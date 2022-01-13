@@ -1,4 +1,6 @@
-![Pixel Composer](https://github.com/Ttanasart-pt/Pixel-Composer/blob/6ed587ed6cd52317f6870836c1188ad914c834d4/img/s_banner.png)
+<p align="center">
+  <img src="https://github.com/Ttanasart-pt/Pixel-Composer/blob/6ed587ed6cd52317f6870836c1188ad914c834d4/img/s_banner.png" alt="Pixel Composer"/>
+</p>
 
 Node base VFX editor for pixel art.
 
