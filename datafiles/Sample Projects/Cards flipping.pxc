@@ -1,0 +1,376 @@
+{
+    "nodes": [{
+        "group": -1.0,
+        "x": -128.0,
+        "id": 2.0,
+        "inputs": [{
+            "from node": 1.0,
+            "curve_type": 0,
+            "on end": 0.0,
+            "inter_post": 2,
+            "raw value": [
+                [0.0, 0.0]
+            ],
+            "anim": 0.0,
+            "inter_type": 0,
+            "inter_curv": [0.0, 0.0, 1.0, 1.0],
+            "from index": 0.0
+        }, {
+            "from node": -1.0,
+            "curve_type": 0,
+            "on end": 0.0,
+            "inter_post": 2,
+            "raw value": [
+                [0.0, [0.0, 0.0]]
+            ],
+            "anim": 0.0,
+            "inter_type": 0,
+            "inter_curv": [0.0, 0.0, 1.0, 1.0],
+            "from index": -1.0
+        }, {
+            "from node": -1.0,
+            "curve_type": 0,
+            "on end": 0.0,
+            "inter_post": 2,
+            "raw value": [
+                [5.0, [0.0, 90.0, 0.0]],
+                [10.0, [0.0, 0.0, 0.0]]
+            ],
+            "anim": 1.0,
+            "inter_type": 0,
+            "inter_curv": [0.0, 0.0, 1.0, 1.0],
+            "from index": -1.0
+        }, {
+            "from node": -1.0,
+            "curve_type": 0,
+            "on end": 0.0,
+            "inter_post": 2,
+            "raw value": [
+                [0.0, [1.0, 1.0]]
+            ],
+            "anim": 0.0,
+            "inter_type": 0,
+            "inter_curv": [0.0, 0.0, 1.0, 1.0],
+            "from index": -1.0
+        }],
+        "attri": {},
+        "type": "Node_3D_Transform",
+        "y": -128.0,
+        "name": "3D Transform"
+    }, {
+        "group": -1.0,
+        "x": -128.0,
+        "id": 3.0,
+        "inputs": [{
+            "from node": 0.0,
+            "curve_type": 0,
+            "on end": 0.0,
+            "inter_post": 2,
+            "raw value": [
+                [0.0, 0.0]
+            ],
+            "anim": 0.0,
+            "inter_type": 0,
+            "inter_curv": [0.0, 0.0, 1.0, 1.0],
+            "from index": 0.0
+        }, {
+            "from node": -1.0,
+            "curve_type": 0,
+            "on end": 0.0,
+            "inter_post": 2,
+            "raw value": [
+                [0.0, [0.0, 0.0]]
+            ],
+            "anim": 0.0,
+            "inter_type": 0,
+            "inter_curv": [0.0, 0.0, 1.0, 1.0],
+            "from index": -1.0
+        }, {
+            "from node": -1.0,
+            "curve_type": 0,
+            "on end": 0.0,
+            "inter_post": 2,
+            "raw value": [
+                [0.0, [0.0, 0.0, 0.0]],
+                [5.0, [0.0, 90.0, 0.0]]
+            ],
+            "anim": 1.0,
+            "inter_type": 0,
+            "inter_curv": [0.0, 0.0, 1.0, 1.0],
+            "from index": -1.0
+        }, {
+            "from node": -1.0,
+            "curve_type": 0,
+            "on end": 0.0,
+            "inter_post": 2,
+            "raw value": [
+                [0.0, [1.0, 1.0]]
+            ],
+            "anim": 0.0,
+            "inter_type": 0,
+            "inter_curv": [0.0, 0.0, 1.0, 1.0],
+            "from index": -1.0
+        }],
+        "attri": {},
+        "type": "Node_3D_Transform",
+        "y": 32.0,
+        "name": "3D Transform"
+    }, {
+        "group": -1.0,
+        "x": -320.0,
+        "id": 1.0,
+        "inputs": [{
+            "from node": -1.0,
+            "curve_type": 0,
+            "on end": 0.0,
+            "inter_post": 2,
+            "raw value": [
+                [0.0, ["card_clubs_02.png", "card_clubs_03.png", "card_clubs_04.png", "card_clubs_05.png"]]
+            ],
+            "anim": 0.0,
+            "inter_type": 0,
+            "inter_curv": [0.0, 0.0, 1.0, 1.0],
+            "from index": -1.0
+        }, {
+            "from node": -1.0,
+            "curve_type": 0,
+            "on end": 0.0,
+            "inter_post": 2,
+            "raw value": [
+                [0.0, [0.0, 0.0, 0.0, 0.0]]
+            ],
+            "anim": 0.0,
+            "inter_type": 0,
+            "inter_curv": [0.0, 0.0, 1.0, 1.0],
+            "from index": -1.0
+        }, {
+            "from node": -1.0,
+            "curve_type": 0,
+            "on end": 0.0,
+            "inter_post": 2,
+            "raw value": [
+                [0.0, 0.0]
+            ],
+            "anim": 0.0,
+            "inter_type": 0,
+            "inter_curv": [0.0, 0.0, 1.0, 1.0],
+            "from index": -1.0
+        }, {
+            "from node": -1.0,
+            "curve_type": 0,
+            "on end": 0.0,
+            "inter_post": 2,
+            "raw value": [
+                [0.0, 0.0]
+            ],
+            "anim": 0.0,
+            "inter_type": 0,
+            "inter_curv": [0.0, 0.0, 1.0, 1.0],
+            "from index": -1.0
+        }, {
+            "from node": -1.0,
+            "curve_type": 0,
+            "on end": 0,
+            "inter_post": 2,
+            "raw value": [
+                [0.0, 0.0]
+            ],
+            "anim": 0.0,
+            "inter_type": 0,
+            "inter_curv": [0.0, 0.0, 1.0, 1.0],
+            "from index": -1.0
+        }],
+        "attri": {},
+        "type": "Node_Image_Sequence",
+        "y": -128.0,
+        "name": "card_clubs_05"
+    }, {
+        "group": -1.0,
+        "x": 256.0,
+        "id": 5.0,
+        "inputs": [{
+            "from node": 4.0,
+            "curve_type": 0,
+            "on end": 0.0,
+            "inter_post": 2,
+            "raw value": [
+                [0.0, 62.0]
+            ],
+            "anim": 0.0,
+            "inter_type": 0,
+            "inter_curv": [0.0, 0.0, 1.0, 1.0],
+            "from index": 0.0
+        }, {
+            "from node": -1.0,
+            "curve_type": 0,
+            "on end": 0.0,
+            "inter_post": 2,
+            "raw value": [
+                [0.0, 0.0]
+            ],
+            "anim": 0.0,
+            "inter_type": 0,
+            "inter_curv": [0.0, 0.0, 1.0, 1.0],
+            "from index": -1.0
+        }, {
+            "from node": -1.0,
+            "curve_type": 0,
+            "on end": 0.0,
+            "inter_post": 2,
+            "raw value": [
+                [0.0, 1.0]
+            ],
+            "anim": 0.0,
+            "inter_type": 0,
+            "inter_curv": [0.0, 0.0, 1.0, 1.0],
+            "from index": -1.0
+        }, {
+            "from node": -1.0,
+            "curve_type": 0,
+            "on end": 0.0,
+            "inter_post": 2,
+            "raw value": [
+                [0.0, 0.0]
+            ],
+            "anim": 0.0,
+            "inter_type": 0,
+            "inter_curv": [0.0, 0.0, 1.0, 1.0],
+            "from index": -1.0
+        }, {
+            "from node": -1.0,
+            "curve_type": 0,
+            "on end": 0.0,
+            "inter_post": 2,
+            "raw value": [
+                [0.0, 4.0]
+            ],
+            "anim": 0.0,
+            "inter_type": 0,
+            "inter_curv": [0.0, 0.0, 1.0, 1.0],
+            "from index": -1.0
+        }, {
+            "from node": -1.0,
+            "curve_type": 0,
+            "on end": 0.0,
+            "inter_post": 2,
+            "raw value": [
+                [0.0, 0.0]
+            ],
+            "anim": 0.0,
+            "inter_type": 0,
+            "inter_curv": [0.0, 0.0, 1.0, 1.0],
+            "from index": -1.0
+        }],
+        "attri": {},
+        "type": "Node_Sprite_Sheet",
+        "y": -64.0,
+        "name": "Sheet"
+    }, {
+        "group": -1.0,
+        "x": 64.0,
+        "id": 4.0,
+        "inputs": [{
+            "from node": 2.0,
+            "curve_type": 0,
+            "on end": 0.0,
+            "inter_post": 2,
+            "raw value": [
+                [0.0, 17.0]
+            ],
+            "anim": 0.0,
+            "inter_type": 0,
+            "inter_curv": [0.0, 0.0, 1.0, 1.0],
+            "from index": 0.0
+        }, {
+            "from node": 3.0,
+            "curve_type": 0,
+            "on end": 0.0,
+            "inter_post": 2,
+            "raw value": [
+                [0.0, 17.0]
+            ],
+            "anim": 0.0,
+            "inter_type": 0,
+            "inter_curv": [0.0, 0.0, 1.0, 1.0],
+            "from index": 0.0
+        }, {
+            "from node": -1.0,
+            "curve_type": 0,
+            "on end": 0.0,
+            "inter_post": 2,
+            "raw value": [
+                [0.0, 0.0]
+            ],
+            "anim": 0.0,
+            "inter_type": 0,
+            "inter_curv": [0.0, 0.0, 1.0, 1.0],
+            "from index": -1.0
+        }, {
+            "from node": -1.0,
+            "curve_type": 0,
+            "on end": 0.0,
+            "inter_post": 2,
+            "raw value": [
+                [0.0, 1.0]
+            ],
+            "anim": 0.0,
+            "inter_type": 0,
+            "inter_curv": [0.0, 0.0, 1.0, 1.0],
+            "from index": -1.0
+        }, {
+            "from node": -1.0,
+            "curve_type": 0,
+            "on end": 0.0,
+            "inter_post": 2,
+            "raw value": [
+                [0.0, 0.0]
+            ],
+            "anim": 0.0,
+            "inter_type": 0,
+            "inter_curv": [0.0, 0.0, 1.0, 1.0],
+            "from index": -1.0
+        }],
+        "attri": {},
+        "type": "Node_Blend",
+        "y": -64.0,
+        "name": "Blend"
+    }, {
+        "group": -1.0,
+        "x": -320.0,
+        "id": 0.0,
+        "inputs": [{
+            "from node": -1.0,
+            "curve_type": 0,
+            "on end": 0.0,
+            "inter_post": 2,
+            "raw value": [
+                [0.0, "card_back.png"]
+            ],
+            "anim": 0.0,
+            "inter_type": 0,
+            "inter_curv": [0.0, 0.0, 1.0, 1.0],
+            "from index": -1.0
+        }, {
+            "from node": -1.0,
+            "curve_type": 0,
+            "on end": 0.0,
+            "inter_post": 2,
+            "raw value": [
+                [0.0, [0.0, 0.0, 0.0, 0.0]]
+            ],
+            "anim": 0.0,
+            "inter_type": 0,
+            "inter_curv": [0.0, 0.0, 1.0, 1.0],
+            "from index": -1.0
+        }],
+        "attri": {},
+        "type": "Node_Image",
+        "y": 32.0,
+        "name": "card_back"
+    }],
+    "version": 68.0,
+    "animator": {
+        "framerate": 15.0,
+        "frames_total": 10.0
+    }
+}

@@ -1,0 +1,361 @@
+{
+    "nodes": [{
+        "group": -1.0,
+        "x": 64.0,
+        "id": 2.0,
+        "inputs": [{
+            "from node": -1.0,
+            "on end": 0,
+            "raw value": [
+                [0.0, "tile_0067.png"]
+            ],
+            "anim": 0.0,
+            "from index": -1.0
+        }, {
+            "from node": -1.0,
+            "on end": 0,
+            "raw value": [
+                [0.0, [0.0, 0.0, 0.0, 0.0]]
+            ],
+            "anim": 0.0,
+            "from index": -1.0
+        }],
+        "attri": {},
+        "type": "Node_Image",
+        "y": 192.0,
+        "name": "tile_0067"
+    }, {
+        "group": -1.0,
+        "x": 224.0,
+        "id": 3.0,
+        "inputs": [{
+            "from node": 2.0,
+            "on end": 0,
+            "raw value": [
+                [0.0, 0.0]
+            ],
+            "anim": 0.0,
+            "from index": 0.0
+        }, {
+            "from node": -1.0,
+            "on end": 0,
+            "raw value": [
+                [0.0, [6244931.0]]
+            ],
+            "anim": 0.0,
+            "from index": -1.0
+        }, {
+            "from node": -1.0,
+            "on end": 0,
+            "raw value": [
+                [0.0, 0.10000000000000000555111512312578]
+            ],
+            "anim": 0.0,
+            "from index": -1.0
+        }],
+        "attri": {},
+        "type": "Node_Color_Remove",
+        "y": 192.0,
+        "name": "Color Remove"
+    }, {
+        "group": -1.0,
+        "x": 544.0,
+        "id": 1.0,
+        "inputs": [{
+            "from node": 6.0,
+            "on end": 0,
+            "raw value": [
+                [0.0, 0.0]
+            ],
+            "anim": 0.0,
+            "from index": 0.0
+        }, {
+            "from node": -1.0,
+            "on end": 0,
+            "raw value": [
+                [0.0, 0.0],
+                [12.0, 0.54000000000000003552713678800501]
+            ],
+            "anim": true,
+            "from index": -1.0
+        }, {
+            "from node": -1.0,
+            "on end": 0,
+            "raw value": [
+                [0.0, 0.059999999999999997779553950749687]
+            ],
+            "anim": 0.0,
+            "from index": -1.0
+        }],
+        "attri": {},
+        "type": "Node_Level_Selector",
+        "y": 288.0,
+        "name": "Level Selector"
+    }, {
+        "group": -1.0,
+        "x": 224.0,
+        "id": 5.0,
+        "inputs": [{
+            "from node": -1.0,
+            "on end": 0,
+            "raw value": [
+                [0.0, [32.0, 32.0]]
+            ],
+            "anim": 0.0,
+            "from index": -1.0
+        }, {
+            "from node": -1.0,
+            "on end": 0,
+            "raw value": [
+                [0.0040322580645161289203404209047221, 0.0],
+                [1.0, 16777215.0]
+            ],
+            "anim": 0.0,
+            "from index": -1.0
+        }, {
+            "from node": -1.0,
+            "on end": 0,
+            "raw value": [
+                [0.0, 0.0]
+            ],
+            "anim": 0.0,
+            "from index": -1.0
+        }, {
+            "from node": -1.0,
+            "on end": 0,
+            "raw value": [
+                [0.0, -45.0]
+            ],
+            "anim": 0.0,
+            "from index": -1.0
+        }, {
+            "from node": -1.0,
+            "on end": 0,
+            "raw value": [
+                [0.0, 0.5]
+            ],
+            "anim": 0.0,
+            "from index": -1.0
+        }, {
+            "from node": -1.0,
+            "on end": 0,
+            "raw value": [
+                [0.0, 0.0]
+            ],
+            "anim": 0.0,
+            "from index": -1.0
+        }],
+        "attri": {},
+        "type": "Node_Gradient",
+        "y": 352.0,
+        "name": "Gradient"
+    }, {
+        "group": -1.0,
+        "x": 704.0,
+        "id": 4.0,
+        "inputs": [{
+            "from node": 3.0,
+            "on end": 0,
+            "raw value": [
+                [0.0, 0.0]
+            ],
+            "anim": 0.0,
+            "from index": 0.0
+        }, {
+            "from node": -1.0,
+            "on end": 0,
+            "raw value": [
+                [0.0, 0.48999999999999999111821580299875]
+            ],
+            "anim": 0.0,
+            "from index": -1.0
+        }, {
+            "from node": -1.0,
+            "on end": 0,
+            "raw value": [
+                [0.0, 1.0]
+            ],
+            "anim": 0.0,
+            "from index": -1.0
+        }, {
+            "from node": -1.0,
+            "on end": 0,
+            "raw value": [
+                [0.0, 0.0]
+            ],
+            "anim": 0.0,
+            "from index": -1.0
+        }, {
+            "from node": -1.0,
+            "on end": 0,
+            "raw value": [
+                [0.0, 0.0]
+            ],
+            "anim": 0.0,
+            "from index": -1.0
+        }, {
+            "from node": -1.0,
+            "on end": 0,
+            "raw value": [
+                [0.0, 0.0]
+            ],
+            "anim": 0.0,
+            "from index": -1.0
+        }, {
+            "from node": -1.0,
+            "on end": 0,
+            "raw value": [
+                [0.0, 16777215.0]
+            ],
+            "anim": 0.0,
+            "from index": -1.0
+        }, {
+            "from node": -1.0,
+            "on end": 0,
+            "raw value": [
+                [0.0, 0.0]
+            ],
+            "anim": 0.0,
+            "from index": -1.0
+        }, {
+            "from node": 1.0,
+            "on end": 0,
+            "raw value": [
+                [0.0, 0.0]
+            ],
+            "anim": 0.0,
+            "from index": 0.0
+        }, {
+            "from node": -1.0,
+            "on end": 0,
+            "raw value": [
+                [0.0, 1.0]
+            ],
+            "anim": 0.0,
+            "from index": -1.0
+        }],
+        "attri": {},
+        "type": "Node_Color_adjust",
+        "y": 192.0,
+        "name": "Color adjust"
+    }, {
+        "group": -1.0,
+        "x": 864.0,
+        "id": 7.0,
+        "inputs": [{
+            "from node": 4.0,
+            "on end": 0,
+            "raw value": [
+                [0.0, 0.0]
+            ],
+            "anim": 0.0,
+            "from index": 0.0
+        }, {
+            "from node": -1.0,
+            "on end": 0,
+            "raw value": [
+                [0.0, 2.0]
+            ],
+            "anim": 0.0,
+            "from index": -1.0
+        }, {
+            "from node": -1.0,
+            "on end": 0,
+            "raw value": [
+                [0.0, 6244931.0]
+            ],
+            "anim": 0.0,
+            "from index": -1.0
+        }, {
+            "from node": -1.0,
+            "on end": 0,
+            "raw value": [
+                [0.0, 0.0]
+            ],
+            "anim": 0.0,
+            "from index": -1.0
+        }, {
+            "from node": -1.0,
+            "on end": 0,
+            "raw value": [
+                [0.0, 1.0]
+            ],
+            "anim": 0.0,
+            "from index": -1.0
+        }, {
+            "from node": -1.0,
+            "on end": 0,
+            "raw value": [
+                [0.0, 1.0]
+            ],
+            "anim": 0.0,
+            "from index": -1.0
+        }, {
+            "from node": -1.0,
+            "on end": 0,
+            "raw value": [
+                [0.0, 0.0]
+            ],
+            "anim": 0.0,
+            "from index": -1.0
+        }],
+        "attri": {},
+        "type": "Node_Outline",
+        "y": 192.0,
+        "name": "Outline"
+    }, {
+        "group": -1.0,
+        "x": 384.0,
+        "id": 6.0,
+        "inputs": [{
+            "from node": 3.0,
+            "on end": 0,
+            "raw value": [
+                [0.0, 17.0]
+            ],
+            "anim": 0.0,
+            "from index": 0.0
+        }, {
+            "from node": 5.0,
+            "on end": 0,
+            "raw value": [
+                [0.0, 17.0]
+            ],
+            "anim": 0.0,
+            "from index": 0.0
+        }, {
+            "from node": -1.0,
+            "on end": 0,
+            "raw value": [
+                [0.0, 3.0]
+            ],
+            "anim": 0.0,
+            "from index": -1.0
+        }, {
+            "from node": -1.0,
+            "on end": 0,
+            "raw value": [
+                [0.0, 1.0]
+            ],
+            "anim": 0.0,
+            "from index": -1.0
+        }, {
+            "from node": -1.0,
+            "on end": 0,
+            "raw value": [
+                [0.0, 0.0]
+            ],
+            "anim": 0.0,
+            "from index": -1.0
+        }],
+        "attri": {},
+        "type": "Node_Blend",
+        "y": 288.0,
+        "name": "Blend"
+    }],
+    "version": 60.0,
+    "animator": {
+        "framerate": 15.0,
+        "frames_total": 12.0
+    }
+}

@@ -1,0 +1,248 @@
+{
+    "nodes": [{
+        "group": -1.0,
+        "x": 704.0,
+        "id": 2.0,
+        "inputs": [{
+            "from node": 1.0,
+            "on end": 0,
+            "raw value": [
+                [0.0, 0.0]
+            ],
+            "anim": 0.0,
+            "from index": 0.0
+        }, {
+            "from node": -1.0,
+            "on end": 0,
+            "raw value": [
+                [0.0, [0.0, 0.0]]
+            ],
+            "anim": 0.0,
+            "from index": -1.0
+        }, {
+            "from node": -1.0,
+            "on end": 0,
+            "raw value": [
+                [0.0, [8.0, 8.0]],
+                [2.0, [10.036256313323974609375, 10.0362570285797119140625]],
+                [4.0, [8.3770024776458740234375, 8.377003192901611328125]]
+            ],
+            "anim": true,
+            "from index": -1.0
+        }, {
+            "from node": -1.0,
+            "on end": 0,
+            "raw value": [
+                [0.0, [0.5, 0.5]]
+            ],
+            "anim": 0.0,
+            "from index": -1.0
+        }, {
+            "from node": -1.0,
+            "on end": 0,
+            "raw value": [
+                [0.0, 1.0]
+            ],
+            "anim": 0.0,
+            "from index": -1.0
+        }, {
+            "from node": -1.0,
+            "on end": 0,
+            "raw value": [
+                [0.0, 0.0]
+            ],
+            "anim": 0.0,
+            "from index": -1.0
+        }, {
+            "from node": -1.0,
+            "on end": 0,
+            "raw value": [
+                [0.0, [1.0, 1.0]]
+            ],
+            "anim": 0.0,
+            "from index": -1.0
+        }, {
+            "from node": -1.0,
+            "on end": 0,
+            "raw value": [
+                [0.0, 0.0]
+            ],
+            "anim": 0.0,
+            "from index": -1.0
+        }, {
+            "from node": -1.0,
+            "on end": 0,
+            "raw value": [
+                [0.0, 0.0]
+            ],
+            "anim": 0.0,
+            "from index": -1.0
+        }],
+        "attri": {},
+        "type": "Node_Transform",
+        "y": 32.0,
+        "name": "Transform"
+    }, {
+        "group": -1.0,
+        "x": 864.0,
+        "id": 3.0,
+        "inputs": [{
+            "from node": 2.0,
+            "on end": 0,
+            "raw value": [
+                [0.0, 0.0]
+            ],
+            "anim": 0.0,
+            "from index": 0.0
+        }, {
+            "from node": -1.0,
+            "on end": 0,
+            "raw value": [
+                [0.0, [8.0, 8.0]]
+            ],
+            "anim": 0.0,
+            "from index": -1.0
+        }, {
+            "from node": -1.0,
+            "on end": 0,
+            "raw value": [
+                [0.0, 180.0]
+            ],
+            "anim": 0.0,
+            "from index": -1.0
+        }],
+        "attri": {},
+        "type": "Node_Mirror",
+        "y": 32.0,
+        "name": "Mirror"
+    }, {
+        "group": -1.0,
+        "x": 544.0,
+        "id": 1.0,
+        "inputs": [{
+            "from node": 0.0,
+            "on end": 0,
+            "raw value": [
+                [0.0, 0.0]
+            ],
+            "anim": 0.0,
+            "from index": 0.0
+        }],
+        "attri": {},
+        "type": "Node_Seperate_Shape",
+        "y": 192.0,
+        "name": "Seperate shape"
+    }, {
+        "group": -1.0,
+        "x": 1184.0,
+        "id": 5.0,
+        "inputs": [{
+            "from node": 4.0,
+            "on end": 0,
+            "raw value": [
+                [0.0, 17.0]
+            ],
+            "anim": 0.0,
+            "from index": 0.0
+        }, {
+            "from node": 1.0,
+            "on end": 0,
+            "raw value": [
+                [0.0, 17.0]
+            ],
+            "anim": 0.0,
+            "from index": 2.0
+        }, {
+            "from node": -1.0,
+            "on end": 0,
+            "raw value": [
+                [0.0, 0.0]
+            ],
+            "anim": 0.0,
+            "from index": -1.0
+        }, {
+            "from node": -1.0,
+            "on end": 0,
+            "raw value": [
+                [0.0, 1.0]
+            ],
+            "anim": 0.0,
+            "from index": -1.0
+        }, {
+            "from node": -1.0,
+            "on end": 0,
+            "raw value": [
+                [0.0, 0.0]
+            ],
+            "anim": 0.0,
+            "from index": -1.0
+        }],
+        "attri": {},
+        "type": "Node_Blend",
+        "y": 192.0,
+        "name": "Blend"
+    }, {
+        "group": -1.0,
+        "x": 1024.0,
+        "id": 4.0,
+        "inputs": [{
+            "from node": 3.0,
+            "on end": 0,
+            "raw value": [
+                [0.0, 0.0]
+            ],
+            "anim": 0.0,
+            "from index": 0.0
+        }, {
+            "from node": -1.0,
+            "on end": 0,
+            "raw value": [
+                [0.0, [8.0, 8.0]]
+            ],
+            "anim": 0.0,
+            "from index": -1.0
+        }, {
+            "from node": -1.0,
+            "on end": 0,
+            "raw value": [
+                [0.0, 270.0]
+            ],
+            "anim": 0.0,
+            "from index": -1.0
+        }],
+        "attri": {},
+        "type": "Node_Mirror",
+        "y": 32.0,
+        "name": "Mirror"
+    }, {
+        "group": -1.0,
+        "x": 384.0,
+        "id": 0.0,
+        "inputs": [{
+            "from node": -1.0,
+            "on end": 0,
+            "raw value": [
+                [0.0, "tile_0027.png"]
+            ],
+            "anim": 0.0,
+            "from index": -1.0
+        }, {
+            "from node": -1.0,
+            "on end": 0,
+            "raw value": [
+                [0.0, [0.0, 0.0, 0.0, 0.0]]
+            ],
+            "anim": 0.0,
+            "from index": -1.0
+        }],
+        "attri": {},
+        "type": "Node_Image",
+        "y": 192.0,
+        "name": "tile_0027"
+    }],
+    "version": 60.0,
+    "animator": {
+        "framerate": 15.0,
+        "frames_total": 4.0
+    }
+}

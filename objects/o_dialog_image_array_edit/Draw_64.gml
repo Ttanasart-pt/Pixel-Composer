@@ -1,0 +1,44 @@
+/// @description init
+if !ready exit;
+if !target exit;
+
+#region base UI
+	draw_sprite_stretched(s_dialog_bg, 0, dialog_x, dialog_y, dialog_w, dialog_h);
+	if(FOCUS == self)
+		draw_sprite_stretched(s_dialog_active, 0, dialog_x, dialog_y, dialog_w, dialog_h);
+	
+	draw_set_text(f_p0, fa_left, fa_center, c_ui_blue_ltgrey);
+	draw_text(dialog_x + 24, dialog_y + 24, "Image array edit");
+#endregion
+
+#region content
+	var x0 = dialog_x + 20;
+	var x1 = x0 + sp_content.w;
+	var y0 = dialog_y + 44;
+	var y1 = y0 + sp_content.h;
+	
+	draw_sprite_stretched(s_ui_panel_bg, 1, x0 - 6, y0 - 6, x1 - x0 + 12, y1 - y0 + 12);
+	sp_content.active = FOCUS == self;
+	sp_content.draw(x0, y0);
+#endregion
+
+#region button
+	var bx = dialog_x + dialog_w - 20 - 88;
+	var by = y0;
+	
+	if(buttonInstant(s_button, bx, by, 88, 40, [mouse_mx, mouse_my], FOCUS == self, HOVER == self) == 2) {
+		var path = get_open_filenames(".png", "");
+		if(path != "") {
+			var paths = paths_to_array(path);
+			var arr = target.inputs[| 0].getValue();
+			
+			for( var i = 0; i < array_length(paths); i++ ) 
+				array_push(arr, paths[i]);
+				
+			target.inputs[| 0].setValue(arr);
+		}
+	}
+	
+	draw_set_text(f_p0, fa_center, fa_center, c_white);
+	draw_text(bx + 44, by + 20, "Add...");
+#endregion

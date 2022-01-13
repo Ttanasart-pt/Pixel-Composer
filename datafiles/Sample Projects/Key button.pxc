@@ -1,0 +1,269 @@
+{
+    "nodes": [{
+        "group": -1.0,
+        "x": 64.0,
+        "id": 2.0,
+        "inputs": [{
+            "from node": -1.0,
+            "on end": 0,
+            "raw value": [
+                [0.0, 1.0]
+            ],
+            "anim": 0.0,
+            "from index": -1.0
+        }, {
+            "from node": -1.0,
+            "on end": 0,
+            "raw value": [
+                [0.0, 1.0]
+            ],
+            "anim": 0.0,
+            "from index": -1.0
+        }],
+        "attri": {},
+        "type": "Node_Counter",
+        "y": 32.0,
+        "name": "Counter"
+    }, {
+        "group": -1.0,
+        "x": 416.0,
+        "id": 3.0,
+        "inputs": [{
+            "from node": -1.0,
+            "on end": 0,
+            "raw value": [
+                [0.0, [0.0, 0.0, 0.0, 0.0]]
+            ],
+            "anim": 0.0,
+            "from index": -1.0
+        }, {
+            "from node": -1.0,
+            "on end": 0,
+            "raw value": [
+                [0.0, [0.0, 0.0]]
+            ],
+            "anim": 0.0,
+            "from index": -1.0
+        }, {
+            "from node": 0.0,
+            "on end": 0,
+            "raw value": [
+                [0.0, 0.0]
+            ],
+            "anim": 0.0,
+            "from index": 0.0
+        }, {
+            "from node": -1.0,
+            "on end": 0,
+            "raw value": [
+                [0.0, [0.0, 0.0]]
+            ],
+            "anim": 0.0,
+            "from index": -1.0
+        }, {
+            "from node": 1.0,
+            "on end": 0,
+            "raw value": [
+                [0.0, 0.0]
+            ],
+            "anim": 0.0,
+            "from index": 0.0
+        }, {
+            "from node": -1.0,
+            "on end": 0,
+            "raw value": [
+                [0.0, [7.9268292682926837500190231367014, 9.5121951219512208552941956440918]]
+            ],
+            "anim": 0.0,
+            "from index": -1.0
+        }, {
+            "from node": -1.0,
+            "on end": 0,
+            "raw value": [
+                [0.0, 0.0]
+            ],
+            "anim": 0.0,
+            "from index": -1.0
+        }, {
+            "from node": -1.0,
+            "on end": 0,
+            "raw value": [
+                [0.0, [0.0, 0.0]]
+            ],
+            "anim": 0.0,
+            "from index": -1.0
+        }],
+        "attri": {},
+        "type": "Node_Composite",
+        "y": -64.0,
+        "name": "Composite"
+    }, {
+        "group": -1.0,
+        "x": 224.0,
+        "id": 1.0,
+        "inputs": [{
+            "from node": 2.0,
+            "on end": 0,
+            "raw value": [
+                [0.0, ""]
+            ],
+            "anim": 0.0,
+            "from index": 0.0
+        }, {
+            "from node": -1.0,
+            "on end": 0,
+            "raw value": [
+                [0.0, ""]
+            ],
+            "anim": 0.0,
+            "from index": -1.0
+        }, {
+            "from node": -1.0,
+            "on end": 0,
+            "raw value": [
+                [0.0, 8.0]
+            ],
+            "anim": 0.0,
+            "from index": -1.0
+        }, {
+            "from node": -1.0,
+            "on end": 0,
+            "raw value": [
+                [0.0, 0.0]
+            ],
+            "anim": 0.0,
+            "from index": -1.0
+        }, {
+            "from node": -1.0,
+            "on end": 0,
+            "raw value": [
+                [0.0, [32.0, 128.0]]
+            ],
+            "anim": 0.0,
+            "from index": -1.0
+        }, {
+            "from node": -1.0,
+            "on end": 0,
+            "raw value": [
+                [0.0, 11179413.0]
+            ],
+            "anim": 0.0,
+            "from index": -1.0
+        }, {
+            "from node": -1.0,
+            "on end": 0,
+            "raw value": [
+                [0.0, [0.0, 0.0]]
+            ],
+            "anim": 0.0,
+            "from index": -1.0
+        }, {
+            "from node": -1.0,
+            "on end": 0,
+            "raw value": [
+                [0.0, 0.0]
+            ],
+            "anim": 0.0,
+            "from index": -1.0
+        }, {
+            "from node": -1.0,
+            "on end": 0,
+            "raw value": [
+                [0.0, 0.0]
+            ],
+            "anim": 0.0,
+            "from index": -1.0
+        }],
+        "attri": {},
+        "type": "Node_Text",
+        "y": 32.0,
+        "name": "Text"
+    }, {
+        "group": -1.0,
+        "x": 608.0,
+        "id": 4.0,
+        "inputs": [{
+            "from node": 3.0,
+            "on end": 0,
+            "raw value": [
+                [0.0, 45.0]
+            ],
+            "anim": 0.0,
+            "from index": 0.0
+        }, {
+            "from node": -1.0,
+            "on end": 0,
+            "raw value": [
+                [0.0, 0.0]
+            ],
+            "anim": 0.0,
+            "from index": -1.0
+        }, {
+            "from node": -1.0,
+            "on end": 0,
+            "raw value": [
+                [0.0, 1.0]
+            ],
+            "anim": 0.0,
+            "from index": -1.0
+        }, {
+            "from node": -1.0,
+            "on end": 0,
+            "raw value": [
+                [0.0, 2.0]
+            ],
+            "anim": 0.0,
+            "from index": -1.0
+        }, {
+            "from node": -1.0,
+            "on end": 0,
+            "raw value": [
+                [0.0, 4.0]
+            ],
+            "anim": 0.0,
+            "from index": -1.0
+        }, {
+            "from node": -1.0,
+            "on end": 0,
+            "raw value": [
+                [0.0, 0.0]
+            ],
+            "anim": 0.0,
+            "from index": -1.0
+        }],
+        "attri": {},
+        "type": "Node_Sprite_Sheet",
+        "y": -64.0,
+        "name": "Sheet"
+    }, {
+        "group": -1.0,
+        "x": 224.0,
+        "id": 0.0,
+        "inputs": [{
+            "from node": -1.0,
+            "on end": 0,
+            "raw value": [
+                [0.0, "key.png"]
+            ],
+            "anim": 0.0,
+            "from index": -1.0
+        }, {
+            "from node": -1.0,
+            "on end": 0,
+            "raw value": [
+                [0.0, [0.0, 0.0, 0.0, 0.0]]
+            ],
+            "anim": 0.0,
+            "from index": -1.0
+        }],
+        "attri": {},
+        "type": "Node_Image",
+        "y": -128.0,
+        "name": "n"
+    }],
+    "version": 60.0,
+    "animator": {
+        "framerate": 15.0,
+        "frames_total": 11.0
+    }
+}
