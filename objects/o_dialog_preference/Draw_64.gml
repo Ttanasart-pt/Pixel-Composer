@@ -43,9 +43,14 @@ if !ready exit;
 	draw_sprite_ext(s_search_16, 0, dialog_x + dialog_w - 16 - 200 - 16, dialog_y + 16 + 12, 1, 1, 0, c_ui_blue_grey, 1);
 	
 	if(page_current == 0) {
+		current_list = pref_global;
 		sp_pref.active = HOVER == self;
 		sp_pref.draw(dialog_x + 160 + 8, yy);
 	} else if(page_current == 1) {
+		current_list = pref_node;
+		sp_pref.active = HOVER == self;
+		sp_pref.draw(dialog_x + 160 + 8, yy);
+	} else if(page_current == 2) {
 		if(mouse_check_button_pressed(mb_left)) hk_editing = noone;
 		
 		sp_hotkey.active = HOVER == self;

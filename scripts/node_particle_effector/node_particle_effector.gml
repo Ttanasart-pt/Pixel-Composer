@@ -19,30 +19,40 @@ function Node_Particle_Effector(_x, _y) : Node(_x, _y) constructor {
 	
 	inputs[| 0] = nodeValue(0, "Particle data", self, JUNCTION_CONNECT.input, VALUE_TYPE.object, -1 );
 	inputs[| 1] = nodeValue(1, "Output dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, def_surf_size2, VALUE_TAG.dimension_2d )
-		.setDisplay(VALUE_DISPLAY.vector);
+		.setDisplay(VALUE_DISPLAY.vector)
+		.setVisible(false, false);
 	
 	inputs[| 2] = nodeValue(2, "Area", self,   JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 16, 16, 4, 4, AREA_SHAPE.rectangle ])
-		.setDisplay(VALUE_DISPLAY.area);
+		.setDisplay(VALUE_DISPLAY.area)
+		.setVisible(false);
 	
 	inputs[| 3] = nodeValue(3, "Falloff", self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, [0, 0, 1, 1] )
-		.setDisplay(VALUE_DISPLAY.curve);
+		.setDisplay(VALUE_DISPLAY.curve)
+		.setVisible(false);
 	
-	inputs[| 4] = nodeValue(4, "Falloff distance", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 4 );
+	inputs[| 4] = nodeValue(4, "Falloff distance", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 4 )
+		.setVisible(false);
 	
 	inputs[| 5] = nodeValue(5, "Effect type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0 )
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Wind", "Attract", "Repel", "Vortex", "Turbulence", "Destroy" ] );
+		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Wind", "Attract", "Repel", "Vortex", "Turbulence", "Destroy" ] )
+		.setVisible(false);
 	
 	inputs[| 6] = nodeValue(6, "Effect Vector", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ -1, 0 ] )
-		.setDisplay(VALUE_DISPLAY.vector);
+		.setDisplay(VALUE_DISPLAY.vector)
+		.setVisible(false);
 	
-	inputs[| 7] = nodeValue(7, "Strength", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1 );
+	inputs[| 7] = nodeValue(7, "Strength", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1 )
+		.setVisible(false);
 	
-	inputs[| 8] = nodeValue(8, "Rotate particle", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0 );
+	inputs[| 8] = nodeValue(8, "Rotate particle", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0 )
+		.setVisible(false);
 	
 	inputs[| 9] = nodeValue(9, "Scale particle", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ] )
-		.setDisplay(VALUE_DISPLAY.vector);
+		.setDisplay(VALUE_DISPLAY.vector)
+		.setVisible(false);
 	
-	inputs[| 10] = nodeValue(10, "Turbulence scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 16 );
+	inputs[| 10] = nodeValue(10, "Turbulence scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 16 )
+		.setVisible(false);
 	
 	input_display_list = [ 0, 1, 
 		["Area",	false], 2, 3, 4, 
@@ -83,7 +93,6 @@ function Node_Particle_Effector(_x, _y) : Node(_x, _y) constructor {
 	
 	function affect(part) {
 		if(!part.active) return;
-		if(array_length(current_data) < ds_list_size(inputs)) return;
 		
 		var _area = current_data[2];
 		var _fall = current_data[3];
@@ -107,18 +116,19 @@ function Node_Particle_Effector(_x, _y) : Node(_x, _y) constructor {
 		var _area_y1 = _area_y + _area_h;
 		
 		var str = 0;
+		var pv = part.getPivot();
 		
 		if(_area_t == AREA_SHAPE.rectangle) {
-			if(point_in_rectangle(part.x, part.y, _area_x0, _area_y0, _area_x1, _area_y1)) {
-				var _dst = min(	distance_to_line(part.x, part.y, _area_x0, _area_y0, _area_x1, _area_y0), 
-								distance_to_line(part.x, part.y, _area_x0, _area_y1, _area_x1, _area_y1), 
-								distance_to_line(part.x, part.y, _area_x0, _area_y0, _area_x0, _area_y1), 
-								distance_to_line(part.x, part.y, _area_x1, _area_y0, _area_x1, _area_y1));
+			if(point_in_rectangle(pv[0], pv[1], _area_x0, _area_y0, _area_x1, _area_y1)) {
+				var _dst = min(	distance_to_line(pv[0], pv[1], _area_x0, _area_y0, _area_x1, _area_y0), 
+								distance_to_line(pv[0], pv[1], _area_x0, _area_y1, _area_x1, _area_y1), 
+								distance_to_line(pv[0], pv[1], _area_x0, _area_y0, _area_x0, _area_y1), 
+								distance_to_line(pv[0], pv[1], _area_x1, _area_y0, _area_x1, _area_y1));
 				str = eval_curve_bezier_cubic(_fall, clamp(_dst / _fads, 0., 1.));
 			}
 		} else if(_area_t == AREA_SHAPE.elipse) {
-			if(point_in_circle(part.x, part.y, _area_x, _area_y, min(_area_w, _area_h))) {
-				var _dst = point_distance(part.x, part.y, _area_x, _area_y);
+			if(point_in_circle(pv[0], pv[1], _area_x, _area_y, min(_area_w, _area_h))) {
+				var _dst = point_distance(pv[0], pv[1], _area_x, _area_y);
 				str = eval_curve_bezier_cubic(_fall, clamp(_dst / _fads, 0., 1.));
 			}
 		}
@@ -128,32 +138,42 @@ function Node_Particle_Effector(_x, _y) : Node(_x, _y) constructor {
 				case FORCE_TYPE.Wind :
 					part.x = part.x + _vect[0] * _sten * str;
 					part.y = part.y + _vect[1] * _sten * str;
+					
+					part.rot += _rot * str;
 					break;
 				case FORCE_TYPE.Attract :
-					var dirr = point_direction(part.x, part.y, _area_x, _area_y);
+					var dirr = point_direction(pv[0], pv[1], _area_x, _area_y);
 					
 					part.x = part.x + lengthdir_x(_sten * str, dirr);
 					part.y = part.y + lengthdir_y(_sten * str, dirr);
+					
+					part.rot += _rot * str;
 					break;
 				case FORCE_TYPE.Repel :
-					var dirr = point_direction(_area_x, _area_y, part.x, part.y);
+					var dirr = point_direction(_area_x, _area_y, pv[0], pv[1]);
 					
 					part.x = part.x + lengthdir_x(_sten * str, dirr);
 					part.y = part.y + lengthdir_y(_sten * str, dirr);
+					
+					part.rot += _rot * str;
 					break;
 				case FORCE_TYPE.Vortex :
-					var dirr = point_direction(_area_x, _area_y, part.x, part.y) + 90;
+					var dirr = point_direction(_area_x, _area_y, pv[0], pv[1]) + 90;
 					
 					part.x = part.x + lengthdir_x(_sten * str, dirr);
 					part.y = part.y + lengthdir_y(_sten * str, dirr);
+					
+					part.rot += _rot * str;
 					break;
 				case FORCE_TYPE.Turbulence :
 					var t_scale = current_data[10];
-					var per = (perlin_noise(part.x / t_scale, part.y / t_scale, 4, part.seed) - 0.5) * 2;
+					var per = (perlin_noise(pv[0] / t_scale, pv[1] / t_scale, 4, part.seed) - 0.5) * 2;
 					per *= str;
 					
 					part.x = part.x + _vect[0] * per;
 					part.y = part.y + _vect[1] * per;
+					
+					part.rot += _rot * per;
 					break;
 				case FORCE_TYPE.Destroy :
 					if(random(1) < _sten)
@@ -167,8 +187,6 @@ function Node_Particle_Effector(_x, _y) : Node(_x, _y) constructor {
 			else			part.scx += sign(part.scx) * scx_s;
 			if(scy_s < 0)	part.scy = lerp_linear(part.scy, 0, abs(scy_s));
 			else			part.scy += sign(part.scy) * scy_s;
-			
-			part.rot += _rot * str;
 		}
 	}
 	

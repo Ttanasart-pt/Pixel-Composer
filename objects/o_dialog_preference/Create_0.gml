@@ -25,56 +25,87 @@ event_inherited();
 #region pages
 	page_current = 0;
 	page[0] = "Global data";
-	page[1] = "Hotkeys";
+	page[1] = "Node data";
+	page[2] = "Hotkeys";
 	
-	pref[0][0] = "Show welcome screen";
-	pref[0][1] = "show_splash";
-	pref[0][2] = new checkBox(function() { 
-		PREF_MAP[? "show_splash"] = !PREF_MAP[? "show_splash"];
-		PREF_SAVE();
-	});
+	pref_global = ds_list_create();
+	pref_node = ds_list_create();
 	
-	pref[1][0] = "Reset preview on focus";
-	pref[1][1] = "reset_display";
-	pref[1][2] = new checkBox(function() { 
-		PREF_MAP[? "reset_display"] = !PREF_MAP[? "reset_display"]; 
-		PREF_SAVE();
-	});
+	ds_list_add(pref_global, [
+		"Show welcome screen",
+		"show_splash",
+		new checkBox(function() { 
+			PREF_MAP[? "show_splash"] = !PREF_MAP[? "show_splash"];
+			PREF_SAVE();
+		})
+	]);
 	
-	pref[2][0] = "Curve connection line";
-	pref[2][1] = "curve_connection_line";
-	pref[2][2] = new checkBox(function() { 
-		PREF_MAP[? "curve_connection_line"] = !PREF_MAP[? "curve_connection_line"]; 
-		PREF_SAVE();
-	});
+	ds_list_add(pref_global, [
+		"Reset preview on focus",
+		"reset_display",
+		new checkBox(function() { 
+			PREF_MAP[? "reset_display"] = !PREF_MAP[? "reset_display"]; 
+			PREF_SAVE();
+		})
+	]);
 	
-	pref[3][0] = "Max particles";
-	pref[3][1] = "part_max_amount";
-	pref[3][2] = new textBox(TEXTBOX_INPUT.number, function(str) { 
-		PREF_MAP[? "part_max_amount"] = real(str); 
-		PREF_SAVE();
-	});
+	ds_list_add(pref_global, [
+		"Curve connection line",
+		"curve_connection_line",
+		new checkBox(function() { 
+			PREF_MAP[? "curve_connection_line"] = !PREF_MAP[? "curve_connection_line"]; 
+			PREF_SAVE();
+		})
+	]);
 	
-	pref[4][0] = "Double click delay";
-	pref[4][1] = "double_click_delay";
-	pref[4][2] = new textBox(TEXTBOX_INPUT.number, function(str) { 
-		PREF_MAP[? "double_click_delay"] = real(str); 
-		PREF_SAVE();
-	});
+	ds_list_add(pref_global, [
+		"Double click delay",
+		"double_click_delay",
+		new textBox(TEXTBOX_INPUT.number, function(str) { 
+			PREF_MAP[? "double_click_delay"] = real(str); 
+			PREF_SAVE();
+		})
+	]);
 	
-	pref[5][0] = "Default surface size";
-	pref[5][1] = "default_surface_side";
-	pref[5][2] = new textBox(TEXTBOX_INPUT.number, function(str) { 
-		PREF_MAP[? "default_surface_side"] = max(1, round(real(str)));
-		PREF_SAVE();
-	});
+	ds_list_add(pref_global, [
+		"Default surface size",
+		"default_surface_side",
+		new textBox(TEXTBOX_INPUT.number, function(str) { 
+			PREF_MAP[? "default_surface_side"] = max(1, round(real(str)));
+			PREF_SAVE();
+		})
+	]);
 	
-	pref[6][0] = "Node snapping (set to 1 for no snap)";
-	pref[6][1] = "node_snapping";
-	pref[6][2] = new textBox(TEXTBOX_INPUT.number, function(str) { 
-		PREF_MAP[? "node_snapping"] = max(1, round(real(str)));
-		PREF_SAVE();
-	});
+	ds_list_add(pref_global, [
+		"Node snapping (set to 1 for no snap)",
+		"node_snapping",
+		new textBox(TEXTBOX_INPUT.number, function(str) { 
+			PREF_MAP[? "node_snapping"] = max(1, round(real(str)));
+			PREF_SAVE();
+		})
+	]);
+	
+	//NODE
+	
+	ds_list_add(pref_node, [
+		"[Particle] Max particles",
+		"part_max_amount",
+		new textBox(TEXTBOX_INPUT.number, function(str) { 
+			PREF_MAP[? "part_max_amount"] = real(str); 
+			PREF_SAVE();
+		})
+	]);
+	
+	ds_list_add(pref_node, [
+		"[Separate shape] Max shapes",
+		"shape_separation_max",
+		new textBox(TEXTBOX_INPUT.number, function(str) { 
+			PREF_MAP[? "shape_separation_max"] = real(str); 
+			PREF_SAVE();
+		})
+	]);
+	
+	current_list = pref_global;
 	
 	sp_pref = new scrollPane(dialog_w - 160 - 32, dialog_h - 64 - 28, function(_y, _m) {
 		draw_clear_alpha(c_ui_blue_black, 0);
@@ -84,24 +115,26 @@ event_inherited();
 		var yy		= _y + 8;
 		var padd	= 6;
 		
-		for(var i = 0; i < array_length(pref); i++) {
-			var name = pref[i][0];
+		for(var i = 0; i < ds_list_size(current_list); i++) {
+			var _pref = current_list[| i];
+			var name = _pref[0];
+			
 			if(search_text == "" || string_pos(string_lower(search_text), string_lower(name)) > 0) {
 				if(i % 2 == 0) {
 					draw_sprite_stretched_ext(s_ui_panel_bg, 0, 0, yy - padd, dialog_w - 200, th + padd * 2, c_ui_blue_white, 1);
 				}
 				
 				draw_set_text(f_p1, fa_left, fa_center, c_white);
-				draw_text(8, yy + 17, pref[i][0]);
-				pref[i][2].active = FOCUS == self; 
-				pref[i][2].hover  = HOVER == self;
+				draw_text(8, yy + 17, _pref[0]);
+				_pref[2].active = FOCUS == self; 
+				_pref[2].hover  = HOVER == self;
 				
-				switch(instanceof(pref[i][2])) {
+				switch(instanceof(_pref[2])) {
 					case "textBox" :
-						pref[i][2].draw(x1 - 100, yy, 96, 34, PREF_MAP[? pref[i][1]], _m);
+						_pref[2].draw(x1 - 100, yy, 96, 34, PREF_MAP[? _pref[1]], _m);
 						break;
 					case "checkBox" :
-						pref[i][2].draw(x1 - 36, yy + 2, PREF_MAP[? pref[i][1]], _m);
+						_pref[2].draw(x1 - 36, yy + 2, PREF_MAP[? _pref[1]], _m);
 						break;
 				}
 				

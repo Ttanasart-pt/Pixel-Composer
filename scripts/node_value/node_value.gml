@@ -985,7 +985,9 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 			}
 		}
 		
-		PANEL_MENU.addNotiExtra("Node connect error : Node ID " + string(con_node + APPEND_ID) + " not found.");
+		var txt = "Node connect error : Node ID " + string(con_node + APPEND_ID) + " not found.";
+		log_warning("LOAD", txt);
+		PANEL_MENU.addNotiExtra(txt);
 		return true;
 	}
 }

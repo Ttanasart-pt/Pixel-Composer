@@ -16,6 +16,8 @@ function __part() constructor {
 	g   = 0;
 	wig = 0;
 	
+	boundary_data = [];
+	
 	fx  = 0;
 	fy  = 0;
 	
@@ -32,6 +34,7 @@ function __part() constructor {
 	
 	col      = -1;
 	alp      = 1;
+	alp_draw = alp;
 	alp_fade = 0;
 	
 	life       = 0;
@@ -72,6 +75,7 @@ function __part() constructor {
 	function setDraw(_col, _alp, _fade) {
 		col      = _col;
 		alp      = _alp;
+		alp_draw = _alp;
 		alp_fade = _fade;
 	}
 	
@@ -106,7 +110,7 @@ function __part() constructor {
 			rot = point_direction(xp, yp, x, y);
 		else
 			rot += rot_s;
-		alp = clamp(alp + alp_fade, 0, 1);
+		alp_draw = alp * eval_bezier_cubic(life / life_total, alp_fade[0], alp_fade[1], alp_fade[2], alp_fade[3]);
 		
 		if(life-- < 0) kill();
 	}
@@ -119,18 +123,45 @@ function __part() constructor {
 		if(!is_surface(ss)) return;
 		
 		var cc = (col == -1)? c_white : gradient_eval(col, 1 - life / life_total);
+		var _xx, _yy;
 		var s_w = surface_get_width(ss) * scx;
 		var s_h = surface_get_height(ss) * scy;
-		var _pp = point_rotate(-s_w / 2, -s_h / 2, 0, 0, rot);
-		_pp[0] = x + _pp[0];
-		_pp[1] = y + _pp[1];
 			
+		if(boundary_data == -1) {
+			var _pp = point_rotate(-s_w / 2, -s_h / 2, 0, 0, rot);
+			_xx = x + _pp[0];
+			_yy = y + _pp[1];
+		} else {
+			var ww = boundary_data[2] + boundary_data[0];
+			var hh = boundary_data[3] + boundary_data[1];
+			
+			var cx = (boundary_data[0] + boundary_data[2]) / 2;
+			var cy = (boundary_data[1] + boundary_data[3]) / 2;
+			
+			var _pp = point_rotate(-cx, -cy, 0, 0, rot);
+			
+			_xx = x + cx + _pp[0] * scx;
+			_yy = y + cy + _pp[1] * scy;
+		}
+		
 		if(exact) {
-			_pp[0] = round(_pp[0]);
-			_pp[1] = round(_pp[1]);
+			_xx = round(_xx);
+			_yy = round(_yy);
 		}
 			
-		draw_surface_ext_safe(ss, _pp[0], _pp[1], scx, scy, rot, cc, alp);
+		draw_surface_ext_safe(ss, _xx, _yy, scx, scy, rot, cc, alp_draw);
+	}
+	
+	function getPivot() {
+		if(boundary_data == -1) 
+			return [x, y];
+		
+		var ww = boundary_data[2] + boundary_data[0] * scx;
+		var hh = boundary_data[3] + boundary_data[1] * scy;
+		var cx = x + boundary_data[0] + ww / 2;
+		var cy = y + boundary_data[1] + hh / 2;
+		
+		return [cx, cy];
 	}
 }
 
@@ -192,7 +223,7 @@ function Node_Particle(_x, _y) : Node(_x, _y) constructor {
 	inputs[| 14] = nodeValue(14, "Alpha", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 1 ])
 		.setDisplay(VALUE_DISPLAY.range)
 		.setVisible(false);
-	inputs[| 15] = nodeValue(15, "Alpha over time", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
+	inputs[| 15] = nodeValue(15, "Alpha over time", self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, [1, 1, 1, 1])
 		.setVisible(false);
 	
 	inputs[| 16] = nodeValue(16, "Rotate by direction", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false)
@@ -234,13 +265,16 @@ function Node_Particle(_x, _y) : Node(_x, _y) constructor {
 		.setVisible(false, false);
 	
 	inputs[| 27] = nodeValue(27, "Scatter", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1)
-		.setDisplay(VALUE_DISPLAY.enum_button, [ "Uniform", "Random" ])
+		.setDisplay(VALUE_DISPLAY.enum_button, [ "Uniform", "Random", "Data" ])
 		.setVisible(false);
+	
+	inputs[| 28] = nodeValue(28, "Boundary data", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [])
+		.setVisible(true, false);
 	
 	input_display_list = [		
 		["Output",		true],	1,
 		["Sprite",		true],	0, 25,
-		["Spawn",		true],	17, 2, 3, 4, 5, 27, 6,
+		["Spawn",		true],	17, 2, 3, 4, 5, 27, 28, 6,
 		["Movement",	true],	7, 20, 8,
 		["Physics",		true],	21, 22,
 		["Rotation",	true],	16, 9, 10, 
@@ -307,20 +341,34 @@ function Node_Particle(_x, _y) : Node(_x, _y) constructor {
 		
 		for(var i = 0; i < PREF_MAP[? "part_max_amount"]; i++) {
 			if(!parts[| i].active) {
-				var _spr = _inSurf;
+				var _spr = _inSurf, _index = 0;
 				if(is_array(_inSurf)) {
-					if(_arr_type == 0)
-						_spr = _inSurf[irandom(array_length(_inSurf) - 1)];
-					else if(_arr_type == 1)
-						_spr = _inSurf[safe_mod(spawn_index, array_length(_inSurf))];
-					else if(_arr_type == 2)
+					if(_arr_type == 0) {
+						_index = irandom(array_length(_inSurf) - 1);
+						_spr = _inSurf[_index];						
+					} else if(_arr_type == 1) {
+						_index = safe_mod(spawn_index, array_length(_inSurf));
+						_spr = _inSurf[_index];
+					} else if(_arr_type == 2)
 						_spr = _inSurf;
 				}
 				var xx, yy;
 				
-				var sp = area_get_random_point(_spawn_area, _distrib, _scatter, spawn_index, _spawn_amount);
-				xx = sp[0];
-				yy = sp[1];
+				if(_scatter == 2) {
+					var _b_data = inputs[| 28].getValue();
+					if(!is_array(_b_data) || array_length(_b_data) <= 0) return;
+					var _b = _b_data[safe_mod(_index, array_length(_b_data))];
+					if(!is_array(_b) || array_length(_b) != 4) return;
+					
+					xx = array_safe_get(_spawn_area, 0) - array_safe_get(_spawn_area, 2);
+					yy = array_safe_get(_spawn_area, 1) - array_safe_get(_spawn_area, 3);
+					
+					parts[| i].boundary_data = _b;
+				} else {
+					var sp = area_get_random_point(_spawn_area, _distrib, _scatter, spawn_index, _spawn_amount);
+					xx = sp[0];
+					yy = sp[1];
+				}
 				
 				var _lif = random_range(_life[0], _life[1]);
 				
@@ -396,9 +444,11 @@ function Node_Particle(_x, _y) : Node(_x, _y) constructor {
 	
 	function step() {
 		var _inSurf = inputs[| 0].getValue();
+		var _scatt  = inputs[| 27].getValue();
 		
 		inputs[| 25].show_in_inspector = false;
 		inputs[| 26].show_in_inspector = false;
+		inputs[| 28].show_in_inspector = _scatt == 2;
 		
 		if(is_array(_inSurf)) {
 			inputs[| 25].show_in_inspector = true;
