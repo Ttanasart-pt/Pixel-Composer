@@ -171,6 +171,7 @@ function NodeObject(_name, _spr, _create, tags = []) constructor {
 	addNodeObject(generator, "Anisotropic noise",	s_node_noise_aniso,			"Node_Noise_Aniso",			Node_create_Noise_Aniso);
 	addNodeObject(generator, "Seperate shape",	    s_node_sepearte_shape,		"Node_Seperate_Shape",		Node_create_Seperate_Shape);
 	addNodeObject(generator, "Text",				s_node_text,				"Node_Text",				Node_create_Text);
+	addNodeObject(generator, "Pixel cloud",			s_node_pixel_cloud,			"Node_Pixel_Cloud",			Node_create_Pixel_Cloud);
 	
 	var render = ds_list_create();
 	addNodeCatagory("Render", render);

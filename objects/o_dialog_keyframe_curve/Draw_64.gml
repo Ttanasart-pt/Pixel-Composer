@@ -17,6 +17,6 @@ if !ready exit;
 		editWidget.active = FOCUS == self;
 		editWidget.hover  = HOVER == self;
 		editWidget.draw(dialog_x + 16, dialog_y + 48, dialog_w - 32, dialog_h - 48 - 16, 
-			value_target.inter_curve, value_target.curve_type, [mouse_mx, mouse_my]);
+			value_target.inter_curve, [mouse_mx, mouse_my]);
 	}
 #endregion

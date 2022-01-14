@@ -10,7 +10,8 @@ function Node_Gradient(_x, _y) : Node(_x, _y) constructor {
 	uniform_grad_blend = shader_get_uniform(sh_gradient, "gradient_blend");
 	uniform_grad = shader_get_uniform(sh_gradient, "gradient_color");
 	uniform_grad_time = shader_get_uniform(sh_gradient, "gradient_time");
-	uniform_key = shader_get_uniform(sh_gradient, "keys");
+	uniform_grad_key = shader_get_uniform(sh_gradient, "gradient_keys");
+	
 	uniform_type = shader_get_uniform(sh_gradient, "type");
 	uniform_center = shader_get_uniform(sh_gradient, "center");
 	
@@ -90,8 +91,9 @@ function Node_Gradient(_x, _y) : Node(_x, _y) constructor {
 			shader_set_uniform_i(uniform_grad_blend, ds_list_get(_gra_data, 0));
 			shader_set_uniform_f_array(uniform_grad, _grad_color);
 			shader_set_uniform_f_array(uniform_grad_time, _grad_time);
+			shader_set_uniform_i(uniform_grad_key, ds_list_size(_gra));
+			
 			shader_set_uniform_f_array(uniform_center, [_cnt[0] / _dim[0], _cnt[1] / _dim[1]]);
-			shader_set_uniform_i(uniform_key, ds_list_size(_gra));
 			shader_set_uniform_i(uniform_type, _typ);
 			
 			shader_set_uniform_f(uniform_angle, degtorad(_ang));

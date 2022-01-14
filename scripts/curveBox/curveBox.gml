@@ -1,6 +1,5 @@
-function curveBox(_onModify, _onTypeModify) constructor {
+function curveBox(_onModify) constructor {
 	onModify = _onModify;
-	typeModify = _onTypeModify;
 	
 	active = false;
 	hover  = false;
@@ -14,45 +13,13 @@ function curveBox(_onModify, _onTypeModify) constructor {
 		return _y + _h * clamp((y_max - val) / y_range, 0, 1);
 	}
 	
-	function draw(_x, _y, _w, _h, _data, _type, _m) {
+	function draw(_x, _y, _w, _h, _data, _m) {
 		static curve_amo = 3;
 		var curve_h = _h - 32;
 		
-		#region type
-			var _tw = 48;
-			var _th = 24;
-			var _ty = _y + _h -_th;
-			
-			var _gh = 16;
-			var _gy = _ty + 4;
-			
-			for( var i = 0; i < curve_amo; i++ )  {
-				var _tx = _x + (_tw + 8) * i;
-				
-				draw_set_color(i == _type? c_ui_blue_white : c_ui_blue_grey);
-				draw_rectangle(_tx, _ty, _tx + _tw, _ty + _th, 1);
-				
-				draw_set_color(c_ui_blue_ltgrey);
-				switch(i) {
-					case CURVE_TYPE.bezier : draw_line_bezier_cubic(_tx, _gy, _tw, -_gh, 0, 0, 1, 1); break;
-					case CURVE_TYPE.bounce : draw_line_bounce(_tx, _gy, _tw, -_gh, 0, 0.5, 0.5, 1); break;
-					case CURVE_TYPE.damping : draw_line_damping(_tx, _gy, _tw, -_gh, 0, 0.5, 0.5, 1); break;
-				}
-				
-				if(active && point_in_rectangle(_m[0], _m[1], _tx, _ty, _tx + _tw, _ty + _th)) {
-					if(mouse_check_button_pressed(mb_left)) 
-						typeModify(i);
-				}
-			}
-		#endregion
-		
 		#region curve
 			var _range;
-			switch(_type) {
-				case CURVE_TYPE.bezier : _range = bezier_range(_data[0], _data[1], _data[2], _data[3]); break;
-				case CURVE_TYPE.bounce : _range = bounce_range(_data[0], _data[1], _data[2], _data[3]); break;
-				case CURVE_TYPE.damping : _range = damp_range(_data[0], _data[1], _data[2], _data[3]); break;
-			}
+			_range = bezier_range(_data[0], _data[1], _data[2], _data[3]);
 			var y_min = min(0, _range[0]);
 			var y_max = max(1, _range[1]);
 			var y_range = y_max - y_min;
@@ -90,11 +57,7 @@ function curveBox(_onModify, _onTypeModify) constructor {
 			var _dh = -curve_h / y_range;
 		
 			draw_set_color(c_ui_blue_ltgrey);
-			switch(_type) {
-				case CURVE_TYPE.bezier : draw_line_bezier_cubic(_x, _dy, _w, _dh, _y0, _y1, _y2, _y3); break;
-				case CURVE_TYPE.bounce : draw_line_bounce(_x, _dy, _w, _dh, _y0, _y1, _y2, _y3); break;
-				case CURVE_TYPE.damping : draw_line_damping(_x, _dy, _w, _dh, _y0, _y1, _y2, _y3); break;
-			}
+			draw_line_bezier_cubic(_x, _dy, _w, _dh, _y0, _y1, _y2, _y3);
 			
 			var node_hovering = -1;
 			for(var i = 0; i < 4; i++) {

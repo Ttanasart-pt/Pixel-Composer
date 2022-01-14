@@ -356,8 +356,7 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 				visible = false;
 				display_type = VALUE_DISPLAY.curve;
 				editWidget = new curveBox(
-					function(_modified) { setValue(_modified); }, 
-					function(type) { value.curve_type = type; } );
+					function(_modified) { setValue(_modified); });
 				break;
 			case VALUE_TYPE.text :
 				editWidget = new textBox(TEXTBOX_INPUT.text, function(str) { 

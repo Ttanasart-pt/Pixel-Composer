@@ -289,9 +289,9 @@ function Panel_Inspector(_panel) : PanelContent(_panel) constructor {
 									hh += 68 + padd;
 									break;
 								case VALUE_TYPE.curve :
-									jun.editWidget.draw(32, _hsy, w - 80, 160, jun.showValue(), jun.value.curve_type, _m);
-									_hey = _hsy + 168;
-									hh += 168 + padd;
+									jun.editWidget.draw(32, _hsy, w - 80, 160, jun.showValue(), _m);
+									_hey = _hsy + 136;
+									hh += 136 + padd;
 									break;
 								case VALUE_TYPE.text :
 									jun.editWidget.draw(32, _hsy, w - 80, 34, jun.showValue(), _m, jun.display_type);

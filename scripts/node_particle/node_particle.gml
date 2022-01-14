@@ -37,9 +37,6 @@ function __part() constructor {
 	life       = 0;
 	life_total = 0;
 	
-	surf_w = 1;
-	surf_h = 1;
-	
 	anim_speed = 1;
 	
 	is_loop = false;
@@ -53,12 +50,8 @@ function __part() constructor {
 		
 		life = _life;
 		life_total = life;
-		
-		if(is_array(_surf)) {
-			surf_w = surface_get_width(_surf[0]);
-			surf_h = surface_get_height(_surf[0]);
-		}
 	}
+	
 	function setPhysic(_sx, _sy, _ac, _g, _wig) {
 		sx  = _sx;
 		sy  = _sy;
@@ -123,12 +116,11 @@ function __part() constructor {
 		var ss = surf;
 		if(is_array(surf))
 			ss = surf[safe_mod((life_total - life) * anim_speed, array_length(surf))];
-		
-		if(!ss) return;
+		if(!is_surface(ss)) return;
 		
 		var cc = (col == -1)? c_white : gradient_eval(col, 1 - life / life_total);
-		var s_w = surf_w * scx;
-		var s_h = surf_h * scy;
+		var s_w = surface_get_width(ss) * scx;
+		var s_h = surface_get_height(ss) * scy;
 		var _pp = point_rotate(-s_w / 2, -s_h / 2, 0, 0, rot);
 		_pp[0] = x + _pp[0];
 		_pp[1] = y + _pp[1];
@@ -353,6 +345,7 @@ function Node_Particle(_x, _y) : Node(_x, _y) constructor {
 				parts[| i].setPhysic(_vx, _vy, _acc, _grav, _wigg);
 				parts[| i].setTransform(_scx, _scy, _scale_speed[0], _scale_speed[1], _rot, _rotation_speed, _follow);
 				parts[| i].setDraw(_color, _alp, _fade);
+				setUpPart(parts[| i]);
 				spawn_index = safe_mod(spawn_index + 1, PREF_MAP[? "part_max_amount"]);
 				
 				if(_loop && ANIMATOR.current_frame + _lif > ANIMATOR.frames_total)
@@ -363,6 +356,8 @@ function Node_Particle(_x, _y) : Node(_x, _y) constructor {
 			}
 		}
 	}
+	
+	function setUpPart(part) {}
 	
 	function reset() {
 		spawn_index = 0;
@@ -447,7 +442,11 @@ function Node_Particle(_x, _y) : Node(_x, _y) constructor {
 	
 	static drawOverlay = function(_active, _x, _y, _s, _mx, _my) {
 		inputs[| 4].drawOverlay(_active, _x, _y, _s, _mx, _my);
+		if(onDrawOverlay != -1)
+			onDrawOverlay(_active, _x, _y, _s, _mx, _my);
 	}
+	
+	static onDrawOverlay = -1;
 	
 	function render() {
 		var _dim		= inputs[| 1].getValue();

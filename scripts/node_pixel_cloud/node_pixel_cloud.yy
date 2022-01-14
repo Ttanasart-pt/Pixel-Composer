@@ -6,7 +6,7 @@
     "path": "folders/nodes/data/generator.yy",
   },
   "resourceVersion": "1.0",
-  "name": "node_particle_sampler",
+  "name": "node_pixel_cloud",
   "tags": [],
   "resourceType": "GMScript",
 }

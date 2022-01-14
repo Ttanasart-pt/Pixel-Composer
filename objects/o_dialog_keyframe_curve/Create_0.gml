@@ -16,6 +16,5 @@ event_inherited();
 	}
 	
 	editWidget = new curveBox(
-		function(_modified) { value_target.inter_curve = _modified; },
-		function(type) { value_target.curve_type = type; });
+		function(_modified) { value_target.inter_curve = _modified; });
 #endregion
