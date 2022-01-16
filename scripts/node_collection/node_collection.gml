@@ -28,8 +28,10 @@ function Node_Collection(_x,  _y) : Node(_x,  _y) constructor {
 	}
 	
 	function step() {
+		render_time = 0;
 		for(var i = 0; i < ds_list_size(nodes); i++) {
 			nodes[| i].step();
+			render_time += nodes[| i].render_time;
 		}
 		
 		if(PANEL_GRAPH.node_focus == self && FOCUS == PANEL_GRAPH.panel && DOUBLE_CLICK) {

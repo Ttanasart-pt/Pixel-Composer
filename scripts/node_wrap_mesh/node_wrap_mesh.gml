@@ -20,7 +20,7 @@ function Node_Mesh_Warp(_x, _y) : Node(_x, _y) constructor {
 		.setDisplay(VALUE_DISPLAY.slider, [ 0, 1, 0.01 ] );
 	
 	inputs[| 3] = nodeValue(3, "Mesh", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.button, [ function() { setTriangle(); update(); }, "Generate"] );
+		.setDisplay(VALUE_DISPLAY.button, [ function() { setTriangle(); doUpdate(); }, "Generate"] );
 	
 	control_index = ds_list_size(inputs);
 	

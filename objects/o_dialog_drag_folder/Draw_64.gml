@@ -35,7 +35,7 @@ if !ready exit;
 		if(target) {
 			var paths = paths_to_array(dir_paths, dir_recursive, dir_filter);
 			target.updatePaths(paths);
-			target.update();
+			target.doUpdate();
 		}
 		instance_destroy();
 	}

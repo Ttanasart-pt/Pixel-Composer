@@ -85,6 +85,15 @@ event_inherited();
 		})
 	]);
 	
+	ds_list_add(pref_global, [
+		"Show node render time",
+		"node_show_time",
+		new checkBox(function() { 
+			PREF_MAP[? "node_show_time"] = !PREF_MAP[? "node_show_time"]; 
+			PREF_SAVE();
+		})
+	]);
+	
 	//NODE
 	
 	ds_list_add(pref_node, [

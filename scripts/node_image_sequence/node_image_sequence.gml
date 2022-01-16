@@ -8,7 +8,7 @@ function Node_create_Image_Sequence(_x, _y) {
 	var node = new Node_Image_Sequence(_x, _y);
 	var paths = paths_to_array(path);
 	node.inputs[| 0].setValue(paths);
-	node.update();
+	node.doUpdate();
 	
 	ds_list_add(PANEL_GRAPH.nodes_list, node);
 	return node;
@@ -17,7 +17,7 @@ function Node_create_Image_Sequence(_x, _y) {
 function Node_create_Image_Sequence_path(_x, _y, _path) {
 	var node = new Node_Image_Sequence(_x, _y);
 	node.inputs[| 0].setValue(_path);
-	node.update();
+	node.doUpdate();
 	
 	ds_list_add(PANEL_GRAPH.nodes_list, node);
 	return node;
@@ -82,7 +82,7 @@ function Node_Image_Sequence(_x, _y) : Node(_x, _y) constructor {
 		
 		var paths = paths_to_array(path);
 		if(updatePaths(paths)) {
-			update();
+			doUpdate();
 			return true;
 		}
 		

@@ -27,6 +27,7 @@
 	PREF_MAP[? "panel_collection"] = true;
 	
 	PREF_MAP[? "node_snapping"] = 32;
+	PREF_MAP[? "node_show_time"] = true;
 	
 	PREF_MAP[? "shape_separation_max"] = 32;
 #endregion

@@ -175,7 +175,7 @@ function LOAD_PATH(path, readonly = false) {
 		var _node = NODE_MAP[? _key];
 		if(_node.is_dynamic_output) {
 			_node.connect();
-			_node.update();
+			_node.doUpdate();
 		}
 		
 		_key = ds_map_find_next(NODE_MAP, _key);

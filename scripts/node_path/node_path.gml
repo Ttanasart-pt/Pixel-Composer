@@ -191,7 +191,7 @@ function Node_Path(_x, _y) : Node(_x, _y) constructor {
 				
 				if(_active && mouse_check_button_pressed(mb_left)) {
 					ds_list_delete(inputs, list_start + anchor_hover);
-					update();
+					doUpdate();
 				}
 			} else {
 				draw_sprite(s_cursor_path_move, 0, _mx + 16, _my + 16);

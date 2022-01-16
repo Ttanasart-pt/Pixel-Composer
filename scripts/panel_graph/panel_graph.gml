@@ -201,6 +201,10 @@ function Panel_Graph(_panel) : PanelContent(_panel) constructor {
 		var gr_x = graph_x * graph_s;
 		var gr_y = graph_y * graph_s;
 		
+		for(var i = 0; i < ds_list_size(nodes_list); i++) {
+			nodes_list[| i].preDraw(gr_x, gr_y, graph_s);
+		}
+		
 		#region hover
 			node_hovering = noone;
 			for(var i = 0; i < ds_list_size(nodes_list); i++) {

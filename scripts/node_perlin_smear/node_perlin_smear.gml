@@ -55,5 +55,5 @@ function Node_Perlin_Smear(_x, _y) : Node(_x, _y) constructor {
 		shader_reset();
 		surface_reset_target();
 	}
-	update();
+	doUpdate();
 }

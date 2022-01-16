@@ -46,7 +46,7 @@ function renderAll() {
 				
 		if(_ready) {
 			if(!rendering.rendered && (LOADING || APPENDING || rendering.auto_update)) 
-				rendering.update();
+				rendering.doUpdate();
 		} else {
 			ds_queue_enqueue(render_q, rendering);
 		}
@@ -119,9 +119,9 @@ function renderNodeBackward(_node) {
 			_rendering.rendered = true;
 			if(_rendering.use_cache) {
 				if(!_rendering.recoverCache())
-					_rendering.update();
+					_rendering.doUpdate();
 			} else
-				_rendering.update();
+				_rendering.doUpdate();
 			ds_stack_pop(render_st);
 		}
 	}

@@ -24,7 +24,7 @@ function Node_Surface_data(_x, _y) : Node(_x, _y) constructor {
 			var len = array_length(_insurf);
 			var _dim = array_create(len);
 			
-			for( var i = 0; i < len; i++ )  {
+			for( var i = 0; i < len; i++ ) {
 				_dim[i][0] = surface_get_width(_insurf[i]);
 				_dim[i][1] = surface_get_height(_insurf[i]);
 			}
@@ -38,5 +38,5 @@ function Node_Surface_data(_x, _y) : Node(_x, _y) constructor {
 		
 		outputs[| 0].setValue([ surface_get_width(_insurf), surface_get_height(_insurf) ]);
 	}
-	update();
+	doUpdate();
 }

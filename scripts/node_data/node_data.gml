@@ -48,6 +48,7 @@ function Node(_x, _y) constructor {
 	rendered        = false;
 	auto_update     = true;
 	update_on_frame = false;
+	render_time		= 0;
 	
 	use_cache		= false;
 	cached_output	= [];
@@ -122,8 +123,10 @@ function Node(_x, _y) constructor {
 	static focusStep = function() {}
 	
 	static doUpdate = function() {
+		var t = get_timer();
 		update();
 		rendered = true;
+		render_time = get_timer() - t;
 	}
 	
 	static onValueUpdate = function(index) {}
@@ -156,6 +159,38 @@ function Node(_x, _y) constructor {
 		return point_in_rectangle(_mx, _my, xx, yy, xx + w, yy + h);
 	}
 	
+	static preDraw = function(_x, _y, _s) {
+		var yy    = y * _s + _y;
+		
+		var _in = yy + junction_shift_y * _s;
+		var amo = input_display_list == -1? ds_list_size(inputs) : max(ds_list_size(inputs), array_length(input_display_list));
+		
+		for(var i = 0; i < amo; i++) {
+			if(input_display_list == -1)
+				jun = inputs[| i];
+			else {
+				var jun_list_arr = input_display_list[i];
+				if(is_array(jun_list_arr)) continue;
+				jun = inputs[| input_display_list[i]];
+			}
+			
+			if(jun.isVisible()) {
+				jun.y = _in;
+				_in += 24 * _s;
+			}
+		}
+		
+		var _in = yy + junction_shift_y * _s;
+		for(var i = 0; i < ds_list_size(outputs); i++) {
+			var jun = outputs[| i];
+			
+			if(jun.isVisible()) {
+				jun.y = _in;
+				_in += 24 * _s;
+			}
+		}
+	}
+	
 	static drawNodeBase = function(xx, yy, _s) {
 		draw_sprite_stretched_ext(bg_spr, 0, xx, yy, w * _s, h * _s, color, 0.75);
 	}
@@ -180,10 +215,8 @@ function Node(_x, _y) constructor {
 	static drawJunctions = function(_x, _y, _mx, _my, _s) {
 		var ss    = max(0.5, _s);
 		var xx    = x * _s + _x;
-		var yy    = y * _s + _y;
 		var hover = noone;
 		
-		var _in = yy + junction_shift_y * _s;
 		var amo = input_display_list == -1? ds_list_size(inputs) : max(ds_list_size(inputs), array_length(input_display_list));
 		
 		var _show_in = show_input_name;
@@ -193,10 +226,8 @@ function Node(_x, _y) constructor {
 		show_input_name = false;
 		show_output_name = false;
 		
+		var jx  = xx;
 		for(var i = 0; i < amo; i++) {
-			var jx  = xx;
-			var jy  = _in;
-			
 			if(input_display_list == -1)
 				jun = inputs[| i];
 			else {
@@ -205,9 +236,9 @@ function Node(_x, _y) constructor {
 				jun = inputs[| input_display_list[i]];
 			}
 			
+			var jy  = jun.y;
+			
 			if(jun.isVisible()) {
-				jun.y = jy;
-				
 				if(point_in_rectangle(_mx, _my, jx - 12 * _s, jy - 12 * _s, jx + 12 * _s, jy + 12 * _s) || DEBUG) {
 					_draw_cc = c_white;
 					hover = jun;
@@ -222,19 +253,15 @@ function Node(_x, _y) constructor {
 					draw_set_text(f_p1, fa_right, fa_center, _draw_cc);
 					draw_text(jx - 12 * _s, jy, jun.name);
 				}
-				
-				_in += 24 * _s;
 			}
 		}
 		
-		var _in = yy + junction_shift_y * _s;
+		var jx = xx + w * _s;
 		for(var i = 0; i < ds_list_size(outputs); i++) {
-			var jx = xx + w * _s;
-			var jy = _in;
 			var jun = outputs[| i];
 			
 			if(jun.isVisible()) {
-				jun.y = jy;
+				var jy  = jun.y;
 				
 				if(point_in_rectangle(_mx, _my, jx - 12 * _s, jy - 12 * _s, jx + 12 * _s, jy + 12 * _s) || DEBUG) {
 					_draw_cc = c_white;
@@ -254,8 +281,6 @@ function Node(_x, _y) constructor {
 					draw_set_text(f_p1, fa_left, fa_center, _draw_cc);
 					draw_text(jx + 12 * _s, jy, jun.name);
 				}
-				
-				_in += 24 * _s;
 			}
 		}
 		
@@ -312,7 +337,28 @@ function Node(_x, _y) constructor {
 			
 			if(_s * w > 48) {
 				draw_set_text(_s >= 1? f_p1 : f_p2, fa_center, fa_top, c_ui_blue_grey);
-				draw_text(xx + w * _s / 2, yy + h * _s + 4 * _s, string(pw) + " x " + string(ph) + "px");
+				var tx = xx + w * _s / 2;
+				var ty = yy + (h + 4) * _s;
+				draw_text(round(tx), round(ty), string(pw) + " x " + string(ph) + "px");
+				
+				if(PREF_MAP[? "node_show_time"]) {
+					ty += string_height("l")
+					var rt, unit;
+					if(render_time < 1000) {
+						rt = round(render_time / 10) * 10;
+						unit = "us";
+						draw_set_color(c_ui_lime);
+					} else if(render_time < 1000000) {
+						rt = round(render_time / 1000);
+						unit = "ms";
+						draw_set_color(c_ui_orange);
+					} else {
+						rt = round(render_time / 1000000);
+						unit = "s";
+						draw_set_color(c_ui_red);
+					}
+					draw_text(round(tx), round(ty), string(rt) + " " + unit);
+				}
 			}
 		}
 	}

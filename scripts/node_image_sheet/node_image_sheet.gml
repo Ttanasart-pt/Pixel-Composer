@@ -66,7 +66,7 @@ function Node_Image_Sheet(_x, _y) : Node(_x, _y) constructor {
 			inputs[| 2].setValue(amo);
 			inputs[| 3].setValue(row);
 		
-			update(); 
+			doUpdate(); 
 		}, "Generate"] );
 	
 	input_display_list = [

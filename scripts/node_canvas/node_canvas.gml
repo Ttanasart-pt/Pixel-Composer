@@ -521,7 +521,7 @@ function Node_Canvas(_x, _y) : Node(_x, _y) constructor {
 		} else
 			surface_size_to(_outSurf, surface_valid(_dim[0]), surface_valid(_dim[1]));
 	}
-	update();
+	doUpdate();
 	
 	static doSerialize = function(_map) {
 		_map[? "surface"] = buffer_base64_encode(surface_buffer, 0, buffer_get_size(surface_buffer));

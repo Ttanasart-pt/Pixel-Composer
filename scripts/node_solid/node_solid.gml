@@ -29,5 +29,5 @@ function Node_Solid(_x, _y) : Node(_x, _y) constructor {
 			draw_clear(_col);
 		surface_reset_target();
 	}
-	update();
+	doUpdate();
 }

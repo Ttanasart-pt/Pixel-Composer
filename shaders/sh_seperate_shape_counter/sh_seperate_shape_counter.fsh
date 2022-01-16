@@ -8,21 +8,22 @@ uniform vec2 dimension;
 uniform sampler2D surface;
 
 void main() {
+	vec4 zero = vec4(0.);
 	vec2 pxPos = v_vTexcoord * vec2(32., 1.);
 	
 	int amo = 0;
-	vec2 list[32];
+	vec4 list[32];
 	
 	for(float i = 0.; i <= dimension.x; i++)
 	for(float j = 0.; j <= dimension.y; j++) {
 		if(amo > 32) break;
 		vec4 col = texture2D( surface, vec2(i, j) / dimension );
 		
-		if(col.a > 0.) {
+		if(col != zero) {
 			bool dup = false;
 			
 			for(int k = 0; k < amo; k++) {
-				if(col.rg == list[k]) {
+				if(col == list[k]) {
 					dup = true;
 					break;
 				}
@@ -33,7 +34,7 @@ void main() {
 					amo = 999;
 					break;
 				}
-				list[amo] = col.rg;
+				list[amo] = col;
 				amo++;
 			}
 		}

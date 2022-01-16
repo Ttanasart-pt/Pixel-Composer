@@ -13,7 +13,7 @@ function Node_3D_Obj(_x, _y) : Node(_x, _y) constructor {
 	inputs[| 1] = nodeValue(1, "Generate", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.button, [ function() { 
 			updateObj();
-			update(); 
+			doUpdate(); 
 		}, "Generate"] );
 	
 	inputs[| 2] = nodeValue(2, "Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, def_surf_size2, VALUE_TAG.dimension_2d)

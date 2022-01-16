@@ -30,11 +30,7 @@ function Node_Seperate_Shape(_x, _y) : Node(_x, _y) constructor {
 	function get_color_buffer(_x, _y, w, h) {
 		buffer_seek(surface_buffer, buffer_seek_start, (w * _y + _x) * 4);
 		var c = buffer_read(surface_buffer, buffer_u32);
-		var _r =  c & 255;
-		var _g = (c >> 8) & 255;
-		var _b = (c >> 16) & 255;
-		
-		return make_color_rgb(_r, _g, _b);
+		return c;
 	}
 	
 	_prev_type = -1;
@@ -42,6 +38,7 @@ function Node_Seperate_Shape(_x, _y) : Node(_x, _y) constructor {
 	function update() {
 		var _inSurf = inputs[| 0].getValue();
 		var _out_type = inputs[| 1].getValue();
+		var t = current_time;
 		
 		if(!is_surface(_inSurf)) return;
 		
@@ -49,8 +46,8 @@ function Node_Seperate_Shape(_x, _y) : Node(_x, _y) constructor {
 		var hh = surface_get_height(_inSurf);
 		
 		for(var i = 0; i < 2; i++) {
-			if(!is_surface(temp_surf[i])) temp_surf[i] = surface_create(surface_get_width(_inSurf), surface_get_height(_inSurf));
-			else surface_size_to(temp_surf[i], surface_get_width(_inSurf), surface_get_height(_inSurf));
+			if(!is_surface(temp_surf[i])) temp_surf[i] = surface_create(ww, hh);
+			else surface_size_to(temp_surf[i], ww, hh);
 			
 			surface_set_target(temp_surf[i]);
 			draw_clear_alpha(0, 0);
@@ -64,10 +61,11 @@ function Node_Seperate_Shape(_x, _y) : Node(_x, _y) constructor {
 		shader_reset();
 		
 		shader_set(sh_seperate_shape_ite);
-		shader_set_uniform_f_array(uniform_it_dim, [ surface_get_width(_inSurf), surface_get_height(_inSurf) ]);
+		shader_set_uniform_f_array(uniform_it_dim, [ ww, hh ]);
 		shader_reset();
 		
-		var res_index, iteration = surface_get_width(_inSurf) + surface_get_height(_inSurf);
+		t = get_timer();
+		var res_index = 0, iteration = ww + hh;
 		for(var i = 0; i <= iteration; i++) {
 			var bg = i % 2;
 			var fg = (i + 1) % 2;
@@ -83,18 +81,22 @@ function Node_Seperate_Shape(_x, _y) : Node(_x, _y) constructor {
 			
 			res_index = bg;
 		}
+		//show_debug_message("iteration time : " + string(get_timer() - t));
 		
+		t = get_timer();
 		var _pixel_surface = surface_create(PREF_MAP[? "shape_separation_max"], 1);
 		surface_set_target(_pixel_surface);
 		draw_clear_alpha(0, 0);
 		BLEND_ADD
 			shader_set(sh_seperate_shape_counter);
 			texture_set_stage(shader_get_sampler_index(sh_seperate_shape_counter, "surface"), surface_get_texture(temp_surf[res_index]));
-			shader_set_uniform_f_array(shader_get_uniform(sh_seperate_shape_counter, "dimension"), [ surface_get_width(_inSurf), surface_get_height(_inSurf) ]);
+			shader_set_uniform_f_array(shader_get_uniform(sh_seperate_shape_counter, "dimension"), [ ww, hh ]);
 				draw_sprite_ext(s_fx_pixel, 0, 0, 0, PREF_MAP[? "shape_separation_max"], 1, 0, c_white, 1);
 			shader_reset();
 		BLEND_NORMAL
 		surface_reset_target();
+		
+		//show_debug_message("count time : " + string(get_timer() - t));
 		
 		var px = surface_getpixel(_pixel_surface, 0, 0);
 		
@@ -119,13 +121,12 @@ function Node_Seperate_Shape(_x, _y) : Node(_x, _y) constructor {
 			}
 			
 			var _boundary = array_create(px);
-			var _sw = surface_get_width(temp_surf[res_index]);
-			var _sh = surface_get_height(temp_surf[res_index]);
 			
 			buffer_delete(surface_buffer);
-			surface_buffer = buffer_create(_sw * _sh * 4, buffer_fixed, 2);
+			surface_buffer = buffer_create(ww * hh * 4, buffer_fixed, 2);
 			buffer_get_surface(surface_buffer, temp_surf[res_index], 0);
-							
+			
+			t = get_timer();
 			for(var i = 0; i < px; i++) {
 				if(_out_type == 0) {
 					if(i >= ds_list_size(outputs)) {
@@ -143,24 +144,31 @@ function Node_Seperate_Shape(_x, _y) : Node(_x, _y) constructor {
 				draw_clear_alpha(0, 0);
 				BLEND_ADD
 					shader_set(sh_seperate_shape_sep);
-					var cc = surface_getpixel(_pixel_surface, 1 + i, 0);
+					var ccx = surface_getpixel_ext(_pixel_surface, 1 + i, 0);
+					var alpha = (ccx >> 24) & 255;
+					var blue = (ccx >> 16) & 255;
+					var green = (ccx >> 8) & 255;
+					var red = ccx & 255;
 					
-					#region boundary search (brute force)
+					#region boundary search
 						if(_out_type == 1) {
-							var t = _sh;
-							var b = 0;
-							var l = 0;
-							var r = _sw;
-						
-							for( var j = 0; j < surface_get_width(_inSurf); j++ ) {
-								for( var k = 0; k < surface_get_height(_inSurf); k++ ) {
-									var _sc = get_color_buffer(j, k, _sw, _sh);
-									if(_sc == cc) {
-										t = min(t, k);
-										b = max(b, k);
-										l = max(l, j);
-										r = min(r, j);
-									}
+							var min_x = floor(red / 255 * ww);
+							var min_y = floor(green / 255 * hh);
+							var max_x = ceil(blue / 255 * ww);
+							var max_y = ceil(alpha / 255 * hh);
+							var t = max_y;
+							var b = min_y;
+							var l = max_x;
+							var r = min_x;
+							
+							for( var j = min_x; j < max_x; j++ ) 
+							for( var k = min_y; k < max_y; k++ ) {
+								var _sc = get_color_buffer(j, k, ww, hh);
+								if(_sc == ccx) {
+									t = min(t, k);
+									b = max(b, k);
+									l = min(l, j);
+									r = max(r, j);
 								}
 							}
 							
@@ -169,7 +177,7 @@ function Node_Seperate_Shape(_x, _y) : Node(_x, _y) constructor {
 					#endregion
 					
 					texture_set_stage(shader_get_sampler_index(sh_seperate_shape_sep, "original"), surface_get_texture(_inSurf));
-					shader_set_uniform_f_array(shader_get_uniform(sh_seperate_shape_sep, "color"), [ color_get_red(cc), color_get_green(cc) ]);
+					shader_set_uniform_f(shader_get_uniform(sh_seperate_shape_sep, "color"), red, green, blue, alpha);
 					draw_surface_safe(temp_surf[res_index], 0, 0);
 					shader_reset();
 				BLEND_NORMAL
@@ -180,5 +188,7 @@ function Node_Seperate_Shape(_x, _y) : Node(_x, _y) constructor {
 				outputs[| 2].setValue(_boundary);	
 			}
 		}
+		
+		//show_debug_message("separate time : " + string(get_timer() - t));
 	}
 }

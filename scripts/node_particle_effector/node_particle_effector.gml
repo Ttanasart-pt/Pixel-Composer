@@ -209,7 +209,7 @@ function Node_Particle_Effector(_x, _y) : Node(_x, _y) constructor {
 		var jun = outputs[| 0];
 		for(var j = 0; j < ds_list_size(jun.value_to); j++) {
 			if(jun.value_to[| j].value_from == jun) {
-				jun.value_to[| j].node.update();
+				jun.value_to[| j].node.doUpdate();
 			}
 		}
 		

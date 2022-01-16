@@ -16,7 +16,7 @@ function __part() constructor {
 	g   = 0;
 	wig = 0;
 	
-	boundary_data = [];
+	boundary_data = -1;
 	
 	fx  = 0;
 	fy  = 0;
@@ -368,6 +368,8 @@ function Node_Particle(_x, _y) : Node(_x, _y) constructor {
 					var sp = area_get_random_point(_spawn_area, _distrib, _scatter, spawn_index, _spawn_amount);
 					xx = sp[0];
 					yy = sp[1];
+					
+					parts[| i].boundary_data = -1;
 				}
 				
 				var _lif = random_range(_life[0], _life[1]);
@@ -422,7 +424,7 @@ function Node_Particle(_x, _y) : Node(_x, _y) constructor {
 		var jun = outputs[| 1];
 		for(var j = 0; j < ds_list_size(jun.value_to); j++) {
 			if(jun.value_to[| j].value_from == jun) {
-				jun.value_to[| j].node.update();
+				jun.value_to[| j].node.doUpdate();
 			}
 		}
 		
@@ -536,6 +538,6 @@ function Node_Particle(_x, _y) : Node(_x, _y) constructor {
 	function update() {
 		reset();
 	}
-	update();
+	doUpdate();
 	render();
 }

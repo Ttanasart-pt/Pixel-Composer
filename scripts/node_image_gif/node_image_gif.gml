@@ -7,7 +7,7 @@ function Node_create_Image_gif(_x, _y) {
 	
 	var node = new Node_Image_gif(_x, _y);
 	node.inputs[| 0].setValue(path);
-	node.update();
+	node.doUpdate();
 	
 	ds_list_add(PANEL_GRAPH.nodes_list, node);
 	return node;
@@ -18,7 +18,7 @@ function Node_create_Image_gif_path(_x, _y, path) {
 	
 	var node = new Node_Image_gif(_x, _y);
 	node.inputs[| 0].setValue(path);
-	node.update();
+	node.doUpdate();
 	
 	ds_list_add(PANEL_GRAPH.nodes_list, node);
 	return node;	
@@ -52,7 +52,7 @@ function Node_Image_gif(_x, _y) : Node(_x, _y) constructor {
 	
 	on_dragdrop_file = function(path) {
 		if(updatePaths(path)) {
-			update();
+			doUpdate();
 			return true;
 		}
 		
@@ -94,7 +94,7 @@ function Node_Image_gif(_x, _y) : Node(_x, _y) constructor {
 		if(loading == 2 && spr_builder != noone) {
 			if(spr_builder.building()) {
 				spr = spr_builder._spr;
-				update();
+				doUpdate();
 				loading = 0;
 				delete spr_builder;
 				

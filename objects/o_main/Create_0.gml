@@ -80,6 +80,7 @@ display_reset(0, 1);
 				setPath(path);	
 			}
 		} else {
+			PANEL_GRAPH.stepBegin();
 			var ext = filename_ext(path);
 			
 			switch(ext) {

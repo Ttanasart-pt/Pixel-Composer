@@ -7,7 +7,7 @@ function Node_create_Image(_x, _y) {
 	
 	var node = new Node_Image(_x, _y);
 	node.inputs[| 0].setValue(path);
-	node.update();
+	node.doUpdate();
 	
 	ds_list_add(PANEL_GRAPH.nodes_list, node);
 	return node;
@@ -18,7 +18,7 @@ function Node_create_Image_path(_x, _y, path) {
 	
 	var node = new Node_Image(_x, _y);
 	node.inputs[| 0].setValue(path);
-	node.update();
+	node.doUpdate();
 	
 	ds_list_add(PANEL_GRAPH.nodes_list, node);
 	return node;	
@@ -46,7 +46,7 @@ function Node_Image(_x, _y) : Node(_x, _y) constructor {
 	
 	on_dragdrop_file = function(path) {
 		if(updatePaths(path)) {
-			update();
+			doUpdate();
 			return true;
 		}
 		

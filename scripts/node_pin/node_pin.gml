@@ -25,5 +25,5 @@ function Node_Pin(_x, _y) : Node(_x, _y) constructor {
 			outputs[| 0].value_from = inputs[| 0].value_from;
 		}
 	}
-	update();
+	doUpdate();
 }

@@ -114,7 +114,7 @@ event_inherited();
 				array_delete(arr, dragging, 1);
 				array_insert(arr, dragging < inb_hover? inb_hover - 1 : inb_hover, val);
 				target.inputs[| 0].setValue(arr);
-				target.update();
+				target.doUpdate();
 				dragging = -1;
 			}
 		}

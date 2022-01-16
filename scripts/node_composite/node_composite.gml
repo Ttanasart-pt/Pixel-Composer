@@ -56,7 +56,7 @@ function Node_Composite(_x, _y) : Node_Processor(_x, _y) constructor {
 			.setDisplay(VALUE_DISPLAY.vector)
 			.setVisible(false);
 		
-		array_push(input_display_list, ["Surface " + string(_s), false], index + 0, index + 1, index + 2, index + 3);
+		array_push(input_display_list, ["Surface " + string(_s), true], index + 0, index + 1, index + 2, index + 3);
 	}
 	createNewSurface();
 	

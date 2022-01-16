@@ -7,23 +7,24 @@ varying vec4 v_vColour;
 uniform vec2 dimension;
 
 void main() {
-	vec2 _index = v_vTexcoord;
-	
+	vec4 zero = vec4(0.);
 	vec4 col = texture2D( gm_BaseTexture, v_vTexcoord );
-	float bright = dot(col.rgb, vec3(0.2126, 0.7152, 0.0722));
 	
-	if(col.a > 0. && bright > 0.) {
+	if(col != zero) {
+		vec2 _index_min = v_vTexcoord;
+		vec2 _index_max = v_vTexcoord;
+	
 		for(float i = -1.; i <= 1.; i++)
 		for(float j = -1.; j <= 1.; j++) {
-			vec4 _col = texture2D( gm_BaseTexture, v_vTexcoord + vec2(i, j) / dimension );
-			float _bright = dot(_col.rgb, vec3(0.2126, 0.7152, 0.0722));
-			if(_col.a > 0. && abs(bright - _bright) < 0.1) {
-				_index.x = min(_index.x, _col.r);
-				_index.y = min(_index.y, _col.g);
+			vec4 _col = texture2D( gm_BaseTexture, clamp(v_vTexcoord + vec2(i, j) / dimension, 0., 1.) );
+			if(_col != zero) {
+				_index_min.x = min(_index_min.x, _col.r);
+				_index_min.y = min(_index_min.y, _col.g);
+				
+				_index_max.x = max(_index_max.x, _col.b);
+				_index_max.y = max(_index_max.y, _col.a);
 			}
 		}
-	    gl_FragColor = vec4(_index, 1., 1.);
-	} else {
-		gl_FragColor = vec4(0.);	
+	    gl_FragColor = vec4(_index_min.x, _index_min.y, _index_max.x, _index_max.y );
 	}
 }

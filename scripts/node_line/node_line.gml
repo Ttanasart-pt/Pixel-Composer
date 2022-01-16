@@ -187,5 +187,5 @@ function Node_Line(_x, _y) : Node(_x, _y) constructor {
 			}
 		surface_reset_target();
 	}
-	update();
+	doUpdate();
 }

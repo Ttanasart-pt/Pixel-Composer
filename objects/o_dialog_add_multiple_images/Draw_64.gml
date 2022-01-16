@@ -21,6 +21,7 @@ if !ready exit;
 		var xx    = dialog_x + 16 + 16 + i * (grid_size + grid_space);
 		var yy    = dialog_y + 44 + 16;
 		
+		PANEL_GRAPH.stepBegin();
 		var nx = PANEL_GRAPH.mouse_grid_x;
 		var ny = PANEL_GRAPH.mouse_grid_y;
 		
