@@ -198,7 +198,7 @@ function textBox(_input, _onModify) constructor {
 				break;
 		}
 		
-		if(_m != -1) {
+		if(!sliding && _m != -1) {
 			for( var i = 1; i <= string_length(_text); i++ ) {
 				_ch = string_char_at(_text, i);
 				_chw = string_width(_ch);

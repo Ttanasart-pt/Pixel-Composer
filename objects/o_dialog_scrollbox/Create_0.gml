@@ -2,6 +2,7 @@
 event_inherited();
 
 #region 
+	align = fa_center;
 	draggable = false;
 	destroy_on_click_out = true;
 	

@@ -77,7 +77,7 @@ function Node_Transform(_x, _y) : Node_Processor(_x, _y) constructor {
 		
 		if(is_array(_surf)) {
 			if(array_length(_surf) == 0) return;
-			_surf = _surf[preview_frame];
+			_surf = _surf[preview_index];
 		}
 		
 		var ww, hh;
@@ -259,13 +259,13 @@ function Node_Transform(_x, _y) : Node_Processor(_x, _y) constructor {
 		var _surf = inputs[| 0].getValue();
 		if(is_array(_surf)) {
 			if(array_length(_surf) == 0) return;
-			_surf = _surf[preview_frame];
+			_surf = _surf[preview_index];
 		}
 		
 		var _surf_out = outputs[| 0].getValue();
 		if(is_array(_surf_out)) {
 			if(array_length(_surf_out) == 0) return;
-			_surf_out = _surf_out[preview_frame];
+			_surf_out = _surf_out[preview_index];
 		}
 		
 		var pos = current_data[2];

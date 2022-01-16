@@ -30,7 +30,7 @@ function log_newline() {
 }
 
 exception_unhandled_handler(function(ex) {
-	var tt = "\n-------------------------- OH BOY --------------------------\n\n";
+	var tt = "\n-------------------------- OH NO --------------------------\n\n";
 	tt += ex.longMessage;
 	tt +=    "\n---------------------------- :( ----------------------------\n";
 	log_crash(tt);

@@ -14,6 +14,7 @@ function renderAll() {
 	var render_q = ds_queue_create();
 	var rendering = noone;
 	
+	// get leaf node
 	var key = ds_map_find_first(NODE_MAP);
 	repeat(ds_map_size(NODE_MAP)) {
 		var _node = NODE_MAP[? key];
@@ -21,10 +22,10 @@ function renderAll() {
 			var _startNode = true;
 			for(var j = 0; j < ds_list_size(_node.inputs); j++) {
 				var _in = _node.inputs[| j];
+				_node.rendered = false;
 					
-				if(_in.value_from != noone) { //init
+				if(_in.value_from != noone)
 					_startNode = false;
-				}
 			}
 			if(_startNode)
 				ds_queue_enqueue(render_q, _node);
@@ -32,19 +33,19 @@ function renderAll() {
 		key = ds_map_find_next(NODE_MAP, key);
 	}
 	
+	// render forward
 	while(!ds_queue_empty(render_q)) {
 		rendering = ds_queue_dequeue(render_q);
 			
 		var _ready = true;
 		for(var j = 0; j < ds_list_size(rendering.inputs); j++) {
 			var _in = rendering.inputs[| j];
-			if(_in.value_from && !_in.value_from.node.rendered) {
+			if(_in.value_from && !_in.value_from.node.rendered)
 				_ready = false;
-			}
 		}
 				
 		if(_ready) {
-			if(!rendering.rendered && (LOADING || rendering.auto_update)) 
+			if(!rendering.rendered && (LOADING || APPENDING || rendering.auto_update)) 
 				rendering.update();
 		} else {
 			ds_queue_enqueue(render_q, rendering);

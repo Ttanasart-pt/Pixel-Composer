@@ -7,6 +7,7 @@ varying vec4 v_vColour;
 uniform vec2 position;
 uniform float scale;
 uniform float time;
+uniform float contrast;
 
 vec2 random2( vec2 p ) {
     return fract(sin(vec2(dot(p, vec2(127.1, 311.7)), dot(p, vec2(269.5, 183.3)))) * 43758.5453);
@@ -49,5 +50,6 @@ void main() {
     // Draw the min distance (distance field)
     color += m_dist;
 
-    gl_FragColor = vec4(color,1.0);
+	vec3 c = 0.5 + (color - 0.5) * contrast;
+    gl_FragColor = vec4(c, 1.0);
 }

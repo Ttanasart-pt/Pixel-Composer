@@ -32,7 +32,7 @@ function Node_Shadow(_x, _y) : Node_Processor(_x, _y) constructor {
 		var _surf = outputs[| 0].getValue();
 		if(is_array(_surf)) {
 			if(array_length(_surf) == 0) return;
-			_surf = _surf[preview_frame];
+			_surf = _surf[preview_index];
 		}
 		
 		var ww = surface_get_width(_surf) * _s;

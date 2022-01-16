@@ -430,7 +430,7 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 		var val = getValue();
 		if(isArray()) {
 			if(array_length(val) == 0) return 0;
-			return val[safe_mod(node.preview_frame, array_length(val))];
+			return val[safe_mod(node.preview_index, array_length(val))];
 		}
 		return val;
 	}
@@ -485,57 +485,48 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 	static setFrom = function(_valueFrom, _update = true, checkRecur = true) {
 		if(_valueFrom == -1 || _valueFrom == undefined) {
 			show_debug_message("LOAD : Value from error " + string(_valueFrom))
-			return;
+			return false;
 		}
 		
 		if(_valueFrom == noone) {
 			removeFrom();
-			return;
+			return false;
 		}
 		
 		if(_valueFrom == self) {
 			show_debug_message("setFrom : Connect to self");
-			return; 
+			return false;
 		}
 		
 		if(value_bit(type) & value_bit(_valueFrom.type) == 0 && !value_type_directional(_valueFrom, self)) {
-			//show_debug_message(tag);
-			//show_debug_message(tag & VALUE_TAG.dimension_2d);
-			//show_debug_message(_valueFrom.type);
-			//show_debug_message(VALUE_TYPE.surface);
-			
-			//if((tag & VALUE_TAG.dimension_2d) && _valueFrom.type == VALUE_TYPE.surface) {
-			//	var conversion_node = nodeBuild("Surface data", node.x - 128, node.y);
-			//	conversion_node.inputs[| 0].setFrom(_valueFrom);
-			//	setFrom(conversion_node.outputs[| 0]);
-			//	return;
-			//} else {
 			show_debug_message("setFrom : Type mismatch");
-			return;
+			return false;
 		}
 		
 		if(connect_type == _valueFrom.connect_type) {
 			show_debug_message("setFrom : Connect type mismatch");
-			return;
+			return false;
 		}
 		
 		if(checkRecur && _valueFrom.searchNodeBackward(node)) {
 			show_debug_message("setFrom : Recursive");
-			return;
+			return false;
 		}
 			
 		if(!accept_array && _valueFrom.isArray()) {
 			show_debug_message("setFrom : Array mismatch");
-			return;
+			return false;
 		}
 		
 		recordAction(ACTION_TYPE.junction_connect, self, value_from);
 		value_from = _valueFrom;
 		ds_list_add(_valueFrom.value_to, self);
-		show_debug_message("connected " + name + " to " + _valueFrom.name)
+		//show_debug_message("connected " + name + " to " + _valueFrom.name)
 		
 		if(_update) node.updateValueFrom(index);
 		if(_update && node.auto_update) _valueFrom.node.updateForward();
+		
+		return true;
 	}
 	
 	static removeFrom = function() {
@@ -977,16 +968,20 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 			var _nd = NODE_MAP[? con_node + APPEND_ID];
 			var _ol = ds_list_size(_nd.outputs);
 			if(con_index < _ol) {
-				setFrom(_nd.outputs[| con_index], false);
-				return true;
+				if(setFrom(_nd.outputs[| con_index], false)) 
+					return true;
+				else {
+					log_warning("LOAD", "[Connect] Connection conflict " + string(node.name) + " to " + string(_nd.name) + " : Connection failed.");
+					return true;
+				}
 			} else {
-				log_warning("LOAD", "Connection conflict " + string(con_index) + " to " + string(_ol));
+				log_warning("LOAD", "[Connect] Connection conflict " + string(node.name) + " to " + string(_nd.name) + " : Node not exist.");
 				return false;
 			}
 		}
 		
 		var txt = "Node connect error : Node ID " + string(con_node + APPEND_ID) + " not found.";
-		log_warning("LOAD", txt);
+		log_warning("LOAD", "[Connect] " + txt);
 		PANEL_MENU.addNotiExtra(txt);
 		return true;
 	}

@@ -16,7 +16,10 @@
 			}
 		}
 					
-		draw_set_text(f_p0, fa_center, fa_center, c_white);
-		draw_text(dialog_x + dialog_w / 2, _ly + hght / 2, scrollbox.data_list[i]);
+		draw_set_text(f_p0, align, fa_center, c_white);
+		if(align == fa_center)
+			draw_text(dialog_x + dialog_w / 2, _ly + hght / 2, scrollbox.data_list[i]);
+		else if(align == fa_left)
+			draw_text(dialog_x + 8, _ly + hght / 2, scrollbox.data_list[i]);
 	}
 #endregion

@@ -163,11 +163,12 @@ function NodeObject(_name, _spr, _create, tags = []) constructor {
 	addNodeObject(generator, "Checker",				s_node_checker,				"Node_Checker",				Node_create_Checker);
 	addNodeObject(generator, "Shape",				s_node_shape,				"Node_Shape",				Node_create_Shape);
 	addNodeObject(generator, "Particle",			s_node_particle,			"Node_Particle",			Node_create_Particle);
-	addNodeObject(generator, "Particle Effector",	s_node_particle_effector,	"Node_Particle_Effector",	Node_create_Particle_Effector);
+	addNodeObject(generator, "Particle Effector",	s_node_particle_effector,	"Node_Particle_Effector",	Node_create_Particle_Effector, ["affector"]);
 	addNodeObject(generator, "Scatter",				s_node_scatter,				"Node_Scatter",				Node_create_Scatter);
 	addNodeObject(generator, "Perlin noise",		s_node_noise_perlin,		"Node_Perlin",				Node_create_Perlin);
 	addNodeObject(generator, "Cellular noise",		s_node_noise_cell,			"Node_Cellular",			Node_create_Cellular);
 	addNodeObject(generator, "Grid noise",			s_node_grid_noise,			"Node_Grid_Noise",			Node_create_Grid_Noise);
+	addNodeObject(generator, "Grid",				s_node_grid_noise,			"Node_Grid",				Node_create_Grid);
 	addNodeObject(generator, "Anisotropic noise",	s_node_noise_aniso,			"Node_Noise_Aniso",			Node_create_Noise_Aniso);
 	addNodeObject(generator, "Seperate shape",	    s_node_sepearte_shape,		"Node_Seperate_Shape",		Node_create_Seperate_Shape);
 	addNodeObject(generator, "Text",				s_node_text,				"Node_Text",				Node_create_Text);
@@ -176,8 +177,8 @@ function NodeObject(_name, _spr, _create, tags = []) constructor {
 	var render = ds_list_create();
 	addNodeCatagory("Render", render);
 	addNodeObject(render, "Render sprite sheet",	s_node_sprite_sheet,	"Node_Render_Sprite_Sheet",	Node_create_Render_Sprite_Sheet);
-	addNodeObject(render, "Export",					s_node_export,			"Node_Export",			Node_create_Export);
-	addNodeObject(render, "Preview timeline",		s_node_timeline_preview,"Node_Timeline_Preview",Node_create_Timeline_Preview);
+	addNodeObject(render, "Export",					s_node_export,			"Node_Export",				Node_create_Export);
+	addNodeObject(render, "Preview timeline",		s_node_timeline_preview,"Node_Timeline_Preview",	Node_create_Timeline_Preview);
 	
 	var group = ds_list_create();
 	addNodeCatagory("Group", group);

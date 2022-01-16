@@ -156,8 +156,8 @@ function __part() constructor {
 		if(boundary_data == -1) 
 			return [x, y];
 		
-		var ww = boundary_data[2] + boundary_data[0] * scx;
-		var hh = boundary_data[3] + boundary_data[1] * scy;
+		var ww = (boundary_data[2] - boundary_data[0]) * scx;
+		var hh = (boundary_data[3] - boundary_data[1]) * scy;
 		var cx = x + boundary_data[0] + ww / 2;
 		var cy = y + boundary_data[1] + hh / 2;
 		
@@ -422,7 +422,7 @@ function Node_Particle(_x, _y) : Node(_x, _y) constructor {
 		var jun = outputs[| 1];
 		for(var j = 0; j < ds_list_size(jun.value_to); j++) {
 			if(jun.value_to[| j].value_from == jun) {
-				jun.value_to[| j].node.updateParticle();
+				jun.value_to[| j].node.update();
 			}
 		}
 		

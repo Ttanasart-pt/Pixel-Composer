@@ -143,44 +143,6 @@ function Node_Line(_x, _y) : Node(_x, _y) constructor {
 					_oy = _ny;
 					_ow = _nw;
 				}
-				
-				//for(var i = 0; i <= _seg; i++) {
-				//	var p = _pat.getPointRatio(_rats + i * ww);
-				//	_nx = p[0];
-				//	_ny = p[1];
-					
-				//	if(i > 0 && i < _seg) {
-				//		_d = point_direction(_ox, _oy, _nx, _ny);
-				//		_nx += lengthdir_x(random(_wig) * choose(-1, 1), _d + 90);
-				//		_ny += lengthdir_y(random(_wig) * choose(-1, 1), _d + 90);
-				//	}
-					
-				//	_nw = random_range(_wid[0], _wid[1]);
-					
-				//	if(i == _seg) {
-				//		_na = point_direction(_ox, _oy, _nx, _ny) + 90;
-				//	} else {
-				//		var np = _pat.getPointRatio(_rats + (i + 1) * ww);
-				//		var _nna = point_direction(_nx, _ny, np[0], np[1]) + 90;
-						
-				//		if(i == 0)
-				//			_na = _nna;
-				//		else {
-				//			var _da = point_direction(_ox, _oy, _nx, _ny) + 90;
-				//			_na = _da + angle_difference(_nna, _da) / 2;
-				//		}
-				//	}
-					
-				//	if(i) {
-				//		draw_set_color(c_white);
-				//		draw_line_width2_angle(_ox, _oy, _nx, _ny, _ow, _nw, _oa, _na);
-				//	}
-					
-				//	_oa = _na;
-				//	_ox = _nx;
-				//	_oy = _ny;
-				//	_ow = _nw;
-				//}
 			} else {
 				var x0, y0, x1, y1;
 				var _0 = point_rectangle_overlap(_dim[0], _dim[1], (_ang + 180) % 360);

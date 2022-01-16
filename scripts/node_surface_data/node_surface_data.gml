@@ -30,8 +30,6 @@ function Node_Surface_data(_x, _y) : Node(_x, _y) constructor {
 			}
 			
 			outputs[| 0].setValue(_dim);
-			
-			outputs[| 1].show_in_inspector = true;
 			outputs[| 1].setValue(len);
 			return;
 		}
@@ -39,7 +37,6 @@ function Node_Surface_data(_x, _y) : Node(_x, _y) constructor {
 		if(!_insurf || !surface_exists(_insurf)) return;
 		
 		outputs[| 0].setValue([ surface_get_width(_insurf), surface_get_height(_insurf) ]);
-		outputs[| 1].show_in_inspector = false;
 	}
 	update();
 }

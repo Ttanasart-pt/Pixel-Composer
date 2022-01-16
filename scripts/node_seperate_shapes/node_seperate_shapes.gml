@@ -43,6 +43,8 @@ function Node_Seperate_Shape(_x, _y) : Node(_x, _y) constructor {
 		var _inSurf = inputs[| 0].getValue();
 		var _out_type = inputs[| 1].getValue();
 		
+		if(!is_surface(_inSurf)) return;
+		
 		var ww = surface_get_width(_inSurf);
 		var hh = surface_get_height(_inSurf);
 		
@@ -111,6 +113,8 @@ function Node_Seperate_Shape(_x, _y) : Node(_x, _y) constructor {
 					outputs[| 2] = nodeValue(2, "Boundary data", self, JUNCTION_CONNECT.output, VALUE_TYPE.integer, []);
 				
 					_prev_type = _out_type;
+				} else {
+					outputs[| 0].setValue(_val);
 				}
 			}
 			

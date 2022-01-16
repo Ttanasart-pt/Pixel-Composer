@@ -147,6 +147,7 @@ event_inherited();
 #region search
 	search_string = "";
 	keyboard_lastchar = "";
+	keyboard_string = "";
 	keyboard_lastkey = -1;
 	
 	tb_search				= new textBox(TEXTBOX_INPUT.text, function(str) { search_string = string(str); });

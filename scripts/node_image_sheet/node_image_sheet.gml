@@ -131,7 +131,7 @@ function Node_Image_Sheet(_x, _y) : Node(_x, _y) constructor {
 		if(_out == 0)
 			ii = safe_mod(ANIMATOR.current_frame * _spd, _amo);
 		else
-			ii = preview_frame;
+			ii = preview_index;
 		var _spr_pos = getSpritePosition(ii);
 			
 		var _orig_x = _x - (_spr_pos[0] - _pad[2]) * _s;

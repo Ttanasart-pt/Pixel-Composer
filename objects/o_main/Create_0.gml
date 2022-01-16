@@ -14,14 +14,14 @@
 	file_text_close(f);
 #endregion
 
-display_reset(4, 1);
+display_reset(0, 1);
 
 #region window
 	depth = 0;
-	win_wp      = WIN_W;
-	win_hp      = WIN_H;
+	win_wp = WIN_W;
+	win_hp = WIN_H;
 
-	room_width  = WIN_W;
+	room_width = WIN_W;
 	room_height = WIN_H;
 	
 	draw_set_circle_precision(64);

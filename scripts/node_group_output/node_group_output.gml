@@ -14,7 +14,8 @@ function Node_Group_Output(_x, _y, _group) : Node(_x, _y) constructor {
 	self.group = _group;
 	
 	w = 96;
-	min_h = 0;
+	h = 32 + 24;
+	min_h = h;
 	
 	inputs[| 0] = nodeValue(0, "Value", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, -1);
 	

@@ -6,6 +6,7 @@ function Node_create_Particle_Effector(_x, _y) {
 
 enum FORCE_TYPE {
 	Wind,
+	Accelerate,
 	Attract,
 	Repel,
 	Vortex,
@@ -14,8 +15,12 @@ enum FORCE_TYPE {
 }
 
 function Node_Particle_Effector(_x, _y) : Node(_x, _y) constructor {
-	name = "Particle Effector";
+	name = "Effector";
 	previewable = false;
+	
+	w = 96;
+	h = 32 + 24;
+	min_h = h;
 	
 	inputs[| 0] = nodeValue(0, "Particle data", self, JUNCTION_CONNECT.input, VALUE_TYPE.object, -1 );
 	inputs[| 1] = nodeValue(1, "Output dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, def_surf_size2, VALUE_TAG.dimension_2d )
@@ -34,7 +39,7 @@ function Node_Particle_Effector(_x, _y) : Node(_x, _y) constructor {
 		.setVisible(false);
 	
 	inputs[| 5] = nodeValue(5, "Effect type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0 )
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Wind", "Attract", "Repel", "Vortex", "Turbulence", "Destroy" ] )
+		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Wind", "Accelerate", "Attract", "Repel", "Vortex", "Turbulence", "Destroy" ] )
 		.setVisible(false);
 	
 	inputs[| 6] = nodeValue(6, "Effect Vector", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ -1, 0 ] )
@@ -71,6 +76,10 @@ function Node_Particle_Effector(_x, _y) : Node(_x, _y) constructor {
 		var _type = inputs[| 5].getValue();
 		switch(_type) {
 			case FORCE_TYPE.Wind :	
+				node_input_visible(inputs[| 6],  true);
+				node_input_visible(inputs[| 10], false);
+				break;
+			case FORCE_TYPE.Accelerate :	
 				node_input_visible(inputs[| 6],  true);
 				node_input_visible(inputs[| 10], false);
 				break;
@@ -141,6 +150,12 @@ function Node_Particle_Effector(_x, _y) : Node(_x, _y) constructor {
 					
 					part.rot += _rot * str;
 					break;
+				case FORCE_TYPE.Accelerate :
+					part.sx = part.sx + _vect[0] * _sten * str;
+					part.sy = part.sy + _vect[1] * _sten * str;
+					
+					part.rot += _rot * str;
+					break;
 				case FORCE_TYPE.Attract :
 					var dirr = point_direction(pv[0], pv[1], _area_x, _area_y);
 					
@@ -190,11 +205,11 @@ function Node_Particle_Effector(_x, _y) : Node(_x, _y) constructor {
 		}
 	}
 	
-	function updateParticle() {
+	function update() {
 		var jun = outputs[| 0];
 		for(var j = 0; j < ds_list_size(jun.value_to); j++) {
 			if(jun.value_to[| j].value_from == jun) {
-				jun.value_to[| j].node.updateParticle();
+				jun.value_to[| j].node.update();
 			}
 		}
 		

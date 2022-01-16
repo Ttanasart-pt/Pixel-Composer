@@ -7,7 +7,6 @@ function Node_create_Canvas(_x, _y) {
 function Node_Canvas(_x, _y) : Node(_x, _y) constructor {
 	name	= "Canvas";
 	color	= c_ui_orange;
-	force_preview_channel = 1;
 	
 	inputs[| 0] = nodeValue(0, "Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, def_surf_size2, VALUE_TAG.dimension_2d )
 		.setDisplay(VALUE_DISPLAY.vector);

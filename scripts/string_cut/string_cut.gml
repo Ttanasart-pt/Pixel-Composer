@@ -11,7 +11,7 @@ function string_cut(str, w, tail = "...") {
 		var ch = string_char_at(str, ind);
 		var _w = string_width(ch);
 		
-		if(ww + _w > w - 16) {
+		if(ww + _w > w - 10) {
 			ss += tail;
 			break; 
 		} else {

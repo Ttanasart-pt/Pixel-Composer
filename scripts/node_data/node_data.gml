@@ -6,7 +6,6 @@ function Node(_x, _y) constructor {
 	icon    = noone;
 	bg_spr  = s_node_bg;
 	bg_sel_spr = s_node_active;
-	force_preview_channel = -1;
 	
 	if(!LOADING && !APPENDING) {
 		recordAction(ACTION_TYPE.node_added, self);
@@ -40,7 +39,7 @@ function Node(_x, _y) constructor {
 	previewable   = true;
 	preview_speed = 0;
 	preview_index = 0;
-	preview_frame = 0;
+	preview_channel = 0;
 	preview_x     = 0;
 	preview_y     = 0;
 	
@@ -163,10 +162,11 @@ function Node(_x, _y) constructor {
 	
 	static drawNodeName = function(xx, yy, _s) {
 		if(name == "") return;
-		
+			
 		if(_s * w > 48) {
 			draw_sprite_stretched_ext(s_node_name, 0, xx, yy, w * _s, 20, color, 0.75);
 			draw_set_text(f_p1, fa_left, fa_center, c_white);
+		
 			if(!auto_update) icon = s_refresh_16;
 			if(icon) {
 				draw_sprite_ext(icon, 0, xx + 12, yy + 10, 1, 1, 0, c_white, 1);	
@@ -296,8 +296,7 @@ function Node(_x, _y) constructor {
 			}
 			
 			if(floor(preview_index) > array_length(surf) - 1) preview_index = 0;
-			preview_frame = clamp(floor(preview_index), 0, array_length(surf) - 1);
-			surf = surf[preview_frame];
+			surf = surf[preview_index];
 		}
 		
 		if(is_surface(surf)) {
@@ -311,8 +310,10 @@ function Node(_x, _y) constructor {
 			//draw_set_color(c_ui_blue_grey);
 			//draw_rectangle(px, py, px + pw * ps - 1, py + ph * ps - 1, true);
 			
-			draw_set_text(_s >= 1? f_p1 : f_p2, fa_center, fa_top, c_ui_blue_grey);
-			draw_text(xx + w * _s / 2, yy + h * _s + 4 * _s, string(pw) + " x " + string(ph) + "px");
+			if(_s * w > 48) {
+				draw_set_text(_s >= 1? f_p1 : f_p2, fa_center, fa_top, c_ui_blue_grey);
+				draw_text(xx + w * _s / 2, yy + h * _s + 4 * _s, string(pw) + " x " + string(ph) + "px");
+			}
 		}
 	}
 	

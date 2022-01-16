@@ -37,6 +37,8 @@ function Panel_Preview(_panel) : PanelContent(_panel) constructor {
 	tool_index		= -1;
 	tool_sub_index	= 0;
 	
+	right_menu_y = 8;
+	
 	tb_framerate = new textBox(TEXTBOX_INPUT.number, function(val) { preview_rate = real(val); })
 	
 	addHotkey("Preview", "Focus content",		"F", MOD_KEY.none,	function() { fullView(); });
@@ -101,35 +103,48 @@ function Panel_Preview(_panel) : PanelContent(_panel) constructor {
 		}
 	}
 	
+	sbChannel = new scrollBox([], function(index) { PANEL_GRAPH.node_previewing.preview_channel = index; });
+	sbChannel.align = fa_left;
+	function drawNodeChannel(_node) {
+		if(ds_list_size(_node.outputs) < 2) return;
+		
+		var chName = [];
+		var ww = 40;
+		draw_set_text(f_p0, fa_center, fa_center, c_white);
+		
+		for( var i = 0; i < ds_list_size(_node.outputs); i++ ) {
+			array_push(chName, _node.outputs[| i].name);
+			ww = max(ww, string_width(_node.outputs[| i].name) + 40);
+		}
+		sbChannel.data_list = chName;
+		sbChannel.hover = HOVER == panel;
+		sbChannel.active = FOCUS == panel;
+		
+		sbChannel.draw(w - 8 - ww, right_menu_y, ww, 34, _node.outputs[| _node.preview_channel].name, [mx, my], panel.x, panel.y);
+		right_menu_y += 40;
+	}
+	
 	function drawNodePreview(_node) {
-		var index = 0;
 		preview_surface  = 0;
 		preview_sequence = 0;
-		var _channel = _node.force_preview_channel == -1? preview_channel : _node.force_preview_channel;
+		if(_node.preview_channel >= ds_list_size(_node.outputs)) return;
 		
-		for(var i = 0; i < ds_list_size(_node.outputs); i++) {
-			var val = _node.outputs[| i];
-			if(val.type == VALUE_TYPE.surface) {
-				if(index == _channel) {
-					var value = val.getValue();
-					
-					if(is_array(value)) {
-						preview_sequence = value;
-					} else {
-						preview_surface = value;
-						canvas_w = surface_get_width(preview_surface);
-						canvas_h = surface_get_height(preview_surface);
-					}
-					
-					break;
-				}
-				index++;
-			}
+		var _prev_val = _node.outputs[| _node.preview_channel];
+		if(_prev_val.type != VALUE_TYPE.surface) return;
+		
+		var value = _prev_val.getValue();
+		
+		if(is_array(value)) {
+			preview_sequence = value;
+		} else {
+			preview_surface = value;
+			canvas_w = surface_get_width(preview_surface);
+			canvas_h = surface_get_height(preview_surface);
 		}
 		
 		if(preview_sequence != 0) {
 			if(array_length(preview_sequence) == 0) return;
-			preview_surface = preview_sequence[safe_mod(_node.preview_frame, array_length(preview_sequence))];
+			preview_surface = preview_sequence[safe_mod(_node.preview_index, array_length(preview_sequence))];
 			
 			canvas_w = surface_get_width(preview_surface);
 			canvas_h = surface_get_height(preview_surface);	
@@ -157,9 +172,12 @@ function Panel_Preview(_panel) : PanelContent(_panel) constructor {
 	
 	function drawPreviewOverlay(_node) {
 		draw_set_text(f_p0, fa_right, fa_top, c_ui_blue_ltgrey);
-		draw_text(w - 8, 38, "frame " + string(ANIMATOR.current_frame) + "/" + string(ANIMATOR.frames_total));
-		draw_text(w - 8, 58, string(canvas_w) + "x" + string(canvas_h) + "px");
-		draw_text(w - 8, 78, "x" + string(canvas_s));
+		draw_text(w - 8, right_menu_y, "frame " + string(ANIMATOR.current_frame) + "/" + string(ANIMATOR.frames_total));
+		right_menu_y += 20;
+		draw_text(w - 8, right_menu_y, string(canvas_w) + "x" + string(canvas_h) + "px");
+		right_menu_y += 20;
+		draw_text(w - 8, right_menu_y, "x" + string(canvas_s));
+		right_menu_y += 20;
 		
 		var prev_size = 48;
 		preview_x = lerp_float(preview_x, preview_x_to, 5);
@@ -202,7 +220,7 @@ function Panel_Preview(_panel) : PanelContent(_panel) constructor {
 					draw_surface_ext_safe(prev, xx, yy, ss, ss, 0, c_white, 0.5);	
 				}
 				
-				if(i == _node.preview_frame) {
+				if(i == _node.preview_index) {
 					draw_set_color(c_ui_orange);
 					draw_rectangle(xx, yy, xx + prev_w * ss, yy + prev_h * ss, true);
 				}
@@ -307,6 +325,8 @@ function Panel_Preview(_panel) : PanelContent(_panel) constructor {
 	}
 	
 	function drawContent() {
+		right_menu_y = 8;
+		
 		draw_clear(c_ui_blue_black);
 		if(canvas_bg == -1) {
 			if(canvas_s >= 1) draw_sprite_tiled_ext(s_transparent, 0, canvas_x, canvas_y, canvas_s, canvas_s, c_white, 0.5);
@@ -318,6 +338,14 @@ function Panel_Preview(_panel) : PanelContent(_panel) constructor {
 		if(PANEL_GRAPH.node_previewing) {
 			PANEL_GRAPH.node_previewing.previewing = true;
 			drawNodePreview(PANEL_GRAPH.node_previewing);
+			drawNodeChannel(PANEL_GRAPH.node_previewing);
+		}
+		
+		draw_set_text(f_p0, fa_right, fa_top, c_ui_blue_ltgrey);
+		draw_text(w - 8, right_menu_y, "fps " + string(fps));
+		right_menu_y += 20;
+		
+		if(PANEL_GRAPH.node_previewing) {
 			drawPreviewOverlay(PANEL_GRAPH.node_previewing);
 		}
 		
@@ -329,9 +357,6 @@ function Panel_Preview(_panel) : PanelContent(_panel) constructor {
 			last_focus = PANEL_GRAPH.node_focus;
 			tool_index = -1;
 		}
-		
-		draw_set_text(f_p0, fa_right, fa_top, c_ui_blue_ltgrey);
-		draw_text(w - 8, 08, "fps " + string(fps));
 	}
 	
 	function saveCurrentFrame() {
