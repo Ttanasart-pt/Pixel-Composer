@@ -63,9 +63,9 @@ void main() {
 		vec4 mas = texture2D( mask, v_vTexcoord );
 		mas.rgb *= mas.a;
 		gl_FragColor = col_cbh * mas + col * (vec4(1.) - mas);
-	} else
+		gl_FragColor.a = col.a * mix(1., v_vColour.a, mas.r);
+	} else {
 		gl_FragColor = col_cbh;
-		
-	//alpha
-	gl_FragColor.a = col.a * v_vColour.a;
+		gl_FragColor.a = col.a * v_vColour.a;
+	}
 }

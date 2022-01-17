@@ -43,8 +43,6 @@ function Node(_x, _y) constructor {
 	preview_x     = 0;
 	preview_y     = 0;
 	
-	output_preview_index = 0;
-	
 	rendered        = false;
 	auto_update     = true;
 	update_on_frame = false;
@@ -268,10 +266,6 @@ function Node(_x, _y) constructor {
 					hover = jun;
 					show_output_name = true;
 					draw_sprite_ext(jun.isArray()? s_node_junctions_array_hover : s_node_junctions_hover, jun.type, jx, jy, ss, ss, 0, c_white, 1);
-					
-					if(jun.type == VALUE_TYPE.surface) {
-						output_preview_index = i;
-					}
 				} else {
 					_draw_cc = c_ui_blue_grey;
 					draw_sprite_ext(jun.isArray()? s_node_junctions_array : s_node_junctions, jun.type, jx, jy, ss, ss, 0, c_white, 1);
@@ -370,7 +364,7 @@ function Node(_x, _y) constructor {
 		var yy = y * _s + _y;
 		drawNodeBase(xx, yy, _s);
 		if(previewable && ds_list_size(outputs) > 0) 
-			drawPreview(outputs[| output_preview_index], xx, yy, _s);
+			drawPreview(outputs[| preview_channel], xx, yy, _s);
 		drawNodeName(xx, yy, _s);
 		onDrawNode(xx, yy, _mx, _my, _s);
 		

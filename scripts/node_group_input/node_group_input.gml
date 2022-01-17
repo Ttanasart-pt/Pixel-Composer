@@ -49,6 +49,15 @@ function Node_Group_Input(_x, _y, _group) : Node(_x, _y) constructor {
 		var _enum_label = inputs[| 3].getValue();
 		var _vec_size = inputs[| 4].getValue();
 		
+		if(index == 2) {
+			var _o = outputs[| 0];
+			for(var j = 0; j < ds_list_size(_o.value_to); j++) {
+				var _to = _o.value_to[| j];
+				if(_to.value_from == _o)
+					_to.removeFrom();
+			}
+		}
+		
 		_inParent.type = _val_type;
 		outputs[| 0].type = _val_type;
 		var _val = _inParent.getValue();

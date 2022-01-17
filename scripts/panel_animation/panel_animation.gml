@@ -126,8 +126,13 @@ function Panel_Animation(_panel) : PanelContent(_panel) constructor {
 	
 	function updatePropertyList() {
 		ds_list_clear(anim_properties);
-		for( var i = 0; i < ds_list_size(PANEL_GRAPH.nodes_list); i++ ) {
-			var _node = PANEL_GRAPH.nodes_list[| i];
+		var amo = ds_map_size(NODE_MAP);
+		var k = ds_map_find_first(NODE_MAP);
+		
+		repeat(amo) {
+			var _node = NODE_MAP[? k];
+			k = ds_map_find_next(NODE_MAP, k);
+			
 			if(!_node.active) continue;
 			
 			for(var j = 0; j < ds_list_size(_node.inputs); j++) {
