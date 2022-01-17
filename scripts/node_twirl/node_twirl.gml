@@ -29,7 +29,7 @@ function Node_Twirl(_x, _y) : Node_Processor(_x, _y) constructor {
 		var py = _y + pos[1] * _s;
 		
 		inputs[| 1].drawOverlay(_active, _x, _y, _s, _mx, _my);
-		inputs[| 3].drawOverlay(_active, px, py, _s, _mx, _my);
+		inputs[| 3].drawOverlay(_active, px, py, _s, _mx, _my, 0, 1, s_anchor_scale_hori);
 	}
 	
 	function process_data(_outSurf, _data, _output_index) {

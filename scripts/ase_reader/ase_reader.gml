@@ -29,5 +29,4 @@ function read_ase(path) {
 	}
 	
 	file_bin_close(file);
-	show_debug_message(load_str);
 }

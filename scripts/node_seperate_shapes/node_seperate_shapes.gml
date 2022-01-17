@@ -17,6 +17,10 @@ function Node_Seperate_Shape(_x, _y) : Node(_x, _y) constructor {
 		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Node", "Array" ])
 		.setVisible(false);
 	
+	inputs[| 2] = nodeValue(2, "Tolerance", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.2)
+		.setDisplay(VALUE_DISPLAY.slider, [0, 1, 0.01])
+		.setVisible(false);
+	
 	static createOutput = function() {
 		var o = nodeValue(ds_list_size(outputs), "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, surface_create(1, 1));
 		ds_list_add(outputs, o);
@@ -55,6 +59,7 @@ function Node_Seperate_Shape(_x, _y) : Node(_x, _y) constructor {
 		}
 		
 		shader_set(sh_seperate_shape_index);
+		shader_set_uniform_f(shader_get_uniform(sh_seperate_shape_index, "tolerance"), inputs[| 2].getValue());
 		surface_set_target(temp_surf[1]);
 			draw_surface_safe(_inSurf, 0, 0);
 		surface_reset_target();
@@ -64,7 +69,6 @@ function Node_Seperate_Shape(_x, _y) : Node(_x, _y) constructor {
 		shader_set_uniform_f_array(uniform_it_dim, [ ww, hh ]);
 		shader_reset();
 		
-		t = get_timer();
 		var res_index = 0, iteration = ww + hh;
 		for(var i = 0; i <= iteration; i++) {
 			var bg = i % 2;
@@ -81,9 +85,7 @@ function Node_Seperate_Shape(_x, _y) : Node(_x, _y) constructor {
 			
 			res_index = bg;
 		}
-		//show_debug_message("iteration time : " + string(get_timer() - t));
 		
-		t = get_timer();
 		var _pixel_surface = surface_create(PREF_MAP[? "shape_separation_max"], 1);
 		surface_set_target(_pixel_surface);
 		draw_clear_alpha(0, 0);
@@ -95,8 +97,6 @@ function Node_Seperate_Shape(_x, _y) : Node(_x, _y) constructor {
 			shader_reset();
 		BLEND_NORMAL
 		surface_reset_target();
-		
-		//show_debug_message("count time : " + string(get_timer() - t));
 		
 		var px = surface_getpixel(_pixel_surface, 0, 0);
 		
@@ -126,7 +126,6 @@ function Node_Seperate_Shape(_x, _y) : Node(_x, _y) constructor {
 			surface_buffer = buffer_create(ww * hh * 4, buffer_fixed, 2);
 			buffer_get_surface(surface_buffer, temp_surf[res_index], 0);
 			
-			t = get_timer();
 			for(var i = 0; i < px; i++) {
 				if(_out_type == 0) {
 					if(i >= ds_list_size(outputs)) {
@@ -188,7 +187,5 @@ function Node_Seperate_Shape(_x, _y) : Node(_x, _y) constructor {
 				outputs[| 2].setValue(_boundary);	
 			}
 		}
-		
-		//show_debug_message("separate time : " + string(get_timer() - t));
 	}
 }

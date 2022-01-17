@@ -5,7 +5,6 @@ function loadPalette(path) {
 		var _t = file_text_open_read(path);
 		var _index = 0;
 		var ext = filename_ext(path);
-		show_debug_message(ext)
 		while(!file_text_eof(_t)) {
 			var _w = file_text_readln(_t);
 			if(_w != "") {

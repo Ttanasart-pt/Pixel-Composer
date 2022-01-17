@@ -448,9 +448,9 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 		return false;
 	}
 	
-	static setValue = function(val = 0, record = true) {
+	static setValue = function(val = 0, record = true, time = -999) {
 		var _o = value.getValue();
-		value.setValue(val, record);
+		value.setValue(val, record, time);
 		var _n = value.getValue();
 		var updated = false;
 		
@@ -612,6 +612,8 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 					case VALUE_DISPLAY._default : #region
 						var _angle = argument_count > 6? argument[6] : 0;
 						var _scale = argument_count > 7? argument[7] : 1;
+						var spr = argument_count > 8? argument[8] : s_anchor_selector;
+						var index = 0;
 						
 						var __ax = lengthdir_x(_val * _scale, _angle);
 						var __ay = lengthdir_y(_val * _scale, _angle);
@@ -619,10 +621,8 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 						var _ax = _x + __ax * _s;
 						var _ay = _y + __ay * _s;
 						
-						draw_sprite(s_anchor_selector, 0, _ax, _ay);
-						
 						if(drag_type) {
-							draw_sprite(s_anchor_selector, 1, _ax, _ay);
+							index = 1;
 							var dist = point_distance(_mx, _my, _x, _y) / _s / _scale;
 							if(keyboard_check(vk_control))
 								dist = round(dist);
@@ -638,8 +638,7 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 						
 						if(point_in_circle(_mx, _my, _ax, _ay, 8)) {
 							hover = 1;
-							
-							draw_sprite(s_anchor_selector, 1, _ax, _ay);
+							index = 1;
 							if(_active && mouse_check_button_pressed(mb_left)) {
 								drag_type = 1;
 								drag_mx   = _mx;
@@ -648,6 +647,8 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 								drag_sy   = _ay;
 							}
 						} 
+						
+						draw_sprite(spr, index, _ax, _ay);
 						break;
 					#endregion
 					case VALUE_DISPLAY.rotation : #region
@@ -655,7 +656,7 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 						
 						var _ax = _x + lengthdir_x(_rad, _val);
 						var _ay = _y + lengthdir_y(_rad, _val);
-						draw_sprite(s_anchor_selector, 0, _ax, _ay);
+						draw_sprite_ext(s_anchor_rotate, 0, _ax, _ay, 1, 1, _val - 90, c_white, 1);
 						
 						if(drag_type) {
 							draw_set_color(c_ui_orange);
@@ -663,7 +664,7 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 							draw_circle(_x, _y, _rad, true);
 							draw_set_alpha(1);
 							
-							draw_sprite(s_anchor_selector, 1, _ax, _ay);
+							draw_sprite_ext(s_anchor_rotate, 1, _ax, _ay, 1, 1, _val - 90, c_white, 1);
 							var angle = point_direction(_x, _y, _mx, _my);
 							if(keyboard_check(vk_control))
 								angle = round(angle / 15) * 15;
@@ -684,7 +685,7 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 							draw_set_alpha(1);
 							hover = 1;
 							
-							draw_sprite(s_anchor_selector, 1, _ax, _ay);
+							draw_sprite_ext(s_anchor_rotate, 1, _ax, _ay, 1, 1, _val - 90, c_white, 1);
 							if(_active && mouse_check_button_pressed(mb_left)) {
 								drag_type = 1;
 								drag_mx   = _mx;

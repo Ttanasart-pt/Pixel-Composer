@@ -23,7 +23,7 @@ function Node_Blur_Radial(_x, _y) : Node_Processor(_x, _y) constructor {
 		var px = _x + pos[0] * _s;
 		var py = _y + pos[1] * _s;
 		
-		inputs[| 1].drawOverlay(_active, px, py, _s, _mx, _my, 0, 64);
+		inputs[| 1].drawOverlay(_active, px, py, _s, _mx, _my, 0, 64, s_anchor_scale_hori);
 		inputs[| 2].drawOverlay(_active, _x, _y, _s, _mx, _my);
 	}
 	

@@ -56,7 +56,6 @@ function animValue(_val, _node) constructor {
 			if(_time > _time_last) {
 				switch(node.on_end) {
 					case KEYFRAME_END.loop : 
-						show_debug_message(_time - _time_last);
 						_time = _time_first + safe_mod(_time - _time_last, _time_dura + 1);
 						break;
 					case KEYFRAME_END.ping :
@@ -206,9 +205,6 @@ function animValue(_val, _node) constructor {
 			else if(scale && _key[| 0] <= 1)
 				_time = round(_key[| 0] * ANIMATOR.frames_total);
 			
-			if(node.display_type == VALUE_DISPLAY.gradient) 
-				show_debug_message(_time);
-				
 			var ease_in = ds_list_get(_key, 2);
 			var ease_out = ds_list_get(_key, 3);
 			var _val;

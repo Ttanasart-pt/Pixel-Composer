@@ -41,8 +41,6 @@
 	if(keyboard_check_direct(vk_shift))		HOTKEY_MOD |= MOD_KEY.shift;
 	if(keyboard_check_direct(vk_alt))		HOTKEY_MOD |= MOD_KEY.alt;
 	
-	//show_debug_message(HOTKEY_MOD)
-	
 	if(ds_map_exists(HOTKEYS, "")) {
 		var l = HOTKEYS[? ""];
 		for(var i = 0; i < ds_list_size(l); i++) {

@@ -376,7 +376,6 @@ function gif_std_enum_getIndex() {
 		static reading = function(_gif) {
 			var _b = self.readBlock();
 			blocks[@ block_index++] = _b;
-			show_debug_message("reading block " + string(block_index));
 			if (_b == format_gif_Block_BEOF)
 				return true;
 			return false;

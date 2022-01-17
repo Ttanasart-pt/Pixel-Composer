@@ -85,7 +85,6 @@ function Node_Line(_x, _y) : Node(_x, _y) constructor {
 			outputs[| 0].setValue(_outSurf);
 		} else
 			surface_size_to(_outSurf, surface_valid(_dim[0]), surface_valid(_dim[1]));
-		show_debug_message(surface_valid(_dim[0]))
 		
 		surface_set_target(_outSurf);
 			if(_bg) draw_clear_alpha(0, 1);

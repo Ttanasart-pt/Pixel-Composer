@@ -389,6 +389,7 @@
     {"id":{"name":"node_animate_curve","path":"scripts/node_animate_curve/node_animate_curve.yy",},"order":0,},
     {"id":{"name":"s_node_state","path":"sprites/s_node_state/s_node_state.yy",},"order":7,},
     {"id":{"name":"curve_bounce_function","path":"scripts/curve_bounce_function/curve_bounce_function.yy",},"order":1,},
+    {"id":{"name":"s_anchor_scale_hori","path":"sprites/s_anchor_scale_hori/s_anchor_scale_hori.yy",},"order":9,},
     {"id":{"name":"gif_reader","path":"scripts/gif_reader/gif_reader.yy",},"order":4,},
     {"id":{"name":"s_loading","path":"sprites/s_loading/s_loading.yy",},"order":37,},
     {"id":{"name":"node_group_input","path":"scripts/node_group_input/node_group_input.yy",},"order":1,},

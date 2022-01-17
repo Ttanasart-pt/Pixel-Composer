@@ -40,7 +40,6 @@ event_inherited();
 	}
 	function setColor() {
 		if(key_selecting == noone) return;
-		show_debug_message("set")
 		key_selecting.value = current_color;
 	}
 	function setGradient(grad, data) {
