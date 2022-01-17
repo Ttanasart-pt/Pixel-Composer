@@ -9,7 +9,7 @@ uniform vec2  scale;
 uniform float width;
 
 void main() {
-	vec2 _pos = v_vTexcoord + position;
+	vec2 _pos = v_vTexcoord - position;
 	
 	vec2 dist = _pos - floor(_pos * scale) / scale;
 	float ww = width / 2.;

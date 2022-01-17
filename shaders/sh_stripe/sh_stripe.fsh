@@ -4,12 +4,14 @@
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
+uniform vec2 position;
 uniform float angle;
 uniform float amount;
 uniform int   blend;
 
 void main() {
-	float prog = .5 + (v_vTexcoord.x - .5) * cos(angle) - (v_vTexcoord.y - .5) * sin(angle);
+	vec2 pos = v_vTexcoord - position;
+	float prog = pos.x * cos(angle) - pos.y * sin(angle);
     float _a   = 1. / amount;
 	
 	float _s   = mod(prog, _a);

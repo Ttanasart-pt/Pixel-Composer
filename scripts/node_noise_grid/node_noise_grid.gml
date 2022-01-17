@@ -34,6 +34,10 @@ function Node_Grid_Noise(_x, _y) : Node(_x, _y) constructor {
 	
 	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, surface_create(1, 1));
 	
+	static drawOverlay = function(_active, _x, _y, _s, _mx, _my) {
+		inputs[| 1].drawOverlay(_active, _x, _y, _s, _mx, _my);
+	}
+	
 	function update() {
 		var _dim = inputs[| 0].getValue();
 		var _pos = inputs[| 1].getValue();

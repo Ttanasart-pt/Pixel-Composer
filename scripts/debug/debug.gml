@@ -32,10 +32,17 @@ function log_newline() {
 exception_unhandled_handler(function(ex) {
 	var tt = "\n-------------------------- OH NO --------------------------\n\n";
 	tt += ex.longMessage;
-	tt +=    "\n---------------------------- :( ----------------------------\n";
+	tt += "\n-------------------------- STACK TRACE --------------------------\n";
+	for( var i = 0; i < array_length(ex.stacktrace); i++ ) {
+		tt += ex.stacktrace[i] + "\n";
+	}
+	tt += "\n---------------------------- :( ----------------------------\n";
 	log_crash(tt);
 	log_message("SESSION", "Ended with error");
 	
+	var tt = "\n-------------------------- OH NO --------------------------\n\n";
+	tt += ex.longMessage;
+	tt += "\n---------------------------- :( ----------------------------\n";
 	tt += "\n\nVisit crash log from " + string(DIRECTORY + "log.txt") + " for more information";
 	show_error(tt, true);
     return 0;

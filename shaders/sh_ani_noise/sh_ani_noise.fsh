@@ -13,7 +13,7 @@ float random (in vec2 st) {
 }
 
 void main() {
-	vec2 _pos = position + v_vTexcoord;
+	vec2 _pos = v_vTexcoord - position;
 	float yy = floor(_pos.y * noiseAmount.y);
 	float xx = (_pos.x + random(vec2(yy))) * noiseAmount.x;
 	float x0 = floor(xx);

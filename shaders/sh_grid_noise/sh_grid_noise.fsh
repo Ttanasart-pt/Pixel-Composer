@@ -14,7 +14,7 @@ float random (in vec2 st) {
 }
 
 void main() {
-	vec2 st = v_vTexcoord + position;
+	vec2 st = v_vTexcoord - position;
     vec2 pos = vec2(st * scale);
 	pos.x += random(vec2(0., floor(pos.y))) * shift;
 	vec2 i = floor(pos);

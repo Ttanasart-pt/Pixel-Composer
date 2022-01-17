@@ -239,7 +239,13 @@ function textBox(_input, _onModify) constructor {
 				sliding = 2;
 			
 			if(sliding == 2) {
-				_input_text = slide_sx + dx * slide_speed;
+				var spd = dx * slide_speed;
+				if(keyboard_check(vk_alt))
+					spd /= 10;
+				if(keyboard_check(vk_control))
+					spd *= 10;
+				
+				_input_text = slide_sx + spd;
 				
 				switch(input) {
 					case TEXTBOX_INPUT.number :

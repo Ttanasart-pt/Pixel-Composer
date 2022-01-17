@@ -30,6 +30,10 @@ function Node_Grid(_x, _y) : Node(_x, _y) constructor {
 	
 	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, surface_create(1, 1));
 	
+	static drawOverlay = function(_active, _x, _y, _s, _mx, _my) {
+		inputs[| 1].drawOverlay(_active, _x, _y, _s, _mx, _my);
+	}
+	
 	function update() {
 		var _dim = inputs[| 0].getValue();
 		var _pos = inputs[| 1].getValue();
@@ -45,7 +49,7 @@ function Node_Grid(_x, _y) : Node(_x, _y) constructor {
 		
 		surface_set_target(_outSurf);
 		shader_set(shader);
-			shader_set_uniform_f_array(uniform_pos, _pos);
+			shader_set_uniform_f(uniform_pos, _pos[0] / _dim[0], _pos[1] / _dim[1]);
 			shader_set_uniform_f_array(uniform_sca, _sca);
 			shader_set_uniform_f(uniform_wid, _wid);
 			

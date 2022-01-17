@@ -4,16 +4,18 @@
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
+uniform vec2 position;
 uniform float amount;
 
 void main() {
+	vec2 pos = v_vTexcoord - position;
 	float _cell  = 1. / (amount * 2.);
 	
-    float _xind  = floor(v_vTexcoord.x / _cell);
-    float _yind  = floor(v_vTexcoord.y / _cell);
+    float _xind  = floor(pos.x / _cell);
+    float _yind  = floor(pos.y / _cell);
 	
-    float _xcell = mod(v_vTexcoord.x, _cell);
-    float _ycell = mod(v_vTexcoord.y, _cell);
+    float _xcell = mod(pos.x, _cell);
+    float _ycell = mod(pos.y, _cell);
 	
 	float _x = _xcell;
 	float _y = _ycell;

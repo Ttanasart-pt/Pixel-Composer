@@ -110,6 +110,7 @@ function NodeObject(_name, _spr, _create, tags = []) constructor {
 	addNodeObject(filter, "2D light",			s_node_2d_light,		"Node_2D_light",		Node_create_2D_light);
 	addNodeObject(filter, "Atlas",				s_node_atlas,			"Node_Atlas",			Node_create_Atlas);
 	addNodeObject(filter, "Scale algorithm",	s_node_scale_algo,		"Node_Scale_Algo",		Node_create_Scale_Algo, ["Scale2x", "Scale3x"]);
+	addNodeObject(filter, "Pixel cloud",		s_node_pixel_cloud,		"Node_Pixel_Cloud",		Node_create_Pixel_Cloud);
 	//addNodeObject(filter, "Corner",			s_node_corner,			"Node_Corner",			Node_create_Corner);
 	
 	var threeD = ds_list_create();
@@ -125,17 +126,18 @@ function NodeObject(_name, _spr, _create, tags = []) constructor {
 	
 	var number = ds_list_create();
 	addNodeCatagory("Number", number);
-	addNodeObject(number, "Math",			s_node_math,		"Node_Math",		Node_create_Math);
-	//addNodeObject(number, "Array",		s_node_array,		"Node_Array",		Node_create_Array);
-	addNodeObject(number, "Number",			s_node_number,		"Node_Number",		Node_create_Number);
-	addNodeObject(number, "Vector2",		s_node_vec2,		"Node_Vector2",		Node_create_Vector2);
-	addNodeObject(number, "Vector3",		s_node_vec3,		"Node_Vector3",		Node_create_Vector3);
-	addNodeObject(number, "Vector4",		s_node_vec4,		"Node_Vector4",		Node_create_Vector4);
-	addNodeObject(number, "Vector split",	s_node_vec_split,	"Node_Vector_Split",Node_create_Vector_Split);
-	addNodeObject(number, "Unicode",		s_node_unicode,		"Node_Unicode",		Node_create_Unicode);
-	addNodeObject(number, "Path",			s_node_path,		"Node_Path",		Node_create_Path);
-	addNodeObject(number, "Area",			s_node_area,		"Node_Area",		Node_create_Area);
-	addNodeObject(number, "Surface data",	s_node_surface_data,"Node_Surface_data",Node_create_Surface_data);
+	addNodeObject(number, "Math",			s_node_math,			"Node_Math",			Node_create_Math);
+	//addNodeObject(number, "Array",		s_node_array,			"Node_Array",			Node_create_Array);
+	addNodeObject(number, "Array length",	s_node_array_length,	"Node_Array_Length",	Node_create_Array_Length);
+	addNodeObject(number, "Number",			s_node_number,			"Node_Number",			Node_create_Number);
+	addNodeObject(number, "Vector2",		s_node_vec2,			"Node_Vector2",			Node_create_Vector2);
+	addNodeObject(number, "Vector3",		s_node_vec3,			"Node_Vector3",			Node_create_Vector3);
+	addNodeObject(number, "Vector4",		s_node_vec4,			"Node_Vector4",			Node_create_Vector4);
+	addNodeObject(number, "Vector split",	s_node_vec_split,		"Node_Vector_Split",	Node_create_Vector_Split);
+	addNodeObject(number, "Unicode",		s_node_unicode,			"Node_Unicode",			Node_create_Unicode);
+	addNodeObject(number, "Path",			s_node_path,			"Node_Path",			Node_create_Path);
+	addNodeObject(number, "Area",			s_node_area,			"Node_Area",			Node_create_Area);
+	addNodeObject(number, "Surface data",	s_node_surface_data,	"Node_Surface_data",	Node_create_Surface_data);
 	
 	var color = ds_list_create();
 	addNodeCatagory("Color", color);
@@ -168,11 +170,10 @@ function NodeObject(_name, _spr, _create, tags = []) constructor {
 	addNodeObject(generator, "Perlin noise",		s_node_noise_perlin,		"Node_Perlin",				Node_create_Perlin);
 	addNodeObject(generator, "Cellular noise",		s_node_noise_cell,			"Node_Cellular",			Node_create_Cellular);
 	addNodeObject(generator, "Grid noise",			s_node_grid_noise,			"Node_Grid_Noise",			Node_create_Grid_Noise);
-	addNodeObject(generator, "Grid",				s_node_grid_noise,			"Node_Grid",				Node_create_Grid);
+	addNodeObject(generator, "Grid",				s_node_grid,				"Node_Grid",				Node_create_Grid);
 	addNodeObject(generator, "Anisotropic noise",	s_node_noise_aniso,			"Node_Noise_Aniso",			Node_create_Noise_Aniso);
 	addNodeObject(generator, "Seperate shape",	    s_node_sepearte_shape,		"Node_Seperate_Shape",		Node_create_Seperate_Shape);
 	addNodeObject(generator, "Text",				s_node_text,				"Node_Text",				Node_create_Text);
-	addNodeObject(generator, "Pixel cloud",			s_node_pixel_cloud,			"Node_Pixel_Cloud",			Node_create_Pixel_Cloud);
 	
 	var render = ds_list_create();
 	addNodeCatagory("Render", render);

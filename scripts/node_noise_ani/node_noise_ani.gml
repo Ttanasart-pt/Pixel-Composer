@@ -30,6 +30,10 @@ function Node_Noise_Aniso(_x, _y) : Node(_x, _y) constructor {
 	
 	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, surface_create(1, 1));
 	
+	static drawOverlay = function(_active, _x, _y, _s, _mx, _my) {
+		inputs[| 3].drawOverlay(_active, _x, _y, _s, _mx, _my);
+	}
+	
 	function update() {
 		var _dim = inputs[| 0].getValue();
 		var _amo = inputs[| 1].getValue();
@@ -46,7 +50,7 @@ function Node_Noise_Aniso(_x, _y) : Node(_x, _y) constructor {
 		surface_set_target(_outSurf);
 		shader_set(shader);
 			shader_set_uniform_f_array(uniform_noi, _amo);
-			shader_set_uniform_f_array(uniform_pos, _pos);
+			shader_set_uniform_f(uniform_pos, _pos[0] / _dim[0], _pos[1] / _dim[1]);
 			shader_set_uniform_f(uniform_sed, _sed);
 			
 			draw_sprite_ext(s_fx_pixel, 0, 0, 0, _dim[0], _dim[1], 0, c_white, 1);
