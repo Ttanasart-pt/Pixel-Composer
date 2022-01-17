@@ -4,6 +4,7 @@
 #endregion
 
 function LOAD_SAMPLE() {
+	ds_list_clear(SAMPLE_PROJECTS);
 	var _l = get_program_directory() + "Sample Projects";
 	var file = file_find_first(_l + "/*", fa_directory);
 	while(file != "") {
