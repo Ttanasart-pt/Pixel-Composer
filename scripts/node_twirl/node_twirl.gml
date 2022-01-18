@@ -32,7 +32,7 @@ function Node_Twirl(_x, _y) : Node_Processor(_x, _y) constructor {
 		inputs[| 3].drawOverlay(_active, px, py, _s, _mx, _my, 0, 1, s_anchor_scale_hori);
 	}
 	
-	function process_data(_outSurf, _data, _output_index) {
+	static process_data = function(_outSurf, _data, _output_index) {
 		surface_set_target(_outSurf);
 		draw_clear_alpha(0, 0);
 		BLEND_ADD

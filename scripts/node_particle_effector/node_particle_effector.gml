@@ -72,7 +72,7 @@ function Node_Particle_Effector(_x, _y) : Node(_x, _y) constructor {
 		inputs[| 2].drawOverlay(_active, _x, _y, _s, _mx, _my);
 	}
 	
-	function step() {
+	static step = function() {
 		var _type = inputs[| 5].getValue();
 		switch(_type) {
 			case FORCE_TYPE.Wind :	
@@ -205,7 +205,7 @@ function Node_Particle_Effector(_x, _y) : Node(_x, _y) constructor {
 		}
 	}
 	
-	function update() {
+	static update = function() {
 		var jun = outputs[| 0];
 		for(var j = 0; j < ds_list_size(jun.value_to); j++) {
 			if(jun.value_to[| j].value_from == jun) {

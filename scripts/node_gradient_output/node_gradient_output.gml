@@ -23,7 +23,7 @@ function Node_Gradient_Out(_x, _y) : Node(_x, _y) constructor {
 	outputs[| 1] = nodeValue(1, "Color", self, JUNCTION_CONNECT.output, VALUE_TYPE.color, c_white);
 	
 	_pal = -1;
-	function update() {
+	static update = function() {
 		var pal = inputs[| 0].getValue();
 		var pos = inputs[| 1].getValue();
 		

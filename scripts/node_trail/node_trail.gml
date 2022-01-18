@@ -25,7 +25,7 @@ function Node_Trail(_x, _y) : Node_Processor(_x, _y) constructor {
 	
 	temp_surf = [ surface_create(1, 1), surface_create(1, 1) ];
 	
-	function process_data(_outSurf, _data, _output_index) {
+	static process_data = function(_outSurf, _data, _output_index) {
 		if(!inputs[| 0].value_from) 
 			return _outSurf;
 		if(array_length(cached_output) != ANIMATOR.frames_total + 1)

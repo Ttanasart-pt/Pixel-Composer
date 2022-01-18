@@ -72,7 +72,7 @@ function Node_Text(_x, _y) : Node_Processor(_x, _y) constructor {
 		}
 	}
 	
-	function process_data(_outSurf, _data, _output_index) {
+	static process_data = function(_outSurf, _data, _output_index) {
 		var str    = _data[0];
 		var _font  = _data[1];
 		var _size  = _data[2];

@@ -27,7 +27,7 @@ function Node_Palette(_x, _y) : Node(_x, _y) constructor {
 	
 	_pal = -1;
 	_ran = [0, 1];
-	function update() {
+	static update = function() {
 		var pal = inputs[| 0].getValue();
 		var ran = inputs[| 1].getValue();
 		

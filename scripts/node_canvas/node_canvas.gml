@@ -497,7 +497,7 @@ function Node_Canvas(_x, _y) : Node(_x, _y) constructor {
 		#endregion
 	}
 	
-	function update() {
+	static update = function() {
 		var _dim   = inputs[| 0].getValue();
 		
 		var _outSurf = outputs[| 0].getValue();
@@ -527,9 +527,9 @@ function Node_Canvas(_x, _y) : Node(_x, _y) constructor {
 		_map[? "surface"] = buffer_base64_encode(surface_buffer, 0, buffer_get_size(surface_buffer));
 	}
 	
-	static doDeserialize = function(_map) {
-		if(!ds_map_exists(_map, "surface")) return;
-		surface_buffer = buffer_base64_decode(_map[? "surface"]);
+	static postDeserialize = function() {
+		if(!ds_map_exists(load_map, "surface")) return;
+		surface_buffer = buffer_base64_decode(load_map[? "surface"]);
 		var _outSurf = outputs[| 0].getValue();
 		buffer_set_surface(surface_buffer, _outSurf, 0);
 	}

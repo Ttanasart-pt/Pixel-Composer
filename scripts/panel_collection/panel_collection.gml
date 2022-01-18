@@ -197,7 +197,7 @@ function Panel_Collection(_panel) : PanelContent(_panel) constructor {
 		return hh;
 	});
 	
-	function onResize(dw, dh) {
+	function onResize() {
 		content_w = w - 24 - group_w;
 		content_h = h - 32 - 16;
 		contentPane.resize(content_w, content_h);

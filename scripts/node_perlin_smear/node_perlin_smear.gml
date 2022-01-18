@@ -30,7 +30,7 @@ function Node_Perlin_Smear(_x, _y) : Node(_x, _y) constructor {
 	
 	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, surface_create(1, 1));
 	
-	function update() {
+	static update = function() {
 		var _dim = inputs[| 0].getValue();
 		var _pos = inputs[| 1].getValue();
 		var _sca = inputs[| 2].getValue();

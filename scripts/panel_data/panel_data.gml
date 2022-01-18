@@ -121,7 +121,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 		if(content) {
 			content.w = w;
 			content.h = h;
-			content.onResize(dw, dh);
+			content.onResize();
 		}
 	}
 	
@@ -149,7 +149,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 		w = _w;
 		if(content) {
 			content.w = w;
-			content.onResize(w - prev_w, 0);
+			content.onResize();
 		}
 		
 		if(parent == noone) PANEL_MAIN = _panelParent;
@@ -178,7 +178,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 		h = _h;
 		if(content) {
 			content.h = h;
-			content.onResize(0, h - prev_h);
+			content.onResize();
 		}
 		
 		if(parent == noone) PANEL_MAIN = _panelParent;
@@ -285,7 +285,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 		}
 	}
 	
-	function step() {
+	static step = function() {
 		for(var i = 0; i < ds_list_size(childs); i++) {
 			var _panel = childs[| i];
 			_panel.step();
@@ -395,10 +395,10 @@ function PanelContent(_panel) constructor {
 	min_h = 32;
 	
 	function refresh() {
-		onResize(0, 0);
+		onResize();
 	}
 	
-	function onResize(dw, dh) {}
+	function onResize() {}
 	
 	function onStepBegin() {
 		mx = mouse_mx - x;

@@ -32,7 +32,7 @@ function Node_Blur_Directional(_x, _y) : Node_Processor(_x, _y) constructor {
 		inputs[| 2].drawOverlay(_active, _x + ww / 2 * _s, _y + hh / 2 * _s, _s, _mx, _my);
 	}
 	
-	function process_data(_outSurf, _data, _output_index) {
+	static process_data = function(_outSurf, _data, _output_index) {
 		var _str = _data[1];
 		var _dir = _data[2];
 		surface_set_target(_outSurf);

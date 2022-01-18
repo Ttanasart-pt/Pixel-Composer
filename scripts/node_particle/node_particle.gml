@@ -83,7 +83,7 @@ function __part() constructor {
 		active = false;	
 	}
 	
-	function step() {
+	static step = function() {
 		if(!active) return;
 		var xp = x, yp = y;
 		x  += sx;
@@ -444,7 +444,7 @@ function Node_Particle(_x, _y) : Node(_x, _y) constructor {
 		}
 	}
 	
-	function step() {
+	static step = function() {
 		var _inSurf = inputs[| 0].getValue();
 		var _scatt  = inputs[| 27].getValue();
 		
@@ -535,7 +535,7 @@ function Node_Particle(_x, _y) : Node(_x, _y) constructor {
 		cacheCurrentFrame(_outSurf);
 	}
 	
-	function update() {
+	static update = function() {
 		reset();
 	}
 	doUpdate();

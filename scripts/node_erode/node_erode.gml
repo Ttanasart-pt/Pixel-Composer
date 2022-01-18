@@ -17,7 +17,7 @@ function Node_Erode(_x, _y) : Node_Processor(_x, _y) constructor {
 	
 	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, surface_create(1, 1));
 	
-	function process_data(_outSurf, _data, _output_index) {
+	static process_data = function(_outSurf, _data, _output_index) {
 		var wd = _data[1];
 		
 		surface_set_target(_outSurf);

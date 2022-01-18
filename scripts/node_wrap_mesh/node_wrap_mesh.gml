@@ -304,8 +304,8 @@ function Node_Mesh_Warp(_x, _y) : Node(_x, _y) constructor {
 		surface_reset_target();	
 	}
 	
-	static doDeserialize = function(_map) {
-		var _inputs = _map[? "inputs"];
+	static postDeserialize = function() {
+		var _inputs = load_map[? "inputs"];
 		
 		for(var i = control_index; i < ds_list_size(_inputs); i++) {
 			createControl();

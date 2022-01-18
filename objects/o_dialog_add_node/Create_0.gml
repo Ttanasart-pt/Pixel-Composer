@@ -13,6 +13,9 @@ event_inherited();
 	
 	destroy_on_click_out = true;
 	
+	node_selecting = 0;
+	node_focusing = -1;
+	
 	anchor = ANCHOR.left | ANCHOR.top;
 	
 	if(PANEL_GRAPH.getCurrentContext() == -1 && ADD_NODE_PAGE == "Group")
@@ -89,6 +92,7 @@ event_inherited();
 		var hh         = grid_space;
 		var yy         = _y + grid_space;
 		var name_height = 0;
+		var amo = 0;
 		
 		for(var i = 0; i < row; i++) {
 			name_height = 0;
@@ -116,13 +120,14 @@ event_inherited();
 					draw_set_text(f_p1, fa_center, fa_top, c_white);
 					name_height = max(name_height, string_height_ext(_node.name, -1, grid_size) + 8);
 					draw_text_ext(_boxx + grid_size / 2, yy + grid_size + 4, _node.name, -1, grid_width);
+					
+					amo++;
 				}
 			}
 			var hght = grid_size + grid_space + name_height;
 			hh += hght;
 			yy += hght;
 		}
-		
 		return hh;
 	});
 #endregion
@@ -157,16 +162,19 @@ event_inherited();
 	search_pane = new scrollPane(dialog_w - 32, dialog_h - 52 - 14, function(_y, _m) {
 		draw_clear_alpha(c_ui_blue_black, 0);
 		
-		var grid_size  = 64;
+		var grid_size = 64;
 		var grid_width = 80;
 		var grid_space = 16;
-		var col        = floor(search_pane.surface_w / (grid_width + grid_space));
-		var hh         = (grid_space + grid_size) * 2;
-		var yy         = _y + grid_space;
-		var index      = 0;
+		var col = floor(search_pane.surface_w / (grid_width + grid_space));
+		var hh = (grid_space + grid_size) * 2;
+		var yy = _y + grid_space;
+		var index = 0;
 		var name_height = 0;
+		var amo = 0;
+		var use_mouse = false;
 		
 		var search_lower = string_lower(search_string);
+		
 		for(var i = 0; i < ds_list_size(NODE_CATAGORY); i++) {
 			var _page = ALL_NODES[? NODE_CATAGORY[| i]];
 			
@@ -194,9 +202,19 @@ event_inherited();
 					draw_text_ext(_boxx + grid_size / 2, yy + grid_size + 4, _node.name, -1, grid_width);
 				
 					if(point_in_rectangle(_m[0], _m[1], _nx, yy, _nx + grid_width, yy + grid_size)) {
-						draw_sprite_stretched(s_node_active, 0, _boxx, yy, grid_size, grid_size);	
+						node_selecting = amo;
 						if(mouse_check_button_pressed(mb_left))
 							buildNode(_node);
+					}
+					
+					if(node_selecting == amo) {
+						draw_sprite_stretched(s_node_active, 0, _boxx, yy, grid_size, grid_size);
+						if(keyboard_check_pressed(vk_enter))
+							buildNode(_node);
+					}
+					
+					if(node_focusing == amo) {
+						search_pane.scroll_y_to = -max(0, hh - search_pane.h);	
 					}
 					
 					if(++index >= col) {
@@ -206,8 +224,22 @@ event_inherited();
 						hh += hght;
 						yy += hght;
 					}
+					
+					amo++;
 				}
 			}
+		}
+		
+		node_focusing = -1;
+		
+		if(keyboard_check_pressed(vk_up)) {
+			node_selecting = safe_mod(node_selecting - 1 + amo, amo);
+			node_focusing = node_selecting;
+		}
+		
+		if(keyboard_check_pressed(vk_down)) {
+			node_selecting = safe_mod(node_selecting + 1, amo);
+			node_focusing = node_selecting;
 		}
 		
 		return hh;

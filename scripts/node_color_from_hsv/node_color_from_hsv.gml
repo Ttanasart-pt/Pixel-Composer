@@ -22,7 +22,7 @@ function Node_Color_HSV(_x, _y) : Node(_x, _y) constructor {
 	
 	outputs[| 0] = nodeValue(0, "Color", self, JUNCTION_CONNECT.output, VALUE_TYPE.color, c_white);
 	
-	function update() { 
+	static update = function() { 
 		outputs[| 0].setValue(make_color_hsv(inputs[| 0].getValue() * 255, inputs[| 1].getValue() * 255, inputs[| 2].getValue() * 255));
 	}
 	doUpdate();

@@ -13,7 +13,7 @@ function Node_RGB_Channel(_x, _y) : Node_Processor(_x, _y) constructor {
 	outputs[| 1] = nodeValue(1, "Surface green", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, surface_create(1, 1));
 	outputs[| 2] = nodeValue(2, "Surface blue", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, surface_create(1, 1));
 	
-	function process_data(_outSurf, _data, output_index) {
+	static process_data = function(_outSurf, _data, output_index) {
 		surface_set_target(_outSurf);
 		draw_clear_alpha(0, 0);
 		BLEND_ADD

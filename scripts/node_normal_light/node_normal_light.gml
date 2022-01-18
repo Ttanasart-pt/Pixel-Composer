@@ -50,7 +50,7 @@ function Node_Normal_Light(_x, _y) : Node_Processor(_x, _y) constructor {
 		inputs[| 5].drawOverlay(_active, px, py, _s, _mx, _my);
 	}
 	
-	function process_data(_outSurf, _data, _output_index) {
+	static process_data = function(_outSurf, _data, _output_index) {
 		var _map = _data[1];
 		var _hei = _data[2];
 		var _amb = _data[3];

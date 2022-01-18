@@ -19,43 +19,67 @@ function Node_Group_Output(_x, _y, _group) : Node(_x, _y) constructor {
 	
 	inputs[| 0] = nodeValue(0, "Value", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, -1);
 	
-	_outParent = -1;
+	inputs[| 1] = nodeValue(1, "Order", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+		.setVisible(false);
 	
-	function createOutput() {
-		_outParent = nodeValue(ds_list_size(group.outputs), "Value", group, JUNCTION_CONNECT.output, VALUE_TYPE.any, -1);
-		ds_list_add(group.outputs, _outParent);
-		group.setHeight();
+	outParent = undefined;
+	output_index = -1;
+	
+	static onValueUpdate = function(index) {
+		if(is_undefined(outParent)) return;
 		
-		_outParent.setFrom(inputs[| 0]);
+		group.sortIO();
+	}
+	
+	function createOutput(override_order = true) {
+		if(group && is_struct(group)) {
+			if(override_order) {
+				output_index = ds_list_size(group.outputs);
+				inputs[| 1].setValue(output_index);
+			} else {
+				output_index = inputs[| 1].getValue();
+			}
+			
+			outParent = nodeValue(ds_list_size(group.outputs), "Value", group, JUNCTION_CONNECT.output, VALUE_TYPE.any, -1);
+			outParent.from = self;
+			ds_list_add(group.outputs, outParent);
+			group.setHeight();
+			group.sortIO();
+		
+			outParent.setFrom(inputs[| 0]);
+		}
 	}
 	if(!LOADING && !APPENDING)
 		createOutput();
 	
-	function step() {
-		_outParent.name = name; 
+	static step = function() {
+		if(is_undefined(outParent)) return;
+		
+		outParent.name = name; 
 
 		if(inputs[| 0].value_from) {
-			_outParent.type  = inputs[| 0].value_from.type;
+			outParent.type  = inputs[| 0].value_from.type;
 			inputs[| 0].type = inputs[| 0].value_from.type;
 		} else {
 			inputs[| 0].type = VALUE_TYPE.any;
 		}
 	}
 	function doUpdateForward() {
-		if(_outParent == -1) return;
+		if(is_undefined(outParent)) return;
 		
-		for(var j = 0; j < ds_list_size(_outParent.value_to); j++) {
-			if(_outParent.value_to[| j].value_from == _outParent) {
-				_outParent.value_to[| j].node.updateForward();
+		for(var j = 0; j < ds_list_size(outParent.value_to); j++) {
+			if(outParent.value_to[| j].value_from == outParent) {
+				outParent.value_to[| j].node.updateForward();
 			}
 		}
 	}
 	
-	function doConnect() {
-		createOutput();
+	static postDeserialize = function() {
+		createOutput(false);
 	}
 	
 	function onDestroy() {
-		ds_list_delete(group.outputs, ds_list_find_index(group.outputs, _outParent));
+		if(is_undefined(outParent)) return;
+		ds_list_delete(group.outputs, ds_list_find_index(group.outputs, outParent));
 	}
 }

@@ -64,7 +64,7 @@ function Node_Value_Processor(_x, _y) : Node(_x, _y) constructor {
 		}
 	}
 	
-	function update() {
+	static update = function() {
 		for(var i = 0; i < ds_list_size(outputs); i++) {
 			var _output = preProcess(i);
 			

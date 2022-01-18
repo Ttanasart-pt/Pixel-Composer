@@ -95,7 +95,7 @@ function Node_Crop(_x, _y) : Node_Processor(_x, _y) constructor {
 		}
 	}
 	
-	function process_data(_outSurf, _data, _output_index) {
+	static process_data = function(_outSurf, _data, _output_index) {
 		var _inSurf		= _data[0];
 		var _crop		= _data[1];
 		var _dim		= [ surface_get_width(_inSurf) - _crop[0] - _crop[2], surface_get_height(_inSurf) - _crop[1] - _crop[3] ];

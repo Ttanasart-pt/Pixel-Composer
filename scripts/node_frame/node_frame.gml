@@ -27,7 +27,7 @@ function Node_Frame(_x, _y) : Node(_x, _y) constructor {
 	inputs[| 1] = nodeValue(1, "Color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white )
 		.setVisible(false);
 	
-	function step() {
+	static step = function() {
 		var si = inputs[| 0].getValue();
 		w = si[0];
 		h = si[1];

@@ -73,7 +73,7 @@ function Node_Shape(_x, _y) : Node_Processor(_x, _y) constructor {
 		inputs[| 3].drawOverlay(_active, _x, _y, _s, _mx, _my);
 	}
 	
-	function process_data(_outSurf, _data, _output_index) {
+	static process_data = function(_outSurf, _data, _output_index) {
 		var _dim	= _data[0];
 		var _bg		= _data[1];
 		var _shape	= _data[2];

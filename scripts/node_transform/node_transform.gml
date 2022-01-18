@@ -114,7 +114,7 @@ function Node_Transform(_x, _y) : Node_Processor(_x, _y) constructor {
 			inputs[| 2].setValue([ surface_get_width(_surf) / 2, surface_get_height(_surf) / 2 ]);
 	}
 	
-	function step() {
+	static step = function() {
 		var pos = inputs[| 2].getValue();
 		
 		if(ANIMATOR.is_playing && ANIMATOR.frame_progress) {
@@ -131,7 +131,7 @@ function Node_Transform(_x, _y) : Node_Processor(_x, _y) constructor {
 		}
 	}
 	
-	function process_data(_outSurf, _data, _output_index) {
+	static process_data = function(_outSurf, _data, _output_index) {
 		var ins = _data[0];
 		
 		var out_type = _data[9];

@@ -22,7 +22,7 @@ function Node_Bloom(_x, _y) : Node_Processor(_x, _y) constructor {
 	
 	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, surface_create(1, 1));
 	
-	function process_data(_outSurf, _data, _output_index) {
+	static process_data = function(_outSurf, _data, _output_index) {
 		var _size = _data[1];
 		var _tole = _data[2];
 		var _stre = _data[3];

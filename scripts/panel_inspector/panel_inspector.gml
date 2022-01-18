@@ -365,7 +365,7 @@ function Panel_Inspector(_panel) : PanelContent(_panel) constructor {
 		prop_selecting.setString(clipboard_get_text());
 	}
 	
-	function onResize(dw, dh) {
+	function onResize() {
 		content_w = w - 32;
 		content_h = h - top_bar_h - 24;
 		contentPane.resize(content_w, content_h);

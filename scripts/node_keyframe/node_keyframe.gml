@@ -39,7 +39,6 @@ function animValue(_val, _node) constructor {
 	
 	static getValue = function() {
 		if(node.display_type == VALUE_DISPLAY.gradient) return processType(values);
-		
 		if(node.type == VALUE_TYPE.path) return processType(values[| 0].value);
 		
 		if(!is_anim) return processType(values[| 0].value);

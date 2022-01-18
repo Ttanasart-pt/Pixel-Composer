@@ -20,7 +20,7 @@ function Node_Array(_x, _y) : Node(_x, _y) constructor {
 	
 	outputs[| 0] = nodeValue(0, "Array", self, JUNCTION_CONNECT.output, VALUE_TYPE.any, []);
 	
-	function update() {
+	static update = function() {
 		var res = array_create(input_size);
 		
 		input_size = 0;

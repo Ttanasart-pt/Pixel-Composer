@@ -43,7 +43,7 @@ function Node_Render_Sprite_Sheet(_x, _y) : Node(_x, _y) constructor {
 	
 	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, surface_create(1, 1));
 	
-	function step() {
+	static step = function() {
 		var inpt = inputs[| 0].getValue();
 		var oupt = outputs[| 0].getValue();
 		
@@ -136,7 +136,7 @@ function Node_Render_Sprite_Sheet(_x, _y) : Node(_x, _y) constructor {
 		if(drawn) anim_drawn[ANIMATOR.current_frame] = true;
 	}
 	
-	function update() {
+	static update = function() {
 		for(var i = 0; i < array_length(anim_drawn); i++) anim_drawn[i] = false;
 		
 		var inpt = inputs[| 0].getValue();

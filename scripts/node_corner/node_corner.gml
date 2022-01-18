@@ -30,7 +30,7 @@ function Node_Corner(_x, _y) : Node_Processor(_x, _y) constructor {
 	
 	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, surface_create(1, 1));
 	
-	function process_data(_outSurf, _data, _output_index) {
+	static process_data = function(_outSurf, _data, _output_index) {
 		var wd = _data[1];
 		
 		var temp = surface_create(surface_get_width(_data[0]), surface_get_height(_data[0]));

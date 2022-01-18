@@ -11,6 +11,7 @@ function Node_Gradient(_x, _y) : Node(_x, _y) constructor {
 	uniform_grad = shader_get_uniform(sh_gradient, "gradient_color");
 	uniform_grad_time = shader_get_uniform(sh_gradient, "gradient_time");
 	uniform_grad_key = shader_get_uniform(sh_gradient, "gradient_keys");
+	uniform_grad_loop = shader_get_uniform(sh_gradient, "gradient_loop");
 	
 	uniform_type = shader_get_uniform(sh_gradient, "type");
 	uniform_center = shader_get_uniform(sh_gradient, "center");
@@ -23,33 +24,43 @@ function Node_Gradient(_x, _y) : Node(_x, _y) constructor {
 		.setDisplay(VALUE_DISPLAY.vector);
 	
 	inputs[| 1] = nodeValue(1, "Gradient", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white)
-		.setDisplay(VALUE_DISPLAY.gradient);
+		.setDisplay(VALUE_DISPLAY.gradient)
 	
 	inputs[| 2] = nodeValue(2, "Type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Linear", "Circular", "Radial" ]);
+		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Linear", "Circular", "Radial" ])
+		.setVisible(false);
 	
 	inputs[| 3] = nodeValue(3, "Angle", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.rotation);
-	
-	inputs[| 4] = nodeValue(4, "Radius", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, .5);
+		.setDisplay(VALUE_DISPLAY.rotation)
+		.setVisible(false);
+
+	inputs[| 4] = nodeValue(4, "Radius", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, .5)
+		.setVisible(false);
+		
 	inputs[| 5] = nodeValue(5, "Shift", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
-		.setDisplay(VALUE_DISPLAY.slider, [-2, 2, 0.01]);
+		.setDisplay(VALUE_DISPLAY.slider, [-2, 2, 0.01])
+		.setVisible(false);
 	
 	inputs[| 6] = nodeValue(6, "Center", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [def_surf_size / 2, def_surf_size / 2])
-		.setDisplay(VALUE_DISPLAY.vector);
+		.setDisplay(VALUE_DISPLAY.vector)
+		.setVisible(false);
+	
+	inputs[| 7] = nodeValue(7, "Loop", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false)
+		.setVisible(false);
 	
 	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, surface_create(1, 1));
 	
 	input_display_list = [
 		["Output",		true],	0, 
-		["Gradient",	false], 1, 2, 3, 4, 5, 6
+		["Gradient",	false], 1, 5, 7,
+		["Shape",		false], 2, 3, 4, 6
 	];
 	
 	static drawOverlay = function(_active, _x, _y, _s, _mx, _my) {
 		inputs[| 6].drawOverlay(_active, _x, _y, _s, _mx, _my);
 	}
 	
-	function update() {	
+	static update = function() {	
 		var _dim = inputs[| 0].getValue();
 		
 		var _outSurf = outputs[| 0].getValue();
@@ -67,6 +78,7 @@ function Node_Gradient(_x, _y) : Node(_x, _y) constructor {
 		var _rad = inputs[| 4].getValue();
 		var _shf = inputs[| 5].getValue();
 		var _cnt = inputs[| 6].getValue();
+		var _lop = inputs[| 7].getValue();
 		var _grad_color = [];
 		var _grad_time  = [];
 		
@@ -92,6 +104,7 @@ function Node_Gradient(_x, _y) : Node(_x, _y) constructor {
 			shader_set_uniform_f_array(uniform_grad, _grad_color);
 			shader_set_uniform_f_array(uniform_grad_time, _grad_time);
 			shader_set_uniform_i(uniform_grad_key, ds_list_size(_gra));
+			shader_set_uniform_i(uniform_grad_loop, _lop);
 			
 			shader_set_uniform_f_array(uniform_center, [_cnt[0] / _dim[0], _cnt[1] / _dim[1]]);
 			shader_set_uniform_i(uniform_type, _typ);

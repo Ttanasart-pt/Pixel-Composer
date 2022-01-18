@@ -8,10 +8,11 @@ uniform int gradient_blend;
 uniform vec4 gradient_color[16];
 uniform float gradient_time[16];
 uniform int keys;
+uniform float gradient_shift;
 
 void main() {
 	vec4 _col = v_vColour * texture2D( gm_BaseTexture, v_vTexcoord );
-	float prog = (_col.r + _col.g + _col.b) / 3.;
+	float prog = fract(dot(_col.rgb, vec3(0.2126, 0.7152, 0.0722)) + gradient_shift);
 	vec4 col = vec4(0.);
 	
 	for(int i = 0; i < 16; i++) {

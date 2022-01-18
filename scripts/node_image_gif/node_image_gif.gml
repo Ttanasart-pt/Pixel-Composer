@@ -103,7 +103,7 @@ function Node_Image_gif(_x, _y) : Node(_x, _y) constructor {
 		}
 	}
 	
-	function update() {
+	static update = function() {
 		var path = inputs[| 0].getValue();
 		if(path == "") return;
 		updatePaths(path);

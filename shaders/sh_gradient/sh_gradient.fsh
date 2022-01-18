@@ -10,6 +10,7 @@ uniform int gradient_blend;
 uniform vec4 gradient_color[16];
 uniform float gradient_time[16];
 uniform int gradient_keys;
+uniform int gradient_loop;
 
 uniform vec2 center;
 uniform float angle;
@@ -56,6 +57,8 @@ void main() {
 		prog = (_a - floor(_a / TAU) * TAU) / TAU;
 	}
 	prog += shift;
+	if(gradient_loop == 1) 
+		prog = fract(prog);
 	
 	vec4 col = gradientEval(prog);
 	

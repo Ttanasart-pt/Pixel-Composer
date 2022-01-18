@@ -135,7 +135,7 @@ function Node_3D_Transform(_x, _y) : Node_Processor(_x, _y) constructor {
 		}
 	}
 	
-	function process_data(_outSurf, _data, _output_index) {
+	static process_data = function(_outSurf, _data, _output_index) {
 		var _out_type = inputs[| 4].getValue();
 		var _out = inputs[| 5].getValue();
 		

@@ -59,7 +59,7 @@ function Node_Scatter(_x, _y) : Node(_x, _y) constructor {
 		inputs[| 5].drawOverlay(_active, _x, _y, _s, _mx, _my);
 	}
 	
-	function update() {
+	static update = function() {
 		var _inSurf = inputs[| 0].getValue(), surf;
 		if(_inSurf == 0)
 			return;

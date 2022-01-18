@@ -135,7 +135,7 @@ function Node_3D_Cube(_x, _y) : Node(_x, _y) constructor {
 		}
 	}
 	
-	function update() {
+	static update = function() {
 		var _inSurf = inputs[| 0].getValue();
 		
 		var _ww  = surface_get_width(_inSurf);

@@ -106,7 +106,7 @@ function Node_9Slice(_x, _y) : Node_Processor(_x, _y) constructor {
 		}
 	}
 	
-	function process_data(_outSurf, _data, _output_index) {
+	static process_data = function(_outSurf, _data, _output_index) {
 		var _inSurf		= _data[0];
 		var _dim		= _data[1];
 		var _splice		= _data[2];

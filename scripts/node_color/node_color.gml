@@ -16,7 +16,7 @@ function Node_Color(_x, _y) : Node(_x, _y) constructor {
 	
 	outputs[| 0] = nodeValue(0, "Color", self, JUNCTION_CONNECT.output, VALUE_TYPE.color, []);
 	
-	function update() {
+	static update = function() {
 		outputs[| 0].setValue(inputs[| 0].getValue());
 	}
 	

@@ -32,7 +32,7 @@ function log_newline() {
 exception_unhandled_handler(function(ex) {
 	var tt = "\n-------------------------- OH NO --------------------------\n\n";
 	tt += ex.longMessage;
-	tt += "\n-------------------------- STACK TRACE --------------------------\n";
+	tt += "\n-------------------------- STACK TRACE --------------------------\n\n";
 	for( var i = 0; i < array_length(ex.stacktrace); i++ ) {
 		tt += ex.stacktrace[i] + "\n";
 	}

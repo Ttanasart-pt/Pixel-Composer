@@ -82,7 +82,7 @@ function Node_2D_light(_x, _y) : Node_Processor(_x, _y) constructor {
 	}
 	
 	
-	function process_data(_outSurf, _data, _output_index) {
+	static process_data = function(_outSurf, _data, _output_index) {
 		var _shape = _data[1];
 		
 		switch(_shape) {

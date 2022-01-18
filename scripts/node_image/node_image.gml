@@ -83,7 +83,7 @@ function Node_Image(_x, _y) : Node(_x, _y) constructor {
 		return false;
 	}
 	
-	function update() {
+	static update = function() {
 		var path = inputs[| 0].getValue();
 		var pad  = inputs[| 1].getValue();
 		if(path == "") return;

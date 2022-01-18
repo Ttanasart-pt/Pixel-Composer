@@ -34,7 +34,7 @@ function Node_Noise_Aniso(_x, _y) : Node(_x, _y) constructor {
 		inputs[| 3].drawOverlay(_active, _x, _y, _s, _mx, _my);
 	}
 	
-	function update() {
+	static update = function() {
 		var _dim = inputs[| 0].getValue();
 		var _amo = inputs[| 1].getValue();
 		var _sed = inputs[| 2].getValue();

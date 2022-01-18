@@ -38,7 +38,7 @@ function Node_Mirror(_x, _y) : Node_Processor(_x, _y) constructor {
 		inputs[| 2].drawOverlay(_active, _posx, _posy, _s, _mx, _my);
 	}
 	
-	function process_data(_outSurf, _data, _output_index) {
+	static process_data = function(_outSurf, _data, _output_index) {
 		var _dim = [ surface_get_width(_data[0]), surface_get_height(_data[0]) ];
 		var _pos = _data[1];
 		var _ang = _data[2];

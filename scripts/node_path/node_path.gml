@@ -306,8 +306,8 @@ function Node_Path(_x, _y) : Node(_x, _y) constructor {
 		draw_sprite_ext(s_node_draw_path, 0, xx + w * _s / 2, yy + 10 + (h - 10) * _s / 2, _s, _s, 0, c_white, 1);
 	}
 	
-	static doDeserialize = function(_map) {
-		var _inputs = _map[? "inputs"];
+	static postDeserialize = function() {
+		var _inputs = load_map[? "inputs"];
 		
 		for(var i = list_start; i < ds_list_size(_inputs); i++) {
 			createAnchor(0, 0).deserialize(_inputs[| i]);

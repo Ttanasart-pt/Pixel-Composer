@@ -18,7 +18,7 @@ function Node_Time_Remap(_x, _y) : Node(_x, _y) constructor {
 	
 	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, surface_create(1, 1));
 	
-	function update() {
+	static update = function() {
 		if(array_length(cached_output) != ANIMATOR.frames_total + 1)
 			return;
 			

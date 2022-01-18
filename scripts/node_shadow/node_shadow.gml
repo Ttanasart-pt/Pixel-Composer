@@ -41,7 +41,7 @@ function Node_Shadow(_x, _y) : Node_Processor(_x, _y) constructor {
 		inputs[| 3].drawOverlay(_active, _x + ww / 2, _y + hh / 2, _s, _mx, _my);
 	}
 	
-	function process_data(_outSurf, _data, _output_index) {
+	static process_data = function(_outSurf, _data, _output_index) {
 		var cl      = _data[1];
 		var _stre   = _data[2];
 		var _shf    = _data[3];

@@ -12,7 +12,8 @@ function Node_Group_Input(_x, _y, _group) : Node(_x, _y) constructor {
 	auto_height = false;
 	input_index = -1;
 	
-	self.group = _group;
+	group = _group;
+	inParent = undefined;
 	
 	w = 96;
 	h = 32 + 24;
@@ -38,11 +39,19 @@ function Node_Group_Input(_x, _y, _group) : Node(_x, _y) constructor {
 		.setDisplay(VALUE_DISPLAY.enum_button, [ "2", "3", "4" ])
 		.setVisible(false, false);
 	
-	input_display_list = [ 2, 0, 1, 3, 4 ];
+	inputs[| 5] = nodeValue(5, "Order", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+		.setVisible(false);
+	
+	input_display_list = [ 
+		["Data",	false], 2, 4,
+		["Display", false], 5, 0, 1, 3
+	];
 	
 	outputs[| 0] = nodeValue(0, "Value", self, JUNCTION_CONNECT.output, VALUE_TYPE.any, 0);
 	
-	function onValueUpdate(index) {
+	static onValueUpdate = function(index) {
+		if(is_undefined(inParent)) return;
+		
 		var _dtype = inputs[| 0].getValue();
 		var _range = inputs[| 1].getValue();
 		var _val_type = inputs[| 2].getValue();
@@ -58,36 +67,36 @@ function Node_Group_Input(_x, _y, _group) : Node(_x, _y) constructor {
 			}
 		}
 		
-		_inParent.type = _val_type;
+		inParent.type = _val_type;
 		outputs[| 0].type = _val_type;
-		var _val = _inParent.getValue();
+		var _val = inParent.getValue();
 		
 		switch(_dtype) {
 			case VALUE_DISPLAY.range :
 			case VALUE_DISPLAY.slider :
-				_inParent.setDisplay(_dtype, [_range[0], _range[1], 0.01]);
+				inParent.setDisplay(_dtype, [_range[0], _range[1], 0.01]);
 				break;
 				
 			case VALUE_DISPLAY.slider_range :
-				_inParent.setDisplay(_dtype, [_range[0], _range[1], 0.01]);
+				inParent.setDisplay(_dtype, [_range[0], _range[1], 0.01]);
 			case VALUE_DISPLAY.rotation_range :
 				if(!is_array(_val) || array_length(_val) != 2) 
-					_inParent.value = new animValue([0, 0], _inParent);
+					inParent.value = new animValue([0, 0], inParent);
 				break;
 				
 			case VALUE_DISPLAY.enum_button :
 			case VALUE_DISPLAY.enum_scroll :
-				_inParent.setDisplay(_dtype, string_splice(_enum_label, ","));
+				inParent.setDisplay(_dtype, string_splice(_enum_label, ","));
 				break;
 				
 			case VALUE_DISPLAY.padding :
 				if(!is_array(_val) || array_length(_val) != 4)
-					_inParent.value = new animValue([0, 0, 0, 0], _inParent);
+					inParent.value = new animValue([0, 0, 0, 0], inParent);
 				break;
 				
 			case VALUE_DISPLAY.area :
 				if(!is_array(_val) || array_length(_val) != 5)
-					_inParent.value = new animValue([0, 0, 0, 0, 5], _inParent);
+					inParent.value = new animValue([0, 0, 0, 0, 5], inParent);
 				break;
 				
 			case VALUE_DISPLAY.vector :
@@ -95,40 +104,53 @@ function Node_Group_Input(_x, _y, _group) : Node(_x, _y) constructor {
 				switch(_vec_size) {
 					case 0 : 
 						if(!is_array(_val) || array_length(_val) != 2)
-							_inParent.value = new animValue([0, 0], _inParent);
+							inParent.value = new animValue([0, 0], inParent);
 						break;
 					case 1 : 
 						if(!is_array(_val) || array_length(_val) != 3)
-							_inParent.value = new animValue([0, 0, 0], _inParent);
+							inParent.value = new animValue([0, 0, 0], inParent);
 						break;
 					case 2 : 
 						if(!is_array(_val) || array_length(_val) != 4)
-							_inParent.value = new animValue([0, 0, 0, 0], _inParent);
+							inParent.value = new animValue([0, 0, 0, 0], inParent);
 						break;
 				}
 				
-				_inParent.setDisplay(_dtype);
+				inParent.setDisplay(_dtype);
 				break;
 				
 			case VALUE_DISPLAY.palette :
 				if(!is_array(_val))
-					_inParent.value = new animValue([c_black], _inParent);
+					inParent.value = new animValue([c_black], inParent);
 				break;
 				
 			default :
-				_inParent.setDisplay(_dtype);
+				inParent.setDisplay(_dtype);
 				break;
 		}
+		
+		group.sortIO();
 	}
 	
-	function createInput() {
-		input_index = ds_list_size(group.inputs);
-		_inParent = nodeValue(ds_list_size(group.inputs), "Value", group, JUNCTION_CONNECT.input, VALUE_TYPE.any, -1);
-		ds_list_add(group.inputs, _inParent);
-		outputs[| 0].setFrom(_inParent, false, false);
-		group.setHeight();
-		
-		onValueUpdate(0);
+	function createInput(override_order = false) {
+		if(group && is_struct(group)) {
+			if(override_order) {
+				input_index = ds_list_size(group.inputs);
+				inputs[| 5].setValue(input_index);
+			} else {
+				input_index = inputs[| 5].getValue();
+			}
+			
+			inParent = nodeValue(ds_list_size(group.inputs), "Value", group, JUNCTION_CONNECT.input, VALUE_TYPE.any, -1);
+			inParent.from = self;
+			
+			ds_list_add(group.inputs, inParent);
+			outputs[| 0].setFrom(inParent, false, false);
+			group.setHeight();
+			group.sortIO();
+			
+			onValueUpdate(0);
+		}
 	}
 	
 	if(!LOADING && !APPENDING)
@@ -137,8 +159,14 @@ function Node_Group_Input(_x, _y, _group) : Node(_x, _y) constructor {
 	dtype  = -1;
 	range  = 0;
 	
-	function update() {
-		_inParent.name = name;
+	static step = function() {
+		if(is_undefined(inParent)) return;
+		
+		inParent.name = name;	
+	}
+	
+	static update = function() {
+		if(is_undefined(inParent)) return;
 		
 		var _dtype = inputs[| 0].getValue();
 		
@@ -163,12 +191,14 @@ function Node_Group_Input(_x, _y, _group) : Node(_x, _y) constructor {
 		}
 	}
 	
-	static preConnect = function() {
-		createInput();
+	static postDeserialize = function() {
+		createInput(false);
 		onValueUpdate(0);
 	}
 	
 	function onDestroy() {
-		ds_list_remove(group.inputs, _inParent);
+		if(is_undefined(inParent)) return;
+		
+		ds_list_remove(group.inputs, inParent);
 	}
 }

@@ -56,7 +56,7 @@ function Node_Cellular(_x, _y) : Node(_x, _y) constructor {
 		inputs[| 1].drawOverlay(_active, _x, _y, _s, _mx, _my);
 	}
 	
-	function update() {
+	static update = function() {
 		var _dim = inputs[| 0].getValue();
 		var _pos = inputs[| 1].getValue();
 		var _sca = inputs[| 2].getValue();

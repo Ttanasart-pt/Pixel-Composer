@@ -52,13 +52,15 @@ function renderAll() {
 		}
 		
 		if(instanceof(rendering) == "Node_Group_Output") {
-			var _ot = rendering._outParent;
-			for(var j = 0; j < ds_list_size(_ot.value_to); j++) {
-				var _to = _ot.value_to[| j];
+			var _ot = rendering.outParent;
+			if(_ot != undefined) {
+				for(var j = 0; j < ds_list_size(_ot.value_to); j++) {
+					var _to = _ot.value_to[| j];
 				
-				if(_to.node.active && _to.value_from != noone && _to.value_from.node == rendering.group) {
-					_to.node.rendered = false;
-					ds_queue_enqueue(render_q, _to.node);
+					if(_to.node.active && _to.value_from != noone && _to.value_from.node == rendering.group) {
+						_to.node.rendered = false;
+						ds_queue_enqueue(render_q, _to.node);
+					}
 				}
 			}
 		} else {

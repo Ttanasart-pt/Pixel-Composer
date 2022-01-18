@@ -185,7 +185,7 @@ function Node_3D_Cylinder(_x, _y) : Node(_x, _y) constructor {
 		camera_set_view_mat(cam, cam_proj);
 	#endregion
 	
-	function update() {
+	static update = function() {
 		var _sides = inputs[| 0].getValue();
 		var _thick = inputs[| 1].getValue();
 		

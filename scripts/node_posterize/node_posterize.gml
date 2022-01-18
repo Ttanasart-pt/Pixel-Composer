@@ -32,7 +32,7 @@ function Node_Posterize(_x, _y) : Node_Processor(_x, _y) constructor {
 	
 	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, surface_create(1, 1));
 	
-	function step() {
+	static step = function() {
 		var _use_pal = inputs[| 2].getValue();
 		
 		inputs[| 1].show_in_inspector = _use_pal;
@@ -40,7 +40,7 @@ function Node_Posterize(_x, _y) : Node_Processor(_x, _y) constructor {
 		inputs[| 4].show_in_inspector = !_use_pal;
 	}
 	
-	function process_data(_outSurf, _data, _output_index) {
+	static process_data = function(_outSurf, _data, _output_index) {
 		var _gra     = _data[1];
 		var _use_gra = _data[2];
 		

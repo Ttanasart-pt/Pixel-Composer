@@ -38,7 +38,7 @@ function Node_Outline(_x, _y) : Node_Processor(_x, _y) constructor {
 	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, surface_create(1, 1));
 	outputs[| 1] = nodeValue(1, "Outline", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, surface_create(1, 1));
 	
-	function process_data(_outSurf, _data, _output_index) {
+	static process_data = function(_outSurf, _data, _output_index) {
 		var ww = surface_get_width(_data[0]);
 		var hh = surface_get_height(_data[0]);
 		var wd = _data[1];
@@ -73,7 +73,7 @@ function Node_Outline(_x, _y) : Node_Processor(_x, _y) constructor {
 		return _outSurf;
 	}
 	
-	function step() {
+	static step = function() {
 		var blend = inputs[| 3].getValue();
 		inputs[| 4].show_in_inspector = blend;
 	}

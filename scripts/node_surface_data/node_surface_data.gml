@@ -18,7 +18,7 @@ function Node_Surface_data(_x, _y) : Node(_x, _y) constructor {
 	min_h = 0;
 	w = 96;
 	
-	function update() {
+	static update = function() {
 		var _insurf	= inputs[| 0].getValue();
 		if(is_array(_insurf)) {
 			var len = array_length(_insurf);

@@ -37,7 +37,7 @@ function Node_Stripe(_x, _y) : Node(_x, _y) constructor {
 		inputs[| 2].drawOverlay(_active, px, py, _s, _mx, _my);
 	}
 	
-	function update() {
+	static update = function() {
 		var _dim = inputs[| 0].getValue();
 		var _amo = inputs[| 1].getValue();
 		var _ang = inputs[| 2].getValue();

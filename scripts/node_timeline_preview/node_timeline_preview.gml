@@ -16,7 +16,7 @@ function Node_Timeline_Preview(_x, _y) : Node(_x, _y) constructor {
 	
 	inputs[| 0] = nodeValue(0, "Surface", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 	
-	function update() {
+	static update = function() {
 		var _inSurf = inputs[| 0].getValue();
 		if(_inSurf == 0) return;
 		

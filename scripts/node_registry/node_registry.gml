@@ -209,8 +209,11 @@ function NodeObject(_name, _spr, _create, tags = []) constructor {
 		
 		var _node = NODE_CREATE_FUCTION[? _type](_x, _y);
 		
-		if(_node) 
-			_node.deserialize(_data, scale);
+		if(_node) {
+			_node.load_map = ds_map_create();
+			ds_map_copy(_node.load_map, _data);
+			_node.deserialize(scale);
+		}
 			
 		return _node;
 	}

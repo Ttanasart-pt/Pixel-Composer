@@ -63,7 +63,7 @@ function Node_Color_adjust(_x, _y) : Node_Processor(_x, _y) constructor {
 		["Color blend", false], 6, 7, 9
 	];
 	
-	function process_data(_outSurf, _data, _output_index) {
+	static process_data = function(_outSurf, _data, _output_index) {
 		var _exp = _data[1];
 		var _con = _data[2];
 		var _hue = _data[3];

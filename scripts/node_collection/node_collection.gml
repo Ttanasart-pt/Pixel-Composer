@@ -27,7 +27,7 @@ function Node_Collection(_x,  _y) : Node(_x,  _y) constructor {
 		}
 	}
 	
-	function step() {
+	static step = function() {
 		render_time = 0;
 		for(var i = 0; i < ds_list_size(nodes); i++) {
 			nodes[| i].step();
@@ -40,15 +40,48 @@ function Node_Collection(_x,  _y) : Node(_x,  _y) constructor {
 		}
 	}
 	
-	load_map = -1;
-	
-	function doDeserialize(map) {
-		load_map = ds_map_create();
-		ds_map_copy(load_map, map);
+	static preConnect = function() {
+		sortIO();
+		deserialize(keyframe_scale);
 	}
 	
-	static doConnect = function() {
-		deserialize(load_map, keyframe_scale);
-		ds_map_destroy(load_map);
+	static sortIO = function() {
+		var siz = ds_list_size(inputs);
+		var ar = ds_priority_create();
+		
+		for( var i = 0; i < siz; i++ ) {
+			var _in = inputs[| i];
+			var _or = _in.from.inputs[| 5].getValue();
+			
+			ds_priority_add(ar, _in, _or);
+		}
+		
+		ds_list_clear(inputs);
+		for( var i = 0; i < siz; i++ ) {
+			var _jin = ds_priority_delete_min(ar);
+			_jin.index = i;
+			ds_list_add(inputs, _jin);
+		}
+		
+		ds_priority_destroy(ar);
+		
+		var siz = ds_list_size(outputs);
+		var ar = ds_priority_create();
+		
+		for( var i = 0; i < siz; i++ ) {
+			var _out = outputs[| i];
+			var _or = _out.from.inputs[| 1].getValue();
+			
+			ds_priority_add(ar, _out, _or);
+		}
+		
+		ds_list_clear(outputs);
+		for( var i = 0; i < siz; i++ ) {
+			var _jout = ds_priority_delete_min(ar);
+			_jout.index = i;
+			ds_list_add(outputs, _jout);
+		}
+		
+		ds_priority_destroy(ar);
 	}
 }

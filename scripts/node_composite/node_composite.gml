@@ -247,7 +247,7 @@ function Node_Composite(_x, _y) : Node_Processor(_x, _y) constructor {
 		}
 	}
 	
-	function process_data(_outSurf, _data, _output_index) {
+	static process_data = function(_outSurf, _data, _output_index) {
 		var _pad = _data[0];
 		var _dim_type = _data[1];
 		var _dim = _data[2];
@@ -325,8 +325,8 @@ function Node_Composite(_x, _y) : Node_Processor(_x, _y) constructor {
 		surface_reset_target();
 	}
 	
-	static doDeserialize = function(_map) {
-		var _inputs = _map[? "inputs"];
+	static postDeserialize = function() {
+		var _inputs = load_map[? "inputs"];
 		
 		for(var i = input_fix_len; i < ds_list_size(_inputs); i += data_length) {
 			createNewSurface();

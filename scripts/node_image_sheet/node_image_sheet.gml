@@ -223,7 +223,7 @@ function Node_Image_Sheet(_x, _y) : Node(_x, _y) constructor {
 		}
 	}
 	
-	function update() {
+	static update = function() {
 		if(inputs[| 0].value_from == noone) return;
 		var _inSurf  = inputs[| 0].getValue();
 		

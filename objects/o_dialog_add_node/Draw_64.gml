@@ -21,6 +21,8 @@ if !ready exit;
 		draw_sprite_stretched(s_ui_panel_bg, 0, dialog_x + 120, dialog_y + 14, dialog_w - 120 - 14, dialog_h - 28);
 		content_pane.active = FOCUS == self;
 		content_pane.draw(dialog_x + 120, dialog_y + 14);
+		
+		node_selecting = 0;
 	} else {
 		tb_search.draw(dialog_x + 14, dialog_y + 14, dialog_w - 28, 32, search_string, [mouse_mx, mouse_my]);
 		

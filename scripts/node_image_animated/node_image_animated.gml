@@ -110,7 +110,7 @@ function Node_Image_Animated(_x, _y) : Node(_x, _y) constructor {
 		return true;
 	}
 	
-	function update() {
+	static update = function() {
 		var path = inputs[| 0].getValue();
 		if(path == "") return;
 		if(is_array(path) && !array_equals(path, path_loaded)) 

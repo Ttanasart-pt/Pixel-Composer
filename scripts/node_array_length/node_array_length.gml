@@ -16,7 +16,7 @@ function Node_Array_Length(_x, _y) : Node(_x, _y) constructor {
 	
 	outputs[| 0] = nodeValue(0, "Size", self, JUNCTION_CONNECT.output, VALUE_TYPE.integer, 0);
 	
-	function update() {
+	static update = function() {
 		var _arr = inputs[| 0].getValue();
 		if(!is_array(_arr)) return;
 		outputs[| 0].setValue(array_length(_arr));

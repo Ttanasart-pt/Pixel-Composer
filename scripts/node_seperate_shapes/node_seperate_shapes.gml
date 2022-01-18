@@ -39,7 +39,7 @@ function Node_Seperate_Shape(_x, _y) : Node(_x, _y) constructor {
 	
 	_prev_type = -1;
 	
-	function update() {
+	static update = function() {
 		var _inSurf = inputs[| 0].getValue();
 		var _out_type = inputs[| 1].getValue();
 		var t = current_time;

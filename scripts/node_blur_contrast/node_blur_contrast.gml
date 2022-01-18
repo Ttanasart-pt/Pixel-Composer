@@ -23,7 +23,7 @@ function Node_Blur_Contrast(_x, _y) : Node_Processor(_x, _y) constructor {
 	
 	pass = surface_create(1, 1);
 	
-	function process_data(_outSurf, _data, _output_index) {
+	static process_data = function(_outSurf, _data, _output_index) {
 		var _surf = _data[0];
 		var _size = _data[1];
 		var _tres = _data[2];

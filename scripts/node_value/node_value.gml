@@ -368,8 +368,24 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 	resetDisplay();
 	
 	static getValue = function() {
-		var val = getValueRecursive(tag);
+		var _val = getValueRecursive();
+		var val = _val[0];
+		var typ = _val[1];
+		
 		var _base = value.getValue();
+		
+		if((tag & VALUE_TAG.dimension_2d) && typ == VALUE_TYPE.surface) {
+			if(is_array(val)) {
+				if(array_length(val) > 0 && is_surface(val[0])) {
+					var _v = array_create(array_length(val));
+					for( var i = 0; i < array_length(val); i++ )
+						_v[i] = [ surface_get_width(val[i]), surface_get_height(val[i]) ];
+					return _v;
+				}
+			} else if (is_surface(val)) {
+				return [ surface_get_width(val), surface_get_height(val) ];
+			}
+		}
 		
 		if(is_array(_base)) {
 			if(!is_array(val))
@@ -384,26 +400,13 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 		return val;
 	}
 	
-	static getValueRecursive = function(_tag) {
-		var val = -1;
+	static getValueRecursive = function() {
+		var val = [ -1, VALUE_TYPE.any ];
 		
 		if(value_from == noone)
-			val = value.getValue();
+			val = [value.getValue(), type];
 		else if(value_from != self) {
-			val = value_from.getValueRecursive(_tag); 
-			
-			if((_tag & VALUE_TAG.dimension_2d) && value_from.type == VALUE_TYPE.surface) {
-				if(is_array(val)) {
-					if(array_length(val) > 0 && is_surface(val[0])) {
-						var _v = array_create(array_length(val));
-						for( var i = 0; i < array_length(val); i++ )
-							_v[i] = [ surface_get_width(val[i]), surface_get_height(val[i]) ];
-						return _v;
-					}
-				} else if (is_surface(val)) {
-					return [ surface_get_width(val), surface_get_height(val) ];
-				}
-			}
+			val = value_from.getValueRecursive(); 
 		}
 		
 		return val;
@@ -971,14 +974,15 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 			if(con_index < _ol) {
 				if(setFrom(_nd.outputs[| con_index], false)) 
 					return true;
-				else {
+				else
 					log_warning("LOAD", "[Connect] Connection conflict " + string(node.name) + " to " + string(_nd.name) + " : Connection failed.");
-					return true;
-				}
+				return false;
 			} else {
 				log_warning("LOAD", "[Connect] Connection conflict " + string(node.name) + " to " + string(_nd.name) + " : Node not exist.");
 				return false;
 			}
+		} else {
+			log_warning("LOAD", "[Connect] Connection error, node does not exist.");
 		}
 		
 		var txt = "Node connect error : Node ID " + string(con_node + APPEND_ID) + " not found.";

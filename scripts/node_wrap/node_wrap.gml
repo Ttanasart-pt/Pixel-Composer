@@ -168,7 +168,7 @@ function Node_Warp(_x, _y) : Node_Processor(_x, _y) constructor {
 		}
 	}
 	
-	function process_data(_outSurf, _data, _output_index) {
+	static process_data = function(_outSurf, _data, _output_index) {
 		var ww = surface_get_width(_data[0]);
 		var hh = surface_get_height(_data[0]);
 		var tl = _data[1];

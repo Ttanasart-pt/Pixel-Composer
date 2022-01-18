@@ -9,9 +9,9 @@ function Node_Processor(_x, _y) : Node(_x, _y) constructor {
 	
 	icon    = s_node_processor;
 	
-	function process_data(_outSurf, _data, _output_index) { return _outSurf; }
+	static process_data = function(_outSurf, _data, _output_index) { return _outSurf; }
 	
-	function update() {
+	static update = function() {
 		var len = 0;
 		for(var i = 0; i < ds_list_size(inputs); i++) {
 			var _in = inputs[| i].getValue();

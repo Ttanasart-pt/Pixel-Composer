@@ -20,7 +20,7 @@ function Node_Sampler(_x, _y) : Node(_x, _y) constructor {
 	}
 	
 	_input = -1;
-	function update() {
+	static update = function() {
 		var _surf = inputs[| 0].getValue();
 		if(!is_surface(_surf)) return;
 		if(_input != _surf) {
