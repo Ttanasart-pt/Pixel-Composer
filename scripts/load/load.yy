@@ -6,7 +6,7 @@
     "path": "folders/functions/save load.yy",
   },
   "resourceVersion": "1.0",
-  "name": "save_load",
+  "name": "load",
   "tags": [],
   "resourceType": "GMScript",
 }
