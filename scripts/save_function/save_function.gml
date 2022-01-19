@@ -4,7 +4,7 @@ function NEW() {
 	room_restart();
 				
 	gc_collect();
-	CURRENT_PATH = "";
+	setPath("");
 }
 
 function clearNodes() {
@@ -46,17 +46,22 @@ function save_serialize() {
 }
 
 function SET_PATH(path) {
-	if(READONLY)
-		window_set_caption("[READ ONLY] " + filename_name(path) + " - Pixel Composer");
-	else {
-		var index = ds_list_find_index(RECENT_FILES, path);
-		if(CURRENT_PATH != path) {
-			if(index != -1)
-				ds_list_delete(RECENT_FILES, index);
-			ds_list_insert(RECENT_FILES, 0, path);
-			RECENT_SAVE();
+	if(path == "") {
+		READONLY = false;
+		window_set_caption("Pixel Composer");
+	} else {
+		if(READONLY)
+			window_set_caption("[READ ONLY] " + filename_name(path) + " - Pixel Composer");
+		else {
+			var index = ds_list_find_index(RECENT_FILES, path);
+			if(CURRENT_PATH != path) {
+				if(index != -1)
+					ds_list_delete(RECENT_FILES, index);
+				ds_list_insert(RECENT_FILES, 0, path);
+				RECENT_SAVE();
+			}
+			window_set_caption(filename_name(path) + " - Pixel Composer");
 		}
-		window_set_caption(filename_name(path) + " - Pixel Composer");
 	}
 	
 	CURRENT_PATH = path;
