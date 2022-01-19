@@ -22,9 +22,8 @@ function Node_Path(_x, _y) : Node(_x, _y) constructor {
 		var index = ds_list_size(inputs);
 		
 		inputs[| index] = nodeValue(index, "Anchor",  self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ _x, _y, 0, 0, 0, 0 ])
-			.setDisplay(VALUE_DISPLAY.vector)
+			.setDisplay(VALUE_DISPLAY.vector);
 			
-		
 		return inputs[| index];
 	}
 	

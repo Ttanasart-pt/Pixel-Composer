@@ -151,7 +151,7 @@
     {"id":{"name":"s_node_transform_single","path":"sprites/s_node_transform_single/s_node_transform_single.yy",},"order":89,},
     {"id":{"name":"s_button_hide_fill","path":"sprites/s_button_hide_fill/s_button_hide_fill.yy",},"order":15,},
     {"id":{"name":"sh_blur_radial","path":"shaders/sh_blur_radial/sh_blur_radial.yy",},"order":18,},
-    {"id":{"name":"sh_grid","path":"shaders/sh_grid/sh_grid.yy",},"order":35,},
+    {"id":{"name":"sh_grid","path":"shaders/sh_grid/sh_grid.yy",},"order":14,},
     {"id":{"name":"s_button_hide","path":"sprites/s_button_hide/s_button_hide.yy",},"order":10,},
     {"id":{"name":"sh_twirl","path":"shaders/sh_twirl/sh_twirl.yy",},"order":19,},
     {"id":{"name":"s_checkbox","path":"sprites/s_checkbox/s_checkbox.yy",},"order":11,},

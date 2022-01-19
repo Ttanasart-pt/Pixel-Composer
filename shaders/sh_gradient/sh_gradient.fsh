@@ -56,8 +56,9 @@ void main() {
 		float _a = atan(_p.y, _p.x) + angle;
 		prog = (_a - floor(_a / TAU) * TAU) / TAU;
 	}
-	prog = abs(prog + shift);
+	prog = prog + shift;
 	if(gradient_loop == 1) { 
+		prog = abs(prog);
 		if(prog > 1.) {
 			if(prog == floor(prog))
 				prog = 1.;

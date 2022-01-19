@@ -6,10 +6,13 @@ varying vec4 v_vColour;
 
 uniform vec2  position;
 uniform vec2  scale;
+uniform float angle;
 uniform float width;
 
 void main() {
-	vec2 _pos = v_vTexcoord - position;
+	vec2 pos = v_vTexcoord - position, _pos;
+	_pos.x = pos.x * cos(angle) - pos.y * sin(angle);
+	_pos.y = pos.x * sin(angle) + pos.y * cos(angle);
 	
 	vec2 dist = _pos - floor(_pos * scale) / scale;
 	float ww = width / 2.;

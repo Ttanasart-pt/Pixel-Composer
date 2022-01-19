@@ -1,8 +1,8 @@
 {
   "type": 1,
   "parent": {
-    "name": "filter",
-    "path": "folders/shader/filter.yy",
+    "name": "generator",
+    "path": "folders/shader/generator.yy",
   },
   "resourceVersion": "1.0",
   "name": "sh_grid",

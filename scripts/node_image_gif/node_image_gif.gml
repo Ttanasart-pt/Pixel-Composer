@@ -43,7 +43,7 @@ function Node_Image_gif(_x, _y) : Node(_x, _y) constructor {
 	
 	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, surface_create(1, 1));
 	outputs[| 1] = nodeValue(1, "Path", self, JUNCTION_CONNECT.output, VALUE_TYPE.path, "")
-		.setVisible(true);
+		.setVisible(true, true);
 	
 	spr = noone;
 	path_current = "";
