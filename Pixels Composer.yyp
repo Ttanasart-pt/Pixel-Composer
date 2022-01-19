@@ -1,5 +1,6 @@
 {
   "resources": [
+    {"id":{"name":"panel_function","path":"scripts/panel_function/panel_function.yy",},"order":6,},
     {"id":{"name":"node_time_remap","path":"scripts/node_time_remap/node_time_remap.yy",},"order":33,},
     {"id":{"name":"s_node_blur","path":"sprites/s_node_blur/s_node_blur.yy",},"order":70,},
     {"id":{"name":"sh_perlin","path":"shaders/sh_perlin/sh_perlin.yy",},"order":1,},

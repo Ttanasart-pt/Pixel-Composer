@@ -67,8 +67,7 @@ function Node_Image(_x, _y) : Node(_x, _y) constructor {
 			case ".jpg":
 			case ".jpeg":
 			case ".gif":
-				name			= _name;
-				inputs[| 0].setValue(path);
+				name = _name;
 				outputs[| 1].setValue(path);
 				
 				if(spr) sprite_delete(spr);
@@ -76,7 +75,7 @@ function Node_Image(_x, _y) : Node(_x, _y) constructor {
 				
 				if(path_current == "") 
 					first_update = true;
-				path_current	= path;
+				path_current = path;
 				
 				return true;
 		}

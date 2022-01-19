@@ -71,7 +71,6 @@ function Node_Image_gif(_x, _y) : Node(_x, _y) constructor {
 		switch(ext) {
 			case ".gif":
 				name			= _name;
-				inputs[| 0].setValue(path);
 				outputs[| 1].setValue(path);
 				
 				if(spr) sprite_delete(spr);

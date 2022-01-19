@@ -95,7 +95,6 @@ function Node_Image_Animated(_x, _y) : Node(_x, _y) constructor {
 		spr = [];
 		
 		path_loaded = array_create(array_length(paths));
-		inputs[| 0].setValue(paths);
 		
 		for( var i = 0; i < array_length(paths); i++ )  {
 			path_loaded[i] = paths[i];

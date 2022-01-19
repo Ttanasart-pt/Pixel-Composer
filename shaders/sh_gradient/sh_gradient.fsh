@@ -56,9 +56,15 @@ void main() {
 		float _a = atan(_p.y, _p.x) + angle;
 		prog = (_a - floor(_a / TAU) * TAU) / TAU;
 	}
-	prog += shift;
-	if(gradient_loop == 1) 
-		prog = fract(prog);
+	prog = abs(prog + shift);
+	if(gradient_loop == 1) { 
+		if(prog > 1.) {
+			if(prog == floor(prog))
+				prog = 1.;
+			else 
+				prog = fract(prog);
+		}
+	}
 	
 	vec4 col = gradientEval(prog);
 	

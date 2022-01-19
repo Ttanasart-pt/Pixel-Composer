@@ -12,7 +12,14 @@ uniform float gradient_shift;
 
 void main() {
 	vec4 _col = v_vColour * texture2D( gm_BaseTexture, v_vTexcoord );
-	float prog = fract(dot(_col.rgb, vec3(0.2126, 0.7152, 0.0722)) + gradient_shift);
+	float prog = abs(dot(_col.rgb, vec3(0.2126, 0.7152, 0.0722)) + gradient_shift);
+	if(prog > 1.) {
+		if(prog == floor(prog))
+			prog = 1.;
+		else 
+			prog = fract(prog);
+	}
+		
 	vec4 col = vec4(0.);
 	
 	for(int i = 0; i < 16; i++) {
