@@ -84,4 +84,10 @@ function Node_Collection(_x,  _y) : Node(_x,  _y) constructor {
 		
 		ds_priority_destroy(ar);
 	}
+	
+	static onDestroy = function() {
+		for( var i = 0; i < ds_list_size(nodes); i++ ) {
+			nodes[| i].destroy();
+		}
+	}
 }

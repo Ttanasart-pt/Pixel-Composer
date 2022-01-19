@@ -61,29 +61,29 @@ function APPEND(_path) {
 		appended_list[| i].postConnect();
 	}
 	
-	for(var i = 0; i < ds_list_size(appended_list); i++) {
-		appended_list[| i].doUpdate();
-	}
+	//for(var i = 0; i < ds_list_size(appended_list); i++) {
+	//	appended_list[| i].doUpdate();
+	//}
 	
 	ds_list_destroy(appended_list);
 	
-	renderAll();
+	//renderAll();
 	
-	if(!ds_queue_empty(CONNECTION_CONFLICT)) {
-		var pass = 0;
+	//if(!ds_queue_empty(CONNECTION_CONFLICT)) {
+	//	var pass = 0;
 		
-		while(++pass < 2 && !ds_queue_empty(CONNECTION_CONFLICT)) {
-			var size = ds_queue_size(CONNECTION_CONFLICT);
-			log_message("LOAD", "[Connect] " + string(size) + " Connection conflict(s) detected ( pass: " + string(pass) + " )");
-			repeat(size) {
-				ds_queue_dequeue(CONNECTION_CONFLICT).connect();	
-			}
-			renderAll();
-		}
+	//	while(++pass < 2 && !ds_queue_empty(CONNECTION_CONFLICT)) {
+	//		var size = ds_queue_size(CONNECTION_CONFLICT);
+	//		log_message("LOAD", "[Connect] " + string(size) + " Connection conflict(s) detected ( pass: " + string(pass) + " )");
+	//		repeat(size) {
+	//			ds_queue_dequeue(CONNECTION_CONFLICT).connect();	
+	//		}
+	//		renderAll();
+	//	}
 		
-		if(!ds_queue_empty(CONNECTION_CONFLICT))
-			PANEL_MENU.addNotiExtra("Some connection(s) is unsolved. This may caused by render node not being update properly, or image path is broken.");
-	}
+	//	if(!ds_queue_empty(CONNECTION_CONFLICT))
+	//		PANEL_MENU.addNotiExtra("Some connection(s) is unsolved. This may caused by render node not being update properly, or image path is broken.");
+	//}
 	
 	APPENDING = false;
 	PANEL_ANIMATION.updatePropertyList();

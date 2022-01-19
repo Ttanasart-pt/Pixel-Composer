@@ -68,7 +68,7 @@ function Node_Outline(_x, _y) : Node_Processor(_x, _y) constructor {
 			BLEND_NORMAL
 		surface_reset_target();
 		
-		return _outSurf;
+		return _outSurf; 
 	}
 	
 	static step = function() {

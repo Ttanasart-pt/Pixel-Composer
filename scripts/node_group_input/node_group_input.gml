@@ -40,8 +40,8 @@ function Node_Group_Input(_x, _y, _group) : Node(_x, _y) constructor {
 	inputs[| 5] = nodeValue(5, "Order", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0);
 	
 	input_display_list = [ 
-		["Data",	false], 2, 4,
-		["Display", false], 5, 0, 1, 3
+		["Display", false], 5, 
+		["Data",	false], 2, 0, 4, 1, 3,
 	];
 	
 	outputs[| 0] = nodeValue(0, "Value", self, JUNCTION_CONNECT.output, VALUE_TYPE.any, 0);
@@ -119,6 +119,7 @@ function Node_Group_Input(_x, _y, _group) : Node(_x, _y) constructor {
 			case VALUE_DISPLAY.palette :
 				if(!is_array(_val))
 					inParent.value = new animValue([c_black], inParent);
+				inParent.setDisplay(_dtype);
 				break;
 				
 			default :

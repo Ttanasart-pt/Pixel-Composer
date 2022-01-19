@@ -113,7 +113,7 @@ function Node_Dither(_x, _y) : Node_Processor(_x, _y) constructor {
 			draw_surface_safe(_data[0], 0, 0);
 			shader_reset();
 				
-			BLEND_NORMAL
+			BLEND_NORMAL 
 		surface_reset_target();
 		
 		return _outSurf;

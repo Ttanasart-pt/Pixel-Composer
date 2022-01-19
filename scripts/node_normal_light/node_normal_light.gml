@@ -62,7 +62,7 @@ function Node_Normal_Light(_x, _y) : Node_Processor(_x, _y) constructor {
 		
 		surface_set_target(_outSurf);
 			draw_clear_alpha(0, 0);
-			BLEND_ADD
+			BLEND_ADD 
 		
 			shader_set(sh_normal_light);
 			texture_set_stage(uniform_map, surface_get_texture(_map));

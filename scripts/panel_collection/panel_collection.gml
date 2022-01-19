@@ -26,7 +26,7 @@ function Panel_Collection(_panel) : PanelContent(_panel) constructor {
 		var grid_space = 12;
 		var nodes	   = content_list;
 		var node_count = ds_list_size(nodes);
-		var col        = floor(content_w / (grid_width + grid_space));
+		var col        = max(1, floor(content_w / (grid_width + grid_space)));
 		var row        = ceil(node_count / col);
 		var hh         = grid_space;
 		var yy         = _y + grid_space;

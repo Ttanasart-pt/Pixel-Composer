@@ -236,8 +236,8 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 						if(display_data != -1) editWidget.extras = display_data;
 						break;
 					case VALUE_DISPLAY.rotation :
-						editWidget = new rotator(function(val, save) {
-							setValue(val, save);
+						editWidget = new rotator(function(val, _save) {
+							setValue(val, _save);
 						} );
 						break;
 					case VALUE_DISPLAY.rotation_range :

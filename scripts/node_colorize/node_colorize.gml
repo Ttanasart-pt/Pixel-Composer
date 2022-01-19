@@ -53,7 +53,7 @@ function Node_Colorize(_x, _y) : Node_Processor(_x, _y) constructor {
 			shader_reset();
 			
 			BLEND_NORMAL
-		surface_reset_target();
+		surface_reset_target(); 
 		
 		return _outSurf;
 	}

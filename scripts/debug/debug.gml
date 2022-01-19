@@ -43,7 +43,9 @@ exception_unhandled_handler(function(ex) {
 	var tt = "\n-------------------------- OH NO --------------------------\n\n";
 	tt += ex.longMessage;
 	tt += "\n---------------------------- :( ----------------------------\n";
+	tt += "\nError message saved to clipboard";
 	tt += "\n\nVisit crash log from " + string(DIRECTORY + "log.txt") + " for more information";
 	show_error(tt, true);
+	clipboard_set_text(tt);
     return 0;
 });
