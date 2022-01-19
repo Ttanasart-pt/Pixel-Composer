@@ -37,7 +37,7 @@ void main() {
     
 	//contrast
 	float cont = contrast * contrast;
-	float c_factor = (1.004 * (1. + cont)) / (1.004 - cont);
+	float c_factor = (1. + cont) / (1. - cont);
 	vec4 col_c = c_factor * (col - .5) + .5;
 	col_c = clamp(col_c, vec4(0.), vec4(1.));
 	

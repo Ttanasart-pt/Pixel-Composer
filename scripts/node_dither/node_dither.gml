@@ -83,25 +83,25 @@ function Node_Dither(_x, _y) : Node_Processor(_x, _y) constructor {
 				
 			switch(_typ) {
 				case 0 :
-					node_input_visible(inputs[| 3],  false);
+					inputs[| 3].setVisible(false);
 					shader_set_uniform_i(uniform_map_use, 0);
 					shader_set_uniform_f(uniform_dither_size, 2);
 					shader_set_uniform_f_array(uniform_dither, dither2);
 					break;
 				case 1 :
-					node_input_visible(inputs[| 3],  false);
+					inputs[| 3].setVisible(false);
 					shader_set_uniform_i(uniform_map_use, 0);
 					shader_set_uniform_f(uniform_dither_size, 4);
 					shader_set_uniform_f_array(uniform_dither, dither4);
 					break;
 				case 2 :
-					node_input_visible(inputs[| 3],  false);
+					inputs[| 3].setVisible(false);
 					shader_set_uniform_i(uniform_map_use, 0);
 					shader_set_uniform_f(uniform_dither_size, 8);
 					shader_set_uniform_f_array(uniform_dither, dither8);
 					break;
 				case 3 :
-					node_input_visible(inputs[| 3],  true);
+					inputs[| 3].setVisible(true);
 					if(is_surface(_map)) {
 						shader_set_uniform_i(uniform_map_use, 1);
 						shader_set_uniform_f_array(uniform_map_dim, [ surface_get_width(_map), surface_get_height(_map) ]);

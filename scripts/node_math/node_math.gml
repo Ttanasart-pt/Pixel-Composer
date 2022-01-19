@@ -30,12 +30,12 @@ function Node_Math(_x, _y) : Node_Value_Processor(_x, _y) constructor {
 			case 3 :
 			case 4 :
 			case 5 :	
-				inputs[| 2].show_in_inspector = true;
+				inputs[| 2].setVisible(true);
 				break;
 			case 6 :
 			case 7 :
 			case 8 :
-				inputs[| 2].show_in_inspector = false;
+				inputs[| 2].setVisible(false);
 				break;
 		}
 		

@@ -141,17 +141,17 @@ function Node_3D_Transform(_x, _y) : Node_Processor(_x, _y) constructor {
 		
 		switch(_out_type) {
 			case OUTPUT_SCALING.same_as_input :
-				node_input_visible(inputs[| 5], false);
+				inputs[| 5].setVisible(false);
 				_ww  = surface_get_width(_data[0]);
 				_hh  = surface_get_height(_data[0]);
 				break;
 			case OUTPUT_SCALING.constant :	
-				node_input_visible(inputs[| 5], true);
+				inputs[| 5].setVisible(true);
 				_ww  = _out[0];
 				_hh  = _out[1];
 				break;
 			case OUTPUT_SCALING.relative : 
-				node_input_visible(inputs[| 5], true);
+				inputs[| 5].setVisible(true);
 				_ww  = surface_get_width(_data[0]) * _out[0];
 				_hh  = surface_get_height(_data[0]) * _out[1];
 				break;

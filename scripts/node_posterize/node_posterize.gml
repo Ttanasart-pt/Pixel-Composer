@@ -35,9 +35,9 @@ function Node_Posterize(_x, _y) : Node_Processor(_x, _y) constructor {
 	static step = function() {
 		var _use_pal = inputs[| 2].getValue();
 		
-		inputs[| 1].show_in_inspector = _use_pal;
-		inputs[| 3].show_in_inspector = !_use_pal;
-		inputs[| 4].show_in_inspector = !_use_pal;
+		inputs[| 1].setVisible(_use_pal);
+		inputs[| 3].setVisible(!_use_pal);
+		inputs[| 4].setVisible(!_use_pal);
 	}
 	
 	static process_data = function(_outSurf, _data, _output_index) {

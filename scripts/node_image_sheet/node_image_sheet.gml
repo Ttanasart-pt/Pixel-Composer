@@ -238,7 +238,7 @@ function Node_Image_Sheet(_x, _y) : Node(_x, _y) constructor {
 		
 		if(_out == 0) {
 			update_on_frame = true;
-			inputs[| 8].show_in_inspector	= true;
+			inputs[| 8].setVisible(true);
 			var _spd = inputs[| 8].getValue();
 			
 			if(is_surface(_outSurf)) 
@@ -259,7 +259,7 @@ function Node_Image_Sheet(_x, _y) : Node(_x, _y) constructor {
 			surface_reset_target();
 		} else if(_out == 1) {
 			update_on_frame = false;
-			inputs[| 8].show_in_inspector	= false;
+			inputs[| 8].setVisible(false);
 			
 			surf_array = array_create(_amo);
 			for(var i = 0; i < _amo; i++) {

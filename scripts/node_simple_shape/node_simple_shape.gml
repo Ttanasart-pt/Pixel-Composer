@@ -95,39 +95,39 @@ function Node_Shape(_x, _y) : Node_Processor(_x, _y) constructor {
 			switch(_shape) {
 				case NODE_SHAPE_TYPE.rectangle :	
 				case NODE_SHAPE_TYPE.elipse :	
-					node_input_visible(inputs[| 4], false);
-					node_input_visible(inputs[| 5], false);
-					node_input_visible(inputs[| 7], false);
-					node_input_visible(inputs[| 8], false);
-					node_input_visible(inputs[| 9], false);
+					inputs[| 4].setVisible(false);
+					inputs[| 5].setVisible(false);
+					inputs[| 7].setVisible(false);
+					inputs[| 8].setVisible(false);
+					inputs[| 9].setVisible(false);
 					break;
 				case NODE_SHAPE_TYPE.regular :
-					node_input_visible(inputs[| 4], true);
-					node_input_visible(inputs[| 5], false);
-					node_input_visible(inputs[| 7], true);
-					node_input_visible(inputs[| 8], false);
-					node_input_visible(inputs[| 9], true);
+					inputs[| 4].setVisible(true);
+					inputs[| 5].setVisible(false);
+					inputs[| 7].setVisible(true);
+					inputs[| 8].setVisible(false);
+					inputs[| 9].setVisible(true);
 					
 					shader_set_uniform_i(uniform_side, _data[4]);
 					shader_set_uniform_f(uniform_angle, degtorad(_data[7]));
 					break;
 				case NODE_SHAPE_TYPE.star :
-					node_input_visible(inputs[| 4], true);
-					node_input_visible(inputs[| 5], true);
-					node_input_visible(inputs[| 7], true);
-					node_input_visible(inputs[| 8], false);
-					node_input_visible(inputs[| 9], true);
+					inputs[| 4].setVisible(true);
+					inputs[| 5].setVisible(true);
+					inputs[| 7].setVisible(true);
+					inputs[| 8].setVisible(false);
+					inputs[| 9].setVisible(true);
 				
 					shader_set_uniform_i(uniform_side, _data[4]);
 					shader_set_uniform_f(uniform_angle, degtorad(_data[7]));
 					shader_set_uniform_f(uniform_inner, _data[5]);
 					break;
 				case NODE_SHAPE_TYPE.arc :
-					node_input_visible(inputs[| 4], false);
-					node_input_visible(inputs[| 5], true);
-					node_input_visible(inputs[| 7], false);
-					node_input_visible(inputs[| 8], true);
-					node_input_visible(inputs[| 9], true);
+					inputs[| 4].setVisible(false);
+					inputs[| 5].setVisible(true);
+					inputs[| 7].setVisible(false);
+					inputs[| 8].setVisible(true);
+					inputs[| 9].setVisible(true);
 					
 					var ar = _data[8];
 					var center =  degtorad(ar[0] + ar[1]) / 2;
@@ -137,11 +137,11 @@ function Node_Shape(_x, _y) : Node_Processor(_x, _y) constructor {
 					shader_set_uniform_f(uniform_inner, _data[5] / 2);
 					break;
 				case NODE_SHAPE_TYPE.capsule :	
-					node_input_visible(inputs[| 4], false);
-					node_input_visible(inputs[| 5], false);
-					node_input_visible(inputs[| 7], false);
-					node_input_visible(inputs[| 8], false);
-					node_input_visible(inputs[| 9], true);
+					inputs[| 4].setVisible(false);
+					inputs[| 5].setVisible(false);
+					inputs[| 7].setVisible(false);
+					inputs[| 8].setVisible(false);
+					inputs[| 9].setVisible(true);
 					break;
 			}
 			

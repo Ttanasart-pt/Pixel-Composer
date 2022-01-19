@@ -574,4 +574,17 @@ function Node(_x, _y) constructor {
 	
 	static preConnect = function() {}
 	static postConnect = function() {}
+	
+	static cleanUp = function() {
+		for( var i = 0; i < ds_list_size(inputs); i++ ) {
+			inputs[| i].cleanUp();
+		}
+		for( var i = 0; i < ds_list_size(outputs); i++ ) {
+			outputs[| i].cleanUp();
+		}
+		
+		ds_list_destroy(inputs);
+		ds_list_destroy(outputs);
+		ds_map_destroy(attributes);
+	}
 }

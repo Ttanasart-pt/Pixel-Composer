@@ -17,7 +17,8 @@ function Node_Group_Output(_x, _y, _group) : Node(_x, _y) constructor {
 	h = 32 + 24;
 	min_h = h;
 	
-	inputs[| 0] = nodeValue(0, "Value", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, -1);
+	inputs[| 0] = nodeValue(0, "Value", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, -1)
+		.setVisible(true, true);
 	
 	inputs[| 1] = nodeValue(1, "Order", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0);
 	
@@ -50,6 +51,7 @@ function Node_Group_Output(_x, _y, _group) : Node(_x, _y) constructor {
 			outParent.setFrom(inputs[| 0]);
 		}
 	}
+	
 	if(!LOADING && !APPENDING)
 		createOutput();
 	

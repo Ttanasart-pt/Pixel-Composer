@@ -127,7 +127,7 @@ function NodeObject(_name, _spr, _create, tags = []) constructor {
 	var number = ds_list_create();
 	addNodeCatagory("Number", number);
 	addNodeObject(number, "Math",			s_node_math,			"Node_Math",			Node_create_Math);
-	//addNodeObject(number, "Array",		s_node_array,			"Node_Array",			Node_create_Array);
+	addNodeObject(number, "Array",			s_node_array,			"Node_Array",			Node_create_Array);
 	addNodeObject(number, "Array length",	s_node_array_length,	"Node_Array_Length",	Node_create_Array_Length);
 	addNodeObject(number, "Number",			s_node_number,			"Node_Number",			Node_create_Number);
 	addNodeObject(number, "Vector2",		s_node_vec2,			"Node_Vector2",			Node_create_Vector2);
@@ -194,7 +194,7 @@ function NodeObject(_name, _spr, _create, tags = []) constructor {
 	NODE_CREATE_FUCTION[? "Node_Group"] = Node_create_Group;
 #endregion
 
-#region node load
+#region node function
 	function nodeLoad(_data, scale = false) {
 		if(!ds_exists(_data, ds_type_map)) return noone;
 		
@@ -218,11 +218,24 @@ function NodeObject(_name, _spr, _create, tags = []) constructor {
 		return _node;
 	}
 	
-	function node_delete(node) {
+	function nodeDelete(node) {
 		var list = node.group == -1? NODES : node.group.nodes;
 		ds_list_delete(list, ds_list_find_index(list, node));
 		node.destroy();
 		
-		recordAction(ACTION_TYPE.node_deleted, node);
+		recordAction(ACTION_TYPE.node_delete, node);
+	}
+	
+	function nodeCleanUp() {
+		var key = ds_map_find_first(NODE_MAP);
+		repeat(ds_map_size(NODE_MAP)) {
+			if(NODE_MAP[? key]) {
+				NODE_MAP[? key].cleanUp();
+				delete NODE_MAP[? key];
+			}
+			key = ds_map_find_next(NODE_MAP, key);
+		}
+		ds_map_clear(NODE_MAP);
+		ds_list_clear(NODES);	
 	}
 #endregion

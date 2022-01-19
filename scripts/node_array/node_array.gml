@@ -5,34 +5,59 @@ function Node_create_Array(_x, _y) {
 }
 
 function Node_Array(_x, _y) : Node(_x, _y) constructor {
-	name		= "Array";
+	name = "Array";
 	previewable = false;
 	
 	input_size = 0;
-	input_max  = 8;
 	
 	w = 96;
+	min_h = 0;
 	
-	for(var i = 0; i < input_max; i++) {
-		inputs[| i] = nodeValue(i, "Value " + string(i), self, JUNCTION_CONNECT.input, VALUE_TYPE.any, 0);
+	static createNewInput = function() {
+		var index = ds_list_size(inputs);
+		inputs[| index] = nodeValue( index, "Input", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, -1 )
+			.setVisible(true, true);
 	}
+	createNewInput();
 	
 	outputs[| 0] = nodeValue(0, "Array", self, JUNCTION_CONNECT.output, VALUE_TYPE.any, []);
 	
-	static update = function() {
-		var res = array_create(input_size);
-		
-		input_size = 0;
-		for(var i = 0; i < input_max; i++) {
+	static updateValueFrom = function(index) {
+		var _l = ds_list_create();
+		for( var i = 0; i < ds_list_size(inputs); i++ ) {
 			if(inputs[| i].value_from) {
-				res[i] = inputs[| i].getValue();
-				input_size = i + 1;
+				ds_list_add(_l, inputs[| i]);
+			} else {
+				delete inputs[| i];	
 			}
 		}
-		if(input_size < input_max) {
-			inputs[| input_size].show_in_inspector = true;
+		
+		for( var i = 0; i < ds_list_size(_l); i++ ) {
+			_l[| i].index = i;	
 		}
+		
+		ds_list_destroy(inputs);
+		inputs = _l;
+		
+		createNewInput();
+	}
+	
+	static update = function() {
+		var res = array_create(ds_list_size(inputs) - 1);
+		
+		for( var i = 0; i < ds_list_size(inputs) - 1; i++ ) {
+			res[i] = inputs[| i].getValue();
+		}
+		
 		outputs[| 0].setValue(res);
 	}
 	doUpdate();
+	
+	static postDeserialize = function() {
+		var _inputs = load_map[? "inputs"];
+		
+		for(var i = 0; i < ds_list_size(_inputs); i++) {
+			createNewInput();
+		}
+	}
 }

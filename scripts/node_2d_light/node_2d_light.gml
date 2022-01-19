@@ -86,29 +86,29 @@ function Node_2D_light(_x, _y) : Node_Processor(_x, _y) constructor {
 		
 		switch(_shape) {
 			case LIGHT_SHAPE_2D.point :
-				node_input_visible(inputs[| 2],  true);
-				node_input_visible(inputs[| 3],  true);
-				node_input_visible(inputs[| 6],  false);
-				node_input_visible(inputs[| 7],  false);
-				node_input_visible(inputs[| 8],  false);
-				node_input_visible(inputs[| 9],  false);
+				inputs[| 2].setVisible(true);
+				inputs[| 3].setVisible(true);
+				inputs[| 6].setVisible(false);
+				inputs[| 7].setVisible(false);
+				inputs[| 8].setVisible(false);
+				inputs[| 9].setVisible(false);
 				break;
 			case LIGHT_SHAPE_2D.line :
 			case LIGHT_SHAPE_2D.line_asym :
-				node_input_visible(inputs[| 2],  false);
-				node_input_visible(inputs[| 3],  true);
-				node_input_visible(inputs[| 6],  true);
-				node_input_visible(inputs[| 7],  true);
-				node_input_visible(inputs[| 8],  true);
-				node_input_visible(inputs[| 9],  _shape == LIGHT_SHAPE_2D.line_asym);
+				inputs[| 2].setVisible(false);
+				inputs[| 3].setVisible(true);
+				inputs[| 6].setVisible(true);
+				inputs[| 7].setVisible(true);
+				inputs[| 8].setVisible(true);
+				inputs[| 9].setVisible(_shape == LIGHT_SHAPE_2D.line_asym);
 				break;
 			case LIGHT_SHAPE_2D.spot :
-				node_input_visible(inputs[| 2],  false);
-				node_input_visible(inputs[| 3],  false);
-				node_input_visible(inputs[| 6],  true);
-				node_input_visible(inputs[| 7],  true);
-				node_input_visible(inputs[| 8],  true);
-				node_input_visible(inputs[| 9],  false);
+				inputs[| 2].setVisible(false);
+				inputs[| 3].setVisible(false);
+				inputs[| 6].setVisible(true);
+				inputs[| 7].setVisible(true);
+				inputs[| 8].setVisible(true);
+				inputs[| 9].setVisible(false);
 				break;
 		}
 		

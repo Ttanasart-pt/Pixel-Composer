@@ -250,12 +250,12 @@ function Node_Composite(_x, _y) : Node_Processor(_x, _y) constructor {
 		
 		switch(_dim_type) {
 			case COMPOSE_OUTPUT_SCALING.first :
-				inputs[| 2].show_in_inspector = false;
+				inputs[| 2].setVisible(false);
 				ww = surface_get_width(base);
 				hh = surface_get_height(base);
 				break;
 			case COMPOSE_OUTPUT_SCALING.largest :
-				inputs[| 2].show_in_inspector = false;
+				inputs[| 2].setVisible(false);
 				for(var i = input_fix_len; i < array_length(_data) - data_length; i += data_length) {
 					var _s = _data[i];
 					ww = max(ww, surface_get_width(_s));
@@ -263,7 +263,7 @@ function Node_Composite(_x, _y) : Node_Processor(_x, _y) constructor {
 				}
 				break;
 			case COMPOSE_OUTPUT_SCALING.constant :	
-				inputs[| 2].show_in_inspector = true;
+				inputs[| 2].setVisible(true);
 				ww = _dim[0];
 				hh = _dim[1];
 				break;

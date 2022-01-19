@@ -152,15 +152,15 @@ function Node_Transform(_x, _y) : Node_Processor(_x, _y) constructor {
 		
 		switch(out_type) {
 			case OUTPUT_SCALING.same_as_input :
-				node_input_visible(inputs[| 1], false);
+				inputs[| 1].setVisible(false);
 				break;
 			case OUTPUT_SCALING.constant :	
-				node_input_visible(inputs[| 1], true);
+				inputs[| 1].setVisible(true);
 				_ww  = out[0];
 				_hh  = out[1];
 				break;
 			case OUTPUT_SCALING.relative : 
-				node_input_visible(inputs[| 1], true);
+				inputs[| 1].setVisible(true);
 				_ww = ww * out[0];
 				_hh = hh * out[1];
 				break;

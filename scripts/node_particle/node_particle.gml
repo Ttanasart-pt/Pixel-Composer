@@ -423,15 +423,15 @@ function Node_Particle(_x, _y) : Node(_x, _y) constructor {
 		var _inSurf = inputs[| 0].getValue();
 		var _scatt  = inputs[| 27].getValue();
 		
-		inputs[| 25].show_in_inspector = false;
-		inputs[| 26].show_in_inspector = false;
-		inputs[| 28].show_in_inspector = _scatt == 2;
+		inputs[| 25].setVisible(false);
+		inputs[| 26].setVisible(false);
+		inputs[| 28].setVisible(_scatt == 2);
 		
 		if(is_array(_inSurf)) {
-			inputs[| 25].show_in_inspector = true;
+			inputs[| 25].setVisible(true);
 			var _type = inputs[| 25].getValue();
 			if(_type == 2) {
-				inputs[| 26].show_in_inspector = true;
+				inputs[| 26].setVisible(true);
 			}
 		}
 		

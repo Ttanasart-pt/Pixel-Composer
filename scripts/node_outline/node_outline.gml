@@ -73,6 +73,6 @@ function Node_Outline(_x, _y) : Node_Processor(_x, _y) constructor {
 	
 	static step = function() {
 		var blend = inputs[| 3].getValue();
-		inputs[| 4].show_in_inspector = blend;
+		inputs[| 4].setVisible(blend);
 	}
 }

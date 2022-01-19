@@ -45,11 +45,11 @@ function Node_Displace(_x, _y) : Node_Processor(_x, _y) constructor {
 	static process_data = function(_outSurf, _data, _output_index) {
 		switch(_data[5]) {
 			case 0 :
-				inputs[| 2].show_in_inspector = true;
+				inputs[| 2].setVisible(true);
 				break;
 			case 1 :
 			case 2 :
-				inputs[| 2].show_in_inspector = false;
+				inputs[| 2].setVisible(false);
 				break;
 		}
 		var ww = surface_get_width(_data[0]);

@@ -60,10 +60,10 @@ function Node_Export(_x, _y) : Node(_x, _y) constructor {
 			inputs[| 2].setValue("%d%n%3f");
 		}
 		
-		inputs[| 5].show_in_inspector = form == 2;
-		inputs[| 6].show_in_inspector = form == 2;
-		inputs[| 7].show_in_inspector = form == 2;
-		inputs[| 8].show_in_inspector = form == 2;
+		inputs[| 5].setVisible(form == 2);
+		inputs[| 6].setVisible(form == 2);
+		inputs[| 7].setVisible(form == 2);
+		inputs[| 8].setVisible(form == 2);
 	}
 	
 	static renderGif = function(temp_path, target_path) {

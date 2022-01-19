@@ -594,7 +594,7 @@ function Panel_Graph(_panel) : PanelContent(_panel) constructor {
 			while(!ds_list_empty(node_focus.nodes)) {
 				node_focus.remove(node_focus.nodes[| 0]); 
 			}
-			node_delete(node_focus);
+			nodeDelete(node_focus);
 		}
 	}
 	
@@ -630,10 +630,10 @@ function Panel_Graph(_panel) : PanelContent(_panel) constructor {
 	
 	function doDelete() {
 		if(node_focus != noone)
-			node_delete(node_focus);
+			nodeDelete(node_focus);
 		
 		for(var i = 0; i < ds_list_size(nodes_select_list); i++) {
-			node_delete(nodes_select_list[| i]);
+			nodeDelete(nodes_select_list[| i]);
 		}
 		ds_list_clear(nodes_select_list);
 	}

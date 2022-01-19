@@ -69,9 +69,9 @@ function Node_Line(_x, _y) : Node(_x, _y) constructor {
 		if(_ang < 0) _ang = 360 + _ang;
 		
 		if(_use_path) {
-			node_input_visible(inputs[| 6], false);
+			inputs[| 6].setVisible(false);
 		} else {
-			node_input_visible(inputs[| 6], true);	
+			inputs[| 6].setVisible(true);	
 		}
 		
 		random_set_seed(_sed);

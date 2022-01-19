@@ -229,4 +229,8 @@ function animValue(_val, _node) constructor {
 			ds_list_add(values, new valueKey(_time, _val, ease_in, ease_out));
 		}
 	}
+	
+	static cleanUp = function() {
+		ds_list_destroy(values);
+	}
 }

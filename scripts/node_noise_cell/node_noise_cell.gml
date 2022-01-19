@@ -58,8 +58,8 @@ function Node_Cellular(_x, _y) : Node(_x, _y) constructor {
 		var _pat = inputs[| 6].getValue();
 		var _mid = inputs[| 7].getValue();
 		
-		inputs[| 8].show_in_inspector = _pat == 1;
-		inputs[| 9].show_in_inspector = _pat == 1;
+		inputs[| 8].setVisible(_pat == 1);
+		inputs[| 9].setVisible(_pat == 1);
 		var _rad = inputs[| 8].getValue();
 		var _sht = inputs[| 9].getValue();
 		

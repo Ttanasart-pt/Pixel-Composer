@@ -1,21 +1,10 @@
 function NEW() {
-	clearNodes();
+	nodeCleanUp();
 	setPanel();
 	room_restart();
 				
 	gc_collect();
-	setPath("");
-}
-
-function clearNodes() {
-	var key = ds_map_find_first(NODE_MAP);
-	repeat(ds_map_size(NODE_MAP)) {
-		if(NODE_MAP[? key])
-			delete NODE_MAP[? key];
-		key = ds_map_find_next(NODE_MAP, key);
-	}
-	ds_map_clear(NODE_MAP);
-	ds_list_clear(NODES);	
+	SET_PATH("");
 }
 
 function save_serialize() {

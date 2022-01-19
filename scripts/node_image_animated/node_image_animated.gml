@@ -117,13 +117,9 @@ function Node_Image_Animated(_x, _y) : Node(_x, _y) constructor {
 		
 		var pad  = inputs[| 1].getValue();
 		var str  = inputs[| 2].getValue();
-		if(str) {
-			inputs[| 3].show_in_inspector = false;
-			inputs[| 4].show_in_inspector = false;
-		} else {
-			inputs[| 3].show_in_inspector = true;
-			inputs[| 4].show_in_inspector = true;
-		}
+		inputs[| 3].setVisible(!str);
+		inputs[| 4].setVisible(!str);
+		
 		var spd  = str? (ANIMATOR.frames_total + 1) / array_length(spr) : inputs[| 3].getValue();
 		var _end = inputs[| 4].getValue();
 		if(spd == 0) spd = 1;

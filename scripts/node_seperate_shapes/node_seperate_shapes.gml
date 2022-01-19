@@ -91,6 +91,7 @@ function Node_Seperate_Shape(_x, _y) : Node(_x, _y) constructor {
 			shader_set(sh_seperate_shape_counter);
 			texture_set_stage(shader_get_sampler_index(sh_seperate_shape_counter, "surface"), surface_get_texture(temp_surf[res_index]));
 			shader_set_uniform_f_array(shader_get_uniform(sh_seperate_shape_counter, "dimension"), [ ww, hh ]);
+			shader_set_uniform_i(shader_get_uniform(sh_seperate_shape_counter, "maxShape"), PREF_MAP[? "shape_separation_max"]);
 				draw_sprite_ext(s_fx_pixel, 0, 0, 0, PREF_MAP[? "shape_separation_max"], 1, 0, c_white, 1);
 			shader_reset();
 		BLEND_NORMAL

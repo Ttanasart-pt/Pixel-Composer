@@ -6,17 +6,18 @@ varying vec4 v_vColour;
 
 uniform vec2 dimension;
 uniform sampler2D surface;
+uniform int maxShape;
 
 void main() {
 	vec4 zero = vec4(0.);
-	vec2 pxPos = v_vTexcoord * vec2(32., 1.);
+	vec2 pxPos = v_vTexcoord * vec2(float(maxShape), 1.);
 	
 	int amo = 0;
-	vec4 list[32];
+	vec4 list[1024];
 	
 	for(float i = 0.; i <= dimension.x; i++)
 	for(float j = 0.; j <= dimension.y; j++) {
-		if(amo > 32) break;
+		if(amo > maxShape) break;
 		vec4 col = texture2D( surface, vec2(i, j) / dimension );
 		
 		if(col != zero) {

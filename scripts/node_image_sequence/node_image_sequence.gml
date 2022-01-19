@@ -118,7 +118,7 @@ function Node_Image_Sequence(_x, _y) : Node(_x, _y) constructor {
 		
 		var pad = inputs[| 1].getValue();
 		var can = inputs[| 2].getValue();
-		inputs[| 3].show_in_inspector = can != CANVAS_SIZE.individual;
+		inputs[| 3].setVisible(can != CANVAS_SIZE.individual);
 		
 		var siz = inputs[| 3].getValue();
 		

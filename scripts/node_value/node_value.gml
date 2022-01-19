@@ -989,4 +989,11 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 		log_warning("LOAD", "[Connect] " + txt);
 		return false;
 	}
+	
+	static cleanUp = function() {
+		ds_list_destroy(value_to);
+		ds_list_destroy(extra_data);
+		value.cleanUp();
+		delete value;
+	}
 }

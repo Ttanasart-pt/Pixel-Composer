@@ -47,8 +47,8 @@ function Node_Render_Sprite_Sheet(_x, _y) : Node(_x, _y) constructor {
 		var pack = inputs[| 3].getValue();
 		var alig = inputs[| 5].getValue();
 		
-		inputs[| 2].show_in_inspector = grup == SPRITE_ANIM_GROUP.animation;
-		inputs[| 4].show_in_inspector = pack == SPRITE_STACK.grid;
+		inputs[| 2].setVisible(grup == SPRITE_ANIM_GROUP.animation);
+		inputs[| 4].setVisible(pack == SPRITE_STACK.grid);
 		if(grup != SPRITE_ANIM_GROUP.animation) return;
 		if(safe_mod(ANIMATOR.current_frame, skip) != 0) return;
 		

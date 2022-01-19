@@ -13,7 +13,7 @@ enum ACTION_TYPE {
 	list_delete,
 	
 	node_added,
-	node_deleted,
+	node_delete,
 	junction_connect,
 	
 	group_added,
@@ -57,9 +57,9 @@ function Action(_type, _object, _data) constructor {
 				ds_list_insert(obj, data[1], data[0]);
 				break;
 			case ACTION_TYPE.node_added :
-				node_delete(obj);
+				nodeDelete(obj);
 				break;
-			case ACTION_TYPE.node_deleted :
+			case ACTION_TYPE.node_delete :
 				ds_list_add(obj.group == -1? NODES : obj.group.nodes, obj);
 				break;
 			case ACTION_TYPE.junction_connect :
@@ -105,8 +105,8 @@ function Action(_type, _object, _data) constructor {
 			case ACTION_TYPE.node_added :
 				ds_list_add(obj.group == -1? NODES : obj.group.nodes, obj);
 				break;
-			case ACTION_TYPE.node_deleted :
-				node_delete(obj);
+			case ACTION_TYPE.node_delete :
+				nodeDelete(obj);
 				break;
 			case ACTION_TYPE.junction_connect :
 				var _d = obj.value_from;
@@ -140,7 +140,7 @@ function Action(_type, _object, _data) constructor {
 			case ACTION_TYPE.node_added :
 				ss = "node add: " + string(obj.name);
 				break;
-			case ACTION_TYPE.node_deleted :
+			case ACTION_TYPE.node_delete :
 				ss = "node deleted: " + string(obj.name);
 				break;
 			case ACTION_TYPE.junction_connect :

@@ -76,7 +76,7 @@ function Node_Text(_x, _y) : Node_Processor(_x, _y) constructor {
 		var _col   = _data[5];
 		
 		var _dim_type = _data[9];
-		inputs[| 6].show_in_inspector = !_dim_type;
+		inputs[| 6].setVisible(!_dim_type);
 		var _dim   = _data[6];
 		
 		var ww, hh;

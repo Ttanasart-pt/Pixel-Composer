@@ -47,7 +47,7 @@ function Node_3D_Obj(_x, _y) : Node(_x, _y) constructor {
 	function createMaterial(m_index) {
 		var index = ds_list_size(inputs);
 		inputs[| index] = nodeValue( index, "Texture " + materials[m_index], self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, tex_surface);
-		inputs[| index].show_in_inspector = false;
+		inputs[| index].setVisible(false);
 		
 		input_display_list[input_display_len + m_index] = index;
 	}

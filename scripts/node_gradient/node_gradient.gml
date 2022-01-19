@@ -85,11 +85,11 @@ function Node_Gradient(_x, _y) : Node(_x, _y) constructor {
 		}
 		
 		if(_typ == 0 || _typ == 2) {
-			inputs[| 3].show_in_inspector	= true;
-			inputs[| 4].show_in_inspector	= false;
+			inputs[| 3].setVisible(true);
+			inputs[| 4].setVisible(false);
 		} else if(_typ == 1) {
-			inputs[| 3].show_in_inspector	= false;
-			inputs[| 4].show_in_inspector	= true;
+			inputs[| 3].setVisible(false);
+			inputs[| 4].setVisible(true);
 		} 
 		
 		surface_set_target(_outSurf);

@@ -145,7 +145,7 @@ function Node_3D_Cube(_x, _y) : Node(_x, _y) constructor {
 		var _sca = inputs[| 4].getValue();
 		
 		var _usetex = inputs[| 5].getValue();
-		for(var i = 6; i <= 11; i++) inputs[| i].show_in_inspector = _usetex;	
+		for(var i = 6; i <= 11; i++) inputs[| i].setVisible(_usetex);	
 		
 		var _outSurf = outputs[| 0].getValue();
 		if(!is_surface(_outSurf)) {

@@ -47,7 +47,7 @@ function LOAD_PATH(path, readonly = false) {
 		PANEL_MENU.addNotiExtra(warn);
 	}
 	
-	clearNodes();
+	nodeCleanUp();
 	
 	var create_list = ds_list_create();
 	if(ds_map_exists(_map, "nodes")) {

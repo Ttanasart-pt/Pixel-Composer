@@ -79,6 +79,7 @@ function Node_Group_Input(_x, _y, _group) : Node(_x, _y) constructor {
 			case VALUE_DISPLAY.rotation_range :
 				if(!is_array(_val) || array_length(_val) != 2) 
 					inParent.value = new animValue([0, 0], inParent);
+				inParent.setDisplay(_dtype);
 				break;
 				
 			case VALUE_DISPLAY.enum_button :
@@ -89,11 +90,13 @@ function Node_Group_Input(_x, _y, _group) : Node(_x, _y) constructor {
 			case VALUE_DISPLAY.padding :
 				if(!is_array(_val) || array_length(_val) != 4)
 					inParent.value = new animValue([0, 0, 0, 0], inParent);
+				inParent.setDisplay(_dtype);
 				break;
 				
 			case VALUE_DISPLAY.area :
 				if(!is_array(_val) || array_length(_val) != 5)
 					inParent.value = new animValue([0, 0, 0, 0, 5], inParent);
+				inParent.setDisplay(_dtype);
 				break;
 				
 			case VALUE_DISPLAY.vector :
@@ -127,7 +130,9 @@ function Node_Group_Input(_x, _y, _group) : Node(_x, _y) constructor {
 				break;
 		}
 		
-		group.sortIO();
+		if(index == 5) {
+			group.sortIO();
+		}
 	}
 	
 	static createInput = function(override_order = false) {
@@ -169,23 +174,23 @@ function Node_Group_Input(_x, _y, _group) : Node(_x, _y) constructor {
 		
 		var _dtype = inputs[| 0].getValue();
 		
-		inputs[| 1].show_in_inspector = false;
-		inputs[| 3].show_in_inspector = false;
-		inputs[| 4].show_in_inspector = false;
+		inputs[| 1].setVisible(false);
+		inputs[| 3].setVisible(false);
+		inputs[| 4].setVisible(false);
 		
 		switch(_dtype) {
 			case VALUE_DISPLAY.range :
 			case VALUE_DISPLAY.slider :
 			case VALUE_DISPLAY.slider_range :
-				inputs[| 1].show_in_inspector = true;
+				inputs[| 1].setVisible(true);
 				break;
 			case VALUE_DISPLAY.enum_button :
 			case VALUE_DISPLAY.enum_scroll :
-				inputs[| 3].show_in_inspector = true;
+				inputs[| 3].setVisible(true);
 				break;
 			case VALUE_DISPLAY.vector :
 			case VALUE_DISPLAY.vector_range :
-				inputs[| 4].show_in_inspector = true;
+				inputs[| 4].setVisible(true);
 				break;
 		}
 	}

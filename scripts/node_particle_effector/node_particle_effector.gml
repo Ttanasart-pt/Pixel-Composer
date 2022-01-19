@@ -66,26 +66,26 @@ function Node_Particle_Effector(_x, _y) : Node(_x, _y) constructor {
 		var _type = inputs[| 5].getValue();
 		switch(_type) {
 			case FORCE_TYPE.Wind :	
-				node_input_visible(inputs[| 6],  true);
-				node_input_visible(inputs[| 10], false);
+				inputs[| 6].setVisible(true);
+				inputs[| 10].setVisible(false);
 				break;
 			case FORCE_TYPE.Accelerate :	
-				node_input_visible(inputs[| 6],  true);
-				node_input_visible(inputs[| 10], false);
+				inputs[| 6].setVisible(true);
+				inputs[| 10].setVisible(false);
 				break;
 			case FORCE_TYPE.Turbulence :	
-				node_input_visible(inputs[| 6],  true);
-				node_input_visible(inputs[| 10], true);
+				inputs[| 6].setVisible(true);
+				inputs[| 10].setVisible(true);
 				break;
 			case FORCE_TYPE.Destroy :	
-				node_input_visible(inputs[| 6],  false);
-				node_input_visible(inputs[| 8],  false);
-				node_input_visible(inputs[| 9],  false);
-				node_input_visible(inputs[| 10], false);
+				inputs[| 6].setVisible(false);
+				inputs[| 8].setVisible(false);
+				inputs[| 9].setVisible(false);
+				inputs[| 10].setVisible(false);
 				break;
 			default :	
-				node_input_visible(inputs[| 6],  false);
-				node_input_visible(inputs[| 10], false);
+				inputs[| 6].setVisible(false);
+				inputs[| 10].setVisible(false);
 				break;
 		}	
 	}
