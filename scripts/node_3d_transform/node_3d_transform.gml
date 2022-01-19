@@ -19,12 +19,10 @@ function Node_3D_Transform(_x, _y) : Node_Processor(_x, _y) constructor {
 		.setDisplay(VALUE_DISPLAY.vector);
 	
 	inputs[| 4] = nodeValue(4, "Output dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, OUTPUT_SCALING.same_as_input)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Same as input", "Constant", "Relative to input" ])
-		.setVisible(false);
+		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Same as input", "Constant", "Relative to input" ]);
 	
 	inputs[| 5] = nodeValue(5, "Constant dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, def_surf_size2, VALUE_TAG.dimension_2d)
 		.setDisplay(VALUE_DISPLAY.vector);
-	node_input_visible(inputs[| 5], false);
 	
 	input_display_list = [0, 
 		["Outputs",		true],	4, 5, 

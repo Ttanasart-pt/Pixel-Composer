@@ -16,3 +16,12 @@ function getWiggle(_min, _max, _fmin, _fmax, _time, seed_shift = 0) {
 	var _val = lerp(_x0, _x1, (_time - _t_prev) / (_t_next - _t_prev));
 	return _val;
 }
+
+function generateUUID() {
+	randomize();
+	var uuid;
+	do {
+		uuid = irandom(1000000000);
+	} until(!ds_map_exists(NODE_MAP, uuid))
+	return uuid;
+}

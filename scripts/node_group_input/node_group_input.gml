@@ -21,26 +21,23 @@ function Node_Group_Input(_x, _y, _group) : Node(_x, _y) constructor {
 	
 	inputs[| 0] = nodeValue(0, "Display type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Default", "Range", "Enum Scroll", "Enum Button", "Rotation", "Rotation range", 
-			"Slider", "Slider range", "Gradient", "Palette", "Padding", "Vector", "Vector range", "Area", "Curve" ])
-		.setVisible(false);
+			"Slider", "Slider range", "Gradient", "Palette", "Padding", "Vector", "Vector range", "Area", "Curve" ]);
 	
 	inputs[| 1] = nodeValue(1, "Range", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [0, 1])
 		.setDisplay(VALUE_DISPLAY.vector)
-		.setVisible(false, false);
-	
-	inputs[| 2] = nodeValue(2, "Input type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Integer", "Float", "Boolean", "Color", "Surface", "Path", "Curve", "Text", "Object", "Any" ])
 		.setVisible(false);
 	
+	inputs[| 2] = nodeValue(2, "Input type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Integer", "Float", "Boolean", "Color", "Surface", "Path", "Curve", "Text", "Object", "Any" ]);
+	
 	inputs[| 3] = nodeValue(3, "Enum label", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "")
-		.setVisible(false, false);
+		.setVisible(false);
 	
 	inputs[| 4] = nodeValue(4, "Vector size", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.enum_button, [ "2", "3", "4" ])
-		.setVisible(false, false);
-	
-	inputs[| 5] = nodeValue(5, "Order", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setVisible(false);
+	
+	inputs[| 5] = nodeValue(5, "Order", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0);
 	
 	input_display_list = [ 
 		["Data",	false], 2, 4,
@@ -132,7 +129,7 @@ function Node_Group_Input(_x, _y, _group) : Node(_x, _y) constructor {
 		group.sortIO();
 	}
 	
-	function createInput(override_order = false) {
+	static createInput = function(override_order = false) {
 		if(group && is_struct(group)) {
 			if(override_order) {
 				input_index = ds_list_size(group.inputs);
@@ -141,7 +138,8 @@ function Node_Group_Input(_x, _y, _group) : Node(_x, _y) constructor {
 				input_index = inputs[| 5].getValue();
 			}
 			
-			inParent = nodeValue(ds_list_size(group.inputs), "Value", group, JUNCTION_CONNECT.input, VALUE_TYPE.any, -1);
+			inParent = nodeValue(ds_list_size(group.inputs), "Value", group, JUNCTION_CONNECT.input, VALUE_TYPE.any, -1)
+				.setVisible(true, true);
 			inParent.from = self;
 			
 			ds_list_add(group.inputs, inParent);
@@ -196,7 +194,7 @@ function Node_Group_Input(_x, _y, _group) : Node(_x, _y) constructor {
 		onValueUpdate(0);
 	}
 	
-	function onDestroy() {
+	static onDestroy = function() {
 		if(is_undefined(inParent)) return;
 		
 		ds_list_remove(group.inputs, inParent);

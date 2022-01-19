@@ -17,18 +17,17 @@ function Node_3D_Obj(_x, _y) : Node(_x, _y) constructor {
 		}, "Generate"] );
 	
 	inputs[| 2] = nodeValue(2, "Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, def_surf_size2, VALUE_TAG.dimension_2d)
-		.setDisplay(VALUE_DISPLAY.vector)
-		.setVisible(false);
+		.setDisplay(VALUE_DISPLAY.vector);
 	
 	inputs[| 3] = nodeValue(3, "Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.vector);
-	
+		
 	inputs[| 4] = nodeValue(4, "Rotation", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 180 ])
 		.setDisplay(VALUE_DISPLAY.vector);
 	
 	inputs[| 5] = nodeValue(5, "Scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 1 ])
 		.setDisplay(VALUE_DISPLAY.vector);
-	
+		
 	input_display_list = [ 2, 
 		["Geometry",	false], 0, 1, 
 		["Transform",	false], 3, 4, 5 

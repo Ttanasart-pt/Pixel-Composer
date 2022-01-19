@@ -1,5 +1,4 @@
 function APPEND(_path) {
-	APPEND_ID	= NODE_ID + 1;
 	APPENDING	= true;
 	
 	if(_path == "") return;
@@ -29,6 +28,7 @@ function APPEND(_path) {
 	var node_create = ds_list_create();
 	
 	ds_queue_clear(CONNECTION_CONFLICT);
+	ds_map_clear(APPEND_MAP);
 	
 	for(var i = 0; i < ds_list_size(_node_list); i++) {
 		var _node = nodeLoad(_node_list[| i], true);
@@ -89,5 +89,12 @@ function APPEND(_path) {
 	PANEL_ANIMATION.updatePropertyList();
 	
 	log_message("FILE", "append file " + _path);
+	PANEL_MENU.showNoti("Collection loaded", s_noti_icon_file_load);
 	return node_create;
+}
+
+function GetAppendID(old_id) {
+	if(ds_map_exists(APPEND_MAP, old_id)) 
+		return APPEND_MAP[? old_id];
+	return -1;
 }

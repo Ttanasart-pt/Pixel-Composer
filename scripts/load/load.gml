@@ -21,7 +21,6 @@ function LOAD_PATH(path, readonly = false) {
 	if(file_exists(temp_path)) file_delete(temp_path);
 	file_copy(path, temp_path);
 	
-	APPEND_ID	= 0;
 	LOADING		= true;
 	READONLY	= readonly;
 	SET_PATH(path);
@@ -116,6 +115,6 @@ function LOAD_PATH(path, readonly = false) {
 	PANEL_ANIMATION.updatePropertyList();
 	
 	log_message("FILE", "load at " + path);
-	PANEL_MENU.showNoti("File loaded", s_noti_icon_file);
+	PANEL_MENU.showNoti("File loaded", s_noti_icon_file_load);
 	return true;
 }

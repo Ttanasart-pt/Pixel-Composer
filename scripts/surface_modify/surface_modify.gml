@@ -50,6 +50,7 @@ function surface_valid(s) {
 
 function is_surface(s) {
 	if(is_array(s)) return false;
+	if(!is_real(s)) return false;
 	if(!s) return false;
 	if(!surface_exists(s)) return false;
 	

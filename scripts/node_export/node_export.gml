@@ -24,8 +24,7 @@ function Node_Export(_x, _y) : Node(_x, _y) constructor {
 		.setVisible(true);
 	
 	inputs[| 2] = nodeValue(2, "Template",  self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "%d%n")
-		.setDisplay(VALUE_DISPLAY.export_format)
-		.setVisible(false);
+		.setDisplay(VALUE_DISPLAY.export_format);
 	
 	inputs[| 3] = nodeValue(3, "Format", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.enum_scroll, ["Single image (.png)", "Image sequence (.png)", "Animated gif (.gif)"]);
@@ -39,14 +38,14 @@ function Node_Export(_x, _y) : Node(_x, _y) constructor {
 %i           Index" );
 
 	inputs[| 5] = nodeValue(5, "Loop", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true)
-		.setVisible(false, false);
+		.setVisible(false);
 	inputs[| 6] = nodeValue(6, "Frame optimization", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false)
-		.setVisible(false, false);
+		.setVisible(false);
 	inputs[| 7] = nodeValue(7, "Color merge", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.02)
 		.setDisplay(VALUE_DISPLAY.slider, [0, 1, 0.01])
-		.setVisible(false, false);
+		.setVisible(false);
 	inputs[| 8] = nodeValue(8, "Dithering", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false)
-		.setVisible(false, false);
+		.setVisible(false);
 	
 	input_display_list = [
 		["Path",			false], 0, 1, 2, 4, 

@@ -12,13 +12,16 @@ function Node_Color_RGB(_x, _y) : Node(_x, _y) constructor {
 	min_h = 0;
 	
 	inputs[| 0] = nodeValue(0, "Red", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
-		.setDisplay(VALUE_DISPLAY.slider, [0, 1, 0.01]);
+		.setDisplay(VALUE_DISPLAY.slider, [0, 1, 0.01])
+		.setVisible(true, true);
 	
 	inputs[| 1] = nodeValue(1, "Green", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
-		.setDisplay(VALUE_DISPLAY.slider, [0, 1, 0.01]);
+		.setDisplay(VALUE_DISPLAY.slider, [0, 1, 0.01])
+		.setVisible(true, true);
 	
 	inputs[| 2] = nodeValue(2, "Blue", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
-		.setDisplay(VALUE_DISPLAY.slider, [0, 1, 0.01]);
+		.setDisplay(VALUE_DISPLAY.slider, [0, 1, 0.01])
+		.setVisible(true, true);
 	
 	outputs[| 0] = nodeValue(0, "Color", self, JUNCTION_CONNECT.output, VALUE_TYPE.color, c_white);
 	

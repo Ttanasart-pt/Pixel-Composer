@@ -24,40 +24,30 @@ function Node_Particle_Effector(_x, _y) : Node(_x, _y) constructor {
 	
 	inputs[| 0] = nodeValue(0, "Particle data", self, JUNCTION_CONNECT.input, VALUE_TYPE.object, -1 );
 	inputs[| 1] = nodeValue(1, "Output dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, def_surf_size2, VALUE_TAG.dimension_2d )
-		.setDisplay(VALUE_DISPLAY.vector)
-		.setVisible(false, false);
+		.setDisplay(VALUE_DISPLAY.vector);
 	
 	inputs[| 2] = nodeValue(2, "Area", self,   JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 16, 16, 4, 4, AREA_SHAPE.rectangle ])
-		.setDisplay(VALUE_DISPLAY.area)
-		.setVisible(false);
+		.setDisplay(VALUE_DISPLAY.area);
 	
 	inputs[| 3] = nodeValue(3, "Falloff", self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, [0, 0, 1, 1] )
-		.setDisplay(VALUE_DISPLAY.curve)
-		.setVisible(false);
+		.setDisplay(VALUE_DISPLAY.curve);
 	
-	inputs[| 4] = nodeValue(4, "Falloff distance", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 4 )
-		.setVisible(false);
+	inputs[| 4] = nodeValue(4, "Falloff distance", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 4 );
 	
 	inputs[| 5] = nodeValue(5, "Effect type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0 )
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Wind", "Accelerate", "Attract", "Repel", "Vortex", "Turbulence", "Destroy" ] )
-		.setVisible(false);
+		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Wind", "Accelerate", "Attract", "Repel", "Vortex", "Turbulence", "Destroy" ] );
 	
 	inputs[| 6] = nodeValue(6, "Effect Vector", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ -1, 0 ] )
-		.setDisplay(VALUE_DISPLAY.vector)
-		.setVisible(false);
+		.setDisplay(VALUE_DISPLAY.vector);
 	
-	inputs[| 7] = nodeValue(7, "Strength", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1 )
-		.setVisible(false);
+	inputs[| 7] = nodeValue(7, "Strength", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1 );
 	
-	inputs[| 8] = nodeValue(8, "Rotate particle", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0 )
-		.setVisible(false);
+	inputs[| 8] = nodeValue(8, "Rotate particle", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0 );
 	
 	inputs[| 9] = nodeValue(9, "Scale particle", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ] )
-		.setDisplay(VALUE_DISPLAY.vector)
-		.setVisible(false);
+		.setDisplay(VALUE_DISPLAY.vector);
 	
-	inputs[| 10] = nodeValue(10, "Turbulence scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 16 )
-		.setVisible(false);
+	inputs[| 10] = nodeValue(10, "Turbulence scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 16 );
 	
 	input_display_list = [ 0, 1, 
 		["Area",	false], 2, 3, 4, 

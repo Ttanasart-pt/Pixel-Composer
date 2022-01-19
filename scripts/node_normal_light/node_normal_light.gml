@@ -31,8 +31,7 @@ function Node_Normal_Light(_x, _y) : Node_Processor(_x, _y) constructor {
 	inputs[| 7] = nodeValue(7, "Light color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white);
 	
 	inputs[| 8] = nodeValue(8, "Light type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_button, ["Point", "Sun"])
-		.setVisible(false);
+		.setDisplay(VALUE_DISPLAY.enum_button, ["Point", "Sun"]);
 	
 	input_display_list = [ 0, 
 		["Normal",	false], 1, 2, 

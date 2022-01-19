@@ -9,8 +9,7 @@ function Node_3D_Cube(_x, _y) : Node(_x, _y) constructor {
 	
 	inputs[| 0] = nodeValue(0, "Main texture", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, DEF_SURFACE);
 	inputs[| 1] = nodeValue(1, "Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, def_surf_size2, VALUE_TAG.dimension_2d)
-		.setDisplay(VALUE_DISPLAY.vector)
-		.setVisible(false);
+		.setDisplay(VALUE_DISPLAY.vector);
 	
 	inputs[| 2] = nodeValue(2, "Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.vector);

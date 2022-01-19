@@ -4,6 +4,7 @@ function NEW() {
 	room_restart();
 				
 	gc_collect();
+	CURRENT_PATH = "";
 }
 
 function clearNodes() {
@@ -95,7 +96,7 @@ function SAVE_AT(path) {
 	READONLY  = false;
 	
 	log_message("FILE", "save at " + path);
-	PANEL_MENU.showNoti("File saved", s_noti_icon_save);
+	PANEL_MENU.showNoti("File saved", s_noti_icon_file_save);
 }
 
 function SAVE_COLLECTIONS(_list, _path, save_surface = true) {

@@ -14,8 +14,7 @@ function Node_Trail(_x, _y) : Node_Processor(_x, _y) constructor {
 	inputs[| 3] = nodeValue(3, "Alpha decrease",	self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0);
 	
 	inputs[| 4] = nodeValue(4, "Blend mode", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, BLEND_TYPES )
-		.setVisible(false);
+		.setDisplay(VALUE_DISPLAY.enum_scroll, BLEND_TYPES );
 	
 	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, surface_create(1, 1));
 	

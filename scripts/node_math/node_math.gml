@@ -13,11 +13,12 @@ function Node_Math(_x, _y) : Node_Value_Processor(_x, _y) constructor {
 	min_h = 0;
 	
 	inputs[| 0] = nodeValue(0, "Type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Add", "Subtract", "Multiply", "Divide", "Power", "Root", "Sin", "Cos", "Tan" ])
-		.setVisible(false);
+		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Add", "Subtract", "Multiply", "Divide", "Power", "Root", "Sin", "Cos", "Tan" ]);
 	
-	inputs[| 1] = nodeValue(1, "a", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0);
-	inputs[| 2] = nodeValue(2, "b", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0);
+	inputs[| 1] = nodeValue(1, "a", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
+		.setVisible(true, true);
+	inputs[| 2] = nodeValue(2, "b", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
+		.setVisible(true, true);
 	
 	outputs[| 0] = nodeValue(0, "Math", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, 0);
 	

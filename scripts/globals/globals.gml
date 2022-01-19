@@ -1,8 +1,7 @@
 #region save
-	globalvar LOADING, APPENDING, APPEND_ID, READONLY, CONNECTION_CONFLICT, GLOBAL_SEED;
+	globalvar LOADING, APPENDING, READONLY, CONNECTION_CONFLICT, GLOBAL_SEED;
 	LOADING   = false;
 	APPENDING = false;
-	APPEND_ID = 0;
 	READONLY  = false;
 	CONNECTION_CONFLICT = ds_queue_create();
 	
@@ -16,14 +15,14 @@
 	
 	globalvar VERSION, SAVEFILE_VERSION, VERSION_STRING;
 	VERSION = 82;
-	SAVEFILE_VERSION = 80;
+	SAVEFILE_VERSION = 82;
 	VERSION_STRING = "0.8.2";
 	
-	globalvar NODES, ANIMATOR, NODE_ID, NODE_MAP, HOTKEYS, HOTKEY_CONTEXT;
+	globalvar NODES, ANIMATOR, NODE_MAP, APPEND_MAP, HOTKEYS, HOTKEY_CONTEXT;
 	
-	NODE_ID		= 0;
 	NODES		= ds_list_create();
 	NODE_MAP	= ds_map_create();
+	APPEND_MAP  = ds_map_create();
 	
 	HOTKEYS			= ds_map_create();
 	HOTKEY_CONTEXT	= ds_list_create();

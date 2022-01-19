@@ -13,8 +13,7 @@ function Node_Palette(_x, _y) : Node(_x, _y) constructor {
 	min_h = 0;
 	
 	inputs[| 0] = nodeValue(0, "Palette", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, [ c_white ])
-		.setDisplay(VALUE_DISPLAY.palette)
-		.setVisible(false);
+		.setDisplay(VALUE_DISPLAY.palette);
 	
 	inputs[| 1] = nodeValue(1, "Trim range", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 1 ])
 		.setDisplay(VALUE_DISPLAY.slider_range, [0, 1, 0.01]);

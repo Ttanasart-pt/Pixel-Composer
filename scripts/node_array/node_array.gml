@@ -14,8 +14,7 @@ function Node_Array(_x, _y) : Node(_x, _y) constructor {
 	w = 96;
 	
 	for(var i = 0; i < input_max; i++) {
-		inputs[| i] = nodeValue(i, "Value " + string(i), self, JUNCTION_CONNECT.input, VALUE_TYPE.any, 0)
-			.setVisible(false);
+		inputs[| i] = nodeValue(i, "Value " + string(i), self, JUNCTION_CONNECT.input, VALUE_TYPE.any, 0);
 	}
 	
 	outputs[| 0] = nodeValue(0, "Array", self, JUNCTION_CONNECT.output, VALUE_TYPE.any, []);

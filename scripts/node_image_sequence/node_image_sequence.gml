@@ -47,12 +47,10 @@ function Node_Image_Sequence(_x, _y) : Node(_x, _y) constructor {
 		.setDisplay(VALUE_DISPLAY.padding);
 	
 	inputs[| 2] = nodeValue(2, "Canvas size", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Individual", "Minimum", "Maximum" ])
-		.setVisible(false);
+		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Individual", "Minimum", "Maximum" ]);
 	
 	inputs[| 3] = nodeValue(3, "Sizing method", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Padding / Crop", "Scale" ])
-		.setVisible(false);
+		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Padding / Crop", "Scale" ]);
 	
 	inputs[| 4] = nodeValue(4, "Edit", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.button, [ function() {

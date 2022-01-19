@@ -155,15 +155,15 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 	on_end	= KEYFRAME_END.hold;
 	extra_data = ds_list_create();
 	
-	visible = true;
+	visible = _connect == JUNCTION_CONNECT.output || _type == VALUE_TYPE.surface || _type == VALUE_TYPE.path || ( _tag & VALUE_TAG.dimension_2d );
 	show_in_inspector = true;
 	
 	display_type = VALUE_DISPLAY._default;
 	display_data = -1;
 	
-	static setVisible = function(vis, inspector = true) {
-		visible = vis;	
+	static setVisible = function(inspector) {
 		show_in_inspector = inspector;
+		visible = argument_count > 1? argument[1] : visible;
 		
 		return self;
 	}
@@ -931,7 +931,7 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 	
 	static isVisible = function() {
 		if(!node.active) return false;
-		return visible && show_in_inspector;
+		return value_from || ( visible && show_in_inspector );
 	}
 	
 	static serialize = function(scale = false) {
@@ -968,8 +968,10 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 		if(con_node == -1) return true;
 		if(con_index == -1) return true;
 		
-		if(ds_map_exists(NODE_MAP, con_node + APPEND_ID)) {
-			var _nd = NODE_MAP[? con_node + APPEND_ID];
+		if(APPENDING) con_node = GetAppendID(con_node);
+		
+		if(ds_map_exists(NODE_MAP, con_node)) {
+			var _nd = NODE_MAP[? con_node];
 			var _ol = ds_list_size(_nd.outputs);
 			if(con_index < _ol) {
 				if(setFrom(_nd.outputs[| con_index], false)) 
@@ -981,13 +983,10 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 				log_warning("LOAD", "[Connect] Connection conflict " + string(node.name) + " to " + string(_nd.name) + " : Node not exist.");
 				return false;
 			}
-		} else {
-			log_warning("LOAD", "[Connect] Connection error, node does not exist.");
 		}
 		
-		var txt = "Node connect error : Node ID " + string(con_node + APPEND_ID) + " not found.";
+		var txt = "Node connect error : Node ID " + string(con_node) + " not found.";
 		log_warning("LOAD", "[Connect] " + txt);
-		PANEL_MENU.addNotiExtra(txt);
-		return true;
+		return false;
 	}
 }

@@ -29,14 +29,12 @@ function Node_Image_Sheet(_x, _y) : Node(_x, _y) constructor {
 		.setDisplay(VALUE_DISPLAY.padding);
 	
 	inputs[| 7]  = nodeValue(7, "Output", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Animation", "Array"])
-		.setVisible(false);
+		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Animation", "Array"]);
 	
 	inputs[| 8]  = nodeValue(8, "Animation speed", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1);
 	
 	inputs[| 9]  = nodeValue(9, "Orientation", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Horizontal", "Vertical"])
-		.setVisible(false);
+		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Horizontal", "Vertical"]);
 	
 	inputs[| 10] = nodeValue(10, "Auto fill", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.button, [ function() { 

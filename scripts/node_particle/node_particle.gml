@@ -177,99 +177,74 @@ function Node_Particle(_x, _y) : Node(_x, _y) constructor {
 	
 	inputs[| 0] = nodeValue(0, "Particle", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 	inputs[| 1] = nodeValue(1, "Output dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, def_surf_size2, VALUE_TAG.dimension_2d)
-		.setDisplay(VALUE_DISPLAY.vector)
-		.setVisible(false);
+		.setDisplay(VALUE_DISPLAY.vector);
 	
-	inputs[| 2] = nodeValue(2, "Spawn delay", self,  JUNCTION_CONNECT.input, VALUE_TYPE.integer, 4)
-		.setVisible(false);
-	inputs[| 3] = nodeValue(3, "Spawn amount", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 2)
-		.setVisible(false);
+	inputs[| 2] = nodeValue(2, "Spawn delay", self,  JUNCTION_CONNECT.input, VALUE_TYPE.integer, 4);
+	inputs[| 3] = nodeValue(3, "Spawn amount", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 2);
 	inputs[| 4] = nodeValue(4, "Spawn area", self,   JUNCTION_CONNECT.input, VALUE_TYPE.float, [ def_surf_size / 2, def_surf_size / 2, def_surf_size / 2, def_surf_size / 2, AREA_SHAPE.rectangle ])
-		.setDisplay(VALUE_DISPLAY.area, function() { return inputs[| 1].getValue(); })
-		.setVisible(false);
+		.setDisplay(VALUE_DISPLAY.area, function() { return inputs[| 1].getValue(); });
 	
 	inputs[| 5] = nodeValue(5, "Spawn distribution", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_button, [ "Area", "Border" ])
-		.setVisible(false);
+		.setDisplay(VALUE_DISPLAY.enum_button, [ "Area", "Border" ]);
 	
 	inputs[| 6] = nodeValue(6, "Lifespan", self,  JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 20, 30 ])
-		.setDisplay(VALUE_DISPLAY.range)
-		.setVisible(false);
+		.setDisplay(VALUE_DISPLAY.range);
 	
 	inputs[| 7] = nodeValue(7, "Spawn direction", self,  JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 45, 135 ])
-		.setDisplay(VALUE_DISPLAY.rotation_range)
-		.setVisible(false);
+		.setDisplay(VALUE_DISPLAY.rotation_range);
 	inputs[| 8] = nodeValue(8, "Acceleration", self,  JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ])
-		.setDisplay(VALUE_DISPLAY.range)
-		.setVisible(false);
+		.setDisplay(VALUE_DISPLAY.range);
 	
 	inputs[| 9] = nodeValue(9, "Orientation", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [0, 0])
-		.setDisplay(VALUE_DISPLAY.rotation_range)
-		.setVisible(false);
+		.setDisplay(VALUE_DISPLAY.rotation_range);
 		
-	inputs[| 10] = nodeValue(10, "Rotational speed", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
-		.setVisible(false);
+	inputs[| 10] = nodeValue(10, "Rotational speed", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0);
 	
 	inputs[| 11] = nodeValue(11, "Spawn scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 1, 1, 1 ] )
-		.setDisplay(VALUE_DISPLAY.vector_range)
-		.setVisible(false);
+		.setDisplay(VALUE_DISPLAY.vector_range);
 	inputs[| 12] = nodeValue(12, "Scaling speed", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ] )
-		.setDisplay(VALUE_DISPLAY.vector)
-		.setVisible(false);
+		.setDisplay(VALUE_DISPLAY.vector);
 	
 	inputs[| 13] = nodeValue(13, "Color over lifetime", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white)
-		.setDisplay(VALUE_DISPLAY.gradient)
-		.setVisible(false);
+		.setDisplay(VALUE_DISPLAY.gradient);
 	inputs[| 14] = nodeValue(14, "Alpha", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 1 ])
-		.setDisplay(VALUE_DISPLAY.range)
-		.setVisible(false);
-	inputs[| 15] = nodeValue(15, "Alpha over time", self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, [1, 1, 1, 1])
-		.setVisible(false);
+		.setDisplay(VALUE_DISPLAY.range);
+	inputs[| 15] = nodeValue(15, "Alpha over time", self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, [1, 1, 1, 1]);
 	
-	inputs[| 16] = nodeValue(16, "Rotate by direction", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false)
-		.setVisible(false);
+	inputs[| 16] = nodeValue(16, "Rotate by direction", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
 	
 	inputs[| 17] = nodeValue(17, "Spawn type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_button, [ "Stream", "Burst" ])
-		.setVisible(false);
+		.setDisplay(VALUE_DISPLAY.enum_button, [ "Stream", "Burst" ]);
 	
 	inputs[| 18] = nodeValue(18, "Spawn size", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 1 ] )
-		.setDisplay(VALUE_DISPLAY.range)
-		.setVisible(false);
+		.setDisplay(VALUE_DISPLAY.range);
 	
-	inputs[| 19] = nodeValue(19, "Draw exact", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true )
-		.setVisible(false);
+	inputs[| 19] = nodeValue(19, "Draw exact", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true );
 	
 	inputs[| 20] = nodeValue(20, "Spawn velocity", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [1, 2] )
-		.setDisplay(VALUE_DISPLAY.range)
-		.setVisible(false);
+		.setDisplay(VALUE_DISPLAY.range);
 	
-	inputs[| 21] = nodeValue(21, "Gravity", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0 )
-		.setVisible(false);
-	inputs[| 22] = nodeValue(22, "Wiggle", self, JUNCTION_CONNECT.input, VALUE_TYPE.float,  0 )
-		.setVisible(false);
+	inputs[| 21] = nodeValue(21, "Gravity", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0 );
+	inputs[| 22] = nodeValue(22, "Wiggle", self, JUNCTION_CONNECT.input, VALUE_TYPE.float,  0 );
 	
-	inputs[| 23] = nodeValue(23, "Loop", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true )
-		.setVisible(false);
+	inputs[| 23] = nodeValue(23, "Loop", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true );
 	
 	inputs[| 24] = nodeValue(24, "Blend mode", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0 )
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Normal", "Additive" ])
-		.setVisible(false);
+		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Normal", "Additive" ]);
 	
 	inputs[| 25] = nodeValue(25, "Surface selection", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0 )
 		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Random", "Order", "Animation" ])
-		.setVisible(false, false);
+		.setVisible(false);
 	
 	inputs[| 26] = nodeValue(26, "Animation speed", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 1 ] )
 		.setDisplay(VALUE_DISPLAY.vector)
-		.setVisible(false, false);
-	
-	inputs[| 27] = nodeValue(27, "Scatter", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1)
-		.setDisplay(VALUE_DISPLAY.enum_button, [ "Uniform", "Random", "Data" ])
 		.setVisible(false);
 	
+	inputs[| 27] = nodeValue(27, "Scatter", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1)
+		.setDisplay(VALUE_DISPLAY.enum_button, [ "Uniform", "Random", "Data" ]);
+	
 	inputs[| 28] = nodeValue(28, "Boundary data", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [])
-		.setVisible(true, false);
+		.setVisible(false, true);
 	
 	input_display_list = [		
 		["Output",		true],	1,

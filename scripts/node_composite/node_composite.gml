@@ -20,16 +20,13 @@ function Node_Composite(_x, _y) : Node_Processor(_x, _y) constructor {
 	uniform_for = shader_get_sampler_index(sh_blend_normal_dim, "fore");
 	
 	inputs[| 0] = nodeValue(0, "Padding", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 0, 0, 0, 0 ])
-		.setDisplay(VALUE_DISPLAY.padding)
-		.setVisible(false);
+		.setDisplay(VALUE_DISPLAY.padding);
 	
 	inputs[| 1] = nodeValue(1, "Output dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, COMPOSE_OUTPUT_SCALING.first)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "First surface", "Largest surface", "Constant" ])
-		.setVisible(false);
+		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "First surface", "Largest surface", "Constant" ]);
 	
 	inputs[| 2] = nodeValue(2, "Output dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, def_surf_size2, VALUE_TAG.dimension_2d)
-		.setDisplay(VALUE_DISPLAY.vector)
-		.setVisible(false);
+		.setDisplay(VALUE_DISPLAY.vector);
 	
 	input_fix_len	= ds_list_size(inputs);
 	data_length		= 4;
@@ -45,16 +42,13 @@ function Node_Composite(_x, _y) : Node_Processor(_x, _y) constructor {
 		inputs[| index + 0] = nodeValue( index + 0, _s? ("Surface " + string(_s)) : "Background", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 		
 		inputs[| index + 1] = nodeValue( index + 1, "Position " + string(_s), self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ] )
-			.setDisplay(VALUE_DISPLAY.vector)
-			.setVisible(false);
+			.setDisplay(VALUE_DISPLAY.vector);
 		
 		inputs[| index + 2] = nodeValue( index + 2, "Rotation " + string(_s), self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0 )
-			.setDisplay(VALUE_DISPLAY.rotation)
-			.setVisible(false);
+			.setDisplay(VALUE_DISPLAY.rotation);
 		
 		inputs[| index + 3] = nodeValue( index + 3, "Scale " + string(_s), self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 1 ] )
-			.setDisplay(VALUE_DISPLAY.vector)
-			.setVisible(false);
+			.setDisplay(VALUE_DISPLAY.vector);
 		
 		array_push(input_display_list, ["Surface " + string(_s), true], index + 0, index + 1, index + 2, index + 3);
 	}

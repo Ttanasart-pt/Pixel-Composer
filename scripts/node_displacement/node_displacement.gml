@@ -28,14 +28,11 @@ function Node_Displace(_x, _y) : Node_Processor(_x, _y) constructor {
 		.setDisplay(VALUE_DISPLAY.slider, [ 0, 1, 0.01]);
 	
 	inputs[| 5] = nodeValue(5, "Color data",  self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_button, [ "Ignore", "Vector", "Angle" ])
-		.setVisible(false);
+		.setDisplay(VALUE_DISPLAY.enum_button, [ "Ignore", "Vector", "Angle" ]);
 	
-	inputs[| 6] = nodeValue(6, "Iterate",  self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false)
-		.setVisible(false);
+	inputs[| 6] = nodeValue(6, "Iterate",  self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
 	
-	inputs[| 7] = nodeValue(7, "Wrap",  self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false)
-		.setVisible(false);
+	inputs[| 7] = nodeValue(7, "Wrap",  self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
 	
 	input_display_list = [ 0, 
 		["Displace",	false], 1, 3, 4, 

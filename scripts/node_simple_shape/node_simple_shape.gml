@@ -41,14 +41,13 @@ function Node_Shape(_x, _y) : Node_Processor(_x, _y) constructor {
 		.setDisplay(VALUE_DISPLAY.area, function() { return inputs[| 0].getValue(); });
 	
 	inputs[| 4] = nodeValue(4, "Sides", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 3)
-		.setVisible(false, false);
+		.setVisible(false);
 	
 	inputs[| 5] = nodeValue(5, "Inner radius", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.5)
 		.setDisplay(VALUE_DISPLAY.slider, [0, 1, 0.01])
-		.setVisible(false, false);
-	
-	inputs[| 6] = nodeValue(6, "Anti alising", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false)
 		.setVisible(false);
+	
+	inputs[| 6] = nodeValue(6, "Anti alising", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
 	
 	inputs[| 7] = nodeValue(7, "Rotation", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.rotation);

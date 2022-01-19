@@ -28,7 +28,7 @@ function Node_Mesh_Warp(_x, _y) : Node(_x, _y) constructor {
 		var index = ds_list_size(inputs);
 		inputs[| index] = nodeValue(index, "Control point range", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 16, 16, 8, 0, 32])
 			.setDisplay(VALUE_DISPLAY.puppet_control)
-			.setVisible(false);
+			
 		
 		return inputs[| index];
 	}

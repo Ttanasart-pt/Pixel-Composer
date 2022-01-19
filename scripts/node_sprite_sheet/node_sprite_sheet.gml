@@ -24,22 +24,17 @@ function Node_Render_Sprite_Sheet(_x, _y) : Node(_x, _y) constructor {
 	inputs[| 0] = nodeValue(0, "Sprites", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, surface_create(1, 1));
 	
 	inputs[| 1] = nodeValue(1, "Sprite set", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Animation", "Sprite array" ])
-		.setVisible(false);
+		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Animation", "Sprite array" ]);
 	
-	inputs[| 2] = nodeValue(2, "Frame step", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1)
-		.setVisible(false);
+	inputs[| 2] = nodeValue(2, "Frame step", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1);
 	
 	inputs[| 3] = nodeValue(3, "Packing type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Horizontal", "Vertical", "Grid" ])
-		.setVisible(false);
+		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Horizontal", "Vertical", "Grid" ]);
 	
-	inputs[| 4] = nodeValue(4, "Grid column", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 4)
-		.setVisible(false);
+	inputs[| 4] = nodeValue(4, "Grid column", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 4);
 	
 	inputs[| 5] = nodeValue(5, "Alignment", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_button, [ "First", "Middle", "Last" ])
-		.setVisible(false);
+		.setDisplay(VALUE_DISPLAY.enum_button, [ "First", "Middle", "Last" ]);
 	
 	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, surface_create(1, 1));
 	

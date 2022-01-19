@@ -23,7 +23,7 @@ function Node_Path(_x, _y) : Node(_x, _y) constructor {
 		
 		inputs[| index] = nodeValue(index, "Anchor",  self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ _x, _y, 0, 0, 0, 0 ])
 			.setDisplay(VALUE_DISPLAY.vector)
-			.setVisible(false);
+			
 		
 		return inputs[| index];
 	}

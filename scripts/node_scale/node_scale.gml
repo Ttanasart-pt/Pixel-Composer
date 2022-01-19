@@ -11,8 +11,7 @@ function Node_Scale(_x, _y) : Node_Processor(_x, _y) constructor {
 	
 	inputs[| 1] = nodeValue(1, "Scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1);
 	
-	inputs[| 2] = nodeValue(2, "Keep dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false)
-		.setVisible(false);
+	inputs[| 2] = nodeValue(2, "Keep dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
 	
 	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, surface_create(1, 1));
 	

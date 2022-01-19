@@ -1,6 +1,6 @@
 function Node(_x, _y) constructor {
 	active  = true;
-	node_id = NODE_ID++;
+	node_id = generateUUID();
 	group   = -1;
 	color   = c_white;
 	icon    = noone;
@@ -517,9 +517,14 @@ function Node(_x, _y) constructor {
 	load_map = -1;
 	static deserialize = function(scale = false) {
 		keyframe_scale = scale;
-		node_id = load_map[? "id"] + APPEND_ID;
+		
+		if(APPENDING) {
+			APPEND_MAP[? load_map[? "id"]] = node_id;
+		} else {
+			node_id = load_map[? "id"];
+		}
+		
 		NODE_MAP[? node_id] = self;
-		NODE_ID = max(NODE_ID, node_id + 1);
 		
 		name  = load_map[? "name"];
 		_group = load_map[? "group"];
@@ -547,8 +552,14 @@ function Node(_x, _y) constructor {
 			var c = PANEL_GRAPH.getCurrentContext();
 			if(c != -1) c.add(self);
 		} else {
-			if(ds_map_exists(NODE_MAP, _group + APPEND_ID)) {
-				NODE_MAP[? _group + APPEND_ID].add(self);
+			if(APPENDING) _group = GetAppendID(_group);
+			
+			if(ds_map_exists(NODE_MAP, _group)) {
+				NODE_MAP[? _group].add(self);
+			} else {
+				var txt = "Group load failed. Can't find node ID " + string(_group);
+				PANEL_MENU.addNotiExtra(txt);
+				log_warning("LOAD", txt);
 			}
 		}
 	}

@@ -17,7 +17,7 @@ function Node_Transform(_x, _y) : Node_Processor(_x, _y) constructor {
 	
 	inputs[| 1] = nodeValue(1, "Output dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [1, 1], VALUE_TAG.dimension_2d)
 		.setDisplay(VALUE_DISPLAY.vector)
-		.setVisible(false, false);
+		.setVisible(false);
 	
 	inputs[| 2] = nodeValue(2, "Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.vector);
@@ -27,34 +27,30 @@ function Node_Transform(_x, _y) : Node_Processor(_x, _y) constructor {
 											.setIcon(s_anchor)
 											.setTooltip("Set to center"));
 	
-	inputs[| 4] = nodeValue(4, "Relative", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true)
-		.setVisible(false);
+	inputs[| 4] = nodeValue(4, "Relative", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
 	
 	inputs[| 5] = nodeValue(5, "Rotation", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.rotation);
 	
 	inputs[| 6] = nodeValue(6, "Scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 1 ])
-		.setDisplay(VALUE_DISPLAY.vector, button(function() {
-														inputs[| 6].modifier = inputs[| 6].modifier == VALUE_MODIFIER.none? VALUE_MODIFIER.linked : VALUE_MODIFIER.none;
-														inputs[| 6].editWidget.extras.icon_index = inputs[| 6].modifier == VALUE_MODIFIER.linked;
-													})
-													.setIcon(s_padding_link));
+		.setDisplay(VALUE_DISPLAY.vector, 
+		button(function() {
+			inputs[| 6].modifier = inputs[| 6].modifier == VALUE_MODIFIER.none? VALUE_MODIFIER.linked : VALUE_MODIFIER.none;
+			inputs[| 6].editWidget.extras.icon_index = inputs[| 6].modifier == VALUE_MODIFIER.linked;
+		})
+		.setIcon(s_padding_link));
 	
-	inputs[| 7] = nodeValue(7, "Wrap", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false)
-		.setVisible(false);
+	inputs[| 7] = nodeValue(7, "Wrap", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
 	
 	inputs[| 8] = nodeValue(8, "Rotate by velocity", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
 		.setDisplay(VALUE_DISPLAY.slider, [0, 1, 0.01]);
 	
 	inputs[| 9] = nodeValue(9, "Output dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, OUTPUT_SCALING.same_as_input)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Same as input", "Constant", "Relative to input" ])
-		.setVisible(false);
+		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Same as input", "Constant", "Relative to input" ]);
 	
-	inputs[| 10] = nodeValue(10, "Exact", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true)
-		.setVisible(false);
+	inputs[| 10] = nodeValue(10, "Exact", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
 	
-	inputs[| 11] = nodeValue(11, "Relative to surface", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false)
-		.setVisible(false);
+	inputs[| 11] = nodeValue(11, "Relative to surface", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
 	
 	input_display_list = [ 0, 
 		["Output",		true],	9, 1, 7, 

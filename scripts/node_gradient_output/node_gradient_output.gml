@@ -12,8 +12,7 @@ function Node_Gradient_Out(_x, _y) : Node(_x, _y) constructor {
 	w = 96;
 	
 	inputs[| 0] = nodeValue(0, "Gradient", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white)
-		.setDisplay(VALUE_DISPLAY.gradient)
-		.setVisible(false);
+		.setDisplay(VALUE_DISPLAY.gradient);
 	
 	inputs[| 1] = nodeValue(1, "Sample", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
 		.setDisplay(VALUE_DISPLAY.slider, [0, 1, 0.01]);

@@ -11,37 +11,29 @@ function Node_Cellular(_x, _y) : Node(_x, _y) constructor {
 		.setDisplay(VALUE_DISPLAY.vector);
 	
 	inputs[| 1] = nodeValue(1, "Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ def_surf_size / 2, def_surf_size / 2])
-		.setDisplay(VALUE_DISPLAY.vector)
-		.setVisible(false);
+		.setDisplay(VALUE_DISPLAY.vector);
 	
-	inputs[| 2] = nodeValue(2, "Scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 4)
-		.setVisible(false);
+	inputs[| 2] = nodeValue(2, "Scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 4);
 	
-	inputs[| 3] = nodeValue(3, "Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
-		.setVisible(false);
+	inputs[| 3] = nodeValue(3, "Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0);
 	
 	inputs[| 4] = nodeValue(4, "Type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Point", "Edge", "Cell" ])
-		.setVisible(false);
+		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Point", "Edge", "Cell" ]);
 	
-	inputs[| 5] = nodeValue(5, "Contrast", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
-		.setVisible(false);
+	inputs[| 5] = nodeValue(5, "Contrast", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1);
 	
 	inputs[| 6] = nodeValue(6, "Pattern", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_button, [ "Uniform", "Radial" ])
-		.setVisible(false);
+		.setDisplay(VALUE_DISPLAY.enum_button, [ "Uniform", "Radial" ]);
 	
 	inputs[| 7] = nodeValue(7, "Middle", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.5)
-		.setDisplay(VALUE_DISPLAY.slider, [0., 1., 0.01])
-		.setVisible(false);
+		.setDisplay(VALUE_DISPLAY.slider, [0., 1., 0.01]);
 	
 	inputs[| 8] = nodeValue(8, "Radial scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 2)
-		.setDisplay(VALUE_DISPLAY.slider, [1., 10., 0.01])
-		.setVisible(false, false);
+		.setDisplay(VALUE_DISPLAY.slider, [1., 10., 0.01]);
 	
 	inputs[| 9] = nodeValue(9, "Radial shatter", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
 		.setDisplay(VALUE_DISPLAY.slider, [-10., 10., 0.01])
-		.setVisible(false, false);
+		.setVisible(false);
 	
 	input_display_list = [
 		["Output",		false], 0, 

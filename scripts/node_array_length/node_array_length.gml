@@ -12,7 +12,8 @@ function Node_Array_Length(_x, _y) : Node(_x, _y) constructor {
 	h = 32 + 24;
 	min_h = h;
 	
-	inputs[| 0] = nodeValue(0, "Array", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, 0);
+	inputs[| 0] = nodeValue(0, "Array", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, 0)
+		.setVisible(true, true);
 	
 	outputs[| 0] = nodeValue(0, "Size", self, JUNCTION_CONNECT.output, VALUE_TYPE.integer, 0);
 	

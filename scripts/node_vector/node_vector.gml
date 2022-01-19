@@ -12,7 +12,8 @@ function Node_Number(_x, _y) : Node_Value_Processor(_x, _y) constructor {
 	w = 96;
 	min_h = 32 + 24 * 1;
 	
-	inputs[| 0] = nodeValue(0, "Value", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0);
+	inputs[| 0] = nodeValue(0, "Value", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
+		.setVisible(true, true);
 	
 	outputs[| 0] = nodeValue(0, "Number", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, 0);
 	
@@ -44,8 +45,10 @@ function Node_Vector2(_x, _y) : Node_Value_Processor(_x, _y) constructor {
 	w = 96;
 	min_h = 32 + 24 * 2;
 	
-	inputs[| 0] = nodeValue(0, "x", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0);
-	inputs[| 1] = nodeValue(1, "y", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0);
+	inputs[| 0] = nodeValue(0, "x", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
+		.setVisible(true, true);
+	inputs[| 1] = nodeValue(1, "y", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
+		.setVisible(true, true);
 	
 	outputs[| 0] = nodeValue(0, "Vector", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, [ 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.area);
@@ -79,9 +82,12 @@ function Node_Vector3(_x, _y) : Node_Value_Processor(_x, _y) constructor {
 	w = 96;
 	min_h = 32 + 24 * 3;
 	
-	inputs[| 0] = nodeValue(0, "x", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0);
-	inputs[| 1] = nodeValue(1, "y", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0);
-	inputs[| 2] = nodeValue(2, "z", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0);
+	inputs[| 0] = nodeValue(0, "x", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
+		.setVisible(true, true);
+	inputs[| 1] = nodeValue(1, "y", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
+		.setVisible(true, true);
+	inputs[| 2] = nodeValue(2, "z", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
+		.setVisible(true, true);
 	
 	outputs[| 0] = nodeValue(0, "Vector", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, [ 0, 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.vector);
@@ -115,10 +121,14 @@ function Node_Vector4(_x, _y) : Node_Value_Processor(_x, _y) constructor {
 	w = 96;
 	min_h = 32 + 24 * 4;
 	
-	inputs[| 0] = nodeValue(0, "x", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0);
-	inputs[| 1] = nodeValue(1, "y", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0);
-	inputs[| 2] = nodeValue(2, "z", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0);
-	inputs[| 3] = nodeValue(3, "w", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0);
+	inputs[| 0] = nodeValue(0, "x", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
+		.setVisible(true, true);
+	inputs[| 1] = nodeValue(1, "y", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
+		.setVisible(true, true);
+	inputs[| 2] = nodeValue(2, "z", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
+		.setVisible(true, true);
+	inputs[| 3] = nodeValue(3, "w", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
+		.setVisible(true, true);
 	
 	outputs[| 0] = nodeValue(0, "Vector", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, [ 0, 0, 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.vector);
@@ -154,7 +164,8 @@ function Node_Vector_Split(_x, _y) : Node_Value_Processor(_x, _y) constructor {
 	min_h = 32 + 24 * 4;
 	
 	inputs[| 0] = nodeValue(0, "Vector", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 0, 0 ])
-		.setDisplay(VALUE_DISPLAY.vector);
+		.setDisplay(VALUE_DISPLAY.vector)
+		.setVisible(true, true);
 	
 	outputs[| 0] = nodeValue(0, "x", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, 0);
 	outputs[| 1] = nodeValue(1, "y", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, 0);

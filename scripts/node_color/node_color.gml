@@ -11,8 +11,7 @@ function Node_Color(_x, _y) : Node(_x, _y) constructor {
 	min_h = 0;
 	w = 96;
 	
-	inputs[| 0] = nodeValue(0, "Color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white)
-		.setVisible(false);
+	inputs[| 0] = nodeValue(0, "Color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white);
 	
 	outputs[| 0] = nodeValue(0, "Color", self, JUNCTION_CONNECT.output, VALUE_TYPE.color, []);
 	

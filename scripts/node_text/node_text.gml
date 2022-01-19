@@ -12,18 +12,14 @@ function Node_Text(_x, _y) : Node_Processor(_x, _y) constructor {
 	inputs[| 0] = nodeValue(0, "Text", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "");
 	
 	inputs[| 1] = nodeValue(1, "Font", self, JUNCTION_CONNECT.input, VALUE_TYPE.path, "")
-		.setDisplay(VALUE_DISPLAY.path_load, ["*.ttf;*.otf", ""])
-		.setVisible(false);
+		.setDisplay(VALUE_DISPLAY.path_load, ["*.ttf;*.otf", ""]);
 	
-	inputs[| 2] = nodeValue(2, "Size", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 16)
-		.setVisible(false);
+	inputs[| 2] = nodeValue(2, "Size", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 16);
 	
-	inputs[| 3] = nodeValue(3, "Anti-Aliasing ", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false)
-		.setVisible(false);
+	inputs[| 3] = nodeValue(3, "Anti-Aliasing ", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
 	
 	inputs[| 4] = nodeValue(4, "Character range", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 32, 128 ])
-		.setDisplay(VALUE_DISPLAY.vector)
-		.setVisible(false);
+		.setDisplay(VALUE_DISPLAY.vector);
 	
 	inputs[| 5] = nodeValue(5, "Color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white);
 	
@@ -38,8 +34,7 @@ function Node_Text(_x, _y) : Node_Processor(_x, _y) constructor {
 		.setDisplay(VALUE_DISPLAY.enum_button, [ s_inspector_text_valign, s_inspector_text_valign, s_inspector_text_valign ]);
 	
 	inputs[| 9] = nodeValue(9, "Output dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1 )
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Fixed", "Dynamic" ])
-		.setVisible(false);
+		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Fixed", "Dynamic" ]);
 	
 	input_display_list = [
 		["Output",			true],	9, 6, 

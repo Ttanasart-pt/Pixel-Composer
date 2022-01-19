@@ -27,22 +27,17 @@ function Node_Scatter(_x, _y) : Node(_x, _y) constructor {
 		.setDisplay(VALUE_DISPLAY.rotation_range);
 	
 	inputs[| 5] = nodeValue(5, "Area", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ def_surf_size / 2, def_surf_size / 2, def_surf_size / 2, def_surf_size / 2, AREA_SHAPE.rectangle ])
-		.setDisplay(VALUE_DISPLAY.area, function() { return inputs[| 1].getValue(); })
-		.setVisible(false);
+		.setDisplay(VALUE_DISPLAY.area, function() { return inputs[| 1].getValue(); });
 	
 	inputs[| 6] = nodeValue(6, "Distribution", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_button, [ "Area", "Border" ])
-		.setVisible(false);
+		.setDisplay(VALUE_DISPLAY.enum_button, [ "Area", "Border" ]);
 	
-	inputs[| 7] = nodeValue(7, "Point at center", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false)
-		.setVisible(false);
+	inputs[| 7] = nodeValue(7, "Point at center", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
 	
-	inputs[| 8] = nodeValue(8, "Uniform scaling", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true)
-		.setVisible(false);
+	inputs[| 8] = nodeValue(8, "Uniform scaling", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
 	
 	inputs[| 9] = nodeValue(9, "Scatter", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1)
-		.setDisplay(VALUE_DISPLAY.enum_button, [ "Uniform", "Random" ])
-		.setVisible(false);
+		.setDisplay(VALUE_DISPLAY.enum_button, [ "Uniform", "Random" ]);
 	
 	inputs[| 10] = nodeValue(10, "Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, irandom(9999999));
 	

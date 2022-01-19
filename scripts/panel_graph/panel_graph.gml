@@ -51,6 +51,7 @@ function Panel_Graph(_panel) : PanelContent(_panel) constructor {
 	value_dragging = noone;
 	
 	show_grid = true;
+	drag_key = mb_middle;
 	
 	addHotkey("Graph", "Add node",			    "A", MOD_KEY.none,	function() { callAddDialog(); });
 	addHotkey("Graph", "Focus content",			"F", MOD_KEY.none,	function() { fullView(); });
@@ -120,12 +121,21 @@ function Panel_Graph(_panel) : PanelContent(_panel) constructor {
 			graph_x += dx / graph_s;
 			graph_y += dy / graph_s;
 			
-			if(mouse_check_button_released(mb_middle)) 
+			if(mouse_check_button_released(drag_key)) 
 				graph_dragging = false;
 		}
 		
 		if(FOCUS == panel) {
+			var _doDragging = false;
 			if(mouse_check_button_pressed(mb_middle)) {
+				_doDragging = true;
+				drag_key = mb_middle;
+			} else if(mouse_check_button_pressed(mb_left) && keyboard_check(vk_control)) {
+				_doDragging = true;
+				drag_key = mb_left;
+			}
+			
+			if(_doDragging) {
 				graph_dragging = true;	
 				graph_drag_mx  = mx;
 				graph_drag_my  = my;
@@ -215,7 +225,7 @@ function Panel_Graph(_panel) : PanelContent(_panel) constructor {
 		#endregion
 		
 		if(FOCUS == panel) {
-			if(mouse_check_button_pressed(mb_left)) {
+			if(mouse_check_button_pressed(mb_left) && !keyboard_check(vk_control)) {
 				if(keyboard_check(vk_shift)) {
 					if(ds_list_empty(nodes_select_list) && node_focus) 
 						ds_list_add(nodes_select_list, node_focus);
@@ -374,7 +384,7 @@ function Panel_Graph(_panel) : PanelContent(_panel) constructor {
 					
 						if(!_recur) {
 							_node.drawActive(gr_x, gr_y, graph_s, 1);
-							if(mouse_check_button_released(mb_left)) {
+							if(mouse_check_button_released(mb_left) && !keyboard_check(vk_control)) {
 								if(ds_list_size(nodes_select_list) == 0) {
 									_node.add(node_dragging);
 									node_dragging.checkConnectGroup();
@@ -403,7 +413,7 @@ function Panel_Graph(_panel) : PanelContent(_panel) constructor {
 					
 					node_dragging.move(nx, ny);
 				
-					if(mouse_check_button_released(mb_left)) {
+					if(mouse_check_button_released(mb_left) && !keyboard_check(vk_control)) {
 						if(nx != node_drag_sx || ny != node_drag_sy) {
 							recordAction(ACTION_TYPE.var_modify, node_dragging, [ node_drag_sx, "x" ]);
 							recordAction(ACTION_TYPE.var_modify, node_dragging, [ node_drag_sy, "y" ]);
@@ -443,7 +453,7 @@ function Panel_Graph(_panel) : PanelContent(_panel) constructor {
 		#endregion
 		
 		if(FOCUS == panel && node_focus && value_focus == noone) {
-			if(mouse_check_button_pressed(mb_left)) {
+			if(mouse_check_button_pressed(mb_left) && !keyboard_check(vk_control)) {
 				node_dragging = node_focus;
 				node_drag_mx  = mouse_graph_x;
 				node_drag_my  = mouse_graph_y;
@@ -487,7 +497,7 @@ function Panel_Graph(_panel) : PanelContent(_panel) constructor {
 					nodes_select_drag = false;
 			}
 		
-			if(FOCUS == panel && mouse_check_button_pressed(mb_left)) {
+			if(FOCUS == panel && mouse_check_button_pressed(mb_left) && !keyboard_check(vk_control)) {
 				if(!node_focus && !value_focus && node_hovering != -1) {
 					nodes_select_drag = true;
 					nodes_select_mx = mx;
@@ -763,7 +773,7 @@ function Panel_Graph(_panel) : PanelContent(_panel) constructor {
 			}
 		} else {
 			if(value_focus) {
-				if(FOCUS == panel && mouse_check_button_pressed(mb_left)) {
+				if(FOCUS == panel && mouse_check_button_pressed(mb_left) && !keyboard_check(vk_control)) {
 					value_dragging = value_focus;
 				}
 			}

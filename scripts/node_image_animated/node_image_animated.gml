@@ -44,11 +44,10 @@ function Node_Image_Animated(_x, _y) : Node(_x, _y) constructor {
 	
 	inputs[| 1]  = nodeValue(1, "Padding", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [0, 0, 0, 0])
 		.setDisplay(VALUE_DISPLAY.padding);
-	
+		
 	inputs[| 2] = nodeValue(2, "Stretch frame", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
 	
 	inputs[| 3] = nodeValue(3, "Frame duration", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1);
-	
 	inputs[| 4] = nodeValue(4, "Animation end", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.enum_scroll, ["Loop", "Ping pong", "Hold last frame", "Hide"]);
 		

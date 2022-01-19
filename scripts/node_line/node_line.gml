@@ -10,8 +10,7 @@ function Node_Line(_x, _y) : Node(_x, _y) constructor {
 	inputs[| 0] = nodeValue(0, "Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, def_surf_size2, VALUE_TAG.dimension_2d )
 		.setDisplay(VALUE_DISPLAY.vector);
 	
-	inputs[| 1] = nodeValue(1, "Backgroud", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false)
-		.setVisible(false);
+	inputs[| 1] = nodeValue(1, "Backgroud", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
 	
 	inputs[| 2] = nodeValue(2, "Segment", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1)
 		.setDisplay(VALUE_DISPLAY.slider, [1, 32, 1]);
@@ -22,12 +21,10 @@ function Node_Line(_x, _y) : Node(_x, _y) constructor {
 	inputs[| 4] = nodeValue(4, "Wiggle", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
 		.setDisplay(VALUE_DISPLAY.slider, [0, 16, 0.01]);
 	
-	inputs[| 5] = nodeValue(5, "Random seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setVisible(false);
+	inputs[| 5] = nodeValue(5, "Random seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0);
 	
 	inputs[| 6] = nodeValue(6, "Rotation", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.rotation)
-		.setVisible(false);
+		.setDisplay(VALUE_DISPLAY.rotation);
 	
 	inputs[| 7] = nodeValue(7, "Path", self, JUNCTION_CONNECT.input, VALUE_TYPE.object, 0);
 	

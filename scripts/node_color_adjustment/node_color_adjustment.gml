@@ -23,37 +23,29 @@ function Node_Color_adjust(_x, _y) : Node_Processor(_x, _y) constructor {
 	inputs[| 0] = nodeValue(0, "Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 	
 	inputs[| 1] = nodeValue(1, "Brightness", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
-		.setDisplay(VALUE_DISPLAY.slider, [ -1, 1, 0.01])
-		.setVisible(false);
+		.setDisplay(VALUE_DISPLAY.slider, [ -1, 1, 0.01]);
 	
 	inputs[| 2] = nodeValue(2, "Contrast",   self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
-		.setDisplay(VALUE_DISPLAY.slider, [ -1, 1, 0.01])
-		.setVisible(false);
+		.setDisplay(VALUE_DISPLAY.slider, [ -1, 1, 0.01]);
 	
 	inputs[| 3] = nodeValue(3, "Hue",        self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
-		.setDisplay(VALUE_DISPLAY.slider, [ -1, 1, 0.01])
-		.setVisible(false);
+		.setDisplay(VALUE_DISPLAY.slider, [ -1, 1, 0.01]);
 	
 	inputs[| 4] = nodeValue(4, "Saturation", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
-		.setDisplay(VALUE_DISPLAY.slider, [ -1, 1, 0.01])
-		.setVisible(false);
+		.setDisplay(VALUE_DISPLAY.slider, [ -1, 1, 0.01]);
 	
 	inputs[| 5] = nodeValue(5, "Value",      self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
-		.setDisplay(VALUE_DISPLAY.slider, [ -1, 1, 0.01])
-		.setVisible(false);
+		.setDisplay(VALUE_DISPLAY.slider, [ -1, 1, 0.01]);
 	
-	inputs[| 6] = nodeValue(6, "Blend",   self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white)
-		.setVisible(false);
+	inputs[| 6] = nodeValue(6, "Blend",   self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white);
 	
 	inputs[| 7] = nodeValue(7, "Blend alpha",  self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
-		.setDisplay(VALUE_DISPLAY.slider, [ 0, 1, 0.01])
-		.setVisible(false);
+		.setDisplay(VALUE_DISPLAY.slider, [ 0, 1, 0.01]);
 	
 	inputs[| 8] = nodeValue(8, "Mask", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 	
 	inputs[| 9] = nodeValue(9, "Alpha", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
-		.setDisplay(VALUE_DISPLAY.slider, [ 0, 1, 0.01])
-		.setVisible(false);
+		.setDisplay(VALUE_DISPLAY.slider, [ 0, 1, 0.01]);
 	
 	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, surface_create(1, 1));
 	

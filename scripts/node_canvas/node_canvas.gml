@@ -16,23 +16,19 @@ function Node_Canvas(_x, _y) : Node(_x, _y) constructor {
 		.setDisplay(VALUE_DISPLAY.slider, [1, 32, 1]);
 	
 	inputs[| 3] = nodeValue(3, "Fill threshold", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.)
-		.setDisplay(VALUE_DISPLAY.slider, [0, 1, 0.01])
-		.setVisible(false);
+		.setDisplay(VALUE_DISPLAY.slider, [0, 1, 0.01]);
 	
 	inputs[| 4] = nodeValue(4, "Fill type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, ["4 connect", "8 connect", "Entire canvas"])
-		.setVisible(false);
+		.setDisplay(VALUE_DISPLAY.enum_scroll, ["4 connect", "8 connect", "Entire canvas"]);
 	
-	inputs[| 5] = nodeValue(5, "Draw preview overlay", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false)
-		.setVisible(false);
+	inputs[| 5] = nodeValue(5, "Draw preview overlay", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
 	
 	inputs[| 6] = nodeValue(6, "Brush", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, -1);
 	
 	inputs[| 7] = nodeValue(7, "Surface amount", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1);
 	
 	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, surface_create(1, 1));
-	outputs[| 1] = nodeValue(1, "Preview", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, surface_create(1, 1))
-		.setVisible(false);
+	outputs[| 1] = nodeValue(1, "Preview", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, surface_create(1, 1));
 	
 	input_display_list = [ 
 		["Output",	false],	0, 

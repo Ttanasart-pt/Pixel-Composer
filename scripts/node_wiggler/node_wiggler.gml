@@ -20,8 +20,7 @@ function Node_Wiggler(_x, _y) : Node_Value_Processor(_x, _y) constructor {
 	inputs[| 2] = nodeValue(2, "Frequency", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 3, 5 ] )
 		.setDisplay(VALUE_DISPLAY.range);
 	
-	inputs[| 3] = nodeValue(3, "Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, irandom(9999999) )
-		.setVisible(false);
+	inputs[| 3] = nodeValue(3, "Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, irandom(9999999) );
 	
 	outputs[| 0] = nodeValue(0, "Output", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, 0);
 	
