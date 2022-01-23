@@ -21,7 +21,7 @@ function Node_create_Image_gif_path(_x, _y, path) {
 	node.doUpdate();
 	
 	ds_list_add(PANEL_GRAPH.nodes_list, node);
-	return node;	
+	return node;
 }
 
 function Node_Image_gif(_x, _y) : Node(_x, _y) constructor {

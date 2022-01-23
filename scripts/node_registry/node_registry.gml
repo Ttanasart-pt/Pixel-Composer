@@ -49,14 +49,25 @@ function NodeObject(_name, _spr, _create, tags = []) constructor {
 		return _node;
 	}
 	
+	var group = ds_list_create();
+	addNodeCatagory("Group", group);
+	addNodeObject(group, "Input",	s_node_input,	"Node_Group_Input",		Node_create_Group_Input);
+	addNodeObject(group, "Output",	s_node_output,	"Node_Group_Output",	Node_create_Group_Output);
+	
+	var iter = ds_list_create();
+	addNodeCatagory("Loop", iter);
+	addNodeObject(iter, "Index",	s_node_iterator_index,	"Node_Iterator_Index",	Node_create_Iterator_Index);
+	addNodeObject(iter, "Input",	s_node_input,			"Node_Iterator_Input",	Node_create_Iterator_Input);
+	addNodeObject(iter, "Output",	s_node_output,			"Node_Iterator_Output",	Node_create_Iterator_Output);
+	
 	var input = ds_list_create();
 	addNodeCatagory("Input", input);
-	addNodeObject(input, "Canvas",				s_node_canvas,			"Node_Canvas",			Node_create_Canvas, ["draw"]);
-	addNodeObject(input, "Image",				s_node_image,			"Node_Image",			Node_create_Image);
-	addNodeObject(input, "Image gif",			s_node_image_gif,		"Node_Image_gif",		Node_create_Image_gif);
-	addNodeObject(input, "Splice spritesheet",	s_node_image_sheet,		"Node_Image_Sheet",		Node_create_Image_Sheet);
-	addNodeObject(input, "Image array",			s_node_image_sequence,	"Node_Image_Sequence",	Node_create_Image_Sequence);
-	addNodeObject(input, "Animation",			s_node_image_animation, "Node_Image_Animated",	Node_create_Image_Animated);
+	addNodeObject(input, "Canvas",				s_node_canvas,			"Node_Canvas",					Node_create_Canvas, ["draw"]);
+	addNodeObject(input, "Image",				s_node_image,			"Node_Image",					Node_create_Image);
+	addNodeObject(input, "Image gif",			s_node_image_gif,		"Node_Image_gif",				Node_create_Image_gif);
+	addNodeObject(input, "Splice spritesheet",	s_node_image_sheet,		"Node_Image_Sheet",				Node_create_Image_Sheet);
+	addNodeObject(input, "Image array",			s_node_image_sequence,	"Node_Image_Sequence",			Node_create_Image_Sequence);
+	addNodeObject(input, "Animation",			s_node_image_animation, "Node_Image_Animated",			Node_create_Image_Animated);
 	addNodeObject(input, "Array to anim",		s_node_image_sequence_to_anim, "Node_Sequence_Anim",	Node_create_Sequence_Anim);
 	
 	var transform = ds_list_create();
@@ -137,7 +148,7 @@ function NodeObject(_name, _spr, _create, tags = []) constructor {
 	addNodeObject(number, "Unicode",		s_node_unicode,			"Node_Unicode",			Node_create_Unicode);
 	addNodeObject(number, "Path",			s_node_path,			"Node_Path",			Node_create_Path);
 	addNodeObject(number, "Area",			s_node_area,			"Node_Area",			Node_create_Area);
-	addNodeObject(number, "Surface data",	s_node_surface_data,	"Node_Surface_data",	Node_create_Surface_data);
+	//addNodeObject(number, "Surface data",	s_node_surface_data,	"Node_Surface_data",	Node_create_Surface_data);
 	
 	var color = ds_list_create();
 	addNodeCatagory("Color", color);
@@ -181,15 +192,11 @@ function NodeObject(_name, _spr, _create, tags = []) constructor {
 	addNodeObject(render, "Export",					s_node_export,			"Node_Export",				Node_create_Export);
 	addNodeObject(render, "Preview timeline",		s_node_timeline_preview,"Node_Timeline_Preview",	Node_create_Timeline_Preview);
 	
-	var group = ds_list_create();
-	addNodeCatagory("Group", group);
-	addNodeObject(group, "Input",	s_node_input,	"Node_Group_Input",		Node_create_Group_Input);
-	addNodeObject(group, "Output",	s_node_output,	"Node_Group_Output",	Node_create_Group_Output);
-	
 	var node = ds_list_create();
 	addNodeCatagory("Node", node);
-	addNodeObject(node, "Pin",		s_node_pin,		"Node_Pin",		Node_create_Pin);
-	addNodeObject(node, "Frame",	s_node_frame,	"Node_Frame",	Node_create_Frame);
+	addNodeObject(node, "Pin",			s_node_pin,			"Node_Pin",			Node_create_Pin);
+	addNodeObject(node, "Frame",		s_node_frame,		"Node_Frame",		Node_create_Frame);
+	addNodeObject(node, "Condition",	s_node_condition,	"Node_Condition",	Node_create_Condition);
 	
 	NODE_CREATE_FUCTION[? "Node_Group"] = Node_create_Group;
 #endregion

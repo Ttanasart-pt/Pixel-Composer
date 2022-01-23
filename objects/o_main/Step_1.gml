@@ -49,6 +49,7 @@
 	}
 	
 	if(UPDATE) {
+		//renderUpdated();
 		renderAll();
 		UPDATE = false;
 	}

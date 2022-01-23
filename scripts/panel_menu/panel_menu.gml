@@ -50,7 +50,7 @@ function Panel_Menu(_panel) : PanelContent(_panel) constructor {
 		["Rendering", [
 			[ "Render all nodes", function() { 
 				for(var i = 0; i < ds_list_size(NODES); i++) 
-					NODES[| i].rendered = false;
+					NODES[| i].setRenderStatus(false);
 				UPDATE = true; 
 			}, ["", "Render all"] ]
 		]],

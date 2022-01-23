@@ -18,10 +18,7 @@ event_inherited();
 	
 	anchor = ANCHOR.left | ANCHOR.top;
 	
-	if(PANEL_GRAPH.getCurrentContext() == -1 && ADD_NODE_PAGE == "Group")
-		ADD_NODE_PAGE = NODE_CATAGORY[| 0];
-		
-	page_key   = ADD_NODE_PAGE == ""? NODE_CATAGORY[| 0] : ADD_NODE_PAGE;
+	page_key   = ADD_NODE_PAGE == ""? NODE_CATAGORY[| 2] : ADD_NODE_PAGE;
 	page       = ALL_NODES[? page_key];
 	
 	function buildNode(_node) {
@@ -53,12 +50,24 @@ event_inherited();
 		var hh  = 0;
 		var hg  = 28;
 		var key = ds_map_find_first(ALL_NODES);
+		var cnt = PANEL_GRAPH.getCurrentContext();
+		var context = cnt == -1? "" : instanceof(cnt);
 		
 		for(var i = 0; i < ds_list_size(NODE_CATAGORY); i++) {
 			var key = NODE_CATAGORY[| i];
-			if(PANEL_GRAPH.getCurrentContext() == -1 && key == "Group") continue;
-			
 			draw_set_text(f_p0, fa_left, fa_center, c_white);
+			
+			switch(key) {
+				case "Group" : 
+					if(context != "Node_Group") continue; 
+					draw_set_text(f_p0, fa_left, fa_center, c_ui_orange);
+					break;	
+				case "Loop" : 
+					if(context != "Node_Iterate") continue; 
+					draw_set_text(f_p0, fa_left, fa_center, c_ui_orange);
+					break;	
+			}
+			
 			if(key == page_key) {
 				draw_sprite_stretched(s_ui_panel_bg, 0, 0, _y + hh, 132, hg);
 			} else if(point_in_rectangle(_m[0], _m[1], 0, _y + hh, 100, _y + hh + hg - 1)) {
@@ -171,12 +180,24 @@ event_inherited();
 		var index = 0;
 		var name_height = 0;
 		var amo = 0;
-		var use_mouse = false;
+		var cnt = PANEL_GRAPH.getCurrentContext();
+		var context = cnt == -1? "" : instanceof(cnt);
 		
 		var search_lower = string_lower(search_string);
 		
 		for(var i = 0; i < ds_list_size(NODE_CATAGORY); i++) {
-			var _page = ALL_NODES[? NODE_CATAGORY[| i]];
+			var key = NODE_CATAGORY[| i];
+			
+			switch(key) {
+				case "Group" : 
+					if(context != "Node_Group") continue; 
+					break;	
+				case "Loop" : 
+					if(context != "Node_Iterate") continue; 
+					break;	
+			}
+			
+			var _page = ALL_NODES[? key];
 			
 			for(var j = 0; j < ds_list_size(_page); j++) {
 				var _node = _page[| j];

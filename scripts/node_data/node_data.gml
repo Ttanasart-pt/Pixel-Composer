@@ -89,13 +89,13 @@ function Node(_x, _y) constructor {
 						for(var j = 0; j < array_length(val); j++) {
 							var _surf = val[j];
 							if(!is_surface(_surf) || _surf == DEF_SURFACE) {
-								rendered = false;
+								setRenderStatus(false);
 								UPDATE = true;	
 							}
 						}
 					} else {
 						if(!is_surface(val) || val == DEF_SURFACE) {
-							rendered = false;
+							setRenderStatus(false);
 							UPDATE = true;	
 						}
 					}
@@ -108,7 +108,7 @@ function Node(_x, _y) constructor {
 				doUpdate();
 			for(var i = 0; i < ds_list_size(inputs); i++) {
 				if(inputs[| i].isAnim()) {
-					rendered = false;
+					setRenderStatus(false);
 					UPDATE = true;
 				}
 			}
@@ -123,7 +123,7 @@ function Node(_x, _y) constructor {
 	static doUpdate = function() {
 		var t = get_timer();
 		update();
-		rendered = true;
+		setRenderStatus(true);
 		render_time = get_timer() - t;
 	}
 	
@@ -134,7 +134,9 @@ function Node(_x, _y) constructor {
 	static updateValueFrom = function(index) {}
 	
 	static updateForward = function() {
-		if(auto_update) doUpdate();
+		rendered = false;
+		UPDATE = true;
+		//if(auto_update) doUpdate();
 		
 		for(var i = 0; i < ds_list_size(outputs); i++) {
 			var jun = outputs[| i];
@@ -149,6 +151,10 @@ function Node(_x, _y) constructor {
 	}
 	
 	static doUpdateForward = function() {}
+	
+	static setRenderStatus = function(result) {
+		rendered = result;
+	}
 	
 	static pointIn = function(_mx, _my) {
 		var xx    = x;
@@ -456,11 +462,16 @@ function Node(_x, _y) constructor {
 		}
 	}
 	
-	static checkConnectGroup = function() {
+	static checkConnectGroup = function(_type = "group") {
 		for(var i = 0; i < ds_list_size(inputs); i++) {
 			var _in = inputs[| i];
 			if(_in.value_from && _in.value_from.node.group != group) {
-				var input_node = new Node_Group_Input(x - w - 64, y, group);
+				var input_node;
+				switch(_type) {
+					case "group" : input_node = new Node_Group_Input(x - w - 64, y, group); break;	
+					case "loop" : input_node = new Node_Iterator_Input(x - w - 64, y, group); break;	
+				}
+				
 				input_node.inputs[| 2].setValue(_in.type);
 				input_node.inputs[| 0].setValue(_in.display_type);
 				
@@ -476,7 +487,12 @@ function Node(_x, _y) constructor {
 			for(var j = 0; j < ds_list_size(_ou.value_to); j++) {
 				var _to = _ou.value_to[| j];
 				if(_to.node.active && _to.node.group != group) {
-					var output_node = new Node_Group_Output(x + w + 64, y, group);
+					var output_node;
+					switch(_type) {
+						case "group" : output_node = new Node_Group_Output(x + w + 64, y, group); break;
+						case "loop" : output_node = new Node_Iterator_Output(x + w + 64, y, group); break;	
+					}
+				
 					ds_list_add(group.nodes, output_node);
 					
 					_to.setFrom(output_node.outParent);

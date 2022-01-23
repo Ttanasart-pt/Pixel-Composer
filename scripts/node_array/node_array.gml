@@ -8,8 +8,6 @@ function Node_Array(_x, _y) : Node(_x, _y) constructor {
 	name = "Array";
 	previewable = false;
 	
-	input_size = 0;
-	
 	w = 96;
 	min_h = 0;
 	

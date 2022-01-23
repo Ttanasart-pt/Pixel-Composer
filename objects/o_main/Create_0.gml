@@ -46,7 +46,7 @@ display_reset(0, 1);
 	
 	addHotkey("", "Render all", vk_f5,	MOD_KEY.none, function() { 
 		for(var i = 0; i < ds_list_size(NODES); i++) 
-			NODES[| i].rendered = false;
+			NODES[| i].setRenderStatus(false);
 		UPDATE = true; 
 	});
 	

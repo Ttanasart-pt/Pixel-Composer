@@ -2,8 +2,8 @@
   "isDnD": false,
   "isCompatibility": false,
   "parent": {
-    "name": "data",
-    "path": "folders/nodes/data.yy",
+    "name": "node",
+    "path": "folders/nodes/data/node.yy",
   },
   "resourceVersion": "1.0",
   "name": "node_frame",

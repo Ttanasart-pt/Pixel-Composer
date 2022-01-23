@@ -1,6 +1,9 @@
 function Node_Collection(_x,  _y) : Node(_x,  _y) constructor {
 	nodes = ds_list_create();
 	
+	custom_input_index = 0;
+	custom_output_index = 0;
+	
 	function add(_node) {
 		ds_list_add(nodes, _node);
 		var list = _node.group == -1? PANEL_GRAPH.nodes_list : _node.group.nodes;
@@ -21,7 +24,7 @@ function Node_Collection(_x,  _y) : Node(_x,  _y) constructor {
 		_node.group = group;
 	}
 	
-	function stepBegin() {
+	static stepBegin = function() {
 		for(var i = 0; i < ds_list_size(nodes); i++) {
 			nodes[| i].stepBegin();
 		}
@@ -40,6 +43,17 @@ function Node_Collection(_x,  _y) : Node(_x,  _y) constructor {
 		}
 	}
 	
+	static updateForward = function() {
+		doUpdate();
+		
+		for(var i = custom_input_index; i < ds_list_size(inputs); i++) {
+			var jun_node = inputs[| i].from;
+			jun_node.updateForward();
+		}
+		
+		doUpdateForward();
+	}
+	
 	static preConnect = function() {
 		sortIO();
 		deserialize(keyframe_scale);
@@ -49,15 +63,18 @@ function Node_Collection(_x,  _y) : Node(_x,  _y) constructor {
 		var siz = ds_list_size(inputs);
 		var ar = ds_priority_create();
 		
-		for( var i = 0; i < siz; i++ ) {
+		for( var i = custom_input_index; i < siz; i++ ) {
 			var _in = inputs[| i];
 			var _or = _in.from.inputs[| 5].getValue();
 			
 			ds_priority_add(ar, _in, _or);
 		}
 		
-		ds_list_clear(inputs);
-		for( var i = 0; i < siz; i++ ) {
+		for( var i = siz - 1; i >= custom_input_index; i-- ) {
+			ds_list_delete(inputs, i);
+		}
+		
+		for( var i = custom_input_index; i < siz; i++ ) {
 			var _jin = ds_priority_delete_min(ar);
 			_jin.index = i;
 			ds_list_add(inputs, _jin);
@@ -68,15 +85,18 @@ function Node_Collection(_x,  _y) : Node(_x,  _y) constructor {
 		var siz = ds_list_size(outputs);
 		var ar = ds_priority_create();
 		
-		for( var i = 0; i < siz; i++ ) {
+		for( var i = custom_output_index; i < siz; i++ ) {
 			var _out = outputs[| i];
 			var _or = _out.from.inputs[| 1].getValue();
 			
 			ds_priority_add(ar, _out, _or);
 		}
 		
-		ds_list_clear(outputs);
-		for( var i = 0; i < siz; i++ ) {
+		for( var i = siz - 1; i >= custom_output_index; i-- ) {
+			ds_list_delete(outputs, i);
+		}
+		
+		for( var i = custom_output_index; i < siz; i++ ) {
 			var _jout = ds_priority_delete_min(ar);
 			_jout.index = i;
 			ds_list_add(outputs, _jout);

@@ -91,6 +91,8 @@ function Panel_Graph(_panel) : PanelContent(_panel) constructor {
 	addHotkey("Graph", "Group",		"G", MOD_KEY.ctrl,					function() { doGroup(); });
 	addHotkey("Graph", "Ungroup",	"G", MOD_KEY.ctrl | MOD_KEY.shift,	function() { doUngroup(); });
 	
+	addHotkey("Graph", "Loop",		"L", MOD_KEY.ctrl,					function() { doLoop(); });
+	
 	addHotkey("Graph", "Canvas",		"C", MOD_KEY.ctrl | MOD_KEY.shift,		function() { setCurrentCanvas(); });
 	addHotkey("Graph", "Canvas blend",	"C", MOD_KEY.ctrl | MOD_KEY.alt,		function() { setCurrentCanvasBlend(); });
 	
@@ -595,6 +597,33 @@ function Panel_Graph(_panel) : PanelContent(_panel) constructor {
 				node_focus.remove(node_focus.nodes[| 0]); 
 			}
 			nodeDelete(node_focus);
+		}
+	}
+	
+	function doLoop() {
+		if(ds_list_empty(nodes_select_list) && node_focus != noone)
+			ds_list_add(nodes_select_list, node_focus);
+		
+		if(!ds_list_empty(nodes_select_list)) {
+			var cx = 0;
+			var cy = 0;
+			for(var i = 0; i < ds_list_size(nodes_select_list); i++) {
+				var _node = nodes_select_list[| i];
+				cx += _node.x;
+				cy += _node.y;
+			}
+			cx = round(cx / ds_list_size(nodes_select_list) / 32) * 32;
+			cy = round(cy / ds_list_size(nodes_select_list) / 32) * 32;
+				
+			var _group = Node_create_Iterate(cx, cy);
+			for(var i = 0; i < ds_list_size(nodes_select_list); i++) {
+				_group.add(nodes_select_list[| i]);
+			}
+			for(var i = 0; i < ds_list_size(nodes_select_list); i++) {
+				nodes_select_list[| i].checkConnectGroup("loop");
+			}
+			
+			ds_list_clear(nodes_select_list);
 		}
 	}
 	

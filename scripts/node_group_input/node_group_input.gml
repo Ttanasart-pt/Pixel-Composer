@@ -135,14 +135,9 @@ function Node_Group_Input(_x, _y, _group) : Node(_x, _y) constructor {
 		}
 	}
 	
-	static createInput = function(override_order = false) {
+	static createInput = function() {
 		if(group && is_struct(group)) {
-			if(override_order) {
-				input_index = ds_list_size(group.inputs);
-				inputs[| 5].setValue(input_index);
-			} else {
-				input_index = inputs[| 5].getValue();
-			}
+			input_index = inputs[| 5].getValue();
 			
 			inParent = nodeValue(ds_list_size(group.inputs), "Value", group, JUNCTION_CONNECT.input, VALUE_TYPE.any, -1)
 				.setVisible(true, true);
@@ -196,7 +191,7 @@ function Node_Group_Input(_x, _y, _group) : Node(_x, _y) constructor {
 	}
 	
 	static postDeserialize = function() {
-		createInput(false);
+		createInput();
 		onValueUpdate(0);
 	}
 	

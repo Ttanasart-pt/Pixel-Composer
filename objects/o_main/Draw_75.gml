@@ -2,14 +2,12 @@
 #region tooltip
 	if(TOOLTIP != "") {
 		draw_set_text(f_p0, fa_left, fa_top, c_white);
-		var _w = string_width(TOOLTIP);
 		
 		var mx = mouse_mx + 16;
 		var my = mouse_my + 16;
 		
-		var tw = clamp(_w, 400, WIN_W - mx - 32);
-		var th = string_height_ext(TOOLTIP, -1, tw);
-		tw = string_width_ext(TOOLTIP, -1, tw);
+		var tw = string_width(TOOLTIP);
+		var th = string_height(TOOLTIP);
 		
 		if(mouse_mx + tw > WIN_W - 32)
 			mx = mouse_mx - 16 - tw;
@@ -17,7 +15,7 @@
 			my = mouse_my - 16 - th;
 		
 		draw_sprite_stretched(s_textbox, 0, mx - 8, my - 8, tw + 16, th + 16);
-		draw_text_ext(mx, my, TOOLTIP, -1, tw);
+		draw_text(mx, my, TOOLTIP);
 	}
 	TOOLTIP = "";
 #endregion

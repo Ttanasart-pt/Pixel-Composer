@@ -467,9 +467,9 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 			}
 		} else
 			updated = _o != _n;
-		
+			
 		if(updated) {
-			if(connect_type == JUNCTION_CONNECT.input && node.auto_update) 
+			if(node.auto_update && connect_type == JUNCTION_CONNECT.input)
 				node.updateForward();
 			
 			node.onValueUpdate(index);

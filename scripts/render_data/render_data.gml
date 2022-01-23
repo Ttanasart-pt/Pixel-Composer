@@ -1,16 +1,17 @@
-function NODE_rerender() {
+function renderAll() {
 	var _key = ds_map_find_first(NODE_MAP);
+	var amo = ds_map_size(NODE_MAP);
 	
-	for(var i = 0; i < ds_map_size(NODE_MAP); i++) {
+	repeat(amo) {
 		var _node = NODE_MAP[? _key];
-		_node.rendered = false;
+		_node.setRenderStatus(false);
 		_key = ds_map_find_next(NODE_MAP, _key);	
 	}
 	
-	renderAll();
+	renderUpdated();
 }
 
-function renderAll() {
+function renderUpdated() {
 	var render_q = ds_queue_create();
 	var rendering = noone;
 	
@@ -22,7 +23,7 @@ function renderAll() {
 			var _startNode = true;
 			for(var j = 0; j < ds_list_size(_node.inputs); j++) {
 				var _in = _node.inputs[| j];
-				_node.rendered = false;
+				_node.setRenderStatus(false);
 					
 				if(_in.value_from != noone)
 					_startNode = false;
@@ -37,33 +38,53 @@ function renderAll() {
 	while(!ds_queue_empty(render_q)) {
 		rendering = ds_queue_dequeue(render_q);
 			
-		var _ready = true;
+		var _ready = true; //check if all the previous junctions is rendered
 		for(var j = 0; j < ds_list_size(rendering.inputs); j++) {
 			var _in = rendering.inputs[| j];
 			if(_in.value_from && !_in.value_from.node.rendered)
 				_ready = false;
 		}
 				
-		if(_ready) {
-			if(!rendering.rendered && (LOADING || APPENDING || rendering.auto_update)) 
+		if(_ready) { //if all junctions is rendered, start render
+			if(!rendering.rendered && (LOADING || APPENDING || rendering.auto_update)) {
 				rendering.doUpdate();
-		} else {
-			ds_queue_enqueue(render_q, rendering);
+				rendering.setRenderStatus(true);
+			}
+		} else { //some junction is not rendered yet, push this node back in queue
+			ds_queue_enqueue(render_q, rendering); 
 		}
 		
-		if(instanceof(rendering) == "Node_Group_Output") {
+		if(instanceof(rendering) == "Node_Group_Output") { //Group output in-junction connect automatically to parent out-junction
 			var _ot = rendering.outParent;
-			if(_ot != undefined) {
+			for(var j = 0; j < ds_list_size(_ot.value_to); j++) {
+				var _to = _ot.value_to[| j];
+				
+				if(_to.node.active && _to.value_from != noone && _to.value_from.node == rendering.group) {
+					_to.node.setRenderStatus(false);
+					ds_queue_enqueue(render_q, _to.node);
+				}
+			}
+		} else if(instanceof(rendering) == "Node_Iterator_Output") { //Iterator input, check iteration result 
+			var _node_it = rendering.group;
+			var _ren = _node_it.outputRendered();
+			
+			if(_ren == 1) { //Go back to the beginning of the loop
+				var _ot = rendering.group.inputs;
+				for(var j = 1; j < ds_list_size(_ot); j++) {
+					ds_queue_enqueue(render_q, _ot[| j].from);
+				}
+			} else if(_ren == 2) { //Go out of loop
+				var _ot = rendering.outParent;
 				for(var j = 0; j < ds_list_size(_ot.value_to); j++) {
 					var _to = _ot.value_to[| j];
 				
 					if(_to.node.active && _to.value_from != noone && _to.value_from.node == rendering.group) {
-						_to.node.rendered = false;
+						_to.node.setRenderStatus(false);
 						ds_queue_enqueue(render_q, _to.node);
 					}
 				}
 			}
-		} else {
+		} else { //queue next node connected from each junction
 			for(var i = 0; i < ds_list_size(rendering.outputs); i++) {
 				var _ot = rendering.outputs[| i];
 				
@@ -71,14 +92,12 @@ function renderAll() {
 					var _to = _ot.value_to[| j];
 					
 					if(_to.node.active && _to.value_from != noone && _to.value_from.node == rendering) {
-						_to.node.rendered = false;
+						_to.node.setRenderStatus(false);
 						ds_queue_enqueue(render_q, _to.node);
 					}
 				}
 			}
 		}
-		
-		rendering.rendered = true;
 	}
 		
 	ds_queue_destroy(render_q);
@@ -92,7 +111,7 @@ function renderNodeBackward(_node) {
 	for(var i = 0; i < ds_map_size(NODE_MAP); i++) {
 		var _allnode = NODE_MAP[? key];
 		if(_allnode && !is_undefined(_allnode) && is_struct(_allnode) && string_pos("Node", instanceof(_allnode)))
-			_allnode.rendered = false;
+			_allnode.setRenderStatus(false);
 		key = ds_map_find_next(NODE_MAP, key);
 	}
 	
@@ -118,7 +137,7 @@ function renderNodeBackward(_node) {
 			
 		if(_leaf) {
 			//show_debug_message("Rendering " + _rendering.name + " at " + string(ANIMATOR.current_frame));
-			_rendering.rendered = true;
+			_rendering.setRenderStatus(true);
 			if(_rendering.use_cache) {
 				if(!_rendering.recoverCache())
 					_rendering.doUpdate();

@@ -7,10 +7,10 @@
   "edgeFiltering": false,
   "collisionTolerance": 0,
   "swfPrecision": 2.525,
-  "bbox_left": 3,
-  "bbox_right": 28,
-  "bbox_top": 8,
-  "bbox_bottom": 21,
+  "bbox_left": 0,
+  "bbox_right": 31,
+  "bbox_top": 5,
+  "bbox_bottom": 26,
   "HTile": false,
   "VTile": false,
   "For3D": false,
@@ -24,9 +24,9 @@
   "gridX": 0,
   "gridY": 0,
   "frames": [
-    {"compositeImage":{"FrameId":{"name":"1822b5aa-1a9e-4856-ac5d-091254dbcb80","path":"sprites/s_node_timeline_preview/s_node_timeline_preview.yy",},"LayerId":null,"resourceVersion":"1.0","name":"","tags":[],"resourceType":"GMSpriteBitmap",},"images":[
-        {"FrameId":{"name":"1822b5aa-1a9e-4856-ac5d-091254dbcb80","path":"sprites/s_node_timeline_preview/s_node_timeline_preview.yy",},"LayerId":{"name":"9d4734fe-da0e-43e3-b8aa-f7037fa744c8","path":"sprites/s_node_timeline_preview/s_node_timeline_preview.yy",},"resourceVersion":"1.0","name":"","tags":[],"resourceType":"GMSpriteBitmap",},
-      ],"parent":{"name":"s_node_timeline_preview","path":"sprites/s_node_timeline_preview/s_node_timeline_preview.yy",},"resourceVersion":"1.0","name":"1822b5aa-1a9e-4856-ac5d-091254dbcb80","tags":[],"resourceType":"GMSpriteFrame",},
+    {"compositeImage":{"FrameId":{"name":"dca7e04f-2a49-48a1-8b0b-815634b9b2d2","path":"sprites/s_node_timeline_preview/s_node_timeline_preview.yy",},"LayerId":null,"resourceVersion":"1.0","name":"","tags":[],"resourceType":"GMSpriteBitmap",},"images":[
+        {"FrameId":{"name":"dca7e04f-2a49-48a1-8b0b-815634b9b2d2","path":"sprites/s_node_timeline_preview/s_node_timeline_preview.yy",},"LayerId":{"name":"3a088e27-139e-4235-9531-e674281ac1d8","path":"sprites/s_node_timeline_preview/s_node_timeline_preview.yy",},"resourceVersion":"1.0","name":"","tags":[],"resourceType":"GMSpriteBitmap",},
+      ],"parent":{"name":"s_node_timeline_preview","path":"sprites/s_node_timeline_preview/s_node_timeline_preview.yy",},"resourceVersion":"1.0","name":"dca7e04f-2a49-48a1-8b0b-815634b9b2d2","tags":[],"resourceType":"GMSpriteFrame",},
   ],
   "sequence": {
     "spriteId": {"name":"s_node_timeline_preview","path":"sprites/s_node_timeline_preview/s_node_timeline_preview.yy",},
@@ -41,7 +41,7 @@
     "moments": {"Keyframes":[],"resourceVersion":"1.0","resourceType":"KeyframeStore<MomentsEventKeyframe>",},
     "tracks": [
       {"name":"frames","spriteId":null,"keyframes":{"Keyframes":[
-            {"id":"66642bd4-3d58-456c-b84c-648d8e12d038","Key":0.0,"Length":1.0,"Stretch":false,"Disabled":false,"IsCreationKey":false,"Channels":{"0":{"Id":{"name":"1822b5aa-1a9e-4856-ac5d-091254dbcb80","path":"sprites/s_node_timeline_preview/s_node_timeline_preview.yy",},"resourceVersion":"1.0","resourceType":"SpriteFrameKeyframe",},},"resourceVersion":"1.0","resourceType":"Keyframe<SpriteFrameKeyframe>",},
+            {"id":"c4b648a4-b298-4c9e-90da-9390d83d9361","Key":0.0,"Length":1.0,"Stretch":false,"Disabled":false,"IsCreationKey":false,"Channels":{"0":{"Id":{"name":"dca7e04f-2a49-48a1-8b0b-815634b9b2d2","path":"sprites/s_node_timeline_preview/s_node_timeline_preview.yy",},"resourceVersion":"1.0","resourceType":"SpriteFrameKeyframe",},},"resourceVersion":"1.0","resourceType":"Keyframe<SpriteFrameKeyframe>",},
           ],"resourceVersion":"1.0","resourceType":"KeyframeStore<SpriteFrameKeyframe>",},"trackColour":0,"inheritsTrackColour":true,"builtinName":0,"traits":0,"interpolation":1,"tracks":[],"events":[],"isCreationTrack":false,"resourceVersion":"1.0","tags":[],"resourceType":"GMSpriteFramesTrack","modifiers":[],},
     ],
     "visibleRange": {"x":0.0,"y":0.0,},
@@ -65,7 +65,7 @@
     "resourceType": "GMSequence",
   },
   "layers": [
-    {"visible":true,"isLocked":false,"blendMode":0,"opacity":100.0,"displayName":"default","resourceVersion":"1.0","name":"9d4734fe-da0e-43e3-b8aa-f7037fa744c8","tags":[],"resourceType":"GMImageLayer",},
+    {"visible":true,"isLocked":false,"blendMode":0,"opacity":100.0,"displayName":"default","resourceVersion":"1.0","name":"3a088e27-139e-4235-9531-e674281ac1d8","tags":[],"resourceType":"GMImageLayer",},
   ],
   "nineSlice": null,
   "parent": {
