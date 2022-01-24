@@ -34,7 +34,7 @@ function textBox(_input, _onModify) constructor {
 	
 	click_block = 0;
 	
-	function apply() {
+	static apply = function() {
 		var _input_text_current = _input_text;
 		
 		switch(input) {
@@ -53,12 +53,12 @@ function textBox(_input, _onModify) constructor {
 			onModify(_input_text_current);
 	}
 	
-	function move_cursor(delta) {
+	static move_cursor = function(delta) {
 		var ll = string_length(_input_text) + 1;
 		cursor = safe_mod(cursor + delta + ll, ll);
 	}
 	
-	function editText() {
+	static editText = function() {
 		#region text editor
 			if(keyboard_check_released(ord("V")) && keyboard_check(vk_control))
 				_input_text = clipboard_get_text();
@@ -145,7 +145,7 @@ function textBox(_input, _onModify) constructor {
 		}
 	}
 	
-	function display_text(_x, _y, _text, _w, _format, _m = -1) {
+	static display_text = function(_x, _y, _text, _w, _format, _m = -1) {
 		var _xx = _x, _ch, _chw;
 		var target = -999;
 		
@@ -225,7 +225,7 @@ function textBox(_input, _onModify) constructor {
 		}
 	}
 	
-	function draw(_x, _y, _w, _h, _text, _m, _format = VALUE_DISPLAY._default) {
+	static draw = function(_x, _y, _w, _h, _text, _m, _format = VALUE_DISPLAY._default) {
 		var tx = _x;
 		switch(align) {
 			case fa_left   : tx = _x + 8; break;

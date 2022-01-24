@@ -12,10 +12,9 @@ function Node_Iterator_Index(_x, _y) : Node(_x, _y) constructor {
 	w = 96;
 	min_h = 32 + 24 * 1;
 	
-	outputs[| 0] = nodeValue(0, "Index", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, 0);
+	outputs[| 0] = nodeValue(0, "Index", self, JUNCTION_CONNECT.output, VALUE_TYPE.integer, 0);
 	
-	update = function() { 
-		if(instanceof(group) == "Node_Iterate")
-			return group.iterated;
+	static update = function() { 
+		outputs[| 0].setValue(group.iterated);
 	}
 }

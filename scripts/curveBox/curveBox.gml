@@ -9,11 +9,11 @@ function curveBox(_onModify) constructor {
 	drag_range = 0;
 	drag_max   = 0;
 	
-	function get_y(val, _y, _h, y_max, y_range) {
+	static get_y = function(val, _y, _h, y_max, y_range) {
 		return _y + _h * clamp((y_max - val) / y_range, 0, 1);
 	}
 	
-	function draw(_x, _y, _w, _h, _data, _m) {
+	static draw = function(_x, _y, _w, _h, _data, _m) {
 		static curve_amo = 3;
 		var curve_h = _h - 32;
 		

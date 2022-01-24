@@ -11,14 +11,9 @@ function renderAll() {
 	renderUpdated();
 }
 
-function renderUpdated() {
-	var render_q = ds_queue_create();
-	var rendering = noone;
-	
-	// get leaf node
-	var key = ds_map_find_first(NODE_MAP);
-	repeat(ds_map_size(NODE_MAP)) {
-		var _node = NODE_MAP[? key];
+function __nodeLeafList(_list, _stack) {
+	for( var i = 0; i < ds_list_size(_list); i++ ) {
+		var _node = _list[| i];
 		if(_node.active && !is_undefined(_node) && is_struct(_node)) {
 			var _startNode = true;
 			for(var j = 0; j < ds_list_size(_node.inputs); j++) {
@@ -29,62 +24,102 @@ function renderUpdated() {
 					_startNode = false;
 			}
 			if(_startNode)
-				ds_queue_enqueue(render_q, _node);
+				ds_stack_push(_stack, _node);
 		}
+	}
+}
+
+function renderUpdated() {
+	var render_st = ds_stack_create();
+	var rendering = noone;
+	var error = 0;
+	
+	// get leaf node
+	var key = ds_map_find_first(NODE_MAP);
+	repeat(ds_map_size(NODE_MAP)) {
+		var _node = NODE_MAP[? key];
 		key = ds_map_find_next(NODE_MAP, key);
+		
+		if(instanceof(_node) == "Node_Group_Input") continue;
+		if(instanceof(_node) == "Node_Iterator_Input") continue;
+		
+		if(_node.active && !is_undefined(_node) && is_struct(_node)) {
+			var _startNode = true;
+			for(var j = 0; j < ds_list_size(_node.inputs); j++) {
+				var _in = _node.inputs[| j];
+				if(_in.value_from != noone)
+					_startNode = false;
+			}
+			if(_startNode)
+				ds_stack_push(render_st, _node);
+		}
 	}
 	
+	show_debug_message("\n=== RENDER ===")
+	
 	// render forward
-	while(!ds_queue_empty(render_q)) {
-		rendering = ds_queue_dequeue(render_q);
-			
-		var _ready = true; //check if all the previous junctions is rendered
-		for(var j = 0; j < ds_list_size(rendering.inputs); j++) {
-			var _in = rendering.inputs[| j];
-			if(_in.value_from && !_in.value_from.node.rendered)
-				_ready = false;
-		}
-				
-		if(_ready) { //if all junctions is rendered, start render
-			if(!rendering.rendered && (LOADING || APPENDING || rendering.auto_update)) {
-				rendering.doUpdate();
-				rendering.setRenderStatus(true);
-			}
-		} else { //some junction is not rendered yet, push this node back in queue
-			ds_queue_enqueue(render_q, rendering); 
-		}
+	while(!ds_stack_empty(render_st)) {
+		rendering = ds_stack_pop(render_st);
 		
-		if(instanceof(rendering) == "Node_Group_Output") { //Group output in-junction connect automatically to parent out-junction
+		if(rendering.rendered) continue;
+		
+		var txt = "rendering " + rendering.name + " ";
+		
+		if(LOADING || APPENDING || rendering.auto_update) {
+			rendering.doUpdate();
+			txt += "| Updated ";
+		}
+		rendering.setRenderStatus(true);
+		
+		if(instanceof(rendering) == "Node_Group") { //Put each input node in group to stack
+			for(var i = rendering.custom_input_index; i < ds_list_size(rendering.inputs); i++) {
+				var _in = rendering.inputs[| i].from;
+				
+				if(_in.isUpdateReady()) ds_stack_push(render_st, _in);
+			}
+		} else if(instanceof(rendering) == "Node_Group_Output") { //Group output in-junction connect automatically to parent out-junction
 			var _ot = rendering.outParent;
 			for(var j = 0; j < ds_list_size(_ot.value_to); j++) {
 				var _to = _ot.value_to[| j];
 				
 				if(_to.node.active && _to.value_from != noone && _to.value_from.node == rendering.group) {
 					_to.node.setRenderStatus(false);
-					ds_queue_enqueue(render_q, _to.node);
+					if(_to.node.isUpdateReady()) ds_stack_push(render_st, _to.node);
 				}
 			}
-		} else if(instanceof(rendering) == "Node_Iterator_Output") { //Iterator input, check iteration result 
+			
+			rendering.group.setRenderStatus(true);
+		} else if(instanceof(rendering) == "Node_Iterate") { //Put each input node in group to stack
+			for(var i = rendering.custom_input_index; i < ds_list_size(rendering.inputs); i++) {
+				var _in = rendering.inputs[| i].from;
+				if(_in.isUpdateReady()) ds_stack_push(render_st, _in);
+			}
+		} else if(instanceof(rendering) == "Node_Iterator_Output") { //Check iteration result 
 			var _node_it = rendering.group;
 			var _ren = _node_it.outputRendered();
 			
-			if(_ren == 1) { //Go back to the beginning of the loop
+			if(_ren == 1) { //Go back to the beginning of the loop, reset render status for leaf node inside?
+				show_debug_message("iteration restart");
 				var _ot = rendering.group.inputs;
 				for(var j = 1; j < ds_list_size(_ot); j++) {
-					ds_queue_enqueue(render_q, _ot[| j].from);
+					if(_ot[| j].from.isUpdateReady()) ds_stack_push(render_st, _ot[| j].from);
 				}
+				
+				__nodeLeafList(rendering.group.nodes, render_st);
 			} else if(_ren == 2) { //Go out of loop
+				show_debug_message("iteration completed");
 				var _ot = rendering.outParent;
 				for(var j = 0; j < ds_list_size(_ot.value_to); j++) {
 					var _to = _ot.value_to[| j];
 				
 					if(_to.node.active && _to.value_from != noone && _to.value_from.node == rendering.group) {
 						_to.node.setRenderStatus(false);
-						ds_queue_enqueue(render_q, _to.node);
+						if(_to.node.isUpdateReady()) ds_stack_push(render_st, _to.node);
 					}
 				}
+				rendering.group.setRenderStatus(true);
 			}
-		} else { //queue next node connected from each junction
+		} else { //push next node
 			for(var i = 0; i < ds_list_size(rendering.outputs); i++) {
 				var _ot = rendering.outputs[| i];
 				
@@ -93,14 +128,16 @@ function renderUpdated() {
 					
 					if(_to.node.active && _to.value_from != noone && _to.value_from.node == rendering) {
 						_to.node.setRenderStatus(false);
-						ds_queue_enqueue(render_q, _to.node);
+						if(_to.node.isUpdateReady()) ds_stack_push(render_st, _to.node);
 					}
 				}
 			}
 		}
+		
+		//show_debug_message(txt);
 	}
 		
-	ds_queue_destroy(render_q);
+	ds_stack_destroy(render_st);
 }
 
 function renderNodeBackward(_node) {

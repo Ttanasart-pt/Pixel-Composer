@@ -15,7 +15,7 @@ function sliderRange(_min, _max, _step, _onModify) constructor {
 	tb_value_min = new textBox(TEXTBOX_INPUT.float, function(val) { onModify(0, val); });
 	tb_value_max = new textBox(TEXTBOX_INPUT.float, function(val) { onModify(1, val); });
 	
-	function draw(_x, _y, _w, _h, _data, _m) {
+	static draw = function(_x, _y, _w, _h, _data, _m) {
 		var tb_w = 64;
 		var sw = _w - (tb_w + 16) * 2;
 		

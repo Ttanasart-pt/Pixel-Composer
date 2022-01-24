@@ -13,7 +13,7 @@ function buttonGroupClass(_data, _onClick) constructor {
 		buttons[i] = button(-1);	
 	}
 	
-	function draw(_x, _y, _w, _h, _seleting, _m) {
+	static draw = function(_x, _y, _w, _h, _seleting, _m) {
 		var amo = array_length(data);
 		var ww  = _w / amo;
 		

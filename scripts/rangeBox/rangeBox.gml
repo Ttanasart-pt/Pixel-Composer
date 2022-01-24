@@ -15,7 +15,7 @@ function rangeBox(_type, _onModify) constructor {
 		tb[i].slidable = true;
 	}
 	
-	function draw(_x, _y, _w, _h, _data, _m) {
+	static draw = function(_x, _y, _w, _h, _data, _m) {
 		if(extras && instanceof(extras) == "buttonClass") {
 			extras.hover  = hover;
 			extras.active = active;

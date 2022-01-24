@@ -129,6 +129,20 @@ function Node(_x, _y) constructor {
 	
 	static onValueUpdate = function(index) {}
 	
+	static isUpdateReady = function() {
+		if(rendered) return false;
+		
+		for(var j = 0; j < ds_list_size(inputs); j++) {
+			var _in = inputs[| j];
+			if(_in.value_from) {
+				if (!_in.value_from.node.rendered)
+					return false;
+			} 
+		}
+		
+		return true;
+	}
+	
 	static update = function() {}
 	
 	static updateValueFrom = function(index) {}
@@ -213,7 +227,7 @@ function Node(_x, _y) constructor {
 	}
 	
 	static drawJunctions = function(_x, _y, _mx, _my, _s) {
-		var ss    = max(0.5, _s);
+		var ss    = max(0.25, _s / 2);
 		var xx    = x * _s + _x;
 		var hover = noone;
 		

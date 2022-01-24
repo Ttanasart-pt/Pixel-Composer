@@ -14,7 +14,7 @@ function Node_Iterator_Output(_x, _y, _group) : Node(_x, _y) constructor {
 	self.group = _group;
 	
 	w = 96;
-	h = 32 + 24;
+	h = 32 + 24 * 2;
 	min_h = h;
 	
 	inputs[| 0] = nodeValue(0, "Value", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, -1)
@@ -22,7 +22,8 @@ function Node_Iterator_Output(_x, _y, _group) : Node(_x, _y) constructor {
 	
 	inputs[| 1] = nodeValue(1, "Order", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0);
 	
-	inputs[| 2] = nodeValue(2, "Use as input", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, -1);
+	inputs[| 2] = nodeValue(2, "Loop input", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, -1)
+		.setVisible(true, true);
 	
 	cache_value = -1;
 	outParent = undefined;
@@ -31,17 +32,6 @@ function Node_Iterator_Output(_x, _y, _group) : Node(_x, _y) constructor {
 	static onValueUpdate = function(index) {
 		if(is_undefined(outParent)) return;
 		group.sortIO();
-		
-		if(index == 2) {
-			var _v = inputs[| 2].getValue();
-			for( var i = 1; i < ds_list_size(group.inputs); i++ ) {
-				var _in = group.inputs[| i].from;
-				if(i - 1 == _v) 
-					_in.local_output = inputs[| 0];
-				else if(_in.local_output == inputs[| 0])
-					_in.local_output = noone;
-			}
-		}
 	}
 	
 	static createOutput = function(override_order = true) {

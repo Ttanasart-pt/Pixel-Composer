@@ -14,7 +14,7 @@ function slider(_min, _max, _step, _onModify) constructor {
 	
 	tb_value = new textBox(TEXTBOX_INPUT.float, onModify);
 	
-	function draw(_x, _y, _w, _h, _data, _m) {
+	static draw = function(_x, _y, _w, _h, _data, _m) {
 		var tb_w = 64;
 		var sw = _w - (tb_w + 16);
 		

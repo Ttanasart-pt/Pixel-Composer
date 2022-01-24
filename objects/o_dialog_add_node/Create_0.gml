@@ -123,9 +123,11 @@ event_inherited();
 						}
 					}
 					
+					var spr_x = _boxx + grid_size / 2;
+					var spr_y = yy + grid_size / 2;
 					if(variable_struct_exists(_node, "spr") && sprite_exists(_node.spr))
-						draw_sprite(_node.spr, 0, _boxx + grid_size / 2, yy + grid_size / 2);
-				
+						draw_sprite(_node.spr, 0, spr_x, spr_y);
+					
 					draw_set_text(f_p1, fa_center, fa_top, c_white);
 					name_height = max(name_height, string_height_ext(_node.name, -1, grid_size) + 8);
 					draw_text_ext(_boxx + grid_size / 2, yy + grid_size + 4, _node.name, -1, grid_width);

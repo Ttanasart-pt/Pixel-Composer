@@ -21,7 +21,7 @@ function vectorRangeBox(_size, _type, _onModify) constructor {
 		label[i] = (i % 2? "max " : "min ") + axis[floor(i / 2)];
 	}
 	
-	function draw(_x, _y, _w, _h, _data, _m) {
+	static draw = function(_x, _y, _w, _h, _data, _m) {
 		if(extras && instanceof(extras) == "buttonClass") {
 			extras.hover  = hover;
 			extras.active = active;

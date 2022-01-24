@@ -8,10 +8,6 @@ function Node_Iterate(_x, _y) : Node_Collection(_x, _y) constructor {
 	name = "Iterate";
 	color = c_ui_lime;
 	icon  = s_group_16;
-	previewable = false;
-	
-	w = 96;
-	min_h = 0;
 	
 	iterated = 0;
 	
@@ -31,10 +27,13 @@ function Node_Iterate(_x, _y) : Node_Collection(_x, _y) constructor {
 			iter &= _out.rendered;
 		}
 		
+		//show_debug_message("get output from iteration " + string(iterated));
+		
 		if(iter) {
-			iterated++;
-			if(iterated >= inputs[| 0].getValue()) 
+			if(++iterated == inputs[| 0].getValue())
 				return 2;
+			else if(iterated > inputs[| 0].getValue())
+				return 3;
 			
 			for( var i = 0; i < ds_list_size(nodes); i++ ) {
 				nodes[| i].setRenderStatus(false);

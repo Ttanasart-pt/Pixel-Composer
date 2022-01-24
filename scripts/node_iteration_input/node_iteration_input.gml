@@ -17,7 +17,7 @@ function Node_Iterator_Input(_x, _y, _group) : Node(_x, _y) constructor {
 	local_output = noone;
 	
 	w = 96;
-	h = 32 + 24;
+	h = 32 + 24 * 2;
 	min_h = h;
 	
 	inputs[| 0] = nodeValue(0, "Display type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
@@ -48,16 +48,25 @@ function Node_Iterator_Input(_x, _y, _group) : Node(_x, _y) constructor {
 	outputs[| 0] = nodeValue(0, "Value", self, JUNCTION_CONNECT.output, VALUE_TYPE.any, 0);
 	outputs[| 0].getValueDefault = method(outputs[| 0], outputs[| 0].getValueRecursive);
 	outputs[| 0].getValueRecursive = function() {
-		show_debug_message("iteration " + string(group.iterated));
+		//show_debug_message("iteration " + string(group.iterated));
 		
-		if(local_output == noone || group.iterated == 0) {
-			show_debug_message("get default value");
+		var _local_output = noone;
+		for( var i = 0; i < ds_list_size(outputs[| 1].value_to); i++ ) {
+			var vt = outputs[| 1].value_to[| i];
+			if(vt.value_from == outputs[| 1])
+				_local_output = vt;
+		}
+		
+		if(_local_output == noone || group.iterated == 0) {
+			//show_debug_message("get default value");
 			return outputs[| 0].getValueDefault();
 		}
 		
-		show_debug_message("get local output");
-		return [ local_output.node.cache_value, inputs[| 2].getValue() ];
+		//show_debug_message("get local output");
+		return [ _local_output.node.cache_value, inputs[| 2].getValue() ];
 	}
+	
+	outputs[| 1] = nodeValue(1, "Index", self, JUNCTION_CONNECT.output, VALUE_TYPE.integer, 0);
 	
 	static onValueUpdate = function(index) {
 		if(is_undefined(inParent)) return;
@@ -174,7 +183,7 @@ function Node_Iterator_Input(_x, _y, _group) : Node(_x, _y) constructor {
 	static step = function() {
 		if(is_undefined(inParent)) return;
 		
-		inParent.name = name;	
+		inParent.name = name;
 	}
 	
 	static update = function() {

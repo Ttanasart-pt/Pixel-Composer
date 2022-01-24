@@ -18,7 +18,7 @@ function scrollPane(_w, _h, ondraw) constructor {
 	
 	is_scrolling		= false;
 	
-	function resize(_w, _h) {
+	static resize = function(_w, _h) {
 		w = _w;
 		h = _h;
 		surface_w   = _w - 8;
@@ -32,7 +32,7 @@ function scrollPane(_w, _h, ondraw) constructor {
 		}
 	}
 	
-	function draw(x, y, _mx = mouse_mx - x, _my = mouse_my - y) {
+	static draw = function(x, y, _mx = mouse_mx - x, _my = mouse_my - y) {
 		var mx = _mx, my = _my;
 
 		if(!point_in_rectangle(mx, my, 0, 0, w, h)) {
@@ -61,7 +61,7 @@ function scrollPane(_w, _h, ondraw) constructor {
 		}
 	}
 	
-	function draw_scroll(scr_x, scr_y, is_vert, scr_s, scr_prog, scr_size, bar_col, bar_hcol, mx, my) {
+	static draw_scroll = function(scr_x, scr_y, is_vert, scr_s, scr_prog, scr_size, bar_col, bar_hcol, mx, my) {
 		var scr_scale_s = scr_s * scr_size;
 		var scr_prog_s  = scr_prog * (scr_s - scr_scale_s);
 		var scr_w, scr_h, bar_w, bar_h, bar_x, bar_y;

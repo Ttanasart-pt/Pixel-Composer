@@ -17,7 +17,7 @@ function paddingBox(_onModify, _linked) constructor {
 	
 	b_link = button(linked);
 	
-	function draw(_x, _y, _data, _mod, _m) {
+	static draw = function(_x, _y, _data, _mod, _m) {
 		draw_sprite(s_inspector_padding, 0, _x, _y + 64);
 		
 		for(var i = 0; i < 4; i++) {

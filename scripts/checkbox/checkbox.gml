@@ -4,7 +4,7 @@ function checkBox(_onClick) constructor {
 	
 	onClick = _onClick;
 	
-	function draw(_x, _y, _value, _m) {
+	static draw = function(_x, _y, _value, _m) {
 		var cx = _x;
 		var cy = _y;
 		

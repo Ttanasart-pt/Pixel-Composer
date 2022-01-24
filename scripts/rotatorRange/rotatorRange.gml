@@ -8,7 +8,7 @@ function rotatorRange(_onModify) constructor {
 	drag_sv  = 0;
 	drag_sa  = 0;
 	
-	function draw(_x, _y, _data, _m) {
+	static draw = function(_x, _y, _data, _m) {
 		var knob_y = _y + 48;
 		
 		draw_set_color(c_ui_blue_mdblack);

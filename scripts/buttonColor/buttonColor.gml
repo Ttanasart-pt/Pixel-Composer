@@ -18,7 +18,7 @@ function buttonColorClass(_onApply) constructor {
 	b_picker = button(onColorPick);
 	b_picker.icon = s_color_picker_dropper;
 	
-	function draw(_x, _y, _w, _h, _color, _m) {
+	static draw = function(_x, _y, _w, _h, _color, _m) {
 		b_picker.hover  = hover;
 		b_picker.active = active;
 		b_picker.draw(_x + _w - 32, _y + _h / 2 - 16, 32, 32, _m, s_button_hide);

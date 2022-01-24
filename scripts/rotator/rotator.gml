@@ -12,7 +12,7 @@ function rotator(_onModify) constructor {
 	
 	tb_value = new textBox(TEXTBOX_INPUT.number, onModify);
 	
-	function draw(_x, _y, _data, _m) {
+	static draw = function(_x, _y, _data, _m) {
 		var knob_y = _y + 48;
 		
 		tb_value.hover  = hover;

@@ -85,7 +85,7 @@ function NodeObject(_name, _spr, _create, tags = []) constructor {
 	
 	var filter = ds_list_create();
 	addNodeCatagory("Filter", filter);
-	addNodeObject(filter, "Blend",				s_node_color_adjust,	"Node_Blend",			Node_create_Blend, ["merge"]);
+	addNodeObject(filter, "Blend",				s_node_blend,			"Node_Blend",			Node_create_Blend, ["merge"]);
 	addNodeObject(filter, "Outline",			s_node_border,			"Node_Outline",			Node_create_Outline, ["border"]);
 	addNodeObject(filter, "Erode",				s_node_erode,			"Node_Erode",			Node_create_Erode);
 	addNodeObject(filter, "Trail",				s_node_trail,			"Node_Trail",			Node_create_Trail);
@@ -140,6 +140,7 @@ function NodeObject(_name, _spr, _create, tags = []) constructor {
 	addNodeObject(number, "Math",			s_node_math,			"Node_Math",			Node_create_Math);
 	addNodeObject(number, "Array",			s_node_array,			"Node_Array",			Node_create_Array);
 	addNodeObject(number, "Array length",	s_node_array_length,	"Node_Array_Length",	Node_create_Array_Length);
+	addNodeObject(number, "Array get",		s_node_array_get,		"Node_Array_Get",		Node_create_Array_Get);
 	addNodeObject(number, "Number",			s_node_number,			"Node_Number",			Node_create_Number);
 	addNodeObject(number, "Vector2",		s_node_vec2,			"Node_Vector2",			Node_create_Vector2);
 	addNodeObject(number, "Vector3",		s_node_vec3,			"Node_Vector3",			Node_create_Vector3);

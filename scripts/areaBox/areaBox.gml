@@ -19,7 +19,7 @@ function areaBox(_onModify) constructor {
 		tb[i] = new textBox(TEXTBOX_INPUT.number, onModifySingle[i]);
 	}
 	
-	function draw(_x, _y, _data, _m) {
+	static draw = function(_x, _y, _data, _m) {
 		if(buttonInstant(s_button_hide, _x - 48, _y + 64 - 48, 96, 96, _m, active, hover, "", s_inspector_area, array_safe_get(_data, 4), c_white) == 2) {
 			if(mouse_check_button_pressed(mb_left)) {
 				var val = (array_safe_get(_data, 4) + 1) % 2;

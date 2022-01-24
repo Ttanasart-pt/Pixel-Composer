@@ -1,3 +1,8 @@
+enum COLLECTION_TAG {
+	group = 1,
+	loop = 2
+}
+
 function Node_Collection(_x,  _y) : Node(_x,  _y) constructor {
 	nodes = ds_list_create();
 	

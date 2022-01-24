@@ -8,7 +8,7 @@ function buttonGradientClass(_onApply) constructor {
 	
 	onApply = _onApply;
 	
-	function draw(_x, _y, _w, _h, _gradient, _data, _m) {
+	static draw = function(_x, _y, _w, _h, _gradient, _data, _m) {
 		var click = false;
 		if(hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + _h)) {
 			draw_sprite_stretched(s_button, 1, _x, _y, _w, _h);	
