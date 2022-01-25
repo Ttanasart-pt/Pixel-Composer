@@ -94,6 +94,15 @@ event_inherited();
 		})
 	]);
 	
+	ds_list_add(pref_global, [
+		"Collection preview speed",
+		"collection_preview_speed",
+		new textBox(TEXTBOX_INPUT.number, function(str) { 
+			PREF_MAP[? "collection_preview_speed"] = max(1, round(real(str)));
+			PREF_SAVE();
+		})
+	]);
+	
 	//NODE
 	
 	ds_list_add(pref_node, [

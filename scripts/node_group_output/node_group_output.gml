@@ -59,13 +59,9 @@ function Node_Group_Output(_x, _y, _group) : Node(_x, _y) constructor {
 		if(is_undefined(outParent)) return;
 		
 		outParent.name = name; 
-
-		if(inputs[| 0].value_from) {
-			outParent.type  = inputs[| 0].value_from.type;
-			inputs[| 0].type = inputs[| 0].value_from.type;
-		} else {
-			inputs[| 0].type = VALUE_TYPE.any;
-		}
+		
+		inputs[| 0].type = inputs[| 0].value_from == noone? VALUE_TYPE.any : inputs[| 0].value_from.type;
+		outParent.type = inputs[| 0].type;
 	}
 	static doUpdateForward = function() {
 		if(is_undefined(outParent)) return;

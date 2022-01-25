@@ -21,7 +21,9 @@ function Node_Pin(_x, _y) : Node(_x, _y) constructor {
 	outputs[| 0] = nodeValue(0, "Out", self, JUNCTION_CONNECT.output, VALUE_TYPE.any, 0);
 	
 	static update = function() {
-		if(inputs[| 0].value_from != noone) {
+		inputs[| 0].type = inputs[| 0].value_from == noone? VALUE_TYPE.any : inputs[| 0].value_from.type;
+		
+		if(inputs[| 0].value_from != noone) { 
 			outputs[| 0].value_from = inputs[| 0].value_from;
 		}
 	}

@@ -40,7 +40,7 @@ if !ready exit;
 	tb_search.active		= FOCUS == self;
 	tb_search.hover			= HOVER == self;
 	tb_search.draw(dialog_x + dialog_w - 16 - 200, dialog_y + 16, 200, 32, search_text, [mouse_mx, mouse_my]);
-	draw_sprite_ext(s_search_16, 0, dialog_x + dialog_w - 16 - 200 - 16, dialog_y + 16 + 12, 1, 1, 0, c_ui_blue_grey, 1);
+	draw_sprite_ext(s_search_16, 0, dialog_x + dialog_w - 16 - 200 - 16, dialog_y + 16 + 16, 1, 1, 0, c_ui_blue_grey, 1);
 	
 	if(page_current == 0) {
 		current_list = pref_global;

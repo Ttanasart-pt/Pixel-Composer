@@ -64,7 +64,7 @@
 #endregion
 
 #region focus
-	FOCUS = self;
+	setFocus(self);
 	FOCUS_STR = "Dialog";
 	
 	function checkFocus() {
@@ -82,7 +82,7 @@
 					mouse_check_button_pressed(mb_right) ||
 					mouse_check_button_pressed(mb_middle)) {
 				
-					FOCUS = self;
+					setFocus(self);
 					FOCUS_STR = "Dialog";
 				}
 			}

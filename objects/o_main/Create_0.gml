@@ -12,7 +12,7 @@
 	file_text_close(f);
 #endregion
 
-display_reset(0, 1);
+display_reset(8, 1);
 
 #region window
 	depth = 0;

@@ -10,7 +10,7 @@ function LOAD_SAMPLE() {
 	while(file != "") {
 		if(filename_ext(file) == ".json" || filename_ext(file) == ".pxc") {
 			var full_path = _l + "\\" + file;
-			var f = new FileContext(string_replace(filename_name(file), filename_ext(file), ""), full_path);
+			var f = new FileObject(string_replace(filename_name(file), filename_ext(file), ""), full_path);
 			var icon_path = string_replace(full_path, filename_ext(full_path), ".png");
 				
 			if(file_exists(icon_path)) {

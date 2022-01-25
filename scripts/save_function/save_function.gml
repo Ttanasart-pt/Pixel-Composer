@@ -148,7 +148,7 @@ function SAVE_COLLECTION(_node, _path, save_surface = true) {
 	
 	ds_map_destroy(_map);
 	var pane = findPanel("Panel_Collection", PANEL_MAIN, noone);
-	if(pane) pane.searchContent();
+	if(pane) pane.refreshContext();
 }
 
 function SAVE_NODE(_list, _node, dx = 0, dy = 0, scale = false) {

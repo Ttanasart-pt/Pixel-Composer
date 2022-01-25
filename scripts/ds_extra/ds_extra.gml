@@ -36,3 +36,9 @@ function ds_list_remove(list, item) {
 	var in = ds_list_find_index(list, item);
 	if(in >= 0) ds_list_delete(list, in);
 }
+
+function ds_list_append(list, _append) {
+	for( var i = 0; i < ds_list_size(_append); i++ ) {
+		ds_list_add(list, _append[| i]);
+	}
+}

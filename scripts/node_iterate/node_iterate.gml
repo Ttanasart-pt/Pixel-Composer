@@ -14,10 +14,14 @@ function Node_Iterate(_x, _y) : Node_Collection(_x, _y) constructor {
 	inputs[| 0] = nodeValue( 0, "Repeat", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1 );
 	
 	custom_input_index = 1;
+	loop_start_time = 0;
 	
 	static setRenderStatus = function(result) {
 		rendered = result;
-		if(!rendered) iterated = 0;
+		if(!rendered) {
+			iterated = 0;
+			loop_start_time = get_timer();
+		}
 	}
 	
 	static outputRendered = function() {
@@ -28,9 +32,10 @@ function Node_Iterate(_x, _y) : Node_Collection(_x, _y) constructor {
 		}
 		
 		if(iter) {
-			if(++iterated == inputs[| 0].getValue())
+			if(++iterated == inputs[| 0].getValue()) {
+				render_time = get_timer() - loop_start_time;
 				return 2;
-			else if(iterated > inputs[| 0].getValue())
+			} else if(iterated > inputs[| 0].getValue())
 				return 3;
 			
 			resetRenderStatus();

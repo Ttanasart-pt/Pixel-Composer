@@ -195,10 +195,10 @@ function NodeObject(_name, _spr, _create, tags = []) constructor {
 	
 	var node = ds_list_create();
 	addNodeCatagory("Node", node);
-	addNodeObject(node, "Pin",			s_node_pin,			"Node_Pin",				Node_create_Pin);
-	addNodeObject(node, "Frame",		s_node_frame,		"Node_Frame",			Node_create_Frame);
-	addNodeObject(node, "Display text",	s_node_frame,		"Node_Display_Text",	Node_create_Display_Text);
-	addNodeObject(node, "Condition",	s_node_condition,	"Node_Condition",		Node_create_Condition);
+	addNodeObject(node, "Pin",				s_node_pin,			"Node_Pin",				Node_create_Pin);
+	addNodeObject(node, "Frame",			s_node_frame,		"Node_Frame",			Node_create_Frame);
+	addNodeObject(node, "Display text",		s_node_text,		"Node_Display_Text",	Node_create_Display_Text);
+	addNodeObject(node, "Condition",		s_node_condition,	"Node_Condition",		Node_create_Condition);
 	
 	NODE_CREATE_FUCTION[? "Node_Group"] = Node_create_Group;
 	NODE_CREATE_FUCTION[? "Node_Iterate"] = Node_create_Iterate;

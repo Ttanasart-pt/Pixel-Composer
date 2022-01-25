@@ -521,13 +521,13 @@ function Node(_x, _y) constructor {
 			var _ou = outputs[| i];
 			for(var j = 0; j < ds_list_size(_ou.value_to); j++) {
 				var _to = _ou.value_to[| j];
-				if(_to.node.active && _to.node.group != group) {
+				if(_to.value_from == _ou && _to.node.active && _to.node.group != group) {
 					var output_node;
 					switch(_type) {
 						case "group" : output_node = new Node_Group_Output(x + w + 64, y, group); break;
 						case "loop" : output_node = new Node_Iterator_Output(x + w + 64, y, group); break;	
 					}
-				
+					
 					ds_list_add(group.nodes, output_node);
 					
 					_to.setFrom(output_node.outParent);

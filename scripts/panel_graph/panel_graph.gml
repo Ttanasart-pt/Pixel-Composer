@@ -572,6 +572,7 @@ function Panel_Graph(_panel) : PanelContent(_panel) constructor {
 	function doGroup() {
 		if(ds_list_empty(nodes_select_list) && node_focus != noone)
 			ds_list_add(nodes_select_list, node_focus);
+		node_focus = noone;
 		
 		if(!ds_list_empty(nodes_select_list)) {
 			var cx = 0;

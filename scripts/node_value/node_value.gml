@@ -14,6 +14,7 @@ enum VALUE_TYPE {
 	curve     = 6,
 	text      = 7,
 	object    = 8,
+	
 	any       = -1,
 }
 
@@ -491,8 +492,8 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 			return false;
 		}
 		
-		if(_valueFrom == noone) {
-			removeFrom();
+		if(_valueFrom == value_from) {
+			show_debug_message("setFrom : Repeated connection");
 			return false;
 		}
 		
@@ -521,6 +522,15 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 			return false;
 		}
 		
+		if(value_from != noone) {
+			ds_list_remove(value_from.value_to, self);	
+		}
+		
+		if(_valueFrom == noone) {
+			removeFrom();
+			return false;
+		}
+		
 		recordAction(ACTION_TYPE.junction_connect, self, value_from);
 		value_from = _valueFrom;
 		ds_list_add(_valueFrom.value_to, self);
@@ -535,7 +545,7 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 	static removeFrom = function() {
 		recordAction(ACTION_TYPE.junction_connect, self, value_from);
 		if(value_from)
-			ds_list_delete(value_from.value_to, ds_list_find_index(value_from.value_to, self));	
+			ds_list_remove(value_from.value_to, self);	
 		value_from = noone;
 		
 		node.updateValueFrom(index);

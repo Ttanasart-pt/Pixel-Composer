@@ -44,7 +44,7 @@
 				}
 				break;
 			case 1 :
-				var split_anim	= split_ins[0].split_v(-240);
+				var split_anim	= split_ins[0].split_v(-300);
 				PANEL_ANIMATION = new Panel_Animation(split_anim[1]);
 				
 				var split_prev	= split_anim[0].split_h(400);

@@ -27,43 +27,70 @@ event_inherited();
 		
 		if(!_node) return;
 		
-		var _new_node = _node.build(node_target_x, node_target_y, _param);
+		var _inputs = 0, _outputs = 0;
+		if(is_struct(_node) && instanceof(_node) == "NodeObject") {
+			var _new_node = _node.build(node_target_x, node_target_y, _param);
+			if(!_new_node) return;
+			_inputs = _new_node.inputs;
+			_outputs = _new_node.outputs;
+		} else {
+			var _new_list = APPEND(_node.path);
+			_inputs = ds_list_create();
+			_outputs = ds_list_create();
+			
+			for( var i = 0; i < ds_list_size(_new_list); i++ ) {
+				var _in = _new_list[| i].inputs;
+				for( var j = 0; j < ds_list_size(_in); j++ ) {
+					if(_in[| j].value_from == noone)
+						ds_list_add(_inputs, _in[| j]);
+				}
+				
+				var _ot = _new_list[| i].outputs;
+				for( var j = 0; j < ds_list_size(_ot); j++ ) {
+					if(ds_list_empty(_ot[| j].value_to))
+						ds_list_add(_outputs, _ot[| j]);
+				}
+			}
+			
+			ds_list_destroy(_new_list);
+		}
 		
-		if(_new_node) {
-			if(node_called != noone) {
-				var _node_list = node_called.connect_type == JUNCTION_CONNECT.input? _new_node.outputs : _new_node.inputs;
-				for(var i = 0; i < ds_list_size(_node_list); i++) {
-					var _target = _node_list[| i]; 
-					if(_target.isVisible() && (value_bit(_target.type) & value_bit(node_called.type))) {
-						if(node_called.connect_type == JUNCTION_CONNECT.input) {
-							node_called.setFrom(_node_list[| i]);
-							_new_node.x -= _new_node.w;
-						} else
-							_node_list[| i].setFrom(node_called);
-						break;
-					}
+		if(node_called != noone) {
+			var _node_list = node_called.connect_type == JUNCTION_CONNECT.input? _outputs : _inputs;
+			for(var i = 0; i < ds_list_size(_node_list); i++) {
+				var _target = _node_list[| i]; 
+				if( _target.isVisible() && (value_bit(_target.type) & value_bit(node_called.type)) ) {
+					if(node_called.connect_type == JUNCTION_CONNECT.input) {
+						node_called.setFrom(_node_list[| i]);
+						_new_node.x -= _new_node.w;
+					} else
+						_node_list[| i].setFrom(node_called);
+					break;
 				}
-			} else if(junction_hovering != noone) {
-				var to = junction_hovering;
-				var from = junction_hovering.value_from;
+			}
+		} else if(junction_hovering != noone) {
+			var to = junction_hovering;
+			var from = junction_hovering.value_from;
 				
-				for( var i = 0; i < ds_list_size(_new_node.inputs); i++ ) {
-					var _in = _new_node.inputs[| i];
-					if(value_bit(_in.type) & value_bit(from.type)) {
-						_in.setFrom(from);
-						break;
-					}
+			for( var i = 0; i < ds_list_size(_inputs); i++ ) {
+				var _in = _inputs[| i];
+				if(value_bit(_in.type) & value_bit(from.type)) {
+					_in.setFrom(from);
+					break;
 				}
+			}
 				
-				for( var i = 0; i < ds_list_size(_new_node.outputs); i++ ) {
-					var _ot = _new_node.outputs[| i];
-					if(value_bit(_ot.type) & value_bit(to.type)) {
-						to.setFrom(_ot);
-						break;
-					}
+			for( var i = 0; i < ds_list_size(_outputs); i++ ) {
+				var _ot = _outputs[| i];
+				if(value_bit(_ot.type) & value_bit(to.type)) {
+					to.setFrom(_ot);
+					break;
 				}
 			}
 		}
+		
+		ds_list_destroy(_inputs);
+		ds_list_destroy(_outputs);
 	}
 	
 	catagory_pane = new scrollPane(132, dialog_h - 28, function(_y, _m) {
@@ -184,41 +211,31 @@ event_inherited();
 
 #region search
 	search_string = "";
+	search_list = ds_list_create();
 	keyboard_lastchar = "";
 	keyboard_string = "";
 	keyboard_lastkey = -1;
 	
-	tb_search				= new textBox(TEXTBOX_INPUT.text, function(str) { search_string = string(str); });
+	tb_search				= new textBox(TEXTBOX_INPUT.text, function(str) { 
+		search_string = string(str); 
+		searchNodes();
+	});
 	tb_search.auto_update	= true;
 	TEXTBOX_ACTIVE			= tb_search;
 	
-	search_pane = new scrollPane(dialog_w - 32, dialog_h - 52 - 14, function(_y, _m) {
-		draw_clear_alpha(c_ui_blue_black, 0);
+	function searchNodes() {
+		ds_list_clear(search_list);
 		
-		var grid_size = 64;
-		var grid_width = 80;
-		var grid_space = 16;
-		var col = floor(search_pane.surface_w / (grid_width + grid_space));
-		var hh = (grid_space + grid_size) * 2;
-		var yy = _y + grid_space;
-		var index = 0;
-		var name_height = 0;
-		var amo = 0;
 		var cnt = PANEL_GRAPH.getCurrentContext();
 		var context = cnt == -1? "" : instanceof(cnt);
-		
 		var search_lower = string_lower(search_string);
 		
 		for(var i = 0; i < ds_list_size(NODE_CATAGORY); i++) {
 			var key = NODE_CATAGORY[| i];
 			
 			switch(key) {
-				case "Group" : 
-					if(context != "Node_Group") continue; 
-					break;	
-				case "Loop" : 
-					if(context != "Node_Iterate") continue; 
-					break;	
+				case "Group" : if(context != "Node_Group") continue; break;	
+				case "Loop" : if(context != "Node_Iterate") continue; break;	
 			}
 			
 			var _page = ALL_NODES[? key];
@@ -237,44 +254,74 @@ event_inherited();
 				}
 				
 				if(match) {
-					var _nx   = grid_space + (grid_width + grid_space) * index;
-					var _boxx = _nx + (grid_width - grid_size) / 2;
-					
-					draw_sprite_stretched(s_node_bg, 0, _boxx, yy, grid_size, grid_size);
-					
-					if(variable_struct_exists(_node, "spr") && sprite_exists(_node.spr))
-						draw_sprite(_node.spr, 0, _boxx + grid_size / 2, yy + grid_size / 2);
-				
-					draw_set_text(f_p1, fa_center, fa_top, c_white);
-					name_height = max(name_height, string_height_ext(_node.name, -1, grid_size) + 8);
-					draw_text_ext(_boxx + grid_size / 2, yy + grid_size + 4, _node.name, -1, grid_width);
-				
-					if(point_in_rectangle(_m[0], _m[1], _nx, yy, _nx + grid_width, yy + grid_size)) {
-						node_selecting = amo;
-						if(mouse_check_button_pressed(mb_left))
-							buildNode(_node, param);
-					}
-					
-					if(node_selecting == amo) {
-						draw_sprite_stretched(s_node_active, 0, _boxx, yy, grid_size, grid_size);
-						if(keyboard_check_pressed(vk_enter))
-							buildNode(_node, param);
-					}
-					
-					if(node_focusing == amo) {
-						search_pane.scroll_y_to = -max(0, hh - search_pane.h);	
-					}
-					
-					if(++index >= col) {
-						index = 0;
-						var hght = grid_size + grid_space + name_height;
-						name_height = 0;
-						hh += hght;
-						yy += hght;
-					}
-					
-					amo++;
+					ds_list_add(search_list, [_node, param]);	
 				}
+			}
+		}
+		
+		searchCollection(search_list, search_string, false);
+	}
+	
+	search_pane = new scrollPane(dialog_w - 32, dialog_h - 52 - 14, function(_y, _m) {
+		draw_clear_alpha(c_ui_blue_black, 0);
+		
+		var grid_size = 64;
+		var grid_width = 80;
+		var grid_space = 16;
+		var col = floor(search_pane.surface_w / (grid_width + grid_space));
+		var hh = (grid_space + grid_size) * 2;
+		var yy = _y + grid_space;
+		var index = 0;
+		var name_height = 0;
+		var amo = ds_list_size(search_list);
+		
+		for(var i = 0; i < ds_list_size(search_list); i++) {
+			var s_res = search_list[| i];
+			var _node, _param = "";
+			if(is_array(s_res)) {
+				_node = s_res[0];
+				_param = s_res[1];
+			} else {
+				_node = s_res;
+			}
+			
+			var _nx   = grid_space + (grid_width + grid_space) * index;
+			var _boxx = _nx + (grid_width - grid_size) / 2;
+			
+			if(is_array(s_res))
+				draw_sprite_stretched(s_node_bg, 0, _boxx, yy, grid_size, grid_size);
+			else
+				draw_sprite_stretched_ext(s_node_bg, 0, _boxx, yy, grid_size, grid_size, merge_color(c_white, c_ui_orange_light, 0.5), 1);
+					
+			if(variable_struct_exists(_node, "spr") && sprite_exists(_node.spr))
+				draw_sprite(_node.spr, current_time * PREF_MAP[? "collection_preview_speed"] / 3000, _boxx + grid_size / 2, yy + grid_size / 2);
+				
+			draw_set_text(f_p1, fa_center, fa_top, c_white);
+			name_height = max(name_height, string_height_ext(_node.name, -1, grid_size) + 8);
+			draw_text_ext(_boxx + grid_size / 2, yy + grid_size + 4, _node.name, -1, grid_width);
+				
+			if(point_in_rectangle(_m[0], _m[1], _nx, yy, _nx + grid_width, yy + grid_size)) {
+				node_selecting = i;
+				if(mouse_check_button_pressed(mb_left))
+					buildNode(_node, _param);
+			}
+					
+			if(node_selecting == i) {
+				draw_sprite_stretched(s_node_active, 0, _boxx, yy, grid_size, grid_size);
+				if(keyboard_check_pressed(vk_enter))
+					buildNode(_node, _param);
+			}
+					
+			if(node_focusing == i) {
+				search_pane.scroll_y_to = -max(0, hh - search_pane.h);	
+			}
+					
+			if(++index >= col) {
+				index = 0;
+				var hght = grid_size + grid_space + name_height;
+				name_height = 0;
+				hh += hght;
+				yy += hght;
 			}
 		}
 		

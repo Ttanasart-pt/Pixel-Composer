@@ -275,9 +275,9 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 			if(ds_list_empty(childs)) {
 				if(point_in_rectangle(mouse_mx, mouse_my, x + 2, y + 2, x + w - 4, y + h - 4)) {
 					HOVER = self;
-					if(mouse_check_button_pressed(mb_left))   FOCUS = self;
-					if(mouse_check_button_pressed(mb_right))  FOCUS = self;
-					if(mouse_check_button_pressed(mb_middle)) FOCUS = self;
+					if(mouse_check_button_pressed(mb_left))   setFocus(self);
+					if(mouse_check_button_pressed(mb_right))  setFocus(self);
+					if(mouse_check_button_pressed(mb_middle)) setFocus(self);
 					if(FOCUS == self && content) 
 						FOCUS_STR = content.context_str;
 				}
@@ -400,6 +400,9 @@ function PanelContent(_panel) constructor {
 	
 	function onResize() {}
 	
+	function onFocusBegin() {}
+	function onFocusEnd() {}
+	
 	function onStepBegin() {
 		mx = mouse_mx - x;
 		my = mouse_my - y;
@@ -414,4 +417,14 @@ function PanelContent(_panel) constructor {
 	}
 	
 	function drawContent() {}
+}
+
+function setFocus(target) {
+	if(FOCUS != noone && is_struct(FOCUS) && FOCUS.content)
+		FOCUS.content.onFocusEnd();
+	
+	FOCUS = target;
+	
+	if(FOCUS != noone && is_struct(FOCUS) && FOCUS.content)	
+		FOCUS.content.onFocusBegin();
 }

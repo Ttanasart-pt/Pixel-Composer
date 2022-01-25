@@ -5,6 +5,8 @@ function Node_create_Line(_x, _y) {
 }
 
 function Node_Line(_x, _y) : Node(_x, _y) constructor {
+	display_reset(0, 1);
+	
 	name = "Line";
 	
 	inputs[| 0] = nodeValue(0, "Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, def_surf_size2, VALUE_TAG.dimension_2d )

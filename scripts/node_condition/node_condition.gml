@@ -38,6 +38,9 @@ function Node_Condition(_x, _y) : Node(_x, _y) constructor {
 		var _true = inputs[| 3].getValue();
 		var _fals = inputs[| 4].getValue();
 		
+		inputs[| 3].type = inputs[| 3].value_from == noone? VALUE_TYPE.any : inputs[| 3].value_from.type;
+		inputs[| 4].type = inputs[| 4].value_from == noone? VALUE_TYPE.any : inputs[| 4].value_from.type;
+		
 		var res = false;
 		
 		switch(_cond) {
@@ -49,6 +52,12 @@ function Node_Condition(_x, _y) : Node(_x, _y) constructor {
 			case 5 : res = _chck >= _valu; break;
 		}
 		
-		output[| 0].setValue(res? _true : _fals);
+		if(res) {
+			outputs[| 0].setValue(_true);
+			outputs[| 0].type = inputs[| 3].type;
+		} else {
+			outputs[| 0].setValue(_fals);
+			outputs[| 0].type = inputs[| 4].type;	
+		}
 	}
 }

@@ -30,6 +30,8 @@
 	PREF_MAP[? "node_show_time"] = true;
 	
 	PREF_MAP[? "shape_separation_max"] = 32;
+	
+	PREF_MAP[? "collection_preview_speed"] = 60;
 #endregion
 
 #region hotkeys	
