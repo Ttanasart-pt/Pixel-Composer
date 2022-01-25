@@ -64,7 +64,7 @@ function DirectoryObject(name, path) constructor {
 			if(FOCUS == PANEL_COLLECTION.panel && mouse_check_button_pressed(mb_left)) {
 				open = !open;
 				
-				if(PANEL_COLLECTION.context = self)
+				if(PANEL_COLLECTION.context == self)
 					PANEL_COLLECTION.setContext(COLLECTIONS);
 				else
 					PANEL_COLLECTION.setContext(self);
@@ -73,9 +73,9 @@ function DirectoryObject(name, path) constructor {
 					
 		draw_set_text(f_p0, fa_left, fa_center, c_white);
 		if(ds_list_empty(subDir)) {
-			draw_sprite_ext(s_folder_24, 0, _x + 16, _y + hg / 2 - 1, 1, 1, 0, c_ui_blue_dkgrey, 1);
+			draw_sprite_ext(s_folder_content_24, PANEL_COLLECTION.context == self, _x + 16, _y + hg / 2 - 1, 1, 1, 0, c_ui_blue_dkgrey, 1);
 		} else {
-			draw_sprite_ext(s_folder_content_24, open, _x + 16, _y + hg / 2 - 1, 1, 1, 0, c_ui_blue_grey, 1);
+			draw_sprite_ext(s_folder_content_24, open, _x + 16, _y + hg / 2 - 1, 1, 1, 0, c_ui_blue_ltgrey, 1);
 		}
 		draw_text(_x + 8 + 24, _y + hg / 2, name);
 		hh += hg;

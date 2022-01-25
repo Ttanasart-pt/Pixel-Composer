@@ -14,8 +14,9 @@ enum VALUE_TYPE {
 	curve     = 6,
 	text      = 7,
 	object    = 8,
+	node      = 9,
 	
-	any       = -1,
+	any       = 11,
 }
 
 enum VALUE_MODIFIER {
@@ -70,7 +71,7 @@ enum VALUE_TAG {
 }
 
 function value_color(i) {
-	static JUNCTION_COLORS = [ $6691ff, $78e4ff, $5d3f8c, $5dde8f, $976bff, $4b00eb, $d1c2c2, $e3ff66, $b5b5ff, $ffa64d ];
+	static JUNCTION_COLORS = [ $6691ff, $78e4ff, $5d3f8c, $5dde8f, $976bff, $4b00eb, $d1c2c2, $e3ff66, $b5b5ff, $ffa64d, $ffffff, $808080 ];
 	return JUNCTION_COLORS[safe_mod(max(0, i), array_length(JUNCTION_COLORS))];
 }
 
@@ -80,13 +81,12 @@ function value_bit(i) {
 		case VALUE_TYPE.float		: return 1 << 1 | 1 << 2;
 		case VALUE_TYPE.color		: return 1 << 3;
 		case VALUE_TYPE.surface		: return 1 << 4;
-									
 		case VALUE_TYPE.path		: return 1 << 10;
 		case VALUE_TYPE.text		: return 1 << 0 | 1 << 1 | 1 << 10 | 1 << 11;
-									
+		case VALUE_TYPE.node		: return 1 << 12;
 		case VALUE_TYPE.object		: return 1 << 20;
 		
-		case VALUE_TYPE.any			: return 1 << 0 | 1 << 1 | 1 << 2 | 1 << 3 | 1 << 4 | 1 << 10 | 1 << 11 | 1 << 20;
+		case VALUE_TYPE.any			: return ~0;
 	}
 	return 0;
 }

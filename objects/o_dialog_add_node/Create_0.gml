@@ -88,9 +88,6 @@ event_inherited();
 				}
 			}
 		}
-		
-		ds_list_destroy(_inputs);
-		ds_list_destroy(_outputs);
 	}
 	
 	catagory_pane = new scrollPane(132, dialog_h - 28, function(_y, _m) {

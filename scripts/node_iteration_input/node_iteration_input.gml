@@ -68,7 +68,7 @@ function Node_Iterator_Input(_x, _y, _group) : Node(_x, _y) constructor {
 		return [ _local_output.node.cache_value, inputs[| 2].getValue() ];
 	}
 	
-	outputs[| 1] = nodeValue(1, "Index", self, JUNCTION_CONNECT.output, VALUE_TYPE.integer, 0);
+	outputs[| 1] = nodeValue(1, "Index", self, JUNCTION_CONNECT.output, VALUE_TYPE.node, 0);
 	
 	static onValueUpdate = function(index) {
 		if(is_undefined(inParent)) return;

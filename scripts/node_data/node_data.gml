@@ -261,10 +261,10 @@ function Node(_x, _y) constructor {
 					_draw_cc = c_white;
 					hover = jun;
 					show_input_name = true;
-					draw_sprite_ext(jun.isArray()? s_node_junctions_array_hover : s_node_junctions_hover, jun.type, jx, jy, ss, ss, 0, c_white, 1);
+					draw_sprite_ext(jun.isArray()? s_node_junctions_array_hover : s_node_junctions_single_hover, jun.type, jx, jy, ss, ss, 0, c_white, 1);
 				} else {
 					_draw_cc = c_ui_blue_grey;
-					draw_sprite_ext(jun.isArray()? s_node_junctions_array : s_node_junctions, jun.type, jx, jy, ss, ss, 0, c_white, 1);
+					draw_sprite_ext(jun.isArray()? s_node_junctions_array : s_node_junctions_single, jun.type, jx, jy, ss, ss, 0, c_white, 1);
 				}
 				
 				if(_show_in) {
@@ -285,10 +285,10 @@ function Node(_x, _y) constructor {
 					_draw_cc = c_white;
 					hover = jun;
 					show_output_name = true;
-					draw_sprite_ext(jun.isArray()? s_node_junctions_array_hover : s_node_junctions_hover, jun.type, jx, jy, ss, ss, 0, c_white, 1);
+					draw_sprite_ext(jun.isArray()? s_node_junctions_array_hover : s_node_junctions_single_hover, jun.type, jx, jy, ss, ss, 0, c_white, 1);
 				} else {
 					_draw_cc = c_ui_blue_grey;
-					draw_sprite_ext(jun.isArray()? s_node_junctions_array : s_node_junctions, jun.type, jx, jy, ss, ss, 0, c_white, 1);
+					draw_sprite_ext(jun.isArray()? s_node_junctions_array : s_node_junctions_single, jun.type, jx, jy, ss, ss, 0, c_white, 1);
 				}
 				
 				if(_show_ot) {

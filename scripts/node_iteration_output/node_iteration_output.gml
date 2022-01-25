@@ -22,7 +22,7 @@ function Node_Iterator_Output(_x, _y, _group) : Node(_x, _y) constructor {
 	
 	inputs[| 1] = nodeValue(1, "Order", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0);
 	
-	inputs[| 2] = nodeValue(2, "Loop input", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, -1)
+	inputs[| 2] = nodeValue(2, "Loop input", self, JUNCTION_CONNECT.input, VALUE_TYPE.node, -1)
 		.setVisible(true, true);
 	
 	cache_value = -1;

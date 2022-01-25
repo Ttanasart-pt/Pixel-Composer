@@ -93,8 +93,8 @@
     "resourceType": "GMNineSliceData",
   },
   "parent": {
-    "name": "nodes",
-    "path": "folders/sprites/nodes.yy",
+    "name": "pin",
+    "path": "folders/sprites/nodes/pin.yy",
   },
   "resourceVersion": "1.0",
   "name": "s_node_pin_bg_active",

@@ -1,7 +1,7 @@
 {
-  "option_windows_display_name": "Pixel Composer 0.8.2",
-  "option_windows_executable_name": "${project_name} 0.8.2.exe",
-  "option_windows_version": "0.8.2.0",
+  "option_windows_display_name": "Pixel Composer 0.9.0",
+  "option_windows_executable_name": "${project_name} 0.9.0.exe",
+  "option_windows_version": "0.9.0.0",
   "option_windows_company_info": "MakhamDev",
   "option_windows_product_info": "Pixel Composer",
   "option_windows_copyright_info": "",

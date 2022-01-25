@@ -22,10 +22,18 @@ function Node_Pin(_x, _y) : Node(_x, _y) constructor {
 	
 	static update = function() {
 		inputs[| 0].type = inputs[| 0].value_from == noone? VALUE_TYPE.any : inputs[| 0].value_from.type;
-		
-		if(inputs[| 0].value_from != noone) { 
-			outputs[| 0].value_from = inputs[| 0].value_from;
-		}
+		outputs[| 0].type = inputs[| 0].type;
+		outputs[| 0].value_from = inputs[| 0].value_from;
 	}
 	doUpdate();
+	
+	static drawNodeBase = function(xx, yy, _s) {
+		if(w * _s > 32) {
+			draw_sprite_stretched_ext(s_node_pin_bg, 0, xx, yy, w * _s, h * _s, color, 0.75);
+			bg_sel_spr = s_node_pin_bg_active;
+		} else {
+			draw_sprite_stretched_ext(s_node_pin_bg_s, 0, xx, yy, w * _s, h * _s, color, 0.75);
+			bg_sel_spr = s_node_pin_bg_active_s;
+		}
+	}
 }
