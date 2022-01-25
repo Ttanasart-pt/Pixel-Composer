@@ -49,7 +49,9 @@ function Node_Iterator_Input(_x, _y, _group) : Node(_x, _y) constructor {
 	outputs[| 0].getValueDefault = method(outputs[| 0], outputs[| 0].getValueRecursive);
 	outputs[| 0].getValueRecursive = function() {
 		//show_debug_message("iteration " + string(group.iterated));
-		
+		if(!variable_struct_exists(group, "iterated"))
+			return outputs[| 0].getValueDefault();
+			
 		var _local_output = noone;
 		for( var i = 0; i < ds_list_size(outputs[| 1].value_to); i++ ) {
 			var vt = outputs[| 1].value_to[| i];
@@ -157,9 +159,14 @@ function Node_Iterator_Input(_x, _y, _group) : Node(_x, _y) constructor {
 		}
 	}
 	
-	static createInput = function() {
+	static createInput = function(override_order = true) {
 		if(group && is_struct(group)) {
-			input_index = inputs[| 5].getValue();
+			if(override_order = true) {
+				input_index = ds_list_size(group.inputs);
+				inputs[| 5].setValue(input_index);
+			} else {
+				input_index = inputs[| 5].getValue();
+			}
 			
 			inParent = nodeValue(ds_list_size(group.inputs), "Value", group, JUNCTION_CONNECT.input, VALUE_TYPE.any, -1)
 				.setVisible(true, true);
@@ -213,7 +220,7 @@ function Node_Iterator_Input(_x, _y, _group) : Node(_x, _y) constructor {
 	}
 	
 	static postDeserialize = function() {
-		createInput();
+		createInput(false);
 		onValueUpdate(0);
 	}
 	

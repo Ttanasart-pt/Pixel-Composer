@@ -53,7 +53,7 @@
 				PANEL_GRAPH     = new Panel_Graph(split_prev[1]);
 				
 				if(PREF_MAP[? "panel_collection"]) {
-					var pane = PANEL_ANIMATION.panel.split_h(460);
+					var pane = PANEL_ANIMATION.panel.split_h(500);
 					pane[1].set(PANEL_ANIMATION);
 					PANEL_COLLECTION = new Panel_Collection(pane[0]);
 				}

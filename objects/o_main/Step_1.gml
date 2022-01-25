@@ -48,11 +48,14 @@
 		NODES[| i].stepBegin();
 	}
 	
-	if(UPDATE) {
-		//renderUpdated();
+	if(UPDATE & RENDER_TYPE.full) {
 		renderAll();
-		UPDATE = false;
-	}
+		UPDATE = RENDER_TYPE.none;
+	} else if(UPDATE & RENDER_TYPE.partial) {
+		show_debug_message("Update partial stack size = " + string(ds_stack_size(RENDER_STACK)));
+		renderUpdated();
+		UPDATE = RENDER_TYPE.none;
+	} 
 #endregion
 
 #region clicks

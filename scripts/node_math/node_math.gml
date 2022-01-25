@@ -1,5 +1,44 @@
-function Node_create_Math(_x, _y) {
+enum MATH_OPERATOR {
+	add,
+	subtract,
+	multiply,
+	divide,
+	power,
+	root,
+		
+	sin,
+	cos,
+	tan,
+		
+	modulo,
+		
+	floor,
+	ceiling,
+	round,
+}
+
+function Node_create_Math(_x, _y, _param = "") {
 	var node = new Node_Math(_x, _y);
+	
+	switch(_param) {
+		case "add" :		node.inputs[| 0].setValue(MATH_OPERATOR.add); break;
+		case "subtract" :	node.inputs[| 0].setValue(MATH_OPERATOR.subtract); break;
+		case "multiply" :	node.inputs[| 0].setValue(MATH_OPERATOR.multiply); break;
+		case "divide" :		node.inputs[| 0].setValue(MATH_OPERATOR.divide); break;
+		case "power" :		node.inputs[| 0].setValue(MATH_OPERATOR.power); break;
+		case "root" :		node.inputs[| 0].setValue(MATH_OPERATOR.root); break;
+		
+		case "sin" :		node.inputs[| 0].setValue(MATH_OPERATOR.sin); break;
+		case "cos" :		node.inputs[| 0].setValue(MATH_OPERATOR.cos); break;
+		case "tan" :		node.inputs[| 0].setValue(MATH_OPERATOR.tan); break;
+		
+		case "modulo" :		node.inputs[| 0].setValue(MATH_OPERATOR.modulo); break;
+		
+		case "floor" :		node.inputs[| 0].setValue(MATH_OPERATOR.floor); break;
+		case "ceiling" :	node.inputs[| 0].setValue(MATH_OPERATOR.ceiling); break;
+		case "round" :		node.inputs[| 0].setValue(MATH_OPERATOR.round); break;
+	}
+	
 	ds_list_add(PANEL_GRAPH.nodes_list, node);
 	return node;
 }
@@ -13,7 +52,9 @@ function Node_Math(_x, _y) : Node_Value_Processor(_x, _y) constructor {
 	min_h = 0;
 	
 	inputs[| 0] = nodeValue(0, "Type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Add", "Subtract", "Multiply", "Divide", "Power", "Root", "Sin", "Cos", "Tan" ]);
+		.setDisplay(VALUE_DISPLAY.enum_scroll, [ 
+			/* 0 -  9*/ "Add", "Subtract", "Multiply", "Divide", "Power", "Root", "Sin", "Cos", "Tan", "Modulo", 
+			/*10 - 12*/ "Floor", "Ceil", "Round" ]);
 	
 	inputs[| 1] = nodeValue(1, "a", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
 		.setVisible(true, true);
@@ -24,32 +65,41 @@ function Node_Math(_x, _y) : Node_Value_Processor(_x, _y) constructor {
 	
 	function process_value_data(_data, index = 0) { 
 		switch(_data[0]) {
-			case 0 :
-			case 1 :
-			case 2 :
-			case 3 :
-			case 4 :
-			case 5 :	
+			case MATH_OPERATOR.add :
+			case MATH_OPERATOR.subtract :
+			case MATH_OPERATOR.multiply :
+			case MATH_OPERATOR.divide :
+			case MATH_OPERATOR.power :
+			case MATH_OPERATOR.root :	
+			case MATH_OPERATOR.modulo :	
 				inputs[| 2].setVisible(true);
 				break;
-			case 6 :
-			case 7 :
-			case 8 :
+			case MATH_OPERATOR.sin :
+			case MATH_OPERATOR.cos :
+			case MATH_OPERATOR.tan :
+			case MATH_OPERATOR.floor :
+			case MATH_OPERATOR.ceiling :
+			case MATH_OPERATOR.round :
 				inputs[| 2].setVisible(false);
 				break;
 		}
 		
 		switch(_data[0]) {
-			case 0 : return _data[1] + _data[2]; break;
-			case 1 : return _data[1] - _data[2]; break;
-			case 2 : return _data[1] * _data[2]; break;
-			case 3 : return _data[1] / _data[2]; break;
-			case 4 : return power(_data[1], _data[2]); break;
-			case 5 : return power(_data[1], 1 / _data[2]); break;
+			case MATH_OPERATOR.add :		return _data[1] + _data[2]; break;
+			case MATH_OPERATOR.subtract :	return _data[1] - _data[2]; break;
+			case MATH_OPERATOR.multiply :	return _data[1] * _data[2]; break;
+			case MATH_OPERATOR.divide :		return _data[1] / _data[2]; break;
+			case MATH_OPERATOR.power :		return power(_data[1], _data[2]); break;
+			case MATH_OPERATOR.root :		return power(_data[1], 1 / _data[2]); break;
 			
-			case 6 : return sin(_data[1]); break;
-			case 7 : return cos(_data[1]); break;
-			case 8 : return tan(_data[1]); break;
+			case MATH_OPERATOR.sin :		return sin(_data[1]); break;
+			case MATH_OPERATOR.cos :		return cos(_data[1]); break;
+			case MATH_OPERATOR.tan :		return tan(_data[1]); break;
+			case MATH_OPERATOR.modulo :		return safe_mod(_data[1], _data[2]); break;
+			
+			case MATH_OPERATOR.floor :		return floor(_data[1]); break;
+			case MATH_OPERATOR.ceiling :	return ceil(_data[1]); break;
+			case MATH_OPERATOR.round :		return round(_data[1]); break;
 		}
 		
 		return _data[1]; 
@@ -58,23 +108,31 @@ function Node_Math(_x, _y) : Node_Value_Processor(_x, _y) constructor {
 	doUpdate();
 	
 	function onDrawNode(xx, yy, _mx, _my, _s) {
-		draw_set_text(f_h5, fa_center, fa_center, c_white);
+		draw_set_text(f_h3, fa_center, fa_center, c_white);
 		var str;
 		switch(inputs[| 0].getValue()) {
-			case 0 : str = "+"; break;
-			case 1 : str = "-"; break;
-			case 2 : str = "*"; break;
-			case 3 : str = "/"; break;
-			case 4 : str = "pow";; break;
-			case 5 : str = "root"; break;
+			case MATH_OPERATOR.add :		str = "+"; break;
+			case MATH_OPERATOR.subtract :	str = "-"; break;
+			case MATH_OPERATOR.multiply :	str = "*"; break;
+			case MATH_OPERATOR.divide :		str = "/"; break;
+			case MATH_OPERATOR.power :		str = "pow";; break;
+			case MATH_OPERATOR.root :		str = "root"; break;
 			
-			case 6 : str = "sin"; break;
-			case 7 : str = "cos"; break;
-			case 8 : str = "tan"; break;
+			case MATH_OPERATOR.sin :		str = "sin"; break;
+			case MATH_OPERATOR.cos :		str = "cos"; break;
+			case MATH_OPERATOR.tan :		str = "tan"; break;
+			case MATH_OPERATOR.modulo :		str = "mod"; break;
+			
+			case MATH_OPERATOR.floor :		str = "floor"; break;
+			case MATH_OPERATOR.ceiling :	str = "ceil"; break;
+			case MATH_OPERATOR.round :		str = "round"; break;
 		}
 		
-		var _ss = min((w - 8) * _s / string_width(str), (h - 8) * _s / string_height(str));
+		var _ss = min((w - 16) * _s / string_width(str), (h - 18) * _s / string_height(str));
 		
-		draw_text_transformed(xx + w / 2 * _s, yy + 10 + h / 2 * _s, str, _ss, _ss, 0);
+		if(_s * w > 48)
+			draw_text_transformed(xx + w / 2 * _s, yy + 10 + h / 2 * _s, str, _ss, _ss, 0);
+		else 
+			draw_text_transformed(xx + w / 2 * _s, yy + h / 2 * _s, str, _ss, _ss, 0);
 	}
 }

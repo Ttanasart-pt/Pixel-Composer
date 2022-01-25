@@ -1,14 +1,16 @@
-function FileContext(_name, _path) constructor {
+function FileContext(_name, _path, _subfolder = false) constructor {
 	name = _name;
 	path = _path;
 	spr  = -1;
+	
+	subfolder = _subfolder;
 }
 
 function __init_collection() {
 	log_message("COLLECTION", "init");
 	
 	globalvar COLLECTIONS;
-	COLLECTIONS = ds_list_create();
+	COLLECTIONS = -1;
 	
 	var _ = DIRECTORY + "Collections";
 	var _l = _ + "\\coll" + string(VERSION);
@@ -26,21 +28,12 @@ function __init_collection() {
 
 function searchCollections() {
 	log_message("COLLECTION", "refreshing collection base folder.");
-	ds_list_clear(COLLECTIONS);
-	var f = new FileContext("Base node", "");
-	ds_list_add(COLLECTIONS, f);
 	
 	if(!directory_exists(DIRECTORY + "Collections")) {
 		directory_create(DIRECTORY + "Collections");
 		return;
 	}
 	
-	var _l = DIRECTORY + "Collections";
-	var folder = file_find_first(_l + "/*", fa_directory);
-	while(folder != "") {
-		if(directory_exists(_l + "\\" + folder))
-			ds_list_add(COLLECTIONS, new FileContext(folder, _l + "\\" + folder));
-		folder = file_find_next();
-	}
-	file_find_close();
+	COLLECTIONS = new DirectoryObject("Collections", DIRECTORY + "Collections");
+	COLLECTIONS.open = true;
 }

@@ -21,10 +21,9 @@ function Node_Frame(_x, _y) : Node(_x, _y) constructor {
 	name_hover = false;
 	
 	inputs[| 0] = nodeValue(0, "Size", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 240, 160 ] )
-		.setDisplay(VALUE_DISPLAY.vector)
-		
+		.setDisplay(VALUE_DISPLAY.vector);
 	
-	inputs[| 1] = nodeValue(1, "Color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white )
+	inputs[| 1] = nodeValue(1, "Color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white );
 		
 	
 	static step = function() {

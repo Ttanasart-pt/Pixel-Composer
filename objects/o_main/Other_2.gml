@@ -2,6 +2,7 @@
 #region directory
 	globalvar DIRECTORY;
 	DIRECTORY = "C:\\Users\\" + environment_get_variable("USERNAME") + "\\AppData\\Local\\Pixels_Composer\\";
+	log_clear();
 	log_newline();
 	log_message("SESSION", "Begin");
 	log_message("DIRECTORY", DIRECTORY);

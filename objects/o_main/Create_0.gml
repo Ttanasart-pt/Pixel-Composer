@@ -2,9 +2,7 @@
 #region log
 	var path = "log_temp.txt";
 	var f = file_text_open_append(path);
-	var t = string(current_year) + "/" + string(current_month) + "/" + string(current_day)
-		+ " " + string(current_hour) + ":" + string(current_minute) + ":" + string(current_second)
-		+ " > ";
+	var t = _log_template();
 	file_text_write_string(f, "[MESSAGE] " + t + "session begin" + "\n");
 	
 	if (!code_is_compiled()) {
@@ -26,10 +24,12 @@ display_reset(0, 1);
 	
 	draw_set_circle_precision(64);
 	globalvar CURSOR, UPDATE, TOOLTIP, DIALOG_DEPTH_HOVER;
+	globalvar RENDER_STACK;
 	DIALOG_DEPTH_HOVER = 0;
-	UPDATE  = false;
+	UPDATE  = RENDER_TYPE.none;
 	CURSOR  = cr_default;
 	TOOLTIP = "";
+	RENDER_STACK = ds_stack_create();
 	
 	_cursor	= CURSOR;
 	dc_check = 0;
@@ -45,9 +45,7 @@ display_reset(0, 1);
 	addHotkey("", "Redo", "Z",		MOD_KEY.ctrl | MOD_KEY.shift, function() { REDO(); });
 	
 	addHotkey("", "Render all", vk_f5,	MOD_KEY.none, function() { 
-		for(var i = 0; i < ds_list_size(NODES); i++) 
-			NODES[| i].setRenderStatus(false);
-		UPDATE = true; 
+		UPDATE |= RENDER_TYPE.full; 
 	});
 	
 	globalvar HOTKEY_MOD;

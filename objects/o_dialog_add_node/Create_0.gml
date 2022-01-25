@@ -7,6 +7,7 @@ event_inherited();
 	node_target_x = 0;
 	node_target_y = 0;
 	node_called   = noone;
+	junction_hovering = noone;
 	
 	dialog_w = ADD_NODE_W;
 	dialog_h = ADD_NODE_H;
@@ -21,24 +22,45 @@ event_inherited();
 	page_key   = ADD_NODE_PAGE == ""? NODE_CATAGORY[| 2] : ADD_NODE_PAGE;
 	page       = ALL_NODES[? page_key];
 	
-	function buildNode(_node) {
+	function buildNode(_node, _param = "") {
 		instance_destroy();
 		
 		if(!_node) return;
 		
-		var _new_node = _node.build(node_target_x, node_target_y);
+		var _new_node = _node.build(node_target_x, node_target_y, _param);
 		
-		if(_new_node && node_called) {
-			var _node_list = node_called.connect_type == JUNCTION_CONNECT.input? _new_node.outputs : _new_node.inputs;
-			for(var i = 0; i < ds_list_size(_node_list); i++) {
-				var _target = _node_list[| i]; 
-				if(_target.isVisible() && (value_bit(_target.type) & value_bit(node_called.type))) {
-					if(node_called.connect_type == JUNCTION_CONNECT.input) {
-						node_called.setFrom(_node_list[| i]);
-						_new_node.x -= _new_node.w;
-					} else
-						_node_list[| i].setFrom(node_called);
-					break;
+		if(_new_node) {
+			if(node_called != noone) {
+				var _node_list = node_called.connect_type == JUNCTION_CONNECT.input? _new_node.outputs : _new_node.inputs;
+				for(var i = 0; i < ds_list_size(_node_list); i++) {
+					var _target = _node_list[| i]; 
+					if(_target.isVisible() && (value_bit(_target.type) & value_bit(node_called.type))) {
+						if(node_called.connect_type == JUNCTION_CONNECT.input) {
+							node_called.setFrom(_node_list[| i]);
+							_new_node.x -= _new_node.w;
+						} else
+							_node_list[| i].setFrom(node_called);
+						break;
+					}
+				}
+			} else if(junction_hovering != noone) {
+				var to = junction_hovering;
+				var from = junction_hovering.value_from;
+				
+				for( var i = 0; i < ds_list_size(_new_node.inputs); i++ ) {
+					var _in = _new_node.inputs[| i];
+					if(value_bit(_in.type) & value_bit(from.type)) {
+						_in.setFrom(from);
+						break;
+					}
+				}
+				
+				for( var i = 0; i < ds_list_size(_new_node.outputs); i++ ) {
+					var _ot = _new_node.outputs[| i];
+					if(value_bit(_ot.type) & value_bit(to.type)) {
+						to.setFrom(_ot);
+						break;
+					}
 				}
 			}
 		}
@@ -206,9 +228,12 @@ event_inherited();
 
 				if(!_node) continue;
 				var match = string_pos(search_lower, string_lower(_node.name)) > 0;
+				var param = "";
 				for( var k = 0; k < array_length(_node.tags); k++ ) {
-					if(string_pos(search_lower, _node.tags[k]) > 0)
+					if(string_pos(search_lower, _node.tags[k]) > 0) {
 						match = true;
+						param = _node.tags[k];
+					}
 				}
 				
 				if(match) {
@@ -227,13 +252,13 @@ event_inherited();
 					if(point_in_rectangle(_m[0], _m[1], _nx, yy, _nx + grid_width, yy + grid_size)) {
 						node_selecting = amo;
 						if(mouse_check_button_pressed(mb_left))
-							buildNode(_node);
+							buildNode(_node, param);
 					}
 					
 					if(node_selecting == amo) {
 						draw_sprite_stretched(s_node_active, 0, _boxx, yy, grid_size, grid_size);
 						if(keyboard_check_pressed(vk_enter))
-							buildNode(_node);
+							buildNode(_node, param);
 					}
 					
 					if(node_focusing == amo) {

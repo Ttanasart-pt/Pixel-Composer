@@ -47,6 +47,8 @@ function Panel_Graph(_panel) : PanelContent(_panel) constructor {
 	node_focus			= noone;
 	node_previewing		= noone;
 	
+	junction_hovering = noone;
+	
 	value_focus = noone;
 	value_dragging = noone;
 	
@@ -343,9 +345,12 @@ function Panel_Graph(_panel) : PanelContent(_panel) constructor {
 			_node.drawActive(gr_x, gr_y, graph_s);
 		}
 		
+		var hov = noone;
 		for(var i = 0; i < ds_list_size(nodes_list); i++) {
-			nodes_list[| i].drawConnections(gr_x, gr_y, mx, my, graph_s);
+			var _hov = nodes_list[| i].drawConnections(gr_x, gr_y, mx, my, graph_s);
+			if(_hov != noone) hov = _hov;
 		}
+		junction_hovering = hov;
 		
 		value_focus = noone;
 		
@@ -813,6 +818,7 @@ function Panel_Graph(_panel) : PanelContent(_panel) constructor {
 		with(dialogCall(o_dialog_add_node, mouse_mx + 8, mouse_my + 8)) {	
 			node_target_x = other.mouse_grid_x;
 			node_target_y = other.mouse_grid_y;
+			junction_hovering = other.junction_hovering;
 			
 			alarm[0] = 1;
 		}		

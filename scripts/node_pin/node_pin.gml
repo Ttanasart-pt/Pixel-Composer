@@ -6,7 +6,7 @@ function Node_create_Pin(_x, _y) {
 
 function Node_Pin(_x, _y) : Node(_x, _y) constructor {
 	name = "";
-	w = 64;
+	w = 32;
 	h = 32;
 	min_h = 0;
 	auto_height = false;

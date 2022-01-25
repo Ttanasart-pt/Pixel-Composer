@@ -54,3 +54,27 @@ function draw_line_curve_color(x0, y0, x1, y1, thick = 1, col1, col2) {
 		oc = nc;
 	}
 }
+
+function distance_to_curve(mx, my, x0, y0, x1, y1) {
+	var xc = (x0 + x1) / 2;
+	var sample = max(8, ceil((abs(x0 - x1) + abs(y0 - y1)) / 4));
+	
+	var dist = 999999;
+	var ox, oy, nx, ny, t, it;
+	
+	for( var i = 0; i <= sample; i++ )  {
+		t = i / sample;
+		it = 1 - t;
+		
+		nx = x0 * t * t * t + 3 * xc * it * t * t + 3 * xc * it * it * t + x1 * it * it * it;
+		ny = y0 * t * t * t + 3 * y0 * it * t * t + 3 * y1 * it * it * t + y1 * it * it * it;
+		
+		if(i)
+			dist = min(dist, distance_to_line(mx, my, ox, oy, nx, ny));
+		
+		ox = nx;
+		oy = ny;
+	}
+	
+	return dist;
+}

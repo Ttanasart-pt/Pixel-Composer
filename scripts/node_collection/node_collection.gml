@@ -33,6 +33,23 @@ function Node_Collection(_x,  _y) : Node(_x,  _y) constructor {
 		for(var i = 0; i < ds_list_size(nodes); i++) {
 			nodes[| i].stepBegin();
 		}
+		
+		var out_surf = false;
+		
+		for( var i = 0; i < ds_list_size(outputs); i++ ) {
+			if(outputs[| i].type == VALUE_TYPE.surface) 
+				out_surf = true;
+		}
+		
+		if(out_surf) {
+			w = 128;
+			min_h = 128;
+		} else {
+			w = 96;
+			min_h = 0;
+		}
+		
+		setHeight();
 	}
 	
 	static step = function() {
@@ -82,6 +99,7 @@ function Node_Collection(_x,  _y) : Node(_x,  _y) constructor {
 		for( var i = custom_input_index; i < siz; i++ ) {
 			var _jin = ds_priority_delete_min(ar);
 			_jin.index = i;
+			_jin.from.inputs[| 5].setValue(i);
 			ds_list_add(inputs, _jin);
 		}
 		
@@ -104,6 +122,7 @@ function Node_Collection(_x,  _y) : Node(_x,  _y) constructor {
 		for( var i = custom_output_index; i < siz; i++ ) {
 			var _jout = ds_priority_delete_min(ar);
 			_jout.index = i;
+			_jout.from.inputs[| 1].setValue(i);
 			ds_list_add(outputs, _jout);
 		}
 		
@@ -113,6 +132,14 @@ function Node_Collection(_x,  _y) : Node(_x,  _y) constructor {
 	static onDestroy = function() {
 		for( var i = 0; i < ds_list_size(nodes); i++ ) {
 			nodes[| i].destroy();
+		}
+	}
+	
+	static resetRenderStatus = function() {
+		for( var i = 0; i < ds_list_size(nodes); i++ ) {
+			nodes[| i].setRenderStatus(false);
+			if(variable_struct_exists(nodes[| i], "nodes"))
+				nodes[| i].resetRenderStatus();
 		}
 	}
 }

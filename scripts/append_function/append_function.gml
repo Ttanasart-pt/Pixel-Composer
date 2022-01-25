@@ -90,6 +90,7 @@ function APPEND(_path) {
 	
 	log_message("FILE", "append file " + _path);
 	PANEL_MENU.showNoti("Collection loaded", s_noti_icon_file_load);
+	
 	return node_create;
 }
 

@@ -79,6 +79,7 @@ function Node(_x, _y) constructor {
 			if(array_length(cached_output) != ANIMATOR.frames_total + 1)
 				array_resize(cached_output, ANIMATOR.frames_total + 1);
 		}
+		var stack_push = false;
 		
 		if(always_output) {
 			for(var i = 0; i < ds_list_size(outputs); i++) {
@@ -89,14 +90,12 @@ function Node(_x, _y) constructor {
 						for(var j = 0; j < array_length(val); j++) {
 							var _surf = val[j];
 							if(!is_surface(_surf) || _surf == DEF_SURFACE) {
-								setRenderStatus(false);
-								UPDATE = true;	
+								stack_push = true;
 							}
 						}
 					} else {
 						if(!is_surface(val) || val == DEF_SURFACE) {
-							setRenderStatus(false);
-							UPDATE = true;	
+							stack_push = true;
 						}
 					}
 				}
@@ -108,10 +107,15 @@ function Node(_x, _y) constructor {
 				doUpdate();
 			for(var i = 0; i < ds_list_size(inputs); i++) {
 				if(inputs[| i].isAnim()) {
-					setRenderStatus(false);
-					UPDATE = true;
+					stack_push = true;
 				}
 			}
+		}
+		
+		if(stack_push) {
+			setRenderStatus(false);
+			UPDATE |= RENDER_TYPE.full;	
+			//ds_stack_push(RENDER_STACK, self);
 		}
 		
 		if(auto_height)
@@ -149,8 +153,8 @@ function Node(_x, _y) constructor {
 	
 	static updateForward = function() {
 		rendered = false;
-		UPDATE = true;
-		//if(auto_update) doUpdate();
+		UPDATE |= RENDER_TYPE.full;
+		//ds_stack_push(RENDER_STACK, self);
 		
 		for(var i = 0; i < ds_list_size(outputs); i++) {
 			var jun = outputs[| i];
@@ -299,6 +303,7 @@ function Node(_x, _y) constructor {
 	
 	static drawConnections = function(_x, _y, mx, my, _s) {
 		var xx = x * _s + _x;
+		var hovering = noone;
 		for(var i = 0; i < ds_list_size(inputs); i++) {
 			var jun = inputs[| i];
 			var jx = xx;
@@ -310,13 +315,29 @@ function Node(_x, _y) constructor {
 					
 				var c0 = value_color(jun.value_from.type);
 				var c1 = value_color(jun.type);
+				var hover = false;
+				var th = max(1, 2 * _s);
 				
-				if(PREF_MAP[? "curve_connection_line"])
-					draw_line_curve_color(jx, jy, frx, fry, max(1, 2 * _s), c0, c1);
-				else
-					draw_line_width_color(jx, jy, frx, fry, max(1, 2 * _s), c0, c1);
+				if(PREF_MAP[? "curve_connection_line"]) {
+					hover = distance_to_curve(mx, my, jx, jy, frx, fry) < 6;
+				} else {
+					hover = distance_to_line(mx, my, jx, jy, frx, fry) < 6;
+				}
+				
+				if(hover)
+					hovering = jun;
+				if(PANEL_GRAPH.junction_hovering == jun)
+					th *= 2;
+				
+				if(PREF_MAP[? "curve_connection_line"]) {
+					draw_line_curve_color(jx, jy, frx, fry, th, c0, c1);
+				} else {
+					draw_line_width_color(jx, jy, frx, fry, th, c0, c1);
+				}
 			}
 		}
+		
+		return hovering;
 	}
 	
 	static drawPreview = function(_node, xx, yy, _s) {

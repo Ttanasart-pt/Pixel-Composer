@@ -5,7 +5,7 @@ function Node_create_Iterate(_x, _y) {
 }
 
 function Node_Iterate(_x, _y) : Node_Collection(_x, _y) constructor {
-	name = "Iterate";
+	name = "Loop";
 	color = c_ui_lime;
 	icon  = s_group_16;
 	
@@ -27,17 +27,13 @@ function Node_Iterate(_x, _y) : Node_Collection(_x, _y) constructor {
 			iter &= _out.rendered;
 		}
 		
-		//show_debug_message("get output from iteration " + string(iterated));
-		
 		if(iter) {
 			if(++iterated == inputs[| 0].getValue())
 				return 2;
 			else if(iterated > inputs[| 0].getValue())
 				return 3;
 			
-			for( var i = 0; i < ds_list_size(nodes); i++ ) {
-				nodes[| i].setRenderStatus(false);
-			}
+			resetRenderStatus();
 			return 1;
 		}
 		
