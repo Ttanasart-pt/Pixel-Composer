@@ -1,6 +1,16 @@
-function Node_create_Blend(_x, _y) {
+function Node_create_Blend(_x, _y, _param = "") {
 	var node = new Node_Blend(_x, _y);
 	ds_list_add(PANEL_GRAPH.nodes_list, node);
+	
+	switch(_param) {
+	    case "normal" :			node.inputs[| 2].setValue(BLEND_MODE.normal)			break;
+	    case "add"	:			node.inputs[| 2].setValue(BLEND_MODE.add);				break;
+	    case "subtract" :		node.inputs[| 2].setValue(BLEND_MODE.subtract);			break;
+	    case "multiply" :		node.inputs[| 2].setValue(BLEND_MODE.multiply);			break;
+	    case "screen" :			node.inputs[| 2].setValue(BLEND_MODE.screen);			break;
+	    case "maxx" :			node.inputs[| 2].setValue(BLEND_MODE.maxx);				break;
+	    case "minn" :			node.inputs[| 2].setValue(BLEND_MODE.minn);				break;
+	}
 	return node;
 }
 

@@ -12,6 +12,7 @@ function Node_Pin(_x, _y) : Node(_x, _y) constructor {
 	auto_height = false;
 	junction_shift_y = 16;
 	previewable = false;
+	
 	bg_spr = s_node_pin_bg;
 	bg_sel_spr = s_node_pin_bg_active;
 	
@@ -27,13 +28,42 @@ function Node_Pin(_x, _y) : Node(_x, _y) constructor {
 	}
 	doUpdate();
 	
-	static drawNodeBase = function(xx, yy, _s) {
-		if(w * _s > 32) {
-			draw_sprite_stretched_ext(s_node_pin_bg, 0, xx, yy, w * _s, h * _s, color, 0.75);
-			bg_sel_spr = s_node_pin_bg_active;
-		} else {
-			draw_sprite_stretched_ext(s_node_pin_bg_s, 0, xx, yy, w * _s, h * _s, color, 0.75);
-			bg_sel_spr = s_node_pin_bg_active_s;
+	static pointIn = function(_mx, _my) {
+		return point_in_circle(_mx, _my, x, y, 24);
+	}
+	
+	static preDraw = function(_x, _y, _s) {
+		var xx = x * _s + _x;
+		var yy = y * _s + _y;
+		
+		inputs[| 0].x = xx;
+		inputs[| 0].y = yy;
+		
+		outputs[| 0].x = xx;
+		outputs[| 0].y = yy;
+	}
+	
+	static drawJunctions = function(_x, _y, _mx, _my, _s) {
+		var hover = noone;
+		
+		var jun = inputs[| 0].value_from == noone? inputs[| 0] : outputs[| 0];
+		if(jun.drawJunction(_s, _mx, _my, false))
+			hover = jun;
+		
+		return hover;
+	}
+	
+	static drawNode = function(_x, _y, _mx, _my, _s) {
+		if(group != PANEL_GRAPH.getCurrentContext()) return;
+		
+		var xx = x * _s + _x;
+		var yy = y * _s + _y;
+		
+		if(active_draw_index > -1) {
+			draw_sprite_ext(bg_sel_spr, 0, xx, yy, _s, _s, 0, c_white, 1);
+			active_draw_index = -1;
 		}
+		
+		return drawJunctions(_x, _y, _mx, _my, _s);
 	}
 }

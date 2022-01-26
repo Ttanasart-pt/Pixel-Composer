@@ -182,9 +182,11 @@ function Node(_x, _y) constructor {
 	}
 	
 	static preDraw = function(_x, _y, _s) {
-		var yy    = y * _s + _y;
+		var xx = x * _s + _x;
+		var yy = y * _s + _y;
 		
 		var _in = yy + junction_shift_y * _s;
+		
 		var amo = input_display_list == -1? ds_list_size(inputs) : max(ds_list_size(inputs), array_length(input_display_list));
 		
 		for(var i = 0; i < amo; i++) {
@@ -196,14 +198,17 @@ function Node(_x, _y) constructor {
 				jun = inputs[| input_display_list[i]];
 			}
 			
+			jun.x = xx;
 			jun.y = _in;
 			_in += 24 * _s * jun.isVisible();
 		}
 		
-		var _in = yy + junction_shift_y * _s;
+		xx = xx + w * _s;
+		_in = yy + junction_shift_y * _s;
 		for(var i = 0; i < ds_list_size(outputs); i++) {
 			var jun = outputs[| i];
 			
+			jun.x = xx;
 			jun.y = _in;
 			_in += 24 * _s * jun.isVisible();
 		}
@@ -231,20 +236,16 @@ function Node(_x, _y) constructor {
 	}
 	
 	static drawJunctions = function(_x, _y, _mx, _my, _s) {
-		var ss    = max(0.25, _s / 2);
-		var xx    = x * _s + _x;
 		var hover = noone;
 		
 		var amo = input_display_list == -1? ds_list_size(inputs) : max(ds_list_size(inputs), array_length(input_display_list));
 		
 		var _show_in = show_input_name;
 		var _show_ot = show_output_name;
-		var _draw_cc = c_white;
-		
+
 		show_input_name = false;
 		show_output_name = false;
 		
-		var jx  = xx;
 		for(var i = 0; i < amo; i++) {
 			if(input_display_list == -1)
 				jun = inputs[| i];
@@ -254,47 +255,18 @@ function Node(_x, _y) constructor {
 				jun = inputs[| input_display_list[i]];
 			}
 			
-			var jy  = jun.y;
-			
-			if(jun.isVisible()) {
-				if(point_in_rectangle(_mx, _my, jx - 12 * _s, jy - 12 * _s, jx + 12 * _s, jy + 12 * _s) || DEBUG) {
-					_draw_cc = c_white;
-					hover = jun;
-					show_input_name = true;
-					draw_sprite_ext(jun.isArray()? s_node_junctions_array_hover : s_node_junctions_single_hover, jun.type, jx, jy, ss, ss, 0, c_white, 1);
-				} else {
-					_draw_cc = c_ui_blue_grey;
-					draw_sprite_ext(jun.isArray()? s_node_junctions_array : s_node_junctions_single, jun.type, jx, jy, ss, ss, 0, c_white, 1);
-				}
-				
-				if(_show_in) {
-					draw_set_text(f_p1, fa_right, fa_center, _draw_cc);
-					draw_text(jx - 12 * _s, jy, jun.name);
-				}
+			if(jun.drawJunction(_s, _mx, _my, _show_in)) {
+				show_input_name = true;
+				hover = jun;
 			}
 		}
 		
-		var jx = xx + w * _s;
 		for(var i = 0; i < ds_list_size(outputs); i++) {
 			var jun = outputs[| i];
 			
-			if(jun.isVisible()) {
-				var jy  = jun.y;
-				
-				if(point_in_rectangle(_mx, _my, jx - 12 * _s, jy - 12 * _s, jx + 12 * _s, jy + 12 * _s) || DEBUG) {
-					_draw_cc = c_white;
-					hover = jun;
-					show_output_name = true;
-					draw_sprite_ext(jun.isArray()? s_node_junctions_array_hover : s_node_junctions_single_hover, jun.type, jx, jy, ss, ss, 0, c_white, 1);
-				} else {
-					_draw_cc = c_ui_blue_grey;
-					draw_sprite_ext(jun.isArray()? s_node_junctions_array : s_node_junctions_single, jun.type, jx, jy, ss, ss, 0, c_white, 1);
-				}
-				
-				if(_show_ot) {
-					draw_set_text(f_p1, fa_left, fa_center, _draw_cc);
-					draw_text(jx + 12 * _s, jy, jun.name);
-				}
+			if(jun.drawJunction(_s, _mx, _my, _show_ot)) {
+				show_output_name = true;
+				hover = jun;
 			}
 		}
 		
@@ -302,15 +274,14 @@ function Node(_x, _y) constructor {
 	}
 	
 	static drawConnections = function(_x, _y, mx, my, _s) {
-		var xx = x * _s + _x;
 		var hovering = noone;
 		for(var i = 0; i < ds_list_size(inputs); i++) {
 			var jun = inputs[| i];
-			var jx = xx;
+			var jx = jun.x;
 			var jy = jun.y;	
 			
 			if(jun.value_from && jun.isVisible()) {
-				var frx = _x + jun.value_from.node.x * _s + jun.value_from.node.w * _s;
+				var frx = jun.value_from.x;
 				var fry = jun.value_from.y;
 					
 				var c0 = value_color(jun.value_from.type);
@@ -341,6 +312,7 @@ function Node(_x, _y) constructor {
 	}
 	
 	static drawPreview = function(_node, xx, yy, _s) {
+		if(_node.type != VALUE_TYPE.surface) return;
 		var surf = _node.getValue();
 		if(is_array(surf)) {
 			if(array_length(surf) == 0) return;
@@ -380,11 +352,11 @@ function Node(_x, _y) constructor {
 						unit = "us";
 						draw_set_color(c_ui_lime);
 					} else if(render_time < 1000000) {
-						rt = round(render_time / 1000);
+						rt = string_format(render_time / 1000, -1, 2);
 						unit = "ms";
 						draw_set_color(c_ui_orange);
 					} else {
-						rt = round(render_time / 1000000);
+						rt = string_format(render_time / 1000000, -1, 2);
 						unit = "s";
 						draw_set_color(c_ui_red);
 					}
@@ -437,7 +409,7 @@ function Node(_x, _y) constructor {
 	
 	static drawOverlay = function(_active, _x, _y, _s, _mx, _my) {}
 	
-	static destroy = function() {
+	static destroy = function(_merge = false) {
 		active = false;
 		if(PANEL_GRAPH.node_hover      == self) PANEL_GRAPH.node_hover = noone;
 		if(PANEL_GRAPH.node_focus      == self) PANEL_GRAPH.node_focus = noone;
@@ -447,9 +419,23 @@ function Node(_x, _y) constructor {
 		
 		for(var i = 0; i < ds_list_size(outputs); i++) {
 			var jun = outputs[| i];
+			
 			for(var j = 0; j < ds_list_size(jun.value_to); j++) {
-				jun.value_to[| j].checkConnection();
+				var _vt = jun.value_to[| j];
+				if(_vt.value_from == noone) return;
+				if(_vt.value_from.node != self) return;
+				
+				_vt.removeFrom(false);
+				
+				if(_merge) {
+					for( var k = 0; k < ds_list_size(inputs); k++ ) {
+						if(inputs[| k].value_from == noone) continue;
+						if(_vt.setFrom(inputs[| k].value_from)) break;
+					}
+				}
 			}
+			
+			ds_list_clear(jun.value_to);
 		}
 		
 		onDestroy();

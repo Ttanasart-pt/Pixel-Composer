@@ -139,6 +139,7 @@ function nodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_TAG._default) constructor {
 	name  = _name;
 	node  = _node;
+	x	  = node.x;
 	y     = node.y;
 	index = _index;
 	type  = _type;
@@ -542,9 +543,9 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 		return true;
 	}
 	
-	static removeFrom = function() {
+	static removeFrom = function(_remove_list = true) {
 		recordAction(ACTION_TYPE.junction_connect, self, value_from);
-		if(value_from)
+		if(_remove_list && value_from != noone)
 			ds_list_remove(value_from.value_to, self);	
 		value_from = noone;
 		
@@ -594,9 +595,11 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 		}
 	}
 	
-	static checkConnection = function() {
-		if(value_from && !value_from.node.active) 
-			removeFrom();
+	static checkConnection = function(_remove_list = true) {
+		if(value_from == noone) return;
+		if(value_from.node.active) return;
+		
+		removeFrom(_remove_list);
 	}
 	
 	static searchNodeBackward = function(_node) {
@@ -937,6 +940,36 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 				break;
 		}
 		return hover;
+	}
+	
+	static drawJunction = function(_s, _mx, _my, _show) {
+		if(!isVisible()) return false;
+		
+		var ss = max(0.25, _s / 2);
+		var _draw_cc = c_white;
+		var is_hover = false;
+		
+		if(point_in_circle(_mx, _my, x, y, 10 * _s)) {
+			is_hover = true;
+			draw_sprite_ext(isArray()? s_node_junctions_array_hover : s_node_junctions_single_hover, type, x, y, ss, ss, 0, c_white, 1);
+		} else {
+			_draw_cc = c_ui_blue_grey;
+			draw_sprite_ext(isArray()? s_node_junctions_array : s_node_junctions_single, type, x, y, ss, ss, 0, c_white, 1);
+		}
+				
+		if(_show) {
+			draw_set_text(f_p1, fa_left, fa_center, _draw_cc);
+			
+			if(connect_type == JUNCTION_CONNECT.input) {
+				draw_set_halign(fa_right);
+				draw_text(x - 12 * _s, y, name);
+			} else {
+				draw_set_halign(fa_left);
+				draw_text(x + 12 * _s, y, name);
+			}
+		}
+		
+		return is_hover;
 	}
 	
 	static isVisible = function() {

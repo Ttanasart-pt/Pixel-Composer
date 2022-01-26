@@ -7,7 +7,7 @@ function Node_create_Iterate(_x, _y) {
 function Node_Iterate(_x, _y) : Node_Collection(_x, _y) constructor {
 	name = "Loop";
 	color = c_ui_lime;
-	icon  = s_group_16;
+	icon  = s_loop_16;
 	
 	iterated = 0;
 	

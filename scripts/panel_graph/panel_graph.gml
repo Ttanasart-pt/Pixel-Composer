@@ -100,11 +100,11 @@ function Panel_Graph(_panel) : PanelContent(_panel) constructor {
 	
 	addHotkey("Graph", "Frame",		"F", MOD_KEY.ctrl,					function() { doFrame(); });
 	
-	addHotkey("Graph", "Delete",	vk_delete, MOD_KEY.none,	function() { doDelete(); });
+	addHotkey("Graph", "Delete",		vk_delete, MOD_KEY.shift,	function() { doDelete(false); });
+	addHotkey("Graph", "Delete merge",	vk_delete, MOD_KEY.none,	function() { doDelete(true); });
 	
 	function stepBegin() {
-		var gr_x = graph_x * graph_s;
-		var gr_y = graph_y * graph_s;
+		var gr_x = graph_x * graph_s;		var gr_y = graph_y * graph_s;
 		var m_x  = (mx - gr_x) / graph_s;
 		var m_y  = (my - gr_y) / graph_s;
 		mouse_graph_x = m_x;
@@ -218,6 +218,13 @@ function Panel_Graph(_panel) : PanelContent(_panel) constructor {
 		for(var i = 0; i < ds_list_size(nodes_list); i++) {
 			nodes_list[| i].preDraw(gr_x, gr_y, graph_s);
 		}
+		
+		#region draw frame
+			for(var i = 0; i < ds_list_size(nodes_list); i++) {
+				if(instanceof(nodes_list[| i]) != "Node_Frame") continue;
+				nodes_list[| i].drawNode(gr_x, gr_y, mx, my, graph_s);
+			}
+		#endregion
 		
 		#region hover
 			node_hovering = noone;
@@ -356,10 +363,6 @@ function Panel_Graph(_panel) : PanelContent(_panel) constructor {
 		
 		#region draw node
 			for(var i = 0; i < ds_list_size(nodes_list); i++) {
-				if(instanceof(nodes_list[| i]) != "Node_Frame") continue;
-				nodes_list[| i].drawNode(gr_x, gr_y, mx, my, graph_s);
-			}
-			for(var i = 0; i < ds_list_size(nodes_list); i++) {
 				var n = nodes_list[| i];
 				if(instanceof(n) == "Node_Frame") continue;
 				var val = n.drawNode(gr_x, gr_y, mx, my, graph_s);
@@ -459,20 +462,32 @@ function Panel_Graph(_panel) : PanelContent(_panel) constructor {
 			}
 		#endregion
 		
-		if(FOCUS == panel && node_focus && value_focus == noone) {
-			if(mouse_check_button_pressed(mb_left) && !keyboard_check(vk_control)) {
-				node_dragging = node_focus;
-				node_drag_mx  = mouse_graph_x;
-				node_drag_my  = mouse_graph_y;
-				node_drag_sx  = node_focus.x;
-				node_drag_sy  = node_focus.y;
+		if(FOCUS == panel) {
+			if(node_focus && value_focus == noone) {
+				if(mouse_check_button_pressed(mb_left) && !keyboard_check(vk_control)) {
+					node_dragging = node_focus;
+					node_drag_mx  = mouse_graph_x;
+					node_drag_my  = mouse_graph_y;
+					node_drag_sx  = node_focus.x;
+					node_drag_sy  = node_focus.y;
 				
-				node_drag_ox  = -1;
-				node_drag_oy  = -1;
+					node_drag_ox  = -1;
+					node_drag_oy  = -1;
+				}
+			
+				if(keyboard_check_pressed(vk_f5)) {
+					node_focus.updateForward();	
+				}
 			}
 			
-			if(keyboard_check_pressed(vk_f5)) {
-				node_focus.updateForward();	
+			if(DOUBLE_CLICK && junction_hovering != noone) {
+				var snap = PREF_MAP[? "node_snapping"];
+				var _mx = round(mouse_graph_x / snap) * snap;
+				var _my = round(mouse_graph_y / snap) * snap;
+						
+				var _pin = Node_create_Pin(_mx, _my);
+				_pin.inputs[| 0].setFrom(junction_hovering.value_from);
+				junction_hovering.setFrom(_pin.outputs[| 0]);
 			}
 		}
 		
@@ -663,12 +678,12 @@ function Panel_Graph(_panel) : PanelContent(_panel) constructor {
 		f.inputs[| 0].setValue([x1 - x0, y1 - y0]);
 	}
 	
-	function doDelete() {
+	function doDelete(_merge = false) {
 		if(node_focus != noone)
-			nodeDelete(node_focus);
+			nodeDelete(node_focus, _merge);
 		
 		for(var i = 0; i < ds_list_size(nodes_select_list); i++) {
-			nodeDelete(nodes_select_list[| i]);
+			nodeDelete(nodes_select_list[| i], _merge);
 		}
 		ds_list_clear(nodes_select_list);
 	}
@@ -771,10 +786,9 @@ function Panel_Graph(_panel) : PanelContent(_panel) constructor {
 	
 	function drawJunctionConnect() {
 		if(value_dragging) {
-			draw_set_color(c_ui_orange);
-			var xx = value_dragging.node.x + graph_x + (value_dragging.connect_type == JUNCTION_CONNECT.input? 0 : value_dragging.node.w);
-			xx *= graph_s;
+			draw_set_color(value_color(value_dragging.type));
 			
+			var xx = value_dragging.x;
 			var yy = value_dragging.y;
 			
 			if(PREF_MAP[? "curve_connection_line"])

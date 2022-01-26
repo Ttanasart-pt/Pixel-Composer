@@ -85,7 +85,7 @@ function NodeObject(_name, _spr, _create, tags = []) constructor {
 	
 	var filter = ds_list_create();
 	addNodeCatagory("Filter", filter);
-	addNodeObject(filter, "Blend",				s_node_blend,			"Node_Blend",			Node_create_Blend, ["merge"]);
+	addNodeObject(filter, "Blend",				s_node_blend,			"Node_Blend",			Node_create_Blend, ["normal", "add", "subtract", "multiply", "screen", "maxx", "minn"]);
 	addNodeObject(filter, "Outline",			s_node_border,			"Node_Outline",			Node_create_Outline, ["border"]);
 	addNodeObject(filter, "Erode",				s_node_erode,			"Node_Erode",			Node_create_Erode);
 	addNodeObject(filter, "Trail",				s_node_trail,			"Node_Trail",			Node_create_Trail);
@@ -138,6 +138,7 @@ function NodeObject(_name, _spr, _create, tags = []) constructor {
 	var number = ds_list_create();
 	addNodeCatagory("Number", number);
 	addNodeObject(number, "Math",			s_node_math,			"Node_Math",			Node_create_Math, ["add", "subtract", "multiply", "divide", "power", "modulo", "round", "ceiling", "floor", "sin", "cos", "tan"]);
+	addNodeObject(number, "Statistic",		s_node_statistic,		"Node_Statistic",		Node_create_Statistic, ["sum", "average", "mean", "median", "min", "max"]);
 	addNodeObject(number, "Array",			s_node_array,			"Node_Array",			Node_create_Array);
 	addNodeObject(number, "Array length",	s_node_array_length,	"Node_Array_Length",	Node_create_Array_Length);
 	addNodeObject(number, "Array get",		s_node_array_get,		"Node_Array_Get",		Node_create_Array_Get);
@@ -195,13 +196,12 @@ function NodeObject(_name, _spr, _create, tags = []) constructor {
 	
 	var node = ds_list_create();
 	addNodeCatagory("Node", node);
+	addNodeObject(node, "Group",			s_node_group,		"Node_Group",			Node_create_Group);
+	addNodeObject(node, "Loop",				s_node_loop,		"Node_Iterate",			Node_create_Iterate);
 	addNodeObject(node, "Pin",				s_node_pin,			"Node_Pin",				Node_create_Pin);
 	addNodeObject(node, "Frame",			s_node_frame,		"Node_Frame",			Node_create_Frame);
 	addNodeObject(node, "Display text",		s_node_text,		"Node_Display_Text",	Node_create_Display_Text);
 	addNodeObject(node, "Condition",		s_node_condition,	"Node_Condition",		Node_create_Condition);
-	
-	NODE_CREATE_FUCTION[? "Node_Group"] = Node_create_Group;
-	NODE_CREATE_FUCTION[? "Node_Iterate"] = Node_create_Iterate;
 #endregion
 
 #region node function
@@ -228,10 +228,10 @@ function NodeObject(_name, _spr, _create, tags = []) constructor {
 		return _node;
 	}
 	
-	function nodeDelete(node) {
+	function nodeDelete(node, _merge = false) {
 		var list = node.group == -1? NODES : node.group.nodes;
 		ds_list_delete(list, ds_list_find_index(list, node));
-		node.destroy();
+		node.destroy(_merge);
 		
 		recordAction(ACTION_TYPE.node_delete, node);
 	}

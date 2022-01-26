@@ -294,8 +294,10 @@ event_inherited();
 				draw_sprite(_node.spr, current_time * PREF_MAP[? "collection_preview_speed"] / 3000, _boxx + grid_size / 2, yy + grid_size / 2);
 				
 			draw_set_text(f_p1, fa_center, fa_top, c_white);
-			name_height = max(name_height, string_height_ext(_node.name, -1, grid_size) + 8);
-			draw_text_ext(_boxx + grid_size / 2, yy + grid_size + 4, _node.name, -1, grid_width);
+			var txt = _node.name;
+			if(_param != "") txt += " (" + _param + ")";
+			name_height = max(name_height, string_height_ext(txt, -1, grid_size) + 8);
+			draw_text_ext(_boxx + grid_size / 2, yy + grid_size + 4, txt, -1, grid_width);
 				
 			if(point_in_rectangle(_m[0], _m[1], _nx, yy, _nx + grid_width, yy + grid_size)) {
 				node_selecting = i;
