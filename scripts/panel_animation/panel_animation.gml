@@ -886,7 +886,7 @@ function Panel_Animation(_panel) : PanelContent(_panel) constructor {
 			}
 		
 			bx = w - 40;
-			if(buttonInstant(s_button_hide, bx, by, 32, 32, [mx, my], FOCUS == panel, HOVER == panel, "Animation settings", s_hamburger, 2) == 2)
+			if(buttonInstant(s_button_hide, bx, by, 32, 32, [mx, my], FOCUS == panel, HOVER == panel, "Animation settings", s_animation_setting, 2) == 2)
 				dialogCall(o_dialog_animation, x + bx + 32, y + by - 8);
 			
 			if(dope_sheet_h > 8) {

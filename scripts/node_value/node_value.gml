@@ -361,7 +361,7 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 					function(_modified) { setValue(_modified); });
 				break;
 			case VALUE_TYPE.text :
-				editWidget = new textBox(TEXTBOX_INPUT.text, function(str) { 
+				editWidget = new textArea(TEXTBOX_INPUT.text, function(str) { 
 					setValue(str);
 				} );
 				break;

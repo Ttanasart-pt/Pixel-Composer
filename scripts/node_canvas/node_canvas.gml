@@ -5,6 +5,8 @@ function Node_create_Canvas(_x, _y) {
 }
 
 function Node_Canvas(_x, _y) : Node(_x, _y) constructor {
+	display_reset(0, 1);
+	
 	name	= "Canvas";
 	color	= c_ui_orange;
 	

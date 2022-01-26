@@ -20,6 +20,8 @@ function textBox(_input, _onModify) constructor {
 	slide_sx = 0;
 	slide_speed = 1 / 16;
 	
+	starting_char = 1;
+	
 	input = _input;
 	onModify = _onModify;
 	
@@ -81,8 +83,9 @@ function textBox(_input, _onModify) constructor {
 						var maxc = max(cursor, cursor_select);
 						
 						var str_before	= string_copy(_input_text, 1, minc);
-						var str_after	= string_copy(_input_text, maxc + 2, string_length(_input_text) - maxc - 1);
+						var str_after	= string_copy(_input_text, maxc + 1, string_length(_input_text) - maxc);
 						
+						cursor = minc + 1;
 						_input_text		= str_before + str_after;
 					}
 					
@@ -99,8 +102,9 @@ function textBox(_input, _onModify) constructor {
 						var maxc = max(cursor, cursor_select);
 						
 						var str_before	= string_copy(_input_text, 1, minc);
-						var str_after	= string_copy(_input_text, maxc + 2, string_length(_input_text) - maxc - 1);
+						var str_after	= string_copy(_input_text, maxc + 1, string_length(_input_text) - maxc);
 						
+						cursor = minc;
 						_input_text		= str_before + str_after;
 					}
 					cursor_select	= -1;
@@ -121,7 +125,7 @@ function textBox(_input, _onModify) constructor {
 						var str_after	= string_copy(_input_text, maxc + 1, string_length(_input_text) - maxc);
 						
 						_input_text		= str_before + ch + str_after;
-						cursor = min(cursor, cursor_select) + string_length(ch);
+						cursor = minc + string_length(ch);
 					}
 					
 					cursor_select	= -1;
@@ -227,6 +231,10 @@ function textBox(_input, _onModify) constructor {
 	
 	static draw = function(_x, _y, _w, _h, _text, _m, _format = VALUE_DISPLAY._default) {
 		var tx = _x;
+		
+		draw_set_text(font, fa_left, fa_top, c_white);
+		var hh = _h;
+		
 		switch(align) {
 			case fa_left   : tx = _x + 8; break;
 			case fa_center : tx = _x + _w / 2; break;
@@ -265,7 +273,7 @@ function textBox(_input, _onModify) constructor {
 		}
 		
 		if(self == TEXTBOX_ACTIVE) { 
-			draw_sprite_stretched(s_textbox, 2, _x, _y, _w, _h);
+			draw_sprite_stretched(s_textbox, 2, _x, _y, _w, hh);
 			editText();
 			
 			#region cursor
@@ -294,7 +302,7 @@ function textBox(_input, _onModify) constructor {
 					draw_set_text(f_p0b, fa_left, fa_center, c_ui_blue_ltgrey);
 					draw_set_alpha(0.5);
 				
-					if(point_in_rectangle(_m[0], _m[1], _x, _y, _x + 32, _y + _h)) {
+					if(point_in_rectangle(_m[0], _m[1], _x, _y, _x + 32, _y + hh)) {
 						draw_set_alpha(1);
 					
 						if(active && mouse_check_button_pressed(mb_left)) {
@@ -310,9 +318,9 @@ function textBox(_input, _onModify) constructor {
 					}
 				
 					if(keyboard_check(vk_alt))
-						draw_text(_x + 8, _y + _h / 2, "/2");
+						draw_text(_x + 8, _y + hh / 2, "/2");
 					else
-						draw_text(_x + 8, _y + _h / 2, "x2");
+						draw_text(_x + 8, _y + hh / 2, "x2");
 					draw_set_alpha(1);
 					
 					apply();
@@ -321,7 +329,7 @@ function textBox(_input, _onModify) constructor {
 			
 			#region draw
 				var ss = string_cut(_input_text, _w - 4);
-				draw_set_text(font, fa_left, fa_center, c_white);
+				draw_set_text(font, fa_left, fa_top, c_white);
 				var ww = string_width(ss);
 				
 				switch(align) {
@@ -346,8 +354,10 @@ function textBox(_input, _onModify) constructor {
 				}
 				
 				var _mx = -1;
-				if((mouse_check_button_pressed(mb_left) || mouse_check_button(mb_left)) && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + _h)) {
+				var _my = -1;
+				if((mouse_check_button_pressed(mb_left) || mouse_check_button(mb_left)) && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + hh)) {
 					_mx = _m[0];
+					_my = _m[1];
 				}
 				
 				draw_set_color(c_white);
@@ -356,7 +366,7 @@ function textBox(_input, _onModify) constructor {
 				draw_line_width(cursor_pos, c_y0, cursor_pos, c_y1, 2);
 			#endregion
 			
-			if(!point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + _h) && mouse_check_button_pressed(mb_left)) {
+			if(!point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + hh) && mouse_check_button_pressed(mb_left)) {
 				apply();
 				TEXTBOX_ACTIVE = noone;
 			}
@@ -371,11 +381,11 @@ function textBox(_input, _onModify) constructor {
 				case fa_right  : tx -= ww;		break;
 			}
 			
-			if(hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + _h)) {
+			if(hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + hh)) {
 				if(hide)
-					draw_sprite_stretched_ext(s_textbox, 1, _x, _y, _w, _h, c_white, 0.5);	
+					draw_sprite_stretched_ext(s_textbox, 1, _x, _y, _w, hh, c_white, 0.5);	
 				else
-					draw_sprite_stretched(s_textbox, 1, _x, _y, _w, _h);	
+					draw_sprite_stretched(s_textbox, 1, _x, _y, _w, hh);	
 				if(active && mouse_check_button_pressed(mb_left)) {
 					TEXTBOX_ACTIVE  = self;
 					click_block = 1;
@@ -386,15 +396,15 @@ function textBox(_input, _onModify) constructor {
 					_last_value     = _text;
 				}
 			} else if(!hide) {
-				draw_sprite_stretched(s_textbox, 0, _x, _y, _w, _h);
+				draw_sprite_stretched(s_textbox, 0, _x, _y, _w, hh);
 			}
 			
 			display_text(tx, _y + _h / 2, ss, _w - 4, _format);
 			
 			if(slidable) {
-				draw_sprite_ext(s_text_slider, 0, _x + 20, _y + _h / 2, 1, 1, 0, c_ui_blue_grey, 0.5);
+				draw_sprite_ext(s_text_slider, 0, _x + 20, _y + hh / 2, 1, 1, 0, c_ui_blue_grey, 0.5);
 			
-				if(hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + _h)) {
+				if(hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + hh)) {
 					if(active && mouse_check_button_pressed(mb_left)) {
 						sliding  = 1;
 						slide_mx = _m[0];
@@ -406,5 +416,7 @@ function textBox(_input, _onModify) constructor {
 		
 		hover  = false;
 		active = false;
+		
+		return hh;
 	}
 }

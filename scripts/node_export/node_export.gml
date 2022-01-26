@@ -227,7 +227,7 @@ function Node_Export(_x, _y) : Node(_x, _y) constructor {
 					if(form == 2) {
 						p = DIRECTORY + "temp\\" + string(i) + "\\" + string(100000 + ANIMATOR.current_frame) + ".png";
 					} else {
-						if(is_array(path))
+						if(is_array(path) && array_length(path) == array_length(surf))
 							p = pathString(path[ safe_mod(i, array_length(path)) ], suff, i);
 						else
 							p = pathString(path, suff, i);
@@ -253,6 +253,8 @@ function Node_Export(_x, _y) : Node(_x, _y) constructor {
 	}
 	
 	static update = function() {
+		if(LOADING || APPENDING) return;
+		
 		var path = inputs[| 1].getValue();
 		if(path == "") return;
 		var anim = inputs[| 3].getValue();

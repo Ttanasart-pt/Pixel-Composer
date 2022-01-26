@@ -294,9 +294,9 @@ function Panel_Inspector(_panel) : PanelContent(_panel) constructor {
 									hh += 136 + padd;
 									break;
 								case VALUE_TYPE.text :
-									jun.editWidget.draw(32, _hsy, w - 80, 34, jun.showValue(), _m, jun.display_type);
-									_hey = _hsy + 34;
-									hh += 34 + padd;
+									var _hh = jun.editWidget.draw(32, _hsy, w - 80, 34, jun.showValue(), _m, jun.display_type);
+									_hey = _hsy + _hh;
+									hh += _hh + padd;
 									break;
 								default:
 									_hey = _hsy + 34;

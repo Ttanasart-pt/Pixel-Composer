@@ -120,7 +120,7 @@ function NodeObject(_name, _spr, _create, tags = []) constructor {
 	addNodeObject(filter, "Time remap",			s_node_time_map,		"Node_Time_Remap",		Node_create_Time_Remap);
 	addNodeObject(filter, "2D light",			s_node_2d_light,		"Node_2D_light",		Node_create_2D_light);
 	addNodeObject(filter, "Atlas",				s_node_atlas,			"Node_Atlas",			Node_create_Atlas);
-	addNodeObject(filter, "Scale algorithm",	s_node_scale_algo,		"Node_Scale_Algo",		Node_create_Scale_Algo, ["Scale2x", "Scale3x"]);
+	addNodeObject(filter, "Scale algorithm",	s_node_scale_algo,		"Node_Scale_Algo",		Node_create_Scale_Algo, ["scale2x", "scale3x"]);
 	addNodeObject(filter, "Pixel cloud",		s_node_pixel_cloud,		"Node_Pixel_Cloud",		Node_create_Pixel_Cloud);
 	//addNodeObject(filter, "Corner",			s_node_corner,			"Node_Corner",			Node_create_Corner);
 	
