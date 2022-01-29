@@ -8,7 +8,7 @@ event_inherited();
 	
 	note = "";
 	
-	var link = "https://gist.githubusercontent.com/Ttanasart-pt/e7ab670299ce6b00cfd632646f3ac9a8/raw/0.8.2";
+	var link = "https://gist.githubusercontent.com/Ttanasart-pt/e7ab670299ce6b00cfd632646f3ac9a8/raw/0.9.0";
 	node_get = http_get(link);
 	
 	sp_note = new scrollPane(dialog_w - 80, dialog_h - 88, function(_y, _m) {

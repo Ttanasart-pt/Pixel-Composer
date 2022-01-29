@@ -5,7 +5,6 @@ function Node_create_Line(_x, _y) {
 }
 
 function Node_Line(_x, _y) : Node(_x, _y) constructor {
-	display_reset(0, 1);
 	
 	name = "Line";
 	

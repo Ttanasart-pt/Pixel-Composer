@@ -300,10 +300,17 @@ function Node(_x, _y) constructor {
 				if(PANEL_GRAPH.junction_hovering == jun)
 					th *= 2;
 				
+				var ty = LINE_STYLE.solid;
+				if(jun.type == VALUE_TYPE.node)
+					ty = LINE_STYLE.dashed;
+						
 				if(PREF_MAP[? "curve_connection_line"]) {
-					draw_line_curve_color(jx, jy, frx, fry, th, c0, c1);
+					draw_line_curve_color(jx, jy, frx, fry, th, c0, c1, ty);
 				} else {
-					draw_line_width_color(jx, jy, frx, fry, th, c0, c1);
+					if(ty == LINE_STYLE.solid)
+						draw_line_width_color(jx, jy, frx, fry, th, c0, c1);
+					else 
+						draw_line_dashed(jx, jy, frx, fry, th, c0, c1, 12);
 				}
 			}
 		}

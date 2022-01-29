@@ -34,7 +34,6 @@ function APPEND(_path) {
 		var _node = nodeLoad(_node_list[| i], true);
 		if(_node) ds_list_add(appended_list, _node);
 	}
-	ds_map_destroy(_map);
 	file_text_close(file);
 	
 	for(var i = 0; i < ds_list_size(appended_list); i++) {
@@ -91,6 +90,7 @@ function APPEND(_path) {
 	log_message("FILE", "append file " + _path);
 	PANEL_MENU.showNoti("Collection loaded", s_noti_icon_file_load);
 	
+	ds_map_destroy(_map);
 	return node_create;
 }
 

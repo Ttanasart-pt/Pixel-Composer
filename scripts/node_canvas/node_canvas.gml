@@ -5,7 +5,6 @@ function Node_create_Canvas(_x, _y) {
 }
 
 function Node_Canvas(_x, _y) : Node(_x, _y) constructor {
-	display_reset(0, 1);
 	
 	name	= "Canvas";
 	color	= c_ui_orange;
@@ -23,7 +22,7 @@ function Node_Canvas(_x, _y) : Node(_x, _y) constructor {
 	inputs[| 4] = nodeValue(4, "Fill type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.enum_scroll, ["4 connect", "8 connect", "Entire canvas"]);
 	
-	inputs[| 5] = nodeValue(5, "Draw preview overlay", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	inputs[| 5] = nodeValue(5, "Draw preview overlay", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
 	
 	inputs[| 6] = nodeValue(6, "Brush", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, -1);
 	

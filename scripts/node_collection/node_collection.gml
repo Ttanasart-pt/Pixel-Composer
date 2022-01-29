@@ -26,7 +26,18 @@ function Node_Collection(_x,  _y) : Node(_x,  _y) constructor {
 		ds_list_add(list, _node);
 		
 		recordAction(ACTION_TYPE.group_removed, self, _node);
-		_node.group = group;
+		
+		switch(instanceof(_node)) {
+			case "Node_Group_Input" :
+			case "Node_Group_Output" :
+			case "Node_Iterator_Input" :
+			case "Node_Iterator_Output" :
+			case "Node_Iterator_Index" :
+				nodeDelete(_node);
+				break;
+			default : 
+				_node.group = group;
+		}
 	}
 	
 	static stepBegin = function() {
@@ -36,7 +47,7 @@ function Node_Collection(_x,  _y) : Node(_x,  _y) constructor {
 		
 		var out_surf = false;
 		
-		for( var i = 0; i < ds_list_size(outputs); i++ ) {
+		for( var i = 0; i < ds_list_size(outputs); i++) {
 			if(outputs[| i].type == VALUE_TYPE.surface) 
 				out_surf = true;
 		}

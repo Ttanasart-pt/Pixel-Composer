@@ -83,13 +83,24 @@ event_inherited();
 					
 					if(_node.spr) 
 						draw_sprite(_node.spr, 0, _boxx + grid_width / 2, yy + grid_heigh / 2);
-				
+					
+					var tx = _boxx + grid_width / 2;
+					var ty = yy + grid_heigh + 6;
+					draw_set_text(f_p2, fa_center, fa_top, c_ui_blue_dkgrey);
+					var _tw = string_width(_node.tag);
+					var _th = string_height(_node.tag);
+					
+					draw_set_color(c_ui_blue_mdblack);
+					draw_roundrect_ext(tx - _tw / 2 - 6, ty - 2, tx + _tw / 2 + 6, ty + _th, 8, 8, 0);
+					draw_set_color(_node.tag == "Getting started"? c_ui_orange_light : c_ui_blue_grey);
+					draw_text(tx, ty, _node.tag);
+					
 					draw_set_text(f_p1, fa_center, fa_top, c_white);
 					name_height = max(name_height, string_height_ext(_node.name, -1, grid_width) + 8);
-					draw_text_ext(_boxx + grid_width / 2, yy + grid_heigh + 4, _node.name, -1, grid_width);
+					draw_text_ext(tx, ty + 20, _node.name, -1, grid_width);
 				}
 			}
-			var hght = grid_heigh + grid_space + name_height;
+			var hght = grid_heigh + grid_space + name_height + 20;
 			hh += hght;
 			yy += hght;
 		}

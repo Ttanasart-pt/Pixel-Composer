@@ -22,7 +22,9 @@ function Node_Particle_Effector(_x, _y) : Node(_x, _y) constructor {
 	h = 32 + 24;
 	min_h = h;
 	
-	inputs[| 0] = nodeValue(0, "Particle data", self, JUNCTION_CONNECT.input, VALUE_TYPE.object, -1 );
+	inputs[| 0] = nodeValue(0, "Particle data", self, JUNCTION_CONNECT.input, VALUE_TYPE.object, -1 )
+		.setVisible(true, true);
+		
 	inputs[| 1] = nodeValue(1, "Output dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, def_surf_size2, VALUE_TAG.dimension_2d )
 		.setDisplay(VALUE_DISPLAY.vector);
 	
@@ -196,6 +198,7 @@ function Node_Particle_Effector(_x, _y) : Node(_x, _y) constructor {
 	}
 	
 	static update = function() {
+		outputs[| 0].setValue(inputs[| 0].getValue());
 		var jun = outputs[| 0];
 		for(var j = 0; j < ds_list_size(jun.value_to); j++) {
 			if(jun.value_to[| j].value_from == jun) {

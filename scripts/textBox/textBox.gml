@@ -347,10 +347,10 @@ function textBox(_input, _onModify) constructor {
 				cursor_pos		= cursor_pos == 0? cursor_pos_to : lerp_float(cursor_pos, cursor_pos_to, 3);
 				
 				if(cursor_select > -1) {
-					draw_set_color(c_ui_blue_grey);
+					draw_set_color(c_ui_blue_dkgrey);
 					var x1 = tx + string_width(string_copy(_input_text, 1, cursor_select));
 					
-					draw_rectangle(cursor_pos, c_y0, x1, c_y1, 0);
+					draw_roundrect_ext(cursor_pos, c_y0, x1, c_y1, 8, 8, 0);
 				}
 				
 				var _mx = -1;

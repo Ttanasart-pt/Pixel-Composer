@@ -3,13 +3,12 @@
 	SAMPLE_PROJECTS = ds_list_create();
 #endregion
 
-function LOAD_SAMPLE() {
-	ds_list_clear(SAMPLE_PROJECTS);
-	var _l = get_program_directory() + "Sample Projects";
-	var file = file_find_first(_l + "/*", fa_directory);
+function LOAD_FOLDER(list, folder) {
+	var path = get_program_directory() + folder;
+	var file = file_find_first(path + "/*", fa_directory);
 	while(file != "") {
 		if(filename_ext(file) == ".json" || filename_ext(file) == ".pxc") {
-			var full_path = _l + "\\" + file;
+			var full_path = path + "\\" + file;
 			var f = new FileObject(string_replace(filename_name(file), filename_ext(file), ""), full_path);
 			var icon_path = string_replace(full_path, filename_ext(full_path), ".png");
 				
@@ -18,9 +17,18 @@ function LOAD_SAMPLE() {
 				sprite_set_offset(f.spr, sprite_get_width(f.spr) / 2, sprite_get_height(f.spr) / 2);
 			}
 			
-			ds_list_add(SAMPLE_PROJECTS, f);
+			f.tag = folder;
+			
+			ds_list_add(list, f);
 		}
 		file = file_find_next();
 	}
 	file_find_close();
+}
+
+function LOAD_SAMPLE() {
+	ds_list_clear(SAMPLE_PROJECTS);
+	
+	LOAD_FOLDER(SAMPLE_PROJECTS, "Getting started");
+	LOAD_FOLDER(SAMPLE_PROJECTS, "Sample Projects");
 }

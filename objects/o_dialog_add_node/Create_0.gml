@@ -290,12 +290,26 @@ event_inherited();
 			else
 				draw_sprite_stretched_ext(s_node_bg, 0, _boxx, yy, grid_size, grid_size, merge_color(c_white, c_ui_orange_light, 0.5), 1);
 					
-			if(variable_struct_exists(_node, "spr") && sprite_exists(_node.spr))
-				draw_sprite(_node.spr, current_time * PREF_MAP[? "collection_preview_speed"] / 3000, _boxx + grid_size / 2, yy + grid_size / 2);
+			if(variable_struct_exists(_node, "spr") && sprite_exists(_node.spr)) {
+				var _si = current_time * PREF_MAP[? "collection_preview_speed"] / 3000;
+				var _sw = sprite_get_width(_node.spr);
+				var _sh = sprite_get_height(_node.spr);
+				var _ss = 32 / max(_sw, _sh);
 				
+				var _sox = sprite_get_xoffset(_node.spr);
+				var _soy = sprite_get_yoffset(_node.spr);
+				
+				var _sx = _boxx + grid_size / 2;
+				var _sy = yy + grid_size / 2;
+				_sx += _sw * _ss / 2 - _sox * _ss;
+				_sy += _sh * _ss / 2 - _soy * _ss;
+				
+				draw_sprite_ext(_node.spr, _si, _sx, _sy, _ss, _ss, 0, c_white, 1);
+			}
+			
 			draw_set_text(f_p1, fa_center, fa_top, c_white);
 			var txt = _node.name;
-			if(_param != "") txt += " (" + _param + ")";
+			//if(_param != "") txt += " (" + _param + ")";
 			name_height = max(name_height, string_height_ext(txt, -1, grid_size) + 8);
 			draw_text_ext(_boxx + grid_size / 2, yy + grid_size + 4, txt, -1, grid_width);
 				

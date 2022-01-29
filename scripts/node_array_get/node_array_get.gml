@@ -21,7 +21,7 @@ function Node_Array_Get(_x, _y) : Node(_x, _y) constructor {
 	inputs[| 2] = nodeValue(2, "Overflow", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.enum_scroll, ["Clamp", "Loop", "Ping Pong"]);
 	
-	outputs[| 0] = nodeValue(0, "Size", self, JUNCTION_CONNECT.output, VALUE_TYPE.any, 0);
+	outputs[| 0] = nodeValue(0, "Value", self, JUNCTION_CONNECT.output, VALUE_TYPE.any, 0);
 	
 	static update = function() {
 		var _arr = inputs[| 0].getValue();

@@ -63,7 +63,6 @@ function LOAD_PATH(path, readonly = false) {
 		ANIMATOR.frames_total	= _anim_map[? "frames_total"];
 		ANIMATOR.framerate		= _anim_map[? "framerate"];
 	}
-	ds_map_destroy(_map);
 	
 	ds_queue_clear(CONNECTION_CONFLICT);
 	
@@ -116,5 +115,7 @@ function LOAD_PATH(path, readonly = false) {
 	
 	log_message("FILE", "load at " + path);
 	PANEL_MENU.showNoti("File loaded", s_noti_icon_file_load);
+	
+	ds_map_destroy(_map);
 	return true;
 }

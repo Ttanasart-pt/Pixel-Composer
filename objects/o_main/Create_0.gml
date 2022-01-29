@@ -12,7 +12,7 @@
 	file_text_close(f);
 #endregion
 
-display_reset(8, 1);
+//display_reset(8, 1);
 
 #region window
 	depth = 0;
@@ -68,7 +68,7 @@ display_reset(8, 1);
 	file_dnd_allowdirs  = true;
 	file_dnd_allowmulti = true;
 	
-	function load_file_path(path) {
+	function load_file_path(path, _new = false) {
 		if(string_pos("\n", path) == 1) path = string_replace(path, "\n", "");
 		
 		var is_multi = string_pos("\n", path) != 0 || directory_exists(path);
@@ -92,6 +92,7 @@ display_reset(8, 1);
 					break;
 				case ".json" :
 				case ".pxc" :
+					if(_new) NEW();
 					LOAD_PATH(path);
 					break;
 			}

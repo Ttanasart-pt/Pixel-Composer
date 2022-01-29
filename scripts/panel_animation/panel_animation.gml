@@ -30,6 +30,7 @@ function Panel_Animation(_panel) : PanelContent(_panel) constructor {
 	timeline_scubbing = false;
 	timeline_scub_st = 0;
 	timeline_scale = 20;
+	_scrub_frame = -1;
 	
 	timeline_shift = 0;
 	timeline_dragging = false;
@@ -798,10 +799,13 @@ function Panel_Animation(_panel) : PanelContent(_panel) constructor {
 					ANIMATOR.real_frame = clamp((mx - bar_x) / timeline_scale + timeline_shift, 0, ANIMATOR.frames_total);
 					timeline_show_time  = ANIMATOR.current_frame;
 					
-					if(mouse_check_button_released(mb_left)) {
-						timeline_scubbing = false;
-						ANIMATOR.is_scrubing = false;
+					if(timeline_show_time != _scrub_frame) {
+						_scrub_frame = timeline_show_time;
+						ANIMATOR.is_scrubing = true;
 					}
+					
+					if(mouse_check_button_released(mb_left))
+						timeline_scubbing = false;
 				}
 				if(timeline_dragging) {
 					timeline_shift = clamp(timeline_drag_sx + mx - timeline_drag_mx, -max(bar_total_w - bar_w, 0), 0);
@@ -834,7 +838,7 @@ function Panel_Animation(_panel) : PanelContent(_panel) constructor {
 						if(key_holding == noone) {
 							timeline_scubbing = true;
 							timeline_scub_st  = ANIMATOR.current_frame;
-							ANIMATOR.is_scrubing = true;
+							_scrub_frame = timeline_scub_st;
 						}
 					}
 				}

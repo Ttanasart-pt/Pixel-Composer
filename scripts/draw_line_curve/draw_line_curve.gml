@@ -1,3 +1,8 @@
+enum LINE_STYLE {
+	solid,
+	dashed
+}
+
 function draw_line_curve(x0, y0, x1, y1, thick = 1) {
 	var xc = (x0 + x1) / 2;
 	var sample = max(8, ceil((abs(x0 - x1) + abs(y0 - y1)) / 4));
@@ -30,12 +35,13 @@ function draw_line_curve(x0, y0, x1, y1, thick = 1) {
 	//buffer_delete(buff);
 }
 
-function draw_line_curve_color(x0, y0, x1, y1, thick = 1, col1, col2) {
+function draw_line_curve_color(x0, y0, x1, y1, thick, col1, col2, type = LINE_STYLE.solid) {
 	var xc = (x0 + x1) / 2;
 	var sample = max(8, ceil((abs(x0 - x1) + abs(y0 - y1)) / 4));
 	
 	var c = draw_get_color();
 	var ox, oy, nx, ny, t, it, oc, nc;
+	var dash_distance = 2;
 	
 	for( var i = 0; i <= sample; i++ )  {
 		t = i / sample;
@@ -46,7 +52,15 @@ function draw_line_curve_color(x0, y0, x1, y1, thick = 1, col1, col2) {
 		nc = merge_color(col1, col2, t);
 		
 		if(i) {
-			draw_line_width_color(ox, oy, nx, ny, thick, oc, nc);
+			switch(type) {
+				case LINE_STYLE.solid :
+					draw_line_width_color(ox, oy, nx, ny, thick, oc, nc);
+					break;
+				case LINE_STYLE.dashed :
+					if(floor(i / dash_distance) % 2)
+						draw_line_width_color(ox, oy, nx, ny, thick, oc, nc);
+					break;
+			}
 		}
 		
 		ox = nx;

@@ -44,6 +44,9 @@ function Node_Mesh_Warp(_x, _y) : Node(_x, _y) constructor {
 		for(var i = 0; i < ds_list_size(data.tris); i++) {
 			data.tris[| i].drawPoints(_x, _y, _s);
 		}
+		for(var i = 0; i < ds_list_size(data.links); i++) {
+			data.links[| i].draw(_x, _y, _s);
+		}
 		
 		var hover = -1;
 		for(var i = control_index; i < ds_list_size(inputs); i++) {
@@ -120,6 +123,11 @@ function Node_Mesh_Warp(_x, _y) : Node(_x, _y) constructor {
 		
 			p1.x -= dx / 2;
 			p1.y -= dy / 2;
+		}
+		
+		static draw = function(_x, _y, _s) {
+			draw_set_color(c_red);
+			draw_line(_x + p0.x * _s, _y + p0.y * _s, _x + p1.x * _s, _y + p1.y * _s);
 		}
 	}
 	

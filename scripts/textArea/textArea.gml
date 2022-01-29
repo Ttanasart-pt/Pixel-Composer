@@ -15,6 +15,8 @@ function textArea(_input, _onModify) constructor {
 	_prev_text = "";
 	_last_value = "";
 	
+	_prev_width = 0;
+	
 	cursor			= 0;
 	
 	cursor_pos_x	= 0;
@@ -33,7 +35,7 @@ function textArea(_input, _onModify) constructor {
 	
 	static move_cursor = function(delta) {
 		var ll = string_length(_input_text);
-		cursor = clamp(cursor + delta, 0, ll + 1);
+		cursor = clamp(cursor + delta, 0, ll);
 	}
 	
 	static cut_line = function() {
@@ -60,12 +62,15 @@ function textArea(_input, _onModify) constructor {
 				ss += _ps;	
 			}
 		}
+		
+		if(ss != "") 
+			array_push(_input_text_line, ss);
 	}
 	
 	static editText = function() {
 		#region text editor
 			if(keyboard_check_released(ord("V")) && keyboard_check(vk_control)) {
-				_input_text = clipboard_get_text();
+				keyboard_string = clipboard_get_text();
 				cut_line();
 			}
 			
@@ -74,72 +79,72 @@ function textArea(_input, _onModify) constructor {
 					cursor_select	= 0;
 					cursor			= string_length(_input_text);
 				}
-			} else {
-				if(keyboard_check_pressed(vk_escape) || keyboard_check_pressed(vk_enter)) {
-				} else if(keyboard_check_pressed(vk_backspace)) {
-					if(cursor_select == -1) {
-						var str_before	= string_copy(_input_text, 1, cursor - 1);
-						var str_after	= string_copy(_input_text, cursor + 1, string_length(_input_text) - cursor);
+			} 
+			
+			if(keyboard_check_pressed(vk_escape) || keyboard_check_pressed(vk_enter)) {
+			} else if(keyboard_check_pressed(vk_backspace)) {
+				if(cursor_select == -1) {
+					var str_before	= string_copy(_input_text, 1, cursor - 1);
+					var str_after	= string_copy(_input_text, cursor + 1, string_length(_input_text) - cursor);
 						
-						_input_text		= str_before + str_after;
-						cut_line();
-					} else {
-						var minc = min(cursor, cursor_select);
-						var maxc = max(cursor, cursor_select);
+					_input_text		= str_before + str_after;
+					cut_line();
+				} else {
+					var minc = min(cursor, cursor_select);
+					var maxc = max(cursor, cursor_select);
 						
-						var str_before	= string_copy(_input_text, 1, minc);
-						var str_after	= string_copy(_input_text, maxc + 1, string_length(_input_text) - maxc);
+					var str_before	= string_copy(_input_text, 1, minc);
+					var str_after	= string_copy(_input_text, maxc + 1, string_length(_input_text) - maxc);
 						
-						cursor = minc + 1;
-						_input_text	= str_before + str_after;
-						cut_line();
-					}
-					
-					cursor_select	= -1;
-					move_cursor(-1);
-				} else if(keyboard_check_pressed(vk_delete)) {
-					if(cursor_select == -1) {
-						var str_before	= string_copy(_input_text, 1, cursor);
-						var str_after	= string_copy(_input_text, cursor + 2, string_length(_input_text) - cursor - 1);
-						
-						_input_text		= str_before + str_after;
-						cut_line();
-					} else {
-						var minc = min(cursor, cursor_select);
-						var maxc = max(cursor, cursor_select);
-						
-						var str_before	= string_copy(_input_text, 1, minc);
-						var str_after	= string_copy(_input_text, maxc + 1, string_length(_input_text) - maxc);
-						
-						cursor = minc;
-						_input_text		= str_before + str_after;
-						cut_line();
-					}
-					cursor_select	= -1;
-				} else if(keyboard_string != "") {
-					var ch			= keyboard_string;
-					
-					if(cursor_select == -1) {
-						var str_before	= string_copy(_input_text, 1, cursor);
-						var str_after	= string_copy(_input_text, cursor + 1, string_length(_input_text) - cursor);
-						
-						_input_text		= str_before + ch + str_after;
-						cut_line();
-						move_cursor(string_length(ch));
-					} else {
-						var minc = min(cursor, cursor_select);
-						var maxc = max(cursor, cursor_select);
-						
-						var str_before	= string_copy(_input_text, 1, minc);
-						var str_after	= string_copy(_input_text, maxc + 1, string_length(_input_text) - maxc);
-						
-						_input_text		= str_before + ch + str_after;
-						cut_line();
-						cursor = minc + string_length(ch);
-					}
-					
-					cursor_select	= -1;
+					cursor = minc + 1;
+					_input_text	= str_before + str_after;
+					cut_line();
 				}
+					
+				cursor_select	= -1;
+				move_cursor(-1);
+			} else if(keyboard_check_pressed(vk_delete)) {
+				if(cursor_select == -1) {
+					var str_before	= string_copy(_input_text, 1, cursor);
+					var str_after	= string_copy(_input_text, cursor + 2, string_length(_input_text) - cursor - 1);
+						
+					_input_text		= str_before + str_after;
+					cut_line();
+				} else {
+					var minc = min(cursor, cursor_select);
+					var maxc = max(cursor, cursor_select);
+						
+					var str_before	= string_copy(_input_text, 1, minc);
+					var str_after	= string_copy(_input_text, maxc + 1, string_length(_input_text) - maxc);
+						
+					cursor = minc;
+					_input_text		= str_before + str_after;
+					cut_line();
+				}
+				cursor_select	= -1;
+			} else if(keyboard_string != "") {
+				var ch			= keyboard_string;
+					
+				if(cursor_select == -1) {
+					var str_before	= string_copy(_input_text, 1, cursor);
+					var str_after	= string_copy(_input_text, cursor + 1, string_length(_input_text) - cursor);
+						
+					_input_text		= str_before + ch + str_after;
+					cut_line();
+					move_cursor(string_length(ch));
+				} else {
+					var minc = min(cursor, cursor_select);
+					var maxc = max(cursor, cursor_select);
+						
+					var str_before	= string_copy(_input_text, 1, minc);
+					var str_after	= string_copy(_input_text, maxc + 1, string_length(_input_text) - maxc);
+						
+					_input_text		= str_before + ch + str_after;
+					cut_line();
+					cursor = minc + string_length(ch);
+				}
+					
+				cursor_select	= -1;
 			}
 			
 			keyboard_string = "";
@@ -161,6 +166,11 @@ function textArea(_input, _onModify) constructor {
 	}
 	
 	static display_text = function(_x, _y, _text, _w, _mx = -1, _my = -1) {
+		if(_w != _prev_width) {
+			_prev_width = _w;
+			cut_line();
+		}
+		
 		var _xx = _x, _ch, _chw;
 		var target = -999;
 		
@@ -207,6 +217,8 @@ function textArea(_input, _onModify) constructor {
 						ch_x += _ch_w;
 						ch_cxo = ch_cxn;
 					}
+					if(target == -999)
+						target = string_length(_prev_text);
 					break;
 				}
 				char_run += _l;	
@@ -247,6 +259,13 @@ function textArea(_input, _onModify) constructor {
 						cursor_select	= -1;
 						
 					move_cursor(-1);
+					if(keyboard_check(vk_control)) {
+						while(cursor > 0) {
+							var ch = string_char_at(_prev_text, cursor);
+							if(ch == " ") break
+							cursor--;
+						}
+					} 
 				}
 				if(keyboard_check_pressed(vk_right)) {
 					if(keyboard_check(vk_shift)) {
@@ -256,37 +275,54 @@ function textArea(_input, _onModify) constructor {
 						cursor_select	= -1;
 					
 					move_cursor(1);
+					if(keyboard_check(vk_control)) {
+						while(cursor < string_length(_prev_text)) {
+							var ch = string_char_at(_prev_text, cursor);
+							if(ch == " ") break
+							cursor++;
+						}
+					} 
 				}
 				
 				if(keyboard_check_pressed(vk_up)) {
+					var _target;
+					
 					if(cursor_line == 0) 
-						cursor = 0;
+						_target = 0;
 					else {
 						var _l = cursor_line - 1;
 						var _str = _input_text_line[_l];
 						var _run = tx;
 						var _char = 0;
 						
-						for( var i = 0; i < _l - 1; i++ ) {
+						for( var i = 0; i < _l; i++ ) {
 							_char += string_length(_input_text_line[i]);
 						}
 						
-						for( var i = 0; i < string_length(_str); i++ ) {
-							var _chr = string_char_at(_str, i + 1);
+						for( var i = 1; i <= string_length(_str); i++ ) {
+							var _chr = string_char_at(_str, i);
 							_run += string_width(_chr);
-							if(_run > cursor_pos_x_to) {
-								_char += i;
-								break;
-							}
+							if(_run > cursor_pos_x_to) break;
+							_char++;
 						}
 						
-						cursor = _char;
+						_target = _char;
 					}
+					
+					if(keyboard_check(vk_shift)) {
+						if(cursor_select == -1)
+							cursor_select = cursor;
+					} else 
+						cursor_select	= -1;
+					
+					cursor = _target;
 				}
 				
 				if(keyboard_check_pressed(vk_down)) {
+					var _target;
+					
 					if(cursor_line == array_length(_input_text_line) - 1) 
-						cursor = string_length(_prev_text);
+						_target = string_length(_prev_text);
 					else {
 						var _l = cursor_line + 1;
 						var _str = _input_text_line[_l];
@@ -297,17 +333,23 @@ function textArea(_input, _onModify) constructor {
 							_char += string_length(_input_text_line[i]);
 						}
 						
-						for( var i = 0; i < string_length(_str); i++ ) {
-							var _chr = string_char_at(_str, i + 1);
+						for( var i = 1; i <= string_length(_str); i++ ) {
+							var _chr = string_char_at(_str, i);
 							_run += string_width(_chr);
-							if(_run > cursor_pos_x_to) {
-								_char += i;
-								break;
-							}
+							if(_run > cursor_pos_x_to) break;
+							_char++;
 						}
 						
-						cursor = _char;
+						_target = _char;
 					}
+					
+					if(keyboard_check(vk_shift)) {
+						if(cursor_select == -1)
+							cursor_select = cursor;
+					} else 
+						cursor_select	= -1;
+					
+					cursor = _target;
 				}
 			#endregion
 			
@@ -331,21 +373,21 @@ function textArea(_input, _onModify) constructor {
 						_l = string_length(_str);
 						
 						if(cursor_select != -1) {
-							draw_set_color(c_ui_blue_grey);
+							draw_set_color(c_ui_blue_dkgrey);
 							
 							if(char_run <= ch_sel_min && char_run + _l > ch_sel_min) {
 								var x1 = tx + string_width(string_copy(_str, 1, ch_sel_min - char_run));
 								var x2 = tx + string_width(string_copy(_str, 1, ch_sel_max - char_run));
 						
-								draw_rectangle(x1, ch_y, x2, ch_y + c_h, 0);
+								draw_roundrect_ext(x1, ch_y, x2, ch_y + c_h, 8, 8, 0);
 							} else if(char_run >= ch_sel_min && char_run + _l < ch_sel_max) {
 								var x2 = tx + string_width(_str);
 								
-								draw_rectangle(tx, ch_y, x2, ch_y + c_h, 0);
-							} else if(char_run > ch_sel_min && char_run <= ch_sel_max && char_run + _l > ch_sel_max) {
+								draw_roundrect_ext(tx, ch_y, x2, ch_y + c_h, 8, 8, 0);
+							} else if(char_run > ch_sel_min && char_run <= ch_sel_max && char_run + _l >= ch_sel_max) {
 								var x2 = tx + string_width(string_copy(_str, 1, ch_sel_max - char_run));
 								
-								draw_rectangle(tx, ch_y, x2, ch_y + c_h, 0);
+								draw_roundrect_ext(tx, ch_y, x2, ch_y + c_h, 8, 8, 0);
 							}
 						}
 						

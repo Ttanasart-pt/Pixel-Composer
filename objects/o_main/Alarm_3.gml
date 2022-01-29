@@ -5,6 +5,6 @@
 	if(PANEL_GRAPH.dropFile(file_dropping)) {
 		renderAll();
 	} else
-		load_file_path(file_dropping);
+		load_file_path(file_dropping, true);
 	file_dropping = "";
 #endregion
