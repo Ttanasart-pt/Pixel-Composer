@@ -67,7 +67,7 @@
     "eventToFunction": {},
     "eventStubScript": null,
     "parent": {"name":"s_inspector_text_halign","path":"sprites/s_inspector_text_halign/s_inspector_text_halign.yy",},
-    "resourceVersion": "1.3",
+    "resourceVersion": "1.4",
     "name": "s_inspector_text_halign",
     "tags": [],
     "resourceType": "GMSequence",

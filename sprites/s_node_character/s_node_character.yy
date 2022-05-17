@@ -59,7 +59,7 @@
     "eventToFunction": {},
     "eventStubScript": null,
     "parent": {"name":"s_node_character","path":"sprites/s_node_character/s_node_character.yy",},
-    "resourceVersion": "1.3",
+    "resourceVersion": "1.4",
     "name": "s_node_character",
     "tags": [],
     "resourceType": "GMSequence",

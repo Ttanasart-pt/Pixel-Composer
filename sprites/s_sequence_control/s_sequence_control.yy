@@ -83,7 +83,7 @@
     "eventToFunction": {},
     "eventStubScript": null,
     "parent": {"name":"s_sequence_control","path":"sprites/s_sequence_control/s_sequence_control.yy",},
-    "resourceVersion": "1.3",
+    "resourceVersion": "1.4",
     "name": "s_sequence_control",
     "tags": [],
     "resourceType": "GMSequence",

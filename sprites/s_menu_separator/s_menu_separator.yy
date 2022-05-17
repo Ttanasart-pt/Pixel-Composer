@@ -59,7 +59,7 @@
     "eventToFunction": {},
     "eventStubScript": null,
     "parent": {"name":"s_menu_separator","path":"sprites/s_menu_separator/s_menu_separator.yy",},
-    "resourceVersion": "1.3",
+    "resourceVersion": "1.4",
     "name": "s_menu_separator",
     "tags": [],
     "resourceType": "GMSequence",

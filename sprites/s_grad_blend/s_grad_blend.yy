@@ -59,7 +59,7 @@
     "eventToFunction": {},
     "eventStubScript": null,
     "parent": {"name":"s_grad_blend","path":"sprites/s_grad_blend/s_grad_blend.yy",},
-    "resourceVersion": "1.3",
+    "resourceVersion": "1.4",
     "name": "s_grad_blend",
     "tags": [],
     "resourceType": "GMSequence",

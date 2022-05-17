@@ -59,7 +59,7 @@
     "eventToFunction": {},
     "eventStubScript": null,
     "parent": {"name":"s_icon_accept_32","path":"sprites/s_icon_accept_32/s_icon_accept_32.yy",},
-    "resourceVersion": "1.3",
+    "resourceVersion": "1.4",
     "name": "s_icon_accept_32",
     "tags": [],
     "resourceType": "GMSequence",

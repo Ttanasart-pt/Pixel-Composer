@@ -59,7 +59,7 @@
     "eventToFunction": {},
     "eventStubScript": null,
     "parent": {"name":"s_node_grid_noise","path":"sprites/s_node_grid_noise/s_node_grid_noise.yy",},
-    "resourceVersion": "1.3",
+    "resourceVersion": "1.4",
     "name": "s_node_grid_noise",
     "tags": [],
     "resourceType": "GMSequence",

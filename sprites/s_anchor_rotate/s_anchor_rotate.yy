@@ -63,7 +63,7 @@
     "eventToFunction": {},
     "eventStubScript": null,
     "parent": {"name":"s_anchor_rotate","path":"sprites/s_anchor_rotate/s_anchor_rotate.yy",},
-    "resourceVersion": "1.3",
+    "resourceVersion": "1.4",
     "name": "s_anchor_rotate",
     "tags": [],
     "resourceType": "GMSequence",

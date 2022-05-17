@@ -59,7 +59,7 @@
     "eventToFunction": {},
     "eventStubScript": null,
     "parent": {"name":"s_node_scatter","path":"sprites/s_node_scatter/s_node_scatter.yy",},
-    "resourceVersion": "1.3",
+    "resourceVersion": "1.4",
     "name": "s_node_scatter",
     "tags": [],
     "resourceType": "GMSequence",

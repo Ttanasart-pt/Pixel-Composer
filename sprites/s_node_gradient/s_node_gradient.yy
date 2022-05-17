@@ -59,7 +59,7 @@
     "eventToFunction": {},
     "eventStubScript": null,
     "parent": {"name":"s_node_gradient","path":"sprites/s_node_gradient/s_node_gradient.yy",},
-    "resourceVersion": "1.3",
+    "resourceVersion": "1.4",
     "name": "s_node_gradient",
     "tags": [],
     "resourceType": "GMSequence",

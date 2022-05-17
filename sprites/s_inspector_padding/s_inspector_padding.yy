@@ -59,7 +59,7 @@
     "eventToFunction": {},
     "eventStubScript": null,
     "parent": {"name":"s_inspector_padding","path":"sprites/s_inspector_padding/s_inspector_padding.yy",},
-    "resourceVersion": "1.3",
+    "resourceVersion": "1.4",
     "name": "s_inspector_padding",
     "tags": [],
     "resourceType": "GMSequence",

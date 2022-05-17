@@ -59,7 +59,7 @@
     "eventToFunction": {},
     "eventStubScript": null,
     "parent": {"name":"s_kenney","path":"sprites/s_kenney/s_kenney.yy",},
-    "resourceVersion": "1.3",
+    "resourceVersion": "1.4",
     "name": "s_kenney",
     "tags": [],
     "resourceType": "GMSequence",

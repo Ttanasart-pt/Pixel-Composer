@@ -59,7 +59,7 @@
     "eventToFunction": {},
     "eventStubScript": null,
     "parent": {"name":"s_node_color_data","path":"sprites/s_node_color_data/s_node_color_data.yy",},
-    "resourceVersion": "1.3",
+    "resourceVersion": "1.4",
     "name": "s_node_color_data",
     "tags": [],
     "resourceType": "GMSequence",

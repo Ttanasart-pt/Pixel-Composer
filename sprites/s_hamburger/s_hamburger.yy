@@ -59,7 +59,7 @@
     "eventToFunction": {},
     "eventStubScript": null,
     "parent": {"name":"s_hamburger","path":"sprites/s_hamburger/s_hamburger.yy",},
-    "resourceVersion": "1.3",
+    "resourceVersion": "1.4",
     "name": "s_hamburger",
     "tags": [],
     "resourceType": "GMSequence",

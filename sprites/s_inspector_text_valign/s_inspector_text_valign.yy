@@ -67,7 +67,7 @@
     "eventToFunction": {},
     "eventStubScript": null,
     "parent": {"name":"s_inspector_text_valign","path":"sprites/s_inspector_text_valign/s_inspector_text_valign.yy",},
-    "resourceVersion": "1.3",
+    "resourceVersion": "1.4",
     "name": "s_inspector_text_valign",
     "tags": [],
     "resourceType": "GMSequence",

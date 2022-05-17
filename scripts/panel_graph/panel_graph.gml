@@ -934,8 +934,16 @@ function Panel_Graph(_panel) : PanelContent(_panel) constructor {
 		#region BG
 			if(show_grid) 
 				drawGrid();
+		#endregion
+		
+		#region data
 			draw_set_text(f_p0, fa_right, fa_top, c_ui_blue_ltgrey);
 			draw_text(w - 8, 08, "x" + string(graph_s_to));
+			
+			if(UPDATE == RENDER_TYPE.full)
+				draw_text(w - 8, 28, "Rendering...");
+			else if(UPDATE == RENDER_TYPE.full)
+				draw_text(w - 8, 28, "Rendering partial...");
 		#endregion
 		
 		draw_set_text(f_p0, fa_right, fa_top, c_ui_blue_ltgrey);

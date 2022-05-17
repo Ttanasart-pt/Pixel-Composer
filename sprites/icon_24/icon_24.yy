@@ -59,7 +59,7 @@
     "eventToFunction": {},
     "eventStubScript": null,
     "parent": {"name":"icon_24","path":"sprites/icon_24/icon_24.yy",},
-    "resourceVersion": "1.3",
+    "resourceVersion": "1.4",
     "name": "icon_24",
     "tags": [],
     "resourceType": "GMSequence",

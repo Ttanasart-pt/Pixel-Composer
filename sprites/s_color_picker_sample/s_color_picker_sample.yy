@@ -63,7 +63,7 @@
     "eventToFunction": {},
     "eventStubScript": null,
     "parent": {"name":"s_color_picker_sample","path":"sprites/s_color_picker_sample/s_color_picker_sample.yy",},
-    "resourceVersion": "1.3",
+    "resourceVersion": "1.4",
     "name": "s_color_picker_sample",
     "tags": [],
     "resourceType": "GMSequence",

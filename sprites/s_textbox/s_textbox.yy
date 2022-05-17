@@ -71,7 +71,7 @@
     "eventToFunction": {},
     "eventStubScript": null,
     "parent": {"name":"s_textbox","path":"sprites/s_textbox/s_textbox.yy",},
-    "resourceVersion": "1.3",
+    "resourceVersion": "1.4",
     "name": "s_textbox",
     "tags": [],
     "resourceType": "GMSequence",

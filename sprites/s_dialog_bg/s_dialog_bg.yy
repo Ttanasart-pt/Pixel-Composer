@@ -59,7 +59,7 @@
     "eventToFunction": {},
     "eventStubScript": null,
     "parent": {"name":"s_dialog_bg","path":"sprites/s_dialog_bg/s_dialog_bg.yy",},
-    "resourceVersion": "1.3",
+    "resourceVersion": "1.4",
     "name": "s_dialog_bg",
     "tags": [],
     "resourceType": "GMSequence",

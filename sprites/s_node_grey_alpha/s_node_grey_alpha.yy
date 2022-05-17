@@ -59,7 +59,7 @@
     "eventToFunction": {},
     "eventStubScript": null,
     "parent": {"name":"s_node_grey_alpha","path":"sprites/s_node_grey_alpha/s_node_grey_alpha.yy",},
-    "resourceVersion": "1.3",
+    "resourceVersion": "1.4",
     "name": "s_node_grey_alpha",
     "tags": [],
     "resourceType": "GMSequence",

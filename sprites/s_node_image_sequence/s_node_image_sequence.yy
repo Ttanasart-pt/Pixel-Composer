@@ -59,7 +59,7 @@
     "eventToFunction": {},
     "eventStubScript": null,
     "parent": {"name":"s_node_image_sequence","path":"sprites/s_node_image_sequence/s_node_image_sequence.yy",},
-    "resourceVersion": "1.3",
+    "resourceVersion": "1.4",
     "name": "s_node_image_sequence",
     "tags": [],
     "resourceType": "GMSequence",

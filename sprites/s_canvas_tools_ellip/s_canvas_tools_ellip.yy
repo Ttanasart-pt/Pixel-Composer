@@ -59,7 +59,7 @@
     "eventToFunction": {},
     "eventStubScript": null,
     "parent": {"name":"s_canvas_tools_ellip","path":"sprites/s_canvas_tools_ellip/s_canvas_tools_ellip.yy",},
-    "resourceVersion": "1.3",
+    "resourceVersion": "1.4",
     "name": "s_canvas_tools_ellip",
     "tags": [],
     "resourceType": "GMSequence",

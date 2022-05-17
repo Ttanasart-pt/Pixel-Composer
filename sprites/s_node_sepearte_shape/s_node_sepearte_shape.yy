@@ -59,7 +59,7 @@
     "eventToFunction": {},
     "eventStubScript": null,
     "parent": {"name":"s_node_sepearte_shape","path":"sprites/s_node_sepearte_shape/s_node_sepearte_shape.yy",},
-    "resourceVersion": "1.3",
+    "resourceVersion": "1.4",
     "name": "s_node_sepearte_shape",
     "tags": [],
     "resourceType": "GMSequence",

@@ -59,7 +59,7 @@
     "eventToFunction": {},
     "eventStubScript": null,
     "parent": {"name":"s_node_alpha_cut","path":"sprites/s_node_alpha_cut/s_node_alpha_cut.yy",},
-    "resourceVersion": "1.3",
+    "resourceVersion": "1.4",
     "name": "s_node_alpha_cut",
     "tags": [],
     "resourceType": "GMSequence",

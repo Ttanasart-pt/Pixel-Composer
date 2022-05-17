@@ -59,7 +59,7 @@
     "eventToFunction": {},
     "eventStubScript": null,
     "parent": {"name":"s_node_canvas","path":"sprites/s_node_canvas/s_node_canvas.yy",},
-    "resourceVersion": "1.3",
+    "resourceVersion": "1.4",
     "name": "s_node_canvas",
     "tags": [],
     "resourceType": "GMSequence",

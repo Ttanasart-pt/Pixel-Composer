@@ -59,7 +59,7 @@
     "eventToFunction": {},
     "eventStubScript": null,
     "parent": {"name":"s_ui_panel_active","path":"sprites/s_ui_panel_active/s_ui_panel_active.yy",},
-    "resourceVersion": "1.3",
+    "resourceVersion": "1.4",
     "name": "s_ui_panel_active",
     "tags": [],
     "resourceType": "GMSequence",

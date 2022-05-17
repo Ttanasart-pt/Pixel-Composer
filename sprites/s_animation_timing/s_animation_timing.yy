@@ -59,7 +59,7 @@
     "eventToFunction": {},
     "eventStubScript": null,
     "parent": {"name":"s_animation_timing","path":"sprites/s_animation_timing/s_animation_timing.yy",},
-    "resourceVersion": "1.3",
+    "resourceVersion": "1.4",
     "name": "s_animation_timing",
     "tags": [],
     "resourceType": "GMSequence",

@@ -59,7 +59,7 @@
     "eventToFunction": {},
     "eventStubScript": null,
     "parent": {"name":"s_scroll_box_arrow","path":"sprites/s_scroll_box_arrow/s_scroll_box_arrow.yy",},
-    "resourceVersion": "1.3",
+    "resourceVersion": "1.4",
     "name": "s_scroll_box_arrow",
     "tags": [],
     "resourceType": "GMSequence",

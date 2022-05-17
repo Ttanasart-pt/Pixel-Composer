@@ -63,7 +63,7 @@
     "eventToFunction": {},
     "eventStubScript": null,
     "parent": {"name":"s_text_bullet","path":"sprites/s_text_bullet/s_text_bullet.yy",},
-    "resourceVersion": "1.3",
+    "resourceVersion": "1.4",
     "name": "s_text_bullet",
     "tags": [],
     "resourceType": "GMSequence",

@@ -59,7 +59,7 @@
     "eventToFunction": {},
     "eventStubScript": null,
     "parent": {"name":"s_cursor_path_move","path":"sprites/s_cursor_path_move/s_cursor_path_move.yy",},
-    "resourceVersion": "1.3",
+    "resourceVersion": "1.4",
     "name": "s_cursor_path_move",
     "tags": [],
     "resourceType": "GMSequence",

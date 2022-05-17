@@ -59,7 +59,7 @@
     "eventToFunction": {},
     "eventStubScript": null,
     "parent": {"name":"s_timeline_graph","path":"sprites/s_timeline_graph/s_timeline_graph.yy",},
-    "resourceVersion": "1.3",
+    "resourceVersion": "1.4",
     "name": "s_timeline_graph",
     "tags": [],
     "resourceType": "GMSequence",

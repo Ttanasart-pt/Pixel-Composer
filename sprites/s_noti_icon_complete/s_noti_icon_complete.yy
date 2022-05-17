@@ -59,7 +59,7 @@
     "eventToFunction": {},
     "eventStubScript": null,
     "parent": {"name":"s_noti_icon_complete","path":"sprites/s_noti_icon_complete/s_noti_icon_complete.yy",},
-    "resourceVersion": "1.3",
+    "resourceVersion": "1.4",
     "name": "s_noti_icon_complete",
     "tags": [],
     "resourceType": "GMSequence",

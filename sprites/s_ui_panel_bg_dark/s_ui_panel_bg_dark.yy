@@ -59,7 +59,7 @@
     "eventToFunction": {},
     "eventStubScript": null,
     "parent": {"name":"s_ui_panel_bg_dark","path":"sprites/s_ui_panel_bg_dark/s_ui_panel_bg_dark.yy",},
-    "resourceVersion": "1.3",
+    "resourceVersion": "1.4",
     "name": "s_ui_panel_bg_dark",
     "tags": [],
     "resourceType": "GMSequence",

@@ -67,7 +67,7 @@
     "eventToFunction": {},
     "eventStubScript": null,
     "parent": {"name":"s_prop_on_end","path":"sprites/s_prop_on_end/s_prop_on_end.yy",},
-    "resourceVersion": "1.3",
+    "resourceVersion": "1.4",
     "name": "s_prop_on_end",
     "tags": [],
     "resourceType": "GMSequence",

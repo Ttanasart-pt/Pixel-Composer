@@ -59,7 +59,7 @@
     "eventToFunction": {},
     "eventStubScript": null,
     "parent": {"name":"s_node_dilate","path":"sprites/s_node_dilate/s_node_dilate.yy",},
-    "resourceVersion": "1.3",
+    "resourceVersion": "1.4",
     "name": "s_node_dilate",
     "tags": [],
     "resourceType": "GMSequence",

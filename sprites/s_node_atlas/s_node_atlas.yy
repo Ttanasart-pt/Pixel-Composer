@@ -59,7 +59,7 @@
     "eventToFunction": {},
     "eventStubScript": null,
     "parent": {"name":"s_node_atlas","path":"sprites/s_node_atlas/s_node_atlas.yy",},
-    "resourceVersion": "1.3",
+    "resourceVersion": "1.4",
     "name": "s_node_atlas",
     "tags": [],
     "resourceType": "GMSequence",

@@ -59,7 +59,7 @@
     "eventToFunction": {},
     "eventStubScript": null,
     "parent": {"name":"s_node_color_replace","path":"sprites/s_node_color_replace/s_node_color_replace.yy",},
-    "resourceVersion": "1.3",
+    "resourceVersion": "1.4",
     "name": "s_node_color_replace",
     "tags": [],
     "resourceType": "GMSequence",

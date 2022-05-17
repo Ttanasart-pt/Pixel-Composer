@@ -59,7 +59,7 @@
     "eventToFunction": {},
     "eventStubScript": null,
     "parent": {"name":"s_node_unicode","path":"sprites/s_node_unicode/s_node_unicode.yy",},
-    "resourceVersion": "1.3",
+    "resourceVersion": "1.4",
     "name": "s_node_unicode",
     "tags": [],
     "resourceType": "GMSequence",

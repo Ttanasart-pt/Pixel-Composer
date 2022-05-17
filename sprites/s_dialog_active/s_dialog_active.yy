@@ -59,7 +59,7 @@
     "eventToFunction": {},
     "eventStubScript": null,
     "parent": {"name":"s_dialog_active","path":"sprites/s_dialog_active/s_dialog_active.yy",},
-    "resourceVersion": "1.3",
+    "resourceVersion": "1.4",
     "name": "s_dialog_active",
     "tags": [],
     "resourceType": "GMSequence",

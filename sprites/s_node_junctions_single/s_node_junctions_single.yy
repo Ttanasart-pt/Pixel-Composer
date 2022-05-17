@@ -103,7 +103,7 @@
     "eventToFunction": {},
     "eventStubScript": null,
     "parent": {"name":"s_node_junctions_single","path":"sprites/s_node_junctions_single/s_node_junctions_single.yy",},
-    "resourceVersion": "1.3",
+    "resourceVersion": "1.4",
     "name": "s_node_junctions_single",
     "tags": [],
     "resourceType": "GMSequence",

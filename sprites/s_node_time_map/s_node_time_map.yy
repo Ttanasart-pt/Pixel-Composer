@@ -59,7 +59,7 @@
     "eventToFunction": {},
     "eventStubScript": null,
     "parent": {"name":"s_node_time_map","path":"sprites/s_node_time_map/s_node_time_map.yy",},
-    "resourceVersion": "1.3",
+    "resourceVersion": "1.4",
     "name": "s_node_time_map",
     "tags": [],
     "resourceType": "GMSequence",

@@ -59,7 +59,7 @@
     "eventToFunction": {},
     "eventStubScript": null,
     "parent": {"name":"s_minus_24","path":"sprites/s_minus_24/s_minus_24.yy",},
-    "resourceVersion": "1.3",
+    "resourceVersion": "1.4",
     "name": "s_minus_24",
     "tags": [],
     "resourceType": "GMSequence",

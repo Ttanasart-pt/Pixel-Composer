@@ -14,9 +14,9 @@
 	DEBUG = false;
 	
 	globalvar VERSION, SAVEFILE_VERSION, VERSION_STRING;
-	VERSION = 90;
+	VERSION = 91;
 	SAVEFILE_VERSION = 90;
-	VERSION_STRING = "0.9.0";
+	VERSION_STRING = "0.9.1";
 	
 	globalvar NODES, ANIMATOR, NODE_MAP, APPEND_MAP, HOTKEYS, HOTKEY_CONTEXT;
 	
@@ -99,6 +99,7 @@
 	#region functions
 		#macro BLEND_ADD gpu_set_blendmode_ext(bm_one, bm_zero);
 		#macro BLEND_NORMAL gpu_set_blendmode(bm_normal);
+		#macro BLEND_OVERRIDE gpu_set_blendmode_ext(bm_one, bm_zero);
 	#endregion
 #endregion
 

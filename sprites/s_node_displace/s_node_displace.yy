@@ -59,7 +59,7 @@
     "eventToFunction": {},
     "eventStubScript": null,
     "parent": {"name":"s_node_displace","path":"sprites/s_node_displace/s_node_displace.yy",},
-    "resourceVersion": "1.3",
+    "resourceVersion": "1.4",
     "name": "s_node_displace",
     "tags": [],
     "resourceType": "GMSequence",

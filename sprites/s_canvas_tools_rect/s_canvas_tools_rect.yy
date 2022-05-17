@@ -59,7 +59,7 @@
     "eventToFunction": {},
     "eventStubScript": null,
     "parent": {"name":"s_canvas_tools_rect","path":"sprites/s_canvas_tools_rect/s_canvas_tools_rect.yy",},
-    "resourceVersion": "1.3",
+    "resourceVersion": "1.4",
     "name": "s_canvas_tools_rect",
     "tags": [],
     "resourceType": "GMSequence",

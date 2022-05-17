@@ -59,7 +59,7 @@
     "eventToFunction": {},
     "eventStubScript": null,
     "parent": {"name":"s_node_texture_map","path":"sprites/s_node_texture_map/s_node_texture_map.yy",},
-    "resourceVersion": "1.3",
+    "resourceVersion": "1.4",
     "name": "s_node_texture_map",
     "tags": [],
     "resourceType": "GMSequence",

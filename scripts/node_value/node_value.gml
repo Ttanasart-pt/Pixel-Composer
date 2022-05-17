@@ -444,7 +444,7 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 		var val = getValue();
 		
 		if(is_array(val)) {
-			if(typeArray(display_type))
+			if(typeArray(display_type) && array_length(val) > 0)
 				return is_array(val[0]);
 			else
 				return true;

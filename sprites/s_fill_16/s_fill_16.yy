@@ -59,7 +59,7 @@
     "eventToFunction": {},
     "eventStubScript": null,
     "parent": {"name":"s_fill_16","path":"sprites/s_fill_16/s_fill_16.yy",},
-    "resourceVersion": "1.3",
+    "resourceVersion": "1.4",
     "name": "s_fill_16",
     "tags": [],
     "resourceType": "GMSequence",

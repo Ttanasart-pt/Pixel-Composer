@@ -67,7 +67,7 @@
     "eventToFunction": {},
     "eventStubScript": null,
     "parent": {"name":"s_button_left","path":"sprites/s_button_left/s_button_left.yy",},
-    "resourceVersion": "1.3",
+    "resourceVersion": "1.4",
     "name": "s_button_left",
     "tags": [],
     "resourceType": "GMSequence",

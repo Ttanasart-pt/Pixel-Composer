@@ -59,7 +59,7 @@
     "eventToFunction": {},
     "eventStubScript": null,
     "parent": {"name":"s_node_particle_effector","path":"sprites/s_node_particle_effector/s_node_particle_effector.yy",},
-    "resourceVersion": "1.3",
+    "resourceVersion": "1.4",
     "name": "s_node_particle_effector",
     "tags": [],
     "resourceType": "GMSequence",

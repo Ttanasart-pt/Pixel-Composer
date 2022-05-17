@@ -71,7 +71,7 @@
     "eventToFunction": {},
     "eventStubScript": null,
     "parent": {"name":"s_arrow_16","path":"sprites/s_arrow_16/s_arrow_16.yy",},
-    "resourceVersion": "1.3",
+    "resourceVersion": "1.4",
     "name": "s_arrow_16",
     "tags": [],
     "resourceType": "GMSequence",

@@ -72,7 +72,7 @@ function Node_Export(_x, _y) : Node(_x, _y) constructor {
 		var opti = inputs[| 6].getValue();
 		var fuzz = inputs[| 7].getValue();
 		var dith = inputs[| 8].getValue();
-						
+		
 		var converter = working_directory + "ImageMagick\\convert.exe";
 		var framerate = ANIMATOR.framerate / 10;
 		var loop_str = loop? 0 : 1;

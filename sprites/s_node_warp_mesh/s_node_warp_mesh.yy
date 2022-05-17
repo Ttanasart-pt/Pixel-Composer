@@ -59,7 +59,7 @@
     "eventToFunction": {},
     "eventStubScript": null,
     "parent": {"name":"s_node_warp_mesh","path":"sprites/s_node_warp_mesh/s_node_warp_mesh.yy",},
-    "resourceVersion": "1.3",
+    "resourceVersion": "1.4",
     "name": "s_node_warp_mesh",
     "tags": [],
     "resourceType": "GMSequence",

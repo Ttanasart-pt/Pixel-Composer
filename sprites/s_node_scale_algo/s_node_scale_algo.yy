@@ -59,7 +59,7 @@
     "eventToFunction": {},
     "eventStubScript": null,
     "parent": {"name":"s_node_scale_algo","path":"sprites/s_node_scale_algo/s_node_scale_algo.yy",},
-    "resourceVersion": "1.3",
+    "resourceVersion": "1.4",
     "name": "s_node_scale_algo",
     "tags": [],
     "resourceType": "GMSequence",

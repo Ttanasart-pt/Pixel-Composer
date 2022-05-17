@@ -59,7 +59,7 @@
     "eventToFunction": {},
     "eventStubScript": null,
     "parent": {"name":"s_animation_setting","path":"sprites/s_animation_setting/s_animation_setting.yy",},
-    "resourceVersion": "1.3",
+    "resourceVersion": "1.4",
     "name": "s_animation_setting",
     "tags": [],
     "resourceType": "GMSequence",

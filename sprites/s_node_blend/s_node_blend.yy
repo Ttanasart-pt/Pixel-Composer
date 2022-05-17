@@ -59,7 +59,7 @@
     "eventToFunction": {},
     "eventStubScript": null,
     "parent": {"name":"s_node_blend","path":"sprites/s_node_blend/s_node_blend.yy",},
-    "resourceVersion": "1.3",
+    "resourceVersion": "1.4",
     "name": "s_node_blend",
     "tags": [],
     "resourceType": "GMSequence",

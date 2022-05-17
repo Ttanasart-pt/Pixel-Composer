@@ -59,7 +59,7 @@
     "eventToFunction": {},
     "eventStubScript": null,
     "parent": {"name":"s_group_24","path":"sprites/s_group_24/s_group_24.yy",},
-    "resourceVersion": "1.3",
+    "resourceVersion": "1.4",
     "name": "s_group_24",
     "tags": [],
     "resourceType": "GMSequence",

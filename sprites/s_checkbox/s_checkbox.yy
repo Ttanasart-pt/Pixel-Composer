@@ -71,7 +71,7 @@
     "eventToFunction": {},
     "eventStubScript": null,
     "parent": {"name":"s_checkbox","path":"sprites/s_checkbox/s_checkbox.yy",},
-    "resourceVersion": "1.3",
+    "resourceVersion": "1.4",
     "name": "s_checkbox",
     "tags": [],
     "resourceType": "GMSequence",

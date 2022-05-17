@@ -51,43 +51,65 @@ function LOAD_PATH(path, readonly = false) {
 	
 	var create_list = ds_list_create();
 	if(ds_map_exists(_map, "nodes")) {
-		var _node_list = _map[? "nodes"];
-		for(var i = 0; i < ds_list_size(_node_list); i++) {
-			var _node = nodeLoad(_node_list[| i]);
-			if(_node) ds_list_add(create_list, _node);
+		try {
+			var _node_list = _map[? "nodes"];
+			for(var i = 0; i < ds_list_size(_node_list); i++) {
+				var _node = nodeLoad(_node_list[| i]);
+				if(_node) ds_list_add(create_list, _node);
+			}
+		} catch(e) {
+			PANEL_MENU.addNotiExtra("Node load error : " + e.message);
+			log_warning("LOAD, node", e.longMessage);
 		}
 	}
 	
-	if(ds_map_exists(_map, "animator")) {
-		var _anim_map			= _map[? "animator"];
-		ANIMATOR.frames_total	= _anim_map[? "frames_total"];
-		ANIMATOR.framerate		= _anim_map[? "framerate"];
+	try {
+		if(ds_map_exists(_map, "animator")) {
+			var _anim_map			= _map[? "animator"];
+			ANIMATOR.frames_total	= ds_map_try_get(_anim_map, "frames_total");
+			ANIMATOR.framerate		= ds_map_try_get(_anim_map, "framerate");
+		}
+	} catch(e) {
+		PANEL_MENU.addNotiExtra("Animator load error : " + e.message);
+		log_warning("LOAD, animator", e.longMessage);
 	}
 	
 	ds_queue_clear(CONNECTION_CONFLICT);
 	
-	for(var i = 0; i < ds_list_size(create_list); i++) {
-		create_list[| i].loadGroup();
+	try {
+		for(var i = 0; i < ds_list_size(create_list); i++)
+			create_list[| i].loadGroup();
+	} catch(e) {
+		PANEL_MENU.addNotiExtra("Group load error : " + e.message);
+		log_warning("LOAD, group", e.longMessage);
 	}
 	
-	for(var i = 0; i < ds_list_size(create_list); i++) {
-		create_list[| i].postDeserialize();
+	try {
+		for(var i = 0; i < ds_list_size(create_list); i++)
+			create_list[| i].postDeserialize();
+	} catch(e) {
+		PANEL_MENU.addNotiExtra("Deserialize error : " + e.message);
+		log_warning("LOAD, deserialize", e.longMessage);
 	}
 	
-	for(var i = 0; i < ds_list_size(create_list); i++) {
-		create_list[| i].preConnect();
-	}
-	
-	for(var i = 0; i < ds_list_size(create_list); i++) {
-		create_list[| i].connect();
-	}
-	
-	for(var i = 0; i < ds_list_size(create_list); i++) {
+	try {
+		for(var i = 0; i < ds_list_size(create_list); i++)
+			create_list[| i].preConnect();
+		for(var i = 0; i < ds_list_size(create_list); i++)
+			create_list[| i].connect();
+		for(var i = 0; i < ds_list_size(create_list); i++)
 		create_list[| i].postConnect();
+	} catch(e) {
+		PANEL_MENU.addNotiExtra("Connect error : " + e.message);
+		log_warning("LOAD, connect", e.longMessage);
 	}
 	
-	for(var i = 0; i < ds_list_size(create_list); i++) {
-		create_list[| i].doUpdate();
+	try {
+		for(var i = 0; i < ds_list_size(create_list); i++)
+			create_list[| i].doUpdate();
+	} catch(e) {
+		PANEL_MENU.addNotiExtra("Update error : " + e.message);
+		log_warning("LOAD, update", e.longMessage);
 	}
 	
 	renderAll();
@@ -95,17 +117,22 @@ function LOAD_PATH(path, readonly = false) {
 	if(!ds_queue_empty(CONNECTION_CONFLICT)) {
 		var pass = 0;
 		
-		while(++pass < 4 && !ds_queue_empty(CONNECTION_CONFLICT)) {
-			var size = ds_queue_size(CONNECTION_CONFLICT);
-			log_message("LOAD", "[Connect] " + string(size) + " Connection conflict(s) detected ( pass: " + string(pass) + " )");
-			repeat(size) {
-				ds_queue_dequeue(CONNECTION_CONFLICT).connect();	
+		try {
+			while(++pass < 4 && !ds_queue_empty(CONNECTION_CONFLICT)) {
+				var size = ds_queue_size(CONNECTION_CONFLICT);
+				log_message("LOAD", "[Connect] " + string(size) + " Connection conflict(s) detected ( pass: " + string(pass) + " )");
+				repeat(size) {
+					ds_queue_dequeue(CONNECTION_CONFLICT).connect();	
+				}
+				renderAll();
 			}
-			renderAll();
-		}
 		
-		if(!ds_queue_empty(CONNECTION_CONFLICT))
-			PANEL_MENU.addNotiExtra("Some connection(s) is unsolved. This may caused by render node not being update properly, or image path is broken.");
+			if(!ds_queue_empty(CONNECTION_CONFLICT))
+				PANEL_MENU.addNotiExtra("Some connection(s) is unsolved. This may caused by render node not being update properly, or image path is broken.");
+		} catch(e) {
+			PANEL_MENU.addNotiExtra("Conflict solver error : " + e.message);
+			log_warning("LOAD, connect solver", e.longMessage);
+		}
 	}
 	
 	LOADING = false;

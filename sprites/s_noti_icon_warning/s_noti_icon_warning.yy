@@ -59,7 +59,7 @@
     "eventToFunction": {},
     "eventStubScript": null,
     "parent": {"name":"s_noti_icon_warning","path":"sprites/s_noti_icon_warning/s_noti_icon_warning.yy",},
-    "resourceVersion": "1.3",
+    "resourceVersion": "1.4",
     "name": "s_noti_icon_warning",
     "tags": [],
     "resourceType": "GMSequence",

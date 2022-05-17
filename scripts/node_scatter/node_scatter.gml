@@ -100,6 +100,7 @@ function Node_Scatter(_x, _y) : Node(_x, _y) constructor {
 			surface_reset_target();
 		}
 		
+		BLEND_OVERRIDE
 		var res_index = 0, bg = 0;
 		for(var i = 0; i < _amount; i++) {
 			var sp = area_get_random_point(_area, _dist, _scat, i, _amount);
@@ -139,11 +140,12 @@ function Node_Scatter(_x, _y) : Node(_x, _y) constructor {
 			res_index = bg;
 			bg = !bg;
 		}
+		BLEND_NORMAL
 		
 		surface_set_target(_outSurf);
 			draw_clear_alpha(0, 0);
 			BLEND_ADD
-		
+			
 			draw_surface_safe(temp_surf[res_index], 0, 0);
 			
 			BLEND_NORMAL

@@ -63,7 +63,7 @@
     "eventToFunction": {},
     "eventStubScript": null,
     "parent": {"name":"s_ui_panel_bg","path":"sprites/s_ui_panel_bg/s_ui_panel_bg.yy",},
-    "resourceVersion": "1.3",
+    "resourceVersion": "1.4",
     "name": "s_ui_panel_bg",
     "tags": [],
     "resourceType": "GMSequence",

@@ -59,7 +59,7 @@
     "eventToFunction": {},
     "eventStubScript": null,
     "parent": {"name":"s_cache","path":"sprites/s_cache/s_cache.yy",},
-    "resourceVersion": "1.3",
+    "resourceVersion": "1.4",
     "name": "s_cache",
     "tags": [],
     "resourceType": "GMSequence",

@@ -59,7 +59,7 @@
     "eventToFunction": {},
     "eventStubScript": null,
     "parent": {"name":"s_node_pin_bg","path":"sprites/s_node_pin_bg/s_node_pin_bg.yy",},
-    "resourceVersion": "1.3",
+    "resourceVersion": "1.4",
     "name": "s_node_pin_bg",
     "tags": [],
     "resourceType": "GMSequence",

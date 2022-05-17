@@ -59,7 +59,7 @@
     "eventToFunction": {},
     "eventStubScript": null,
     "parent": {"name":"s_timeline_clock","path":"sprites/s_timeline_clock/s_timeline_clock.yy",},
-    "resourceVersion": "1.3",
+    "resourceVersion": "1.4",
     "name": "s_timeline_clock",
     "tags": [],
     "resourceType": "GMSequence",

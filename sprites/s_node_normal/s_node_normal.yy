@@ -59,7 +59,7 @@
     "eventToFunction": {},
     "eventStubScript": null,
     "parent": {"name":"s_node_normal","path":"sprites/s_node_normal/s_node_normal.yy",},
-    "resourceVersion": "1.3",
+    "resourceVersion": "1.4",
     "name": "s_node_normal",
     "tags": [],
     "resourceType": "GMSequence",

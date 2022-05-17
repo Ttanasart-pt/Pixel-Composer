@@ -287,11 +287,15 @@ function Node_Composite(_x, _y) : Node_Processor(_x, _y) constructor {
 		}
 		
 		var res_index = 0, bg = 0;
-		for(var i = input_fix_len; i < array_length(_data) - data_length; i += data_length) {
-			var _s   = _data[i + 0];
-			var _pos = _data[i + 1];
-			var _rot = _data[i + 2];
-			var _sca = _data[i + 3];
+		var imageAmo = (ds_list_size(inputs) - input_fix_len) / data_length;
+		
+		BLEND_OVERRIDE
+		for(var i = 0; i < imageAmo; i++) {
+			var startDataIndex = input_fix_len + i * data_length;
+			var _s   = _data[startDataIndex + 0];
+			var _pos = _data[startDataIndex + 1];
+			var _rot = _data[startDataIndex + 2];
+			var _sca = _data[startDataIndex + 3];
 			
 			if(!_s || is_array(_s)) continue;
 			
@@ -310,6 +314,7 @@ function Node_Composite(_x, _y) : Node_Processor(_x, _y) constructor {
 			res_index = bg;
 			bg = !bg;
 		}
+		BLEND_NORMAL
 		
 		surface_set_target(_outSurf);
 		draw_clear_alpha(0, 0);

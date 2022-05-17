@@ -103,7 +103,7 @@
     "eventToFunction": {},
     "eventStubScript": null,
     "parent": {"name":"s_node_junctions_array_hover","path":"sprites/s_node_junctions_array_hover/s_node_junctions_array_hover.yy",},
-    "resourceVersion": "1.3",
+    "resourceVersion": "1.4",
     "name": "s_node_junctions_array_hover",
     "tags": [],
     "resourceType": "GMSequence",

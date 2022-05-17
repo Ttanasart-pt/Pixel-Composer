@@ -59,7 +59,7 @@
     "eventToFunction": {},
     "eventStubScript": null,
     "parent": {"name":"s_node_timeline_preview","path":"sprites/s_node_timeline_preview/s_node_timeline_preview.yy",},
-    "resourceVersion": "1.3",
+    "resourceVersion": "1.4",
     "name": "s_node_timeline_preview",
     "tags": [],
     "resourceType": "GMSequence",

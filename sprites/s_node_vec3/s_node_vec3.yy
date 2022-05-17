@@ -59,7 +59,7 @@
     "eventToFunction": {},
     "eventStubScript": null,
     "parent": {"name":"s_node_vec3","path":"sprites/s_node_vec3/s_node_vec3.yy",},
-    "resourceVersion": "1.3",
+    "resourceVersion": "1.4",
     "name": "s_node_vec3",
     "tags": [],
     "resourceType": "GMSequence",

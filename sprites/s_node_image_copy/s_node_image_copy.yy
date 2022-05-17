@@ -59,7 +59,7 @@
     "eventToFunction": {},
     "eventStubScript": null,
     "parent": {"name":"s_node_image_copy","path":"sprites/s_node_image_copy/s_node_image_copy.yy",},
-    "resourceVersion": "1.3",
+    "resourceVersion": "1.4",
     "name": "s_node_image_copy",
     "tags": [],
     "resourceType": "GMSequence",

@@ -59,7 +59,7 @@
     "eventToFunction": {},
     "eventStubScript": null,
     "parent": {"name":"s_node_dithering","path":"sprites/s_node_dithering/s_node_dithering.yy",},
-    "resourceVersion": "1.3",
+    "resourceVersion": "1.4",
     "name": "s_node_dithering",
     "tags": [],
     "resourceType": "GMSequence",

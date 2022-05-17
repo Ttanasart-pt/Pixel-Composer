@@ -63,7 +63,7 @@
     "eventToFunction": {},
     "eventStubScript": null,
     "parent": {"name":"s_padding_link","path":"sprites/s_padding_link/s_padding_link.yy",},
-    "resourceVersion": "1.3",
+    "resourceVersion": "1.4",
     "name": "s_padding_link",
     "tags": [],
     "resourceType": "GMSequence",

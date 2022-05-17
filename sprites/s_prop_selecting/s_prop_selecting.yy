@@ -63,7 +63,7 @@
     "eventToFunction": {},
     "eventStubScript": null,
     "parent": {"name":"s_prop_selecting","path":"sprites/s_prop_selecting/s_prop_selecting.yy",},
-    "resourceVersion": "1.3",
+    "resourceVersion": "1.4",
     "name": "s_prop_selecting",
     "tags": [],
     "resourceType": "GMSequence",

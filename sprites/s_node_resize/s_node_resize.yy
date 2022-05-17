@@ -59,7 +59,7 @@
     "eventToFunction": {},
     "eventStubScript": null,
     "parent": {"name":"s_node_resize","path":"sprites/s_node_resize/s_node_resize.yy",},
-    "resourceVersion": "1.3",
+    "resourceVersion": "1.4",
     "name": "s_node_resize",
     "tags": [],
     "resourceType": "GMSequence",

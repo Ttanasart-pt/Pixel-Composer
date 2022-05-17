@@ -59,7 +59,7 @@
     "eventToFunction": {},
     "eventStubScript": null,
     "parent": {"name":"s_texture_default","path":"sprites/s_texture_default/s_texture_default.yy",},
-    "resourceVersion": "1.3",
+    "resourceVersion": "1.4",
     "name": "s_texture_default",
     "tags": [],
     "resourceType": "GMSequence",

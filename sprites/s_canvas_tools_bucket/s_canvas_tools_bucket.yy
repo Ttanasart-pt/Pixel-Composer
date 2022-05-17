@@ -59,7 +59,7 @@
     "eventToFunction": {},
     "eventStubScript": null,
     "parent": {"name":"s_canvas_tools_bucket","path":"sprites/s_canvas_tools_bucket/s_canvas_tools_bucket.yy",},
-    "resourceVersion": "1.3",
+    "resourceVersion": "1.4",
     "name": "s_canvas_tools_bucket",
     "tags": [],
     "resourceType": "GMSequence",

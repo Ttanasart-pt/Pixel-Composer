@@ -59,7 +59,7 @@
     "eventToFunction": {},
     "eventStubScript": null,
     "parent": {"name":"s_menu_button","path":"sprites/s_menu_button/s_menu_button.yy",},
-    "resourceVersion": "1.3",
+    "resourceVersion": "1.4",
     "name": "s_menu_button",
     "tags": [],
     "resourceType": "GMSequence",

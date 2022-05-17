@@ -59,7 +59,7 @@
     "eventToFunction": {},
     "eventStubScript": null,
     "parent": {"name":"s_node_math","path":"sprites/s_node_math/s_node_math.yy",},
-    "resourceVersion": "1.3",
+    "resourceVersion": "1.4",
     "name": "s_node_math",
     "tags": [],
     "resourceType": "GMSequence",

@@ -59,7 +59,7 @@
     "eventToFunction": {},
     "eventStubScript": null,
     "parent": {"name":"s_text_slider","path":"sprites/s_text_slider/s_text_slider.yy",},
-    "resourceVersion": "1.3",
+    "resourceVersion": "1.4",
     "name": "s_text_slider",
     "tags": [],
     "resourceType": "GMSequence",

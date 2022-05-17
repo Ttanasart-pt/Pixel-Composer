@@ -47,7 +47,9 @@ function draw_surface_blend(background, foreground, blend, alpha, _mask = 0, til
 	shader_set_uniform_f_array(uniform_dim_rat,	[ surface_get_width(background) / surface_get_width(foreground), surface_get_height(background) / surface_get_height(foreground) ]);
 	shader_set_uniform_f(uniform_alpha,	alpha);
 	shader_set_uniform_i(uniform_tile,	tile);
-			
+	
+	BLEND_OVERRIDE
 	draw_surface_safe(background, 0, 0);
+	BLEND_NORMAL
 	shader_reset();
 }

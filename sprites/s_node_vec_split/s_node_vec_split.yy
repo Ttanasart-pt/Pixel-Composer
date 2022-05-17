@@ -59,7 +59,7 @@
     "eventToFunction": {},
     "eventStubScript": null,
     "parent": {"name":"s_node_vec_split","path":"sprites/s_node_vec_split/s_node_vec_split.yy",},
-    "resourceVersion": "1.3",
+    "resourceVersion": "1.4",
     "name": "s_node_vec_split",
     "tags": [],
     "resourceType": "GMSequence",

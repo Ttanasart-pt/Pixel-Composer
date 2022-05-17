@@ -59,7 +59,7 @@
     "eventToFunction": {},
     "eventStubScript": null,
     "parent": {"name":"s_node_erode","path":"sprites/s_node_erode/s_node_erode.yy",},
-    "resourceVersion": "1.3",
+    "resourceVersion": "1.4",
     "name": "s_node_erode",
     "tags": [],
     "resourceType": "GMSequence",

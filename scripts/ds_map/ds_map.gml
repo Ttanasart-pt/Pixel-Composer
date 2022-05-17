@@ -1,4 +1,4 @@
-function ds_map_try_get(map, key, def) {
+function ds_map_try_get(map, key, def = 0) {
 	if(ds_map_exists(map, key)) return map[? key];
 	return def;
 }

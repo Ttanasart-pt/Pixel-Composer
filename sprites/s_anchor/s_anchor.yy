@@ -59,7 +59,7 @@
     "eventToFunction": {},
     "eventStubScript": null,
     "parent": {"name":"s_anchor","path":"sprites/s_anchor/s_anchor.yy",},
-    "resourceVersion": "1.3",
+    "resourceVersion": "1.4",
     "name": "s_anchor",
     "tags": [],
     "resourceType": "GMSequence",

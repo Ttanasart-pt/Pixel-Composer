@@ -59,7 +59,7 @@
     "eventToFunction": {},
     "eventStubScript": null,
     "parent": {"name":"s_ui_scrollbar","path":"sprites/s_ui_scrollbar/s_ui_scrollbar.yy",},
-    "resourceVersion": "1.3",
+    "resourceVersion": "1.4",
     "name": "s_ui_scrollbar",
     "tags": [],
     "resourceType": "GMSequence",

@@ -59,7 +59,7 @@
     "eventToFunction": {},
     "eventStubScript": null,
     "parent": {"name":"s_node_array_get","path":"sprites/s_node_array_get/s_node_array_get.yy",},
-    "resourceVersion": "1.3",
+    "resourceVersion": "1.4",
     "name": "s_node_array_get",
     "tags": [],
     "resourceType": "GMSequence",

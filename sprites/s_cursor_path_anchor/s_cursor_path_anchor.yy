@@ -59,7 +59,7 @@
     "eventToFunction": {},
     "eventStubScript": null,
     "parent": {"name":"s_cursor_path_anchor","path":"sprites/s_cursor_path_anchor/s_cursor_path_anchor.yy",},
-    "resourceVersion": "1.3",
+    "resourceVersion": "1.4",
     "name": "s_cursor_path_anchor",
     "tags": [],
     "resourceType": "GMSequence",

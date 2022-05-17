@@ -59,7 +59,7 @@
     "eventToFunction": {},
     "eventStubScript": null,
     "parent": {"name":"s_control_edit","path":"sprites/s_control_edit/s_control_edit.yy",},
-    "resourceVersion": "1.3",
+    "resourceVersion": "1.4",
     "name": "s_control_edit",
     "tags": [],
     "resourceType": "GMSequence",

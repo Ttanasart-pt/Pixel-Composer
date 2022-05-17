@@ -59,7 +59,7 @@
     "eventToFunction": {},
     "eventStubScript": null,
     "parent": {"name":"s_loop_16","path":"sprites/s_loop_16/s_loop_16.yy",},
-    "resourceVersion": "1.3",
+    "resourceVersion": "1.4",
     "name": "s_loop_16",
     "tags": [],
     "resourceType": "GMSequence",

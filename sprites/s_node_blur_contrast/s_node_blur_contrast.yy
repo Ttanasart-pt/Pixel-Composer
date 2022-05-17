@@ -59,7 +59,7 @@
     "eventToFunction": {},
     "eventStubScript": null,
     "parent": {"name":"s_node_blur_contrast","path":"sprites/s_node_blur_contrast/s_node_blur_contrast.yy",},
-    "resourceVersion": "1.3",
+    "resourceVersion": "1.4",
     "name": "s_node_blur_contrast",
     "tags": [],
     "resourceType": "GMSequence",

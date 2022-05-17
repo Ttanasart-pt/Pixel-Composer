@@ -59,7 +59,7 @@
     "eventToFunction": {},
     "eventStubScript": null,
     "parent": {"name":"s_node_3d_transform","path":"sprites/s_node_3d_transform/s_node_3d_transform.yy",},
-    "resourceVersion": "1.3",
+    "resourceVersion": "1.4",
     "name": "s_node_3d_transform",
     "tags": [],
     "resourceType": "GMSequence",

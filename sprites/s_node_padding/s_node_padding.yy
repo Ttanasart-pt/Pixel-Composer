@@ -59,7 +59,7 @@
     "eventToFunction": {},
     "eventStubScript": null,
     "parent": {"name":"s_node_padding","path":"sprites/s_node_padding/s_node_padding.yy",},
-    "resourceVersion": "1.3",
+    "resourceVersion": "1.4",
     "name": "s_node_padding",
     "tags": [],
     "resourceType": "GMSequence",

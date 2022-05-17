@@ -59,7 +59,7 @@
     "eventToFunction": {},
     "eventStubScript": null,
     "parent": {"name":"icon_64","path":"sprites/icon_64/icon_64.yy",},
-    "resourceVersion": "1.3",
+    "resourceVersion": "1.4",
     "name": "icon_64",
     "tags": [],
     "resourceType": "GMSequence",

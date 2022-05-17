@@ -59,7 +59,7 @@
     "eventToFunction": {},
     "eventStubScript": null,
     "parent": {"name":"s_rotator_bg","path":"sprites/s_rotator_bg/s_rotator_bg.yy",},
-    "resourceVersion": "1.3",
+    "resourceVersion": "1.4",
     "name": "s_rotator_bg",
     "tags": [],
     "resourceType": "GMSequence",

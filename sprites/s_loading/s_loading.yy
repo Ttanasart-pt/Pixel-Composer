@@ -59,7 +59,7 @@
     "eventToFunction": {},
     "eventStubScript": null,
     "parent": {"name":"s_loading","path":"sprites/s_loading/s_loading.yy",},
-    "resourceVersion": "1.3",
+    "resourceVersion": "1.4",
     "name": "s_loading",
     "tags": [],
     "resourceType": "GMSequence",

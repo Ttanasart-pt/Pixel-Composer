@@ -75,7 +75,7 @@
     "eventToFunction": {},
     "eventStubScript": null,
     "parent": {"name":"s_slider","path":"sprites/s_slider/s_slider.yy",},
-    "resourceVersion": "1.3",
+    "resourceVersion": "1.4",
     "name": "s_slider",
     "tags": [],
     "resourceType": "GMSequence",

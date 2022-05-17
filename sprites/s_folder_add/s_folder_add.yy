@@ -63,7 +63,7 @@
     "eventToFunction": {},
     "eventStubScript": null,
     "parent": {"name":"s_folder_add","path":"sprites/s_folder_add/s_folder_add.yy",},
-    "resourceVersion": "1.3",
+    "resourceVersion": "1.4",
     "name": "s_folder_add",
     "tags": [],
     "resourceType": "GMSequence",

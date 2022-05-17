@@ -59,7 +59,7 @@
     "eventToFunction": {},
     "eventStubScript": null,
     "parent": {"name":"s_node_3d_cylinder","path":"sprites/s_node_3d_cylinder/s_node_3d_cylinder.yy",},
-    "resourceVersion": "1.3",
+    "resourceVersion": "1.4",
     "name": "s_node_3d_cylinder",
     "tags": [],
     "resourceType": "GMSequence",

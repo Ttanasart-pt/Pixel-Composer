@@ -59,7 +59,7 @@
     "eventToFunction": {},
     "eventStubScript": null,
     "parent": {"name":"s_node_blur_directional","path":"sprites/s_node_blur_directional/s_node_blur_directional.yy",},
-    "resourceVersion": "1.3",
+    "resourceVersion": "1.4",
     "name": "s_node_blur_directional",
     "tags": [],
     "resourceType": "GMSequence",

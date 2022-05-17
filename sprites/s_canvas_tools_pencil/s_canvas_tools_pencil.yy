@@ -59,7 +59,7 @@
     "eventToFunction": {},
     "eventStubScript": null,
     "parent": {"name":"s_canvas_tools_pencil","path":"sprites/s_canvas_tools_pencil/s_canvas_tools_pencil.yy",},
-    "resourceVersion": "1.3",
+    "resourceVersion": "1.4",
     "name": "s_canvas_tools_pencil",
     "tags": [],
     "resourceType": "GMSequence",

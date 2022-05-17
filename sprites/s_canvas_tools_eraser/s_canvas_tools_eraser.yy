@@ -59,7 +59,7 @@
     "eventToFunction": {},
     "eventStubScript": null,
     "parent": {"name":"s_canvas_tools_eraser","path":"sprites/s_canvas_tools_eraser/s_canvas_tools_eraser.yy",},
-    "resourceVersion": "1.3",
+    "resourceVersion": "1.4",
     "name": "s_canvas_tools_eraser",
     "tags": [],
     "resourceType": "GMSequence",

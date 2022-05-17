@@ -59,7 +59,7 @@
     "eventToFunction": {},
     "eventStubScript": null,
     "parent": {"name":"s_node_processor","path":"sprites/s_node_processor/s_node_processor.yy",},
-    "resourceVersion": "1.3",
+    "resourceVersion": "1.4",
     "name": "s_node_processor",
     "tags": [],
     "resourceType": "GMSequence",

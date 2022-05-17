@@ -59,7 +59,7 @@
     "eventToFunction": {},
     "eventStubScript": null,
     "parent": {"name":"s_node_2d_light","path":"sprites/s_node_2d_light/s_node_2d_light.yy",},
-    "resourceVersion": "1.3",
+    "resourceVersion": "1.4",
     "name": "s_node_2d_light",
     "tags": [],
     "resourceType": "GMSequence",

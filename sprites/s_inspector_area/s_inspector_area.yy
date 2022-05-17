@@ -63,7 +63,7 @@
     "eventToFunction": {},
     "eventStubScript": null,
     "parent": {"name":"s_inspector_area","path":"sprites/s_inspector_area/s_inspector_area.yy",},
-    "resourceVersion": "1.3",
+    "resourceVersion": "1.4",
     "name": "s_inspector_area",
     "tags": [],
     "resourceType": "GMSequence",

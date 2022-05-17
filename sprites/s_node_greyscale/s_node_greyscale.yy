@@ -59,7 +59,7 @@
     "eventToFunction": {},
     "eventStubScript": null,
     "parent": {"name":"s_node_greyscale","path":"sprites/s_node_greyscale/s_node_greyscale.yy",},
-    "resourceVersion": "1.3",
+    "resourceVersion": "1.4",
     "name": "s_node_greyscale",
     "tags": [],
     "resourceType": "GMSequence",

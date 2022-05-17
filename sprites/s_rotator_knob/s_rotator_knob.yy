@@ -63,7 +63,7 @@
     "eventToFunction": {},
     "eventStubScript": null,
     "parent": {"name":"s_rotator_knob","path":"sprites/s_rotator_knob/s_rotator_knob.yy",},
-    "resourceVersion": "1.3",
+    "resourceVersion": "1.4",
     "name": "s_rotator_knob",
     "tags": [],
     "resourceType": "GMSequence",

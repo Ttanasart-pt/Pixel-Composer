@@ -59,7 +59,7 @@
     "eventToFunction": {},
     "eventStubScript": null,
     "parent": {"name":"s_node_posterize","path":"sprites/s_node_posterize/s_node_posterize.yy",},
-    "resourceVersion": "1.3",
+    "resourceVersion": "1.4",
     "name": "s_node_posterize",
     "tags": [],
     "resourceType": "GMSequence",

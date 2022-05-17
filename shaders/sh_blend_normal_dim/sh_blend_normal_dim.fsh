@@ -29,5 +29,5 @@ void main() {
 	    gl_FragColor = res;
 	} else {
 		gl_FragColor = _col1;
-	}	
+	}
 }

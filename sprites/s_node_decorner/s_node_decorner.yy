@@ -59,7 +59,7 @@
     "eventToFunction": {},
     "eventStubScript": null,
     "parent": {"name":"s_node_decorner","path":"sprites/s_node_decorner/s_node_decorner.yy",},
-    "resourceVersion": "1.3",
+    "resourceVersion": "1.4",
     "name": "s_node_decorner",
     "tags": [],
     "resourceType": "GMSequence",

@@ -67,7 +67,7 @@
     "eventToFunction": {},
     "eventStubScript": null,
     "parent": {"name":"s_button_middle","path":"sprites/s_button_middle/s_button_middle.yy",},
-    "resourceVersion": "1.3",
+    "resourceVersion": "1.4",
     "name": "s_button_middle",
     "tags": [],
     "resourceType": "GMSequence",

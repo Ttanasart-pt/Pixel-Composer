@@ -59,7 +59,7 @@
     "eventToFunction": {},
     "eventStubScript": null,
     "parent": {"name":"s_graph","path":"sprites/s_graph/s_graph.yy",},
-    "resourceVersion": "1.3",
+    "resourceVersion": "1.4",
     "name": "s_graph",
     "tags": [],
     "resourceType": "GMSequence",

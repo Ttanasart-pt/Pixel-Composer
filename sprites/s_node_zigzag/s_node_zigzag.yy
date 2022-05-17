@@ -59,7 +59,7 @@
     "eventToFunction": {},
     "eventStubScript": null,
     "parent": {"name":"s_node_zigzag","path":"sprites/s_node_zigzag/s_node_zigzag.yy",},
-    "resourceVersion": "1.3",
+    "resourceVersion": "1.4",
     "name": "s_node_zigzag",
     "tags": [],
     "resourceType": "GMSequence",

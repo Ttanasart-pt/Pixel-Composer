@@ -63,7 +63,7 @@
     "eventToFunction": {},
     "eventStubScript": null,
     "parent": {"name":"s_prop_gradient","path":"sprites/s_prop_gradient/s_prop_gradient.yy",},
-    "resourceVersion": "1.3",
+    "resourceVersion": "1.4",
     "name": "s_prop_gradient",
     "tags": [],
     "resourceType": "GMSequence",

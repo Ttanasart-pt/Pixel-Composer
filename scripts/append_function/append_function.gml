@@ -36,32 +36,45 @@ function APPEND(_path) {
 	}
 	file_text_close(file);
 	
-	for(var i = 0; i < ds_list_size(appended_list); i++) {
-		var _node = appended_list[| i];
-		_node.loadGroup();
+	try {
+		for(var i = 0; i < ds_list_size(appended_list); i++) {
+			var _node = appended_list[| i];
+			_node.loadGroup();
 		
-		if(_node.group == PANEL_GRAPH.getCurrentContext())
-			ds_list_add(node_create, _node);
+			if(_node.group == PANEL_GRAPH.getCurrentContext())
+				ds_list_add(node_create, _node);
+		}
+	} catch(e) {
+		PANEL_MENU.addNotiExtra("Node load error : " + e.message);
+		log_warning("APPEND, node", e.longMessage);
 	}
 	
-	for(var i = 0; i < ds_list_size(appended_list); i++) {
-		appended_list[| i].postDeserialize();
+	try {
+		for(var i = 0; i < ds_list_size(appended_list); i++)
+			appended_list[| i].postDeserialize();
+	} catch(e) {
+		PANEL_MENU.addNotiExtra("Deserialize error : " + e.message);
+		log_warning("APPEND, deserialize", e.longMessage);
 	}
 	
-	for(var i = 0; i < ds_list_size(appended_list); i++) {
-		appended_list[| i].preConnect();
+	try {
+		for(var i = 0; i < ds_list_size(appended_list); i++)
+			appended_list[| i].preConnect();
+		for(var i = 0; i < ds_list_size(appended_list); i++)
+			appended_list[| i].connect();
+		for(var i = 0; i < ds_list_size(appended_list); i++)
+			appended_list[| i].postConnect();
+	} catch(e) {
+		PANEL_MENU.addNotiExtra("Connect error : " + e.message);
+		log_warning("APPEND, connect", e.longMessage);
 	}
 	
-	for(var i = 0; i < ds_list_size(appended_list); i++) {
-		appended_list[| i].connect();
-	}
-	
-	for(var i = 0; i < ds_list_size(appended_list); i++) {
-		appended_list[| i].postConnect();
-	}
-	
-	for(var i = 0; i < ds_list_size(appended_list); i++) {
-		appended_list[| i].doUpdate();
+	try {
+		for(var i = 0; i < ds_list_size(appended_list); i++)
+			appended_list[| i].doUpdate();
+	} catch(e) {
+		PANEL_MENU.addNotiExtra("Update error : " + e.message);
+		log_warning("APPEND, update", e.longMessage);
 	}
 	
 	ds_list_destroy(appended_list);
@@ -71,17 +84,22 @@ function APPEND(_path) {
 	if(!ds_queue_empty(CONNECTION_CONFLICT)) {
 		var pass = 0;
 		
-		while(++pass < 2 && !ds_queue_empty(CONNECTION_CONFLICT)) {
-			var size = ds_queue_size(CONNECTION_CONFLICT);
-			log_message("LOAD", "[Connect] " + string(size) + " Connection conflict(s) detected ( pass: " + string(pass) + " )");
-			repeat(size) {
-				ds_queue_dequeue(CONNECTION_CONFLICT).connect();	
+		try {
+			while(++pass < 2 && !ds_queue_empty(CONNECTION_CONFLICT)) {
+				var size = ds_queue_size(CONNECTION_CONFLICT);
+				log_message("APPEND", "[Connect] " + string(size) + " Connection conflict(s) detected ( pass: " + string(pass) + " )");
+				repeat(size) {
+					ds_queue_dequeue(CONNECTION_CONFLICT).connect();	
+				}
+				renderAll();
 			}
-			renderAll();
-		}
 		
-		if(!ds_queue_empty(CONNECTION_CONFLICT))
-			PANEL_MENU.addNotiExtra("Some connection(s) is unsolved. This may caused by render node not being update properly, or image path is broken.");
+			if(!ds_queue_empty(CONNECTION_CONFLICT))
+				PANEL_MENU.addNotiExtra("Some connection(s) is unsolved. This may caused by render node not being update properly, or image path is broken.");
+		} catch(e) {
+			PANEL_MENU.addNotiExtra("Conflict solver error : " + e.message);
+			log_warning("APPEND, solver", e.longMessage);
+		}
 	}
 	
 	APPENDING = false;

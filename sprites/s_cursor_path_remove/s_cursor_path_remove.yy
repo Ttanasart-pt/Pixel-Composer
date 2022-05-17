@@ -59,7 +59,7 @@
     "eventToFunction": {},
     "eventStubScript": null,
     "parent": {"name":"s_cursor_path_remove","path":"sprites/s_cursor_path_remove/s_cursor_path_remove.yy",},
-    "resourceVersion": "1.3",
+    "resourceVersion": "1.4",
     "name": "s_cursor_path_remove",
     "tags": [],
     "resourceType": "GMSequence",

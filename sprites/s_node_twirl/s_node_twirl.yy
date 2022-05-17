@@ -59,7 +59,7 @@
     "eventToFunction": {},
     "eventStubScript": null,
     "parent": {"name":"s_node_twirl","path":"sprites/s_node_twirl/s_node_twirl.yy",},
-    "resourceVersion": "1.3",
+    "resourceVersion": "1.4",
     "name": "s_node_twirl",
     "tags": [],
     "resourceType": "GMSequence",

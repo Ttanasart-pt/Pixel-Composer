@@ -71,7 +71,7 @@
     "eventToFunction": {},
     "eventStubScript": null,
     "parent": {"name":"s_timeline_keyframe","path":"sprites/s_timeline_keyframe/s_timeline_keyframe.yy",},
-    "resourceVersion": "1.3",
+    "resourceVersion": "1.4",
     "name": "s_timeline_keyframe",
     "tags": [],
     "resourceType": "GMSequence",

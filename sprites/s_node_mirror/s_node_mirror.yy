@@ -59,7 +59,7 @@
     "eventToFunction": {},
     "eventStubScript": null,
     "parent": {"name":"s_node_mirror","path":"sprites/s_node_mirror/s_node_mirror.yy",},
-    "resourceVersion": "1.3",
+    "resourceVersion": "1.4",
     "name": "s_node_mirror",
     "tags": [],
     "resourceType": "GMSequence",

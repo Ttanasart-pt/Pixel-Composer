@@ -63,7 +63,7 @@
     "eventToFunction": {},
     "eventStubScript": null,
     "parent": {"name":"s_junc_visible","path":"sprites/s_junc_visible/s_junc_visible.yy",},
-    "resourceVersion": "1.3",
+    "resourceVersion": "1.4",
     "name": "s_junc_visible",
     "tags": [],
     "resourceType": "GMSequence",

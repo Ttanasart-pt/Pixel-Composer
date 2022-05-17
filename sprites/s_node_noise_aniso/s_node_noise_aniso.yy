@@ -59,7 +59,7 @@
     "eventToFunction": {},
     "eventStubScript": null,
     "parent": {"name":"s_node_noise_aniso","path":"sprites/s_node_noise_aniso/s_node_noise_aniso.yy",},
-    "resourceVersion": "1.3",
+    "resourceVersion": "1.4",
     "name": "s_node_noise_aniso",
     "tags": [],
     "resourceType": "GMSequence",

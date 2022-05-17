@@ -59,7 +59,7 @@
     "eventToFunction": {},
     "eventStubScript": null,
     "parent": {"name":"s_node_RGB","path":"sprites/s_node_RGB/s_node_RGB.yy",},
-    "resourceVersion": "1.3",
+    "resourceVersion": "1.4",
     "name": "s_node_RGB",
     "tags": [],
     "resourceType": "GMSequence",

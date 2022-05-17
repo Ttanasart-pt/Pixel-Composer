@@ -59,7 +59,7 @@
     "eventToFunction": {},
     "eventStubScript": null,
     "parent": {"name":"s_search_16","path":"sprites/s_search_16/s_search_16.yy",},
-    "resourceVersion": "1.3",
+    "resourceVersion": "1.4",
     "name": "s_search_16",
     "tags": [],
     "resourceType": "GMSequence",

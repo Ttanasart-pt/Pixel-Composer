@@ -63,7 +63,7 @@
     "eventToFunction": {},
     "eventStubScript": null,
     "parent": {"name":"s_anchor_scale_hori","path":"sprites/s_anchor_scale_hori/s_anchor_scale_hori.yy",},
-    "resourceVersion": "1.3",
+    "resourceVersion": "1.4",
     "name": "s_anchor_scale_hori",
     "tags": [],
     "resourceType": "GMSequence",

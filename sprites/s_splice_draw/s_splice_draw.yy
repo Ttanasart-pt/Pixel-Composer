@@ -59,7 +59,7 @@
     "eventToFunction": {},
     "eventStubScript": null,
     "parent": {"name":"s_splice_draw","path":"sprites/s_splice_draw/s_splice_draw.yy",},
-    "resourceVersion": "1.3",
+    "resourceVersion": "1.4",
     "name": "s_splice_draw",
     "tags": [],
     "resourceType": "GMSequence",

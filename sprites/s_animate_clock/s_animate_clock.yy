@@ -67,7 +67,7 @@
     "eventToFunction": {},
     "eventStubScript": null,
     "parent": {"name":"s_animate_clock","path":"sprites/s_animate_clock/s_animate_clock.yy",},
-    "resourceVersion": "1.3",
+    "resourceVersion": "1.4",
     "name": "s_animate_clock",
     "tags": [],
     "resourceType": "GMSequence",

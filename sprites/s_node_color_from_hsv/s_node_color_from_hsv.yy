@@ -59,7 +59,7 @@
     "eventToFunction": {},
     "eventStubScript": null,
     "parent": {"name":"s_node_color_from_hsv","path":"sprites/s_node_color_from_hsv/s_node_color_from_hsv.yy",},
-    "resourceVersion": "1.3",
+    "resourceVersion": "1.4",
     "name": "s_node_color_from_hsv",
     "tags": [],
     "resourceType": "GMSequence",

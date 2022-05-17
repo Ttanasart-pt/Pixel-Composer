@@ -59,7 +59,7 @@
     "eventToFunction": {},
     "eventStubScript": null,
     "parent": {"name":"s_node_invert","path":"sprites/s_node_invert/s_node_invert.yy",},
-    "resourceVersion": "1.3",
+    "resourceVersion": "1.4",
     "name": "s_node_invert",
     "tags": [],
     "resourceType": "GMSequence",

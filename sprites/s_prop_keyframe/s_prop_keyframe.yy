@@ -67,7 +67,7 @@
     "eventToFunction": {},
     "eventStubScript": null,
     "parent": {"name":"s_prop_keyframe","path":"sprites/s_prop_keyframe/s_prop_keyframe.yy",},
-    "resourceVersion": "1.3",
+    "resourceVersion": "1.4",
     "name": "s_prop_keyframe",
     "tags": [],
     "resourceType": "GMSequence",

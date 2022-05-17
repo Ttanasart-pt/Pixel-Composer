@@ -59,7 +59,7 @@
     "eventToFunction": {},
     "eventStubScript": null,
     "parent": {"name":"s_animate_node_go","path":"sprites/s_animate_node_go/s_animate_node_go.yy",},
-    "resourceVersion": "1.3",
+    "resourceVersion": "1.4",
     "name": "s_animate_node_go",
     "tags": [],
     "resourceType": "GMSequence",
