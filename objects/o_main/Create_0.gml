@@ -18,7 +18,7 @@
 	depth = 0;
 	win_wp = WIN_W;
 	win_hp = WIN_H;
-
+	
 	room_width = WIN_W;
 	room_height = WIN_H;
 	

@@ -7,6 +7,9 @@ function draw_surface_ext_safe(surface, _x, _y, _xs, _ys, _rot, _col, _alpha) {
 function draw_surface_tiled_ext_safe(surface, _x, _y, _xs, _ys, _col, _alpha) {
 	if(is_surface(surface)) draw_surface_tiled_ext(surface, _x, _y, _xs, _ys, _col, _alpha);
 }
+function draw_surface_part_ext_safe(surface, _l, _t, _w, _h, _x, _y, _xs, _ys, _rot, _col, _alpha) {
+	if(is_surface(surface)) draw_surface_part_ext(surface, _l, _t, _w, _h, _x, _y, _xs, _ys, _col, _alpha);
+}
 
 function surface_size_to(surface, width, height) {
 	if(width <= 1 || height <= 1) return false;

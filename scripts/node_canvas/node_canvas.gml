@@ -113,9 +113,13 @@ function Node_Canvas(_x, _y) : Node(_x, _y) constructor {
 			draw_point_size(_x0, _y0, _siz, _brush);
 			return;
 		} else if(_x0 == _x1) {
+			draw_point_size(_x0, _y0, _siz, _brush);
+			draw_point_size(_x1, _y1, _siz, _brush);
 			draw_line_size(_x0, _y0, _x0, _y1, _siz, _brush);
 			return;
 		} else if(_y0 == _y1) {
+			draw_point_size(_x0, _y0, _siz, _brush);
+			draw_point_size(_x1, _y1, _siz, _brush);
 			draw_line_size(_x0, _y0, _x1, _y0, _siz, _brush);
 			return;
 		}
@@ -142,23 +146,28 @@ function Node_Canvas(_x, _y) : Node(_x, _y) constructor {
 			draw_point_size(_x0, _y0, _siz, _brush);	
 			return;
 		} else if(_x0 == _x1) {
+			draw_point_size(_x0, _y0, _siz, _brush);
+			draw_point_size(_x1, _y1, _siz, _brush);
 			draw_line_size(_x0, _y0, _x0, _y1, _siz, _brush);
 			return;
 		} else if(_y0 == _y1) {
+			draw_point_size(_x0, _y0, _siz, _brush);
+			draw_point_size(_x1, _y1, _siz, _brush);
 			draw_line_size(_x0, _y0, _x1, _y0, _siz, _brush);
 			return;
 		}
 		
-		var _min_x = min(_x0, _x1);
+		var _min_x = min(_x0, _x1) - 1;
 		var _max_x = max(_x0, _x1);
-		var _min_y = min(_y0, _y1);
-		var _may_y = max(_y0, _y1);
+		var _min_y = min(_y0, _y1) - 1;
+		var _max_y = max(_y0, _y1);
+		
+		draw_point_size(_min_x, _min_y, _siz, _brush);
+		draw_point_size(_max_x, _max_y, _siz, _brush);
 		
 		if(_fill) {
-			draw_ellipse(_min_x, _min_y, _max_x, _may_y, 0);
-		} else if(_siz == 1 && _brush == -1)
-			draw_ellipse(_min_x + 1, _min_y + 1, _max_x - 1, _may_y - 1, 1);
-		else {
+			draw_ellipse(_min_x, _min_y, _max_x, _max_y, 0);
+		} else {
 			var samp = 64;
 			var cx = (_x0 + _x1) / 2;
 			var cy = (_y0 + _y1) / 2;

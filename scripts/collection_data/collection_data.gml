@@ -57,13 +57,18 @@ function DirectoryObject(name, path) constructor {
 		var hh = 0;
 		
 		if(path == PANEL_COLLECTION.context.path)
-			draw_sprite_stretched_ext(s_ui_panel_bg, 0, _x, _y, _w, hg, c_ui_blue_ltgrey, 1); 
+			draw_sprite_stretched_ext(s_ui_panel_bg, 0, _x + 28, _y, _w - 28, hg, c_ui_blue_ltgrey, 1); 
 		
-		if(HOVER == PANEL_COLLECTION.panel && point_in_rectangle(_m[0], _m[1], 0, _y, _w, _y + hg - 1)) {
-			draw_sprite_stretched_ext(s_ui_panel_bg, 0, _x, _y, _w, hg, c_ui_blue_white, 1);
+		if(!ds_list_empty(subDir) && HOVER == PANEL_COLLECTION.panel && point_in_rectangle(_m[0], _m[1], _x, _y, 32, _y + hg - 1)) {
+			draw_sprite_stretched_ext(s_ui_panel_bg, 0, _x, _y, 32, hg, c_ui_blue_white, 1);
 			if(FOCUS == PANEL_COLLECTION.panel && mouse_check_button_pressed(mb_left)) {
 				open = !open;
-				
+			}
+		}
+		
+		if(HOVER == PANEL_COLLECTION.panel && point_in_rectangle(_m[0], _m[1], _x + 32, _y, _w, _y + hg - 1)) {
+			draw_sprite_stretched_ext(s_ui_panel_bg, 0, _x + 28, _y, _w - 28, hg, c_ui_blue_white, 1);
+			if(FOCUS == PANEL_COLLECTION.panel && mouse_check_button_pressed(mb_left)) {
 				if(PANEL_COLLECTION.context == self)
 					PANEL_COLLECTION.setContext(COLLECTIONS);
 				else

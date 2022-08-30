@@ -45,7 +45,6 @@ function Panel_Graph(_panel) : PanelContent(_panel) constructor {
 	node_hovering		= noone;
 	node_hover			= noone;
 	node_focus			= noone;
-	node_previewing		= noone;
 	
 	junction_hovering = noone;
 	
@@ -265,9 +264,7 @@ function Panel_Graph(_panel) : PanelContent(_panel) constructor {
 							}
 							ds_list_add(nodes_select_list, node_focus);	
 						} else if(node_focus.previewable && DOUBLE_CLICK) {
-							node_previewing = node_focus;
-							if(PREF_MAP[? "reset_display"])
-								PANEL_PREVIEW.do_fullView = true;
+							PANEL_PREVIEW.setNodePreview(node_focus);
 						} else {
 							var hover_selected = false;	
 							for( var i = 0; i < ds_list_size(nodes_select_list); i++ ) {
@@ -689,11 +686,9 @@ function Panel_Graph(_panel) : PanelContent(_panel) constructor {
 	}
 	
 	function setCurrentPreview(_node = node_focus) {
-		if(_node) {
-			node_previewing = _node;
-			if(PREF_MAP[? "reset_display"])
-				PANEL_PREVIEW.do_fullView = true;
-		}
+		if(!_node) return;
+		
+		PANEL_PREVIEW.setNodePreview(_node);
 	}
 	
 	function setCurrentExport(_node = node_focus) {
@@ -861,7 +856,8 @@ function Panel_Graph(_panel) : PanelContent(_panel) constructor {
 						nodes_list		= NODES;
 						node_hover		= noone;
 						node_focus		= noone;
-						node_previewing = noone;
+						PANEL_PREVIEW.preview_node[0] = noone;
+						PANEL_PREVIEW.preview_node[1] = noone;
 						
 						toOrigin();
 						PANEL_ANIMATION.updatePropertyList();
@@ -871,7 +867,8 @@ function Panel_Graph(_panel) : PanelContent(_panel) constructor {
 						nodes_list		= node_context[| i].nodes;
 						node_hover		= noone;
 						node_focus		= noone;
-						node_previewing = noone;
+						PANEL_PREVIEW.preview_node[0] = noone;
+						PANEL_PREVIEW.preview_node[1] = noone;
 						
 						toOrigin();
 						PANEL_ANIMATION.updatePropertyList();

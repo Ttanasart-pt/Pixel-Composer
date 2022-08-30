@@ -25,9 +25,9 @@ function Node_Shape(_x, _y) : Node_Processor(_x, _y) constructor {
 	uniform_inner	= shader_get_uniform(shader, "inner");
 	uniform_corner	= shader_get_uniform(shader, "corner");
 	uniform_arange	= shader_get_uniform(shader, "angle_range");
-	uniform_bg		= shader_get_uniform(shader, "bg");
 	uniform_aa		= shader_get_uniform(shader, "aa");
 	uniform_dim		= shader_get_uniform(shader, "dimension");
+	uniform_bgCol	= shader_get_uniform(shader, "bgColor");
 	
 	inputs[| 0] = nodeValue(0, "Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, def_surf_size2, VALUE_TAG.dimension_2d )
 		.setDisplay(VALUE_DISPLAY.vector);
@@ -58,14 +58,16 @@ function Node_Shape(_x, _y) : Node_Processor(_x, _y) constructor {
 	inputs[| 9] = nodeValue(9, "Corner radius", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
 		.setDisplay(VALUE_DISPLAY.slider, [0, 0.5, 0.01]);
 	
-	inputs[| 10] = nodeValue(10, "Color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white);
+	inputs[| 10] = nodeValue(10, "Shape color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white);
+	
+	inputs[| 11] = nodeValue(11, "Background color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_black);
 	
 	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, surface_create(1, 1));
 	
 	input_display_list = [
 		["Surface", false], 0, 6, 
 		["Shape",	false], 2, 3, 9, 4, 5, 7, 8, 
-		["Render",	true],	1, 10
+		["Render",	true],	10, 1, 11
 	];
 	
 	static drawOverlay = function(_active, _x, _y, _s, _mx, _my) {
@@ -79,7 +81,10 @@ function Node_Shape(_x, _y) : Node_Processor(_x, _y) constructor {
 		var _posit	= _data[3];
 		var _aa		= _data[6];
 		var _corner = _data[9];
-		var _color  = _data[10]
+		var _color  = _data[10];
+		var _bgcol  = _bg? colToVec4(_data[11]) : [0, 0, 0, 0];
+		
+		inputs[| 11].setVisible(_bg);
 		
 		if(!is_surface(_outSurf)) {
 			_outSurf = surface_create(surface_valid(_dim[0]), surface_valid(_dim[1]));
@@ -147,13 +152,13 @@ function Node_Shape(_x, _y) : Node_Processor(_x, _y) constructor {
 			
 			shader_set_uniform_f_array(uniform_dim, _dim);
 			shader_set_uniform_i(uniform_shape, _shape);
-			shader_set_uniform_i(uniform_bg, _bg);
+			shader_set_uniform_f_array(uniform_bgCol, _bgcol);
 			shader_set_uniform_i(uniform_aa, _aa);
 			shader_set_uniform_f(uniform_corner, _corner);
 					
 			shader_set_uniform_f_array(uniform_cent, [ _posit[0] / _dim[0], _posit[1] / _dim[1] ]);
 			shader_set_uniform_f_array(uniform_scal, [ _posit[2] / _dim[0], _posit[3] / _dim[1] ]);
-				
+			
 			draw_sprite_ext(s_fx_pixel, 0, 0, 0, _dim[0], _dim[1], 0, _color, 1);
 			shader_reset();
 		surface_reset_target();

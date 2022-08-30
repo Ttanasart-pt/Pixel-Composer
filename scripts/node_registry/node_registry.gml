@@ -44,7 +44,6 @@ function NodeObject(_name, _spr, _create, tags = []) constructor {
 		var _node = nodeFind(_name).build(_x, _y);
 		if(!_node) return noone;
 		PANEL_GRAPH.node_focus = _node;
-		PANEL_GRAPH.previewing = _node;
 		
 		return _node;
 	}
@@ -122,6 +121,7 @@ function NodeObject(_name, _spr, _create, tags = []) constructor {
 	addNodeObject(filter, "Atlas",				s_node_atlas,			"Node_Atlas",			Node_create_Atlas);
 	addNodeObject(filter, "Scale algorithm",	s_node_scale_algo,		"Node_Scale_Algo",		Node_create_Scale_Algo, ["scale2x", "scale3x"]);
 	addNodeObject(filter, "Pixel cloud",		s_node_pixel_cloud,		"Node_Pixel_Cloud",		Node_create_Pixel_Cloud);
+	addNodeObject(filter, "Edge detect",		s_node_edge_detect,		"Node_Edge_Detect",		Node_create_Edge_Detect);
 	//addNodeObject(filter, "Corner",			s_node_corner,			"Node_Corner",			Node_create_Corner);
 	
 	var threeD = ds_list_create();

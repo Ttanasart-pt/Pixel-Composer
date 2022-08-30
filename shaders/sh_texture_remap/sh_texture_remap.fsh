@@ -8,5 +8,5 @@ uniform sampler2D map;
 
 void main() {
 	vec2 pos = texture2D( map, v_vTexcoord ).rg;
-    gl_FragColor = texture2D( gm_BaseTexture, pos );
+    gl_FragColor = texture2D( gm_BaseTexture, vec2(1. - pos.x, pos.y) );
 }

@@ -19,6 +19,8 @@ uniform vec2 dimension;
 uniform vec2 center;
 uniform vec2 scale;
 
+uniform vec4 bgColor;
+
 #define PI  3.14159265359
 #define TAU 6.28318530718
 
@@ -125,8 +127,5 @@ void main() {
 			color = smoothstep(0.05, 0., d);
 	}
 	
-	if(bg == 0) 
-		gl_FragColor = vec4(vec3(1.), color);
-	else
-		gl_FragColor = vec4(vec3(v_vColour.rgb * color), 1.0);
+	gl_FragColor = mix(bgColor, v_vColour, color);
 }

@@ -34,7 +34,7 @@ function Node(_x, _y) constructor {
 	
 	always_output = false;
 	inspecting = false;
-	previewing = false;
+	previewing = 0;
 	
 	previewable   = true;
 	preview_speed = 0;
@@ -56,6 +56,8 @@ function Node(_x, _y) constructor {
 	on_dragdrop_file = -1;
 	
 	anim_show = true;
+	
+	value_validation = [0, 0];
 	
 	static setHeight = function() {
 		var _hi = 32, _ho = 32;
@@ -378,14 +380,19 @@ function Node(_x, _y) constructor {
 		
 		var xx = x * _s + _x;
 		var yy = y * _s + _y;
+		
+		if(value_validation[1]) {
+			draw_sprite_stretched(s_node_error, 0, xx - 9, yy - 9, w * _s + 18, h * _s + 18);
+		}
+		
 		drawNodeBase(xx, yy, _s);
 		if(previewable && ds_list_size(outputs) > 0) 
 			drawPreview(outputs[| preview_channel], xx, yy, _s);
 		drawNodeName(xx, yy, _s);
 		onDrawNode(xx, yy, _mx, _my, _s);
-		
+
 		if(active_draw_index > -1) {
-			draw_sprite_stretched(bg_sel_spr, active_draw_index, x * _s + _x, y * _s + _y, w * _s, h * _s);
+			draw_sprite_stretched(bg_sel_spr, active_draw_index, xx, yy, w * _s, h * _s);
 			active_draw_index = -1;
 		}
 		
@@ -406,7 +413,7 @@ function Node(_x, _y) constructor {
 		}
 		
 		inspecting = false;
-		previewing = false;
+		previewing = 0;
 	}
 	
 	active_draw_index = -1;
@@ -418,10 +425,11 @@ function Node(_x, _y) constructor {
 	
 	static destroy = function(_merge = false) {
 		active = false;
-		if(PANEL_GRAPH.node_hover      == self) PANEL_GRAPH.node_hover = noone;
-		if(PANEL_GRAPH.node_focus      == self) PANEL_GRAPH.node_focus = noone;
-		if(PANEL_GRAPH.node_previewing == self) PANEL_GRAPH.node_previewing = noone;
-		if(PANEL_INSPECTOR.inspecting  == self) PANEL_INSPECTOR.inspecting  = noone;
+		if(PANEL_GRAPH.node_hover         == self) PANEL_GRAPH.node_hover        = noone;
+		if(PANEL_GRAPH.node_focus         == self) PANEL_GRAPH.node_focus        = noone;
+		if(PANEL_PREVIEW.preview_node[0]  == self) PANEL_PREVIEW.preview_node[0] = noone;
+		if(PANEL_PREVIEW.preview_node[1]  == self) PANEL_PREVIEW.preview_node[1] = noone;
+		if(PANEL_INSPECTOR.inspecting     == self) PANEL_INSPECTOR.inspecting    = noone;
 		PANEL_ANIMATION.updatePropertyList();
 		
 		for(var i = 0; i < ds_list_size(outputs); i++) {
@@ -447,6 +455,17 @@ function Node(_x, _y) constructor {
 		
 		onDestroy();
 	}
+	static onValidate = function() {
+		value_validation[0] = 0;
+		value_validation[1] = 0;
+		
+		for( var i = 0; i < ds_list_size(inputs); i++ ) {
+			var jun = inputs[| i];
+			if(jun.value_validation)
+				value_validation[jun.value_validation - 1]++;
+		}
+	}
+	
 	static onDestroy = function() {}
 	
 	static cacheCurrentFrame = function(_frame) {

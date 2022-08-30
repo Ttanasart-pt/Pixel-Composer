@@ -267,18 +267,24 @@ function Panel_Inspector(_panel) : PanelContent(_panel) constructor {
 									hh += 34 + padd;
 									break;
 								case VALUE_TYPE.path :
-									jun.editWidget.draw(32, _hsy, w - 80, 34, _m);
-									
-									draw_sprite_ext(s_button_path_icon, 0, w - 72, _hsy + 17, 1, 1, 0, c_white, 1);
-									draw_set_text(f_p0, fa_left, fa_center, c_white);
-								
 									var val = jun.showValue(), txt;
+									var pathExist = jun.value_validation == VALIDATION.pass;
+									
 									if(is_array(val)) {
 										txt = "[" + string(array_length(val)) + "] " + val[0];
-									} else 
+									} else {
 										txt = val;
-								
+									}
+									
+									jun.editWidget.draw(32, _hsy, w - 80, 34, _m,, pathExist? c_white : c_ui_red);
+									draw_sprite_ext(pathExist? s_button_path_icon : s_button_path_not_found_icon, 0, w - 72, _hsy + 17, 1, 1, 0, c_white, 1);
+									draw_set_text(f_p0, fa_left, fa_center, c_white);
 									draw_text_cut(40, _hsy + 17, txt, w - 140);
+									
+									if(!pathExist && point_in_rectangle(_m[0], _m[1], w - 72 - 17, _hsy, w - 72 + 17, _hsy + 34)) {
+										TOOLTIP = "File not exist";
+									}
+									
 									_hey = _hsy + 34;
 									hh += 34 + padd;
 									break;

@@ -124,6 +124,12 @@ enum KEYFRAME_END {
 	ping
 }
 
+enum VALIDATION {
+	pass,
+	warning,
+	error
+}
+
 function isGraphable(type) {
 	switch(type) {
 		case VALUE_TYPE.integer :
@@ -162,6 +168,8 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 	
 	display_type = VALUE_DISPLAY._default;
 	display_data = -1;
+	
+	value_validation = VALIDATION.pass;
 	
 	static setVisible = function(inspector) {
 		show_in_inspector = inspector;
@@ -369,6 +377,35 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 	}
 	resetDisplay();
 	
+	static onValidate = function() {
+		value_validation = VALIDATION.pass; 
+		
+		switch(type) {
+			case VALUE_TYPE.path:
+				switch(display_type) {
+					case VALUE_DISPLAY.path_load: 
+						var path = value.getValue();
+						if(!file_exists(path)) 
+							value_validation = VALIDATION.error;	
+						break;
+					case VALUE_DISPLAY.path_array: 
+						var paths = value.getValue();
+						if(isArray(paths)) {
+							for( var i = 0; i < array_length(paths); i++ ) {
+								if(!file_exists(paths[i])) 
+									value_validation = VALIDATION.error;	
+							} 
+						} else
+							value_validation = VALIDATION.error;	
+						break;
+				}
+				break;
+		}
+		node.onValidate();
+		
+		return self;
+	}
+	
 	static getValue = function() {
 		var _val = getValueRecursive();
 		var val = _val[0];
@@ -477,6 +514,7 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 			node.onValueUpdate(index);
 		}
 		
+		onValidate();
 		return updated;
 	}
 	
@@ -1005,6 +1043,8 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 		
 		if(ds_map_exists(_map, "data")) 
 			ds_list_copy(extra_data, _map[? "data"]);
+			
+		onValidate();
 	}
 	
 	static connect = function() {
