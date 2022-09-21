@@ -85,11 +85,14 @@ function APPEND(_path) {
 		var pass = 0;
 		
 		try {
-			while(++pass < 2 && !ds_queue_empty(CONNECTION_CONFLICT)) {
+			while(++pass < 3 && !ds_queue_empty(CONNECTION_CONFLICT)) {
 				var size = ds_queue_size(CONNECTION_CONFLICT);
 				log_message("APPEND", "[Connect] " + string(size) + " Connection conflict(s) detected ( pass: " + string(pass) + " )");
 				repeat(size) {
-					ds_queue_dequeue(CONNECTION_CONFLICT).connect();	
+					var junc = ds_queue_dequeue(CONNECTION_CONFLICT);
+					var res = junc.connect(true);	
+					
+					log_message("APPEND", "[Connect] Reconnecting " + string(junc.name) + " " + (res? "SUCCESS" : "FAILED"));
 				}
 				renderAll();
 			}

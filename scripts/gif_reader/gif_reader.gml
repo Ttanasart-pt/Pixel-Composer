@@ -138,10 +138,10 @@ function gif_std_enum_getIndex() {
 	}
 	mt_Gif.i_constructor = Gif;
 
-	function sprite_add_gif(_path1, _return_func) {
-		if (false) throw argument[3];
+	function sprite_add_gif(_path, _return_func, _error_message = "") {
+		if (false) throw _error_message;
 		
-		var _buf = buffer_load(_path1);
+		var _buf = buffer_load(_path);
 		var _gif = new Gif();
 		_gif.readBegin(_buf);
 		ds_list_add(GIF_READER, [_gif, _buf, _return_func] );

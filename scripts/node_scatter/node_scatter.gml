@@ -41,14 +41,14 @@ function Node_Scatter(_x, _y) : Node(_x, _y) constructor {
 	
 	inputs[| 10] = nodeValue(10, "Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, irandom(9999999));
 	
-	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, surface_create(1, 1));
+	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
 	
 	input_display_list = [ 0, 1, 10, 
 		["Area",	false], 5, 6, 9, 
 		["Scatter", false], 2, 3, 8, 7, 4
 	];
 	
-	temp_surf = [ surface_create(1, 1), surface_create(1, 1) ];
+	temp_surf = [ PIXEL_SURFACE, PIXEL_SURFACE ];
 	
 	static drawOverlay = function(_active, _x, _y, _s, _mx, _my) {
 		inputs[| 5].drawOverlay(_active, _x, _y, _s, _mx, _my);
@@ -111,7 +111,7 @@ function Node_Scatter(_x, _y) : Node(_x, _y) constructor {
 			var _scy = random_range(_scale[2], _scale[3]);
 			if(_unis) _scy = _scx;
 				
-			var _r		= (_pint? point_direction(_area[0], _area[1], _x, _y) : 0) + random_range(_rota[0], _rota[1]);
+			var _r	 = (_pint? point_direction(_area[0], _area[1], _x, _y) : 0) + random_range(_rota[0], _rota[1]);
 				
 			surf = _inSurf;
 			if(is_array(_inSurf)) 
@@ -120,7 +120,7 @@ function Node_Scatter(_x, _y) : Node(_x, _y) constructor {
 			var sw = surface_get_width(surf);
 			var sh = surface_get_height(surf);
 			
-			if(_dist == AREA_DISTRIBUTION.border) {
+			if(_dist != AREA_DISTRIBUTION.area || _scat != AREA_SCATTER.uniform) {
 				_x -= sw / 2;
 				_y -= sh / 2;
 			}

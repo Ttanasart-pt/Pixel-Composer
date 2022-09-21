@@ -1,7 +1,10 @@
 {
-  "option_windows_display_name": "Pixel Composer 0.9.0",
-  "option_windows_executable_name": "${project_name} 0.9.0.exe",
-  "option_windows_version": "0.9.0.0",
+  "resourceType": "GMWindowsOptions",
+  "resourceVersion": "1.1",
+  "name": "Windows",
+  "option_windows_display_name": "Pixel Composer 0.9.2",
+  "option_windows_executable_name": "${project_name} 0.9.2.exe",
+  "option_windows_version": "0.9.2.0",
   "option_windows_company_info": "MakhamDev",
   "option_windows_product_info": "Pixel Composer",
   "option_windows_copyright_info": "",
@@ -28,9 +31,4 @@
   "option_windows_enable_steam": false,
   "option_windows_disable_sandbox": true,
   "option_windows_steam_use_alternative_launcher": false,
-  "option_windows_use_x64": false,
-  "resourceVersion": "1.1",
-  "name": "Windows",
-  "tags": [],
-  "resourceType": "GMWindowsOptions",
 }

@@ -34,10 +34,10 @@ function Node_3D_Obj(_x, _y) : Node(_x, _y) constructor {
 	];
 	input_display_len  = array_length(input_display_list);
 	
-	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, surface_create(1, 1));
+	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
 	
 	function reset_tex() {
-		tex_surface = surface_create(1, 1);
+		tex_surface = PIXEL_SURFACE;
 		surface_set_target(tex_surface);
 			draw_clear(c_black);
 		surface_reset_target();

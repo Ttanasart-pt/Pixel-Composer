@@ -14,9 +14,9 @@
 	DEBUG = false;
 	
 	globalvar VERSION, SAVEFILE_VERSION, VERSION_STRING;
-	VERSION = 91;
+	VERSION = 92;
 	SAVEFILE_VERSION = 90;
-	VERSION_STRING = "0.9.1";
+	VERSION_STRING = "0.9.2";
 	
 	globalvar NODES, ANIMATOR, NODE_MAP, APPEND_MAP, HOTKEYS, HOTKEY_CONTEXT;
 	
@@ -57,10 +57,11 @@
 	HOVER = noone;
 	TEXTBOX_ACTIVE = noone
 	
-	globalvar ADD_NODE_PAGE, ADD_NODE_W, ADD_NODE_H;
+	globalvar ADD_NODE_PAGE, ADD_NODE_W, ADD_NODE_H, ADD_NODE_MODE;
 	ADD_NODE_PAGE = "";
-	ADD_NODE_W = 372 + 16 * 3 + 8;
-	ADD_NODE_H = 320;
+	ADD_NODE_W = 532;
+	ADD_NODE_H = 346;
+	ADD_NODE_MODE = 0;
 	
 	globalvar AXIS_COLOR;
 	AXIS_COLOR = [ c_ui_red, c_ui_lime, c_ui_cyan, c_yellow, c_aqua, c_fuchsia, c_orange, c_ltgray ];
@@ -101,6 +102,8 @@
 		#macro BLEND_NORMAL gpu_set_blendmode(bm_normal);
 		#macro BLEND_OVERRIDE gpu_set_blendmode_ext(bm_one, bm_zero);
 	#endregion
+	
+	#macro PIXEL_SURFACE surface_create(1, 1)
 #endregion
 
 #region presets
@@ -115,7 +118,7 @@
 #region default
 	globalvar DEF_SURFACE;
 	function DEF_SURFACE_RESET() {
-		DEF_SURFACE = surface_create(1, 1);
+		DEF_SURFACE = PIXEL_SURFACE;
 		surface_set_target(DEF_SURFACE);
 			draw_clear_alpha(c_white, 0);
 		surface_reset_target();

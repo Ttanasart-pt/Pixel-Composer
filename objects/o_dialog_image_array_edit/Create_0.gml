@@ -45,7 +45,7 @@ event_inherited();
 		var yy			= _y + 8;
 		var menu		= -1;
 		var drag		= -1;
-		var inb_hover	= 0;
+		var inb_hover	= -1;
 		
 		for( var i = 0; i < row; i++ ) {
 			var ch = hh;
@@ -92,7 +92,6 @@ event_inherited();
 					draw_sprite_ext(spr, 0, spr_x, spr_y, spr_s, spr_s, 0, c_white, 0.5);
 				else
 					draw_sprite_ext(spr, 0, spr_x, spr_y, spr_s, spr_s, 0, c_white, 1);
-
 				
 				draw_set_text(f_p2, fa_center, fa_top, c_white);
 				var path  = arr[index];
@@ -108,15 +107,15 @@ event_inherited();
 			_h += ch;
 		}
 		
-		if(dragging != -1) {
-			if(mouse_check_button_released(mb_left) && dragging != inb_hover) {
+		if(dragging != -1 && mouse_check_button_released(mb_left)) {
+			if(inb_hover != -1) {
 				var val = arr[dragging];
 				array_delete(arr, dragging, 1);
 				array_insert(arr, dragging < inb_hover? inb_hover - 1 : inb_hover, val);
 				target.inputs[| 0].setValue(arr);
 				target.doUpdate();
-				dragging = -1;
 			}
+			dragging = -1;
 		}
 		
 		if(menu > -1) {

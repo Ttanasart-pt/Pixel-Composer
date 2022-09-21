@@ -34,7 +34,7 @@ function Node_3D_Cube(_x, _y) : Node(_x, _y) constructor {
 		["Texture",		false],	5, 6, 7, 8, 9, 10, 11
 	];
 	
-	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, surface_create(1, 1));
+	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
 	
 	#region 3D setup
 		TM = matrix_build(0, 0, 0, 0, 0, 0, 1, 1, 1);

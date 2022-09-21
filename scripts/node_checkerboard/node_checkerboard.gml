@@ -7,15 +7,20 @@ function Node_create_Checker(_x, _y) {
 function Node_Checker(_x, _y) : Node(_x, _y) constructor {
 	name = "Checker";
 	
-	uniform_pos = shader_get_uniform(sh_checkerboard, "position");
-	uniform_angle = shader_get_uniform(sh_checkerboard, "angle");
-	uniform_amount = shader_get_uniform(sh_checkerboard, "amount");
+	shader = sh_checkerboard;
+	uniform_dim = shader_get_uniform(shader, "dimension");
+	uniform_pos = shader_get_uniform(shader, "position");
+	uniform_angle = shader_get_uniform(shader, "angle");
+	uniform_amount = shader_get_uniform(shader, "amount");
+	
+	uniform_col1 = shader_get_uniform(shader, "col1");
+	uniform_col2 = shader_get_uniform(shader, "col2");
 	
 	inputs[| 0] = nodeValue(0, "Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, def_surf_size2, VALUE_TAG.dimension_2d )
 		.setDisplay(VALUE_DISPLAY.vector);
 	
-	inputs[| 1] = nodeValue(1, "Amount", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 2)
-		.setDisplay(VALUE_DISPLAY.slider, [2, 32, 1]);
+	inputs[| 1] = nodeValue(1, "Amount", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 2)
+		.setDisplay(VALUE_DISPLAY.slider, [2, 16, 0.1]);
 	
 	inputs[| 2] = nodeValue(2, "Angle", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.rotation);
@@ -23,7 +28,16 @@ function Node_Checker(_x, _y) : Node(_x, _y) constructor {
 	inputs[| 3] = nodeValue(3, "Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [0, 0] )
 		.setDisplay(VALUE_DISPLAY.vector);
 	
-	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, surface_create(1, 1));
+	inputs[| 4] = nodeValue(4, "Color 1", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white);
+	inputs[| 5] = nodeValue(5, "Color 2", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_black);
+	
+	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
+	
+	input_display_list = [
+		["Output",	true],	0,  
+		["Pattern",	false], 1, 2, 3,
+		["Render",	false], 4, 5,
+	];
 	
 	static drawOverlay = function(_active, _x, _y, _s, _mx, _my) {
 		var pos = inputs[| 3].getValue();
@@ -40,6 +54,9 @@ function Node_Checker(_x, _y) : Node(_x, _y) constructor {
 		var _ang = inputs[| 2].getValue();
 		var _pos = inputs[| 3].getValue();
 		
+		var _col1 = inputs[| 4].getValue();
+		var _col2 = inputs[| 5].getValue();
+		
 		var _outSurf = outputs[| 0].getValue();
 		if(!is_surface(_outSurf)) {
 			_outSurf = surface_create(surface_valid(_dim[0]), surface_valid(_dim[1]));
@@ -48,10 +65,13 @@ function Node_Checker(_x, _y) : Node(_x, _y) constructor {
 			surface_size_to(_outSurf, surface_valid(_dim[0]), surface_valid(_dim[1]));
 			
 		surface_set_target(_outSurf);
-			shader_set(sh_checkerboard);
+			shader_set(shader);
+			shader_set_uniform_f(uniform_dim, surface_get_width(_outSurf), surface_get_height(_outSurf));
 			shader_set_uniform_f(uniform_pos, _pos[0] / _dim[0], _pos[1] / _dim[1]);
 			shader_set_uniform_f(uniform_angle,  degtorad(_ang));
 			shader_set_uniform_f(uniform_amount, _amo);
+			shader_set_uniform_f_array(uniform_col1, colToVec4(_col1));
+			shader_set_uniform_f_array(uniform_col2, colToVec4(_col2));
 				draw_sprite_ext(s_fx_pixel, 0, 0, 0, _dim[0], _dim[1], 0, c_white, 1);
 			shader_reset();
 		surface_reset_target();

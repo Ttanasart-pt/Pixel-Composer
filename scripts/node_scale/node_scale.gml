@@ -13,7 +13,7 @@ function Node_Scale(_x, _y) : Node_Processor(_x, _y) constructor {
 	
 	inputs[| 2] = nodeValue(2, "Keep dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
 	
-	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, surface_create(1, 1));
+	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
 	
 	static process_data = function(_outSurf, _data, _output_index) {
 		var scale	= _data[1];

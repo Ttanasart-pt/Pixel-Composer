@@ -28,8 +28,8 @@ function Node_Canvas(_x, _y) : Node(_x, _y) constructor {
 	
 	inputs[| 7] = nodeValue(7, "Surface amount", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1);
 	
-	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, surface_create(1, 1));
-	outputs[| 1] = nodeValue(1, "Preview", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, surface_create(1, 1));
+	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
+	outputs[| 1] = nodeValue(1, "Preview", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
 	
 	input_display_list = [ 
 		["Output",	false],	0, 
@@ -66,8 +66,8 @@ function Node_Canvas(_x, _y) : Node(_x, _y) constructor {
 	}
 	
 	function draw_point_size(_x, _y, _siz, _brush) {
-		if(_brush == -1) {
-			if(_siz == 1) 
+		if(!is_surface(_brush)) {
+			if(_siz <= 1) 
 				draw_point(_x, _y);
 			else if(_siz == 2) { 
 				draw_point(_x, _y);
@@ -82,7 +82,7 @@ function Node_Canvas(_x, _y) : Node(_x, _y) constructor {
 				draw_point(_x,     _y + 1);	
 			} else
 				draw_circle(_x, _y, _siz / 2, 0);
-		} else if(surface_exists(_brush)) {
+		} else {
 			var _sw = surface_get_width(_brush);
 			var _sh = surface_get_height(_brush);
 			
@@ -162,15 +162,12 @@ function Node_Canvas(_x, _y) : Node(_x, _y) constructor {
 		var _min_y = min(_y0, _y1) - 1;
 		var _max_y = max(_y0, _y1);
 		
-		draw_point_size(_min_x, _min_y, _siz, _brush);
-		draw_point_size(_max_x, _max_y, _siz, _brush);
-		
 		if(_fill) {
 			draw_ellipse(_min_x, _min_y, _max_x, _max_y, 0);
 		} else {
 			var samp = 64;
-			var cx = (_x0 + _x1) / 2;
-			var cy = (_y0 + _y1) / 2;
+			var cx = (_min_x + _max_x) / 2;
+			var cy = (_min_y + _max_y) / 2;
 			var rx = abs(_x0 - _x1) / 2;
 			var ry = abs(_y0 - _y1) / 2;
 			
@@ -477,9 +474,8 @@ function Node_Canvas(_x, _y) : Node(_x, _y) constructor {
 		
 		surface_reset_target();
 		
-		#region preview 
-			if(_prev)
-				draw_surface_ext(_surf_prev, _x, _y, _s, _s, 0, c_white, 1);
+		#region preview
+			if(_prev) draw_surface_ext(_surf_prev, _x, _y, _s, _s, 0, c_white, 1);
 			
 			if (_tool == 2 || _tool == 3) {
 				if(mouse_holding) {
@@ -496,7 +492,7 @@ function Node_Canvas(_x, _y) : Node(_x, _y) constructor {
 			if(_tool > -1 && point_in_rectangle(mouse_cur_x, mouse_cur_y, 0, 0, _surf_w - 1, _surf_h - 1)) {
 				var _pr_x = _x + mouse_cur_x * _s;
 				var _pr_y = _y + mouse_cur_y * _s;
-		
+				
 				draw_set_color(c_white);
 				draw_rectangle(_pr_x, _pr_y, _pr_x + _s, _pr_y + _s, 1);
 			}

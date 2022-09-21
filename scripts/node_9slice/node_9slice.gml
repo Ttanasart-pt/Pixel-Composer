@@ -17,7 +17,7 @@ function Node_9Slice(_x, _y) : Node_Processor(_x, _y) constructor {
 	inputs[| 3] = nodeValue(3, "Filling modes", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Scale", "Repeat" ]);
 	
-	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, surface_create(1, 1));
+	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
 	
 	drag_side = -1;
 	drag_mx   = 0;

@@ -31,9 +31,11 @@ function paths_to_array(paths, recur = false, _filter = "") {
 		var path_left = paths;
 		
 		while(string_length(path_left) > 0) {
-			var space;
-			if(string_pos("\n", path_left) == 0) space = string_length(path_left) + 1;
-			else space = string_pos("\n", path_left);
+			var space = 0;
+			if(string_pos("\n", path_left) == 0) 
+				space = string_length(path_left) + 1;
+			else 
+				space = string_pos("\n", path_left);
 			
 			var path_str	= string_copy(path_left, 1, space - 1);
 			path_left		= string_copy(path_left, space + 1, string_length(path_left) - space);

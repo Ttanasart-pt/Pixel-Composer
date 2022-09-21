@@ -31,13 +31,15 @@ function Action(_type, _object, _data) constructor {
 	data = _data;
 	
 	static undo = function() {
+		var _n;
+		
 		switch(type) {
 			case ACTION_TYPE.var_modify :
 				if(is_struct(obj)) {
-					var _n = variable_struct_get(obj, data[1]);
+					_n = variable_struct_get(obj, data[1]);
 					variable_struct_set(obj, data[1], data[0]);
 				} else if(object_exists(obj)) {
-					var _n = variable_instance_get(obj, data[1]);
+					_n = variable_instance_get(obj, data[1]);
 					variable_instance_set(obj, data[1], data[0]);
 				}
 				data[0] = _n;
@@ -48,7 +50,7 @@ function Action(_type, _object, _data) constructor {
 				break;
 			case ACTION_TYPE.list_modify :
 				if(!ds_exists(obj, ds_type_list)) return;
-				var _n = data[0];
+				_n = data[0];
 				obj[| data[1]] = data[0];
 				data[0] = _n;
 				break;
@@ -77,13 +79,14 @@ function Action(_type, _object, _data) constructor {
 	}
 	
 	static redo = function() {
+		var _n;
 		switch(type) {
 			case ACTION_TYPE.var_modify :
 				if(is_struct(obj)) {
-					var _n = variable_struct_get(obj, data[1]);
+					_n = variable_struct_get(obj, data[1]);
 					variable_struct_set(obj, data[1], data[0]);
 				} else if(object_exists(obj)) {
-					var _n = variable_instance_get(obj, data[1]);
+					_n = variable_instance_get(obj, data[1]);
 					variable_instance_set(obj, data[1], data[0]);	
 				}
 				data[0] = _n;
@@ -94,7 +97,7 @@ function Action(_type, _object, _data) constructor {
 				break;
 			case ACTION_TYPE.list_modify :
 				if(!ds_exists(obj, ds_type_list)) return;
-				var _n = data[0];
+				_n = data[0];
 				obj[| data[1]] = data[0];
 				data[0] = _n;
 				break;

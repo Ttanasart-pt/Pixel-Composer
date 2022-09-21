@@ -92,3 +92,25 @@ function distance_to_curve(mx, my, x0, y0, x1, y1) {
 	
 	return dist;
 }
+
+function draw_line_elbow(x0, y0, x1, y1, thick = 1, type = LINE_STYLE.solid) {
+	var cx = (x0 + x1) / 2;
+	draw_line_width(x0, y0, cx, y0, thick);
+	draw_line_width(cx, y0 - thick / 2, cx, y1 + thick / 2, thick);
+	draw_line_width(cx, y1, x1, y1, thick);
+}
+
+function draw_line_elbow_color(x0, y0, x1, y1, thick, col1, col2, type = LINE_STYLE.solid) {
+	var cx = (x0 + x1) / 2;
+	var cm = merge_color(col1, col2, 0.5);
+						
+	if(type == LINE_STYLE.solid) {
+		draw_line_width_color(x0, y0, cx, y0, thick, col1, cm);
+		draw_line_width_color(cx, y0 - thick / 2, cx, y1 + thick / 2, thick, cm, cm);
+		draw_line_width_color(cx, y1, x1, y1, thick, cm, col2);
+	} else {
+		draw_line_dashed(x0, y0, cx, y0, thick, col1, cm, 12);
+		draw_line_dashed(cx, y0 - thick / 2, cx, y1 + thick / 2, thick, cm, cm, 12);
+		draw_line_dashed(cx, y1, x1, y1, thick, cm, col2, 12);
+	}	
+}

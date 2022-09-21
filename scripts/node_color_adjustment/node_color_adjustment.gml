@@ -47,7 +47,7 @@ function Node_Color_adjust(_x, _y) : Node_Processor(_x, _y) constructor {
 	inputs[| 9] = nodeValue(9, "Alpha", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
 		.setDisplay(VALUE_DISPLAY.slider, [ 0, 1, 0.01]);
 	
-	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, surface_create(1, 1));
+	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
 	
 	input_display_list = [0, 8, 
 		["Brightness",	false], 1, 2, 

@@ -57,7 +57,7 @@ function Node_Image_Animated(_x, _y) : Node(_x, _y) constructor {
 				ANIMATOR.frames_total = array_length(spr);
 			}, "Match length"] );
 	
-	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, surface_create(1, 1));
+	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
 	
 	input_display_list = [
 		["Image", false],		0, 1,

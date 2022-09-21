@@ -46,7 +46,7 @@ function Node_Line(_x, _y) : Node(_x, _y) constructor {
 		["Render",			false], 10 
 	];
 	
-	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, surface_create(1, 1));
+	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
 	
 	static update = function() {
 		var _dim   = inputs[| 0].getValue();
@@ -94,7 +94,8 @@ function Node_Line(_x, _y) : Node(_x, _y) constructor {
 				var ww = _rat / _seg;
 				
 				var _total = _rat;
-				var _prog_curr = frac(_shift + _rats) - ww, _prog = _prog_curr + 1;
+				var _prog_curr = frac(_shift + _rats) - ww;
+				var _prog = _prog_curr + 1;
 				var _prog_eli = 0;
 				
 				while(_total > 0) {
@@ -107,7 +108,7 @@ function Node_Line(_x, _y) : Node(_x, _y) constructor {
 					_ny = p[1];
 					
 					if(_total < _rat) {
-						_d = point_direction(_ox, _oy, _nx, _ny);
+						var _d = point_direction(_ox, _oy, _nx, _ny);
 						_nx += lengthdir_x(random(_wig) * choose(-1, 1), _d + 90);
 						_ny += lengthdir_y(random(_wig) * choose(-1, 1), _d + 90);
 					}
@@ -154,7 +155,8 @@ function Node_Line(_x, _y) : Node(_x, _y) constructor {
 				
 				var ww = _rat / _seg;
 				var _total = _rat;
-				var _prog_curr = frac(_shift + _rats) - ww, _prog = _prog_curr + 1;
+				var _prog_curr = frac(_shift + _rats) - ww;
+				var _prog = _prog_curr + 1;
 				var _prog_eli = 0;
 				
 				while(_total > 0) {

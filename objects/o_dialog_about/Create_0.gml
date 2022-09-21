@@ -14,6 +14,7 @@ event_inherited();
 		[ "Execute Shell", "Samuel Venable" ],
 		[ "The Book of Shaders", "Patricio Gonzalez Vivo & Jen Lowe" ],
 		[ "Many noise and shape shaders", "Inigo Quilez" ],
+		[ "Chromatic aberration shader", "jcant0n" ],
 		[ "gif importer", "YellowAfterLife" ],
 	]
 	

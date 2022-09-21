@@ -59,7 +59,7 @@ function Node_Transform(_x, _y) : Node_Processor(_x, _y) constructor {
 		["Scale",		false], 6
 	];
 	
-	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, surface_create(1, 1));
+	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
 	
 	vel = 0;
 	prev_pos = [0, 0];

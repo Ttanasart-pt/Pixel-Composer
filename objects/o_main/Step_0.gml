@@ -10,7 +10,7 @@
 
 #region animation
 	if(ANIMATOR.is_playing) {
-		ANIMATOR.real_frame += ANIMATOR.framerate / room_speed;
+		ANIMATOR.real_frame += ANIMATOR.framerate / game_get_speed(gamespeed_fps);
 		if(floor(ANIMATOR.real_frame) > ANIMATOR.frames_total) {
 			switch(ANIMATOR.playback) {
 				case ANIMATOR_END.loop : 
@@ -88,3 +88,21 @@
 	}
 #endregion
 
+#region file drop
+	file_dnd_set_files(file_dnd_pattern, file_dnd_allowfiles, file_dnd_allowdirs, file_dnd_allowmulti);
+	file_dnd_filelist = file_dnd_get_files();
+	
+	file_dnd_set_enabled(true);
+	
+	if(file_dnd_filelist != "" && file_dnd_filelist != 0) {
+		show_debug_message(file_dnd_filelist);
+		file_dropping = file_dnd_filelist;
+		if(string_pos("\n", file_dropping) == 1) 
+			file_dropping = string_replace(file_dropping, "\n", "");
+		
+		alarm[3] = 2;
+		
+		file_dnd_set_enabled(false);
+		file_dnd_filelist = "";
+	}
+#endregion

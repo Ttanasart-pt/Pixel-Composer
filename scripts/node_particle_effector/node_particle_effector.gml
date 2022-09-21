@@ -44,10 +44,11 @@ function Node_Particle_Effector(_x, _y) : Node(_x, _y) constructor {
 	
 	inputs[| 7] = nodeValue(7, "Strength", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1 );
 	
-	inputs[| 8] = nodeValue(8, "Rotate particle", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0 );
+	inputs[| 8] = nodeValue(8, "Rotate particle", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ] )
+		.setDisplay(VALUE_DISPLAY.rotation_range);
 	
-	inputs[| 9] = nodeValue(9, "Scale particle", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ] )
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 9] = nodeValue(9, "Scale particle", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 0, 0 ] )
+		.setDisplay(VALUE_DISPLAY.vector_range);
 	
 	inputs[| 10] = nodeValue(10, "Turbulence scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 16 );
 	
@@ -102,8 +103,8 @@ function Node_Particle_Effector(_x, _y) : Node(_x, _y) constructor {
 		var _vect = current_data[6];
 		var _sten = current_data[7];
 		
-		var _rot = current_data[8];
-		var _sca = current_data[9];
+		var _rot_range = current_data[8];
+		var _sca_range = current_data[9];
 		
 		var _area_x = _area[0];
 		var _area_y = _area[1];
@@ -115,6 +116,10 @@ function Node_Particle_Effector(_x, _y) : Node(_x, _y) constructor {
 		var _area_x1 = _area_x + _area_w;
 		var _area_y0 = _area_y - _area_h;
 		var _area_y1 = _area_y + _area_h;
+		
+		random_set_seed(part.seed);
+		var _rot = random_range(_rot_range[0], _rot_range[1]);
+		var _sca = [ random_range(_sca_range[0], _sca_range[1]), random_range(_sca_range[2], _sca_range[3]) ];
 		
 		var str = 0;
 		var pv = part.getPivot();

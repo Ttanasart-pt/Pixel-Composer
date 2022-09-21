@@ -73,7 +73,7 @@ function Node_Image_Sheet(_x, _y) : Node(_x, _y) constructor {
 		["Output", false],	7, 8
 	];
 	
-	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, surface_create(1, 1));
+	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
 	
 	tools = [
 		[ "Draw boundary",		s_splice_draw ]

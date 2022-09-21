@@ -16,13 +16,13 @@ function Node_Trail(_x, _y) : Node_Processor(_x, _y) constructor {
 	inputs[| 4] = nodeValue(4, "Blend mode", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.enum_scroll, BLEND_TYPES );
 	
-	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, surface_create(1, 1));
+	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
 	
 	input_display_list = [
 		["Trail settings",	false], 0, 1, 2, 4, 3
 	];
 	
-	temp_surf = [ surface_create(1, 1), surface_create(1, 1) ];
+	temp_surf = [ PIXEL_SURFACE, PIXEL_SURFACE ];
 	
 	static process_data = function(_outSurf, _data, _output_index) {
 		if(!inputs[| 0].value_from) 

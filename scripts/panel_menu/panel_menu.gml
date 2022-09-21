@@ -33,7 +33,7 @@ function Panel_Menu(_panel) : PanelContent(_panel) constructor {
 			-1,
 			[ "Show Grid", function() { PANEL_PREVIEW.grid_show = !PANEL_PREVIEW.grid_show; }, ["Preview", "Toggle grid"] ],
 			[ "Grid setting...", function() { 
-				var dia = dialogCall(o_dialog_grid, WIN_W / 2, WIN_H / 2); 
+				var dia = dialogCall(o_dialog_preview_grid, WIN_W / 2, WIN_H / 2); 
 				dia.anchor = ANCHOR.none;
 			} ],
 		]], 
@@ -65,7 +65,7 @@ function Panel_Menu(_panel) : PanelContent(_panel) constructor {
 				PREF_MAP[? "panel_collection"] = !PREF_MAP[? "panel_collection"];
 				setPanel();
 				PREF_SAVE();
-			} ]
+			} ],
 		]],
 	]
 	

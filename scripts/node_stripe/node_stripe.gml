@@ -7,16 +7,23 @@ function Node_create_Stripe(_x, _y) {
 function Node_Stripe(_x, _y) : Node(_x, _y) constructor {
 	name = "Stripe";
 	
+	uniform_grad_use = shader_get_uniform(sh_stripe, "gradient_use");
+	uniform_grad_blend = shader_get_uniform(sh_stripe, "gradient_blend");
+	uniform_grad = shader_get_uniform(sh_stripe, "gradient_color");
+	uniform_grad_time = shader_get_uniform(sh_stripe, "gradient_time");
+	uniform_grad_key = shader_get_uniform(sh_stripe, "gradient_keys");
+	
 	uniform_pos = shader_get_uniform(sh_stripe, "position");
 	uniform_angle = shader_get_uniform(sh_stripe, "angle");
 	uniform_amount = shader_get_uniform(sh_stripe, "amount");
 	uniform_blend = shader_get_uniform(sh_stripe, "blend");
+	uniform_rand = shader_get_uniform(sh_stripe, "rand");
 	
 	inputs[| 0] = nodeValue(0, "Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, def_surf_size2, VALUE_TAG.dimension_2d )
 		.setDisplay(VALUE_DISPLAY.vector);
 	
-	inputs[| 1] = nodeValue(1, "Amount", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1)
-		.setDisplay(VALUE_DISPLAY.slider, [1, 32, 1]);
+	inputs[| 1] = nodeValue(1, "Amount", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
+		.setDisplay(VALUE_DISPLAY.slider, [1, 16, 0.1]);
 	
 	inputs[| 2] = nodeValue(2, "Angle", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.rotation);
@@ -25,8 +32,22 @@ function Node_Stripe(_x, _y) : Node(_x, _y) constructor {
 	
 	inputs[| 4] = nodeValue(4, "Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [0, 0] )
 		.setDisplay(VALUE_DISPLAY.vector);
+		
+	inputs[| 5] = nodeValue(5, "Random", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
+		.setDisplay(VALUE_DISPLAY.slider, [0, 1, 0.01]);
+		
+	inputs[| 6] = nodeValue(6, "Random color", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
 	
-	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, surface_create(1, 1));
+	inputs[| 7] = nodeValue(7, "Colors", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white)
+		.setDisplay(VALUE_DISPLAY.gradient);
+	
+	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
+	
+	input_display_list = [ 0, 
+		["Output",	true],	0,  
+		["Pattern",	false], 1, 2, 4, 5,
+		["Render",	false], 3, 6, 7
+	];
 	
 	static drawOverlay = function(_active, _x, _y, _s, _mx, _my) {
 		var pos = inputs[| 4].getValue();
@@ -43,6 +64,17 @@ function Node_Stripe(_x, _y) : Node(_x, _y) constructor {
 		var _ang = inputs[| 2].getValue();
 		var _bnd = inputs[| 3].getValue();
 		var _pos = inputs[| 4].getValue();
+		var _rnd = inputs[| 5].getValue();
+		
+		var _grad_use = inputs[| 6].getValue();
+		inputs[| 7].setVisible(_grad_use);
+		
+		var _gra = inputs[| 7].getValue();
+		var _gra_data = inputs[| 7].getExtraData();
+		
+		var _g = getGradientData(_gra, _gra_data);
+		var _grad_color = _g[0];
+		var _grad_time = _g[1];
 		
 		var _outSurf = outputs[| 0].getValue();
 		if(!is_surface(_outSurf)) {
@@ -57,6 +89,14 @@ function Node_Stripe(_x, _y) : Node(_x, _y) constructor {
 			shader_set_uniform_f(uniform_angle,  degtorad(_ang));
 			shader_set_uniform_f(uniform_amount, _amo);
 			shader_set_uniform_f(uniform_blend, _bnd);
+			shader_set_uniform_f(uniform_rand, _rnd);
+			
+			shader_set_uniform_i(uniform_grad_use, _grad_use);
+			shader_set_uniform_i(uniform_grad_blend, ds_list_get(_gra_data, 0));
+			shader_set_uniform_f_array(uniform_grad, _grad_color);
+			shader_set_uniform_f_array(uniform_grad_time, _grad_time);
+			shader_set_uniform_i(uniform_grad_key, ds_list_size(_gra));
+			
 				draw_sprite_ext(s_fx_pixel, 0, 0, 0, _dim[0], _dim[1], 0, c_white, 1);
 			shader_reset();
 		surface_reset_target();

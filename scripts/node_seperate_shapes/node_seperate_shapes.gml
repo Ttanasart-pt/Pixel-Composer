@@ -20,13 +20,13 @@ function Node_Seperate_Shape(_x, _y) : Node(_x, _y) constructor {
 		.setDisplay(VALUE_DISPLAY.slider, [0, 1, 0.01]);
 	
 	static createOutput = function() {
-		var o = nodeValue(ds_list_size(outputs), "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, surface_create(1, 1));
+		var o = nodeValue(ds_list_size(outputs), "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
 		ds_list_add(outputs, o);
 		
 		return o;
 	}
 	
-	temp_surf = [ surface_create(1, 1), surface_create(1, 1) ];
+	temp_surf = [ PIXEL_SURFACE, PIXEL_SURFACE ];
 	surface_buffer = buffer_create(1 * 1 * 4, buffer_fixed, 2);
 	
 	function get_color_buffer(_x, _y, w, h) {

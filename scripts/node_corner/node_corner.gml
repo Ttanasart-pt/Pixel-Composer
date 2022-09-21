@@ -28,7 +28,7 @@ function Node_Corner(_x, _y) : Node_Processor(_x, _y) constructor {
 	inputs[| 1] = nodeValue(1, "Radius", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 2)
 		.setDisplay(VALUE_DISPLAY.slider, [1, 16, 1]);
 	
-	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, surface_create(1, 1));
+	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
 	
 	static process_data = function(_outSurf, _data, _output_index) {
 		var wd = _data[1];

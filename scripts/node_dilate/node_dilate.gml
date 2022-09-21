@@ -21,7 +21,7 @@ function Node_Dilate(_x, _y) : Node_Processor(_x, _y) constructor {
 	
 	inputs[| 3] = nodeValue(3, "Radius", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 16);
 	
-	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, surface_create(1, 1));
+	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
 	
 	static drawOverlay = function(_active, _x, _y, _s, _mx, _my) {
 		var pos = inputs[| 1].getValue();

@@ -58,9 +58,9 @@ function Node_Composite(_x, _y) : Node_Processor(_x, _y) constructor {
 		inputs[| ds_list_size(inputs) - data_length].setFrom(_nodeFrom);
 	}
 	
-	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, surface_create(1, 1));
+	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
 	
-	temp_surf = [ surface_create(1, 1), surface_create(1, 1) ];
+	temp_surf = [ PIXEL_SURFACE, PIXEL_SURFACE ];
 	
 	surf_dragging = -1;
 	input_dragging = -1;
@@ -146,6 +146,9 @@ function Node_Composite(_x, _y) : Node_Processor(_x, _y) constructor {
 		var hovering_type = 0;
 		
 		var amo = (ds_list_size(inputs) - input_fix_len) / data_length;
+		if(array_length(current_data) < input_fix_len + amo * data_length)
+			return;
+		
 		for(var i = 0; i < amo; i++) {
 			var index = input_fix_len + i * data_length;
 			var _surf = current_data[index + 0];

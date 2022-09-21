@@ -57,22 +57,18 @@ function SET_PATH(path) {
 }
 
 function SAVE() {
-	if(CURRENT_PATH == "" || READONLY) {
+	if(CURRENT_PATH == "" || READONLY)
 		SAVE_AS();
-	} else {
+	else
 		SAVE_AT(CURRENT_PATH);
-	}
 }
 
 function SAVE_AS() {
 	var path = get_save_filename(".pxc", "");
 	if(path == "") return;
 	
-	if(filename_ext(path) == "") {
+	if(filename_ext(path) != ".pxc")
 		path += ".pxc";
-	} else if(filename_ext(path) != ".pxc") {
-		path = string_replace(path, filename_ext(path), ".pxc");
-	}
 	
 	if(file_exists(path))
 		PANEL_MENU.addNotiExtra("Overrided file : " + path);
@@ -109,9 +105,10 @@ function SAVE_COLLECTIONS(_list, _path, save_surface = true) {
 	cy = round((cy / ds_list_size(_list)) / 32) * 32;
 	
 	if(save_surface) {
-		if(PANEL_PREVIEW.preview_surface && is_surface(PANEL_PREVIEW.preview_surface)) {
+		var preview_surface = PANEL_PREVIEW.getNodePreviewSurface();
+		if(preview_surface && is_surface(preview_surface)) {
 			var icon_path = string_copy(_path, 1, string_length(_path) - 5) + ".png";
-			surface_save(PANEL_PREVIEW.preview_surface, icon_path);
+			surface_save(preview_surface, icon_path);
 		}
 	}
 	
@@ -129,9 +126,10 @@ function SAVE_COLLECTIONS(_list, _path, save_surface = true) {
 
 function SAVE_COLLECTION(_node, _path, save_surface = true) {
 	if(save_surface) {
-		if(PANEL_PREVIEW.preview_surface && is_surface(PANEL_PREVIEW.preview_surface)) {
+		var preview_surface = PANEL_PREVIEW.getNodePreviewSurface();
+		if(preview_surface && is_surface(preview_surface)) {
 			var icon_path = string_copy(_path, 1, string_length(_path) - 5) + ".png";
-			surface_save(PANEL_PREVIEW.preview_surface, icon_path);
+			surface_save(preview_surface, icon_path);
 		}
 	}
 	

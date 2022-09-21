@@ -19,7 +19,7 @@ function Node_Color_Remove(_x, _y) : Node_Processor(_x, _y) constructor {
 	inputs[| 2] = nodeValue(2, "Treshold",   self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.1)
 		.setDisplay(VALUE_DISPLAY.slider, [0, 1, 0.01]);
 	
-	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, surface_create(1, 1));
+	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
 	
 	static process_data = function(_outSurf, _data, _output_index) {
 		var fr = _data[1];

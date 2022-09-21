@@ -21,9 +21,8 @@ if !ready exit;
 			draw_sprite_stretched(s_ui_panel_bg, 0, dialog_x + 16, hh, 160, hg);
 		} else if(point_in_rectangle(mouse_mx, mouse_my, dialog_x, hh, dialog_x + 160, hh + hg)) {
 			draw_sprite_stretched_ext(s_ui_panel_bg, 0, dialog_x + 16, hh, 160, hg, c_white, 0.5);
-			if(mouse_check_button(mb_left)) {
+			if(mouse_check_button(mb_left))
 				page_current = i;
-			}
 		}
 			
 		draw_text(dialog_x + 28, hh + hg / 2, page[i]);

@@ -21,7 +21,7 @@ function Node_Render_Sprite_Sheet(_x, _y) : Node(_x, _y) constructor {
 	
 	anim_drawn		= array_create(ANIMATOR.frames_total + 1, false);
 	
-	inputs[| 0] = nodeValue(0, "Sprites", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, surface_create(1, 1));
+	inputs[| 0] = nodeValue(0, "Sprites", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, PIXEL_SURFACE);
 	
 	inputs[| 1] = nodeValue(1, "Sprite set", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Animation", "Sprite array" ]);
@@ -36,7 +36,7 @@ function Node_Render_Sprite_Sheet(_x, _y) : Node(_x, _y) constructor {
 	inputs[| 5] = nodeValue(5, "Alignment", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.enum_button, [ "First", "Middle", "Last" ]);
 	
-	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, surface_create(1, 1));
+	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
 	
 	static step = function() {
 		var inpt = inputs[| 0].getValue();
@@ -71,7 +71,7 @@ function Node_Render_Sprite_Sheet(_x, _y) : Node(_x, _y) constructor {
 		
 		for(var i = 0; i < array_length(inpt); i++) {
 			if(!is_surface(inpt[i])) break;
-			var oo;
+			var oo = noone;
 			if(!is_array(oupt))		oo = oupt;
 			else					oo = oupt[i];
 			

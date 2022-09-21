@@ -38,7 +38,7 @@ function Node_Normal_Light(_x, _y) : Node_Processor(_x, _y) constructor {
 		["Light",	false], 3, 8, 4, 5, 6, 7
 	];
 	
-	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, surface_create(1, 1));
+	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
 	
 	static drawOverlay = function(_active, _x, _y, _s, _mx, _my) {
 		var pos = inputs[| 4].getValue();

@@ -5,7 +5,7 @@ function Node_create_Particle(_x, _y) {
 }
 
 function __part() constructor {
-	seed   = irandom(9999);
+	seed   = irandom(99999);
 	active = false;
 	surf   = noone;
 	x   = 0;
@@ -110,7 +110,7 @@ function __part() constructor {
 			rot = point_direction(xp, yp, x, y);
 		else
 			rot += rot_s;
-		alp_draw = alp * eval_bezier_cubic(life / life_total, alp_fade[0], alp_fade[1], alp_fade[2], alp_fade[3]);
+		alp_draw = alp * eval_bezier_cubic(1 - life / life_total, alp_fade[0], alp_fade[1], alp_fade[2], alp_fade[3]);
 		
 		if(life-- < 0) kill();
 	}
@@ -258,7 +258,7 @@ function Node_Particle(_x, _y) : Node(_x, _y) constructor {
 		["Render",		true],	26, 19, 23,
 	];
 	
-	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, surface_create(1, 1));
+	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
 	
 	def_surface = -1;
 	
@@ -273,7 +273,7 @@ function Node_Particle(_x, _y) : Node(_x, _y) constructor {
 		
 		if(_inSurf == 0) {
 			if(def_surface == -1 || !surface_exists(def_surface)) { 
-				def_surface = surface_create(1, 1);
+				def_surface = PIXEL_SURFACE;
 				surface_set_target(def_surface);
 				draw_clear(c_white);
 				surface_reset_target();
@@ -327,7 +327,8 @@ function Node_Particle(_x, _y) : Node(_x, _y) constructor {
 					} else if(_arr_type == 2)
 						_spr = _inSurf;
 				}
-				var xx, yy;
+				var xx = 0;
+				var yy = 0;
 				
 				if(_scatter == 2) {
 					var _b_data = inputs[| 28].getValue();
@@ -443,7 +444,7 @@ function Node_Particle(_x, _y) : Node(_x, _y) constructor {
 			inputs[| 2].name = "Spawn frame";
 		
 		var _spawn_delay = inputs[| 2].getValue();
-
+		
 		if(ANIMATOR.is_playing && ANIMATOR.frame_progress) {
 			if(ANIMATOR.current_frame == 0) reset();
 			

@@ -3,6 +3,20 @@
 	PANEL_MAIN = 0;
 #endregion
 
+#region panel class
+	enum PANEL_CONTENT {
+		empty,
+		splith,
+		splitv,
+		menu,
+		inspector,
+		animation,
+		preview,
+		graph,
+		collection
+	}
+#endregion
+
 #region functions 
 	function clearPanel() {
 		delete PANEL_MAIN;

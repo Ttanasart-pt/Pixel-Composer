@@ -28,7 +28,7 @@ function Node_Noise_Aniso(_x, _y) : Node(_x, _y) constructor {
 		["Noise",	false], 2, 1, 3
 	];
 	
-	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, surface_create(1, 1));
+	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
 	
 	static drawOverlay = function(_active, _x, _y, _s, _mx, _my) {
 		inputs[| 3].drawOverlay(_active, _x, _y, _s, _mx, _my);

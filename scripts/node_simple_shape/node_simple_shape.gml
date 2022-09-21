@@ -62,7 +62,7 @@ function Node_Shape(_x, _y) : Node_Processor(_x, _y) constructor {
 	
 	inputs[| 11] = nodeValue(11, "Background color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_black);
 	
-	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, surface_create(1, 1));
+	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
 	
 	input_display_list = [
 		["Surface", false], 0, 6, 

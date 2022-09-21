@@ -65,6 +65,13 @@ enum VALUE_DISPLAY {
 	path_load
 }
 
+enum PADDING {
+	right,
+	up,
+	left,
+	down
+}
+
 enum VALUE_TAG {
 	_default = 0,
 	dimension_2d = 1
@@ -390,7 +397,7 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 						break;
 					case VALUE_DISPLAY.path_array: 
 						var paths = value.getValue();
-						if(isArray(paths)) {
+						if(is_array(paths)) {
 							for( var i = 0; i < array_length(paths); i++ ) {
 								if(!file_exists(paths[i])) 
 									value_validation = VALIDATION.error;	
@@ -1047,19 +1054,25 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 		onValidate();
 	}
 	
-	static connect = function() {
-		if(con_node == -1) return true;
-		if(con_index == -1) return true;
+	static connect = function(log = false) {
+		if(con_node == -1 || con_index == -1)
+			return true;
 		
-		if(APPENDING) con_node = GetAppendID(con_node);
+		var _node = con_node;
+		if(APPENDING) 
+			_node = GetAppendID(con_node);
 		
-		if(ds_map_exists(NODE_MAP, con_node)) {
-			var _nd = NODE_MAP[? con_node];
+		if(ds_map_exists(NODE_MAP, _node)) {
+			var _nd = NODE_MAP[? _node];
 			var _ol = ds_list_size(_nd.outputs);
+			
+			if(log)
+				log_warning("LOAD", "[Connect] Reconnecting " + string(node.name) + " to " + _nd.name);
+			
 			if(con_index < _ol) {
-				if(setFrom(_nd.outputs[| con_index], false)) 
+				if(setFrom(_nd.outputs[| con_index], false)) {
 					return true;
-				else
+				} else
 					log_warning("LOAD", "[Connect] Connection conflict " + string(node.name) + " to " + string(_nd.name) + " : Connection failed.");
 				return false;
 			} else {
@@ -1068,7 +1081,7 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 			}
 		}
 		
-		var txt = "Node connect error : Node ID " + string(con_node) + " not found.";
+		var txt = "Node connect error : Node ID " + string(_node) + " not found.";
 		log_warning("LOAD", "[Connect] " + txt);
 		return false;
 	}

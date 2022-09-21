@@ -1,0 +1,9 @@
+{
+  "extensionId": {
+    "name": "libxprocess",
+    "path": "extensions/libxprocess/libxprocess.yy"
+  },
+  "resourceVersion": "1.0",
+  "resourceType": "GMExtensionConfigSet",
+  "configurables": null
+}

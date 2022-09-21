@@ -16,6 +16,6 @@ void main() {
 	float eff	= 1. - clamp(dis / radius, 0., 1.);
 	float ang	= atan(to.y, to.x) + eff * strength;
 	
-	vec2 tex = center / dimension + vec2(cos(ang), sin(ang)) * distance(center / dimension, v_vTexcoord);
-    gl_FragColor = v_vColour * texture2D( gm_BaseTexture, tex );
+	vec2 tex = center + vec2(cos(ang), sin(ang)) * distance(center, pixelPos);
+    gl_FragColor = v_vColour * texture2D( gm_BaseTexture, tex / dimension );
 }

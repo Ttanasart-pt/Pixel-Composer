@@ -63,7 +63,7 @@ function Node_Image_Sequence(_x, _y) : Node(_x, _y) constructor {
 		["Sequence settings",	false], 4, 0, 1, 2, 3
 	];
 	
-	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, [ surface_create(1, 1) ]);
+	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, [ PIXEL_SURFACE ]);
 	outputs[| 1] = nodeValue(1, "Paths", self, JUNCTION_CONNECT.output, VALUE_TYPE.path, [] ).
 		setVisible(true, true);
 	

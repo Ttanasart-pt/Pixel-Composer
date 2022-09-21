@@ -42,10 +42,12 @@ function Node_Gradient(_x, _y) : Node(_x, _y) constructor {
 	
 	inputs[| 7] = nodeValue(7, "Loop", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
 	
-	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, surface_create(1, 1));
+	inputs[| 8] = nodeValue(8, "Mask", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
+	
+	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
 	
 	input_display_list = [
-		["Output",		true],	0, 
+		["Output",		true],	0, 8, 
 		["Gradient",	false], 1, 5, 7,
 		["Shape",		false], 2, 3, 4, 6
 	];
@@ -54,7 +56,7 @@ function Node_Gradient(_x, _y) : Node(_x, _y) constructor {
 		inputs[| 6].drawOverlay(_active, _x, _y, _s, _mx, _my);
 	}
 	
-	static update = function() {	
+	static update = function() {
 		var _dim = inputs[| 0].getValue();
 		
 		var _outSurf = outputs[| 0].getValue();
@@ -73,6 +75,7 @@ function Node_Gradient(_x, _y) : Node(_x, _y) constructor {
 		var _shf = inputs[| 5].getValue();
 		var _cnt = inputs[| 6].getValue();
 		var _lop = inputs[| 7].getValue();
+		var _msk = inputs[| 8].getValue();
 		var _grad_color = [];
 		var _grad_time  = [];
 		
@@ -90,9 +93,10 @@ function Node_Gradient(_x, _y) : Node(_x, _y) constructor {
 		} else if(_typ == 1) {
 			inputs[| 3].setVisible(false);
 			inputs[| 4].setVisible(true);
-		} 
+		}
 		
 		surface_set_target(_outSurf);
+		draw_clear_alpha(0, 0);
 		shader_set(sh_gradient);
 			shader_set_uniform_i(uniform_grad_blend, ds_list_get(_gra_data, 0));
 			shader_set_uniform_f_array(uniform_grad, _grad_color);
@@ -107,7 +111,12 @@ function Node_Gradient(_x, _y) : Node(_x, _y) constructor {
 			shader_set_uniform_f(uniform_radius, _rad * sqrt(2));
 			shader_set_uniform_f(uniform_radius_shf, _shf);
 			
-			draw_sprite_ext(s_fx_pixel, 0, 0, 0, _dim[0], _dim[1], 0, c_white, 1);
+			BLEND_ADD
+			if(is_surface(_msk))
+				draw_surface_stretched_ext(_msk, 0, 0, _dim[0], _dim[1], c_white, 1);
+			else
+				draw_sprite_stretched_ext(s_fx_pixel, 0, 0, 0, _dim[0], _dim[1], c_white, 1);
+			BLEND_NORMAL
 		shader_reset();
 		surface_reset_target();
 	}

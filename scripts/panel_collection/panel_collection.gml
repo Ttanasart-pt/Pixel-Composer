@@ -41,58 +41,110 @@ function Panel_Collection(_panel) : PanelContent(_panel) constructor {
 	//	tb_search._input_text = search_string;
 	//}
 	
+	contentView = 0;
 	contentPane = new scrollPane(content_w, content_h, function(_y, _m) {
-		draw_clear_alpha(c_ui_blue_black, 0);
+		draw_clear_alpha(c_white, 0);
 		
-		var grid_size  = 64;
-		var grid_width = 80;
-		var grid_space = 12;
 		var nodes	   = search_string == ""? context.content : search_list;
 		var node_count = ds_list_size(nodes);
-		var col        = max(1, floor(content_w / (grid_width + grid_space)));
-		var row        = ceil(node_count / col);
-		var hh         = grid_space;
-		var yy         = _y + grid_space;
-		var name_height = 0;
+		var hh = 0;
+		var frame = current_time * PREF_MAP[? "collection_preview_speed"] / 3000;
 		
-		for(var i = 0; i < row; i++) {
-			name_height = 0;
-			for(var j = 0; j < col; j++) {
-				var index = i * col + j;
-				if(index < node_count) {
-					var _node = nodes[| index];
-					var _nx   = grid_space + (grid_width + grid_space) * j;
-					var _boxx = _nx + (grid_width - grid_size) / 2;
+		if(contentView == 0) {
+			var grid_size  = 64;
+			var grid_width = 80;
+			var grid_space = 12;
+			var col        = max(1, floor(content_w / (grid_width + grid_space)));
+			var row        = ceil(node_count / col);
+			var yy         = _y + grid_space;
+			var name_height = 0;
+			
+			hh += grid_space;
+		
+			for(var i = 0; i < row; i++) {
+				name_height = 0;
+				for(var j = 0; j < col; j++) {
+					var index = i * col + j;
+					if(index < node_count) {
+						var _node = nodes[| index];
+						var _nx   = grid_space + (grid_width + grid_space) * j;
+						var _boxx = _nx + (grid_width - grid_size) / 2;
 					
-					draw_sprite_stretched(s_node_bg, 0, _boxx, yy, grid_size, grid_size);
-					if(point_in_rectangle(_m[0], _m[1], _nx, yy, _nx + grid_width, yy + grid_size)) {
-						draw_sprite_stretched(s_node_active, 0, _boxx, yy, grid_size, grid_size);	
-						if(mouse_check_button_pressed(mb_left)) {
-							file_dragging = _node;
-						}
+						BLEND_ADD
+						draw_sprite_stretched(s_node_bg, 0, _boxx, yy, grid_size, grid_size);
+						BLEND_NORMAL
 						
-						if(mouse_check_button_pressed(mb_right)) {
-							_menu_node = _node;
-							var dia = dialogCall(o_dialog_menubox, mouse_mx + 8, mouse_my + 8);
-							dia.setMenu(contentMenu);	
+						if(point_in_rectangle(_m[0], _m[1], _nx, yy, _nx + grid_width, yy + grid_size)) {
+							draw_sprite_stretched(s_node_active, 0, _boxx, yy, grid_size, grid_size);	
+							if(mouse_check_button_pressed(mb_left))
+								file_dragging = _node;
+						
+							if(mouse_check_button_pressed(mb_right)) {
+								_menu_node = _node;
+								var dia = dialogCall(o_dialog_menubox, mouse_mx + 8, mouse_my + 8);
+								dia.setMenu(contentMenu);	
+							}
 						}
-					}
 					
-					if(_node.spr) {
-						var ss = 32 / max(sprite_get_width(_node.spr), sprite_get_height(_node.spr));
-						draw_sprite_ext(_node.spr, current_time * PREF_MAP[? "collection_preview_speed"] / 3000, _boxx + grid_size / 2, yy + grid_size / 2, ss, ss, 0, c_white, 1);
-					} else {
-						draw_sprite_ext(s_group_24, 0, _boxx + grid_size / 2, yy + grid_size / 2, 1, 1, 0, c_white, 1);
-					}
+						if(_node.spr) {
+							var ss = 32 / max(sprite_get_width(_node.spr), sprite_get_height(_node.spr));
+							draw_sprite_ext(_node.spr, frame, _boxx + grid_size / 2, yy + grid_size / 2, ss, ss, 0, c_white, 1);
+						} else {
+							draw_sprite_ext(s_group_24, 0, _boxx + grid_size / 2, yy + grid_size / 2, 1, 1, 0, c_white, 1);
+						}
 					
-					draw_set_text(f_p0, fa_center, fa_top, c_white);
-					name_height = max(name_height, string_height_ext(_node.name, -1, grid_size) + 8);
-					draw_text_ext(_boxx + grid_size / 2, yy + grid_size + 4, _node.name, -1, grid_width);
+						draw_set_text(f_p2, fa_center, fa_top, c_white);
+						name_height = max(name_height, string_height_ext(_node.name, -1, grid_size) + 8);
+						draw_text_ext(_boxx + grid_size / 2, yy + grid_size + 4, _node.name, -1, grid_width);
+					}
 				}
+				var hght = grid_size + grid_space + name_height;
+				hh += hght;
+				yy += hght;
 			}
-			var hght = grid_size + grid_space + name_height;
-			hh += hght;
-			yy += hght;
+		} else {
+			var list_width  = content_w - 12;
+			var list_height = 28;
+			var yy         = _y + list_height / 2;
+			hh += list_height;
+		
+			for(var i = 0; i < node_count; i++) {
+				var _node = nodes[| i];
+				if(!_node) continue;
+				
+				if(i % 2) {
+					BLEND_ADD
+					draw_sprite_stretched_ext(s_node_bg, 0, 4, yy, list_width - 8, list_height, c_white, 0.2);
+					BLEND_NORMAL
+				}
+				
+				if(point_in_rectangle(_m[0], _m[1], 0, yy, list_width, yy + list_height - 1)) {
+					draw_sprite_stretched(s_node_active, 0, 4, yy, list_width - 8, list_height);
+					if(mouse_check_button_pressed(mb_left))
+						file_dragging = _node;
+						
+					if(mouse_check_button_pressed(mb_right)) {
+						_menu_node = _node;
+						var dia = dialogCall(o_dialog_menubox, mouse_mx + 8, mouse_my + 8);
+						dia.setMenu(contentMenu);	
+					}
+				}
+					
+				var spr_x = list_height / 2 + 8 + 6;
+				var spr_y = yy + list_height / 2;
+				if(variable_struct_exists(_node, "spr") && sprite_exists(_node.spr)) {
+					var ss = (list_height - 8) / max(sprite_get_width(_node.spr), sprite_get_height(_node.spr));
+					draw_sprite_ext(_node.spr, frame, spr_x, spr_y, ss, ss, 0, c_white, 1);
+				} else {
+					draw_sprite_ext(s_group_24, 0, spr_x, spr_y, 0.75, 0.75, 0, c_white, 1);	
+				}
+				
+				draw_set_text(f_p2, fa_left, fa_center, c_white);
+				draw_text(list_height + 8 + 12, yy + list_height / 2, _node.name);
+				
+				yy += list_height;
+				hh += list_height;
+			}
 		}
 		
 		return hh;
@@ -165,6 +217,11 @@ function Panel_Collection(_panel) : PanelContent(_panel) constructor {
 		if(search_string == "") {
 			if(FOCUS == panel)
 				tb_search.editText();
+			
+			if(buttonInstant(s_button_hide, bx, by, 24, 24, [mx, my], FOCUS == panel, HOVER == panel, contentView? "Grid view" : "List view", s_view_mode, contentView) == 2) {
+				contentView = !contentView;
+			}
+			bx -= 32;
 			
 			if(context != COLLECTIONS) {
 				if(buttonInstant(s_button_hide, bx, by, 24, 24, [mx, my], FOCUS == panel, HOVER == panel, "Add selecting node as collection", s_add_24, 0, c_ui_lime) == 2) {

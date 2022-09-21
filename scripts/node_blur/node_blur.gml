@@ -13,7 +13,7 @@ function Node_Blur(_x, _y) : Node_Processor(_x, _y) constructor {
 	
 	inputs[| 2] = nodeValue(2, "Clamp border", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
 	
-	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, surface_create(1, 1));
+	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
 	
 	static process_data = function(_outSurf, _data, _output_index) {
 		var _size	= _data[1];

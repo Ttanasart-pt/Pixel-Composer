@@ -42,7 +42,7 @@ function Node_Cellular(_x, _y) : Node(_x, _y) constructor {
 		["Rendering",	false], 5, 7
 	];
 	
-	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, surface_create(1, 1));
+	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
 	
 	static drawOverlay = function(_active, _x, _y, _s, _mx, _my) {
 		inputs[| 1].drawOverlay(_active, _x, _y, _s, _mx, _my);

@@ -7,8 +7,6 @@
 	PREF_MAP[? "part_max_amount"] = 256;
 	PREF_MAP[? "path_resolution"] = 32;
 	
-	PREF_MAP[? "reset_display"] = true;
-	
 	PREF_MAP[? "double_click_delay"] = 12;
 	
 	PREF_MAP[? "show_splash"] = true;
@@ -26,7 +24,8 @@
 	PREF_MAP[? "panel_layout"] = 1;
 	PREF_MAP[? "panel_collection"] = true;
 	
-	PREF_MAP[? "node_snapping"] = 32;
+	PREF_MAP[? "inspector_line_break_width"] = 500;
+	
 	PREF_MAP[? "node_show_time"] = true;
 	
 	PREF_MAP[? "shape_separation_max"] = 32;
@@ -250,7 +249,7 @@
 		if(ds_map_exists(HOTKEYS, _context)) {
 			for(var j = 0; j < ds_list_size(HOTKEYS[? _context]); j++) {
 				if(HOTKEYS[? _context][| j].name == _name) {
-					return HOTKEYS[? _context][| j];;
+					return HOTKEYS[? _context][| j];
 				}
 			}
 		}

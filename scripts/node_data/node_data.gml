@@ -188,7 +188,7 @@ function Node(_x, _y) constructor {
 		var yy = y * _s + _y;
 		
 		var _in = yy + junction_shift_y * _s;
-		
+		var jun;
 		var amo = input_display_list == -1? ds_list_size(inputs) : max(ds_list_size(inputs), array_length(input_display_list));
 		
 		for(var i = 0; i < amo; i++) {
@@ -208,7 +208,7 @@ function Node(_x, _y) constructor {
 		xx = xx + w * _s;
 		_in = yy + junction_shift_y * _s;
 		for(var i = 0; i < ds_list_size(outputs); i++) {
-			var jun = outputs[| i];
+			jun = outputs[| i];
 			
 			jun.x = xx;
 			jun.y = _in;
@@ -239,14 +239,13 @@ function Node(_x, _y) constructor {
 	
 	static drawJunctions = function(_x, _y, _mx, _my, _s) {
 		var hover = noone;
-		
 		var amo = input_display_list == -1? ds_list_size(inputs) : max(ds_list_size(inputs), array_length(input_display_list));
-		
+		var jun;
 		var _show_in = show_input_name;
 		var _show_ot = show_output_name;
-
-		show_input_name = false;
-		show_output_name = false;
+		
+		show_input_name = point_in_rectangle(_mx, _my, _x - 6 * _s, _y + 20 * _s, _x + 6 * _s, _y + h * _s);
+		show_output_name = point_in_rectangle(_mx, _my, _x + (w - 6) * _s, _y + 20 * _s, _x + (w + 6) * _s, _y + h * _s);
 		
 		for(var i = 0; i < amo; i++) {
 			if(input_display_list == -1)
@@ -257,19 +256,15 @@ function Node(_x, _y) constructor {
 				jun = inputs[| input_display_list[i]];
 			}
 			
-			if(jun.drawJunction(_s, _mx, _my, _show_in)) {
-				show_input_name = true;
+			if(jun.drawJunction(_s, _mx, _my, _show_in))
 				hover = jun;
-			}
 		}
 		
 		for(var i = 0; i < ds_list_size(outputs); i++) {
-			var jun = outputs[| i];
+			jun = outputs[| i];
 			
-			if(jun.drawJunction(_s, _mx, _my, _show_ot)) {
-				show_output_name = true;
+			if(jun.drawJunction(_s, _mx, _my, _show_ot))
 				hover = jun;
-			}
 		}
 		
 		return hover;
@@ -291,10 +286,19 @@ function Node(_x, _y) constructor {
 				var hover = false;
 				var th = max(1, 2 * _s);
 				
-				if(PREF_MAP[? "curve_connection_line"]) {
-					hover = distance_to_curve(mx, my, jx, jy, frx, fry) < 6;
-				} else {
-					hover = distance_to_line(mx, my, jx, jy, frx, fry) < 6;
+				switch(PREF_MAP[? "curve_connection_line"]) {
+					case 0 : 
+						hover = distance_to_line(mx, my, jx, jy, frx, fry) < 6;
+						break;
+					case 1 : 
+						hover = distance_to_curve(mx, my, jx, jy, frx, fry) < 6;
+						break;
+					case 2 : 
+						var cx = (jx + frx) / 2;
+						hover = distance_to_line(mx, my, jx, jy, cx, jy) < 6;
+						hover |= distance_to_line(mx, my, cx, jy, cx, fry) < 6;
+						hover |= distance_to_line(mx, my, cx, fry, frx, fry) < 6;
+						break;
 				}
 				
 				if(hover)
@@ -305,14 +309,16 @@ function Node(_x, _y) constructor {
 				var ty = LINE_STYLE.solid;
 				if(jun.type == VALUE_TYPE.node)
 					ty = LINE_STYLE.dashed;
-						
-				if(PREF_MAP[? "curve_connection_line"]) {
-					draw_line_curve_color(jx, jy, frx, fry, th, c0, c1, ty);
-				} else {
-					if(ty == LINE_STYLE.solid)
-						draw_line_width_color(jx, jy, frx, fry, th, c0, c1);
-					else 
-						draw_line_dashed(jx, jy, frx, fry, th, c0, c1, 12);
+				
+				switch(PREF_MAP[? "curve_connection_line"]) {
+					case 0 : 
+						if(ty == LINE_STYLE.solid)
+							draw_line_width_color(jx, jy, frx, fry, th, c0, c1);
+						else 
+							draw_line_dashed(jx, jy, frx, fry, th, c0, c1, 12);
+						break;
+					case 1 : draw_line_curve_color(jx, jy, frx, fry, th, c0, c1, ty); break;
+					case 2 : draw_line_elbow_color(jx, jy, frx, fry, th, c0, c1, ty); break;
 				}
 			}
 		}
@@ -396,7 +402,7 @@ function Node(_x, _y) constructor {
 			active_draw_index = -1;
 		}
 		
-		return drawJunctions(_x, _y, _mx, _my, _s);
+		return drawJunctions(xx, yy, _mx, _my, _s);
 	}
 	static onDrawNode = function(xx, yy, _mx, _my, _s) {}
 	
@@ -513,12 +519,13 @@ function Node(_x, _y) constructor {
 		for(var i = 0; i < ds_list_size(inputs); i++) {
 			var _in = inputs[| i];
 			if(_in.value_from && _in.value_from.node.group != group) {
-				var input_node;
+				var input_node = noone;
 				switch(_type) {
 					case "group" : input_node = new Node_Group_Input(x - w - 64, y, group); break;	
 					case "loop" : input_node = new Node_Iterator_Input(x - w - 64, y, group); break;	
 				}
 				
+				if(input_node == noone) continue;
 				input_node.inputs[| 2].setValue(_in.type);
 				input_node.inputs[| 0].setValue(_in.display_type);
 				
@@ -534,12 +541,13 @@ function Node(_x, _y) constructor {
 			for(var j = 0; j < ds_list_size(_ou.value_to); j++) {
 				var _to = _ou.value_to[| j];
 				if(_to.value_from == _ou && _to.node.active && _to.node.group != group) {
-					var output_node;
+					var output_node = noone;
 					switch(_type) {
 						case "group" : output_node = new Node_Group_Output(x + w + 64, y, group); break;
 						case "loop" : output_node = new Node_Iterator_Output(x + w + 64, y, group); break;	
 					}
 					
+					if(output_node == noone) continue;
 					ds_list_add(group.nodes, output_node);
 					
 					_to.setFrom(output_node.outParent);
@@ -627,12 +635,14 @@ function Node(_x, _y) constructor {
 		}
 	}
 	
-	static connect = function() {
+	static connect = function(log = false) {
 		var connected = true;
 		for(var i = 0; i < ds_list_size(inputs); i++) {
-			connected &= inputs[| i].connect();
+			connected &= inputs[| i].connect(log);
 		}
 		if(!connected) ds_queue_enqueue(CONNECTION_CONFLICT, self);
+		
+		return connected;
 	}
 	
 	static preConnect = function() {}

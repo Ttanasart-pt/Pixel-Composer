@@ -19,9 +19,9 @@ function Node_Blur_Contrast(_x, _y) : Node_Processor(_x, _y) constructor {
 	inputs[| 2] = nodeValue(2, "Treshold", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.2)
 		.setDisplay(VALUE_DISPLAY.slider, [0, 1, 0.01]);
 	
-	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, surface_create(1, 1));
+	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
 	
-	pass = surface_create(1, 1);
+	pass = PIXEL_SURFACE;
 	
 	static process_data = function(_outSurf, _data, _output_index) {
 		var _surf = _data[0];

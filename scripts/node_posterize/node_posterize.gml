@@ -30,7 +30,7 @@ function Node_Posterize(_x, _y) : Node_Processor(_x, _y) constructor {
 		["Auto color",		false], 3, 4 
 	];
 	
-	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, surface_create(1, 1));
+	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
 	
 	static step = function() {
 		var _use_pal = inputs[| 2].getValue();

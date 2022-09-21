@@ -77,6 +77,9 @@ function Node_Math(_x, _y) : Node_Value_Processor(_x, _y) constructor {
 			case MATH_OPERATOR.sin :
 			case MATH_OPERATOR.cos :
 			case MATH_OPERATOR.tan :
+				inputs[| 2].setVisible(true);
+				inputs[| 2].name = "Amplitude";
+				break;
 			case MATH_OPERATOR.floor :
 			case MATH_OPERATOR.ceiling :
 			case MATH_OPERATOR.round :
@@ -92,9 +95,9 @@ function Node_Math(_x, _y) : Node_Value_Processor(_x, _y) constructor {
 			case MATH_OPERATOR.power :		return power(_data[1], _data[2]); break;
 			case MATH_OPERATOR.root :		return power(_data[1], 1 / _data[2]); break;
 			
-			case MATH_OPERATOR.sin :		return sin(_data[1]); break;
-			case MATH_OPERATOR.cos :		return cos(_data[1]); break;
-			case MATH_OPERATOR.tan :		return tan(_data[1]); break;
+			case MATH_OPERATOR.sin :		return sin(_data[1]) * _data[2]; break;
+			case MATH_OPERATOR.cos :		return cos(_data[1]) * _data[2]; break;
+			case MATH_OPERATOR.tan :		return tan(_data[1]) * _data[2]; break;
 			case MATH_OPERATOR.modulo :		return safe_mod(_data[1], _data[2]); break;
 			
 			case MATH_OPERATOR.floor :		return floor(_data[1]); break;
@@ -109,13 +112,13 @@ function Node_Math(_x, _y) : Node_Value_Processor(_x, _y) constructor {
 	
 	function onDrawNode(xx, yy, _mx, _my, _s) {
 		draw_set_text(f_h3, fa_center, fa_center, c_white);
-		var str;
+		var str = "";
 		switch(inputs[| 0].getValue()) {
 			case MATH_OPERATOR.add :		str = "+"; break;
 			case MATH_OPERATOR.subtract :	str = "-"; break;
 			case MATH_OPERATOR.multiply :	str = "*"; break;
 			case MATH_OPERATOR.divide :		str = "/"; break;
-			case MATH_OPERATOR.power :		str = "pow";; break;
+			case MATH_OPERATOR.power :		str = "pow"; break;
 			case MATH_OPERATOR.root :		str = "root"; break;
 			
 			case MATH_OPERATOR.sin :		str = "sin"; break;

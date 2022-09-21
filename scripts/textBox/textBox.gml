@@ -36,6 +36,9 @@ function textBox(_input, _onModify) constructor {
 	
 	click_block = 0;
 	
+	sprite_index = -1;
+	text_color = c_white;
+	
 	static apply = function() {
 		var _input_text_current = _input_text;
 		
@@ -95,7 +98,7 @@ function textBox(_input, _onModify) constructor {
 					if(cursor_select == -1) {
 						var str_before	= string_copy(_input_text, 1, cursor);
 						var str_after	= string_copy(_input_text, cursor + 2, string_length(_input_text) - cursor - 1);
-					
+						
 						_input_text		= str_before + str_after;
 					} else {
 						var minc = min(cursor, cursor_select);
@@ -155,11 +158,11 @@ function textBox(_input, _onModify) constructor {
 		
 		switch(_format) {
 			case VALUE_DISPLAY._default :
-				draw_set_text(font, fa_left, fa_center, c_white);
+				draw_set_text(font, fa_left, fa_center, text_color);
 				draw_text(_x, _y, _text);
 				break;
 			case VALUE_DISPLAY.export_format :
-				draw_set_text(font, fa_left, fa_center, c_white);
+				draw_set_text(font, fa_left, fa_center, text_color);
 				var _x0 = _x, ch = "", len = string_length(_text), i = 1;
 				var cc = draw_get_color();
 				var str = "", _comm = false;
@@ -273,7 +276,7 @@ function textBox(_input, _onModify) constructor {
 		}
 		
 		if(self == TEXTBOX_ACTIVE) { 
-			draw_sprite_stretched(s_textbox, 2, _x, _y, _w, hh);
+			draw_sprite_stretched(s_textbox, sprite_index == -1? 2 : sprite_index, _x, _y, _w, hh);
 			editText();
 			
 			#region cursor
@@ -417,6 +420,8 @@ function textBox(_input, _onModify) constructor {
 		hover  = false;
 		active = false;
 		
+		sprite_index = -1;
+		text_color = c_white;
 		return hh;
 	}
 }

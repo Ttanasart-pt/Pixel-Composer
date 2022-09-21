@@ -69,5 +69,5 @@ void main() {
 	
 	vec4 col = gradientEval(prog);
 	
-    gl_FragColor = col;
+	gl_FragColor = vec4(col.rgb, texture2D( gm_BaseTexture, v_vTexcoord ).a);
 }

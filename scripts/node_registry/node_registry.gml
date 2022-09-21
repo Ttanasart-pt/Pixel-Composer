@@ -89,7 +89,7 @@ function NodeObject(_name, _spr, _create, tags = []) constructor {
 	addNodeObject(filter, "Erode",				s_node_erode,			"Node_Erode",			Node_create_Erode);
 	addNodeObject(filter, "Trail",				s_node_trail,			"Node_Trail",			Node_create_Trail);
 	addNodeObject(filter, "Blur",				s_node_blur,			"Node_Blur",			Node_create_Blur, ["gaussian"]);
-	addNodeObject(filter, "Directioanl Blur",	s_node_blur_directional,"Node_Blur_Directional",Node_create_Blur_Directional);
+	addNodeObject(filter, "Directional Blur",	s_node_blur_directional,"Node_Blur_Directional",Node_create_Blur_Directional);
 	addNodeObject(filter, "Radial Blur",		s_node_blur,			"Node_Blur_Radial",		Node_create_Blur_Radial);
 	addNodeObject(filter, "Contrast Blur",		s_node_blur_contrast,	"Node_Blur_Contrast",	Node_create_Blur_Contrast);
 	addNodeObject(filter, "Twirl",				s_node_twirl,			"Node_Twirl",			Node_create_Twirl, ["twist"]);
@@ -122,6 +122,7 @@ function NodeObject(_name, _spr, _create, tags = []) constructor {
 	addNodeObject(filter, "Scale algorithm",	s_node_scale_algo,		"Node_Scale_Algo",		Node_create_Scale_Algo, ["scale2x", "scale3x"]);
 	addNodeObject(filter, "Pixel cloud",		s_node_pixel_cloud,		"Node_Pixel_Cloud",		Node_create_Pixel_Cloud);
 	addNodeObject(filter, "Edge detect",		s_node_edge_detect,		"Node_Edge_Detect",		Node_create_Edge_Detect);
+	addNodeObject(filter, "Chromatic aberration",	s_node_chromatic_abarration,	"Node_Chromatic_Aberration",	Node_create_Chromatic_Aberration);
 	//addNodeObject(filter, "Corner",			s_node_corner,			"Node_Corner",			Node_create_Corner);
 	
 	var threeD = ds_list_create();
@@ -192,7 +193,7 @@ function NodeObject(_name, _spr, _create, tags = []) constructor {
 	addNodeCatagory("Render", render);
 	addNodeObject(render, "Render sprite sheet",	s_node_sprite_sheet,	"Node_Render_Sprite_Sheet",	Node_create_Render_Sprite_Sheet);
 	addNodeObject(render, "Export",					s_node_export,			"Node_Export",				Node_create_Export);
-	addNodeObject(render, "Preview timeline",		s_node_timeline_preview,"Node_Timeline_Preview",	Node_create_Timeline_Preview);
+	//addNodeObject(render, "Preview timeline",		s_node_timeline_preview,"Node_Timeline_Preview",	Node_create_Timeline_Preview);
 	
 	var node = ds_list_create();
 	addNodeCatagory("Node", node);

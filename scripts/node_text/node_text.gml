@@ -36,13 +36,16 @@ function Node_Text(_x, _y) : Node_Processor(_x, _y) constructor {
 	inputs[| 9] = nodeValue(9, "Output dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1 )
 		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Fixed", "Dynamic" ]);
 	
+	inputs[| 10] = nodeValue(10, "Padding", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [0, 0, 0, 0])
+		.setDisplay(VALUE_DISPLAY.padding);
+	
 	input_display_list = [
-		["Output",			true],	9, 6, 
+		["Output",			true],	9, 6, 10,
 		["Text",			false], 0, 7, 8, 5, 
 		["Font properties", false], 1, 2, 3, 4
 	];
 	
-	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, surface_create(1, 1));
+	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
 	
 	_font_current = "";
 	_size_current = 0;
@@ -77,7 +80,9 @@ function Node_Text(_x, _y) : Node_Processor(_x, _y) constructor {
 		
 		var _dim_type = _data[9];
 		inputs[| 6].setVisible(!_dim_type);
+		
 		var _dim   = _data[6];
+		var _padd  = _data[10];
 		
 		var ww, hh;
 		
@@ -91,6 +96,9 @@ function Node_Text(_x, _y) : Node_Processor(_x, _y) constructor {
 			ww = max(1, string_width(str));
 			hh = max(1, string_height(str));
 		}
+		
+		ww += _padd[PADDING.left] + _padd[PADDING.right];
+		hh += _padd[PADDING.up] + _padd[PADDING.down];
 		
 		if(is_surface(_outSurf)) 
 			surface_size_to(_outSurf, ww, hh);
@@ -116,10 +124,10 @@ function Node_Text(_x, _y) : Node_Processor(_x, _y) constructor {
 					case 2 : draw_set_valign(fa_bottom);	ty = hh;		break;
 				}
 				
-				draw_text(tx, ty, str);
+				draw_text(_padd[PADDING.left] + tx, _padd[PADDING.up] + ty, str);
 			} else {
 				draw_set_text(font, fa_left, fa_top, _col);
-				draw_text(0, 0, str);
+				draw_text(_padd[PADDING.left], _padd[PADDING.up], str);
 			}
 			
 			BLEND_NORMAL

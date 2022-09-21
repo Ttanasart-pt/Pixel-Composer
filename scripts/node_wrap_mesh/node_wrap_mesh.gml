@@ -14,7 +14,8 @@ function Node_Mesh_Warp(_x, _y) : Node(_x, _y) constructor {
 	}
 	
 	inputs[| 0] = nodeValue(0, "Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
-	inputs[| 1] = nodeValue(1, "Sample size", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 8);
+	inputs[| 1] = nodeValue(1, "Sample size", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 8)
+		.setDisplay(VALUE_DISPLAY.slider, [ 2, 32, 1 ] );
 	
 	inputs[| 2] = nodeValue(2, "Spring force", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.5)
 		.setDisplay(VALUE_DISPLAY.slider, [ 0, 1, 0.01 ] );
@@ -33,7 +34,7 @@ function Node_Mesh_Warp(_x, _y) : Node(_x, _y) constructor {
 		return inputs[| index];
 	}
 	
-	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, surface_create(1, 1));
+	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
 	outputs[| 1] = nodeValue(1, "Mesh data", self, JUNCTION_CONNECT.output, VALUE_TYPE.object, data);
 	
 	tools = [
@@ -192,7 +193,7 @@ function Node_Mesh_Warp(_x, _y) : Node(_x, _y) constructor {
 			shader_set(sh_content_sampler);
 			var uniform_dim = shader_get_uniform(sh_content_sampler, "dimension");
 			var uniform_sam = shader_get_uniform(sh_content_sampler, "sampler");
-		
+			
 			shader_set_uniform_f_array(uniform_dim, [ww, hh]);
 			shader_set_uniform_f_array(uniform_sam, [sample, sample]);
 			draw_surface_safe(surf, 0, 0);

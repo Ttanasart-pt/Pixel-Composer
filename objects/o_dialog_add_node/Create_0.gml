@@ -27,9 +27,11 @@ event_inherited();
 		
 		if(!_node) return;
 		
+		var _new_node = noone;
 		var _inputs = 0, _outputs = 0;
+		
 		if(is_struct(_node) && instanceof(_node) == "NodeObject") {
-			var _new_node = _node.build(node_target_x, node_target_y, _param);
+			_new_node = _node.build(node_target_x, node_target_y, _param);
 			if(!_new_node) return;
 			_inputs = _new_node.inputs;
 			_outputs = _new_node.outputs;
@@ -90,7 +92,7 @@ event_inherited();
 		}
 	}
 	
-	catagory_pane = new scrollPane(132, dialog_h - 28, function(_y, _m) {
+	catagory_pane = new scrollPane(132, dialog_h - 66, function(_y, _m) {
 		draw_clear_alpha(c_ui_blue_black, 0);
 		
 		var hh  = 0;
@@ -117,7 +119,7 @@ event_inherited();
 			if(key == page_key) {
 				draw_sprite_stretched(s_ui_panel_bg, 0, 0, _y + hh, 132, hg);
 			} else if(point_in_rectangle(_m[0], _m[1], 0, _y + hh, 100, _y + hh + hg - 1)) {
-				draw_sprite_stretched_ext(s_ui_panel_bg, 0, 0, _y + hh, 132, hg, c_white, 0.5);
+				draw_sprite_stretched_ext(s_ui_panel_bg, 0, 0, _y + hh + 3, 103, hg - 6, c_white, 0.75);
 				if(mouse_check_button(mb_left)) {
 					page_key		= key;
 					ADD_NODE_PAGE	= key;
@@ -134,57 +136,95 @@ event_inherited();
 		return hh;
 	});
 	
-	content_pane = new scrollPane(dialog_w - 144, dialog_h - 28, function(_y, _m) {
-		draw_clear_alpha(c_ui_blue_black, 0);
+	content_pane = new scrollPane(dialog_w - 144, dialog_h - 66, function(_y, _m) {
+		draw_clear_alpha(c_white, 0);
 		
-		var grid_size  = 64;
-		var grid_width = 80;
-		var grid_space = 12;
 		var nodes	   = page;
 		var node_count = ds_list_size(nodes);
-		var col        = floor(content_pane.surface_w / (grid_width + grid_space));
-		var row        = ceil(node_count / col);
-		var hh         = grid_space;
-		var yy         = _y + grid_space;
-		var name_height = 0;
-		var amo = 0;
+		var hh         = 0;
 		
-		for(var i = 0; i < row; i++) {
-			name_height = 0;
-			for(var j = 0; j < col; j++) {
-				var index = i * col + j;
-				if(index < node_count) {
-					var _node = nodes[| index];
-					if(!_node) continue;
+		if(ADD_NODE_MODE == 0) {
+			var grid_size  = 64;
+			var grid_width = 80;
+			var grid_space = 12;
+			var col        = floor(content_pane.surface_w / (grid_width + grid_space));
+			var row        = ceil(node_count / col);
+			var yy         = _y + grid_space;
+			var name_height = 0;
+			hh += grid_space;
+		
+			for(var i = 0; i < row; i++) {
+				name_height = 0;
+				for(var j = 0; j < col; j++) {
+					var index = i * col + j;
+					if(index < node_count) {
+						var _node = nodes[| index];
+						if(!_node) continue;
 					
-					var _nx   = grid_space + (grid_width + grid_space) * j;
-					var _boxx = _nx + (grid_width - grid_size) / 2;
-					
-					draw_sprite_stretched(s_node_bg, 0, _boxx, yy, grid_size, grid_size);
-					
-					if(point_in_rectangle(_m[0], _m[1], _nx, yy, _nx + grid_width, yy + grid_size)) {
-						draw_sprite_stretched(s_node_active, 0, _boxx, yy, grid_size, grid_size);	
-						if(mouse_check_button_pressed(mb_left)) {
-							buildNode(_node);
+						var _nx   = grid_space + (grid_width + grid_space) * j;
+						var _boxx = _nx + (grid_width - grid_size) / 2;
+						
+						BLEND_ADD
+						draw_sprite_stretched(s_node_bg, 0, _boxx, yy, grid_size, grid_size);
+						BLEND_NORMAL
+						
+						if(point_in_rectangle(_m[0], _m[1], _nx, yy, _nx + grid_width, yy + grid_size)) {
+							draw_sprite_stretched(s_node_active, 0, _boxx, yy, grid_size, grid_size);	
+							if(mouse_check_button_pressed(mb_left))
+								buildNode(_node);
 						}
+						
+						var spr_x = _boxx + grid_size / 2;
+						var spr_y = yy + grid_size / 2;
+						if(variable_struct_exists(_node, "spr") && sprite_exists(_node.spr))
+							draw_sprite(_node.spr, 0, spr_x, spr_y);
+					
+						draw_set_text(f_p2, fa_center, fa_top, c_white);
+						name_height = max(name_height, string_height_ext(_node.name, -1, grid_width) + 8);
+						draw_text_ext(_boxx + grid_size / 2, yy + grid_size + 4, _node.name, -1, grid_width);
 					}
-					
-					var spr_x = _boxx + grid_size / 2;
-					var spr_y = yy + grid_size / 2;
-					if(variable_struct_exists(_node, "spr") && sprite_exists(_node.spr))
-						draw_sprite(_node.spr, 0, spr_x, spr_y);
-					
-					draw_set_text(f_p1, fa_center, fa_top, c_white);
-					name_height = max(name_height, string_height_ext(_node.name, -1, grid_size) + 8);
-					draw_text_ext(_boxx + grid_size / 2, yy + grid_size + 4, _node.name, -1, grid_width);
-					
-					amo++;
 				}
+				var hght = grid_size + grid_space + name_height;
+				hh += hght;
+				yy += hght;
+			}	
+		} else if(ADD_NODE_MODE == 1) {
+			var list_width  = content_pane.surface_w;
+			var list_height = 28;
+			var yy         = _y + list_height / 2;
+			hh += list_height;
+		
+			for(var i = 0; i < node_count; i++) {
+				var _node = nodes[| i];
+				if(!_node) continue;
+				
+				if(i % 2) {
+					BLEND_ADD
+					draw_sprite_stretched_ext(s_node_bg, 0, 4, yy, list_width - 8, list_height, c_white, 0.2);
+					BLEND_NORMAL
+				}
+				
+				if(point_in_rectangle(_m[0], _m[1], 0, yy, list_width, yy + list_height - 1)) {
+					draw_sprite_stretched(s_node_active, 0, 4, yy, list_width - 8, list_height);
+					if(mouse_check_button_pressed(mb_left))
+						buildNode(_node);
+				}
+					
+				var spr_x = list_height / 2 + 8 + 6;
+				var spr_y = yy + list_height / 2;
+				if(variable_struct_exists(_node, "spr") && sprite_exists(_node.spr)) {
+					var ss = (list_height - 8) / max(sprite_get_width(_node.spr), sprite_get_height(_node.spr));
+					draw_sprite_ext(_node.spr, 0, spr_x, spr_y, ss, ss, 0, c_white, 1);
+				}
+				
+				draw_set_text(f_p2, fa_left, fa_center, c_white);
+				draw_text(list_height + 8 + 12, yy + list_height / 2, _node.name);
+				
+				yy += list_height;
+				hh += list_height;
 			}
-			var hght = grid_size + grid_space + name_height;
-			hh += hght;
-			yy += hght;
 		}
+		
 		return hh;
 	});
 #endregion
@@ -197,9 +237,9 @@ event_inherited();
 	dialog_h_max = 480;
 	
 	onResize = function() {
-		catagory_pane.resize(132, dialog_h - 28);
-		content_pane.resize(dialog_w - 144, dialog_h - 28);
-		search_pane.resize(dialog_w - 32, dialog_h - 52 - 14);
+		catagory_pane.resize(132, dialog_h - 66);
+		content_pane.resize(dialog_w - 144, dialog_h - 66);
+		search_pane.resize(dialog_w - 40, dialog_h - 66);
 		
 		ADD_NODE_W = dialog_w;
 		ADD_NODE_H = dialog_h;
@@ -213,7 +253,7 @@ event_inherited();
 	keyboard_string = "";
 	keyboard_lastkey = -1;
 	
-	tb_search				= new textBox(TEXTBOX_INPUT.text, function(str) { 
+	tb_search = new textBox(TEXTBOX_INPUT.text, function(str) { 
 		search_string = string(str); 
 		searchNodes();
 	});
@@ -250,91 +290,153 @@ event_inherited();
 					}
 				}
 				
-				if(match) {
-					ds_list_add(search_list, [_node, param]);	
-				}
+				if(match)
+					ds_list_add(search_list, [_node, param]);
 			}
 		}
 		
 		searchCollection(search_list, search_string, false);
 	}
 	
-	search_pane = new scrollPane(dialog_w - 32, dialog_h - 52 - 14, function(_y, _m) {
-		draw_clear_alpha(c_ui_blue_black, 0);
+	search_pane = new scrollPane(dialog_w - 40, dialog_h - 66, function(_y, _m) {
+		draw_clear_alpha(c_white, 0);
 		
-		var grid_size = 64;
-		var grid_width = 80;
-		var grid_space = 16;
-		var col = floor(search_pane.surface_w / (grid_width + grid_space));
-		var hh = (grid_space + grid_size) * 2;
-		var yy = _y + grid_space;
-		var index = 0;
-		var name_height = 0;
 		var amo = ds_list_size(search_list);
+		var hh = 0;
 		
-		for(var i = 0; i < ds_list_size(search_list); i++) {
-			var s_res = search_list[| i];
-			var _node, _param = "";
-			if(is_array(s_res)) {
-				_node = s_res[0];
-				_param = s_res[1];
-			} else {
-				_node = s_res;
-			}
+		if(ADD_NODE_MODE == 0) {
+			var grid_size = 64;
+			var grid_width = 80;
+			var grid_space = 16;
+			var col = floor(search_pane.surface_w / (grid_width + grid_space));
+			var yy = _y + grid_space;
+			var index = 0;
+			var name_height = 0;
 			
-			var _nx   = grid_space + (grid_width + grid_space) * index;
-			var _boxx = _nx + (grid_width - grid_size) / 2;
+			hh += (grid_space + grid_size) * 2;
 			
-			if(is_array(s_res))
-				draw_sprite_stretched(s_node_bg, 0, _boxx, yy, grid_size, grid_size);
-			else
-				draw_sprite_stretched_ext(s_node_bg, 0, _boxx, yy, grid_size, grid_size, merge_color(c_white, c_ui_orange_light, 0.5), 1);
-					
-			if(variable_struct_exists(_node, "spr") && sprite_exists(_node.spr)) {
-				var _si = current_time * PREF_MAP[? "collection_preview_speed"] / 3000;
-				var _sw = sprite_get_width(_node.spr);
-				var _sh = sprite_get_height(_node.spr);
-				var _ss = 32 / max(_sw, _sh);
-				
-				var _sox = sprite_get_xoffset(_node.spr);
-				var _soy = sprite_get_yoffset(_node.spr);
-				
-				var _sx = _boxx + grid_size / 2;
-				var _sy = yy + grid_size / 2;
-				_sx += _sw * _ss / 2 - _sox * _ss;
-				_sy += _sh * _ss / 2 - _soy * _ss;
-				
-				draw_sprite_ext(_node.spr, _si, _sx, _sy, _ss, _ss, 0, c_white, 1);
-			}
+			for(var i = 0; i < amo; i++) {
+				var s_res = search_list[| i];
+				var _node = noone, _param = "";
+				if(is_array(s_res)) {
+					_node = s_res[0];
+					_param = s_res[1];
+				} else
+					_node = s_res;
 			
-			draw_set_text(f_p1, fa_center, fa_top, c_white);
-			var txt = _node.name;
-			//if(_param != "") txt += " (" + _param + ")";
-			name_height = max(name_height, string_height_ext(txt, -1, grid_size) + 8);
-			draw_text_ext(_boxx + grid_size / 2, yy + grid_size + 4, txt, -1, grid_width);
+				var _nx   = grid_space + (grid_width + grid_space) * index;
+				var _boxx = _nx + (grid_width - grid_size) / 2;
 				
-			if(point_in_rectangle(_m[0], _m[1], _nx, yy, _nx + grid_width, yy + grid_size)) {
-				node_selecting = i;
-				if(mouse_check_button_pressed(mb_left))
-					buildNode(_node, _param);
-			}
+				BLEND_ADD
+				if(is_array(s_res))
+					draw_sprite_stretched(s_node_bg, 0, _boxx, yy, grid_size, grid_size);
+				else
+					draw_sprite_stretched_ext(s_node_bg, 0, _boxx, yy, grid_size, grid_size, merge_color(c_white, c_ui_orange_light, 0.5), 1);
+				BLEND_NORMAL
 					
-			if(node_selecting == i) {
-				draw_sprite_stretched(s_node_active, 0, _boxx, yy, grid_size, grid_size);
-				if(keyboard_check_pressed(vk_enter))
-					buildNode(_node, _param);
-			}
+				if(variable_struct_exists(_node, "spr") && sprite_exists(_node.spr)) {
+					var _si = current_time * PREF_MAP[? "collection_preview_speed"] / 3000;
+					var _sw = sprite_get_width(_node.spr);
+					var _sh = sprite_get_height(_node.spr);
+					var _ss = 32 / max(_sw, _sh);
+				
+					var _sox = sprite_get_xoffset(_node.spr);
+					var _soy = sprite_get_yoffset(_node.spr);
+				
+					var _sx = _boxx + grid_size / 2;
+					var _sy = yy + grid_size / 2;
+					_sx += _sw * _ss / 2 - _sox * _ss;
+					_sy += _sh * _ss / 2 - _soy * _ss;
+				
+					draw_sprite_ext(_node.spr, _si, _sx, _sy, _ss, _ss, 0, c_white, 1);
+				}
+			
+				draw_set_text(f_p2, fa_center, fa_top, c_white);
+				var txt = _node.name;
+				name_height = max(name_height, string_height_ext(txt, -1, grid_width) + 8);
+				draw_text_ext(_boxx + grid_size / 2, yy + grid_size + 4, txt, -1, grid_width);
+				
+				if(point_in_rectangle(_m[0], _m[1], _nx, yy, _nx + grid_width, yy + grid_size)) {
+					node_selecting = i;
+					if(mouse_check_button_pressed(mb_left))
+						buildNode(_node, _param);
+				}
+				
+				if(node_selecting == i) {
+					draw_sprite_stretched(s_node_active, 0, _boxx, yy, grid_size, grid_size);
+					if(keyboard_check_pressed(vk_enter))
+						buildNode(_node, _param);
+				}
 					
-			if(node_focusing == i) {
-				search_pane.scroll_y_to = -max(0, hh - search_pane.h);	
-			}
+				if(node_focusing == i)
+					search_pane.scroll_y_to = -max(0, hh - search_pane.h);	
 					
-			if(++index >= col) {
-				index = 0;
-				var hght = grid_size + grid_space + name_height;
-				name_height = 0;
-				hh += hght;
-				yy += hght;
+				if(++index >= col) {
+					index = 0;
+					var hght = grid_size + grid_space + name_height;
+					name_height = 0;
+					hh += hght;
+					yy += hght;
+				}
+			}
+		} else if(ADD_NODE_MODE == 1) {
+			var list_width  = search_pane.surface_w;
+			var list_height = 28;
+			var yy = _y + list_height / 2;
+			hh += list_height;
+		
+			for(var i = 0; i < amo; i++) {
+				var s_res = search_list[| i];
+				var _node = noone, _param = "";
+				if(is_array(s_res)) {
+					_node = s_res[0];
+					_param = s_res[1];
+				} else
+					_node = s_res;
+				
+				if(i % 2) {
+					BLEND_ADD
+					draw_sprite_stretched_ext(s_node_bg, 0, 4, yy, list_width - 8, list_height, c_white, 0.2);
+					BLEND_NORMAL
+				}
+				
+				if(variable_struct_exists(_node, "spr") && sprite_exists(_node.spr)) {
+					var _si = current_time * PREF_MAP[? "collection_preview_speed"] / 3000;
+					var _sw = sprite_get_width(_node.spr);
+					var _sh = sprite_get_height(_node.spr);
+					var _ss = (list_height - 8) / max(_sw, _sh);
+				
+					var _sox = sprite_get_xoffset(_node.spr);
+					var _soy = sprite_get_yoffset(_node.spr);
+					
+					var _sx = list_height / 2 + 8 + 6;
+					var _sy = yy + list_height / 2;
+					_sx += _sw * _ss / 2 - _sox * _ss;
+					_sy += _sh * _ss / 2 - _soy * _ss;
+				
+					draw_sprite_ext(_node.spr, _si, _sx, _sy, _ss, _ss, 0, c_white, 1);
+				}
+			
+				draw_set_text(f_p2, fa_left, fa_center, c_white);
+				draw_text(list_height + 8 + 12, yy + list_height / 2, _node.name);
+				
+				if(point_in_rectangle(_m[0], _m[1], 0, yy, list_width, yy + list_height - 1)) {
+					node_selecting = i;
+					if(mouse_check_button_pressed(mb_left))
+						buildNode(_node, _param);
+				}
+				
+				if(node_selecting == i) {
+					draw_sprite_stretched(s_node_active, 0, 4, yy, list_width - 8, list_height);
+					if(keyboard_check_pressed(vk_enter))
+						buildNode(_node, _param);
+				}
+					
+				if(node_focusing == i)
+					search_pane.scroll_y_to = -max(0, hh - search_pane.h);	
+				
+				hh += list_height;
+				yy += list_height;
 			}
 		}
 		

@@ -96,7 +96,6 @@ function Panel_Animation(_panel) : PanelContent(_panel) constructor {
 			else
 				ds_name_surface = surface_create(tool_width - 16, dope_sheet_h);
 		}
-			
 		resetTimelineMask();
 	}
 	
@@ -359,7 +358,7 @@ function Panel_Animation(_panel) : PanelContent(_panel) constructor {
 										var b = key_next.ease_in;
 										var dx = key_next.time - key.time;
 										var tott = a + b;
-										var ox, oy, nx, ny, oly, nly;
+										var ox = 0, oy = 0, nx = 0, ny = 0, oly = 0, nly = 0;
 										
 										if(tott == 0) {
 											nx = key_next.time * timeline_scale + timeline_shift;
@@ -419,6 +418,8 @@ function Panel_Animation(_panel) : PanelContent(_panel) constructor {
 									
 									var key_last = prop.value.values[| ds_list_size(prop.value.values) - 1];
 									var t_last = key_last.time * timeline_scale + timeline_shift;
+									
+									var oy = 0;
 									
 									if(is_array(key_last.value)) {
 										for( var ki = 0; ki < array_length(key_last.value); ki++ ) {

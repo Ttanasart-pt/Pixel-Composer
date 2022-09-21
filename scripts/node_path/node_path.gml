@@ -94,16 +94,18 @@ function Node_Path(_x, _y) : Node(_x, _y) constructor {
 
 		draw_set_color(c_ui_orange);
 		for(var i = loop? 0 : 1; i < ansize; i++) {
-			var _a0, _a1;
+			var _a0 = 0;
+			var _a1 = 0;
+			
 			if(i) {
-				var _a0 = inputs[| list_start + i - 1].getValue();
-				var _a1 = inputs[| list_start + i].getValue();
+				_a0 = inputs[| list_start + i - 1].getValue();
+				_a1 = inputs[| list_start + i].getValue();
 			} else {
-				var _a0 = inputs[| list_start + ansize - 1].getValue();
-				var _a1 = inputs[| list_start + 0].getValue();
+				_a0 = inputs[| list_start + ansize - 1].getValue();
+				_a1 = inputs[| list_start + 0].getValue();
 			}
 			
-			var _ox, _oy, _nx, _ny, p;
+			var _ox = 0, _oy = 0, _nx = 0, _ny = 0, p = 0;
 			for(var j = 0; j < sample; j++) {
 				p = eval_bezier(j / sample, _a0[0], _a0[1], _a1[0], _a1[1], _a0[0] + _a0[4], _a0[1] + _a0[5], _a1[0] + _a1[2], _a1[1] + _a1[3]);
 				_nx = _x + p[0] * _s;
@@ -124,12 +126,14 @@ function Node_Path(_x, _y) : Node(_x, _y) constructor {
 			var xx = _x + _a[0] * _s;
 			var yy = _y + _a[1] * _s;
 			var cont = false;
+			var _ax0 = 0, _ay0 = 0;
+			var _ax1 = 0, _ay1 = 0;
 			
 			if(_a[2] != 0 || _a[3] != 0 || _a[4] != 0 || _a[5] != 0) {
-				var _ax0 = _x + (_a[0] + _a[2]) * _s;
-				var _ay0 = _y + (_a[1] + _a[3]) * _s;
-				var _ax1 = _x + (_a[0] + _a[4]) * _s;
-				var _ay1 = _y + (_a[1] + _a[5]) * _s;
+				_ax0 = _x + (_a[0] + _a[2]) * _s;
+				_ay0 = _y + (_a[1] + _a[3]) * _s;
+				_ax1 = _x + (_a[0] + _a[4]) * _s;
+				_ay1 = _y + (_a[1] + _a[5]) * _s;
 				cont = true;
 			
 				draw_set_color(c_ui_blue_grey);
@@ -243,7 +247,6 @@ function Node_Path(_x, _y) : Node(_x, _y) constructor {
 			array_resize(lengths, con);
 		
 		for(var i = 0; i < con; i++) {
-			var _a0, _a1;
 			var index_0 = list_start + i;
 			var index_1 = list_start + i + 1;
 			if(index_1 >= ds_list_size(inputs)) index_1 = list_start;
@@ -253,7 +256,7 @@ function Node_Path(_x, _y) : Node(_x, _y) constructor {
 			
 			var l = 0;
 			
-			var _ox, _oy, _nx, _ny, p;
+			var _ox = 0, _oy = 0, _nx = 0, _ny = 0, p = 0;
 			for(var j = 0; j < sample; j++) {
 				p = eval_bezier(j / sample, _a0[0], _a0[1], _a1[0], _a1[1], _a0[0] + _a0[4], _a0[1] + _a0[5], _a1[0] + _a1[2], _a1[1] + _a1[3]);
 				_nx = p[0];

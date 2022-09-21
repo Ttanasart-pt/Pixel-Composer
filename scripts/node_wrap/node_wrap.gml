@@ -21,7 +21,7 @@ function Node_Warp(_x, _y) : Node_Processor(_x, _y) constructor {
 	inputs[| 4] = nodeValue(4, "Bottom right", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 1 ] )
 		.setDisplay(VALUE_DISPLAY.vector);
 	
-	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, surface_create(1, 1));
+	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
 	
 	drag_side = -1;
 	drag_mx   = 0;
@@ -71,9 +71,12 @@ function Node_Warp(_x, _y) : Node_Processor(_x, _y) constructor {
 		if(inputs[| 4].drawOverlay(active, _x, _y, _s, _mx, _my, ww, hh))
 			active = false;
 		
+		var dx = 0;
+		var dy = 0;
+		
 		if(drag_side > -1) {
-			var dx = (_mx - drag_mx) / _s / ww;
-			var dy = (_my - drag_my) / _s / hh;
+			dx = (_mx - drag_mx) / _s / ww;
+			dy = (_my - drag_my) / _s / hh;
 			drag_mx = _mx;
 			drag_my = _my;
 			

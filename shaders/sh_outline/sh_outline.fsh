@@ -42,7 +42,7 @@ void main() {
 	if(side == 0) 
 		isBorder = point.a == 1.;
 	else if(side == 1) 
-		isBorder = point.a == 0.;
+		isBorder = point.a < 1.;
 	
 	if(isBorder) {
 		if(borderSize > 0.) {
@@ -90,7 +90,8 @@ void main() {
 			if(is_blend == 0) {
 				if(side == 0) {
 					col = borderColor;
-					if(is_aa == 1) col.a = point.a;
+					if(is_aa == 1) 
+						col.a = point.a;
 				} else {
 					float alpha = point.a + outline_alpha * (1. - point.a);
 					col = ((point * point.a) + (borderColor * outline_alpha * (1. - point.a))) / alpha;

@@ -4,7 +4,7 @@
 #endregion
 
 function LOAD_FOLDER(list, folder) {
-	var path = get_program_directory() + folder;
+	var path = directory_get_current_working() + folder;
 	var file = file_find_first(path + "/*", fa_directory);
 	while(file != "") {
 		if(filename_ext(file) == ".json" || filename_ext(file) == ".pxc") {

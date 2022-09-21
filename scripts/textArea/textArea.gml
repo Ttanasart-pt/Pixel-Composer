@@ -413,9 +413,10 @@ function textArea(_input, _onModify) constructor {
 				
 				draw_set_color(c_white);
 				display_text(tx, _y + 7, _input_text, _w - 4, _mx, _my);
-				draw_set_color(c_ui_orange);
-				
-				draw_line_width(cursor_pos_x, cursor_pos_y, cursor_pos_x, cursor_pos_y + c_h, 2);
+				if(cursor_pos_y != 0 && cursor_pos_x != 0) {
+					draw_set_color(c_ui_orange);
+					draw_line_width(cursor_pos_x, cursor_pos_y, cursor_pos_x, cursor_pos_y + c_h, 2);
+				}
 			#endregion
 			
 			if(!point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + hh) && mouse_check_button_pressed(mb_left)) {

@@ -109,10 +109,10 @@ function animValue(_val, _node) constructor {
 		if(is_array(_val)) return _val;
 		
 		switch(node.type) {
-			case VALUE_TYPE.integer : return round(_val);	
-			case VALUE_TYPE.float   : return _val;
+			case VALUE_TYPE.integer : return round(toNumber(_val));	
+			case VALUE_TYPE.float   : return toNumber(_val);
 			case VALUE_TYPE.text    : return string(_val);
-			case VALUE_TYPE.surface : return _val == 0? DEF_SURFACE : _val;
+			case VALUE_TYPE.surface : return is_surface(_val)? _val : DEF_SURFACE;
 		}
 		
 		return _val;
@@ -206,25 +206,23 @@ function animValue(_val, _node) constructor {
 			
 			var ease_in = ds_list_get(_key, 2);
 			var ease_out = ds_list_get(_key, 3);
-			var _val;
+			var _val = 0;
 			var t = typeArray(node.display_type);
 			
 			if(t) {
 				if(is_string(_key[| 1])) {
 					_val = compat_path_array(_key[| 1]);
 				} else {
+					_val = array_create(array_length(base));
+					
 					if(ds_exists(_key[| 1], ds_type_list)) {
 						var ll = t == 1? min(array_length(base), ds_list_size(_key[| 1])) : ds_list_size(_key[| 1]);
-						_val = array_create(ll);
 						for(var j = 0; j < ll; j++)
-							_val[j] = _key[| 1][| j];
-					} else {
-						_val = array_create(array_length(base), _key[| 1]);
+							_val[j] = processValue(_key[| 1][| j]);
 					}
 				}
-			} else {
+			} else
 				_val  = _key[| 1];
-			}
 			
 			ds_list_add(values, new valueKey(_time, _val, ease_in, ease_out));
 		}

@@ -39,6 +39,7 @@ function log_clear() {
 		file_delete(path);
 }
 
+/*
 exception_unhandled_handler(function(ex) {
 	var tt = "\n-------------------------- OH NO --------------------------\n\n";
 	tt += ex.longMessage;

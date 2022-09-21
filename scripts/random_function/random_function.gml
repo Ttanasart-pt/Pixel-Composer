@@ -3,7 +3,8 @@ function getWiggle(_min, _max, _fmin, _fmax, _time, seed_shift = 0) {
 	
 	var _x0 = random_range(_min, _max);
 	var _x1 = random_range(_min, _max);
-	var _t_next = 0, _t_prev = 0;
+	var _t_prev = 0;
+	var _t_next = irandom_range(_fmin, _fmax);
 		
 	while(_t_next < _time) {
 		_x0 = _x1;
@@ -13,7 +14,9 @@ function getWiggle(_min, _max, _fmin, _fmax, _time, seed_shift = 0) {
 		_t_next = _t_prev + irandom_range(_fmin, _fmax);
 	}
 	
-	var _val = lerp(_x0, _x1, (_time - _t_prev) / (_t_next - _t_prev));
+	var t = (_time - _t_prev) / (_t_next - _t_prev);
+	t = -(cos(pi * t) - 1) / 2;
+	var _val = lerp(_x0, _x1, t);
 	return _val;
 }
 

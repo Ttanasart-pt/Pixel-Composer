@@ -222,19 +222,19 @@ function Node_Export(_x, _y) : Node(_x, _y) constructor {
 		if(is_array(surf)) {
 			for(var i = 0; i < array_length(surf); i++) {
 				var _surf = surf[i];
-				var p;
-				if(is_surface(_surf)) {
-					if(form == 2) {
-						p = DIRECTORY + "temp\\" + string(i) + "\\" + string(100000 + ANIMATOR.current_frame) + ".png";
-					} else {
-						if(is_array(path) && array_length(path) == array_length(surf))
-							p = pathString(path[ safe_mod(i, array_length(path)) ], suff, i);
-						else
-							p = pathString(path, suff, i);
-					}
-					
-					surface_save(_surf, p);
+				if(!is_surface(_surf)) continue;
+				
+				var p = "";
+				if(form == 2) {
+					p = DIRECTORY + "temp\\" + string(i) + "\\" + string(100000 + ANIMATOR.current_frame) + ".png";
+				} else {
+					if(is_array(path) && array_length(path) == array_length(surf))
+						p = pathString(path[ safe_mod(i, array_length(path)) ], suff, i);
+					else
+						p = pathString(path, suff, i);
 				}
+					
+				surface_save(_surf, p);
 			}
 		} else {
 			if(is_surface(surf)) {

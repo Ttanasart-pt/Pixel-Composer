@@ -59,7 +59,7 @@
 #endregion
 
 #region file drop
-	file_dnd_set_hwnd(hwnd_main);
+	file_dnd_set_hwnd(window_handle());
 	file_dnd_set_enabled(true);
 	file_dnd_filelist   = "";
 	file_dropping		= "";
