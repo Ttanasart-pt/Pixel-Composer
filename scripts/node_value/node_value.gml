@@ -165,10 +165,10 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 	modifier     = VALUE_MODIFIER.none;
 	accept_array = true;
 	
-	def_val = _value;
-	value	= new animValue(_value, self);
-	on_end	= KEYFRAME_END.hold;
-	extra_data = ds_list_create();
+	def_val		= _value;
+	animator	= new valueAnimator(_value, self);
+	on_end		= KEYFRAME_END.hold;
+	extra_data	= ds_list_create();
 	
 	visible = _connect == JUNCTION_CONNECT.output || _type == VALUE_TYPE.surface || _type == VALUE_TYPE.path || ( _tag & VALUE_TAG.dimension_2d );
 	show_in_inspector = true;
@@ -223,16 +223,16 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 						break;
 					case VALUE_DISPLAY.range :
 						editWidget = new rangeBox(_txt, function(index, val) { 
-							var _val = value.getValue();
+							var _val = animator.getValue();
 							_val[index] = val;
 							setValue(_val);
 						} );
 						if(display_data != -1) editWidget.extras = display_data;
 						break;
 					case VALUE_DISPLAY.vector :
-						if(array_length(value.getValue()) <= 4) {
-							editWidget = new vectorBox(array_length(value.getValue()), _txt, function(index, val) { 
-								var _val = value.getValue();
+						if(array_length(animator.getValue()) <= 4) {
+							editWidget = new vectorBox(array_length(animator.getValue()), _txt, function(index, val) { 
+								var _val = animator.getValue();
 								if(modifier & VALUE_MODIFIER.linked) {
 									for(var i = 0; i < array_length(_val); i++) 
 										_val[i] = val;
@@ -245,8 +245,8 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 						}
 						break;
 					case VALUE_DISPLAY.vector_range :
-						editWidget = new vectorRangeBox(array_length(value.getValue()), _txt, function(index, val) { 
-							var _val = value.getValue();
+						editWidget = new vectorRangeBox(array_length(animator.getValue()), _txt, function(index, val) { 
+							var _val = animator.getValue();
 							_val[index] = val;
 							setValue(_val);
 						} );
@@ -259,7 +259,7 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 						break;
 					case VALUE_DISPLAY.rotation_range :
 						editWidget = new rotatorRange(function(index, val) { 
-							var _val = value.getValue();
+							var _val = animator.getValue();
 							_val[index] = round(val);
 							setValue(_val);
 						} );
@@ -271,14 +271,14 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 						break;
 					case VALUE_DISPLAY.slider_range :
 						editWidget = new sliderRange(display_data[0], display_data[1], display_data[2], function(index, val) { 
-							var _val = value.getValue();
+							var _val = animator.getValue();
 							_val[index] = val;
 							setValue(_val);
 						} );
 						break;
 					case VALUE_DISPLAY.area :
 						editWidget = new areaBox(function(index, val) { 
-							var _val = value.getValue();
+							var _val = animator.getValue();
 							_val[index] = val;
 							setValue(_val);
 						});
@@ -286,7 +286,7 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 						break;
 					case VALUE_DISPLAY.padding :
 						editWidget = new paddingBox(function(index, val) { 
-							var _val = value.getValue();
+							var _val = animator.getValue();
 							if(modifier & VALUE_MODIFIER.linked) {
 								for(var i = 0; i < array_length(_val); i++) 
 									_val[i] = val;
@@ -302,14 +302,11 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 						});
 						break;
 					case VALUE_DISPLAY.puppet_control :
-						editWidget = new textBox(_txt, function(str) { 
-							if(str != "") {
-								var _val = value.getValue();
-								_val[4] = toNumber(str);
-								setValue(_val);
-							}
-						} );
-						editWidget.slidable = true;
+						editWidget = new controlPointBox(function(index, val) { 
+							var _val = animator.getValue();
+							_val[index] = val;
+							setValue(_val);
+						});
 						break;
 					case VALUE_DISPLAY.enum_scroll :
 						editWidget = new scrollBox(display_data, function(val) {
@@ -326,7 +323,7 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 				break;
 			case VALUE_TYPE.boolean :
 				editWidget = new checkBox(function() {
-					setValue(!value.getValue()); 
+					setValue(!animator.getValue()); 
 				} );
 				break;
 			case VALUE_TYPE.color :
@@ -391,12 +388,12 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 			case VALUE_TYPE.path:
 				switch(display_type) {
 					case VALUE_DISPLAY.path_load: 
-						var path = value.getValue();
+						var path = animator.getValue();
 						if(!file_exists(path)) 
 							value_validation = VALIDATION.error;	
 						break;
 					case VALUE_DISPLAY.path_array: 
-						var paths = value.getValue();
+						var paths = animator.getValue();
 						if(is_array(paths)) {
 							for( var i = 0; i < array_length(paths); i++ ) {
 								if(!file_exists(paths[i])) 
@@ -418,7 +415,7 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 		var val = _val[0];
 		var typ = _val[1];
 		
-		var _base = value.getValue();
+		var _base = animator.getValue();
 		
 		if((tag & VALUE_TAG.dimension_2d) && typ == VALUE_TYPE.surface) {
 			if(is_array(val)) {
@@ -450,7 +447,7 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 		var val = [ -1, VALUE_TYPE.any ];
 		
 		if(value_from == noone)
-			val = [value.getValue(), type];
+			val = [animator.getValue(), type];
 		else if(value_from != self) {
 			val = value_from.getValueRecursive(); 
 		}
@@ -468,7 +465,7 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 	}
 	
 	static __anim = function() {
-		return value.is_anim || node.update_on_frame;
+		return animator.is_anim || node.update_on_frame;
 	}
 	static isAnim = function() {
 		if(value_from == noone) return __anim();
@@ -498,9 +495,9 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 	}
 	
 	static setValue = function(val = 0, record = true, time = -999) {
-		var _o = value.getValue();
-		value.setValue(val, record, time);
-		var _n = value.getValue();
+		var _o = animator.getValue();
+		animator.setValue(val, record, time);
+		var _n = animator.getValue();
 		var updated = false;
 		
 		if(is_array(_o)) {
@@ -518,18 +515,11 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 			if(node.auto_update && connect_type == JUNCTION_CONNECT.input)
 				node.updateForward();
 			
-			node.onValueUpdate(index);
+			node.onValueUpdate(index, _o);
 		}
 		
 		onValidate();
 		return updated;
-	}
-	
-	static removeKeyframe = function(index) {
-		if(ds_list_size(value.values) > 1)
-			ds_list_delete(value.values, index);
-		else
-			value.is_anim = false;
 	}
 	
 	static setFrom = function(_valueFrom, _update = true, checkRecur = true) {
@@ -577,11 +567,13 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 			return false;
 		}
 		
+		var _o = animator.getValue();
 		recordAction(ACTION_TYPE.junction_connect, self, value_from);
 		value_from = _valueFrom;
 		ds_list_add(_valueFrom.value_to, self);
 		//show_debug_message("connected " + name + " to " + _valueFrom.name)
 		
+		node.onValueUpdate(index, _o);
 		if(_update) node.updateValueFrom(index);
 		if(_update && node.auto_update) _valueFrom.node.updateForward();
 		
@@ -603,7 +595,7 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 	}
 	
 	static setString = function(str) {
-		var _o = value.getValue();
+		var _o = animator.getValue();
 		
 		if(string_pos(",", str) > 0) {
 			string_replace(str, "[", "");
@@ -895,10 +887,10 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 						break;
 					#endregion
 					case VALUE_DISPLAY.puppet_control : #region
-						var __ax  = _val[0];
-						var __ay  = _val[1];
-						var __ax1 = _val[2];
-						var __ay1 = _val[3];
+						var __ax  = _val[PUPPET_CONTROL.cx];
+						var __ay  = _val[PUPPET_CONTROL.cy];
+						var __ax1 = _val[PUPPET_CONTROL.fx];
+						var __ay1 = _val[PUPPET_CONTROL.fy];
 						
 						var _ax = __ax * _s + _x;
 						var _ay = __ay * _s + _y;
@@ -907,11 +899,43 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 						var _ay1 = (__ay + __ay1) * _s + _y;
 						
 						draw_set_color(c_ui_orange);
+						switch(_val[PUPPET_CONTROL.mode]) {
+							case PUPPET_FORCE_MODE.move :
+								draw_line_width2(_ax, _ay, _ax1, _ay1, 6, 1);
 						
-						draw_line_width2(_ax, _ay, _ax1, _ay1, 6, 1);
-						
-						draw_sprite(s_anchor_selector, 0, _ax, _ay);
-						draw_sprite(s_anchor_selector, 2, _ax1, _ay1);
+								draw_sprite(s_anchor_selector, 0, _ax, _ay);
+								draw_sprite(s_anchor_selector, 2, _ax1, _ay1);
+								draw_circle(_ax, _ay, _val[PUPPET_CONTROL.width] * _s, true);
+								break;
+							case PUPPET_FORCE_MODE.pinch :
+							case PUPPET_FORCE_MODE.inflate :
+								draw_sprite(s_anchor_selector, 0, _ax, _ay);
+								draw_circle(_ax, _ay, _val[PUPPET_CONTROL.width] * _s, true);
+								break;
+							case PUPPET_FORCE_MODE.wind :
+								var dir  = _val[PUPPET_CONTROL.fy];
+								var rad  = _val[PUPPET_CONTROL.width] * _s;
+								
+								var _l0x = _ax + lengthdir_x(rad, dir + 90);
+								var _l0y = _ay + lengthdir_y(rad, dir + 90);
+								var _l1x = _ax + lengthdir_x(rad, dir - 90);
+								var _l1y = _ay + lengthdir_y(rad, dir - 90);
+								
+								var _l0x0 = _l0x + lengthdir_x(1000, dir);
+								var _l0y0 = _l0y + lengthdir_y(1000, dir);
+								var _l0x1 = _l0x + lengthdir_x(1000, dir + 180);
+								var _l0y1 = _l0y + lengthdir_y(1000, dir + 180);
+								
+								var _l1x0 = _l1x + lengthdir_x(1000, dir);
+								var _l1y0 = _l1y + lengthdir_y(1000, dir);
+								var _l1x1 = _l1x + lengthdir_x(1000, dir + 180);
+								var _l1y1 = _l1y + lengthdir_y(1000, dir + 180);
+								
+								draw_line(_l0x0, _l0y0, _l0x1, _l0y1);
+								draw_line(_l1x0, _l1y0, _l1x1, _l1y1);
+								draw_sprite(s_anchor_selector, 0, _ax, _ay);
+								break;
+						}
 						
 						if(drag_type == 1) {
 							draw_sprite(s_anchor_selector, 1, _ax, _ay);
@@ -919,11 +943,11 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 							var _ny = drag_sy + (_my - drag_my) / _s;
 							
 							if(keyboard_check(vk_control)) {
-								_val[0] = round(_nx);
-								_val[1] = round(_ny);
+								_val[PUPPET_CONTROL.cx] = round(_nx);
+								_val[PUPPET_CONTROL.cy] = round(_ny);
 							} else {
-								_val[0] = _nx;
-								_val[1] = _ny;
+								_val[PUPPET_CONTROL.cx] = _nx;
+								_val[PUPPET_CONTROL.cy] = _ny;
 							}
 							
 							if(setValue( _val ))
@@ -939,11 +963,11 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 							var _ny = drag_sy + (_my - drag_my) / _s;
 							
 							if(keyboard_check(vk_control)) {
-								_val[2] = round(_nx);
-								_val[3] = round(_ny);
+								_val[PUPPET_CONTROL.fx] = round(_nx);
+								_val[PUPPET_CONTROL.fy] = round(_ny);
 							} else {
-								_val[2] = _nx;
-								_val[3] = _ny;
+								_val[PUPPET_CONTROL.fx] = _nx;
+								_val[PUPPET_CONTROL.fy] = _ny;
 							}
 							
 							if(setValue( _val ))
@@ -956,9 +980,6 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 						}
 						
 						if(point_in_circle(_mx, _my, _ax, _ay, 8)) {
-							draw_set_color(c_ui_orange);
-							draw_circle(_ax, _ay, _val[4] * _s, true);
-							
 							hover = 1;
 							draw_sprite(s_anchor_selector, 1, _ax, _ay);
 							if(_active && mouse_check_button_pressed(mb_left)) {
@@ -968,7 +989,9 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 								drag_sx   = __ax;
 								drag_sy   = __ay;
 							}
-						} else if(point_in_circle(_mx, _my, _ax1, _ay1, 8)) {
+						} 
+						
+						if(_val[PUPPET_CONTROL.mode] == PUPPET_FORCE_MODE.move && point_in_circle(_mx, _my, _ax1, _ay1, 8)) {
 							hover = 2;
 							draw_sprite(s_anchor_selector, 0, _ax1, _ay1);
 							if(_active && mouse_check_button_pressed(mb_left)) {
@@ -1025,11 +1048,11 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 	static serialize = function(scale = false) {
 		var _map = ds_map_create();
 		
-		ds_map_add_list(_map, "raw value", value.serialize(scale));
+		ds_map_add_list(_map, "raw value", animator.serialize(scale));
 		
 		_map[? "on end"] = on_end;
 		_map[? "visible"] = visible;
-		_map[? "anim"] = value.is_anim;
+		_map[? "anim"] = animator.is_anim;
 		_map[? "from node"] = value_from? value_from.node.node_id	: -1;
 		_map[? "from index"] = value_from? value_from.index			: -1;
 		
@@ -1043,8 +1066,8 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 	static deserialize = function(_map, scale = false) {
 		on_end = ds_map_try_get(_map, "on end", on_end);
 		visible	= ds_map_try_get(_map, "visible", visible);
-		value.deserialize(_map[? "raw value"], scale);
-		value.is_anim = _map[? "anim"];
+		animator.deserialize(_map[? "raw value"], scale);
+		animator.is_anim = _map[? "anim"];
 		con_node = _map[? "from node"];
 		con_index = _map[? "from index"];
 		
@@ -1089,7 +1112,7 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 	static cleanUp = function() {
 		ds_list_destroy(value_to);
 		ds_list_destroy(extra_data);
-		value.cleanUp();
-		delete value;
+		animator.cleanUp();
+		delete animator;
 	}
 }

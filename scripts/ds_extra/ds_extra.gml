@@ -42,3 +42,7 @@ function ds_list_append(list, _append) {
 		ds_list_add(list, _append[| i]);
 	}
 }
+
+function ds_list_exist(list, item) {
+	return ds_list_find_index(list, item) != -1;
+}

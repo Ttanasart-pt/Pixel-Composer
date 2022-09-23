@@ -117,6 +117,35 @@ event_inherited();
 		})
 	]);
 	
+	ds_list_add(pref_node, "Levels");
+	ds_list_add(pref_node, [
+		"Histogram resolution",
+		"level_resolution",
+		new textBox(TEXTBOX_INPUT.number, function(str) { 
+			PREF_MAP[? "level_resolution"] = real(str); 
+			PREF_SAVE();
+		})
+	]);
+	
+	ds_list_add(pref_node, [
+		"Maximum sampling",
+		"level_max_sampling",
+		new textBox(TEXTBOX_INPUT.number, function(str) { 
+			PREF_MAP[? "level_max_sampling"] = real(str); 
+			PREF_SAVE();
+		})
+	]);
+	
+	ds_list_add(pref_node, "Physic");
+	ds_list_add(pref_node, [
+		"Verlet iteration",
+		"verlet_iteration",
+		new textBox(TEXTBOX_INPUT.number, function(str) { 
+			PREF_MAP[? "verlet_iteration"] = real(str); 
+			PREF_SAVE();
+		})
+	]);
+	
 	current_list = pref_global;
 	
 	sp_pref = new scrollPane(dialog_w - 160 - 32, dialog_h - 64 - 28, function(_y, _m) {

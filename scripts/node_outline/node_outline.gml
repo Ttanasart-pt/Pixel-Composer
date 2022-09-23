@@ -20,7 +20,7 @@ function Node_Outline(_x, _y) : Node_Processor(_x, _y) constructor {
 	uniform_out_only	= shader_get_uniform(sh_outline, "outline_only");
 	
 	inputs[| 0] = nodeValue(0, "Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
-	inputs[| 1] = nodeValue(1, "Width",   self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1);
+	inputs[| 1] = nodeValue(1, "Width",   self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0);
 	inputs[| 2] = nodeValue(2, "Color",   self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white);
 	
 	inputs[| 3] = nodeValue(3, "Blend",   self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, 0);
@@ -28,7 +28,7 @@ function Node_Outline(_x, _y) : Node_Processor(_x, _y) constructor {
 	inputs[| 4] = nodeValue(4, "Blend alpha",   self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
 		.setDisplay(VALUE_DISPLAY.slider, [0, 1, 0.01]);
 	
-	inputs[| 5] = nodeValue(5, "Position",   self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+	inputs[| 5] = nodeValue(5, "Position",   self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1)
 		.setDisplay(VALUE_DISPLAY.enum_button, ["Inside", "Outside"]);
 	
 	inputs[| 6] = nodeValue(6, "Anti alising",   self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, 0);

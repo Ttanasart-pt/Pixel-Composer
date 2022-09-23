@@ -29,6 +29,9 @@
 	PREF_MAP[? "node_show_time"] = true;
 	
 	PREF_MAP[? "shape_separation_max"] = 32;
+	PREF_MAP[? "level_resolution"] = 64;
+	PREF_MAP[? "level_max_sampling"] = 32;
+	PREF_MAP[? "verlet_iteration"] = 4;
 	
 	PREF_MAP[? "collection_preview_speed"] = 60;
 #endregion

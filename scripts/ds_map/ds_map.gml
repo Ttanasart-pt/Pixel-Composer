@@ -1,3 +1,14 @@
+function ds_map_clone(map) {
+	var m = ds_map_create();
+	var k = ds_map_find_first(map);
+	
+	repeat(ds_map_size(map)) {
+		m[? k] = map[? k];
+		k = ds_map_find_next(map, k);
+	}
+	return m;
+}
+
 function ds_map_try_get(map, key, def = 0) {
 	if(ds_map_exists(map, key)) return map[? key];
 	return def;

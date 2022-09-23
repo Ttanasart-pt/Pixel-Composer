@@ -5,7 +5,7 @@
   "isDnD": false,
   "isCompatibility": false,
   "parent": {
-    "name": "inspector",
-    "path": "folders/panels/inspector.yy",
+    "name": "inspectors",
+    "path": "folders/panels/data/inspectors.yy",
   },
 }

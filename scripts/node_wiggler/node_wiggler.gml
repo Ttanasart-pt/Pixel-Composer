@@ -12,41 +12,37 @@ function Node_Wiggler(_x, _y) : Node_Value_Processor(_x, _y) constructor {
 	w = 96;
 	min_h = 0;
 	
-	inputs[| 0] = nodeValue(0, "Value", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0);
+	inputs[| 0] = nodeValue(0, "Range", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [0, 1])
+		.setDisplay(VALUE_DISPLAY.vector);
 	
-	inputs[| 1] = nodeValue(1, "Range", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1 );
-	
-	inputs[| 2] = nodeValue(2, "Frequency", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 3, 5 ] )
+	inputs[| 1] = nodeValue(1, "Frequency", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 3, 5 ] )
 		.setDisplay(VALUE_DISPLAY.slider_range, [1, 32, 1]);
 	
-	inputs[| 3] = nodeValue(3, "Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, irandom(9999999) );
+	inputs[| 2] = nodeValue(2, "Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, irandom(9999999) );
 	
-	inputs[| 4] = nodeValue(4, "Display", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1 )
+	inputs[| 3] = nodeValue(3, "Display", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1 )
 		.setDisplay(VALUE_DISPLAY.enum_scroll, ["Number", "Graph"])
 	
 	outputs[| 0] = nodeValue(0, "Output", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, 0);
 	
 	input_display_list = [
-		["Display",	true],	4,
-		["Wiggle",	false], 3, 0, 1, 2, 
+		["Display",	true],	3,
+		["Wiggle",	false], 2, 0, 1,
 	];
 	
 	graph_value = array_create(64, 0);
 	
 	static onValueUpdate = function(index) {
-		var val = inputs[| 0].getValue();
-		var ran = inputs[| 1].getValue();
-		var fre = inputs[| 2].getValue();
-		var sed = inputs[| 3].getValue();
+		var ran = inputs[| 0].getValue();
+		var fre = inputs[| 1].getValue();
+		var sed = inputs[| 2].getValue();
 		
-		var _min = val - ran;
-		var _max = val + ran;
 		var _fmin = ANIMATOR.frames_total / max(1, min(fre[0], fre[1]));
 		var _fmax = ANIMATOR.frames_total / max(1, max(fre[0], fre[1]));
 		var _val;
 		
 		for( var i = 0; i < 64; i++ ) {
-			_val = getWiggle(_min, _max, _fmin, _fmax, i, sed);
+			_val = getWiggle(ran[0], ran[1], _fmin, _fmax, i, sed);
 			graph_value[i] = _val;
 		}
 	}
@@ -56,19 +52,18 @@ function Node_Wiggler(_x, _y) : Node_Value_Processor(_x, _y) constructor {
 			array_resize(graph_value, ANIMATOR.frames_total);
 			
 		var time = ANIMATOR.current_frame;
-		var _min = _data[0] - _data[1];
-		var _max = _data[0] + _data[1];
-		var _fmin = ANIMATOR.frames_total / max(1, min(_data[2][0], _data[2][1]));
-		var _fmax = ANIMATOR.frames_total / max(1, max(_data[2][0], _data[2][1]));
+		var _ran = _data[0];
+		var _fmin = ANIMATOR.frames_total / max(1, min(_data[1][0], _data[1][1]));
+		var _fmax = ANIMATOR.frames_total / max(1, max(_data[1][0], _data[1][1]));
 		
-		var _val = getWiggle(_min, _max, _fmin, _fmax, time, _data[3]);
+		var _val = getWiggle(_ran[0], _ran[1], _fmin, _fmax, time, _data[3]);
 		return _val;
 	}
 	
 	doUpdate();
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s) {
-		var disp = inputs[| 4].getValue();
+		var disp = inputs[| 3].getValue();
 		var time = ANIMATOR.current_frame;
 		var total_time = ANIMATOR.frames_total;
 		
@@ -84,13 +79,14 @@ function Node_Wiggler(_x, _y) : Node_Value_Processor(_x, _y) constructor {
 				w = 128;
 				min_h = 96;
 				
-				var val = inputs[| 0].getValue();
-				var ran = inputs[| 1].getValue();
-				var fre = inputs[| 2].getValue();
-				var sed = inputs[| 3].getValue();
-		
-				var _min = val - ran;
-				var _max = val + ran;
+				var ran = inputs[| 0].getValue();
+				var fre = inputs[| 1].getValue();
+				var sed = inputs[| 2].getValue();
+				
+				var _min = ran[0];
+				var _max = ran[1];
+				var val  = (_min + _max) / 2;
+				var _ran = _max - _min;
 				var _fmin = max(1, fre[0]);
 				var _fmax = max(1, fre[1]);
 				
@@ -112,7 +108,7 @@ function Node_Wiggler(_x, _y) : Node_Value_Processor(_x, _y) constructor {
 				var ox, oy;
 				for( var i = 0; i < array_length(graph_value); i++ ) {
 					var _x = x0 + i * lw;
-					var _y = yc - (graph_value[i] - val) / (ran * 2) * hh;
+					var _y = yc - (graph_value[i] - val) / (_ran * 2) * hh;
 					if(i)
 						draw_line(ox, oy, _x, _y);
 					

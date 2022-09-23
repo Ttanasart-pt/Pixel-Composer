@@ -627,7 +627,7 @@ function Panel_Graph(_panel) : PanelContent(_panel) constructor {
 	function doCompose() {
 		if(ds_list_empty(nodes_select_list)) return;
 		
-		var cx = 0;
+		var cx = -99999;
 		var cy = 0;
 		
 		for(var i = 0; i < ds_list_size(nodes_select_list); i++) {

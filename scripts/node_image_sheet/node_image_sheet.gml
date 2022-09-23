@@ -147,8 +147,8 @@ function Node_Image_Sheet(_x, _y) : Node(_x, _y) constructor {
 			draw_set_color(c_ui_orange);
 			draw_rectangle(_fx0, _fy0, _fx1, _fy1, true);
 			
-			draw_set_text(f_p1, fa_left, fa_top);
-			draw_text(_fx0 + 2, _fy0 + 2, string(i));
+			//draw_set_text(f_p1, fa_left, fa_top);
+			//draw_text(_fx0 + 2, _fy0 + 2, string(i));
 		}
 		
 		var _tool = PANEL_PREVIEW.tool_index;

@@ -39,3 +39,16 @@ function damp_range(c0, c1, c2, c3) {
 	
 	return [ minn, maxx ];
 }
+
+function ease_damp_in(rat, amount) {
+	var c1 = amount;
+	var c3 = c1 + 1;
+	
+	return c3 * rat * rat * rat - c1 * rat * rat;
+}
+function ease_damp_out(rat, amount) {
+	var c1 = amount;
+	var c3 = c1 + 1;
+
+	return 1 + c3 * power(rat - 1, 3) + c1 * power(rat - 1, 2);
+}

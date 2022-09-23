@@ -67,7 +67,7 @@
   ],
   "nineSlice": null,
   "parent": {
-    "name": "icon",
-    "path": "folders/sprites/icon.yy",
+    "name": "timeline",
+    "path": "folders/sprites/timeline.yy",
   },
 }

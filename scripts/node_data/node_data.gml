@@ -24,6 +24,7 @@ function Node(_x, _y) constructor {
 	junction_shift_y = 32;
 	
 	input_display_list = -1;
+	inspector_display_list = -1;
 	is_dynamic_output = false;
 	inputs  = ds_list_create();
 	outputs = ds_list_create();
@@ -170,6 +171,8 @@ function Node(_x, _y) constructor {
 		doUpdateForward();
 	}
 	
+	static onInspect = function() {}
+	
 	static doUpdateForward = function() {}
 	
 	static setRenderStatus = function(result) {
@@ -189,14 +192,16 @@ function Node(_x, _y) constructor {
 		
 		var _in = yy + junction_shift_y * _s;
 		var jun;
-		var amo = input_display_list == -1? ds_list_size(inputs) : max(ds_list_size(inputs), array_length(input_display_list));
+		var amo = input_display_list == -1? ds_list_size(inputs) : array_length(input_display_list);
 		
 		for(var i = 0; i < amo; i++) {
 			if(input_display_list == -1)
 				jun = inputs[| i];
 			else {
-				var jun_list_arr = input_display_list[i];
-				if(is_array(jun_list_arr)) continue;
+				var jun_disp = input_display_list[i];
+				if(is_array(jun_disp)) continue;
+				if(is_struct(jun_disp)) continue;
+				
 				jun = inputs[| input_display_list[i]];
 			}
 			
@@ -239,7 +244,7 @@ function Node(_x, _y) constructor {
 	
 	static drawJunctions = function(_x, _y, _mx, _my, _s) {
 		var hover = noone;
-		var amo = input_display_list == -1? ds_list_size(inputs) : max(ds_list_size(inputs), array_length(input_display_list));
+		var amo = input_display_list == -1? ds_list_size(inputs) : array_length(input_display_list);
 		var jun;
 		var _show_in = show_input_name;
 		var _show_ot = show_output_name;
@@ -567,9 +572,7 @@ function Node(_x, _y) constructor {
 		_map[? "type"]  = instanceof(self);
 		_map[? "group"] = group == -1? -1 : group.node_id;
 		
-		var att = ds_map_create();
-		ds_map_override(att, attributes);
-		ds_map_add_map(_map, "attri", att);
+		ds_map_add_map(_map, "attri", attributeSerialize());
 		
 		var _inputs = ds_list_create();
 		for(var i = 0; i < ds_list_size(inputs); i++) {
@@ -582,6 +585,11 @@ function Node(_x, _y) constructor {
 		return _map;
 	}
 	
+	static attributeSerialize = function() {
+		var att = ds_map_create();
+		ds_map_override(att, attributes);
+		return att;
+	}
 	static doSerialize = function(_map) {}
 	
 	keyframe_scale = false;
@@ -604,7 +612,7 @@ function Node(_x, _y) constructor {
 		y = load_map[? "y"];
 		
 		if(ds_map_exists(load_map, "attri"))
-			ds_map_override(attributes, load_map[? "attri"]);
+			attributeDeserialize(load_map[? "attri"]);
 		
 		var _inputs = load_map[? "inputs"];
 		
@@ -616,6 +624,9 @@ function Node(_x, _y) constructor {
 		}
 	}
 	
+	static attributeDeserialize = function(attr) {
+		ds_map_override(attributes, attr);
+	}
 	static postDeserialize = function() {}
 	
 	static loadGroup = function() {

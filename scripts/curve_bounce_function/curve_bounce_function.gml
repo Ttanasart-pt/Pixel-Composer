@@ -50,3 +50,24 @@ function eval_curve_bounce(curve, t) {
 function bounce_range(c0, c1, c2, c3) {
 	return [ min(c0, c1, c2, c3), max(c0, c1, c2, c3) ];
 }
+
+function ease_bounce_in(rat) {
+	return 1 - ease_bounce_out(1 - rat);
+}
+function ease_bounce_out(rat) {
+	var n1 = 7.5625;
+	var d1 = 2.75;
+	
+	if (rat < 1 / d1)
+	    return n1 * rat * rat;
+	else if (rat < 2 / d1) {
+		rat -= 1.5 / d1;
+	    return n1 * rat * rat + 0.75;
+	} else if (rat < 2.5 / d1) {
+		rat -= 2.25 / d1;
+	    return n1 * rat * rat + 0.9375;
+	} else {
+		rat -= 2.625 / d1;
+	    return n1 * rat * rat + 0.984375;
+	}
+}

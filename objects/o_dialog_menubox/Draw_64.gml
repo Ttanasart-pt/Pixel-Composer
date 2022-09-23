@@ -38,8 +38,16 @@
 			for(var j = 0; j < amo; j++) {
 				var _bx = _sx + j * (hght + 4);
 				var _by = yy + hght + hght / 2 - 4;
+				var _spr = noone, _ind = 0;
+				var _ss = menu[i][1][j][0];
 				
-				var _spr = menu[i][1][j][0];
+				if(is_array(_ss)) {
+					_spr = _ss[0];
+					_ind = _ss[1];
+				} else {
+					_spr = _ss;
+					_ind = 0;
+				}
 				
 				if(HOVER == self && point_in_rectangle(mouse_mx, mouse_my, _bx - 14, _by - 14, _bx + 14, _by + 14)) {
 					draw_sprite_stretched(s_textbox, 1, _bx - 14, _by - 14, 28, 28);
@@ -50,7 +58,7 @@
 					}
 				}
 				
-				draw_sprite(_spr, 0, _bx, _by);
+				draw_sprite(_spr, _ind, _bx, _by);
 			}
 		} else {
 			draw_set_text(f_p0, fa_left, fa_center, c_white);

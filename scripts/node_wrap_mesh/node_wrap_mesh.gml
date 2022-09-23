@@ -23,23 +23,35 @@ function Node_Mesh_Warp(_x, _y) : Node(_x, _y) constructor {
 	inputs[| 3] = nodeValue(3, "Mesh", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.button, [ function() { setTriangle(); doUpdate(); }, "Generate"] );
 	
+	inputs[| 4] = nodeValue(4, "Diagonal link", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	
 	control_index = ds_list_size(inputs);
 	
 	function createControl() {
 		var index = ds_list_size(inputs);
-		inputs[| index] = nodeValue(index, "Control point range", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 16, 16, 8, 0, 32])
+		inputs[| index] = nodeValue(index, "Control point", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ PUPPET_FORCE_MODE.move, 16, 16, 8, 0, 8, 8])
 			.setDisplay(VALUE_DISPLAY.puppet_control)
-			
 		
+		array_push(input_display_list, index);
 		return inputs[| index];
 	}
 	
 	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
 	outputs[| 1] = nodeValue(1, "Mesh data", self, JUNCTION_CONNECT.output, VALUE_TYPE.object, data);
 	
-	tools = [
-		[ "Add / Remove control point",  s_control_edit ]
+	input_display_list = [ 
+		["Mesh",			false],	0, 1, 2, 4, 3,
+		["Control points",	false], 
 	];
+	
+	input_display_index = array_length(input_display_list);
+	
+	tools = [
+		[ "Add / Remove control point",  s_control_edit ],
+		[ "Pin, unpin mesh", [s_control_pin, s_control_unpin] ]
+	];
+	
+	attributes[? "pin"] = ds_map_create();
 	
 	static drawOverlay = function(_active, _x, _y, _s, _mx, _my) {
 		for(var i = 0; i < ds_list_size(data.tris); i++) {
@@ -55,11 +67,15 @@ function Node_Mesh_Warp(_x, _y) : Node(_x, _y) constructor {
 				hover = i;
 		}
 		
-		if(_active && PANEL_PREVIEW.tool_index == 0) {
+		var _tool = PANEL_PREVIEW.tool_index;
+		var _sub_tool = PANEL_PREVIEW.tool_sub_index;
+		
+		if(!_active) return;
+		if(_tool == 0) {
 			if(mouse_check_button_pressed(mb_left)) {
 				if(hover == -1) {
 					var i = createControl();
-					i.setValue( [(_mx - _x) / _s, (_my - _y) / _s, 0, 0, 8] );
+					i.setValue( [PUPPET_FORCE_MODE.move, (_mx - _x) / _s, (_my - _y) / _s, 0, 0, 8, 8] );
 					i.drag_type = 2;
 					i.drag_sx   = 0;
 					i.drag_sy   = 0;
@@ -67,22 +83,48 @@ function Node_Mesh_Warp(_x, _y) : Node(_x, _y) constructor {
 					i.drag_my   = _my;
 				} else {
 					ds_list_delete(inputs, hover);	
+					array_delete(input_display_list, input_display_index + hover - control_index, 1);
 				}
 				
 				reset();
-				control();
+				control(input_display_list);
+			}
+		} else if(_tool == 1) {
+			draw_set_color(c_ui_orange);
+			var rad = 16;
+			draw_circle(_mx, _my, rad, true);
+			var _xx = (_mx - _x) / _s;
+			var _yy = (_my - _y) / _s;
+			
+			if(mouse_check_button(mb_left)) {
+				for(var j = 0; j < ds_list_size(data.tris); j++) {
+					var t = data.tris[| j];
+					
+					if(point_in_circle(t.p0.x, t.p0.y, _xx, _yy, rad / _s))
+						t.p0.setPin(!_sub_tool);
+					if(point_in_circle(t.p1.x, t.p1.y, _xx, _yy, rad / _s))
+						t.p1.setPin(!_sub_tool);
+					if(point_in_circle(t.p2.x, t.p2.y, _xx, _yy, rad / _s))
+						t.p2.setPin(!_sub_tool);
+				}
 			}
 		}
 	}
 	
-	function point(_x, _y) constructor {
+	function point(node, index, _x, _y) constructor {
+		self.index = index;
+		self.node = node;
 		x = _x;
 		y = _y;
 		xp = x;
 		yp = y;
 		
+		ndx = 0;
+		ndy = 0;
+		
 		sx = x;
 		sy = y;
+		pin = ds_map_exists(node.attributes[? "pin"], index);
 		
 		static reset = function() {
 			x = sx;
@@ -91,9 +133,14 @@ function Node_Mesh_Warp(_x, _y) : Node(_x, _y) constructor {
 			yp = y;
 		}
 		
-		static draw = function() {
-			draw_set_color(c_white);
-			draw_circle(x, y, 4, false);
+		static draw = function(_x, _y, _s) {
+			if(pin) {
+				draw_set_color(c_ui_orange);
+				draw_circle(_x + x * _s, _y + y * _s, 3, false);
+			} else {
+				draw_set_color(c_ui_blue_grey);
+				draw_circle(_x + x * _s, _y + y * _s, 2, false);
+			}
 		}
 		
 		u = 0;
@@ -101,6 +148,42 @@ function Node_Mesh_Warp(_x, _y) : Node(_x, _y) constructor {
 		static mapTexture = function(ww, hh) {
 			u = x / ww;
 			v = y / hh;
+		}
+		
+		static move = function(dx, dy) {
+			if(pin) return;
+			
+			x += dx;
+			y += dy;
+		}
+		
+		static planMove = function(dx, dy) {
+			if(pin) return;
+			
+			ndx += dx;
+			ndy += dy;
+		}
+		
+		static stepMove = function(rat) {
+			if(pin) return;
+			
+			move(ndx * rat, ndy * rat);
+		}
+		
+		static clearMove = function(rat) {
+			if(pin) return;
+			
+			ndx = 0;
+			ndy = 0;
+		}
+		
+		static setPin = function(pin) {
+			if(!pin && ds_map_exists(node.attributes[? "pin"], index))
+				ds_map_delete(node.attributes[? "pin"], index);
+			if(pin && !ds_map_exists(node.attributes[? "pin"], index))
+				ds_map_add(node.attributes[? "pin"], index, 1);
+			
+			self.pin = pin;	
 		}
 	}
 	
@@ -118,12 +201,9 @@ function Node_Mesh_Warp(_x, _y) : Node(_x, _y) constructor {
 			var f  = k * (_len - len);
 			var dx = lengthdir_x(f, _dir);
 			var dy = lengthdir_y(f, _dir);
-		
-			p0.x += dx / 2;
-			p0.y += dy / 2;
-		
-			p1.x -= dx / 2;
-			p1.y -= dy / 2;
+			
+			p0.move( dx / 2,  dy / 2);
+			p1.move(-dx / 2, -dy / 2);
 		}
 		
 		static draw = function(_x, _y, _s) {
@@ -161,15 +241,14 @@ function Node_Mesh_Warp(_x, _y) : Node(_x, _y) constructor {
 		}
 		
 		static drawPoints = function(_x, _y, _s) {
-			draw_set_color(c_ui_blue_dkgrey);
-			draw_line(_x + p0.x * _s, _y + p0.y * _s, _x + p1.x * _s, _y + p1.y * _s);
-			draw_line(_x + p0.x * _s, _y + p0.y * _s, _x + p2.x * _s, _y + p2.y * _s);
-			draw_line(_x + p1.x * _s, _y + p1.y * _s, _x + p2.x * _s, _y + p2.y * _s);
+			//draw_set_color(c_ui_blue_dkgrey);
+			//draw_line(_x + p0.x * _s, _y + p0.y * _s, _x + p1.x * _s, _y + p1.y * _s);
+			//draw_line(_x + p0.x * _s, _y + p0.y * _s, _x + p2.x * _s, _y + p2.y * _s);
+			//draw_line(_x + p1.x * _s, _y + p1.y * _s, _x + p2.x * _s, _y + p2.y * _s);
 			
-			draw_set_color(c_ui_blue_grey);
-			draw_circle(_x + p0.x * _s, _y + p0.y * _s, 2, false);
-			draw_circle(_x + p1.x * _s, _y + p1.y * _s, 2, false);
-			draw_circle(_x + p2.x * _s, _y + p2.y * _s, 2, false);
+			p0.draw(_x, _y, _s);
+			p1.draw(_x, _y, _s);
+			p2.draw(_x, _y, _s);
 		}
 		
 		static contain = function(p) {
@@ -180,6 +259,7 @@ function Node_Mesh_Warp(_x, _y) : Node(_x, _y) constructor {
 	static regularTri = function(surf) {
 		var sample = inputs[| 1].getValue();
 		var spring = inputs[| 2].getValue();
+		var diagon = inputs[| 4].getValue();
 		
 		if(!inputs[| 0].value_from) return;
 		var ww = surface_get_width(surf);
@@ -204,6 +284,7 @@ function Node_Mesh_Warp(_x, _y) : Node(_x, _y) constructor {
 		ds_list_clear(data.tris);
 		ds_list_clear(data.links);
 		
+		var ind = 0;
 		for(var i = 0; i < gh; i++) 
 		for(var j = 0; j < gw; j++) {
 			var c0 = surface_getpixel(cont, j * sample,     i * sample);
@@ -212,7 +293,7 @@ function Node_Mesh_Warp(_x, _y) : Node(_x, _y) constructor {
 			var c3 = surface_getpixel(cont, j * sample - 1, i * sample - 1);
 			
 			if(c0 + c1 + c2 + c3 > 0) {
-				data.points[i][j] = new point(min(j * sample, ww), min(i * sample, hh));
+				data.points[i][j] = new point(self, ind++, min(j * sample, ww), min(i * sample, hh));
 				if(i) {
 					if(j && data.points[i - 1][j] != 0 && data.points[i][j - 1] != 0) 
 						ds_list_add(data.tris, new triangle(data.points[i - 1][j], data.points[i][j - 1], data.points[i][j]));
@@ -233,15 +314,18 @@ function Node_Mesh_Warp(_x, _y) : Node(_x, _y) constructor {
 			if(j && data.points[i][j - 1] != 0) {
 				ds_list_add(data.links, new link(data.points[i][j], data.points[i][j - 1]));
 			}
-			if(i && j && data.points[i - 1][j - 1] != 0) {
-				var l = new link(data.points[i][j], data.points[i - 1][j - 1]);
-				l.k = spring;
-				ds_list_add(data.links, l);
-			}
-			if(i && j < gw - 1 && data.points[i - 1][j + 1] != 0) {
-				var l = new link(data.points[i][j], data.points[i - 1][j + 1]);
-				l.k = spring;
-				ds_list_add(data.links, l);
+			
+			if(diagon) {
+				if(i && j && data.points[i - 1][j - 1] != 0) {
+					var l = new link(data.points[i][j], data.points[i - 1][j - 1]);
+					l.k = spring;
+					ds_list_add(data.links, l);
+				}
+				if(i && j < gw - 1 && data.points[i - 1][j + 1] != 0) {
+					var l = new link(data.points[i][j], data.points[i - 1][j + 1]);
+					l.k = spring;
+					ds_list_add(data.links, l);
+				}
 			}
 		}
 		
@@ -264,15 +348,49 @@ function Node_Mesh_Warp(_x, _y) : Node(_x, _y) constructor {
 	}
 	
 	static affectPoint = function(c, p) {
-		var dis = point_distance(c[0], c[1], p.x, p.y);
-		var range = c[4];
-		var inf = clamp(1 - dis / range, 0, 1);
+		var mode = c[PUPPET_CONTROL.mode];
+		var cx   = c[PUPPET_CONTROL.cx];
+		var cy   = c[PUPPET_CONTROL.cy];
+		var fx   = c[PUPPET_CONTROL.fx];
+		var fy   = c[PUPPET_CONTROL.fy];
+		var cw   = c[PUPPET_CONTROL.width];
+		var ch   = c[PUPPET_CONTROL.height];
 		
-		var dx = c[2] * inf / 2;
-		var dy = c[3] * inf / 2;
-		
-		p.x += dx;
-		p.y += dy;
+		switch(mode) {
+			case PUPPET_FORCE_MODE.move:
+				var dis = point_distance(cx, cy, p.x, p.y);
+				var inf = clamp(1 - dis / cw, 0, 1);
+				inf = ease_cubic_inout(inf);
+				
+				p.planMove(fx * inf, fy * inf);
+				break;
+			case PUPPET_FORCE_MODE.pinch:
+				var dis = point_distance(cx, cy, p.x, p.y);
+				var inf = power(clamp(1 - dis / cw, 0, 1), 2) / 2;
+				var dir = point_direction(p.x, p.y, cx, cy);
+				
+				p.planMove(lengthdir_x(inf, dir) * ch, lengthdir_y(inf, dir) * ch);
+				break;
+			case PUPPET_FORCE_MODE.inflate:
+				var dis = point_distance(cx, cy, p.x, p.y);
+				var inf = power(clamp(1 - dis / cw, 0, 1), 2) / 2;
+				var dir = point_direction(cx, cy, p.x, p.y);
+				
+				p.planMove(lengthdir_x(inf, dir) * ch, lengthdir_y(inf, dir) * ch);
+				break;
+			case PUPPET_FORCE_MODE.wind:
+				var lx0 = cx + lengthdir_x(1000, fy);
+				var ly0 = cy + lengthdir_y(1000, fy);
+				var lx1 = cx - lengthdir_x(1000, fy);
+				var ly1 = cy - lengthdir_y(1000, fy);
+				
+				var dist = distance_to_line(p.x, p.y, lx0, ly0, lx1, ly1);
+				var inf = clamp(1 - dist / cw, 0, 1);
+				inf = ease_cubic_inout(inf);
+				
+				p.planMove(lengthdir_x(fx * inf, fy), lengthdir_y(fx * inf, fy));
+				break;
+		}
 	}
 	
 	static control = function() {
@@ -286,9 +404,30 @@ function Node_Mesh_Warp(_x, _y) : Node(_x, _y) constructor {
 			}
 		}
 		
-		repeat(4)
-		for(var i = 0; i < ds_list_size(data.links); i++)
-			data.links[| i].resolve();
+		var it = PREF_MAP[? "verlet_iteration"];
+		var resit = it;
+		var _rat = power(1 / it, 2);
+		
+		repeat(it) {
+			for(var j = 0; j < ds_list_size(data.tris); j++) {
+				var t = data.tris[| j];
+				t.p0.stepMove(_rat);
+				t.p1.stepMove(_rat);
+				t.p2.stepMove(_rat);
+			}
+			
+			repeat(resit) {
+				for(var i = 0; i < ds_list_size(data.links); i++)
+					data.links[| i].resolve();
+			}
+		}
+		
+		for(var j = 0; j < ds_list_size(data.tris); j++) {
+			var t = data.tris[| j];
+			t.p0.clearMove();
+			t.p1.clearMove();
+			t.p2.clearMove();
+		}
 	}
 	
 	static update = function() {
@@ -320,5 +459,16 @@ function Node_Mesh_Warp(_x, _y) : Node(_x, _y) constructor {
 			createControl();
 			inputs[| i].deserialize(_inputs[| i]);
 		}
+	}
+	
+	static attributeSerialize = function() {
+		var att = ds_map_create();
+		ds_map_add_map(att, "pin", attributes[? "pin"]);
+		return att;
+	}
+	
+	static attributeDeserialize = function(attr) {
+		if(ds_map_exists(attr, "pin"))
+			attributes[? "pin"] = ds_map_clone(attr[? "pin"]);
 	}
 }

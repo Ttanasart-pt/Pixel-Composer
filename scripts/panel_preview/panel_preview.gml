@@ -400,6 +400,7 @@ function Panel_Preview(_panel) : PanelContent(_panel) constructor {
 				if(FOCUS == panel && point_in_rectangle(mx, my, xx, yy, xx + prev_w * ss, yy + prev_h * ss)) {
 					if(mouse_check_button_pressed(mb_left)) {
 						_node.preview_index = i;
+						_node.onValueUpdate(0);
 						do_fullView = true;
 					}
 					draw_surface_ext_safe(prev, xx, yy, ss, ss, 0, c_white, 1);
@@ -477,9 +478,14 @@ function Panel_Preview(_panel) : PanelContent(_panel) constructor {
 					
 				if(toggle) {
 					if(is_array(_node.tools[i][1])) {
-						if(tool_index == i)
-							tool_sub_index = (tool_sub_index + 1) % array_length(_node.tools[i][1]);
-						tool_index = i;
+						if(tool_index == i) {
+							tool_sub_index++;
+							if(tool_sub_index >= array_length(_node.tools[i][1])) {
+								tool_index = -1;
+								tool_sub_index = 0;
+							}
+						} else 
+							tool_index = i;
 					} else
 						tool_index = tool_index == i? -1 : i;
 				}

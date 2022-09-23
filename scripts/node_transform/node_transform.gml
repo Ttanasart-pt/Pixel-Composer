@@ -13,7 +13,7 @@ enum OUTPUT_SCALING {
 function Node_Transform(_x, _y) : Node_Processor(_x, _y) constructor {
 	name = "Transform";
 	
-	inputs[| 0] = nodeValue(0, "Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
+	inputs[| 0] = nodeValue(0, "Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
 	
 	inputs[| 1] = nodeValue(1, "Output dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [1, 1], VALUE_TAG.dimension_2d)
 		.setDisplay(VALUE_DISPLAY.vector)
@@ -48,7 +48,7 @@ function Node_Transform(_x, _y) : Node_Processor(_x, _y) constructor {
 	inputs[| 9] = nodeValue(9, "Output dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, OUTPUT_SCALING.same_as_input)
 		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Same as input", "Constant", "Relative to input" ]);
 	
-	inputs[| 10] = nodeValue(10, "Exact", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
+	inputs[| 10] = nodeValue(10, "Exact", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
 	
 	inputs[| 11] = nodeValue(11, "Relative to surface", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
 	
@@ -63,6 +63,11 @@ function Node_Transform(_x, _y) : Node_Processor(_x, _y) constructor {
 	
 	vel = 0;
 	prev_pos = [0, 0];
+	
+	static onValueUpdate = function(index, prev) {
+		if(index == 0 && !is_surface(prev))
+			centerAnchor();
+	}
 	
 	static centerAnchor = function() {
 		var _surf = inputs[| 0].getValue();

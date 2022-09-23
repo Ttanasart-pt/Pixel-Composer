@@ -78,7 +78,7 @@ function Node_Group_Input(_x, _y, _group) : Node(_x, _y) constructor {
 				inParent.setDisplay(_dtype, [_range[0], _range[1], 0.01]);
 			case VALUE_DISPLAY.rotation_range :
 				if(!is_array(_val) || array_length(_val) != 2) 
-					inParent.value = new animValue([0, 0], inParent);
+					inParent.animator = new valueAnimator([0, 0], inParent);
 				inParent.setDisplay(_dtype);
 				break;
 				
@@ -89,13 +89,13 @@ function Node_Group_Input(_x, _y, _group) : Node(_x, _y) constructor {
 				
 			case VALUE_DISPLAY.padding :
 				if(!is_array(_val) || array_length(_val) != 4)
-					inParent.value = new animValue([0, 0, 0, 0], inParent);
+					inParent.animator = new valueAnimator([0, 0, 0, 0], inParent);
 				inParent.setDisplay(_dtype);
 				break;
 				
 			case VALUE_DISPLAY.area :
 				if(!is_array(_val) || array_length(_val) != 5)
-					inParent.value = new animValue([0, 0, 0, 0, 5], inParent);
+					inParent.animator = new valueAnimator([0, 0, 0, 0, 5], inParent);
 				inParent.setDisplay(_dtype);
 				break;
 				
@@ -104,15 +104,15 @@ function Node_Group_Input(_x, _y, _group) : Node(_x, _y) constructor {
 				switch(_vec_size) {
 					case 0 : 
 						if(!is_array(_val) || array_length(_val) != 2)
-							inParent.value = new animValue([0, 0], inParent);
+							inParent.animator = new valueAnimator([0, 0], inParent);
 						break;
 					case 1 : 
 						if(!is_array(_val) || array_length(_val) != 3)
-							inParent.value = new animValue([0, 0, 0], inParent);
+							inParent.animator = new valueAnimator([0, 0, 0], inParent);
 						break;
 					case 2 : 
 						if(!is_array(_val) || array_length(_val) != 4)
-							inParent.value = new animValue([0, 0, 0, 0], inParent);
+							inParent.animator = new valueAnimator([0, 0, 0, 0], inParent);
 						break;
 				}
 				
@@ -121,7 +121,7 @@ function Node_Group_Input(_x, _y, _group) : Node(_x, _y) constructor {
 				
 			case VALUE_DISPLAY.palette :
 				if(!is_array(_val))
-					inParent.value = new animValue([c_black], inParent);
+					inParent.animator = new valueAnimator([c_black], inParent);
 				inParent.setDisplay(_dtype);
 				break;
 				

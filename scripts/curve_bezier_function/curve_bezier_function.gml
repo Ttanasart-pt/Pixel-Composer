@@ -40,3 +40,13 @@ function bezier_interpol_x(a, b, t, iteration = 16) {
 			
 	return 3 * (1 - _x) * _x * _x + _x * _x * _x;
 }
+
+function ease_cubic_in(rat) {
+	return rat * rat * rat;
+}
+function ease_cubic_out(rat) {
+	return 1 - power(1 - rat, 3);
+}
+function ease_cubic_inout(rat) {
+	return rat < 0.5 ? 4 * power(rat, 3) : 1 - power(-2 * rat + 2, 3) / 2;
+}
