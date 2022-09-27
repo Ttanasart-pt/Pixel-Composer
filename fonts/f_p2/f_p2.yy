@@ -10,7 +10,7 @@
   "fontName": "Segoe UI",
   "styleName": "Semibold",
   "size": 10.0,
-  "bold": false,
+  "bold": true,
   "italic": false,
   "charset": 0,
   "AntiAlias": 1,

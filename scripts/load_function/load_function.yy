@@ -1,12 +1,11 @@
 {
+  "resourceType": "GMScript",
+  "resourceVersion": "1.0",
+  "name": "load_function",
   "isDnD": false,
   "isCompatibility": false,
   "parent": {
-    "name": "save load",
-    "path": "folders/functions/save load.yy",
+    "name": "files",
+    "path": "folders/functions/files.yy",
   },
-  "resourceVersion": "1.0",
-  "name": "load_function",
-  "tags": [],
-  "resourceType": "GMScript",
 }

@@ -110,7 +110,6 @@ function Node_Collection(_x,  _y) : Node(_x,  _y) constructor {
 		for( var i = custom_input_index; i < siz; i++ ) {
 			var _jin = ds_priority_delete_min(ar);
 			_jin.index = i;
-			_jin.from.inputs[| 5].setValue(i);
 			ds_list_add(inputs, _jin);
 		}
 		
@@ -133,7 +132,6 @@ function Node_Collection(_x,  _y) : Node(_x,  _y) constructor {
 		for( var i = custom_output_index; i < siz; i++ ) {
 			var _jout = ds_priority_delete_min(ar);
 			_jout.index = i;
-			_jout.from.inputs[| 1].setValue(i);
 			ds_list_add(outputs, _jout);
 		}
 		

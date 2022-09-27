@@ -43,7 +43,7 @@ function Node_Stripe(_x, _y) : Node(_x, _y) constructor {
 	
 	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
 	
-	input_display_list = [ 0, 
+	input_display_list = [ 
 		["Output",	true],	0,  
 		["Pattern",	false], 1, 2, 4, 5,
 		["Render",	false], 3, 6, 7

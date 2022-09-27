@@ -16,7 +16,7 @@ function scrollPane(_w, _h, ondraw) constructor {
 	scroll_step = 64;
 	active      = false;
 	
-	is_scrolling		= false;
+	is_scrolling = false;
 	
 	static resize = function(_w, _h) {
 		w = _w;

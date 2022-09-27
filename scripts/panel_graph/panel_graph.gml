@@ -438,9 +438,10 @@ function Panel_Graph(_panel) : PanelContent(_panel) constructor {
 				var val = n.drawNode(gr_x, gr_y, mx, my, graph_s);
 				if(val) value_focus = val;
 			}
-		
+			
 			for(var i = 0; i < ds_list_size(nodes_list); i++) {
 				nodes_list[| i].drawBadge(gr_x, gr_y, graph_s);	
+				nodes_list[| i].drawJunctionNames(gr_x, gr_y, mx, my, graph_s);	
 			}
 		#endregion
 		

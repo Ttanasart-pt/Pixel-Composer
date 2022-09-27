@@ -136,25 +136,27 @@ function Node_Group_Input(_x, _y, _group) : Node(_x, _y) constructor {
 	}
 	
 	static createInput = function(override_order = true) {
-		if(group && is_struct(group)) {
-			if(override_order) {
-				input_index = ds_list_size(group.inputs);
-				inputs[| 5].setValue(input_index);
-			} else {
-				input_index = inputs[| 5].getValue();
-			}
+		if(group == noone || !is_struct(group)) return noone;
 			
-			inParent = nodeValue(ds_list_size(group.inputs), "Value", group, JUNCTION_CONNECT.input, VALUE_TYPE.any, -1)
-				.setVisible(true, true);
-			inParent.from = self;
-			
-			ds_list_add(group.inputs, inParent);
-			outputs[| 0].setFrom(inParent, false, false);
-			group.setHeight();
-			group.sortIO();
-			
-			onValueUpdate(0);
+		if(override_order) {
+			input_index = ds_list_size(group.inputs);
+			inputs[| 5].setValue(input_index);
+		} else {
+			input_index = inputs[| 5].getValue();
 		}
+			
+		inParent = nodeValue(ds_list_size(group.inputs), "Value", group, JUNCTION_CONNECT.input, VALUE_TYPE.any, -1)
+			.setVisible(true, true);
+		inParent.from = self;
+			
+		ds_list_add(group.inputs, inParent);
+		outputs[| 0].setFrom(inParent, false, false);
+		group.setHeight();
+		group.sortIO();
+			
+		onValueUpdate(0);
+		
+		return inParent;
 	}
 	
 	if(!LOADING && !APPENDING)

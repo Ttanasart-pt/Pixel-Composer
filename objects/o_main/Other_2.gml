@@ -7,6 +7,7 @@
 	log_message("SESSION", "Begin");
 	log_message("DIRECTORY", DIRECTORY);
 	__init_collection();
+	__initAssets();
 #endregion
 
 #region parameter

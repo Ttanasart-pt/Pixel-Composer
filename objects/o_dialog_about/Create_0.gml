@@ -11,11 +11,10 @@ event_inherited();
 
 #region scroll
 	credits = [
-		[ "Execute Shell", "Samuel Venable" ],
 		[ "The Book of Shaders", "Patricio Gonzalez Vivo & Jen Lowe" ],
 		[ "Many noise and shape shaders", "Inigo Quilez" ],
 		[ "Chromatic aberration shader", "jcant0n" ],
-		[ "gif importer", "YellowAfterLife" ],
+		[ "gif importer\nWindow commands\nExecute shell simple", "YellowAfterLife" ],
 	]
 	
 	sc_thank = new scrollPane(dialog_w - 64, thank_h, function(_y, _m) {
@@ -29,17 +28,21 @@ event_inherited();
 		draw_text(cx, yy, "Special Thanks");
 		
 		for( var i = 0; i < array_length(credits); i++ ) {
+			yy += 40; 
 			draw_set_font(f_p2);
 			draw_set_color(c_ui_blue_grey);
-			yy += 40; draw_text(cx, yy, credits[i][0]);
-			draw_set_font(f_p0);
-			draw_set_color(c_ui_blue_ltgrey);
-			yy += 16; draw_text(cx, yy, credits[i][1]);
+			draw_text(cx, yy, credits[i][0]);
+			
+			yy += string_height(credits[i][0]); 
+			draw_set_font(f_p0b);
+			draw_set_color(c_ui_blue_white);
+			draw_text(cx, yy, credits[i][1]);
 		}
 		
 		draw_set_font(f_p0);
 		draw_set_color(c_ui_blue_ltgrey);
-		yy += 40; draw_text(cx, yy, "Made with GameMaker Studio 2");
+		yy += 40; 
+		draw_text(cx, yy, "Made with GameMaker Studio 2, Abode Illustrator,\nAseprite");
 		
 		return yy - _h + 32;
 	})

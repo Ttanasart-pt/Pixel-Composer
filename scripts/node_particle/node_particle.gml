@@ -4,6 +4,12 @@ function Node_create_Particle(_x, _y) {
 	return node;
 }
 
+enum ANIM_END_ACTION {
+	loop,
+	pingpong,
+	destroy,
+}
+
 function __part() constructor {
 	seed   = irandom(99999);
 	active = false;
@@ -41,6 +47,7 @@ function __part() constructor {
 	life_total = 0;
 	
 	anim_speed = 1;
+	anim_end   = ANIM_END_ACTION.loop;
 	
 	is_loop = false;
 	
@@ -118,8 +125,24 @@ function __part() constructor {
 	function draw(exact) {
 		if(!active) return;
 		var ss = surf;
-		if(is_array(surf))
-			ss = surf[safe_mod((life_total - life) * anim_speed, array_length(surf))];
+		if(is_array(surf)) {
+			var ind = abs(round((life_total - life) * anim_speed));
+			var len = array_length(surf);
+			
+			switch(anim_end) {
+				case ANIM_END_ACTION.loop: 
+					ss = surf[safe_mod(ind, len)];
+					break;
+				case ANIM_END_ACTION.pingpong:
+					var ping = safe_mod(ind, (len - 1) * 2 + 1); 
+					ss = surf[ping >= len? (len - 1) * 2 - ping : ping];
+					break;
+				case ANIM_END_ACTION.destroy:
+					if(ind >= len)	return;
+					else			ss = surf[ind];
+					break;
+			}
+		}
 		if(!is_surface(ss)) return;
 		
 		var cc = (col == -1)? c_white : gradient_eval(col, 1 - life / life_total);
@@ -175,7 +198,9 @@ function Node_Particle(_x, _y) : Node(_x, _y) constructor {
 	auto_update = false;
 	use_cache = true;
 	
-	inputs[| 0] = nodeValue(0, "Particle", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
+	inputs[| 0] = nodeValue(0, "Particle", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0)
+		.setDisplay(noone, "particles");
+		
 	inputs[| 1] = nodeValue(1, "Output dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, def_surf_size2, VALUE_TAG.dimension_2d)
 		.setDisplay(VALUE_DISPLAY.vector);
 	
@@ -198,7 +223,8 @@ function Node_Particle(_x, _y) : Node(_x, _y) constructor {
 	inputs[| 9] = nodeValue(9, "Orientation", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [0, 0])
 		.setDisplay(VALUE_DISPLAY.rotation_range);
 		
-	inputs[| 10] = nodeValue(10, "Rotational speed", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0);
+	inputs[| 10] = nodeValue(10, "Rotational speed", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ])
+		.setDisplay(VALUE_DISPLAY.range);
 	
 	inputs[| 11] = nodeValue(11, "Spawn scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 1, 1, 1 ] )
 		.setDisplay(VALUE_DISPLAY.vector_range);
@@ -232,12 +258,11 @@ function Node_Particle(_x, _y) : Node(_x, _y) constructor {
 	inputs[| 24] = nodeValue(24, "Blend mode", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0 )
 		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Normal", "Additive" ]);
 	
-	inputs[| 25] = nodeValue(25, "Surface selection", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0 )
+	inputs[| 25] = nodeValue(25, "Surface array", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0 )
 		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Random", "Order", "Animation" ])
 		.setVisible(false);
 	
-	inputs[| 26] = nodeValue(26, "Animation speed", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 1 ] )
-		.setDisplay(VALUE_DISPLAY.vector)
+	inputs[| 26] = nodeValue(26, "Animation speed", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1 )
 		.setVisible(false);
 	
 	inputs[| 27] = nodeValue(27, "Scatter", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1)
@@ -246,16 +271,20 @@ function Node_Particle(_x, _y) : Node(_x, _y) constructor {
 	inputs[| 28] = nodeValue(28, "Boundary data", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [])
 		.setVisible(false, true);
 	
+	inputs[| 29] = nodeValue(29, "On animation end", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, ANIM_END_ACTION.loop)
+		.setDisplay(VALUE_DISPLAY.enum_button, [ "Loop", "Ping pong", "Destroy" ])
+		.setVisible(false);
+	
 	input_display_list = [		
 		["Output",		true],	1,
-		["Sprite",		true],	0, 25,
+		["Sprite",	   false],	0, 25, 26, 29,
 		["Spawn",		true],	17, 2, 3, 4, 5, 27, 28, 6,
 		["Movement",	true],	7, 20, 8,
 		["Physics",		true],	21, 22,
 		["Rotation",	true],	16, 9, 10, 
 		["Scale",		true],	11, 18, 12, 
-		["Color",		true],	13, 14, 15, 24,
-		["Render",		true],	26, 19, 23,
+		["Color",		true],	13, 14, 15, 
+		["Render",		true],	24, 19, 23,
 	];
 	
 	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
@@ -311,6 +340,7 @@ function Node_Particle(_x, _y) : Node(_x, _y) constructor {
 		
 		var _arr_type	= inputs[| 25].getValue();
 		var _anim_speed	= inputs[| 26].getValue();
+		var _anim_end	= inputs[| 29].getValue();
 		
 		if(_rotation[1] < _rotation[0]) _rotation[1] += 360;
 		
@@ -350,7 +380,8 @@ function Node_Particle(_x, _y) : Node(_x, _y) constructor {
 				
 				var _lif = random_range(_life[0], _life[1]);
 				
-				var _rot = random_range(_rotation[0], _rotation[1]);
+				var _rot	 = random_range(_rotation[0], _rotation[1]);
+				var _rot_spd = random_range(_rotation_speed[0], _rotation_speed[1]);
 				
 				var _dirr	= random_range(_direction[0], _direction[1]);
 				
@@ -366,10 +397,11 @@ function Node_Particle(_x, _y) : Node(_x, _y) constructor {
 				var _alp = random_range(_alpha[0], _alpha[1]);
 				
 				parts[| i].create(_spr, xx, yy, _lif);
-				parts[| i].anim_speed = random_range(_anim_speed[0], _anim_speed[1]);
+				parts[| i].anim_speed = _anim_speed;
+				parts[| i].anim_end = _anim_end;
 				
 				parts[| i].setPhysic(_vx, _vy, _acc, _grav, _wigg);
-				parts[| i].setTransform(_scx, _scy, _scale_speed[0], _scale_speed[1], _rot, _rotation_speed, _follow);
+				parts[| i].setTransform(_scx, _scy, _scale_speed[0], _scale_speed[1], _rot, _rot_spd, _follow);
 				parts[| i].setDraw(_color, _alp, _fade);
 				setUpPart(parts[| i]);
 				spawn_index = safe_mod(spawn_index + 1, PREF_MAP[? "part_max_amount"]);
@@ -433,6 +465,7 @@ function Node_Particle(_x, _y) : Node(_x, _y) constructor {
 			var _type = inputs[| 25].getValue();
 			if(_type == 2) {
 				inputs[| 26].setVisible(true);
+				inputs[| 29].setVisible(true);
 			}
 		}
 		
@@ -491,15 +524,11 @@ function Node_Particle(_x, _y) : Node(_x, _y) constructor {
 		}
 		
 		surface_set_target(_outSurf);
-			draw_clear_alpha(0, 0);
+			draw_clear_alpha(c_white, 0);
 			
 			switch(_blend) {
-				case PARTICLE_BLEND_MODE.normal		: 
-					gpu_set_blendmode(bm_normal);	
-					break;
-				case PARTICLE_BLEND_MODE.additive   : 
-					gpu_set_blendmode(bm_add);
-					break;
+				case PARTICLE_BLEND_MODE.normal :	gpu_set_blendmode(bm_normal);	break;
+				case PARTICLE_BLEND_MODE.additive : gpu_set_blendmode(bm_add);		break;
 			}
 			
 			for(var i = 0; i < PREF_MAP[? "part_max_amount"]; i++)

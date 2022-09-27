@@ -62,7 +62,7 @@ enum VALUE_DISPLAY {
 	
 	//path
 	path_save,
-	path_load
+	path_load,
 }
 
 enum PADDING {
@@ -99,7 +99,7 @@ function value_bit(i) {
 }
 
 function value_type_directional(f, t) {
-	if((t.tag & VALUE_TAG.dimension_2d) && f.type == VALUE_TYPE.surface && t.type == VALUE_TYPE.integer) return true;
+	if((t.tag & VALUE_TAG.dimension_2d) && f.type == VALUE_TYPE.surface && (t.type == VALUE_TYPE.integer || t.type == VALUE_TYPE.float)) return true;
 	return false;
 }
 
@@ -377,6 +377,10 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 					setValue(str);
 				} );
 				break;
+			case VALUE_TYPE.surface :
+				editWidget = new surfaceBox(function(ind) { setValue(ind); }, display_data );
+				show_in_inspector = true;
+				break;
 		}
 	}
 	resetDisplay();
@@ -516,6 +520,7 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 				node.updateForward();
 			
 			node.onValueUpdate(index, _o);
+			MODIFIED = true;
 		}
 		
 		onValidate();
@@ -577,6 +582,7 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 		if(_update) node.updateValueFrom(index);
 		if(_update && node.auto_update) _valueFrom.node.updateForward();
 		
+		MODIFIED = true;
 		return true;
 	}
 	
@@ -1010,34 +1016,54 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 		return hover;
 	}
 	
-	static drawJunction = function(_s, _mx, _my, _show) {
+	static drawJunction = function(_s, _mx, _my) {
 		if(!isVisible()) return false;
 		
 		var ss = max(0.25, _s / 2);
-		var _draw_cc = c_white;
 		var is_hover = false;
 		
 		if(point_in_circle(_mx, _my, x, y, 10 * _s)) {
 			is_hover = true;
 			draw_sprite_ext(isArray()? s_node_junctions_array_hover : s_node_junctions_single_hover, type, x, y, ss, ss, 0, c_white, 1);
 		} else {
-			_draw_cc = c_ui_blue_grey;
 			draw_sprite_ext(isArray()? s_node_junctions_array : s_node_junctions_single, type, x, y, ss, ss, 0, c_white, 1);
-		}
-				
-		if(_show) {
-			draw_set_text(f_p1, fa_left, fa_center, _draw_cc);
-			
-			if(connect_type == JUNCTION_CONNECT.input) {
-				draw_set_halign(fa_right);
-				draw_text(x - 12 * _s, y, name);
-			} else {
-				draw_set_halign(fa_left);
-				draw_text(x + 12 * _s, y, name);
-			}
 		}
 		
 		return is_hover;
+	}
+	
+	static drawNameBG = function(_s) {
+		if(!isVisible()) return false;
+		
+		draw_set_text(f_p1, fa_left, fa_center);
+			
+		var tw = string_width(name) + 16;
+		var th = string_height(name) + 16;
+		
+		if(connect_type == JUNCTION_CONNECT.input) {
+			var tx = x - 12 * _s;
+			draw_sprite_stretched_ext(s_node_junction_name_bg, 0, tx - tw, y - th / 2, tw + 16, th, c_white, 0.5);
+		} else {
+			var tx = x + 12 * _s;
+			draw_sprite_stretched_ext(s_node_junction_name_bg, 0, tx - 16, y - th / 2, tw + 16, th, c_white, 0.5);
+		}
+	}
+	static drawName = function(_s, _mx, _my) {
+		if(!isVisible()) return false;
+		
+		var _hover = point_in_circle(_mx, _my, x, y, 10 * _s);
+		var _draw_cc = _hover? c_white : c_ui_blue_grey;
+		draw_set_text(f_p1, fa_left, fa_center, _draw_cc);
+		
+		if(connect_type == JUNCTION_CONNECT.input) {
+			var tx = x - 12 * _s;
+			draw_set_halign(fa_right);
+			draw_text(tx, y, name);
+		} else {
+			var tx = x + 12 * _s;
+			draw_set_halign(fa_left);
+			draw_text(tx, y, name);
+		}
 	}
 	
 	static isVisible = function() {

@@ -136,6 +136,7 @@ function LOAD_PATH(path, readonly = false) {
 	}
 	
 	LOADING = false;
+	MODIFIED = false;
 	
 	PANEL_GRAPH.fullView();
 	PANEL_ANIMATION.updatePropertyList();

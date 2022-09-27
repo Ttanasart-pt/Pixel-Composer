@@ -96,7 +96,7 @@ function Panel_Inspector(_panel) : PanelContent(_panel) constructor {
 				jun = inspecting.inputs[| inspecting.input_display_list[i]];
 			}
 				
-			if(!jun.show_in_inspector || jun.type == VALUE_TYPE.surface || jun.type == VALUE_TYPE.object) continue;
+			if(!jun.show_in_inspector || jun.type == VALUE_TYPE.object) continue;
 			
 			var butx = 16;
 			var index = jun.value_from == noone? jun.animator.is_anim : 2;
@@ -301,9 +301,9 @@ function Panel_Inspector(_panel) : PanelContent(_panel) constructor {
 									TOOLTIP = "File not exist";
 								break;
 							case VALUE_TYPE.surface :
-								draw_set_color(c_ui_blue_dkgrey);
-								draw_rectangle(editBoxX, editBoxY, w - 48, yy + 14 + 68, true);
-								widH = 68;
+								editBoxH = 96;
+								jun.editWidget.draw(editBoxX, editBoxY, editBoxW, editBoxH, jun.showValue(), _m, 16 + x, top_bar_h + y);
+								widH = editBoxH;
 								break;
 							case VALUE_TYPE.curve :
 								editBoxH = 160;

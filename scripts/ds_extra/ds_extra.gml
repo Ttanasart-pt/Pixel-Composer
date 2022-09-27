@@ -26,9 +26,16 @@ function ds_list_get(list, index, def = 0) {
 	return def;
 }
 
-function ds_list_clone(list) {
+function ds_list_clone(list, mem = false) {
 	var l = ds_list_create();
-	ds_list_copy(l, list);
+	if(!ds_exists(list, ds_type_list)) return l;
+	
+	if(mem) {
+		for( var i = 0; i < ds_list_size(list); i++ ) 
+			ds_list_add(l, list[| i]);
+	} else
+		ds_list_copy(l, list);
+		
 	return l;
 }
 

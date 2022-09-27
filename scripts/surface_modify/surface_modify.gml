@@ -62,3 +62,33 @@ function is_surface(s) {
 	
 	return true;
 }
+
+function surface_create_from_sprite_ext(spr, ind) {
+	if(!sprite_exists(spr)) return noone;
+	var sw = sprite_get_width(spr);
+	var sh = sprite_get_height(spr);
+	
+	var s = surface_create(sw, sh);
+	surface_set_target(s);
+		BLEND_ADD
+		draw_clear_alpha(0, 0);
+		draw_sprite(spr, ind, sprite_get_xoffset(spr), sprite_get_yoffset(spr));
+		BLEND_NORMAL
+	surface_reset_target();
+	
+	return s;
+}
+
+function surface_create_from_sprite(spr) {
+	if(!sprite_exists(spr)) return noone;
+	
+	if(sprite_get_number(spr) == 1)
+		return surface_create_from_sprite_ext(spr, 0);
+	
+	var s = [];
+	for( var i = 0; i < sprite_get_number(spr); i++ ) {
+		array_push(s, surface_create_from_sprite_ext(spr, i));
+	}
+	
+	return s;
+}

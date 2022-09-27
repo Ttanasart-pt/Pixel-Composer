@@ -59,6 +59,17 @@ function Node(_x, _y) constructor {
 	anim_show = true;
 	
 	value_validation = [0, 0];
+	MODIFIED = true;
+	
+	static getInputJunctionIndex = function(index) {
+		if(input_display_list == -1)
+			return index;
+		
+		var jun_list_arr = input_display_list[index];
+		if(is_array(jun_list_arr)) return noone;
+		if(is_struct(jun_list_arr)) return noone;
+		return jun_list_arr;
+	}
 	
 	static setHeight = function() {
 		var _hi = 32, _ho = 32;
@@ -75,6 +86,7 @@ function Node(_x, _y) constructor {
 	static move = function(_x, _y) {
 		x = _x;
 		y = _y;
+		MODIFIED = true;
 	}
 	
 	static stepBegin = function() {
@@ -195,16 +207,11 @@ function Node(_x, _y) constructor {
 		var amo = input_display_list == -1? ds_list_size(inputs) : array_length(input_display_list);
 		
 		for(var i = 0; i < amo; i++) {
-			if(input_display_list == -1)
-				jun = inputs[| i];
-			else {
-				var jun_disp = input_display_list[i];
-				if(is_array(jun_disp)) continue;
-				if(is_struct(jun_disp)) continue;
-				
-				jun = inputs[| input_display_list[i]];
-			}
+			var idx = getInputJunctionIndex(i);
+			if(idx == noone) continue;
 			
+			jun = ds_list_get(inputs, idx, noone);
+			if(jun == noone) continue;
 			jun.x = xx;
 			jun.y = _in;
 			_in += 24 * _s * jun.isVisible();
@@ -246,33 +253,60 @@ function Node(_x, _y) constructor {
 		var hover = noone;
 		var amo = input_display_list == -1? ds_list_size(inputs) : array_length(input_display_list);
 		var jun;
-		var _show_in = show_input_name;
-		var _show_ot = show_output_name;
-		
-		show_input_name = point_in_rectangle(_mx, _my, _x - 6 * _s, _y + 20 * _s, _x + 6 * _s, _y + h * _s);
-		show_output_name = point_in_rectangle(_mx, _my, _x + (w - 6) * _s, _y + 20 * _s, _x + (w + 6) * _s, _y + h * _s);
 		
 		for(var i = 0; i < amo; i++) {
-			if(input_display_list == -1)
-				jun = inputs[| i];
-			else {
-				var jun_list_arr = input_display_list[i];
-				if(is_array(jun_list_arr)) continue;
-				jun = inputs[| input_display_list[i]];
-			}
+			var ind = getInputJunctionIndex(i);
+			if(ind == noone) continue;
+			jun = ds_list_get(inputs, ind, noone);
+			if(jun == noone) continue;
 			
-			if(jun.drawJunction(_s, _mx, _my, _show_in))
+			if(jun.drawJunction(_s, _mx, _my))
 				hover = jun;
 		}
 		
 		for(var i = 0; i < ds_list_size(outputs); i++) {
 			jun = outputs[| i];
 			
-			if(jun.drawJunction(_s, _mx, _my, _show_ot))
+			if(jun.drawJunction(_s, _mx, _my))
 				hover = jun;
 		}
 		
 		return hover;
+	}
+	
+	static drawJunctionNames = function(_x, _y, _mx, _my, _s) {
+		var amo = input_display_list == -1? ds_list_size(inputs) : array_length(input_display_list);
+		var jun;
+		
+		var xx = x * _s + _x;
+		var yy = y * _s + _y;
+		
+		show_input_name = point_in_rectangle(_mx, _my, xx - 8 * _s, yy + 20 * _s, xx + 8 * _s, yy + h * _s);
+		show_output_name = point_in_rectangle(_mx, _my, xx + (w - 8) * _s, yy + 20 * _s, xx + (w + 8) * _s, yy + h * _s);
+		
+		if(show_input_name) {
+			for(var i = 0; i < amo; i++) {
+				var ind = getInputJunctionIndex(i);
+				if(ind == noone) continue;
+				inputs[| ind].drawNameBG(_s);
+			}
+			
+			for(var i = 0; i < amo; i++) {
+				var ind = getInputJunctionIndex(i);
+				if(ind == noone) continue;
+				inputs[| ind].drawName(_s, _mx, _my);
+			}
+		}
+		
+		if(show_output_name) {
+			for(var i = 0; i < ds_list_size(outputs); i++) {
+				outputs[| i].drawNameBG(_s);
+			}
+			
+			for(var i = 0; i < ds_list_size(outputs); i++) {
+				outputs[| i].drawName(_s, _mx, _my);
+			}
+		}
 	}
 	
 	static drawConnections = function(_x, _y, mx, my, _s) {

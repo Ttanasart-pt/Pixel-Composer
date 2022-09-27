@@ -233,19 +233,17 @@
 		ds_map_destroy(map);
 		
 		var ww, hh;
+		
 		if(PREF_MAP[? "window_maximize"]) {
-			ww = display_get_width();
-			hh = display_get_height();
-			
-			window_set_size(ww, hh);
-			window_set_position(0, 0);
+			ww = window_get_width();
+			hh = window_get_height();
 		} else {
 			ww = PREF_MAP[? "window_width"];
 			hh = PREF_MAP[? "window_height"];
-			
-			window_set_size(ww, hh);
-			window_set_position(display_get_width() / 2 - ww / 2, display_get_height() / 2 - hh / 2);
 		}
+		
+		window_set_size(ww, hh);
+		window_set_position(display_get_width() / 2 - ww / 2, display_get_height() / 2 - hh / 2);
 	}
 	
 	function find_hotkey(_context, _name) {

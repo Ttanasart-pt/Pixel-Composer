@@ -106,3 +106,24 @@
 		file_dnd_filelist = "";
 	}
 #endregion
+
+#region window
+	if (window_command_check(window_command_maximize)) {
+		window_command_run(window_command_maximize);
+	    PREF_MAP[? "window_maximize"] = !PREF_MAP[? "window_maximize"];
+	}
+	
+	if (window_command_check(window_command_close)) {
+		if(MODIFIED) {
+			dialogCall(o_dialog_exit);
+		} else {
+			PREF_SAVE();
+			game_end();
+		}
+	}
+	
+	if(_modified != MODIFIED) {
+		_modified = MODIFIED;
+		window_set_caption(CURRENT_PATH + (MODIFIED? "*" : "") + " - Pixel Composer");
+	}
+#endregion

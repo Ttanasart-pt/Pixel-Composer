@@ -31,7 +31,7 @@ function scrollBox(_data, _onModify) constructor {
 				draw_text(_x + _w / 2, _y + _h / 2, _text);
 			else if(align == fa_left)
 				draw_text(_x + 8, _y + _h / 2, _text);
-			draw_sprite(s_scroll_box_arrow, 0, _x + _w - 20, _y + _h / 2);
+			draw_sprite_ext(s_scroll_box_arrow, 0, _x + _w - 20, _y + _h / 2, 1, 1, 0, c_ui_blue_grey, 1);
 		}
 		
 		hover  = false;

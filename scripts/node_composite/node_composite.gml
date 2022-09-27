@@ -36,8 +36,10 @@ function Node_Composite(_x, _y) : Node_Processor(_x, _y) constructor {
 	
 	hold_visibility = true;
 	layer_dragging = noone;
+	layer_remove = -1;
 	layer_renderer = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) {
 		var amo = (ds_list_size(inputs) - input_fix_len) / data_length - 1;
+		
 		var lh = 32;
 		var _h = 8 + max(1, amo) * (lh + 4) + 8;
 		layer_renderer.h = _h;
@@ -50,23 +52,36 @@ function Node_Composite(_x, _y) : Node_Processor(_x, _y) constructor {
 		draw_set_color(c_ui_blue_black);
 		draw_line(_x + 16, ly, _x + _w - 16, ly);
 		
+		layer_remove = -1;
 		for(var i = 0; i < amo; i++) {
 			var ind = amo - i - 1;
 			var index = input_fix_len + ind * data_length;
 			var _surf = current_data[index + 0];
 			var _pos  = current_data[index + 1];
-			if(!_surf || is_surface(_surf)) continue;
+			
+			var _bx = _x + _w - 24;
+			var _cy = ly + i * (lh + 4);
+			
+			if(point_in_circle(_m[0], _m[1], _bx, _cy + lh / 2, 16)) {
+				draw_sprite_ext(s_delete_16, 3, _bx, _cy + lh / 2, 1, 1, 0, c_ui_red, 1);
+				
+				if(_focus && mouse_check_button_pressed(mb_left))
+					layer_remove = ind;
+			} else 
+				draw_sprite_ext(s_delete_16, 3, _bx, _cy + lh / 2, 1, 1, 0, c_ui_blue_grey, 1);
+			
+			if(!is_surface(_surf)) continue;
 			
 			var aa = (ind != layer_dragging || layer_dragging == noone)? 1 : 0.5;
 			var vis = _vis[| ind];
-			var _cy = ly + i * (lh + 4);
 			var hover = point_in_rectangle(_m[0], _m[1], _x, _cy, _x + _w, _cy + lh);
 			
 			draw_set_color(c_ui_blue_black);
 			draw_line(_x + 16, _cy + lh + 2, _x + _w - 16, _cy + lh + 2);
 			
-			if(point_in_circle(_m[0], _m[1], _x + 24, _cy + lh / 2, 12)) {
-				draw_sprite_ext(s_junc_visible, vis, _x + 24, _cy + lh / 2, 1, 1, 0, c_white, 1);
+			var _bx = _x + 24 * 2 + 8;
+			if(point_in_circle(_m[0], _m[1], _bx, _cy + lh / 2, 12)) {
+				draw_sprite_ext(s_junc_visible, vis, _bx, _cy + lh / 2, 1, 1, 0, c_white, 1);
 				
 				if(_focus) {
 					if(mouse_check_button_pressed(mb_left))
@@ -78,10 +93,10 @@ function Node_Composite(_x, _y) : Node_Processor(_x, _y) constructor {
 					}
 				}
 			} else 
-				draw_sprite_ext(s_junc_visible, vis, _x + 24, _cy + lh / 2, 1, 1, 0, c_ui_blue_grey, 1);
+				draw_sprite_ext(s_junc_visible, vis, _bx, _cy + lh / 2, 1, 1, 0, c_ui_blue_grey, 1);
 			
 			draw_set_color(c_ui_blue_dkgrey);
-			var _sx0 = 56;
+			var _sx0 = _x + 24 * 3 + 8;
 			var _sx1 = _sx0 + ssh;
 			var _sy0 = _cy + 3;
 			var _sy1 = _sy0 + ssh;
@@ -109,7 +124,7 @@ function Node_Composite(_x, _y) : Node_Processor(_x, _y) constructor {
 			}
 			
 			if(layer_dragging == noone || layer_dragging == ind) {
-				var _bx = _x + _w - 24;
+				var _bx = _x + 24;
 				if(point_in_circle(_m[0], _m[1], _bx, _cy + lh / 2, 16)) {
 					draw_sprite_ext(s_hamburger_16, 3, _bx, _cy + lh / 2, 1, 1, 0, c_white, 1);
 				
@@ -152,6 +167,20 @@ function Node_Composite(_x, _y) : Node_Processor(_x, _y) constructor {
 		["Layers",	false],	layer_renderer,
 		["Surface",	true],	
 	];
+	input_display_list_len = array_length(input_display_list);
+	
+	function deleteLayer(index) {
+		var idx = input_fix_len + index * data_length;
+		for( var i = 0; i < data_length; i++ ) {
+			ds_list_delete(inputs, idx);
+			array_remove(input_display_list, idx + i);
+		}
+		for( var i = input_display_list_len; i < array_length(input_display_list); i++ ) {
+			if(input_display_list[i] > idx)
+				input_display_list[i] = input_display_list[i] - data_length;
+		}
+		update();
+	}
 	
 	function createNewSurface() {
 		var index = ds_list_size(inputs);
@@ -371,6 +400,11 @@ function Node_Composite(_x, _y) : Node_Processor(_x, _y) constructor {
 				}
 			}
 		}
+		
+		if(layer_remove > -1) {
+			deleteLayer(layer_remove);
+			layer_remove = -1;
+		}
 	}
 	
 	static process_data = function(_outSurf, _data, _output_index) {
@@ -464,7 +498,8 @@ function Node_Composite(_x, _y) : Node_Processor(_x, _y) constructor {
 		var _inputs = load_map[? "inputs"];
 		
 		for(var i = input_fix_len; i < ds_list_size(_inputs); i += data_length) {
-			createNewSurface();
+			if(i > input_fix_len)
+				createNewSurface();
 			inputs[| i + 0].deserialize(_inputs[| i + 0]);
 			inputs[| i + 1].deserialize(_inputs[| i + 1]);
 			inputs[| i + 2].deserialize(_inputs[| i + 2]);
@@ -474,12 +509,13 @@ function Node_Composite(_x, _y) : Node_Processor(_x, _y) constructor {
 	
 	static attributeSerialize = function() {
 		var att = ds_map_create();
-		ds_map_add_list(att, "layer_visible", attributes[? "layer_visible"]);
+		ds_map_add_list(att, "layer_visible", ds_list_clone(attributes[? "layer_visible"]));
 		return att;
 	}
 	
 	static attributeDeserialize = function(attr) {
-		attributes[? "layer_visible"] = ds_list_clone(attr[? "layer_visible"]);
+		if(ds_map_exists(attr, "layer_visible"))
+			attributes[? "layer_visible"] = ds_list_clone(attr[? "layer_visible"], true);
 	}
 }
 

@@ -49,7 +49,8 @@ function SET_PATH(path) {
 				ds_list_insert(RECENT_FILES, 0, path);
 				RECENT_SAVE();
 			}
-			window_set_caption(filename_name(path) + " - Pixel Composer");
+			CURRENT_PATH = filename_name(path);
+			window_set_caption(CURRENT_PATH + " - Pixel Composer");
 		}
 	}
 	
@@ -84,6 +85,7 @@ function SAVE_AT(path) {
 	file_text_close(file);
 	
 	READONLY  = false;
+	MODIFIED  = false;
 	
 	log_message("FILE", "save at " + path);
 	PANEL_MENU.showNoti("File saved", s_noti_icon_file_save);

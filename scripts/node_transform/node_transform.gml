@@ -65,7 +65,7 @@ function Node_Transform(_x, _y) : Node_Processor(_x, _y) constructor {
 	prev_pos = [0, 0];
 	
 	static onValueUpdate = function(index, prev) {
-		if(index == 0 && !is_surface(prev))
+		if(index == 0 && !is_surface(prev) && !LOADING && !APPENDING)
 			centerAnchor();
 	}
 	

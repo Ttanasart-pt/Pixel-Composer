@@ -123,6 +123,9 @@ function Node_Image(_x, _y) : Node(_x, _y) constructor {
 					_splice.inputs[| 1].setValue([ww, hh]);
 					_splice.inputs[| 2].setValue(amo);
 					_splice.inputs[| 3].setValue(amo);
+					
+					ds_list_add(PANEL_GRAPH.nodes_select_list, self);
+					ds_list_add(PANEL_GRAPH.nodes_select_list, _splice);
 				}
 			}	
 			first_update = false;

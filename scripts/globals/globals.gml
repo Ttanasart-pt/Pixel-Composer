@@ -1,8 +1,11 @@
 #region save
-	globalvar LOADING, APPENDING, READONLY, CONNECTION_CONFLICT, GLOBAL_SEED;
+	globalvar LOADING, APPENDING, MODIFIED, CURRENT_PATH, READONLY, CONNECTION_CONFLICT, GLOBAL_SEED;
 	LOADING   = false;
 	APPENDING = false;
 	READONLY  = false;
+	
+	CURRENT_PATH = "";
+	MODIFIED  = false;
 	CONNECTION_CONFLICT = ds_queue_create();
 	
 	randomize();
@@ -14,9 +17,9 @@
 	DEBUG = false;
 	
 	globalvar VERSION, SAVEFILE_VERSION, VERSION_STRING;
-	VERSION = 92;
+	VERSION = 100;
 	SAVEFILE_VERSION = 90;
-	VERSION_STRING = "0.9.2";
+	VERSION_STRING = "0.10.0";
 	
 	globalvar NODES, ANIMATOR, NODE_MAP, APPEND_MAP, HOTKEYS, HOTKEY_CONTEXT;
 	
@@ -104,6 +107,7 @@
 	#endregion
 	
 	#macro PIXEL_SURFACE surface_create(1, 1)
+	#macro print show_debug_message
 #endregion
 
 #region presets

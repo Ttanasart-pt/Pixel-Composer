@@ -143,7 +143,10 @@ function valueAnimator(_val, _prop) constructor {
 			case VALUE_TYPE.integer : return round(toNumber(_val));	
 			case VALUE_TYPE.float   : return toNumber(_val);
 			case VALUE_TYPE.text    : return string(_val);
-			case VALUE_TYPE.surface : return is_surface(_val)? _val : DEF_SURFACE;
+			case VALUE_TYPE.surface : 
+				if(is_string(_val))
+					return get_asset(_val);
+				return is_surface(_val)? _val : DEF_SURFACE;
 		}
 		
 		return _val;
@@ -151,6 +154,7 @@ function valueAnimator(_val, _prop) constructor {
 	
 	static setKeyTime = function(_key, _time, _replace = true) {
 		if(!ds_list_exist(values, _key)) return 0;
+		MODIFIED = true;
 		
 		_key.time = _time;
 		ds_list_remove(values, _key);
@@ -177,6 +181,7 @@ function valueAnimator(_val, _prop) constructor {
 	
 	static setValue = function(_val = 0, _record = true, _time = -999, ease_in = 0, ease_out = 0) {
 		if(_time == -999) _time = ANIMATOR.current_frame;
+		MODIFIED = true;
 		
 		if(!is_anim) {
 			if(_record) recordAction(ACTION_TYPE.var_modify, values[| 0], [ values[| 0].value, "value" ]);

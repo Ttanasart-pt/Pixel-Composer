@@ -43,7 +43,7 @@ function Node_create_Math(_x, _y, _param = "") {
 	return node;
 }
 
-function Node_Math(_x, _y) : Node_Value_Processor(_x, _y) constructor {
+function Node_Math(_x, _y) : Node(_x, _y) constructor {
 	name		= "Math";
 	color		= c_ui_cyan;
 	previewable = false;
@@ -56,15 +56,44 @@ function Node_Math(_x, _y) : Node_Value_Processor(_x, _y) constructor {
 			/* 0 -  9*/ "Add", "Subtract", "Multiply", "Divide", "Power", "Root", "Sin", "Cos", "Tan", "Modulo", 
 			/*10 - 12*/ "Floor", "Ceil", "Round" ]);
 	
-	inputs[| 1] = nodeValue(1, "a", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
+	inputs[| 1] = nodeValue(1, "a", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0, VALUE_TAG.dimension_2d)
 		.setVisible(true, true);
-	inputs[| 2] = nodeValue(2, "b", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
+	inputs[| 2] = nodeValue(2, "b", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0, VALUE_TAG.dimension_2d)
 		.setVisible(true, true);
 	
 	outputs[| 0] = nodeValue(0, "Math", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, 0);
 	
-	function process_value_data(_data, index = 0) { 
-		switch(_data[0]) {
+	static _eval = function(mode, a, b) {
+		switch(mode) {
+			case MATH_OPERATOR.add :		return a + b;
+			case MATH_OPERATOR.subtract :	return a - b;
+			case MATH_OPERATOR.multiply :	return a * b;
+			case MATH_OPERATOR.divide :		return a / b;
+			case MATH_OPERATOR.power :		return power(a, b);
+			case MATH_OPERATOR.root :		return power(a, 1 / b);
+			
+			case MATH_OPERATOR.sin :		return sin(a) * b;
+			case MATH_OPERATOR.cos :		return cos(a) * b;
+			case MATH_OPERATOR.tan :		return tan(a) * b;
+			case MATH_OPERATOR.modulo :		return safe_mod(a, b);
+			
+			case MATH_OPERATOR.floor :		return floor(a);
+			case MATH_OPERATOR.ceiling :	return ceil(a);
+			case MATH_OPERATOR.round :		return round(a);
+		}
+		return 0;
+	}
+	
+	function update() { 
+		var mode = inputs[| 0].getValue();
+		var a = inputs[| 1].getValue();
+		var b = inputs[| 2].getValue();
+		var as = is_array(a);
+		var bs = is_array(b);
+		var al = as? array_length(a) : 0;
+		var bl = bs? array_length(b) : 0;
+		
+		switch(mode) {
 			case MATH_OPERATOR.add :
 			case MATH_OPERATOR.subtract :
 			case MATH_OPERATOR.multiply :
@@ -87,28 +116,22 @@ function Node_Math(_x, _y) : Node_Value_Processor(_x, _y) constructor {
 				break;
 		}
 		
-		switch(_data[0]) {
-			case MATH_OPERATOR.add :		return _data[1] + _data[2]; break;
-			case MATH_OPERATOR.subtract :	return _data[1] - _data[2]; break;
-			case MATH_OPERATOR.multiply :	return _data[1] * _data[2]; break;
-			case MATH_OPERATOR.divide :		return _data[1] / _data[2]; break;
-			case MATH_OPERATOR.power :		return power(_data[1], _data[2]); break;
-			case MATH_OPERATOR.root :		return power(_data[1], 1 / _data[2]); break;
-			
-			case MATH_OPERATOR.sin :		return sin(_data[1]) * _data[2]; break;
-			case MATH_OPERATOR.cos :		return cos(_data[1]) * _data[2]; break;
-			case MATH_OPERATOR.tan :		return tan(_data[1]) * _data[2]; break;
-			case MATH_OPERATOR.modulo :		return safe_mod(_data[1], _data[2]); break;
-			
-			case MATH_OPERATOR.floor :		return floor(_data[1]); break;
-			case MATH_OPERATOR.ceiling :	return ceil(_data[1]); break;
-			case MATH_OPERATOR.round :		return round(_data[1]); break;
+		var val = 0;
+		if(!as && !bs)
+			val = _eval(mode, a, b);
+		else if(!as && bs) {
+			for( var i = 0; i < bl; i++ )
+				val[i] = _eval(mode, a, b[i]);
+		} else if(as && !bs) {
+			for( var i = 0; i < al; i++ )
+				val[i] = _eval(mode, a[i], b);
+		} else {
+			for( var i = 0; i < max(al, bl); i++ ) 
+				val[i] = _eval(mode, array_safe_get(a, i), array_safe_get(b, i));
 		}
 		
-		return _data[1]; 
+		outputs[| 0].setValue(val);
 	}
-	
-	doUpdate();
 	
 	function onDrawNode(xx, yy, _mx, _my, _s) {
 		draw_set_text(f_h3, fa_center, fa_center, c_white);

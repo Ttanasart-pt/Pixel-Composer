@@ -5,7 +5,7 @@
   "isDnD": false,
   "isCompatibility": false,
   "parent": {
-    "name": "save load",
-    "path": "folders/functions/save load.yy",
+    "name": "files",
+    "path": "folders/functions/files.yy",
   },
 }
