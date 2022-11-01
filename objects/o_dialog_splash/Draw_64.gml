@@ -12,7 +12,7 @@ if !ready exit;
 	draw_set_text(f_h5, fa_left, fa_bottom, c_ui_orange);
 	draw_text(dialog_x + 56 + 40, dialog_y + 70, "Pixel Composer");
 	
-	var bx = dialog_x + 256;
+	var bx = dialog_x + 266;
 	var by = dialog_y + 40;
 	var txt = "v. " + VERSION_STRING;
 	draw_set_text(f_p0, fa_center, fa_center, c_ui_blue_grey);
@@ -24,8 +24,14 @@ if !ready exit;
 	
 	var bx = dialog_x + dialog_w - 16 - 36;
 	var by = dialog_y + 16;
-	if(buttonInstant(s_button_hide, bx, by, 36, 36, [mouse_mx, mouse_my], FOCUS == self, HOVER == self, "", s_gear_24) == 2) {
+	if(buttonInstant(s_button_hide, bx, by, 36, 36, [mouse_mx, mouse_my], FOCUS == self, HOVER == self, "Prefernece", s_gear_24) == 2) {
 		dialogCall(o_dialog_preference, WIN_W / 2, WIN_H / 2);
+	}
+	
+	bx -= 40;
+	if(buttonInstant(s_button_hide, bx, by, 36, 36, [mouse_mx, mouse_my], FOCUS == self, HOVER == self, "Show on startup", s_icon_spalsh_show_on_start, PREF_MAP[? "show_splash"]) == 2) {
+		PREF_MAP[? "show_splash"] = !PREF_MAP[? "show_splash"];
+		PREF_SAVE();
 	}
 	
 	var x0 = dialog_x + 16;

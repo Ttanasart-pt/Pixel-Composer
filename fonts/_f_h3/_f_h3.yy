@@ -1,4 +1,7 @@
 {
+  "resourceType": "GMFont",
+  "resourceVersion": "1.0",
+  "name": "_f_h3",
   "hinting": 0,
   "glyphOperations": 0,
   "interpreter": 0,
@@ -21,6 +24,7 @@
     "path": "texturegroups/Default",
   },
   "ascenderOffset": 0,
+  "ascender": 0,
   "glyphs": {
     "32": {"x":2,"y":2,"w":7,"h":35,"character":32,"shift":7,"offset":0,},
     "33": {"x":47,"y":76,"w":5,"h":35,"character":33,"shift":9,"offset":2,},
@@ -1207,8 +1211,4 @@
     "name": "font",
     "path": "folders/font.yy",
   },
-  "resourceVersion": "1.0",
-  "name": "f_h3",
-  "tags": [],
-  "resourceType": "GMFont",
 }

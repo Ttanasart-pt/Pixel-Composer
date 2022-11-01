@@ -22,12 +22,12 @@ function controlPointBox(_onModify) constructor {
 	active  = false;
 	hover   = false;
 	
-	tbCx = new textBox(TEXTBOX_INPUT.number, function(val) { onModify(PUPPET_CONTROL.cx,     toNumber(val)); });
-	tbCy = new textBox(TEXTBOX_INPUT.number, function(val) { onModify(PUPPET_CONTROL.cy,     toNumber(val)); });
-	tbFx = new textBox(TEXTBOX_INPUT.number, function(val) { onModify(PUPPET_CONTROL.fx,     toNumber(val)); });
-	tbFy = new textBox(TEXTBOX_INPUT.number, function(val) { onModify(PUPPET_CONTROL.fy,     toNumber(val)); });
-	tbW  = new textBox(TEXTBOX_INPUT.number, function(val) { onModify(PUPPET_CONTROL.width,  max(0, toNumber(val))); });
-	tbH  = new textBox(TEXTBOX_INPUT.number, function(val) { onModify(PUPPET_CONTROL.height, max(0, toNumber(val))); });
+	tbCx = new textBox(TEXTBOX_INPUT.float, function(val) { onModify(PUPPET_CONTROL.cx,     toNumber(val)); });
+	tbCy = new textBox(TEXTBOX_INPUT.float, function(val) { onModify(PUPPET_CONTROL.cy,     toNumber(val)); });
+	tbFx = new textBox(TEXTBOX_INPUT.float, function(val) { onModify(PUPPET_CONTROL.fx,     toNumber(val)); });
+	tbFy = new textBox(TEXTBOX_INPUT.float, function(val) { onModify(PUPPET_CONTROL.fy,     toNumber(val)); });
+	tbW  = new textBox(TEXTBOX_INPUT.float, function(val) { onModify(PUPPET_CONTROL.width,  max(0, toNumber(val))); });
+	tbH  = new textBox(TEXTBOX_INPUT.float, function(val) { onModify(PUPPET_CONTROL.height, max(0, toNumber(val))); });
 	rot  = new rotator(function(val) { onModify(PUPPET_CONTROL.fy, toNumber(val)); });
 	tbFx.slidable = true;
 	tbFy.slidable = true;

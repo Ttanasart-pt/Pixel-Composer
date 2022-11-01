@@ -13,9 +13,11 @@ function Node_Area(_x, _y) : Node_Value_Processor(_x, _y) constructor {
 	min_h = 0;
 	
 	inputs[| 0] = nodeValue(0, "Postion", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ] )
-		.setDisplay(VALUE_DISPLAY.vector);
+		.setDisplay(VALUE_DISPLAY.vector)
+		.setVisible(true, true);
 	inputs[| 1] = nodeValue(1, "Size", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 16, 16 ] )
-		.setDisplay(VALUE_DISPLAY.vector);
+		.setDisplay(VALUE_DISPLAY.vector)
+		.setVisible(true, true);
 	
 	inputs[| 2] = nodeValue(2, "Shape", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, AREA_SHAPE.rectangle )
 		.setDisplay(VALUE_DISPLAY.enum_scroll, ["Rectangle", "Elipse"]);

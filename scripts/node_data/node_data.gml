@@ -72,15 +72,17 @@ function Node(_x, _y) constructor {
 	}
 	
 	static setHeight = function() {
-		var _hi = 32, _ho = 32;
+		var _hi = junction_shift_y;
+		var _ho = 32;
 		for( var i = 0; i < ds_list_size(inputs); i++ )  {
 			if(inputs[| i].isVisible()) _hi += 24;
 		}
+		
 		for( var i = 0; i < ds_list_size(outputs); i++ )  {
 			if(outputs[| i].isVisible()) _ho += 24;
 		}
 		
-		h = max(_hi, _ho, min_h);
+		h = max(min_h, _hi, _ho);
 	}
 	
 	static move = function(_x, _y) {
@@ -191,20 +193,20 @@ function Node(_x, _y) constructor {
 		rendered = result;
 	}
 	
-	static pointIn = function(_mx, _my) {
-		var xx    = x;
-		var yy    = y;
+	static pointIn = function(_x, _y, _mx, _my, _s) {
+		var xx = x * _s + _x;
+		var yy = y * _s + _y;
 		
-		return point_in_rectangle(_mx, _my, xx, yy, xx + w, yy + h);
+		return point_in_rectangle(_mx, _my, xx, yy, xx + w * _s, yy + h * _s);
 	}
 	
 	static preDraw = function(_x, _y, _s) {
 		var xx = x * _s + _x;
 		var yy = y * _s + _y;
 		
-		var _in = yy + junction_shift_y * _s;
 		var jun;
 		var amo = input_display_list == -1? ds_list_size(inputs) : array_length(input_display_list);
+		var _in = yy + junction_shift_y * _s;
 		
 		for(var i = 0; i < amo; i++) {
 			var idx = getInputJunctionIndex(i);
@@ -392,14 +394,14 @@ function Node(_x, _y) constructor {
 			//draw_set_color(c_ui_blue_grey);
 			//draw_rectangle(px, py, px + pw * ps - 1, py + ph * ps - 1, true);
 			
-			if(_s * w > 48) {
+			if(_s * w > 64) {
 				draw_set_text(_s >= 1? f_p1 : f_p2, fa_center, fa_top, c_ui_blue_grey);
 				var tx = xx + w * _s / 2;
 				var ty = yy + (h + 4) * _s;
 				draw_text(round(tx), round(ty), string(pw) + " x " + string(ph) + "px");
 				
 				if(PREF_MAP[? "node_show_time"]) {
-					ty += string_height("l")
+					ty += string_height("l") * 0.8;
 					var rt, unit;
 					if(render_time < 1000) {
 						rt = round(render_time / 10) * 10;

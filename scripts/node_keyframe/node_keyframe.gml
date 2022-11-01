@@ -38,7 +38,7 @@ function valueAnimator(_val, _prop) constructor {
 			eo = rat;
 		else {
 			switch(from.ease_out_type) {
-				case CURVE_TYPE.bezier  : 
+				case CURVE_TYPE.bezier : 
 					eo = ease_cubic_in(rat);
 					eo = lerp(rat, eo, from.ease_out);
 					break;

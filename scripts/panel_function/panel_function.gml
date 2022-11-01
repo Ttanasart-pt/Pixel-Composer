@@ -33,41 +33,43 @@
 	}
 	
 	function setPanel() {
-		PANEL_MAIN = new Panel(noone, 0, 0, WIN_W, WIN_H);
+		PANEL_MAIN = new Panel(noone, 0, 0, WIN_SW, WIN_SH);
 		
-		var split_menu	= PANEL_MAIN.split_v(40);
+		var split_menu	= PANEL_MAIN.split_v(40 * DISP_SCALE);
 		PANEL_MENU      = new Panel_Menu(split_menu[0]);
 		
-		var split_ins	= split_menu[1].split_h(-400);
+		var split_ins	= split_menu[1].split_h(-400 * DISP_SCALE);
 		PANEL_INSPECTOR = new Panel_Inspector(split_ins[1]);
 		
 		switch(PREF_MAP[? "panel_layout"]) {
 			case 0 :
-				var split_anim	= split_ins[0].split_v(-48);
+				var split_anim	= split_ins[0].split_v(-48 * DISP_SCALE);
 				PANEL_ANIMATION = new Panel_Animation(split_anim[1]);
-		
-				var split_prev	= split_anim[0].split_v(-500);
+				
+				var split_prev	= split_anim[0].split_v(-500 * DISP_SCALE);
 				PANEL_PREVIEW   = new Panel_Preview(split_prev[0]);
 				
 				PANEL_GRAPH     = new Panel_Graph(split_prev[1]);
 				
 				if(PREF_MAP[? "panel_collection"]) {
-					var pane = PANEL_GRAPH.panel.split_h(460);
+					var pane = PANEL_GRAPH.panel.split_h(460 * DISP_SCALE);
+					if(pane == noone) break;
 					pane[1].set(PANEL_GRAPH);
 					PANEL_COLLECTION = new Panel_Collection(pane[0]);
 				}
 				break;
 			case 1 :
-				var split_anim	= split_ins[0].split_v(-300);
+				var split_anim	= split_ins[0].split_v(-300 * DISP_SCALE);
 				PANEL_ANIMATION = new Panel_Animation(split_anim[1]);
 				
-				var split_prev	= split_anim[0].split_h(400);
+				var split_prev	= split_anim[0].split_h(400 * DISP_SCALE);
 				PANEL_PREVIEW   = new Panel_Preview(split_prev[0]);
 				
 				PANEL_GRAPH     = new Panel_Graph(split_prev[1]);
 				
 				if(PREF_MAP[? "panel_collection"]) {
-					var pane = PANEL_ANIMATION.panel.split_h(500);
+					var pane = PANEL_ANIMATION.panel.split_h(500 * DISP_SCALE);
+					if(pane == noone) break;
 					pane[1].set(PANEL_ANIMATION);
 					PANEL_COLLECTION = new Panel_Collection(pane[0]);
 				}

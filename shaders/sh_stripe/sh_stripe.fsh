@@ -10,6 +10,7 @@ uniform vec4 gradient_color[16];
 uniform float gradient_time[16];
 uniform int gradient_keys;
 
+uniform vec2 dimension;
 uniform vec2 position;
 uniform float angle;
 uniform float amount;
@@ -49,7 +50,8 @@ vec4 gradientEval(in float prog) {
 
 void main() {
 	vec2 pos = v_vTexcoord - position;
-	float prog = pos.x * cos(angle) - pos.y * sin(angle);
+	float ratio = dimension.x / dimension.y;
+	float prog = pos.x * ratio * cos(angle) - pos.y * sin(angle);
     float _a   = 1. / amount;
 	
 	float slot = floor(prog / _a);

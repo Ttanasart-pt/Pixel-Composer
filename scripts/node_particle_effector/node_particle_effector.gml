@@ -63,6 +63,87 @@ function Node_Particle_Effector(_x, _y) : Node(_x, _y) constructor {
 	
 	static drawOverlay = function(_active, _x, _y, _s, _mx, _my) {
 		inputs[| 2].drawOverlay(_active, _x, _y, _s, _mx, _my);
+		
+		var parts = inputs[| 0].getValue();
+		if(!parts) return;
+		
+		var _area = current_data[2];
+		var _fall = current_data[3];
+		var _fads = current_data[4];
+		var _type = current_data[5];
+		var _vect = current_data[6];
+		
+		var _area_x = _area[0];
+		var _area_y = _area[1];
+		var _area_w = _area[2];
+		var _area_h = _area[3];
+		var _area_t = _area[4];
+		
+		var _area_x0 = _area_x - _area_w;
+		var _area_x1 = _area_x + _area_w;
+		var _area_y0 = _area_y - _area_h;
+		var _area_y1 = _area_y + _area_h;
+		
+		for(var i = 0; i < ds_list_size(parts); i++) {
+			var part = parts[| i];
+			var pv = part.getPivot();
+			var px = _x + part.x * _s;
+			var py = _y + part.y * _s;
+			
+			var str = 0;
+			if(_area_t == AREA_SHAPE.rectangle) {
+				if(point_in_rectangle(pv[0], pv[1], _area_x0, _area_y0, _area_x1, _area_y1)) {
+					var _dst = min(	distance_to_line(pv[0], pv[1], _area_x0, _area_y0, _area_x1, _area_y0), 
+									distance_to_line(pv[0], pv[1], _area_x0, _area_y1, _area_x1, _area_y1), 
+									distance_to_line(pv[0], pv[1], _area_x0, _area_y0, _area_x0, _area_y1), 
+									distance_to_line(pv[0], pv[1], _area_x1, _area_y0, _area_x1, _area_y1));
+					str = eval_curve_bezier_cubic(_fall, clamp(_dst / _fads, 0., 1.));
+				}
+			} else if(_area_t == AREA_SHAPE.elipse) {
+				if(point_in_circle(pv[0], pv[1], _area_x, _area_y, min(_area_w, _area_h))) {
+					var _dst = point_distance(pv[0], pv[1], _area_x, _area_y);
+					str = eval_curve_bezier_cubic(_fall, clamp(_dst / _fads, 0., 1.));
+				}
+			}
+			
+			var ss = 0.5 + 0.5 * str;
+			var cc = str < 0.5? merge_color(c_ui_red, c_ui_yellow, str * 2) : merge_color(c_ui_yellow, c_ui_lime, str * 2 - 1);
+			draw_set_color(cc);
+			var vx = 0, vy = 0;
+			var scale = 8;
+			
+			switch(_type) {
+				case FORCE_TYPE.Wind :
+					vx = _vect[0] * scale * str * _s;
+					vy = _vect[1] * scale * str * _s;
+					
+					draw_line(px, py, px + vx, py + vy);
+					break;
+				case FORCE_TYPE.Attract :
+					var dirr = point_direction(pv[0], pv[1], _area_x, _area_y);
+					vx = lengthdir_x(str * scale * _s, dirr);
+					vy = lengthdir_y(str * scale * _s, dirr);
+					
+					draw_line(px, py, px + vx, py + vy);
+					break;
+				case FORCE_TYPE.Repel :
+					var dirr = point_direction(_area_x, _area_y, pv[0], pv[1]);
+					vx = lengthdir_x(str * scale * _s, dirr);
+					vy = lengthdir_y(str * scale * _s, dirr);
+					
+					draw_line(px, py, px + vx, py + vy);
+					break;
+				case FORCE_TYPE.Vortex :
+					var dirr = point_direction(_area_x, _area_y, pv[0], pv[1]) + 90;
+					vx = lengthdir_x(str * scale * _s, dirr);
+					vy = lengthdir_y(str * scale * _s, dirr);
+					
+					draw_line(px, py, px + vx, py + vy);
+					break;
+			}
+			
+			draw_sprite_ext(s_preview_crosshair, 0, px, py, 1, 1, 0, cc, ss);
+		}
 	}
 	
 	static step = function() {
@@ -139,67 +220,67 @@ function Node_Particle_Effector(_x, _y) : Node(_x, _y) constructor {
 			}
 		}
 		
-		if(str > 0) {
-			switch(_type) {
-				case FORCE_TYPE.Wind :
-					part.x = part.x + _vect[0] * _sten * str;
-					part.y = part.y + _vect[1] * _sten * str;
+		if(str == 0) return;
+		
+		switch(_type) {
+			case FORCE_TYPE.Wind :
+				part.x = part.x + _vect[0] * _sten * str;
+				part.y = part.y + _vect[1] * _sten * str;
 					
-					part.rot += _rot * str;
-					break;
-				case FORCE_TYPE.Accelerate :
-					part.sx = part.sx + _vect[0] * _sten * str;
-					part.sy = part.sy + _vect[1] * _sten * str;
+				part.rot += _rot * str;
+				break;
+			case FORCE_TYPE.Accelerate :
+				part.sx = part.sx + _vect[0] * _sten * str;
+				part.sy = part.sy + _vect[1] * _sten * str;
 					
-					part.rot += _rot * str;
-					break;
-				case FORCE_TYPE.Attract :
-					var dirr = point_direction(pv[0], pv[1], _area_x, _area_y);
+				part.rot += _rot * str;
+				break;
+			case FORCE_TYPE.Attract :
+				var dirr = point_direction(pv[0], pv[1], _area_x, _area_y);
 					
-					part.x = part.x + lengthdir_x(_sten * str, dirr);
-					part.y = part.y + lengthdir_y(_sten * str, dirr);
+				part.x = part.x + lengthdir_x(_sten * str, dirr);
+				part.y = part.y + lengthdir_y(_sten * str, dirr);
 					
-					part.rot += _rot * str;
-					break;
-				case FORCE_TYPE.Repel :
-					var dirr = point_direction(_area_x, _area_y, pv[0], pv[1]);
+				part.rot += _rot * str;
+				break;
+			case FORCE_TYPE.Repel :
+				var dirr = point_direction(_area_x, _area_y, pv[0], pv[1]);
 					
-					part.x = part.x + lengthdir_x(_sten * str, dirr);
-					part.y = part.y + lengthdir_y(_sten * str, dirr);
+				part.x = part.x + lengthdir_x(_sten * str, dirr);
+				part.y = part.y + lengthdir_y(_sten * str, dirr);
 					
-					part.rot += _rot * str;
-					break;
-				case FORCE_TYPE.Vortex :
-					var dirr = point_direction(_area_x, _area_y, pv[0], pv[1]) + 90;
+				part.rot += _rot * str;
+				break;
+			case FORCE_TYPE.Vortex :
+				var dirr = point_direction(_area_x, _area_y, pv[0], pv[1]) + 90;
 					
-					part.x = part.x + lengthdir_x(_sten * str, dirr);
-					part.y = part.y + lengthdir_y(_sten * str, dirr);
+				part.x = part.x + lengthdir_x(_sten * str, dirr);
+				part.y = part.y + lengthdir_y(_sten * str, dirr);
 					
-					part.rot += _rot * str;
-					break;
-				case FORCE_TYPE.Turbulence :
-					var t_scale = current_data[10];
-					var per = (perlin_noise(pv[0] / t_scale, pv[1] / t_scale, 4, part.seed) - 0.5) * 2;
-					per *= str;
+				part.rot += _rot * str;
+				break;
+			case FORCE_TYPE.Turbulence :
+				var t_scale = current_data[10];
+				var per = (perlin_noise(pv[0] / t_scale, pv[1] / t_scale, 4, part.seed) - 0.5) * 2;
+				per *= str;
 					
-					part.x = part.x + _vect[0] * per;
-					part.y = part.y + _vect[1] * per;
+				part.x = part.x + _vect[0] * per;
+				part.y = part.y + _vect[1] * per;
 					
-					part.rot += _rot * per;
-					break;
-				case FORCE_TYPE.Destroy :
-					if(random(1) < _sten)
-						part.kill();
-					break;
-			}
-			
-			var scx_s = _sca[0] * str;
-			var scy_s = _sca[1] * str;
-			if(scx_s < 0)	part.scx = lerp_linear(part.scx, 0, abs(scx_s));
-			else			part.scx += sign(part.scx) * scx_s;
-			if(scy_s < 0)	part.scy = lerp_linear(part.scy, 0, abs(scy_s));
-			else			part.scy += sign(part.scy) * scy_s;
+				part.rot += _rot * per;
+				break;
+			case FORCE_TYPE.Destroy :
+				if(random(1) < _sten)
+					part.kill();
+				break;
 		}
+			
+		var scx_s = _sca[0] * str;
+		var scy_s = _sca[1] * str;
+		if(scx_s < 0)	part.scx = lerp_linear(part.scx, 0, abs(scx_s));
+		else			part.scx += sign(part.scx) * scx_s;
+		if(scy_s < 0)	part.scy = lerp_linear(part.scy, 0, abs(scy_s));
+		else			part.scy += sign(part.scy) * scy_s;
 	}
 	
 	static update = function() {

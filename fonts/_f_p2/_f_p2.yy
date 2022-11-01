@@ -1,7 +1,7 @@
 {
   "resourceType": "GMFont",
   "resourceVersion": "1.0",
-  "name": "f_p2",
+  "name": "_f_p2",
   "hinting": 0,
   "glyphOperations": 0,
   "interpreter": 0,

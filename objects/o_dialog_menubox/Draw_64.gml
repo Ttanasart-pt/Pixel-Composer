@@ -21,8 +21,11 @@
 			
 			if(FOCUS == self && mouse_check_button_released(mb_left)) {
 				if(!is_array(menu[i][1])) {
-					menu[i][1]();
-					instance_destroy();
+					var res = menu[i][1](dialog_x + dialog_w, yy, depth, menu[i][0]);
+					if(array_safe_get(menu[i], 2, 0) == ">")
+						ds_list_add(children, res);
+					else
+						instance_destroy(o_dialog_menubox);
 				}
 			}
 		}
@@ -54,7 +57,7 @@
 					
 					if(FOCUS == self && mouse_check_button_pressed(mb_left)) {
 						menu[i][1][j][1]();
-						instance_destroy();
+						instance_destroy(o_dialog_menubox);
 					}
 				}
 				
@@ -66,10 +69,14 @@
 		}
 		
 		if(array_length(menu[i]) > 2) {
-			var _key = find_hotkey(menu[i][2][0], menu[i][2][1]);
-			if(_key) {
-				draw_set_text(f_p1, fa_right, fa_center, c_ui_blue_grey);
-				draw_text(dialog_x + dialog_w - 16, yy + hght / 2, key_get_name(_key.key, _key.modi));	
+			if(menu[i][2] == ">") {
+				draw_sprite_ext(s_arrow_16, 0, dialog_x + dialog_w - 20, yy + hght / 2, 1, 1, 0, c_ui_blue_dkgrey, 1);	
+			} else if(is_array(menu[i][2])) {
+				var _key = find_hotkey(menu[i][2][0], menu[i][2][1]);
+				if(_key) {
+					draw_set_text(f_p1, fa_right, fa_center, c_ui_blue_grey);
+					draw_text(dialog_x + dialog_w - 16, yy + hght / 2, key_get_name(_key.key, _key.modi));	
+				}	
 			}
 		}
 		

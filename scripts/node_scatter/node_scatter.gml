@@ -80,9 +80,9 @@ function Node_Scatter(_x, _y) : Node(_x, _y) constructor {
 		var _in_w, _in_h;
 		
 		if(is_surface(_outSurf)) 
-			surface_size_to(_outSurf, surface_valid(_dim[0]), surface_valid(_dim[1]));
+			surface_size_to(_outSurf, _dim[0], _dim[1]);
 		else {
-			_outSurf = surface_create(surface_valid(_dim[0]), surface_valid(_dim[1]));
+			_outSurf =  surface_create_valid(_dim[0], _dim[1]);
 			outputs[| 0].setValue(_outSurf);
 		}
 		

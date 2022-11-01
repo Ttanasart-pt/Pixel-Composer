@@ -9,25 +9,7 @@
 	CURSOR = cr_default;
 	
 	if((win_wp != WIN_W || win_hp != WIN_H) && (WIN_W > 1 && WIN_H > 1)) {
-		win_wp      = WIN_W;
-		win_hp      = WIN_H;
-		
-		room_width  = WIN_W;
-		room_height = WIN_H;
-		
-		display_set_gui_size(win_wp, win_hp);
-		
-		clearPanel();
-		setPanel();
-		
-		PANEL_GRAPH.fullView();
-		PANEL_PREVIEW.fullView();
-		
-		alarm[0] = 10;
-		
-		PREF_MAP[? "window_width"]	= WIN_W;
-		PREF_MAP[? "window_height"]	= WIN_H;
-		PREF_SAVE();
+		display_refresh();
 		
 		renderAll();
 	}

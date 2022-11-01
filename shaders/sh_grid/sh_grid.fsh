@@ -5,6 +5,7 @@ varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
 uniform vec2  position;
+uniform vec2  dimension;
 uniform vec2  scale;
 uniform float angle;
 uniform float width;
@@ -16,8 +17,9 @@ uniform int useSampler;
 
 void main() {
 	vec2 pos = v_vTexcoord - position, _pos;
-	_pos.x = pos.x * cos(angle) - pos.y * sin(angle);
-	_pos.y = pos.x * sin(angle) + pos.y * cos(angle);
+	float ratio = dimension.x / dimension.y;
+	_pos.x = pos.x * ratio * cos(angle) - pos.y * sin(angle);
+	_pos.y = pos.x * ratio * sin(angle) + pos.y * cos(angle);
 	
 	if(shiftAxis == 0) {
 		float cellY = floor(_pos.y * scale.y);

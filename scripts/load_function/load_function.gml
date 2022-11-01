@@ -3,6 +3,11 @@ function LOAD() {
 	if(path == "") return;
 	if(filename_ext(path) != ".json" && filename_ext(path) != ".pxc") return;
 	
+	nodeCleanUp();
+	setPanel();
+	room_restart();
+				
+	gc_collect();
 	LOAD_PATH(path);
 }
 

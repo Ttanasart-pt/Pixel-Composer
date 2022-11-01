@@ -17,9 +17,9 @@
 	DEBUG = false;
 	
 	globalvar VERSION, SAVEFILE_VERSION, VERSION_STRING;
-	VERSION = 100;
+	VERSION = 102;
 	SAVEFILE_VERSION = 90;
-	VERSION_STRING = "0.10.0";
+	VERSION_STRING = "0.10.2";
 	
 	globalvar NODES, ANIMATOR, NODE_MAP, APPEND_MAP, HOTKEYS, HOTKEY_CONTEXT;
 	
@@ -35,6 +35,7 @@
 		loop,
 		stop
 	}
+	
 	ANIMATOR = {
 		frames_total : 30,
 		current_frame : 0,
@@ -71,8 +72,13 @@
 #endregion
 
 #region macro
-	#macro WIN_W window_get_width() / PREF_MAP[? "display_scaling"]
-	#macro WIN_H window_get_height() / PREF_MAP[? "display_scaling"]
+	#macro WIN_W window_get_width()
+	#macro WIN_H window_get_height()
+	
+	#macro WIN_SW window_get_width()
+	#macro WIN_SH window_get_height()
+	
+	#macro DISP_SCALE PREF_MAP[? "display_scaling"]
 	
 	#macro mouse_mx device_mouse_x_to_gui(0)
 	#macro mouse_my device_mouse_y_to_gui(0)
@@ -86,7 +92,7 @@
 		#macro c_ui_blue_ltgrey		$8f7e7e
 		#macro c_ui_blue_white		$e8d6d6
 		#macro c_ui_cyan			$e9ff88
-									
+		
 		#macro c_ui_yellow			$78e4ff
 		#macro c_ui_orange			$6691ff
 		#macro c_ui_orange_light	$92c2ff

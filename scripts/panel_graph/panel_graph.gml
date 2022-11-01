@@ -6,6 +6,7 @@ function Panel_Graph(_panel) : PanelContent(_panel) constructor {
 	graph_s			= scale[graph_s_index];
 	graph_s_to		= graph_s;
 	graph_line_s	= 32;
+	grid_opacity	= 0.5;
 	
 	function toOrigin() {
 		graph_x = round(w / 2 / graph_s);
@@ -67,6 +68,8 @@ function Panel_Graph(_panel) : PanelContent(_panel) constructor {
 	minimap_drag_mx = 0;
 	minimap_drag_my = 0;
 	
+	drag_locking = false;
+	
 	toolbar_height = 40;
 	toolbars = [
 		[ 
@@ -114,7 +117,7 @@ function Panel_Graph(_panel) : PanelContent(_panel) constructor {
 	addHotkey("Graph", "Add vector3",			"3", MOD_KEY.none,	function() { nodeBuild("Vector3", mouse_grid_x, mouse_grid_y); });
 	addHotkey("Graph", "Add vector4",			"4", MOD_KEY.none,	function() { nodeBuild("Vector4", mouse_grid_x, mouse_grid_y); });
 	
-	addHotkey("Graph", "Transform node",		"T", MOD_KEY.ctrl,	function() { 
+	static addNodeTransform = function() {
 		if(ds_list_empty(nodes_select_list)) {
 			if(node_focus != noone && !ds_list_empty(node_focus.outputs)) {
 				var _o = node_focus.outputs[| 0];
@@ -123,8 +126,21 @@ function Panel_Graph(_panel) : PanelContent(_panel) constructor {
 					tr.inputs[| 0].setFrom(_o);
 				}
 			}
+		} else {
+			for( var i = 0; i < ds_list_size(nodes_select_list); i++ ) {	
+				var node = nodes_select_list[| i];
+				if(ds_list_empty(node.outputs)) continue;
+				
+				var _o = node.outputs[| 0];
+				if(_o.type == VALUE_TYPE.surface) {
+					var tr = nodeBuild("Transform", node.x + node.w + 64, node.y);
+					tr.inputs[| 0].setFrom(_o);
+				}
+			}
 		}
-	});
+	}
+	addNodeTransform = method(self, addNodeTransform);
+	addHotkey("Graph", "Transform node",		"T", MOD_KEY.ctrl,	addNodeTransform);
 	
 	addHotkey("Graph", "Select all",	"A", MOD_KEY.ctrl,	function() { 
 		ds_list_clear(nodes_select_list); 
@@ -149,8 +165,8 @@ function Panel_Graph(_panel) : PanelContent(_panel) constructor {
 	
 	addHotkey("Graph", "Frame",		"F", MOD_KEY.ctrl,					function() { doFrame(); });
 	
-	addHotkey("Graph", "Delete",		vk_delete, MOD_KEY.shift,	function() { doDelete(false); });
-	addHotkey("Graph", "Delete merge",	vk_delete, MOD_KEY.none,	function() { doDelete(true); });
+	addHotkey("Graph", "Delete (break)",	vk_delete, MOD_KEY.shift,	function() { doDelete(false); });
+	addHotkey("Graph", "Delete (merge)",	vk_delete, MOD_KEY.none,	function() { doDelete(true); });
 	
 	function stepBegin() {
 		var gr_x = graph_x * graph_s;		var gr_y = graph_y * graph_s;
@@ -258,8 +274,7 @@ function Panel_Graph(_panel) : PanelContent(_panel) constructor {
 		
 		draw_set_color(c_ui_blue_dkgrey);
 		
-		draw_set_text(f_p0, fa_center, fa_top);
-		draw_set_alpha(graph_s >= 1? 1 : 0.5);
+		draw_set_alpha(grid_opacity * (graph_s >= 1? 1 : 0.5));
 		while(xx < w + gr_ls) {
 			draw_line(xx + xs, 0, xx + xs, h);
 			if(xx + xs - gr_x == 0) {
@@ -267,10 +282,7 @@ function Panel_Graph(_panel) : PanelContent(_panel) constructor {
 			}
 			xx += gr_ls;
 		}
-		draw_set_alpha(1);
 		
-		draw_set_text(f_p0, fa_left, fa_center);
-		draw_set_alpha(graph_s >= 1? 1 : 0.5);
 		while(yy < h + gr_ls) {
 			draw_line(0, yy + ys, w, yy + ys);
 			if(yy + ys - gr_y == 0) {
@@ -302,7 +314,7 @@ function Panel_Graph(_panel) : PanelContent(_panel) constructor {
 			node_hovering = noone;
 			for(var i = 0; i < ds_list_size(nodes_list); i++) {
 				var n = nodes_list[| i];
-				if(n.pointIn(mouse_grid_x, mouse_grid_y))
+				if(n.pointIn(gr_x, gr_y, mx, my, graph_s))
 					node_hovering = n;	
 			}
 		#endregion
@@ -369,19 +381,33 @@ function Panel_Graph(_panel) : PanelContent(_panel) constructor {
 							setCurrentExport(node_hover);
 						}, ["Graph", "Export"] ]);
 					array_push(menu,  
-						[ "Copy to canvas", function() {
-							setCurrentCanvas(node_hover);
-						}, ["Graph", "Canvas"] ]);
+						[ "Delete and merge connection", function() {
+							doDelete(true);
+						}, ["Graph", "Delete (merge)"] ]);
 					array_push(menu,  
-						[ "Overlay canvas", function() {
-							setCurrentCanvasBlend(node_hover);
-						}, ["Graph", "Canvas blend"] ]);
-					array_push(menu,  
-						[ "Delete", function() {
-							doDelete();
-						}, ["Graph", "Delete"] ]);
+						[ "Delete and cut connection", function() {
+							doDelete(false);
+						}, ["Graph", "Delete (break)"] ]);
+					
+					array_push(menu, -1);
+					array_push(menu, [ "Add transform", addNodeTransform, ["Graph", "Transform node"] ]);
+					array_push(menu, [ "Canvas",
+						function(_x, _y, _depth) { 
+							var dia = instance_create_depth(_x - 4, _y, _depth - 1, o_dialog_menubox);
+							dia.setMenu([
+								[ "Copy to canvas", function() {
+									setCurrentCanvas(node_hover);
+								}, ["Graph", "Canvas"] ],
+								[ "Overlay canvas", function() {
+									setCurrentCanvasBlend(node_hover);
+								}, ["Graph", "Canvas blend"] ]
+							]);
+							return dia;
+						}, ">"
+					]);
 					
 					if(!ds_list_empty(nodes_select_list)) {
+						array_push(menu, -1);
 						array_push(menu,  
 							[ "Blend nodes", function() { 
 								doBlend();
@@ -395,6 +421,11 @@ function Panel_Graph(_panel) : PanelContent(_panel) constructor {
 							[ "Group nodes", function() { 
 								doGroup();
 							}, ["Graph", "Group"] ]);	
+						
+						array_push(menu,  
+							[ "Frame nodes", function() { 
+								doFrame();
+							}, ["Graph", "Frame"] ]);	
 					} else if(variable_struct_exists(node_hover, "nodes")) {
 						array_push(menu,  
 							[ "Ungroup", function() { 
@@ -452,7 +483,7 @@ function Panel_Graph(_panel) : PanelContent(_panel) constructor {
 				for(var i = 0; i < ds_list_size(nodes_list); i++) {
 					var _node = nodes_list[| i];
 					
-					if(_node.pointIn(mouse_grid_x, mouse_grid_y) && variable_struct_exists(_node, "nodes")) {
+					if(_node.pointIn(gr_x, gr_y, mx, my, graph_s) && variable_struct_exists(_node, "nodes")) {
 						var _recur = false;
 						if(ds_list_size(nodes_select_list) == 0) {
 							if(_node == node_dragging) _recur = true;	
@@ -588,11 +619,12 @@ function Panel_Graph(_panel) : PanelContent(_panel) constructor {
 			}
 		
 			if(mouse_on_graph && FOCUS == panel && mouse_check_button_pressed(mb_left) && !keyboard_check(vk_control)) {
-				if(!node_focus && !value_focus && node_hovering != -1) {
+				if(!node_focus && !value_focus && !drag_locking) {
 					nodes_select_drag = true;
 					nodes_select_mx = mx;
 					nodes_select_my = my;
 				}
+				drag_locking = false;
 			}
 		#endregion
 	}
@@ -948,7 +980,7 @@ function Panel_Graph(_panel) : PanelContent(_panel) constructor {
 				draw_sprite_ext(s_arrow_16, 0, xx + tw + 16, tbh, 1, 1, 0, c_ui_blue_grey, 1);
 			}
 			draw_set_alpha(i < ds_list_size(node_context) - 1? 0.5 : 1);
-			draw_text(xx, tbh, tt);
+			draw_text(xx, tbh - 2, tt);
 			draw_set_alpha(1);
 			xx += tw;
 			xx += 32;

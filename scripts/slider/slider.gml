@@ -1,4 +1,4 @@
-function slider(_min, _max, _step, _onModify) constructor {
+function slider(_min, _max, _step, _onModify = noone, _onRelease = noone) constructor {
 	active = false;
 	hover  = false;
 	
@@ -7,15 +7,19 @@ function slider(_min, _max, _step, _onModify) constructor {
 	step = _step;
 	
 	onModify = _onModify;
+	onRelease = _onRelease;
+	onApply = function(val) {
+		onModify(val);
+		onRelease();
+	}
 	
 	dragging = false;
 	drag_mx  = 0;
 	drag_sx  = 0;
 	
-	tb_value = new textBox(TEXTBOX_INPUT.float, onModify);
+	tb_value = new textBox(TEXTBOX_INPUT.float, onApply);
 	
-	static draw = function(_x, _y, _w, _h, _data, _m) {
-		var tb_w = 64;
+	static draw = function(_x, _y, _w, _h, _data, _m, tb_w = 64) {
 		var sw = _w - (tb_w + 16);
 		
 		tb_value.hover  = hover;
@@ -33,10 +37,14 @@ function slider(_min, _max, _step, _onModify) constructor {
 			var val = (_m[0] - _x) / sw * (maxx - minn) + minn;
 			val = round(val / step) * step;
 			val = clamp(val, minn, maxx);
-			onModify(val);
+			if(onModify != noone)
+				onModify(val);
 			
-			if(mouse_check_button_released(mb_left))
+			if(mouse_check_button_released(mb_left)) {
 				dragging = false;
+				if(onRelease != noone)
+					onRelease(val);
+			}
 		} else {
 			if(hover && (point_in_rectangle(_m[0], _m[1], _x, _y, _x + sw, _y + _h) || point_in_rectangle(_m[0], _m[1], _kx - 10, _y, _kx + 10, _y + _h))) {
 				draw_sprite_stretched(s_slider, 2, _kx - 10, _y, 20, _h);

@@ -114,6 +114,7 @@ function Node_Math(_x, _y) : Node(_x, _y) constructor {
 			case MATH_OPERATOR.round :
 				inputs[| 2].setVisible(false);
 				break;
+			default: return;
 		}
 		
 		var val = 0;
@@ -152,6 +153,7 @@ function Node_Math(_x, _y) : Node(_x, _y) constructor {
 			case MATH_OPERATOR.floor :		str = "floor"; break;
 			case MATH_OPERATOR.ceiling :	str = "ceil"; break;
 			case MATH_OPERATOR.round :		str = "round"; break;
+			default: return;
 		}
 		
 		var _ss = min((w - 16) * _s / string_width(str), (h - 18) * _s / string_height(str));

@@ -23,6 +23,7 @@ event_inherited();
 		
 		for(var i = 0; i < ds_list_size(RECENT_FILES); i++)  {
 			var _rec = RECENT_FILES[| i];
+			if(!file_exists(_rec)) continue;
 			draw_sprite_stretched(s_ui_panel_bg, 1, 0, _y, sp_recent.surface_w, hg);
 			
 			if(HOVER == self && point_in_rectangle(_m[0], _m[1], 0, _y, sp_recent.surface_w, _y + hg)) {
@@ -85,7 +86,7 @@ event_inherited();
 						draw_sprite(_node.spr, 0, _boxx + grid_width / 2, yy + grid_heigh / 2);
 					
 					var tx = _boxx + grid_width / 2;
-					var ty = yy + grid_heigh + 6;
+					var ty = yy + grid_heigh + 4;
 					draw_set_text(f_p2, fa_center, fa_top, c_ui_blue_dkgrey);
 					var _tw = string_width(_node.tag);
 					var _th = string_height(_node.tag);

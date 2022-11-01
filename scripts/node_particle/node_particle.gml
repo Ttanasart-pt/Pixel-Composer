@@ -51,6 +51,7 @@ function __part() constructor {
 	
 	is_loop = false;
 	
+	
 	function create(_surf, _x, _y, _life) {
 		active	= true;
 		surf	= _surf;
@@ -149,7 +150,7 @@ function __part() constructor {
 		var _xx, _yy;
 		var s_w = surface_get_width(ss) * scx;
 		var s_h = surface_get_height(ss) * scy;
-			
+		
 		if(boundary_data == -1) {
 			var _pp = point_rotate(-s_w / 2, -s_h / 2, 0, 0, rot);
 			_xx = x + _pp[0];
@@ -289,6 +290,7 @@ function Node_Particle(_x, _y) : Node(_x, _y) constructor {
 	
 	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
 	
+	seed = irandom(9999999);
 	def_surface = -1;
 	
 	parts = ds_list_create();
@@ -298,6 +300,7 @@ function Node_Particle(_x, _y) : Node(_x, _y) constructor {
 	outputs[| 1] = nodeValue(1, "Particle data", self, JUNCTION_CONNECT.output, VALUE_TYPE.object, parts );
 	
 	function spawn() {
+		randomize();
 		var _inSurf = inputs[| 0].getValue();
 		
 		if(_inSurf == 0) {
@@ -517,9 +520,9 @@ function Node_Particle(_x, _y) : Node(_x, _y) constructor {
 		var _outSurf	= outputs[| 0].getValue();
 		
 		if(is_surface(_outSurf)) 
-			surface_size_to(_outSurf, surface_valid(_dim[0]), surface_valid(_dim[1]));
+			surface_size_to(_outSurf, _dim[0], _dim[1]);
 		else {
-			_outSurf = surface_create(surface_valid(_dim[0]), surface_valid(_dim[1]));
+			_outSurf = surface_create_valid(_dim[0], _dim[1]);
 			outputs[| 0].setValue(_outSurf);
 		}
 		

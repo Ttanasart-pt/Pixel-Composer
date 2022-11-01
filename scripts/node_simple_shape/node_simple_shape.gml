@@ -87,9 +87,9 @@ function Node_Shape(_x, _y) : Node_Processor(_x, _y) constructor {
 		inputs[| 11].setVisible(_bg);
 		
 		if(!is_surface(_outSurf)) {
-			_outSurf = surface_create(surface_valid(_dim[0]), surface_valid(_dim[1]));
+			_outSurf =  surface_create_valid(_dim[0], _dim[1]);
 		} else
-			surface_size_to(_outSurf, surface_valid(_dim[0]), surface_valid(_dim[1]));
+			surface_size_to(_outSurf, _dim[0], _dim[1]);
 		
 		surface_set_target(_outSurf);
 			if(_bg) draw_clear_alpha(0, 1);

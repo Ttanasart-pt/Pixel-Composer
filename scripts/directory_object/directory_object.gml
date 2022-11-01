@@ -8,9 +8,9 @@ function DirectoryObject(name, path) constructor {
 	self.name = name;
 	self.path = path;
 	
-	subDir = ds_list_create();
+	subDir  = ds_list_create();
 	content = ds_list_create();
-	open = false;
+	open    = false;
 	
 	static destroy = function() {
 		ds_list_destroy(subDir);
@@ -57,7 +57,7 @@ function DirectoryObject(name, path) constructor {
 					var hh = sprite_get_height(_temp);
 					var amo = ww % hh == 0? ww / hh : 1;
 					sprite_delete(_temp);
-						
+					
 					f.spr = sprite_add(icon_path, amo, false, false, 0, 0);
 					sprite_set_offset(f.spr, sprite_get_width(f.spr) / 2, sprite_get_height(f.spr) / 2);
 				}

@@ -6,17 +6,19 @@ function string_cut(str, w, tail = "...") {
 	var ww  = 0;
 	var ind = 1;
 	var ss  = "";
+	var tw = string_width(tail);
+	if(string_width(str) <= w) return str;
 	
 	while(ind <= string_length(str)) {
 		var ch = string_char_at(str, ind);
 		var _w = string_width(ch);
 		
-		if(ww + _w > w - 10) {
+		if(ww + _w + tw >= w) {
 			ss += tail;
-			break; 
-		} else {
+			break;
+		} else
 			ss += ch;
-		}
+		
 		ww += _w;
 		
 		ind++;

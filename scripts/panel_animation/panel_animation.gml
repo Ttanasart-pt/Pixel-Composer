@@ -825,7 +825,7 @@ function Panel_Animation(_panel) : PanelContent(_panel) constructor {
 								draw_sprite_ext(s_animate_node_go, 0, tx, key_y - 1, 1, 1, 0, c_ui_blue_grey, 1);
 							
 							draw_sprite_ext(s_arrow_16, prop.node.anim_show? 3 : 0, 10, key_y, 1, 1, 0, c_ui_blue_grey, 1);
-							draw_text(20, key_y, prop.node.name);
+							draw_text(20, key_y - 2, prop.node.name);
 							key_y += 22;
 						}
 						
@@ -926,7 +926,7 @@ function Panel_Animation(_panel) : PanelContent(_panel) constructor {
 							draw_sprite_ext(s_timeline_clock, 1, 22, key_y - 1, 1, 1, 0, c_ui_blue_grey, 1);
 							
 						draw_set_color(c_ui_blue_white);
-						draw_text(32, key_y, prop.name);
+						draw_text(32, key_y - 2, prop.name);
 						
 						if(prop.animator.show_graph)
 							key_y += graph_h + 8;

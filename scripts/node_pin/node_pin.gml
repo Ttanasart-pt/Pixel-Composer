@@ -28,8 +28,11 @@ function Node_Pin(_x, _y) : Node(_x, _y) constructor {
 	}
 	doUpdate();
 	
-	static pointIn = function(_mx, _my) {
-		return point_in_circle(_mx, _my, x, y, 24);
+	static pointIn = function(_x, _y, _mx, _my, _s) {
+		var xx = x * _s + _x;
+		var yy = y * _s + _y;
+		
+		return point_in_circle(_mx, _my, xx, yy, 24);
 	}
 	
 	static preDraw = function(_x, _y, _s) {

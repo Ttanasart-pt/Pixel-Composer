@@ -17,8 +17,8 @@ event_inherited();
 	dialog_h_max = 800;
 	
 	onResize = function() {
-		sp_pref.resize(dialog_w - 160 - 32, dialog_h - 56 - 28);
-		sp_hotkey.resize(dialog_w - 160 - 32, dialog_h - 56 - 28);
+		sp_pref.resize(dialog_w - 160 - 32, dialog_h - 56 - 24);
+		sp_hotkey.resize(dialog_w - 160 - 32, dialog_h - 56 - 24);
 	}
 #endregion
 
@@ -41,11 +41,14 @@ event_inherited();
 	]);
 	
 	ds_list_add(pref_global, [
-		"Curve connection line",
-		"curve_connection_line",
-		new checkBox(function() { 
-			PREF_MAP[? "curve_connection_line"] = !PREF_MAP[? "curve_connection_line"]; 
+		"GUI scaling",
+		"display_scaling",
+		new slider(0.5, 2, 0.01, function(val) { 
+			PREF_MAP[? "display_scaling"] = val;
 			PREF_SAVE();
+		}, function() { 
+			setPanel();
+			loadFonts();
 		})
 	]);
 	
@@ -148,7 +151,7 @@ event_inherited();
 	
 	current_list = pref_global;
 	
-	sp_pref = new scrollPane(dialog_w - 160 - 32, dialog_h - 64 - 28, function(_y, _m) {
+	sp_pref = new scrollPane(dialog_w - 160 - 32, dialog_h - 64 - 24, function(_y, _m) {
 		draw_clear_alpha(c_ui_blue_black, 0);
 		var hh		= 0;
 		var th		= 34;
@@ -164,6 +167,7 @@ event_inherited();
 				draw_set_text(f_p0b, fa_left, fa_top, c_ui_blue_grey);
 				draw_text(8, yy, _pref);
 				yy += string_height(_pref) + 8;
+				hh += string_height(_pref) + 8;
 				ind = 0;
 				continue;
 			}
@@ -187,7 +191,7 @@ event_inherited();
 						_pref[2].draw(x1 - 36, yy + 2, PREF_MAP[? _pref[1]], _m);
 						break;
 					case "slider" :
-						_pref[2].draw(x1 - 4 - 160, yy + 2, 160, 34, PREF_MAP[? _pref[1]], _m);
+						_pref[2].draw(x1 - 4 - 200, yy + 2, 200, 34, PREF_MAP[? _pref[1]], _m);
 						break;
 				}
 				
@@ -217,7 +221,7 @@ event_inherited();
 	];
 	hk_editing = noone;
 	
-	sp_hotkey = new scrollPane(dialog_w - 160 - 32, dialog_h - 64 - 28, function(_y, _m) {
+	sp_hotkey = new scrollPane(dialog_w - 160 - 32, dialog_h - 64 - 24, function(_y, _m) {
 		draw_clear_alpha(c_ui_blue_black, 0);
 		var padd		= 8;
 		var hh			= 0;

@@ -1,4 +1,7 @@
 {
+  "resourceType": "GMFont",
+  "resourceVersion": "1.0",
+  "name": "_f_p1",
   "hinting": 0,
   "glyphOperations": 0,
   "interpreter": 0,
@@ -21,6 +24,7 @@
     "path": "texturegroups/Default",
   },
   "ascenderOffset": 0,
+  "ascender": 0,
   "glyphs": {
     "32": {"x":2,"y":2,"w":4,"h":20,"character":32,"shift":4,"offset":0,},
     "33": {"x":128,"y":46,"w":3,"h":20,"character":33,"shift":5,"offset":1,},
@@ -473,8 +477,4 @@
     "name": "font",
     "path": "folders/font.yy",
   },
-  "resourceVersion": "1.0",
-  "name": "f_p1",
-  "tags": [],
-  "resourceType": "GMFont",
 }

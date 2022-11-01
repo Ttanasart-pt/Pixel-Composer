@@ -3,10 +3,12 @@ event_inherited();
 
 #region data
 	draggable = false;
-	destroy_on_click_out = true;
+	destroy_on_click_out = false;
 	alarm[0] = -1;
 	menu = 1;
 	hght = 36;
+	children = ds_list_create();
+	ds_list_add(children, self);
 	
 	function setMenu(_menu) {
 		menu = _menu;
@@ -15,6 +17,12 @@ event_inherited();
 		
 		dialog_w = 0;
 		dialog_h = 0;
+		
+		while(ds_list_size(children) > 1) {
+			var ch = children[| 1];
+			instance_destroy(children[| 1]);
+			ds_list_delete(children, 1);
+		}
 		
 		draw_set_text(f_p0, fa_center, fa_center, c_white);
 		for(var i = 0; i < array_length(menu); i++) {
@@ -26,11 +34,15 @@ event_inherited();
 			var ww = string_width(menu[i][0]) + 64;
 				
 			if(array_length(menu[i]) > 2) {
-				var _key = find_hotkey(menu[i][2][0], menu[i][2][1]);
-				if(_key) {
-					draw_set_font(f_p1);
-					var ss = key_get_name(_key.key, _key.modi);	
-					ww += string_width(ss) + 16;
+				if(menu[i][2] == ">") {
+					
+				} else if(is_array(menu[i][2])) {
+					var _key = find_hotkey(menu[i][2][0], menu[i][2][1]);
+					if(_key) {
+						draw_set_font(f_p1);
+						var ss = key_get_name(_key.key, _key.modi);	
+						ww += string_width(ss) + 16;
+					}
 				}
 			}
 			dialog_w = max(dialog_w, ww);

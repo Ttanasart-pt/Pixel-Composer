@@ -12,17 +12,25 @@ if !ready exit;
 
 #region draw
 	var yy = dialog_y + 44;
+	var ww = 128;
 	
 	cb_enable.active = FOCUS == self; 
 	cb_enable.hover  = HOVER == self;
 	draw_set_text(f_p1, fa_left, fa_center, c_white);
 	draw_text(dialog_x + 32, yy + 17, "Snap to grid");
-	cb_enable.draw(dialog_x + dialog_w - 24 - 48 - 14, yy, PANEL_GRAPH.node_drag_snap, [mouse_mx, mouse_my]);
+	cb_enable.draw(dialog_x + dialog_w - 24 - ww / 2 - 14, yy, PANEL_GRAPH.node_drag_snap, [mouse_mx, mouse_my]);
 	
-	yy += 44;
+	yy += 40;
 	tb_size.active = FOCUS == self; 
 	tb_size.hover  = HOVER == self;
 	draw_set_text(f_p1, fa_left, fa_center, c_white);
 	draw_text(dialog_x + 32, yy + 17, "Grid size");
-	tb_size.draw(dialog_x + dialog_w - 24 - 96, yy, 96, 34, PANEL_GRAPH.graph_line_s, [mouse_mx, mouse_my]);
+	tb_size.draw(dialog_x + dialog_w - 24 - ww, yy, ww, 34, PANEL_GRAPH.graph_line_s, [mouse_mx, mouse_my]);
+	
+	yy += 40;
+	sl_opacity.active = FOCUS == self; 
+	sl_opacity.hover  = HOVER == self;
+	draw_set_text(f_p1, fa_left, fa_center, c_white);
+	draw_text(dialog_x + 32, yy + 17, "Grid opacity");
+	sl_opacity.draw(dialog_x + dialog_w - 24 - ww, yy, ww, 34, PANEL_GRAPH.grid_opacity, [mouse_mx, mouse_my], 52);
 #endregion

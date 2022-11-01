@@ -2,8 +2,8 @@
 event_inherited();
 
 #region data
-	dialog_w = 280;
-	dialog_h = 144;
+	dialog_w = 320;
+	dialog_h = 180;
 	
 	destroy_on_click_out = true;
 #endregion
@@ -15,5 +15,9 @@ event_inherited();
 	
 	tb_size = new textBox(TEXTBOX_INPUT.number, function(str) {
 		PANEL_GRAPH.graph_line_s = max(1, real(str));	
+	})
+	
+	sl_opacity = new slider(0, 1, .05, function(str) {
+		PANEL_GRAPH.grid_opacity = clamp(real(str), 0, 1);	
 	})
 #endregion

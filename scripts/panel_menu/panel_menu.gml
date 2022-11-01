@@ -15,8 +15,19 @@ function Panel_Menu(_panel) : PanelContent(_panel) constructor {
 			[ "Open...", function() { LOAD(); }, ["", "Open"]  ],
 			[ "Save", function() { SAVE(); }, ["", "Save"]  ],
 			[ "Save as...", function() { SAVE_AS(); }, ["", "Save as"]  ],
+			[ "Recent files", function(_x, _y, _depth) { 
+					var dia = instance_create_depth(_x - 4, _y, _depth - 1, o_dialog_menubox);
+					var arr = [];
+					for(var i = 0; i < min(10, ds_list_size(RECENT_FILES)); i++)  {
+						var _rec = RECENT_FILES[| i];
+						array_push(arr, [ _rec, function(_x, _y, _depth, _path) { LOAD_PATH(_path); } ]);
+					}
+					dia.setMenu(arr);
+					return dia;
+			}, ">" ],
 			-1,
-			[ "Preferences...", function() { dialogCall(o_dialog_preference, WIN_W / 2, WIN_H / 2); } ],
+			[ "Preferences...", function() { dialogCall(o_dialog_preference); } ],
+			[ "Splash screen", function() { dialogCall(o_dialog_splash); } ],
 		]],
 		["Edit", [
 			[ "Undo", function() { UNDO(); }, ["", "Undo"]  ],
@@ -33,18 +44,18 @@ function Panel_Menu(_panel) : PanelContent(_panel) constructor {
 			-1,
 			[ "Show Grid", function() { PANEL_PREVIEW.grid_show = !PANEL_PREVIEW.grid_show; }, ["Preview", "Toggle grid"] ],
 			[ "Grid setting...", function() { 
-				var dia = dialogCall(o_dialog_preview_grid, WIN_W / 2, WIN_H / 2); 
+				var dia = dialogCall(o_dialog_preview_grid); 
 				dia.anchor = ANCHOR.none;
 			} ],
 		]], 
 		["Animation", [
 			[ "Animation setting...", function() { 
-				var dia = dialogCall(o_dialog_animation, WIN_W / 2, WIN_H / 2); 
+				var dia = dialogCall(o_dialog_animation); 
 				dia.anchor = ANCHOR.none;
 			} ],
 			-1,
 			[ "Animation scaler...", function() { 
-				dialogCall(o_dialog_anim_time_scaler, WIN_W / 2, WIN_H / 2); 
+				dialogCall(o_dialog_anim_time_scaler); 
 			} ],
 		]],
 		["Rendering", [
@@ -89,7 +100,7 @@ function Panel_Menu(_panel) : PanelContent(_panel) constructor {
 		
 		if(FOCUS == panel && point_in_rectangle(mx, my, 0, 0, 40, 32)) {
 			if(mouse_check_button_pressed(mb_left)) {
-				dialogCall(o_dialog_about, WIN_W / 2, WIN_H / 2);
+				dialogCall(o_dialog_about);
 			}
 		}
 		
@@ -149,7 +160,7 @@ function Panel_Menu(_panel) : PanelContent(_panel) constructor {
 			draw_sprite_stretched(s_menu_button, 0, w - 16 - ww - 6, 6, ww + 12, h - 12);
 			
 			if(FOCUS == panel && mouse_check_button_pressed(mb_left)) {
-				dialogCall(o_dialog_release_note, WIN_W / 2, WIN_H / 2); 
+				dialogCall(o_dialog_release_note); 
 			}
 		}
 		draw_text(w - 16, h / 2, txt);

@@ -24,7 +24,7 @@ function ds_map_override(original, newmap) {
 	var k = ds_map_find_first(newmap);
 	
 	repeat(ds_map_size(newmap)) {
-		original[? k] = newmap[? k];
+		original[? k] = newmap[? k] ?? 1;
 		k = ds_map_find_next(newmap, k);
 	}
 }

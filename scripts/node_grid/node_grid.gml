@@ -9,6 +9,7 @@ function Node_Grid(_x, _y) : Node(_x, _y) constructor {
 	
 	shader = sh_grid;
 	uniform_pos = shader_get_uniform(shader, "position");
+	uniform_dim = shader_get_uniform(shader, "dimension");
 	uniform_sca = shader_get_uniform(shader, "scale");
 	uniform_wid = shader_get_uniform(shader, "width");
 	uniform_ang = shader_get_uniform(shader, "angle");
@@ -72,15 +73,16 @@ function Node_Grid(_x, _y) : Node(_x, _y) constructor {
 		
 		var _outSurf = outputs[| 0].getValue();
 		if(!is_surface(_outSurf)) {
-			_outSurf = surface_create(surface_valid(_dim[0]), surface_valid(_dim[1]));
+			_outSurf =  surface_create_valid(_dim[0], _dim[1]);
 			outputs[| 0].setValue(_outSurf);
 		} else
-			surface_size_to(_outSurf, surface_valid(_dim[0]), surface_valid(_dim[1]));
+			surface_size_to(_outSurf, _dim[0], _dim[1]);
 		
 		surface_set_target(_outSurf);
 		draw_clear_alpha(0, 0);
 		shader_set(shader);
 			shader_set_uniform_f(uniform_pos, _pos[0] / _dim[0], _pos[1] / _dim[1]);
+			shader_set_uniform_f(uniform_dim, _dim[0], _dim[1]);
 			shader_set_uniform_f_array(uniform_sca, _sca);
 			shader_set_uniform_f(uniform_wid, _wid);
 			shader_set_uniform_f(uniform_ang, degtorad(_ang));

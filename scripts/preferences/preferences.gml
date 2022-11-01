@@ -89,9 +89,9 @@
 	
 	function key_get_name(_key, _mod) {
 		var dk = "";
-		if(_mod & MOD_KEY.ctrl)		dk += "ctrl+";
-		if(_mod & MOD_KEY.shift)	dk += "shift+";
-		if(_mod & MOD_KEY.alt)		dk += "alt+";
+		if(_mod & MOD_KEY.ctrl)		dk += "Ctrl+";
+		if(_mod & MOD_KEY.shift)	dk += "Shift+";
+		if(_mod & MOD_KEY.alt)		dk += "Alt+";
 				
 		switch(_key) {
 			case vk_space : dk += "Space";	break;	
@@ -244,6 +244,8 @@
 		
 		window_set_size(ww, hh);
 		window_set_position(display_get_width() / 2 - ww / 2, display_get_height() / 2 - hh / 2);
+		
+		loadFonts();
 	}
 	
 	function find_hotkey(_context, _name) {

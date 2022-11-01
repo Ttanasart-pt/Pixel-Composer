@@ -233,8 +233,8 @@ event_inherited();
 	dialog_resizable = true;
 	dialog_w_min = 200;
 	dialog_h_min = 120;
-	dialog_w_max = 640;
-	dialog_h_max = 480;
+	dialog_w_max = 800;
+	dialog_h_max = 640;
 	
 	onResize = function() {
 		catagory_pane.resize(132, dialog_h - 66);

@@ -88,4 +88,19 @@
 			}
 		}
 	}
+	
+	function resetPosition() {
+		if(anchor == ANCHOR.none) {
+			dialog_x = xstart - dialog_w / 2;
+			dialog_y = ystart - dialog_h / 2;
+		} else {
+			if(anchor & ANCHOR.left)   dialog_x = min(xstart, WIN_SW - dialog_w);
+			if(anchor & ANCHOR.right)  dialog_x = max(xstart - dialog_w, 0);
+			if(anchor & ANCHOR.top)    dialog_y = min(ystart, WIN_SH - dialog_h);
+			if(anchor & ANCHOR.bottom) dialog_y = max(ystart - dialog_h, 0);
+		}
+		dialog_x = round(dialog_x);
+		dialog_y = round(dialog_y);
+	}
 #endregion
+

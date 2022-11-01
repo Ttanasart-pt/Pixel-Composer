@@ -30,14 +30,13 @@ function Panel_Inspector(_panel) : PanelContent(_panel) constructor {
 	
 	contentPane = new scrollPane(content_w, content_h, function(_y, _m) {
 		var con_w = contentPane.surface_w;
-		
 		draw_clear_alpha(c_ui_blue_black, 0);
 		
 		if(FOCUS == panel) 
 			if(point_in_rectangle(_m[0], _m[1], 0, 0, con_w, content_h) && mouse_check_button_pressed(mb_left))
 				prop_selecting = noone;
 		
-		if(!inspecting) 
+		if(inspecting == noone) 
 			return 0;
 		
 		inspecting.inspecting = true;
@@ -60,17 +59,17 @@ function Panel_Inspector(_panel) : PanelContent(_panel) constructor {
 					
 					if(HOVER == panel && point_in_rectangle(_m[0], _m[1], 0, yy, con_w, yy + 32)) {
 						draw_sprite_stretched_ext(s_node_name, 0, 0, yy, con_w, 32, c_ui_blue_white, 1);
-							
+						
 						if(FOCUS == panel && mouse_check_button_pressed(mb_left)) {
 							jun_disp[@ 1] = !coll;
 						}
 					} else
 						draw_sprite_stretched_ext(s_node_name, 0, 0, yy, con_w, 32, c_ui_blue_ltgrey, 1);
-						
+					
 					draw_sprite_ext(s_arrow_16, 0, 16, yy + 32 / 2, 1, 1, -90 + coll * 90, c_ui_blue_ltgrey, 1);
 					draw_set_text(f_p0, fa_left, fa_center, c_ui_blue_white);
 					draw_text(32, yy + 32 / 2, txt);
-						
+					
 					hh += 32 + 8 + 16 * !coll;
 					
 					if(coll) {

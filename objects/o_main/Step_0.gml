@@ -114,7 +114,7 @@
 	}
 	
 	if (window_command_check(window_command_close)) {
-		if(MODIFIED) {
+		if(MODIFIED && !READONLY) {
 			dialogCall(o_dialog_exit);
 		} else {
 			PREF_SAVE();

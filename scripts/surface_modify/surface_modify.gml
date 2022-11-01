@@ -12,8 +12,8 @@ function draw_surface_part_ext_safe(surface, _l, _t, _w, _h, _x, _y, _xs, _ys, _
 }
 
 function surface_size_to(surface, width, height) {
-	if(width <= 1 || height <= 1) return false;
-	if(is_infinity(width) || is_infinity(height)) return false;
+	width = surface_valid(width);
+	height = surface_valid(height);
 	
 	if(!surface_exists(surface)) return false;
 	
@@ -49,6 +49,10 @@ function surface_copy_size(dest, source) {
 function surface_valid(s) {
 	if(is_infinity(s)) return 1;
 	return max(1, s);	
+}
+
+function surface_create_valid(w, h) {
+	return surface_create(surface_valid(w), surface_valid(h));
 }
 
 function is_surface(s) {

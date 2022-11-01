@@ -393,14 +393,14 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 				switch(display_type) {
 					case VALUE_DISPLAY.path_load: 
 						var path = animator.getValue();
-						if(!file_exists(path)) 
+						if(try_get_path(path) == -1) 
 							value_validation = VALIDATION.error;	
 						break;
 					case VALUE_DISPLAY.path_array: 
 						var paths = animator.getValue();
 						if(is_array(paths)) {
 							for( var i = 0; i < array_length(paths); i++ ) {
-								if(!file_exists(paths[i])) 
+								if(try_get_path(paths[i]) == -1) 
 									value_validation = VALIDATION.error;	
 							} 
 						} else

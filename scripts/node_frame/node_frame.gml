@@ -73,7 +73,7 @@ function Node_Frame(_x, _y) : Node(_x, _y) constructor {
 		draw_sprite_ext(s_node_resize, 0, _re_x, _re_y, 1, 1, 0, c_white, 0.5);
 		if(!name_hover && point_in_rectangle(_mx, _my, _re_x - 16 * _s, _re_y - 16 * _s, _re_x + 4 * _s, _re_y + 4 * _s)) {
 			draw_sprite_ext(s_node_resize, 0, _re_x, _re_y, 1, 1, 0, c_white, 1);
-			PANEL_GRAPH.node_hovering = -1;
+			PANEL_GRAPH.drag_locking = true;
 			
 			if(mouse_check_button_pressed(mb_left)) {
 				size_dragging	= true;
@@ -86,15 +86,15 @@ function Node_Frame(_x, _y) : Node(_x, _y) constructor {
 		return noone;
 	}
 	
-	static pointIn = function(_mx, _my) {
-		var xx    = x + w;
-		var yy    = y + h;
+	static pointIn = function(_x, _y, _mx, _my, _s) {
+		var xx = x * _s + _x;
+		var yy = y * _s + _y;
 		draw_set_font(f_h5);
-		var ww = (string_width(name) + 16) / draw_scale;
-		var hh = (string_height(name) + 16) / draw_scale;
+		var ww = (string_width(name) + 16) / _s;
+		var hh = (string_height(name) + 16) / _s;
 		
-		var _x0 = max(x + 16, xx - ww);
-		var _y0 = max(y + 16, yy - hh);
+		var _x0 = max(xx + 16, xx - ww);
+		var _y0 = max(yy + 16, yy - hh);
 		
 		var hover = point_in_rectangle(_mx, _my, _x0, _y0, xx - 32, yy);
 		name_hover = hover;

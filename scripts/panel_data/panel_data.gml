@@ -26,8 +26,8 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 	drag_sval = 0;
 	drag_sm   = 0;
 	
-	content_surface = surface_create(w, h);
-	mask_surface    = surface_create(w, h);
+	content_surface = surface_create_valid(w, h);
+	mask_surface    = surface_create_valid(w, h);
 	
 	function resetMask() {
 		surface_set_target(mask_surface);
@@ -43,12 +43,12 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 		if(is_surface(content_surface) && surface_exists(content_surface)) 
 			surface_size_to(content_surface, w, h);
 		else
-			content_surface = surface_create(w, h);
+			content_surface = surface_create_valid(w, h);
 		
 		if(is_surface(mask_surface) && surface_exists(mask_surface)) 
 			surface_size_to(mask_surface, w, h);
 		else
-			mask_surface = surface_create(w, h);
+			mask_surface = surface_create_valid(w, h);
 		resetMask();
 		
 		if(content != noone) 
@@ -113,7 +113,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 			if(is_surface(mask_surface)) 
 				surface_size_to(mask_surface, w, h);
 			else 
-				mask_surface = surface_create(w, h);
+				mask_surface = surface_create_valid(w, h);
 			
 			resetMask();
 		}
@@ -135,6 +135,8 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 	}
 	
 	function split_h(_w) {
+		if(abs(_w) > w) return noone;
+		
 		if(_w < 0) _w = w + _w;
 		var _panelParent = new Panel(parent, x, y, w, h);
 		_panelParent.anchor = anchor;
@@ -165,6 +167,8 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 	}
 	
 	function split_v(_h) {
+		if(abs(_h) > h) return noone;
+		
 		if(_h < 0) _h = h + _h;
 		var _panelParent = new Panel(parent, x, y, w, h);
 		_panelParent.anchor = anchor;
@@ -340,7 +344,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 		draw_sprite_stretched(s_ui_panel_bg, 0, x + 2, y + 2, w - 4, h - 4);
 		
 		if(!is_surface(mask_surface)) {
-			mask_surface = surface_create(w, h);
+			mask_surface = surface_create_valid(w, h);
 			resetMask();
 		}
 		

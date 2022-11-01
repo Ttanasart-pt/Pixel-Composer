@@ -13,6 +13,7 @@ function Node_Stripe(_x, _y) : Node(_x, _y) constructor {
 	uniform_grad_time = shader_get_uniform(sh_stripe, "gradient_time");
 	uniform_grad_key = shader_get_uniform(sh_stripe, "gradient_keys");
 	
+	uniform_dim = shader_get_uniform(sh_stripe, "dimension");
 	uniform_pos = shader_get_uniform(sh_stripe, "position");
 	uniform_angle = shader_get_uniform(sh_stripe, "angle");
 	uniform_amount = shader_get_uniform(sh_stripe, "amount");
@@ -78,13 +79,14 @@ function Node_Stripe(_x, _y) : Node(_x, _y) constructor {
 		
 		var _outSurf = outputs[| 0].getValue();
 		if(!is_surface(_outSurf)) {
-			_outSurf = surface_create(surface_valid(_dim[0]), surface_valid(_dim[1]));
+			_outSurf =  surface_create_valid(_dim[0], _dim[1]);
 			outputs[| 0].setValue(_outSurf);
 		} else
-			surface_size_to(_outSurf, surface_valid(_dim[0]), surface_valid(_dim[1]));
+			surface_size_to(_outSurf, _dim[0], _dim[1]);
 			
 		surface_set_target(_outSurf);
 			shader_set(sh_stripe);
+			shader_set_uniform_f(uniform_dim, _dim[0], _dim[1]);
 			shader_set_uniform_f(uniform_pos, _pos[0] / _dim[0], _pos[1] / _dim[1]);
 			shader_set_uniform_f(uniform_angle,  degtorad(_ang));
 			shader_set_uniform_f(uniform_amount, _amo);

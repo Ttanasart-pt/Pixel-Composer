@@ -1,2 +1,2 @@
 /// @description init
-alarm[1] = 2;
+MODIFIED = false;

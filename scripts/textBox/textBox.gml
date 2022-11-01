@@ -331,7 +331,7 @@ function textBox(_input, _onModify) constructor {
 			#endregion
 			
 			#region draw
-				var ss = string_cut(_input_text, _w - 4);
+				var ss = string_cut(_input_text, _w - 16);
 				draw_set_text(font, fa_left, fa_top, c_white);
 				var ww = string_width(ss);
 				
@@ -374,7 +374,7 @@ function textBox(_input, _onModify) constructor {
 				TEXTBOX_ACTIVE = noone;
 			}
 		} else {
-			var ss = string_cut(string(_text), _w - 4);
+			var ss = string_cut(string(_text), _w - 16);
 			draw_set_text(font, fa_left, fa_center, c_white);
 			var ww = string_width(ss);
 				

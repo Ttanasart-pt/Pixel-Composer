@@ -222,11 +222,11 @@ function Panel_Collection(_panel) : PanelContent(_panel) constructor {
 		folderPane.draw(0, content_y, mx, my - content_y);
 		
 		var _x = 16;
-		var _y = 28;
+		var _y = 24;
 		
 		for( var i = 0; i < array_length(roots); i++ ) {
 			var r = roots[i];
-			var b = buttonInstant(s_button_hide_fill, _x - 8, _y - 16, string_width(r[0]) + 20, string_height(r[0]) + 8, [mx, my], FOCUS == panel, HOVER == panel);
+			var b = buttonInstant(s_button_hide_fill, _x - 8, _y - 14, string_width(r[0]) + 20, string_height(r[0]) + 8, [mx, my], FOCUS == panel, HOVER == panel);
 			if(b == 2) {
 				mode = i;
 				root = r[1];

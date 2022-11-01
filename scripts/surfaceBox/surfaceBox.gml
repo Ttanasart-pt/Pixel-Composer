@@ -44,8 +44,10 @@ function surfaceBox(_onModify, def_path = "") constructor {
 				var sfw = surface_get_width(_surface);	
 				var sfh = surface_get_height(_surface);	
 				var ss  = min(sw / sfw, sh / sfh);
+				var _sx = sx0 + sw / 2 - ss * sfw / 2;
+				var _sy = sy0 + sh / 2 - ss * sfh / 2;
 				
-				draw_surface_ext(_surface, sx0, sy0, ss, ss, 0, c_white, 1);
+				draw_surface_ext(_surface, _sx, _sy, ss, ss, 0, c_white, 1);
 			}
 			
 			draw_sprite_ext(s_scroll_box_arrow, 0, _x + _w - 20, _y + _h / 2, 1, 1, 0, c_ui_blue_grey, 1);

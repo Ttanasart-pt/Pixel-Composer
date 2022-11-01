@@ -31,7 +31,7 @@ if !ready exit;
 #endregion
 
 #region draw
-	draw_sprite_stretched(s_ui_panel_bg, 0, dialog_x + 160, yy - 8, dialog_w - 160 - 16, dialog_h - 56 - 8);
+	draw_sprite_stretched(s_ui_panel_bg, 0, dialog_x + 160, yy - 8, dialog_w - 160 - 16, dialog_h - 56 - 16);
 	
 	tb_search.auto_update   = true;
 	tb_search.no_empty		= false;

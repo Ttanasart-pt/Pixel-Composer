@@ -24,12 +24,16 @@ function rotatorRange(_onModify) constructor {
 				hover_arc = true;
 			} else
 				draw_set_color(c_ui_blue_grey);
-			var diff = _data[1] >= _data[0]? _data[1] - _data[0] : _data[1] + 360 - _data[0];
-		
-			for(var i = 0; i < abs(diff); i += 4) {
-				var as = _data[0] + i * sign(diff);
-				var ae = _data[0] + (i + 4) * sign(diff);
 			
+			var ans = _data[0] % 360;
+			var ane = _data[1] % 360;
+			
+			var diff = ane >= ans? ane - ans : ane + 360 - ans;
+			
+			for(var i = 0; i < abs(diff); i += 4) {
+				var as = ans + i * sign(diff);
+				var ae = ans + (i + 4) * sign(diff);
+				
 				var sx = _x     + lengthdir_x(36, as);
 				var sy = knob_y + lengthdir_y(36, as);
 				var ex = _x     + lengthdir_x(36, ae);
