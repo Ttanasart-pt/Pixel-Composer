@@ -3,8 +3,8 @@ event_inherited();
 
 #region data
 	destroy_on_click_out = true;
-	dialog_w = 290;
-	dialog_h = 192;
+	dialog_w = ui(290);
+	dialog_h = ui(172);
 	
 	paths	= "";
 	is_dir	= false;
@@ -16,7 +16,7 @@ event_inherited();
 		is_dir	= directory_exists(path);
 		
 		if(is_dir) {
-			dialog_h += 96;
+			dialog_h += ui(96);
 		}
 	}
 	

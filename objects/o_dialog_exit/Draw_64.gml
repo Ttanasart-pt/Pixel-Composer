@@ -7,39 +7,41 @@ draw_set_alpha(1);
 
 #region base UI
 	draw_sprite_stretched(s_dialog_bg, 0, dialog_x, dialog_y, dialog_w, dialog_h);
-	if(FOCUS == self)
+	if(sFOCUS)
 		draw_sprite_stretched(s_dialog_active, 0, dialog_x, dialog_y, dialog_w, dialog_h);
 #endregion
 
 #region text
+	var py = dialog_y + ui(16);
 	draw_set_text(f_h5, fa_left, fa_top, c_ui_blue_grey);
-	draw_text(dialog_x + 24, dialog_y + 24, "Project modified");
+	draw_text(dialog_x + ui(24), py, "Project modified");
+	py += line_height(, 4);
 	
 	draw_set_text(f_p0, fa_left, fa_top, c_white);
-	draw_text(dialog_x + 24, dialog_y + 54, "Save progress before exit?");
+	draw_text(dialog_x + ui(24), py, "Save progress before exit?");
 	
-	var bw = 96, bh = 32;
-	var bx1 = dialog_x + dialog_w - 16;
-	var by1 = dialog_y + dialog_h - 16;
+	var bw = ui(96), bh = TEXTBOX_HEIGHT;
+	var bx1 = dialog_x + dialog_w - ui(16);
+	var by1 = dialog_y + dialog_h - ui(16);
 	var bx0 = bx1 - bw;
 	var by0 = by1 - bh;
 	
 	draw_set_text(f_p1, fa_center, fa_center, c_white);
-	var b = buttonInstant(s_button, bx0, by0, bw, bh, [mouse_mx, mouse_my], FOCUS == self, HOVER == self);
+	var b = buttonInstant(s_button, bx0, by0, bw, bh, mouse_ui, sFOCUS, sHOVER);
 	draw_text(bx0 + bw / 2, by0 + bh / 2, "Cancel");
 	if(b == 2) 
 		instance_destroy();
 	
-	bx0 -= bw + 12;
-	var b = buttonInstant(s_button, bx0, by0, bw, bh, [mouse_mx, mouse_my], FOCUS == self, HOVER == self);
+	bx0 -= bw + ui(12);
+	var b = buttonInstant(s_button, bx0, by0, bw, bh, mouse_ui, sFOCUS, sHOVER);
 	draw_text(bx0 + bw / 2, by0 + bh / 2, "Don't save");
 	if(b == 2) {
 		PREF_SAVE();
 		game_end();
 	}
 	
-	bx0 -= bw + 12;
-	var b = buttonInstant(s_button, bx0, by0, bw, bh, [mouse_mx, mouse_my], FOCUS == self, HOVER == self);
+	bx0 -= bw + ui(12);
+	var b = buttonInstant(s_button, bx0, by0, bw, bh, mouse_ui, sFOCUS, sHOVER);
 	draw_text(bx0 + bw / 2, by0 + bh / 2, "Save");
 	if(b == 2) {
 		SAVE();

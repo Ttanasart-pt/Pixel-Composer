@@ -238,13 +238,13 @@ function textArea(_input, _onModify) constructor {
 	}
 	
 	static draw = function(_x, _y, _w, _h, _text, _m) {
-		var tx = _x + 8;
+		var tx = _x + ui(8);
 		var hh = _h;
-		line_width = _w - 16;
+		line_width = _w - ui(16);
 		
 		draw_set_font(font);
 		var c_h = string_height("l");
-		hh = max(_h, 14 + c_h * array_length(_input_text_line));
+		hh = max(_h, ui(14) + c_h * array_length(_input_text_line));
 		
 		if(self == TEXTBOX_ACTIVE) { 
 			draw_sprite_stretched(s_textbox, 2, _x, _y, _w, hh);
@@ -359,7 +359,7 @@ function textArea(_input, _onModify) constructor {
 				#region draw cursor highlight
 					var char_run = 0, _l, _str;
 					var ch_x = tx;
-					var ch_y = _y + 7;
+					var ch_y = _y + ui(7);
 					var ch_sel_min = -1;
 					var ch_sel_max = -1;
 					
@@ -379,15 +379,15 @@ function textArea(_input, _onModify) constructor {
 								var x1 = tx + string_width(string_copy(_str, 1, ch_sel_min - char_run));
 								var x2 = tx + string_width(string_copy(_str, 1, ch_sel_max - char_run));
 						
-								draw_roundrect_ext(x1, ch_y, x2, ch_y + c_h, 8, 8, 0);
+								draw_roundrect_ext(x1, ch_y, x2, ch_y + c_h, ui(8), ui(8), 0);
 							} else if(char_run >= ch_sel_min && char_run + _l < ch_sel_max) {
 								var x2 = tx + string_width(_str);
 								
-								draw_roundrect_ext(tx, ch_y, x2, ch_y + c_h, 8, 8, 0);
+								draw_roundrect_ext(tx, ch_y, x2, ch_y + c_h, ui(8), ui(8), 0);
 							} else if(char_run > ch_sel_min && char_run <= ch_sel_max && char_run + _l >= ch_sel_max) {
 								var x2 = tx + string_width(string_copy(_str, 1, ch_sel_max - char_run));
 								
-								draw_roundrect_ext(tx, ch_y, x2, ch_y + c_h, 8, 8, 0);
+								draw_roundrect_ext(tx, ch_y, x2, ch_y + c_h, ui(8), ui(8), 0);
 							}
 						}
 						
@@ -412,7 +412,7 @@ function textArea(_input, _onModify) constructor {
 				}
 				
 				draw_set_color(c_white);
-				display_text(tx, _y + 7, _input_text, _w - 4, _mx, _my);
+				display_text(tx, _y + ui(7), _input_text, _w - ui(4), _mx, _my);
 				if(cursor_pos_y != 0 && cursor_pos_x != 0) {
 					draw_set_color(c_ui_orange);
 					draw_line_width(cursor_pos_x, cursor_pos_y, cursor_pos_x, cursor_pos_y + c_h, 2);
@@ -444,7 +444,7 @@ function textArea(_input, _onModify) constructor {
 				draw_sprite_stretched(s_textbox, 0, _x, _y, _w, hh);
 			}
 			
-			display_text(tx, _y + 7, string(_text), _w - 4);
+			display_text(tx, _y + ui(7), string(_text), _w - ui(4));
 		}
 		
 		hover  = false;

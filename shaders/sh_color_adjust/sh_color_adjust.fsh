@@ -9,6 +9,7 @@ uniform sampler2D mask;
 
 uniform float brightness;
 uniform float contrast;
+uniform float exposure;
 uniform float hue;
 uniform float sat;
 uniform float val;
@@ -36,14 +37,15 @@ void main() {
     vec4 col = texture2D( gm_BaseTexture, v_vTexcoord );
     
 	//contrast
-	float cont = contrast * contrast;
-	float c_factor = (1. + cont) / (1. - cont);
-	vec4 col_c = c_factor * (col - .5) + .5;
+	vec4 col_c = .5 + (contrast * 2.) * (col - .5);
 	col_c = clamp(col_c, vec4(0.), vec4(1.));
 	
 	//brightness
 	vec4 col_cb = col_c + vec4(brightness, brightness, brightness, 0.0);
 	col_cb = clamp(col_cb, vec4(0.), vec4(1.));
+	
+	//exposure
+	col_cb = clamp(col_cb * exposure, vec4(0.), vec4(1.));
 	
 	//hsv
 	vec3 _hsv = rgb2hsv(col_cb.rgb);

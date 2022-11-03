@@ -131,7 +131,7 @@ function Node_Image_Animated(_x, _y) : Node(_x, _y) constructor {
 		
 		var surfs = outputs[| 0].getValue();
 		if(!is_surface(surfs)) {
-			surfs = surface_create(ww, hh);
+			surfs = surface_create_valid(ww, hh);
 			outputs[| 0].setValue(surfs);
 		} else
 			surface_size_to(surfs, ww, hh);

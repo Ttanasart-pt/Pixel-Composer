@@ -4,14 +4,23 @@ function checkBox(_onClick) constructor {
 	
 	onClick = _onClick;
 	
-	static draw = function(_x, _y, _value, _m, _s = 28) {
-		var cx = _x;
-		var cy = _y;
+	static draw = function(_x, _y, _value, _m, ss = ui(28), halign = fa_left, valign = fa_top) {
+		switch(halign) {
+			case fa_left:   _x = _x;			break;	
+			case fa_center: _x = _x - ss / 2;	break;	
+			case fa_right:  _x = _x - ss;		break;	
+		}
 		
-		draw_sprite_stretched(s_checkbox, _value * 2, cx, cy, _s, _s);	
+		switch(valign) {
+			case fa_top:    _y = _y;			break;	
+			case fa_center: _y = _y - ss / 2;	break;	
+			case fa_bottom: _y = _y - ss;		break;	
+		}
 		
-		if(hover && point_in_rectangle(_m[0], _m[1], cx, cy, cx + _s, cy + _s)) {
-			draw_sprite_stretched(s_checkbox, _value * 2 + 1, _x, _y, _s, _s);	
+		draw_sprite_stretched(s_checkbox, _value * 2, _x, _y, ss, ss);	
+		
+		if(hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + ss, _y + ss)) {
+			draw_sprite_stretched(s_checkbox, _value * 2 + 1, _x, _y, ss, ss);	
 			
 			if(active && mouse_check_button_pressed(mb_left)) {
 				if(onClick) onClick();

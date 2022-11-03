@@ -5,9 +5,9 @@ function scrollPane(_w, _h, ondraw) constructor {
 	
 	w			= _w;
 	h			= _h;
-	surface_w   = _w - 8;
+	surface_w   = _w - ui(8);
 	surface_h   = _h;
-	surface     = surface_create(surface_w, surface_h);
+	surface     = surface_create_valid(surface_w, surface_h);
 	
 	drawFunc    = ondraw;
 	
@@ -21,14 +21,14 @@ function scrollPane(_w, _h, ondraw) constructor {
 	static resize = function(_w, _h) {
 		w = _w;
 		h = _h;
-		surface_w   = _w - 8;
+		surface_w   = _w - ui(8);
 		surface_h   = _h;
 		
 		if(surface_w > 1 && surface_h > 1) {
 			if(is_surface(surface)) 
 				surface_size_to(surface, surface_w, surface_h);
 			else
-				surface = surface_create(surface_w, surface_h);
+				surface = surface_create_valid(surface_w, surface_h);
 		}
 	}
 	
@@ -36,11 +36,11 @@ function scrollPane(_w, _h, ondraw) constructor {
 		var mx = _mx, my = _my;
 
 		if(!point_in_rectangle(mx, my, 0, 0, w, h)) {
-			mx = -100;	
-			my = -100;	
+			mx = -100;
+			my = -100;
 		}
 		
-		if(!is_surface(surface)) surface = surface_create(surface_w, surface_h);
+		if(!is_surface(surface)) surface = surface_create_valid(surface_w, surface_h);
 		surface_set_target(surface);
 			draw_clear(c_ui_blue_black);
 			content_h = max(0, drawFunc(scroll_y, [mx, my]) - surface_h);
@@ -57,7 +57,7 @@ function scrollPane(_w, _h, ondraw) constructor {
 		}
 		
 		if(abs(content_h) > 0) {
-			draw_scroll(x + surface_w + 6, y + 6, true, surface_h - 12, -scroll_y / content_h, surface_h / (surface_h + content_h), c_ui_blue_grey, c_ui_blue_white, x + _mx, y + _my);
+			draw_scroll(x + surface_w + ui(6), y + ui(6), true, surface_h - ui(12), -scroll_y / content_h, surface_h / (surface_h + content_h), c_ui_blue_grey, c_ui_blue_white, x + _mx, y + _my);
 		}
 	}
 	
@@ -67,17 +67,17 @@ function scrollPane(_w, _h, ondraw) constructor {
 		var scr_w, scr_h, bar_w, bar_h, bar_x, bar_y;
 		
 		if(is_vert) {
-			scr_w	= 4;
+			scr_w	= ui(4);
 			scr_h	= scr_s;
-			bar_w	= 4;
+			bar_w	= ui(4);
 			bar_h   = scr_scale_s;
 			bar_x	= scr_x;
 			bar_y	= scr_y + scr_prog_s;
 		} else {
 			scr_w	= scr_s;
-			scr_h	= 4;
+			scr_h	= ui(4);
 			bar_w	= scr_scale_s;
-			bar_h   = 4;
+			bar_h   = ui(4);
 			bar_x	= scr_x + scr_prog_s;
 			bar_y	= scr_y;
 		}

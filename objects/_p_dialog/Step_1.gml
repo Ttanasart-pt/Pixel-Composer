@@ -35,7 +35,7 @@ if !ready exit;
 			dialog_x + dialog_w, dialog_y + dialog_h) < 12) {
 				
 			CURSOR = cr_size_we;
-			if(FOCUS == self && mouse_check_button_pressed(mb_left)) {
+			if(sFOCUS && mouse_check_button_pressed(mb_left)) {
 				dialog_resizing |= 1 << 0;
 				dialog_resiz_sw = dialog_w;
 				dialog_resiz_mx = mouse_mx;
@@ -51,7 +51,7 @@ if !ready exit;
 			else
 				CURSOR = cr_size_ns;
 			
-			if(FOCUS == self && mouse_check_button_pressed(mb_left)) {
+			if(sFOCUS && mouse_check_button_pressed(mb_left)) {
 				dialog_resizing |= 1 << 1;
 				dialog_resiz_sh = dialog_h;
 				dialog_resiz_mx = mouse_mx;

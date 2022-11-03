@@ -48,7 +48,7 @@ function Node_Seperate_Shape(_x, _y) : Node(_x, _y) constructor {
 		var hh = surface_get_height(_inSurf);
 		
 		for(var i = 0; i < 2; i++) {
-			if(!is_surface(temp_surf[i])) temp_surf[i] = surface_create(ww, hh);
+			if(!is_surface(temp_surf[i])) temp_surf[i] = surface_create_valid(ww, hh);
 			else surface_size_to(temp_surf[i], ww, hh);
 			
 			surface_set_target(temp_surf[i]);
@@ -84,7 +84,7 @@ function Node_Seperate_Shape(_x, _y) : Node(_x, _y) constructor {
 			res_index = bg;
 		}
 		
-		var _pixel_surface = surface_create(PREF_MAP[? "shape_separation_max"], 1);
+		var _pixel_surface = surface_create_valid(PREF_MAP[? "shape_separation_max"], 1);
 		surface_set_target(_pixel_surface);
 		draw_clear_alpha(0, 0);
 		BLEND_ADD
@@ -134,7 +134,7 @@ function Node_Seperate_Shape(_x, _y) : Node(_x, _y) constructor {
 					_outSurf = outputs[| i].getValue();
 					surface_size_to(_outSurf, ww, hh);
 				} else {
-					_outSurf = surface_create(ww, hh);
+					_outSurf = surface_create_valid(ww, hh);
 					_val[@ i] = _outSurf;
 				}
 				

@@ -3,8 +3,8 @@ event_inherited();
 
 #region data
 	destroy_on_click_out = true;
-	dialog_w = 290;
-	dialog_h = 188;
+	dialog_w = ui(290);
+	dialog_h = ui(188);
 	
 	target			= noone;
 	dir_paths		= "";

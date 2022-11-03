@@ -43,7 +43,7 @@ function buttonClass(_onClick) constructor {
 		} else {
 			draw_sprite_stretched_ext(spr, 0, _x, _y, _w, _h, blend, 1);	
 		}
-		if(icon) draw_sprite(icon, icon_index, _x + _w / 2, _y + _h / 2);
+		if(icon) draw_sprite_ui_uniform(icon, icon_index, _x + _w / 2, _y + _h / 2);
 		if(text != "") {
 			draw_set_text(f_p0, fa_center, fa_center, c_white);
 			draw_text(_x + _w / 2, _y + _h / 2, text);
@@ -73,7 +73,7 @@ function buttonInstant(spr, _x, _y, _w, _h, _m, _act, _hvr, _tip = "", _icon = n
 	}
 	
 	if(_icon) {
-		draw_sprite_ext(_icon, _icon_index, _x + _w / 2, _y + _h / 2, 1, 1, 0, _icon_blend, _icon_alpha);
+		draw_sprite_ui_uniform(_icon, _icon_index, _x + _w / 2, _y + _h / 2, 1, _icon_blend, _icon_alpha);
 	}
 	
 	return res;

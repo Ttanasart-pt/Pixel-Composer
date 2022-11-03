@@ -1,6 +1,6 @@
 /// @description init
 #region draw
-	var hght = 32;
+	var hght = line_height(f_p0, 8);
 	
 	draw_sprite_stretched(s_textbox, 1, dialog_x, dialog_y, dialog_w, dialog_h);
 	
@@ -20,6 +20,6 @@
 		if(align == fa_center)
 			draw_text(dialog_x + dialog_w / 2, _ly + hght / 2, scrollbox.data_list[i]);
 		else if(align == fa_left)
-			draw_text(dialog_x + 8, _ly + hght / 2, scrollbox.data_list[i]);
+			draw_text(dialog_x + ui(8), _ly + hght / 2, scrollbox.data_list[i]);
 	}
 #endregion

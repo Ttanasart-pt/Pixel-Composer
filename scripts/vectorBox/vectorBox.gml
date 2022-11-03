@@ -23,8 +23,8 @@ function vectorBox(_size, _type, _onModify) constructor {
 			extras.hover  = hover;
 			extras.active = active;
 			
-			extras.draw(_x + _w - 32, _y + _h / 2 - 32 / 2, 32, 32, _m, s_button_hide);
-			_w -= 40;
+			extras.draw(_x + _w - ui(32), _y + _h / 2 - ui(32 / 2), ui(32), ui(32), _m, s_button_hide);
+			_w -= ui(40);
 		}
 		
 		var ww  = _w / size;
@@ -33,10 +33,10 @@ function vectorBox(_size, _type, _onModify) constructor {
 			tb[i].active = active;
 			
 			var bx  = _x + ww * i;
-			tb[i].draw(bx + 24, _y, ww - 24, _h, _data[i], _m);
+			tb[i].draw(bx + ui(24), _y, ww - ui(24), _h, _data[i], _m);
 			
 			draw_set_text(f_p0, fa_left, fa_center, c_ui_blue_grey);
-			draw_text(bx + 8, _y + _h / 2, axis[i]);
+			draw_text(bx + ui(8), _y + _h / 2, axis[i]);
 		}
 		hover  = false;
 		active = false;

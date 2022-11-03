@@ -9,17 +9,17 @@ function rotatorRange(_onModify) constructor {
 	drag_sa  = 0;
 	
 	static draw = function(_x, _y, _data, _m) {
-		var knob_y = _y + 48;
+		var knob_y = _y + ui(48);
 		
 		draw_set_color(c_ui_blue_mdblack);
-		draw_rectangle(_x - 44, knob_y - 44, _x + 44, knob_y + 44, 0);
+		draw_rectangle(_x - ui(44), knob_y - ui(44), _x + ui(44), knob_y + ui(44), 0);
 		
-		draw_sprite(s_rotator_bg, 0, _x, knob_y);
+		draw_sprite_ui_uniform(s_rotator_bg, 0, _x, knob_y);
 		
 		#region draw arc
 			var hover_arc = false;
 			var diss = point_distance(_m[0], _m[1], _x, knob_y);
-			if(diss >= 32 && diss <= 40 || dragging == 2) {
+			if(diss >= ui(32) && diss <= ui(40) || dragging == 2) {
 				draw_set_color(c_ui_blue_ltgrey);
 				hover_arc = true;
 			} else
@@ -34,23 +34,23 @@ function rotatorRange(_onModify) constructor {
 				var as = ans + i * sign(diff);
 				var ae = ans + (i + 4) * sign(diff);
 				
-				var sx = _x     + lengthdir_x(36, as);
-				var sy = knob_y + lengthdir_y(36, as);
-				var ex = _x     + lengthdir_x(36, ae);
-				var ey = knob_y + lengthdir_y(36, ae);
+				var sx = _x     + lengthdir_x(ui(36), as);
+				var sy = knob_y + lengthdir_y(ui(36), as);
+				var ex = _x     + lengthdir_x(ui(36), ae);
+				var ey = knob_y + lengthdir_y(ui(36), ae);
 				
-				draw_line_width(sx, sy, ex, ey, 8);
-				draw_circle(ex, ey, 4, 0);
+				draw_line_width(sx, sy, ex, ey, ui(8));
+				draw_circle(ex, ey, ui(4), 0);
 			}
 		#endregion
 		
 		var px, py;
 		
 		for(var i = 0; i < 2; i++) {
-			px[i] = _x + lengthdir_x(36, _data[i]);
-			py[i] = knob_y + lengthdir_y(36, _data[i]);
+			px[i] = _x + lengthdir_x(ui(36), _data[i]);
+			py[i] = knob_y + lengthdir_y(ui(36), _data[i]);
 			
-			draw_sprite(s_rotator_knob, 0, px[i], py[i]);
+			draw_sprite_ui_uniform(s_rotator_knob, 0, px[i], py[i]);
 		}
 			
 		if(dragging > -1) {
@@ -74,7 +74,7 @@ function rotatorRange(_onModify) constructor {
 				real_val   = round(delta + drag_sv);
 				val = keyboard_check(vk_control)? round(real_val / 15) * 15 : real_val;
 				
-				draw_sprite(s_rotator_knob, 1, px[dragging], py[dragging]);
+				draw_sprite_ui_uniform(s_rotator_knob, 1, px[dragging], py[dragging]);
 				
 				if(_data[dragging] != val) {
 					onModify(dragging, val);
@@ -93,8 +93,8 @@ function rotatorRange(_onModify) constructor {
 			}
 		} else if(hover) {
 			for(var i = 0; i < 2; i++) {
-				if(point_in_circle(_m[0], _m[1], px[i], py[i], 10)) {
-					draw_sprite(s_rotator_knob, 1, px[i], py[i]);
+				if(point_in_circle(_m[0], _m[1], px[i], py[i], ui(10))) {
+					draw_sprite_ui_uniform(s_rotator_knob, 1, px[i], py[i]);
 						
 					if(active && mouse_check_button_pressed(mb_left)) {
 						dragging = i;
@@ -111,8 +111,8 @@ function rotatorRange(_onModify) constructor {
 		}
 		
 		draw_set_text(f_p0, fa_center, fa_center, c_white);
-		draw_text(_x, knob_y - 12, string(_data[0]));
-		draw_text(_x, knob_y + 12, string(_data[1]));
+		draw_text(_x, knob_y - ui(12), string(_data[0]));
+		draw_text(_x, knob_y + ui(12), string(_data[1]));
 		
 		active = false;
 		hover  = false;

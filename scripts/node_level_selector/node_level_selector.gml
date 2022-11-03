@@ -39,11 +39,11 @@ function Node_Level_Selector(_x, _y) : Node_Processor(_x, _y) constructor {
 		
 		for( var i = 0; i < 4; i++ ) {
 			var _bx = x1 - 20 - i * 24;
-			var _by = y0 - 24;
+			var _by = y0;
 			
 			if(buttonInstant(s_button_hide, _bx, _by, 20, 20, _m, _focus, _hover) == 2) 
 				histShow[i] = !histShow[i];
-			draw_sprite_ext(s_circle_12, 0, _bx + 10, _by + 10, 1, 1, 0, his_colors[i], 0.5 + histShow[i] * 0.5);
+			draw_sprite_ui_uniform(s_circle_12, 0, _bx + 10, _by + 10, 1, his_colors[i], 0.5 + histShow[i] * 0.5);
 		}
 		
 		if(histMax > 0)

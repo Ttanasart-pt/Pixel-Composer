@@ -19,8 +19,8 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 	w = _w;
 	h = _h;
 	
-	min_w = 32;
-	min_h = 32;
+	min_w = ui(32);
+	min_h = ui(32);
 	
 	dragging  = -1;
 	drag_sval = 0;
@@ -33,7 +33,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 		surface_set_target(mask_surface);
 		draw_clear(c_black);
 		gpu_set_blendmode(bm_subtract);
-		draw_sprite_stretched(s_ui_panel_bg, 0, 2, 2, w - 4, h - 4);
+		draw_sprite_stretched(s_ui_panel_bg, 0, ui(2), ui(2), w - ui(4), h - ui(4));
 		gpu_set_blendmode(bm_normal);
 		surface_reset_target();
 	}
@@ -201,7 +201,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 		if(content) content.onStepBegin();
 		
 		if(dragging == 1) {
-			var _mx = clamp(mouse_mx, 16, WIN_W - 16);
+			var _mx = clamp(mouse_mx, ui(16), WIN_W - ui(16));
 			var dw = _mx - drag_sm;
 			var res = true;
 			
@@ -236,7 +236,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 			
 			if(mouse_check_button_released(mb_left)) dragging = -1;
 		} else if(dragging == 2) {
-			var _my = clamp(mouse_my, 16, WIN_H - 16);
+			var _my = clamp(mouse_my, ui(16), WIN_H - ui(16));
 			var dh = _my - drag_sm;
 			var res = true;
 			
@@ -277,12 +277,12 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 			}
 			
 			if(ds_list_empty(childs)) {
-				if(point_in_rectangle(mouse_mx, mouse_my, x + 2, y + 2, x + w - 4, y + h - 4)) {
+				if(point_in_rectangle(mouse_mx, mouse_my, x + ui(2), y + ui(2), x + w - ui(4), y + h - ui(4))) {
 					HOVER = self;
 					if(mouse_check_button_pressed(mb_left))   setFocus(self);
 					if(mouse_check_button_pressed(mb_right))  setFocus(self);
 					if(mouse_check_button_pressed(mb_middle)) setFocus(self);
-					if(FOCUS == self && content) 
+					if(sFOCUS && content) 
 						FOCUS_STR = content.context_str;
 				}
 			}
@@ -311,44 +311,47 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 				var _panel = childs[| i];
 				_panel.draw();
 				
-				if(_drag && (HOVER == noone || is_struct(HOVER)) ) {
-					switch(_panel.anchor) {
-						case ANCHOR.left :
-							if(point_in_rectangle(mouse_mx, mouse_my, _panel.x + _panel.w - 2, _panel.y, _panel.x + _panel.w + 2, _panel.y + _panel.h)) {
-								CURSOR = cr_size_we;
-								if(mouse_check_button_pressed(mb_left)) {
-									dragging  = 1;
-									drag_sval = _panel.w;
-									drag_sm   = mouse_mx;
-								}
-							}
+				if!(_drag && (HOVER == noone || is_struct(HOVER)))
+					continue;
+				
+				switch(_panel.anchor) {
+					case ANCHOR.left :
+						if(!point_in_rectangle(mouse_mx, mouse_my, _panel.x + _panel.w - ui(2), _panel.y, _panel.x + _panel.w + ui(2), _panel.y + _panel.h))
 							break;
-						case ANCHOR.top :
-							if(point_in_rectangle(mouse_mx, mouse_my, _panel.x, _panel.y + _panel.h - 2, _panel.x + _panel.w, _panel.y + _panel.h + 2)) {
-								CURSOR = cr_size_ns;
-								if(mouse_check_button_pressed(mb_left)) {
-									dragging = 2;
-									drag_sval = _panel.h;
-									drag_sm   = mouse_my;
-								}
-							}
+							
+						CURSOR = cr_size_we;
+						if(mouse_check_button_pressed(mb_left)) {
+							dragging  = 1;
+							drag_sval = _panel.w;
+							drag_sm   = mouse_mx;
+						}
+						break;
+					case ANCHOR.top :
+						if(!point_in_rectangle(mouse_mx, mouse_my, _panel.x, _panel.y + _panel.h - ui(2), _panel.x + _panel.w, _panel.y + _panel.h + ui(2)))
 							break;
-					}
+							
+						CURSOR = cr_size_ns;
+						if(mouse_check_button_pressed(mb_left)) {
+							dragging = 2;
+							drag_sval = _panel.h;
+							drag_sm   = mouse_my;
+						}
+						break;
 				}
 			}
 		}
 	}
 	
 	function drawPanel() {
-		if(w <= 16) return;
-		draw_sprite_stretched(s_ui_panel_bg, 0, x + 2, y + 2, w - 4, h - 4);
+		if(w <= ui(16)) return;
+		draw_sprite_stretched(s_ui_panel_bg, 0, x + ui(2), y + ui(2), w - ui(4), h - ui(4));
 		
 		if(!is_surface(mask_surface)) {
 			mask_surface = surface_create_valid(w, h);
 			resetMask();
 		}
 		
-		if(!is_surface(content_surface)) content_surface = surface_create(w, h);
+		if(!is_surface(content_surface)) content_surface = surface_create_valid(w, h);
 		surface_set_target(content_surface);
 			draw_clear(c_ui_blue_black);
 			if(content) {
@@ -365,7 +368,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 		
 		draw_surface_safe(content_surface, x, y);
 		
-		if(FOCUS == self) draw_sprite_stretched(s_ui_panel_active, 0, x + 2, y + 2, w - 4, h - 4);
+		if(sFOCUS) draw_sprite_stretched(s_ui_panel_active, 0, x + ui(2), y + ui(2), w - ui(4), h - ui(4));
 	}
 	
 	function remove() {
@@ -395,8 +398,8 @@ function PanelContent(_panel) constructor {
 	mx = 0;
 	my = 0;
 	
-	min_w = 32;
-	min_h = 32;
+	min_w = ui(32);
+	min_h = ui(32);
 	
 	function refresh() {
 		onResize();

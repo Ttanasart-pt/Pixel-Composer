@@ -63,8 +63,8 @@
 	
 	globalvar ADD_NODE_PAGE, ADD_NODE_W, ADD_NODE_H, ADD_NODE_MODE;
 	ADD_NODE_PAGE = "";
-	ADD_NODE_W = 532;
-	ADD_NODE_H = 346;
+	ADD_NODE_W = -1;
+	ADD_NODE_H = -1;
 	ADD_NODE_MODE = 0;
 	
 	globalvar AXIS_COLOR;
@@ -78,10 +78,14 @@
 	#macro WIN_SW window_get_width()
 	#macro WIN_SH window_get_height()
 	
-	#macro DISP_SCALE PREF_MAP[? "display_scaling"]
+	#macro UI_SCALE PREF_MAP[? "display_scaling"]
 	
 	#macro mouse_mx device_mouse_x_to_gui(0)
 	#macro mouse_my device_mouse_y_to_gui(0)
+	#macro mouse_ui [device_mouse_x_to_gui(0), device_mouse_y_to_gui(0)]
+	
+	#macro sFOCUS FOCUS == self
+	#macro sHOVER HOVER == self
 	
 	#region color
 		#macro c_ui_blue_dkblack	$251919
@@ -112,7 +116,7 @@
 		#macro BLEND_OVERRIDE gpu_set_blendmode_ext(bm_one, bm_zero);
 	#endregion
 	
-	#macro PIXEL_SURFACE surface_create(1, 1)
+	#macro PIXEL_SURFACE surface_create_valid(1, 1)
 	#macro print show_debug_message
 #endregion
 

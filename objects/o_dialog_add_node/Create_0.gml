@@ -9,6 +9,11 @@ event_inherited();
 	node_called   = noone;
 	junction_hovering = noone;
 	
+	if(ADD_NODE_W == -1 || ADD_NODE_H == -1) {
+		ADD_NODE_W = ui(532);
+		ADD_NODE_H = ui(346);	
+	}
+	
 	dialog_w = ADD_NODE_W;
 	dialog_h = ADD_NODE_H;
 	
@@ -92,11 +97,11 @@ event_inherited();
 		}
 	}
 	
-	catagory_pane = new scrollPane(132, dialog_h - 66, function(_y, _m) {
+	catagory_pane = new scrollPane(ui(132), dialog_h - ui(66), function(_y, _m) {
 		draw_clear_alpha(c_ui_blue_black, 0);
 		
 		var hh  = 0;
-		var hg  = 28;
+		var hg  = ui(28);
 		var key = ds_map_find_first(ALL_NODES);
 		var cnt = PANEL_GRAPH.getCurrentContext();
 		var context = cnt == -1? "" : instanceof(cnt);
@@ -117,9 +122,9 @@ event_inherited();
 			}
 			
 			if(key == page_key) {
-				draw_sprite_stretched(s_ui_panel_bg, 0, 0, _y + hh, 132, hg);
-			} else if(point_in_rectangle(_m[0], _m[1], 0, _y + hh, 100, _y + hh + hg - 1)) {
-				draw_sprite_stretched_ext(s_ui_panel_bg, 0, 0, _y + hh + 3, 103, hg - 6, c_white, 0.75);
+				draw_sprite_stretched(s_ui_panel_bg, 0, 0, _y + hh, ui(132), hg);
+			} else if(point_in_rectangle(_m[0], _m[1], 0, _y + hh, ui(100), _y + hh + hg - 1)) {
+				draw_sprite_stretched_ext(s_ui_panel_bg, 0, 0, _y + hh + ui(3), ui(103), hg - ui(6), c_white, 0.75);
 				if(mouse_check_button(mb_left)) {
 					page_key		= key;
 					ADD_NODE_PAGE	= key;
@@ -129,14 +134,14 @@ event_inherited();
 				}
 			}
 			
-			draw_text(8, _y + hh + hg / 2, key);
+			draw_text(ui(8), _y + hh + hg / 2, key);
 			hh += hg;
 		}
 		
 		return hh;
 	});
 	
-	content_pane = new scrollPane(dialog_w - 144, dialog_h - 66, function(_y, _m) {
+	content_pane = new scrollPane(dialog_w - ui(144), dialog_h - ui(66), function(_y, _m) {
 		draw_clear_alpha(c_white, 0);
 		
 		var nodes	   = page;
@@ -144,9 +149,9 @@ event_inherited();
 		var hh         = 0;
 		
 		if(ADD_NODE_MODE == 0) {
-			var grid_size  = 64;
-			var grid_width = 80;
-			var grid_space = 12;
+			var grid_size  = ui(64);
+			var grid_width = ui(80);
+			var grid_space = ui(12);
 			var col        = floor(content_pane.surface_w / (grid_width + grid_space));
 			var row        = ceil(node_count / col);
 			var yy         = _y + grid_space;
@@ -177,7 +182,7 @@ event_inherited();
 						var spr_x = _boxx + grid_size / 2;
 						var spr_y = yy + grid_size / 2;
 						if(variable_struct_exists(_node, "spr") && sprite_exists(_node.spr))
-							draw_sprite(_node.spr, 0, spr_x, spr_y);
+							draw_sprite_ui_uniform(_node.spr, 0, spr_x, spr_y);
 					
 						draw_set_text(f_p2, fa_center, fa_top, c_white);
 						name_height = max(name_height, string_height_ext(_node.name, -1, grid_width) + 8);
@@ -190,7 +195,7 @@ event_inherited();
 			}	
 		} else if(ADD_NODE_MODE == 1) {
 			var list_width  = content_pane.surface_w;
-			var list_height = 28;
+			var list_height = ui(28);
 			var yy         = _y + list_height / 2;
 			hh += list_height;
 		
@@ -200,25 +205,25 @@ event_inherited();
 				
 				if(i % 2) {
 					BLEND_ADD
-					draw_sprite_stretched_ext(s_node_bg, 0, 4, yy, list_width - 8, list_height, c_white, 0.2);
+					draw_sprite_stretched_ext(s_node_bg, 0, ui(4), yy, list_width - ui(8), list_height, c_white, 0.2);
 					BLEND_NORMAL
 				}
 				
 				if(point_in_rectangle(_m[0], _m[1], 0, yy, list_width, yy + list_height - 1)) {
-					draw_sprite_stretched(s_node_active, 0, 4, yy, list_width - 8, list_height);
+					draw_sprite_stretched(s_node_active, 0, ui(4), yy, list_width - ui(8), list_height);
 					if(mouse_check_button_pressed(mb_left))
 						buildNode(_node);
 				}
 					
-				var spr_x = list_height / 2 + 8 + 6;
+				var spr_x = list_height / 2 + ui(14);
 				var spr_y = yy + list_height / 2;
 				if(variable_struct_exists(_node, "spr") && sprite_exists(_node.spr)) {
-					var ss = (list_height - 8) / max(sprite_get_width(_node.spr), sprite_get_height(_node.spr));
+					var ss = (list_height - ui(8)) / max(sprite_get_width(_node.spr), sprite_get_height(_node.spr));
 					draw_sprite_ext(_node.spr, 0, spr_x, spr_y, ss, ss, 0, c_white, 1);
 				}
 				
 				draw_set_text(f_p2, fa_left, fa_center, c_white);
-				draw_text(list_height + 8 + 12, yy + list_height / 2, _node.name);
+				draw_text(list_height + ui(20), yy + list_height / 2, _node.name);
 				
 				yy += list_height;
 				hh += list_height;
@@ -231,15 +236,15 @@ event_inherited();
 
 #region resize
 	dialog_resizable = true;
-	dialog_w_min = 200;
-	dialog_h_min = 120;
-	dialog_w_max = 800;
-	dialog_h_max = 640;
+	dialog_w_min = ui(200);
+	dialog_h_min = ui(120);
+	dialog_w_max = ui(800);
+	dialog_h_max = ui(640);
 	
 	onResize = function() {
-		catagory_pane.resize(132, dialog_h - 66);
-		content_pane.resize(dialog_w - 144, dialog_h - 66);
-		search_pane.resize(dialog_w - 40, dialog_h - 66);
+		catagory_pane.resize(ui(132), dialog_h - ui(66));
+		content_pane.resize(dialog_w - ui(144), dialog_h - ui(66));
+		search_pane.resize(dialog_w - ui(40), dialog_h - ui(66));
 		
 		ADD_NODE_W = dialog_w;
 		ADD_NODE_H = dialog_h;
@@ -298,16 +303,16 @@ event_inherited();
 		searchCollection(search_list, search_string, false);
 	}
 	
-	search_pane = new scrollPane(dialog_w - 40, dialog_h - 66, function(_y, _m) {
+	search_pane = new scrollPane(dialog_w - ui(40), dialog_h - ui(66), function(_y, _m) {
 		draw_clear_alpha(c_white, 0);
 		
 		var amo = ds_list_size(search_list);
 		var hh = 0;
 		
 		if(ADD_NODE_MODE == 0) {
-			var grid_size = 64;
-			var grid_width = 80;
-			var grid_space = 16;
+			var grid_size = ui(64);
+			var grid_width = ui(80);
+			var grid_space = ui(16);
 			var col = floor(search_pane.surface_w / (grid_width + grid_space));
 			var yy = _y + grid_space;
 			var index = 0;
@@ -338,7 +343,7 @@ event_inherited();
 					var _si = current_time * PREF_MAP[? "collection_preview_speed"] / 3000;
 					var _sw = sprite_get_width(_node.spr);
 					var _sh = sprite_get_height(_node.spr);
-					var _ss = 32 / max(_sw, _sh);
+					var _ss = ui(32) / max(_sw, _sh);
 				
 					var _sox = sprite_get_xoffset(_node.spr);
 					var _soy = sprite_get_yoffset(_node.spr);
@@ -353,7 +358,7 @@ event_inherited();
 			
 				draw_set_text(f_p2, fa_center, fa_top, c_white);
 				var txt = _node.name;
-				name_height = max(name_height, string_height_ext(txt, -1, grid_width) + 8);
+				name_height = max(name_height, string_height_ext(txt, -1, grid_width) + ui(8));
 				draw_text_ext(_boxx + grid_size / 2, yy + grid_size + 4, txt, -1, grid_width);
 				
 				if(point_in_rectangle(_m[0], _m[1], _nx, yy, _nx + grid_width, yy + grid_size)) {
@@ -381,7 +386,7 @@ event_inherited();
 			}
 		} else if(ADD_NODE_MODE == 1) {
 			var list_width  = search_pane.surface_w;
-			var list_height = 28;
+			var list_height = ui(28);
 			var yy = _y + list_height / 2;
 			hh += list_height;
 		
@@ -396,7 +401,7 @@ event_inherited();
 				
 				if(i % 2) {
 					BLEND_ADD
-					draw_sprite_stretched_ext(s_node_bg, 0, 4, yy, list_width - 8, list_height, c_white, 0.2);
+					draw_sprite_stretched_ext(s_node_bg, 0, ui(4), yy, list_width - ui(8), list_height, c_white, 0.2);
 					BLEND_NORMAL
 				}
 				
@@ -404,12 +409,12 @@ event_inherited();
 					var _si = current_time * PREF_MAP[? "collection_preview_speed"] / 3000;
 					var _sw = sprite_get_width(_node.spr);
 					var _sh = sprite_get_height(_node.spr);
-					var _ss = (list_height - 8) / max(_sw, _sh);
+					var _ss = (list_height - ui(8)) / max(_sw, _sh);
 				
 					var _sox = sprite_get_xoffset(_node.spr);
 					var _soy = sprite_get_yoffset(_node.spr);
 					
-					var _sx = list_height / 2 + 8 + 6;
+					var _sx = list_height / 2 + ui(14);
 					var _sy = yy + list_height / 2;
 					_sx += _sw * _ss / 2 - _sox * _ss;
 					_sy += _sh * _ss / 2 - _soy * _ss;
@@ -418,7 +423,7 @@ event_inherited();
 				}
 			
 				draw_set_text(f_p2, fa_left, fa_center, c_white);
-				draw_text(list_height + 8 + 12, yy + list_height / 2, _node.name);
+				draw_text(list_height + ui(20), yy + list_height / 2, _node.name);
 				
 				if(point_in_rectangle(_m[0], _m[1], 0, yy, list_width, yy + list_height - 1)) {
 					node_selecting = i;
@@ -427,7 +432,7 @@ event_inherited();
 				}
 				
 				if(node_selecting == i) {
-					draw_sprite_stretched(s_node_active, 0, 4, yy, list_width - 8, list_height);
+					draw_sprite_stretched(s_node_active, 0, ui(4), yy, list_width - ui(8), list_height);
 					if(keyboard_check_pressed(vk_enter))
 						buildNode(_node, _param);
 				}

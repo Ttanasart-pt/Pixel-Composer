@@ -2,8 +2,8 @@
 event_inherited();
 
 #region data
-	dialog_w = 240;
-	dialog_h = 48;
+	dialog_w = ui(240);
+	dialog_h = ui(48);
 	
 	destroy_on_click_out = true;
 	

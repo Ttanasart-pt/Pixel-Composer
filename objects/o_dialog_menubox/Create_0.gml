@@ -6,7 +6,7 @@ event_inherited();
 	destroy_on_click_out = false;
 	alarm[0] = -1;
 	menu = 1;
-	hght = 36;
+	hght = ui(36);
 	children = ds_list_create();
 	ds_list_add(children, self);
 	
@@ -27,11 +27,11 @@ event_inherited();
 		draw_set_text(f_p0, fa_center, fa_center, c_white);
 		for(var i = 0; i < array_length(menu); i++) {
 			if(!is_array(menu[i])) {
-				dialog_h += 8;
+				dialog_h += ui(8);
 				continue;
 			}
 			draw_set_font(f_p0);
-			var ww = string_width(menu[i][0]) + 64;
+			var ww = string_width(menu[i][0]) + ui(64);
 				
 			if(array_length(menu[i]) > 2) {
 				if(menu[i][2] == ">") {
@@ -41,7 +41,7 @@ event_inherited();
 					if(_key) {
 						draw_set_font(f_p1);
 						var ss = key_get_name(_key.key, _key.modi);	
-						ww += string_width(ss) + 16;
+						ww += string_width(ss) + ui(16);
 					}
 				}
 			}
@@ -52,10 +52,10 @@ event_inherited();
 			dialog_h += hght;
 		}
 		
-		if(dialog_x + dialog_w > WIN_W - 16)
-			dialog_x = WIN_W - 16 - dialog_w;
-		if(dialog_y + dialog_h > WIN_H - 16)
-			dialog_y = WIN_H - 16 - dialog_h;
+		if(dialog_x + dialog_w > WIN_W - ui(16))
+			dialog_x = WIN_W - ui(16) - dialog_w;
+		if(dialog_y + dialog_h > WIN_H - ui(16))
+			dialog_y = WIN_H - ui(16) - dialog_h;
 		
 		ready = true;
 	}

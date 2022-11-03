@@ -116,7 +116,7 @@ function Node_Image_gif(_x, _y) : Node(_x, _y) constructor {
 		if(is_surface(_outsurf)) 
 			surface_size_to(_outsurf, ww, hh);
 		else {
-			_outsurf = surface_create(ww, hh);
+			_outsurf = surface_create_valid(ww, hh);
 			outputs[| 0].setValue(_outsurf);
 		}
 		
@@ -131,7 +131,7 @@ function Node_Image_gif(_x, _y) : Node(_x, _y) constructor {
 	
 	function onDrawNode(xx, yy, _mx, _my, _s) {
 		if(loading) {
-			draw_sprite_ext(s_loading, 0, xx + w * _s / 2, yy + h * _s / 2, _s, _s, current_time / 2, c_ui_blue_grey, 1);
+			draw_sprite_ui(s_loading, 0, xx + w * _s / 2, yy + h * _s / 2, _s, _s, current_time / 2, c_ui_blue_grey, 1);
 		}
 	}
 	

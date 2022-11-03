@@ -1,5 +1,5 @@
 /// @description init
-if(HOVER == self) HOVER = noone;
-if(FOCUS == self) setFocus(noone);
+if(sHOVER) HOVER = noone;
+if(sFOCUS) setFocus(noone);
 
 TEXTBOX_ACTIVE = noone;

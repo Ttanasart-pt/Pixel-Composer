@@ -21,7 +21,6 @@ function Node(_x, _y) constructor {
 	h = 128;
 	min_h = 128;
 	auto_height = true;
-	junction_shift_y = 32;
 	
 	input_display_list = -1;
 	inspector_display_list = -1;
@@ -58,7 +57,7 @@ function Node(_x, _y) constructor {
 	
 	anim_show = true;
 	
-	value_validation = [0, 0];
+	value_validation = array_create(3);
 	MODIFIED = true;
 	
 	static getInputJunctionIndex = function(index) {
@@ -72,8 +71,8 @@ function Node(_x, _y) constructor {
 	}
 	
 	static setHeight = function() {
-		var _hi = junction_shift_y;
-		var _ho = 32;
+		var _hi = ui(32);
+		var _ho = ui(32);
 		for( var i = 0; i < ds_list_size(inputs); i++ )  {
 			if(inputs[| i].isVisible()) _hi += 24;
 		}
@@ -206,7 +205,7 @@ function Node(_x, _y) constructor {
 		
 		var jun;
 		var amo = input_display_list == -1? ds_list_size(inputs) : array_length(input_display_list);
-		var _in = yy + junction_shift_y * _s;
+		var _in = yy + ui(32) * _s;
 		
 		for(var i = 0; i < amo; i++) {
 			var idx = getInputJunctionIndex(i);
@@ -220,7 +219,7 @@ function Node(_x, _y) constructor {
 		}
 		
 		xx = xx + w * _s;
-		_in = yy + junction_shift_y * _s;
+		_in = yy + ui(32) * _s;
 		for(var i = 0; i < ds_list_size(outputs); i++) {
 			jun = outputs[| i];
 			
@@ -238,15 +237,15 @@ function Node(_x, _y) constructor {
 		if(name == "") return;
 			
 		if(_s * w > 48) {
-			draw_sprite_stretched_ext(s_node_name, 0, xx, yy, w * _s, 20, color, 0.75);
+			draw_sprite_stretched_ext(s_node_name, 0, xx, yy, w * _s, ui(20), color, 0.75);
 			draw_set_text(f_p1, fa_left, fa_center, c_white);
 		
 			if(!auto_update) icon = s_refresh_16;
 			if(icon) {
-				draw_sprite_ext(icon, 0, xx + 12, yy + 10, 1, 1, 0, c_white, 1);	
-				draw_text_cut(xx + 24, yy + 10, name, w * _s - 24);
+				draw_sprite_ui_uniform(icon, 0, xx + ui(12), yy + ui(10));	
+				draw_text_cut(xx + ui(24), yy + ui(10), name, w * _s - ui(24));
 			} else {
-				draw_text_cut(xx + 8, yy + 10, name, w * _s - 8);
+				draw_text_cut(xx + ui(8), yy + ui(10), name, w * _s - ui(8));
 			}
 		}
 	}
@@ -383,41 +382,41 @@ function Node(_x, _y) constructor {
 			surf = surf[preview_index];
 		}
 		
-		if(is_surface(surf)) {
-			var pw = surface_get_width(surf);
-			var ph = surface_get_height(surf);
-			var ps = min((w * _s - 8) / pw, (h * _s - 8) / ph);
-			var px = xx + w * _s / 2 - pw * ps / 2;
-			var py = yy + h * _s / 2 - ph * ps / 2;
+		if(!is_surface(surf)) return;
+		
+		var pw = surface_get_width(surf);
+		var ph = surface_get_height(surf);
+		var ps = min((w * _s - 8) / pw, (h * _s - 8) / ph);
+		var px = xx + w * _s / 2 - pw * ps / 2;
+		var py = yy + h * _s / 2 - ph * ps / 2;
 			
-			draw_surface_ext_safe(surf, px, py, ps, ps, 0, c_white, 1);
-			//draw_set_color(c_ui_blue_grey);
-			//draw_rectangle(px, py, px + pw * ps - 1, py + ph * ps - 1, true);
+		draw_surface_ext_safe(surf, px, py, ps, ps, 0, c_white, 1);
+		//draw_set_color(c_ui_blue_grey);
+		//draw_rectangle(px, py, px + pw * ps - 1, py + ph * ps - 1, true);
 			
-			if(_s * w > 64) {
-				draw_set_text(_s >= 1? f_p1 : f_p2, fa_center, fa_top, c_ui_blue_grey);
-				var tx = xx + w * _s / 2;
-				var ty = yy + (h + 4) * _s;
-				draw_text(round(tx), round(ty), string(pw) + " x " + string(ph) + "px");
+		if(_s * w > 64) {
+			draw_set_text(_s >= 1? f_p1 : f_p2, fa_center, fa_top, c_ui_blue_grey);
+			var tx = xx + w * _s / 2;
+			var ty = yy + (h + 4) * _s;
+			draw_text(round(tx), round(ty), string(pw) + " x " + string(ph) + "px");
 				
-				if(PREF_MAP[? "node_show_time"]) {
-					ty += string_height("l") * 0.8;
-					var rt, unit;
-					if(render_time < 1000) {
-						rt = round(render_time / 10) * 10;
-						unit = "us";
-						draw_set_color(c_ui_lime);
-					} else if(render_time < 1000000) {
-						rt = string_format(render_time / 1000, -1, 2);
-						unit = "ms";
-						draw_set_color(c_ui_orange);
-					} else {
-						rt = string_format(render_time / 1000000, -1, 2);
-						unit = "s";
-						draw_set_color(c_ui_red);
-					}
-					draw_text(round(tx), round(ty), string(rt) + " " + unit);
+			if(PREF_MAP[? "node_show_time"]) {
+				ty += line_height() * 0.8;
+				var rt, unit;
+				if(render_time < 1000) {
+					rt = round(render_time / 10) * 10;
+					unit = "us";
+					draw_set_color(c_ui_lime);
+				} else if(render_time < 1000000) {
+					rt = string_format(render_time / 1000, -1, 2);
+					unit = "ms";
+					draw_set_color(c_ui_orange);
+				} else {
+					rt = string_format(render_time / 1000000, -1, 2);
+					unit = "s";
+					draw_set_color(c_ui_red);
 				}
+				draw_text(round(tx), round(ty), string(rt) + " " + unit);
 			}
 		}
 	}
@@ -428,9 +427,8 @@ function Node(_x, _y) constructor {
 		var xx = x * _s + _x;
 		var yy = y * _s + _y;
 		
-		if(value_validation[1]) {
+		if(value_validation[VALIDATION.error])
 			draw_sprite_stretched(s_node_error, 0, xx - 9, yy - 9, w * _s + 18, h * _s + 18);
-		}
 		
 		drawNodeBase(xx, yy, _s);
 		if(previewable && ds_list_size(outputs) > 0) 
@@ -503,13 +501,14 @@ function Node(_x, _y) constructor {
 		onDestroy();
 	}
 	static onValidate = function() {
-		value_validation[0] = 0;
-		value_validation[1] = 0;
+		value_validation[VALIDATION.pass]	 = 0;
+		value_validation[VALIDATION.warning] = 0;
+		value_validation[VALIDATION.error]   = 0;
 		
 		for( var i = 0; i < ds_list_size(inputs); i++ ) {
 			var jun = inputs[| i];
 			if(jun.value_validation)
-				value_validation[jun.value_validation - 1]++;
+				value_validation[jun.value_validation]++;
 		}
 	}
 	
@@ -676,7 +675,7 @@ function Node(_x, _y) constructor {
 				NODE_MAP[? _group].add(self);
 			} else {
 				var txt = "Group load failed. Can't find node ID " + string(_group);
-				PANEL_MENU.addNotiExtra(txt);
+				noti_warning(txt);
 				log_warning("LOAD", txt);
 			}
 		}

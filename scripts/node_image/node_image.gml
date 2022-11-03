@@ -97,7 +97,7 @@ function Node_Image(_x, _y) : Node(_x, _y) constructor {
 		if(is_surface(_outsurf)) 
 			surface_size_to(_outsurf, ww, hh);
 		else {
-			_outsurf = surface_create(ww, hh);
+			_outsurf = surface_create_valid(ww, hh);
 			outputs[| 0].setValue(_outsurf);
 		}
 		

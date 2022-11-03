@@ -168,7 +168,7 @@ function Node_Render_Sprite_Sheet(_x, _y) : Node(_x, _y) constructor {
 						break;
 				}
 				
-				_surf[i] = surface_create(ww, hh);
+				_surf[i] = surface_create_valid(ww, hh);
 				surface_set_target(_surf[i]);
 				draw_clear_alpha(0, 0);
 				surface_reset_target();
@@ -218,7 +218,7 @@ function Node_Render_Sprite_Sheet(_x, _y) : Node(_x, _y) constructor {
 						break;
 				}
 				
-				var _surf = surface_create(ww, hh);
+				var _surf = surface_create_valid(ww, hh);
 				
 				surface_set_target(_surf);
 				draw_clear_alpha(0, 0);

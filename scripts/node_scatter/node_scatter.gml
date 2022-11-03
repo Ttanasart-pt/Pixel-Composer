@@ -91,7 +91,7 @@ function Node_Scatter(_x, _y) : Node(_x, _y) constructor {
 		
 		for(var i = 0; i < 2; i++) {
 			if(!is_surface(temp_surf[i])) 
-				temp_surf[i] = surface_create(ww, hh);
+				temp_surf[i] = surface_create_valid(ww, hh);
 			else 
 				surface_size_to(temp_surf[i], ww, hh);
 			

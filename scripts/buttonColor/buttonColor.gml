@@ -21,7 +21,7 @@ function buttonColorClass(_onApply) constructor {
 	static draw = function(_x, _y, _w, _h, _color, _m) {
 		b_picker.hover  = hover;
 		b_picker.active = active;
-		b_picker.draw(_x + _w - 32, _y + _h / 2 - 16, 32, 32, _m, s_button_hide);
+		b_picker.draw(_x + _w - ui(32), _y + _h / 2 - ui(16), ui(32), ui(32), _m, s_button_hide);
 		
 		if(keyboard_check_pressed(vk_alt)) {
 			onColorPick();
@@ -34,7 +34,7 @@ function buttonColorClass(_onApply) constructor {
 			}
 		}
 		
-		var _cw = _w - 40;
+		var _cw = _w - ui(40);
 		var click = false;
 		if(hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _cw, _y + _h)) {
 			draw_sprite_stretched(s_button, 1, _x, _y, _cw, _h);	
@@ -50,7 +50,7 @@ function buttonColorClass(_onApply) constructor {
 		} else {
 			draw_sprite_stretched(s_button, 0, _x, _y, _cw, _h);		
 		}
-		draw_sprite_stretched_ext(s_color_picker_sample, 0, _x + 4, _y + 4, _cw - 8, _h - 8, _color, 1);
+		draw_sprite_stretched_ext(s_color_picker_sample, 0, _x + ui(4), _y + ui(4), _cw - ui(8), _h - ui(8), _color, 1);
 		
 		hover  = false;
 		active = false;

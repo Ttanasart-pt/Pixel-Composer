@@ -142,7 +142,7 @@ function Node_Particle_Effector(_x, _y) : Node(_x, _y) constructor {
 					break;
 			}
 			
-			draw_sprite_ext(s_preview_crosshair, 0, px, py, 1, 1, 0, cc, ss);
+			draw_sprite_ui_uniform(s_preview_crosshair, 0, px, py, 1, cc, ss);
 		}
 	}
 	

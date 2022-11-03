@@ -55,57 +55,57 @@ function controlPointBox(_onModify) constructor {
 		
 		var yy = _y;
 		
-		scMode.draw(_x, yy, _w, 34, sMode[_data[PUPPET_CONTROL.mode]], _m, _rx, _ry);
-		yy += 34 + 8;
+		scMode.draw(_x, yy, _w, TEXTBOX_HEIGHT, sMode[_data[PUPPET_CONTROL.mode]], _m, _rx, _ry);
+		yy += TEXTBOX_HEIGHT + ui(8);
 		
-		var lw = 80;
+		var lw = ui(80);
 		var w  = _w / 2 - lw;
 		
 		draw_set_text(f_p0, fa_left, fa_center, c_white);
-		draw_text(_x,               yy + 17, "cx");
-		draw_text(_x + _w / 2 + 10, yy + 17, "cy");
-		tbCx.draw(_x + lw,          yy, w, 34, _data[PUPPET_CONTROL.cx], _m);
-		tbCy.draw(_x + _w / 2 + lw, yy, w, 34, _data[PUPPET_CONTROL.cy], _m);
-		yy += 34 + 8;
+		draw_text(_x,					yy + ui(17), "cx");
+		draw_text(_x + _w / 2 + ui(10), yy + ui(17), "cy");
+		tbCx.draw(_x + lw,				yy, w, TEXTBOX_HEIGHT, _data[PUPPET_CONTROL.cx], _m);
+		tbCy.draw(_x + _w / 2 + lw,		yy, w, TEXTBOX_HEIGHT, _data[PUPPET_CONTROL.cy], _m);
+		yy += TEXTBOX_HEIGHT + ui(8);
 		
 		switch(_data[PUPPET_CONTROL.mode]) {
 			case PUPPET_FORCE_MODE.move: 
 				draw_set_text(f_p0, fa_left, fa_center, c_white);
-				draw_text(_x,               yy + 17, "fx");
-				draw_text(_x + _w / 2 + 10, yy + 17, "fy");
-				tbFx.draw(_x + lw,          yy, w, 34, _data[PUPPET_CONTROL.fx],  _m);
-				tbFy.draw(_x + _w / 2 + lw, yy, w, 34, _data[PUPPET_CONTROL.fy], _m);
-				yy += 34 + 8;
+				draw_text(_x,					yy + ui(17), "fx");
+				draw_text(_x + _w / 2 + ui(10), yy + ui(17), "fy");
+				tbFx.draw(_x + lw,				yy, w, TEXTBOX_HEIGHT, _data[PUPPET_CONTROL.fx],  _m);
+				tbFy.draw(_x + _w / 2 + lw,		yy, w, TEXTBOX_HEIGHT, _data[PUPPET_CONTROL.fy], _m);
+				yy += TEXTBOX_HEIGHT + ui(8);
 		
 				draw_set_text(f_p0, fa_left, fa_center, c_white);
-				draw_text(_x, yy + 17, "radius");
-				sW.draw(_x + lw, yy, _w - lw, 34, _data[PUPPET_CONTROL.width],  _m);
-				yy += 34 + 8;
+				draw_text(_x, yy + ui(17), "radius");
+				sW.draw(_x + lw, yy, _w - lw, TEXTBOX_HEIGHT, _data[PUPPET_CONTROL.width],  _m);
+				yy += TEXTBOX_HEIGHT + ui(8);
 				break;
 			case PUPPET_FORCE_MODE.pinch: 
 			case PUPPET_FORCE_MODE.inflate: 
 				draw_set_text(f_p0, fa_left, fa_center, c_white);
-				draw_text(_x, yy + 17, "radius");
-				sW.draw(_x + lw, yy, _w - lw, 34, _data[PUPPET_CONTROL.width],  _m);
-				yy += 34 + 8;
+				draw_text(_x, yy + ui(17), "radius");
+				sW.draw(_x + lw, yy, _w - lw, TEXTBOX_HEIGHT, _data[PUPPET_CONTROL.width],  _m);
+				yy += TEXTBOX_HEIGHT + ui(8);
 				
-				draw_text(_x, yy + 17, "strength");
-				tbH.draw(_x + lw, yy, _w - lw, 34, _data[PUPPET_CONTROL.height], _m);
-				yy += 34 + 8;
+				draw_text(_x, yy + ui(17), "strength");
+				tbH.draw(_x + lw, yy, _w - lw, TEXTBOX_HEIGHT, _data[PUPPET_CONTROL.height], _m);
+				yy += TEXTBOX_HEIGHT + ui(8);
 				break;
 			case PUPPET_FORCE_MODE.wind: 
 				draw_set_text(f_p0, fa_left, fa_center, c_white);
-				draw_text(_x, yy + 17, "stength");
-				tbFx.draw(_x + lw, yy, _w - lw, 34, _data[PUPPET_CONTROL.fx],  _m);
-				yy += 34 + 8;
+				draw_text(_x, yy + ui(17), "stength");
+				tbFx.draw(_x + lw, yy, _w - lw, TEXTBOX_HEIGHT, _data[PUPPET_CONTROL.fx],  _m);
+				yy += TEXTBOX_HEIGHT + ui(8);
 				
 				draw_set_text(f_p0, fa_left, fa_center, c_white);
-				draw_text(_x, yy + 17, "width");
-				tbW.draw(_x + lw, yy, _w - lw, 34, _data[PUPPET_CONTROL.width], _m);
-				yy += 34 + 8;
+				draw_text(_x, yy + ui(17), "width");
+				tbW.draw(_x + lw, yy, _w - lw, TEXTBOX_HEIGHT, _data[PUPPET_CONTROL.width], _m);
+				yy += TEXTBOX_HEIGHT + ui(8);
 				
 				rot.draw(_x + _w / 2, yy, _data[PUPPET_CONTROL.fy], _m);
-				yy += 94 + 8;
+				yy += ui(94 + 8);
 				break;
 		}
 		

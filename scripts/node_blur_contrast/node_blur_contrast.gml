@@ -32,7 +32,7 @@ function Node_Blur_Contrast(_x, _y) : Node_Processor(_x, _y) constructor {
 		var hh = surface_get_height(_surf);
 		
 		if(is_surface(pass)) surface_size_to(pass, ww, hh);
-		else pass = surface_create(ww, hh);
+		else pass = surface_create_valid(ww, hh);
 		
 		surface_set_target(pass);
 		draw_clear_alpha(0, 0);

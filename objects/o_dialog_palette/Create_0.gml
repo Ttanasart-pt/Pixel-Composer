@@ -2,8 +2,8 @@
 event_inherited();
 
 #region data
-	dialog_w = 240 + 16 + 540;
-	dialog_h = 432;
+	dialog_w = ui(796);
+	dialog_h = ui(432);
 	destroy_on_click_out = true;
 	
 	name = "Palette editor";
@@ -20,7 +20,7 @@ event_inherited();
 	
 	sat           = 0;
 	val           = 0;
-	color_surface = surface_create(256, 256);
+	color_surface = surface_create_valid(ui(256), ui(256));
 	
 	onApply = -1;
 	
@@ -127,22 +127,22 @@ event_inherited();
 	}
 	presetCollect();
 	
-	sp_preset_w = 240 - 32 - 16;
-	sp_presets = new scrollPane(sp_preset_w, dialog_h - 44 - 18, function(_y, _m) {
-		var ww  = sp_preset_w - 32 - 8;
-		var hh = 32;
-		var yy = _y + 8;
-		var hg = 52;
+	sp_preset_w = ui(240 - 32 - 16);
+	sp_presets = new scrollPane(sp_preset_w, dialog_h - ui(62), function(_y, _m) {
+		var ww  = sp_preset_w - ui(40);
+		var hh = ui(32);
+		var yy = _y + ui(8);
+		var hg = ui(52);
 		draw_clear_alpha(c_ui_blue_black, 0);
 		
 		for(var i = 0; i < ds_list_size(presets); i++) {
-			draw_sprite_stretched(s_ui_panel_bg, 1, 4, yy, sp_preset_w - 16, hg);
+			draw_sprite_stretched(s_ui_panel_bg, 1, ui(4), yy, sp_preset_w - ui(16), hg);
 			
 			draw_set_text(f_p2, fa_left, fa_top, c_ui_blue_ltgrey);
-			draw_text(16, yy + 8, preset_name[| i]);
-			drawPalette(presets[| i], 16, yy + 24, ww, 16);
+			draw_text(ui(16), yy + ui(8), preset_name[| i]);
+			drawPalette(presets[| i], ui(16), yy + ui(28), ww, ui(16));
 			
-			if(FOCUS == self && point_in_rectangle(_m[0], _m[1], 4, yy, 4 + sp_preset_w - 16, yy + hg)) {
+			if(sFOCUS && point_in_rectangle(_m[0], _m[1], ui(4), yy, ui(4) + sp_preset_w - ui(16), yy + hg)) {
 				if(mouse_check_button_pressed(mb_left)) {
 					palette = array_create(array_length(presets[| i]));
 					for( var j = 0; j < array_length(presets[| i]); j++ ) {
@@ -151,8 +151,8 @@ event_inherited();
 				}
 			}
 			
-			yy += hg + 4;
-			hh += hg + 4;
+			yy += hg + ui(4);
+			hh += hg + ui(4);
 		}
 		
 		return hh;
@@ -184,6 +184,6 @@ event_inherited();
 
 #region resize
 	onResize = function() {
-		sp_presets.resize(sp_preset_w, dialog_h - 44 - 18);
+		sp_presets.resize(sp_preset_w, dialog_h - ui(62));
 	}
 #endregion

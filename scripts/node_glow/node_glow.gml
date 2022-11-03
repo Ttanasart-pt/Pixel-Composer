@@ -30,7 +30,7 @@ function Node_Glow(_x, _y) : Node_Processor(_x, _y) constructor {
 		var _size = _data[2];
 		var _stre = _data[3];
 		var cl    = _data[4];
-		var pass1 = surface_create(surface_get_width(_outSurf), surface_get_height(_outSurf));	
+		var pass1 = surface_create_valid(surface_get_width(_outSurf), surface_get_height(_outSurf));	
 		
 		surface_set_target(pass1);
 		draw_clear_alpha(c_black, 1);

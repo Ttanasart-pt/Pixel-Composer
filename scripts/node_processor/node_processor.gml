@@ -44,7 +44,7 @@ function Node_Processor(_x, _y) : Node(_x, _y) constructor {
 					}
 					
 					if(!is_surface(outSurfs[i]))
-						outSurfs[i] = surface_create(ww, hh);
+						outSurfs[i] = surface_create_valid(ww, hh);
 					else 
 						surface_size_to(outSurfs[i], ww, hh)
 					
@@ -76,7 +76,7 @@ function Node_Processor(_x, _y) : Node(_x, _y) constructor {
 				}
 				
 				if(!is_surface(outSurfs)) {
-					outSurfs = surface_create(ww, hh);
+					outSurfs = surface_create_valid(ww, hh);
 					outputs[| _oi].setValue(outSurfs);
 				} else 
 					surface_size_to(outSurfs, ww, hh);

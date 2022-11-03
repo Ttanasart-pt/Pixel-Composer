@@ -4,12 +4,12 @@
 #endregion
 
 #region draw TB
-	draw_set_text(f_p0, fa_left, fa_center, c_ui_blue_ltgrey);
-	draw_text(dialog_x + 8, dialog_y + dialog_h / 2, "Name ");
+	draw_set_text(f_p0, fa_left, fa_top, c_ui_blue_ltgrey);
+	draw_text(dialog_x + ui(8), dialog_y + dialog_h / 2, "Name ");
 	
-	tb_name.active = FOCUS == self;
-	tb_name.hover  = HOVER == self;
+	tb_name.active = sFOCUS;
+	tb_name.hover  = sHOVER;
 	
-	tb_name.draw(dialog_x + 64, dialog_y + 8, dialog_w - 64 - 8, dialog_h - 16, 
-		"New file", [mouse_mx, mouse_my]);
+	tb_name.draw(dialog_x + ui(64), dialog_y + ui(8), dialog_w - ui(72), dialog_h - ui(16), 
+		"New file", mouse_ui);
 #endregion

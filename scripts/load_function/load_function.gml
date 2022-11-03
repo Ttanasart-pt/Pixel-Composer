@@ -9,16 +9,20 @@ function LOAD() {
 				
 	gc_collect();
 	LOAD_PATH(path);
+	
+	ds_list_clear(STATUSES);
+	ds_list_clear(WARNING);
+	ds_list_clear(ERRORS);
 }
 
 function LOAD_PATH(path, readonly = false) {
 	if(!file_exists(path)) {
-		PANEL_MENU.showNoti("File not found", s_noti_icon_warning);
+		noti_warning("File not found");
 		return false;
 	}
 	
 	if(filename_ext(path) != ".json" && filename_ext(path) != ".pxc") {
-		PANEL_MENU.showNoti("File not a valid project", s_noti_icon_warning);
+		noti_warning("File not a valid project");
 		return false;
 	}
 	
@@ -44,12 +48,12 @@ function LOAD_PATH(path, readonly = false) {
 		if(_v != SAVEFILE_VERSION) {
 			var warn = "File version mismatch : loading file verion " + string(_v) + " to Pixel Composer " + string(SAVEFILE_VERSION);
 			log_warning("FILE", warn)
-			PANEL_MENU.addNotiExtra(warn);
+			noti_warning(warn);
 		}
 	} else {
 		var warn = "File version mismatch : loading old format to Pixel Composer " + string(SAVEFILE_VERSION);
 		log_warning("FILE", warn)
-		PANEL_MENU.addNotiExtra(warn);
+		noti_warning(warn);
 	}
 	
 	nodeCleanUp();
@@ -63,7 +67,7 @@ function LOAD_PATH(path, readonly = false) {
 				if(_node) ds_list_add(create_list, _node);
 			}
 		} catch(e) {
-			PANEL_MENU.addNotiExtra("Node load error : " + e.message);
+			noti_warning("Node load error : " + e.message);
 			log_warning("LOAD, node", e.longMessage);
 		}
 	}
@@ -75,7 +79,7 @@ function LOAD_PATH(path, readonly = false) {
 			ANIMATOR.framerate		= ds_map_try_get(_anim_map, "framerate");
 		}
 	} catch(e) {
-		PANEL_MENU.addNotiExtra("Animator load error : " + e.message);
+		noti_warning("Animator load error : " + e.message);
 		log_warning("LOAD, animator", e.longMessage);
 	}
 	
@@ -85,7 +89,7 @@ function LOAD_PATH(path, readonly = false) {
 		for(var i = 0; i < ds_list_size(create_list); i++)
 			create_list[| i].loadGroup();
 	} catch(e) {
-		PANEL_MENU.addNotiExtra("Group load error : " + e.message);
+		noti_warning("Group load error : " + e.message);
 		log_warning("LOAD, group", e.longMessage);
 	}
 	
@@ -93,7 +97,7 @@ function LOAD_PATH(path, readonly = false) {
 		for(var i = 0; i < ds_list_size(create_list); i++)
 			create_list[| i].postDeserialize();
 	} catch(e) {
-		PANEL_MENU.addNotiExtra("Deserialize error : " + e.message);
+		noti_warning("Deserialize error : " + e.message);
 		log_warning("LOAD, deserialize", e.longMessage);
 	}
 	
@@ -105,7 +109,7 @@ function LOAD_PATH(path, readonly = false) {
 		for(var i = 0; i < ds_list_size(create_list); i++)
 		create_list[| i].postConnect();
 	} catch(e) {
-		PANEL_MENU.addNotiExtra("Connect error : " + e.message);
+		noti_warning("Connect error : " + e.message);
 		log_warning("LOAD, connect", e.longMessage);
 	}
 	
@@ -113,7 +117,7 @@ function LOAD_PATH(path, readonly = false) {
 		for(var i = 0; i < ds_list_size(create_list); i++)
 			create_list[| i].doUpdate();
 	} catch(e) {
-		PANEL_MENU.addNotiExtra("Update error : " + e.message);
+		noti_warning("Update error : " + e.message);
 		log_warning("LOAD, update", e.longMessage);
 	}
 	
@@ -133,9 +137,9 @@ function LOAD_PATH(path, readonly = false) {
 			}
 		
 			if(!ds_queue_empty(CONNECTION_CONFLICT))
-				PANEL_MENU.addNotiExtra("Some connection(s) is unsolved. This may caused by render node not being update properly, or image path is broken.");
+				noti_warning("Some connection(s) is unsolved. This may caused by render node not being update properly, or image path is broken.");
 		} catch(e) {
-			PANEL_MENU.addNotiExtra("Conflict solver error : " + e.message);
+			noti_warning("Conflict solver error : " + e.message);
 			log_warning("LOAD, connect solver", e.longMessage);
 		}
 	}
@@ -147,7 +151,7 @@ function LOAD_PATH(path, readonly = false) {
 	PANEL_ANIMATION.updatePropertyList();
 	
 	log_message("FILE", "load at " + path);
-	PANEL_MENU.showNoti("File loaded", s_noti_icon_file_load);
+	noti_status("File loaded", s_noti_icon_file_load);
 	
 	ds_map_destroy(_map);
 	return true;

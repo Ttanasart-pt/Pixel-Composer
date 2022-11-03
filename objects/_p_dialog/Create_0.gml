@@ -17,8 +17,8 @@
 	dialog_resiz_my = 0;
 	dialog_w_min = 320;
 	dialog_h_min = 320;
-	dialog_w_max = 1000;
-	dialog_h_max = 1000;
+	dialog_w_max = WIN_W;
+	dialog_h_max = WIN_H;
 	onResize = -1;
 	
 	draggable = true;
@@ -39,7 +39,7 @@
 				dialog_dragging = false;
 		}
 	
-		if(FOCUS == self) {
+		if(sFOCUS) {
 			if(destroy_on_escape && keyboard_check_pressed(vk_escape))
 				instance_destroy(self);
 			if(mouse_check_button_pressed(mb_left)) {

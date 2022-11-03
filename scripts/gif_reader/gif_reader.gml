@@ -105,7 +105,7 @@ function gif_std_enum_getIndex() {
 							if (_col == _transparentIndex) buffer_write(_buf, buffer_s32, 0); else buffer_write(_buf, buffer_s32, _colorTable[_col]);
 						}
 						_gf.buffer = _buf;
-						var _sf = surface_create(_f.width, _f.height);
+						var _sf = surface_create_valid(_f.width, _f.height);
 						gif_std_gml_io__Buffer_BufferImpl_setSurface(_buf, _sf, 0);
 						_gf.surface = _sf;
 						_gce = undefined;
@@ -149,14 +149,14 @@ function gif_std_enum_getIndex() {
 	
 	function __gif_sprite_builder(_gif) constructor {
 		gif = _gif;
-		_sf = surface_create(gif.width, gif.height);
+		_sf = surface_create_valid(gif.width, gif.height);
 		//show_debug_message("gif creation: width = " + string(_gif.width));
 		_restoreBuf = -1;
 		_spr = -1;
 		spr_size = 0;
 		_white32 = Gif_white32;
 		if (_white32 == -1) {
-			var _ws = surface_create(32, 32);
+			var _ws = surface_create_valid(32, 32);
 			surface_set_target(_ws);
 			draw_clear(16777215);
 			surface_reset_target();
@@ -223,14 +223,14 @@ function gif_std_enum_getIndex() {
 	}
 	
 	function __gif_create_sprite(_gif) {
-		var _sf = surface_create(_gif.width, _gif.height);
+		var _sf = surface_create_valid(_gif.width, _gif.height);
 		//show_debug_message("gif creation: width = " + string(_gif.width));
 		var _restoreBuf = -1;
 		var _spr = -1;
 		var spr_size = 0;
 		var _white32 = Gif_white32;
 		if (_white32 == -1) {
-			var _ws = surface_create(32, 32);
+			var _ws = surface_create_valid(32, 32);
 			surface_set_target(_ws);
 			draw_clear(16777215);
 			surface_reset_target();

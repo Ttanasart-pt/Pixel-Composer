@@ -268,7 +268,7 @@ function Node_Mesh_Warp(_x, _y) : Node(_x, _y) constructor {
 		var gw = floor(ww / sample) + 1;
 		var gh = floor(hh / sample) + 1;
 		
-		var cont = surface_create(ww, hh)
+		var cont = surface_create_valid(ww, hh)
 		surface_set_target(cont);
 			shader_set(sh_content_sampler);
 			var uniform_dim = shader_get_uniform(sh_content_sampler, "dimension");
@@ -437,7 +437,7 @@ function Node_Mesh_Warp(_x, _y) : Node(_x, _y) constructor {
 		if(is_surface(_outSurf)) 
 			surface_size_to(_outSurf, surface_get_width(_inSurf), surface_get_height(_inSurf));
 		else {
-			_outSurf = surface_create(surface_get_width(_inSurf), surface_get_height(_inSurf));
+			_outSurf = surface_create_valid(surface_get_width(_inSurf), surface_get_height(_inSurf));
 			outputs[| 0].setValue(_outSurf);
 		}
 		

@@ -7,9 +7,9 @@ enum TEXTBOX_INPUT {
 function textBox(_input, _onModify) constructor {
 	active = false;
 	hover  = false;
-	font   = f_p0;
 	align  = fa_right;
 	hide   = false;
+	font   = noone;
 	
 	no_empty    = true;
 	auto_update = false;
@@ -158,11 +158,11 @@ function textBox(_input, _onModify) constructor {
 		
 		switch(_format) {
 			case VALUE_DISPLAY._default :
-				draw_set_text(font, fa_left, fa_center, text_color);
+				draw_set_text(font == noone? f_p0 : font, fa_left, fa_center, text_color);
 				draw_text(_x, _y, _text);
 				break;
 			case VALUE_DISPLAY.export_format :
-				draw_set_text(font, fa_left, fa_center, text_color);
+				draw_set_text(font == noone? f_p0 : font, fa_left, fa_center, text_color);
 				var _x0 = _x, ch = "", len = string_length(_text), i = 1;
 				var cc = draw_get_color();
 				var str = "", _comm = false;
@@ -232,16 +232,27 @@ function textBox(_input, _onModify) constructor {
 		}
 	}
 	
-	static draw = function(_x, _y, _w, _h, _text, _m, _format = VALUE_DISPLAY._default) {
-		var tx = _x;
+	static draw = function(_x, _y, _w, _h, _text, _m, _format = VALUE_DISPLAY._default, halign = fa_left, valign = fa_top) {
+		switch(halign) {
+			case fa_left:   _x = _x;			break;	
+			case fa_center: _x = _x - _w / 2;	break;	
+			case fa_right:  _x = _x - _w;		break;	
+		}
 		
-		draw_set_text(font, fa_left, fa_top, c_white);
+		switch(valign) {
+			case fa_top:    _y = _y;			break;	
+			case fa_center: _y = _y - _h / 2;	break;	
+			case fa_bottom: _y = _y - _h;		break;	
+		}
+		
+		draw_set_text(font == noone? f_p0 : font, fa_left, fa_top, c_white);
 		var hh = _h;
 		
+		var tx = _x;
 		switch(align) {
-			case fa_left   : tx = _x + 8; break;
+			case fa_left   : tx = _x + ui(8); break;
 			case fa_center : tx = _x + _w / 2; break;
-			case fa_right  : tx = _x + _w - 8; break;
+			case fa_right  : tx = _x + _w - ui(8); break;
 		}
 		
 		if(sliding > 0) {
@@ -301,11 +312,11 @@ function textBox(_input, _onModify) constructor {
 			#endregion
 			
 			#region multiplier
-				if(_w > 80 && (input == TEXTBOX_INPUT.number || input == TEXTBOX_INPUT.float)) {
+				if(_w > ui(80) && (input == TEXTBOX_INPUT.number || input == TEXTBOX_INPUT.float)) {
 					draw_set_text(f_p0b, fa_left, fa_center, c_ui_blue_ltgrey);
 					draw_set_alpha(0.5);
 				
-					if(point_in_rectangle(_m[0], _m[1], _x, _y, _x + 32, _y + hh)) {
+					if(point_in_rectangle(_m[0], _m[1], _x, _y, _x + ui(32), _y + hh)) {
 						draw_set_alpha(1);
 					
 						if(active && mouse_check_button_pressed(mb_left)) {
@@ -321,9 +332,9 @@ function textBox(_input, _onModify) constructor {
 					}
 				
 					if(keyboard_check(vk_alt))
-						draw_text(_x + 8, _y + hh / 2, "/2");
+						draw_text(_x + ui(8), _y + hh / 2, "/2");
 					else
-						draw_text(_x + 8, _y + hh / 2, "x2");
+						draw_text(_x + ui(8), _y + hh / 2, "x2");
 					draw_set_alpha(1);
 					
 					apply();
@@ -331,8 +342,8 @@ function textBox(_input, _onModify) constructor {
 			#endregion
 			
 			#region draw
-				var ss = string_cut(_input_text, _w - 16);
-				draw_set_text(font, fa_left, fa_top, c_white);
+				var ss = string_cut(_input_text, _w - ui(16));
+				draw_set_text(font == noone? f_p0 : font, fa_left, fa_top, c_white);
 				var ww = string_width(ss);
 				
 				switch(align) {
@@ -353,7 +364,7 @@ function textBox(_input, _onModify) constructor {
 					draw_set_color(c_ui_blue_dkgrey);
 					var x1 = tx + string_width(string_copy(_input_text, 1, cursor_select));
 					
-					draw_roundrect_ext(cursor_pos, c_y0, x1, c_y1, 8, 8, 0);
+					draw_roundrect_ext(cursor_pos, c_y0, x1, c_y1, ui(8), ui(8), 0);
 				}
 				
 				var _mx = -1;
@@ -364,7 +375,7 @@ function textBox(_input, _onModify) constructor {
 				}
 				
 				draw_set_color(c_white);
-				display_text(tx, _y + _h / 2, ss, _w - 4, _format, _mx);
+				display_text(tx, _y + _h / 2, ss, _w - ui(4), _format, _mx);
 				draw_set_color(c_ui_orange);
 				draw_line_width(cursor_pos, c_y0, cursor_pos, c_y1, 2);
 			#endregion
@@ -375,7 +386,7 @@ function textBox(_input, _onModify) constructor {
 			}
 		} else {
 			var ss = string_cut(string(_text), _w - 16);
-			draw_set_text(font, fa_left, fa_center, c_white);
+			draw_set_text(font == noone? f_p0 : font, fa_left, fa_center, c_white);
 			var ww = string_width(ss);
 				
 			switch(align) {
@@ -402,10 +413,10 @@ function textBox(_input, _onModify) constructor {
 				draw_sprite_stretched(s_textbox, 0, _x, _y, _w, hh);
 			}
 			
-			display_text(tx, _y + _h / 2, ss, _w - 4, _format);
+			display_text(tx, _y + _h / 2, ss, _w - ui(4), _format);
 			
 			if(slidable) {
-				draw_sprite_ext(s_text_slider, 0, _x + 20, _y + hh / 2, 1, 1, 0, c_ui_blue_grey, 0.5);
+				draw_sprite_ui_uniform(s_text_slider, 0, _x + ui(20), _y + hh / 2, 1, c_ui_blue_grey, 0.5);
 			
 				if(hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + hh)) {
 					if(active && mouse_check_button_pressed(mb_left)) {

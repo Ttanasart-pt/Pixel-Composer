@@ -2,8 +2,8 @@
 event_inherited();
 
 #region data
-	dialog_w = 360;
-	dialog_h = 360;
+	dialog_w = ui(360);
+	dialog_h = ui(360);
 	
 	destroy_on_click_out = true;
 	

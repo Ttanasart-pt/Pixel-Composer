@@ -13,19 +13,19 @@ function rotator(_onModify) constructor {
 	tb_value = new textBox(TEXTBOX_INPUT.number, onModify);
 	
 	static draw = function(_x, _y, _data, _m) {
-		var knob_y = _y + 48;
+		var knob_y = _y + ui(48);
 		
 		tb_value.hover  = hover;
 		tb_value.active = active;
-		tb_value.draw(_x + 64, knob_y - 17, 64, 34, _data, _m);
+		tb_value.draw(_x + ui(64), knob_y - ui(17), ui(64), TEXTBOX_HEIGHT, _data, _m);
 		
 		draw_set_color(c_ui_blue_mdblack);
-		draw_rectangle(_x - 44, knob_y - 44, _x + 44, knob_y + 44, 0);
+		draw_rectangle(_x - ui(44), knob_y - ui(44), _x + ui(44), knob_y + ui(44), 0);
 		
-		draw_sprite(s_rotator_bg, 0, _x, knob_y);
+		draw_sprite_ui_uniform(s_rotator_bg, 0, _x, knob_y);
 		
-		var px = _x     + lengthdir_x(36, _data);
-		var py = knob_y + lengthdir_y(36, _data);
+		var px = _x     + lengthdir_x(ui(36), _data);
+		var py = knob_y + lengthdir_y(ui(36), _data);
 		
 		if(dragging) {
 			var delta = angle_difference(point_direction(_x, knob_y, _m[0], _m[1]), drag_sa);
@@ -37,7 +37,7 @@ function rotator(_onModify) constructor {
 			else 
 				val = real_val;
 			
-			draw_sprite(s_rotator_knob, 1, px, py);
+			draw_sprite_ui_uniform(s_rotator_knob, 1, px, py);
 			
 			if(val != drag_sv) {
 				onModify(val);
@@ -52,8 +52,8 @@ function rotator(_onModify) constructor {
 				UNDO_HOLDING = false;	
 			}
 			
-		} else if(hover && point_in_circle(_m[0], _m[1], _x, knob_y, 48)) {
-			draw_sprite(s_rotator_knob, 1, px, py);
+		} else if(hover && point_in_circle(_m[0], _m[1], _x, knob_y, ui(48))) {
+			draw_sprite_ui_uniform(s_rotator_knob, 1, px, py);
 				
 			if(active && mouse_check_button_pressed(mb_left)) {
 				dragging = true;
@@ -61,7 +61,7 @@ function rotator(_onModify) constructor {
 				drag_sa  = point_direction(_x, knob_y, _m[0], _m[1]);
 			}
 		} else {
-			draw_sprite(s_rotator_knob, 0, px, py);
+			draw_sprite_ui_uniform(s_rotator_knob, 0, px, py);
 		}
 		
 		draw_set_text(f_p0, fa_center, fa_center, c_white);

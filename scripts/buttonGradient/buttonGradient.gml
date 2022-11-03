@@ -24,7 +24,7 @@ function buttonGradientClass(_onApply) constructor {
 			draw_sprite_stretched(s_button, 0, _x, _y, _w, _h);		
 		}
 		
-		draw_gradient(_x + 6, _y + 6, _w - 12, _h - 12, _gradient, _data[| 0]);
+		draw_gradient(_x + ui(6), _y + ui(6), _w - ui(12), _h - ui(12), _gradient, _data[| 0]);
 		
 		hover  = false;
 		active = false;

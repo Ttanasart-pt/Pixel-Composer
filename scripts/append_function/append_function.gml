@@ -15,12 +15,12 @@ function APPEND(_path) {
 		if(_v != SAVEFILE_VERSION) {
 			var warn = "File version mismatch : loading file verion " + string(_v) + " to Pixel Composer " + string(SAVEFILE_VERSION);
 			log_warning("FILE", warn)
-			PANEL_MENU.addNotiExtra(warn);
+			noti_warning(warn);
 		}
 	} else {
 		var warn = "File version mismatch : loading old format to Pixel Composer " + string(SAVEFILE_VERSION);
 		log_warning("FILE", warn)
-		PANEL_MENU.addNotiExtra(warn);
+		noti_warning(warn);
 	}
 	
 	var _node_list = _map[? "nodes"];
@@ -45,7 +45,7 @@ function APPEND(_path) {
 				ds_list_add(node_create, _node);
 		}
 	} catch(e) {
-		PANEL_MENU.addNotiExtra("Node load error : " + e.message);
+		noti_warning("Node load error : " + e.message);
 		log_warning("APPEND, node", e.longMessage);
 	}
 	
@@ -53,7 +53,7 @@ function APPEND(_path) {
 		for(var i = 0; i < ds_list_size(appended_list); i++)
 			appended_list[| i].postDeserialize();
 	} catch(e) {
-		PANEL_MENU.addNotiExtra("Deserialize error : " + e.message);
+		noti_warning("Deserialize error : " + e.message);
 		log_warning("APPEND, deserialize", e.longMessage);
 	}
 	
@@ -65,7 +65,7 @@ function APPEND(_path) {
 		for(var i = 0; i < ds_list_size(appended_list); i++)
 			appended_list[| i].postConnect();
 	} catch(e) {
-		PANEL_MENU.addNotiExtra("Connect error : " + e.message);
+		noti_warning("Connect error : " + e.message);
 		log_warning("APPEND, connect", e.longMessage);
 	}
 	
@@ -73,7 +73,7 @@ function APPEND(_path) {
 		for(var i = 0; i < ds_list_size(appended_list); i++)
 			appended_list[| i].doUpdate();
 	} catch(e) {
-		PANEL_MENU.addNotiExtra("Update error : " + e.message);
+		noti_warning("Update error : " + e.message);
 		log_warning("APPEND, update", e.longMessage);
 	}
 	
@@ -98,9 +98,9 @@ function APPEND(_path) {
 			}
 		
 			if(!ds_queue_empty(CONNECTION_CONFLICT))
-				PANEL_MENU.addNotiExtra("Some connection(s) is unsolved. This may caused by render node not being update properly, or image path is broken.");
+				noti_warning("Some connection(s) is unsolved. This may caused by render node not being update properly, or image path is broken.");
 		} catch(e) {
-			PANEL_MENU.addNotiExtra("Conflict solver error : " + e.message);
+			noti_warning("Conflict solver error : " + e.message);
 			log_warning("APPEND, solver", e.longMessage);
 		}
 	}
@@ -109,7 +109,7 @@ function APPEND(_path) {
 	PANEL_ANIMATION.updatePropertyList();
 	
 	log_message("FILE", "append file " + _path);
-	PANEL_MENU.showNoti("Collection loaded", s_noti_icon_file_load);
+	noti_status("Collection loaded", s_noti_icon_file_load);
 	
 	ds_map_destroy(_map);
 	return node_create;

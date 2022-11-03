@@ -385,7 +385,9 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 	}
 	resetDisplay();
 	
+	error_notification = noone;
 	static onValidate = function() {
+		var _val = value_validation, str = "";
 		value_validation = VALIDATION.pass; 
 		
 		switch(type) {
@@ -393,23 +395,41 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 				switch(display_type) {
 					case VALUE_DISPLAY.path_load: 
 						var path = animator.getValue();
-						if(try_get_path(path) == -1) 
+						if(try_get_path(path) == -1) {
 							value_validation = VALIDATION.error;	
+							str = "File not exist";
+						}
 						break;
 					case VALUE_DISPLAY.path_array: 
 						var paths = animator.getValue();
 						if(is_array(paths)) {
 							for( var i = 0; i < array_length(paths); i++ ) {
-								if(try_get_path(paths[i]) == -1) 
+								if(try_get_path(paths[i]) == -1) {
 									value_validation = VALIDATION.error;	
+									str = "File not exist";
+								}
 							} 
-						} else
+						} else {
 							value_validation = VALIDATION.error;	
+							str = "File not exist";
+						}
 						break;
 				}
 				break;
 		}
 		node.onValidate();
+		
+		if(_val != value_validation) {
+			if(value_validation == VALIDATION.error && error_notification == noone) {
+				error_notification = noti_error(str);
+				error_notification.onClick = function() { PANEL_GRAPH.node_focus = node; };
+			}
+				
+			if(value_validation == VALIDATION.pass && error_notification != noone) {
+				noti_remove(error_notification);
+				error_notification = noone;
+			}
+		}
 		
 		return self;
 	}
@@ -707,7 +727,7 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 							}
 						} 
 						
-						draw_sprite(spr, index, _ax, _ay);
+						draw_sprite_ui_uniform(spr, index, _ax, _ay);
 						break;
 					#endregion
 					case VALUE_DISPLAY.rotation : #region
@@ -715,7 +735,7 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 						
 						var _ax = _x + lengthdir_x(_rad, _val);
 						var _ay = _y + lengthdir_y(_rad, _val);
-						draw_sprite_ext(s_anchor_rotate, 0, _ax, _ay, 1, 1, _val - 90, c_white, 1);
+						draw_sprite_ui(s_anchor_rotate, 0, _ax, _ay, 1, 1, _val - 90, c_white, 1);
 						
 						if(drag_type) {
 							draw_set_color(c_ui_orange);
@@ -723,7 +743,7 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 							draw_circle(_x, _y, _rad, true);
 							draw_set_alpha(1);
 							
-							draw_sprite_ext(s_anchor_rotate, 1, _ax, _ay, 1, 1, _val - 90, c_white, 1);
+							draw_sprite_ui(s_anchor_rotate, 1, _ax, _ay, 1, 1, _val - 90, c_white, 1);
 							var angle = point_direction(_x, _y, _mx, _my);
 							if(keyboard_check(vk_control))
 								angle = round(angle / 15) * 15;
@@ -744,7 +764,7 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 							draw_set_alpha(1);
 							hover = 1;
 							
-							draw_sprite_ext(s_anchor_rotate, 1, _ax, _ay, 1, 1, _val - 90, c_white, 1);
+							draw_sprite_ui(s_anchor_rotate, 1, _ax, _ay, 1, 1, _val - 90, c_white, 1);
 							if(_active && mouse_check_button_pressed(mb_left)) {
 								drag_type = 1;
 								drag_mx   = _mx;
@@ -765,10 +785,10 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 						var _ax = __ax * _s + _x;
 						var _ay = __ay * _s + _y;
 						
-						draw_sprite(s_anchor_selector, 0, _ax, _ay);
+						draw_sprite_ui_uniform(s_anchor_selector, 0, _ax, _ay);
 						
 						if(drag_type) {
-							draw_sprite(s_anchor_selector, 1, _ax, _ay);
+							draw_sprite_ui_uniform(s_anchor_selector, 1, _ax, _ay);
 							var _nx = (drag_sx + (_mx - drag_mx) - _x) / _s / _psx;
 							var _ny = (drag_sy + (_my - drag_my) - _y) / _s / _psy;
 							if(keyboard_check(vk_control)) {
@@ -790,7 +810,7 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 						
 						if(point_in_circle(_mx, _my, _ax, _ay, 8)) {
 							hover = 1;
-							draw_sprite(s_anchor_selector, 1, _ax, _ay);
+							draw_sprite_ui_uniform(s_anchor_selector, 1, _ax, _ay);
 							if(_active && mouse_check_button_pressed(mb_left)) {
 								drag_type = 1;
 								drag_mx   = _mx;
@@ -823,13 +843,13 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 								break;
 						}
 						
-						draw_sprite_ext(s_anchor, 0, _ax, _ay, 1, 1, 0, c_white, 1);
-						draw_sprite(s_anchor_selector, 0, _ax + _aw, _ay + _ah);
+						draw_sprite_ui_uniform(s_anchor, 0, _ax, _ay);
+						draw_sprite_ui_uniform(s_anchor_selector, 0, _ax + _aw, _ay + _ah);
 						
 						if(point_in_circle(_mx, _my, _ax + _aw, _ay + _ah, 8))
-							draw_sprite(s_anchor_selector, 1, _ax + _aw, _ay + _ah);
+							draw_sprite_ui_uniform(s_anchor_selector, 1, _ax + _aw, _ay + _ah);
 						else if(point_in_rectangle(_mx, _my, _ax - _aw, _ay - _ah, _ax + _aw, _ay + _ah))
-							draw_sprite_ext(s_anchor, 0, _ax, _ay, 1.25, 1.25, 0, c_white, 1);
+							draw_sprite_ui_uniform(s_anchor, 0, _ax, _ay, 1.25, c_white);
 						
 						if(drag_type == 1) {
 							var _xx = drag_sx + (_mx - drag_mx) / _s;
@@ -909,13 +929,13 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 							case PUPPET_FORCE_MODE.move :
 								draw_line_width2(_ax, _ay, _ax1, _ay1, 6, 1);
 						
-								draw_sprite(s_anchor_selector, 0, _ax, _ay);
-								draw_sprite(s_anchor_selector, 2, _ax1, _ay1);
+								draw_sprite_ui_uniform(s_anchor_selector, 0, _ax, _ay);
+								draw_sprite_ui_uniform(s_anchor_selector, 2, _ax1, _ay1);
 								draw_circle(_ax, _ay, _val[PUPPET_CONTROL.width] * _s, true);
 								break;
 							case PUPPET_FORCE_MODE.pinch :
 							case PUPPET_FORCE_MODE.inflate :
-								draw_sprite(s_anchor_selector, 0, _ax, _ay);
+								draw_sprite_ui_uniform(s_anchor_selector, 0, _ax, _ay);
 								draw_circle(_ax, _ay, _val[PUPPET_CONTROL.width] * _s, true);
 								break;
 							case PUPPET_FORCE_MODE.wind :
@@ -939,12 +959,12 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 								
 								draw_line(_l0x0, _l0y0, _l0x1, _l0y1);
 								draw_line(_l1x0, _l1y0, _l1x1, _l1y1);
-								draw_sprite(s_anchor_selector, 0, _ax, _ay);
+								draw_sprite_ui_uniform(s_anchor_selector, 0, _ax, _ay);
 								break;
 						}
 						
 						if(drag_type == 1) {
-							draw_sprite(s_anchor_selector, 1, _ax, _ay);
+							draw_sprite_ui_uniform(s_anchor_selector, 1, _ax, _ay);
 							var _nx = drag_sx + (_mx - drag_mx) / _s;
 							var _ny = drag_sy + (_my - drag_my) / _s;
 							
@@ -964,7 +984,7 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 								UNDO_HOLDING = false;
 							}
 						} else if(drag_type == 2) {
-							draw_sprite(s_anchor_selector, 0, _ax1, _ay1);
+							draw_sprite_ui_uniform(s_anchor_selector, 0, _ax1, _ay1);
 							var _nx = drag_sx + (_mx - drag_mx) / _s;
 							var _ny = drag_sy + (_my - drag_my) / _s;
 							
@@ -987,7 +1007,7 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 						
 						if(point_in_circle(_mx, _my, _ax, _ay, 8)) {
 							hover = 1;
-							draw_sprite(s_anchor_selector, 1, _ax, _ay);
+							draw_sprite_ui_uniform(s_anchor_selector, 1, _ax, _ay);
 							if(_active && mouse_check_button_pressed(mb_left)) {
 								drag_type = 1;
 								drag_mx   = _mx;
@@ -999,7 +1019,7 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 						
 						if(_val[PUPPET_CONTROL.mode] == PUPPET_FORCE_MODE.move && point_in_circle(_mx, _my, _ax1, _ay1, 8)) {
 							hover = 2;
-							draw_sprite(s_anchor_selector, 0, _ax1, _ay1);
+							draw_sprite_ui_uniform(s_anchor_selector, 0, _ax1, _ay1);
 							if(_active && mouse_check_button_pressed(mb_left)) {
 								drag_type = 2;
 								drag_mx   = _mx;

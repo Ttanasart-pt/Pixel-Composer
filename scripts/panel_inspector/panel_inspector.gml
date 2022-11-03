@@ -7,18 +7,18 @@ function Panel_Inspector(_panel) : PanelContent(_panel) constructor {
 	context_str = "Inspector";
 	
 	inspecting = noone;
-	top_bar_h  = 64;
+	top_bar_h  = ui(64);
 	
 	prop_hover = noone;
 	prop_selecting = noone;
 	
-	content_w = w - 32;
-	content_h = h - top_bar_h - 24;
+	content_w = w - ui(32);
+	content_h = h - top_bar_h - ui(24);
 	
 	keyframe_dragging = noone;
 	keyframe_drag_st  = 0;
 	
-	min_w = 160;
+	min_w = ui(160);
 	lineBreak = true;
 	
 	tb_node_name	= new textBox(TEXTBOX_INPUT.text, function(txt) {
@@ -43,11 +43,11 @@ function Panel_Inspector(_panel) : PanelContent(_panel) constructor {
 		prop_hover = noone;
 		var jun;
 		var amo = inspecting.input_display_list == -1? ds_list_size(inspecting.inputs) : array_length(inspecting.input_display_list);
-		var hh = 16;
+		var hh = ui(8);
 		
 		for(var i = 0; i < amo; i++) {
 			var xc = con_w / 2;
-			var yy = 16 + hh + _y;
+			var yy = hh + _y;
 			
 			if(inspecting.input_display_list == -1) {
 				jun = inspecting.inputs[| i];
@@ -57,20 +57,20 @@ function Panel_Inspector(_panel) : PanelContent(_panel) constructor {
 					var txt  = jun_disp[0];
 					var coll = jun_disp[1];
 					
-					if(HOVER == panel && point_in_rectangle(_m[0], _m[1], 0, yy, con_w, yy + 32)) {
-						draw_sprite_stretched_ext(s_node_name, 0, 0, yy, con_w, 32, c_ui_blue_white, 1);
+					if(HOVER == panel && point_in_rectangle(_m[0], _m[1], 0, yy, con_w, yy + ui(32))) {
+						draw_sprite_stretched_ext(s_node_name, 0, 0, yy, con_w, ui(32), c_ui_blue_white, 1);
 						
 						if(FOCUS == panel && mouse_check_button_pressed(mb_left)) {
 							jun_disp[@ 1] = !coll;
 						}
 					} else
-						draw_sprite_stretched_ext(s_node_name, 0, 0, yy, con_w, 32, c_ui_blue_ltgrey, 1);
+						draw_sprite_stretched_ext(s_node_name, 0, 0, yy, con_w, ui(32), c_ui_blue_ltgrey, 1);
 					
-					draw_sprite_ext(s_arrow_16, 0, 16, yy + 32 / 2, 1, 1, -90 + coll * 90, c_ui_blue_ltgrey, 1);
+					draw_sprite_ui(s_arrow_16, 0, ui(16), yy + ui(32) / 2, 1, 1, -90 + coll * 90, c_ui_blue_ltgrey, 1);
 					draw_set_text(f_p0, fa_left, fa_center, c_ui_blue_white);
-					draw_text(32, yy + 32 / 2, txt);
+					draw_text(ui(32), yy + ui(32) / 2, txt);
 					
-					hh += 32 + 8 + 16 * !coll;
+					hh += ui(32 + 8);
 					
 					if(coll) {
 						var j = i + 1;
@@ -83,13 +83,13 @@ function Panel_Inspector(_panel) : PanelContent(_panel) constructor {
 						}
 						i = j - 1;
 						continue;
-					} else
-						continue;
+					}
+					continue;
 				} else if(is_struct(jun_disp) && instanceof(jun_disp) == "Inspector_Custom_Renderer") {
 					var hov = HOVER == panel;
 					var foc = FOCUS == panel;
-					jun_disp.draw(6, yy, con_w - 12, _m, hov, foc);
-					hh += jun_disp.h + 20;
+					jun_disp.draw(ui(6), yy, con_w - ui(12), _m, hov, foc);
+					hh += jun_disp.h + ui(20);
 					continue;
 				}
 				jun = inspecting.inputs[| inspecting.input_display_list[i]];
@@ -97,11 +97,14 @@ function Panel_Inspector(_panel) : PanelContent(_panel) constructor {
 				
 			if(!jun.show_in_inspector || jun.type == VALUE_TYPE.object) continue;
 			
-			var butx = 16;
+			var lb_h = line_height(f_p0) + ui(8);
+			var lb_y = yy + lb_h / 2;
+			
+			var butx = ui(16);
 			var index = jun.value_from == noone? jun.animator.is_anim : 2;
-			draw_sprite_ext(s_animate_clock, index, butx, yy, 1, 1, 0, c_white, 0.8);
-			if(HOVER == panel && point_in_circle(_m[0], _m[1], butx, yy, 10)) {
-				draw_sprite_ext(s_animate_clock, index, butx, yy, 1, 1, 0, c_white, 1);
+			draw_sprite_ui_uniform(s_animate_clock, index, butx, lb_y, 1, c_white, 0.8);
+			if(HOVER == panel && point_in_circle(_m[0], _m[1], butx, lb_y, ui(10))) {
+				draw_sprite_ui_uniform(s_animate_clock, index, butx, lb_y, 1, c_white, 1);
 				TOOLTIP = "Toggle animation";
 					
 				if(mouse_check_button_pressed(mb_left)) {
@@ -113,11 +116,11 @@ function Panel_Inspector(_panel) : PanelContent(_panel) constructor {
 				}
 			}
 			
-			butx += 20;
+			butx += ui(20);
 			index = jun.visible;
-			draw_sprite_ext(s_junc_visible, index, butx, yy, 1, 1, 0, c_white, 0.8);
-			if(HOVER == panel && point_in_circle(_m[0], _m[1], butx, yy, 10)) {
-				draw_sprite_ext(s_junc_visible, index, butx, yy, 1, 1, 0, c_white, 1);
+			draw_sprite_ui_uniform(s_junc_visible, index, butx, lb_y, 1, c_white, 0.8);
+			if(HOVER == panel && point_in_circle(_m[0], _m[1], butx, lb_y, ui(10))) {
+				draw_sprite_ui_uniform(s_junc_visible, index, butx, lb_y, 1, c_white, 1);
 				TOOLTIP = "Visibility";
 					
 				if(mouse_check_button_pressed(mb_left)) {
@@ -126,14 +129,14 @@ function Panel_Inspector(_panel) : PanelContent(_panel) constructor {
 			}
 				
 			draw_set_text(f_p0, fa_left, fa_center, c_white);
-			draw_text(56, yy, jun.name);
-			var labelStringWidth = string_width(jun.name) + 32;
+			draw_text(ui(56), lb_y - ui(2), jun.name);
+			var lb_w = string_width(jun.name) + ui(32);
 				
 			#region anim
 				if(lineBreak && jun.animator.is_anim) {
-					var bx = w - 72;
-					var by = yy - 12;
-					if(buttonInstant(s_button_hide, bx, by, 24, 24, _m, FOCUS == panel, HOVER == panel, "", s_prop_keyframe, 2) == 2) {
+					var bx = w - ui(64);
+					var by = lb_y;
+					if(buttonInstant(s_button_hide, bx - ui(12), by - ui(12), ui(24), ui(24), _m, FOCUS == panel, HOVER == panel, "", s_prop_keyframe, 2) == 2) {
 						for(var j = 0; j < ds_list_size(jun.animator.values); j++) {
 							var _key = jun.animator.values[| j];
 							if(_key.time > ANIMATOR.current_frame) {
@@ -144,7 +147,7 @@ function Panel_Inspector(_panel) : PanelContent(_panel) constructor {
 						}
 					}
 						
-					bx -= 26;
+					bx -= ui(26);
 					var cc = c_ui_blue_grey;
 					for(var j = 0; j < ds_list_size(jun.animator.values); j++) {
 						if(jun.animator.values[| j].time == ANIMATOR.current_frame) {
@@ -153,7 +156,7 @@ function Panel_Inspector(_panel) : PanelContent(_panel) constructor {
 						}
 					}
 						
-					if(buttonInstant(s_button_hide, bx, by, 24, 24, _m, FOCUS == panel, HOVER == panel, cc == c_ui_blue_grey? "Add keyframe" : "Remove keyframe", s_prop_keyframe, 1, cc) == 2) {
+					if(buttonInstant(s_button_hide, bx - ui(12), by - ui(12), ui(24), ui(24), _m, FOCUS == panel, HOVER == panel, cc == c_ui_blue_grey? "Add keyframe" : "Remove keyframe", s_prop_keyframe, 1, cc) == 2) {
 						var _add = false;
 						for(var j = 0; j < ds_list_size(jun.animator.values); j++) {
 							var _key = jun.animator.values[| j];
@@ -171,8 +174,8 @@ function Panel_Inspector(_panel) : PanelContent(_panel) constructor {
 						if(!_add) ds_list_add(jun.animator.values, new valueKey(ANIMATOR.current_frame, jun.getValue(), jun.animator));
 					}
 						
-					bx -= 26;
-					if(buttonInstant(s_button_hide, bx, by, 24, 24, _m, FOCUS == panel, HOVER == panel, "", s_prop_keyframe, 0) == 2) {
+					bx -= ui(26);
+					if(buttonInstant(s_button_hide, bx - ui(12), by - ui(12), ui(24), ui(24), _m, FOCUS == panel, HOVER == panel, "", s_prop_keyframe, 0) == 2) {
 						var _t = -1;
 						for(var j = 0; j < ds_list_size(jun.animator.values); j++) {
 							var _key = jun.animator.values[| j];
@@ -184,39 +187,39 @@ function Panel_Inspector(_panel) : PanelContent(_panel) constructor {
 						ANIMATOR.is_scrubing = true;
 					}
 						
+					var lhf = lb_h / 2 - 4;
 					draw_set_color(c_ui_blue_dkgrey);
-					draw_line(bx - 6, by + 4, bx - 6, by + 20);
-						
+					draw_line(bx - ui(20), by - lhf, bx - ui(20), by + lhf);
+					
 					draw_set_color(c_ui_blue_dkgrey);
-					draw_line(bx - 6, by + 4, bx - 6, by + 20);
+					draw_line(bx - ui(20), by - lhf, bx - ui(20), by + lhf);
 						
-					bx -= 26 + 12;
-					if(buttonInstant(s_button_hide, bx, by, 24, 24, _m, FOCUS == panel, HOVER == panel, "Looping mode " + ON_END_NAME[jun.on_end], s_prop_on_end, jun.on_end) == 2)
+					bx -= ui(26 + 12);
+					if(buttonInstant(s_button_hide, bx - ui(12), by - ui(12), ui(24), ui(24), _m, FOCUS == panel, HOVER == panel, "Looping mode " + ON_END_NAME[jun.on_end], s_prop_on_end, jun.on_end) == 2)
 						jun.on_end = safe_mod(jun.on_end + 1, sprite_get_number(s_prop_on_end));
 				}
 			#endregion
-				
-			var _hsx = 32;
-			var _hsy = yy + 20;
-			var _hex = _hsx + w - 80;
-			var _hey = _hsy + 34;
-			var padd = lineBreak? 48 : 28;
-				
-			var labelWidth = max(labelStringWidth, min(80 + w * 0.2, 200));
-			var editBoxW   = lineBreak? w - 80 : w - 80 - labelWidth;
-			var editBoxH   = lineBreak? 34 : 30;
-			var editBoxX   = lineBreak? 32 : 32 + labelWidth;
-			var editBoxY   = lineBreak? _hsy : _hsy - 36;
-				
-			var widH = lineBreak? 34 : 16;
-				
+			
+			//TODO: Fix padding to be consistant to every widget
+			var _hsx = ui(32);
+			var _hsy = yy + lb_h;
+			var padd = ui(8);
+			
+			var labelWidth = max(lb_w, min(ui(80) + w * 0.2, ui(200)));
+			var editBoxW   = w - ui(80)		- !lineBreak * labelWidth;
+			var editBoxH   = lineBreak? TEXTBOX_HEIGHT : lb_h;
+			var editBoxX   = ui(32)			+ !lineBreak * labelWidth;
+			var editBoxY   = lineBreak? _hsy : yy;
+			
+			var widH	   = lineBreak? editBoxH : 0;
+			
 			if(jun.editWidget) {
 				jun.editWidget.active = FOCUS == panel;
 				jun.editWidget.hover  = HOVER == panel;
 				
 				switch(jun.display_type) {
 					case VALUE_DISPLAY.button :
-						jun.editWidget.draw(32, _hsy, w - 80, 34, _m);
+						jun.editWidget.draw(editBoxX, editBoxY, editBoxW, editBoxH, _m);
 						break;
 					default :
 						switch(jun.type) {
@@ -231,44 +234,36 @@ function Panel_Inspector(_panel) : PanelContent(_panel) constructor {
 										break;
 									case VALUE_DISPLAY.vector_range :
 										jun.editWidget.draw(editBoxX, editBoxY, editBoxW, editBoxH, jun.showValue(), _m);
-										widH = 68;
 										break;
 									case VALUE_DISPLAY.enum_scroll :
-										jun.editWidget.draw(editBoxX, editBoxY, editBoxW, editBoxH, jun.display_data[jun.showValue()], _m, 16 + x, top_bar_h + y);
+										jun.editWidget.draw(editBoxX, editBoxY, editBoxW, editBoxH, jun.display_data[jun.showValue()], _m, ui(16) + x, top_bar_h + y);
 										break;
 									case VALUE_DISPLAY.padding :
-										editBoxY = _hsy + 50;
-										jun.editWidget.draw(xc, editBoxY, jun.showValue(), jun.modifier, _m);
-										
-										padd = 48;
-										widH = 216;
+										jun.editWidget.draw(xc, _hsy + ui(32), jun.showValue(), jun.modifier, _m);
+										widH = ui(192);
 										break;
 									case VALUE_DISPLAY.rotation :
 									case VALUE_DISPLAY.rotation_range :
 										jun.editWidget.draw(xc, _hsy, jun.showValue(), _m);
-										padd = 48;
-										widH = 94;
+										widH = ui(96);
 										break;
 									case VALUE_DISPLAY.slider :
 									case VALUE_DISPLAY.slider_range :
 										jun.editWidget.draw(editBoxX, editBoxY, editBoxW, editBoxH, jun.showValue(), _m);
 										break;
 									case VALUE_DISPLAY.area :
-										jun.editWidget.draw(xc, _hsy + 40, jun.showValue(), _m);
-										padd = 48;
-										widH = 200;
+										jun.editWidget.draw(xc, _hsy + ui(40), jun.showValue(), _m);
+										widH = ui(204);
 										break;
 									case VALUE_DISPLAY.puppet_control :
-										widH = jun.editWidget.draw(editBoxX, editBoxY, editBoxW, jun.showValue(), _m, 16 + x, top_bar_h + y);
-										padd = 48;
+										jun.editWidget.draw(editBoxX, editBoxY, editBoxW, jun.showValue(), _m, ui(16) + x, top_bar_h + y);
+										widH = ui(164);
 										break;
 								}
-						
 								break;
 							case VALUE_TYPE.boolean :
 								editBoxX = lineBreak? editBoxX : (labelWidth + con_w) / 2;
-								jun.editWidget.draw(editBoxX, editBoxY, jun.showValue(), _m);
-								widH = lineBreak? 26 : 16;
+								jun.editWidget.draw(editBoxX, editBoxY, jun.showValue(), _m, editBoxH);
 								break;
 							case VALUE_TYPE.color :
 								switch(jun.display_type) {
@@ -290,25 +285,24 @@ function Panel_Inspector(_panel) : PanelContent(_panel) constructor {
 									txt = val;
 									
 								jun.editWidget.draw(editBoxX, editBoxY, editBoxW, editBoxH, _m,, pathExist? c_white : c_ui_red);
-								var icx = editBoxX + editBoxW - 16;
+								var icx = editBoxX + editBoxW - ui(16);
 								var icy = editBoxY + editBoxH / 2;
-								draw_sprite_ext(pathExist? s_button_path_icon : s_button_path_not_found_icon, 0, icx, icy, 1, 1, 0, c_white, 1);
+								draw_sprite_ui_uniform(pathExist? s_button_path_icon : s_button_path_not_found_icon, 0, icx, icy, 1, c_white, 1);
 								draw_set_text(f_p0, fa_left, fa_center, c_white);
-								draw_text_cut(editBoxX + 8, editBoxY + 17, txt, editBoxW - 60);
+								draw_text_cut(editBoxX + ui(8), editBoxY + editBoxH / 2, txt, editBoxW - ui(60));
 									
-								if(!pathExist && point_in_rectangle(_m[0], _m[1], icx - 17, icy - 17, icx + 17, icy + 17))
+								if(!pathExist && point_in_rectangle(_m[0], _m[1], icx - ui(17), icy - ui(17), icx + ui(17), icy + ui(17)))
 									TOOLTIP = "File not exist";
 								break;
 							case VALUE_TYPE.surface :
-								editBoxH = 96;
-								jun.editWidget.draw(editBoxX, editBoxY, editBoxW, editBoxH, jun.showValue(), _m, 16 + x, top_bar_h + y);
-								widH = editBoxH;
+								editBoxH = ui(96);
+								jun.editWidget.draw(editBoxX, editBoxY, editBoxW, editBoxH, jun.showValue(), _m, ui(16) + x, top_bar_h + y);
+								widH = lineBreak? editBoxH : editBoxH - lb_h;
 								break;
 							case VALUE_TYPE.curve :
-								editBoxH = 160;
-								jun.editWidget.draw(32, _hsy, w - 80, editBoxH, jun.showValue(), _m);
-								widH = 136;
-								padd = 48;
+								editBoxH = ui(132);
+								jun.editWidget.draw(ui(32), _hsy, w - ui(80), editBoxH, jun.showValue(), _m);
+								widH = editBoxH;
 								break;
 							case VALUE_TYPE.text :
 								var _hh = jun.editWidget.draw(editBoxX, editBoxY, editBoxW, editBoxH, jun.showValue(), _m, jun.display_type);
@@ -318,23 +312,34 @@ function Panel_Inspector(_panel) : PanelContent(_panel) constructor {
 				}
 			} else if(jun.display_type == VALUE_DISPLAY.label) {
 				draw_set_text(f_p1, fa_left, fa_top, c_ui_blue_ltgrey);
-				draw_text(32, _hsy, jun.display_data);
+				draw_text(ui(32), _hsy, jun.display_data);
 				
 				widH = string_height(jun.display_data);
 			}
 			
-			_hey = _hsy + widH;
-			hh += widH + padd;
+			if(false) {
+				var __hsy = yy;
+				draw_set_alpha(0.5);
+				draw_set_color(c_ui_blue_grey);
+				draw_rectangle(ui(8), __hsy, contentPane.w - ui(16), __hsy + lb_h, 0);	__hsy += lb_h;
+				draw_set_color(c_ui_orange);
+				draw_rectangle(ui(8), __hsy, contentPane.w - ui(16), __hsy + widH, 0);	__hsy += widH;
+				draw_set_color(c_ui_lime);
+				draw_rectangle(ui(8), __hsy, contentPane.w - ui(16), __hsy + padd, 0);
+				draw_set_alpha(1);
+			}
 			
-			var _selY = min(yy - 16, editBoxY - 4);
-			var _selY1 = max(yy + 20, editBoxY + widH + 4);
+			hh += lb_h + widH + padd;
+			
+			var _selY = yy - ui(0);
+			var _selY1 = max(yy + lb_h, editBoxY + widH + ui(4));
 			var _selH = _selY1 - _selY;
 			
 			if(prop_selecting == jun)
-				draw_sprite_stretched(s_prop_selecting, 1, 4, _selY, contentPane.surface_w - 8, _selH);
+				draw_sprite_stretched(s_prop_selecting, 1, 4, _selY, contentPane.surface_w - ui(8), _selH);
 				
-			if(HOVER == panel && point_in_rectangle(_m[0], _m[1], 4, _selY, contentPane.surface_w - 4, _selY + _selH)) {
-				draw_sprite_stretched(s_prop_selecting, 0, 4, _selY, contentPane.surface_w - 8, _selH);
+			if(HOVER == panel && point_in_rectangle(_m[0], _m[1], 4, _selY, contentPane.surface_w - ui(4), _selY + _selH)) {
+				draw_sprite_stretched(s_prop_selecting, 0, 4, _selY, contentPane.surface_w - ui(8), _selH);
 				prop_hover = jun;
 					
 				if(FOCUS == panel) {
@@ -378,8 +383,8 @@ function Panel_Inspector(_panel) : PanelContent(_panel) constructor {
 	}
 	
 	function onResize() {
-		content_w = w - 32;
-		content_h = h - top_bar_h - 24;
+		content_w = w - ui(32);
+		content_h = h - top_bar_h - ui(24);
 		contentPane.resize(content_w, content_h);
 	}
 	
@@ -390,21 +395,21 @@ function Panel_Inspector(_panel) : PanelContent(_panel) constructor {
 		tb_node_name.active = FOCUS == panel;
 		tb_node_name.hover  = HOVER == panel;
 		tb_node_name.align = fa_center;
-		tb_node_name.draw(64, 14, w - 128, 32, inspecting.name, [mx, my]);
+		tb_node_name.draw(ui(64), ui(14), w - ui(128), ui(32), inspecting.name, [mx, my]);
 		
 		if(!inspecting.auto_update) {
-			var bx = w - 44;
-			var by = 12;
+			var bx = w - ui(44);
+			var by = ui(12);
 			
-			if(buttonInstant(s_button_hide, bx, by, 32, 32, [mx, my], FOCUS == panel, HOVER == panel, "Run node", s_sequence_control, 1) == 2)
+			if(buttonInstant(s_button_hide, bx, by, ui(32), ui(32), [mx, my], FOCUS == panel, HOVER == panel, "Run node", s_sequence_control, 1) == 2)
 				inspecting.doUpdate();
 		}
 		
 		if(inspecting.use_cache) {
-			var bx = 8;
-			var by = 12;
+			var bx = ui(8);
+			var by = ui(12);
 			
-			if(buttonInstant(s_button_hide, bx, by, 32, 32, [mx, my], FOCUS == panel, HOVER == panel, "This node cache output for performance.\nClick to clear all cached frames in this node.", s_cache) = 2)
+			if(buttonInstant(s_button_hide, bx, by, ui(32), ui(32), [mx, my], FOCUS == panel, HOVER == panel, "This node cache output for performance.\nClick to clear all cached frames in this node.", s_cache) = 2)
 				inspecting.clearCache();
 		}
 	}
@@ -413,13 +418,13 @@ function Panel_Inspector(_panel) : PanelContent(_panel) constructor {
 		draw_clear_alpha(c_ui_blue_black, 0);
 		lineBreak = w < PREF_MAP[? "inspector_line_break_width"];
 		
-		draw_sprite_stretched(s_ui_panel_bg, 1, 8, top_bar_h - 8, w - 16, h - top_bar_h);
+		draw_sprite_stretched(s_ui_panel_bg, 1, ui(8), top_bar_h - ui(8), w - ui(16), h - top_bar_h);
 		
 		if(inspecting)
 			drawInspectingNode();
 		
 		contentPane.active = HOVER == panel;
-		contentPane.draw(16, top_bar_h, mx - 16, my - top_bar_h);
+		contentPane.draw(ui(16), top_bar_h, mx - ui(16), my - top_bar_h);
 		
 		if(PANEL_GRAPH.node_focus && inspecting != PANEL_GRAPH.node_focus) {
 			inspecting = PANEL_GRAPH.node_focus;

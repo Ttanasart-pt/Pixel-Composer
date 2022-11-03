@@ -4,8 +4,8 @@ event_inherited();
 #region data
 	anchor = ANCHOR.right | ANCHOR.bottom;
 	
-	dialog_w = 368;
-	dialog_h = 188;
+	dialog_w = ui(368);
+	dialog_h = ui(188);
 	
 	destroy_on_click_out = true;
 #endregion

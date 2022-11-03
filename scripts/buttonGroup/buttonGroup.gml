@@ -34,7 +34,7 @@ function buttonGroupClass(_data, _onClick) constructor {
 				draw_set_text(f_p0, fa_center, fa_center, c_white);
 				draw_text(bx + ww / 2, _y + _h / 2, data[i]);
 			} else if(sprite_exists(data[i])) {
-				draw_sprite(data[i], i, bx + ww / 2, _y + _h / 2);
+				draw_sprite_ui_uniform(data[i], i, bx + ww / 2, _y + _h / 2);
 			}
 		}
 		hover  = false;

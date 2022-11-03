@@ -3,23 +3,24 @@ if !ready exit;
 
 #region base UI
 	draw_sprite_stretched(s_dialog_bg, 0, dialog_x, dialog_y, dialog_w, dialog_h);
-	if(FOCUS == self)
+	if(sFOCUS)
 		draw_sprite_stretched(s_dialog_active, 0, dialog_x, dialog_y, dialog_w, dialog_h);
 #endregion
 
 #region about
 	var cx = dialog_x + dialog_w / 2;
+	var ly = dialog_y + ui(96);
 	
-	draw_sprite(icon_64, 0, cx, dialog_y + 56);
+	draw_sprite_ui_uniform(icon_64, 0, cx, dialog_y + ui(56));
 	draw_set_text(f_h3, fa_center, fa_top, c_ui_orange);
-	draw_text(cx, dialog_y + 96, "Pixel Composer");
+	draw_text(cx, ly, "Pixel Composer");
 	
+	ly += line_height();
 	draw_set_text(f_p0, fa_center, fa_top, c_ui_blue_ltgrey);
-	draw_text(cx, dialog_y + 132, "2021, MakhamDev");
+	draw_text(cx, ly, "2021, MakhamDev");
 	
-	var thank_y = dialog_y + 180;
-	
-	draw_sprite_stretched(s_ui_panel_bg, 0, dialog_x + 24, thank_y - 8, dialog_w - 48, thank_h + 16);
-	sc_thank.active = FOCUS == self;
-	sc_thank.draw(dialog_x + 32, thank_y);
+	var thank_y = dialog_y + ui(188);
+	draw_sprite_stretched(s_ui_panel_bg, 0, dialog_x + ui(24), thank_y - ui(8), dialog_w - ui(48), thank_h + ui(16));
+	sc_thank.active = sFOCUS;
+	sc_thank.draw(dialog_x + ui(32), thank_y);
 #endregion

@@ -26,6 +26,8 @@ function Node_Export(_x, _y) : Node(_x, _y) constructor {
 	inputs[| 2] = nodeValue(2, "Template",  self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "%d%n")
 		.setDisplay(VALUE_DISPLAY.export_format);
 	
+	format_single = ["Single image (.png)", "Image sequence (.png)", "Animated gif (.gif)"];
+	format_array  = ["Multiple image (.png)", "Image sequence (.png)", "Animated gif (.gif)"];
 	inputs[| 3] = nodeValue(3, "Format", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.enum_scroll, ["Single image (.png)", "Image sequence (.png)", "Animated gif (.gif)"]);
 	
@@ -35,7 +37,7 @@ function Node_Export(_x, _y) : Node(_x, _y) constructor {
 %1d        Goes up 1 level
 %n          File name
 %f           Frame
-%i           Index" );
+%i           Array index" );
 
 	inputs[| 5] = nodeValue(5, "Loop", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true)
 		.setVisible(false);
@@ -57,7 +59,7 @@ function Node_Export(_x, _y) : Node(_x, _y) constructor {
 		var form = inputs[| 3].getValue();
 		
 		if(_index == 3 && form == 1) {
-			inputs[| 2].setValue("%d%n%3f");
+			inputs[| 2].setValue("%d%n%3f%i");
 		}
 		
 		inputs[| 5].setVisible(form == 2);
@@ -102,41 +104,49 @@ function Node_Export(_x, _y) : Node(_x, _y) constructor {
 	}
 	
 	static step = function() {
+		var surf = inputs[| 0].getValue();
+		if(is_array(surf))	inputs[| 3].display_data = format_array;
+		else				inputs[| 3].display_data = format_single;
+		
 		var anim = inputs[| 3].getValue();
 		if(!anim) return;
 		
-		if(ANIMATOR.is_playing) {
-			if(ANIMATOR.frame_progress && playing && ANIMATOR.current_frame > -1) {
-				export();
-				
-				if(ANIMATOR.current_frame == ANIMATOR.frames_total - 1) {
-					ANIMATOR.is_playing = false;
-					playing = false;
-					
-					if(anim == 2) {
-						var surf = inputs[| 0].getValue();
-						var path = inputs[| 1].getValue();
-						var suff = inputs[| 2].getValue();
-						var temp_path, target_path;
-						
-						if(is_array(surf)) {
-							for(var i = 0; i < array_length(surf); i++) {
-								temp_path = "\"" + DIRECTORY + "temp\\" + string(i) + "\\" + "*.png\"";
-								if(is_array(path))
-									target_path = pathString(path[ safe_mod(i, array_length(path)) ], suff, i);
-								else
-									target_path = pathString(path, suff, i);
-								renderGif(temp_path, "\"" + target_path + "\"");
-							}
-						} else {
-							target_path = "\"" + pathString(path, suff) + "\"";
-							renderGif("\"" + DIRECTORY + "temp\\*.png\"", target_path);
-						}
-					}
-				}
-			}
-		} else 
+		if(!ANIMATOR.is_playing) {
 			playing = false;
+			return;
+		}
+		
+		if(!ANIMATOR.frame_progress || !playing || ANIMATOR.current_frame <= -1)
+			return;
+			
+		export();
+				
+		if(ANIMATOR.current_frame < ANIMATOR.frames_total - 1) 
+			return;
+				
+		ANIMATOR.is_playing = false;
+		playing = false;
+					
+		if(anim != 2)
+			return;
+				
+		var path = inputs[| 1].getValue();
+		var suff = inputs[| 2].getValue();
+		var temp_path, target_path;
+						
+		if(is_array(surf)) {
+			for(var i = 0; i < array_length(surf); i++) {
+				temp_path = "\"" + DIRECTORY + "temp\\" + string(i) + "\\" + "*.png\"";
+				if(is_array(path))
+					target_path = pathString(path[ safe_mod(i, array_length(path)) ], suff, i);
+				else
+					target_path = pathString(path, suff, i);
+				renderGif(temp_path, "\"" + target_path + "\"");
+			}
+		} else {
+			target_path = "\"" + pathString(path, suff) + "\"";
+			renderGif("\"" + DIRECTORY + "temp\\*.png\"", target_path);
+		}
 	}
 	
 	static pathString = function(path, suff, index = 0) {
@@ -268,8 +278,7 @@ function Node_Export(_x, _y) : Node(_x, _y) constructor {
 			
 			if(directory_exists(DIRECTORY + "temp"))
 				directory_destroy(DIRECTORY + "temp");
-		} else {
+		} else
 			export();
-		}
 	}
 }

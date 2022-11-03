@@ -3,23 +3,23 @@ if !ready exit;
 
 #region base UI
 	draw_sprite_stretched(s_dialog_bg, 0, dialog_x, dialog_y, dialog_w, dialog_h);
-	if(FOCUS == self)
+	if(sFOCUS)
 		draw_sprite_stretched(s_dialog_active, 0, dialog_x, dialog_y, dialog_w, dialog_h);
 	
-	draw_set_text(f_p0, fa_left, fa_center, c_ui_blue_ltgrey);
-	draw_text(dialog_x + 24, dialog_y + 24, "Import multiple images");
+	draw_set_text(f_p0, fa_left, fa_top, c_ui_blue_ltgrey);
+	draw_text(dialog_x + ui(24), dialog_y + ui(16), "Import multiple images");
 #endregion
 
 #region nodes
-	draw_sprite_stretched(s_ui_panel_bg, 1, dialog_x + 16, dialog_y + 44, dialog_w - 32, 132);
-	var grid_size  = 64;
-	var grid_width = 80;
-	var grid_space = 16;
+	draw_sprite_stretched(s_ui_panel_bg, 0, dialog_x + ui(16), dialog_y + ui(44), dialog_w - ui(32), ui(112));
+	var grid_size  = ui(64);
+	var grid_space = ui(16);
+	var grid_width = grid_size + grid_space;
 	
 	for(var i = 0; i < array_length(nodes); i++) {
 		var _node = nodes[i];
-		var xx    = dialog_x + 16 + 16 + i * (grid_size + grid_space);
-		var yy    = dialog_y + 44 + 16;
+		var xx    = dialog_x + ui(32) + i * grid_width;
+		var yy    = dialog_y + ui(60);
 		
 		PANEL_GRAPH.stepBegin();
 		var nx = PANEL_GRAPH.mouse_grid_x;
@@ -35,7 +35,7 @@ if !ready exit;
 						for( var i = 0; i < array_length(path_arr); i++ )  {
 							var path = path_arr[i];
 							Node_create_Image_path(nx, ny, path);
-							ny += 160;
+							ny += ui(160);
 						}
 						break;
 					case 1 :
@@ -50,30 +50,30 @@ if !ready exit;
 			}
 		}
 					
-		draw_sprite(_node.spr, 0, xx + grid_size / 2, yy + grid_size / 2);
+		draw_sprite_ui_uniform(_node.spr, 0, xx + grid_size / 2, yy + grid_size / 2);
 				
-		draw_set_text(f_p1, fa_center, fa_top, c_white);
-		draw_text_ext(xx + grid_size / 2, yy + grid_size + 4, _node.name, -1, grid_width);	
+		draw_set_text(f_p2, fa_center, fa_top, c_white);
+		draw_text(xx + grid_size / 2, yy + grid_size + 4, _node.name);	
 	}
 #endregion
 
 #region directory option
 	if(is_dir) {
-		var dir_y = dialog_y + 188;
+		var dir_y = dialog_y + ui(172);
 		
-		cb_recursive.active = FOCUS == self;
-		cb_recursive.hover  = HOVER == self;
-		cb_recursive.draw(dialog_x + dialog_w - 48, dir_y, dir_recursive, [mouse_mx, mouse_my]);
-		
-		draw_set_text(f_p1, fa_left, fa_center, c_white);
-		draw_text(dialog_x + 20, dir_y + 14, "Recursive");
-		
-		dir_y += 40;
-		tb_filter.active = FOCUS == self;
-		tb_filter.hover  = HOVER == self;
-		tb_filter.draw(dialog_x + 100, dir_y, dialog_w - 100 - 20, 36, dir_filter, [mouse_mx, mouse_my]);
+		cb_recursive.active = sFOCUS;
+		cb_recursive.hover  = sHOVER;
+		cb_recursive.draw(dialog_x + dialog_w - ui(48), dir_y, dir_recursive, mouse_ui);
 		
 		draw_set_text(f_p1, fa_left, fa_center, c_white);
-		draw_text(dialog_x + 20, dir_y + 18, "Filter");
+		draw_text(dialog_x + ui(24), dir_y + ui(14), "Recursive");
+		
+		dir_y += ui(40);
+		tb_filter.active = sFOCUS;
+		tb_filter.hover  = sHOVER;
+		tb_filter.draw(dialog_x + ui(100), dir_y, dialog_w - ui(120), ui(36), dir_filter, mouse_ui);
+		
+		draw_set_text(f_p1, fa_left, fa_center, c_white);
+		draw_text(dialog_x + ui(24), dir_y + ui(18), "Filter");
 	}
 #endregion

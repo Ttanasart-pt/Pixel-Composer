@@ -7,16 +7,16 @@ event_inherited();
 	
 	target = noone;
 	
-	dialog_w = 608;
-	dialog_h = 320;
+	dialog_w = ui(608);
+	dialog_h = ui(320);
 	
 	anchor = ANCHOR.top | ANCHOR.right;
 	
 	dialog_resizable = true;
-	dialog_w_min = 200;
-	dialog_h_min = 120;
-	dialog_w_max = 640;
-	dialog_h_max = 480;
+	dialog_w_min = ui(200);
+	dialog_h_min = ui(120);
+	dialog_w_max = ui(640);
+	dialog_h_max = ui(480);
 #endregion
 
 #region context
@@ -40,15 +40,15 @@ event_inherited();
 #endregion
 
 #region surface
-	folderW = 180;
-	content_w = dialog_w - 32 - folderW;
-	content_h = dialog_h - 32;
+	folderW = ui(180);
+	content_w = dialog_w - ui(32) - folderW;
+	content_h = dialog_h - ui(32);
 	
 	function onResize() {
-		content_w = dialog_w - 32 - folderW;
-		content_h = dialog_h - 32;
+		content_w = dialog_w - ui(32) - folderW;
+		content_h = dialog_h - ui(32);
 		contentPane.resize(content_w, content_h);
-		folderPane.resize(folderW - 8, content_h - 32);
+		folderPane.resize(folderW - ui(16), content_h - ui(32));
 	}
 	
 	contentPane = new scrollPane(content_w, content_h, function(_y, _m) {
@@ -59,9 +59,9 @@ event_inherited();
 		var hh = 0;
 		var frame = current_time * PREF_MAP[? "collection_preview_speed"] / 8000;
 		
-		var grid_size = 64;
-		var img_size  = grid_size - 16;
-		var grid_space = 12;
+		var grid_size = ui(64);
+		var img_size  = grid_size - ui(16);
+		var grid_space = ui(12);
 		var col = max(1, floor(content_w / (grid_size + grid_space)));
 		var row = ceil(amo / col);
 		var yy  = _y + grid_space;
@@ -106,16 +106,16 @@ event_inherited();
 		return hh;
 	});
 	
-	folderPane = new scrollPane(folderW - 8, content_h - 48, function(_y, _m) {
+	folderPane = new scrollPane(folderW - ui(16), content_h - ui(32), function(_y, _m) {
 		draw_clear_alpha(c_ui_blue_black, 0);
 		var hh = 8;
 		
 		for(var i = 0; i < ds_list_size(global.ASSETS.subDir); i++) {
-			var hg = global.ASSETS.subDir[| i].draw(self, 8, _y, _m, folderPane.w - 16, HOVER == self, FOCUS == self, global.ASSETS);
+			var hg = global.ASSETS.subDir[| i].draw(self, ui(8), _y + 8, _m, folderPane.w - ui(16), sHOVER, sFOCUS, global.ASSETS);
 			hh += hg;
 			_y += hg;
 		}
 		
-		return hh;
+		return hh + 8;
 	});
 #endregion

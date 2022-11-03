@@ -25,7 +25,7 @@ function surfaceBox(_onModify, def_path = "") constructor {
 				draw_sprite_stretched(s_textbox, 0, _x, _y, _w, _h);		
 			}
 			
-			var pad = 12;
+			var pad = ui(12);
 			var sw = min(_w - pad, _h - pad);
 			var sh = sw;
 			
@@ -50,7 +50,7 @@ function surfaceBox(_onModify, def_path = "") constructor {
 				draw_surface_ext(_surface, _sx, _sy, ss, ss, 0, c_white, 1);
 			}
 			
-			draw_sprite_ext(s_scroll_box_arrow, 0, _x + _w - 20, _y + _h / 2, 1, 1, 0, c_ui_blue_grey, 1);
+			draw_sprite_ui_uniform(s_scroll_box_arrow, 0, _x + _w - ui(20), _y + _h / 2, 1, c_ui_blue_grey);
 		}
 		
 		hover  = false;

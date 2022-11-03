@@ -164,7 +164,7 @@ function Node_Image_Sequence(_x, _y) : Node(_x, _y) constructor {
 					ww = sprite_get_width(_spr) + pad[0] + pad[2];
 					hh = sprite_get_height(_spr) + pad[1] + pad[3];
 					
-					surfs[i] = surface_create(ww, hh);
+					surfs[i] = surface_create_valid(ww, hh);
 					surface_set_target(surfs[i]);
 						draw_clear_alpha(0, 0);
 						BLEND_ADD
@@ -174,7 +174,7 @@ function Node_Image_Sequence(_x, _y) : Node(_x, _y) constructor {
 					break;
 				case CANVAS_SIZE.maximum :
 				case CANVAS_SIZE.minimum :
-					surfs[i] = surface_create(ww, hh);
+					surfs[i] = surface_create_valid(ww, hh);
 					var _w = sprite_get_width(_spr);
 					var _h = sprite_get_height(_spr);
 						

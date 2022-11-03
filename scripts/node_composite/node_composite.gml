@@ -63,12 +63,12 @@ function Node_Composite(_x, _y) : Node_Processor(_x, _y) constructor {
 			var _cy = ly + i * (lh + 4);
 			
 			if(point_in_circle(_m[0], _m[1], _bx, _cy + lh / 2, 16)) {
-				draw_sprite_ext(s_delete_16, 3, _bx, _cy + lh / 2, 1, 1, 0, c_ui_red, 1);
+				draw_sprite_ui_uniform(s_delete_16, 3, _bx, _cy + lh / 2, 1, c_ui_red);
 				
 				if(_focus && mouse_check_button_pressed(mb_left))
 					layer_remove = ind;
 			} else 
-				draw_sprite_ext(s_delete_16, 3, _bx, _cy + lh / 2, 1, 1, 0, c_ui_blue_grey, 1);
+				draw_sprite_ui_uniform(s_delete_16, 3, _bx, _cy + lh / 2, 1, c_ui_blue_grey);
 			
 			if(!is_surface(_surf)) continue;
 			
@@ -81,7 +81,7 @@ function Node_Composite(_x, _y) : Node_Processor(_x, _y) constructor {
 			
 			var _bx = _x + 24 * 2 + 8;
 			if(point_in_circle(_m[0], _m[1], _bx, _cy + lh / 2, 12)) {
-				draw_sprite_ext(s_junc_visible, vis, _bx, _cy + lh / 2, 1, 1, 0, c_white, 1);
+				draw_sprite_ui_uniform(s_junc_visible, vis, _bx, _cy + lh / 2, 1, c_white);
 				
 				if(_focus) {
 					if(mouse_check_button_pressed(mb_left))
@@ -93,7 +93,7 @@ function Node_Composite(_x, _y) : Node_Processor(_x, _y) constructor {
 					}
 				}
 			} else 
-				draw_sprite_ext(s_junc_visible, vis, _bx, _cy + lh / 2, 1, 1, 0, c_ui_blue_grey, 1);
+				draw_sprite_ui_uniform(s_junc_visible, vis, _bx, _cy + lh / 2, 1, c_ui_blue_grey);
 			
 			draw_set_color(c_ui_blue_dkgrey);
 			var _sx0 = _x + 24 * 3 + 8;
@@ -126,12 +126,12 @@ function Node_Composite(_x, _y) : Node_Processor(_x, _y) constructor {
 			if(layer_dragging == noone || layer_dragging == ind) {
 				var _bx = _x + 24;
 				if(point_in_circle(_m[0], _m[1], _bx, _cy + lh / 2, 16)) {
-					draw_sprite_ext(s_hamburger_16, 3, _bx, _cy + lh / 2, 1, 1, 0, c_white, 1);
+					draw_sprite_ui_uniform(s_hamburger_16, 3, _bx, _cy + lh / 2, 1, c_white);
 				
 					if(_focus && mouse_check_button_pressed(mb_left))
 						layer_dragging = ind;
 				} else 
-					draw_sprite_ext(s_hamburger_16, 3, _bx, _cy + lh / 2, 1, 1, 0, c_ui_blue_grey, 1);
+					draw_sprite_ui_uniform(s_hamburger_16, 3, _bx, _cy + lh / 2, 1, c_ui_blue_grey);
 			}
 		}
 		
@@ -344,8 +344,8 @@ function Node_Composite(_x, _y) : Node_Processor(_x, _y) constructor {
 				_ri = 1;
 			}
 			
-			draw_sprite(s_anchor_rotate, _ri, _rx, _ry);
-			draw_sprite(s_anchor_scale, _si, _sx, _sy);
+			draw_sprite_ui_uniform(s_anchor_rotate, _ri, _rx, _ry);
+			draw_sprite_ui_uniform(s_anchor_scale, _si, _sx, _sy);
 			
 			draw_set_color(_borcol);
 			draw_rectangle(_dx0, _dy0, _dx1, _dy1, true);
@@ -444,7 +444,7 @@ function Node_Composite(_x, _y) : Node_Processor(_x, _y) constructor {
 			surface_size_to(_outSurf, ww, hh);
 		
 		for(var i = 0; i < 2; i++) {
-			if(!is_surface(temp_surf[i])) temp_surf[i] = surface_create(surface_get_width(_outSurf), surface_get_height(_outSurf));
+			if(!is_surface(temp_surf[i])) temp_surf[i] = surface_create_valid(surface_get_width(_outSurf), surface_get_height(_outSurf));
 			else surface_size_to(temp_surf[i], surface_get_width(_outSurf), surface_get_height(_outSurf));
 			
 			surface_set_target(temp_surf[i]);

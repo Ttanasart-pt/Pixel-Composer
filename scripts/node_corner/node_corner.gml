@@ -33,7 +33,7 @@ function Node_Corner(_x, _y) : Node_Processor(_x, _y) constructor {
 	static process_data = function(_outSurf, _data, _output_index) {
 		var wd = _data[1];
 		
-		var temp = surface_create(surface_get_width(_data[0]), surface_get_height(_data[0]));
+		var temp = surface_create_valid(surface_get_width(_data[0]), surface_get_height(_data[0]));
 		
 		surface_set_target(temp);
 			draw_clear_alpha(0, 0);

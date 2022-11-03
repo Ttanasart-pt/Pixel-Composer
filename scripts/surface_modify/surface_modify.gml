@@ -29,7 +29,7 @@ function surface_size_to(surface, width, height) {
 }
 
 function surface_clone(surface) {
-	var s = surface_create(surface_get_width(surface), surface_get_height(surface));
+	var s = surface_create_valid(surface_get_width(surface), surface_get_height(surface));
 	surface_set_target(s);
 	draw_clear_alpha(0, 0);
 	surface_reset_target();
@@ -72,7 +72,7 @@ function surface_create_from_sprite_ext(spr, ind) {
 	var sw = sprite_get_width(spr);
 	var sh = sprite_get_height(spr);
 	
-	var s = surface_create(sw, sh);
+	var s = surface_create_valid(sw, sh);
 	surface_set_target(s);
 		BLEND_ADD
 		draw_clear_alpha(0, 0);

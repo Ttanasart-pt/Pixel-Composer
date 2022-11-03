@@ -127,3 +127,21 @@
 		window_set_caption(CURRENT_PATH + (MODIFIED? "*" : "") + " - Pixel Composer");
 	}
 #endregion
+
+#region notification
+	if(!ds_list_empty(WARNING)) {
+		var rem = ds_stack_create();
+		
+		for( var i = 0; i < ds_list_size(WARNING); i++ ) {
+			var w = WARNING[| i];
+			if(--w.life <= 0)
+				ds_stack_push(rem, w);
+		}
+		
+		while(!ds_stack_empty(rem)) {
+			ds_list_delete(WARNING, ds_stack_pop(rem));	
+		}
+		
+		ds_stack_destroy(rem);
+	}
+#endregion

@@ -68,8 +68,8 @@ function Node_Image_Sheet(_x, _y) : Node(_x, _y) constructor {
 		}, "Generate"] );
 	
 	input_display_list = [
-		["Sprite", false],	0, 1, 6, 
-		["Sheet",  false],	2, 3, 9, 10, 4, 5, 
+		["Sprite", false],	0, 1, 6, 10, 
+		["Sheet",  false],	2, 3, 9, 4, 5, 
 		["Output", false],	7, 8
 	];
 	
@@ -244,7 +244,7 @@ function Node_Image_Sheet(_x, _y) : Node(_x, _y) constructor {
 			if(is_surface(_outSurf)) 
 				surface_size_to(_outSurf, ww, hh);
 			else {
-				_outSurf = surface_create(ww, hh);
+				_outSurf = surface_create_valid(ww, hh);
 				outputs[| 0].setValue(_outSurf);
 			}
 			
@@ -263,7 +263,7 @@ function Node_Image_Sheet(_x, _y) : Node(_x, _y) constructor {
 			
 			surf_array = array_create(_amo);
 			for(var i = 0; i < _amo; i++) {
-				surf_array[i] = surface_create(ww, hh);
+				surf_array[i] = surface_create_valid(ww, hh);
 				var _spr_pos = getSpritePosition(i);
 				
 				surface_set_target(surf_array[i]);

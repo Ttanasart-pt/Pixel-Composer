@@ -9,8 +9,8 @@ function slider(_min, _max, _step, _onModify = noone, _onRelease = noone) constr
 	onModify = _onModify;
 	onRelease = _onRelease;
 	onApply = function(val) {
-		onModify(val);
-		onRelease();
+		if(onModify)  onModify(val);
+		if(onRelease) onRelease();
 	}
 	
 	dragging = false;
@@ -19,20 +19,32 @@ function slider(_min, _max, _step, _onModify = noone, _onRelease = noone) constr
 	
 	tb_value = new textBox(TEXTBOX_INPUT.float, onApply);
 	
-	static draw = function(_x, _y, _w, _h, _data, _m, tb_w = 64) {
-		var sw = _w - (tb_w + 16);
+	static draw = function(_x, _y, _w, _h, _data, _m, tb_w = 64, halign = fa_left, valign = fa_top) {
+		switch(halign) {
+			case fa_left:   _x = _x;			break;	
+			case fa_center: _x = _x - _w / 2;	break;	
+			case fa_right:  _x = _x - _w;		break;	
+		}
+		
+		switch(valign) {
+			case fa_top:    _y = _y;			break;	
+			case fa_center: _y = _y - _h / 2;	break;	
+			case fa_bottom: _y = _y - _h;		break;	
+		}
+		
+		var sw = _w - (tb_w + ui(16));
 		
 		tb_value.hover  = hover;
 		tb_value.active = active;
-		tb_value.draw(_x + sw + 16, _y, tb_w, 34, _data, _m);
+		tb_value.draw(_x + sw + ui(16), _y, tb_w, _h, _data, _m);
 		
-		draw_sprite_stretched(s_slider, 0, _x, _y + _h / 2 - 4, sw, 8);	
+		draw_sprite_stretched(s_slider, 0, _x, _y + _h / 2 - ui(4), sw, ui(8));	
 		
 		var _kx = _x + clamp((_data - minn) / (maxx - minn), 0, 1) * sw;
-		draw_sprite_stretched(s_slider, 1, _kx - 10, _y, 20, _h);
+		draw_sprite_stretched(s_slider, 1, _kx - ui(10), _y, ui(20), _h);
 		
 		if(dragging) {
-			draw_sprite_stretched(s_slider, 3, _kx - 10, _y, 20, _h);
+			draw_sprite_stretched(s_slider, 3, _kx - ui(10), _y, ui(20), _h);
 			
 			var val = (_m[0] - _x) / sw * (maxx - minn) + minn;
 			val = round(val / step) * step;
@@ -46,8 +58,8 @@ function slider(_min, _max, _step, _onModify = noone, _onRelease = noone) constr
 					onRelease(val);
 			}
 		} else {
-			if(hover && (point_in_rectangle(_m[0], _m[1], _x, _y, _x + sw, _y + _h) || point_in_rectangle(_m[0], _m[1], _kx - 10, _y, _kx + 10, _y + _h))) {
-				draw_sprite_stretched(s_slider, 2, _kx - 10, _y, 20, _h);
+			if(hover && (point_in_rectangle(_m[0], _m[1], _x, _y, _x + sw, _y + _h) || point_in_rectangle(_m[0], _m[1], _kx - ui(10), _y, _kx + ui(10), _y + _h))) {
+				draw_sprite_stretched(s_slider, 2, _kx - ui(10), _y, ui(20), _h);
 				
 				if(active && mouse_check_button_pressed(mb_left)) {
 					dragging = true;

@@ -31,7 +31,7 @@ function Node_Trail(_x, _y) : Node_Processor(_x, _y) constructor {
 			return _outSurf
 		
 		for(var i = 0; i < 2; i++) {
-			if(!is_surface(temp_surf[i])) temp_surf[i] = surface_create(surface_get_width(_outSurf), surface_get_height(_outSurf));
+			if(!is_surface(temp_surf[i])) temp_surf[i] = surface_create_valid(surface_get_width(_outSurf), surface_get_height(_outSurf));
 			else surface_size_to(temp_surf[i], surface_get_width(_outSurf), surface_get_height(_outSurf));
 			
 			surface_set_target(temp_surf[i]);

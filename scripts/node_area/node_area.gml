@@ -55,6 +55,6 @@ function Node_Area(_x, _y) : Node_Value_Processor(_x, _y) constructor {
 	doUpdate();
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s) {
-		draw_sprite_ext(s_node_draw_area, 0, xx + w * _s / 2, yy + 10 + (h - 10) * _s / 2, _s, _s, 0, c_white, 1);
+		draw_sprite_ui_uniform(s_node_draw_area, 0, xx + w * _s / 2, yy + 10 + (h - 10) * _s / 2, _s, c_white);
 	}
 }

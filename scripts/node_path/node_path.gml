@@ -140,24 +140,24 @@ function Node_Path(_x, _y) : Node(_x, _y) constructor {
 				draw_line(_ax0, _ay0, xx, yy);
 				draw_line(_ax1, _ay1, xx, yy);
 				
-				draw_sprite(s_anchor_selector, 2, _ax0, _ay0);
-				draw_sprite(s_anchor_selector, 2, _ax1, _ay1);
+				draw_sprite_ui_uniform(s_anchor_selector, 2, _ax0, _ay0);
+				draw_sprite_ui_uniform(s_anchor_selector, 2, _ax1, _ay1);
 			}
 			
-			draw_sprite(s_anchor_selector, 0, xx, yy);
+			draw_sprite_ui_uniform(s_anchor_selector, 0, xx, yy);
 			
 			if(drag_point == i) {
-				draw_sprite(s_anchor_selector, 1, xx, yy);
+				draw_sprite_ui_uniform(s_anchor_selector, 1, xx, yy);
 			} else if(point_in_circle(_mx, _my, xx, yy, 8)) {
-				draw_sprite(s_anchor_selector, 1, xx, yy);
+				draw_sprite_ui_uniform(s_anchor_selector, 1, xx, yy);
 				anchor_hover = i;
 				hover_type   = 0;
 			} else if(cont && point_in_circle(_mx, _my, _ax0, _ay0, 8)) {
-				draw_sprite(s_anchor_selector, 0, _ax0, _ay0);
+				draw_sprite_ui_uniform(s_anchor_selector, 0, _ax0, _ay0);
 				anchor_hover = i;
 				hover_type   = 1;
 			} else if(cont && point_in_circle(_mx, _my, _ax1, _ay1, 8)) {
-				draw_sprite(s_anchor_selector, 0, _ax1, _ay1);
+				draw_sprite_ui_uniform(s_anchor_selector, 0, _ax1, _ay1);
 				anchor_hover =  i;
 				hover_type   = -1;
 			}
@@ -166,7 +166,7 @@ function Node_Path(_x, _y) : Node(_x, _y) constructor {
 		if(anchor_hover != -1) {
 			var _a = inputs[| list_start + anchor_hover].getValue();
 			if(keyboard_check(vk_shift) || PANEL_PREVIEW.tool_index == 1) {
-				draw_sprite(s_cursor_path_anchor, 0, _mx + 16, _my + 16);
+				draw_sprite_ui_uniform(s_cursor_path_anchor, 0, _mx + 16, _my + 16);
 				
 				if(_active && mouse_check_button_pressed(mb_left)) {
 					if(_a[2] != 0 || _a[3] != 0 || _a[4] != 0 || _a[5] != 0) {
@@ -190,14 +190,14 @@ function Node_Path(_x, _y) : Node(_x, _y) constructor {
 					}
 				}
 			} else if(keyboard_check(vk_control) || PANEL_PREVIEW.tool_index == 0) {
-				draw_sprite(s_cursor_path_remove, 0, _mx + 16, _my + 16);
+				draw_sprite_ui_uniform(s_cursor_path_remove, 0, _mx + 16, _my + 16);
 				
 				if(_active && mouse_check_button_pressed(mb_left)) {
 					ds_list_delete(inputs, list_start + anchor_hover);
 					doUpdate();
 				}
 			} else {
-				draw_sprite(s_cursor_path_move, 0, _mx + 16, _my + 16);
+				draw_sprite_ui_uniform(s_cursor_path_move, 0, _mx + 16, _my + 16);
 				
 				if(_active && mouse_check_button_pressed(mb_left)) {
 					drag_point    = anchor_hover;
@@ -217,7 +217,7 @@ function Node_Path(_x, _y) : Node(_x, _y) constructor {
 				}
 			}
 		} else if(keyboard_check(vk_control) || PANEL_PREVIEW.tool_index == 0) {
-			draw_sprite(s_cursor_path_add, 0, _mx + 16, _my + 16);
+			draw_sprite_ui_uniform(s_cursor_path_add, 0, _mx + 16, _my + 16);
 			
 			if(_active && mouse_check_button_pressed(mb_left)) {
 				drag_point    = ds_list_size(inputs) - list_start;

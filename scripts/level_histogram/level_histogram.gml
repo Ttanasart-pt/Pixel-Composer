@@ -58,10 +58,13 @@ function histogramUpdate(surface) {
 	for( var i = 0; i < array_length(hist[0]); i++ ) {
 		hist[j][i] = 0;
 	}
+	
+	var surface_buffer = buffer_create(sw * sh * 4, buffer_grow, 1);
+	buffer_get_surface(surface_buffer, surface, 0);
 		
-	for( var i = 1; i <= sw; i += stw )
-	for( var j = 1; j <= sh; j += sth ) {
-		var col = surface_getpixel(surface, i, j);
+	for( var i = 0; i < sw; i += stw )
+	for( var j = 0; j < sh; j += sth ) {
+		var col = buffer_get_color(surface_buffer, i, j, sw, sh);
 		var colA = [];
 		colA[0] = round(color_get_red(col)   / 256 * PREF_MAP[? "level_resolution"]);
 		colA[1] = round(color_get_green(col) / 256 * PREF_MAP[? "level_resolution"]);

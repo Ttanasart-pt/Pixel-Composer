@@ -5,8 +5,8 @@ function surface_apply_gaussian(surface, size, bg = false, bg_c = c_white, clamp
 	static uni_wei = shader_get_uniform(sh_blur_gaussian, "weight");
 	static uni_sze = shader_get_uniform(sh_blur_gaussian, "size");
 	
-	var hori = surface_create(surface_get_width(surface), surface_get_height(surface));	
-	var vert = surface_create(surface_get_width(surface), surface_get_height(surface));	
+	var hori = surface_create_valid(surface_get_width(surface), surface_get_height(surface));	
+	var vert = surface_create_valid(surface_get_width(surface), surface_get_height(surface));	
 	
 	size = max(1, round(size));
 	var gau_array = array_create(size);

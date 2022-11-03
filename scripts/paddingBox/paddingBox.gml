@@ -18,7 +18,7 @@ function paddingBox(_onModify, _linked) constructor {
 	b_link = button(linked);
 	
 	static draw = function(_x, _y, _data, _mod, _m) {
-		draw_sprite(s_inspector_padding, 0, _x, _y + 64);
+		draw_sprite_ui_uniform(s_inspector_padding, 0, _x, _y + ui(64));
 		
 		for(var i = 0; i < 4; i++) {
 			tb[i].hover  = hover;
@@ -26,17 +26,17 @@ function paddingBox(_onModify, _linked) constructor {
 			tb[i].align  = fa_center;
 		}
 		
-		tb[0].draw(_x + 64,      _y + 64 - 17,          64, 34, _data[0], _m);
-		tb[1].draw(_x - 32,      _y + 64 - 48 - 8 - 34, 64, 34, _data[1], _m);
-		tb[2].draw(_x - 64 - 64, _y + 64 - 17,          64, 34, _data[2], _m);
-		tb[3].draw(_x - 32,      _y + 64 + 48 + 8,      64, 34, _data[3], _m);
+		tb[0].draw(_x + ui(64),          _y + ui(64 - 17),          ui(64), TEXTBOX_HEIGHT, _data[0], _m);
+		tb[1].draw(_x - ui(32),          _y + ui(64 - 48 - 8 - 34), ui(64), TEXTBOX_HEIGHT, _data[1], _m);
+		tb[2].draw(_x - ui(64) - ui(64), _y + ui(64 - 17),          ui(64), TEXTBOX_HEIGHT, _data[2], _m);
+		tb[3].draw(_x - ui(32),          _y + ui(64 + 48 + 8),      ui(64), TEXTBOX_HEIGHT, _data[3], _m);
 		
 		b_link.hover = hover;
 		b_link.active = active;
-		var bx = _x - 64 - 16;
-		var by = _y      - 16;
-		b_link.draw(bx, by, 32, 32, _m, s_button_hide);
-		draw_sprite(s_padding_link, (_mod & VALUE_MODIFIER.linked) != 0, bx + 16, by + 16);
+		var bx = _x - ui(80);
+		var by = _y - ui(16);
+		b_link.draw(bx, by, ui(32), ui(32), _m, s_button_hide);
+		draw_sprite_ui_uniform(s_padding_link, (_mod & VALUE_MODIFIER.linked) != 0, bx + ui(16), by + ui(16));
 		
 		active = false;
 		hover  = false;

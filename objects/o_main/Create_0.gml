@@ -35,7 +35,7 @@
 	dc_check = 0;
 	
 	display_set_timing_method(tm_sleep);
-
+	
 	addHotkey("", "New file", "N",	MOD_KEY.ctrl, NEW);
 	addHotkey("", "Save", "S",		MOD_KEY.ctrl, SAVE);
 	addHotkey("", "Save as", "S",	MOD_KEY.ctrl | MOD_KEY.shift, SAVE_AS);

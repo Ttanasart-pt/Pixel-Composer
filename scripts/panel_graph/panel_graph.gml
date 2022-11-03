@@ -3,7 +3,7 @@ function Panel_Graph(_panel) : PanelContent(_panel) constructor {
 	
 	scale			= [ 0.25, 0.33, 0.5, 0.65, 0.8, 1, 1.2, 1.35, 1.5];
 	graph_s_index	= 5;
-	graph_s			= scale[graph_s_index];
+	graph_s			= ui(scale[graph_s_index]);
 	graph_s_to		= graph_s;
 	graph_line_s	= 32;
 	grid_opacity	= 0.5;
@@ -57,8 +57,8 @@ function Panel_Graph(_panel) : PanelContent(_panel) constructor {
 	drag_key  = mb_middle;
 	
 	minimap_show = false;
-	minimap_w = 160;
-	minimap_h = 160;
+	minimap_w = ui(160);
+	minimap_h = ui(160);
 	minimap_surface = -1;
 	
 	minimap_panning  = false;
@@ -70,7 +70,7 @@ function Panel_Graph(_panel) : PanelContent(_panel) constructor {
 	
 	drag_locking = false;
 	
-	toolbar_height = 40;
+	toolbar_height = ui(40);
 	toolbars = [
 		[ 
 			s_icon_center_canvas,
@@ -101,7 +101,7 @@ function Panel_Graph(_panel) : PanelContent(_panel) constructor {
 			function() { return 0; },
 			function() { return "Grid setting" }, 
 			function(param) { 
-				var gs = dialogCall(o_dialog_inspector_grid, param.x, param.y); 
+				var gs = dialogCall(o_dialog_graph_grid, param.x, param.y); 
 				gs.anchor = ANCHOR.bottom | ANCHOR.left;
 			} 
 		],
@@ -200,7 +200,7 @@ function Panel_Graph(_panel) : PanelContent(_panel) constructor {
 		}
 		
 		graph_x = round(w / 2 / graph_s - (minx + maxx) / 2);
-		graph_y = round(h / 2 / graph_s - (miny + maxy) / 2);
+		graph_y = round((h - toolbar_height) / 2 / graph_s - (miny + maxy) / 2);
 	}
 	
 	function dragGraph() {
@@ -240,11 +240,11 @@ function Panel_Graph(_panel) : PanelContent(_panel) constructor {
 			var _s = graph_s;
 			if(mouse_wheel_down()) {
 				graph_s_index = max(0, graph_s_index - 1);
-				graph_s_to = scale[graph_s_index];
+				graph_s_to = ui(scale[graph_s_index]);
 			}
 			if(mouse_wheel_up()) {
 				graph_s_index = min(array_length(scale) - 1, graph_s_index + 1);
-				graph_s_to = scale[graph_s_index];
+				graph_s_to = ui(scale[graph_s_index]);
 			}
 			graph_s = lerp_float(graph_s, graph_s_to, 3);
 			
@@ -343,7 +343,7 @@ function Panel_Graph(_panel) : PanelContent(_panel) constructor {
 								var _y = (_node.y + graph_y) * graph_s;
 								var _w = _node.w * graph_s;
 								var _h = _node.h * graph_s;
-							
+								
 								if(rectangle_inside_rectangle(fx0, fy0, fx1, fy1, _x, _y, _x + _w, _y + _h))
 									ds_list_add(nodes_select_list, _node);	
 							}
@@ -940,7 +940,8 @@ function Panel_Graph(_panel) : PanelContent(_panel) constructor {
 	
 	function drawContext() {
 		draw_set_text(f_p0, fa_left, fa_center, c_ui_blue_ltgrey);
-		var xx = 16, tt, tw, th;
+		var xx = ui(16), tt, tw, th;
+		var bh  = toolbar_height - ui(10);
 		var tbh = h - toolbar_height / 2;
 		
 		draw_set_color(c_ui_blue_ltgrey);
@@ -956,12 +957,12 @@ function Panel_Graph(_panel) : PanelContent(_panel) constructor {
 			th = string_height(tt);
 			
 			if(i < ds_list_size(node_context) - 1) {
-				if(buttonInstant(s_button_hide_fill, xx - 6, tbh - 14, tw + 12, 26, [mx, my], FOCUS == panel, HOVER == panel) == 2) {
+				if(buttonInstant(s_button_hide_fill, xx - ui(6), tbh - bh / 2, tw + ui(12), bh, [mx, my], FOCUS == panel, HOVER == panel) == 2) {
 					node_hover		= noone;
 					node_focus		= noone;
 					PANEL_PREVIEW.preview_node[0] = noone;
 					PANEL_PREVIEW.preview_node[1] = noone;
-						
+					
 					if(i == -1) {
 						ds_list_clear(node_context);
 						nodes_list = NODES;
@@ -977,17 +978,19 @@ function Panel_Graph(_panel) : PanelContent(_panel) constructor {
 					}
 				}
 				
-				draw_sprite_ext(s_arrow_16, 0, xx + tw + 16, tbh, 1, 1, 0, c_ui_blue_grey, 1);
+				draw_sprite_ui_uniform(s_arrow_16, 0, xx + tw + ui(16), tbh, 1, c_ui_blue_grey);
 			}
+			
 			draw_set_alpha(i < ds_list_size(node_context) - 1? 0.5 : 1);
 			draw_text(xx, tbh - 2, tt);
 			draw_set_alpha(1);
 			xx += tw;
-			xx += 32;
+			xx += ui(32);
 		}
 	}
 	
 	function drawToolBar() {
+		toolbar_height = ui(40);
 		var ty = h - toolbar_height;
 		
 		if(point_in_rectangle(mx, my, 0, ty, w, h))
@@ -1010,31 +1013,31 @@ function Panel_Graph(_panel) : PanelContent(_panel) constructor {
 			var tbInd = tb[1]();
 			var tbTooltip = tb[2]();
 			
-			var b = buttonInstant(s_button_hide, tbx - 14, tby - 14, 28, 28, [mx, my], FOCUS == panel, HOVER == panel, tbTooltip, tbSpr, tbInd);
-			if(b == 2) tb[3]( { x: x + tbx - 14, y: y + tby - 14 } );
+			var b = buttonInstant(s_button_hide, tbx - ui(14), tby - ui(14), ui(28), ui(28), [mx, my], FOCUS == panel, HOVER == panel, tbTooltip, tbSpr, tbInd);
+			if(b == 2) tb[3]( { x: x + tbx - ui(14), y: y + tby - ui(14) } );
 			
-			tbx -= 32;
+			tbx -= ui(32);
 		}
 		
 		draw_set_color(c_ui_blue_dkblack);
-		draw_line_width(tbx + 12, tby - toolbar_height / 2 + 8, tbx + 12, tby + toolbar_height / 2 - 8, 2);
+		draw_line_width(tbx + ui(12), tby - toolbar_height / 2 + ui(8), tbx + ui(12), tby + toolbar_height / 2 - ui(8), 2);
 	}
 	
 	function drawMinimap() {
-		var mx1 = w - 8;
-		var my1 = h - toolbar_height - 8;
+		var mx1 = w - ui(8);
+		var my1 = h - toolbar_height - ui(8);
 		var mx0 = mx1 - minimap_w;
 		var my0 = my1 - minimap_h;
 		
-		minimap_w = min(minimap_w, w - 16);
-		minimap_h = min(minimap_h, h - 16 - toolbar_height);
+		minimap_w = min(minimap_w, w - ui(16));
+		minimap_h = min(minimap_h, h - ui(16) - toolbar_height);
 		
 		if(point_in_rectangle(mx, my, mx0, my0, mx1, my1))
 			mouse_on_graph = false;
-		var hover = point_in_rectangle(mx, my, mx0, my0, mx1, my1) && !point_in_rectangle(mx, my, mx0, my0, mx0 + 16, my0 + 16) && !minimap_dragging;
+		var hover = point_in_rectangle(mx, my, mx0, my0, mx1, my1) && !point_in_rectangle(mx, my, mx0, my0, mx0 + ui(16), my0 + ui(16)) && !minimap_dragging;
 		
 		if(!is_surface(minimap_surface) || surface_get_width(minimap_surface) != minimap_w || surface_get_height(minimap_surface) != minimap_h) {
-			minimap_surface = surface_create(minimap_w, minimap_h);
+			minimap_surface = surface_create_valid(minimap_w, minimap_h);
 		}
 		
 		surface_set_target(minimap_surface);
@@ -1100,15 +1103,15 @@ function Panel_Graph(_panel) : PanelContent(_panel) constructor {
 			var sw = minimap_drag_sx + minimap_drag_mx - mx;
 			var sh = minimap_drag_sy + minimap_drag_my - my;
 			
-			minimap_w = max(64, sw);
-			minimap_h = max(64, sh);
+			minimap_w = max(ui(64), sw);
+			minimap_h = max(ui(64), sh);
 			
 			if(mouse_check_button_released(mb_left))
 				minimap_dragging = false;
 		}
 		
-		if(point_in_rectangle(mx, my, mx0, my0, mx0 + 16, my0 + 16)) {
-			draw_sprite_ext(s_node_resize, 0, mx0 + 2, my0 + 2, 1, 1, 180, c_white, 0.6);
+		if(point_in_rectangle(mx, my, mx0, my0, mx0 + ui(16), my0 + ui(16))) {
+			draw_sprite_ui(s_node_resize, 0, mx0 + ui(2), my0 + ui(2), 1, 1, 180, c_white, 0.6);
 			if(mouse_check_button_pressed(mb_left)) {
 				minimap_dragging = true;
 				minimap_drag_sx = minimap_w;
@@ -1117,13 +1120,13 @@ function Panel_Graph(_panel) : PanelContent(_panel) constructor {
 				minimap_drag_my = my;
 			}
 		} else 
-			draw_sprite_ext(s_node_resize, 0, mx0 + 2, my0 + 2, 1, 1, 180, c_white, 0.3);
+			draw_sprite_ui(s_node_resize, 0, mx0 + ui(2), my0 + ui(2), 1, 1, 180, c_white, 0.3);
 	}
 	
 	function addContext(node) {
 		recordAction(ACTION_TYPE.var_modify, self, [nodes_list, "nodes_list"]);
 		recordAction(ACTION_TYPE.list_insert, node_context, [node, ds_list_size(node_context)]);
-			
+		
 		nodes_list = node.nodes;
 		ds_list_add(node_context, node);
 		
@@ -1165,12 +1168,12 @@ function Panel_Graph(_panel) : PanelContent(_panel) constructor {
 		if(show_grid) drawGrid();
 		
 		draw_set_text(f_p0, fa_right, fa_top, c_ui_blue_ltgrey);
-		draw_text(w - 8, 08, "x" + string(graph_s_to));
+		draw_text(w - ui(8), ui(8), "x" + string(graph_s_to));
 			
 		if(UPDATE == RENDER_TYPE.full)
-			draw_text(w - 8, 28, "Rendering...");
+			draw_text(w - ui(8), ui(28), "Rendering...");
 		else if(UPDATE == RENDER_TYPE.full)
-			draw_text(w - 8, 28, "Rendering partial...");
+			draw_text(w - ui(8), ui(28), "Rendering partial...");
 		
 		drawNodes();
 		drawJunctionConnect();
