@@ -105,6 +105,15 @@ event_inherited();
 		})
 	]);
 	
+	ds_list_add(pref_global, [
+		"Expand hovering panel",
+		"expand_hover",
+		new checkBox(function() { 
+			PREF_MAP[? "expand_hover"] = !PREF_MAP[? "expand_hover"]; 
+			PREF_SAVE();
+		})
+	]);
+	
 	//NODE
 	
 	ds_list_add(pref_node, "Particle");

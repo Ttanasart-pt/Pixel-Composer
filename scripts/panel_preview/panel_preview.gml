@@ -1,10 +1,14 @@
-function Panel_Preview(_panel) : PanelContent(_panel) constructor {
+function Panel_Preview() : PanelContent() constructor {
 	context_str = "Preview";
 	
 	last_focus = noone;
 	
-	canvas_x = w / 2 - ui(64);
-	canvas_y = h / 2 - ui(64);
+	function initSize() {
+		canvas_x = w / 2 - ui(64);
+		canvas_y = h / 2 - ui(64);
+	}
+	initSize();
+	
 	canvas_s = ui(1);
 	canvas_w = ui(128);
 	canvas_h = ui(128);
@@ -162,7 +166,7 @@ function Panel_Preview(_panel) : PanelContent(_panel) constructor {
 				canvas_dragging = false;
 		}
 		
-		if(FOCUS == panel && HOVER == panel && canvas_hover) {
+		if(pFOCUS && pHOVER && canvas_hover) {
 			if(mouse_check_button_pressed(mb_middle)) {
 				canvas_dragging = true;	
 				canvas_drag_mx  = mx;
@@ -231,10 +235,10 @@ function Panel_Preview(_panel) : PanelContent(_panel) constructor {
 			ww = max(ww, string_width(_node.outputs[| i].name) + ui(40));
 		}
 		sbChannel.data_list = chName;
-		sbChannel.hover = HOVER == panel;
-		sbChannel.active = FOCUS == panel;
+		sbChannel.hover = pHOVER;
+		sbChannel.active = pFOCUS;
 		
-		sbChannel.draw(_x - ww, _y - hh / 2, ww, hh, _node.outputs[| _node.preview_channel].name, [mx, my], panel.x, panel.y);
+		sbChannel.draw(_x - ww, _y - hh / 2, ww, hh, _node.outputs[| _node.preview_channel].name, [mx, my], x, y);
 		right_menu_y += ui(40);
 	}
 	
@@ -382,7 +386,7 @@ function Panel_Preview(_panel) : PanelContent(_panel) constructor {
 				preview_x_to = 0;
 			}
 			
-			if(HOVER == panel && my > h - toolbar_height - prev_size - ui(16)) {
+			if(pHOVER && my > h - toolbar_height - prev_size - ui(16)) {
 				canvas_hover = false;
 				if(mouse_wheel_down())	preview_x_to = clamp(preview_x_to - prev_size, - preview_x_max, 0);
 				if(mouse_wheel_up())	preview_x_to = clamp(preview_x_to + prev_size, - preview_x_max, 0);
@@ -403,7 +407,7 @@ function Panel_Preview(_panel) : PanelContent(_panel) constructor {
 				draw_set_color(c_ui_blue_grey);
 				draw_rectangle(xx, yy, xx + prev_w * ss, yy + prev_h * ss, true);
 				
-				if(FOCUS == panel && point_in_rectangle(mx, my, xx, yy, xx + prev_w * ss, yy + prev_h * ss)) {
+				if(pFOCUS && point_in_rectangle(mx, my, xx, yy, xx + prev_w * ss, yy + prev_h * ss)) {
 					if(mouse_check_button_pressed(mb_left)) {
 						_node.preview_index = i;
 						_node.onValueUpdate(0);
@@ -426,7 +430,7 @@ function Panel_Preview(_panel) : PanelContent(_panel) constructor {
 			var by = h - toolbar_height - prev_size - ui(56);
 			var bx = ui(10);
 			
-			var b = buttonInstant(s_button_hide, bx, by, ui(40), ui(40), [mx, my], FOCUS == panel, HOVER == panel);
+			var b = buttonInstant(s_button_hide, bx, by, ui(40), ui(40), [mx, my], pFOCUS, pHOVER);
 			
 			if(_node.preview_speed == 0) {
 				if(b) {
@@ -448,14 +452,14 @@ function Panel_Preview(_panel) : PanelContent(_panel) constructor {
 		var active = _active;
 		var _mx = mx;
 		var _my = my;
-		var isHover = HOVER == panel && mouse_on_preview;
+		var isHover = pHOVER && mouse_on_preview;
 		
 		if(_node.tools != -1) {
 			var xx = ui(16);
 			var yy = ui(16);
 			
 			for(var i = 0; i < array_length(_node.tools); i++) {
-				var b = buttonInstant(s_button, xx, yy, ui(40), ui(40), [_mx, _my], FOCUS == panel, isHover);
+				var b = buttonInstant(s_button, xx, yy, ui(40), ui(40), [_mx, _my], pFOCUS, isHover);
 				if(b > 0) active = false;
 				yy += ui(48);
 			}
@@ -468,14 +472,14 @@ function Panel_Preview(_panel) : PanelContent(_panel) constructor {
 			var yy = ui(16);
 			
 			for(var i = 0; i < array_length(_node.tools); i++) {
-				var b = buttonInstant(s_button, xx, yy, ui(40), ui(40), [_mx, _my], FOCUS == panel, isHover);
+				var b = buttonInstant(s_button, xx, yy, ui(40), ui(40), [_mx, _my], pFOCUS, isHover);
 				var toggle = false;
 				if(b == 1)
 					TOOLTIP = _node.tools[i][0];
 				else if(b == 2)
 					toggle = true;
 				
-				if(FOCUS == panel && keyboard_check_pressed(ord(string(i + 1))))
+				if(pFOCUS && keyboard_check_pressed(ord(string(i + 1))))
 					toggle = true;
 					
 				if(toggle) {
@@ -524,7 +528,7 @@ function Panel_Preview(_panel) : PanelContent(_panel) constructor {
 			var tbInd = tb[1]();
 			var tbTooltip = tb[2]();
 			
-			var b = buttonInstant(s_button_hide, tbx - ui(14), tby - ui(14), ui(28), ui(28), [mx, my], FOCUS == panel, HOVER == panel, tbTooltip, tbSpr, tbInd);
+			var b = buttonInstant(s_button_hide, tbx - ui(14), tby - ui(14), ui(28), ui(28), [mx, my], pFOCUS, pHOVER, tbTooltip, tbSpr, tbInd);
 			if(b == 2) tb[3]( { x: x + tbx - ui(14), y: y + tby - ui(14) } );
 			
 			tbx += ui(32);
@@ -536,7 +540,7 @@ function Panel_Preview(_panel) : PanelContent(_panel) constructor {
 			var tbSpr = tb[0];
 			var tbTooltip = tb[1];
 			
-			var b = buttonInstant(s_button_hide, tbx - ui(14), tby - ui(14), ui(28), ui(28), [mx, my], FOCUS == panel, HOVER == panel, tbTooltip, tbSpr, 0);
+			var b = buttonInstant(s_button_hide, tbx - ui(14), tby - ui(14), ui(28), ui(28), [mx, my], pFOCUS, pHOVER, tbTooltip, tbSpr, 0);
 			if(b == 2) tb[2]();
 			
 			tbx -= ui(32);
@@ -609,7 +613,7 @@ function Panel_Preview(_panel) : PanelContent(_panel) constructor {
 		}
 	}
 	
-	function drawContent() {
+	function drawContent(panel) {
 		mouse_on_preview = point_in_rectangle(mx, my, 0, 0, w, h - toolbar_height);
 		
 		draw_clear(c_ui_blue_black);
@@ -625,7 +629,7 @@ function Panel_Preview(_panel) : PanelContent(_panel) constructor {
 		
 		drawPreviewOverlay();
 		if(PANEL_GRAPH.node_focus)
-			drawNodeTools(FOCUS == panel, PANEL_GRAPH.node_focus);
+			drawNodeTools(pFOCUS, PANEL_GRAPH.node_focus);
 		if(last_focus != PANEL_GRAPH.node_focus) {
 			last_focus = PANEL_GRAPH.node_focus;
 			tool_index = -1;
@@ -636,7 +640,7 @@ function Panel_Preview(_panel) : PanelContent(_panel) constructor {
 			fullView();
 		}
 		
-		if(FOCUS == panel) {
+		if(pFOCUS) {
 			if(mouse_check_button_pressed(mb_right)) {
 				var dia = dialogCall(o_dialog_menubox, mouse_mx + ui(8), mouse_my + ui(8));
 				dia.setMenu([ 

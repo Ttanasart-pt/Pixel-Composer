@@ -95,7 +95,6 @@
 	file_dnd_set_enabled(true);
 	
 	if(file_dnd_filelist != "" && file_dnd_filelist != 0) {
-		show_debug_message(file_dnd_filelist);
 		file_dropping = file_dnd_filelist;
 		if(string_pos("\n", file_dropping) == 1) 
 			file_dropping = string_replace(file_dropping, "\n", "");

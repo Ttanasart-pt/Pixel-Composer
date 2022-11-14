@@ -34,6 +34,7 @@
 	PREF_MAP[? "verlet_iteration"] = 4;
 	
 	PREF_MAP[? "collection_preview_speed"] = 60;
+	PREF_MAP[? "expand_hover"] = false;
 #endregion
 
 #region hotkeys	

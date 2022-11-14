@@ -13,7 +13,7 @@
 		error    = 1 << 2,
 	}
 	
-	function notification(type, str, icon = noone, color = c_ui_blue_dkgrey, life = -1) constructor {
+	function notification(type, str, icon = s_noti_icon_log, color = c_ui_blue_dkgrey, life = -1) constructor {
 		self.type = type;
 		self.txt = str;
 		self.icon = icon;
@@ -23,9 +23,11 @@
 		self.life = life;
 		
 		self.onClick = noone;
+		
+		self.time = string_lead_zero(current_hour, 2) + ":" + string_lead_zero(current_minute, 2);
 	}
 	
-	function noti_status(str, icon = noone) {
+	function noti_status(str, icon = s_noti_icon_log) {
 		ds_list_add(STATUSES, new notification(NOTI_TYPE.log, str, icon));
 	}
 	

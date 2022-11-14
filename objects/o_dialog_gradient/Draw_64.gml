@@ -99,7 +99,7 @@ if !ready exit;
 		
 		if(buttonInstant(s_button_hide, bx, by, ui(28), ui(28), mouse_ui, sFOCUS, sHOVER, "Key blending", s_grad_blend) == 2) {
 			if(grad_data != noone)
-				grad_data[| 0] = !grad_data[| 0];
+				grad_data[| 0] = (grad_data[| 0] + 1) % 3;
 		}
 		bx -= ui(32);
 	#endregion
@@ -110,30 +110,24 @@ if !ready exit;
 	var hover = noone;
 	for(var i = 0; i < ds_list_size(gradient); i++) {
 		var _k  = gradient[| i];
+		var _c  = _k.value;
 		var _kx = gr_x + _k.time * gr_w; 
 		var _in = _k == key_selecting? 1 : 0;
 		
-		draw_sprite_ui_uniform(s_prop_gradient, _in, _kx, gr_y + gr_h / 2, 1);
+		draw_sprite_ui_uniform(s_prop_gradient, _in, _kx, gr_y + gr_h / 2, 1, _c);
 		
 		if(sHOVER && point_in_rectangle(mouse_mx, mouse_my, _kx - ui(6), gr_y, _kx + ui(6), gr_y + gr_h)) {
-			draw_sprite_ui_uniform(s_prop_gradient, _in, _kx, gr_y + gr_h / 2, 1.2);
+			draw_sprite_ui_uniform(s_prop_gradient, _in, _kx, gr_y + gr_h / 2, 1.2, _c);
 			hover = _k;
 		}
 	}
 	
 	if(key_dragging) {
 		var tt = clamp((mouse_mx - gr_x) / gr_w, 0, 1);
-		key_dragging.time = tt;
-		
-		var _index = ds_list_find_index(gradient, key_dragging);
-		ds_list_delete(gradient, _index);
-		gradient_add(gradient, key_dragging, false);
+		setKeyPosition(key_dragging, tt);
 		
 		if(mouse_check_button_released(mb_left)) {
-			var _index = ds_list_find_index(gradient, key_dragging);
-			ds_list_delete(gradient, _index);
-			gradient_add(gradient, key_dragging, true);
-			
+			removeKeyOverlap(key_dragging);
 			key_dragging = noone;	
 		}
 	}
@@ -171,11 +165,22 @@ if !ready exit;
 			}
 		}
 	}
+	
+	var op_x = content_x + ui(20);
+	var op_y = gr_y + gr_h + ui(12);
+	
+	draw_set_text(f_p0, fa_left, fa_center, c_ui_blue_white);
+	draw_text(op_x, op_y + TEXTBOX_HEIGHT / 2, "Position")
+	
+	var txt = key_selecting? key_selecting.time * 100 : "-";
+	sl_position.active = sFOCUS;
+	sl_position.hover  = sHOVER;
+	sl_position.draw(op_x + ui(100), op_y, ui(content_w - 140), TEXTBOX_HEIGHT, txt, mouse_ui);
 #endregion
 
 #region color surface
 	var col_x = content_x + ui(20);
-	var col_y = dialog_y + ui(96);
+	var col_y = dialog_y + ui(136);
 	
 	draw_sprite_stretched(s_ui_panel_bg, 0, col_x - ui(8), col_y - ui(8), ui(256 + 16), ui(256 + 16));
 	

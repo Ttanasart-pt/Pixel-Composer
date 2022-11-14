@@ -1,4 +1,4 @@
-function Panel_Graph(_panel) : PanelContent(_panel) constructor {
+function Panel_Graph() : PanelContent() constructor {
 	context_str = "Graph";
 	
 	scale			= [ 0.25, 0.33, 0.5, 0.65, 0.8, 1, 1.2, 1.35, 1.5];
@@ -12,7 +12,11 @@ function Panel_Graph(_panel) : PanelContent(_panel) constructor {
 		graph_x = round(w / 2 / graph_s);
 		graph_y = round(h / 2 / graph_s);
 	}
-	toOrigin();
+	
+	function initSize() {
+		toOrigin();
+	}
+	initSize();
 	
 	graph_dragging = false;
 	graph_drag_mx  = 0;
@@ -217,7 +221,7 @@ function Panel_Graph(_panel) : PanelContent(_panel) constructor {
 				graph_dragging = false;
 		}
 		
-		if(mouse_on_graph && FOCUS == panel) {
+		if(mouse_on_graph && pFOCUS) {
 			var _doDragging = false;
 			if(mouse_check_button_pressed(mb_middle)) {
 				_doDragging = true;
@@ -236,7 +240,7 @@ function Panel_Graph(_panel) : PanelContent(_panel) constructor {
 			}
 		}
 		
-		if(mouse_on_graph && HOVER == panel) {
+		if(mouse_on_graph && pHOVER) {
 			var _s = graph_s;
 			if(mouse_wheel_down()) {
 				graph_s_index = max(0, graph_s_index - 1);
@@ -319,7 +323,7 @@ function Panel_Graph(_panel) : PanelContent(_panel) constructor {
 			}
 		#endregion
 		
-		if(mouse_on_graph && FOCUS == panel) {
+		if(mouse_on_graph && pFOCUS) {
 			if(mouse_check_button_pressed(mb_left) && !keyboard_check(vk_control)) {
 				if(keyboard_check(vk_shift)) {
 					if(ds_list_empty(nodes_select_list) && node_focus) 
@@ -562,7 +566,7 @@ function Panel_Graph(_panel) : PanelContent(_panel) constructor {
 			}
 		#endregion
 		
-		if(mouse_on_graph && FOCUS == panel) {
+		if(mouse_on_graph && pFOCUS) {
 			if(node_focus && value_focus == noone) {
 				if(mouse_check_button_pressed(mb_left) && !keyboard_check(vk_control)) {
 					node_dragging = node_focus;
@@ -618,7 +622,7 @@ function Panel_Graph(_panel) : PanelContent(_panel) constructor {
 					nodes_select_drag = false;
 			}
 		
-			if(mouse_on_graph && FOCUS == panel && mouse_check_button_pressed(mb_left) && !keyboard_check(vk_control)) {
+			if(mouse_on_graph && pFOCUS && mouse_check_button_pressed(mb_left) && !keyboard_check(vk_control)) {
 				if(!node_focus && !value_focus && !drag_locking) {
 					nodes_select_drag = true;
 					nodes_select_mx = mx;
@@ -921,7 +925,7 @@ function Panel_Graph(_panel) : PanelContent(_panel) constructor {
 			}
 		} else {
 			if(value_focus) {
-				if(FOCUS == panel && mouse_check_button_pressed(mb_left) && !keyboard_check(vk_control)) {
+				if(pFOCUS && mouse_check_button_pressed(mb_left) && !keyboard_check(vk_control)) {
 					value_dragging = value_focus;
 				}
 			}
@@ -941,7 +945,7 @@ function Panel_Graph(_panel) : PanelContent(_panel) constructor {
 	function drawContext() {
 		draw_set_text(f_p0, fa_left, fa_center, c_ui_blue_ltgrey);
 		var xx = ui(16), tt, tw, th;
-		var bh  = toolbar_height - ui(10);
+		var bh  = toolbar_height - ui(12);
 		var tbh = h - toolbar_height / 2;
 		
 		draw_set_color(c_ui_blue_ltgrey);
@@ -957,7 +961,7 @@ function Panel_Graph(_panel) : PanelContent(_panel) constructor {
 			th = string_height(tt);
 			
 			if(i < ds_list_size(node_context) - 1) {
-				if(buttonInstant(s_button_hide_fill, xx - ui(6), tbh - bh / 2, tw + ui(12), bh, [mx, my], FOCUS == panel, HOVER == panel) == 2) {
+				if(buttonInstant(s_button_hide_fill, xx - ui(6), tbh - bh / 2, tw + ui(12), bh, [mx, my], pFOCUS, pHOVER) == 2) {
 					node_hover		= noone;
 					node_focus		= noone;
 					PANEL_PREVIEW.preview_node[0] = noone;
@@ -1013,7 +1017,7 @@ function Panel_Graph(_panel) : PanelContent(_panel) constructor {
 			var tbInd = tb[1]();
 			var tbTooltip = tb[2]();
 			
-			var b = buttonInstant(s_button_hide, tbx - ui(14), tby - ui(14), ui(28), ui(28), [mx, my], FOCUS == panel, HOVER == panel, tbTooltip, tbSpr, tbInd);
+			var b = buttonInstant(s_button_hide, tbx - ui(14), tby - ui(14), ui(28), ui(28), [mx, my], pFOCUS, pHOVER, tbTooltip, tbSpr, tbInd);
 			if(b == 2) tb[3]( { x: x + tbx - ui(14), y: y + tby - ui(14) } );
 			
 			tbx -= ui(32);
@@ -1160,7 +1164,7 @@ function Panel_Graph(_panel) : PanelContent(_panel) constructor {
 		return;
 	}
 	
-	function drawContent() {
+	function drawContent(panel) {
 		dragGraph();
 		
 		draw_clear(c_ui_blue_black);
@@ -1183,7 +1187,7 @@ function Panel_Graph(_panel) : PanelContent(_panel) constructor {
 		if(minimap_show) 
 			drawMinimap();
 		
-		if(FOCUS == panel) {
+		if(pFOCUS) {
 			if(node_focus) node_focus.focusStep();
 		}
 	}

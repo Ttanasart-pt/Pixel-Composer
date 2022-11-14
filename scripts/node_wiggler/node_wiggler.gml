@@ -30,7 +30,7 @@ function Node_Wiggler(_x, _y) : Node_Value_Processor(_x, _y) constructor {
 		["Wiggle",	false], 2, 0, 1,
 	];
 	
-	graph_value = array_create(64, 0);
+	random_value = array_create(64, 0);
 	
 	static onValueUpdate = function(index) {
 		var ran = inputs[| 0].getValue();
@@ -41,28 +41,30 @@ function Node_Wiggler(_x, _y) : Node_Value_Processor(_x, _y) constructor {
 		var _fmax = ANIMATOR.frames_total / max(1, max(fre[0], fre[1]));
 		var _val;
 		
-		for( var i = 0; i < 64; i++ ) {
+		for( var i = 0; i < ANIMATOR.frames_total + 1; i++ ) {
 			_val = getWiggle(ran[0], ran[1], _fmin, _fmax, i, sed);
-			graph_value[i] = _val;
+			random_value[i] = _val;
 		}
 	}
 	
 	function process_value_data(_data, index = 0) { 
-		if(array_length(graph_value) != ANIMATOR.frames_total)
-			array_resize(graph_value, ANIMATOR.frames_total);
-			
-		var time = ANIMATOR.current_frame;
-		var _ran = _data[0];
-		var _fmin = ANIMATOR.frames_total / max(1, min(_data[1][0], _data[1][1]));
-		var _fmax = ANIMATOR.frames_total / max(1, max(_data[1][0], _data[1][1]));
+		if(array_length(random_value) != ANIMATOR.frames_total + 1) {
+			array_resize(random_value, ANIMATOR.frames_total + 1);
+			onValueUpdate(0);
+		}
 		
-		var _val = getWiggle(_ran[0], _ran[1], _fmin, _fmax, time, _data[3]);
-		return _val;
+		var time = ANIMATOR.current_frame;
+		return random_value[time];
 	}
 	
 	doUpdate();
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s) {
+		if(array_length(random_value) != ANIMATOR.frames_total + 1) {
+			array_resize(random_value, ANIMATOR.frames_total + 1);
+			onValueUpdate(0);
+		}
+		
 		var disp = inputs[| 3].getValue();
 		var time = ANIMATOR.current_frame;
 		var total_time = ANIMATOR.frames_total;
@@ -71,7 +73,7 @@ function Node_Wiggler(_x, _y) : Node_Value_Processor(_x, _y) constructor {
 			case 0 :
 				min_h = 0;
 				draw_set_text(f_h5, fa_center, fa_center, c_white);
-				var str	= string(outputs[| 0].getValue());
+				var str	= string(random_value[time]);
 				var ss	= string_scale(str, (w - 16) * _s, (h - 16) * _s - 20);
 				draw_text_transformed(xx + w / 2 * _s, yy + 10 + h / 2 * _s, str, ss, ss, 0);
 				break;
@@ -103,12 +105,12 @@ function Node_Wiggler(_x, _y) : Node_Value_Processor(_x, _y) constructor {
 				var _fx = x0 + (time / total_time * ww);
 				draw_line(_fx, y0, _fx, y1);
 				
-				var lw = ww / (array_length(graph_value) - 1);
+				var lw = ww / (array_length(random_value) - 1);
 				draw_set_color(c_white);
 				var ox, oy;
-				for( var i = 0; i < array_length(graph_value); i++ ) {
+				for( var i = 0; i < array_length(random_value); i++ ) {
 					var _x = x0 + i * lw;
-					var _y = yc - (graph_value[i] - val) / (_ran * 2) * hh;
+					var _y = yc - (random_value[i] - val) / (_ran * 2) * hh;
 					if(i)
 						draw_line(ox, oy, _x, _y);
 					

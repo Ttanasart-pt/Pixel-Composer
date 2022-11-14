@@ -1,7 +1,7 @@
 /// @description init
 #region panels
-	if(PANEL_MAIN != 0)
+	if(PANEL_MAIN != 0) {
 		PANEL_MAIN.draw();
-	else 
+	} else 
 		setPanel();
 #endregion

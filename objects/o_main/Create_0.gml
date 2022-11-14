@@ -44,6 +44,8 @@
 	addHotkey("", "Undo", "Z",		MOD_KEY.ctrl, function() { UNDO(); });
 	addHotkey("", "Redo", "Z",		MOD_KEY.ctrl | MOD_KEY.shift, function() { REDO(); });
 	
+	addHotkey("", "Full panel", vk_tab,	MOD_KEY.none, set_focus_fullscreen);
+	
 	addHotkey("", "Render all", vk_f5,	MOD_KEY.none, function() { 
 		UPDATE |= RENDER_TYPE.full; 
 	});

@@ -70,7 +70,7 @@ function Node_Collection(_x,  _y) : Node(_x,  _y) constructor {
 			render_time += nodes[| i].render_time;
 		}
 		
-		if(PANEL_GRAPH.node_focus == self && FOCUS == PANEL_GRAPH.panel && DOUBLE_CLICK) {
+		if(PANEL_GRAPH.node_focus == self && panelFocus(PANEL_GRAPH) && DOUBLE_CLICK) {
 			PANEL_GRAPH.addContext(self);
 			DOUBLE_CLICK = false;
 		}

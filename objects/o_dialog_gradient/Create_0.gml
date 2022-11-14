@@ -3,7 +3,7 @@ event_inherited();
 
 #region data
 	dialog_w = ui(796);
-	dialog_h = ui(428);
+	dialog_h = ui(468);
 	
 	name = "Gradient editor";
 	gradient = noone;
@@ -28,6 +28,11 @@ event_inherited();
 	
 	destroy_on_click_out = true;
 	
+	sl_position = new slider(0, 100, 0.1, function(val) { 
+		if(key_selecting == noone) return;
+		setKeyPosition(key_selecting, val / 100);
+	}, function() { removeKeyOverlap(key_selecting); })
+	
 	function resetHSV() {
 		hue = color_get_hue(current_color);	
 		sat = color_get_saturation(current_color);	
@@ -47,6 +52,24 @@ event_inherited();
 		grad_data = data;
 		if(!ds_list_empty(grad))
 			key_selecting = grad[| 0];
+	}
+	
+	function setKeyPosition(key, position) {
+		key.time = position;
+		
+		ds_list_remove(gradient, key);
+		gradient_add(gradient, key, false);
+	}
+	
+	function removeKeyOverlap(key) {
+		for(var i = 0; i < ds_list_size(gradient); i++) {
+			var _key = gradient[| i];
+			if(_key == key || _key.time != key.time) 
+				continue;
+				
+			_key.value = key.value;
+			ds_list_remove(gradient, key);
+		}
 	}
 	
 	dropper_active = false;

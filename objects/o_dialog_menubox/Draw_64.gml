@@ -70,7 +70,7 @@
 		
 		if(array_length(menu[i]) > 2) {
 			if(menu[i][2] == ">") {
-				draw_sprite_ui_uniform(s_arrow_16, 0, dialog_x + dialog_w - ui(20), yy + hght / 2, 1, c_ui_blue_dkgrey);	
+				draw_sprite_ui_uniform(s_arrow_16, 0, dialog_x + dialog_w - ui(20), yy + hght / 2, 1, c_ui_blue_grey);	
 			} else if(is_array(menu[i][2])) {
 				var _key = find_hotkey(menu[i][2][0], menu[i][2][1]);
 				if(_key) {

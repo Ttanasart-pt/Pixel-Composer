@@ -14,16 +14,22 @@ function __log(title, str, fname = "log.txt") {
 	show_debug_message(str);
 }
 
-function log_message(title, str) {
-	__log("[MESSAGE] ", string(title) + " : " + string(str));
+function log_message(title, str, icon = s_noti_icon_log) {
+	__log("[MESSAGE] ", string(title) + ": " + string(str));
+	
+	noti_status(string(title) + ": " + string(str), icon);
 }
 
 function log_warning(title, str) {
-	__log("[WARNING] ", string(title) + " : " + string(str));
+	__log("[WARNING] ", string(title) + ": " + string(str));
+	
+	noti_warning(string(title) + ": " + string(str));
 }
 
 function log_crash(str) {
 	__log("[ERROR] ", string(str));
+	
+	noti_error(string(str));
 }
 
 function log_newline() {

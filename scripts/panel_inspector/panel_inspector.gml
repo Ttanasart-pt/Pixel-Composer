@@ -3,7 +3,7 @@ function Inspector_Custom_Renderer(draw) constructor {
 	self.draw = draw;
 }
 
-function Panel_Inspector(_panel) : PanelContent(_panel) constructor {
+function Panel_Inspector() : PanelContent() constructor {
 	context_str = "Inspector";
 	
 	inspecting = noone;
@@ -12,8 +12,11 @@ function Panel_Inspector(_panel) : PanelContent(_panel) constructor {
 	prop_hover = noone;
 	prop_selecting = noone;
 	
-	content_w = w - ui(32);
-	content_h = h - top_bar_h - ui(24);
+	function initSize() {
+		content_w = w - ui(32);
+		content_h = h - top_bar_h - ui(24);
+	}
+	initSize();
 	
 	keyframe_dragging = noone;
 	keyframe_drag_st  = 0;
@@ -28,11 +31,17 @@ function Panel_Inspector(_panel) : PanelContent(_panel) constructor {
 	addHotkey("Inspector", "Copy property",		"C",   MOD_KEY.ctrl,	function() { propSelectCopy(); });
 	addHotkey("Inspector", "Paste property",	"V",   MOD_KEY.ctrl,	function() { propSelectPaste(); });
 	
+	function onResize() {
+		content_w = w - ui(32);
+		content_h = h - top_bar_h - ui(24);
+		contentPane.resize(content_w, content_h);
+	}
+	
 	contentPane = new scrollPane(content_w, content_h, function(_y, _m) {
 		var con_w = contentPane.surface_w;
 		draw_clear_alpha(c_ui_blue_black, 0);
 		
-		if(FOCUS == panel) 
+		if(pFOCUS) 
 			if(point_in_rectangle(_m[0], _m[1], 0, 0, con_w, content_h) && mouse_check_button_pressed(mb_left))
 				prop_selecting = noone;
 		
@@ -57,10 +66,10 @@ function Panel_Inspector(_panel) : PanelContent(_panel) constructor {
 					var txt  = jun_disp[0];
 					var coll = jun_disp[1];
 					
-					if(HOVER == panel && point_in_rectangle(_m[0], _m[1], 0, yy, con_w, yy + ui(32))) {
+					if(pHOVER && point_in_rectangle(_m[0], _m[1], 0, yy, con_w, yy + ui(32))) {
 						draw_sprite_stretched_ext(s_node_name, 0, 0, yy, con_w, ui(32), c_ui_blue_white, 1);
 						
-						if(FOCUS == panel && mouse_check_button_pressed(mb_left)) {
+						if(pFOCUS && mouse_check_button_pressed(mb_left)) {
 							jun_disp[@ 1] = !coll;
 						}
 					} else
@@ -86,8 +95,8 @@ function Panel_Inspector(_panel) : PanelContent(_panel) constructor {
 					}
 					continue;
 				} else if(is_struct(jun_disp) && instanceof(jun_disp) == "Inspector_Custom_Renderer") {
-					var hov = HOVER == panel;
-					var foc = FOCUS == panel;
+					var hov = pHOVER;
+					var foc = pFOCUS;
 					jun_disp.draw(ui(6), yy, con_w - ui(12), _m, hov, foc);
 					hh += jun_disp.h + ui(20);
 					continue;
@@ -103,7 +112,7 @@ function Panel_Inspector(_panel) : PanelContent(_panel) constructor {
 			var butx = ui(16);
 			var index = jun.value_from == noone? jun.animator.is_anim : 2;
 			draw_sprite_ui_uniform(s_animate_clock, index, butx, lb_y, 1, c_white, 0.8);
-			if(HOVER == panel && point_in_circle(_m[0], _m[1], butx, lb_y, ui(10))) {
+			if(pHOVER && point_in_circle(_m[0], _m[1], butx, lb_y, ui(10))) {
 				draw_sprite_ui_uniform(s_animate_clock, index, butx, lb_y, 1, c_white, 1);
 				TOOLTIP = "Toggle animation";
 					
@@ -119,7 +128,7 @@ function Panel_Inspector(_panel) : PanelContent(_panel) constructor {
 			butx += ui(20);
 			index = jun.visible;
 			draw_sprite_ui_uniform(s_junc_visible, index, butx, lb_y, 1, c_white, 0.8);
-			if(HOVER == panel && point_in_circle(_m[0], _m[1], butx, lb_y, ui(10))) {
+			if(pHOVER && point_in_circle(_m[0], _m[1], butx, lb_y, ui(10))) {
 				draw_sprite_ui_uniform(s_junc_visible, index, butx, lb_y, 1, c_white, 1);
 				TOOLTIP = "Visibility";
 					
@@ -136,7 +145,7 @@ function Panel_Inspector(_panel) : PanelContent(_panel) constructor {
 				if(lineBreak && jun.animator.is_anim) {
 					var bx = w - ui(64);
 					var by = lb_y;
-					if(buttonInstant(s_button_hide, bx - ui(12), by - ui(12), ui(24), ui(24), _m, FOCUS == panel, HOVER == panel, "", s_prop_keyframe, 2) == 2) {
+					if(buttonInstant(s_button_hide, bx - ui(12), by - ui(12), ui(24), ui(24), _m, pFOCUS, pHOVER, "", s_prop_keyframe, 2) == 2) {
 						for(var j = 0; j < ds_list_size(jun.animator.values); j++) {
 							var _key = jun.animator.values[| j];
 							if(_key.time > ANIMATOR.current_frame) {
@@ -156,7 +165,7 @@ function Panel_Inspector(_panel) : PanelContent(_panel) constructor {
 						}
 					}
 						
-					if(buttonInstant(s_button_hide, bx - ui(12), by - ui(12), ui(24), ui(24), _m, FOCUS == panel, HOVER == panel, cc == c_ui_blue_grey? "Add keyframe" : "Remove keyframe", s_prop_keyframe, 1, cc) == 2) {
+					if(buttonInstant(s_button_hide, bx - ui(12), by - ui(12), ui(24), ui(24), _m, pFOCUS, pHOVER, cc == c_ui_blue_grey? "Add keyframe" : "Remove keyframe", s_prop_keyframe, 1, cc) == 2) {
 						var _add = false;
 						for(var j = 0; j < ds_list_size(jun.animator.values); j++) {
 							var _key = jun.animator.values[| j];
@@ -175,7 +184,7 @@ function Panel_Inspector(_panel) : PanelContent(_panel) constructor {
 					}
 						
 					bx -= ui(26);
-					if(buttonInstant(s_button_hide, bx - ui(12), by - ui(12), ui(24), ui(24), _m, FOCUS == panel, HOVER == panel, "", s_prop_keyframe, 0) == 2) {
+					if(buttonInstant(s_button_hide, bx - ui(12), by - ui(12), ui(24), ui(24), _m, pFOCUS, pHOVER, "", s_prop_keyframe, 0) == 2) {
 						var _t = -1;
 						for(var j = 0; j < ds_list_size(jun.animator.values); j++) {
 							var _key = jun.animator.values[| j];
@@ -195,7 +204,7 @@ function Panel_Inspector(_panel) : PanelContent(_panel) constructor {
 					draw_line(bx - ui(20), by - lhf, bx - ui(20), by + lhf);
 						
 					bx -= ui(26 + 12);
-					if(buttonInstant(s_button_hide, bx - ui(12), by - ui(12), ui(24), ui(24), _m, FOCUS == panel, HOVER == panel, "Looping mode " + ON_END_NAME[jun.on_end], s_prop_on_end, jun.on_end) == 2)
+					if(buttonInstant(s_button_hide, bx - ui(12), by - ui(12), ui(24), ui(24), _m, pFOCUS, pHOVER, "Looping mode " + ON_END_NAME[jun.on_end], s_prop_on_end, jun.on_end) == 2)
 						jun.on_end = safe_mod(jun.on_end + 1, sprite_get_number(s_prop_on_end));
 				}
 			#endregion
@@ -214,8 +223,8 @@ function Panel_Inspector(_panel) : PanelContent(_panel) constructor {
 			var widH	   = lineBreak? editBoxH : 0;
 			
 			if(jun.editWidget) {
-				jun.editWidget.active = FOCUS == panel;
-				jun.editWidget.hover  = HOVER == panel;
+				jun.editWidget.active = pFOCUS;
+				jun.editWidget.hover  = pHOVER;
 				
 				switch(jun.display_type) {
 					case VALUE_DISPLAY.button :
@@ -256,8 +265,7 @@ function Panel_Inspector(_panel) : PanelContent(_panel) constructor {
 										widH = ui(204);
 										break;
 									case VALUE_DISPLAY.puppet_control :
-										jun.editWidget.draw(editBoxX, editBoxY, editBoxW, jun.showValue(), _m, ui(16) + x, top_bar_h + y);
-										widH = ui(164);
+										widH = jun.editWidget.draw(editBoxX, editBoxY, editBoxW, jun.showValue(), _m, ui(16) + x, top_bar_h + y);
 										break;
 								}
 								break;
@@ -331,18 +339,18 @@ function Panel_Inspector(_panel) : PanelContent(_panel) constructor {
 			
 			hh += lb_h + widH + padd;
 			
-			var _selY = yy - ui(0);
-			var _selY1 = max(yy + lb_h, editBoxY + widH + ui(4));
-			var _selH = _selY1 - _selY;
+			var _selY  = yy - ui(0);
+			var _selY1 = yy + lb_h + widH + ui(2);
+			var _selH  = _selY1 - _selY;
 			
 			if(prop_selecting == jun)
 				draw_sprite_stretched(s_prop_selecting, 1, 4, _selY, contentPane.surface_w - ui(8), _selH);
 				
-			if(HOVER == panel && point_in_rectangle(_m[0], _m[1], 4, _selY, contentPane.surface_w - ui(4), _selY + _selH)) {
+			if(pHOVER && point_in_rectangle(_m[0], _m[1], 4, _selY, contentPane.surface_w - ui(4), _selY + _selH)) {
 				draw_sprite_stretched(s_prop_selecting, 0, 4, _selY, contentPane.surface_w - ui(8), _selH);
 				prop_hover = jun;
 					
-				if(FOCUS == panel) {
+				if(pFOCUS) {
 					if(mouse_check_button_pressed(mb_left))
 						prop_selecting = jun;
 						
@@ -382,18 +390,12 @@ function Panel_Inspector(_panel) : PanelContent(_panel) constructor {
 		prop_selecting.setString(clipboard_get_text());
 	}
 	
-	function onResize() {
-		content_w = w - ui(32);
-		content_h = h - top_bar_h - ui(24);
-		contentPane.resize(content_w, content_h);
-	}
-	
 	function drawInspectingNode() {
 		draw_set_text(f_h5, fa_center, fa_top, c_white);
 		tb_node_name.font = f_h5;
 		tb_node_name.hide = true;
-		tb_node_name.active = FOCUS == panel;
-		tb_node_name.hover  = HOVER == panel;
+		tb_node_name.active = pFOCUS;
+		tb_node_name.hover  = pHOVER;
 		tb_node_name.align = fa_center;
 		tb_node_name.draw(ui(64), ui(14), w - ui(128), ui(32), inspecting.name, [mx, my]);
 		
@@ -401,7 +403,7 @@ function Panel_Inspector(_panel) : PanelContent(_panel) constructor {
 			var bx = w - ui(44);
 			var by = ui(12);
 			
-			if(buttonInstant(s_button_hide, bx, by, ui(32), ui(32), [mx, my], FOCUS == panel, HOVER == panel, "Run node", s_sequence_control, 1) == 2)
+			if(buttonInstant(s_button_hide, bx, by, ui(32), ui(32), [mx, my], pFOCUS, pHOVER, "Run node", s_sequence_control, 1) == 2)
 				inspecting.doUpdate();
 		}
 		
@@ -409,12 +411,12 @@ function Panel_Inspector(_panel) : PanelContent(_panel) constructor {
 			var bx = ui(8);
 			var by = ui(12);
 			
-			if(buttonInstant(s_button_hide, bx, by, ui(32), ui(32), [mx, my], FOCUS == panel, HOVER == panel, "This node cache output for performance.\nClick to clear all cached frames in this node.", s_cache) = 2)
+			if(buttonInstant(s_button_hide, bx, by, ui(32), ui(32), [mx, my], pFOCUS, pHOVER, "This node cache output for performance.\nClick to clear all cached frames in this node.", s_cache) = 2)
 				inspecting.clearCache();
 		}
 	}
 	
-	function drawContent() {
+	function drawContent(panel) {
 		draw_clear_alpha(c_ui_blue_black, 0);
 		lineBreak = w < PREF_MAP[? "inspector_line_break_width"];
 		
@@ -423,7 +425,7 @@ function Panel_Inspector(_panel) : PanelContent(_panel) constructor {
 		if(inspecting)
 			drawInspectingNode();
 		
-		contentPane.active = HOVER == panel;
+		contentPane.active = pHOVER;
 		contentPane.draw(ui(16), top_bar_h, mx - ui(16), my - top_bar_h);
 		
 		if(PANEL_GRAPH.node_focus && inspecting != PANEL_GRAPH.node_focus) {

@@ -1,4 +1,4 @@
-function Panel_Menu(_panel) : PanelContent(_panel) constructor {
+function Panel_Menu() : PanelContent() constructor {
 	draggable  = false;
 	
 	noti_flash = 0;
@@ -8,6 +8,7 @@ function Panel_Menu(_panel) : PanelContent(_panel) constructor {
 			[ "New", function() { 
 				NEW();
 			}, ["", "New file"] ],
+			[ "Open...", function() { LOAD(); }, ["", "Open"]  ],
 			[ "Open...", function() { LOAD(); }, ["", "Open"]  ],
 			[ "Save", function() { SAVE(); }, ["", "Save"]  ],
 			[ "Save as...", function() { SAVE_AS(); }, ["", "Save as"]  ],
@@ -76,12 +77,12 @@ function Panel_Menu(_panel) : PanelContent(_panel) constructor {
 		]],
 	]
 	
-	function drawContent() {
+	function drawContent(panel) {
 		draw_clear_alpha(c_ui_blue_black, 0);
 		draw_sprite_ui_uniform(icon_24, 0, h / 2, h / 2, 1, c_white);
 		var xx = h;
 		
-		if(FOCUS == panel && point_in_rectangle(mx, my, 0, 0, ui(40), ui(32))) {
+		if(pFOCUS && point_in_rectangle(mx, my, 0, 0, ui(40), ui(32))) {
 			if(mouse_check_button_pressed(mb_left)) {
 				dialogCall(o_dialog_about);
 			}
@@ -92,11 +93,11 @@ function Panel_Menu(_panel) : PanelContent(_panel) constructor {
 			var ww = string_width(menus[i][0]) + ui(16);
 			var xc = xx + ww / 2;
 			
-			if(HOVER == panel) {
+			if(pHOVER) {
 				if(point_in_rectangle(mx, my, xc - ww / 2, 0, xc + ww / 2, h)) {
 					draw_sprite_stretched(s_menu_button, 0, xc - ww / 2, ui(6), ww, h - ui(12));
 					
-					if((FOCUS == panel && mouse_check_button_pressed(mb_left)) || instance_exists(o_dialog_menubox)) {
+					if((pFOCUS && mouse_check_button_pressed(mb_left)) || instance_exists(o_dialog_menubox)) {
 						var dia = dialogCall(o_dialog_menubox, x + xx, y + h);
 						dia.setMenu(menus[i][1]);
 					}
@@ -154,10 +155,10 @@ function Panel_Menu(_panel) : PanelContent(_panel) constructor {
 		draw_set_text(f_p0, fa_right, fa_center, c_ui_blue_grey);
 		var txt = "v. " + string(VERSION_STRING);
 		var ww = string_width(txt);
-		if(HOVER == panel && point_in_rectangle(mx, my, w - ui(16) - ww, 0, w - ui(16), h)) {
+		if(pHOVER && point_in_rectangle(mx, my, w - ui(16) - ww, 0, w - ui(16), h)) {
 			draw_sprite_stretched(s_menu_button, 0, w - ww - ui(22), ui(6), ww + ui(12), h - ui(12));
 			
-			if(FOCUS == panel && mouse_check_button_pressed(mb_left)) {
+			if(pFOCUS && mouse_check_button_pressed(mb_left)) {
 				dialogCall(o_dialog_release_note); 
 			}
 		}
@@ -169,10 +170,10 @@ function Panel_Menu(_panel) : PanelContent(_panel) constructor {
 			var txt = " Newer version available ";
 			var ww = string_width(txt);
 			
-			if(HOVER == panel && point_in_rectangle(mx, my, xx - ww, 0, xx, h)) {
+			if(pHOVER && point_in_rectangle(mx, my, xx - ww, 0, xx, h)) {
 				draw_sprite_stretched(s_menu_button, 0, xx - ww - ui(6), ui(6), ww + ui(12), h - ui(12));
 				
-				if(FOCUS == panel && mouse_check_button_pressed(mb_left)) {
+				if(pFOCUS && mouse_check_button_pressed(mb_left)) {
 					url_open("https://makham.itch.io/pixel-composer");
 				}
 			}

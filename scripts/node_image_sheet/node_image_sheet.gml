@@ -66,11 +66,17 @@ function Node_Image_Sheet(_x, _y) : Node(_x, _y) constructor {
 		
 			doUpdate(); 
 		}, "Generate"] );
+		
+	inputs[| 11] = nodeValue(11, "Sync animation", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+		.setDisplay(VALUE_DISPLAY.button, [ function() { 
+			var _amo	= inputs[| 2].getValue();
+			ANIMATOR.frames_total = max(1, _amo - 1);
+		}, "Sync frames"] );
 	
 	input_display_list = [
 		["Sprite", false],	0, 1, 6, 10, 
 		["Sheet",  false],	2, 3, 9, 4, 5, 
-		["Output", false],	7, 8
+		["Output", false],	7, 8, 11
 	];
 	
 	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);

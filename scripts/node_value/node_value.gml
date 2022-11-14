@@ -549,37 +549,36 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 	
 	static setFrom = function(_valueFrom, _update = true, checkRecur = true) {
 		if(_valueFrom == -1 || _valueFrom == undefined) {
-			show_debug_message("LOAD : Value from error " + string(_valueFrom))
+			noti_warning("LOAD: Cannot set node connection from " + string(_valueFrom) + " to " + string(name) + " of node " + string(node.name) + ".");
 			return false;
 		}
 		
 		if(_valueFrom == value_from) {
-			show_debug_message("setFrom : Repeated connection");
 			return false;
 		}
 		
 		if(_valueFrom == self) {
-			show_debug_message("setFrom : Connect to self");
+			noti_warning("setFrom: Self connection is not allowed.");
 			return false;
 		}
 		
 		if(value_bit(type) & value_bit(_valueFrom.type) == 0 && !value_type_directional(_valueFrom, self)) {
-			show_debug_message("setFrom : Type mismatch");
+			noti_warning("setFrom: Type mismatch");
 			return false;
 		}
 		
 		if(connect_type == _valueFrom.connect_type) {
-			show_debug_message("setFrom : Connect type mismatch");
+			noti_warning("setFrom: Connect type mismatch");
 			return false;
 		}
 		
 		if(checkRecur && _valueFrom.searchNodeBackward(node)) {
-			show_debug_message("setFrom : Recursive");
+			noti_warning("setFrom: Cycle connection");
 			return false;
 		}
 			
 		if(!accept_array && _valueFrom.isArray()) {
-			show_debug_message("setFrom : Array mismatch");
+			noti_warning("setFrom: Array mismatch");
 			return false;
 		}
 		

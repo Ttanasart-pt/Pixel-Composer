@@ -675,7 +675,6 @@ function Node(_x, _y) constructor {
 				NODE_MAP[? _group].add(self);
 			} else {
 				var txt = "Group load failed. Can't find node ID " + string(_group);
-				noti_warning(txt);
 				log_warning("LOAD", txt);
 			}
 		}

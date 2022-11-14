@@ -72,7 +72,7 @@ function SAVE_AS() {
 		path += ".pxc";
 	
 	if(file_exists(path))
-		noti_warning("Overrided file : " + path);
+		log_warning("SAVE", "Overrided file : " + path);
 	SAVE_AT(path);
 	SET_PATH(path);
 }
@@ -87,8 +87,7 @@ function SAVE_AT(path) {
 	READONLY  = false;
 	MODIFIED  = false;
 	
-	log_message("FILE", "save at " + path);
-	noti_status("File saved", s_noti_icon_file_save);
+	log_message("FILE", "save at " + path, s_noti_icon_file_save);
 }
 
 function SAVE_COLLECTIONS(_list, _path, save_surface = true) {

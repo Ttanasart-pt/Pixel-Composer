@@ -15,12 +15,10 @@ function APPEND(_path) {
 		if(_v != SAVEFILE_VERSION) {
 			var warn = "File version mismatch : loading file verion " + string(_v) + " to Pixel Composer " + string(SAVEFILE_VERSION);
 			log_warning("FILE", warn)
-			noti_warning(warn);
 		}
 	} else {
 		var warn = "File version mismatch : loading old format to Pixel Composer " + string(SAVEFILE_VERSION);
 		log_warning("FILE", warn)
-		noti_warning(warn);
 	}
 	
 	var _node_list = _map[? "nodes"];
@@ -45,7 +43,6 @@ function APPEND(_path) {
 				ds_list_add(node_create, _node);
 		}
 	} catch(e) {
-		noti_warning("Node load error : " + e.message);
 		log_warning("APPEND, node", e.longMessage);
 	}
 	
@@ -53,7 +50,6 @@ function APPEND(_path) {
 		for(var i = 0; i < ds_list_size(appended_list); i++)
 			appended_list[| i].postDeserialize();
 	} catch(e) {
-		noti_warning("Deserialize error : " + e.message);
 		log_warning("APPEND, deserialize", e.longMessage);
 	}
 	
@@ -65,7 +61,6 @@ function APPEND(_path) {
 		for(var i = 0; i < ds_list_size(appended_list); i++)
 			appended_list[| i].postConnect();
 	} catch(e) {
-		noti_warning("Connect error : " + e.message);
 		log_warning("APPEND, connect", e.longMessage);
 	}
 	
@@ -73,7 +68,6 @@ function APPEND(_path) {
 		for(var i = 0; i < ds_list_size(appended_list); i++)
 			appended_list[| i].doUpdate();
 	} catch(e) {
-		noti_warning("Update error : " + e.message);
 		log_warning("APPEND, update", e.longMessage);
 	}
 	
@@ -98,18 +92,16 @@ function APPEND(_path) {
 			}
 		
 			if(!ds_queue_empty(CONNECTION_CONFLICT))
-				noti_warning("Some connection(s) is unsolved. This may caused by render node not being update properly, or image path is broken.");
+				log_warning("APPEND", "Some connection(s) is unsolved. This may caused by render node not being update properly, or image path is broken.");
 		} catch(e) {
-			noti_warning("Conflict solver error : " + e.message);
-			log_warning("APPEND, solver", e.longMessage);
+			log_warning("APPEND, Conflict solver error : ", e.longMessage);
 		}
 	}
 	
 	APPENDING = false;
 	PANEL_ANIMATION.updatePropertyList();
 	
-	log_message("FILE", "append file " + _path);
-	noti_status("Collection loaded", s_noti_icon_file_load);
+	log_message("FILE", "append file " + _path, s_noti_icon_file_load);
 	
 	ds_map_destroy(_map);
 	return node_create;

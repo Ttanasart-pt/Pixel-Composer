@@ -5,7 +5,7 @@ enum KEYFRAME_DRAG_TYPE {
 	ease_both
 }
 
-function Panel_Animation(_panel) : PanelContent(_panel) constructor {
+function Panel_Animation() : PanelContent() constructor {
 	context_str = "Animation";
 	
 	timeline_h = ui(28);
@@ -13,13 +13,18 @@ function Panel_Animation(_panel) : PanelContent(_panel) constructor {
 	min_h = ui(48);
 	tool_width = ui(280);
 	
-	timeline_surface = surface_create_valid(w - tool_width, timeline_h);
-	timeline_mask = surface_create_valid(w - tool_width, timeline_h);
+	function initSize() {
+		timeline_w = w - tool_width - ui(12);
+		timeline_surface = surface_create_valid(timeline_w, timeline_h);
+		timeline_mask = surface_create_valid(timeline_w, timeline_h);
 	
-	dope_sheet_w = w - tool_width - ui(8);
-	dope_sheet_h = h - timeline_h - ui(20);
-	dope_sheet_surface = surface_create_valid(dope_sheet_w, 1);
-	dope_sheet_mask = surface_create_valid(dope_sheet_w, 1);
+		dope_sheet_w = w - tool_width;
+		dope_sheet_h = h - timeline_h - ui(20);
+		dope_sheet_surface = surface_create_valid(dope_sheet_w, 1);
+		dope_sheet_mask = surface_create_valid(dope_sheet_w, 1);
+	}
+	initSize();
+	
 	dope_sheet_y = 0;
 	dope_sheet_y_to = 0;
 	dope_sheet_y_max = 0;
@@ -194,17 +199,17 @@ function Panel_Animation(_panel) : PanelContent(_panel) constructor {
 	function onResize(dw, dh) {
 		if(w - tool_width > 1) {
 			if(is_surface(timeline_mask) && surface_exists(timeline_mask))
-				surface_size_to(timeline_mask, w - tool_width, timeline_h);
+				surface_size_to(timeline_mask, timeline_w, timeline_h);
 			else 
-				timeline_mask = surface_create_valid(w - tool_width, timeline_h);
+				timeline_mask = surface_create_valid(timeline_w, timeline_h);
 				
 			if(is_surface(timeline_surface) && surface_exists(timeline_surface))
-				surface_size_to(timeline_surface, w - tool_width, timeline_h);
+				surface_size_to(timeline_surface, timeline_w, timeline_h);
 			else
-				timeline_surface = surface_create_valid(w - tool_width, timeline_h);
+				timeline_surface = surface_create_valid(timeline_w, timeline_h);
 		}
 		
-		dope_sheet_w = w - tool_width - ui(8);
+		dope_sheet_w = timeline_w;
 		dope_sheet_h = h - timeline_h - ui(24);
 		if(dope_sheet_h > ui(8)) {
 			if(is_surface(dope_sheet_mask) && surface_exists(dope_sheet_mask))
@@ -227,12 +232,12 @@ function Panel_Animation(_panel) : PanelContent(_panel) constructor {
 	
 	function resetTimelineMask() {
 		if(!surface_exists(timeline_mask))
-			timeline_mask = surface_create_valid(w - tool_width, timeline_h);
+			timeline_mask = surface_create_valid(timeline_w, timeline_h);
 			
 		surface_set_target(timeline_mask);
 		draw_clear(c_black);
 		gpu_set_blendmode(bm_subtract);
-		draw_sprite_stretched(s_ui_panel_bg, 0, 0, 0, w - tool_width, timeline_h);
+		draw_sprite_stretched(s_ui_panel_bg, 0, 0, 0, timeline_w, timeline_h);
 		gpu_set_blendmode(bm_normal);
 		surface_reset_target();
 		
@@ -270,16 +275,16 @@ function Panel_Animation(_panel) : PanelContent(_panel) constructor {
 	}
 	
 	//TODO: Divide this 800+ lines monstrosity into subfunctions
-	function drawAnimationControl() {
+	function drawAnimationControl(panel) {
 		var bar_x = tool_width - ui(48);
 		var bar_y = h - timeline_h - ui(10);
-		var bar_w = w - tool_width;
+		var bar_w = timeline_w;
 		var bar_h = timeline_h;
 		var bar_total_w = ANIMATOR.frames_total * ui(timeline_scale);
 		
 		resetTimelineMask();
 		if(!is_surface(timeline_surface) || !surface_exists(timeline_surface)) 
-			timeline_surface = surface_create_valid(w - tool_width, timeline_h);
+			timeline_surface = surface_create_valid(timeline_w, timeline_h);
 		
 		if(dope_sheet_h > 8) {
 			if(!is_surface(dope_sheet_surface) || !surface_exists(dope_sheet_surface)) 
@@ -291,7 +296,7 @@ function Panel_Animation(_panel) : PanelContent(_panel) constructor {
 			#region scroll
 				dope_sheet_y = lerp_float(dope_sheet_y, dope_sheet_y_to, 5);
 					
-				if(HOVER == panel && point_in_rectangle(mx, my, ui(8), ui(8), tool_width, ui(8) + dope_sheet_h)) {
+				if(pHOVER && point_in_rectangle(mx, my, ui(8), ui(8), tool_width, ui(8) + dope_sheet_h)) {
 					if(mouse_wheel_down())	dope_sheet_y_to = clamp(dope_sheet_y_to - ui(32), -dope_sheet_y_max, 0);
 					if(mouse_wheel_up())	dope_sheet_y_to = clamp(dope_sheet_y_to + ui(32), -dope_sheet_y_max, 0);
 				}
@@ -458,10 +463,10 @@ function Panel_Animation(_panel) : PanelContent(_panel) constructor {
 										else if(key.ease_in_type == CURVE_TYPE.damping)
 											draw_sprite_stretched_ext(s_timeline_elastic, 0, _tx, key_y - 4, t - _tx, 8, c_ui_blue_dkgrey, 1);
 											
-										if(HOVER == panel && point_in_circle(msx, msy, _tx, key_y, ui(6))) {
+										if(pHOVER && point_in_circle(msx, msy, _tx, key_y, ui(6))) {
 											key_hover = key;
 											draw_sprite_ui_uniform(s_timeline_keyframe, 2, _tx, key_y, 1, c_ui_blue_white);
-											if(FOCUS == panel && mouse_check_button_pressed(mb_left)) {
+											if(pFOCUS && mouse_check_button_pressed(mb_left)) {
 												keyframe_dragging = prop.animator.values[| k];
 												keyframe_drag_type = KEYFRAME_DRAG_TYPE.ease_in;
 											}
@@ -475,10 +480,10 @@ function Panel_Animation(_panel) : PanelContent(_panel) constructor {
 										else if(key.ease_out_type == CURVE_TYPE.damping)
 											draw_sprite_stretched_ext(s_timeline_elastic, 0, t, key_y - 4, _tx - t, 8, c_ui_blue_dkgrey, 1);
 										
-										if(HOVER == panel && point_in_circle(msx, msy, _tx, key_y, ui(6))) {
+										if(pHOVER && point_in_circle(msx, msy, _tx, key_y, ui(6))) {
 											key_hover = key;
 											draw_sprite_ui_uniform(s_timeline_keyframe, 3, _tx, key_y, 1, c_ui_blue_white);
-											if(FOCUS == panel && mouse_check_button_pressed(mb_left)) {
+											if(pFOCUS && mouse_check_button_pressed(mb_left)) {
 												keyframe_dragging = prop.animator.values[| k];
 												keyframe_drag_type = KEYFRAME_DRAG_TYPE.ease_out;
 											}
@@ -619,11 +624,11 @@ function Panel_Animation(_panel) : PanelContent(_panel) constructor {
 								}
 								
 								var cc = c_ui_blue_grey;
-								if(HOVER == panel && point_in_circle(msx, msy, t, key_y, ui(8))) {
+								if(pHOVER && point_in_circle(msx, msy, t, key_y, ui(8))) {
 									cc = c_ui_blue_white;
 									key_hover = keyframe;
 									
-									if(FOCUS == panel) {
+									if(pFOCUS) {
 										if(DOUBLE_CLICK) {
 											keyframe_dragging = keyframe;
 											keyframe_drag_type = KEYFRAME_DRAG_TYPE.ease_both;
@@ -635,7 +640,7 @@ function Panel_Animation(_panel) : PanelContent(_panel) constructor {
 								}
 								
 								if(stagger_mode == 1 && ds_list_exist(keyframe_selecting, keyframe))
-									cc = c_ui_orange;
+									cc = key_hover == keyframe? c_white : c_ui_orange;
 									
 								draw_sprite_ui_uniform(s_timeline_keyframe, 1, t, key_y, 1, cc);
 								if(ds_list_exist(keyframe_selecting, keyframe)) 
@@ -662,7 +667,7 @@ function Panel_Animation(_panel) : PanelContent(_panel) constructor {
 							}
 						}
 						
-						if(FOCUS == panel && point_in_rectangle(msx, msy, 0, ui(16), dope_sheet_w, dope_sheet_h)) {
+						if(pFOCUS && point_in_rectangle(msx, msy, 0, ui(16), dope_sheet_w, dope_sheet_h)) {
 							if(mouse_check_button_pressed(mb_left) || mouse_check_button_pressed(mb_right)) {
 								if(key_hover == noone) {
 									ds_list_clear(keyframe_selecting);
@@ -700,7 +705,7 @@ function Panel_Animation(_panel) : PanelContent(_panel) constructor {
 							}
 						}
 						
-						if(FOCUS == panel && mouse_check_button_pressed(mb_right)) {
+						if(pFOCUS && mouse_check_button_pressed(mb_right)) {
 							if(!ds_list_empty(keyframe_selecting)) {
 								dialogCall(o_dialog_menubox, mouse_mx + ui(8), mouse_my + ui(8))
 									.setMenu(keyframe_menu);
@@ -801,9 +806,9 @@ function Panel_Animation(_panel) : PanelContent(_panel) constructor {
 							
 							key_y += ui(6);
 							draw_set_color(c_ui_blue_ltgrey);
-							if(HOVER == panel && point_in_rectangle(msx, msy, 0, key_y - ui(10), tool_width - ui(64), key_y + ui(10))) {
+							if(pHOVER && point_in_rectangle(msx, msy, 0, key_y - ui(10), tool_width - ui(64), key_y + ui(10))) {
 								draw_sprite_stretched_ext(s_ui_panel_bg, 0, 0, key_y - ui(10), tool_width - ui(64), ui(20), c_ui_blue_ltgrey, 1);
-								if(FOCUS == panel && msx < tool_width - ui(88) && mouse_check_button_pressed(mb_left))
+								if(pFOCUS && msx < tool_width - ui(88) && mouse_check_button_pressed(mb_left))
 									prop.node.anim_show = !prop.node.anim_show;
 							} else 
 								draw_sprite_stretched_ext(s_ui_panel_bg, 0, 0, key_y - ui(10), tool_width - ui(64), ui(20), merge_color(c_ui_blue_white, c_ui_blue_ltgrey, 0.5), 1);
@@ -812,11 +817,11 @@ function Panel_Animation(_panel) : PanelContent(_panel) constructor {
 								draw_sprite_stretched(s_node_active, 0, 0, key_y - ui(10), tool_width - ui(64), ui(20));
 							
 							var tx = tool_width - ui(76 + 16 * 0);
-							if(HOVER == panel && point_in_circle(msx, msy, tx, key_y - 1, ui(10))) {
+							if(pHOVER && point_in_circle(msx, msy, tx, key_y - 1, ui(10))) {
 								draw_sprite_ui_uniform(s_animate_node_go, 0, tx, key_y - 1, 1, c_ui_blue_white);
 								TOOLTIP = "Go to node";
 								
-								if(FOCUS == panel && mouse_check_button_pressed(mb_left)) {
+								if(pFOCUS && mouse_check_button_pressed(mb_left)) {
 									PANEL_INSPECTOR.inspecting = _node;
 									ds_list_clear(PANEL_GRAPH.nodes_select_list);
 									PANEL_GRAPH.node_focus = _node;
@@ -834,10 +839,10 @@ function Panel_Animation(_panel) : PanelContent(_panel) constructor {
 						
 						var tx = tool_width - ui(72 + 16 * 3);
 						var ty = key_y - 1;
-						if(HOVER == panel && point_in_circle(msx, msy, tx, ty, ui(6))) {
+						if(pHOVER && point_in_circle(msx, msy, tx, ty, ui(6))) {
 							draw_sprite_ui_uniform(s_prop_keyframe, 0, tx, ty, 1, c_ui_blue_white);
 							
-							if(FOCUS == panel && mouse_check_button_pressed(mb_left)) {
+							if(pFOCUS && mouse_check_button_pressed(mb_left)) {
 								var _t = -1;
 								for(var j = 0; j < ds_list_size(prop.animator.values); j++) {
 									var _key = prop.animator.values[| j];
@@ -852,10 +857,10 @@ function Panel_Animation(_panel) : PanelContent(_panel) constructor {
 							draw_sprite_ui_uniform(s_prop_keyframe, 0, tx, ty, 1, c_ui_blue_grey);
 						
 						var tx = tool_width - ui(72 + 16 * 1);
-						if(HOVER == panel && point_in_circle(msx, msy, tx, ty, ui(6))) {
+						if(pHOVER && point_in_circle(msx, msy, tx, ty, ui(6))) {
 							draw_sprite_ui_uniform(s_prop_keyframe, 2, tx, ty, 1, c_ui_blue_white);
 							
-							if(FOCUS == panel && mouse_check_button_pressed(mb_left)) {
+							if(pFOCUS && mouse_check_button_pressed(mb_left)) {
 								for(var j = 0; j < ds_list_size(prop.animator.values); j++) {
 									var _key = prop.animator.values[| j];
 									if(_key.time > ANIMATOR.current_frame) {
@@ -869,10 +874,10 @@ function Panel_Animation(_panel) : PanelContent(_panel) constructor {
 							draw_sprite_ui_uniform(s_prop_keyframe, 2, tx, ty, 1, c_ui_blue_grey);
 						
 						var tx = tool_width - ui(72 + 16 * 2);
-						if(HOVER == panel && point_in_circle(msx, msy, tx, ty, ui(6))) {
+						if(pHOVER && point_in_circle(msx, msy, tx, ty, ui(6))) {
 							draw_sprite_ui_uniform(s_prop_keyframe, 1, tx, ty, 1, c_ui_orange_light);
 							
-							if(FOCUS == panel && mouse_check_button_pressed(mb_left)) {
+							if(pFOCUS && mouse_check_button_pressed(mb_left)) {
 								var _add = false;
 								for(var j = 0; j < ds_list_size(prop.animator.values); j++) {
 									var _key = prop.animator.values[| j];
@@ -894,11 +899,11 @@ function Panel_Animation(_panel) : PanelContent(_panel) constructor {
 						
 						if(isGraphable(prop.type)) {
 							var tx = tool_width - ui(68 + 16 * 0);
-							if(HOVER == panel && point_in_circle(msx, msy, tx, ty, ui(8))) {
+							if(pHOVER && point_in_circle(msx, msy, tx, ty, ui(8))) {
 								draw_sprite_ui_uniform(s_timeline_graph, 1, tx, ty, 1, prop.animator.show_graph? c_ui_orange_light : c_ui_blue_white);
 								TOOLTIP = "Show graph";
 								
-								if(FOCUS == panel && mouse_check_button_pressed(mb_left)) {
+								if(pFOCUS && mouse_check_button_pressed(mb_left)) {
 									prop.animator.show_graph = !prop.animator.show_graph;
 								}
 							} else
@@ -906,20 +911,20 @@ function Panel_Animation(_panel) : PanelContent(_panel) constructor {
 						}
 						
 						var tx = tool_width - ui(72 + 16 * 4.5);
-						if(HOVER == panel && point_in_circle(msx, msy, tx, ty, ui(6))) {
+						if(pHOVER && point_in_circle(msx, msy, tx, ty, ui(6))) {
 							draw_sprite_ui_uniform(s_prop_on_end, prop.on_end, tx, ty, 1, c_ui_blue_white, 1);
 							TOOLTIP = "Looping mode " + ON_END_NAME[prop.on_end];
 							
-							if(FOCUS == panel && mouse_check_button_pressed(mb_left)) {
+							if(pFOCUS && mouse_check_button_pressed(mb_left)) {
 								prop.on_end = safe_mod(prop.on_end + 1, sprite_get_number(s_prop_on_end));
 							}
 						} else
 							draw_sprite_ui_uniform(s_prop_on_end, prop.on_end, tx, ty, 1, c_ui_blue_grey);
 						
-						if(HOVER == panel && point_in_circle(msx, msy, ui(22), key_y - 1, ui(10))) {
+						if(pHOVER && point_in_circle(msx, msy, ui(22), key_y - 1, ui(10))) {
 							draw_sprite_ui_uniform(s_timeline_clock, 1, ui(22), key_y - 1, 1, c_ui_blue_white);
 							
-							if(FOCUS == panel && mouse_check_button_pressed(mb_left)) {
+							if(pFOCUS && mouse_check_button_pressed(mb_left)) {
 								prop.animator.is_anim = !prop.animator.is_anim;
 								updatePropertyList();
 							}
@@ -1046,7 +1051,7 @@ function Panel_Animation(_panel) : PanelContent(_panel) constructor {
 						timeline_dragging = false;
 				}
 				
-				if(HOVER == panel) {
+				if(pHOVER) {
 					if(point_in_rectangle(mx, my, bar_x, 16, bar_x + bar_w, bar_y - 8)) {
 						if(mouse_wheel_down()) {
 							timeline_scale = max(timeline_scale - 1, 1);
@@ -1074,7 +1079,7 @@ function Panel_Animation(_panel) : PanelContent(_panel) constructor {
 						if(mouse_wheel_up())
 							timeline_shift_to = clamp(timeline_shift_to + 64, -max(bar_total_w - bar_w, 0), 0);
 						
-						if(FOCUS == panel && mouse_check_button_pressed(mb_left)) {
+						if(pFOCUS && mouse_check_button_pressed(mb_left)) {
 							timeline_scubbing = true;
 							timeline_scub_st  = ANIMATOR.current_frame;
 							_scrub_frame = timeline_scub_st;
@@ -1082,7 +1087,7 @@ function Panel_Animation(_panel) : PanelContent(_panel) constructor {
 					}
 					
 					if(point_in_rectangle(mx, my, bar_x, 8, bar_x + bar_w, 8 + 16)) {
-						if(FOCUS == panel && mouse_check_button_pressed(mb_left)) {
+						if(pFOCUS && mouse_check_button_pressed(mb_left)) {
 							timeline_scubbing = true;
 							timeline_scub_st  = ANIMATOR.current_frame;
 							_scrub_frame = timeline_scub_st;
@@ -1101,49 +1106,49 @@ function Panel_Animation(_panel) : PanelContent(_panel) constructor {
 		#region control
 			var bx = ui(8);
 			var by = h - ui(40);
-			if(buttonInstant(s_button_hide, bx, by, ui(32), ui(32), [mx, my], FOCUS == panel, HOVER == panel, "Stop", s_sequence_control, 4, ANIMATOR.is_playing? c_ui_orange : c_ui_blue_grey) == 2) {
+			if(buttonInstant(s_button_hide, bx, by, ui(32), ui(32), [mx, my], pFOCUS, pHOVER, "Stop", s_sequence_control, 4, ANIMATOR.is_playing? c_ui_orange : c_ui_blue_grey) == 2) {
 				ANIMATOR.is_playing = false;
 				ANIMATOR.real_frame = 0;
 			}
 		
 			bx += ui(36);
-			if(buttonInstant(s_button_hide, bx, by, ui(32), ui(32), [mx, my], FOCUS == panel, HOVER == panel, ANIMATOR.is_playing? "Pause" : "Play", 
+			if(buttonInstant(s_button_hide, bx, by, ui(32), ui(32), [mx, my], pFOCUS, pHOVER, ANIMATOR.is_playing? "Pause" : "Play", 
 				s_sequence_control, !ANIMATOR.is_playing, ANIMATOR.is_playing? c_ui_orange : c_ui_blue_grey) == 2)
 				
 				ANIMATOR.is_playing = !ANIMATOR.is_playing;
 		
 			bx += ui(36);
-			if(buttonInstant(s_button_hide, bx, by, ui(32), ui(32), [mx, my], FOCUS == panel, HOVER == panel, "Go to first frame", s_sequence_control, 3) == 2) {
+			if(buttonInstant(s_button_hide, bx, by, ui(32), ui(32), [mx, my], pFOCUS, pHOVER, "Go to first frame", s_sequence_control, 3) == 2) {
 				ANIMATOR.real_frame = 0;
 				ANIMATOR.is_scrubing = true;
 			}
 			
 			bx += ui(36);
-			if(buttonInstant(s_button_hide, bx, by, ui(32), ui(32), [mx, my], FOCUS == panel, HOVER == panel, "Go to last frame", s_sequence_control, 2) == 2) {
+			if(buttonInstant(s_button_hide, bx, by, ui(32), ui(32), [mx, my], pFOCUS, pHOVER, "Go to last frame", s_sequence_control, 2) == 2) {
 				ANIMATOR.real_frame = ANIMATOR.frames_total;
 				ANIMATOR.is_scrubing = true;
 			}
 			
 			bx += ui(36);
-			if(buttonInstant(s_button_hide, bx, by, ui(32), ui(32), [mx, my], FOCUS == panel, HOVER == panel, "Previous frame", s_sequence_control, 5) == 2) {
+			if(buttonInstant(s_button_hide, bx, by, ui(32), ui(32), [mx, my], pFOCUS, pHOVER, "Previous frame", s_sequence_control, 5) == 2) {
 				ANIMATOR.real_frame = clamp(ANIMATOR.real_frame - 1, 0, ANIMATOR.frames_total);
 				ANIMATOR.is_scrubing = true;
 			}
 			
 			bx += ui(36);
-			if(buttonInstant(s_button_hide, bx, by, ui(32), ui(32), [mx, my], FOCUS == panel, HOVER == panel, "Next frame", s_sequence_control, 6) == 2) {
+			if(buttonInstant(s_button_hide, bx, by, ui(32), ui(32), [mx, my], pFOCUS, pHOVER, "Next frame", s_sequence_control, 6) == 2) {
 				ANIMATOR.real_frame = clamp(ANIMATOR.real_frame + 1, 0, ANIMATOR.frames_total);
 				ANIMATOR.is_scrubing = true;
 			}
 		
 			bx = w - ui(40);
-			if(buttonInstant(s_button_hide, bx, by, ui(32), ui(32), [mx, my], FOCUS == panel, HOVER == panel, "Animation settings", s_animation_setting, 2) == 2)
+			if(buttonInstant(s_button_hide, bx, by, ui(32), ui(32), [mx, my], pFOCUS, pHOVER, "Animation settings", s_animation_setting, 2) == 2)
 				dialogCall(o_dialog_animation, x + bx + 32, y + by - 8);
 			
 			if(dope_sheet_h > 8) {
 				by -= ui(40);
 				bx = w - ui(40);
-				if(buttonInstant(s_button_hide, bx, by, ui(32), ui(32), [mx, my], FOCUS == panel, HOVER == panel, "Scale animation", s_animation_timing, 2) == 2) {
+				if(buttonInstant(s_button_hide, bx, by, ui(32), ui(32), [mx, my], pFOCUS, pHOVER, "Scale animation", s_animation_timing, 2) == 2) {
 					var dia = dialogCall(o_dialog_anim_time_scaler, x + bx + ui(32), y + by - ui(8));
 					dia.anchor = ANCHOR.right | ANCHOR.bottom;
 				}
@@ -1151,10 +1156,10 @@ function Panel_Animation(_panel) : PanelContent(_panel) constructor {
 		#endregion
 	}
 	
-	function drawContent() {
+	function drawContent(panel) {
 		draw_clear_alpha(c_ui_blue_black, 0);
 		
-		drawAnimationControl();
+		drawAnimationControl(panel);
 		
 		if(timeline_show_time > -1) {
 			TOOLTIP = "Frame " + string(timeline_show_time) + "/" + string(ANIMATOR.frames_total);

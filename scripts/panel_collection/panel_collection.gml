@@ -1,7 +1,12 @@
-function Panel_Collection(_panel) : PanelContent(_panel) constructor {
+function Panel_Collection() : PanelContent() constructor {
+	expandable = false;
 	group_w   = ui(180);
-	content_w = w - ui(24) - group_w;
-	content_h = h - ui(40) - ui(16);
+	
+	function initSize() {
+		content_w = w - ui(24) - group_w;
+		content_h = h - ui(40) - ui(16);
+	}
+	initSize();
 	
 	min_w = group_w + ui(40);
 	min_h = ui(40);
@@ -174,7 +179,7 @@ function Panel_Collection(_panel) : PanelContent(_panel) constructor {
 		var hh = ui(8);
 		
 		for(var i = 0; i < ds_list_size(root.subDir); i++) {
-			var hg = root.subDir[| i].draw(self, ui(8), _y, _m, folderPane.w - ui(16), HOVER == panel, FOCUS == panel, root);
+			var hg = root.subDir[| i].draw(self, ui(8), _y, _m, folderPane.w - ui(16), pHOVER, pFOCUS, root);
 			hh += hg;
 			_y += hg;
 		}
@@ -209,15 +214,15 @@ function Panel_Collection(_panel) : PanelContent(_panel) constructor {
 		}
 	}
 	
-	function drawContent() {
+	function drawContent(panel) {
 		draw_clear_alpha(c_ui_blue_black, 0);
 		
 		var content_y = ui(48);
 		draw_sprite_stretched(s_ui_panel_bg, 1, group_w, content_y, content_w + ui(16), content_h);
-		contentPane.active = HOVER == panel;
+		contentPane.active = pHOVER;
 		contentPane.draw(group_w + ui(8), content_y, mx - group_w - ui(8), my - content_y);
 		
-		folderPane.active = HOVER == panel;
+		folderPane.active = pHOVER;
 		folderPane.draw(0, content_y, mx, my - content_y);
 		
 		var _x = ui(16);
@@ -226,10 +231,11 @@ function Panel_Collection(_panel) : PanelContent(_panel) constructor {
 		
 		for( var i = 0; i < array_length(roots); i++ ) {
 			var r = roots[i];
-			var b = buttonInstant(s_button_hide_fill, _x - ui(8), _y - bh / 2, string_width(r[0]) + ui(20), bh, [mx, my], FOCUS == panel, HOVER == panel);
+			var b = buttonInstant(s_button_hide_fill, _x - ui(8), _y - bh / 2, string_width(r[0]) + ui(20), bh, [mx, my], pFOCUS, pHOVER);
 			if(b == 2) {
 				mode = i;
 				root = r[1];
+				context = root;
 			}
 			
 			draw_set_text(f_p0b, fa_left, fa_center, i == mode? c_ui_blue_white : c_ui_blue_dkgrey);
@@ -241,25 +247,22 @@ function Panel_Collection(_panel) : PanelContent(_panel) constructor {
 		var bx = w - ui(40);
 		var by = ui(12);
 		
-		//tb_search.hover = HOVER == panel;
-		//tb_search.focus = FOCUS == panel;
+		//tb_search.hover = pHOVER;
+		//tb_search.focus = pFOCUS;
 		//if(tb_search.focus)
 		//	TEXTBOX_ACTIVE = tb_search;
 		//else if(TEXTBOX_ACTIVE == tb_search)
 		//	TEXTBOX_ACTIVE = noone;
 		
 		if(search_string == "") {
-			if(FOCUS == panel)
-				tb_search.editText();
-			
-			if(buttonInstant(s_button_hide, bx, by, ui(24), ui(24), [mx, my], FOCUS == panel, HOVER == panel, contentView? "Grid view" : "List view", s_view_mode, contentView) == 2) {
+			if(buttonInstant(s_button_hide, bx, by, ui(24), ui(24), [mx, my], pFOCUS, pHOVER, contentView? "Grid view" : "List view", s_view_mode, contentView) == 2) {
 				contentView = !contentView;
 			}
 			bx -= ui(32);
 			
 			if(mode == 0) {
 			if(context != root) {
-					if(buttonInstant(s_button_hide, bx, by, ui(24), ui(24), [mx, my], FOCUS == panel, HOVER == panel, "Add selecting node as collection", s_add_24, 0, c_ui_lime) == 2) {
+					if(buttonInstant(s_button_hide, bx, by, ui(24), ui(24), [mx, my], pFOCUS, pHOVER, "Add selecting node as collection", s_add_24, 0, c_ui_lime) == 2) {
 						if(PANEL_INSPECTOR.inspecting != noone) {
 							var dia = dialogCall(o_dialog_file_name, mouse_mx + ui(8), mouse_my + ui(8));
 							data_path = context.path;
@@ -283,7 +286,7 @@ function Panel_Collection(_panel) : PanelContent(_panel) constructor {
 				}
 				bx -= ui(32);
 		
-				if(buttonInstant(s_button_hide, bx, by, ui(24), ui(24), [mx, my], FOCUS == panel, HOVER == panel, "Add folder") == 2) {
+				if(buttonInstant(s_button_hide, bx, by, ui(24), ui(24), [mx, my], pFOCUS, pHOVER, "Add folder") == 2) {
 					var dia = dialogCall(o_dialog_file_name, mouse_mx + 8, mouse_my + 8);
 					dia.onModify = function (txt) {
 						directory_create(txt);
@@ -295,14 +298,14 @@ function Panel_Collection(_panel) : PanelContent(_panel) constructor {
 				bx -= ui(32);
 			}
 		
-			if(buttonInstant(s_button_hide, bx, by, ui(24), ui(24), [mx, my], FOCUS == panel, HOVER == panel, "Open in file explorer", s_folder_24) == 2) {
+			if(buttonInstant(s_button_hide, bx, by, ui(24), ui(24), [mx, my], pFOCUS, pHOVER, "Open in file explorer", s_folder_24) == 2) {
 				var _contPath = context.path;
 				var _windir   = environment_get_variable("WINDIR") + "/explorer.exe";
 				execute_shell_simple(_windir, _contPath);
 			}
 			bx -= ui(32);
 		
-			if(buttonInstant(s_button_hide, bx, by, ui(24), ui(24), [mx, my], FOCUS == panel, HOVER == panel, "Refresh", s_refresh_16) == 2)
+			if(buttonInstant(s_button_hide, bx, by, ui(24), ui(24), [mx, my], pFOCUS, pHOVER, "Refresh", s_refresh_16) == 2)
 				refreshContext();
 			bx -= ui(32);
 		} else {
@@ -317,7 +320,7 @@ function Panel_Collection(_panel) : PanelContent(_panel) constructor {
 			if(file_dragging.spr)
 				draw_sprite_ext(file_dragging.spr, 0, mx, my, 1, 1, 0, c_white, 0.5);
 			
-			if(HOVER == PANEL_GRAPH.panel) 
+			if(panelHover(PANEL_GRAPH)) 
 				dragToGraph();
 			
 			if(mouse_check_button_released(mb_left)) 

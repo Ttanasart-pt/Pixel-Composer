@@ -36,7 +36,7 @@
 		renderAll();
 		UPDATE = RENDER_TYPE.none;
 	} else if(UPDATE & RENDER_TYPE.partial) {
-		show_debug_message("Update partial stack size = " + string(ds_stack_size(RENDER_STACK)));
+		noti_warning("Update partial stack size to " + string(ds_stack_size(RENDER_STACK)));
 		renderUpdated();
 		UPDATE = RENDER_TYPE.none;
 	} 

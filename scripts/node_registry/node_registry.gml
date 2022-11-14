@@ -81,6 +81,7 @@ function NodeObject(_name, _spr, _create, tags = []) constructor {
 	addNodeObject(transform, "Polar",			s_node_polar,			"Node_Polar",			Node_create_Polar);
 	addNodeObject(transform, "Nine slice",		s_node_9patch,			"Node_9Slice",			Node_create_9Slice, ["9", "splice"]);
 	addNodeObject(transform, "Padding",			s_node_padding,			"Node_Padding",			Node_create_Padding);
+	addNodeObject(transform, "Area wrap",		s_node_padding,			"Node_Wrap_Area",		Node_create_Wrap_Area);
 	
 	var filter = ds_list_create();
 	addNodeCatagory("Filter", filter);
@@ -214,7 +215,7 @@ function NodeObject(_name, _spr, _create, tags = []) constructor {
 		var _type = ds_map_try_get(_data, "type", 0);
 		
 		if(!ds_map_exists(NODE_CREATE_FUCTION, _type)) {
-			show_debug_message("Append ERROR : no type " + _type)
+			noti_error("LOAD: node creation function [" + _type + "] not found.")
 			return noone;
 		}
 		

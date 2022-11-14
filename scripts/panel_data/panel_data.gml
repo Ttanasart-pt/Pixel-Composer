@@ -127,11 +127,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 	
 	function set(_content) {
 		content = _content;
-		content.panel = self;
-		content.x = x;
-		content.y = y;
-		content.w = w;
-		content.h = h;
+		content.onSetPanel(self);
 	}
 	
 	function split_h(_w) {
@@ -198,7 +194,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 	}
 	
 	function stepBegin() {
-		if(content) content.onStepBegin();
+		if(content) content.onStepBegin(self);
 		
 		if(dragging == 1) {
 			var _mx = clamp(mouse_mx, ui(16), WIN_W - ui(16));
@@ -271,12 +267,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 			
 			if(mouse_check_button_released(mb_left)) dragging = -1;
 		} else {
-			for(var i = 0; i < ds_list_size(childs); i++) {
-				var _panel = childs[| i];
-				_panel.stepBegin();
-			}
-			
-			if(ds_list_empty(childs)) {
+			if(content != noone) {
 				if(point_in_rectangle(mouse_mx, mouse_my, x + ui(2), y + ui(2), x + w - ui(4), y + h - ui(4))) {
 					HOVER = self;
 					if(mouse_check_button_pressed(mb_left))   setFocus(self);
@@ -284,6 +275,11 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 					if(mouse_check_button_pressed(mb_middle)) setFocus(self);
 					if(sFOCUS && content) 
 						FOCUS_STR = content.context_str;
+				}
+			} else {
+				for(var i = 0; i < ds_list_size(childs); i++) {
+					var _panel = childs[| i];
+					_panel.stepBegin();
 				}
 			}
 		}
@@ -297,47 +293,51 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 	}
 	
 	function draw() {
-		if(ds_list_empty(childs)) {
+		if(content != noone) {
 			drawPanel();
-		} else {
-			var _drag = true;
-			for(var i = 0; i < ds_list_size(childs); i++) {
-				var _panel = childs[| i];
-				if(_panel.content && !_panel.content.draggable)
-					_drag = false;
-			}
+			return;
+		}
 			
-			for(var i = 0; i < ds_list_size(childs); i++) {
-				var _panel = childs[| i];
-				_panel.draw();
+		if(ds_list_empty(childs)) 
+			return;
+		
+		var _drag = true;
+		for(var i = 0; i < ds_list_size(childs); i++) {
+			var _panel = childs[| i];
+			if(_panel.content && !_panel.content.draggable)
+				_drag = false;
+		}
+			
+		for(var i = 0; i < ds_list_size(childs); i++) {
+			var _panel = childs[| i];
+			_panel.draw();
 				
-				if!(_drag && (HOVER == noone || is_struct(HOVER)))
-					continue;
+			if!(_drag && (HOVER == noone || is_struct(HOVER)))
+				continue;
 				
-				switch(_panel.anchor) {
-					case ANCHOR.left :
-						if(!point_in_rectangle(mouse_mx, mouse_my, _panel.x + _panel.w - ui(2), _panel.y, _panel.x + _panel.w + ui(2), _panel.y + _panel.h))
-							break;
-							
-						CURSOR = cr_size_we;
-						if(mouse_check_button_pressed(mb_left)) {
-							dragging  = 1;
-							drag_sval = _panel.w;
-							drag_sm   = mouse_mx;
-						}
+			switch(_panel.anchor) {
+				case ANCHOR.left :
+					if(!point_in_rectangle(mouse_mx, mouse_my, _panel.x + _panel.w - ui(2), _panel.y, _panel.x + _panel.w + ui(2), _panel.y + _panel.h))
 						break;
-					case ANCHOR.top :
-						if(!point_in_rectangle(mouse_mx, mouse_my, _panel.x, _panel.y + _panel.h - ui(2), _panel.x + _panel.w, _panel.y + _panel.h + ui(2)))
-							break;
 							
-						CURSOR = cr_size_ns;
-						if(mouse_check_button_pressed(mb_left)) {
-							dragging = 2;
-							drag_sval = _panel.h;
-							drag_sm   = mouse_my;
-						}
+					CURSOR = cr_size_we;
+					if(mouse_check_button_pressed(mb_left)) {
+						dragging  = 1;
+						drag_sval = _panel.w;
+						drag_sm   = mouse_mx;
+					}
+					break;
+				case ANCHOR.top :
+					if(!point_in_rectangle(mouse_mx, mouse_my, _panel.x, _panel.y + _panel.h - ui(2), _panel.x + _panel.w, _panel.y + _panel.h + ui(2)))
 						break;
-				}
+							
+					CURSOR = cr_size_ns;
+					if(mouse_check_button_pressed(mb_left)) {
+						dragging = 2;
+						drag_sval = _panel.h;
+						drag_sm   = mouse_my;
+					}
+					break;
 			}
 		}
 	}
@@ -358,7 +358,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 				min_w = content.min_w;
 				min_h = content.min_h;
 				if(w >= min_w && h >= min_h)
-					content.draw();
+					content.draw(self);
 			}
 			
 			gpu_set_blendmode(bm_subtract);
@@ -384,22 +384,24 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 	}
 }
 
-function PanelContent(_panel) constructor {
+function PanelContent() constructor {
 	context_str = "";
-	panel = _panel;
-	panel.content = self;
-	
 	draggable = true;
+	expandable = true;
 	
-	x = panel.x;
-	y = panel.y;
-	w = panel.w;
-	h = panel.h;
 	mx = 0;
 	my = 0;
 	
+	x = 0;
+	y = 0;
+	w = 1;
+	h = 1;
+	
 	min_w = ui(32);
 	min_h = ui(32);
+	
+	pFOCUS = false;
+	pHOVER = false;
 	
 	function refresh() {
 		onResize();
@@ -410,7 +412,23 @@ function PanelContent(_panel) constructor {
 	function onFocusBegin() {}
 	function onFocusEnd() {}
 	
-	function onStepBegin() {
+	function initSize() {}
+	function setPanelSize(panel) {
+		x = panel.x;
+		y = panel.y;
+		w = panel.w;
+		h = panel.h;
+	}
+	
+	function onSetPanel(panel) {
+		setPanelSize(panel);
+		initSize();
+		onResize();
+	}
+	
+	function onStepBegin(panel) {
+		setPanelSize(panel);
+		
 		mx = mouse_mx - x;
 		my = mouse_my - y;
 		
@@ -419,11 +437,14 @@ function PanelContent(_panel) constructor {
 	
 	function stepBegin() {}
 	
-	function draw() {
-		drawContent();
+	function draw(panel) {
+		pFOCUS = FOCUS == panel;
+		pHOVER = HOVER == panel;
+		
+		drawContent(panel);
 	}
 	
-	function drawContent() {}
+	function drawContent(panel) {}
 }
 
 function setFocus(target) {

@@ -1,32 +1,41 @@
 enum GRADIENT_INTER {
 	smooth,
-	none
+	none,
+	hue
 }
 
 function draw_gradient(_x, _y, _w, _h, _grad, _int = GRADIENT_INTER.smooth) {
 	static RES = 48;
 	var _step  = _w / RES;
-	
 	var _ox, _oc;
 	
-	for(var i = 0; i <= RES; i++) {
-		var _nx = _x + _step * i;
-		var _nc = gradient_eval(_grad, i / RES, _int);
+	var uniform_grad_blend = shader_get_uniform(sh_gradient_display, "gradient_blend");
+	var uniform_grad = shader_get_uniform(sh_gradient_display, "gradient_color");
+	var uniform_grad_time = shader_get_uniform(sh_gradient_display, "gradient_time");
+	var uniform_grad_key = shader_get_uniform(sh_gradient_display, "gradient_keys");
+	
+	var _grad_color = [];
+	var _grad_time  = [];
 		
-		if(i) {
-			switch(_int) {
-				case GRADIENT_INTER.smooth :
-					draw_rectangle_color(_ox, _y, _nx, _y + _h, _oc, _nc, _nc, _oc, false);
-					break;
-				case GRADIENT_INTER.none :
-					draw_set_color(_nc);
-					draw_rectangle(_ox, _y, _nx, _y + _h, false);
-					break;
-			}
-		}
-		
-		_ox = _nx;
-		_oc = _nc;
+	for(var i = 0; i < ds_list_size(_grad); i++) {
+		_grad_color[i * 4 + 0] = color_get_red(_grad[| i].value) / 255;
+		_grad_color[i * 4 + 1] = color_get_green(_grad[| i].value) / 255;
+		_grad_color[i * 4 + 2] = color_get_blue(_grad[| i].value) / 255;
+		_grad_color[i * 4 + 3] = 1;
+		_grad_time[i]  = _grad[| i].time;
+	}
+	
+	if(ds_list_empty(_grad)) {
+		draw_sprite_stretched(s_fx_pixel, 0, _x, _y, _w, _h)
+	} else {
+		shader_set(sh_gradient_display);
+		shader_set_uniform_i(uniform_grad_blend, _int);
+		shader_set_uniform_f_array(uniform_grad, _grad_color);
+		shader_set_uniform_f_array(uniform_grad_time, _grad_time);
+		shader_set_uniform_i(uniform_grad_key, ds_list_size(_grad));
+			
+		draw_sprite_stretched(s_fx_pixel, 0, _x, _y, _w, _h)
+		shader_reset();
 	}
 }
 

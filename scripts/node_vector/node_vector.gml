@@ -50,8 +50,7 @@ function Node_Vector2(_x, _y) : Node_Value_Processor(_x, _y) constructor {
 	inputs[| 1] = nodeValue(1, "y", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
 		.setVisible(true, true);
 	
-	outputs[| 0] = nodeValue(0, "Vector", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, [ 0, 0 ])
-		.setDisplay(VALUE_DISPLAY.area);
+	outputs[| 0] = nodeValue(0, "Vector", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, [ 0, 0 ]);
 	
 	function process_value_data(_data, index = 0) { 
 		var vec = [ _data[0], _data[1] ];

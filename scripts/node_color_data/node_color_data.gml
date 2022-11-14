@@ -11,6 +11,7 @@ function Node_Color_Data(_x, _y) : Node_Value_Processor(_x, _y) constructor {
 	w = 96;
 	
 	inputs[| 0] = nodeValue(0, "Color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white);
+	inputs[| 0].setVisible(true, true);
 	
 	outputs[| 0] = nodeValue(0, "Red", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, 0);
 	outputs[| 1] = nodeValue(1, "Green", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, 0);
