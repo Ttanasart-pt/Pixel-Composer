@@ -185,7 +185,7 @@ function NodeObject(_name, _spr, _create, tags = []) constructor {
 	addNodeObject(generator, "Perlin noise",		s_node_noise_perlin,		"Node_Perlin",				Node_create_Perlin);
 	addNodeObject(generator, "Cellular noise",		s_node_noise_cell,			"Node_Cellular",			Node_create_Cellular);
 	addNodeObject(generator, "Grid noise",			s_node_grid_noise,			"Node_Grid_Noise",			Node_create_Grid_Noise);
-	addNodeObject(generator, "Grid",				s_node_grid,				"Node_Grid",				Node_create_Grid);
+	addNodeObject(generator, "Grid",				s_node_grid,				"Node_Grid",				Node_create_Grid, ["tile"]);
 	addNodeObject(generator, "Anisotropic noise",	s_node_noise_aniso,			"Node_Noise_Aniso",			Node_create_Noise_Aniso);
 	addNodeObject(generator, "Seperate shape",	    s_node_sepearte_shape,		"Node_Seperate_Shape",		Node_create_Seperate_Shape);
 	addNodeObject(generator, "Text",				s_node_text,				"Node_Text",				Node_create_Text);

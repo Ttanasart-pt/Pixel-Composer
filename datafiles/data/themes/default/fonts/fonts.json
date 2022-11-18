@@ -1,0 +1,37 @@
+{
+    "h3": {
+        "path": "./NotoSans-Bold.ttf",
+        "size": 20,
+        "range": [32, 127]
+    },
+    "h5": {
+        "path": "./NotoSans-Bold.ttf",
+        "size": 16,
+        "range": [32, 127]
+    },
+    "p0": {
+        "path": "./NotoSans-Medium.ttf",
+        "size": 12,
+        "range": [32, 127]
+    },
+    "p0b": {
+        "path": "./NotoSans-Bold.ttf",
+        "size": 12,
+        "range": [32, 127]
+    },
+    "p1": {
+        "path": "./NotoSans-SemiBold.ttf",
+        "size": 11,
+        "range": [32, 127]
+    },
+    "p2": {
+        "path": "./NotoSans-SemiBold.ttf",
+        "size": 10,
+        "range": [32, 127]
+    },
+    "p3": {
+        "path": "./NotoSans-SemiBold.ttf",
+        "size": 9,
+        "range": [32, 127]
+    }
+}

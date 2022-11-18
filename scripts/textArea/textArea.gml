@@ -174,7 +174,7 @@ function textArea(_input, _onModify) constructor {
 		var _xx = _x, _ch, _chw;
 		var target = -999;
 		
-		draw_set_text(font, fa_left, fa_top, c_white);
+		draw_set_text(font, fa_left, fa_top, COLORS._main_text);
 		
 		var ch_x = _x;
 		var ch_y = _y;
@@ -247,7 +247,7 @@ function textArea(_input, _onModify) constructor {
 		hh = max(_h, ui(14) + c_h * array_length(_input_text_line));
 		
 		if(self == TEXTBOX_ACTIVE) { 
-			draw_sprite_stretched(s_textbox, 2, _x, _y, _w, hh);
+			draw_sprite_stretched(THEME.textbox, 2, _x, _y, _w, hh);
 			editText();
 			
 			#region cursor
@@ -354,7 +354,7 @@ function textArea(_input, _onModify) constructor {
 			#endregion
 			
 			#region draw
-				draw_set_text(font, fa_left, fa_top, c_white);
+				draw_set_text(font, fa_left, fa_top, COLORS._main_text);
 				
 				#region draw cursor highlight
 					var char_run = 0, _l, _str;
@@ -373,7 +373,7 @@ function textArea(_input, _onModify) constructor {
 						_l = string_length(_str);
 						
 						if(cursor_select != -1) {
-							draw_set_color(c_ui_blue_dkgrey);
+							draw_set_color(COLORS.widget_text_highlight);
 							
 							if(char_run <= ch_sel_min && char_run + _l > ch_sel_min) {
 								var x1 = tx + string_width(string_copy(_str, 1, ch_sel_min - char_run));
@@ -411,10 +411,9 @@ function textArea(_input, _onModify) constructor {
 					_my = _m[1];
 				}
 				
-				draw_set_color(c_white);
 				display_text(tx, _y + ui(7), _input_text, _w - ui(4), _mx, _my);
 				if(cursor_pos_y != 0 && cursor_pos_x != 0) {
-					draw_set_color(c_ui_orange);
+					draw_set_color(COLORS._main_text_accent);
 					draw_line_width(cursor_pos_x, cursor_pos_y, cursor_pos_x, cursor_pos_y + c_h, 2);
 				}
 			#endregion
@@ -426,9 +425,9 @@ function textArea(_input, _onModify) constructor {
 		} else {
 			if(hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + hh)) {
 				if(hide)
-					draw_sprite_stretched_ext(s_textbox, 1, _x, _y, _w, hh, c_white, 0.5);	
+					draw_sprite_stretched_ext(THEME.textbox, 1, _x, _y, _w, hh, c_white, 0.5);	
 				else
-					draw_sprite_stretched(s_textbox, 1, _x, _y, _w, hh);	
+					draw_sprite_stretched(THEME.textbox, 1, _x, _y, _w, hh);	
 				if(active && mouse_check_button_pressed(mb_left)) {
 					TEXTBOX_ACTIVE  = self;
 					click_block = 1;
@@ -441,7 +440,7 @@ function textArea(_input, _onModify) constructor {
 					cut_line();
 				}
 			} else if(!hide) {
-				draw_sprite_stretched(s_textbox, 0, _x, _y, _w, hh);
+				draw_sprite_stretched(THEME.textbox, 0, _x, _y, _w, hh);
 			}
 			
 			display_text(tx, _y + ui(7), string(_text), _w - ui(4));

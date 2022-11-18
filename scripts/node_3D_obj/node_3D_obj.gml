@@ -91,13 +91,13 @@ function Node_3D_Obj(_x, _y) : Node(_x, _y) constructor {
 		var cx = _x + _dim[0] * _s / 2;
 		var cy = _y + _dim[1] * _s / 2;
 		
-		draw_set_color(c_ui_red);
+		draw_set_color(COLORS.axis[0]);
 		draw_line(cx - 64, cy, cx + 64, cy);
 		
-		draw_set_color(c_ui_lime);
+		draw_set_color(COLORS.axis[1]);
 		draw_line(cx, cy - 64, cx, cy + 64);
 		
-		draw_set_color(c_ui_cyan);
+		draw_set_color(COLORS.axis[2]);
 		draw_circle(cx, cy, 64, true);
 		
 		if(drag_index == 0) {
@@ -135,7 +135,7 @@ function Node_3D_Obj(_x, _y) : Node(_x, _y) constructor {
 			}
 		} else {
 			if(distance_to_line(_mx, _my, cx - 64, cy, cx + 64, cy) < 16) {
-				draw_set_color(c_ui_red);
+				draw_set_color(COLORS.axis[0]);
 				draw_line_width(cx - 64, cy, cx + 64, cy, 3);
 				if(active && mouse_check_button_pressed(mb_left)) {
 					drag_index	= 0;
@@ -144,7 +144,7 @@ function Node_3D_Obj(_x, _y) : Node(_x, _y) constructor {
 					drag_my		= _my;
 				}
 			} else if(distance_to_line(_mx, _my, cx, cy - 64, cx, cy + 64) < 16) {
-				draw_set_color(c_ui_lime);
+				draw_set_color(COLORS.axis[1]);
 				draw_line_width(cx, cy - 64, cx, cy + 64, 3);
 				if(active && mouse_check_button_pressed(mb_left)) {
 					drag_index	= 1;
@@ -153,7 +153,7 @@ function Node_3D_Obj(_x, _y) : Node(_x, _y) constructor {
 					drag_my		= _my;
 				}
 			} else if(abs(point_distance(_mx, _my, cx, cy) - 64) < 8) {
-				draw_set_color(c_ui_cyan);
+				draw_set_color(COLORS.axis[2]);
 				draw_circle_border(cx, cy, 64, 3);
 				if(active && mouse_check_button_pressed(mb_left)) {
 					drag_index	= 2;

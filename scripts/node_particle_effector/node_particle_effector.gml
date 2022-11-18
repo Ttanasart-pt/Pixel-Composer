@@ -107,7 +107,8 @@ function Node_Particle_Effector(_x, _y) : Node(_x, _y) constructor {
 			}
 			
 			var ss = 0.5 + 0.5 * str;
-			var cc = str < 0.5? merge_color(c_ui_red, c_ui_yellow, str * 2) : merge_color(c_ui_yellow, c_ui_lime, str * 2 - 1);
+			var cc = str < 0.5? merge_color(COLORS.heat[0], COLORS.heat[1], str * 2) 
+				: merge_color(COLORS.heat[1], COLORS.heat[2], str * 2 - 1);
 			draw_set_color(cc);
 			var vx = 0, vy = 0;
 			var scale = 8;
@@ -142,7 +143,7 @@ function Node_Particle_Effector(_x, _y) : Node(_x, _y) constructor {
 					break;
 			}
 			
-			draw_sprite_ui_uniform(s_preview_crosshair, 0, px, py, 1, cc, ss);
+			draw_sprite_ui_uniform(THEME.preview_crosshair, 0, px, py, 1, cc, ss);
 		}
 	}
 	

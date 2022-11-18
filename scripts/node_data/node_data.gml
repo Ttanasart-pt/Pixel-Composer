@@ -4,8 +4,8 @@ function Node(_x, _y) constructor {
 	group   = -1;
 	color   = c_white;
 	icon    = noone;
-	bg_spr  = s_node_bg;
-	bg_sel_spr = s_node_active;
+	bg_spr  = THEME.node_bg;
+	bg_sel_spr = THEME.node_active;
 	
 	if(!LOADING && !APPENDING) {
 		recordAction(ACTION_TYPE.node_added, self);
@@ -237,10 +237,10 @@ function Node(_x, _y) constructor {
 		if(name == "") return;
 			
 		if(_s * w > 48) {
-			draw_sprite_stretched_ext(s_node_name, 0, xx, yy, w * _s, ui(20), color, 0.75);
-			draw_set_text(f_p1, fa_left, fa_center, c_white);
+			draw_sprite_stretched_ext(THEME.node_bg_name, 0, xx, yy, w * _s, ui(20), color, 0.75);
+			draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text);
 		
-			if(!auto_update) icon = s_refresh_16;
+			if(!auto_update) icon = THEME.refresh_s;
 			if(icon) {
 				draw_sprite_ui_uniform(icon, 0, xx + ui(12), yy + ui(10));	
 				draw_text_cut(xx + ui(24), yy + ui(10), name, w * _s - ui(24));
@@ -391,11 +391,9 @@ function Node(_x, _y) constructor {
 		var py = yy + h * _s / 2 - ph * ps / 2;
 			
 		draw_surface_ext_safe(surf, px, py, ps, ps, 0, c_white, 1);
-		//draw_set_color(c_ui_blue_grey);
-		//draw_rectangle(px, py, px + pw * ps - 1, py + ph * ps - 1, true);
 			
 		if(_s * w > 64) {
-			draw_set_text(_s >= 1? f_p1 : f_p2, fa_center, fa_top, c_ui_blue_grey);
+			draw_set_text(_s >= 1? f_p1 : f_p2, fa_center, fa_top, COLORS.panel_graph_node_dimension);
 			var tx = xx + w * _s / 2;
 			var ty = yy + (h + 4) * _s;
 			draw_text(round(tx), round(ty), string(pw) + " x " + string(ph) + "px");
@@ -406,15 +404,15 @@ function Node(_x, _y) constructor {
 				if(render_time < 1000) {
 					rt = round(render_time / 10) * 10;
 					unit = "us";
-					draw_set_color(c_ui_lime);
+					draw_set_color(COLORS.speed[2]);
 				} else if(render_time < 1000000) {
 					rt = string_format(render_time / 1000, -1, 2);
 					unit = "ms";
-					draw_set_color(c_ui_orange);
+					draw_set_color(COLORS.speed[1]);
 				} else {
 					rt = string_format(render_time / 1000000, -1, 2);
 					unit = "s";
-					draw_set_color(c_ui_red);
+					draw_set_color(COLORS.speed[0]);
 				}
 				draw_text(round(tx), round(ty), string(rt) + " " + unit);
 			}
@@ -428,7 +426,7 @@ function Node(_x, _y) constructor {
 		var yy = y * _s + _y;
 		
 		if(value_validation[VALIDATION.error])
-			draw_sprite_stretched(s_node_error, 0, xx - 9, yy - 9, w * _s + 18, h * _s + 18);
+			draw_sprite_stretched(THEME.node_error, 0, xx - 9, yy - 9, w * _s + 18, h * _s + 18);
 		
 		drawNodeBase(xx, yy, _s);
 		if(previewable && ds_list_size(outputs) > 0) 
@@ -450,11 +448,11 @@ function Node(_x, _y) constructor {
 		var yy = y * _s + _y;
 		
 		if(previewing) {
-			draw_sprite(s_node_state, 0, xx, yy);
+			draw_sprite(THEME.node_state, 0, xx, yy);
 			xx -= max(32 * _s, 16);
 		}
 		if(inspecting) {
-			draw_sprite(s_node_state, 1, xx, yy);
+			draw_sprite(THEME.node_state, 1, xx, yy);
 		}
 		
 		inspecting = false;

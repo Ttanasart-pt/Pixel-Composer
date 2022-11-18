@@ -27,7 +27,4 @@
 	}
 #endregion
 
-#region pref
-	PREF_LOAD();
-	setPanel();
-#endregion
+PREF_LOAD();

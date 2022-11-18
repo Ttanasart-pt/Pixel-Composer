@@ -42,8 +42,8 @@ function scrollPane(_w, _h, ondraw) constructor {
 		
 		if(!is_surface(surface)) surface = surface_create_valid(surface_w, surface_h);
 		surface_set_target(surface);
-			draw_clear(c_ui_blue_black);
-			content_h = max(0, drawFunc(scroll_y, [mx, my]) - surface_h);
+			draw_clear(COLORS.panel_bg_clear);
+			content_h = max(0, drawFunc(scroll_y, [mx, my], [x, y]) - surface_h);
 		surface_reset_target();
 		
 		scroll_y_to		= clamp(scroll_y_to, -content_h, 0);
@@ -57,7 +57,7 @@ function scrollPane(_w, _h, ondraw) constructor {
 		}
 		
 		if(abs(content_h) > 0) {
-			draw_scroll(x + surface_w + ui(6), y + ui(6), true, surface_h - ui(12), -scroll_y / content_h, surface_h / (surface_h + content_h), c_ui_blue_grey, c_ui_blue_white, x + _mx, y + _my);
+			draw_scroll(x + surface_w + ui(6), y + ui(6), true, surface_h - ui(12), -scroll_y / content_h, surface_h / (surface_h + content_h), COLORS.scrollbar_idle, COLORS.scrollbar_hover, x + _mx, y + _my);
 		}
 	}
 	
@@ -82,9 +82,9 @@ function scrollPane(_w, _h, ondraw) constructor {
 			bar_y	= scr_y;
 		}
 	
-		draw_sprite_stretched_ext(s_ui_scrollbar, 0, bar_x, bar_y, bar_w, bar_h, bar_col, 1);
+		draw_sprite_stretched_ext(THEME.ui_scrollbar, 0, bar_x, bar_y, bar_w, bar_h, bar_col, 1);
 		if(point_in_rectangle(mx, my, scr_x - 2, scr_y - 2, scr_x + scr_w + 2, scr_y + scr_h + 2) || is_scrolling) {
-			draw_sprite_stretched_ext(s_ui_scrollbar, 0, bar_x, bar_y, bar_w, bar_h, bar_hcol, 1);
+			draw_sprite_stretched_ext(THEME.ui_scrollbar, 0, bar_x, bar_y, bar_w, bar_h, bar_hcol, 1);
 			if(mouse_check_button(mb_left)) {
 				if(is_vert)	
 					scroll_y_to = clamp((my - scr_y - scr_scale_s / 2) / (scr_s - scr_scale_s), 0, 1) * -content_h;

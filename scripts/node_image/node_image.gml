@@ -26,7 +26,7 @@ function Node_create_Image_path(_x, _y, path) {
 
 function Node_Image(_x, _y) : Node(_x, _y) constructor {
 	name			= "";
-	color			= c_ui_lime_light;
+	color			= COLORS.node_blend_input;
 	always_output   = true;
 	
 	inputs[| 0]  = nodeValue(0, "Path", self, JUNCTION_CONNECT.input, VALUE_TYPE.path, "")

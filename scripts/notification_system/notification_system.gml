@@ -13,7 +13,7 @@
 		error    = 1 << 2,
 	}
 	
-	function notification(type, str, icon = s_noti_icon_log, color = c_ui_blue_dkgrey, life = -1) constructor {
+	function notification(type, str, icon = noone, color = c_ui_blue_dkgrey, life = -1) constructor {
 		self.type = type;
 		self.txt = str;
 		self.icon = icon;
@@ -27,20 +27,21 @@
 		self.time = string_lead_zero(current_hour, 2) + ":" + string_lead_zero(current_minute, 2);
 	}
 	
-	function noti_status(str, icon = s_noti_icon_log) {
+	function noti_status(str, icon = noone) {
 		ds_list_add(STATUSES, new notification(NOTI_TYPE.log, str, icon));
 	}
 	
-	function noti_warning(str, icon = s_noti_icon_warning) {
+	function noti_warning(str, icon = noone) {
 		var noti = new notification(NOTI_TYPE.warning, str, icon, c_ui_orange, 180);
 		ds_list_add(STATUSES, noti);
 		ds_list_add(WARNING, noti);
 		
-		PANEL_MENU.noti_flash = 1;
+		if(PANEL_MENU)
+			PANEL_MENU.noti_flash = 1;
 		return noti;
 	}
 	
-	function noti_error(str, icon = s_noti_icon_error) {
+	function noti_error(str, icon = noone) {
 		var noti = new notification(NOTI_TYPE.error, str, icon, c_ui_red);
 		ds_list_add(STATUSES, noti);
 		ds_list_add(ERRORS, noti);

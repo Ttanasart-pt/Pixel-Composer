@@ -98,7 +98,7 @@ event_inherited();
 	}
 	
 	catagory_pane = new scrollPane(ui(132), dialog_h - ui(66), function(_y, _m) {
-		draw_clear_alpha(c_ui_blue_black, 0);
+		draw_clear_alpha(COLORS.panel_bg_clear, 0);
 		
 		var hh  = 0;
 		var hg  = ui(28);
@@ -108,23 +108,23 @@ event_inherited();
 		
 		for(var i = 0; i < ds_list_size(NODE_CATAGORY); i++) {
 			var key = NODE_CATAGORY[| i];
-			draw_set_text(f_p0, fa_left, fa_center, c_white);
+			draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text);
 			
 			switch(key) {
 				case "Group" : 
 					if(context != "Node_Group") continue; 
-					draw_set_text(f_p0, fa_left, fa_center, c_ui_orange);
+					draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text_accent);
 					break;	
 				case "Loop" : 
 					if(context != "Node_Iterate") continue; 
-					draw_set_text(f_p0, fa_left, fa_center, c_ui_orange);
+					draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text_accent);
 					break;	
 			}
 			
 			if(key == page_key) {
-				draw_sprite_stretched(s_ui_panel_bg, 0, 0, _y + hh, ui(132), hg);
+				draw_sprite_stretched(THEME.ui_panel_bg, 0, 0, _y + hh, ui(132), hg);
 			} else if(point_in_rectangle(_m[0], _m[1], 0, _y + hh, ui(100), _y + hh + hg - 1)) {
-				draw_sprite_stretched_ext(s_ui_panel_bg, 0, 0, _y + hh + ui(3), ui(103), hg - ui(6), c_white, 0.75);
+				draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, 0, _y + hh + ui(3), ui(103), hg - ui(6), c_white, 0.75);
 				if(mouse_check_button(mb_left)) {
 					page_key		= key;
 					ADD_NODE_PAGE	= key;
@@ -170,11 +170,11 @@ event_inherited();
 						var _boxx = _nx + (grid_width - grid_size) / 2;
 						
 						BLEND_ADD
-						draw_sprite_stretched(s_node_bg, 0, _boxx, yy, grid_size, grid_size);
+						draw_sprite_stretched(THEME.node_bg, 0, _boxx, yy, grid_size, grid_size);
 						BLEND_NORMAL
 						
 						if(point_in_rectangle(_m[0], _m[1], _nx, yy, _nx + grid_width, yy + grid_size)) {
-							draw_sprite_stretched(s_node_active, 0, _boxx, yy, grid_size, grid_size);	
+							draw_sprite_stretched(THEME.node_active, 0, _boxx, yy, grid_size, grid_size);	
 							if(mouse_check_button_pressed(mb_left))
 								buildNode(_node);
 						}
@@ -184,7 +184,7 @@ event_inherited();
 						if(variable_struct_exists(_node, "spr") && sprite_exists(_node.spr))
 							draw_sprite_ui_uniform(_node.spr, 0, spr_x, spr_y);
 					
-						draw_set_text(f_p2, fa_center, fa_top, c_white);
+						draw_set_text(f_p2, fa_center, fa_top, COLORS._main_text);
 						name_height = max(name_height, string_height_ext(_node.name, -1, grid_width) + 8);
 						draw_text_ext(_boxx + grid_size / 2, yy + grid_size + 4, _node.name, -1, grid_width);
 					}
@@ -205,12 +205,12 @@ event_inherited();
 				
 				if(i % 2) {
 					BLEND_ADD
-					draw_sprite_stretched_ext(s_node_bg, 0, ui(4), yy, list_width - ui(8), list_height, c_white, 0.2);
+					draw_sprite_stretched_ext(THEME.node_bg, 0, ui(4), yy, list_width - ui(8), list_height, c_white, 0.2);
 					BLEND_NORMAL
 				}
 				
 				if(point_in_rectangle(_m[0], _m[1], 0, yy, list_width, yy + list_height - 1)) {
-					draw_sprite_stretched(s_node_active, 0, ui(4), yy, list_width - ui(8), list_height);
+					draw_sprite_stretched(THEME.node_active, 0, ui(4), yy, list_width - ui(8), list_height);
 					if(mouse_check_button_pressed(mb_left))
 						buildNode(_node);
 				}
@@ -222,7 +222,7 @@ event_inherited();
 					draw_sprite_ext(_node.spr, 0, spr_x, spr_y, ss, ss, 0, c_white, 1);
 				}
 				
-				draw_set_text(f_p2, fa_left, fa_center, c_white);
+				draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text);
 				draw_text(list_height + ui(20), yy + list_height / 2, _node.name);
 				
 				yy += list_height;
@@ -334,9 +334,9 @@ event_inherited();
 				
 				BLEND_ADD
 				if(is_array(s_res))
-					draw_sprite_stretched(s_node_bg, 0, _boxx, yy, grid_size, grid_size);
+					draw_sprite_stretched(THEME.node_bg, 0, _boxx, yy, grid_size, grid_size);
 				else
-					draw_sprite_stretched_ext(s_node_bg, 0, _boxx, yy, grid_size, grid_size, merge_color(c_white, c_ui_orange_light, 0.5), 1);
+					draw_sprite_stretched_ext(THEME.node_bg, 0, _boxx, yy, grid_size, grid_size, COLORS.dialog_add_node_collection, 1);
 				BLEND_NORMAL
 					
 				if(variable_struct_exists(_node, "spr") && sprite_exists(_node.spr)) {
@@ -356,7 +356,7 @@ event_inherited();
 					draw_sprite_ext(_node.spr, _si, _sx, _sy, _ss, _ss, 0, c_white, 1);
 				}
 			
-				draw_set_text(f_p2, fa_center, fa_top, c_white);
+				draw_set_text(f_p2, fa_center, fa_top, COLORS._main_text);
 				var txt = _node.name;
 				name_height = max(name_height, string_height_ext(txt, -1, grid_width) + ui(8));
 				draw_text_ext(_boxx + grid_size / 2, yy + grid_size + 4, txt, -1, grid_width);
@@ -368,7 +368,7 @@ event_inherited();
 				}
 				
 				if(node_selecting == i) {
-					draw_sprite_stretched(s_node_active, 0, _boxx, yy, grid_size, grid_size);
+					draw_sprite_stretched(THEME.node_active, 0, _boxx, yy, grid_size, grid_size);
 					if(keyboard_check_pressed(vk_enter))
 						buildNode(_node, _param);
 				}
@@ -401,7 +401,7 @@ event_inherited();
 				
 				if(i % 2) {
 					BLEND_ADD
-					draw_sprite_stretched_ext(s_node_bg, 0, ui(4), yy, list_width - ui(8), list_height, c_white, 0.2);
+					draw_sprite_stretched_ext(THEME.node_bg, 0, ui(4), yy, list_width - ui(8), list_height, c_white, 0.2);
 					BLEND_NORMAL
 				}
 				
@@ -422,7 +422,7 @@ event_inherited();
 					draw_sprite_ext(_node.spr, _si, _sx, _sy, _ss, _ss, 0, c_white, 1);
 				}
 			
-				draw_set_text(f_p2, fa_left, fa_center, c_white);
+				draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text);
 				draw_text(list_height + ui(20), yy + list_height / 2, _node.name);
 				
 				if(point_in_rectangle(_m[0], _m[1], 0, yy, list_width, yy + list_height - 1)) {
@@ -432,7 +432,7 @@ event_inherited();
 				}
 				
 				if(node_selecting == i) {
-					draw_sprite_stretched(s_node_active, 0, ui(4), yy, list_width - ui(8), list_height);
+					draw_sprite_stretched(THEME.node_active, 0, ui(4), yy, list_width - ui(8), list_height);
 					if(keyboard_check_pressed(vk_enter))
 						buildNode(_node, _param);
 				}

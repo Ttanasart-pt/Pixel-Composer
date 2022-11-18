@@ -77,19 +77,19 @@ function Panel_Graph() : PanelContent() constructor {
 	toolbar_height = ui(40);
 	toolbars = [
 		[ 
-			s_icon_center_canvas,
+			THEME.icon_center_canvas,
 			function() { return 0;  },
 			function() { return "Center to nodes" }, 
 			function() { toCenterNode(); } 
 		],
 		[ 
-			s_icon_minimap,
+			THEME.icon_minimap,
 			function() { return minimap_show;  },
 			function() { return minimap_show? "Minimap enabled" : "Minimap disabled" }, 
 			function() { minimap_show = !minimap_show; } 
 		],
 		[ 
-			s_icon_curve_connection,
+			THEME.icon_curve_connection,
 			function() { return PREF_MAP[? "curve_connection_line"];  },
 			function() { 
 				switch(PREF_MAP[? "curve_connection_line"]) {
@@ -101,7 +101,7 @@ function Panel_Graph() : PanelContent() constructor {
 			function() { PREF_MAP[? "curve_connection_line"] = (PREF_MAP[? "curve_connection_line"] + 1) % 3; } 
 		],
 		[ 
-			s_icon_grid_setting,
+			THEME.icon_grid_setting,
 			function() { return 0; },
 			function() { return "Grid setting" }, 
 			function(param) { 
@@ -276,8 +276,7 @@ function Panel_Graph() : PanelContent() constructor {
 		var xx = -gr_ls, xs = safe_mod(gr_x, gr_ls);
 		var yy = -gr_ls, ys = safe_mod(gr_y, gr_ls);
 		
-		draw_set_color(c_ui_blue_dkgrey);
-		
+		draw_set_color(COLORS.panel_graph_grid);
 		draw_set_alpha(grid_opacity * (graph_s >= 1? 1 : 0.5));
 		while(xx < w + gr_ls) {
 			draw_line(xx + xs, 0, xx + xs, h);
@@ -597,7 +596,7 @@ function Panel_Graph() : PanelContent() constructor {
 		#region draw selection frame
 			if(nodes_select_drag) {
 				if(point_distance(nodes_select_mx, nodes_select_my, mx, my) > 16) {
-					draw_set_color(c_ui_orange);
+					draw_set_color(COLORS._main_accent);
 					draw_rectangle(nodes_select_mx, nodes_select_my, mx, my, true);
 					draw_set_alpha(0.05);
 					draw_rectangle(nodes_select_mx, nodes_select_my, mx, my, false);
@@ -943,12 +942,11 @@ function Panel_Graph() : PanelContent() constructor {
 	}
 	
 	function drawContext() {
-		draw_set_text(f_p0, fa_left, fa_center, c_ui_blue_ltgrey);
+		draw_set_text(f_p0, fa_left, fa_center);
 		var xx = ui(16), tt, tw, th;
 		var bh  = toolbar_height - ui(12);
 		var tbh = h - toolbar_height / 2;
 		
-		draw_set_color(c_ui_blue_ltgrey);
 		for(var i = -1; i < ds_list_size(node_context); i++) {
 			if(i == -1) {
 				tt = "Global";
@@ -961,7 +959,7 @@ function Panel_Graph() : PanelContent() constructor {
 			th = string_height(tt);
 			
 			if(i < ds_list_size(node_context) - 1) {
-				if(buttonInstant(s_button_hide_fill, xx - ui(6), tbh - bh / 2, tw + ui(12), bh, [mx, my], pFOCUS, pHOVER) == 2) {
+				if(buttonInstant(THEME.button_hide_fill, xx - ui(6), tbh - bh / 2, tw + ui(12), bh, [mx, my], pFOCUS, pHOVER) == 2) {
 					node_hover		= noone;
 					node_focus		= noone;
 					PANEL_PREVIEW.preview_node[0] = noone;
@@ -982,9 +980,10 @@ function Panel_Graph() : PanelContent() constructor {
 					}
 				}
 				
-				draw_sprite_ui_uniform(s_arrow_16, 0, xx + tw + ui(16), tbh, 1, c_ui_blue_grey);
+				draw_sprite_ui_uniform(THEME.arrow, 0, xx + tw + ui(16), tbh, 1, COLORS._main_icon);
 			}
 			
+			draw_set_color(COLORS._main_text_sub);
 			draw_set_alpha(i < ds_list_size(node_context) - 1? 0.5 : 1);
 			draw_text(xx, tbh - 2, tt);
 			draw_set_alpha(1);
@@ -1000,10 +999,10 @@ function Panel_Graph() : PanelContent() constructor {
 		if(point_in_rectangle(mx, my, 0, ty, w, h))
 			mouse_on_graph = false;
 			
-		draw_set_color(c_ui_blue_black);
+		draw_set_color(COLORS.panel_toolbar_fill);
 		draw_rectangle(0, ty, w, h, false);
 		
-		draw_set_color(c_ui_blue_dkgrey);
+		draw_set_color(COLORS.panel_toolbar_outline);
 		draw_line(0, ty, w, ty);
 		
 		drawContext();
@@ -1017,13 +1016,13 @@ function Panel_Graph() : PanelContent() constructor {
 			var tbInd = tb[1]();
 			var tbTooltip = tb[2]();
 			
-			var b = buttonInstant(s_button_hide, tbx - ui(14), tby - ui(14), ui(28), ui(28), [mx, my], pFOCUS, pHOVER, tbTooltip, tbSpr, tbInd);
+			var b = buttonInstant(THEME.button_hide, tbx - ui(14), tby - ui(14), ui(28), ui(28), [mx, my], pFOCUS, pHOVER, tbTooltip, tbSpr, tbInd);
 			if(b == 2) tb[3]( { x: x + tbx - ui(14), y: y + tby - ui(14) } );
 			
 			tbx -= ui(32);
 		}
 		
-		draw_set_color(c_ui_blue_dkblack);
+		draw_set_color(COLORS.panel_toolbar_separator);
 		draw_line_width(tbx + ui(12), tby - toolbar_height / 2 + ui(8), tbx + ui(12), tby + toolbar_height / 2 - ui(8), 2);
 	}
 	
@@ -1045,7 +1044,7 @@ function Panel_Graph() : PanelContent() constructor {
 		}
 		
 		surface_set_target(minimap_surface);
-		draw_clear_alpha(c_ui_blue_dkblack, 0.5);
+		draw_clear_alpha(COLORS.panel_bg_clear_inner, 0.5);
 		if(!ds_list_empty(nodes_list)) {
 			var minx =  99999;
 			var maxx = -99999;
@@ -1075,7 +1074,7 @@ function Panel_Graph() : PanelContent() constructor {
 				var nw = n.w * ss;
 				var nh = n.h * ss;
 				
-				draw_sprite_stretched_ext(s_node_bg_mini, 0, nx, ny, nw, nh, n.color, 1);
+				draw_sprite_stretched_ext(THEME.node_bg_mini, 0, nx, ny, nw, nh, n.color, 1);
 			}
 			
 			var gx = minimap_w / 2 - (graph_x + cx) * ss;
@@ -1083,7 +1082,7 @@ function Panel_Graph() : PanelContent() constructor {
 			var gw = w / graph_s * ss;
 			var gh = h / graph_s * ss;
 			
-			draw_set_color(c_ui_blue_ltgrey);
+			draw_set_color(COLORS.panel_graph_minimap_focus);
 			draw_rectangle(gx, gy, gx + gw, gy + gh, 1);
 			
 			if(minimap_panning) {
@@ -1099,7 +1098,7 @@ function Panel_Graph() : PanelContent() constructor {
 		surface_reset_target();
 		
 		draw_surface_ext(minimap_surface, mx0, my0, 1, 1, 0, c_white, 0.75 + 0.25 * hover);
-		draw_set_color(c_ui_blue_dkgrey);
+		draw_set_color(COLORS.panel_graph_minimap_outline);
 		draw_rectangle(mx0, my0, mx1 - 1, my1 - 1, true);
 		
 		if(minimap_dragging) {
@@ -1115,7 +1114,7 @@ function Panel_Graph() : PanelContent() constructor {
 		}
 		
 		if(point_in_rectangle(mx, my, mx0, my0, mx0 + ui(16), my0 + ui(16))) {
-			draw_sprite_ui(s_node_resize, 0, mx0 + ui(2), my0 + ui(2), 1, 1, 180, c_white, 0.6);
+			draw_sprite_ui(THEME.node_resize, 0, mx0 + ui(2), my0 + ui(2), 1, 1, 180, c_white, 0.6);
 			if(mouse_check_button_pressed(mb_left)) {
 				minimap_dragging = true;
 				minimap_drag_sx = minimap_w;
@@ -1124,7 +1123,7 @@ function Panel_Graph() : PanelContent() constructor {
 				minimap_drag_my = my;
 			}
 		} else 
-			draw_sprite_ui(s_node_resize, 0, mx0 + ui(2), my0 + ui(2), 1, 1, 180, c_white, 0.3);
+			draw_sprite_ui(THEME.node_resize, 0, mx0 + ui(2), my0 + ui(2), 1, 1, 180, c_white, 0.3);
 	}
 	
 	function addContext(node) {
@@ -1167,11 +1166,11 @@ function Panel_Graph() : PanelContent() constructor {
 	function drawContent(panel) {
 		dragGraph();
 		
-		draw_clear(c_ui_blue_black);
+		draw_clear(COLORS.panel_bg_clear);
 		
 		if(show_grid) drawGrid();
 		
-		draw_set_text(f_p0, fa_right, fa_top, c_ui_blue_ltgrey);
+		draw_set_text(f_p0, fa_right, fa_top, COLORS._main_text_sub);
 		draw_text(w - ui(8), ui(8), "x" + string(graph_s_to));
 			
 		if(UPDATE == RENDER_TYPE.full)

@@ -34,7 +34,7 @@ enum ANIMATION_END {
 function Node_Image_Animated(_x, _y) : Node(_x, _y) constructor {
 	name  = "";
 	spr   = [];
-	color = c_ui_lime_light;
+	color = COLORS.node_blend_input;
 	
 	update_on_frame = true;
 	always_output   = true;

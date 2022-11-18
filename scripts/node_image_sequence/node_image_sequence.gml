@@ -37,7 +37,7 @@ enum CANVAS_SIZING {
 function Node_Image_Sequence(_x, _y) : Node(_x, _y) constructor {
 	name  = "";
 	spr   = [];
-	color = c_ui_lime_light;
+	color = COLORS.node_blend_input;
 	always_output   = true;
 	
 	inputs[| 0]  = nodeValue(0, "Path", self, JUNCTION_CONNECT.input, VALUE_TYPE.path, "")

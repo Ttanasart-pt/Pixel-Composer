@@ -6,7 +6,7 @@ function Node_create_Lerp(_x, _y) {
 
 function Node_Lerp(_x, _y) : Node_Value_Processor(_x, _y) constructor {
 	name		= "Lerp";
-	color		= c_ui_cyan;
+	color		= COLORS.node_blend_number;
 	previewable = false;
 	
 	w = 96;
@@ -24,7 +24,7 @@ function Node_Lerp(_x, _y) : Node_Value_Processor(_x, _y) constructor {
 	}
 	
 	function onDrawNode(xx, yy, _mx, _my, _s) {
-		draw_set_text(f_h5, fa_center, fa_center, c_white);
+		draw_set_text(f_h5, fa_center, fa_center, COLORS._main_text);
 		var str = "lerp";
 		var _ss = min((w - 8) * _s / string_width(str), (h - 8) * _s / string_height(str));
 		

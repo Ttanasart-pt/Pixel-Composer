@@ -24,7 +24,7 @@ function Node_Transform(_x, _y) : Node_Processor(_x, _y) constructor {
 	
 	inputs[| 3] = nodeValue(3, "Anchor", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.vector, button(function() { centerAnchor(); })
-											.setIcon(s_anchor)
+											.setIcon(THEME.anchor)
 											.setTooltip("Set to center"));
 	
 	inputs[| 4] = nodeValue(4, "Relative", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
@@ -38,7 +38,7 @@ function Node_Transform(_x, _y) : Node_Processor(_x, _y) constructor {
 			inputs[| 6].modifier = inputs[| 6].modifier == VALUE_MODIFIER.none? VALUE_MODIFIER.linked : VALUE_MODIFIER.none;
 			inputs[| 6].editWidget.extras.icon_index = inputs[| 6].modifier == VALUE_MODIFIER.linked;
 		})
-		.setIcon(s_padding_link));
+		.setIcon(THEME.padding_link));
 	
 	inputs[| 7] = nodeValue(7, "Wrap", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
 	
@@ -65,7 +65,8 @@ function Node_Transform(_x, _y) : Node_Processor(_x, _y) constructor {
 	prev_pos = [0, 0];
 	
 	static onValueUpdate = function(index, prev) {
-		if(index == 0 && !is_surface(prev) && !LOADING && !APPENDING)
+		var curr = inputs[| 0].getValue();
+		if(index == 0 && !is_surface(prev) && curr != prev && !LOADING && !APPENDING)
 			centerAnchor();
 	}
 	
@@ -317,24 +318,24 @@ function Node_Transform(_x, _y) : Node_Processor(_x, _y) constructor {
 			
 			var rth = point_rotate((bx0 + bx1) / 2, by0 - 16, bax, bay, rot);
 		
-			draw_set_color(c_ui_orange);
-			draw_sprite_ui_uniform(s_anchor, 0, bax, bay);
+			draw_set_color(COLORS._main_accent);
+			draw_sprite_ui_uniform(THEME.anchor, 0, bax, bay);
 			
 			var r_index = 0;
 			
-			draw_sprite_ui_uniform(s_anchor_selector, 0, tl[0], tl[1]);
-			draw_sprite_ui_uniform(s_anchor_selector, 0, tr[0], tr[1]);
-			draw_sprite_ui_uniform(s_anchor_selector, 0, bl[0], bl[1]);
-			draw_sprite_ui_uniform(s_anchor_selector, 0, br[0], br[1]);
+			draw_sprite_ui_uniform(THEME.anchor_selector, 0, tl[0], tl[1]);
+			draw_sprite_ui_uniform(THEME.anchor_selector, 0, tr[0], tr[1]);
+			draw_sprite_ui_uniform(THEME.anchor_selector, 0, bl[0], bl[1]);
+			draw_sprite_ui_uniform(THEME.anchor_selector, 0, br[0], br[1]);
 			
-			if(point_in_circle(_mx, _my, bax, bay, 8)) draw_sprite_ui_uniform(s_anchor, 0, bax, bay, 1.25);
+			if(point_in_circle(_mx, _my, bax, bay, 8)) draw_sprite_ui_uniform(THEME.anchor, 0, bax, bay, 1.25);
 			else if(point_in_circle(_mx, _my, rth[0], rth[1], 8)) r_index = 1;
-			else if(point_in_circle(_mx, _my, tl[0], tl[1], 8))	draw_sprite_ui_uniform(s_anchor_selector, 1, tl[0], tl[1]);
-			else if(point_in_circle(_mx, _my, tr[0], tr[1], 8))	draw_sprite_ui_uniform(s_anchor_selector, 1, tr[0], tr[1]);			
-			else if(point_in_circle(_mx, _my, bl[0], bl[1], 8))	draw_sprite_ui_uniform(s_anchor_selector, 1, bl[0], bl[1]);			
-			else if(point_in_circle(_mx, _my, br[0], br[1], 8))	draw_sprite_ui_uniform(s_anchor_selector, 1, br[0], br[1]);
+			else if(point_in_circle(_mx, _my, tl[0], tl[1], 8))	draw_sprite_ui_uniform(THEME.anchor_selector, 1, tl[0], tl[1]);
+			else if(point_in_circle(_mx, _my, tr[0], tr[1], 8))	draw_sprite_ui_uniform(THEME.anchor_selector, 1, tr[0], tr[1]);			
+			else if(point_in_circle(_mx, _my, bl[0], bl[1], 8))	draw_sprite_ui_uniform(THEME.anchor_selector, 1, bl[0], bl[1]);			
+			else if(point_in_circle(_mx, _my, br[0], br[1], 8))	draw_sprite_ui_uniform(THEME.anchor_selector, 1, br[0], br[1]);
 			
-			draw_sprite_ui(s_anchor_rotate, r_index, rth[0], rth[1], 1, 1, rot);
+			draw_sprite_ui(THEME.anchor_rotate, r_index, rth[0], rth[1], 1, 1, rot);
 			
 			draw_line(tl[0], tl[1], tr[0], tr[1]);
 			draw_line(tl[0], tl[1], bl[0], bl[1]);

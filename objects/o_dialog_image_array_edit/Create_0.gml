@@ -26,7 +26,7 @@ event_inherited();
 	
 	sp_content = new scrollPane(dialog_w - ui(150), dialog_h - ui(64), function(_y, _m) {
 		if(!target) return 0;
-		draw_clear_alpha(c_ui_blue_grey, 0);
+		draw_clear_alpha(COLORS.dialog_array_edit_bg, 0);
 		
 		var _h = ui(8);
 		
@@ -55,11 +55,11 @@ event_inherited();
 				
 				var xx = pad + (ww + pad) * j;
 				
-				draw_sprite_stretched(s_ui_panel_bg, 0, xx, yy, ww, hh);
+				draw_sprite_stretched(THEME.ui_panel_bg, 0, xx, yy, ww, hh);
 				
 				if(point_in_rectangle(_m[0], _m[1], xx, yy, xx + ww, yy + hh)) {
 					if(dragging == -1)
-						draw_sprite_stretched(s_ui_panel_active, 0, xx, yy, ww, hh);
+						draw_sprite_stretched_ext(THEME.ui_panel_active, 0, xx, yy, ww, hh, COLORS._main_accent, 1);
 					
 					if(mouse_check_button_pressed(mb_left))
 						dragging = index;
@@ -71,7 +71,7 @@ event_inherited();
 				}
 				
 				if(dragging != -1 && dragging != index) {
-					draw_set_color(c_ui_blue_dkgrey);
+					draw_set_color(COLORS.dialog_array_edit_divider);
 					if(point_in_rectangle(_m[0], _m[1], xx - pad / 2, yy, xx + ww / 2, yy + hh)) {
 						inb_hover = index;
 						draw_line_round(xx - pad / 2, yy, xx - pad / 2, yy + hh, 4);
@@ -93,7 +93,7 @@ event_inherited();
 				else
 					draw_sprite_ext(spr, 0, spr_x, spr_y, spr_s, spr_s, 0, c_white, 1);
 				
-				draw_set_text(f_p2, fa_center, fa_top, c_white);
+				draw_set_text(f_p2, fa_center, fa_top, COLORS._main_text);
 				var path  = arr[index];
 				var name  = string_cut_line(string_replace(filename_name(path), filename_ext(path), ""), ww);
 				var txt_h = string_height_ext(name, -1, ww);

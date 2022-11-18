@@ -101,7 +101,7 @@ function APPEND(_path) {
 	APPENDING = false;
 	PANEL_ANIMATION.updatePropertyList();
 	
-	log_message("FILE", "append file " + _path, s_noti_icon_file_load);
+	log_message("FILE", "append file " + _path, THEME.noti_icon_file_load);
 	
 	ds_map_destroy(_map);
 	return node_create;

@@ -13,13 +13,15 @@
 #endregion
 
 #region main
-	globalvar DEBUG;
+	globalvar DEBUG, THEME, CDEF, COLORS, COLOR_KEYS;
 	DEBUG = false;
+	THEME = {};
+	COLOR_KEYS = [];
 	
 	globalvar VERSION, SAVEFILE_VERSION, VERSION_STRING;
-	VERSION = 102;
+	VERSION = 110;
 	SAVEFILE_VERSION = 90;
-	VERSION_STRING = "0.10.2";
+	VERSION_STRING = "0.11.0";
 	
 	globalvar NODES, ANIMATOR, NODE_MAP, APPEND_MAP, HOTKEYS, HOTKEY_CONTEXT;
 	
@@ -51,7 +53,7 @@
 #endregion
 
 #region inputs
-	globalvar FOCUS, FOCUS_STR, HOVER, DOUBLE_CLICK, CURRENT_PATH;
+	globalvar FOCUS, FOCUS_STR, HOVER, DOUBLE_CLICK, CURRENT_PATH, DIALOG_CLICK;
 	globalvar TEXTBOX_ACTIVE;
 	
 	CURRENT_PATH = "";
@@ -59,16 +61,14 @@
 	FOCUS = noone;
 	FOCUS_STR = "";
 	HOVER = noone;
-	TEXTBOX_ACTIVE = noone
+	TEXTBOX_ACTIVE = noone;
+	DIALOG_CLICK = true;
 	
 	globalvar ADD_NODE_PAGE, ADD_NODE_W, ADD_NODE_H, ADD_NODE_MODE;
 	ADD_NODE_PAGE = "";
 	ADD_NODE_W = -1;
 	ADD_NODE_H = -1;
 	ADD_NODE_MODE = 0;
-	
-	globalvar AXIS_COLOR;
-	AXIS_COLOR = [ c_ui_red, c_ui_lime, c_ui_cyan, c_yellow, c_aqua, c_fuchsia, c_orange, c_ltgray ];
 #endregion
 
 #region macro
@@ -108,6 +108,8 @@
 		#macro c_ui_lime_dark		$38995e
 		#macro c_ui_lime			$5dde8f
 		#macro c_ui_lime_light		$b2ffd0
+		
+		#macro c_ui_white			$ffffff
 	#endregion
 	
 	#region functions

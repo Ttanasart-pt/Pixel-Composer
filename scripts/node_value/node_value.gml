@@ -690,7 +690,7 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 					case VALUE_DISPLAY._default : #region
 						var _angle = argument_count > 6? argument[6] : 0;
 						var _scale = argument_count > 7? argument[7] : 1;
-						var spr = argument_count > 8? argument[8] : s_anchor_selector;
+						var spr = argument_count > 8? argument[8] : THEME.anchor_selector;
 						var index = 0;
 						
 						var __ax = lengthdir_x(_val * _scale, _angle);
@@ -734,15 +734,15 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 						
 						var _ax = _x + lengthdir_x(_rad, _val);
 						var _ay = _y + lengthdir_y(_rad, _val);
-						draw_sprite_ui(s_anchor_rotate, 0, _ax, _ay, 1, 1, _val - 90, c_white, 1);
+						draw_sprite_ui(THEME.anchor_rotate, 0, _ax, _ay, 1, 1, _val - 90, c_white, 1);
 						
 						if(drag_type) {
-							draw_set_color(c_ui_orange);
+							draw_set_color(COLORS._main_accent);
 							draw_set_alpha(0.5);
 							draw_circle(_x, _y, _rad, true);
 							draw_set_alpha(1);
 							
-							draw_sprite_ui(s_anchor_rotate, 1, _ax, _ay, 1, 1, _val - 90, c_white, 1);
+							draw_sprite_ui(THEME.anchor_rotate, 1, _ax, _ay, 1, 1, _val - 90, c_white, 1);
 							var angle = point_direction(_x, _y, _mx, _my);
 							if(keyboard_check(vk_control))
 								angle = round(angle / 15) * 15;
@@ -757,13 +757,13 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 						}
 						
 						if(point_in_circle(_mx, _my, _ax, _ay, 8)) {
-							draw_set_color(c_ui_orange);
+							draw_set_color(COLORS._main_accent);
 							draw_set_alpha(0.5);
 							draw_circle(_x, _y, _rad, true);
 							draw_set_alpha(1);
 							hover = 1;
 							
-							draw_sprite_ui(s_anchor_rotate, 1, _ax, _ay, 1, 1, _val - 90, c_white, 1);
+							draw_sprite_ui(THEME.anchor_rotate, 1, _ax, _ay, 1, 1, _val - 90, c_white, 1);
 							if(_active && mouse_check_button_pressed(mb_left)) {
 								drag_type = 1;
 								drag_mx   = _mx;
@@ -784,10 +784,10 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 						var _ax = __ax * _s + _x;
 						var _ay = __ay * _s + _y;
 						
-						draw_sprite_ui_uniform(s_anchor_selector, 0, _ax, _ay);
+						draw_sprite_ui_uniform(THEME.anchor_selector, 0, _ax, _ay);
 						
 						if(drag_type) {
-							draw_sprite_ui_uniform(s_anchor_selector, 1, _ax, _ay);
+							draw_sprite_ui_uniform(THEME.anchor_selector, 1, _ax, _ay);
 							var _nx = (drag_sx + (_mx - drag_mx) - _x) / _s / _psx;
 							var _ny = (drag_sy + (_my - drag_my) - _y) / _s / _psy;
 							if(keyboard_check(vk_control)) {
@@ -809,7 +809,7 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 						
 						if(point_in_circle(_mx, _my, _ax, _ay, 8)) {
 							hover = 1;
-							draw_sprite_ui_uniform(s_anchor_selector, 1, _ax, _ay);
+							draw_sprite_ui_uniform(THEME.anchor_selector, 1, _ax, _ay);
 							if(_active && mouse_check_button_pressed(mb_left)) {
 								drag_type = 1;
 								drag_mx   = _mx;
@@ -832,7 +832,7 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 						var _aw = __aw * _s;
 						var _ah = __ah * _s;
 						
-						draw_set_color(c_ui_orange);
+						draw_set_color(COLORS._main_accent);
 						switch(__at) {
 							case AREA_SHAPE.rectangle :
 								draw_rectangle(_ax - _aw, _ay - _ah, _ax + _aw, _ay + _ah, true);
@@ -842,13 +842,13 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 								break;
 						}
 						
-						draw_sprite_ui_uniform(s_anchor, 0, _ax, _ay);
-						draw_sprite_ui_uniform(s_anchor_selector, 0, _ax + _aw, _ay + _ah);
+						draw_sprite_ui_uniform(THEME.anchor, 0, _ax, _ay);
+						draw_sprite_ui_uniform(THEME.anchor_selector, 0, _ax + _aw, _ay + _ah);
 						
 						if(point_in_circle(_mx, _my, _ax + _aw, _ay + _ah, 8))
-							draw_sprite_ui_uniform(s_anchor_selector, 1, _ax + _aw, _ay + _ah);
+							draw_sprite_ui_uniform(THEME.anchor_selector, 1, _ax + _aw, _ay + _ah);
 						else if(point_in_rectangle(_mx, _my, _ax - _aw, _ay - _ah, _ax + _aw, _ay + _ah))
-							draw_sprite_ui_uniform(s_anchor, 0, _ax, _ay, 1.25, c_white);
+							draw_sprite_ui_uniform(THEME.anchor, 0, _ax, _ay, 1.25, c_white);
 						
 						if(drag_type == 1) {
 							var _xx = drag_sx + (_mx - drag_mx) / _s;
@@ -923,18 +923,18 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 						var _ax1 = (__ax + __ax1) * _s + _x;
 						var _ay1 = (__ay + __ay1) * _s + _y;
 						
-						draw_set_color(c_ui_orange);
+						draw_set_color(COLORS._main_accent);
 						switch(_val[PUPPET_CONTROL.mode]) {
 							case PUPPET_FORCE_MODE.move :
 								draw_line_width2(_ax, _ay, _ax1, _ay1, 6, 1);
 						
-								draw_sprite_ui_uniform(s_anchor_selector, 0, _ax, _ay);
-								draw_sprite_ui_uniform(s_anchor_selector, 2, _ax1, _ay1);
+								draw_sprite_ui_uniform(THEME.anchor_selector, 0, _ax, _ay);
+								draw_sprite_ui_uniform(THEME.anchor_selector, 2, _ax1, _ay1);
 								draw_circle(_ax, _ay, _val[PUPPET_CONTROL.width] * _s, true);
 								break;
 							case PUPPET_FORCE_MODE.pinch :
 							case PUPPET_FORCE_MODE.inflate :
-								draw_sprite_ui_uniform(s_anchor_selector, 0, _ax, _ay);
+								draw_sprite_ui_uniform(THEME.anchor_selector, 0, _ax, _ay);
 								draw_circle(_ax, _ay, _val[PUPPET_CONTROL.width] * _s, true);
 								break;
 							case PUPPET_FORCE_MODE.wind :
@@ -958,12 +958,12 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 								
 								draw_line(_l0x0, _l0y0, _l0x1, _l0y1);
 								draw_line(_l1x0, _l1y0, _l1x1, _l1y1);
-								draw_sprite_ui_uniform(s_anchor_selector, 0, _ax, _ay);
+								draw_sprite_ui_uniform(THEME.anchor_selector, 0, _ax, _ay);
 								break;
 						}
 						
 						if(drag_type == 1) {
-							draw_sprite_ui_uniform(s_anchor_selector, 1, _ax, _ay);
+							draw_sprite_ui_uniform(THEME.anchor_selector, 1, _ax, _ay);
 							var _nx = drag_sx + (_mx - drag_mx) / _s;
 							var _ny = drag_sy + (_my - drag_my) / _s;
 							
@@ -983,7 +983,7 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 								UNDO_HOLDING = false;
 							}
 						} else if(drag_type == 2) {
-							draw_sprite_ui_uniform(s_anchor_selector, 0, _ax1, _ay1);
+							draw_sprite_ui_uniform(THEME.anchor_selector, 0, _ax1, _ay1);
 							var _nx = drag_sx + (_mx - drag_mx) / _s;
 							var _ny = drag_sy + (_my - drag_my) / _s;
 							
@@ -1006,7 +1006,7 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 						
 						if(point_in_circle(_mx, _my, _ax, _ay, 8)) {
 							hover = 1;
-							draw_sprite_ui_uniform(s_anchor_selector, 1, _ax, _ay);
+							draw_sprite_ui_uniform(THEME.anchor_selector, 1, _ax, _ay);
 							if(_active && mouse_check_button_pressed(mb_left)) {
 								drag_type = 1;
 								drag_mx   = _mx;
@@ -1018,7 +1018,7 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 						
 						if(_val[PUPPET_CONTROL.mode] == PUPPET_FORCE_MODE.move && point_in_circle(_mx, _my, _ax1, _ay1, 8)) {
 							hover = 2;
-							draw_sprite_ui_uniform(s_anchor_selector, 0, _ax1, _ay1);
+							draw_sprite_ui_uniform(THEME.anchor_selector, 0, _ax1, _ay1);
 							if(_active && mouse_check_button_pressed(mb_left)) {
 								drag_type = 2;
 								drag_mx   = _mx;
@@ -1043,9 +1043,9 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 		
 		if(point_in_circle(_mx, _my, x, y, 10 * _s)) {
 			is_hover = true;
-			draw_sprite_ext(isArray()? s_node_junctions_array_hover : s_node_junctions_single_hover, type, x, y, ss, ss, 0, c_white, 1);
+			draw_sprite_ext(isArray()? THEME.node_junctions_array_hover : THEME.node_junctions_single_hover, type, x, y, ss, ss, 0, c_white, 1);
 		} else {
-			draw_sprite_ext(isArray()? s_node_junctions_array : s_node_junctions_single, type, x, y, ss, ss, 0, c_white, 1);
+			draw_sprite_ext(isArray()? THEME.node_junctions_array : THEME.node_junctions_single, type, x, y, ss, ss, 0, c_white, 1);
 		}
 		
 		return is_hover;
@@ -1061,17 +1061,17 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 		
 		if(connect_type == JUNCTION_CONNECT.input) {
 			var tx = x - 12 * _s;
-			draw_sprite_stretched_ext(s_node_junction_name_bg, 0, tx - tw, y - th / 2, tw + 16, th, c_white, 0.5);
+			draw_sprite_stretched_ext(THEME.node_junction_name_bg, 0, tx - tw, y - th / 2, tw + 16, th, c_white, 0.5);
 		} else {
 			var tx = x + 12 * _s;
-			draw_sprite_stretched_ext(s_node_junction_name_bg, 0, tx - 16, y - th / 2, tw + 16, th, c_white, 0.5);
+			draw_sprite_stretched_ext(THEME.node_junction_name_bg, 0, tx - 16, y - th / 2, tw + 16, th, c_white, 0.5);
 		}
 	}
 	static drawName = function(_s, _mx, _my) {
 		if(!isVisible()) return false;
 		
 		var _hover = point_in_circle(_mx, _my, x, y, 10 * _s);
-		var _draw_cc = _hover? c_white : c_ui_blue_grey;
+		var _draw_cc = _hover? COLORS._main_text : COLORS._main_text_sub;
 		draw_set_text(f_p1, fa_left, fa_center, _draw_cc);
 		
 		if(connect_type == JUNCTION_CONNECT.input) {

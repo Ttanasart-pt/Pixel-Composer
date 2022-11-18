@@ -37,7 +37,6 @@ function textBox(_input, _onModify) constructor {
 	click_block = 0;
 	
 	sprite_index = -1;
-	text_color = c_white;
 	
 	static apply = function() {
 		var _input_text_current = _input_text;
@@ -158,11 +157,11 @@ function textBox(_input, _onModify) constructor {
 		
 		switch(_format) {
 			case VALUE_DISPLAY._default :
-				draw_set_text(font == noone? f_p0 : font, fa_left, fa_center, text_color);
+				draw_set_text(font == noone? f_p0 : font, fa_left, fa_center, COLORS._main_text);
 				draw_text(_x, _y, _text);
 				break;
 			case VALUE_DISPLAY.export_format :
-				draw_set_text(font == noone? f_p0 : font, fa_left, fa_center, text_color);
+				draw_set_text(font == noone? f_p0 : font, fa_left, fa_center, COLORS._main_text);
 				var _x0 = _x, ch = "", len = string_length(_text), i = 1;
 				var cc = draw_get_color();
 				var str = "", _comm = false;
@@ -179,11 +178,11 @@ function textBox(_input, _onModify) constructor {
 					} else {
 						str += ch;
 						switch(ch) {
-							case "d" : draw_set_color(c_ui_cyan);	break;	
-							case "n" : draw_set_color(c_ui_lime);	break;	
-							case "e" : draw_set_color(c_ui_orange); break;	
-							case "f" : draw_set_color(c_ui_pink);	break;	
-							case "i" : draw_set_color(c_ui_yellow); break;
+							case "d" : draw_set_color(COLORS.widget_text_dec_d); break;	
+							case "n" : draw_set_color(COLORS.widget_text_dec_n); break;	
+							case "e" : draw_set_color(COLORS.widget_text_dec_e); break;	
+							case "f" : draw_set_color(COLORS.widget_text_dec_f); break;	
+							case "i" : draw_set_color(COLORS.widget_text_dec_i); break;
 						}
 						
 						switch(ch) {
@@ -245,7 +244,7 @@ function textBox(_input, _onModify) constructor {
 			case fa_bottom: _y = _y - _h;		break;	
 		}
 		
-		draw_set_text(font == noone? f_p0 : font, fa_left, fa_top, c_white);
+		draw_set_text(font == noone? f_p0 : font, fa_left, fa_top);
 		var hh = _h;
 		
 		var tx = _x;
@@ -281,13 +280,12 @@ function textBox(_input, _onModify) constructor {
 				}
 			}
 			
-			if(mouse_check_button_released(mb_left)) {
+			if(mouse_check_button_released(mb_left))
 				sliding = 0;
-			}
 		}
 		
 		if(self == TEXTBOX_ACTIVE) { 
-			draw_sprite_stretched(s_textbox, sprite_index == -1? 2 : sprite_index, _x, _y, _w, hh);
+			draw_sprite_stretched(THEME.textbox, sprite_index == -1? 2 : sprite_index, _x, _y, _w, hh);
 			editText();
 			
 			#region cursor
@@ -313,7 +311,7 @@ function textBox(_input, _onModify) constructor {
 			
 			#region multiplier
 				if(_w > ui(80) && (input == TEXTBOX_INPUT.number || input == TEXTBOX_INPUT.float)) {
-					draw_set_text(f_p0b, fa_left, fa_center, c_ui_blue_ltgrey);
+					draw_set_text(f_p0b, fa_left, fa_center, COLORS._main_text_sub);
 					draw_set_alpha(0.5);
 				
 					if(point_in_rectangle(_m[0], _m[1], _x, _y, _x + ui(32), _y + hh)) {
@@ -343,7 +341,7 @@ function textBox(_input, _onModify) constructor {
 			
 			#region draw
 				var ss = string_cut(_input_text, _w - ui(16));
-				draw_set_text(font == noone? f_p0 : font, fa_left, fa_top, c_white);
+				draw_set_text(font == noone? f_p0 : font, fa_left, fa_top);
 				var ww = string_width(ss);
 				
 				switch(align) {
@@ -361,7 +359,7 @@ function textBox(_input, _onModify) constructor {
 				cursor_pos		= cursor_pos == 0? cursor_pos_to : lerp_float(cursor_pos, cursor_pos_to, 3);
 				
 				if(cursor_select > -1) {
-					draw_set_color(c_ui_blue_dkgrey);
+					draw_set_color(COLORS.widget_text_highlight);
 					var x1 = tx + string_width(string_copy(_input_text, 1, cursor_select));
 					
 					draw_roundrect_ext(cursor_pos, c_y0, x1, c_y1, ui(8), ui(8), 0);
@@ -374,9 +372,8 @@ function textBox(_input, _onModify) constructor {
 					_my = _m[1];
 				}
 				
-				draw_set_color(c_white);
 				display_text(tx, _y + _h / 2, ss, _w - ui(4), _format, _mx);
-				draw_set_color(c_ui_orange);
+				draw_set_color(COLORS._main_text_accent);
 				draw_line_width(cursor_pos, c_y0, cursor_pos, c_y1, 2);
 			#endregion
 			
@@ -386,7 +383,7 @@ function textBox(_input, _onModify) constructor {
 			}
 		} else {
 			var ss = string_cut(string(_text), _w - 16);
-			draw_set_text(font == noone? f_p0 : font, fa_left, fa_center, c_white);
+			draw_set_text(font == noone? f_p0 : font, fa_left, fa_center);
 			var ww = string_width(ss);
 				
 			switch(align) {
@@ -397,9 +394,9 @@ function textBox(_input, _onModify) constructor {
 			
 			if(hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + hh)) {
 				if(hide)
-					draw_sprite_stretched_ext(s_textbox, 1, _x, _y, _w, hh, c_white, 0.5);	
+					draw_sprite_stretched_ext(THEME.textbox, 1, _x, _y, _w, hh, c_white, 0.5);	
 				else
-					draw_sprite_stretched(s_textbox, 1, _x, _y, _w, hh);	
+					draw_sprite_stretched(THEME.textbox, 1, _x, _y, _w, hh);	
 				if(active && mouse_check_button_pressed(mb_left)) {
 					TEXTBOX_ACTIVE  = self;
 					click_block = 1;
@@ -410,13 +407,13 @@ function textBox(_input, _onModify) constructor {
 					_last_value     = _text;
 				}
 			} else if(!hide) {
-				draw_sprite_stretched(s_textbox, 0, _x, _y, _w, hh);
+				draw_sprite_stretched(THEME.textbox, 0, _x, _y, _w, hh);
 			}
 			
 			display_text(tx, _y + _h / 2, ss, _w - ui(4), _format);
 			
 			if(slidable) {
-				draw_sprite_ui_uniform(s_text_slider, 0, _x + ui(20), _y + hh / 2, 1, c_ui_blue_grey, 0.5);
+				draw_sprite_ui_uniform(THEME.text_slider, 0, _x + ui(20), _y + hh / 2, 1, COLORS._main_icon, 0.5);
 			
 				if(hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + hh)) {
 					if(active && mouse_check_button_pressed(mb_left)) {
@@ -432,7 +429,6 @@ function textBox(_input, _onModify) constructor {
 		active = false;
 		
 		sprite_index = -1;
-		text_color = c_white;
 		return hh;
 	}
 }

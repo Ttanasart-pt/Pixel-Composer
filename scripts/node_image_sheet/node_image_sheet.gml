@@ -82,7 +82,7 @@ function Node_Image_Sheet(_x, _y) : Node(_x, _y) constructor {
 	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
 	
 	tools = [
-		[ "Draw boundary",		s_splice_draw ]
+		[ "Draw boundary",		THEME.splice_draw ]
 	];
 	
 	bound_drag = 0;
@@ -150,7 +150,7 @@ function Node_Image_Sheet(_x, _y) : Node(_x, _y) constructor {
 			var _fx1 = _fx0 + _dim[0] * _s;
 			var _fy1 = _fy0 + _dim[1] * _s;
 			
-			draw_set_color(c_ui_orange);
+			draw_set_color(COLORS._main_accent);
 			draw_rectangle(_fx0, _fy0, _fx1, _fy1, true);
 			
 			//draw_set_text(f_p1, fa_left, fa_top);
@@ -182,7 +182,7 @@ function Node_Image_Sheet(_x, _y) : Node(_x, _y) constructor {
 				var col = floor((bound_mx - bound_sx) / cell_cx);
 				var row = floor((bound_my - bound_sy) / cell_cy);
 					
-				draw_set_color(c_ui_orange_light);
+				draw_set_color(COLORS._main_accent);
 				for( var i = 0; i < row; i++ ) {
 					for( var j = 0; j < col; j++ ) {
 						var cl_x0 = fr_x0 + j * (cell_cx * _s);
@@ -194,7 +194,7 @@ function Node_Image_Sheet(_x, _y) : Node(_x, _y) constructor {
 					}
 				}
 				
-				draw_set_color(c_ui_orange);
+				draw_set_color(COLORS._main_accent);
 				draw_line_width(fr_x0, 0, fr_x0, room_height, 1);
 				draw_line_width(0, fr_y0, room_width, fr_y0, 1);
 				draw_line_width(fr_x1, 0, fr_x1, room_height, 1);

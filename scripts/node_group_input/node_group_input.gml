@@ -7,7 +7,7 @@ function Node_create_Group_Input(_x, _y) {
 
 function Node_Group_Input(_x, _y, _group) : Node(_x, _y) constructor {
 	name  = "Input";
-	color = c_ui_yellow;
+	color = COLORS.node_blend_interface;
 	previewable = false;
 	auto_height = false;
 	input_index = -1;

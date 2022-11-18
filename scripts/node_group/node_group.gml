@@ -6,6 +6,6 @@ function Node_create_Group(_x, _y) {
 
 function Node_Group(_x, _y) : Node_Collection(_x, _y) constructor {
 	name  = "Group";
-	color = c_ui_yellow;
-	icon  = s_group_16;
+	color = COLORS.node_blend_interface;
+	icon  = THEME.group_s;
 }

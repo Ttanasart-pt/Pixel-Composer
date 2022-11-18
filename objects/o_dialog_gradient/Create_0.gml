@@ -14,18 +14,6 @@ event_inherited();
 	key_drag_sx   = 0;
 	key_drag_mx   = 0;
 	
-	current_color = 0;
-	
-	hue           = 1;
-	hue_dragging  = false;
-	value_draggin = false;
-	
-	sat           = 0;
-	val           = 0;
-	color_surface = surface_create_valid(ui(256), ui(256));
-	
-	onApply = -1;
-	
 	destroy_on_click_out = true;
 	
 	sl_position = new slider(0, 100, 0.1, function(val) { 
@@ -33,19 +21,9 @@ event_inherited();
 		setKeyPosition(key_selecting, val / 100);
 	}, function() { removeKeyOverlap(key_selecting); })
 	
-	function resetHSV() {
-		hue = color_get_hue(current_color);	
-		sat = color_get_saturation(current_color);	
-		val = color_get_value(current_color);	
-		setColor();
-	}
-	function setHSV() {		
-		current_color = make_color_hsv(hue, sat, val);
-		setColor();
-	}
-	function setColor() {
+	setColor = function(color) {
 		if(key_selecting == noone) return;
-		key_selecting.value = current_color;
+		key_selecting.value = color;
 	}
 	function setGradient(grad, data) {
 		gradient = grad;	
@@ -53,6 +31,8 @@ event_inherited();
 		if(!ds_list_empty(grad))
 			key_selecting = grad[| 0];
 	}
+	
+	selector = new colorSelector(setColor);
 	
 	function setKeyPosition(key, position) {
 		key.time = position;
@@ -71,83 +51,34 @@ event_inherited();
 			ds_list_remove(gradient, key);
 		}
 	}
-	
-	dropper_active = false;
-	dropper_color  = c_white;
-#endregion
-
-#region textbox
-	tb_hue = new textBox(TEXTBOX_INPUT.number, function(str) {
-		if(str == "") return;
-		hue = clamp(real(str), 0, 255);
-		setHSV();
-	})
-	tb_sat = new textBox(TEXTBOX_INPUT.number, function(str) {
-		if(str == "") return;
-		sat = clamp(real(str), 0, 255);
-		setHSV();
-	})
-	tb_val= new textBox(TEXTBOX_INPUT.number, function(str) {
-		if(str == "") return;
-		val = clamp(real(str), 0, 255);
-		setHSV();
-	})
-	
-	tb_red = new textBox(TEXTBOX_INPUT.number, function(str) {
-		if(str == "") return;
-		var r = clamp(real(str), 0, 255);
-		var g = color_get_green(current_color);
-		var b = color_get_blue(current_color);
-		
-		current_color = make_color_rgb(r, g, b);
-		resetHSV();
-	})
-	tb_green = new textBox(TEXTBOX_INPUT.number, function(str) {
-		if(str == "") return;
-		var r = color_get_red(current_color);
-		var g = clamp(real(str), 0, 255);
-		var b = color_get_blue(current_color);
-		
-		current_color = make_color_rgb(r, g, b);
-		resetHSV();
-	})
-	tb_blue = new textBox(TEXTBOX_INPUT.number, function(str) {
-		if(str == "") return;
-		var r = color_get_red(current_color);
-		var g = color_get_green(current_color);
-		var b = clamp(real(str), 0, 255);
-		
-		current_color = make_color_rgb(r, g, b);
-		resetHSV();
-	})
-	
-	tb_hex = new textBox(TEXTBOX_INPUT.text, function(str) {
-		if(str == "") return;
-		if(string_char_at(str, 1) == "#") str = string_replace(str, "#", "");
-		
-		var _r = string_hexadecimal(string_copy(str, 1, 2));
-		var _g = string_hexadecimal(string_copy(str, 3, 2));
-		var _b = string_hexadecimal(string_copy(str, 5, 2));
-		
-		current_color = make_color_rgb(_r, _g, _b);
-		resetHSV();
-	})
 #endregion
 
 #region preset
 	function loadGradient(path) {
-		var grad = ds_list_create();
+		if(path == "") return noone;
+		if(!file_exists(path)) return noone;
 		
-		if(path != "" && file_exists(path)) {
-			var _t = file_text_open_read(path);
-			while(!file_text_eof(_t)) {
-				var _col = toNumber(file_text_readln(_t));
-				var _pos = toNumber(file_text_readln(_t));
+		var grad = ds_list_create();
+		var _t = file_text_open_read(path);
+		while(!file_text_eof(_t)) {
+			var key = file_text_readln(_t);
+			var _col = 0, _pos = 0;
+			
+			if(string_pos(",", key)) {
+				var keys = string_splice(key, ",");
+				if(array_length(keys) != 2) continue;
 				
-				ds_list_add(grad, new valueKey(_pos, _col));
+				_col = toNumber(keys[0]);
+				_pos = toNumber(keys[1]);
+			} else {
+				_col = toNumber(key);
+				if(file_text_eof(_t)) break;
+				_pos = toNumber(file_text_readln(_t));
 			}
-			file_text_close(_t);
+			
+			ds_list_add(grad, new valueKey(_pos, _col));
 		}
+		file_text_close(_t);
 		return grad;
 	}
 	
@@ -175,18 +106,23 @@ event_inherited();
 		var hh = ui(32);
 		var yy = _y + ui(8);
 		var hg = ui(52);
-		draw_clear_alpha(c_ui_blue_black, 0);
+		draw_clear_alpha(COLORS.panel_bg_clear, 0);
 		
 		for(var i = 0; i < ds_list_size(presets); i++) {
-			draw_sprite_stretched(s_ui_panel_bg, 1, ui(4), yy, sp_preset_w - ui(16), hg);
+			draw_sprite_stretched(THEME.ui_panel_bg, 1, ui(4), yy, sp_preset_w - ui(16), hg);
 			
-			draw_set_text(f_p2, fa_left, fa_top, c_ui_blue_ltgrey);
+			draw_set_text(f_p2, fa_left, fa_top, COLORS._main_text_sub);
 			draw_text(ui(16), yy + ui(8), preset_name[| i]);
 			draw_gradient(ui(16), yy + ui(28), ww, ui(16), presets[| i]);
 			
 			if(sFOCUS && point_in_rectangle(_m[0], _m[1], ui(4), yy, ui(4) + sp_preset_w - ui(16), yy + hg)) {
-				if(mouse_check_button_pressed(mb_left)) 
-				ds_list_copy(gradient, presets[| i]);
+				if(mouse_check_button_pressed(mb_left)) { 
+					var target = presets[| i];
+					ds_list_clear(gradient);
+					for( var i = 0; i < ds_list_size(target); i++ ) {
+						ds_list_add(gradient, new valueKey(target[| i].time, target[| i].value));
+					}
+				}
 			}
 			
 			yy += hg + ui(4);
@@ -195,4 +131,8 @@ event_inherited();
 		
 		return hh;
 	})
+#endregion
+
+#region action
+	function checkMouse() {}
 #endregion

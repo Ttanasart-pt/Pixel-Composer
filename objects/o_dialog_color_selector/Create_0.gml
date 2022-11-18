@@ -3,93 +3,12 @@ event_inherited();
 
 #region data
 	dialog_w = ui(796);
-	dialog_h = ui(380);
+	dialog_h = ui(388);
 	destroy_on_click_out = true;
 	
 	name = "Color selector";
 	
-	current_color = c_white;
-	
-	hue           = 1;
-	hue_dragging  = false;
-	value_draggin = false;
-	
-	sat           = 0;
-	val           = 0;
-	color_surface = surface_create_valid(ui(256), ui(256));
-	
-	onApply = -1;
-	
-	function resetHSV() {
-		hue = round(color_get_hue(current_color));
-		sat = round(color_get_saturation(current_color));
-		val = round(color_get_value(current_color));
-	}
-	function setHSV() {
-		current_color     = make_color_hsv(hue, sat, val);	
-	}
-	resetHSV();
-		
-	dropper_active = false;
-	dropper_color  = c_white;
-#endregion
-
-#region textbox
-	tb_hue = new textBox(TEXTBOX_INPUT.number, function(str) {
-		if(str == "") return;
-		hue = clamp(real(str), 0, 255);
-		setHSV();
-	})
-	tb_sat = new textBox(TEXTBOX_INPUT.number, function(str) {
-		if(str == "") return;
-		sat = clamp(real(str), 0, 255);
-		setHSV();
-	})
-	tb_val= new textBox(TEXTBOX_INPUT.number, function(str) {
-		if(str == "") return;
-		val = clamp(real(str), 0, 255);
-		setHSV();
-	})
-	
-	tb_red = new textBox(TEXTBOX_INPUT.number, function(str) {
-		if(str == "") return;
-		var r = clamp(real(str), 0, 255);
-		var g = color_get_green(current_color);
-		var b = color_get_blue(current_color);
-		
-		current_color = make_color_rgb(r, g, b);
-		resetHSV();
-	})
-	tb_green = new textBox(TEXTBOX_INPUT.number, function(str) {
-		if(str == "") return;
-		var r = color_get_red(current_color);
-		var g = clamp(real(str), 0, 255);
-		var b = color_get_blue(current_color);
-		
-		current_color = make_color_rgb(r, g, b);
-		resetHSV();
-	})
-	tb_blue = new textBox(TEXTBOX_INPUT.number, function(str) {
-		if(str == "") return;
-		var r = color_get_red(current_color);
-		var g = color_get_green(current_color);
-		var b = clamp(real(str), 0, 255);
-		
-		current_color = make_color_rgb(r, g, b);
-		resetHSV();
-	})
-	
-	tb_hex = new textBox(TEXTBOX_INPUT.text, function(str) {
-		if(str == "") return;
-		if(string_char_at(str, 1) == "#") str = string_replace(str, "#", "");
-		
-		var _r = string_hexadecimal(string_copy(str, 1, 2));
-		var _g = string_hexadecimal(string_copy(str, 3, 2));
-		var _b = string_hexadecimal(string_copy(str, 5, 2));
-		
-		current_color = make_color_rgb(_r, _g, _b);
-		resetHSV();
-	})
+	selector = new colorSelector();
 #endregion
 
 #region presets
@@ -122,7 +41,7 @@ event_inherited();
 		var _gs = sp_preset_size;
 		var yy  = _y + ui(8);
 		var _height, pre_amo;
-		draw_clear_alpha(c_ui_blue_black, 0);
+		draw_clear_alpha(COLORS.panel_bg_clear, 0);
 		
 		for(var i = 0; i < ds_list_size(presets); i++) {
 			pre_amo = array_length(presets[| i]);
@@ -134,12 +53,12 @@ event_inherited();
 			else
 				_height = ui(52);
 			
-			draw_sprite_stretched(s_ui_panel_bg, 1, ui(4), yy, sp_preset_w - ui(16), _height);
+			draw_sprite_stretched(THEME.ui_panel_bg, 1, ui(4), yy, sp_preset_w - ui(16), _height);
 			
-			draw_set_text(f_p2, fa_left, fa_top, c_ui_blue_ltgrey);
+			draw_set_text(f_p2, fa_left, fa_top, COLORS._main_text_sub);
 			draw_text(ui(16), yy + ui(8), preset_name[| i]);
 			if(preset_selecting == i)
-				drawPaletteGrid(presets[| i], ui(16), yy + ui(28), ww, _gs, current_color);
+				drawPaletteGrid(presets[| i], ui(16), yy + ui(28), ww, _gs, selector.current_color);
 			else
 				drawPalette(presets[| i], ui(16), yy + ui(28), ww, ui(20));
 			
@@ -154,8 +73,7 @@ event_inherited();
 							var m_gy = floor(m_ay / _gs);
 					
 							var _index = clamp(m_gy * col + m_gx, 0, pre_amo - 1);
-							current_color = presets[| i][_index];
-							resetHSV();
+							selector.setColor(presets[| i][_index]);
 						} 
 					} else if(point_in_rectangle(_m[0], _m[1], ui(4), yy, ui(4) + sp_preset_w - ui(16), yy + _height)) {
 						preset_selecting = i;
@@ -173,4 +91,8 @@ event_inherited();
 		
 		return hh;
 	})
+#endregion
+
+#region action
+	function checkMouse() {}
 #endregion

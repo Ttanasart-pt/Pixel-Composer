@@ -15,7 +15,7 @@ event_inherited();
 	var y1 = dialog_y + dialog_h - ui(16);
 	
 	sp_recent = new scrollPane(x1 - x0 - ui(12), y1 - y0, function(_y, _m) {
-		draw_clear_alpha(c_ui_blue_dkblack, 0);
+		draw_clear_alpha(COLORS.panel_bg_clear_inner, 0);
 		var ww  = sp_recent.surface_w - ui(2);
 		var hh	= 0;
 		var pad = ui(8);
@@ -25,10 +25,10 @@ event_inherited();
 		for(var i = 0; i < ds_list_size(RECENT_FILES); i++)  {
 			var _rec = RECENT_FILES[| i];
 			if(!file_exists(_rec)) continue;
-			draw_sprite_stretched(s_ui_panel_bg, 1, 0, _y, ww, hg);
+			draw_sprite_stretched(THEME.ui_panel_bg, 1, 0, _y, ww, hg);
 			
 			if(sHOVER && point_in_rectangle(_m[0], _m[1], 0, _y, ww, _y + hg)) {
-				draw_sprite_stretched(s_node_active, 0, 0, _y, ww, hg);
+				draw_sprite_stretched(THEME.node_active, 0, 0, _y, ww, hg);
 				
 				if(sFOCUS && mouse_check_button_pressed(mb_left)) {
 					LOAD_PATH(_rec);
@@ -37,11 +37,11 @@ event_inherited();
 			}
 			
 			var ly = _y + ui(8);
-			draw_set_text(f_p0b, fa_left, fa_top, c_white);
+			draw_set_text(f_p0b, fa_left, fa_top, COLORS._main_text);
 			draw_text(ui(12), ly, filename_name(_rec));
 			
 			ly += line_height();
-			draw_set_text(f_p1, fa_left, fa_top, c_ui_blue_grey);
+			draw_set_text(f_p1, fa_left, fa_top, COLORS._main_text_sub);
 			draw_text_cut(ui(12), ly, _rec, ww - ui(24));
 			
 			hh += hg + pad;
@@ -55,7 +55,7 @@ event_inherited();
 	x1 = dialog_x + dialog_w - ui(16);
 	
 	sp_sample = new scrollPane(x1 - x0 - ui(12), y1 - y0, function(_y, _m) {
-		draw_clear_alpha(c_ui_blue_dkblack, 0);
+		draw_clear_alpha(COLORS.panel_bg_clear_inner, 0);
 		var hh = 0;
 		var grid_heigh = ui(96);
 		var grid_width = ui(128);
@@ -76,9 +76,9 @@ event_inherited();
 					var _nx   = grid_space + (grid_width + grid_space) * j;
 					var _boxx = _nx;
 					
-					draw_sprite_stretched(s_node_bg, 0, _boxx, yy, grid_width, grid_heigh);
+					draw_sprite_stretched(THEME.node_bg, 0, _boxx, yy, grid_width, grid_heigh);
 					if(sHOVER && point_in_rectangle(_m[0], _m[1], _nx, yy, _nx + grid_width, yy + grid_heigh)) {
-						draw_sprite_stretched(s_node_active, 0, _boxx, yy, grid_width, grid_heigh);	
+						draw_sprite_stretched(THEME.node_active, 0, _boxx, yy, grid_width, grid_heigh);	
 						if(sFOCUS && mouse_check_button_pressed(mb_left)) {
 							LOAD_PATH(_node.path, true);
 							instance_destroy();
@@ -90,16 +90,16 @@ event_inherited();
 					
 					var tx = _boxx + grid_width / 2;
 					var ty = yy + grid_heigh + ui(4);
-					draw_set_text(f_p2, fa_center, fa_top, c_ui_blue_dkgrey);
+					draw_set_text(f_p2, fa_center, fa_top);
 					var _tw = string_width(_node.tag);
 					var _th = string_height(_node.tag);
 					
-					draw_set_color(c_ui_blue_mdblack);
+					draw_set_color(COLORS.dialog_splash_badge);
 					draw_roundrect_ext(tx - _tw / 2 - ui(6), ty - ui(2), tx + _tw / 2 + ui(6), ty + _th, ui(8), ui(8), 0);
-					draw_set_color(_node.tag == "Getting started"? c_ui_orange_light : c_ui_blue_grey);
+					draw_set_color(_node.tag == "Getting started"? COLORS._main_text_accent : COLORS._main_text_sub);
 					draw_text(tx, ty - ui(2), _node.tag);
 					
-					draw_set_text(f_p1, fa_center, fa_top, c_white);
+					draw_set_text(f_p1, fa_center, fa_top, COLORS._main_text);
 					name_height = max(name_height, string_height_ext(_node.name, -1, grid_width) + ui(8));
 					draw_text_ext(tx, ty + line_height() - ui(2), _node.name, -1, grid_width);
 				}

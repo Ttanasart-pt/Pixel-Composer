@@ -141,7 +141,7 @@ function LOAD_PATH(path, readonly = false) {
 	PANEL_GRAPH.fullView();
 	PANEL_ANIMATION.updatePropertyList();
 	
-	log_message("FILE", "load " + path, s_noti_icon_file_load);
+	log_message("FILE", "load " + path, THEME.noti_icon_file_load);
 	
 	ds_map_destroy(_map);
 	return true;

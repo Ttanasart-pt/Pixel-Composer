@@ -22,7 +22,7 @@ function buttonGroupClass(_data, _onClick) constructor {
 			buttons[i].active = active;
 			
 			var bx  = _x + ww * i;
-			var spr = i == 0 ? s_button_left : (i == amo - 1? s_button_right : s_button_middle);
+			var spr = i == 0 ? THEME.button_left : (i == amo - 1? THEME.button_right : THEME.button_middle);
 			
 			if(_seleting == i) {
 				draw_sprite_stretched(spr, 2, bx, _y, ww, _h);	
@@ -31,7 +31,7 @@ function buttonGroupClass(_data, _onClick) constructor {
 			}
 			
 			if(is_string(data[i])) {
-				draw_set_text(f_p0, fa_center, fa_center, c_white);
+				draw_set_text(f_p0, fa_center, fa_center, COLORS._main_text);
 				draw_text(bx + ww / 2, _y + _h / 2, data[i]);
 			} else if(sprite_exists(data[i])) {
 				draw_sprite_ui_uniform(data[i], i, bx + ww / 2, _y + _h / 2);

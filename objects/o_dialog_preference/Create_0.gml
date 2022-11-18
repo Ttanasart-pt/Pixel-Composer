@@ -15,8 +15,9 @@ event_inherited();
 	dialog_h_min = ui(480);
 	
 	onResize = function() {
-		sp_pref.resize(dialog_w - ui(192), dialog_h - ui(80));
-		sp_hotkey.resize(dialog_w - ui(192), dialog_h - ui(80));
+		sp_pref.resize(dialog_w - ui(192), dialog_h - ui(88));
+		sp_hotkey.resize(dialog_w - ui(192), dialog_h - ui(88));
+		sp_colors.resize(dialog_w - ui(192), dialog_h - ui(128));
 	}
 #endregion
 
@@ -24,7 +25,8 @@ event_inherited();
 	page_current = 0;
 	page[0] = "General";
 	page[1] = "Node settings";
-	page[2] = "Hotkeys";
+	page[2] = "Appearances";
+	page[3] = "Hotkeys";
 	
 	pref_global = ds_list_create();
 	pref_node = ds_list_create();
@@ -37,7 +39,6 @@ event_inherited();
 			PREF_SAVE();
 		})
 	]);
-	
 	
 	PREF_MAP[? "_display_scaling"] = PREF_MAP[? "display_scaling"];
 	ds_list_add(pref_global, [
@@ -164,11 +165,107 @@ event_inherited();
 			PREF_SAVE();
 		})
 	]);
+#endregion
+
+#region theme
+	themes = [];
+	var f = file_find_first("data/themes/*", fa_directory);
+	while(f != "") {
+		array_push(themes, f);
+		f = file_find_next();
+	}
+	file_find_close();
 	
+	sb_theme = new scrollBox(themes, function(index) { 
+			var thm = themes[index]
+			if(PREF_MAP[? "theme"] == thm) return;
+			PREF_MAP[? "theme"] = thm;
+			PREF_SAVE();
+			
+			loadFonts();
+			loadGraphic(thm);
+			loadColor(thm);
+		});
+	sb_theme.align = fa_left;
+	
+	sp_colors = new scrollPane(dialog_w - ui(192), dialog_h - ui(128), function(_y, _m, _r) {
+		draw_clear_alpha(COLORS.panel_bg_clear, 0);
+		var hh		= 0;
+		var th		= ui(28);
+		var x1		= dialog_w - ui(208);
+		var yy		= _y + ui(8);
+		var padd	= ui(6);
+		var ind		= 0;
+		
+		var cw = ui(100);
+		var ch = th - ui(4);
+		var cx = x1 - cw;
+		var category = "";
+		
+		for( var i = 0; i < array_length(COLOR_KEYS); i++ ) {
+			var key = COLOR_KEYS[i];
+			var val = variable_struct_get(COLORS, key);
+			
+			if(search_text != "" && string_pos(string_lower(search_text), string_lower(key)) == 0)
+				continue;
+				
+			if(is_array(val)) continue;
+			var spl = string_splice(key, "_");
+			var cat = spl[0] == ""? spl[1] : spl[0];
+			if(cat != category) {
+				category = cat;
+				draw_set_text(f_p0b, fa_left, fa_top, COLORS._main_text_sub);
+				draw_text(ui(16), yy, string_title(category));
+				yy += string_height(category) + ui(8);
+				hh += string_height(category) + ui(8);
+				ind = 0;
+			}
+			
+			if(ind % 2 == 0)
+				draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, 0, yy - padd, sp_colors.w, th + padd * 2, COLORS.dialog_preference_prop_bg, 1);
+					
+			var keyStr = string_replace_all(key, "_", " ");
+			keyStr = string_replace(keyStr, cat + " ", "");
+			keyStr = string_title(keyStr);
+			
+			draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text);
+			draw_text(ui(8), yy + th / 2, keyStr);
+			
+			var b = buttonInstant(THEME.button, cx, yy + ui(2), cw, ch, _m, sFOCUS, sHOVER);
+			draw_sprite_stretched_ext(THEME.color_picker_sample, 0, cx + ui(2), yy + ui(2 + 2), cw - ui(4), ch - ui(4), val, 1);
+			
+			if(b == 2) {
+				var dialog = dialogCall(o_dialog_color_selector, WIN_W / 2, WIN_H / 2);
+				dialog.selector.setColor(val);
+				self.key = key;
+				dialog.onApply = function(color) { 
+					variable_struct_set(COLORS, self.key, color); 
+					overrideColor();
+				};
+				dialog.selector.onApply = dialog.onApply;
+			}
+			
+			yy += th + padd + ui(8);
+			hh += th + padd + ui(8);
+			ind++;
+		}
+		
+		return hh;
+	});
+	
+	function overrideColor() {
+		var path = "data/themes/" + PREF_MAP[? "theme"] + "/override.json";
+		var f = file_text_open_write(path);
+		file_text_write_string(f, json_stringify(COLORS));
+		file_text_close(f);
+	}
+#endregion
+
+#region draw
 	current_list = pref_global;
 	
-	sp_pref = new scrollPane(dialog_w - ui(192), dialog_h - ui(88), function(_y, _m) {
-		draw_clear_alpha(c_ui_blue_black, 0);
+	sp_pref = new scrollPane(dialog_w - ui(192), dialog_h - ui(88), function(_y, _m, _r) {
+		draw_clear_alpha(COLORS.panel_bg_clear, 0);
 		var hh		= 0;
 		var th		= TEXTBOX_HEIGHT;
 		var x1		= dialog_w - ui(200);
@@ -180,7 +277,7 @@ event_inherited();
 			var _pref = current_list[| i];
 			
 			if(is_string(_pref)) {
-				draw_set_text(f_p0b, fa_left, fa_top, c_ui_blue_grey);
+				draw_set_text(f_p0b, fa_left, fa_top, COLORS._main_text_sub);
 				draw_text(ui(16), yy, _pref);
 				yy += string_height(_pref) + ui(8);
 				hh += string_height(_pref) + ui(8);
@@ -190,31 +287,39 @@ event_inherited();
 			
 			var name = _pref[0];
 			
-			if(search_text == "" || string_pos(string_lower(search_text), string_lower(name)) > 0) {
-				if(ind % 2 == 0)
-					draw_sprite_stretched_ext(s_ui_panel_bg, 0, 0, yy - padd, sp_pref.w, th + padd * 2, c_ui_blue_white, 1);
+			if(search_text != "" && string_pos(string_lower(search_text), string_lower(name)) == 0)
+				continue;
+			
+			if(ind % 2 == 0)
+				draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, 0, yy - padd, sp_pref.w, th + padd * 2, COLORS.dialog_preference_prop_bg, 1);
 				
-				draw_set_text(f_p1, fa_left, fa_center, c_white);
-				draw_text(ui(8), yy + th / 2, _pref[0]);
-				_pref[2].active = sFOCUS; 
-				_pref[2].hover  = sHOVER;
+			draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text);
+			draw_text(ui(8), yy + th / 2, _pref[0]);
+			_pref[2].active = sFOCUS; 
+			_pref[2].hover  = sHOVER;
 				
-				switch(instanceof(_pref[2])) {
-					case "textBox" :
-						_pref[2].draw(x1 - ui(4), yy + th / 2, ui(88), th, PREF_MAP[? _pref[1]], _m,, fa_right, fa_center);
-						break;
-					case "checkBox" :
-						_pref[2].draw(x1 - ui(48), yy + th / 2, PREF_MAP[? _pref[1]], _m,, fa_center, fa_center);
-						break;
-					case "slider" :
-						_pref[2].draw(x1 - ui(4), yy + th / 2, ui(200), th, PREF_MAP[? _pref[1]], _m, ui(88), fa_right, fa_center);
-						break;
-				}
-				
-				yy += th + padd + ui(8);
-				hh += th + padd + ui(8);
-				ind++;
+			switch(instanceof(_pref[2])) {
+				case "textBox" :
+					_pref[2].draw(x1 - ui(4), yy + th / 2, ui(88), th, PREF_MAP[? _pref[1]], _m,, fa_right, fa_center);
+					break;
+				case "checkBox" :
+					_pref[2].draw(x1 - ui(48), yy + th / 2, PREF_MAP[? _pref[1]], _m,, fa_center, fa_center);
+					break;
+				case "slider" :
+					_pref[2].draw(x1 - ui(4), yy + th / 2, ui(200), th, PREF_MAP[? _pref[1]], _m, ui(88), fa_right, fa_center);
+					break;
+				case "scrollBox" :
+					var _w = ui(200);
+					var _h = th;
+						
+					_pref[2].align = fa_left;
+					_pref[2].draw(x1 - ui(4) - _w, yy + th / 2 - _h / 2, _w, _h, PREF_MAP[? _pref[1]], _m, _r[0], _r[1]);
+					break;
 			}
+				
+			yy += th + padd + ui(8);
+			hh += th + padd + ui(8);
+			ind++;
 		}
 		
 		return hh;
@@ -238,7 +343,7 @@ event_inherited();
 	hk_editing = noone;
 	
 	sp_hotkey = new scrollPane(dialog_w - ui(192), dialog_h - ui(88), function(_y, _m) {
-		draw_clear_alpha(c_ui_blue_black, 0);
+		draw_clear_alpha(COLORS.panel_bg_clear, 0);
 		var padd		= ui(8);
 		var hh			= 0;
 		var currGroup	= -1;
@@ -259,21 +364,21 @@ event_inherited();
 				
 				if(group != currGroup) {
 					if(group != "") hh += ui(12);
-					draw_set_text(f_p0b, fa_left, fa_top, c_ui_blue_grey);
+					draw_set_text(f_p0b, fa_left, fa_top, COLORS._main_text_sub);
 					draw_text(ui(16), _y + hh, group == ""? "Global" : group);
 					
 					hh += string_height("l") + ui(16);
 					currGroup = group;
 				}
-				draw_set_text(f_p0, fa_left, fa_top, c_white);
+				draw_set_text(f_p0, fa_left, fa_top);
 				var th = string_height("l");
 			
 				if(i % 2 == 0) {
-					draw_sprite_stretched_ext(s_ui_panel_bg, 0, 0, _y + hh - padd, 
-						sp_hotkey.w, th + padd * 2, c_ui_blue_white, 1);
+					draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, 0, _y + hh - padd, 
+						sp_hotkey.w, th + padd * 2, COLORS.dialog_preference_prop_bg, 1);
 				}
 			
-				draw_set_text(f_p0, fa_left, fa_top, c_white);
+				draw_set_text(f_p0, fa_left, fa_top, COLORS._main_text);
 				draw_text(ui(16), _y + hh, name);
 			
 				var dk = key_get_name(key.key, key.modi);
@@ -314,14 +419,14 @@ event_inherited();
 						PREF_SAVE();
 					}
 					
-					draw_sprite_stretched(s_button_hide, 2, x1 - ui(40) - kw, _y + hh - ui(6), kw + ui(32), th + ui(12));
+					draw_sprite_stretched(THEME.button_hide, 2, x1 - ui(40) - kw, _y + hh - ui(6), kw + ui(32), th + ui(12));
 				} else {
-					if(buttonInstant(s_button_hide, x1 - ui(40) - kw, _y + hh - ui(6), kw + ui(32), th + ui(12), _m, sFOCUS, sHOVER) == 2) {
+					if(buttonInstant(THEME.button_hide, x1 - ui(40) - kw, _y + hh - ui(6), kw + ui(32), th + ui(12), _m, sFOCUS, sHOVER) == 2) {
 						hk_editing = key;
 						keyboard_lastchar = pkey;
 					}
 				}
-				draw_set_text(f_p0, fa_right, fa_top, hk_editing == key? c_ui_orange : c_white);
+				draw_set_text(f_p0, fa_right, fa_top, hk_editing == key? COLORS._main_text_accent : COLORS._main_text);
 				draw_text(x1 - ui(24), _y + hh, dk);
 				
 				hh += th + padd * 2;
@@ -331,3 +436,4 @@ event_inherited();
 		return hh;
 	})
 #endregion
+

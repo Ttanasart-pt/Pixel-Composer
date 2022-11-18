@@ -27,14 +27,15 @@ function curveBox(_onModify) constructor {
 			var _y_0 = get_y(0, _y, curve_h, y_max, y_range);
 			var _y_1 = get_y(1, _y, curve_h, y_max, y_range);
 		
-			draw_set_color(c_ui_blue_dkgrey);
+			draw_set_color(COLORS.widget_curve_outline);
+			draw_set_alpha(0.5);
 			draw_line(_x + _w / 3, _y, _x + _w / 3, _y + curve_h);
 			draw_line(_x + _w / 3 * 2, _y, _x + _w / 3 * 2, _y + curve_h);
-		
+			
 			draw_line(_x, _y_0, _x + _w, _y_0);
 			draw_line(_x, _y_1, _x + _w, _y_1);
-		
-			draw_set_color(c_ui_blue_grey);
+			draw_set_alpha(1);
+			
 			draw_rectangle(_x, _y, _x + _w, _y + curve_h, true);
 		
 			if(node_dragging != -1) {
@@ -56,7 +57,7 @@ function curveBox(_onModify) constructor {
 			var _dy = _y + (y_max - 1) / y_range * curve_h;
 			var _dh = -curve_h / y_range;
 		
-			draw_set_color(c_ui_blue_ltgrey);
+			draw_set_color(COLORS.widget_curve_line);
 			draw_line_bezier_cubic(_x, _dy, _w, _dh, _y0, _y1, _y2, _y3);
 			
 			var node_hovering = -1;
@@ -64,7 +65,7 @@ function curveBox(_onModify) constructor {
 				var _nx = i / 3 * _w + _x;
 				var _ny = get_y(_data[i], _y, curve_h, y_max, y_range);
 			
-				draw_set_color(c_ui_blue_grey);
+				draw_set_color(COLORS.widget_curve_outline);
 				draw_circle(_nx, _ny, 3, false);
 			
 				if(hover && point_in_circle(_m[0], _m[1], _nx, _ny, 6)) {

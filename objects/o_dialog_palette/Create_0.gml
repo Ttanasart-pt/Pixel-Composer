@@ -12,100 +12,20 @@ event_inherited();
 	index_selecting = 0;
 	index_dragging = -1;
 	
-	current_color = 0;
-	
-	hue           = 1;
-	hue_dragging  = false;
-	value_draggin = false;
-	
-	sat           = 0;
-	val           = 0;
-	color_surface = surface_create_valid(ui(256), ui(256));
-	
-	onApply = -1;
-	
-	function resetHSV() {
-		hue = color_get_hue(current_color);	
-		sat = color_get_saturation(current_color);	
-		val = color_get_value(current_color);	
-		setColor();
-	}
-	function setHSV() {		
-		current_color = make_color_hsv(hue, sat, val);
-		setColor();
-	}
-	function setColor() {
+	setColor = function(color) {
 		if(index_selecting == -1 || palette == 0) return;
-		palette[index_selecting] = current_color;
+		palette[index_selecting] = color;
+		onApply(palette);
 	}
+	
+	selector = new colorSelector(setColor);
+	
 	function setPalette(pal) {
 		palette = pal;	
 		index_selecting = 0;
 		if(array_length(palette) > 0)
-			current_color   = palette[0];
-		resetHSV();
+			selector.setColor(palette[0]);
 	}
-	
-	dropper_active = false;
-	dropper_color  = c_white;
-#endregion
-
-#region textbox
-	tb_hue = new textBox(TEXTBOX_INPUT.number, function(str) {
-		if(str == "") return;
-		hue = clamp(real(str), 0, 255);
-		setHSV();
-	})
-	tb_sat = new textBox(TEXTBOX_INPUT.number, function(str) {
-		if(str == "") return;
-		sat = clamp(real(str), 0, 255);
-		setHSV();
-	})
-	tb_val= new textBox(TEXTBOX_INPUT.number, function(str) {
-		if(str == "") return;
-		val = clamp(real(str), 0, 255);
-		setHSV();
-	})
-	
-	tb_red = new textBox(TEXTBOX_INPUT.number, function(str) {
-		if(str == "") return;
-		var r = clamp(real(str), 0, 255);
-		var g = color_get_green(current_color);
-		var b = color_get_blue(current_color);
-		
-		current_color = make_color_rgb(r, g, b);
-		resetHSV();
-	})
-	tb_green = new textBox(TEXTBOX_INPUT.number, function(str) {
-		if(str == "") return;
-		var r = color_get_red(current_color);
-		var g = clamp(real(str), 0, 255);
-		var b = color_get_blue(current_color);
-		
-		current_color = make_color_rgb(r, g, b);
-		resetHSV();
-	})
-	tb_blue = new textBox(TEXTBOX_INPUT.number, function(str) {
-		if(str == "") return;
-		var r = color_get_red(current_color);
-		var g = color_get_green(current_color);
-		var b = clamp(real(str), 0, 255);
-		
-		current_color = make_color_rgb(r, g, b);
-		resetHSV();
-	})
-	
-	tb_hex = new textBox(TEXTBOX_INPUT.text, function(str) {
-		if(str == "") return;
-		if(string_char_at(str, 1) == "#") str = string_replace(str, "#", "");
-		
-		var _r = string_hexadecimal(string_copy(str, 1, 2));
-		var _g = string_hexadecimal(string_copy(str, 3, 2));
-		var _b = string_hexadecimal(string_copy(str, 5, 2));
-		
-		current_color = make_color_rgb(_r, _g, _b);
-		resetHSV();
-	})
 #endregion
 
 #region presets
@@ -133,12 +53,12 @@ event_inherited();
 		var hh = ui(32);
 		var yy = _y + ui(8);
 		var hg = ui(52);
-		draw_clear_alpha(c_ui_blue_black, 0);
+		draw_clear_alpha(COLORS.panel_bg_clear, 0);
 		
 		for(var i = 0; i < ds_list_size(presets); i++) {
-			draw_sprite_stretched(s_ui_panel_bg, 1, ui(4), yy, sp_preset_w - ui(16), hg);
+			draw_sprite_stretched(THEME.ui_panel_bg, 1, ui(4), yy, sp_preset_w - ui(16), hg);
 			
-			draw_set_text(f_p2, fa_left, fa_top, c_ui_blue_ltgrey);
+			draw_set_text(f_p2, fa_left, fa_top, COLORS._main_text_sub);
 			draw_text(ui(16), yy + ui(8), preset_name[| i]);
 			drawPalette(presets[| i], ui(16), yy + ui(28), ww, ui(16));
 			
@@ -182,8 +102,10 @@ event_inherited();
 	}
 #endregion
 
-#region resize
+#region action
 	onResize = function() {
 		sp_presets.resize(sp_preset_w, dialog_h - ui(62));
 	}
+	
+	function checkMouse() {}
 #endregion

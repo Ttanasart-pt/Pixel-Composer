@@ -23,7 +23,7 @@ function vectorBox(_size, _type, _onModify) constructor {
 			extras.hover  = hover;
 			extras.active = active;
 			
-			extras.draw(_x + _w - ui(32), _y + _h / 2 - ui(32 / 2), ui(32), ui(32), _m, s_button_hide);
+			extras.draw(_x + _w - ui(32), _y + _h / 2 - ui(32 / 2), ui(32), ui(32), _m, THEME.button_hide);
 			_w -= ui(40);
 		}
 		
@@ -35,7 +35,7 @@ function vectorBox(_size, _type, _onModify) constructor {
 			var bx  = _x + ww * i;
 			tb[i].draw(bx + ui(24), _y, ww - ui(24), _h, _data[i], _m);
 			
-			draw_set_text(f_p0, fa_left, fa_center, c_ui_blue_grey);
+			draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text_sub);
 			draw_text(bx + ui(8), _y + _h / 2, axis[i]);
 		}
 		hover  = false;

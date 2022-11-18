@@ -1,6 +1,8 @@
 #region data
 	globalvar PREF_MAP;
 	PREF_MAP = ds_map_create();
+	loadGraphic();
+	loadColor();
 #endregion
 
 #region pref map
@@ -35,6 +37,8 @@
 	
 	PREF_MAP[? "collection_preview_speed"] = 60;
 	PREF_MAP[? "expand_hover"] = false;
+	
+	PREF_MAP[? "theme"] = "default";
 #endregion
 
 #region hotkeys	
@@ -246,7 +250,10 @@
 		window_set_size(ww, hh);
 		window_set_position(display_get_width() / 2 - ww / 2, display_get_height() / 2 - hh / 2);
 		
+		setPanel();
 		loadFonts();
+		loadGraphic(PREF_MAP[? "theme"]);
+		loadColor(PREF_MAP[? "theme"]);
 	}
 	
 	function find_hotkey(_context, _name) {

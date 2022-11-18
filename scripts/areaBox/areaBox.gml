@@ -20,7 +20,7 @@ function areaBox(_onModify) constructor {
 	}
 	
 	static draw = function(_x, _y, _data, _m) {
-		if(buttonInstant(s_button_hide, _x - ui(48), _y + ui(64 - 48), ui(96), ui(96), _m, active, hover, "", s_inspector_area, array_safe_get(_data, 4), c_white) == 2) {
+		if(buttonInstant(THEME.button_hide, _x - ui(48), _y + ui(64 - 48), ui(96), ui(96), _m, active, hover, "", THEME.inspector_area, array_safe_get(_data, 4), c_white) == 2) {
 			if(mouse_check_button_pressed(mb_left)) {
 				var val = (array_safe_get(_data, 4) + 1) % 2;
 				onModify(4, val);
@@ -28,7 +28,7 @@ function areaBox(_onModify) constructor {
 		}
 		
 		if(onSurfaceSize != -1) {
-			if(buttonInstant(s_button_hide, _x - ui(76), _y + ui(28 - 12), ui(24), ui(24), _m, active, hover, "Fill surface", s_fill_16, 0, c_white) == 2) {
+			if(buttonInstant(THEME.button_hide, _x - ui(76), _y + ui(28 - 12), ui(24), ui(24), _m, active, hover, "Fill surface", THEME.fill, 0, c_white) == 2) {
 				var ss = onSurfaceSize();
 				onModify(0, toNumber(ss[0] / 2));
 				onModify(1, toNumber(ss[1] / 2));

@@ -63,3 +63,11 @@
 	}
 	action_last_frame = [];
 #endregion
+
+#region dialog
+	if(!ds_list_empty(DIALOGS))
+		DIALOGS[| ds_list_size(DIALOGS) - 1].checkMouse();
+	
+	if(mouse_check_button_released(mb_left))
+		DIALOG_CLICK = true;
+#endregion

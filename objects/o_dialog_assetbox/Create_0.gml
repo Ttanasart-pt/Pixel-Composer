@@ -76,11 +76,11 @@ event_inherited();
 					var xx   = grid_space + (grid_size + grid_space) * j;
 					
 					BLEND_ADD
-					draw_sprite_stretched(s_node_bg, 0, xx, yy, grid_size, grid_size);
+					draw_sprite_stretched(THEME.node_bg, 0, xx, yy, grid_size, grid_size);
 					BLEND_NORMAL
 						
 					if(point_in_rectangle(_m[0], _m[1], xx, yy, xx + grid_size, yy + grid_size)) {
-						draw_sprite_stretched(s_node_active, 0, xx, yy, grid_size, grid_size);	
+						draw_sprite_stretched(THEME.node_active, 0, xx, yy, grid_size, grid_size);	
 						if(mouse_check_button_pressed(mb_left)) {
 							target.onModify(content.path);
 							instance_destroy();
@@ -107,7 +107,7 @@ event_inherited();
 	});
 	
 	folderPane = new scrollPane(folderW - ui(16), content_h - ui(32), function(_y, _m) {
-		draw_clear_alpha(c_ui_blue_black, 0);
+		draw_clear_alpha(COLORS.panel_bg_clear, 0);
 		var hh = 8;
 		
 		for(var i = 0; i < ds_list_size(global.ASSETS.subDir); i++) {

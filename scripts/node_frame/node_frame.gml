@@ -8,8 +8,8 @@ function Node_Frame(_x, _y) : Node(_x, _y) constructor {
 	name = "Empty frame";
 	w = 240;
 	h = 160;
-	bg_spr		= s_node_frame_bg;
-	bg_sel_spr	= s_node_frame_bg_active;
+	bg_spr		= THEME.node_frame_bg;
+	bg_sel_spr	= THEME.node_frame_bg_active;
 	
 	size_dragging = false;
 	size_dragging_w = w;
@@ -36,7 +36,7 @@ function Node_Frame(_x, _y) : Node(_x, _y) constructor {
 	
 	static drawNodeBase = function(xx, yy, _s) {
 		draw_sprite_stretched_ext(bg_spr, 0, xx, yy, w * _s, h * _s, color, 0.75);
-		draw_set_text(f_h5, fa_right, fa_bottom, c_white);
+		draw_set_text(f_h5, fa_right, fa_bottom, COLORS._main_text);
 		draw_set_alpha(name_hover? 0.5 : 0.25);
 		draw_text_cut(xx + w * _s - 8, yy + h * _s - 8, name, w * _s);
 		draw_set_alpha(1);
@@ -70,9 +70,9 @@ function Node_Frame(_x, _y) : Node(_x, _y) constructor {
 		
 		var _re_x = (x + w - 4) * _s + _x;
 		var _re_y = (y + h - 4) * _s + _y;
-		draw_sprite_ext(s_node_resize, 0, _re_x, _re_y, 1, 1, 0, c_white, 0.5);
+		draw_sprite_ext(THEME.node_resize, 0, _re_x, _re_y, 1, 1, 0, c_white, 0.5);
 		if(!name_hover && point_in_rectangle(_mx, _my, _re_x - 16 * _s, _re_y - 16 * _s, _re_x + 4 * _s, _re_y + 4 * _s)) {
-			draw_sprite_ext(s_node_resize, 0, _re_x, _re_y, 1, 1, 0, c_white, 1);
+			draw_sprite_ext(THEME.node_resize, 0, _re_x, _re_y, 1, 1, 0, c_white, 1);
 			PANEL_GRAPH.drag_locking = true;
 			
 			if(mouse_check_button_pressed(mb_left)) {

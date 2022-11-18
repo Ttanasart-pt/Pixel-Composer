@@ -2,29 +2,65 @@ globalvar FONT_LOADED, f_h3, f_h5, f_p0, f_p0b, f_p1, f_p2, f_p3;
 
 FONT_LOADED = false;
 
-function loadFonts() {
-	if(FONT_LOADED) {
-		font_delete(f_h3);
-		font_delete(f_h5);
-					
-		font_delete(f_p0);
-		font_delete(f_p0b);
-					
-		font_delete(f_p1);
-		font_delete(f_p2);
-		font_delete(f_p3);
+function _font_path(rel) {
+	return "data/themes/" + PREF_MAP[? "theme"] + "/fonts/" + string_replace_all(rel, "./", "");
+}
+
+function _font_load_from_struct(str, def) {
+	var path = _font_path(str.path);
+	if(!file_exists(path)) {
+		noti_status("Font resource " + string(path), " not found. Rollback to default font.");
+		return def;
 	}
 	
-	var font = "NotoSans";
-	f_h3 = font_add("data/fonts/" + font + "-Bold.ttf", 20 * UI_SCALE, false, false, 32, 127);
-	f_h5 = font_add("data/fonts/" + font + "-Bold.ttf", 16 * UI_SCALE, false, false, 32, 127);
+	var f = font_add(path, str.size * UI_SCALE, false, false, str.range[0], str.range[1]);
+	return f;
+}
 
-	f_p0  = font_add("data/fonts/" + font + "-Medium.ttf", 12 * UI_SCALE, false, false, 32, 127);
-	f_p0b = font_add("data/fonts/" + font + "-Bold.ttf",   12 * UI_SCALE, false, false, 32, 127);
+function font_clear(font) { if(font_exists(font)) font_delete(font); }
 
-	f_p1 = font_add("data/fonts/" + font + "-SemiBold.ttf", 11 * UI_SCALE, false, false, 32, 127);
-	f_p2 = font_add("data/fonts/" + font + "-SemiBold.ttf", 10 * UI_SCALE, false, false, 32, 127);
-	f_p3 = font_add("data/fonts/" + font + "-SemiBold.ttf",  9 * UI_SCALE, false, false, 32, 127);
+function loadFonts() {
+	if(FONT_LOADED) {
+		font_clear(f_h3);
+		font_clear(f_h5);
+					
+		font_clear(f_p0);
+		font_clear(f_p0b);
+					
+		font_clear(f_p1);
+		font_clear(f_p2);
+		font_clear(f_p3);
+	}
+	
+	var path = _font_path("./fonts.json");
+	if(!file_exists(path)) {
+		noti_status("Font not defined at " + path + ", rollback to default fonts.");
+		f_h3  = _f_h3;
+		f_h5  = _f_h5;
+		f_p0  = _f_p0;
+		f_p0b = _f_p0b;
+		f_p1  = _f_p1;
+		f_p2  = _f_p2;
+		f_p3  = _f_p3;
+		FONT_LOADED = false;
+		return;
+	}
+	
+	var f = file_text_open_read(path);
+	var s = file_text_read_all(f);
+	file_text_close(f);
+	
+	var fontDef = json_parse(s);
+	
+	f_h3 = _font_load_from_struct(fontDef.h3, _f_h3);
+	f_h5 = _font_load_from_struct(fontDef.h5, _f_h5);
+	
+	f_p0  = _font_load_from_struct(fontDef.p0, _f_p0);
+	f_p0b = _font_load_from_struct(fontDef.p0b, _f_p0b);
+	
+	f_p1 = _font_load_from_struct(fontDef.p1, _f_p1);
+	f_p2 = _font_load_from_struct(fontDef.p2, _f_p2);
+	f_p3 = _font_load_from_struct(fontDef.p3, _f_p3);
 	
 	FONT_LOADED = true;
 }

@@ -61,7 +61,7 @@ function controlPointBox(_onModify) constructor {
 		var lw = ui(80);
 		var w  = _w / 2 - lw;
 		
-		draw_set_text(f_p0, fa_left, fa_center, c_white);
+		draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text);
 		draw_text(_x,					yy + ui(17), "cx");
 		draw_text(_x + _w / 2 + ui(10), yy + ui(17), "cy");
 		tbCx.draw(_x + lw,				yy, w, TEXTBOX_HEIGHT, _data[PUPPET_CONTROL.cx], _m);
@@ -70,21 +70,21 @@ function controlPointBox(_onModify) constructor {
 		
 		switch(_data[PUPPET_CONTROL.mode]) {
 			case PUPPET_FORCE_MODE.move: 
-				draw_set_text(f_p0, fa_left, fa_center, c_white);
+				draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text);
 				draw_text(_x,					yy + ui(17), "fx");
 				draw_text(_x + _w / 2 + ui(10), yy + ui(17), "fy");
 				tbFx.draw(_x + lw,				yy, w, TEXTBOX_HEIGHT, _data[PUPPET_CONTROL.fx],  _m);
 				tbFy.draw(_x + _w / 2 + lw,		yy, w, TEXTBOX_HEIGHT, _data[PUPPET_CONTROL.fy], _m);
 				yy += TEXTBOX_HEIGHT + ui(8);
 		
-				draw_set_text(f_p0, fa_left, fa_center, c_white);
+				draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text);
 				draw_text(_x, yy + ui(17), "radius");
 				sW.draw(_x + lw, yy, _w - lw, TEXTBOX_HEIGHT, _data[PUPPET_CONTROL.width],  _m);
 				yy += TEXTBOX_HEIGHT + ui(8);
 				break;
 			case PUPPET_FORCE_MODE.pinch: 
 			case PUPPET_FORCE_MODE.inflate: 
-				draw_set_text(f_p0, fa_left, fa_center, c_white);
+				draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text);
 				draw_text(_x, yy + ui(17), "radius");
 				sW.draw(_x + lw, yy, _w - lw, TEXTBOX_HEIGHT, _data[PUPPET_CONTROL.width],  _m);
 				yy += TEXTBOX_HEIGHT + ui(8);
@@ -94,12 +94,12 @@ function controlPointBox(_onModify) constructor {
 				yy += TEXTBOX_HEIGHT + ui(8);
 				break;
 			case PUPPET_FORCE_MODE.wind: 
-				draw_set_text(f_p0, fa_left, fa_center, c_white);
+				draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text);
 				draw_text(_x, yy + ui(17), "stength");
 				tbFx.draw(_x + lw, yy, _w - lw, TEXTBOX_HEIGHT, _data[PUPPET_CONTROL.fx],  _m);
 				yy += TEXTBOX_HEIGHT + ui(8);
 				
-				draw_set_text(f_p0, fa_left, fa_center, c_white);
+				draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text);
 				draw_text(_x, yy + ui(17), "width");
 				tbW.draw(_x + lw, yy, _w - lw, TEXTBOX_HEIGHT, _data[PUPPET_CONTROL.width], _m);
 				yy += TEXTBOX_HEIGHT + ui(8);

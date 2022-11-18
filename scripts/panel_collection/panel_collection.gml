@@ -79,11 +79,11 @@ function Panel_Collection() : PanelContent() constructor {
 						var _boxx = _nx + (grid_width - grid_size) / 2;
 						
 						BLEND_ADD
-						draw_sprite_stretched(s_node_bg, 0, _boxx, yy, grid_size, grid_size);
+						draw_sprite_stretched(THEME.node_bg, 0, _boxx, yy, grid_size, grid_size);
 						BLEND_NORMAL
 						
 						if(point_in_rectangle(_m[0], _m[1], _nx, yy, _nx + grid_width, yy + grid_size)) {
-							draw_sprite_stretched(s_node_active, 0, _boxx, yy, grid_size, grid_size);	
+							draw_sprite_stretched(THEME.node_active, 0, _boxx, yy, grid_size, grid_size);	
 							if(mouse_check_button_pressed(mb_left))
 								file_dragging = _node;
 						
@@ -106,10 +106,10 @@ function Panel_Collection() : PanelContent() constructor {
 							
 							draw_sprite_ext(_node.spr, frame, sx, sy, ss, ss, 0, c_white, 1);
 						} else {
-							draw_sprite_ui_uniform(s_group_24, 0, _boxx + grid_size / 2, yy + grid_size / 2, 1, c_white);
+							draw_sprite_ui_uniform(THEME.group, 0, _boxx + grid_size / 2, yy + grid_size / 2, 1, c_white);
 						}
 						
-						draw_set_text(f_p2, fa_center, fa_top, c_white);
+						draw_set_text(f_p2, fa_center, fa_top, COLORS._main_text);
 						name_height = max(name_height, string_height_ext(_node.name, -1, grid_size) + 8);
 						draw_text_ext(_boxx + grid_size / 2, yy + grid_size + ui(4), _node.name, -1, grid_width);
 					}
@@ -130,12 +130,12 @@ function Panel_Collection() : PanelContent() constructor {
 				
 				if(i % 2) {
 					BLEND_ADD
-					draw_sprite_stretched_ext(s_node_bg, 0, ui(4), yy, list_width - 8, list_height, c_white, 0.2);
+					draw_sprite_stretched_ext(THEME.node_bg, 0, ui(4), yy, list_width - 8, list_height, c_white, 0.2);
 					BLEND_NORMAL
 				}
 				
 				if(point_in_rectangle(_m[0], _m[1], 0, yy, list_width, yy + list_height - 1)) {
-					draw_sprite_stretched(s_node_active, 0, ui(4), yy, list_width - ui(8), list_height);
+					draw_sprite_stretched(THEME.node_active, 0, ui(4), yy, list_width - ui(8), list_height);
 					if(mouse_check_button_pressed(mb_left))
 						file_dragging = _node;
 						
@@ -161,9 +161,9 @@ function Panel_Collection() : PanelContent() constructor {
 					
 					draw_sprite_ext(_node.spr, frame, sx, sy, ss, ss, 0, c_white, 1);
 				} else
-					draw_sprite_ui_uniform(s_group_24, 0, spr_x, spr_y, 0.75, c_white);
+					draw_sprite_ui_uniform(THEME.group, 0, spr_x, spr_y, 0.75, c_white);
 				
-				draw_set_text(f_p2, fa_left, fa_center, c_white);
+				draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text);
 				draw_text(list_height + ui(20), yy + list_height / 2, _node.name);
 				
 				yy += list_height;
@@ -175,7 +175,7 @@ function Panel_Collection() : PanelContent() constructor {
 	});
 	
 	folderPane = new scrollPane(group_w - ui(8), content_h, function(_y, _m) {
-		draw_clear(c_ui_blue_black);
+		draw_clear(COLORS.panel_bg_clear);
 		var hh = ui(8);
 		
 		for(var i = 0; i < ds_list_size(root.subDir); i++) {
@@ -215,10 +215,10 @@ function Panel_Collection() : PanelContent() constructor {
 	}
 	
 	function drawContent(panel) {
-		draw_clear_alpha(c_ui_blue_black, 0);
+		draw_clear_alpha(COLORS.panel_bg_clear, 0);
 		
 		var content_y = ui(48);
-		draw_sprite_stretched(s_ui_panel_bg, 1, group_w, content_y, content_w + ui(16), content_h);
+		draw_sprite_stretched(THEME.ui_panel_bg, 1, group_w, content_y, content_w + ui(16), content_h);
 		contentPane.active = pHOVER;
 		contentPane.draw(group_w + ui(8), content_y, mx - group_w - ui(8), my - content_y);
 		
@@ -231,14 +231,15 @@ function Panel_Collection() : PanelContent() constructor {
 		
 		for( var i = 0; i < array_length(roots); i++ ) {
 			var r = roots[i];
-			var b = buttonInstant(s_button_hide_fill, _x - ui(8), _y - bh / 2, string_width(r[0]) + ui(20), bh, [mx, my], pFOCUS, pHOVER);
+			var b = buttonInstant(THEME.button_hide_fill, _x - ui(8), _y - bh / 2, string_width(r[0]) + ui(20), bh, [mx, my], pFOCUS, pHOVER);
 			if(b == 2) {
 				mode = i;
 				root = r[1];
 				context = root;
 			}
 			
-			draw_set_text(f_p0b, fa_left, fa_center, i == mode? c_ui_blue_white : c_ui_blue_dkgrey);
+			draw_set_text(f_p0b, fa_left, fa_center, i == mode? COLORS._main_text
+				: COLORS._main_text_sub);
 			draw_text(_x, _y, r[0]);
 			
 			_x += string_width(r[0]) + ui(20);
@@ -255,14 +256,14 @@ function Panel_Collection() : PanelContent() constructor {
 		//	TEXTBOX_ACTIVE = noone;
 		
 		if(search_string == "") {
-			if(buttonInstant(s_button_hide, bx, by, ui(24), ui(24), [mx, my], pFOCUS, pHOVER, contentView? "Grid view" : "List view", s_view_mode, contentView) == 2) {
+			if(buttonInstant(THEME.button_hide, bx, by, ui(24), ui(24), [mx, my], pFOCUS, pHOVER, contentView? "Grid view" : "List view", THEME.view_mode, contentView) == 2) {
 				contentView = !contentView;
 			}
 			bx -= ui(32);
 			
 			if(mode == 0) {
-			if(context != root) {
-					if(buttonInstant(s_button_hide, bx, by, ui(24), ui(24), [mx, my], pFOCUS, pHOVER, "Add selecting node as collection", s_add_24, 0, c_ui_lime) == 2) {
+				if(context != root) {
+					if(buttonInstant(THEME.button_hide, bx, by, ui(24), ui(24), [mx, my], pFOCUS, pHOVER, "Add selecting node as collection", THEME.add, 0, COLORS._main_value_positive) == 2) {
 						if(PANEL_INSPECTOR.inspecting != noone) {
 							var dia = dialogCall(o_dialog_file_name, mouse_mx + ui(8), mouse_my + ui(8));
 							data_path = context.path;
@@ -282,30 +283,30 @@ function Panel_Collection() : PanelContent() constructor {
 						}
 					}
 				} else {
-					draw_sprite_ui_uniform(s_add_24, 0, bx + ui(12), by + ui(12), 1, c_ui_blue_dkgrey);	
+					draw_sprite_ui_uniform(THEME.add, 0, bx + ui(12), by + ui(12), 1, COLORS._main_icon_dark);	
 				}
 				bx -= ui(32);
 		
-				if(buttonInstant(s_button_hide, bx, by, ui(24), ui(24), [mx, my], pFOCUS, pHOVER, "Add folder") == 2) {
+				if(buttonInstant(THEME.button_hide, bx, by, ui(24), ui(24), [mx, my], pFOCUS, pHOVER, "Add folder") == 2) {
 					var dia = dialogCall(o_dialog_file_name, mouse_mx + 8, mouse_my + 8);
 					dia.onModify = function (txt) {
 						directory_create(txt);
 					};
 					dia.path = context.path + "\\";
 				}
-				draw_sprite_ui_uniform(s_folder_add, 0, bx + ui(12), by + ui(12), 1, c_ui_blue_grey);
-				draw_sprite_ui_uniform(s_folder_add, 1, bx + ui(12), by + ui(12), 1, c_ui_lime);
+				draw_sprite_ui_uniform(THEME.folder_add, 0, bx + ui(12), by + ui(12), 1, COLORS._main_icon);
+				draw_sprite_ui_uniform(THEME.folder_add, 1, bx + ui(12), by + ui(12), 1, COLORS._main_value_positive);
 				bx -= ui(32);
 			}
 		
-			if(buttonInstant(s_button_hide, bx, by, ui(24), ui(24), [mx, my], pFOCUS, pHOVER, "Open in file explorer", s_folder_24) == 2) {
+			if(buttonInstant(THEME.button_hide, bx, by, ui(24), ui(24), [mx, my], pFOCUS, pHOVER, "Open in file explorer", THEME.folder) == 2) {
 				var _contPath = context.path;
 				var _windir   = environment_get_variable("WINDIR") + "/explorer.exe";
 				execute_shell_simple(_windir, _contPath);
 			}
 			bx -= ui(32);
 		
-			if(buttonInstant(s_button_hide, bx, by, ui(24), ui(24), [mx, my], pFOCUS, pHOVER, "Refresh", s_refresh_16) == 2)
+			if(buttonInstant(THEME.button_hide, bx, by, ui(24), ui(24), [mx, my], pFOCUS, pHOVER, "Refresh", THEME.refresh_s) == 2)
 				refreshContext();
 			bx -= ui(32);
 		} else {

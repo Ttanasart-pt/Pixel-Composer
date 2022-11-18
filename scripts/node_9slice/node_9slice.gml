@@ -45,7 +45,7 @@ function Node_9Slice(_x, _y) : Node_Processor(_x, _y) constructor {
 		var ww = WIN_W;
 		var hh = WIN_H;
 		
-		draw_set_color(c_ui_orange);
+		draw_set_color(COLORS._main_accent);
 		draw_line(sp_r, -hh, sp_r, hh);
 		draw_line(sp_l, -hh, sp_l, hh);
 		draw_line(-ww, sp_t, ww, sp_t);

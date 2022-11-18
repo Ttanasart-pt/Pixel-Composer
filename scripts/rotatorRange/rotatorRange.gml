@@ -11,25 +11,20 @@ function rotatorRange(_onModify) constructor {
 	static draw = function(_x, _y, _data, _m) {
 		var knob_y = _y + ui(48);
 		
-		draw_set_color(c_ui_blue_mdblack);
-		draw_rectangle(_x - ui(44), knob_y - ui(44), _x + ui(44), knob_y + ui(44), 0);
-		
-		draw_sprite_ui_uniform(s_rotator_bg, 0, _x, knob_y);
+		draw_sprite_ui_uniform(THEME.rotator_bg, 0, _x, knob_y);
 		
 		#region draw arc
 			var hover_arc = false;
 			var diss = point_distance(_m[0], _m[1], _x, knob_y);
-			if(diss >= ui(32) && diss <= ui(40) || dragging == 2) {
-				draw_set_color(c_ui_blue_ltgrey);
+			if(diss >= ui(32) && diss <= ui(40) || dragging == 2)
 				hover_arc = true;
-			} else
-				draw_set_color(c_ui_blue_grey);
 			
 			var ans = _data[0] % 360;
 			var ane = _data[1] % 360;
 			
 			var diff = ane >= ans? ane - ans : ane + 360 - ans;
 			
+			draw_set_color(COLORS.widget_rotator_range);
 			for(var i = 0; i < abs(diff); i += 4) {
 				var as = ans + i * sign(diff);
 				var ae = ans + (i + 4) * sign(diff);
@@ -39,7 +34,10 @@ function rotatorRange(_onModify) constructor {
 				var ex = _x     + lengthdir_x(ui(36), ae);
 				var ey = knob_y + lengthdir_y(ui(36), ae);
 				
+				draw_set_alpha(0.5 + 0.5 * hover_arc);
 				draw_line_width(sx, sy, ex, ey, ui(8));
+				draw_set_alpha(1);
+				
 				draw_circle(ex, ey, ui(4), 0);
 			}
 		#endregion
@@ -50,7 +48,7 @@ function rotatorRange(_onModify) constructor {
 			px[i] = _x + lengthdir_x(ui(36), _data[i]);
 			py[i] = knob_y + lengthdir_y(ui(36), _data[i]);
 			
-			draw_sprite_ui_uniform(s_rotator_knob, 0, px[i], py[i]);
+			draw_sprite_ui_uniform(THEME.rotator_knob, 0, px[i], py[i]);
 		}
 			
 		if(dragging > -1) {
@@ -74,7 +72,7 @@ function rotatorRange(_onModify) constructor {
 				real_val   = round(delta + drag_sv);
 				val = keyboard_check(vk_control)? round(real_val / 15) * 15 : real_val;
 				
-				draw_sprite_ui_uniform(s_rotator_knob, 1, px[dragging], py[dragging]);
+				draw_sprite_ui_uniform(THEME.rotator_knob, 1, px[dragging], py[dragging]);
 				
 				if(_data[dragging] != val) {
 					onModify(dragging, val);
@@ -94,7 +92,7 @@ function rotatorRange(_onModify) constructor {
 		} else if(hover) {
 			for(var i = 0; i < 2; i++) {
 				if(point_in_circle(_m[0], _m[1], px[i], py[i], ui(10))) {
-					draw_sprite_ui_uniform(s_rotator_knob, 1, px[i], py[i]);
+					draw_sprite_ui_uniform(THEME.rotator_knob, 1, px[i], py[i]);
 						
 					if(active && mouse_check_button_pressed(mb_left)) {
 						dragging = i;
@@ -110,7 +108,7 @@ function rotatorRange(_onModify) constructor {
 			}
 		}
 		
-		draw_set_text(f_p0, fa_center, fa_center, c_white);
+		draw_set_text(f_p0, fa_center, fa_center, COLORS._main_text);
 		draw_text(_x, knob_y - ui(12), string(_data[0]));
 		draw_text(_x, knob_y + ui(12), string(_data[1]));
 		

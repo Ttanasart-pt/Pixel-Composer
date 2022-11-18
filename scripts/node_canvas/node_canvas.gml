@@ -5,9 +5,8 @@ function Node_create_Canvas(_x, _y) {
 }
 
 function Node_Canvas(_x, _y) : Node(_x, _y) constructor {
-	
 	name	= "Canvas";
-	color	= c_ui_orange;
+	color	= COLORS.node_blend_canvas;
 	
 	inputs[| 0] = nodeValue(0, "Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, def_surf_size2, VALUE_TAG.dimension_2d )
 		.setDisplay(VALUE_DISPLAY.vector);
@@ -41,11 +40,11 @@ function Node_Canvas(_x, _y) : Node(_x, _y) constructor {
 	surface_buffer = buffer_create(1 * 1 * 4, buffer_fixed, 2);
 	
 	tools = [
-		[ "Pencil",		s_canvas_tools_pencil ],
-		[ "Eraser",		s_canvas_tools_eraser ],
-		[ "Rectangle",	[ s_canvas_tools_rect, s_canvas_tools_rect_fill ]],
-		[ "Ellipse",	[ s_canvas_tools_ellip, s_canvas_tools_ellip_fill ]],
-		[ "Fill",		s_canvas_tools_bucket ],
+		[ "Pencil",		THEME.canvas_tools_pencil ],
+		[ "Eraser",		THEME.canvas_tools_eraser ],
+		[ "Rectangle",	[ THEME.canvas_tools_rect, THEME.canvas_tools_rect_fill ]],
+		[ "Ellipse",	[ THEME.canvas_tools_ellip, THEME.canvas_tools_ellip_fill ]],
+		[ "Fill",		THEME.canvas_tools_bucket ],
 	];
 	
 	mouse_cur_x = 0;

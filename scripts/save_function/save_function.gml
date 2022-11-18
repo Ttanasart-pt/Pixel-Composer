@@ -87,7 +87,7 @@ function SAVE_AT(path) {
 	READONLY  = false;
 	MODIFIED  = false;
 	
-	log_message("FILE", "save at " + path, s_noti_icon_file_save);
+	log_message("FILE", "save at " + path, THEME.noti_icon_file_save);
 }
 
 function SAVE_COLLECTIONS(_list, _path, save_surface = true) {

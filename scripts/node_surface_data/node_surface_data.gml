@@ -6,7 +6,7 @@ function Node_create_Surface_data(_x, _y) {
 
 function Node_Surface_data(_x, _y) : Node(_x, _y) constructor {
 	name	= "Surface data";
-	color	= c_ui_cyan;
+	color	= COLORS.node_blend_number;
 	previewable = false;
 	
 	inputs[| 0] = nodeValue(0, "Surface", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);

@@ -38,13 +38,13 @@ function slider(_min, _max, _step, _onModify = noone, _onRelease = noone) constr
 		tb_value.active = active;
 		tb_value.draw(_x + sw + ui(16), _y, tb_w, _h, _data, _m);
 		
-		draw_sprite_stretched(s_slider, 0, _x, _y + _h / 2 - ui(4), sw, ui(8));	
+		draw_sprite_stretched(THEME.slider, 0, _x, _y + _h / 2 - ui(4), sw, ui(8));	
 		
 		var _kx = _x + clamp((_data - minn) / (maxx - minn), 0, 1) * sw;
-		draw_sprite_stretched(s_slider, 1, _kx - ui(10), _y, ui(20), _h);
+		draw_sprite_stretched(THEME.slider, 1, _kx - ui(10), _y, ui(20), _h);
 		
 		if(dragging) {
-			draw_sprite_stretched(s_slider, 3, _kx - ui(10), _y, ui(20), _h);
+			draw_sprite_stretched(THEME.slider, 3, _kx - ui(10), _y, ui(20), _h);
 			
 			var val = (_m[0] - _x) / sw * (maxx - minn) + minn;
 			val = round(val / step) * step;
@@ -59,7 +59,7 @@ function slider(_min, _max, _step, _onModify = noone, _onRelease = noone) constr
 			}
 		} else {
 			if(hover && (point_in_rectangle(_m[0], _m[1], _x, _y, _x + sw, _y + _h) || point_in_rectangle(_m[0], _m[1], _kx - ui(10), _y, _kx + ui(10), _y + _h))) {
-				draw_sprite_stretched(s_slider, 2, _kx - ui(10), _y, ui(20), _h);
+				draw_sprite_stretched(THEME.slider, 2, _kx - ui(10), _y, ui(20), _h);
 				
 				if(active && mouse_check_button_pressed(mb_left)) {
 					dragging = true;

@@ -47,8 +47,8 @@ function Node_Mesh_Warp(_x, _y) : Node(_x, _y) constructor {
 	input_display_index = array_length(input_display_list);
 	
 	tools = [
-		[ "Add / Remove control point",  s_control_edit ],
-		[ "Pin, unpin mesh", [s_control_pin, s_control_unpin] ]
+		[ "Add / Remove control point",  THEME.control_edit ],
+		[ "Pin, unpin mesh", [THEME.control_pin, THEME.control_unpin] ]
 	];
 	
 	attributes[? "pin"] = ds_map_create();
@@ -90,7 +90,7 @@ function Node_Mesh_Warp(_x, _y) : Node(_x, _y) constructor {
 				control(input_display_list);
 			}
 		} else if(_tool == 1) {
-			draw_set_color(c_ui_orange);
+			draw_set_color(COLORS._main_accent);
 			var rad = 16;
 			draw_circle(_mx, _my, rad, true);
 			var _xx = (_mx - _x) / _s;
@@ -135,10 +135,10 @@ function Node_Mesh_Warp(_x, _y) : Node(_x, _y) constructor {
 		
 		static draw = function(_x, _y, _s) {
 			if(pin) {
-				draw_set_color(c_ui_orange);
+				draw_set_color(COLORS._main_accent);
 				draw_circle(_x + x * _s, _y + y * _s, 3, false);
 			} else {
-				draw_set_color(c_ui_blue_grey);
+				draw_set_color(COLORS.node_overlay_gizmo_inactive);
 				draw_circle(_x + x * _s, _y + y * _s, 2, false);
 			}
 		}
@@ -241,11 +241,6 @@ function Node_Mesh_Warp(_x, _y) : Node(_x, _y) constructor {
 		}
 		
 		static drawPoints = function(_x, _y, _s) {
-			//draw_set_color(c_ui_blue_dkgrey);
-			//draw_line(_x + p0.x * _s, _y + p0.y * _s, _x + p1.x * _s, _y + p1.y * _s);
-			//draw_line(_x + p0.x * _s, _y + p0.y * _s, _x + p2.x * _s, _y + p2.y * _s);
-			//draw_line(_x + p1.x * _s, _y + p1.y * _s, _x + p2.x * _s, _y + p2.y * _s);
-			
 			p0.draw(_x, _y, _s);
 			p1.draw(_x, _y, _s);
 			p2.draw(_x, _y, _s);

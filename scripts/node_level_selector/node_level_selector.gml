@@ -33,7 +33,7 @@ function Node_Level_Selector(_x, _y) : Node_Processor(_x, _y) constructor {
 		var _min    = _middle - _span;
 		var _max    = _middle + _span;
 		
-		draw_set_color(c_ui_blue_black);
+		draw_set_color(COLORS.node_level_shade);
 		draw_rectangle(x0, y0, x0 + max(0, _min) * _w, y1, false);
 		draw_rectangle(x0 + min(1, _max) * _w, y0, x1, y1, false);
 		
@@ -41,15 +41,15 @@ function Node_Level_Selector(_x, _y) : Node_Processor(_x, _y) constructor {
 			var _bx = x1 - 20 - i * 24;
 			var _by = y0;
 			
-			if(buttonInstant(s_button_hide, _bx, _by, 20, 20, _m, _focus, _hover) == 2) 
+			if(buttonInstant(THEME.button_hide, _bx, _by, 20, 20, _m, _focus, _hover) == 2) 
 				histShow[i] = !histShow[i];
-			draw_sprite_ui_uniform(s_circle_12, 0, _bx + 10, _by + 10, 1, his_colors[i], 0.5 + histShow[i] * 0.5);
+			draw_sprite_ui_uniform(THEME.circle, 0, _bx + 10, _by + 10, 1, COLORS.histogram[i], 0.5 + histShow[i] * 0.5);
 		}
 		
 		if(histMax > 0)
 			histogramDraw(x0, y1, _w, _h);
 
-		draw_set_color(c_ui_blue_dkgrey);
+		draw_set_color(COLORS.node_level_outline);
 		draw_rectangle(x0, y0, x1, y1, true);
 	});
 	

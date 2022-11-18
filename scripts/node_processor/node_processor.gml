@@ -7,7 +7,7 @@ function Node_Processor(_x, _y) : Node(_x, _y) constructor {
 	array_process = ARRAY_PROCESS.loop;
 	current_data  = [];
 	
-	icon    = s_node_processor;
+	icon    = THEME.node_processor;
 	
 	static process_data = function(_outSurf, _data, _output_index) { return _outSurf; }
 	

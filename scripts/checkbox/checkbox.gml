@@ -17,10 +17,10 @@ function checkBox(_onClick) constructor {
 			case fa_bottom: _y = _y - ss;		break;	
 		}
 		
-		draw_sprite_stretched(s_checkbox, _value * 2, _x, _y, ss, ss);	
+		draw_sprite_stretched(THEME.checkbox, _value * 2, _x, _y, ss, ss);	
 		
 		if(hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + ss, _y + ss)) {
-			draw_sprite_stretched(s_checkbox, _value * 2 + 1, _x, _y, ss, ss);	
+			draw_sprite_stretched(THEME.checkbox, _value * 2 + 1, _x, _y, ss, ss);	
 			
 			if(active && mouse_check_button_pressed(mb_left)) {
 				if(onClick) onClick();

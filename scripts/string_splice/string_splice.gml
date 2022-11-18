@@ -17,3 +17,10 @@ function string_splice(str, delim) {
 	
 	return st;
 }
+
+function string_title(str) {
+	var ch = string_char_at(str, 1);
+	ch = string_upper(ch);
+	var rs = string_copy(str, 2, string_length(str) - 1);
+	return ch + rs;
+}

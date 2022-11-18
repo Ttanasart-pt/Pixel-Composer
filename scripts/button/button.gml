@@ -29,7 +29,7 @@ function buttonClass(_onClick) constructor {
 		return self; 
 	}
 	
-	static draw = function(_x, _y, _w, _h, _m, spr = s_button, blend = c_white) {
+	static draw = function(_x, _y, _w, _h, _m, spr = THEME.button, blend = c_white) {
 		var click = false;
 		if(hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + _h)) {
 			draw_sprite_stretched_ext(spr, 1, _x, _y, _w, _h, blend, 1);	
@@ -45,7 +45,7 @@ function buttonClass(_onClick) constructor {
 		}
 		if(icon) draw_sprite_ui_uniform(icon, icon_index, _x + _w / 2, _y + _h / 2);
 		if(text != "") {
-			draw_set_text(f_p0, fa_center, fa_center, c_white);
+			draw_set_text(f_p0, fa_center, fa_center, COLORS._main_text);
 			draw_text(_x + _w / 2, _y + _h / 2, text);
 		}
 		
@@ -56,7 +56,7 @@ function buttonClass(_onClick) constructor {
 	}
 }
 
-function buttonInstant(spr, _x, _y, _w, _h, _m, _act, _hvr, _tip = "", _icon = noone, _icon_index = 0, _icon_blend = c_ui_blue_grey, _icon_alpha = 1) {
+function buttonInstant(spr, _x, _y, _w, _h, _m, _act, _hvr, _tip = "", _icon = noone, _icon_index = 0, _icon_blend = COLORS._main_icon, _icon_alpha = 1) {
 	var res = 0;
 	
 	if(_hvr && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + _h)) {

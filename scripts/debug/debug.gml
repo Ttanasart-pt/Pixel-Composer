@@ -14,7 +14,7 @@ function __log(title, str, fname = "log.txt") {
 	show_debug_message(str);
 }
 
-function log_message(title, str, icon = s_noti_icon_log) {
+function log_message(title, str, icon = noone) {
 	__log("[MESSAGE] ", string(title) + ": " + string(str));
 	
 	noti_status(string(title) + ": " + string(str), icon);
@@ -44,7 +44,6 @@ function log_clear() {
 	if(file_exists(path))
 		file_delete(path);
 }
-
 /*
 exception_unhandled_handler(function(ex) {
 	var tt = "\n-------------------------- OH NO --------------------------\n\n";

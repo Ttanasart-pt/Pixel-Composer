@@ -31,7 +31,7 @@ function Node_Mirror(_x, _y) : Node_Processor(_x, _y) constructor {
 		var dy0 = _posy + lengthdir_y(1000, _ang);
 		var dy1 = _posy + lengthdir_y(1000, _ang + 180);
 		
-		draw_set_color(c_ui_orange);
+		draw_set_color(COLORS._main_accent);
 		draw_line(dx0, dy0, dx1, dy1);
 		
 		inputs[| 1].drawOverlay(_active, _x, _y, _s, _mx, _my);

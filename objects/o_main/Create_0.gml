@@ -5,10 +5,6 @@
 	var t = _log_template();
 	file_text_write_string(f, "[MESSAGE] " + t + "session begin" + "\n");
 	
-	if (!code_is_compiled()) {
-		file_text_write_string(f, "[ERROR] " + t + "code not compiled" + "\n");
-	}
-	
 	file_text_close(f);
 #endregion
 
@@ -34,7 +30,7 @@
 	_cursor	= CURSOR;
 	dc_check = 0;
 	
-	display_set_timing_method(tm_sleep);
+	//display_set_timing_method(tm_sleep);
 	
 	addHotkey("", "New file", "N",	MOD_KEY.ctrl, NEW);
 	addHotkey("", "Save", "S",		MOD_KEY.ctrl, SAVE);
@@ -123,4 +119,9 @@
 	window_command_hook(window_command_close);
 	
 	_modified = false;
+#endregion
+
+#region dialog
+	globalvar DIALOGS;
+	DIALOGS = ds_list_create();
 #endregion

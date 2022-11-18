@@ -28,10 +28,10 @@ function Node_Text(_x, _y) : Node_Processor(_x, _y) constructor {
 		.setVisible(true, false);
 	
 	inputs[| 7] = nodeValue(7, "Horizontal alignment", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0 )
-		.setDisplay(VALUE_DISPLAY.enum_button, [ s_inspector_text_halign, s_inspector_text_halign, s_inspector_text_halign]);
+		.setDisplay(VALUE_DISPLAY.enum_button, [ THEME.inspector_text_halign, THEME.inspector_text_halign, THEME.inspector_text_halign]);
 	
 	inputs[| 8] = nodeValue(8, "Vertical alignment", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0 )
-		.setDisplay(VALUE_DISPLAY.enum_button, [ s_inspector_text_valign, s_inspector_text_valign, s_inspector_text_valign ]);
+		.setDisplay(VALUE_DISPLAY.enum_button, [ THEME.inspector_text_valign, THEME.inspector_text_valign, THEME.inspector_text_valign ]);
 	
 	inputs[| 9] = nodeValue(9, "Output dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1 )
 		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Fixed", "Dynamic" ]);

@@ -38,7 +38,7 @@ function Panel_Preview() : PanelContent() constructor {
 	grid_width	 = 16;
 	grid_height	 = 16;
 	grid_opacity = 0.5;
-	grid_color   = c_ui_blue_grey;
+	grid_color   = COLORS.panel_preview_grid;
 	
 	tool_index		= -1;
 	tool_sub_index	= 0;
@@ -59,13 +59,13 @@ function Panel_Preview() : PanelContent() constructor {
 	toolbar_height = ui(40);
 	toolbars = [
 		[ 
-			s_icon_reset_when_preview,
+			THEME.icon_reset_when_preview,
 			function() { return resetViewOnDoubleClick;  },
 			function() { return resetViewOnDoubleClick? "Center canvas on preview" : "Keep canvas on preview" }, 
 			function() { resetViewOnDoubleClick = !resetViewOnDoubleClick; } 
 		],
 		[ 
-			s_icon_split_view,
+			THEME.icon_split_view,
 			function() { return splitView;  },
 			function() { 
 				switch(splitView) {
@@ -78,7 +78,7 @@ function Panel_Preview() : PanelContent() constructor {
 			function() { splitView = (splitView + 1) % 3; } 
 		],
 		[ 
-			s_icon_grid_setting,
+			THEME.icon_grid_setting,
 			function() { return 0; },
 			function() { return "Grid setting" }, 
 			function(param) { 
@@ -90,12 +90,12 @@ function Panel_Preview() : PanelContent() constructor {
 	
 	actions = [
 		[ 
-			s_icon_center_canvas,
+			THEME.icon_center_canvas,
 			"Center canvas", 
 			function() { fullView(); }
 		],
 		[ 
-			s_icon_preview_export,
+			THEME.icon_preview_export,
 			"Export canvas", 
 			function() { saveCurrentFrame(); }
 		],
@@ -227,7 +227,7 @@ function Panel_Preview() : PanelContent() constructor {
 		var chName = [];
 		var ww = ui(96);
 		var hh = toolbar_height - ui(12);
-		draw_set_text(f_p0, fa_center, fa_center, c_white);
+		draw_set_text(f_p0, fa_center, fa_center);
 		
 		for( var i = 0; i < ds_list_size(_node.outputs); i++ ) {
 			if(_node.outputs[| i].type != VALUE_TYPE.surface) continue;
@@ -353,21 +353,21 @@ function Panel_Preview() : PanelContent() constructor {
 				draw_set_alpha(1);
 			}
 		
-			draw_set_color(c_ui_blue_grey);
+			draw_set_color(COLORS.panel_preview_surface_outline);
 			draw_rectangle(psx, psy, psx + pswd, psy + pshd, true);
 		}
 	}
 	
 	function drawPreviewOverlay() {
 		right_menu_y = ui(8);
-		draw_set_text(f_p0, fa_right, fa_top, c_ui_blue_ltgrey);
+		draw_set_text(f_p0, fa_right, fa_top, COLORS._main_text_sub);
 		draw_text(w - ui(8), right_menu_y, "fps " + string(fps));
 		right_menu_y += string_height("l");
 		
 		var _node = getNodePreview();
 		if(_node == noone) return;
 		
-		draw_set_text(f_p0, fa_right, fa_top, c_ui_blue_ltgrey);
+		draw_set_text(f_p0, fa_right, fa_top, COLORS._main_text_sub);
 		draw_text(w - ui(8), right_menu_y, "frame " + string(ANIMATOR.current_frame) + "/" + string(ANIMATOR.frames_total));
 		right_menu_y += string_height("l");
 		draw_text(w - ui(8), right_menu_y, string(canvas_w) + "x" + string(canvas_h) + "px");
@@ -404,7 +404,7 @@ function Panel_Preview() : PanelContent() constructor {
 				var prev_h = surface_get_height(prev);
 				var ss     = prev_size / max(prev_w, prev_h);
 				
-				draw_set_color(c_ui_blue_grey);
+				draw_set_color(COLORS.panel_preview_surface_outline);
 				draw_rectangle(xx, yy, xx + prev_w * ss, yy + prev_h * ss, true);
 				
 				if(pFOCUS && point_in_rectangle(mx, my, xx, yy, xx + prev_w * ss, yy + prev_h * ss)) {
@@ -419,7 +419,7 @@ function Panel_Preview() : PanelContent() constructor {
 				}
 				
 				if(i == _node.preview_index) {
-					draw_set_color(c_ui_orange);
+					draw_set_color(COLORS._main_accent);
 					draw_rectangle(xx, yy, xx + prev_w * ss, yy + prev_h * ss, true);
 				}
 				
@@ -430,20 +430,20 @@ function Panel_Preview() : PanelContent() constructor {
 			var by = h - toolbar_height - prev_size - ui(56);
 			var bx = ui(10);
 			
-			var b = buttonInstant(s_button_hide, bx, by, ui(40), ui(40), [mx, my], pFOCUS, pHOVER);
+			var b = buttonInstant(THEME.button_hide, bx, by, ui(40), ui(40), [mx, my], pFOCUS, pHOVER);
 			
 			if(_node.preview_speed == 0) {
 				if(b) {
-					draw_sprite_ui_uniform(s_sequence_control, 1, bx + ui(20), by + ui(20), 1, c_ui_blue_ltgrey, 1);
+					draw_sprite_ui_uniform(THEME.sequence_control, 1, bx + ui(20), by + ui(20), 1, COLORS._main_icon, 1);
 					if(b == 2) _node.preview_speed = preview_rate / game_get_speed(gamespeed_fps);
 				}
-				draw_sprite_ui_uniform(s_sequence_control, 1, bx + ui(20), by + ui(20), 1, c_ui_blue_ltgrey, 0.5);
+				draw_sprite_ui_uniform(THEME.sequence_control, 1, bx + ui(20), by + ui(20), 1, COLORS._main_icon, 0.5);
 			} else {
 				if(b) {
-					draw_sprite_ui_uniform(s_sequence_control, 0, bx + ui(20), by + ui(20), 1, c_ui_orange, 1);
+					draw_sprite_ui_uniform(THEME.sequence_control, 0, bx + ui(20), by + ui(20), 1, COLORS._main_accent, 1);
 					if(b == 2) _node.preview_speed = 0;
 				}
-				draw_sprite_ui_uniform(s_sequence_control, 0, bx + ui(20), by + ui(20), 1, c_ui_orange, .75);
+				draw_sprite_ui_uniform(THEME.sequence_control, 0, bx + ui(20), by + ui(20), 1, COLORS._main_accent, .75);
 			}
 		}
 	}
@@ -459,7 +459,7 @@ function Panel_Preview() : PanelContent() constructor {
 			var yy = ui(16);
 			
 			for(var i = 0; i < array_length(_node.tools); i++) {
-				var b = buttonInstant(s_button, xx, yy, ui(40), ui(40), [_mx, _my], pFOCUS, isHover);
+				var b = buttonInstant(THEME.button, xx, yy, ui(40), ui(40), [_mx, _my], pFOCUS, isHover);
 				if(b > 0) active = false;
 				yy += ui(48);
 			}
@@ -472,7 +472,7 @@ function Panel_Preview() : PanelContent() constructor {
 			var yy = ui(16);
 			
 			for(var i = 0; i < array_length(_node.tools); i++) {
-				var b = buttonInstant(s_button, xx, yy, ui(40), ui(40), [_mx, _my], pFOCUS, isHover);
+				var b = buttonInstant(THEME.button, xx, yy, ui(40), ui(40), [_mx, _my], pFOCUS, isHover);
 				var toggle = false;
 				if(b == 1)
 					TOOLTIP = _node.tools[i][0];
@@ -497,7 +497,7 @@ function Panel_Preview() : PanelContent() constructor {
 				}
 				
 				if(tool_index == i)
-					draw_sprite_stretched(s_button, 2, xx, yy, ui(40), ui(40));
+					draw_sprite_stretched(THEME.button, 2, xx, yy, ui(40), ui(40));
 				
 				if(is_array(_node.tools[i][1])) {
 					var _ind = tool_sub_index % array_length(_node.tools[i][1]);
@@ -512,11 +512,11 @@ function Panel_Preview() : PanelContent() constructor {
 	function drawToolBar() {
 		toolbar_height = ui(40);
 		var ty = h - toolbar_height;
-		//draw_sprite_stretched_ext(s_toolbar_shadow, 0, 0, ty - 12 + 4, w, 12, c_white, 0.5);
-		draw_set_color(c_ui_blue_black);
+		//draw_sprite_stretched_ext(THEME.toolbar_shadow, 0, 0, ty - 12 + 4, w, 12, c_white, 0.5);
+		draw_set_color(COLORS.panel_toolbar_fill);
 		draw_rectangle(0, ty, w, h, false);
 		
-		draw_set_color(c_ui_blue_dkgrey);
+		draw_set_color(COLORS.panel_toolbar_outline);
 		draw_line(0, ty, w, ty);
 		
 		var tbx = toolbar_height / 2;
@@ -528,7 +528,7 @@ function Panel_Preview() : PanelContent() constructor {
 			var tbInd = tb[1]();
 			var tbTooltip = tb[2]();
 			
-			var b = buttonInstant(s_button_hide, tbx - ui(14), tby - ui(14), ui(28), ui(28), [mx, my], pFOCUS, pHOVER, tbTooltip, tbSpr, tbInd);
+			var b = buttonInstant(THEME.button_hide, tbx - ui(14), tby - ui(14), ui(28), ui(28), [mx, my], pFOCUS, pHOVER, tbTooltip, tbSpr, tbInd);
 			if(b == 2) tb[3]( { x: x + tbx - ui(14), y: y + tby - ui(14) } );
 			
 			tbx += ui(32);
@@ -540,13 +540,13 @@ function Panel_Preview() : PanelContent() constructor {
 			var tbSpr = tb[0];
 			var tbTooltip = tb[1];
 			
-			var b = buttonInstant(s_button_hide, tbx - ui(14), tby - ui(14), ui(28), ui(28), [mx, my], pFOCUS, pHOVER, tbTooltip, tbSpr, 0);
+			var b = buttonInstant(THEME.button_hide, tbx - ui(14), tby - ui(14), ui(28), ui(28), [mx, my], pFOCUS, pHOVER, tbTooltip, tbSpr, 0);
 			if(b == 2) tb[2]();
 			
 			tbx -= ui(32);
 		}
 		
-		draw_set_color(c_ui_blue_dkblack);
+		draw_set_color(COLORS.panel_toolbar_separator);
 		draw_line_width(tbx + ui(12), tby - toolbar_height / 2 + ui(8), tbx + ui(12), tby + toolbar_height / 2 - ui(8), 2);
 		drawNodeChannel(tbx, tby);
 	}
@@ -554,7 +554,7 @@ function Panel_Preview() : PanelContent() constructor {
 	function drawSplitView() {
 		if(splitView == 0) return;
 		
-		draw_set_color(c_ui_blue_grey);
+		draw_set_color(COLORS.panel_preview_split_line);
 		
 		if(splitViewDragging) {
 			if(splitView == 1) {
@@ -582,7 +582,7 @@ function Panel_Preview() : PanelContent() constructor {
 			} else 
 				draw_line_width(sx, 0, sx, h, 1);
 			
-			draw_sprite_ui_uniform(s_panel_active_split, 0, splitSelection? sx + ui(16) : sx - ui(16), ui(16));
+			draw_sprite_ui_uniform(THEME.icon_active_split, 0, splitSelection? sx + ui(16) : sx - ui(16), ui(16),, COLORS._main_accent);
 			
 			if(mouse_on_preview && mouse_check_button_pressed(mb_left)) {
 				if(point_in_rectangle(mx, my, 0, 0, sx, h))
@@ -602,7 +602,7 @@ function Panel_Preview() : PanelContent() constructor {
 				}
 			} else
 				draw_line_width(0, sy, w, sy, 1);
-			draw_sprite_ui_uniform(s_panel_active_split, 0, ui(16), splitSelection? sy + ui(16) : sy - ui(16));
+			draw_sprite_ui_uniform(THEME.icon_active_split, 0, ui(16), splitSelection? sy + ui(16) : sy - ui(16),, COLORS._main_accent);
 			
 			if(mouse_on_preview && mouse_check_button_pressed(mb_left)) {
 				if(point_in_rectangle(mx, my, 0, 0, w, sy))
@@ -616,7 +616,7 @@ function Panel_Preview() : PanelContent() constructor {
 	function drawContent(panel) {
 		mouse_on_preview = point_in_rectangle(mx, my, 0, 0, w, h - toolbar_height);
 		
-		draw_clear(c_ui_blue_black);
+		draw_clear(COLORS.panel_bg_clear);
 		if(canvas_bg == -1) {
 			if(canvas_s >= 1) draw_sprite_tiled_ext(s_transparent, 0, canvas_x, canvas_y, canvas_s, canvas_s, c_white, 0.5);
 		} else {

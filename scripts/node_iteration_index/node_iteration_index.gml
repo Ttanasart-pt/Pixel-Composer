@@ -6,7 +6,7 @@ function Node_create_Iterator_Index(_x, _y) {
 
 function Node_Iterator_Index(_x, _y) : Node(_x, _y) constructor {
 	name = "Index";
-	color = c_ui_cyan;
+	color = COLORS.node_blend_number;
 	previewable   = false;
 	
 	w = 96;

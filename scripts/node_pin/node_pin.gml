@@ -13,8 +13,8 @@ function Node_Pin(_x, _y) : Node(_x, _y) constructor {
 	junction_shift_y = 16;
 	previewable = false;
 	
-	bg_spr = s_node_pin_bg;
-	bg_sel_spr = s_node_pin_bg_active;
+	bg_spr = THEME.node_pin_bg;
+	bg_sel_spr = THEME.node_pin_bg_active;
 	
 	inputs[| 0] = nodeValue(0, "In", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, 0 )
 		.setVisible(true, true);

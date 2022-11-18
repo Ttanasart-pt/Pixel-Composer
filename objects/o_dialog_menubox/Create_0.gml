@@ -24,7 +24,7 @@ event_inherited();
 			ds_list_delete(children, 1);
 		}
 		
-		draw_set_text(f_p0, fa_center, fa_center, c_white);
+		draw_set_text(f_p0, fa_center, fa_center, COLORS._main_text);
 		for(var i = 0; i < array_length(menu); i++) {
 			if(!is_array(menu[i])) {
 				dialog_h += ui(8);

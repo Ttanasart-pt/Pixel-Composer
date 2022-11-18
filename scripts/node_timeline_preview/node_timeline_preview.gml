@@ -7,7 +7,7 @@ function Node_create_Timeline_Preview(_x, _y) {
 function Node_Timeline_Preview(_x, _y) : Node(_x, _y) constructor {
 	name = "Timeline";
 	use_cache = true;
-	color = c_ui_cyan;
+	color = COLORS.node_blend_number;
 	
 	w = 96;
 	min_h = 0;

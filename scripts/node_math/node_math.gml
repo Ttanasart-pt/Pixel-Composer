@@ -45,7 +45,7 @@ function Node_create_Math(_x, _y, _param = "") {
 
 function Node_Math(_x, _y) : Node(_x, _y) constructor {
 	name		= "Math";
-	color		= c_ui_cyan;
+	color		= COLORS.node_blend_number;
 	previewable = false;
 	
 	w = 96;
@@ -135,7 +135,7 @@ function Node_Math(_x, _y) : Node(_x, _y) constructor {
 	}
 	
 	function onDrawNode(xx, yy, _mx, _my, _s) {
-		draw_set_text(f_h3, fa_center, fa_center, c_white);
+		draw_set_text(f_h3, fa_center, fa_center, COLORS._main_text);
 		var str = "";
 		switch(inputs[| 0].getValue()) {
 			case MATH_OPERATOR.add :		str = "+"; break;

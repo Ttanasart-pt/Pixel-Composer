@@ -39,7 +39,7 @@ function Panel_Inspector() : PanelContent() constructor {
 	
 	contentPane = new scrollPane(content_w, content_h, function(_y, _m) {
 		var con_w = contentPane.surface_w;
-		draw_clear_alpha(c_ui_blue_black, 0);
+		draw_clear_alpha(COLORS.panel_bg_clear, 0);
 		
 		if(pFOCUS) 
 			if(point_in_rectangle(_m[0], _m[1], 0, 0, con_w, content_h) && mouse_check_button_pressed(mb_left))
@@ -67,16 +67,16 @@ function Panel_Inspector() : PanelContent() constructor {
 					var coll = jun_disp[1];
 					
 					if(pHOVER && point_in_rectangle(_m[0], _m[1], 0, yy, con_w, yy + ui(32))) {
-						draw_sprite_stretched_ext(s_node_name, 0, 0, yy, con_w, ui(32), c_ui_blue_white, 1);
+						draw_sprite_stretched_ext(THEME.group_label, 0, 0, yy, con_w, ui(32), COLORS.panel_inspector_group_hover, 1);
 						
 						if(pFOCUS && mouse_check_button_pressed(mb_left)) {
 							jun_disp[@ 1] = !coll;
 						}
 					} else
-						draw_sprite_stretched_ext(s_node_name, 0, 0, yy, con_w, ui(32), c_ui_blue_ltgrey, 1);
+						draw_sprite_stretched_ext(THEME.group_label, 0, 0, yy, con_w, ui(32), COLORS.panel_inspector_group_bg, 1);
 					
-					draw_sprite_ui(s_arrow_16, 0, ui(16), yy + ui(32) / 2, 1, 1, -90 + coll * 90, c_ui_blue_ltgrey, 1);
-					draw_set_text(f_p0, fa_left, fa_center, c_ui_blue_white);
+					draw_sprite_ui(THEME.arrow, 0, ui(16), yy + ui(32) / 2, 1, 1, -90 + coll * 90, COLORS.panel_inspector_group_bg, 1);
+					draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text);
 					draw_text(ui(32), yy + ui(32) / 2, txt);
 					
 					hh += ui(32 + 8);
@@ -111,9 +111,9 @@ function Panel_Inspector() : PanelContent() constructor {
 			
 			var butx = ui(16);
 			var index = jun.value_from == noone? jun.animator.is_anim : 2;
-			draw_sprite_ui_uniform(s_animate_clock, index, butx, lb_y, 1, c_white, 0.8);
+			draw_sprite_ui_uniform(THEME.animate_clock, index, butx, lb_y, 1,, 0.8);
 			if(pHOVER && point_in_circle(_m[0], _m[1], butx, lb_y, ui(10))) {
-				draw_sprite_ui_uniform(s_animate_clock, index, butx, lb_y, 1, c_white, 1);
+				draw_sprite_ui_uniform(THEME.animate_clock, index, butx, lb_y, 1,, 1);
 				TOOLTIP = "Toggle animation";
 					
 				if(mouse_check_button_pressed(mb_left)) {
@@ -127,9 +127,9 @@ function Panel_Inspector() : PanelContent() constructor {
 			
 			butx += ui(20);
 			index = jun.visible;
-			draw_sprite_ui_uniform(s_junc_visible, index, butx, lb_y, 1, c_white, 0.8);
+			draw_sprite_ui_uniform(THEME.junc_visible, index, butx, lb_y, 1,, 0.8);
 			if(pHOVER && point_in_circle(_m[0], _m[1], butx, lb_y, ui(10))) {
-				draw_sprite_ui_uniform(s_junc_visible, index, butx, lb_y, 1, c_white, 1);
+				draw_sprite_ui_uniform(THEME.junc_visible, index, butx, lb_y, 1,, 1);
 				TOOLTIP = "Visibility";
 					
 				if(mouse_check_button_pressed(mb_left)) {
@@ -137,7 +137,7 @@ function Panel_Inspector() : PanelContent() constructor {
 				}
 			}
 				
-			draw_set_text(f_p0, fa_left, fa_center, c_white);
+			draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text);
 			draw_text(ui(56), lb_y - ui(2), jun.name);
 			var lb_w = string_width(jun.name) + ui(32);
 				
@@ -145,7 +145,7 @@ function Panel_Inspector() : PanelContent() constructor {
 				if(lineBreak && jun.animator.is_anim) {
 					var bx = w - ui(64);
 					var by = lb_y;
-					if(buttonInstant(s_button_hide, bx - ui(12), by - ui(12), ui(24), ui(24), _m, pFOCUS, pHOVER, "", s_prop_keyframe, 2) == 2) {
+					if(buttonInstant(THEME.button_hide, bx - ui(12), by - ui(12), ui(24), ui(24), _m, pFOCUS, pHOVER, "", THEME.prop_keyframe, 2) == 2) {
 						for(var j = 0; j < ds_list_size(jun.animator.values); j++) {
 							var _key = jun.animator.values[| j];
 							if(_key.time > ANIMATOR.current_frame) {
@@ -157,15 +157,17 @@ function Panel_Inspector() : PanelContent() constructor {
 					}
 						
 					bx -= ui(26);
-					var cc = c_ui_blue_grey;
+					var cc = COLORS.panel_animation_keyframe_unselected;
+					var kfFocus = false;
 					for(var j = 0; j < ds_list_size(jun.animator.values); j++) {
 						if(jun.animator.values[| j].time == ANIMATOR.current_frame) {
-							cc = c_ui_orange;
+							cc = COLORS.panel_animation_keyframe_selected;
+							kfFocus = true;
 							break;
 						}
 					}
 						
-					if(buttonInstant(s_button_hide, bx - ui(12), by - ui(12), ui(24), ui(24), _m, pFOCUS, pHOVER, cc == c_ui_blue_grey? "Add keyframe" : "Remove keyframe", s_prop_keyframe, 1, cc) == 2) {
+					if(buttonInstant(THEME.button_hide, bx - ui(12), by - ui(12), ui(24), ui(24), _m, pFOCUS, pHOVER, kfFocus? "Remove keyframe" : "Add keyframe", THEME.prop_keyframe, 1, cc) == 2) {
 						var _add = false;
 						for(var j = 0; j < ds_list_size(jun.animator.values); j++) {
 							var _key = jun.animator.values[| j];
@@ -184,7 +186,7 @@ function Panel_Inspector() : PanelContent() constructor {
 					}
 						
 					bx -= ui(26);
-					if(buttonInstant(s_button_hide, bx - ui(12), by - ui(12), ui(24), ui(24), _m, pFOCUS, pHOVER, "", s_prop_keyframe, 0) == 2) {
+					if(buttonInstant(THEME.button_hide, bx - ui(12), by - ui(12), ui(24), ui(24), _m, pFOCUS, pHOVER, "", THEME.prop_keyframe, 0) == 2) {
 						var _t = -1;
 						for(var j = 0; j < ds_list_size(jun.animator.values); j++) {
 							var _key = jun.animator.values[| j];
@@ -197,15 +199,15 @@ function Panel_Inspector() : PanelContent() constructor {
 					}
 						
 					var lhf = lb_h / 2 - 4;
-					draw_set_color(c_ui_blue_dkgrey);
+					draw_set_color(COLORS.panel_inspector_key_separator);
 					draw_line(bx - ui(20), by - lhf, bx - ui(20), by + lhf);
 					
-					draw_set_color(c_ui_blue_dkgrey);
+					draw_set_color(COLORS.panel_inspector_key_separator);
 					draw_line(bx - ui(20), by - lhf, bx - ui(20), by + lhf);
-						
+					
 					bx -= ui(26 + 12);
-					if(buttonInstant(s_button_hide, bx - ui(12), by - ui(12), ui(24), ui(24), _m, pFOCUS, pHOVER, "Looping mode " + ON_END_NAME[jun.on_end], s_prop_on_end, jun.on_end) == 2)
-						jun.on_end = safe_mod(jun.on_end + 1, sprite_get_number(s_prop_on_end));
+					if(buttonInstant(THEME.button_hide, bx - ui(12), by - ui(12), ui(24), ui(24), _m, pFOCUS, pHOVER, "Looping mode " + ON_END_NAME[jun.on_end], THEME.prop_on_end, jun.on_end) == 2)
+						jun.on_end = safe_mod(jun.on_end + 1, sprite_get_number(THEME.prop_on_end));
 				}
 			#endregion
 			
@@ -292,11 +294,11 @@ function Panel_Inspector() : PanelContent() constructor {
 								else
 									txt = val;
 									
-								jun.editWidget.draw(editBoxX, editBoxY, editBoxW, editBoxH, _m,, pathExist? c_white : c_ui_red);
+								jun.editWidget.draw(editBoxX, editBoxY, editBoxW, editBoxH, _m,, pathExist? COLORS._main_text : COLORS._main_value_negative);
 								var icx = editBoxX + editBoxW - ui(16);
 								var icy = editBoxY + editBoxH / 2;
-								draw_sprite_ui_uniform(pathExist? s_button_path_icon : s_button_path_not_found_icon, 0, icx, icy, 1, c_white, 1);
-								draw_set_text(f_p0, fa_left, fa_center, c_white);
+								draw_sprite_ui_uniform(pathExist? THEME.button_path_icon : THEME.button_path_not_found_icon, 0, icx, icy, 1,, 1);
+								draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text);
 								draw_text_cut(editBoxX + ui(8), editBoxY + editBoxH / 2, txt, editBoxW - ui(60));
 									
 								if(!pathExist && point_in_rectangle(_m[0], _m[1], icx - ui(17), icy - ui(17), icx + ui(17), icy + ui(17)))
@@ -319,7 +321,7 @@ function Panel_Inspector() : PanelContent() constructor {
 						}
 				}
 			} else if(jun.display_type == VALUE_DISPLAY.label) {
-				draw_set_text(f_p1, fa_left, fa_top, c_ui_blue_ltgrey);
+				draw_set_text(f_p1, fa_left, fa_top, COLORS._main_text_sub);
 				draw_text(ui(32), _hsy, jun.display_data);
 				
 				widH = string_height(jun.display_data);
@@ -328,11 +330,11 @@ function Panel_Inspector() : PanelContent() constructor {
 			if(false) {
 				var __hsy = yy;
 				draw_set_alpha(0.5);
-				draw_set_color(c_ui_blue_grey);
+				draw_set_color(c_aqua);
 				draw_rectangle(ui(8), __hsy, contentPane.w - ui(16), __hsy + lb_h, 0);	__hsy += lb_h;
-				draw_set_color(c_ui_orange);
+				draw_set_color(c_red);
 				draw_rectangle(ui(8), __hsy, contentPane.w - ui(16), __hsy + widH, 0);	__hsy += widH;
-				draw_set_color(c_ui_lime);
+				draw_set_color(c_lime);
 				draw_rectangle(ui(8), __hsy, contentPane.w - ui(16), __hsy + padd, 0);
 				draw_set_alpha(1);
 			}
@@ -344,10 +346,10 @@ function Panel_Inspector() : PanelContent() constructor {
 			var _selH  = _selY1 - _selY;
 			
 			if(prop_selecting == jun)
-				draw_sprite_stretched(s_prop_selecting, 1, 4, _selY, contentPane.surface_w - ui(8), _selH);
+				draw_sprite_stretched(THEME.prop_selecting, 1, 4, _selY, contentPane.surface_w - ui(8), _selH);
 				
 			if(pHOVER && point_in_rectangle(_m[0], _m[1], 4, _selY, contentPane.surface_w - ui(4), _selY + _selH)) {
-				draw_sprite_stretched(s_prop_selecting, 0, 4, _selY, contentPane.surface_w - ui(8), _selH);
+				draw_sprite_stretched(THEME.prop_selecting, 0, 4, _selY, contentPane.surface_w - ui(8), _selH);
 				prop_hover = jun;
 					
 				if(pFOCUS) {
@@ -391,7 +393,6 @@ function Panel_Inspector() : PanelContent() constructor {
 	}
 	
 	function drawInspectingNode() {
-		draw_set_text(f_h5, fa_center, fa_top, c_white);
 		tb_node_name.font = f_h5;
 		tb_node_name.hide = true;
 		tb_node_name.active = pFOCUS;
@@ -403,7 +404,7 @@ function Panel_Inspector() : PanelContent() constructor {
 			var bx = w - ui(44);
 			var by = ui(12);
 			
-			if(buttonInstant(s_button_hide, bx, by, ui(32), ui(32), [mx, my], pFOCUS, pHOVER, "Run node", s_sequence_control, 1) == 2)
+			if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), [mx, my], pFOCUS, pHOVER, "Run node", THEME.sequence_control, 1) == 2)
 				inspecting.doUpdate();
 		}
 		
@@ -411,16 +412,16 @@ function Panel_Inspector() : PanelContent() constructor {
 			var bx = ui(8);
 			var by = ui(12);
 			
-			if(buttonInstant(s_button_hide, bx, by, ui(32), ui(32), [mx, my], pFOCUS, pHOVER, "This node cache output for performance.\nClick to clear all cached frames in this node.", s_cache) = 2)
+			if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), [mx, my], pFOCUS, pHOVER, "This node cache output for performance.\nClick to clear all cached frames in this node.", THEME.cache) = 2)
 				inspecting.clearCache();
 		}
 	}
 	
 	function drawContent(panel) {
-		draw_clear_alpha(c_ui_blue_black, 0);
+		draw_clear_alpha(COLORS.panel_bg_clear, 0);
 		lineBreak = w < PREF_MAP[? "inspector_line_break_width"];
 		
-		draw_sprite_stretched(s_ui_panel_bg, 1, ui(8), top_bar_h - ui(8), w - ui(16), h - top_bar_h);
+		draw_sprite_stretched(THEME.ui_panel_bg, 1, ui(8), top_bar_h - ui(8), w - ui(16), h - top_bar_h);
 		
 		if(inspecting)
 			drawInspectingNode();

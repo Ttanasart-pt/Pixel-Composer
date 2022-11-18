@@ -26,7 +26,7 @@ function Node_create_Image_gif_path(_x, _y, path) {
 
 function Node_Image_gif(_x, _y) : Node(_x, _y) constructor {
 	name			= "";
-	color			= c_ui_lime_light;
+	color			= COLORS.node_blend_input;
 	update_on_frame = true;
 	always_output   = true;
 	
@@ -131,7 +131,7 @@ function Node_Image_gif(_x, _y) : Node(_x, _y) constructor {
 	
 	function onDrawNode(xx, yy, _mx, _my, _s) {
 		if(loading) {
-			draw_sprite_ui(s_loading, 0, xx + w * _s / 2, yy + h * _s / 2, _s, _s, current_time / 2, c_ui_blue_grey, 1);
+			draw_sprite_ui(THEME.loading, 0, xx + w * _s / 2, yy + h * _s / 2, _s, _s, current_time / 2, COLORS._main_icon, 1);
 		}
 	}
 	

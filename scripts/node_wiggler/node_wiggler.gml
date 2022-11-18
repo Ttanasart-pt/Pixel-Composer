@@ -72,7 +72,7 @@ function Node_Wiggler(_x, _y) : Node_Value_Processor(_x, _y) constructor {
 		switch(disp) {
 			case 0 :
 				min_h = 0;
-				draw_set_text(f_h5, fa_center, fa_center, c_white);
+				draw_set_text(f_h5, fa_center, fa_center, COLORS._main_text);
 				var str	= string(random_value[time]);
 				var ss	= string_scale(str, (w - 16) * _s, (h - 16) * _s - 20);
 				draw_text_transformed(xx + w / 2 * _s, yy + 10 + h / 2 * _s, str, ss, ss, 0);
@@ -100,13 +100,13 @@ function Node_Wiggler(_x, _y) : Node_Value_Processor(_x, _y) constructor {
 				var hh = y1 - y0;
 				
 				var yc = (y0 + y1) / 2;
-				draw_set_color(c_ui_blue_grey);
+				draw_set_color(COLORS.node_wiggler_frame);
 				draw_line(x0, yc, x1, yc);
 				var _fx = x0 + (time / total_time * ww);
 				draw_line(_fx, y0, _fx, y1);
 				
 				var lw = ww / (array_length(random_value) - 1);
-				draw_set_color(c_white);
+				draw_set_color(COLORS.node_wiggler_line);
 				var ox, oy;
 				for( var i = 0; i < array_length(random_value); i++ ) {
 					var _x = x0 + i * lw;
@@ -118,7 +118,7 @@ function Node_Wiggler(_x, _y) : Node_Value_Processor(_x, _y) constructor {
 					oy = _y;
 				}
 				
-				draw_set_color(c_ui_blue_grey);
+				draw_set_color(COLORS.node_wiggler_frame);
 				draw_rectangle(x0, y0, x1, y1, true);
 				break;
 		}

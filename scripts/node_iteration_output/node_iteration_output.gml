@@ -7,7 +7,7 @@ function Node_create_Iterator_Output(_x, _y) {
 
 function Node_Iterator_Output(_x, _y, _group) : Node(_x, _y) constructor {
 	name  = "Output";
-	color = c_ui_yellow;
+	color = COLORS.node_blend_interface;
 	previewable = false;
 	auto_height = false;
 	

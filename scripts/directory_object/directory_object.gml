@@ -72,16 +72,16 @@ function DirectoryObject(name, path) constructor {
 		var hh = 0;
 		
 		if(path == parent.context.path)
-			draw_sprite_stretched_ext(s_ui_panel_bg, 0, _x + ui(28), _y, _w - ui(28), hg, c_ui_blue_ltgrey, 1); 
+			draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, _x + ui(28), _y, _w - ui(28), hg, COLORS.collection_path_current_bg, 1); 
 		
 		if(!ds_list_empty(subDir) && _hover && point_in_rectangle(_m[0], _m[1], _x, _y, ui(32), _y + hg - 1)) {
-			draw_sprite_stretched_ext(s_ui_panel_bg, 0, _x, _y, ui(32), hg, c_ui_blue_white, 1);
+			draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, _x, _y, ui(32), hg, COLORS.collection_path_current_bg, 0.75);
 			if(_focus && mouse_check_button_pressed(mb_left))
 				open = !open;
 		}
 		
 		if(_hover && point_in_rectangle(_m[0], _m[1], _x + ui(32), _y, _w, _y + hg - 1)) {
-			draw_sprite_stretched_ext(s_ui_panel_bg, 0, _x + ui(28), _y, _w - ui(28), hg, c_ui_blue_white, 1);
+			draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, _x + ui(28), _y, _w - ui(28), hg, COLORS.collection_path_current_bg, 0.75);
 			if(_focus && mouse_check_button_pressed(mb_left)) {
 				if(parent.context == self)
 					parent.setContext(_homedir);
@@ -90,11 +90,11 @@ function DirectoryObject(name, path) constructor {
 			}
 		}
 		
-		draw_set_text(f_p0, fa_left, fa_center, c_white);
+		draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text);
 		if(ds_list_empty(subDir)) {
-			draw_sprite_ui_uniform(s_folder_content_24, parent.context == self, _x + ui(16), _y + hg / 2 - 1, 1, c_ui_blue_dkgrey);
+			draw_sprite_ui_uniform(THEME.folder_content, parent.context == self, _x + ui(16), _y + hg / 2 - 1, 1, COLORS.collection_folder_empty);
 		} else {
-			draw_sprite_ui_uniform(s_folder_content_24, open, _x + ui(16), _y + hg / 2 - 1, 1, c_ui_blue_ltgrey);
+			draw_sprite_ui_uniform(THEME.folder_content, open, _x + ui(16), _y + hg / 2 - 1, 1, COLORS.collection_folder_nonempty);
 		}
 		draw_text(_x + ui(32), _y + hg / 2, name);
 		hh += hg;
@@ -104,13 +104,13 @@ function DirectoryObject(name, path) constructor {
 			var l_y = _y;
 			for(var i = 0; i < ds_list_size(subDir); i++) {
 				var _hg = subDir[| i].draw(parent, _x + ui(16), _y, _m, _w - ui(16), _hover, _focus, _homedir);
-				draw_set_color(c_ui_blue_dkgrey);
+				draw_set_color(COLORS.collection_tree_line);
 				draw_line(_x + ui(12), _y + hg / 2, _x + ui(16), _y + hg / 2);
 				
 				hh += _hg;
 				_y += _hg;
 			}
-			draw_set_color(c_ui_blue_dkgrey);
+			draw_set_color(COLORS.collection_tree_line);
 			draw_line(_x + ui(12), l_y, _x + ui(12), _y - hg / 2);
 		}
 		

@@ -1,6 +1,9 @@
 /// @description init
 #region data
-	depth = - 99 - instance_number(_p_dialog);
+	with(_p_dialog) {
+		other.depth = min(depth - 1, other.depth);
+	}
+	ds_list_add(DIALOGS, self);
 	
 	dialog_w = 320;
 	dialog_h = 320;
@@ -104,3 +107,20 @@
 	}
 #endregion
 
+#region action
+	function checkMouse() {
+		if(!DIALOG_CLICK) return;
+		
+		var x0 = dialog_x - dialog_resizable * 6;
+		var x1 = dialog_x + dialog_w + dialog_resizable * 6;
+		var y0 = dialog_y - dialog_resizable * 6;
+		var y1 = dialog_y + dialog_h + dialog_resizable * 6;
+	
+		if(!point_in_rectangle(mouse_mx, mouse_my, x0, y0, x1, y1)) {
+			if(destroy_on_click_out && mouse_check_button_pressed(mb_left)) {
+				instance_destroy(self);
+				DIALOG_CLICK = false;
+			}
+		}
+	}
+#endregion

@@ -36,7 +36,7 @@ function Node_Crop(_x, _y) : Node_Processor(_x, _y) constructor {
 		
 		draw_surface_ext_safe(_inSurf, _x - _splice[2] * _s, _y - _splice[1] * _s, _s, _s, 0, c_white, 0.1);
 		
-		draw_set_color(c_ui_orange);
+		draw_set_color(COLORS._main_accent);
 		draw_line(sp_r, -hh, sp_r, hh);
 		draw_line(sp_l, -hh, sp_l, hh);
 		draw_line(-ww, sp_t, ww, sp_t);

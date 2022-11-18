@@ -9,8 +9,8 @@ function Node_Display_Text(_x, _y) : Node(_x, _y) constructor {
 	w = 240;
 	h = 160;
 	min_h = 0;
-	bg_spr		= s_node_frame_bg;
-	bg_sel_spr	= s_node_frame_bg_active;
+	bg_spr		= THEME.node_frame_bg;
+	bg_sel_spr	= THEME.node_frame_bg_active;
 	
 	size_dragging = false;
 	size_dragging_w = w;
@@ -77,9 +77,9 @@ function Node_Display_Text(_x, _y) : Node(_x, _y) constructor {
 								_tw = string_width(_bch) * _s;
 								_th = string_height(_bch) * _s;
 									
-								draw_set_color(c_ui_blue_dkblack);
+								draw_set_color(COLORS.node_display_text_frame_outline);
 								draw_roundrect_ext(_tx - 4, _y - 4, _tx + _tw + 4, _y + _th + 4, 8, 8, 0);
-								draw_set_color(c_ui_blue_grey);
+								draw_set_color(COLORS.node_display_text_frame_fill);
 								draw_roundrect_ext(_tx - 4, _y - 4, _tx + _tw + 4, _y + _th + 4, 8, 8, 1);
 									
 								draw_set_color(_cc);

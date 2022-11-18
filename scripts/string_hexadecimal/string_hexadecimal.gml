@@ -40,3 +40,11 @@ function color_get_hex(color) {
 	var hex = number_to_hex(r) + number_to_hex(g) + number_to_hex(b);
 	return hex;
 }
+
+function color_from_rgb(str) {
+	var _r = string_hexadecimal(string_copy(str, 1, 2));
+	var _g = string_hexadecimal(string_copy(str, 3, 2));
+	var _b = string_hexadecimal(string_copy(str, 5, 2));
+		
+	return make_color_rgb(_r, _g, _b);
+}

@@ -1,5 +1,4 @@
 function histogramInit() {
-	his_colors = [ c_ui_red, c_ui_lime, c_ui_cyan, c_white ];
 	for( var i = 0; i < 4; i++ ) {
 		hist[i] = array_create(PREF_MAP[? "level_resolution"] + 1);
 		histShow[i] = true;
@@ -26,7 +25,7 @@ function histogramDraw(_x, _y, _w, _h) {
 			for( var j = 0; j < 4; j++ ) {
 				if(!histShow[j]) continue;
 				
-				draw_set_color(his_colors[j]);
+				draw_set_color(COLORS.histogram[j]);
 				draw_line(ox, oy[j], _lx, _lh[j]);
 			}
 		}

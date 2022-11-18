@@ -1,19 +1,6 @@
 /// @description init
 if !ready exit;
-
-#region destroy
-	var x0 = dialog_x - dialog_resizable * 6;
-	var x1 = dialog_x + dialog_w + dialog_resizable * 6;
-	var y0 = dialog_y - dialog_resizable * 6;
-	var y1 = dialog_y + dialog_h + dialog_resizable * 6;
-	
-	if(!point_in_rectangle(mouse_mx, mouse_my, x0, y0, x1, y1)) {
-		if(destroy_on_click_out && mouse_check_button_pressed(mb_left))
-			instance_destroy(self);
-	}
-	
-	doDrag();
-#endregion
+doDrag();
 
 #region resize
 	if(dialog_resizable) {

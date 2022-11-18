@@ -6,7 +6,7 @@ function Node_create_Area(_x, _y) {
 
 function Node_Area(_x, _y) : Node_Value_Processor(_x, _y) constructor {
 	name = "Area";
-	color = c_ui_cyan;
+	color = COLORS.node_blend_number;
 	previewable   = false;
 	
 	w = 96;
@@ -34,7 +34,7 @@ function Node_Area(_x, _y) : Node_Value_Processor(_x, _y) constructor {
 		var ex = _span[0] * _s;
 		var ey = _span[1] * _s;
 		
-		draw_set_color(c_ui_orange);
+		draw_set_color(COLORS._main_accent);
 		switch(_shape) {
 			case AREA_SHAPE.rectangle :
 				draw_rectangle(px - ex, py - ey, px + ex, py + ey, true);
@@ -55,6 +55,6 @@ function Node_Area(_x, _y) : Node_Value_Processor(_x, _y) constructor {
 	doUpdate();
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s) {
-		draw_sprite_ui_uniform(s_node_draw_area, 0, xx + w * _s / 2, yy + 10 + (h - 10) * _s / 2, _s, c_white);
+		draw_sprite_ui_uniform(THEME.node_draw_area, 0, xx + w * _s / 2, yy + 10 + (h - 10) * _s / 2, _s, c_white);
 	}
 }
