@@ -29,6 +29,6 @@ function LOAD_FOLDER(list, folder) {
 function LOAD_SAMPLE() {
 	ds_list_clear(SAMPLE_PROJECTS);
 	
-	LOAD_FOLDER(SAMPLE_PROJECTS, "Getting started");
-	LOAD_FOLDER(SAMPLE_PROJECTS, "Sample Projects");
+//	LOAD_FOLDER(SAMPLE_PROJECTS, "Getting started");
+//	LOAD_FOLDER(SAMPLE_PROJECTS, "Sample Projects");
 }

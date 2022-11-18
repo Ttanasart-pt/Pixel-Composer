@@ -296,9 +296,9 @@ function Panel_Collection(_panel) : PanelContent(_panel) constructor {
 			}
 		
 			if(buttonInstant(s_button_hide, bx, by, ui(24), ui(24), [mx, my], FOCUS == panel, HOVER == panel, "Open in file explorer", s_folder_24) == 2) {
-				var _contPath = context.path;
-				var _windir   = environment_get_variable("WINDIR") + "/explorer.exe";
-				execute_shell_simple(_windir, _contPath);
+				//var _contPath = context.path;
+				//var _windir   = environment_get_variable("WINDIR") + "/explorer.exe";
+				//execute_shell_simple(_windir, _contPath);
 			}
 			bx -= ui(32);
 		

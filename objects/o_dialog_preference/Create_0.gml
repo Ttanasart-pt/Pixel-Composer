@@ -53,7 +53,6 @@ event_inherited();
 				
 			PREF_MAP[? "display_scaling"] = PREF_MAP[? "_display_scaling"];
 			setPanel();
-			loadFonts();
 			
 			time_source_start(time_source_create(time_source_global, 1, time_source_units_frames, onResize));
 		})

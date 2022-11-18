@@ -1,7 +1,8 @@
+globalvar COLLECTIONS;
+
 function __init_collection() {
 	log_message("COLLECTION", "init");
 	
-	globalvar COLLECTIONS;
 	COLLECTIONS = -1;
 	
 	var root = DIRECTORY + "Collections";

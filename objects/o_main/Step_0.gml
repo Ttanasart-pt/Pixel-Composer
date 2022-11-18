@@ -89,42 +89,46 @@
 #endregion
 
 #region file drop
-	file_dnd_set_files(file_dnd_pattern, file_dnd_allowfiles, file_dnd_allowdirs, file_dnd_allowmulti);
-	file_dnd_filelist = file_dnd_get_files();
+	if(use_file_drop) {
+		file_dnd_set_files(file_dnd_pattern, file_dnd_allowfiles, file_dnd_allowdirs, file_dnd_allowmulti);
+		file_dnd_filelist = file_dnd_get_files();
 	
-	file_dnd_set_enabled(true);
+		file_dnd_set_enabled(true);
 	
-	if(file_dnd_filelist != "" && file_dnd_filelist != 0) {
-		show_debug_message(file_dnd_filelist);
-		file_dropping = file_dnd_filelist;
-		if(string_pos("\n", file_dropping) == 1) 
-			file_dropping = string_replace(file_dropping, "\n", "");
+		if(file_dnd_filelist != "" && file_dnd_filelist != 0) {
+			show_debug_message(file_dnd_filelist);
+			file_dropping = file_dnd_filelist;
+			if(string_pos("\n", file_dropping) == 1) 
+				file_dropping = string_replace(file_dropping, "\n", "");
 		
-		alarm[3] = 2;
+			alarm[3] = 2;
 		
-		file_dnd_set_enabled(false);
-		file_dnd_filelist = "";
+			file_dnd_set_enabled(false);
+			file_dnd_filelist = "";
+		}
 	}
 #endregion
 
 #region window
-	if (window_command_check(window_command_maximize)) {
-		window_command_run(window_command_maximize);
-	    PREF_MAP[? "window_maximize"] = !PREF_MAP[? "window_maximize"];
-	}
-	
-	if (window_command_check(window_command_close)) {
-		if(MODIFIED && !READONLY) {
-			dialogCall(o_dialog_exit);
-		} else {
-			PREF_SAVE();
-			game_end();
+	if(window_hook) {
+		if (window_command_check(window_command_maximize)) {
+			window_command_run(window_command_maximize);
+		    PREF_MAP[? "window_maximize"] = !PREF_MAP[? "window_maximize"];
 		}
-	}
 	
-	if(_modified != MODIFIED) {
-		_modified = MODIFIED;
-		window_set_caption(CURRENT_PATH + (MODIFIED? "*" : "") + " - Pixel Composer");
+		if (window_command_check(window_command_close)) {
+			if(MODIFIED && !READONLY) {
+				dialogCall(o_dialog_exit);
+			} else {
+				PREF_SAVE();
+				game_end();
+			}
+		}
+	
+		if(_modified != MODIFIED) {
+			_modified = MODIFIED;
+			window_set_caption(CURRENT_PATH + (MODIFIED? "*" : "") + " - Pixel Composer");
+		}
 	}
 #endregion
 

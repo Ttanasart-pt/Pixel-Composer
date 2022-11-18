@@ -51,12 +51,12 @@
 				
 				PANEL_GRAPH     = new Panel_Graph(split_prev[1]);
 				
-				if(PREF_MAP[? "panel_collection"]) {
-					var pane = PANEL_GRAPH.panel.split_h(ui(460));
-					if(pane == noone) break;
-					pane[1].set(PANEL_GRAPH);
-					PANEL_COLLECTION = new Panel_Collection(pane[0]);
-				}
+				//if(PREF_MAP[? "panel_collection"]) {
+				//	var pane = PANEL_GRAPH.panel.split_h(ui(460));
+				//	if(pane == noone) break;
+				//	pane[1].set(PANEL_GRAPH);
+				//	PANEL_COLLECTION = new Panel_Collection(pane[0]);
+				//}
 				break;
 			case 1 :
 				var split_anim	= split_ins[0].split_v(ui(-300));
@@ -67,12 +67,12 @@
 				
 				PANEL_GRAPH     = new Panel_Graph(split_prev[1]);
 				
-				if(PREF_MAP[? "panel_collection"]) {
-					var pane = PANEL_ANIMATION.panel.split_h(ui(500));
-					if(pane == noone) break;
-					pane[1].set(PANEL_ANIMATION);
-					PANEL_COLLECTION = new Panel_Collection(pane[0]);
-				}
+				//if(PREF_MAP[? "panel_collection"]) {
+				//	var pane = PANEL_ANIMATION.panel.split_h(ui(500));
+				//	if(pane == noone) break;
+				//	pane[1].set(PANEL_ANIMATION);
+				//	PANEL_COLLECTION = new Panel_Collection(pane[0]);
+				//}
 				break;
 		}
 		

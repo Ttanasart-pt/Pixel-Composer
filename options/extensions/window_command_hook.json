@@ -1,8 +1,5 @@
 {
-  "extensionId": {
-    "name": "window_command_hook",
-    "path": "extensions/window_command_hook/window_command_hook.yy"
-  },
+  "extensionId": null,
   "resourceVersion": "1.0",
   "resourceType": "GMExtensionConfigSet",
   "configurables": null

@@ -1,7 +1,5 @@
 /// @description init
-#region window
-	//if(keyboard_check_pressed(vk_f12)) DEBUG = !DEBUG;
-	
+#region window	
 	if(_cursor != CURSOR) {
 		window_set_cursor(CURSOR);
 		_cursor = CURSOR;

@@ -34,7 +34,7 @@
 	_cursor	= CURSOR;
 	dc_check = 0;
 	
-	display_set_timing_method(tm_sleep);
+	//display_set_timing_method(tm_sleep);
 	
 	addHotkey("", "New file", "N",	MOD_KEY.ctrl, NEW);
 	addHotkey("", "Save", "S",		MOD_KEY.ctrl, SAVE);
@@ -59,14 +59,18 @@
 #endregion
 
 #region file drop
-	file_dnd_set_hwnd(window_handle());
-	file_dnd_set_enabled(true);
-	file_dnd_filelist   = "";
-	file_dropping		= "";
-	file_dnd_pattern    = "*.*";
-	file_dnd_allowfiles = true;
-	file_dnd_allowdirs  = true;
-	file_dnd_allowmulti = true;
+	use_file_drop = false;
+	function setFileDrop() {
+		use_file_drop = true;
+		file_dnd_set_hwnd(window_handle());
+		file_dnd_set_enabled(true);
+		file_dnd_filelist   = "";
+		file_dropping		= "";
+		file_dnd_pattern    = "*.*";
+		file_dnd_allowfiles = true;
+		file_dnd_allowdirs  = true;
+		file_dnd_allowmulti = true;
+	}
 	
 	function load_file_path(path, _new = false) {
 		if(string_pos("\n", path) == 1) path = string_replace(path, "\n", "");
@@ -108,17 +112,21 @@
 #region version
 	version_check = -1;
 	version_latest = 0;
-	if(os_is_network_connected()) {
-		var version = "https://gist.githubusercontent.com/Ttanasart-pt/d9eefbda84a78863c122b8b155bc0cda/raw/version.txt";
-		version_check = http_get(version);
-	}
+	//if(os_is_network_connected()) {
+	//	var version = "https://gist.githubusercontent.com/Ttanasart-pt/d9eefbda84a78863c122b8b155bc0cda/raw/version.txt";
+	//	version_check = http_get(version);
+	//}
 #endregion
 
 #region parameter
 	file_open_parameter = "";
+	window_hook = false;
 	
-	window_command_hook(window_command_maximize);
-	window_command_hook(window_command_close);
+	function setWindowHook() {
+		window_hook = true;
+		window_command_hook(window_command_maximize);
+		window_command_hook(window_command_close);
+	}
 	
 	_modified = false;
 #endregion

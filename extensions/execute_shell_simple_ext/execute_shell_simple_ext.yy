@@ -25,18 +25,18 @@
             1,
             1,
             2,
-          ],},
+          ],"documentation":"",},
       ],"constants":[],"ProxyFiles":[
         {"resourceType":"GMProxyFile","resourceVersion":"1.0","name":"execute_shell_simple_ext_x64.dll","TargetMask":6,},
-      ],"copyToTargets":9223372036854775807,"order":[
+      ],"copyToTargets":9223372036854775807,"usesRunnerInterface":false,"order":[
         {"name":"execute_shell_simple_raw","path":"extensions/execute_shell_simple_ext/execute_shell_simple_ext.yy",},
       ],},
     {"resourceType":"GMExtensionFile","resourceVersion":"1.0","name":"","filename":"execute_shell_simple_ext.gml","origname":"extensions\\gml.gml","init":"","final":"","kind":2,"uncompress":false,"functions":[
-        {"resourceType":"GMExtensionFunction","resourceVersion":"1.0","name":"execute_shell_simple","externalName":"execute_shell_simple","kind":2,"help":"execute_shell_simple(path, args = \"\", action = \"open\", showCmd = 5/*SW_OPEN*/)","hidden":false,"returnType":2,"argCount":-1,"args":[],},
-      ],"constants":[],"ProxyFiles":[],"copyToTargets":9223372036854775807,"order":[
+        {"resourceType":"GMExtensionFunction","resourceVersion":"1.0","name":"execute_shell_simple","externalName":"execute_shell_simple","kind":2,"help":"execute_shell_simple(path, args = \"\", action = \"open\", showCmd = 5/*SW_OPEN*/)","hidden":false,"returnType":2,"argCount":-1,"args":[],"documentation":"",},
+      ],"constants":[],"ProxyFiles":[],"copyToTargets":9223372036854775807,"usesRunnerInterface":false,"order":[
         {"name":"execute_shell_simple","path":"extensions/execute_shell_simple_ext/execute_shell_simple_ext.yy",},
       ],},
-    {"resourceType":"GMExtensionFile","resourceVersion":"1.0","name":"","filename":"autogen.gml","origname":"extensions\\autogen.gml","init":"","final":"","kind":2,"uncompress":false,"functions":[],"constants":[],"ProxyFiles":[],"copyToTargets":-1,"order":[],},
+    {"resourceType":"GMExtensionFile","resourceVersion":"1.0","name":"","filename":"autogen.gml","origname":"extensions\\autogen.gml","init":"","final":"","kind":2,"uncompress":false,"functions":[],"constants":[],"ProxyFiles":[],"copyToTargets":-1,"usesRunnerInterface":false,"order":[],},
   ],
   "classname": "",
   "tvosclassname": "",
