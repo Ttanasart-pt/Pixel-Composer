@@ -404,16 +404,16 @@
         "slice": null
     },
     "prop_selecting": {
-        "path": "./inspector/s_prop_selecting_strip2.png",
-        "subimages": 2,
+        "path": "./inspector/s_prop_selecting.png",
+        "subimages": 1,
         "xorigin": 0,
         "yorigin": 0,
         "slice": {
             "enabled": true,
-            "left": 11,
-            "right": 11,
-            "top": 11,
-            "bottom": 11
+            "left": 23,
+            "right": 23,
+            "top": 23,
+            "bottom": 23
         }
     },
     "rotator_bg": {
@@ -520,8 +520,8 @@
         }
     },
     "node_active": {
-        "path": "./node/s_node_active_strip2.png",
-        "subimages": 2,
+        "path": "./node/s_node_active.png",
+        "subimages": 1,
         "xorigin": 0,
         "yorigin": 0,
         "slice": {
@@ -573,19 +573,6 @@
     },
     "node_frame_bg": {
         "path": "./node/s_node_frame_bg.png",
-        "subimages": 1,
-        "xorigin": 0,
-        "yorigin": 0,
-        "slice": {
-            "enabled": true,
-            "left": 7,
-            "right": 7,
-            "top": 7,
-            "bottom": 7
-        }
-    },
-    "node_frame_bg_active": {
-        "path": "./node/s_node_frame_active.png",
         "subimages": 1,
         "xorigin": 0,
         "yorigin": 0,
@@ -762,10 +749,10 @@
         "yorigin": 0,
         "slice": {
             "enabled": true,
-            "left": 6,
-            "right": 6,
-            "top": 6,
-            "bottom": 6
+            "left": 5,
+            "right": 5,
+            "top": 5,
+            "bottom": 5
         }
     },
     "toolbar_shadow": {
@@ -821,10 +808,10 @@
         "yorigin": 0,
         "slice": {
             "enabled": true,
-            "left": 2,
-            "right": 2,
-            "top": 2,
-            "bottom": 2
+            "left": 1,
+            "right": 1,
+            "top": 1,
+            "bottom": 1
         }
     },
     "cursor_path_add": {

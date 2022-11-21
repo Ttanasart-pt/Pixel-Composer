@@ -70,6 +70,15 @@ event_inherited();
 	]);
 	
 	ds_list_add(pref_global, [
+		"UI frame rate",
+		"ui_framerate",
+		new textBox(TEXTBOX_INPUT.number, function(str) { 
+			PREF_MAP[? "ui_framerate"] = max(15, round(real(str)));
+			PREF_SAVE();
+		})
+	]);
+	
+	ds_list_add(pref_global, [
 		"Default surface size",
 		"default_surface_side",
 		new textBox(TEXTBOX_INPUT.number, function(str) { 

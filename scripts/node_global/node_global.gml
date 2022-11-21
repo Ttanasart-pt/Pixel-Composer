@@ -9,7 +9,7 @@ function Node_Global(_x, _y) constructor {
 	outputs = ds_list_create();
 	input_display_list = -1;
 	
-	inputs[| 0] = nodeValue(0, "Default Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, def_surf_size2, VALUE_TAG.dimension_2d );
+	inputs[| 0] = nodeValue(0, "Default Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, def_surf_size2 );
 	inputs[| 0].setDisplay(VALUE_DISPLAY.vector);
 	
 	static serialize = function() {

@@ -10,7 +10,6 @@ function Node_Display_Text(_x, _y) : Node(_x, _y) constructor {
 	h = 160;
 	min_h = 0;
 	bg_spr		= THEME.node_frame_bg;
-	bg_sel_spr	= THEME.node_frame_bg_active;
 	
 	size_dragging = false;
 	size_dragging_w = w;
@@ -258,7 +257,7 @@ function Node_Display_Text(_x, _y) : Node(_x, _y) constructor {
 		var yy = y * _s + _y;
 		
 		if(active_draw_index > -1) {
-			draw_sprite_stretched(bg_sel_spr, active_draw_index, xx, yy, w * _s, h * _s);
+			draw_sprite_stretched_ext(bg_sel_spr, 0, xx, yy, w * _s, h * _s, COLORS._main_accent, 1);
 			active_draw_index = -1;
 		}
 		

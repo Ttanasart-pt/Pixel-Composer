@@ -435,7 +435,7 @@ function Node(_x, _y) constructor {
 		onDrawNode(xx, yy, _mx, _my, _s);
 
 		if(active_draw_index > -1) {
-			draw_sprite_stretched(bg_sel_spr, active_draw_index, xx, yy, w * _s, h * _s);
+			draw_sprite_stretched_ext(bg_sel_spr, 0, xx, yy, w * _s, h * _s, active_draw_index > 1? COLORS.node_border_file_drop : COLORS._main_accent, 1);
 			active_draw_index = -1;
 		}
 		

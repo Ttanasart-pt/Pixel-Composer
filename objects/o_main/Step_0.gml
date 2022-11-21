@@ -28,7 +28,7 @@
 	
 	ANIMATOR.frame_progress = false;
 	var _c = ANIMATOR.current_frame;
-	ANIMATOR.current_frame = floor(ANIMATOR.real_frame);
+	ANIMATOR.current_frame = round(ANIMATOR.real_frame);
 	
 	if(_c != ANIMATOR.current_frame) {
 		ANIMATOR.frame_progress = true;

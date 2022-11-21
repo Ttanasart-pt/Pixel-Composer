@@ -67,17 +67,17 @@ function scrollPane(_w, _h, ondraw) constructor {
 		var scr_w, scr_h, bar_w, bar_h, bar_x, bar_y;
 		
 		if(is_vert) {
-			scr_w	= ui(4);
+			scr_w	= ui(sprite_get_width(THEME.ui_scrollbar));
 			scr_h	= scr_s;
-			bar_w	= ui(4);
+			bar_w	= ui(sprite_get_width(THEME.ui_scrollbar));
 			bar_h   = scr_scale_s;
 			bar_x	= scr_x;
 			bar_y	= scr_y + scr_prog_s;
 		} else {
 			scr_w	= scr_s;
-			scr_h	= ui(4);
+			scr_h	= ui(sprite_get_width(THEME.ui_scrollbar));
 			bar_w	= scr_scale_s;
-			bar_h   = ui(4);
+			bar_h   = ui(sprite_get_width(THEME.ui_scrollbar));
 			bar_x	= scr_x + scr_prog_s;
 			bar_y	= scr_y;
 		}

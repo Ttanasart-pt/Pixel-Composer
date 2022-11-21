@@ -45,7 +45,15 @@ event_inherited();
 			
 			draw_sprite_stretched_ext(THEME.group_label, 0, 0, yy + ui(2), ui(48), _h - ui(4), noti.color, 1);
 			
-			var ic = noti.icon? noti.icon : THEME.noti_icon_log;
+			var ic = noti.icon;
+			if(noti.icon == noone) {
+				switch(noti.type) {
+					case NOTI_TYPE.log :	 ic = THEME.noti_icon_log; break;	
+					case NOTI_TYPE.warning : ic = THEME.noti_icon_warning; break;	
+					case NOTI_TYPE.error :	 ic = THEME.noti_icon_error; break;	
+				}
+			}
+			
 			draw_sprite_ui(ic, 1, ui(24), yy + _h / 2);
 			
 			var tx = ui(48) + timeW + ui(12);
@@ -57,7 +65,7 @@ event_inherited();
 			draw_text_ext(tx + ui(4), yy + _h / 2, noti.txt, -1, txw);
 			
 			if(noti.onClick != noone && point_in_rectangle(_m[0], _m[1], 0, yy, _w, yy + _h - ui(4))) {
-				draw_sprite_stretched_ext(THEME.node_active, 0, 0, yy + ui(2), _w, _h - ui(4), c_white, 1);
+				draw_sprite_stretched_ext(THEME.node_active, 0, 0, yy + ui(2), _w, _h - ui(4), COLORS._main_accent, 1);
 				
 				if(mouse_check_button_pressed(mb_left))
 					noti.onClick();

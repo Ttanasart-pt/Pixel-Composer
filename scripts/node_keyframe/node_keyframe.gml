@@ -156,7 +156,7 @@ function valueAnimator(_val, _prop) constructor {
 		if(!ds_list_exist(values, _key)) return 0;
 		MODIFIED = true;
 		
-		_time = clamp(_time, 0, ANIMATOR.frames_total);
+		_time = clamp(_time, 0, ANIMATOR.frames_total - 1);
 		_key.time = _time;
 		ds_list_remove(values, _key);
 		

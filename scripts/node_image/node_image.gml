@@ -108,28 +108,28 @@ function Node_Image(_x, _y) : Node(_x, _y) constructor {
 		BLEND_NORMAL
 		surface_reset_target();
 		
-		if(first_update) {
-			if(string_pos("strip", name) > 0) {
-				var sep_pos = string_pos("strip", name) + 5;
-				var sep     = string_copy(name, sep_pos, string_length(name) - sep_pos + 1);
-				var amo		= toNumber(sep);
+		if(!first_update) return;
+		first_update = false;
+		
+		if(string_pos("strip", name) == 0) return;
+		
+		var sep_pos = string_pos("strip", name) + 5;
+		var sep     = string_copy(name, sep_pos, string_length(name) - sep_pos + 1);
+		var amo		= toNumber(sep);
 			
-				if(amo) {
-					var ww = sprite_get_width(spr) / amo;
-					var hh = sprite_get_height(spr);
+		if(amo) {
+			var ww = sprite_get_width(spr) / amo;
+			var hh = sprite_get_height(spr);
 					
-					var _splice = nodeBuild("Splice spritesheet", x + w + 64, y);
-					_splice.inputs[| 0].setFrom(outputs[| 0], false);
-					_splice.inputs[| 1].setValue([ww, hh]);
-					_splice.inputs[| 2].setValue(amo);
-					_splice.inputs[| 3].setValue(amo);
+			var _splice = nodeBuild("Splice spritesheet", x + w + 64, y);
+			_splice.inputs[| 0].setFrom(outputs[| 0], false);
+			_splice.inputs[| 1].setValue([ww, hh]);
+			_splice.inputs[| 2].setValue(amo);
+			_splice.inputs[| 3].setValue(amo);
 					
-					ds_list_add(PANEL_GRAPH.nodes_select_list, self);
-					ds_list_add(PANEL_GRAPH.nodes_select_list, _splice);
-				}
-			}	
-			first_update = false;
-		}
+			ds_list_add(PANEL_GRAPH.nodes_select_list, self);
+			ds_list_add(PANEL_GRAPH.nodes_select_list, _splice);
+		}	
 	}
 	doUpdate();
 }

@@ -44,5 +44,7 @@ function vectorRangeBox(_size, _type, _onModify) constructor {
 		}
 		hover  = false;
 		active = false;
+		
+		return TEXTBOX_HEIGHT * 2 + ui(4);
 	}
 }

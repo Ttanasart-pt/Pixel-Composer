@@ -20,7 +20,7 @@ function Node_Gradient(_x, _y) : Node(_x, _y) constructor {
 	uniform_radius = shader_get_uniform(sh_gradient, "radius");
 	uniform_radius_shf = shader_get_uniform(sh_gradient, "shift");
 	
-	inputs[| 0] = nodeValue(0, "Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, def_surf_size2, VALUE_TAG.dimension_2d )
+	inputs[| 0] = nodeValue(0, "Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, def_surf_size2 )
 		.setDisplay(VALUE_DISPLAY.vector);
 	
 	inputs[| 1] = nodeValue(1, "Gradient", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white)

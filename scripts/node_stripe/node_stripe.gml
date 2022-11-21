@@ -20,7 +20,7 @@ function Node_Stripe(_x, _y) : Node(_x, _y) constructor {
 	uniform_blend = shader_get_uniform(sh_stripe, "blend");
 	uniform_rand = shader_get_uniform(sh_stripe, "rand");
 	
-	inputs[| 0] = nodeValue(0, "Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, def_surf_size2, VALUE_TAG.dimension_2d )
+	inputs[| 0] = nodeValue(0, "Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, def_surf_size2 )
 		.setDisplay(VALUE_DISPLAY.vector);
 	
 	inputs[| 1] = nodeValue(1, "Amount", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)

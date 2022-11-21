@@ -74,7 +74,6 @@ enum PADDING {
 
 enum VALUE_TAG {
 	_default = 0,
-	dimension_2d = 1
 }
 
 function value_color(i) {
@@ -99,7 +98,7 @@ function value_bit(i) {
 }
 
 function value_type_directional(f, t) {
-	if((t.tag & VALUE_TAG.dimension_2d) && f.type == VALUE_TYPE.surface && (t.type == VALUE_TYPE.integer || t.type == VALUE_TYPE.float)) return true;
+	if(f.type == VALUE_TYPE.surface && (t.type == VALUE_TYPE.integer || t.type == VALUE_TYPE.float)) return true;
 	return false;
 }
 
@@ -170,7 +169,7 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 	on_end		= KEYFRAME_END.hold;
 	extra_data	= ds_list_create();
 	
-	visible = _connect == JUNCTION_CONNECT.output || _type == VALUE_TYPE.surface || _type == VALUE_TYPE.path || ( _tag & VALUE_TAG.dimension_2d );
+	visible = _connect == JUNCTION_CONNECT.output || _type == VALUE_TYPE.surface || _type == VALUE_TYPE.path;
 	show_in_inspector = true;
 	
 	display_type = VALUE_DISPLAY._default;
@@ -441,7 +440,7 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 		
 		var _base = animator.getValue();
 		
-		if((tag & VALUE_TAG.dimension_2d) && typ == VALUE_TYPE.surface) {
+		if(typ == VALUE_TYPE.surface && (type == VALUE_TYPE.integer || type == VALUE_TYPE.float)) {
 			if(is_array(val)) {
 				if(array_length(val) > 0 && is_surface(val[0])) {
 					var _v = array_create(array_length(val));

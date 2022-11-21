@@ -63,6 +63,7 @@
         "node_blend_canvas": ["white", "orange", 0.5],
         "node_path_overlay_control_line": "blue_grey",
         "node_wiggler_frame": "blue_grey",
+        "node_border_file_drop": "cyan",
 
         "scrollbar_hover": "blue_white",
         "scrollbar_idle": "blue_grey",
@@ -75,7 +76,7 @@
         "panel_animation_keyframe_unselected": "blue_ltgrey",
         "panel_animation_keyframe_hide": "blue_grey",
         "panel_animation_node_bg": "blue_grey",
-        "panel_animation_dope_bg_hover": ["blue_white", "blue_ltgrey", 0.5],
+        "panel_animation_dope_bg_hover": "blue_dkgrey",
         "panel_animation_dope_bg": "blue_ltgrey",
         "panel_animation_graph_bg": "blue_ltgrey",
         "panel_animation_graph_line": "blue_grey",

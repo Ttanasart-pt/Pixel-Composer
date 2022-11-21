@@ -28,7 +28,7 @@ event_inherited();
 			draw_sprite_stretched(THEME.ui_panel_bg, 1, 0, _y, ww, hg);
 			
 			if(sHOVER && point_in_rectangle(_m[0], _m[1], 0, _y, ww, _y + hg)) {
-				draw_sprite_stretched(THEME.node_active, 0, 0, _y, ww, hg);
+				draw_sprite_stretched_ext(THEME.node_active, 0, 0, _y, ww, hg, COLORS._main_accent, 1);
 				
 				if(sFOCUS && mouse_check_button_pressed(mb_left)) {
 					LOAD_PATH(_rec);
@@ -78,7 +78,7 @@ event_inherited();
 					
 					draw_sprite_stretched(THEME.node_bg, 0, _boxx, yy, grid_width, grid_heigh);
 					if(sHOVER && point_in_rectangle(_m[0], _m[1], _nx, yy, _nx + grid_width, yy + grid_heigh)) {
-						draw_sprite_stretched(THEME.node_active, 0, _boxx, yy, grid_width, grid_heigh);	
+						draw_sprite_stretched_ext(THEME.node_active, 0, _boxx, yy, grid_width, grid_heigh, COLORS._main_accent, 1);
 						if(sFOCUS && mouse_check_button_pressed(mb_left)) {
 							LOAD_PATH(_node.path, true);
 							instance_destroy();

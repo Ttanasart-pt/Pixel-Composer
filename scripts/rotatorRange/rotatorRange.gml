@@ -7,6 +7,7 @@ function rotatorRange(_onModify) constructor {
 	dragging = -1;
 	drag_sv  = 0;
 	drag_sa  = 0;
+	drag_sc  = 0;
 	
 	static draw = function(_x, _y, _data, _m) {
 		var knob_y = _y + ui(48);
@@ -69,6 +70,7 @@ function rotatorRange(_onModify) constructor {
 				
 				UNDO_HOLDING = true;
 			} else {
+				var _o = _data[dragging];
 				real_val   = round(delta + drag_sv);
 				val = keyboard_check(vk_control)? round(real_val / 15) * 15 : real_val;
 				
@@ -76,6 +78,12 @@ function rotatorRange(_onModify) constructor {
 				
 				if(_data[dragging] != val) {
 					onModify(dragging, val);
+					
+					if(keyboard_check(vk_alt)) {
+						var dt = val - _o;
+						onModify(!dragging, _data[!dragging] - dt);
+					}
+				
 					UNDO_HOLDING = true;
 				}
 				
@@ -98,6 +106,7 @@ function rotatorRange(_onModify) constructor {
 						dragging = i;
 						drag_sv  = _data[i];
 						drag_sa  = point_direction(_x, knob_y, _m[0], _m[1]);
+						drag_sc  = lerp_angle(_data[0], _data[1], 0.5);
 					}
 				}
 			}

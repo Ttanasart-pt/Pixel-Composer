@@ -15,7 +15,7 @@ function Node_Transform(_x, _y) : Node_Processor(_x, _y) constructor {
 	
 	inputs[| 0] = nodeValue(0, "Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
 	
-	inputs[| 1] = nodeValue(1, "Output dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [1, 1], VALUE_TAG.dimension_2d)
+	inputs[| 1] = nodeValue(1, "Output dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [1, 1])
 		.setDisplay(VALUE_DISPLAY.vector)
 		.setVisible(false);
 	

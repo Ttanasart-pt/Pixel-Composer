@@ -27,7 +27,7 @@ if !ready exit;
 		
 		draw_sprite_stretched(THEME.node_bg, 0, xx, yy, grid_size, grid_size);
 		if(point_in_rectangle(mouse_mx, mouse_my, xx, yy, xx + grid_width, yy + grid_size)) {
-			draw_sprite_stretched(THEME.node_active, 0, xx, yy, grid_size, grid_size);	
+			draw_sprite_stretched_ext(THEME.node_active, 0, xx, yy, grid_size, grid_size, COLORS._main_accent, 1);
 			if(mouse_check_button_pressed(mb_left)) {
 				var path_arr = paths_to_array(paths, dir_recursive, dir_filter);
 				switch(i) {

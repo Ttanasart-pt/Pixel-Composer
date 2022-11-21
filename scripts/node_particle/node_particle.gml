@@ -202,7 +202,7 @@ function Node_Particle(_x, _y) : Node(_x, _y) constructor {
 	inputs[| 0] = nodeValue(0, "Particle", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0)
 		.setDisplay(noone, "particles");
 		
-	inputs[| 1] = nodeValue(1, "Output dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, def_surf_size2, VALUE_TAG.dimension_2d)
+	inputs[| 1] = nodeValue(1, "Output dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, def_surf_size2)
 		.setDisplay(VALUE_DISPLAY.vector);
 	
 	inputs[| 2] = nodeValue(2, "Spawn delay", self,  JUNCTION_CONNECT.input, VALUE_TYPE.integer, 4);

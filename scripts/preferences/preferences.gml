@@ -6,6 +6,7 @@
 #endregion
 
 #region pref map
+	PREF_MAP[? "ui_framerate"] = 60;
 	PREF_MAP[? "part_max_amount"] = 256;
 	PREF_MAP[? "path_resolution"] = 32;
 	
@@ -249,6 +250,7 @@
 		
 		window_set_size(ww, hh);
 		window_set_position(display_get_width() / 2 - ww / 2, display_get_height() / 2 - hh / 2);
+		game_set_speed(PREF_MAP[? "ui_framerate"], gamespeed_fps);
 		
 		setPanel();
 		loadFonts();

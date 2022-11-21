@@ -3,7 +3,7 @@ event_inherited();
 
 #region data
 	dialog_w = ui(320);
-	dialog_h = ui(180);
+	dialog_h = ui(220);
 	
 	destroy_on_click_out = true;
 #endregion
@@ -20,4 +20,8 @@ event_inherited();
 	sl_opacity = new slider(0, 1, .05, function(str) {
 		PANEL_GRAPH.grid_opacity = clamp(real(str), 0, 1);	
 	})
+	
+	cl_color = buttonColor(function(color) {
+		PANEL_GRAPH.grid_color = color;
+	});
 #endregion

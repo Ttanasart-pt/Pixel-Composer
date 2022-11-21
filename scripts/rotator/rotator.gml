@@ -19,9 +19,6 @@ function rotator(_onModify) constructor {
 		tb_value.active = active;
 		tb_value.draw(_x + ui(64), knob_y - ui(17), ui(64), TEXTBOX_HEIGHT, _data, _m);
 		
-		draw_set_color(COLORS.widget_rotator_bg);
-		draw_rectangle(_x - ui(44), knob_y - ui(44), _x + ui(44), knob_y + ui(44), 0);
-		
 		draw_sprite_ui_uniform(THEME.rotator_bg, 0, _x, knob_y);
 		
 		var px = _x     + lengthdir_x(ui(36), _data);

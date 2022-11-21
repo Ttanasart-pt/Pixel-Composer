@@ -244,7 +244,7 @@ function Panel_Inspector() : PanelContent() constructor {
 										jun.editWidget.draw(editBoxX, editBoxY, editBoxW, editBoxH, jun.showValue(), _m);
 										break;
 									case VALUE_DISPLAY.vector_range :
-										jun.editWidget.draw(editBoxX, editBoxY, editBoxW, editBoxH, jun.showValue(), _m);
+										widH = jun.editWidget.draw(editBoxX, editBoxY, editBoxW, editBoxH, jun.showValue(), _m);
 										break;
 									case VALUE_DISPLAY.enum_scroll :
 										jun.editWidget.draw(editBoxX, editBoxY, editBoxW, editBoxH, jun.display_data[jun.showValue()], _m, ui(16) + x, top_bar_h + y);
@@ -345,11 +345,8 @@ function Panel_Inspector() : PanelContent() constructor {
 			var _selY1 = yy + lb_h + widH + ui(2);
 			var _selH  = _selY1 - _selY;
 			
-			if(prop_selecting == jun)
-				draw_sprite_stretched(THEME.prop_selecting, 1, 4, _selY, contentPane.surface_w - ui(8), _selH);
-				
 			if(pHOVER && point_in_rectangle(_m[0], _m[1], 4, _selY, contentPane.surface_w - ui(4), _selY + _selH)) {
-				draw_sprite_stretched(THEME.prop_selecting, 0, 4, _selY, contentPane.surface_w - ui(8), _selH);
+				draw_sprite_stretched_ext(THEME.prop_selecting, 0, 4, _selY, contentPane.surface_w - ui(8), _selH, COLORS._main_accent, 1);
 				prop_hover = jun;
 					
 				if(pFOCUS) {

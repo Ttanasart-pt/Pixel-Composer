@@ -9,7 +9,6 @@ function Node_Frame(_x, _y) : Node(_x, _y) constructor {
 	w = 240;
 	h = 160;
 	bg_spr		= THEME.node_frame_bg;
-	bg_sel_spr	= THEME.node_frame_bg_active;
 	
 	size_dragging = false;
 	size_dragging_w = w;
@@ -64,7 +63,7 @@ function Node_Frame(_x, _y) : Node(_x, _y) constructor {
 		drawNodeBase(xx, yy, _s);
 		
 		if(active_draw_index > -1) {
-			draw_sprite_stretched(bg_sel_spr, active_draw_index, x * _s + _x, y * _s + _y, w * _s, h * _s);
+			draw_sprite_stretched_ext(bg_sel_spr, 0, x * _s + _x, y * _s + _y, w * _s, h * _s, COLORS._main_accent, 1);
 			active_draw_index = -1;
 		}
 		

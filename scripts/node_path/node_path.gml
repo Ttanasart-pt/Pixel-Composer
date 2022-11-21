@@ -223,7 +223,7 @@ function Node_Path(_x, _y) : Node(_x, _y) constructor {
 				drag_point    = ds_list_size(inputs) - list_start;
 				createAnchor((_mx - _x) / _s, (_my - _y) / _s);
 				
-				drag_type     = 1;
+				drag_type     = -1;
 				drag_point_mx = _mx;
 				drag_point_my = _my;
 				drag_point_sx = (_mx - _x) / _s;

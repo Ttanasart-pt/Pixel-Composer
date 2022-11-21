@@ -33,4 +33,11 @@ if !ready exit;
 	draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text);
 	draw_text(dialog_x + ui(32), yy, "Grid opacity");
 	sl_opacity.draw(dialog_x + dialog_w - ui(24), yy, ww, TEXTBOX_HEIGHT, PANEL_GRAPH.grid_opacity, mouse_ui, ui(52), fa_right, fa_center);
+	
+	yy += ui(40);
+	cl_color.active = sFOCUS; 
+	cl_color.hover  = sHOVER;
+	draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text);
+	draw_text(dialog_x + ui(32), yy, "Grid Color");
+	cl_color.draw(dialog_x + dialog_w - ui(24) - ww, yy - TEXTBOX_HEIGHT / 2, ww, TEXTBOX_HEIGHT, PANEL_GRAPH.grid_color, mouse_ui);
 #endregion

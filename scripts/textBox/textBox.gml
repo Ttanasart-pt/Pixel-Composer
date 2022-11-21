@@ -64,15 +64,19 @@ function textBox(_input, _onModify) constructor {
 	
 	static editText = function() {
 		#region text editor
-			if(keyboard_check_released(ord("V")) && keyboard_check(vk_control))
-				_input_text = clipboard_get_text();
-			
-			if(keyboard_check(vk_control)) {
-				if(keyboard_check_pressed(ord("A"))) {
-					cursor_select	= 0;
-					cursor			= string_length(_input_text);
+			if(keyboard_check_pressed(ord("A")) && keyboard_check(vk_control)) {
+				cursor_select	= 0;
+				cursor			= string_length(_input_text);
+			} else if(keyboard_check(vk_control) && (keyboard_check_released(ord("C")) || keyboard_check_released(ord("X")))) {
+				if(cursor_select != -1) {
+					var minc = min(cursor, cursor_select);
+					var maxc = max(cursor, cursor_select);
+					clipboard_set_text(string_copy(_input_text, minc, maxc - minc));
 				}
 			} else {
+				if(keyboard_check_released(ord("V")) && keyboard_check(vk_control))
+					keyboard_string = clipboard_get_text();
+				
 				if(keyboard_check_pressed(vk_escape) || keyboard_check_pressed(vk_enter)) {
 				} else if(keyboard_check_pressed(vk_backspace)) {
 					if(cursor_select == -1) {
@@ -93,7 +97,7 @@ function textBox(_input, _onModify) constructor {
 					
 					cursor_select	= -1;
 					move_cursor(-1);
-				} else if(keyboard_check_pressed(vk_delete)) {
+				} else if(keyboard_check_pressed(vk_delete) || (keyboard_check_pressed(ord("X")) && keyboard_check(vk_control) && cursor_select != -1)) {
 					if(cursor_select == -1) {
 						var str_before	= string_copy(_input_text, 1, cursor);
 						var str_after	= string_copy(_input_text, cursor + 2, string_length(_input_text) - cursor - 1);

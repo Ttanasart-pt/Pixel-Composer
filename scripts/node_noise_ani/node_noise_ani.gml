@@ -12,7 +12,7 @@ function Node_Noise_Aniso(_x, _y) : Node(_x, _y) constructor {
 	uniform_sed = shader_get_uniform(shader, "seed");
 	uniform_pos = shader_get_uniform(shader, "position");
 	
-	inputs[| 0] = nodeValue(0, "Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, def_surf_size2, VALUE_TAG.dimension_2d )
+	inputs[| 0] = nodeValue(0, "Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, def_surf_size2 )
 		.setDisplay(VALUE_DISPLAY.vector);
 	
 	inputs[| 1] = nodeValue(1, "Amount", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 2, 16 ])

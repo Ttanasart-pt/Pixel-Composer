@@ -1,7 +1,11 @@
 /// @description main directory, parameter
 #region directory
 	globalvar DIRECTORY;
-	DIRECTORY = "C:\\Users\\" + environment_get_variable("USERNAME") + "\\AppData\\Local\\Pixels_Composer\\";
+	DIRECTORY = environment_get_variable("userprofile") + "\\AppData\\Local\\Pixels_Composer\\";
+	if(!directory_exists(DIRECTORY)) { 
+		log_message("DIRECTORY", "Default user directory not exist");
+		DIRECTORY = "";
+	}
 	log_clear();
 	log_newline();
 	log_message("SESSION", "Begin");
@@ -17,12 +21,12 @@
 		var path = parameter_string(1);
 		path = string_replace_all(path, "\n", "");
 		path = string_replace_all(path, "\"", "");
-	
+		
 		if(file_exists(path) && filename_ext(path) == ".pxc") {
 			file_open_parameter = path;
 			alarm[2] = 3;
-		
-			set_working_directory(DIRECTORY);
+			
+			directory_set_current_working(DIRECTORY);
 		}
 	}
 #endregion

@@ -6,6 +6,7 @@ function Panel_Graph() : PanelContent() constructor {
 	graph_s			= ui(scale[graph_s_index]);
 	graph_s_to		= graph_s;
 	graph_line_s	= 32;
+	grid_color      = COLORS.panel_graph_grid;
 	grid_opacity	= 0.5;
 	
 	function toOrigin() {
@@ -276,7 +277,7 @@ function Panel_Graph() : PanelContent() constructor {
 		var xx = -gr_ls, xs = safe_mod(gr_x, gr_ls);
 		var yy = -gr_ls, ys = safe_mod(gr_y, gr_ls);
 		
-		draw_set_color(COLORS.panel_graph_grid);
+		draw_set_color(grid_color);
 		draw_set_alpha(grid_opacity * (graph_s >= 1? 1 : 0.5));
 		while(xx < w + gr_ls) {
 			draw_line(xx + xs, 0, xx + xs, h);

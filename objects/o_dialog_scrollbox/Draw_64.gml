@@ -8,7 +8,7 @@
 		var _ly = dialog_y + i * hght;	
 					
 		if(point_in_rectangle(mouse_mx, mouse_my, dialog_x, _ly + 1, dialog_x + dialog_w, _ly + hght - 1)) {
-			draw_sprite_stretched_ext(THEME.textbox, 3, dialog_x, _ly, dialog_w, hght, COLORS._main_text, 1);
+			draw_sprite_stretched_ext(THEME.textbox, 3, dialog_x, _ly, dialog_w, hght, COLORS.dialog_menubox_highlight, 1);
 			
 			if(mouse_check_button_pressed(mb_left)) {
 				scrollbox.onModify(i);

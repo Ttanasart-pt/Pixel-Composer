@@ -83,7 +83,7 @@ function Panel_Collection() : PanelContent() constructor {
 						BLEND_NORMAL
 						
 						if(point_in_rectangle(_m[0], _m[1], _nx, yy, _nx + grid_width, yy + grid_size)) {
-							draw_sprite_stretched(THEME.node_active, 0, _boxx, yy, grid_size, grid_size);	
+							draw_sprite_stretched_ext(THEME.node_active, 0, _boxx, yy, grid_size, grid_size, COLORS._main_accent, 1);
 							if(mouse_check_button_pressed(mb_left))
 								file_dragging = _node;
 						
@@ -135,7 +135,7 @@ function Panel_Collection() : PanelContent() constructor {
 				}
 				
 				if(point_in_rectangle(_m[0], _m[1], 0, yy, list_width, yy + list_height - 1)) {
-					draw_sprite_stretched(THEME.node_active, 0, ui(4), yy, list_width - ui(8), list_height);
+					draw_sprite_stretched_ext(THEME.node_active, 0, ui(4), yy, list_width - ui(8), list_height, COLORS._main_accent, 1);
 					if(mouse_check_button_pressed(mb_left))
 						file_dragging = _node;
 						

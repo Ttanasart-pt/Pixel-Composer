@@ -63,7 +63,7 @@ function Node_Pin(_x, _y) : Node(_x, _y) constructor {
 		var yy = y * _s + _y;
 		
 		if(active_draw_index > -1) {
-			draw_sprite_ext(bg_sel_spr, 0, xx, yy, _s, _s, 0, c_white, 1);
+			draw_sprite_ext(bg_sel_spr, 0, xx, yy, _s, _s, 0, COLORS._main_accent, 1);
 			active_draw_index = -1;
 		}
 		
