@@ -59,14 +59,13 @@ function SET_PATH(path) {
 
 function SAVE() {
 	if(CURRENT_PATH == "" || READONLY)
-		SAVE_AS();
-	else
-		SAVE_AT(CURRENT_PATH);
+		return SAVE_AS();
+	return SAVE_AT(CURRENT_PATH);
 }
 
 function SAVE_AS() {
 	var path = get_save_filename(".pxc", "");
-	if(path == "") return;
+	if(path == "") return false;
 	
 	if(filename_ext(path) != ".pxc")
 		path += ".pxc";
@@ -75,6 +74,8 @@ function SAVE_AS() {
 		log_warning("SAVE", "Overrided file : " + path);
 	SAVE_AT(path);
 	SET_PATH(path);
+	
+	return true;
 }
 
 function SAVE_AT(path) {
@@ -88,6 +89,8 @@ function SAVE_AT(path) {
 	MODIFIED  = false;
 	
 	log_message("FILE", "save at " + path, THEME.noti_icon_file_save);
+	
+	return true;
 }
 
 function SAVE_COLLECTIONS(_list, _path, save_surface = true) {

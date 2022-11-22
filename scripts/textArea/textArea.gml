@@ -29,8 +29,15 @@ function textArea(_input, _onModify) constructor {
 	
 	click_block = 0;
 	
+	static deselect = function() {
+		apply();
+		TEXTBOX_ACTIVE = noone;
+		UNDO_HOLDING = false;
+	}
+	
 	static apply = function() {
 		if(onModify) onModify(_input_text);
+		UNDO_HOLDING = true;
 	}
 	
 	static move_cursor = function(delta) {
@@ -157,11 +164,9 @@ function textArea(_input, _onModify) constructor {
 		if(keyboard_check_pressed(vk_escape)) {
 			_input_text = _last_value;
 			cut_line();
-			apply();
-			TEXTBOX_ACTIVE = noone;
+			deselect();
 		} else if(keyboard_check_pressed(vk_enter)) {
-			apply();
-			TEXTBOX_ACTIVE = noone;
+			deselect();
 		}
 	}
 	
@@ -419,8 +424,7 @@ function textArea(_input, _onModify) constructor {
 			#endregion
 			
 			if(!point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + hh) && mouse_check_button_pressed(mb_left)) {
-				apply();
-				TEXTBOX_ACTIVE = noone;
+				deselect();
 			}
 		} else {
 			if(hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + hh)) {

@@ -141,9 +141,6 @@ function textBox(_input, _onModify) constructor {
 			keyboard_string = "";
 			keyboard_lastkey = -1;
 		#endregion
-		
-		if(auto_update && keyboard_check_pressed(vk_anykey))
-			apply();
 			
 		if(keyboard_check_pressed(vk_escape)) {
 			_input_text = _last_value;
@@ -152,6 +149,8 @@ function textBox(_input, _onModify) constructor {
 		} else if(keyboard_check_pressed(vk_enter)) {
 			apply();
 			TEXTBOX_ACTIVE = noone;
+		} else if(auto_update && keyboard_check_pressed(vk_anykey)) {
+			apply();
 		}
 	}
 	
@@ -278,8 +277,11 @@ function textBox(_input, _onModify) constructor {
 						break;
 				} 
 				
+				apply();
+				UNDO_HOLDING = true;
+					
 				if(mouse_check_button_released(mb_left)) {
-					apply();
+					UNDO_HOLDING = false;
 					TEXTBOX_ACTIVE = noone;
 				}
 			}
@@ -330,6 +332,7 @@ function textBox(_input, _onModify) constructor {
 								if(keyboard_check(vk_alt))	_input_text	= string(toNumber(ktxt) / 2);
 								else						_input_text	= string(toNumber(ktxt) * 2);
 							}
+							apply();
 						}
 					}
 				
@@ -338,8 +341,6 @@ function textBox(_input, _onModify) constructor {
 					else
 						draw_text(_x + ui(8), _y + hh / 2, "x2");
 					draw_set_alpha(1);
-					
-					apply();
 				}
 			#endregion
 			

@@ -411,7 +411,8 @@ function Panel_Preview() : PanelContent() constructor {
 					if(mouse_check_button_pressed(mb_left)) {
 						_node.preview_index = i;
 						_node.onValueUpdate(0);
-						do_fullView = true;
+						if(resetViewOnDoubleClick)
+							do_fullView = true;
 					}
 					draw_surface_ext_safe(prev, xx, yy, ss, ss, 0, c_white, 1);
 				} else {

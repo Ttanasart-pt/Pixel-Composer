@@ -43,8 +43,7 @@ draw_set_alpha(1);
 	bx0 -= bw + ui(12);
 	var b = buttonInstant(THEME.button, bx0, by0, bw, bh, mouse_ui, sFOCUS, sHOVER);
 	draw_text(bx0 + bw / 2, by0 + bh / 2, "Save");
-	if(b == 2) {
-		SAVE();
+	if(b == 2 && SAVE()) {
 		PREF_SAVE();
 		game_end();
 	}

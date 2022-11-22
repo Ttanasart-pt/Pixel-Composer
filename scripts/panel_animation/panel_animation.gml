@@ -338,9 +338,9 @@ function Panel_Animation() : PanelContent() constructor {
 					if(i >= array_length(inspecting.cached_output)) 
 						break;
 						
-					var x0 = (i + 1) * ui(timeline_scale) + timeline_shift;
-					var x1 = (i + 2) * ui(timeline_scale) + timeline_shift;
-								
+					var x0 = (i + 0) * ui(timeline_scale) + timeline_shift;
+					var x1 = (i + 1) * ui(timeline_scale) + timeline_shift;
+					
 					var sh = inspecting.cached_output[i];
 					draw_set_color(is_surface(sh)? c_lime : c_red);
 					draw_set_alpha(0.5);

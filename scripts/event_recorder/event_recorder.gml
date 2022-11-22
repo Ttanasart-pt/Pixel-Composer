@@ -129,31 +129,31 @@ function Action(_type, _object, _data) constructor {
 		var ss = "";
 		switch(type) {
 			case ACTION_TYPE.var_modify :
-				ss = "var mod: " + string(data[1]);
+				ss = "modify " + string(data[1]);
 				break;
 			case ACTION_TYPE.list_insert :
-				ss = "list insert: " + string(data[1]) + " in " + string(obj);
+				ss = "insert " + string(data[1]) + " to list " + string(obj);
 				break;
 			case ACTION_TYPE.list_modify :
-				ss = "list mod: " + string(data[1]) + " in " + string(obj);
+				ss = "modify " + string(data[1]) + " of list " + string(obj);
 				break;
 			case ACTION_TYPE.list_delete :
-				ss = "list del: " + string(data[1]) + " in " + string(obj);
+				ss = "delete " + string(data[1]) + " from list " + string(obj);
 				break;
 			case ACTION_TYPE.node_added :
-				ss = "node add: " + string(obj.name);
+				ss = "add " + string(obj.name) + " node";
 				break;
 			case ACTION_TYPE.node_delete :
-				ss = "node deleted: " + string(obj.name);
+				ss = "deleted " + string(obj.name) + " node";
 				break;
 			case ACTION_TYPE.junction_connect :
-				ss = "junction connect: " + string(obj.name);
+				ss = "connect " + string(obj.name) + " junction";
 				break;
 			case ACTION_TYPE.group_added :
-				ss = "group add: " + string(obj.name);
+				ss = "add " + string(obj.name) + " to group";
 				break;
 			case ACTION_TYPE.group_removed :
-				ss = "group remove: " + string(obj.name);
+				ss = "remove " + string(obj.name) + " from group";
 				break;
 		}
 		return ss;
@@ -165,16 +165,20 @@ function recordAction(_type, _object, _data = -1) {
 	if(UNDO_HOLDING)	return;
 	if(LOADING)			return;
 	
-	o_main.action_last_frame[array_length(o_main.action_last_frame)] = new Action(_type, _object, _data);
+	var act = new Action(_type, _object, _data);
+	array_push(o_main.action_last_frame, act);
+	
+	return act;
 }
 
 function UNDO() {
 	if(ds_stack_empty(UNDO_STACK)) return;
+	if(instance_exists(_p_dialog)) return;
 	
 	IS_UNDOING = true;
 	var actions = ds_stack_pop(UNDO_STACK);
 	for(var i = 0; i < array_length(actions); i++) {
-		//show_debug_message("UNDO " + actions[i].toString());
+		//print("UNDO " + actions[i].toString());
 		actions[i].undo();
 	}
 	IS_UNDOING = false;
@@ -189,7 +193,7 @@ function REDO() {
 	IS_UNDOING = true;
 	var actions = ds_stack_pop(REDO_STACK);
 	for(var i = 0; i < array_length(actions); i++) {
-		//show_debug_message("REDO " + actions[i].toString());
+		//print("REDO " + actions[i].toString());
 		actions[i].redo();
 	}
 	IS_UNDOING = false;

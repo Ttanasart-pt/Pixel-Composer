@@ -185,12 +185,13 @@ function valueAnimator(_val, _prop) constructor {
 		MODIFIED = true;
 		
 		if(!is_anim) {
-			if(_record) recordAction(ACTION_TYPE.var_modify, values[| 0], [ values[| 0].value, "value" ]);
-			if(values[| 0].value != _val) {
-				values[| 0].value = _val;
-				return true;
-			}
-			return false;
+			if(isEqual(values[| 0].value, _val)) 
+				return false;
+			
+			if(_record)
+				recordAction(ACTION_TYPE.var_modify, values[| 0], [ values[| 0].value, "value" ]);
+			values[| 0].value = _val;
+			return true;
 		}
 		
 		if(ds_list_size(values) == 0) {
@@ -204,7 +205,8 @@ function valueAnimator(_val, _prop) constructor {
 		for(var i = 0; i < ds_list_size(values); i++) {
 			var _key = values[| i];
 			if(_key.time == _time) {
-				if(_record) recordAction(ACTION_TYPE.var_modify, _key, [ _key.value, "value" ]);
+				if(_record) 
+					recordAction(ACTION_TYPE.var_modify, _key, [ _key.value, "value" ]);
 				if(_key.value != _val) {
 					_key.value = _val;
 					return true;

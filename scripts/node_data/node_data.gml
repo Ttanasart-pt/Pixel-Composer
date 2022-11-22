@@ -528,27 +528,25 @@ function Node(_x, _y) constructor {
 	static recoverCache = function() {
 		if(ANIMATOR.current_frame >= array_length(cached_output)) return false;
 		var _s = cached_output[ANIMATOR.current_frame];
-		if(is_surface(_s)) {
-			var _outSurf	= outputs[| 0].getValue();
-			if(is_surface(_outSurf)) 
-				surface_copy_size(_outSurf, _s);
-			else {
-				_outSurf = surface_clone(_s);
-				outputs[| 0].setValue(_outSurf);
-			}
-			
-			return true;
+		if(!is_surface(_s)) return false;
+		
+		var _outSurf	= outputs[| 0].getValue();
+		if(is_surface(_outSurf)) 
+			surface_copy_size(_outSurf, _s);
+		else {
+			_outSurf = surface_clone(_s);
+			outputs[| 0].setValue(_outSurf);
 		}
-		return false;
+			
+		return true;
 	}
 	static clearCache = function() {
 		if(array_length(cached_output) != ANIMATOR.frames_total + 1)
 			array_resize(cached_output, ANIMATOR.frames_total + 1);
 		for(var i = 0; i < array_length(cached_output); i++) {
 			var _s = cached_output[i];
-			if(is_surface(_s)) {
+			if(is_surface(_s))
 				surface_free(_s);
-			}
 			cached_output[i] = 0;
 		}
 	}

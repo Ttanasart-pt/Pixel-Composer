@@ -12,11 +12,14 @@
 			continue;
 		}
 		var _h = hght;
+		var label = menu[i][0];
+		var activated = string_char_at(label, 1) != "-";
+		if(!activated) label = string_copy(label, 2, string_length(label) - 1);
 		
 		if(is_array(menu[i][1]))
 			_h += hght;
 			
-		if(sHOVER && point_in_rectangle(mouse_mx, mouse_my, dialog_x, yy + 1, dialog_x + dialog_w, yy + _h - 1)) {
+		if(activated && sHOVER && point_in_rectangle(mouse_mx, mouse_my, dialog_x, yy + 1, dialog_x + dialog_w, yy + _h - 1)) {
 			draw_sprite_stretched_ext(THEME.textbox, 3, dialog_x, yy, dialog_w, _h, COLORS.dialog_menubox_highlight, 1);
 			
 			if(!is_array(menu[i][1]) && sFOCUS && mouse_check_button_released(mb_left)) {
@@ -30,7 +33,9 @@
 		
 		if(is_array(menu[i][1])) {
 			draw_set_text(f_p1, fa_center, fa_center, COLORS._main_text_sub);
-			draw_text(dialog_x + dialog_w / 2, yy + hght / 2, menu[i][0]);
+			draw_set_alpha(activated * 0.5 + 0.5);
+			draw_text(dialog_x + dialog_w / 2, yy + hght / 2, label);
+			draw_set_alpha(1);
 			
 			var amo = array_length(menu[i][1]);
 			var _w  = (amo - 1) / 2 * (hght + ui(4));
@@ -63,7 +68,9 @@
 			}
 		} else {
 			draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text);
-			draw_text(dialog_x + ui(16), yy + hght / 2, menu[i][0]);	
+			draw_set_alpha(activated * 0.5 + 0.5);
+			draw_text(dialog_x + ui(16), yy + hght / 2, label);
+			draw_set_alpha(1);
 		}
 		
 		if(array_length(menu[i]) > 2) {

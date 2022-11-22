@@ -1,34 +1,39 @@
 function draw_surface_safe(surface, _x, _y) {
-	if(is_surface(surface)) draw_surface(surface, _x, _y);
+	if(!is_surface(surface)) return;
+	draw_surface(surface, _x, _y);
 }
-function draw_surface_ext_safe(surface, _x, _y, _xs, _ys, _rot, _col, _alpha) {
-	if(is_surface(surface)) draw_surface_ext(surface, _x, _y, _xs, _ys, _rot, _col, _alpha);
+function draw_surface_ext_safe(surface, _x, _y, _xs = 1, _ys = 1, _rot = 0, _col = c_white, _alpha = 1) {
+	if(!is_surface(surface)) return;
+	draw_surface_ext(surface, _x, _y, _xs, _ys, _rot, _col, _alpha);
 }
-function draw_surface_tiled_ext_safe(surface, _x, _y, _xs, _ys, _col, _alpha) {
-	if(is_surface(surface)) draw_surface_tiled_ext(surface, _x, _y, _xs, _ys, _col, _alpha);
+function draw_surface_tiled_ext_safe(surface, _x, _y, _xs = 1, _ys = 1, _col = c_white, _alpha = 1) {
+	if(!is_surface(surface)) return;
+	draw_surface_tiled_ext(surface, _x, _y, _xs, _ys, _col, _alpha);
 }
-function draw_surface_part_ext_safe(surface, _l, _t, _w, _h, _x, _y, _xs, _ys, _rot, _col, _alpha) {
-	if(is_surface(surface)) draw_surface_part_ext(surface, _l, _t, _w, _h, _x, _y, _xs, _ys, _col, _alpha);
+function draw_surface_part_ext_safe(surface, _l, _t, _w, _h, _x, _y, _xs = 1, _ys = 1, _rot = 0, _col = c_white, _alpha = 1) {
+	if(!is_surface(surface)) return;
+	draw_surface_part_ext(surface, _l, _t, _w, _h, _x, _y, _xs, _ys, _col, _alpha);
 }
 
 function surface_size_to(surface, width, height) {
-	width = surface_valid(width);
-	height = surface_valid(height);
-	
 	if(!surface_exists(surface)) return false;
+	if(width == 1 && height == 1) return false;
+	
+	width = surface_valid_size(width);
+	height = surface_valid_size(height);
 	
 	var ww = surface_get_width(surface);	
 	var hh = surface_get_height(surface);	
 	
-	if(ww != width || hh != height) {
-		surface_resize(surface, width, height);
-		return true;
-	}
+	if(ww == width && hh == height) return false;
 	
-	return false;
+	surface_resize(surface, width, height);
+	return true;
 }
 
 function surface_clone(surface) {
+	if(!surface_exists(surface)) return surface_create(1, 1);
+	
 	var s = surface_create_valid(surface_get_width(surface), surface_get_height(surface));
 	surface_set_target(s);
 	draw_clear_alpha(0, 0);
@@ -39,6 +44,9 @@ function surface_clone(surface) {
 }
 
 function surface_copy_size(dest, source) {
+	if(!is_surface(dest)) return;
+	if(!is_surface(source)) return;
+	
 	surface_size_to(dest, surface_get_width(source), surface_get_height(source));
 	surface_set_target(dest);
 	draw_clear_alpha(0, 0);
@@ -46,13 +54,13 @@ function surface_copy_size(dest, source) {
 	surface_copy(dest, 0, 0, source);
 }
 
-function surface_valid(s) {
+function surface_valid_size(s) {
 	if(is_infinity(s)) return 1;
 	return max(1, s);	
 }
 
 function surface_create_valid(w, h) {
-	return surface_create(surface_valid(w), surface_valid(h));
+	return surface_create(surface_valid_size(w), surface_valid_size(h));
 }
 
 function is_surface(s) {

@@ -2,16 +2,23 @@
 #region directory
 	globalvar DIRECTORY;
 	DIRECTORY = environment_get_variable("userprofile") + "\\AppData\\Local\\Pixels_Composer\\";
-	if(!directory_exists(DIRECTORY)) { 
-		log_message("DIRECTORY", "Default user directory not exist");
-		DIRECTORY = "";
-	}
+	if(!directory_exists(DIRECTORY))
+		directory_create(DIRECTORY);
+		
 	log_clear();
 	log_newline();
 	log_message("SESSION", "Begin");
 	log_message("DIRECTORY", DIRECTORY);
+	__init_theme();
 	__init_collection();
 	__initAssets();
+	
+	PREF_LOAD();
+	loadFonts();
+	loadGraphic(PREF_MAP[? "theme"]);
+	loadColor(PREF_MAP[? "theme"]);
+	
+	setPanel();
 #endregion
 
 #region parameter
@@ -30,5 +37,3 @@
 		}
 	}
 #endregion
-
-PREF_LOAD();

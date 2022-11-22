@@ -5,7 +5,7 @@
   "isDnD": false,
   "isCompatibility": false,
   "parent": {
-    "name": "selector",
-    "path": "folders/dialog/selector.yy",
+    "name": "color selector",
+    "path": "folders/dialog/color selector.yy",
   },
 }

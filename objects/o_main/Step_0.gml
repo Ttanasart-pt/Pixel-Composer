@@ -10,20 +10,20 @@
 
 #region animation
 	if(ANIMATOR.is_playing) {
-		ANIMATOR.real_frame += ANIMATOR.framerate / game_get_speed(gamespeed_fps);
-		if(floor(ANIMATOR.real_frame) > ANIMATOR.frames_total) {
+		ANIMATOR.real_frame += ANIMATOR.framerate * (delta_time / 1000000);
+		if(round(ANIMATOR.real_frame) >= ANIMATOR.frames_total) {
 			switch(ANIMATOR.playback) {
 				case ANIMATOR_END.loop : 
 					ANIMATOR.real_frame = 0;
 					break;
 				case ANIMATOR_END.stop : 
-					ANIMATOR.real_frame = ANIMATOR.frames_total;
+					ANIMATOR.real_frame = ANIMATOR.frames_total - 1;
 					ANIMATOR.is_playing = false;
 					break;
 			}
 		}
 	} else {
-		ANIMATOR.real_frame = min(ANIMATOR.real_frame, ANIMATOR.frames_total);
+		ANIMATOR.real_frame = clamp(ANIMATOR.real_frame, 0, ANIMATOR.frames_total - 1);
 	}
 	
 	ANIMATOR.frame_progress = false;

@@ -15,10 +15,8 @@ function Node_Processor(_x, _y) : Node(_x, _y) constructor {
 		var len = 0;
 		for(var i = 0; i < ds_list_size(inputs); i++) {
 			var _in = inputs[| i].getValue();
-			if(is_array(_in)) {
-				if(inputs[| i].isArray())
-					len = max(len, array_length(_in));
-			}
+			if(inputs[| i].isArray() && is_array(_in))
+				len = max(len, array_length(_in));
 		}
 		
 		for(var _oi = 0; _oi < ds_list_size(outputs); _oi++) {
@@ -38,15 +36,15 @@ function Node_Processor(_x, _y) : Node(_x, _y) constructor {
 						var base_s = getData(0, i);
 						
 						if(is_surface(base_s)) {
-							var ww = surface_get_width(base_s);
-							var hh = surface_get_height(base_s);
+							ww = surface_get_width(base_s);
+							hh = surface_get_height(base_s);
 						}
 					}
 					
-					if(!is_surface(outSurfs[i]))
-						outSurfs[i] = surface_create_valid(ww, hh);
-					else 
+					if(is_surface(outSurfs[i]))
 						surface_size_to(outSurfs[i], ww, hh)
+					else
+						outSurfs[i] = surface_create_valid(ww, hh);
 					
 					var _data = getDataArray(i);
 					process_data(outSurfs[i], _data, _oi);
@@ -75,11 +73,12 @@ function Node_Processor(_x, _y) : Node(_x, _y) constructor {
 					outputs[| _oi].setValue(outSurfs);
 				}
 				
-				if(!is_surface(outSurfs)) {
+				if(is_surface(outSurfs)) {
+					surface_size_to(outSurfs, ww, hh);
+				} else {
 					outSurfs = surface_create_valid(ww, hh);
 					outputs[| _oi].setValue(outSurfs);
-				} else 
-					surface_size_to(outSurfs, ww, hh);
+				}
 				
 				var _data = getDataArray(0);
 				process_data(outSurfs, _data, _oi);

@@ -51,11 +51,13 @@ function slider(_min, _max, _step, _onModify = noone, _onRelease = noone) constr
 			val = clamp(val, minn, maxx);
 			if(onModify != noone)
 				onModify(val);
+			UNDO_HOLDING = true;
 			
 			if(mouse_check_button_released(mb_left)) {
 				dragging = false;
 				if(onRelease != noone)
 					onRelease(val);
+				UNDO_HOLDING = false;
 			}
 		} else {
 			if(hover && (point_in_rectangle(_m[0], _m[1], _x, _y, _x + sw, _y + _h) || point_in_rectangle(_m[0], _m[1], _kx - ui(10), _y, _kx + ui(10), _y + _h))) {

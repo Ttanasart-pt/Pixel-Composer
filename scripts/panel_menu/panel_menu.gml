@@ -3,7 +3,7 @@ function Panel_Menu() : PanelContent() constructor {
 	
 	noti_flash = 0;
 	
-	static menus = [
+	menus = [
 		["File", [
 			[ "New", function() { 
 				NEW();
@@ -76,6 +76,51 @@ function Panel_Menu() : PanelContent() constructor {
 			} ],
 		]],
 	]
+	
+	function displayNewVersion() {
+		var xx = w - ui(88);
+		draw_set_text(f_p0b, fa_right, fa_center, COLORS._main_value_positive);
+		var txt = " Newer version available ";
+		var ww = string_width(txt);
+			
+		if(pHOVER && point_in_rectangle(mx, my, xx - ww, 0, xx, h)) {
+			draw_sprite_stretched(THEME.menu_button, 0, xx - ww - ui(6), ui(6), ww + ui(12), h - ui(12));
+				
+			if(pFOCUS && mouse_check_button_pressed(mb_left)) {
+				url_open("https://makham.itch.io/pixel-composer");
+			}
+		}
+			
+		draw_text(xx, h / 2, txt);
+	}
+	
+	function undoUpdate() {
+		var txt;
+		
+		if(ds_stack_empty(UNDO_STACK)) {
+			txt = "-Undo";
+		} else {
+			var act = ds_stack_top(UNDO_STACK);
+			if(array_length(act) > 1)
+				txt = "Undo " + string(array_length(act)) + " actions";
+			else 
+				txt = "Undo " + act[0].toString();
+		}
+		
+		menus[1][1][0][0] = txt;
+		
+		if(ds_stack_empty(REDO_STACK)) {
+			txt = "-Redo";
+		} else {
+			var act = ds_stack_top(REDO_STACK);
+			if(array_length(act) > 1)
+				txt = "Redo " + string(array_length(act)) + " actions";
+			else 
+				txt = "Redo " + act[0].toString();
+		}
+		
+		menus[1][1][1][0] = txt;
+	}
 	
 	function drawContent(panel) {
 		draw_clear_alpha(COLORS.panel_bg_clear, 0);
@@ -164,21 +209,9 @@ function Panel_Menu() : PanelContent() constructor {
 		}
 		draw_text(w - ui(16), h / 2, txt);
 		
-		if(o_main.version_latest > VERSION) {
-			var xx = w - ui(88);
-			draw_set_text(f_p0b, fa_right, fa_center, COLORS._main_value_positive);
-			var txt = " Newer version available ";
-			var ww = string_width(txt);
+		if(o_main.version_latest > VERSION) 
+			displayNewVersion();
 			
-			if(pHOVER && point_in_rectangle(mx, my, xx - ww, 0, xx, h)) {
-				draw_sprite_stretched(THEME.menu_button, 0, xx - ww - ui(6), ui(6), ww + ui(12), h - ui(12));
-				
-				if(pFOCUS && mouse_check_button_pressed(mb_left)) {
-					url_open("https://makham.itch.io/pixel-composer");
-				}
-			}
-			
-			draw_text(xx, h / 2, txt);
-		}
+		undoUpdate();
 	}
 }

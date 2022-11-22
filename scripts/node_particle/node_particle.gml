@@ -254,7 +254,7 @@ function Node_Particle(_x, _y) : Node(_x, _y) constructor {
 	inputs[| 21] = nodeValue(21, "Gravity", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0 );
 	inputs[| 22] = nodeValue(22, "Wiggle", self, JUNCTION_CONNECT.input, VALUE_TYPE.float,  0 );
 	
-	inputs[| 23] = nodeValue(23, "Loop", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true );
+	inputs[| 23] = nodeValue(23, "Loop", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false );
 	
 	inputs[| 24] = nodeValue(24, "Blend mode", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0 )
 		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Normal", "Additive" ]);
@@ -285,12 +285,13 @@ function Node_Particle(_x, _y) : Node(_x, _y) constructor {
 		["Rotation",	true],	16, 9, 10, 
 		["Scale",		true],	11, 18, 12, 
 		["Color",		true],	13, 14, 15, 
-		["Render",		true],	24, 19, 23,
+		["Render",		true],	24, 19, 23
 	];
 	
 	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
 	
-	seed = irandom(9999999);
+	seed_origin = irandom(9999999);
+	seed = seed_origin;
 	def_surface = -1;
 	
 	parts = ds_list_create();
@@ -300,7 +301,8 @@ function Node_Particle(_x, _y) : Node(_x, _y) constructor {
 	outputs[| 1] = nodeValue(1, "Particle data", self, JUNCTION_CONNECT.output, VALUE_TYPE.object, parts );
 	
 	function spawn() {
-		randomize();
+		random_set_seed(seed++);
+		
 		var _inSurf = inputs[| 0].getValue();
 		
 		if(_inSurf == 0) {
@@ -429,35 +431,36 @@ function Node_Particle(_x, _y) : Node(_x, _y) constructor {
 				parts[| i].kill();
 		}
 		render();
+		seed = seed_origin;
 	}
 	
 	function updateParticle() {
 		var jun = outputs[| 1];
 		for(var j = 0; j < ds_list_size(jun.value_to); j++) {
-			if(jun.value_to[| j].value_from == jun) {
+			if(jun.value_to[| j].value_from == jun)
 				jun.value_to[| j].node.doUpdate();
-			}
 		}
 		
 		render();
 	}
 	
-	function resetPartPool() {
+	function checkPartPool() {
 		var _part_amo = PREF_MAP[? "part_max_amount"];
-		if(_part_amo > ds_list_size(parts)) {
-			repeat(_part_amo - ds_list_size(parts)) {
+		var _curr_amo = ds_list_size(parts);
+		
+		if(_part_amo > _curr_amo) {
+			repeat(_part_amo - _curr_amo)
 				ds_list_add(parts, new __part());
-			}
-		} else if(_part_amo < ds_list_size(parts)) {
-			repeat(ds_list_size(parts) - _part_amo) {
+		} else if(_part_amo < _curr_amo) {
+			repeat(_curr_amo - _part_amo)
 				ds_list_delete(parts, 0);
-			}
 		}
 	}
 	
 	static step = function() {
 		var _inSurf = inputs[| 0].getValue();
 		var _scatt  = inputs[| 27].getValue();
+		var _loop	= inputs[| 23].getValue();
 		
 		inputs[| 25].setVisible(false);
 		inputs[| 26].setVisible(false);
@@ -472,7 +475,7 @@ function Node_Particle(_x, _y) : Node(_x, _y) constructor {
 			}
 		}
 		
-		resetPartPool();
+		checkPartPool();
 		var _spawn_type = inputs[| 17].getValue();
 		if(_spawn_type == 0)
 			inputs[| 2].name = "Spawn delay";
@@ -484,24 +487,25 @@ function Node_Particle(_x, _y) : Node(_x, _y) constructor {
 		if(ANIMATOR.is_playing && ANIMATOR.frame_progress) {
 			if(ANIMATOR.current_frame == 0) reset();
 			
-			if(_spawn_type == 0) {
-				if(safe_mod(ANIMATOR.current_frame, _spawn_delay) == 0)
-					spawn();
-			} else if(_spawn_type == 1) {
-				if(ANIMATOR.current_frame == _spawn_delay)
-					spawn();
+			switch(_spawn_type) {
+				case 0 :
+					if(safe_mod(ANIMATOR.current_frame, _spawn_delay) == 0)
+						spawn();
+					break;
+				case 1 :
+					if(ANIMATOR.current_frame == _spawn_delay)
+						spawn();
+					break;
 			}
 			
-			for(var i = 0; i < PREF_MAP[? "part_max_amount"]; i++)
+			for(var i = 0; i < ds_list_size(parts); i++)
 				parts[| i].step();
 			updateParticle();
-			
 			updateForward();
 		}
 		
-		if(ANIMATOR.is_scrubing) {
+		if(ANIMATOR.is_scrubing)
 			recoverCache();	
-		}
 	}
 	
 	static drawOverlay = function(_active, _x, _y, _s, _mx, _my) {

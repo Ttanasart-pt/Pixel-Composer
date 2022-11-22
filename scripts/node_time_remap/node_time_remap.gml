@@ -41,7 +41,7 @@ function Node_Time_Remap(_x, _y) : Node(_x, _y) constructor {
 		texture_set_stage(uniform_map, surface_get_texture(_map));
 		
 		for(var i = 0; i <= _life; i++) {
-			var frame = clamp(ANIMATOR.current_frame - i, 0, ANIMATOR.frames_total);
+			var frame = clamp(ANIMATOR.current_frame - i, 0, ANIMATOR.frames_total - 1);
 			
 			if(is_surface(cached_output[frame])) {
 				shader_set_uniform_f(uniform_min, i * ste);	

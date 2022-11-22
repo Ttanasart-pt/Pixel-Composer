@@ -47,9 +47,12 @@ function sliderRange(_min, _max, _step, _onModify) constructor {
 			val = round(val / step) * step;
 			val = clamp(val, minn, maxx);
 			onModify(dragging, val);
+			UNDO_HOLDING = true;
 			
-			if(mouse_check_button_released(mb_left))
+			if(mouse_check_button_released(mb_left)) {
+				UNDO_HOLDING = false;
 				dragging = -1;
+			}
 		} else {
 			if(hover) {
 				var _hover = -1;

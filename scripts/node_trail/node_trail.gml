@@ -11,7 +11,8 @@ function Node_Trail(_x, _y) : Node_Processor(_x, _y) constructor {
 	inputs[| 0] = nodeValue(0, "Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 	inputs[| 1] = nodeValue(1, "Max life",   self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 3);
 	inputs[| 2] = nodeValue(2, "Step",       self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1);
-	inputs[| 3] = nodeValue(3, "Alpha decrease",	self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0);
+	inputs[| 3] = nodeValue(3, "Alpha decrease",	self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
+		.setDisplay(VALUE_DISPLAY.slider, [0, 1, 0.01]);
 	
 	inputs[| 4] = nodeValue(4, "Blend mode", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.enum_scroll, BLEND_TYPES );
@@ -46,19 +47,20 @@ function Node_Trail(_x, _y) : Node_Processor(_x, _y) constructor {
 		
 		var aa = 1;
 		var res_index = 0;
-		var st_frame  = floor(ANIMATOR.current_frame / _step);
+		var frame_amo = min(_life, floor(ANIMATOR.current_frame / _step));
+		var st_frame  = ANIMATOR.current_frame - frame_amo * _step;
 		
-		for(var i = _life; i >= 0; i--) {
-			var frame = clamp(st_frame - i * _step, 0, ANIMATOR.frames_total);
+		for(var i = 0; i <= _life; i++) {
+			var frame_idx = clamp(st_frame + i * _step, 0, ANIMATOR.frames_total - 1);
 			var bg = i % 2;
-			var fg = (i + 1) % 2;
-			aa = max(aa - _alpha, 0);
+			var fg = !bg;
+			var aa = 1 - _alpha * (_life - i);
 			
 			surface_set_target(temp_surf[bg]);
 				if(i == _life)
 					draw_surface_safe(_data[0], 0, 0);
-				else if(is_surface(cached_output[frame]))
-					draw_surface_blend(temp_surf[fg], cached_output[frame], _blend, aa);
+				else if(is_surface(cached_output[frame_idx]))
+					draw_surface_blend(temp_surf[fg], cached_output[frame_idx], _blend, aa);
 			surface_reset_target();
 			
 			res_index = bg;

@@ -143,7 +143,8 @@ function Node_Render_Sprite_Sheet(_x, _y) : Node(_x, _y) constructor {
 			var skip = inputs[| 2].getValue();
 			
 			if(is_array(inpt) && array_length(inpt) == 0) return;
-			if(!is_array(inpt)) inpt = [ inpt ];
+			var arr = is_array(inpt);
+			if(!arr) inpt = [ inpt ];
 			var _surf = [];
 			
 			for(var i = 0; i < array_length(inpt); i++) {
@@ -173,6 +174,8 @@ function Node_Render_Sprite_Sheet(_x, _y) : Node(_x, _y) constructor {
 				draw_clear_alpha(0, 0);
 				surface_reset_target();
 			}
+			
+			if(!arr) _surf = _surf[0];
 			outputs[| 0].setValue(_surf);
 		} else {
 			if(is_array(inpt)) {

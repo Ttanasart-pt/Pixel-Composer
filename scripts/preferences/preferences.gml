@@ -1,8 +1,6 @@
 #region data
 	globalvar PREF_MAP;
 	PREF_MAP = ds_map_create();
-	loadGraphic();
-	loadColor();
 #endregion
 
 #region pref map
@@ -251,11 +249,6 @@
 		window_set_size(ww, hh);
 		window_set_position(display_get_width() / 2 - ww / 2, display_get_height() / 2 - hh / 2);
 		game_set_speed(PREF_MAP[? "ui_framerate"], gamespeed_fps);
-		
-		setPanel();
-		loadFonts();
-		loadGraphic(PREF_MAP[? "theme"]);
-		loadColor(PREF_MAP[? "theme"]);
 	}
 	
 	function find_hotkey(_context, _name) {

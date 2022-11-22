@@ -3,7 +3,7 @@ globalvar FONT_LOADED, f_h3, f_h5, f_p0, f_p0b, f_p1, f_p2, f_p3;
 FONT_LOADED = false;
 
 function _font_path(rel) {
-	return "data/themes/" + PREF_MAP[? "theme"] + "/fonts/" + string_replace_all(rel, "./", "");
+	return DIRECTORY + "themes/" + PREF_MAP[? "theme"] + "/fonts/" + string_replace_all(rel, "./", "");
 }
 
 function _font_load_from_struct(str, def) {
@@ -13,8 +13,7 @@ function _font_load_from_struct(str, def) {
 		return def;
 	}
 	
-	var f = font_add(path, str.size * UI_SCALE, false, false, str.range[0], str.range[1]);
-	return f;
+	return font_add(path, str.size * UI_SCALE, false, false, str.range[0], str.range[1]);
 }
 
 function font_clear(font) { if(font_exists(font)) font_delete(font); }
