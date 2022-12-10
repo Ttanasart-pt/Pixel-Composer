@@ -65,7 +65,7 @@ if palette == 0 exit;
 	if(buttonInstant(THEME.button_hide, bx, by, ui(28), ui(28), mouse_ui, sFOCUS, sHOVER, "Open palette folder", THEME.folder) == 2) {
 		var _realpath = environment_get_variable("LOCALAPPDATA") + "\\Pixels_Composer\\Palettes";
 		var _windir   = environment_get_variable("WINDIR") + "\\explorer.exe";
-		execute_shell(_windir, _realpath);
+		execute_shell_simple(_windir, _realpath);
 	}
 	draw_sprite_ui_uniform(THEME.folder, 0, bx + ui(14), by + ui(14), 1, COLORS._main_icon);
 	bx -= ui(32);
@@ -82,7 +82,7 @@ if palette == 0 exit;
 	var row = ceil(array_length(palette) / col);
 	var ww = pl_w / col;
 	var hh = (pl_h + ui(6)) * row;
-	dialog_h = ui(400) + hh;
+	dialog_h = ui(408) + hh;
 	
 	draw_sprite_stretched(THEME.textbox, 0, pl_x - ui(6), pl_y - ui(6), pl_w + ui(12), hh + ui(6));
 	
@@ -98,7 +98,7 @@ if palette == 0 exit;
 		bx -= ui(32);
 	#endregion
 	
-	var hover = -1;
+	var hover = -1, hvx, hvy;
 	for(var i = 0; i < row; i++)
 	for(var j = 0; j < col; j++) {
 		var index = i * col + j;
@@ -110,30 +110,34 @@ if palette == 0 exit;
 		draw_sprite_stretched_ext(THEME.color_picker_sample, index == index_selecting, _kx + ui(2), _ky, ww - ui(4), pl_h, _p, 1);
 		
 		if(sHOVER && point_in_rectangle(mouse_mx, mouse_my, _kx, _ky, _kx + ww, _ky + pl_h)) {
-			if(index_dragging > -1 && index_dragging != index) {
-				draw_set_color(COLORS.dialog_palette_divider);
-				draw_line_width(_kx - 1, _ky, _kx - 1, _ky + pl_h, 2);
-			}
-			
 			hover = index;
+			hvx = _kx;
+			hvy = _ky;
 		}
 	}
 	
 	if(index_dragging > -1) {
-		if(mouse_check_button_released(mb_left)) {
-			if(hover > -1 && hover !=  index_dragging) {
+		if(hover > -1 && hover != index_dragging) {
+			draw_set_color(COLORS.dialog_palette_divider);
+			if(hover < index_dragging)
+				draw_line_width(hvx - 1, hvy, hvx - 1, hvy + pl_h, 4);
+			else
+				draw_line_width(hvx + ww - 1, hvy, hvx + ww - 1, hvy + pl_h, 4);
+			
+			if(mouse_release(mb_left)) {
 				var tt = palette[index_dragging];
 				
 				array_delete(palette, index_dragging, 1);
 				array_insert(palette, hover, tt);
-				
-				selector.setColor(palette[index_selecting]);
+				index_selecting = hover;
 			}
-			index_dragging = -1;	
 		}
+		
+		if(mouse_release(mb_left))
+			index_dragging = -1;	
 	}
 	
-	if(sFOCUS && mouse_check_button_pressed(mb_left) && hover > -1) {
+	if(mouse_press(mb_left, sFOCUS) && hover > -1) {
 		index_selecting = hover;
 		index_dragging = hover;
 		selector.setColor(palette[hover]);

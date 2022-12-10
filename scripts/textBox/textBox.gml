@@ -10,6 +10,7 @@ function textBox(_input, _onModify) constructor {
 	align  = fa_right;
 	hide   = false;
 	font   = noone;
+	color  = COLORS._main_text;
 	
 	no_empty    = true;
 	auto_update = false;
@@ -160,11 +161,11 @@ function textBox(_input, _onModify) constructor {
 		
 		switch(_format) {
 			case VALUE_DISPLAY._default :
-				draw_set_text(font == noone? f_p0 : font, fa_left, fa_center, COLORS._main_text);
+				draw_set_text(font == noone? f_p0 : font, fa_left, fa_center, color);
 				draw_text(_x, _y, _text);
 				break;
 			case VALUE_DISPLAY.export_format :
-				draw_set_text(font == noone? f_p0 : font, fa_left, fa_center, COLORS._main_text);
+				draw_set_text(font == noone? f_p0 : font, fa_left, fa_center, color);
 				var _x0 = _x, ch = "", len = string_length(_text), i = 1;
 				var cc = draw_get_color();
 				var str = "", _comm = false;
@@ -224,11 +225,11 @@ function textBox(_input, _onModify) constructor {
 		}
 		
 		if(target != -999) {
-			if(mouse_check_button_pressed(mb_left) || click_block == 1) {
+			if(mouse_press(mb_left, active) || click_block == 1) {
 				cursor_select = -1;
 				cursor = target;
 				click_block = 0;
-			} else if(mouse_check_button(mb_left) && cursor != target) {
+			} else if(mouse_click(mb_left, active) && cursor != target) {
 				cursor_select = target;
 			}
 		}
@@ -280,13 +281,13 @@ function textBox(_input, _onModify) constructor {
 				apply();
 				UNDO_HOLDING = true;
 					
-				if(mouse_check_button_released(mb_left)) {
+				if(mouse_release(mb_left)) {
 					UNDO_HOLDING = false;
 					TEXTBOX_ACTIVE = noone;
 				}
 			}
 			
-			if(mouse_check_button_released(mb_left))
+			if(mouse_release(mb_left))
 				sliding = 0;
 		}
 		
@@ -320,10 +321,10 @@ function textBox(_input, _onModify) constructor {
 					draw_set_text(f_p0b, fa_left, fa_center, COLORS._main_text_sub);
 					draw_set_alpha(0.5);
 				
-					if(point_in_rectangle(_m[0], _m[1], _x, _y, _x + ui(32), _y + hh)) {
+					if(hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + ui(32), _y + hh)) {
 						draw_set_alpha(1);
 					
-						if(active && mouse_check_button_pressed(mb_left)) {
+						if(mouse_press(mb_left, active)) {
 							var ktxt = _input_text;
 							if(input == TEXTBOX_INPUT.number) {
 								if(keyboard_check(vk_alt))	_input_text	= string(ceil(toNumber(ktxt) / 2));
@@ -361,7 +362,7 @@ function textBox(_input, _onModify) constructor {
 				var c_y0 = _y + _h / 2 - c_h / 2;
 				var c_y1 = _y + _h / 2 + c_h / 2;
 				cursor_pos_to	= tx + c_w;
-				cursor_pos		= cursor_pos == 0? cursor_pos_to : lerp_float(cursor_pos, cursor_pos_to, 3);
+				cursor_pos		= cursor_pos == 0? cursor_pos_to : lerp_float(cursor_pos, cursor_pos_to, 4);
 				
 				if(cursor_select > -1) {
 					draw_set_color(COLORS.widget_text_highlight);
@@ -372,7 +373,7 @@ function textBox(_input, _onModify) constructor {
 				
 				var _mx = -1;
 				var _my = -1;
-				if((mouse_check_button_pressed(mb_left) || mouse_check_button(mb_left)) && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + hh)) {
+				if(mouse_press(mb_any, active) && hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + hh)) {
 					_mx = _m[0];
 					_my = _m[1];
 				}
@@ -382,7 +383,7 @@ function textBox(_input, _onModify) constructor {
 				draw_line_width(cursor_pos, c_y0, cursor_pos, c_y1, 2);
 			#endregion
 			
-			if(!point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + hh) && mouse_check_button_pressed(mb_left)) {
+			if(!point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + hh) && mouse_press(mb_left)) {
 				apply();
 				TEXTBOX_ACTIVE = noone;
 			}
@@ -402,7 +403,7 @@ function textBox(_input, _onModify) constructor {
 					draw_sprite_stretched_ext(THEME.textbox, 1, _x, _y, _w, hh, c_white, 0.5);	
 				else
 					draw_sprite_stretched(THEME.textbox, 1, _x, _y, _w, hh);	
-				if(active && mouse_check_button_pressed(mb_left)) {
+				if(mouse_press(mb_left, active)) {
 					TEXTBOX_ACTIVE  = self;
 					click_block = 1;
 					keyboard_string = "";
@@ -417,11 +418,11 @@ function textBox(_input, _onModify) constructor {
 			
 			display_text(tx, _y + _h / 2, ss, _w - ui(4), _format);
 			
-			if(slidable) {
+			if(_w > ui(64) && slidable) {
 				draw_sprite_ui_uniform(THEME.text_slider, 0, _x + ui(20), _y + hh / 2, 1, COLORS._main_icon, 0.5);
 			
 				if(hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + hh)) {
-					if(active && mouse_check_button_pressed(mb_left)) {
+					if(mouse_press(mb_left, active)) {
 						sliding  = 1;
 						slide_mx = _m[0];
 						slide_sx = _last_value;

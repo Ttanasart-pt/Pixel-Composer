@@ -57,14 +57,14 @@ event_inherited();
 				
 				draw_sprite_stretched(THEME.ui_panel_bg, 0, xx, yy, ww, hh);
 				
-				if(point_in_rectangle(_m[0], _m[1], xx, yy, xx + ww, yy + hh)) {
+				if(sHOVER && point_in_rectangle(_m[0], _m[1], xx, yy, xx + ww, yy + hh)) {
 					if(dragging == -1)
 						draw_sprite_stretched_ext(THEME.ui_panel_active, 0, xx, yy, ww, hh, COLORS._main_accent, 1);
 					
-					if(mouse_check_button_pressed(mb_left))
+					if(mouse_press(mb_left, sFOCUS))
 						dragging = index;
 					
-					if(mouse_check_button_pressed(mb_right)) {
+					if(mouse_press(mb_right, sFOCUS)) {
 						menu   = index;
 						menuOn = index;
 					}
@@ -72,10 +72,10 @@ event_inherited();
 				
 				if(dragging != -1 && dragging != index) {
 					draw_set_color(COLORS.dialog_array_edit_divider);
-					if(point_in_rectangle(_m[0], _m[1], xx - pad / 2, yy, xx + ww / 2, yy + hh)) {
+					if(sHOVER && point_in_rectangle(_m[0], _m[1], xx - pad / 2, yy, xx + ww / 2, yy + hh)) {
 						inb_hover = index;
 						draw_line_round(xx - pad / 2, yy, xx - pad / 2, yy + hh, 4);
-					} else if(point_in_rectangle(_m[0], _m[1], xx + ww / 2, yy, xx + ww + pad / 2, yy + hh)) {
+					} else if(sHOVER && point_in_rectangle(_m[0], _m[1], xx + ww / 2, yy, xx + ww + pad / 2, yy + hh)) {
 						inb_hover = index + 1;
 						draw_line_round(xx + ww + pad / 2, yy, xx + ww + pad / 2, yy + hh, 4);
 					} 
@@ -107,7 +107,7 @@ event_inherited();
 			_h += ch;
 		}
 		
-		if(dragging != -1 && mouse_check_button_released(mb_left)) {
+		if(dragging != -1 && mouse_release(mb_left)) {
 			if(inb_hover != -1) {
 				var val = arr[dragging];
 				array_delete(arr, dragging, 1);

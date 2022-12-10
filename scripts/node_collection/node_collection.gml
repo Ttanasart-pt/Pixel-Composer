@@ -40,9 +40,25 @@ function Node_Collection(_x,  _y) : Node(_x,  _y) constructor {
 		}
 	}
 	
-	static stepBegin = function() {
+	static clearCache = function() {
 		for(var i = 0; i < ds_list_size(nodes); i++) {
-			nodes[| i].stepBegin();
+			nodes[| i].clearCache();
+		}
+	}
+	
+	static stepBegin = function() {
+		use_cache = false;
+		auto_update = true;
+		cache_result[ANIMATOR.current_frame] = true;
+		
+		for(var i = 0; i < ds_list_size(nodes); i++) {
+			var n = nodes[| i];
+			n.stepBegin();
+			auto_update &= n.auto_update;
+			if(!n.use_cache) continue;
+			
+			use_cache = true;
+			cache_result[ANIMATOR.current_frame] &= n.cache_result[ANIMATOR.current_frame];
 		}
 		
 		var out_surf = false;
@@ -63,6 +79,12 @@ function Node_Collection(_x,  _y) : Node(_x,  _y) constructor {
 		setHeight();
 	}
 	
+	static doUpdate = function() {
+		for(var i = 0; i < ds_list_size(nodes); i++) {
+			nodes[| i].doUpdate();
+		}
+	}
+	
 	static step = function() {
 		render_time = 0;
 		for(var i = 0; i < ds_list_size(nodes); i++) {
@@ -76,15 +98,11 @@ function Node_Collection(_x,  _y) : Node(_x,  _y) constructor {
 		}
 	}
 	
-	static updateForward = function() {
-		doUpdate();
-		
+	static triggerRender = function() {
 		for(var i = custom_input_index; i < ds_list_size(inputs); i++) {
 			var jun_node = inputs[| i].from;
-			jun_node.updateForward();
+			jun_node.triggerRender();
 		}
-		
-		doUpdateForward();
 	}
 	
 	static preConnect = function() {
@@ -149,6 +167,17 @@ function Node_Collection(_x,  _y) : Node(_x,  _y) constructor {
 			nodes[| i].setRenderStatus(false);
 			if(variable_struct_exists(nodes[| i], "nodes"))
 				nodes[| i].resetRenderStatus();
+		}
+	}
+	
+	static collectionDeserialize = function(scale = false) {
+		sortIO();
+		var _inputs = load_map[? "inputs"];
+		if(!ds_list_empty(_inputs) && !ds_list_empty(inputs)) {
+			var _siz = min(ds_list_size(_inputs), ds_list_size(inputs));
+			for(var i = 0; i < _siz; i++) {
+				inputs[| i].deserialize(_inputs[| i], scale);
+			}
 		}
 	}
 }

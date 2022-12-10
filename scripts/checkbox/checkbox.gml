@@ -22,7 +22,7 @@ function checkBox(_onClick) constructor {
 		if(hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + ss, _y + ss)) {
 			draw_sprite_stretched(THEME.checkbox, _value * 2 + 1, _x, _y, ss, ss);	
 			
-			if(active && mouse_check_button_pressed(mb_left)) {
+			if(mouse_press(mb_left, active)) {
 				if(onClick) onClick();
 			}
 		}

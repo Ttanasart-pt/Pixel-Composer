@@ -6,7 +6,7 @@ function Node_create_Seperate_Shape(_x, _y) {
 
 function Node_Seperate_Shape(_x, _y) : Node(_x, _y) constructor {
 	name		= "Separate shape";
-	auto_update = false;
+	//auto_update = false;
 	
 	uniform_it_dim = shader_get_uniform(sh_seperate_shape_ite, "dimension");
 	

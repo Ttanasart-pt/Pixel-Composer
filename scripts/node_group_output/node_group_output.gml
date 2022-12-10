@@ -7,7 +7,7 @@ function Node_create_Group_Output(_x, _y) {
 
 function Node_Group_Output(_x, _y, _group) : Node(_x, _y) constructor {
 	name  = "Output";
-	color = COLORS.node_blend_interface;
+	color = COLORS.node_blend_collection;
 	previewable = false;
 	auto_height = false;
 	
@@ -60,16 +60,22 @@ function Node_Group_Output(_x, _y, _group) : Node(_x, _y) constructor {
 		
 		outParent.name = name; 
 		
-		inputs[| 0].type = inputs[| 0].value_from == noone? VALUE_TYPE.any : inputs[| 0].value_from.type;
+		inputs[| 0].type = VALUE_TYPE.any;
+		if(inputs[| 0].value_from != noone) {
+			inputs[| 0].type = inputs[| 0].value_from.type;
+			inputs[| 0].display_type = inputs[| 0].value_from.display_type;
+		} 
+		
 		outParent.type = inputs[| 0].type;
+		outParent.display_type = inputs[| 0].display_type;
 	}
-	static doUpdateForward = function() {
+	
+	static triggerRender = function() {
 		if(is_undefined(outParent)) return;
 		
 		for(var j = 0; j < ds_list_size(outParent.value_to); j++) {
-			if(outParent.value_to[| j].value_from == outParent) {
-				outParent.value_to[| j].node.updateForward();
-			}
+			if(outParent.value_to[| j].value_from == outParent)
+				outParent.value_to[| j].node.triggerRender();
 		}
 	}
 	

@@ -2,8 +2,8 @@
 event_inherited();
 
 #region data
-	dialog_w = ui(796);
-	dialog_h = ui(432);
+	dialog_w = ui(812);
+	dialog_h = ui(440);
 	destroy_on_click_out = true;
 	
 	name = "Palette editor";
@@ -56,18 +56,19 @@ event_inherited();
 		draw_clear_alpha(COLORS.panel_bg_clear, 0);
 		
 		for(var i = 0; i < ds_list_size(presets); i++) {
+			var isHover = sHOVER && point_in_rectangle(_m[0], _m[1], ui(4), yy, ui(4) + sp_preset_w - ui(16), yy + hg);
 			draw_sprite_stretched(THEME.ui_panel_bg, 1, ui(4), yy, sp_preset_w - ui(16), hg);
-			
+			if(isHover) 
+				draw_sprite_stretched_ext(THEME.node_active, 1, ui(4), yy, sp_preset_w - ui(16), hg, COLORS._main_accent, 1);
+				
 			draw_set_text(f_p2, fa_left, fa_top, COLORS._main_text_sub);
 			draw_text(ui(16), yy + ui(8), preset_name[| i]);
 			drawPalette(presets[| i], ui(16), yy + ui(28), ww, ui(16));
 			
-			if(sFOCUS && point_in_rectangle(_m[0], _m[1], ui(4), yy, ui(4) + sp_preset_w - ui(16), yy + hg)) {
-				if(mouse_check_button_pressed(mb_left)) {
-					palette = array_create(array_length(presets[| i]));
-					for( var j = 0; j < array_length(presets[| i]); j++ ) {
-						palette[j] = presets[| i][j];
-					}
+			if(isHover && mouse_press(mb_left, sFOCUS)) {
+				palette = array_create(array_length(presets[| i]));
+				for( var j = 0; j < array_length(presets[| i]); j++ ) {
+					palette[j] = presets[| i][j];
 				}
 			}
 			

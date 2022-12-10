@@ -44,7 +44,7 @@ function rotator(_onModify) constructor {
 			drag_sa = point_direction(_x, knob_y, _m[0], _m[1]);
 			drag_sv = real_val;
 			
-			if(mouse_check_button_released(mb_left)) {
+			if(mouse_release(mb_left)) {
 				dragging = false;
 				UNDO_HOLDING = false;	
 			}
@@ -52,7 +52,7 @@ function rotator(_onModify) constructor {
 		} else if(hover && point_in_circle(_m[0], _m[1], _x, knob_y, ui(48))) {
 			draw_sprite_ui_uniform(THEME.rotator_knob, 1, px, py);
 				
-			if(active && mouse_check_button_pressed(mb_left)) {
+			if(mouse_press(mb_left, active)) {
 				dragging = true;
 				drag_sv  = _data;
 				drag_sa  = point_direction(_x, knob_y, _m[0], _m[1]);

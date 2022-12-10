@@ -74,6 +74,7 @@ event_inherited();
 		"ui_framerate",
 		new textBox(TEXTBOX_INPUT.number, function(str) { 
 			PREF_MAP[? "ui_framerate"] = max(15, round(real(str)));
+			game_set_speed(PREF_MAP[? "ui_framerate"], gamespeed_fps);
 			PREF_SAVE();
 		})
 	]);
@@ -92,6 +93,15 @@ event_inherited();
 		"node_show_time",
 		new checkBox(function() { 
 			PREF_MAP[? "node_show_time"] = !PREF_MAP[? "node_show_time"]; 
+			PREF_SAVE();
+		})
+	]);
+	
+	ds_list_add(pref_global, [
+		"Show node render status",
+		"node_show_render_status",
+		new checkBox(function() { 
+			PREF_MAP[? "node_show_render_status"] = !PREF_MAP[? "node_show_render_status"]; 
 			PREF_SAVE();
 		})
 	]);
@@ -120,6 +130,15 @@ event_inherited();
 		"expand_hover",
 		new checkBox(function() { 
 			PREF_MAP[? "expand_hover"] = !PREF_MAP[? "expand_hover"]; 
+			PREF_SAVE();
+		})
+	]);
+	
+	ds_list_add(pref_global, [
+		"Graph zoom smoothing",
+		"graph_zoom_smoooth",
+		new textBox(TEXTBOX_INPUT.number, function(str) { 
+			PREF_MAP[? "graph_zoom_smoooth"] = max(1, round(real(str)));
 			PREF_SAVE();
 		})
 	]);
@@ -178,9 +197,10 @@ event_inherited();
 
 #region theme
 	themes = [];
-	var f = file_find_first("data/themes/*", fa_directory);
+	var f = file_find_first(DIRECTORY + "themes/*", fa_directory);
 	while(f != "") {
-		array_push(themes, f);
+		if(directory_exists(DIRECTORY + "themes/" + f))
+			array_push(themes, f);
 		f = file_find_next();
 	}
 	file_find_close();
@@ -263,7 +283,7 @@ event_inherited();
 	});
 	
 	function overrideColor() {
-		var path = "data/themes/" + PREF_MAP[? "theme"] + "/override.json";
+		var path = DIRECTORY + "themes/" + PREF_MAP[? "theme"] + "/override.json";
 		var f = file_text_open_write(path);
 		file_text_write_string(f, json_stringify(COLORS));
 		file_text_close(f);

@@ -1,4 +1,7 @@
 {
+  "resourceType": "GMAndroidOptions",
+  "resourceVersion": "1.0",
+  "name": "Android",
   "option_android_sync_amazon": false,
   "option_android_display_name": "Created with GameMaker Studio 2",
   "option_android_version": "1.0.0.0",
@@ -12,7 +15,6 @@
   "option_android_package_company": "company",
   "option_android_package_product": "game",
   "option_android_arch_armv7": true,
-  "option_android_arch_x86": false,
   "option_android_arch_arm64": false,
   "option_android_arch_x86_64": false,
   "option_android_orient_portrait": true,
@@ -69,8 +71,6 @@
   "option_android_google_dynamic_asset_delivery": false,
   "option_android_google_licensing_public_key": "",
   "option_android_tv_isgame": true,
-  "resourceVersion": "1.0",
-  "name": "Android",
-  "tags": [],
-  "resourceType": "GMAndroidOptions",
+  "option_android_proguard_minifying": false,
+  "option_android_proguard_shrinking": false,
 }

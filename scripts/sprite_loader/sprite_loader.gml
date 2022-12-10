@@ -3,15 +3,14 @@ function __init_theme() {
 	if(!directory_exists(root))
 		directory_create(root);
 			
-	var _l = root + "\\theme" + string(VERSION);
-	if(file_exists(_l)) return;
-	
-	log_message("THEME", "unzipping default theme to DIRECTORY.");
+	var _l = root + "\\_theme" + string(VERSION);
+	//if(file_exists(_l)) return;
+	//log_message("THEME", "unzipping default theme to DIRECTORY.");
 	var f = file_text_open_write(_l);
 	file_text_write_real(f, 0);
 	file_text_close(f);
-		
-	zip_unzip("data/themes/ThemeDef.zip", root);
+	
+	zip_unzip("data/themes/default.zip", root);
 }
 
 function _sprite_path(rel, theme) {
@@ -28,7 +27,7 @@ function _sprite_load_from_struct(str, theme, key) {
 		slice.right   = str.slice.right;
 		slice.top     = str.slice.top;
 		slice.bottom  = str.slice.bottom;
-			
+		
 		sprite_set_nineslice(s, slice);
 	}
 	return s; 

@@ -2,6 +2,7 @@ function FileObject(_name, _path) constructor {
 	name = _name;
 	path = _path;
 	spr  = -1;
+	content = -1;
 }
 
 function DirectoryObject(name, path) constructor {
@@ -76,13 +77,16 @@ function DirectoryObject(name, path) constructor {
 		
 		if(!ds_list_empty(subDir) && _hover && point_in_rectangle(_m[0], _m[1], _x, _y, ui(32), _y + hg - 1)) {
 			draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, _x, _y, ui(32), hg, COLORS.collection_path_current_bg, 0.75);
-			if(_focus && mouse_check_button_pressed(mb_left))
+			if(mouse_press(mb_left, _focus))
 				open = !open;
 		}
 		
 		if(_hover && point_in_rectangle(_m[0], _m[1], _x + ui(32), _y, _w, _y + hg - 1)) {
 			draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, _x + ui(28), _y, _w - ui(28), hg, COLORS.collection_path_current_bg, 0.75);
-			if(_focus && mouse_check_button_pressed(mb_left)) {
+			if(mouse_press(mb_left, _focus)) {
+				if(!ds_list_empty(subDir))
+					open = !open;
+				
 				if(parent.context == self)
 					parent.setContext(_homedir);
 				else

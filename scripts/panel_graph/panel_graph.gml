@@ -218,16 +218,16 @@ function Panel_Graph() : PanelContent() constructor {
 			graph_x += dx / graph_s;
 			graph_y += dy / graph_s;
 			
-			if(mouse_check_button_released(drag_key)) 
+			if(mouse_release(drag_key)) 
 				graph_dragging = false;
 		}
 		
 		if(mouse_on_graph && pFOCUS) {
 			var _doDragging = false;
-			if(mouse_check_button_pressed(mb_middle)) {
+			if(mouse_press(mb_middle)) {
 				_doDragging = true;
 				drag_key = mb_middle;
-			} else if(mouse_check_button_pressed(mb_left) && keyboard_check(vk_control)) {
+			} else if(mouse_press(mb_left) && keyboard_check(vk_control)) {
 				_doDragging = true;
 				drag_key = mb_left;
 			}
@@ -251,7 +251,7 @@ function Panel_Graph() : PanelContent() constructor {
 				graph_s_index = min(array_length(scale) - 1, graph_s_index + 1);
 				graph_s_to = ui(scale[graph_s_index]);
 			}
-			graph_s = lerp_float(graph_s, graph_s_to, 3);
+			graph_s = lerp_float(graph_s, graph_s_to, PREF_MAP[? "graph_zoom_smoooth"]);
 			
 			if(_s != graph_s) {
 				var mb_x = (mx - graph_x * _s) / _s;
@@ -324,7 +324,7 @@ function Panel_Graph() : PanelContent() constructor {
 		#endregion
 		
 		if(mouse_on_graph && pFOCUS) {
-			if(mouse_check_button_pressed(mb_left) && !keyboard_check(vk_control)) {
+			if(mouse_press(mb_left) && !keyboard_check(vk_control)) {
 				if(keyboard_check(vk_shift)) {
 					if(ds_list_empty(nodes_select_list) && node_focus) 
 						ds_list_add(nodes_select_list, node_focus);
@@ -371,7 +371,7 @@ function Panel_Graph() : PanelContent() constructor {
 				}
 			}
 			
-			if(mouse_check_button_pressed(mb_right)) {
+			if(mouse_press(mb_right)) {
 				node_hover = node_hovering;	
 				if(node_hover) {
 					var dia = dialogCall(o_dialog_menubox, mouse_mx + 8, mouse_my + 8);
@@ -500,7 +500,7 @@ function Panel_Graph() : PanelContent() constructor {
 					
 						if(!_recur) {
 							_node.drawActive(gr_x, gr_y, graph_s, 1);
-							if(mouse_check_button_released(mb_left) && !keyboard_check(vk_control)) {
+							if(mouse_release(mb_left) && !keyboard_check(vk_control)) {
 								if(ds_list_size(nodes_select_list) == 0) {
 									_node.add(node_dragging);
 									node_dragging.checkConnectGroup();
@@ -528,7 +528,7 @@ function Panel_Graph() : PanelContent() constructor {
 					
 					node_dragging.move(nx, ny);
 				
-					if(mouse_check_button_released(mb_left) && !keyboard_check(vk_control)) {
+					if(mouse_release(mb_left) && !keyboard_check(vk_control)) {
 						if(nx != node_drag_sx || ny != node_drag_sy) {
 							recordAction(ACTION_TYPE.var_modify, node_dragging, [ node_drag_sx, "x" ]);
 							recordAction(ACTION_TYPE.var_modify, node_dragging, [ node_drag_sy, "y" ]);
@@ -560,7 +560,7 @@ function Panel_Graph() : PanelContent() constructor {
 					}
 				}
 			
-				if(mouse_check_button_released(mb_left)) {
+				if(mouse_release(mb_left)) {
 					node_dragging = noone;
 				}
 			}
@@ -568,7 +568,7 @@ function Panel_Graph() : PanelContent() constructor {
 		
 		if(mouse_on_graph && pFOCUS) {
 			if(node_focus && value_focus == noone) {
-				if(mouse_check_button_pressed(mb_left) && !keyboard_check(vk_control)) {
+				if(mouse_press(mb_left) && !keyboard_check(vk_control)) {
 					node_dragging = node_focus;
 					node_drag_mx  = mouse_graph_x;
 					node_drag_my  = mouse_graph_y;
@@ -577,10 +577,6 @@ function Panel_Graph() : PanelContent() constructor {
 				
 					node_drag_ox  = -1;
 					node_drag_oy  = -1;
-				}
-			
-				if(keyboard_check_pressed(vk_f5)) {
-					node_focus.updateForward();	
 				}
 			}
 			
@@ -618,11 +614,11 @@ function Panel_Graph() : PanelContent() constructor {
 					}
 				}
 			
-				if(mouse_check_button_released(mb_left))
+				if(mouse_release(mb_left))
 					nodes_select_drag = false;
 			}
 		
-			if(mouse_on_graph && pFOCUS && mouse_check_button_pressed(mb_left) && !keyboard_check(vk_control)) {
+			if(mouse_on_graph && mouse_press(mb_left, pFOCUS) && !keyboard_check(vk_control)) {
 				if(!node_focus && !value_focus && !drag_locking) {
 					nodes_select_drag = true;
 					nodes_select_mx = mx;
@@ -899,7 +895,7 @@ function Panel_Graph() : PanelContent() constructor {
 				case 2 : draw_line_elbow(xx, yy, mx, my); break;
 			}
 			
-			if(mouse_check_button_released(mb_left)) {
+			if(mouse_release(mb_left)) {
 				if(value_focus && value_focus != value_dragging) {
 					if(value_focus.connect_type == JUNCTION_CONNECT.input)
 						value_focus.setFrom(value_dragging);
@@ -908,7 +904,7 @@ function Panel_Graph() : PanelContent() constructor {
 				} else {
 					if(value_dragging.connect_type == JUNCTION_CONNECT.input)
 						value_dragging.removeFrom();
-					value_dragging.node.updateForward();
+					value_dragging.node.triggerRender();
 					
 					if(value_focus != value_dragging) {
 						with(dialogCall(o_dialog_add_node, mouse_mx + 8, mouse_my + 8)) {	
@@ -925,7 +921,7 @@ function Panel_Graph() : PanelContent() constructor {
 			}
 		} else {
 			if(value_focus) {
-				if(pFOCUS && mouse_check_button_pressed(mb_left) && !keyboard_check(vk_control)) {
+				if(mouse_press(mb_left, pFOCUS) && !keyboard_check(vk_control)) {
 					value_dragging = value_focus;
 				}
 			}
@@ -997,7 +993,7 @@ function Panel_Graph() : PanelContent() constructor {
 		toolbar_height = ui(40);
 		var ty = h - toolbar_height;
 		
-		if(point_in_rectangle(mx, my, 0, ty, w, h))
+		if(pHOVER && point_in_rectangle(mx, my, 0, ty, w, h))
 			mouse_on_graph = false;
 			
 		draw_set_color(COLORS.panel_toolbar_fill);
@@ -1038,7 +1034,7 @@ function Panel_Graph() : PanelContent() constructor {
 		
 		if(point_in_rectangle(mx, my, mx0, my0, mx1, my1))
 			mouse_on_graph = false;
-		var hover = point_in_rectangle(mx, my, mx0, my0, mx1, my1) && !point_in_rectangle(mx, my, mx0, my0, mx0 + ui(16), my0 + ui(16)) && !minimap_dragging;
+		var hover = pHOVER && point_in_rectangle(mx, my, mx0, my0, mx1, my1) && !point_in_rectangle(mx, my, mx0, my0, mx0 + ui(16), my0 + ui(16)) && !minimap_dragging;
 		
 		if(!is_surface(minimap_surface) || surface_get_width(minimap_surface) != minimap_w || surface_get_height(minimap_surface) != minimap_h) {
 			minimap_surface = surface_create_valid(minimap_w, minimap_h);
@@ -1089,11 +1085,11 @@ function Panel_Graph() : PanelContent() constructor {
 			if(minimap_panning) {
 				graph_x = -((mx - mx0 - gw / 2) - minimap_w / 2) / ss - cx;
 				graph_y = -((my - my0 - gh / 2) - minimap_h / 2) / ss - cy;
-				if(mouse_check_button_released(mb_left))
+				if(mouse_release(mb_left))
 					minimap_panning = false;
 			}
 			
-			if(hover && mouse_check_button(mb_left))
+			if(mouse_click(mb_left, hover))
 				minimap_panning = true;
 		}
 		surface_reset_target();
@@ -1110,13 +1106,13 @@ function Panel_Graph() : PanelContent() constructor {
 			minimap_w = max(ui(64), sw);
 			minimap_h = max(ui(64), sh);
 			
-			if(mouse_check_button_released(mb_left))
+			if(mouse_release(mb_left))
 				minimap_dragging = false;
 		}
 		
-		if(point_in_rectangle(mx, my, mx0, my0, mx0 + ui(16), my0 + ui(16))) {
+		if(pHOVER && point_in_rectangle(mx, my, mx0, my0, mx0 + ui(16), my0 + ui(16))) {
 			draw_sprite_ui(THEME.node_resize, 0, mx0 + ui(2), my0 + ui(2), 1, 1, 180, c_white, 0.6);
-			if(mouse_check_button_pressed(mb_left)) {
+			if(mouse_press(mb_left, pFOCUS)) {
 				minimap_dragging = true;
 				minimap_drag_sx = minimap_w;
 				minimap_drag_sy = minimap_h;
@@ -1173,11 +1169,6 @@ function Panel_Graph() : PanelContent() constructor {
 		
 		draw_set_text(f_p0, fa_right, fa_top, COLORS._main_text_sub);
 		draw_text(w - ui(8), ui(8), "x" + string(graph_s_to));
-			
-		if(UPDATE == RENDER_TYPE.full)
-			draw_text(w - ui(8), ui(28), "Rendering...");
-		else if(UPDATE == RENDER_TYPE.full)
-			draw_text(w - ui(8), ui(28), "Rendering partial...");
 		
 		drawNodes();
 		drawJunctionConnect();
@@ -1190,5 +1181,10 @@ function Panel_Graph() : PanelContent() constructor {
 		if(pFOCUS) {
 			if(node_focus) node_focus.focusStep();
 		}
+		
+		if(UPDATE == RENDER_TYPE.full)
+			draw_text(w - ui(8), ui(28), "Rendering...");
+		else if(UPDATE == RENDER_TYPE.full)
+			draw_text(w - ui(8), ui(28), "Rendering partial...");
 	}
 }

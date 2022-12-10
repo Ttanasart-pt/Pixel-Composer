@@ -79,9 +79,9 @@ event_inherited();
 					draw_sprite_stretched(THEME.node_bg, 0, xx, yy, grid_size, grid_size);
 					BLEND_NORMAL
 						
-					if(point_in_rectangle(_m[0], _m[1], xx, yy, xx + grid_size, yy + grid_size)) {
+					if(sHOVER && point_in_rectangle(_m[0], _m[1], xx, yy, xx + grid_size, yy + grid_size)) {
 						draw_sprite_stretched_ext(THEME.node_active, 0, xx, yy, grid_size, grid_size, COLORS._main_accent, 1);
-						if(mouse_check_button_pressed(mb_left)) {
+						if(mouse_press(mb_left, sFOCUS)) {
 							target.onModify(content.path);
 							instance_destroy();
 						}

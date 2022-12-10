@@ -9,6 +9,7 @@ ON_END_NAME = [ "Hold", "Loop", "Ping pong" ];
 
 function valueKey(_time, _value, _anim = noone, _in = 0, _out = 0) constructor {
 	time	= _time;
+	ratio	= time / ANIMATOR.frames_total;
 	value	= _value;
 	anim	= _anim;
 	
@@ -17,6 +18,11 @@ function valueKey(_time, _value, _anim = noone, _in = 0, _out = 0) constructor {
 	
 	ease_in_type  = CURVE_TYPE.bezier;
 	ease_out_type = CURVE_TYPE.bezier;
+	
+	static setTime = function(time) {
+		self.time = time;	
+		ratio	= time / ANIMATOR.frames_total;
+	}
 }
 
 function valueAnimator(_val, _prop) constructor {
@@ -68,15 +74,13 @@ function valueAnimator(_val, _prop) constructor {
 			return lerp(eo, ei, rat);
 	}
 	
-	static getValue = function() {
+	static getValue = function(_time = ANIMATOR.current_frame) {
 		if(prop.display_type == VALUE_DISPLAY.gradient) return processType(values);
 		if(prop.type == VALUE_TYPE.path) return processType(values[| 0].value);
 		
 		if(!is_anim) return processType(values[| 0].value);
 		if(ds_list_size(values) == 0) return processType(0);
 		if(ds_list_size(values) == 1) return processType(values[| 0].value);
-		
-		var _time = argument_count > 0? argument[0] : ANIMATOR.current_frame;
 		
 		if(ds_list_size(values) > 1) {
 			var _time_first = values[| 0].time;
@@ -157,7 +161,7 @@ function valueAnimator(_val, _prop) constructor {
 		MODIFIED = true;
 		
 		_time = clamp(_time, 0, ANIMATOR.frames_total - 1);
-		_key.time = _time;
+		_key.setTime(_time);
 		ds_list_remove(values, _key);
 		
 		if(_replace) {
@@ -241,7 +245,7 @@ function valueAnimator(_val, _prop) constructor {
 		for(var i = 0; i < ds_list_size(values); i++) {
 			var _value_list = ds_list_create();
 			if(scale && prop.display_type != VALUE_DISPLAY.gradient)
-				_value_list[| 0] = values[| i].time / ANIMATOR.frames_total;
+				_value_list[| 0] = values[| i].time / (ANIMATOR.frames_total - 1);
 			else
 				_value_list[| 0] = values[| i].time;
 			
@@ -276,7 +280,7 @@ function valueAnimator(_val, _prop) constructor {
 			if(prop.display_type == VALUE_DISPLAY.gradient) 
 				_time = _key[| 0];
 			else if(scale && _key[| 0] <= 1)
-				_time = round(_key[| 0] * ANIMATOR.frames_total);
+				_time = round(_key[| 0] * (ANIMATOR.frames_total - 1));
 			
 			var ease_in  = ds_list_get(_key, 2);
 			var ease_out = ds_list_get(_key, 3);

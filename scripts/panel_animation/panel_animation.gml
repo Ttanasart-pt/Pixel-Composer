@@ -45,6 +45,10 @@ function Panel_Animation() : PanelContent() constructor {
 	timeline_drag_mx = 0;
 	timeline_drag_my = 0;
 	
+	timeline_stretch = 0;
+	timeline_stretch_sx = 0;
+	timeline_stretch_mx = 0;
+	
 	timeline_show_time = -1;
 	timeline_preview = noone;
 	
@@ -67,17 +71,18 @@ function Panel_Animation() : PanelContent() constructor {
 	addHotkey("", "Play/Pause",		vk_space, MOD_KEY.none,	function() { 
 		ANIMATOR.is_playing = !ANIMATOR.is_playing; 
 		if(ANIMATOR.is_playing && ANIMATOR.frames_total) {
-			ANIMATOR.real_frame = 0;
+			ANIMATOR.setFrame(0);
+			ANIMATOR.frame_progress = true;
 		}
 	});
-	addHotkey("", "First frame",	vk_home,  MOD_KEY.none,	function() { ANIMATOR.real_frame = 0; });
-	addHotkey("", "Last frame",		vk_end,   MOD_KEY.none,	function() { ANIMATOR.real_frame = ANIMATOR.frames_total - 1; });
+	addHotkey("", "First frame",	vk_home,  MOD_KEY.none,	function() { ANIMATOR.setFrame(0); });
+	addHotkey("", "Last frame",		vk_end,   MOD_KEY.none,	function() { ANIMATOR.setFrame(ANIMATOR.frames_total - 1); });
 	addHotkey("", "Next frame",		vk_right, MOD_KEY.none,	function() { 
-		ANIMATOR.real_frame = min(ANIMATOR.real_frame + 1, ANIMATOR.frames_total - 1); 
+		ANIMATOR.setFrame(min(ANIMATOR.real_frame + 1, ANIMATOR.frames_total - 1)); 
 		ANIMATOR.frame_progress = true; 
 	});
 	addHotkey("", "Previous frame",	vk_left, MOD_KEY.none,	function() { 
-		ANIMATOR.real_frame = max(ANIMATOR.real_frame - 1, 0); 
+		ANIMATOR.setFrame(max(ANIMATOR.real_frame - 1, 0));
 		ANIMATOR.frame_progress = true; 
 	});
 	addHotkey("Animation", "Delete keys",	vk_delete, MOD_KEY.none, function() { deleteKeys(); });
@@ -198,11 +203,13 @@ function Panel_Animation() : PanelContent() constructor {
 		[ "Delete", function() { deleteKeys(); }, [ "Animation", "Delete keys" ] ],
 	];
 	
-	function onResize(dw, dh) {
+	function onResize() {
+		initSize();
+		
 		if(w - tool_width > 1) {
 			if(is_surface(timeline_mask) && surface_exists(timeline_mask))
 				surface_size_to(timeline_mask, timeline_w, timeline_h);
-			else 
+			else
 				timeline_mask = surface_create_valid(timeline_w, timeline_h);
 				
 			if(is_surface(timeline_surface) && surface_exists(timeline_surface))
@@ -293,24 +300,6 @@ function Panel_Animation() : PanelContent() constructor {
 		#region bg
 			draw_sprite_stretched(THEME.ui_panel_bg, 1, 0, 0, bar_w, bar_h);
 			draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, 0, 0, bar_total_w, bar_h, COLORS.panel_animation_timeline_blend, 1);
-				
-			//TODO: Add UI scaling, no one use timeline preview anyway
-			//if(timeline_scale > 16 && timeline_preview != noone) {
-			//	var prev_s = timeline_scale - ui(4);
-			//	draw_set_color(COLORS.panel_animation_preview_frame);
-			//	for(var i = 0; i < ANIMATOR.frames_total; i++) {
-			//		var fr_x = i * timeline_scale + timeline_shift + ui(2);
-			//		var fr_y = timeline_h - ui(2) - prev_s;
-						
-			//		var surf = timeline_preview.cached_output[i];
-			//		if(!surf || !surface_exists(surf)) continue;
-						
-			//		var ss = prev_s / max(surface_get_width(surf), surface_get_height(surf));
-			//		draw_rectangle(fr_x, fr_y, fr_x + prev_s, fr_y + prev_s, 1);
-						
-			//		draw_surface_ext(surf, fr_x, fr_y, ss, ss, 0, c_white, 1);
-			//	}
-			//}
 			
 			for(var i = 10; i <= ANIMATOR.frames_total; i += 10) {
 				var bar_line_x = i * ui(timeline_scale) + timeline_shift;
@@ -335,14 +324,13 @@ function Panel_Animation() : PanelContent() constructor {
 				
 			if(inspecting && inspecting.use_cache) {
 				for(var i = 0; i < ANIMATOR.frames_total; i++) {
-					if(i >= array_length(inspecting.cached_output)) 
+					if(i >= array_length(inspecting.cache_result)) 
 						break;
 						
 					var x0 = (i + 0) * ui(timeline_scale) + timeline_shift;
 					var x1 = (i + 1) * ui(timeline_scale) + timeline_shift;
 					
-					var sh = inspecting.cached_output[i];
-					draw_set_color(is_surface(sh)? c_lime : c_red);
+					draw_set_color(inspecting.cacheExist(i)? c_lime : c_red);
 					draw_set_alpha(0.5);
 					draw_rectangle(x0, bar_h - ui(4), x1, bar_h, false);
 					draw_set_alpha(1);
@@ -354,7 +342,7 @@ function Panel_Animation() : PanelContent() constructor {
 			var index = 0, key_y = timeline_h / 2;
 					
 			for( var i = 0; i < ds_list_size(anim_properties); i++ ) {
-				var prop = anim_properties[| i];	
+				var prop = anim_properties[| i];
 					
 				for(var k = 0; k < ds_list_size(prop.animator.values); k++) {
 					var t = (prop.animator.values[| k].time + 1) * ui(timeline_scale) + timeline_shift;
@@ -364,71 +352,69 @@ function Panel_Animation() : PanelContent() constructor {
 		#endregion
 			
 		#region pan zoom
-			timeline_shift = lerp_float(timeline_shift, timeline_shift_to, 5);
+			timeline_shift = lerp_float(timeline_shift, timeline_shift_to, 4);
 				
 			if(timeline_scubbing) {
-				ANIMATOR.real_frame = (mx - bar_x - timeline_shift) / ui(timeline_scale) - 1;
-				ANIMATOR.real_frame = clamp(ANIMATOR.real_frame, 0, ANIMATOR.frames_total - 1);
+				var rfrm = (mx - bar_x - timeline_shift) / ui(timeline_scale) - 1;
+				ANIMATOR.setFrame(rfrm);
 				timeline_show_time  = ANIMATOR.current_frame;
 					
 				if(timeline_show_time != _scrub_frame) {
 					_scrub_frame = timeline_show_time;
-					ANIMATOR.is_scrubing = true;
 				}
 					
-				if(mouse_check_button_released(mb_left))
+				if(mouse_release(mb_left))
 					timeline_scubbing = false;
 			}
+			
 			if(timeline_dragging) {
 				timeline_shift_to = clamp(timeline_drag_sx + mx - timeline_drag_mx, -max(bar_total_w - bar_w, 0), 0);
 				timeline_shift = timeline_shift_to;
 				dope_sheet_y_to = clamp(timeline_drag_sy + my - timeline_drag_my, -dope_sheet_y_max, 0);
 					
-				if(mouse_check_button_released(mb_middle))
+				if(mouse_release(mb_middle))
 					timeline_dragging = false;
 			}
-				
-			if(pHOVER) {
-				if(point_in_rectangle(mx, my, bar_x, 16, bar_x + bar_w, bar_y - 8)) {
-					if(mouse_wheel_down()) {
-						timeline_scale = max(timeline_scale - 1, 1);
-						timeline_shift_to = 0;
-					}
-					
-					if(mouse_wheel_up()) {
-						timeline_scale = min(timeline_scale + 1, 24);
-						timeline_shift_to = 0;
-					}
-						
-					if(mouse_check_button_pressed(mb_middle)) {
-						timeline_dragging = true;
-					
-						timeline_drag_sx = timeline_shift;
-						timeline_drag_sy = dope_sheet_y_to;
-						timeline_drag_mx = mx;
-						timeline_drag_my = my;
-					}
+			
+			if(pHOVER && point_in_rectangle(mx, my, bar_x, 16, bar_x + bar_w, bar_y - 8)) {
+				if(mouse_wheel_down()) {
+					timeline_scale = max(timeline_scale - 1, 1);
+					timeline_shift_to = 0;
 				}
 					
-				if(point_in_rectangle(mx, my, bar_x, bar_y, bar_x + bar_w, bar_y + bar_h)) {
-					if(mouse_wheel_down())
-						timeline_shift_to = clamp(timeline_shift_to - 64, -max(bar_total_w - bar_w, 0), 0);
-					if(mouse_wheel_up())
-						timeline_shift_to = clamp(timeline_shift_to + 64, -max(bar_total_w - bar_w, 0), 0);
-						
-					if(pFOCUS && mouse_check_button_pressed(mb_left)) {
-						timeline_scubbing = true;
-						timeline_scub_st  = ANIMATOR.current_frame;
-						_scrub_frame = timeline_scub_st;
-					}
+				if(mouse_wheel_up()) {
+					timeline_scale = min(timeline_scale + 1, 24);
+					timeline_shift_to = 0;
 				}
+						
+				if(mouse_press(mb_middle, pFOCUS)) {
+					timeline_dragging = true;
 					
-				if(point_in_rectangle(mx, my, bar_x, 8, bar_x + bar_w, 8 + 16)) {
-					if(pFOCUS && mouse_check_button_pressed(mb_left)) {
-						timeline_scubbing = true;
-						timeline_scub_st  = ANIMATOR.current_frame;
-						_scrub_frame = timeline_scub_st;
-					}
+					timeline_drag_sx = timeline_shift;
+					timeline_drag_sy = dope_sheet_y_to;
+					timeline_drag_mx = mx;
+					timeline_drag_my = my;
+				}
+			}
+					
+			if(pHOVER && point_in_rectangle(mx, my, bar_x, bar_y, bar_x + timeline_shift + bar_total_w, bar_y + bar_h)) { //preview
+				if(mouse_wheel_down())
+					timeline_shift_to = clamp(timeline_shift_to - 64, -max(bar_total_w - bar_w, 0), 0);
+				if(mouse_wheel_up())
+					timeline_shift_to = clamp(timeline_shift_to + 64, -max(bar_total_w - bar_w, 0), 0);
+						
+				if(mouse_press(mb_left, pFOCUS)) {
+					timeline_scubbing = true;
+					timeline_scub_st  = ANIMATOR.current_frame;
+					_scrub_frame = timeline_scub_st;
+				}
+			}
+					
+			if(pHOVER && point_in_rectangle(mx, my, bar_x, 8, bar_x + timeline_shift + bar_total_w, 8 + 16)) { //top bar
+				if(mouse_press(mb_left, pFOCUS)) {
+					timeline_scubbing = true;
+					timeline_scub_st  = ANIMATOR.current_frame;
+					_scrub_frame = timeline_scub_st;
 				}
 			}
 		#endregion
@@ -480,7 +466,7 @@ function Panel_Animation() : PanelContent() constructor {
 					if(pHOVER && point_in_circle(msx, msy, _tx, key_y, ui(6))) {
 						hovering = key;
 						draw_sprite_ui_uniform(THEME.timeline_keyframe, 2, _tx, key_y, 1, COLORS.panel_animation_keyframe_selected);
-						if(pFOCUS && mouse_check_button_pressed(mb_left)) {
+						if(mouse_press(mb_left, pFOCUS)) {
 							keyframe_dragging = prop.animator.values[| k];
 							keyframe_drag_type = KEYFRAME_DRAG_TYPE.ease_in;
 						}
@@ -499,7 +485,7 @@ function Panel_Animation() : PanelContent() constructor {
 					if(pHOVER && point_in_circle(msx, msy, _tx, key_y, ui(6))) {
 						hovering = key;
 						draw_sprite_ui_uniform(THEME.timeline_keyframe, 3, _tx, key_y, 1, COLORS.panel_animation_keyframe_selected);
-						if(pFOCUS && mouse_check_button_pressed(mb_left)) {
+						if(mouse_press(mb_left, pFOCUS)) {
 							keyframe_dragging = prop.animator.values[| k];
 							keyframe_drag_type = KEYFRAME_DRAG_TYPE.ease_out;
 						}
@@ -617,7 +603,7 @@ function Panel_Animation() : PanelContent() constructor {
 				key_y += ui(6);
 				if(pHOVER && point_in_rectangle(msx, msy, 0, key_y - ui(10), lable_w, key_y + ui(10))) {
 					draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, 0, key_y - ui(10), lable_w, ui(20), COLORS.panel_animation_dope_bg_hover, 1);
-					if(pFOCUS && msx < tool_width - ui(88) && mouse_check_button_pressed(mb_left))
+					if(msx < tool_width - ui(88) && mouse_press(mb_left, pFOCUS))
 						prop.node.anim_show = !prop.node.anim_show;
 				} else 
 					draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, 0, key_y - ui(10), lable_w, ui(20), COLORS.panel_animation_dope_bg, 1);
@@ -630,7 +616,7 @@ function Panel_Animation() : PanelContent() constructor {
 					draw_sprite_ui_uniform(THEME.animate_node_go, 0, tx, key_y - 1, 1, COLORS._main_icon, 1);
 					TOOLTIP = "Go to node";
 								
-					if(pFOCUS && mouse_check_button_pressed(mb_left)) {
+					if(mouse_press(mb_left, pFOCUS)) {
 						PANEL_INSPECTOR.inspecting = _node;
 						ds_list_clear(PANEL_GRAPH.nodes_select_list);
 						PANEL_GRAPH.node_focus = _node;
@@ -652,7 +638,7 @@ function Panel_Animation() : PanelContent() constructor {
 			if(pHOVER && point_in_circle(msx, msy, tx, ty, ui(6))) {
 				draw_sprite_ui_uniform(THEME.prop_keyframe, 0, tx, ty, 1, COLORS._main_icon, 1);
 							
-				if(pFOCUS && mouse_check_button_pressed(mb_left)) {
+				if(mouse_press(mb_left, pFOCUS)) {
 					var _t = -1;
 					for(var j = 0; j < ds_list_size(prop.animator.values); j++) {
 						var _key = prop.animator.values[| j];
@@ -660,8 +646,7 @@ function Panel_Animation() : PanelContent() constructor {
 							_t = _key.time;
 						}
 					}
-					if(_t > -1) ANIMATOR.real_frame = _t;
-					ANIMATOR.is_scrubing = true;
+					if(_t > -1) ANIMATOR.setFrame(_t);
 				}
 			} else
 				draw_sprite_ui_uniform(THEME.prop_keyframe, 0, tx, ty, 1, COLORS._main_icon, 0.75);
@@ -670,12 +655,11 @@ function Panel_Animation() : PanelContent() constructor {
 			if(pHOVER && point_in_circle(msx, msy, tx, ty, ui(6))) {
 				draw_sprite_ui_uniform(THEME.prop_keyframe, 2, tx, ty, 1, COLORS._main_icon, 1);
 							
-				if(pFOCUS && mouse_check_button_pressed(mb_left)) {
+				if(mouse_press(mb_left, pFOCUS)) {
 					for(var j = 0; j < ds_list_size(prop.animator.values); j++) {
 						var _key = prop.animator.values[| j];
 						if(_key.time > ANIMATOR.current_frame) {
-							ANIMATOR.real_frame = _key.time;
-							ANIMATOR.is_scrubing = true;
+							ANIMATOR.setFrame(_key.time);
 							break;
 						}
 					}
@@ -687,7 +671,7 @@ function Panel_Animation() : PanelContent() constructor {
 			if(pHOVER && point_in_circle(msx, msy, tx, ty, ui(6))) {
 				draw_sprite_ui_uniform(THEME.prop_keyframe, 1, tx, ty, 1, COLORS._main_accent, 1);
 							
-				if(pFOCUS && mouse_check_button_pressed(mb_left)) {
+				if(mouse_press(mb_left, pFOCUS)) {
 					var _add = false;
 					for(var j = 0; j < ds_list_size(prop.animator.values); j++) {
 						var _key = prop.animator.values[| j];
@@ -713,7 +697,7 @@ function Panel_Animation() : PanelContent() constructor {
 					draw_sprite_ui_uniform(THEME.timeline_graph, 1, tx, ty, 1, COLORS._main_icon, prop.animator.show_graph? 1 : 0.75);
 					TOOLTIP = "Show graph";
 								
-					if(pFOCUS && mouse_check_button_pressed(mb_left)) {
+					if(mouse_press(mb_left, pFOCUS)) {
 						prop.animator.show_graph = !prop.animator.show_graph;
 					}
 				} else
@@ -725,7 +709,7 @@ function Panel_Animation() : PanelContent() constructor {
 				draw_sprite_ui_uniform(THEME.prop_on_end, prop.on_end, tx, ty, 1, COLORS._main_icon, 1);
 				TOOLTIP = "Looping mode " + ON_END_NAME[prop.on_end];
 							
-				if(pFOCUS && mouse_check_button_pressed(mb_left)) {
+				if(mouse_press(mb_left, pFOCUS)) {
 					prop.on_end = safe_mod(prop.on_end + 1, sprite_get_number(THEME.prop_on_end));
 				}
 			} else
@@ -734,7 +718,7 @@ function Panel_Animation() : PanelContent() constructor {
 			if(pHOVER && point_in_circle(msx, msy, ui(22), key_y - 1, ui(10))) {
 				draw_sprite_ui_uniform(THEME.timeline_clock, 1, ui(22), key_y - 1, 1, COLORS._main_icon, 1);
 							
-				if(pFOCUS && mouse_check_button_pressed(mb_left)) {
+				if(mouse_press(mb_left, pFOCUS)) {
 					prop.animator.is_anim = !prop.animator.is_anim;
 					updatePropertyList();
 				}
@@ -766,7 +750,7 @@ function Panel_Animation() : PanelContent() constructor {
 			ds_name_surface = surface_create_valid(dope_sheet_w, dope_sheet_h);
 			
 		#region scroll
-			dope_sheet_y = lerp_float(dope_sheet_y, dope_sheet_y_to, 5);
+			dope_sheet_y = lerp_float(dope_sheet_y, dope_sheet_y_to, 4);
 					
 			if(pHOVER && point_in_rectangle(mx, my, ui(8), ui(8), tool_width, ui(8) + dope_sheet_h)) {
 				if(mouse_wheel_down())	dope_sheet_y_to = clamp(dope_sheet_y_to - ui(32), -dope_sheet_y_max, 0);
@@ -792,12 +776,12 @@ function Panel_Animation() : PanelContent() constructor {
 			if(is_scrolling) {
 				dope_sheet_y_to = clamp((my - scr_y - scr_scale_s / 2) / (scr_s - scr_scale_s), 0, 1) * -dope_sheet_y_max;
 					
-				if(mouse_check_button_released(mb_left)) is_scrolling = false;
+				if(mouse_release(mb_left)) is_scrolling = false;
 			}
 				
-			if(point_in_rectangle(mx, my, scr_x - ui(2), scr_y - ui(2), scr_x + scr_w + ui(2), scr_y + scr_h + ui(2))) {
+			if(pHOVER && point_in_rectangle(mx, my, scr_x - ui(2), scr_y - ui(2), scr_x + scr_w + ui(2), scr_y + scr_h + ui(2))) {
 				draw_sprite_stretched_ext(THEME.ui_scrollbar, 0, s_bar_x, s_bar_y, s_bar_w, s_bar_h, COLORS.scrollbar_hover, 1);
-				if(mouse_check_button(mb_left))
+				if(mouse_click(mb_left, pFOCUS))
 					is_scrolling = true;
 			} else {
 				draw_sprite_stretched_ext(THEME.ui_scrollbar, 0, s_bar_x, s_bar_y, s_bar_w, s_bar_h, COLORS.scrollbar_idle, 1);	
@@ -810,11 +794,11 @@ function Panel_Animation() : PanelContent() constructor {
 		var msy = my - ui(8);
 				
 		#region bg
-			draw_sprite_stretched(THEME.ui_panel_bg, 1, 0, 0, bar_w, dope_sheet_h);
-			draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, 0, 0, bar_total_w, dope_sheet_h, COLORS.panel_animation_timeline_blend, 1);
+			draw_sprite_stretched(THEME.ui_panel_bg, 1, 0, 0, bar_w, dope_sheet_h); //base BG
+			draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, timeline_shift, 0, bar_total_w, dope_sheet_h, COLORS.panel_animation_timeline_blend, 1);
 			
 			draw_set_color(COLORS.panel_animation_timeline_top);
-			draw_rectangle(0, 0, bar_total_w, 16, false);
+			draw_rectangle(0, 0, bar_total_w, ui(16), false);
 					
 			dope_sheet_y_max = 0;
 			var key_y = ui(24) + dope_sheet_y, key_y_node, _node = noone;
@@ -851,18 +835,91 @@ function Panel_Animation() : PanelContent() constructor {
 				draw_set_color(COLORS.panel_animation_frame_divider);
 				draw_line(bar_line_x, ui(16), bar_line_x, dope_sheet_h);
 						
-				draw_set_text(f_p2, fa_center, fa_bottom, COLORS._main_text_sub);
-				draw_text(bar_line_x, ui(16), string(i));
+				draw_set_text(f_p2, fa_right, fa_top, COLORS._main_text_sub);
+				draw_text(bar_line_x - ui(2), 0, string(i));
 			}
 				
 			var bar_line_x = (ANIMATOR.current_frame + 1) * ui(timeline_scale) + timeline_shift;
 			var cc = ANIMATOR.is_playing? COLORS._main_value_positive : COLORS._main_accent;
 			
 			draw_set_color(cc);
-			draw_line(bar_line_x, ui(16), bar_line_x, dope_sheet_h);
+			draw_set_font(f_p2);
+			draw_line(bar_line_x, 0, bar_line_x, dope_sheet_h);
+			
+			var cf = string(ANIMATOR.current_frame + 1);
+			var tx = string_width(cf) + ui(4);
+			draw_rectangle(bar_line_x - tx, 0, bar_line_x, ui(16), false);
+			draw_roundrect_ext(bar_line_x - tx - ui(2), 0, bar_line_x, ui(16), ui(2), ui(2), false);
+			
+			draw_set_text(f_p2, fa_right, fa_top, COLORS._main_icon_dark);
+			draw_text(bar_line_x - ui(2), 0, cf);
+		#endregion
+		
+		#region stretch
+			var stx = bar_total_w + ui(16);
+			var sty = ui(10);
+			
+			if(timeline_stretch == 1) {
+				var len = round((mx - bar_x - timeline_shift) / ui(timeline_scale)) - 2;
+				len = max(1, len);
+				TOOLTIP = "Animation length " + string(len);
+				ANIMATOR.frames_total = len;
 				
-			draw_set_text(f_p2, fa_center, fa_bottom, cc);
-			draw_text(bar_line_x, ui(16), string(ANIMATOR.current_frame + 1));
+				if(mouse_release(mb_left))
+					timeline_stretch = 0;
+					
+				draw_sprite_ui(THEME.animation_stretch, 0, stx, sty, 1, 1, 0, COLORS._main_accent, 1);
+			} else if(timeline_stretch == 2) {
+				var len = round((mx - bar_x - timeline_shift) / ui(timeline_scale)) - 2;
+				len = max(1, len);
+				TOOLTIP = "Animation length " + string(len);
+				var _len = ANIMATOR.frames_total;
+				ANIMATOR.frames_total = len;
+				
+				if(_len != len) {
+					var key = ds_map_find_first(NODE_MAP);
+					repeat(ds_map_size(NODE_MAP)) {
+						var n = NODE_MAP[? key];
+						key = ds_map_find_next(NODE_MAP, key);
+						if(!n || !n.active) continue;
+						
+						for(var i = 0; i < ds_list_size(n.inputs); i++) {
+							var in = n.inputs[| i];
+							if(!in.animator.is_anim) continue;
+							for(var j = 0; j < ds_list_size(in.animator.values); j++) {
+								var t = in.animator.values[| j];
+								t.time = t.ratio * len;
+							}
+						}
+					}
+				}
+				
+				if(mouse_release(mb_left))
+					timeline_stretch = 0;
+					
+				draw_sprite_ui(THEME.animation_stretch, 1, stx, sty, 1, 1, 0, COLORS._main_accent, 1);
+			} else {
+				if(pHOVER && point_in_circle(msx, msy, stx, sty, sty)) {
+					if(keyboard_check(vk_control)) {
+						draw_sprite_ui(THEME.animation_stretch, 1, stx, sty, 1, 1, 0, COLORS._main_icon, 1);
+						TOOLTIP = "Stretch animation";
+						if(mouse_press(mb_left, pFOCUS)) {
+							timeline_stretch = 2;
+							timeline_stretch_mx = msx;
+							timeline_stretch_sx = ANIMATOR.frames_total;
+						}
+					} else {
+						draw_sprite_ui(THEME.animation_stretch, 0, stx, sty, 1, 1, 0, COLORS._main_icon, 1);
+						TOOLTIP = "Adjust animation length";
+						if(mouse_press(mb_left, pFOCUS)) {
+							timeline_stretch = 1;
+							timeline_stretch_mx = msx;
+							timeline_stretch_sx = ANIMATOR.frames_total;
+						}
+					}
+				} else
+					draw_sprite_ui(THEME.animation_stretch, 0, stx, sty, 1, 1, 0, COLORS._main_icon, 0.5);
+			}
 		#endregion
 		
 		var key_sy = ui(24) + dope_sheet_y;
@@ -919,7 +976,7 @@ function Panel_Animation() : PanelContent() constructor {
 			draw_rectangle(keyframe_box_sx, keyframe_box_sy, msx, msy, false);
 			draw_set_alpha(1);
 					
-			if(mouse_check_button_released(mb_left))
+			if(mouse_release(mb_left))
 				keyframe_boxing = false;
 		}
 							
@@ -952,7 +1009,7 @@ function Panel_Animation() : PanelContent() constructor {
 						if(DOUBLE_CLICK) {
 							keyframe_dragging = keyframe;
 							keyframe_drag_type = KEYFRAME_DRAG_TYPE.ease_both;
-						} else if(mouse_check_button_pressed(mb_left)) {
+						} else if(mouse_press(mb_left)) {
 							keyframe_dragging = keyframe;
 							keyframe_drag_type = KEYFRAME_DRAG_TYPE.move;
 						}
@@ -972,9 +1029,9 @@ function Panel_Animation() : PanelContent() constructor {
 					var box_y0 = min(keyframe_box_sy, msy);
 					var box_y1 = max(keyframe_box_sy, msy);
 									
-					if(!point_in_rectangle(t, key_y, box_x0, box_y0, box_x1, box_y1) && ds_list_exist(keyframe_selecting, keyframe))
+					if(pHOVER && !point_in_rectangle(t, key_y, box_x0, box_y0, box_x1, box_y1) && ds_list_exist(keyframe_selecting, keyframe))
 						ds_list_remove(keyframe_selecting, keyframe);
-					if(point_in_rectangle(t, key_y, box_x0, box_y0, box_x1, box_y1) && !ds_list_exist(keyframe_selecting, keyframe))
+					if(pHOVER && point_in_rectangle(t, key_y, box_x0, box_y0, box_x1, box_y1) && !ds_list_exist(keyframe_selecting, keyframe))
 						ds_list_add(keyframe_selecting, keyframe);
 				}
 			}
@@ -987,8 +1044,8 @@ function Panel_Animation() : PanelContent() constructor {
 			}
 		}
 						
-		if(pFOCUS && point_in_rectangle(msx, msy, 0, ui(16), dope_sheet_w, dope_sheet_h)) {
-			if(mouse_check_button_pressed(mb_left) || mouse_check_button_pressed(mb_right)) {
+		if(pHOVER && point_in_rectangle(msx, msy, 0, ui(16), dope_sheet_w, dope_sheet_h)) {
+			if(mouse_press(mb_left, pFOCUS) || mouse_press(mb_right, pFOCUS)) {
 				if(key_hover == noone) {
 					ds_list_clear(keyframe_selecting);
 				} else {
@@ -1006,7 +1063,7 @@ function Panel_Animation() : PanelContent() constructor {
 				}
 			}
 							
-			if(mouse_check_button_pressed(mb_left)) {
+			if(mouse_press(mb_left, pFOCUS)) {
 				if(stagger_mode == 1) {
 					if(key_hover == noone || !ds_list_exist(keyframe_selecting, key_hover)) 
 						stagger_mode = 0;
@@ -1025,10 +1082,9 @@ function Panel_Animation() : PanelContent() constructor {
 			}
 		}
 						
-		if(pFOCUS && mouse_check_button_pressed(mb_right)) {
+		if(mouse_press(mb_right, pFOCUS)) {
 			if(!ds_list_empty(keyframe_selecting)) {
-				dialogCall(o_dialog_menubox, mouse_mx + ui(8), mouse_my + ui(8))
-					.setMenu(keyframe_menu);
+				dialogCall(o_dialog_menubox, mouse_mx + ui(8), mouse_my + ui(8)).setMenu(keyframe_menu);
 			}
 		}
 						
@@ -1047,7 +1103,7 @@ function Panel_Animation() : PanelContent() constructor {
 								
 				timeline_show_time     = floor(tt);
 								
-				if(mouse_check_button_released(mb_left)) {
+				if(mouse_release(mb_left)) {
 					keyframe_dragging = noone;
 									
 					for( var i = 0; i < ds_list_size(keyframe_selecting); i++ ) {
@@ -1084,7 +1140,7 @@ function Panel_Animation() : PanelContent() constructor {
 						break;
 				}
 								
-				if(mouse_check_button_released(mb_left)) {
+				if(mouse_release(mb_left)) {
 					recordAction(ACTION_TYPE.var_modify, keyframe_dragging, [_in, "ease_in"]);
 					recordAction(ACTION_TYPE.var_modify, keyframe_dragging, [_ot, "ease_out"]);
 								
@@ -1119,7 +1175,7 @@ function Panel_Animation() : PanelContent() constructor {
 		var by = h - ui(40);
 		if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), [mx, my], pFOCUS, pHOVER, "Stop", THEME.sequence_control, 4, ANIMATOR.is_playing? COLORS._main_accent : COLORS._main_icon) == 2) {
 			ANIMATOR.is_playing = false;
-			ANIMATOR.real_frame = 0;
+			ANIMATOR.setFrame(0);
 		}
 		
 		bx += ui(36);
@@ -1130,26 +1186,26 @@ function Panel_Animation() : PanelContent() constructor {
 		
 		bx += ui(36);
 		if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), [mx, my], pFOCUS, pHOVER, "Go to first frame", THEME.sequence_control, 3) == 2) {
-			ANIMATOR.real_frame = 0;
-			ANIMATOR.is_scrubing = true;
+			ANIMATOR.setFrame(0);
+			ANIMATOR.frame_progress = true;
 		}
 			
 		bx += ui(36);
 		if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), [mx, my], pFOCUS, pHOVER, "Go to last frame", THEME.sequence_control, 2) == 2) {
-			ANIMATOR.real_frame = ANIMATOR.frames_total - 1;
-			ANIMATOR.is_scrubing = true;
+			ANIMATOR.setFrame(ANIMATOR.frames_total - 1);
+			ANIMATOR.frame_progress = true;
 		}
 			
 		bx += ui(36);
 		if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), [mx, my], pFOCUS, pHOVER, "Previous frame", THEME.sequence_control, 5) == 2) {
-			ANIMATOR.real_frame = clamp(ANIMATOR.real_frame - 1, 0, ANIMATOR.frames_total - 1);
-			ANIMATOR.is_scrubing = true;
+			ANIMATOR.setFrame(ANIMATOR.real_frame - 1);
+			ANIMATOR.frame_progress = true;
 		}
 			
 		bx += ui(36);
 		if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), [mx, my], pFOCUS, pHOVER, "Next frame", THEME.sequence_control, 6) == 2) {
-			ANIMATOR.real_frame = clamp(ANIMATOR.real_frame + 1, 0, ANIMATOR.frames_total - 1);
-			ANIMATOR.is_scrubing = true;
+			ANIMATOR.setFrame(ANIMATOR.real_frame + 1);
+			ANIMATOR.frame_progress = true;
 		}
 		
 		bx = w - ui(40);

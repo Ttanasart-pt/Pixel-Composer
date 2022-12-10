@@ -2,8 +2,8 @@
 event_inherited();
 
 #region data
-	dialog_w = ui(796);
-	dialog_h = ui(388);
+	dialog_w = ui(812);
+	dialog_h = ui(396);
 	destroy_on_click_out = true;
 	
 	name = "Color selector";
@@ -51,9 +51,13 @@ event_inherited();
 			if(preset_selecting == i)
 				_height = ui(28) + row * _gs + ui(12);
 			else
-				_height = ui(52);
+				_height = ui(56);
+			
+			var isHover = sHOVER && point_in_rectangle(_m[0], _m[1], ui(4), yy, ui(4) + sp_preset_w - ui(16), yy + _height);
 			
 			draw_sprite_stretched(THEME.ui_panel_bg, 1, ui(4), yy, sp_preset_w - ui(16), _height);
+			if(isHover) 
+				draw_sprite_stretched_ext(THEME.node_active, 1, ui(4), yy, sp_preset_w - ui(16), _height, COLORS._main_accent, 1);
 			
 			draw_set_text(f_p2, fa_left, fa_top, COLORS._main_text_sub);
 			draw_text(ui(16), yy + ui(8), preset_name[| i]);
@@ -62,31 +66,30 @@ event_inherited();
 			else
 				drawPalette(presets[| i], ui(16), yy + ui(28), ww, ui(20));
 			
-			if(sFOCUS) {
-				if(!click_block && mouse_check_button(mb_left)) {
-					if(preset_selecting == i) {
-						if(point_in_rectangle(_m[0], _m[1], ui(16), yy + ui(28), ui(16) + ww, yy + ui(28) + _height)) {
-							var m_ax = _m[0] - ui(16);
-							var m_ay = _m[1] - (yy + ui(28));
+			if(!click_block && mouse_click(mb_left, sFOCUS)) {
+				if(preset_selecting == i && sHOVER && point_in_rectangle(_m[0], _m[1], ui(16), yy + ui(28), ui(16) + ww, yy + ui(28) + _height)) {
+					var m_ax = _m[0] - ui(16);
+					var m_ay = _m[1] - (yy + ui(28));
 					
-							var m_gx = floor(m_ax / _gs);
-							var m_gy = floor(m_ay / _gs);
-					
-							var _index = clamp(m_gy * col + m_gx, 0, pre_amo - 1);
-							selector.setColor(presets[| i][_index]);
-						} 
-					} else if(point_in_rectangle(_m[0], _m[1], ui(4), yy, ui(4) + sp_preset_w - ui(16), yy + _height)) {
-						preset_selecting = i;
-						click_block = true;
+					var m_gx = floor(m_ax / _gs);
+					var m_gy = floor(m_ay / _gs);
+						
+					var _index = m_gy * col + m_gx;
+					if(_index < pre_amo && _index >= 0) {
+						selector.setColor(presets[| i][_index]);
+						selector.setHSV();
 					}
-				}	
-			}
+				} else if(isHover) {
+					preset_selecting = i;
+					click_block = true;
+				}
+			}	
 			
 			yy += _height + ui(4);
 			hh += _height + ui(4);
 		}
 		
-		if(mouse_check_button_released(mb_left))
+		if(mouse_release(mb_left))
 			click_block = false;
 		
 		return hh;

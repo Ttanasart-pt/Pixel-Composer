@@ -11,5 +11,5 @@
 	tb_name.hover  = sHOVER;
 	
 	tb_name.draw(dialog_x + ui(64), dialog_y + ui(8), dialog_w - ui(72), dialog_h - ui(16), 
-		"New file", mouse_ui);
+		name, mouse_ui);
 #endregion

@@ -19,11 +19,11 @@
 	COLOR_KEYS = [];
 	
 	globalvar VERSION, SAVEFILE_VERSION, VERSION_STRING;
-	VERSION = 110;
-	SAVEFILE_VERSION = 90;
-	VERSION_STRING = "0.11.0";
+	VERSION = 1000;
+	SAVEFILE_VERSION = 1000;
+	VERSION_STRING = "1.0.0";
 	
-	globalvar NODES, ANIMATOR, NODE_MAP, APPEND_MAP, HOTKEYS, HOTKEY_CONTEXT;
+	globalvar NODES, NODE_MAP, APPEND_MAP, HOTKEYS, HOTKEY_CONTEXT;
 	
 	NODES		= ds_list_create();
 	NODE_MAP	= ds_map_create();
@@ -37,19 +37,6 @@
 		loop,
 		stop
 	}
-	
-	ANIMATOR = {
-		frames_total : 30,
-		current_frame : 0,
-		real_frame : 0,
-		framerate : 30,
-		is_playing : false,
-		is_scrubing : false,
-		
-		frame_progress : false,
-		
-		playback : ANIMATOR_END.loop
-	};
 #endregion
 
 #region inputs

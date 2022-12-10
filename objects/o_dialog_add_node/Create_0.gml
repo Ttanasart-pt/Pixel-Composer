@@ -123,9 +123,9 @@ event_inherited();
 			
 			if(key == page_key) {
 				draw_sprite_stretched(THEME.ui_panel_bg, 0, 0, _y + hh, ui(132), hg);
-			} else if(point_in_rectangle(_m[0], _m[1], 0, _y + hh, ui(100), _y + hh + hg - 1)) {
+			} else if(sHOVER && point_in_rectangle(_m[0], _m[1], 0, _y + hh, ui(100), _y + hh + hg - 1)) {
 				draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, 0, _y + hh + ui(3), ui(103), hg - ui(6), c_white, 0.75);
-				if(mouse_check_button(mb_left)) {
+				if(mouse_click(mb_left, sFOCUS)) {
 					page_key		= key;
 					ADD_NODE_PAGE	= key;
 					page			= ALL_NODES[? page_key];
@@ -173,9 +173,9 @@ event_inherited();
 						draw_sprite_stretched(THEME.node_bg, 0, _boxx, yy, grid_size, grid_size);
 						BLEND_NORMAL
 						
-						if(point_in_rectangle(_m[0], _m[1], _nx, yy, _nx + grid_width, yy + grid_size)) {
+						if(sHOVER && point_in_rectangle(_m[0], _m[1], _nx, yy, _nx + grid_width, yy + grid_size)) {
 							draw_sprite_stretched_ext(THEME.node_active, 0, _boxx, yy, grid_size, grid_size, COLORS._main_accent, 1);
-							if(mouse_check_button_pressed(mb_left))
+							if(mouse_press(mb_left, sFOCUS))
 								buildNode(_node);
 						}
 						
@@ -209,9 +209,9 @@ event_inherited();
 					BLEND_NORMAL
 				}
 				
-				if(point_in_rectangle(_m[0], _m[1], 0, yy, list_width, yy + list_height - 1)) {
+				if(sHOVER && point_in_rectangle(_m[0], _m[1], 0, yy, list_width, yy + list_height - 1)) {
 					draw_sprite_stretched_ext(THEME.node_active, 0, ui(4), yy, list_width - ui(8), list_height, COLORS._main_accent, 1);
-					if(mouse_check_button_pressed(mb_left))
+					if(mouse_press(mb_left, sFOCUS))
 						buildNode(_node);
 				}
 					
@@ -361,9 +361,9 @@ event_inherited();
 				name_height = max(name_height, string_height_ext(txt, -1, grid_width) + ui(8));
 				draw_text_ext(_boxx + grid_size / 2, yy + grid_size + 4, txt, -1, grid_width);
 				
-				if(point_in_rectangle(_m[0], _m[1], _nx, yy, _nx + grid_width, yy + grid_size)) {
+				if(sHOVER && point_in_rectangle(_m[0], _m[1], _nx, yy, _nx + grid_width, yy + grid_size)) {
 					node_selecting = i;
-					if(mouse_check_button_pressed(mb_left))
+					if(mouse_press(mb_left, sFOCUS))
 						buildNode(_node, _param);
 				}
 				
@@ -425,9 +425,9 @@ event_inherited();
 				draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text);
 				draw_text(list_height + ui(20), yy + list_height / 2, _node.name);
 				
-				if(point_in_rectangle(_m[0], _m[1], 0, yy, list_width, yy + list_height - 1)) {
+				if(sHOVER && point_in_rectangle(_m[0], _m[1], 0, yy, list_width, yy + list_height - 1)) {
 					node_selecting = i;
-					if(mouse_check_button_pressed(mb_left))
+					if(mouse_press(mb_left, sFOCUS))
 						buildNode(_node, _param);
 				}
 				

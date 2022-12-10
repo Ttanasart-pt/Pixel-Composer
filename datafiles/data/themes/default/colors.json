@@ -59,7 +59,7 @@
         "node_blend_number": "cyan",
         "node_blend_input": ["white", "lime", 0.5],
         "node_blend_loop": "lime",
-        "node_blend_interface": "yellow",
+        "node_blend_collection": "yellow",
         "node_blend_canvas": ["white", "orange", 0.5],
         "node_path_overlay_control_line": "blue_grey",
         "node_wiggler_frame": "blue_grey",
@@ -94,7 +94,7 @@
 
         "panel_inspector_key_separator": "blue_dkgrey",
         "panel_inspector_group_hover": "blue_white",
-        "panel_inspector_group_bg": "blue_ltgrey",
+        "panel_inspector_group_bg": ["blue_white", "blue_ltgrey", 0.5],
         
         "panel_preview_grid": "blue_grey",
         "panel_preview_surface_outline": "blue_grey",

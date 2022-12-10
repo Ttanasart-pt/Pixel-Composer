@@ -28,3 +28,16 @@ function ds_map_override(original, newmap) {
 		k = ds_map_find_next(newmap, k);
 	}
 }
+
+
+function ds_map_print(map) {
+	var txt = "{";
+	var k = ds_map_find_first(map);
+	
+	repeat(ds_map_size(map)) {
+		txt += string(k) + " : " + string(map[? k]) + ", ";
+		k = ds_map_find_next(map, k);
+	}
+	txt += "}";
+	return txt;
+}

@@ -9,13 +9,13 @@
 		if(!directory_exists(root))
 			directory_create(root);
 		
-		var _l = root + "\\part" + string(VERSION);
+		var _l = root + "\\_asset" + string(VERSION);
 		if(!file_exists(_l)) {
 			var f = file_text_open_write(_l);
 			file_text_write_real(f, 0);
 			file_text_close(f);
 			
-			zip_unzip("Assets.zip", root);
+			zip_unzip("data/Assets.zip", root);
 		}
 		
 		global.ASSETS = new DirectoryObject("Assets", root);

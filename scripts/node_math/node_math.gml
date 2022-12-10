@@ -60,10 +60,11 @@ function Node_Math(_x, _y) : Node(_x, _y) constructor {
 		.setVisible(true, true);
 	inputs[| 2] = nodeValue(2, "b", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
 		.setVisible(true, true);
+	inputs[| 3] = nodeValue(3, "Degree angle", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
 	
 	outputs[| 0] = nodeValue(0, "Math", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, 0);
 	
-	static _eval = function(mode, a, b) {
+	static _eval = function(mode, a, b, deg = true) {
 		switch(mode) {
 			case MATH_OPERATOR.add :		return a + b;
 			case MATH_OPERATOR.subtract :	return a - b;
@@ -72,9 +73,9 @@ function Node_Math(_x, _y) : Node(_x, _y) constructor {
 			case MATH_OPERATOR.power :		return power(a, b);
 			case MATH_OPERATOR.root :		return power(a, 1 / b);
 			
-			case MATH_OPERATOR.sin :		return sin(a) * b;
-			case MATH_OPERATOR.cos :		return cos(a) * b;
-			case MATH_OPERATOR.tan :		return tan(a) * b;
+			case MATH_OPERATOR.sin :		return sin(degtorad(a)) * b;
+			case MATH_OPERATOR.cos :		return cos(degtorad(a)) * b;
+			case MATH_OPERATOR.tan :		return tan(degtorad(a)) * b;
 			case MATH_OPERATOR.modulo :		return safe_mod(a, b);
 			
 			case MATH_OPERATOR.floor :		return floor(a);
@@ -84,10 +85,26 @@ function Node_Math(_x, _y) : Node(_x, _y) constructor {
 		return 0;
 	}
 	
+	static step = function() {
+		var mode = inputs[| 0].getValue();
+		
+		switch(mode) {
+			case MATH_OPERATOR.sin :
+			case MATH_OPERATOR.cos :
+			case MATH_OPERATOR.tan :
+				inputs[| 3].setVisible(true);
+				break;
+			default:
+				inputs[| 3].setVisible(false);
+				break;
+		}
+	}
+	
 	function update() { 
 		var mode = inputs[| 0].getValue();
 		var a = inputs[| 1].getValue();
 		var b = inputs[| 2].getValue();
+		var deg = inputs[| 3].getValue();
 		var as = is_array(a);
 		var bs = is_array(b);
 		var al = as? array_length(a) : 0;
@@ -119,16 +136,16 @@ function Node_Math(_x, _y) : Node(_x, _y) constructor {
 		
 		var val = 0;
 		if(!as && !bs)
-			val = _eval(mode, a, b);
+			val = _eval(mode, a, b, deg);
 		else if(!as && bs) {
 			for( var i = 0; i < bl; i++ )
-				val[i] = _eval(mode, a, b[i]);
+				val[i] = _eval(mode, a, b[i], deg);
 		} else if(as && !bs) {
 			for( var i = 0; i < al; i++ )
-				val[i] = _eval(mode, a[i], b);
+				val[i] = _eval(mode, a[i], b, deg);
 		} else {
 			for( var i = 0; i < max(al, bl); i++ ) 
-				val[i] = _eval(mode, array_safe_get(a, i), array_safe_get(b, i));
+				val[i] = _eval(mode, array_safe_get(a, i), array_safe_get(b, i), deg);
 		}
 		
 		outputs[| 0].setValue(val);

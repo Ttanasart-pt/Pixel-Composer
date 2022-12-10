@@ -10,8 +10,7 @@
 	
 	if((win_wp != WIN_W || win_hp != WIN_H) && (WIN_W > 1 && WIN_H > 1)) {
 		display_refresh();
-		
-		renderAll();
+		Render();
 	}
 #endregion
 
@@ -32,19 +31,16 @@
 		NODES[| i].stepBegin();
 	}
 	
-	if(UPDATE & RENDER_TYPE.full) {
-		renderAll();
-		UPDATE = RENDER_TYPE.none;
-	} else if(UPDATE & RENDER_TYPE.partial) {
-		noti_warning("Update partial stack size to " + string(ds_stack_size(RENDER_STACK)));
-		renderUpdated();
-		UPDATE = RENDER_TYPE.none;
-	} 
+	if(UPDATE & RENDER_TYPE.full)
+		Render();
+	if(UPDATE & RENDER_TYPE.partial)
+		Render(true);
+	UPDATE = RENDER_TYPE.none;
 #endregion
 
 #region clicks
 	DOUBLE_CLICK = false;
-	if(mouse_check_button_pressed(mb_left)) {
+	if(mouse_press(mb_left)) {
 		if(dc_check > 0) {
 			DOUBLE_CLICK = true;
 			dc_check = 0;
@@ -68,6 +64,6 @@
 	if(!ds_list_empty(DIALOGS))
 		DIALOGS[| ds_list_size(DIALOGS) - 1].checkMouse();
 	
-	if(mouse_check_button_released(mb_left))
+	if(mouse_release(mb_left))
 		DIALOG_CLICK = true;
 #endregion

@@ -334,7 +334,7 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 					break;
 					case VALUE_DISPLAY.gradient :
 						editWidget = buttonGradient(function() { 
-							node.updateForward();
+							node.triggerRender();
 						} );
 						extra_data[| 0] = GRADIENT_INTER.smooth;
 					break;
@@ -433,12 +433,12 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 		return self;
 	}
 	
-	static getValue = function() {
-		var _val = getValueRecursive();
+	static getValue = function(_time = ANIMATOR.current_frame) {
+		var _val = getValueRecursive(_time);
 		var val = _val[0];
 		var typ = _val[1];
 		
-		var _base = animator.getValue();
+		var _base = animator.getValue(_time);
 		
 		if(typ == VALUE_TYPE.surface && (type == VALUE_TYPE.integer || type == VALUE_TYPE.float)) {
 			if(is_array(val)) {
@@ -466,13 +466,13 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 		return val;
 	}
 	
-	static getValueRecursive = function() {
+	static getValueRecursive = function(_time = ANIMATOR.current_frame) {
 		var val = [ -1, VALUE_TYPE.any ];
 		
 		if(value_from == noone)
-			val = [animator.getValue(), type];
+			val = [animator.getValue(_time), type];
 		else if(value_from != self) {
-			val = value_from.getValueRecursive(); 
+			val = value_from.getValueRecursive(_time); 
 		}
 		
 		return val;
@@ -536,8 +536,9 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 			
 		if(updated) {
 			if(node.auto_update && connect_type == JUNCTION_CONNECT.input)
-				node.updateForward();
+				node.triggerRender();
 			
+			if(node.use_cache) node.clearCache();
 			node.onValueUpdate(index, _o);
 			MODIFIED = true;
 		}
@@ -598,7 +599,7 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 		
 		node.onValueUpdate(index, _o);
 		if(_update) node.updateValueFrom(index);
-		if(_update && node.auto_update) _valueFrom.node.updateForward();
+		if(_update && node.auto_update) _valueFrom.node.triggerRender();
 		
 		MODIFIED = true;
 		return true;
@@ -707,7 +708,7 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 							if(setValue( dist ))
 								UNDO_HOLDING = true;
 							
-							if(mouse_check_button_released(mb_left)) {
+							if(mouse_release(mb_left)) {
 								drag_type = 0;
 								UNDO_HOLDING = false;
 							}
@@ -716,7 +717,7 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 						if(point_in_circle(_mx, _my, _ax, _ay, 8)) {
 							hover = 1;
 							index = 1;
-							if(_active && mouse_check_button_pressed(mb_left)) {
+							if(_mouse_press(mb_left, active)) {
 								drag_type = 1;
 								drag_mx   = _mx;
 								drag_my   = _my;
@@ -749,7 +750,7 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 							if(setValue( angle ))
 								UNDO_HOLDING = true;
 							
-							if(mouse_check_button_released(mb_left)) {
+							if(mouse_release(mb_left)) {
 								drag_type = 0;
 								UNDO_HOLDING = false;
 							}
@@ -763,7 +764,7 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 							hover = 1;
 							
 							draw_sprite_ui(THEME.anchor_rotate, 1, _ax, _ay, 1, 1, _val - 90, c_white, 1);
-							if(_active && mouse_check_button_pressed(mb_left)) {
+							if(_mouse_press(mb_left, active)) {
 								drag_type = 1;
 								drag_mx   = _mx;
 								drag_my   = _my;
@@ -800,7 +801,7 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 							if(setValue( _val )) 
 								UNDO_HOLDING = true;
 							
-							if(mouse_check_button_released(mb_left)) {
+							if(mouse_release(mb_left)) {
 								drag_type = 0;
 								UNDO_HOLDING = false;
 							}
@@ -809,7 +810,7 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 						if(point_in_circle(_mx, _my, _ax, _ay, 8)) {
 							hover = 1;
 							draw_sprite_ui_uniform(THEME.anchor_selector, 1, _ax, _ay);
-							if(_active && mouse_check_button_pressed(mb_left)) {
+							if(_mouse_press(mb_left, active)) {
 								drag_type = 1;
 								drag_mx   = _mx;
 								drag_my   = _my;
@@ -864,7 +865,7 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 							if(setValue(_val))
 								UNDO_HOLDING = true;
 							
-							if(mouse_check_button_released(mb_left)) {
+							if(mouse_release(mb_left)) {
 								drag_type = 0;
 								UNDO_HOLDING = false;
 							}
@@ -883,7 +884,7 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 							if(setValue(_val))
 								UNDO_HOLDING = true;
 			
-							if(mouse_check_button_released(mb_left)) {
+							if(mouse_release(mb_left)) {
 								drag_type = 0;
 								UNDO_HOLDING = false;
 							}
@@ -892,14 +893,14 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 						if(_active) {
 							if(point_in_circle(_mx, _my, _ax + _aw, _ay + _ah, 8)) {
 								hover = 2;
-								if(mouse_check_button_pressed(mb_left)) {
+								if(mouse_press(mb_left)) {
 									drag_type = 2;
 									drag_mx   = _ax;
 									drag_my   = _ay;
 								}
 							} else if(point_in_rectangle(_mx, _my, _ax - _aw, _ay - _ah, _ax + _aw, _ay + _ah)) {
 								hover = 1;
-								if(mouse_check_button_pressed(mb_left)) {
+								if(mouse_press(mb_left)) {
 									drag_type = 1;	
 									drag_sx   = __ax;
 									drag_sy   = __ay;
@@ -977,7 +978,7 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 							if(setValue( _val ))
 								UNDO_HOLDING = true;
 							
-							if(mouse_check_button_released(mb_left)) {
+							if(mouse_release(mb_left)) {
 								drag_type = 0;
 								UNDO_HOLDING = false;
 							}
@@ -997,7 +998,7 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 							if(setValue( _val ))
 								UNDO_HOLDING = true;
 							
-							if(mouse_check_button_released(mb_left)) {
+							if(mouse_release(mb_left)) {
 								drag_type = 0;
 								UNDO_HOLDING = false;
 							}
@@ -1006,7 +1007,7 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 						if(point_in_circle(_mx, _my, _ax, _ay, 8)) {
 							hover = 1;
 							draw_sprite_ui_uniform(THEME.anchor_selector, 1, _ax, _ay);
-							if(_active && mouse_check_button_pressed(mb_left)) {
+							if(_mouse_press(mb_left, active)) {
 								drag_type = 1;
 								drag_mx   = _mx;
 								drag_my   = _my;
@@ -1018,7 +1019,7 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 						if(_val[PUPPET_CONTROL.mode] == PUPPET_FORCE_MODE.move && point_in_circle(_mx, _my, _ax1, _ay1, 8)) {
 							hover = 2;
 							draw_sprite_ui_uniform(THEME.anchor_selector, 0, _ax1, _ay1);
-							if(_active && mouse_check_button_pressed(mb_left)) {
+							if(_mouse_press(mb_left, active)) {
 								drag_type = 2;
 								drag_mx   = _mx;
 								drag_my   = _my;
@@ -1054,7 +1055,7 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 		if(!isVisible()) return false;
 		
 		draw_set_text(f_p1, fa_left, fa_center);
-			
+		
 		var tw = string_width(name) + 16;
 		var th = string_height(name) + 16;
 		

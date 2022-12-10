@@ -2,6 +2,10 @@ function Panel_Menu() : PanelContent() constructor {
 	draggable  = false;
 	
 	noti_flash = 0;
+	noti_flash_color = COLORS._main_accent;
+	noti_icon = noone;
+	noti_icon_show = 0;
+	noti_icon_time = 0;
 	
 	menus = [
 		["File", [
@@ -77,6 +81,11 @@ function Panel_Menu() : PanelContent() constructor {
 		]],
 	]
 	
+	function setNotiIcon(icon) {
+		noti_icon = icon;
+		noti_icon_time = 90;
+	}
+	
 	function displayNewVersion() {
 		var xx = w - ui(88);
 		draw_set_text(f_p0b, fa_right, fa_center, COLORS._main_value_positive);
@@ -86,7 +95,7 @@ function Panel_Menu() : PanelContent() constructor {
 		if(pHOVER && point_in_rectangle(mx, my, xx - ww, 0, xx, h)) {
 			draw_sprite_stretched(THEME.menu_button, 0, xx - ww - ui(6), ui(6), ww + ui(12), h - ui(12));
 				
-			if(pFOCUS && mouse_check_button_pressed(mb_left)) {
+			if(mouse_press(mb_left, pFOCUS)) {
 				url_open("https://makham.itch.io/pixel-composer");
 			}
 		}
@@ -127,8 +136,8 @@ function Panel_Menu() : PanelContent() constructor {
 		draw_sprite_ui_uniform(THEME.icon_24, 0, h / 2, h / 2, 1, c_white);
 		var xx = h;
 		
-		if(pFOCUS && point_in_rectangle(mx, my, 0, 0, ui(40), ui(32))) {
-			if(mouse_check_button_pressed(mb_left)) {
+		if(pHOVER && point_in_rectangle(mx, my, 0, 0, ui(40), ui(32))) {
+			if(mouse_press(mb_left, pFOCUS)) {
 				dialogCall(o_dialog_about);
 			}
 		}
@@ -138,14 +147,12 @@ function Panel_Menu() : PanelContent() constructor {
 			var ww = string_width(menus[i][0]) + ui(16);
 			var xc = xx + ww / 2;
 			
-			if(pHOVER) {
-				if(point_in_rectangle(mx, my, xc - ww / 2, 0, xc + ww / 2, h)) {
-					draw_sprite_stretched(THEME.menu_button, 0, xc - ww / 2, ui(6), ww, h - ui(12));
+			if(pHOVER && point_in_rectangle(mx, my, xc - ww / 2, 0, xc + ww / 2, h)) {
+				draw_sprite_stretched(THEME.menu_button, 0, xc - ww / 2, ui(6), ww, h - ui(12));
 					
-					if((pFOCUS && mouse_check_button_pressed(mb_left)) || instance_exists(o_dialog_menubox)) {
-						var dia = dialogCall(o_dialog_menubox, x + xx, y + h);
-						dia.setMenu(menus[i][1]);
-					}
+				if((mouse_press(mb_left, pFOCUS)) || instance_exists(o_dialog_menubox)) {
+					var dia = dialogCall(o_dialog_menubox, x + xx, y + h);
+					dia.setMenu(menus[i][1]);
 				}
 			}
 			
@@ -166,16 +173,22 @@ function Panel_Menu() : PanelContent() constructor {
 			var wr_w = ui(20) + ui(8) + string_width(string(warning_amo));
 			var er_w = ui(20) + ui(8) + string_width(string(error_amo));
 			
-			var nw = ui(16) + wr_w + ui(16) + er_w;
+			if(noti_icon_time > 0) {
+				noti_icon_show = lerp_float(noti_icon_show, 1, 4);
+				noti_icon_time--;
+			} else 
+				noti_icon_show = lerp_float(noti_icon_show, 0, 4);
+			
+			var nw = ui(16) + wr_w + ui(16) + er_w + noti_icon_show * ui(32);
 			var nh = ui(32);
 			
 			noti_flash = lerp_linear(noti_flash, 0, 0.02);
 			var ev = animation_curve_eval(ac_flash, noti_flash);
-			var cc = merge_color(c_white, COLORS._main_accent, ev);
+			var cc = merge_color(c_white, noti_flash_color, ev);
 			
-			if(point_in_rectangle(mx, my, nx0, ny0 - nh / 2, nx0 + nw, ny0 + nh / 2)) {
+			if(pHOVER && point_in_rectangle(mx, my, nx0, ny0 - nh / 2, nx0 + nw, ny0 + nh / 2)) {
 				draw_sprite_stretched_ext(THEME.menu_button, 0, nx0, ny0 - nh / 2, nw, nh, cc, 1);
-				if(mouse_check_button_pressed(mb_left)) {
+				if(mouse_press(mb_left, pFOCUS)) {
 					var dia = dialogCall(o_dialog_notifications, nx0, ny0 + nh / 2 + ui(4));
 					dia.anchor = ANCHOR.left | ANCHOR.top;
 				}
@@ -188,6 +201,9 @@ function Panel_Menu() : PanelContent() constructor {
 			draw_sprite_stretched_ext(THEME.menu_button_mask, 0, nx0, ny0 - nh / 2, nw, nh, cc, ev / 2);
 			gpu_set_blendmode(bm_normal);
 			
+			if(noti_icon_show > 0)
+				draw_sprite_ui(noti_icon, 0, nx0 + nw - ui(16), ny0,,,,, noti_icon_show);
+				
 			var wr_x = nx0 + ui(8);
 			draw_sprite_ui_uniform(THEME.noti_icon_warning, warning_amo? 1 : 0, wr_x + ui(10), ny0);
 			draw_text(wr_x + ui(28), ny0, warning_amo);
@@ -203,7 +219,7 @@ function Panel_Menu() : PanelContent() constructor {
 		if(pHOVER && point_in_rectangle(mx, my, w - ui(16) - ww, 0, w - ui(16), h)) {
 			draw_sprite_stretched(THEME.menu_button, 0, w - ww - ui(22), ui(6), ww + ui(12), h - ui(12));
 			
-			if(pFOCUS && mouse_check_button_pressed(mb_left)) {
+			if(mouse_press(mb_left, pFOCUS)) {
 				dialogCall(o_dialog_release_note); 
 			}
 		}

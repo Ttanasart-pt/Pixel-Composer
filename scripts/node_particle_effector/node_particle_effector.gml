@@ -296,8 +296,8 @@ function Node_Particle_Effector(_x, _y) : Node(_x, _y) constructor {
 		render();
 	}
 	
-	function render() {
-		var parts = inputs[| 0].getValue();
+	function render(_time = ANIMATOR.current_frame) {
+		var parts = inputs[| 0].getValue(_time);
 		if(!parts) return;
 		
 		for(var i = 0; i < ds_list_size(inputs); i++) {

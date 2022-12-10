@@ -109,6 +109,13 @@
         "yorigin": 24,
         "slice": null
     },
+    "animation_stretch": {
+        "path": "./icon/s_animation_stretch.png",
+        "subimages": 2,
+        "xorigin": 20,
+        "yorigin": 12,
+        "slice": null
+    },
     "arrow": {
         "path": "./icon/s_arrow_16_strip4.png",
         "subimages": 4,
@@ -270,6 +277,13 @@
         "yorigin": 24,
         "slice": null
     },
+    "preset": {
+        "path": "./icon/s_preset.png",
+        "subimages": 1,
+        "xorigin": 24,
+        "yorigin": 24,
+        "slice": null
+    },
     "refresh": {
         "path": "./icon/s_refresh_24.png",
         "subimages": 1,
@@ -410,10 +424,10 @@
         "yorigin": 0,
         "slice": {
             "enabled": true,
-            "left": 23,
-            "right": 23,
-            "top": 23,
-            "bottom": 23
+            "left": 11,
+            "right": 11,
+            "top": 11,
+            "bottom": 11
         }
     },
     "rotator_bg": {
@@ -513,10 +527,10 @@
         "yorigin": 20,
         "slice": {
             "enabled": true,
-            "left": 19,
-            "right": 19,
-            "top": 19,
-            "bottom": 19
+            "left": 9,
+            "right": 9,
+            "top": 9,
+            "bottom": 9
         }
     },
     "node_active": {
@@ -715,11 +729,18 @@
         "yorigin": 24,
         "slice": null
     },
+    "icon_tile_view": {
+        "path": "./icon/s_icon_tile_view_strip4.png",
+        "subimages": 4,
+        "xorigin": 24,
+        "yorigin": 24,
+        "slice": null
+    },
     "icon_active_split": {
         "path": "./icon/s_panel_active_split.png",
         "subimages": 1,
-        "xorigin": 24,
-        "yorigin": 24,
+        "xorigin": 12,
+        "yorigin": 12,
         "slice": null
     },
     "icon_splash_show_on_start": {

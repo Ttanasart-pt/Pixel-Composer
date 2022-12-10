@@ -1,4 +1,7 @@
 {
+  "resourceType": "GMiOSOptions",
+  "resourceVersion": "1.3",
+  "name": "iOS",
   "option_ios_display_name": "Created with GameMaker Studio 2",
   "option_ios_bundle_name": "com.company.game",
   "option_ios_version": "1.0.0.0",
@@ -36,15 +39,6 @@
   "option_ios_half_ipad1_textures": false,
   "option_ios_scale": 0,
   "option_ios_texture_page": "2048x2048",
-  "option_ios_use_facebook": false,
-  "option_ios_facebook_id": "",
-  "option_ios_facebook_app_display_name": "",
-  "option_ios_push_notifications": false,
-  "option_ios_apple_sign_in": false,
   "option_ios_podfile_path": "${options_dir}/ios/Podfile",
   "option_ios_podfile_lock_path": "${options_dir}/ios/Podfile.lock",
-  "resourceVersion": "1.3",
-  "name": "iOS",
-  "tags": [],
-  "resourceType": "GMiOSOptions",
 }

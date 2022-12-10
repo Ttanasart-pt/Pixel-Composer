@@ -30,7 +30,7 @@ event_inherited();
 			if(sHOVER && point_in_rectangle(_m[0], _m[1], 0, _y, ww, _y + hg)) {
 				draw_sprite_stretched_ext(THEME.node_active, 0, 0, _y, ww, hg, COLORS._main_accent, 1);
 				
-				if(sFOCUS && mouse_check_button_pressed(mb_left)) {
+				if(mouse_press(mb_left, sFOCUS)) {
 					LOAD_PATH(_rec);
 					instance_destroy();
 				}
@@ -79,14 +79,22 @@ event_inherited();
 					draw_sprite_stretched(THEME.node_bg, 0, _boxx, yy, grid_width, grid_heigh);
 					if(sHOVER && point_in_rectangle(_m[0], _m[1], _nx, yy, _nx + grid_width, yy + grid_heigh)) {
 						draw_sprite_stretched_ext(THEME.node_active, 0, _boxx, yy, grid_width, grid_heigh, COLORS._main_accent, 1);
-						if(sFOCUS && mouse_check_button_pressed(mb_left)) {
+						if(mouse_press(mb_left, sFOCUS)) {
 							LOAD_PATH(_node.path, true);
 							instance_destroy();
 						}
 					}
 					
-					if(_node.spr) 
-						draw_sprite_ui_uniform(_node.spr, 0, _boxx + grid_width / 2, yy + grid_heigh / 2);
+					if(_node.spr) {
+						var gw = grid_width - ui(4);
+						var gh = grid_heigh - ui(4);
+						
+						var sw = sprite_get_width(_node.spr);
+						var sh = sprite_get_height(_node.spr);
+						
+						var s = min(gw / sw, gh / sh) * 2;
+						draw_sprite_ui_uniform(_node.spr, 0, _boxx + grid_width / 2, yy + grid_heigh / 2, s);
+					}
 					
 					var tx = _boxx + grid_width / 2;
 					var ty = yy + grid_heigh + ui(4);

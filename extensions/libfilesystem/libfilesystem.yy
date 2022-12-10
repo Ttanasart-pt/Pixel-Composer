@@ -23,313 +23,313 @@
         {"resourceType":"GMExtensionFunction","resourceVersion":"1.0","name":"file_copy","externalName":"file_copy","kind":12,"help":"file_copy(fname,newname)","hidden":false,"returnType":2,"argCount":2,"args":[
             1,
             1,
-          ],},
+          ],"documentation":"",},
         {"resourceType":"GMExtensionFunction","resourceVersion":"1.0","name":"file_rename","externalName":"file_rename","kind":12,"help":"file_rename(oldname,newname)","hidden":false,"returnType":2,"argCount":2,"args":[
             1,
             1,
-          ],},
+          ],"documentation":"",},
         {"resourceType":"GMExtensionFunction","resourceVersion":"1.0","name":"file_exists","externalName":"file_exists","kind":12,"help":"file_exists(fname)","hidden":false,"returnType":2,"argCount":1,"args":[
             1,
-          ],},
+          ],"documentation":"",},
         {"resourceType":"GMExtensionFunction","resourceVersion":"1.0","name":"file_delete","externalName":"file_delete","kind":12,"help":"file_delete(fname)","hidden":false,"returnType":2,"argCount":1,"args":[
             1,
-          ],},
+          ],"documentation":"",},
         {"resourceType":"GMExtensionFunction","resourceVersion":"1.0","name":"directory_create","externalName":"directory_create","kind":12,"help":"directory_create(dname)","hidden":false,"returnType":2,"argCount":1,"args":[
             1,
-          ],},
+          ],"documentation":"",},
         {"resourceType":"GMExtensionFunction","resourceVersion":"1.0","name":"directory_copy","externalName":"directory_copy","kind":12,"help":"directory_copy(dname,newname)","hidden":false,"returnType":2,"argCount":2,"args":[
             1,
             1,
-          ],},
+          ],"documentation":"",},
         {"resourceType":"GMExtensionFunction","resourceVersion":"1.0","name":"directory_rename","externalName":"directory_rename","kind":12,"help":"directory_rename(oldname,newname)","hidden":false,"returnType":2,"argCount":2,"args":[
             1,
             1,
-          ],},
+          ],"documentation":"",},
         {"resourceType":"GMExtensionFunction","resourceVersion":"1.0","name":"directory_exists","externalName":"directory_exists","kind":12,"help":"directory_exists(dname)","hidden":false,"returnType":2,"argCount":1,"args":[
             1,
-          ],},
+          ],"documentation":"",},
         {"resourceType":"GMExtensionFunction","resourceVersion":"1.0","name":"directory_destroy","externalName":"directory_destroy","kind":12,"help":"directory_destroy(dname)","hidden":false,"returnType":2,"argCount":1,"args":[
             1,
-          ],},
+          ],"documentation":"",},
         {"resourceType":"GMExtensionFunction","resourceVersion":"1.0","name":"filename_absolute","externalName":"filename_absolute","kind":12,"help":"filename_absolute(fname)","hidden":false,"returnType":1,"argCount":1,"args":[
             1,
-          ],},
+          ],"documentation":"",},
         {"resourceType":"GMExtensionFunction","resourceVersion":"1.0","name":"environment_get_variable","externalName":"environment_get_variable","kind":12,"help":"environment_get_variable(name)","hidden":false,"returnType":1,"argCount":1,"args":[
             1,
-          ],},
+          ],"documentation":"",},
         {"resourceType":"GMExtensionFunction","resourceVersion":"1.0","name":"environment_set_variable","externalName":"environment_set_variable","kind":12,"help":"environment_set_variable(name,value)","hidden":false,"returnType":2,"argCount":2,"args":[
             1,
             1,
-          ],},
-        {"resourceType":"GMExtensionFunction","resourceVersion":"1.0","name":"directory_get_current_working","externalName":"directory_get_current_working","kind":12,"help":"directory_get_current_working()","hidden":false,"returnType":1,"argCount":0,"args":[],},
+          ],"documentation":"",},
+        {"resourceType":"GMExtensionFunction","resourceVersion":"1.0","name":"directory_get_current_working","externalName":"directory_get_current_working","kind":12,"help":"directory_get_current_working()","hidden":false,"returnType":1,"argCount":0,"args":[],"documentation":"",},
         {"resourceType":"GMExtensionFunction","resourceVersion":"1.0","name":"directory_set_current_working","externalName":"directory_set_current_working","kind":12,"help":"directory_set_current_working(dname)","hidden":false,"returnType":2,"argCount":1,"args":[
             1,
-          ],},
-        {"resourceType":"GMExtensionFunction","resourceVersion":"1.0","name":"executable_get_directory","externalName":"executable_get_directory","kind":12,"help":"executable_get_directory()","hidden":false,"returnType":1,"argCount":-1,"args":[],},
-        {"resourceType":"GMExtensionFunction","resourceVersion":"1.0","name":"executable_get_filename","externalName":"executable_get_filename","kind":12,"help":"executable_get_filename()","hidden":false,"returnType":1,"argCount":-1,"args":[],},
-        {"resourceType":"GMExtensionFunction","resourceVersion":"1.0","name":"executable_get_pathname","externalName":"executable_get_pathname","kind":12,"help":"executable_get_pathname()","hidden":false,"returnType":1,"argCount":-1,"args":[],},
+          ],"documentation":"",},
+        {"resourceType":"GMExtensionFunction","resourceVersion":"1.0","name":"executable_get_directory","externalName":"executable_get_directory","kind":12,"help":"executable_get_directory()","hidden":false,"returnType":1,"argCount":-1,"args":[],"documentation":"",},
+        {"resourceType":"GMExtensionFunction","resourceVersion":"1.0","name":"executable_get_filename","externalName":"executable_get_filename","kind":12,"help":"executable_get_filename()","hidden":false,"returnType":1,"argCount":-1,"args":[],"documentation":"",},
+        {"resourceType":"GMExtensionFunction","resourceVersion":"1.0","name":"executable_get_pathname","externalName":"executable_get_pathname","kind":12,"help":"executable_get_pathname()","hidden":false,"returnType":1,"argCount":-1,"args":[],"documentation":"",},
         {"resourceType":"GMExtensionFunction","resourceVersion":"1.0","name":"file_size","externalName":"file_size","kind":1,"help":"file_size(fname)","hidden":false,"returnType":2,"argCount":0,"args":[
             1,
-          ],},
+          ],"documentation":"",},
         {"resourceType":"GMExtensionFunction","resourceVersion":"1.0","name":"directory_size","externalName":"directory_size","kind":1,"help":"directory_size(dname)","hidden":false,"returnType":2,"argCount":0,"args":[
             1,
-          ],},
+          ],"documentation":"",},
         {"resourceType":"GMExtensionFunction","resourceVersion":"1.0","name":"filename_canonical","externalName":"filename_canonical","kind":1,"help":"filename_canonical(fname)","hidden":false,"returnType":1,"argCount":0,"args":[
             1,
-          ],},
+          ],"documentation":"",},
         {"resourceType":"GMExtensionFunction","resourceVersion":"1.0","name":"environment_expand_variables","externalName":"environment_expand_variables","kind":1,"help":"environment_expand_variables(str)","hidden":false,"returnType":1,"argCount":0,"args":[
             1,
-          ],},
+          ],"documentation":"",},
         {"resourceType":"GMExtensionFunction","resourceVersion":"1.0","name":"directory_contents_first","externalName":"directory_contents_first","kind":1,"help":"directory_contents_first(dname,pattern,includedirs,recursive)","hidden":false,"returnType":1,"argCount":0,"args":[
             1,
             1,
             2,
             2,
-          ],},
-        {"resourceType":"GMExtensionFunction","resourceVersion":"1.0","name":"directory_contents_next","externalName":"directory_contents_next","kind":1,"help":"directory_contents_next()","hidden":false,"returnType":1,"argCount":0,"args":[],},
-        {"resourceType":"GMExtensionFunction","resourceVersion":"1.0","name":"directory_contents_close","externalName":"directory_contents_close","kind":1,"help":"directory_contents_close()","hidden":false,"returnType":2,"argCount":0,"args":[],},
+          ],"documentation":"",},
+        {"resourceType":"GMExtensionFunction","resourceVersion":"1.0","name":"directory_contents_next","externalName":"directory_contents_next","kind":1,"help":"directory_contents_next()","hidden":false,"returnType":1,"argCount":0,"args":[],"documentation":"",},
+        {"resourceType":"GMExtensionFunction","resourceVersion":"1.0","name":"directory_contents_close","externalName":"directory_contents_close","kind":1,"help":"directory_contents_close()","hidden":false,"returnType":2,"argCount":0,"args":[],"documentation":"",},
         {"resourceType":"GMExtensionFunction","resourceVersion":"1.0","name":"file_bin_open","externalName":"file_bin_open","kind":1,"help":"file_bin_open(fname,mode)","hidden":false,"returnType":2,"argCount":0,"args":[
             1,
             2,
-          ],},
+          ],"documentation":"",},
         {"resourceType":"GMExtensionFunction","resourceVersion":"1.0","name":"file_bin_rewrite","externalName":"file_bin_rewrite","kind":1,"help":"file_bin_rewrite(fd)","hidden":false,"returnType":2,"argCount":0,"args":[
             2,
-          ],},
+          ],"documentation":"",},
         {"resourceType":"GMExtensionFunction","resourceVersion":"1.0","name":"file_bin_close","externalName":"file_bin_close","kind":1,"help":"file_bin_close(fd)","hidden":false,"returnType":2,"argCount":0,"args":[
             2,
-          ],},
+          ],"documentation":"",},
         {"resourceType":"GMExtensionFunction","resourceVersion":"1.0","name":"file_bin_size","externalName":"file_bin_size","kind":1,"help":"file_bin_size(fd)","hidden":false,"returnType":2,"argCount":0,"args":[
             2,
-          ],},
+          ],"documentation":"",},
         {"resourceType":"GMExtensionFunction","resourceVersion":"1.0","name":"file_bin_position","externalName":"file_bin_position","kind":1,"help":"file_bin_position(fd)","hidden":false,"returnType":2,"argCount":0,"args":[
             2,
-          ],},
+          ],"documentation":"",},
         {"resourceType":"GMExtensionFunction","resourceVersion":"1.0","name":"file_bin_seek","externalName":"file_bin_seek","kind":1,"help":"file_bin_seek(fd,pos)","hidden":false,"returnType":2,"argCount":0,"args":[
             2,
             2,
-          ],},
+          ],"documentation":"",},
         {"resourceType":"GMExtensionFunction","resourceVersion":"1.0","name":"file_bin_read_byte","externalName":"file_bin_read_byte","kind":1,"help":"file_bin_read_byte(fd)","hidden":false,"returnType":2,"argCount":0,"args":[
             2,
-          ],},
+          ],"documentation":"",},
         {"resourceType":"GMExtensionFunction","resourceVersion":"1.0","name":"file_bin_write_byte","externalName":"file_bin_write_byte","kind":1,"help":"file_bin_write_byte(fd,byte)","hidden":false,"returnType":2,"argCount":0,"args":[
             2,
             2,
-          ],},
+          ],"documentation":"",},
         {"resourceType":"GMExtensionFunction","resourceVersion":"1.0","name":"file_text_open_read","externalName":"file_text_open_read","kind":1,"help":"file_text_open_read(fname)","hidden":false,"returnType":2,"argCount":0,"args":[
             1,
-          ],},
+          ],"documentation":"",},
         {"resourceType":"GMExtensionFunction","resourceVersion":"1.0","name":"file_text_open_write","externalName":"file_text_open_write","kind":1,"help":"file_text_open_write(fname)","hidden":false,"returnType":2,"argCount":0,"args":[
             1,
-          ],},
+          ],"documentation":"",},
         {"resourceType":"GMExtensionFunction","resourceVersion":"1.0","name":"file_text_open_append","externalName":"file_text_open_append","kind":1,"help":"file_text_open_append(fname)","hidden":false,"returnType":2,"argCount":0,"args":[
             1,
-          ],},
+          ],"documentation":"",},
         {"resourceType":"GMExtensionFunction","resourceVersion":"1.0","name":"file_text_write_real","externalName":"file_text_write_real","kind":1,"help":"file_text_write_real(fd,val)","hidden":false,"returnType":2,"argCount":0,"args":[
             2,
             2,
-          ],},
+          ],"documentation":"",},
         {"resourceType":"GMExtensionFunction","resourceVersion":"1.0","name":"file_text_write_string","externalName":"file_text_write_string","kind":1,"help":"file_text_write_string(fd,str)","hidden":false,"returnType":2,"argCount":0,"args":[
             2,
             1,
-          ],},
+          ],"documentation":"",},
         {"resourceType":"GMExtensionFunction","resourceVersion":"1.0","name":"file_text_writeln","externalName":"file_text_writeln","kind":1,"help":"file_text_writeln(fd)","hidden":false,"returnType":2,"argCount":0,"args":[
             2,
-          ],},
+          ],"documentation":"",},
         {"resourceType":"GMExtensionFunction","resourceVersion":"1.0","name":"file_text_eoln","externalName":"file_text_eoln","kind":1,"help":"file_text_eoln(fd)","hidden":false,"returnType":2,"argCount":0,"args":[
             2,
-          ],},
+          ],"documentation":"",},
         {"resourceType":"GMExtensionFunction","resourceVersion":"1.0","name":"file_text_eof","externalName":"file_text_eof","kind":1,"help":"file_text_eof(fd)","hidden":false,"returnType":2,"argCount":0,"args":[
             2,
-          ],},
+          ],"documentation":"",},
         {"resourceType":"GMExtensionFunction","resourceVersion":"1.0","name":"file_text_read_real","externalName":"file_text_read_real","kind":1,"help":"file_text_read_real(fd)","hidden":false,"returnType":2,"argCount":0,"args":[
             2,
-          ],},
+          ],"documentation":"",},
         {"resourceType":"GMExtensionFunction","resourceVersion":"1.0","name":"file_text_read_string","externalName":"file_text_read_string","kind":1,"help":"file_text_read_string(fd)","hidden":false,"returnType":1,"argCount":0,"args":[
             2,
-          ],},
+          ],"documentation":"",},
         {"resourceType":"GMExtensionFunction","resourceVersion":"1.0","name":"file_text_readln","externalName":"file_text_readln","kind":1,"help":"file_text_readln(fd)","hidden":false,"returnType":1,"argCount":0,"args":[
             2,
-          ],},
+          ],"documentation":"",},
         {"resourceType":"GMExtensionFunction","resourceVersion":"1.0","name":"file_text_read_all","externalName":"file_text_read_all","kind":1,"help":"file_text_read_all(fd)","hidden":false,"returnType":1,"argCount":0,"args":[
             2,
-          ],},
+          ],"documentation":"",},
         {"resourceType":"GMExtensionFunction","resourceVersion":"1.0","name":"file_text_open_from_string","externalName":"file_text_open_from_string","kind":1,"help":"file_text_open_from_string(str)","hidden":false,"returnType":2,"argCount":0,"args":[
             1,
-          ],},
+          ],"documentation":"",},
         {"resourceType":"GMExtensionFunction","resourceVersion":"1.0","name":"file_text_close","externalName":"file_text_close","kind":1,"help":"file_text_close(fd)","hidden":false,"returnType":2,"argCount":0,"args":[
             2,
-          ],},
+          ],"documentation":"",},
         {"resourceType":"GMExtensionFunction","resourceVersion":"1.0","name":"environment_unset_variable","externalName":"environment_unset_variable","kind":1,"help":"environment_unset_variable(name)","hidden":false,"returnType":2,"argCount":0,"args":[
             1,
-          ],},
+          ],"documentation":"",},
         {"resourceType":"GMExtensionFunction","resourceVersion":"1.0","name":"file_bin_hardlinks","externalName":"file_bin_hardlinks","kind":1,"help":"file_bin_hardlinks(fd,dnames,recursive)","hidden":false,"returnType":1,"argCount":0,"args":[
             2,
             1,
             2,
-          ],},
-        {"resourceType":"GMExtensionFunction","resourceVersion":"1.0","name":"directory_contents_get_order","externalName":"directory_contents_get_order","kind":1,"help":"directory_contents_get_order()","hidden":false,"returnType":2,"argCount":0,"args":[],},
+          ],"documentation":"",},
+        {"resourceType":"GMExtensionFunction","resourceVersion":"1.0","name":"directory_contents_get_order","externalName":"directory_contents_get_order","kind":1,"help":"directory_contents_get_order()","hidden":false,"returnType":2,"argCount":0,"args":[],"documentation":"",},
         {"resourceType":"GMExtensionFunction","resourceVersion":"1.0","name":"directory_contents_set_order","externalName":"directory_contents_set_order","kind":1,"help":"directory_contents_set_order(order)","hidden":false,"returnType":2,"argCount":0,"args":[
             2,
-          ],},
-        {"resourceType":"GMExtensionFunction","resourceVersion":"1.0","name":"directory_get_temporary_path","externalName":"directory_get_temporary_path","kind":1,"help":"directory_get_temporary_path()","hidden":false,"returnType":1,"argCount":0,"args":[],},
+          ],"documentation":"",},
+        {"resourceType":"GMExtensionFunction","resourceVersion":"1.0","name":"directory_get_temporary_path","externalName":"directory_get_temporary_path","kind":1,"help":"directory_get_temporary_path()","hidden":false,"returnType":1,"argCount":0,"args":[],"documentation":"",},
         {"resourceType":"GMExtensionFunction","resourceVersion":"1.0","name":"file_datetime_accessed_year","externalName":"file_datetime_accessed_year","kind":1,"help":"file_datetime_accessed_year(fname)","hidden":false,"returnType":2,"argCount":0,"args":[
             1,
-          ],},
+          ],"documentation":"",},
         {"resourceType":"GMExtensionFunction","resourceVersion":"1.0","name":"file_datetime_accessed_month","externalName":"file_datetime_accessed_month","kind":1,"help":"file_datetime_accessed_month(fname)","hidden":false,"returnType":2,"argCount":0,"args":[
             1,
-          ],},
+          ],"documentation":"",},
         {"resourceType":"GMExtensionFunction","resourceVersion":"1.0","name":"file_datetime_accessed_day","externalName":"file_datetime_accessed_day","kind":1,"help":"file_datetime_accessed_day(fname)","hidden":false,"returnType":2,"argCount":0,"args":[
             1,
-          ],},
+          ],"documentation":"",},
         {"resourceType":"GMExtensionFunction","resourceVersion":"1.0","name":"file_datetime_accessed_hour","externalName":"file_datetime_accessed_hour","kind":1,"help":"file_datetime_accessed_hour(fname)","hidden":false,"returnType":2,"argCount":0,"args":[
             1,
-          ],},
+          ],"documentation":"",},
         {"resourceType":"GMExtensionFunction","resourceVersion":"1.0","name":"file_datetime_accessed_minute","externalName":"file_datetime_accessed_minute","kind":1,"help":"file_datetime_accessed_minute(fname)","hidden":false,"returnType":2,"argCount":0,"args":[
             1,
-          ],},
+          ],"documentation":"",},
         {"resourceType":"GMExtensionFunction","resourceVersion":"1.0","name":"file_datetime_accessed_second","externalName":"file_datetime_accessed_second","kind":1,"help":"file_datetime_accessed_second(fname)","hidden":false,"returnType":2,"argCount":0,"args":[
             1,
-          ],},
+          ],"documentation":"",},
         {"resourceType":"GMExtensionFunction","resourceVersion":"1.0","name":"file_datetime_modified_year","externalName":"file_datetime_modified_year","kind":1,"help":"file_datetime_modified_year(fname)","hidden":false,"returnType":2,"argCount":0,"args":[
             1,
-          ],},
+          ],"documentation":"",},
         {"resourceType":"GMExtensionFunction","resourceVersion":"1.0","name":"file_datetime_modified_month","externalName":"file_datetime_modified_month","kind":1,"help":"file_datetime_modified_month(fname)","hidden":false,"returnType":2,"argCount":0,"args":[
             1,
-          ],},
+          ],"documentation":"",},
         {"resourceType":"GMExtensionFunction","resourceVersion":"1.0","name":"file_datetime_modified_day","externalName":"file_datetime_modified_day","kind":1,"help":"file_datetime_modified_day(fname)","hidden":false,"returnType":2,"argCount":0,"args":[
             1,
-          ],},
+          ],"documentation":"",},
         {"resourceType":"GMExtensionFunction","resourceVersion":"1.0","name":"file_datetime_modified_hour","externalName":"file_datetime_modified_hour","kind":1,"help":"file_datetime_modified_hour(fname)","hidden":false,"returnType":2,"argCount":0,"args":[
             1,
-          ],},
+          ],"documentation":"",},
         {"resourceType":"GMExtensionFunction","resourceVersion":"1.0","name":"file_datetime_modified_minute","externalName":"file_datetime_modified_minute","kind":1,"help":"file_datetime_modified_minute(fname)","hidden":false,"returnType":2,"argCount":0,"args":[
             1,
-          ],},
+          ],"documentation":"",},
         {"resourceType":"GMExtensionFunction","resourceVersion":"1.0","name":"file_datetime_modified_second","externalName":"file_datetime_modified_second","kind":1,"help":"file_datetime_modified_second(fname)","hidden":false,"returnType":2,"argCount":0,"args":[
             1,
-          ],},
+          ],"documentation":"",},
         {"resourceType":"GMExtensionFunction","resourceVersion":"1.0","name":"file_datetime_created_year","externalName":"file_datetime_created_year","kind":1,"help":"file_datetime_created_year(fname)","hidden":false,"returnType":2,"argCount":0,"args":[
             1,
-          ],},
+          ],"documentation":"",},
         {"resourceType":"GMExtensionFunction","resourceVersion":"1.0","name":"file_datetime_created_month","externalName":"file_datetime_created_month","kind":1,"help":"file_datetime_created_month(fname)","hidden":false,"returnType":2,"argCount":0,"args":[
             1,
-          ],},
+          ],"documentation":"",},
         {"resourceType":"GMExtensionFunction","resourceVersion":"1.0","name":"file_datetime_created_day","externalName":"file_datetime_created_day","kind":1,"help":"file_datetime_created_day(fname)","hidden":false,"returnType":2,"argCount":0,"args":[
             1,
-          ],},
+          ],"documentation":"",},
         {"resourceType":"GMExtensionFunction","resourceVersion":"1.0","name":"file_datetime_created_hour","externalName":"file_datetime_created_hour","kind":1,"help":"file_datetime_created_hour(fname)","hidden":false,"returnType":2,"argCount":0,"args":[
             1,
-          ],},
+          ],"documentation":"",},
         {"resourceType":"GMExtensionFunction","resourceVersion":"1.0","name":"file_datetime_created_minute","externalName":"file_datetime_created_minute","kind":1,"help":"file_datetime_created_minute(fname)","hidden":false,"returnType":2,"argCount":0,"args":[
             1,
-          ],},
+          ],"documentation":"",},
         {"resourceType":"GMExtensionFunction","resourceVersion":"1.0","name":"file_datetime_created_second","externalName":"file_datetime_created_second","kind":1,"help":"file_datetime_created_second(fname)","hidden":false,"returnType":2,"argCount":0,"args":[
             1,
-          ],},
+          ],"documentation":"",},
         {"resourceType":"GMExtensionFunction","resourceVersion":"1.0","name":"file_bin_datetime_accessed_year","externalName":"file_bin_datetime_accessed_year","kind":1,"help":"file_bin_datetime_accessed_year(fd)","hidden":false,"returnType":2,"argCount":0,"args":[
             2,
-          ],},
+          ],"documentation":"",},
         {"resourceType":"GMExtensionFunction","resourceVersion":"1.0","name":"file_bin_datetime_accessed_month","externalName":"file_bin_datetime_accessed_month","kind":1,"help":"file_bin_datetime_accessed_month(fd)","hidden":false,"returnType":2,"argCount":0,"args":[
             2,
-          ],},
+          ],"documentation":"",},
         {"resourceType":"GMExtensionFunction","resourceVersion":"1.0","name":"file_bin_datetime_accessed_day","externalName":"file_bin_datetime_accessed_day","kind":1,"help":"file_bin_datetime_accessed_day(fd)","hidden":false,"returnType":2,"argCount":0,"args":[
             2,
-          ],},
+          ],"documentation":"",},
         {"resourceType":"GMExtensionFunction","resourceVersion":"1.0","name":"file_bin_datetime_accessed_hour","externalName":"file_bin_datetime_accessed_hour","kind":1,"help":"file_bin_datetime_accessed_hour(fd)","hidden":false,"returnType":2,"argCount":0,"args":[
             2,
-          ],},
+          ],"documentation":"",},
         {"resourceType":"GMExtensionFunction","resourceVersion":"1.0","name":"file_bin_datetime_accessed_minute","externalName":"file_bin_datetime_accessed_minute","kind":1,"help":"file_bin_datetime_accessed_minute(fd)","hidden":false,"returnType":2,"argCount":0,"args":[
             2,
-          ],},
+          ],"documentation":"",},
         {"resourceType":"GMExtensionFunction","resourceVersion":"1.0","name":"file_bin_datetime_accessed_second","externalName":"file_bin_datetime_accessed_second","kind":1,"help":"file_bin_datetime_accessed_second(fd)","hidden":false,"returnType":2,"argCount":0,"args":[
             2,
-          ],},
+          ],"documentation":"",},
         {"resourceType":"GMExtensionFunction","resourceVersion":"1.0","name":"file_bin_datetime_modified_year","externalName":"file_bin_datetime_modified_year","kind":1,"help":"file_bin_datetime_modified_year(fd)","hidden":false,"returnType":2,"argCount":0,"args":[
             2,
-          ],},
+          ],"documentation":"",},
         {"resourceType":"GMExtensionFunction","resourceVersion":"1.0","name":"file_bin_datetime_modified_month","externalName":"file_bin_datetime_modified_month","kind":1,"help":"file_bin_datetime_modified_month(fd)","hidden":false,"returnType":2,"argCount":0,"args":[
             2,
-          ],},
+          ],"documentation":"",},
         {"resourceType":"GMExtensionFunction","resourceVersion":"1.0","name":"file_bin_datetime_modified_day","externalName":"file_bin_datetime_modified_day","kind":1,"help":"file_bin_datetime_modified_day(fd)","hidden":false,"returnType":2,"argCount":0,"args":[
             2,
-          ],},
+          ],"documentation":"",},
         {"resourceType":"GMExtensionFunction","resourceVersion":"1.0","name":"file_bin_datetime_modified_hour","externalName":"file_bin_datetime_modified_hour","kind":1,"help":"file_bin_datetime_modified_hour(fd)","hidden":false,"returnType":2,"argCount":0,"args":[
             2,
-          ],},
+          ],"documentation":"",},
         {"resourceType":"GMExtensionFunction","resourceVersion":"1.0","name":"file_bin_datetime_modified_minute","externalName":"file_bin_datetime_modified_minute","kind":1,"help":"file_bin_datetime_modified_minute(fd)","hidden":false,"returnType":2,"argCount":0,"args":[
             2,
-          ],},
+          ],"documentation":"",},
         {"resourceType":"GMExtensionFunction","resourceVersion":"1.0","name":"file_bin_datetime_modified_second","externalName":"file_bin_datetime_modified_second","kind":1,"help":"file_bin_datetime_modified_second(fd)","hidden":false,"returnType":2,"argCount":0,"args":[
             2,
-          ],},
+          ],"documentation":"",},
         {"resourceType":"GMExtensionFunction","resourceVersion":"1.0","name":"file_bin_datetime_created_year","externalName":"file_bin_datetime_created_year","kind":1,"help":"file_bin_datetime_created_year(fd)","hidden":false,"returnType":2,"argCount":0,"args":[
             2,
-          ],},
+          ],"documentation":"",},
         {"resourceType":"GMExtensionFunction","resourceVersion":"1.0","name":"file_bin_datetime_created_month","externalName":"file_bin_datetime_created_month","kind":1,"help":"file_bin_datetime_created_month(fd)","hidden":false,"returnType":2,"argCount":0,"args":[
             2,
-          ],},
+          ],"documentation":"",},
         {"resourceType":"GMExtensionFunction","resourceVersion":"1.0","name":"file_bin_datetime_created_day","externalName":"file_bin_datetime_created_day","kind":1,"help":"file_bin_datetime_created_day(fd)","hidden":false,"returnType":2,"argCount":0,"args":[
             2,
-          ],},
+          ],"documentation":"",},
         {"resourceType":"GMExtensionFunction","resourceVersion":"1.0","name":"file_bin_datetime_created_hour","externalName":"file_bin_datetime_created_hour","kind":1,"help":"file_bin_datetime_created_hour(fd)","hidden":false,"returnType":2,"argCount":0,"args":[
             2,
-          ],},
+          ],"documentation":"",},
         {"resourceType":"GMExtensionFunction","resourceVersion":"1.0","name":"file_bin_datetime_created_minute","externalName":"file_bin_datetime_created_minute","kind":1,"help":"file_bin_datetime_created_minute(fd)","hidden":false,"returnType":2,"argCount":0,"args":[
             2,
-          ],},
+          ],"documentation":"",},
         {"resourceType":"GMExtensionFunction","resourceVersion":"1.0","name":"file_bin_datetime_created_second","externalName":"file_bin_datetime_created_second","kind":1,"help":"file_bin_datetime_created_second(fd)","hidden":false,"returnType":2,"argCount":0,"args":[
             2,
-          ],},
-        {"resourceType":"GMExtensionFunction","resourceVersion":"1.0","name":"directory_contents_get_maxfiles","externalName":"directory_contents_get_maxfiles","kind":1,"help":"directory_contents_get_maxfiles()","hidden":false,"returnType":2,"argCount":0,"args":[],},
+          ],"documentation":"",},
+        {"resourceType":"GMExtensionFunction","resourceVersion":"1.0","name":"directory_contents_get_maxfiles","externalName":"directory_contents_get_maxfiles","kind":1,"help":"directory_contents_get_maxfiles()","hidden":false,"returnType":2,"argCount":0,"args":[],"documentation":"",},
         {"resourceType":"GMExtensionFunction","resourceVersion":"1.0","name":"directory_contents_set_maxfiles","externalName":"directory_contents_set_maxfiles","kind":1,"help":"directory_contents_set_maxfiles(maxfiles)","hidden":false,"returnType":2,"argCount":0,"args":[
             2,
-          ],},
-        {"resourceType":"GMExtensionFunction","resourceVersion":"1.0","name":"directory_contents_get_cntfiles","externalName":"directory_contents_get_cntfiles","kind":1,"help":"directory_contents_get_cntfiles()","hidden":false,"returnType":2,"argCount":0,"args":[],},
+          ],"documentation":"",},
+        {"resourceType":"GMExtensionFunction","resourceVersion":"1.0","name":"directory_contents_get_cntfiles","externalName":"directory_contents_get_cntfiles","kind":1,"help":"directory_contents_get_cntfiles()","hidden":false,"returnType":2,"argCount":0,"args":[],"documentation":"",},
         {"resourceType":"GMExtensionFunction","resourceVersion":"1.0","name":"symlink_create","externalName":"symlink_create","kind":1,"help":"symlink_create(fname,newname)","hidden":false,"returnType":2,"argCount":0,"args":[
             1,
             1,
-          ],},
+          ],"documentation":"",},
         {"resourceType":"GMExtensionFunction","resourceVersion":"1.0","name":"symlink_copy","externalName":"symlink_copy","kind":1,"help":"symlink_copy(fname,newname)","hidden":false,"returnType":2,"argCount":0,"args":[
             1,
             1,
-          ],},
+          ],"documentation":"",},
         {"resourceType":"GMExtensionFunction","resourceVersion":"1.0","name":"symlink_exists","externalName":"symlink_exists","kind":1,"help":"symlink_exists(fname)","hidden":false,"returnType":2,"argCount":0,"args":[
             1,
-          ],},
+          ],"documentation":"",},
         {"resourceType":"GMExtensionFunction","resourceVersion":"1.0","name":"hardlink_create","externalName":"hardlink_create","kind":1,"help":"hardlink_create(fname,newname)","hidden":false,"returnType":2,"argCount":0,"args":[
             1,
             1,
-          ],},
+          ],"documentation":"",},
         {"resourceType":"GMExtensionFunction","resourceVersion":"1.0","name":"file_numblinks","externalName":"file_numblinks","kind":1,"help":"file_numblinks(fname)","hidden":false,"returnType":2,"argCount":0,"args":[
             1,
-          ],},
+          ],"documentation":"",},
         {"resourceType":"GMExtensionFunction","resourceVersion":"1.0","name":"file_bin_numblinks","externalName":"file_bin_numblinks","kind":1,"help":"file_bin_numblinks(fd)","hidden":false,"returnType":2,"argCount":0,"args":[
             2,
-          ],},
+          ],"documentation":"",},
         {"resourceType":"GMExtensionFunction","resourceVersion":"1.0","name":"filename_equivalent","externalName":"filename_equivalent","kind":1,"help":"filename_equivalent(fname1,fname2)","hidden":false,"returnType":2,"argCount":0,"args":[
             1,
             1,
-          ],},
+          ],"documentation":"",},
         {"resourceType":"GMExtensionFunction","resourceVersion":"1.0","name":"environment_get_variable_exists","externalName":"environment_get_variable_exists","kind":1,"help":"environment_get_variable_exists(name)","hidden":false,"returnType":2,"argCount":0,"args":[
             1,
-          ],},
+          ],"documentation":"",},
         {"resourceType":"GMExtensionFunction","resourceVersion":"1.0","name":"directory_contents_first_async","externalName":"directory_contents_first_async","kind":1,"help":"directory_contents_first_async(dname,pattern,includedirs,recursive)","hidden":false,"returnType":2,"argCount":0,"args":[
             1,
             1,
             2,
             2,
-          ],},
-        {"resourceType":"GMExtensionFunction","resourceVersion":"1.0","name":"directory_contents_get_completion_status","externalName":"directory_contents_get_completion_status","kind":1,"help":"directory_contents_get_completion_status()","hidden":false,"returnType":2,"argCount":0,"args":[],},
+          ],"documentation":"",},
+        {"resourceType":"GMExtensionFunction","resourceVersion":"1.0","name":"directory_contents_get_completion_status","externalName":"directory_contents_get_completion_status","kind":1,"help":"directory_contents_get_completion_status()","hidden":false,"returnType":2,"argCount":0,"args":[],"documentation":"",},
         {"resourceType":"GMExtensionFunction","resourceVersion":"1.0","name":"directory_contents_set_completion_status","externalName":"directory_contents_set_completion_status","kind":1,"help":"directory_contents_set_completion_status(complete)","hidden":false,"returnType":2,"argCount":0,"args":[
             2,
-          ],},
-        {"resourceType":"GMExtensionFunction","resourceVersion":"1.0","name":"directory_contents_get_length","externalName":"directory_contents_get_length","kind":1,"help":"directory_contents_get_length()","hidden":false,"returnType":2,"argCount":0,"args":[],},
-        {"resourceType":"GMExtensionFunction","resourceVersion":"1.0","name":"directory_get_desktop_path","externalName":"directory_get_desktop_path","kind":1,"help":"directory_get_desktop_path()","hidden":false,"returnType":1,"argCount":0,"args":[],},
-        {"resourceType":"GMExtensionFunction","resourceVersion":"1.0","name":"directory_get_documents_path","externalName":"directory_get_documents_path","kind":1,"help":"directory_get_documents_path()","hidden":false,"returnType":1,"argCount":0,"args":[],},
-        {"resourceType":"GMExtensionFunction","resourceVersion":"1.0","name":"directory_get_downloads_path","externalName":"directory_get_downloads_path","kind":1,"help":"directory_get_downloads_path()","hidden":false,"returnType":1,"argCount":0,"args":[],},
-        {"resourceType":"GMExtensionFunction","resourceVersion":"1.0","name":"directory_get_music_path","externalName":"directory_get_music_path","kind":1,"help":"directory_get_music_path()","hidden":false,"returnType":1,"argCount":0,"args":[],},
-        {"resourceType":"GMExtensionFunction","resourceVersion":"1.0","name":"directory_get_pictures_path","externalName":"directory_get_pictures_path","kind":1,"help":"directory_get_pictures_path()","hidden":false,"returnType":1,"argCount":0,"args":[],},
-        {"resourceType":"GMExtensionFunction","resourceVersion":"1.0","name":"directory_get_videos_path","externalName":"directory_get_videos_path","kind":1,"help":"directory_get_videos_path()","hidden":false,"returnType":1,"argCount":0,"args":[],},
+          ],"documentation":"",},
+        {"resourceType":"GMExtensionFunction","resourceVersion":"1.0","name":"directory_contents_get_length","externalName":"directory_contents_get_length","kind":1,"help":"directory_contents_get_length()","hidden":false,"returnType":2,"argCount":0,"args":[],"documentation":"",},
+        {"resourceType":"GMExtensionFunction","resourceVersion":"1.0","name":"directory_get_desktop_path","externalName":"directory_get_desktop_path","kind":1,"help":"directory_get_desktop_path()","hidden":false,"returnType":1,"argCount":0,"args":[],"documentation":"",},
+        {"resourceType":"GMExtensionFunction","resourceVersion":"1.0","name":"directory_get_documents_path","externalName":"directory_get_documents_path","kind":1,"help":"directory_get_documents_path()","hidden":false,"returnType":1,"argCount":0,"args":[],"documentation":"",},
+        {"resourceType":"GMExtensionFunction","resourceVersion":"1.0","name":"directory_get_downloads_path","externalName":"directory_get_downloads_path","kind":1,"help":"directory_get_downloads_path()","hidden":false,"returnType":1,"argCount":0,"args":[],"documentation":"",},
+        {"resourceType":"GMExtensionFunction","resourceVersion":"1.0","name":"directory_get_music_path","externalName":"directory_get_music_path","kind":1,"help":"directory_get_music_path()","hidden":false,"returnType":1,"argCount":0,"args":[],"documentation":"",},
+        {"resourceType":"GMExtensionFunction","resourceVersion":"1.0","name":"directory_get_pictures_path","externalName":"directory_get_pictures_path","kind":1,"help":"directory_get_pictures_path()","hidden":false,"returnType":1,"argCount":0,"args":[],"documentation":"",},
+        {"resourceType":"GMExtensionFunction","resourceVersion":"1.0","name":"directory_get_videos_path","externalName":"directory_get_videos_path","kind":1,"help":"directory_get_videos_path()","hidden":false,"returnType":1,"argCount":0,"args":[],"documentation":"",},
       ],"constants":[
         {"resourceType":"GMExtensionConstant","resourceVersion":"1.0","name":"working_directory","value":"directory_get_current_working()","hidden":false,},
         {"resourceType":"GMExtensionConstant","resourceVersion":"1.0","name":"program_directory","value":"executable_get_directory()","hidden":false,},
@@ -356,7 +356,7 @@
         {"resourceType":"GMProxyFile","resourceVersion":"1.0","name":"libfilesystem_arm.so","TargetMask":7,},
         {"resourceType":"GMProxyFile","resourceVersion":"1.0","name":"libfilesystem_arm64.so","TargetMask":7,},
         {"resourceType":"GMProxyFile","resourceVersion":"1.0","name":"libfilesystem.so","TargetMask":7,},
-      ],"copyToTargets":202375362,"order":[
+      ],"copyToTargets":202375362,"usesRunnerInterface":false,"order":[
         {"name":"file_copy","path":"extensions/libfilesystem/libfilesystem.yy",},
         {"name":"file_rename","path":"extensions/libfilesystem/libfilesystem.yy",},
         {"name":"file_exists","path":"extensions/libfilesystem/libfilesystem.yy",},
@@ -466,10 +466,10 @@
         {"name":"directory_get_pictures_path","path":"extensions/libfilesystem/libfilesystem.yy",},
         {"name":"directory_get_videos_path","path":"extensions/libfilesystem/libfilesystem.yy",},
       ],},
-    {"resourceType":"GMExtensionFile","resourceVersion":"1.0","name":"","filename":"libfilesystem.zip","origname":"extensions\\libfilesystem.zip","init":"","final":"","kind":4,"uncompress":false,"functions":[],"constants":[],"ProxyFiles":[],"copyToTargets":0,"order":[],},
+    {"resourceType":"GMExtensionFile","resourceVersion":"1.0","name":"","filename":"libfilesystem.zip","origname":"extensions\\libfilesystem.zip","init":"","final":"","kind":4,"uncompress":false,"functions":[],"constants":[],"ProxyFiles":[],"copyToTargets":0,"usesRunnerInterface":false,"order":[],},
     {"resourceType":"GMExtensionFile","resourceVersion":"1.0","name":"","filename":"libfilesystem.gml","origname":"","init":"generate_working_directory","final":"","kind":2,"uncompress":false,"functions":[
-        {"resourceType":"GMExtensionFunction","resourceVersion":"1.0","name":"generate_working_directory","externalName":"generate_working_directory","kind":2,"help":"","hidden":false,"returnType":1,"argCount":0,"args":[],},
-      ],"constants":[],"ProxyFiles":[],"copyToTargets":194,"order":[
+        {"resourceType":"GMExtensionFunction","resourceVersion":"1.0","name":"generate_working_directory","externalName":"generate_working_directory","kind":2,"help":"","hidden":false,"returnType":1,"argCount":0,"args":[],"documentation":"",},
+      ],"constants":[],"ProxyFiles":[],"copyToTargets":194,"usesRunnerInterface":false,"order":[
         {"name":"generate_working_directory","path":"extensions/libfilesystem/libfilesystem.yy",},
       ],},
   ],

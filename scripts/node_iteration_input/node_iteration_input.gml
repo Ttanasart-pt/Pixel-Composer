@@ -7,7 +7,7 @@ function Node_create_Iterator_Input(_x, _y) {
 
 function Node_Iterator_Input(_x, _y, _group) : Node(_x, _y) constructor {
 	name  = "Input";
-	color = COLORS.node_blend_interface;
+	color = COLORS.node_blend_collection;
 	previewable = false;
 	auto_height = false;
 	input_index = -1;

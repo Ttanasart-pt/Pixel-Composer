@@ -1,2 +1,2 @@
 /// @description force update
-renderAll();
+Render();

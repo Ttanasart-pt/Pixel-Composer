@@ -10,8 +10,9 @@
 	log_message("SESSION", "Begin");
 	log_message("DIRECTORY", DIRECTORY);
 	__init_theme();
-	__init_collection();
+	__initCollection();
 	__initAssets();
+	__initPresets();
 	
 	PREF_LOAD();
 	loadFonts();

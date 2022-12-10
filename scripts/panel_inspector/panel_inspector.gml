@@ -7,14 +7,14 @@ function Panel_Inspector() : PanelContent() constructor {
 	context_str = "Inspector";
 	
 	inspecting = noone;
-	top_bar_h  = ui(64);
+	top_bar_h  = ui(96);
 	
 	prop_hover = noone;
 	prop_selecting = noone;
 	
 	function initSize() {
 		content_w = w - ui(32);
-		content_h = h - top_bar_h - ui(24);
+		content_h = h - top_bar_h - ui(12);
 	}
 	initSize();
 	
@@ -28,12 +28,39 @@ function Panel_Inspector() : PanelContent() constructor {
 		if(inspecting) inspecting.name = txt;
 	})
 	
+	tb_prop_filter	= new textBox(TEXTBOX_INPUT.text, function(txt) {
+		filter_text = txt;
+	})
+	filter_text = "";
+	
 	addHotkey("Inspector", "Copy property",		"C",   MOD_KEY.ctrl,	function() { propSelectCopy(); });
 	addHotkey("Inspector", "Paste property",	"V",   MOD_KEY.ctrl,	function() { propSelectPaste(); });
 	
+	group_menu = [
+		[ "Expand all", function() {
+			if(inspecting == noone) return;
+			if(inspecting.input_display_list == -1) return;
+			
+			var dlist = inspecting.input_display_list;
+			for( var i = 0; i < array_length(dlist); i++ ) {
+				if(!is_array(dlist[i])) continue;
+				dlist[i][@ 1] = false;
+			}
+		}],
+		[ "Collapse all", function() {
+			if(inspecting == noone) return;
+			if(inspecting.input_display_list == -1) return;
+			
+			var dlist = inspecting.input_display_list;
+			for( var i = 0; i < array_length(dlist); i++ ) {
+				if(!is_array(dlist[i])) continue;
+				dlist[i][@ 1] = true;
+			}
+		}],
+	]
+	
 	function onResize() {
-		content_w = w - ui(32);
-		content_h = h - top_bar_h - ui(24);
+		initSize();
 		contentPane.resize(content_w, content_h);
 	}
 	
@@ -41,16 +68,15 @@ function Panel_Inspector() : PanelContent() constructor {
 		var con_w = contentPane.surface_w;
 		draw_clear_alpha(COLORS.panel_bg_clear, 0);
 		
-		if(pFOCUS) 
-			if(point_in_rectangle(_m[0], _m[1], 0, 0, con_w, content_h) && mouse_check_button_pressed(mb_left))
-				prop_selecting = noone;
+		if(point_in_rectangle(_m[0], _m[1], 0, 0, con_w, content_h) && mouse_press(mb_left, pFOCUS))
+			prop_selecting = noone;
 		
 		if(inspecting == noone) 
 			return 0;
 		
 		inspecting.inspecting = true;
 		prop_hover = noone;
-		var jun;
+		var jun = noone;
 		var amo = inspecting.input_display_list == -1? ds_list_size(inspecting.inputs) : array_length(inspecting.input_display_list);
 		var hh = ui(8);
 		
@@ -64,18 +90,22 @@ function Panel_Inspector() : PanelContent() constructor {
 				var jun_disp = inspecting.input_display_list[i];
 				if(is_array(jun_disp)) {
 					var txt  = jun_disp[0];
-					var coll = jun_disp[1];
+					var coll = jun_disp[1] && filter_text == "";
 					
 					if(pHOVER && point_in_rectangle(_m[0], _m[1], 0, yy, con_w, yy + ui(32))) {
 						draw_sprite_stretched_ext(THEME.group_label, 0, 0, yy, con_w, ui(32), COLORS.panel_inspector_group_hover, 1);
 						
-						if(pFOCUS && mouse_check_button_pressed(mb_left)) {
+						if(mouse_press(mb_left, pFOCUS))
 							jun_disp[@ 1] = !coll;
-						}
+						if(mouse_press(mb_right, pFOCUS))
+							menuCall(, , group_menu);
 					} else
 						draw_sprite_stretched_ext(THEME.group_label, 0, 0, yy, con_w, ui(32), COLORS.panel_inspector_group_bg, 1);
 					
-					draw_sprite_ui(THEME.arrow, 0, ui(16), yy + ui(32) / 2, 1, 1, -90 + coll * 90, COLORS.panel_inspector_group_bg, 1);
+					if(filter_text == "") {
+						draw_sprite_ui(THEME.arrow, 0, ui(16), yy + ui(32) / 2, 1, 1, -90 + coll * 90, COLORS.panel_inspector_group_bg, 1);	
+					}
+					
 					draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text);
 					draw_text(ui(32), yy + ui(32) / 2, txt);
 					
@@ -103,8 +133,13 @@ function Panel_Inspector() : PanelContent() constructor {
 				}
 				jun = inspecting.inputs[| inspecting.input_display_list[i]];
 			}
-				
+			
+			if(!is_struct(jun) || instanceof(jun) != "NodeValue") continue;
 			if(!jun.show_in_inspector || jun.type == VALUE_TYPE.object) continue;
+			if(filter_text != "") {
+				var pos = string_pos(filter_text, string_lower(jun.name));
+				if(pos == 0) continue;
+			}
 			
 			var lb_h = line_height(f_p0) + ui(8);
 			var lb_y = yy + lb_h / 2;
@@ -116,7 +151,7 @@ function Panel_Inspector() : PanelContent() constructor {
 				draw_sprite_ui_uniform(THEME.animate_clock, index, butx, lb_y, 1,, 1);
 				TOOLTIP = "Toggle animation";
 					
-				if(mouse_check_button_pressed(mb_left)) {
+				if(mouse_press(mb_left, pFOCUS)) {
 					if(jun.value_from != noone)
 						jun.removeFrom();
 					else
@@ -131,16 +166,15 @@ function Panel_Inspector() : PanelContent() constructor {
 			if(pHOVER && point_in_circle(_m[0], _m[1], butx, lb_y, ui(10))) {
 				draw_sprite_ui_uniform(THEME.junc_visible, index, butx, lb_y, 1,, 1);
 				TOOLTIP = "Visibility";
-					
-				if(mouse_check_button_pressed(mb_left)) {
+				
+				if(mouse_press(mb_left, pFOCUS))
 					jun.visible = !jun.visible;
-				}
 			}
 				
 			draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text);
 			draw_text(ui(56), lb_y - ui(2), jun.name);
 			var lb_w = string_width(jun.name) + ui(32);
-				
+			
 			#region anim
 				if(lineBreak && jun.animator.is_anim) {
 					var bx = w - ui(64);
@@ -149,8 +183,8 @@ function Panel_Inspector() : PanelContent() constructor {
 						for(var j = 0; j < ds_list_size(jun.animator.values); j++) {
 							var _key = jun.animator.values[| j];
 							if(_key.time > ANIMATOR.current_frame) {
-								ANIMATOR.real_frame = _key.time;
-								ANIMATOR.is_scrubing = true;
+								ANIMATOR.setFrame(_key.time);
+								ANIMATOR.frame_progress = true;
 								break;
 							}
 						}
@@ -194,8 +228,8 @@ function Panel_Inspector() : PanelContent() constructor {
 								_t = _key.time;
 							}
 						}
-						if(_t > -1) ANIMATOR.real_frame = _t;
-						ANIMATOR.is_scrubing = true;
+						if(_t > -1) ANIMATOR.setFrame(_t);
+						ANIMATOR.frame_progress = true;
 					}
 						
 					var lhf = lb_h / 2 - 4;
@@ -237,16 +271,19 @@ function Panel_Inspector() : PanelContent() constructor {
 							case VALUE_TYPE.float :
 							case VALUE_TYPE.integer :
 								switch(jun.display_type) {
-									case VALUE_DISPLAY.enum_button :
 									case VALUE_DISPLAY._default :
 									case VALUE_DISPLAY.range :
 									case VALUE_DISPLAY.vector :
 										jun.editWidget.draw(editBoxX, editBoxY, editBoxW, editBoxH, jun.showValue(), _m);
 										break;
 									case VALUE_DISPLAY.vector_range :
-										widH = jun.editWidget.draw(editBoxX, editBoxY, editBoxW, editBoxH, jun.showValue(), _m);
+										var ebH = jun.editWidget.draw(editBoxX, editBoxY, editBoxW, editBoxH, jun.showValue(), _m);
+										widH = lineBreak? ebH : ebH - lb_h;
 										break;
 									case VALUE_DISPLAY.enum_scroll :
+										jun.editWidget.draw(editBoxX, editBoxY, editBoxW, editBoxH, jun.display_data[jun.showValue()], _m, ui(16) + x, top_bar_h + y);
+										break;
+									case VALUE_DISPLAY.enum_button :
 										jun.editWidget.draw(editBoxX, editBoxY, editBoxW, editBoxH, jun.display_data[jun.showValue()], _m, ui(16) + x, top_bar_h + y);
 										break;
 									case VALUE_DISPLAY.padding :
@@ -301,7 +338,7 @@ function Panel_Inspector() : PanelContent() constructor {
 								draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text);
 								draw_text_cut(editBoxX + ui(8), editBoxY + editBoxH / 2, txt, editBoxW - ui(60));
 									
-								if(!pathExist && point_in_rectangle(_m[0], _m[1], icx - ui(17), icy - ui(17), icx + ui(17), icy + ui(17)))
+								if(!pathExist && pHOVER && point_in_rectangle(_m[0], _m[1], icx - ui(17), icy - ui(17), icx + ui(17), icy + ui(17)))
 									TOOLTIP = "File not exist";
 								break;
 							case VALUE_TYPE.surface :
@@ -349,30 +386,28 @@ function Panel_Inspector() : PanelContent() constructor {
 				draw_sprite_stretched_ext(THEME.prop_selecting, 0, 4, _selY, contentPane.surface_w - ui(8), _selH, COLORS._main_accent, 1);
 				prop_hover = jun;
 					
-				if(pFOCUS) {
-					if(mouse_check_button_pressed(mb_left))
-						prop_selecting = jun;
+				if(mouse_press(mb_left, pFOCUS))
+					prop_selecting = jun;
 						
-					if(mouse_check_button_pressed(mb_right)) {
-						__dialog_junction = jun;
-						var dia = dialogCall(o_dialog_menubox, mouse_mx, mouse_my);
-						dia.setMenu( [
-							[ "Reset value", function() { 
-								__dialog_junction.setValue(__dialog_junction.def_val);
-								}],
-							[ __dialog_junction.animator.is_anim? "Remove animation" : "Add animation", function() { 
-								__dialog_junction.animator.is_anim = !__dialog_junction.animator.is_anim; 
-								PANEL_ANIMATION.updatePropertyList();
-								}],
-							-1,
-							[ "Copy", function() {
-								clipboard_set_text(__dialog_junction.getShowString());
-								}, ["Inspector", "Copy property"]],
-							[ "Paste", function() {
-								__dialog_junction.setString(clipboard_get_text());
-								}, ["Inspector", "Paste property"]],
-						] );
-					}
+				if(mouse_press(mb_right, pFOCUS)) {
+					__dialog_junction = jun;
+					var dia = dialogCall(o_dialog_menubox, mouse_mx, mouse_my);
+					dia.setMenu( [
+						[ "Reset value", function() { 
+							__dialog_junction.setValue(__dialog_junction.def_val);
+							}],
+						[ __dialog_junction.animator.is_anim? "Remove animation" : "Add animation", function() { 
+							__dialog_junction.animator.is_anim = !__dialog_junction.animator.is_anim; 
+							PANEL_ANIMATION.updatePropertyList();
+							}],
+						-1,
+						[ "Copy", function() {
+							clipboard_set_text(__dialog_junction.getShowString());
+							}, ["Inspector", "Copy property"]],
+						[ "Paste", function() {
+							__dialog_junction.setString(clipboard_get_text());
+							}, ["Inspector", "Paste property"]],
+					] );
 				}
 			}
 		}
@@ -397,17 +432,33 @@ function Panel_Inspector() : PanelContent() constructor {
 		tb_node_name.align = fa_center;
 		tb_node_name.draw(ui(64), ui(14), w - ui(128), ui(32), inspecting.name, [mx, my]);
 		
+		tb_prop_filter.auto_update = true;
+		tb_prop_filter.font = f_p0;
+		tb_prop_filter.color = COLORS._main_text_sub;
+		tb_prop_filter.active = pFOCUS;
+		tb_prop_filter.hover  = pHOVER;
+		tb_prop_filter.align  = fa_center;
+		tb_prop_filter.draw(ui(64), ui(52), w - ui(128), ui(28), filter_text, [mx, my]);
+		
+		draw_sprite_ui(THEME.search, 0, ui(80), ui(52 + 14), 1, 1, 0, COLORS._main_icon, 1);
+		
+		var bx = ui(8);
+		var by = ui(12);
+			
+		if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), [mx, my], pFOCUS, pHOVER, "Presets", THEME.preset, 1) == 2)
+			dialogCall(o_dialog_preset, x + bx, y + by + ui(36), { "node": inspecting });
+		
 		if(!inspecting.auto_update) {
 			var bx = w - ui(44);
 			var by = ui(12);
 			
-			if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), [mx, my], pFOCUS, pHOVER, "Run node", THEME.sequence_control, 1) == 2)
+			if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), [mx, my], pFOCUS, pHOVER, "Execute node", THEME.sequence_control, 1) == 2)
 				inspecting.doUpdate();
 		}
 		
 		if(inspecting.use_cache) {
-			var bx = ui(8);
-			var by = ui(12);
+			var bx = w - ui(44);
+			var by = ui(12 + 36);
 			
 			if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), [mx, my], pFOCUS, pHOVER, "This node cache output for performance.\nClick to clear all cached frames in this node.", THEME.cache) = 2)
 				inspecting.clearCache();

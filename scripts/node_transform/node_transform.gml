@@ -66,8 +66,8 @@ function Node_Transform(_x, _y) : Node_Processor(_x, _y) constructor {
 	
 	static onValueUpdate = function(index, prev) {
 		var curr = inputs[| 0].getValue();
-		if(index == 0 && !is_surface(prev) && curr != prev && !LOADING && !APPENDING)
-			centerAnchor();
+		//if(index == 0 && !is_surface(prev) && curr != prev && !LOADING && !APPENDING)
+		//	centerAnchor();
 	}
 	
 	static centerAnchor = function() {
@@ -99,15 +99,9 @@ function Node_Transform(_x, _y) : Node_Processor(_x, _y) constructor {
 		var _pos = inputs[| 3].getValue();
 		
 		if(inputs[| 4].getValue()) {
-			if(_pos[0] != 0.5 && _pos[1] != 0.5)
-				inputs[| 3].setValue([ 0.5, 0.5 ]);
-			else
-				inputs[| 3].setValue([ 0, 0 ]);
+			inputs[| 3].setValue([ 0.5, 0.5 ]);
 		} else {
-			if(_pos[0] != ww / 2 && _pos[1] != hh / 2)
-				inputs[| 3].setValue([ ww / 2, hh / 2]);
-			else
-				inputs[| 3].setValue([ 0, 0 ]);
+			inputs[| 3].setValue([ ww / 2, hh / 2]);
 		}
 		
 		if(inputs[| 11].getValue()) 
@@ -119,7 +113,7 @@ function Node_Transform(_x, _y) : Node_Processor(_x, _y) constructor {
 	static step = function() {
 		var pos = inputs[| 2].getValue();
 		
-		if(ANIMATOR.is_playing && ANIMATOR.frame_progress) {
+		if(ANIMATOR.frame_progress) { 
 			if(ANIMATOR.current_frame == 0) {
 				vel = 0;
 				prev_pos[0] = pos[0];
@@ -383,7 +377,7 @@ function Node_Transform(_x, _y) : Node_Processor(_x, _y) constructor {
 					UNDO_HOLDING = true;
 			}
 			
-			if(mouse_check_button_released(mb_left)) {
+			if(mouse_release(mb_left)) {
 				overlay_dragging = 0;	
 				UNDO_HOLDING = false;
 			}
@@ -400,7 +394,7 @@ function Node_Transform(_x, _y) : Node_Processor(_x, _y) constructor {
 			if(inputs[| 5].setValue(sa))
 				UNDO_HOLDING = true;
 			
-			if(mouse_check_button_released(mb_left)) {
+			if(mouse_release(mb_left)) {
 				overlay_dragging = 0;
 				UNDO_HOLDING = false;
 			}
@@ -425,12 +419,12 @@ function Node_Transform(_x, _y) : Node_Processor(_x, _y) constructor {
 			if(inputs[| 6].setValue([ _sw, _sh ]))
 				UNDO_HOLDING = true;
 			
-			if(mouse_check_button_released(mb_left)) {
+			if(mouse_release(mb_left)) {
 				overlay_dragging = 0;
 				UNDO_HOLDING = false;
 			}
 		} else {
-			if(_active && mouse_check_button_pressed(mb_left)) {
+			if(_mouse_press(mb_left, active)) {
 				if(point_in_circle(_mx, _my, bax, bay, 8)) {
 					overlay_dragging = 2;
 					overlay_drag_mx  = _mx;

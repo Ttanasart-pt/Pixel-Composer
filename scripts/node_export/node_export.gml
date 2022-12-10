@@ -48,8 +48,10 @@ function Node_Export(_x, _y) : Node(_x, _y) constructor {
 		.setVisible(false);
 	inputs[| 8] = nodeValue(8, "Dithering", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false)
 		.setVisible(false);
+	inputs[| 9] = nodeValue(9, "Auto execute", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
 	
 	input_display_list = [
+		9, 
 		["Path",			false], 0, 1, 2, 4, 
 		["Format settings", false], 3, 
 		["Gif settings",	false], 5, 6, 7, 8,
@@ -58,9 +60,8 @@ function Node_Export(_x, _y) : Node(_x, _y) constructor {
 	static onValueUpdate = function(_index) {
 		var form = inputs[| 3].getValue();
 		
-		if(_index == 3 && form == 1) {
+		if(_index == 3 && form == 1)
 			inputs[| 2].setValue("%d%n%3f%i");
-		}
 		
 		inputs[| 5].setVisible(form == 2);
 		inputs[| 6].setVisible(form == 2);
@@ -100,10 +101,11 @@ function Node_Export(_x, _y) : Node(_x, _y) constructor {
 					 " " + target_path;
 		//show_debug_message(converter);
 		//show_debug_message(shell_cmd);
-		execute_shell(converter, shell_cmd);
+		execute_shell_simple(converter, shell_cmd);
 	}
 	
 	static step = function() {
+		auto_update = inputs[| 9].getValue();
 		var surf = inputs[| 0].getValue();
 		if(is_array(surf))	inputs[| 3].display_data = format_array;
 		else				inputs[| 3].display_data = format_single;

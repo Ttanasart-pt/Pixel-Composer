@@ -7,10 +7,10 @@
 	for(var i = 0; i < array_length(scrollbox.data_list); i++) {
 		var _ly = dialog_y + i * hght;	
 					
-		if(point_in_rectangle(mouse_mx, mouse_my, dialog_x, _ly + 1, dialog_x + dialog_w, _ly + hght - 1)) {
+		if(sHOVER && point_in_rectangle(mouse_mx, mouse_my, dialog_x, _ly + 1, dialog_x + dialog_w, _ly + hght - 1)) {
 			draw_sprite_stretched_ext(THEME.textbox, 3, dialog_x, _ly, dialog_w, hght, COLORS.dialog_menubox_highlight, 1);
 			
-			if(mouse_check_button_pressed(mb_left)) {
+			if(mouse_press(mb_left, sFOCUS)) {
 				scrollbox.onModify(i);
 				instance_destroy();
 			}

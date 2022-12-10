@@ -27,6 +27,7 @@
 	
 	PREF_MAP[? "inspector_line_break_width"] = 500;
 	
+	PREF_MAP[? "node_show_render_status"] = false;
 	PREF_MAP[? "node_show_time"] = true;
 	
 	PREF_MAP[? "shape_separation_max"] = 32;
@@ -36,6 +37,8 @@
 	
 	PREF_MAP[? "collection_preview_speed"] = 60;
 	PREF_MAP[? "expand_hover"] = false;
+	
+	PREF_MAP[? "graph_zoom_smoooth"] = 4;
 	
 	PREF_MAP[? "theme"] = "default";
 #endregion

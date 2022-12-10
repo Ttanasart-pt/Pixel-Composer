@@ -56,6 +56,8 @@ function Panel_Preview() : PanelContent() constructor {
 	splitViewStart = 0;
 	splitViewMouse = 0;
 	
+	tileMode = false;
+	
 	toolbar_height = ui(40);
 	toolbars = [
 		[ 
@@ -76,6 +78,20 @@ function Panel_Preview() : PanelContent() constructor {
 				return "Split view";
 			}, 
 			function() { splitView = (splitView + 1) % 3; } 
+		],
+		[
+			THEME.icon_tile_view,
+			function() { return tileMode? 2 : 3;  },
+			function() { 
+				switch(tileMode) {
+					case 0 : return "Tile off";
+					case 1 : return "Tile horizontal";
+					case 2 : return "Tile vertical";
+					case 3 : return "Tile both";
+				}
+				return "Tile mode";
+			}, 
+			function() { tileMode = tileMode? 0 : 3; } 
 		],
 		[ 
 			THEME.icon_grid_setting,
@@ -162,12 +178,12 @@ function Panel_Preview() : PanelContent() constructor {
 			canvas_x += dx;
 			canvas_y += dy;
 			
-			if(mouse_check_button_released(mb_middle)) 
+			if(mouse_release(mb_middle)) 
 				canvas_dragging = false;
 		}
 		
 		if(pFOCUS && pHOVER && canvas_hover) {
-			if(mouse_check_button_pressed(mb_middle)) {
+			if(mouse_press(mb_middle)) {
 				canvas_dragging = true;	
 				canvas_drag_mx  = mx;
 				canvas_drag_my  = my;
@@ -277,7 +293,13 @@ function Panel_Preview() : PanelContent() constructor {
 			case 0 :
 				if(is_surface(preview_surface[0])) {
 					preview_node[0].previewing = 1;
-					draw_surface_ext_safe(preview_surface[0], psx, psy, ss, ss, 0, c_white, 1);						
+					
+					switch(tileMode) {
+						case 0 : draw_surface_ext_safe(preview_surface[0], psx, psy, ss, ss, 0, c_white, 1); break;
+						case 1 : draw_surface_ext_safe(preview_surface[0], psx, psy, ss, ss, 0, c_white, 1); break;
+						case 2 : draw_surface_ext_safe(preview_surface[0], psx, psy, ss, ss, 0, c_white, 1); break;
+						case 3 : draw_surface_tiled_ext_safe(preview_surface[0], psx, psy, ss, ss, c_white, 1); break;
+					}
 				}
 				break;
 			case 1 :
@@ -376,7 +398,7 @@ function Panel_Preview() : PanelContent() constructor {
 		right_menu_y += string_height("l");
 		
 		var prev_size = ui(48);
-		preview_x = lerp_float(preview_x, preview_x_to, 5);
+		preview_x = lerp_float(preview_x, preview_x_to, 4);
 		
 		var pseq = getNodePreviewSequence();
 		if(pseq != 0) {
@@ -407,8 +429,8 @@ function Panel_Preview() : PanelContent() constructor {
 				draw_set_color(COLORS.panel_preview_surface_outline);
 				draw_rectangle(xx, yy, xx + prev_w * ss, yy + prev_h * ss, true);
 				
-				if(pFOCUS && point_in_rectangle(mx, my, xx, yy, xx + prev_w * ss, yy + prev_h * ss)) {
-					if(mouse_check_button_pressed(mb_left)) {
+				if(pHOVER && point_in_rectangle(mx, my, xx, yy, xx + prev_w * ss, yy + prev_h * ss)) {
+					if(mouse_press(mb_left, pFOCUS)) {
 						_node.preview_index = i;
 						_node.onValueUpdate(0);
 						if(resetViewOnDoubleClick)
@@ -566,7 +588,7 @@ function Panel_Preview() : PanelContent() constructor {
 				splitPosition = clamp(cy / h, .1, .9);
 			}
 			
-			if(mouse_check_button_released(mb_left))
+			if(mouse_release(mb_left))
 				splitViewDragging = false;
 		}
 		
@@ -575,7 +597,7 @@ function Panel_Preview() : PanelContent() constructor {
 			
 			if(mouse_on_preview && point_in_rectangle(mx, my, sx - ui(4), 0, sx + ui(4), h)) {
 				draw_line_width(sx, 0, sx, h, 2);
-				if(mouse_check_button_pressed(mb_left)) {
+				if(mouse_press(mb_left, pFOCUS)) {
 					splitViewDragging = true;
 					splitViewStart = sx;
 					splitViewMouse = mx;
@@ -585,7 +607,7 @@ function Panel_Preview() : PanelContent() constructor {
 			
 			draw_sprite_ui_uniform(THEME.icon_active_split, 0, splitSelection? sx + ui(16) : sx - ui(16), ui(16),, COLORS._main_accent);
 			
-			if(mouse_on_preview && mouse_check_button_pressed(mb_left)) {
+			if(mouse_on_preview && mouse_press(mb_left, pFOCUS)) {
 				if(point_in_rectangle(mx, my, 0, 0, sx, h))
 					splitSelection = 0;
 				else if(point_in_rectangle(mx, my, sx, 0, w, h))
@@ -596,7 +618,7 @@ function Panel_Preview() : PanelContent() constructor {
 			
 			if(mouse_on_preview && point_in_rectangle(mx, my, 0, sy - ui(4), w, sy + ui(4))) {
 				draw_line_width(0, sy, w, sy, 2);
-				if(mouse_check_button_pressed(mb_left)) {
+				if(mouse_press(mb_left, pFOCUS)) {
 					splitViewDragging = true;
 					splitViewStart = sy;
 					splitViewMouse = my;
@@ -605,7 +627,7 @@ function Panel_Preview() : PanelContent() constructor {
 				draw_line_width(0, sy, w, sy, 1);
 			draw_sprite_ui_uniform(THEME.icon_active_split, 0, ui(16), splitSelection? sy + ui(16) : sy - ui(16),, COLORS._main_accent);
 			
-			if(mouse_on_preview && mouse_check_button_pressed(mb_left)) {
+			if(mouse_on_preview && mouse_press(mb_left, pFOCUS)) {
 				if(point_in_rectangle(mx, my, 0, 0, w, sy))
 					splitSelection = 0;
 				else if(point_in_rectangle(mx, my, 0, sy, w, h))
@@ -615,7 +637,7 @@ function Panel_Preview() : PanelContent() constructor {
 	}
 	
 	function drawContent(panel) {
-		mouse_on_preview = point_in_rectangle(mx, my, 0, 0, w, h - toolbar_height);
+		mouse_on_preview = pHOVER && point_in_rectangle(mx, my, 0, 0, w, h - toolbar_height);
 		
 		draw_clear(COLORS.panel_bg_clear);
 		if(canvas_bg == -1) {
@@ -641,14 +663,12 @@ function Panel_Preview() : PanelContent() constructor {
 			fullView();
 		}
 		
-		if(pFOCUS) {
-			if(mouse_check_button_pressed(mb_right)) {
-				var dia = dialogCall(o_dialog_menubox, mouse_mx + ui(8), mouse_my + ui(8));
-				dia.setMenu([ 
-					[ "Save current preview as...", function() { PANEL_PREVIEW.saveCurrentFrame(); } ], 
-					[ "Save all current previews as...", function() { PANEL_PREVIEW.saveAllCurrentFrames(); } ], 
-				]);
-			}
+		if(my < h - toolbar_height && mouse_press(mb_right, pFOCUS)) {
+			var dia = dialogCall(o_dialog_menubox, mouse_mx + ui(8), mouse_my + ui(8));
+			dia.setMenu([ 
+				[ "Save current preview as...", function() { PANEL_PREVIEW.saveCurrentFrame(); } ], 
+				[ "Save all current previews as...", function() { PANEL_PREVIEW.saveAllCurrentFrames(); } ], 
+			]);
 		}
 		
 		drawSplitView();

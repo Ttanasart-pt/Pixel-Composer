@@ -49,7 +49,7 @@ function sliderRange(_min, _max, _step, _onModify) constructor {
 			onModify(dragging, val);
 			UNDO_HOLDING = true;
 			
-			if(mouse_check_button_released(mb_left)) {
+			if(mouse_release(mb_left)) {
 				UNDO_HOLDING = false;
 				dragging = -1;
 			}
@@ -66,7 +66,7 @@ function sliderRange(_min, _max, _step, _onModify) constructor {
 					_hover = 1;
 				}
 				
-				if(_hover > -1 && active && mouse_check_button_pressed(mb_left)) {
+				if(_hover > -1 && mouse_press(mb_left, active)) {
 					dragging = _hover;
 					drag_mx  = _m[0];
 					drag_sx  = _data[_hover];

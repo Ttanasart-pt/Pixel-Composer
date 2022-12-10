@@ -31,7 +31,7 @@
   "properties": [],
   "overriddenProperties": [],
   "parent": {
-    "name": "dialog",
-    "path": "folders/dialog.yy",
+    "name": "animation",
+    "path": "folders/dialog/animation.yy",
   },
 }

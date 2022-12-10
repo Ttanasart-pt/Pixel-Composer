@@ -38,14 +38,14 @@
 			dialog_x = dialog_drag_sx + mouse_mx - dialog_drag_mx;
 			dialog_y = dialog_drag_sy + mouse_my - dialog_drag_my;
 		
-			if(mouse_check_button_released(mb_left))
+			if(mouse_release(mb_left))
 				dialog_dragging = false;
 		}
 	
 		if(sFOCUS) {
-			if(destroy_on_escape && keyboard_check_pressed(vk_escape))
+			if(destroy_on_escape && mouse_press(vk_escape))
 				instance_destroy(self);
-			if(mouse_check_button_pressed(mb_left)) {
+			if(mouse_press(mb_left)) {
 				if(point_in_rectangle(mouse_mx, mouse_my, dialog_x, dialog_y, 
 				dialog_x + dialog_w, dialog_y + 32)) {
 					dialog_dragging = true;
@@ -81,10 +81,7 @@
 				DIALOG_DEPTH_HOVER = depth;
 				HOVER = self;
 			
-				if(mouse_check_button_pressed(mb_left) || 
-					mouse_check_button_pressed(mb_right) ||
-					mouse_check_button_pressed(mb_middle)) {
-				
+				if(mouse_press(mb_any)) {
 					setFocus(self);
 					FOCUS_STR = "Dialog";
 				}
@@ -117,7 +114,7 @@
 		var y1 = dialog_y + dialog_h + dialog_resizable * 6;
 	
 		if(!point_in_rectangle(mouse_mx, mouse_my, x0, y0, x1, y1)) {
-			if(destroy_on_click_out && mouse_check_button_pressed(mb_left)) {
+			if(destroy_on_click_out && mouse_press(mb_left)) {
 				instance_destroy(self);
 				DIALOG_CLICK = false;
 			}

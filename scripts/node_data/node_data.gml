@@ -50,6 +50,7 @@ function Node(_x, _y) constructor {
 	
 	use_cache		= false;
 	cached_output	= [];
+	cache_result	= [];
 	
 	tools			= -1;
 	
@@ -92,8 +93,7 @@ function Node(_x, _y) constructor {
 	
 	static stepBegin = function() {
 		if(use_cache) {
-			if(array_length(cached_output) != ANIMATOR.frames_total + 1)
-				array_resize(cached_output, ANIMATOR.frames_total + 1);
+			cacheArrayCheck();
 		}
 		var stack_push = false;
 		
@@ -118,7 +118,7 @@ function Node(_x, _y) constructor {
 			}
 		}
 		
-		if(ANIMATOR.is_playing || ANIMATOR.is_scrubing) {
+		if(ANIMATOR.frame_progress) {
 			if(update_on_frame)
 				doUpdate();
 			for(var i = 0; i < ds_list_size(inputs); i++) {
@@ -167,26 +167,22 @@ function Node(_x, _y) constructor {
 	
 	static updateValueFrom = function(index) {}
 	
-	static updateForward = function() {
-		rendered = false;
-		UPDATE |= RENDER_TYPE.full;
+	static triggerRender = function() {
+		setRenderStatus(false);
+		UPDATE |= RENDER_TYPE.partial;
 		//ds_stack_push(RENDER_STACK, self);
 		
 		for(var i = 0; i < ds_list_size(outputs); i++) {
 			var jun = outputs[| i];
 			for(var j = 0; j < ds_list_size(jun.value_to); j++) {
 				var _to = jun.value_to[| j];
-				if(_to.value_from == jun && _to.node.auto_update) {
-					_to.node.updateForward();
-				}
+				if(_to.value_from == jun)
+					_to.node.triggerRender();
 			}
 		}
-		doUpdateForward();
 	}
 	
 	static onInspect = function() {}
-	
-	static doUpdateForward = function() {}
 	
 	static setRenderStatus = function(result) {
 		rendered = result;
@@ -235,18 +231,21 @@ function Node(_x, _y) constructor {
 	
 	static drawNodeName = function(xx, yy, _s) {
 		if(name == "") return;
-			
-		if(_s * w > 48) {
-			draw_sprite_stretched_ext(THEME.node_bg_name, 0, xx, yy, w * _s, ui(20), color, 0.75);
-			draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text);
+		if(_s * w <= 48) return;
 		
-			if(!auto_update) icon = THEME.refresh_s;
-			if(icon) {
-				draw_sprite_ui_uniform(icon, 0, xx + ui(12), yy + ui(10));	
-				draw_text_cut(xx + ui(24), yy + ui(10), name, w * _s - ui(24));
-			} else {
-				draw_text_cut(xx + ui(8), yy + ui(10), name, w * _s - ui(8));
-			}
+		draw_sprite_stretched_ext(THEME.node_bg_name, 0, xx, yy, w * _s, ui(20), color, 0.75);
+		
+		var cc = COLORS._main_text;
+		if(PREF_MAP[? "node_show_render_status"])
+			cc = rendered? COLORS._main_text : COLORS._main_value_negative;
+		draw_set_text(f_p1, fa_left, fa_center, cc);
+		
+		if(!auto_update) icon = THEME.refresh_s;
+		if(icon) {
+			draw_sprite_ui_uniform(icon, 0, xx + ui(12), yy + ui(10));	
+			draw_text_cut(xx + ui(24), yy + ui(10), name, w * _s - ui(24));
+		} else {
+			draw_text_cut(xx + ui(8), yy + ui(10), name, w * _s - ui(8));
 		}
 	}
 	
@@ -416,6 +415,9 @@ function Node(_x, _y) constructor {
 				}
 				draw_text(round(tx), round(ty), string(rt) + " " + unit);
 			}
+			
+			//ty += line_height();
+			//draw_text(round(tx), round(ty), rendered);
 		}
 	}
 	
@@ -512,9 +514,15 @@ function Node(_x, _y) constructor {
 	
 	static onDestroy = function() {}
 	
-	static cacheCurrentFrame = function(_frame) {
+	static cacheArrayCheck = function() {
 		if(array_length(cached_output) != ANIMATOR.frames_total + 1)
 			array_resize(cached_output, ANIMATOR.frames_total + 1);
+		if(array_length(cache_result) != ANIMATOR.frames_total + 1)
+			array_resize(cache_result, ANIMATOR.frames_total + 1);
+	}
+	
+	static cacheCurrentFrame = function(_frame) {
+		cacheArrayCheck();
 		if(ANIMATOR.current_frame > ANIMATOR.frames_total) return;
 		
 		var _os = cached_output[ANIMATOR.current_frame];
@@ -524,9 +532,19 @@ function Node(_x, _y) constructor {
 			_os = surface_clone(_frame);
 			cached_output[ANIMATOR.current_frame] = _os;
 		}
+		
+		cache_result[ANIMATOR.current_frame] = true;
 	}
-	static recoverCache = function() {
-		if(ANIMATOR.current_frame >= array_length(cached_output)) return false;
+	static cacheExist = function(frame = ANIMATOR.current_frame) {
+		if(frame >= array_length(cached_output)) return false;
+		if(frame >= array_length(cache_result)) return false;
+		if(!cache_result[frame]) return false;
+		return true;
+	}
+	
+	static recoverCache = function(frame = ANIMATOR.current_frame) {
+		if(!cacheExist(frame)) return false;
+		
 		var _s = cached_output[ANIMATOR.current_frame];
 		if(!is_surface(_s)) return false;
 		
@@ -548,6 +566,7 @@ function Node(_x, _y) constructor {
 			if(is_surface(_s))
 				surface_free(_s);
 			cached_output[i] = 0;
+			cache_result[i] = false;
 		}
 	}
 	
@@ -593,15 +612,17 @@ function Node(_x, _y) constructor {
 		}
 	}
 	
-	static serialize = function(scale = false) {
+	static serialize = function(scale = false, preset = false) {
 		var _map = ds_map_create();
 		
-		_map[? "id"]	= node_id;
-		_map[? "name"]	= name;
-		_map[? "x"]		= x;
-		_map[? "y"]		= y;
-		_map[? "type"]  = instanceof(self);
-		_map[? "group"] = group == -1? -1 : group.node_id;
+		if(!preset) {
+			_map[? "id"]	= node_id;
+			_map[? "name"]	= name;
+			_map[? "x"]		= x;
+			_map[? "y"]		= y;
+			_map[? "type"]  = instanceof(self);
+			_map[? "group"] = group == -1? -1 : group.node_id;
+		}
 		
 		ds_map_add_map(_map, "attri", attributeSerialize());
 		
@@ -625,28 +646,34 @@ function Node(_x, _y) constructor {
 	
 	keyframe_scale = false;
 	load_map = -1;
-	static deserialize = function(scale = false) {
+	static deserialize = function(_map, scale = false, preset = false) {
+		load_map = _map;
 		keyframe_scale = scale;
 		
-		if(APPENDING) {
-			APPEND_MAP[? load_map[? "id"]] = node_id;
-		} else {
-			node_id = load_map[? "id"];
+		if(!preset) {
+			if(APPENDING) {
+				APPEND_MAP[? load_map[? "id"]] = node_id;
+			} else {
+				node_id = ds_map_try_get(load_map, "id");
+			}
+		
+			NODE_MAP[? node_id] = self;
+		
+			if(ds_map_exists(load_map, "name"))
+				name  = ds_map_try_get(load_map, "name", "");
+			_group = ds_map_try_get(load_map, "group");
+		
+			x = ds_map_try_get(load_map, "x");
+			y = ds_map_try_get(load_map, "y");
 		}
-		
-		NODE_MAP[? node_id] = self;
-		
-		name  = load_map[? "name"];
-		_group = load_map[? "group"];
-		
-		x = load_map[? "x"];
-		y = load_map[? "y"];
 		
 		if(ds_map_exists(load_map, "attri"))
 			attributeDeserialize(load_map[? "attri"]);
 		
-		var _inputs = load_map[? "inputs"];
+		if(!ds_map_exists(load_map, "inputs"))
+			return;
 		
+		var _inputs = load_map[? "inputs"];
 		if(!ds_list_empty(_inputs) && !ds_list_empty(inputs)) {
 			var _siz = min(ds_list_size(_inputs), ds_list_size(inputs));
 			for(var i = 0; i < _siz; i++) {

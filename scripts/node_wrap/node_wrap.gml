@@ -80,7 +80,7 @@ function Node_Warp(_x, _y) : Node_Processor(_x, _y) constructor {
 			drag_mx = _mx;
 			drag_my = _my;
 			
-			if(mouse_check_button_released(mb_left)) {
+			if(mouse_release(mb_left)) {
 				drag_side = -1;	
 				UNDO_HOLDING = false;
 			}
@@ -135,28 +135,28 @@ function Node_Warp(_x, _y) : Node_Processor(_x, _y) constructor {
 			draw_set_color(COLORS._main_accent);
 			if(distance_to_line_infinite(_mx, _my, tl[0], tl[1], tr[0], tr[1]) < 12) {
 				draw_line_width(tl[0], tl[1], tr[0], tr[1], 3);
-				if(active && mouse_check_button_pressed(mb_left)) {
+				if(mouse_press(mb_left, active)) {
 					drag_side = 0;
 					drag_mx   = _mx;
 					drag_my   = _my;
 				}
 			} else if(distance_to_line_infinite(_mx, _my, tl[0], tl[1], bl[0], bl[1]) < 12) {
 				draw_line_width(tl[0], tl[1], bl[0], bl[1], 3);
-				if(active && mouse_check_button_pressed(mb_left)) {
+				if(mouse_press(mb_left, active)) {
 					drag_side = 1;
 					drag_mx   = _mx;
 					drag_my   = _my;
 				}
 			} else if(distance_to_line_infinite(_mx, _my, br[0], br[1], tr[0], tr[1]) < 12) {
 				draw_line_width(br[0], br[1], tr[0], tr[1], 3);
-				if(active && mouse_check_button_pressed(mb_left)) {
+				if(mouse_press(mb_left, active)) {
 					drag_side = 2;
 					drag_mx   = _mx;
 					drag_my   = _my;
 				}
 			} else if(distance_to_line_infinite(_mx, _my, br[0], br[1], bl[0], bl[1]) < 12) {
 				draw_line_width(br[0], br[1], bl[0], bl[1], 3);
-				if(active && mouse_check_button_pressed(mb_left)) {
+				if(mouse_press(mb_left, active)) {
 					drag_side = 3;
 					drag_mx   = _mx;
 					drag_my   = _my;

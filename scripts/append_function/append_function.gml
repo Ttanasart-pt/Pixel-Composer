@@ -54,6 +54,15 @@ function APPEND(_path) {
 	}
 	
 	try {
+		for(var i = 0; i < ds_list_size(appended_list); i++) {
+			if(!variable_struct_exists(appended_list[| i], "collectionDeserialize")) continue;
+			appended_list[| i].collectionDeserialize(true);
+		}
+	} catch(e) {
+		log_warning("APPEND, deserialize", e.longMessage);
+	}
+	
+	try {
 		for(var i = 0; i < ds_list_size(appended_list); i++)
 			appended_list[| i].preConnect();
 		for(var i = 0; i < ds_list_size(appended_list); i++)
@@ -73,7 +82,7 @@ function APPEND(_path) {
 	
 	ds_list_destroy(appended_list);
 	
-	renderAll();
+	Render(true);
 	
 	if(!ds_queue_empty(CONNECTION_CONFLICT)) {
 		var pass = 0;
@@ -88,7 +97,7 @@ function APPEND(_path) {
 					
 					log_message("APPEND", "[Connect] Reconnecting " + string(junc.name) + " " + (res? "SUCCESS" : "FAILED"));
 				}
-				renderAll();
+				Render(true);
 			}
 		
 			if(!ds_queue_empty(CONNECTION_CONFLICT))

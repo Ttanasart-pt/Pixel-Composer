@@ -142,7 +142,7 @@ function Node_Transform_Single(_x, _y) : Node_Processor(_x, _y) constructor {
 				inputs[| 4].setValue(pos_y);
 			}
 			
-			if(mouse_check_button_released(mb_left))
+			if(mouse_release(mb_left))
 				overlay_dragging = 0;	
 		} else if(overlay_dragging == 3) {
 			var aa = point_direction(bax, bay, _mx, _my);
@@ -151,10 +151,10 @@ function Node_Transform_Single(_x, _y) : Node_Processor(_x, _y) constructor {
 			
 			inputs[| 5].setValue(sa);
 			
-			if(mouse_check_button_released(mb_left))
+			if(mouse_release(mb_left))
 				overlay_dragging = 0;	
 		} else {
-			if(_active && mouse_check_button_pressed(mb_left)) {
+			if(_mouse_press(mb_left, active)) {
 				if(point_in_circle(_mx, _my, bax, bay, 8)) {
 					overlay_dragging = 2;
 					overlay_drag_mx  = _mx;

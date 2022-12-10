@@ -12,14 +12,14 @@ function surfaceBox(_onModify, def_path = "") constructor {
 		if(!open) {
 			if(hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + _h)) {
 				draw_sprite_stretched(THEME.textbox, 1, _x, _y, _w, _h);
-				if(active && mouse_check_button_pressed(mb_left)) {
+				if(mouse_press(mb_left, active)) {
 					open = true;
 					with(dialogCall(o_dialog_assetbox, _x + _w + _rx, _y + _ry)) {
 						target = other;
 						gotoDir(other.def_path);
 					}
 				}
-				if(mouse_check_button(mb_left))
+				if(mouse_click(mb_left, active))
 					draw_sprite_stretched(THEME.textbox, 2, _x, _y, _w, _h);	
 			} else {
 				draw_sprite_stretched(THEME.textbox, 0, _x, _y, _w, _h);		

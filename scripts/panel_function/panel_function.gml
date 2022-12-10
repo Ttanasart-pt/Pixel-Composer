@@ -27,12 +27,14 @@
 		delete PANEL_INSPECTOR;
 		delete PANEL_PREVIEW;
 		delete PANEL_GRAPH;
+		delete PANEL_COLLECTION;
 		
 		PANEL_MAIN = 0;
 		PANEL_MENU = 0;
 		PANEL_INSPECTOR = 0;
 		PANEL_PREVIEW = 0;
 		PANEL_GRAPH = 0;
+		PANEL_COLLECTION = 0;
 	}
 	
 	function setPanel() {
@@ -57,6 +59,8 @@
 				split_anim[1].set(PANEL_ANIMATION);
 				
 				var split_prev	= split_anim[0].split_v(ui(-500));
+				if(split_prev == noone) break;
+				
 				split_prev[0].set(PANEL_PREVIEW);
 				split_prev[1].set(PANEL_GRAPH);
 				
@@ -72,6 +76,8 @@
 				split_anim[1].set(PANEL_ANIMATION);
 				
 				var split_prev	= split_anim[0].split_h(ui(400));
+				if(split_prev == noone) break;
+				
 				split_prev[0].set(PANEL_PREVIEW);
 				split_prev[1].set(PANEL_GRAPH);
 				

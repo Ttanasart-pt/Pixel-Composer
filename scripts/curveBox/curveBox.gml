@@ -15,7 +15,7 @@ function curveBox(_onModify) constructor {
 	
 	static draw = function(_x, _y, _w, _h, _data, _m) {
 		static curve_amo = 3;
-		var curve_h = _h - 32;
+		var curve_h = _h;
 		
 		#region curve
 			var _range;
@@ -43,7 +43,7 @@ function curveBox(_onModify) constructor {
 			
 				_data[node_dragging] = _my;
 			
-				if(mouse_check_button_released(mb_left)) {
+				if(mouse_release(mb_left)) {
 					onModify(_data);
 					node_dragging = -1;
 				}
@@ -74,23 +74,21 @@ function curveBox(_onModify) constructor {
 				}
 			}
 		
-			if(active) {
-				if(mouse_check_button_pressed(mb_left)) {
-					if(node_hovering != -1) {
-						node_dragging = node_hovering;
-						drag_range = y_range;
-						drag_max   = y_max;
-					}
-				} else if(mouse_check_button_pressed(mb_right)) {
-					switch(node_hovering) {
-						case 0 : _data[0] = 0; break;
-						case 1 : _data[1] = 0; break;
-						case 2 : _data[2] = 1; break;
-						case 3 : _data[3] = 1; break;
-					}
-					onModify(_data);
-				} 
-			}
+			if(mouse_press(mb_left, active)) {
+				if(node_hovering != -1) {
+					node_dragging = node_hovering;
+					drag_range = y_range;
+					drag_max   = y_max;
+				}
+			} else if(mouse_press(mb_right, active)) {
+				switch(node_hovering) {
+					case 0 : _data[0] = 0; break;
+					case 1 : _data[1] = 0; break;
+					case 2 : _data[2] = 1; break;
+					case 3 : _data[3] = 1; break;
+				}
+				onModify(_data);
+			} 
 		#endregion
 		
 		active = false;

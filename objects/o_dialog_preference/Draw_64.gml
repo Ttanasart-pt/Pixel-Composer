@@ -21,9 +21,9 @@ if !ready exit;
 		draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text);
 		if(i == page_current) {
 			draw_sprite_stretched(THEME.ui_panel_bg, 0, dialog_x + ui(16), yl, ui(160), hg);
-		} else if(point_in_rectangle(mouse_mx, mouse_my, dialog_x, yl, dialog_x + ui(160), yl + hg)) {
+		} else if(sHOVER && point_in_rectangle(mouse_mx, mouse_my, dialog_x, yl, dialog_x + ui(160), yl + hg)) {
 			draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, dialog_x + ui(16), yl, ui(160), hg, c_white, 0.5);
-			if(mouse_check_button(mb_left))
+			if(mouse_click(mb_left, sFOCUS))
 				page_current = i;
 		}
 			
@@ -59,7 +59,7 @@ if !ready exit;
 		var bx = _x - ui(48);
 		var b = buttonInstant(THEME.button_hide, bx, yy, ui(32), ui(32), mouse_ui, sFOCUS, sHOVER, "Reset colors", THEME.refresh);
 		if(b == 2) {
-			var path = "data/themes/" + PREF_MAP[? "theme"] + "/override.json";
+			var path = DIRECTORY + "themes/" + PREF_MAP[? "theme"] + "/override.json";
 			if(file_exists(path)) file_delete(path);
 			loadColor(PREF_MAP[? "theme"]);
 		}
@@ -76,7 +76,7 @@ if !ready exit;
 		sp_colors.active = sHOVER;
 		sp_colors.draw(dialog_x + ui(168), yy + ui(40));
 	} else if(page_current == 3) {
-		if(mouse_check_button_pressed(mb_left)) 
+		if(mouse_press(mb_left, sFOCUS)) 
 			hk_editing = noone;
 		
 		sp_hotkey.active = sHOVER;

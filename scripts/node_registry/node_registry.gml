@@ -190,11 +190,11 @@ function NodeObject(_name, _spr, _create, tags = []) constructor {
 	addNodeObject(generator, "Seperate shape",	    s_node_sepearte_shape,		"Node_Seperate_Shape",		Node_create_Seperate_Shape);
 	addNodeObject(generator, "Text",				s_node_text,				"Node_Text",				Node_create_Text);
 	
-	var render = ds_list_create();
-	addNodeCatagory("Render", render);
-	addNodeObject(render, "Render sprite sheet",	s_node_sprite_sheet,	"Node_Render_Sprite_Sheet",	Node_create_Render_Sprite_Sheet);
-	addNodeObject(render, "Export",					s_node_export,			"Node_Export",				Node_create_Export);
-	//addNodeObject(render, "Preview timeline",		s_node_timeline_preview,"Node_Timeline_Preview",	Node_create_Timeline_Preview);
+	var renderNode = ds_list_create();
+	addNodeCatagory("Render", renderNode);
+	addNodeObject(renderNode, "Render sprite sheet",	s_node_sprite_sheet,	"Node_Render_Sprite_Sheet",	Node_create_Render_Sprite_Sheet);
+	addNodeObject(renderNode, "Export",					s_node_export,			"Node_Export",				Node_create_Export);
+	//addNodeObject(renderNode, "Preview timeline",		s_node_timeline_preview,"Node_Timeline_Preview",	Node_create_Timeline_Preview);
 	
 	var node = ds_list_create();
 	addNodeCatagory("Node", node);
@@ -203,6 +203,7 @@ function NodeObject(_name, _spr, _create, tags = []) constructor {
 	addNodeObject(node, "Pin",				s_node_pin,			"Node_Pin",				Node_create_Pin);
 	addNodeObject(node, "Frame",			s_node_frame,		"Node_Frame",			Node_create_Frame);
 	addNodeObject(node, "Display text",		s_node_text,		"Node_Display_Text",	Node_create_Display_Text);
+	addNodeObject(node, "Display image",	s_node_image,		"Node_Display_Image",	Node_create_Display_Image);
 	addNodeObject(node, "Condition",		s_node_condition,	"Node_Condition",		Node_create_Condition);
 #endregion
 
@@ -215,16 +216,15 @@ function NodeObject(_name, _spr, _create, tags = []) constructor {
 		var _type = ds_map_try_get(_data, "type", 0);
 		
 		if(!ds_map_exists(NODE_CREATE_FUCTION, _type)) {
-			noti_error("LOAD: node creation function [" + _type + "] not found.")
+			noti_warning("LOAD: node creation function [" + _type + "] not found.")
 			return noone;
 		}
 		
 		var _node = NODE_CREATE_FUCTION[? _type](_x, _y);
 		
 		if(_node) {
-			_node.load_map = ds_map_create();
-			ds_map_copy(_node.load_map, _data);
-			_node.deserialize(scale);
+			var map = ds_map_clone(_data);
+			_node.deserialize(map, scale);
 		}
 			
 		return _node;

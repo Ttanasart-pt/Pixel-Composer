@@ -36,8 +36,10 @@
 		ds_list_add(STATUSES, noti);
 		ds_list_add(WARNING, noti);
 		
-		if(PANEL_MENU)
+		if(PANEL_MENU) {
 			PANEL_MENU.noti_flash = 1;
+			PANEL_MENU.noti_flash_color = COLORS._main_accent;
+		}
 		return noti;
 	}
 	

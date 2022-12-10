@@ -22,7 +22,7 @@
 		if(activated && sHOVER && point_in_rectangle(mouse_mx, mouse_my, dialog_x, yy + 1, dialog_x + dialog_w, yy + _h - 1)) {
 			draw_sprite_stretched_ext(THEME.textbox, 3, dialog_x, yy, dialog_w, _h, COLORS.dialog_menubox_highlight, 1);
 			
-			if(!is_array(menu[i][1]) && sFOCUS && mouse_check_button_released(mb_left)) {
+			if(!is_array(menu[i][1]) && sFOCUS && mouse_release(mb_left)) {
 				var res = menu[i][1](dialog_x + dialog_w, yy, depth, menu[i][0]);
 				if(array_safe_get(menu[i], 2, 0) == ">")
 					ds_list_add(children, res);
@@ -58,7 +58,7 @@
 				if(sHOVER && point_in_rectangle(mouse_mx, mouse_my, _bx - ui(14), _by - ui(14), _bx + ui(14), _by + ui(14))) {
 					draw_sprite_stretched_ext(THEME.textbox, 1, _bx - ui(14), _by - ui(14), ui(28), ui(28), COLORS.dialog_menubox_highlight, 1);
 					
-					if(sFOCUS && mouse_check_button_pressed(mb_left)) {
+					if(mouse_press(mb_left, sFOCUS)) {
 						menu[i][1][j][1]();
 						instance_destroy(o_dialog_menubox);
 					}

@@ -4,32 +4,21 @@
 #endregion
 
 function loadColor(theme = "default") {
-	var defpath = "data/themes/default/colors.json";
-	var f = file_text_open_read(defpath);
-	var s = file_text_read_all(f);
-	file_text_close(f);
-	
-	var clrs = json_parse(s);
-	var defkeys = variable_struct_get_names(clrs.define);
-	
-	COLOR_KEYS = defkeys;
-	array_sort(COLOR_KEYS, true);
-	
-	
-	var path  = "data/themes/" + theme + "/colors.json";
-	var pathO = "data/themes/" + theme + "/override.json";
+	var dirr = DIRECTORY + "themes/" + theme;
+	var path  = dirr + "/colors.json";
+	var pathO = dirr + "/override.json";
 	
 	if(!file_exists(path)) {
 		noti_status("Colors not defined at " + path + ", rollback to default color.");
 		return;
 	}
 	
-	var oclr = noone;
+	var oclr = {};
 	if(file_exists(pathO)) {
-		var f = file_text_open_read(defpath);
+		var f = file_text_open_read(pathO);
 		var s = file_text_read_all(f);
 		file_text_close(f);
-	
+		
 		oclr = json_parse(s);
 	}
 	
@@ -39,7 +28,12 @@ function loadColor(theme = "default") {
 	
 	var clrs = json_parse(s);
 	
+	var defkeys = variable_struct_get_names(clrs.define);
+	COLOR_KEYS = defkeys;
+	array_sort(COLOR_KEYS, true);
+	
 	var clrkeys = variable_struct_get_names(clrs.colors);
+	
 	for( var i = 0; i < array_length(clrkeys); i++ ) {
 		var key = clrkeys[i];
 		var str = variable_struct_get(clrs.colors, key);

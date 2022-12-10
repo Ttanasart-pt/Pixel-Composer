@@ -4,41 +4,6 @@ enum RENDER_TYPE {
 	full = 2
 }
 
-function renderAll() {
-	var _key = ds_map_find_first(NODE_MAP);
-	var amo = ds_map_size(NODE_MAP);
-	
-	repeat(amo) {
-		var _node = NODE_MAP[? _key];
-		_node.setRenderStatus(false);
-		_key = ds_map_find_next(NODE_MAP, _key);	
-	}
-	
-	ds_stack_clear(RENDER_STACK);
-	// get leaf node
-	var key = ds_map_find_first(NODE_MAP);
-	repeat(ds_map_size(NODE_MAP)) {
-		var _node = NODE_MAP[? key];
-		key = ds_map_find_next(NODE_MAP, key);
-		
-		if(instanceof(_node) == "Node_Group_Input") continue;
-		if(instanceof(_node) == "Node_Iterator_Input") continue;
-		
-		if(_node.active && !is_undefined(_node) && is_struct(_node)) {
-			var _startNode = true;
-			for(var j = 0; j < ds_list_size(_node.inputs); j++) {
-				var _in = _node.inputs[| j];
-				if(_in.value_from != noone)
-					_startNode = false;
-			}
-			if(_startNode)
-				ds_stack_push(RENDER_STACK, _node);
-		}
-	}
-	
-	renderUpdated();
-}
-
 function __nodeLeafList(_list, _stack) {
 	for( var i = 0; i < ds_list_size(_list); i++ ) {
 		var _node = _list[| i];
@@ -57,11 +22,45 @@ function __nodeLeafList(_list, _stack) {
 	}
 }
 
-function renderUpdated() {
+function Render(partial = false) {
 	var rendering = noone;
 	var error = 0;
 	
-	//show_debug_message("\n=== RENDER ===")
+	if(!partial) {
+		var _key = ds_map_find_first(NODE_MAP);
+		var amo = ds_map_size(NODE_MAP);
+	
+		repeat(amo) {
+			var _node = NODE_MAP[? _key];
+			_node.setRenderStatus(false);
+			_key = ds_map_find_next(NODE_MAP, _key);	
+		}
+	}
+	
+	// get leaf node
+	ds_stack_clear(RENDER_STACK);
+	var key = ds_map_find_first(NODE_MAP);
+	var amo = ds_map_size(NODE_MAP);
+	repeat(amo) {
+		var _node = NODE_MAP[? key];
+		key = ds_map_find_next(NODE_MAP, key);
+		
+		if(is_undefined(_node)) continue;
+		if(!is_struct(_node)) continue;
+		if(instanceof(_node) == "Node_Group_Input") continue;
+		if(instanceof(_node) == "Node_Iterator_Input") continue;
+		
+		if(_node.active && !_node.rendered) {
+			var _startNode = true;
+			for(var j = 0; j < ds_list_size(_node.inputs); j++) {
+				var _in = _node.inputs[| j];
+				if(_in.value_from != noone && !_in.value_from.node.rendered)
+					_startNode = false;
+			}
+			if(_startNode)
+				ds_stack_push(RENDER_STACK, _node);
+		}
+	}
 	
 	// render forward
 	while(!ds_stack_empty(RENDER_STACK)) {
@@ -69,7 +68,8 @@ function renderUpdated() {
 		
 		if(rendering.rendered) continue;
 		
-		var txt = "rendering " + rendering.name + " ";
+		var name = variable_struct_exists(rendering, "name")? rendering.name : "";
+		var txt = "rendering " + string(name) + " ";
 		
 		if(LOADING || APPENDING || rendering.auto_update) {
 			rendering.doUpdate();

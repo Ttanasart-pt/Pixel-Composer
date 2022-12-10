@@ -84,10 +84,10 @@ function Panel_Collection() : PanelContent() constructor {
 						
 						if(point_in_rectangle(_m[0], _m[1], _nx, yy, _nx + grid_width, yy + grid_size)) {
 							draw_sprite_stretched_ext(THEME.node_active, 0, _boxx, yy, grid_size, grid_size, COLORS._main_accent, 1);
-							if(mouse_check_button_pressed(mb_left))
+							if(mouse_press(mb_left, pFOCUS))
 								file_dragging = _node;
 						
-							if(mouse_check_button_pressed(mb_right)) {
+							if(mouse_press(mb_right, pFOCUS)) {
 								_menu_node = _node;
 								var dia = dialogCall(o_dialog_menubox, mouse_mx + 8, mouse_my + 8);
 								dia.setMenu(contentMenu);	
@@ -134,12 +134,12 @@ function Panel_Collection() : PanelContent() constructor {
 					BLEND_NORMAL
 				}
 				
-				if(point_in_rectangle(_m[0], _m[1], 0, yy, list_width, yy + list_height - 1)) {
+				if(pHOVER && point_in_rectangle(_m[0], _m[1], 0, yy, list_width, yy + list_height - 1)) {
 					draw_sprite_stretched_ext(THEME.node_active, 0, ui(4), yy, list_width - ui(8), list_height, COLORS._main_accent, 1);
-					if(mouse_check_button_pressed(mb_left))
+					if(mouse_press(mb_left, pFOCUS))
 						file_dragging = _node;
 						
-					if(mouse_check_button_pressed(mb_right)) {
+					if(mouse_press(mb_right, pFOCUS)) {
 						_menu_node = _node;
 						var dia = dialogCall(o_dialog_menubox, mouse_mx + ui(8), mouse_my + ui(8));
 						dia.setMenu(contentMenu);	
@@ -324,7 +324,7 @@ function Panel_Collection() : PanelContent() constructor {
 			if(panelHover(PANEL_GRAPH)) 
 				dragToGraph();
 			
-			if(mouse_check_button_released(mb_left)) 
+			if(mouse_release(mb_left)) 
 				file_dragging = noone;
 		}
 	}

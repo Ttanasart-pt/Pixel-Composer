@@ -200,7 +200,7 @@ function Node_Image_Sheet(_x, _y) : Node(_x, _y) constructor {
 				draw_line_width(fr_x1, 0, fr_x1, room_height, 1);
 				draw_line_width(0, fr_y1, room_width, fr_y1, 1);
 					
-				if(mouse_check_button_released(mb_left)) {
+				if(mouse_release(mb_left)) {
 					bound_drag = 0;
 					
 					if(row && col) {
@@ -210,19 +210,15 @@ function Node_Image_Sheet(_x, _y) : Node(_x, _y) constructor {
 						inputs[| 4].setValue([ bound_sx + _off[0], bound_sy + _off[1]]);
 					}
 				}
-			} else {
-				if(_active) {
-					if(mouse_check_button_pressed(mb_left)) {
-						bound_drag = 1;
-						bound_sx = _ex;
-						bound_sy = _ey;
+			} else if(mouse_press(mb_left, _active)) {
+				bound_drag = 1;
+				bound_sx = _ex;
+				bound_sy = _ey;
 						
-						cell_cx = _dim[0];
-						cell_cy = _dim[1];
-						cell_sx = _dim[0];
-						cell_sy = _dim[1];
-					}
-				}
+				cell_cx = _dim[0];
+				cell_cy = _dim[1];
+				cell_sx = _dim[0];
+				cell_sy = _dim[1];
 			}
 		}
 	}

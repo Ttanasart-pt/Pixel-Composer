@@ -33,11 +33,11 @@ function buttonClass(_onClick) constructor {
 		var click = false;
 		if(hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + _h)) {
 			draw_sprite_stretched_ext(spr, 1, _x, _y, _w, _h, blend, 1);	
-			if(active && mouse_check_button_pressed(mb_left)) {
+			if(mouse_press(mb_left, active)) {
 				if(onClick) onClick();
 				click = true;
 			}
-			if(mouse_check_button(mb_left))
+			if(mouse_click(mb_left, active))
 				draw_sprite_stretched_ext(spr, 2, _x, _y, _w, _h, blend, 1);	
 			if(tooltip != "") TOOLTIP = tooltip;
 		} else {
@@ -64,9 +64,9 @@ function buttonInstant(spr, _x, _y, _w, _h, _m, _act, _hvr, _tip = "", _icon = n
 		draw_sprite_stretched(spr, 1, _x, _y, _w, _h);	
 		if(_tip != "") 
 			TOOLTIP = _tip;
-		if(_act && mouse_check_button_pressed(mb_left))
+		if(mouse_press(mb_left, _act))
 			res = 2;
-		if(mouse_check_button(mb_left))
+		if(mouse_click(mb_left, _act))
 			draw_sprite_stretched(spr, 2, _x, _y, _w, _h);	
 	} else {
 		draw_sprite_stretched(spr, 0, _x, _y, _w, _h);		

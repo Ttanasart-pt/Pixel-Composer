@@ -47,6 +47,8 @@ function Node_Canvas(_x, _y) : Node(_x, _y) constructor {
 		[ "Fill",		THEME.canvas_tools_bucket ],
 	];
 	
+	display_reset(0, 1);
+	
 	mouse_cur_x = 0;
 	mouse_cur_y = 0;
 	mouse_pre_x = 0;
@@ -61,7 +63,7 @@ function Node_Canvas(_x, _y) : Node(_x, _y) constructor {
 	function surface_update() {
 		var _surf = outputs[| 0].getValue();
 		buffer_get_surface(surface_buffer, _surf, 0);
-		updateForward();
+		triggerRender();
 	}
 	
 	function draw_point_size(_x, _y, _siz, _brush) {
@@ -369,7 +371,7 @@ function Node_Canvas(_x, _y) : Node(_x, _y) constructor {
 				mouse_cur_y = mouse_pre_draw_y + lengthdir_y(dd, _a);
 			}
 			
-			if(mouse_check_button_pressed(mb_left)) {
+			if(mouse_press(mb_left)) {
 				draw_point_size(mouse_cur_x, mouse_cur_y, _siz, _brush);
 				
 				mouse_holding = true;
@@ -382,7 +384,7 @@ function Node_Canvas(_x, _y) : Node(_x, _y) constructor {
 				mouse_pre_draw_y = mouse_cur_y;	
 			}
 			
-			if(mouse_holding && mouse_check_button(mb_left)) {
+			if(mouse_holding && mouse_click(mb_left)) {
 				draw_point_size(mouse_cur_x, mouse_cur_y, _siz, _brush);
 				draw_line_size(mouse_pre_draw_x, mouse_pre_draw_y, mouse_cur_x, mouse_cur_y, _siz, _brush);
 				
@@ -392,7 +394,7 @@ function Node_Canvas(_x, _y) : Node(_x, _y) constructor {
 			
 			if(_tool == 1) gpu_set_blendmode(bm_normal);
 			
-			if(mouse_check_button_released(mb_left)) {
+			if(mouse_release(mb_left)) {
 				surface_update();
 				mouse_holding = false;
 			}
@@ -410,14 +412,14 @@ function Node_Canvas(_x, _y) : Node(_x, _y) constructor {
 				mouse_cur_y = mouse_pre_y + ss * sign(hh);
 			}
 			
-			if(mouse_check_button_pressed(mb_left)) {
+			if(mouse_press(mb_left)) {
 				mouse_pre_x = mouse_cur_x;
 				mouse_pre_y = mouse_cur_y;
 				
 				mouse_holding = true;
 			}
 			
-			if(mouse_check_button_released(mb_left)) {
+			if(mouse_release(mb_left)) {
 				if(_tool == 2) {
 					draw_rect_size(mouse_pre_x, mouse_pre_y, mouse_cur_x, mouse_cur_y, _siz, _sub_tool, _brush);
 				} else if(_tool == 3) {
@@ -428,7 +430,7 @@ function Node_Canvas(_x, _y) : Node(_x, _y) constructor {
 				mouse_holding = false;
 			}
 		} else if(_tool == 4) {
-			if(point_in_rectangle(mouse_cur_x, mouse_cur_y, 0, 0, _surf_w - 1, _surf_h - 1) && mouse_check_button_pressed(mb_left)) {
+			if(point_in_rectangle(mouse_cur_x, mouse_cur_y, 0, 0, _surf_w - 1, _surf_h - 1) && mouse_press(mb_left)) {
 				switch(_fill_type) {
 					case 0 :	
 						flood_fill_scanline(mouse_cur_x, mouse_cur_y, _surf, _thr, false);
@@ -493,7 +495,7 @@ function Node_Canvas(_x, _y) : Node(_x, _y) constructor {
 				var _pr_y = _y + mouse_cur_y * _s;
 				
 				draw_set_color(c_white);
-				draw_rectangle(_pr_x, _pr_y, _pr_x + _s, _pr_y + _s, 1);
+				draw_rectangle(_pr_x, _pr_y, _pr_x + _s - 1, _pr_y + _s - 1, 1);
 			}
 		#endregion
 	}

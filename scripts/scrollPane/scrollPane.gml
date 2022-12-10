@@ -25,7 +25,7 @@ function scrollPane(_w, _h, ondraw) constructor {
 		surface_h   = _h;
 		
 		if(surface_w > 1 && surface_h > 1) {
-			if(is_surface(surface)) 
+			if(is_surface(surface))
 				surface_size_to(surface, surface_w, surface_h);
 			else
 				surface = surface_create_valid(surface_w, surface_h);
@@ -47,7 +47,7 @@ function scrollPane(_w, _h, ondraw) constructor {
 		surface_reset_target();
 		
 		scroll_y_to		= clamp(scroll_y_to, -content_h, 0);
-		scroll_y_raw	= lerp_float(scroll_y_raw, scroll_y_to, 3);
+		scroll_y_raw	= lerp_float(scroll_y_raw, scroll_y_to, 4);
 		scroll_y		= round(scroll_y_raw);
 		draw_surface_safe(surface, x, y);
 		
@@ -83,9 +83,9 @@ function scrollPane(_w, _h, ondraw) constructor {
 		}
 	
 		draw_sprite_stretched_ext(THEME.ui_scrollbar, 0, bar_x, bar_y, bar_w, bar_h, bar_col, 1);
-		if(point_in_rectangle(mx, my, scr_x - 2, scr_y - 2, scr_x + scr_w + 2, scr_y + scr_h + 2) || is_scrolling) {
+		if(active && point_in_rectangle(mx, my, scr_x - 2, scr_y - 2, scr_x + scr_w + 2, scr_y + scr_h + 2) || is_scrolling) {
 			draw_sprite_stretched_ext(THEME.ui_scrollbar, 0, bar_x, bar_y, bar_w, bar_h, bar_hcol, 1);
-			if(mouse_check_button(mb_left)) {
+			if(mouse_click(mb_left, active)) {
 				if(is_vert)	
 					scroll_y_to = clamp((my - scr_y - scr_scale_s / 2) / (scr_s - scr_scale_s), 0, 1) * -content_h;
 				else

@@ -49,6 +49,8 @@ function Node_Line(_x, _y) : Node(_x, _y) constructor {
 	
 	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
 	
+	display_reset(0, 1);
+	
 	static update = function() {
 		var _dim   = inputs[| 0].getValue();
 		var _bg    = inputs[| 1].getValue();

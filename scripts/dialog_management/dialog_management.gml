@@ -14,3 +14,9 @@ function dialogCall(_dia, _x = noone, _y = noone, param = {}) {
 	
 	return dia;
 }
+
+function menuCall(_x = mouse_mx, _y = mouse_my, menu = []) {
+	var dia = dialogCall(o_dialog_menubox, _x, _y);
+	dia.setMenu(menu);
+	return dia;
+}

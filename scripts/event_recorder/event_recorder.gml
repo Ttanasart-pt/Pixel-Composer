@@ -182,7 +182,7 @@ function UNDO() {
 		actions[i].undo();
 	}
 	IS_UNDOING = false;
-	renderAll();
+	Render();
 	
 	ds_stack_push(REDO_STACK, actions);
 }
@@ -197,7 +197,7 @@ function REDO() {
 		actions[i].redo();
 	}
 	IS_UNDOING = false;
-	renderAll();
+	Render();
 	
 	ds_stack_push(UNDO_STACK, actions);	
 }

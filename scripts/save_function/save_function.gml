@@ -2,7 +2,7 @@ function NEW() {
 	nodeCleanUp();
 	setPanel();
 	room_restart();
-				
+	
 	gc_collect();
 	SET_PATH("");
 }
@@ -28,6 +28,11 @@ function save_serialize() {
 	_anim_map[? "frames_total"] = ANIMATOR.frames_total;
 	_anim_map[? "framerate"] = ANIMATOR.framerate;
 	ds_map_add_map(_map, "animator", _anim_map);
+	
+	var _graph_map = ds_map_create();
+	_graph_map[? "graph_x"] = PANEL_GRAPH.graph_x;
+	_graph_map[? "graph_y"] = PANEL_GRAPH.graph_y;
+	ds_map_add_map(_map, "graph", _graph_map);
 	
 	var val  = json_encode(_map);
 	ds_map_destroy(_map);
@@ -89,6 +94,7 @@ function SAVE_AT(path) {
 	MODIFIED  = false;
 	
 	log_message("FILE", "save at " + path, THEME.noti_icon_file_save);
+	PANEL_MENU.setNotiIcon(THEME.noti_icon_file_save);
 	
 	return true;
 }
@@ -125,7 +131,7 @@ function SAVE_COLLECTIONS(_list, _path, save_surface = true) {
 	
 	ds_map_destroy(_map);
 	var pane = findPanel("Panel_Collection", PANEL_MAIN, noone);
-	if(pane) pane.searchContent();
+	if(pane) pane.refreshContext();
 }
 
 function SAVE_COLLECTION(_node, _path, save_surface = true) {

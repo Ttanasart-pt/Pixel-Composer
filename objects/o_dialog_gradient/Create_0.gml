@@ -2,8 +2,8 @@
 event_inherited();
 
 #region data
-	dialog_w = ui(796);
-	dialog_h = ui(468);
+	dialog_w = ui(812);
+	dialog_h = ui(476);
 	
 	name = "Gradient editor";
 	gradient = noone;
@@ -109,14 +109,18 @@ event_inherited();
 		draw_clear_alpha(COLORS.panel_bg_clear, 0);
 		
 		for(var i = 0; i < ds_list_size(presets); i++) {
-			draw_sprite_stretched(THEME.ui_panel_bg, 1, ui(4), yy, sp_preset_w - ui(16), hg);
+			var isHover = point_in_rectangle(_m[0], _m[1], ui(4), yy, ui(4) + sp_preset_w - ui(16), yy + hg);
 			
+			draw_sprite_stretched(THEME.ui_panel_bg, 1, ui(4), yy, sp_preset_w - ui(16), hg);
+			if(sHOVER && isHover) 
+				draw_sprite_stretched_ext(THEME.node_active, 1, ui(4), yy, sp_preset_w - ui(16), hg, COLORS._main_accent, 1);
+				
 			draw_set_text(f_p2, fa_left, fa_top, COLORS._main_text_sub);
 			draw_text(ui(16), yy + ui(8), preset_name[| i]);
 			draw_gradient(ui(16), yy + ui(28), ww, ui(16), presets[| i]);
 			
-			if(sFOCUS && point_in_rectangle(_m[0], _m[1], ui(4), yy, ui(4) + sp_preset_w - ui(16), yy + hg)) {
-				if(mouse_check_button_pressed(mb_left)) { 
+			if(sFOCUS && isHover) {
+				if(mouse_press(mb_left, sFOCUS)) { 
 					var target = presets[| i];
 					ds_list_clear(gradient);
 					for( var i = 0; i < ds_list_size(target); i++ ) {

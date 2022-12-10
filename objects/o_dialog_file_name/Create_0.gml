@@ -8,6 +8,7 @@ event_inherited();
 	destroy_on_click_out = true;
 	
 	path = "";
+	name = "New file";
 #endregion
 
 #region text

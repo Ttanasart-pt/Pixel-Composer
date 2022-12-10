@@ -67,7 +67,7 @@ if !ready exit;
 	if(buttonInstant(THEME.button_hide, bx, by, ui(28), ui(28), mouse_ui, sFOCUS, sHOVER, "Open gradient folder", THEME.folder) == 2) {
 		var _realpath = environment_get_variable("LOCALAPPDATA") + "\\Pixels_Composer\\Gradients";
 		var _windir   = environment_get_variable("WINDIR") + "\\explorer.exe";
-		execute_shell(_windir, _realpath);
+		execute_shell_simple(_windir, _realpath);
 	}
 	bx -= ui(32);
 #endregion
@@ -111,7 +111,7 @@ if !ready exit;
 		var tt = clamp((mouse_mx - gr_x) / gr_w, 0, 1);
 		setKeyPosition(key_dragging, tt);
 		
-		if(mouse_check_button_released(mb_left)) {
+		if(mouse_release(mb_left)) {
 			removeKeyOverlap(key_dragging);
 			key_dragging = noone;	
 		}
@@ -122,8 +122,8 @@ if !ready exit;
 	var _y0 = gr_y - ui(6);
 	var _y1 = gr_y + gr_h + ui(12);
 	
-	if(sFOCUS && point_in_rectangle(mouse_mx, mouse_my, _x0, _y0, _x1, _y1)) {
-		if(mouse_check_button_pressed(mb_left)) {
+	if(sHOVER && point_in_rectangle(mouse_mx, mouse_my, _x0, _y0, _x1, _y1)) {
+		if(mouse_press(mb_left, sFOCUS)) {
 			if(hover) {
 				key_selecting = hover;
 				key_dragging  = hover;
@@ -144,11 +144,9 @@ if !ready exit;
 			}
 		}
 			
-		if(mouse_check_button_pressed(mb_right)) {
-			if(hover && ds_list_size(gradient) > 1) {
-				var _index = ds_list_find_index(gradient, hover);
-				ds_list_delete(gradient, _index);
-			}	
+		if(mouse_press(mb_right, sFOCUS) && hover && ds_list_size(gradient) > 1) {
+			var _index = ds_list_find_index(gradient, hover);
+			ds_list_delete(gradient, _index);
 		}
 	}
 	

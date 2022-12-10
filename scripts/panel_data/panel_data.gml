@@ -230,7 +230,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 				}
 			}
 			
-			if(mouse_check_button_released(mb_left)) dragging = -1;
+			if(mouse_release(mb_left)) dragging = -1;
 		} else if(dragging == 2) {
 			var _my = clamp(mouse_my, ui(16), WIN_H - ui(16));
 			var dh = _my - drag_sm;
@@ -265,14 +265,12 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 				}
 			}
 			
-			if(mouse_check_button_released(mb_left)) dragging = -1;
+			if(mouse_release(mb_left)) dragging = -1;
 		} else {
 			if(content != noone) {
 				if(point_in_rectangle(mouse_mx, mouse_my, x + ui(2), y + ui(2), x + w - ui(4), y + h - ui(4))) {
 					HOVER = self;
-					if(mouse_check_button_pressed(mb_left))   setFocus(self);
-					if(mouse_check_button_pressed(mb_right))  setFocus(self);
-					if(mouse_check_button_pressed(mb_middle)) setFocus(self);
+					if(mouse_press(mb_any))   setFocus(self);
 					if(sFOCUS && content) 
 						FOCUS_STR = content.context_str;
 				}
@@ -321,7 +319,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 						break;
 							
 					CURSOR = cr_size_we;
-					if(mouse_check_button_pressed(mb_left)) {
+					if(mouse_press(mb_left)) {
 						dragging  = 1;
 						drag_sval = _panel.w;
 						drag_sm   = mouse_mx;
@@ -332,7 +330,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 						break;
 							
 					CURSOR = cr_size_ns;
-					if(mouse_check_button_pressed(mb_left)) {
+					if(mouse_press(mb_left)) {
 						dragging = 2;
 						drag_sval = _panel.h;
 						drag_sm   = mouse_my;

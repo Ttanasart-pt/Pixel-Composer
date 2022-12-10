@@ -54,7 +54,7 @@ function Node_Crop(_x, _y) : Node_Processor(_x, _y) constructor {
 			if(inputs[| 1].setValue(_splice))
 				UNDO_HOLDING = true;
 			
-			if(mouse_check_button_released(mb_left)) {
+			if(mouse_release(mb_left)) {
 				drag_side = -1;
 				UNDO_HOLDING = false;
 			}
@@ -62,7 +62,7 @@ function Node_Crop(_x, _y) : Node_Processor(_x, _y) constructor {
 		
 		if(distance_to_line_infinite(_mx, _my, sp_r, -hh, sp_r, hh) < 12) {
 			draw_line_width(sp_r, -hh, sp_r, hh, 3);
-			if(_active && mouse_check_button_pressed(mb_left)) {
+			if(_mouse_press(mb_left, active)) {
 				drag_side = 0;
 				drag_mx   = _mx;
 				drag_my   = _my;
@@ -70,7 +70,7 @@ function Node_Crop(_x, _y) : Node_Processor(_x, _y) constructor {
 			}
 		} else if(distance_to_line_infinite(_mx, _my, -ww, sp_t, ww, sp_t) < 12) {
 			draw_line_width(-ww, sp_t, ww, sp_t, 3);
-			if(_active && mouse_check_button_pressed(mb_left)) {
+			if(_mouse_press(mb_left, active)) {
 				drag_side = 1;
 				drag_mx   = _mx;
 				drag_my   = _my;
@@ -78,7 +78,7 @@ function Node_Crop(_x, _y) : Node_Processor(_x, _y) constructor {
 			}
 		} else if(distance_to_line_infinite(_mx, _my, sp_l, -hh, sp_l, hh) < 12) {
 			draw_line_width(sp_l, -hh, sp_l, hh, 3);
-			if(_active && mouse_check_button_pressed(mb_left)) {
+			if(_mouse_press(mb_left, active)) {
 				drag_side = 2;
 				drag_mx   = _mx;
 				drag_my   = _my;
@@ -86,7 +86,7 @@ function Node_Crop(_x, _y) : Node_Processor(_x, _y) constructor {
 			}
 		} else if(distance_to_line_infinite(_mx, _my, -ww, sp_b, ww, sp_b) < 12) {
 			draw_line_width(-ww, sp_b, ww, sp_b, 3);
-			if(_active && mouse_check_button_pressed(mb_left)) {
+			if(_mouse_press(mb_left, active)) {
 				drag_side = 3;
 				drag_mx   = _mx;
 				drag_my   = _my;

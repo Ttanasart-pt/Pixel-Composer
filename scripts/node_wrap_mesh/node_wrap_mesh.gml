@@ -14,7 +14,7 @@ function Node_Mesh_Warp(_x, _y) : Node(_x, _y) constructor {
 	}
 	
 	inputs[| 0] = nodeValue(0, "Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
-	inputs[| 1] = nodeValue(1, "Sample size", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 8)
+	inputs[| 1] = nodeValue(1, "Sample", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 8)
 		.setDisplay(VALUE_DISPLAY.slider, [ 2, 32, 1 ] );
 	
 	inputs[| 2] = nodeValue(2, "Spring force", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.5)
@@ -72,7 +72,7 @@ function Node_Mesh_Warp(_x, _y) : Node(_x, _y) constructor {
 		
 		if(!_active) return;
 		if(_tool == 0) {
-			if(mouse_check_button_pressed(mb_left)) {
+			if(mouse_press(mb_left)) {
 				if(hover == -1) {
 					var i = createControl();
 					i.setValue( [PUPPET_FORCE_MODE.move, (_mx - _x) / _s, (_my - _y) / _s, 0, 0, 8, 8] );
@@ -96,7 +96,7 @@ function Node_Mesh_Warp(_x, _y) : Node(_x, _y) constructor {
 			var _xx = (_mx - _x) / _s;
 			var _yy = (_my - _y) / _s;
 			
-			if(mouse_check_button(mb_left)) {
+			if(mouse_click(mb_left)) {
 				for(var j = 0; j < ds_list_size(data.tris); j++) {
 					var t = data.tris[| j];
 					
@@ -241,6 +241,9 @@ function Node_Mesh_Warp(_x, _y) : Node(_x, _y) constructor {
 		}
 		
 		static drawPoints = function(_x, _y, _s) {
+			//draw_set_color(c_white);
+			//draw_triangle(_x + p0.x * _s, _y + p0.y * _s, _x + p1.x * _s, _y + p1.y * _s, _x + p2.x * _s, _y + p2.y * _s, false)
+			
 			p0.draw(_x, _y, _s);
 			p1.draw(_x, _y, _s);
 			p2.draw(_x, _y, _s);
@@ -260,8 +263,8 @@ function Node_Mesh_Warp(_x, _y) : Node(_x, _y) constructor {
 		var ww = surface_get_width(surf);
 		var hh = surface_get_height(surf);
 		
-		var gw = floor(ww / sample) + 1;
-		var gh = floor(hh / sample) + 1;
+		var gw = ww / sample;
+		var gh = hh / sample;
 		
 		var cont = surface_create_valid(ww, hh)
 		surface_set_target(cont);
@@ -270,7 +273,7 @@ function Node_Mesh_Warp(_x, _y) : Node(_x, _y) constructor {
 			var uniform_sam = shader_get_uniform(sh_content_sampler, "sampler");
 			
 			shader_set_uniform_f_array(uniform_dim, [ww, hh]);
-			shader_set_uniform_f_array(uniform_sam, [sample, sample]);
+			shader_set_uniform_f_array(uniform_sam, [gw, gh]);
 			draw_surface_safe(surf, 0, 0);
 			shader_reset();
 		surface_reset_target();
@@ -280,27 +283,27 @@ function Node_Mesh_Warp(_x, _y) : Node(_x, _y) constructor {
 		ds_list_clear(data.links);
 		
 		var ind = 0;
-		for(var i = 0; i < gh; i++) 
-		for(var j = 0; j < gw; j++) {
-			var c0 = surface_getpixel(cont, j * sample,     i * sample);
-			var c1 = surface_getpixel(cont, j * sample - 1, i * sample);
-			var c2 = surface_getpixel(cont, j * sample,     i * sample - 1);
-			var c3 = surface_getpixel(cont, j * sample - 1, i * sample - 1);
+		for(var i = 0; i <= sample; i++) 
+		for(var j = 0; j <= sample; j++) {
+			var c0 = surface_getpixel(cont, j * gw,     i * gh);
+			var c1 = surface_getpixel(cont, j * gw - 1, i * gh);
+			var c2 = surface_getpixel(cont, j * gw,     i * gh - 1);
+			var c3 = surface_getpixel(cont, j * gw - 1, i * gh - 1);
 			
 			if(c0 + c1 + c2 + c3 > 0) {
-				data.points[i][j] = new point(self, ind++, min(j * sample, ww), min(i * sample, hh));
-				if(i) {
-					if(j && data.points[i - 1][j] != 0 && data.points[i][j - 1] != 0) 
-						ds_list_add(data.tris, new triangle(data.points[i - 1][j], data.points[i][j - 1], data.points[i][j]));
-					if(j + 1 < gw && data.points[i - 1][j] != 0 && data.points[i - 1][j + 1] != 0)
-						ds_list_add(data.tris, new triangle(data.points[i - 1][j], data.points[i - 1][j + 1], data.points[i][j]));
-				}
+				data.points[i][j] = new point(self, ind++, min(j * gw, ww), min(i * gh, hh));
+				if(i == 0) continue;
+				
+				if(j && data.points[i - 1][j] != 0 && data.points[i][j - 1] != 0) 
+					ds_list_add(data.tris, new triangle(data.points[i - 1][j], data.points[i][j - 1], data.points[i][j]));
+				if(j < sample && data.points[i - 1][j] != 0 && data.points[i - 1][j + 1] != 0)
+					ds_list_add(data.tris, new triangle(data.points[i - 1][j], data.points[i - 1][j + 1], data.points[i][j]));
 			} else
 				data.points[i][j] = 0;
 		}
 		
-		for(var i = 0; i < gh; i++)
-		for(var j = 0; j < gw; j++) {
+		for(var i = 0; i <= sample; i++)
+		for(var j = 0; j <= sample; j++) {
 			if(data.points[i][j] == 0) continue;
 			
 			if(i && data.points[i - 1][j] != 0) {
@@ -316,7 +319,7 @@ function Node_Mesh_Warp(_x, _y) : Node(_x, _y) constructor {
 					l.k = spring;
 					ds_list_add(data.links, l);
 				}
-				if(i && j < gw - 1 && data.points[i - 1][j + 1] != 0) {
+				if(i && j < sample && data.points[i - 1][j + 1] != 0) {
 					var l = new link(data.points[i][j], data.points[i - 1][j + 1]);
 					l.k = spring;
 					ds_list_add(data.links, l);

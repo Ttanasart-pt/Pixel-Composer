@@ -93,7 +93,7 @@ function rotatorRange(_onModify) constructor {
 			drag_sa = point_direction(_x, knob_y, _m[0], _m[1]);
 			drag_sv = real_val;
 			
-			if(mouse_check_button_released(mb_left)) {
+			if(mouse_release(mb_left)) {
 				dragging = -1;
 				UNDO_HOLDING = false;
 			}
@@ -102,7 +102,7 @@ function rotatorRange(_onModify) constructor {
 				if(point_in_circle(_m[0], _m[1], px[i], py[i], ui(10))) {
 					draw_sprite_ui_uniform(THEME.rotator_knob, 1, px[i], py[i]);
 						
-					if(active && mouse_check_button_pressed(mb_left)) {
+					if(mouse_press(mb_left, active)) {
 						dragging = i;
 						drag_sv  = _data[i];
 						drag_sa  = point_direction(_x, knob_y, _m[0], _m[1]);
@@ -110,7 +110,7 @@ function rotatorRange(_onModify) constructor {
 					}
 				}
 			}
-			if(dragging == -1 && hover_arc && active && mouse_check_button_pressed(mb_left)) {
+			if(dragging == -1 && hover_arc && mouse_press(mb_left, active)) {
 				dragging = 2;
 				drag_sv  = _data;
 				drag_sa  = point_direction(_x, knob_y, _m[0], _m[1]);

@@ -49,9 +49,6 @@ function __part() constructor {
 	anim_speed = 1;
 	anim_end   = ANIM_END_ACTION.loop;
 	
-	is_loop = false;
-	
-	
 	function create(_surf, _x, _y, _life) {
 		active	= true;
 		surf	= _surf;
@@ -172,7 +169,7 @@ function __part() constructor {
 			_xx = round(_xx);
 			_yy = round(_yy);
 		}
-			
+		
 		draw_surface_ext_safe(ss, _xx, _yy, scx, scy, rot, cc, alp_draw);
 	}
 	
@@ -199,7 +196,7 @@ function Node_Particle(_x, _y) : Node(_x, _y) constructor {
 	auto_update = false;
 	use_cache = true;
 	
-	inputs[| 0] = nodeValue(0, "Particle", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0)
+	inputs[| 0] = nodeValue(0, "Particle sprite", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0)
 		.setDisplay(noone, "particles");
 		
 	inputs[| 1] = nodeValue(1, "Output dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, def_surf_size2)
@@ -254,7 +251,7 @@ function Node_Particle(_x, _y) : Node(_x, _y) constructor {
 	inputs[| 21] = nodeValue(21, "Gravity", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0 );
 	inputs[| 22] = nodeValue(22, "Wiggle", self, JUNCTION_CONNECT.input, VALUE_TYPE.float,  0 );
 	
-	inputs[| 23] = nodeValue(23, "Loop", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false );
+	inputs[| 23] = nodeValue(23, "Loop", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true );
 	
 	inputs[| 24] = nodeValue(24, "Blend mode", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0 )
 		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Normal", "Additive" ]);
@@ -276,7 +273,7 @@ function Node_Particle(_x, _y) : Node(_x, _y) constructor {
 		.setDisplay(VALUE_DISPLAY.enum_button, [ "Loop", "Ping pong", "Destroy" ])
 		.setVisible(false);
 	
-	input_display_list = [		
+	input_display_list = [
 		["Output",		true],	1,
 		["Sprite",	   false],	0, 25, 26, 29,
 		["Spawn",		true],	17, 2, 3, 4, 5, 27, 28, 6,
@@ -300,10 +297,10 @@ function Node_Particle(_x, _y) : Node(_x, _y) constructor {
 	
 	outputs[| 1] = nodeValue(1, "Particle data", self, JUNCTION_CONNECT.output, VALUE_TYPE.object, parts );
 	
-	function spawn() {
+	static spawn = function(_time = ANIMATOR.current_frame) {
 		random_set_seed(seed++);
 		
-		var _inSurf = inputs[| 0].getValue();
+		var _inSurf = inputs[| 0].getValue(_time);
 		
 		if(_inSurf == 0) {
 			if(def_surface == -1 || !surface_exists(def_surface)) { 
@@ -315,37 +312,37 @@ function Node_Particle(_x, _y) : Node(_x, _y) constructor {
 			_inSurf = def_surface;	
 		}
 		
-		var _spawn_amount	= inputs[| 3].getValue();
+		var _spawn_amount	= inputs[| 3].getValue(_time);
 		var _amo = _spawn_amount;
 		
-		var _spawn_area		= inputs[| 4].getValue();
-		var _distrib		= inputs[| 5].getValue();
-		var _scatter		= inputs[| 27].getValue();
+		var _spawn_area		= inputs[| 4].getValue(_time);
+		var _distrib		= inputs[| 5].getValue(_time);
+		var _scatter		= inputs[| 27].getValue(_time);
 		
-		var _life			= inputs[| 6].getValue();
-		var _direction		= inputs[| 7].getValue();
-		var _velocity		= inputs[| 20].getValue();
+		var _life			= inputs[| 6].getValue(_time);
+		var _direction		= inputs[| 7].getValue(_time);
+		var _velocity		= inputs[| 20].getValue(_time);
 		
-		var _accel			= inputs[| 8].getValue();
-		var _grav			= inputs[| 21].getValue();
-		var _wigg			= inputs[| 22].getValue();
+		var _accel			= inputs[| 8].getValue(_time);
+		var _grav			= inputs[| 21].getValue(_time);
+		var _wigg			= inputs[| 22].getValue(_time);
 		
-		var _follow			= inputs[| 16].getValue();
-		var _rotation		= inputs[| 9].getValue();
-		var _rotation_speed	= inputs[| 10].getValue();
-		var _scale			= inputs[| 11].getValue();
-		var _size 			= inputs[| 18].getValue();
-		var _scale_speed	= inputs[| 12].getValue();
+		var _follow			= inputs[| 16].getValue(_time);
+		var _rotation		= inputs[| 9].getValue(_time);
+		var _rotation_speed	= inputs[| 10].getValue(_time);
+		var _scale			= inputs[| 11].getValue(_time);
+		var _size 			= inputs[| 18].getValue(_time);
+		var _scale_speed	= inputs[| 12].getValue(_time);
 		
-		var _loop	= inputs[| 23].getValue();
+		var _loop	= inputs[| 23].getValue(_time);
 		
-		var _color	= inputs[| 13].getValue();
-		var _alpha	= inputs[| 14].getValue();
-		var _fade	= inputs[| 15].getValue();
+		var _color	= inputs[| 13].getValue(_time);
+		var _alpha	= inputs[| 14].getValue(_time);
+		var _fade	= inputs[| 15].getValue(_time);
 		
-		var _arr_type	= inputs[| 25].getValue();
-		var _anim_speed	= inputs[| 26].getValue();
-		var _anim_end	= inputs[| 29].getValue();
+		var _arr_type	= inputs[| 25].getValue(_time);
+		var _anim_speed	= inputs[| 26].getValue(_time);
+		var _anim_end	= inputs[| 29].getValue(_time);
 		
 		if(_rotation[1] < _rotation[0]) _rotation[1] += 360;
 		
@@ -366,7 +363,7 @@ function Node_Particle(_x, _y) : Node(_x, _y) constructor {
 				var yy = 0;
 				
 				if(_scatter == 2) {
-					var _b_data = inputs[| 28].getValue();
+					var _b_data = inputs[| 28].getValue(_time);
 					if(!is_array(_b_data) || array_length(_b_data) <= 0) return;
 					var _b = _b_data[safe_mod(_index, array_length(_b_data))];
 					if(!is_array(_b) || array_length(_b) != 4) return;
@@ -408,11 +405,7 @@ function Node_Particle(_x, _y) : Node(_x, _y) constructor {
 				parts[| i].setPhysic(_vx, _vy, _acc, _grav, _wigg);
 				parts[| i].setTransform(_scx, _scy, _scale_speed[0], _scale_speed[1], _rot, _rot_spd, _follow);
 				parts[| i].setDraw(_color, _alp, _fade);
-				setUpPart(parts[| i]);
 				spawn_index = safe_mod(spawn_index + 1, PREF_MAP[? "part_max_amount"]);
-				
-				if(_loop && ANIMATOR.current_frame + _lif > ANIMATOR.frames_total)
-					parts[| i].is_loop = true;
 				
 				if(--_amo <= 0)
 					return;
@@ -420,28 +413,31 @@ function Node_Particle(_x, _y) : Node(_x, _y) constructor {
 		}
 	}
 	
-	function setUpPart(part) {}
-	
 	function reset() {
 		spawn_index = 0;
 		for(var i = 0; i < PREF_MAP[? "part_max_amount"]; i++) {
-			if(parts[| i].is_loop)
-				parts[| i].is_loop = false;
-			else
-				parts[| i].kill();
+			parts[| i].kill();
 		}
 		render();
 		seed = seed_origin;
+		
+		var _loop	= inputs[| 23].getValue();
+		if(!_loop) return;
+		
+		for(var i = 0; i < ANIMATOR.frames_total; i++)
+			runFrame(i);
+		
+		seed = seed_origin;
 	}
 	
-	function updateParticle() {
+	function updateParticle(_time = ANIMATOR.current_frame) {
 		var jun = outputs[| 1];
 		for(var j = 0; j < ds_list_size(jun.value_to); j++) {
 			if(jun.value_to[| j].value_from == jun)
 				jun.value_to[| j].node.doUpdate();
 		}
 		
-		render();
+		render(_time);
 	}
 	
 	function checkPartPool() {
@@ -455,6 +451,27 @@ function Node_Particle(_x, _y) : Node(_x, _y) constructor {
 			repeat(_curr_amo - _part_amo)
 				ds_list_delete(parts, 0);
 		}
+	}
+	
+	static runFrame = function(_time = ANIMATOR.current_frame) {
+		var _spawn_delay = inputs[| 2].getValue(_time);
+		var _spawn_type = inputs[| 17].getValue(_time);
+		
+		switch(_spawn_type) {
+			case 0 :
+				if(safe_mod(_time, _spawn_delay) == 0)
+					spawn(_time);
+				break;
+			case 1 :
+				if(_time == _spawn_delay)
+					spawn(_time);
+				break;
+		}
+			
+		for(var i = 0; i < ds_list_size(parts); i++)
+			parts[| i].step();
+		updateParticle(_time);
+		triggerRender();
 	}
 	
 	static step = function() {
@@ -477,35 +494,24 @@ function Node_Particle(_x, _y) : Node(_x, _y) constructor {
 		
 		checkPartPool();
 		var _spawn_type = inputs[| 17].getValue();
-		if(_spawn_type == 0)
-			inputs[| 2].name = "Spawn delay";
-		else
-			inputs[| 2].name = "Spawn frame";
+		if(_spawn_type == 0)	inputs[| 2].name = "Spawn delay";
+		else					inputs[| 2].name = "Spawn frame";
 		
-		var _spawn_delay = inputs[| 2].getValue();
-		
-		if(ANIMATOR.is_playing && ANIMATOR.frame_progress) {
-			if(ANIMATOR.current_frame == 0) reset();
-			
-			switch(_spawn_type) {
-				case 0 :
-					if(safe_mod(ANIMATOR.current_frame, _spawn_delay) == 0)
-						spawn();
-					break;
-				case 1 :
-					if(ANIMATOR.current_frame == _spawn_delay)
-						spawn();
-					break;
+		if(ANIMATOR.frame_progress) {
+			if(recoverCache()) {
+				triggerRender();
+				return;
 			}
 			
-			for(var i = 0; i < ds_list_size(parts); i++)
-				parts[| i].step();
-			updateParticle();
-			updateForward();
+			if(!ANIMATOR.is_playing) return;
+			
+			if(ANIMATOR.current_frame == 0) {
+				reset();
+				runFrame(ANIMATOR.current_frame);
+			} else if(cached_output[ANIMATOR.current_frame - 1] != 0) {
+				runFrame(ANIMATOR.current_frame);
+			}
 		}
-		
-		if(ANIMATOR.is_scrubing)
-			recoverCache();	
 	}
 	
 	static drawOverlay = function(_active, _x, _y, _s, _mx, _my) {
@@ -516,10 +522,10 @@ function Node_Particle(_x, _y) : Node(_x, _y) constructor {
 	
 	static onDrawOverlay = -1;
 	
-	function render() {
-		var _dim		= inputs[| 1].getValue();
-		var _exact 		= inputs[| 19].getValue();
-		var _blend 		= inputs[| 24].getValue();
+	function render(_time = ANIMATOR.current_frame) {
+		var _dim		= inputs[| 1].getValue(_time);
+		var _exact 		= inputs[| 19].getValue(_time);
+		var _blend 		= inputs[| 24].getValue(_time);
 		
 		var _outSurf	= outputs[| 0].getValue();
 		

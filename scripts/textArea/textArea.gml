@@ -232,11 +232,11 @@ function textArea(_input, _onModify) constructor {
 		}
 		
 		if(target != -999) {
-			if(mouse_check_button_pressed(mb_left) || click_block == 1) {
+			if(mouse_press(mb_left, active) || click_block == 1) {
 				cursor_select = -1;
 				cursor = target;
 				click_block = 0;
-			} else if(mouse_check_button(mb_left) && cursor != target) {
+			} else if(mouse_click(mb_left, active) && cursor != target) {
 				cursor_select = target;
 			}
 		}
@@ -405,13 +405,13 @@ function textArea(_input, _onModify) constructor {
 						ch_y += string_height(_str);
 					}
 					
-					cursor_pos_x = cursor_pos_x == 0? cursor_pos_x_to : lerp_float(cursor_pos_x, cursor_pos_x_to, 3);
-					cursor_pos_y = cursor_pos_y == 0? cursor_pos_y_to : lerp_float(cursor_pos_y, cursor_pos_y_to, 3);
+					cursor_pos_x = cursor_pos_x == 0? cursor_pos_x_to : lerp_float(cursor_pos_x, cursor_pos_x_to, 4);
+					cursor_pos_y = cursor_pos_y == 0? cursor_pos_y_to : lerp_float(cursor_pos_y, cursor_pos_y_to, 4);
 				#endregion
 				
 				var _mx = -1;
 				var _my = -1;
-				if((mouse_check_button_pressed(mb_left) || mouse_check_button(mb_left)) && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + hh)) {
+				if(mouse_press(mb_any, active) && hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + hh)) {
 					_mx = _m[0];
 					_my = _m[1];
 				}
@@ -423,7 +423,7 @@ function textArea(_input, _onModify) constructor {
 				}
 			#endregion
 			
-			if(!point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + hh) && mouse_check_button_pressed(mb_left)) {
+			if(!point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + hh) && mouse_press(mb_left)) {
 				deselect();
 			}
 		} else {
@@ -432,7 +432,7 @@ function textArea(_input, _onModify) constructor {
 					draw_sprite_stretched_ext(THEME.textbox, 1, _x, _y, _w, hh, c_white, 0.5);	
 				else
 					draw_sprite_stretched(THEME.textbox, 1, _x, _y, _w, hh);	
-				if(active && mouse_check_button_pressed(mb_left)) {
+				if(mouse_press(mb_left, active)) {
 					TEXTBOX_ACTIVE  = self;
 					click_block = 1;
 					keyboard_string = "";

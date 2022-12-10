@@ -21,7 +21,7 @@ function areaBox(_onModify) constructor {
 	
 	static draw = function(_x, _y, _data, _m) {
 		if(buttonInstant(THEME.button_hide, _x - ui(48), _y + ui(64 - 48), ui(96), ui(96), _m, active, hover, "", THEME.inspector_area, array_safe_get(_data, 4), c_white) == 2) {
-			if(mouse_check_button_pressed(mb_left)) {
+			if(mouse_press(mb_left, active)) {
 				var val = (array_safe_get(_data, 4) + 1) % 2;
 				onModify(4, val);
 			}

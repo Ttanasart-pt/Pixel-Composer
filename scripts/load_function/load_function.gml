@@ -2,10 +2,6 @@ function LOAD() {
 	var path = get_open_filename("*.pxc;*.json", "");
 	if(path == "") return;
 	if(filename_ext(path) != ".json" && filename_ext(path) != ".pxc") return;
-	
-	nodeCleanUp();
-	setPanel();
-	room_restart();
 				
 	gc_collect();
 	LOAD_PATH(path);
@@ -25,6 +21,11 @@ function LOAD_PATH(path, readonly = false) {
 		log_warning("LOAD", "File not a valid project");
 		return false;
 	}
+	
+	nodeCleanUp();
+	clearPanel();
+	setPanel();
+	room_restart();
 	
 	var temp_path = DIRECTORY + "\_temp";
 	if(file_exists(temp_path)) file_delete(temp_path);
@@ -79,6 +80,16 @@ function LOAD_PATH(path, readonly = false) {
 		log_warning("LOAD, animator", e.longMessage);
 	}
 	
+	try {
+		if(ds_map_exists(_map, "graph")) {
+			var _graph_map			= _map[? "graph"];
+			PANEL_GRAPH.graph_x		= ds_map_try_get(_graph_map, "graph_x");
+			PANEL_GRAPH.graph_y		= ds_map_try_get(_graph_map, "graph_y");
+		}
+	} catch(e) {
+		log_warning("LOAD, graph", e.longMessage);
+	}
+	
 	ds_queue_clear(CONNECTION_CONFLICT);
 	
 	try {
@@ -91,6 +102,15 @@ function LOAD_PATH(path, readonly = false) {
 	try {
 		for(var i = 0; i < ds_list_size(create_list); i++)
 			create_list[| i].postDeserialize();
+	} catch(e) {
+		log_warning("LOAD, deserialize", e.longMessage);
+	}
+	
+	try {
+		for(var i = 0; i < ds_list_size(create_list); i++) {
+			if(!variable_struct_exists(create_list[| i], "collectionDeserialize")) continue;
+			create_list[| i].collectionDeserialize();
+		}
 	} catch(e) {
 		log_warning("LOAD, deserialize", e.longMessage);
 	}
@@ -113,7 +133,7 @@ function LOAD_PATH(path, readonly = false) {
 		log_warning("LOAD, update", e.longMessage);
 	}
 	
-	renderAll();
+	Render();
 	
 	if(!ds_queue_empty(CONNECTION_CONFLICT)) {
 		var pass = 0;
@@ -125,7 +145,7 @@ function LOAD_PATH(path, readonly = false) {
 				repeat(size) {
 					ds_queue_dequeue(CONNECTION_CONFLICT).connect();	
 				}
-				renderAll();
+				Render();
 			}
 		
 			if(!ds_queue_empty(CONNECTION_CONFLICT))
@@ -138,10 +158,10 @@ function LOAD_PATH(path, readonly = false) {
 	LOADING = false;
 	MODIFIED = false;
 	
-	PANEL_GRAPH.fullView();
 	PANEL_ANIMATION.updatePropertyList();
 	
 	log_message("FILE", "load " + path, THEME.noti_icon_file_load);
+	PANEL_MENU.setNotiIcon(THEME.noti_icon_file_load);
 	
 	ds_map_destroy(_map);
 	return true;

@@ -36,8 +36,8 @@ function vectorRangeBox(_size, _type, _onModify) constructor {
 			tb[i].active = active;
 			
 			var bx  = _x + ww * floor(i / 2);
-			var by  = _y + i % 2 * 40;
-			tb[i].draw(bx + ui(56), by, ww - ui(56), TEXTBOX_HEIGHT, _data[i], _m);
+			var by  = _y + i % 2 * (_h + ui(4));
+			tb[i].draw(bx + ui(56), by, ww - ui(56), _h, _data[i], _m);
 			
 			draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text_sub);
 			draw_text(bx + ui(8), by + _h / 2, label[i]);
@@ -45,6 +45,6 @@ function vectorRangeBox(_size, _type, _onModify) constructor {
 		hover  = false;
 		active = false;
 		
-		return TEXTBOX_HEIGHT * 2 + ui(4);
+		return _h * 2 + ui(4);
 	}
 }

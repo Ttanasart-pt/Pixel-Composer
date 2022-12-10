@@ -52,7 +52,7 @@ function Node_Frame(_x, _y) : Node(_x, _y) constructor {
 			w = round(w / 32) * 32;
 			h = round(h / 32) * 32;
 			
-			if(mouse_check_button_released(mb_left)) {
+			if(mouse_release(mb_left)) {
 				size_dragging = false;
 				inputs[| 0].setValue([ w, h ]);
 			}
@@ -74,7 +74,7 @@ function Node_Frame(_x, _y) : Node(_x, _y) constructor {
 			draw_sprite_ext(THEME.node_resize, 0, _re_x, _re_y, 1, 1, 0, c_white, 1);
 			PANEL_GRAPH.drag_locking = true;
 			
-			if(mouse_check_button_pressed(mb_left)) {
+			if(mouse_press(mb_left)) {
 				size_dragging	= true;
 				size_dragging_w = w;
 				size_dragging_h = h;

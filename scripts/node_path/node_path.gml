@@ -88,7 +88,7 @@ function Node_Path(_x, _y) : Node(_x, _y) constructor {
 			} 
 			
 			inp.setValue(anc);
-			if(mouse_check_button_released(mb_left))
+			if(mouse_release(mb_left))
 				drag_point = -1;
 		}
 
@@ -168,7 +168,7 @@ function Node_Path(_x, _y) : Node(_x, _y) constructor {
 			if(keyboard_check(vk_shift) || PANEL_PREVIEW.tool_index == 1) {
 				draw_sprite_ui_uniform(THEME.cursor_path_anchor, 0, _mx + 16, _my + 16);
 				
-				if(_active && mouse_check_button_pressed(mb_left)) {
+				if(_mouse_press(mb_left, active)) {
 					if(_a[2] != 0 || _a[3] != 0 || _a[4] != 0 || _a[5] != 0) {
 						_a[2] = 0;
 						_a[3] = 0;
@@ -192,14 +192,14 @@ function Node_Path(_x, _y) : Node(_x, _y) constructor {
 			} else if(keyboard_check(vk_control) || PANEL_PREVIEW.tool_index == 0) {
 				draw_sprite_ui_uniform(THEME.cursor_path_remove, 0, _mx + 16, _my + 16);
 				
-				if(_active && mouse_check_button_pressed(mb_left)) {
+				if(_mouse_press(mb_left, active)) {
 					ds_list_delete(inputs, list_start + anchor_hover);
 					doUpdate();
 				}
 			} else {
 				draw_sprite_ui_uniform(THEME.cursor_path_move, 0, _mx + 16, _my + 16);
 				
-				if(_active && mouse_check_button_pressed(mb_left)) {
+				if(_mouse_press(mb_left, active)) {
 					drag_point    = anchor_hover;
 					drag_type     = hover_type;
 					drag_point_mx = _mx;
@@ -219,7 +219,7 @@ function Node_Path(_x, _y) : Node(_x, _y) constructor {
 		} else if(keyboard_check(vk_control) || PANEL_PREVIEW.tool_index == 0) {
 			draw_sprite_ui_uniform(THEME.cursor_path_add, 0, _mx + 16, _my + 16);
 			
-			if(_active && mouse_check_button_pressed(mb_left)) {
+			if(_mouse_press(mb_left, active)) {
 				drag_point    = ds_list_size(inputs) - list_start;
 				createAnchor((_mx - _x) / _s, (_my - _y) / _s);
 				

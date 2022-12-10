@@ -31,6 +31,15 @@ function surface_size_to(surface, width, height) {
 	return true;
 }
 
+function surface_copy_add(dst, src, _x = 0, _y = 0) {
+	surface_set_target(dst);
+	draw_clear_alpha(0, 0);
+	BLEND_ADD
+		draw_surface(src, _x, _y);
+	BLEND_NORMAL
+	surface_reset_target();
+}
+
 function surface_clone(surface) {
 	if(!surface_exists(surface)) return surface_create(1, 1);
 	
@@ -38,8 +47,8 @@ function surface_clone(surface) {
 	surface_set_target(s);
 	draw_clear_alpha(0, 0);
 	surface_reset_target();
-	surface_copy(s, 0, 0, surface);
 	
+	surface_copy_add(s, surface);
 	return s;
 }
 
@@ -51,7 +60,8 @@ function surface_copy_size(dest, source) {
 	surface_set_target(dest);
 	draw_clear_alpha(0, 0);
 	surface_reset_target();
-	surface_copy(dest, 0, 0, source);
+	
+	surface_copy_add(dest, source);
 }
 
 function surface_valid_size(s) {

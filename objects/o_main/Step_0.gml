@@ -14,16 +14,16 @@
 		if(round(ANIMATOR.real_frame) >= ANIMATOR.frames_total) {
 			switch(ANIMATOR.playback) {
 				case ANIMATOR_END.loop : 
-					ANIMATOR.real_frame = 0;
+					ANIMATOR.setFrame(0);
 					break;
 				case ANIMATOR_END.stop : 
-					ANIMATOR.real_frame = ANIMATOR.frames_total - 1;
+					ANIMATOR.setFrame(ANIMATOR.frames_total - 1);
 					ANIMATOR.is_playing = false;
 					break;
 			}
 		}
 	} else {
-		ANIMATOR.real_frame = clamp(ANIMATOR.real_frame, 0, ANIMATOR.frames_total - 1);
+		ANIMATOR.setFrame(ANIMATOR.real_frame);
 	}
 	
 	ANIMATOR.frame_progress = false;

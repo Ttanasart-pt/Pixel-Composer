@@ -18,6 +18,7 @@ function Node_Wrap_Area(_x, _y) : Node_Processor(_x, _y) constructor {
 	}
 	
 	static process_data = function(_outSurf, _data, _output_index) {
+		print("update")
 		var _inSurf	= _data[0];
 		var _area	= _data[1];
 		

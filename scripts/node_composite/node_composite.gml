@@ -65,7 +65,7 @@ function Node_Composite(_x, _y) : Node_Processor(_x, _y) constructor {
 			if(point_in_circle(_m[0], _m[1], _bx, _cy + lh / 2, 16)) {
 				draw_sprite_ui_uniform(THEME.icon_delete, 3, _bx, _cy + lh / 2, 1, COLORS._main_value_negative);
 				
-				if(_focus && mouse_check_button_pressed(mb_left))
+				if(mouse_press(mb_left, _focus))
 					layer_remove = ind;
 			} else 
 				draw_sprite_ui_uniform(THEME.icon_delete, 3, _bx, _cy + lh / 2, 1, COLORS._main_icon);
@@ -83,14 +83,12 @@ function Node_Composite(_x, _y) : Node_Processor(_x, _y) constructor {
 			if(point_in_circle(_m[0], _m[1], _bx, _cy + lh / 2, 12)) {
 				draw_sprite_ui_uniform(THEME.junc_visible, vis, _bx, _cy + lh / 2, 1, c_white);
 				
-				if(_focus) {
-					if(mouse_check_button_pressed(mb_left))
-						hold_visibility = !_vis[| ind];
+				if(mouse_press(mb_left, _focus))
+					hold_visibility = !_vis[| ind];
 					
-					if(mouse_check_button(mb_left) && _vis[| ind] != hold_visibility) {
-						_vis[| ind] = hold_visibility;
-						update();
-					}
+				if(mouse_click(mb_left, _focus) && _vis[| ind] != hold_visibility) {
+					_vis[| ind] = hold_visibility;
+					update();
 				}
 			} else 
 				draw_sprite_ui_uniform(THEME.junc_visible, vis, _bx, _cy + lh / 2, 1, COLORS._main_icon);
@@ -128,14 +126,14 @@ function Node_Composite(_x, _y) : Node_Processor(_x, _y) constructor {
 				if(point_in_circle(_m[0], _m[1], _bx, _cy + lh / 2, 16)) {
 					draw_sprite_ui_uniform(THEME.hamburger, 3, _bx, _cy + lh / 2, .75, c_white);
 				
-					if(_focus && mouse_check_button_pressed(mb_left))
+					if(mouse_press(mb_left, _focus))
 						layer_dragging = ind;
 				} else 
 					draw_sprite_ui_uniform(THEME.hamburger, 3, _bx, _cy + lh / 2, .75, COLORS._main_icon);
 			}
 		}
 		
-		if(layer_dragging != noone && mouse_check_button_released(mb_left)) {
+		if(layer_dragging != noone && mouse_release(mb_left)) {
 			if(layer_dragging != hoverIndex && hoverIndex != noone) {
 				var index = input_fix_len + layer_dragging * data_length;
 				var targt = input_fix_len + hoverIndex * data_length;
@@ -290,7 +288,7 @@ function Node_Composite(_x, _y) : Node_Processor(_x, _y) constructor {
 					UNDO_HOLDING = true;	
 			}
 			
-			if(mouse_check_button_released(mb_left)) {
+			if(mouse_release(mb_left)) {
 				input_dragging = -1;
 				UNDO_HOLDING = false;
 			}
@@ -368,7 +366,7 @@ function Node_Composite(_x, _y) : Node_Processor(_x, _y) constructor {
 				draw_set_color(COLORS._main_accent);
 				draw_rectangle_border(_dx0, _dy0, _dx1, _dy1, 2);
 				
-				if(_active && mouse_check_button_pressed(mb_left)) {
+				if(_mouse_press(mb_left, active)) {
 					surf_dragging = hovering;
 					input_dragging = hovering + 1;
 					drag_type = hovering_type;
@@ -378,7 +376,7 @@ function Node_Composite(_x, _y) : Node_Processor(_x, _y) constructor {
 					dragging_my = _my;
 				}
 			} else if(hovering_type == 1) { //rot
-				if(_active && mouse_check_button_pressed(mb_left)) {
+				if(_mouse_press(mb_left, active)) {
 					surf_dragging = hovering;
 					input_dragging = hovering + 2;
 					drag_type = hovering_type;
@@ -389,7 +387,7 @@ function Node_Composite(_x, _y) : Node_Processor(_x, _y) constructor {
 					dragging_mx = point_direction(rot_anc_x, rot_anc_y, _mx, _my);
 				}
 			} else if(hovering_type == 2) { //sca
-				if(_active && mouse_check_button_pressed(mb_left)) {
+				if(_mouse_press(mb_left, active)) {
 					surf_dragging = hovering;
 					input_dragging = hovering + 3;
 					drag_type = hovering_type;

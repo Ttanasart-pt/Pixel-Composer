@@ -39,14 +39,14 @@ function buttonColorClass(_onApply) constructor {
 		var click = false;
 		if(hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _cw, _y + _h)) {
 			draw_sprite_stretched(THEME.button, 1, _x, _y, _cw, _h);	
-			if(active && mouse_check_button_pressed(mb_left)) {
+			if(mouse_press(mb_left, active)) {
 				var dialog = dialogCall(o_dialog_color_selector, WIN_W / 2, WIN_H / 2);
 				dialog.selector.setColor(_color);
 				dialog.selector.onApply = onApply;
 				dialog.onApply = onApply;
 				click = true;
 			}
-			if(mouse_check_button(mb_left))
+			if(mouse_click(mb_left, active))
 				draw_sprite_stretched(THEME.button, 2, _x, _y, _cw, _h);	
 		} else {
 			draw_sprite_stretched(THEME.button, 0, _x, _y, _cw, _h);		

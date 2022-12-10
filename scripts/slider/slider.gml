@@ -17,6 +17,8 @@ function slider(_min, _max, _step, _onModify = noone, _onRelease = noone) constr
 	drag_mx  = 0;
 	drag_sx  = 0;
 	
+	hdw = ui(20);
+	
 	tb_value = new textBox(TEXTBOX_INPUT.float, onApply);
 	
 	static draw = function(_x, _y, _w, _h, _data, _m, tb_w = 64, halign = fa_left, valign = fa_top) {
@@ -41,10 +43,10 @@ function slider(_min, _max, _step, _onModify = noone, _onRelease = noone) constr
 		draw_sprite_stretched(THEME.slider, 0, _x, _y + _h / 2 - ui(4), sw, ui(8));	
 		
 		var _kx = _x + clamp((_data - minn) / (maxx - minn), 0, 1) * sw;
-		draw_sprite_stretched(THEME.slider, 1, _kx - ui(10), _y, ui(20), _h);
+		draw_sprite_stretched(THEME.slider, 1, _kx - hdw / 2, _y, hdw, _h);
 		
 		if(dragging) {
-			draw_sprite_stretched(THEME.slider, 3, _kx - ui(10), _y, ui(20), _h);
+			draw_sprite_stretched(THEME.slider, 3, _kx - hdw / 2, _y, hdw, _h);
 			
 			var val = (_m[0] - _x) / sw * (maxx - minn) + minn;
 			val = round(val / step) * step;
@@ -53,17 +55,17 @@ function slider(_min, _max, _step, _onModify = noone, _onRelease = noone) constr
 				onModify(val);
 			UNDO_HOLDING = true;
 			
-			if(mouse_check_button_released(mb_left)) {
+			if(mouse_release(mb_left)) {
 				dragging = false;
 				if(onRelease != noone)
 					onRelease(val);
 				UNDO_HOLDING = false;
 			}
 		} else {
-			if(hover && (point_in_rectangle(_m[0], _m[1], _x, _y, _x + sw, _y + _h) || point_in_rectangle(_m[0], _m[1], _kx - ui(10), _y, _kx + ui(10), _y + _h))) {
-				draw_sprite_stretched(THEME.slider, 2, _kx - ui(10), _y, ui(20), _h);
+			if(hover && (point_in_rectangle(_m[0], _m[1], _x, _y, _x + sw, _y + _h) || point_in_rectangle(_m[0], _m[1], _kx - hdw / 2, _y, _kx + hdw / 2, _y + _h))) {
+				draw_sprite_stretched(THEME.slider, 2, _kx - hdw / 2, _y, hdw, _h);
 				
-				if(active && mouse_check_button_pressed(mb_left)) {
+				if(mouse_press(mb_left, active)) {
 					dragging = true;
 					drag_mx  = _m[0];
 					drag_sx  = _data;

@@ -4,61 +4,64 @@ function colorSelector(onApply = noone) constructor {
 	current_color = c_white;
 	
 	hue           = 1;
-	hue_dragging  = false;
-	
 	sat           = 0;
-	
 	val           = 0;
-	value_draggin = false;
+	
+	area_dragging = false;
+	side_dragging = false;
 	
 	dropper_active = false;
 	dropper_color  = c_white;
 	
+	disp_mode = 0;
+	
 	color_surface = surface_create_valid(ui(256), ui(256));
 	
-	tb_hue = new textBox(TEXTBOX_INPUT.number, function(str) {
-		if(str == "") return;
-		hue = clamp(real(str), 0, 255);
+	tb_hue = new slider(0, 255, 1, function(_val) {
+		hue = clamp(_val, 0, 255);
 		setHSV();
 	})
-	tb_sat = new textBox(TEXTBOX_INPUT.number, function(str) {
-		if(str == "") return;
-		sat = clamp(real(str), 0, 255);
+	tb_sat = new slider(0, 255, 1, function(_val) {
+		sat = clamp(_val, 0, 255);
 		setHSV();
 	})
-	tb_val= new textBox(TEXTBOX_INPUT.number, function(str) {
-		if(str == "") return;
-		val = clamp(real(str), 0, 255);
+	tb_val= new slider(0, 255, 1, function(_val) {
+		val = clamp(_val, 0, 255);
 		setHSV();
 	})
 	
-	tb_red = new textBox(TEXTBOX_INPUT.number, function(str) {
-		if(str == "") return;
-		var r = clamp(real(str), 0, 255);
+	tb_hue.hdw = ui(16);
+	tb_sat.hdw = ui(16);
+	tb_val.hdw = ui(16);
+	
+	tb_red = new slider(0, 255, 1, function(_val) {
+		var r = clamp(_val, 0, 255);
 		var g = color_get_green(current_color);
 		var b = color_get_blue(current_color);
 		
 		current_color = make_color_rgb(r, g, b);
 		resetHSV();
 	})
-	tb_green = new textBox(TEXTBOX_INPUT.number, function(str) {
-		if(str == "") return;
+	tb_green = new slider(0, 255, 1, function(_val) {
 		var r = color_get_red(current_color);
-		var g = clamp(real(str), 0, 255);
+		var g = clamp(_val, 0, 255);
 		var b = color_get_blue(current_color);
 		
 		current_color = make_color_rgb(r, g, b);
 		resetHSV();
 	})
-	tb_blue = new textBox(TEXTBOX_INPUT.number, function(str) {
-		if(str == "") return;
+	tb_blue = new slider(0, 255, 1, function(_val) {
 		var r = color_get_red(current_color);
 		var g = color_get_green(current_color);
-		var b = clamp(real(str), 0, 255);
+		var b = clamp(_val, 0, 255);
 		
 		current_color = make_color_rgb(r, g, b);
 		resetHSV();
 	})
+	
+	tb_red.hdw = ui(16);
+	tb_green.hdw = ui(16);
+	tb_blue.hdw = ui(16);
 	
 	tb_hex = new textBox(TEXTBOX_INPUT.text, function(str) {
 		if(str == "") return;
@@ -71,6 +74,8 @@ function colorSelector(onApply = noone) constructor {
 		current_color = make_color_rgb(_r, _g, _b);
 		resetHSV();
 	})
+	
+	scr_disp = buttonGroup(["Hue", "Value"], function(mode) { disp_mode = mode; } );
 
 	function resetHSV() {
 		hue = round(color_get_hue(current_color));
@@ -93,7 +98,7 @@ function colorSelector(onApply = noone) constructor {
 	}
 	
 	static drawDropper = function(instance) {
-		if(mouse_check_button_pressed(mb_left)) {
+		if(mouse_press(mb_left)) {
 			setColor(dropper_color);
 			if(dropper_active == true) {
 				onApply(current_color);
@@ -103,7 +108,7 @@ function colorSelector(onApply = noone) constructor {
 			resetHSV();
 		}
 		
-		if(mouse_check_button_pressed(mb_right))
+		if(mouse_press(mb_right))
 			if(dropper_active == true) instance_destroy(instance);
 		
 		var dx = mouse_mx + ui(36);
@@ -112,19 +117,30 @@ function colorSelector(onApply = noone) constructor {
 		draw_sprite_stretched_ext(THEME.color_picker_sample, 0, dx - ui(18), dy - ui(18), ui(36), ui(36), dropper_color, 1);
 	}
 	
-	static draw = function(col_x, col_y, focus, hover) {
+	static draw = function(_x, _y, focus, hover) {
+		var col_x = _x + ui(8);
+		var col_y = _y + ui(8);
+		
 		draw_sprite_stretched(THEME.ui_panel_bg, 0, col_x - ui(8), col_y - ui(8), ui(256 + 16), ui(256 + 16));
 	
 		if(!is_surface(color_surface)) color_surface = surface_create_valid(ui(256), ui(256));
 		surface_set_target(color_surface);			
 		draw_sprite_uniform(s_fx_pixel, 0, 0, 0, ui(256));
 		surface_reset_target();
-	
-		shader_set(sh_color_picker);
-		var h = shader_get_uniform(sh_color_picker, "hue");
-		shader_set_uniform_f(h, hue / 256);
+		
+		if(disp_mode == 0) {
+			shader_set(sh_color_picker_hue);
+			var h = shader_get_uniform(sh_color_picker_hue, "hue");
+			shader_set_uniform_f(h, hue / 256);
 			
-		draw_surface_safe(color_surface, col_x, col_y);
+			draw_surface_safe(color_surface, col_x, col_y);
+		} else if(disp_mode == 1) {
+			shader_set(sh_color_picker_value);
+			var v = shader_get_uniform(sh_color_picker_value, "value");
+			shader_set_uniform_f(v, val / 256);
+			
+			draw_surface_safe(color_surface, col_x, col_y);
+		} 
 		shader_reset();
 		
 		#region hue
@@ -134,76 +150,100 @@ function colorSelector(onApply = noone) constructor {
 			draw_sprite_stretched(THEME.ui_panel_bg, 0, hue_x - ui(8), hue_y - ui(8), ui(32), ui(256 + 16));
 		
 			for(var i = 0; i < 256; i++) {
-				draw_set_color(make_color_hsv(i, 255, 255));
+				if(disp_mode == 0)
+					draw_set_color(make_color_hsv(i, 255, 255));
+				else if(disp_mode == 1)
+					draw_set_color(make_color_hsv(hue, 255, 255 - i));
 				draw_rectangle(hue_x, hue_y + ui(i), hue_x + ui(16), hue_y + ui(i + 1), false);
 			}
 		
-			var hy = hue_y + ui(hue);
-			draw_sprite_stretched_ext(s_ui_base_white, 0, hue_x - ui(3), hy - ui(6), ui(24), ui(10), make_color_hsv(hue, 255, 255), 1);
-			draw_sprite_stretched_ext(s_ui_base_white, 0, col_x + ui(sat - 6), col_y + ui(256 - val - 6), ui(12), ui(12), current_color, 1);
-	
-			if(focus) {
-				if(mouse_check_button_pressed(mb_left)) {
-					if(point_in_rectangle(mouse_mx, mouse_my, hue_x, hue_y, hue_x + ui(16), hue_y + ui(256))) {
-						hue_dragging = true;
-					} else if(point_in_rectangle(mouse_mx, mouse_my, col_x, col_y, col_x + ui(256), col_y + ui(256))) {
-						value_draggin = true;
-					}
+			if(disp_mode == 0) {
+				var hy = hue_y + ui(hue);
+				draw_sprite_stretched_ext(s_ui_base_white, 0, hue_x - ui(3), hy - ui(6), ui(24), ui(10), make_color_hsv(hue, 255, 255), 1);
+				draw_sprite_stretched_ext(s_ui_base_white, 0, col_x + ui(sat - 6), col_y + ui(256 - val - 6), ui(12), ui(12), current_color, 1);
+			} else if(disp_mode == 1) {
+				var vy = hue_y + ui(256 - val);
+				draw_sprite_stretched_ext(s_ui_base_white, 0, hue_x - ui(3), vy - ui(6), ui(24), ui(10), make_color_hsv(hue, 255, val), 1);
+				draw_sprite_stretched_ext(s_ui_base_white, 0, col_x + ui(hue - 6), col_y + ui(256 - sat - 6), ui(12), ui(12), current_color, 1);
+			}
+			
+			if(mouse_press(mb_left, focus)) {
+				if(point_in_rectangle(mouse_mx, mouse_my, hue_x, hue_y, hue_x + ui(16), hue_y + ui(256))) {
+					area_dragging = true;
+				} else if(point_in_rectangle(mouse_mx, mouse_my, col_x, col_y, col_x + ui(256), col_y + ui(256))) {
+					side_dragging = true;
 				}
 			}
 	
-			if(hue_dragging) {
-				hue = clamp((mouse_my - hue_y) / UI_SCALE, 0, 256);
+			if(area_dragging) {
+				if(disp_mode == 0) {
+					hue = clamp((mouse_my - hue_y) / UI_SCALE, 0, 256);
+				} else if(disp_mode == 1) {
+					val = 256 - clamp((mouse_my - hue_y) / UI_SCALE, 0, 256);
+				}
+				
 				setHSV();
+				if(mouse_release(mb_left))
+					area_dragging  = false;
+			}
+		
+			if(side_dragging) {
+				if(disp_mode == 0) {
+					sat = clamp((mouse_mx - col_x) / UI_SCALE, 0, 256);
+					val = 256 - clamp((mouse_my - col_y) / UI_SCALE, 0, 256);
+				} else if(disp_mode == 1) {
+					hue = clamp((mouse_mx - col_x) / UI_SCALE, 0, 256);
+					sat = 256 - clamp((mouse_my - col_y) / UI_SCALE, 0, 256);	
+				}
+		
+				setHSV();
+				if(mouse_release(mb_left))
+					side_dragging  = false;
+			}
+		#endregion
+		
+		#region type
+			var tx = hue_x + ui(36);
+			var ty = _y + ui(4);
 			
-				if(mouse_check_button_released(mb_left))
-					hue_dragging  = false;
-			}
-		
-			if(value_draggin) {
-				sat     = clamp((mouse_mx - col_x) / UI_SCALE, 0, 256);
-				val     = 256 - clamp((mouse_my - col_y) / UI_SCALE, 0, 256);
-				setHSV();
-		
-				if(mouse_check_button_released(mb_left))
-					value_draggin  = false;
-			}
+			scr_disp.active = focus; scr_disp.hover = hover;
+			scr_disp.draw(tx, ty, ui(190), ui(32), disp_mode, mouse_ui);
 		#endregion
 		
 		#region data
 			var data_x = hue_x + ui(40);
-			var data_y = col_y;
+			var data_y = col_y + ui(40);
 	
 			draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text);
-			draw_text(data_x, data_y + ui(40 * 0 + 17), "Hue");
-			draw_text(data_x, data_y + ui(40 * 1 + 17), "Saturation")
-			draw_text(data_x, data_y + ui(40 * 2 + 17), "Value");
+			draw_text(data_x, data_y + ui(36 * 0 + 15), "H");
+			draw_text(data_x, data_y + ui(36 * 1 + 15), "S")
+			draw_text(data_x, data_y + ui(36 * 2 + 15), "V");
 	
 			tb_hue.active = focus; tb_hue.hover = hover;
 			tb_sat.active = focus; tb_sat.hover = hover;
 			tb_val.active = focus; tb_val.hover = hover;
 	
-			tb_hue.draw(data_x + ui(80), data_y + ui(44 * 0), ui(100), TEXTBOX_HEIGHT, round(color_get_hue(current_color)),			mouse_ui);
-			tb_sat.draw(data_x + ui(80), data_y + ui(44 * 1), ui(100), TEXTBOX_HEIGHT, round(color_get_saturation(current_color)),	mouse_ui);
-			tb_val.draw(data_x + ui(80), data_y + ui(44 * 2), ui(100), TEXTBOX_HEIGHT, round(color_get_value(current_color)),		mouse_ui);
+			tb_hue.draw(data_x + ui(28), data_y + ui(36 * 0), ui(160), ui(30), round(color_get_hue(current_color)),			mouse_ui);
+			tb_sat.draw(data_x + ui(28), data_y + ui(36 * 1), ui(160), ui(30), round(color_get_saturation(current_color)),	mouse_ui);
+			tb_val.draw(data_x + ui(28), data_y + ui(36 * 2), ui(160), ui(30), round(color_get_value(current_color)),		mouse_ui);
 	
-			data_y = data_y + ui(44 * 3 + 8);
+			data_y = data_y + ui(36 * 3 + 8);
 	
 			draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text);
-			draw_text(data_x, data_y + ui(40 * 0 + 17), "Red");
-			draw_text(data_x, data_y + ui(40 * 1 + 17), "Green");
-			draw_text(data_x, data_y + ui(40 * 2 + 17), "Blue");
+			draw_text(data_x, data_y + ui(36 * 0 + 15), "R");
+			draw_text(data_x, data_y + ui(36 * 1 + 15), "G");
+			draw_text(data_x, data_y + ui(36 * 2 + 15), "B");
 			
 			tb_red.active   = focus; tb_red.hover   = hover;
 			tb_green.active = focus; tb_green.hover = hover;
 			tb_blue.active  = focus; tb_blue.hover  = hover;
 			
-			tb_red.draw  (data_x + ui(80), data_y + ui(44 * 0), ui(100), TEXTBOX_HEIGHT, color_get_red(current_color),   mouse_ui);
-			tb_green.draw(data_x + ui(80), data_y + ui(44 * 1), ui(100), TEXTBOX_HEIGHT, color_get_green(current_color), mouse_ui);
-			tb_blue.draw (data_x + ui(80), data_y + ui(44 * 2), ui(100), TEXTBOX_HEIGHT, color_get_blue(current_color),  mouse_ui);
+			tb_red.draw  (data_x + ui(28), data_y + ui(36 * 0), ui(160), ui(30), color_get_red(current_color),   mouse_ui);
+			tb_green.draw(data_x + ui(28), data_y + ui(36 * 1), ui(160), ui(30), color_get_green(current_color), mouse_ui);
+			tb_blue.draw (data_x + ui(28), data_y + ui(36 * 2), ui(160), ui(30), color_get_blue(current_color),  mouse_ui);
 			
 			tb_hex.active  = focus;  tb_hex.hover  = hover;
-			tb_hex.draw(hue_x - ui(128), data_y + ui(140), ui(108), TEXTBOX_HEIGHT, color_get_hex(current_color),  mouse_ui);
+			tb_hex.draw(hue_x - ui(128), col_y + ui(256 + 24), ui(108), TEXTBOX_HEIGHT, color_get_hex(current_color),  mouse_ui);
 		#endregion
 		
 		var cx = col_x + ui(16);

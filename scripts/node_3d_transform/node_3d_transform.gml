@@ -75,7 +75,7 @@ function Node_3D_Transform(_x, _y) : Node_Processor(_x, _y) constructor {
 			if(inputs[| 2].setValue(_rot)) 
 				UNDO_HOLDING = true;
 			
-			if(mouse_check_button_released(mb_left)) {
+			if(mouse_release(mb_left)) {
 				drag_index = -1;
 				UNDO_HOLDING = false;
 			}
@@ -86,7 +86,7 @@ function Node_3D_Transform(_x, _y) : Node_Processor(_x, _y) constructor {
 			if(inputs[| 2].setValue(_rot)) 
 				UNDO_HOLDING = true;
 			
-			if(mouse_check_button_released(mb_left)) {
+			if(mouse_release(mb_left)) {
 				drag_index = -1;
 				UNDO_HOLDING = false;
 			}
@@ -97,7 +97,7 @@ function Node_3D_Transform(_x, _y) : Node_Processor(_x, _y) constructor {
 			if(inputs[| 2].setValue(_rot)) 
 				UNDO_HOLDING = true;
 			
-			if(mouse_check_button_released(mb_left)) {
+			if(mouse_release(mb_left)) {
 				drag_index = -1;
 				UNDO_HOLDING = false;
 			}
@@ -105,7 +105,7 @@ function Node_3D_Transform(_x, _y) : Node_Processor(_x, _y) constructor {
 			if(distance_to_line(_mx, _my, cx - 64, cy, cx + 64, cy) < 16) {
 				draw_set_color(COLORS.axis[0]);
 				draw_line_width(cx - 64, cy, cx + 64, cy, 3);
-				if(active && mouse_check_button_pressed(mb_left)) {
+				if(mouse_press(mb_left, active)) {
 					drag_index	= 0;
 					drag_sv		= _rot[1];
 					drag_mx		= _mx;
@@ -114,7 +114,7 @@ function Node_3D_Transform(_x, _y) : Node_Processor(_x, _y) constructor {
 			} else if(distance_to_line(_mx, _my, cx, cy - 64, cx, cy + 64) < 16) {
 				draw_set_color(COLORS.axis[1]);
 				draw_line_width(cx, cy - 64, cx, cy + 64, 3);
-				if(active && mouse_check_button_pressed(mb_left)) {
+				if(mouse_press(mb_left, active)) {
 					drag_index	= 1;
 					drag_sv		= _rot[0];
 					drag_mx		= _mx;
@@ -123,7 +123,7 @@ function Node_3D_Transform(_x, _y) : Node_Processor(_x, _y) constructor {
 			} else if(abs(point_distance(_mx, _my, cx, cy) - 64) < 8) {
 				draw_set_color(COLORS.axis[2]);
 				draw_circle_border(cx, cy, 64, 3);
-				if(active && mouse_check_button_pressed(mb_left)) {
+				if(mouse_press(mb_left, active)) {
 					drag_index	= 2;
 					drag_sv		= _rot[2];
 					drag_mx		= _mx;
