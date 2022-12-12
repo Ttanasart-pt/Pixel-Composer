@@ -28,6 +28,7 @@ function Node_Shape(_x, _y) : Node_Processor(_x, _y) constructor {
 	uniform_aa		= shader_get_uniform(shader, "aa");
 	uniform_dim		= shader_get_uniform(shader, "dimension");
 	uniform_bgCol	= shader_get_uniform(shader, "bgColor");
+	uniform_drawDF	= shader_get_uniform(shader, "drawDF");
 	
 	inputs[| 0] = nodeValue(0, "Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, def_surf_size2 )
 		.setDisplay(VALUE_DISPLAY.vector);
@@ -62,16 +63,18 @@ function Node_Shape(_x, _y) : Node_Processor(_x, _y) constructor {
 	
 	inputs[| 11] = nodeValue(11, "Background color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_black);
 	
+	inputs[| 12] = nodeValue(12, "Distance field", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	
 	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
 	
 	input_display_list = [
 		["Surface", false], 0, 6, 
 		["Shape",	false], 2, 3, 9, 4, 5, 7, 8, 
-		["Render",	true],	10, 1, 11
+		["Render",	true],	10, 1, 11, 12
 	];
 	
-	static drawOverlay = function(_active, _x, _y, _s, _mx, _my) {
-		inputs[| 3].drawOverlay(_active, _x, _y, _s, _mx, _my);
+	static drawOverlay = function(active, _x, _y, _s, _mx, _my) {
+		inputs[| 3].drawOverlay(active, _x, _y, _s, _mx, _my);
 	}
 	
 	static process_data = function(_outSurf, _data, _output_index) {
@@ -82,6 +85,7 @@ function Node_Shape(_x, _y) : Node_Processor(_x, _y) constructor {
 		var _aa		= _data[6];
 		var _corner = _data[9];
 		var _color  = _data[10];
+		var _df		= _data[12];
 		var _bgcol  = _bg? colToVec4(_data[11]) : [0, 0, 0, 0];
 		
 		inputs[| 11].setVisible(_bg);
@@ -141,7 +145,7 @@ function Node_Shape(_x, _y) : Node_Processor(_x, _y) constructor {
 					shader_set_uniform_f_array(uniform_arange, [ sin(range), cos(range) ] );
 					shader_set_uniform_f(uniform_inner, _data[5] / 2);
 					break;
-				case NODE_SHAPE_TYPE.capsule :	
+				case NODE_SHAPE_TYPE.capsule :
 					inputs[| 4].setVisible(false);
 					inputs[| 5].setVisible(false);
 					inputs[| 7].setVisible(false);
@@ -154,6 +158,7 @@ function Node_Shape(_x, _y) : Node_Processor(_x, _y) constructor {
 			shader_set_uniform_i(uniform_shape, _shape);
 			shader_set_uniform_f_array(uniform_bgCol, _bgcol);
 			shader_set_uniform_i(uniform_aa, _aa);
+			shader_set_uniform_i(uniform_drawDF, _df);
 			shader_set_uniform_f(uniform_corner, _corner);
 					
 			shader_set_uniform_f_array(uniform_cent, [ _posit[0] / _dim[0], _posit[1] / _dim[1] ]);

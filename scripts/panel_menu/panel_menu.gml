@@ -62,7 +62,7 @@ function Panel_Menu() : PanelContent() constructor {
 		["Rendering", [
 			[ "Render all nodes", function() { 
 				for(var i = 0; i < ds_list_size(NODES); i++) 
-					NODES[| i].setRenderStatus(false);
+					NODES[| i].triggerRender();
 				UPDATE |= RENDER_TYPE.full; 
 			}, ["", "Render all"] ]
 		]],

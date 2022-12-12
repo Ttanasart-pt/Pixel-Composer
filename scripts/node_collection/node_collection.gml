@@ -9,6 +9,27 @@ function Node_Collection(_x,  _y) : Node(_x,  _y) constructor {
 	custom_input_index = 0;
 	custom_output_index = 0;
 	
+	static setRenderStatus = function(result) {
+		rendered = result;
+		
+		if(result) {
+			var siz = ds_list_size(outputs);
+			for( var i = custom_output_index; i < siz; i++ ) {
+				var _o = outputs[| i];
+				if(_o.node.rendered) continue;
+						
+				rendered = false;
+				break;
+			}
+		}
+			
+		if(!result && group != -1) 
+			group.setRenderStatus(result);
+		postSetRenderStatus(result);
+	}
+	
+	static postSetRenderStatus = function(result) {}
+	
 	function add(_node) {
 		ds_list_add(nodes, _node);
 		var list = _node.group == -1? PANEL_GRAPH.nodes_list : _node.group.nodes;
@@ -107,7 +128,7 @@ function Node_Collection(_x,  _y) : Node(_x,  _y) constructor {
 	
 	static preConnect = function() {
 		sortIO();
-		deserialize(keyframe_scale);
+		deserialize(load_map, load_scale);
 	}
 	
 	static sortIO = function() {
@@ -164,20 +185,9 @@ function Node_Collection(_x,  _y) : Node(_x,  _y) constructor {
 	
 	static resetRenderStatus = function() {
 		for( var i = 0; i < ds_list_size(nodes); i++ ) {
-			nodes[| i].setRenderStatus(false);
+			nodes[| i].setUpdate();
 			if(variable_struct_exists(nodes[| i], "nodes"))
 				nodes[| i].resetRenderStatus();
-		}
-	}
-	
-	static collectionDeserialize = function(scale = false) {
-		sortIO();
-		var _inputs = load_map[? "inputs"];
-		if(!ds_list_empty(_inputs) && !ds_list_empty(inputs)) {
-			var _siz = min(ds_list_size(_inputs), ds_list_size(inputs));
-			for(var i = 0; i < _siz; i++) {
-				inputs[| i].deserialize(_inputs[| i], scale);
-			}
 		}
 	}
 }

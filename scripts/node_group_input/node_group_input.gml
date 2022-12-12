@@ -76,6 +76,8 @@ function Node_Group_Input(_x, _y, _group) : Node(_x, _y) constructor {
 				
 			case VALUE_DISPLAY.slider_range :
 				inParent.setDisplay(_dtype, [_range[0], _range[1], 0.01]);
+				break;
+				
 			case VALUE_DISPLAY.rotation_range :
 				if(!is_array(_val) || array_length(_val) != 2) 
 					inParent.animator = new valueAnimator([0, 0], inParent);
@@ -130,9 +132,8 @@ function Node_Group_Input(_x, _y, _group) : Node(_x, _y) constructor {
 				break;
 		}
 		
-		if(index == 5) {
+		if(index == 5)
 			group.sortIO();
-		}
 	}
 	
 	static createInput = function(override_order = true) {

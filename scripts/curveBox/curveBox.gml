@@ -40,7 +40,8 @@ function curveBox(_onModify) constructor {
 		
 			if(node_dragging != -1) {
 				var _my = -((_m[1] - _y) / curve_h * drag_range - drag_max);
-			
+				_my = clamp(_my, 0, 1);
+				
 				_data[node_dragging] = _my;
 			
 				if(mouse_release(mb_left)) {

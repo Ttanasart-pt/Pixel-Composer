@@ -5,10 +5,11 @@
 
 #region pref map
 	PREF_MAP[? "ui_framerate"] = 60;
-	PREF_MAP[? "part_max_amount"] = 256;
 	PREF_MAP[? "path_resolution"] = 32;
 	
-	PREF_MAP[? "double_click_delay"] = 12;
+	PREF_MAP[? "double_click_delay"] = 0.25;
+	PREF_MAP[? "keyboard_repeat_start"] = 0.50;
+	PREF_MAP[? "keyboard_repeat_speed"] = 0.10;
 	
 	PREF_MAP[? "show_splash"] = true;
 	
@@ -30,7 +31,8 @@
 	PREF_MAP[? "node_show_render_status"] = false;
 	PREF_MAP[? "node_show_time"] = true;
 	
-	PREF_MAP[? "shape_separation_max"] = 32;
+	PREF_MAP[? "part_max_amount"] = 1024;
+	PREF_MAP[? "shape_separation_max"] = 256;
 	PREF_MAP[? "level_resolution"] = 64;
 	PREF_MAP[? "level_max_sampling"] = 32;
 	PREF_MAP[? "verlet_iteration"] = 4;
@@ -248,6 +250,9 @@
 			ww = PREF_MAP[? "window_width"];
 			hh = PREF_MAP[? "window_height"];
 		}
+		
+		if(PREF_MAP[? "double_click_delay"] > 1)
+			PREF_MAP[? "double_click_delay"] /= 60;
 		
 		window_set_size(ww, hh);
 		window_set_position(display_get_width() / 2 - ww / 2, display_get_height() / 2 - hh / 2);

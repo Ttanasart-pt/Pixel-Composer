@@ -69,9 +69,9 @@ function Node_Math(_x, _y) : Node(_x, _y) constructor {
 			case MATH_OPERATOR.add :		return a + b;
 			case MATH_OPERATOR.subtract :	return a - b;
 			case MATH_OPERATOR.multiply :	return a * b;
-			case MATH_OPERATOR.divide :		return a / b;
+			case MATH_OPERATOR.divide :		return b == 0? 0 : a / b;
 			case MATH_OPERATOR.power :		return power(a, b);
-			case MATH_OPERATOR.root :		return power(a, 1 / b);
+			case MATH_OPERATOR.root :		return b == 0? 0 : power(a, 1 / b);
 			
 			case MATH_OPERATOR.sin :		return sin(degtorad(a)) * b;
 			case MATH_OPERATOR.cos :		return cos(degtorad(a)) * b;

@@ -235,6 +235,13 @@
         "yorigin": 24,
         "slice": null
     },
+    "visible": {
+        "path": "./icon/s_visible.png",
+        "subimages": 2,
+        "xorigin": 24,
+        "yorigin": 24,
+        "slice": null
+    },
     "junc_visible": {
         "path": "./icon/s_junc_visible_strip2.png",
         "subimages": 2,
@@ -1025,6 +1032,20 @@
     },
     "path_tools_anchor": {
         "path": "./tool/s_path_tools_anchor.png",
+        "subimages": 1,
+        "xorigin": 24,
+        "yorigin": 24,
+        "slice": null
+    },
+    "path_tools_circle": {
+        "path": "./tool/s_path_tools_circle.png",
+        "subimages": 1,
+        "xorigin": 24,
+        "yorigin": 24,
+        "slice": null
+    },
+    "path_tools_rectangle": {
+        "path": "./tool/s_path_tools_rectangle.png",
         "subimages": 1,
         "xorigin": 24,
         "yorigin": 24,

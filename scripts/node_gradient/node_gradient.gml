@@ -52,8 +52,8 @@ function Node_Gradient(_x, _y) : Node(_x, _y) constructor {
 		["Shape",		false], 2, 3, 4, 6
 	];
 	
-	static drawOverlay = function(_active, _x, _y, _s, _mx, _my) {
-		inputs[| 6].drawOverlay(_active, _x, _y, _s, _mx, _my);
+	static drawOverlay = function(active, _x, _y, _s, _mx, _my) {
+		inputs[| 6].drawOverlay(active, _x, _y, _s, _mx, _my);
 	}
 	
 	static update = function() {

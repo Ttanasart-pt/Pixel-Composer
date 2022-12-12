@@ -32,7 +32,7 @@ function Node_9Slice(_x, _y) : Node_Processor(_x, _y) constructor {
 		}
 	}
 	
-	static drawOverlay = function(_active, _x, _y, _s, _mx, _my) {
+	static drawOverlay = function(active, _x, _y, _s, _mx, _my) {
 		var _dim		= inputs[| 1].getValue();
 		var _splice		= inputs[| 2].getValue();
 		
@@ -69,10 +69,10 @@ function Node_9Slice(_x, _y) : Node_Processor(_x, _y) constructor {
 			}
 		}
 		
-		if(!inputs[| 1].drawOverlay(_active, _x, _y, _s, _mx, _my)) {
+		if(!inputs[| 1].drawOverlay(active, _x, _y, _s, _mx, _my)) {
 			if(distance_to_line_infinite(_mx, _my, sp_r, -hh, sp_r, hh) < 12) {
 				draw_line_width(sp_r, -hh, sp_r, hh, 3);
-				if(_mouse_press(mb_left, active)) {
+				if(mouse_press(mb_left, active)) {
 					drag_side = 0;
 					drag_mx   = _mx;
 					drag_my   = _my;
@@ -80,7 +80,7 @@ function Node_9Slice(_x, _y) : Node_Processor(_x, _y) constructor {
 				}
 			} else if(distance_to_line_infinite(_mx, _my, -ww, sp_t, ww, sp_t) < 12) {
 				draw_line_width(-ww, sp_t, ww, sp_t, 3);
-				if(_mouse_press(mb_left, active)) {
+				if(mouse_press(mb_left, active)) {
 					drag_side = 1;
 					drag_mx   = _mx;
 					drag_my   = _my;
@@ -88,7 +88,7 @@ function Node_9Slice(_x, _y) : Node_Processor(_x, _y) constructor {
 				}
 			} else if(distance_to_line_infinite(_mx, _my, sp_l, -hh, sp_l, hh) < 12) {
 				draw_line_width(sp_l, -hh, sp_l, hh, 3);
-				if(_mouse_press(mb_left, active)) {
+				if(mouse_press(mb_left, active)) {
 					drag_side = 2;
 					drag_mx   = _mx;
 					drag_my   = _my;
@@ -96,7 +96,7 @@ function Node_9Slice(_x, _y) : Node_Processor(_x, _y) constructor {
 				}
 			} else if(distance_to_line_infinite(_mx, _my, -ww, sp_b, ww, sp_b) < 12) {
 				draw_line_width(-ww, sp_b, ww, sp_b, 3);
-				if(_mouse_press(mb_left, active)) {
+				if(mouse_press(mb_left, active)) {
 					drag_side = 3;
 					drag_mx   = _mx;
 					drag_my   = _my;

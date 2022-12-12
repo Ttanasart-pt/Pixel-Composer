@@ -233,7 +233,7 @@ function Node_Composite(_x, _y) : Node_Processor(_x, _y) constructor {
 			createNewSurface();
 	}
 	
-	static drawOverlay = function(_active, _x, _y, _s, _mx, _my) {
+	static drawOverlay = function(active, _x, _y, _s, _mx, _my) {
 		var pad = inputs[| 0].getValue();
 		var ww  = overlay_w;
 		var hh  = overlay_h;
@@ -366,7 +366,7 @@ function Node_Composite(_x, _y) : Node_Processor(_x, _y) constructor {
 				draw_set_color(COLORS._main_accent);
 				draw_rectangle_border(_dx0, _dy0, _dx1, _dy1, 2);
 				
-				if(_mouse_press(mb_left, active)) {
+				if(mouse_press(mb_left, active)) {
 					surf_dragging = hovering;
 					input_dragging = hovering + 1;
 					drag_type = hovering_type;
@@ -376,7 +376,7 @@ function Node_Composite(_x, _y) : Node_Processor(_x, _y) constructor {
 					dragging_my = _my;
 				}
 			} else if(hovering_type == 1) { //rot
-				if(_mouse_press(mb_left, active)) {
+				if(mouse_press(mb_left, active)) {
 					surf_dragging = hovering;
 					input_dragging = hovering + 2;
 					drag_type = hovering_type;
@@ -387,7 +387,7 @@ function Node_Composite(_x, _y) : Node_Processor(_x, _y) constructor {
 					dragging_mx = point_direction(rot_anc_x, rot_anc_y, _mx, _my);
 				}
 			} else if(hovering_type == 2) { //sca
-				if(_mouse_press(mb_left, active)) {
+				if(mouse_press(mb_left, active)) {
 					surf_dragging = hovering;
 					input_dragging = hovering + 3;
 					drag_type = hovering_type;

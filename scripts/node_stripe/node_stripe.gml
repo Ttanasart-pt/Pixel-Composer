@@ -50,13 +50,13 @@ function Node_Stripe(_x, _y) : Node(_x, _y) constructor {
 		["Render",	false], 3, 6, 7
 	];
 	
-	static drawOverlay = function(_active, _x, _y, _s, _mx, _my) {
+	static drawOverlay = function(active, _x, _y, _s, _mx, _my) {
 		var pos = inputs[| 4].getValue();
 		var px = _x + pos[0] * _s;
 		var py = _y + pos[1] * _s;
 		
-		inputs[| 4].drawOverlay(_active, _x, _y, _s, _mx, _my);
-		inputs[| 2].drawOverlay(_active, px, py, _s, _mx, _my);
+		inputs[| 4].drawOverlay(active, _x, _y, _s, _mx, _my);
+		inputs[| 2].drawOverlay(active, px, py, _s, _mx, _my);
 	}
 	
 	static update = function() {

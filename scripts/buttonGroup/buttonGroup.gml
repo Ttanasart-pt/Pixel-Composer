@@ -15,7 +15,7 @@ function buttonGroupClass(_data, _onClick) constructor {
 	
 	sb_small = new scrollBox(data, _onClick);
 	
-	static draw = function(_x, _y, _w, _h, _seleting, _m, _rx = 0, _ry = 0) {
+	static draw = function(_x, _y, _w, _h, _selecting, _m, _rx = 0, _ry = 0) {
 		var amo = array_length(data);
 		var ww  = _w / amo;
 		
@@ -34,7 +34,7 @@ function buttonGroupClass(_data, _onClick) constructor {
 				var bx  = _x + ww * i;
 				var spr = i == 0 ? THEME.button_left : (i == amo - 1? THEME.button_right : THEME.button_middle);
 			
-				if(_seleting == i) {
+				if(_selecting == i) {
 					draw_sprite_stretched(spr, 2, bx, _y, ww, _h);	
 				} else if(buttons[i].draw(bx, _y, ww, _h, _m, spr)) {
 					onClick(i);	
@@ -50,7 +50,7 @@ function buttonGroupClass(_data, _onClick) constructor {
 		} else {
 			sb_small.hover = hover;
 			sb_small.active = active;
-			sb_small.draw(_x, _y, _w, _h, _seleting, _m, _rx, _ry);
+			sb_small.draw(_x, _y, _w, _h, data[_selecting], _m, _rx, _ry);
 		}
 		
 		hover  = false;

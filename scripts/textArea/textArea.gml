@@ -76,85 +76,87 @@ function textArea(_input, _onModify) constructor {
 	
 	static editText = function() {
 		#region text editor
-			if(keyboard_check_released(ord("V")) && keyboard_check(vk_control)) {
-				keyboard_string = clipboard_get_text();
-				cut_line();
+			if(keyboard_check(vk_control) && keyboard_check_pressed(ord("A"))) {
+				cursor_select	= 0;
+				cursor			= string_length(_input_text);
+			} else if(keyboard_check(vk_control) && (keyboard_check_pressed(ord("C")) || keyboard_check_pressed(ord("X")))) {
+				if(cursor_select != -1) {
+					var minc = min(cursor, cursor_select);
+					var maxc = max(cursor, cursor_select);
+					clipboard_set_text(string_copy(_input_text, minc, maxc - minc));
+				}
+			} else {
+				if(keyboard_check(vk_control) && keyboard_check_pressed(ord("V")))
+					KEYBOARD_STRING = clipboard_get_text();
+					
+				if(keyboard_check_pressed(vk_escape) || keyboard_check_pressed(vk_enter)) {
+				} else if(keyboard_check_pressed(vk_backspace)) {
+					if(cursor_select == -1) {
+						var str_before	= string_copy(_input_text, 1, cursor - 1);
+						var str_after	= string_copy(_input_text, cursor + 1, string_length(_input_text) - cursor);
+						
+						_input_text		= str_before + str_after;
+						cut_line();
+					} else {
+						var minc = min(cursor, cursor_select);
+						var maxc = max(cursor, cursor_select);
+						
+						var str_before	= string_copy(_input_text, 1, minc);
+						var str_after	= string_copy(_input_text, maxc + 1, string_length(_input_text) - maxc);
+						
+						cursor = minc + 1;
+						_input_text	= str_before + str_after;
+						cut_line();
+					}
+					
+					cursor_select	= -1;
+					move_cursor(-1);
+				} else if(keyboard_check_pressed(vk_delete) || (keyboard_check_pressed(ord("X")) && keyboard_check(vk_control) && cursor_select != -1)) {
+					if(cursor_select == -1) {
+						var str_before	= string_copy(_input_text, 1, cursor);
+						var str_after	= string_copy(_input_text, cursor + 2, string_length(_input_text) - cursor - 1);
+						
+						_input_text		= str_before + str_after;
+						cut_line();
+					} else {
+						var minc = min(cursor, cursor_select);
+						var maxc = max(cursor, cursor_select);
+						
+						var str_before	= string_copy(_input_text, 1, minc);
+						var str_after	= string_copy(_input_text, maxc + 1, string_length(_input_text) - maxc);
+						
+						cursor = minc;
+						_input_text		= str_before + str_after;
+						cut_line();
+					}
+					cursor_select	= -1;
+				} else if(KEYBOARD_STRING != "") {
+					var ch			= KEYBOARD_STRING;
+					
+					if(cursor_select == -1) {
+						var str_before	= string_copy(_input_text, 1, cursor);
+						var str_after	= string_copy(_input_text, cursor + 1, string_length(_input_text) - cursor);
+						
+						_input_text		= str_before + ch + str_after;
+						cut_line();
+						move_cursor(string_length(ch));
+					} else {
+						var minc = min(cursor, cursor_select);
+						var maxc = max(cursor, cursor_select);
+						
+						var str_before	= string_copy(_input_text, 1, minc);
+						var str_after	= string_copy(_input_text, maxc + 1, string_length(_input_text) - maxc);
+						
+						_input_text		= str_before + ch + str_after;
+						cut_line();
+						cursor = minc + string_length(ch);
+					}
+					
+					cursor_select	= -1;
+				}
 			}
 			
-			if(keyboard_check(vk_control)) {
-				if(keyboard_check_pressed(ord("A"))) {
-					cursor_select	= 0;
-					cursor			= string_length(_input_text);
-				}
-			} 
-			
-			if(keyboard_check_pressed(vk_escape) || keyboard_check_pressed(vk_enter)) {
-			} else if(keyboard_check_pressed(vk_backspace)) {
-				if(cursor_select == -1) {
-					var str_before	= string_copy(_input_text, 1, cursor - 1);
-					var str_after	= string_copy(_input_text, cursor + 1, string_length(_input_text) - cursor);
-						
-					_input_text		= str_before + str_after;
-					cut_line();
-				} else {
-					var minc = min(cursor, cursor_select);
-					var maxc = max(cursor, cursor_select);
-						
-					var str_before	= string_copy(_input_text, 1, minc);
-					var str_after	= string_copy(_input_text, maxc + 1, string_length(_input_text) - maxc);
-						
-					cursor = minc + 1;
-					_input_text	= str_before + str_after;
-					cut_line();
-				}
-					
-				cursor_select	= -1;
-				move_cursor(-1);
-			} else if(keyboard_check_pressed(vk_delete)) {
-				if(cursor_select == -1) {
-					var str_before	= string_copy(_input_text, 1, cursor);
-					var str_after	= string_copy(_input_text, cursor + 2, string_length(_input_text) - cursor - 1);
-						
-					_input_text		= str_before + str_after;
-					cut_line();
-				} else {
-					var minc = min(cursor, cursor_select);
-					var maxc = max(cursor, cursor_select);
-						
-					var str_before	= string_copy(_input_text, 1, minc);
-					var str_after	= string_copy(_input_text, maxc + 1, string_length(_input_text) - maxc);
-						
-					cursor = minc;
-					_input_text		= str_before + str_after;
-					cut_line();
-				}
-				cursor_select	= -1;
-			} else if(keyboard_string != "") {
-				var ch			= keyboard_string;
-					
-				if(cursor_select == -1) {
-					var str_before	= string_copy(_input_text, 1, cursor);
-					var str_after	= string_copy(_input_text, cursor + 1, string_length(_input_text) - cursor);
-						
-					_input_text		= str_before + ch + str_after;
-					cut_line();
-					move_cursor(string_length(ch));
-				} else {
-					var minc = min(cursor, cursor_select);
-					var maxc = max(cursor, cursor_select);
-						
-					var str_before	= string_copy(_input_text, 1, minc);
-					var str_after	= string_copy(_input_text, maxc + 1, string_length(_input_text) - maxc);
-						
-					_input_text		= str_before + ch + str_after;
-					cut_line();
-					cursor = minc + string_length(ch);
-				}
-					
-				cursor_select	= -1;
-			}
-			
-			keyboard_string = "";
+			KEYBOARD_STRING = "";
 			keyboard_lastkey = -1;
 		#endregion
 		
@@ -435,7 +437,7 @@ function textArea(_input, _onModify) constructor {
 				if(mouse_press(mb_left, active)) {
 					TEXTBOX_ACTIVE  = self;
 					click_block = 1;
-					keyboard_string = "";
+					KEYBOARD_STRING = "";
 					keyboard_lastkey = -1;
 					
 					_input_text		= _text;

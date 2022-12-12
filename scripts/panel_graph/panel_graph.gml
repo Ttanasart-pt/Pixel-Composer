@@ -153,6 +153,8 @@ function Panel_Graph() : PanelContent() constructor {
 			ds_list_add(nodes_select_list, nodes_list[| i]);	
 		}
 	});
+	addHotkey("Graph", "Duplicate",		"D", MOD_KEY.ctrl,		function() { doDuplicate(); });
+	
 	addHotkey("Graph", "Toggle grid",	"G", MOD_KEY.none,		function() { show_grid = !show_grid; });
 	
 	addHotkey("Graph", "Export",	"E", MOD_KEY.ctrl,	function() { setCurrentExport(); });
@@ -316,6 +318,7 @@ function Panel_Graph() : PanelContent() constructor {
 		
 		#region hover
 			node_hovering = noone;
+			if(pHOVER)
 			for(var i = 0; i < ds_list_size(nodes_list); i++) {
 				var n = nodes_list[| i];
 				if(n.pointIn(gr_x, gr_y, mx, my, graph_s))
@@ -392,6 +395,10 @@ function Panel_Graph() : PanelContent() constructor {
 						[ "Delete and cut connection", function() {
 							doDelete(false);
 						}, ["Graph", "Delete (break)"] ]);
+					array_push(menu,  
+						[ "Duplicate", function() {
+							doDuplicate();
+						}, ["Graph", "Duplicate"] ]);
 					
 					array_push(menu, -1);
 					array_push(menu, [ "Add transform", addNodeTransform, ["Graph", "Transform node"] ]);
@@ -549,10 +556,18 @@ function Panel_Graph() : PanelContent() constructor {
 					} else if(nx != node_drag_ox || ny != node_drag_oy) {
 						var dx = nx - node_drag_ox;
 						var dy = ny - node_drag_oy;
-					
+						
 						for(var i = 0; i < ds_list_size(nodes_select_list); i++) {
 							var _node = nodes_select_list[| i];
-							_node.move(_node.x + dx, _node.y + dy);
+							var _nx = _node.x + dx;
+							var _ny = _node.y + dy;
+							
+							if(!keyboard_check(vk_control) && node_drag_snap) {
+								_nx = round(_nx / graph_line_s) * graph_line_s;
+								_ny = round(_ny / graph_line_s) * graph_line_s;
+							}
+							
+							_node.move(_nx, _ny);
 						}
 					
 						node_drag_ox = nx;
@@ -627,6 +642,48 @@ function Panel_Graph() : PanelContent() constructor {
 				drag_locking = false;
 			}
 		#endregion
+	}
+	
+	function doDuplicate() {
+		if(ds_list_empty(nodes_select_list)) {
+			if(node_focus == noone) return;
+			node_dragging = node_focus.clone();
+			node_drag_mx  = node_dragging.x;
+			node_drag_my  = node_dragging.y;
+			node_drag_sx  = node_dragging.x;
+			node_drag_sy  = node_dragging.y;
+				
+			node_drag_ox  = -1;
+			node_drag_oy  = -1;
+			return;
+		}
+		
+		var dups = ds_list_create();
+		ds_map_clear(APPEND_MAP);
+		
+		for(var i = 0; i < ds_list_size(nodes_select_list); i++) {
+			var _node = nodes_select_list[| i];
+			var _cnode = _node.clone();
+			ds_list_add(dups, _cnode);
+			
+			APPEND_MAP[? _node.node_id] = _cnode.node_id;
+		}
+		
+		APPENDING = true;
+		for(var i = 0; i < ds_list_size(dups); i++) {
+			var _node = dups[| i];
+			_node.connect();
+		}
+		APPENDING = false;
+		
+		ds_list_destroy(nodes_select_list);
+		nodes_select_list = dups;
+		
+		node_dragging = nodes_select_list[| 0];
+		node_drag_mx  = node_dragging.x;
+		node_drag_my  = node_dragging.y;
+		node_drag_sx  = node_dragging.x;
+		node_drag_sy  = node_dragging.y;
 	}
 	
 	function doBlend() {
@@ -1032,9 +1089,9 @@ function Panel_Graph() : PanelContent() constructor {
 		minimap_w = min(minimap_w, w - ui(16));
 		minimap_h = min(minimap_h, h - ui(16) - toolbar_height);
 		
-		if(point_in_rectangle(mx, my, mx0, my0, mx1, my1))
+		if(pHOVER && point_in_rectangle(mx, my, mx0, my0, mx1, my1))
 			mouse_on_graph = false;
-		var hover = pHOVER && point_in_rectangle(mx, my, mx0, my0, mx1, my1) && !point_in_rectangle(mx, my, mx0, my0, mx0 + ui(16), my0 + ui(16)) && !minimap_dragging;
+		var hover = mouse_on_graph && !point_in_rectangle(mx, my, mx0, my0, mx0 + ui(16), my0 + ui(16)) && !minimap_dragging;
 		
 		if(!is_surface(minimap_surface) || surface_get_width(minimap_surface) != minimap_w || surface_get_height(minimap_surface) != minimap_h) {
 			minimap_surface = surface_create_valid(minimap_w, minimap_h);

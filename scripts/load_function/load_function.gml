@@ -107,21 +107,12 @@ function LOAD_PATH(path, readonly = false) {
 	}
 	
 	try {
-		for(var i = 0; i < ds_list_size(create_list); i++) {
-			if(!variable_struct_exists(create_list[| i], "collectionDeserialize")) continue;
-			create_list[| i].collectionDeserialize();
-		}
-	} catch(e) {
-		log_warning("LOAD, deserialize", e.longMessage);
-	}
-	
-	try {
 		for(var i = 0; i < ds_list_size(create_list); i++)
 			create_list[| i].preConnect();
 		for(var i = 0; i < ds_list_size(create_list); i++)
 			create_list[| i].connect();
 		for(var i = 0; i < ds_list_size(create_list); i++)
-		create_list[| i].postConnect();
+			create_list[| i].postConnect();
 	} catch(e) {
 		log_warning("LOAD, connect", e.longMessage);
 	}

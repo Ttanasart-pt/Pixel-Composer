@@ -1,16 +1,21 @@
 globalvar BLEND_TYPES;
-BLEND_TYPES = [ "Normal", "Add", "Subtract", "Multiply", "Multiply keep Alpha", "Screen", "Screen keep Alpha", "Maximum", "Minimum" ];
+BLEND_TYPES = [ "Normal", "Add", "Subtract", "Subtract keep alpha", "Multiply", "Multiply keep Alpha", "Screen", "Screen keep Alpha", "Contrast", "Overlay", "Maximum", "Minimum" ];
 
 enum BLEND_MODE {
 	normal,
 	add,
+	
 	subtract,
+	subtract_alpha,
 	
 	multiply,
 	multiply_alpha,
 	
 	screen,
 	screen_alpha,
+	
+	contrast,
+	overlay,
 	
 	maxx,
 	minn,
@@ -25,10 +30,13 @@ function draw_surface_blend(background, foreground, blend, alpha, _mask = 0, til
 		case BLEND_MODE.normal :			sh = sh_blend_normal			break;
 		case BLEND_MODE.add	:				sh = sh_blend_add;				break;
 		case BLEND_MODE.subtract :			sh = sh_blend_subtract;			break;
+		case BLEND_MODE.subtract_alpha :	sh = sh_blend_subtract_alpha;	break;
 		case BLEND_MODE.multiply :			sh = sh_blend_multiply;			break;
 		case BLEND_MODE.multiply_alpha :	sh = sh_blend_multiply_alpha;	break;
 		case BLEND_MODE.screen :			sh = sh_blend_screen;			break;
 		case BLEND_MODE.screen_alpha :		sh = sh_blend_screen_alpha;		break;
+		case BLEND_MODE.contrast :			sh = sh_blend_contrast;			break;
+		case BLEND_MODE.overlay :			sh = sh_blend_overlay;			break;
 		case BLEND_MODE.maxx :				sh = sh_blend_max;				break;
 		case BLEND_MODE.minn :				sh = sh_blend_min;				break;
 	}

@@ -67,11 +67,13 @@ function Node_Frame(_x, _y) : Node(_x, _y) constructor {
 			active_draw_index = -1;
 		}
 		
-		var _re_x = (x + w - 4) * _s + _x;
-		var _re_y = (y + h - 4) * _s + _y;
-		draw_sprite_ext(THEME.node_resize, 0, _re_x, _re_y, 1, 1, 0, c_white, 0.5);
-		if(!name_hover && point_in_rectangle(_mx, _my, _re_x - 16 * _s, _re_y - 16 * _s, _re_x + 4 * _s, _re_y + 4 * _s)) {
-			draw_sprite_ext(THEME.node_resize, 0, _re_x, _re_y, 1, 1, 0, c_white, 1);
+		var x1 = xx + w * _s;
+		var y1 = yy + h * _s;
+		var x0 = xx + w * _s - 16 * _s;
+		var y0 = yy + h * _s - 16 * _s;
+		draw_sprite_ext(THEME.node_resize, 0, x1 - 4 * _s, y1 - 4 * _s, 1, 1, 0, c_white, 0.5);
+		if(!name_hover && point_in_rectangle(_mx, _my, x0, y0, x1, y1)) {
+			draw_sprite_ext(THEME.node_resize, 0, x1 - 4 * _s, y1 - 4 * _s, 1, 1, 0, c_white, 1);
 			PANEL_GRAPH.drag_locking = true;
 			
 			if(mouse_press(mb_left)) {
@@ -86,17 +88,18 @@ function Node_Frame(_x, _y) : Node(_x, _y) constructor {
 	}
 	
 	static pointIn = function(_x, _y, _mx, _my, _s) {
-		var xx = x * _s + _x;
-		var yy = y * _s + _y;
+		var xx = x * _s + _x + w * _s;
+		var yy = y * _s + _y + h * _s;
 		draw_set_font(f_h5);
 		var ww = (string_width(name) + 16) / _s;
 		var hh = (string_height(name) + 16) / _s;
 		
-		var _x0 = max(xx + 16, xx - ww);
-		var _y0 = max(yy + 16, yy - hh);
+		var _x0 = xx - ww;
+		var _y0 = yy - hh;
 		
-		var hover = point_in_rectangle(_mx, _my, _x0, _y0, xx - 32, yy);
+		var hover = point_in_rectangle(_mx, _my, _x0, _y0, xx, yy) && !point_in_rectangle(_mx, _my, xx - 16 * _s, yy - 16 * _s, xx, yy);
 		name_hover = hover;
+		//print(string(_my) + ", " + string(_y0));
 		
 		return hover;
 	}

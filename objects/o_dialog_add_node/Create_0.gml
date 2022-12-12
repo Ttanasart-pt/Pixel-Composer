@@ -255,7 +255,7 @@ event_inherited();
 	search_string = "";
 	search_list = ds_list_create();
 	keyboard_lastchar = "";
-	keyboard_string = "";
+	KEYBOARD_STRING = "";
 	keyboard_lastkey = -1;
 	
 	tb_search = new textBox(TEXTBOX_INPUT.text, function(str) { 

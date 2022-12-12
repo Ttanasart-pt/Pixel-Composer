@@ -8,6 +8,7 @@ uniform int  shape;
 uniform int  bg;
 uniform int  aa;
 uniform int  sides;
+uniform int  drawDF;
 
 uniform float  angle;
 uniform float  inner;
@@ -82,50 +83,37 @@ void main() {
 	float color = 0.;
 	vec2 cen = (v_vTexcoord - center) / scale;
 	float ratio = dimension.x / dimension.y;
+	float d;
 	
 	if(shape == 0) {
 		vec2 cen = v_vTexcoord - center;
-		
-		if(abs(cen.x) < scale.x && abs(cen.y) < scale.y)
-			color = 1.;
+		vec2 edgeDist = abs(cen) - scale;
+		float odist = length(max(edgeDist, 0.));
+		float idist = min(max(edgeDist.x, edgeDist.y), 0.);
+		d = odist + idist;
 	} else if(shape == 1) {
-		if(aa == 0)
-			color = step(length((v_vTexcoord - center) / scale), 1.);
-		else
-			color = smoothstep(1., 0.95, length((v_vTexcoord - center) / scale));
+		d = length((v_vTexcoord - center) / scale) - 1.;
 	} else if(shape == 2) {
-		float d = sdRegularPolygon( cen, 0.9 - corner, sides, angle );
+		d = sdRegularPolygon( cen, 0.9 - corner, sides, angle );
 		d -= corner;
-		
-		if(aa == 0)
-			color = step(d, 0.);
-		else
-			color = smoothstep(.05, 0., d);
 	} else if(shape == 3) {
-	    float d = sdStar( cen, 0.9 - corner, sides, 2. + inner * (float(sides) - 2.), angle );
+	    d = sdStar( cen, 0.9 - corner, sides, 2. + inner * (float(sides) - 2.), angle );
 		d -= corner;
-		
-		if(aa == 0)
-			color = step(d, 0.);
-		else
-			color = smoothstep(0.05, 0., d);
 	} else if(shape == 4) {
-	    float d = sdArc( cen, vec2(sin(angle), cos(angle)), angle_range, 0.9 - inner, inner );
+	    d = sdArc( cen, vec2(sin(angle), cos(angle)), angle_range, 0.9 - inner, inner );
 		d -= corner;
-		
-		if(aa == 0)
-			color = step(d, 0.);
-		else
-			color = smoothstep(0.05, 0., d);
 	} else if(shape == 5) {
-		float d = sdBox( v_vTexcoord - center, scale - corner);
+		d = sdBox( v_vTexcoord - center, scale - corner);
 		d -= corner;
-		
-		if(aa == 0)
-			color = step(d, 0.0);
-		else
-			color = smoothstep(0.05, 0., d);
 	}
+	
+	d = max(0., min(1., d));
+	if(drawDF == 1)
+		color = 1. - d;
+	else if(aa == 0)
+		color = step(d, 0.0);
+	else
+		color = smoothstep(0.05, 0., d);
 	
 	gl_FragColor = mix(bgColor, v_vColour, color);
 }

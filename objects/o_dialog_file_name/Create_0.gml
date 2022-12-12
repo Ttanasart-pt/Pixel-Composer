@@ -23,5 +23,5 @@ event_inherited();
 	});
 	
 	TEXTBOX_ACTIVE  = tb_name;
-	keyboard_string = "";
+	KEYBOARD_STRING = "";
 #endregion

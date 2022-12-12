@@ -1,7 +1,7 @@
 {
   "resourceType": "GMScript",
   "resourceVersion": "1.0",
-  "name": "node_3D_obj",
+  "name": "node_3d_obj",
   "isDnD": false,
   "isCompatibility": false,
   "parent": {

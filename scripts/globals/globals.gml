@@ -74,6 +74,8 @@
 	#macro sFOCUS FOCUS == self
 	#macro sHOVER HOVER == self
 	
+	#macro DELTA_TIME delta_time / 1000000
+	
 	#region color
 		#macro c_ui_blue_dkblack	$251919
 		#macro c_ui_blue_mdblack	$2c1e1e
@@ -107,6 +109,7 @@
 	
 	#macro PIXEL_SURFACE surface_create_valid(1, 1)
 	#macro print show_debug_message
+	#macro printlog if(log) show_debug_message
 #endregion
 
 #region presets

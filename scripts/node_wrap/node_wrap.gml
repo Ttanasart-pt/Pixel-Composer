@@ -28,7 +28,7 @@ function Node_Warp(_x, _y) : Node_Processor(_x, _y) constructor {
 	drag_my   = 0;
 	drag_sv   = 0;
 	
-	static drawOverlay = function(_active, _x, _y, _s, _mx, _my) {
+	static drawOverlay = function(active, _x, _y, _s, _mx, _my) {
 		if(array_length(current_data) < ds_list_size(inputs)) return;
 		
 		var _surf = outputs[| 0].getValue();
@@ -59,8 +59,6 @@ function Node_Warp(_x, _y) : Node_Processor(_x, _y) constructor {
 		draw_line(tl[0], tl[1], bl[0], bl[1]);
 		draw_line(br[0], br[1], tr[0], tr[1]);
 		draw_line(br[0], br[1], bl[0], bl[1]);
-		
-		var active = _active;
 		
 		if(inputs[| 1].drawOverlay(active, _x, _y, _s, _mx, _my, ww, hh))
 			active = false;

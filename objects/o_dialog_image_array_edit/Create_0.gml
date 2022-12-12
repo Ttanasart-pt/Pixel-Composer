@@ -15,7 +15,7 @@ event_inherited();
 	target = noone;
 	
 	function onResize() {
-		sp_content.resize(dialog_w - ui(150), dialog_h - ui(64));
+		sp_content.resize(dialog_w - ui(150), dialog_h - ui(72));
 	}	
 #endregion
 
@@ -24,7 +24,7 @@ event_inherited();
 	dragging = -1;
 	drag_spr = -1;
 	
-	sp_content = new scrollPane(dialog_w - ui(150), dialog_h - ui(64), function(_y, _m) {
+	sp_content = new scrollPane(dialog_w - ui(150), dialog_h - ui(72), function(_y, _m) {
 		if(!target) return 0;
 		draw_clear_alpha(COLORS.dialog_array_edit_bg, 0);
 		
@@ -58,6 +58,7 @@ event_inherited();
 				draw_sprite_stretched(THEME.ui_panel_bg, 0, xx, yy, ww, hh);
 				
 				if(sHOVER && point_in_rectangle(_m[0], _m[1], xx, yy, xx + ww, yy + hh)) {
+					inb_hover = index;
 					if(dragging == -1)
 						draw_sprite_stretched_ext(THEME.ui_panel_active, 0, xx, yy, ww, hh, COLORS._main_accent, 1);
 					
@@ -70,17 +71,6 @@ event_inherited();
 					}
 				}
 				
-				if(dragging != -1 && dragging != index) {
-					draw_set_color(COLORS.dialog_array_edit_divider);
-					if(sHOVER && point_in_rectangle(_m[0], _m[1], xx - pad / 2, yy, xx + ww / 2, yy + hh)) {
-						inb_hover = index;
-						draw_line_round(xx - pad / 2, yy, xx - pad / 2, yy + hh, 4);
-					} else if(sHOVER && point_in_rectangle(_m[0], _m[1], xx + ww / 2, yy, xx + ww + pad / 2, yy + hh)) {
-						inb_hover = index + 1;
-						draw_line_round(xx + ww + pad / 2, yy, xx + ww + pad / 2, yy + hh, 4);
-					} 
-				}
-				
 				var spr = target.spr[index];
 				var spr_w = sprite_get_width(spr);
 				var spr_h = sprite_get_height(spr);
@@ -88,10 +78,8 @@ event_inherited();
 				var spr_x = xx + ww / 2 - spr_w * spr_s / 2;
 				var spr_y = yy + hh / 2 - spr_h * spr_s / 2;
 				
-				if(dragging == index)
-					draw_sprite_ext(spr, 0, spr_x, spr_y, spr_s, spr_s, 0, c_white, 0.5);
-				else
-					draw_sprite_ext(spr, 0, spr_x, spr_y, spr_s, spr_s, 0, c_white, 1);
+				var aa = dragging == -1? 1 : (dragging == index? 1 : 0.5);
+				draw_sprite_ext(spr, 0, spr_x, spr_y, spr_s, spr_s, 0, c_white, aa);
 				
 				draw_set_text(f_p2, fa_center, fa_top, COLORS._main_text);
 				var path  = arr[index];
@@ -107,15 +95,14 @@ event_inherited();
 			_h += ch;
 		}
 		
-		if(dragging != -1 && mouse_release(mb_left)) {
+		if(dragging != -1) {
 			if(inb_hover != -1) {
-				var val = arr[dragging];
-				array_delete(arr, dragging, 1);
-				array_insert(arr, dragging < inb_hover? inb_hover - 1 : inb_hover, val);
-				target.inputs[| 0].setValue(arr);
-				target.doUpdate();
+				rearrange(dragging, inb_hover);
+				dragging = inb_hover;
 			}
-			dragging = -1;
+			
+			if(mouse_release(mb_left))
+				dragging = -1;
 		}
 		
 		if(menu > -1) {
@@ -131,4 +118,17 @@ event_inherited();
 		
 		return _h;
 	})
+#endregion
+
+#region function
+	function rearrange(oldindex, newindex) {
+		if(oldindex == newindex) return;
+		
+		var arr = target.inputs[| 0].getValue();
+		var val = arr[oldindex];
+		array_delete(arr, oldindex, 1);
+		array_insert(arr, newindex, val);
+		target.inputs[| 0].setValue(arr);
+		target.doUpdate();
+	}
 #endregion

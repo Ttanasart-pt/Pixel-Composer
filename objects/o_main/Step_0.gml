@@ -10,7 +10,9 @@
 
 #region animation
 	if(ANIMATOR.is_playing) {
-		ANIMATOR.real_frame += ANIMATOR.framerate * (delta_time / 1000000);
+		var fr = ANIMATOR.real_frame + ANIMATOR.framerate * (delta_time / 1000000);
+		if(fr <= ANIMATOR.real_frame + 1)
+			ANIMATOR.real_frame = fr;
 		if(round(ANIMATOR.real_frame) >= ANIMATOR.frames_total) {
 			switch(ANIMATOR.playback) {
 				case ANIMATOR_END.loop : 
@@ -26,13 +28,9 @@
 		ANIMATOR.setFrame(ANIMATOR.real_frame);
 	}
 	
-	ANIMATOR.frame_progress = false;
 	var _c = ANIMATOR.current_frame;
 	ANIMATOR.current_frame = round(ANIMATOR.real_frame);
-	
-	if(_c != ANIMATOR.current_frame) {
-		ANIMATOR.frame_progress = true;
-	}
+	ANIMATOR.frame_progress = _c != ANIMATOR.current_frame;
 #endregion
 
 #region hotkey

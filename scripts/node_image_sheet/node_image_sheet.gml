@@ -119,7 +119,7 @@ function Node_Image_Sheet(_x, _y) : Node(_x, _y) constructor {
 			return [_y, _x];
 	}
 	
-	static drawOverlay = function(_active, _x, _y, _s, _mx, _my) {
+	static drawOverlay = function(active, _x, _y, _s, _mx, _my) {
 		if(inputs[| 0].value_from == noone) return;
 		var _inSurf  = inputs[| 0].getValue();
 		
@@ -200,7 +200,7 @@ function Node_Image_Sheet(_x, _y) : Node(_x, _y) constructor {
 				draw_line_width(fr_x1, 0, fr_x1, room_height, 1);
 				draw_line_width(0, fr_y1, room_width, fr_y1, 1);
 					
-				if(mouse_release(mb_left)) {
+				if(mouse_release(mb_left, active)) {
 					bound_drag = 0;
 					
 					if(row && col) {
@@ -210,7 +210,7 @@ function Node_Image_Sheet(_x, _y) : Node(_x, _y) constructor {
 						inputs[| 4].setValue([ bound_sx + _off[0], bound_sy + _off[1]]);
 					}
 				}
-			} else if(mouse_press(mb_left, _active)) {
+			} else if(mouse_press(mb_left, active)) {
 				bound_drag = 1;
 				bound_sx = _ex;
 				bound_sy = _ey;

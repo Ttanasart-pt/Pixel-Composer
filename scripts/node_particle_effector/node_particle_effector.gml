@@ -61,8 +61,8 @@ function Node_Particle_Effector(_x, _y) : Node(_x, _y) constructor {
 	
 	current_data = [];
 	
-	static drawOverlay = function(_active, _x, _y, _s, _mx, _my) {
-		inputs[| 2].drawOverlay(_active, _x, _y, _s, _mx, _my);
+	static drawOverlay = function(active, _x, _y, _s, _mx, _my) {
+		inputs[| 2].drawOverlay(active, _x, _y, _s, _mx, _my);
 		
 		var parts = inputs[| 0].getValue();
 		if(!parts) return;

@@ -21,6 +21,8 @@ function Panel_Inspector() : PanelContent() constructor {
 	keyframe_dragging = noone;
 	keyframe_drag_st  = 0;
 	
+	anim_toggling = false;
+	
 	min_w = ui(160);
 	lineBreak = true;
 	
@@ -35,6 +37,7 @@ function Panel_Inspector() : PanelContent() constructor {
 	
 	addHotkey("Inspector", "Copy property",		"C",   MOD_KEY.ctrl,	function() { propSelectCopy(); });
 	addHotkey("Inspector", "Paste property",	"V",   MOD_KEY.ctrl,	function() { propSelectPaste(); });
+	addHotkey("Inspector", "Toggle animation",	"I",   MOD_KEY.none,	function() { anim_toggling = true; });
 	
 	group_menu = [
 		[ "Expand all", function() {
@@ -184,7 +187,6 @@ function Panel_Inspector() : PanelContent() constructor {
 							var _key = jun.animator.values[| j];
 							if(_key.time > ANIMATOR.current_frame) {
 								ANIMATOR.setFrame(_key.time);
-								ANIMATOR.frame_progress = true;
 								break;
 							}
 						}
@@ -229,7 +231,6 @@ function Panel_Inspector() : PanelContent() constructor {
 							}
 						}
 						if(_t > -1) ANIMATOR.setFrame(_t);
-						ANIMATOR.frame_progress = true;
 					}
 						
 					var lhf = lb_h / 2 - 4;
@@ -284,7 +285,7 @@ function Panel_Inspector() : PanelContent() constructor {
 										jun.editWidget.draw(editBoxX, editBoxY, editBoxW, editBoxH, jun.display_data[jun.showValue()], _m, ui(16) + x, top_bar_h + y);
 										break;
 									case VALUE_DISPLAY.enum_button :
-										jun.editWidget.draw(editBoxX, editBoxY, editBoxW, editBoxH, jun.display_data[jun.showValue()], _m, ui(16) + x, top_bar_h + y);
+										jun.editWidget.draw(editBoxX, editBoxY, editBoxW, editBoxH, jun.showValue(), _m, ui(16) + x, top_bar_h + y);
 										break;
 									case VALUE_DISPLAY.padding :
 										jun.editWidget.draw(xc, _hsy + ui(32), jun.showValue(), jun.modifier, _m);
@@ -384,6 +385,12 @@ function Panel_Inspector() : PanelContent() constructor {
 			
 			if(pHOVER && point_in_rectangle(_m[0], _m[1], 4, _selY, contentPane.surface_w - ui(4), _selY + _selH)) {
 				draw_sprite_stretched_ext(THEME.prop_selecting, 0, 4, _selY, contentPane.surface_w - ui(8), _selH, COLORS._main_accent, 1);
+				if(anim_toggling) {
+					jun.animator.is_anim = !jun.animator.is_anim;
+					PANEL_ANIMATION.updatePropertyList();
+					anim_toggling = false;
+				}
+				
 				prop_hover = jun;
 					
 				if(mouse_press(mb_left, pFOCUS))

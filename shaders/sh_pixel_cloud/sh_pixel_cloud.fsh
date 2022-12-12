@@ -95,7 +95,7 @@ float frandom (in vec2 st, in float _seed) {
 }
 
 vec2 vrandom (in vec2 st) {
-    return vec2(frandom(st, 165.84), frandom(st, 98.01));
+    return vec2(frandom(st, 165.874), frandom(st, 98.601));
 }
 
 void main() {

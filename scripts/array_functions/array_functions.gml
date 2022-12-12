@@ -22,3 +22,8 @@ function array_remove(arr, val) {
 	var ind = array_find(arr, val);
 	array_delete(arr, ind, 1);
 }
+
+function array_push_unique(arr, val) {
+	if(array_exists(arr, val)) return;
+	array_push(arr, val);
+}

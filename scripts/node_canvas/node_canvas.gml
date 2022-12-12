@@ -330,8 +330,8 @@ function Node_Canvas(_x, _y) : Node(_x, _y) constructor {
 		surface_update();
 	}
 	
-	static drawOverlay = function(_active, _x, _y, _s, _mx, _my) {
-		if(!_active) return;
+	static drawOverlay = function(active, _x, _y, _s, _mx, _my) {
+		if(!active) return;
 		if(keyboard_check(vk_alt)) return;
 		
 		var _col		= inputs[| 1].getValue();
@@ -384,7 +384,7 @@ function Node_Canvas(_x, _y) : Node(_x, _y) constructor {
 				mouse_pre_draw_y = mouse_cur_y;	
 			}
 			
-			if(mouse_holding && mouse_click(mb_left)) {
+			if(mouse_holding && mouse_click(mb_left, active)) {
 				draw_point_size(mouse_cur_x, mouse_cur_y, _siz, _brush);
 				draw_line_size(mouse_pre_draw_x, mouse_pre_draw_y, mouse_cur_x, mouse_cur_y, _siz, _brush);
 				

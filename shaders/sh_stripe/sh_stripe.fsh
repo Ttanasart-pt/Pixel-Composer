@@ -17,6 +17,8 @@ uniform float amount;
 uniform float rand;
 uniform int blend;
 
+#define PI 3.14159265359
+
 float random (in vec2 st) {
 	return fract(sin(dot(st.xy, vec2(12.9898, 78.233))) * 43758.5453123);
 }
@@ -103,7 +105,7 @@ void main() {
 			else
 				gl_FragColor = vec4(vec3(1.), 1.);
 		} else
-			gl_FragColor = vec4(vec3(abs(_s - 0.5) * 2.), 1.);
+			gl_FragColor = vec4(vec3(sin(_s * 2. * PI) * 0.5 + 0.5), 1.);
 	} else {
 		if(_s > .5)
 			gl_FragColor = vec4(gradientEval(random(vec2(slot))).rgb, 1.);

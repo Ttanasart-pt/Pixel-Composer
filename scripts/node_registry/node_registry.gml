@@ -133,9 +133,10 @@ function NodeObject(_name, _spr, _create, tags = []) constructor {
 	addNodeObject(threeD, "Normal light",		s_node_normal_light,	"Node_Normal_Light",	Node_create_Normal_Light);
 	addNodeObject(threeD, "Bevel",				s_node_bevel,			"Node_Bevel",			Node_create_Bevel);
 	addNodeObject(threeD, "Sprite stack",		s_node_stack,			"Node_Sprite_Stack",	Node_create_Sprite_Stack);
+	addNodeObject(threeD, "3D Obj",				s_node_3d_obj,			"Node_3D_Obj",			Node_create_3D_Obj);
 	addNodeObject(threeD, "3D Cube",			s_node_3d_cube,			"Node_3D_Cube",			Node_create_3D_Cube);
 	addNodeObject(threeD, "3D Cylinder",		s_node_3d_cylinder,		"Node_3D_Cylinder",		Node_create_3D_Cylinder);
-	addNodeObject(threeD, "3D Obj",				s_node_3d_obj,			"Node_3D_Obj",			Node_create_3D_Obj);
+	addNodeObject(threeD, "3D Extrude",			s_node_3d_extrude,		"Node_3D_Extrude",		Node_create_3D_Extrude);
 	
 	var number = ds_list_create();
 	addNodeCatagory("Number", number);
@@ -182,6 +183,7 @@ function NodeObject(_name, _spr, _create, tags = []) constructor {
 	addNodeObject(generator, "Particle",			s_node_particle,			"Node_Particle",			Node_create_Particle);
 	addNodeObject(generator, "Particle Effector",	s_node_particle_effector,	"Node_Particle_Effector",	Node_create_Particle_Effector, ["affector"]);
 	addNodeObject(generator, "Scatter",				s_node_scatter,				"Node_Scatter",				Node_create_Scatter);
+	addNodeObject(generator, "Noise",				s_node_noise,				"Node_Noise",				Node_create_Noise);
 	addNodeObject(generator, "Perlin noise",		s_node_noise_perlin,		"Node_Perlin",				Node_create_Perlin);
 	addNodeObject(generator, "Cellular noise",		s_node_noise_cell,			"Node_Cellular",			Node_create_Cellular);
 	addNodeObject(generator, "Grid noise",			s_node_grid_noise,			"Node_Grid_Noise",			Node_create_Grid_Noise);

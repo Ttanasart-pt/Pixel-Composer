@@ -514,10 +514,10 @@ function Node_Particle(_x, _y) : Node(_x, _y) constructor {
 		}
 	}
 	
-	static drawOverlay = function(_active, _x, _y, _s, _mx, _my) {
-		inputs[| 4].drawOverlay(_active, _x, _y, _s, _mx, _my);
+	static drawOverlay = function(active, _x, _y, _s, _mx, _my) {
+		inputs[| 4].drawOverlay(active, _x, _y, _s, _mx, _my);
 		if(onDrawOverlay != -1)
-			onDrawOverlay(_active, _x, _y, _s, _mx, _my);
+			onDrawOverlay(active, _x, _y, _s, _mx, _my);
 	}
 	
 	static onDrawOverlay = -1;

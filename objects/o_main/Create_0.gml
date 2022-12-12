@@ -20,15 +20,19 @@
 	
 	draw_set_circle_precision(64);
 	globalvar CURSOR, UPDATE, TOOLTIP, DIALOG_DEPTH_HOVER;
-	globalvar RENDER_STACK;
+	globalvar RENDER_STACK, KEYBOARD_STRING;
 	DIALOG_DEPTH_HOVER = 0;
 	UPDATE  = RENDER_TYPE.none;
 	CURSOR  = cr_default;
 	TOOLTIP = "";
+	KEYBOARD_STRING = "";
 	RENDER_STACK = ds_stack_create();
 	
 	_cursor	= CURSOR;
 	dc_check = 0;
+	kb_time  = 0;
+	kb_hold  = false;
+	kb_hkey  = 0;
 	
 	//display_set_timing_method(tm_sleep);
 	
@@ -87,6 +91,9 @@
 					break;
 				case ".gif"  :
 					Node_create_Image_gif_path(PANEL_GRAPH.mouse_grid_x, PANEL_GRAPH.mouse_grid_y, path);
+					break;
+				case ".obj" :
+					Node_create_3D_Obj_path(PANEL_GRAPH.mouse_grid_x, PANEL_GRAPH.mouse_grid_y, path);
 					break;
 				case ".json" :
 				case ".pxc" :

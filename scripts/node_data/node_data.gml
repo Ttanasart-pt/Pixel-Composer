@@ -6,6 +6,7 @@ function Node(_x, _y) constructor {
 	icon    = noone;
 	bg_spr  = THEME.node_bg;
 	bg_sel_spr = THEME.node_active;
+	anim_priority = ds_map_size(NODE_MAP);
 	
 	if(!LOADING && !APPENDING) {
 		recordAction(ACTION_TYPE.node_added, self);
@@ -122,16 +123,14 @@ function Node(_x, _y) constructor {
 			if(update_on_frame)
 				doUpdate();
 			for(var i = 0; i < ds_list_size(inputs); i++) {
-				if(inputs[| i].isAnim()) {
+				if(inputs[| i].isAnimated())
 					stack_push = true;
-				}
 			}
 		}
 		
 		if(stack_push) {
 			setRenderStatus(false);
-			UPDATE |= RENDER_TYPE.full;	
-			//ds_stack_push(RENDER_STACK, self);
+			UPDATE |= RENDER_TYPE.partial;
 		}
 		
 		if(auto_height)
@@ -150,7 +149,7 @@ function Node(_x, _y) constructor {
 	static onValueUpdate = function(index) {}
 	
 	static isUpdateReady = function() {
-		if(rendered) return false;
+		//if(rendered) return false;
 		
 		for(var j = 0; j < ds_list_size(inputs); j++) {
 			var _in = inputs[| j];
@@ -176,8 +175,9 @@ function Node(_x, _y) constructor {
 			var jun = outputs[| i];
 			for(var j = 0; j < ds_list_size(jun.value_to); j++) {
 				var _to = jun.value_to[| j];
-				if(_to.value_from == jun)
-					_to.node.triggerRender();
+				if(_to.value_from != jun) continue;
+				
+				_to.node.triggerRender();
 			}
 		}
 	}
@@ -186,6 +186,9 @@ function Node(_x, _y) constructor {
 	
 	static setRenderStatus = function(result) {
 		rendered = result;
+		
+		if(!result && group != -1) 
+			group.setRenderStatus(result);
 	}
 	
 	static pointIn = function(_x, _y, _mx, _my, _s) {
@@ -236,16 +239,18 @@ function Node(_x, _y) constructor {
 		draw_sprite_stretched_ext(THEME.node_bg_name, 0, xx, yy, w * _s, ui(20), color, 0.75);
 		
 		var cc = COLORS._main_text;
-		if(PREF_MAP[? "node_show_render_status"])
-			cc = rendered? COLORS._main_text : COLORS._main_value_negative;
+		if(PREF_MAP[? "node_show_render_status"] && !rendered)
+			cc = isUpdateReady()? COLORS._main_value_positive : COLORS._main_value_negative;
+		
 		draw_set_text(f_p1, fa_left, fa_center, cc);
 		
 		if(!auto_update) icon = THEME.refresh_s;
+		var ts = clamp(power(_s, 0.5), 0.5, 1);
 		if(icon) {
 			draw_sprite_ui_uniform(icon, 0, xx + ui(12), yy + ui(10));	
-			draw_text_cut(xx + ui(24), yy + ui(10), name, w * _s - ui(24));
+			draw_text_cut(xx + ui(24), yy + ui(10), name, w * _s - ui(24), ts);
 		} else {
-			draw_text_cut(xx + ui(8), yy + ui(10), name, w * _s - ui(8));
+			draw_text_cut(xx + ui(8), yy + ui(10), name, w * _s - ui(8), ts);
 		}
 	}
 	
@@ -466,7 +471,7 @@ function Node(_x, _y) constructor {
 		active_draw_index = ind;
 	}
 	
-	static drawOverlay = function(_active, _x, _y, _s, _mx, _my) {}
+	static drawOverlay = function(active, _x, _y, _s, _mx, _my) {}
 	
 	static destroy = function(_merge = false) {
 		active = false;
@@ -595,21 +600,34 @@ function Node(_x, _y) constructor {
 			var _ou = outputs[| i];
 			for(var j = 0; j < ds_list_size(_ou.value_to); j++) {
 				var _to = _ou.value_to[| j];
-				if(_to.value_from == _ou && _to.node.active && _to.node.group != group) {
-					var output_node = noone;
-					switch(_type) {
-						case "group" : output_node = new Node_Group_Output(x + w + 64, y, group); break;
-						case "loop" : output_node = new Node_Iterator_Output(x + w + 64, y, group); break;	
-					}
-					
-					if(output_node == noone) continue;
-					ds_list_add(group.nodes, output_node);
-					
-					_to.setFrom(output_node.outParent);
-					output_node.inputs[| 0].setFrom(_ou);
+				if(_to.value_from != _ou) continue;
+				if(!_to.node.active) continue;
+				if(_to.node.group == group) continue;
+				
+				var output_node = noone;
+				switch(_type) {
+					case "group" : output_node = new Node_Group_Output(x + w + 64, y, group); break;
+					case "loop" : output_node = new Node_Iterator_Output(x + w + 64, y, group); break;	
 				}
+					
+				if(output_node == noone) continue;
+				ds_list_add(group.nodes, output_node);
+					
+				_to.setFrom(output_node.outParent);
+				output_node.inputs[| 0].setFrom(_ou);
 			}
 		}
+	}
+	
+	static clone = function() {
+		var _type = instanceof(self);
+		var _node = NODE_CREATE_FUCTION[? _type](x, y);
+		
+		var _data = serialize();
+		_node.deserialize(ds_map_clone(_data));
+		_node.node_id = generateUUID();
+		
+		return _node;
 	}
 	
 	static serialize = function(scale = false, preset = false) {
@@ -644,11 +662,11 @@ function Node(_x, _y) constructor {
 	}
 	static doSerialize = function(_map) {}
 	
-	keyframe_scale = false;
+	load_scale = false;
 	load_map = -1;
 	static deserialize = function(_map, scale = false, preset = false) {
 		load_map = _map;
-		keyframe_scale = scale;
+		load_scale = scale;
 		
 		if(!preset) {
 			if(APPENDING) {

@@ -82,11 +82,11 @@ function Panel_Collection() : PanelContent() constructor {
 						draw_sprite_stretched(THEME.node_bg, 0, _boxx, yy, grid_size, grid_size);
 						BLEND_NORMAL
 						
-						if(point_in_rectangle(_m[0], _m[1], _nx, yy, _nx + grid_width, yy + grid_size)) {
+						if(pHOVER && point_in_rectangle(_m[0], _m[1], _nx, yy, _nx + grid_width, yy + grid_size)) {
 							draw_sprite_stretched_ext(THEME.node_active, 0, _boxx, yy, grid_size, grid_size, COLORS._main_accent, 1);
 							if(mouse_press(mb_left, pFOCUS))
 								file_dragging = _node;
-						
+							
 							if(mouse_press(mb_right, pFOCUS)) {
 								_menu_node = _node;
 								var dia = dialogCall(o_dialog_menubox, mouse_mx + 8, mouse_my + 8);

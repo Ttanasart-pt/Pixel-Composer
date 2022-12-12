@@ -37,8 +37,8 @@ function Node_Zigzag(_x, _y) : Node(_x, _y) constructor {
 		["Render",	false], 3, 4, 5,
 	];
 	
-	static drawOverlay = function(_active, _x, _y, _s, _mx, _my) {
-		inputs[| 2].drawOverlay(_active, _x, _y, _s, _mx, _my);
+	static drawOverlay = function(active, _x, _y, _s, _mx, _my) {
+		inputs[| 2].drawOverlay(active, _x, _y, _s, _mx, _my);
 	}
 	
 	static update = function() {

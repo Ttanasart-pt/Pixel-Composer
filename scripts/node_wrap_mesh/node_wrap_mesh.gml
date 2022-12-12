@@ -53,7 +53,7 @@ function Node_Mesh_Warp(_x, _y) : Node(_x, _y) constructor {
 	
 	attributes[? "pin"] = ds_map_create();
 	
-	static drawOverlay = function(_active, _x, _y, _s, _mx, _my) {
+	static drawOverlay = function(active, _x, _y, _s, _mx, _my) {
 		for(var i = 0; i < ds_list_size(data.tris); i++) {
 			data.tris[| i].drawPoints(_x, _y, _s);
 		}
@@ -63,14 +63,14 @@ function Node_Mesh_Warp(_x, _y) : Node(_x, _y) constructor {
 		
 		var hover = -1;
 		for(var i = control_index; i < ds_list_size(inputs); i++) {
-			if(inputs[| i].drawOverlay(_active, _x, _y, _s, _mx, _my))
+			if(inputs[| i].drawOverlay(active, _x, _y, _s, _mx, _my))
 				hover = i;
 		}
 		
 		var _tool = PANEL_PREVIEW.tool_index;
 		var _sub_tool = PANEL_PREVIEW.tool_sub_index;
 		
-		if(!_active) return;
+		if(!active) return;
 		if(_tool == 0) {
 			if(mouse_press(mb_left)) {
 				if(hover == -1) {

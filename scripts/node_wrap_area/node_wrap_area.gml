@@ -13,12 +13,11 @@ function Node_Wrap_Area(_x, _y) : Node_Processor(_x, _y) constructor {
 	
 	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
 	
-	static drawOverlay = function(_active, _x, _y, _s, _mx, _my) {
-		inputs[| 1].drawOverlay(_active, _x, _y, _s, _mx, _my);
+	static drawOverlay = function(active, _x, _y, _s, _mx, _my) {
+		inputs[| 1].drawOverlay(active, _x, _y, _s, _mx, _my);
 	}
 	
 	static process_data = function(_outSurf, _data, _output_index) {
-		print("update")
 		var _inSurf	= _data[0];
 		var _area	= _data[1];
 		

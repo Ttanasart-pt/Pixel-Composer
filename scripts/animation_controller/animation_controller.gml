@@ -10,9 +10,13 @@
 		playback = ANIMATOR_END.loop;
 		
 		static setFrame = function(frame) {
+			var _c = current_frame;
 			frame = clamp(frame, 0, frames_total - 1);
 			real_frame = frame;
 			current_frame = round(frame);
+			
+			if(_c != current_frame)
+				frame_progress = true;
 		}
 	}
 #endregion

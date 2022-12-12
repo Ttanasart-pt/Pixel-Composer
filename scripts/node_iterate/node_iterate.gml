@@ -1,3 +1,9 @@
+enum ITERATION_STATUS {
+	not_ready,
+	loop,
+	complete,
+}
+
 function Node_create_Iterate(_x, _y) {
 	var node = new Node_Iterate(_x, _y);
 	ds_list_add(PANEL_GRAPH.nodes_list, node);
@@ -16,15 +22,14 @@ function Node_Iterate(_x, _y) : Node_Collection(_x, _y) constructor {
 	custom_input_index = 1;
 	loop_start_time = 0;
 	
-	static setRenderStatus = function(result) {
-		rendered = result;
-		if(!rendered) {
-			iterated = 0;
-			loop_start_time = get_timer();
-		}
+	static postSetRenderStatus = function(result) {
+		if(rendered) return;
+		
+		iterated = 0;
+		loop_start_time = get_timer();
 	}
 	
-	static outputRendered = function() {
+	static iterationStatus = function() {
 		var iter = true;
 		for( var i = 0; i < ds_list_size(outputs); i++ ) {
 			var _out = outputs[| i].node;
@@ -34,14 +39,14 @@ function Node_Iterate(_x, _y) : Node_Collection(_x, _y) constructor {
 		if(iter) {
 			if(++iterated == inputs[| 0].getValue()) {
 				render_time = get_timer() - loop_start_time;
-				return 2;
+				return ITERATION_STATUS.complete;
 			} else if(iterated > inputs[| 0].getValue())
-				return 3;
+				return ITERATION_STATUS.complete;
 			
 			resetRenderStatus();
-			return 1;
+			return ITERATION_STATUS.loop;
 		}
 		
-		return 0;
+		return ITERATION_STATUS.not_ready;
 	}
 }

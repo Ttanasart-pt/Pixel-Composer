@@ -78,9 +78,9 @@ function valueAnimator(_val, _prop) constructor {
 		if(prop.display_type == VALUE_DISPLAY.gradient) return processType(values);
 		if(prop.type == VALUE_TYPE.path) return processType(values[| 0].value);
 		
-		if(!is_anim) return processType(values[| 0].value);
 		if(ds_list_size(values) == 0) return processType(0);
 		if(ds_list_size(values) == 1) return processType(values[| 0].value);
+		if(!is_anim) return processType(values[| 0].value);
 		
 		if(ds_list_size(values) > 1) {
 			var _time_first = values[| 0].time;
@@ -274,6 +274,7 @@ function valueAnimator(_val, _prop) constructor {
 	static deserialize = function(_list, scale = false) {
 		var base = getValue();
 		ds_list_clear(values);
+		
 		for(var i = 0; i < ds_list_size(_list); i++) {
 			var _key  = _list[| i];
 			var _time = _key[| 0];

@@ -25,7 +25,7 @@ function Node_Area(_x, _y) : Node_Value_Processor(_x, _y) constructor {
 	outputs[| 0] = nodeValue(0, "Area", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, [ 0, 0, 0, 0, AREA_SHAPE.rectangle ])
 		.setDisplay(VALUE_DISPLAY.vector);
 	
-	static drawOverlay = function(_active, _x, _y, _s, _mx, _my) {
+	static drawOverlay = function(active, _x, _y, _s, _mx, _my) {
 		var _pos	= inputs[| 0].getValue();
 		var _span	= inputs[| 1].getValue();
 		var _shape	= inputs[| 2].getValue();
@@ -44,8 +44,8 @@ function Node_Area(_x, _y) : Node_Value_Processor(_x, _y) constructor {
 				break;
 		}
 		
-		inputs[| 0].drawOverlay(_active, _x, _y, _s, _mx, _my);
-		inputs[| 1].drawOverlay(_active, px, py, _s, _mx, _my);
+		inputs[| 0].drawOverlay(active, _x, _y, _s, _mx, _my);
+		inputs[| 1].drawOverlay(active, px, py, _s, _mx, _my);
 	}
 	
 	function process_value_data(_data, index = 0) { 

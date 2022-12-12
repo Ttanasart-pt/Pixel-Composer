@@ -14,7 +14,7 @@ if !target exit;
 #region content
 	var x0 = dialog_x + ui(20);
 	var x1 = x0 + sp_content.w;
-	var y0 = dialog_y + ui(44);
+	var y0 = dialog_y + ui(56);
 	var y1 = y0 + sp_content.h;
 	
 	draw_sprite_stretched(THEME.ui_panel_bg, 1, x0 - ui(6), y0 - ui(6), x1 - x0 + ui(12), y1 - y0 + ui(12));

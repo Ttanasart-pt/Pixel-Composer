@@ -63,8 +63,26 @@ event_inherited();
 	ds_list_add(pref_global, [
 		"Double click delay",
 		"double_click_delay",
-		new slider(0, 100, 1, function(val) { 
+		new slider(0, 1, 0.01, function(val) { 
 			PREF_MAP[? "double_click_delay"] = val; 
+			PREF_SAVE();
+		})
+	]);
+	
+	ds_list_add(pref_global, [
+		"Keyboard hold start",
+		"keyboard_repeat_start",
+		new slider(0, 1, 0.01, function(val) { 
+			PREF_MAP[? "keyboard_repeat_start"] = val; 
+			PREF_SAVE();
+		})
+	]);
+	
+	ds_list_add(pref_global, [
+		"Keyboard repeat delay",
+		"keyboard_repeat_speed",
+		new slider(0, 1, 0.01, function(val) { 
+			PREF_MAP[? "keyboard_repeat_speed"] = val; 
 			PREF_SAVE();
 		})
 	]);

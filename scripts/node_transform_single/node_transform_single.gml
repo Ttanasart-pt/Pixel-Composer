@@ -53,7 +53,7 @@ function Node_Transform_Single(_x, _y) : Node_Processor(_x, _y) constructor {
 	overlay_drag_ma  = 0;
 	overlay_drag_sa  = 0;
 	
-	static drawOverlay = function(_active, _x, _y, _s, _mx, _my) {
+	static drawOverlay = function(active, _x, _y, _s, _mx, _my) {
 		if(array_length(current_data) < ds_list_size(inputs)) return;
 		
 		var _surf = outputs[| 0].getValue();
@@ -154,7 +154,7 @@ function Node_Transform_Single(_x, _y) : Node_Processor(_x, _y) constructor {
 			if(mouse_release(mb_left))
 				overlay_dragging = 0;	
 		} else {
-			if(_mouse_press(mb_left, active)) {
+			if(mouse_press(mb_left, active)) {
 				if(point_in_circle(_mx, _my, bax, bay, 8)) {
 					overlay_dragging = 2;
 					overlay_drag_mx  = _mx;

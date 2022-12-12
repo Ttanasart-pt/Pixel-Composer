@@ -44,12 +44,11 @@
 		if(dc_check > 0) {
 			DOUBLE_CLICK = true;
 			dc_check = 0;
-		} else {
-			dc_check = PREF_MAP[? "double_click_delay"];	
-		}
+		} else
+			dc_check = PREF_MAP[? "double_click_delay"];
 	}
 	
-	dc_check--;
+	dc_check -= DELTA_TIME;
 #endregion
 
 #region step

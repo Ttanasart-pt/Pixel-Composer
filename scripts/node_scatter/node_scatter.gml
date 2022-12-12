@@ -50,8 +50,8 @@ function Node_Scatter(_x, _y) : Node(_x, _y) constructor {
 	
 	temp_surf = [ PIXEL_SURFACE, PIXEL_SURFACE ];
 	
-	static drawOverlay = function(_active, _x, _y, _s, _mx, _my) {
-		inputs[| 5].drawOverlay(_active, _x, _y, _s, _mx, _my);
+	static drawOverlay = function(active, _x, _y, _s, _mx, _my) {
+		inputs[| 5].drawOverlay(active, _x, _y, _s, _mx, _my);
 	}
 	
 	static update = function() {

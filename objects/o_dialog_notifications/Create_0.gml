@@ -35,7 +35,26 @@ event_inherited();
 			var _w = sp_noti.w - ui(12);
 			var _h = ui(8) + string_height_ext(noti.txt, -1, txw) + ui(8);
 			
+			var cc = COLORS.dialog_notification_bg;
 			draw_sprite_stretched_ext(THEME.group_label, 0, 0, yy + ui(2), _w, _h - ui(4), COLORS.dialog_notification_bg, 1);
+			
+			if(sHOVER && point_in_rectangle(_m[0], _m[1], 0, yy, _w, yy + _h - ui(4))) {
+				cc = COLORS.dialog_notification_bg_hover;
+				
+				if(noti.onClick != noone && mouse_press(mb_left, sFOCUS))
+					noti.onClick();
+				if(mouse_press(mb_right, sFOCUS)) {
+					var dia = dialogCall(o_dialog_menubox, mouse_mx + ui(8), mouse_my + ui(8));
+					dia.noti = noti;
+					dia.setMenu([ 
+						[ "Copy notification message", function() { 
+							clipboard_set_text(o_dialog_menubox.noti.txt);
+						} ], 
+					]);
+				}
+			}
+			
+			draw_sprite_stretched_ext(THEME.group_label, 0, 0, yy + ui(2), _w, _h - ui(4), cc, 1);
 			
 			if(noti.life_max > 0) {
 				var _nwx = sp_noti.w - ui(12) - ui(40);
@@ -64,22 +83,6 @@ event_inherited();
 			
 			draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text);
 			draw_text_ext(tx + ui(4), yy + _h / 2, noti.txt, -1, txw);
-			
-			if(sHOVER && point_in_rectangle(_m[0], _m[1], 0, yy, _w, yy + _h - ui(4))) {
-				draw_sprite_stretched_ext(THEME.node_active, 0, 0, yy + ui(2), _w, _h - ui(4), COLORS._main_accent, 1);
-				
-				if(noti.onClick != noone && mouse_press(mb_left, sFOCUS))
-					noti.onClick();
-				if(mouse_press(mb_right, sFOCUS)) {
-					var dia = dialogCall(o_dialog_menubox, mouse_mx + ui(8), mouse_my + ui(8));
-					dia.noti = noti;
-					dia.setMenu([ 
-						[ "Copy notification message", function() { 
-							clipboard_set_text(o_dialog_menubox.noti.txt);
-						} ], 
-					]);
-				}
-			}
 			
 			yy += _h;
 			hh += _h;

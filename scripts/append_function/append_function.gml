@@ -1,14 +1,14 @@
 function APPEND(_path) {
 	APPENDING	= true;
 	
+	var log = false;
 	if(_path == "") return;
+	var _map = json_load(_path);
 	
-	var file = file_text_open_read(_path);
-	var load_str = "";
-	while(!file_text_eof(file)) {
-		load_str += file_text_readln(file);
+	if(_map == -1) {
+		printlog("Decode error");
+		return 
 	}
-	var _map = json_decode(load_str);
 	
 	if(ds_map_exists(_map, "version")) {
 		var _v = _map[? "version"];
@@ -27,12 +27,14 @@ function APPEND(_path) {
 	
 	ds_queue_clear(CONNECTION_CONFLICT);
 	ds_map_clear(APPEND_MAP);
+	var t = current_time;
 	
 	for(var i = 0; i < ds_list_size(_node_list); i++) {
 		var _node = nodeLoad(_node_list[| i], true);
 		if(_node) ds_list_add(appended_list, _node);
 	}
-	file_text_close(file);
+	printlog("Load time: " + string(current_time - t));
+	t = current_time;
 	
 	try {
 		for(var i = 0; i < ds_list_size(appended_list); i++) {
@@ -45,6 +47,8 @@ function APPEND(_path) {
 	} catch(e) {
 		log_warning("APPEND, node", e.longMessage);
 	}
+	printlog("Load group time: " + string(current_time - t));
+	t = current_time;
 	
 	try {
 		for(var i = 0; i < ds_list_size(appended_list); i++)
@@ -52,15 +56,8 @@ function APPEND(_path) {
 	} catch(e) {
 		log_warning("APPEND, deserialize", e.longMessage);
 	}
-	
-	try {
-		for(var i = 0; i < ds_list_size(appended_list); i++) {
-			if(!variable_struct_exists(appended_list[| i], "collectionDeserialize")) continue;
-			appended_list[| i].collectionDeserialize(true);
-		}
-	} catch(e) {
-		log_warning("APPEND, deserialize", e.longMessage);
-	}
+	printlog("Deserialize time: " + string(current_time - t));
+	t = current_time;
 	
 	try {
 		for(var i = 0; i < ds_list_size(appended_list); i++)
@@ -72,6 +69,8 @@ function APPEND(_path) {
 	} catch(e) {
 		log_warning("APPEND, connect", e.longMessage);
 	}
+	printlog("Connect time: " + string(current_time - t));
+	t = current_time;
 	
 	try {
 		for(var i = 0; i < ds_list_size(appended_list); i++)
@@ -79,6 +78,8 @@ function APPEND(_path) {
 	} catch(e) {
 		log_warning("APPEND, update", e.longMessage);
 	}
+	printlog("Update time: " + string(current_time - t));
+	t = current_time;
 	
 	ds_list_destroy(appended_list);
 	
@@ -101,11 +102,13 @@ function APPEND(_path) {
 			}
 		
 			if(!ds_queue_empty(CONNECTION_CONFLICT))
-				log_warning("APPEND", "Some connection(s) is unsolved. This may caused by render node not being update properly, or image path is broken.");
+				log_warning("APPEND", "Some connection(s) is unresolved. This may caused by render node not being update properly, or image path is broken.");
 		} catch(e) {
 			log_warning("APPEND, Conflict solver error : ", e.longMessage);
 		}
 	}
+	printlog("Conflict time: " + string(current_time - t));
+	t = current_time;
 	
 	APPENDING = false;
 	PANEL_ANIMATION.updatePropertyList();

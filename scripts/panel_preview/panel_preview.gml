@@ -471,8 +471,7 @@ function Panel_Preview() : PanelContent() constructor {
 		}
 	}
 	
-	function drawNodeTools(_active, _node) {
-		var active = _active;
+	function drawNodeTools(active, _node) {
 		var _mx = mx;
 		var _my = my;
 		var isHover = pHOVER && mouse_on_preview;

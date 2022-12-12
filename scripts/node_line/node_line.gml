@@ -39,17 +39,17 @@ function Node_Line(_x, _y) : Node(_x, _y) constructor {
 	inputs[| 10] = nodeValue(10, "Color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white)
 		.setDisplay(VALUE_DISPLAY.gradient);
 	
+	inputs[| 11] = nodeValue(11, "Width over length", self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, [1, 1, 1, 1]);
+		
 	input_display_list = [
 		["Output",			true],	0, 1, 
 		["Line data",		false], 6, 7, 2, 
-		["Line settings",	false], 3, 8, 9, 
+		["Line settings",	false], 3, 11, 8, 9, 
 		["Wiggle",			false], 4, 5, 
 		["Render",			false], 10 
 	];
 	
 	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
-	
-	display_reset(0, 1);
 	
 	static update = function() {
 		var _dim   = inputs[| 0].getValue();
@@ -65,9 +65,10 @@ function Node_Line(_x, _y) : Node(_x, _y) constructor {
 		
 		var _color = inputs[| 10].getValue();
 		var _col_data = inputs[| 10].getExtraData();
+		var _widc  = inputs[| 11].getValue();
 		
-		var _rat   = max(_ratio[0], _ratio[1]) - min(_ratio[0], _ratio[1]);
-		var _rats  = min(_ratio[0], _ratio[1]);
+		var _rtStr = min(_ratio[0], _ratio[1]);
+		var _rtLen = max(_ratio[0], _ratio[1]) - _rtStr;
 		
 		var _use_path = _pat != 0 && instanceof(_pat) == "Node_Path";
 		if(_ang < 0) _ang = 360 + _ang;
@@ -94,10 +95,10 @@ function Node_Line(_x, _y) : Node(_x, _y) constructor {
 			var _ox, _nx, _oy, _ny, _ow, _nw, _oa, _na;
 			
 			if(_use_path) {
-				var ww = _rat / _seg;
+				var ww = _rtLen / _seg;
 				
-				var _total = _rat;
-				var _prog_curr = frac(_shift + _rats) - ww;
+				var _total = _rtLen;
+				var _prog_curr = frac(_shift + _rtStr) - ww;
 				var _prog = _prog_curr + 1;
 				var _prog_eli = 0;
 				
@@ -110,13 +111,14 @@ function Node_Line(_x, _y) : Node(_x, _y) constructor {
 					_nx = p[0];
 					_ny = p[1];
 					
-					if(_total < _rat) {
+					if(_total < _rtLen) {
 						var _d = point_direction(_ox, _oy, _nx, _ny);
 						_nx += lengthdir_x(random(_wig) * choose(-1, 1), _d + 90);
 						_ny += lengthdir_y(random(_wig) * choose(-1, 1), _d + 90);
 					}
 					
 					_nw = random_range(_wid[0], _wid[1]);
+					_nw *= eval_bezier_cubic(1 - _prog_curr, _widc[0], _widc[1], _widc[2], _widc[3]);
 					
 					if(_total <= _prog_curr - _prog) {
 						_na = point_direction(_ox, _oy, _nx, _ny) + 90;
@@ -124,7 +126,7 @@ function Node_Line(_x, _y) : Node(_x, _y) constructor {
 						var np = _pat.getPointRatio(_prog_curr + ww);
 						var _nna = point_direction(_nx, _ny, np[0], np[1]) + 90;
 						
-						if(_total == _rat)
+						if(_total == _rtLen)
 							_na = _nna;
 						else {
 							var _da = point_direction(_ox, _oy, _nx, _ny) + 90;
@@ -133,7 +135,7 @@ function Node_Line(_x, _y) : Node(_x, _y) constructor {
 					}
 					
 					if(_prog_curr > _prog) {
-						draw_set_color(gradient_eval(_color, _prog_eli / _rat, ds_list_get(_col_data, 0)));
+						draw_set_color(gradient_eval(_color, _prog_eli / _rtLen, ds_list_get(_col_data, 0)));
 						draw_line_width2_angle(_ox, _oy, _nx, _ny, _ow, _nw, _oa, _na);
 						_total -= (_prog_curr - _prog);
 					}
@@ -156,9 +158,9 @@ function Node_Line(_x, _y) : Node(_x, _y) constructor {
 				var _l = point_distance(x0, y0, x1, y1);
 				var _d = point_direction(x0, y0, x1, y1);
 				
-				var ww = _rat / _seg;
-				var _total = _rat;
-				var _prog_curr = frac(_shift + _rats) - ww;
+				var ww = _rtLen / _seg;
+				var _total = _rtLen;
+				var _prog_curr = frac(_shift + _rtStr) - ww;
 				var _prog = _prog_curr + 1;
 				var _prog_eli = 0;
 				
@@ -174,9 +176,10 @@ function Node_Line(_x, _y) : Node(_x, _y) constructor {
 					_ny += lengthdir_y(random(_wig) * choose(-1, 1), _d + 90);
 				
 					_nw = random_range(_wid[0], _wid[1]);
+					_nw *= eval_bezier_cubic(1 - _prog_curr, _widc[0], _widc[1], _widc[2], _widc[3]);
 					
 					if(_prog_curr > _prog) {
-						draw_set_color(gradient_eval(_color, _prog_eli / _rat, ds_list_get(_col_data, 0)));
+						draw_set_color(gradient_eval(_color, _prog_eli / _rtLen, ds_list_get(_col_data, 0)));
 						draw_line_width2_angle(_ox, _oy, _nx, _ny, _ow, _nw, _d + 90, _d + 90);
 						_total -= (_prog_curr - _prog);
 					}

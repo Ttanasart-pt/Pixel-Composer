@@ -1,8 +1,8 @@
-function draw_text_cut(x, y, str, w) {
-	draw_text(x, y, string_cut(str, w));
+function draw_text_cut(x, y, str, w, scale = 1) {
+	draw_text_transformed(x, y, string_cut(str, w,, scale), scale, scale, 0);
 }
 
-function string_cut(str, w, tail = "...") {
+function string_cut(str, w, tail = "...", scale = 1) {
 	var ww  = 0;
 	var ind = 1;
 	var ss  = "";
@@ -11,7 +11,7 @@ function string_cut(str, w, tail = "...") {
 	
 	while(ind <= string_length(str)) {
 		var ch = string_char_at(str, ind);
-		var _w = string_width(ch);
+		var _w = string_width(ch) * scale;
 		
 		if(ww + _w + tw >= w) {
 			ss += tail;

@@ -20,7 +20,7 @@ function Node_Mirror(_x, _y) : Node_Processor(_x, _y) constructor {
 	
 	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
 	
-	static drawOverlay = function(_active, _x, _y, _s, _mx, _my) {
+	static drawOverlay = function(active, _x, _y, _s, _mx, _my) {
 		var _pos   = inputs[| 1].getValue();
 		var _ang   = inputs[| 2].getValue();
 		var _posx = _pos[0] * _s + _x;
@@ -34,8 +34,8 @@ function Node_Mirror(_x, _y) : Node_Processor(_x, _y) constructor {
 		draw_set_color(COLORS._main_accent);
 		draw_line(dx0, dy0, dx1, dy1);
 		
-		inputs[| 1].drawOverlay(_active, _x, _y, _s, _mx, _my);
-		inputs[| 2].drawOverlay(_active, _posx, _posy, _s, _mx, _my);
+		inputs[| 1].drawOverlay(active, _x, _y, _s, _mx, _my);
+		inputs[| 2].drawOverlay(active, _posx, _posy, _s, _mx, _my);
 	}
 	
 	static process_data = function(_outSurf, _data, _output_index) {
