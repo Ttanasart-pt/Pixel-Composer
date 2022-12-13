@@ -1,10 +1,4 @@
-function Node_create_Chromatic_Aberration(_x, _y) {
-	var node = new Node_Chromatic_Aberration(_x, _y);
-	ds_list_add(PANEL_GRAPH.nodes_list, node);
-	return node;
-}
-
-function Node_Chromatic_Aberration(_x, _y) : Node_Processor(_x, _y) constructor {
+function Node_Chromatic_Aberration(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constructor {
 	name = "Chromatic aberration";
 	
 	shader = sh_chromatic_aberration;

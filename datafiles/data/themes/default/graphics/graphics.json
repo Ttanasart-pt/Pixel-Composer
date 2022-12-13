@@ -263,6 +263,13 @@
         "yorigin": 16,
         "slice": null
     },
+    "vfx": {
+        "path": "./icon/s_vfx.png",
+        "subimages": 1,
+        "xorigin": 16,
+        "yorigin": 16,
+        "slice": null
+    },
     "minus": {
         "path": "./icon/s_minus_24.png",
         "subimages": 1,
@@ -487,28 +494,28 @@
         "slice": null
     },
     "node_junctions_array": {
-        "path": "./node/s_node_junctions_array_strip12.png",
+        "path": "./node/s_node_junctions_array.png",
         "subimages": 12,
         "xorigin": 16,
         "yorigin": 16,
         "slice": null
     },
     "node_junctions_array_hover": {
-        "path": "./node/s_node_junctions_array_hover_strip12.png",
+        "path": "./node/s_node_junctions_array_hover.png",
         "subimages": 12,
         "xorigin": 16,
         "yorigin": 16,
         "slice": null
     },
     "node_junctions_single": {
-        "path": "./node/s_node_junctions_single_strip12.png",
+        "path": "./node/s_node_junctions_single.png",
         "subimages": 12,
         "xorigin": 16,
         "yorigin": 16,
         "slice": null
     },
     "node_junctions_single_hover": {
-        "path": "./node/s_node_junctions_single_hover_strip12.png",
+        "path": "./node/s_node_junctions_single_hover.png",
         "subimages": 12,
         "xorigin": 16,
         "yorigin": 16,

@@ -31,6 +31,7 @@ function LOAD_PATH(path, readonly = false) {
 	if(file_exists(temp_path)) file_delete(temp_path);
 	file_copy(path, temp_path);
 	
+	ALWAYS_FULL = false;
 	LOADING		= true;
 	READONLY	= readonly;
 	SET_PATH(path);

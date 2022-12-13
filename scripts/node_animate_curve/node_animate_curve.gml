@@ -1,9 +1,3 @@
-function Node_create_Anim_Curve(_x, _y) {
-	var node = new Node_Anim_Curve(_x, _y);
-	ds_list_add(PANEL_GRAPH.nodes_list, node);
-	return node;
-}
-
 function Node_Anim_Curve(_x, _y) : Node_Value_Processor(_x, _y) constructor {
 	name = "Anim Curve";
 	update_on_frame = true;

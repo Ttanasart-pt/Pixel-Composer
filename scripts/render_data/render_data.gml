@@ -4,20 +4,24 @@ enum RENDER_TYPE {
 	full = 2
 }
 
+global.RENDER_LOG = false;
+
 function __nodeLeafList(_list, _stack) {
 	for( var i = 0; i < ds_list_size(_list); i++ ) {
 		var _node = _list[| i];
-		if(_node.active && !is_undefined(_node) && is_struct(_node)) {
-			var _startNode = true;
-			for(var j = 0; j < ds_list_size(_node.inputs); j++) {
-				var _in = _node.inputs[| j];
-				_node.triggerRender();
+		if(!_node.active) continue;
+		
+		var _startNode = true;
+		for(var j = 0; j < ds_list_size(_node.inputs); j++) {
+			var _in = _node.inputs[| j];
+			_node.triggerRender();
 					
-				if(_in.value_from != noone)
-					_startNode = false;
-			}
-			if(_startNode)
-				ds_stack_push(_stack, _node);
+			if(_in.value_from != noone && !_in.value_from.node.rendered)
+				_startNode = false;
+		}
+		if(_startNode) {
+			ds_stack_push(_stack, _node);
+			printIf(global.RENDER_LOG, "Push node " + _node.name + " to stack");
 		}
 	}
 }
@@ -25,14 +29,15 @@ function __nodeLeafList(_list, _stack) {
 function Render(partial = false) {
 	var rendering = noone;
 	var error = 0;
+	printIf(global.RENDER_LOG, "=== RENDER START ===");
 	
-	if(!partial) {
+	if(!partial || ALWAYS_FULL) {
 		var _key = ds_map_find_first(NODE_MAP);
 		var amo = ds_map_size(NODE_MAP);
 	
 		repeat(amo) {
 			var _node = NODE_MAP[? _key];
-			_node.triggerRender();
+			_node.setRenderStatus(false);
 			_key = ds_map_find_next(NODE_MAP, _key);	
 		}
 	}
@@ -50,30 +55,32 @@ function Render(partial = false) {
 		if(instanceof(_node) == "Node_Group_Input") continue;
 		if(instanceof(_node) == "Node_Iterator_Input") continue;
 		
-		if(_node.active && !_node.rendered) {
-			var _startNode = true;
-			for(var j = 0; j < ds_list_size(_node.inputs); j++) {
-				var _in = _node.inputs[| j];
-				if(_in.value_from != noone && !_in.value_from.node.rendered)
-					_startNode = false;
-			}
-			if(_startNode)
-				ds_stack_push(RENDER_STACK, _node);
+		if(!_node.active) continue;
+		if(_node.rendered) continue;
+		
+		var _startNode = true;
+		for(var j = 0; j < ds_list_size(_node.inputs); j++) {
+			var _in = _node.inputs[| j];
+			if(_in.value_from != noone && !_in.value_from.node.rendered)
+				_startNode = false;
+		}
+		if(_startNode) {
+			ds_stack_push(RENDER_STACK, _node);
+			printIf(global.RENDER_LOG, "    > Push " + _node.name + " node to stack");
 		}
 	}
 	
-	var log = false;
-	printlog("=== RENDER START ===");
 	// render forward
 	while(!ds_stack_empty(RENDER_STACK)) {
 		rendering = ds_stack_pop(RENDER_STACK);
 		
+		var txt = rendering.rendered? " [Skip]" : " [Update]";
 		if(!rendering.rendered) {
 			if(LOADING || APPENDING || rendering.auto_update)
 				rendering.doUpdate();
 			rendering.setRenderStatus(true);
 		}
-		printlog("Rendered " + rendering.name);
+		printIf(global.RENDER_LOG, "Rendered " + rendering.name + " [" + string(instanceof(rendering)) + "]" + txt);
 		
 		if(instanceof(rendering) == "Node_Group") { //Put each input node in group to stack
 			//if(!rendering.isUpdateReady()) continue;
@@ -81,49 +88,57 @@ function Render(partial = false) {
 				var _in = rendering.inputs[| i].from;
 				
 				ds_stack_push(RENDER_STACK, _in);
-				printlog("Push group input " + _in.name + " to stack");
+				printIf(global.RENDER_LOG, "Push group input " + _in.name + " to stack");
 			}
 		} else if(instanceof(rendering) == "Node_Group_Output") { //Group output in-junction connect automatically to parent out-junction
 			rendering.group.setRenderStatus(true);
 			var _ot = rendering.outParent;
-			printlog("Value to amount " + string(ds_list_size(_ot.value_to)));
+			printIf(global.RENDER_LOG, "Value to amount " + string(ds_list_size(_ot.value_to)));
 			for(var j = 0; j < ds_list_size(_ot.value_to); j++) {
 				var _to = _ot.value_to[| j];
-				printlog("Value to " + _to.name);
+				printIf(global.RENDER_LOG, "Value to " + _to.name);
 				if(!_to.node.active || _to.value_from == noone) {
-					printlog("no value from");
+					printIf(global.RENDER_LOG, "no value from");
 					continue; 
 				}
 				if(_to.value_from.node != rendering.group) {
-					printlog("value from not equal group");
+					printIf(global.RENDER_LOG, "value from not equal group");
 					continue; 
 				}
 				
-				printlog("Group output ready " + string(_to.node.isUpdateReady()));
+				printIf(global.RENDER_LOG, "Group output ready " + string(_to.node.isUpdateReady()));
 				//_to.node.triggerRender();
 				if(_to.node.isUpdateReady()) {
 					ds_stack_push(RENDER_STACK, _to.node);
+					printIf(global.RENDER_LOG, "Push node " + _to.node + " to stack");
 				}
 			}
 		} else if(instanceof(rendering) == "Node_Iterate") { //Put each input node in group to stack
+			var allReady = true;
 			for(var i = rendering.custom_input_index; i < ds_list_size(rendering.inputs); i++) {
 				var _in = rendering.inputs[| i].from;
-				if(_in.isUpdateReady()) ds_stack_push(RENDER_STACK, _in);
+				allReady &= _in.isUpdateReady()
+			}
+			
+			if(allReady) {
+				for(var i = rendering.custom_input_index; i < ds_list_size(rendering.inputs); i++) {
+					var _in = rendering.inputs[| i].from;	
+					ds_stack_push(RENDER_STACK, _in);	
+					printIf(global.RENDER_LOG, "    > Push " + _in.name + " node to stack");
+				}
+				rendering.initLoop();
 			}
 		} else if(instanceof(rendering) == "Node_Iterator_Output") { //Check iteration result 
 			var _node_it = rendering.group;
 			var _ren = _node_it.iterationStatus();
 			
 			if(_ren == ITERATION_STATUS.loop) { //Go back to the beginning of the loop, reset render status for leaf node inside?
-				//show_debug_message("iteration restart");
-				var _ot = rendering.group.inputs;
-				for(var j = rendering.group.custom_input_index; j < ds_list_size(_ot); j++) {
-					if(_ot[| j].from.isUpdateReady()) ds_stack_push(RENDER_STACK, _ot[| j].from);
-				}
-				
+				printIf(global.RENDER_LOG, "    > Loop restart: iteration " + string(rendering.group.iterated));
 				__nodeLeafList(rendering.group.nodes, RENDER_STACK);
+				var loopEnt = rendering.inputs[| 2].value_from.node;
+				ds_stack_push(RENDER_STACK, loopEnt);
 			} else if(_ren == ITERATION_STATUS.complete) { //Go out of loop
-				//show_debug_message("iteration completed");
+				printIf(global.RENDER_LOG, "    > Loop completed");
 				rendering.group.setRenderStatus(true);
 				var _ot = rendering.outParent;
 				for(var j = 0; j < ds_list_size(_ot.value_to); j++) {
@@ -134,10 +149,12 @@ function Render(partial = false) {
 						if(_to.node.isUpdateReady()) ds_stack_push(RENDER_STACK, _to.node);
 					}
 				}
-			}
+			} else 
+				printIf(global.RENDER_LOG, "    > Loop not ready");
 		} else { //push next node
 			for(var i = 0; i < ds_list_size(rendering.outputs); i++) {
 				var _ot = rendering.outputs[| i];
+				if(_ot.type == VALUE_TYPE.node) continue;
 				
 				for(var j = 0; j < ds_list_size(_ot.value_to); j++) {
 					var _to = _ot.value_to[| j];
@@ -147,9 +164,9 @@ function Render(partial = false) {
 					_to.node.triggerRender();
 					if(_to.node.isUpdateReady()) {
 						ds_stack_push(RENDER_STACK, _to.node);
-						printlog("Push " + _to.node.name + " node to stack");
+						printIf(global.RENDER_LOG, "    > Push " + _to.node.name + " node to stack");
 					} else 
-						printlog("    > Node " + _to.node.name + " not ready");
+						printIf(global.RENDER_LOG, "    > Node " + _to.node.name + " not ready");
 				}
 			}
 		}
@@ -157,7 +174,7 @@ function Render(partial = false) {
 		//show_debug_message(txt);
 	}
 	
-	printlog("=== RENDER COMPLETE ===");
+	printIf(global.RENDER_LOG, "=== RENDER COMPLETE ===\n");
 }
 /*
 function renderNodeBackward(_node) { //unused

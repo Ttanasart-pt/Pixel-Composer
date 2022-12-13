@@ -1,10 +1,4 @@
-function Node_create_Gradient(_x, _y) {
-	var node = new Node_Gradient(_x, _y);
-	ds_list_add(PANEL_GRAPH.nodes_list, node);
-	return node;
-}
-
-function Node_Gradient(_x, _y) : Node(_x, _y) constructor {
+function Node_Gradient(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 	name = "Gradient";
 	
 	uniform_grad_blend = shader_get_uniform(sh_gradient, "gradient_blend");

@@ -1,11 +1,4 @@
-function Node_create_Group_Output(_x, _y) {
-	if(!LOADING && !APPENDING && PANEL_GRAPH.getCurrentContext() == -1) return;
-	var node = new Node_Group_Output(_x, _y, PANEL_GRAPH.getCurrentContext());
-	ds_list_add(PANEL_GRAPH.nodes_list, node);
-	return node;
-}
-
-function Node_Group_Output(_x, _y, _group) : Node(_x, _y) constructor {
+function Node_Group_Output(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 	name  = "Output";
 	color = COLORS.node_blend_collection;
 	previewable = false;

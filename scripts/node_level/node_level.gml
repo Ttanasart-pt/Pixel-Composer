@@ -1,10 +1,4 @@
-function Node_create_Level(_x, _y) {
-	var node = new Node_Level(_x, _y);
-	ds_list_add(PANEL_GRAPH.nodes_list, node);
-	return node;
-}
-
-function Node_Level(_x, _y) : Node_Processor(_x, _y) constructor {
+function Node_Level(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constructor {
 	name = "Level";
 	
 	uniform_black = shader_get_uniform(sh_level, "black");

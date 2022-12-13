@@ -1,9 +1,3 @@
-function Node_create_Shape(_x, _y) {
-	var node = new Node_Shape(_x, _y);
-	ds_list_add(PANEL_GRAPH.nodes_list, node);
-	return node;
-}
-
 enum NODE_SHAPE_TYPE {
 	rectangle,
 	elipse,
@@ -13,7 +7,7 @@ enum NODE_SHAPE_TYPE {
 	capsule
 }
 
-function Node_Shape(_x, _y) : Node_Processor(_x, _y) constructor {
+function Node_Shape(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constructor {
 	name = "Shape";
 	
 	shader = sh_shape;
@@ -63,7 +57,7 @@ function Node_Shape(_x, _y) : Node_Processor(_x, _y) constructor {
 	
 	inputs[| 11] = nodeValue(11, "Background color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_black);
 	
-	inputs[| 12] = nodeValue(12, "Distance field", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	inputs[| 12] = nodeValue(12, "Height", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
 	
 	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
 	

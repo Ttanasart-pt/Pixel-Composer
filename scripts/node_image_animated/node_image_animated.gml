@@ -1,16 +1,16 @@
-function Node_create_Image_Animated(_x, _y) {
+function Node_create_Image_Animated(_x, _y, _group = -1) {
 	var path = "";
 	if(!LOADING && !APPENDING) {
 		path = get_open_filenames(".png", "");
 		if(path == "") return noone;
 	}
 	
-	var node = new Node_Image_Animated(_x, _y);
+	var node = new Node_Image_Animated(_x, _y, _group);
 	var paths = paths_to_array(path);
 	node.inputs[| 0].setValue(paths);
 	node.doUpdate();
 	
-	ds_list_add(PANEL_GRAPH.nodes_list, node);
+	//ds_list_add(PANEL_GRAPH.nodes_list, node);
 	return node;
 }
 
@@ -20,7 +20,7 @@ function Node_create_Image_Animated_path(_x, _y, _path) {
 	node.inputs[| 0].setValue(_path);
 	node.doUpdate();
 	
-	ds_list_add(PANEL_GRAPH.nodes_list, node);
+	//ds_list_add(PANEL_GRAPH.nodes_list, node);
 	return node;
 }
 
@@ -31,7 +31,7 @@ enum ANIMATION_END {
 	hide
 }
 
-function Node_Image_Animated(_x, _y) : Node(_x, _y) constructor {
+function Node_Image_Animated(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 	name  = "";
 	spr   = [];
 	color = COLORS.node_blend_input;

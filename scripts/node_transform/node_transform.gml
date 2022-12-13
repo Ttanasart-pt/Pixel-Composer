@@ -1,16 +1,10 @@
-function Node_create_Transform(_x, _y) {
-	var node = new Node_Transform(_x, _y);
-	ds_list_add(PANEL_GRAPH.nodes_list, node);
-	return node;
-}
-
 enum OUTPUT_SCALING {
 	same_as_input,
 	constant,
 	relative
 }
 
-function Node_Transform(_x, _y) : Node_Processor(_x, _y) constructor {
+function Node_Transform(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constructor {
 	name = "Transform";
 	
 	inputs[| 0] = nodeValue(0, "Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);

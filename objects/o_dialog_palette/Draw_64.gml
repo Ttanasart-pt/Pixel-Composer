@@ -91,8 +91,12 @@ if palette == 0 exit;
 		var by = dialog_y + ui(16);
 		
 		if(buttonInstant(THEME.button_hide, bx, by, ui(28), ui(28), mouse_ui, sFOCUS, sHOVER, "Sort color", THEME.sort) == 2) {
-			sortPalette();
-			onApply(palette);
+			var dia = dialogCall(o_dialog_menubox, bx + ui(32), by);
+			dia.setMenu([ 
+				[ "Brighter", function() { sortPalette(__sortBright); } ], 
+				[ "Darker", function() { sortPalette(__sortDark); } ], 
+				[ "Hue", function() { sortPalette(__sortHue); } ], 
+			]);
 		}
 		
 		bx -= ui(32);

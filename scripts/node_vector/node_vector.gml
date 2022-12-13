@@ -1,9 +1,3 @@
-function Node_create_Number(_x, _y) {
-	var node = new Node_Number(_x, _y);
-	ds_list_add(PANEL_GRAPH.nodes_list, node);
-	return node;
-}
-
 function Node_Number(_x, _y) : Node_Value_Processor(_x, _y) constructor {
 	name = "Number";
 	color = COLORS.node_blend_number;
@@ -29,12 +23,6 @@ function Node_Number(_x, _y) : Node_Value_Processor(_x, _y) constructor {
 		var ss	= string_scale(str, (w - 16) * _s, (h - 16) * _s - 20);
 		draw_text_transformed(xx + w / 2 * _s, yy + 10 + h / 2 * _s, str, ss, ss, 0);
 	}
-}
-
-function Node_create_Vector2(_x, _y) {
-	var node = new Node_Vector2(_x, _y);
-	ds_list_add(PANEL_GRAPH.nodes_list, node);
-	return node;
 }
 
 function Node_Vector2(_x, _y) : Node_Value_Processor(_x, _y) constructor {
@@ -65,12 +53,6 @@ function Node_Vector2(_x, _y) : Node_Value_Processor(_x, _y) constructor {
 		var ss	= string_scale(str, (w - 16) * _s, (h - 16) * _s - 20);
 		draw_text_transformed(xx + w / 2 * _s, yy + 10 + h / 2 * _s, str, ss, ss, 0);
 	}
-}
-
-function Node_create_Vector3(_x, _y) {
-	var node = new Node_Vector3(_x, _y);
-	ds_list_add(PANEL_GRAPH.nodes_list, node);
-	return node;
 }
 
 function Node_Vector3(_x, _y) : Node_Value_Processor(_x, _y) constructor {
@@ -104,12 +86,6 @@ function Node_Vector3(_x, _y) : Node_Value_Processor(_x, _y) constructor {
 		var ss	= string_scale(str, (w - 16) * _s, (h - 16) * _s - 20);
 		draw_text_transformed(xx + w / 2 * _s, yy + 10 + h / 2 * _s, str, ss, ss, 0);
 	}
-}
-
-function Node_create_Vector4(_x, _y) {
-	var node = new Node_Vector4(_x, _y);
-	ds_list_add(PANEL_GRAPH.nodes_list, node);
-	return node;
 }
 
 function Node_Vector4(_x, _y) : Node_Value_Processor(_x, _y) constructor {
@@ -146,12 +122,6 @@ function Node_Vector4(_x, _y) : Node_Value_Processor(_x, _y) constructor {
 		var ss	= string_scale(str, (w - 16) * _s, (h - 16) * _s - 20);
 		draw_text_transformed(xx + w / 2 * _s, yy + 10 + h / 2 * _s, str, ss, ss, 0);
 	}
-}
-
-function Node_create_Vector_Split(_x, _y) {
-	var node = new Node_Vector_Split(_x, _y);
-	ds_list_add(PANEL_GRAPH.nodes_list, node);
-	return node;
 }
 
 function Node_Vector_Split(_x, _y) : Node_Value_Processor(_x, _y) constructor {

@@ -1,4 +1,4 @@
-function Node_Value_Processor(_x, _y) : Node(_x, _y) constructor {
+function Node_Value_Processor(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 	array_process = ARRAY_PROCESS.loop;
 	
 	function process_value(_outindex) {

@@ -1,7 +1,9 @@
-function Node(_x, _y) constructor {
+function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) constructor {
 	active  = true;
 	node_id = generateUUID();
-	group   = -1;
+	group   = _group;
+	ds_list_add(PANEL_GRAPH.getNodeList(_group), self);
+	
 	color   = c_white;
 	icon    = noone;
 	bg_spr  = THEME.node_bg;
@@ -11,7 +13,6 @@ function Node(_x, _y) constructor {
 	if(!LOADING && !APPENDING) {
 		recordAction(ACTION_TYPE.node_added, self);
 		NODE_MAP[? node_id] = self;
-		group = PANEL_GRAPH.getCurrentContext();
 	}
 	
 	name = "";
@@ -24,6 +25,7 @@ function Node(_x, _y) constructor {
 	auto_height = true;
 	
 	input_display_list = -1;
+	output_display_list = -1;
 	inspector_display_list = -1;
 	is_dynamic_output = false;
 	inputs  = ds_list_create();
@@ -70,6 +72,12 @@ function Node(_x, _y) constructor {
 		if(is_array(jun_list_arr)) return noone;
 		if(is_struct(jun_list_arr)) return noone;
 		return jun_list_arr;
+	}
+	
+	static getOutputJunctionIndex = function(index) {
+		if(output_display_list == -1)
+			return index;
+		return output_display_list[index];
 	}
 	
 	static setHeight = function() {
@@ -201,12 +209,12 @@ function Node(_x, _y) constructor {
 	static preDraw = function(_x, _y, _s) {
 		var xx = x * _s + _x;
 		var yy = y * _s + _y;
-		
 		var jun;
-		var amo = input_display_list == -1? ds_list_size(inputs) : array_length(input_display_list);
+		
+		var inamo = input_display_list == -1? ds_list_size(inputs) : array_length(input_display_list);
 		var _in = yy + ui(32) * _s;
 		
-		for(var i = 0; i < amo; i++) {
+		for(var i = 0; i < inamo; i++) {
 			var idx = getInputJunctionIndex(i);
 			if(idx == noone) continue;
 			
@@ -217,10 +225,13 @@ function Node(_x, _y) constructor {
 			_in += 24 * _s * jun.isVisible();
 		}
 		
+		var outamo = output_display_list == -1? ds_list_size(outputs) : array_length(output_display_list);
+		
 		xx = xx + w * _s;
 		_in = yy + ui(32) * _s;
-		for(var i = 0; i < ds_list_size(outputs); i++) {
-			jun = outputs[| i];
+		for(var i = 0; i < outamo; i++) {
+			var idx = getOutputJunctionIndex(i);
+			jun = outputs[| idx];
 			
 			jun.x = xx;
 			jun.y = _in;
@@ -314,7 +325,7 @@ function Node(_x, _y) constructor {
 		}
 	}
 	
-	static drawConnections = function(_x, _y, mx, my, _s) {
+	static drawConnections = function(_x, _y, _s, mx, my, active) {
 		var hovering = noone;
 		for(var i = 0; i < ds_list_size(inputs); i++) {
 			var jun = inputs[| i];
@@ -345,9 +356,9 @@ function Node(_x, _y) constructor {
 						break;
 				}
 				
-				if(hover)
+				if(active && hover)
 					hovering = jun;
-				if(PANEL_GRAPH.junction_hovering == jun)
+				if(PANEL_GRAPH.junction_hovering == jun || (instance_exists(o_dialog_add_node) && o_dialog_add_node.junction_hovering == jun))
 					th *= 2;
 				
 				var ty = LINE_STYLE.solid;
@@ -626,6 +637,7 @@ function Node(_x, _y) constructor {
 		var _data = serialize();
 		_node.deserialize(ds_map_clone(_data));
 		_node.node_id = generateUUID();
+		NODE_MAP[? _node.node_id] = _node;
 		
 		return _node;
 	}

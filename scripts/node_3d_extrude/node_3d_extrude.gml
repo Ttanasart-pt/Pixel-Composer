@@ -1,10 +1,4 @@
-function Node_create_3D_Extrude(_x, _y) {
-	var node = new Node_3D_Extrude(_x, _y);
-	ds_list_add(PANEL_GRAPH.nodes_list, node);
-	return node;
-}
-
-function Node_3D_Extrude(_x, _y) : Node(_x, _y) constructor {
+function Node_3D_Extrude(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 	name = "3D Extrude";
 	
 	uniVertex_lightFor = shader_get_uniform(sh_vertex_pnt_light, "u_LightForward");
@@ -46,8 +40,10 @@ function Node_3D_Extrude(_x, _y) : Node(_x, _y) constructor {
 	inputs[| 10] = nodeValue(10, "Light color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white);
 	inputs[| 11] = nodeValue(11, "Ambient color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_grey);
 	
-	input_display_list = [1,
-		["Geometry",	false], 0, 6,
+	inputs[| 12] = nodeValue(12, "Height map", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
+	
+	input_display_list = [1, 
+		["Geometry",	false], 0, 12, 6,
 		["Transform",	false], 2, 3, 4, 5,
 		["Light",		false], 7, 8, 9, 10, 11
 	];
@@ -59,12 +55,13 @@ function Node_3D_Extrude(_x, _y) : Node(_x, _y) constructor {
 	vertex_end(VB);
 	
 	static onValueUpdate = function(index) {
-		if(index == 0) 
+		if(index == 0 || index == 12) 
 			generateMesh();
 	}
 	
 	static generateMesh = function() {
 		var _ins = inputs[| 0].getValue();
+		var _hei = inputs[| 12].getValue();
 		if(!is_surface(_ins)) return;
 		
 		var ww = surface_get_width(_ins);
@@ -73,6 +70,24 @@ function Node_3D_Extrude(_x, _y) : Node(_x, _y) constructor {
 		var th = 1 / hh;
 		var sw = -ww / 2 * tw;
 		var sh = -hh / 2 * th;
+		var useH = is_surface(_hei);
+		
+		if(useH) {
+			var height_buffer = buffer_create(ww * hh * 4, buffer_fixed, 2);
+			buffer_get_surface(height_buffer, _hei, 0);
+			buffer_seek(height_buffer, buffer_seek_start, 0);
+			
+			var hei = array_create(ww, hh);
+			
+			for( var j = 0; j < hh; j++ )
+			for( var i = 0; i < ww; i++ ) {
+				var cc = buffer_read(height_buffer, buffer_u32);
+				var _b = colorBrightness(cc & ~0b11111111);
+				hei[i][j] = _b;
+			}
+			
+			buffer_delete(height_buffer);
+		}
 		
 		var surface_buffer = buffer_create(ww * hh * 4, buffer_fixed, 2);
 		buffer_get_surface(surface_buffer, _ins, 0);
@@ -88,6 +103,8 @@ function Node_3D_Extrude(_x, _y) : Node(_x, _y) constructor {
 			ap[i][j] = _a;
 		}
 		
+		buffer_delete(surface_buffer);
+		
 		for( var i = 0; i < ww; i++ )
 		for( var j = 0; j < hh; j++ ) {
 			if(ap[i][j] == 0) continue;
@@ -97,60 +114,62 @@ function Node_3D_Extrude(_x, _y) : Node(_x, _y) constructor {
 			var tx0 = tw * i, tx1 = tx0 + tw;
 			var ty0 = th * j, ty1 = ty0 + th;
 			
-			vertex_add_pnt(VB, [i1, j0, -0.5], [0, 0, -1], [tx1, ty0]);
-			vertex_add_pnt(VB, [i0, j0, -0.5], [0, 0, -1], [tx0, ty0]);
-			vertex_add_pnt(VB, [i1, j1, -0.5], [0, 0, -1], [tx1, ty1]);
+			var dep = (useH? hei[i][j] : 1) * 0.5;
+			
+			vertex_add_pnt(VB, [i1, j0, -dep], [0, 0, -1], [tx1, ty0]);
+			vertex_add_pnt(VB, [i0, j0, -dep], [0, 0, -1], [tx0, ty0]);
+			vertex_add_pnt(VB, [i1, j1, -dep], [0, 0, -1], [tx1, ty1]);
 						    		
-			vertex_add_pnt(VB, [i1, j1, -0.5], [0, 0, -1], [tx1, ty1]);
-			vertex_add_pnt(VB, [i0, j0, -0.5], [0, 0, -1], [tx0, ty0]);
-			vertex_add_pnt(VB, [i0, j1, -0.5], [0, 0, -1], [tx0, ty1]);
+			vertex_add_pnt(VB, [i1, j1, -dep], [0, 0, -1], [tx1, ty1]);
+			vertex_add_pnt(VB, [i0, j0, -dep], [0, 0, -1], [tx0, ty0]);
+			vertex_add_pnt(VB, [i0, j1, -dep], [0, 0, -1], [tx0, ty1]);
 			
-			vertex_add_pnt(VB, [i1, j0,  0.5], [0, 0, 1], [tx1, ty0]);
-			vertex_add_pnt(VB, [i0, j0,  0.5], [0, 0, 1], [tx0, ty0]);
-			vertex_add_pnt(VB, [i1, j1,  0.5], [0, 0, 1], [tx1, ty1]);
+			vertex_add_pnt(VB, [i1, j0,  dep], [0, 0, 1], [tx1, ty0]);
+			vertex_add_pnt(VB, [i0, j0,  dep], [0, 0, 1], [tx0, ty0]);
+			vertex_add_pnt(VB, [i1, j1,  dep], [0, 0, 1], [tx1, ty1]);
 						    		    
-			vertex_add_pnt(VB, [i1, j1,  0.5], [0, 0, 1], [tx1, ty1]);
-			vertex_add_pnt(VB, [i0, j0,  0.5], [0, 0, 1], [tx0, ty0]);
-			vertex_add_pnt(VB, [i0, j1,  0.5], [0, 0, 1], [tx0, ty1]);
+			vertex_add_pnt(VB, [i1, j1,  dep], [0, 0, 1], [tx1, ty1]);
+			vertex_add_pnt(VB, [i0, j0,  dep], [0, 0, 1], [tx0, ty0]);
+			vertex_add_pnt(VB, [i0, j1,  dep], [0, 0, 1], [tx0, ty1]);
 			
-			if(j == 0 || ap[i][j - 1] == 0) {
-				vertex_add_pnt(VB, [i0, j0,  0.5], [0, -1, 0], [tx1, ty0]);
-				vertex_add_pnt(VB, [i0, j0, -0.5], [0, -1, 0], [tx0, ty0]);
-				vertex_add_pnt(VB, [i1, j0,  0.5], [0, -1, 0], [tx1, ty1]);
+			if((useH && dep > hei[i][j - 1]) || (j == 0 || ap[i][j - 1] == 0)) {
+				vertex_add_pnt(VB, [i0, j0,  dep], [0, -1, 0], [tx1, ty0]);
+				vertex_add_pnt(VB, [i0, j0, -dep], [0, -1, 0], [tx0, ty0]);
+				vertex_add_pnt(VB, [i1, j0,  dep], [0, -1, 0], [tx1, ty1]);
 						    		    
-				vertex_add_pnt(VB, [i0, j0, -0.5], [0, -1, 0], [tx1, ty1]);
-				vertex_add_pnt(VB, [i1, j0, -0.5], [0, -1, 0], [tx0, ty0]);
-				vertex_add_pnt(VB, [i1, j0,  0.5], [0, -1, 0], [tx0, ty1]);
+				vertex_add_pnt(VB, [i0, j0, -dep], [0, -1, 0], [tx1, ty1]);
+				vertex_add_pnt(VB, [i1, j0, -dep], [0, -1, 0], [tx0, ty0]);
+				vertex_add_pnt(VB, [i1, j0,  dep], [0, -1, 0], [tx0, ty1]);
 			}
 			
-			if(j == hh - 1 || ap[i][j + 1] == 0) {
-				vertex_add_pnt(VB, [i0, j1,  0.5], [0, 1, 0], [tx1, ty0]);
-				vertex_add_pnt(VB, [i0, j1, -0.5], [0, 1, 0], [tx0, ty0]);
-				vertex_add_pnt(VB, [i1, j1,  0.5], [0, 1, 0], [tx1, ty1]);
+			if((useH && dep > hei[i][j + 1]) || (j == hh - 1 || ap[i][j + 1] == 0)) {
+				vertex_add_pnt(VB, [i0, j1,  dep], [0, 1, 0], [tx1, ty0]);
+				vertex_add_pnt(VB, [i0, j1, -dep], [0, 1, 0], [tx0, ty0]);
+				vertex_add_pnt(VB, [i1, j1,  dep], [0, 1, 0], [tx1, ty1]);
 						    		    
-				vertex_add_pnt(VB, [i0, j1, -0.5], [0, 1, 0], [tx1, ty1]);
-				vertex_add_pnt(VB, [i1, j1, -0.5], [0, 1, 0], [tx0, ty0]);
-				vertex_add_pnt(VB, [i1, j1,  0.5], [0, 1, 0], [tx0, ty1]);
+				vertex_add_pnt(VB, [i0, j1, -dep], [0, 1, 0], [tx1, ty1]);
+				vertex_add_pnt(VB, [i1, j1, -dep], [0, 1, 0], [tx0, ty0]);
+				vertex_add_pnt(VB, [i1, j1,  dep], [0, 1, 0], [tx0, ty1]);
 			}
 			
-			if(i == 0 || ap[i - 1][j] == 0) {
-				vertex_add_pnt(VB, [i0, j0,  0.5], [1, 0, 0], [tx1, ty0]);
-				vertex_add_pnt(VB, [i0, j0, -0.5], [1, 0, 0], [tx0, ty0]);
-				vertex_add_pnt(VB, [i0, j1,  0.5], [1, 0, 0], [tx1, ty1]);
+			if((useH && dep > hei[i - 1][j]) || (i == 0 || ap[i - 1][j] == 0)) {
+				vertex_add_pnt(VB, [i0, j0,  dep], [1, 0, 0], [tx1, ty0]);
+				vertex_add_pnt(VB, [i0, j0, -dep], [1, 0, 0], [tx0, ty0]);
+				vertex_add_pnt(VB, [i0, j1,  dep], [1, 0, 0], [tx1, ty1]);
 						    		    
-				vertex_add_pnt(VB, [i0, j0, -0.5], [1, 0, 0], [tx1, ty1]);
-				vertex_add_pnt(VB, [i0, j1, -0.5], [1, 0, 0], [tx0, ty0]);
-				vertex_add_pnt(VB, [i0, j1,  0.5], [1, 0, 0], [tx0, ty1]);
+				vertex_add_pnt(VB, [i0, j0, -dep], [1, 0, 0], [tx1, ty1]);
+				vertex_add_pnt(VB, [i0, j1, -dep], [1, 0, 0], [tx0, ty0]);
+				vertex_add_pnt(VB, [i0, j1,  dep], [1, 0, 0], [tx0, ty1]);
 			}
 			
-			if(i == ww - 1 || ap[i + 1][j] == 0) {
-				vertex_add_pnt(VB, [i1, j0,  0.5], [-1, 0, 0], [tx1, ty0]);
-				vertex_add_pnt(VB, [i1, j0, -0.5], [-1, 0, 0], [tx0, ty0]);
-				vertex_add_pnt(VB, [i1, j1,  0.5], [-1, 0, 0], [tx1, ty1]);
+			if((useH && dep > hei[i + 1][j]) || (i == ww - 1 || ap[i + 1][j] == 0)) {
+				vertex_add_pnt(VB, [i1, j0,  dep], [-1, 0, 0], [tx1, ty0]);
+				vertex_add_pnt(VB, [i1, j0, -dep], [-1, 0, 0], [tx0, ty0]);
+				vertex_add_pnt(VB, [i1, j1,  dep], [-1, 0, 0], [tx1, ty1]);
 						    		    
-				vertex_add_pnt(VB, [i1, j0, -0.5], [-1, 0, 0], [tx1, ty1]);
-				vertex_add_pnt(VB, [i1, j1, -0.5], [-1, 0, 0], [tx0, ty0]);
-				vertex_add_pnt(VB, [i1, j1,  0.5], [-1, 0, 0], [tx0, ty1]);
+				vertex_add_pnt(VB, [i1, j0, -dep], [-1, 0, 0], [tx1, ty1]);
+				vertex_add_pnt(VB, [i1, j1, -dep], [-1, 0, 0], [tx0, ty0]);
+				vertex_add_pnt(VB, [i1, j1,  dep], [-1, 0, 0], [tx0, ty1]);
 			}
 		}
 		vertex_end(VB);

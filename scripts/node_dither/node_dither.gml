@@ -1,10 +1,4 @@
-function Node_create_Dither(_x, _y) {
-	var node = new Node_Dither(_x, _y);
-	ds_list_add(PANEL_GRAPH.nodes_list, node);
-	return node;
-}
-
-function Node_Dither(_x, _y) : Node_Processor(_x, _y) constructor {
+function Node_Dither(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constructor {
 	static dither2 =    [  0,  2,
 					       3,  1 ];
 	static dither4 =    [  0,  8,  2, 10,

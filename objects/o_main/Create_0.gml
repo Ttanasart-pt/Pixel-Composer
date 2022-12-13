@@ -19,8 +19,6 @@
 	room_height = WIN_H;
 	
 	draw_set_circle_precision(64);
-	globalvar CURSOR, UPDATE, TOOLTIP, DIALOG_DEPTH_HOVER;
-	globalvar RENDER_STACK, KEYBOARD_STRING;
 	DIALOG_DEPTH_HOVER = 0;
 	UPDATE  = RENDER_TYPE.none;
 	CURSOR  = cr_default;

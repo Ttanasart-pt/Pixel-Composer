@@ -6,9 +6,9 @@ enum STAT_OPERATOR {
 	_min
 }
 
-function Node_create_Statistic(_x, _y, _param = "") {
-	var node = new Node_Statistic(_x, _y);
-	ds_list_add(PANEL_GRAPH.nodes_list, node);
+function Node_create_Statistic(_x, _y, _group = -1, _param = "") {
+	var node = new Node_Statistic(_x, _y, _group);
+	//ds_list_add(PANEL_GRAPH.nodes_list, node);
 	
 	switch(_param) {
 		case "sum" :		node.inputs[| 0].setValue(STAT_OPERATOR._sum); break;	
@@ -22,7 +22,7 @@ function Node_create_Statistic(_x, _y, _param = "") {
 	return node;
 }
 
-function Node_Statistic(_x, _y) : Node(_x, _y) constructor {
+function Node_Statistic(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 	name = "Statistic";
 	previewable = false;
 	

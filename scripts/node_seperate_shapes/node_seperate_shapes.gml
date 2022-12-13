@@ -1,10 +1,4 @@
-function Node_create_Seperate_Shape(_x, _y) {
-	var node = new Node_Seperate_Shape(_x, _y);
-	ds_list_add(PANEL_GRAPH.nodes_list, node);
-	return node;
-}
-
-function Node_Seperate_Shape(_x, _y) : Node(_x, _y) constructor {
+function Node_Seperate_Shape(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 	name		= "Separate shape";
 	auto_update = false;
 	

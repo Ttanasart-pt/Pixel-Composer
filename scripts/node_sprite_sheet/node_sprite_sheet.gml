@@ -1,9 +1,3 @@
-function Node_create_Render_Sprite_Sheet(_x, _y) {
-	var node = new Node_Render_Sprite_Sheet(_x, _y);
-	ds_list_add(PANEL_GRAPH.nodes_list, node);
-	return node;
-}
-
 enum SPRITE_STACK {
 	horizontal,
 	vertical,
@@ -15,7 +9,7 @@ enum SPRITE_ANIM_GROUP {
 	all_sprites
 }
 
-function Node_Render_Sprite_Sheet(_x, _y) : Node(_x, _y) constructor {
+function Node_Render_Sprite_Sheet(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 	name			= "Sheet";
 	auto_update     = false;
 	

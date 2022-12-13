@@ -86,8 +86,7 @@ void main() {
 	float d;
 	
 	if(shape == 0) {
-		vec2 cen = v_vTexcoord - center;
-		vec2 edgeDist = abs(cen) - scale;
+		vec2 edgeDist = abs(cen) - 1.;
 		float odist = length(max(edgeDist, 0.));
 		float idist = min(max(edgeDist.x, edgeDist.y), 0.);
 		d = odist + idist;
@@ -107,9 +106,9 @@ void main() {
 		d -= corner;
 	}
 	
-	d = max(0., min(1., d));
+	//d = d;
 	if(drawDF == 1)
-		color = 1. - d;
+		color = -d;
 	else if(aa == 0)
 		color = step(d, 0.0);
 	else

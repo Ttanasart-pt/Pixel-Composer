@@ -1,5 +1,5 @@
 #region save
-	globalvar LOADING, APPENDING, MODIFIED, CURRENT_PATH, READONLY, CONNECTION_CONFLICT, GLOBAL_SEED;
+	globalvar LOADING, APPENDING, MODIFIED, CURRENT_PATH, READONLY, CONNECTION_CONFLICT, GLOBAL_SEED, ALWAYS_FULL;
 	LOADING   = false;
 	APPENDING = false;
 	READONLY  = false;
@@ -10,6 +10,7 @@
 	
 	randomize();
 	GLOBAL_SEED = irandom(9999999999);
+	ALWAYS_FULL = false;
 #endregion
 
 #region main
@@ -32,6 +33,9 @@
 	HOTKEYS			= ds_map_create();
 	HOTKEY_CONTEXT	= ds_list_create();
 	HOTKEY_CONTEXT[| 0] = "";
+	
+	globalvar CURSOR, TOOLTIP, DIALOG_DEPTH_HOVER, KEYBOARD_STRING;
+	globalvar UPDATE, RENDER_STACK;
 	
 	enum ANIMATOR_END {
 		loop,
@@ -110,6 +114,11 @@
 	#macro PIXEL_SURFACE surface_create_valid(1, 1)
 	#macro print show_debug_message
 	#macro printlog if(log) show_debug_message
+	
+	function printIf(cond, log) {
+		if(!cond) return;
+		show_debug_message(log);
+	}
 #endregion
 
 #region presets

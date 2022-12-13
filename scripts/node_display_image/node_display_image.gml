@@ -1,15 +1,15 @@
-function Node_create_Display_Image(_x, _y) {
+function Node_create_Display_Image(_x, _y, _group = -1) {
 	var path = "";
 	if(!LOADING && !APPENDING) {
 		path = get_open_filename(".png", "");
 		if(path == "") return noone;
 	}
 	
-	var node = new Node_Display_Image(_x, _y);
+	var node = new Node_Display_Image(_x, _y, _group);
 	node.inputs[| 0].setValue(path);
 	node.doUpdate();
 	
-	ds_list_add(PANEL_GRAPH.nodes_list, node);
+	//ds_list_add(PANEL_GRAPH.nodes_list, node);
 	return node;
 }
 
@@ -20,11 +20,11 @@ function Node_create_Display_Image_path(_x, _y, path) {
 	node.inputs[| 0].setValue(path);
 	node.doUpdate();
 	
-	ds_list_add(PANEL_GRAPH.nodes_list, node);
+	//ds_list_add(PANEL_GRAPH.nodes_list, node);
 	return node;	
 }
 
-function Node_Display_Image(_x, _y) : Node(_x, _y) constructor {
+function Node_Display_Image(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 	name			= "";
 	always_output   = true;
 	auto_height		= false;

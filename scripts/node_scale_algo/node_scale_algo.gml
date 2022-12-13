@@ -1,6 +1,6 @@
-function Node_create_Scale_Algo(_x, _y, _param = "") {
-	var node = new Node_Scale_Algo(_x, _y);
-	ds_list_add(PANEL_GRAPH.nodes_list, node);
+function Node_create_Scale_Algo(_x, _y, _group = -1, _param = "") {
+	var node = new Node_Scale_Algo(_x, _y, _group);
+	//ds_list_add(PANEL_GRAPH.nodes_list, node);
 	
 	switch(_param) {
 		case "scale2x" : node.inputs[| 1].setValue(0); break;	
@@ -10,7 +10,7 @@ function Node_create_Scale_Algo(_x, _y, _param = "") {
 	return node;
 }
 
-function Node_Scale_Algo(_x, _y) : Node_Processor(_x, _y) constructor {
+function Node_Scale_Algo(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constructor {
 	name = "Scale Algo";
 	
 	uniform_dim = shader_get_uniform(sh_scale2x, "dimension");

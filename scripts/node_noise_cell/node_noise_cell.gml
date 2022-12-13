@@ -1,10 +1,4 @@
-function Node_create_Cellular(_x, _y) {
-	var node = new Node_Cellular(_x, _y);
-	ds_list_add(PANEL_GRAPH.nodes_list, node);
-	return node;
-}
-
-function Node_Cellular(_x, _y) : Node(_x, _y) constructor {
+function Node_Cellular(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 	name = "Cellular";
 	
 	inputs[| 0] = nodeValue(0, "Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, def_surf_size2 )
@@ -49,14 +43,14 @@ function Node_Cellular(_x, _y) : Node(_x, _y) constructor {
 	}
 	
 	static update = function() {
-		var _dim = inputs[| 0].getValue();
-		var _pos = inputs[| 1].getValue();
-		var _sca = inputs[| 2].getValue();
-		var _tim = inputs[| 3].getValue();
+		var _dim  = inputs[| 0].getValue();
+		var _pos  = inputs[| 1].getValue();
+		var _sca  = inputs[| 2].getValue();
+		var _tim  = inputs[| 3].getValue();
 		var _type = inputs[| 4].getValue();
-		var _con = inputs[| 5].getValue();
-		var _pat = inputs[| 6].getValue();
-		var _mid = inputs[| 7].getValue();
+		var _con  = inputs[| 5].getValue();
+		var _pat  = inputs[| 6].getValue();
+		var _mid  = inputs[| 7].getValue();
 		
 		inputs[| 8].setVisible(_pat == 1);
 		inputs[| 9].setVisible(_pat == 1);

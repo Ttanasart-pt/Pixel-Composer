@@ -1,15 +1,15 @@
-function Node_create_Image(_x, _y) {
+function Node_create_Image(_x, _y, _group = -1) {
 	var path = "";
 	if(!LOADING && !APPENDING) {
 		path = get_open_filename(".png", "");
 		if(path == "") return noone;
 	}
 	
-	var node = new Node_Image(_x, _y);
+	var node = new Node_Image(_x, _y, _group);
 	node.inputs[| 0].setValue(path);
 	node.doUpdate();
 	
-	ds_list_add(PANEL_GRAPH.nodes_list, node);
+	//ds_list_add(PANEL_GRAPH.nodes_list, node);
 	return node;
 }
 
@@ -20,11 +20,11 @@ function Node_create_Image_path(_x, _y, path) {
 	node.inputs[| 0].setValue(path);
 	node.doUpdate();
 	
-	ds_list_add(PANEL_GRAPH.nodes_list, node);
+	//ds_list_add(PANEL_GRAPH.nodes_list, node);
 	return node;	
 }
 
-function Node_Image(_x, _y) : Node(_x, _y) constructor {
+function Node_Image(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 	name			= "";
 	color			= COLORS.node_blend_input;
 	always_output   = true;
@@ -121,7 +121,7 @@ function Node_Image(_x, _y) : Node(_x, _y) constructor {
 			var ww = sprite_get_width(spr) / amo;
 			var hh = sprite_get_height(spr);
 					
-			var _splice = nodeBuild("Splice spritesheet", x + w + 64, y);
+			var _splice = nodeBuild("Node_Image_Sheet", x + w + 64, y);
 			_splice.inputs[| 0].setFrom(outputs[| 0], false);
 			_splice.inputs[| 1].setValue([ww, hh]);
 			_splice.inputs[| 2].setValue(amo);

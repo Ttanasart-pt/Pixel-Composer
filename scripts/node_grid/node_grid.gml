@@ -1,10 +1,4 @@
-function Node_create_Grid(_x, _y) {
-	var node = new Node_Grid(_x, _y);
-	ds_list_add(PANEL_GRAPH.nodes_list, node);
-	return node;
-}
-
-function Node_Grid(_x, _y) : Node(_x, _y) constructor {
+function Node_Grid(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 	name = "Grid";
 	
 	shader = sh_grid;
@@ -15,6 +9,7 @@ function Node_Grid(_x, _y) : Node(_x, _y) constructor {
 	uniform_ang = shader_get_uniform(shader, "angle");
 	uniform_shf = shader_get_uniform(shader, "shift");
 	uniform_shx = shader_get_uniform(shader, "shiftAxis");
+	uniform_hgt = shader_get_uniform(shader, "height");
 	
 	uniform_col1 = shader_get_uniform(shader, "col1");
 	uniform_col2 = shader_get_uniform(shader, "col2");
@@ -45,11 +40,13 @@ function Node_Grid(_x, _y) : Node(_x, _y) constructor {
 		
 	inputs[| 9] = nodeValue(9, "Shift axis", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.enum_button, ["X", "Y"]);
+		
+	inputs[| 10] = nodeValue(10, "Height", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
 	
 	input_display_list = [
 		["Output",  false], 0,
 		["Pattern",	false], 1, 4, 2, 3, 9, 8,
-		["Render",	false], 5, 6, 7,
+		["Render",	false], 5, 6, 7, 10
 	];
 	
 	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
@@ -67,6 +64,7 @@ function Node_Grid(_x, _y) : Node(_x, _y) constructor {
 		var _sam = inputs[| 7].getValue();
 		var _shf = inputs[| 8].getValue();
 		var _shx = inputs[| 9].getValue();
+		var _hgt = inputs[| 10].getValue();
 		
 		var _col1 = inputs[| 5].getValue();
 		var _col2 = inputs[| 6].getValue();
@@ -89,6 +87,7 @@ function Node_Grid(_x, _y) : Node(_x, _y) constructor {
 			shader_set_uniform_f(uniform_sam, is_surface(_sam));
 			shader_set_uniform_f(uniform_shf, _shf);
 			shader_set_uniform_i(uniform_shx, _shx);
+			shader_set_uniform_i(uniform_hgt, _hgt);
 			shader_set_uniform_f_array(uniform_col1, colToVec4(_col1));
 			shader_set_uniform_f_array(uniform_col2, colToVec4(_col2));
 			

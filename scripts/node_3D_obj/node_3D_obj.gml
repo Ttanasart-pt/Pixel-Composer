@@ -1,22 +1,16 @@
-function Node_create_3D_Obj(_x, _y) {
-	var node = new Node_3D_Obj(_x, _y);
-	ds_list_add(PANEL_GRAPH.nodes_list, node);
-	return node;
-}
-
-function Node_create_3D_Obj_path(_x, _y, path) {
+function Node_create_3D_Obj_path(_x, _y, _group = 1, path) {
 	if(!file_exists(path)) return noone;
 	
-	var node = new Node_3D_Obj(_x, _y);
+	var node = new Node_3D_Obj(_x, _y, _group);
 	node.inputs[| 0].setValue(path);
 	node.updateObj();
 	node.doUpdate(); 
 	
-	ds_list_add(PANEL_GRAPH.nodes_list, node);
+	//ds_list_add(PANEL_GRAPH.nodes_list, node);
 	return node;	
 }
 
-function Node_3D_Obj(_x, _y) : Node(_x, _y) constructor {
+function Node_3D_Obj(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 	name = "3D Obj";
 	
 	uniVertex_lightFor = shader_get_uniform(sh_vertex_pnt_light, "u_LightForward");
@@ -93,7 +87,7 @@ function Node_3D_Obj(_x, _y) : Node(_x, _y) constructor {
 			
 			inputs[| index].setFrom(sol.outputs[| 0]);
 		} else {
-			var sol = nodeBuild("Solid", x - (w + 64), matY + m_index * (128 + 32));
+			var sol = nodeBuild("Node_Solid", x - (w + 64), matY + m_index * (128 + 32));
 			sol.name = mat.name + " texture";
 			sol.inputs[| 1].setValue(mat.diff);
 			

@@ -1,16 +1,11 @@
-function Node_create_Noise_Aniso(_x, _y) {
-	var node = new Node_Noise_Aniso(_x, _y);
-	ds_list_add(PANEL_GRAPH.nodes_list, node);
-	return node;
-}
-
-function Node_Noise_Aniso(_x, _y) : Node(_x, _y) constructor {
+function Node_Noise_Aniso(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 	name = "Noise Anisotropic";
 	
 	shader = sh_ani_noise;
 	uniform_noi = shader_get_uniform(shader, "noiseAmount");
 	uniform_sed = shader_get_uniform(shader, "seed");
 	uniform_pos = shader_get_uniform(shader, "position");
+	uniform_ang = shader_get_uniform(shader, "angle");
 	
 	inputs[| 0] = nodeValue(0, "Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, def_surf_size2 )
 		.setDisplay(VALUE_DISPLAY.vector);
@@ -23,9 +18,12 @@ function Node_Noise_Aniso(_x, _y) : Node(_x, _y) constructor {
 	inputs[| 3] = nodeValue(3, "Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.vector);
 	
+	inputs[| 4] = nodeValue(4, "Rotation", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
+		.setDisplay(VALUE_DISPLAY.rotation);
+	
 	input_display_list = [
 		["Output",	false], 0, 
-		["Noise",	false], 2, 1, 3
+		["Noise",	false], 2, 1, 3, 4
 	];
 	
 	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
@@ -39,6 +37,7 @@ function Node_Noise_Aniso(_x, _y) : Node(_x, _y) constructor {
 		var _amo = inputs[| 1].getValue();
 		var _sed = inputs[| 2].getValue();
 		var _pos = inputs[| 3].getValue();
+		var _ang = inputs[| 4].getValue();
 		
 		var _outSurf = outputs[| 0].getValue();
 		if(!is_surface(_outSurf)) {
@@ -52,6 +51,7 @@ function Node_Noise_Aniso(_x, _y) : Node(_x, _y) constructor {
 			shader_set_uniform_f_array(uniform_noi, _amo);
 			shader_set_uniform_f(uniform_pos, _pos[0] / _dim[0], _pos[1] / _dim[1]);
 			shader_set_uniform_f(uniform_sed, _sed);
+			shader_set_uniform_f(uniform_ang, degtorad(_ang));
 			
 			draw_sprite_ext(s_fx_pixel, 0, 0, 0, _dim[0], _dim[1], 0, c_white, 1);
 		shader_reset();

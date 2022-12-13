@@ -1,10 +1,4 @@
-function Node_create_Stripe(_x, _y) {
-	var node = new Node_Stripe(_x, _y);
-	ds_list_add(PANEL_GRAPH.nodes_list, node);
-	return node;
-}
-
-function Node_Stripe(_x, _y) : Node(_x, _y) constructor {
+function Node_Stripe(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 	name = "Stripe";
 	
 	uniform_grad_use = shader_get_uniform(sh_stripe, "gradient_use");

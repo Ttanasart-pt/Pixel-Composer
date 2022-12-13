@@ -6,6 +6,7 @@ varying vec4 v_vColour;
 
 uniform vec2 noiseAmount;
 uniform vec2 position;
+uniform float angle;
 uniform float seed;
 
 float random (in vec2 st) {
@@ -13,7 +14,10 @@ float random (in vec2 st) {
 }
 
 void main() {
-	vec2 _pos = v_vTexcoord - position;
+	vec2 pos = v_vTexcoord - position, _pos;
+	_pos.x = pos.x * cos(angle) - pos.y * sin(angle);
+	_pos.y = pos.x * sin(angle) + pos.y * cos(angle);
+	
 	float yy = floor(_pos.y * noiseAmount.y);
 	float xx = (_pos.x + random(vec2(yy))) * noiseAmount.x;
 	float x0 = floor(xx);

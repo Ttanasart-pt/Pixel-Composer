@@ -1,18 +1,10 @@
-function Node_create_Iterator_Input(_x, _y) {
-	if(!LOADING && !APPENDING && PANEL_GRAPH.getCurrentContext() == -1) return;
-	var node = new Node_Iterator_Input(_x, _y, PANEL_GRAPH.getCurrentContext());
-	ds_list_add(PANEL_GRAPH.nodes_list, node);
-	return node;
-}
-
-function Node_Iterator_Input(_x, _y, _group) : Node(_x, _y) constructor {
+function Node_Iterator_Input(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 	name  = "Input";
 	color = COLORS.node_blend_collection;
 	previewable = false;
 	auto_height = false;
 	input_index = -1;
 	
-	group = _group;
 	inParent = undefined;
 	local_output = noone;
 	
@@ -46,29 +38,30 @@ function Node_Iterator_Input(_x, _y, _group) : Node(_x, _y) constructor {
 	];
 	
 	outputs[| 0] = nodeValue(0, "Value", self, JUNCTION_CONNECT.output, VALUE_TYPE.any, 0);
-	outputs[| 0].getValueDefault = method(outputs[| 0], outputs[| 0].getValueRecursive);
+	outputs[| 0].getValueDefault = method(outputs[| 0], outputs[| 0].getValueRecursive); //Get value from outside loop
 	outputs[| 0].getValueRecursive = function() {
 		//show_debug_message("iteration " + string(group.iterated));
 		if(!variable_struct_exists(group, "iterated"))
 			return outputs[| 0].getValueDefault();
 			
-		var _local_output = noone;
+		var _node_output = noone;
 		for( var i = 0; i < ds_list_size(outputs[| 1].value_to); i++ ) {
 			var vt = outputs[| 1].value_to[| i];
 			if(vt.value_from == outputs[| 1])
-				_local_output = vt;
+				_node_output = vt;
 		}
 		
-		if(_local_output == noone || group.iterated == 0) {
-			//show_debug_message("get default value");
+		if(_node_output == noone || group.iterated == 0)
 			return outputs[| 0].getValueDefault();
-		}
 		
-		//show_debug_message("get local output");
-		return [ _local_output.node.cache_value, inputs[| 2].getValue() ];
+		return [ _node_output.node.cache_value, inputs[| 2].getValue() ];
 	}
 	
-	outputs[| 1] = nodeValue(1, "Index", self, JUNCTION_CONNECT.output, VALUE_TYPE.node, 0);
+	outputs[| 1] = nodeValue(1, "Loop entrance", self, JUNCTION_CONNECT.output, VALUE_TYPE.node, 0);
+	
+	output_display_list = [
+		1, 0
+	]
 	
 	static onValueUpdate = function(index) {
 		if(is_undefined(inParent)) return;

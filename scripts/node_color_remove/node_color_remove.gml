@@ -1,10 +1,4 @@
-function Node_create_Color_Remove(_x, _y) {
-	var node = new Node_Color_Remove(_x, _y);
-	ds_list_add(PANEL_GRAPH.nodes_list, node);
-	return node;
-}
-
-function Node_Color_Remove(_x, _y) : Node_Processor(_x, _y) constructor {
+function Node_Color_Remove(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constructor {
 	name = "Color Remove";
 	
 	uniform_from       = shader_get_uniform(sh_color_remove, "colorFrom");

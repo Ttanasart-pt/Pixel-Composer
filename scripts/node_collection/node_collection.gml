@@ -3,8 +3,9 @@ enum COLLECTION_TAG {
 	loop = 2
 }
 
-function Node_Collection(_x,  _y) : Node(_x,  _y) constructor {
+function Node_Collection(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 	nodes = ds_list_create();
+	ungroupable = true;
 	
 	custom_input_index = 0;
 	custom_output_index = 0;
@@ -25,10 +26,7 @@ function Node_Collection(_x,  _y) : Node(_x,  _y) constructor {
 			
 		if(!result && group != -1) 
 			group.setRenderStatus(result);
-		postSetRenderStatus(result);
 	}
-	
-	static postSetRenderStatus = function(result) {}
 	
 	function add(_node) {
 		ds_list_add(nodes, _node);
@@ -101,9 +99,9 @@ function Node_Collection(_x,  _y) : Node(_x,  _y) constructor {
 	}
 	
 	static doUpdate = function() {
-		for(var i = 0; i < ds_list_size(nodes); i++) {
-			nodes[| i].doUpdate();
-		}
+		//for(var i = 0; i < ds_list_size(nodes); i++) {
+		//	nodes[| i].doUpdate();
+		//}
 	}
 	
 	static step = function() {
@@ -183,11 +181,11 @@ function Node_Collection(_x,  _y) : Node(_x,  _y) constructor {
 		}
 	}
 	
-	static resetRenderStatus = function() {
+	static resetAllRenderStatus = function() {
 		for( var i = 0; i < ds_list_size(nodes); i++ ) {
-			nodes[| i].setUpdate();
+			nodes[| i].setRenderStatus(false);
 			if(variable_struct_exists(nodes[| i], "nodes"))
-				nodes[| i].resetRenderStatus();
+				nodes[| i].resetAllRenderStatus();
 		}
 	}
 }

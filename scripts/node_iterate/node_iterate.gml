@@ -4,12 +4,6 @@ enum ITERATION_STATUS {
 	complete,
 }
 
-function Node_create_Iterate(_x, _y) {
-	var node = new Node_Iterate(_x, _y);
-	ds_list_add(PANEL_GRAPH.nodes_list, node);
-	return node;
-}
-
 function Node_Iterate(_x, _y) : Node_Collection(_x, _y) constructor {
 	name = "Loop";
 	color = COLORS.node_blend_loop;
@@ -21,18 +15,32 @@ function Node_Iterate(_x, _y) : Node_Collection(_x, _y) constructor {
 	
 	custom_input_index = 1;
 	loop_start_time = 0;
+	ALWAYS_FULL = true;
 	
-	static postSetRenderStatus = function(result) {
-		if(rendered) return;
+	if(!LOADING && !APPENDING) {
+		var input  = nodeBuild("Node_Iterator_Input", -256, -32, self);
+		var output = nodeBuild("Node_Iterator_Output", 256, -32, self);
 		
+		output.inputs[| 2].setFrom(input.outputs[| 1]);
+	}
+	
+	static initLoop = function() {
 		iterated = 0;
 		loop_start_time = get_timer();
+		
+		for( var i = 0; i < ds_list_size(nodes); i++ ) {
+			var n = nodes[| i];
+			if(variable_struct_exists(n, "initLoop"))
+				n.initLoop();
+		}
+		
+		printIf(global.RENDER_LOG, "LOOP INIT");
 	}
 	
 	static iterationStatus = function() {
 		var iter = true;
 		for( var i = 0; i < ds_list_size(outputs); i++ ) {
-			var _out = outputs[| i].node;
+			var _out = outputs[| i].from;
 			iter &= _out.rendered;
 		}
 		
@@ -43,7 +51,7 @@ function Node_Iterate(_x, _y) : Node_Collection(_x, _y) constructor {
 			} else if(iterated > inputs[| 0].getValue())
 				return ITERATION_STATUS.complete;
 			
-			resetRenderStatus();
+			resetAllRenderStatus();
 			return ITERATION_STATUS.loop;
 		}
 		

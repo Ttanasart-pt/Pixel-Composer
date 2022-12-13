@@ -1,10 +1,4 @@
-function Node_create_Sprite_Stack(_x, _y) {
-	var node = new Node_Sprite_Stack(_x, _y);
-	ds_list_add(PANEL_GRAPH.nodes_list, node);
-	return node;
-}
-
-function Node_Sprite_Stack(_x, _y) : Node(_x, _y) constructor {
+function Node_Sprite_Stack(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 	name = "Sprite Stack";
 	
 	inputs[| 0] = nodeValue(0, "Base shape", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, PIXEL_SURFACE);

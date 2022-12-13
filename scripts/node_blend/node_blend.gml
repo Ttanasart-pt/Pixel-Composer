@@ -1,6 +1,5 @@
-function Node_create_Blend(_x, _y, _param = "") {
-	var node = new Node_Blend(_x, _y);
-	ds_list_add(PANEL_GRAPH.nodes_list, node);
+function Node_create_Blend(_x, _y, _group = 1, _param = "") {
+	var node = new Node_Blend(_x, _y, _group);
 	
 	switch(_param) {
 	    case "normal" :			node.inputs[| 2].setValue(BLEND_MODE.normal)			break;
@@ -14,7 +13,7 @@ function Node_create_Blend(_x, _y, _param = "") {
 	return node;
 }
 
-function Node_Blend(_x, _y) : Node_Processor(_x, _y) constructor {
+function Node_Blend(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constructor {
 	name = "Blend";
 	
 	inputs[| 0] = nodeValue(0, "Background", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, DEF_SURFACE);

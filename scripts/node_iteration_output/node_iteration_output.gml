@@ -1,11 +1,4 @@
-function Node_create_Iterator_Output(_x, _y) {
-	if(!LOADING && !APPENDING && PANEL_GRAPH.getCurrentContext() == -1) return;
-	var node = new Node_Iterator_Output(_x, _y, PANEL_GRAPH.getCurrentContext());
-	ds_list_add(PANEL_GRAPH.nodes_list, node);
-	return node;
-}
-
-function Node_Iterator_Output(_x, _y, _group) : Node(_x, _y) constructor {
+function Node_Iterator_Output(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 	name  = "Output";
 	color = COLORS.node_blend_collection;
 	previewable = false;
@@ -22,8 +15,12 @@ function Node_Iterator_Output(_x, _y, _group) : Node(_x, _y) constructor {
 	
 	inputs[| 1] = nodeValue(1, "Order", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0);
 	
-	inputs[| 2] = nodeValue(2, "Loop input", self, JUNCTION_CONNECT.input, VALUE_TYPE.node, -1)
+	inputs[| 2] = nodeValue(2, "Loop exit", self, JUNCTION_CONNECT.input, VALUE_TYPE.node, -1)
 		.setVisible(true, true);
+	
+	input_display_list = [ 
+		2, 0, 1
+	]
 	
 	cache_value = -1;
 	outParent = undefined;
@@ -32,6 +29,10 @@ function Node_Iterator_Output(_x, _y, _group) : Node(_x, _y) constructor {
 	static onValueUpdate = function(index) {
 		if(is_undefined(outParent)) return;
 		group.sortIO();
+	}
+	
+	static initLoop = function() {
+		cache_value = noone;
 	}
 	
 	static createOutput = function(override_order = true) {
@@ -83,8 +84,9 @@ function Node_Iterator_Output(_x, _y, _group) : Node(_x, _y) constructor {
 			case VALUE_TYPE.surface	: 
 				if(is_surface(cache_value)) 
 					surface_free(cache_value);
-				if(is_surface(_val_get)) 
+				if(is_surface(_val_get))
 					cache_value = surface_clone(_val_get);
+				printIf(global.RENDER_LOG, "LOOP cache result");
 				break;
 			default : 
 				cache_value = _val_get;

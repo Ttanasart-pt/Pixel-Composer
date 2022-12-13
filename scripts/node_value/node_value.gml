@@ -15,6 +15,7 @@ enum VALUE_TYPE {
 	text      = 7,
 	object    = 8,
 	node      = 9,
+	d3object  = 10,
 	
 	any       = 11,
 }

@@ -24,7 +24,7 @@ event_inherited();
 	
 	anchor = ANCHOR.left | ANCHOR.top;
 	
-	page_key   = ADD_NODE_PAGE == ""? NODE_CATAGORY[| 2] : ADD_NODE_PAGE;
+	page_key   = ADD_NODE_PAGE == ""? NODE_CATAGORY[| 3] : ADD_NODE_PAGE;
 	page       = ALL_NODES[? page_key];
 	
 	function buildNode(_node, _param = "") {
@@ -117,6 +117,10 @@ event_inherited();
 					break;	
 				case "Loop" : 
 					if(context != "Node_Iterate") continue; 
+					draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text_accent);
+					break;	
+				case "VFX" : 
+					if(context != "Node_VFX_Group") continue; 
 					draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text_accent);
 					break;	
 			}

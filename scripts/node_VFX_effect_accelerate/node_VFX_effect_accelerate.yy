@@ -1,11 +1,11 @@
 {
   "resourceType": "GMScript",
   "resourceVersion": "1.0",
-  "name": "node_particle_effector",
+  "name": "node_VFX_effect_accelerate",
   "isDnD": false,
   "isCompatibility": false,
   "parent": {
-    "name": "generator",
-    "path": "folders/nodes/data/generator.yy",
+    "name": "VFX",
+    "path": "folders/nodes/data/VFX.yy",
   },
 }

@@ -17,8 +17,8 @@ enum MATH_OPERATOR {
 	round,
 }
 
-function Node_create_Math(_x, _y, _param = "") {
-	var node = new Node_Math(_x, _y);
+function Node_create_Math(_x, _y, _group = 1, _param = "") {
+	var node = new Node_Math(_x, _y, _group);
 	
 	switch(_param) {
 		case "add" :		node.inputs[| 0].setValue(MATH_OPERATOR.add); break;
@@ -39,11 +39,11 @@ function Node_create_Math(_x, _y, _param = "") {
 		case "round" :		node.inputs[| 0].setValue(MATH_OPERATOR.round); break;
 	}
 	
-	ds_list_add(PANEL_GRAPH.nodes_list, node);
+	//ds_list_add(PANEL_GRAPH.nodes_list, node);
 	return node;
 }
 
-function Node_Math(_x, _y) : Node(_x, _y) constructor {
+function Node_Math(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 	name		= "Math";
 	color		= COLORS.node_blend_number;
 	previewable = false;

@@ -1,10 +1,4 @@
-function Node_create_Timeline_Preview(_x, _y) {
-	var node = new Node_Timeline_Preview(_x, _y);
-	ds_list_add(PANEL_GRAPH.nodes_list, node);
-	return node;
-}
-
-function Node_Timeline_Preview(_x, _y) : Node(_x, _y) constructor {
+function Node_Timeline_Preview(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 	name = "Timeline";
 	use_cache = true;
 	color = COLORS.node_blend_number;

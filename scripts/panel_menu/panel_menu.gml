@@ -13,7 +13,6 @@ function Panel_Menu() : PanelContent() constructor {
 				NEW();
 			}, ["", "New file"] ],
 			[ "Open...", function() { LOAD(); }, ["", "Open"]  ],
-			[ "Open...", function() { LOAD(); }, ["", "Open"]  ],
 			[ "Save", function() { SAVE(); }, ["", "Save"]  ],
 			[ "Save as...", function() { SAVE_AS(); }, ["", "Save as"]  ],
 			[ "Recent files", function(_x, _y, _depth) { 
