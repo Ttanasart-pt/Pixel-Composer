@@ -1,4 +1,4 @@
-function Node_Lerp(_x, _y) : Node_Value_Processor(_x, _y) constructor {
+function Node_Lerp(_x, _y, _group = -1) : Node_Value_Processor(_x, _y, _group) constructor {
 	name		= "Lerp";
 	color		= COLORS.node_blend_number;
 	previewable = false;

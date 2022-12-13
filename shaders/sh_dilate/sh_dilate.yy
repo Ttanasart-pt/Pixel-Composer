@@ -4,7 +4,7 @@
   "name": "sh_dilate",
   "type": 1,
   "parent": {
-    "name": "filter",
-    "path": "folders/shader/filter.yy",
+    "name": "warp",
+    "path": "folders/shader/warp.yy",
   },
 }

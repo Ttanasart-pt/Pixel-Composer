@@ -4,7 +4,7 @@
   "name": "sh_gradient",
   "type": 1,
   "parent": {
-    "name": "shader",
-    "path": "folders/shader.yy",
+    "name": "generator",
+    "path": "folders/shader/generator.yy",
   },
 }

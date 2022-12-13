@@ -4,7 +4,7 @@
   "name": "sh_polar",
   "type": 1,
   "parent": {
-    "name": "shader",
-    "path": "folders/shader.yy",
+    "name": "warp",
+    "path": "folders/shader/warp.yy",
   },
 }

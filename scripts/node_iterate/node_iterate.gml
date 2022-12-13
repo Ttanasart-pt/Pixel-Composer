@@ -4,7 +4,7 @@ enum ITERATION_STATUS {
 	complete,
 }
 
-function Node_Iterate(_x, _y) : Node_Collection(_x, _y) constructor {
+function Node_Iterate(_x, _y, _group = -1) : Node_Collection(_x, _y, _group) constructor {
 	name = "Loop";
 	color = COLORS.node_blend_loop;
 	icon  = THEME.loop;

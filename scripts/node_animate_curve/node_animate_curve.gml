@@ -1,4 +1,4 @@
-function Node_Anim_Curve(_x, _y) : Node_Value_Processor(_x, _y) constructor {
+function Node_Anim_Curve(_x, _y, _group = -1) : Node_Value_Processor(_x, _y, _group) constructor {
 	name = "Anim Curve";
 	update_on_frame = true;
 	previewable = false;

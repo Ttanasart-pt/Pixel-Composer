@@ -4,7 +4,7 @@
   "name": "sh_outline_only",
   "type": 1,
   "parent": {
-    "name": "shader",
-    "path": "folders/shader.yy",
+    "name": "filter",
+    "path": "folders/shader/filter.yy",
   },
 }

@@ -17,7 +17,7 @@ enum MATH_OPERATOR {
 	round,
 }
 
-function Node_create_Math(_x, _y, _group = 1, _param = "") {
+function Node_create_Math(_x, _y, _group = -1, _param = "") {
 	var node = new Node_Math(_x, _y, _group);
 	
 	switch(_param) {

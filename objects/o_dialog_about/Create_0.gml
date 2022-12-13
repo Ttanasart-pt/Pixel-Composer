@@ -15,6 +15,7 @@ event_inherited();
 		[ "Many noise and shape shaders", "Inigo Quilez" ],
 		[ "Chromatic aberration shader", "jcant0n" ],
 		[ "gif importer\nWindow commands\nExecute shell simple", "YellowAfterLife" ],
+		[ "Triangle grid", "Farini" ],
 	]
 	
 	sc_thank = new scrollPane(dialog_w - ui(64), thank_h, function(_y, _m) {

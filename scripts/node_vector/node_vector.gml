@@ -1,4 +1,4 @@
-function Node_Number(_x, _y) : Node_Value_Processor(_x, _y) constructor {
+function Node_Number(_x, _y, _group = -1) : Node_Value_Processor(_x, _y, _group) constructor {
 	name = "Number";
 	color = COLORS.node_blend_number;
 	previewable   = false;
@@ -25,7 +25,7 @@ function Node_Number(_x, _y) : Node_Value_Processor(_x, _y) constructor {
 	}
 }
 
-function Node_Vector2(_x, _y) : Node_Value_Processor(_x, _y) constructor {
+function Node_Vector2(_x, _y, _group = -1) : Node_Value_Processor(_x, _y, _group) constructor {
 	name = "Vector2";
 	color = COLORS.node_blend_number;
 	previewable   = false;
@@ -55,7 +55,7 @@ function Node_Vector2(_x, _y) : Node_Value_Processor(_x, _y) constructor {
 	}
 }
 
-function Node_Vector3(_x, _y) : Node_Value_Processor(_x, _y) constructor {
+function Node_Vector3(_x, _y, _group = -1) : Node_Value_Processor(_x, _y, _group) constructor {
 	name = "Vector3";
 	color = COLORS.node_blend_number;
 	previewable   = false;
@@ -88,7 +88,7 @@ function Node_Vector3(_x, _y) : Node_Value_Processor(_x, _y) constructor {
 	}
 }
 
-function Node_Vector4(_x, _y) : Node_Value_Processor(_x, _y) constructor {
+function Node_Vector4(_x, _y, _group = -1) : Node_Value_Processor(_x, _y, _group) constructor {
 	name = "Vector4";
 	color = COLORS.node_blend_number;
 	previewable   = false;
@@ -124,7 +124,7 @@ function Node_Vector4(_x, _y) : Node_Value_Processor(_x, _y) constructor {
 	}
 }
 
-function Node_Vector_Split(_x, _y) : Node_Value_Processor(_x, _y) constructor {
+function Node_Vector_Split(_x, _y, _group = -1) : Node_Value_Processor(_x, _y, _group) constructor {
 	name = "Vector split";
 	color = COLORS.node_blend_number;
 	previewable   = false;

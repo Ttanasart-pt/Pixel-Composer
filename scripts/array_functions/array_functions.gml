@@ -27,3 +27,17 @@ function array_push_unique(arr, val) {
 	if(array_exists(arr, val)) return;
 	array_push(arr, val);
 }
+
+function array_append(arr, arr0) {
+	for( var i = 0; i < array_length(arr0); i++ )
+		array_push(arr, arr0[i]);
+}
+
+function array_merge() {
+	var arr = [];
+	for( var i = 0; i < argument_count; i++ ) {
+		array_append(arr, argument[i]);
+	}
+	
+	return arr;
+}

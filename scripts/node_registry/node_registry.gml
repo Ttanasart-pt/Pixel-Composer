@@ -45,7 +45,6 @@ function NodeObject(_name, _spr, _create, tags = []) constructor {
 		var funs = NODE_CREATE_FUCTION[? _name];
 		var _node = funs[0]? new funs[1](_x, _y, _group) : funs[1](_x, _y, _group);
 		if(!_node) return noone;
-		//PANEL_GRAPH.node_focus = _node;
 		
 		return _node;
 	}
@@ -91,6 +90,7 @@ function NodeObject(_name, _spr, _create, tags = []) constructor {
 	addNodeObject(transform, "Crop",			s_node_crop,			"Node_Crop",			[1, Node_Crop]);
 	addNodeObject(transform, "Mirror",			s_node_mirror,			"Node_Mirror",			[1, Node_Mirror]);
 	addNodeObject(transform, "Warp",			s_node_warp,			"Node_Warp",			[1, Node_Warp], ["wrap"]);
+	addNodeObject(transform, "Skew",			s_node_warp,			"Node_Skew",			[1, Node_Skew]);
 	addNodeObject(transform, "Mesh warp",		s_node_warp_mesh,		"Node_Mesh_Warp",		[1, Node_Mesh_Warp], ["mesh wrap"]);
 	addNodeObject(transform, "Compose",			s_node_compose,			"Node_Composite",		[1, Node_Composite], ["merge"]);
 	addNodeObject(transform, "Polar",			s_node_polar,			"Node_Polar",			[1, Node_Polar]);
@@ -190,6 +190,7 @@ function NodeObject(_name, _spr, _create, tags = []) constructor {
 	addNodeCatagory("Generate", generator);
 	addNodeObject(generator, "Solid",				s_node_solid,				"Node_Solid",				[1, Node_Solid]);
 	addNodeObject(generator, "Gradient",			s_node_gradient,			"Node_Gradient",			[1, Node_Gradient]);
+	addNodeObject(generator, "4 Points Gradient",	s_node_gradient_4points,	"Node_Gradient_Points",		[1, Node_Gradient_Points]);
 	addNodeObject(generator, "Line",				s_node_line,				"Node_Line",				[1, Node_Line]);
 	addNodeObject(generator, "Stripe",				s_node_stripe,				"Node_Stripe",				[1, Node_Stripe]);
 	addNodeObject(generator, "Zigzag",				s_node_zigzag,				"Node_Zigzag",				[1, Node_Zigzag]);
@@ -204,6 +205,8 @@ function NodeObject(_name, _spr, _create, tags = []) constructor {
 	addNodeObject(generator, "Cellular noise",		s_node_noise_cell,			"Node_Cellular",			[1, Node_Cellular], ["Voronoi", "Worley"]);
 	addNodeObject(generator, "Grid noise",			s_node_grid_noise,			"Node_Grid_Noise",			[1, Node_Grid_Noise]);
 	addNodeObject(generator, "Grid",				s_node_grid,				"Node_Grid",				[1, Node_Grid], ["tile"]);
+	addNodeObject(generator, "Grid triangle",		s_node_grid_tri,			"Node_Grid_Tri",			[1, Node_Grid_Tri]);
+	addNodeObject(generator, "Grid hexagonal",		s_node_grid_hex,			"Node_Grid_Hex",			[1, Node_Grid_Hex]);
 	addNodeObject(generator, "Anisotropic noise",	s_node_noise_aniso,			"Node_Noise_Aniso",			[1, Node_Noise_Aniso]);
 	addNodeObject(generator, "Seperate shape",	    s_node_sepearte_shape,		"Node_Seperate_Shape",		[1, Node_Seperate_Shape]);
 	addNodeObject(generator, "Text",				s_node_text,				"Node_Text",				[1, Node_Text]);

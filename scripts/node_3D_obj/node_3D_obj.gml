@@ -1,4 +1,4 @@
-function Node_create_3D_Obj_path(_x, _y, _group = 1, path) {
+function Node_create_3D_Obj_path(_x, _y, _group = -1, path) {
 	if(!file_exists(path)) return noone;
 	
 	var node = new Node_3D_Obj(_x, _y, _group);
