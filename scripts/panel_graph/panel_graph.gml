@@ -6,8 +6,8 @@ function Panel_Graph() : PanelContent() constructor {
 	graph_s			= ui(scale[graph_s_index]);
 	graph_s_to		= graph_s;
 	graph_line_s	= 32;
-	grid_color      = COLORS.panel_graph_grid;
-	grid_opacity	= 0.5;
+	grid_color      = c_white;
+	grid_opacity	= 0.05;
 	
 	function toOrigin() {
 		graph_x = round(w / 2 / graph_s);
@@ -72,6 +72,12 @@ function Panel_Graph() : PanelContent() constructor {
 	minimap_drag_sy = 0;
 	minimap_drag_mx = 0;
 	minimap_drag_my = 0;
+	
+	context_framing = false;
+	context_frame_progress = 0;
+	context_frame_direct   = 0;
+	context_frame_sx = 0; context_frame_ex = 0;
+	context_frame_sy = 0; context_frame_ey = 0;
 	
 	drag_locking = false;
 	
@@ -176,7 +182,8 @@ function Panel_Graph() : PanelContent() constructor {
 	addHotkey("Graph", "Delete (merge)",	vk_delete, MOD_KEY.none,	function() { doDelete(true); });
 	
 	function stepBegin() {
-		var gr_x = graph_x * graph_s;		var gr_y = graph_y * graph_s;
+		var gr_x = graph_x * graph_s;
+		var gr_y = graph_y * graph_s;
 		var m_x  = (mx - gr_x) / graph_s;
 		var m_y  = (my - gr_y) / graph_s;
 		mouse_graph_x = m_x;
@@ -608,9 +615,9 @@ function Panel_Graph() : PanelContent() constructor {
 			if(nodes_select_drag) {
 				if(point_distance(nodes_select_mx, nodes_select_my, mx, my) > 16) {
 					draw_set_color(COLORS._main_accent);
-					draw_rectangle(nodes_select_mx, nodes_select_my, mx, my, true);
+					draw_roundrect_ext(nodes_select_mx, nodes_select_my, mx, my, 6, 6, true);
 					draw_set_alpha(0.05);
-					draw_rectangle(nodes_select_mx, nodes_select_my, mx, my, false);
+					draw_roundrect_ext(nodes_select_mx, nodes_select_my, mx, my, 6, 6, false);
 					draw_set_alpha(1);
 				
 					ds_list_clear(nodes_select_list);
@@ -1019,6 +1026,7 @@ function Panel_Graph() : PanelContent() constructor {
 					node_focus		= noone;
 					PANEL_PREVIEW.preview_node[0] = noone;
 					PANEL_PREVIEW.preview_node[1] = noone;
+					setContextFrame(true, node_context[| i + 1]);
 					
 					if(i == -1) {
 						ds_list_clear(node_context);
@@ -1028,7 +1036,7 @@ function Panel_Graph() : PanelContent() constructor {
 					} else {
 						for(var j = ds_list_size(node_context) - 1; j > i; j--)
 							ds_list_delete(node_context, j);
-						nodes_list = node_context[| i].nodes;	
+						nodes_list = node_context[| i].nodes;
 						toCenterNode();
 						PANEL_ANIMATION.updatePropertyList();
 						break;
@@ -1038,8 +1046,8 @@ function Panel_Graph() : PanelContent() constructor {
 				draw_sprite_ui_uniform(THEME.arrow, 0, xx + tw + ui(16), tbh, 1, COLORS._main_icon);
 			}
 			
-			draw_set_color(COLORS._main_text_sub);
-			draw_set_alpha(i < ds_list_size(node_context) - 1? 0.5 : 1);
+			draw_set_color(COLORS._main_text);
+			draw_set_alpha(i < ds_list_size(node_context) - 1? 0.33 : 1);
 			draw_text(xx, tbh - 2, tt);
 			draw_set_alpha(1);
 			xx += tw;
@@ -1181,6 +1189,36 @@ function Panel_Graph() : PanelContent() constructor {
 			draw_sprite_ui(THEME.node_resize, 0, mx0 + ui(2), my0 + ui(2), 1, 1, 180, c_white, 0.3);
 	}
 	
+	function drawContextFrame() {
+		if(!context_framing) return;
+		context_frame_progress = lerp_float(context_frame_progress, 1, 5);
+		if(context_frame_progress == 1) 
+			context_framing = false;
+		
+		var _s = graph_s;
+		var _x = graph_x * _s;
+		var _y = graph_y * _s;
+		
+		var _fr_x0 = 0, _fr_y0 = 0;
+		var _fr_x1 = w, _fr_y1 = h;
+		
+		var _to_x0 = _x + context_frame_sx * _s;
+		var _to_y0 = _y + context_frame_sy * _s;
+		var _to_x1 = _x + context_frame_ex * _s;
+		var _to_y1 = _y + context_frame_ey * _s;
+		
+		var prog = context_frame_direct? context_frame_progress : 1 - context_frame_progress;
+		var frm_x0 = lerp(_fr_x0, _to_x0, prog);
+		var frm_y0 = lerp(_fr_y0, _to_y0, prog);
+		var frm_x1 = lerp(_fr_x1, _to_x1, prog);
+		var frm_y1 = lerp(_fr_y1, _to_y1, prog);
+		
+		draw_set_color(COLORS._main_accent);
+		draw_set_alpha(0.5);
+		draw_roundrect_ext(frm_x0, frm_y0, frm_x1, frm_y1, 8, 8, true);
+		draw_set_alpha(1);
+	}
+	
 	function addContext(node) {
 		recordAction(ACTION_TYPE.var_modify, self, [nodes_list, "nodes_list"]);
 		recordAction(ACTION_TYPE.list_insert, node_context, [node, ds_list_size(node_context)]);
@@ -1194,6 +1232,18 @@ function Panel_Graph() : PanelContent() constructor {
 		
 		toCenterNode();
 		PANEL_ANIMATION.updatePropertyList();
+		
+		setContextFrame(false, node)
+	}
+	
+	function setContextFrame(dirr, node) {
+		context_framing = true;
+		context_frame_direct   = dirr;
+		context_frame_progress = 0;
+		context_frame_sx = node.x;
+		context_frame_sy = node.y;
+		context_frame_ex = node.x + node.w;
+		context_frame_ey = node.y + node.h;
 	}
 	
 	function getCurrentContext() {
@@ -1225,7 +1275,16 @@ function Panel_Graph() : PanelContent() constructor {
 	function drawContent(panel) {
 		dragGraph();
 		
-		draw_clear(COLORS.panel_bg_clear);
+		var bg = COLORS.panel_bg_clear;
+		var cnt = getCurrentContext();
+		var context = cnt == -1? "" : instanceof(cnt);
+		switch(context) {
+			case "Node_Group" :		bg = merge_color(COLORS.panel_bg_clear, COLORS.node_blend_collection, 0.05); break;
+			case "Node_Iterate" :	bg = merge_color(COLORS.panel_bg_clear, COLORS.node_blend_loop, 0.05); break;
+			case "Node_VFX_Group" : bg = merge_color(COLORS.panel_bg_clear, COLORS.node_blend_vfx, 0.05); break;
+			case "Node_Feedback" :  bg = merge_color(COLORS.panel_bg_clear, COLORS.node_blend_feedback, 0.05); break;
+		}
+		draw_clear(bg);
 		
 		if(show_grid) drawGrid();
 		
@@ -1234,6 +1293,7 @@ function Panel_Graph() : PanelContent() constructor {
 		
 		drawNodes();
 		drawJunctionConnect();
+		drawContextFrame();
 		
 		mouse_on_graph = true;
 		drawToolBar();

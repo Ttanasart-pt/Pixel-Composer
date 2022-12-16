@@ -18,7 +18,7 @@
   "VTile": false,
   "For3D": false,
   "DynamicTexturePage": false,
-  "width": 65,
+  "width": 64,
   "height": 64,
   "textureGroupId": {
     "name": "Default",
@@ -28,7 +28,7 @@
   "gridX": 0,
   "gridY": 0,
   "frames": [
-    {"resourceType":"GMSpriteFrame","resourceVersion":"1.1","name":"37418650-4652-4d81-9692-a04c8aac0d9d",},
+    {"resourceType":"GMSpriteFrame","resourceVersion":"1.1","name":"8ff01a09-49f0-4958-aacb-b1be88c4eb83",},
   ],
   "sequence": {
     "resourceType": "GMSequence",
@@ -45,7 +45,7 @@
     "moments": {"Keyframes":[],"resourceVersion":"1.0","resourceType":"KeyframeStore<MomentsEventKeyframe>",},
     "tracks": [
       {"resourceType":"GMSpriteFramesTrack","resourceVersion":"1.0","name":"frames","spriteId":null,"keyframes":{"Keyframes":[
-            {"id":"97fcfe95-badb-4bd8-9fd4-d36c8502e001","Key":0.0,"Length":1.0,"Stretch":false,"Disabled":false,"IsCreationKey":false,"Channels":{"0":{"Id":{"name":"37418650-4652-4d81-9692-a04c8aac0d9d","path":"sprites/s_node_vfx_wind/s_node_vfx_wind.yy",},"resourceVersion":"1.0","resourceType":"SpriteFrameKeyframe",},},"resourceVersion":"1.0","resourceType":"Keyframe<SpriteFrameKeyframe>",},
+            {"id":"9dc12cbc-c34d-4c31-989d-bb61d11ea040","Key":0.0,"Length":1.0,"Stretch":false,"Disabled":false,"IsCreationKey":false,"Channels":{"0":{"Id":{"name":"8ff01a09-49f0-4958-aacb-b1be88c4eb83","path":"sprites/s_node_vfx_wind/s_node_vfx_wind.yy",},"resourceVersion":"1.0","resourceType":"SpriteFrameKeyframe",},},"resourceVersion":"1.0","resourceType":"Keyframe<SpriteFrameKeyframe>",},
           ],"resourceVersion":"1.0","resourceType":"KeyframeStore<SpriteFrameKeyframe>",},"trackColour":0,"inheritsTrackColour":true,"builtinName":0,"traits":0,"interpolation":1,"tracks":[],"events":[],"isCreationTrack":false,"modifiers":[],},
     ],
     "visibleRange": null,
@@ -64,11 +64,11 @@
     "eventStubScript": null,
   },
   "layers": [
-    {"resourceType":"GMImageLayer","resourceVersion":"1.0","name":"1827712d-ce48-485f-b503-aa2826ed5ab7","visible":true,"isLocked":false,"blendMode":0,"opacity":100.0,"displayName":"default",},
+    {"resourceType":"GMImageLayer","resourceVersion":"1.0","name":"fcbd5ee8-7d99-4b81-ad7b-468cbb94cc69","visible":true,"isLocked":false,"blendMode":0,"opacity":100.0,"displayName":"default",},
   ],
   "nineSlice": null,
   "parent": {
-    "name": "icons",
-    "path": "folders/nodes/icons.yy",
+    "name": "VFX",
+    "path": "folders/nodes/icons/VFX.yy",
   },
 }

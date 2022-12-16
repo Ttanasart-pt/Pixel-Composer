@@ -11,7 +11,7 @@ event_inherited();
 	
 	if(ADD_NODE_W == -1 || ADD_NODE_H == -1) {
 		ADD_NODE_W = ui(532);
-		ADD_NODE_H = ui(346);	
+		ADD_NODE_H = ui(400);
 	}
 	
 	dialog_w = ADD_NODE_W;
@@ -24,8 +24,11 @@ event_inherited();
 	
 	anchor = ANCHOR.left | ANCHOR.top;
 	
-	page_key   = ADD_NODE_PAGE == ""? NODE_CATAGORY[| 3] : ADD_NODE_PAGE;
-	page       = ALL_NODES[? page_key];
+	function setPage(pageIndex) {
+		ADD_NODE_PAGE	= pageIndex;
+		node_list		= NODE_CATEGORY[| ADD_NODE_PAGE].list;
+	}
+	setPage(ADD_NODE_PAGE);
 	
 	function buildNode(_node, _param = "") {
 		instance_destroy();
@@ -36,7 +39,7 @@ event_inherited();
 		var _inputs = 0, _outputs = 0;
 		
 		if(is_struct(_node) && instanceof(_node) == "NodeObject") {
-			_new_node = _node.build(node_target_x, node_target_y, _param);
+			_new_node = _node.build(node_target_x, node_target_y,, _param);
 			if(!_new_node) return;
 			_inputs = _new_node.inputs;
 			_outputs = _new_node.outputs;
@@ -102,54 +105,44 @@ event_inherited();
 		
 		var hh  = 0;
 		var hg  = ui(28);
-		var key = ds_map_find_first(ALL_NODES);
 		var cnt = PANEL_GRAPH.getCurrentContext();
 		var context = cnt == -1? "" : instanceof(cnt);
 		
-		for(var i = 0; i < ds_list_size(NODE_CATAGORY); i++) {
-			var key = NODE_CATAGORY[| i];
+		for(var i = 0; i < ds_list_size(NODE_CATEGORY); i++) {
+			var cat = NODE_CATEGORY[| i];
+			var name = cat.name;
 			draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text);
 			
-			switch(key) {
-				case "Group" : 
-					if(context != "Node_Group") continue; 
-					draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text_accent);
-					break;	
-				case "Loop" : 
-					if(context != "Node_Iterate") continue; 
-					draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text_accent);
-					break;	
-				case "VFX" : 
-					if(context != "Node_VFX_Group") continue; 
-					draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text_accent);
-					break;	
+			if(cat.filter != "") {
+				if(context != cat.filter) {
+					if(ADD_NODE_PAGE == i) setPage(NODE_PAGE_DEFAULT);
+					continue;
+				}	
+				draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text_accent);
 			}
 			
-			if(key == page_key) {
+			if(i == ADD_NODE_PAGE) {
 				draw_sprite_stretched(THEME.ui_panel_bg, 0, 0, _y + hh, ui(132), hg);
 			} else if(sHOVER && point_in_rectangle(_m[0], _m[1], 0, _y + hh, ui(100), _y + hh + hg - 1)) {
-				draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, 0, _y + hh + ui(3), ui(103), hg - ui(6), c_white, 0.75);
+				draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, 0, _y + hh, ui(132), hg, c_white, 0.75);
 				if(mouse_click(mb_left, sFOCUS)) {
-					page_key		= key;
-					ADD_NODE_PAGE	= key;
-					page			= ALL_NODES[? page_key];
+					setPage(i);
 					content_pane.scroll_y		= 0;
 					content_pane.scroll_y_to	= 0;
 				}
 			}
 			
-			draw_text(ui(8), _y + hh + hg / 2, key);
+			draw_text(ui(8), _y + hh + hg / 2, name);
 			hh += hg;
 		}
 		
 		return hh;
 	});
 	
-	content_pane = new scrollPane(dialog_w - ui(144), dialog_h - ui(66), function(_y, _m) {
+	content_pane = new scrollPane(dialog_w - ui(136), dialog_h - ui(66), function(_y, _m) {
 		draw_clear_alpha(c_white, 0);
 		
-		var nodes	   = page;
-		var node_count = ds_list_size(nodes);
+		var node_count = ds_list_size(node_list);
 		var hh         = 0;
 		
 		if(ADD_NODE_MODE == 0) {
@@ -167,7 +160,7 @@ event_inherited();
 				for(var j = 0; j < col; j++) {
 					var index = i * col + j;
 					if(index < node_count) {
-						var _node = nodes[| index];
+						var _node = node_list[| index];
 						if(!_node) continue;
 					
 						var _nx   = grid_space + (grid_width + grid_space) * j;
@@ -204,7 +197,7 @@ event_inherited();
 			hh += list_height;
 		
 			for(var i = 0; i < node_count; i++) {
-				var _node = nodes[| i];
+				var _node = node_list[| i];
 				if(!_node) continue;
 				
 				if(i % 2) {
@@ -242,13 +235,13 @@ event_inherited();
 	dialog_resizable = true;
 	dialog_w_min = ui(200);
 	dialog_h_min = ui(120);
-	dialog_w_max = ui(800);
-	dialog_h_max = ui(640);
+	dialog_w_max = ui(960);
+	dialog_h_max = ui(800);
 	
 	onResize = function() {
 		catagory_pane.resize(ui(132), dialog_h - ui(66));
-		content_pane.resize(dialog_w - ui(144), dialog_h - ui(66));
-		search_pane.resize(dialog_w - ui(40), dialog_h - ui(66));
+		content_pane.resize(dialog_w - ui(136), dialog_h - ui(66));
+		search_pane.resize(dialog_w - ui(32), dialog_h - ui(66));
 		
 		ADD_NODE_W = dialog_w;
 		ADD_NODE_H = dialog_h;
@@ -276,18 +269,15 @@ event_inherited();
 		var context = cnt == -1? "" : instanceof(cnt);
 		var search_lower = string_lower(search_string);
 		
-		for(var i = 0; i < ds_list_size(NODE_CATAGORY); i++) {
-			var key = NODE_CATAGORY[| i];
+		for(var i = 0; i < ds_list_size(NODE_CATEGORY); i++) {
+			var cat = NODE_CATEGORY[| i];
 			
-			switch(key) {
-				case "Group" : if(context != "Node_Group") continue; break;	
-				case "Loop" : if(context != "Node_Iterate") continue; break;	
-			}
+			if(cat.filter != "" && context != cat.filter)
+				continue;
 			
-			var _page = ALL_NODES[? key];
-			
-			for(var j = 0; j < ds_list_size(_page); j++) {
-				var _node = _page[| j];
+			var _content = cat.list;
+			for(var j = 0; j < ds_list_size(_content); j++) {
+				var _node = _content[| j];
 
 				if(!_node) continue;
 				var match = string_pos(search_lower, string_lower(_node.name)) > 0;
@@ -307,7 +297,7 @@ event_inherited();
 		searchCollection(search_list, search_string, false);
 	}
 	
-	search_pane = new scrollPane(dialog_w - ui(40), dialog_h - ui(66), function(_y, _m) {
+	search_pane = new scrollPane(dialog_w - ui(32), dialog_h - ui(66), function(_y, _m) {
 		draw_clear_alpha(c_white, 0);
 		
 		var amo = ds_list_size(search_list);

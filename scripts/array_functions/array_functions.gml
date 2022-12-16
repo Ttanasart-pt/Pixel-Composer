@@ -41,3 +41,11 @@ function array_merge() {
 	
 	return arr;
 }
+
+function array_clone(arr) {
+	var _res = array_create(array_length(arr));
+	 for( var i = 0; i < array_length(arr); i++ ) {
+		 _res[i] = arr[i];
+	 }
+	 return _res;
+}

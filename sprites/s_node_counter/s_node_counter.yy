@@ -68,7 +68,7 @@
   ],
   "nineSlice": null,
   "parent": {
-    "name": "icons",
-    "path": "folders/nodes/icons.yy",
+    "name": "animation",
+    "path": "folders/nodes/icons/animation.yy",
   },
 }

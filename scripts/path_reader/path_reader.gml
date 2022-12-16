@@ -1,3 +1,11 @@
+function path_search(paths, recur = false, _filter = "") {
+	var _paths = [];
+	for( var i = 0; i < array_length(paths); i++ ) {
+		array_append(_paths, paths_to_array(paths[i], recur, _filter));
+	}
+	return _paths;
+}
+
 function paths_to_array(paths, recur = false, _filter = "") {
 	var _paths = [];
 	var in = 0;
@@ -27,29 +35,8 @@ function paths_to_array(paths, recur = false, _filter = "") {
 		regx.free();
 		delete regx;
 		ds_stack_destroy(st);
-	} else {
-		var path_left = paths;
-		
-		while(string_length(path_left) > 0) {
-			var space = 0;
-			if(string_pos("\n", path_left) == 0) 
-				space = string_length(path_left) + 1;
-			else 
-				space = string_pos("\n", path_left);
-			
-			var path_str	= string_copy(path_left, 1, space - 1);
-			path_left		= string_copy(path_left, space + 1, string_length(path_left) - space);
-			
-			if(!file_exists(path_str)) {
-				var local_path = filename_dir(CURRENT_PATH) + "\\" + path_str;
-				if(path_is_image(local_path))
-					path_str = local_path;
-			}
-			
-			if(file_exists(path_str))
-				array_push(_paths, path_str);
-		}
-	}
+	} else if(file_exists(paths))
+		array_push(_paths, paths);
 	
 	return _paths;
 }

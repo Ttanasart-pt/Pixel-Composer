@@ -1,9 +1,8 @@
-function Node_Particle(_x, _y, _group = -1) : Node_VFX_Spawner(_x, _y, _group) constructor {
+function Node_Particle(_x, _y, _group = -1) : Node_VFX_Spawner_Base(_x, _y, _group) constructor {
 	name = "Particle";
 	auto_update = false;
 	use_cache = true;
 	
-	input_len = ds_list_size(inputs);
 	inputs[| input_len + 0] = nodeValue(input_len + 0, "Output dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, def_surf_size2)
 		.setDisplay(VALUE_DISPLAY.vector);
 		
@@ -31,9 +30,9 @@ function Node_Particle(_x, _y, _group = -1) : Node_VFX_Spawner(_x, _y, _group) c
 			
 		if(ANIMATOR.current_frame == 0) {
 			reset();
-			runFrame(ANIMATOR.current_frame);
+			runVFX(ANIMATOR.current_frame);
 		} else if(cached_output[ANIMATOR.current_frame - 1] != 0) {
-			runFrame(ANIMATOR.current_frame);
+			runVFX(ANIMATOR.current_frame);
 		}
 	}
 	

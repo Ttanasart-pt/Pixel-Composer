@@ -5,13 +5,14 @@ function scrollPane(_w, _h, ondraw) constructor {
 	
 	w			= _w;
 	h			= _h;
-	surface_w   = _w - ui(8);
+	surface_w   = _w - ui(12);
 	surface_h   = _h;
 	surface     = surface_create_valid(surface_w, surface_h);
 	
 	drawFunc    = ondraw;
 	
 	content_h   = 0;
+	is_scroll	= true;
 	
 	scroll_step = 64;
 	active      = false;
@@ -21,7 +22,7 @@ function scrollPane(_w, _h, ondraw) constructor {
 	static resize = function(_w, _h) {
 		w = _w;
 		h = _h;
-		surface_w   = _w - ui(8);
+		surface_w   = _w - is_scroll * ui(12);
 		surface_h   = _h;
 		
 		if(surface_w > 1 && surface_h > 1) {
@@ -35,7 +36,7 @@ function scrollPane(_w, _h, ondraw) constructor {
 	static draw = function(x, y, _mx = mouse_mx - x, _my = mouse_my - y) {
 		var mx = _mx, my = _my;
 
-		if(!point_in_rectangle(mx, my, 0, 0, w, h)) {
+		if(!point_in_rectangle(mx, my, 0, 0, surface_w, surface_h)) {
 			mx = -100;
 			my = -100;
 		}
@@ -43,8 +44,14 @@ function scrollPane(_w, _h, ondraw) constructor {
 		if(!is_surface(surface)) surface = surface_create_valid(surface_w, surface_h);
 		surface_set_target(surface);
 			draw_clear(COLORS.panel_bg_clear);
-			content_h = max(0, drawFunc(scroll_y, [mx, my], [x, y]) - surface_h);
+			var hh = drawFunc(scroll_y, [mx, my], [x, y]);
+			content_h = max(0, hh - surface_h);
 		surface_reset_target();
+		
+		var sc = is_scroll;
+		is_scroll = hh > surface_h;
+		if(sc != is_scroll)
+			resize(w, h);
 		
 		scroll_y_to		= clamp(scroll_y_to, -content_h, 0);
 		scroll_y_raw	= lerp_float(scroll_y_raw, scroll_y_to, 4);
@@ -57,7 +64,7 @@ function scrollPane(_w, _h, ondraw) constructor {
 		}
 		
 		if(abs(content_h) > 0) {
-			draw_scroll(x + surface_w + ui(6), y + ui(6), true, surface_h - ui(12), -scroll_y / content_h, surface_h / (surface_h + content_h), COLORS.scrollbar_idle, COLORS.scrollbar_hover, x + _mx, y + _my);
+			draw_scroll(x + surface_w + ui(4), y + ui(6), true, surface_h - ui(12), -scroll_y / content_h, surface_h / (surface_h + content_h), COLORS.scrollbar_idle, COLORS.scrollbar_hover, x + _mx, y + _my);
 		}
 	}
 	

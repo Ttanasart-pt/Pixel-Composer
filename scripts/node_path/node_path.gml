@@ -385,7 +385,9 @@ function Node_Path(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s) {
-		draw_sprite_ext(THEME.node_draw_path, 0, xx + w * _s / 2, yy + 10 + (h - 10) * _s / 2, _s, _s, 0, c_white, 1);
+		var cx = xx + w * _s / 2;
+		var cy = yy + 10 + (h - 10) * _s / 2;
+		draw_sprite_uniform(THEME.node_draw_path, 0, cx, cy, _s);
 	}
 	
 	static postDeserialize = function() {

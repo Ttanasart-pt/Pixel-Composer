@@ -3,7 +3,7 @@ function Panel_Collection() : PanelContent() constructor {
 	group_w   = ui(180);
 	
 	function initSize() {
-		content_w = w - ui(24) - group_w;
+		content_w = w - ui(8) - group_w;
 		content_h = h - ui(40) - ui(16);
 	}
 	initSize();
@@ -57,12 +57,13 @@ function Panel_Collection() : PanelContent() constructor {
 		var node_count = ds_list_size(nodes);
 		var hh = 0;
 		var frame = current_time * PREF_MAP[? "collection_preview_speed"] / 3000;
+		var _cw = contentPane.surface_w;
 		
 		if(contentView == 0) {
 			var grid_size  = ui(64);
 			var grid_width = ui(80);
 			var grid_space = ui(12);
-			var col = max(1, floor(content_w / (grid_width + grid_space)));
+			var col = max(1, floor(_cw / (grid_width + grid_space)));
 			var row = ceil(node_count / col);
 			var yy  = _y + grid_space;
 			var name_height = 0;
@@ -119,7 +120,7 @@ function Panel_Collection() : PanelContent() constructor {
 				yy += hght;
 			}
 		} else {
-			var list_width  = content_w - ui(12);
+			var list_width  = _cw;
 			var list_height = ui(28);
 			var yy         = _y + list_height / 2;
 			hh += list_height;
@@ -174,12 +175,12 @@ function Panel_Collection() : PanelContent() constructor {
 		return hh;
 	});
 	
-	folderPane = new scrollPane(group_w - ui(8), content_h, function(_y, _m) {
+	folderPane = new scrollPane(group_w - ui(4), content_h, function(_y, _m) {
 		draw_clear(COLORS.panel_bg_clear);
 		var hh = ui(8);
 		
 		for(var i = 0; i < ds_list_size(root.subDir); i++) {
-			var hg = root.subDir[| i].draw(self, ui(8), _y, _m, folderPane.w - ui(16), pHOVER, pFOCUS, root);
+			var hg = root.subDir[| i].draw(self, ui(8), _y, _m, folderPane.w - ui(20), pHOVER, pFOCUS, root);
 			hh += hg;
 			_y += hg;
 		}
@@ -188,10 +189,9 @@ function Panel_Collection() : PanelContent() constructor {
 	});
 	
 	function onResize() {
-		content_w = w - ui(24) - group_w;
-		content_h = h - ui(40) - ui(16);
+		initSize();
 		contentPane.resize(content_w, content_h);
-		folderPane.resize(group_w - ui(8), content_h);
+		folderPane.resize(group_w - ui(4), content_h);
 	}
 	
 	function setContext(cont) {
@@ -218,9 +218,9 @@ function Panel_Collection() : PanelContent() constructor {
 		draw_clear_alpha(COLORS.panel_bg_clear, 0);
 		
 		var content_y = ui(48);
-		draw_sprite_stretched(THEME.ui_panel_bg, 1, group_w, content_y, content_w + ui(16), content_h);
+		draw_sprite_stretched(THEME.ui_panel_bg, 1, group_w, content_y, content_w, content_h);
 		contentPane.active = pHOVER;
-		contentPane.draw(group_w + ui(8), content_y, mx - group_w - ui(8), my - content_y);
+		contentPane.draw(group_w, content_y, mx - group_w - ui(8), my - content_y);
 		
 		folderPane.active = pHOVER;
 		folderPane.draw(0, content_y, mx, my - content_y);
@@ -300,9 +300,7 @@ function Panel_Collection() : PanelContent() constructor {
 			}
 		
 			if(buttonInstant(THEME.button_hide, bx, by, ui(24), ui(24), [mx, my], pFOCUS, pHOVER, "Open in file explorer", THEME.folder) == 2) {
-				var _contPath = context.path;
-				var _windir   = environment_get_variable("WINDIR") + "/explorer.exe";
-				execute_shell_simple(_windir, _contPath);
+				shellOpenExplorer(context.path);
 			}
 			bx -= ui(32);
 		

@@ -16,6 +16,7 @@ event_inherited();
 		[ "Chromatic aberration shader", "jcant0n" ],
 		[ "gif importer\nWindow commands\nExecute shell simple", "YellowAfterLife" ],
 		[ "Triangle grid", "Farini" ],
+		[ "Pixel sort", "Ciphrd" ],
 	]
 	
 	sc_thank = new scrollPane(dialog_w - ui(64), thank_h, function(_y, _m) {

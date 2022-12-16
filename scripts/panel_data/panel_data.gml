@@ -194,7 +194,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 	}
 	
 	function stepBegin() {
-		if(content) content.onStepBegin(self);
+		if(content) content.panelStepBegin(self);
 		
 		if(dragging == 1) {
 			var _mx = clamp(mouse_mx, ui(16), WIN_W - ui(16));
@@ -424,9 +424,12 @@ function PanelContent() constructor {
 		onResize();
 	}
 	
-	function onStepBegin(panel) {
+	function panelStepBegin(panel) {
 		setPanelSize(panel);
-		
+		onStepBegin();
+	}
+	
+	function onStepBegin() {
 		mx = mouse_mx - x;
 		my = mouse_my - y;
 		

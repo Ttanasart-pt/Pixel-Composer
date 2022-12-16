@@ -1,8 +1,9 @@
 /// @description init
 #region pos
 	var hght = line_height(f_p0, 8);
-	var hh = array_length(scrollbox.data_list) * hght;
+	var hh = array_length(scrollbox.data) * hght;
 	
-	dialog_h = hh;
+	dialog_h = min(max_h, hh);
+	sc_content.resize(dialog_w, dialog_h);
 #endregion
 event_inherited();

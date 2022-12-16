@@ -13,6 +13,7 @@
 	__initCollection();
 	__initAssets();
 	__initPresets();
+	__initFontFolder();
 	
 	PREF_LOAD();
 	loadFonts();

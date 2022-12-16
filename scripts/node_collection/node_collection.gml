@@ -10,6 +10,15 @@ function Node_Collection(_x, _y, _group = -1) : Node(_x, _y, _group) constructor
 	custom_input_index = 0;
 	custom_output_index = 0;
 	
+	static getNextNodes = function() {
+		for(var i = custom_input_index; i < ds_list_size(inputs); i++) {
+			var _in = inputs[| i].from;
+			
+			ds_stack_push(RENDER_STACK, _in);
+			printIf(global.RENDER_LOG, "Push group input " + _in.name + " to stack");
+		}
+	}
+	
 	static setRenderStatus = function(result) {
 		rendered = result;
 		
@@ -18,7 +27,7 @@ function Node_Collection(_x, _y, _group = -1) : Node(_x, _y, _group) constructor
 			for( var i = custom_output_index; i < siz; i++ ) {
 				var _o = outputs[| i];
 				if(_o.node.rendered) continue;
-						
+				
 				rendered = false;
 				break;
 			}
@@ -96,6 +105,7 @@ function Node_Collection(_x, _y, _group = -1) : Node(_x, _y, _group) constructor
 		}
 		
 		setHeight();
+		doStepBegin();
 	}
 	
 	static doUpdate = function() {
@@ -115,7 +125,11 @@ function Node_Collection(_x, _y, _group = -1) : Node(_x, _y, _group) constructor
 			PANEL_GRAPH.addContext(self);
 			DOUBLE_CLICK = false;
 		}
+		
+		onStep();
 	}
+	
+	static onStep = function() {}
 	
 	static triggerRender = function() {
 		for(var i = custom_input_index; i < ds_list_size(inputs); i++) {

@@ -59,47 +59,43 @@
 #endregion
 
 #region file drop
-	file_dnd_set_hwnd(window_handle());
-	file_dnd_set_enabled(true);
-	file_dnd_filelist   = "";
-	file_dropping		= "";
-	file_dnd_pattern    = "*.*";
-	file_dnd_allowfiles = true;
-	file_dnd_allowdirs  = true;
-	file_dnd_allowmulti = true;
+	file_dropper_init();
+	drop_path = [];
 	
-	function load_file_path(path, _new = false) {
-		if(string_pos("\n", path) == 1) path = string_replace(path, "\n", "");
-		
-		var is_multi = string_pos("\n", path) != 0 || directory_exists(path);
+	function load_file_path(path) {
+		if(array_length(path) == 0) return; 
+		var is_multi = array_length(path) > 1 || directory_exists(path[0]);
 		
 		if(is_multi) {
 			with(dialogCall(o_dialog_add_multiple_images, WIN_W / 2, WIN_H / 2)) {
 				setPath(path);	
 			}
 		} else {
-			PANEL_GRAPH.stepBegin();
+			PANEL_GRAPH.onStepBegin();
+			path = path[0];
 			var ext = filename_ext(path);
+			var node = noone;
 			
 			switch(ext) {
 				case ".png"	 :
 				case ".jpg"	 :
 				case ".jpeg" :
-					Node_create_Image_path(PANEL_GRAPH.mouse_grid_x, PANEL_GRAPH.mouse_grid_y, path);
+					node = Node_create_Image_path(PANEL_GRAPH.mouse_grid_x, PANEL_GRAPH.mouse_grid_y, path);
 					break;
 				case ".gif"  :
-					Node_create_Image_gif_path(PANEL_GRAPH.mouse_grid_x, PANEL_GRAPH.mouse_grid_y, path);
+					node = Node_create_Image_gif_path(PANEL_GRAPH.mouse_grid_x, PANEL_GRAPH.mouse_grid_y, path);
 					break;
 				case ".obj" :
-					Node_create_3D_Obj_path(PANEL_GRAPH.mouse_grid_x, PANEL_GRAPH.mouse_grid_y, path);
+					node = Node_create_3D_Obj_path(PANEL_GRAPH.mouse_grid_x, PANEL_GRAPH.mouse_grid_y, path);
 					break;
 				case ".json" :
 				case ".pxc" :
-					if(_new) NEW();
 					LOAD_PATH(path);
 					break;
 			}
-			PANEL_GRAPH.fullView();
+			
+			if(node)
+				PANEL_GRAPH.toCenterNode();
 		}
 	}
 #endregion

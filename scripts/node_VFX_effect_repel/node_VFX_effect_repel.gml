@@ -1,5 +1,6 @@
 function Node_VFX_Repel(_x, _y, _group = -1) : Node_VFX_effector(_x, _y, _group) constructor {
 	name = "Repel";
+	node_draw_icon = s_node_vfx_repel;
 	
 	function onAffect(part, str) {
 		var _area = current_data[1];

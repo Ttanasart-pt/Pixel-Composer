@@ -60,7 +60,9 @@
         "node_blend_default": "blue_ltgrey",
         "node_blend_number": "cyan",
         "node_blend_input": ["white", "lime", 0.5],
-        "node_blend_loop": "lime",
+        "node_blend_loop": "cyan",
+        "node_blend_vfx": "lime",
+        "node_blend_feedback": "pink",
         "node_blend_collection": "yellow",
         "node_blend_canvas": ["white", "orange", 0.5],
         "node_path_overlay_control_line": "blue_grey",
@@ -89,7 +91,6 @@
         "panel_bg_clear_inner": "blue_dkblack",
         "panel_bg_clear": "blue_black",
 
-        "panel_graph_grid": "blue_dkgrey",
         "panel_graph_minimap_outline": "blue_dkgrey",
         "panel_graph_node_dimension": "blue_grey",
         "panel_graph_minimap_focus": "blue_ltgrey",

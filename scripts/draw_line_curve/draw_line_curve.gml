@@ -109,8 +109,8 @@ function draw_line_elbow_color(x0, y0, x1, y1, thick, col1, col2, type = LINE_ST
 		draw_line_width_color(cx, y0 - thick / 2, cx, y1 + thick / 2, thick, cm, cm);
 		draw_line_width_color(cx, y1, x1, y1, thick, cm, col2);
 	} else {
-		draw_line_dashed(x0, y0, cx, y0, thick, col1, cm, 12);
-		draw_line_dashed(cx, y0 - thick / 2, cx, y1 + thick / 2, thick, cm, cm, 12);
-		draw_line_dashed(cx, y1, x1, y1, thick, cm, col2, 12);
+		draw_line_dashed_color(x0, y0, cx, y0, thick, col1, cm, 12);
+		draw_line_dashed_color(cx, y0 - thick / 2, cx, y1 + thick / 2, thick, cm, cm, 12);
+		draw_line_dashed_color(cx, y1, x1, y1, thick, cm, col2, 12);
 	}	
 }

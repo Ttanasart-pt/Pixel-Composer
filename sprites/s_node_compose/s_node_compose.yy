@@ -68,7 +68,7 @@
   ],
   "nineSlice": null,
   "parent": {
-    "name": "icons",
-    "path": "folders/nodes/icons.yy",
+    "name": "transform",
+    "path": "folders/nodes/icons/transform.yy",
   },
 }

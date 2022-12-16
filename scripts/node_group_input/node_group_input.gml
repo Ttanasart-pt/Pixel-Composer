@@ -5,7 +5,6 @@ function Node_Group_Input(_x, _y, _group = -1) : Node(_x, _y, _group) constructo
 	auto_height = false;
 	input_index = -1;
 	
-	group = _group;
 	inParent = undefined;
 	
 	w = 96;

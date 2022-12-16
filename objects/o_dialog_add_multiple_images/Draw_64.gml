@@ -29,7 +29,7 @@ if !ready exit;
 		if(sHOVER && point_in_rectangle(mouse_mx, mouse_my, xx, yy, xx + grid_width, yy + grid_size)) {
 			draw_sprite_stretched_ext(THEME.node_active, 0, xx, yy, grid_size, grid_size, COLORS._main_accent, 1);
 			if(mouse_press(mb_left, sFOCUS)) {
-				var path_arr = paths_to_array(paths, dir_recursive, dir_filter);
+				var path_arr = path_search(paths, dir_recursive, dir_filter);
 				switch(i) {
 					case 0 :
 						for( var i = 0; i < array_length(path_arr); i++ )  {

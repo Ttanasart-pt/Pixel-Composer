@@ -6,7 +6,8 @@ function buttonClass(_onClick) constructor {
 	active = false;
 	hover  = false;
 	
-	icon   = noone;
+	icon	   = noone;
+	icon_blend = c_white;
 	icon_index = 0;
 	
 	text = "";
@@ -14,8 +15,10 @@ function buttonClass(_onClick) constructor {
 	
 	onClick = _onClick;
 	
-	static setIcon = function(_icon, _index = 0) { 
-		icon = _icon; icon_index = _index 
+	static setIcon = function(_icon, _index = 0, _blend = c_white) { 
+		icon       = _icon; 
+		icon_index = _index;
+		icon_blend = _blend;
 		return self; 
 	}
 	
@@ -43,7 +46,7 @@ function buttonClass(_onClick) constructor {
 		} else {
 			draw_sprite_stretched_ext(spr, 0, _x, _y, _w, _h, blend, 1);	
 		}
-		if(icon) draw_sprite_ui_uniform(icon, icon_index, _x + _w / 2, _y + _h / 2);
+		if(icon) draw_sprite_ui_uniform(icon, icon_index, _x + _w / 2, _y + _h / 2,, icon_blend);
 		if(text != "") {
 			draw_set_text(f_p0, fa_center, fa_center, COLORS._main_text);
 			draw_text(_x + _w / 2, _y + _h / 2, text);

@@ -1,10 +1,4 @@
 /* Backup
-function Node_create_VFX(_x, _y) {
-	var node = new Node_VFX(_x, _y);
-	//ds_list_add(PANEL_GRAPH.nodes_list, node);
-	return node;
-}
-
 function Node_VFX(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 	name = "VFX";
 	auto_update = false;
@@ -239,7 +233,7 @@ function Node_VFX(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 		if(!_loop) return;
 		
 		for(var i = 0; i < ANIMATOR.frames_total; i++)
-			runFrame(i);
+			runVFX(i);
 		
 		seed = seed_origin;
 	}
@@ -267,7 +261,7 @@ function Node_VFX(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 		}
 	}
 	
-	static runFrame = function(_time = ANIMATOR.current_frame) {
+	static runVFX = function(_time = ANIMATOR.current_frame) {
 		var _spawn_delay = inputs[| 2].getValue(_time);
 		var _spawn_type = inputs[| 17].getValue(_time);
 		
@@ -321,9 +315,9 @@ function Node_VFX(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 			
 			if(ANIMATOR.current_frame == 0) {
 				reset();
-				runFrame(ANIMATOR.current_frame);
+				runVFX(ANIMATOR.current_frame);
 			} else if(cached_output[ANIMATOR.current_frame - 1] != 0) {
-				runFrame(ANIMATOR.current_frame);
+				runVFX(ANIMATOR.current_frame);
 			}
 		}
 	}

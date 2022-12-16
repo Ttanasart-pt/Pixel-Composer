@@ -27,8 +27,11 @@
 #endregion
 
 #region nodes
-	for(var i = 0; i < ds_list_size(NODES); i++) {
-		NODES[| i].stepBegin();
+	var _k = ds_map_find_first(NODE_MAP);
+	var _a = ds_map_size(NODE_MAP);
+	repeat(_a) {
+		NODE_MAP[? _k].stepBegin();
+		_k = ds_map_find_next(NODE_MAP, _k);
 	}
 	
 	if(UPDATE & RENDER_TYPE.full)

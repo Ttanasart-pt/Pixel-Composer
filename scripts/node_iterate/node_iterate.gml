@@ -37,6 +37,19 @@ function Node_Iterate(_x, _y, _group = -1) : Node_Collection(_x, _y, _group) con
 		printIf(global.RENDER_LOG, "LOOP INIT");
 	}
 	
+	static getNextNodes = function() {
+		var allReady = true;
+		for(var i = custom_input_index; i < ds_list_size(inputs); i++) {
+			var _in = inputs[| i].from;
+			allReady &= _in.isUpdateReady()
+		}
+			
+		if(!allReady) return;
+		
+		__nodeLeafList(nodes, RENDER_STACK);
+		initLoop();
+	}
+	
 	static iterationStatus = function() {
 		var iter = true;
 		for( var i = 0; i < ds_list_size(outputs); i++ ) {

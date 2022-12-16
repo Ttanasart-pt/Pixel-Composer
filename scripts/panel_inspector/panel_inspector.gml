@@ -13,7 +13,7 @@ function Panel_Inspector() : PanelContent() constructor {
 	prop_selecting = noone;
 	
 	function initSize() {
-		content_w = w - ui(32);
+		content_w = w - ui(28);
 		content_h = h - top_bar_h - ui(12);
 	}
 	initSize();
@@ -68,7 +68,7 @@ function Panel_Inspector() : PanelContent() constructor {
 	}
 	
 	contentPane = new scrollPane(content_w, content_h, function(_y, _m) {
-		var con_w = contentPane.surface_w;
+		var con_w = contentPane.surface_w - ui(4);
 		draw_clear_alpha(COLORS.panel_bg_clear, 0);
 		
 		if(point_in_rectangle(_m[0], _m[1], 0, 0, con_w, content_h) && mouse_press(mb_left, pFOCUS))
@@ -324,23 +324,35 @@ function Panel_Inspector() : PanelContent() constructor {
 								}
 								break;
 							case VALUE_TYPE.path :
-								var val = jun.showValue(), txt = "";
-								var pathExist = jun.value_validation == VALIDATION.pass;
+								switch(jun.display_type) {
+									case VALUE_DISPLAY.path_load :
+									case VALUE_DISPLAY.path_save :
+									case VALUE_DISPLAY.path_array :
+										var val = jun.showValue(), txt = "";
+										var pathExist = jun.value_validation == VALIDATION.pass;
 									
-								if(is_array(val))
-									txt = "[" + string(array_length(val)) + "] " + val[0];
-								else
-									txt = val;
+										if(is_array(val))
+											txt = "[" + string(array_length(val)) + "] " + val[0];
+										else
+											txt = val;
 									
-								jun.editWidget.draw(editBoxX, editBoxY, editBoxW, editBoxH, _m,, pathExist? COLORS._main_text : COLORS._main_value_negative);
-								var icx = editBoxX + editBoxW - ui(16);
-								var icy = editBoxY + editBoxH / 2;
-								draw_sprite_ui_uniform(pathExist? THEME.button_path_icon : THEME.button_path_not_found_icon, 0, icx, icy, 1,, 1);
-								draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text);
-								draw_text_cut(editBoxX + ui(8), editBoxY + editBoxH / 2, txt, editBoxW - ui(60));
+										jun.editWidget.draw(editBoxX, editBoxY, editBoxW, editBoxH, _m,, pathExist? COLORS._main_text : COLORS._main_value_negative);
+										var icx = editBoxX + editBoxW - ui(16);
+										var icy = editBoxY + editBoxH / 2;
+										draw_sprite_ui_uniform(pathExist? THEME.button_path_icon : THEME.button_path_not_found_icon, 0, icx, icy, 1,, 1);
+										draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text);
+										draw_text_cut(editBoxX + ui(8), editBoxY + editBoxH / 2, txt, editBoxW - ui(60));
 									
-								if(!pathExist && pHOVER && point_in_rectangle(_m[0], _m[1], icx - ui(17), icy - ui(17), icx + ui(17), icy + ui(17)))
-									TOOLTIP = "File not exist";
+										if(!pathExist && pHOVER && point_in_rectangle(_m[0], _m[1], icx - ui(17), icy - ui(17), icx + ui(17), icy + ui(17)))
+											TOOLTIP = "File not exist";
+										break;
+									case VALUE_DISPLAY.path_font :
+										var val = jun.showValue();
+										if(file_exists(val))
+											val = filename_name(val);
+										jun.editWidget.draw(editBoxX, editBoxY, editBoxW, editBoxH, val, _m, ui(16) + x, top_bar_h + y);
+										break;
+								}
 								break;
 							case VALUE_TYPE.surface :
 								editBoxH = ui(96);

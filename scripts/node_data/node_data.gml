@@ -43,6 +43,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) constructor {
 	preview_speed = 0;
 	preview_index = 0;
 	preview_channel = 0;
+	preview_alpha = 1;
 	preview_x     = 0;
 	preview_y     = 0;
 	
@@ -101,28 +102,25 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) constructor {
 	}
 	
 	static stepBegin = function() {
-		if(use_cache) {
+		if(use_cache)
 			cacheArrayCheck();
-		}
 		var stack_push = false;
 		
 		if(always_output) {
 			for(var i = 0; i < ds_list_size(outputs); i++) {
-				if(outputs[| i].type == VALUE_TYPE.surface) {
-					var val = outputs[| i].getValue();
+				if(outputs[| i].type != VALUE_TYPE.surface) 
+					continue;
+				var val = outputs[| i].getValue();
 					
-					if(is_array(val)) {
-						for(var j = 0; j < array_length(val); j++) {
-							var _surf = val[j];
-							if(!is_surface(_surf) || _surf == DEF_SURFACE) {
-								stack_push = true;
-							}
-						}
-					} else {
-						if(!is_surface(val) || val == DEF_SURFACE) {
-							stack_push = true;
-						}
+				if(is_array(val)) {
+					for(var j = 0; j < array_length(val); j++) {
+						var _surf = val[j];
+						if(is_surface(_surf) && _surf != DEF_SURFACE)
+							continue;
+						stack_push = true;
 					}
+				} else if(!is_surface(val) || val == DEF_SURFACE) {
+					stack_push = true;
 				}
 			}
 		}
@@ -143,7 +141,11 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) constructor {
 		
 		if(auto_height)
 			setHeight();
+		
+		doStepBegin();
 	}
+	static doStepBegin = function() {}
+	
 	static step = function() {}
 	static focusStep = function() {}
 	
@@ -370,7 +372,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) constructor {
 						if(ty == LINE_STYLE.solid)
 							draw_line_width_color(jx, jy, frx, fry, th, c0, c1);
 						else 
-							draw_line_dashed(jx, jy, frx, fry, th, c0, c1, 12);
+							draw_line_dashed_color(jx, jy, frx, fry, th, c0, c1, 12);
 						break;
 					case 1 : draw_line_curve_color(jx, jy, frx, fry, th, c0, c1, ty); break;
 					case 2 : draw_line_elbow_color(jx, jy, frx, fry, th, c0, c1, ty); break;
@@ -449,8 +451,8 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) constructor {
 		drawNodeBase(xx, yy, _s);
 		if(previewable && ds_list_size(outputs) > 0) 
 			drawPreview(outputs[| preview_channel], xx, yy, _s);
-		drawNodeName(xx, yy, _s);
 		onDrawNode(xx, yy, _mx, _my, _s);
+		drawNodeName(xx, yy, _s);
 
 		if(active_draw_index > -1) {
 			draw_sprite_stretched_ext(bg_sel_spr, 0, xx, yy, w * _s, h * _s, active_draw_index > 1? COLORS.node_border_file_drop : COLORS._main_accent, 1);
@@ -483,6 +485,11 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) constructor {
 	}
 	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my) {}
+	
+	static getPreviewValue = function() {
+		if(preview_channel > ds_list_size(outputs)) return noone;
+		return outputs[| preview_channel];
+	}
 	
 	static destroy = function(_merge = false) {
 		active = false;
@@ -529,6 +536,26 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) constructor {
 	}
 	
 	static onDestroy = function() {}
+	
+	static getNextNodes = function() {
+		for(var i = 0; i < ds_list_size(outputs); i++) {
+			var _ot = outputs[| i];
+			if(_ot.type == VALUE_TYPE.node) continue;
+			
+			for(var j = 0; j < ds_list_size(_ot.value_to); j++) {
+				var _to = _ot.value_to[| j];
+				if(!_to.node.active || _to.value_from == noone) continue; 
+				if(_to.value_from.node != self) continue;
+					
+				_to.node.triggerRender();
+				if(_to.node.isUpdateReady()) {
+					ds_stack_push(RENDER_STACK, _to.node);
+					printIf(global.RENDER_LOG, "    > Push " + _to.node.name + " node to stack");
+				} else 
+					printIf(global.RENDER_LOG, "    > Node " + _to.node.name + " not ready");
+			}
+		}	
+	}
 	
 	static cacheArrayCheck = function() {
 		if(array_length(cached_output) != ANIMATOR.frames_total + 1)
@@ -632,7 +659,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) constructor {
 	
 	static clone = function() {
 		var _type = instanceof(self);
-		var _node = NODE_CREATE_FUCTION[? _type](x, y);
+		var _node = nodeBuild(_type, x, y);
 		
 		var _data = serialize();
 		_node.deserialize(ds_map_clone(_data));

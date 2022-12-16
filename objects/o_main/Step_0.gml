@@ -87,20 +87,9 @@
 #endregion
 
 #region file drop
-	file_dnd_set_files(file_dnd_pattern, file_dnd_allowfiles, file_dnd_allowdirs, file_dnd_allowmulti);
-	file_dnd_filelist = file_dnd_get_files();
-	
-	file_dnd_set_enabled(true);
-	
-	if(file_dnd_filelist != "" && file_dnd_filelist != 0) {
-		file_dropping = file_dnd_filelist;
-		if(string_pos("\n", file_dropping) == 1) 
-			file_dropping = string_replace(file_dropping, "\n", "");
-		
-		alarm[3] = 2;
-		
-		file_dnd_set_enabled(false);
-		file_dnd_filelist = "";
+	if(array_length(drop_path)) {
+		load_file_path(drop_path);
+		drop_path = [];
 	}
 #endregion
 

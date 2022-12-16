@@ -143,10 +143,11 @@ function Panel_Preview() : PanelContent() constructor {
 			var node = preview_node[i];
 			
 			if(node == noone) continue;
-			if(node.preview_channel >= ds_list_size(node.outputs)) continue;
 			
-			var _prev_val = node.outputs[| node.preview_channel];
-			if(_prev_val.type != VALUE_TYPE.surface) return;
+			var _prev_val = node.getPreviewValue();
+			
+			if(_prev_val == noone) continue;
+			if(_prev_val.type != VALUE_TYPE.surface) continue;
 			
 			var value = _prev_val.getValue();
 			
@@ -295,7 +296,10 @@ function Panel_Preview() : PanelContent() constructor {
 					preview_node[0].previewing = 1;
 					
 					switch(tileMode) {
-						case 0 : draw_surface_ext_safe(preview_surface[0], psx, psy, ss, ss, 0, c_white, 1); break;
+						case 0 : 
+							var aa = preview_node[0].preview_alpha;
+							draw_surface_ext_safe(preview_surface[0], psx, psy, ss, ss, 0, c_white, aa); 
+							break;
 						case 1 : draw_surface_ext_safe(preview_surface[0], psx, psy, ss, ss, 0, c_white, 1); break;
 						case 2 : draw_surface_ext_safe(preview_surface[0], psx, psy, ss, ss, 0, c_white, 1); break;
 						case 3 : draw_surface_tiled_ext_safe(preview_surface[0], psx, psy, ss, ss, c_white, 1); break;
@@ -397,77 +401,79 @@ function Panel_Preview() : PanelContent() constructor {
 		draw_text(w - ui(8), right_menu_y, "x" + string(canvas_s));
 		right_menu_y += string_height("l");
 		
+		var pseq = getNodePreviewSequence();
+		if(pseq == 0) return;
+		
+		if(!array_equals(pseq, _preview_sequence)) {
+			_preview_sequence = pseq;
+			preview_x    = 0;
+			preview_x_to = 0;
+		}
+		
 		var prev_size = ui(48);
 		preview_x = lerp_float(preview_x, preview_x_to, 4);
-		
-		var pseq = getNodePreviewSequence();
-		if(pseq != 0) {
-			if(pseq != _preview_sequence) {
-				_preview_sequence = pseq;
-				preview_x    = 0;
-				preview_x_to = 0;
-			}
 			
-			if(pHOVER && my > h - toolbar_height - prev_size - ui(16)) {
-				canvas_hover = false;
-				if(mouse_wheel_down())	preview_x_to = clamp(preview_x_to - prev_size, - preview_x_max, 0);
-				if(mouse_wheel_up())	preview_x_to = clamp(preview_x_to + prev_size, - preview_x_max, 0);
-			}
+		if(pHOVER && my > h - toolbar_height - prev_size - ui(16)) {
+			canvas_hover = false;
+			if(mouse_wheel_down())	preview_x_to = clamp(preview_x_to - prev_size, - preview_x_max, 0);
+			if(mouse_wheel_up())	preview_x_to = clamp(preview_x_to + prev_size, - preview_x_max, 0);
+		}
 			
-			preview_x_max = 0;
-			for(var i = 0; i < array_length(pseq); i++) {
-				var xx = preview_x + ui(8) + (prev_size + ui(8)) * i;
-				var yy = h - toolbar_height - prev_size - ui(8);
+		preview_x_max = 0;
+		var xx = preview_x + ui(8);
+		for(var i = 0; i < array_length(pseq); i++) {
+			var yy = h - toolbar_height - prev_size - ui(8);
 				
-				var prev   = pseq[i];
-				if(!is_surface(prev)) continue;
+			var prev   = pseq[i];
+			if(!is_surface(prev)) continue;
 				
-				var prev_w = surface_get_width(prev);
-				var prev_h = surface_get_height(prev);
-				var ss     = prev_size / max(prev_w, prev_h);
+			var prev_w = surface_get_width(prev);
+			var prev_h = surface_get_height(prev);
+			var ss     = prev_size / max(prev_w, prev_h);
+			var prev_sw = prev_w * ss;
+			
+			draw_set_color(COLORS.panel_preview_surface_outline);
+			draw_rectangle(xx, yy, xx + prev_w * ss, yy + prev_h * ss, true);
 				
-				draw_set_color(COLORS.panel_preview_surface_outline);
-				draw_rectangle(xx, yy, xx + prev_w * ss, yy + prev_h * ss, true);
-				
-				if(pHOVER && point_in_rectangle(mx, my, xx, yy, xx + prev_w * ss, yy + prev_h * ss)) {
-					if(mouse_press(mb_left, pFOCUS)) {
-						_node.preview_index = i;
-						_node.onValueUpdate(0);
-						if(resetViewOnDoubleClick)
-							do_fullView = true;
-					}
-					draw_surface_ext_safe(prev, xx, yy, ss, ss, 0, c_white, 1);
-				} else {
-					draw_surface_ext_safe(prev, xx, yy, ss, ss, 0, c_white, 0.5);	
+			if(pHOVER && point_in_rectangle(mx, my, xx, yy, xx + prev_sw, yy + prev_h * ss)) {
+				if(mouse_press(mb_left, pFOCUS)) {
+					_node.preview_index = i;
+					_node.onValueUpdate(0);
+					if(resetViewOnDoubleClick)
+						do_fullView = true;
 				}
-				
-				if(i == _node.preview_index) {
-					draw_set_color(COLORS._main_accent);
-					draw_rectangle(xx, yy, xx + prev_w * ss, yy + prev_h * ss, true);
-				}
-				
-				preview_x_max += prev_size + 8;
-			}
-			preview_x_max = max(preview_x_max - ui(100), 0);
-			
-			var by = h - toolbar_height - prev_size - ui(56);
-			var bx = ui(10);
-			
-			var b = buttonInstant(THEME.button_hide, bx, by, ui(40), ui(40), [mx, my], pFOCUS, pHOVER);
-			
-			if(_node.preview_speed == 0) {
-				if(b) {
-					draw_sprite_ui_uniform(THEME.sequence_control, 1, bx + ui(20), by + ui(20), 1, COLORS._main_icon, 1);
-					if(b == 2) _node.preview_speed = preview_rate / game_get_speed(gamespeed_fps);
-				}
-				draw_sprite_ui_uniform(THEME.sequence_control, 1, bx + ui(20), by + ui(20), 1, COLORS._main_icon, 0.5);
+				draw_surface_ext_safe(prev, xx, yy, ss, ss, 0, c_white, 1);
 			} else {
-				if(b) {
-					draw_sprite_ui_uniform(THEME.sequence_control, 0, bx + ui(20), by + ui(20), 1, COLORS._main_accent, 1);
-					if(b == 2) _node.preview_speed = 0;
-				}
-				draw_sprite_ui_uniform(THEME.sequence_control, 0, bx + ui(20), by + ui(20), 1, COLORS._main_accent, .75);
+				draw_surface_ext_safe(prev, xx, yy, ss, ss, 0, c_white, 0.5);	
 			}
+				
+			if(i == _node.preview_index) {
+				draw_set_color(COLORS._main_accent);
+				draw_rectangle(xx, yy, xx + prev_sw, yy + prev_h * ss, true);
+			}
+			
+			xx += prev_sw + ui(8);
+			preview_x_max += prev_sw + ui(8);
+		}
+		preview_x_max = max(preview_x_max - ui(100), 0);
+			
+		var by = h - toolbar_height - prev_size - ui(56);
+		var bx = ui(10);
+			
+		var b = buttonInstant(THEME.button_hide, bx, by, ui(40), ui(40), [mx, my], pFOCUS, pHOVER);
+			
+		if(_node.preview_speed == 0) {
+			if(b) {
+				draw_sprite_ui_uniform(THEME.sequence_control, 1, bx + ui(20), by + ui(20), 1, COLORS._main_icon, 1);
+				if(b == 2) _node.preview_speed = preview_rate / game_get_speed(gamespeed_fps);
+			}
+			draw_sprite_ui_uniform(THEME.sequence_control, 1, bx + ui(20), by + ui(20), 1, COLORS._main_icon, 0.5);
+		} else {
+			if(b) {
+				draw_sprite_ui_uniform(THEME.sequence_control, 0, bx + ui(20), by + ui(20), 1, COLORS._main_accent, 1);
+				if(b == 2) _node.preview_speed = 0;
+			}
+			draw_sprite_ui_uniform(THEME.sequence_control, 0, bx + ui(20), by + ui(20), 1, COLORS._main_accent, .75);
 		}
 	}
 	

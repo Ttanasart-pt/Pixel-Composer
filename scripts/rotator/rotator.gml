@@ -1,8 +1,9 @@
-function rotator(_onModify) constructor {
+function rotator(_onModify, _step = -1) constructor {
 	active = false;
 	hover  = false;
 	
 	onModify = _onModify;
+	step	 = _step;
 	
 	dragging = false;
 	drag_sv  = 0;
@@ -34,6 +35,9 @@ function rotator(_onModify) constructor {
 			else 
 				val = real_val;
 			
+			if(step != -1)
+				val = round(real_val / step) * step;
+			
 			draw_sprite_ui_uniform(THEME.rotator_knob, 1, px, py);
 			
 			if(val != drag_sv) {
@@ -46,7 +50,7 @@ function rotator(_onModify) constructor {
 			
 			if(mouse_release(mb_left)) {
 				dragging = false;
-				UNDO_HOLDING = false;	
+				UNDO_HOLDING = false;
 			}
 			
 		} else if(hover && point_in_circle(_m[0], _m[1], _x, knob_y, ui(48))) {

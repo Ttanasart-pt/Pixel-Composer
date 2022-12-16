@@ -13,11 +13,10 @@ event_inherited();
 	
 	function setPath(path) {
 		paths	= path;
-		is_dir	= directory_exists(path);
+		is_dir	= directory_exists(path[0]);
 		
-		if(is_dir) {
+		if(is_dir)
 			dialog_h += ui(96);
-		}
 	}
 	
 	cb_recursive = new checkBox(function(val) { dir_recursive = !dir_recursive; });
@@ -27,8 +26,8 @@ event_inherited();
 
 #region nodes
 	nodes = [
-		nodeFind("Image"),
-		nodeFind("Image array"),
-		nodeFind("Animation"),
+		ALL_NODES[? "Node_Image"],
+		ALL_NODES[? "Node_Image_Sequence"],
+		ALL_NODES[? "Node_Image_Animated"],
 	];
 #endregion

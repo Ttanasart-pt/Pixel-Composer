@@ -64,6 +64,7 @@ enum VALUE_DISPLAY {
 	//path
 	path_save,
 	path_load,
+	path_font,
 }
 
 enum PADDING {
@@ -255,7 +256,7 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 					case VALUE_DISPLAY.rotation :
 						editWidget = new rotator(function(val, _save) {
 							setValue(val, _save);
-						} );
+						}, display_data );
 						break;
 					case VALUE_DISPLAY.rotation_range :
 						editWidget = new rotatorRange(function(index, val) { 
@@ -364,6 +365,38 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 							setValue(path);
 						} );
 						break;
+					case VALUE_DISPLAY.path_font :
+						editWidget = new scrollBox(
+							function() {
+								var pth = [];
+								var root = DIRECTORY + "Fonts/*";
+								var f = file_find_first(root, -1);
+								var filter = [ ".ttf", ".otf" ];
+								while(f != "") {
+									var ext = filename_ext(DIRECTORY + "Fonts/" + f);
+									if(array_exists(filter, string_lower(ext)))
+										array_push(pth, f);
+									f = file_find_next();
+								}
+								file_find_close();
+								array_push(pth, "Open font folder...");
+								return pth;
+							},
+							function(val) {
+								if(val == array_length(editWidget.data) - 1) {
+									shellOpenExplorer(DIRECTORY + "Fonts\\");
+									return;
+								}
+								setValue(DIRECTORY + "Fonts\\" + editWidget.data[val]);
+							}
+						);
+						
+						editWidget.extra_button = button(function() { 
+							var path = get_open_filename("*.ttf;*.otf", "");
+							if(path == "") return noone;
+							setValue(path);
+						} ).setTooltip("Load font...").setIcon(THEME.folder_content, 0, COLORS._main_icon);
+						break;
 				}
 				break;
 			case VALUE_TYPE.curve :
@@ -433,6 +466,13 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 		return self;
 	}
 	
+	static valueProcess = function(value, type) {
+		switch(type) {
+			case VALUE_TYPE.text :    return string(value);
+			default :				  return value;
+		}
+	}
+	
 	static getValue = function(_time = ANIMATOR.current_frame) {
 		var _val = getValueRecursive(_time);
 		var val = _val[0];
@@ -457,11 +497,16 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 			if(!is_array(val))
 				return array_create(array_length(_base), val);	
 			else if(array_length(val) < array_length(_base)) {
-				for( var i = array_length(val); i < array_length(_base); i++ ) {
+				for( var i = array_length(val); i < array_length(_base); i++ )
 					val[i] = 0;
-				}
 			}
 		}
+		
+		if(is_array(val)) {
+			for( var i = 0; i < array_length(val); i++ )
+				val[i] = valueProcess(val[i], typ);
+		} else 
+			val = valueProcess(val, typ);
 		
 		return val;
 	}
@@ -471,9 +516,8 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 		
 		if(value_from == noone)
 			val = [animator.getValue(_time), type];
-		else if(value_from != self) {
+		else if(value_from != self)
 			val = value_from.getValueRecursive(_time); 
-		}
 		
 		return val;
 	}
@@ -882,6 +926,11 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 							} else {
 								_val[2] = _dx;
 								_val[3] = _dy;
+							}
+							
+							if(keyboard_check(vk_shift)) {
+								_val[2] = max(_dx, _dy);
+								_val[3] = max(_dx, _dy);
 							}
 							
 							if(setValue(_val))

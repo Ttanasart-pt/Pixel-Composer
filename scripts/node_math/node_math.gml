@@ -66,21 +66,41 @@ function Node_Math(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 	
 	static _eval = function(mode, a, b, deg = true) {
 		switch(mode) {
-			case MATH_OPERATOR.add :		return a + b;
-			case MATH_OPERATOR.subtract :	return a - b;
-			case MATH_OPERATOR.multiply :	return a * b;
-			case MATH_OPERATOR.divide :		return b == 0? 0 : a / b;
-			case MATH_OPERATOR.power :		return power(a, b);
-			case MATH_OPERATOR.root :		return b == 0? 0 : power(a, 1 / b);
+			case MATH_OPERATOR.add :		
+				if(is_real(a) && is_real(b))			return a + b;
+				else if(is_string(a) || is_string(b))	return string(a) + string(b);
+				
+			case MATH_OPERATOR.subtract :	
+				if(is_real(a) && is_real(b))			return a - b;
+				else if(is_string(a) || is_string(b))	return string_replace(string(a), string(b), "");
+				
+			case MATH_OPERATOR.multiply :	
+				if(is_real(a) && is_real(b))			return a * b;
+				else if(is_string(a) || is_real(b))	{
+					var s = "";
+					repeat(b) s += a;
+					return s;
+				} else if(is_string(b) || is_real(a))	{
+					var s = "";
+					repeat(a) s += b;
+					return s;
+				}
+				
+			case MATH_OPERATOR.divide :	
+				if(is_real(a) && is_real(b))			return b == 0? 0 : a / b;
+				else if(is_string(a) || is_string(b))	return string_replace_all(string(a), string(b), "");
 			
-			case MATH_OPERATOR.sin :		return sin(degtorad(a)) * b;
-			case MATH_OPERATOR.cos :		return cos(degtorad(a)) * b;
-			case MATH_OPERATOR.tan :		return tan(degtorad(a)) * b;
-			case MATH_OPERATOR.modulo :		return safe_mod(a, b);
+			case MATH_OPERATOR.power :		if(is_real(a) && is_real(b)) return power(a, b);
+			case MATH_OPERATOR.root :		if(is_real(a) && is_real(b)) return b == 0? 0 : power(a, 1 / b);
 			
-			case MATH_OPERATOR.floor :		return floor(a);
-			case MATH_OPERATOR.ceiling :	return ceil(a);
-			case MATH_OPERATOR.round :		return round(a);
+			case MATH_OPERATOR.sin :		if(is_real(a) && is_real(b)) return sin(degtorad(a)) * b;
+			case MATH_OPERATOR.cos :		if(is_real(a) && is_real(b)) return cos(degtorad(a)) * b;
+			case MATH_OPERATOR.tan :		if(is_real(a) && is_real(b)) return tan(degtorad(a)) * b;
+			case MATH_OPERATOR.modulo :		if(is_real(a) && is_real(b)) return safe_mod(a, b);
+			
+			case MATH_OPERATOR.floor :		if(is_real(a)) return floor(a);
+			case MATH_OPERATOR.ceiling :	if(is_real(a)) return ceil(a);
+			case MATH_OPERATOR.round :		if(is_real(a)) return round(a);
 		}
 		return 0;
 	}

@@ -3,10 +3,11 @@ function Node_Text(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constru
 	
 	font = f_p0;
 	
-	inputs[| 0] = nodeValue(0, "Text", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "");
+	inputs[| 0] = nodeValue(0, "Text", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "")
+		.setVisible(true, true);
 	
 	inputs[| 1] = nodeValue(1, "Font", self, JUNCTION_CONNECT.input, VALUE_TYPE.path, "")
-		.setDisplay(VALUE_DISPLAY.path_load, ["*.ttf;*.otf", ""]);
+		.setDisplay(VALUE_DISPLAY.path_font);
 	
 	inputs[| 2] = nodeValue(2, "Size", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 16);
 	

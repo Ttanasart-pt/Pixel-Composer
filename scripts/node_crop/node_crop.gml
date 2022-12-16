@@ -1,5 +1,6 @@
 function Node_Crop(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constructor {
 	name = "Crop";
+	preview_alpha = 0.5;
 	
 	inputs[| 0] = nodeValue(0, "Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 	inputs[| 1] = nodeValue(1, "Crop", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 0, 0, 0, 0 ])
@@ -12,23 +13,27 @@ function Node_Crop(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constru
 	drag_my   = 0;
 	drag_sv   = 0;
 	
+	static getPreviewValue = function() { return inputs[| 0]; }
+	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my) {
 		if(array_length(current_data) < 2) return;
 		
 		var _inSurf		= current_data[0];
-		var _dim		= [ surface_get_width(_inSurf), surface_get_height(_inSurf) ];
 		var _splice		= current_data[1];
 		
-		var sp_r = _x + (_dim[0] - _splice[0] - _splice[2]) * _s;
-		var sp_l = _x;
+		var dim = [ surface_get_width(_inSurf), surface_get_height(_inSurf) ]
 		
-		var sp_t = _y;
-		var sp_b = _y + (_dim[1] - _splice[1] - _splice[3]) * _s;
+		var sp_r = _x + (dim[0] - _splice[0]) * _s;
+		var sp_l = _x + _splice[2] * _s;
+		
+		var sp_t = _y + _splice[1] * _s;
+		var sp_b = _y + (dim[1] - _splice[3]) * _s;
 		
 		var ww = WIN_W;
 		var hh = WIN_H;
 		
-		draw_surface_ext_safe(_inSurf, _x - _splice[2] * _s, _y - _splice[1] * _s, _s, _s, 0, c_white, 0.1);
+		var _out = outputs[| 0].getValue();
+		draw_surface_ext_safe(_out, sp_l, sp_t, _s, _s);
 		
 		draw_set_color(COLORS._main_accent);
 		draw_line(sp_r, -hh, sp_r, hh);
@@ -43,7 +48,7 @@ function Node_Crop(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constru
 			else if(drag_side == 2)	vv = drag_sv + (_mx - drag_mx) / _s;
 			else if(drag_side == 1)	vv = drag_sv + (_my - drag_my) / _s;
 			else					vv = drag_sv - (_my - drag_my) / _s;
-				
+			
 			_splice[drag_side] = vv;
 			if(inputs[| 1].setValue(_splice))
 				UNDO_HOLDING = true;
@@ -93,9 +98,6 @@ function Node_Crop(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constru
 		var _inSurf		= _data[0];
 		var _crop		= _data[1];
 		var _dim		= [ surface_get_width(_inSurf) - _crop[0] - _crop[2], surface_get_height(_inSurf) - _crop[1] - _crop[3] ];
-		
-		preview_x = _crop[2];
-		preview_y = _crop[1];
 		
 		surface_size_to(_outSurf, _dim[0], _dim[1]);
 		

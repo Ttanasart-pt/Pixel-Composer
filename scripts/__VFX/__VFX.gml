@@ -9,8 +9,9 @@ enum PARTICLE_BLEND_MODE {
 	additive
 }
 
-function __part() constructor {
+function __part(_node) constructor {
 	seed   = irandom(99999);
+	node   = _node;
 	active = false;
 	surf   = noone;
 	x   = 0;
@@ -44,6 +45,7 @@ function __part() constructor {
 	
 	life       = 0;
 	life_total = 0;
+	step_int   = 0;
 	
 	anim_speed = 1;
 	anim_end   = ANIM_END_ACTION.loop;
@@ -57,6 +59,7 @@ function __part() constructor {
 		
 		life = _life;
 		life_total = life;
+		node.onPartCreate(self);
 	}
 	
 	function setPhysic(_sx, _sy, _ac, _g, _wig) {
@@ -84,7 +87,8 @@ function __part() constructor {
 	}
 	
 	function kill() {
-		active = false;	
+		active = false;
+		node.onPartDestroy(self);
 	}
 	
 	static step = function() {
@@ -116,6 +120,8 @@ function __part() constructor {
 			rot += rot_s;
 		alp_draw = alp * eval_bezier_cubic(1 - life / life_total, alp_fade[0], alp_fade[1], alp_fade[2], alp_fade[3]);
 		
+		if(step_int > 0 && safe_mod(life, step_int) == 0) 
+			node.onPartStep(self);
 		if(life-- < 0) kill();
 	}
 	

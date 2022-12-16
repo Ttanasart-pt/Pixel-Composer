@@ -69,7 +69,7 @@ function SAVE() {
 }
 
 function SAVE_AS() {
-	var path = get_save_filename(".pxc", "");
+	var path = get_save_filename("Pixel Composer project (.pxc)|*.pxc", "");
 	if(path == "") return false;
 	
 	if(filename_ext(path) != ".pxc")
