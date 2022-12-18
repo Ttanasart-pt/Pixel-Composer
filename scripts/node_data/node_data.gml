@@ -537,6 +537,21 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) constructor {
 	
 	static onDestroy = function() {}
 	
+	static isRenderable = function(trigger = false) {
+		var _startNode = true;
+		for(var j = 0; j < ds_list_size(inputs); j++) {
+			var _in = inputs[| j];
+			if(_in.type == VALUE_TYPE.node) continue;
+			
+			if(trigger)
+				triggerRender();
+					
+			if(_in.value_from != noone && !_in.value_from.node.rendered)
+				_startNode = false;
+		}
+		return _startNode;
+	}
+	
 	static getNextNodes = function() {
 		for(var i = 0; i < ds_list_size(outputs); i++) {
 			var _ot = outputs[| i];
@@ -664,6 +679,8 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) constructor {
 		var _data = serialize();
 		_node.deserialize(ds_map_clone(_data));
 		_node.node_id = generateUUID();
+		
+		NODE_MAP[? node_id] = self;
 		NODE_MAP[? _node.node_id] = _node;
 		
 		return _node;

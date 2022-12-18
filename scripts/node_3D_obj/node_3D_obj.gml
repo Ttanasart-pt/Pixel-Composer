@@ -1,12 +1,10 @@
-function Node_create_3D_Obj_path(_x, _y, _group = -1, path) {
+function Node_create_3D_Obj_path(_x, _y, path) {
 	if(!file_exists(path)) return noone;
 	
-	var node = new Node_3D_Obj(_x, _y, _group);
+	var node = new Node_3D_Obj(_x, _y);
 	node.inputs[| 0].setValue(path);
 	node.updateObj();
 	node.doUpdate(); 
-	
-	//ds_list_add(PANEL_GRAPH.nodes_list, node);
 	return node;	
 }
 
@@ -17,6 +15,7 @@ function Node_3D_Obj(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 	uniLightAmb = shader_get_uniform(sh_vertex_pnt_light, "u_AmbientLight");
 	uniLightClr = shader_get_uniform(sh_vertex_pnt_light, "u_LightColor");
 	uniLightInt = shader_get_uniform(sh_vertex_pnt_light, "u_LightIntensity");
+	uniLightNrm = shader_get_uniform(sh_vertex_pnt_light, "useNormal");
 	
 	inputs[| 0] = nodeValue(0, "Path", self, JUNCTION_CONNECT.input, VALUE_TYPE.path, "")
 		.setDisplay(VALUE_DISPLAY.path_load, [ "*.obj", "" ]);
@@ -50,12 +49,15 @@ function Node_3D_Obj(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 	
 	inputs[| 9] = nodeValue(9, "Light color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white);
 	inputs[| 10] = nodeValue(10, "Ambient color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_grey);
-		
+	
+	inputs[| 11] = nodeValue(11, "Scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 1, 1 ])
+		.setDisplay(VALUE_DISPLAY.vector);
+	
 	input_display_list = [ 2, 
 		["Geometry",	false], 0, 1, 
-		["Transform",	false], 3, 4, 5,
-		["Textures",	true], 
+		["Transform",	false], 3, 4, 5, 11,
 		["Light",		false], 6, 7, 8, 9, 10,
+		["Textures",	true], 
 	];
 	input_length = ds_list_size(inputs);
 	input_display_len  = array_length(input_display_list);
@@ -99,6 +101,7 @@ function Node_3D_Obj(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 	materialNames = [];
 	materialIndex = [];
 	materials = [];
+	use_normal = true;
 	
 	static updateObj = function() {
 		var _path = inputs[| 0].getValue();
@@ -109,9 +112,16 @@ function Node_3D_Obj(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 			VB = _v[0];
 			materialNames = _v[1];
 			materialIndex = _v[2];
+			use_normal    = _v[3];
 		}
 		
-		materials = readMtl(_pathMtl);
+		if(array_length(materialNames)) 
+			materials = readMtl(_pathMtl);
+		else {
+			materialNames = ["Material"];
+			materialIndex = [0];
+			materials = [new MTLmaterial("Material")];
+		}
 		
 		do_reset_material = true;
 	}
@@ -241,6 +251,7 @@ function Node_3D_Obj(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 		var _lint = inputs[| 8].getValue();
 		var _lclr = inputs[| 9].getValue();
 		var _aclr = inputs[| 10].getValue();
+		var _lsc  = inputs[| 11].getValue();
 		
 		var _outSurf = outputs[| 0].getValue();
 		if(!is_surface(_outSurf)) {
@@ -263,15 +274,19 @@ function Node_3D_Obj(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 			shader_set_uniform_f_array(uniLightAmb, colorArrayFromReal(_aclr));
 			shader_set_uniform_f_array(uniLightClr, colorArrayFromReal(_lclr));
 			shader_set_uniform_f(uniLightInt, _lint);
+			shader_set_uniform_i(uniLightNrm, use_normal);
 			
 			camera_apply(cam);
-				
+			
 			draw_clear_alpha(0, 0);
 			matrix_stack_push(TM);
-				
+			matrix_stack_push(matrix_build(0, 0, 0, 0, 0, 0, _lsc[0], _lsc[1], _lsc[2]));
+			
 			matrix_set(matrix_world, matrix_stack_top());
 			for(var i = 0; i < array_length(VB); i++) {
 				if(i >= ds_list_size(inputs)) break;
+				if(i >= array_length(materialIndex)) continue;
+				
 				var mIndex = materialIndex[i];
 				var tex = inputs[| input_length + mIndex].getValue();
 						
@@ -280,6 +295,7 @@ function Node_3D_Obj(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 			}
 			shader_reset();
 			
+			matrix_stack_pop();
 			matrix_stack_pop();
 			matrix_set(matrix_world, MATRIX_IDENTITY);
 		surface_reset_target();

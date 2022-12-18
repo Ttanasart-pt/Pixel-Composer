@@ -2,17 +2,18 @@
 event_inherited();
 
 #region data
-	dialog_w = ui(600);
-	dialog_h = ui(360);
+	dialog_w = ui(720);
+	dialog_h = ui(480);
 	destroy_on_click_out = true;
 	
 	note = "";
 	
-	var link = "https://gist.githubusercontent.com/Ttanasart-pt/e7ab670299ce6b00cfd632646f3ac9a8/raw/0.9.0";
-	node_get = http_get(link);
+	var link = "https://gist.githubusercontent.com/Ttanasart-pt/e7ab670299ce6b00cfd632646f3ac9a8/raw/1.0.0";
+	note_get = http_get(link);
 	
 	sp_note = new scrollPane(dialog_w - ui(80), dialog_h - ui(88), function(_y, _m) {
 		draw_clear_alpha(COLORS.panel_bg_clear, 0);
+		BLEND_ADD
 		var yy = 0;
 		var txt = note;
 		
@@ -37,7 +38,7 @@ event_inherited();
 			
 			switch(md) {
 				case "#" :
-					draw_set_text(f_h5, fa_left, fa_top, COLORS._main_text_title);
+					draw_set_text(f_h3, fa_left, fa_top, COLORS._main_text_title);
 					line = string_copy(line, sp + 1, string_length(line) - sp);
 					yy += ui(16);
 					draw_text_ext(xx, _y + yy, line, -1, ww);
@@ -45,7 +46,14 @@ event_inherited();
 					yy += ui(4);
 					break;
 				case "##" :
-					draw_set_text(f_p0b, fa_left, fa_top, COLORS._main_text_title);
+					draw_set_text(f_h5, fa_left, fa_top, COLORS._main_text_title);
+					line = string_copy(line, sp + 1, string_length(line) - sp);
+					yy += ui(8);
+					draw_text_ext(xx + ui(16), _y + yy, line, -1, ww);
+					yy += ui(4);
+					break;
+				case "###" :
+					draw_set_text(f_p0b, fa_left, fa_top, COLORS._main_accent);
 					line = string_copy(line, sp + 1, string_length(line) - sp);
 					yy += ui(8);
 					draw_text_ext(xx + ui(16), _y + yy, line, -1, ww);
@@ -72,6 +80,7 @@ event_inherited();
 			yy += string_height_ext(line, -1, ww);
 		}
 		
+		BLEND_NORMAL
 		return yy + ui(64);
 	})
 #endregion

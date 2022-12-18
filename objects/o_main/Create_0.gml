@@ -8,8 +8,6 @@
 	file_text_close(f);
 #endregion
 
-//display_reset(8, 1);
-
 #region window
 	depth = 0;
 	win_wp = WIN_W;

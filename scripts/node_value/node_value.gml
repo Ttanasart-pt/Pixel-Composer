@@ -216,8 +216,8 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 				var _txt = type == VALUE_TYPE.float? TEXTBOX_INPUT.float : TEXTBOX_INPUT.number;
 				switch(display_type) {
 					case VALUE_DISPLAY._default :
-						editWidget = new textBox(_txt, function(str) { 
-							if(str != "") setValue(toNumber(str)); 
+						editWidget = new textBox(_txt, function(val) { 
+							setValue(val);
 						} );
 						editWidget.slidable = true;
 						if(display_data != -1) editWidget.slide_speed = display_data;

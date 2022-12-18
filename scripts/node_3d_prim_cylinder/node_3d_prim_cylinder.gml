@@ -5,6 +5,7 @@ function Node_3D_Cylinder(_x, _y, _group = -1) : Node(_x, _y, _group) constructo
 	uniLightAmb = shader_get_uniform(sh_vertex_pnt_light, "u_AmbientLight");
 	uniLightClr = shader_get_uniform(sh_vertex_pnt_light, "u_LightColor");
 	uniLightInt = shader_get_uniform(sh_vertex_pnt_light, "u_LightIntensity");
+	uniLightNrm = shader_get_uniform(sh_vertex_pnt_light, "useNormal");
 	
 	inputs[| 0] = nodeValue(0, "Sides", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 16);
 	
@@ -246,6 +247,8 @@ function Node_3D_Cylinder(_x, _y, _group = -1) : Node(_x, _y, _group) constructo
 			shader_set_uniform_f_array(uniLightAmb, colorArrayFromReal(_aclr));
 			shader_set_uniform_f_array(uniLightClr, colorArrayFromReal(_lclr));
 			shader_set_uniform_f(uniLightInt, _lint);
+			shader_set_uniform_i(uniLightNrm, 1);
+			
 			camera_apply(cam);
 			draw_clear_alpha(0, 0);
 				

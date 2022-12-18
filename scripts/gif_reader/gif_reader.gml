@@ -656,7 +656,7 @@ function gif_std_enum_getIndex() {
 			return _s + ")";
 		}
 		if (is_real(_value)) {
-			_s = string_format(_value, 0, 16);
+			_s = string(_value);
 			if (os_browser != -1) {
 				_n = string_length(_s);
 				_i = _n;

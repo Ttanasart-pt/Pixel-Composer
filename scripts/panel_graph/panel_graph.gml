@@ -690,6 +690,8 @@ function Panel_Graph() : PanelContent() constructor {
 		node_drag_my  = 0;
 		node_drag_sx  = 0;
 		node_drag_sy  = 0;
+		
+		PANEL_ANIMATION.updatePropertyList();
 	}
 	
 	function doBlend() {

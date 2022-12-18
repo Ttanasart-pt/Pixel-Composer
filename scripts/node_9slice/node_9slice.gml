@@ -27,8 +27,11 @@ function Node_9Slice(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) const
 	}
 	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my) {
-		var _dim		= inputs[| 1].getValue();
-		var _splice		= inputs[| 2].getValue();
+		if(process_multiple) return;
+		if(array_length(current_data) < 1) return;
+		
+		var _dim		= current_data[1];
+		var _splice		= current_data[2];
 		
 		var sp_r = _x + (_dim[0] - _splice[0]) * _s;
 		var sp_l = _x + _splice[2] * _s;

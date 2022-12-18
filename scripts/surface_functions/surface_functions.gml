@@ -35,7 +35,7 @@ function surface_copy_add(dst, src, _x = 0, _y = 0) {
 	surface_set_target(dst);
 	draw_clear_alpha(0, 0);
 	BLEND_ADD
-		draw_surface(src, _x, _y);
+		draw_surface_safe(src, _x, _y);
 	BLEND_NORMAL
 	surface_reset_target();
 }

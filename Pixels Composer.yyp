@@ -948,8 +948,8 @@
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"graphics x2.ai","CopyToMask":-1,"filePath":"datafiles/data/themes/default/graphics/icon",},
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"s_vfx.png","CopyToMask":-1,"filePath":"datafiles/data/themes/default/graphics/icon",},
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"default.zip","CopyToMask":-1,"filePath":"datafiles/data/themes",},
-    {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"Collections.zip","CopyToMask":-1,"filePath":"datafiles/data",},
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"Assets.zip","CopyToMask":-1,"filePath":"datafiles/data",},
+    {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"Collections.zip","CopyToMask":-1,"filePath":"datafiles/data",},
   ],
   "MetaData": {
     "IDEVersion": "2022.11.1.56",

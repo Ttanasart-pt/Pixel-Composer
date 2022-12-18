@@ -6,6 +6,7 @@ function readObj(path) {
 	var _VBN = [];
 	var mats = [];
 	var matIndex = [];
+	var use_normal = true;
 	var v  = ds_list_create();
 	var vt = ds_list_create();
 	var vn = ds_list_create();
@@ -38,7 +39,11 @@ function readObj(path) {
 				
 				ds_list_add(f,  [f1[0], f2[0], f3[0]]);
 				ds_list_add(ft, [f1[1], f2[1], f3[1]]);
-				ds_list_add(fn, [f1[2], f2[2], f3[2]]);
+				if(array_length(f1) > 2)	ds_list_add(fn, [f1[2], f2[2], f3[2]]);
+				else {
+					ds_list_add(fn, [0, 0, 0]);
+					use_normal = false;
+				}
 				break;
 			case "usemtl" :
 				array_push_unique(mats, sep[1]);
@@ -102,9 +107,9 @@ function readObj(path) {
 			var _ft3 = vt[| _ft[2] - 1];
 		
 			var _fn  = facen[| j];
-			var _fn1 = vn[| _fn[0] - 1];
-			var _fn2 = vn[| _fn[1] - 1];
-			var _fn3 = vn[| _fn[2] - 1];
+			var _fn1 = _fn[0]? vn[| _fn[0] - 1] : [0, 0, 0];
+			var _fn2 = _fn[1]? vn[| _fn[1] - 1] : [0, 0, 0];
+			var _fn3 = _fn[2]? vn[| _fn[2] - 1] : [0, 0, 0];
 			
 			vertex_add_pnt(VB, _f1, _fn1, _ft1 );
 			vertex_add_pnt(VB, _f2, _fn2, _ft2 );
@@ -126,5 +131,5 @@ function readObj(path) {
 	ds_list_destroy(ft);
 	ds_list_destroy(fn);
 	
-	return [ VBS, mats, matIndex ];
+	return [ VBS, mats, matIndex, use_normal ];
 }

@@ -3,8 +3,9 @@ function Node_Value_Processor(_x, _y, _group = -1) : Node(_x, _y, _group) constr
 	
 	function process_value(_outindex) {
 		var _data = array_create(ds_list_size(inputs));
-		for(var i = 0; i < array_length(_data); i++) 
+		for(var i = 0; i < array_length(_data); i++) {
 			_data[i] = inputs[| i].getValue();
+		}
 		return process_value_data(_data, _outindex);
 	}
 	
@@ -59,9 +60,9 @@ function Node_Value_Processor(_x, _y, _group = -1) : Node(_x, _y, _group) constr
 				_out[l] = process_value_data(_data, _outindex);
 			}
 			return _out;
-		} else {
-			return process_value(_outindex);
-		}
+		} 
+		
+		return process_value(_outindex);
 	}
 	
 	static update = function() {

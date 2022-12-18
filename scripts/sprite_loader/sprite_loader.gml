@@ -4,8 +4,8 @@ function __init_theme() {
 		directory_create(root);
 			
 	var _l = root + "\\_theme" + string(VERSION);
-	//if(file_exists(_l)) return;
-	//log_message("THEME", "unzipping default theme to DIRECTORY.");
+	if(file_exists(_l)) return;
+	log_message("THEME", "unzipping default theme to DIRECTORY.");
 	var f = file_text_open_write(_l);
 	file_text_write_real(f, 0);
 	file_text_close(f);

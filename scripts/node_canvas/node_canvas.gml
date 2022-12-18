@@ -445,7 +445,7 @@ function Node_Canvas(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 		
 		surface_set_target(_surf_prev);
 		draw_clear_alpha(0, 0);
-		draw_surface(_surf, 0, 0);
+		draw_surface_safe(_surf, 0, 0);
 		
 		draw_set_color(_col);
 		

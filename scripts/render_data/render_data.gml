@@ -11,16 +11,7 @@ function __nodeLeafList(_list, _stack) {
 		var _node = _list[| i];
 		if(!_node.active) continue;
 		
-		var _startNode = true;
-		for(var j = 0; j < ds_list_size(_node.inputs); j++) {
-			var _in = _node.inputs[| j];
-			if(_in.type == VALUE_TYPE.node) continue;
-			
-			_node.triggerRender();
-					
-			if(_in.value_from != noone && !_in.value_from.node.rendered)
-				_startNode = false;
-		}
+		var _startNode = _node.isRenderable(true);
 		if(_startNode) {
 			ds_stack_push(_stack, _node);
 			printIf(global.RENDER_LOG, "Push node " + _node.name + " to stack");
@@ -71,14 +62,7 @@ function Render(partial = false) {
 		if(_node.rendered) continue;
 		if(__nodeInLoop(_node)) continue;
 		
-		var _startNode = true;
-		for(var j = 0; j < ds_list_size(_node.inputs); j++) {
-			var _in = _node.inputs[| j];
-			if(_in.type == VALUE_TYPE.node) continue;
-			
-			if(_in.value_from != noone && !_in.value_from.node.rendered)
-				_startNode = false;
-		}
+		var _startNode = _node.isRenderable();
 		if(_startNode) {
 			ds_stack_push(RENDER_STACK, _node);
 			printIf(global.RENDER_LOG, "    > Push " + _node.name + " node to stack");

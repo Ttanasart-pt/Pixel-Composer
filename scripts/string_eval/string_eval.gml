@@ -182,7 +182,8 @@
 						case "t":  ds_stack_push(vl, _x); break;
 						case "pi": ds_stack_push(vl, pi); break;
 						
-						default :  ds_stack_push(vl, toNumber(vsl));
+						default :  
+							ds_stack_push(vl, toNumber(vsl));
 						break;
 					}
 				}

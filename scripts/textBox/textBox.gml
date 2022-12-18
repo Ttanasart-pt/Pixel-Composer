@@ -27,7 +27,7 @@ function textBox(_input, _onModify) constructor {
 	onModify = _onModify;
 	
 	_input_text = "";
-	_last_value = "";
+	_last_text = "";
 	
 	cursor			= 0;
 	cursor_pos		= 0;
@@ -53,7 +53,7 @@ function textBox(_input, _onModify) constructor {
 		}
 		
 		if(no_empty && _input_text_current == "") 
-			_input_text_current = _last_value;
+			_input_text_current = _last_text;
 		if(onModify) 
 			onModify(_input_text_current);
 	}
@@ -61,6 +61,11 @@ function textBox(_input, _onModify) constructor {
 	static move_cursor = function(delta) {
 		var ll = string_length(_input_text) + 1;
 		cursor = safe_mod(cursor + delta + ll, ll);
+	}
+	
+	static getDisplayText = function(val) {
+		if(input == TEXTBOX_INPUT.text) return val;
+		return string(val);
 	}
 	
 	static editText = function() {
@@ -144,7 +149,7 @@ function textBox(_input, _onModify) constructor {
 		#endregion
 			
 		if(keyboard_check_pressed(vk_escape)) {
-			_input_text = _last_value;
+			_input_text = _last_text;
 			apply();
 			TEXTBOX_ACTIVE = noone;
 		} else if(keyboard_check_pressed(vk_enter)) {
@@ -273,10 +278,8 @@ function textBox(_input, _onModify) constructor {
 				_input_text = slide_sx + spd;
 				
 				switch(input) {
-					case TEXTBOX_INPUT.number :
-						_input_text = round(_input_text);
-						break;
-				} 
+					case TEXTBOX_INPUT.number :	_input_text = round(_input_text);	break;
+				}
 				
 				apply();
 				UNDO_HOLDING = true;
@@ -346,7 +349,8 @@ function textBox(_input, _onModify) constructor {
 			#endregion
 			
 			#region draw
-				var ss = string_cut(_input_text, _w - ui(16));
+				var disp_text = getDisplayText(_input_text);
+				var ss = string_cut(disp_text, _w - ui(16));
 				draw_set_text(font == noone? f_p0 : font, fa_left, fa_top);
 				var ww = string_width(ss);
 				
@@ -366,7 +370,7 @@ function textBox(_input, _onModify) constructor {
 				
 				if(cursor_select > -1) {
 					draw_set_color(COLORS.widget_text_highlight);
-					var x1 = tx + string_width(string_copy(_input_text, 1, cursor_select));
+					var x1 = tx + string_width(string_copy(disp_text, 1, cursor_select));
 					
 					draw_roundrect_ext(cursor_pos, c_y0, x1, c_y1, ui(8), ui(8), 0);
 				}
@@ -388,7 +392,7 @@ function textBox(_input, _onModify) constructor {
 				TEXTBOX_ACTIVE = noone;
 			}
 		} else {
-			var ss = string_cut(string(_text), _w - 16);
+			var ss = string_cut(getDisplayText(_text), _w - 16);
 			draw_set_text(font == noone? f_p0 : font, fa_left, fa_center);
 			var ww = string_width(ss);
 				
@@ -409,8 +413,8 @@ function textBox(_input, _onModify) constructor {
 					KEYBOARD_STRING = "";
 					keyboard_lastkey = -1;
 				
-					_input_text		= _text;
-					_last_value     = _text;
+					_input_text	= _text;
+					_last_text  = _text;
 				}
 			} else if(!hide) {
 				draw_sprite_stretched(THEME.textbox, 0, _x, _y, _w, hh);
@@ -425,7 +429,7 @@ function textBox(_input, _onModify) constructor {
 					if(mouse_press(mb_left, active)) {
 						sliding  = 1;
 						slide_mx = _m[0];
-						slide_sx = _last_value;
+						slide_sx = toNumber(_text);
 					}
 				} 
 			}

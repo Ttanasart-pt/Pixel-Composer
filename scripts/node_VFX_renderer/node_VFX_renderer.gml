@@ -65,8 +65,12 @@ function Node_VFX_Renderer(_x, _y, _group = -1) : Node(_x, _y, _group) construct
 			
 			for( var i = input_index; i < ds_list_size(inputs) - 1; i++ ) {
 				var parts = inputs[| i].getValue(_time);
-				for(var j = 0; j < PREF_MAP[? "part_max_amount"]; j++)
+				if(!ds_exists(parts, ds_type_list)) continue;
+				
+				for(var j = 0; j < ds_list_size(parts); j++) {
+					if(!parts[| j].active) continue;
 					parts[| j].draw(_exact);
+				}
 			}
 			
 			gpu_set_blendmode(bm_normal);

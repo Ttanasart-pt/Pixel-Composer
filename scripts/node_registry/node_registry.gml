@@ -18,6 +18,11 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 	NODE_CATEGORY	= ds_list_create();
 	
 	function nodeBuild(_name, _x, _y, _group = PANEL_GRAPH.getCurrentContext()) {
+		if(!ds_map_exists(ALL_NODES, _name)) {
+			log_warning("LOAD", "Node type " + _name + " not found");
+			return noone;
+		}
+			
 		var _node = ALL_NODES[? _name];
 		return _node.build(_x, _y, _group);
 	}
@@ -220,7 +225,7 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 	addNodeObject(node, "Group",			s_node_group,		"Node_Group",			[1, Node_Group]);
 	addNodeObject(node, "Feedback",			s_node_feedback,	"Node_Feedback",		[1, Node_Feedback]);
 	addNodeObject(node, "Loop",				s_node_loop,		"Node_Iterate",			[1, Node_Iterate]);
-	addNodeObject(node, "Pin",				s_node_pin,			"Nodee_Pin",			[1, Node_Pin]);
+	addNodeObject(node, "Pin",				s_node_pin,			"Node_Pin",				[1, Node_Pin]);
 	addNodeObject(node, "Frame",			s_node_frame,		"Node_Frame",			[1, Node_Frame]);
 	addNodeObject(node, "Display text",		s_node_text,		"Node_Display_Text",	[1, Node_Display_Text]);
 	addNodeObject(node, "Display image",	s_node_image,		"Node_Display_Image",	[0, Node_create_Display_Image]);

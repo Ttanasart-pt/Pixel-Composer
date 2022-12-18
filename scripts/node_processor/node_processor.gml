@@ -6,6 +6,7 @@ enum ARRAY_PROCESS {
 function Node_Processor(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 	array_process = ARRAY_PROCESS.loop;
 	current_data  = [];
+	process_multiple = false;
 	
 	icon    = THEME.node_processor;
 	
@@ -18,6 +19,8 @@ function Node_Processor(_x, _y, _group = -1) : Node(_x, _y, _group) constructor 
 			if(inputs[| i].isArray() && is_array(_in))
 				len = max(len, array_length(_in));
 		}
+		
+		process_multiple = len > 0;
 		
 		for(var _oi = 0; _oi < ds_list_size(outputs); _oi++) {
 			if(outputs[| _oi].type != VALUE_TYPE.surface) continue;

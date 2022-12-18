@@ -60,6 +60,6 @@ function toNumber(str) {
 	str = string_decimal(str);
 	if(str == "") return 0;
 	if(str == ".") return 0;
-	if(str == "-") return 0;
+	if(str == "-") return 0;	
 	return real(str);
 }

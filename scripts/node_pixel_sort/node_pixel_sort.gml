@@ -18,6 +18,7 @@ function Node_Pixel_Sort(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) c
 	
 	static process_data = function(_outSurf, _data, _output_index) {
 		var _in = _data[0];
+		
 		var _it = _data[1];
 		var _tr = _data[2];
 		var _dr = floor(_data[3] / 90) % 4;
@@ -33,7 +34,7 @@ function Node_Pixel_Sort(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) c
 		surface_set_target(pp[1]);
 			draw_clear_alpha(0, 0);
 			BLEND_ADD
-			draw_surface(_in, 0, 0);
+			draw_surface_safe(_in, 0, 0);
 			BLEND_NORMAL
 		surface_reset_target();
 		
@@ -60,7 +61,7 @@ function Node_Pixel_Sort(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) c
 		
 		surface_set_target(_outSurf);
 			BLEND_ADD
-			draw_surface(sBase, 0, 0);
+			draw_surface_safe(sBase, 0, 0);
 			BLEND_NORMAL
 		surface_reset_target();
 		
