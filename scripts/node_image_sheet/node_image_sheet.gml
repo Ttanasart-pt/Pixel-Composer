@@ -10,8 +10,9 @@ function Node_Image_Sheet(_x, _y, _group = -1) : Node(_x, _y, _group) constructo
 	inputs[| 1]  = nodeValue(1, "Sprite size", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 32, 32 ])
 		.setDisplay(VALUE_DISPLAY.vector);
 	
-	inputs[| 2]  = nodeValue(2, "Sprite amount", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1);
-	inputs[| 3]  = nodeValue(3, "Sprite per row", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 4);
+	inputs[| 2]  = nodeValue(2, "Row", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1); //unused
+	inputs[| 3]  = nodeValue(3, "Amount", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 1, 1 ])
+		.setDisplay(VALUE_DISPLAY.vector);
 	
 	inputs[| 4]  = nodeValue(4, "Offset", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.vector);
@@ -47,55 +48,44 @@ function Node_Image_Sheet(_x, _y, _group = -1) : Node(_x, _y, _group) constructo
 		
 			var fill_w = floor((ww - _offs[0]) / sh_w);
 			var fill_h = floor((hh - _offs[1]) / sh_h);
-		
-			var amo = fill_w * fill_h, row;
-			if(_orie == 0) {
-				row = fill_w;
-			} else {
-				row = fill_h;
-			}
-		
-			inputs[| 2].setValue(amo);
-			inputs[| 3].setValue(row);
+			
+			if(_orie == 0)
+				inputs[| 3].setValue([ fill_w, fill_h ]);
+			else
+				inputs[| 3].setValue([ fill_h, fill_w ]);
 		
 			doUpdate(); 
 		}, "Generate"] );
 		
 	inputs[| 11] = nodeValue(11, "Sync animation", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.button, [ function() { 
-			var _amo	= inputs[| 2].getValue();
-			ANIMATOR.frames_total = max(1, _amo - 1);
+			var _amo	= inputs[| 3].getValue();
+			ANIMATOR.frames_total = max(1, _amo[0] * _amo[1]);
 		}, "Sync frames"] );
 	
 	input_display_list = [
 		["Sprite", false],	0, 1, 6, 10, 
-		["Sheet",  false],	2, 3, 9, 4, 5, 
+		["Sheet",  false],	3, 9, 4, 5, 
 		["Output", false],	7, 8, 11
 	];
 	
 	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
 	
-	tools = [
-		[ "Draw boundary",		THEME.splice_draw ]
-	];
+	drag_type = 0;	
+	drag_sx   = 0;
+	drag_sy   = 0;
+	drag_mx   = 0;
+	drag_my   = 0;
+	curr_off  = [0, 0];
+	curr_dim  = [0, 0];
+	curr_amo  = [0, 0];
 	
-	bound_drag = 0;
-	bound_sx = 0;
-	bound_sy = 0;
-	bound_mx = 0;
-	bound_my = 0;
-	
-	cell_sx = 0;
-	cell_sy = 0;
-	cell_cx = 0;
-	cell_cy = 0;
-	cell_mx = 0;
-	cell_my = 0;
+	static getPreviewValue = function() { return inputs[| 0]; }
 	
 	function getSpritePosition(index) {
-		var _dim = inputs[| 1].getValue();
-		var _col = inputs[| 3].getValue();
-		var _off = inputs[| 4].getValue();
+		var _dim = curr_dim;
+		var _col = curr_amo[0];
+		var _off = curr_off;
 		var _spa = inputs[| 5].getValue();
 		var _ori = inputs[| 9].getValue();
 		
@@ -113,108 +103,145 @@ function Node_Image_Sheet(_x, _y, _group = -1) : Node(_x, _y, _group) constructo
 			return [_y, _x];
 	}
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my) {
+	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		if(inputs[| 0].value_from == noone) return;
 		var _inSurf  = inputs[| 0].getValue();
 		
-		var _dim = inputs[| 1].getValue();
-		var _amo = inputs[| 2].getValue();
-		var _off = inputs[| 4].getValue();
-		
 		var _out = inputs[| 7].getValue();
-		var _pad = inputs[| 6].getValue();
+		var _spc = inputs[| 5].getValue();
 		var _spd = inputs[| 8].getValue();
+		if(drag_type == 0) {
+			curr_dim = inputs[| 1].getValue();
+			curr_amo = inputs[| 3].getValue();
+			curr_off = inputs[| 4].getValue();
+		}
 		
-		var ii;
-		if(_out == 0)
-			ii = safe_mod(ANIMATOR.current_frame * _spd, _amo);
-		else
-			ii = preview_index;
-		var _spr_pos = getSpritePosition(ii);
-			
-		var _orig_x = _x - (_spr_pos[0] - _pad[2]) * _s;
-		var _orig_y = _y - (_spr_pos[1] - _pad[1]) * _s;
-			
-		draw_surface_ext_safe(_inSurf, _orig_x, _orig_y, _s, _s, 0 ,c_white, 0.25);
-		
-		for(var i = 0; i < _amo; i++) {
+		var _amo = curr_amo[0] * curr_amo[1];
+		for(var i = _amo - 1; i >= 0; i--) {
 			var _f = getSpritePosition(i);
-			var _fx0 = _orig_x + (_f[0] - _pad[2]) * _s;
-			var _fy0 = _orig_y + (_f[1] - _pad[1]) * _s;
-			var _fx1 = _fx0 + _dim[0] * _s;
-			var _fy1 = _fy0 + _dim[1] * _s;
+			var _fx0 = _x + _f[0] * _s;
+			var _fy0 = _y + _f[1] * _s;
+			var _fx1 = _fx0 + curr_dim[0] * _s;
+			var _fy1 = _fy0 + curr_dim[1] * _s;
 			
 			draw_set_color(COLORS._main_accent);
-			draw_rectangle(_fx0, _fy0, _fx1, _fy1, true);
+			draw_set_alpha(i == 0? 1 : 0.75);
+			draw_rectangle(_fx0, _fy0, _fx1 - 1, _fy1 - 1, true);
+			draw_set_alpha(1);
 			
 			//draw_set_text(f_p1, fa_left, fa_top);
 			//draw_text(_fx0 + 2, _fy0 + 2, string(i));
 		}
 		
-		var _tool = PANEL_PREVIEW.tool_index;
-		var _ex = (_mx - _x) / _s;
-		var _ey = (_my - _y) / _s;
+		var __ax = curr_off[0];
+		var __ay = curr_off[1];
+		var __aw = curr_dim[0];
+		var __ah = curr_dim[1];
+						
+		var _ax = __ax * _s + _x;
+		var _ay = __ay * _s + _y;
+		var _aw = __aw * _s;
+		var _ah = __ah * _s;
 		
-		if(_tool == 0) {
-			if(bound_drag) {
-				if(keyboard_check(vk_shift)) {
-					cell_cx = max(2, round(cell_sx + (_ex - cell_mx)));
-					cell_cy = max(2, round(cell_sy + (_ey - cell_my)));
-				} else {
-					bound_mx = _ex;
-					bound_my = _ey;	
-					
-					cell_mx = _ex;
-					cell_my = _ey;
-				}
-				
-				var fr_x0 = _x + bound_sx * _s;
-				var fr_y0 = _y + bound_sy * _s;
-				var fr_x1 = _x + bound_mx * _s;
-				var fr_y1 = _y + bound_my * _s;
-				
-				var col = floor((bound_mx - bound_sx) / cell_cx);
-				var row = floor((bound_my - bound_sy) / cell_cy);
-					
-				draw_set_color(COLORS._main_accent);
-				for( var i = 0; i < row; i++ ) {
-					for( var j = 0; j < col; j++ ) {
-						var cl_x0 = fr_x0 + j * (cell_cx * _s);
-						var cl_y0 = fr_y0 + i * (cell_cy * _s);
-						var cl_x1 = cl_x0 + (cell_cx * _s);
-						var cl_y1 = cl_y0 + (cell_cy * _s);
-						
-						draw_rectangle(cl_x0, cl_y0, cl_x1 - 1, cl_y1 - 1, 1);
-					}
-				}
-				
-				draw_set_color(COLORS._main_accent);
-				draw_line_width(fr_x0, 0, fr_x0, room_height, 1);
-				draw_line_width(0, fr_y0, room_width, fr_y0, 1);
-				draw_line_width(fr_x1, 0, fr_x1, room_height, 1);
-				draw_line_width(0, fr_y1, room_width, fr_y1, 1);
-					
-				if(mouse_release(mb_left, active)) {
-					bound_drag = 0;
-					
-					if(row && col) {
-						inputs[| 1].setValue([ cell_cx, cell_cy ]);
-						inputs[| 2].setValue(row * col);
-						inputs[| 3].setValue(col);
-						inputs[| 4].setValue([ bound_sx + _off[0], bound_sy + _off[1]]);
-					}
-				}
-			} else if(mouse_press(mb_left, active)) {
-				bound_drag = 1;
-				bound_sx = _ex;
-				bound_sy = _ey;
-						
-				cell_cx = _dim[0];
-				cell_cy = _dim[1];
-				cell_sx = _dim[0];
-				cell_sy = _dim[1];
-			}
+		var _bw = curr_amo[0] * (curr_dim[0] + _spc[0]) - _spc[0]; _bw *= _s;
+		var _bh = curr_amo[1] * (curr_dim[1] + _spc[1]) - _spc[1]; _bh *= _s;
+		
+		draw_sprite_ui_uniform(THEME.anchor, 0, _ax, _ay);
+		draw_sprite_ui_uniform(THEME.anchor_selector, 0, _ax + _aw, _ay + _ah);
+		draw_sprite_ui_uniform(THEME.anchor_arrow, 0, _ax + _bw + _s * 4, _ay + _bh / 2);
+		draw_sprite_ui_uniform(THEME.anchor_arrow, 0, _ax + _bw / 2, _ay + _bh + _s * 4,,,, -90);
+		
+		if(active) {
+			if(point_in_circle(_mx, _my, _ax + _aw, _ay + _ah, 8))
+				draw_sprite_ui_uniform(THEME.anchor_selector, 1, _ax + _aw, _ay + _ah);
+			else if(point_in_rectangle(_mx, _my, _ax - _aw, _ay - _ah, _ax + _aw, _ay + _ah))
+				draw_sprite_ui_uniform(THEME.anchor, 0, _ax, _ay, 1.25, c_white);
+			else if(point_in_circle(_mx, _my, _ax + _bw + _s * 4, _ay + _bh / 2, 8))
+				draw_sprite_ui_uniform(THEME.anchor_arrow, 1, _ax + _bw + _s * 4, _ay + _bh / 2);
+			else if(point_in_circle(_mx, _my, _ax + _bw / 2, _ay + _bh + _s * 4, 8))
+				draw_sprite_ui_uniform(THEME.anchor_arrow, 1, _ax + _bw / 2, _ay + _bh + _s * 4,,,, -90);
 		}
+		
+		#region area
+			var __dim = inputs[| 1].getValue();
+			var __amo = inputs[| 3].getValue();
+			var __off = inputs[| 4].getValue();
+						
+			var _ax = __off[0] * _s + _x;
+			var _ay = __off[1] * _s + _y;
+			var _aw = __dim[0] * _s;
+			var _ah = __dim[1] * _s;
+						
+			//draw_set_color(COLORS._main_accent);
+			//draw_rectangle(_ax - _aw, _ay - _ah, _ax + _aw, _ay + _ah, true);
+						
+			if(drag_type == 1) {
+				var _xx = value_snap(round(drag_sx + (_mx - drag_mx) / _s), _snx);
+				var _yy = value_snap(round(drag_sy + (_my - drag_my) / _s), _sny);
+							
+				var off = [_xx, _yy];
+				curr_off = off;
+			
+				if(mouse_release(mb_left)) {
+					drag_type = 0;
+					inputs[| 4].setValue(off);
+				}
+			} else if(drag_type == 2) {
+				var _dx = value_snap(round(abs((_mx - drag_mx) / _s)), _snx);
+				var _dy = value_snap(round(abs((_my - drag_my) / _s)), _sny);
+				
+				var dim = [_dx, _dy];
+				curr_dim = dim;
+							
+				if(keyboard_check(vk_shift)) {
+					dim[0] = max(_dx, _dy);
+					dim[1] = max(_dx, _dy);
+				}
+				
+				if(mouse_release(mb_left)) {
+					drag_type = 0;
+					inputs[| 1].setValue(dim);
+				}
+			} else if(drag_type == 3) {
+				var _col = floor((abs(_mx - drag_mx) / _s - _spc[0]) / (__dim[0] + _spc[0]));
+				curr_amo[0] = _col;
+				
+				if(mouse_release(mb_left)) {
+					drag_type = 0;
+					inputs[| 3].setValue(curr_amo);
+				}
+			} else if(drag_type == 4) {
+				var _row = floor((abs(_my - drag_my) / _s - _spc[1]) / (__dim[1] + _spc[1]));
+				curr_amo[1] = _row;
+				
+				if(mouse_release(mb_left)) {
+					drag_type = 0;
+					inputs[| 3].setValue(curr_amo);
+				}
+			}
+						
+			if(mouse_press(mb_left, active)) {
+				if(point_in_circle(_mx, _my, _ax + _aw, _ay + _ah, 8)) { // drag size
+					drag_type = 2;
+					drag_mx   = _ax;
+					drag_my   = _ay;
+				} else if(point_in_rectangle(_mx, _my, _ax - _aw, _ay - _ah, _ax + _aw, _ay + _ah)) { // drag position
+					drag_type = 1;	
+					drag_sx   = __off[0];
+					drag_sy   = __off[1];
+					drag_mx   = _mx;
+					drag_my   = _my;
+				} else if(point_in_circle(_mx, _my, _ax + _bw + _s * 4, _ay + _bh / 2, 8)) { // drag col
+					drag_type = 3;
+					drag_mx   = _ax;
+					drag_my   = _ay;
+				} else if(point_in_circle(_mx, _my, _ax + _bw / 2, _ay + _bh + _s * 4, 8)) { // drag row
+					drag_type = 4;
+					drag_mx   = _ax;
+					drag_my   = _ay;
+				}
+			}
+		#endregion
 	}
 	
 	static update = function() {
@@ -224,7 +251,8 @@ function Node_Image_Sheet(_x, _y, _group = -1) : Node(_x, _y, _group) constructo
 		var _outSurf = outputs[| 0].getValue();
 		
 		var _dim	= inputs[| 1].getValue();
-		var _amo	= inputs[| 2].getValue();
+		var _amo	= inputs[| 3].getValue();
+		var _total  = _amo[0] * _amo[1];
 		var _pad	= inputs[| 6].getValue();
 		
 		var ww   = _dim[0] + _pad[0] + _pad[2];
@@ -244,7 +272,7 @@ function Node_Image_Sheet(_x, _y, _group = -1) : Node(_x, _y, _group) constructo
 				outputs[| 0].setValue(_outSurf);
 			}
 			
-			var ii = safe_mod(ANIMATOR.current_frame * _spd, _amo);
+			var ii = safe_mod(ANIMATOR.current_frame * _spd, _total);
 			var _spr_pos = getSpritePosition(ii);
 			
 			surface_set_target(_outSurf);
@@ -257,8 +285,8 @@ function Node_Image_Sheet(_x, _y, _group = -1) : Node(_x, _y, _group) constructo
 			update_on_frame = false;
 			inputs[| 8].setVisible(false);
 			
-			surf_array = array_create(_amo);
-			for(var i = 0; i < _amo; i++) {
+			surf_array = array_create(_total);
+			for(var i = 0; i < _total; i++) {
 				surf_array[i] = surface_create_valid(ww, hh);
 				var _spr_pos = getSpritePosition(i);
 				

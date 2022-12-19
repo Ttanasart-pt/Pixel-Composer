@@ -278,7 +278,7 @@ event_inherited();
 			draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text);
 			draw_text(ui(8), yy + th / 2, keyStr);
 			
-			var b = buttonInstant(THEME.button, cx, yy + ui(2), cw, ch, _m, sFOCUS, sHOVER);
+			var b = buttonInstant(THEME.button, cx, yy + ui(2), cw, ch, _m, sFOCUS, sHOVER && sp_colors.hover);
 			draw_sprite_stretched_ext(THEME.color_picker_sample, 0, cx + ui(2), yy + ui(2 + 2), cw - ui(4), ch - ui(4), val, 1);
 			
 			if(b == 2) {
@@ -343,7 +343,7 @@ event_inherited();
 			draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text);
 			draw_text(ui(8), yy + th / 2, _pref[0]);
 			_pref[2].active = sFOCUS; 
-			_pref[2].hover  = sHOVER;
+			_pref[2].hover  = sHOVER && sp_pref.hover;
 				
 			switch(instanceof(_pref[2])) {
 				case "textBox" :
@@ -468,9 +468,10 @@ event_inherited();
 					
 					draw_sprite_stretched(THEME.button_hide, 2, x1 - ui(40) - kw, _y + hh - ui(6), kw + ui(32), th + ui(12));
 				} else {
-					if(buttonInstant(THEME.button_hide, x1 - ui(40) - kw, _y + hh - ui(6), kw + ui(32), th + ui(12), _m, sFOCUS, sHOVER) == 2) {
-						hk_editing = key;
-						keyboard_lastchar = pkey;
+					if(buttonInstant(THEME.button_hide, x1 - ui(40) - kw, _y + hh - ui(6), kw + ui(32), th + ui(12), 
+						_m, sFOCUS, sHOVER && sp_hotkey.hover) == 2) {
+							hk_editing = key;
+							keyboard_lastchar = pkey;
 					}
 				}
 				draw_set_text(f_p0, fa_right, fa_top, hk_editing == key? COLORS._main_text_accent : COLORS._main_text);

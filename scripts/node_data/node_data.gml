@@ -484,7 +484,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) constructor {
 		active_draw_index = ind;
 	}
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my) {}
+	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {}
 	
 	static getPreviewValue = function() {
 		if(preview_channel > ds_list_size(outputs)) return noone;

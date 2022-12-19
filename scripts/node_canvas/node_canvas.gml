@@ -324,7 +324,7 @@ function Node_Canvas(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 		surface_update();
 	}
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my) {
+	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		if(!active) return;
 		if(keyboard_check(vk_alt)) return;
 		

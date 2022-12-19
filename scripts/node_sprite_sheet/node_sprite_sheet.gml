@@ -134,6 +134,12 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = -1) : Node(_x, _y, _group) co
 		var alig = inputs[| 5].getValue();
 		
 		if(grup == SPRITE_ANIM_GROUP.animation) {
+			if(!LOADING && !APPENDING) {
+				ANIMATOR.setFrame(-1);
+				ANIMATOR.is_playing = true;
+				ANIMATOR.stopOnEnd = true;
+			}
+			
 			var skip = inputs[| 2].getValue();
 			
 			if(is_array(inpt) && array_length(inpt) == 0) return;

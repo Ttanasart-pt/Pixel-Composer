@@ -7,8 +7,8 @@ function Node_Wrap_Area(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) co
 	
 	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my) {
-		inputs[| 1].drawOverlay(active, _x, _y, _s, _mx, _my);
+	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
+		inputs[| 1].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
 	}
 	
 	static process_data = function(_outSurf, _data, _output_index) {

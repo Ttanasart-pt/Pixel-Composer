@@ -33,11 +33,11 @@ function Node_Gradient_Points(_x, _y, _group = -1) : Node(_x, _y, _group) constr
 		["Colors",		false],	2, 4, 6, 8,
 	];
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my) {
-		if(inputs[| 1].drawOverlay(active, _x, _y, _s, _mx, _my)) active = false;
-		if(inputs[| 3].drawOverlay(active, _x, _y, _s, _mx, _my)) active = false;
-		if(inputs[| 5].drawOverlay(active, _x, _y, _s, _mx, _my)) active = false;
-		if(inputs[| 7].drawOverlay(active, _x, _y, _s, _mx, _my)) active = false;
+	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
+		if(inputs[| 1].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny)) active = false;
+		if(inputs[| 3].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny)) active = false;
+		if(inputs[| 5].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny)) active = false;
+		if(inputs[| 7].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny)) active = false;
 	}
 	
 	static update = function() {

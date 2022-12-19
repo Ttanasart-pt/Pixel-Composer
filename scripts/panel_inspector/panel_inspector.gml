@@ -82,6 +82,7 @@ function Panel_Inspector() : PanelContent() constructor {
 		var jun = noone;
 		var amo = inspecting.input_display_list == -1? ds_list_size(inspecting.inputs) : array_length(inspecting.input_display_list);
 		var hh = ui(8);
+		var _hover = pHOVER && contentPane.hover;
 		
 		for(var i = 0; i < amo; i++) {
 			var xc = con_w / 2;
@@ -95,7 +96,7 @@ function Panel_Inspector() : PanelContent() constructor {
 					var txt  = jun_disp[0];
 					var coll = jun_disp[1] && filter_text == "";
 					
-					if(pHOVER && point_in_rectangle(_m[0], _m[1], 0, yy, con_w, yy + ui(32))) {
+					if(_hover && point_in_rectangle(_m[0], _m[1], 0, yy, con_w, yy + ui(32))) {
 						draw_sprite_stretched_ext(THEME.group_label, 0, 0, yy, con_w, ui(32), COLORS.panel_inspector_group_hover, 1);
 						
 						if(mouse_press(mb_left, pFOCUS))
@@ -128,9 +129,7 @@ function Panel_Inspector() : PanelContent() constructor {
 					}
 					continue;
 				} else if(is_struct(jun_disp) && instanceof(jun_disp) == "Inspector_Custom_Renderer") {
-					var hov = pHOVER;
-					var foc = pFOCUS;
-					jun_disp.draw(ui(6), yy, con_w - ui(12), _m, hov, foc);
+					jun_disp.draw(ui(6), yy, con_w - ui(12), _m, _hover, pFOCUS);
 					hh += jun_disp.h + ui(20);
 					continue;
 				}
@@ -150,7 +149,7 @@ function Panel_Inspector() : PanelContent() constructor {
 			var butx = ui(16);
 			var index = jun.value_from == noone? jun.animator.is_anim : 2;
 			draw_sprite_ui_uniform(THEME.animate_clock, index, butx, lb_y, 1,, 0.8);
-			if(pHOVER && point_in_circle(_m[0], _m[1], butx, lb_y, ui(10))) {
+			if(_hover && point_in_circle(_m[0], _m[1], butx, lb_y, ui(10))) {
 				draw_sprite_ui_uniform(THEME.animate_clock, index, butx, lb_y, 1,, 1);
 				TOOLTIP = "Toggle animation";
 					
@@ -166,7 +165,7 @@ function Panel_Inspector() : PanelContent() constructor {
 			butx += ui(20);
 			index = jun.visible;
 			draw_sprite_ui_uniform(THEME.junc_visible, index, butx, lb_y, 1,, 0.8);
-			if(pHOVER && point_in_circle(_m[0], _m[1], butx, lb_y, ui(10))) {
+			if(_hover && point_in_circle(_m[0], _m[1], butx, lb_y, ui(10))) {
 				draw_sprite_ui_uniform(THEME.junc_visible, index, butx, lb_y, 1,, 1);
 				TOOLTIP = "Visibility";
 				
@@ -175,14 +174,14 @@ function Panel_Inspector() : PanelContent() constructor {
 			}
 				
 			draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text);
-			draw_text(ui(56), lb_y - ui(2), jun.name);
+			draw_text_add(ui(56), lb_y - ui(2), jun.name);
 			var lb_w = string_width(jun.name) + ui(32);
 			
 			#region anim
 				if(lineBreak && jun.animator.is_anim) {
 					var bx = w - ui(64);
 					var by = lb_y;
-					if(buttonInstant(THEME.button_hide, bx - ui(12), by - ui(12), ui(24), ui(24), _m, pFOCUS, pHOVER, "", THEME.prop_keyframe, 2) == 2) {
+					if(buttonInstant(THEME.button_hide, bx - ui(12), by - ui(12), ui(24), ui(24), _m, pFOCUS, _hover, "", THEME.prop_keyframe, 2) == 2) {
 						for(var j = 0; j < ds_list_size(jun.animator.values); j++) {
 							var _key = jun.animator.values[| j];
 							if(_key.time > ANIMATOR.current_frame) {
@@ -203,7 +202,7 @@ function Panel_Inspector() : PanelContent() constructor {
 						}
 					}
 						
-					if(buttonInstant(THEME.button_hide, bx - ui(12), by - ui(12), ui(24), ui(24), _m, pFOCUS, pHOVER, kfFocus? "Remove keyframe" : "Add keyframe", THEME.prop_keyframe, 1, cc) == 2) {
+					if(buttonInstant(THEME.button_hide, bx - ui(12), by - ui(12), ui(24), ui(24), _m, pFOCUS, _hover, kfFocus? "Remove keyframe" : "Add keyframe", THEME.prop_keyframe, 1, cc) == 2) {
 						var _add = false;
 						for(var j = 0; j < ds_list_size(jun.animator.values); j++) {
 							var _key = jun.animator.values[| j];
@@ -222,7 +221,7 @@ function Panel_Inspector() : PanelContent() constructor {
 					}
 						
 					bx -= ui(26);
-					if(buttonInstant(THEME.button_hide, bx - ui(12), by - ui(12), ui(24), ui(24), _m, pFOCUS, pHOVER, "", THEME.prop_keyframe, 0) == 2) {
+					if(buttonInstant(THEME.button_hide, bx - ui(12), by - ui(12), ui(24), ui(24), _m, pFOCUS, _hover, "", THEME.prop_keyframe, 0) == 2) {
 						var _t = -1;
 						for(var j = 0; j < ds_list_size(jun.animator.values); j++) {
 							var _key = jun.animator.values[| j];
@@ -241,7 +240,7 @@ function Panel_Inspector() : PanelContent() constructor {
 					draw_line(bx - ui(20), by - lhf, bx - ui(20), by + lhf);
 					
 					bx -= ui(26 + 12);
-					if(buttonInstant(THEME.button_hide, bx - ui(12), by - ui(12), ui(24), ui(24), _m, pFOCUS, pHOVER, "Looping mode " + ON_END_NAME[jun.on_end], THEME.prop_on_end, jun.on_end) == 2)
+					if(buttonInstant(THEME.button_hide, bx - ui(12), by - ui(12), ui(24), ui(24), _m, pFOCUS, _hover, "Looping mode " + ON_END_NAME[jun.on_end], THEME.prop_on_end, jun.on_end) == 2)
 						jun.on_end = safe_mod(jun.on_end + 1, sprite_get_number(THEME.prop_on_end));
 				}
 			#endregion
@@ -261,7 +260,7 @@ function Panel_Inspector() : PanelContent() constructor {
 			
 			if(jun.editWidget) {
 				jun.editWidget.active = pFOCUS;
-				jun.editWidget.hover  = pHOVER;
+				jun.editWidget.hover  = _hover;
 				
 				switch(jun.display_type) {
 					case VALUE_DISPLAY.button :
@@ -343,7 +342,7 @@ function Panel_Inspector() : PanelContent() constructor {
 										draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text);
 										draw_text_cut(editBoxX + ui(8), editBoxY + editBoxH / 2, txt, editBoxW - ui(60));
 									
-										if(!pathExist && pHOVER && point_in_rectangle(_m[0], _m[1], icx - ui(17), icy - ui(17), icx + ui(17), icy + ui(17)))
+										if(!pathExist && _hover && point_in_rectangle(_m[0], _m[1], icx - ui(17), icy - ui(17), icx + ui(17), icy + ui(17)))
 											TOOLTIP = "File not exist";
 										break;
 									case VALUE_DISPLAY.path_font :
@@ -372,7 +371,7 @@ function Panel_Inspector() : PanelContent() constructor {
 				}
 			} else if(jun.display_type == VALUE_DISPLAY.label) {
 				draw_set_text(f_p1, fa_left, fa_top, COLORS._main_text_sub);
-				draw_text(ui(32), _hsy, jun.display_data);
+				draw_text_add(ui(32), _hsy, jun.display_data);
 				
 				widH = string_height(jun.display_data);
 			}
@@ -395,7 +394,7 @@ function Panel_Inspector() : PanelContent() constructor {
 			var _selY1 = yy + lb_h + widH + ui(2);
 			var _selH  = _selY1 - _selY;
 			
-			if(pHOVER && point_in_rectangle(_m[0], _m[1], 4, _selY, contentPane.surface_w - ui(4), _selY + _selH)) {
+			if(_hover && point_in_rectangle(_m[0], _m[1], 4, _selY, contentPane.surface_w - ui(4), _selY + _selH)) {
 				draw_sprite_stretched_ext(THEME.prop_selecting, 0, 4, _selY, contentPane.surface_w - ui(8), _selH, COLORS._main_accent, 1);
 				if(anim_toggling) {
 					jun.animator.is_anim = !jun.animator.is_anim;
@@ -471,7 +470,7 @@ function Panel_Inspector() : PanelContent() constructor {
 			var bx = w - ui(44);
 			var by = ui(12);
 			
-			if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), [mx, my], pFOCUS, pHOVER, "Execute node", THEME.sequence_control, 1) == 2)
+			if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), [mx, my], pFOCUS, pHOVER, "Execute node", THEME.sequence_control, 1, COLORS._main_value_positive) == 2)
 				inspecting.doUpdate();
 		}
 		

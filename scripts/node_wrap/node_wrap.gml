@@ -6,23 +6,38 @@ function Node_Warp(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constru
 	inputs[| 1] = nodeValue(1, "Top left", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ] )
 		.setDisplay(VALUE_DISPLAY.vector);
 	
-	inputs[| 2] = nodeValue(2, "Top right", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 0 ] )
+	inputs[| 2] = nodeValue(2, "Top right", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ def_surf_size, 0 ] )
 		.setDisplay(VALUE_DISPLAY.vector);
 	
-	inputs[| 3] = nodeValue(3, "Bottom left", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 1 ] )
+	inputs[| 3] = nodeValue(3, "Bottom left", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, def_surf_size ] )
 		.setDisplay(VALUE_DISPLAY.vector);
 	
-	inputs[| 4] = nodeValue(4, "Bottom right", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 1 ] )
+	inputs[| 4] = nodeValue(4, "Bottom right", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ def_surf_size, def_surf_size ] )
 		.setDisplay(VALUE_DISPLAY.vector);
 	
 	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
 	
 	drag_side = -1;
-	drag_mx   = 0;
-	drag_my   = 0;
-	drag_sv   = 0;
+	drag_mx = 0;
+	drag_my = 0;
+	drag_s = [[0, 0], [0, 0]];
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my) {
+	static onValueUpdate = function(index) {
+		if(index != 0) return;
+		
+		var _inSurf = inputs[| 0].getValue();
+		if(!is_surface(_inSurf)) return;
+		
+		var ww = surface_get_width(_inSurf);
+		var hh = surface_get_height(_inSurf);
+		
+		inputs[| 1].setValue([ 0,  0]);
+		inputs[| 2].setValue([ww,  0]);
+		inputs[| 3].setValue([ 0, hh]);
+		inputs[| 4].setValue([ww, hh]);
+	}
+	
+	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		if(array_length(current_data) < ds_list_size(inputs)) return;
 		
 		var _surf = outputs[| 0].getValue();
@@ -31,22 +46,20 @@ function Node_Warp(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constru
 			_surf = _surf[preview_index];
 		}
 		
-		var ww = surface_get_width(_surf);
-		var hh = surface_get_height(_surf);
 		var tl = current_data[1];
 		var tr = current_data[2];
 		var bl = current_data[3];
 		var br = current_data[4];
 		
-		tl[0] = _x + tl[0] * ww * _s;
-		tr[0] = _x + tr[0] * ww * _s;
-		bl[0] = _x + bl[0] * ww * _s;
-		br[0] = _x + br[0] * ww * _s;
+		tl[0] = _x + tl[0] * _s;
+		tr[0] = _x + tr[0] * _s;
+		bl[0] = _x + bl[0] * _s;
+		br[0] = _x + br[0] * _s;
 		
-		tl[1] = _y + tl[1] * hh * _s;
-		tr[1] = _y + tr[1] * hh * _s;
-		bl[1] = _y + bl[1] * hh * _s;
-		br[1] = _y + br[1] * hh * _s;
+		tl[1] = _y + tl[1] * _s;
+		tr[1] = _y + tr[1] * _s;
+		bl[1] = _y + bl[1] * _s;
+		br[1] = _y + br[1] * _s;
 		
 		draw_set_color(COLORS._main_accent);
 		draw_line(tl[0], tl[1], tr[0], tr[1]);
@@ -54,23 +67,17 @@ function Node_Warp(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constru
 		draw_line(br[0], br[1], tr[0], tr[1]);
 		draw_line(br[0], br[1], bl[0], bl[1]);
 		
-		if(inputs[| 1].drawOverlay(active, _x, _y, _s, _mx, _my, ww, hh))
-			active = false;
-		if(inputs[| 2].drawOverlay(active, _x, _y, _s, _mx, _my, ww, hh))
-			active = false;
-		if(inputs[| 3].drawOverlay(active, _x, _y, _s, _mx, _my, ww, hh))
-			active = false;
-		if(inputs[| 4].drawOverlay(active, _x, _y, _s, _mx, _my, ww, hh))
-			active = false;
+		if(inputs[| 1].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny)) active = false;
+		if(inputs[| 2].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny)) active = false;
+		if(inputs[| 3].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny)) active = false;
+		if(inputs[| 4].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny)) active = false;
 		
 		var dx = 0;
 		var dy = 0;
 		
 		if(drag_side > -1) {
-			dx = (_mx - drag_mx) / _s / ww;
-			dy = (_my - drag_my) / _s / hh;
-			drag_mx = _mx;
-			drag_my = _my;
+			dx = (_mx - drag_mx) / _s;
+			dy = (_my - drag_my) / _s;
 			
 			if(mouse_release(mb_left)) {
 				drag_side = -1;	
@@ -82,84 +89,91 @@ function Node_Warp(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constru
 		if(drag_side == 0) {
 			draw_line_width(tl[0], tl[1], tr[0], tr[1], 3);
 			
-			var _tlx = current_data[1][0] + dx;
-			var _tly = current_data[1][1] + dy;
+			var _tlx = value_snap(drag_s[0][0] + dx, _snx);
+			var _tly = value_snap(drag_s[0][1] + dy, _sny);
 			
-			var _trx = current_data[2][0] + dx;
-			var _try = current_data[2][1] + dy;
+			var _trx = value_snap(drag_s[1][0] + dx, _snx);
+			var _try = value_snap(drag_s[1][1] + dy, _sny);
 			
 			inputs[| 1].setValue([ _tlx, _tly ])
 			if(inputs[| 2].setValue([ _trx, _try ])) UNDO_HOLDING = true;
 		} else if(drag_side == 1) {
 			draw_line_width(tl[0], tl[1], bl[0], bl[1], 3);
 			
-			var _tlx = current_data[1][0] + dx;
-			var _tly = current_data[1][1] + dy;
-			
-			var _blx = current_data[3][0] + dx;
-			var _bly = current_data[3][1] + dy;
+			var _tlx = value_snap(drag_s[0][0] + dx, _snx);
+			var _tly = value_snap(drag_s[0][1] + dy, _sny);
+								  
+			var _blx = value_snap(drag_s[1][0] + dx, _snx);
+			var _bly = value_snap(drag_s[1][1] + dy, _sny);
 			
 			inputs[| 1].setValue([ _tlx, _tly ]);
 			if(inputs[| 3].setValue([ _blx, _bly ])) UNDO_HOLDING = true;
 		} else if(drag_side == 2) {
 			draw_line_width(br[0], br[1], tr[0], tr[1], 3);
 			
-			var _brx = current_data[4][0] + dx;
-			var _bry = current_data[4][1] + dy;
-			
-			var _trx = current_data[2][0] + dx;
-			var _try = current_data[2][1] + dy;
+			var _brx = value_snap(drag_s[0][0] + dx, _snx);
+			var _bry = value_snap(drag_s[0][1] + dy, _sny);
+								  
+			var _trx = value_snap(drag_s[1][0] + dx, _snx);
+			var _try = value_snap(drag_s[1][1] + dy, _sny);
 			
 			inputs[| 4].setValue([ _brx, _bry ]);
 			if(inputs[| 2].setValue([ _trx, _try ])) UNDO_HOLDING = true;
 		} else if(drag_side == 3) {
 			draw_line_width(br[0], br[1], bl[0], bl[1], 3);
 			
-			var _brx = current_data[4][0] + dx;
-			var _bry = current_data[4][1] + dy;
-			
-			var _blx = current_data[3][0] + dx;
-			var _bly = current_data[3][1] + dy;
+			var _brx = value_snap(drag_s[0][0] + dx, _snx);
+			var _bry = value_snap(drag_s[0][1] + dy, _sny);
+								  
+			var _blx = value_snap(drag_s[1][0] + dx, _snx);
+			var _bly = value_snap(drag_s[1][1] + dy, _sny);
 			
 			inputs[| 4].setValue([ _brx, _bry ]);
 			if(inputs[| 3].setValue([ _blx, _bly ])) UNDO_HOLDING = true;
-		} else {
+		} else if(active) {
 			draw_set_color(COLORS._main_accent);
 			if(distance_to_line_infinite(_mx, _my, tl[0], tl[1], tr[0], tr[1]) < 12) {
 				draw_line_width(tl[0], tl[1], tr[0], tr[1], 3);
 				if(mouse_press(mb_left, active)) {
 					drag_side = 0;
-					drag_mx   = _mx;
-					drag_my   = _my;
+					drag_mx = _mx;
+					drag_my = _my;
+					drag_s = [ current_data[1], current_data[2] ];
 				}
 			} else if(distance_to_line_infinite(_mx, _my, tl[0], tl[1], bl[0], bl[1]) < 12) {
 				draw_line_width(tl[0], tl[1], bl[0], bl[1], 3);
 				if(mouse_press(mb_left, active)) {
 					drag_side = 1;
-					drag_mx   = _mx;
-					drag_my   = _my;
+					drag_mx = _mx;
+					drag_my = _my;
+					drag_s = [ current_data[1], current_data[3] ];
 				}
 			} else if(distance_to_line_infinite(_mx, _my, br[0], br[1], tr[0], tr[1]) < 12) {
 				draw_line_width(br[0], br[1], tr[0], tr[1], 3);
 				if(mouse_press(mb_left, active)) {
 					drag_side = 2;
-					drag_mx   = _mx;
-					drag_my   = _my;
+					drag_mx = _mx;
+					drag_my = _my;
+					drag_s = [ current_data[4], current_data[2] ];
 				}
 			} else if(distance_to_line_infinite(_mx, _my, br[0], br[1], bl[0], bl[1]) < 12) {
 				draw_line_width(br[0], br[1], bl[0], bl[1], 3);
 				if(mouse_press(mb_left, active)) {
 					drag_side = 3;
-					drag_mx   = _mx;
-					drag_my   = _my;
+					drag_mx = _mx;
+					drag_my = _my;
+					drag_s = [ current_data[4], current_data[3] ];
 				}
 			}
 		}
+		
+		inputs[| 1].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
+		inputs[| 2].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
+		inputs[| 3].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
+		inputs[| 4].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
 	}
 	
 	static process_data = function(_outSurf, _data, _output_index) {
-		var ww = surface_get_width(_data[0]);
-		var hh = surface_get_height(_data[0]);
 		var tl = _data[1];
 		var tr = _data[2];
 		var bl = _data[3];
@@ -175,14 +189,14 @@ function Node_Warp(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constru
 			
 			var res = 4;
 			var _i0, _i1, _j0, _j1;
-			var tl_x = tl[0] * ww;
-			var tl_y = tl[1] * hh;
-			var tr_x = tr[0] * ww;
-			var tr_y = tr[1] * hh;
-			var bl_x = bl[0] * ww;
-			var bl_y = bl[1] * hh;
-			var br_x = br[0] * ww;
-			var br_y = br[1] * hh;
+			var tl_x = tl[0];
+			var tl_y = tl[1];
+			var tr_x = tr[0];
+			var tr_y = tr[1];
+			var bl_x = bl[0];
+			var bl_y = bl[1];
+			var br_x = br[0];
+			var br_y = br[1];
 			
 			for( var i = 0; i < res; i++ ) {
 				for( var j = 0; j < res; j++ ) {

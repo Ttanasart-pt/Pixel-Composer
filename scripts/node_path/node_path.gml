@@ -41,14 +41,14 @@ function Node_Path(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 	drag_point_sx = 0;
 	drag_point_sy = 0;
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my) {
+	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var sample = PREF_MAP[? "path_resolution"];
 		var loop   = inputs[| 1].getValue();
 		var ansize = ds_list_size(inputs) - list_start;
 
 		if(drag_point > -1) {
-			var dx = drag_point_sx + (_mx - drag_point_mx) / _s;
-			var dy = drag_point_sy + (_my - drag_point_my) / _s;
+			var dx = value_snap(drag_point_sx + (_mx - drag_point_mx) / _s, _snx);
+			var dy = value_snap(drag_point_sy + (_my - drag_point_my) / _s, _sny);
 			
 			if(drag_type < 2) {
 				var inp = inputs[| list_start + drag_point];
@@ -91,6 +91,11 @@ function Node_Path(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 				var miny = min((_my - _y) / _s, (drag_point_my - _y) / _s);
 				var maxy = max((_my - _y) / _s, (drag_point_my - _y) / _s);
 				
+				minx = value_snap(minx, _snx);
+				maxx = value_snap(maxx, _snx);
+				miny = value_snap(miny, _sny);
+				maxy = value_snap(maxy, _sny);
+				
 				var a = [];
 				for( var i = 0; i < 4; i++ ) 
 					a[i] = inputs[| list_start + i].getValue();
@@ -114,6 +119,11 @@ function Node_Path(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 				var maxx = max((_mx - _x) / _s, (drag_point_mx - _x) / _s);
 				var miny = min((_my - _y) / _s, (drag_point_my - _y) / _s);
 				var maxy = max((_my - _y) / _s, (drag_point_my - _y) / _s);
+				
+				minx = value_snap(minx, _snx);
+				maxx = value_snap(maxx, _snx);
+				miny = value_snap(miny, _sny);
+				maxy = value_snap(maxy, _sny);
 				
 				var a = [];
 				for( var i = 0; i < 4; i++ ) 
@@ -285,7 +295,7 @@ function Node_Path(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 			
 			if(mouse_press(mb_left, active)) {
 				drag_point    = ds_list_size(inputs) - list_start;
-				createAnchor((_mx - _x) / _s, (_my - _y) / _s);
+				createAnchor(value_snap((_mx - _x) / _s, _snx), value_snap((_my - _y) / _s, _sny));
 				
 				drag_type     = -1;
 				drag_point_mx = _mx;
@@ -307,7 +317,7 @@ function Node_Path(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 				inputs[| 1].setValue(true);
 				
 				repeat(4)
-					createAnchor((_mx - _x) / _s, (_my - _y) / _s);
+					createAnchor(value_snap((_mx - _x) / _s, _snx), value_snap((_my - _y) / _s, _sny));
 			}
 		}
 	}

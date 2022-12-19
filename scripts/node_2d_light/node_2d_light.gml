@@ -53,7 +53,7 @@ function Node_2D_light(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) con
 		["Render",	false], 11, 10 
 	];
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my) {
+	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var _shape = inputs[| 1].getValue();
 		
 		switch(_shape) {
@@ -62,14 +62,14 @@ function Node_2D_light(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) con
 				var px = _x + pos[0] * _s;
 				var py = _y + pos[1] * _s;
 		
-				inputs[| 2].drawOverlay(active, _x, _y, _s, _mx, _my);
-				inputs[| 3].drawOverlay(active, px, py, _s, _mx, _my);
+				inputs[| 2].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
+				inputs[| 3].drawOverlay(active, px, py, _s, _mx, _my, _snx, _sny);
 				break;
 			case LIGHT_SHAPE_2D.line :
 			case LIGHT_SHAPE_2D.line_asym :
 			case LIGHT_SHAPE_2D.spot :
-				inputs[| 6].drawOverlay(active, _x, _y, _s, _mx, _my);
-				inputs[| 7].drawOverlay(active, _x, _y, _s, _mx, _my);
+				inputs[| 6].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
+				inputs[| 7].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
 				break;
 		}
 	}

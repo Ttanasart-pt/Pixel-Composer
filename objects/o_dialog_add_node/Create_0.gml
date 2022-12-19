@@ -123,7 +123,7 @@ event_inherited();
 			
 			if(i == ADD_NODE_PAGE) {
 				draw_sprite_stretched(THEME.ui_panel_bg, 0, 0, _y + hh, ui(132), hg);
-			} else if(sHOVER && point_in_rectangle(_m[0], _m[1], 0, _y + hh, ui(100), _y + hh + hg - 1)) {
+			} else if(sHOVER && catagory_pane.hover && point_in_rectangle(_m[0], _m[1], 0, _y + hh, ui(100), _y + hh + hg - 1)) {
 				draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, 0, _y + hh, ui(132), hg, c_white, 0.75);
 				if(mouse_click(mb_left, sFOCUS)) {
 					setPage(i);
@@ -143,7 +143,8 @@ event_inherited();
 		draw_clear_alpha(c_white, 0);
 		
 		var node_count = ds_list_size(node_list);
-		var hh         = 0;
+		var hh = 0;
+		var _hover = sHOVER && content_pane.hover;
 		
 		if(ADD_NODE_MODE == 0) {
 			var grid_size  = ui(64);
@@ -170,7 +171,7 @@ event_inherited();
 						draw_sprite_stretched(THEME.node_bg, 0, _boxx, yy, grid_size, grid_size);
 						BLEND_NORMAL
 						
-						if(sHOVER && point_in_rectangle(_m[0], _m[1], _nx, yy, _nx + grid_width, yy + grid_size)) {
+						if(_hover && point_in_rectangle(_m[0], _m[1], _nx, yy, _nx + grid_width, yy + grid_size)) {
 							draw_sprite_stretched_ext(THEME.node_active, 0, _boxx, yy, grid_size, grid_size, COLORS._main_accent, 1);
 							if(mouse_press(mb_left, sFOCUS))
 								buildNode(_node);
@@ -183,7 +184,7 @@ event_inherited();
 					
 						draw_set_text(f_p2, fa_center, fa_top, COLORS._main_text);
 						name_height = max(name_height, string_height_ext(_node.name, -1, grid_width) + 8);
-						draw_text_ext(_boxx + grid_size / 2, yy + grid_size + 4, _node.name, -1, grid_width);
+						draw_text_ext_add(_boxx + grid_size / 2, yy + grid_size + 4, _node.name, -1, grid_width);
 					}
 				}
 				var hght = grid_size + grid_space + name_height;
@@ -206,7 +207,7 @@ event_inherited();
 					BLEND_NORMAL
 				}
 				
-				if(sHOVER && point_in_rectangle(_m[0], _m[1], 0, yy, list_width, yy + list_height - 1)) {
+				if(_hover && point_in_rectangle(_m[0], _m[1], 0, yy, list_width, yy + list_height - 1)) {
 					draw_sprite_stretched_ext(THEME.node_active, 0, ui(4), yy, list_width - ui(8), list_height, COLORS._main_accent, 1);
 					if(mouse_press(mb_left, sFOCUS))
 						buildNode(_node);
@@ -220,7 +221,7 @@ event_inherited();
 				}
 				
 				draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text);
-				draw_text(list_height + ui(20), yy + list_height / 2, _node.name);
+				draw_text_add(list_height + ui(20), yy + list_height / 2, _node.name);
 				
 				yy += list_height;
 				hh += list_height;
@@ -302,6 +303,7 @@ event_inherited();
 		
 		var amo = ds_list_size(search_list);
 		var hh = 0;
+		var _hover = sHOVER && search_pane.hover;
 		
 		if(ADD_NODE_MODE == 0) {
 			var grid_size = ui(64);
@@ -353,9 +355,9 @@ event_inherited();
 				draw_set_text(f_p2, fa_center, fa_top, COLORS._main_text);
 				var txt = _node.name;
 				name_height = max(name_height, string_height_ext(txt, -1, grid_width) + ui(8));
-				draw_text_ext(_boxx + grid_size / 2, yy + grid_size + 4, txt, -1, grid_width);
+				draw_text_ext_add(_boxx + grid_size / 2, yy + grid_size + 4, txt, -1, grid_width);
 				
-				if(sHOVER && point_in_rectangle(_m[0], _m[1], _nx, yy, _nx + grid_width, yy + grid_size)) {
+				if(_hover && point_in_rectangle(_m[0], _m[1], _nx, yy, _nx + grid_width, yy + grid_size)) {
 					node_selecting = i;
 					if(mouse_press(mb_left, sFOCUS))
 						buildNode(_node, _param);
@@ -417,9 +419,9 @@ event_inherited();
 				}
 			
 				draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text);
-				draw_text(list_height + ui(20), yy + list_height / 2, _node.name);
+				draw_text_add(list_height + ui(20), yy + list_height / 2, _node.name);
 				
-				if(sHOVER && point_in_rectangle(_m[0], _m[1], 0, yy, list_width, yy + list_height - 1)) {
+				if(_hover && point_in_rectangle(_m[0], _m[1], 0, yy, list_width, yy + list_height - 1)) {
 					node_selecting = i;
 					if(mouse_press(mb_left, sFOCUS))
 						buildNode(_node, _param);

@@ -5,7 +5,7 @@
   "isDnD": false,
   "isCompatibility": false,
   "parent": {
-    "name": "sprites",
-    "path": "folders/sprites.yy",
+    "name": "scritps",
+    "path": "folders/main/scritps.yy",
   },
 }

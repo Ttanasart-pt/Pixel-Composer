@@ -15,7 +15,7 @@ function Node_Crop(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constru
 	
 	static getPreviewValue = function() { return inputs[| 0]; }
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my) {
+	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		if(array_length(current_data) < 2) return;
 		
 		var _inSurf		= current_data[0];
@@ -44,10 +44,10 @@ function Node_Crop(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constru
 		if(drag_side > -1) {
 			var vv;
 			
-			if(drag_side == 0)		vv = drag_sv - (_mx - drag_mx) / _s;
-			else if(drag_side == 2)	vv = drag_sv + (_mx - drag_mx) / _s;
-			else if(drag_side == 1)	vv = drag_sv + (_my - drag_my) / _s;
-			else					vv = drag_sv - (_my - drag_my) / _s;
+			if(drag_side == 0)		vv = value_snap(drag_sv - (_mx - drag_mx) / _s, _snx);
+			else if(drag_side == 2)	vv = value_snap(drag_sv + (_mx - drag_mx) / _s, _snx);
+			else if(drag_side == 1)	vv = value_snap(drag_sv + (_my - drag_my) / _s, _sny);
+			else					vv = value_snap(drag_sv - (_my - drag_my) / _s, _sny);
 			
 			_splice[drag_side] = vv;
 			if(inputs[| 1].setValue(_splice))

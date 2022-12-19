@@ -79,7 +79,7 @@ event_inherited();
 					draw_sprite_stretched(THEME.node_bg, 0, xx, yy, grid_size, grid_size);
 					BLEND_NORMAL
 						
-					if(sHOVER && point_in_rectangle(_m[0], _m[1], xx, yy, xx + grid_size, yy + grid_size)) {
+					if(sHOVER && contentPane.hover && point_in_rectangle(_m[0], _m[1], xx, yy, xx + grid_size, yy + grid_size)) {
 						draw_sprite_stretched_ext(THEME.node_active, 0, xx, yy, grid_size, grid_size, COLORS._main_accent, 1);
 						if(mouse_press(mb_left, sFOCUS)) {
 							target.onModify(content.path);
@@ -111,7 +111,8 @@ event_inherited();
 		var hh = 8;
 		
 		for(var i = 0; i < ds_list_size(global.ASSETS.subDir); i++) {
-			var hg = global.ASSETS.subDir[| i].draw(self, ui(8), _y + 8, _m, folderPane.w - ui(16), sHOVER, sFOCUS, global.ASSETS);
+			var hg = global.ASSETS.subDir[| i].draw(self, ui(8), _y + 8, _m, folderPane.w - ui(16), 
+				sHOVER && folderPane.hover, sFOCUS, global.ASSETS);
 			hh += hg;
 			_y += hg;
 		}

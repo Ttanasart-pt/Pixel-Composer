@@ -18,7 +18,7 @@ function textBox(_input, _onModify) constructor {
 	slidable = false;
 	sliding  = false;
 	slide_mx = 0;
-	slide_sx = 0;
+	slide_my = 0;
 	slide_speed = 1 / 16;
 	
 	starting_char = 1;
@@ -265,20 +265,32 @@ function textBox(_input, _onModify) constructor {
 		
 		if(sliding > 0) {
 			var dx = _m[0] - slide_mx;
-			if(abs(dx) > 16)
+			var dy = slide_my - _m[1];
+			
+			if(sliding == 1 && (abs(dx) > 16 || abs(dy) > 16)) {
 				sliding = 2;
+				slide_mx = _m[0];
+				slide_my = _m[1];
+			}
 			
 			if(sliding == 2) {
-				var spd = dx * slide_speed;
+				var spd = (abs(dx) > abs(dy)? dx : dy) * slide_speed;
+				
 				if(keyboard_check(vk_alt))
 					spd /= 10;
 				if(keyboard_check(vk_control))
 					spd *= 10;
 				
-				_input_text = slide_sx + spd;
+				var _ip = _input_text;
+				_input_text = _input_text + spd;
 				
 				switch(input) {
 					case TEXTBOX_INPUT.number :	_input_text = round(_input_text);	break;
+				}
+				
+				if(_input_text != _ip) {
+					slide_mx = _m[0];
+					slide_my = _m[1];
 				}
 				
 				apply();
@@ -428,8 +440,9 @@ function textBox(_input, _onModify) constructor {
 				if(hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + hh)) {
 					if(mouse_press(mb_left, active)) {
 						sliding  = 1;
+						
 						slide_mx = _m[0];
-						slide_sx = toNumber(_text);
+						slide_my = _m[1];
 					}
 				} 
 			}

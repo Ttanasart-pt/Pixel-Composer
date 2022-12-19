@@ -303,8 +303,8 @@ function Node_VFX_Spawner_Base(_x, _y, _group = -1) : Node(_x, _y, _group) const
 		runVFX(ANIMATOR.current_frame);
 	}
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my) {
-		inputs[| 3].drawOverlay(active, _x, _y, _s, _mx, _my);
+	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
+		inputs[| 3].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
 		if(onDrawOverlay != -1)
 			onDrawOverlay(active, _x, _y, _s, _mx, _my);
 	}

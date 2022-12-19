@@ -106,26 +106,25 @@ event_inherited();
 		var hh = ui(32);
 		var yy = _y + ui(8);
 		var hg = ui(52);
+		var _hover = sHOVER && sp_presets.hover;
 		draw_clear_alpha(COLORS.panel_bg_clear, 0);
 		
 		for(var i = 0; i < ds_list_size(presets); i++) {
 			var isHover = point_in_rectangle(_m[0], _m[1], ui(4), yy, ui(4) + sp_preset_w - ui(16), yy + hg);
 			
 			draw_sprite_stretched(THEME.ui_panel_bg, 1, ui(4), yy, sp_preset_w - ui(16), hg);
-			if(sHOVER && isHover) 
+			if(_hover && isHover) 
 				draw_sprite_stretched_ext(THEME.node_active, 1, ui(4), yy, sp_preset_w - ui(16), hg, COLORS._main_accent, 1);
 				
 			draw_set_text(f_p2, fa_left, fa_top, COLORS._main_text_sub);
 			draw_text(ui(16), yy + ui(8), preset_name[| i]);
 			draw_gradient(ui(16), yy + ui(28), ww, ui(16), presets[| i]);
 			
-			if(sFOCUS && isHover) {
-				if(mouse_press(mb_left, sFOCUS)) { 
-					var target = presets[| i];
-					ds_list_clear(gradient);
-					for( var i = 0; i < ds_list_size(target); i++ ) {
-						ds_list_add(gradient, new valueKey(target[| i].time, target[| i].value));
-					}
+			if(_hover && isHover && mouse_press(mb_left, sFOCUS)) { 
+				var target = presets[| i];
+				ds_list_clear(gradient);
+				for( var i = 0; i < ds_list_size(target); i++ ) {
+					ds_list_add(gradient, new valueKey(target[| i].time, target[| i].value));
 				}
 			}
 			

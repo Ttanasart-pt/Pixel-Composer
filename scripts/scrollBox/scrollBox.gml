@@ -32,7 +32,7 @@ function scrollBox(_data, _onModify) constructor {
 					data = data_list();
 				else 
 					data = data_list;
-					
+				
 				open = true;
 				with(dialogCall(o_dialog_scrollbox, _x + _rx, _y + _ry)) {
 					scrollbox = other;	
@@ -42,9 +42,8 @@ function scrollBox(_data, _onModify) constructor {
 			}
 			if(mouse_click(mb_left, active))
 				draw_sprite_stretched(THEME.textbox, 2, _x, _y, ww, _h);	
-		} else {
-			draw_sprite_stretched(THEME.textbox, 0, _x, _y, ww, _h);		
-		}
+		} else
+			draw_sprite_stretched(THEME.textbox, 0, _x, _y, ww, _h);
 		
 		draw_set_text(f_p0, align, fa_center, COLORS._main_text);
 		if(align == fa_center)

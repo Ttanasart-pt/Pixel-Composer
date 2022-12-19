@@ -43,8 +43,8 @@ function Node_3D_Transform(_x, _y, _group = -1) : Node_Processor(_x, _y, _group)
 	drag_mx = 0;
 	drag_my = 0;
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my) {
-		if(inputs[| 1].drawOverlay(active, _x, _y, _s, _mx, _my)) 
+	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
+		if(inputs[| 1].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny)) 
 			active = false;
 		var _out = outputs[| 0].getValue();
 		if(!is_surface(_out) || !surface_exists(_out)) return;

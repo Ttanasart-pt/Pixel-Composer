@@ -58,6 +58,7 @@ function Panel_Collection() : PanelContent() constructor {
 		var hh = 0;
 		var frame = current_time * PREF_MAP[? "collection_preview_speed"] / 3000;
 		var _cw = contentPane.surface_w;
+		var _hover = pHOVER && contentPane.hover;
 		
 		if(contentView == 0) {
 			var grid_size  = ui(64);
@@ -83,7 +84,7 @@ function Panel_Collection() : PanelContent() constructor {
 						draw_sprite_stretched(THEME.node_bg, 0, _boxx, yy, grid_size, grid_size);
 						BLEND_NORMAL
 						
-						if(pHOVER && point_in_rectangle(_m[0], _m[1], _nx, yy, _nx + grid_width, yy + grid_size)) {
+						if(_hover && point_in_rectangle(_m[0], _m[1], _nx, yy, _nx + grid_width, yy + grid_size)) {
 							draw_sprite_stretched_ext(THEME.node_active, 0, _boxx, yy, grid_size, grid_size, COLORS._main_accent, 1);
 							if(mouse_press(mb_left, pFOCUS))
 								file_dragging = _node;
@@ -135,7 +136,7 @@ function Panel_Collection() : PanelContent() constructor {
 					BLEND_NORMAL
 				}
 				
-				if(pHOVER && point_in_rectangle(_m[0], _m[1], 0, yy, list_width, yy + list_height - 1)) {
+				if(_hover && point_in_rectangle(_m[0], _m[1], 0, yy, list_width, yy + list_height - 1)) {
 					draw_sprite_stretched_ext(THEME.node_active, 0, ui(4), yy, list_width - ui(8), list_height, COLORS._main_accent, 1);
 					if(mouse_press(mb_left, pFOCUS))
 						file_dragging = _node;
@@ -180,7 +181,7 @@ function Panel_Collection() : PanelContent() constructor {
 		var hh = ui(8);
 		
 		for(var i = 0; i < ds_list_size(root.subDir); i++) {
-			var hg = root.subDir[| i].draw(self, ui(8), _y, _m, folderPane.w - ui(20), pHOVER, pFOCUS, root);
+			var hg = root.subDir[| i].draw(self, ui(8), _y, _m, folderPane.w - ui(20), pHOVER && folderPane.hover, pFOCUS, root);
 			hh += hg;
 			_y += hg;
 		}

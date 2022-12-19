@@ -47,7 +47,7 @@ function Node_Transform_Single(_x, _y, _group = -1) : Node_Processor(_x, _y, _gr
 	overlay_drag_ma  = 0;
 	overlay_drag_sa  = 0;
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my) {
+	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		if(array_length(current_data) < ds_list_size(inputs)) return;
 		
 		var _surf = outputs[| 0].getValue();
@@ -108,8 +108,8 @@ function Node_Transform_Single(_x, _y, _group = -1) : Node_Processor(_x, _y, _gr
 		#endregion
 		
 		if(overlay_dragging && overlay_dragging < 3) {
-			var px = _mx - overlay_drag_mx;
-			var py = _my - overlay_drag_my;
+			var px = value_snap(_mx - overlay_drag_mx, _snx);
+			var py = value_snap(_my - overlay_drag_my, _sny);
 			var pos_x, pos_y;
 			
 			if(keyboard_check(vk_shift)) {

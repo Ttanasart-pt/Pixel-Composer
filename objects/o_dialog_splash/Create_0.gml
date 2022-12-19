@@ -27,7 +27,7 @@ event_inherited();
 			if(!file_exists(_rec)) continue;
 			draw_sprite_stretched(THEME.ui_panel_bg, 1, 0, _y, ww, hg);
 			
-			if(sHOVER && point_in_rectangle(_m[0], _m[1], 0, _y, ww, _y + hg)) {
+			if(sHOVER && sp_recent.hover && point_in_rectangle(_m[0], _m[1], 0, _y, ww, _y + hg)) {
 				draw_sprite_stretched_ext(THEME.node_active, 0, 0, _y, ww, hg, COLORS._main_accent, 1);
 				
 				if(mouse_press(mb_left, sFOCUS)) {
@@ -77,7 +77,7 @@ event_inherited();
 					var _boxx = _nx;
 					
 					draw_sprite_stretched(THEME.node_bg, 0, _boxx, yy, grid_width, grid_heigh);
-					if(sHOVER && point_in_rectangle(_m[0], _m[1], _nx, yy, _nx + grid_width, yy + grid_heigh)) {
+					if(sHOVER && sp_sample.hover && point_in_rectangle(_m[0], _m[1], _nx, yy, _nx + grid_width, yy + grid_heigh)) {
 						draw_sprite_stretched_ext(THEME.node_active, 0, _boxx, yy, grid_width, grid_heigh, COLORS._main_accent, 1);
 						if(mouse_press(mb_left, sFOCUS)) {
 							LOAD_PATH(_node.path, true);
@@ -109,7 +109,7 @@ event_inherited();
 					
 					draw_set_text(f_p1, fa_center, fa_top, COLORS._main_text);
 					name_height = max(name_height, string_height_ext(_node.name, -1, grid_width) + ui(8));
-					draw_text_ext(tx, ty + line_height() - ui(2), _node.name, -1, grid_width);
+					draw_text_ext_add(tx, ty + line_height() - ui(2), _node.name, -1, grid_width);
 				}
 			}
 			var hght = grid_heigh + grid_space + name_height + ui(20);

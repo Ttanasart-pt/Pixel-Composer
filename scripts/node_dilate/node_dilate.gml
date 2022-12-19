@@ -17,13 +17,13 @@ function Node_Dilate(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) const
 	
 	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my) {
+	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var pos = inputs[| 1].getValue();
 		var px = _x + pos[0] * _s;
 		var py = _y + pos[1] * _s;
 		
-		inputs[| 1].drawOverlay(active, _x, _y, _s, _mx, _my);
-		inputs[| 3].drawOverlay(active, px, py, _s, _mx, _my, 0, 1, THEME.anchor_scale_hori);
+		inputs[| 1].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
+		inputs[| 3].drawOverlay(active, px, py, _s, _mx, _my, _snx, _sny, 0, 1, THEME.anchor_scale_hori);
 	}
 	
 	static process_data = function(_outSurf, _data, _output_index) {

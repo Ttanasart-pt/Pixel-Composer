@@ -13,7 +13,7 @@ function Node_Blur_Directional(_x, _y, _group = -1) : Node_Processor(_x, _y, _gr
 	
 	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my) {
+	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var _surf = outputs[| 0].getValue();
 		if(is_array(_surf)) {
 			if(array_length(_surf) == 0) return;
@@ -23,7 +23,7 @@ function Node_Blur_Directional(_x, _y, _group = -1) : Node_Processor(_x, _y, _gr
 		var ww = surface_get_width(_surf);
 		var hh = surface_get_height(_surf);
 		
-		inputs[| 2].drawOverlay(active, _x + ww / 2 * _s, _y + hh / 2 * _s, _s, _mx, _my);
+		inputs[| 2].drawOverlay(active, _x + ww / 2 * _s, _y + hh / 2 * _s, _s, _mx, _my, _snx, _sny);
 	}
 	
 	static process_data = function(_outSurf, _data, _output_index) {

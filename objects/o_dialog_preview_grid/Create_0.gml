@@ -3,14 +3,18 @@ event_inherited();
 
 #region data
 	dialog_w = ui(320);
-	dialog_h = ui(260);
+	dialog_h = ui(300);
 	
 	destroy_on_click_out = true;
 #endregion
 
 #region data
-	cb_enable = new checkBox(function(str) {
+	cb_enable = new checkBox(function() {
 		PANEL_PREVIEW.grid_show = !PANEL_PREVIEW.grid_show;
+	});
+	
+	cb_snap = new checkBox(function() {
+		PANEL_PREVIEW.grid_snap = !PANEL_PREVIEW.grid_snap;
 	});
 	
 	tb_width = new textBox(TEXTBOX_INPUT.number, function(str) {

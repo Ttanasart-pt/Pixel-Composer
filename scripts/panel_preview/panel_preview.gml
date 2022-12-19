@@ -35,6 +35,7 @@ function Panel_Preview() : PanelContent() constructor {
 	preview_rate     = 10;
 	
 	grid_show	 = false;
+	grid_snap	 = false;
 	grid_width	 = 16;
 	grid_height	 = 16;
 	grid_opacity = 0.5;
@@ -146,6 +147,7 @@ function Panel_Preview() : PanelContent() constructor {
 			
 			var _prev_val = node.getPreviewValue();
 			
+			if(_prev_val == undefined) continue;
 			if(_prev_val == noone) continue;
 			if(_prev_val.type != VALUE_TYPE.surface) continue;
 			
@@ -493,7 +495,19 @@ function Panel_Preview() : PanelContent() constructor {
 			}
 		}
 		
-		_node.drawOverlay(active && isHover, canvas_x + _node.preview_x * canvas_s, canvas_y + _node.preview_y * canvas_s, canvas_s, _mx, _my);
+		var cx = canvas_x + _node.preview_x * canvas_s;
+		var cy = canvas_y + _node.preview_y * canvas_s;
+		var _snx = 0, _sny = 0;
+		
+		if(keyboard_check(vk_control)) {
+			_snx = grid_show? grid_width : 1;
+			_sny = grid_show? grid_height : 1;
+		} else if(grid_snap) {
+			_snx = grid_width;
+			_sny = grid_height;
+		}
+		
+		_node.drawOverlay(active && isHover, cx, cy, canvas_s, _mx, _my, _snx, _sny);
 		
 		if(_node.tools != -1) {
 			var xx = ui(16);

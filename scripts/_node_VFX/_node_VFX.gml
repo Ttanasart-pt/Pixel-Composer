@@ -322,8 +322,8 @@ function Node_VFX(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 		}
 	}
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my) {
-		inputs[| 4].drawOverlay(active, _x, _y, _s, _mx, _my);
+	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
+		inputs[| 4].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
 		if(onDrawOverlay != -1)
 			onDrawOverlay(active, _x, _y, _s, _mx, _my);
 	}

@@ -726,7 +726,7 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 	drag_my   = 0;
 	drag_sx   = 0;
 	drag_sy   = 0;
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my) {
+	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var _val = getValue();
 		var hover = -1;
 		
@@ -735,9 +735,9 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 			case VALUE_TYPE.float :
 				switch(display_type) {
 					case VALUE_DISPLAY._default : #region
-						var _angle = argument_count > 6? argument[6] : 0;
-						var _scale = argument_count > 7? argument[7] : 1;
-						var spr = argument_count > 8? argument[8] : THEME.anchor_selector;
+						var _angle = argument_count > 8? argument[8] : 0;
+						var _scale = argument_count > 9? argument[9] : 1;
+						var spr = argument_count > 10? argument[10] : THEME.anchor_selector;
 						var index = 0;
 						
 						var __ax = lengthdir_x(_val * _scale, _angle);
@@ -777,7 +777,7 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 						break;
 					#endregion
 					case VALUE_DISPLAY.rotation : #region
-						var _rad = argument_count > 6? argument[6] : 64;
+						var _rad = argument_count > 8? argument[8] : 64;
 						
 						var _ax = _x + lengthdir_x(_rad, _val);
 						var _ay = _y + lengthdir_y(_rad, _val);
@@ -822,11 +822,8 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 						break;
 					#endregion
 					case VALUE_DISPLAY.vector : #region
-						var _psx = argument_count > 6? argument[6] : 1;
-						var _psy = argument_count > 7? argument[7] : 1;
-						
-						var __ax = _val[0] * _psx;
-						var __ay = _val[1] * _psy;
+						var __ax = _val[0];
+						var __ay = _val[1];
 						
 						var _ax = __ax * _s + _x;
 						var _ay = __ay * _s + _y;
@@ -835,8 +832,8 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 						
 						if(drag_type) {
 							draw_sprite_ui_uniform(THEME.anchor_selector, 1, _ax, _ay);
-							var _nx = (drag_sx + (_mx - drag_mx) - _x) / _s / _psx;
-							var _ny = (drag_sy + (_my - drag_my) - _y) / _s / _psy;
+							var _nx = value_snap((drag_sx + (_mx - drag_mx) - _x) / _s, _snx);
+							var _ny = value_snap((drag_sy + (_my - drag_my) - _y) / _s, _sny);
 							if(keyboard_check(vk_control)) {
 								_val[0] = round(_nx);
 								_val[1] = round(_ny);
@@ -898,8 +895,8 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 							draw_sprite_ui_uniform(THEME.anchor, 0, _ax, _ay, 1.25, c_white);
 						
 						if(drag_type == 1) {
-							var _xx = drag_sx + (_mx - drag_mx) / _s;
-							var _yy = drag_sy + (_my - drag_my) / _s;
+							var _xx = value_snap(drag_sx + (_mx - drag_mx) / _s, _snx);
+							var _yy = value_snap(drag_sy + (_my - drag_my) / _s, _sny);
 							
 							if(keyboard_check(vk_control)) {
 								_val[0] = round(_xx);
@@ -917,8 +914,8 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 								UNDO_HOLDING = false;
 							}
 						} else if(drag_type == 2) {
-							var _dx = (_mx - drag_mx) / _s;
-							var _dy = (_my - drag_my) / _s;
+							var _dx = value_snap((_mx - drag_mx) / _s, _snx);
+							var _dy = value_snap((_my - drag_my) / _s, _sny);
 							
 							if(keyboard_check(vk_control)) {
 								_val[2] = round(_dx);
@@ -1016,8 +1013,8 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 						
 						if(drag_type == 1) {
 							draw_sprite_ui_uniform(THEME.anchor_selector, 1, _ax, _ay);
-							var _nx = drag_sx + (_mx - drag_mx) / _s;
-							var _ny = drag_sy + (_my - drag_my) / _s;
+							var _nx = value_snap(drag_sx + (_mx - drag_mx) / _s, _snx);
+							var _ny = value_snap(drag_sy + (_my - drag_my) / _s, _sny);
 							
 							if(keyboard_check(vk_control)) {
 								_val[PUPPET_CONTROL.cx] = round(_nx);
@@ -1036,8 +1033,8 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 							}
 						} else if(drag_type == 2) {
 							draw_sprite_ui_uniform(THEME.anchor_selector, 0, _ax1, _ay1);
-							var _nx = drag_sx + (_mx - drag_mx) / _s;
-							var _ny = drag_sy + (_my - drag_my) / _s;
+							var _nx = value_snap(drag_sx + (_mx - drag_mx) / _s, _snx);
+							var _ny = value_snap(drag_sy + (_my - drag_my) / _s, _sny);
 							
 							if(keyboard_check(vk_control)) {
 								_val[PUPPET_CONTROL.fx] = round(_nx);

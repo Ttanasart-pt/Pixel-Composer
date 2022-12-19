@@ -24,7 +24,7 @@ event_inherited();
 		var amo = ds_list_size(STATUSES);
 		
 		draw_set_font(f_p3);
-		var timeW = string_width("00:00");
+		var timeW = string_width("00:00:00");
 		
 		for( var i = 0; i < ds_list_size(STATUSES); i++ ) {
 			var index = amo - 1 - i;
@@ -38,7 +38,7 @@ event_inherited();
 			var cc = COLORS.dialog_notification_bg;
 			draw_sprite_stretched_ext(THEME.group_label, 0, 0, yy + ui(2), _w, _h - ui(4), COLORS.dialog_notification_bg, 1);
 			
-			if(sHOVER && point_in_rectangle(_m[0], _m[1], 0, yy, _w, yy + _h - ui(4))) {
+			if(sHOVER && sp_noti.hover && point_in_rectangle(_m[0], _m[1], 0, yy, _w, yy + _h - ui(4))) {
 				cc = COLORS.dialog_notification_bg_hover;
 				
 				if(noti.onClick != noone && mouse_press(mb_left, sFOCUS))

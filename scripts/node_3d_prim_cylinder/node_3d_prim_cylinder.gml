@@ -105,8 +105,8 @@ function Node_3D_Cylinder(_x, _y, _group = -1) : Node(_x, _y, _group) constructo
 	drag_mx = 0;
 	drag_my = 0;
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my) {
-		if(inputs[| 3].drawOverlay(active, _x, _y, _s, _mx, _my)) 
+	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
+		if(inputs[| 3].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny)) 
 			active = false;
 		
 		var _dim = inputs[| 2].getValue();
@@ -188,7 +188,7 @@ function Node_3D_Cylinder(_x, _y, _group = -1) : Node(_x, _y, _group) constructo
 			}
 		}
 		
-		inputs[| 3].drawOverlay(active, _x, _y, _s, _mx, _my);
+		inputs[| 3].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
 	}
 	
 	#region 3D setup

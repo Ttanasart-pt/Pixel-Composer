@@ -41,6 +41,7 @@ event_inherited();
 		var _gs = sp_preset_size;
 		var yy  = _y + ui(8);
 		var _height, pre_amo;
+		var _hover = sHOVER && sp_presets.hover;
 		draw_clear_alpha(COLORS.panel_bg_clear, 0);
 		
 		for(var i = 0; i < ds_list_size(presets); i++) {
@@ -53,7 +54,7 @@ event_inherited();
 			else
 				_height = ui(56);
 			
-			var isHover = sHOVER && point_in_rectangle(_m[0], _m[1], ui(4), yy, ui(4) + sp_preset_w - ui(16), yy + _height);
+			var isHover = _hover && point_in_rectangle(_m[0], _m[1], ui(4), yy, ui(4) + sp_preset_w - ui(16), yy + _height);
 			
 			draw_sprite_stretched(THEME.ui_panel_bg, 1, ui(4), yy, sp_preset_w - ui(16), _height);
 			if(isHover) 
@@ -67,7 +68,7 @@ event_inherited();
 				drawPalette(presets[| i], ui(16), yy + ui(28), ww, ui(20));
 			
 			if(!click_block && mouse_click(mb_left, sFOCUS)) {
-				if(preset_selecting == i && sHOVER && point_in_rectangle(_m[0], _m[1], ui(16), yy + ui(28), ui(16) + ww, yy + ui(28) + _height)) {
+				if(preset_selecting == i && _hover && point_in_rectangle(_m[0], _m[1], ui(16), yy + ui(28), ui(16) + ww, yy + ui(28) + _height)) {
 					var m_ax = _m[0] - ui(16);
 					var m_ay = _m[1] - (yy + ui(28));
 					

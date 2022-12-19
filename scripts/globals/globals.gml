@@ -20,9 +20,9 @@
 	COLOR_KEYS = [];
 	
 	globalvar VERSION, SAVEFILE_VERSION, VERSION_STRING;
-	VERSION = 1000;
+	VERSION = 1010;
 	SAVEFILE_VERSION = 1000;
-	VERSION_STRING = "1.0.0";
+	VERSION_STRING = "1.0.1";
 	
 	globalvar NODES, NODE_MAP, APPEND_MAP, HOTKEYS, HOTKEY_CONTEXT;
 	
@@ -36,11 +36,6 @@
 	
 	globalvar CURSOR, TOOLTIP, DIALOG_DEPTH_HOVER, KEYBOARD_STRING;
 	globalvar UPDATE, RENDER_STACK;
-	
-	enum ANIMATOR_END {
-		loop,
-		stop
-	}
 #endregion
 
 #region inputs

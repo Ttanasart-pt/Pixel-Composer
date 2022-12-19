@@ -55,8 +55,8 @@ function Node_Particle_Effector(_x, _y, _group = -1) : Node(_x, _y, _group) cons
 	
 	current_data = [];
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my) {
-		inputs[| 2].drawOverlay(active, _x, _y, _s, _mx, _my);
+	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
+		inputs[| 2].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
 		
 		var parts = inputs[| 0].getValue();
 		if(!parts) return;

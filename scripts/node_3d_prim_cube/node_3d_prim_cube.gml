@@ -67,8 +67,8 @@ function Node_3D_Cube(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 	drag_mx = 0;
 	drag_my = 0;
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my) {
-		if(inputs[| 2].drawOverlay(active, _x, _y, _s, _mx, _my))
+	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
+		if(inputs[| 2].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny))
 			active = false;
 		
 		var _dim = inputs[| 1].getValue();
@@ -150,14 +150,11 @@ function Node_3D_Cube(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 			}
 		}
 		
-		inputs[| 2].drawOverlay(active, _x, _y, _s, _mx, _my);
+		inputs[| 2].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
 	}
 	
 	static update = function() {
 		var _inSurf = inputs[| 0].getValue();
-		
-		var _ww  = surface_get_width(_inSurf);
-		var _hh  = surface_get_height(_inSurf);
 		var _dim = inputs[| 1].getValue();
 		var _pos = inputs[| 2].getValue();
 		var _rot = inputs[| 3].getValue();
@@ -171,6 +168,9 @@ function Node_3D_Cube(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 		var _aclr = inputs[| 17].getValue();
 		
 		var _usetex = inputs[| 5].getValue();
+		var _ww  = _usetex? _dim[0] : surface_get_width(_inSurf);
+		var _hh  = _usetex? _dim[1] : surface_get_height(_inSurf);
+		
 		for(var i = 6; i <= 11; i++) inputs[| i].setVisible(_usetex);
 		inputs[| 0].setVisible(true, !_usetex);	
 		
@@ -212,12 +212,12 @@ function Node_3D_Cube(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 				vertex_submit(PRIMITIVES[? "plane_normal"], pr_trianglelist, surface_get_texture(face[0]));
 				matrix_stack_pop();
 				
-				matrix_stack_push(matrix_build(0, 0, -0.5, 0, 0, 0, 1, 1, 1));
+				matrix_stack_push(matrix_build(0, 0, -0.5, 0, 180, 0, 1, 1, 1));
 				matrix_set(matrix_world, matrix_stack_top());
 				vertex_submit(PRIMITIVES[? "plane_normal"], pr_trianglelist, surface_get_texture(face[1]));
 				matrix_stack_pop();
 				
-				matrix_stack_push(matrix_build(0, 0.5, 0, 90, 0, 0, 1, 1, 1));
+				matrix_stack_push(matrix_build(0, 0.5, 0, -90, 0, 0, 1, 1, 1));
 				matrix_set(matrix_world, matrix_stack_top());
 				vertex_submit(PRIMITIVES[? "plane_normal"], pr_trianglelist, surface_get_texture(face[2]));
 				matrix_stack_pop();
@@ -227,7 +227,7 @@ function Node_3D_Cube(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 				vertex_submit(PRIMITIVES[? "plane_normal"], pr_trianglelist, surface_get_texture(face[3]));
 				matrix_stack_pop();
 				
-				matrix_stack_push(matrix_build(0.5, 0, 0, 0, 90, 0, 1, 1, 1));
+				matrix_stack_push(matrix_build(0.5, 0, 0, 0, -90, 0, 1, 1, 1));
 				matrix_set(matrix_world, matrix_stack_top());
 				vertex_submit(PRIMITIVES[? "plane_normal"], pr_trianglelist, surface_get_texture(face[4]));
 				matrix_stack_pop();

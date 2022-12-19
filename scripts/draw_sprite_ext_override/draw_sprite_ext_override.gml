@@ -18,6 +18,6 @@ function draw_sprite_ui(spr, ind, _x, _y, xscale = 1, yscale = 1, rot = 0, color
 	draw_sprite_ext(spr, ind, _x, _y, xscale_ui, yscale_ui, rot, color, alpha);
 }
 
-function draw_sprite_ui_uniform(spr, ind, _x, _y, scale = 1, color = c_white, alpha = 1) {
-	draw_sprite_ui(spr, ind, _x, _y, scale, scale, 0, color, alpha);
+function draw_sprite_ui_uniform(spr, ind, _x, _y, scale = 1, color = c_white, alpha = 1, rot = 0) {
+	draw_sprite_ui(spr, ind, _x, _y, scale, scale, rot, color, alpha);
 }

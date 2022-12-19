@@ -40,8 +40,8 @@ function Node_VFX_effector(_x, _y, _group = -1) : Node(_x, _y, _group) construct
 	
 	current_data = [];
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my) {
-		inputs[| 1].drawOverlay(active, _x, _y, _s, _mx, _my);
+	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
+		inputs[| 1].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
 		
 		var area = inputs[| 1].getValue();
 		var cx = _x + area[0] * _s;

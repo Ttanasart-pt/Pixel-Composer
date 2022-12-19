@@ -21,7 +21,7 @@ function Node_Transform(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) co
 											.setIcon(THEME.anchor)
 											.setTooltip("Set to center"));
 	
-	inputs[| 4] = nodeValue(4, "Relative", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
+	inputs[| 4] = nodeValue(4, "Relative anchor", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
 	
 	inputs[| 5] = nodeValue(5, "Rotation", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.rotation);
@@ -44,7 +44,7 @@ function Node_Transform(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) co
 	
 	inputs[| 10] = nodeValue(10, "Exact", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
 	
-	inputs[| 11] = nodeValue(11, "Relative to surface", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	inputs[| 11] = nodeValue(11, "Relative position", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
 	
 	input_display_list = [ 0, 
 		["Output",		true],	9, 1, 7, 
@@ -244,7 +244,7 @@ function Node_Transform(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) co
 	overlay_drag_ma  = 0;
 	overlay_drag_sa  = 0;
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my) {
+	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		if(array_length(current_data) < ds_list_size(inputs)) return;
 		
 		var _surf = inputs[| 0].getValue();
@@ -349,10 +349,8 @@ function Node_Transform(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) co
 				pos_y = overlay_drag_sy + py / _s;
 			}
 			
-			if(keyboard_check(vk_control)) {
-				pos_x = round(pos_x);
-				pos_y = round(pos_y);
-			}
+			pos_x = value_snap(pos_x, _snx);
+			pos_y = value_snap(pos_y, _sny);
 			
 			if(overlay_dragging == 1) {
 				if(pos_rel) {
@@ -418,31 +416,31 @@ function Node_Transform(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) co
 				overlay_dragging = 0;
 				UNDO_HOLDING = false;
 			}
-		} else {
-			if(mouse_press(mb_left, active)) {
-				if(point_in_circle(_mx, _my, bax, bay, 8)) {
-					overlay_dragging = 2;
-					overlay_drag_mx  = _mx;
-					overlay_drag_my  = _my;
-					overlay_drag_sx  = anc[0];
-					overlay_drag_sy  = anc[1];
-				} else if(point_in_circle(_mx, _my, tl[0], tl[1], 8) || point_in_circle(_mx, _my, tr[0], tr[1], 8) || point_in_circle(_mx, _my, bl[0], bl[1], 8) || point_in_circle(_mx, _my, br[0], br[1], 8)) {
-					overlay_dragging = 4;
-					overlay_drag_mx  = _mx;
-					overlay_drag_my  = _my;
-					overlay_drag_sx  = sca[0];
-					overlay_drag_sy  = sca[1];
-				} else if(point_in_circle(_mx, _my, rth[0], rth[1], 8)) {
-					overlay_dragging = 3;
-					overlay_drag_ma  = point_direction(bax, bay, _mx, _my);
-					overlay_drag_sa  = rot;
-				} else if(point_in_triangle(_mx, _my, tl[0], tl[1], tr[0], tr[1], bl[0], bl[1]) || point_in_triangle(_mx, _my, tr[0], tr[1], bl[0], bl[1], br[0], br[1])) {
-					overlay_dragging = 1;
-					overlay_drag_mx  = _mx;
-					overlay_drag_my  = _my;
-					overlay_drag_sx  = _pos[0];
-					overlay_drag_sy  = _pos[1];
-				}
+		} 
+		
+		if(overlay_dragging == 0 && mouse_press(mb_left, active)) {
+			if(point_in_circle(_mx, _my, bax, bay, 8)) {
+				overlay_dragging = 2;
+				overlay_drag_mx  = _mx;
+				overlay_drag_my  = _my;
+				overlay_drag_sx  = anc[0];
+				overlay_drag_sy  = anc[1];
+			} else if(point_in_circle(_mx, _my, tl[0], tl[1], 8) || point_in_circle(_mx, _my, tr[0], tr[1], 8) || point_in_circle(_mx, _my, bl[0], bl[1], 8) || point_in_circle(_mx, _my, br[0], br[1], 8)) {
+				overlay_dragging = 4;
+				overlay_drag_mx  = _mx;
+				overlay_drag_my  = _my;
+				overlay_drag_sx  = sca[0];
+				overlay_drag_sy  = sca[1];
+			} else if(point_in_circle(_mx, _my, rth[0], rth[1], 8)) {
+				overlay_dragging = 3;
+				overlay_drag_ma  = point_direction(bax, bay, _mx, _my);
+				overlay_drag_sa  = rot;
+			} else if(point_in_triangle(_mx, _my, tl[0], tl[1], tr[0], tr[1], bl[0], bl[1]) || point_in_triangle(_mx, _my, tr[0], tr[1], bl[0], bl[1], br[0], br[1])) {
+				overlay_dragging = 1;
+				overlay_drag_mx  = _mx;
+				overlay_drag_my  = _my;
+				overlay_drag_sx  = _pos[0];
+				overlay_drag_sy  = _pos[1];
 			}
 		}
 	}

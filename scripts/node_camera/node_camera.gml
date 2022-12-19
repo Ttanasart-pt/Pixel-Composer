@@ -10,14 +10,14 @@ function Node_Camera(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) const
 	
 	static getPreviewValue = function() { return inputs[| 0]; }
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my) {
+	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var _out = outputs[| 0].getValue();
 		var _area = current_data[1];
 		var _px = _x + (_area[0] - _area[2]) * _s;
 		var _py = _y + (_area[1] - _area[3]) * _s;
 		
 		draw_surface_ext_safe(_out, _px, _py, _s, _s);
-		inputs[| 1].drawOverlay(active, _x, _y, _s, _mx, _my);
+		inputs[| 1].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
 	}
 	
 	static process_data = function(_outSurf, _data, _output_index) {

@@ -458,13 +458,11 @@ function Panel_Graph() : PanelContent() constructor {
 			}
 		}
 		
-		if(node_hovering && node_hovering.on_dragdrop_file != -1) {
-			node_hovering.drawActive(gr_x, gr_y, graph_s, 1);	
-		}
+		if(node_hovering && node_hovering.on_dragdrop_file != -1)
+			node_hovering.drawActive(gr_x, gr_y, graph_s, 1);
 		
-		if(node_focus) {
+		if(node_focus)
 			node_focus.drawActive(gr_x, gr_y, graph_s);
-		}
 		
 		for(var i = 0; i < ds_list_size(nodes_select_list); i++) {
 			var _node = nodes_select_list[| i];
@@ -477,7 +475,8 @@ function Panel_Graph() : PanelContent() constructor {
 			var _hov = nodes_list[| i].drawConnections(gr_x, gr_y, graph_s, mx, my, hoverable);
 			if(_hov != noone) hov = _hov;
 		}
-		junction_hovering = hov;
+		
+		junction_hovering = node_hovering == noone? hov : noone;
 		
 		value_focus = noone;
 		
@@ -876,15 +875,9 @@ function Panel_Graph() : PanelContent() constructor {
 		
 		if(_outp == -1) return;
 		
-		var _export;
-		if(_path == -1)
-			_export = nodeBuild("Node_Export", _node.x + _node.w + 64, _node.y);
-		else {
-			_export = new Node_Export(_node.x + _node.w + 64, _node.y);
+		var _export = nodeBuild("Node_Export", _node.x + _node.w + 64, _node.y);
+		if(_path != -1)
 			_export.inputs[| 1].setFrom(_path);
-			
-			ds_list_add(PANEL_GRAPH.nodes_list, _export);
-		}
 		
 		_export.inputs[| 0].setFrom(_outp);
 	}

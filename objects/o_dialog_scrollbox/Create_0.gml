@@ -21,7 +21,7 @@ event_inherited();
 		for(var i = 0; i < array_length(data); i++) {
 			var _ly = _y + i * hght;	
 			
-			if(sHOVER && point_in_rectangle(_m[0], _m[1], 0, _ly + 1, _dw, _ly + hght - 1)) {
+			if(sHOVER && sc_content.hover && point_in_rectangle(_m[0], _m[1], 0, _ly + 1, _dw, _ly + hght - 1)) {
 				draw_sprite_stretched_ext(THEME.textbox, 3, 0, _ly, _dw, hght, COLORS.dialog_menubox_highlight, 1);
 				
 				if(mouse_press(mb_left, sFOCUS)) {

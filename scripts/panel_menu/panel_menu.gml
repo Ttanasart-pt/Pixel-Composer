@@ -156,7 +156,7 @@ function Panel_Menu() : PanelContent() constructor {
 			}
 			
 			draw_set_text(f_p1, fa_center, fa_center, COLORS._main_text);
-			draw_text(xx + ww / 2, y + h / 2, menus[i][0]);
+			draw_text_add(xx + ww / 2, y + h / 2, menus[i][0]);
 			
 			xx += ww + 8;
 		}

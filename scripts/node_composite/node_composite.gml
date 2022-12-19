@@ -227,7 +227,7 @@ function Node_Composite(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) co
 			createNewSurface();
 	}
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my) {
+	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var pad = inputs[| 0].getValue();
 		var ww  = overlay_w;
 		var hh  = overlay_h;
@@ -244,13 +244,9 @@ function Node_Composite(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) co
 		
 		if(input_dragging > -1) {
 			if(drag_type == 0) {
-				var pos_x = dragging_sx + (_mx - dragging_mx) / _s;
-				var pos_y = dragging_sy + (_my - dragging_my) / _s;
-				if(keyboard_check(vk_control)) {
-					pos_x = round(pos_x);
-					pos_y = round(pos_y);
-				}
-			
+				var pos_x = value_snap(dragging_sx + (_mx - dragging_mx) / _s, _snx);
+				var pos_y = value_snap(dragging_sy + (_my - dragging_my) / _s, _sny);
+				
 				if(inputs[| input_dragging].setValue([ pos_x, pos_y ]))
 					UNDO_HOLDING = true;
 			} else if(drag_type == 1) {

@@ -36,8 +36,8 @@ function Node_Skew(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constru
 		inputs[| 4].setValue([ww / 2, hh / 2]);
 	}
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my) {
-		inputs[| 4].drawOverlay(active, _x, _y, _s, _mx, _my);
+	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
+		inputs[| 4].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
 	}
 	
 	static process_data = function(_outSurf, _data, _output_index) {

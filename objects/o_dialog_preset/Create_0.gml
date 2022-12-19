@@ -29,7 +29,7 @@ event_inherited();
 			var preset = pres[i];
 			var _yy = _y + hh * i;
 			
-			if(sHOVER && point_in_rectangle(_m[0], _m[1], 0, _yy, sc_presets.w, _yy + hh)) {
+			if(sHOVER && sc_presets.hover && point_in_rectangle(_m[0], _m[1], 0, _yy, sc_presets.w, _yy + hh)) {
 				draw_sprite_stretched(THEME.node_bg, 0, 0, _yy, sc_presets.w - ui(12), hh);
 				if(mouse_click(mb_left, sFOCUS)) {
 					node.deserialize(preset.content, true, true);

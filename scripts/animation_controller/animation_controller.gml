@@ -7,6 +7,7 @@
 		is_playing = false;
 		frame_progress = false;
 		
+		stopOnEnd = false;
 		playback = ANIMATOR_END.loop;
 		
 		static setFrame = function(frame) {
@@ -22,6 +23,11 @@
 #endregion
 
 #region object
+	enum ANIMATOR_END {
+		loop,
+		stop
+	}
+	
 	globalvar ANIMATOR;
 	ANIMATOR = new AnimationManager();
 #endregion

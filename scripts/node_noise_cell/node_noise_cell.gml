@@ -38,8 +38,8 @@ function Node_Cellular(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 	
 	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my) {
-		inputs[| 1].drawOverlay(active, _x, _y, _s, _mx, _my);
+	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
+		inputs[| 1].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
 	}
 	
 	static update = function() {

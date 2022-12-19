@@ -14,7 +14,10 @@ function Node_create_Export(_x, _y, _group = -1) {
 function Node_Export(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 	name		= "Export";
 	auto_update = false;
+	previewable = false;
 	
+	w = 96;
+	min_h = 0;
 	playing = false;
 	played  = 0;
 	

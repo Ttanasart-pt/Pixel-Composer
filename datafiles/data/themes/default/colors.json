@@ -69,6 +69,7 @@
         "node_wiggler_frame": "blue_grey",
         "node_border_file_drop": "cyan",
 
+        "scrollbar_bg": "blue_dkblack",
         "scrollbar_hover": "blue_white",
         "scrollbar_idle": "blue_grey",
 

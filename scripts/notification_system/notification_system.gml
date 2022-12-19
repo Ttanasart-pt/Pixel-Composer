@@ -24,7 +24,7 @@
 		
 		self.onClick = noone;
 		
-		self.time = string_lead_zero(current_hour, 2) + ":" + string_lead_zero(current_minute, 2);
+		self.time = string_lead_zero(current_hour, 2) + ":" + string_lead_zero(current_minute, 2) + "." + string_lead_zero(current_second, 2);
 	}
 	
 	function noti_status(str, icon = noone) {

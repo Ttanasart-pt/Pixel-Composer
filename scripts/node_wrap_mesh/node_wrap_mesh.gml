@@ -47,7 +47,7 @@ function Node_Mesh_Warp(_x, _y, _group = -1) : Node(_x, _y, _group) constructor 
 	
 	attributes[? "pin"] = ds_map_create();
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my) {
+	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		for(var i = 0; i < ds_list_size(data.tris); i++) {
 			data.tris[| i].drawPoints(_x, _y, _s);
 		}
@@ -57,7 +57,7 @@ function Node_Mesh_Warp(_x, _y, _group = -1) : Node(_x, _y, _group) constructor 
 		
 		var hover = -1;
 		for(var i = control_index; i < ds_list_size(inputs); i++) {
-			if(inputs[| i].drawOverlay(active, _x, _y, _s, _mx, _my))
+			if(inputs[| i].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny))
 				hover = i;
 		}
 		
@@ -69,7 +69,7 @@ function Node_Mesh_Warp(_x, _y, _group = -1) : Node(_x, _y, _group) constructor 
 			if(mouse_press(mb_left)) {
 				if(hover == -1) {
 					var i = createControl();
-					i.setValue( [PUPPET_FORCE_MODE.move, (_mx - _x) / _s, (_my - _y) / _s, 0, 0, 8, 8] );
+					i.setValue( [PUPPET_FORCE_MODE.move, value_snap(_mx - _x, _snx) / _s, value_snap(_my - _y, _sny) / _s, 0, 0, 8, 8] );
 					i.drag_type = 2;
 					i.drag_sx   = 0;
 					i.drag_sy   = 0;

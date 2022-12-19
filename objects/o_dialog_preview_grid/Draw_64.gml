@@ -18,7 +18,14 @@ if !ready exit;
 	cb_enable.hover  = sHOVER;
 	draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text);
 	draw_text(dialog_x + ui(32), yy, "Enabled");
-	cb_enable.draw(dialog_x + dialog_w - ww / 2, yy, PANEL_PREVIEW.grid_show, mouse_ui,, fa_center, fa_center);
+	cb_enable.draw(dialog_x + dialog_w - ui(24) - ww / 2, yy, PANEL_PREVIEW.grid_show, mouse_ui,, fa_center, fa_center);
+	
+	yy += ui(40);
+	cb_snap.active = sFOCUS; 
+	cb_snap.hover  = sHOVER;
+	draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text);
+	draw_text(dialog_x + ui(32), yy, "Snap to grid");
+	cb_snap.draw(dialog_x + dialog_w - ui(24) - ww / 2, yy, PANEL_PREVIEW.grid_snap, mouse_ui,, fa_center, fa_center);
 	
 	yy += ui(40);
 	tb_width.active = sFOCUS; 

@@ -15,12 +15,12 @@ function Node_Chromatic_Aberration(_x, _y, _group = -1) : Node_Processor(_x, _y,
 	
 	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my) {
+	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var pos = inputs[| 1].getValue();
 		var px = _x + pos[0] * _s;
 		var py = _y + pos[1] * _s;
 		
-		inputs[| 1].drawOverlay(active, _x, _y, _s, _mx, _my);
+		inputs[| 1].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
 	}
 	
 	static process_data = function(_outSurf, _data, _output_index) {

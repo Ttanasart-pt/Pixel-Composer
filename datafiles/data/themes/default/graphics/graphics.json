@@ -912,6 +912,13 @@
         "yorigin": 18,
         "slice": null
     },
+    "anchor_arrow": {
+        "path": "./preview/anchor_arrow.png",
+        "subimages": 2,
+        "xorigin": 18,
+        "yorigin": 18,
+        "slice": null
+    },
     "preview_crosshair": {
         "path": "./preview/s_preview_crosshair.png",
         "subimages": 1,

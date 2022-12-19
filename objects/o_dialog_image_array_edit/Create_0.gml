@@ -57,7 +57,7 @@ event_inherited();
 				
 				draw_sprite_stretched(THEME.ui_panel_bg, 0, xx, yy, ww, hh);
 				
-				if(sHOVER && point_in_rectangle(_m[0], _m[1], xx, yy, xx + ww, yy + hh)) {
+				if(sHOVER && sp_content.hover && point_in_rectangle(_m[0], _m[1], xx, yy, xx + ww, yy + hh)) {
 					inb_hover = index;
 					if(dragging == -1)
 						draw_sprite_stretched_ext(THEME.ui_panel_active, 0, xx, yy, ww, hh, COLORS._main_accent, 1);
