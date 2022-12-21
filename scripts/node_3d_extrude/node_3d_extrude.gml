@@ -7,7 +7,7 @@ function Node_3D_Extrude(_x, _y, _group = -1) : Node(_x, _y, _group) constructor
 	uniLightInt = shader_get_uniform(sh_vertex_pnt_light, "u_LightIntensity");
 	uniLightNrm = shader_get_uniform(sh_vertex_pnt_light, "useNormal");
 	
-	inputs[| 0] = nodeValue(0, "Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
+	inputs[| 0] = nodeValue(0, "Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone).rejectArray();
 	
 	inputs[| 1] = nodeValue(1, "Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, def_surf_size2)
 		.setDisplay(VALUE_DISPLAY.vector);
@@ -25,8 +25,9 @@ function Node_3D_Extrude(_x, _y, _group = -1) : Node(_x, _y, _group) constructor
 		.setDisplay(VALUE_DISPLAY.vector);
 	
 	inputs[| 6] = nodeValue(6, "Manual generate", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.button, [ function() { 
+		.setDisplay(VALUE_DISPLAY.button, [ function() {
 			generateMesh();
+			update();
 		}, "Generate"] );
 		
 	inputs[| 7] = nodeValue(7, "Light direction", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
@@ -133,7 +134,7 @@ function Node_3D_Extrude(_x, _y, _group = -1) : Node(_x, _y, _group) constructor
 			vertex_add_pnt(VB, [i0, j0,  dep], [0, 0, 1], [tx0, ty0]);
 			vertex_add_pnt(VB, [i0, j1,  dep], [0, 0, 1], [tx0, ty1]);
 			
-			if((useH && dep > hei[i][j - 1]) || (j == 0 || ap[i][j - 1] == 0)) {
+			if((useH && dep * 2 > hei[i][j - 1]) || (j == 0 || ap[i][j - 1] == 0)) {
 				vertex_add_pnt(VB, [i0, j0,  dep], [0, -1, 0], [tx1, ty0]);
 				vertex_add_pnt(VB, [i0, j0, -dep], [0, -1, 0], [tx0, ty0]);
 				vertex_add_pnt(VB, [i1, j0,  dep], [0, -1, 0], [tx1, ty1]);
@@ -143,7 +144,7 @@ function Node_3D_Extrude(_x, _y, _group = -1) : Node(_x, _y, _group) constructor
 				vertex_add_pnt(VB, [i1, j0,  dep], [0, -1, 0], [tx0, ty1]);
 			}
 			
-			if((useH && dep > hei[i][j + 1]) || (j == hh - 1 || ap[i][j + 1] == 0)) {
+			if((useH && dep * 2 > hei[i][j + 1]) || (j == hh - 1 || ap[i][j + 1] == 0)) {
 				vertex_add_pnt(VB, [i0, j1,  dep], [0, 1, 0], [tx1, ty0]);
 				vertex_add_pnt(VB, [i0, j1, -dep], [0, 1, 0], [tx0, ty0]);
 				vertex_add_pnt(VB, [i1, j1,  dep], [0, 1, 0], [tx1, ty1]);
@@ -153,7 +154,7 @@ function Node_3D_Extrude(_x, _y, _group = -1) : Node(_x, _y, _group) constructor
 				vertex_add_pnt(VB, [i1, j1,  dep], [0, 1, 0], [tx0, ty1]);
 			}
 			
-			if((useH && dep > hei[i - 1][j]) || (i == 0 || ap[i - 1][j] == 0)) {
+			if((useH && dep * 2 > hei[i - 1][j]) || (i == 0 || ap[i - 1][j] == 0)) {
 				vertex_add_pnt(VB, [i0, j0,  dep], [1, 0, 0], [tx1, ty0]);
 				vertex_add_pnt(VB, [i0, j0, -dep], [1, 0, 0], [tx0, ty0]);
 				vertex_add_pnt(VB, [i0, j1,  dep], [1, 0, 0], [tx1, ty1]);
@@ -163,7 +164,7 @@ function Node_3D_Extrude(_x, _y, _group = -1) : Node(_x, _y, _group) constructor
 				vertex_add_pnt(VB, [i0, j1,  dep], [1, 0, 0], [tx0, ty1]);
 			}
 			
-			if((useH && dep > hei[i + 1][j]) || (i == ww - 1 || ap[i + 1][j] == 0)) {
+			if((useH && dep * 2 > hei[i + 1][j]) || (i == ww - 1 || ap[i + 1][j] == 0)) {
 				vertex_add_pnt(VB, [i1, j0,  dep], [-1, 0, 0], [tx1, ty0]);
 				vertex_add_pnt(VB, [i1, j0, -dep], [-1, 0, 0], [tx0, ty0]);
 				vertex_add_pnt(VB, [i1, j1,  dep], [-1, 0, 0], [tx1, ty1]);
@@ -174,7 +175,6 @@ function Node_3D_Extrude(_x, _y, _group = -1) : Node(_x, _y, _group) constructor
 			}
 		}
 		vertex_end(VB);
-		update();
 	}
 	
 	drag_index = -1;
@@ -300,6 +300,9 @@ function Node_3D_Extrude(_x, _y, _group = -1) : Node(_x, _y, _group) constructor
 			surface_size_to(_outSurf, _dim[0], _dim[1]);
 		
 		if(!is_surface(_ins)) return _outSurf;
+		
+		if(ANIMATOR.frame_progress)
+			generateMesh();
 		
 		var TM = matrix_build(_pos[0], _pos[1], 0, _rot[0], _rot[1], _rot[2], _dim[0] * _sca[0], _dim[1] * _sca[1], 1);
 		var cam_proj = matrix_build_projection_ortho(_dim[0], _dim[1], 1, 100);

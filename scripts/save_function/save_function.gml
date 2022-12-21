@@ -132,6 +132,9 @@ function SAVE_COLLECTIONS(_list, _path, save_surface = true) {
 	ds_map_destroy(_map);
 	var pane = findPanel("Panel_Collection", PANEL_MAIN, noone);
 	if(pane) pane.refreshContext();
+	
+	log_message("COLLECTION", "save collection at " + _path, THEME.noti_icon_file_save);
+	PANEL_MENU.setNotiIcon(THEME.noti_icon_file_save);
 }
 
 function SAVE_COLLECTION(_node, _path, save_surface = true) {
@@ -157,6 +160,9 @@ function SAVE_COLLECTION(_node, _path, save_surface = true) {
 	ds_map_destroy(_map);
 	var pane = findPanel("Panel_Collection", PANEL_MAIN, noone);
 	if(pane) pane.refreshContext();
+	
+	log_message("COLLECTION", "save collection at " + _path, THEME.noti_icon_file_save);
+	PANEL_MENU.setNotiIcon(THEME.noti_icon_file_save);
 }
 
 function SAVE_NODE(_list, _node, dx = 0, dy = 0, scale = false) {

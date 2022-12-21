@@ -208,11 +208,10 @@ function Panel_Collection() : PanelContent() constructor {
 	function saveCollection(_path, save_surface = true) {
 		if(PANEL_INSPECTOR.inspecting == noone) return;
 		
-		if(ds_list_empty(PANEL_GRAPH.nodes_select_list)) {
+		if(ds_list_empty(PANEL_GRAPH.nodes_select_list))
 			SAVE_COLLECTION(PANEL_INSPECTOR.inspecting, _path, save_surface);
-		} else {
+		else
 			SAVE_COLLECTIONS(PANEL_GRAPH.nodes_select_list, _path, save_surface);
-		}
 	}
 	
 	function drawContent(panel) {
@@ -278,7 +277,7 @@ function Panel_Collection() : PanelContent() constructor {
 									_name = _pre_name + string(_i) + ".pxcc";
 									_i++;
 								}
-					
+								
 								saveCollection(_name);
 							};
 						}

@@ -21,18 +21,18 @@ function Node_Color_Data(_x, _y, _group = -1) : Node_Value_Processor(_x, _y, _gr
 		var c = _data[0];
 		
 		switch(index) {
-			case 0 : return color_get_red(c);
-			case 1 : return color_get_green(c);
-			case 2 : return color_get_blue(c);
+			case 0 : return color_get_red(c) / 255;
+			case 1 : return color_get_green(c) / 255;
+			case 2 : return color_get_blue(c) / 255;
 			
-			case 3 : return color_get_hue(c);
-			case 4 : return color_get_saturation(c);
-			case 5 : return color_get_value(c);
+			case 3 : return color_get_hue(c) / 255;
+			case 4 : return color_get_saturation(c) / 255;
+			case 5 : return color_get_value(c) / 255;
 			
 			case 6 : 
-				var r = color_get_red(c);
-				var g = color_get_green(c);
-				var b = color_get_blue(c);
+				var r = color_get_red(c) / 255;
+				var g = color_get_green(c) / 255;
+				var b = color_get_blue(c) / 255;
 				return 0.299 * r + 0.587 * g + 0.224 * b;
 		}
 	}

@@ -403,8 +403,7 @@ function Node_Path(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 	static postDeserialize = function() {
 		var _inputs = load_map[? "inputs"];
 		
-		for(var i = list_start; i < ds_list_size(_inputs); i++) {
-			createAnchor(0, 0).deserialize(_inputs[| i]);
-		}
+		for(var i = list_start; i < ds_list_size(_inputs); i++)
+			createAnchor(0, 0);
 	}
 }

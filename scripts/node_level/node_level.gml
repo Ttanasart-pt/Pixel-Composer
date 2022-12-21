@@ -1,8 +1,9 @@
 function Node_Level(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constructor {
 	name = "Level";
 	
-	uniform_black = shader_get_uniform(sh_level, "black");
-	uniform_white = shader_get_uniform(sh_level, "white");
+	shader = sh_level;
+	uniform_black = shader_get_uniform(shader, "black");
+	uniform_white = shader_get_uniform(shader, "white");
 	
 	inputs[| 0] = nodeValue(0, "Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 	
@@ -71,7 +72,7 @@ function Node_Level(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constr
 		draw_clear_alpha(0, 0);
 		BLEND_ADD
 		
-		shader_set(sh_level);
+		shader_set(shader);
 			shader_set_uniform_f(uniform_black, _black);
 			shader_set_uniform_f(uniform_white, _white);
 			

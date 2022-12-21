@@ -1,18 +1,19 @@
 function Node_Gradient(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 	name = "Gradient";
 	
-	uniform_grad_blend = shader_get_uniform(sh_gradient, "gradient_blend");
-	uniform_grad = shader_get_uniform(sh_gradient, "gradient_color");
-	uniform_grad_time = shader_get_uniform(sh_gradient, "gradient_time");
-	uniform_grad_key = shader_get_uniform(sh_gradient, "gradient_keys");
-	uniform_grad_loop = shader_get_uniform(sh_gradient, "gradient_loop");
+	shader = sh_gradient;
+	uniform_grad_blend = shader_get_uniform(shader, "gradient_blend");
+	uniform_grad = shader_get_uniform(shader, "gradient_color");
+	uniform_grad_time = shader_get_uniform(shader, "gradient_time");
+	uniform_grad_key = shader_get_uniform(shader, "gradient_keys");
+	uniform_grad_loop = shader_get_uniform(shader, "gradient_loop");
 	
-	uniform_type = shader_get_uniform(sh_gradient, "type");
-	uniform_center = shader_get_uniform(sh_gradient, "center");
+	uniform_type = shader_get_uniform(shader, "type");
+	uniform_center = shader_get_uniform(shader, "center");
 	
-	uniform_angle = shader_get_uniform(sh_gradient, "angle");
-	uniform_radius = shader_get_uniform(sh_gradient, "radius");
-	uniform_radius_shf = shader_get_uniform(sh_gradient, "shift");
+	uniform_angle = shader_get_uniform(shader, "angle");
+	uniform_radius = shader_get_uniform(shader, "radius");
+	uniform_radius_shf = shader_get_uniform(shader, "shift");
 	
 	inputs[| 0] = nodeValue(0, "Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, def_surf_size2 )
 		.setDisplay(VALUE_DISPLAY.vector);
@@ -91,7 +92,7 @@ function Node_Gradient(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 		
 		surface_set_target(_outSurf);
 		draw_clear_alpha(0, 0);
-		shader_set(sh_gradient);
+		shader_set(shader);
 			shader_set_uniform_i(uniform_grad_blend, ds_list_get(_gra_data, 0));
 			shader_set_uniform_f_array(uniform_grad, _grad_color);
 			shader_set_uniform_f_array(uniform_grad_time, _grad_time);

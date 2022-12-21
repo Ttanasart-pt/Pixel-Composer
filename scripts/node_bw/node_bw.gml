@@ -1,8 +1,9 @@
 function Node_BW(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constructor {
 	name = "BW";
 	
-	uniform_exp = shader_get_uniform(sh_bw, "brightness");
-	uniform_con = shader_get_uniform(sh_bw, "contrast");
+	shader = sh_bw;
+	uniform_exp = shader_get_uniform(shader, "brightness");
+	uniform_con = shader_get_uniform(shader, "contrast");
 	
 	inputs[| 0] = nodeValue(0, "Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 	inputs[| 1] = nodeValue(1, "Brightness", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
@@ -20,7 +21,7 @@ function Node_BW(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) construct
 		draw_clear_alpha(0, 0);
 		BLEND_ADD
 		
-		shader_set(sh_bw);
+		shader_set(shader);
 			shader_set_uniform_f(uniform_exp, _exp);
 			shader_set_uniform_f(uniform_con, _con);
 			draw_surface_safe(_data[0], 0, 0);

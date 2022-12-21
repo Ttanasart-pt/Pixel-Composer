@@ -81,15 +81,17 @@ function colorSelector(onApply = noone) constructor {
 		hue = round(color_get_hue(current_color));
 		sat = round(color_get_saturation(current_color));
 		val = round(color_get_value(current_color));
+		onApply(current_color);
 	}
 	function setHSV() {
-		current_color     = make_color_hsv(hue, sat, val);	
+		current_color = make_color_hsv(hue, sat, val);	
 		onApply(current_color);
 	}
 	
 	function setColor(color) {
 		current_color = color;
 		resetHSV();
+		onApply(current_color);
 	}
 	
 	function colorPicker() {

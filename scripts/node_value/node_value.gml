@@ -194,9 +194,8 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 		return self;
 	}
 	
-	static setAcceptArray = function(_accept_array) {
-		accept_array = _accept_array;
-		
+	static rejectArray = function() {
+		accept_array = false;
 		return self;
 	}
 	
@@ -1157,7 +1156,8 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 	
 	con_node  = -1;
 	con_index = -1;
-	static deserialize = function(_map, scale = false) {
+	
+	static applyDeserialize = function(_map, scale = false) {
 		on_end = ds_map_try_get(_map, "on end", on_end);
 		visible	= ds_map_try_get(_map, "visible", visible);
 		animator.deserialize(_map[? "raw value"], scale);
@@ -1176,30 +1176,33 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 			return true;
 		
 		var _node = con_node;
-		if(APPENDING) 
+		if(APPENDING) {
 			_node = GetAppendID(con_node);
-		
-		if(ds_map_exists(NODE_MAP, _node)) {
-			var _nd = NODE_MAP[? _node];
-			var _ol = ds_list_size(_nd.outputs);
+			if(_node == -1)
+				return true;
+		}
 			
-			if(log)
-				log_warning("LOAD", "[Connect] Reconnecting " + string(node.name) + " to " + _nd.name);
-			
-			if(con_index < _ol) {
-				if(setFrom(_nd.outputs[| con_index], false)) {
-					return true;
-				} else
-					log_warning("LOAD", "[Connect] Connection conflict " + string(node.name) + " to " + string(_nd.name) + " : Connection failed.");
-				return false;
-			} else {
-				log_warning("LOAD", "[Connect] Connection conflict " + string(node.name) + " to " + string(_nd.name) + " : Node not exist.");
-				return false;
-			}
+		if(!ds_map_exists(NODE_MAP, _node)) {
+			var txt = "Node connect error : Node ID " + string(_node) + " not found.";
+			log_warning("LOAD", "[Connect] " + txt);
+			return false;
 		}
 		
-		var txt = "Node connect error : Node ID " + string(_node) + " not found.";
-		log_warning("LOAD", "[Connect] " + txt);
+		var _nd = NODE_MAP[? _node];
+		var _ol = ds_list_size(_nd.outputs);
+			
+		if(log)
+			log_warning("LOAD", "[Connect] Reconnecting " + string(node.name) + " to " + _nd.name);
+			
+		if(con_index < _ol) {
+			if(setFrom(_nd.outputs[| con_index], false))
+				return true;
+			
+			log_warning("LOAD", "[Connect] Connection conflict " + string(node.name) + " to " + string(_nd.name) + " : Connection failed.");
+			return false;
+		}
+		
+		log_warning("LOAD", "[Connect] Connection conflict " + string(node.name) + " to " + string(_nd.name) + " : Node not exist.");
 		return false;
 	}
 	

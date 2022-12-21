@@ -1,10 +1,11 @@
 function Node_Bevel(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constructor {
 	name = "Bevel";
 	
-	uniform_dim = shader_get_uniform(sh_bevel, "dimension");
-	uniform_shf = shader_get_uniform(sh_bevel, "shift");
-	uniform_sca = shader_get_uniform(sh_bevel, "scale");
-	uniform_hei = shader_get_uniform(sh_bevel, "height");
+	shader = sh_bevel;
+	uniform_dim = shader_get_uniform(shader, "dimension");
+	uniform_shf = shader_get_uniform(shader, "shift");
+	uniform_sca = shader_get_uniform(shader, "scale");
+	uniform_hei = shader_get_uniform(shader, "height");
 	
 	inputs[| 0] = nodeValue(0, "Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 	inputs[| 1] = nodeValue(1, "Height", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 4);
@@ -26,7 +27,7 @@ function Node_Bevel(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constr
 			draw_clear_alpha(0, 0);
 			BLEND_ADD
 		
-			shader_set(sh_bevel);
+			shader_set(shader);
 			shader_set_uniform_f(uniform_hei, _hei);
 			shader_set_uniform_f_array(uniform_shf, _shf);
 			shader_set_uniform_f_array(uniform_sca, _sca);

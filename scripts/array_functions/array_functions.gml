@@ -1,3 +1,10 @@
+function array_safe_set(arr, index, value) {
+	if(index < 0) return;
+	if(index >= array_length(arr)) return;
+	
+	array_set(arr, index, value);
+}
+
 function array_safe_get(arr, index, def = 0) {
 	if(index >= array_length(arr)) return def;
 	return arr[index];

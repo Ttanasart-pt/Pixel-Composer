@@ -1,8 +1,9 @@
 function Node_Bloom(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constructor {
 	name = "Bloom";
 	
-	uniform_size = shader_get_uniform(sh_bloom_pass1, "size");
-	uniform_tole = shader_get_uniform(sh_bloom_pass1, "tolerance");
+	shader = sh_bloom_pass1;
+	uniform_size = shader_get_uniform(shader, "size");
+	uniform_tole = shader_get_uniform(shader, "tolerance");
 	
 	inputs[| 0] = nodeValue(0, "Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 	inputs[| 1] = nodeValue(1, "Size", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 3)

@@ -77,7 +77,7 @@ function Node_Collection(_x, _y, _group = -1) : Node(_x, _y, _group) constructor
 	static stepBegin = function() {
 		use_cache = false;
 		auto_update = true;
-		cache_result[ANIMATOR.current_frame] = true;
+		array_safe_set(cache_result, ANIMATOR.current_frame, true);
 		
 		for(var i = 0; i < ds_list_size(nodes); i++) {
 			var n = nodes[| i];
@@ -86,7 +86,8 @@ function Node_Collection(_x, _y, _group = -1) : Node(_x, _y, _group) constructor
 			if(!n.use_cache) continue;
 			
 			use_cache = true;
-			cache_result[ANIMATOR.current_frame] &= n.cache_result[ANIMATOR.current_frame];
+			if(!array_safe_get(n.cache_result, ANIMATOR.current_frame))
+				array_safe_set(cache_result, ANIMATOR.current_frame, false);
 		}
 		
 		var out_surf = false;
@@ -106,12 +107,6 @@ function Node_Collection(_x, _y, _group = -1) : Node(_x, _y, _group) constructor
 		
 		setHeight();
 		doStepBegin();
-	}
-	
-	static doUpdate = function() {
-		//for(var i = 0; i < ds_list_size(nodes); i++) {
-		//	nodes[| i].doUpdate();
-		//}
 	}
 	
 	static step = function() {
@@ -201,5 +196,9 @@ function Node_Collection(_x, _y, _group = -1) : Node(_x, _y, _group) constructor
 			if(variable_struct_exists(nodes[| i], "nodes"))
 				nodes[| i].resetAllRenderStatus();
 		}
+	}
+	
+	static postDeserialize = function() {
+		sortIO();
 	}
 }

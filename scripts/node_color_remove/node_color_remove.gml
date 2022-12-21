@@ -1,10 +1,11 @@
 function Node_Color_Remove(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constructor {
 	name = "Color Remove";
 	
-	uniform_from       = shader_get_uniform(sh_color_remove, "colorFrom");
-	uniform_from_count = shader_get_uniform(sh_color_remove, "colorFrom_amo");
+	shader = sh_color_remove;
+	uniform_from       = shader_get_uniform(shader, "colorFrom");
+	uniform_from_count = shader_get_uniform(shader, "colorFrom_amo");
 	
-	uniform_ter  = shader_get_uniform(sh_color_remove, "treshold");
+	uniform_ter  = shader_get_uniform(shader, "treshold");
 	
 	inputs[| 0] = nodeValue(0, "Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 	inputs[| 1] = nodeValue(1, "Colors", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, [ c_black ])
@@ -31,7 +32,7 @@ function Node_Color_Remove(_x, _y, _group = -1) : Node_Processor(_x, _y, _group)
 		draw_clear_alpha(0, 0);
 		BLEND_ADD
 		
-		shader_set(sh_color_remove);
+		shader_set(shader);
 			shader_set_uniform_f_array(uniform_from, _colors);
 			shader_set_uniform_i(uniform_from_count, array_length(fr));
 			

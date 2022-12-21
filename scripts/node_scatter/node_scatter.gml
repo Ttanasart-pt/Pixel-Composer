@@ -1,11 +1,12 @@
 function Node_Scatter(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 	name = "Scatter";
 	
-	uniform_dim = shader_get_uniform(sh_blend_normal_dim, "dimension");
-	uniform_pos = shader_get_uniform(sh_blend_normal_dim, "position");
-	uniform_sca = shader_get_uniform(sh_blend_normal_dim, "scale");
-	uniform_rot = shader_get_uniform(sh_blend_normal_dim, "rotation");
-	uniform_for = shader_get_sampler_index(sh_blend_normal_dim, "fore");
+	shader = sh_blend_normal_dim;
+	uniform_dim = shader_get_uniform(shader, "dimension");
+	uniform_pos = shader_get_uniform(shader, "position");
+	uniform_sca = shader_get_uniform(shader, "scale");
+	uniform_rot = shader_get_uniform(shader, "rotation");
+	uniform_for = shader_get_sampler_index(shader, "fore");
 	
 	inputs[| 0] = nodeValue(0, "Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 	
@@ -120,7 +121,7 @@ function Node_Scatter(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 			}
 					
 			surface_set_target(temp_surf[bg]);
-				shader_set(sh_blend_normal_dim);
+				shader_set(shader);
 				shader_set_uniform_f_array(uniform_dim, [ sw / ww, sh / hh ]);
 				shader_set_uniform_f_array(uniform_pos, [ _x / ww, _y / hh]); 
 				shader_set_uniform_f_array(uniform_sca, [ _scx, _scy ]) 

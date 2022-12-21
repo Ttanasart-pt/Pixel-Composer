@@ -4,6 +4,8 @@
 	DIRECTORY = environment_get_variable("userprofile") + "\\AppData\\Local\\Pixels_Composer\\";
 	if(!directory_exists(DIRECTORY))
 		directory_create(DIRECTORY);
+	if(!directory_exists(DIRECTORY + "temp"))
+		directory_create(DIRECTORY + "temp");
 		
 	log_clear();
 	log_newline();

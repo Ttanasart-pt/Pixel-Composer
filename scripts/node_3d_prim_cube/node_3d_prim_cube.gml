@@ -1,4 +1,4 @@
-function Node_3D_Cube(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
+function Node_3D_Cube(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constructor {
 	name = "3D Cube";
 	
 	uniVertex_lightFor = shader_get_uniform(sh_vertex_pnt_light, "u_LightForward");
@@ -78,10 +78,10 @@ function Node_3D_Cube(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 		var cy = _y + _pos[1] * _s;
 		
 		draw_set_color(COLORS.axis[0]);
-		draw_line(cx - 64, cy, cx + 64, cy);
+		draw_line_width(cx - 64, cy, cx + 64, cy, drag_index == 0? 3 : 1);
 		
 		draw_set_color(COLORS.axis[1]);
-		draw_line(cx, cy - 64, cx, cy + 64);
+		draw_line_width(cx, cy - 64, cx, cy + 64, drag_index == 1? 3 : 1);
 		
 		draw_set_color(COLORS.axis[2]);
 		draw_circle(cx, cy, 64, true);
@@ -153,38 +153,36 @@ function Node_3D_Cube(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 		inputs[| 2].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
 	}
 	
-	static update = function() {
-		var _inSurf = inputs[| 0].getValue();
-		var _dim = inputs[| 1].getValue();
-		var _pos = inputs[| 2].getValue();
-		var _rot = inputs[| 3].getValue();
-		var _sca = inputs[| 4].getValue();
-		var _lsc = inputs[| 12].getValue();
+	static process_data = function(_outSurf, _data, _output_index) {
+		var _inSurf = _data[0];
+		var _dim = _data[1];
+		var _pos = _data[2];
+		var _rot = _data[3];
+		var _sca = _data[4];
+		var _lsc = _data[12];
 		
-		var _ldir = inputs[| 13].getValue();
-		var _lhgt = inputs[| 14].getValue();
-		var _lint = inputs[| 15].getValue();
-		var _lclr = inputs[| 16].getValue();
-		var _aclr = inputs[| 17].getValue();
+		var _ldir = _data[13];
+		var _lhgt = _data[14];
+		var _lint = _data[15];
+		var _lclr = _data[16];
+		var _aclr = _data[17];
 		
-		var _usetex = inputs[| 5].getValue();
+		var _usetex = _data[5];
 		var _ww  = _usetex? _dim[0] : surface_get_width(_inSurf);
 		var _hh  = _usetex? _dim[1] : surface_get_height(_inSurf);
 		
 		for(var i = 6; i <= 11; i++) inputs[| i].setVisible(_usetex);
-		inputs[| 0].setVisible(true, !_usetex);	
+		inputs[| 0].setVisible(true, !_usetex);
 		
-		var _outSurf = outputs[| 0].getValue();
-		if(!is_surface(_outSurf)) {
+		if(!is_surface(_outSurf))
 			_outSurf = surface_create_valid(_dim[0], _dim[1]);
-			outputs[| 0].setValue(_outSurf);
-		} else
+		else
 			surface_size_to(_outSurf, _dim[0], _dim[1]);
 		
 		TM = matrix_build(_pos[0], _pos[1], 0, _rot[0], _rot[1], _rot[2], _ww * _sca[0], _hh * _sca[1], 1);
 		cam_proj = matrix_build_projection_ortho(_ww, _hh, 1, 100);
 		camera_set_view_mat(cam, cam_proj);
-		camera_set_view_size(cam, _ww, _hh);
+		camera_set_view_size(cam, _dim[0], _dim[1]);
 		
 		var lightFor = [ -cos(degtorad(_ldir)), -_lhgt, -sin(degtorad(_ldir)) ];
 		
@@ -205,7 +203,7 @@ function Node_3D_Cube(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 			
 			if(_usetex) {
 				var face = [];
-				for(var i = 0; i < 6; i++) face[i] = inputs[| 6 + i].getValue();
+				for(var i = 0; i < 6; i++) face[i] = _data[6 + i];
 				
 				matrix_stack_push(matrix_build(0, 0, 0.5, 0, 0, 0, 1, 1, 1));
 				matrix_set(matrix_world, matrix_stack_top());

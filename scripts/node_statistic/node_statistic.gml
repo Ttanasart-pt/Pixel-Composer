@@ -40,11 +40,12 @@ function Node_Statistic(_x, _y, _group = -1) : Node(_x, _y, _group) constructor 
 		inputs[| index] = nodeValue( index, "Input", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, -1 )
 			.setVisible(true, true);
 	}
-	createNewInput();
+	if(!LOADING && !APPENDING) createNewInput();
 	
 	outputs[| 0] = nodeValue(0, "Statistic", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, -1);
 	
 	static updateValueFrom = function(index) {
+		if(LOADING || APPENDING) return;
 		var _l = ds_list_create();
 		
 		for( var i = 0; i < input_fix_len; i++ ) {
@@ -77,47 +78,75 @@ function Node_Statistic(_x, _y, _group = -1) : Node(_x, _y, _group) constructor 
 			case STAT_OPERATOR._sum : 
 				for( var i = input_fix_len; i < ds_list_size(inputs) - 1; i++ ) {
 					var val = inputs[| i].getValue();
-					res += val;
+					if(is_array(val)) {
+						for( var j = 0; j < array_length(val); j++ )
+							res += val[j];
+					} else
+						res += val;
 				}
 				break;
 			case STAT_OPERATOR._average : 
-				if(ds_list_size(inputs) <= input_fix_len + 1) res = 0;
-				else {
-					for( var i = input_fix_len; i < ds_list_size(inputs) - 1; i++ ) {
-						var val = inputs[| i].getValue();
-						res += val;
-					}
-					res /= ds_list_size(inputs) - 1 - input_fix_len;
-				}
-				break;
-			case STAT_OPERATOR._median : 
-				var len = ds_list_size(inputs) - 1 - input_fix_len;
-				if(len == 0) {
+				if(ds_list_size(inputs) <= input_fix_len + 1) {
 					res = 0;
 					break;
 				}
 				
-				var vals = array_create(len);
+				var amo = 0;
 				for( var i = input_fix_len; i < ds_list_size(inputs) - 1; i++ ) {
-					vals[i - input_fix_len] = inputs[| i].getValue();
+					var val = inputs[| i].getValue();
+					if(is_array(val)) {
+						for( var j = 0; j < array_length(val); j++ ) {
+							res += val[j];
+							amo++;
+						}
+					} else {
+						res += val;
+						amo++;
+					}
+				}
+				res /= amo;
+				break;
+			case STAT_OPERATOR._median : 
+				if(ds_list_size(inputs) - 1 - input_fix_len == 0) {
+					res = 0;
+					break;
 				}
 				
-				if(len == 1) {
+				var vals = [];
+				var amo = 0;
+				for( var i = input_fix_len; i < ds_list_size(inputs) - 1; i++ ) {
+					var val = inputs[| i].getValue();
+					if(is_array(val)) {
+						for( var j = 0; j < array_length(val); j++ ) {
+							array_push(vals, val[j]);
+							amo++;
+						}
+					} else {
+						array_push(vals, val);
+						amo++;
+					}
+				}
+				
+				if(amo == 1) {
 					res = vals[0];
 					break;
 				}
 				
 				array_sort(vals, true);
-				if(len % 2 == 0)
-					res = (vals[len / 2 - 1] + vals[len / 2]) / 2;
+				if(amo % 2 == 0)
+					res = (vals[amo / 2 - 1] + vals[amo / 2]) / 2;
 				else
-					res = vals[(len - 1) / 2];
+					res = vals[(amo - 1) / 2];
 				break;
 			case STAT_OPERATOR._min : 
 				var _min = 9999999999;
 				for( var i = input_fix_len; i < ds_list_size(inputs) - 1; i++ ) {
 					var val = inputs[| i].getValue();
-					_min = min(_min, val);
+					if(is_array(val)) {
+						for( var j = 0; j < array_length(val); j++ )
+							_min = min(_min, val[j]);
+					} else
+						_min = min(_min, val);
 				}
 				res = _min;
 				break;
@@ -125,7 +154,11 @@ function Node_Statistic(_x, _y, _group = -1) : Node(_x, _y, _group) constructor 
 				var _max = -9999999999;
 				for( var i = input_fix_len; i < ds_list_size(inputs) - 1; i++ ) {
 					var val = inputs[| i].getValue();
-					_max = max(_max, val);
+					if(is_array(val)) {
+						for( var j = 0; j < array_length(val); j++ )
+							_max = max(_max, val[j]);
+					} else
+						_max = max(_max, val);
 				}
 				res = _max;
 				break;
@@ -138,9 +171,8 @@ function Node_Statistic(_x, _y, _group = -1) : Node(_x, _y, _group) constructor 
 	static postDeserialize = function() {
 		var _inputs = load_map[? "inputs"];
 		
-		for(var i = 0; i < ds_list_size(_inputs); i++) {
+		for(var i = 0; i < ds_list_size(_inputs); i++)
 			createNewInput();
-		}
 	}
 	
 	function onDrawNode(xx, yy, _mx, _my, _s) {

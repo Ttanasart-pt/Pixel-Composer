@@ -1,8 +1,9 @@
 function Node_Blur_Directional(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constructor {
 	name = "Directional blur";
 	
-	uniform_str = shader_get_uniform(sh_blur_directional, "strength");
-	uniform_dir = shader_get_uniform(sh_blur_directional, "direction");
+	shader = sh_blur_directional;
+	uniform_str = shader_get_uniform(shader, "strength");
+	uniform_dir = shader_get_uniform(shader, "direction");
 	
 	inputs[| 0] = nodeValue(0, "Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 	inputs[| 1] = nodeValue(1, "Strength", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.2)
@@ -33,7 +34,7 @@ function Node_Blur_Directional(_x, _y, _group = -1) : Node_Processor(_x, _y, _gr
 			draw_clear_alpha(0, 0);
 			BLEND_ADD
 		
-			shader_set(sh_blur_directional);
+			shader_set(shader);
 			shader_set_uniform_f(uniform_str, _str);
 			shader_set_uniform_f(uniform_dir, _dir + 90);
 			draw_surface_safe(_data[0], 0, 0);

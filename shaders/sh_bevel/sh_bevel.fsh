@@ -36,7 +36,7 @@ void main() {
 				
 				vec2 pxs = v_vTexcoord + shf * pixelStep;
 				vec4 sam = v_vColour * texture2D( gm_BaseTexture, pxs );
-				if(bright(sam) < 1.) {
+				if(bright(sam) < 1. || pxs.x < 0. || pxs.y < 0. || pxs.x > 1. || pxs.y > 1.) {
 					float dist1 = i;
 					min_distance = min(min_distance, dist1);
 					break;

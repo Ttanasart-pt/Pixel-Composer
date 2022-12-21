@@ -61,6 +61,13 @@ function APPEND(_path) {
 	
 	try {
 		for(var i = 0; i < ds_list_size(appended_list); i++)
+			appended_list[| i].applyDeserialize();
+	} catch(e) {
+		log_warning("LOAD, apply deserialize", e.longMessage);
+	}
+	
+	try {
+		for(var i = 0; i < ds_list_size(appended_list); i++)
 			appended_list[| i].preConnect();
 		for(var i = 0; i < ds_list_size(appended_list); i++)
 			appended_list[| i].connect();
@@ -122,5 +129,6 @@ function APPEND(_path) {
 function GetAppendID(old_id) {
 	if(ds_map_exists(APPEND_MAP, old_id)) 
 		return APPEND_MAP[? old_id];
+	print("Get append ID error: " + string(old_id));
 	return -1;
 }

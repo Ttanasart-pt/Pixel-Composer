@@ -1,11 +1,12 @@
 function Node_Colorize(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constructor {
 	name = "Colorize";
 	
-	uniform_grad_blend = shader_get_uniform(sh_colorize, "gradient_blend");
-	uniform_color = shader_get_uniform(sh_colorize, "gradient_color");
-	uniform_time = shader_get_uniform(sh_colorize, "gradient_time");
-	uniform_shift = shader_get_uniform(sh_colorize, "gradient_shift");
-	uniform_key = shader_get_uniform(sh_colorize, "keys");
+	shader = sh_colorize;
+	uniform_grad_blend = shader_get_uniform(shader, "gradient_blend");
+	uniform_color = shader_get_uniform(shader, "gradient_color");
+	uniform_time = shader_get_uniform(shader, "gradient_time");
+	uniform_shift = shader_get_uniform(shader, "gradient_shift");
+	uniform_key = shader_get_uniform(shader, "keys");
 	
 	inputs[| 0] = nodeValue(0, "Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 	inputs[| 1] = nodeValue(1, "Gradient", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white)
@@ -36,7 +37,7 @@ function Node_Colorize(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) con
 			draw_clear_alpha(0, 0);
 			BLEND_ADD
 			
-			shader_set(sh_colorize);
+			shader_set(shader);
 			shader_set_uniform_i(uniform_grad_blend, ds_list_get(_gra_data, 0));
 			shader_set_uniform_f_array(uniform_color, _grad_color);
 			shader_set_uniform_f_array(uniform_time,  _grad_time);

@@ -87,21 +87,21 @@
 	vertex_add_pnt(VB, [_0, _1, _1], [0, -1, 0], [0, 1]);
 	
 	
-	vertex_add_pnt(VB, [_0, _1, _0], [1, 0, 0], [1, 0]);
+	vertex_add_pnt(VB, [_0, _1, _0], [1, 0, 0], [0, 1]);
 	vertex_add_pnt(VB, [_0, _0, _0], [1, 0, 0], [0, 0]);
 	vertex_add_pnt(VB, [_0, _1, _1], [1, 0, 0], [1, 1]);
-							      	  
+							      	  			    
 	vertex_add_pnt(VB, [_0, _1, _1], [1, 0, 0], [1, 1]);
 	vertex_add_pnt(VB, [_0, _0, _0], [1, 0, 0], [0, 0]);
-	vertex_add_pnt(VB, [_0, _0, _1], [1, 0, 0], [0, 1]);
+	vertex_add_pnt(VB, [_0, _0, _1], [1, 0, 0], [1, 0]);
 						   			  
-	vertex_add_pnt(VB, [_1, _1, _0], [-1, 0, 0], [1, 0]);
+	vertex_add_pnt(VB, [_1, _1, _0], [-1, 0, 0], [0, 1]);
 	vertex_add_pnt(VB, [_1, _0, _0], [-1, 0, 0], [0, 0]);
 	vertex_add_pnt(VB, [_1, _1, _1], [-1, 0, 0], [1, 1]);
-							    	  		 
+							    	  		 		 
 	vertex_add_pnt(VB, [_1, _1, _1], [-1, 0, 0], [1, 1]);
 	vertex_add_pnt(VB, [_1, _0, _0], [-1, 0, 0], [0, 0]);
-	vertex_add_pnt(VB, [_1, _0, _1], [-1, 0, 0], [0, 1]);
+	vertex_add_pnt(VB, [_1, _0, _1], [-1, 0, 0], [1, 0]);
 	
 	vertex_end(VB);
 	vertex_freeze(VB);

@@ -25,6 +25,7 @@ event_inherited();
 		var yy = _y;
 		draw_clear_alpha(COLORS.dialog_about_bg, 0);
 		
+		BLEND_ADD
 		draw_set_font(f_p2);
 		draw_set_color(COLORS._main_text_sub);
 		draw_text(cx, yy, "Special Thanks");
@@ -48,6 +49,7 @@ event_inherited();
 		yy += ui(40); 
 		draw_text_ext(cx, yy, "Made with GameMaker Studio 2, Abode Illustrator, Aseprite", -1, sc_thank.w - ui(16));
 		yy += ui(32);
+		BLEND_NORMAL
 		
 		return yy - _h + ui(32);
 	})

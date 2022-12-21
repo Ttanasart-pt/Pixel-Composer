@@ -16,20 +16,21 @@ function Node_Dither(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) const
 	
 	name = "Dither";
 	
-	uniform_dither_size	= shader_get_uniform(sh_dither, "ditherSize");
-	uniform_dither     	= shader_get_uniform(sh_dither, "dither");
+	shader = sh_dither;
+	uniform_dither_size	= shader_get_uniform(shader, "ditherSize");
+	uniform_dither     	= shader_get_uniform(shader, "dither");
 	
-	uniform_dim		= shader_get_uniform(sh_dither, "dimension");
-	uniform_color	= shader_get_uniform(sh_dither, "palette");
-	uniform_key		= shader_get_uniform(sh_dither, "keys");
+	uniform_dim		= shader_get_uniform(shader, "dimension");
+	uniform_color	= shader_get_uniform(shader, "palette");
+	uniform_key		= shader_get_uniform(shader, "keys");
 	
-	uniform_constrast	= shader_get_uniform(sh_dither, "contrast");
-	uniform_con_map_use = shader_get_uniform(sh_dither, "useConMap");
-	uniform_con_map		= shader_get_sampler_index(sh_dither, "conMap");
+	uniform_constrast	= shader_get_uniform(shader, "contrast");
+	uniform_con_map_use = shader_get_uniform(shader, "useConMap");
+	uniform_con_map		= shader_get_sampler_index(shader, "conMap");
 	
-	uniform_map_use = shader_get_uniform(sh_dither, "useMap");
-	uniform_map		= shader_get_sampler_index(sh_dither, "map");
-	uniform_map_dim = shader_get_uniform(sh_dither, "mapDimension");
+	uniform_map_use = shader_get_uniform(shader, "useMap");
+	uniform_map		= shader_get_sampler_index(shader, "map");
+	uniform_map_dim = shader_get_uniform(shader, "mapDimension");
 	
 	inputs[| 0] = nodeValue(0, "Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 	inputs[| 1] = nodeValue(1, "Palette", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, [ c_white ])
@@ -66,7 +67,7 @@ function Node_Dither(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) const
 			draw_clear_alpha(0, 0);
 			BLEND_ADD
 			
-			shader_set(sh_dither);
+			shader_set(shader);
 			shader_set_uniform_f_array(uniform_dim, [ surface_get_width(_data[0]), surface_get_height(_data[0]) ] );
 			shader_set_uniform_f_array(uniform_color, _colors);
 			shader_set_uniform_i(uniform_key, array_length(_pal));

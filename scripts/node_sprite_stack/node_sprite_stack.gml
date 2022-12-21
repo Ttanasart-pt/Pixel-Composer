@@ -1,4 +1,4 @@
-function Node_Sprite_Stack(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
+function Node_Sprite_Stack(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constructor {
 	name = "Sprite Stack";
 	
 	inputs[| 0] = nodeValue(0, "Base shape", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, PIXEL_SURFACE);
@@ -39,24 +39,21 @@ function Node_Sprite_Stack(_x, _y, _group = -1) : Node(_x, _y, _group) construct
 		inputs[| 5].drawOverlay(active, px, py, _s, _mx, _my, _snx, _sny);
 	}
 	
-	static update = function() {
-		var _in   = inputs[| 0].getValue();
-		var _dim  = inputs[| 1].getValue();
-		var _amo  = inputs[| 2].getValue();
-		var _shf  = inputs[| 3].getValue();
+	static process_data = function(_outSurf, _data, _output_index) {
+		var _in   = _data[0];
+		var _dim  = _data[1];
+		var _amo  = _data[2];
+		var _shf  = _data[3];
 		
-		var _pos  = inputs[| 4].getValue();
-		var _rot  = inputs[| 5].getValue();
-		var _col  = inputs[| 6].getValue();
-		var _alp  = inputs[| 7].getValue();
-		var _mov  = inputs[| 8].getValue();
+		var _pos  = _data[4];
+		var _rot  = _data[5];
+		var _col  = _data[6];
+		var _alp  = _data[7];
+		var _mov  = _data[8];
 		
-		var _outSurf = outputs[| 0].getValue();
-		
-		if(!is_surface(_outSurf)) {
+		if(!is_surface(_outSurf))
 			_outSurf =  surface_create_valid(_dim[0], _dim[1]);
-			outputs[| 0].setValue(_outSurf);
-		} else
+		else
 			surface_size_to(_outSurf, _dim[0], _dim[1]);
 		
 		if(_mov) {

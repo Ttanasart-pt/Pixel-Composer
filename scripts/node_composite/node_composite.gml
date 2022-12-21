@@ -7,11 +7,12 @@ enum COMPOSE_OUTPUT_SCALING {
 function Node_Composite(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constructor {
 	name		= "Composite";
 	
-	uniform_dim = shader_get_uniform(sh_blend_normal_dim, "dimension");
-	uniform_pos = shader_get_uniform(sh_blend_normal_dim, "position");
-	uniform_sca = shader_get_uniform(sh_blend_normal_dim, "scale");
-	uniform_rot = shader_get_uniform(sh_blend_normal_dim, "rotation");
-	uniform_for = shader_get_sampler_index(sh_blend_normal_dim, "fore");
+	shader = sh_blend_normal_dim;
+	uniform_dim = shader_get_uniform(shader, "dimension");
+	uniform_pos = shader_get_uniform(shader, "position");
+	uniform_sca = shader_get_uniform(shader, "scale");
+	uniform_rot = shader_get_uniform(shader, "rotation");
+	uniform_for = shader_get_sampler_index(shader, "fore");
 	
 	inputs[| 0] = nodeValue(0, "Padding", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 0, 0, 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.padding);
@@ -198,7 +199,7 @@ function Node_Composite(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) co
 			ds_list_add(attributes[? "layer_visible"], true);
 		}
 	}
-	createNewSurface();
+	if(!LOADING && !APPENDING) createNewSurface();
 	
 	function addFrom(_nodeFrom) {
 		inputs[| ds_list_size(inputs) - data_length].setFrom(_nodeFrom);
@@ -223,6 +224,8 @@ function Node_Composite(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) co
 	overlay_h = 0;
 	
 	static updateValueFrom = function(index) {
+		if(LOADING || APPENDING) return;
+		
 		if(index + data_length >= ds_list_size(inputs))
 			createNewSurface();
 	}
@@ -396,6 +399,7 @@ function Node_Composite(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) co
 	}
 	
 	static process_data = function(_outSurf, _data, _output_index) {
+		if(array_length(_data) < 4) return _outSurf;
 		var _pad = _data[0];
 		var _dim_type = _data[1];
 		var _dim = _data[2];
@@ -458,7 +462,7 @@ function Node_Composite(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) co
 			if(!_s || is_array(_s)) continue;
 			
 			surface_set_target(temp_surf[bg]);
-				shader_set(sh_blend_normal_dim);
+				shader_set(shader);
 				shader_set_uniform_f_array(uniform_dim, [ surface_get_width(_s) / ww, surface_get_height(_s) / hh ]);
 				shader_set_uniform_f_array(uniform_pos, [ _pos[0] / ww, _pos[1] / hh]); 
 				shader_set_uniform_f_array(uniform_sca, _sca) 
@@ -485,14 +489,8 @@ function Node_Composite(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) co
 	static postDeserialize = function() {
 		var _inputs = load_map[? "inputs"];
 		
-		for(var i = input_fix_len; i < ds_list_size(_inputs); i += data_length) {
-			if(i > input_fix_len)
-				createNewSurface();
-			inputs[| i + 0].deserialize(_inputs[| i + 0]);
-			inputs[| i + 1].deserialize(_inputs[| i + 1]);
-			inputs[| i + 2].deserialize(_inputs[| i + 2]);
-			inputs[| i + 3].deserialize(_inputs[| i + 3]);
-		}
+		for(var i = input_fix_len; i < ds_list_size(_inputs); i += data_length)
+			createNewSurface();
 	}
 	
 	static attributeSerialize = function() {

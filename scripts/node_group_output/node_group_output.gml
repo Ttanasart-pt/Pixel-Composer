@@ -23,8 +23,9 @@ function Node_Group_Output(_x, _y, _group = -1) : Node(_x, _y, _group) construct
 	}
 	
 	static getNextNodes = function() {
+		if(is_undefined(outParent)) return;
 		group.setRenderStatus(true);
-		printIf(global.RENDER_LOG, "Value to amount " + string(ds_list_size(outParent.value_to)));
+		//printIf(global.RENDER_LOG, "Value to amount " + string(ds_list_size(outParent.value_to)));
 		
 		for(var j = 0; j < ds_list_size(outParent.value_to); j++) {
 			var _to = outParent.value_to[| j];

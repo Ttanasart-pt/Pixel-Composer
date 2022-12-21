@@ -109,6 +109,13 @@ function LOAD_PATH(path, readonly = false) {
 	
 	try {
 		for(var i = 0; i < ds_list_size(create_list); i++)
+			create_list[| i].applyDeserialize();
+	} catch(e) {
+		log_warning("LOAD, apply deserialize", e.longMessage);
+	}
+	
+	try {
+		for(var i = 0; i < ds_list_size(create_list); i++)
 			create_list[| i].preConnect();
 		for(var i = 0; i < ds_list_size(create_list); i++)
 			create_list[| i].connect();

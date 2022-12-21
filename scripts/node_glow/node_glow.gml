@@ -1,9 +1,10 @@
 function Node_Glow(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constructor {
 	name = "Glow";
 	
-	uniform_dim  = shader_get_uniform(sh_outline_only, "dimension");
-	uniform_size = shader_get_uniform(sh_outline_only, "borderSize");
-	uniform_colr = shader_get_uniform(sh_outline_only, "borderColor");
+	shader = sh_outline_only;
+	uniform_dim  = shader_get_uniform(shader, "dimension");
+	uniform_size = shader_get_uniform(shader, "borderSize");
+	uniform_colr = shader_get_uniform(shader, "borderColor");
 	
 	inputs[| 0] = nodeValue(0, "Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 	inputs[| 1] = nodeValue(1, "Border", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
@@ -28,7 +29,7 @@ function Node_Glow(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constru
 		
 		surface_set_target(pass1);
 		draw_clear_alpha(c_black, 1);
-			shader_set(sh_outline_only);
+			shader_set(shader);
 				shader_set_uniform_f_array(uniform_dim,  [ surface_get_width(_outSurf), surface_get_height(_outSurf) ]);
 				shader_set_uniform_f(uniform_size, _size + _border);
 				shader_set_uniform_f_array(uniform_colr, [1.0, 1.0, 1.0, 1.0]);

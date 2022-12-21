@@ -7,7 +7,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = -1) : Node(_x, _y, _group) const
 	inputs[| 1] = nodeValue(1, "Spawn delay", self,  JUNCTION_CONNECT.input, VALUE_TYPE.integer, 4);
 	inputs[| 2] = nodeValue(2, "Spawn amount", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 2);
 	inputs[| 3] = nodeValue(3, "Spawn area", self,   JUNCTION_CONNECT.input, VALUE_TYPE.float, [ def_surf_size / 2, def_surf_size / 2, def_surf_size / 2, def_surf_size / 2, AREA_SHAPE.rectangle ])
-		.setDisplay(VALUE_DISPLAY.area, function() { return inputs[| 1].getValue(); });
+		.setDisplay(VALUE_DISPLAY.area);
 	
 	inputs[| 4] = nodeValue(4, "Spawn distribution", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.enum_button, [ "Area", "Border" ]);

@@ -666,6 +666,13 @@
             "bottom": 0
         }
     },
+    "noti_icon_tick": {
+        "path": "./icon/s_noti_icon_tick.png",
+        "subimages": 1,
+        "xorigin": 20,
+        "yorigin": 20,
+        "slice": null
+    },
     "noti_icon_error": {
         "path": "./icon/s_noti_icon_error_strip2.png",
         "subimages": 2,

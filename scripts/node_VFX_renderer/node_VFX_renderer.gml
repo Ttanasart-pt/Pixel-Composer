@@ -16,12 +16,13 @@ function Node_VFX_Renderer(_x, _y, _group = -1) : Node(_x, _y, _group) construct
 		inputs[| index] = nodeValue( index, "Particles", self, JUNCTION_CONNECT.input, VALUE_TYPE.object, noone )
 			.setVisible(true, true);
 	}
-	createNewInput();
+	if(!LOADING && !APPENDING) createNewInput();
 		
 	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
 	
 	static updateValueFrom = function(index) {
 		if(index < input_index) return;
+		if(LOADING || APPENDING) return;
 		
 		var _l = ds_list_create();
 		for( var i = 0; i < ds_list_size(inputs); i++ ) {

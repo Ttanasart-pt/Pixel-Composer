@@ -1,8 +1,9 @@
 function Node_Level_Selector(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constructor {
 	name = "Level Selector";
 	
-	uniform_middle = shader_get_uniform(sh_level_selector, "middle");
-	uniform_range  = shader_get_uniform(sh_level_selector, "range");
+	shader = sh_level_selector;
+	uniform_middle = shader_get_uniform(shader, "middle");
+	uniform_range  = shader_get_uniform(shader, "range");
 	
 	inputs[| 0] = nodeValue(0, "Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 	
@@ -74,7 +75,7 @@ function Node_Level_Selector(_x, _y, _group = -1) : Node_Processor(_x, _y, _grou
 			draw_clear_alpha(0, 0);
 			BLEND_ADD
 			
-			shader_set(sh_level_selector);
+			shader_set(shader);
 			shader_set_uniform_f(uniform_middle, _middle);
 			shader_set_uniform_f(uniform_range , _range );
 			

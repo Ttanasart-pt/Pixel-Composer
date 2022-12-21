@@ -4,8 +4,7 @@ function Node_Image_Sheet(_x, _y, _group = -1) : Node(_x, _y, _group) constructo
 	
 	surf_array = [];
 	
-	inputs[| 0] = nodeValue(0, "Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0)
-		.setAcceptArray(false);
+	inputs[| 0] = nodeValue(0, "Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0).rejectArray();
 	
 	inputs[| 1]  = nodeValue(1, "Sprite size", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 32, 32 ])
 		.setDisplay(VALUE_DISPLAY.vector);

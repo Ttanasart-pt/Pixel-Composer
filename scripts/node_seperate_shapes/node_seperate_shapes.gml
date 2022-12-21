@@ -2,7 +2,8 @@ function Node_Seperate_Shape(_x, _y, _group = -1) : Node(_x, _y, _group) constru
 	name		= "Separate shape";
 	auto_update = false;
 	
-	uniform_it_dim = shader_get_uniform(sh_seperate_shape_ite, "dimension");
+	shader = sh_seperate_shape_ite;
+	uniform_it_dim = shader_get_uniform(shader, "dimension");
 	
 	is_dynamic_output = true;
 	inputs[| 0] = nodeValue(0, "Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
@@ -57,7 +58,7 @@ function Node_Seperate_Shape(_x, _y, _group = -1) : Node(_x, _y, _group) constru
 		surface_reset_target();
 		shader_reset();
 		
-		shader_set(sh_seperate_shape_ite);
+		shader_set(shader);
 		shader_set_uniform_f_array(uniform_it_dim, [ ww, hh ]);
 		shader_reset();
 		
@@ -66,7 +67,7 @@ function Node_Seperate_Shape(_x, _y, _group = -1) : Node(_x, _y, _group) constru
 			var bg = i % 2;
 			var fg = (i + 1) % 2;
 			
-			shader_set(sh_seperate_shape_ite);
+			shader_set(shader);
 			surface_set_target(temp_surf[bg]);
 			draw_clear_alpha(0, 0);
 			BLEND_ADD

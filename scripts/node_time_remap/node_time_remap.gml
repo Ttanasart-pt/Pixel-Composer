@@ -1,10 +1,11 @@
 function Node_Time_Remap(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
-	name	= "Time remap";
-	use_cache   = true;
+	name = "Time remap";
+	use_cache = true;
 	
-	uniform_map = shader_get_sampler_index(sh_time_remap, "map");
-	uniform_min = shader_get_uniform(sh_time_remap, "vMin");
-	uniform_max = shader_get_uniform(sh_time_remap, "vMax");
+	shader = sh_time_remap;
+	uniform_map = shader_get_sampler_index(shader, "map");
+	uniform_min = shader_get_uniform(shader, "vMin");
+	uniform_max = shader_get_uniform(shader, "vMax");
 	
 	inputs[| 0] = nodeValue(0, "Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 	inputs[| 1] = nodeValue(1, "Map", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
@@ -31,7 +32,7 @@ function Node_Time_Remap(_x, _y, _group = -1) : Node(_x, _y, _group) constructor
 		
 		surface_set_target(_surf);
 		draw_clear_alpha(0, 0);
-		shader_set(sh_time_remap);
+		shader_set(shader);
 		texture_set_stage(uniform_map, surface_get_texture(_map));
 		
 		for(var i = 0; i <= _life; i++) {

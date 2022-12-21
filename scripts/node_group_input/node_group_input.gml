@@ -152,8 +152,7 @@ function Node_Group_Input(_x, _y, _group = -1) : Node(_x, _y, _group) constructo
 		return inParent;
 	}
 	
-	if(!LOADING && !APPENDING)
-		createInput();
+	if(!LOADING && !APPENDING) createInput();
 	
 	dtype  = -1;
 	range  = 0;
@@ -192,6 +191,17 @@ function Node_Group_Input(_x, _y, _group = -1) : Node(_x, _y, _group) constructo
 	
 	static postDeserialize = function() {
 		createInput(false);
+		var _inputs = load_map[? "inputs"];
+		inputs[| 5].applyDeserialize(_inputs[| 5], load_scale);
+	}
+	
+	static applyDeserialize = function() {
+		var _inputs = load_map[? "inputs"];
+		for(var i = 0; i < ds_list_size(inputs); i++) {
+			if(i == 5) continue;
+			inputs[| i].applyDeserialize(_inputs[| i], load_scale);
+			var raw_val = _inputs[| i][? "raw value"];
+		}
 		onValueUpdate(0);
 	}
 	

@@ -1,8 +1,9 @@
 function Node_De_Stray(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constructor {
 	name = "De-Stray";
 	
-	uniform_dim = shader_get_uniform(sh_de_stray, "dimension");
-	uniform_tol = shader_get_uniform(sh_de_stray, "tolerance");
+	shader = sh_de_stray;
+	uniform_dim = shader_get_uniform(shader, "dimension");
+	uniform_tol = shader_get_uniform(shader, "tolerance");
 	
 	inputs[| 0] = nodeValue(0, "Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 	inputs[| 1] = nodeValue(1, "Tolerance", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
@@ -15,7 +16,7 @@ function Node_De_Stray(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) con
 		draw_clear_alpha(0, 0);
 		BLEND_ADD
 		
-		shader_set(sh_de_stray);
+		shader_set(shader);
 			shader_set_uniform_f_array(uniform_dim, [ surface_get_width(_data[0]), surface_get_height(_data[0]) ]);
 			shader_set_uniform_f(uniform_tol, _data[1]);
 			draw_surface_safe(_data[0], 0, 0);

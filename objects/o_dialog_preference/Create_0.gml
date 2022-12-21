@@ -239,7 +239,7 @@ event_inherited();
 		draw_clear_alpha(COLORS.panel_bg_clear, 0);
 		var hh		= 0;
 		var th		= ui(28);
-		var x1		= dialog_w - ui(208);
+		var x1		= sp_colors.surface_w;
 		var yy		= _y + ui(8);
 		var padd	= ui(6);
 		var ind		= 0;
@@ -315,7 +315,7 @@ event_inherited();
 		draw_clear_alpha(COLORS.panel_bg_clear, 0);
 		var hh		= 0;
 		var th		= TEXTBOX_HEIGHT;
-		var x1		= dialog_w - ui(200);
+		var x1		= sp_pref.surface_w;
 		var yy		= _y + ui(8);
 		var padd	= ui(6);
 		var ind		= 0;
@@ -394,7 +394,7 @@ event_inherited();
 		var padd		= ui(8);
 		var hh			= 0;
 		var currGroup	= -1;
-		var x1			= dialog_w - ui(192);
+		var x1			= sp_hotkey.surface_w;
 		
 		for(var j = 0; j < ds_list_size(HOTKEY_CONTEXT); j++) {
 			var ll = HOTKEYS[? HOTKEY_CONTEXT[| j]];

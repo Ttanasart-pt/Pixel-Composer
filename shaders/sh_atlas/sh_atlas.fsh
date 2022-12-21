@@ -7,8 +7,8 @@ varying vec4 v_vColour;
 uniform vec2  dimension;
 
 #define TAU 6.28318
-#define angle_sample 32.
-#define distance_sample 32.
+#define angle_sample 64.
+#define distance_sample 64.
 
 void main() {
 	vec2 pixelPosition = v_vTexcoord * dimension;

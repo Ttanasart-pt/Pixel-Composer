@@ -1,17 +1,18 @@
 function Node_Outline(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constructor {
 	name = "Outline";
 	
-	uniform_dim          = shader_get_uniform(sh_outline, "dimension");
-	uniform_border_size  = shader_get_uniform(sh_outline, "borderSize");
-	uniform_border_color = shader_get_uniform(sh_outline, "borderColor");
+	shader = sh_outline;
+	uniform_dim          = shader_get_uniform(shader, "dimension");
+	uniform_border_size  = shader_get_uniform(shader, "borderSize");
+	uniform_border_color = shader_get_uniform(shader, "borderColor");
 	
-	uniform_blend		= shader_get_uniform(sh_outline, "is_blend");
-	uniform_blend_alpha = shader_get_uniform(sh_outline, "blend_alpha");
+	uniform_blend		= shader_get_uniform(shader, "is_blend");
+	uniform_blend_alpha = shader_get_uniform(shader, "blend_alpha");
 	
-	uniform_side		= shader_get_uniform(sh_outline, "side");
-	uniform_aa  		= shader_get_uniform(sh_outline, "is_aa");
+	uniform_side		= shader_get_uniform(shader, "side");
+	uniform_aa  		= shader_get_uniform(shader, "is_aa");
 	
-	uniform_out_only	= shader_get_uniform(sh_outline, "outline_only");
+	uniform_out_only	= shader_get_uniform(shader, "outline_only");
 	
 	inputs[| 0] = nodeValue(0, "Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 	inputs[| 1] = nodeValue(1, "Width",   self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0);
@@ -45,7 +46,7 @@ function Node_Outline(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) cons
 			draw_clear_alpha(0, 0);
 			BLEND_ADD
 		
-			shader_set(sh_outline);
+			shader_set(shader);
 			shader_set_uniform_f_array(uniform_dim, [ww, hh]);
 			shader_set_uniform_f(uniform_border_size, wd);
 			shader_set_uniform_f_array(uniform_border_color, [color_get_red(cl) / 255, color_get_green(cl) / 255, color_get_blue(cl) / 255, 1.0]);

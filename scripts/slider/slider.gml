@@ -2,8 +2,8 @@ function slider(_min, _max, _step, _onModify = noone, _onRelease = noone) constr
 	active = false;
 	hover  = false;
 	
-	minn = _min;
-	maxx = _max;
+	minn = _min; curr_minn = _min;
+	maxx = _max; curr_maxx = _max;
 	step = _step;
 	
 	onModify = _onModify;
@@ -34,6 +34,12 @@ function slider(_min, _max, _step, _onModify = noone, _onRelease = noone) constr
 			case fa_bottom: _y = _y - _h;		break;	
 		}
 		
+		var _rang = abs(maxx - minn);
+		if(!dragging) {
+			curr_minn = (_data >= minn)? minn : minn - ceil(abs(_data - minn) / _rang) * _rang; 
+			curr_maxx = (_data <= maxx)? maxx : maxx + ceil(abs(_data - maxx) / _rang) * _rang;
+		}
+		
 		var sw = _w - (tb_w + ui(16));
 		
 		tb_value.hover  = hover;
@@ -42,15 +48,15 @@ function slider(_min, _max, _step, _onModify = noone, _onRelease = noone) constr
 		
 		draw_sprite_stretched(THEME.slider, 0, _x, _y + _h / 2 - ui(4), sw, ui(8));	
 		
-		var _kx = _x + clamp((_data - minn) / (maxx - minn), 0, 1) * sw;
+		var _kx = _x + clamp((_data - curr_minn) / (curr_maxx - curr_minn), 0, 1) * sw;
 		draw_sprite_stretched(THEME.slider, 1, _kx - hdw / 2, _y, hdw, _h);
 		
 		if(dragging) {
 			draw_sprite_stretched(THEME.slider, 3, _kx - hdw / 2, _y, hdw, _h);
 			
-			var val = (_m[0] - _x) / sw * (maxx - minn) + minn;
+			var val = (_m[0] - _x) / sw * (curr_maxx - curr_minn) + curr_minn;
 			val = round(val / step) * step;
-			val = clamp(val, minn, maxx);
+			val = clamp(val, curr_minn, curr_maxx);
 			if(onModify != noone)
 				onModify(val);
 			UNDO_HOLDING = true;

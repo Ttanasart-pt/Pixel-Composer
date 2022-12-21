@@ -20,7 +20,7 @@ event_inherited();
 		
 		var hh = 32;
 		var yy = _y;
-		var txw = sp_noti.w - ui(48 + 48 + 20);
+		var txw = sp_noti.surface_w - ui(48 + 48 + 20);
 		var amo = ds_list_size(STATUSES);
 		
 		draw_set_font(f_p3);

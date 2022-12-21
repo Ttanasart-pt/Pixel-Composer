@@ -1,7 +1,8 @@
 function Node_Texture_Remap(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constructor {
 	name = "Texture remap";
 	
-	uniform_map = shader_get_sampler_index(sh_texture_remap, "map");
+	shader = sh_texture_remap;
+	uniform_map = shader_get_sampler_index(shader, "map");
 	
 	inputs[| 0] = nodeValue(0, "Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 	inputs[| 1] = nodeValue(1, "RG Map", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
@@ -14,7 +15,7 @@ function Node_Texture_Remap(_x, _y, _group = -1) : Node_Processor(_x, _y, _group
 		BLEND_ADD
 		
 		if(_data[1]) {
-			shader_set(sh_texture_remap);
+			shader_set(shader);
 				texture_set_stage(uniform_map, surface_get_texture(_data[1]));
 				draw_surface_safe(_data[0], 0, 0);
 			shader_reset();

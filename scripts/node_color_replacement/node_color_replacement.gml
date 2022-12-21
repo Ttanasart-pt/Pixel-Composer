@@ -1,14 +1,15 @@
 function Node_Color_replace(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constructor {
 	name = "Color replace";
 	
-	uniform_from       = shader_get_uniform(sh_color_replace, "colorFrom");
-	uniform_from_count = shader_get_uniform(sh_color_replace, "colorFrom_amo");
+	shader = sh_color_replace;
+	uniform_from       = shader_get_uniform(shader, "colorFrom");
+	uniform_from_count = shader_get_uniform(shader, "colorFrom_amo");
 	
-	uniform_to   = shader_get_uniform(sh_color_replace, "colorTo");
-	uniform_ter  = shader_get_uniform(sh_color_replace, "treshold");
-	uniform_alp  = shader_get_uniform(sh_color_replace, "alphacmp");
-	uniform_inv  = shader_get_uniform(sh_color_replace, "inverted");
-	uniform_hrd  = shader_get_uniform(sh_color_replace, "hardReplace");
+	uniform_to   = shader_get_uniform(shader, "colorTo");
+	uniform_ter  = shader_get_uniform(shader, "treshold");
+	uniform_alp  = shader_get_uniform(shader, "alphacmp");
+	uniform_inv  = shader_get_uniform(shader, "inverted");
+	uniform_hrd  = shader_get_uniform(shader, "hardReplace");
 	
 	inputs[| 0] = nodeValue(0, "Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 	inputs[| 1] = nodeValue(1, "Color from", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, [ c_black ])
@@ -53,7 +54,7 @@ function Node_Color_replace(_x, _y, _group = -1) : Node_Processor(_x, _y, _group
 		draw_clear_alpha(0, 0);
 		BLEND_ADD
 		
-		shader_set(sh_color_replace);
+		shader_set(shader);
 			shader_set_uniform_f_array(uniform_from, _colors);
 			shader_set_uniform_i(uniform_from_count, array_length(fr));
 			shader_set_uniform_i(uniform_alp, alp);

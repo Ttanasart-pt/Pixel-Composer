@@ -150,10 +150,14 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) constructor {
 	static focusStep = function() {}
 	
 	static doUpdate = function() {
-		var t = get_timer();
-		update();
-		setRenderStatus(true);
-		render_time = get_timer() - t;
+		try {
+			var t = get_timer();
+			update();
+			setRenderStatus(true);
+			render_time = get_timer() - t;
+		} catch(exception) {
+			log_warning("RENDER", "Render error " + string(exception));
+		}
 	}
 	
 	static onValueUpdate = function(index) {}
@@ -591,7 +595,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) constructor {
 			cached_output[ANIMATOR.current_frame] = _os;
 		}
 		
-		cache_result[ANIMATOR.current_frame] = true;
+		array_safe_set(cache_result, ANIMATOR.current_frame, true);
 	}
 	static cacheExist = function(frame = ANIMATOR.current_frame) {
 		if(frame >= array_length(cached_output)) return false;
@@ -675,13 +679,16 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) constructor {
 	static clone = function() {
 		var _type = instanceof(self);
 		var _node = nodeBuild(_type, x, y);
+		var _nid = _node.node_id;
 		
 		var _data = serialize();
 		_node.deserialize(ds_map_clone(_data));
-		_node.node_id = generateUUID();
+		_node.applyDeserialize();
+		_node.node_id = _nid;
 		
 		NODE_MAP[? node_id] = self;
-		NODE_MAP[? _node.node_id] = _node;
+		NODE_MAP[? _nid] = _node;
+		PANEL_ANIMATION.updatePropertyList();
 		
 		return _node;
 	}
@@ -725,11 +732,10 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) constructor {
 		load_scale = scale;
 		
 		if(!preset) {
-			if(APPENDING) {
+			if(APPENDING)
 				APPEND_MAP[? load_map[? "id"]] = node_id;
-			} else {
+			else
 				node_id = ds_map_try_get(load_map, "id");
-			}
 		
 			NODE_MAP[? node_id] = self;
 		
@@ -746,20 +752,19 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) constructor {
 		
 		if(!ds_map_exists(load_map, "inputs"))
 			return;
-		
-		var _inputs = load_map[? "inputs"];
-		if(!ds_list_empty(_inputs) && !ds_list_empty(inputs)) {
-			var _siz = min(ds_list_size(_inputs), ds_list_size(inputs));
-			for(var i = 0; i < _siz; i++) {
-				inputs[| i].deserialize(_inputs[| i], scale);
-			}
-		}
 	}
 	
 	static attributeDeserialize = function(attr) {
 		ds_map_override(attributes, attr);
 	}
+	
 	static postDeserialize = function() {}
+	
+	static applyDeserialize = function() {
+		var _inputs = load_map[? "inputs"];
+		for(var i = 0; i < ds_list_size(inputs); i++)
+			inputs[| i].applyDeserialize(_inputs[| i], load_scale);
+	}
 	
 	static loadGroup = function() {
 		if(_group == -1) {

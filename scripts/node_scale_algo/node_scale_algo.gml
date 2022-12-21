@@ -13,8 +13,6 @@ function Node_create_Scale_Algo(_x, _y, _group = -1, _param = "") {
 function Node_Scale_Algo(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constructor {
 	name = "Scale Algo";
 	
-	uniform_dim = shader_get_uniform(sh_scale2x, "dimension");
-	
 	inputs[| 0] = nodeValue(0, "Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 	
 	inputs[| 1] = nodeValue(1, "Algorithm", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
@@ -30,7 +28,7 @@ function Node_Scale_Algo(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) c
 		var algo = _data[1];
 		var ww = surface_get_width(inSurf);
 		var hh = surface_get_height(inSurf);
-		var shader = sh_scale2x;
+		var shader;
 		var sc = 2;
 		
 		switch(algo) {
@@ -48,6 +46,7 @@ function Node_Scale_Algo(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) c
 				var sh = hh * 3;
 				surface_size_to(_outSurf, sw, sh);
 				break;
+			default: return _outSurf;
 		}
 		
 		
@@ -55,8 +54,8 @@ function Node_Scale_Algo(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) c
 		draw_clear_alpha(0, 0);
 		BLEND_ADD
 		
-		uniform_dim = shader_get_uniform(shader, "dimension");
-		uniform_tol = shader_get_uniform(shader, "tol");
+		var uniform_dim = shader_get_uniform(shader, "dimension");
+		var uniform_tol = shader_get_uniform(shader, "tol");
 		
 		shader_set(shader);
 			shader_set_uniform_f_array(uniform_dim, [ ww, hh ]);

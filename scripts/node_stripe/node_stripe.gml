@@ -1,18 +1,19 @@
 function Node_Stripe(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 	name = "Stripe";
 	
-	uniform_grad_use = shader_get_uniform(sh_stripe, "gradient_use");
-	uniform_grad_blend = shader_get_uniform(sh_stripe, "gradient_blend");
-	uniform_grad = shader_get_uniform(sh_stripe, "gradient_color");
-	uniform_grad_time = shader_get_uniform(sh_stripe, "gradient_time");
-	uniform_grad_key = shader_get_uniform(sh_stripe, "gradient_keys");
+	shader = sh_stripe;
+	uniform_grad_use = shader_get_uniform(shader, "gradient_use");
+	uniform_grad_blend = shader_get_uniform(shader, "gradient_blend");
+	uniform_grad = shader_get_uniform(shader, "gradient_color");
+	uniform_grad_time = shader_get_uniform(shader, "gradient_time");
+	uniform_grad_key = shader_get_uniform(shader, "gradient_keys");
 	
-	uniform_dim = shader_get_uniform(sh_stripe, "dimension");
-	uniform_pos = shader_get_uniform(sh_stripe, "position");
-	uniform_angle = shader_get_uniform(sh_stripe, "angle");
-	uniform_amount = shader_get_uniform(sh_stripe, "amount");
-	uniform_blend = shader_get_uniform(sh_stripe, "blend");
-	uniform_rand = shader_get_uniform(sh_stripe, "rand");
+	uniform_dim = shader_get_uniform(shader, "dimension");
+	uniform_pos = shader_get_uniform(shader, "position");
+	uniform_angle = shader_get_uniform(shader, "angle");
+	uniform_amount = shader_get_uniform(shader, "amount");
+	uniform_blend = shader_get_uniform(shader, "blend");
+	uniform_rand = shader_get_uniform(shader, "rand");
 	
 	inputs[| 0] = nodeValue(0, "Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, def_surf_size2 )
 		.setDisplay(VALUE_DISPLAY.vector);
@@ -79,7 +80,7 @@ function Node_Stripe(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 			surface_size_to(_outSurf, _dim[0], _dim[1]);
 			
 		surface_set_target(_outSurf);
-			shader_set(sh_stripe);
+			shader_set(shader);
 			shader_set_uniform_f(uniform_dim, _dim[0], _dim[1]);
 			shader_set_uniform_f(uniform_pos, _pos[0] / _dim[0], _pos[1] / _dim[1]);
 			shader_set_uniform_f(uniform_angle,  degtorad(_ang));

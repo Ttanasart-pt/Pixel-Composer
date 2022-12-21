@@ -1,4 +1,4 @@
-function Node_Sampler(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
+function Node_Sampler(_x, _y, _group = -1) : Node_Value_Processor(_x, _y, _group) constructor {
 	name = "Sampler";
 	
 	inputs[| 0] = nodeValue(0, "Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
@@ -6,25 +6,19 @@ function Node_Sampler(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 	inputs[| 1] = nodeValue(1, "Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.vector);
 	
-	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
-	outputs[| 1] = nodeValue(1, "Color", self, JUNCTION_CONNECT.output, VALUE_TYPE.color, c_white);
+	outputs[| 0] = nodeValue(0, "Color", self, JUNCTION_CONNECT.output, VALUE_TYPE.color, c_white);
+	
+	static getPreviewValue = function() { return inputs[| 0]; }
 	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		inputs[| 1].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
 	}
 	
-	_input = -1;
-	static update = function() {
-		var _surf = inputs[| 0].getValue();
-		if(!is_surface(_surf)) return;
-		if(_input != _surf) {
-			outputs[| 0].setValue(_surf);
-			_input = _surf;	
-		}
-		var _pos = inputs[| 1].getValue();
+	function process_value_data(_data, index = 0) { 
+		var _surf = _data[0];
+		var _pos = _data[1];
+		if(!is_surface(_surf)) return c_black;
 		
-		var cc   = surface_getpixel(_surf, _pos[0], _pos[1]);
-		
-		outputs[| 1].setValue(cc);
+		return surface_getpixel(_surf, _pos[0], _pos[1]);
 	}
 }

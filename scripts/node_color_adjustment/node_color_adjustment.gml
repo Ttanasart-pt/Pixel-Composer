@@ -1,19 +1,20 @@
 function Node_Color_adjust(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constructor {
 	name = "Color adjust";
 	
-	uniform_bri = shader_get_uniform(sh_color_adjust, "brightness");
-	uniform_exp = shader_get_uniform(sh_color_adjust, "exposure");
-	uniform_con = shader_get_uniform(sh_color_adjust, "contrast");
-	uniform_hue = shader_get_uniform(sh_color_adjust, "hue");
-	uniform_sat = shader_get_uniform(sh_color_adjust, "sat");
-	uniform_val = shader_get_uniform(sh_color_adjust, "val");
-	uniform_alp = shader_get_uniform(sh_color_adjust, "alpha");
+	shader = sh_color_adjust;
+	uniform_bri = shader_get_uniform(shader, "brightness");
+	uniform_exp = shader_get_uniform(shader, "exposure");
+	uniform_con = shader_get_uniform(shader, "contrast");
+	uniform_hue = shader_get_uniform(shader, "hue");
+	uniform_sat = shader_get_uniform(shader, "sat");
+	uniform_val = shader_get_uniform(shader, "val");
+	uniform_alp = shader_get_uniform(shader, "alpha");
 	
-	uniform_bl  = shader_get_uniform(sh_color_adjust, "blend");
-	uniform_bla = shader_get_uniform(sh_color_adjust, "blendAlpha");
+	uniform_bl  = shader_get_uniform(shader, "blend");
+	uniform_bla = shader_get_uniform(shader, "blendAlpha");
 	
-	uniform_mask_use	= shader_get_uniform(sh_color_adjust, "use_mask");
-	uniform_mask		= shader_get_sampler_index(sh_color_adjust, "mask");
+	uniform_mask_use	= shader_get_uniform(shader, "use_mask");
+	uniform_mask		= shader_get_sampler_index(shader, "mask");
 	
 	inputs[| 0] = nodeValue(0, "Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 	
@@ -70,7 +71,7 @@ function Node_Color_adjust(_x, _y, _group = -1) : Node_Processor(_x, _y, _group)
 		draw_clear_alpha(0, 0);
 		BLEND_ADD
 		
-		shader_set(sh_color_adjust);
+		shader_set(shader);
 			shader_set_uniform_i(uniform_mask_use, _m != DEF_SURFACE);
 			texture_set_stage(uniform_mask, surface_get_texture(_m));
 			

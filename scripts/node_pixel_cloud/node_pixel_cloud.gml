@@ -1,19 +1,20 @@
 function Node_Pixel_Cloud(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constructor {
 	name = "Pixel Cloud";
 	
-	uniform_sed = shader_get_uniform(sh_pixel_cloud, "seed");
-	uniform_str = shader_get_uniform(sh_pixel_cloud, "strength");
-	uniform_dis = shader_get_uniform(sh_pixel_cloud, "dist");
+	shader = sh_pixel_cloud;
+	uniform_sed = shader_get_uniform(shader, "seed");
+	uniform_str = shader_get_uniform(shader, "strength");
+	uniform_dis = shader_get_uniform(shader, "dist");
 	
-	uniform_map_use = shader_get_uniform(sh_pixel_cloud, "useMap");
-	uniform_map = shader_get_sampler_index(sh_pixel_cloud, "strengthMap");
+	uniform_map_use = shader_get_uniform(shader, "useMap");
+	uniform_map = shader_get_sampler_index(shader, "strengthMap");
 	
-	uniform_grad_blend = shader_get_uniform(sh_pixel_cloud, "gradient_blend");
-	uniform_grad = shader_get_uniform(sh_pixel_cloud, "gradient_color");
-	uniform_grad_time = shader_get_uniform(sh_pixel_cloud, "gradient_time");
-	uniform_grad_key = shader_get_uniform(sh_pixel_cloud, "gradient_keys");
+	uniform_grad_blend = shader_get_uniform(shader, "gradient_blend");
+	uniform_grad = shader_get_uniform(shader, "gradient_color");
+	uniform_grad_time = shader_get_uniform(shader, "gradient_time");
+	uniform_grad_key = shader_get_uniform(shader, "gradient_keys");
 	
-	uniform_alpha = shader_get_uniform(sh_pixel_cloud, "alpha_curve");
+	uniform_alpha = shader_get_uniform(shader, "alpha_curve");
 	
 	inputs[| 0] = nodeValue(0, "Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 	
@@ -65,7 +66,7 @@ function Node_Pixel_Cloud(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) 
 		draw_clear_alpha(0, 0);
 		BLEND_ADD
 		
-		shader_set(sh_pixel_cloud);
+		shader_set(shader);
 			shader_set_uniform_f(uniform_sed, _sed);
 			shader_set_uniform_f(uniform_str, _str);
 			shader_set_uniform_f(uniform_dis, _dis);

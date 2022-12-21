@@ -1,4 +1,4 @@
-function Node_3D_Cylinder(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
+function Node_3D_Cylinder(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constructor {
 	name = "3D Cylinder";
 	
 	uniVertex_lightFor = shader_get_uniform(sh_vertex_pnt_light, "u_LightForward");
@@ -201,9 +201,9 @@ function Node_3D_Cylinder(_x, _y, _group = -1) : Node(_x, _y, _group) constructo
 		camera_set_view_mat(cam, cam_proj);
 	#endregion
 	
-	static update = function() {
-		var _sides = inputs[| 0].getValue();
-		var _thick = inputs[| 1].getValue();
+	static process_data = function(_outSurf, _data, _output_index) {
+		var _sides = _data[0];
+		var _thick = _data[1];
 		
 		if(_sides != sides || _thick != thick) {
 			sides = _sides;
@@ -211,26 +211,24 @@ function Node_3D_Cylinder(_x, _y, _group = -1) : Node(_x, _y, _group) constructo
 			generate_vb();	
 		}
 		
-		var _dim		= inputs[| 2].getValue();
-		var _pos		= inputs[| 3].getValue();
-		var _rot		= inputs[| 4].getValue();
-		var _sca		= inputs[| 5].getValue();
-		var face_top	= inputs[| 6].getValue();
-		var face_bot	= inputs[| 7].getValue();
-		var face_sid	= inputs[| 8].getValue();
-		var _lsc		= inputs[| 9].getValue();
+		var _dim		= _data[2];
+		var _pos		= _data[3];
+		var _rot		= _data[4];
+		var _sca		= _data[5];
+		var face_top	= _data[6];
+		var face_bot	= _data[7];
+		var face_sid	= _data[8];
+		var _lsc		= _data[9];
 		
-		var _ldir = inputs[| 10].getValue();
-		var _lhgt = inputs[| 11].getValue();
-		var _lint = inputs[| 12].getValue();
-		var _lclr = inputs[| 13].getValue();
-		var _aclr = inputs[| 14].getValue();
+		var _ldir = _data[10];
+		var _lhgt = _data[11];
+		var _lint = _data[12];
+		var _lclr = _data[13];
+		var _aclr = _data[14];
 		
-		var _outSurf = outputs[| 0].getValue();
-		if(!is_surface(_outSurf)) {
+		if(!is_surface(_outSurf))
 			_outSurf = surface_create_valid(_dim[0], _dim[1]);
-			outputs[| 0].setValue(_outSurf);
-		} else
+		else
 			surface_size_to(_outSurf, _dim[0], _dim[1]);
 		
 		TM = matrix_build(_pos[0], _pos[1], 0, _rot[0], _rot[1], _rot[2], _dim[0] * _sca[0], _dim[1] * _sca[1], 1);

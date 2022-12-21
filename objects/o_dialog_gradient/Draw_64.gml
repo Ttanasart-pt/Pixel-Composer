@@ -83,8 +83,12 @@ if !ready exit;
 		var by = dialog_y + ui(16);
 		
 		if(buttonInstant(THEME.button_hide, bx, by, ui(28), ui(28), mouse_ui, sFOCUS, sHOVER, "Key blending", THEME.grad_blend) == 2) {
-			if(grad_data != noone)
-				grad_data[| 0] = (grad_data[| 0] + 1) % 3;
+			var dia = dialogCall(o_dialog_menubox, bx + ui(32), by);
+			dia.setMenu([ 
+				[ "RGB blend", function() { grad_data[| 0] = 0; } ], 
+				[ "HSV blend", function() { grad_data[| 0] = 2; } ], 
+				[ "Hard blend", function() { grad_data[| 0] = 1; } ], 
+			]);
 		}
 		bx -= ui(32);
 	#endregion

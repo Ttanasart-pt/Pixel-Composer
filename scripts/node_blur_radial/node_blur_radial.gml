@@ -1,8 +1,9 @@
 function Node_Blur_Radial(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constructor {
 	name = "Blur_Radial";
 	
-	uniform_str = shader_get_uniform(sh_blur_radial, "strength");
-	uniform_cen = shader_get_uniform(sh_blur_radial, "center");
+	shader = sh_blur_radial;
+	uniform_str = shader_get_uniform(shader, "strength");
+	uniform_cen = shader_get_uniform(shader, "center");
 	
 	inputs[| 0] = nodeValue(0, "Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 	inputs[| 1] = nodeValue(1, "Strength", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.2);
@@ -31,7 +32,7 @@ function Node_Blur_Radial(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) 
 			draw_clear_alpha(0, 0);
 			BLEND_ADD
 		
-			shader_set(sh_blur_radial);
+			shader_set(shader);
 			shader_set_uniform_f(uniform_str, _str);
 			shader_set_uniform_f_array(uniform_cen, _cen);
 			draw_surface_safe(_data[0], 0, 0);
