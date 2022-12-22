@@ -647,10 +647,10 @@
     {"name":"iOS","path":"options/ios/options_ios.yy",},
     {"name":"Linux","path":"options/linux/options_linux.yy",},
     {"name":"macOS","path":"options/mac/options_mac.yy",},
-    {"name":"Main","path":"options/main/options_main.yy",},
     {"name":"tvOS","path":"options/tvos/options_tvos.yy",},
     {"name":"Windows","path":"options/windows/options_windows.yy",},
     {"name":"operagx","path":"options/operagx/options_operagx.yy",},
+    {"name":"Main","path":"options/main/options_main.yy",},
   ],
   "defaultScriptType": 1,
   "isEcma": false,
@@ -836,6 +836,6 @@
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"1 image import.png","CopyToMask":-1,"filePath":"datafiles/Getting started",},
   ],
   "MetaData": {
-    "IDEVersion": "2022.9.0.49",
+    "IDEVersion": "2022.11.1.56",
   },
 }
