@@ -12,6 +12,7 @@
 	PREF_MAP[? "keyboard_repeat_speed"] = 0.10;
 	
 	PREF_MAP[? "show_splash"] = true;
+	PREF_MAP[? "notification_time"] = 180;
 	
 	PREF_MAP[? "display_scaling"] = 1;
 	

@@ -67,7 +67,7 @@ function LOAD_PATH(path, readonly = false) {
 				if(_node) ds_list_add(create_list, _node);
 			}
 		} catch(e) {
-			log_warning("LOAD", e.longMessage);
+			log_warning("LOAD", exception_print(e));
 		}
 	}
 	
@@ -78,7 +78,7 @@ function LOAD_PATH(path, readonly = false) {
 			ANIMATOR.framerate		= ds_map_try_get(_anim_map, "framerate");
 		}
 	} catch(e) {
-		log_warning("LOAD, animator", e.longMessage);
+		log_warning("LOAD, animator", exception_print(e));
 	}
 	
 	try {
@@ -88,7 +88,7 @@ function LOAD_PATH(path, readonly = false) {
 			PANEL_GRAPH.graph_y		= ds_map_try_get(_graph_map, "graph_y");
 		}
 	} catch(e) {
-		log_warning("LOAD, graph", e.longMessage);
+		log_warning("LOAD, graph", exception_print(e));
 	}
 	
 	ds_queue_clear(CONNECTION_CONFLICT);
@@ -97,21 +97,21 @@ function LOAD_PATH(path, readonly = false) {
 		for(var i = 0; i < ds_list_size(create_list); i++)
 			create_list[| i].loadGroup();
 	} catch(e) {
-		log_warning("LOAD, group", e.longMessage);
+		log_warning("LOAD, group", exception_print(e));
 	}
 	
 	try {
 		for(var i = 0; i < ds_list_size(create_list); i++)
 			create_list[| i].postDeserialize();
 	} catch(e) {
-		log_warning("LOAD, deserialize", e.longMessage);
+		log_warning("LOAD, deserialize", exception_print(e));
 	}
 	
 	try {
 		for(var i = 0; i < ds_list_size(create_list); i++)
 			create_list[| i].applyDeserialize();
 	} catch(e) {
-		log_warning("LOAD, apply deserialize", e.longMessage);
+		log_warning("LOAD, apply deserialize", exception_print(e));
 	}
 	
 	try {
@@ -122,14 +122,14 @@ function LOAD_PATH(path, readonly = false) {
 		for(var i = 0; i < ds_list_size(create_list); i++)
 			create_list[| i].postConnect();
 	} catch(e) {
-		log_warning("LOAD, connect", e.longMessage);
+		log_warning("LOAD, connect", exception_print(e));
 	}
 	
 	try {
 		for(var i = 0; i < ds_list_size(create_list); i++)
 			create_list[| i].doUpdate();
 	} catch(e) {
-		log_warning("LOAD, update", e.longMessage);
+		log_warning("LOAD, update", exception_print(e));
 	}
 	
 	Render();
@@ -150,7 +150,7 @@ function LOAD_PATH(path, readonly = false) {
 			if(!ds_queue_empty(CONNECTION_CONFLICT))
 				log_warning("LOAD", "Some connection(s) is unsolved. This may caused by render node not being update properly, or image path is broken.");
 		} catch(e) {
-			log_warning("LOAD, connect solver", e.longMessage);
+			log_warning("LOAD, connect solver", exception_print(e));
 		}
 	}
 	

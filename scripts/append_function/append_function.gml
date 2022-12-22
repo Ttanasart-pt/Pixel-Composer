@@ -45,7 +45,7 @@ function APPEND(_path) {
 				ds_list_add(node_create, _node);
 		}
 	} catch(e) {
-		log_warning("APPEND, node", e.longMessage);
+		log_warning("APPEND, node", exception_print(e));
 	}
 	printlog("Load group time: " + string(current_time - t));
 	t = current_time;
@@ -54,7 +54,7 @@ function APPEND(_path) {
 		for(var i = 0; i < ds_list_size(appended_list); i++)
 			appended_list[| i].postDeserialize();
 	} catch(e) {
-		log_warning("APPEND, deserialize", e.longMessage);
+		log_warning("APPEND, deserialize", exception_print(e));
 	}
 	printlog("Deserialize time: " + string(current_time - t));
 	t = current_time;
@@ -63,7 +63,7 @@ function APPEND(_path) {
 		for(var i = 0; i < ds_list_size(appended_list); i++)
 			appended_list[| i].applyDeserialize();
 	} catch(e) {
-		log_warning("LOAD, apply deserialize", e.longMessage);
+		log_warning("LOAD, apply deserialize", exception_print(e));
 	}
 	
 	try {
@@ -74,7 +74,7 @@ function APPEND(_path) {
 		for(var i = 0; i < ds_list_size(appended_list); i++)
 			appended_list[| i].postConnect();
 	} catch(e) {
-		log_warning("APPEND, connect", e.longMessage);
+		log_warning("APPEND, connect", exception_print(e));
 	}
 	printlog("Connect time: " + string(current_time - t));
 	t = current_time;
@@ -83,7 +83,7 @@ function APPEND(_path) {
 		for(var i = 0; i < ds_list_size(appended_list); i++)
 			appended_list[| i].doUpdate();
 	} catch(e) {
-		log_warning("APPEND, update", e.longMessage);
+		log_warning("APPEND, update", exception_print(e));
 	}
 	printlog("Update time: " + string(current_time - t));
 	t = current_time;
@@ -111,7 +111,7 @@ function APPEND(_path) {
 			if(!ds_queue_empty(CONNECTION_CONFLICT))
 				log_warning("APPEND", "Some connection(s) is unresolved. This may caused by render node not being update properly, or image path is broken.");
 		} catch(e) {
-			log_warning("APPEND, Conflict solver error : ", e.longMessage);
+			log_warning("APPEND, Conflict solver error : ", exception_print(e));
 		}
 	}
 	printlog("Conflict time: " + string(current_time - t));

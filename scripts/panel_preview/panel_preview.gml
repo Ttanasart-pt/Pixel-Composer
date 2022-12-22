@@ -499,7 +499,7 @@ function Panel_Preview() : PanelContent() constructor {
 		var cy = canvas_y + _node.preview_y * canvas_s;
 		var _snx = 0, _sny = 0;
 		
-		if(keyboard_check(vk_control)) {
+		if(key_mod_press(CTRL)) {
 			_snx = grid_show? grid_width : 1;
 			_sny = grid_show? grid_height : 1;
 		} else if(grid_snap) {

@@ -1,4 +1,4 @@
-function Node_Line(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {	
+function Node_Line(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constructor {	
 	name = "Line";
 	
 	inputs[| 0] = nodeValue(0, "Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, def_surf_size2 )
@@ -44,21 +44,21 @@ function Node_Line(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 	
 	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
 	
-	static update = function() {
-		var _dim   = inputs[| 0].getValue();
-		var _bg    = inputs[| 1].getValue();
-		var _seg   = inputs[| 2].getValue();
-		var _wid   = inputs[| 3].getValue();
-		var _wig   = inputs[| 4].getValue();
-		var _sed   = inputs[| 5].getValue();
-		var _ang   = inputs[| 6].getValue() % 360;
-		var _pat   = inputs[| 7].getValue();
-		var _ratio = inputs[| 8].getValue();
-		var _shift = inputs[| 9].getValue();
+	static process_data = function(_outSurf, _data, _output_index) {
+		var _dim   = _data[0];
+		var _bg    = _data[1];
+		var _seg   = _data[2];
+		var _wid   = _data[3];
+		var _wig   = _data[4];
+		var _sed   = _data[5];
+		var _ang   = _data[6] % 360;
+		var _pat   = _data[7];
+		var _ratio = _data[8];
+		var _shift = _data[9];
 		
-		var _color = inputs[| 10].getValue();
+		var _color = _data[10];
 		var _col_data = inputs[| 10].getExtraData();
-		var _widc  = inputs[| 11].getValue();
+		var _widc  = _data[11];
 		
 		var _rtStr = min(_ratio[0], _ratio[1]);
 		var _rtLen = max(_ratio[0], _ratio[1]) - _rtStr;
@@ -66,19 +66,13 @@ function Node_Line(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 		var _use_path = _pat != 0 && instanceof(_pat) == "Node_Path";
 		if(_ang < 0) _ang = 360 + _ang;
 		
-		if(_use_path) {
-			inputs[| 6].setVisible(false);
-		} else {
-			inputs[| 6].setVisible(true);	
-		}
+		inputs[| 6].setVisible(!_use_path);
 		
 		random_set_seed(_sed);
 		
-		var _outSurf = outputs[| 0].getValue();
-		if(!is_surface(_outSurf)) {
+		if(!is_surface(_outSurf))
 			_outSurf =  surface_create_valid(_dim[0], _dim[1]);
-			outputs[| 0].setValue(_outSurf);
-		} else
+		else
 			surface_size_to(_outSurf, _dim[0], _dim[1]);
 		
 		surface_set_target(_outSurf);
@@ -184,6 +178,8 @@ function Node_Line(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 				}
 			}
 		surface_reset_target();
+		
+		return _outSurf;
 	}
 	doUpdate();
 }

@@ -25,14 +25,21 @@
 		self.onClick = noone;
 		
 		self.time = string_lead_zero(current_hour, 2) + ":" + string_lead_zero(current_minute, 2) + "." + string_lead_zero(current_second, 2);
+		
+		static setOnClick = function(onClick) {
+			self.onClick = method(self, onClick);
+			return self;
+		}
 	}
 	
 	function noti_status(str, icon = noone) {
-		ds_list_add(STATUSES, new notification(NOTI_TYPE.log, str, icon));
+		var noti = new notification(NOTI_TYPE.log, str, icon);
+		ds_list_add(STATUSES, noti);
+		return noti;
 	}
 	
 	function noti_warning(str, icon = noone) {
-		var noti = new notification(NOTI_TYPE.warning, str, icon, c_ui_orange, 180);
+		var noti = new notification(NOTI_TYPE.warning, str, icon, c_ui_orange, PREF_MAP[? "notification_time"]);
 		ds_list_add(STATUSES, noti);
 		ds_list_add(WARNING, noti);
 		

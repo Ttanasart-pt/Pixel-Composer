@@ -47,26 +47,32 @@ function textArea(_input, _onModify) constructor {
 	
 	static cut_line = function() {
 		_input_text_line = [];
-		
-		var ch, i = 1, ss = "", _txt = _prev_text;
-		var len = string_length(_prev_text);
-		
 		draw_set_font(font);
-		while(string_length(_txt) > 0) {
-			var sp = string_pos(" ", _txt);
-			if(sp == 0) sp = string_length(_txt);
+		
+		var _txtLines = string_splice(_prev_text, "\n");
+		var ss = "";
+		
+		for( var i = 0; i < array_length(_txtLines); i++ ) {
+			var _txt = _txtLines[i];
+			_txt = string_replace_all(_txt, "\n", "");
+			if(_txt == "") continue;
 			
-			var _ps = string_copy(_txt, 1, sp);
-			_txt = string_copy(_txt, sp + 1, string_length(_txt) - sp);
+			while(string_length(_txt) > 0) {
+				var sp = string_pos(" ", _txt);
+				if(sp == 0) sp = string_length(_txt);
 			
-			if(string_width(ss + _ps) >= line_width) {
-				array_push(_input_text_line, ss);
-				ss = _ps;
-			} else if(string_length(_txt) <= 0) {
-				array_push(_input_text_line, ss + _ps);
-				ss = "";
-			} else {
-				ss += _ps;	
+				var _ps = string_copy(_txt, 1, sp);
+				_txt = string_copy(_txt, sp + 1, string_length(_txt) - sp);
+			
+				if(string_width(ss + _ps) >= line_width) {
+					array_push(_input_text_line, ss);
+					ss = _ps;
+				} else if(string_length(_txt) <= 0) {
+					array_push(_input_text_line, ss + _ps);
+					ss = "";
+				} else {
+					ss += _ps;	
+				}
 			}
 		}
 		
@@ -76,17 +82,17 @@ function textArea(_input, _onModify) constructor {
 	
 	static editText = function() {
 		#region text editor
-			if(keyboard_check(vk_control) && keyboard_check_pressed(ord("A"))) {
+			if(key_mod_press(CTRL) && keyboard_check_pressed(ord("A"))) {
 				cursor_select	= 0;
 				cursor			= string_length(_input_text);
-			} else if(keyboard_check(vk_control) && (keyboard_check_pressed(ord("C")) || keyboard_check_pressed(ord("X")))) {
+			} else if(key_mod_press(CTRL) && (keyboard_check_pressed(ord("C")) || keyboard_check_pressed(ord("X")))) {
 				if(cursor_select != -1) {
 					var minc = min(cursor, cursor_select);
 					var maxc = max(cursor, cursor_select);
 					clipboard_set_text(string_copy(_input_text, minc, maxc - minc));
 				}
 			} else {
-				if(keyboard_check(vk_control) && keyboard_check_pressed(ord("V")))
+				if(key_mod_press(CTRL) && keyboard_check_pressed(ord("V")))
 					KEYBOARD_STRING = clipboard_get_text();
 					
 				if(keyboard_check_pressed(vk_escape) || keyboard_check_pressed(vk_enter)) {
@@ -111,7 +117,7 @@ function textArea(_input, _onModify) constructor {
 					
 					cursor_select	= -1;
 					move_cursor(-1);
-				} else if(keyboard_check_pressed(vk_delete) || (keyboard_check_pressed(ord("X")) && keyboard_check(vk_control) && cursor_select != -1)) {
+				} else if(keyboard_check_pressed(vk_delete) || (keyboard_check_pressed(ord("X")) && key_mod_press(CTRL) && cursor_select != -1)) {
 					if(cursor_select == -1) {
 						var str_before	= string_copy(_input_text, 1, cursor);
 						var str_after	= string_copy(_input_text, cursor + 2, string_length(_input_text) - cursor - 1);
@@ -163,7 +169,21 @@ function textArea(_input, _onModify) constructor {
 		if(auto_update && keyboard_check_pressed(vk_anykey))
 			apply();
 			
-		if(keyboard_check_pressed(vk_escape)) {
+		if(keyboard_check_pressed(vk_home)) {
+			if(keyboard_check(vk_shift)) {
+				if(cursor_select == -1)
+					cursor_select = cursor;
+			} else 
+				cursor_select	= -1;
+			move_cursor(-cursor);
+		} else if(keyboard_check_pressed(vk_end)) {
+			if(keyboard_check(vk_shift)) {
+				if(cursor_select == -1)
+					cursor_select = cursor;
+			} else 
+				cursor_select	= -1;
+			move_cursor(string_length(_input_text) - cursor);
+		} else if(keyboard_check_pressed(vk_escape)) {
 			_input_text = _last_value;
 			cut_line();
 			deselect();
@@ -266,7 +286,7 @@ function textArea(_input, _onModify) constructor {
 						cursor_select	= -1;
 						
 					move_cursor(-1);
-					if(keyboard_check(vk_control)) {
+					if(key_mod_press(CTRL)) {
 						while(cursor > 0) {
 							var ch = string_char_at(_prev_text, cursor);
 							if(ch == " ") break
@@ -282,7 +302,7 @@ function textArea(_input, _onModify) constructor {
 						cursor_select	= -1;
 					
 					move_cursor(1);
-					if(keyboard_check(vk_control)) {
+					if(key_mod_press(CTRL)) {
 						while(cursor < string_length(_prev_text)) {
 							var ch = string_char_at(_prev_text, cursor);
 							if(ch == " ") break

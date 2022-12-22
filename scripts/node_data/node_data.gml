@@ -156,7 +156,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) constructor {
 			setRenderStatus(true);
 			render_time = get_timer() - t;
 		} catch(exception) {
-			log_warning("RENDER", "Render error " + string(exception));
+			log_warning("RENDER", "Render error " + exception_print(exception));
 		}
 	}
 	
@@ -762,7 +762,9 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) constructor {
 	
 	static applyDeserialize = function() {
 		var _inputs = load_map[? "inputs"];
-		for(var i = 0; i < ds_list_size(inputs); i++)
+		var amo = min(ds_list_size(inputs), ds_list_size(_inputs));
+		
+		for(var i = 0; i < amo; i++)
 			inputs[| i].applyDeserialize(_inputs[| i], load_scale);
 	}
 	

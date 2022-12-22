@@ -15,10 +15,10 @@ event_inherited();
 	setColor = function(color) {
 		if(index_selecting == -1 || palette == 0) return;
 		palette[index_selecting] = color;
-		onApply(palette);
 	}
 	
 	selector = new colorSelector(setColor);
+	selector.dropper_close = false;
 	
 	function setPalette(pal) {
 		palette = pal;	
@@ -115,7 +115,7 @@ event_inherited();
 		
 	function sortPalette(sortFunc) {
 		array_sort(palette, sortFunc);
-		onApply(palette);
+		selector.onApply();
 	}
 #endregion
 

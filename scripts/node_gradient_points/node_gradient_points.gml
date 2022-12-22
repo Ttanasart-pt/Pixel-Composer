@@ -1,4 +1,4 @@
-function Node_Gradient_Points(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
+function Node_Gradient_Points(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constructor {
 	name = "4 Points gradient";
 	
 	shader = sh_gradient_points;
@@ -40,24 +40,22 @@ function Node_Gradient_Points(_x, _y, _group = -1) : Node(_x, _y, _group) constr
 		if(inputs[| 7].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny)) active = false;
 	}
 	
-	static update = function() {
-		var _dim = inputs[| 0].getValue();
+	static process_data = function(_outSurf, _data, _output_index) {
+		var _dim = _data[0];
 		
-		var _outSurf = outputs[| 0].getValue();
-		if(!is_surface(_outSurf)) {
+		if(!is_surface(_outSurf))
 			_outSurf =  surface_create_valid(_dim[0], _dim[1]);
-			outputs[| 0].setValue(_outSurf);
-		} else
+		else
 			surface_size_to(_outSurf, _dim[0], _dim[1]);
 			
-		var _1cen = inputs[| 1].getValue();
-		var _1col = inputs[| 2].getValue();
-		var _2cen = inputs[| 3].getValue();
-		var _2col = inputs[| 4].getValue();
-		var _3cen = inputs[| 5].getValue();
-		var _3col = inputs[| 6].getValue();
-		var _4cen = inputs[| 7].getValue();
-		var _4col = inputs[| 8].getValue();
+		var _1cen = _data[1];
+		var _1col = _data[2];
+		var _2cen = _data[3];
+		var _2col = _data[4];
+		var _3cen = _data[5];
+		var _3col = _data[6];
+		var _4cen = _data[7];
+		var _4col = _data[8];
 		
 		surface_set_target(_outSurf);
 		draw_clear_alpha(0, 0);
@@ -69,6 +67,8 @@ function Node_Gradient_Points(_x, _y, _group = -1) : Node(_x, _y, _group) constr
 			draw_sprite_stretched_ext(s_fx_pixel, 0, 0, 0, _dim[0], _dim[1], c_white, 1);
 		shader_reset();
 		surface_reset_target();
+		
+		return _outSurf;
 	}
 	doUpdate();
 }

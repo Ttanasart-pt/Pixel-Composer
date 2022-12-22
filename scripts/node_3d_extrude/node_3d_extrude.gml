@@ -61,6 +61,16 @@ function Node_3D_Extrude(_x, _y, _group = -1) : Node(_x, _y, _group) constructor
 			generateMesh();
 	}
 	
+	static getHeight = function(h, gw, gh, i, j) {
+		var _i = round(i * gw);
+		var _j = round(j * gh);
+		
+		_i = clamp(_i, 0, array_length(h) - 1);
+		_j = clamp(_j, 0, array_length(h[_i]) - 1);
+		
+		return h[_i][_j];
+	}
+	
 	static generateMesh = function() {
 		var _ins = inputs[| 0].getValue();
 		var _hei = inputs[| 12].getValue();
@@ -75,14 +85,19 @@ function Node_3D_Extrude(_x, _y, _group = -1) : Node(_x, _y, _group) constructor
 		var useH = is_surface(_hei);
 		
 		if(useH) {
-			var height_buffer = buffer_create(ww * hh * 4, buffer_fixed, 2);
+			var hgw = surface_get_width(_hei);
+			var hgh = surface_get_height(_hei);
+			var hgtW = hgw / ww;
+			var hgtH = hgh / hh;
+			
+			var height_buffer = buffer_create(hgw * hgh * 4, buffer_fixed, 2);
 			buffer_get_surface(height_buffer, _hei, 0);
 			buffer_seek(height_buffer, buffer_seek_start, 0);
 			
-			var hei = array_create(ww, hh);
+			var hei = array_create(hgw, hgh);
 			
-			for( var j = 0; j < hh; j++ )
-			for( var i = 0; i < ww; i++ ) {
+			for( var j = 0; j < hgh; j++ )
+			for( var i = 0; i < hgw; i++ ) {
 				var cc = buffer_read(height_buffer, buffer_u32);
 				var _b = colorBrightness(cc & ~0b11111111);
 				hei[i][j] = _b;
@@ -116,7 +131,7 @@ function Node_3D_Extrude(_x, _y, _group = -1) : Node(_x, _y, _group) constructor
 			var tx0 = tw * i, tx1 = tx0 + tw;
 			var ty0 = th * j, ty1 = ty0 + th;
 			
-			var dep = (useH? hei[i][j] : 1) * 0.5;
+			var dep = (useH? getHeight(hei, hgtW, hgtH, i, j) : 1) * 0.5;
 			
 			vertex_add_pnt(VB, [i1, j0, -dep], [0, 0, -1], [tx1, ty0]);
 			vertex_add_pnt(VB, [i0, j0, -dep], [0, 0, -1], [tx0, ty0]);
@@ -134,7 +149,7 @@ function Node_3D_Extrude(_x, _y, _group = -1) : Node(_x, _y, _group) constructor
 			vertex_add_pnt(VB, [i0, j0,  dep], [0, 0, 1], [tx0, ty0]);
 			vertex_add_pnt(VB, [i0, j1,  dep], [0, 0, 1], [tx0, ty1]);
 			
-			if((useH && dep * 2 > hei[i][j - 1]) || (j == 0 || ap[i][j - 1] == 0)) {
+			if((useH && dep * 2 > getHeight(hei, hgtW, hgtH, i, j - 1)) || (j == 0 || ap[i][j - 1] == 0)) {
 				vertex_add_pnt(VB, [i0, j0,  dep], [0, -1, 0], [tx1, ty0]);
 				vertex_add_pnt(VB, [i0, j0, -dep], [0, -1, 0], [tx0, ty0]);
 				vertex_add_pnt(VB, [i1, j0,  dep], [0, -1, 0], [tx1, ty1]);
@@ -144,7 +159,7 @@ function Node_3D_Extrude(_x, _y, _group = -1) : Node(_x, _y, _group) constructor
 				vertex_add_pnt(VB, [i1, j0,  dep], [0, -1, 0], [tx0, ty1]);
 			}
 			
-			if((useH && dep * 2 > hei[i][j + 1]) || (j == hh - 1 || ap[i][j + 1] == 0)) {
+			if((useH && dep * 2 > getHeight(hei, hgtW, hgtH, i, j + 1)) || (j == hh - 1 || ap[i][j + 1] == 0)) {
 				vertex_add_pnt(VB, [i0, j1,  dep], [0, 1, 0], [tx1, ty0]);
 				vertex_add_pnt(VB, [i0, j1, -dep], [0, 1, 0], [tx0, ty0]);
 				vertex_add_pnt(VB, [i1, j1,  dep], [0, 1, 0], [tx1, ty1]);
@@ -154,7 +169,7 @@ function Node_3D_Extrude(_x, _y, _group = -1) : Node(_x, _y, _group) constructor
 				vertex_add_pnt(VB, [i1, j1,  dep], [0, 1, 0], [tx0, ty1]);
 			}
 			
-			if((useH && dep * 2 > hei[i - 1][j]) || (i == 0 || ap[i - 1][j] == 0)) {
+			if((useH && dep * 2 > getHeight(hei, hgtW, hgtH, i - 1, j)) || (i == 0 || ap[i - 1][j] == 0)) {
 				vertex_add_pnt(VB, [i0, j0,  dep], [1, 0, 0], [tx1, ty0]);
 				vertex_add_pnt(VB, [i0, j0, -dep], [1, 0, 0], [tx0, ty0]);
 				vertex_add_pnt(VB, [i0, j1,  dep], [1, 0, 0], [tx1, ty1]);
@@ -164,7 +179,7 @@ function Node_3D_Extrude(_x, _y, _group = -1) : Node(_x, _y, _group) constructor
 				vertex_add_pnt(VB, [i0, j1,  dep], [1, 0, 0], [tx0, ty1]);
 			}
 			
-			if((useH && dep * 2 > hei[i + 1][j]) || (i == ww - 1 || ap[i + 1][j] == 0)) {
+			if((useH && dep * 2 > getHeight(hei, hgtW, hgtH, i + 1, j)) || (i == ww - 1 || ap[i + 1][j] == 0)) {
 				vertex_add_pnt(VB, [i1, j0,  dep], [-1, 0, 0], [tx1, ty0]);
 				vertex_add_pnt(VB, [i1, j0, -dep], [-1, 0, 0], [tx0, ty0]);
 				vertex_add_pnt(VB, [i1, j1,  dep], [-1, 0, 0], [tx1, ty1]);

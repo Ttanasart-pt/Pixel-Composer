@@ -161,6 +161,15 @@ event_inherited();
 		})
 	]);
 	
+	ds_list_add(pref_global, [
+		"Warning notification time",
+		"notification_time",
+		new textBox(TEXTBOX_INPUT.number, function(str) { 
+			PREF_MAP[? "notification_time"] = max(0, round(real(str)));
+			PREF_SAVE();
+		})
+	]);
+	
 	//NODE
 	
 	ds_list_add(pref_node, "Particle");
@@ -434,7 +443,7 @@ event_inherited();
 				if(hk_editing == key) {
 					var _mod_prs = 0;
 					
-					if(keyboard_check(vk_control))	_mod_prs |= MOD_KEY.ctrl;
+					if(key_mod_press(CTRL))	_mod_prs |= MOD_KEY.ctrl;
 					if(keyboard_check(vk_shift))	_mod_prs |= MOD_KEY.shift;
 					if(keyboard_check(vk_alt))		_mod_prs |= MOD_KEY.alt;
 	

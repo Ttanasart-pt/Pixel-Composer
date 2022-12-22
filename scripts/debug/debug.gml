@@ -17,19 +17,19 @@ function __log(title, str, fname = "log.txt") {
 function log_message(title, str, icon = noone) {
 	__log("[MESSAGE] ", string(title) + ": " + string(str));
 	
-	noti_status(string(title) + ": " + string(str), icon);
+	return noti_status(string(title) + ": " + string(str), icon);
 }
 
 function log_warning(title, str) {
 	__log("[WARNING] ", string(title) + ": " + string(str));
 	
-	noti_warning(string(title) + ": " + string(str));
+	return noti_warning(string(title) + ": " + string(str));
 }
 
 function log_crash(str) {
 	__log("[ERROR] ", string(str));
 	
-	noti_error(string(str));
+	return noti_error(string(str));
 }
 
 function log_newline() {
@@ -44,6 +44,17 @@ function log_clear() {
 	if(file_exists(path))
 		file_delete(path);
 }
+
+function exception_print(e) {
+	var str = exception_print(e) + "\n\n\n=== Stack trace ===\n";	
+	
+	for( var i = 0; i < array_length(e.stacktrace); i++ ) {
+		str += e.stacktrace[i] + "\n"
+	}
+	
+	return str;
+}
+
 /*
 exception_unhandled_handler(function(ex) {
 	var tt = "\n-------------------------- OH NO --------------------------\n\n";

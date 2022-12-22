@@ -56,7 +56,7 @@ function Node_Path(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 				if(drag_type == 0) {
 					anc[0] = dx;
 					anc[1] = dy;
-					if(keyboard_check(vk_control)) {
+					if(key_mod_press(CTRL)) {
 						anc[0] = round(anc[0]);
 						anc[1] = round(anc[1]);
 					}
@@ -65,7 +65,7 @@ function Node_Path(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 					anc[3] = dy - anc[1];
 					anc[4] = -anc[2];
 					anc[5] = -anc[3];
-					if(keyboard_check(vk_control)) {
+					if(key_mod_press(CTRL)) {
 						anc[2] = round(anc[2]);
 						anc[3] = round(anc[3]);
 						anc[4] = round(anc[4]);
@@ -76,7 +76,7 @@ function Node_Path(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 					anc[5] = dy - anc[1];
 					anc[2] = -anc[4];
 					anc[3] = -anc[5];
-					if(keyboard_check(vk_control)) {
+					if(key_mod_press(CTRL)) {
 						anc[2] = round(anc[2]);
 						anc[3] = round(anc[3]);
 						anc[4] = round(anc[4]);
@@ -263,7 +263,7 @@ function Node_Path(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 						drag_point_sy = _a[1];
 					}
 				}
-			} else if(keyboard_check(vk_control) || PANEL_PREVIEW.tool_index == 0) {
+			} else if(key_mod_press(CTRL) || PANEL_PREVIEW.tool_index == 0) {
 				draw_sprite_ui_uniform(THEME.cursor_path_remove, 0, _mx + 16, _my + 16);
 				
 				if(mouse_press(mb_left, active)) {
@@ -290,7 +290,7 @@ function Node_Path(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 					} 
 				}
 			}
-		} else if(keyboard_check(vk_control) || PANEL_PREVIEW.tool_index == 0) {
+		} else if(key_mod_press(CTRL) || PANEL_PREVIEW.tool_index == 0) {
 			draw_sprite_ui_uniform(THEME.cursor_path_add, 0, _mx + 16, _my + 16);
 			
 			if(mouse_press(mb_left, active)) {

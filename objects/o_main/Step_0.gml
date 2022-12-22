@@ -32,9 +32,9 @@
 
 #region hotkey
 	HOTKEY_MOD = 0;
-	if(keyboard_check_direct(vk_control))	HOTKEY_MOD |= MOD_KEY.ctrl;
-	if(keyboard_check_direct(vk_shift))		HOTKEY_MOD |= MOD_KEY.shift;
-	if(keyboard_check_direct(vk_alt))		HOTKEY_MOD |= MOD_KEY.alt;
+	if(CTRL  == KEYBOARD_STATUS.pressing)	HOTKEY_MOD |= MOD_KEY.ctrl;
+	if(SHIFT == KEYBOARD_STATUS.pressing)	HOTKEY_MOD |= MOD_KEY.shift;
+	if(ALT   == KEYBOARD_STATUS.pressing)	HOTKEY_MOD |= MOD_KEY.alt;
 	
 	if(ds_map_exists(HOTKEYS, "")) {
 		var l = HOTKEYS[? ""];
@@ -42,7 +42,8 @@
 			var hotkey	= l[| i];
 			
 			if(key_press(hotkey.key, hotkey.modi)) {
-				hotkey.action();	
+				hotkey.action();
+				key_release();
 				break;
 			}
 		}
@@ -56,6 +57,7 @@
 			if(hotkey.key != -1) {
 				if(key_press(hotkey.key, hotkey.modi)) {
 					hotkey.action();
+					key_release();
 					break;
 				}
 			}

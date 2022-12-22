@@ -355,7 +355,7 @@ function Node_Canvas(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 		if(_tool == 0 || _tool == 1) {
 			if(_tool == 1) gpu_set_blendmode(bm_subtract);
 			
-			if(keyboard_check(vk_shift) && keyboard_check(vk_control)) {
+			if(keyboard_check(vk_shift) && key_mod_press(CTRL)) {
 				var aa = point_direction(mouse_pre_draw_x, mouse_pre_draw_y, mouse_cur_x, mouse_cur_y);
 				var dd = point_distance(mouse_pre_draw_x, mouse_pre_draw_y, mouse_cur_x, mouse_cur_y);
 				var _a = round(aa / 45) * 45;

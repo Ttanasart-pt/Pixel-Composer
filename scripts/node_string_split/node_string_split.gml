@@ -14,13 +14,18 @@ function Node_String_Split(_x, _y, _group = -1) : Node_Value_Processor(_x, _y, _
 	function process_value_data(_data) {
 		if(_data[1] == "") 
 			return string_to_array(_data[0]);
-		return string_splice(_data[0], _data[1]);
+			
+		var delim = _data[1];
+		delim = string_replace_all(delim, "\\n", "\n");
+		delim = string_replace_all(delim, "\\t", "\t");
+		return string_splice(_data[0], delim);
 	}
 	
 	doUpdate();
 	
 	function onDrawNode(xx, yy, _mx, _my, _s) {
 		var str = inputs[| 1].getValue();
+		
 		var cx = xx + w / 2 * _s;
 		var cy = yy + 10 + h / 2 * _s;
 		

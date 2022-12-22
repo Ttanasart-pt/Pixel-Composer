@@ -30,7 +30,7 @@ function rotator(_onModify, _step = -1) constructor {
 			var val;
 			var real_val   = round(delta + drag_sv);
 			
-			if(keyboard_check(vk_control)) 
+			if(key_mod_press(CTRL)) 
 				val = round(real_val / 15) * 15;
 			else 
 				val = real_val;

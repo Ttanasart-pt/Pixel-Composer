@@ -1,4 +1,4 @@
-function Node_Mesh_Warp(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
+function Node_Mesh_Warp(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constructor {
 	name = "Mesh warp";
 	
 	data = {
@@ -254,23 +254,26 @@ function Node_Mesh_Warp(_x, _y, _group = -1) : Node(_x, _y, _group) constructor 
 		var diagon = inputs[| 4].getValue();
 		
 		if(!inputs[| 0].value_from) return;
-		var ww = surface_get_width(surf);
-		var hh = surface_get_height(surf);
+		var useArray = is_array(surf);
+		var ww = useArray? surface_get_width(surf[0]) : surface_get_width(surf);
+		var hh = useArray? surface_get_height(surf[0]) : surface_get_height(surf);
 		
 		var gw = ww / sample;
 		var gh = hh / sample;
 		
-		var cont = surface_create_valid(ww, hh)
-		surface_set_target(cont);
-			shader_set(sh_content_sampler);
-			var uniform_dim = shader_get_uniform(sh_content_sampler, "dimension");
-			var uniform_sam = shader_get_uniform(sh_content_sampler, "sampler");
+		if(!useArray) {
+			var cont = surface_create_valid(ww, hh)
+			surface_set_target(cont);
+				shader_set(sh_content_sampler);
+				var uniform_dim = shader_get_uniform(sh_content_sampler, "dimension");
+				var uniform_sam = shader_get_uniform(sh_content_sampler, "sampler");
 			
-			shader_set_uniform_f_array(uniform_dim, [ww, hh]);
-			shader_set_uniform_f_array(uniform_sam, [gw, gh]);
-			draw_surface_safe(surf, 0, 0);
-			shader_reset();
-		surface_reset_target();
+				shader_set_uniform_f_array(uniform_dim, [ww, hh]);
+				shader_set_uniform_f_array(uniform_sam, [gw, gh]);
+				draw_surface_safe(surf, 0, 0);
+				shader_reset();
+			surface_reset_target();
+		}
 		
 		data.points = [[]];
 		ds_list_clear(data.tris);
@@ -279,12 +282,18 @@ function Node_Mesh_Warp(_x, _y, _group = -1) : Node(_x, _y, _group) constructor 
 		var ind = 0;
 		for(var i = 0; i <= sample; i++) 
 		for(var j = 0; j <= sample; j++) {
-			var c0 = surface_getpixel(cont, j * gw,     i * gh);
-			var c1 = surface_getpixel(cont, j * gw - 1, i * gh);
-			var c2 = surface_getpixel(cont, j * gw,     i * gh - 1);
-			var c3 = surface_getpixel(cont, j * gw - 1, i * gh - 1);
+			var fill = false;
+			if(useArray) {
+				fill = true;
+			} else {
+				var c0 = surface_getpixel(cont, j * gw,     i * gh);
+				var c1 = surface_getpixel(cont, j * gw - 1, i * gh);
+				var c2 = surface_getpixel(cont, j * gw,     i * gh - 1);
+				var c3 = surface_getpixel(cont, j * gw - 1, i * gh - 1);
+				fill = c0 + c1 + c2 + c3 > 0;
+			}
 			
-			if(c0 + c1 + c2 + c3 > 0) {
+			if(fill) {
 				data.points[i][j] = new point(self, ind++, min(j * gw, ww), min(i * gh, hh));
 				if(i == 0) continue;
 				
@@ -321,7 +330,8 @@ function Node_Mesh_Warp(_x, _y, _group = -1) : Node(_x, _y, _group) constructor 
 			}
 		}
 		
-		surface_free(cont);
+		if(!useArray)
+			surface_free(cont);
 	}
 	
 	static reset = function() {
@@ -335,7 +345,7 @@ function Node_Mesh_Warp(_x, _y, _group = -1) : Node(_x, _y, _group) constructor 
 		
 		regularTri(_inSurf);
 		for(var i = 0; i < ds_list_size(data.tris); i++) {
-			data.tris[| i].initSurface(_inSurf);
+			data.tris[| i].initSurface(is_array(_inSurf)? _inSurf[0] : _inSurf);
 		}
 	}
 	
@@ -422,15 +432,13 @@ function Node_Mesh_Warp(_x, _y, _group = -1) : Node(_x, _y, _group) constructor 
 		}
 	}
 	
-	static update = function() {
-		var _inSurf		= inputs[| 0].getValue();
-		var _outSurf	= outputs[| 0].getValue();
+	static process_data = function(_outSurf, _data, _output_index) {
+		var _inSurf		= _data[0];
 		
 		if(is_surface(_outSurf)) 
 			surface_size_to(_outSurf, surface_get_width(_inSurf), surface_get_height(_inSurf));
 		else {
 			_outSurf = surface_create_valid(surface_get_width(_inSurf), surface_get_height(_inSurf));
-			outputs[| 0].setValue(_outSurf);
 		}
 		
 		reset();
@@ -438,10 +446,11 @@ function Node_Mesh_Warp(_x, _y, _group = -1) : Node(_x, _y, _group) constructor 
 		
 		surface_set_target(_outSurf);
 		draw_clear_alpha(0, 0);
-			for(var i = 0; i < ds_list_size(data.tris); i++) {
+			for(var i = 0; i < ds_list_size(data.tris); i++)
 				data.tris[| i].drawSurface(_inSurf);
-			}
 		surface_reset_target();	
+		
+		return _outSurf;
 	}
 	
 	static postDeserialize = function() {

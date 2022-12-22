@@ -1,4 +1,4 @@
-function Node_Grid(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
+function Node_Grid(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constructor {
 	name = "Grid";
 	
 	shader = sh_grid;
@@ -55,25 +55,23 @@ function Node_Grid(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 		inputs[| 1].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
 	}
 	
-	static update = function() {
-		var _dim = inputs[| 0].getValue();
-		var _pos = inputs[| 1].getValue();
-		var _sca = inputs[| 2].getValue();
-		var _wid = inputs[| 3].getValue();
-		var _ang = inputs[| 4].getValue();
-		var _sam = inputs[| 7].getValue();
-		var _shf = inputs[| 8].getValue();
-		var _shx = inputs[| 9].getValue();
-		var _hgt = inputs[| 10].getValue();
+	static process_data = function(_outSurf, _data, _output_index) {
+		var _dim = _data[0];
+		var _pos = _data[1];
+		var _sca = _data[2];
+		var _wid = _data[3];
+		var _ang = _data[4];
+		var _sam = _data[7];
+		var _shf = _data[8];
+		var _shx = _data[9];
+		var _hgt = _data[10];
 		
-		var _col1 = inputs[| 5].getValue();
-		var _col2 = inputs[| 6].getValue();
+		var _col1 = _data[5];
+		var _col2 = _data[6];
 		
-		var _outSurf = outputs[| 0].getValue();
-		if(!is_surface(_outSurf)) {
+		if(!is_surface(_outSurf))
 			_outSurf =  surface_create_valid(_dim[0], _dim[1]);
-			outputs[| 0].setValue(_outSurf);
-		} else
+		else
 			surface_size_to(_outSurf, _dim[0], _dim[1]);
 		
 		surface_set_target(_outSurf);
@@ -97,6 +95,8 @@ function Node_Grid(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 				draw_sprite_ext(s_fx_pixel, 0, 0, 0, _dim[0], _dim[1], 0, c_white, 1);
 		shader_reset();
 		surface_reset_target();
+		
+		return _outSurf;
 	}
 	doUpdate();
 }

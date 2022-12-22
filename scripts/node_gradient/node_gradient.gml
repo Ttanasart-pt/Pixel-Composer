@@ -1,4 +1,4 @@
-function Node_Gradient(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
+function Node_Gradient(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constructor {
 	name = "Gradient";
 	
 	shader = sh_gradient;
@@ -51,26 +51,24 @@ function Node_Gradient(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 		inputs[| 6].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
 	}
 	
-	static update = function() {
-		var _dim = inputs[| 0].getValue();
+	static process_data = function(_outSurf, _data, _output_index) {
+		var _dim = _data[0];
 		
-		var _outSurf = outputs[| 0].getValue();
 		if(!is_surface(_outSurf)) {
 			_outSurf =  surface_create_valid(_dim[0], _dim[1]);
-			outputs[| 0].setValue(_outSurf);
 		} else
 			surface_size_to(_outSurf, _dim[0], _dim[1]);
 			
-		var _gra = inputs[| 1].getValue();
+		var _gra = _data[1];
 		var _gra_data = inputs[| 1].getExtraData();
 		
-		var _typ = inputs[| 2].getValue();
-		var _ang = inputs[| 3].getValue();
-		var _rad = inputs[| 4].getValue();
-		var _shf = inputs[| 5].getValue();
-		var _cnt = inputs[| 6].getValue();
-		var _lop = inputs[| 7].getValue();
-		var _msk = inputs[| 8].getValue();
+		var _typ = _data[2];
+		var _ang = _data[3];
+		var _rad = _data[4];
+		var _shf = _data[5];
+		var _cnt = _data[6];
+		var _lop = _data[7];
+		var _msk = _data[8];
 		var _grad_color = [];
 		var _grad_time  = [];
 		
@@ -114,6 +112,8 @@ function Node_Gradient(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 			BLEND_NORMAL
 		shader_reset();
 		surface_reset_target();
+		
+		return _outSurf;
 	}
 	doUpdate();
 }

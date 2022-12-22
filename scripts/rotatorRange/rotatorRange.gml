@@ -54,25 +54,25 @@ function rotatorRange(_onModify) constructor {
 			
 		if(dragging > -1) {
 			var val = point_direction(_x, knob_y, _m[0], _m[1]);
-			if(keyboard_check(vk_control)) val = round(val / 15) * 15;
+			if(key_mod_press(CTRL)) val = round(val / 15) * 15;
 			
 			var delta = angle_difference(point_direction(_x, knob_y, _m[0], _m[1]), drag_sa);
 			var val, real_val;
 			
 			if(dragging == 2) {
 				real_val[0]   = round(delta + drag_sv[0]);
-				val = keyboard_check(vk_control)? round(real_val[0] / 15) * 15 : real_val[0];
+				val = key_mod_press(CTRL)? round(real_val[0] / 15) * 15 : real_val[0];
 				onModify(0, val);
 				
 				real_val[1]   = round(delta + drag_sv[1]);
-				val = keyboard_check(vk_control)? round(real_val[1] / 15) * 15 : real_val[1];
+				val = key_mod_press(CTRL)? round(real_val[1] / 15) * 15 : real_val[1];
 				onModify(1, val);
 				
 				UNDO_HOLDING = true;
 			} else {
 				var _o = _data[dragging];
 				real_val   = round(delta + drag_sv);
-				val = keyboard_check(vk_control)? round(real_val / 15) * 15 : real_val;
+				val = key_mod_press(CTRL)? round(real_val / 15) * 15 : real_val;
 				
 				draw_sprite_ui_uniform(THEME.rotator_knob, 1, px[dragging], py[dragging]);
 				

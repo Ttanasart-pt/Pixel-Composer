@@ -1,4 +1,4 @@
-function Node_Scatter(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
+function Node_Scatter(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constructor {
 	name = "Scatter";
 	
 	shader = sh_blend_normal_dim;
@@ -49,37 +49,33 @@ function Node_Scatter(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 		inputs[| 5].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
 	}
 	
-	static update = function() {
-		var _inSurf = inputs[| 0].getValue(), surf;
+	static process_data = function(_outSurf, _data, _output_index) {
+		var _inSurf = _data[0], surf;
 		if(_inSurf == 0)
 			return;
 		
-		var _outSurf	= outputs[| 0].getValue();
+		var _dim	= _data[1];
+		var _amount	= _data[2];
+		var _scale	= _data[3];
+		var _rota	= _data[4];
 		
-		var _dim	= inputs[| 1].getValue();
-		var _amount	= inputs[| 2].getValue();
-		var _scale	= inputs[| 3].getValue();
-		var _rota	= inputs[| 4].getValue();
+		var _area	= _data[5];
 		
-		var _area	= inputs[| 5].getValue();
+		var _dist	= _data[6];
+		var _scat	= _data[9];
 		
-		var _dist	= inputs[| 6].getValue();
-		var _scat	= inputs[| 9].getValue();
+		var _pint	= _data[7];
+		var _unis	= _data[8];
 		
-		var _pint	= inputs[| 7].getValue();
-		var _unis	= inputs[| 8].getValue();
-		
-		var seed	= inputs[| 10].getValue();
+		var seed	= _data[10];
 		random_set_seed(seed);
 		
 		var _in_w, _in_h;
 		
 		if(is_surface(_outSurf)) 
 			surface_size_to(_outSurf, _dim[0], _dim[1]);
-		else {
+		else
 			_outSurf =  surface_create_valid(_dim[0], _dim[1]);
-			outputs[| 0].setValue(_outSurf);
-		}
 		
 		var ww = surface_get_width(_outSurf);
 		var hh = surface_get_height(_outSurf);
@@ -145,6 +141,8 @@ function Node_Scatter(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 			
 			BLEND_NORMAL
 		surface_reset_target();
+		
+		return _outSurf;
 	}
 	
 }

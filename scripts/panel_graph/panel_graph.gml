@@ -236,7 +236,7 @@ function Panel_Graph() : PanelContent() constructor {
 			if(mouse_press(mb_middle)) {
 				_doDragging = true;
 				drag_key = mb_middle;
-			} else if(mouse_press(mb_left) && keyboard_check(vk_control)) {
+			} else if(mouse_press(mb_left) && key_mod_press(CTRL)) {
 				_doDragging = true;
 				drag_key = mb_left;
 			}
@@ -334,7 +334,7 @@ function Panel_Graph() : PanelContent() constructor {
 		#endregion
 		
 		if(mouse_on_graph && pFOCUS) {
-			if(mouse_press(mb_left) && !keyboard_check(vk_control)) {
+			if(mouse_press(mb_left) && !key_mod_press(CTRL)) {
 				if(keyboard_check(vk_shift)) {
 					if(ds_list_empty(nodes_select_list) && node_focus) 
 						ds_list_add(nodes_select_list, node_focus);
@@ -516,7 +516,7 @@ function Panel_Graph() : PanelContent() constructor {
 					
 						if(!_recur) {
 							_node.drawActive(gr_x, gr_y, graph_s, 1);
-							if(mouse_release(mb_left) && !keyboard_check(vk_control)) {
+							if(mouse_release(mb_left) && !key_mod_press(CTRL)) {
 								if(ds_list_size(nodes_select_list) == 0) {
 									_node.add(node_dragging);
 									node_dragging.checkConnectGroup();
@@ -537,14 +537,14 @@ function Panel_Graph() : PanelContent() constructor {
 					var nx = node_drag_sx + (mouse_graph_x - node_drag_mx);
 					var ny = node_drag_sy + (mouse_graph_y - node_drag_my);
 					
-					if(!keyboard_check(vk_control) && node_drag_snap) {
+					if(!key_mod_press(CTRL) && node_drag_snap) {
 						nx = round(nx / graph_line_s) * graph_line_s;
 						ny = round(ny / graph_line_s) * graph_line_s;
 					}
 					
 					node_dragging.move(nx, ny);
 				
-					if(mouse_release(mb_left) && !keyboard_check(vk_control)) {
+					if(mouse_release(mb_left) && !key_mod_press(CTRL)) {
 						if(nx != node_drag_sx || ny != node_drag_sy) {
 							recordAction(ACTION_TYPE.var_modify, node_dragging, [ node_drag_sx, "x" ]);
 							recordAction(ACTION_TYPE.var_modify, node_dragging, [ node_drag_sy, "y" ]);
@@ -554,7 +554,7 @@ function Panel_Graph() : PanelContent() constructor {
 					var nx = node_drag_sx + (mouse_graph_x - node_drag_mx);
 					var ny = node_drag_sy + (mouse_graph_y - node_drag_my);
 					
-					if(!keyboard_check(vk_control) && node_drag_snap) {
+					if(!key_mod_press(CTRL) && node_drag_snap) {
 						nx = round(nx / graph_line_s) * graph_line_s;
 						ny = round(ny / graph_line_s) * graph_line_s;
 					}
@@ -571,7 +571,7 @@ function Panel_Graph() : PanelContent() constructor {
 							var _nx = _node.x + dx;
 							var _ny = _node.y + dy;
 							
-							if(!keyboard_check(vk_control) && node_drag_snap) {
+							if(!key_mod_press(CTRL) && node_drag_snap) {
 								_nx = round(_nx / graph_line_s) * graph_line_s;
 								_ny = round(_ny / graph_line_s) * graph_line_s;
 							}
@@ -588,7 +588,7 @@ function Panel_Graph() : PanelContent() constructor {
 		
 		if(mouse_on_graph && pFOCUS) {
 			if(node_focus && value_focus == noone) {
-				if(mouse_press(mb_left) && !keyboard_check(vk_control)) {
+				if(mouse_press(mb_left) && !key_mod_press(CTRL)) {
 					node_dragging = node_focus;
 					node_drag_mx  = mouse_graph_x;
 					node_drag_my  = mouse_graph_y;
@@ -638,7 +638,7 @@ function Panel_Graph() : PanelContent() constructor {
 					nodes_select_drag = false;
 			}
 		
-			if(mouse_on_graph && mouse_press(mb_left, pFOCUS) && !keyboard_check(vk_control)) {
+			if(mouse_on_graph && mouse_press(mb_left, pFOCUS) && !key_mod_press(CTRL)) {
 				if(!node_focus && !value_focus && !drag_locking) {
 					nodes_select_drag = true;
 					nodes_select_mx = mx;
@@ -981,7 +981,7 @@ function Panel_Graph() : PanelContent() constructor {
 			}
 		} else {
 			if(value_focus) {
-				if(mouse_press(mb_left, pFOCUS) && !keyboard_check(vk_control)) {
+				if(mouse_press(mb_left, pFOCUS) && !key_mod_press(CTRL)) {
 					value_dragging = value_focus;
 				}
 			}
@@ -1093,9 +1093,13 @@ function Panel_Graph() : PanelContent() constructor {
 		minimap_w = min(minimap_w, w - ui(16));
 		minimap_h = min(minimap_h, h - ui(16) - toolbar_height);
 		
-		if(pHOVER && point_in_rectangle(mx, my, mx0, my0, mx1, my1))
+		var mini_hover = false;
+		if(pHOVER && point_in_rectangle(mx, my, mx0, my0, mx1, my1)) {
 			mouse_on_graph = false;
-		var hover = mouse_on_graph && !point_in_rectangle(mx, my, mx0, my0, mx0 + ui(16), my0 + ui(16)) && !minimap_dragging;
+			mini_hover = true;
+		}
+		
+		var hover = mini_hover && !point_in_rectangle(mx, my, mx0, my0, mx0 + ui(16), my0 + ui(16)) && !minimap_dragging;
 		
 		if(!is_surface(minimap_surface) || surface_get_width(minimap_surface) != minimap_w || surface_get_height(minimap_surface) != minimap_h) {
 			minimap_surface = surface_create_valid(minimap_w, minimap_h);
@@ -1124,6 +1128,7 @@ function Panel_Graph() : PanelContent() constructor {
 			var sph = maxy - miny;
 			var ss  = min(minimap_w / spw, minimap_h / sph);
 			
+			draw_set_alpha(0.4);
 			for(var i = 0; i < ds_list_size(nodes_list); i++) {
 				var n = nodes_list[| i];
 				
@@ -1132,8 +1137,10 @@ function Panel_Graph() : PanelContent() constructor {
 				var nw = n.w * ss;
 				var nh = n.h * ss;
 				
-				draw_sprite_stretched_ext(THEME.node_bg_mini, 0, nx, ny, nw, nh, n.color, 1);
+				draw_set_color(n.color);
+				draw_roundrect_ext(nx, ny, nx + nw, ny + nh, 2, 2, false);
 			}
+			draw_set_alpha(1);
 			
 			var gx = minimap_w / 2 - (graph_x + cx) * ss;
 			var gy = minimap_h / 2 - (graph_y + cy) * ss;

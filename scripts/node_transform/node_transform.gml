@@ -379,7 +379,7 @@ function Node_Transform(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) co
 			var da = angle_difference(overlay_drag_ma, aa);
 			var sa;
 			
-			if(keyboard_check(vk_control)) 
+			if(key_mod_press(CTRL)) 
 				sa = round((overlay_drag_sa - da) / 15) * 15;
 			else 
 				sa = overlay_drag_sa - da;

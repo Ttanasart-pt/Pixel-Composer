@@ -11,6 +11,7 @@ function colorSelector(onApply = noone) constructor {
 	side_dragging = false;
 	
 	dropper_active = false;
+	dropper_close  = true;
 	dropper_color  = c_white;
 	
 	disp_mode = 0;
@@ -81,17 +82,17 @@ function colorSelector(onApply = noone) constructor {
 		hue = round(color_get_hue(current_color));
 		sat = round(color_get_saturation(current_color));
 		val = round(color_get_value(current_color));
-		onApply(current_color);
+		
+		if(onApply != noone) onApply(current_color);
 	}
 	function setHSV() {
 		current_color = make_color_hsv(hue, sat, val);	
-		onApply(current_color);
+		if(onApply != noone) onApply(current_color);
 	}
 	
 	function setColor(color) {
 		current_color = color;
 		resetHSV();
-		onApply(current_color);
 	}
 	
 	function colorPicker() {
@@ -102,12 +103,9 @@ function colorSelector(onApply = noone) constructor {
 	static drawDropper = function(instance) {
 		if(mouse_press(mb_left)) {
 			setColor(dropper_color);
-			if(dropper_active == true) {
-				onApply(current_color);
+			if(dropper_active == true && dropper_close)
 				instance_destroy(instance);
-			}
-			dropper_active = false;	
-			resetHSV();
+			dropper_active = false;
 		}
 		
 		if(mouse_press(mb_right))

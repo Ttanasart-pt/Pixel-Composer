@@ -16,7 +16,12 @@ function Node_String(_x, _y, _group = -1) : Node_Value_Processor(_x, _y, _group)
 	
 	function onDrawNode(xx, yy, _mx, _my, _s) {
 		draw_set_text(f_h5, fa_center, fa_center, COLORS._main_text);
+		var cx = xx + w / 2 * _s;
+		var cy = yy + 10 + h / 2 * _s;
+		
 		var str = inputs[| 0].getValue();
-		draw_text_cut(xx + w / 2 * _s, yy + 10 + h / 2 * _s, str, w - ui(6), _s);
+		var ss = min((w - 4) * _s / string_width(str), (h - 24) * _s / string_height(str));
+		
+		draw_text_transformed(cx, cy, str, ss, ss, 0);
 	}
 }

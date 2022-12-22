@@ -481,12 +481,8 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 		
 		if(typ == VALUE_TYPE.surface && (type == VALUE_TYPE.integer || type == VALUE_TYPE.float)) {
 			if(is_array(val)) {
-				if(array_length(val) > 0 && is_surface(val[0])) {
-					var _v = array_create(array_length(val));
-					for( var i = 0; i < array_length(val); i++ )
-						_v[i] = [ surface_get_width(val[i]), surface_get_height(val[i]) ];
-					return _v;
-				}
+				if(array_length(val) > 0 && is_surface(val[0]))
+					return [ surface_get_width(val[0]), surface_get_height(val[0]) ];
 			} else if (is_surface(val)) {
 				return [ surface_get_width(val), surface_get_height(val) ];
 			}
@@ -748,7 +744,7 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 						if(drag_type) {
 							index = 1;
 							var dist = point_distance(_mx, _my, _x, _y) / _s / _scale;
-							if(keyboard_check(vk_control))
+							if(key_mod_press(CTRL))
 								dist = round(dist);
 							
 							if(setValue( dist ))
@@ -790,7 +786,7 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 							
 							draw_sprite_ui(THEME.anchor_rotate, 1, _ax, _ay, 1, 1, _val - 90, c_white, 1);
 							var angle = point_direction(_x, _y, _mx, _my);
-							if(keyboard_check(vk_control))
+							if(key_mod_press(CTRL))
 								angle = round(angle / 15) * 15;
 								
 							if(setValue( angle ))
@@ -833,7 +829,7 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 							draw_sprite_ui_uniform(THEME.anchor_selector, 1, _ax, _ay);
 							var _nx = value_snap((drag_sx + (_mx - drag_mx) - _x) / _s, _snx);
 							var _ny = value_snap((drag_sy + (_my - drag_my) - _y) / _s, _sny);
-							if(keyboard_check(vk_control)) {
+							if(key_mod_press(CTRL)) {
 								_val[0] = round(_nx);
 								_val[1] = round(_ny);
 							} else {
@@ -897,7 +893,7 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 							var _xx = value_snap(drag_sx + (_mx - drag_mx) / _s, _snx);
 							var _yy = value_snap(drag_sy + (_my - drag_my) / _s, _sny);
 							
-							if(keyboard_check(vk_control)) {
+							if(key_mod_press(CTRL)) {
 								_val[0] = round(_xx);
 								_val[1] = round(_yy);
 							} else {
@@ -916,7 +912,7 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 							var _dx = value_snap((_mx - drag_mx) / _s, _snx);
 							var _dy = value_snap((_my - drag_my) / _s, _sny);
 							
-							if(keyboard_check(vk_control)) {
+							if(key_mod_press(CTRL)) {
 								_val[2] = round(_dx);
 								_val[3] = round(_dy);
 							} else {
@@ -1015,7 +1011,7 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 							var _nx = value_snap(drag_sx + (_mx - drag_mx) / _s, _snx);
 							var _ny = value_snap(drag_sy + (_my - drag_my) / _s, _sny);
 							
-							if(keyboard_check(vk_control)) {
+							if(key_mod_press(CTRL)) {
 								_val[PUPPET_CONTROL.cx] = round(_nx);
 								_val[PUPPET_CONTROL.cy] = round(_ny);
 							} else {
@@ -1035,7 +1031,7 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 							var _nx = value_snap(drag_sx + (_mx - drag_mx) / _s, _snx);
 							var _ny = value_snap(drag_sy + (_my - drag_my) / _s, _sny);
 							
-							if(keyboard_check(vk_control)) {
+							if(key_mod_press(CTRL)) {
 								_val[PUPPET_CONTROL.fx] = round(_nx);
 								_val[PUPPET_CONTROL.fy] = round(_ny);
 							} else {
@@ -1158,6 +1154,7 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 	con_index = -1;
 	
 	static applyDeserialize = function(_map, scale = false) {
+		if(_map == undefined) return;
 		on_end = ds_map_try_get(_map, "on end", on_end);
 		visible	= ds_map_try_get(_map, "visible", visible);
 		animator.deserialize(_map[? "raw value"], scale);

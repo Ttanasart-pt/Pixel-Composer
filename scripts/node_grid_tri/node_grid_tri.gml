@@ -1,4 +1,4 @@
-function Node_Grid_Tri(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
+function Node_Grid_Tri(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constructor {
 	name = "Triangle Grid";
 	
 	shader = sh_grid_tri;
@@ -34,18 +34,16 @@ function Node_Grid_Tri(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 		inputs[| 1].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
 	}
 	
-	static update = function() {
-		var _dim = inputs[| 0].getValue();
-		var _pos = inputs[| 1].getValue();
-		var _sca = inputs[| 2].getValue();
-		var _rot = inputs[| 3].getValue();
-		var _thk = inputs[| 4].getValue();
+	static process_data = function(_outSurf, _data, _output_index) {
+		var _dim = _data[0];
+		var _pos = _data[1];
+		var _sca = _data[2];
+		var _rot = _data[3];
+		var _thk = _data[4];
 		
-		var _outSurf = outputs[| 0].getValue();
-		if(!is_surface(_outSurf)) {
+		if(!is_surface(_outSurf))
 			_outSurf =  surface_create_valid(_dim[0], _dim[1]);
-			outputs[| 0].setValue(_outSurf);
-		} else
+		else
 			surface_size_to(_outSurf, _dim[0], _dim[1]);
 		
 		surface_set_target(_outSurf);
@@ -60,6 +58,8 @@ function Node_Grid_Tri(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 			draw_sprite_ext(s_fx_pixel, 0, 0, 0, _dim[0], _dim[1], 0, c_white, 1);
 		shader_reset();
 		surface_reset_target();
+		
+		return _outSurf;
 	}
 	doUpdate();
 }

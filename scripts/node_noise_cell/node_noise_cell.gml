@@ -1,4 +1,4 @@
-function Node_Cellular(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
+function Node_Cellular(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constructor {
 	name = "Cellular";
 	
 	inputs[| 0] = nodeValue(0, "Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, def_surf_size2 )
@@ -42,35 +42,32 @@ function Node_Cellular(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 		inputs[| 1].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
 	}
 	
-	static update = function() {
-		var _dim  = inputs[| 0].getValue();
-		var _pos  = inputs[| 1].getValue();
-		var _sca  = inputs[| 2].getValue();
-		var _tim  = inputs[| 3].getValue();
-		var _type = inputs[| 4].getValue();
-		var _con  = inputs[| 5].getValue();
-		var _pat  = inputs[| 6].getValue();
-		var _mid  = inputs[| 7].getValue();
+	static process_data = function(_outSurf, _data, _output_index) {
+		var _dim  = _data[0];
+		var _pos  = _data[1];
+		var _sca  = _data[2];
+		var _tim  = _data[3];
+		var _type = _data[4];
+		var _con  = _data[5];
+		var _pat  = _data[6];
+		var _mid  = _data[7];
 		
-		inputs[| 8].setVisible(_pat == 1);
-		inputs[| 9].setVisible(_pat == 1);
-		var _rad = inputs[| 8].getValue();
-		var _sht = inputs[| 9].getValue();
+		_data[8].setVisible(_pat == 1);
+		_data[9].setVisible(_pat == 1);
+		var _rad = _data[8];
+		var _sht = _data[9];
 		
-		var _outSurf = outputs[| 0].getValue();
-		if(!is_surface(_outSurf)) {
+		if(!is_surface(_outSurf))
 			_outSurf =  surface_create_valid(_dim[0], _dim[1]);
-			outputs[| 0].setValue(_outSurf);
-		} else
+		else
 			surface_size_to(_outSurf, _dim[0], _dim[1]);
 		
-		if(_type == 0) {
+		if(_type == 0)
 			shader = sh_cell_noise;
-		} else if(_type == 1) {
+		else if(_type == 1)
 			shader = sh_cell_noise_edge;	
-		} else if(_type == 2) {
+		else if(_type == 2)
 			shader = sh_cell_noise_random;	
-		}
 		
 		uniform_dim = shader_get_uniform(shader, "dimension");
 		uniform_pos = shader_get_uniform(shader, "position");
@@ -97,6 +94,8 @@ function Node_Cellular(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 			draw_sprite_ext(s_fx_pixel, 0, 0, 0, _dim[0], _dim[1], 0, c_white, 1);
 		shader_reset();
 		surface_reset_target();
+		
+		return _outSurf;
 	}
 	doUpdate();
 }

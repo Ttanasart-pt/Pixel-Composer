@@ -33,6 +33,7 @@ event_inherited();
 	}
 	
 	selector = new colorSelector(setColor);
+	selector.dropper_close = false;
 	
 	function setKeyPosition(key, position) {
 		key.time = position;

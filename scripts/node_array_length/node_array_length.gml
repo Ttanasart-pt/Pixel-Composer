@@ -1,4 +1,4 @@
-function Node_Array_Length(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
+function Node_Array_Length(_x, _y, _group = -1) : Node_Value_Processor(_x, _y, _group) constructor {
 	name		= "Array Length";
 	previewable = false;
 	
@@ -11,10 +11,11 @@ function Node_Array_Length(_x, _y, _group = -1) : Node(_x, _y, _group) construct
 	
 	outputs[| 0] = nodeValue(0, "Size", self, JUNCTION_CONNECT.output, VALUE_TYPE.integer, 0);
 	
-	static update = function() {
-		var _arr = inputs[| 0].getValue();
-		if(!is_array(_arr)) return;
-		outputs[| 0].setValue(array_length(_arr));
+	function process_value_data(_data, index = 0) { 
+		var _arr = _data[0];
+		if(!is_array(_arr)) return 0;
+		
+		return array_length(_arr);
 	}
 	
 	doUpdate();
