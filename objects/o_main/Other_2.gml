@@ -2,6 +2,13 @@
 #region directory
 	globalvar DIRECTORY;
 	DIRECTORY = "C:\\Users\\" + environment_get_variable("USERNAME") + "\\AppData\\Local\\Pixels_Composer\\";
+	if(!directory_exists(DIRECTORY))
+		directory_create(DIRECTORY);
+		
+	DIRECTORY += "demo\\"
+	if(!directory_exists(DIRECTORY))
+		directory_create(DIRECTORY);
+	
 	log_clear();
 	log_newline();
 	log_message("SESSION", "Begin");
@@ -29,5 +36,6 @@
 
 #region pref
 	PREF_LOAD();
+	loadFonts();
 	setPanel();
 #endregion

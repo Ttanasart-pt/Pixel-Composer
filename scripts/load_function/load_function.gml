@@ -2,11 +2,7 @@ function LOAD() {
 	var path = get_open_filename("*.pxc;*.json", "");
 	if(path == "") return;
 	if(filename_ext(path) != ".json" && filename_ext(path) != ".pxc") return;
-	
-	nodeCleanUp();
-	setPanel();
-	room_restart();
-				
+		
 	gc_collect();
 	LOAD_PATH(path);
 	
@@ -25,6 +21,11 @@ function LOAD_PATH(path, readonly = false) {
 		log_warning("LOAD", "File not a valid project");
 		return false;
 	}
+	
+	nodeCleanUp();
+	clearPanel();
+	setPanel();
+	room_restart();
 	
 	var temp_path = DIRECTORY + "\_temp";
 	if(file_exists(temp_path)) file_delete(temp_path);
@@ -138,7 +139,6 @@ function LOAD_PATH(path, readonly = false) {
 	LOADING = false;
 	MODIFIED = false;
 	
-	PANEL_GRAPH.fullView();
 	PANEL_ANIMATION.updatePropertyList();
 	
 	log_message("FILE", "load " + path, s_noti_icon_file_load);

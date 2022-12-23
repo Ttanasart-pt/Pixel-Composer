@@ -110,10 +110,6 @@
 #region version
 	version_check = -1;
 	version_latest = 0;
-	if(os_is_network_connected()) {
-		var version = "https://gist.githubusercontent.com/Ttanasart-pt/d9eefbda84a78863c122b8b155bc0cda/raw/version.txt";
-		version_check = http_get(version);
-	}
 #endregion
 
 #region parameter

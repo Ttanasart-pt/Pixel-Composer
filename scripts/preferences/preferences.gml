@@ -245,8 +245,6 @@
 		
 		window_set_size(ww, hh);
 		window_set_position(display_get_width() / 2 - ww / 2, display_get_height() / 2 - hh / 2);
-		
-		loadFonts();
 	}
 	
 	function find_hotkey(_context, _name) {

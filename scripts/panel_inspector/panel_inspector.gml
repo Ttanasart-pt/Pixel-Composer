@@ -103,7 +103,7 @@ function Panel_Inspector() : PanelContent() constructor {
 				}
 				jun = inspecting.inputs[| inspecting.input_display_list[i]];
 			}
-				
+			
 			if(!jun.show_in_inspector || jun.type == VALUE_TYPE.object) continue;
 			
 			var lb_h = line_height(f_p0) + ui(8);
