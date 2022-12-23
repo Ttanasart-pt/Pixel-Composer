@@ -13,7 +13,6 @@ function Node_create_Export(_x, _y, _group = -1) {
 
 function Node_Export(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 	name		= "Export";
-	auto_update = false;
 	previewable = false;
 	
 	w = 96;
@@ -51,10 +50,8 @@ function Node_Export(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 		.setVisible(false);
 	inputs[| 8] = nodeValue(8, "Dithering", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false)
 		.setVisible(false);
-	inputs[| 9] = nodeValue(9, "Auto execute", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
 	
 	input_display_list = [
-		9, 
 		["Path",			false], 0, 1, 2, 4, 
 		["Format settings", false], 3, 
 		["Gif settings",	false], 5, 6, 7, 8,
@@ -110,53 +107,6 @@ function Node_Export(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 		noti.setOnClick(function() { shellOpenExplorer(self.path); });
 		
 		PANEL_MENU.setNotiIcon(THEME.noti_icon_tick);
-	}
-	
-	static step = function() {
-		auto_update = inputs[| 9].getValue();
-		var surf = inputs[| 0].getValue();
-		if(is_array(surf))	inputs[| 3].display_data = format_array;
-		else				inputs[| 3].display_data = format_single;
-		
-		var anim = inputs[| 3].getValue();
-		if(!anim) return;
-		
-		if(!ANIMATOR.is_playing) {
-			playing = false;
-			return;
-		}
-		
-		if(!ANIMATOR.frame_progress || !playing || ANIMATOR.current_frame <= -1)
-			return;
-			
-		export();
-				
-		if(ANIMATOR.current_frame < ANIMATOR.frames_total - 1) 
-			return;
-				
-		ANIMATOR.is_playing = false;
-		playing = false;
-					
-		if(anim != 2)
-			return;
-				
-		var path = inputs[| 1].getValue();
-		var suff = inputs[| 2].getValue();
-		var temp_path, target_path;
-						
-		if(is_array(surf)) {
-			for(var i = 0; i < array_length(surf); i++) {
-				temp_path = "\"" + DIRECTORY + "temp\\" + string(i) + "\\" + "*.png\"";
-				if(is_array(path))
-					target_path = pathString(path[ safe_mod(i, array_length(path)) ], suff, i);
-				else
-					target_path = pathString(path, suff, i);
-				renderGif(temp_path, "\"" + target_path + "\"");
-			}
-		} else {
-			target_path = "\"" + pathString(path, suff) + "\"";
-			renderGif("\"" + DIRECTORY + "temp\\*.png\"", target_path);
-		}
 	}
 	
 	static pathString = function(path, suff, index = 0) {
@@ -288,7 +238,7 @@ function Node_Export(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 		}
 	}
 	
-	static update = function() {
+	static inspectorUpdate = function() {
 		if(LOADING || APPENDING) return;
 		
 		var path = inputs[| 1].getValue();
@@ -306,5 +256,51 @@ function Node_Export(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 				directory_destroy(DIRECTORY + "temp");
 		} else
 			export();
+	}
+	
+	static update = function() {
+		var surf = inputs[| 0].getValue();
+		if(is_array(surf))	inputs[| 3].display_data = format_array;
+		else				inputs[| 3].display_data = format_single;
+		
+		var anim = inputs[| 3].getValue();
+		if(!anim) return;
+		
+		if(!ANIMATOR.is_playing) {
+			playing = false;
+			return;
+		}
+		
+		if(!ANIMATOR.frame_progress || !playing || ANIMATOR.current_frame <= -1)
+			return;
+			
+		export();
+				
+		if(ANIMATOR.current_frame < ANIMATOR.frames_total - 1) 
+			return;
+				
+		ANIMATOR.is_playing = false;
+		playing = false;
+					
+		if(anim != 2)
+			return;
+				
+		var path = inputs[| 1].getValue();
+		var suff = inputs[| 2].getValue();
+		var temp_path, target_path;
+						
+		if(is_array(surf)) {
+			for(var i = 0; i < array_length(surf); i++) {
+				temp_path = "\"" + DIRECTORY + "temp\\" + string(i) + "\\" + "*.png\"";
+				if(is_array(path))
+					target_path = pathString(path[ safe_mod(i, array_length(path)) ], suff, i);
+				else
+					target_path = pathString(path, suff, i);
+				renderGif(temp_path, "\"" + target_path + "\"");
+			}
+		} else {
+			target_path = "\"" + pathString(path, suff) + "\"";
+			renderGif("\"" + DIRECTORY + "temp\\*.png\"", target_path);
+		}
 	}
 }

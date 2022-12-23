@@ -1,6 +1,5 @@
 function Node_Seperate_Shape(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 	name		= "Separate shape";
-	auto_update = false;
 	
 	shader = sh_seperate_shape_ite;
 	uniform_it_dim = shader_get_uniform(shader, "dimension");
@@ -32,7 +31,7 @@ function Node_Seperate_Shape(_x, _y, _group = -1) : Node(_x, _y, _group) constru
 	
 	_prev_type = -1;
 	
-	static update = function() {
+	static inspectorUpdate = function() {
 		var _inSurf = inputs[| 0].getValue();
 		var _out_type = inputs[| 1].getValue();
 		var t = current_time;

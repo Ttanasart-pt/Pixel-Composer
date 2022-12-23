@@ -5,6 +5,7 @@ enum GRADIENT_INTER {
 }
 
 function draw_gradient(_x, _y, _w, _h, _grad, _int = GRADIENT_INTER.smooth) {
+	if(!ds_exists(_grad, ds_type_list)) return;
 	static RES = 48;
 	var _step  = _w / RES;
 	var _ox, _oc;
@@ -40,6 +41,7 @@ function draw_gradient(_x, _y, _w, _h, _grad, _int = GRADIENT_INTER.smooth) {
 }
 
 function gradient_eval(_gradient, _time, _int = GRADIENT_INTER.smooth) {
+	if(!ds_exists(_gradient, ds_type_list)) return c_white;
 	if(ds_list_size(_gradient) == 0) return c_white;
 	if(ds_list_size(_gradient) == 1) return _gradient[| 0].value;
 	
@@ -65,6 +67,8 @@ function gradient_eval(_gradient, _time, _int = GRADIENT_INTER.smooth) {
 }
 
 function gradient_add(_gradient, _addkey, _deleteDup) {
+	if(!ds_exists(_gradient, ds_type_list)) return;
+	
 	if(ds_list_size(_gradient) == 0) {
 		ds_list_add(_gradient, _addkey);
 		return;

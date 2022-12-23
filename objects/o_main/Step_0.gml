@@ -14,10 +14,10 @@
 		if(fr <= ANIMATOR.real_frame + 1)
 			ANIMATOR.real_frame = fr;
 		if(round(ANIMATOR.real_frame) >= ANIMATOR.frames_total) {
-			if(ANIMATOR.playback == ANIMATOR_END.stop || ANIMATOR.stopOnEnd) {
+			if(ANIMATOR.playback == ANIMATOR_END.stop || ANIMATOR.rendering) {
 				ANIMATOR.setFrame(ANIMATOR.frames_total - 1);
 				ANIMATOR.is_playing = false;
-				ANIMATOR.stopOnEnd = false;
+				ANIMATOR.rendering = false;
 			} else
 				ANIMATOR.setFrame(0);
 		}
@@ -28,6 +28,9 @@
 	var _c = ANIMATOR.current_frame;
 	ANIMATOR.current_frame = round(ANIMATOR.real_frame);
 	ANIMATOR.frame_progress = _c != ANIMATOR.current_frame;
+	
+	//if(ANIMATOR.frame_progress)
+	//	UPDATE = RENDER_TYPE.full;
 #endregion
 
 #region hotkey

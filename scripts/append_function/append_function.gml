@@ -12,6 +12,7 @@ function APPEND(_path) {
 	
 	if(ds_map_exists(_map, "version")) {
 		var _v = _map[? "version"];
+		LOADING_VERSION = _v;
 		if(_v != SAVEFILE_VERSION) {
 			var warn = "File version mismatch : loading file verion " + string(_v) + " to Pixel Composer " + string(SAVEFILE_VERSION);
 			log_warning("FILE", warn)

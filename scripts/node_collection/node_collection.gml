@@ -66,6 +66,9 @@ function Node_Collection(_x, _y, _group = -1) : Node(_x, _y, _group) constructor
 			default : 
 				_node.group = group;
 		}
+		
+		_node.x += x;
+		_node.y += y;
 	}
 	
 	static clearCache = function() {
@@ -74,15 +77,26 @@ function Node_Collection(_x, _y, _group = -1) : Node(_x, _y, _group) constructor
 		}
 	}
 	
+	static inspectorGroupUpdate = function() {
+		for(var i = 0; i < ds_list_size(nodes); i++) {
+			var _node = nodes[| i];
+			if(_node.inspectorUpdate == noone) continue;
+			
+			_node.inspectorUpdate();
+		}
+	}
+	
 	static stepBegin = function() {
 		use_cache = false;
-		auto_update = true;
+		inspectorUpdate = noone;
+		
 		array_safe_set(cache_result, ANIMATOR.current_frame, true);
 		
 		for(var i = 0; i < ds_list_size(nodes); i++) {
 			var n = nodes[| i];
 			n.stepBegin();
-			auto_update &= n.auto_update;
+			if(n.inspectorUpdate != noone)
+				inspectorUpdate = inspectorGroupUpdate;
 			if(!n.use_cache) continue;
 			
 			use_cache = true;

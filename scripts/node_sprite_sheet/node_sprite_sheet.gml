@@ -10,10 +10,8 @@ enum SPRITE_ANIM_GROUP {
 }
 
 function Node_Render_Sprite_Sheet(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
-	name			= "Sheet";
-	auto_update     = false;
-	
-	anim_drawn		= array_create(ANIMATOR.frames_total + 1, false);
+	name		= "Sheet";
+	anim_drawn	= array_create(ANIMATOR.frames_total + 1, false);
 	
 	inputs[| 0] = nodeValue(0, "Sprites", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, PIXEL_SURFACE);
 	
@@ -33,16 +31,23 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = -1) : Node(_x, _y, _group) co
 	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
 	
 	static step = function() {
-		var inpt = inputs[| 0].getValue();
-		var oupt = outputs[| 0].getValue();
-		
 		var grup = inputs[| 1].getValue();
-		var skip = inputs[| 2].getValue();
 		var pack = inputs[| 3].getValue();
-		var alig = inputs[| 5].getValue();
 		
 		inputs[| 2].setVisible(grup == SPRITE_ANIM_GROUP.animation);
 		inputs[| 4].setVisible(pack == SPRITE_STACK.grid);
+	}
+	
+	static update = function() {
+		var inpt = inputs[| 0].getValue();
+		var grup = inputs[| 1].getValue();
+		var skip = inputs[| 2].getValue();
+		var pack = inputs[| 3].getValue();
+		var grid = inputs[| 4].getValue();
+		var alig = inputs[| 5].getValue();
+		
+		var oupt = outputs[| 0].getValue();
+		
 		if(grup != SPRITE_ANIM_GROUP.animation) return;
 		if(safe_mod(ANIMATOR.current_frame, skip) != 0) return;
 		
@@ -51,7 +56,7 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = -1) : Node(_x, _y, _group) co
 			
 		if(ANIMATOR.current_frame < ANIMATOR.frames_total) {
 			if(anim_drawn[ANIMATOR.current_frame]) return;
-		
+			
 			if(ANIMATOR.is_playing && ANIMATOR.frame_progress) {
 				if(is_array(inpt) && array_length(inpt) == 0) return;
 				if(!is_array(inpt)) inpt = [ inpt ];
@@ -125,7 +130,7 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = -1) : Node(_x, _y, _group) co
 		if(drawn) anim_drawn[ANIMATOR.current_frame] = true;
 	}
 	
-	static update = function() {
+	static inspectorUpdate = function() {
 		for(var i = 0; i < array_length(anim_drawn); i++) anim_drawn[i] = false;
 		
 		var inpt = inputs[| 0].getValue();
@@ -137,7 +142,7 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = -1) : Node(_x, _y, _group) co
 			if(!LOADING && !APPENDING) {
 				ANIMATOR.setFrame(-1);
 				ANIMATOR.is_playing = true;
-				ANIMATOR.stopOnEnd = true;
+				ANIMATOR.rendering = true;
 			}
 			
 			var skip = inputs[| 2].getValue();
@@ -303,10 +308,8 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = -1) : Node(_x, _y, _group) co
 				}
 				surface_reset_target();
 				outputs[| 0].setValue(_surf);
-			} else {
+			} else
 				outputs[| 0].setValue(inpt);
-			}
 		}
 	}
-	doUpdate();
 }

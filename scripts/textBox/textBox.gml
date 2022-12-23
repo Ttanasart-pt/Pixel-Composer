@@ -278,8 +278,8 @@ function textBox(_input, _onModify) constructor {
 		}
 		
 		if(sliding > 0) {
-			var dx = _m[0] - slide_mx;
-			var dy = slide_my - _m[1];
+			var dx =   _m[0] - slide_mx;
+			var dy = -(_m[1] - slide_my);
 			
 			if(sliding == 1 && (abs(dx) > 16 || abs(dy) > 16)) {
 				sliding = 2;
@@ -288,28 +288,32 @@ function textBox(_input, _onModify) constructor {
 			}
 			
 			if(sliding == 2) {
-				var spd = (abs(dx) > abs(dy)? dx : dy) * slide_speed;
-				
-				if(keyboard_check(vk_alt))
-					spd /= 10;
-				if(key_mod_press(CTRL))
-					spd *= 10;
-				
 				var _ip = _input_text;
-				_input_text = _input_text + spd;
 				
-				switch(input) {
-					case TEXTBOX_INPUT.number :	_input_text = round(_input_text);	break;
+				if(!MOUSE_WRAPPING) {
+					var spd = (abs(dx) > abs(dy)? dx : dy) * slide_speed;
+				
+					if(keyboard_check(vk_alt))
+						spd /= 10;
+					if(key_mod_press(CTRL))
+						spd *= 10;
+					
+					_input_text = _input_text + spd;
+				
+					switch(input) {
+						case TEXTBOX_INPUT.number :	_input_text = round(_input_text);	break;
+					}
+					
+					apply();
+					UNDO_HOLDING = true;
 				}
 				
-				if(_input_text != _ip) {
+				if(MOUSE_WRAPPING || _input_text != _ip) {
 					slide_mx = _m[0];
 					slide_my = _m[1];
 				}
 				
-				apply();
-				UNDO_HOLDING = true;
-					
+				setMouseWrap();
 				if(mouse_release(mb_left)) {
 					UNDO_HOLDING = false;
 					TEXTBOX_ACTIVE = noone;

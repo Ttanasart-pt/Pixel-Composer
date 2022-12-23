@@ -219,13 +219,17 @@ function Panel_Graph() : PanelContent() constructor {
 	
 	function dragGraph() {
 		if(graph_dragging) {
-			var dx = mx - graph_drag_mx; 
-			var dy = my - graph_drag_my;
+			if(!MOUSE_WRAPPING) {
+				var dx = mx - graph_drag_mx; 
+				var dy = my - graph_drag_my;
+			
+				graph_x += dx / graph_s;
+				graph_y += dy / graph_s;
+			}
+				
 			graph_drag_mx = mx;
 			graph_drag_my = my;
-			
-			graph_x += dx / graph_s;
-			graph_y += dy / graph_s;
+			setMouseWrap();
 			
 			if(mouse_release(drag_key)) 
 				graph_dragging = false;
@@ -735,7 +739,7 @@ function Panel_Graph() : PanelContent() constructor {
 		cx = cx + 160;
 		cy = round(cy / ds_list_size(nodes_select_list) / 32) * 32;
 		
-		var _compose = new Node_Composite(cx, cy);
+		var _compose = nodeBuild("Node_Composite", cx, cy);
 		
 		for( var i = 0; i < ds_list_size(nodes_select_list); i++ ) {
 			var _node = nodes_select_list[| i];

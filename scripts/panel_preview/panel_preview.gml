@@ -173,13 +173,17 @@ function Panel_Preview() : PanelContent() constructor {
 	
 	function dragCanvas() {
 		if(canvas_dragging) {
-			var dx = mx - canvas_drag_mx;
-			var dy = my - canvas_drag_my;
+			if(!MOUSE_WRAPPING) {
+				var dx = mx - canvas_drag_mx;
+				var dy = my - canvas_drag_my;
+				
+				canvas_x += dx;
+				canvas_y += dy;
+			}
+			
 			canvas_drag_mx = mx;
 			canvas_drag_my = my;
-			
-			canvas_x += dx;
-			canvas_y += dy;
+			setMouseWrap();
 			
 			if(mouse_release(mb_middle)) 
 				canvas_dragging = false;

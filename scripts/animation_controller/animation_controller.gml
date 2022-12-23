@@ -7,7 +7,7 @@
 		is_playing = false;
 		frame_progress = false;
 		
-		stopOnEnd = false;
+		rendering = false;
 		playback = ANIMATOR_END.loop;
 		
 		static setFrame = function(frame) {

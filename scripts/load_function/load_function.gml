@@ -47,6 +47,7 @@ function LOAD_PATH(path, readonly = false) {
 	var _map = json_decode(load_str);
 	if(ds_map_exists(_map, "version")) {
 		var _v = _map[? "version"];
+		LOADING_VERSION = _v;
 		if(_v != SAVEFILE_VERSION) {
 			var warn = "File version mismatch : loading file verion " + string(_v) + " to Pixel Composer " + string(SAVEFILE_VERSION);
 			log_warning("LOAD", warn);
@@ -141,12 +142,11 @@ function LOAD_PATH(path, readonly = false) {
 			while(++pass < 4 && !ds_queue_empty(CONNECTION_CONFLICT)) {
 				var size = ds_queue_size(CONNECTION_CONFLICT);
 				log_message("LOAD", "[Connect] " + string(size) + " Connection conflict(s) detected ( pass: " + string(pass) + " )");
-				repeat(size) {
-					ds_queue_dequeue(CONNECTION_CONFLICT).connect();	
-				}
+				repeat(size)
+					ds_queue_dequeue(CONNECTION_CONFLICT).connect();
 				Render();
 			}
-		
+			
 			if(!ds_queue_empty(CONNECTION_CONFLICT))
 				log_warning("LOAD", "Some connection(s) is unsolved. This may caused by render node not being update properly, or image path is broken.");
 		} catch(e) {

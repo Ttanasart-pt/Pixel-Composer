@@ -206,13 +206,13 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 	
 	var color = ds_list_create();
 	addNodeCatagory("Color", color);
-	addNodeObject(color, "Color",		s_node_color_out,		"Node_Color",			[1, Node_Color]);
-	addNodeObject(color, "RGB Color",	s_node_color_from_rgb,	"Node_Color_RGB",		[1, Node_Color_RGB]);
-	addNodeObject(color, "HSV Color",	s_node_color_from_hsv,	"Node_Color_HSV",		[1, Node_Color_HSV]);
-	addNodeObject(color, "Palette",		s_node_palette,			"Node_Palette",			[1, Node_Palette]);
-	addNodeObject(color, "Gradient",	s_node_gradient_out,	"Node_Gradient_Out",	[1, Node_Gradient_Out]);
-	addNodeObject(color, "Sampler",		s_node_sampler,			"Node_Sampler",			[1, Node_Sampler]);
-	addNodeObject(color, "Color data",	s_node_color_data,		"Node_Color_Data",		[1, Node_Color_Data]);
+	addNodeObject(color, "Color",			s_node_color_out,		"Node_Color",			[1, Node_Color]);
+	addNodeObject(color, "RGB Color",		s_node_color_from_rgb,	"Node_Color_RGB",		[1, Node_Color_RGB]);
+	addNodeObject(color, "HSV Color",		s_node_color_from_hsv,	"Node_Color_HSV",		[1, Node_Color_HSV]);
+	addNodeObject(color, "Palette",			s_node_palette,			"Node_Palette",			[1, Node_Palette]);
+	addNodeObject(color, "Gradient data",	s_node_gradient_out,	"Node_Gradient_Out",	[1, Node_Gradient_Out]);
+	addNodeObject(color, "Sampler",			s_node_sampler,			"Node_Sampler",			[1, Node_Sampler]);
+	addNodeObject(color, "Color data",		s_node_color_data,		"Node_Color_Data",		[1, Node_Color_Data]);
 	
 	var animation = ds_list_create();
 	addNodeCatagory("Animation", animation);
@@ -239,6 +239,7 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 		var _x    = ds_map_try_get(_data, "x", 0);
 		var _y    = ds_map_try_get(_data, "y", 0);
 		var _type = ds_map_try_get(_data, "type", 0);
+		
 		var _node = nodeBuild(_type, _x, _y);
 		
 		if(_node) {

@@ -466,13 +466,14 @@ function Panel_Inspector() : PanelContent() constructor {
 		if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), [mx, my], pFOCUS, pHOVER, "Presets", THEME.preset, 1) == 2)
 			dialogCall(o_dialog_preset, x + bx, y + by + ui(36), { "node": inspecting });
 		
-		if(!inspecting.auto_update) {
-			var bx = w - ui(44);
-			var by = ui(12);
-			
+		var bx = w - ui(44);
+		var by = ui(12);
+		
+		if(inspecting.inspectorUpdate != noone) {
 			if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), [mx, my], pFOCUS, pHOVER, "Execute node", THEME.sequence_control, 1, COLORS._main_value_positive) == 2)
-				inspecting.doUpdate();
-		}
+				inspecting.inspectorUpdate();
+		} else 
+			draw_sprite_ui(THEME.sequence_control, 1, bx + ui(16), by + ui(16),,,, COLORS._main_icon_dark);
 		
 		if(inspecting.use_cache) {
 			var bx = w - ui(44);

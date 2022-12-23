@@ -48,7 +48,6 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) constructor {
 	preview_y     = 0;
 	
 	rendered        = false;
-	auto_update     = true;
 	update_on_frame = false;
 	render_time		= 0;
 	
@@ -101,10 +100,12 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) constructor {
 		MODIFIED = true;
 	}
 	
+	static inspectorUpdate = noone;
+	
 	static stepBegin = function() {
 		if(use_cache)
 			cacheArrayCheck();
-		var stack_push = false;
+		var willUpdate = false;
 		
 		if(always_output) {
 			for(var i = 0; i < ds_list_size(outputs); i++) {
@@ -117,10 +118,10 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) constructor {
 						var _surf = val[j];
 						if(is_surface(_surf) && _surf != DEF_SURFACE)
 							continue;
-						stack_push = true;
+						willUpdate = true;
 					}
 				} else if(!is_surface(val) || val == DEF_SURFACE) {
-					stack_push = true;
+					willUpdate = true;
 				}
 			}
 		}
@@ -130,11 +131,11 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) constructor {
 				doUpdate();
 			for(var i = 0; i < ds_list_size(inputs); i++) {
 				if(inputs[| i].isAnimated())
-					stack_push = true;
+					willUpdate = true;
 			}
 		}
 		
-		if(stack_push) {
+		if(willUpdate) {
 			setRenderStatus(false);
 			UPDATE |= RENDER_TYPE.partial;
 		}
@@ -156,6 +157,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) constructor {
 			setRenderStatus(true);
 			render_time = get_timer() - t;
 		} catch(exception) {
+			print(exception)
 			log_warning("RENDER", "Render error " + exception_print(exception));
 		}
 	}
@@ -167,10 +169,9 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) constructor {
 		
 		for(var j = 0; j < ds_list_size(inputs); j++) {
 			var _in = inputs[| j];
-			if(_in.value_from) {
-				if (!_in.value_from.node.rendered)
-					return false;
-			} 
+			if(_in.value_from == noone) continue;
+			if (!_in.value_from.node.rendered)
+				return false;
 		}
 		
 		return true;
@@ -261,7 +262,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) constructor {
 		
 		draw_set_text(f_p1, fa_left, fa_center, cc);
 		
-		if(!auto_update) icon = THEME.refresh_s;
+		if(inspectorUpdate != noone) icon = THEME.refresh_s;
 		var ts = clamp(power(_s, 0.5), 0.5, 1);
 		if(icon) {
 			draw_sprite_ui_uniform(icon, 0, xx + ui(12), yy + ui(10));	
@@ -565,8 +566,9 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) constructor {
 				var _to = _ot.value_to[| j];
 				if(!_to.node.active || _to.value_from == noone) continue; 
 				if(_to.value_from.node != self) continue;
-					
+				
 				_to.node.triggerRender();
+				
 				if(_to.node.isUpdateReady()) {
 					ds_stack_push(RENDER_STACK, _to.node);
 					printIf(global.RENDER_LOG, "    > Push " + _to.node.name + " node to stack");
@@ -633,26 +635,30 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) constructor {
 	}
 	
 	static checkConnectGroup = function(_type = "group") {
+		var _y = y;
 		for(var i = 0; i < ds_list_size(inputs); i++) {
 			var _in = inputs[| i];
-			if(_in.value_from && _in.value_from.node.group != group) {
-				var input_node = noone;
-				switch(_type) {
-					case "group" : input_node = new Node_Group_Input(x - w - 64, y, group); break;	
-					case "loop" : input_node = new Node_Iterator_Input(x - w - 64, y, group); break;	
-				}
-				
-				if(input_node == noone) continue;
-				input_node.inputs[| 2].setValue(_in.type);
-				input_node.inputs[| 0].setValue(_in.display_type);
-				
-				ds_list_add(group.nodes, input_node);
-				
-				input_node.inParent.setFrom(_in.value_from);
-				input_node.onValueUpdate(0);
-				_in.setFrom(input_node.outputs[| 0]);
+			if(_in.value_from == noone) continue;
+			if(_in.value_from.node.group == group) continue;
+			
+			var input_node = noone;
+			switch(_type) {
+				case "group" :		input_node = new Node_Group_Input(x - w - 64, _y, group);	break;	
+				case "loop" :		input_node = new Node_Iterator_Input(x - w - 64, _y, group); break;	
+				case "feedback" :	input_node = new Node_Feedback_Input(x - w - 64, _y, group); break;	
 			}
-		}	
+				
+			if(input_node == noone) continue;
+			
+			input_node.inputs[| 2].setValue(_in.type);
+				
+			input_node.inParent.setFrom(_in.value_from);
+			input_node.onValueUpdate(0);
+			_in.setFrom(input_node.outputs[| 0]);
+			
+			_y += 64;
+		}
+		
 		for(var i = 0; i < ds_list_size(outputs); i++) {
 			var _ou = outputs[| i];
 			for(var j = 0; j < ds_list_size(_ou.value_to); j++) {
@@ -663,13 +669,13 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) constructor {
 				
 				var output_node = noone;
 				switch(_type) {
-					case "group" : output_node = new Node_Group_Output(x + w + 64, y, group); break;
-					case "loop" : output_node = new Node_Iterator_Output(x + w + 64, y, group); break;	
+					case "group" :		output_node = new Node_Group_Output(x + w + 64, y, group);		break;
+					case "loop" :		output_node = new Node_Iterator_Output(x + w + 64, y, group);	break;	
+					case "feedback" :	output_node = new Node_Feedback_Output(x + w + 64, y, group);	break;	
 				}
 					
 				if(output_node == noone) continue;
-				ds_list_add(group.nodes, output_node);
-					
+				
 				_to.setFrom(output_node.outParent);
 				output_node.inputs[| 0].setFrom(_ou);
 			}

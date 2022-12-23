@@ -291,6 +291,7 @@ function Panel_Collection() : PanelContent() constructor {
 					var dia = dialogCall(o_dialog_file_name, mouse_mx + 8, mouse_my + 8);
 					dia.onModify = function (txt) {
 						directory_create(txt);
+						refreshContext();
 					};
 					dia.path = context.path + "\\";
 				}

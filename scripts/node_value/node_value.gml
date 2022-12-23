@@ -86,11 +86,12 @@ function value_color(i) {
 function value_bit(i) {
 	switch(i) {
 		case VALUE_TYPE.integer		: return 1 << 0 | 1 << 1;
-		case VALUE_TYPE.float		: return 1 << 1 | 1 << 2;
-		case VALUE_TYPE.color		: return 1 << 3;
-		case VALUE_TYPE.surface		: return 1 << 4;
+		case VALUE_TYPE.float		: return 1 << 2 | 1 << 1;
+		case VALUE_TYPE.boolean		: return 1 << 3 | 1 << 1;
+		case VALUE_TYPE.color		: return 1 << 4;
+		case VALUE_TYPE.surface		: return 1 << 5;
 		case VALUE_TYPE.path		: return 1 << 10;
-		case VALUE_TYPE.text		: return 1 << 0 | 1 << 1 | 1 << 10 | 1 << 11;
+		case VALUE_TYPE.text		: return 1 << 10 | 1 << 11;
 		case VALUE_TYPE.node		: return 1 << 12;
 		case VALUE_TYPE.object		: return 1 << 20;
 		
@@ -100,7 +101,16 @@ function value_bit(i) {
 }
 
 function value_type_directional(f, t) {
-	if(f.type == VALUE_TYPE.surface && (t.type == VALUE_TYPE.integer || t.type == VALUE_TYPE.float)) return true;
+	if(f.type == VALUE_TYPE.surface && t.type == VALUE_TYPE.integer) return true;
+	if(f.type == VALUE_TYPE.surface && t.type == VALUE_TYPE.float) return true;
+	
+	if(f.type == VALUE_TYPE.integer && t.type == VALUE_TYPE.color) return true;
+	if(f.type == VALUE_TYPE.float   && t.type == VALUE_TYPE.color) return true;
+	
+	if(f.type == VALUE_TYPE.integer && t.type == VALUE_TYPE.text) return true;
+	if(f.type == VALUE_TYPE.float   && t.type == VALUE_TYPE.text) return true;
+	if(f.type == VALUE_TYPE.boolean && t.type == VALUE_TYPE.text) return true;
+	
 	return false;
 }
 
@@ -170,6 +180,7 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 	animator	= new valueAnimator(_value, self);
 	on_end		= KEYFRAME_END.hold;
 	extra_data	= ds_list_create();
+	dyna_depo   = ds_list_create();
 	
 	visible = _connect == JUNCTION_CONNECT.output || _type == VALUE_TYPE.surface || _type == VALUE_TYPE.path;
 	show_in_inspector = true;
@@ -465,17 +476,33 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 		return self;
 	}
 	
-	static valueProcess = function(value, type) {
+	static valueProcess = function(value, type, display) {
 		switch(type) {
-			case VALUE_TYPE.text :    return string(value);
-			default :				  return value;
+			case VALUE_TYPE.text :    
+				return string(value);
+			case VALUE_TYPE.color :
+				if(display_type == VALUE_DISPLAY.gradient && display == VALUE_DISPLAY._default) {
+					ds_list_clear(dyna_depo);
+					ds_list_add(dyna_depo, new valueKey(0, value));
+					return dyna_depo;
+				} else if(display_type == VALUE_DISPLAY.gradient && display == VALUE_DISPLAY.palette) {
+					ds_list_clear(dyna_depo);
+					var amo = array_length(value);
+					for( var i = 0; i < amo; i++ ) {
+						ds_list_add(dyna_depo, new valueKey(i / amo, value[i]));
+					}
+					return dyna_depo;
+				}
 		}
+		return value;
 	}
 	
 	static getValue = function(_time = ANIMATOR.current_frame) {
 		var _val = getValueRecursive(_time);
 		var val = _val[0];
-		var typ = _val[1];
+		var nod = _val[1];
+		var typ = nod.type;
+		var dis = nod.display_type;
 		
 		var _base = animator.getValue(_time);
 		
@@ -483,9 +510,40 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 			if(is_array(val)) {
 				if(array_length(val) > 0 && is_surface(val[0]))
 					return [ surface_get_width(val[0]), surface_get_height(val[0]) ];
-			} else if (is_surface(val)) {
+			} else if (is_surface(val))
 				return [ surface_get_width(val), surface_get_height(val) ];
-			}
+		} else if(typ == VALUE_TYPE.integer && type == VALUE_TYPE.color) {
+			if(is_array(val)) {
+				var v = [];
+				for( var i = 0; i < array_length(val); i++ )
+					array_append(v, make_color_hsv(0, 0, val[i]))
+				return v;
+			} else 
+				return make_color_hsv(0, 0, val);
+		} else if(typ == VALUE_TYPE.float && type == VALUE_TYPE.color) {
+			if(is_array(val)) {
+				var v = [];
+				for( var i = 0; i < array_length(val); i++ )
+					array_append(v, make_color_hsv(0, 0, val[i] * 255))
+				return v;
+			} else 
+				return make_color_hsv(0, 0, val * 255);
+		} else if(typ == VALUE_TYPE.boolean && type == VALUE_TYPE.text) {
+			if(is_array(val)) {
+				var v = [];
+				for( var i = 0; i < array_length(val); i++ )
+					array_append(v, val[i]? "true" : "false")
+				return v;
+			} else 
+				return val? "true" : "false";
+		} else if(typ == VALUE_TYPE.float && type == VALUE_TYPE.text) {
+			if(is_array(val)) {
+				var v = [];
+				for( var i = 0; i < array_length(val); i++ )
+					array_append(v, string(val[i]))
+				return v;
+			} else 
+				return string(val);
 		}
 		
 		if(is_array(_base)) {
@@ -497,20 +555,20 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 			}
 		}
 		
-		if(is_array(val)) {
+		if(nod.isArray(val)) {
 			for( var i = 0; i < array_length(val); i++ )
-				val[i] = valueProcess(val[i], typ);
+				val[i] = valueProcess(val[i], typ, dis);
 		} else 
-			val = valueProcess(val, typ);
+			val = valueProcess(val, typ, dis);
 		
 		return val;
 	}
 	
 	static getValueRecursive = function(_time = ANIMATOR.current_frame) {
-		var val = [ -1, VALUE_TYPE.any ];
+		var val = [ -1, VALUE_TYPE.any, VALUE_DISPLAY._default ];
 		
 		if(value_from == noone)
-			val = [animator.getValue(_time), type];
+			val = [animator.getValue(_time), self ];
 		else if(value_from != self)
 			val = value_from.getValueRecursive(_time); 
 		
@@ -518,12 +576,12 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 	}
 	
 	static getExtraData = function() {
-		var data = extra_data;
-		
-		if(value_from != noone && value_from != self)					
-			data = value_from.getExtraData();
-		
-		return data;
+		if(value_from != noone && value_from != self) {
+			if(display_type == VALUE_DISPLAY.gradient && value_from.display_type != VALUE_DISPLAY.gradient) 
+				return extra_data;
+			return value_from.getExtraData();
+		}
+		return extra_data;
 	}
 	
 	static __anim = function() {
@@ -543,15 +601,15 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 		return val;
 	}
 	
-	static isArray = function() {
-		var val = getValue();
-		
-		if(is_array(val)) {
-			if(typeArray(display_type) && array_length(val) > 0)
-				return is_array(val[0]);
-			else
-				return true;
-		}
+	static isArray = function(val = getValue()) {
+		if(!is_array(val)) 
+			return false;
+			
+		if(!typeArray(display_type)) 
+			return true;
+			
+		if(array_length(val) > 0)
+			return is_array(val[0]);
 		
 		return false;
 	}
@@ -574,7 +632,7 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 			updated = _o != _n;
 			
 		if(updated) {
-			if(node.auto_update && connect_type == JUNCTION_CONNECT.input)
+			if(connect_type == JUNCTION_CONNECT.input)
 				node.triggerRender();
 			
 			if(node.use_cache) node.clearCache();

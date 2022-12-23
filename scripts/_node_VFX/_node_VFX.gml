@@ -1,7 +1,6 @@
 /* Backup
 function Node_VFX(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 	name = "VFX";
-	auto_update = false;
 	use_cache = true;
 	
 	inputs[| 0] = nodeValue(0, "Particle sprite", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0)

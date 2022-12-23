@@ -4,7 +4,6 @@ function Node_Global(_x, _y) constructor {
 	y = _y;
 	
 	use_cache = false;
-	auto_update = false;
 	inputs  = ds_list_create();
 	outputs = ds_list_create();
 	input_display_list = -1;

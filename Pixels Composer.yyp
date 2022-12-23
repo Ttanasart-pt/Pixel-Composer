@@ -265,6 +265,7 @@
     {"id":{"name":"sh_gradient","path":"shaders/sh_gradient/sh_gradient.yy",},"order":17,},
     {"id":{"name":"s_node_zigzag","path":"sprites/s_node_zigzag/s_node_zigzag.yy",},"order":18,},
     {"id":{"name":"sh_glow","path":"shaders/sh_glow/sh_glow.yy",},"order":39,},
+    {"id":{"name":"sh_clean_shape","path":"shaders/sh_clean_shape/sh_clean_shape.yy",},"order":42,},
     {"id":{"name":"sh_posterize","path":"shaders/sh_posterize/sh_posterize.yy",},"order":22,},
     {"id":{"name":"s_node_mirror","path":"sprites/s_node_mirror/s_node_mirror.yy",},"order":3,},
     {"id":{"name":"node_VFX_spawner","path":"scripts/node_VFX_spawner/node_VFX_spawner.yy",},"order":2,},

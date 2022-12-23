@@ -15,7 +15,7 @@ function Node_Feedback_Input(_x, _y, _group = -1) : Node_Group_Input(_x, _y, _gr
 		}
 		
 		if(ANIMATOR.current_frame > 1 && _node_output != noone)
-			return [ _node_output.node.cache_value, inputs[| 2].getValue() ];
+			return [ _node_output.node.cache_value, inParent ];
 		
 		if(inParent.value_from == noone)
 			return [ -1, VALUE_TYPE.any ];

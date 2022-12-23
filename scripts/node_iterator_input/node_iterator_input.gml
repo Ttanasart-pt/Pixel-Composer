@@ -24,7 +24,7 @@ function Node_Iterator_Input(_x, _y, _group = -1) : Node_Group_Input(_x, _y, _gr
 		if(_node_output == noone || group.iterated == 0)
 			return outputs[| 0].getValueDefault();
 		
-		return [ _node_output.node.cache_value, inputs[| 2].getValue() ];
+		return [ _node_output.node.cache_value, inParent ];
 	}
 	
 	outputs[| 1] = nodeValue(1, "Loop entrance", self, JUNCTION_CONNECT.output, VALUE_TYPE.node, 0);

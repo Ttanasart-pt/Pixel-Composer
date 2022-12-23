@@ -32,7 +32,7 @@ function __nodeInLoop(_node) {
 function Render(partial = false) {
 	var rendering = noone;
 	var error = 0;
-	printIf(global.RENDER_LOG, "=== RENDER START ===");
+	printIf(global.RENDER_LOG, "=== RENDER START [frame " + string(ANIMATOR.current_frame) + "] ===");
 	
 	if(!partial || ALWAYS_FULL) {
 		var _key = ds_map_find_first(NODE_MAP);
@@ -75,8 +75,7 @@ function Render(partial = false) {
 		
 		var txt = rendering.rendered? " [Skip]" : " [Update]";
 		if(!rendering.rendered) {
-			if(LOADING || APPENDING || rendering.auto_update)
-				rendering.doUpdate();
+			rendering.doUpdate();
 			rendering.setRenderStatus(true);
 		}
 		printIf(global.RENDER_LOG, "Rendered " + rendering.name + " [" + string(instanceof(rendering)) + "]" + txt);

@@ -99,3 +99,26 @@
 	if(keyboard_check_released(vk_alt))
 		ALT  = KEYBOARD_STATUS.up;	
 #endregion
+
+#region mouse wrap
+	MOUSE_WRAPPING = max(0, MOUSE_WRAPPING - 1);
+	
+	if(MOUSE_WRAP) {
+		if(mouse_x < 0) {
+			window_mouse_set(window_get_width(), mouse_y);
+			MOUSE_WRAPPING = 2;
+		} else if(mouse_x > window_get_width()) {
+			window_mouse_set(0, mouse_y);
+			MOUSE_WRAPPING = 2;
+		}
+			
+		if(mouse_y < 0) {
+			window_mouse_set(mouse_x, window_get_height());
+			MOUSE_WRAPPING = 2;
+		} else if(mouse_y > window_get_height()) {
+			window_mouse_set(mouse_x, 0);
+			MOUSE_WRAPPING = 2;
+		}
+	}
+	MOUSE_WRAP = false;
+#endregion

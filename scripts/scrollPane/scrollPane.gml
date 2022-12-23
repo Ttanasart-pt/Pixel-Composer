@@ -90,7 +90,7 @@ function scrollPane(_w, _h, ondraw) constructor {
 			bar_x	= scr_x + scr_prog_s;
 			bar_y	= scr_y;
 		}
-	
+		
 		if(is_scrolling) {
 			var delta = (is_vert? my : mx) - scroll_ms;
 			scroll_ms = is_vert? my : mx;
@@ -106,7 +106,7 @@ function scrollPane(_w, _h, ondraw) constructor {
 		draw_sprite_stretched_ext(THEME.ui_scrollbar, 0, bar_x, bar_y, bar_w, bar_h, bar_col, 1);
 		if(active && point_in_rectangle(mx, my, scr_x - 2, scr_y - 2, scr_x + scr_w + 2, scr_y + scr_h + 2) || is_scrolling) {
 			draw_sprite_stretched_ext(THEME.ui_scrollbar, 0, bar_x, bar_y, bar_w, bar_h, bar_hcol, 1);
-			if(mouse_click(mb_left, active)) {
+			if(mouse_press(mb_left, active)) {
 				is_scrolling = true;
 				scroll_ms = is_vert? my : mx;
 			}

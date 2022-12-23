@@ -16,7 +16,7 @@ function rangeBox(_type, _onModify) constructor {
 	}
 	
 	static draw = function(_x, _y, _w, _h, _data, _m) {
-		if(extras && instanceof(extras) == "buttonClass") {
+		if(extras != -1 && is_struct(extras) && instanceof(extras) == "buttonClass") {
 			extras.hover  = hover;
 			extras.active = active;
 			
