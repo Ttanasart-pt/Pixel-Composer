@@ -82,7 +82,7 @@ if !ready exit;
 	if(buttonInstant(s_button_hide, bx, by, ui(28), ui(28), mouse_ui, sFOCUS, sHOVER, "Open gradient folder", s_folder_24) == 2) {
 		var _realpath = environment_get_variable("LOCALAPPDATA") + "\\Pixels_Composer\\Gradients";
 		var _windir   = environment_get_variable("WINDIR") + "\\explorer.exe";
-		execute_shell(_windir, _realpath);
+		execute_shell_simple(_windir, _realpath);
 	}
 	bx -= ui(32);
 #endregion

@@ -100,7 +100,7 @@ function Node_Export(_x, _y) : Node(_x, _y) constructor {
 					 " " + target_path;
 		//show_debug_message(converter);
 		//show_debug_message(shell_cmd);
-		execute_shell(converter, shell_cmd);
+		execute_shell_simple(converter, shell_cmd);
 	}
 	
 	static step = function() {
