@@ -256,11 +256,25 @@
         "yorigin": 64,
         "slice": null
     },
+    "feedback": {
+        "path": "./icon/s_feedback_16.png",
+        "subimages": 1,
+        "xorigin": 16,
+        "yorigin": 16,
+        "slice": null
+    },
     "loop": {
         "path": "./icon/s_loop_16.png",
         "subimages": 1,
         "xorigin": 16,
         "yorigin": 16,
+        "slice": null
+    },
+    "unit_ref": {
+        "path": "./icon/s_unit_ref.png",
+        "subimages": 2,
+        "xorigin": 20,
+        "yorigin": 20,
         "slice": null
     },
     "vfx": {
@@ -284,7 +298,7 @@
         "yorigin": 16,
         "slice": null
     },
-    "padding_link": {
+    "value_link": {
         "path": "./icon/s_padding_link_strip2.png",
         "subimages": 2,
         "xorigin": 24,
@@ -521,6 +535,13 @@
         "yorigin": 16,
         "slice": null
     },
+    "node_new_badge": {
+        "path": "./node/s_node_new_badge.png",
+        "subimages": 1,
+        "xorigin": 36,
+        "yorigin": 18,
+        "slice": null
+    },
     "node_pin_bg": {
         "path": "./node/s_node_pin.png",
         "subimages": 1,
@@ -626,7 +647,7 @@
         }
     },
     "node_resize": {
-        "path": "./node/s_node_resize.png",
+        "path": "./icon/s_node_resize.png",
         "subimages": 1,
         "xorigin": 16,
         "yorigin": 16,

@@ -26,11 +26,7 @@ function Node_Solid(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constr
 		inputs[| 4].setVisible(is_surface(_msk));
 		if(is_surface(_msk) && _msd)
 			_dim = [ surface_get_width(_msk), surface_get_height(_msk) ];
-		
-		if(!is_surface(_outSurf))
-			_outSurf = surface_create_valid(_dim[0], _dim[1]);
-		else
-			surface_size_to(_outSurf, _dim[0], _dim[1]);
+		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1]);
 		
 		surface_set_target(_outSurf);
 			draw_clear_alpha(0, 0);

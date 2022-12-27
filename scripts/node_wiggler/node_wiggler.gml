@@ -1,4 +1,4 @@
-function Node_Wiggler(_x, _y, _group = -1) : Node_Value_Processor(_x, _y, _group) constructor {
+function Node_Wiggler(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constructor {
 	name			= "Wiggler";
 	update_on_frame = true;
 	previewable     = false;
@@ -37,7 +37,7 @@ function Node_Wiggler(_x, _y, _group = -1) : Node_Value_Processor(_x, _y, _group
 		}
 	}
 	
-	function process_value_data(_data, index = 0) { 
+	function process_data(_output, _data, index = 0) { 
 		var ran = inputs[| 0].getValue();
 		var fre = inputs[| 1].getValue();
 		var sed = inputs[| 2].getValue();

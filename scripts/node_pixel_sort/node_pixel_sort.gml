@@ -33,7 +33,7 @@ function Node_Pixel_Sort(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) c
 		
 		surface_set_target(pp[1]);
 			draw_clear_alpha(0, 0);
-			BLEND_ADD
+			BLEND_OVER
 			draw_surface_safe(_in, 0, 0);
 			BLEND_NORMAL
 		surface_reset_target();
@@ -50,7 +50,7 @@ function Node_Pixel_Sort(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) c
 			
 			surface_set_target(sBase);
 			draw_clear_alpha(0, 0);
-			BLEND_ADD
+			BLEND_OVER
 				shader_set_uniform_f(uniform_itr, i);
 				draw_surface_safe(sDraw, 0, 0);
 			BLEND_NORMAL
@@ -60,13 +60,13 @@ function Node_Pixel_Sort(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) c
 		shader_reset();
 		
 		surface_set_target(_outSurf);
-			BLEND_ADD
+			BLEND_OVER
 			draw_surface_safe(sBase, 0, 0);
 			BLEND_NORMAL
 		surface_reset_target();
 		
 		surface_free(pp[0]);
-		surface_free(pp[1]);
+		surface_free(pp[1]); 
 		
 		return _outSurf;
 	}

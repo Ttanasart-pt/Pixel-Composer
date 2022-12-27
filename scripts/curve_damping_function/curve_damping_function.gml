@@ -44,7 +44,7 @@ function ease_damp_in(rat, amount) {
 	var c1 = amount;
 	var c3 = c1 + 1;
 	
-	return c3 * rat * rat * rat - c1 * rat * rat;
+	return c3 * power(rat, 3) - c1 * power(rat, 2);
 }
 function ease_damp_out(rat, amount) {
 	var c1 = amount;

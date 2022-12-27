@@ -1,4 +1,4 @@
-function Node_Counter(_x, _y, _group = -1) : Node_Value_Processor(_x, _y, _group) constructor {
+function Node_Counter(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constructor {
 	name = "Counter";
 	update_on_frame = true;
 	previewable = false;
@@ -19,17 +19,10 @@ function Node_Counter(_x, _y, _group = -1) : Node_Value_Processor(_x, _y, _group
 	
 	static step = function() {
 		var mode = inputs[| 2].getValue();
-		switch(mode) {
-			case 0 :
-				inputs[| 0].setVisible(true);
-				break;
-			case 1 :
-				inputs[| 0].setVisible(false);
-				break;
-		}
+		inputs[| 0].setVisible(mode == 0);
 	}
 	
-	function process_value_data(_data, index = 0) { 
+	function process_data(_output, _data, index = 0) { 
 		var time = ANIMATOR.current_frame;
 		var mode = inputs[| 2].getValue();
 		var val;

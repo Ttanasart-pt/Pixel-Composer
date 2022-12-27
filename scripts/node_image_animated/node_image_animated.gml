@@ -130,11 +130,9 @@ function Node_Image_Animated(_x, _y, _group = -1) : Node(_x, _y, _group) constru
 		hh += pad[1] + pad[3];
 		
 		var surfs = outputs[| 0].getValue();
-		if(!is_surface(surfs)) {
-			surfs = surface_create_valid(ww, hh);
-			outputs[| 0].setValue(surfs);
-		} else
-			surface_size_to(surfs, ww, hh);
+		surfs = surface_verify(surfs, ww, hh);
+		outputs[| 0].setValue(surfs);
+		
 		var frame = floor(ANIMATOR.current_frame / spd);
 		
 		switch(_end) {
@@ -158,7 +156,7 @@ function Node_Image_Animated(_x, _y, _group = -1) : Node(_x, _y, _group) constru
 		
 		surface_set_target(surfs);
 			draw_clear_alpha(0, 0);
-			BLEND_ADD
+			BLEND_OVER
 			if(_end == ANIMATION_END.hide) {
 				if(frame < array_length(spr))
 					draw_sprite(spr[frame], 0, curr_x, curr_y);

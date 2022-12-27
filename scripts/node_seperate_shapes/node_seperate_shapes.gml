@@ -42,8 +42,7 @@ function Node_Seperate_Shape(_x, _y, _group = -1) : Node(_x, _y, _group) constru
 		var hh = surface_get_height(_inSurf);
 		
 		for(var i = 0; i < 2; i++) {
-			if(!is_surface(temp_surf[i])) temp_surf[i] = surface_create_valid(ww, hh);
-			else surface_size_to(temp_surf[i], ww, hh);
+			temp_surf[i] = surface_verify(temp_surf[i], ww, hh);
 			
 			surface_set_target(temp_surf[i]);
 			draw_clear_alpha(0, 0);
@@ -69,7 +68,7 @@ function Node_Seperate_Shape(_x, _y, _group = -1) : Node(_x, _y, _group) constru
 			shader_set(shader);
 			surface_set_target(temp_surf[bg]);
 			draw_clear_alpha(0, 0);
-			BLEND_ADD
+			BLEND_OVER
 				draw_surface_safe(temp_surf[fg], 0, 0);
 			BLEND_NORMAL
 			surface_reset_target();
@@ -81,7 +80,7 @@ function Node_Seperate_Shape(_x, _y, _group = -1) : Node(_x, _y, _group) constru
 		var _pixel_surface = surface_create_valid(PREF_MAP[? "shape_separation_max"], 1);
 		surface_set_target(_pixel_surface);
 		draw_clear_alpha(0, 0);
-		BLEND_ADD
+		BLEND_OVER
 			shader_set(sh_seperate_shape_counter);
 			texture_set_stage(shader_get_sampler_index(sh_seperate_shape_counter, "surface"), surface_get_texture(temp_surf[res_index]));
 			shader_set_uniform_f_array(shader_get_uniform(sh_seperate_shape_counter, "dimension"), [ ww, hh ]);
@@ -134,7 +133,7 @@ function Node_Seperate_Shape(_x, _y, _group = -1) : Node(_x, _y, _group) constru
 				
 				surface_set_target(_outSurf);
 				draw_clear_alpha(0, 0);
-				BLEND_ADD
+				BLEND_OVER
 					shader_set(sh_seperate_shape_sep);
 					var ccx = surface_getpixel_ext(_pixel_surface, 1 + i, 0);
 					var alpha = (ccx >> 24) & 255;

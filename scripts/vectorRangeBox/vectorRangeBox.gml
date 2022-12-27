@@ -1,6 +1,7 @@
-function vectorRangeBox(_size, _type, _onModify) constructor {
+function vectorRangeBox(_size, _type, _onModify, _unit = noone) constructor {
 	size     = _size;
 	onModify = _onModify;
+	unit	 = _unit;
 	
 	hover  = false;
 	active = false;

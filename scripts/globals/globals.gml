@@ -21,9 +21,9 @@
 	COLOR_KEYS = [];
 	
 	globalvar VERSION, SAVEFILE_VERSION, VERSION_STRING;
-	VERSION = 1060;
-	SAVEFILE_VERSION = 1060;
-	VERSION_STRING = "1.0.6";
+	VERSION = 1070;
+	SAVEFILE_VERSION = 1070;
+	VERSION_STRING = "1.0.7";
 	
 	globalvar NODES, NODE_MAP, APPEND_MAP, HOTKEYS, HOTKEY_CONTEXT;
 	
@@ -102,8 +102,9 @@
 	#endregion
 	
 	#region functions
-		#macro BLEND_ADD gpu_set_blendmode_ext(bm_one, bm_zero);
+		#macro BLEND_OVER gpu_set_blendmode_ext(bm_one, bm_zero);
 		#macro BLEND_NORMAL gpu_set_blendmode(bm_normal);
+		#macro BLEND_ADD gpu_set_blendmode(bm_add);
 		#macro BLEND_OVERRIDE gpu_set_blendmode_ext(bm_one, bm_zero);
 	#endregion
 	

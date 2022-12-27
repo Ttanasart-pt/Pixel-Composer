@@ -94,13 +94,11 @@ function Node_Text(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constru
 		
 		ww += _padd[PADDING.left] + _padd[PADDING.right];
 		hh += _padd[PADDING.up] + _padd[PADDING.down];
-		
-		if(is_surface(_outSurf)) 
-			surface_size_to(_outSurf, ww, hh);
+		_outSurf = surface_verify(_outSurf, ww, hh);
 		
 		surface_set_target(_outSurf);
 			draw_clear_alpha(0, 0);
-			BLEND_ADD
+			BLEND_OVER
 			
 			if(_dim[0] != 0 && _dim[1] != 0) {
 				var _hali = _data[7];
@@ -127,5 +125,7 @@ function Node_Text(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constru
 			
 			BLEND_NORMAL
 		surface_reset_target();
+		
+		return _outSurf;
 	}
 }

@@ -13,7 +13,8 @@ function Node_3D_Extrude(_x, _y, _group = -1) : Node(_x, _y, _group) constructor
 		.setDisplay(VALUE_DISPLAY.vector);
 	
 	inputs[| 2] = nodeValue(2, "Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ def_surf_size / 2, def_surf_size / 2 ])
-		.setDisplay(VALUE_DISPLAY.vector);
+		.setDisplay(VALUE_DISPLAY.vector)
+		.setUnitRef( function() { return inputs[| 1].getValue(); });
 	
 	inputs[| 3] = nodeValue(3, "Rotation", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.vector);
@@ -308,11 +309,7 @@ function Node_3D_Extrude(_x, _y, _group = -1) : Node(_x, _y, _group) constructor
 		var _aclr = inputs[| 11].getValue();
 		
 		var _outSurf = outputs[| 0].getValue();
-		if(!is_surface(_outSurf)) {
-			_outSurf = surface_create_valid(_dim[0], _dim[1]);
-			outputs[| 0].setValue(_outSurf);
-		} else
-			surface_size_to(_outSurf, _dim[0], _dim[1]);
+		outputs[| 0].setValue(surface_verify(_outSurf, _dim[0], _dim[1]));
 		
 		if(!is_surface(_ins)) return _outSurf;
 		

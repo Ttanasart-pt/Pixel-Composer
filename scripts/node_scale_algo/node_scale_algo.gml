@@ -37,22 +37,23 @@ function Node_Scale_Algo(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) c
 				sc = 2;
 				var sw = ww * 2;
 				var sh = hh * 2;
-				surface_size_to(_outSurf, sw, sh);
+				
+				_outSurf = surface_verify(_outSurf, sw, sh);
 				break;
 			case 1 :
 				shader = sh_scale3x;
 				sc = 3;
 				var sw = ww * 3;
 				var sh = hh * 3;
-				surface_size_to(_outSurf, sw, sh);
+				
+				_outSurf = surface_verify(_outSurf, sw, sh);
 				break;
 			default: return _outSurf;
 		}
 		
-		
 		surface_set_target(_outSurf);
 		draw_clear_alpha(0, 0);
-		BLEND_ADD
+		BLEND_OVER
 		
 		var uniform_dim = shader_get_uniform(shader, "dimension");
 		var uniform_tol = shader_get_uniform(shader, "tol");

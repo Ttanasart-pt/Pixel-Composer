@@ -37,7 +37,7 @@ function Node_Bloom(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constr
 		
 		surface_set_target(_outSurf);
 			draw_clear_alpha(0, 0);
-			BLEND_ADD
+			BLEND_OVER
 		
 			var uniform_foreground = shader_get_sampler_index(sh_blend_add_alpha_adj, "fore");
 			var uniform_opacity    = shader_get_uniform(sh_blend_add_alpha_adj, "opacity");

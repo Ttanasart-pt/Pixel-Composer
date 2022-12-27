@@ -15,7 +15,8 @@ function Node_3D_Cylinder(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) 
 		.setDisplay(VALUE_DISPLAY.vector);
 	
 	inputs[| 3] = nodeValue(3, "Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ def_surf_size / 2, def_surf_size / 2 ])
-		.setDisplay(VALUE_DISPLAY.vector);
+		.setDisplay(VALUE_DISPLAY.vector)
+		.setUnitRef(function(index) { return getDimension(2, index); });
 	
 	inputs[| 4] = nodeValue(4, "Rotation", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.vector);
@@ -226,10 +227,7 @@ function Node_3D_Cylinder(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) 
 		var _lclr = _data[13];
 		var _aclr = _data[14];
 		
-		if(!is_surface(_outSurf))
-			_outSurf = surface_create_valid(_dim[0], _dim[1]);
-		else
-			surface_size_to(_outSurf, _dim[0], _dim[1]);
+		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1]);
 		
 		TM = matrix_build(_pos[0], _pos[1], 0, _rot[0], _rot[1], _rot[2], _dim[0] * _sca[0], _dim[1] * _sca[1], 1);
 		cam_proj = matrix_build_projection_ortho(_dim[0], _dim[1], 1, 100);

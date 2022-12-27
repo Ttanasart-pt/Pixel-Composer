@@ -6,17 +6,27 @@ function Node_Twirl(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constr
 	uniform_cen = shader_get_uniform(shader, "center");
 	uniform_str = shader_get_uniform(shader, "strength");
 	uniform_rad = shader_get_uniform(shader, "radius");
+	uniform_sam = shader_get_uniform(shader, "sampleMode");
 	
 	inputs[| 0] = nodeValue(0, "Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 	inputs[| 1] = nodeValue(1, "Center", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ])
-		.setDisplay(VALUE_DISPLAY.vector);
+		.setDisplay(VALUE_DISPLAY.vector)
+		.setUnitRef(function(index) { return getDimension(0, index); });
 	
 	inputs[| 2] = nodeValue(2, "Strength", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 3)
 		.setDisplay(VALUE_DISPLAY.slider, [-10, 10, 0.01]);
 	
 	inputs[| 3] = nodeValue(3, "Radius", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 16);
 	
+	inputs[| 4] = nodeValue(4, "Oversample mode", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Empty", "Clamp", "Repeat" ]);
+		
 	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
+	
+	input_display_list = [ 
+		["Surface",	false],	0, 4, 
+		["Effect", false],	1, 2, 3,
+	];
 	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var pos = inputs[| 1].getValue();
@@ -30,17 +40,19 @@ function Node_Twirl(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constr
 	static process_data = function(_outSurf, _data, _output_index) {
 		surface_set_target(_outSurf);
 		draw_clear_alpha(0, 0);
-		BLEND_ADD
+		BLEND_OVER
 		
 		var center = _data[1];
 		var stren = _data[2];
 		var rad   = _data[3];
+		var sam   = _data[4];
 		
 		shader_set(shader);
 			shader_set_uniform_f_array(uniform_dim, [ surface_get_width(_data[0]), surface_get_height(_data[0]) ]);
 			shader_set_uniform_f_array(uniform_cen, center);
 			shader_set_uniform_f(uniform_str, stren);
 			shader_set_uniform_f(uniform_rad, rad);
+			shader_set_uniform_i(uniform_sam, sam);
 			draw_surface_safe(_data[0], 0, 0);
 		shader_reset();
 		

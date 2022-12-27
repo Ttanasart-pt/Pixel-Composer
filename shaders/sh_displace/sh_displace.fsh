@@ -10,14 +10,28 @@ uniform vec2  map_dimension;
 uniform vec2  displace;
 uniform float strength;
 uniform float middle;
-uniform int   iterate;
-uniform int   use_rg;
-uniform int   wrap;
+uniform int iterate;
+uniform int use_rg;
+uniform int sampleMode;
 
 #define PI 3.14159265359
 
 float bright(in vec4 col) {
 	return dot(col.rgb, vec3(0.2126, 0.7152, 0.0722))  * col.a;
+}
+
+vec4 sampleTexture(vec2 pos) {
+	if(pos.x > 0. && pos.y > 0. && pos.x < 1. && pos.y < 1.)
+		return texture2D(gm_BaseTexture, pos);
+	
+	if(sampleMode == 0) 
+		return vec4(0.);
+	if(sampleMode == 1) 
+		return texture2D(gm_BaseTexture, clamp(pos, 0., 1.));
+	if(sampleMode == 2) 
+		return texture2D(gm_BaseTexture, fract(pos));
+	
+	return vec4(0.);
 }
 
 vec2 shiftMap(in vec2 pos, in float str) {
@@ -41,9 +55,7 @@ vec2 shiftMap(in vec2 pos, in float str) {
 		sam_pos = pos + _str * raw_displace;
 	}
 	
-	if(wrap == 0)
-		return sam_pos;
-	return fract(sam_pos);
+	return sam_pos;
 }
 
 void main() {
@@ -53,14 +65,10 @@ void main() {
 		for(float i = 0.; i < strength; i++) {
 			samPos = shiftMap(samPos, 1.);
 		}
-	} else {
+	} else
 		samPos = shiftMap(samPos, strength);
-	}
 	
-	samPos.x = clamp(samPos.x, 0., 1.);
-	samPos.y = clamp(samPos.y, 0., 1.);
-	
-	vec4 col = v_vColour * texture2D( gm_BaseTexture, samPos );
+	vec4 col = sampleTexture( samPos );
 	
     gl_FragColor = col;
 }

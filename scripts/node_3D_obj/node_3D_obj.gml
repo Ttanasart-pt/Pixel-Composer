@@ -30,7 +30,8 @@ function Node_3D_Obj(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 		.setDisplay(VALUE_DISPLAY.vector);
 	
 	inputs[| 3] = nodeValue(3, "Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ def_surf_size / 2, def_surf_size / 2 ])
-		.setDisplay(VALUE_DISPLAY.vector);
+		.setDisplay(VALUE_DISPLAY.vector)
+		.setUnitRef( function() { return inputs[| 2].getValue(); });
 		
 	inputs[| 4] = nodeValue(4, "Rotation", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 180 ])
 		.setDisplay(VALUE_DISPLAY.vector);
@@ -254,11 +255,8 @@ function Node_3D_Obj(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 		var _lsc  = inputs[| 11].getValue();
 		
 		var _outSurf = outputs[| 0].getValue();
-		if(!is_surface(_outSurf)) {
-			_outSurf = surface_create_valid(_dim[0], _dim[1]);
-			outputs[| 0].setValue(_outSurf);
-		} else
-			surface_size_to(_outSurf, _dim[0], _dim[1]);
+		outputs[| 0].setValue(_outSurf);
+		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1]);
 		
 		var TM = matrix_build(_pos[0], _pos[1], 0, _rot[0], _rot[1], _rot[2], _dim[0] * _sca[0], _dim[1] * _sca[1], 1);
 		var cam_proj = matrix_build_projection_ortho(_dim[0], _dim[1], 1, 100);

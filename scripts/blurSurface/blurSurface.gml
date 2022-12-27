@@ -1,9 +1,12 @@
-function surface_apply_gaussian(surface, size, bg = false, bg_c = c_white, clamp_border = false) {
+function surface_apply_gaussian(surface, size, bg = false, bg_c = c_white, clamp_border = false, mask = noone) {
 	static uni_bor = shader_get_uniform(sh_blur_gaussian, "clamp_border");
 	static uni_dim = shader_get_uniform(sh_blur_gaussian, "dimension");
 	static uni_hor = shader_get_uniform(sh_blur_gaussian, "horizontal");
 	static uni_wei = shader_get_uniform(sh_blur_gaussian, "weight");
 	static uni_sze = shader_get_uniform(sh_blur_gaussian, "size");
+	
+	static uni_umk = shader_get_uniform(sh_blur_gaussian, "useMask");
+	static uni_msk = shader_get_sampler_index(sh_blur_gaussian, "mask");
 	
 	var hori = surface_create_valid(surface_get_width(surface), surface_get_height(surface));	
 	var vert = surface_create_valid(surface_get_width(surface), surface_get_height(surface));	
@@ -32,6 +35,9 @@ function surface_apply_gaussian(surface, size, bg = false, bg_c = c_white, clamp
 		shader_set_uniform_i(uni_bor, clamp_border? 1 : 0);
 		shader_set_uniform_i(uni_sze, size);
 		shader_set_uniform_i(uni_hor, 1);
+		
+		shader_set_uniform_i(uni_umk, is_surface(mask));
+		texture_set_stage(uni_msk, surface_get_texture(mask));
 		
 		draw_surface_safe(surface, 0, 0);
 		shader_reset();

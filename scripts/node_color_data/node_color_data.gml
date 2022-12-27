@@ -1,4 +1,4 @@
-function Node_Color_Data(_x, _y, _group = -1) : Node_Value_Processor(_x, _y, _group) constructor {
+function Node_Color_Data(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constructor {
 	name		= "Color data";
 	previewable = false;
 	
@@ -17,7 +17,7 @@ function Node_Color_Data(_x, _y, _group = -1) : Node_Value_Processor(_x, _y, _gr
 	
 	outputs[| 6] = nodeValue(6, "Brightness", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, 0);
 	
-	function process_value_data(_data, index = 0) { 
+	function process_data(_output, _data, index = 0) { 
 		var c = _data[0];
 		
 		switch(index) {

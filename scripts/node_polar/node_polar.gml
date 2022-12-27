@@ -8,7 +8,7 @@ function Node_Polar(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constr
 	static process_data = function(_outSurf, _data, _output_index) {
 		surface_set_target(_outSurf);
 			draw_clear_alpha(0, 0);
-			BLEND_ADD
+			BLEND_OVER
 			
 			shader_set(sh_polar);
 				draw_surface_safe(_data[0], 0, 0);

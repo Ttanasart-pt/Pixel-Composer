@@ -436,8 +436,7 @@ function Node_Composite(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) co
 			surface_size_to(_outSurf, ww, hh);
 		
 		for(var i = 0; i < 2; i++) {
-			if(!is_surface(temp_surf[i])) temp_surf[i] = surface_create_valid(surface_get_width(_outSurf), surface_get_height(_outSurf));
-			else surface_size_to(temp_surf[i], surface_get_width(_outSurf), surface_get_height(_outSurf));
+			temp_surf[i] = surface_verify(temp_surf[i], surface_get_width(_outSurf), surface_get_height(_outSurf));
 			
 			surface_set_target(temp_surf[i]);
 			draw_clear_alpha(0, 0);
@@ -480,10 +479,12 @@ function Node_Composite(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) co
 		
 		surface_set_target(_outSurf);
 		draw_clear_alpha(0, 0);
-		BLEND_ADD
+		BLEND_OVER
 			draw_surface_safe(temp_surf[res_index], 0, 0);
 		BLEND_NORMAL
 		surface_reset_target();
+		
+		return _outSurf;
 	}
 	
 	static postDeserialize = function() {

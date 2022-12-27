@@ -30,7 +30,7 @@ function Node_Color_Remove(_x, _y, _group = -1) : Node_Processor(_x, _y, _group)
 		
 		surface_set_target(_outSurf);
 		draw_clear_alpha(0, 0);
-		BLEND_ADD
+		BLEND_OVER
 		
 		shader_set(shader);
 			shader_set_uniform_f_array(uniform_from, _colors);

@@ -4,7 +4,8 @@ function Node_3D_Transform(_x, _y, _group = -1) : Node_Processor(_x, _y, _group)
 	inputs[| 0] = nodeValue(0, "Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 	
 	inputs[| 1] = nodeValue(1, "Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ])
-		.setDisplay(VALUE_DISPLAY.vector);
+		.setDisplay(VALUE_DISPLAY.vector)
+		.setUnitRef(function(index) { return getDimension(0, index); });
 	
 	inputs[| 2] = nodeValue(2, "Rotation", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.vector);
@@ -152,7 +153,7 @@ function Node_3D_Transform(_x, _y, _group = -1) : Node_Processor(_x, _y, _group)
 		}
 		
 		if(_ww <= 0 || _hh <= 0) return;
-		surface_size_to(_outSurf, _ww, _hh);
+		_outSurf = surface_verify(_outSurf, _ww, _hh);
 		
 		var _pos = _data[1];
 		var _rot = _data[2];
@@ -165,7 +166,7 @@ function Node_3D_Transform(_x, _y, _group = -1) : Node_Processor(_x, _y, _group)
 		
 		surface_set_target(_outSurf);
 		draw_clear_alpha(0, 0);
-		BLEND_ADD
+		BLEND_OVER
 		
 			shader_set(sh_vertex_pt);
 			camera_apply(cam);

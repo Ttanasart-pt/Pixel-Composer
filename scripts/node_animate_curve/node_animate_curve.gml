@@ -1,4 +1,4 @@
-function Node_Anim_Curve(_x, _y, _group = -1) : Node_Value_Processor(_x, _y, _group) constructor {
+function Node_Anim_Curve(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constructor {
 	name = "Anim Curve";
 	update_on_frame = true;
 	previewable = false;
@@ -15,7 +15,7 @@ function Node_Anim_Curve(_x, _y, _group = -1) : Node_Value_Processor(_x, _y, _gr
 	
 	outputs[| 0] = nodeValue(0, "Curve", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, []);
 	
-	function process_value_data(_data, index = 0) { 		
+	function process_data(_output, _data, index = 0) { 		
 		var curve = _data[0];
 		var time  = _data[1];
 		var _min  = _data[2];

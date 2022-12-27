@@ -13,7 +13,8 @@ function Node_Shadow(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) const
 		.setDisplay(VALUE_DISPLAY.slider, [ 0, 2, 0.01]);
 	
 	inputs[| 3] = nodeValue(3, "Shift", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 4, 4 ])
-		.setDisplay(VALUE_DISPLAY.vector);
+		.setDisplay(VALUE_DISPLAY.vector)
+		.setUnitRef(function(index) { return getDimension(0, index); });
 	
 	inputs[| 4] = nodeValue(4, "Grow", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 3)
 		.setDisplay(VALUE_DISPLAY.slider, [0, 16, 1]);
@@ -47,7 +48,7 @@ function Node_Shadow(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) const
 		
 		surface_set_target(pass1);
 		draw_clear_alpha(0, 0);
-		BLEND_ADD
+		BLEND_OVER
 			shader_set(shader);
 				shader_set_uniform_f_array(uniform_dim,  [ surface_get_width(_outSurf), surface_get_height(_outSurf) ]);
 				shader_set_uniform_f(uniform_size, _border);
@@ -62,7 +63,7 @@ function Node_Shadow(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) const
 		
 		surface_set_target(_outSurf);
 		draw_clear_alpha(0, 0);
-		BLEND_ADD
+		BLEND_OVER
 			draw_surface_ext_safe(pass1, 0, 0, 1, 1, 0, cl, _stre);
 		BLEND_NORMAL
 			draw_surface_safe(_data[0], 0, 0);

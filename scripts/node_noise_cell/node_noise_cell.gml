@@ -5,7 +5,8 @@ function Node_Cellular(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) con
 		.setDisplay(VALUE_DISPLAY.vector);
 	
 	inputs[| 1] = nodeValue(1, "Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ def_surf_size / 2, def_surf_size / 2])
-		.setDisplay(VALUE_DISPLAY.vector);
+		.setDisplay(VALUE_DISPLAY.vector)
+		.setUnitRef(function(index) { return getDimension(0, index); });
 	
 	inputs[| 2] = nodeValue(2, "Scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 4);
 	
@@ -57,10 +58,7 @@ function Node_Cellular(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) con
 		var _rad = _data[8];
 		var _sht = _data[9];
 		
-		if(!is_surface(_outSurf))
-			_outSurf =  surface_create_valid(_dim[0], _dim[1]);
-		else
-			surface_size_to(_outSurf, _dim[0], _dim[1]);
+		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1]);
 		
 		if(_type == 0)
 			shader = sh_cell_noise;

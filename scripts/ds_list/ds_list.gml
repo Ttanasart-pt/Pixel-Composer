@@ -16,6 +16,11 @@ function ds_list_to_array(list) {
 	return a;
 }
 
+function ds_list_add_list(list, list_add) {
+	ds_list_add(list, list_add);
+	ds_list_mark_as_list(list, ds_list_size(list) - 1);
+}
+
 function ds_list_add_map(list, map) {
 	ds_list_add(list, map);
 	ds_list_mark_as_map(list, ds_list_size(list) - 1);

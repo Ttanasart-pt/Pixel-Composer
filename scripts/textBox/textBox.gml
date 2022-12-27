@@ -452,9 +452,10 @@ function textBox(_input, _onModify) constructor {
 			
 			display_text(tx, _y + _h / 2, ss, _w - ui(4), _format);
 			
-			if(_w > ui(64) && slidable) {
-				draw_sprite_ui_uniform(THEME.text_slider, 0, _x + ui(20), _y + hh / 2, 1, COLORS._main_icon, 0.5);
-			
+			if(slidable) {
+				if(_w > ui(64))
+					draw_sprite_ui_uniform(THEME.text_slider, 0, _x + ui(20), _y + hh / 2, 1, COLORS._main_icon, 0.5);
+				
 				if(hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + hh)) {
 					if(mouse_press(mb_left, active)) {
 						sliding  = 1;

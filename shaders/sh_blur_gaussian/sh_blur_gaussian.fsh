@@ -29,9 +29,7 @@ void main() {
 	vec4 samp;
 	
     if(horizontal == 1) {
-        for(int i = 1; i < 32; i++) {
-			if(i >= size) break;
-			
+        for(int i = 1; i < size; i++) {
 			vec2 pos = vec2(tex_offset.x * float(i), 0.0);
 			
 			vec2 s_pos = v_vTexcoord + pos;
@@ -53,9 +51,7 @@ void main() {
 			}
         }
     } else {
-        for(int i = 1; i < 32; i++) {
-			if(i >= size) break;
-			
+        for(int i = 1; i < size; i++) {
 			vec2 pos = vec2(0.0, tex_offset.y * float(i));
 			
 			vec2 s_pos = v_vTexcoord + pos;

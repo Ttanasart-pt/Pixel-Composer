@@ -38,18 +38,18 @@ void main() {
 	vec4 baseColor;
 	baseColor = col;
 		
-	vec3 lab		= rgb2lab(col.rgb);
+	vec3 lab = rgb2lab(col.rgb);
 	
 	float min_df = treshold;
 	for(int i = 0; i < colorFrom_amo; i++) {
-		vec3 labFrom	= rgb2lab(colorFrom[i].rgb);
+		vec3 labFrom = rgb2lab(colorFrom[i].rgb);
 	
 		float df = length(lab - labFrom);
 		min_df = min(min_df, df);
 	}
 	
-	if(min_df < treshold) {
+	if(min_df < treshold)
 		gl_FragColor = vec4(1., 1., 1., 0.);
-	} else	
+	else	
 		gl_FragColor = baseColor;
 }

@@ -5,7 +5,7 @@
   "isDnD": false,
   "isCompatibility": false,
   "parent": {
-    "name": "transform",
-    "path": "folders/nodes/data/transform.yy",
+    "name": "compose",
+    "path": "folders/nodes/data/compose.yy",
   },
 }

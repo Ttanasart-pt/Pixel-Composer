@@ -26,12 +26,11 @@ function Node_Blur_Contrast(_x, _y, _group = -1) : Node_Processor(_x, _y, _group
 		var ww = surface_get_width(_surf);
 		var hh = surface_get_height(_surf);
 		
-		if(is_surface(pass)) surface_size_to(pass, ww, hh);
-		else pass = surface_create_valid(ww, hh);
+		pass = surface_verify(pass, ww, hh);
 		
 		surface_set_target(pass);
 		draw_clear_alpha(0, 0);
-		BLEND_ADD
+		BLEND_OVER
 			shader_set(shader);
 			shader_set_uniform_f_array(uniform_dim, [ ww, hh ]);
 			shader_set_uniform_f(uniform_siz, _size);
@@ -44,7 +43,7 @@ function Node_Blur_Contrast(_x, _y, _group = -1) : Node_Processor(_x, _y, _group
 		
 		surface_set_target(_outSurf);
 		draw_clear_alpha(0, 0);
-		BLEND_ADD
+		BLEND_OVER
 			shader_set(shader);
 			shader_set_uniform_i(uniform_dir, 1);
 			draw_surface_safe(pass, 0, 0);

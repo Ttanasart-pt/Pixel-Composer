@@ -39,6 +39,10 @@ function Node_Array(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 		
 		for( var i = 0; i < ds_list_size(inputs) - 1; i++ ) {
 			res[i] = inputs[| i].getValue();
+			inputs[| i].type = inputs[| i].value_from? inputs[| i].value_from.type : VALUE_TYPE.any;
+			
+			if(i == 0)
+				outputs[| 0].type = inputs[| i].value_from? inputs[| i].value_from.type : VALUE_TYPE.any;
 		}
 		
 		outputs[| 0].setValue(res);

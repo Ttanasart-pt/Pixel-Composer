@@ -12,7 +12,7 @@ function histogramDraw(_x, _y, _w, _h) {
 	var ox, oy = array_create(4);
 			
 	draw_set_alpha(0.5);
-	BLEND_ADD
+	BLEND_OVER
 					
 	for( var i = 0; i < _levels; i++ ) {
 		var _lx  = _x + i * lw, _lh = [];

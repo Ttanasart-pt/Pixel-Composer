@@ -6,6 +6,7 @@ function Node_create_Blend(_x, _y, _group = -1, _param = "") {
 	    case "add"	:			node.inputs[| 2].setValue(BLEND_MODE.add);				break;
 	    case "subtract" :		node.inputs[| 2].setValue(BLEND_MODE.subtract);			break;
 	    case "multiply" :		node.inputs[| 2].setValue(BLEND_MODE.multiply);			break;
+	    case "overlay" :		node.inputs[| 2].setValue(BLEND_MODE.overlay);			break;
 	    case "screen" :			node.inputs[| 2].setValue(BLEND_MODE.screen);			break;
 	    case "maxx" :			node.inputs[| 2].setValue(BLEND_MODE.maxx);				break;
 	    case "minn" :			node.inputs[| 2].setValue(BLEND_MODE.minn);				break;

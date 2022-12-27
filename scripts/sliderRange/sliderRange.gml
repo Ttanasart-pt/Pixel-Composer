@@ -12,8 +12,13 @@ function sliderRange(_min, _max, _step, _onModify) constructor {
 	drag_mx  = 0;
 	drag_sx  = 0;
 	
-	tb_value_min = new textBox(TEXTBOX_INPUT.float, function(val) { onModify(0, val); });
-	tb_value_max = new textBox(TEXTBOX_INPUT.float, function(val) { onModify(1, val); });
+	tb_value_min = new textBox(TEXTBOX_INPUT.float, function(val) { onModify(0, clamp(val, minn, maxx)); });
+	tb_value_max = new textBox(TEXTBOX_INPUT.float, function(val) { onModify(1, clamp(val, minn, maxx)); });
+	
+	tb_value_min.slidable = true;
+	tb_value_max.slidable = true;
+	tb_value_min.slide_speed = 0.01;
+	tb_value_max.slide_speed = 0.01;
 	
 	static draw = function(_x, _y, _w, _h, _data, _m) {
 		var tb_w = ui(64);

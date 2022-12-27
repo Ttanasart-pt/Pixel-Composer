@@ -1,6 +1,7 @@
 function Node_Feedback(_x, _y, _group = -1) : Node_Collection(_x, _y, _group) constructor {
 	name  = "Feedback";
 	color = COLORS.node_blend_feedback;
+	icon  = THEME.feedback;
 	
 	if(!LOADING && !APPENDING) {
 		var input  = nodeBuild("Node_Feedback_Input", -256, -32, self);
@@ -14,7 +15,7 @@ function Node_Feedback(_x, _y, _group = -1) : Node_Collection(_x, _y, _group) co
 	static doStepBegin = function() {
 		if(!ANIMATOR.frame_progress) return;
 		setRenderStatus(false);
-		UPDATE |= RENDER_TYPE.full;
+		UPDATE |= RENDER_TYPE.full; //force full render
 	}
 	
 	static getNextNodes = function() {

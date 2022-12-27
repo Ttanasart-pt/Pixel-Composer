@@ -20,7 +20,8 @@ function Node_Checker(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) cons
 		.setDisplay(VALUE_DISPLAY.rotation);
 	
 	inputs[| 3] = nodeValue(3, "Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [0, 0] )
-		.setDisplay(VALUE_DISPLAY.vector);
+		.setDisplay(VALUE_DISPLAY.vector)
+		.setUnitRef(function(index) { return getDimension(0, index); });
 	
 	inputs[| 4] = nodeValue(4, "Color 1", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white);
 	inputs[| 5] = nodeValue(5, "Color 2", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_black);
@@ -51,10 +52,7 @@ function Node_Checker(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) cons
 		var _col1 = _data[4];
 		var _col2 = _data[5];
 		
-		if(!is_surface(_outSurf))
-			_outSurf =  surface_create_valid(_dim[0], _dim[1]);
-		else
-			surface_size_to(_outSurf, _dim[0], _dim[1]);
+		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1]);
 			
 		surface_set_target(_outSurf);
 			shader_set(shader);

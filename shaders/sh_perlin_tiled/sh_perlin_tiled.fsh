@@ -9,6 +9,7 @@ uniform vec2  u_resolution;
 uniform vec2  scale;
 uniform float bright;
 uniform int   iteration;
+uniform float seed;
 
 vec2 modulo(in vec2 divident, in vec2 divisor) {
 	divident.x = mod(divident.x, divisor.x);
@@ -16,8 +17,8 @@ vec2 modulo(in vec2 divident, in vec2 divisor) {
     return divident;
 }
 
-float random (in vec2 st) {
-    return fract(sin(dot(st.xy, vec2(12.9898, 78.233))) * 43758.5453123);
+float random (in vec2 st, float seed) {
+    return fract(sin(dot(st.xy, vec2(12.9898, 78.233))) * (43758.5453123 + seed));
 }
 
 float noise (in vec2 st) {
@@ -27,10 +28,10 @@ float noise (in vec2 st) {
 	vec2 f = fract(st);
 	
     // Four corners in 2D of a tile
-    float a = random(vec2(cellMin.x, cellMin.y));
-    float b = random(vec2(cellMax.x, cellMin.y));
-    float c = random(vec2(cellMin.x, cellMax.y));
-    float d = random(vec2(cellMax.x, cellMax.y));
+    float a = random(vec2(cellMin.x, cellMin.y), seed);
+    float b = random(vec2(cellMax.x, cellMin.y), seed);
+    float c = random(vec2(cellMin.x, cellMax.y), seed);
+    float d = random(vec2(cellMax.x, cellMax.y), seed);
 
     // Cubic Hermine Curve.  Same as SmoothStep()
     vec2 u = f * f * (3.0 - 2.0 * f);

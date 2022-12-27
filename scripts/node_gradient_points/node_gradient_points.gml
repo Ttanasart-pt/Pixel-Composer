@@ -10,19 +10,23 @@ function Node_Gradient_Points(_x, _y, _group = -1) : Node_Processor(_x, _y, _gro
 		.setDisplay(VALUE_DISPLAY.vector);
 	
 	inputs[| 1] = nodeValue(1, "Center 1", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ] )
-		.setDisplay(VALUE_DISPLAY.vector);
+		.setDisplay(VALUE_DISPLAY.vector)
+		.setUnitRef(function(index) { return getDimension(0, index); });
 	inputs[| 2] = nodeValue(2, "Color 1", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white );
 	
 	inputs[| 3] = nodeValue(3, "Center 2", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ def_surf_size, 0 ] )
-		.setDisplay(VALUE_DISPLAY.vector);
+		.setDisplay(VALUE_DISPLAY.vector)
+		.setUnitRef(function(index) { return getDimension(0, index); });
 	inputs[| 4] = nodeValue(4, "Color 2", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white );
 	
 	inputs[| 5] = nodeValue(5, "Center 3", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, def_surf_size ] )
-		.setDisplay(VALUE_DISPLAY.vector);
+		.setDisplay(VALUE_DISPLAY.vector)
+		.setUnitRef(function(index) { return getDimension(0, index); });
 	inputs[| 6] = nodeValue(6, "Color 3", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white );
 	
 	inputs[| 7] = nodeValue(7, "Center 4", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ def_surf_size, def_surf_size ] )
-		.setDisplay(VALUE_DISPLAY.vector);
+		.setDisplay(VALUE_DISPLAY.vector)
+		.setUnitRef(function(index) { return getDimension(0, index); });
 	inputs[| 8] = nodeValue(8, "Color 4", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white );
 	
 	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
@@ -43,10 +47,7 @@ function Node_Gradient_Points(_x, _y, _group = -1) : Node_Processor(_x, _y, _gro
 	static process_data = function(_outSurf, _data, _output_index) {
 		var _dim = _data[0];
 		
-		if(!is_surface(_outSurf))
-			_outSurf =  surface_create_valid(_dim[0], _dim[1]);
-		else
-			surface_size_to(_outSurf, _dim[0], _dim[1]);
+		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1]);
 			
 		var _1cen = _data[1];
 		var _1col = _data[2];

@@ -10,7 +10,7 @@ function Node_Alpha_Cutoff(_x, _y, _group = -1) : Node_Processor(_x, _y, _group)
 	static process_data = function(_outSurf, _data, _output_index) {
 		surface_set_target(_outSurf);
 		draw_clear_alpha(0, 0);
-		BLEND_ADD
+		BLEND_OVER
 		
 		shader_set(sh_alpha_cutoff);
 			shader_set_uniform_f(shader_get_uniform(sh_alpha_cutoff, "cutoff"), _data[1]);

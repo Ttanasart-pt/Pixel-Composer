@@ -4,7 +4,14 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 	node = _node;
 	createNode = _create;
 	
+	new_node = false;
+	
 	self.tags = tags;
+	
+	static set_version = function(version) {
+		new_node = version == VERSION;
+		return self;
+	}
 	
 	function build(_x, _y, _group = PANEL_GRAPH.getCurrentContext(), _param = "") {
 		var _node = createNode[0]? new createNode[1](_x, _y, _group, _param) : createNode[1](_x, _y, _group, _param);
@@ -32,6 +39,8 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 		
 		ALL_NODES[? _node] = _n;
 		ds_list_add(_list, _n);
+		
+		return _n;
 	}
 	
 	function addNodeCatagory(name, list, filter = "") {
@@ -84,8 +93,9 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 	addNodeCatagory("Transform", transform);
 	addNodeObject(transform, "Transform",		s_node_transform,		"Node_Transform",		[1, Node_Transform]);
 	addNodeObject(transform, "Scale",			s_node_scale,			"Node_Scale",			[1, Node_Scale], ["resize"]);
+	addNodeObject(transform, "Flip",			s_node_flip,			"Node_Flip",			[1, Node_Flip]);
 	addNodeObject(transform, "Crop",			s_node_crop,			"Node_Crop",			[1, Node_Crop]);
-	addNodeObject(transform, "Mirror",			s_node_mirror,			"Node_Mirror",			[1, Node_Mirror]);
+	addNodeObject(transform, "Mirror",			s_node_mirror,			"Node_Mirror",			[1, Node_Mirror]).set_version(1070);
 	addNodeObject(transform, "Warp",			s_node_warp,			"Node_Warp",			[1, Node_Warp], ["wrap"]);
 	addNodeObject(transform, "Skew",			s_node_skew,			"Node_Skew",			[1, Node_Skew]);
 	addNodeObject(transform, "Mesh warp",		s_node_warp_mesh,		"Node_Mesh_Warp",		[1, Node_Mesh_Warp], ["mesh wrap"]);
@@ -102,6 +112,7 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 	addNodeObject(filter, "Erode",				s_node_erode,			"Node_Erode",			[1, Node_Erode]);
 	addNodeObject(filter, "Trail",				s_node_trail,			"Node_Trail",			[1, Node_Trail]);
 	addNodeObject(filter, "Blur",				s_node_blur,			"Node_Blur",			[1, Node_Blur], ["gaussian"]);
+	addNodeObject(filter, "Blur simple",		s_node_blur_simple,		"Node_Blur_Simple",		[1, Node_Blur_Simple]).set_version(1070);
 	addNodeObject(filter, "Directional Blur",	s_node_blur_directional,"Node_Blur_Directional",[1, Node_Blur_Directional]);
 	addNodeObject(filter, "Radial Blur",		s_node_blur,			"Node_Blur_Radial",		[1, Node_Blur_Radial]);
 	addNodeObject(filter, "Contrast Blur",		s_node_blur_contrast,	"Node_Blur_Contrast",	[1, Node_Blur_Contrast]);
@@ -119,7 +130,8 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 	addNodeObject(filter, "BW",					s_node_BW,				"Node_BW",				[1, Node_BW], ["black and white"]);
 	addNodeObject(filter, "Greyscale",			s_node_greyscale,		"Node_Greyscale",		[1, Node_Greyscale]);
 	addNodeObject(filter, "Invert",				s_node_invert,			"Node_Invert",			[1, Node_Invert], ["negate"]);
-	addNodeObject(filter, "RGB Channels",		s_node_RGB,				"Node_RGB_Channel",		[1, Node_RGB_Channel], ["channel extract"]);
+	addNodeObject(filter, "RGB extract",		s_node_RGB,				"Node_RGB_Channel",		[1, Node_RGB_Channel], ["channel extract"]);
+	addNodeObject(filter, "HSV extract",		s_node_HSV,				"Node_HSV_Channel",		[1, Node_HSV_Channel]).set_version(1070);
 	addNodeObject(filter, "Level",				s_node_level,			"Node_Level",			[1, Node_Level]);
 	addNodeObject(filter, "Level selector",		s_node_level_selector,	"Node_Level_Selector",	[1, Node_Level_Selector]);
 	addNodeObject(filter, "Displace",			s_node_displace,		"Node_Displace",		[1, Node_Displace]);
@@ -137,6 +149,8 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 	addNodeObject(filter, "Pixel sort",			s_node_pixel_sort,		"Node_Pixel_Sort",		[1, Node_Pixel_Sort]);
 	addNodeObject(filter, "Edge detect",		s_node_edge_detect,		"Node_Edge_Detect",		[1, Node_Edge_Detect]);
 	addNodeObject(filter, "Chromatic aberration",	s_node_chromatic_abarration,	"Node_Chromatic_Aberration",	[1, Node_Chromatic_Aberration]);
+	addNodeObject(filter, "RGB combine",		s_node_RGB_combine,		"Node_Combine_RGB",		[1, Node_Combine_RGB]).set_version(1070);
+	addNodeObject(filter, "HSV combine",		s_node_HSV_combine,		"Node_Combine_HSV",		[1, Node_Combine_HSV]).set_version(1070);
 	//addNodeObject(filter, "Corner",			s_node_corner,			"Node_Corner",			[1, Node_create_Corner]);
 	
 	var threeD = ds_list_create();
@@ -175,6 +189,12 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 	addNodeObject(generator, "Anisotropic noise",	s_node_noise_aniso,			"Node_Noise_Aniso",			[1, Node_Noise_Aniso]);
 	addNodeObject(generator, "Seperate shape",	    s_node_sepearte_shape,		"Node_Seperate_Shape",		[1, Node_Seperate_Shape]);
 	addNodeObject(generator, "Draw text",			s_node_text_render,			"Node_Text",				[1, Node_Text]);
+	
+	var compose = ds_list_create();
+	addNodeCatagory("Compose", compose);
+	addNodeObject(compose, "Blend",		s_node_blend,	"Node_Blend",		[1, Node_Blend]);
+	addNodeObject(compose, "Compose",	s_node_compose,	"Node_Composite",	[1, Node_Composite]);
+	addNodeObject(compose, "Stack",		s_node_stack,	"Node_Stack",		[1, Node_Stack]).set_version(1070);
 	
 	var renderNode = ds_list_create();
 	addNodeCatagory("Render", renderNode);

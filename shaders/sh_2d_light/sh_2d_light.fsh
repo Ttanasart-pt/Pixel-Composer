@@ -10,8 +10,8 @@ uniform float band;
 uniform float atten;
 
 void main() {
-	float bright = dot(v_vColour.rgb, vec3(0.2126, 0.7152, 0.0722));
-	bright = min(max(bright, 0.), 1.);
+	float bright = (v_vColour.r + v_vColour.b + v_vColour.g) / 3.;
+	bright = clamp(bright, 0., 1.);
 	
 	if(atten == 0.)
 		bright = bright * bright;
@@ -25,6 +25,5 @@ void main() {
 	if(band > 0.)
 		bright = ceil(bright * band) / band;
 	
-	vec4 col = vec4(color, bright);
-    gl_FragColor = col;
+    gl_FragColor = vec4(color, 1.) * bright;
 }

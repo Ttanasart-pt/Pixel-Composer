@@ -3,8 +3,10 @@ function Node_Crop(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constru
 	preview_alpha = 0.5;
 	
 	inputs[| 0] = nodeValue(0, "Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
+	
 	inputs[| 1] = nodeValue(1, "Crop", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 0, 0, 0, 0 ])
-		.setDisplay(VALUE_DISPLAY.padding);
+		.setDisplay(VALUE_DISPLAY.padding)
+		.setUnitRef(function(index) { return getDimension(0, index); });
 	
 	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
 	
@@ -18,8 +20,10 @@ function Node_Crop(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constru
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		if(array_length(current_data) < 2) return;
 		
-		var _inSurf		= current_data[0];
-		var _splice		= current_data[1];
+		var _inSurf	= current_data[0];
+		var _splice	= current_data[1];
+		for( var i = 0; i < array_length(_splice); i++ )
+			_splice[i] = round(_splice[i]);
 		
 		var dim = [ surface_get_width(_inSurf), surface_get_height(_inSurf) ]
 		
@@ -99,15 +103,17 @@ function Node_Crop(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constru
 		var _crop		= _data[1];
 		var _dim		= [ surface_get_width(_inSurf) - _crop[0] - _crop[2], surface_get_height(_inSurf) - _crop[1] - _crop[3] ];
 		
-		surface_size_to(_outSurf, _dim[0], _dim[1]);
+		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1]);
 		
 		surface_set_target(_outSurf);
 			draw_clear_alpha(0, 0);
-			BLEND_ADD
+			BLEND_OVER
 			
 			draw_surface_safe(_inSurf, -_crop[2], -_crop[1]);
 			
 			BLEND_NORMAL
 		surface_reset_target();
+		
+		return _outSurf;
 	}
 }

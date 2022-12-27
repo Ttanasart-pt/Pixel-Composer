@@ -33,7 +33,8 @@ function Node_Gradient(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) con
 		.setDisplay(VALUE_DISPLAY.slider, [-2, 2, 0.01]);
 	
 	inputs[| 6] = nodeValue(6, "Center", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [def_surf_size / 2, def_surf_size / 2])
-		.setDisplay(VALUE_DISPLAY.vector);
+		.setDisplay(VALUE_DISPLAY.vector)
+		.setUnitRef(function(index) { return getDimension(0, index); });
 	
 	inputs[| 7] = nodeValue(7, "Loop", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
 	
@@ -54,10 +55,7 @@ function Node_Gradient(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) con
 	static process_data = function(_outSurf, _data, _output_index) {
 		var _dim = _data[0];
 		
-		if(!is_surface(_outSurf)) {
-			_outSurf =  surface_create_valid(_dim[0], _dim[1]);
-		} else
-			surface_size_to(_outSurf, _dim[0], _dim[1]);
+		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1]);
 			
 		var _gra = _data[1];
 		var _gra_data = inputs[| 1].getExtraData();
@@ -104,7 +102,7 @@ function Node_Gradient(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) con
 			shader_set_uniform_f(uniform_radius, _rad * sqrt(2));
 			shader_set_uniform_f(uniform_radius_shf, _shf);
 			
-			BLEND_ADD
+			BLEND_OVER
 			if(is_surface(_msk))
 				draw_surface_stretched_ext(_msk, 0, 0, _dim[0], _dim[1], c_white, 1);
 			else

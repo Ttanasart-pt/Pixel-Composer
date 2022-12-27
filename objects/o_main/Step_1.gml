@@ -104,19 +104,21 @@
 	MOUSE_WRAPPING = max(0, MOUSE_WRAPPING - 1);
 	
 	if(MOUSE_WRAP) {
-		if(mouse_x < 0) {
-			window_mouse_set(window_get_width(), mouse_y);
+		var _pad = 2;
+		
+		if(mouse_x < _pad) {
+			window_mouse_set(window_get_width() - _pad, mouse_y);
 			MOUSE_WRAPPING = 2;
-		} else if(mouse_x > window_get_width()) {
-			window_mouse_set(0, mouse_y);
+		} else if(mouse_x > window_get_width() - _pad) {
+			window_mouse_set(_pad, mouse_y);
 			MOUSE_WRAPPING = 2;
 		}
 			
-		if(mouse_y < 0) {
-			window_mouse_set(mouse_x, window_get_height());
+		if(mouse_y < _pad) {
+			window_mouse_set(mouse_x, window_get_height() - _pad);
 			MOUSE_WRAPPING = 2;
-		} else if(mouse_y > window_get_height()) {
-			window_mouse_set(mouse_x, 0);
+		} else if(mouse_y > window_get_height() - _pad) {
+			window_mouse_set(mouse_x, _pad);
 			MOUSE_WRAPPING = 2;
 		}
 	}

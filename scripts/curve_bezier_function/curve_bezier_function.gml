@@ -24,7 +24,7 @@ function bezier_range(c0, c1, c2, c3) {
 	return [ min(c0, c1, c2, c3), max(c0, c1, c2, c3) ];
 }
 
-function bezier_interpol_x(a, b, t, iteration = 16) {
+function bezier_interpol_x(a, b, t, iteration = 10) {
 	var fx, _x = 0.5, _x1, slope;
 	repeat(iteration) {
 		fx = (3 * a - 3 * b + 1) * _x * _x * _x
@@ -41,8 +41,12 @@ function bezier_interpol_x(a, b, t, iteration = 16) {
 	return 3 * (1 - _x) * _x * _x + _x * _x * _x;
 }
 
+function ease_bezier(t, a, b) {
+	return 3 * power(1 - t, 2) * t * a + 3 * (1 - t) * power(t, 2) * b + power(t, 3);
+}
+
 function ease_cubic_in(rat) {
-	return rat * rat * rat;
+	return power(rat, 3);
 }
 function ease_cubic_out(rat) {
 	return 1 - power(1 - rat, 3);

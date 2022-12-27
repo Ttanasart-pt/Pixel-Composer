@@ -13,8 +13,8 @@ function Node_Glow(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constru
 	inputs[| 2] = nodeValue(2, "Size", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 3)
 		.setDisplay(VALUE_DISPLAY.slider, [1, 16, 1]);
 	
-	inputs[| 3] = nodeValue(3, "Strength", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, .25)
-		.setDisplay(VALUE_DISPLAY.slider, [ 0, 2, 0.01]);
+	inputs[| 3] = nodeValue(3, "Strength", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.5)
+		.setDisplay(VALUE_DISPLAY.slider, [ 0, 1, 0.01]);
 	
 	inputs[| 4] = nodeValue(4, "Color",   self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white);
 	
@@ -32,25 +32,26 @@ function Node_Glow(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constru
 			shader_set(shader);
 				shader_set_uniform_f_array(uniform_dim,  [ surface_get_width(_outSurf), surface_get_height(_outSurf) ]);
 				shader_set_uniform_f(uniform_size, _size + _border);
-				shader_set_uniform_f_array(uniform_colr, [1.0, 1.0, 1.0, 1.0]);
+				shader_set_uniform_f_array(uniform_colr, [ 1., 1., 1., 1. ]);
 				
 				if(is_surface(_data[0])) draw_surface_safe(_data[0], 0, 0);
 			shader_reset();
 		surface_reset_target();
 		
-		pass1 = surface_apply_gaussian(pass1, _size, false, c_black, 1);
+		pass1 = surface_apply_gaussian(pass1, _size, false, c_black, 0);
 		
 		surface_set_target(_outSurf);
 		draw_clear_alpha(0, 0);
-		BLEND_ADD
+		BLEND_OVER
 		
-			shader_set(sh_remove_black);
-			if(is_surface(pass1)) draw_surface_ext_safe(pass1, 0, 0, 1, 1, 0, cl, _stre);
-			shader_reset();
-			
-			if(is_surface(_data[0])) draw_surface_safe(_data[0], 0, 0);
+		shader_set(sh_lum2alpha);
+		shader_set_uniform_f_array(shader_get_uniform(sh_lum2alpha, "color"), colToVec4(cl));
+			draw_surface_ext_safe(pass1, 0, 0, 1, 1, 0, c_white, _stre);
+		shader_reset();
 		
 		BLEND_NORMAL
+		
+		draw_surface_safe(_data[0], 0, 0);
 		surface_reset_target();
 		
 		surface_free(pass1);

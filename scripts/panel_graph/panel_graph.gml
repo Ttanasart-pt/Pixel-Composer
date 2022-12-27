@@ -664,6 +664,9 @@ function Panel_Graph() : PanelContent() constructor {
 				
 			node_drag_ox  = -1;
 			node_drag_oy  = -1;
+			
+			PANEL_ANIMATION.updatePropertyList();
+			UPDATE = RENDER_TYPE.full;
 			return;
 		}
 		
@@ -695,6 +698,7 @@ function Panel_Graph() : PanelContent() constructor {
 		node_drag_sy  = 0;
 		
 		PANEL_ANIMATION.updatePropertyList();
+		UPDATE = RENDER_TYPE.full;
 	}
 	
 	function doBlend() {
@@ -1110,7 +1114,7 @@ function Panel_Graph() : PanelContent() constructor {
 		}
 		
 		surface_set_target(minimap_surface);
-		draw_clear_alpha(COLORS.panel_bg_clear_inner, 0.5);
+		draw_clear_alpha(COLORS.panel_bg_clear_inner, 0.75);
 		if(!ds_list_empty(nodes_list)) {
 			var minx =  99999;
 			var maxx = -99999;
@@ -1166,7 +1170,7 @@ function Panel_Graph() : PanelContent() constructor {
 		}
 		surface_reset_target();
 		
-		draw_surface_ext(minimap_surface, mx0, my0, 1, 1, 0, c_white, 0.75 + 0.25 * hover);
+		draw_surface_ext(minimap_surface, mx0, my0, 1, 1, 0, c_white, 0.5 + 0.35 * hover);
 		draw_set_color(COLORS.panel_graph_minimap_outline);
 		draw_rectangle(mx0, my0, mx1 - 1, my1 - 1, true);
 		
@@ -1183,7 +1187,7 @@ function Panel_Graph() : PanelContent() constructor {
 		}
 		
 		if(pHOVER && point_in_rectangle(mx, my, mx0, my0, mx0 + ui(16), my0 + ui(16))) {
-			draw_sprite_ui(THEME.node_resize, 0, mx0 + ui(2), my0 + ui(2), 1, 1, 180, c_white, 0.6);
+			draw_sprite_ui(THEME.node_resize, 0, mx0 + ui(10), my0 + ui(10), 1, 1, 180, c_white, 0.75);
 			if(mouse_press(mb_left, pFOCUS)) {
 				minimap_dragging = true;
 				minimap_drag_sx = minimap_w;
@@ -1192,7 +1196,7 @@ function Panel_Graph() : PanelContent() constructor {
 				minimap_drag_my = my;
 			}
 		} else 
-			draw_sprite_ui(THEME.node_resize, 0, mx0 + ui(2), my0 + ui(2), 1, 1, 180, c_white, 0.3);
+			draw_sprite_ui(THEME.node_resize, 0, mx0 + ui(10), my0 + ui(10), 1, 1, 180, c_white, 0.3);
 	}
 	
 	function drawContextFrame() {

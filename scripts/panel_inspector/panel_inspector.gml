@@ -212,12 +212,12 @@ function Panel_Inspector() : PanelContent() constructor {
 								_add = true;
 								break;
 							} else if(_key.time > ANIMATOR.current_frame) {
-								ds_list_insert(jun.animator.values, j, new valueKey(ANIMATOR.current_frame, jun.getValue(), jun.animator));
+								ds_list_insert(jun.animator.values, j, new valueKey(ANIMATOR.current_frame, jun.showValue(), jun.animator));
 								_add = true;
 								break;	
 							}
 						}
-						if(!_add) ds_list_add(jun.animator.values, new valueKey(ANIMATOR.current_frame, jun.getValue(), jun.animator));
+						if(!_add) ds_list_add(jun.animator.values, new valueKey(ANIMATOR.current_frame, jun.showValue(), jun.animator));
 					}
 						
 					bx -= ui(26);
@@ -246,14 +246,13 @@ function Panel_Inspector() : PanelContent() constructor {
 			#endregion
 			
 			//TODO: Fix padding to be consistant to every widget
-			var _hsx = ui(32);
 			var _hsy = yy + lb_h;
 			var padd = ui(8);
 			
 			var labelWidth = max(lb_w, min(ui(80) + w * 0.2, ui(200)));
-			var editBoxW   = w - ui(80)		- !lineBreak * labelWidth;
+			var editBoxW   = w - ui(16 + 48) - !lineBreak * labelWidth;
 			var editBoxH   = lineBreak? TEXTBOX_HEIGHT : lb_h;
-			var editBoxX   = ui(32)			+ !lineBreak * labelWidth;
+			var editBoxX   = ui(16)	+ !lineBreak * labelWidth;
 			var editBoxY   = lineBreak? _hsy : yy;
 			
 			var widH	   = lineBreak? editBoxH : 0;
@@ -287,7 +286,7 @@ function Panel_Inspector() : PanelContent() constructor {
 										jun.editWidget.draw(editBoxX, editBoxY, editBoxW, editBoxH, jun.showValue(), _m, ui(16) + x, top_bar_h + y);
 										break;
 									case VALUE_DISPLAY.padding :
-										jun.editWidget.draw(xc, _hsy + ui(32), jun.showValue(), jun.modifier, _m);
+										jun.editWidget.draw(xc, _hsy + ui(32), jun.showValue(), _m);
 										widH = ui(192);
 										break;
 									case VALUE_DISPLAY.rotation :

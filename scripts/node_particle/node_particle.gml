@@ -42,12 +42,8 @@ function Node_Particle(_x, _y, _group = -1) : Node_VFX_Spawner_Base(_x, _y, _gro
 		
 		var _outSurf	= outputs[| 0].getValue();
 		
-		if(is_surface(_outSurf)) 
-			surface_size_to(_outSurf, _dim[0], _dim[1]);
-		else {
-			_outSurf = surface_create_valid(_dim[0], _dim[1]);
-			outputs[| 0].setValue(_outSurf);
-		}
+		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1]);
+		outputs[| 0].setValue(_outSurf);
 		
 		surface_set_target(_outSurf);
 			draw_clear_alpha(c_white, 0);

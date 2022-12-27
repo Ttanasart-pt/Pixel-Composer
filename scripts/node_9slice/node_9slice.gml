@@ -2,11 +2,13 @@ function Node_9Slice(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) const
 	name = "Nine slice";
 	
 	inputs[| 0] = nodeValue(0, "Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
+	
 	inputs[| 1] = nodeValue(1, "Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, def_surf_size2)
 		.setDisplay(VALUE_DISPLAY.vector);
 	
 	inputs[| 2] = nodeValue(2, "Splice", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 0, 0, 0, 0 ])
-		.setDisplay(VALUE_DISPLAY.padding);
+		.setDisplay(VALUE_DISPLAY.padding)
+		.setUnitRef(function(index) { return getDimension(0, index); });
 	
 	inputs[| 3] = nodeValue(3, "Filling modes", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Scale", "Repeat" ]);
@@ -27,12 +29,13 @@ function Node_9Slice(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) const
 	}
 	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
-		if(process_multiple) return;
 		if(array_length(current_data) < 1) return;
 		
 		var _dim		= current_data[1];
 		var _splice		= current_data[2];
-		
+		for( var i = 0; i < array_length(_splice); i++ )
+			_splice[i] = round(_splice[i]);
+			
 		var sp_r = _x + (_dim[0] - _splice[0]) * _s;
 		var sp_l = _x + _splice[2] * _s;
 		
@@ -66,39 +69,39 @@ function Node_9Slice(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) const
 			}
 		}
 		
-		if(!inputs[| 1].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny)) {
-			if(distance_to_line_infinite(_mx, _my, sp_r, -hh, sp_r, hh) < 12) {
-				draw_line_width(sp_r, -hh, sp_r, hh, 3);
-				if(mouse_press(mb_left, active)) {
-					drag_side = 0;
-					drag_mx   = _mx;
-					drag_my   = _my;
-					drag_sv   = _splice[0];
-				}
-			} else if(distance_to_line_infinite(_mx, _my, -ww, sp_t, ww, sp_t) < 12) {
-				draw_line_width(-ww, sp_t, ww, sp_t, 3);
-				if(mouse_press(mb_left, active)) {
-					drag_side = 1;
-					drag_mx   = _mx;
-					drag_my   = _my;
-					drag_sv   = _splice[1];
-				}
-			} else if(distance_to_line_infinite(_mx, _my, sp_l, -hh, sp_l, hh) < 12) {
-				draw_line_width(sp_l, -hh, sp_l, hh, 3);
-				if(mouse_press(mb_left, active)) {
-					drag_side = 2;
-					drag_mx   = _mx;
-					drag_my   = _my;
-					drag_sv   = _splice[2];
-				}
-			} else if(distance_to_line_infinite(_mx, _my, -ww, sp_b, ww, sp_b) < 12) {
-				draw_line_width(-ww, sp_b, ww, sp_b, 3);
-				if(mouse_press(mb_left, active)) {
-					drag_side = 3;
-					drag_mx   = _mx;
-					drag_my   = _my;
-					drag_sv   = _splice[3];
-				}
+		if(inputs[| 1].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny)) return;
+		
+		if(distance_to_line_infinite(_mx, _my, sp_r, -hh, sp_r, hh) < 12) {
+			draw_line_width(sp_r, -hh, sp_r, hh, 3);
+			if(mouse_press(mb_left, active)) {
+				drag_side = 0;
+				drag_mx   = _mx;
+				drag_my   = _my;
+				drag_sv   = _splice[0];
+			}
+		} else if(distance_to_line_infinite(_mx, _my, -ww, sp_t, ww, sp_t) < 12) {
+			draw_line_width(-ww, sp_t, ww, sp_t, 3);
+			if(mouse_press(mb_left, active)) {
+				drag_side = 1;
+				drag_mx   = _mx;
+				drag_my   = _my;
+				drag_sv   = _splice[1];
+			}
+		} else if(distance_to_line_infinite(_mx, _my, sp_l, -hh, sp_l, hh) < 12) {
+			draw_line_width(sp_l, -hh, sp_l, hh, 3);
+			if(mouse_press(mb_left, active)) {
+				drag_side = 2;
+				drag_mx   = _mx;
+				drag_my   = _my;
+				drag_sv   = _splice[2];
+			}
+		} else if(distance_to_line_infinite(_mx, _my, -ww, sp_b, ww, sp_b) < 12) {
+			draw_line_width(-ww, sp_b, ww, sp_b, 3);
+			if(mouse_press(mb_left, active)) {
+				drag_side = 3;
+				drag_mx   = _mx;
+				drag_my   = _my;
+				drag_sv   = _splice[3];
 			}
 		}
 	}
@@ -110,11 +113,11 @@ function Node_9Slice(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) const
 		var _fill		= _data[3];
 		
 		if(!surface_exists(_inSurf)) return;
-		surface_size_to(_outSurf, _dim[0], _dim[1]);
+		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1]);
 		
 		surface_set_target(_outSurf);
 			draw_clear_alpha(0, 0);
-			BLEND_ADD
+			BLEND_OVER
 			
 			var ww   = _dim[0];
 			var hh   = _dim[1];
@@ -176,5 +179,7 @@ function Node_9Slice(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) const
 			
 			BLEND_NORMAL
 		surface_reset_target();
+		
+		return _outSurf;
 	}
 }

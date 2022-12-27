@@ -172,12 +172,14 @@ function Panel_Animation() : PanelContent() constructor {
 				for( var i = 0; i < ds_list_size(keyframe_selecting); i++ ) {
 					var k = keyframe_selecting[| i];
 					k.ease_in_type = CURVE_TYPE.bezier;
+					k.ease_in = 1;
 				}
 			} ],
 			[ [THEME.timeline_ease, 3], function() { 
 				for( var i = 0; i < ds_list_size(keyframe_selecting); i++ ) {
 					var k = keyframe_selecting[| i];
 					k.ease_in_type = CURVE_TYPE.damping;
+					k.ease_in = 1;
 				}
 			} ],
 		]],
@@ -192,12 +194,14 @@ function Panel_Animation() : PanelContent() constructor {
 				for( var i = 0; i < ds_list_size(keyframe_selecting); i++ ) {
 					var k = keyframe_selecting[| i];
 					k.ease_out_type = CURVE_TYPE.bezier;
+					k.ease_out = 1;
 				}
 			} ],
 			[ [THEME.timeline_ease, 3], function() { 
 				for( var i = 0; i < ds_list_size(keyframe_selecting); i++ ) {
 					var k = keyframe_selecting[| i];
 					k.ease_out_type = CURVE_TYPE.damping;
+					k.ease_out = 1;
 				}
 			} ],
 		]],
@@ -544,11 +548,11 @@ function Panel_Animation() : PanelContent() constructor {
 				a = a;
 				b = 1 - b;
 										
-				var _step = 1 / 20;
+				var _step = 1 / dx;
 				for( var _r = 0; _r <= 1; _r += _step ) {
 					nx = t + _r * dx * ui(timeline_scale);
 					var nly = prop.animator.interpolate(key, key_next, _r);
-												
+					
 					if(is_array(key.value)) {
 						for( var ki = 0; ki < array_length(key.value); ki++ ) {
 							ny = value_map(lerp(key.value[ki], key_next.value[ki], nly), _gy_val_min, _gy_val_max, _gy_bottom, _gy_top);
@@ -1162,10 +1166,10 @@ function Panel_Animation() : PanelContent() constructor {
 					}
 				}
 			} else {
-				var dx = ((keyframe_dragging.time + 1) - (mx - bar_x) / ui(timeline_scale)) / 2;
-				dx = clamp(abs(dx), 0, 0.9);
+				var dx = abs((keyframe_dragging.time + 1) - (mx - bar_x) / ui(timeline_scale)) / 2;
+				dx = clamp(dx, 0, 1);
 				if(dx < 0.1) dx = 0;
-							
+				
 				var _in = keyframe_dragging.ease_in;
 				var _ot = keyframe_dragging.ease_out;							
 				switch(keyframe_drag_type) {

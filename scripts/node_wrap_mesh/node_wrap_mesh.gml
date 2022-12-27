@@ -435,12 +435,6 @@ function Node_Mesh_Warp(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) co
 	static process_data = function(_outSurf, _data, _output_index) {
 		var _inSurf		= _data[0];
 		
-		if(is_surface(_outSurf)) 
-			surface_size_to(_outSurf, surface_get_width(_inSurf), surface_get_height(_inSurf));
-		else {
-			_outSurf = surface_create_valid(surface_get_width(_inSurf), surface_get_height(_inSurf));
-		}
-		
 		reset();
 		control();
 		

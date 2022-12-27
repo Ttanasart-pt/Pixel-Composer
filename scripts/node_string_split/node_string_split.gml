@@ -1,4 +1,4 @@
-function Node_String_Split(_x, _y, _group = -1) : Node_Value_Processor(_x, _y, _group) constructor {
+function Node_String_Split(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constructor {
 	name = "Text split";
 	previewable   = false;
 	
@@ -11,7 +11,7 @@ function Node_String_Split(_x, _y, _group = -1) : Node_Value_Processor(_x, _y, _
 	
 	outputs[| 0] = nodeValue(0, "Text", self, JUNCTION_CONNECT.output, VALUE_TYPE.text, "");
 	
-	function process_value_data(_data) {
+	function process_data(_output, _data, _index = 0) { 
 		if(_data[1] == "") 
 			return string_to_array(_data[0]);
 			

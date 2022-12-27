@@ -11,7 +11,9 @@ function Node_Sprite_Stack(_x, _y, _group = -1) : Node_Processor(_x, _y, _group)
 		.setDisplay(VALUE_DISPLAY.vector);
 	
 	inputs[| 4] = nodeValue(4, "Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 0, 0 ] )
-		.setDisplay(VALUE_DISPLAY.vector);
+		.setDisplay(VALUE_DISPLAY.vector)
+		.setUnitRef(function(index) { return getDimension(1, index); });
+		
 	inputs[| 5] = nodeValue(5, "Rotation", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0 )
 		.setDisplay(VALUE_DISPLAY.rotation);
 	
@@ -51,10 +53,7 @@ function Node_Sprite_Stack(_x, _y, _group = -1) : Node_Processor(_x, _y, _group)
 		var _alp  = _data[7];
 		var _mov  = _data[8];
 		
-		if(!is_surface(_outSurf))
-			_outSurf =  surface_create_valid(_dim[0], _dim[1]);
-		else
-			surface_size_to(_outSurf, _dim[0], _dim[1]);
+		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1]);
 		
 		if(_mov) {
 			_pos[0] -= _shf[0] * _amo;
@@ -98,5 +97,7 @@ function Node_Sprite_Stack(_x, _y, _group = -1) : Node_Processor(_x, _y, _group)
 				}
 			}
 		surface_reset_target();
+		
+		return _outSurf;
 	}
 }

@@ -13,7 +13,7 @@ event_inherited();
 	
 	sp_note = new scrollPane(dialog_w - ui(80), dialog_h - ui(88), function(_y, _m) {
 		draw_clear_alpha(COLORS.panel_bg_clear, 0);
-		BLEND_ADD
+		BLEND_OVER
 		var yy = 0;
 		var txt = note;
 		

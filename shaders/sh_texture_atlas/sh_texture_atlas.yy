@@ -4,7 +4,7 @@
   "name": "sh_texture_atlas",
   "type": 1,
   "parent": {
-    "name": "blur",
-    "path": "folders/shader/blur.yy",
+    "name": "filter",
+    "path": "folders/shader/filter.yy",
   },
 }

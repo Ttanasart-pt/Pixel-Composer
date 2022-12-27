@@ -84,10 +84,7 @@ function Node_Shape(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constr
 		
 		inputs[| 11].setVisible(_bg);
 		
-		if(!is_surface(_outSurf)) {
-			_outSurf =  surface_create_valid(_dim[0], _dim[1]);
-		} else
-			surface_size_to(_outSurf, _dim[0], _dim[1]);
+		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1]);
 		
 		surface_set_target(_outSurf);
 			if(_bg) draw_clear_alpha(0, 1);
@@ -161,6 +158,8 @@ function Node_Shape(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constr
 			draw_sprite_ext(s_fx_pixel, 0, 0, 0, _dim[0], _dim[1], 0, _color, 1);
 			shader_reset();
 		surface_reset_target();
+		
+		return _outSurf;
 	}
 	doUpdate();
 }

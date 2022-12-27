@@ -8,10 +8,11 @@ function Node_Chromatic_Aberration(_x, _y, _group = -1) : Node_Processor(_x, _y,
 	
 	inputs[| 0] = nodeValue(0, "Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 	inputs[| 1] = nodeValue(1, "Center", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ])
-		.setDisplay(VALUE_DISPLAY.vector);
+		.setDisplay(VALUE_DISPLAY.vector)
+		.setUnitRef(function(index) { return getDimension(0, index); });
 	
 	inputs[| 2] = nodeValue(2, "Strength", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
-		.setDisplay(VALUE_DISPLAY.slider, [0, 16, 0.01]);
+		.setDisplay(VALUE_DISPLAY.slider, [-16, 16, 0.01]);
 	
 	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
 	
@@ -26,7 +27,7 @@ function Node_Chromatic_Aberration(_x, _y, _group = -1) : Node_Processor(_x, _y,
 	static process_data = function(_outSurf, _data, _output_index) {
 		surface_set_target(_outSurf);
 		draw_clear_alpha(0, 0);
-		BLEND_ADD
+		BLEND_OVER
 		
 		var center = _data[1];
 		var stren = _data[2];

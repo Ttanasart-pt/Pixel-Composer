@@ -91,6 +91,21 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 		return true;
 	}
 	
+	function refreshSize() {
+		for(var i = 0; i < ds_list_size(childs); i++)
+			childs[| i].refreshSize();
+		
+		refreshContentSize();
+	}
+		
+	function refreshContentSize() {
+		if(content) {
+			content.w = w;
+			content.h = h;
+			content.onResize();
+		}
+	}
+	
 	function resize(dw, dh, oppose = ANCHOR.left) {
 		if(dw == 0 && dh == 0) return;
 		
@@ -118,11 +133,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 			resetMask();
 		}
 		
-		if(content) {
-			content.w = w;
-			content.h = h;
-			content.onResize();
-		}
+		refreshContentSize();
 	}
 	
 	function set(_content) {

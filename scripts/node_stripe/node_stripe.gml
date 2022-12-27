@@ -27,7 +27,8 @@ function Node_Stripe(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) const
 	inputs[| 3] = nodeValue(3, "Blend", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, 0);
 	
 	inputs[| 4] = nodeValue(4, "Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [0, 0] )
-		.setDisplay(VALUE_DISPLAY.vector);
+		.setDisplay(VALUE_DISPLAY.vector)
+		.setUnitRef(function(index) { return getDimension(0, index); });
 		
 	inputs[| 5] = nodeValue(5, "Random", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
 		.setDisplay(VALUE_DISPLAY.slider, [0, 1, 0.01]);
@@ -72,10 +73,7 @@ function Node_Stripe(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) const
 		var _grad_color = _g[0];
 		var _grad_time = _g[1];
 		
-		if(!is_surface(_outSurf))
-			_outSurf =  surface_create_valid(_dim[0], _dim[1]);
-		else
-			surface_size_to(_outSurf, _dim[0], _dim[1]);
+		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1]);
 			
 		surface_set_target(_outSurf);
 			shader_set(shader);

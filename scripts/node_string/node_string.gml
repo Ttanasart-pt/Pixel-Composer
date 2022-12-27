@@ -1,4 +1,4 @@
-function Node_String(_x, _y, _group = -1) : Node_Value_Processor(_x, _y, _group) constructor {
+function Node_String(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constructor {
 	name = "Text";
 	previewable   = false;
 	
@@ -8,7 +8,7 @@ function Node_String(_x, _y, _group = -1) : Node_Value_Processor(_x, _y, _group)
 	inputs[| 0] = nodeValue(0, "Text", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "");
 	outputs[| 0] = nodeValue(0, "Text", self, JUNCTION_CONNECT.output, VALUE_TYPE.text, "");
 	
-	function process_value_data(_data) { 
+	function process_data(_output, _data, _index = 0) { 
 		return _data[0];
 	}
 	

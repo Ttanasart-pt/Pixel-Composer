@@ -75,7 +75,7 @@ event_inherited();
 					var content = contents[| index];
 					var xx   = grid_space + (grid_size + grid_space) * j;
 					
-					BLEND_ADD
+					BLEND_OVER
 					draw_sprite_stretched(THEME.node_bg, 0, xx, yy, grid_size, grid_size);
 					BLEND_NORMAL
 						

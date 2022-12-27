@@ -32,9 +32,8 @@ function Node_VFX_Renderer(_x, _y, _group = -1) : Node(_x, _y, _group) construct
 				delete inputs[| i];	
 		}
 		
-		for( var i = 0; i < ds_list_size(_l); i++ ) {
-			_l[| i].index = i;	
-		}
+		for( var i = 0; i < ds_list_size(_l); i++ )
+			_l[| i].index = i;
 		
 		ds_list_destroy(inputs);
 		inputs = _l;
@@ -49,12 +48,8 @@ function Node_VFX_Renderer(_x, _y, _group = -1) : Node(_x, _y, _group) construct
 		
 		var _outSurf	= outputs[| 0].getValue();
 		
-		if(is_surface(_outSurf)) 
-			surface_size_to(_outSurf, _dim[0], _dim[1]);
-		else {
-			_outSurf = surface_create_valid(_dim[0], _dim[1]);
-			outputs[| 0].setValue(_outSurf);
-		}
+		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1]);
+		outputs[| 0].setValue(_outSurf);
 		
 		surface_set_target(_outSurf);
 			draw_clear_alpha(c_white, 0);

@@ -1,4 +1,4 @@
-function Node_Number(_x, _y, _group = -1) : Node_Value_Processor(_x, _y, _group) constructor {
+function Node_Number(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constructor {
 	name = "Number";
 	color = COLORS.node_blend_number;
 	previewable   = false;
@@ -11,7 +11,7 @@ function Node_Number(_x, _y, _group = -1) : Node_Value_Processor(_x, _y, _group)
 	
 	outputs[| 0] = nodeValue(0, "Number", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, 0);
 	
-	function process_value_data(_data, index = 0) { 
+	function process_data(_output, _data, index = 0) { 
 		return _data[0]; 
 	}
 	
@@ -25,7 +25,7 @@ function Node_Number(_x, _y, _group = -1) : Node_Value_Processor(_x, _y, _group)
 	}
 }
 
-function Node_Vector2(_x, _y, _group = -1) : Node_Value_Processor(_x, _y, _group) constructor {
+function Node_Vector2(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constructor {
 	name = "Vector2";
 	color = COLORS.node_blend_number;
 	previewable   = false;
@@ -40,7 +40,7 @@ function Node_Vector2(_x, _y, _group = -1) : Node_Value_Processor(_x, _y, _group
 	
 	outputs[| 0] = nodeValue(0, "Vector", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, [ 0, 0 ]);
 	
-	function process_value_data(_data, index = 0) { 
+	function process_data(_output, _data, index = 0) { 
 		var vec = [ _data[0], _data[1] ];
 		return vec;
 	}
@@ -55,7 +55,7 @@ function Node_Vector2(_x, _y, _group = -1) : Node_Value_Processor(_x, _y, _group
 	}
 }
 
-function Node_Vector3(_x, _y, _group = -1) : Node_Value_Processor(_x, _y, _group) constructor {
+function Node_Vector3(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constructor {
 	name = "Vector3";
 	color = COLORS.node_blend_number;
 	previewable   = false;
@@ -73,7 +73,7 @@ function Node_Vector3(_x, _y, _group = -1) : Node_Value_Processor(_x, _y, _group
 	outputs[| 0] = nodeValue(0, "Vector", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, [ 0, 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.vector);
 	
-	function process_value_data(_data, index = 0) { 
+	function process_data(_output, _data, index = 0) { 
 		var vec = [ _data[0], _data[1], _data[2] ];
 		return vec; 
 	}
@@ -88,7 +88,7 @@ function Node_Vector3(_x, _y, _group = -1) : Node_Value_Processor(_x, _y, _group
 	}
 }
 
-function Node_Vector4(_x, _y, _group = -1) : Node_Value_Processor(_x, _y, _group) constructor {
+function Node_Vector4(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constructor {
 	name = "Vector4";
 	color = COLORS.node_blend_number;
 	previewable   = false;
@@ -108,7 +108,7 @@ function Node_Vector4(_x, _y, _group = -1) : Node_Value_Processor(_x, _y, _group
 	outputs[| 0] = nodeValue(0, "Vector", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, [ 0, 0, 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.vector);
 	
-	function process_value_data(_data, index = 0) { 
+	function process_data(_output, _data, index = 0) { 
 		var vec = [ _data[0], _data[1], _data[2], _data[3] ];
 		return vec; 
 	}
@@ -124,7 +124,7 @@ function Node_Vector4(_x, _y, _group = -1) : Node_Value_Processor(_x, _y, _group
 	}
 }
 
-function Node_Vector_Split(_x, _y, _group = -1) : Node_Value_Processor(_x, _y, _group) constructor {
+function Node_Vector_Split(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constructor {
 	name = "Vector split";
 	color = COLORS.node_blend_number;
 	previewable   = false;
@@ -141,7 +141,7 @@ function Node_Vector_Split(_x, _y, _group = -1) : Node_Value_Processor(_x, _y, _
 	outputs[| 2] = nodeValue(2, "z", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, 0);
 	outputs[| 3] = nodeValue(3, "w", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, 0);
 	
-	function process_value_data(_data, _index) { 
+	function process_data(_output, _data, _index = 0) { 
 		if(array_length(_data[0]) > _index)
 			return _data[0][_index]; 
 		return 0;

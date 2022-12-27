@@ -73,7 +73,7 @@ function Node_Level_Selector(_x, _y, _group = -1) : Node_Processor(_x, _y, _grou
 		
 		surface_set_target(_outSurf);
 			draw_clear_alpha(0, 0);
-			BLEND_ADD
+			BLEND_OVER
 			
 			shader_set(shader);
 			shader_set_uniform_f(uniform_middle, _middle);

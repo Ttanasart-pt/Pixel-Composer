@@ -31,7 +31,7 @@ function Node_Corner(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) const
 		
 		surface_set_target(temp);
 			draw_clear_alpha(0, 0);
-			BLEND_ADD
+			BLEND_OVER
 			
 			shader_set(sh_erode);
 			shader_set_uniform_f_array(uniform_er_dim, [surface_get_width(_data[0]), surface_get_height(_data[0])]);
@@ -45,7 +45,7 @@ function Node_Corner(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) const
 		
 		surface_set_target(_outSurf);
 			draw_clear_alpha(0, 0);
-			BLEND_ADD
+			BLEND_OVER
 			
 			shader_set(sh_outline);
 			shader_set_uniform_f_array(uniform_dim, [surface_get_width(_data[0]), surface_get_height(_data[0])]);

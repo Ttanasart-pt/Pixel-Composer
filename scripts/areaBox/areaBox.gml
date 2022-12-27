@@ -3,8 +3,9 @@ enum AREA_SHAPE {
 	elipse
 }
 
-function areaBox(_onModify) constructor {
+function areaBox(_onModify, _unit = noone) constructor {
 	onModify = _onModify;
+	unit	 = _unit;
 	onSurfaceSize = -1;
 	
 	active  = false;
@@ -46,8 +47,15 @@ function areaBox(_onModify) constructor {
 		tb[0].draw(_x - ui(56) - ui(48), _y - ui(28), ui(96), TEXTBOX_HEIGHT, array_safe_get(_data, 0), _m);
 		tb[1].draw(_x + ui(56) - ui(48), _y - ui(28), ui(96), TEXTBOX_HEIGHT, array_safe_get(_data, 1), _m);
 		
-		tb[2].draw(_x - ui(36),      _y + ui(64 + 48 + 8),      ui(64), TEXTBOX_HEIGHT, array_safe_get(_data, 2), _m);
-		tb[3].draw(_x + ui(64),      _y + ui(64 - 16),          ui(64), TEXTBOX_HEIGHT, array_safe_get(_data, 3), _m);
+		tb[2].draw(_x - ui(48), _y + ui(64 + 48 + 8), ui(96), TEXTBOX_HEIGHT, array_safe_get(_data, 2), _m);
+		tb[3].draw(_x + ui(68), _y + ui(64 - 16),     ui(96), TEXTBOX_HEIGHT, array_safe_get(_data, 3), _m);
+		
+		if(unit != noone && unit.reference != noone) {
+			unit.triggerButton.hover  = hover;
+			unit.triggerButton.active = active;
+			
+			unit.draw(_x + ui(56 + 48 + 8), _y - ui(28), ui(32), ui(32), _m);
+		}
 		
 		active = false;
 		hover  = false;

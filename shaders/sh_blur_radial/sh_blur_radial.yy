@@ -4,7 +4,7 @@
   "name": "sh_blur_radial",
   "type": 1,
   "parent": {
-    "name": "filter",
-    "path": "folders/shader/filter.yy",
+    "name": "blur",
+    "path": "folders/shader/blur.yy",
   },
 }

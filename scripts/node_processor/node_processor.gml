@@ -4,111 +4,112 @@ enum ARRAY_PROCESS {
 }
 
 function Node_Processor(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
-	array_process = ARRAY_PROCESS.loop;
-	current_data  = [];
-	process_multiple = false;
+	array_process  = ARRAY_PROCESS.loop;
+	current_data   = [];
+	process_amount = 0;
+	inputs_data    = [];
 	
 	icon    = THEME.node_processor;
 	
 	static process_data = function(_outSurf, _data, _output_index) { return _outSurf; }
 	
-	static update = function() {
-		var len = 0;
-		for(var i = 0; i < ds_list_size(inputs); i++) {
-			var _in = inputs[| i].getValue();
-			if(inputs[| i].isArray() && is_array(_in))
-				len = max(len, array_length(_in));
+	static getDimension = function(index = 0, arr = 0) {
+		if(array_length(inputs_data) == 0) return [1, 1];
+		
+		var _inSurf = process_amount == 0? inputs_data[index] : inputs_data[index][arr];
+		if(is_surface(_inSurf)) {
+			var ww = surface_get_width(_inSurf);
+			var hh = surface_get_height(_inSurf);
+			return [ww, hh];
 		}
 		
-		process_multiple = len > 0;
-		
-		for(var _oi = 0; _oi < ds_list_size(outputs); _oi++) {
-			if(outputs[| _oi].type != VALUE_TYPE.surface) continue;
-			var outSurfs = outputs[| _oi].getValue();
-			
-			if(len) {
-				if(!is_array(outSurfs))
-					outSurfs = array_create(len);
-				else if(array_length(outSurfs) != len) 
-					array_resize(outSurfs, len);
-				
-				for(var i = 0; i < len; i++) {
-					var ww = 1, hh = 1;
-					
-					if(inputs[| 0].type == VALUE_TYPE.surface) {
-						var base_s = getData(0, i);
-						
-						if(is_surface(base_s)) {
-							ww = surface_get_width(base_s);
-							hh = surface_get_height(base_s);
-						}
-					}
-					
-					if(is_surface(outSurfs[i]))
-						surface_size_to(outSurfs[i], ww, hh)
-					else
-						outSurfs[i] = surface_create_valid(ww, hh);
-					
-					var _data = getDataArray(i);
-					process_data(outSurfs[i], _data, _oi);
-					if(i == preview_index) current_data = _data;
-				}
-				
-				outputs[| _oi].setValue(outSurfs);
-			} else {
-				var ww = 1, hh = 1;
-				
-				if(inputs[| 0].type == VALUE_TYPE.surface) {
-					var base_texture = inputs[| 0].getValue();
-					
-					if(is_surface(base_texture)) {
-						ww = surface_get_width(base_texture);
-						hh = surface_get_height(base_texture);
-					}
-				}
-				
-				if(is_array(outSurfs)) {
-					for(var i = 1; i < array_length(outSurfs); i++) {
-						if(is_surface(outSurfs[i]))
-							surface_free(outSurfs[i]);
-					}
-					outSurfs = outSurfs[0];
-					outputs[| _oi].setValue(outSurfs);
-				}
-				
-				if(is_surface(outSurfs)) {
-					surface_size_to(outSurfs, ww, hh);
-				} else {
-					outSurfs = surface_create_valid(ww, hh);
-					outputs[| _oi].setValue(outSurfs);
-				}
-				
-				var _data = getDataArray(0);
-				process_data(outSurfs, _data, _oi);
-				current_data = _data;
-			}
-		}
-	}	
-	
-	function getDataArray(index) {
-		var _data = array_create(ds_list_size(inputs));
-		for(var i = 0; i < array_length(_data); i++) {
-			_data[i] = getData(i, index);
-		}
-		return _data;
+		if(is_array(_inSurf) && array_length(_inSurf) == 2)
+			return _inSurf;
+		return [1, 1];
 	}
 	
-	function getData(data, index) {
-		var _data = 0;
+	static preProcess = function(outIndex) {
+		var _out = outputs[| outIndex].getValue();
 		
-		var val = inputs[| data].getValue();
+		if(process_amount == 0) { //render single data
+			if(is_array(_out)) { //free surface if needed
+				if(outputs[| outIndex].type == VALUE_TYPE.surface)
+				for(var i = 1; i < array_length(_out); i++) {
+					if(is_surface(_out[i])) surface_free(_out[i]);
+				}
+				
+				_out = _out[0];
+			}
 			
-		if(inputs[| data].isArray()) {
-			if(array_length(val) == 0) return 0;
-			_data = val[safe_mod(index, array_length(val))];
-		} else 
-			_data = val;
+			if(inputs[| 0].type == VALUE_TYPE.surface && is_surface(inputs_data[0])) { //match surface size
+				var _ww = surface_get_width(inputs_data[0]);
+				var _hh = surface_get_height(inputs_data[0]);
+				_out = surface_verify(_out, _ww, _hh);
+			}
+			
+			current_data = inputs_data;
+			return process_data(_out, inputs_data, outIndex);
+		}
 		
-		return _data;
+		if(!is_array(_out))
+			_out = array_create(process_amount);
+		else if(array_length(_out) != process_amount) 
+			array_resize(_out, process_amount);
+		
+		var _data    = array_create(ds_list_size(inputs));
+		
+		for(var l = 0; l < process_amount; l++) {
+			for(var i = 0; i < ds_list_size(inputs); i++) { //input prepare
+				var _in = inputs_data[i];
+				
+				if(!inputs[| i].isArray(_in)) {
+					_data[i] = inputs_data[i];	
+					continue;
+				}
+				
+				if(array_length(_in) == 0) {
+					_data[i] = 0;
+					continue;
+				}
+				var _index = 0;
+				switch(array_process) {
+					case ARRAY_PROCESS.loop : _index = safe_mod(l, array_length(_in)); break;
+					case ARRAY_PROCESS.hold : _index = min(l, array_length(_in) - 1);  break;
+				}
+				_data[i] = _in[_index];
+			}
+			
+			if(inputs[| 0].type == VALUE_TYPE.surface && is_surface(_data[0])) { //match surface size
+				var _ww = surface_get_width(_data[0]);
+				var _hh = surface_get_height(_data[0]);
+				_out[l] = surface_verify(_out[l], _ww, _hh);
+			}
+			
+			_out[l] = process_data(_out[l], _data, outIndex);
+			if(l == preview_index) current_data = _data;
+		}
+		
+		return _out;
+	}
+	
+	static update = function() {
+		process_amount = 0;
+		inputs_data = array_create(ds_list_size(inputs));
+		
+		for(var i = 0; i < ds_list_size(inputs); i++) { //pre-collect current input data
+			inputs_data[i] = inputs[| i].getValue();
+			
+			if(!is_array(inputs_data[i])) continue;
+			if(array_length(inputs_data[i]) == 0) continue;
+			if(!inputs[| i].isArray(inputs_data[i])) continue;
+			
+			if(typeArray(inputs[| i].display_type)) {
+				process_amount = max(process_amount, array_length(inputs_data[i][0]));
+			} else 
+				process_amount = max(process_amount, array_length(inputs_data[i]));
+		}
+		
+		for(var i = 0; i < ds_list_size(outputs); i++)
+			outputs[| i].setValue(preProcess(i));
 	}
 }

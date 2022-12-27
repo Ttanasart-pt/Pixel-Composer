@@ -22,11 +22,8 @@ function Node_Time_Remap(_x, _y, _group = -1) : Node(_x, _y, _group) constructor
 		var _life    = inputs[| 2].getValue();
 		
 		var _surf  = outputs[| 0].getValue();
-		if(!is_surface(_surf)) {
-			_surf = surface_create_valid(surface_get_width(_inSurf), surface_get_height(_inSurf));
-			outputs[| 0].setValue(_surf);
-		} else
-			surface_size_to(_surf, surface_get_width(_inSurf), surface_get_height(_inSurf));
+		_surf = surface_verify(_surf, surface_get_width(_inSurf), surface_get_height(_inSurf));
+		outputs[| 0].setValue(_surf);
 		
 		var ste = 1 / _life;
 		

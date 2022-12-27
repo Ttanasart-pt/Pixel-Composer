@@ -4,7 +4,7 @@
   "name": "sh_blur_box_contrast",
   "type": 1,
   "parent": {
-    "name": "filter",
-    "path": "folders/shader/filter.yy",
+    "name": "blur",
+    "path": "folders/shader/blur.yy",
   },
 }

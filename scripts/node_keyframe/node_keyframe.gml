@@ -40,9 +40,7 @@ function valueAnimator(_val, _prop) constructor {
 		var eo = rat;
 		var ei = rat;
 		
-		if(from.ease_out == 0)
-			eo = rat;
-		else {
+		if(from.ease_out != 0) {
 			switch(from.ease_out_type) {
 				case CURVE_TYPE.bezier : 
 					eo = ease_cubic_in(rat);
@@ -54,9 +52,7 @@ function valueAnimator(_val, _prop) constructor {
 			}
 		}
 		
-		if(to.ease_in == 0)
-			ei = rat;
-		else {
+		if(to.ease_in != 0) {
 			switch(to.ease_in_type) {
 				case CURVE_TYPE.bezier  : 
 					ei = ease_cubic_out(rat);
@@ -70,8 +66,8 @@ function valueAnimator(_val, _prop) constructor {
 		
 		if(from.ease_out_type == CURVE_TYPE.damping && to.ease_in_type == CURVE_TYPE.damping) 
 			return lerp(eo, ei, rat < 0.5 ? 4 * power(rat, 3) : 1 - power(-2 * rat + 2, 3) / 2);
-		else
-			return lerp(eo, ei, rat);
+		
+		return lerp(eo, ei, rat);
 	}
 	
 	static getValue = function(_time = ANIMATOR.current_frame) {
@@ -116,7 +112,7 @@ function valueAnimator(_val, _prop) constructor {
 						
 					if(prop.type == VALUE_TYPE.color) {
 						return processType(merge_color(from.value, to.value, _lerp));
-					} else if(typeArray(prop.display_type)) {
+					} else if(typeArray(prop.display_type) && is_array(from.value)) {
 						var _vec = array_create(array_length(from.value));
 						for(var i = 0; i < array_length(_vec); i++) 
 							_vec[i] = processType(lerp(from.value[i], to.value[i], _lerp));
@@ -133,7 +129,7 @@ function valueAnimator(_val, _prop) constructor {
 	}
 	
 	static processType = function(_val) {
-		if(typeArray(prop.display_type)) {
+		if(typeArray(prop.display_type) && is_array(_val)) {
 			for(var i = 0; i < array_length(_val); i++) 
 				_val[i] = processValue(_val[i]);			
 			return _val;
@@ -143,8 +139,11 @@ function valueAnimator(_val, _prop) constructor {
 	static processValue = function(_val) {
 		if(is_array(_val)) return _val;
 		
+		if(prop.type == VALUE_TYPE.integer && prop.unit.mode == VALUE_UNIT.constant)
+			return round(toNumber(_val));
+			
 		switch(prop.type) {
-			case VALUE_TYPE.integer : return round(toNumber(_val));	
+			case VALUE_TYPE.integer : 
 			case VALUE_TYPE.float   : return toNumber(_val);
 			case VALUE_TYPE.text    : return string(_val);
 			case VALUE_TYPE.surface : 
@@ -184,8 +183,7 @@ function valueAnimator(_val, _prop) constructor {
 		return 1;
 	}
 	
-	static setValue = function(_val = 0, _record = true, _time = -999, ease_in = 0, ease_out = 0) {
-		if(_time == -999) _time = ANIMATOR.current_frame;
+	static setValue = function(_val = 0, _record = true, _time = ANIMATOR.current_frame, ease_in = 0, ease_out = 0) {
 		MODIFIED = true;
 		
 		if(!is_anim) {
@@ -249,7 +247,7 @@ function valueAnimator(_val, _prop) constructor {
 			else
 				_value_list[| 0] = values[| i].time;
 			
-			if(typeArray(prop.display_type)) {
+			if(typeArray(prop.display_type) && is_array(values[| i].value)) {
 				var __v = ds_list_create();
 				for(var j = 0; j < array_length(values[| i].value); j++)
 					ds_list_add(__v, values[| i].value[j]);
@@ -288,7 +286,7 @@ function valueAnimator(_val, _prop) constructor {
 			var ease_in_type  = ds_list_get(_key, 4, CURVE_TYPE.bezier);
 			var ease_out_type = ds_list_get(_key, 5, CURVE_TYPE.bezier);
 			var _val = 0;
-			var t = typeArray(prop.display_type);
+			var t = typeArray(prop.display_type) && is_array(base);
 			
 			if(t) {
 				if(is_string(_key[| 1])) {

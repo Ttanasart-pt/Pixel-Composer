@@ -94,16 +94,12 @@ function Node_Image(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 		var hh = sprite_get_height(spr) + pad[1] + pad[3];
 		
 		var _outsurf  = outputs[| 0].getValue();
-		if(is_surface(_outsurf)) 
-			surface_size_to(_outsurf, ww, hh);
-		else {
-			_outsurf = surface_create_valid(ww, hh);
-			outputs[| 0].setValue(_outsurf);
-		}
+		_outsurf = surface_verify(_outsurf, ww, hh);
+		outputs[| 0].setValue(_outsurf);
 		
 		surface_set_target(_outsurf);
 		draw_clear_alpha(0, 0);
-		BLEND_ADD 
+		BLEND_OVER 
 		draw_sprite(spr, 0, pad[2], pad[1]);
 		BLEND_NORMAL
 		surface_reset_target();

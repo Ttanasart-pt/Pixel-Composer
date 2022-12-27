@@ -264,19 +264,16 @@ function Node_Image_Sheet(_x, _y, _group = -1) : Node(_x, _y, _group) constructo
 			inputs[| 8].setVisible(true);
 			var _spd = inputs[| 8].getValue();
 			
-			if(is_surface(_outSurf)) 
-				surface_size_to(_outSurf, ww, hh);
-			else {
-				_outSurf = surface_create_valid(ww, hh);
-				outputs[| 0].setValue(_outSurf);
-			}
+			
+			_outSurf = surface_verify(_outSurf, ww, hh);
+			outputs[| 0].setValue(_outSurf);
 			
 			var ii = safe_mod(ANIMATOR.current_frame * _spd, _total);
 			var _spr_pos = getSpritePosition(ii);
 			
 			surface_set_target(_outSurf);
 				draw_clear_alpha(c_black, 0);
-				BLEND_ADD
+				BLEND_OVER
 				draw_surface_part(_inSurf, _spr_pos[0], _spr_pos[1], _dim[0], _dim[1], _pad[2], _pad[1]);
 				BLEND_NORMAL
 			surface_reset_target();
@@ -291,7 +288,7 @@ function Node_Image_Sheet(_x, _y, _group = -1) : Node(_x, _y, _group) constructo
 				
 				surface_set_target(surf_array[i]);
 					draw_clear_alpha(c_black, 0);
-					BLEND_ADD
+					BLEND_OVER
 					draw_surface_part(_inSurf, _spr_pos[0], _spr_pos[1], _dim[0], _dim[1], _pad[2], _pad[1]);
 					BLEND_NORMAL
 				surface_reset_target();

@@ -12,7 +12,8 @@ function Node_Perlin_Smear(_x, _y, _group = -1) : Node_Processor(_x, _y, _group)
 		.setDisplay(VALUE_DISPLAY.vector);
 	
 	inputs[| 1] = nodeValue(1, "Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ])
-		.setDisplay(VALUE_DISPLAY.vector);
+		.setDisplay(VALUE_DISPLAY.vector)
+		.setUnitRef(function(index) { return getDimension(0, index); });
 	
 	inputs[| 2] = nodeValue(2, "Scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 4, 6])
 		.setDisplay(VALUE_DISPLAY.vector);
@@ -31,10 +32,7 @@ function Node_Perlin_Smear(_x, _y, _group = -1) : Node_Processor(_x, _y, _group)
 		var _ite = _data[3];
 		var _bri = _data[4];
 		
-		if(!is_surface(_outSurf))
-			_outSurf =  surface_create_valid(_dim[0], _dim[1]);
-		else
-			surface_size_to(_outSurf, _dim[0], _dim[1]);
+		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1]);
 		
 		surface_set_target(_outSurf);
 		shader_set(shader);

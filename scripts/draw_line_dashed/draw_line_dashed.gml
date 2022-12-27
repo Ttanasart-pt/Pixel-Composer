@@ -1,4 +1,4 @@
-function draw_line_dashed(x0, y0, x1, y1, th, dash_distance = 8) {
+function draw_line_dashed(x0, y0, x1, y1, th = 1, dash_distance = 8) {
 	var dis = point_distance(x0, y0, x1, y1);
 	var dir = point_direction(x0, y0, x1, y1);
 	var part = ceil(dis / dash_distance);

@@ -1,4 +1,4 @@
-function Node_Area(_x, _y, _group = -1) : Node_Value_Processor(_x, _y, _group) constructor {
+function Node_Area(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constructor {
 	name = "Area";
 	color = COLORS.node_blend_number;
 	previewable   = false;
@@ -42,7 +42,7 @@ function Node_Area(_x, _y, _group = -1) : Node_Value_Processor(_x, _y, _group) c
 		inputs[| 1].drawOverlay(active, px, py, _s, _mx, _my, _snx, _sny);
 	}
 	
-	function process_value_data(_data, index = 0) { 
+	function process_data(_output, _data, index = 0) { 
 		return [_data[0][0], _data[0][1], _data[1][0], _data[1][1], _data[2]];
 	}
 	

@@ -1,4 +1,4 @@
-function Node_Lerp(_x, _y, _group = -1) : Node_Value_Processor(_x, _y, _group) constructor {
+function Node_Lerp(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constructor {
 	name		= "Lerp";
 	color		= COLORS.node_blend_number;
 	previewable = false;
@@ -13,7 +13,7 @@ function Node_Lerp(_x, _y, _group = -1) : Node_Value_Processor(_x, _y, _group) c
 	
 	outputs[| 0] = nodeValue(0, "Result", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, 0);
 	
-	function process_value_data(_data, index = 0) { 
+	function process_data(_output, _data, index = 0) { 
 		return lerp(_data[0], _data[1], _data[2]);
 	}
 	

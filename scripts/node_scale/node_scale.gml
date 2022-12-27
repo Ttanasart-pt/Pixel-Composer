@@ -20,14 +20,14 @@ function Node_Scale(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constr
 		var sh	= keep? hh : hh * scale;
 		
 		if(sw > 1 && sh > 1) { 
-			surface_size_to(_outSurf, sw, sh);
+			surface_verify(_outSurf, sw, sh);
 			
 			surface_set_target(_outSurf);
 				var cx = keep? (ww - ww * scale) / 2 : 0;
 				var cy = keep? (ww - hh * scale) / 2 : 0;
 				
 				draw_clear_alpha(0, 0);
-				BLEND_ADD
+				BLEND_OVER
 				draw_surface_ext_safe(_data[0], cx, cy, scale, scale, 0, c_white, 1);		
 				BLEND_NORMAL
 			surface_reset_target();

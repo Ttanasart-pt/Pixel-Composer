@@ -8,12 +8,7 @@ uniform vec2 dimension;
 uniform float tolerance;
 
 bool sameColor(in vec4 c1, in vec4 c2) {
-	if(abs(c1.r - c2.r) > tolerance) return false;	
-	if(abs(c1.g - c2.g) > tolerance) return false;	
-	if(abs(c1.b - c2.b) > tolerance) return false;	
-	if(abs(c1.a - c2.a) > tolerance) return false;	
-	
-	return true;
+	return length(c1 - c2) < tolerance;
 }
 
 void main() {

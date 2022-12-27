@@ -167,7 +167,7 @@ function Node_Image_Sequence(_x, _y, _group = -1) : Node(_x, _y, _group) constru
 					surfs[i] = surface_create_valid(ww, hh);
 					surface_set_target(surfs[i]);
 						draw_clear_alpha(0, 0);
-						BLEND_ADD
+						BLEND_OVER
 						draw_sprite(_spr, 0, pad[2], pad[1]);
 						BLEND_NORMAL
 					surface_reset_target();
@@ -185,7 +185,7 @@ function Node_Image_Sequence(_x, _y, _group = -1) : Node(_x, _y, _group) constru
 						
 						surface_set_target(surfs[i]);
 							draw_clear_alpha(0, 0);
-							BLEND_ADD
+							BLEND_OVER
 							draw_sprite_ext(_spr, 0, sw, sh, ss, ss, 0, c_white, 1);
 							BLEND_NORMAL
 						surface_reset_target();
@@ -195,7 +195,7 @@ function Node_Image_Sequence(_x, _y, _group = -1) : Node(_x, _y, _group) constru
 						
 						surface_set_target(surfs[i]);
 							draw_clear_alpha(0, 0);
-							BLEND_ADD
+							BLEND_OVER
 							draw_sprite(_spr, 0, xx, yy);
 							BLEND_NORMAL
 						surface_reset_target();

@@ -119,6 +119,7 @@
 		if(FULL_SCREEN_CONTENT != noone) {
 			PANEL_MAIN.childs[| 1].content = noone;
 			FULL_SCREEN_CONTENT = noone;
+			PANEL_MAIN.refreshSize();
 			return;
 		}
 		

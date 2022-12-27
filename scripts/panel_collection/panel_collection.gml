@@ -80,7 +80,7 @@ function Panel_Collection() : PanelContent() constructor {
 						var _nx   = grid_space + (grid_width + grid_space) * j;
 						var _boxx = _nx + (grid_width - grid_size) / 2;
 						
-						BLEND_ADD
+						BLEND_OVER
 						draw_sprite_stretched(THEME.node_bg, 0, _boxx, yy, grid_size, grid_size);
 						BLEND_NORMAL
 						
@@ -131,7 +131,7 @@ function Panel_Collection() : PanelContent() constructor {
 				if(!_node) continue;
 				
 				if(i % 2) {
-					BLEND_ADD
+					BLEND_OVER
 					draw_sprite_stretched_ext(THEME.node_bg, 0, ui(4), yy, list_width - 8, list_height, c_white, 0.2);
 					BLEND_NORMAL
 				}

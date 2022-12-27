@@ -2,16 +2,28 @@ function Node_Level(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constr
 	name = "Level";
 	
 	shader = sh_level;
-	uniform_black = shader_get_uniform(shader, "black");
-	uniform_white = shader_get_uniform(shader, "white");
+	uniform_wmin = shader_get_uniform(shader, "wmin");
+	uniform_wmax = shader_get_uniform(shader, "wmax");
+	uniform_rmin = shader_get_uniform(shader, "rmin");
+	uniform_rmax = shader_get_uniform(shader, "rmax");
+	uniform_gmin = shader_get_uniform(shader, "gmin");
+	uniform_gmax = shader_get_uniform(shader, "gmax");
+	uniform_bmin = shader_get_uniform(shader, "bmin");
+	uniform_bmax = shader_get_uniform(shader, "bmax");
 	
 	inputs[| 0] = nodeValue(0, "Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 	
-	inputs[| 1] = nodeValue(1, "Black", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
-		.setDisplay(VALUE_DISPLAY.slider, [ 0, 1, 0.01]);
+	inputs[| 1] = nodeValue(1, "White",   self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [0, 1])
+		.setDisplay(VALUE_DISPLAY.slider_range, [ 0, 1, 0.01]);
 	
-	inputs[| 2] = nodeValue(2, "White",   self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
-		.setDisplay(VALUE_DISPLAY.slider, [ 0, 1, 0.01]);
+	inputs[| 2] = nodeValue(2, "Red",   self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [0, 1])
+		.setDisplay(VALUE_DISPLAY.slider_range, [ 0, 1, 0.01]);
+	
+	inputs[| 3] = nodeValue(3, "Green",   self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [0, 1])
+		.setDisplay(VALUE_DISPLAY.slider_range, [ 0, 1, 0.01]);
+	
+	inputs[| 4] = nodeValue(4, "Blue",   self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [0, 1])
+		.setDisplay(VALUE_DISPLAY.slider_range, [ 0, 1, 0.01]);
 	
 	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
 	
@@ -24,10 +36,12 @@ function Node_Level(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constr
 		level_renderer.h = 128;
 		
 		draw_set_color(COLORS.node_level_shade);
-		var _min = inputs[| 1].getValue();
-		var _max = inputs[| 2].getValue();
-		draw_rectangle(x0, y0, x0 + max(0, _min) * _w, y1, false);
-		draw_rectangle(x0 + min(1, _max) * _w, y0, x1, y1, false);
+		var _wh = inputs[| 1].getValue();
+		var _wmin = min(_wh[0], _wh[1]);
+		var _wmax = max(_wh[0], _wh[1]);
+		
+		draw_rectangle(x0, y0, x0 + max(0, _wmin) * _w, y1, false);
+		draw_rectangle(x0 + min(1, _wmax) * _w, y0, x1, y1, false);
 		
 		for( var i = 0; i < 4; i++ ) {
 			var _bx = x1 - 20 - i * 24;
@@ -47,7 +61,8 @@ function Node_Level(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constr
 	
 	input_display_list = [
 		level_renderer,
-		["Level",	false],	0, 1, 2,
+		["Level",	false],	0, 1,
+		["Channel",	true],	2, 3, 4,
 	];
 	histogramInit();
 	
@@ -65,16 +80,28 @@ function Node_Level(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constr
 	}
 	
 	static process_data = function(_outSurf, _data, _output_index) {
-		var _black = min(_data[1], _data[2]);
-		var _white = max(_data[1], _data[2]);
+		var _wmin = min(_data[1][0], _data[1][1]);
+		var _wmax = max(_data[1][0], _data[1][1]);
+		var _rmin = min(_data[2][0], _data[2][1]);
+		var _rmax = max(_data[2][0], _data[2][1]);
+		var _gmin = min(_data[3][0], _data[3][1]);
+		var _gmax = max(_data[3][0], _data[3][1]);
+		var _bmin = min(_data[4][0], _data[4][1]);
+		var _bmax = max(_data[4][0], _data[4][1]);
 		
 		surface_set_target(_outSurf);
 		draw_clear_alpha(0, 0);
-		BLEND_ADD
+		BLEND_OVER
 		
 		shader_set(shader);
-			shader_set_uniform_f(uniform_black, _black);
-			shader_set_uniform_f(uniform_white, _white);
+			shader_set_uniform_f(uniform_wmin, _wmin);
+			shader_set_uniform_f(uniform_wmax, _wmax);
+			shader_set_uniform_f(uniform_rmin, _rmin);
+			shader_set_uniform_f(uniform_rmax, _rmax);
+			shader_set_uniform_f(uniform_gmin, _gmin);
+			shader_set_uniform_f(uniform_gmax, _gmax);
+			shader_set_uniform_f(uniform_bmin, _bmin);
+			shader_set_uniform_f(uniform_bmax, _bmax);
 			
 			draw_surface_safe(_data[0], 0, 0);
 		shader_reset();

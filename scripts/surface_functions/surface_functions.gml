@@ -34,7 +34,7 @@ function surface_size_to(surface, width, height) {
 function surface_copy_add(dst, src, _x = 0, _y = 0) {
 	surface_set_target(dst);
 	draw_clear_alpha(0, 0);
-	BLEND_ADD
+	BLEND_OVER
 		draw_surface_safe(src, _x, _y);
 	BLEND_NORMAL
 	surface_reset_target();
@@ -92,7 +92,7 @@ function surface_create_from_sprite_ext(spr, ind) {
 	
 	var s = surface_create_valid(sw, sh);
 	surface_set_target(s);
-		BLEND_ADD
+		BLEND_OVER
 		draw_clear_alpha(0, 0);
 		draw_sprite(spr, ind, sprite_get_xoffset(spr), sprite_get_yoffset(spr));
 		BLEND_NORMAL
@@ -113,4 +113,11 @@ function surface_create_from_sprite(spr) {
 	}
 	
 	return s;
+}
+
+function surface_verify(surf, w, h) {
+	if(!is_surface(surf))
+		return surface_create_valid(w, h);
+	surface_size_to(surf, w, h);
+	return surf;
 }

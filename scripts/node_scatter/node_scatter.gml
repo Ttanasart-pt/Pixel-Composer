@@ -71,20 +71,14 @@ function Node_Scatter(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) cons
 		random_set_seed(seed);
 		
 		var _in_w, _in_h;
-		
-		if(is_surface(_outSurf)) 
-			surface_size_to(_outSurf, _dim[0], _dim[1]);
-		else
-			_outSurf =  surface_create_valid(_dim[0], _dim[1]);
+
+		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1]);
 		
 		var ww = surface_get_width(_outSurf);
 		var hh = surface_get_height(_outSurf);
 		
 		for(var i = 0; i < 2; i++) {
-			if(!is_surface(temp_surf[i])) 
-				temp_surf[i] = surface_create_valid(ww, hh);
-			else 
-				surface_size_to(temp_surf[i], ww, hh);
+			temp_surf[i] = surface_verify(temp_surf[i], ww, hh);
 			
 			surface_set_target(temp_surf[i]);
 			draw_clear_alpha(0, 0);
@@ -135,12 +129,12 @@ function Node_Scatter(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) cons
 		
 		surface_set_target(_outSurf);
 			draw_clear_alpha(0, 0);
-			BLEND_ADD
+			BLEND_OVER
 			
 			draw_surface_safe(temp_surf[res_index], 0, 0);
 			
 			BLEND_NORMAL
-		surface_reset_target();
+		surface_reset_target(); 
 		
 		return _outSurf;
 	}
