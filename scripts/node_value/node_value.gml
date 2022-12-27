@@ -202,17 +202,18 @@ function nodeValueUnit(value) constructor {
 		var base = reference(index);
 		var inv = unitTo == VALUE_UNIT.reference;
 		
-		if(!is_array(value) && !is_array(base))
+		if(!is_array(base) && !is_array(value))
 			return inv? value / base : value * base;
 		
-		if(is_array(value) && !is_array(base)) {
+		if(!is_array(base) && is_array(value)) {
 			for( var i = 0; i < array_length(value); i++ )
 				value[i] = inv? value[i] / base : value[i] * base;
 			return value;
 		}
 		
-		if(!is_array(value) && is_array(base))
+		if(is_array(base) && !is_array(value)) {
 			return value;
+		}
 			
 		switch(disp) {
 			case VALUE_DISPLAY.padding :
@@ -261,8 +262,9 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 	
 	value_validation = VALIDATION.pass;
 	
-	static setUnitRef = function(ref) {
+	static setUnitRef = function(ref, mode = VALUE_UNIT.constant) {
 		unit.reference = ref;
+		unit.mode = mode;
 		
 		return self;
 	}
@@ -499,6 +501,7 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 				switch(display_type) {
 					case VALUE_DISPLAY.path_load: 
 						var path = animator.getValue();
+						if(is_array(path)) path = path[0];
 						if(try_get_path(path) == -1) {
 							value_validation = VALIDATION.error;	
 							str = "File not exist";
@@ -508,10 +511,9 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 						var paths = animator.getValue();
 						if(is_array(paths)) {
 							for( var i = 0; i < array_length(paths); i++ ) {
-								if(try_get_path(paths[i]) == -1) {
-									value_validation = VALIDATION.error;	
-									str = "File not exist";
-								}
+								if(try_get_path(paths[i]) != -1) continue;
+								value_validation = VALIDATION.error;	
+								str = "File not exist";
 							} 
 						} else {
 							value_validation = VALIDATION.error;	
@@ -521,9 +523,12 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 				}
 				break;
 		}
+		
 		node.onValidate();
 		
-		if(_val != value_validation) {
+		if(_val == value_validation) return self;
+		
+		#region notification
 			if(value_validation == VALIDATION.error && error_notification == noone) {
 				error_notification = noti_error(str);
 				error_notification.onClick = function() { PANEL_GRAPH.node_focus = node; };
@@ -533,7 +538,7 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 				noti_remove(error_notification);
 				error_notification = noone;
 			}
-		}
+		#endregion
 		
 		return self;
 	}
@@ -1297,13 +1302,14 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 		unit.mode = ds_map_try_get(_map, "unit", VALUE_UNIT.constant);
 		
 		animator.deserialize(_map[? "raw value"], scale);
+		
 		animator.is_anim = _map[? "anim"];
 		con_node = _map[? "from node"];
 		con_index = _map[? "from index"];
 		
 		if(ds_map_exists(_map, "data")) 
 			ds_list_copy(extra_data, _map[? "data"]);
-			
+		
 		onValidate();
 	}
 	

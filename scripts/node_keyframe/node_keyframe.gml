@@ -281,27 +281,24 @@ function valueAnimator(_val, _prop) constructor {
 			else if(scale && _key[| 0] <= 1)
 				_time = round(_key[| 0] * (ANIMATOR.frames_total - 1));
 			
+			var value    = ds_list_get(_key, 1);
 			var ease_in  = ds_list_get(_key, 2);
 			var ease_out = ds_list_get(_key, 3);
 			var ease_in_type  = ds_list_get(_key, 4, CURVE_TYPE.bezier);
 			var ease_out_type = ds_list_get(_key, 5, CURVE_TYPE.bezier);
-			var _val = 0;
-			var t = typeArray(prop.display_type) && is_array(base);
+			var _val  = _key[| 1];
 			
-			if(t) {
-				if(is_string(_key[| 1])) {
-					_val = compat_path_array(_key[| 1]);
-				} else {
-					_val = array_create(array_length(base));
+			if(prop.type == VALUE_TYPE.path && prop.display_type == VALUE_DISPLAY.path_array) {
+				for(var j = 0; j < ds_list_size(value); j++)
+					_val[j] = value[| j];
+			} else if(typeArray(prop.display_type) && is_array(base)) {
+				_val = array_create(array_length(base));
 					
-					if(ds_exists(_key[| 1], ds_type_list)) {
-						var ll = t == 1? min(array_length(base), ds_list_size(_key[| 1])) : ds_list_size(_key[| 1]);
-						for(var j = 0; j < ll; j++)
-							_val[j] = processValue(_key[| 1][| j]);
-					}
+				if(ds_exists(_key[| 1], ds_type_list)) {
+					for(var j = 0; j < ds_list_size(_key[| 1]); j++)
+						_val[j] = processValue(value[| j]);
 				}
-			} else
-				_val  = _key[| 1];
+			} 
 			
 			var vk = new valueKey(_time, _val, self, ease_in, ease_out);
 			vk.ease_in_type  = ease_in_type;

@@ -34,7 +34,7 @@ function Node_Gradient(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) con
 	
 	inputs[| 6] = nodeValue(6, "Center", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [def_surf_size / 2, def_surf_size / 2])
 		.setDisplay(VALUE_DISPLAY.vector)
-		.setUnitRef(function(index) { return getDimension(0, index); });
+		.setUnitRef(function(index) { return getDimension(index); });
 	
 	inputs[| 7] = nodeValue(7, "Loop", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
 	

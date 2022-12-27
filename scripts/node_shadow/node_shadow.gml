@@ -14,7 +14,7 @@ function Node_Shadow(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) const
 	
 	inputs[| 3] = nodeValue(3, "Shift", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 4, 4 ])
 		.setDisplay(VALUE_DISPLAY.vector)
-		.setUnitRef(function(index) { return getDimension(0, index); });
+		.setUnitRef(function(index) { return getDimension(index); });
 	
 	inputs[| 4] = nodeValue(4, "Grow", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 3)
 		.setDisplay(VALUE_DISPLAY.slider, [0, 16, 1]);

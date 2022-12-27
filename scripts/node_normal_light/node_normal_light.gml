@@ -19,7 +19,7 @@ function Node_Normal_Light(_x, _y, _group = -1) : Node_Processor(_x, _y, _group)
 	
 	inputs[| 4] = nodeValue(4, "Light position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, -1 ])
 		.setDisplay(VALUE_DISPLAY.vector)
-		.setUnitRef(function(index) { return getDimension(0, index); });
+		.setUnitRef(function(index) { return getDimension(index); });
 	
 	inputs[| 5] = nodeValue(5, "Light range", self,	JUNCTION_CONNECT.input, VALUE_TYPE.float, 16);
 	inputs[| 6] = nodeValue(6, "Light intensity", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 32);

@@ -13,15 +13,14 @@ function Node_Transform(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) co
 		.setDisplay(VALUE_DISPLAY.vector)
 		.setVisible(false);
 	
-	inputs[| 2] = nodeValue(2, "Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ])
+	inputs[| 2] = nodeValue(2, "Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0.5, 0.5 ])
 		.setDisplay(VALUE_DISPLAY.vector)
-		.setUnitRef(function(index) { return getDimension(index); });
+		.setUnitRef(function(index) { return getDimension(index); }, VALUE_UNIT.reference);
 	
-	inputs[| 3] = nodeValue(3, "Anchor", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ])
+	inputs[| 3] = nodeValue(3, "Anchor", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0.5, 0.5 ])
 		.setDisplay(VALUE_DISPLAY.vector, button(function() { centerAnchor(); })
 											.setIcon(THEME.anchor)
-											.setTooltip("Set to center"))
-		.setUnitRef(function(index) { return getDimension(index); });
+											.setTooltip("Set to center"));
 	
 	inputs[| 4] = nodeValue(4, "Relative anchor", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
 	
@@ -53,13 +52,10 @@ function Node_Transform(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) co
 	vel = 0;
 	prev_pos = [0, 0];
 	
-	static getDimension = function(index) {
-		if(array_length(inputs_data) == 0) return [1, 1];
-		
-		var _surf = process_amount == 0? inputs_data[0] : inputs_data[0][index];
-			
-		var _out_type = process_amount == 0? inputs_data[9] : inputs_data[9][index];
-		var _out = process_amount == 0? inputs_data[1] : inputs_data[1][index];
+	static getDimension = function(arr) {
+		var _surf		= getSingleValue(0, arr);
+		var _out_type	= getSingleValue(9, arr);
+		var _out		= getSingleValue(1, arr);
 		var ww, hh;
 		
 		switch(_out_type) {
@@ -76,7 +72,7 @@ function Node_Transform(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) co
 				hh  = _out[1];
 				break;
 		}
-			
+		
 		return [ww, hh];
 	}
 	
@@ -110,26 +106,24 @@ function Node_Transform(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) co
 				break;
 		}
 		
-		var _pos = inputs[| 3].getValue();
-		
-		inputs[| 2].setValue([ surface_get_width(_surf) / 2, surface_get_height(_surf) / 2 ]); //position
-		inputs[| 3].setValue([ ww / 2, hh / 2]); //anchor
+		inputs[| 3].setValue([ 0.5, 0.5]);
+		inputs[| 2].setValue([ surface_get_width(_surf) / 2, surface_get_height(_surf) / 2 ]);
 	}
 	
 	static step = function() {
 		var pos = inputs[| 2].getValue();
 		
-		if(ANIMATOR.frame_progress) { 
-			if(ANIMATOR.current_frame == 0) {
-				vel = 0;
-				prev_pos[0] = pos[0];
-				prev_pos[1] = pos[1];
-			} else {
-				vel = point_direction(prev_pos[0], prev_pos[1], pos[0], pos[1]);
+		if(!ANIMATOR.frame_progress) return;
+		
+		if(ANIMATOR.current_frame == 0) {
+			vel = 0;
+			prev_pos[0] = pos[0];
+			prev_pos[1] = pos[1];
+		} else {
+			vel = point_direction(prev_pos[0], prev_pos[1], pos[0], pos[1]);
 				
-				prev_pos[0] = pos[0];
-				prev_pos[1] = pos[1];
-			}
+			prev_pos[0] = pos[0];
+			prev_pos[1] = pos[1];
 		}
 	}
 	
@@ -154,7 +148,7 @@ function Node_Transform(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) co
 		var hh  = surface_get_height(ins);
 		var _ww = ww, _hh = hh;
 		if(_ww <= 1 && _hh <= 1) return _outSurf;
-				
+		
 		switch(out_type) {
 			case OUTPUT_SCALING.same_as_input :
 				inputs[| 1].setVisible(false);
@@ -172,6 +166,9 @@ function Node_Transform(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) co
 		}
 		if(_ww <= 0 || _hh <= 0) return;
 		_outSurf = surface_verify(_outSurf, _ww, _hh);
+		
+		anc[0] *= ww * sca[0];
+		anc[1] *= hh * sca[1];
 		
 		pos[0] -= anc[0];
 		pos[1] -= anc[1];
@@ -237,7 +234,10 @@ function Node_Transform(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) co
 		return _outSurf;
 	}
 	
+	doUpdate();
+	
 	overlay_dragging = 0;
+	corner_dragging  = 0;
 	overlay_drag_mx  = 0;
 	overlay_drag_my  = 0;
 	overlay_drag_sx  = 0;
@@ -262,7 +262,8 @@ function Node_Transform(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) co
 		
 		var pos = current_data[2];
 		
-		var anc = current_data[3];
+		var anc  = current_data[3];
+		var _anc = current_data[3];
 		
 		var rot = current_data[5];
 		var sca = current_data[6];
@@ -275,6 +276,9 @@ function Node_Transform(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) co
 		
 		var ww  = srw * sca[0];
 		var hh  = srh * sca[1];
+		
+		anc[0] *= ww;
+		anc[1] *= hh;
 		
 		var _pos  = [ pos[0], pos[1] ];
 		pos[0] -= anc[0];
@@ -345,12 +349,7 @@ function Node_Transform(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) co
 				if(inputs[| 2].setValue([ pos_x, pos_y ]))
 					UNDO_HOLDING = true;
 			} else if(overlay_dragging == 2) {
-				if(arl) { 
-					pos_x /= ww;
-					pos_y /= hh;
-				}
-				
-				if(inputs[| 3].setValue([ pos_x, pos_y ]))
+				if(inputs[| 3].setValue([ pos_x / ww, pos_y / hh ]))
 					UNDO_HOLDING = true;
 			}
 			
@@ -376,17 +375,28 @@ function Node_Transform(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) co
 				UNDO_HOLDING = false;
 			}
 		} else if(overlay_dragging == 4) {
-			var _dist = point_distance (overlay_drag_mx, overlay_drag_my, bax, bay);
-			var _dirr = point_direction(overlay_drag_mx, overlay_drag_my, bax, bay);
+			var _p = point_rotate(_mx - overlay_drag_mx, _my - overlay_drag_my, 0, 0, -rot);
 			
-			var dist = point_distance (_mx, _my, bax, bay);
-			var dirr = point_direction(_mx, _my, bax, bay);
+			var _sw = _p[0] / _s / srw;
+			var _sh = _p[1] / _s / srh;
+			var sw, sh;
 			
-			var sw = (lengthdir_x(dist, dirr) - lengthdir_x(_dist, _dirr)) / _s / srw;
-			var sh = (lengthdir_y(dist, dirr) - lengthdir_y(_dist, _dirr)) / _s / srh;
+			if(corner_dragging == 0) {
+				sw = -_sw / _anc[0];
+				sh = -_sh / _anc[1];
+			} else if(corner_dragging == 1) {
+				sw =  _sw / (1 - _anc[0]);
+				sh = -_sh / _anc[1];
+			} else if(corner_dragging == 2) {
+				sw = -_sw / _anc[0];
+				sh =  _sh / (1 - _anc[1]);
+			} else if(corner_dragging == 3) {
+				sw =  _sw / (1 - _anc[0]);
+				sh =  _sh / (1 - _anc[1]);
+			}
 			
-			var _sw = overlay_drag_sx - sw;
-			var _sh = overlay_drag_sy - sh;
+			var _sw = overlay_drag_sx + sw;
+			var _sh = overlay_drag_sy + sh;
 			
 			if(keyboard_check(vk_shift)) {
 				_sw = max(_sw, _sh);
@@ -411,6 +421,12 @@ function Node_Transform(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) co
 				overlay_drag_sy  = anc[1];
 			} else if(point_in_circle(_mx, _my, tl[0], tl[1], 8) || point_in_circle(_mx, _my, tr[0], tr[1], 8) || point_in_circle(_mx, _my, bl[0], bl[1], 8) || point_in_circle(_mx, _my, br[0], br[1], 8)) {
 				overlay_dragging = 4;
+				
+				if(point_in_circle(_mx, _my, tl[0], tl[1], 8))		corner_dragging = 0;
+				else if(point_in_circle(_mx, _my, tr[0], tr[1], 8)) corner_dragging = 1;
+				else if(point_in_circle(_mx, _my, bl[0], bl[1], 8)) corner_dragging = 2;
+				else if(point_in_circle(_mx, _my, br[0], br[1], 8)) corner_dragging = 3;
+				
 				overlay_drag_mx  = _mx;
 				overlay_drag_my  = _my;
 				overlay_drag_sx  = sca[0];

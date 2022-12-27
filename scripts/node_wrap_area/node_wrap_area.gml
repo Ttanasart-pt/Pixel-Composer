@@ -4,7 +4,7 @@ function Node_Wrap_Area(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) co
 	inputs[| 0] = nodeValue(0, "Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 	inputs[| 1] = nodeValue(1, "Area", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 16, 16, 4, 4, AREA_SHAPE.rectangle ])
 		.setDisplay(VALUE_DISPLAY.area)
-		.setUnitRef(function(index) { return getDimension(0, index); });;
+		.setUnitRef(function(index) { return getDimension(index); });;
 	
 	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
 	
@@ -14,7 +14,11 @@ function Node_Wrap_Area(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) co
 	
 	static process_data = function(_outSurf, _data, _output_index) {
 		var _inSurf	= _data[0];
+		if(!is_surface(_inSurf)) return _outSurf;
+		
 		var _area	= _data[1];
+		if(!is_array(_area) && array_length(_area) < 4)
+			return _outSurf;
 		
 		var cx = _area[0];
 		var cy = _area[1];

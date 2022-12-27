@@ -5,7 +5,7 @@ function Node_Sampler(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) cons
 	
 	inputs[| 1] = nodeValue(1, "Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.vector)
-		.setUnitRef(function(index) { return getDimension(0, index); });
+		.setUnitRef(function(index) { return getDimension(index); });
 	
 	outputs[| 0] = nodeValue(0, "Color", self, JUNCTION_CONNECT.output, VALUE_TYPE.color, c_white);
 	

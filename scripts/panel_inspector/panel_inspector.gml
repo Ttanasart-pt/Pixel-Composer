@@ -328,11 +328,11 @@ function Panel_Inspector() : PanelContent() constructor {
 									case VALUE_DISPLAY.path_array :
 										var val = jun.showValue(), txt = "";
 										var pathExist = jun.value_validation == VALIDATION.pass;
-									
-										if(is_array(val))
+										
+										if(is_array(val) && array_length(val))
 											txt = "[" + string(array_length(val)) + "] " + val[0];
 										else
-											txt = val;
+											txt = string(val);
 									
 										jun.editWidget.draw(editBoxX, editBoxY, editBoxW, editBoxH, _m,, pathExist? COLORS._main_text : COLORS._main_value_negative);
 										var icx = editBoxX + editBoxW - ui(16);

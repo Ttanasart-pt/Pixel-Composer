@@ -48,7 +48,7 @@ function paddingBox(_onModify, _unit = noone) constructor {
 		
 		var bx = _x - ui(80);
 		var by = _y - ui(24);
-		b_link.draw(bx, by, ui(32), ui(32), _m, THEME.button_hide);
+		b_link.draw(bx + ui(4), by + ui(4), ui(24), ui(24), _m, THEME.button_hide);
 		
 		if(unit != noone && unit.reference != noone) {
 			unit.triggerButton.hover  = hover;

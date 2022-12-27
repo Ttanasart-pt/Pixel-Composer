@@ -1,11 +1,12 @@
 function Node_Padding(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constructor {
 	name = "Padding";
+	dimension_index = -1;
 	
 	inputs[| 0] = nodeValue(0, "Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 	
 	inputs[| 1] = nodeValue(1, "Padding", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [0, 0, 0, 0])
 		.setDisplay(VALUE_DISPLAY.padding)
-		.setUnitRef(function(index) { return getDimension(0, index); });
+		.setUnitRef(function(index) { return getDimension(index); });
 	
 	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
 	

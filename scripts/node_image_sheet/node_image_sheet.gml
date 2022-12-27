@@ -1,6 +1,5 @@
 function Node_Image_Sheet(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 	name  = "Splice sprite";
-	always_output = true;
 	
 	surf_array = [];
 	
@@ -103,8 +102,8 @@ function Node_Image_Sheet(_x, _y, _group = -1) : Node(_x, _y, _group) constructo
 	}
 	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
-		if(inputs[| 0].value_from == noone) return;
 		var _inSurf  = inputs[| 0].getValue();
+		if(!is_surface(_inSurf)) return;
 		
 		var _out = inputs[| 7].getValue();
 		var _spc = inputs[| 5].getValue();
@@ -116,6 +115,7 @@ function Node_Image_Sheet(_x, _y, _group = -1) : Node(_x, _y, _group) constructo
 		}
 		
 		var _amo = curr_amo[0] * curr_amo[1];
+		
 		for(var i = _amo - 1; i >= 0; i--) {
 			var _f = getSpritePosition(i);
 			var _fx0 = _x + _f[0] * _s;
@@ -244,13 +244,14 @@ function Node_Image_Sheet(_x, _y, _group = -1) : Node(_x, _y, _group) constructo
 	}
 	
 	static update = function() {
-		if(inputs[| 0].value_from == noone) return;
 		var _inSurf  = inputs[| 0].getValue();
+		if(!is_surface(_inSurf)) return;
 		
 		var _outSurf = outputs[| 0].getValue();
 		
 		var _dim	= inputs[| 1].getValue();
 		var _amo	= inputs[| 3].getValue();
+		var _off	= inputs[| 4].getValue();
 		var _total  = _amo[0] * _amo[1];
 		var _pad	= inputs[| 6].getValue();
 		
@@ -259,11 +260,16 @@ function Node_Image_Sheet(_x, _y, _group = -1) : Node(_x, _y, _group) constructo
 		
 		var _out = inputs[| 7].getValue();
 		
+		curr_dim = _dim;
+		curr_amo = _amo;
+		curr_off = _off;
+			
 		if(_out == 0) {
 			update_on_frame = true;
-			inputs[| 8].setVisible(true);
-			var _spd = inputs[| 8].getValue();
+			inputs[|  8].setVisible(true);
+			inputs[| 11].setVisible(true);
 			
+			var _spd = inputs[| 8].getValue();
 			
 			_outSurf = surface_verify(_outSurf, ww, hh);
 			outputs[| 0].setValue(_outSurf);
@@ -279,7 +285,8 @@ function Node_Image_Sheet(_x, _y, _group = -1) : Node(_x, _y, _group) constructo
 			surface_reset_target();
 		} else if(_out == 1) {
 			update_on_frame = false;
-			inputs[| 8].setVisible(false);
+			inputs[|  8].setVisible(false);
+			inputs[| 11].setVisible(false);
 			
 			surf_array = array_create(_total);
 			for(var i = 0; i < _total; i++) {

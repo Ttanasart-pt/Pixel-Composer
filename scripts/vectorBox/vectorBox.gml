@@ -59,7 +59,7 @@ function vectorBox(_size, _type, _onModify, _unit = noone) constructor {
 		
 		var bx = _x;
 		var by = _y + _h / 2 - ui(32 / 2);
-		b_link.draw(bx, by, ui(32), ui(32), _m, THEME.button_hide);
+		b_link.draw(bx + ui(4), by + ui(4), ui(24), ui(24), _m, THEME.button_hide);
 		
 		_x += ui(28);
 		_w -= ui(28);

@@ -1,5 +1,6 @@
 function Node_3D_Cube(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constructor {
 	name = "3D Cube";
+	dimension_index = 1;
 	
 	uniVertex_lightFor = shader_get_uniform(sh_vertex_pnt_light, "u_LightForward");
 	uniLightAmb = shader_get_uniform(sh_vertex_pnt_light, "u_AmbientLight");
@@ -13,7 +14,7 @@ function Node_3D_Cube(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) cons
 	
 	inputs[| 2] = nodeValue(2, "Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ def_surf_size / 2, def_surf_size / 2 ])
 		.setDisplay(VALUE_DISPLAY.vector)
-		.setUnitRef(function(index) { return getDimension(1, index); });
+		.setUnitRef(function(index) { return getDimension(index); });
 	
 	inputs[| 3] = nodeValue(3, "Rotation", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.vector);

@@ -4,27 +4,39 @@ enum ARRAY_PROCESS {
 }
 
 function Node_Processor(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
-	array_process  = ARRAY_PROCESS.loop;
-	current_data   = [];
-	process_amount = 0;
-	inputs_data    = [];
+	array_process	= ARRAY_PROCESS.loop;
+	current_data	= [];
+	process_amount	= 0;
+	inputs_data		= [];
+	dimension_index = 0;
 	
 	icon    = THEME.node_processor;
 	
 	static process_data = function(_outSurf, _data, _output_index) { return _outSurf; }
 	
-	static getDimension = function(index = 0, arr = 0) {
-		if(array_length(inputs_data) == 0) return [1, 1];
+	static getSingleValue = function(_index, _arr = 0) {
+		var _n  = inputs[| _index];
+		var _in = _n.getValue();
 		
-		var _inSurf = process_amount == 0? inputs_data[index] : inputs_data[index][arr];
-		if(is_surface(_inSurf)) {
-			var ww = surface_get_width(_inSurf);
-			var hh = surface_get_height(_inSurf);
+		if(_n.isArray()) 
+			return _in[_arr % array_length(_in)];
+		return _in;
+	}
+	
+	static getDimension = function(arr = 0) {
+		if(dimension_index == -1) return [1, 1];
+		
+		var _in = getSingleValue(dimension_index, arr);
+		
+		if(_n.type == VALUE_TYPE.surface && is_surface(_in)) {
+			var ww = surface_get_width(_in);
+			var hh = surface_get_height(_in);
 			return [ww, hh];
 		}
 		
-		if(is_array(_inSurf) && array_length(_inSurf) == 2)
-			return _inSurf;
+		if(is_array(_in) && array_length(_in) == 2)
+			return _in;
+			
 		return [1, 1];
 	}
 	
@@ -41,10 +53,17 @@ function Node_Processor(_x, _y, _group = -1) : Node(_x, _y, _group) constructor 
 				_out = _out[0];
 			}
 			
-			if(inputs[| 0].type == VALUE_TYPE.surface && is_surface(inputs_data[0])) { //match surface size
-				var _ww = surface_get_width(inputs_data[0]);
-				var _hh = surface_get_height(inputs_data[0]);
-				_out = surface_verify(_out, _ww, _hh);
+			if(outputs[| outIndex].type == VALUE_TYPE.surface && dimension_index > -1) {
+				var surf = inputs_data[dimension_index];
+				var _sw = 1, _sh = 1;
+				if(inputs[| dimension_index].type == VALUE_TYPE.surface && is_surface(surf)) {
+					_sw = surface_get_width(surf);
+					_sh = surface_get_height(surf);
+				} else if(is_array(surf)) {
+					_sw = surf[0];
+					_sh = surf[1];
+				}
+				_out = surface_verify(_out, _sw, _sh);
 			}
 			
 			current_data = inputs_data;
@@ -79,14 +98,23 @@ function Node_Processor(_x, _y, _group = -1) : Node(_x, _y, _group) constructor 
 				_data[i] = _in[_index];
 			}
 			
-			if(inputs[| 0].type == VALUE_TYPE.surface && is_surface(_data[0])) { //match surface size
-				var _ww = surface_get_width(_data[0]);
-				var _hh = surface_get_height(_data[0]);
-				_out[l] = surface_verify(_out[l], _ww, _hh);
+			if(outputs[| outIndex].type == VALUE_TYPE.surface && dimension_index > -1) {
+				var surf = _data[dimension_index];
+				var _sw = 1, _sh = 1;
+				if(inputs[| dimension_index].type == VALUE_TYPE.surface && is_surface(surf)) {
+					_sw = surface_get_width(surf);
+					_sh = surface_get_height(surf);
+				} else if(is_array(surf)) {
+					_sw = surf[0];
+					_sh = surf[1];
+				}
+				_out[l] = surface_verify(_out[l], _sw, _sh);
 			}
 			
+			if(l == preview_index) 
+				current_data = _data;
+			
 			_out[l] = process_data(_out[l], _data, outIndex);
-			if(l == preview_index) current_data = _data;
 		}
 		
 		return _out;

@@ -15,7 +15,7 @@ function Node_Grid_Noise(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) c
 	
 	inputs[| 1] = nodeValue(1, "Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.vector)
-		.setUnitRef(function(index) { return getDimension(0, index); });
+		.setUnitRef(function(index) { return getDimension(index); });
 	
 	inputs[| 2] = nodeValue(2, "Scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 8, 8 ])
 		.setDisplay(VALUE_DISPLAY.vector);

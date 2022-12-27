@@ -1,5 +1,6 @@
 function Node_Sprite_Stack(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constructor {
 	name = "Sprite Stack";
+	dimension_index = 1;
 	
 	inputs[| 0] = nodeValue(0, "Base shape", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, PIXEL_SURFACE);
 	
@@ -12,7 +13,7 @@ function Node_Sprite_Stack(_x, _y, _group = -1) : Node_Processor(_x, _y, _group)
 	
 	inputs[| 4] = nodeValue(4, "Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 0, 0 ] )
 		.setDisplay(VALUE_DISPLAY.vector)
-		.setUnitRef(function(index) { return getDimension(1, index); });
+		.setUnitRef(function(index) { return getDimension(index); });
 		
 	inputs[| 5] = nodeValue(5, "Rotation", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0 )
 		.setDisplay(VALUE_DISPLAY.rotation);

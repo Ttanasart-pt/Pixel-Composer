@@ -17,7 +17,7 @@ function Node_Zigzag(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) const
 		
 	inputs[| 2] = nodeValue(2, "Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [0, 0] )
 		.setDisplay(VALUE_DISPLAY.vector)
-		.setUnitRef(function(index) { return getDimension(0, index); });
+		.setUnitRef(function(index) { return getDimension(index); });
 	
 	inputs[| 3] = nodeValue(3, "Color 1", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white);
 	inputs[| 4] = nodeValue(4, "Color 2", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_black);

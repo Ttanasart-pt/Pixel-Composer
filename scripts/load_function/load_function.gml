@@ -154,6 +154,8 @@ function LOAD_PATH(path, readonly = false) {
 		}
 	}
 	
+	UPDATE = RENDER_TYPE.full;
+	
 	LOADING = false;
 	MODIFIED = false;
 	
