@@ -65,7 +65,7 @@ function vectorBox(_size, _type, _onModify, _unit = noone) constructor {
 		_w -= ui(28);
 		
 		var ww  = _w / size;
-		for(var i = 0; i < array_length(_data); i++) {
+		for(var i = 0; i < size; i++) {
 			tb[i].hover  = hover;
 			tb[i].active = active;
 			

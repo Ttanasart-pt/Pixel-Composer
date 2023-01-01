@@ -21,8 +21,6 @@ function Node_String_Split(_x, _y, _group = -1) : Node_Processor(_x, _y, _group)
 		return string_splice(_data[0], delim);
 	}
 	
-	doUpdate();
-	
 	function onDrawNode(xx, yy, _mx, _my, _s) {
 		var str = inputs[| 1].getValue();
 		

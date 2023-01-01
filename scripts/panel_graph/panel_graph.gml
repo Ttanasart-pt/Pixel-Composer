@@ -481,7 +481,6 @@ function Panel_Graph() : PanelContent() constructor {
 		}
 		
 		junction_hovering = node_hovering == noone? hov : noone;
-		
 		value_focus = noone;
 		
 		#region draw node

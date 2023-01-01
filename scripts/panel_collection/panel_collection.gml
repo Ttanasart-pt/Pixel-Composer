@@ -19,8 +19,10 @@ function Panel_Collection() : PanelContent() constructor {
 	search_list = ds_list_create();
 	
 	file_dragging = noone;
-	
 	_menu_node = noone;
+	
+	updated_path = noone;
+	updated_prog = 0;
 	
 	contentMenu = [
 		[ "Replace with selected", function() { 
@@ -60,6 +62,8 @@ function Panel_Collection() : PanelContent() constructor {
 		var _cw = contentPane.surface_w;
 		var _hover = pHOVER && contentPane.hover;
 		
+		updated_prog = lerp_linear(updated_prog, 0, 0.01);
+		
 		if(contentView == 0) {
 			var grid_size  = ui(64);
 			var grid_width = ui(80);
@@ -95,6 +99,9 @@ function Panel_Collection() : PanelContent() constructor {
 								dia.setMenu(contentMenu);	
 							}
 						}
+						
+						if(_node.path == updated_path && updated_prog > 0) 
+							draw_sprite_stretched_ext(THEME.node_glow, 0, _boxx - 9, yy - 9, grid_size + 18, grid_size + 18, COLORS._main_value_positive, updated_prog);
 						
 						if(_node.spr) {
 							var sw = sprite_get_width(_node.spr);
@@ -144,7 +151,7 @@ function Panel_Collection() : PanelContent() constructor {
 					if(mouse_press(mb_right, pFOCUS)) {
 						_menu_node = _node;
 						var dia = dialogCall(o_dialog_menubox, mouse_mx + ui(8), mouse_my + ui(8));
-						dia.setMenu(contentMenu);	
+						dia.setMenu(contentMenu);
 					}
 				}
 				
@@ -212,6 +219,9 @@ function Panel_Collection() : PanelContent() constructor {
 			SAVE_COLLECTION(PANEL_INSPECTOR.inspecting, _path, save_surface);
 		else
 			SAVE_COLLECTIONS(PANEL_GRAPH.nodes_select_list, _path, save_surface);
+		
+		updated_path = _path;
+		updated_prog = 1;
 	}
 	
 	function drawContent(panel) {
@@ -270,7 +280,7 @@ function Panel_Collection() : PanelContent() constructor {
 							if(PANEL_INSPECTOR.inspecting)
 								dia.tb_name._input_text = PANEL_INSPECTOR.inspecting.name;
 							dia.onModify = function (txt) {
-								var _pre_name = data_path + "/" + txt;
+								var _pre_name = data_path + "\\" + txt;
 								var _name  = _pre_name + ".pxcc";
 								var _i = 0;
 								while(file_exists(_name)) {
@@ -305,7 +315,7 @@ function Panel_Collection() : PanelContent() constructor {
 			}
 			bx -= ui(32);
 		
-			if(buttonInstant(THEME.button_hide, bx, by, ui(24), ui(24), [mx, my], pFOCUS, pHOVER, "Refresh", THEME.refresh_s) == 2)
+			if(buttonInstant(THEME.button_hide, bx, by, ui(24), ui(24), [mx, my], pFOCUS, pHOVER, "Refresh", THEME.refresh) == 2)
 				refreshContext();
 			bx -= ui(32);
 		} else {

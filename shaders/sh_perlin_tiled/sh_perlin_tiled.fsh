@@ -11,19 +11,13 @@ uniform float bright;
 uniform int   iteration;
 uniform float seed;
 
-vec2 modulo(in vec2 divident, in vec2 divisor) {
-	divident.x = mod(divident.x, divisor.x);
-	divident.y = mod(divident.y, divisor.y);
-    return divident;
-}
-
 float random (in vec2 st, float seed) {
     return fract(sin(dot(st.xy, vec2(12.9898, 78.233))) * (43758.5453123 + seed));
 }
 
 float noise (in vec2 st) {
-    vec2 cellMin = modulo(floor(st),				scale);
-    vec2 cellMax = modulo(floor(st) + vec2(1., 1.), scale);
+    vec2 cellMin = mod(floor(st),				 scale);
+    vec2 cellMax = mod(floor(st) + vec2(1., 1.), scale);
 	
 	vec2 f = fract(st);
 	

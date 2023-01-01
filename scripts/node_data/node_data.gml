@@ -112,7 +112,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) constructor {
 				if(outputs[| i].type != VALUE_TYPE.surface) 
 					continue;
 				var val = outputs[| i].getValue();
-					
+				
 				if(is_array(val)) {
 					for(var j = 0; j < array_length(val); j++) {
 						var _surf = val[j];
@@ -120,9 +120,8 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) constructor {
 							continue;
 						willUpdate = true;
 					}
-				} else if(!is_surface(val) || val == DEF_SURFACE) {
+				} else if(!is_surface(val) || val == DEF_SURFACE)
 					willUpdate = true;
-				}
 			}
 		}
 		
@@ -151,15 +150,15 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) constructor {
 	static focusStep = function() {}
 	
 	static doUpdate = function() {
-		try {
+		//try {
 			var t = get_timer();
 			update();
 			setRenderStatus(true);
 			render_time = get_timer() - t;
-		} catch(exception) {
-			print(exception)
-			log_warning("RENDER", "Render error " + exception_print(exception));
-		}
+		//} catch(exception) {
+		//	print(exception)
+		//	log_warning("RENDER", "Render error " + exception_print(exception));
+		//}
 	}
 	
 	static onValueUpdate = function(index) {}
@@ -451,11 +450,15 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) constructor {
 		var yy = y * _s + _y;
 		
 		if(value_validation[VALIDATION.error])
-			draw_sprite_stretched(THEME.node_error, 0, xx - 9, yy - 9, w * _s + 18, h * _s + 18);
+			draw_sprite_stretched_ext(THEME.node_glow, 0, xx - 9, yy - 9, w * _s + 18, h * _s + 18, COLORS._main_value_negative, 1);
 		
 		drawNodeBase(xx, yy, _s);
-		if(previewable && ds_list_size(outputs) > 0) 
+		if(previewable && ds_list_size(outputs) > 0) {
+			if(preview_channel >= ds_list_size(outputs))
+				preview_channel = 0;
 			drawPreview(outputs[| preview_channel], xx, yy, _s);
+		}
+		
 		onDrawNode(xx, yy, _mx, _my, _s);
 		drawNodeName(xx, yy, _s);
 
@@ -770,8 +773,12 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) constructor {
 		var _inputs = load_map[? "inputs"];
 		var amo = min(ds_list_size(inputs), ds_list_size(_inputs));
 		
+		printIf(TESTING, "  > Applying deserialize to node " + name);
+		
 		for(var i = 0; i < amo; i++)
 			inputs[| i].applyDeserialize(_inputs[| i], load_scale);
+		
+		printIf(TESTING, "  > Applying deserialize to node " + name + " completed");
 	}
 	
 	static loadGroup = function() {

@@ -67,7 +67,7 @@ function Node_Level_Selector(_x, _y, _group = -1) : Node_Processor(_x, _y, _grou
 		}
 	}
 	
-	static process_data = function(_outSurf, _data, _output_index) {
+	static process_data = function(_outSurf, _data, _output_index, _array_index) {
 		var _middle = _data[1];
 		var _range  = _data[2];
 		

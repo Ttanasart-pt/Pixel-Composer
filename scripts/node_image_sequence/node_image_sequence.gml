@@ -207,5 +207,4 @@ function Node_Image_Sequence(_x, _y, _group = -1) : Node(_x, _y, _group) constru
 		
 		outputs[| 0].setValue(surfs);
 	}
-	doUpdate();
 }

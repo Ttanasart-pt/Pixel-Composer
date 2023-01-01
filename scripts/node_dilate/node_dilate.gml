@@ -25,7 +25,7 @@ function Node_Dilate(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) const
 	
 	input_display_list = [ 
 		["Surface",	false],	0, 4, 
-		["Effect", false],	1, 2, 3,
+		["Dilate",	false],	1, 2, 3,
 	];
 	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
@@ -37,7 +37,7 @@ function Node_Dilate(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) const
 		inputs[| 3].drawOverlay(active, px, py, _s, _mx, _my, _snx, _sny, 0, 1, THEME.anchor_scale_hori);
 	}
 	
-	static process_data = function(_outSurf, _data, _output_index) {
+	static process_data = function(_outSurf, _data, _output_index, _array_index) {
 		surface_set_target(_outSurf);
 		draw_clear_alpha(0, 0);
 		BLEND_OVER

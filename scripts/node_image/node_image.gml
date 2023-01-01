@@ -127,5 +127,4 @@ function Node_Image(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 			ds_list_add(PANEL_GRAPH.nodes_select_list, _splice);
 		}	
 	}
-	doUpdate();
 }

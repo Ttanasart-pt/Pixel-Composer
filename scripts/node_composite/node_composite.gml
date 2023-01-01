@@ -398,7 +398,7 @@ function Node_Composite(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) co
 		}
 	}
 	
-	static process_data = function(_outSurf, _data, _output_index) {
+	static process_data = function(_outSurf, _data, _output_index, _array_index) {
 		if(array_length(_data) < 4) return _outSurf;
 		var _pad = _data[0];
 		var _dim_type = _data[1];

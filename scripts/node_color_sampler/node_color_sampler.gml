@@ -1,6 +1,9 @@
 function Node_Sampler(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constructor {
 	name = "Sampler";
 	
+	min_h = 0;
+	w = 96;
+	
 	inputs[| 0] = nodeValue(0, "Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 	
 	inputs[| 1] = nodeValue(1, "Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ])
@@ -21,5 +24,20 @@ function Node_Sampler(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) cons
 		if(!is_surface(_surf)) return c_black;
 		
 		return surface_getpixel(_surf, _pos[0], _pos[1]);
+	}
+	
+	static onDrawNode = function(xx, yy, _mx, _my, _s) {
+		var x0 = xx + 8 * _s;
+		var x1 = xx + (w - 8) * _s;
+		var y0 = yy + 20 + 8 * _s;
+		var y1 = yy + (h - 8) * _s;
+		
+		if(y1 <= y0) return;
+		
+		var c = outputs[| 0].getValue();
+		if(is_array(c)) c = c[0];
+			
+		draw_set_color(c);
+		draw_rectangle(x0, y0, x1, y1, 0);
 	}
 }

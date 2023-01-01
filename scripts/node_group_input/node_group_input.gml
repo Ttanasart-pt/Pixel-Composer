@@ -21,6 +21,8 @@ function Node_Group_Input(_x, _y, _group = -1) : Node(_x, _y, _group) constructo
 		/*Curve*/	[ "Default", ],
 		/*Text*/	[ "Default", ],
 		/*Object*/	[ "Default", ],
+		/*Node*/	[ "Default", ],
+		/*3D*/		[ "Default", ],
 		/*Any*/		[ "Default", ],
 	]
 	
@@ -32,7 +34,7 @@ function Node_Group_Input(_x, _y, _group = -1) : Node(_x, _y, _group) constructo
 		.setVisible(false);
 	
 	inputs[| 2] = nodeValue(2, "Input type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Integer", "Float", "Boolean", "Color", "Surface", "Path", "Curve", "Text", "Object", "Any" ]);
+		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Integer", "Float", "Boolean", "Color", "Surface", "Path", "Curve", "Text", "Object", "Node", "3D object", "Any" ]);
 	
 	inputs[| 3] = nodeValue(3, "Enum label", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "")
 		.setVisible(false);
@@ -43,12 +45,18 @@ function Node_Group_Input(_x, _y, _group = -1) : Node(_x, _y, _group) constructo
 	
 	inputs[| 5] = nodeValue(5, "Order", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0);
 	
+	inputs[| 6] = nodeValue(6, "Display gizmo", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
+	
 	input_display_list = [ 
-		["Display", false], 5, 
+		["Display", false], 5, 6, 
 		["Data",	false], 2, 0, 4, 1, 3,
 	];
 	
 	outputs[| 0] = nodeValue(0, "Value", self, JUNCTION_CONNECT.output, VALUE_TYPE.any, 0);
+	
+	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
+		inParent.drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
+	}
 	
 	static onValueUpdate = function(index) {
 		if(is_undefined(inParent)) return;
@@ -214,7 +222,9 @@ function Node_Group_Input(_x, _y, _group = -1) : Node(_x, _y, _group) constructo
 	
 	static applyDeserialize = function() {
 		var _inputs = load_map[? "inputs"];
-		for(var i = 0; i < ds_list_size(inputs); i++) {
+		var amo = min(ds_list_size(_inputs), ds_list_size(inputs));
+		
+		for(var i = 0; i < amo; i++) {
 			if(i == 2 || i == 5) continue;
 			inputs[| i].applyDeserialize(_inputs[| i], load_scale);
 			var raw_val = _inputs[| i][? "raw value"];

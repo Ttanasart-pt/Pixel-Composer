@@ -304,5 +304,4 @@ function Node_Image_Sheet(_x, _y, _group = -1) : Node(_x, _y, _group) constructo
 		}
 		
 	}
-	doUpdate();
 }

@@ -47,7 +47,6 @@ function Node_Array(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 		
 		outputs[| 0].setValue(res);
 	}
-	doUpdate();
 	
 	static postDeserialize = function() {
 		var _inputs = load_map[? "inputs"];

@@ -82,7 +82,7 @@ float sdBox( in vec2 p, in vec2 b ) {
 void main() {
 	float color = 0.;
 	vec2 cen = (v_vTexcoord - center) / scale;
-	float ratio = dimension.x / dimension.y;
+	vec2 ratio = dimension / dimension.y;
 	float d;
 	
 	if(shape == 0) {
@@ -91,7 +91,7 @@ void main() {
 		float idist = min(max(edgeDist.x, edgeDist.y), 0.);
 		d = odist + idist;
 	} else if(shape == 1) {
-		d = length((v_vTexcoord - center) / scale) - 1.;
+		d = length(cen) - 1.;
 	} else if(shape == 2) {
 		d = sdRegularPolygon( cen, 0.9 - corner, sides, angle );
 		d -= corner;
@@ -102,7 +102,7 @@ void main() {
 	    d = sdArc( cen, vec2(sin(angle), cos(angle)), angle_range, 0.9 - inner, inner );
 		d -= corner;
 	} else if(shape == 5) {
-		d = sdBox( v_vTexcoord - center, scale - corner);
+		d = sdBox( (v_vTexcoord - center) * ratio, (scale * ratio - corner));
 		d -= corner;
 	}
 	

@@ -32,5 +32,4 @@ function Node_Surface_data(_x, _y, _group = -1) : Node(_x, _y, _group) construct
 		
 		outputs[| 0].setValue([ surface_get_width(_insurf), surface_get_height(_insurf) ]);
 	}
-	doUpdate();
 }

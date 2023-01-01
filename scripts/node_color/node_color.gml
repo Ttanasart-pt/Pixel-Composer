@@ -19,11 +19,9 @@ function Node_Color(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 		var y0 = yy + 20 + 8 * _s;
 		var y1 = yy + (h - 8) * _s;
 		
-		if(y1 > y0) {
-			draw_set_color(inputs[| 0].getValue());
-			draw_rectangle(x0, y0, x1, y1, 0);
-		}
+		if(y1 <= y0) return;
+		
+		draw_set_color(inputs[| 0].getValue());
+		draw_rectangle(x0, y0, x1, y1, 0);
 	}
-	
-	doUpdate();
 }

@@ -21,9 +21,9 @@
 	COLOR_KEYS = [];
 	
 	globalvar VERSION, SAVEFILE_VERSION, VERSION_STRING;
-	VERSION = 1080;
-	SAVEFILE_VERSION = 1070;
-	VERSION_STRING = "1.0.8";
+	VERSION = 1090;
+	SAVEFILE_VERSION = 1090;
+	VERSION_STRING = "1.0.9";
 	
 	globalvar NODES, NODE_MAP, APPEND_MAP, HOTKEYS, HOTKEY_CONTEXT;
 	
@@ -35,7 +35,7 @@
 	HOTKEY_CONTEXT	= ds_list_create();
 	HOTKEY_CONTEXT[| 0] = "";
 	
-	globalvar CURSOR, TOOLTIP, DIALOG_DEPTH_HOVER, KEYBOARD_STRING;
+	globalvar CURSOR, TOOLTIP, DIALOG_DEPTH_HOVER;
 	globalvar UPDATE, RENDER_STACK;
 #endregion
 
@@ -74,7 +74,10 @@
 	#macro sFOCUS FOCUS == self
 	#macro sHOVER HOVER == self
 	
-	#macro DELTA_TIME delta_time / 1000000
+	#macro DELTA_TIME delta_time / 1_000_000
+	
+	#macro TESTING false
+	#macro Tester:TESTING true
 	
 	#region color
 		#macro c_ui_blue_dkblack	$251919

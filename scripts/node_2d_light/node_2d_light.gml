@@ -46,12 +46,18 @@ function Node_2D_light(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) con
 	inputs[| 11] = nodeValue(11, "Attenuation", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.enum_scroll, ["Quadratic", "Invert quadratic", "Linear"]);
 	
+	inputs[| 12] = nodeValue(12, "Radial banding", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+		.setDisplay(VALUE_DISPLAY.slider, [0, 16, 1]);
+	
+	inputs[| 13] = nodeValue(13, "Radial start", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+		.setDisplay(VALUE_DISPLAY.rotation);
+	
 	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
 	outputs[| 1] = nodeValue(1, "Light only", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
 	
 	input_display_list = [ 0, 
 		["Shape",	false], 1, 2, 6, 7, 8, 9, 
-		["Light",	false], 3, 4, 5,
+		["Light",	false], 3, 4, 5, 12, 13,
 		["Render",	false], 11, 10 
 	];
 	
@@ -77,7 +83,7 @@ function Node_2D_light(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) con
 	}
 	
 	
-	static process_data = function(_outSurf, _data, _output_index) {
+	static process_data = function(_outSurf, _data, _output_index, _array_index) {
 		var _shape = _data[1];
 		
 		switch(_shape) {
@@ -88,6 +94,9 @@ function Node_2D_light(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) con
 				inputs[| 7].setVisible(false);
 				inputs[| 8].setVisible(false);
 				inputs[| 9].setVisible(false);
+				
+				inputs[| 12].setVisible(true);
+				inputs[| 13].setVisible(true);
 				break;
 			case LIGHT_SHAPE_2D.line :
 			case LIGHT_SHAPE_2D.line_asym :
@@ -97,6 +106,9 @@ function Node_2D_light(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) con
 				inputs[| 7].setVisible(true);
 				inputs[| 8].setVisible(true);
 				inputs[| 9].setVisible(_shape == LIGHT_SHAPE_2D.line_asym);
+				
+				inputs[| 12].setVisible(false);
+				inputs[| 13].setVisible(false);
 				break;
 			case LIGHT_SHAPE_2D.spot :
 				inputs[| 2].setVisible(false);
@@ -105,6 +117,9 @@ function Node_2D_light(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) con
 				inputs[| 7].setVisible(true);
 				inputs[| 8].setVisible(true);
 				inputs[| 9].setVisible(false);
+				
+				inputs[| 12].setVisible(false);
+				inputs[| 13].setVisible(false);
 				break;
 		}
 		
@@ -139,7 +154,38 @@ function Node_2D_light(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) con
 			
 			switch(_shape) {
 				case LIGHT_SHAPE_2D.point :
-					draw_circle_color(_pos[0], _pos[1], _range, c_white, c_black,  0);
+					var _rbnd  = _data[12];
+					var _rbns  = _data[13];
+		
+					if(_rbnd < 2)
+						draw_circle_color(_pos[0], _pos[1], _range, c_white, c_black,  0);
+					else {
+						_rbnd *= 2;
+						var bnd_amo = ceil(64 / _rbnd);
+						var step = bnd_amo * _rbnd;
+						var astp = 360 / step;
+						var ox, oy, nx, ny;
+						var banding = false;
+						
+						draw_primitive_begin(pr_trianglelist);
+						
+						for( var i = 0; i < step; i++ ) {
+							var dir = _rbns + i * astp;
+							nx = _pos[0] + lengthdir_x(_range, dir);
+							ny = _pos[1] + lengthdir_y(_range, dir);
+							
+							if(floor(i / bnd_amo) % 2 && i) {
+								draw_vertex_color(_pos[0], _pos[1], c_white, 1);
+								draw_vertex_color(ox, oy, c_black, 1);
+								draw_vertex_color(nx, ny, c_black, 1);
+							}
+							
+							ox = nx;
+							oy = ny;
+						}
+						
+						draw_primitive_end();
+					}
 					break;
 				case LIGHT_SHAPE_2D.line :
 				case LIGHT_SHAPE_2D.line_asym :

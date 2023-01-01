@@ -2,21 +2,16 @@ function Node_3D_Cube(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) cons
 	name = "3D Cube";
 	dimension_index = 1;
 	
-	uniVertex_lightFor = shader_get_uniform(sh_vertex_pnt_light, "u_LightForward");
-	uniLightAmb = shader_get_uniform(sh_vertex_pnt_light, "u_AmbientLight");
-	uniLightClr = shader_get_uniform(sh_vertex_pnt_light, "u_LightColor");
-	uniLightInt = shader_get_uniform(sh_vertex_pnt_light, "u_LightIntensity");
-	uniLightNrm = shader_get_uniform(sh_vertex_pnt_light, "useNormal");
-	
 	inputs[| 0] = nodeValue(0, "Main texture", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, DEF_SURFACE);
+	
 	inputs[| 1] = nodeValue(1, "Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, def_surf_size2)
 		.setDisplay(VALUE_DISPLAY.vector);
 	
-	inputs[| 2] = nodeValue(2, "Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ def_surf_size / 2, def_surf_size / 2 ])
+	inputs[| 2] = nodeValue(2, "Render position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ def_surf_size / 2, def_surf_size / 2 ])
 		.setDisplay(VALUE_DISPLAY.vector)
 		.setUnitRef(function(index) { return getDimension(index); });
 	
-	inputs[| 3] = nodeValue(3, "Rotation", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 0 ])
+	inputs[| 3] = nodeValue(3, "Render rotation", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.vector);
 	
 	inputs[| 4] = nodeValue(4, "Render scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 1 ])
@@ -31,7 +26,7 @@ function Node_3D_Cube(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) cons
 	inputs[| 10] = nodeValue(10, "Textures 4", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0).setVisible(false);
 	inputs[| 11] = nodeValue(11, "Textures 5", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0).setVisible(false);
 	
-	inputs[| 12] = nodeValue(12, "Scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 1, 1 ])
+	inputs[| 12] = nodeValue(12, "Object scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 1, 1 ])
 		.setDisplay(VALUE_DISPLAY.vector);
 		
 	inputs[| 13] = nodeValue(13, "Light direction", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
@@ -44,124 +39,73 @@ function Node_3D_Cube(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) cons
 		.setDisplay(VALUE_DISPLAY.slider, [0, 1, 0.01]);
 	
 	inputs[| 16] = nodeValue(16, "Light color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white);
+	
 	inputs[| 17] = nodeValue(17, "Ambient color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_grey);
 	
-	input_display_list = [
-		["Transform",	false],	0, 1, 2, 3, 12, 4, 
-		["Texture",		true],	5, 6, 7, 8, 9, 10, 11,
-		["Light",		false], 13, 14, 15, 16, 17,
+	inputs[| 18] = nodeValue(18, "Object rotation", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 0 ])
+		.setDisplay(VALUE_DISPLAY.vector);
+		
+	inputs[| 19] = nodeValue(19, "Object position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 0 ])
+		.setDisplay(VALUE_DISPLAY.vector);
+	
+	input_display_list = [1,
+		["Object transform",false], 19, 18, 12,
+		["Render",			false], 2, 4,
+		["Texture",			 true],	0, 5, 6, 7, 8, 9, 10, 11,
+		["Light",			false], 13, 14, 15, 16, 17,
 	];
 	
 	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
+	outputs[| 1] = nodeValue(1, "3D object", self, JUNCTION_CONNECT.output, VALUE_TYPE.d3object, function(index) { return submit_vertex(index); });
 	
-	#region 3D setup
-		TM = matrix_build(0, 0, 0, 0, 0, 0, 1, 1, 1);
-		cam = camera_create();
-		cam_view = matrix_build_lookat(0, 0, 1, 0, 0, 0, 0, 1, 0);
-		cam_proj = matrix_build_projection_ortho(1, 1, 1, 100);
-		
-		camera_set_proj_mat(cam, cam_view);
-		camera_set_view_mat(cam, cam_proj);
-	#endregion
+	_3d_node_init(1, /*Transform*/ 2, 18, 4);
 	
-	drag_index = -1;
-	drag_sv = 0;
-	drag_mx = 0;
-	drag_my = 0;
+	cube_faces = [
+		matrix_build(0, 0,  0.5, 0,   0, 0, 1, 1, 1),
+		matrix_build(0, 0, -0.5, 0, 180, 0, 1, 1, 1),
+		matrix_build(0,  0.5, 0, -90, 0, 0, 1, 1, 1),
+		matrix_build(0, -0.5, 0,  90, 0, 0, 1, 1, 1),
+		matrix_build( 0.5, 0, 0, 0, -90, 0, 1, 1, 1),
+		matrix_build(-0.5, 0, 0, 0,  90, 0, 1, 1, 1),
+	]
 	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
-		if(inputs[| 2].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny))
-			active = false;
-		
-		var _dim = inputs[| 1].getValue();
-		var _pos = inputs[| 2].getValue();
-		var _rot = inputs[| 3].getValue();
-		var cx = _x + _pos[0] * _s;
-		var cy = _y + _pos[1] * _s;
-		
-		draw_set_color(COLORS.axis[0]);
-		draw_line_width(cx - 64, cy, cx + 64, cy, drag_index == 0? 3 : 1);
-		
-		draw_set_color(COLORS.axis[1]);
-		draw_line_width(cx, cy - 64, cx, cy + 64, drag_index == 1? 3 : 1);
-		
-		draw_set_color(COLORS.axis[2]);
-		draw_circle(cx, cy, 64, true);
-		
-		if(drag_index == 0) {
-			var dx  = (_mx - drag_mx) / _s * 6;
-			_rot[1] = drag_sv + dx;
-			
-			if(inputs[| 3].setValue(_rot)) 
-				UNDO_HOLDING = true;
-			
-			if(mouse_release(mb_left)) {
-				drag_index = -1;
-				UNDO_HOLDING = false;
-			}
-		} else if(drag_index == 1) {
-			var dy  = (_my - drag_my) / _s * -6;
-			_rot[0] = drag_sv + dy;
-			
-			if(inputs[| 3].setValue(_rot)) 
-				UNDO_HOLDING = true;
-			
-			if(mouse_release(mb_left)) {
-				drag_index = -1;
-				UNDO_HOLDING = false;
-			}
-		} else if(drag_index == 2) {
-			var da  = point_direction(cx, cy, _mx, _my);
-			_rot[2] = da;
-			
-			if(inputs[| 3].setValue(_rot)) 
-				UNDO_HOLDING = true;
-			
-			if(mouse_release(mb_left)) {
-				drag_index = -1;
-				UNDO_HOLDING = false;
-			}
-		} else {
-			if(active && distance_to_line(_mx, _my, cx - 64, cy, cx + 64, cy) < 16) {
-				draw_set_color(COLORS.axis[0]);
-				draw_line_width(cx - 64, cy, cx + 64, cy, 3);
-				if(mouse_press(mb_left, active)) {
-					drag_index	= 0;
-					drag_sv		= _rot[1];
-					drag_mx		= _mx;
-					drag_my		= _my;
-				}
-			} else if(active && distance_to_line(_mx, _my, cx, cy - 64, cx, cy + 64) < 16) {
-				draw_set_color(COLORS.axis[1]);
-				draw_line_width(cx, cy - 64, cx, cy + 64, 3);
-				if(mouse_press(mb_left, active)) {
-					drag_index	= 1;
-					drag_sv		= _rot[0];
-					drag_mx		= _mx;
-					drag_my		= _my;
-				}
-			} else if(active && abs(point_distance(_mx, _my, cx, cy) - 64) < 8) {
-				draw_set_color(COLORS.axis[2]);
-				draw_circle_border(cx, cy, 64, 3);
-				if(mouse_press(mb_left, active)) {
-					drag_index	= 2;
-					drag_sv		= _rot[2];
-					drag_mx		= _mx;
-					drag_my		= _my;
-				}
-			}
-		}
-		
-		inputs[| 2].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
+		_3d_gizmo(active, _x, _y, _s, _mx, _my, _snx, _sny);
 	}
 	
-	static process_data = function(_outSurf, _data, _output_index) {
+	static submit_vertex = function(index = 0) {
+		var _lpos = getSingleValue(19, index);
+		var _lrot = getSingleValue(18, index);
+		var _lsca = getSingleValue(12, index);
+		var _usetex = getSingleValue(5, index);
+		
+		_3d_local_transform(_lpos, _lrot, _lsca);
+		
+		if(_usetex) {
+			for(var i = 0; i < 6; i++) {
+				matrix_stack_push(cube_faces[i]);
+				matrix_set(matrix_world, matrix_stack_top());
+				vertex_submit(PRIMITIVES[? "plane_normal"], pr_trianglelist, surface_get_texture(getSingleValue(6 + i, index)));
+				matrix_stack_pop();
+			}
+		} else {
+			matrix_set(matrix_world, matrix_stack_top());
+			vertex_submit(PRIMITIVES[? "cube"], pr_trianglelist, surface_get_texture(getSingleValue(0, index)));
+		}
+		
+		_3d_clear_local_transform();
+	}
+	
+	static process_data = function(_outSurf, _data, _output_index, _array_index) {
 		var _inSurf = _data[0];
 		var _dim = _data[1];
 		var _pos = _data[2];
-		var _rot = _data[3];
+		//var _rot = _data[3];
 		var _sca = _data[4];
-		var _lsc = _data[12];
+		
+		var _lpos = _data[19];
+		var _lrot = _data[18];
+		var _lsca = _data[12];
 		
 		var _ldir = _data[13];
 		var _lhgt = _data[14];
@@ -170,82 +114,25 @@ function Node_3D_Cube(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) cons
 		var _aclr = _data[17];
 		
 		var _usetex = _data[5];
-		var _ww  = _usetex? _dim[0] : surface_get_width(_inSurf);
-		var _hh  = _usetex? _dim[1] : surface_get_height(_inSurf);
 		
 		for(var i = 6; i <= 11; i++) inputs[| i].setVisible(_usetex);
 		inputs[| 0].setVisible(true, !_usetex);
 		
-		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1]);
+		_3d_pre_setup(_outSurf, _dim, _pos, _sca, _ldir, _lhgt, _lint, _lclr, _aclr, _lpos, _lrot, _lsca);
 		
-		TM = matrix_build(_pos[0], _pos[1], 0, _rot[0], _rot[1], _rot[2], _ww * _sca[0], _hh * _sca[1], 1);
-		cam_proj = matrix_build_projection_ortho(_ww, _hh, 1, 100);
-		camera_set_view_mat(cam, cam_proj);
-		camera_set_view_size(cam, _dim[0], _dim[1]);
-		
-		var lightFor = [ -cos(degtorad(_ldir)), -_lhgt, -sin(degtorad(_ldir)) ];
-		
-		gpu_set_ztestenable(true);
-		surface_set_target(_outSurf);
-			shader_set(sh_vertex_pnt_light);
-			shader_set_uniform_f_array(uniVertex_lightFor, lightFor);
-			shader_set_uniform_f_array(uniLightAmb, colorArrayFromReal(_aclr));
-			shader_set_uniform_f_array(uniLightClr, colorArrayFromReal(_lclr));
-			shader_set_uniform_f(uniLightInt, _lint);
-			shader_set_uniform_i(uniLightNrm, 1);
-			
-			camera_apply(cam);
-			draw_clear_alpha(0, 0);
-			
-			matrix_stack_push(TM);
-			matrix_stack_push(matrix_build(0, 0, 0, 0, 0, 0, _lsc[0], _lsc[1], _lsc[2]));
-			
-			if(_usetex) {
-				var face = [];
-				for(var i = 0; i < 6; i++) face[i] = _data[6 + i];
-				
-				matrix_stack_push(matrix_build(0, 0, 0.5, 0, 0, 0, 1, 1, 1));
+		if(_usetex) {
+			for(var i = 0; i < 6; i++) {
+				matrix_stack_push(cube_faces[i]);
 				matrix_set(matrix_world, matrix_stack_top());
-				vertex_submit(PRIMITIVES[? "plane_normal"], pr_trianglelist, surface_get_texture(face[0]));
+				vertex_submit(PRIMITIVES[? "plane_normal"], pr_trianglelist, surface_get_texture(_data[6 + i]));
 				matrix_stack_pop();
-				
-				matrix_stack_push(matrix_build(0, 0, -0.5, 0, 180, 0, 1, 1, 1));
-				matrix_set(matrix_world, matrix_stack_top());
-				vertex_submit(PRIMITIVES[? "plane_normal"], pr_trianglelist, surface_get_texture(face[1]));
-				matrix_stack_pop();
-				
-				matrix_stack_push(matrix_build(0, 0.5, 0, -90, 0, 0, 1, 1, 1));
-				matrix_set(matrix_world, matrix_stack_top());
-				vertex_submit(PRIMITIVES[? "plane_normal"], pr_trianglelist, surface_get_texture(face[2]));
-				matrix_stack_pop();
-				
-				matrix_stack_push(matrix_build(0, -0.5, 0, 90, 0, 0, 1, 1, 1));
-				matrix_set(matrix_world, matrix_stack_top());
-				vertex_submit(PRIMITIVES[? "plane_normal"], pr_trianglelist, surface_get_texture(face[3]));
-				matrix_stack_pop();
-				
-				matrix_stack_push(matrix_build(0.5, 0, 0, 0, -90, 0, 1, 1, 1));
-				matrix_set(matrix_world, matrix_stack_top());
-				vertex_submit(PRIMITIVES[? "plane_normal"], pr_trianglelist, surface_get_texture(face[4]));
-				matrix_stack_pop();
-				
-				matrix_stack_push(matrix_build(-0.5, 0, 0, 0, 90, 0, 1, 1, 1));
-				matrix_set(matrix_world, matrix_stack_top());
-				vertex_submit(PRIMITIVES[? "plane_normal"], pr_trianglelist, surface_get_texture(face[5]));
-				matrix_stack_pop();
-			} else {
-				matrix_set(matrix_world, matrix_stack_top());
-				vertex_submit(PRIMITIVES[? "cube"], pr_trianglelist, surface_get_texture(_inSurf));
 			}
-			
-			shader_reset();
-			matrix_stack_pop();
-			matrix_stack_pop();
-			matrix_set(matrix_world, MATRIX_IDENTITY);
-		surface_reset_target();
+		} else {
+			matrix_set(matrix_world, matrix_stack_top());
+			vertex_submit(PRIMITIVES[? "cube"], pr_trianglelist, surface_get_texture(_inSurf));
+		}
 		
-		gpu_set_ztestenable(false);
-		camera_apply(0);
+		_3d_post_setup();
 		
 		return _outSurf;
 	}

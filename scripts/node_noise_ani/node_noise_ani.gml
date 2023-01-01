@@ -33,7 +33,7 @@ function Node_Noise_Aniso(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) 
 		inputs[| 3].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
 	}
 	
-	static process_data = function(_outSurf, _data, _output_index) {
+	static process_data = function(_outSurf, _data, _output_index, _array_index) {
 		var _dim = _data[0];
 		var _amo = _data[1];
 		var _sed = _data[2];
@@ -55,5 +55,4 @@ function Node_Noise_Aniso(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) 
 		
 		return _outSurf;
 	}
-	doUpdate();
 }

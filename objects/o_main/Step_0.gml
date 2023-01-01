@@ -10,9 +10,13 @@
 
 #region animation
 	if(ANIMATOR.is_playing) {
-		var fr = ANIMATOR.real_frame + ANIMATOR.framerate * (delta_time / 1000000);
-		if(fr <= ANIMATOR.real_frame + 1)
-			ANIMATOR.real_frame = fr;
+		ANIMATOR.time_since_last_frame += ANIMATOR.framerate * (delta_time / 1000000);
+		
+		if(ANIMATOR.time_since_last_frame >= 1) {
+			ANIMATOR.real_frame += 1;
+			ANIMATOR.time_since_last_frame = 0;
+		}
+			
 		if(round(ANIMATOR.real_frame) >= ANIMATOR.frames_total) {
 			if(ANIMATOR.playback == ANIMATOR_END.stop || ANIMATOR.rendering) {
 				ANIMATOR.setFrame(ANIMATOR.frames_total - 1);
@@ -23,6 +27,7 @@
 		}
 	} else {
 		ANIMATOR.setFrame(ANIMATOR.real_frame);
+		ANIMATOR.time_since_last_frame = 0;
 	}
 	
 	var _c = ANIMATOR.current_frame;

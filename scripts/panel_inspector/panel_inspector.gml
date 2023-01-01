@@ -325,6 +325,9 @@ function Panel_Inspector() : PanelContent() constructor {
 								switch(jun.display_type) {
 									case VALUE_DISPLAY.path_load :
 									case VALUE_DISPLAY.path_save :
+										jun.editWidget.draw(editBoxX, editBoxY, editBoxW, editBoxH, jun.showValue(), _m);
+										break;
+										
 									case VALUE_DISPLAY.path_array :
 										var val = jun.showValue(), txt = "";
 										var pathExist = jun.value_validation == VALIDATION.pass;

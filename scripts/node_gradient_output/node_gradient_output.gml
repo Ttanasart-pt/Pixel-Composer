@@ -37,5 +37,4 @@ function Node_Gradient_Out(_x, _y, _group = -1) : Node(_x, _y, _group) construct
 		if(y1 > y0)
 			draw_gradient(x0, y0, x1 - x0, y1 - y0, inputs[| 0].getValue(), inputs[| 0].extra_data[| 0]);
 	}
-	doUpdate();
 }

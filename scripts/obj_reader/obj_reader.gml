@@ -1,4 +1,4 @@
-function readObj(path) {
+function readObj(path, flipUV = false) {
 	if(!file_exists(path)) return noone;
 	
 	var _VB  = [];
@@ -27,7 +27,10 @@ function readObj(path) {
 				ds_list_add(v, [ toNumber(sep[1]), toNumber(sep[2]), toNumber(sep[3]) ]);
 				break;
 			case "vt" :
-				ds_list_add(vt, [ 1 + toNumber(sep[1]), -toNumber(sep[2]) ]);
+				if(flipUV) 
+					ds_list_add(vt, [ 1 + toNumber(sep[1]), -toNumber(sep[2]) ]);
+				else 
+					ds_list_add(vt, [ toNumber(sep[1]), toNumber(sep[2]) ]);
 				break;
 			case "vn" :
 				ds_list_add(vn, [ toNumber(sep[1]), toNumber(sep[2]), toNumber(sep[3]) ]);
@@ -46,8 +49,12 @@ function readObj(path) {
 				}
 				break;
 			case "usemtl" :
-				array_push_unique(mats, sep[1]);
-				array_push(matIndex, array_find(mats, sep[1]));
+				var mname = string_replace_all(sep[1], "\n", "");
+				mname = string_replace_all(mname, "\r", "");
+				
+				array_push_unique(mats, mname);
+				array_push(matIndex, array_find(mats, mname));
+				
 				if(!ds_list_empty(f)) {
 					array_push(_VB,  f);
 					array_push(_VBT, ft);

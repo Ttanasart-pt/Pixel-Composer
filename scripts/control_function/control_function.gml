@@ -6,7 +6,10 @@
 		up
 	}	
 	
+	globalvar KEYBOARD_STRING, KEYBOARD_PRESSED;
 	globalvar CTRL, ALT, SHIFT;
+	
+	KEYBOARD_PRESSED = vk_nokey;
 	CTRL  = KEYBOARD_STATUS.idle;
 	ALT   = KEYBOARD_STATUS.idle;
 	SHIFT = KEYBOARD_STATUS.idle;

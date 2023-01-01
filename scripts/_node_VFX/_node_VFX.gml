@@ -363,6 +363,5 @@ function Node_VFX(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 	static update = function() {
 		reset();
 	}
-	doUpdate();
 	render();
 }

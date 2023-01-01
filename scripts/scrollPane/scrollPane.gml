@@ -56,9 +56,11 @@ function scrollPane(_w, _h, ondraw) constructor {
 		draw_surface_safe(surface, x, y);
 		
 		if(active && point_in_rectangle(mx, my, 0, 0, surface_w, surface_h)) {
-			if(mouse_wheel_down())	scroll_y_to = clamp(scroll_y_to - scroll_step, -content_h, 0);
-			if(mouse_wheel_up())	scroll_y_to = clamp(scroll_y_to + scroll_step, -content_h, 0);
+			if(mouse_wheel_down())	scroll_y_to -= scroll_step;
+			if(mouse_wheel_up())	scroll_y_to += scroll_step;
 		}
+		
+		scroll_y_to = clamp(scroll_y_to, -content_h, 0);
 		
 		if(abs(content_h) > 0) {
 			draw_scroll(x + surface_w + ui(4), y + ui(6), true, surface_h - ui(12), -scroll_y / content_h, surface_h / (surface_h + content_h), 

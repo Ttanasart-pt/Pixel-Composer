@@ -16,7 +16,7 @@ function Node_Pixel_Sort(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) c
 	
 	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
 	
-	static process_data = function(_outSurf, _data, _output_index) {
+	static process_data = function(_outSurf, _data, _output_index, _array_index) {
 		var _in = _data[0];
 		
 		var _it = _data[1];

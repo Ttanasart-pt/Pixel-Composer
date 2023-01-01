@@ -46,8 +46,6 @@ function Node_Area(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constru
 		return [_data[0][0], _data[0][1], _data[1][0], _data[1][1], _data[2]];
 	}
 	
-	doUpdate();
-	
 	static onDrawNode = function(xx, yy, _mx, _my, _s) {
 		draw_sprite_ui_uniform(THEME.node_draw_area, 0, xx + w * _s / 2, yy + 10 + (h - 10) * _s / 2, _s, c_white);
 	}

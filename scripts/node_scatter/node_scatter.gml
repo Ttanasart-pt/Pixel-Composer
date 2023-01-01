@@ -49,7 +49,7 @@ function Node_Scatter(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) cons
 		inputs[| 5].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
 	}
 	
-	static process_data = function(_outSurf, _data, _output_index) {
+	static process_data = function(_outSurf, _data, _output_index, _array_index) {
 		var _inSurf = _data[0], surf;
 		if(_inSurf == 0)
 			return;

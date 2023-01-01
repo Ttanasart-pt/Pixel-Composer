@@ -9,7 +9,7 @@ ON_END_NAME = [ "Hold", "Loop", "Ping pong" ];
 
 function valueKey(_time, _value, _anim = noone, _in = 0, _out = 0) constructor {
 	time	= _time;
-	ratio	= time / ANIMATOR.frames_total;
+	ratio	= time / (ANIMATOR.frames_total - 1);
 	value	= _value;
 	anim	= _anim;
 	
@@ -21,7 +21,7 @@ function valueKey(_time, _value, _anim = noone, _in = 0, _out = 0) constructor {
 	
 	static setTime = function(time) {
 		self.time = time;	
-		ratio	= time / ANIMATOR.frames_total;
+		ratio	= time / (ANIMATOR.frames_total - 1);
 	}
 }
 

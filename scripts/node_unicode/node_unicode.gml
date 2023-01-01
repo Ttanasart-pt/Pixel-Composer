@@ -14,8 +14,6 @@ function Node_Unicode(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) cons
 		return chr(_data[0]);
 	}
 	
-	doUpdate();
-	
 	function onDrawNode(xx, yy, _mx, _my, _s) {
 		draw_set_text(f_h5, fa_center, fa_center, COLORS._main_text);
 		draw_text(xx + w / 2 * _s, yy + 10 + h / 2 * _s, chr(inputs[| 0].getValue()));

@@ -10,12 +10,12 @@ function Node_Flip(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constru
 	
 	input_display_list = [
 		["Surface",	false],	0, 
-		["Effect",	false],	1,
+		["Flip",	false],	1,
 	]
 	
 	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
 	
-	static process_data = function(_outSurf, _data, _output_index) {
+	static process_data = function(_outSurf, _data, _output_index, _array_index) {
 		var _axis = _data[1];
 		surface_set_target(_outSurf);
 			draw_clear_alpha(0, 0);

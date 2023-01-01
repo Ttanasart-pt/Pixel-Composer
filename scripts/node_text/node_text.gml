@@ -1,6 +1,5 @@
 function Node_Text(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constructor {
 	name = "Text";
-	
 	font = f_p0;
 	
 	inputs[| 0] = nodeValue(0, "Text", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "")
@@ -65,7 +64,7 @@ function Node_Text(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constru
 		}
 	}
 	
-	static process_data = function(_outSurf, _data, _output_index) {
+	static process_data = function(_outSurf, _data, _output_index, _array_index) {
 		var str    = _data[0];
 		var _font  = _data[1];
 		var _size  = _data[2];

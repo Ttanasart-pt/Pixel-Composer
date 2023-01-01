@@ -1,12 +1,12 @@
-function button(_onClick) {
-	return new buttonClass(_onClick);
+function button(_onClick, _icon = noone) {
+	return new buttonClass(_onClick, _icon);
 }
 
-function buttonClass(_onClick) constructor {
+function buttonClass(_onClick, _icon = noone) constructor {
 	active = false;
 	hover  = false;
 	
-	icon	   = noone;
+	icon	   = _icon;
 	icon_blend = c_white;
 	icon_index = 0;
 	

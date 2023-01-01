@@ -75,6 +75,12 @@
 			var node = noone;
 			
 			switch(ext) {
+				case ".txt"  :
+					node = Node_create_Text_File_Read_path(PANEL_GRAPH.mouse_grid_x, PANEL_GRAPH.mouse_grid_y, path);
+					break;
+				case ".json"  :
+					node = Node_create_Json_File_Read_path(PANEL_GRAPH.mouse_grid_x, PANEL_GRAPH.mouse_grid_y, path);
+					break;
 				case ".png"	 :
 				case ".jpg"	 :
 				case ".jpeg" :
@@ -86,7 +92,6 @@
 				case ".obj" :
 					node = Node_create_3D_Obj_path(PANEL_GRAPH.mouse_grid_x, PANEL_GRAPH.mouse_grid_y, path);
 					break;
-				case ".json" :
 				case ".pxc" :
 					LOAD_PATH(path);
 					break;

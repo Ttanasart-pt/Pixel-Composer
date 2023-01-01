@@ -44,7 +44,7 @@ function Node_Gradient_Points(_x, _y, _group = -1) : Node_Processor(_x, _y, _gro
 		if(inputs[| 7].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny)) active = false;
 	}
 	
-	static process_data = function(_outSurf, _data, _output_index) {
+	static process_data = function(_outSurf, _data, _output_index, _array_index) {
 		var _dim = _data[0];
 		
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1]);
@@ -71,5 +71,4 @@ function Node_Gradient_Points(_x, _y, _group = -1) : Node_Processor(_x, _y, _gro
 		
 		return _outSurf;
 	}
-	doUpdate();
 }

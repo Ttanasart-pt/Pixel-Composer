@@ -1,13 +1,13 @@
 function APPEND(_path) {
 	APPENDING	= true;
 	
-	var log = false;
-	if(_path == "") return;
+	var log = true;
+	if(_path == "") return noone;
 	var _map = json_load(_path);
 	
 	if(_map == -1) {
 		printlog("Decode error");
-		return 
+		return noone;
 	}
 	
 	if(ds_map_exists(_map, "version")) {
@@ -34,8 +34,7 @@ function APPEND(_path) {
 		var _node = nodeLoad(_node_list[| i], true);
 		if(_node) ds_list_add(appended_list, _node);
 	}
-	printlog("Load time: " + string(current_time - t));
-	t = current_time;
+	printlog("Load time: " + string(current_time - t)); t = current_time;
 	
 	try {
 		for(var i = 0; i < ds_list_size(appended_list); i++) {
@@ -48,8 +47,7 @@ function APPEND(_path) {
 	} catch(e) {
 		log_warning("APPEND, node", exception_print(e));
 	}
-	printlog("Load group time: " + string(current_time - t));
-	t = current_time;
+	printlog("Load group time: " + string(current_time - t)); t = current_time;
 	
 	try {
 		for(var i = 0; i < ds_list_size(appended_list); i++)
@@ -57,8 +55,7 @@ function APPEND(_path) {
 	} catch(e) {
 		log_warning("APPEND, deserialize", exception_print(e));
 	}
-	printlog("Deserialize time: " + string(current_time - t));
-	t = current_time;
+	printlog("Deserialize time: " + string(current_time - t)); t = current_time;
 	
 	try {
 		for(var i = 0; i < ds_list_size(appended_list); i++)
@@ -66,6 +63,7 @@ function APPEND(_path) {
 	} catch(e) {
 		log_warning("LOAD, apply deserialize", exception_print(e));
 	}
+	printlog("Apply deserialize time: " + string(current_time - t)); t = current_time;
 	
 	try {
 		for(var i = 0; i < ds_list_size(appended_list); i++)
@@ -77,8 +75,7 @@ function APPEND(_path) {
 	} catch(e) {
 		log_warning("APPEND, connect", exception_print(e));
 	}
-	printlog("Connect time: " + string(current_time - t));
-	t = current_time;
+	printlog("Connect time: " + string(current_time - t)); t = current_time;
 	
 	try {
 		for(var i = 0; i < ds_list_size(appended_list); i++)
@@ -86,8 +83,7 @@ function APPEND(_path) {
 	} catch(e) {
 		log_warning("APPEND, update", exception_print(e));
 	}
-	printlog("Update time: " + string(current_time - t));
-	t = current_time;
+	printlog("Update time: " + string(current_time - t)); t = current_time;
 	
 	ds_list_destroy(appended_list);
 	
@@ -115,11 +111,11 @@ function APPEND(_path) {
 			log_warning("APPEND, Conflict solver error : ", exception_print(e));
 		}
 	}
-	printlog("Conflict time: " + string(current_time - t));
-	t = current_time;
+	printlog("Conflict time: " + string(current_time - t)); t = current_time;
 	
 	APPENDING = false;
 	PANEL_ANIMATION.updatePropertyList();
+	UPDATE = RENDER_TYPE.full;
 	
 	log_message("FILE", "append file " + _path, THEME.noti_icon_file_load);
 	

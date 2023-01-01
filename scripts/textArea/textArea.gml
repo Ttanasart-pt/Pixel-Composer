@@ -1,4 +1,4 @@
-function textArea(_input, _onModify) constructor {
+function textArea(_input, _onModify, _extras = noone) constructor {
 	active = false;
 	hover  = false;
 	font   = f_p0;
@@ -9,6 +9,7 @@ function textArea(_input, _onModify) constructor {
 	
 	input = _input;
 	onModify = _onModify;
+	extras = _extras;
 	
 	_input_text_line = [];
 	_input_text = "";
@@ -96,7 +97,7 @@ function textArea(_input, _onModify) constructor {
 					KEYBOARD_STRING = clipboard_get_text();
 					
 				if(keyboard_check_pressed(vk_escape) || keyboard_check_pressed(vk_enter)) {
-				} else if(keyboard_check_pressed(vk_backspace)) {
+				} else if(KEYBOARD_PRESSED == vk_backspace) {
 					if(cursor_select == -1) {
 						var str_before	= string_copy(_input_text, 1, cursor - 1);
 						var str_after	= string_copy(_input_text, cursor + 1, string_length(_input_text) - cursor);
@@ -117,7 +118,7 @@ function textArea(_input, _onModify) constructor {
 					
 					cursor_select	= -1;
 					move_cursor(-1);
-				} else if(keyboard_check_pressed(vk_delete) || (keyboard_check_pressed(ord("X")) && key_mod_press(CTRL) && cursor_select != -1)) {
+				} else if(KEYBOARD_PRESSED == vk_delete || (keyboard_check_pressed(ord("X")) && key_mod_press(CTRL) && cursor_select != -1)) {
 					if(cursor_select == -1) {
 						var str_before	= string_copy(_input_text, 1, cursor);
 						var str_after	= string_copy(_input_text, cursor + 2, string_length(_input_text) - cursor - 1);
@@ -265,6 +266,14 @@ function textArea(_input, _onModify) constructor {
 	}
 	
 	static draw = function(_x, _y, _w, _h, _text, _m) {
+		if(extras && instanceof(extras) == "buttonClass") {
+			extras.hover  = hover;
+			extras.active = active;
+			
+			extras.draw(_x + _w - ui(32), _y + _h / 2 - ui(32 / 2), ui(32), ui(32), _m, THEME.button_hide);
+			_w -= ui(40);
+		}
+		
 		var tx = _x + ui(8);
 		var hh = _h;
 		line_width = _w - ui(16);
@@ -278,7 +287,7 @@ function textArea(_input, _onModify) constructor {
 			editText();
 			
 			#region cursor
-				if(keyboard_check_pressed(vk_left)) {
+				if(KEYBOARD_PRESSED == vk_left) {
 					if(keyboard_check(vk_shift)) {
 						if(cursor_select == -1)
 							cursor_select = cursor;
@@ -294,7 +303,7 @@ function textArea(_input, _onModify) constructor {
 						}
 					} 
 				}
-				if(keyboard_check_pressed(vk_right)) {
+				if(KEYBOARD_PRESSED == vk_right) {
 					if(keyboard_check(vk_shift)) {
 						if(cursor_select == -1)
 							cursor_select = cursor;
@@ -311,7 +320,7 @@ function textArea(_input, _onModify) constructor {
 					} 
 				}
 				
-				if(keyboard_check_pressed(vk_up)) {
+				if(KEYBOARD_PRESSED == vk_up) {
 					var _target;
 					
 					if(cursor_line == 0) 
@@ -345,7 +354,7 @@ function textArea(_input, _onModify) constructor {
 					cursor = _target;
 				}
 				
-				if(keyboard_check_pressed(vk_down)) {
+				if(KEYBOARD_PRESSED == vk_down) {
 					var _target;
 					
 					if(cursor_line == array_length(_input_text_line) - 1) 

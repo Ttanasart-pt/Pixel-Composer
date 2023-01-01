@@ -21,6 +21,7 @@ function Node_Export(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 	played  = 0;
 	
 	inputs[| 0] = nodeValue(0, "Surface", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
+	
 	inputs[| 1] = nodeValue(1, "Paths",   self, JUNCTION_CONNECT.input, VALUE_TYPE.path, "")
 		.setDisplay(VALUE_DISPLAY.path_save, ["*.png", ""])
 		.setVisible(true);
@@ -30,6 +31,7 @@ function Node_Export(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 	
 	format_single = ["Single image (.png)", "Image sequence (.png)", "Animated gif (.gif)"];
 	format_array  = ["Multiple image (.png)", "Image sequence (.png)", "Animated gif (.gif)"];
+	
 	inputs[| 3] = nodeValue(3, "Format", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.enum_scroll, ["Single image (.png)", "Image sequence (.png)", "Animated gif (.gif)"]);
 	
@@ -43,18 +45,20 @@ function Node_Export(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 
 	inputs[| 5] = nodeValue(5, "Loop", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true)
 		.setVisible(false);
+	
 	inputs[| 6] = nodeValue(6, "Frame optimization", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false)
 		.setVisible(false);
+	
 	inputs[| 7] = nodeValue(7, "Color merge", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.02)
 		.setDisplay(VALUE_DISPLAY.slider, [0, 1, 0.01])
 		.setVisible(false);
-	inputs[| 8] = nodeValue(8, "Dithering", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false)
-		.setVisible(false);
+	
+	inputs[| 8] = nodeValue(8, "Framerate", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 30)
 	
 	input_display_list = [
-		["Path",			false], 0, 1, 2, 4, 
+		["Export",			false], 0, 1, 2, 4, 
 		["Format settings", false], 3, 
-		["Gif settings",	false], 5, 6, 7, 8,
+		["Gif settings",	false], 8, 5, 6, 7
 	];
 	
 	static onValueUpdate = function(_index) {
@@ -70,14 +74,13 @@ function Node_Export(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 	}
 	
 	static renderGif = function(temp_path, target_path) {
-		show_debug_message("render from " + temp_path + " to " + target_path);
 		var loop = inputs[| 5].getValue();
 		var opti = inputs[| 6].getValue();
 		var fuzz = inputs[| 7].getValue();
-		var dith = inputs[| 8].getValue();
+		var rate = inputs[| 8].getValue();
 		
 		var converter = working_directory + "ImageMagick\\convert.exe";
-		var framerate = ANIMATOR.framerate / 10;
+		var framerate = 100 / rate;
 		var loop_str = loop? 0 : 1;
 		
 		var shell_cmd = "-delay " + string(framerate) +
@@ -91,10 +94,6 @@ function Node_Export(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 			shell_cmd += " -fuzz " + string(fuzz * 100) + "%" +
 				" -layers OptimizeFrame" +
 				" -layers OptimizeTransparency";
-		}
-		
-		if(dith) {
-			shell_cmd += " +dither";	
 		}
 		
 		shell_cmd += " " + temp_path + 

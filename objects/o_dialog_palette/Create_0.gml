@@ -15,8 +15,11 @@ event_inherited();
 	setColor = function(color) {
 		if(index_selecting == -1 || palette == 0) return;
 		palette[index_selecting] = color;
+		
+		if(onApply != noone) onApply(palette);
 	}
 	
+	onApply = noone;
 	selector = new colorSelector(setColor);
 	selector.dropper_close = false;
 	

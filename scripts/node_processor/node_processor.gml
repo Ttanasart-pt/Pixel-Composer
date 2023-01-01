@@ -6,13 +6,14 @@ enum ARRAY_PROCESS {
 function Node_Processor(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 	array_process	= ARRAY_PROCESS.loop;
 	current_data	= [];
-	process_amount	= 0;
 	inputs_data		= [];
+	
+	process_amount	= 0;
 	dimension_index = 0;
 	
 	icon    = THEME.node_processor;
 	
-	static process_data = function(_outSurf, _data, _output_index) { return _outSurf; }
+	static process_data = function(_outSurf, _data, _output_index, _array_index) { return _outSurf; }
 	
 	static getSingleValue = function(_index, _arr = 0) {
 		var _n  = inputs[| _index];
@@ -28,7 +29,7 @@ function Node_Processor(_x, _y, _group = -1) : Node(_x, _y, _group) constructor 
 		
 		var _in = getSingleValue(dimension_index, arr);
 		
-		if(_n.type == VALUE_TYPE.surface && is_surface(_in)) {
+		if(inputs[| dimension_index].type == VALUE_TYPE.surface && is_surface(_in)) {
 			var ww = surface_get_width(_in);
 			var hh = surface_get_height(_in);
 			return [ww, hh];
@@ -44,13 +45,16 @@ function Node_Processor(_x, _y, _group = -1) : Node(_x, _y, _group) constructor 
 		var _out = outputs[| outIndex].getValue();
 		
 		if(process_amount == 0) { //render single data
+			if(outputs[| outIndex].type == VALUE_TYPE.d3object) //passing 3D vertex call
+				return _out;
+			
 			if(is_array(_out)) { //free surface if needed
 				if(outputs[| outIndex].type == VALUE_TYPE.surface)
 				for(var i = 1; i < array_length(_out); i++) {
 					if(is_surface(_out[i])) surface_free(_out[i]);
 				}
 				
-				_out = _out[0];
+				_out = array_safe_get(_out, 0);
 			}
 			
 			if(outputs[| outIndex].type == VALUE_TYPE.surface && dimension_index > -1) {
@@ -67,7 +71,12 @@ function Node_Processor(_x, _y, _group = -1) : Node(_x, _y, _group) constructor 
 			}
 			
 			current_data = inputs_data;
-			return process_data(_out, inputs_data, outIndex);
+			return process_data(_out, inputs_data, outIndex, 0);
+		}
+		
+		if(outputs[| outIndex].type == VALUE_TYPE.d3object) { //passing 3D vertex call
+			if(is_array(_out)) _out = _out[0];
+			return array_create(process_amount, _out);
 		}
 		
 		if(!is_array(_out))
@@ -114,7 +123,7 @@ function Node_Processor(_x, _y, _group = -1) : Node(_x, _y, _group) constructor 
 			if(l == preview_index) 
 				current_data = _data;
 			
-			_out[l] = process_data(_out[l], _data, outIndex);
+			_out[l] = process_data(_out[l], _data, outIndex, l);
 		}
 		
 		return _out;

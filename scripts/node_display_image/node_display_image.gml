@@ -75,7 +75,6 @@ function Node_Display_Image(_x, _y, _group = -1) : Node(_x, _y, _group) construc
 		w = sprite_get_width(spr);
 		h = sprite_get_height(spr);
 	}
-	doUpdate();
 	
 	static drawNodeBase = function(xx, yy, _s) {
 		if(!spr || !sprite_exists(spr)) return;

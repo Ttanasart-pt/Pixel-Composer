@@ -18,7 +18,7 @@ function Node_Blur_Contrast(_x, _y, _group = -1) : Node_Processor(_x, _y, _group
 	
 	pass = PIXEL_SURFACE;
 	
-	static process_data = function(_outSurf, _data, _output_index) {
+	static process_data = function(_outSurf, _data, _output_index, _array_index) {
 		var _surf = _data[0];
 		var _size = _data[1];
 		var _tres = _data[2];

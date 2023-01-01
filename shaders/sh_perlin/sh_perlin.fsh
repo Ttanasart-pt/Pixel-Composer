@@ -44,6 +44,5 @@ void main() {
 		pos *= 2.;
 	}
 	
-
     gl_FragColor = vec4(vec3(n), 1.0);
 }

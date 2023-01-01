@@ -24,6 +24,10 @@ function Node_Shadow(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) const
 	
 	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
 	
+	input_display_list = [ 0,
+		["Shadow", false], 1, 2, 3, 4, 5, 
+	];
+	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var _surf = outputs[| 0].getValue();
 		if(is_array(_surf)) {
@@ -37,7 +41,7 @@ function Node_Shadow(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) const
 		inputs[| 3].drawOverlay(active, _x + ww / 2, _y + hh / 2, _s, _mx, _my, _snx, _sny);
 	}
 	
-	static process_data = function(_outSurf, _data, _output_index) {
+	static process_data = function(_outSurf, _data, _output_index, _array_index) {
 		var cl      = _data[1];
 		var _stre   = _data[2];
 		var _shf    = _data[3];

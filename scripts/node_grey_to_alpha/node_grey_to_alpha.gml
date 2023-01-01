@@ -17,7 +17,7 @@ function Node_Grey_Alpha(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) c
 		inputs[| 2].setVisible(_replace);
 	}
 	
-	static process_data = function(_outSurf, _data, _output_index) {
+	static process_data = function(_outSurf, _data, _output_index, _array_index) {
 		var _replace	= inputs[| 1].getValue();
 		var _color		= inputs[| 2].getValue();
 		

@@ -607,8 +607,8 @@
             "bottom": 7
         }
     },
-    "node_error": {
-        "path": "./node/s_node_error.png",
+    "node_glow": {
+        "path": "./node/s_node_glow.png",
         "subimages": 1,
         "xorigin": 15,
         "yorigin": 15,

@@ -10,8 +10,6 @@ function __log(title, str, fname = "log.txt") {
 	var t = _log_template();
 	file_text_write_string(f, string(title) + t + string(str) + "\n");
 	file_text_close(f);
-	
-	show_debug_message(str);
 }
 
 function log_message(title, str, icon = noone) {
@@ -46,11 +44,14 @@ function log_clear() {
 }
 
 function exception_print(e) {
-	var str = exception_print(e) + "\n\n\n=== Stack trace ===\n";	
+	var str = "\n\n==========  Crash log  ==========\n\n" + e.longMessage;	
+	str += "\n\n========== Stack trace ==========\n\n";	
 	
 	for( var i = 0; i < array_length(e.stacktrace); i++ ) {
 		str += e.stacktrace[i] + "\n"
 	}
+	
+	str += "\n\n========= Crash log end =========\n";	
 	
 	return str;
 }

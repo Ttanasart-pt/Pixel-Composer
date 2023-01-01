@@ -3,6 +3,7 @@
 		frames_total = 30;
 		current_frame = 0;
 		real_frame = 0;
+		time_since_last_frame = 0;
 		framerate = 30;
 		is_playing = false;
 		frame_progress = false;

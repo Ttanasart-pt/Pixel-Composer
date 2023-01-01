@@ -41,8 +41,6 @@ function Node_Canvas(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 		[ "Fill",		THEME.canvas_tools_bucket ],
 	];
 	
-	display_reset(0, 1);
-	
 	mouse_cur_x = 0;
 	mouse_cur_y = 0;
 	mouse_pre_x = 0;
@@ -518,7 +516,6 @@ function Node_Canvas(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 		} else
 			surface_size_to(_outSurf, _dim[0], _dim[1]);
 	}
-	doUpdate();
 	
 	static doSerialize = function(_map) {
 		_map[? "surface"] = buffer_base64_encode(surface_buffer, 0, buffer_get_size(surface_buffer));

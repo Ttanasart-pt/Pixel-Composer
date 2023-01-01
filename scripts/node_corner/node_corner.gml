@@ -24,7 +24,7 @@ function Node_Corner(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) const
 	
 	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
 	
-	static process_data = function(_outSurf, _data, _output_index) {
+	static process_data = function(_outSurf, _data, _output_index, _array_index) {
 		var wd = _data[1];
 		
 		var temp = surface_create_valid(surface_get_width(_data[0]), surface_get_height(_data[0]));

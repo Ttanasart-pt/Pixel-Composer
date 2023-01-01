@@ -69,7 +69,8 @@ function Node_9Slice(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) const
 			}
 		}
 		
-		if(inputs[| 1].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny)) return;
+		if(inputs[| 1].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny)) 
+			return;
 		
 		if(distance_to_line_infinite(_mx, _my, sp_r, -hh, sp_r, hh) < 12) {
 			draw_line_width(sp_r, -hh, sp_r, hh, 3);
@@ -106,7 +107,7 @@ function Node_9Slice(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) const
 		}
 	}
 	
-	static process_data = function(_outSurf, _data, _output_index) {
+	static process_data = function(_outSurf, _data, _output_index, _array_index) {
 		var _inSurf		= _data[0];
 		var _dim		= _data[1];
 		var _splice		= _data[2];

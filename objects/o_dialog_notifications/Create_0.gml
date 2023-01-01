@@ -3,7 +3,7 @@ event_inherited();
 
 #region data
 	dialog_w = ui(720);
-	dialog_h = ui(360);
+	dialog_h = ui(480);
 	
 	dialog_resizable = true;
 	destroy_on_click_out = true;

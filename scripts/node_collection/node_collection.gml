@@ -10,6 +10,16 @@ function Node_Collection(_x, _y, _group = -1) : Node(_x, _y, _group) constructor
 	custom_input_index = 0;
 	custom_output_index = 0;
 	
+	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
+		for(var i = custom_input_index; i < ds_list_size(inputs); i++) {
+			var _in = inputs[| i];
+			var _show = _in.from.inputs[| 6].getValue();
+			
+			if(!_show) continue;
+			_in.drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
+		}
+	}
+	
 	static getNextNodes = function() {
 		for(var i = custom_input_index; i < ds_list_size(inputs); i++) {
 			var _in = inputs[| i].from;

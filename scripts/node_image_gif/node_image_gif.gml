@@ -123,7 +123,6 @@ function Node_Image_gif(_x, _y, _group = -1) : Node(_x, _y, _group) constructor 
 		BLEND_NORMAL
 		surface_reset_target();
 	}
-	doUpdate();
 	
 	function onDrawNode(xx, yy, _mx, _my, _s) {
 		if(loading) {

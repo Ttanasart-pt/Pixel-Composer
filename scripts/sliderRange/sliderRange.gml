@@ -51,6 +51,9 @@ function sliderRange(_min, _max, _step, _onModify) constructor {
 			var val = (_m[0] - _x0) / sw * (maxx - minn) + minn;
 			val = round(val / step) * step;
 			val = clamp(val, minn, maxx);
+			if(key_mod_press(CTRL))
+				val = round(val);
+			
 			onModify(dragging, val);
 			UNDO_HOLDING = true;
 			
@@ -58,24 +61,22 @@ function sliderRange(_min, _max, _step, _onModify) constructor {
 				UNDO_HOLDING = false;
 				dragging = -1;
 			}
-		} else {
-			if(hover) {
-				var _hover = -1;
+		} else if(hover) {
+			var _hover = -1;
 				
-				if(point_in_rectangle(_m[0], _m[1], _slider_x0 - ui(10), _y, _slider_x0 + ui(10), _y + _h)) {
-					draw_sprite_stretched(THEME.slider, 2, _slider_x0 - ui(10), _y, ui(20), _h);
-					_hover = 0;
-				}
-				if(point_in_rectangle(_m[0], _m[1], _slider_x1 - ui(10), _y, _slider_x1 + ui(10), _y + _h)) {
-					draw_sprite_stretched(THEME.slider, 2, _slider_x1 - ui(10), _y, ui(20), _h);
-					_hover = 1;
-				}
+			if(point_in_rectangle(_m[0], _m[1], _slider_x0 - ui(10), _y, _slider_x0 + ui(10), _y + _h)) {
+				draw_sprite_stretched(THEME.slider, 2, _slider_x0 - ui(10), _y, ui(20), _h);
+				_hover = 0;
+			}
+			if(point_in_rectangle(_m[0], _m[1], _slider_x1 - ui(10), _y, _slider_x1 + ui(10), _y + _h)) {
+				draw_sprite_stretched(THEME.slider, 2, _slider_x1 - ui(10), _y, ui(20), _h);
+				_hover = 1;
+			}
 				
-				if(_hover > -1 && mouse_press(mb_left, active)) {
-					dragging = _hover;
-					drag_mx  = _m[0];
-					drag_sx  = _data[_hover];
-				}
+			if(_hover > -1 && mouse_press(mb_left, active)) {
+				dragging = _hover;
+				drag_mx  = _m[0];
+				drag_sx  = _data[_hover];
 			}
 		}
 		

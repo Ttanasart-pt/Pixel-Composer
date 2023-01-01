@@ -165,5 +165,4 @@ function Node_Image_Animated(_x, _y, _group = -1) : Node(_x, _y, _group) constru
 			BLEND_NORMAL
 		surface_reset_target();
 	}
-	doUpdate();
 }

@@ -124,3 +124,5 @@
 	}
 	MOUSE_WRAP = false;
 #endregion
+
+//if(KEYBOARD_PRESSED) print(string(KEYBOARD_PRESSED) + " | " + string(irandom_range(10000, 99999)))

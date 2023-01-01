@@ -16,10 +16,3 @@ function json_save(path, struct) {
 	file_text_write_string(f, s);
 	file_text_close(f);
 }
-
-function file_text_read_all(file) {
-	var s = "";
-	while(!file_text_eof(file))	
-		s += file_text_readln(file);
-	return s;
-}

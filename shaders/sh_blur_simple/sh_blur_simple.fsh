@@ -11,6 +11,12 @@ uniform int useMask;
 uniform sampler2D mask;
 uniform int sampleMode;
 
+float sampleMask() {
+	if(useMask == 0) return 1.;
+	vec4 m = texture2D( mask, v_vTexcoord );
+	return (m.r + m.g + m.b) / 3. * m.a;
+}
+
 vec4 sampleTexture(vec2 pos) {
 	if(pos.x > 0. && pos.y > 0. && pos.x < 1. && pos.y < 1.)
 		return texture2D(gm_BaseTexture, pos);
@@ -31,10 +37,7 @@ void main() {
 	vec2 texel = 1. / dimension;
 	float realSize = size;
 	
-	if(useMask == 1) {
-		vec4 maskWeight = texture2D( mask, v_vTexcoord);
-		realSize *= (maskWeight.r + maskWeight.g + maskWeight.b) / 3.;
-	}
+	realSize *= sampleMask();
 	
 	if(realSize < 1.) {
 		gl_FragColor = sampleTexture( v_vTexcoord );

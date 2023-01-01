@@ -392,7 +392,7 @@ function Panel_Preview() : PanelContent() constructor {
 	
 	function drawPreviewOverlay() {
 		right_menu_y = ui(8);
-		draw_set_text(f_p0, fa_right, fa_top, COLORS._main_text_sub);
+		draw_set_text(f_p0, fa_right, fa_top, fps >= ANIMATOR.framerate? COLORS._main_text_sub : COLORS._main_value_negative);
 		draw_text(w - ui(8), right_menu_y, "fps " + string(fps));
 		right_menu_y += string_height("l");
 		

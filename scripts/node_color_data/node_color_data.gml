@@ -36,6 +36,4 @@ function Node_Color_Data(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) c
 				return 0.299 * r + 0.587 * g + 0.224 * b;
 		}
 	}
-	
-	doUpdate();
 }

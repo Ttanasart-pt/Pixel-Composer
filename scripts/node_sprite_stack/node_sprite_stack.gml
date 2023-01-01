@@ -42,7 +42,7 @@ function Node_Sprite_Stack(_x, _y, _group = -1) : Node_Processor(_x, _y, _group)
 		inputs[| 5].drawOverlay(active, px, py, _s, _mx, _my, _snx, _sny);
 	}
 	
-	static process_data = function(_outSurf, _data, _output_index) {
+	static process_data = function(_outSurf, _data, _output_index, _array_index) {
 		var _in   = _data[0];
 		var _dim  = _data[1];
 		var _amo  = _data[2];

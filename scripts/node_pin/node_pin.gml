@@ -20,7 +20,6 @@ function Node_Pin(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 		outputs[| 0].type = inputs[| 0].type;
 		outputs[| 0].value_from = inputs[| 0].value_from;
 	}
-	doUpdate();
 	
 	static pointIn = function(_x, _y, _mx, _my, _s) {
 		var xx = x * _s + _x;

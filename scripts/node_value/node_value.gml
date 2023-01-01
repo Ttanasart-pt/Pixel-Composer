@@ -74,7 +74,7 @@ enum VALUE_TAG {
 }
 
 function value_color(i) {
-	static JUNCTION_COLORS = [ $6691ff, $78e4ff, $5d3f8c, $5dde8f, $976bff, $4b00eb, $d1c2c2, $e3ff66, $b5b5ff, $ffa64d, $ffffff, $808080 ];
+	static JUNCTION_COLORS = [ $6691ff, $78e4ff, $5d3f8c, $5dde8f, $976bff, $4b00eb, $d1c2c2, $e3ff66, $b5b5ff, $ffa64d, #c1007c, $808080 ];
 	return JUNCTION_COLORS[safe_mod(max(0, i), array_length(JUNCTION_COLORS))];
 }
 
@@ -86,9 +86,10 @@ function value_bit(i) {
 		case VALUE_TYPE.color		: return 1 << 4;
 		case VALUE_TYPE.surface		: return 1 << 5;
 		case VALUE_TYPE.path		: return 1 << 10;
-		case VALUE_TYPE.text		: return 1 << 10 | 1 << 11;
+		case VALUE_TYPE.text		: return 1 << 10 | 1 << 1;
 		case VALUE_TYPE.node		: return 1 << 12;
 		case VALUE_TYPE.object		: return 1 << 20;
+		case VALUE_TYPE.d3object	: return 1 << 21;
 		
 		case VALUE_TYPE.any			: return ~0;
 	}
@@ -424,21 +425,35 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 			case VALUE_TYPE.path :
 				visible = false;
 				switch(display_type) {
-					case VALUE_DISPLAY.path_load :
 					case VALUE_DISPLAY.path_array :
 						editWidget = button(function() { 
 							var path = get_open_filename(display_data[0], display_data[1]);
 							if(path == "") return noone;
 							setValueDirect(path);
-						} );
+						});
+						break;
+						
+					case VALUE_DISPLAY.path_load :
+						editWidget = new textBox(TEXTBOX_INPUT.text, function(str) { setValueDirect(str); }, 
+							button(function() { 
+								var path = get_open_filename(display_data[0], display_data[1]);
+								if(path == "") return noone;
+								setValueDirect(path);
+							}, THEME.button_path_icon)
+						);
+						editWidget.align = fa_left;
 						break;
 					case VALUE_DISPLAY.path_save :
-						editWidget = button(function() { 
-							var path = get_save_filename(display_data[0], display_data[1]);
-							if(path == "") return noone;
-							setValueDirect(path);
-						} );
+						editWidget = new textBox(TEXTBOX_INPUT.text, function(str) { setValueDirect(str); }, 
+							button(function() { 
+								var path = get_save_filename(display_data[0], display_data[1]);
+								if(path == "") return noone;
+								setValueDirect(path);
+							}, THEME.button_path_icon)
+						);
+						editWidget.align = fa_left;
 						break;
+						
 					case VALUE_DISPLAY.path_font :
 						editWidget = new scrollBox(
 							function() {
@@ -479,9 +494,7 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 				editWidget = new curveBox(function(_modified) { setValueDirect(_modified); });
 				break;
 			case VALUE_TYPE.text :
-				editWidget = new textArea(TEXTBOX_INPUT.text, function(str) { 
-					setValueDirect(str);
-				} );
+				editWidget = new textArea(TEXTBOX_INPUT.text, function(str) { setValueDirect(str); } );
 				break;
 			case VALUE_TYPE.surface :
 				editWidget = new surfaceBox(function(ind) { setValueDirect(ind); }, display_data );
@@ -543,28 +556,42 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 		return self;
 	}
 	
-	static valueProcess = function(value, type, display, applyUnit = true, arrIndex = 0) {
-		switch(type) {
-			case VALUE_TYPE.text :    
-				return string(value);
-			case VALUE_TYPE.color :
-				if(display_type == VALUE_DISPLAY.gradient && display == VALUE_DISPLAY._default) {
-					ds_list_clear(dyna_depo);
-					ds_list_add(dyna_depo, new valueKey(0, value));
-					return dyna_depo;
-				} else if(display_type == VALUE_DISPLAY.gradient && display == VALUE_DISPLAY.palette) {
-					ds_list_clear(dyna_depo);
-					var amo = array_length(value);
-					for( var i = 0; i < amo; i++ ) {
-						ds_list_add(dyna_depo, new valueKey(i / amo, value[i]));
-					}
-					return dyna_depo;
+	static valueProcess = function(value, typeFrom, display, applyUnit = true, arrIndex = 0) {
+		if(typeFrom == VALUE_TYPE.color) {
+			if(display_type == VALUE_DISPLAY.gradient && display == VALUE_DISPLAY._default) {
+				ds_list_clear(dyna_depo);
+				ds_list_add(dyna_depo, new valueKey(0, value));
+				return dyna_depo;
+			} else if(display_type == VALUE_DISPLAY.gradient && display == VALUE_DISPLAY.palette) {
+				ds_list_clear(dyna_depo);
+				var amo = array_length(value);
+				for( var i = 0; i < amo; i++ ) {
+					ds_list_add(dyna_depo, new valueKey(i / amo, value[i]));
 				}
-			case VALUE_TYPE.integer :
-			case VALUE_TYPE.float :
-				if(applyUnit)
-					return unit.apply(value, arrIndex);
+				return dyna_depo;
+			}
 		}
+		
+		if(type == VALUE_TYPE.text)
+			return string(value);
+		
+		if(typeFrom == VALUE_TYPE.integer && type == VALUE_TYPE.color)
+			return make_color_hsv(0, 0, value);
+		
+		if(typeFrom == VALUE_TYPE.float && type == VALUE_TYPE.color)
+			return make_color_hsv(0, 0, value * 255);
+			
+		if(typeFrom == VALUE_TYPE.boolean && type == VALUE_TYPE.text)
+			return value? "true" : "false";
+			
+		if(type == VALUE_TYPE.integer || type == VALUE_TYPE.float) {
+			if(typeFrom == VALUE_TYPE.text)
+				value = toNumber(value);
+			
+			if(applyUnit) 
+				return unit.apply(value, arrIndex);
+		}
+			
 		return value;
 	}
 	
@@ -577,47 +604,32 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 		
 		var _base = animator.getValue(_time);
 		
-		if(typ == VALUE_TYPE.surface && (type == VALUE_TYPE.integer || type == VALUE_TYPE.float)) {
+		if(typ == VALUE_TYPE.surface && (type == VALUE_TYPE.integer || type == VALUE_TYPE.float)) { //Dimension conversion
 			if(is_array(val)) {
-				if(array_length(val) > 0 && is_surface(val[0]))
-					return [ surface_get_width(val[0]), surface_get_height(val[0]) ];
-			} else if (is_surface(val))
+				var eqSize = true;
+				var sArr = [];
+				var _osZ = 0;
+				
+				for( var i = 0; i < array_length(val); i++ ) {
+					if(!is_surface(val[i])) continue;
+					
+					var surfSz = [ surface_get_width(val[i]), surface_get_height(val[i]) ];
+					array_push(sArr, surfSz);
+					
+					if(i && !array_equals(surfSz, _osZ))
+						eqSize = false;
+					
+					_osZ = surfSz;
+				}
+				
+				if(eqSize) return _osZ;
+				return sArr;
+			} else if (is_surface(val)) 
 				return [ surface_get_width(val), surface_get_height(val) ];
-		} else if(typ == VALUE_TYPE.integer && type == VALUE_TYPE.color) {
-			if(is_array(val)) {
-				var v = [];
-				for( var i = 0; i < array_length(val); i++ )
-					array_append(v, make_color_hsv(0, 0, val[i]))
-				return v;
-			} else 
-				return make_color_hsv(0, 0, val);
-		} else if(typ == VALUE_TYPE.float && type == VALUE_TYPE.color) {
-			if(is_array(val)) {
-				var v = [];
-				for( var i = 0; i < array_length(val); i++ )
-					array_append(v, make_color_hsv(0, 0, val[i] * 255))
-				return v;
-			} else 
-				return make_color_hsv(0, 0, val * 255);
-		} else if(typ == VALUE_TYPE.boolean && type == VALUE_TYPE.text) {
-			if(is_array(val)) {
-				var v = [];
-				for( var i = 0; i < array_length(val); i++ )
-					array_append(v, val[i]? "true" : "false")
-				return v;
-			} else 
-				return val? "true" : "false";
-		} else if(typ == VALUE_TYPE.float && type == VALUE_TYPE.text) {
-			if(is_array(val)) {
-				var v = [];
-				for( var i = 0; i < array_length(val); i++ )
-					array_append(v, string(val[i]))
-				return v;
-			} else 
-				return string(val);
-		}
+			return [1, 1];
+		} 
 		
-		if(is_array(_base)) {
+		if(is_array(_base)) { //Balance array (generate uniform array from single values)
 			if(!is_array(val))
 				return array_create(array_length(_base), val);	
 			else if(array_length(val) < array_length(_base)) {
@@ -626,7 +638,7 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 			}
 		}
 		
-		if(nod.isArray(val)) {
+		if(nod.isArray(val)) { //Process data
 			for( var i = 0; i < array_length(val); i++ )
 				val[i] = valueProcess(val[i], typ, dis, applyUnit, arrIndex);
 		} else 
@@ -863,6 +875,8 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 	drag_sx   = 0;
 	drag_sy   = 0;
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
+		if(value_from != noone) return;
+		
 		var _val = getValue();
 		var hover = -1;
 		
@@ -871,6 +885,8 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 			case VALUE_TYPE.float :
 				switch(display_type) {
 					case VALUE_DISPLAY._default : #region
+						if(is_array(_val)) break;
+						
 						var _angle = argument_count > 8? argument[8] : 0;
 						var _scale = argument_count > 9? argument[9] : 1;
 						var spr = argument_count > 10? argument[10] : THEME.anchor_selector;
@@ -913,8 +929,9 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 						break;
 					#endregion
 					case VALUE_DISPLAY.rotation : #region
-						var _rad = argument_count > 8? argument[8] : 64;
+						if(is_array(_val)) break;
 						
+						var _rad = argument_count > 8? argument[8] : 64;
 						var _ax = _x + lengthdir_x(_rad, _val);
 						var _ay = _y + lengthdir_y(_rad, _val);
 						draw_sprite_ui(THEME.anchor_rotate, 0, _ax, _ay, 1, 1, _val - 90, c_white, 1);
@@ -958,6 +975,8 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 						break;
 					#endregion
 					case VALUE_DISPLAY.vector : #region
+						if(is_array(_val[0])) break;
+						
 						var __ax = _val[0];
 						var __ay = _val[1];
 						
@@ -1001,6 +1020,8 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 						break;
 					#endregion
 					case VALUE_DISPLAY.area : #region
+						if(is_array(_val[0])) break;
+						
 						var __ax = array_safe_get(_val, 0);
 						var __ay = array_safe_get(_val, 1);
 						var __aw = array_safe_get(_val, 2);
@@ -1097,6 +1118,8 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 						break;
 					#endregion
 					case VALUE_DISPLAY.puppet_control : #region
+						if(is_array(_val[0])) break;
+						
 						var __ax  = _val[PUPPET_CONTROL.cx];
 						var __ay  = _val[PUPPET_CONTROL.cy];
 						var __ax1 = _val[PUPPET_CONTROL.fx];
@@ -1297,6 +1320,8 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 	
 	static applyDeserialize = function(_map, scale = false) {
 		if(_map == undefined) return;
+		
+		printIf(TESTING, "     |- Applying deserialize to junction " + name + " of node " + node.name);
 		on_end = ds_map_try_get(_map, "on end", on_end);
 		visible	= ds_map_try_get(_map, "visible", visible);
 		unit.mode = ds_map_try_get(_map, "unit", VALUE_UNIT.constant);

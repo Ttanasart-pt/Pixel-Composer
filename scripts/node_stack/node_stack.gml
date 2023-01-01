@@ -2,7 +2,7 @@ function Node_Stack(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constr
 	name		= "Stack";
 	
 	inputs[| 0] = nodeValue(0, "Axis", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Horizontal", "Vertical" ]);
+		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Horizontal", "Vertical", "On top" ]);
 	
 	inputs[| 1] = nodeValue(1, "Align", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1)
 		.setDisplay(VALUE_DISPLAY.enum_button, [ "Start", "Middle", "End"]);
@@ -41,7 +41,14 @@ function Node_Stack(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constr
 		createNewInput();
 	}
 	
-	static process_data = function(_outSurf, _data, _output_index) {
+	static step = function() {
+		var _axis = inputs[| 0].getValue();
+		
+		inputs[| 1].setVisible(_axis != 2);
+		inputs[| 2].setVisible(_axis != 2);
+	}
+	
+	static process_data = function(_outSurf, _data, _output_index, _array_index) {
 		var _axis = _data[0];
 		var _alig = _data[1];
 		var _spac = _data[2];
@@ -60,13 +67,16 @@ function Node_Stack(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constr
 			} else if(_axis == 1) {
 				ww = max(ww, sw);
 				hh += sh + (i > input_fix_len) * _spac;
+			} else if(_axis == 2) {
+				ww = max(ww, sw);
+				hh = max(hh, sh);
 			}
 		}
 		
 		_outSurf = surface_verify(_outSurf, ww, hh);
 		surface_set_target(_outSurf);
 			draw_clear_alpha(0, 0);
-			BLEND_OVERRIDE
+			//BLEND_OVERRIDE
 			
 			var sx = 0, sy = 0;
 			for( var i = input_fix_len; i < array_length(_data) - 1; i++ ) {
@@ -86,6 +96,9 @@ function Node_Stack(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constr
 						case fa_center:	sx = ww / 2 - sw / 2;	break;
 						case fa_right:	sx = ww - sw;			break;
 					}
+				} else if(_axis == 2) {
+					sx = ww / 2 - sw / 2;
+					sy = hh / 2 - sh / 2;
 				}
 				
 				draw_surface_safe(_data[i], sx, sy);

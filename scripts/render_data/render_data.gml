@@ -4,7 +4,7 @@ enum RENDER_TYPE {
 	full = 2
 }
 
-global.RENDER_LOG = true;
+global.RENDER_LOG = false;
 
 function __nodeLeafList(_list, _stack) {
 	for( var i = 0; i < ds_list_size(_list); i++ ) {

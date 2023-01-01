@@ -22,7 +22,6 @@ function Node_Color_HSV(_x, _y, _group = -1) : Node(_x, _y, _group) constructor 
 	static update = function() { 
 		outputs[| 0].setValue(make_color_hsv(inputs[| 0].getValue() * 255, inputs[| 1].getValue() * 255, inputs[| 2].getValue() * 255));
 	}
-	doUpdate();
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s) {
 		var x0 = xx + 8 * _s;

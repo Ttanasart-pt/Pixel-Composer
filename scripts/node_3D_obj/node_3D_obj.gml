@@ -2,20 +2,12 @@ function Node_create_3D_Obj_path(_x, _y, path) {
 	if(!file_exists(path)) return noone;
 	
 	var node = new Node_3D_Obj(_x, _y);
-	node.inputs[| 0].setValue(path);
-	node.updateObj();
-	node.doUpdate(); 
-	return node;	
+	node.setPath(path);
+	return node;
 }
 
 function Node_3D_Obj(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 	name = "3D Obj";
-	
-	uniVertex_lightFor = shader_get_uniform(sh_vertex_pnt_light, "u_LightForward");
-	uniLightAmb = shader_get_uniform(sh_vertex_pnt_light, "u_AmbientLight");
-	uniLightClr = shader_get_uniform(sh_vertex_pnt_light, "u_LightColor");
-	uniLightInt = shader_get_uniform(sh_vertex_pnt_light, "u_LightIntensity");
-	uniLightNrm = shader_get_uniform(sh_vertex_pnt_light, "useNormal");
 	
 	inputs[| 0] = nodeValue(0, "Path", self, JUNCTION_CONNECT.input, VALUE_TYPE.path, "")
 		.setDisplay(VALUE_DISPLAY.path_load, [ "*.obj", "" ]);
@@ -29,11 +21,11 @@ function Node_3D_Obj(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 	inputs[| 2] = nodeValue(2, "Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, def_surf_size2)
 		.setDisplay(VALUE_DISPLAY.vector);
 	
-	inputs[| 3] = nodeValue(3, "Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ def_surf_size / 2, def_surf_size / 2 ])
+	inputs[| 3] = nodeValue(3, "Render position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ def_surf_size / 2, def_surf_size / 2 ])
 		.setDisplay(VALUE_DISPLAY.vector)
 		.setUnitRef( function() { return inputs[| 2].getValue(); });
 		
-	inputs[| 4] = nodeValue(4, "Rotation", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 180 ])
+	inputs[| 4] = nodeValue(4, "Render rotation", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.vector);
 	
 	inputs[| 5] = nodeValue(5, "Render scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 1 ])
@@ -49,21 +41,34 @@ function Node_3D_Obj(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 		.setDisplay(VALUE_DISPLAY.slider, [0, 1, 0.01]);
 	
 	inputs[| 9] = nodeValue(9, "Light color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white);
+	
 	inputs[| 10] = nodeValue(10, "Ambient color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_grey);
 	
-	inputs[| 11] = nodeValue(11, "Scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 1, 1 ])
+	inputs[| 11] = nodeValue(11, "Object scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 1, 1 ])
+		.setDisplay(VALUE_DISPLAY.vector);
+		
+	inputs[| 12] = nodeValue(12, "Flip UV", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	
+	inputs[| 13] = nodeValue(13, "Object rotation", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 180 ])
+		.setDisplay(VALUE_DISPLAY.vector);
+		
+	inputs[| 14] = nodeValue(14, "Object position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.vector);
 	
 	input_display_list = [ 2, 
-		["Geometry",	false], 0, 1, 
-		["Transform",	false], 3, 4, 5, 11,
-		["Light",		false], 6, 7, 8, 9, 10,
-		["Textures",	true], 
+		["Geometry",			false], 0, 1, 
+		["Object transform",	false], 14, 13, 11,
+		["Render",				false], 3, 5, 
+		["Light",				false], 6, 7, 8, 9, 10,
+		["Textures",			 true], 12,
 	];
 	input_length = ds_list_size(inputs);
 	input_display_len  = array_length(input_display_list);
 	
 	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
+	outputs[| 1] = nodeValue(1, "3D object", self, JUNCTION_CONNECT.output, VALUE_TYPE.d3object, function() { return submit_vertex(); });
+	
+	_3d_node_init(2, /*Transform*/ 3, 13, 5);
 	
 	function reset_tex() {
 		tex_surface = PIXEL_SURFACE;
@@ -72,6 +77,16 @@ function Node_3D_Obj(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 		surface_reset_target();
 	}
 	reset_tex();
+	
+	static onValueUpdate = function(index) {
+		if(index == 12) updateObj();
+	}
+	
+	function setPath(path) {
+		inputs[| 0].setValue(path);
+		updateObj();
+		doUpdate();
+	}
 	
 	function createMaterial(m_index) {
 		var index = ds_list_size(inputs);
@@ -84,6 +99,7 @@ function Node_3D_Obj(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 		
 		var matY = y - (array_length(materials) - 1) / 2 * (128 + 32);
 		var mat = materials[m_index];
+		
 		if(file_exists(mat.diff_path)) {
 			var sol = Node_create_Image_path(x - (w + 64), matY + m_index * (128 + 32), mat.diff_path);
 			sol.name = mat.name + " texture";
@@ -98,17 +114,16 @@ function Node_3D_Obj(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 		}
 	}
 	
-	VB = [];
 	materialNames = [];
 	materialIndex = [];
 	materials = [];
-	use_normal = true;
-	
+		
 	static updateObj = function() {
-		var _path = inputs[| 0].getValue();
+		var _path = inputs[|  0].getValue();
+		var _flip = inputs[| 12].getValue();
 		var _pathMtl = string_copy(_path, 1, string_length(_path) - 4) + ".mtl";
 		
-		var _v = readObj(_path);
+		var _v = readObj(_path, _flip);
 		if(_v != noone) {
 			VB = _v[0];
 			materialNames = _v[1];
@@ -121,111 +136,36 @@ function Node_3D_Obj(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 		else {
 			materialNames = ["Material"];
 			materialIndex = [0];
-			materials = [new MTLmaterial("Material")];
+			materials = [ new MTLmaterial("Material") ];
 		}
 		
 		do_reset_material = true;
 	}
 	do_reset_material = false;
 	
-	#region 3D setup
-		TM = matrix_build(0, 0, 0, 0, 0, 0, 1, 1, 1);
-		cam = camera_create();
-		cam_view = matrix_build_lookat(0, 0, 1, 0, 0, 0, 0, 1, 0);
-		cam_proj = matrix_build_projection_ortho(1, 1, 1, 100);
-		
-		camera_set_proj_mat(cam, cam_view);
-		camera_set_view_mat(cam, cam_proj);
-	#endregion
-	
-	drag_index = -1;
-	drag_sv = 0;
-	drag_mx = 0;
-	drag_my = 0;
-	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
-		if(inputs[| 3].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny)) active = false;
+		_3d_gizmo(active, _x, _y, _s, _mx, _my, _snx, _sny, true);
+	}
+	
+	static submit_vertex = function() {
+		var _lpos = inputs[| 14].getValue();
+		var _lrot = inputs[| 13].getValue();
+		var _lsca = inputs[| 11].getValue();
 		
-		var _dim = inputs[| 2].getValue();
-		var _pos = inputs[| 3].getValue();
-		var _rot = inputs[| 4].getValue();
-		var cx = _x + _pos[0] * _s;
-		var cy = _y + _pos[1] * _s;
+		_3d_local_transform(_lpos, _lrot, _lsca);
 		
-		draw_set_color(COLORS.axis[0]);
-		draw_line(cx - 64, cy, cx + 64, cy);
-		
-		draw_set_color(COLORS.axis[1]);
-		draw_line(cx, cy - 64, cx, cy + 64);
-		
-		draw_set_color(COLORS.axis[2]);
-		draw_circle(cx, cy, 64, true);
-		
-		if(drag_index == 0) {
-			var dx  = (_mx - drag_mx) / _s * -6;
-			_rot[1] = drag_sv + dx;
-			
-			if(inputs[| 4].setValue(_rot)) 
-				UNDO_HOLDING = true;
-			
-			if(mouse_release(mb_left)) {
-				drag_index = -1;
-				UNDO_HOLDING = false;
-			}
-		} else if(drag_index == 1) {
-			var dy  = (_my - drag_my) / _s * 6;
-			_rot[0] = drag_sv + dy;
-			
-			if(inputs[| 4].setValue(_rot)) 
-				UNDO_HOLDING = true;
-			
-			if(mouse_release(mb_left)) {
-				drag_index = -1;
-				UNDO_HOLDING = false;
-			}
-		} else if(drag_index == 2) {
-			var dy  = point_direction(cx, cy, _mx, _my) - point_direction(cx, cy, drag_mx, drag_my);
-			_rot[2] = drag_sv + dy;
-			
-			if(inputs[| 4].setValue(_rot)) 
-				UNDO_HOLDING = true;
-			
-			if(mouse_release(mb_left)) {
-				drag_index = -1;
-				UNDO_HOLDING = false;
-			}
-		} else {
-			if(active && distance_to_line(_mx, _my, cx - 64, cy, cx + 64, cy) < 16) {
-				draw_set_color(COLORS.axis[0]);
-				draw_line_width(cx - 64, cy, cx + 64, cy, 3);
-				if(mouse_press(mb_left, active)) {
-					drag_index	= 0;
-					drag_sv		= _rot[1];
-					drag_mx		= _mx;
-					drag_my		= _my;
-				}
-			} else if(active && distance_to_line(_mx, _my, cx, cy - 64, cx, cy + 64) < 16) {
-				draw_set_color(COLORS.axis[1]);
-				draw_line_width(cx, cy - 64, cx, cy + 64, 3);
-				if(mouse_press(mb_left, active)) {
-					drag_index	= 1;
-					drag_sv		= _rot[0];
-					drag_mx		= _mx;
-					drag_my		= _my;
-				}
-			} else if(active && abs(point_distance(_mx, _my, cx, cy) - 64) < 8) {
-				draw_set_color(COLORS.axis[2]);
-				draw_circle_border(cx, cy, 64, 3);
-				if(mouse_press(mb_left, active)) {
-					drag_index	= 2;
-					drag_sv		= _rot[2];
-					drag_mx		= _mx;
-					drag_my		= _my;
-				}
-			}
+		for(var i = 0; i < array_length(VB); i++) {
+			if(i >= ds_list_size(inputs)) break;
+			if(i >= array_length(materialIndex)) continue;
+				
+			var mIndex = materialIndex[i];
+			var tex = inputs[| input_length + mIndex].getValue();
+						
+			if(!is_surface(tex)) continue;
+			vertex_submit(VB[i], pr_trianglelist, surface_get_texture(tex));
 		}
 		
-		inputs[| 3].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny)
+		_3d_clear_local_transform();
 	}
 	
 	static update = function() {
@@ -242,63 +182,26 @@ function Node_3D_Obj(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 			do_reset_material = false;
 		}
 		
-		var _dim  = inputs[| 2].getValue();
-		var _pos  = inputs[| 3].getValue();
-		var _rot  = inputs[| 4].getValue();
-		var _sca  = inputs[| 5].getValue();
+		var _dim  = inputs[|  2].getValue();
+		var _pos  = inputs[|  3].getValue();
+		//var _rot  = inputs[|  4].getValue();
+		var _sca  = inputs[|  5].getValue();
 		
-		var _ldir = inputs[| 6].getValue();
-		var _lhgt = inputs[| 7].getValue();
-		var _lint = inputs[| 8].getValue();
-		var _lclr = inputs[| 9].getValue();
+		var _ldir = inputs[|  6].getValue();
+		var _lhgt = inputs[|  7].getValue();
+		var _lint = inputs[|  8].getValue();
+		var _lclr = inputs[|  9].getValue();
 		var _aclr = inputs[| 10].getValue();
-		var _lsc  = inputs[| 11].getValue();
+							  
+		var _lpos = inputs[| 14].getValue();
+		var _lrot = inputs[| 13].getValue();
+		var _lsca = inputs[| 11].getValue();
 		
 		var _outSurf = outputs[| 0].getValue();
 		outputs[| 0].setValue(_outSurf);
-		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1]);
 		
-		var TM = matrix_build(_pos[0], _pos[1], 0, _rot[0], _rot[1], _rot[2], _dim[0] * _sca[0], _dim[1] * _sca[1], 1);
-		var cam_proj = matrix_build_projection_ortho(_dim[0], _dim[1], 1, 100);
-		camera_set_view_mat(cam, cam_proj);
-		camera_set_view_size(cam, _dim[0], _dim[1]);
-		
-		var lightFor = [ -cos(degtorad(_ldir)), -_lhgt, -sin(degtorad(_ldir)) ];
-		
-		gpu_set_ztestenable(true);
-		surface_set_target(_outSurf);
-			shader_set(sh_vertex_pnt_light);
-			shader_set_uniform_f_array(uniVertex_lightFor, lightFor);
-			shader_set_uniform_f_array(uniLightAmb, colorArrayFromReal(_aclr));
-			shader_set_uniform_f_array(uniLightClr, colorArrayFromReal(_lclr));
-			shader_set_uniform_f(uniLightInt, _lint);
-			shader_set_uniform_i(uniLightNrm, use_normal);
-			
-			camera_apply(cam);
-			
-			draw_clear_alpha(0, 0);
-			matrix_stack_push(TM);
-			matrix_stack_push(matrix_build(0, 0, 0, 0, 0, 0, _lsc[0], _lsc[1], _lsc[2]));
-			
-			matrix_set(matrix_world, matrix_stack_top());
-			for(var i = 0; i < array_length(VB); i++) {
-				if(i >= ds_list_size(inputs)) break;
-				if(i >= array_length(materialIndex)) continue;
-				
-				var mIndex = materialIndex[i];
-				var tex = inputs[| input_length + mIndex].getValue();
-						
-				if(!is_surface(tex)) continue;
-				vertex_submit(VB[i], pr_trianglelist, surface_get_texture(tex));
-			}
-			shader_reset();
-			
-			matrix_stack_pop();
-			matrix_stack_pop();
-			matrix_set(matrix_world, MATRIX_IDENTITY);
-		surface_reset_target();
-		
-		gpu_set_ztestenable(false);
-		camera_apply(0);
+		_3d_pre_setup(_outSurf, _dim, _pos, _sca, _ldir, _lhgt, _lint, _lclr, _aclr, _lpos, _lrot, _lsca, false);
+			submit_vertex();
+		_3d_post_setup();
 	}
 }

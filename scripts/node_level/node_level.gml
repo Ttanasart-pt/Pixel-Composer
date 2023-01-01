@@ -10,6 +10,8 @@ function Node_Level(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constr
 	uniform_gmax = shader_get_uniform(shader, "gmax");
 	uniform_bmin = shader_get_uniform(shader, "bmin");
 	uniform_bmax = shader_get_uniform(shader, "bmax");
+	uniform_amin = shader_get_uniform(shader, "amin");
+	uniform_amax = shader_get_uniform(shader, "amax");
 	
 	inputs[| 0] = nodeValue(0, "Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 	
@@ -23,6 +25,9 @@ function Node_Level(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constr
 		.setDisplay(VALUE_DISPLAY.slider_range, [ 0, 1, 0.01]);
 	
 	inputs[| 4] = nodeValue(4, "Blue",   self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [0, 1])
+		.setDisplay(VALUE_DISPLAY.slider_range, [ 0, 1, 0.01]);
+	
+	inputs[| 5] = nodeValue(5, "Alpha",   self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [0, 1])
 		.setDisplay(VALUE_DISPLAY.slider_range, [ 0, 1, 0.01]);
 	
 	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
@@ -62,7 +67,7 @@ function Node_Level(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constr
 	input_display_list = [
 		level_renderer,
 		["Level",	false],	0, 1,
-		["Channel",	true],	2, 3, 4,
+		["Channel",	true],	2, 3, 4, 5
 	];
 	histogramInit();
 	
@@ -79,7 +84,7 @@ function Node_Level(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constr
 		}
 	}
 	
-	static process_data = function(_outSurf, _data, _output_index) {
+	static process_data = function(_outSurf, _data, _output_index, _array_index) {
 		var _wmin = min(_data[1][0], _data[1][1]);
 		var _wmax = max(_data[1][0], _data[1][1]);
 		var _rmin = min(_data[2][0], _data[2][1]);
@@ -88,6 +93,8 @@ function Node_Level(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constr
 		var _gmax = max(_data[3][0], _data[3][1]);
 		var _bmin = min(_data[4][0], _data[4][1]);
 		var _bmax = max(_data[4][0], _data[4][1]);
+		var _amin = min(_data[5][0], _data[5][1]);
+		var _amax = max(_data[5][0], _data[5][1]);
 		
 		surface_set_target(_outSurf);
 		draw_clear_alpha(0, 0);
@@ -102,6 +109,8 @@ function Node_Level(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constr
 			shader_set_uniform_f(uniform_gmax, _gmax);
 			shader_set_uniform_f(uniform_bmin, _bmin);
 			shader_set_uniform_f(uniform_bmax, _bmax);
+			shader_set_uniform_f(uniform_amin, _amin);
+			shader_set_uniform_f(uniform_amax, _amax);
 			
 			draw_surface_safe(_data[0], 0, 0);
 		shader_reset();

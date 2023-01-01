@@ -23,7 +23,7 @@ function Node_Camera(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) const
 		inputs[| 1].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
 	}
 	
-	static process_data = function(_outSurf, _data, _output_index) {
+	static process_data = function(_outSurf, _data, _output_index, _array_index) {
 		var _area = _data[1];
 		
 		var _dw = surface_valid_size(_area[2]) * 2;

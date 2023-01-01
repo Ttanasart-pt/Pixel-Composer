@@ -57,6 +57,10 @@ function slider(_min, _max, _step, _onModify = noone, _onRelease = noone) constr
 			var val = (_m[0] - _x) / sw * (curr_maxx - curr_minn) + curr_minn;
 			val = round(val / step) * step;
 			val = clamp(val, curr_minn, curr_maxx);
+			
+			if(key_mod_press(CTRL))
+				val = round(val);
+			
 			if(onModify != noone)
 				onModify(val);
 			UNDO_HOLDING = true;

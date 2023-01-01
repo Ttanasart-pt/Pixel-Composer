@@ -24,7 +24,7 @@ function Node_Chromatic_Aberration(_x, _y, _group = -1) : Node_Processor(_x, _y,
 		inputs[| 1].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
 	}
 	
-	static process_data = function(_outSurf, _data, _output_index) {
+	static process_data = function(_outSurf, _data, _output_index, _array_index) {
 		surface_set_target(_outSurf);
 		draw_clear_alpha(0, 0);
 		BLEND_OVER

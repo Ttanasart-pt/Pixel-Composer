@@ -12,6 +12,8 @@ uniform float gmin;
 uniform float gmax;
 uniform float bmin;
 uniform float bmax;
+uniform float amin;
+uniform float amax;
 
 void main() {
 	vec4 col  = v_vColour * texture2D( gm_BaseTexture, v_vTexcoord );
@@ -19,6 +21,7 @@ void main() {
 	col.r = (col.r - rmin) / (rmax - rmin);
 	col.g = (col.g - gmin) / (gmax - gmin);
 	col.b = (col.b - bmin) / (bmax - bmin);
+	col.a = (col.a - amin) / (amax - amin);
 	
 	col.r = (col.r - wmin) / (wmax - wmin);
 	col.g = (col.g - wmin) / (wmax - wmin);

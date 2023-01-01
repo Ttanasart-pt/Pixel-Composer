@@ -56,7 +56,7 @@ function Node_Grid(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constru
 		inputs[| 1].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
 	}
 	
-	static process_data = function(_outSurf, _data, _output_index) {
+	static process_data = function(_outSurf, _data, _output_index, _array_index) {
 		var _dim = _data[0];
 		var _pos = _data[1];
 		var _sca = _data[2];
@@ -96,5 +96,4 @@ function Node_Grid(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constru
 		
 		return _outSurf;
 	}
-	doUpdate();
 }

@@ -19,7 +19,7 @@ function Node_Trail(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constr
 	
 	temp_surf = [ PIXEL_SURFACE, PIXEL_SURFACE ];
 	
-	static process_data = function(_outSurf, _data, _output_index) {
+	static process_data = function(_outSurf, _data, _output_index, _array_index) {
 		if(!inputs[| 0].value_from) 
 			return _outSurf;
 		if(array_length(cached_output) != ANIMATOR.frames_total + 1)

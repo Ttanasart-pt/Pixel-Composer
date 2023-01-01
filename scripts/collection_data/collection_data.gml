@@ -45,9 +45,9 @@ function searchCollection(_list, _search_str, _claer_list = true) {
 			var _nd = _st.content[| i];
 				
 			var match = string_pos(search_lower, string_lower(_nd.name)) > 0;
-			if(match) {
-				ds_list_add(_list, _nd);
-			}
+			if(!match) continue;
+			
+			ds_list_add(_list, _nd);
 		}
 			
 		for( var i = 0; i < ds_list_size(_st.subDir); i++ ) {

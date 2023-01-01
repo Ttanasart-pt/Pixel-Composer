@@ -45,5 +45,4 @@ function Node_Palette(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 		if(y1 > y0)
 			drawPalette(outputs[| 0].getValue(), x0, y0, x1 - x0, y1 - y0);
 	}
-	doUpdate();
 }

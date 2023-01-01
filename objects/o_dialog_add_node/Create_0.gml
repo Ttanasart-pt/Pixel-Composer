@@ -153,47 +153,69 @@ event_inherited();
 			var col        = floor(content_pane.surface_w / (grid_width + grid_space));
 			var row        = ceil(node_count / col);
 			var yy         = _y + grid_space;
-			var name_height = 0;
+			var curr_height = 0;
+			var cProg = 0;
 			hh += grid_space;
-		
-			for(var i = 0; i < row; i++) {
-				name_height = 0;
-				for(var j = 0; j < col; j++) {
-					var index = i * col + j;
-					if(index < node_count) {
-						var _node = node_list[| index];
-						if(!_node) continue;
+			
+			for(var index = 0; index < node_count; index++) {
+				var _node = node_list[| index];
+				if(is_string(_node)) {
+					hh += curr_height;
+					yy += curr_height;
 					
-						var _nx   = grid_space + (grid_width + grid_space) * j;
-						var _boxx = _nx + (grid_width - grid_size) / 2;
-						
-						BLEND_OVER
-						draw_sprite_stretched(THEME.node_bg, 0, _boxx, yy, grid_size, grid_size);
-						BLEND_NORMAL
-						
-						if(_hover && point_in_rectangle(_m[0], _m[1], _nx, yy, _nx + grid_width, yy + grid_size)) {
-							draw_sprite_stretched_ext(THEME.node_active, 0, _boxx, yy, grid_size, grid_size, COLORS._main_accent, 1);
-							if(mouse_press(mb_left, sFOCUS))
-								buildNode(_node);
-						}
-						
-						var spr_x = _boxx + grid_size / 2;
-						var spr_y = yy + grid_size / 2;
-						if(variable_struct_exists(_node, "spr") && sprite_exists(_node.spr))
-							draw_sprite_ui_uniform(_node.spr, 0, spr_x, spr_y);
-						
-						if(_node.new_node)
-							draw_sprite_ui_uniform(THEME.node_new_badge, 0, _boxx + grid_size - ui(12), yy + ui(6));
-						
-						draw_set_text(f_p2, fa_center, fa_top, COLORS._main_text);
-						name_height = max(name_height, string_height_ext(_node.name, -1, grid_width) + 8);
-						draw_text_ext_add(_boxx + grid_size / 2, yy + grid_size + 4, _node.name, -1, grid_width);
-					}
+					cProg = 0;
+					curr_height = 0;
+					
+					BLEND_OVER
+					draw_sprite_stretched_ext(THEME.node_bg, 0, ui(16), yy, content_pane.surface_w - ui(32), ui(24), COLORS._main_icon, 1);
+					BLEND_NORMAL
+					
+					draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text);
+					draw_text(ui(16 + 16), yy + ui(12), _node);
+					
+					hh += ui(24 + 12);
+					yy += ui(24 + 12);
+					continue;
 				}
-				var hght = grid_size + grid_space + name_height;
-				hh += hght;
-				yy += hght;
-			}	
+					
+				var _nx   = grid_space + (grid_width + grid_space) * cProg;
+				var _boxx = _nx + (grid_width - grid_size) / 2;
+				
+				BLEND_OVER
+				draw_sprite_stretched(THEME.node_bg, 0, _boxx, yy, grid_size, grid_size);
+				BLEND_NORMAL
+						
+				if(_hover && point_in_rectangle(_m[0], _m[1], _nx, yy, _nx + grid_width, yy + grid_size)) {
+					draw_sprite_stretched_ext(THEME.node_active, 0, _boxx, yy, grid_size, grid_size, COLORS._main_accent, 1);
+					if(mouse_press(mb_left, sFOCUS))
+						buildNode(_node);
+				}
+						
+				var spr_x = _boxx + grid_size / 2;
+				var spr_y = yy + grid_size / 2;
+				if(variable_struct_exists(_node, "spr") && sprite_exists(_node.spr))
+					draw_sprite_ui_uniform(_node.spr, 0, spr_x, spr_y);
+						
+				if(_node.new_node)
+					draw_sprite_ui_uniform(THEME.node_new_badge, 0, _boxx + grid_size - ui(12), yy + ui(6));
+						
+				draw_set_text(f_p2, fa_center, fa_top, COLORS._main_text);
+				draw_text_ext_add(_boxx + grid_size / 2, yy + grid_size + 4, _node.name, -1, grid_width);
+				
+				var name_height = string_height_ext(_node.name, -1, grid_width) + 8;
+				curr_height = max(curr_height, grid_size + grid_space + name_height);
+				
+				if(++cProg >= col) {
+					hh += curr_height;
+					yy += curr_height;
+					
+					cProg = 0;
+					curr_height = 0;
+				}
+			}
+			
+			hh += curr_height;
+			yy += curr_height;
 		} else if(ADD_NODE_MODE == 1) {
 			var list_width  = content_pane.surface_w;
 			var list_height = ui(28);
@@ -202,7 +224,22 @@ event_inherited();
 		
 			for(var i = 0; i < node_count; i++) {
 				var _node = node_list[| i];
-				if(!_node) continue;
+				
+				if(is_string(_node)) {
+					hh += ui(8);
+					yy += ui(8);
+					
+					BLEND_OVER
+					draw_sprite_stretched_ext(THEME.node_bg, 0, ui(8), yy, content_pane.surface_w - ui(24), ui(24), COLORS._main_icon, 1);
+					BLEND_NORMAL
+					
+					draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text);
+					draw_text(ui(24), yy + ui(12), _node);
+					
+					hh += ui(32);
+					yy += ui(32);
+					continue;
+				}
 				
 				if(i % 2) {
 					BLEND_OVER
@@ -291,7 +328,7 @@ event_inherited();
 			for(var j = 0; j < ds_list_size(_content); j++) {
 				var _node = _content[| j];
 
-				if(!_node) continue;
+				if(is_string(_node)) continue;
 				if(ds_map_exists(search_map, _node.node)) continue;
 				
 				var match = string_pos(search_lower, string_lower(_node.name)) > 0;

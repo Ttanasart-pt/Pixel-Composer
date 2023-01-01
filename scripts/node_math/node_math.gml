@@ -58,13 +58,19 @@ function Node_Math(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 	
 	inputs[| 1] = nodeValue(1, "a", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
 		.setVisible(true, true);
+		
 	inputs[| 2] = nodeValue(2, "b", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
 		.setVisible(true, true);
+		
 	inputs[| 3] = nodeValue(3, "Degree angle", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
+	
+	inputs[| 4] = nodeValue(4, "To integer", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
 	
 	outputs[| 0] = nodeValue(0, "Math", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, 0);
 	
-	static _eval = function(mode, a, b, deg = true) {
+	static _eval = function(mode, a, b) {
+		var deg = inputs[| 3].getValue();
+		
 		switch(mode) {
 			case MATH_OPERATOR.add :		
 				if(is_real(a) && is_real(b))			return a + b;
@@ -76,11 +82,11 @@ function Node_Math(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 				
 			case MATH_OPERATOR.multiply :	
 				if(is_real(a) && is_real(b))			return a * b;
-				else if(is_string(a) || is_real(b))	{
+				else if(is_string(a) || is_real(b)) {
 					var s = "";
 					repeat(b) s += a;
 					return s;
-				} else if(is_string(b) || is_real(a))	{
+				} else if(is_string(b) || is_real(a)) {
 					var s = "";
 					repeat(a) s += b;
 					return s;
@@ -93,9 +99,9 @@ function Node_Math(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 			case MATH_OPERATOR.power :		if(is_real(a) && is_real(b)) return power(a, b);
 			case MATH_OPERATOR.root :		if(is_real(a) && is_real(b)) return b == 0? 0 : power(a, 1 / b);
 			
-			case MATH_OPERATOR.sin :		if(is_real(a) && is_real(b)) return sin(degtorad(a)) * b;
-			case MATH_OPERATOR.cos :		if(is_real(a) && is_real(b)) return cos(degtorad(a)) * b;
-			case MATH_OPERATOR.tan :		if(is_real(a) && is_real(b)) return tan(degtorad(a)) * b;
+			case MATH_OPERATOR.sin :		if(is_real(a) && is_real(b)) return sin(deg? degtorad(a) : a) * b;
+			case MATH_OPERATOR.cos :		if(is_real(a) && is_real(b)) return cos(deg? degtorad(a) : a) * b;
+			case MATH_OPERATOR.tan :		if(is_real(a) && is_real(b)) return tan(deg? degtorad(a) : a) * b;
 			case MATH_OPERATOR.modulo :		if(is_real(a) && is_real(b)) return safe_mod(a, b);
 			
 			case MATH_OPERATOR.floor :		if(is_real(a)) return floor(a);
@@ -118,17 +124,23 @@ function Node_Math(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 				inputs[| 3].setVisible(false);
 				break;
 		}
-	}
-	
-	function update() { 
-		var mode = inputs[| 0].getValue();
-		var a = inputs[| 1].getValue();
-		var b = inputs[| 2].getValue();
-		var deg = inputs[| 3].getValue();
-		var as = is_array(a);
-		var bs = is_array(b);
-		var al = as? array_length(a) : 0;
-		var bl = bs? array_length(b) : 0;
+		
+		switch(mode) {
+			case MATH_OPERATOR.root :
+			case MATH_OPERATOR.floor :
+			case MATH_OPERATOR.ceiling :
+				inputs[| 4].setVisible(true);
+				
+				var int = inputs[| 4].getValue();
+				if(int) outputs[| 0].type = VALUE_TYPE.integer;
+				else	outputs[| 0].type = VALUE_TYPE.float;
+				break;
+			default:
+				inputs[| 4].setVisible(false);
+				break;
+		}
+		
+		inputs[| 2].name = "b";
 		
 		switch(mode) {
 			case MATH_OPERATOR.add :
@@ -153,19 +165,30 @@ function Node_Math(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 				break;
 			default: return;
 		}
+	}
+	
+	function update() { 
+		var mode = inputs[| 0].getValue();
+		var a = inputs[| 1].getValue();
+		var b = inputs[| 2].getValue();
+		
+		var as = is_array(a);
+		var bs = is_array(b);
+		var al = as? array_length(a) : 0;
+		var bl = bs? array_length(b) : 0;
 		
 		var val = 0;
 		if(!as && !bs)
-			val = _eval(mode, a, b, deg);
+			val = _eval(mode, a, b);
 		else if(!as && bs) {
 			for( var i = 0; i < bl; i++ )
-				val[i] = _eval(mode, a, b[i], deg);
+				val[i] = _eval(mode, a, b[i]);
 		} else if(as && !bs) {
 			for( var i = 0; i < al; i++ )
-				val[i] = _eval(mode, a[i], b, deg);
+				val[i] = _eval(mode, a[i], b);
 		} else {
 			for( var i = 0; i < max(al, bl); i++ ) 
-				val[i] = _eval(mode, array_safe_get(a, i), array_safe_get(b, i), deg);
+				val[i] = _eval(mode, array_safe_get(a, i), array_safe_get(b, i));
 		}
 		
 		outputs[| 0].setValue(val);

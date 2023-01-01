@@ -34,7 +34,6 @@ function Node_Counter(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) cons
 		
 		return val;
 	}
-	doUpdate();
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s) {
 		draw_set_text(f_h5, fa_center, fa_center, COLORS._main_text);

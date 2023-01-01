@@ -80,6 +80,17 @@ function Panel_Menu() : PanelContent() constructor {
 		]],
 	]
 	
+	if(TESTING) {
+		array_push(menus, ["Test", [
+			[ "Load all current collections", function() { 
+				__test_load_current_collections();
+			}],
+			[ "Update all current collections", function() { 
+				__test_update_current_collections();
+			}],
+		]]);
+	}
+	
 	function setNotiIcon(icon) {
 		noti_icon = icon;
 		noti_icon_time = 90;

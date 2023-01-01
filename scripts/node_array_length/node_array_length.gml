@@ -17,6 +17,4 @@ function Node_Array_Length(_x, _y, _group = -1) : Node_Processor(_x, _y, _group)
 		
 		return array_length(_arr);
 	}
-	
-	doUpdate();
 }

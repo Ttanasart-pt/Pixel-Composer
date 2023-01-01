@@ -16,7 +16,7 @@ function Node_Solid(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constr
 		0, 3, 4, 1, 2
 	];
 	
-	static process_data = function(_outSurf, _data, _output_index) {
+	static process_data = function(_outSurf, _data, _output_index, _array_index) {
 		var _dim = _data[0];
 		var _col = _data[1];
 		var _emp = _data[2];
@@ -43,5 +43,4 @@ function Node_Solid(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constr
 		
 		return _outSurf;
 	}
-	doUpdate();
 }

@@ -42,6 +42,4 @@ function Node_Array_Get(_x, _y, _group = -1) : Node(_x, _y, _group) constructor 
 		
 		outputs[| 0].setValue(_arr[index]);
 	}
-	
-	doUpdate();
 }

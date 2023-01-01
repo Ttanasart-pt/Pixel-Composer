@@ -1,61 +1,69 @@
-function Node_3D_Extrude(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
+function Node_3D_Extrude(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constructor {
 	name = "3D Extrude";
 	
-	uniVertex_lightFor = shader_get_uniform(sh_vertex_pnt_light, "u_LightForward");
-	uniLightAmb = shader_get_uniform(sh_vertex_pnt_light, "u_AmbientLight");
-	uniLightClr = shader_get_uniform(sh_vertex_pnt_light, "u_LightColor");
-	uniLightInt = shader_get_uniform(sh_vertex_pnt_light, "u_LightIntensity");
-	uniLightNrm = shader_get_uniform(sh_vertex_pnt_light, "useNormal");
-	
-	inputs[| 0] = nodeValue(0, "Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone).rejectArray();
+	inputs[| 0] = nodeValue(0, "Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
 	
 	inputs[| 1] = nodeValue(1, "Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, def_surf_size2)
 		.setDisplay(VALUE_DISPLAY.vector);
 	
-	inputs[| 2] = nodeValue(2, "Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ def_surf_size / 2, def_surf_size / 2 ])
+	inputs[| 2] = nodeValue(2, "Object position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 0 ])
+		.setDisplay(VALUE_DISPLAY.vector);
+	
+	inputs[| 3] = nodeValue(3, "Object rotation", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 0 ])
+		.setDisplay(VALUE_DISPLAY.vector);
+	
+	inputs[| 4] = nodeValue(4, "Object scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 1, 0.1 ])
+		.setDisplay(VALUE_DISPLAY.vector);
+	
+	inputs[| 5] = nodeValue(5, "Render position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ def_surf_size / 2, def_surf_size / 2 ])
 		.setDisplay(VALUE_DISPLAY.vector)
 		.setUnitRef( function() { return inputs[| 1].getValue(); });
-	
-	inputs[| 3] = nodeValue(3, "Rotation", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 0 ])
-		.setDisplay(VALUE_DISPLAY.vector);
-	
-	inputs[| 4] = nodeValue(4, "Scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 1, 0.1 ])
-		.setDisplay(VALUE_DISPLAY.vector);
 		
-	inputs[| 5] = nodeValue(5, "Render scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 1 ])
+	inputs[| 6] = nodeValue(6, "Render rotation", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.vector);
 	
-	inputs[| 6] = nodeValue(6, "Manual generate", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+	inputs[| 7] = nodeValue(7, "Render scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 1 ])
+		.setDisplay(VALUE_DISPLAY.vector);
+	
+	inputs[| 8] = nodeValue(8, "Manual generate", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.button, [ function() {
 			generateMesh();
 			update();
 		}, "Generate"] );
 		
-	inputs[| 7] = nodeValue(7, "Light direction", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
+	inputs[| 9] = nodeValue(9, "Light direction", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
 		.setDisplay(VALUE_DISPLAY.rotation);
 		
-	inputs[| 8] = nodeValue(8, "Light height", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.5)
+	inputs[| 10] = nodeValue(10, "Light height", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.5)
 		.setDisplay(VALUE_DISPLAY.slider, [-1, 1, 0.01]);
 		
-	inputs[| 9] = nodeValue(9, "Light intensity", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
+	inputs[| 11] = nodeValue(11, "Light intensity", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
 		.setDisplay(VALUE_DISPLAY.slider, [0, 1, 0.01]);
 	
-	inputs[| 10] = nodeValue(10, "Light color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white);
-	inputs[| 11] = nodeValue(11, "Ambient color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_grey);
+	inputs[| 12] = nodeValue(12, "Light color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white);
+	inputs[| 13] = nodeValue(13, "Ambient color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_grey);
 	
-	inputs[| 12] = nodeValue(12, "Height map", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
+	inputs[| 14] = nodeValue(14, "Height map", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
+	
+	inputs[| 15] = nodeValue(15, "Always update", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
 	
 	input_display_list = [1, 
-		["Geometry",	false], 0, 12, 6,
-		["Transform",	false], 2, 3, 4, 5,
-		["Light",		false], 7, 8, 9, 10, 11
+		["Geometry",		 false], 0, 12, 8, 14,
+		["Object transform", false], 2, 3, 4,
+		["Render",			 false], 5, 7, 15,
+		["Light",			 false], 9, 10, 11, 12, 13,
 	];
 	
 	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
 	
-	VB = vertex_create_buffer();
-	vertex_begin(VB, FORMAT_PT);
-	vertex_end(VB);
+	outputs[| 1] = nodeValue(1, "3D object", self, JUNCTION_CONNECT.output, VALUE_TYPE.d3object, function(index) { return submit_vertex(index); });
+	
+	_3d_node_init(1, /*Transform*/ 5, 3, 7);
+	
+	VB = [];
+	VB[0] = vertex_create_buffer();
+	vertex_begin(VB[0], FORMAT_PT);
+	vertex_end(VB[0]);
 	
 	static onValueUpdate = function(index) {
 		if(index == 0 || index == 12) 
@@ -74,7 +82,16 @@ function Node_3D_Extrude(_x, _y, _group = -1) : Node(_x, _y, _group) constructor
 	
 	static generateMesh = function() {
 		var _ins = inputs[| 0].getValue();
-		var _hei = inputs[| 12].getValue();
+		if(!is_array(_ins)) _ins = [ _ins ];
+		
+		for( var i = 0; i < array_length(_ins); i++ ) {
+			VB[i] = generateMeshIndex(i);
+		}
+	}
+		
+	static generateMeshIndex = function(index) {
+		var _ins = getSingleValue( 0, index);
+		var _hei = getSingleValue(12, index);
 		if(!is_surface(_ins)) return;
 		
 		var ww = surface_get_width(_ins);
@@ -111,6 +128,7 @@ function Node_3D_Extrude(_x, _y, _group = -1) : Node(_x, _y, _group) constructor
 		buffer_get_surface(surface_buffer, _ins, 0);
 		buffer_seek(surface_buffer, buffer_seek_start, 0);
 		
+		var VB = vertex_create_buffer();
 		vertex_begin(VB, FORMAT_PNT);
 		var ap = array_create(ww, hh);
 		
@@ -191,164 +209,53 @@ function Node_3D_Extrude(_x, _y, _group = -1) : Node(_x, _y, _group) constructor
 			}
 		}
 		vertex_end(VB);
+		return VB;
 	}
-	
-	drag_index = -1;
-	drag_sv = 0;
-	drag_mx = 0;
-	drag_my = 0;
 	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
-		if(inputs[| 2].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny)) 
-			active = false;
-		
-		var _dim = inputs[| 1].getValue();
-		var _pos = inputs[| 2].getValue();
-		var _rot = inputs[| 3].getValue();
-		var cx = _x + _pos[0] * _s;
-		var cy = _y + _pos[1] * _s;
-		
-		draw_set_color(COLORS.axis[0]);
-		draw_line(cx - 64, cy, cx + 64, cy);
-		
-		draw_set_color(COLORS.axis[1]);
-		draw_line(cx, cy - 64, cx, cy + 64);
-		
-		draw_set_color(COLORS.axis[2]);
-		draw_circle(cx, cy, 64, true);
-		
-		if(drag_index == 0) {
-			var dx  = (_mx - drag_mx) / _s * 6;
-			_rot[1] = drag_sv + dx;
-			
-			if(inputs[| 3].setValue(_rot)) 
-				UNDO_HOLDING = true;
-			
-			if(mouse_release(mb_left)) {
-				drag_index = -1;
-				UNDO_HOLDING = false;
-			}
-		} else if(drag_index == 1) {
-			var dy  = (_my - drag_my) / _s * -6;
-			_rot[0] = drag_sv + dy;
-			
-			if(inputs[| 3].setValue(_rot)) 
-				UNDO_HOLDING = true;
-			
-			if(mouse_release(mb_left)) {
-				drag_index = -1;
-				UNDO_HOLDING = false;
-			}
-		} else if(drag_index == 2) {
-			var da  = point_direction(cx, cy, _mx, _my);
-			_rot[2] = da;
-			
-			if(inputs[| 3].setValue(_rot)) 
-				UNDO_HOLDING = true;
-			
-			if(mouse_release(mb_left)) {
-				drag_index = -1;
-				UNDO_HOLDING = false;
-			}
-		} else {
-			if(distance_to_line(_mx, _my, cx - 64, cy, cx + 64, cy) < 16) {
-				draw_set_color(COLORS.axis[0]);
-				draw_line_width(cx - 64, cy, cx + 64, cy, 3);
-				if(mouse_press(mb_left, active)) {
-					drag_index	= 0;
-					drag_sv		= _rot[1];
-					drag_mx		= _mx;
-					drag_my		= _my;
-				}
-			} else if(distance_to_line(_mx, _my, cx, cy - 64, cx, cy + 64) < 16) {
-				draw_set_color(COLORS.axis[1]);
-				draw_line_width(cx, cy - 64, cx, cy + 64, 3);
-				if(mouse_press(mb_left, active)) {
-					drag_index	= 1;
-					drag_sv		= _rot[0];
-					drag_mx		= _mx;
-					drag_my		= _my;
-				}
-			} else if(abs(point_distance(_mx, _my, cx, cy) - 64) < 8) {
-				draw_set_color(COLORS.axis[2]);
-				draw_circle_border(cx, cy, 64, 3);
-				if(mouse_press(mb_left, active)) {
-					drag_index	= 2;
-					drag_sv		= _rot[2];
-					drag_mx		= _mx;
-					drag_my		= _my;
-				}
-			}
-		}
-		
-		inputs[| 2].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
+		_3d_gizmo(active, _x, _y, _s, _mx, _my, _snx, _sny);
 	}
 	
-	#region 3D setup
-		TM = matrix_build(0, 0, 0, 0, 0, 0, 1, 1, 1);
-		cam = camera_create();
-		cam_view = matrix_build_lookat(0, 0, 1, 0, 0, 0, 0, 1, 0);
-		cam_proj = matrix_build_projection_ortho(1, 1, 1, 100);
+	static submit_vertex = function(index) {
+		var _ins  = getSingleValue(0, index);
+		if(!is_surface(_ins)) return;
 		
-		camera_set_proj_mat(cam, cam_view);
-		camera_set_view_mat(cam, cam_proj);
-	#endregion
+		var _lpos = getSingleValue(2, index);
+		var _lrot = getSingleValue(3, index);
+		var _lsca = getSingleValue(4, index);
+		
+		_3d_local_transform(_lpos, _lrot, _lsca);
+		vertex_submit(VB[index], pr_trianglelist, surface_get_texture(_ins));
+		_3d_clear_local_transform();
+	}
 	
-	static update = function() {
-		var _ins = inputs[| 0].getValue();
-		var _dim = inputs[| 1].getValue();
-		var _pos = inputs[| 2].getValue();
-		var _rot = inputs[| 3].getValue();
-		var _lsc = inputs[| 4].getValue();
-		var _sca = inputs[| 5].getValue();
+	static process_data = function(_outSurf, _data, _output_index, _array_index) {
+		var _ins  = _data[ 0];
+		var _dim  = _data[ 1];
+		var _lpos = _data[ 2];
+		var _lrot = _data[ 3];
+		var _lsca = _data[ 4];
 		
-		var _ldir = inputs[|  7].getValue();
-		var _lhgt = inputs[|  8].getValue();
-		var _lint = inputs[|  9].getValue();
-		var _lclr = inputs[| 10].getValue();
-		var _aclr = inputs[| 11].getValue();
+		var _pos  = _data[ 5];
+		var _sca  = _data[ 7];
 		
-		var _outSurf = outputs[| 0].getValue();
-		outputs[| 0].setValue(surface_verify(_outSurf, _dim[0], _dim[1]));
+		var _ldir = _data[ 9];
+		var _lhgt = _data[10];
+		var _lint = _data[11];
+		var _lclr = _data[12];
+		var _aclr = _data[13];
 		
+		var _upda = _data[15];
+		
+		surface_verify(_outSurf, _dim[0], _dim[1]);
 		if(!is_surface(_ins)) return _outSurf;
 		
-		if(ANIMATOR.frame_progress)
+		if(_upda && ANIMATOR.frame_progress)
 			generateMesh();
 		
-		var TM = matrix_build(_pos[0], _pos[1], 0, _rot[0], _rot[1], _rot[2], _dim[0] * _sca[0], _dim[1] * _sca[1], 1);
-		var cam_proj = matrix_build_projection_ortho(_dim[0], _dim[1], 1, 100);
-		camera_set_view_mat(cam, cam_proj);
-		camera_set_view_size(cam, _dim[0], _dim[1]);
-		
-		var lightFor = [ -cos(degtorad(_ldir)), -_lhgt, -sin(degtorad(_ldir)) ];
-		
-		gpu_set_ztestenable(true);
-		surface_set_target(_outSurf);
-			shader_set(sh_vertex_pnt_light);
-			shader_set_uniform_f_array(uniVertex_lightFor, lightFor);
-			shader_set_uniform_f_array(uniLightAmb, colorArrayFromReal(_aclr));
-			shader_set_uniform_f_array(uniLightClr, colorArrayFromReal(_lclr));
-			shader_set_uniform_f(uniLightInt, _lint);
-			shader_set_uniform_i(uniLightNrm, 1);
-			
-			camera_apply(cam);
-			draw_clear_alpha(0, 0);
-				
-			matrix_stack_push(TM);
-			matrix_stack_push(matrix_build(0, 0, 0, 0, 0, 0, _lsc[0], _lsc[1], _lsc[2]));
-				
-			matrix_set(matrix_world, matrix_stack_top());
-			vertex_submit(VB, pr_trianglelist, surface_get_texture(_ins));
-			
-			shader_reset();
-			matrix_stack_pop();
-			matrix_stack_pop();
-			matrix_set(matrix_world, MATRIX_IDENTITY);
-		surface_reset_target();
-		
-		gpu_set_ztestenable(false);
-		camera_apply(0);
+		_3d_pre_setup(_outSurf, _dim, _pos, _sca, _ldir, _lhgt, _lint, _lclr, _aclr, _lpos, _lrot, _lsca, false);
+			submit_vertex(_array_index);
+		_3d_post_setup();
 		
 		return _outSurf;
 	}
