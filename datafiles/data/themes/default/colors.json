@@ -8,6 +8,7 @@
         "blue_ltgrey":	"7e7e8f",
         "blue_white":	"d6d6e8",
 
+        "blue":			"27aae1",
         "cyan":			"88ffe9",
         "yellow":		"ffe478",
         "orange":		"ff9166",
@@ -30,6 +31,12 @@
         "_main_icon_dark": "blue_mdblack",
         "_main_value_positive": "lime",
         "_main_value_negative": "red",
+
+        "lua_highlight_keyword": "orange",
+        "lua_highlight_bracklet": "cyan",
+        "lua_highlight_function": "lime",
+        "lua_highlight_number": "yellow",
+        "lua_highlight_string": "blue",
         
         "collection_folder_empty": "blue_dkgrey",
         "collection_folder_nonempty": "blue_ltgrey",

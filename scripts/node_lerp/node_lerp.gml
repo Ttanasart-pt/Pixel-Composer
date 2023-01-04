@@ -20,8 +20,9 @@ function Node_Lerp(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constru
 	function onDrawNode(xx, yy, _mx, _my, _s) {
 		draw_set_text(f_h5, fa_center, fa_center, COLORS._main_text);
 		var str = "lerp";
-		var _ss = min((w - 8) * _s / string_width(str), (h - 8) * _s / string_height(str));
 		
-		draw_text_transformed(xx + w / 2 * _s, yy + 10 + h / 2 * _s, str, _ss, _ss, 0);
+		var bbox = drawGetBbox(xx, yy, _s);
+		var ss	= string_scale(str, bbox.w, bbox.h);
+		draw_text_transformed(bbox.xc, bbox.yc, str, ss, ss, 0);
 	}
 }

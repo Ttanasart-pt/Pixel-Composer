@@ -65,8 +65,8 @@ function Node_3D_Extrude(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) c
 	vertex_begin(VB[0], FORMAT_PT);
 	vertex_end(VB[0]);
 	
-	static onValueUpdate = function(index) {
-		if(index == 0 || index == 12) 
+	static onValueUpdateFrom = function(index) {
+		if(index == 0 || index == 14) 
 			generateMesh();
 	}
 	

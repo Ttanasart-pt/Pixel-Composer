@@ -38,7 +38,6 @@ function Node_Level(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constr
 		var x1 = _x + _w;
 		var y0 = _y;
 		var y1 = _y + _h; 
-		level_renderer.h = 128;
 		
 		draw_set_color(COLORS.node_level_shade);
 		var _wh = inputs[| 1].getValue();
@@ -62,6 +61,8 @@ function Node_Level(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constr
 
 		draw_set_color(COLORS.node_level_outline);
 		draw_rectangle(x0, y0, x1, y1, true);
+		
+		return _h;
 	});
 	
 	input_display_list = [
@@ -76,7 +77,7 @@ function Node_Level(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constr
 			histogramUpdate(current_data[0]);
 	}
 	
-	static onValueUpdate = function(index) {
+	static onValueUpdateFrom = function(index) {
 		if(index == 0) {
 			update();
 			if(array_length(current_data) > 0)

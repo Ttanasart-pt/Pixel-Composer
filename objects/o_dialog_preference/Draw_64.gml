@@ -52,6 +52,10 @@ if !ready exit;
 		sp_pref.active = sHOVER;
 		sp_pref.draw(dialog_x + ui(168), yy);
 	} else if(page_current == 2) {
+		current_list = pref_appr;
+		sp_pref.active = sHOVER;
+		sp_pref.draw(dialog_x + ui(168), yy);
+	} else if(page_current == 3) {
 		var _w = ui(200);
 		var _h = TEXTBOX_HEIGHT;
 		
@@ -75,7 +79,7 @@ if !ready exit;
 		
 		sp_colors.active = sHOVER;
 		sp_colors.draw(dialog_x + ui(168), yy + ui(40));
-	} else if(page_current == 3) {
+	} else if(page_current == 2) {
 		if(mouse_press(mb_left, sFOCUS)) 
 			hk_editing = noone;
 		

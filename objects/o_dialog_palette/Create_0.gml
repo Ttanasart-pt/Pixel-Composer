@@ -16,7 +16,9 @@ event_inherited();
 		if(index_selecting == -1 || palette == 0) return;
 		palette[index_selecting] = color;
 		
-		if(onApply != noone) onApply(palette);
+		if(onApply == noone) return;
+		
+		onApply(palette);
 	}
 	
 	onApply = noone;

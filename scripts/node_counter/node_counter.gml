@@ -36,7 +36,11 @@ function Node_Counter(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) cons
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s) {
+		var bbox = drawGetBbox(xx, yy, _s);
+		var str = outputs[| 0].getValue();
+		
 		draw_set_text(f_h5, fa_center, fa_center, COLORS._main_text);
-		draw_text_transformed(xx + w / 2 * _s, yy + 10 + h / 2 * _s, outputs[| 0].getValue(), _s, _s, 0);
+		var ss	= string_scale(str, bbox.w, bbox.h);
+		draw_text_transformed(bbox.xc, bbox.yc, str, ss, ss, 0);
 	}
 }

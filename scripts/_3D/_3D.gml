@@ -241,7 +241,7 @@
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1]);
 		
 		var cam_proj = matrix_build_projection_ortho(_dim[0], _dim[1], 1, 100);
-		camera_set_view_mat(cam, cam_proj);
+		camera_set_proj_mat(cam, cam_proj);
 		camera_set_view_size(cam, _dim[0], _dim[1]);
 		
 		var lightFor = [ -cos(degtorad(_ldir)), -_lhgt, -sin(degtorad(_ldir)) ];
@@ -256,7 +256,7 @@
 		shader_set_uniform_f_array(uniLightClr, colorArrayFromReal(_lclr));
 		shader_set_uniform_f(uniLightInt, _lint);
 		shader_set_uniform_i(uniLightNrm, use_normal);
-			
+		
 		camera_apply(cam);
 		
 		matrix_stack_push(matrix_build(_pos[0], _pos[1], 0, 0, 0, 0, _dim[0] * _sca[0], _dim[1] * _sca[1], 1));

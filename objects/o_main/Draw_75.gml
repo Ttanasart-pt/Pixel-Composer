@@ -9,6 +9,7 @@
 		var mx = min(mouse_mx + ui(16), WIN_W - (tw + ui(16)));
 		var my = min(mouse_my + ui(16), WIN_H - (th + ui(16)));
 		
+		draw_sprite_stretched(THEME.textbox, 3, mx, my, tw + ui(16), th + ui(16));
 		draw_sprite_stretched(THEME.textbox, 0, mx, my, tw + ui(16), th + ui(16));
 		draw_text(mx + ui(8), my + ui(8), TOOLTIP);
 	}

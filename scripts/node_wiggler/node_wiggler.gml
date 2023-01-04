@@ -60,7 +60,7 @@ function Node_Wiggler(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) cons
 				min_h = 0;
 				draw_set_text(f_h5, fa_center, fa_center, COLORS._main_text);
 				var str	= getWiggle(ran[0], ran[1], ANIMATOR.frames_total / fre, time, sed, 0, ANIMATOR.frames_total);
-				var ss	= string_scale(str, (w - 16) * _s, (h - 16) * _s - 20);
+				var ss	= string_scale(str, (w - 16) * _s, (h - 16) * _s - 20 * draw_name);
 				draw_text_transformed(xx + w / 2 * _s, yy + 10 + h / 2 * _s, str, ss, ss, 0);
 				break;
 			case 1 :
@@ -74,7 +74,7 @@ function Node_Wiggler(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) cons
 				
 				var x0 = xx + 8 * _s;
 				var x1 = xx + (w - 8) * _s;
-				var y0 = yy + 20 + 8  * _s;
+				var y0 = yy + 20 * draw_name + 8  * _s;
 				var y1 = yy + (h - 8) * _s;
 				var ww = x1 - x0;
 				var hh = y1 - y0;

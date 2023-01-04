@@ -290,7 +290,6 @@ function textBox(_input, _onModify, _extras = noone) constructor {
 		}
 		
 		draw_set_text(font == noone? f_p0 : font, fa_left, fa_top);
-		var hh = _h;
 		
 		if(sliding > 0) {
 			var dx =   _m[0] - slide_mx;
@@ -346,10 +345,11 @@ function textBox(_input, _onModify, _extras = noone) constructor {
 			case fa_right  : tx = _x + _w - ui(8); break;
 		}
 		
-		text_surface = surface_verify(text_surface, _w - ui(16), hh);
+		text_surface = surface_verify(text_surface, _w - ui(16), _h);
+		draw_sprite_stretched(THEME.textbox, 3, _x, _y, _w, _h);
 		
 		if(self == TEXTBOX_ACTIVE) { 
-			draw_sprite_stretched(THEME.textbox, sprite_index == -1? 2 : sprite_index, _x, _y, _w, hh);
+			draw_sprite_stretched(THEME.textbox, sprite_index == -1? 2 : sprite_index, _x, _y, _w, _h);
 			editText();
 			
 			#region cursor
@@ -378,7 +378,7 @@ function textBox(_input, _onModify, _extras = noone) constructor {
 					draw_set_text(f_p0b, fa_left, fa_center, COLORS._main_text_sub);
 					draw_set_alpha(0.5);
 				
-					if(hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + ui(32), _y + hh)) {
+					if(hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + ui(32), _y + _h)) {
 						draw_set_alpha(1);
 					
 						if(mouse_press(mb_left, active)) {
@@ -395,9 +395,9 @@ function textBox(_input, _onModify, _extras = noone) constructor {
 					}
 				
 					if(keyboard_check(vk_alt))
-						draw_text(_x + ui(8), _y + hh / 2, "/2");
+						draw_text(_x + ui(8), _y + _h / 2, "/2");
 					else
-						draw_text(_x + ui(8), _y + hh / 2, "x2");
+						draw_text(_x + ui(8), _y + _h / 2, "x2");
 					draw_set_alpha(1);
 				}
 			#endregion
@@ -437,7 +437,7 @@ function textBox(_input, _onModify, _extras = noone) constructor {
 				
 				var _mx = -1;
 				var _my = -1;
-				if(mouse_press(mb_any, active) && hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + hh)) {
+				if(mouse_press(mb_any, active) && hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + _h)) {
 					_mx = _m[0];
 					_my = _m[1];
 				}
@@ -453,7 +453,7 @@ function textBox(_input, _onModify, _extras = noone) constructor {
 				disp_x = lerp_float(disp_x, disp_x_to, 5);
 			#endregion
 			
-			if(!point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + hh) && mouse_press(mb_left)) {
+			if(!point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + _h) && mouse_press(mb_left)) {
 				apply();
 				TEXTBOX_ACTIVE = noone;
 			}
@@ -469,11 +469,11 @@ function textBox(_input, _onModify, _extras = noone) constructor {
 				case fa_right  : tx -= tw;		break;
 			}
 			
-			if(hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + hh)) {
+			if(hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + _h)) {
 				if(hide)
-					draw_sprite_stretched_ext(THEME.textbox, 1, _x, _y, _w, hh, c_white, 0.5);	
+					draw_sprite_stretched_ext(THEME.textbox, 1, _x, _y, _w, _h, c_white, 0.5);	
 				else
-					draw_sprite_stretched(THEME.textbox, 1, _x, _y, _w, hh);	
+					draw_sprite_stretched(THEME.textbox, 1, _x, _y, _w, _h);	
 				if(mouse_press(mb_left, active)) {
 					TEXTBOX_ACTIVE  = self;
 					click_block = 1;
@@ -484,14 +484,14 @@ function textBox(_input, _onModify, _extras = noone) constructor {
 					_last_text  = _text;
 				}
 			} else if(!hide) {
-				draw_sprite_stretched(THEME.textbox, 0, _x, _y, _w, hh);
+				draw_sprite_stretched(THEME.textbox, 0, _x, _y, _w, _h);
 			}
 			
 			if(slidable) {
 				if(_w > ui(64))
-					draw_sprite_ui_uniform(THEME.text_slider, 0, _x + ui(20), _y + hh / 2, 1, COLORS._main_icon, 0.5);
+					draw_sprite_ui_uniform(THEME.text_slider, 0, _x + ui(20), _y + _h / 2, 1, COLORS._main_icon, 0.5);
 				
-				if(hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + hh)) {
+				if(hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + _h)) {
 					if(mouse_press(mb_left, active)) {
 						sliding  = 1;
 						
@@ -508,6 +508,6 @@ function textBox(_input, _onModify, _extras = noone) constructor {
 		active = false;
 		
 		sprite_index = -1;
-		return hh;
+		return _h;
 	}
 }

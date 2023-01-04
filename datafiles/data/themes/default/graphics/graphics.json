@@ -1229,5 +1229,18 @@
             "top": 5,
             "bottom": 5
         }
+    },
+    "textbox_code": {
+        "path": "./widget/s_textbox_code_line.png",
+        "subimages": 1,
+        "xorigin": 0,
+        "yorigin": 0,
+        "slice": {
+            "enabled": true,
+            "left": 5,
+            "right": 5,
+            "top": 5,
+            "bottom": 5
+        }
     }
 }

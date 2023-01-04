@@ -24,14 +24,10 @@ function Node_Color_RGB(_x, _y, _group = -1) : Node(_x, _y, _group) constructor 
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s) {
-		var x0 = xx + 8 * _s;
-		var x1 = xx + (w - 8) * _s;
-		var y0 = yy + 20 + 8 * _s;
-		var y1 = yy + (h - 8) * _s;
+		var bbox = drawGetBbox(xx, yy, _s);
+		if(bbox.h < 1) return;
 		
-		if(y1 > y0) {
-			draw_set_color(outputs[| 0].getValue());
-			draw_rectangle(x0, y0, x1, y1, 0);
-		}
+		draw_set_color(outputs[| 0].getValue());
+		draw_rectangle(bbox.x0, bbox.y0, bbox.x1, bbox.y1, 0);
 	}
 }

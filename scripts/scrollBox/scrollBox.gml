@@ -25,6 +25,8 @@ function scrollBox(_data, _onModify) constructor {
 			return;
 		}
 		
+		draw_sprite_stretched(THEME.textbox, 3, _x, _y, ww, _h);
+		
 		if(hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + ww, _y + _h)) {
 			draw_sprite_stretched(THEME.textbox, 1, _x, _y, ww, _h);
 			if(mouse_press(mb_left, active)) {

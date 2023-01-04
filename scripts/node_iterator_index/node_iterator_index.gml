@@ -14,8 +14,7 @@ function Node_Iterator_Index(_x, _y, _group = -1) : Node(_x, _y, _group) constru
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s) {
-		var cx = xx + w * _s / 2;
-		var cy = yy + 10 + (h - 10) * _s / 2;
-		draw_sprite_uniform(s_node_iterator_index, 0, cx, cy, _s * 0.8);
+		var bbox = drawGetBbox(xx, yy, _s);
+		draw_sprite_fit(s_node_iterator_index, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
 	}
 }

@@ -20,7 +20,9 @@
 	PREF_MAP[? "window_height"]		= 800;
 	PREF_MAP[? "window_maximize"]	= false;
 	
-	PREF_MAP[? "curve_connection_line"]	= true;
+	PREF_MAP[? "connection_line_width"]	 = 2;
+	PREF_MAP[? "connection_line_sample"] = 1;
+	PREF_MAP[? "curve_connection_line"]	 = true;
 	
 	PREF_MAP[? "default_surface_side"]	= 32;
 	

@@ -474,7 +474,7 @@ function Panel_Graph() : PanelContent() constructor {
 		}
 		
 		var hov = noone;
-		var hoverable = !bool(node_dragging);
+		var hoverable = !bool(node_dragging) && pHOVER;
 		for(var i = 0; i < ds_list_size(nodes_list); i++) {
 			var _hov = nodes_list[| i].drawConnections(gr_x, gr_y, graph_s, mx, my, hoverable);
 			if(_hov != noone) hov = _hov;

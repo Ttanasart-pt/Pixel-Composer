@@ -78,6 +78,9 @@
 				case ".txt"  :
 					node = Node_create_Text_File_Read_path(PANEL_GRAPH.mouse_grid_x, PANEL_GRAPH.mouse_grid_y, path);
 					break;
+				case ".csv"  :
+					node = Node_create_CSV_File_Read_path(PANEL_GRAPH.mouse_grid_x, PANEL_GRAPH.mouse_grid_y, path);
+					break;
 				case ".json"  :
 					node = Node_create_Json_File_Read_path(PANEL_GRAPH.mouse_grid_x, PANEL_GRAPH.mouse_grid_y, path);
 					break;

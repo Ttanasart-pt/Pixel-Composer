@@ -47,6 +47,7 @@ function Node_Area(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constru
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s) {
-		draw_sprite_ui_uniform(THEME.node_draw_area, 0, xx + w * _s / 2, yy + 10 + (h - 10) * _s / 2, _s, c_white);
+		var bbox = drawGetBbox(xx, yy, _s);
+		draw_sprite_fit(THEME.node_draw_area, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
 	}
 }

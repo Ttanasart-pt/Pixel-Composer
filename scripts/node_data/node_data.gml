@@ -24,6 +24,8 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) constructor {
 	min_h = 128;
 	auto_height = true;
 	
+	draw_name = true;
+	
 	input_display_list = -1;
 	output_display_list = -1;
 	inspector_display_list = -1;
@@ -127,7 +129,8 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) constructor {
 		
 		if(ANIMATOR.frame_progress) {
 			if(update_on_frame)
-				doUpdate();
+				willUpdate = true;
+				
 			for(var i = 0; i < ds_list_size(inputs); i++) {
 				if(inputs[| i].isAnimated())
 					willUpdate = true;
@@ -178,6 +181,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) constructor {
 	
 	static update = function() {}
 	
+	static updateValue = function(index) {}
 	static updateValueFrom = function(index) {}
 	
 	static triggerRender = function() {
@@ -249,9 +253,28 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) constructor {
 		draw_sprite_stretched_ext(bg_spr, 0, xx, yy, w * _s, h * _s, color, 0.75);
 	}
 	
+	static drawGetBbox = function(xx, yy, _s) {
+		var x0 = xx + 8 * _s;
+		var x1 = xx + (w - 8) * _s;
+		var y0 = yy + 20 * draw_name + 8 * _s;
+		var y1 = yy + (h - 8) * _s;
+		
+		return { x0: x0, 
+				 x1 : x1, 
+				 y0: y0, 
+				 y1 : y1, 
+				 xc: (x0 + x1) / 2, 
+				 yc: (y0 + y1) / 2, 
+				 w: x1 - x0, 
+				 h: y1 - y0 
+			  };
+	}
+	
 	static drawNodeName = function(xx, yy, _s) {
+		draw_name = false;
 		if(name == "") return;
-		if(_s * w <= 48) return;
+		if(_s < 0.5) return;
+		draw_name = true;
 		
 		draw_sprite_stretched_ext(THEME.node_bg_name, 0, xx, yy, w * _s, ui(20), color, 0.75);
 		
@@ -263,12 +286,12 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) constructor {
 		
 		if(inspectorUpdate != noone) icon = THEME.refresh_s;
 		var ts = clamp(power(_s, 0.5), 0.5, 1);
-		if(icon) {
+		
+		if(icon && _s > 0.75) {
 			draw_sprite_ui_uniform(icon, 0, xx + ui(12), yy + ui(10));	
 			draw_text_cut(xx + ui(24), yy + ui(10), name, w * _s - ui(24), ts);
-		} else {
+		} else
 			draw_text_cut(xx + ui(8), yy + ui(10), name, w * _s - ui(8), ts);
-		}
 	}
 	
 	static drawJunctions = function(_x, _y, _mx, _my, _s) {
@@ -345,7 +368,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) constructor {
 				var c0 = value_color(jun.value_from.type);
 				var c1 = value_color(jun.type);
 				var hover = false;
-				var th = max(1, 2 * _s);
+				var th = max(1, PREF_MAP[? "connection_line_width"] * _s);
 				
 				switch(PREF_MAP[? "curve_connection_line"]) {
 					case 0 : 
@@ -364,7 +387,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) constructor {
 				
 				if(active && hover)
 					hovering = jun;
-				if(PANEL_GRAPH.junction_hovering == jun || (instance_exists(o_dialog_add_node) && o_dialog_add_node.junction_hovering == jun))
+				if(active && PANEL_GRAPH.junction_hovering == jun || (instance_exists(o_dialog_add_node) && o_dialog_add_node.junction_hovering == jun))
 					th *= 2;
 				
 				var ty = LINE_STYLE.solid;
@@ -376,7 +399,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) constructor {
 						if(ty == LINE_STYLE.solid)
 							draw_line_width_color(jx, jy, frx, fry, th, c0, c1);
 						else 
-							draw_line_dashed_color(jx, jy, frx, fry, th, c0, c1, 12);
+							draw_line_dashed_color(jx, jy, frx, fry, th, c0, c1, 12 * _s);
 						break;
 					case 1 : draw_line_curve_color(jx, jy, frx, fry, th, c0, c1, ty); break;
 					case 2 : draw_line_elbow_color(jx, jy, frx, fry, th, c0, c1, ty); break;

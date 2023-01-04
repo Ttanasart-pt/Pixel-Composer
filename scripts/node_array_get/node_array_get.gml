@@ -19,12 +19,17 @@ function Node_Array_Get(_x, _y, _group = -1) : Node(_x, _y, _group) constructor 
 	
 	static update = function() {
 		var _arr = inputs[| 0].getValue();
+		
+		inputs[| 0].type  = VALUE_TYPE.any;
+		outputs[| 0].type = VALUE_TYPE.any;
+		
 		if(!is_array(_arr)) return;
 		
 		var index = inputs[| 1].getValue();
 		var _len = array_length(_arr);
-		var _of = inputs[| 2].getValue();
-		switch(_of) {
+		var _ovf = inputs[| 2].getValue();
+		
+		switch(_ovf) {
 			case 0 :
 				index = clamp(index, 0, _len - 1);
 				break;
@@ -38,6 +43,11 @@ function Node_Array_Get(_x, _y, _group = -1) : Node(_x, _y, _group) constructor 
 				if(index >= _len) 
 					index = _pplen - index;
 				break;
+		}
+		
+		if(inputs[| 0].value_from != noone) {
+			inputs[| 0].type  = inputs[| 0].value_from.type;
+			outputs[| 0].type = inputs[| 0].type;
 		}
 		
 		outputs[| 0].setValue(_arr[index]);

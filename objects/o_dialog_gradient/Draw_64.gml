@@ -93,6 +93,7 @@ if !ready exit;
 		bx -= ui(32);
 	#endregion
 	
+	draw_sprite_stretched(THEME.textbox, 3, gr_x - ui(6), gr_y - ui(6), gr_w + ui(12), gr_h + ui(12));
 	draw_sprite_stretched(THEME.textbox, 0, gr_x - ui(6), gr_y - ui(6), gr_w + ui(12), gr_h + ui(12));
 	draw_gradient(gr_x, gr_y, gr_w, gr_h, gradient, grad_data[| 0]);
 	

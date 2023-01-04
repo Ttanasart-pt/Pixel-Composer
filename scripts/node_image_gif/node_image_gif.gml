@@ -125,9 +125,8 @@ function Node_Image_gif(_x, _y, _group = -1) : Node(_x, _y, _group) constructor 
 	}
 	
 	function onDrawNode(xx, yy, _mx, _my, _s) {
-		if(loading) {
+		if(loading)
 			draw_sprite_ui(THEME.loading, 0, xx + w * _s / 2, yy + h * _s / 2, _s, _s, current_time / 2, COLORS._main_icon, 1);
-		}
 	}
 	
 	static onDestroy = function() {

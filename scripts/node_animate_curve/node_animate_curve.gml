@@ -26,6 +26,7 @@ function Node_Anim_Curve(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) c
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s) {
-		draw_sprite_ext(s_node_curve, 0, xx + w / 2 * _s, yy + 10 + h / 2 * _s, _s / 2, _s / 2, 0, c_white, 1);
+		var bbox = drawGetBbox(xx, yy, _s);
+		draw_sprite_fit(s_node_curve, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
 	}
 }

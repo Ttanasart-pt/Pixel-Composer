@@ -1098,7 +1098,7 @@ function Panel_Animation() : PanelContent() constructor {
 			}
 		#endregion
 						
-		if(pHOVER && point_in_rectangle(msx, msy, 0, ui(16), dope_sheet_w, dope_sheet_h)) {
+		if(pHOVER && point_in_rectangle(msx, msy, 0, ui(18), dope_sheet_w, dope_sheet_h)) {
 			if(mouse_press(mb_left, pFOCUS) || mouse_press(mb_right, pFOCUS)) {
 				if(key_hover == noone) {
 					ds_list_clear(keyframe_selecting);

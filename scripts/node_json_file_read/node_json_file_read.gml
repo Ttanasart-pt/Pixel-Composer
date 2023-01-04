@@ -23,7 +23,7 @@ function Node_create_Json_File_Read_path(_x, _y, path) {
 }
 
 function Node_Json_File_Read(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
-	name = "JSON file";
+	name = "JSON in";
 	color = COLORS.node_blend_input;
 	previewable = false;
 	
@@ -33,11 +33,22 @@ function Node_Json_File_Read(_x, _y, _group = -1) : Node(_x, _y, _group) constru
 	inputs[| 0]  = nodeValue(0, "Path", self, JUNCTION_CONNECT.input, VALUE_TYPE.path, "")
 		.setDisplay(VALUE_DISPLAY.path_load, ["*.json", ""]);
 	
-	outputs[| 0] = nodeValue(0, "Content", self, JUNCTION_CONNECT.output, VALUE_TYPE.text, "");
-	outputs[| 1] = nodeValue(1, "Path", self, JUNCTION_CONNECT.output, VALUE_TYPE.path, "")
+	outputs[| 0] = nodeValue(0, "Path", self, JUNCTION_CONNECT.output, VALUE_TYPE.path, "")
 		.setVisible(true, true);
 	
-	content = "";
+	input_index = ds_list_size(inputs);
+	
+	static createNewInput = function() {
+		var index = ds_list_size(inputs);
+		inputs[| index] = nodeValue( index, "Key", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "" )
+			.setVisible(true, true);
+		
+		outputs[| index] = nodeValue( index, "Values", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, 0 )
+			.setVisible(true, true);
+	}
+	if(!LOADING && !APPENDING) createNewInput();
+	
+	content = {};
 	path_current = "";
 	
 	first_update = false;
@@ -51,6 +62,37 @@ function Node_Json_File_Read(_x, _y, _group = -1) : Node(_x, _y, _group) constru
 		return false;
 	}
 	
+	static updateValue = function(index) {
+		if(index < input_index) return;
+		if(LOADING || APPENDING) return;
+		
+		var _in = ds_list_create();
+		var _ot = ds_list_create();
+		
+		for( var i = 0; i < ds_list_size(inputs); i++ ) {
+			if(i < input_index || inputs[| i].getValue() != "") {
+				ds_list_add(_in, inputs[| i]);
+				ds_list_add(_ot, outputs[| i]);
+			} else {
+				delete inputs[| i];
+				delete outputs[| i];
+			}
+		}
+		
+		for( var i = 0; i < ds_list_size(_in); i++ ) {
+			_in[| i].index = i;
+			_ot[| i].index = i;
+		}
+		
+		ds_list_destroy(inputs);
+		inputs = _in;
+		
+		ds_list_destroy(outputs);
+		outputs = _ot;
+		
+		createNewInput();
+	}
+	
 	function updatePaths(path) {
 		if(path_current == path) return false;
 		
@@ -60,19 +102,17 @@ function Node_Json_File_Read(_x, _y, _group = -1) : Node(_x, _y, _group) constru
 		var ext = filename_ext(path);
 		var _name = string_replace(filename_name(path), filename_ext(path), "");
 		
-		switch(ext) {
-			case ".json":
-				outputs[| 1].setValue(path);
+		if(ext != ".json") return false;
+		
+		outputs[| 0].setValue(path);
 				
-				content = json_load(path);
+		content = json_load_struct(path);
 				
-				if(path_current == "") 
-					first_update = true;
-				path_current = path;
+		if(path_current == "") 
+			first_update = true;
+		path_current = path;
 				
-				return true;
-		}
-		return false;
+		return true;
 	}
 	
 	static update = function() {
@@ -80,17 +120,37 @@ function Node_Json_File_Read(_x, _y, _group = -1) : Node(_x, _y, _group) constru
 		if(path == "") return;
 		updatePaths(path);
 		
-		outputs[| 0].setValue(content);
+		for( var i = 1; i < ds_list_size(inputs) - 1; i++ ) {
+			var key = inputs[| i].getValue();
+			
+			outputs[| i].name = key;
+			if(variable_struct_exists(content, key)) {
+				var val = variable_struct_get(content, key);
+				outputs[| i].setValue(val);
+				
+				if(is_array(val) && array_length(val))
+					outputs[| i].type = is_string(val[0])? VALUE_TYPE.text : VALUE_TYPE.float;
+				else
+					outputs[| i].type = is_string(val)? VALUE_TYPE.text : VALUE_TYPE.float;
+			} else {
+				outputs[| i].setValue(0);
+				outputs[| i].type = VALUE_TYPE.float;
+			}
+		}
 	}
 	
 	function onDrawNode(xx, yy, _mx, _my, _s) {
 		draw_set_text(f_h5, fa_center, fa_center, COLORS._main_text);
-		var cx = xx + w / 2 * _s;
-		var cy = yy + 10 + h / 2 * _s;
-		
 		var str = filename_name(path_current);
-		var ss = min((w - 8) * _s / string_width(str), (h - 24) * _s / string_height(str));
+		var bbox = drawGetBbox(xx, yy, _s);
+		var ss	= string_scale(str, bbox.w, bbox.h);
+		draw_text_transformed(bbox.xc, bbox.yc, str, ss, ss, 0);
+	}
+	
+	static postDeserialize = function() {
+		var _inputs = load_map[? "inputs"];
 		
-		draw_text_transformed(cx, cy, str, ss, ss, 0);
+		for(var i = input_index; i < ds_list_size(_inputs); i++)
+			createNewInput();
 	}
 }

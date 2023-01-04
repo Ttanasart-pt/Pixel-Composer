@@ -37,12 +37,9 @@ function Node_Palette(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s) {
-		var x0 = xx + 8 * _s;
-		var x1 = xx + (w - 8) * _s;
-		var y0 = yy + 20 + 8 * _s;
-		var y1 = yy + (h - 8) * _s;
+		var bbox = drawGetBbox(xx, yy, _s);
+		if(bbox.h < 1) return;
 		
-		if(y1 > y0)
-			drawPalette(outputs[| 0].getValue(), x0, y0, x1 - x0, y1 - y0);
+		drawPalette(outputs[| 0].getValue(), bbox.x0, bbox.y0, bbox.w, bbox.h);
 	}
 }

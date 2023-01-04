@@ -5,7 +5,7 @@
   "isDnD": false,
   "isCompatibility": false,
   "parent": {
-    "name": "render",
-    "path": "folders/nodes/data/render.yy",
+    "name": "IO",
+    "path": "folders/nodes/data/IO.yy",
   },
 }

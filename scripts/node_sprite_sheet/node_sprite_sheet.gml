@@ -82,6 +82,7 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = -1) : Node(_x, _y, _group) co
 			
 			var frame = floor(ANIMATOR.current_frame / skip);
 			surface_set_target(oo);
+			BLEND_OVERRIDE
 			
 			switch(pack) {
 				case SPRITE_STACK.horizontal :
@@ -124,10 +125,15 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = -1) : Node(_x, _y, _group) co
 					break;
 			}
 			drawn = true;
+			
+			BLEND_NORMAL
 			surface_reset_target();
 		}
 		
-		if(drawn) anim_drawn[ANIMATOR.current_frame] = true;
+		if(drawn) {
+			anim_drawn[ANIMATOR.current_frame] = true;
+			//print(string(ANIMATOR.current_frame) + ": " + string(drawn));
+		}
 	}
 	
 	static inspectorUpdate = function() {
@@ -143,6 +149,7 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = -1) : Node(_x, _y, _group) co
 				ANIMATOR.setFrame(-1);
 				ANIMATOR.is_playing = true;
 				ANIMATOR.rendering = true;
+				ANIMATOR.frame_progress = true;
 			}
 			
 			var skip = inputs[| 2].getValue();

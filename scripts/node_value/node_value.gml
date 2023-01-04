@@ -41,6 +41,7 @@ enum VALUE_DISPLAY {
 	vector,
 	vector_range,
 	area,
+	kernel,
 	
 	//Curve
 	curve,
@@ -55,6 +56,7 @@ enum VALUE_DISPLAY {
 	
 	//Text
 	export_format,
+	code,
 	
 	//path
 	path_save,
@@ -121,6 +123,7 @@ function typeArray(_type) {
 		case VALUE_DISPLAY.padding :
 		case VALUE_DISPLAY.area :
 		case VALUE_DISPLAY.puppet_control :
+		case VALUE_DISPLAY.kernel :
 			
 		case VALUE_DISPLAY.curve :
 			return 1;
@@ -395,6 +398,14 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 							setValueDirect(val);
 						} );
 						break;
+					case VALUE_DISPLAY.kernel :
+						editWidget = new matrixGrid(_txt, function(index, val) { 
+							var _val = animator.getValue();
+							_val[index] = val;
+							setValueDirect(_val);
+						}, unit );
+						if(display_data != -1) editWidget.extras = display_data;
+						break;
 				}
 				break;
 			case VALUE_TYPE.boolean :
@@ -495,6 +506,12 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 				break;
 			case VALUE_TYPE.text :
 				editWidget = new textArea(TEXTBOX_INPUT.text, function(str) { setValueDirect(str); } );
+				
+				if(display_type == VALUE_DISPLAY.code) {
+					editWidget.font = f_code;
+					editWidget.format = TEXT_AREA_FORMAT.code;
+					editWidget.min_lines = 4;
+				}
 				break;
 			case VALUE_TYPE.surface :
 				editWidget = new surfaceBox(function(ind) { setValueDirect(ind); }, display_data );
@@ -517,7 +534,7 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 						if(is_array(path)) path = path[0];
 						if(try_get_path(path) == -1) {
 							value_validation = VALIDATION.error;	
-							str = "File not exist";
+							str = "File not exist: " + string(path);
 						}
 						break;
 					case VALUE_DISPLAY.path_array: 
@@ -526,11 +543,11 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 							for( var i = 0; i < array_length(paths); i++ ) {
 								if(try_get_path(paths[i]) != -1) continue;
 								value_validation = VALIDATION.error;	
-								str = "File not exist";
+								str = "File not exist: " + string(paths[i]);
 							} 
 						} else {
 							value_validation = VALIDATION.error;	
-							str = "File not exist";
+							str = "File not exist: " + string(paths);
 						}
 						break;
 				}
@@ -712,16 +729,20 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 			if(array_length(_o) != array_length(_n)) {
 				updated = true;
 			} else {
-				for(var i = 0; i < array_length(_o); i++) {
+				for(var i = 0; i < array_length(_o); i++)
 					updated = updated || (_o[i] != _n[i]);
-				}
 			}
 		} else
 			updated = _o != _n;
-			
+		
+		if(VALUE_DISPLAY.palette)
+			updated = true;
+		
 		if(updated) {
-			if(connect_type == JUNCTION_CONNECT.input)
+			if(connect_type == JUNCTION_CONNECT.input) {
 				node.triggerRender();
+				node.updateValue(index);
+			}
 			
 			if(node.use_cache) node.clearCache();
 			node.onValueUpdate(index, _o);
@@ -783,7 +804,7 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 		//show_debug_message("connected " + name + " to " + _valueFrom.name)
 		
 		node.onValueUpdate(index, _o);
-		if(_update) {
+		if(_update && connect_type == JUNCTION_CONNECT.input) {
 			node.updateValueFrom(index);
 			node.triggerRender();
 			if(node.use_cache) node.clearCache();
@@ -799,7 +820,8 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 			ds_list_remove(value_from.value_to, self);	
 		value_from = noone;
 		
-		node.updateValueFrom(index);
+		if(connect_type == JUNCTION_CONNECT.input)
+			node.updateValueFrom(index);
 	}
 	
 	static getShowString = function() {
@@ -1295,7 +1317,7 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 	
 	static isVisible = function() {
 		if(!node.active) return false;
-		return value_from || ( visible && show_in_inspector );
+		return value_from || visible;
 	}
 	
 	static serialize = function(scale = false) {

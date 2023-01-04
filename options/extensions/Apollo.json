@@ -1,0 +1,9 @@
+{
+  "extensionId": {
+    "name": "Apollo",
+    "path": "extensions/Apollo/Apollo.yy"
+  },
+  "resourceVersion": "1.0",
+  "resourceType": "GMExtensionConfigSet",
+  "configurables": null
+}

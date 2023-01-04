@@ -37,7 +37,8 @@ function draw_line_curve(x0, y0, x1, y1, thick = 1) {
 
 function draw_line_curve_color(x0, y0, x1, y1, thick, col1, col2, type = LINE_STYLE.solid) {
 	var xc = (x0 + x1) / 2;
-	var sample = max(8, ceil((abs(x0 - x1) + abs(y0 - y1)) / 4));
+	var sample = ceil((abs(x0 - x1) + abs(y0 - y1)) / 16 * PREF_MAP[? "connection_line_sample"]);
+	sample = clamp(sample, 8, 128);
 	
 	var c = draw_get_color();
 	var ox, oy, nx, ny, t, it, oc, nc;
@@ -71,7 +72,8 @@ function draw_line_curve_color(x0, y0, x1, y1, thick, col1, col2, type = LINE_ST
 
 function distance_to_curve(mx, my, x0, y0, x1, y1) {
 	var xc = (x0 + x1) / 2;
-	var sample = max(8, ceil((abs(x0 - x1) + abs(y0 - y1)) / 4));
+	var sample = ceil((abs(x0 - x1) + abs(y0 - y1)) / 16 * PREF_MAP[? "connection_line_sample"]);
+	sample = clamp(sample, 8, 128);
 	
 	var dist = 999999;
 	var ox, oy, nx, ny, t, it;

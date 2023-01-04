@@ -10,6 +10,8 @@ function surfaceBox(_onModify, def_path = "") constructor {
 	
 	static draw = function(_x, _y, _w, _h, _surface, _m, _rx, _ry) {
 		if(!open) {
+			draw_sprite_stretched(THEME.textbox, 3, _x, _y, _w, _h);
+			
 			if(hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + _h)) {
 				draw_sprite_stretched(THEME.textbox, 1, _x, _y, _w, _h);
 				if(mouse_press(mb_left, active)) {

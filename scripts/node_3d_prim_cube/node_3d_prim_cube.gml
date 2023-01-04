@@ -50,7 +50,7 @@ function Node_3D_Cube(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) cons
 	
 	input_display_list = [1,
 		["Object transform",false], 19, 18, 12,
-		["Render",			false], 2, 4,
+		["Render",			false], 2, 4, 
 		["Texture",			 true],	0, 5, 6, 7, 8, 9, 10, 11,
 		["Light",			false], 13, 14, 15, 16, 17,
 	];
@@ -115,7 +115,7 @@ function Node_3D_Cube(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) cons
 		
 		var _usetex = _data[5];
 		
-		for(var i = 6; i <= 11; i++) inputs[| i].setVisible(_usetex);
+		for(var i = 6; i <= 11; i++) inputs[| i].setVisible(true, _usetex);
 		inputs[| 0].setVisible(true, !_usetex);
 		
 		_3d_pre_setup(_outSurf, _dim, _pos, _sca, _ldir, _lhgt, _lint, _lclr, _aclr, _lpos, _lrot, _lsca);

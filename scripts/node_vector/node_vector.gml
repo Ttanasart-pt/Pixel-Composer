@@ -22,8 +22,10 @@ function Node_Number(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) const
 	static onDrawNode = function(xx, yy, _mx, _my, _s) {
 		draw_set_text(f_h5, fa_center, fa_center, COLORS._main_text);
 		var str	= string(outputs[| 0].getValue());
-		var ss	= string_scale(str, (w - 16) * _s, (h - 16) * _s - 20);
-		draw_text_transformed(xx + w / 2 * _s, yy + 10 + h / 2 * _s, str, ss, ss, 0);
+		
+		var bbox = drawGetBbox(xx, yy, _s);
+		var ss	= string_scale(str, bbox.w, bbox.h);
+		draw_text_transformed(bbox.xc, bbox.yc, str, ss, ss, 0);
 	}
 }
 
@@ -105,8 +107,10 @@ function Node_Vector2(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) cons
 		draw_set_text(f_p0, fa_center, fa_center, COLORS._main_text);
 		var vec = outputs[| 0].getValue();
 		var str	= string(vec[0]) + "\n" + string(vec[1]);
-		var ss	= string_scale(str, (w - 16) * _s, (h - 16) * _s - 20);
-		draw_text_transformed(xx + w / 2 * _s, yy + 10 + h / 2 * _s, str, ss, ss, 0);
+		
+		var bbox = drawGetBbox(xx, yy, _s);
+		var ss	= string_scale(str, bbox.w, bbox.h);
+		draw_text_transformed(bbox.xc, bbox.yc, str, ss, ss, 0);
 	}
 }
 
@@ -137,8 +141,10 @@ function Node_Vector3(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) cons
 		draw_set_text(f_p0, fa_center, fa_center, COLORS._main_text);
 		var vec = outputs[| 0].getValue();
 		var str	= string(vec[0]) + "\n" + string(vec[1]) + "\n" + string(vec[2]);
-		var ss	= string_scale(str, (w - 16) * _s, (h - 16) * _s - 20);
-		draw_text_transformed(xx + w / 2 * _s, yy + 10 + h / 2 * _s, str, ss, ss, 0);
+		
+		var bbox = drawGetBbox(xx, yy, _s);
+		var ss	= string_scale(str, bbox.w, bbox.h);
+		draw_text_transformed(bbox.xc, bbox.yc, str, ss, ss, 0);
 	}
 }
 
@@ -171,8 +177,10 @@ function Node_Vector4(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) cons
 		draw_set_text(f_p0, fa_center, fa_center, COLORS._main_text);
 		var vec = outputs[| 0].getValue();
 		var str	= string(vec[0]) + "\n" + string(vec[1]) + "\n" + string(vec[2]) + "\n" + string(vec[3]);
-		var ss	= string_scale(str, (w - 16) * _s, (h - 16) * _s - 20);
-		draw_text_transformed(xx + w / 2 * _s, yy + 10 + h / 2 * _s, str, ss, ss, 0);
+		
+		var bbox = drawGetBbox(xx, yy, _s);
+		var ss	= string_scale(str, bbox.w, bbox.h);
+		draw_text_transformed(bbox.xc, bbox.yc, str, ss, ss, 0);
 	}
 }
 
@@ -203,7 +211,9 @@ function Node_Vector_Split(_x, _y, _group = -1) : Node_Processor(_x, _y, _group)
 		draw_set_text(f_p0, fa_center, fa_center, COLORS._main_text);
 		var str	= string(outputs[| 0].getValue()) + "\n" + string(outputs[| 1].getValue()) 
 			+ "\n" + string(outputs[| 2].getValue()) + "\n" + string(outputs[| 3].getValue());
-		var ss	= string_scale(str, (w - 16) * _s, (h - 16) * _s - 20);
-		draw_text_transformed(xx + w / 2 * _s, yy + 10 + h / 2 * _s, str, ss, ss, 0);
+			
+		var bbox = drawGetBbox(xx, yy, _s);
+		var ss	= string_scale(str, bbox.w, bbox.h);
+		draw_text_transformed(bbox.xc, bbox.yc, str, ss, ss, 0);
 	}
 }

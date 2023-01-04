@@ -26,10 +26,10 @@ event_inherited();
 	page[0] = "General";
 	page[1] = "Node settings";
 	page[2] = "Appearances";
-	page[3] = "Hotkeys";
+	page[3] = "Colors";
+	page[4] = "Hotkeys";
 	
 	pref_global = ds_list_create();
-	pref_node = ds_list_create();
 	
 	ds_list_add(pref_global, [
 		"Show welcome screen",
@@ -169,8 +169,11 @@ event_inherited();
 			PREF_SAVE();
 		})
 	]);
-	
-	//NODE
+
+#endregion
+
+#region //NODE
+	pref_node = ds_list_create();
 	
 	ds_list_add(pref_node, "Particle");
 	ds_list_add(pref_node, [
@@ -217,6 +220,29 @@ event_inherited();
 		"verlet_iteration",
 		new textBox(TEXTBOX_INPUT.number, function(str) { 
 			PREF_MAP[? "verlet_iteration"] = real(str); 
+			PREF_SAVE();
+		})
+	]);
+#endregion
+
+#region appearance
+	pref_appr = ds_list_create();
+	
+	ds_list_add(pref_appr, "Graph");
+	ds_list_add(pref_appr, [
+		"Connection thickness",
+		"connection_line_width",
+		new textBox(TEXTBOX_INPUT.float, function(str) { 
+			PREF_MAP[? "connection_line_width"] = real(str); 
+			PREF_SAVE();
+		})
+	]);
+	
+	ds_list_add(pref_appr, [
+		"Connection curve smoothness",
+		"connection_line_sample",
+		new textBox(TEXTBOX_INPUT.float, function(str) { 
+			PREF_MAP[? "connection_line_sample"] = real(str); 
 			PREF_SAVE();
 		})
 	]);

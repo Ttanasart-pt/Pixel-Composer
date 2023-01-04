@@ -1,3 +1,8 @@
+enum TEXT_AREA_FORMAT {
+	_default,
+	code
+}
+
 function textArea(_input, _onModify, _extras = noone) constructor {
 	active = false;
 	hover  = false;
@@ -15,8 +20,9 @@ function textArea(_input, _onModify, _extras = noone) constructor {
 	_input_text = "";
 	_prev_text = "";
 	_last_value = "";
-	
 	_prev_width = 0;
+	
+	min_lines = 0;
 	
 	cursor			= 0;
 	
@@ -29,6 +35,9 @@ function textArea(_input, _onModify, _extras = noone) constructor {
 	cursor_select	= -1;
 	
 	click_block = 0;
+	format = TEXT_AREA_FORMAT._default;
+	
+	code_line_width = 48;
 	
 	static deselect = function() {
 		apply();
@@ -50,35 +59,40 @@ function textArea(_input, _onModify, _extras = noone) constructor {
 		_input_text_line = [];
 		draw_set_font(font);
 		
+		if(string_pos("\n", _prev_text) == 0) {
+			array_push(_input_text_line, _prev_text);
+			return;
+		}
+		
 		var _txtLines = string_splice(_prev_text, "\n");
 		var ss = "";
 		
 		for( var i = 0; i < array_length(_txtLines); i++ ) {
 			var _txt = _txtLines[i];
-			_txt = string_replace_all(_txt, "\n", "");
-			if(_txt == "") continue;
+			var words = string_splice(_txt, " ");
+			var currW = 0;
+			var currL = "";
+			var cut = true;
 			
-			while(string_length(_txt) > 0) {
-				var sp = string_pos(" ", _txt);
-				if(sp == 0) sp = string_length(_txt);
-			
-				var _ps = string_copy(_txt, 1, sp);
-				_txt = string_copy(_txt, sp + 1, string_length(_txt) - sp);
-			
-				if(string_width(ss + _ps) >= line_width) {
-					array_push(_input_text_line, ss);
-					ss = _ps;
-				} else if(string_length(_txt) <= 0) {
-					array_push(_input_text_line, ss + _ps);
-					ss = "";
-				} else {
-					ss += _ps;	
+			for( var j = 0; j < array_length(words); j++ ) {
+				var word = words[j];
+				if(j) word = " " + word;
+				
+				if(currW + string_width(word) > line_width) {
+					array_push(_input_text_line, currL);
+					currW = 0;
+					currL = "";
+					cut = false;
+					continue;
 				}
+				
+				cut = true;
+				currW += string_width(word);
+				currL += word;
 			}
+			
+			if(cut) array_push(_input_text_line, currL);
 		}
-		
-		if(ss != "") 
-			array_push(_input_text_line, ss);
 	}
 	
 	static editText = function() {
@@ -96,7 +110,29 @@ function textArea(_input, _onModify, _extras = noone) constructor {
 				if(key_mod_press(CTRL) && keyboard_check_pressed(ord("V")))
 					KEYBOARD_STRING = clipboard_get_text();
 					
-				if(keyboard_check_pressed(vk_escape) || keyboard_check_pressed(vk_enter)) {
+				if(keyboard_check_pressed(vk_escape)) {
+				} else if(keyboard_check_pressed(vk_enter)) {
+					if(key_mod_press(SHIFT)) {
+						var ch = "\n";
+						if(cursor_select == -1) {
+							var str_before	= string_copy(_input_text, 1, cursor);
+							var str_after	= string_copy(_input_text, cursor + 1, string_length(_input_text) - cursor);
+						
+							_input_text		= str_before + ch + str_after;
+							cut_line();
+							move_cursor(string_length(ch));
+						} else {
+							var minc = min(cursor, cursor_select);
+							var maxc = max(cursor, cursor_select);
+						
+							var str_before	= string_copy(_input_text, 1, minc);
+							var str_after	= string_copy(_input_text, maxc + 1, string_length(_input_text) - maxc);
+						
+							_input_text		= str_before + ch + str_after;
+							cut_line();
+							cursor = minc + string_length(ch);
+						}
+					}
 				} else if(KEYBOARD_PRESSED == vk_backspace) {
 					if(cursor_select == -1) {
 						var str_before	= string_copy(_input_text, 1, cursor - 1);
@@ -188,7 +224,7 @@ function textArea(_input, _onModify, _extras = noone) constructor {
 			_input_text = _last_value;
 			cut_line();
 			deselect();
-		} else if(keyboard_check_pressed(vk_enter)) {
+		} else if(keyboard_check_pressed(vk_enter) && !key_mod_press(SHIFT)) {
 			deselect();
 		}
 	}
@@ -215,10 +251,15 @@ function textArea(_input, _onModify, _extras = noone) constructor {
 		
 		for( var i = 0; i < array_length(_input_text_line); i++ ) {
 			_str = _input_text_line[i];
-			draw_text(ch_x, ch_y, _str);
+			
+			if(format == TEXT_AREA_FORMAT._default)
+				draw_text(ch_x, ch_y, _str);
+			else if(format == TEXT_AREA_FORMAT.code)
+				draw_code(ch_x, ch_y, _str);
+			
 			ch_y += string_height(_str);
 		}
-		//draw_text_ext(_x, _y, _text, -1, _w - 16);
+		
 		
 		if(_mx != -1 && _my != -1) {
 			var char_run = 0, _l, _ch_w, _ch_h, _str, _chr;
@@ -276,11 +317,32 @@ function textArea(_input, _onModify, _extras = noone) constructor {
 		
 		var tx = _x + ui(8);
 		var hh = _h;
-		line_width = _w - ui(16);
+		
+		if(format == TEXT_AREA_FORMAT._default) {
+			line_width = _w - ui(16);
+		} else if(format == TEXT_AREA_FORMAT.code) {
+			line_width = _w - ui(16 + code_line_width);
+			tx += ui(code_line_width);
+		}
 		
 		draw_set_font(font);
 		var c_h = string_height("l");
-		hh = max(_h, ui(14) + c_h * array_length(_input_text_line));
+		var line_count = max(min_lines, array_length(_input_text_line));
+		hh = max(_h, ui(14) + c_h * line_count);
+		
+		draw_sprite_stretched(THEME.textbox, 3, _x, _y, _w, hh);
+		
+		if(format == TEXT_AREA_FORMAT.code) {
+			draw_sprite_stretched(THEME.textbox_code, 0, _x, _y, ui(code_line_width), hh);
+			draw_set_text(f_p1, fa_right, fa_top, COLORS._main_text_sub);
+			
+			var lx = _x + ui(code_line_width - 8);
+			for( var i = 0; i < line_count; i++ ) {
+				var ly = _y + ui(7) + i * c_h;
+				
+				draw_text(lx, ly, string(i + 1));
+			}
+		}
 		
 		if(self == TEXTBOX_ACTIVE) { 
 			draw_sprite_stretched(THEME.textbox, 2, _x, _y, _w, hh);
@@ -298,7 +360,7 @@ function textArea(_input, _onModify, _extras = noone) constructor {
 					if(key_mod_press(CTRL)) {
 						while(cursor > 0) {
 							var ch = string_char_at(_prev_text, cursor);
-							if(ch == " ") break
+							if(ch == " " || ch == "\n") break;
 							cursor--;
 						}
 					} 
@@ -314,7 +376,7 @@ function textArea(_input, _onModify, _extras = noone) constructor {
 					if(key_mod_press(CTRL)) {
 						while(cursor < string_length(_prev_text)) {
 							var ch = string_char_at(_prev_text, cursor);
-							if(ch == " ") break
+							if(ch == " " || ch == "\n") break;
 							cursor++;
 						}
 					} 
@@ -427,12 +489,12 @@ function textArea(_input, _onModify, _extras = noone) constructor {
 							}
 						}
 						
-						if(char_run <= cursor && char_run + _l >= cursor) {
+						if(char_run <= cursor && cursor <= char_run + _l) {
 							cursor_pos_x_to = ch_x + string_width(string_copy(_str, 1, cursor - char_run));
 							cursor_pos_y_to = ch_y;
 							cursor_line = i;
 						}
-						char_run += _l;	
+						char_run += _l + 1;	
 						ch_y += string_height(_str);
 					}
 					

@@ -27,17 +27,14 @@ function Node_Sampler(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) cons
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s) {
-		var x0 = xx + 8 * _s;
-		var x1 = xx + (w - 8) * _s;
-		var y0 = yy + 20 + 8 * _s;
-		var y1 = yy + (h - 8) * _s;
+		var bbox = drawGetBbox(xx, yy, _s);
 		
 		if(y1 <= y0) return;
 		
 		var c = outputs[| 0].getValue();
 		if(is_array(c)) c = c[0];
-			
+		
 		draw_set_color(c);
-		draw_rectangle(x0, y0, x1, y1, 0);
+		draw_rectangle(bbox.x0, bbox.y0, bbox.x1, bbox.y1, 0);
 	}
 }

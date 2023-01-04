@@ -5,7 +5,7 @@
   "isDnD": false,
   "isCompatibility": false,
   "parent": {
-    "name": "input",
-    "path": "folders/nodes/data/input.yy",
+    "name": "IO",
+    "path": "folders/nodes/data/IO.yy",
   },
 }

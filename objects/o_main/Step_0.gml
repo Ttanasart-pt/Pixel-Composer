@@ -9,6 +9,8 @@
 #endregion
 
 #region animation
+	ANIMATOR.frame_progress = false;
+	
 	if(ANIMATOR.is_playing) {
 		ANIMATOR.time_since_last_frame += ANIMATOR.framerate * (delta_time / 1000000);
 		
@@ -24,15 +26,15 @@
 				ANIMATOR.rendering = false;
 			} else
 				ANIMATOR.setFrame(0);
+		} else {
+			var _c = ANIMATOR.current_frame;
+			ANIMATOR.current_frame = round(ANIMATOR.real_frame);
+			ANIMATOR.frame_progress = _c != ANIMATOR.current_frame;
 		}
 	} else {
 		ANIMATOR.setFrame(ANIMATOR.real_frame);
 		ANIMATOR.time_since_last_frame = 0;
 	}
-	
-	var _c = ANIMATOR.current_frame;
-	ANIMATOR.current_frame = round(ANIMATOR.real_frame);
-	ANIMATOR.frame_progress = _c != ANIMATOR.current_frame;
 	
 	//if(ANIMATOR.frame_progress)
 	//	UPDATE = RENDER_TYPE.full;

@@ -2,7 +2,7 @@
 #region draw
 	var yy = dialog_y;
 	
-	draw_sprite_stretched(THEME.textbox, 1, dialog_x, dialog_y, dialog_w, dialog_h);
+	draw_sprite_stretched(THEME.textbox, 3, dialog_x, dialog_y, dialog_w, dialog_h);
 	
 	for(var i = 0; i < array_length(menu); i++) {
 		if(!is_array(menu[i])) {
@@ -56,6 +56,7 @@
 				}
 				
 				if(sHOVER && point_in_rectangle(mouse_mx, mouse_my, _bx - ui(14), _by - ui(14), _bx + ui(14), _by + ui(14))) {
+					draw_sprite_stretched_ext(THEME.textbox, 3, _bx - ui(14), _by - ui(14), ui(28), ui(28), COLORS.dialog_menubox_highlight, 1);
 					draw_sprite_stretched_ext(THEME.textbox, 1, _bx - ui(14), _by - ui(14), ui(28), ui(28), COLORS.dialog_menubox_highlight, 1);
 					
 					if(mouse_press(mb_left, sFOCUS)) {
@@ -87,4 +88,6 @@
 		
 		yy += _h;
 	}
+	
+	draw_sprite_stretched(THEME.textbox, 1, dialog_x, dialog_y, dialog_w, dialog_h);
 #endregion

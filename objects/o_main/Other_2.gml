@@ -16,6 +16,7 @@
 	__initAssets();
 	__initPresets();
 	__initFontFolder();
+	__initLua();
 	
 	PREF_LOAD();
 	loadFonts();

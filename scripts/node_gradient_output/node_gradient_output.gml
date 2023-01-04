@@ -29,12 +29,9 @@ function Node_Gradient_Out(_x, _y, _group = -1) : Node(_x, _y, _group) construct
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s) {
-		var x0 = xx + 8 * _s;
-		var x1 = xx + (w - 8) * _s;
-		var y0 = yy + 20 + 8 * _s;
-		var y1 = yy + (h - 8) * _s;
+		var bbox = drawGetBbox(xx, yy, _s);
+		if(bbox.h < 1) return;
 		
-		if(y1 > y0)
-			draw_gradient(x0, y0, x1 - x0, y1 - y0, inputs[| 0].getValue(), inputs[| 0].extra_data[| 0]);
+		draw_gradient(bbox.x0, bbox.y0, bbox.w, bbox.h, inputs[| 0].getValue(), inputs[| 0].extra_data[| 0]);
 	}
 }

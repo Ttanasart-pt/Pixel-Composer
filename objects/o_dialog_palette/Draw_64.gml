@@ -84,6 +84,7 @@ if palette == 0 exit;
 	var hh = (pl_h + ui(6)) * row;
 	dialog_h = ui(408) + hh;
 	
+	draw_sprite_stretched(THEME.textbox, 3, pl_x - ui(6), pl_y - ui(6), pl_w + ui(12), hh + ui(6));
 	draw_sprite_stretched(THEME.textbox, 0, pl_x - ui(6), pl_y - ui(6), pl_w + ui(12), hh + ui(6));
 	
 	#region tools

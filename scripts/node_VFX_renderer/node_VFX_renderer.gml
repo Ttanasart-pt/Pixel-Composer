@@ -81,5 +81,4 @@ function Node_VFX_Renderer(_x, _y, _group = -1) : Node(_x, _y, _group) construct
 		for(var i = input_index; i < ds_list_size(_inputs); i++)
 			createNewInput();
 	}
-	
 }

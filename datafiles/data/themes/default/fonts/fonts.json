@@ -33,5 +33,10 @@
         "path": "./NotoSans-SemiBold.ttf",
         "size": 9,
         "range": [32, 127]
+    },
+    "code": {
+        "path": "./FiraCode-Medium.ttf",
+        "size": 12,
+        "range": [32, 127]
     }
 }

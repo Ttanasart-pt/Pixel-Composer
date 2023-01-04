@@ -23,7 +23,7 @@ function Node_create_Text_File_Read_path(_x, _y, path) {
 }
 
 function Node_Text_File_Read(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
-	name = "Text file";
+	name = "Text in";
 	color = COLORS.node_blend_input;
 	previewable = false;
 	
@@ -86,13 +86,11 @@ function Node_Text_File_Read(_x, _y, _group = -1) : Node(_x, _y, _group) constru
 	}
 	
 	function onDrawNode(xx, yy, _mx, _my, _s) {
-		draw_set_text(f_h5, fa_center, fa_center, COLORS._main_text);
-		var cx = xx + w / 2 * _s;
-		var cy = yy + 10 + h / 2 * _s;
+		var bbox = drawGetBbox(xx, yy, _s);
 		
 		var str = filename_name(path_current);
-		var ss = min((w - 8) * _s / string_width(str), (h - 24) * _s / string_height(str));
-		
-		draw_text_transformed(cx, cy, str, ss, ss, 0);
+		draw_set_text(f_h5, fa_center, fa_center, COLORS._main_text);
+		var ss	= string_scale(str, bbox.w, bbox.h);
+		draw_text_transformed(bbox.xc, bbox.yc, str, ss, ss, 0);
 	}
 }

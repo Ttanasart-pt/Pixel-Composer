@@ -129,8 +129,10 @@ function Panel_Inspector() : PanelContent() constructor {
 					}
 					continue;
 				} else if(is_struct(jun_disp) && instanceof(jun_disp) == "Inspector_Custom_Renderer") {
-					jun_disp.draw(ui(6), yy, con_w - ui(12), _m, _hover, pFOCUS);
-					hh += jun_disp.h + ui(20);
+					jun_disp.rx = ui(16) + x;
+					jun_disp.ry = top_bar_h + y;
+					
+					hh += jun_disp.draw(ui(6), yy, con_w - ui(12), _m, _hover, pFOCUS) + ui(8);
 					continue;
 				}
 				jun = inspecting.inputs[| inspecting.input_display_list[i]];
@@ -304,6 +306,10 @@ function Panel_Inspector() : PanelContent() constructor {
 										break;
 									case VALUE_DISPLAY.puppet_control :
 										widH = jun.editWidget.draw(editBoxX, editBoxY, editBoxW, jun.showValue(), _m, ui(16) + x, top_bar_h + y);
+										break;
+									case VALUE_DISPLAY.kernel :
+										var ebH = jun.editWidget.draw(editBoxX, editBoxY, editBoxW, editBoxH, jun.showValue(), _m);
+										widH = lineBreak? ebH : ebH - lb_h;
 										break;
 								}
 								break;

@@ -24,10 +24,9 @@ function Node_String_Trim(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) 
 		if(is_array(str) && array_length(str)) 
 			str = str[0];
 		
-		var cx = xx + w / 2 * _s;
-		var cy = yy + 10 + h / 2 * _s;
-		
 		draw_set_text(f_h5, fa_center, fa_center, COLORS._main_text);
-		draw_text_cut(cx, cy, str, w - ui(6), _s);
+		var bbox = drawGetBbox(xx, yy, _s);
+		var ss	= string_scale(str, bbox.w, bbox.h);
+		draw_text_transformed(bbox.xc, bbox.yc, str, ss, ss, 0);
 	}
 }

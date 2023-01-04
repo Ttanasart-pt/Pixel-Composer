@@ -185,11 +185,8 @@ function Node_Statistic(_x, _y, _group = -1) : Node(_x, _y, _group) constructor 
 			case STAT_OPERATOR._max : str = "Max"; break;
 		}
 		
-		var _ss = min((w - 16) * _s / string_width(str), (h - 18) * _s / string_height(str));
-		
-		if(_s * w > 48)
-			draw_text_transformed(xx + w / 2 * _s, yy + 10 + h / 2 * _s, str, _ss, _ss, 0);
-		else 
-			draw_text_transformed(xx + w / 2 * _s, yy + h / 2 * _s, str, _ss, _ss, 0);
+		var bbox = drawGetBbox(xx, yy, _s);
+		var ss	= string_scale(str, bbox.w, bbox.h);
+		draw_text_transformed(bbox.xc, bbox.yc, str, ss, ss, 0);
 	}
 }
