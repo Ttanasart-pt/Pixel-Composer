@@ -118,7 +118,7 @@ function __part(_node) constructor {
 			rot = point_direction(xp, yp, x, y);
 		else
 			rot += rot_s;
-		alp_draw = alp * eval_bezier_cubic(1 - life / life_total, alp_fade[0], alp_fade[1], alp_fade[2], alp_fade[3]);
+		alp_draw = alp * eval_curve_bezier_cubic_x(alp_fade, 1 - life / life_total);
 		
 		if(step_int > 0 && safe_mod(life, step_int) == 0) 
 			node.onPartStep(self);

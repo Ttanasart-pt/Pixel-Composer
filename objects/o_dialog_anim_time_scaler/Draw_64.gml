@@ -39,7 +39,7 @@ if !ready exit;
 				if(!in.animator.is_anim) continue;
 				for(var j = 0; j < ds_list_size(in.animator.values); j++) {
 					var t = in.animator.values[| j];
-					t.time = t.ratio * len;
+					t.time = t.ratio * scale_to;
 				}
 			}
 		}

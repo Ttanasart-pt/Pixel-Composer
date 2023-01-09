@@ -7,7 +7,7 @@ function Node_Noise(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constr
 	inputs[| 0] = nodeValue(0, "Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, def_surf_size2 )
 		.setDisplay(VALUE_DISPLAY.vector);
 	
-	inputs[| 1] = nodeValue(1, "Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, irandom(99999));
+	inputs[| 1] = nodeValue(1, "Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, irandom(99999));
 	
 	input_display_list = [
 		["Output",	false], 0, 

@@ -77,9 +77,9 @@ function __test_load_current_collections() {
 			if(++ind > col) {
 				ind = 0;
 				xx = 0;
-				yy += 144;
+				yy += 160;
 			} else 
-				xx += 144;
+				xx += 160;
 		}
 			
 		for( var i = 0; i < ds_list_size(_st.subDir); i++ )

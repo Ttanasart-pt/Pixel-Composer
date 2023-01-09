@@ -15,7 +15,7 @@ const mat3 prewit = mat3( -1., -1., -1.,
 						   0.,  0.,  0., 
 						   1.,  1.,  1);
 
-const mat3 laplac = mat3(  1.,   1.,  1., 
+const mat3 laplac = mat3(  1.,   1.,  1.,
 						   1.,  -8.,  1., 
 						   1.,   1.,  1);
 						   

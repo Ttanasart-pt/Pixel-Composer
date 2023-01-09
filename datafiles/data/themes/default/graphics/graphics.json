@@ -382,6 +382,13 @@
         "yorigin": 16,
         "slice": null
     },
+    "view_group": {
+        "path": "./icon/s_view_group.png",
+        "subimages": 2,
+        "xorigin": 24,
+        "yorigin": 24,
+        "slice": null
+    },
     "view_mode": {
         "path": "./icon/s_view_mode_strip2.png",
         "subimages": 2,
@@ -439,8 +446,8 @@
         "slice": null
     },
     "prop_on_end": {
-        "path": "./inspector/s_prop_on_end_strip3.png",
-        "subimages": 3,
+        "path": "./inspector/s_prop_on_end.png",
+        "subimages": 4,
         "xorigin": 16,
         "yorigin": 16,
         "slice": null
@@ -816,6 +823,19 @@
             "right": 5,
             "top": 5,
             "bottom": 5
+        }
+    },
+    "key_display": {
+        "path": "./UI/s_key_display.png",
+        "subimages": 1,
+        "xorigin": 0,
+        "yorigin": 0,
+        "slice": {
+            "enabled": true,
+            "left": 10,
+            "right": 10,
+            "top": 10,
+            "bottom": 10
         }
     },
     "toolbar_shadow": {

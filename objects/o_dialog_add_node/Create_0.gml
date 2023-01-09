@@ -146,7 +146,7 @@ event_inherited();
 		var hh = 0;
 		var _hover = sHOVER && content_pane.hover;
 		
-		if(ADD_NODE_MODE == 0) {
+		if(PREF_MAP[? "dialog_add_node_view"] == 0) {
 			var grid_size  = ui(64);
 			var grid_width = ui(80);
 			var grid_space = ui(12);
@@ -160,6 +160,8 @@ event_inherited();
 			for(var index = 0; index < node_count; index++) {
 				var _node = node_list[| index];
 				if(is_string(_node)) {
+					if(!PREF_MAP[? "dialog_add_node_grouping"])
+						continue;
 					hh += curr_height;
 					yy += curr_height;
 					
@@ -216,7 +218,7 @@ event_inherited();
 			
 			hh += curr_height;
 			yy += curr_height;
-		} else if(ADD_NODE_MODE == 1) {
+		} else if(PREF_MAP[? "dialog_add_node_view"] == 1) {
 			var list_width  = content_pane.surface_w;
 			var list_height = ui(28);
 			var yy         = _y + list_height / 2;
@@ -226,6 +228,9 @@ event_inherited();
 				var _node = node_list[| i];
 				
 				if(is_string(_node)) {
+					if(!PREF_MAP[? "dialog_add_node_grouping"])
+						continue;
+						
 					hh += ui(8);
 					yy += ui(8);
 					
@@ -359,7 +364,7 @@ event_inherited();
 		var hh = 0;
 		var _hover = sHOVER && search_pane.hover;
 		
-		if(ADD_NODE_MODE == 0) {
+		if(PREF_MAP[? "dialog_add_node_view"] == 0) {
 			var grid_size = ui(64);
 			var grid_width = ui(80);
 			var grid_space = ui(16);
@@ -434,7 +439,7 @@ event_inherited();
 					yy += hght;
 				}
 			}
-		} else if(ADD_NODE_MODE == 1) {
+		} else if(PREF_MAP[? "dialog_add_node_view"] == 1) {
 			var list_width  = search_pane.surface_w;
 			var list_height = ui(28);
 			var yy = _y + list_height / 2;

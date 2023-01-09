@@ -12,11 +12,12 @@ function Node_Array(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 	}
 	if(!LOADING && !APPENDING) createNewInput();
 	
+	input_fix_len = 0;
+	data_length = 1;
+	
 	outputs[| 0] = nodeValue(0, "Array", self, JUNCTION_CONNECT.output, VALUE_TYPE.any, []);
 	
-	static updateValueFrom = function(index) {
-		if(LOADING || APPENDING) return;
-		
+	static refreshDynamicInput = function() {
 		var _l = ds_list_create();
 		for( var i = 0; i < ds_list_size(inputs); i++ ) {
 			if(inputs[| i].value_from)
@@ -32,6 +33,12 @@ function Node_Array(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 		inputs = _l;
 		
 		createNewInput();
+	}
+	
+	static onValueFromUpdate = function(index) {
+		if(LOADING || APPENDING) return;
+		
+		refreshDynamicInput();
 	}
 	
 	static update = function() {
@@ -51,7 +58,7 @@ function Node_Array(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 	static postDeserialize = function() {
 		var _inputs = load_map[? "inputs"];
 		
-		for(var i = 0; i < ds_list_size(_inputs); i++)
+		for(var i = input_fix_len; i < ds_list_size(_inputs); i += data_length)
 			createNewInput();
 	}
 }

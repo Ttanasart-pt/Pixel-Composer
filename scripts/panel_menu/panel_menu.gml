@@ -88,6 +88,15 @@ function Panel_Menu() : PanelContent() constructor {
 			[ "Update all current collections", function() { 
 				__test_update_current_collections();
 			}],
+			-1,
+			[ "Key displayer", function() { 
+				if(instance_exists(addon_key_displayer)) {
+					instance_destroy(addon_key_displayer);
+					return;
+				}
+				
+				instance_create_depth(0, 0, 0, addon_key_displayer);
+			}],
 		]]);
 	}
 	
@@ -221,6 +230,28 @@ function Panel_Menu() : PanelContent() constructor {
 			var er_x = nx0 + ui(8) + wr_w + ui(16);
 			draw_sprite_ui_uniform(THEME.noti_icon_error, error_amo? 1 : 0, er_x + ui(10), ny0);
 			draw_text(er_x + ui(28), ny0, error_amo);
+			
+			nx0 += nw + ui(8);
+		#endregion
+		
+		#region window
+			var wh = ui(32);
+			var cc = c_white;
+			
+			with(addon) {
+				draw_set_text(f_p0, fa_center, fa_center, COLORS._main_text);
+				var ww = string_width(name) + ui(16);
+				
+				if(other.pHOVER && point_in_rectangle(other.mx, other.my, nx0, ny0 - wh / 2, nx0 + ww, ny0 + wh / 2)) {
+					draw_sprite_stretched_ext(THEME.menu_button, 1, nx0, ny0 - wh / 2, ww, wh, cc, 1);
+					if(mouse_press(mb_left, other.pFOCUS)) 
+						instance_destroy();
+				} else 
+					draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, nx0, ny0 - wh / 2, ww, wh, cc, 1);
+				draw_text(nx0 + ww / 2, ny0, name);
+				
+				nx0 += ww + ui(4);
+			}
 		#endregion
 		
 		draw_set_text(f_p0, fa_right, fa_center, COLORS._main_text_sub);

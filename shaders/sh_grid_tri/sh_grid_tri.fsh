@@ -13,6 +13,9 @@ uniform vec2  scale;
 uniform float angle;
 uniform float thick;
 
+uniform vec4 color0;
+uniform vec4 color1;
+
 #define PI 3.1415926535897
 
 // triangle rotation matrices
@@ -44,8 +47,7 @@ void main() {
 	_pos.x = pos.x * ratio * cos(angle) - pos.y * sin(angle);
 	_pos.y = pos.x * ratio * sin(angle) + pos.y * cos(angle);
     vec3 color = triangleGrid(_pos, 0.1, 0., thick / 100.) * vec3(0.8, 0.8, 0.85);
-	color = vec3((color[0] + color[1] + color[2]) / 3.);
-    color = step(0.75, 1. - color);
+	float grey = (color[0] + color[1] + color[2]) / 3.;
 	
-	gl_FragColor = vec4(color ,1.0);
+	gl_FragColor = (grey < 0.5)? color0 : color1;
 }

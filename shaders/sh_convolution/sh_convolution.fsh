@@ -21,5 +21,5 @@ void main() {
 		     + kernel[7] * texture2D( gm_BaseTexture, v_vTexcoord + vec2(    0., tex.y) )
 		     + kernel[8] * texture2D( gm_BaseTexture, v_vTexcoord + vec2( tex.x, tex.y) );
 	
-    gl_FragColor = c;
+    gl_FragColor = vec4(c.rgb, 1.);
 }

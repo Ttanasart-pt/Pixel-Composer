@@ -13,8 +13,12 @@ uniform int shiftAxis;
 
 uniform int useSampler;
 
+float randomSeed (in vec2 st, float _seed) {
+    return fract(sin(dot(st.xy, vec2(12.9898, 78.233))) * (43758.5453123 + _seed));
+}
+
 float random (in vec2 st) {
-    return fract(sin(dot(st.xy, vec2(12.9898 * seed, 78.233))) * 43758.5453123);
+    return mix(randomSeed(st, floor(seed)), randomSeed(st, floor(seed) + 1.), fract(seed));
 }
 
 void main() {
@@ -25,13 +29,12 @@ void main() {
 		pos.x += random(vec2(0., floor(pos.y))) * shift;
 	else if(shiftAxis == 1)
 		pos.y += random(vec2(0., floor(pos.x))) * shift;
-		
-	vec2 i = floor(pos);
-    float n = random(i);
 	
-	if(useSampler == 0)
+	if(useSampler == 0) {
+		vec2 i = floor(pos);
+		float n = random(i);
 		gl_FragColor = vec4(vec3(n), 1.0);
-	else {
+	} else {
 		vec2 samPos = floor(pos) / scale + 0.5 / scale;
 		gl_FragColor = texture2D( gm_BaseTexture, samPos );
 	}

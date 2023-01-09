@@ -238,9 +238,10 @@ function Panel_Preview() : PanelContent() constructor {
 		var node = getNodePreview();
 		if(node == noone) return;
 		
-		node.preview_channel = index; 
+		node.preview_channel = sbChannelIndex[index]; 
 	});
 	
+	sbChannelIndex = [];
 	sbChannel.align = fa_left;
 	function drawNodeChannel(_x, _y) {
 		var _node = getNodePreview();
@@ -248,13 +249,17 @@ function Panel_Preview() : PanelContent() constructor {
 		if(ds_list_size(_node.outputs) < 2) return;
 		
 		var chName = [];
+		sbChannelIndex = [];
+		
 		var ww = ui(96);
 		var hh = toolbar_height - ui(12);
 		draw_set_text(f_p0, fa_center, fa_center);
 		
 		for( var i = 0; i < ds_list_size(_node.outputs); i++ ) {
 			if(_node.outputs[| i].type != VALUE_TYPE.surface) continue;
+			
 			array_push(chName, _node.outputs[| i].name);
+			array_push(sbChannelIndex, i);
 			ww = max(ww, string_width(_node.outputs[| i].name) + ui(40));
 		}
 		sbChannel.data_list = chName;

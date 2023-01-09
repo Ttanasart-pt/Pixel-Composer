@@ -36,7 +36,8 @@ function Node_Json_File_Read(_x, _y, _group = -1) : Node(_x, _y, _group) constru
 	outputs[| 0] = nodeValue(0, "Path", self, JUNCTION_CONNECT.output, VALUE_TYPE.path, "")
 		.setVisible(true, true);
 	
-	input_index = ds_list_size(inputs);
+	data_length = 1;
+	input_fix_len = ds_list_size(inputs);
 	
 	static createNewInput = function() {
 		var index = ds_list_size(inputs);
@@ -62,15 +63,12 @@ function Node_Json_File_Read(_x, _y, _group = -1) : Node(_x, _y, _group) constru
 		return false;
 	}
 	
-	static updateValue = function(index) {
-		if(index < input_index) return;
-		if(LOADING || APPENDING) return;
-		
+	static refreshDynamicInput = function() {
 		var _in = ds_list_create();
 		var _ot = ds_list_create();
 		
 		for( var i = 0; i < ds_list_size(inputs); i++ ) {
-			if(i < input_index || inputs[| i].getValue() != "") {
+			if(i < input_fix_len || inputs[| i].getValue() != "") {
 				ds_list_add(_in, inputs[| i]);
 				ds_list_add(_ot, outputs[| i]);
 			} else {
@@ -91,6 +89,13 @@ function Node_Json_File_Read(_x, _y, _group = -1) : Node(_x, _y, _group) constru
 		outputs = _ot;
 		
 		createNewInput();
+	}
+	
+	static onValueUpdate = function(index) {
+		if(index < input_fix_len) return;
+		if(LOADING || APPENDING) return;
+		
+		refreshDynamicInput();
 	}
 	
 	function updatePaths(path) {
@@ -120,7 +125,7 @@ function Node_Json_File_Read(_x, _y, _group = -1) : Node(_x, _y, _group) constru
 		if(path == "") return;
 		updatePaths(path);
 		
-		for( var i = 1; i < ds_list_size(inputs) - 1; i++ ) {
+		for( var i = input_fix_len; i < ds_list_size(inputs) - 1; i++ ) {
 			var key = inputs[| i].getValue();
 			
 			outputs[| i].name = key;
@@ -150,7 +155,11 @@ function Node_Json_File_Read(_x, _y, _group = -1) : Node(_x, _y, _group) constru
 	static postDeserialize = function() {
 		var _inputs = load_map[? "inputs"];
 		
-		for(var i = input_index; i < ds_list_size(_inputs); i++)
+		for(var i = input_fix_len; i < ds_list_size(_inputs); i += data_length)
 			createNewInput();
+	}
+	
+	static doApplyDeserialize = function() {
+		refreshDynamicInput();
 	}
 }

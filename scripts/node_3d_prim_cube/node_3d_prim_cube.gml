@@ -48,15 +48,28 @@ function Node_3D_Cube(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) cons
 	inputs[| 19] = nodeValue(19, "Object position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.vector);
 	
+	inputs[| 20] = nodeValue(20, "Projection", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+		.setDisplay(VALUE_DISPLAY.enum_button, [ "Orthographic", "Perspective" ]);
+		
+	inputs[| 21] = nodeValue(21, "Field of view", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 60)
+		.setDisplay(VALUE_DISPLAY.slider, [ 0, 90, 1 ]);
+	
 	input_display_list = [1,
 		["Object transform",false], 19, 18, 12,
-		["Render",			false], 2, 4, 
+		["Camera",			false], 20, 21, 2, 4, 
 		["Texture",			 true],	0, 5, 6, 7, 8, 9, 10, 11,
 		["Light",			false], 13, 14, 15, 16, 17,
 	];
 	
 	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
+	
 	outputs[| 1] = nodeValue(1, "3D object", self, JUNCTION_CONNECT.output, VALUE_TYPE.d3object, function(index) { return submit_vertex(index); });
+	
+	outputs[| 2] = nodeValue(2, "Normal pass", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
+	
+	output_display_list = [
+		0, 2, 1
+	]
 	
 	_3d_node_init(1, /*Transform*/ 2, 18, 4);
 	
@@ -115,10 +128,21 @@ function Node_3D_Cube(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) cons
 		
 		var _usetex = _data[5];
 		
+		var _proj = _data[20];
+		var _fov  = _data[21];
+		
+		inputs[| 21].setVisible(_proj);
+		
 		for(var i = 6; i <= 11; i++) inputs[| i].setVisible(true, _usetex);
 		inputs[| 0].setVisible(true, !_usetex);
 		
-		_3d_pre_setup(_outSurf, _dim, _pos, _sca, _ldir, _lhgt, _lint, _lclr, _aclr, _lpos, _lrot, _lsca);
+		var pass = "diff";
+		switch(_output_index) {
+			case 0 : pass = "diff" break;
+			case 2 : pass = "norm" break;
+		}
+		
+		_3d_pre_setup(_outSurf, _dim, _pos, _sca, _ldir, _lhgt, _lint, _lclr, _aclr, _lpos, _lrot, _lsca, _proj, _fov, pass);
 		
 		if(_usetex) {
 			for(var i = 0; i < 6; i++) {

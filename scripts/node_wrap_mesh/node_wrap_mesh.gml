@@ -47,6 +47,12 @@ function Node_Mesh_Warp(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) co
 	
 	attributes[? "pin"] = ds_map_create();
 	
+	static onValueFromUpdate = function(index) {
+		if(index == 0 && ds_list_empty(data.tris)) {
+			setTriangle();
+		}
+	}
+	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		for(var i = 0; i < ds_list_size(data.tris); i++) {
 			data.tris[| i].drawPoints(_x, _y, _s);
@@ -434,9 +440,12 @@ function Node_Mesh_Warp(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) co
 	
 	static process_data = function(_outSurf, _data, _output_index, _array_index) {
 		var _inSurf		= _data[0];
+		if(!is_surface(_inSurf)) return _outSurf;
 		
 		reset();
 		control();
+		
+		_outSurf = surface_verify(_outSurf, surface_get_width(_inSurf), surface_get_height(_inSurf));
 		
 		surface_set_target(_outSurf);
 		draw_clear_alpha(0, 0);

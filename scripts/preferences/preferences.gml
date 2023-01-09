@@ -46,6 +46,9 @@
 	PREF_MAP[? "graph_zoom_smoooth"] = 4;
 	
 	PREF_MAP[? "theme"] = "default";
+	
+	PREF_MAP[? "dialog_add_node_grouping"] = true;
+	PREF_MAP[? "dialog_add_node_view"] = 0;
 #endregion
 
 #region hotkeys	

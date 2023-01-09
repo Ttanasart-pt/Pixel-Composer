@@ -5,20 +5,20 @@ function Node_Lua_Global(_x, _y, _group = -1) : Node(_x, _y, _group) constructor
 	
 	min_h = 0;
 		
-	inputs[| 0]  = nodeValue(2, "Lua code", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "")
+	inputs[| 0]  = nodeValue(0, "Lua code", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "")
 		.setDisplay(VALUE_DISPLAY.code);
 		
-	inputs[| 1]  = nodeValue(3, "Run order", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+	inputs[| 1]  = nodeValue(1, "Run order", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "On start", "Every frame" ]);
 	
-	inputs[| 2]  = nodeValue(4, "Execution thread", self, JUNCTION_CONNECT.input, VALUE_TYPE.node, noone)
+	inputs[| 2]  = nodeValue(2, "Execution thread", self, JUNCTION_CONNECT.input, VALUE_TYPE.node, noone)
 		.setVisible(false, true);
 	
 	outputs[| 0] = nodeValue(0, "Execution thread", self, JUNCTION_CONNECT.output, VALUE_TYPE.node, noone );
 	
 	input_display_list = [ 
 		["Main",		false], 2, 1, 0,
-	]
+	];
 	
 	lua_state = lua_create();
 	
@@ -44,12 +44,12 @@ function Node_Lua_Global(_x, _y, _group = -1) : Node(_x, _y, _group) constructor
 		return inputs[| 2].value_from.node.getState();
 	}
 	
-	static updateValueFrom = function(index) {
-		compiled = false;
+	static onValueFromUpdate = function(index) {
+		if(index == 0 || index == 2) compiled = false;
 	}
 	
-	static updateValue = function(index) {
-		compiled = false;
+	static onValueUpdate = function(index) {
+		if(index == 0 || index == 2) compiled = false;
 	}
 	
 	static update = function() {

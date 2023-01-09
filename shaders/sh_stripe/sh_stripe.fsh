@@ -10,6 +10,9 @@ uniform vec4 gradient_color[16];
 uniform float gradient_time[16];
 uniform int gradient_keys;
 
+uniform vec4 color0;
+uniform vec4 color1;
+
 uniform vec2 dimension;
 uniform vec2 position;
 uniform float angle;
@@ -100,10 +103,7 @@ void main() {
 	
 	if(gradient_use == 0) {
 		if(blend == 0) {
-			if(_s > .5)
-				gl_FragColor = vec4(vec3(0.), 1.);
-			else
-				gl_FragColor = vec4(vec3(1.), 1.);
+			gl_FragColor = _s > .5? color0 : color1;
 		} else
 			gl_FragColor = vec4(vec3(sin(_s * 2. * PI) * 0.5 + 0.5), 1.);
 	} else {

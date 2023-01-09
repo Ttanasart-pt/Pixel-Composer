@@ -48,6 +48,8 @@ function draw_code(_x, _y, str) {
 	
 	for( var i = 0; i < amo; i++ ) {
 		var _w = stringSplice[i];
+		_w = string_trim_end(_w);
+		
 		isStr = !isStr;
 		
 		if(isStr) {

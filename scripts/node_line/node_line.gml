@@ -15,7 +15,7 @@ function Node_Line(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constru
 	inputs[| 4] = nodeValue(4, "Wiggle", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
 		.setDisplay(VALUE_DISPLAY.slider, [0, 16, 0.01]);
 	
-	inputs[| 5] = nodeValue(5, "Random seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0);
+	inputs[| 5] = nodeValue(5, "Random seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0);
 	
 	inputs[| 6] = nodeValue(6, "Rotation", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.rotation);
@@ -32,7 +32,7 @@ function Node_Line(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constru
 	inputs[| 10] = nodeValue(10, "Color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white)
 		.setDisplay(VALUE_DISPLAY.gradient);
 	
-	inputs[| 11] = nodeValue(11, "Width over length", self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, [1, 1, 1, 1]);
+	inputs[| 11] = nodeValue(11, "Width over length", self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_11);
 		
 	input_display_list = [
 		["Output",			true],	0, 1, 
@@ -69,6 +69,7 @@ function Node_Line(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constru
 		inputs[| 6].setVisible(!_use_path);
 		
 		random_set_seed(_sed);
+		var _sedIndex = 0;
 		
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1]);
 		
@@ -97,12 +98,15 @@ function Node_Line(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constru
 					
 					if(_total < _rtLen) {
 						var _d = point_direction(_ox, _oy, _nx, _ny);
-						_nx += lengthdir_x(random(_wig) * choose(-1, 1), _d + 90);
-						_ny += lengthdir_y(random(_wig) * choose(-1, 1), _d + 90);
+						_nx += lengthdir_x(random1D(_sed + _sedIndex, -_wig, _wig), _d + 90); 
+						_sedIndex++;
+						
+						_ny += lengthdir_y(random1D(_sed + _sedIndex, -_wig, _wig), _d + 90); 
+						_sedIndex++;
 					}
 					
 					_nw = random_range(_wid[0], _wid[1]);
-					_nw *= eval_bezier_cubic(1 - _prog_curr, _widc[0], _widc[1], _widc[2], _widc[3]);
+					_nw *= eval_curve_bezier_cubic_x(_widc, _prog_curr);
 					
 					if(_total <= _prog_curr - _prog) {
 						_na = point_direction(_ox, _oy, _nx, _ny) + 90;
@@ -156,11 +160,14 @@ function Node_Line(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constru
 					_nx = x0 + lengthdir_x(_l * _prog_curr, _d);
 					_ny = y0 + lengthdir_y(_l * _prog_curr, _d);
 					
-					_nx += lengthdir_x(random(_wig) * choose(-1, 1), _d + 90);
-					_ny += lengthdir_y(random(_wig) * choose(-1, 1), _d + 90);
+					_nx += lengthdir_x(random1D(_sed + _sedIndex, -_wig, _wig), _d + 90);
+					_sedIndex++;
+					
+					_ny += lengthdir_y(random1D(_sed + _sedIndex, -_wig, _wig), _d + 90);
+					_sedIndex++;
 				
 					_nw = random_range(_wid[0], _wid[1]);
-					_nw *= eval_bezier_cubic(1 - _prog_curr, _widc[0], _widc[1], _widc[2], _widc[3]);
+					_nw *= eval_curve_bezier_cubic_x(_widc, _prog_curr);
 					
 					if(_prog_curr > _prog) {
 						draw_set_color(gradient_eval(_color, _prog_eli / _rtLen, ds_list_get(_col_data, 0)));

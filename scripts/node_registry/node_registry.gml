@@ -15,6 +15,8 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 	
 	function build(_x, _y, _group = PANEL_GRAPH.getCurrentContext(), _param = "") {
 		var _node = createNode[0]? new createNode[1](_x, _y, _group, _param) : createNode[1](_x, _y, _group, _param);
+		if(!_node) return noone;
+		
 		_node.doUpdate();
 		return _node;
 	}
@@ -106,6 +108,7 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 		addNodeObject(input, "Text file in",		s_node_text_file_read,	"Node_Text_File_Read",			[1, Node_Text_File_Read], ["txt"]).set_version(1080);
 		addNodeObject(input, "Text file out",		s_node_text_file_write,	"Node_Text_File_Write",			[1, Node_Text_File_Write], ["txt"]).set_version(1090);
 		addNodeObject(input, "CSV file in",			s_node_csv_file_read,	"Node_CSV_File_Read",			[1, Node_CSV_File_Read], ["comma"]).set_version(1090);
+		addNodeObject(input, "CSV file out",		s_node_csv_file_write,	"Node_CSV_File_Write",			[1, Node_CSV_File_Write], ["comma"]).set_version(1090);
 		addNodeObject(input, "JSON file in",		s_node_json_file_read,	"Node_Json_File_Read",			[1, Node_Json_File_Read]).set_version(1090);
 		addNodeObject(input, "JSON file out",		s_node_json_file_write,	"Node_Json_File_Write",			[1, Node_Json_File_Write]).set_version(1090);
 	
@@ -148,7 +151,7 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 		addNodeObject(filter, "Mirror",				s_node_mirror,			"Node_Mirror",			[1, Node_Mirror]).set_version(1070);
 		addNodeObject(filter, "Twirl",				s_node_twirl,			"Node_Twirl",			[1, Node_Twirl], ["twist"]);
 		addNodeObject(filter, "Dilate",				s_node_dilate,			"Node_Dilate",			[1, Node_Dilate], ["inflate"]);
-		addNodeObject(filter, "Displace",			s_node_displace,		"Node_Displace",		[1, Node_Displace]);
+		addNodeObject(filter, "Displace",			s_node_displace,		"Node_Displace",		[1, Node_Displace], ["distort"]);
 		addNodeObject(filter, "Texture remap",		s_node_texture_map,		"Node_Texture_Remap",	[1, Node_Texture_Remap]);
 		addNodeObject(filter, "Time remap",			s_node_time_map,		"Node_Time_Remap",		[1, Node_Time_Remap]);
 		
@@ -168,7 +171,7 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 		addNodeObject(filter, "Chromatic aberration",	s_node_chromatic_abarration,	"Node_Chromatic_Aberration",	[1, Node_Chromatic_Aberration]);
 		
 		ds_list_add(filter, "Colors");
-		addNodeObject(filter, "Replace color",		s_node_color_replace,	"Node_Color_replace",	[1, Node_Color_replace], ["isolate color", "select color"]);
+		addNodeObject(filter, "Replace color",		s_node_color_replace,	"Node_Color_replace",	[1, Node_Color_replace], ["isolate color", "select color", "palette swap"]);
 		addNodeObject(filter, "Remove color",		s_node_color_remove,	"Node_Color_Remove",	[1, Node_Color_Remove], ["delete color"]);
 		addNodeObject(filter, "Colorize",			s_node_colorize,		"Node_Colorize",		[1, Node_Colorize], ["recolor"]);
 		addNodeObject(filter, "Posterize",			s_node_posterize,		"Node_Posterize",		[1, Node_Posterize]);
@@ -205,8 +208,10 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 		addNodeObject(threeD, "3D Plane",			s_node_3d_plane,		"Node_3D_Plane",		[1, Node_3D_Plane]);
 		addNodeObject(threeD, "3D Cube",			s_node_3d_cube,			"Node_3D_Cube",			[1, Node_3D_Cube]);
 		addNodeObject(threeD, "3D Cylinder",		s_node_3d_cylinder,		"Node_3D_Cylinder",		[1, Node_3D_Cylinder]);
+		addNodeObject(threeD, "3D Sphere",			s_node_3d_sphere,		"Node_3D_Sphere",		[1, Node_3D_Sphere]).set_version(1090);
+		addNodeObject(threeD, "3D Cone",			s_node_3d_cone,			"Node_3D_Cone",			[1, Node_3D_Cone]).set_version(1090);
 		addNodeObject(threeD, "3D Extrude",			s_node_3d_extrude,		"Node_3D_Extrude",		[1, Node_3D_Extrude]);
-	
+		
 		ds_list_add(threeD, "3D operations");
 		addNodeObject(threeD, "3D Transform",		s_node_3d_transform,	"Node_3D_Transform",	[1, Node_3D_Transform]).set_version(1080);
 		addNodeObject(threeD, "3D Combine",			s_node_3d_obj_combine,	"Node_3D_Combine",		[1, Node_3D_Combine]).set_version(1080);
@@ -229,7 +234,9 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 		addNodeObject(generator, "Perlin noise",		s_node_noise_perlin,		"Node_Perlin",				[1, Node_Perlin]);
 		addNodeObject(generator, "Simplex noise",		s_node_noise_simplex,		"Node_Noise_Simplex",		[1, Node_Noise_Simplex], ["perlin"]).set_version(1080);
 		addNodeObject(generator, "Cellular noise",		s_node_noise_cell,			"Node_Cellular",			[1, Node_Cellular], ["voronoi", "worley"]);
-		addNodeObject(generator, "Grid noise",			s_node_grid_noise,			"Node_Grid_Noise",			[1, Node_Grid_Noise]);
+		addNodeObject(generator, "Square noise",		s_node_grid_noise,			"Node_Grid_Noise",			[1, Node_Grid_Noise]);
+		addNodeObject(generator, "Triangular noise",	s_node_grid_tri_noise,		"Node_Noise_Tri",			[1, Node_Noise_Tri]).set_version(1090);
+		addNodeObject(generator, "Hexagonal noise",		s_node_grid_hex_noise,		"Node_Noise_Hex",			[1, Node_Noise_Hex]).set_version(1090);
 		addNodeObject(generator, "Anisotropic noise",	s_node_noise_aniso,			"Node_Noise_Aniso",			[1, Node_Noise_Aniso]);
 		
 		ds_list_add(generator, "Patterns");
@@ -237,8 +244,8 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 		addNodeObject(generator, "Zigzag",				s_node_zigzag,				"Node_Zigzag",				[1, Node_Zigzag]);
 		addNodeObject(generator, "Checker",				s_node_checker,				"Node_Checker",				[1, Node_Checker]);
 		addNodeObject(generator, "Grid",				s_node_grid,				"Node_Grid",				[1, Node_Grid], ["tile"]);
-		addNodeObject(generator, "Grid triangle",		s_node_grid_tri,			"Node_Grid_Tri",			[1, Node_Grid_Tri]);
-		addNodeObject(generator, "Grid hexagonal",		s_node_grid_hex,			"Node_Grid_Hex",			[1, Node_Grid_Hex]);
+		addNodeObject(generator, "Triangular grid",		s_node_grid_tri,			"Node_Grid_Tri",			[1, Node_Grid_Tri]);
+		addNodeObject(generator, "Hexagonal grid",		s_node_grid_hex,			"Node_Grid_Hex",			[1, Node_Grid_Hex]);
 		
 		ds_list_add(generator, "Particles");
 		addNodeObject(generator, "Particle",			s_node_particle,			"Node_Particle",			[1, Node_Particle]);
@@ -265,33 +272,37 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 	
 	var values = ds_list_create();
 	addNodeCatagory("Values", values);
-		ds_list_add(values, "Data types");
-		addNodeObject(values, "Path",			s_node_path,			"Node_Path",			[1, Node_Path]);
-		addNodeObject(values, "Area",			s_node_area,			"Node_Area",			[1, Node_Area]);
-	
+		ds_list_add(values, "Raw data");
+		addNodeObject(values, "Number",			s_node_number,		"Node_Number",			[1, Node_Number]);
+		addNodeObject(values, "Text",			s_node_text,		"Node_String",			[1, Node_String]);
+		addNodeObject(values, "Path",			s_node_path,		"Node_Path",			[1, Node_Path]);
+		addNodeObject(values, "Area",			s_node_area,		"Node_Area",			[1, Node_Area]);
+		addNodeObject(values, "Boolean",		s_node_boolean,		"Node_Boolean",			[1, Node_Boolean]).set_version(1090);
+		
 		ds_list_add(values, "Numbers");
 		addNodeObject(values, "Number",			s_node_number,			"Node_Number",			[1, Node_Number]);
 		addNodeObject(values, "Math",			s_node_math,			"Node_Math",			[0, Node_create_Math], ["add", "subtract", "multiply", "divide", "power", "modulo", "round", "ceiling", "floor", "sin", "cos", "tan"]);
+		addNodeObject(values, "Equation",		s_node_equation,		"Node_Equation",		[1, Node_Equation]);
 		addNodeObject(values, "Compare",		s_node_compare,			"Node_Compare",			[0, Node_create_Compare], ["equal", "greater", "lesser"]);
 		addNodeObject(values, "Statistic",		s_node_statistic,		"Node_Statistic",		[0, Node_create_Statistic], ["sum", "average", "mean", "median", "min", "max"]);
 		addNodeObject(values, "Vector2",		s_node_vec2,			"Node_Vector2",			[1, Node_Vector2]);
 		addNodeObject(values, "Vector3",		s_node_vec3,			"Node_Vector3",			[1, Node_Vector3]);
 		addNodeObject(values, "Vector4",		s_node_vec4,			"Node_Vector4",			[1, Node_Vector4]);
 		addNodeObject(values, "Vector split",	s_node_vec_split,		"Node_Vector_Split",	[1, Node_Vector_Split]);
-	
+		
 		ds_list_add(values, "Texts");
 		addNodeObject(values, "Text",			s_node_text,			"Node_String",			[1, Node_String]);
 		addNodeObject(values, "Unicode",		s_node_unicode,			"Node_Unicode",			[1, Node_Unicode]);
 		addNodeObject(values, "Split text",		s_node_text_splice,		"Node_String_Split",	[1, Node_String_Split]);
 		addNodeObject(values, "Trim text",		s_node_text_trim,		"Node_String_Trim",		[1, Node_String_Trim]).set_version(1080);
-	
+		
 		ds_list_add(values, "Arrays");
 		addNodeObject(values, "Array create",		s_node_array,			"Node_Array",			[1, Node_Array]);
 		addNodeObject(values, "Array create range",	s_node_array_range,		"Node_Array_Range",		[1, Node_Array_Range]);
 		addNodeObject(values, "Array add",			s_node_array_add,		"Node_Array_Add",		[1, Node_Array_Add]);
 		addNodeObject(values, "Array length",		s_node_array_length,	"Node_Array_Length",	[1, Node_Array_Length]);
 		addNodeObject(values, "Array get",			s_node_array_get,		"Node_Array_Get",		[1, Node_Array_Get]);
-	
+		
 	var color = ds_list_create();
 	addNodeCatagory("Color", color);
 		ds_list_add(color, "Colors");

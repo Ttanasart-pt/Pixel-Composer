@@ -12,7 +12,7 @@ function Node_Wiggler(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) cons
 	inputs[| 1] = nodeValue(1, "Frequency", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 4 )
 		.setDisplay(VALUE_DISPLAY.slider, [1, 32, 1]);
 	
-	inputs[| 2] = nodeValue(2, "Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, irandom(9999999) );
+	inputs[| 2] = nodeValue(2, "Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, irandom(9999999) );
 	
 	inputs[| 3] = nodeValue(3, "Display", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1 )
 		.setDisplay(VALUE_DISPLAY.enum_scroll, ["Number", "Graph"])
@@ -90,7 +90,7 @@ function Node_Wiggler(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) cons
 				var ox, oy;
 				for( var i = 0; i < 64; i++ ) {
 					var _x = x0 + i * lw;
-					var _y = yc - (random_value[i] - val) / (_ran * 2) * hh;
+					var _y = yc - (random_value[i] - val) / _ran * hh;
 					if(i)
 						draw_line(ox, oy, _x, _y);
 					

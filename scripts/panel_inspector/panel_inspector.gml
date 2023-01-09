@@ -91,6 +91,7 @@ function Panel_Inspector() : PanelContent() constructor {
 			if(inspecting.input_display_list == -1) {
 				jun = inspecting.inputs[| i];
 			} else {
+				if(i >= array_length(inspecting.input_display_list)) break;
 				var jun_disp = inspecting.input_display_list[i];
 				if(is_array(jun_disp)) {
 					var txt  = jun_disp[0];
@@ -149,18 +150,21 @@ function Panel_Inspector() : PanelContent() constructor {
 			var lb_y = yy + lb_h / 2;
 			
 			var butx = ui(16);
-			var index = jun.value_from == noone? jun.animator.is_anim : 2;
-			draw_sprite_ui_uniform(THEME.animate_clock, index, butx, lb_y, 1,, 0.8);
-			if(_hover && point_in_circle(_m[0], _m[1], butx, lb_y, ui(10))) {
-				draw_sprite_ui_uniform(THEME.animate_clock, index, butx, lb_y, 1,, 1);
-				TOOLTIP = "Toggle animation";
+			
+			if(jun.isAnimable()) {
+				var index = jun.value_from == noone? jun.animator.is_anim : 2;
+				draw_sprite_ui_uniform(THEME.animate_clock, index, butx, lb_y, 1,, 0.8);
+				if(_hover && point_in_circle(_m[0], _m[1], butx, lb_y, ui(10))) {
+					draw_sprite_ui_uniform(THEME.animate_clock, index, butx, lb_y, 1,, 1);
+					TOOLTIP = "Toggle animation";
 					
-				if(mouse_press(mb_left, pFOCUS)) {
-					if(jun.value_from != noone)
-						jun.removeFrom();
-					else
-						jun.animator.is_anim = !jun.animator.is_anim;
-					PANEL_ANIMATION.updatePropertyList();
+					if(mouse_press(mb_left, pFOCUS)) {
+						if(jun.value_from != noone)
+							jun.removeFrom();
+						else
+							jun.animator.is_anim = !jun.animator.is_anim;
+						PANEL_ANIMATION.updatePropertyList();
+					}
 				}
 			}
 			
@@ -371,8 +375,12 @@ function Panel_Inspector() : PanelContent() constructor {
 								jun.editWidget.draw(ui(32), _hsy, w - ui(80), editBoxH, jun.showValue(), _m);
 								widH = editBoxH;
 								break;
-							case VALUE_TYPE.text :
-								var _hh = jun.editWidget.draw(editBoxX, editBoxY, editBoxW, editBoxH, jun.showValue(), _m, jun.display_type);
+							case VALUE_TYPE.text : 
+								var _hh = 0;
+								if(instanceof(jun.editWidget) == "textBox")
+									_hh = jun.editWidget.draw(editBoxX, editBoxY, editBoxW, editBoxH, jun.showValue(), _m, jun.display_type);
+								else if(instanceof(jun.editWidget) == "textArea")
+									_hh = jun.editWidget.draw(ui(16), _hsy, w - ui(16 + 48), editBoxH, jun.showValue(), _m, jun.display_type);
 								widH = _hh;
 								break;
 						}
@@ -418,7 +426,7 @@ function Panel_Inspector() : PanelContent() constructor {
 				if(mouse_press(mb_right, pFOCUS)) {
 					__dialog_junction = jun;
 					var dia = dialogCall(o_dialog_menubox, mouse_mx, mouse_my);
-					dia.setMenu( [
+					var menuItem = [
 						[ "Reset value", function() { 
 							__dialog_junction.setValue(__dialog_junction.def_val);
 							}],
@@ -433,7 +441,15 @@ function Panel_Inspector() : PanelContent() constructor {
 						[ "Paste", function() {
 							__dialog_junction.setString(clipboard_get_text());
 							}, ["Inspector", "Paste property"]],
-					] );
+					];
+					
+					if(jun.extract_node != "") {
+						array_insert(menuItem, 2, [ "Extract to node", function() { 
+							__dialog_junction.extractNode();
+						}]);
+					}
+					
+					dia.setMenu( menuItem );
 				}
 			}
 		}

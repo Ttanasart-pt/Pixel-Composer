@@ -34,26 +34,7 @@ function Node_Switch(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 	
 	if(!LOADING && !APPENDING) createNewInput();
 	
-	static updateValueFrom = function(index) {
-		if(LOADING || APPENDING) return;
-		
-		inputs[| 1].type = inputs[| 1].value_from? inputs[| 1].value_from.type : VALUE_TYPE.any;
-		
-		for( var i = input_fix_len; i < ds_list_size(inputs); i += data_length ) {
-			inputs[| i + 1].type = VALUE_TYPE.any;
-			if(inputs[| i + 1].value_from != noone)
-				inputs[| i + 1].type = inputs[| i + 1].value_from.type;
-		}
-	}
-	
-	static updateValue = function(index) {
-		if(index < input_fix_len) return;
-		if(LOADING || APPENDING) return;
-		
-		if((index - input_fix_len) % data_length == 0) { //Variable name
-			inputs[| index + 1].name = inputs[| index].getValue() + " value";
-		}
-		
+	static refreshDynamicInput = function() {
 		var _in = ds_list_create();
 		
 		for( var i = 0; i < input_fix_len; i++ )
@@ -81,6 +62,29 @@ function Node_Switch(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 		inputs = _in;
 		
 		createNewInput();
+	}
+	
+	static onValueFromUpdate = function(index) {
+		if(LOADING || APPENDING) return;
+		
+		inputs[| 1].type = inputs[| 1].value_from? inputs[| 1].value_from.type : VALUE_TYPE.any;
+		
+		for( var i = input_fix_len; i < ds_list_size(inputs); i += data_length ) {
+			inputs[| i + 1].type = VALUE_TYPE.any;
+			if(inputs[| i + 1].value_from != noone)
+				inputs[| i + 1].type = inputs[| i + 1].value_from.type;
+		}
+	}
+	
+	static onValueUpdate = function(index) {
+		if(index < input_fix_len) return;
+		if(LOADING || APPENDING) return;
+		
+		if((index - input_fix_len) % data_length == 0) { //Variable name
+			inputs[| index + 1].name = inputs[| index].getValue() + " value";
+		}
+		
+		refreshDynamicInput();
 	}
 	
 	static update = function() {
@@ -119,5 +123,16 @@ function Node_Switch(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 		draw_set_alpha(0.5);
 		draw_line_width(frm.x, frm.y, to.x, to.y, _s * 4);
 		draw_set_alpha(1);
+	}
+	
+	static postDeserialize = function() {
+		var _inputs = load_map[? "inputs"];
+		
+		for(var i = input_fix_len; i < ds_list_size(_inputs); i += data_length)
+			createNewInput();
+	}
+	
+	static doApplyDeserialize = function() {
+		refreshDynamicInput();
 	}
 }

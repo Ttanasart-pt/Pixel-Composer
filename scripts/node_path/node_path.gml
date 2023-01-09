@@ -2,13 +2,20 @@ function Node_Path(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 	name = "Path";
 	previewable = false;
 	
+	w = 96;
+	min_h = 0;
+	
 	inputs[| 0] = nodeValue(0, "Path progress", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
 		.setDisplay(VALUE_DISPLAY.slider, [0, 1, 0.01]);
 	
 	inputs[| 1] = nodeValue(1, "Loop", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
 	
-	w = 96;
-	min_h = 0;
+	inputs[| 2] = nodeValue(2, "Progress mode", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+		.setDisplay(VALUE_DISPLAY.enum_scroll, ["Entire line", "Segment"]);
+	
+	input_display_list = [
+		0, 2, 1,
+	];
 	
 	list_start = ds_list_size(inputs);
 	
@@ -21,7 +28,9 @@ function Node_Path(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 		return inputs[| index];
 	}
 	
-	outputs[| 0] = nodeValue(0, "Position out", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, [ 0, 0 ]);
+	outputs[| 0] = nodeValue(0, "Position out", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, [ 0, 0 ])
+		.setDisplay(VALUE_DISPLAY.vector);
+		
 	outputs[| 1] = nodeValue(1, "Path data", self, JUNCTION_CONNECT.output, VALUE_TYPE.object, self);
 	
 	tools = [
@@ -40,6 +49,16 @@ function Node_Path(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 	drag_point_my = 0;
 	drag_point_sx = 0;
 	drag_point_sy = 0;
+	
+	static onValueUpdate = function(index) {
+		if(index == 2) {
+			var type = inputs[| 2].getValue();	
+			if(type == 0)
+				inputs[| 0].setDisplay(VALUE_DISPLAY.slider, [0, 1, 0.01]);
+			else if(type == 1)
+				inputs[| 0].setDisplay(VALUE_DISPLAY._default);
+		}
+	}
 	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var sample = PREF_MAP[? "path_resolution"];
@@ -363,18 +382,50 @@ function Node_Path(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 		}
 	}
 	
+	static getSegmentRatio = function(_rat) {
+		var loop   = inputs[| 1].getValue();
+		var ansize = array_length(lengths);
+		var amo    = ds_list_size(inputs) - list_start;
+		
+		if(amo < 1) return [0, 0];
+		if(_rat < 0) {
+			var _p0 = inputs[| list_start].getValue();
+			return [_p0[0], _p0[1]];
+		}
+		
+		_rat = safe_mod(_rat, ansize);
+		var _i0 = clamp(floor(_rat), 0, amo - 1);
+		var _t  = frac(_rat);
+		var _i1 = _i0 + 1;
+		
+		if(_i1 >= amo) {
+			if(!loop) {
+				var _p1 = inputs[| ds_list_size(inputs) - 1].getValue()
+				return [_p1[0], _p1[1]];
+			}
+			
+			_i1 = 0; 
+		}
+		
+		var _a0 = inputs[| list_start + _i0].getValue();
+		var _a1 = inputs[| list_start + _i1].getValue();
+		
+		return eval_bezier(_t, _a0[0], _a0[1], _a1[0], _a1[1], _a0[0] + _a0[4], _a0[1] + _a0[5], _a1[0] + _a1[2], _a1[1] + _a1[3]);
+	}
+	
 	static getPointRatio = function(_rat) {
 		var loop   = inputs[| 1].getValue();
-		var ansize = ds_list_size(inputs) - list_start;
+		var ansize = array_length(lengths);
+		var amo    = ds_list_size(inputs) - list_start;
 		
-		if(array_length(lengths) < 1) return [0, 0];
+		if(ansize == 0) return [0, 0];
 		
 		var pix = clamp(_rat, 0, 1) * length_total;
 		
 		for(var i = 0; i < ansize; i++) {
 			if(pix <= lengths[i]) {
 				var _a0 = inputs[| list_start + i].getValue();
-				var _a1 = inputs[| list_start + safe_mod(i + 1, ansize)].getValue();
+				var _a1 = inputs[| list_start + safe_mod(i + 1, amo)].getValue();
 				var _t  = pix / lengths[i];
 				
 				if(!is_array(_a0) || !is_array(_a1))
@@ -389,8 +440,15 @@ function Node_Path(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 	
 	static update = function() {
 		updateLength();
-		var _point = inputs[| 0].getValue();
-		var _out = getPointRatio(_point);
+		var _rat = inputs[| 0].getValue();
+		var _typ = inputs[| 2].getValue();
+		var _out = [0, 0];
+		
+		if(_typ == 0)
+			_out = getPointRatio(_rat);
+		else if(_typ == 1)
+			_out = getSegmentRatio(_rat);
+		
 		outputs[| 0].setValue(_out);
 	}
 	
@@ -401,6 +459,9 @@ function Node_Path(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 	
 	static postDeserialize = function() {
 		var _inputs = load_map[? "inputs"];
+		
+		if(LOADING_VERSION < 1090)
+			ds_list_insert(_inputs, 2, noone);
 		
 		for(var i = list_start; i < ds_list_size(_inputs); i++)
 			createAnchor(0, 0);

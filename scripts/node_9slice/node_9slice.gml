@@ -20,7 +20,7 @@ function Node_9Slice(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) const
 	drag_my   = 0;
 	drag_sv   = 0;
 	
-	static updateValueFrom = function(index) {
+	static onValueFromUpdate = function(index) {
 		if(index == 0) {
 			var s = inputs[| 0].getValue();
 			if(is_array(s)) s = s[0];

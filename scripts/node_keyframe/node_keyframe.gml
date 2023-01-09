@@ -1,23 +1,19 @@
 enum CURVE_TYPE {
+	none,
 	bezier,
-	bounce,
-	damping
 }
 
-globalvar ON_END_NAME;
-ON_END_NAME = [ "Hold", "Loop", "Ping pong" ];
-
-function valueKey(_time, _value, _anim = noone, _in = 0, _out = 0) constructor {
+function valueKey(_time, _value, _anim = noone, _in = 0, _ot = 0) constructor {
 	time	= _time;
 	ratio	= time / (ANIMATOR.frames_total - 1);
 	value	= _value;
 	anim	= _anim;
 	
-	ease_in	 = _in;
-	ease_out = _out;
+	ease_in	 = is_array(_in)? _in : [_in, 1];
+	ease_out = is_array(_ot)? _ot : [_ot, 0];
 	
-	ease_in_type  = CURVE_TYPE.bezier;
-	ease_out_type = CURVE_TYPE.bezier;
+	ease_in_type  = CURVE_TYPE.none;
+	ease_out_type = CURVE_TYPE.none;
 	
 	static setTime = function(time) {
 		self.time = time;	
@@ -30,44 +26,84 @@ function valueAnimator(_val, _prop) constructor {
 	show_graph = false;
 	ds_list_add(values, new valueKey(0, _val, self));
 	
-	is_anim    = false;
-	prop       = _prop;
+	is_anim  = false;
+	prop     = _prop;
 	
 	static interpolate = function(from, to, rat) {
-		if(from.ease_out == 0 && to.ease_in == 0) 
+		if(to.ease_in_type == CURVE_TYPE.none && from.ease_out_type == CURVE_TYPE.none) 
+			return rat;
+		if(rat == 0 || rat == 1) 
 			return rat;
 		
-		var eo = rat;
-		var ei = rat;
+		var eox = clamp(from.ease_out[0], 0, 0.9);
+		var eix = clamp(to.ease_in[0],    0, 0.9);
+		var eoy = from.ease_out[1];
+		var eiy = to.ease_in[1];
 		
-		if(from.ease_out != 0) {
-			switch(from.ease_out_type) {
-				case CURVE_TYPE.bezier : 
-					eo = ease_cubic_in(rat);
-					eo = lerp(rat, eo, from.ease_out);
-					break;
-				case CURVE_TYPE.damping : 
-					eo = ease_damp_in(rat, 1 + from.ease_out * 10);
-					break;
+		var bz = [0, eox, eoy, 1. - eix, eiy, 1];
+		return eval_curve_bezier_cubic_x(bz, rat);
+		
+		//var eo = rat;
+		//var ei = rat;
+		
+		//if(from.ease_out != 0) {
+		//	switch(from.ease_out_type) {
+		//		case CURVE_TYPE.bezier : 
+		//			eo = ease_cubic_in(rat);
+		//			eo = lerp(rat, eo, from.ease_out);
+		//			break;
+		//		case CURVE_TYPE.damping : 
+		//			eo = ease_damp_in(rat, 1 + from.ease_out * 10);
+		//			break;
+		//	}
+		//}
+		
+		//if(to.ease_in != 0) {
+		//	switch(to.ease_in_type) {
+		//		case CURVE_TYPE.bezier  : 
+		//			ei = ease_cubic_out(rat);
+		//			ei = lerp(rat, ei, to.ease_in);
+		//			break;
+		//		case CURVE_TYPE.damping : 
+		//			ei = ease_damp_out(rat, 1 + to.ease_in * 10);
+		//			break;
+		//	}
+		//}
+		
+		//if(from.ease_out_type == CURVE_TYPE.damping && to.ease_in_type == CURVE_TYPE.damping) 
+		//	return lerp(eo, ei, rat < 0.5 ? 4 * power(rat, 3) : 1 - power(-2 * rat + 2, 3) / 2);
+		
+		//return lerp(eo, ei, rat);
+	}
+	
+	static lerpValue = function(from, to, _lrp) {
+		if(prop.type == VALUE_TYPE.color) {
+			var _f = from.value;
+			var _t = to.value;
+			
+			if(is_array(_f)) {
+				var amo = max(array_length(_f), array_length(_t));
+				var res = array_create(amo);
+				for( var i = 0; i < amo; i++ )
+					res[i] = merge_color(array_safe_get(_f, i, 0), array_safe_get(_t, i, 0), _lrp);
+				
+				return res;
 			}
+			
+			return processType(merge_color(_f, _t, _lrp));
 		}
-		
-		if(to.ease_in != 0) {
-			switch(to.ease_in_type) {
-				case CURVE_TYPE.bezier  : 
-					ei = ease_cubic_out(rat);
-					ei = lerp(rat, ei, to.ease_in);
-					break;
-				case CURVE_TYPE.damping : 
-					ei = ease_damp_out(rat, 1 + to.ease_in * 10);
-					break;
-			}
+			
+		if(typeArray(prop.display_type) && is_array(from.value)) {
+			var _vec = array_create(array_length(from.value));
+			for(var i = 0; i < array_length(_vec); i++) 
+				_vec[i] = processType(lerp(from.value[i], to.value[i], _lrp));
+			return _vec;
 		}
-		
-		if(from.ease_out_type == CURVE_TYPE.damping && to.ease_in_type == CURVE_TYPE.damping) 
-			return lerp(eo, ei, rat < 0.5 ? 4 * power(rat, 3) : 1 - power(-2 * rat + 2, 3) / 2);
-		
-		return lerp(eo, ei, rat);
+			
+		if(prop.type == VALUE_TYPE.text)
+			return processType(from.value);
+			
+		return processType(lerp(from.value, to.value, _lrp));
 	}
 	
 	static getValue = function(_time = ANIMATOR.current_frame) {
@@ -78,54 +114,66 @@ function valueAnimator(_val, _prop) constructor {
 		if(ds_list_size(values) == 1) return processType(values[| 0].value);
 		if(!is_anim) return processType(values[| 0].value);
 		
-		if(ds_list_size(values) > 1) {
-			var _time_first = values[| 0].time;
-			var _time_last  = values[| ds_list_size(values) - 1].time;
-			var _time_dura  = _time_last - _time_first;
+		var _time_first = values[| 0].time;
+		var _time_last  = values[| ds_list_size(values) - 1].time;
+		var _time_dura  = _time_last - _time_first;
 			
-			if(_time > _time_last) {
-				switch(prop.on_end) {
-					case KEYFRAME_END.loop : 
-						_time = _time_first + safe_mod(_time - _time_last, _time_dura + 1);
-						break;
-					case KEYFRAME_END.ping :
-						var time_in_loop = safe_mod(_time - _time_first, _time_dura * 2);
-						if(time_in_loop < _time_dura) 
-							_time = _time_first + time_in_loop;
-						else
-							_time = _time_first + _time_dura * 2 - time_in_loop;
-						break;
-				}
+		if(_time > _time_last) {
+			switch(prop.on_end) {
+				case KEYFRAME_END.loop : 
+					_time = _time_first + safe_mod(_time - _time_last, _time_dura + 1);
+					break;
+				case KEYFRAME_END.ping :
+					var time_in_loop = safe_mod(_time - _time_first, _time_dura * 2);
+					if(time_in_loop < _time_dura) 
+						_time = _time_first + time_in_loop;
+					else
+						_time = _time_first + _time_dura * 2 - time_in_loop;
+					break;
 			}
 		}
 		
-		for(var i = 0; i < ds_list_size(values); i++) {
-			var _key = values[| i];
-			if(_key.time > _time) {
-				if(i == 0) 
-					return processType(values[| 0].value);
-				else {
-					var rat = (_time - values[| i - 1].time) / (values[| i].time - values[| i - 1].time);
-					var from = values[| i - 1];
-					var to = values[| i];
-					var _lerp = interpolate(from, to, rat);
-						
-					if(prop.type == VALUE_TYPE.color) {
-						return processType(merge_color(from.value, to.value, _lerp));
-					} else if(typeArray(prop.display_type) && is_array(from.value)) {
-						var _vec = array_create(array_length(from.value));
-						for(var i = 0; i < array_length(_vec); i++) 
-							_vec[i] = processType(lerp(from.value[i], to.value[i], _lerp));
-						return _vec;
-					} else if(prop.type == VALUE_TYPE.text) {
-						return processType(from.value);
-					} else {
-						return processType(lerp(from.value, to.value, _lerp));
-					}
-				}
+		if(_time < values[| 0].time) { //Wrap begin
+			if(prop.on_end == KEYFRAME_END.wrap) {
+				var from = values[| ds_list_size(values) - 1];
+				var to   = values[| 0];
+				var prog = ANIMATOR.frames_total - from.time + _time;
+				var totl = ANIMATOR.frames_total - from.time + to.time;
+				
+				var rat  = prog / totl;
+				var _lrp = interpolate(from, to, rat);
+				
+				return lerpValue(from, to, _lrp);
 			}
+			
+			return processType(values[| 0].value); //First frame
 		}
-		return processType(values[| ds_list_size(values) - 1].value);
+			
+		for(var i = 0; i < ds_list_size(values); i++) { //In between
+			var _key = values[| i];
+			if(_key.time <= _time) continue;
+			
+			var rat  = (_time - values[| i - 1].time) / (values[| i].time - values[| i - 1].time);
+			var from = values[| i - 1];
+			var to   = values[| i];
+			var _lrp = interpolate(from, to, rat);
+			
+			return lerpValue(from, to, _lrp);
+		}
+		
+		if(prop.on_end == KEYFRAME_END.wrap) { //Wrap end
+			var from = values[| ds_list_size(values) - 1];
+			var to   = values[| 0];
+			var prog = _time - from.time;
+			var totl = ANIMATOR.frames_total - from.time + to.time;
+				
+			var rat  = prog / totl;
+			var _lrp = interpolate(from, to, rat);
+				
+			return lerpValue(from, to, _lrp);
+		}
+		
+		return processType(values[| ds_list_size(values) - 1].value); //Last frame
 	}
 	
 	static processType = function(_val) {
@@ -257,13 +305,15 @@ function valueAnimator(_val, _prop) constructor {
 				_value_list[| 1] = values[| i].value;
 			}
 			
-			_value_list[| 2] = values[| i].ease_in;
-			_value_list[| 3] = values[| i].ease_out;
+			_value_list[| 2] = ds_list_create_from_array(values[| i].ease_in);
+				ds_list_mark_as_list(_value_list, 2);
+			_value_list[| 3] = ds_list_create_from_array(values[| i].ease_out);
+				ds_list_mark_as_list(_value_list, 3);
+				
 			_value_list[| 4] = values[| i].ease_in_type;
 			_value_list[| 5] = values[| i].ease_out_type;
 			
-			ds_list_add(_list, _value_list);
-			ds_list_mark_as_list(_list, i);
+			ds_list_add_list(_list, _value_list);
 		}
 		
 		return _list;
@@ -284,6 +334,11 @@ function valueAnimator(_val, _prop) constructor {
 			var value    = ds_list_get(_key, 1);
 			var ease_in  = ds_list_get(_key, 2);
 			var ease_out = ds_list_get(_key, 3);
+			if(LOADING_VERSION >= 1090) {
+				ease_in  = array_create_from_list(ease_in);
+				ease_out = array_create_from_list(ease_out);
+			}
+			
 			var ease_in_type  = ds_list_get(_key, 4, CURVE_TYPE.bezier);
 			var ease_out_type = ds_list_get(_key, 5, CURVE_TYPE.bezier);
 			var _val  = _key[| 1];

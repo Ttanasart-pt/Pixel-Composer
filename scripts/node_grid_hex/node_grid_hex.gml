@@ -8,6 +8,9 @@ function Node_Grid_Hex(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) con
 	uniform_rot = shader_get_uniform(shader, "angle");
 	uniform_thk = shader_get_uniform(shader, "thick");
 	
+	uniform_clr0 = shader_get_uniform(shader, "color0");
+	uniform_clr1 = shader_get_uniform(shader, "color1");
+	
 	inputs[| 0] = nodeValue(0, "Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, def_surf_size2 )
 		.setDisplay(VALUE_DISPLAY.vector);
 	
@@ -24,9 +27,14 @@ function Node_Grid_Hex(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) con
 	inputs[| 4] = nodeValue(4, "Thickness", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.1)
 		.setDisplay(VALUE_DISPLAY.slider, [0, 1, 0.01]);
 	
+	inputs[| 5] = nodeValue(5, "Color 1", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white);
+	
+	inputs[| 6] = nodeValue(6, "Color 2", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_black);
+	
 	input_display_list = [
 		["Output",  false], 0,
-		["Pattern",	false], 1, 2, 3, 4
+		["Pattern",	false], 1, 2, 3, 4,
+		["Render",	false], 5, 6, 
 	];
 	
 	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
@@ -42,6 +50,9 @@ function Node_Grid_Hex(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) con
 		var _rot = _data[3];
 		var _thk = _data[4];
 		
+		var _clr0 = _data[5];
+		var _clr1 = _data[6];
+		
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1]);
 		
 		surface_set_target(_outSurf);
@@ -52,6 +63,9 @@ function Node_Grid_Hex(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) con
 			shader_set_uniform_f(uniform_sca, _sca[0], _sca[1]);
 			shader_set_uniform_f(uniform_rot, degtorad(_rot));
 			shader_set_uniform_f(uniform_thk, _thk);
+			
+			shader_set_uniform_f_array(uniform_clr0, colToVec4(_clr0));
+			shader_set_uniform_f_array(uniform_clr1, colToVec4(_clr1));
 			
 			draw_sprite_ext(s_fx_pixel, 0, 0, 0, _dim[0], _dim[1], 0, c_white, 1);
 		shader_reset();

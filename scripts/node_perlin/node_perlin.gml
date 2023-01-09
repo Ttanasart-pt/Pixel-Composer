@@ -24,7 +24,7 @@ function Node_Perlin(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) const
 	inputs[| 4] = nodeValue(4, "Brightness", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.5)
 		.setDisplay(VALUE_DISPLAY.slider, [ 0, 1, 0.01]);
 		
-	inputs[| 5] = nodeValue(5, "Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 2);
+	inputs[| 5] = nodeValue(5, "Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, irandom(99999));
 	
 	input_display_list = [
 		["Surface",		false],	0, 5, 

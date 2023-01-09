@@ -25,7 +25,7 @@ function Node_Particle_Effector(_x, _y, _group = -1) : Node(_x, _y, _group) cons
 	inputs[| 2] = nodeValue(2, "Area", self,   JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 16, 16, 4, 4, AREA_SHAPE.rectangle ])
 		.setDisplay(VALUE_DISPLAY.area);
 	
-	inputs[| 3] = nodeValue(3, "Falloff", self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, [0, 0, 1, 1] )
+	inputs[| 3] = nodeValue(3, "Falloff", self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_01 )
 		.setDisplay(VALUE_DISPLAY.curve);
 	
 	inputs[| 4] = nodeValue(4, "Falloff distance", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 4 );

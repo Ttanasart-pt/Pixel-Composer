@@ -26,21 +26,6 @@ function Node_Warp(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constru
 	drag_my = 0;
 	drag_s = [[0, 0], [0, 0]];
 	
-	static onValueUpdateFrom = function(index) {
-		if(index != 0) return;
-		
-		var _inSurf = inputs[| 0].getValue();
-		if(!is_surface(_inSurf)) return;
-		
-		var ww = surface_get_width(_inSurf);
-		var hh = surface_get_height(_inSurf);
-		
-		inputs[| 1].setValue([ 0,  0]);
-		inputs[| 2].setValue([ww,  0]);
-		inputs[| 3].setValue([ 0, hh]);
-		inputs[| 4].setValue([ww, hh]);
-	}
-	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		if(array_length(current_data) < ds_list_size(inputs)) return;
 		
@@ -191,7 +176,7 @@ function Node_Warp(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constru
 			var tex = surface_get_texture(_data[0]);
 			draw_primitive_begin_texture(pr_trianglestrip, tex);
 			
-			var res = 16;
+			var res = 4;
 			var _i0, _i1, _j0, _j1;
 			var tl_x = tl[0];
 			var tl_y = tl[1];

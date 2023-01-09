@@ -9,7 +9,8 @@ function Node_Stack(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constr
 	
 	inputs[| 2] = nodeValue(2, "Spacing", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0);
 	
-	input_fix_len	= ds_list_size(inputs);
+	input_fix_len = ds_list_size(inputs);
+	data_length = 1;
 	
 	static createNewInput = function() {
 		var index = ds_list_size(inputs);
@@ -20,10 +21,7 @@ function Node_Stack(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constr
 	
 	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
 	
-	static updateValueFrom = function(index) {
-		if(index < input_fix_len) return;
-		if(LOADING || APPENDING) return;
-		
+	static refreshDynamicInput = function() {
 		var _l = ds_list_create();
 		for( var i = 0; i < ds_list_size(inputs); i++ ) {
 			if(i < input_fix_len || inputs[| i].value_from)	
@@ -39,6 +37,13 @@ function Node_Stack(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constr
 		inputs = _l;
 		
 		createNewInput();
+	}
+	
+	static onValueFromUpdate = function(index) {
+		if(index < input_fix_len) return;
+		if(LOADING || APPENDING) return;
+		
+		refreshDynamicInput();
 	}
 	
 	static step = function() {
@@ -118,7 +123,7 @@ function Node_Stack(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constr
 	static postDeserialize = function() {
 		var _inputs = load_map[? "inputs"];
 		
-		for(var i = 0; i < ds_list_size(_inputs); i++)
+		for(var i = input_fix_len; i < ds_list_size(_inputs); i += data_length)
 			createNewInput();
 	}
 }

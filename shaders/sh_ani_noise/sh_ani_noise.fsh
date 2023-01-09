@@ -9,8 +9,12 @@ uniform vec2 position;
 uniform float angle;
 uniform float seed;
 
+float random1D (in vec2 st, float _seed) {
+    return fract(sin(dot(st.xy, vec2(12.9898, 78.233)) * mod(_seed, 32.156) * 12.588) * 43758.5453123);
+}
+
 float random (in vec2 st) {
-    return fract(sin(dot(st.xy, vec2(12.9898, 78.233)) * mod(seed, 32.156) * 12.588) * 43758.5453123);
+    return mix(random1D(st, floor(seed)), random1D(st, floor(seed) + 1.), fract(seed));
 }
 
 void main() {
@@ -19,7 +23,7 @@ void main() {
 	_pos.y = pos.x * sin(angle) + pos.y * cos(angle);
 	
 	float yy = floor(_pos.y * noiseAmount.y);
-	float xx = (_pos.x + random(vec2(yy))) * noiseAmount.x;
+	float xx = (_pos.x + random1D(vec2(yy), floor(seed))) * noiseAmount.x;
 	float x0 = floor(xx);
 	float x1 = floor(xx) + 1.;
 	

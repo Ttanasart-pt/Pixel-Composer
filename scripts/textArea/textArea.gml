@@ -39,6 +39,8 @@ function textArea(_input, _onModify, _extras = noone) constructor {
 	
 	code_line_width = 48;
 	
+	_cl = -1;
+	
 	static deselect = function() {
 		apply();
 		TEXTBOX_ACTIVE = noone;
@@ -59,16 +61,16 @@ function textArea(_input, _onModify, _extras = noone) constructor {
 		_input_text_line = [];
 		draw_set_font(font);
 		
-		if(string_pos("\n", _prev_text) == 0) {
-			array_push(_input_text_line, _prev_text);
+		if(string_pos("\n", _input_text) == 0) {
+			array_push(_input_text_line, _input_text);
 			return;
 		}
 		
-		var _txtLines = string_splice(_prev_text, "\n");
+		var _txtLines = string_splice(_input_text, "\n");
 		var ss = "";
 		
 		for( var i = 0; i < array_length(_txtLines); i++ ) {
-			var _txt = _txtLines[i];
+			var _txt = _txtLines[i] + (i < array_length(_txtLines)? "\n" : "");
 			var words = string_splice(_txt, " ");
 			var currW = 0;
 			var currL = "";
@@ -82,8 +84,6 @@ function textArea(_input, _onModify, _extras = noone) constructor {
 					array_push(_input_text_line, currL);
 					currW = 0;
 					currL = "";
-					cut = false;
-					continue;
 				}
 				
 				cut = true;
@@ -212,14 +212,27 @@ function textArea(_input, _onModify, _extras = noone) constructor {
 					cursor_select = cursor;
 			} else 
 				cursor_select	= -1;
-			move_cursor(-cursor);
+			
+			if(cursor_line == 0) 
+				move_cursor(-cursor);
+			else {
+				var _str = _input_text_line[cursor_line];
+				while(string_char_at(_input_text, cursor) != "\n") {
+					cursor--;
+				}
+			}
+			
 		} else if(keyboard_check_pressed(vk_end)) {
 			if(keyboard_check(vk_shift)) {
 				if(cursor_select == -1)
 					cursor_select = cursor;
 			} else 
 				cursor_select	= -1;
-			move_cursor(string_length(_input_text) - cursor);
+			
+			var _str = _input_text_line[cursor_line];
+			while(string_char_at(_input_text, cursor + 1) != "\n" && cursor < string_length(_input_text)) {
+				cursor++;
+			}
 		} else if(keyboard_check_pressed(vk_escape)) {
 			_input_text = _last_value;
 			cut_line();
@@ -244,8 +257,8 @@ function textArea(_input, _onModify, _extras = noone) constructor {
 		var ch_y = _y;
 		var _str;
 		
-		if(_prev_text != _text) {
-			_prev_text = _text;
+		if(_input_text != _text) {
+			_input_text = _text;
 			cut_line();
 		}
 		
@@ -257,28 +270,33 @@ function textArea(_input, _onModify, _extras = noone) constructor {
 			else if(format == TEXT_AREA_FORMAT.code)
 				draw_code(ch_x, ch_y, _str);
 			
-			ch_y += string_height(_str);
+			ch_y += line_height();
 		}
-		
 		
 		if(_mx != -1 && _my != -1) {
 			var char_run = 0, _l, _ch_w, _ch_h, _str, _chr;
-			var ch_x = _x;
-			var ch_cxo = _x, ch_cxn = _x;
+			var sx = _x;
+			var ch_x = sx;
+			var ch_cxo = sx;
+			var ch_cxn = sx;
 			var ch_y = _y;
 					
 			for( var i = 0; i < array_length(_input_text_line); i++ ) {
-				_str = _input_text_line[i];
+				_str = string_trim_end(_input_text_line[i]);
 				_l = string_length(_str);
-				_ch_h = string_height(_str);
+				_ch_h = line_height();
+				ch_cxo = sx;
+				ch_x = sx;
 				
 				if(ch_y <= _my && ch_y + _ch_h >= _my) {
+					target = char_run + _l;
+					
 					for( var j = 0; j < string_length(_str); j++ ) {
 						_chr = string_char_at(_str, j + 1);
 						_ch_w = string_width(_chr);
 						ch_cxn = ch_x + _ch_w / 2;
 						
-						if(ch_cxo <= _mx && ch_cxn >= _mx) {
+						if(ch_cxo <= _mx && _mx <= ch_cxn) {
 							target = char_run + j;
 							break;
 						}
@@ -286,11 +304,9 @@ function textArea(_input, _onModify, _extras = noone) constructor {
 						ch_x += _ch_w;
 						ch_cxo = ch_cxn;
 					}
-					if(target == -999)
-						target = string_length(_prev_text);
 					break;
 				}
-				char_run += _l;	
+				char_run += string_length(_input_text_line[i]);	
 				ch_y += _ch_h;
 			}
 		}
@@ -326,7 +342,7 @@ function textArea(_input, _onModify, _extras = noone) constructor {
 		}
 		
 		draw_set_font(font);
-		var c_h = string_height("l");
+		var c_h = line_height();
 		var line_count = max(min_lines, array_length(_input_text_line));
 		hh = max(_h, ui(14) + c_h * line_count);
 		
@@ -345,6 +361,7 @@ function textArea(_input, _onModify, _extras = noone) constructor {
 		}
 		
 		if(self == TEXTBOX_ACTIVE) { 
+			draw_set_text(font, fa_left, fa_top, COLORS._main_text);
 			draw_sprite_stretched(THEME.textbox, 2, _x, _y, _w, hh);
 			editText();
 			
@@ -359,7 +376,7 @@ function textArea(_input, _onModify, _extras = noone) constructor {
 					move_cursor(-1);
 					if(key_mod_press(CTRL)) {
 						while(cursor > 0) {
-							var ch = string_char_at(_prev_text, cursor);
+							var ch = string_char_at(_input_text, cursor);
 							if(ch == " " || ch == "\n") break;
 							cursor--;
 						}
@@ -374,8 +391,8 @@ function textArea(_input, _onModify, _extras = noone) constructor {
 					
 					move_cursor(1);
 					if(key_mod_press(CTRL)) {
-						while(cursor < string_length(_prev_text)) {
-							var ch = string_char_at(_prev_text, cursor);
+						while(cursor < string_length(_input_text)) {
+							var ch = string_char_at(_input_text, cursor);
 							if(ch == " " || ch == "\n") break;
 							cursor++;
 						}
@@ -400,7 +417,8 @@ function textArea(_input, _onModify, _extras = noone) constructor {
 						for( var i = 1; i <= string_length(_str); i++ ) {
 							var _chr = string_char_at(_str, i);
 							_run += string_width(_chr);
-							if(_run > cursor_pos_x_to) break;
+							if(_run > cursor_pos_x_to)
+								break;
 							_char++;
 						}
 						
@@ -420,7 +438,7 @@ function textArea(_input, _onModify, _extras = noone) constructor {
 					var _target;
 					
 					if(cursor_line == array_length(_input_text_line) - 1) 
-						_target = string_length(_prev_text);
+						_target = string_length(_input_text);
 					else {
 						var _l = cursor_line + 1;
 						var _str = _input_text_line[_l];
@@ -494,8 +512,8 @@ function textArea(_input, _onModify, _extras = noone) constructor {
 							cursor_pos_y_to = ch_y;
 							cursor_line = i;
 						}
-						char_run += _l + 1;	
-						ch_y += string_height(_str);
+						char_run += _l;
+						ch_y += line_height();
 					}
 					
 					cursor_pos_x = cursor_pos_x == 0? cursor_pos_x_to : lerp_float(cursor_pos_x, cursor_pos_x_to, 4);
@@ -504,12 +522,13 @@ function textArea(_input, _onModify, _extras = noone) constructor {
 				
 				var _mx = -1;
 				var _my = -1;
-				if(mouse_press(mb_any, active) && hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + hh)) {
+				if(hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + hh)) {
 					_mx = _m[0];
 					_my = _m[1];
 				}
 				
 				display_text(tx, _y + ui(7), _input_text, _w - ui(4), _mx, _my);
+				
 				if(cursor_pos_y != 0 && cursor_pos_x != 0) {
 					draw_set_color(COLORS._main_text_accent);
 					draw_line_width(cursor_pos_x, cursor_pos_y, cursor_pos_x, cursor_pos_y + c_h, 2);
@@ -526,6 +545,9 @@ function textArea(_input, _onModify, _extras = noone) constructor {
 				else
 					draw_sprite_stretched(THEME.textbox, 1, _x, _y, _w, hh);	
 				if(mouse_press(mb_left, active)) {
+					cursor_pos_x = 0;
+					cursor_pos_y = 0;
+					
 					TEXTBOX_ACTIVE  = self;
 					click_block = 1;
 					KEYBOARD_STRING = "";

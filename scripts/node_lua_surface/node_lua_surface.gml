@@ -30,11 +30,12 @@ function Node_Lua_Surface(_x, _y, _group = -1) : Node(_x, _y, _group) constructo
 	
 	luaArgumentRenderer();
 	
-	input_display_list = [ 
-		["Main",		false], 0, 3, 1, 2,
+	input_display_list = [ 3,
+		["Function",	false], 0, 1,
 		["Arguments",	false], argument_renderer,
+		["Script",		false], 2,
 		["Inputs",		 true], 
-	]
+	];
 	
 	input_fix_len	  = ds_list_size(inputs);
 	input_display_len = array_length(input_display_list);
@@ -67,37 +68,7 @@ function Node_Lua_Surface(_x, _y, _group = -1) : Node(_x, _y, _group) constructo
 		return inputs[| 3].value_from.node.getState();
 	}
 	
-	static updateValueFrom = function(index) {
-		compiled = false;
-	}
-	
-	static updateValue = function(index) {
-		compiled = false;
-		
-		if(index == 4) {
-			for( var i = 0; i < ds_list_size(outputs[| 0].value_to); i++ ) {
-				var _j = outputs[| 0].value_to[| i];
-				if(_j.value_from != outputs[| 0]) continue;
-				_j.node.compiled = false;
-			}
-		}
-		
-		if(index < input_fix_len) return;
-		if(LOADING || APPENDING) return;
-		
-		if((index - input_fix_len) % data_length == 0) { //Variable name
-			inputs[| index + 2].name = inputs[| index].getValue();
-		} else if((index - input_fix_len) % data_length == 1) { //Variable type
-			var type = inputs[| index].getValue();
-			switch(type) {
-				case 0 : inputs[| index + 1].type = VALUE_TYPE.float;	break;
-				case 1 : inputs[| index + 1].type = VALUE_TYPE.text;	break;
-				case 2 : inputs[| index + 1].type = VALUE_TYPE.surface;	break;
-			}
-			
-			inputs[| index + 1].setDisplay(VALUE_DISPLAY._default);
-		}
-		
+	static refreshDynamicInput = function() {
 		var _in = ds_list_create();
 		
 		for( var i = 0; i < input_fix_len; i++ )
@@ -110,6 +81,17 @@ function Node_Lua_Surface(_x, _y, _group = -1) : Node(_x, _y, _group) constructo
 				ds_list_add(_in, inputs[| i + 0]);
 				ds_list_add(_in, inputs[| i + 1]);
 				ds_list_add(_in, inputs[| i + 2]);
+				
+				if(LOADING || APPENDING) {
+					var type = inputs[| i + 1].getValue();
+					switch(type) {
+						case 0 : inputs[| i + 2].type = VALUE_TYPE.float;	break;
+						case 1 : inputs[| i + 2].type = VALUE_TYPE.text;	break;
+						case 2 : inputs[| i + 2].type = VALUE_TYPE.surface;	break;
+					}
+					
+					inputs[| i + 2].setDisplay(VALUE_DISPLAY._default);
+				}
 				
 				array_push(input_display_list, i + 2);
 			} else {
@@ -128,6 +110,43 @@ function Node_Lua_Surface(_x, _y, _group = -1) : Node(_x, _y, _group) constructo
 		createNewInput();
 	}
 	
+	static onValueFromUpdate = function(index) {
+		if(index == 0 || index == 2) compiled = false;
+	}
+	
+	static onValueUpdate = function(index) {
+		if(index == 0 || index == 2) compiled = false;
+		
+		if(index == 3) {
+			for( var i = 0; i < ds_list_size(outputs[| 0].value_to); i++ ) {
+				var _j = outputs[| 0].value_to[| i];
+				if(_j.value_from != outputs[| 0]) continue;
+				_j.node.compiled = false;
+			}
+			compiled = false;
+		}
+		
+		if(index < input_fix_len) return;
+		if(LOADING || APPENDING) return;
+		
+		if((index - input_fix_len) % data_length == 0) { //Variable name
+			inputs[| index + 2].name = inputs[| index].getValue();
+			compiled = false;
+		} else if((index - input_fix_len) % data_length == 1) { //Variable type
+			var type = inputs[| index].getValue();
+			switch(type) {
+				case 0 : inputs[| index + 1].type = VALUE_TYPE.float;	break;
+				case 1 : inputs[| index + 1].type = VALUE_TYPE.text;	break;
+				case 2 : inputs[| index + 1].type = VALUE_TYPE.surface;	break;
+			}
+			
+			inputs[| index + 1].setDisplay(VALUE_DISPLAY._default);
+			compiled = false;
+		}
+		
+		refreshDynamicInput();
+	}
+	
 	static update = function() {
 		if(!compiled) return;
 		
@@ -140,7 +159,7 @@ function Node_Lua_Surface(_x, _y, _group = -1) : Node(_x, _y, _group) constructo
 		}
 		
 		var _outSurf = outputs[| 1].getValue();
-		surface_verify(_outSurf, _dimm[0], _dimm[1]);
+		_outSurf = surface_verify(_outSurf, _dimm[0], _dimm[1]);
 		
 		surface_set_target(_outSurf);
 			try {
@@ -167,9 +186,9 @@ function Node_Lua_Surface(_x, _y, _group = -1) : Node(_x, _y, _group) constructo
 			if(i) lua_code += ", "
 			lua_code += argument_name[i];
 		}
-		lua_code += ")";
+		lua_code += ")\n";
 		lua_code += _code;
-		lua_code += "end";
+		lua_code += "\nend";
 		
 		lua_add_code(getState(), lua_code);
 		
@@ -187,7 +206,11 @@ function Node_Lua_Surface(_x, _y, _group = -1) : Node(_x, _y, _group) constructo
 	static postDeserialize = function() {
 		var _inputs = load_map[? "inputs"];
 		
-		for(var i = input_index; i < ds_list_size(_inputs); i += data_length)
+		for(var i = input_fix_len; i < ds_list_size(_inputs); i += data_length)
 			createNewInput();
+	}
+	
+	static doApplyDeserialize = function() {
+		refreshDynamicInput();
 	}
 }

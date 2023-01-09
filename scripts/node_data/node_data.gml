@@ -165,6 +165,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) constructor {
 	}
 	
 	static onValueUpdate = function(index) {}
+	static onValueFromUpdate = function(index) {}
 	
 	static isUpdateReady = function() {
 		//if(rendered) return false;
@@ -180,9 +181,6 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) constructor {
 	}
 	
 	static update = function() {}
-	
-	static updateValue = function(index) {}
-	static updateValueFrom = function(index) {}
 	
 	static triggerRender = function() {
 		setRenderStatus(false);
@@ -273,7 +271,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) constructor {
 	static drawNodeName = function(xx, yy, _s) {
 		draw_name = false;
 		if(name == "") return;
-		if(_s < 0.5) return;
+		if(_s < 0.6) return;
 		draw_name = true;
 		
 		draw_sprite_stretched_ext(THEME.node_bg_name, 0, xx, yy, w * _s, ui(20), color, 0.75);
@@ -802,7 +800,11 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) constructor {
 			inputs[| i].applyDeserialize(_inputs[| i], load_scale);
 		
 		printIf(TESTING, "  > Applying deserialize to node " + name + " completed");
+		
+		doApplyDeserialize();
 	}
+	
+	static doApplyDeserialize = function() {}
 	
 	static loadGroup = function() {
 		if(_group == -1) {

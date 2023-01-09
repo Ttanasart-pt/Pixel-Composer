@@ -33,7 +33,8 @@ function Node_Statistic(_x, _y, _group = -1) : Node(_x, _y, _group) constructor 
 		.setDisplay(VALUE_DISPLAY.enum_scroll, [ 
 			"Sum", "Mean", "Median", "Max", "Min"]);
 	
-	input_fix_len	= ds_list_size(inputs);
+	input_fix_len = ds_list_size(inputs);
+	data_length = 1;
 	
 	static createNewInput = function() {
 		var index = ds_list_size(inputs);
@@ -44,8 +45,7 @@ function Node_Statistic(_x, _y, _group = -1) : Node(_x, _y, _group) constructor 
 	
 	outputs[| 0] = nodeValue(0, "Statistic", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, -1);
 	
-	static updateValueFrom = function(index) {
-		if(LOADING || APPENDING) return;
+	static refreshDynamicInput = function() {
 		var _l = ds_list_create();
 		
 		for( var i = 0; i < input_fix_len; i++ ) {
@@ -68,6 +68,12 @@ function Node_Statistic(_x, _y, _group = -1) : Node(_x, _y, _group) constructor 
 		inputs = _l;
 		
 		createNewInput();
+	}
+	
+	static onValueFromUpdate = function(index) {
+		if(LOADING || APPENDING) return;
+		
+		refreshDynamicInput();
 	}
 	
 	static update = function() {
@@ -170,7 +176,7 @@ function Node_Statistic(_x, _y, _group = -1) : Node(_x, _y, _group) constructor 
 	static postDeserialize = function() {
 		var _inputs = load_map[? "inputs"];
 		
-		for(var i = 0; i < ds_list_size(_inputs); i++)
+		for(var i = input_fix_len; i < ds_list_size(_inputs); i += data_length)
 			createNewInput();
 	}
 	

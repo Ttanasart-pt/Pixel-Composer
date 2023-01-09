@@ -1,3 +1,10 @@
+function array_create_from_list(list) {
+	var arr = array_create(ds_list_size(list));
+	for( var i = 0; i < ds_list_size(list); i++ )
+		arr[i] = list[| i];
+	return arr;
+}
+
 function array_safe_set(arr, index, value) {
 	if(index < 0) return;
 	if(index >= array_length(arr)) return;
@@ -55,4 +62,22 @@ function array_clone(arr) {
 		 _res[i] = arr[i];
 	 }
 	 return _res;
+}
+
+function array_min(arr) {
+	if(array_length(arr) == 0) return 0;
+	
+	var mn = arr[0];
+	 for( var i = 0; i < array_length(arr); i++ )
+		 mn = min(mn, arr[i]);
+	 return mn;
+}
+
+function array_max(arr) {
+	if(array_length(arr) == 0) return 0;
+	
+	var mx = arr[0];
+	 for( var i = 0; i < array_length(arr); i++ )
+		 mx = max(mx, arr[i]);
+	 return mx;
 }

@@ -1,3 +1,8 @@
+enum CAMERA_PROJ {
+	ortho,
+	perspective
+}
+
 #region setup
 	globalvar PRIMITIVES, FORMAT_PT, FORMAT_PNT;
 	PRIMITIVES = ds_map_create();
@@ -110,22 +115,17 @@
 
 #region helper
 	function _3d_node_init(iDim, iPos, iRot, iSca) {
-		uniVertex_lightFor = shader_get_uniform(sh_vertex_pnt_light, "u_LightForward");
-		uniLightAmb = shader_get_uniform(sh_vertex_pnt_light, "u_AmbientLight");
-		uniLightClr = shader_get_uniform(sh_vertex_pnt_light, "u_LightColor");
-		uniLightInt = shader_get_uniform(sh_vertex_pnt_light, "u_LightIntensity");
-		uniLightNrm = shader_get_uniform(sh_vertex_pnt_light, "useNormal");
-		
 		VB = [];
 		use_normal = true;
 		
 		TM = matrix_build(0, 0, 0, 0, 0, 0, 1, 1, 1);
 		cam = camera_create();
+		
 		cam_view = matrix_build_lookat(0, 0, 1, 0, 0, 0, 0, 1, 0);
 		cam_proj = matrix_build_projection_ortho(1, 1, 1, 100);
 		
-		camera_set_proj_mat(cam, cam_view);
-		camera_set_view_mat(cam, cam_proj);
+		camera_set_view_mat(cam, cam_view);
+		camera_set_proj_mat(cam, cam_proj);
 		
 		drag_index = -1;
 		drag_sv = 0;
@@ -138,7 +138,7 @@
 		input_sca = iSca;
 	}
 	
-	function _3d_gizmo(active, _x, _y, _s, _mx, _my, _snx, _sny, inv = false) {
+	function _3d_gizmo(active, _x, _y, _s, _mx, _my, _snx, _sny, invx = false, invy = true) {
 		if(inputs[| input_pos].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny)) active = false;
 		
 		var _dim = inputs[| input_dim].getValue();
@@ -158,7 +158,7 @@
 		
 		if(drag_index == 0) {
 			var dx  = (_mx - drag_mx) / _s * -6;
-			_rot[1] = drag_sv - dx * (inv? -1 : 1);
+			_rot[1] = drag_sv - dx * (invx? -1 : 1);
 			
 			if(inputs[| input_rot].setValue(_rot)) 
 				UNDO_HOLDING = true;
@@ -169,7 +169,7 @@
 			}
 		} else if(drag_index == 1) {
 			var dy  = (_my - drag_my) / _s * 6;
-			_rot[0] = drag_sv - dy * (inv? -1 : 1);
+			_rot[0] = drag_sv - dy * (invy? -1 : 1);
 			
 			if(inputs[| input_rot].setValue(_rot)) 
 				UNDO_HOLDING = true;
@@ -237,12 +237,8 @@
 		matrix_stack_pop();
 	}
 	
-	function _3d_pre_setup(_outSurf, _dim, _pos, _sca, _ldir, _lhgt, _lint, _lclr, _aclr, _lpos, _lrot, _lsca, _applyLocal = true) {
+	function _3d_pre_setup(_outSurf, _dim, _pos, _sca, _ldir, _lhgt, _lint, _lclr, _aclr, _lpos, _lrot, _lsca, _proj = CAMERA_PROJ.perspective, _fov = 60, _pass = "diff", _applyLocal = true) {
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1]);
-		
-		var cam_proj = matrix_build_projection_ortho(_dim[0], _dim[1], 1, 100);
-		camera_set_proj_mat(cam, cam_proj);
-		camera_set_view_size(cam, _dim[0], _dim[1]);
 		
 		var lightFor = [ -cos(degtorad(_ldir)), -_lhgt, -sin(degtorad(_ldir)) ];
 		
@@ -250,16 +246,48 @@
 		surface_set_target(_outSurf);
 		draw_clear_alpha(0, 0);
 		
-		shader_set(sh_vertex_pnt_light);
+		var shader = sh_vertex_pnt_light;
+		if(_pass == "diff")			shader = sh_vertex_pnt_light;
+		else if(_pass == "norm")	shader = sh_vertex_normal_pass;
+		else if(_pass == "dept")	shader = sh_vertex_depth_pass;
+		
+		uniVertex_lightFor = shader_get_uniform(shader, "u_LightForward");
+		uniLightAmb = shader_get_uniform(shader, "u_AmbientLight");
+		uniLightClr = shader_get_uniform(shader, "u_LightColor");
+		uniLightInt = shader_get_uniform(shader, "u_LightIntensity");
+		uniLightNrm = shader_get_uniform(shader, "useNormal");
+		
+		shader_set(shader);
 		shader_set_uniform_f_array(uniVertex_lightFor, lightFor);
 		shader_set_uniform_f_array(uniLightAmb, colorArrayFromReal(_aclr));
 		shader_set_uniform_f_array(uniLightClr, colorArrayFromReal(_lclr));
 		shader_set_uniform_f(uniLightInt, _lint);
 		shader_set_uniform_i(uniLightNrm, use_normal);
 		
+		var cam_view, cam_proj;
+		
+		if(_proj == CAMERA_PROJ.ortho) {
+			cam_view = matrix_build_lookat(0, 0, 128, 0, 0, 0, 0, 1, 0);
+			cam_proj = matrix_build_projection_ortho(_dim[0], _dim[1], 0.1, 256);
+		} else {
+			var _adjFov = power(_fov / 90, 1 / 4) * 90;
+			var dist = _dim[0] / 2 * dtan(90 - _adjFov);
+			cam_view = matrix_build_lookat(0, 0, 1 + dist, 0, 0, 0, 0, 1, 0);
+			cam_proj = matrix_build_projection_perspective(_dim[0], _dim[1], dist, dist + 256);
+		}
+		
+		var cam = camera_get_active();
+		camera_set_view_size(cam, _dim[0], _dim[1]);
+		camera_set_view_mat(cam, cam_view);
+		camera_set_proj_mat(cam, cam_proj);
 		camera_apply(cam);
 		
-		matrix_stack_push(matrix_build(_pos[0], _pos[1], 0, 0, 0, 0, _dim[0] * _sca[0], _dim[1] * _sca[1], 1));
+		if(_proj == CAMERA_PROJ.ortho) 
+			matrix_stack_push(matrix_build(_dim[0] / 2 - _pos[0], _pos[1] - _dim[1] / 2, 0, 0, 0, 0, _dim[0] * _sca[0], _dim[1] * _sca[1], 1));
+		else 							   				 		  
+			matrix_stack_push(matrix_build(_dim[0] / 2 - _pos[0], _pos[1] - _dim[1] / 2, 0, 0, 0, 0, _dim[0] * _sca[0], _dim[1] * _sca[1], 1));
+		//matrix_stack_push(matrix_build(0, 0, 0, 0, 0, 0, 1, 1, 1));
+		
 		if(_applyLocal) _3d_local_transform(_lpos, _lrot, _lsca);
 		
 		matrix_set(matrix_world, matrix_stack_top());
@@ -272,7 +300,10 @@
 		matrix_set(matrix_world, MATRIX_IDENTITY);
 		
 		gpu_set_ztestenable(false);
-		camera_apply(0);
+		var cam = camera_get_active();
+		camera_set_view_mat(cam, matrix_build_lookat(0, 0, 1, 0, 0, 0, 0, 1, 0));
+		camera_set_proj_mat(cam, matrix_build_projection_ortho(1, 1, 0.1, 256));
+		camera_apply(cam);
 		
 		surface_reset_target();
 	}

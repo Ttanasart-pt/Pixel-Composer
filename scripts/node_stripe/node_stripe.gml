@@ -15,6 +15,9 @@ function Node_Stripe(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) const
 	uniform_blend = shader_get_uniform(shader, "blend");
 	uniform_rand = shader_get_uniform(shader, "rand");
 	
+	uniform_clr0 = shader_get_uniform(shader, "color0");
+	uniform_clr1 = shader_get_uniform(shader, "color1");
+	
 	inputs[| 0] = nodeValue(0, "Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, def_surf_size2 )
 		.setDisplay(VALUE_DISPLAY.vector);
 	
@@ -38,12 +41,16 @@ function Node_Stripe(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) const
 	inputs[| 7] = nodeValue(7, "Colors", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white)
 		.setDisplay(VALUE_DISPLAY.gradient);
 	
+	inputs[| 8] = nodeValue(8, "Color 1", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white);
+	
+	inputs[| 9] = nodeValue(9, "Color 2", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_black);
+	
 	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
 	
 	input_display_list = [ 
 		["Output",	true],	0,  
 		["Pattern",	false], 1, 2, 4, 5,
-		["Render",	false], 3, 6, 7
+		["Render",	false], 6, 7, 8, 9, 3
 	];
 	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
@@ -63,8 +70,13 @@ function Node_Stripe(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) const
 		var _pos = _data[4];
 		var _rnd = _data[5];
 		
+		var _clr0 = _data[8];
+		var _clr1 = _data[9];
+		
 		var _grad_use = _data[6];
 		inputs[| 7].setVisible(_grad_use);
+		inputs[| 8].setVisible(!_grad_use);
+		inputs[| 9].setVisible(!_grad_use);
 		
 		var _gra = _data[7];
 		var _gra_data = inputs[| 7].getExtraData();
@@ -83,6 +95,9 @@ function Node_Stripe(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) const
 			shader_set_uniform_f(uniform_amount, _amo);
 			shader_set_uniform_f(uniform_blend, _bnd);
 			shader_set_uniform_f(uniform_rand, _rnd);
+			
+			shader_set_uniform_f_array(uniform_clr0, colToVec4(_clr0));
+			shader_set_uniform_f_array(uniform_clr1, colToVec4(_clr1));
 			
 			shader_set_uniform_i(uniform_grad_use, _grad_use);
 			shader_set_uniform_i(uniform_grad_blend, ds_list_get(_gra_data, 0));

@@ -115,7 +115,7 @@
 		return ds_stack_empty(vl)? new functionTree("", []) : ds_stack_pop(vl);
 	}
 	
-	function evaluateFunction(fx, _x = 0) {
+	function evaluateFunction(fx, params = {}) {
 		static pres = ds_map_create();
 		pres[? "+"] = 1;
 		pres[? "-"] = 1;
@@ -172,18 +172,19 @@
 				}
 				
 				if(vsl == "") continue;
-				//show_debug_message("|" + vsl + "|");
 				
 				if(ds_map_exists(pres, vsl)) {
 					ds_stack_push(op, vsl);
 				} else {
 					switch(vsl) {
-						case "x": 
-						case "t":  ds_stack_push(vl, _x); break;
+						case "e":  ds_stack_push(vl, 2.71828); break;
 						case "pi": ds_stack_push(vl, pi); break;
 						
 						default :  
-							ds_stack_push(vl, toNumber(vsl));
+							if(variable_struct_exists(params, vsl)) 
+								ds_stack_push(vl, variable_struct_get(params, vsl));
+							else 
+								ds_stack_push(vl, toNumber(vsl));
 						break;
 					}
 				}

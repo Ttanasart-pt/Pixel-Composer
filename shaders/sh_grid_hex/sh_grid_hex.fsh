@@ -13,6 +13,9 @@ uniform vec2  scale;
 uniform float angle;
 uniform float thick;
 
+uniform vec4 color0;
+uniform vec4 color1;
+
 float hexagonAspect = sqrt(3.0);
 
 void main() {
@@ -38,6 +41,6 @@ void main() {
                 step(uvChanged.x + thick * hexagonAspect, uvChanged.y) + 
                 step(uvChanged.y + thick * hexagonAspect, uvChanged.x);
     }
-
-    gl_FragColor = vec4(vec3(hexagonMask), 1.);
+	
+	gl_FragColor = (hexagonMask > 0.5)? color0 : color1;
 }

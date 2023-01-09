@@ -52,12 +52,15 @@ function Node_2D_light(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) con
 	inputs[| 13] = nodeValue(13, "Radial start", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.rotation);
 	
+	inputs[| 14] = nodeValue(14, "Radial band ratio", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.5)
+		.setDisplay(VALUE_DISPLAY.slider, [0, 1, 0.01]);
+		
 	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
 	outputs[| 1] = nodeValue(1, "Light only", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
 	
 	input_display_list = [ 0, 
 		["Shape",	false], 1, 2, 6, 7, 8, 9, 
-		["Light",	false], 3, 4, 5, 12, 13,
+		["Light",	false], 3, 4, 5, 12, 13, 14,
 		["Render",	false], 11, 10 
 	];
 	
@@ -97,6 +100,7 @@ function Node_2D_light(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) con
 				
 				inputs[| 12].setVisible(true);
 				inputs[| 13].setVisible(true);
+				inputs[| 14].setVisible(true);
 				break;
 			case LIGHT_SHAPE_2D.line :
 			case LIGHT_SHAPE_2D.line_asym :
@@ -109,6 +113,7 @@ function Node_2D_light(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) con
 				
 				inputs[| 12].setVisible(false);
 				inputs[| 13].setVisible(false);
+				inputs[| 14].setVisible(false);
 				break;
 			case LIGHT_SHAPE_2D.spot :
 				inputs[| 2].setVisible(false);
@@ -120,6 +125,7 @@ function Node_2D_light(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) con
 				
 				inputs[| 12].setVisible(false);
 				inputs[| 13].setVisible(false);
+				inputs[| 14].setVisible(false);
 				break;
 		}
 		
@@ -154,14 +160,15 @@ function Node_2D_light(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) con
 			
 			switch(_shape) {
 				case LIGHT_SHAPE_2D.point :
-					var _rbnd  = _data[12];
-					var _rbns  = _data[13];
+					var _rbnd = _data[12];
+					var _rbns = _data[13];
+					var _rbnr = _data[14];
 		
 					if(_rbnd < 2)
 						draw_circle_color(_pos[0], _pos[1], _range, c_white, c_black,  0);
 					else {
 						_rbnd *= 2;
-						var bnd_amo = ceil(64 / _rbnd);
+						var bnd_amo = ceil(64 / _rbnd); //band radial per step
 						var step = bnd_amo * _rbnd;
 						var astp = 360 / step;
 						var ox, oy, nx, ny;
@@ -169,12 +176,12 @@ function Node_2D_light(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) con
 						
 						draw_primitive_begin(pr_trianglelist);
 						
-						for( var i = 0; i < step; i++ ) {
+						for( var i = 0; i <= step; i++ ) {
 							var dir = _rbns + i * astp;
 							nx = _pos[0] + lengthdir_x(_range, dir);
 							ny = _pos[1] + lengthdir_y(_range, dir);
 							
-							if(floor(i / bnd_amo) % 2 && i) {
+							if((i % bnd_amo) / bnd_amo < _rbnr && i) {
 								draw_vertex_color(_pos[0], _pos[1], c_white, 1);
 								draw_vertex_color(ox, oy, c_black, 1);
 								draw_vertex_color(nx, ny, c_black, 1);

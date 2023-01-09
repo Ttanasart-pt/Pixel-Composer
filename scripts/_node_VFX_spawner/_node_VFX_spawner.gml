@@ -35,7 +35,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = -1) : Node(_x, _y, _group) const
 		.setDisplay(VALUE_DISPLAY.gradient);
 	inputs[| 13] = nodeValue(13, "Alpha", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 1 ])
 		.setDisplay(VALUE_DISPLAY.range);
-	inputs[| 14] = nodeValue(14, "Alpha over time", self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, [1, 1, 1, 1]);
+	inputs[| 14] = nodeValue(14, "Alpha over time", self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_11);
 	
 	inputs[| 15] = nodeValue(15, "Rotate by direction", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
 	

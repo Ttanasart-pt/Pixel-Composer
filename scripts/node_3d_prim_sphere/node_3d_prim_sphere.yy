@@ -1,11 +1,11 @@
 {
   "resourceType": "GMScript",
   "resourceVersion": "1.0",
-  "name": "curve_power_function",
+  "name": "node_3d_prim_sphere",
   "isDnD": false,
   "isCompatibility": false,
   "parent": {
-    "name": "curve",
-    "path": "folders/functions/curve.yy",
+    "name": "3D",
+    "path": "folders/nodes/data/3D.yy",
   },
 }

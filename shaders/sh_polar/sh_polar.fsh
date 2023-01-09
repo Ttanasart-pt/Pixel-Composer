@@ -7,8 +7,6 @@ varying vec4 v_vColour;
 #define pi2 1.57079
 #define pi 3.14159265
 
-
-
 void main() {
 	vec2  center	= v_vTexcoord - vec2(0.5, 0.5);
 	float radius	= distance(v_vTexcoord, vec2(0.5, 0.5)) / (sqrt(2.) * .5);

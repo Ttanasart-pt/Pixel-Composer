@@ -58,7 +58,9 @@ function Node_Iterate(_x, _y, _group = -1) : Node_Collection(_x, _y, _group) con
 		}
 		
 		if(iter) {
-			if(++iterated == inputs[| 0].getValue()) {
+			iterated++;
+			
+			if(iterated == inputs[| 0].getValue()) {
 				render_time = get_timer() - loop_start_time;
 				return ITERATION_STATUS.complete;
 			} else if(iterated > inputs[| 0].getValue())

@@ -120,8 +120,6 @@ function LOAD_PATH(path, readonly = false) {
 			create_list[| i].preConnect();
 		for(var i = 0; i < ds_list_size(create_list); i++)
 			create_list[| i].connect();
-		for(var i = 0; i < ds_list_size(create_list); i++)
-			create_list[| i].postConnect();
 	} catch(e) {
 		log_warning("LOAD, connect", exception_print(e));
 	}
@@ -152,6 +150,13 @@ function LOAD_PATH(path, readonly = false) {
 		} catch(e) {
 			log_warning("LOAD, connect solver", exception_print(e));
 		}
+	}
+	
+	try {
+		for(var i = 0; i < ds_list_size(create_list); i++)
+			create_list[| i].postConnect();
+	} catch(e) {
+		log_warning("LOAD, connect", exception_print(e));
 	}
 	
 	UPDATE = RENDER_TYPE.full;

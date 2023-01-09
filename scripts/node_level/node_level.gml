@@ -77,7 +77,7 @@ function Node_Level(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constr
 			histogramUpdate(current_data[0]);
 	}
 	
-	static onValueUpdateFrom = function(index) {
+	static onValueFromUpdate = function(index) {
 		if(index == 0) {
 			update();
 			if(array_length(current_data) > 0)

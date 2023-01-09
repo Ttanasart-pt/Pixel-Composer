@@ -55,10 +55,16 @@ function Node_3D_Obj(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 	inputs[| 14] = nodeValue(14, "Object position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.vector);
 	
+	inputs[| 15] = nodeValue(15, "Projection", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+		.setDisplay(VALUE_DISPLAY.enum_button, [ "Orthographic", "Perspective" ]);
+		
+	inputs[| 16] = nodeValue(16, "Field of view", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 60)
+		.setDisplay(VALUE_DISPLAY.slider, [ 0, 90, 1 ]);
+	
 	input_display_list = [ 2, 
 		["Geometry",			false], 0, 1, 
 		["Object transform",	false], 14, 13, 11,
-		["Render",				false], 3, 5, 
+		["Camera",				false], 15, 16, 3, 5, 
 		["Light",				false], 6, 7, 8, 9, 10,
 		["Textures",			 true], 12,
 	];
@@ -66,7 +72,14 @@ function Node_3D_Obj(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 	input_display_len  = array_length(input_display_list);
 	
 	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
+	
 	outputs[| 1] = nodeValue(1, "3D object", self, JUNCTION_CONNECT.output, VALUE_TYPE.d3object, function() { return submit_vertex(); });
+	
+	outputs[| 2] = nodeValue(2, "Normal pass", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
+	
+	output_display_list = [
+		0, 2, 1
+	]
 	
 	_3d_node_init(2, /*Transform*/ 3, 13, 5);
 	
@@ -144,7 +157,7 @@ function Node_3D_Obj(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 	do_reset_material = false;
 	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
-		_3d_gizmo(active, _x, _y, _s, _mx, _my, _snx, _sny, true);
+		_3d_gizmo(active, _x, _y, _s, _mx, _my, _snx, _sny, true, false);
 	}
 	
 	static submit_vertex = function() {
@@ -197,11 +210,25 @@ function Node_3D_Obj(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 		var _lrot = inputs[| 13].getValue();
 		var _lsca = inputs[| 11].getValue();
 		
-		var _outSurf = outputs[| 0].getValue();
-		outputs[| 0].setValue(_outSurf);
+		var _proj = inputs[| 15].getValue();
+		var _fov  = inputs[| 16].getValue();
 		
-		_3d_pre_setup(_outSurf, _dim, _pos, _sca, _ldir, _lhgt, _lint, _lclr, _aclr, _lpos, _lrot, _lsca, false);
-			submit_vertex();
-		_3d_post_setup();
+		inputs[| 16].setVisible(_proj);
+		
+		for( var i = 0; i < array_length(output_display_list) - 1; i++ ) {
+			var ind = output_display_list[i];
+			var _outSurf = outputs[| ind].getValue();
+			outputs[| ind].setValue(surface_verify(_outSurf, _dim[0], _dim[1]));
+			
+			var pass = "diff";
+			switch(ind) {
+				case 0 : pass = "diff" break;
+				case 2 : pass = "norm" break;
+			}
+		
+			_3d_pre_setup(_outSurf, _dim, _pos, _sca, _ldir, _lhgt, _lint, _lclr, _aclr, _lpos, _lrot, _lsca, _proj, _fov, pass, false);
+				submit_vertex();
+			_3d_post_setup();
+		}
 	}
 }

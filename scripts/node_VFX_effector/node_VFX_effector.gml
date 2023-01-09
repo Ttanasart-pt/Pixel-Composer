@@ -13,7 +13,7 @@ function Node_VFX_effector(_x, _y, _group = -1) : Node(_x, _y, _group) construct
 	inputs[| 1] = nodeValue(1, "Area", self,   JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 16, 16, 4, 4, AREA_SHAPE.rectangle ])
 		.setDisplay(VALUE_DISPLAY.area);
 	
-	inputs[| 2] = nodeValue(2, "Falloff", self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, [0, 0, 1, 1] )
+	inputs[| 2] = nodeValue(2, "Falloff", self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_01 )
 		.setDisplay(VALUE_DISPLAY.curve);
 	
 	inputs[| 3] = nodeValue(3, "Falloff distance", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 4 );

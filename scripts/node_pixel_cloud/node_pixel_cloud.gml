@@ -30,7 +30,7 @@ function Node_Pixel_Cloud(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) 
 	
 	inputs[| 5] = nodeValue(5, "Size", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1);
 	
-	inputs[| 6] = nodeValue(6, "Alpha over lifetime", self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, [1, 1, 1, 1])
+	inputs[| 6] = nodeValue(6, "Alpha over lifetime", self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_11)
 		.setDisplay(VALUE_DISPLAY.curve);
 	
 	input_display_list = [

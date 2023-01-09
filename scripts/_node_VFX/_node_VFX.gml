@@ -40,7 +40,7 @@ function Node_VFX(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 		.setDisplay(VALUE_DISPLAY.gradient);
 	inputs[| 14] = nodeValue(14, "Alpha", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 1 ])
 		.setDisplay(VALUE_DISPLAY.range);
-	inputs[| 15] = nodeValue(15, "Alpha over time", self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, [1, 1, 1, 1]);
+	inputs[| 15] = nodeValue(15, "Alpha over time", self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_11);
 	
 	inputs[| 16] = nodeValue(16, "Rotate by direction", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
 	

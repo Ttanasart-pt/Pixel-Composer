@@ -1,21 +1,24 @@
 function Node_Color_replace(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constructor {
 	name = "Color replace";
 	
-	shader = sh_color_replace;
+	shader = sh_palette_replace;
 	uniform_from       = shader_get_uniform(shader, "colorFrom");
 	uniform_from_count = shader_get_uniform(shader, "colorFrom_amo");
 	
-	uniform_to   = shader_get_uniform(shader, "colorTo");
+	uniform_to		   = shader_get_uniform(shader, "colorTo");
+	uniform_to_count   = shader_get_uniform(shader, "colorTo_amo");
+	
 	uniform_ter  = shader_get_uniform(shader, "treshold");
 	uniform_alp  = shader_get_uniform(shader, "alphacmp");
 	uniform_inv  = shader_get_uniform(shader, "inverted");
 	uniform_hrd  = shader_get_uniform(shader, "hardReplace");
 	
 	inputs[| 0] = nodeValue(0, "Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
-	inputs[| 1] = nodeValue(1, "Color from", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, [ c_black ])
+	inputs[| 1] = nodeValue(1, "Palette from", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, [ c_black ])
 		.setDisplay(VALUE_DISPLAY.palette);
 	
-	inputs[| 2] = nodeValue(2, "Color to", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white);
+	inputs[| 2] = nodeValue(2, "Palette to", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, [ c_white ])
+		.setDisplay(VALUE_DISPLAY.palette);
 	
 	inputs[| 3] = nodeValue(3, "Treshold", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.1)
 		.setDisplay(VALUE_DISPLAY.slider, [0, 1, 0.01]);
@@ -27,7 +30,7 @@ function Node_Color_replace(_x, _y, _group = -1) : Node_Processor(_x, _y, _group
 	inputs[| 6] = nodeValue(6, "Hard replace", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
 	
 	input_display_list = [0, 
-		["Color",		false], 1, 2, 
+		["Palette",		false], 1, 2, 
 		["Comparison",	false], 3, 5, 
 		["Render",		false], 4, 6
 	];
@@ -42,12 +45,20 @@ function Node_Color_replace(_x, _y, _group = -1) : Node_Processor(_x, _y, _group
 		var alp = _data[5];
 		var hrd = _data[6];
 		
-		var _colors = array_create(array_length(fr) * 4);
+		var _colorFrom = array_create(array_length(fr) * 4);
 		for(var i = 0; i < array_length(fr); i++) {
-			_colors[i * 4 + 0] = color_get_red(fr[i]) / 255;
-			_colors[i * 4 + 1] = color_get_green(fr[i]) / 255;
-			_colors[i * 4 + 2] = color_get_blue(fr[i]) / 255;
-			_colors[i * 4 + 3] = 1;
+			_colorFrom[i * 4 + 0] = color_get_red(fr[i]) / 255;
+			_colorFrom[i * 4 + 1] = color_get_green(fr[i]) / 255;
+			_colorFrom[i * 4 + 2] = color_get_blue(fr[i]) / 255;
+			_colorFrom[i * 4 + 3] = 1;
+		}
+		
+		var _colorTo = array_create(array_length(to) * 4);
+		for(var i = 0; i < array_length(to); i++) {
+			_colorTo[i * 4 + 0] = color_get_red(to[i]) / 255;
+			_colorTo[i * 4 + 1] = color_get_green(to[i]) / 255;
+			_colorTo[i * 4 + 2] = color_get_blue(to[i]) / 255;
+			_colorTo[i * 4 + 3] = 1;
 		}
 		
 		surface_set_target(_outSurf);
@@ -55,12 +66,13 @@ function Node_Color_replace(_x, _y, _group = -1) : Node_Processor(_x, _y, _group
 		BLEND_OVER
 		
 		shader_set(shader);
-			shader_set_uniform_f_array(uniform_from, _colors);
+			shader_set_uniform_f_array(uniform_from, _colorFrom);
 			shader_set_uniform_i(uniform_from_count, array_length(fr));
 			shader_set_uniform_i(uniform_alp, alp);
 			shader_set_uniform_i(uniform_hrd, hrd);
 			
-			shader_set_uniform_f_array(uniform_to, [ color_get_red(to) / 255, color_get_green(to) / 255, color_get_blue(to) / 255, 1.0 ] );
+			shader_set_uniform_f_array(uniform_to, _colorTo);
+			shader_set_uniform_i(uniform_to_count, array_length(to));
 			shader_set_uniform_f(uniform_ter, tr);
 			shader_set_uniform_i(uniform_inv, in);
 			

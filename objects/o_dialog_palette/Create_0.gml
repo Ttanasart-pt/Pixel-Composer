@@ -120,7 +120,7 @@ event_inherited();
 		
 	function sortPalette(sortFunc) {
 		array_sort(palette, sortFunc);
-		selector.onApply();
+		onApply(palette);
 	}
 #endregion
 

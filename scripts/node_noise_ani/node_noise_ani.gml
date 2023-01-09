@@ -13,7 +13,7 @@ function Node_Noise_Aniso(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) 
 	inputs[| 1] = nodeValue(1, "Amount", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 2, 16 ])
 		.setDisplay(VALUE_DISPLAY.vector);
 	
-	inputs[| 2] = nodeValue(2, "Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, irandom(9999999));
+	inputs[| 2] = nodeValue(2, "Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, irandom(9999999));
 	
 	inputs[| 3] = nodeValue(3, "Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.vector)

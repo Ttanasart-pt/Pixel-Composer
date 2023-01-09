@@ -9,7 +9,7 @@ function Node_3D_Extrude(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) c
 	inputs[| 2] = nodeValue(2, "Object position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.vector);
 	
-	inputs[| 3] = nodeValue(3, "Object rotation", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 0 ])
+	inputs[| 3] = nodeValue(3, "Object rotation", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 180, 0 ])
 		.setDisplay(VALUE_DISPLAY.vector);
 	
 	inputs[| 4] = nodeValue(4, "Object scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 1, 0.1 ])
@@ -47,10 +47,16 @@ function Node_3D_Extrude(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) c
 	
 	inputs[| 15] = nodeValue(15, "Always update", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
 	
+	inputs[| 16] = nodeValue(16, "Projection", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+		.setDisplay(VALUE_DISPLAY.enum_button, [ "Orthographic", "Perspective" ]);
+		
+	inputs[| 17] = nodeValue(17, "Field of view", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 60)
+		.setDisplay(VALUE_DISPLAY.slider, [ 0, 90, 1 ]);
+	
 	input_display_list = [1, 
-		["Geometry",		 false], 0, 12, 8, 14,
+		["Geometry",		 false], 0, 8, 14,
 		["Object transform", false], 2, 3, 4,
-		["Render",			 false], 5, 7, 15,
+		["Camera",			 false], 16, 17, 5, 7, 15,
 		["Light",			 false], 9, 10, 11, 12, 13,
 	];
 	
@@ -58,14 +64,20 @@ function Node_3D_Extrude(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) c
 	
 	outputs[| 1] = nodeValue(1, "3D object", self, JUNCTION_CONNECT.output, VALUE_TYPE.d3object, function(index) { return submit_vertex(index); });
 	
+	outputs[| 2] = nodeValue(2, "Normal pass", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
+	
+	output_display_list = [
+		0, 2, 1
+	]
+	
 	_3d_node_init(1, /*Transform*/ 5, 3, 7);
 	
 	VB = [];
 	VB[0] = vertex_create_buffer();
-	vertex_begin(VB[0], FORMAT_PT);
+	vertex_begin(VB[0], FORMAT_PNT);
 	vertex_end(VB[0]);
 	
-	static onValueUpdateFrom = function(index) {
+	static onValueFromUpdate = function(index) {
 		if(index == 0 || index == 14) 
 			generateMesh();
 	}
@@ -84,14 +96,15 @@ function Node_3D_Extrude(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) c
 		var _ins = inputs[| 0].getValue();
 		if(!is_array(_ins)) _ins = [ _ins ];
 		
-		for( var i = 0; i < array_length(_ins); i++ ) {
+		for( var i = 0; i < array_length(_ins); i++ )
 			VB[i] = generateMeshIndex(i);
-		}
+		
+		UPDATE |= RENDER_TYPE.full;
 	}
 		
 	static generateMeshIndex = function(index) {
 		var _ins = getSingleValue( 0, index);
-		var _hei = getSingleValue(12, index);
+		var _hei = getSingleValue(14, index);
 		if(!is_surface(_ins)) return;
 		
 		var ww = surface_get_width(_ins);
@@ -216,9 +229,10 @@ function Node_3D_Extrude(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) c
 		_3d_gizmo(active, _x, _y, _s, _mx, _my, _snx, _sny);
 	}
 	
-	static submit_vertex = function(index) {
+	static submit_vertex = function(index = 0) {
 		var _ins  = getSingleValue(0, index);
 		if(!is_surface(_ins)) return;
+		if(index >= array_length(VB)) return;
 		
 		var _lpos = getSingleValue(2, index);
 		var _lrot = getSingleValue(3, index);
@@ -247,16 +261,31 @@ function Node_3D_Extrude(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) c
 		
 		var _upda = _data[15];
 		
-		surface_verify(_outSurf, _dim[0], _dim[1]);
+		var _proj = _data[16];
+		var _fov  = _data[17];
+		
+		inputs[| 17].setVisible(_proj);
+		
+		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1]);
 		if(!is_surface(_ins)) return _outSurf;
+		
+		var pass = "diff";
+		switch(_output_index) {
+			case 0 : pass = "diff" break;
+			case 2 : pass = "norm" break;
+		}
 		
 		if(_upda && ANIMATOR.frame_progress)
 			generateMesh();
 		
-		_3d_pre_setup(_outSurf, _dim, _pos, _sca, _ldir, _lhgt, _lint, _lclr, _aclr, _lpos, _lrot, _lsca, false);
+		_3d_pre_setup(_outSurf, _dim, _pos, _sca, _ldir, _lhgt, _lint, _lclr, _aclr, _lpos, _lrot, _lsca, _proj, _fov, pass, false);
 			submit_vertex(_array_index);
 		_3d_post_setup();
 		
 		return _outSurf;
+	}
+	
+	static postConnect = function() {
+		generateMesh();
 	}
 }

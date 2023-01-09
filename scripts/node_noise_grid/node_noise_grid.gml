@@ -63,9 +63,8 @@ function Node_Grid_Noise(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) c
 			shader_set_uniform_i(uniform_sam, is_surface(_sam));
 			shader_set_uniform_f(uniform_shf, _shf);
 			shader_set_uniform_i(uniform_shfax, _shfAx);
+			shader_set_uniform_f(uniform_sed, _sed);
 			
-			random_set_seed(_sed);
-			shader_set_uniform_f(uniform_sed, random_range(1.0, 100.0));
 			if(is_surface(_sam))
 				draw_surface_stretched(_sam, 0, 0, _dim[0], _dim[1]);
 			else

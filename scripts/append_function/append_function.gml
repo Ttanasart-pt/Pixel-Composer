@@ -70,8 +70,6 @@ function APPEND(_path) {
 			appended_list[| i].preConnect();
 		for(var i = 0; i < ds_list_size(appended_list); i++)
 			appended_list[| i].connect();
-		for(var i = 0; i < ds_list_size(appended_list); i++)
-			appended_list[| i].postConnect();
 	} catch(e) {
 		log_warning("APPEND, connect", exception_print(e));
 	}
@@ -84,8 +82,6 @@ function APPEND(_path) {
 		log_warning("APPEND, update", exception_print(e));
 	}
 	printlog("Update time: " + string(current_time - t)); t = current_time;
-	
-	ds_list_destroy(appended_list);
 	
 	Render(true);
 	
@@ -112,6 +108,15 @@ function APPEND(_path) {
 		}
 	}
 	printlog("Conflict time: " + string(current_time - t)); t = current_time;
+	
+	try {
+		for(var i = 0; i < ds_list_size(appended_list); i++)
+			appended_list[| i].postConnect();
+	} catch(e) {
+		log_warning("APPEND, connect", exception_print(e));
+	}
+	
+	ds_list_destroy(appended_list);
 	
 	APPENDING = false;
 	PANEL_ANIMATION.updatePropertyList();

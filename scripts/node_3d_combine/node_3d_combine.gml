@@ -33,17 +33,32 @@ function Node_3D_Combine(_x, _y, _group = -1) : Node(_x, _y, _group) constructor
 	
 	inputs[| 10] = nodeValue(10, "Ambient color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_grey);
 		
+	inputs[| 11] = nodeValue(11, "Projection", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+		.setDisplay(VALUE_DISPLAY.enum_button, [ "Orthographic", "Perspective" ]);
+		
+	inputs[| 12] = nodeValue(12, "Field of view", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 60)
+		.setDisplay(VALUE_DISPLAY.slider, [ 0, 90, 1 ]);
+	
 	input_display_list = [ 0, 
 		["Object transform",	false], 1, 2, 3,
-		["Render",				false], 4, 5,
+		["Camera",				false], 11, 12, 4, 5,
 		["Light",				false], 6, 7, 8, 9, 10,
 		["Objects",				 true], 
 	];
+	
+	data_length = 1;
 	input_fix_len = ds_list_size(inputs);
 	input_display_len = array_length(input_display_list);
 	
 	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
+	
 	outputs[| 1] = nodeValue(1, "3D objects", self, JUNCTION_CONNECT.output, VALUE_TYPE.d3object, function() { return submit_vertex(); });
+	
+	outputs[| 2] = nodeValue(2, "Normal pass", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
+	
+	output_display_list = [
+		0, 2, 1
+	]
 	
 	_3d_node_init(1, /*Transform*/ 4, 2, 5);
 	
@@ -56,10 +71,7 @@ function Node_3D_Combine(_x, _y, _group = -1) : Node(_x, _y, _group) constructor
 	}
 	if(!LOADING && !APPENDING) createNewInput();
 	
-	static updateValueFrom = function(index) {
-		if(index < input_fix_len) return;
-		if(LOADING || APPENDING) return;
-		
+	static refreshDynamicInput = function() {
 		var _l = ds_list_create();
 		for( var i = 0; i < ds_list_size(inputs); i++ ) {
 			if(i < input_fix_len || inputs[| i].value_from)	
@@ -84,6 +96,13 @@ function Node_3D_Combine(_x, _y, _group = -1) : Node(_x, _y, _group) constructor
 		input_display_list = _d;
 		
 		createNewInput();
+	}
+	
+	static onValueFromUpdate = function(index) {
+		if(index < input_fix_len) return;
+		if(LOADING || APPENDING) return;
+		
+		refreshDynamicInput();
 	}
 	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
@@ -127,11 +146,32 @@ function Node_3D_Combine(_x, _y, _group = -1) : Node(_x, _y, _group) constructor
 		var _lclr = inputs[|  9].getValue();
 		var _aclr = inputs[| 10].getValue();
 		
-		var _outSurf = outputs[| 0].getValue();
-		outputs[| 0].setValue(surface_verify(_outSurf, _dim[0], _dim[1]));
+		var _proj = inputs[| 11].getValue();
+		var _fov  = inputs[| 12].getValue();
 		
-		_3d_pre_setup(_outSurf, _dim, _pos, _sca, _ldir, _lhgt, _lint, _lclr, _aclr, _lpos, _lrot, _lsca, false);
-			submit_vertex();
-		_3d_post_setup();
+		inputs[| 12].setVisible(_proj);
+		
+		for( var i = 0; i < array_length(output_display_list) - 1; i++ ) {
+			var ind = output_display_list[i];
+			var _outSurf = outputs[| ind].getValue();
+			outputs[| ind].setValue(surface_verify(_outSurf, _dim[0], _dim[1]));
+			
+			var pass = "diff";
+			switch(ind) {
+				case 0 : pass = "diff" break;
+				case 2 : pass = "norm" break;
+			}
+		
+			_3d_pre_setup(_outSurf, _dim, _pos, _sca, _ldir, _lhgt, _lint, _lclr, _aclr, _lpos, _lrot, _lsca, _proj, _fov, pass, false);
+				submit_vertex();
+			_3d_post_setup();
+		}
+	}
+	
+	static postDeserialize = function() {
+		var _inputs = load_map[? "inputs"];
+		
+		for(var i = input_fix_len; i < ds_list_size(_inputs); i += data_length)
+			createNewInput();
 	}
 }

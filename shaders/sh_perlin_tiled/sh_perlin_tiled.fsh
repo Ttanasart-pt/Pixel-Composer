@@ -22,10 +22,10 @@ float noise (in vec2 st) {
 	vec2 f = fract(st);
 	
     // Four corners in 2D of a tile
-    float a = random(vec2(cellMin.x, cellMin.y), seed);
-    float b = random(vec2(cellMax.x, cellMin.y), seed);
-    float c = random(vec2(cellMin.x, cellMax.y), seed);
-    float d = random(vec2(cellMax.x, cellMax.y), seed);
+    float a = mix(random(vec2(cellMin.x, cellMin.y), floor(seed)), random(vec2(cellMin.x, cellMin.y), floor(seed) + 1.), fract(seed));
+    float b = mix(random(vec2(cellMax.x, cellMin.y), floor(seed)), random(vec2(cellMax.x, cellMin.y), floor(seed) + 1.), fract(seed));
+    float c = mix(random(vec2(cellMin.x, cellMax.y), floor(seed)), random(vec2(cellMin.x, cellMax.y), floor(seed) + 1.), fract(seed));
+    float d = mix(random(vec2(cellMax.x, cellMax.y), floor(seed)), random(vec2(cellMax.x, cellMax.y), floor(seed) + 1.), fract(seed));
 
     // Cubic Hermine Curve.  Same as SmoothStep()
     vec2 u = f * f * (3.0 - 2.0 * f);

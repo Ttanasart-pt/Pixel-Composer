@@ -19,15 +19,10 @@ function Node_Palette(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 		["Trim",	true],	1
 	];
 	
-	_pal = -1;
-	_ran = [0, 1];
 	static update = function() {
 		var pal = inputs[| 0].getValue();
 		var ran = inputs[| 1].getValue();
 		
-		if(pal != _pal) {
-			_pal = pal;
-		}
 		var st = floor(min(ran[0], ran[1]) * array_length(pal));
 		var en = floor(max(ran[0], ran[1]) * array_length(pal));
 		var len = max(1, en - st);

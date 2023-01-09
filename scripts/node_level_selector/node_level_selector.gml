@@ -46,6 +46,8 @@ function Node_Level_Selector(_x, _y, _group = -1) : Node_Processor(_x, _y, _grou
 
 		draw_set_color(COLORS.node_level_outline);
 		draw_rectangle(x0, y0, x1, y1, true);
+		
+		return _h;
 	});
 	
 	input_display_list = [
@@ -59,7 +61,7 @@ function Node_Level_Selector(_x, _y, _group = -1) : Node_Processor(_x, _y, _grou
 			histogramUpdate(current_data[0]);
 	}
 	
-	static onValueUpdate = function(index) {
+	static onValueFromUpdate = function(index) {
 		if(index == 0) {
 			update();
 			if(array_length(current_data) > 0)

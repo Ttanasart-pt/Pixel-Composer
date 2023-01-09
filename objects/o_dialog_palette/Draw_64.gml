@@ -153,7 +153,7 @@ if palette == 0 exit;
 	
 	if(array_length(palette) > 1) {
 		if(buttonInstant(THEME.button, bx, by, ui(28), ui(28), mouse_ui, sFOCUS, sHOVER, "", THEME.minus) == 2) {
-			array_resize(palette, array_length(palette) - 1);
+			array_delete(palette, index_selecting, 1);
 			onApply(palette);
 		}
 	} else {

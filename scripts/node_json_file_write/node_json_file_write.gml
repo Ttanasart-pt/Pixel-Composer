@@ -30,14 +30,7 @@ function Node_Json_File_Write(_x, _y, _group = -1) : Node(_x, _y, _group) constr
 	
 	if(!LOADING && !APPENDING) createNewInput();
 	
-	static updateValue = function(index) {
-		if(index < input_fix_len) return;
-		if(LOADING || APPENDING) return;
-		
-		if((index - input_fix_len) % data_length == 0) { //Variable name
-			inputs[| index + 1].name = inputs[| index].getValue() + " value";
-		}
-		
+	static refreshDynamicInput = function() {
 		var _in = ds_list_create();
 		
 		for( var i = 0; i < input_fix_len; i++ )
@@ -65,6 +58,17 @@ function Node_Json_File_Write(_x, _y, _group = -1) : Node(_x, _y, _group) constr
 		inputs = _in;
 		
 		createNewInput();
+	}
+	
+	static onValueUpdate = function(index) {
+		if(index < input_fix_len) return;
+		if(LOADING || APPENDING) return;
+		
+		if((index - input_fix_len) % data_length == 0) { //Variable name
+			inputs[| index + 1].name = inputs[| index].getValue() + " value";
+		}
+		
+		refreshDynamicInput();
 	}
 	
 	static update = function() {
@@ -96,5 +100,16 @@ function Node_Json_File_Write(_x, _y, _group = -1) : Node(_x, _y, _group) constr
 		draw_set_text(f_h5, fa_center, fa_center, COLORS._main_text);
 		var ss	= string_scale(str, bbox.w, bbox.h);
 		draw_text_transformed(bbox.xc, bbox.yc, str, ss, ss, 0);
+	}
+	
+	static postDeserialize = function() {
+		var _inputs = load_map[? "inputs"];
+		
+		for(var i = input_fix_len; i < ds_list_size(_inputs); i += data_length)
+			createNewInput();
+	}
+	
+	static doApplyDeserialize = function() {
+		refreshDynamicInput();
 	}
 }

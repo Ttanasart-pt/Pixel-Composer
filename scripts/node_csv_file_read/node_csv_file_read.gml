@@ -5,7 +5,7 @@ function Node_create_CSV_File_Read(_x, _y, _group = -1) {
 		if(path == "") return noone;
 	}
 	
-	var node = new Node_Text_File_Read(_x, _y, _group);
+	var node = new Node_CSV_File_Read(_x, _y, _group);
 	node.inputs[| 0].setValue(path);
 	node.doUpdate();
 	
