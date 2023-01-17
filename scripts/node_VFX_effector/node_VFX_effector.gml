@@ -29,8 +29,6 @@ function Node_VFX_effector(_x, _y, _group = -1) : Node(_x, _y, _group) construct
 	inputs[| 7] = nodeValue(7, "Scale particle", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 0, 0 ] )
 		.setDisplay(VALUE_DISPLAY.vector_range);
 	
-	inputs[| 8] = nodeValue(8, "Turbulence scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0 );
-	
 	input_display_list = [ 0,
 		["Area",	false], 1, 2, 3,
 		["Effect",	false], 4, 5, 6, 7,
@@ -115,8 +113,8 @@ function Node_VFX_effector(_x, _y, _group = -1) : Node(_x, _y, _group) construct
 							distance_to_line(pv[0], pv[1], _area_x1, _area_y0, _area_x1, _area_y1));
 		} else if(_area_t == AREA_SHAPE.elipse) {
 			var _dirr = point_direction(_area_x, _area_y, pv[0], pv[1]);
-			var _epx = _area_x + lengthdir_x(_area_w / 2, _dirr);
-			var _epy = _area_y + lengthdir_y(_area_h / 2, _dirr);
+			var _epx = _area_x + lengthdir_x(_area_w, _dirr);
+			var _epy = _area_y + lengthdir_y(_area_h, _dirr);
 			
 			in   = point_distance(_area_x, _area_y, pv[0], pv[1]) < point_distance(_area_x, _area_y, _epx, _epy);
 			_dst = point_distance(pv[0], pv[1], _epx, _epy);
@@ -124,7 +122,7 @@ function Node_VFX_effector(_x, _y, _group = -1) : Node(_x, _y, _group) construct
 		
 		if(_dst <= _fads) {
 			var inf = in? 0.5 + _dst / _fads : 0.5 - _dst / _fads;
-			str = eval_curve_bezier_cubic(_fall, clamp(inf, 0., 1.));
+			str = eval_curve_bezier_cubic_t(_fall, clamp(inf, 0., 1.));
 		} else if(in)
 			str = 1;
 		

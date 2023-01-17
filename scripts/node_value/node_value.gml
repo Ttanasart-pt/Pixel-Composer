@@ -253,6 +253,7 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 	connect_type = _connect;
 	value_from   = noone;
 	value_to     = ds_list_create();
+	value_to_arr = [];
 	accept_array = true;
 	
 	def_val		= _value;
@@ -424,6 +425,7 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 							setValueDirect(_val);
 						}, unit);
 						
+						extra_data[| 0] = AREA_MODE.area;
 						extract_node = "Node_Vector4";
 						break;
 					case VALUE_DISPLAY.puppet_control :
@@ -533,36 +535,11 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 						break;
 						
 					case VALUE_DISPLAY.path_font :
-						editWidget = new scrollBox(
-							function() {
-								var pth = [];
-								var root = DIRECTORY + "Fonts/*";
-								var f = file_find_first(root, -1);
-								var filter = [ ".ttf", ".otf" ];
-								while(f != "") {
-									var ext = filename_ext(DIRECTORY + "Fonts/" + f);
-									if(array_exists(filter, string_lower(ext)))
-										array_push(pth, f);
-									f = file_find_next();
-								}
-								file_find_close();
-								array_push(pth, "Open font folder...");
-								return pth;
-							},
+						editWidget = new fontScrollBox(
 							function(val) {
-								if(val == array_length(editWidget.data) - 1) {
-									shellOpenExplorer(DIRECTORY + "Fonts\\");
-									return;
-								}
-								setValueDirect(DIRECTORY + "Fonts\\" + editWidget.data[val]);
+								setValueDirect(DIRECTORY + "Fonts\\" + FONT_INTERNAL[val]);
 							}
 						);
-						
-						editWidget.extra_button = button(function() { 
-							var path = get_open_filename("*.ttf;*.otf", "");
-							if(path == "") return noone;
-							setValueDirect(path);
-						} ).setTooltip("Load font...").setIcon(THEME.folder_content, 0, COLORS._main_icon);
 						break;
 				}
 				break;
@@ -642,7 +619,10 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 		return self;
 	}
 	
-	static valueProcess = function(value, typeFrom, display, applyUnit = true, arrIndex = 0) {
+	static valueProcess = function(value, nodeFrom, applyUnit = true, arrIndex = 0) {
+		var typeFrom = nodeFrom.type;
+		var display  = nodeFrom.display_type;
+		
 		if(typeFrom == VALUE_TYPE.color) {
 			if(display_type == VALUE_DISPLAY.gradient && display == VALUE_DISPLAY._default) {
 				ds_list_clear(dyna_depo);
@@ -655,6 +635,35 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 					ds_list_add(dyna_depo, new valueKey(i / amo, value[i]));
 				}
 				return dyna_depo;
+			}
+		}
+		
+		if(display_type == VALUE_DISPLAY.area) {
+			var dispType = ds_list_get(nodeFrom.extra_data, 0);
+			var surfGet = nodeFrom.display_data;
+			if(!applyUnit || surfGet == -1) return value;
+			
+			var surf = surfGet();
+			var ww = surf[0];
+			var hh = surf[1];
+			
+			switch(dispType) {
+				case AREA_MODE.area : 
+					return value;	
+					
+				case AREA_MODE.padding : 
+					var cx = (ww - value[0] + value[2]) / 2
+					var cy = (value[1] + hh - value[3]) / 2;
+					var sw = abs((ww - value[0]) - value[2]) / 2;
+					var sh = abs(value[1] - (hh - value[3])) / 2;
+					return [cx, cy, sw, sh, value[4]];
+					
+				case AREA_MODE.two_point : 
+					var cx = (value[0] + value[2]) / 2
+					var cy = (value[1] + value[3]) / 2;
+					var sw = abs(value[0] - value[2]) / 2;
+					var sh = abs(value[1] - value[3]) / 2;
+					return [cx, cy, sw, sh, value[4]];
 			}
 		}
 		
@@ -718,7 +727,7 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 		if(is_array(_base)) { //Balance array (generate uniform array from single values)
 			if(!is_array(val)) {
 				val = array_create(array_length(_base), val);	
-				return valueProcess(val, typ, dis, applyUnit, arrIndex);
+				return valueProcess(val, nod, applyUnit, arrIndex);
 			} else if(array_length(val) < array_length(_base)) {
 				for( var i = array_length(val); i < array_length(_base); i++ )
 					val[i] = 0;
@@ -727,9 +736,9 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 		
 		if(nod.isArray(val)) { //Process data
 			for( var i = 0; i < array_length(val); i++ )
-				val[i] = valueProcess(val[i], typ, dis, applyUnit, arrIndex);
+				val[i] = valueProcess(val[i], nod, applyUnit, arrIndex);
 		} else 
-			val = valueProcess(val, typ, dis, applyUnit, arrIndex);
+			val = valueProcess(val, nod, applyUnit, arrIndex);
 		
 		return val;
 	}
@@ -969,370 +978,33 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		if(value_from != noone) return;
 		
-		var _val = getValue();
-		var hover = -1;
-		
 		switch(type) {
 			case VALUE_TYPE.integer :
 			case VALUE_TYPE.float :
 				switch(display_type) {
-					case VALUE_DISPLAY._default : #region
-						if(is_array(_val)) break;
+					case VALUE_DISPLAY._default :
+						var _angle = argument_count >  8? argument[ 8] : 0;
+						var _scale = argument_count >  9? argument[ 9] : 1;
+						var _spr   = argument_count > 10? argument[10] : THEME.anchor_selector;
+						return preview_overlay_scalar(active, _x, _y, _s, _mx, _my, _snx, _sny, _angle, _scale, _spr);
 						
-						var _angle = argument_count > 8? argument[8] : 0;
-						var _scale = argument_count > 9? argument[9] : 1;
-						var spr = argument_count > 10? argument[10] : THEME.anchor_selector;
-						var index = 0;
+					case VALUE_DISPLAY.rotation :
+						var _rad = argument_count >  8? argument[ 8] : 64;
+						return preview_overlay_rotation(active, _x, _y, _s, _mx, _my, _snx, _sny, _rad);
 						
-						var __ax = lengthdir_x(_val * _scale, _angle);
-						var __ay = lengthdir_y(_val * _scale, _angle);
+					case VALUE_DISPLAY.vector :
+						var _spr   = argument_count > 8? argument[8] : THEME.anchor_selector;
+						return preview_overlay_vector(active, _x, _y, _s, _mx, _my, _snx, _sny, _spr);
 						
-						var _ax = _x + __ax * _s;
-						var _ay = _y + __ay * _s;
+					case VALUE_DISPLAY.area :
+						return preview_overlay_area(active, _x, _y, _s, _mx, _my, _snx, _sny, display_data);
 						
-						if(drag_type) {
-							index = 1;
-							var dist = point_distance(_mx, _my, _x, _y) / _s / _scale;
-							if(key_mod_press(CTRL))
-								dist = round(dist);
-							
-							if(setValue( dist ))
-								UNDO_HOLDING = true;
-							
-							if(mouse_release(mb_left)) {
-								drag_type = 0;
-								UNDO_HOLDING = false;
-							}
-						}
-						
-						if(point_in_circle(_mx, _my, _ax, _ay, 8)) {
-							hover = 1;
-							index = 1;
-							if(mouse_press(mb_left, active)) {
-								drag_type = 1;
-								drag_mx   = _mx;
-								drag_my   = _my;
-								drag_sx   = _ax;
-								drag_sy   = _ay;
-							}
-						} 
-						
-						draw_sprite_ui_uniform(spr, index, _ax, _ay);
-						break;
-					#endregion
-					case VALUE_DISPLAY.rotation : #region
-						if(is_array(_val)) break;
-						
-						var _rad = argument_count > 8? argument[8] : 64;
-						var _ax = _x + lengthdir_x(_rad, _val);
-						var _ay = _y + lengthdir_y(_rad, _val);
-						draw_sprite_ui(THEME.anchor_rotate, 0, _ax, _ay, 1, 1, _val - 90, c_white, 1);
-						
-						if(drag_type) {
-							draw_set_color(COLORS._main_accent);
-							draw_set_alpha(0.5);
-							draw_circle(_x, _y, _rad, true);
-							draw_set_alpha(1);
-							
-							draw_sprite_ui(THEME.anchor_rotate, 1, _ax, _ay, 1, 1, _val - 90, c_white, 1);
-							var angle = point_direction(_x, _y, _mx, _my);
-							if(key_mod_press(CTRL))
-								angle = round(angle / 15) * 15;
-								
-							if(setValue( angle ))
-								UNDO_HOLDING = true;
-							
-							if(mouse_release(mb_left)) {
-								drag_type = 0;
-								UNDO_HOLDING = false;
-							}
-						}
-						
-						if(point_in_circle(_mx, _my, _ax, _ay, 8)) {
-							draw_set_color(COLORS._main_accent);
-							draw_set_alpha(0.5);
-							draw_circle(_x, _y, _rad, true);
-							draw_set_alpha(1);
-							hover = 1;
-							
-							draw_sprite_ui(THEME.anchor_rotate, 1, _ax, _ay, 1, 1, _val - 90, c_white, 1);
-							if(mouse_press(mb_left, active)) {
-								drag_type = 1;
-								drag_mx   = _mx;
-								drag_my   = _my;
-								drag_sx   = _ax;
-								drag_sy   = _ay;
-							}
-						} 
-						break;
-					#endregion
-					case VALUE_DISPLAY.vector : #region
-						if(is_array(_val[0])) break;
-						
-						var __ax = _val[0];
-						var __ay = _val[1];
-						
-						var _ax = __ax * _s + _x;
-						var _ay = __ay * _s + _y;
-						
-						draw_sprite_ui_uniform(THEME.anchor_selector, 0, _ax, _ay);
-						
-						if(drag_type) {
-							draw_sprite_ui_uniform(THEME.anchor_selector, 1, _ax, _ay);
-							var _nx = value_snap((drag_sx + (_mx - drag_mx) - _x) / _s, _snx);
-							var _ny = value_snap((drag_sy + (_my - drag_my) - _y) / _s, _sny);
-							if(key_mod_press(CTRL)) {
-								_val[0] = round(_nx);
-								_val[1] = round(_ny);
-							} else {
-								_val[0] = _nx;
-								_val[1] = _ny;
-							}
-							
-							if(setValue( _val )) 
-								UNDO_HOLDING = true;
-							
-							if(mouse_release(mb_left)) {
-								drag_type = 0;
-								UNDO_HOLDING = false;
-							}
-						}
-						
-						if(point_in_circle(_mx, _my, _ax, _ay, 8)) {
-							hover = 1;
-							draw_sprite_ui_uniform(THEME.anchor_selector, 1, _ax, _ay);
-							if(mouse_press(mb_left, active)) {
-								drag_type = 1;
-								drag_mx   = _mx;
-								drag_my   = _my;
-								drag_sx   = _ax;
-								drag_sy   = _ay;
-							}
-						} 
-						break;
-					#endregion
-					case VALUE_DISPLAY.area : #region
-						if(is_array(_val[0])) break;
-						
-						var __ax = array_safe_get(_val, 0);
-						var __ay = array_safe_get(_val, 1);
-						var __aw = array_safe_get(_val, 2);
-						var __ah = array_safe_get(_val, 3);
-						var __at = array_safe_get(_val, 4);
-						
-						var _ax = __ax * _s + _x;
-						var _ay = __ay * _s + _y;
-						var _aw = __aw * _s;
-						var _ah = __ah * _s;
-						
-						draw_set_color(COLORS._main_accent);
-						switch(__at) {
-							case AREA_SHAPE.rectangle :
-								draw_rectangle(_ax - _aw, _ay - _ah, _ax + _aw, _ay + _ah, true);
-								break;
-							case AREA_SHAPE.elipse :
-								draw_ellipse(_ax - _aw, _ay - _ah, _ax + _aw, _ay + _ah, true);
-								break;
-						}
-						
-						draw_sprite_ui_uniform(THEME.anchor, 0, _ax, _ay);
-						draw_sprite_ui_uniform(THEME.anchor_selector, 0, _ax + _aw, _ay + _ah);
-						
-						if(point_in_circle(_mx, _my, _ax + _aw, _ay + _ah, 8))
-							draw_sprite_ui_uniform(THEME.anchor_selector, 1, _ax + _aw, _ay + _ah);
-						else if(point_in_rectangle(_mx, _my, _ax - _aw, _ay - _ah, _ax + _aw, _ay + _ah))
-							draw_sprite_ui_uniform(THEME.anchor, 0, _ax, _ay, 1.25, c_white);
-						
-						if(drag_type == 1) {
-							var _xx = value_snap(drag_sx + (_mx - drag_mx) / _s, _snx);
-							var _yy = value_snap(drag_sy + (_my - drag_my) / _s, _sny);
-							
-							if(key_mod_press(CTRL)) {
-								_val[0] = round(_xx);
-								_val[1] = round(_yy);
-							} else {
-								_val[0] = _xx;
-								_val[1] = _yy;
-							}
-							
-							if(setValue(_val))
-								UNDO_HOLDING = true;
-							
-							if(mouse_release(mb_left)) {
-								drag_type = 0;
-								UNDO_HOLDING = false;
-							}
-						} else if(drag_type == 2) {
-							var _dx = value_snap((_mx - drag_mx) / _s, _snx);
-							var _dy = value_snap((_my - drag_my) / _s, _sny);
-							
-							if(key_mod_press(CTRL)) {
-								_val[2] = round(_dx);
-								_val[3] = round(_dy);
-							} else {
-								_val[2] = _dx;
-								_val[3] = _dy;
-							}
-							
-							if(keyboard_check(vk_shift)) {
-								_val[2] = max(_dx, _dy);
-								_val[3] = max(_dx, _dy);
-							}
-							
-							if(setValue(_val))
-								UNDO_HOLDING = true;
-			
-							if(mouse_release(mb_left)) {
-								drag_type = 0;
-								UNDO_HOLDING = false;
-							}
-						}
-						
-						if(active) {
-							if(point_in_circle(_mx, _my, _ax + _aw, _ay + _ah, 8)) {
-								hover = 2;
-								if(mouse_press(mb_left)) {
-									drag_type = 2;
-									drag_mx   = _ax;
-									drag_my   = _ay;
-								}
-							} else if(point_in_rectangle(_mx, _my, _ax - _aw, _ay - _ah, _ax + _aw, _ay + _ah)) {
-								hover = 1;
-								if(mouse_press(mb_left)) {
-									drag_type = 1;	
-									drag_sx   = __ax;
-									drag_sy   = __ay;
-									drag_mx   = _mx;
-									drag_my   = _my;
-								}
-							}
-						}
-						break;
-					#endregion
-					case VALUE_DISPLAY.puppet_control : #region
-						if(is_array(_val[0])) break;
-						
-						var __ax  = _val[PUPPET_CONTROL.cx];
-						var __ay  = _val[PUPPET_CONTROL.cy];
-						var __ax1 = _val[PUPPET_CONTROL.fx];
-						var __ay1 = _val[PUPPET_CONTROL.fy];
-						
-						var _ax = __ax * _s + _x;
-						var _ay = __ay * _s + _y;
-						
-						var _ax1 = (__ax + __ax1) * _s + _x;
-						var _ay1 = (__ay + __ay1) * _s + _y;
-						
-						draw_set_color(COLORS._main_accent);
-						switch(_val[PUPPET_CONTROL.mode]) {
-							case PUPPET_FORCE_MODE.move :
-								draw_line_width2(_ax, _ay, _ax1, _ay1, 6, 1);
-						
-								draw_sprite_ui_uniform(THEME.anchor_selector, 0, _ax, _ay);
-								draw_sprite_ui_uniform(THEME.anchor_selector, 2, _ax1, _ay1);
-								draw_circle(_ax, _ay, _val[PUPPET_CONTROL.width] * _s, true);
-								break;
-							case PUPPET_FORCE_MODE.pinch :
-							case PUPPET_FORCE_MODE.inflate :
-								draw_sprite_ui_uniform(THEME.anchor_selector, 0, _ax, _ay);
-								draw_circle(_ax, _ay, _val[PUPPET_CONTROL.width] * _s, true);
-								break;
-							case PUPPET_FORCE_MODE.wind :
-								var dir  = _val[PUPPET_CONTROL.fy];
-								var rad  = _val[PUPPET_CONTROL.width] * _s;
-								
-								var _l0x = _ax + lengthdir_x(rad, dir + 90);
-								var _l0y = _ay + lengthdir_y(rad, dir + 90);
-								var _l1x = _ax + lengthdir_x(rad, dir - 90);
-								var _l1y = _ay + lengthdir_y(rad, dir - 90);
-								
-								var _l0x0 = _l0x + lengthdir_x(1000, dir);
-								var _l0y0 = _l0y + lengthdir_y(1000, dir);
-								var _l0x1 = _l0x + lengthdir_x(1000, dir + 180);
-								var _l0y1 = _l0y + lengthdir_y(1000, dir + 180);
-								
-								var _l1x0 = _l1x + lengthdir_x(1000, dir);
-								var _l1y0 = _l1y + lengthdir_y(1000, dir);
-								var _l1x1 = _l1x + lengthdir_x(1000, dir + 180);
-								var _l1y1 = _l1y + lengthdir_y(1000, dir + 180);
-								
-								draw_line(_l0x0, _l0y0, _l0x1, _l0y1);
-								draw_line(_l1x0, _l1y0, _l1x1, _l1y1);
-								draw_sprite_ui_uniform(THEME.anchor_selector, 0, _ax, _ay);
-								break;
-						}
-						
-						if(drag_type == 1) {
-							draw_sprite_ui_uniform(THEME.anchor_selector, 1, _ax, _ay);
-							var _nx = value_snap(drag_sx + (_mx - drag_mx) / _s, _snx);
-							var _ny = value_snap(drag_sy + (_my - drag_my) / _s, _sny);
-							
-							if(key_mod_press(CTRL)) {
-								_val[PUPPET_CONTROL.cx] = round(_nx);
-								_val[PUPPET_CONTROL.cy] = round(_ny);
-							} else {
-								_val[PUPPET_CONTROL.cx] = _nx;
-								_val[PUPPET_CONTROL.cy] = _ny;
-							}
-							
-							if(setValue( _val ))
-								UNDO_HOLDING = true;
-							
-							if(mouse_release(mb_left)) {
-								drag_type = 0;
-								UNDO_HOLDING = false;
-							}
-						} else if(drag_type == 2) {
-							draw_sprite_ui_uniform(THEME.anchor_selector, 0, _ax1, _ay1);
-							var _nx = value_snap(drag_sx + (_mx - drag_mx) / _s, _snx);
-							var _ny = value_snap(drag_sy + (_my - drag_my) / _s, _sny);
-							
-							if(key_mod_press(CTRL)) {
-								_val[PUPPET_CONTROL.fx] = round(_nx);
-								_val[PUPPET_CONTROL.fy] = round(_ny);
-							} else {
-								_val[PUPPET_CONTROL.fx] = _nx;
-								_val[PUPPET_CONTROL.fy] = _ny;
-							}
-							
-							if(setValue( _val ))
-								UNDO_HOLDING = true;
-							
-							if(mouse_release(mb_left)) {
-								drag_type = 0;
-								UNDO_HOLDING = false;
-							}
-						}
-						
-						if(point_in_circle(_mx, _my, _ax, _ay, 8)) {
-							hover = 1;
-							draw_sprite_ui_uniform(THEME.anchor_selector, 1, _ax, _ay);
-							if(mouse_press(mb_left, active)) {
-								drag_type = 1;
-								drag_mx   = _mx;
-								drag_my   = _my;
-								drag_sx   = __ax;
-								drag_sy   = __ay;
-							}
-						} 
-						
-						if(_val[PUPPET_CONTROL.mode] == PUPPET_FORCE_MODE.move && point_in_circle(_mx, _my, _ax1, _ay1, 8)) {
-							hover = 2;
-							draw_sprite_ui_uniform(THEME.anchor_selector, 0, _ax1, _ay1);
-							if(mouse_press(mb_left, active)) {
-								drag_type = 2;
-								drag_mx   = _mx;
-								drag_my   = _my;
-								drag_sx   = __ax1;
-								drag_sy   = __ay1;
-							}
-						} 
-						break;
-					#endregion
+					case VALUE_DISPLAY.puppet_control :
+						return preview_overlay_puppet(active, _x, _y, _s, _mx, _my, _snx, _sny);
 				}
 				break;
 		}
-		return hover;
+		return -1;
 	}
 	
 	static drawJunction = function(_s, _mx, _my) {

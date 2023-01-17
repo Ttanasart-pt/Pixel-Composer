@@ -4,9 +4,7 @@ enum TEXTBOX_INPUT {
 	float
 }
 
-function textBox(_input, _onModify, _extras = noone) constructor {
-	active = false;
-	hover  = false;
+function textBox(_input, _onModify, _extras = noone) : textInput(_input, _onModify, _extras) constructor {
 	align  = fa_right;
 	hide   = false;
 	font   = noone;
@@ -23,10 +21,7 @@ function textBox(_input, _onModify, _extras = noone) constructor {
 	
 	starting_char = 1;
 	
-	input = _input;
-	onModify = _onModify;
-	extras = _extras;
-	
+	_current_text = "";
 	_input_text = "";
 	_last_text = "";
 	
@@ -45,6 +40,28 @@ function textBox(_input, _onModify, _extras = noone) constructor {
 	sprite_index = -1;
 	
 	text_surface = surface_create(1, 1);
+	
+	static activate = function() { 
+		WIDGET_CURRENT = self;
+		WIDGET_CURRENT_SCROLL = parent;
+		parentFocus();
+		
+		_input_text	= _current_text;
+		_last_text  = _current_text;
+		
+		cursor_select = 0;
+		cursor = string_length(_current_text);
+					
+		click_block = 1;
+		KEYBOARD_STRING = "";
+		keyboard_lastkey = -1;
+	}
+	
+	static deactivate = function() { 
+		apply();
+		WIDGET_CURRENT = noone;
+		UNDO_HOLDING = false;
+	}
 	
 	static apply = function() {
 		var _input_text_current = _input_text;
@@ -173,18 +190,16 @@ function textBox(_input, _onModify, _extras = noone) constructor {
 			move_cursor(string_length(_input_text) - cursor);
 		} else if(keyboard_check_pressed(vk_escape)) {
 			_input_text = _last_text;
+			deactivate();
+		} else if(keyboard_check_pressed(vk_enter))
+			deactivate();
+		else if(auto_update && keyboard_check_pressed(vk_anykey))
 			apply();
-			TEXTBOX_ACTIVE = noone;
-		} else if(keyboard_check_pressed(vk_enter)) {
-			apply();
-			TEXTBOX_ACTIVE = noone;
-		} else if(auto_update && keyboard_check_pressed(vk_anykey)) {
-			apply();
-		}
 	}
 	
 	static display_text = function(_x, _y, _text, _w, _format, _m = -1) {
 		BLEND_OVERRIDE
+		if(!interactable) draw_set_alpha(0.5);
 		
 		switch(_format) {
 			case VALUE_DISPLAY._default :
@@ -235,6 +250,7 @@ function textBox(_input, _onModify, _extras = noone) constructor {
 				break;
 		}
 		
+		draw_set_alpha(1);
 		BLEND_NORMAL
 		
 		var _xx = _x, _ch, _chw;
@@ -268,6 +284,12 @@ function textBox(_input, _onModify, _extras = noone) constructor {
 	}
 	
 	static draw = function(_x, _y, _w, _h, _text, _m, _format = VALUE_DISPLAY._default, halign = fa_left, valign = fa_top) {
+		x = _x;
+		y = _y;
+		w = _w;
+		h = _h;
+		_current_text = _text;
+		
 		if(extras && instanceof(extras) == "buttonClass") {
 			extras.hover  = hover;
 			extras.active = active;
@@ -316,19 +338,13 @@ function textBox(_input, _onModify, _extras = noone) constructor {
 				}
 				
 				setMouseWrap();
-				if(mouse_release(mb_left)) {
-					UNDO_HOLDING = false;
-					TEXTBOX_ACTIVE = noone;
-				}
+				if(mouse_release(mb_left))
+					deactivate();
 			}
 			
 			if(mouse_release(mb_left))
 				sliding = 0;
 		}
-		
-		
-		var _dpX = _x + ui(8);
-		var _dpY = _y;
 		
 		switch(halign) {
 			case fa_left:   _x = _x;			break;	
@@ -341,6 +357,9 @@ function textBox(_input, _onModify, _extras = noone) constructor {
 			case fa_center: _y = _y - _h / 2;	break;	
 			case fa_bottom: _y = _y - _h;		break;	
 		}
+		
+		var _dpX = _x + ui(8);
+		var _dpY = _y;
 		
 		draw_set_text(font == noone? f_p0 : font, fa_left, fa_top);
 		
@@ -355,7 +374,7 @@ function textBox(_input, _onModify, _extras = noone) constructor {
 		draw_sprite_stretched(THEME.textbox, 3, _x, _y, _w, _h);
 		disp_x = lerp_float(disp_x, disp_x_to, 5);
 		
-		if(self == TEXTBOX_ACTIVE) { 
+		if(self == WIDGET_CURRENT) { 
 			draw_sprite_stretched(THEME.textbox, sprite_index == -1? 2 : sprite_index, _x, _y, _w, _h);
 			editText();
 			
@@ -364,19 +383,19 @@ function textBox(_input, _onModify, _extras = noone) constructor {
 					if(keyboard_check(vk_shift)) {
 						if(cursor_select == -1)
 							cursor_select = cursor;
-					} else 
-						cursor_select	= -1;
-						
-					move_cursor(-1);
+					} else if(cursor_select != -1)
+						cursor_select = -1;
+					else 
+						move_cursor(-1);
 				}
 				if(KEYBOARD_PRESSED == vk_right) {
 					if(keyboard_check(vk_shift)) {
 						if(cursor_select == -1)
 							cursor_select = cursor;
-					} else 
+					} else if(cursor_select != -1)
 						cursor_select	= -1;
-					
-					move_cursor(1);
+					else 
+						move_cursor(1);
 				}
 			#endregion
 			
@@ -473,10 +492,8 @@ function textBox(_input, _onModify, _extras = noone) constructor {
 			
 			disp_x_to = clamp(disp_x_to, disp_x_min, disp_x_max);
 			
-			if(!point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + _h) && mouse_press(mb_left)) {
-				apply();
-				TEXTBOX_ACTIVE = noone;
-			}
+			if(!point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + _h) && mouse_press(mb_left))
+				deactivate();
 		} else {
 			var txt = getDisplayText(_text);
 			draw_set_text(font == noone? f_p0 : font, fa_left, fa_center);
@@ -494,18 +511,10 @@ function textBox(_input, _onModify, _extras = noone) constructor {
 					draw_sprite_stretched_ext(THEME.textbox, 1, _x, _y, _w, _h, c_white, 0.5);	
 				else
 					draw_sprite_stretched(THEME.textbox, 1, _x, _y, _w, _h);	
-				if(mouse_press(mb_left, active)) {
-					TEXTBOX_ACTIVE  = self;
-					click_block = 1;
-					KEYBOARD_STRING = "";
-					keyboard_lastkey = -1;
-				
-					_input_text	= _text;
-					_last_text  = _text;
-				}
-			} else if(!hide) {
-				draw_sprite_stretched(THEME.textbox, 0, _x, _y, _w, _h);
-			}
+				if(mouse_press(mb_left, active))
+					activate();
+			} else if(!hide)
+				draw_sprite_stretched_ext(THEME.textbox, 0, _x, _y, _w, _h, c_white, 0.5 + 0.5 * interactable);
 			
 			if(slidable) {
 				if(_w > ui(64))
@@ -528,8 +537,7 @@ function textBox(_input, _onModify, _extras = noone) constructor {
 			draw_surface(text_surface, _dpX, _dpY);
 		}
 		
-		hover  = false;
-		active = false;
+		resetFocus();
 		
 		sprite_index = -1;
 		return _h;

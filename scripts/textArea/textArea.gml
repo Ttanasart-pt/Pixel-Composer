@@ -3,20 +3,15 @@ enum TEXT_AREA_FORMAT {
 	code
 }
 
-function textArea(_input, _onModify, _extras = noone) constructor {
-	active = false;
-	hover  = false;
+function textArea(_input, _onModify, _extras = noone) : textInput(_input, _onModify, _extras) constructor {
 	font   = f_p0;
 	hide   = false;
 	line_width = 1000;
 	
 	auto_update = false;
 	
-	input = _input;
-	onModify = _onModify;
-	extras = _extras;
-	
 	_input_text_line = [];
+	_current_text = "";
 	_input_text = "";
 	_prev_text = "";
 	_last_value = "";
@@ -41,9 +36,27 @@ function textArea(_input, _onModify, _extras = noone) constructor {
 	
 	_cl = -1;
 	
-	static deselect = function() {
+	static activate = function() { 
+		WIDGET_CURRENT = self;
+		WIDGET_CURRENT_SCROLL = parent;
+		parentFocus();
+		
+		_input_text		= _current_text;
+		_last_value     = _current_text;
+		
+		cursor_pos_x = 0;
+		cursor_pos_y = 0;
+		click_block = 1;
+		KEYBOARD_STRING = "";
+		keyboard_lastkey = -1;
+					
+		cut_line();
+	}
+	
+	static deactivate = function() { 
+		if(WIDGET_CURRENT != self) return;
 		apply();
-		TEXTBOX_ACTIVE = noone;
+		WIDGET_CURRENT = noone;
 		UNDO_HOLDING = false;
 	}
 	
@@ -236,9 +249,9 @@ function textArea(_input, _onModify, _extras = noone) constructor {
 		} else if(keyboard_check_pressed(vk_escape)) {
 			_input_text = _last_value;
 			cut_line();
-			deselect();
+			deactivate();
 		} else if(keyboard_check_pressed(vk_enter) && !key_mod_press(SHIFT)) {
-			deselect();
+			deactivate();
 		}
 	}
 	
@@ -252,6 +265,7 @@ function textArea(_input, _onModify, _extras = noone) constructor {
 		var target = -999;
 		
 		draw_set_text(font, fa_left, fa_top, COLORS._main_text);
+		draw_set_alpha(0.5 + 0.5 * interactable)
 		
 		var ch_x = _x;
 		var ch_y = _y;
@@ -272,6 +286,8 @@ function textArea(_input, _onModify, _extras = noone) constructor {
 			
 			ch_y += line_height();
 		}
+		
+		draw_set_alpha(1);
 		
 		if(_mx != -1 && _my != -1) {
 			var char_run = 0, _l, _ch_w, _ch_h, _str, _chr;
@@ -323,6 +339,12 @@ function textArea(_input, _onModify, _extras = noone) constructor {
 	}
 	
 	static draw = function(_x, _y, _w, _h, _text, _m) {
+		x = _x;
+		y = _y;
+		w = _w;
+		h = _h;
+		_current_text = _text;
+		
 		if(extras && instanceof(extras) == "buttonClass") {
 			extras.hover  = hover;
 			extras.active = active;
@@ -360,7 +382,7 @@ function textArea(_input, _onModify, _extras = noone) constructor {
 			}
 		}
 		
-		if(self == TEXTBOX_ACTIVE) { 
+		if(self == WIDGET_CURRENT) { 
 			draw_set_text(font, fa_left, fa_top, COLORS._main_text);
 			draw_sprite_stretched(THEME.textbox, 2, _x, _y, _w, hh);
 			editText();
@@ -536,28 +558,16 @@ function textArea(_input, _onModify, _extras = noone) constructor {
 			#endregion
 			
 			if(!point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + hh) && mouse_press(mb_left)) {
-				deselect();
+				deactivate();
 			}
 		} else {
 			if(hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + hh)) {
 				if(hide)
 					draw_sprite_stretched_ext(THEME.textbox, 1, _x, _y, _w, hh, c_white, 0.5);	
 				else
-					draw_sprite_stretched(THEME.textbox, 1, _x, _y, _w, hh);	
-				if(mouse_press(mb_left, active)) {
-					cursor_pos_x = 0;
-					cursor_pos_y = 0;
-					
-					TEXTBOX_ACTIVE  = self;
-					click_block = 1;
-					KEYBOARD_STRING = "";
-					keyboard_lastkey = -1;
-					
-					_input_text		= _text;
-					_last_value     = _text;
-					
-					cut_line();
-				}
+					draw_sprite_stretched_ext(THEME.textbox, 1, _x, _y, _w, hh, c_white, 0.5 + 0.5 * interactable);	
+				if(mouse_press(mb_left, active))
+					activate();
 			} else if(!hide) {
 				draw_sprite_stretched(THEME.textbox, 0, _x, _y, _w, hh);
 			}
@@ -565,8 +575,7 @@ function textArea(_input, _onModify, _extras = noone) constructor {
 			display_text(tx, _y + ui(7), string(_text), _w - ui(4));
 		}
 		
-		hover  = false;
-		active = false;
+		resetFocus();
 		
 		return hh;
 	}

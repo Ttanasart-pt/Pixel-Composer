@@ -2,8 +2,14 @@ function Node_VFX_Turbulence(_x, _y, _group = -1) : Node_VFX_effector(_x, _y, _g
 	name = "Turbulence";
 	node_draw_icon = s_node_vfx_turb;
 	
+	inputs[| 4].setVisible(false, false);
+	
+	inputs[| 8] = nodeValue(8, "Turbulence scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1 )
+		.setVisible(true, false);
+		
+	array_push(input_display_list, 8);
+	
 	function onAffect(part, str) {
-		var _vect = current_data[4];
 		var _sten = current_data[5];
 		var _rot_range = current_data[6];
 		var _sca_range = current_data[7];
@@ -12,20 +18,22 @@ function Node_VFX_Turbulence(_x, _y, _group = -1) : Node_VFX_effector(_x, _y, _g
 		
 		var pv = part.getPivot();
 		
-		var t_scale = current_data[10];
-		var per = (perlin_noise(pv[0] / t_scale, pv[1] / t_scale, 4, part.seed) - 0.5) * 2;
-		per *= str;
-					
-		part.x = part.x + _vect[0] * per;
-		part.y = part.y + _vect[1] * per;
-					
-		part.rot += _rot * per;
+		var t_scale = current_data[8];
+		var perx = (perlin_noise(pv[0] / t_scale, pv[1] / t_scale, 1, part.seed)       - 0.5) * 2;
+		var pery = (perlin_noise(pv[0] / t_scale, pv[1] / t_scale, 1, part.seed + 100) - 0.5) * 2;
+		
+		part.x += perx * str * _sten;
+		part.y += pery * str * _sten;
+		
+		part.rot += _rot * perx;
 		
 		var scx_s = _sca[0] * str;
 		var scy_s = _sca[1] * str;
-		if(scx_s < 0)	part.scx = lerp_linear(part.scx, 0, abs(scx_s));
-		else			part.scx += sign(part.scx) * scx_s;
-		if(scy_s < 0)	part.scy = lerp_linear(part.scy, 0, abs(scy_s));
-		else			part.scy += sign(part.scy) * scy_s;
+		
+		if(scx_s < 0)		part.scx = lerp_linear(part.scx, 0, abs(scx_s));
+		else if(scx_s > 0)	part.scx += sign(part.scx) * scx_s;
+		
+		if(scy_s < 0)		part.scy = lerp_linear(part.scy, 0, abs(scy_s));
+		else if(scy_s > 0)	part.scy += sign(part.scy) * scy_s;
 	}
 }

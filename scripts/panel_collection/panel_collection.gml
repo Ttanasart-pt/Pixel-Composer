@@ -1,6 +1,10 @@
 function Panel_Collection() : PanelContent() constructor {
 	expandable = false;
+	
 	group_w   = ui(180);
+	group_w_dragging = false;
+	group_w_sx = false;
+	group_w_mx = false;
 	
 	function initSize() {
 		content_w = w - ui(8) - group_w;
@@ -40,16 +44,6 @@ function Panel_Collection() : PanelContent() constructor {
 		searchCollection(search_list, search_string);
 	});
 	tb_search.auto_update = true;
-	
-	//function onFocusBegin() {
-	//	TEXTBOX_ACTIVE = tb_search;
-	//}
-	//function onFocusEnd() {
-	//	if(TEXTBOX_ACTIVE == tb_search)
-	//		TEXTBOX_ACTIVE = noone;
-	//	search_string = "";
-	//	tb_search._input_text = search_string;
-	//}
 	
 	contentView = 0;
 	contentPane = new scrollPane(content_w, content_h, function(_y, _m) {
@@ -103,7 +97,8 @@ function Panel_Collection() : PanelContent() constructor {
 						if(_node.path == updated_path && updated_prog > 0) 
 							draw_sprite_stretched_ext(THEME.node_glow, 0, _boxx - 9, yy - 9, grid_size + 18, grid_size + 18, COLORS._main_value_positive, updated_prog);
 						
-						if(_node.spr) {
+						if(variable_struct_exists(_node, "getSpr")) _node.getSpr();
+						if(sprite_exists(_node.spr)) {
 							var sw = sprite_get_width(_node.spr);
 							var sh = sprite_get_height(_node.spr);
 							var ss = ui(32) / max(sw, sh);
@@ -114,9 +109,8 @@ function Panel_Collection() : PanelContent() constructor {
 							var sy = yy + grid_size / 2 + yo;
 							
 							draw_sprite_ext(_node.spr, frame, sx, sy, ss, ss, 0, c_white, 1);
-						} else {
+						} else
 							draw_sprite_ui_uniform(THEME.group, 0, _boxx + grid_size / 2, yy + grid_size / 2, 1, c_white);
-						}
 						
 						draw_set_text(f_p2, fa_center, fa_top, COLORS._main_text);
 						name_height = max(name_height, string_height_ext(_node.name, -1, grid_size) + 8);
@@ -158,7 +152,8 @@ function Panel_Collection() : PanelContent() constructor {
 				var spr_x = list_height / 2 + ui(14);
 				var spr_y = yy + list_height / 2;
 				var spr_s = list_height - ui(8);
-				if(variable_struct_exists(_node, "spr") && sprite_exists(_node.spr)) {
+				if(variable_struct_exists(_node, "getSpr")) _node.getSpr();
+				if(sprite_exists(_node.spr)) {
 					var sw = sprite_get_width(_node.spr);
 					var sh = sprite_get_height(_node.spr);
 					var ss = spr_s / max(sw, sh);
@@ -198,6 +193,8 @@ function Panel_Collection() : PanelContent() constructor {
 	
 	function onResize() {
 		initSize();
+		
+		folderPane.resize(group_w - ui(4), content_h);
 		contentPane.resize(content_w, content_h);
 		folderPane.resize(group_w - ui(4), content_h);
 	}
@@ -235,6 +232,31 @@ function Panel_Collection() : PanelContent() constructor {
 		folderPane.active = pHOVER;
 		folderPane.draw(0, content_y, mx, my - content_y);
 		
+		#region resize width
+			if(group_w_dragging) {
+				CURSOR = cr_size_we;
+				
+				var _gw = group_w_sx + (mx - group_w_mx);
+				_gw = max(ui(180), _gw);
+				group_w = _gw;
+				
+				onResize();
+				
+				if(mouse_release(mb_left)) {
+					group_w_dragging = false;
+				}
+			}
+			
+			if(pHOVER && point_in_rectangle(mx, my, group_w - ui(2), content_y, group_w + ui(2), content_y + content_h)) {
+				CURSOR = cr_size_we;
+				if(pFOCUS && mouse_press(mb_left)) {
+					group_w_dragging = true;
+					group_w_mx = mx;
+					group_w_sx = group_w;
+				}
+			}
+		#endregion
+		
 		var _x = ui(16);
 		var _y = ui(24);
 		var bh = line_height(f_p0b, 8);
@@ -257,13 +279,6 @@ function Panel_Collection() : PanelContent() constructor {
 		
 		var bx = w - ui(40);
 		var by = ui(12);
-		
-		//tb_search.hover = pHOVER;
-		//tb_search.focus = pFOCUS;
-		//if(tb_search.focus)
-		//	TEXTBOX_ACTIVE = tb_search;
-		//else if(TEXTBOX_ACTIVE == tb_search)
-		//	TEXTBOX_ACTIVE = noone;
 		
 		if(search_string == "") {
 			if(buttonInstant(THEME.button_hide, bx, by, ui(24), ui(24), [mx, my], pFOCUS, pHOVER, contentView? "Grid view" : "List view", THEME.view_mode, contentView) == 2) {

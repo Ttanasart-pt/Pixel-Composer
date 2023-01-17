@@ -158,11 +158,25 @@
         "yorigin": 24,
         "slice": null
     },
+    "cursor_select": {
+        "path": "./icon/s_cursor.png",
+        "subimages": 2,
+        "xorigin": 16,
+        "yorigin": 16,
+        "slice": null
+    },
     "file": {
         "path": "./icon/s_file.png",
         "subimages": 1,
         "xorigin": 24,
         "yorigin": 24,
+        "slice": null
+    },
+    "explorer": {
+        "path": "./icon/s_file_explorer.png",
+        "subimages": 1,
+        "xorigin": 20,
+        "yorigin": 20,
         "slice": null
     },
     "fill": {
@@ -410,6 +424,13 @@
         "yorigin": 72,
         "slice": null
     },
+    "inspector_area_type": {
+        "path": "./inspector/s_prop_area_type.png",
+        "subimages": 3,
+        "xorigin": 16,
+        "yorigin": 16,
+        "slice": null
+    },
     "inspector_padding": {
         "path": "./inspector/s_inspector_padding.png",
         "subimages": 1,
@@ -564,16 +585,10 @@
     },
     "node_pin_bg_active": {
         "path": "./node/s_node_pin_active.png",
-        "subimages": 2,
+        "subimages": 1,
         "xorigin": 20,
         "yorigin": 20,
-        "slice": {
-            "enabled": true,
-            "left": 9,
-            "right": 9,
-            "top": 9,
-            "bottom": 9
-        }
+        "slice": null
     },
     "node_active": {
         "path": "./node/s_node_active.png",
@@ -656,8 +671,8 @@
     "node_resize": {
         "path": "./icon/s_node_resize.png",
         "subimages": 1,
-        "xorigin": 16,
-        "yorigin": 16,
+        "xorigin": 32,
+        "yorigin": 32,
         "slice": null
     },
     "node_state": {
@@ -927,7 +942,7 @@
     },
     "anchor": {
         "path": "./preview/s_anchor.png",
-        "subimages": 1,
+        "subimages": 2,
         "xorigin": 20,
         "yorigin": 20,
         "slice": null
@@ -944,6 +959,13 @@
         "subimages": 2,
         "xorigin": 24,
         "yorigin": 24,
+        "slice": null
+    },
+    "anchor_solid_hori": {
+        "path": "./preview/s_anchor_solid.png",
+        "subimages": 2,
+        "xorigin": 32,
+        "yorigin": 20,
         "slice": null
     },
     "anchor_scale_hori": {
@@ -1235,6 +1257,19 @@
             "right": 4,
             "top": 4,
             "bottom": 4
+        }
+    },
+    "widget_selecting": {
+        "path": "./widget/s_widget_highlight.png",
+        "subimages": 1,
+        "xorigin": 0,
+        "yorigin": 0,
+        "slice": {
+            "enabled": true,
+            "left": 5,
+            "right": 5,
+            "top": 5,
+            "bottom": 5
         }
     },
     "textbox": {

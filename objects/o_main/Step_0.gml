@@ -49,7 +49,8 @@
 	if(ds_map_exists(HOTKEYS, "")) {
 		var l = HOTKEYS[? ""];
 		for(var i = 0; i < ds_list_size(l); i++) {
-			var hotkey	= l[| i];
+			var hotkey = l[| i];
+			var name = hotkey.name;
 			
 			if(key_press(hotkey.key, hotkey.modi)) {
 				hotkey.action();

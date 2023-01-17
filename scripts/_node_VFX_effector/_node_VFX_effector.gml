@@ -78,8 +78,8 @@ function Node_Particle_Effector(_x, _y, _group = -1) : Node(_x, _y, _group) cons
 		var _area_y0 = _area_y - _area_h;
 		var _area_y1 = _area_y + _area_h;
 		
-		for(var i = 0; i < ds_list_size(parts); i++) {
-			var part = parts[| i];
+		for(var i = 0; i < array_length(parts); i++) {
+			var part = parts[i];
 			var pv = part.getPivot();
 			var px = _x + part.x * _s;
 			var py = _y + part.y * _s;
@@ -91,12 +91,12 @@ function Node_Particle_Effector(_x, _y, _group = -1) : Node(_x, _y, _group) cons
 									distance_to_line(pv[0], pv[1], _area_x0, _area_y1, _area_x1, _area_y1), 
 									distance_to_line(pv[0], pv[1], _area_x0, _area_y0, _area_x0, _area_y1), 
 									distance_to_line(pv[0], pv[1], _area_x1, _area_y0, _area_x1, _area_y1));
-					str = eval_curve_bezier_cubic(_fall, clamp(_dst / _fads, 0., 1.));
+					str = eval_curve_bezier_cubic_t(_fall, clamp(_dst / _fads, 0., 1.));
 				}
 			} else if(_area_t == AREA_SHAPE.elipse) {
 				if(point_in_circle(pv[0], pv[1], _area_x, _area_y, min(_area_w, _area_h))) {
 					var _dst = point_distance(pv[0], pv[1], _area_x, _area_y);
-					str = eval_curve_bezier_cubic(_fall, clamp(_dst / _fads, 0., 1.));
+					str = eval_curve_bezier_cubic_t(_fall, clamp(_dst / _fads, 0., 1.));
 				}
 			}
 			
@@ -138,6 +138,19 @@ function Node_Particle_Effector(_x, _y, _group = -1) : Node(_x, _y, _group) cons
 			}
 			
 			draw_sprite_ui_uniform(THEME.preview_crosshair, 0, px, py, 1, cc, ss);
+		}
+	}
+	
+	static updateParticleForward = function(_render = true) {
+		update();
+		
+		var pt = outputs[| 0];
+		for( var i = 0; i < ds_list_size(pt.value_to); i++ ) {
+			var _n = pt.value_to[| i];
+			if(_n.value_from != pt) continue;
+			
+			if(variable_struct_exists(_n.node, "updateParticleForward"))
+				_n.node.updateParticleForward();
 		}
 	}
 	
@@ -206,12 +219,12 @@ function Node_Particle_Effector(_x, _y, _group = -1) : Node(_x, _y, _group) cons
 								distance_to_line(pv[0], pv[1], _area_x0, _area_y1, _area_x1, _area_y1), 
 								distance_to_line(pv[0], pv[1], _area_x0, _area_y0, _area_x0, _area_y1), 
 								distance_to_line(pv[0], pv[1], _area_x1, _area_y0, _area_x1, _area_y1));
-				str = eval_curve_bezier_cubic(_fall, clamp(_dst / _fads, 0., 1.));
+				str = eval_curve_bezier_cubic_t(_fall, clamp(_dst / _fads, 0., 1.));
 			}
 		} else if(_area_t == AREA_SHAPE.elipse) {
 			if(point_in_circle(pv[0], pv[1], _area_x, _area_y, min(_area_w, _area_h))) {
 				var _dst = point_distance(pv[0], pv[1], _area_x, _area_y);
-				str = eval_curve_bezier_cubic(_fall, clamp(_dst / _fads, 0., 1.));
+				str = eval_curve_bezier_cubic_t(_fall, clamp(_dst / _fads, 0., 1.));
 			}
 		}
 		
@@ -297,7 +310,7 @@ function Node_Particle_Effector(_x, _y, _group = -1) : Node(_x, _y, _group) cons
 		for(var i = 0; i < ds_list_size(inputs); i++) {
 			current_data[i] = inputs[| i].getValue();
 		}
-		for(var i = 0; i < ds_list_size(parts); i++)
-			affect(parts[| i]);
+		for(var i = 0; i < array_length(parts); i++)
+			affect(parts[i]);
 	}
 }

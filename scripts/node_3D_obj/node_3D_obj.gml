@@ -1,7 +1,7 @@
 function Node_create_3D_Obj_path(_x, _y, path) {
 	if(!file_exists(path)) return noone;
 	
-	var node = new Node_3D_Obj(_x, _y);
+	var node = new Node_3D_Obj(_x, _y, PANEL_GRAPH.getCurrentContext());
 	node.setPath(path);
 	return node;
 }
@@ -213,7 +213,7 @@ function Node_3D_Obj(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 		var _proj = inputs[| 15].getValue();
 		var _fov  = inputs[| 16].getValue();
 		
-		inputs[| 16].setVisible(_proj);
+		inputs[| 16].setVisible(_proj == 1);
 		
 		for( var i = 0; i < array_length(output_display_list) - 1; i++ ) {
 			var ind = output_display_list[i];

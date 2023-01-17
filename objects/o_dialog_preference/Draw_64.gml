@@ -79,7 +79,7 @@ if !ready exit;
 		
 		sp_colors.active = sHOVER;
 		sp_colors.draw(dialog_x + ui(168), yy + ui(40));
-	} else if(page_current == 2) {
+	} else if(page_current == 4) {
 		if(mouse_press(mb_left, sFOCUS)) 
 			hk_editing = noone;
 		

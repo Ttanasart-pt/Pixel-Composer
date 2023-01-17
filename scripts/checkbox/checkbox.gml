@@ -1,10 +1,17 @@
-function checkBox(_onClick) constructor {
-	active = false;
-	hover  = false;
-	
+function checkBox(_onClick) : widget() constructor {
 	onClick = _onClick;
 	
+	static trigger = function() { 
+		if(!onClick) return;
+		onClick();
+	}
+	
 	static draw = function(_x, _y, _value, _m, ss = ui(28), halign = fa_left, valign = fa_top) {
+		x = _x;
+		y = _y;
+		w = ss;
+		h = ss;
+		
 		var _dx, _dy;
 		switch(halign) {
 			case fa_left:   _dx = _x;			break;	
@@ -24,10 +31,13 @@ function checkBox(_onClick) constructor {
 			draw_sprite_stretched(THEME.checkbox, _value * 2 + 1, _dx, _dy, ss, ss);	
 			
 			if(mouse_press(mb_left, active))
-				if(onClick) onClick();
-		}
+				trigger();
+		} else
+			if(mouse_press(mb_left)) deactivate();
 		
-		hover  = false;
-		active = false;
+		if(WIDGET_CURRENT == self)
+			draw_sprite_stretched(THEME.widget_selecting, 0, _dx - ui(3), _dy - ui(3), ss + ui(6), ss + ui(6));	
+		
+		resetFocus();
 	}
 }

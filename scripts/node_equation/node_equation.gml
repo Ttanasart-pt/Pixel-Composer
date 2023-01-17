@@ -4,7 +4,7 @@ function Node_Equation(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) con
 	previewable = false;
 	
 	w = 96;
-	min_h = 0;
+	
 	
 	inputs[| 0] = nodeValue(1, "Equation", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "");
 	
@@ -14,11 +14,16 @@ function Node_Equation(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) con
 		
 		inputs[| index + 1] = nodeValue( index + 1, "Argument value", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0 )
 			.setVisible(true, true);
+		inputs[| index + 1].editWidget.interactable = false;
 	}
 	
 	outputs[| 0] = nodeValue(0, "Result", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, 0);
 	
 	argument_renderer = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) {
+		argument_renderer.x = _x;
+		argument_renderer.y = _y;
+		argument_renderer.w = _w;
+		
 		var tx = _x + ui(8);
 		var ty = _y + ui(8);
 		var hh = ui(8);
@@ -28,16 +33,14 @@ function Node_Equation(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) con
 			var _h = 0;
 			
 			var _jName = inputs[| i + 0];
-			_jName.editWidget.hover  = _hover;
-			_jName.editWidget.active = _focus;
+			_jName.editWidget.setFocus(_focus, _hover);
 			_jName.editWidget.draw(tx, ty, ui(128), _th, _jName.showValue(), _m, _jName.display_type);
 			
 			draw_set_text(f_p1, fa_center, fa_top, COLORS._main_text_sub);
 			draw_text_add(tx + ui(128 + 12), ty + ui(6), "=");
 			
 			var _jValue = inputs[| i + 1];
-			_jValue.editWidget.hover  = _hover;
-			_jValue.editWidget.active = _focus;
+			_jValue.editWidget.setFocus(_focus, _hover);
 			_jValue.editWidget.draw(tx + ui(128 + 24), ty, _w - ui(128 + 24 + 16), _th, _jValue.showValue(), _m);
 			
 			_h += _th + ui(6);
@@ -45,8 +48,15 @@ function Node_Equation(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) con
 			ty += _h;
 		}
 		
+		argument_renderer.h = hh;
 		return hh;
 	});
+	
+	argument_renderer.register = function(parent = noone) {
+		for( var i = input_fix_len; i < ds_list_size(inputs); i++ ) {
+			inputs[| i].editWidget.register(parent);
+		}
+	}
 	
 	input_display_list = [ 
 		["Function",	false], 0,
@@ -72,6 +82,7 @@ function Node_Equation(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) con
 			if(inputs[| i].getValue() != "") {
 				ds_list_add(_in, inputs[| i + 0]);
 				ds_list_add(_in, inputs[| i + 1]);
+				inputs[| i + 1].editWidget.interactable = true;
 				
 				array_push(input_display_list, i + 1);
 			} else {
@@ -128,9 +139,5 @@ function Node_Equation(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) con
 		
 		for(var i = input_fix_len; i < ds_list_size(_inputs); i += data_length)
 			createNewInput();
-	}
-	
-	static doApplyDeserialize = function() {
-		refreshDynamicInput();
 	}
 }

@@ -2,32 +2,43 @@ function buttonPalette(_onApply) {
 	return new buttonPaletteClass(_onApply);
 }
 
-function buttonPaletteClass(_onApply) constructor {
-	active = false;
-	hover  = false;
-	
+function buttonPaletteClass(_onApply) : widget() constructor {
 	onApply = _onApply;
+	current_palette = noone;
+	
+	static trigger = function() {
+		var dialog = dialogCall(o_dialog_palette, WIN_W / 2, WIN_H / 2);
+		dialog.setPalette(current_palette);
+		dialog.onApply = onApply;
+	}
 	
 	static draw = function(_x, _y, _w, _h, _color, _m) {
+		x = _x;
+		y = _y;
+		w = _w;
+		h = _h;
+		current_palette = _color;
+		
 		var click = false;
 		if(hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + _h)) {
 			draw_sprite_stretched(THEME.button, 1, _x, _y, _w, _h);	
 			if(mouse_press(mb_left, active)) {
-				var dialog = dialogCall(o_dialog_palette, WIN_W / 2, WIN_H / 2);
-				dialog.setPalette(_color);
-				dialog.onApply = onApply;
+				trigger();
 				click = true;
 			}
 			if(mouse_click(mb_left, active))
 				draw_sprite_stretched(THEME.button, 2, _x, _y, _w, _h);	
 		} else {
 			draw_sprite_stretched(THEME.button, 0, _x, _y, _w, _h);		
+			if(mouse_press(mb_left)) deactivate();
 		}
 		
 		drawPalette(_color, _x + ui(6), _y + ui(6), _w - ui(12), _h - ui(12));
 		
-		hover  = false;
-		active = false;
+		resetFocus();
+		
+		if(WIDGET_CURRENT == self)
+			draw_sprite_stretched(THEME.widget_selecting, 0, _x - ui(3), _y - ui(3), _w + ui(6), _h + ui(6));	
 		
 		return click;
 	}

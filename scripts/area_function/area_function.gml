@@ -8,7 +8,7 @@ enum AREA_SCATTER {
 	random
 }
 
-function area_get_random_point(area, distrib, scatter, index = 0, total = 1) {
+function area_get_random_point(area, distrib, scatter, index = 0, total = 1, _sed = 999) {
 	if(total == 0) return [0, 0];
 	
 	var _area_x = array_safe_get(area, 0);
@@ -32,12 +32,12 @@ function area_get_random_point(area, distrib, scatter, index = 0, total = 1) {
 				yy = _area_y - _area_h + _irow * _ihig;
 			} else if(scatter == AREA_SCATTER.random) {
 				if(_area_t == AREA_SHAPE.rectangle) {
-					xx = _area_x + random_range(-_area_w, _area_w);
-					yy = _area_y + random_range(-_area_h, _area_h);
+					xx = _area_x + random_range_seed(-_area_w, _area_w, _sed); _sed++;
+					yy = _area_y + random_range_seed(-_area_h, _area_h, _sed); _sed++;
 				} else {
-					var rr = random(360);
-					xx = _area_x + lengthdir_x(1, rr) * random(_area_w);
-					yy = _area_y + lengthdir_y(1, rr) * random(_area_h);
+					var rr = random_seed(360, _sed); _sed++;
+					xx = _area_x + lengthdir_x(1, rr) * random_seed(_area_w, _sed); _sed++;
+					yy = _area_y + lengthdir_y(1, rr) * random_seed(_area_h, _sed); _sed++;
 				}
 			}
 			break;
@@ -48,17 +48,17 @@ function area_get_random_point(area, distrib, scatter, index = 0, total = 1) {
 					var perimeter = _area_w * 2 + _area_h * 2;
 					var i = perimeter * index / total;
 					if(i < _area_w) {
-						xx = _area_x + random_range(-_area_w, _area_w);
+						xx = _area_x + random_range_seed(-_area_w, _area_w, _sed); _sed++;
 						yy = _area_y - _area_h;
 					} else if(i < _area_w + _area_h) {
 						xx = _area_x - _area_w;
-						yy = _area_y + random_range(-_area_h, _area_h);
+						yy = _area_y + random_range_seed(-_area_h, _area_h, _sed); _sed++;
 					} else if(i < _area_w * 2 + _area_h) {
-						xx = _area_x + random_range(-_area_w, _area_w);
+						xx = _area_x + random_range_seed(-_area_w, _area_w, _sed); _sed++;
 						yy = _area_y + _area_h;	
 					} else {
 						xx = _area_x + _area_w;
-						yy = _area_y + random_range(-_area_h, _area_h);
+						yy = _area_y + random_range_seed(-_area_h, _area_h, _sed); _sed++;
 					}
 				} else {
 					var rr = 360 * index / total;
@@ -68,22 +68,22 @@ function area_get_random_point(area, distrib, scatter, index = 0, total = 1) {
 			} else if(scatter == AREA_SCATTER.random) {
 				if(_area_t == AREA_SHAPE.rectangle) {
 					var perimeter = _area_w * 2 + _area_h * 2;
-					var i = random(perimeter);
+					var i = random_seed(perimeter, _sed); _sed++;
 					if(i < _area_w) {
-						xx = _area_x + random_range(-_area_w, _area_w);
+						xx = _area_x + random_range_seed(-_area_w, _area_w, _sed); _sed++;
 						yy = _area_y - _area_h;
 					} else if(i < _area_w + _area_h) {
 						xx = _area_x - _area_w;
-						yy = _area_y + random_range(-_area_h, _area_h);
+						yy = _area_y + random_range_seed(-_area_h, _area_h, _sed); _sed++;
 					} else if(i < _area_w * 2 + _area_h) {
-						xx = _area_x + random_range(-_area_w, _area_w);
+						xx = _area_x + random_range_seed(-_area_w, _area_w, _sed); _sed++;
 						yy = _area_y + _area_h;	
 					} else {
 						xx = _area_x + _area_w;
-						yy = _area_y + random_range(-_area_h, _area_h);
+						yy = _area_y + random_range_seed(-_area_h, _area_h, _sed); _sed++;
 					}
 				} else {
-					var rr = random(360);
+					var rr = random_seed(360, _sed); _sed++;
 					xx = _area_x + lengthdir_x(_area_w, rr);
 					yy = _area_y + lengthdir_y(_area_h, rr);
 				}

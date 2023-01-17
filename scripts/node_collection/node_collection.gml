@@ -126,7 +126,7 @@ function Node_Collection(_x, _y, _group = -1) : Node(_x, _y, _group) constructor
 			min_h = 128;
 		} else {
 			w = 96;
-			min_h = 0;
+			
 		}
 		
 		setHeight();
@@ -222,7 +222,8 @@ function Node_Collection(_x, _y, _group = -1) : Node(_x, _y, _group) constructor
 		}
 	}
 	
-	static postDeserialize = function() {
+	static preConnect = function() {
 		sortIO();
+		applyDeserialize();
 	}
 }

@@ -238,6 +238,7 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = -1) : Node(_x, _y, _group) co
 				surface_set_target(_surf);
 				draw_clear_alpha(0, 0);
 				
+				BLEND_OVERRIDE
 				switch(pack) {
 					case SPRITE_STACK.horizontal :
 						var px = 0;
@@ -312,7 +313,8 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = -1) : Node(_x, _y, _group) co
 							py += row_h;
 						}
 						break;
-				}
+					}
+					BLEND_NORMAL
 				surface_reset_target();
 				outputs[| 0].setValue(_surf);
 			} else

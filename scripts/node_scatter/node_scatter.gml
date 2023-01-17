@@ -34,13 +34,20 @@ function Node_Scatter(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) cons
 	inputs[| 9] = nodeValue(9, "Scatter", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1)
 		.setDisplay(VALUE_DISPLAY.enum_button, [ "Uniform", "Random" ]);
 	
-	inputs[| 10] = nodeValue(10, "Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, irandom(9999999));
+	inputs[| 10] = nodeValue(10, "Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, irandom(9999999));
+	
+	inputs[| 11] = nodeValue(11, "Random blend", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white)
+		.setDisplay(VALUE_DISPLAY.gradient);
+	
+	inputs[| 12] = nodeValue(12, "Alpha", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 1 ])
+		.setDisplay(VALUE_DISPLAY.slider_range, [0, 1, 0.01]);
 	
 	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
 	
 	input_display_list = [ 0, 1, 10, 
-		["Area",	false], 5, 6, 9, 
-		["Scatter", false], 2, 3, 8, 7, 4
+		["Scatter",		false], 5, 6, 9, 2,
+		["Transform",	false], 3, 8, 7, 4,
+		["Render",		false], 11, 12
 	];
 	
 	temp_surf = [ PIXEL_SURFACE, PIXEL_SURFACE ];
@@ -68,7 +75,10 @@ function Node_Scatter(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) cons
 		var _unis	= _data[8];
 		
 		var seed	= _data[10];
-		random_set_seed(seed);
+		
+		var color	= inputs[| 11].getValue();
+		var _bldTyp	= inputs[| 11].getExtraData();
+		var alpha	= _data[12];
 		
 		var _in_w, _in_h;
 
@@ -86,21 +96,22 @@ function Node_Scatter(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) cons
 		}
 		
 		BLEND_OVERRIDE
+		var _sed = seed;
 		var res_index = 0, bg = 0;
 		for(var i = 0; i < _amount; i++) {
-			var sp = area_get_random_point(_area, _dist, _scat, i, _amount);
+			var sp = area_get_random_point(_area, _dist, _scat, i, _amount, _sed); _sed += 20;
 			var _x = sp[0];
 			var _y = sp[1];
 			
-			var _scx = random_range(_scale[0], _scale[1]);
-			var _scy = random_range(_scale[2], _scale[3]);
+			var _scx = random_range_seed(_scale[0], _scale[1], _sed); _sed++;
+			var _scy = random_range_seed(_scale[2], _scale[3], _sed); _sed++;
 			if(_unis) _scy = _scx;
 				
-			var _r	 = (_pint? point_direction(_area[0], _area[1], _x, _y) : 0) + random_range(_rota[0], _rota[1]);
+			var _r	 = (_pint? point_direction(_area[0], _area[1], _x, _y) : 0) + random_range_seed(_rota[0], _rota[1], _sed); _sed++;
 				
 			surf = _inSurf;
 			if(is_array(_inSurf)) 
-				surf = _inSurf[irandom(array_length(_inSurf) - 1)];
+				surf = _inSurf[irandom_seed(array_length(_inSurf) - 1, _sed)]; _sed++;
 			
 			var sw = surface_get_width(surf);
 			var sh = surface_get_height(surf);
@@ -109,7 +120,10 @@ function Node_Scatter(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) cons
 				_x -= sw / 2;
 				_y -= sh / 2;
 			}
-					
+			
+			var clr = gradient_eval(color, random_seed(1, _sed), _bldTyp[| 0]); _sed++;
+			var alp = random_range_seed(alpha[0], alpha[1], _sed); _sed++;
+			
 			surface_set_target(temp_surf[bg]);
 				shader_set(shader);
 				shader_set_uniform_f_array(uniform_dim, [ sw / ww, sh / hh ]);
@@ -118,7 +132,7 @@ function Node_Scatter(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) cons
 				shader_set_uniform_f(uniform_rot, degtorad(_r)); 
 				texture_set_stage(uniform_for, surface_get_texture(surf));
 				
-				draw_surface_safe(temp_surf[!bg], 0, 0);
+				draw_surface_ext_safe(temp_surf[!bg], 0, 0, 1, 1, 0, clr, alp);
 				shader_reset();
 			surface_reset_target();
 			

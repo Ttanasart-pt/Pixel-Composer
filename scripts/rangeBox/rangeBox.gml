@@ -1,12 +1,23 @@
-function rangeBox(_type, _onModify) constructor {
+function rangeBox(_type, _onModify) : widget() constructor {
 	onModify = _onModify;
 	
-	hover  = false;
-	active = false;
+	linked = false;
+	b_link = button(function() { linked = !linked; });
+	b_link.icon = THEME.value_link;
+	
+	onModifyIndex = function(index, val) { 
+		if(linked) {
+			for( var i = 0; i < 2; i++ )
+				onModify(i, toNumber(val)); 
+			return;
+		}
+		
+		onModify(index, toNumber(val)); 
+	}
 	
 	label = [ "min", "max" ];
-	onModifySingle[0] = function(val) { onModify(0, toNumber(val)); }
-	onModifySingle[1] = function(val) { onModify(1, toNumber(val)); }
+	onModifySingle[0] = function(val) { onModifyIndex(0, toNumber(val)); }
+	onModifySingle[1] = function(val) { onModifyIndex(1, toNumber(val)); }
 	
 	extras = -1;
 	
@@ -15,7 +26,32 @@ function rangeBox(_type, _onModify) constructor {
 		tb[i].slidable = true;
 	}
 	
+	static register = function(parent = noone) {
+		b_link.register(parent);
+		
+		for( var i = 0; i < 2; i++ )
+			tb[i].register(parent);
+	}
+	
 	static draw = function(_x, _y, _w, _h, _data, _m) {
+		x = _x;
+		y = _y;
+		w = _w;
+		h = _h;
+		
+		b_link.hover = hover;
+		b_link.active = active;
+		b_link.icon_index = linked;
+		b_link.icon_blend = linked? COLORS._main_accent : COLORS._main_icon;
+		b_link.tooltip = linked? "Unlink axis" : "Link axis";
+		
+		var bx = _x;
+		var by = _y + _h / 2 - ui(32 / 2);
+		b_link.draw(bx + ui(4), by + ui(4), ui(24), ui(24), _m, THEME.button_hide);
+		
+		_x += ui(28);
+		_w -= ui(28);
+		
 		if(extras != -1 && is_struct(extras) && instanceof(extras) == "buttonClass") {
 			extras.hover  = hover;
 			extras.active = active;
@@ -38,7 +74,6 @@ function rangeBox(_type, _onModify) constructor {
 			}
 		}
 		
-		hover  = false;
-		active = false;
+		resetFocus();
 	}
 }

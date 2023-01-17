@@ -3,7 +3,7 @@ function Node_Lua_Compute(_x, _y, _group = -1) : Node(_x, _y, _group) constructo
 	preview_channel = 1;
 	
 	previewable = false;
-	min_h = 0;
+	
 	
 	inputs[| 0]  = nodeValue(0, "Function name", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "render" + string(irandom_range(100000, 999999)));
 	
@@ -22,9 +22,12 @@ function Node_Lua_Compute(_x, _y, _group = -1) : Node(_x, _y, _group) constructo
 		
 		inputs[| index + 1] = nodeValue( index + 1, "Argument type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0 )
 			.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Number", "String", "Surface" ]);
-			
+		inputs[| index + 1].editWidget.interactable = false;
+		
 		inputs[| index + 2] = nodeValue( index + 2, "Argument value", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0 )
 			.setVisible(true, true);
+		inputs[| index + 2].editWidget.interactable = false;
+		
 	}
 	
 	outputs[| 0] = nodeValue(0, "Execution thread", self, JUNCTION_CONNECT.output, VALUE_TYPE.node, noone );
@@ -90,6 +93,9 @@ function Node_Lua_Compute(_x, _y, _group = -1) : Node(_x, _y, _group) constructo
 				ds_list_add(_in, inputs[| i + 0]);
 				ds_list_add(_in, inputs[| i + 1]);
 				ds_list_add(_in, inputs[| i + 2]);
+				
+				inputs[| i + 1].editWidget.interactable = true;
+				inputs[| i + 2].editWidget.interactable = true;
 				
 				array_push(input_display_list, i + 2);
 			} else {

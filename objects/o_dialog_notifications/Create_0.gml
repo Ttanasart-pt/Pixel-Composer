@@ -15,6 +15,29 @@ event_inherited();
 	current_page = 0;
 	filter = NOTI_TYPE.log | NOTI_TYPE.warning | NOTI_TYPE.error;
 	
+	rightClickMenu = [ 
+		[ "Clear log messages", function() { 
+			for( var i = ds_list_size(STATUSES) - 1; i >= 0; i-- ) {
+				if(STATUSES[| i].type == NOTI_TYPE.log) 
+					ds_list_delete(STATUSES, i);
+			}
+		} ], 
+		[ "Clear warning messages", function() { 
+			for( var i = ds_list_size(STATUSES) - 1; i >= 0; i-- ) {
+				if(STATUSES[| i].type == NOTI_TYPE.warning) 
+					ds_list_delete(STATUSES, i);
+			}
+		} ],
+		-1,
+		[ "Clear all notifications", function() { 
+			ds_list_clear(STATUSES);
+		} ],
+		-1,
+		[ "Open log file", function() { 
+			shellOpenExplorer(DIRECTORY + "log.txt");
+		} ],
+	];
+	
 	sp_noti = new scrollPane(dialog_w - ui(80), dialog_h - ui(88), function(_y, _m) {
 		draw_clear_alpha(COLORS.panel_bg_clear, 0);
 		
@@ -35,14 +58,17 @@ event_inherited();
 			var _w = sp_noti.w - ui(12);
 			var _h = ui(8) + string_height_ext(noti.txt, -1, txw) + ui(8);
 			
-			var cc = COLORS.dialog_notification_bg;
 			draw_sprite_stretched_ext(THEME.group_label, 0, 0, yy + ui(2), _w, _h - ui(4), COLORS.dialog_notification_bg, 1);
 			
 			if(sHOVER && sp_noti.hover && point_in_rectangle(_m[0], _m[1], 0, yy, _w, yy + _h - ui(4))) {
-				cc = COLORS.dialog_notification_bg_hover;
+				draw_sprite_stretched_ext(THEME.group_label, 0, 0, yy + ui(2), _w, _h - ui(4), COLORS.dialog_notification_bg_hover, 1);
+				
+				if(noti.tooltip != "")
+					TOOLTIP = noti.tooltip;
 				
 				if(noti.onClick != noone && mouse_press(mb_left, sFOCUS))
 					noti.onClick();
+				
 				if(mouse_press(mb_right, sFOCUS)) {
 					var dia = dialogCall(o_dialog_menubox, mouse_mx + ui(8), mouse_my + ui(8));
 					dia.noti = noti;
@@ -50,11 +76,12 @@ event_inherited();
 						[ "Copy notification message", function() { 
 							clipboard_set_text(o_dialog_menubox.noti.txt);
 						} ], 
+						[ "Delete notification", function() { 
+							ds_list_remove(STATUSES, o_dialog_menubox.noti);
+						} ], 
 					]);
 				}
 			}
-			
-			draw_sprite_stretched_ext(THEME.group_label, 0, 0, yy + ui(2), _w, _h - ui(4), cc, 1);
 			
 			if(noti.life_max > 0) {
 				var _nwx = sp_noti.w - ui(12) - ui(40);
@@ -64,6 +91,9 @@ event_inherited();
 			}
 			
 			draw_sprite_stretched_ext(THEME.group_label, 0, 0, yy + ui(2), ui(48), _h - ui(4), noti.color, 1);
+			
+			if(noti.icon_end != noone)
+				draw_sprite_ui(noti.icon_end, 1, _w - ui(24), yy + _h / 2,,,, COLORS._main_icon);
 			
 			var ic = noti.icon;
 			if(noti.icon == noone) {
@@ -78,11 +108,13 @@ event_inherited();
 			
 			var tx = ui(48) + timeW + ui(12);
 			
-			draw_set_text(f_p3, fa_right, fa_center, COLORS._main_text_sub);
-			draw_text_ext(tx - ui(4), yy + _h / 2, noti.time, -1, txw);
+			if(yy >= -_h && yy <= sp_noti.h) {
+				draw_set_text(f_p3, fa_right, fa_center, COLORS._main_text_sub);
+				draw_text_ext(tx - ui(4), yy + _h / 2, noti.time, -1, txw);
 			
-			draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text);
-			draw_text_ext(tx + ui(4), yy + _h / 2, noti.txt, -1, txw);
+				draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text);
+				draw_text_ext(tx + ui(4), yy + _h / 2, noti.txt, -1, txw);
+			}
 			
 			yy += _h;
 			hh += _h;

@@ -4,7 +4,7 @@ function Node_Wiggler(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) cons
 	previewable     = false;
 	
 	w = 96;
-	min_h = 0;
+	
 	
 	inputs[| 0] = nodeValue(0, "Range", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [0, 1])
 		.setDisplay(VALUE_DISPLAY.vector);
@@ -57,7 +57,7 @@ function Node_Wiggler(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) cons
 		switch(disp) {
 			case 0 :
 				w = 96;
-				min_h = 0;
+				
 				draw_set_text(f_h5, fa_center, fa_center, COLORS._main_text);
 				var str	= getWiggle(ran[0], ran[1], ANIMATOR.frames_total / fre, time, sed, 0, ANIMATOR.frames_total);
 				var ss	= string_scale(str, (w - 16) * _s, (h - 16) * _s - 20 * draw_name);

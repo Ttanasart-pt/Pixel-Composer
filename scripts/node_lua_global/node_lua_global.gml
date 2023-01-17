@@ -3,7 +3,7 @@ function Node_Lua_Global(_x, _y, _group = -1) : Node(_x, _y, _group) constructor
 	preview_channel = 1;
 	previewable = false;
 	
-	min_h = 0;
+	
 		
 	inputs[| 0]  = nodeValue(0, "Lua code", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "")
 		.setDisplay(VALUE_DISPLAY.code);

@@ -4,7 +4,7 @@ function Node_Timeline_Preview(_x, _y, _group = -1) : Node(_x, _y, _group) const
 	color = COLORS.node_blend_number;
 	
 	w = 96;
-	min_h = 0;
+	
 	
 	PANEL_ANIMATION.timeline_preview = self;
 	

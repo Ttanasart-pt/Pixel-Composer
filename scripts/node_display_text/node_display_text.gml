@@ -2,7 +2,7 @@ function Node_Display_Text(_x, _y, _group = -1) : Node(_x, _y, _group) construct
 	name = "Display text";
 	w = 240;
 	h = 160;
-	min_h = 0;
+	
 	bg_spr		= THEME.node_frame_bg;
 	
 	size_dragging = false;

@@ -1,11 +1,6 @@
 function Node_Mirror(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constructor {
 	name = "Mirror";
 	
-	shader = sh_mirror;
-	uniform_dim = shader_get_uniform(shader, "dimension");
-	uniform_pos = shader_get_uniform(shader, "position");
-	uniform_ang = shader_get_uniform(shader, "angle");
-	
 	inputs[| 0] = nodeValue(0, "Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 	inputs[| 1] = nodeValue(1, "Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.vector)
@@ -15,6 +10,8 @@ function Node_Mirror(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) const
 		.setDisplay(VALUE_DISPLAY.rotation);
 	
 	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
+	
+	outputs[| 1] = nodeValue(1, "Mirror mask", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
 	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var _pos   = inputs[| 1].getValue();
@@ -43,6 +40,11 @@ function Node_Mirror(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) const
 			draw_clear_alpha(0, 0);
 			BLEND_OVER
 			
+			shader = _output_index? sh_mirror_mask : sh_mirror;
+			uniform_dim = shader_get_uniform(shader, "dimension");
+			uniform_pos = shader_get_uniform(shader, "position");
+			uniform_ang = shader_get_uniform(shader, "angle");
+	
 			shader_set(shader);
 			shader_set_uniform_f_array(uniform_dim, _dim);
 			shader_set_uniform_f_array(uniform_pos, _pos);

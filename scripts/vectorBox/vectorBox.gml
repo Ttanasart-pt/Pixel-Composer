@@ -1,10 +1,8 @@
-function vectorBox(_size, _type, _onModify, _unit = noone) constructor {
+function vectorBox(_size, _type, _onModify, _unit = noone) : widget() constructor {
 	size     = _size;
 	onModify = _onModify;
 	unit	 = _unit;
 	
-	hover  = false;
-	active = false;
 	linked = false;
 	b_link = button(function() { linked = !linked; });
 	b_link.icon = THEME.value_link;
@@ -32,7 +30,25 @@ function vectorBox(_size, _type, _onModify, _unit = noone) constructor {
 		tb[i].slidable = true;
 	}
 	
+	static register = function(parent = noone) {
+		b_link.register(parent);
+		
+		for( var i = 0; i < size; i++ ) 
+			tb[i].register(parent);
+		
+		if(extras) 
+			extras.register(parent);
+		
+		if(unit != noone && unit.reference != noone)
+			unit.triggerButton.register(parent);
+	}
+	
 	static draw = function(_x, _y, _w, _h, _data, _m) {
+		x = _x;
+		y = _y;
+		w = _w;
+		h = _h;
+		
 		if(extras && instanceof(extras) == "buttonClass") {
 			extras.hover  = hover;
 			extras.active = active;
@@ -75,7 +91,7 @@ function vectorBox(_size, _type, _onModify, _unit = noone) constructor {
 			draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text_sub);
 			draw_text(bx + ui(8), _y + _h / 2, axis[i]);
 		}
-		hover  = false;
-		active = false;
+		
+		resetFocus();
 	}
 }

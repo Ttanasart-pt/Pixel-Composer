@@ -3,7 +3,7 @@ function Node_Array(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 	previewable = false;
 	
 	w = 96;
-	min_h = 0;
+	
 	
 	static createNewInput = function() {
 		var index = ds_list_size(inputs);

@@ -195,8 +195,9 @@ event_inherited();
 						
 				var spr_x = _boxx + grid_size / 2;
 				var spr_y = yy + grid_size / 2;
-				if(variable_struct_exists(_node, "spr") && sprite_exists(_node.spr))
-					draw_sprite_ui_uniform(_node.spr, 0, spr_x, spr_y);
+				
+				if(variable_struct_exists(_node, "getSpr")) _node.getSpr();
+				if(sprite_exists(_node.spr)) draw_sprite_ui_uniform(_node.spr, 0, spr_x, spr_y);
 						
 				if(_node.new_node)
 					draw_sprite_ui_uniform(THEME.node_new_badge, 0, _boxx + grid_size - ui(12), yy + ui(6));
@@ -260,7 +261,9 @@ event_inherited();
 				
 				var spr_x = list_height / 2 + ui(14);
 				var spr_y = yy + list_height / 2;
-				if(variable_struct_exists(_node, "spr") && sprite_exists(_node.spr)) {
+				
+				if(variable_struct_exists(_node, "getSpr")) _node.getSpr();
+				if(sprite_exists(_node.spr)) {
 					var ss = (list_height - ui(8)) / max(sprite_get_width(_node.spr), sprite_get_height(_node.spr));
 					draw_sprite_ext(_node.spr, 0, spr_x, spr_y, ss, ss, 0, c_white, 1);
 				}
@@ -286,8 +289,8 @@ event_inherited();
 
 #region resize
 	dialog_resizable = true;
-	dialog_w_min = ui(200);
-	dialog_h_min = ui(120);
+	dialog_w_min = ui(320);
+	dialog_h_min = ui(320);
 	dialog_w_max = ui(960);
 	dialog_h_max = ui(800);
 	
@@ -313,7 +316,7 @@ event_inherited();
 		searchNodes();
 	});
 	tb_search.auto_update	= true;
-	TEXTBOX_ACTIVE			= tb_search;
+	WIDGET_CURRENT			= tb_search;
 	
 	function searchNodes() {
 		ds_list_clear(search_list);
@@ -394,7 +397,8 @@ event_inherited();
 					draw_sprite_stretched_ext(THEME.node_bg, 0, _boxx, yy, grid_size, grid_size, COLORS.dialog_add_node_collection, 1);
 				BLEND_NORMAL
 					
-				if(variable_struct_exists(_node, "spr") && sprite_exists(_node.spr)) {
+				if(variable_struct_exists(_node, "getSpr")) _node.getSpr();
+				if(sprite_exists(_node.spr)) {
 					var _si = current_time * PREF_MAP[? "collection_preview_speed"] / 3000;
 					var _sw = sprite_get_width(_node.spr);
 					var _sh = sprite_get_height(_node.spr);
@@ -460,7 +464,8 @@ event_inherited();
 					BLEND_NORMAL
 				}
 				
-				if(variable_struct_exists(_node, "spr") && sprite_exists(_node.spr)) {
+				if(variable_struct_exists(_node, "getSpr")) _node.getSpr();
+				if(sprite_exists(_node.spr)) {
 					var _si = current_time * PREF_MAP[? "collection_preview_speed"] / 3000;
 					var _sw = sprite_get_width(_node.spr);
 					var _sh = sprite_get_height(_node.spr);

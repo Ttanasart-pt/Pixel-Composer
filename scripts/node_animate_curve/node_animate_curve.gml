@@ -4,7 +4,7 @@ function Node_Anim_Curve(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) c
 	previewable = false;
 	
 	w = 96;
-	min_h = 0;
+	
 	
 	inputs[| 0] = nodeValue(0, "Curve",   self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_01);
 	inputs[| 1] = nodeValue(1, "Progress", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)

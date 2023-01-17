@@ -1,8 +1,5 @@
-function curveBox(_onModify) constructor {
+function curveBox(_onModify) : widget() constructor {
 	onModify = _onModify;
-	
-	active = false;
-	hover  = false;
 	
 	node_dragging = -1;
 	
@@ -13,7 +10,14 @@ function curveBox(_onModify) constructor {
 		return _y + _h * clamp((y_max - val) / y_range, 0, 1);
 	}
 	
+	static register = function() {}
+	
 	static draw = function(_x, _y, _w, _h, _data, _m) {
+		x = _x;
+		y = _y;
+		w = _w;
+		h = _h;
+		
 		static curve_amo = 3;
 		var curve_h = _h;
 		
@@ -106,7 +110,6 @@ function curveBox(_onModify) constructor {
 			drag_max   = y_max;
 		}
 		
-		active = false;
-		hover  = false;
+		resetFocus();
 	}
 }

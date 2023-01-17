@@ -1,10 +1,8 @@
-function matrixGrid(_type, _onModify, _unit = noone) constructor {
+function matrixGrid(_type, _onModify, _unit = noone) : widget() constructor {
 	size	 = 9;
 	onModify = _onModify;
 	unit	 = _unit;
 	
-	hover  = false;
-	active = false;
 	linked = false;
 	b_link = button(function() { linked = !linked; });
 	b_link.icon = THEME.value_link;
@@ -33,12 +31,30 @@ function matrixGrid(_type, _onModify, _unit = noone) constructor {
 	
 	extras = -1;
 	
+	static register = function(parent = noone) {
+		b_link.register(parent);
+		
+		for( var i = 0; i < size; i++ )
+			tb[i].register(parent);
+		
+		if(extras) 
+			extras.register(parent);
+		
+		if(unit != noone && unit.reference != noone)
+			unit.triggerButton.register(parent);
+	}
+	
 	for(var i = 0; i < size; i++) {
 		tb[i] = new textBox(_type, onModifySingle[i]);
 		tb[i].slidable = true;
 	}
 	
 	static draw = function(_x, _y, _w, _h, _data, _m) {
+		x = _x;
+		y = _y;
+		w = _w;
+		h = _h;
+		
 		if(extras && instanceof(extras) == "buttonClass") {
 			extras.hover  = hover;
 			extras.active = active;
@@ -87,8 +103,7 @@ function matrixGrid(_type, _onModify, _unit = noone) constructor {
 			tb[ind].draw(bx + ui(8), by, ww - ui(8), TEXTBOX_HEIGHT, _data[ind], _m);
 		}
 		
-		hover  = false;
-		active = false;
+		resetFocus();
 		
 		return th;
 	}

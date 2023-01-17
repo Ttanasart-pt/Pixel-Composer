@@ -21,7 +21,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) constructor {
 	
 	w = 128;
 	h = 128;
-	min_h = 128;
+	min_h = 0;
 	auto_height = true;
 	
 	draw_name = true;
@@ -41,6 +41,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) constructor {
 	inspecting = false;
 	previewing = 0;
 	
+	preview_surface = noone;
 	previewable   = true;
 	preview_speed = 0;
 	preview_index = 0;
@@ -93,7 +94,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) constructor {
 			if(outputs[| i].isVisible()) _ho += 24;
 		}
 		
-		h = max(min_h, _hi, _ho);
+		h = max(min_h, preview_surface? 128 : 0, _hi, _ho);
 	}
 	
 	static move = function(_x, _y) {
@@ -425,6 +426,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) constructor {
 		}
 		
 		if(!is_surface(surf)) return;
+		preview_surface = surf;
 		
 		var pw = surface_get_width(surf);
 		var ph = surface_get_height(surf);
@@ -474,6 +476,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) constructor {
 			draw_sprite_stretched_ext(THEME.node_glow, 0, xx - 9, yy - 9, w * _s + 18, h * _s + 18, COLORS._main_value_negative, 1);
 		
 		drawNodeBase(xx, yy, _s);
+		preview_surface = noone;
 		if(previewable && ds_list_size(outputs) > 0) {
 			if(preview_channel >= ds_list_size(outputs))
 				preview_channel = 0;
@@ -626,7 +629,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) constructor {
 	static cacheExist = function(frame = ANIMATOR.current_frame) {
 		if(frame >= array_length(cached_output)) return false;
 		if(frame >= array_length(cache_result)) return false;
-		if(!cache_result[frame]) return false;
+		if(!array_safe_get(cache_result, frame)) return false;
 		return true;
 	}
 	
@@ -707,8 +710,13 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) constructor {
 	}
 	
 	static clone = function() {
+		CLONING = true;
 		var _type = instanceof(self);
 		var _node = nodeBuild(_type, x, y);
+		CLONING = false;
+		
+		if(!_node) return;
+		
 		var _nid = _node.node_id;
 		
 		var _data = serialize();

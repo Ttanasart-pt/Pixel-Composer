@@ -4,7 +4,7 @@ function Node_Counter(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) cons
 	previewable = false;
 	
 	w = 96;
-	min_h = 0;
+	
 	
 	inputs[| 0] = nodeValue(0, "Start", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1);
 	inputs[| 1] = nodeValue(1, "Speed", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1);

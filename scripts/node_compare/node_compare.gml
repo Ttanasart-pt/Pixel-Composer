@@ -28,7 +28,7 @@ function Node_Compare(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 	previewable = false;
 	
 	w = 96;
-	min_h = 0;
+	
 	
 	inputs[| 0] = nodeValue(0, "Type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Equal", "Not equal", "Greater", "Greater or equal", "Lesser", "Lesser or equal" ]);

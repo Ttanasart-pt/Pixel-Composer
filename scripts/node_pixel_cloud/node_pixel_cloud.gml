@@ -21,7 +21,7 @@ function Node_Pixel_Cloud(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) 
 	inputs[| 1] = nodeValue(1, "Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, irandom(100000));
 		
 	inputs[| 2] = nodeValue(2, "Strength", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.1)
-		.setDisplay(VALUE_DISPLAY.slider, [ 0, 1, 0.01]);
+		.setDisplay(VALUE_DISPLAY.slider, [ 0, 2, 0.01]);
 	
 	inputs[| 3] = nodeValue(3, "Strength map", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 	

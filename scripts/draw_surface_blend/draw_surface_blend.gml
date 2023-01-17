@@ -40,14 +40,14 @@ function draw_surface_blend(background, foreground, blend, alpha, _mask = 0, til
 		case BLEND_MODE.maxx :				sh = sh_blend_max;				break;
 		case BLEND_MODE.minn :				sh = sh_blend_min;				break;
 	}
-			
+	
 	var uniform_foreground	= shader_get_sampler_index(sh, "fore");
 	var uniform_mask		= shader_get_sampler_index(sh, "mask");
 	var uniform_dim_rat		= shader_get_uniform(sh, "dimension");
 	var uniform_is_mask		= shader_get_uniform(sh, "useMask");
 	var uniform_alpha		= shader_get_uniform(sh, "opacity");
 	var uniform_tile		= shader_get_uniform(sh, "tile_type");
-				
+	
 	shader_set(sh);
 	texture_set_stage(uniform_foreground,		surface_get_texture(foreground));
 	if(_mask) texture_set_stage(uniform_mask,	surface_get_texture(_mask));

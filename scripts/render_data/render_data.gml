@@ -32,6 +32,7 @@ function __nodeInLoop(_node) {
 function Render(partial = false) {
 	var rendering = noone;
 	var error = 0;
+	var t = current_time;
 	printIf(global.RENDER_LOG, "=== RENDER START [frame " + string(ANIMATOR.current_frame) + "] ===");
 	
 	if(!partial || ALWAYS_FULL) {
@@ -82,7 +83,7 @@ function Render(partial = false) {
 		rendering.getNextNodes();
 	}
 	
-	printIf(global.RENDER_LOG, "=== RENDER COMPLETE ===\n");
+	printIf(global.RENDER_LOG, "=== RENDER COMPLETE IN {" + string(current_time - t) + "ms} ===\n");
 }
 /*
 function renderNodeBackward(_node) { //unused

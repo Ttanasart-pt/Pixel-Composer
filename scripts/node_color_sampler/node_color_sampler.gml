@@ -1,12 +1,12 @@
 function Node_Sampler(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constructor {
 	name = "Sampler";
 	
-	min_h = 0;
+	
 	w = 96;
 	
 	inputs[| 0] = nodeValue(0, "Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 	
-	inputs[| 1] = nodeValue(1, "Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 0, 0 ])
+	inputs[| 1] = nodeValue(1, "Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.vector)
 		.setUnitRef(function(index) { return getDimension(index); });
 		

@@ -2,12 +2,13 @@ function Node_VFX_Attract(_x, _y, _group = -1) : Node_VFX_effector(_x, _y, _grou
 	name = "Attract";
 	node_draw_icon = s_node_vfx_attract;
 	
+	inputs[| 4].setVisible(false, false);
+	
 	function onAffect(part, str) {
 		var _area = current_data[1];
 		var _area_x = _area[0];
 		var _area_y = _area[1];
 		
-		var _vect = current_data[4];
 		var _sten = current_data[5];
 		var _rot_range = current_data[6];
 		var _sca_range = current_data[7];
@@ -23,9 +24,10 @@ function Node_VFX_Attract(_x, _y, _group = -1) : Node_VFX_effector(_x, _y, _grou
 		
 		var scx_s = _sca[0] * str;
 		var scy_s = _sca[1] * str;
-		if(scx_s < 0)	part.scx = lerp_linear(part.scx, 0, abs(scx_s));
-		else			part.scx += sign(part.scx) * scx_s;
-		if(scy_s < 0)	part.scy = lerp_linear(part.scy, 0, abs(scy_s));
-		else			part.scy += sign(part.scy) * scy_s;
+		
+		if(scx_s < 0)	part.sc_sx =  lerp_linear(part.sc_sx, 0, abs(scx_s));
+		else			part.sc_sx += sign(part.sc_sx) * scx_s;
+		if(scy_s < 0)	part.sc_sy =  lerp_linear(part.sc_sy, 0, abs(scy_s));
+		else			part.sc_sy += sign(part.sc_sy) * scy_s;
 	}
 }

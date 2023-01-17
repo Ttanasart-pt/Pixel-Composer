@@ -59,6 +59,9 @@
 		modi	= _mod;
 		action	= _action;
 		
+		dKey	= _key;
+		dModi	= _mod;
+		
 		static serialize = function() {
 			var ll = ds_list_create();
 			ll[| 0] = context;
@@ -69,15 +72,17 @@
 		}
 		
 		static deserialize = function(ll) {
-			var _k = is_string(ll[| 2])? ord(ll[| 2]) : ll[| 2];
-			key  = _k;
+			key  = ll[| 2];
 			modi = ll[| 3];
 		}
 	}
 	
 	function addHotkey(_context, _name, _key, _mod, _action) {
 		if(_key == "") _key = -1;
-		if(is_string(_key)) _key = ord(_key);
+		if(is_string(_key)) {
+			var ind = key_get_index(_key);
+			_key = ind? ind : ord(_key);
+		}
 		
 		var key = new hotkeyObject(_context, _name, _key, _mod, _action);
 		
@@ -100,46 +105,6 @@
 			ds_list_insert(HOTKEYS[? _context], 0, key);
 		else
 			ds_list_add(HOTKEYS[? _context], key);
-	}
-	
-	function key_get_name(_key, _mod) {
-		var dk = "";
-		if(_mod & MOD_KEY.ctrl)		dk += "Ctrl+";
-		if(_mod & MOD_KEY.shift)	dk += "Shift+";
-		if(_mod & MOD_KEY.alt)		dk += "Alt+";
-				
-		switch(_key) {
-			case vk_space : dk += "Space";	break;	
-			case vk_left  : dk += "Left";	break;	
-			case vk_right : dk += "Right";	break;	
-			case vk_up    : dk += "Up";		break;	
-			case vk_down  : dk += "Down";	break;	
-			case vk_backspace :   dk += "Backspace"; break;
-			case vk_tab :         dk += "Tab"; break;
-			case vk_home :        dk += "Home"; break;
-			case vk_end :         dk += "End"; break;
-			case vk_delete :      dk += "Delete"; break;
-			case vk_insert :      dk += "Insert"; break; 
-			case vk_pageup :      dk += "Page Up"; break;
-			case vk_pagedown :    dk += "Page Down"; break;
-			case vk_pause :       dk += "Pause"; break;
-			case vk_printscreen : dk += "Printscreen"; break;         
-			case vk_f1 :  dk += "F1"; break;
-			case vk_f2 :  dk += "F2"; break;
-			case vk_f3 :  dk += "F3"; break;
-			case vk_f4 :  dk += "F4"; break;
-			case vk_f5 :  dk += "F5"; break;
-			case vk_f6 :  dk += "F6"; break;
-			case vk_f7 :  dk += "F7"; break;
-			case vk_f8 :  dk += "F8"; break;
-			case vk_f9 :  dk += "F9"; break;
-			case vk_f10 : dk += "F10"; break;
-			case vk_f11 : dk += "F11"; break;
-			case vk_f12 : dk += "F12"; break;          
-			default     : dk += ansi_char(_key);	break;	
-		}
-		
-		return dk;
 	}
 #endregion
 
@@ -173,18 +138,13 @@
 		var map = json_decode(load_str);
 		
 		if(ds_map_exists(map, "Recents")) {
-			ds_list_copy(RECENT_FILES, map[? "Recents"]);	
+			var l = map[? "Recents"];
+			ds_list_clear(RECENT_FILES);
 			
-			var del = ds_stack_create();
-			for(var i = 0; i < ds_list_size(RECENT_FILES); i++)  {
-				if(!file_exists(RECENT_FILES[| i])) ds_stack_push(del, i);
+			for(var i = 0; i < ds_list_size(l); i++) {
+				if(!file_exists(l[| i])) continue;
+				ds_list_add(RECENT_FILES, l[| i]);
 			}
-			
-			while(!ds_stack_empty(del)) {
-				ds_list_delete(RECENT_FILES, ds_stack_pop(del));
-			}
-			
-			ds_stack_destroy(del);
 		}
 	}
 #endregion
@@ -236,8 +196,7 @@
 				var name		= key_list[| 1];
 				
 				var _key = find_hotkey(_context, name);
-				if(_key) 
-					_key.deserialize(key_list);
+				if(_key) _key.deserialize(key_list);
 			}
 		}
 		
@@ -266,13 +225,11 @@
 	}
 	
 	function find_hotkey(_context, _name) {
-		if(ds_map_exists(HOTKEYS, _context)) {
-			for(var j = 0; j < ds_list_size(HOTKEYS[? _context]); j++) {
-				if(HOTKEYS[? _context][| j].name == _name) {
-					return HOTKEYS[? _context][| j];
-				}
-			}
+		if(!ds_map_exists(HOTKEYS, _context)) return noone;
+		
+		for(var j = 0; j < ds_list_size(HOTKEYS[? _context]); j++) {
+			if(HOTKEYS[? _context][| j].name == _name)
+				return HOTKEYS[? _context][| j];
 		}
-		return noone;
 	}
 #endregion

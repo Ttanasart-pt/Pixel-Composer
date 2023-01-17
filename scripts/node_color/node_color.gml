@@ -2,7 +2,7 @@ function Node_Color(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 	name		= "Color";
 	previewable = false;
 	
-	min_h = 0;
+	
 	w = 96;
 	
 	inputs[| 0] = nodeValue(0, "Color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white);

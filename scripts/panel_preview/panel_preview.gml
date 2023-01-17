@@ -432,9 +432,10 @@ function Panel_Preview() : PanelContent() constructor {
 			
 		preview_x_max = 0;
 		var xx = preview_x + ui(8);
+		var yy = h - toolbar_height - prev_size - ui(8);
+		if(my > yy) mouse_on_preview = false;
+		
 		for(var i = 0; i < array_length(pseq); i++) {
-			var yy = h - toolbar_height - prev_size - ui(8);
-				
 			var prev   = pseq[i];
 			if(!is_surface(prev)) continue;
 				
@@ -677,8 +678,8 @@ function Panel_Preview() : PanelContent() constructor {
 		dragCanvas();
 		getPreviewData();
 		drawNodePreview();
-		
 		drawPreviewOverlay();
+		
 		if(PANEL_GRAPH.node_focus)
 			drawNodeTools(pFOCUS, PANEL_GRAPH.node_focus);
 		if(last_focus != PANEL_GRAPH.node_focus) {

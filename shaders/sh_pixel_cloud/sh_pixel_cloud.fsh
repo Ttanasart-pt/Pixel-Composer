@@ -15,7 +15,7 @@ uniform vec4 gradient_color[16];
 uniform float gradient_time[16];
 uniform int gradient_keys;
 
-uniform float alpha_curve[4];
+uniform float alpha_curve[6];
 
 vec3 rgb2hsv(vec3 c) {
 	vec4 K = vec4(0.0, -1.0 / 3.0, 2.0 / 3.0, -1.0);
@@ -81,17 +81,16 @@ vec4 gradientEval(in float prog) {
 	return col;
 }
 
-float curveEval(in float curve[4], in float prog) {
-	return pow(1. - prog, 3.) * curve[0] + 
-		3. * pow(1. - prog, 2.) * prog * curve[1] + 
-		3. * (1. - prog) * pow(prog, 2.) * curve[2] + 
-		pow(prog, 3.) * curve[3];	
+float curveEval(in float curve[6], in float prog) {
+	return curve[0] * pow(1. - prog, 3.) + 
+		   curve[2] * 3. * pow(1. - prog, 2.) * prog + 
+		   curve[4] * 3. * (1. - prog) * pow(prog, 2.) + 
+		   curve[5] * pow(prog, 3.);
 }
 
 float frandom (in vec2 st, in float _seed) {
 	float f = fract(sin(dot(st.xy, vec2(12.9898, 78.233)) * mod(15.15 + seed, 32.156 + _seed) * 12.588) * 43758.5453123);
-	f = f * 2. - 1.;
-    return f;
+    return mix(-1., 1., f);
 }
 
 vec2 vrandom (in vec2 st) {
@@ -114,14 +113,12 @@ void main() {
 	str += frandom(_pos, 12.01) * abs(.1) * str;
 	
 	vec2 _new_pos = _pos - _vec;
-	vec4 _col;
+	vec4 _col = vec4(0.);
 	
-	if(_new_pos == clamp(_new_pos, 0., 1.)) {
-		_col = texture2D( gm_BaseTexture, _pos - _vec );
-		_col.rgb *= gradientEval(str).rgb;
-		_col.a *= curveEval(alpha_curve, str);
-	} else {
-		_col = vec4(0.);	
+	if(_new_pos.x >= 0. && _new_pos.x <= 1. && _new_pos.y >= 0. && _new_pos.y <= 1.) {
+		_col = texture2D( gm_BaseTexture, _new_pos );
+		_col.rgb *= gradientEval(str + frandom(_pos, 1.235) * 0.1).rgb;
+		_col.a *= curveEval(alpha_curve, str + frandom(_pos, 2.984) * 0.1);
 	}
 	
     gl_FragColor = _col;

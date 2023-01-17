@@ -105,12 +105,14 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 		addNodeObject(input, "Export",				s_node_export,			"Node_Export",					[0, Node_create_Export]);
 		
 		ds_list_add(input, "Files");
-		addNodeObject(input, "Text file in",		s_node_text_file_read,	"Node_Text_File_Read",			[1, Node_Text_File_Read], ["txt"]).set_version(1080);
-		addNodeObject(input, "Text file out",		s_node_text_file_write,	"Node_Text_File_Write",			[1, Node_Text_File_Write], ["txt"]).set_version(1090);
-		addNodeObject(input, "CSV file in",			s_node_csv_file_read,	"Node_CSV_File_Read",			[1, Node_CSV_File_Read], ["comma"]).set_version(1090);
-		addNodeObject(input, "CSV file out",		s_node_csv_file_write,	"Node_CSV_File_Write",			[1, Node_CSV_File_Write], ["comma"]).set_version(1090);
-		addNodeObject(input, "JSON file in",		s_node_json_file_read,	"Node_Json_File_Read",			[1, Node_Json_File_Read]).set_version(1090);
-		addNodeObject(input, "JSON file out",		s_node_json_file_write,	"Node_Json_File_Write",			[1, Node_Json_File_Write]).set_version(1090);
+		addNodeObject(input, "Text file in",		s_node_text_file_read,	"Node_Text_File_Read",		[1, Node_Text_File_Read], ["txt"]).set_version(1080);
+		addNodeObject(input, "Text file out",		s_node_text_file_write,	"Node_Text_File_Write",		[1, Node_Text_File_Write], ["txt"]).set_version(1090);
+		addNodeObject(input, "CSV file in",			s_node_csv_file_read,	"Node_CSV_File_Read",		[1, Node_CSV_File_Read], ["comma"]).set_version(1090);
+		addNodeObject(input, "CSV file out",		s_node_csv_file_write,	"Node_CSV_File_Write",		[1, Node_CSV_File_Write], ["comma"]).set_version(1090);
+		addNodeObject(input, "JSON file in",		s_node_json_file_read,	"Node_Json_File_Read",		[1, Node_Json_File_Read]).set_version(1090);
+		addNodeObject(input, "JSON file out",		s_node_json_file_write,	"Node_Json_File_Write",		[1, Node_Json_File_Write]).set_version(1090);
+		addNodeObject(input, "ASE file in",			s_node_ase_file,		"Node_ASE_File_Read",		[0, Node_create_ASE_File_Read]).set_version(1100);
+		addNodeObject(input, "ASE layer",			s_node_ase_layer,		"Node_ASE_layer",			[1, Node_ASE_layer]).set_version(1100);
 	
 	var transform = ds_list_create();
 	addNodeCatagory("Transform", transform);
@@ -146,6 +148,7 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 		addNodeObject(filter, "Directional Blur",	s_node_blur_directional,"Node_Blur_Directional",[1, Node_Blur_Directional]);
 		addNodeObject(filter, "Radial Blur",		s_node_blur,			"Node_Blur_Radial",		[1, Node_Blur_Radial]);
 		addNodeObject(filter, "Contrast Blur",		s_node_blur_contrast,	"Node_Blur_Contrast",	[1, Node_Blur_Contrast]);
+		addNodeObject(filter, "Average",			s_node_average,			"Node_Average",			[1, Node_Average]);
 		
 		ds_list_add(filter, "Warps");
 		addNodeObject(filter, "Mirror",				s_node_mirror,			"Node_Mirror",			[1, Node_Mirror]).set_version(1070);
@@ -160,10 +163,11 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 		addNodeObject(filter, "Glow",				s_node_glow,			"Node_Glow",			[1, Node_Glow]);
 		addNodeObject(filter, "Shadow",				s_node_shadow,			"Node_Shadow",			[1, Node_Shadow]);
 		addNodeObject(filter, "Bloom",				s_node_bloom,			"Node_Bloom",			[1, Node_Bloom]);
-		addNodeObject(filter, "Trail",				s_node_trail,			"Node_Trail",			[1, Node_Trail]);
+		//addNodeObject(filter, "Trail",				s_node_trail,			"Node_Trail",			[1, Node_Trail]);
 		addNodeObject(filter, "Erode",				s_node_erode,			"Node_Erode",			[1, Node_Erode]);
 		addNodeObject(filter, "2D light",			s_node_2d_light,		"Node_2D_light",		[1, Node_2D_light]);
-		addNodeObject(filter, "Atlas",				s_node_atlas,			"Node_Atlas",			[1, Node_Atlas]);
+		addNodeObject(filter, "Cast shadow",		s_node_shadow_cast,		"Node_Shadow_Cast",		[1, Node_Shadow_Cast]).set_version(1100);
+		addNodeObject(filter, "Pixel expand",		s_node_atlas,			"Node_Atlas",			[1, Node_Atlas]);
 		addNodeObject(filter, "Pixel cloud",		s_node_pixel_cloud,		"Node_Pixel_Cloud",		[1, Node_Pixel_Cloud]);
 		addNodeObject(filter, "Pixel sort",			s_node_pixel_sort,		"Node_Pixel_Sort",		[1, Node_Pixel_Sort]);
 		addNodeObject(filter, "Edge detect",		s_node_edge_detect,		"Node_Edge_Detect",		[1, Node_Edge_Detect]);
@@ -202,7 +206,7 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 		addNodeObject(threeD, "Normal light",		s_node_normal_light,	"Node_Normal_Light",	[1, Node_Normal_Light]);
 		addNodeObject(threeD, "Bevel",				s_node_bevel,			"Node_Bevel",			[1, Node_Bevel]);
 		addNodeObject(threeD, "Sprite stack",		s_node_stack,			"Node_Sprite_Stack",	[1, Node_Sprite_Stack]);
-	
+		
 		ds_list_add(threeD, "3D generates");
 		addNodeObject(threeD, "3D Object",			s_node_3d_obj,			"Node_3D_Obj",			[1, Node_3D_Obj]);
 		addNodeObject(threeD, "3D Plane",			s_node_3d_plane,		"Node_3D_Plane",		[1, Node_3D_Plane]);
@@ -247,9 +251,10 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 		addNodeObject(generator, "Triangular grid",		s_node_grid_tri,			"Node_Grid_Tri",			[1, Node_Grid_Tri]);
 		addNodeObject(generator, "Hexagonal grid",		s_node_grid_hex,			"Node_Grid_Hex",			[1, Node_Grid_Hex]);
 		
-		ds_list_add(generator, "Particles");
+		ds_list_add(generator, "Populate");
 		addNodeObject(generator, "Particle",			s_node_particle,			"Node_Particle",			[1, Node_Particle]);
 		addNodeObject(generator, "VFX",					s_node_vfx,					"Node_VFX_Group",			[1, Node_VFX_Group]);
+		addNodeObject(generator, "Repeat",				s_node_repeat,				"Node_Repeat",				[1, Node_Repeat]).set_version(1100);
 		addNodeObject(generator, "Scatter",				s_node_scatter,				"Node_Scatter",				[1, Node_Scatter]);
 		
 		ds_list_add(generator, "Others");
@@ -261,13 +266,13 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 		addNodeObject(compose, "Blend",		s_node_blend,		"Node_Blend",		[1, Node_Blend]);
 		addNodeObject(compose, "Compose",	s_node_compose,		"Node_Composite",	[1, Node_Composite]);
 		addNodeObject(compose, "Stack",		s_node_draw_stack,	"Node_Stack",		[1, Node_Stack]).set_version(1070);
+		addNodeObject(compose, "Camera",	s_node_camera,		"Node_Camera",		[1, Node_Camera]);
 	
 	var renderNode = ds_list_create();
 	addNodeCatagory("Render", renderNode);
 		ds_list_add(renderNode, "Renders");
 		addNodeObject(renderNode, "Render sprite sheet",	s_node_sprite_sheet,	"Node_Render_Sprite_Sheet",	[1, Node_Render_Sprite_Sheet]);
 		addNodeObject(renderNode, "Export",					s_node_export,			"Node_Export",				[0, Node_create_Export]);
-		addNodeObject(renderNode, "Camera",					s_node_camera,			"Node_Camera",				[1, Node_Camera]);
 		//addNodeObject(renderNode, "Preview timeline",		s_node_timeline_preview,"Node_Timeline_Preview",	[1, Node_create_Timeline_Preview]);
 	
 	var values = ds_list_create();
@@ -283,6 +288,7 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 		addNodeObject(values, "Number",			s_node_number,			"Node_Number",			[1, Node_Number]);
 		addNodeObject(values, "Math",			s_node_math,			"Node_Math",			[0, Node_create_Math], ["add", "subtract", "multiply", "divide", "power", "modulo", "round", "ceiling", "floor", "sin", "cos", "tan"]);
 		addNodeObject(values, "Equation",		s_node_equation,		"Node_Equation",		[1, Node_Equation]);
+		addNodeObject(values, "Random",			s_node_random,			"Node_Random",			[1, Node_Random]);
 		addNodeObject(values, "Compare",		s_node_compare,			"Node_Compare",			[0, Node_create_Compare], ["equal", "greater", "lesser"]);
 		addNodeObject(values, "Statistic",		s_node_statistic,		"Node_Statistic",		[0, Node_create_Statistic], ["sum", "average", "mean", "median", "min", "max"]);
 		addNodeObject(values, "Vector2",		s_node_vec2,			"Node_Vector2",			[1, Node_Vector2]);
@@ -293,8 +299,10 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 		ds_list_add(values, "Texts");
 		addNodeObject(values, "Text",			s_node_text,			"Node_String",			[1, Node_String]);
 		addNodeObject(values, "Unicode",		s_node_unicode,			"Node_Unicode",			[1, Node_Unicode]);
+		addNodeObject(values, "Combine text",	s_node_text_combine,	"Node_String_Merge",	[1, Node_String_Merge]);
 		addNodeObject(values, "Split text",		s_node_text_splice,		"Node_String_Split",	[1, Node_String_Split]);
 		addNodeObject(values, "Trim text",		s_node_text_trim,		"Node_String_Trim",		[1, Node_String_Trim]).set_version(1080);
+		addNodeObject(values, "Get character",	s_node_text_char_get,	"Node_String_Get_Char",	[1, Node_String_Get_Char]).set_version(1100);
 		
 		ds_list_add(values, "Arrays");
 		addNodeObject(values, "Array create",		s_node_array,			"Node_Array",			[1, Node_Array]);
@@ -309,10 +317,13 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 		addNodeObject(color, "Color",			s_node_color_out,		"Node_Color",			[1, Node_Color]);
 		addNodeObject(color, "RGB Color",		s_node_color_from_rgb,	"Node_Color_RGB",		[1, Node_Color_RGB]);
 		addNodeObject(color, "HSV Color",		s_node_color_from_hsv,	"Node_Color_HSV",		[1, Node_Color_HSV]);
-		addNodeObject(color, "Palette",			s_node_palette,			"Node_Palette",			[1, Node_Palette]);
 		addNodeObject(color, "Gradient data",	s_node_gradient_out,	"Node_Gradient_Out",	[1, Node_Gradient_Out]);
 		addNodeObject(color, "Sampler",			s_node_sampler,			"Node_Sampler",			[1, Node_Sampler]);
 		addNodeObject(color, "Color data",		s_node_color_data,		"Node_Color_Data",		[1, Node_Color_Data]);
+		
+		ds_list_add(color, "Palettes");
+		addNodeObject(color, "Palette",			s_node_palette,			"Node_Palette",			[1, Node_Palette]);
+		addNodeObject(color, "Palette extract",	s_node_palette_extract,	"Node_Palette_Extract",	[1, Node_Palette_Extract]).set_version(1100);
 	
 	var animation = ds_list_create();
 	addNodeCatagory("Animation", animation);

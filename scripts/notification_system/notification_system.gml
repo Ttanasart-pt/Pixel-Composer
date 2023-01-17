@@ -23,18 +23,29 @@
 		self.life = life;
 		
 		self.onClick = noone;
+		self.tooltip = "";
+		self.icon_end = noone;
 		
 		self.time = string_lead_zero(current_hour, 2) + ":" + string_lead_zero(current_minute, 2) + "." + string_lead_zero(current_second, 2);
 		
-		static setOnClick = function(onClick) {
+		static setOnClick = function(onClick, tooltip = "", icon_end = noone) {
 			self.onClick = method(self, onClick);
+			self.tooltip = tooltip;
+			self.icon_end = icon_end;
+			
 			return self;
 		}
 	}
 	
-	function noti_status(str, icon = noone) {
+	function noti_status(str, icon = noone, flash = false) {
 		var noti = new notification(NOTI_TYPE.log, str, icon);
 		ds_list_add(STATUSES, noti);
+		
+		if(flash && PANEL_MENU) {
+			PANEL_MENU.noti_flash = 1;
+			PANEL_MENU.noti_flash_color = flash;
+		}
+		
 		return noti;
 	}
 	

@@ -15,12 +15,9 @@ enum PUPPET_FORCE_MODE {
 	wind,
 }
 
-function controlPointBox(_onModify) constructor {
+function controlPointBox(_onModify) : widget() constructor {
 	onModify = _onModify;
 	onSurfaceSize = -1;
-	
-	active  = false;
-	hover   = false;
 	
 	tbCx = new textBox(TEXTBOX_INPUT.float, function(val) { onModify(PUPPET_CONTROL.cx,     toNumber(val)); });
 	tbCy = new textBox(TEXTBOX_INPUT.float, function(val) { onModify(PUPPET_CONTROL.cy,     toNumber(val)); });
@@ -42,7 +39,21 @@ function controlPointBox(_onModify) constructor {
 		function(val) { onModify(PUPPET_CONTROL.mode, toNumber(val)); }
 	);
 	
+	static register = function(parent = noone) {
+		sMode.register(parent); 
+		tbCx.register(parent);
+		tbCy.register(parent);
+		tbFx.register(parent);
+		tbFy.register(parent);
+		tbW.register(parent); 
+		tbH.register(parent); 
+		rot.register(parent); 
+	}
+	
 	static draw = function(_x, _y, _w, _data, _m, _rx, _ry) {
+		x = _x;
+		y = _y;
+		
 		tbCx.hover   = hover; tbCx.active   = active;
 		tbCy.hover   = hover; tbCy.active   = active;
 		tbFx.hover   = hover; tbFx.active   = active;
@@ -109,8 +120,7 @@ function controlPointBox(_onModify) constructor {
 				break;
 		}
 		
-		active = false;
-		hover  = false;
+		resetFocus();
 		
 		return yy - _y;
 	}

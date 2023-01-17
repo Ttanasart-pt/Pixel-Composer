@@ -17,7 +17,6 @@ function Node_Frame(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 		.setDisplay(VALUE_DISPLAY.vector);
 	
 	inputs[| 1] = nodeValue(1, "Color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white );
-		
 	
 	static step = function() {
 		var si = inputs[| 0].getValue();
@@ -29,9 +28,10 @@ function Node_Frame(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 	
 	static drawNodeBase = function(xx, yy, _s) {
 		draw_sprite_stretched_ext(bg_spr, 0, xx, yy, w * _s, h * _s, color, 0.75);
+		
 		draw_set_text(f_h5, fa_right, fa_bottom, COLORS._main_text);
 		draw_set_alpha(name_hover? 0.5 : 0.25);
-		draw_text_cut(xx + w * _s - 8, yy + h * _s - 8, name, w * _s);
+		draw_text_cut(xx + (w - 8) * _s, yy + (h - 8) * _s, name, w * _s);
 		draw_set_alpha(1);
 	}
 	
@@ -65,9 +65,11 @@ function Node_Frame(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 		var y1 = yy + h * _s;
 		var x0 = xx + w * _s - 16 * _s;
 		var y0 = yy + h * _s - 16 * _s;
-		draw_sprite_ext(THEME.node_resize, 0, x1 - 4 * _s, y1 - 4 * _s, 1, 1, 0, c_white, 0.5);
+		var ics = max(0.25, 0.5 * _s);
+		draw_sprite_ext(THEME.node_resize, 0, x1 - 4 * _s, y1 - 4 * _s, ics, ics, 0, c_white, 0.5);
+		
 		if(!name_hover && point_in_rectangle(_mx, _my, x0, y0, x1, y1)) {
-			draw_sprite_ext(THEME.node_resize, 0, x1 - 4 * _s, y1 - 4 * _s, 1, 1, 0, c_white, 1);
+			draw_sprite_ext(THEME.node_resize, 0, x1 - 4 * _s, y1 - 4 * _s, ics, ics, 0, c_white, 1);
 			PANEL_GRAPH.drag_locking = true;
 			
 			if(mouse_press(mb_left)) {

@@ -15,7 +15,7 @@ function Node_3D_Repeat(_x, _y, _group = -1) : Node(_x, _y, _group) constructor 
 	
 	inputs[| 4] = nodeValue(4, "Render position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ def_surf_size / 2, def_surf_size / 2 ])
 		.setDisplay(VALUE_DISPLAY.vector)
-		.setUnitRef( function() { return inputs[| 2].getValue(); });
+		.setUnitRef( function() { return inputs[| 0].getValue(); });
 	
 	inputs[| 5] = nodeValue(5, "Render scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 1 ])
 		.setDisplay(VALUE_DISPLAY.vector);
@@ -48,7 +48,7 @@ function Node_3D_Repeat(_x, _y, _group = -1) : Node(_x, _y, _group) constructor 
 		.setDisplay(VALUE_DISPLAY.vector);
 	
 	inputs[| 16] = nodeValue(16, "Repeat pattern", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_button, [ "Linear", "Radial" ]);
+		.setDisplay(VALUE_DISPLAY.enum_button, [ "Linear", "Circular" ]);
 	
 	inputs[| 17] = nodeValue(17, "Axis", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.enum_button, [ "x", "y", "z" ]);

@@ -57,20 +57,25 @@ function Node_VFX_Renderer(_x, _y, _group = -1) : Node(_x, _y, _group) construct
 		outputs[| 0].setValue(_outSurf);
 		
 		surface_set_target(_outSurf);
-			draw_clear_alpha(c_white, 0);
-			
 			switch(_blend) {
-				case PARTICLE_BLEND_MODE.normal :	gpu_set_blendmode(bm_normal);	break;
-				case PARTICLE_BLEND_MODE.additive : gpu_set_blendmode(bm_add);		break;
+				case PARTICLE_BLEND_MODE.normal :	
+					draw_clear_alpha(c_white, 0);
+					gpu_set_blendmode(bm_normal);	
+					break;
+				case PARTICLE_BLEND_MODE.additive : 
+					draw_clear_alpha(c_black, 0);
+					gpu_set_blendmode(bm_add);		
+					break;
 			}
+			
+			var surf_w = surface_get_width(_outSurf);
+			var surf_h = surface_get_height(_outSurf);
 			
 			for( var i = input_fix_len; i < ds_list_size(inputs) - 1; i++ ) {
 				var parts = inputs[| i].getValue(_time);
-				if(!ds_exists(parts, ds_type_list)) continue;
-				
-				for(var j = 0; j < ds_list_size(parts); j++) {
-					if(!parts[| j].active) continue;
-					parts[| j].draw(_exact);
+				for(var j = 0; j < array_length(parts); j++) {
+					if(!parts[j].active) continue;
+					parts[j].draw(_exact, surf_w, surf_h);
 				}
 			}
 			

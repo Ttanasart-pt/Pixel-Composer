@@ -1,4 +1,5 @@
 #macro CURVE_DEF_01 [0, 1/3, 1/3, 2/3, 2/3, 1]
+#macro CURVE_DEF_10 [1, 2/3, 1/3, 1/3, 2/3, 0]
 #macro CURVE_DEF_11 [1, 1/3,   1, 2/3,   1, 1]
 
 function draw_line_bezier_cubic(x0, y0, _w, _h, _bz) {
@@ -42,6 +43,8 @@ function eval_curve_bezier_cubic_x(_bz, _x, _prec = 0.00001) {
 	
 	var _xt = _x;
 	var _binRep = 5;
+	
+	if(_bz[0] == _bz[2] && _bz[0] == _bz[4] && _bz[0] == _bz[5]) return _bz[0];
 	
 	repeat(_binRep) {
 		var _ftx = power(1 - _xt, 3) * 0 

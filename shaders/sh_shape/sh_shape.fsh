@@ -12,7 +12,11 @@ uniform int  drawDF;
 
 uniform float  angle;
 uniform float  inner;
+uniform float  outer;
 uniform float  corner;
+
+uniform float  stRad;
+uniform float  edRad;
 
 uniform vec2 angle_range;
 
@@ -79,6 +83,32 @@ float sdBox( in vec2 p, in vec2 b ) {
     return length(max(d, 0.0)) + min(max(d.x, d.y), 0.0);
 }
 
+float sdTearDrop( vec2 p, float r1, float r2, float h ) {
+    p.x = abs(p.x);
+    float b = (r1-r2)/h;
+    float a = sqrt(1.0-b*b);
+    float k = dot(p,vec2(-b,a));
+    if( k < 0.0 ) return length(p) - r1;
+    if( k > a*h ) return length(p-vec2(0.0,h)) - r2;
+    return dot(p, vec2(a,b) ) - r1;
+}
+
+float sdCross( in vec2 p, in vec2 b, float r )  {
+    p = abs(p); p = (p.y>p.x) ? p.yx : p.xy;
+    vec2  q = p - b;
+    float k = max(q.y,q.x);
+    vec2  w = (k>0.0) ? q : vec2(b.y-p.x,-k);
+    return sign(k)*length(max(w,0.0)) + r;
+}
+
+float sdVesica(vec2 p, float r, float d) {
+    p = abs(p);
+
+    float b = sqrt(r*r-d*d);  // can delay this sqrt by rewriting the comparison
+    return ((p.y-b)*d > p.x*b) ? length(p-vec2(0.0,b))*sign(d)
+                               : length(p-vec2(-d,0.0))-r;
+}
+
 void main() {
 	float color = 0.;
 	vec2 cen = (v_vTexcoord - center) / scale;
@@ -86,10 +116,8 @@ void main() {
 	float d;
 	
 	if(shape == 0) {
-		vec2 edgeDist = abs(cen) - 1.;
-		float odist = length(max(edgeDist, 0.));
-		float idist = min(max(edgeDist.x, edgeDist.y), 0.);
-		d = odist + idist;
+		d = sdBox( (v_vTexcoord - center) * ratio, (scale * ratio - corner));
+		d -= corner;
 	} else if(shape == 1) {
 		d = length(cen) - 1.;
 	} else if(shape == 2) {
@@ -100,10 +128,12 @@ void main() {
 		d -= corner;
 	} else if(shape == 4) {
 	    d = sdArc( cen, vec2(sin(angle), cos(angle)), angle_range, 0.9 - inner, inner );
-		d -= corner;
 	} else if(shape == 5) {
-		d = sdBox( (v_vTexcoord - center) * ratio, (scale * ratio - corner));
-		d -= corner;
+	    d = sdTearDrop( cen + vec2(0., 0.5), stRad, edRad, 1. );
+	} else if(shape == 6) {
+	    d = sdCross( cen, vec2(1. + corner, outer), corner );
+	} else if(shape == 7) {
+	    d = sdVesica( cen, inner, outer );
 	}
 	
 	//d = d;

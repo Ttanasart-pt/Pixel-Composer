@@ -1,9 +1,7 @@
-function paddingBox(_onModify, _unit = noone) constructor {
+function paddingBox(_onModify, _unit = noone) : widget() constructor {
 	onModify = _onModify;
 	unit	 = _unit;
 	
-	active  = false;
-	hover   = false;
 	linked = false;
 	b_link = button(function() { linked = !linked; });
 	b_link.icon = THEME.value_link;
@@ -26,7 +24,22 @@ function paddingBox(_onModify, _unit = noone) constructor {
 	for(var i = 0; i < 4; i++)
 		tb[i] = new textBox(TEXTBOX_INPUT.float, onModifySingle[i]);
 	
+	static register = function(parent = noone) {
+		b_link.register();
+		
+		for(var i = 0; i < 4; i++)
+			tb[i].register(parent);
+		
+		if(unit != noone && unit.reference != noone)
+			unit.triggerButton.register(parent);
+	}
+	
 	static draw = function(_x, _y, _data, _m) {
+		x = _x;
+		y = _y;
+		w = 0;
+		h = ui(192);
+		
 		draw_sprite_ui_uniform(THEME.inspector_padding, 0, _x, _y + ui(64));
 		
 		for(var i = 0; i < 4; i++) {
@@ -57,7 +70,6 @@ function paddingBox(_onModify, _unit = noone) constructor {
 			unit.draw(_x + ui(48),  _y - ui(25), ui(32), ui(32), _m);
 		}
 		
-		active = false;
-		hover  = false;
+		resetFocus();
 	}
 }

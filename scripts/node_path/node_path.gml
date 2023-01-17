@@ -3,7 +3,7 @@ function Node_Path(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 	previewable = false;
 	
 	w = 96;
-	min_h = 0;
+	
 	
 	inputs[| 0] = nodeValue(0, "Path progress", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
 		.setDisplay(VALUE_DISPLAY.slider, [0, 1, 0.01]);

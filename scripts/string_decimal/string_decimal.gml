@@ -1,62 +1,17 @@
-function string_real(str) {
-	var ss  = "";
-	var i   = 1;
-	
-	while(i <= string_length(str)) {
-		var ch = string_char_at(str, i);
-		switch(ch) {
-			case "-":	
-			case "0":	
-			case "1":	
-			case "2":	
-			case "3":	
-			case "4":	
-			case "5":	
-			case "6":	
-			case "7":	
-			case "8":	
-			case "9":	
-				ss += ch;
-				break;
-		}
-		i++;
-	}
-	return ss;
-}
-
 function string_decimal(str) {
-	var ss  = "";
-	var i   = 1;
-	var dec = 0;
+	var neg = string_char_at(str, 1) == "-";
+	if(neg) str = string_copy(str, 2, string_length(str) - 1);
 	
-	if(string_pos("E", str) != 0) return "0";
+	var dec = string_pos(".", str);
+	var pre = string_copy(str, 1, dec - 1);
+	var pos = string_copy(str, dec + 1, string_length(str) - dec);
 	
-	while(i <= string_length(str)) {
-		var ch = string_char_at(str, i);
-		switch(ch) {
-			case ".":
-				if(dec++ > 0) break;
-			case "-":	
-			case "0":	
-			case "1":	
-			case "2":	
-			case "3":	
-			case "4":	
-			case "5":	
-			case "6":	
-			case "7":	
-			case "8":	
-			case "9":	
-				ss += ch;
-				break;
-		}
-		i++;
-	}
-	
-	return ss;
+	return (neg? "-" : "") + (dec? string_digits(pre) + "." + string_digits(pos) : string_digits(str));
 }
 
 function toNumber(str) {
+	if(is_real(str)) return str;
+	
 	str = string_decimal(str);
 	if(str == "") return 0;
 	if(str == ".") return 0;

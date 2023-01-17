@@ -1,7 +1,4 @@
-function sliderRange(_min, _max, _step, _onModify) constructor {
-	active = false;
-	hover  = false;
-	
+function sliderRange(_min, _max, _step, _onModify) : widget() constructor {
 	minn = _min;
 	maxx = _max;
 	step = _step;
@@ -20,7 +17,17 @@ function sliderRange(_min, _max, _step, _onModify) constructor {
 	tb_value_min.slide_speed = 0.01;
 	tb_value_max.slide_speed = 0.01;
 	
+	static register = function(parent = noone) {
+		tb_value_min.register(parent);
+		tb_value_max.register(parent);
+	}
+	
 	static draw = function(_x, _y, _w, _h, _data, _m) {
+		x = _x;
+		y = _y;
+		w = _w;
+		h = _h;
+		
 		var tb_w = ui(64);
 		var sw = _w - (tb_w + ui(16)) * 2;
 		
@@ -80,7 +87,6 @@ function sliderRange(_min, _max, _step, _onModify) constructor {
 			}
 		}
 		
-		hover  = false;
-		active = false;
+		resetFocus();
 	}
 }

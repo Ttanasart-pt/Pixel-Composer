@@ -1,8 +1,30 @@
 function FileObject(_name, _path) constructor {
 	name = _name;
 	path = _path;
-	spr  = -1;
-	content = -1;
+	spr_path = [];
+	spr      = -1;
+	content  = -1;
+	surface  = noone;
+	
+	static getSurface = function() {
+		if(is_surface(surface)) return surface;
+		var spr = getSpr();
+		surface = surface_create_from_sprite_ext(spr, 0);
+		return surface;
+	}
+	
+	static getSpr = function() {
+		if(sprite_exists(spr)) return spr;
+		var path = array_safe_get(spr_path, 0);
+		var amo  = array_safe_get(spr_path, 1);
+		var cent = array_safe_get(spr_path, 2);
+		
+		if(path == 0) return -1;
+		spr = sprite_add(path, amo, false, false, 0, 0);
+		if(cent)
+			sprite_set_offset(spr, sprite_get_width(spr) / 2, sprite_get_height(spr) / 2);
+		return spr;
+	}
 }
 
 function DirectoryObject(name, path) constructor {
@@ -48,7 +70,7 @@ function DirectoryObject(name, path) constructor {
 					var p = string_pos("strip", icon_path);
 					if(p) amo = toNumber(string_copy(icon_path, p, string_length(icon_path) - p + 1));
 					
-					f.spr = sprite_add(icon_path, amo, false, false, 0, 0);
+					f.spr_path = [icon_path, amo, false];
 				} else {
 					var icon_path = path + "\\" + filename_change_ext(file, ".png");
 					if(!file_exists(icon_path)) continue;
@@ -59,8 +81,7 @@ function DirectoryObject(name, path) constructor {
 					var amo = ww % hh == 0? ww / hh : 1;
 					sprite_delete(_temp);
 					
-					f.spr = sprite_add(icon_path, amo, false, false, 0, 0);
-					sprite_set_offset(f.spr, sprite_get_width(f.spr) / 2, sprite_get_height(f.spr) / 2);
+					f.spr_path = [icon_path, amo, true];
 				}
 			}
 		}

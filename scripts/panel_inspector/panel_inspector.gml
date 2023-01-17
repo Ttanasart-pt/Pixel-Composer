@@ -1,4 +1,4 @@
-function Inspector_Custom_Renderer(draw) constructor {
+function Inspector_Custom_Renderer(draw) : widget() constructor {
 	h = 64;
 	self.draw = draw;
 }
@@ -130,6 +130,7 @@ function Panel_Inspector() : PanelContent() constructor {
 					}
 					continue;
 				} else if(is_struct(jun_disp) && instanceof(jun_disp) == "Inspector_Custom_Renderer") {
+					jun_disp.register(contentPane);
 					jun_disp.rx = ui(16) + x;
 					jun_disp.ry = top_bar_h + y;
 					
@@ -264,8 +265,8 @@ function Panel_Inspector() : PanelContent() constructor {
 			var widH	   = lineBreak? editBoxH : 0;
 			
 			if(jun.editWidget) {
-				jun.editWidget.active = pFOCUS;
-				jun.editWidget.hover  = _hover;
+				jun.editWidget.setFocus(pFOCUS, _hover);
+				jun.editWidget.register(contentPane);
 				
 				switch(jun.display_type) {
 					case VALUE_DISPLAY.button :
@@ -286,7 +287,7 @@ function Panel_Inspector() : PanelContent() constructor {
 										widH = lineBreak? ebH : ebH - lb_h;
 										break;
 									case VALUE_DISPLAY.enum_scroll :
-										jun.editWidget.draw(editBoxX, editBoxY, editBoxW, editBoxH, jun.display_data[jun.showValue()], _m, ui(16) + x, top_bar_h + y);
+										jun.editWidget.draw(editBoxX, editBoxY, editBoxW, editBoxH, array_safe_get(jun.display_data, jun.showValue()), _m, ui(16) + x, top_bar_h + y);
 										break;
 									case VALUE_DISPLAY.enum_button :
 										jun.editWidget.draw(editBoxX, editBoxY, editBoxW, editBoxH, jun.showValue(), _m, ui(16) + x, top_bar_h + y);
@@ -305,7 +306,7 @@ function Panel_Inspector() : PanelContent() constructor {
 										jun.editWidget.draw(editBoxX, editBoxY, editBoxW, editBoxH, jun.showValue(), _m);
 										break;
 									case VALUE_DISPLAY.area :
-										jun.editWidget.draw(xc, _hsy + ui(40), jun.showValue(), _m);
+										jun.editWidget.draw(xc, _hsy + ui(40), jun.showValue(), jun.extra_data, _m);
 										widH = ui(204);
 										break;
 									case VALUE_DISPLAY.puppet_control :

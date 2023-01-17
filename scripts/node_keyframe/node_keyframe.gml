@@ -184,6 +184,7 @@ function valueAnimator(_val, _prop) constructor {
 		}
 		return processValue(_val);
 	}
+	
 	static processValue = function(_val) {
 		if(is_array(_val)) return _val;
 		

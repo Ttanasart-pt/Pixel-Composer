@@ -4,7 +4,7 @@ function Node_Text_File_Write(_x, _y, _group = -1) : Node(_x, _y, _group) constr
 	previewable = false;
 	
 	w = 128;
-	min_h = 0;
+	
 	
 	inputs[| 0]  = nodeValue(0, "Path", self, JUNCTION_CONNECT.input, VALUE_TYPE.path, "")
 		.setDisplay(VALUE_DISPLAY.path_save, ["*.txt", ""]);

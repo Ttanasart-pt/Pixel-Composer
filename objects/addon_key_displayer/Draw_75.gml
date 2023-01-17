@@ -2,12 +2,10 @@
 #region draw 
 	var key = "";
 	
-	if(keyboard_check(vk_control))
-		key += "Ctrl";
-	if(keyboard_check(vk_shift))
-		key += key == ""? "Shift" : " + Shift";
-	if(keyboard_check(vk_alt))
-		key += key == ""? "Alt" : " + Alt";
+	for( var i = 0; i < array_length(extra_keys); i++ ) {
+		if(keyboard_check(extra_keys[i][0]))
+			key += key == ""? extra_keys[i][1] : (" + " + extra_keys[i][1]);
+	}
 	
 	if(keyboard_check(vk_anykey)) {
 		var pres = keyboard_lastkey;

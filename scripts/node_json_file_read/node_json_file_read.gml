@@ -1,6 +1,6 @@
 function Node_create_Json_File_Read(_x, _y, _group = -1) {
 	var path = "";
-	if(!LOADING && !APPENDING) {
+	if(!LOADING && !APPENDING && !CLONING) {
 		path = get_open_filename(".json", "");
 		if(path == "") return noone;
 	}
@@ -15,7 +15,7 @@ function Node_create_Json_File_Read(_x, _y, _group = -1) {
 function Node_create_Json_File_Read_path(_x, _y, path) {
 	if(!file_exists(path)) return noone;
 	
-	var node = new Node_Json_File_Read(_x, _y);
+	var node = new Node_Json_File_Read(_x, _y, PANEL_GRAPH.getCurrentContext());
 	node.inputs[| 0].setValue(path);
 	node.doUpdate();
 	
@@ -28,7 +28,7 @@ function Node_Json_File_Read(_x, _y, _group = -1) : Node(_x, _y, _group) constru
 	previewable = false;
 	
 	w = 128;
-	min_h = 0;
+	
 	
 	inputs[| 0]  = nodeValue(0, "Path", self, JUNCTION_CONNECT.input, VALUE_TYPE.path, "")
 		.setDisplay(VALUE_DISPLAY.path_load, ["*.json", ""]);
@@ -61,6 +61,13 @@ function Node_Json_File_Read(_x, _y, _group = -1) : Node(_x, _y, _group) constru
 		}
 		
 		return false;
+	}
+	
+	static inspectorUpdate = function() {
+		var path = inputs[| 0].getValue();
+		if(path == "") return;
+		updatePaths(path);
+		update();
 	}
 	
 	static refreshDynamicInput = function() {
@@ -99,8 +106,6 @@ function Node_Json_File_Read(_x, _y, _group = -1) : Node(_x, _y, _group) constru
 	}
 	
 	function updatePaths(path) {
-		if(path_current == path) return false;
-		
 		path = try_get_path(path);
 		if(path == -1) return false;
 		
@@ -123,7 +128,7 @@ function Node_Json_File_Read(_x, _y, _group = -1) : Node(_x, _y, _group) constru
 	static update = function() {
 		var path = inputs[| 0].getValue();
 		if(path == "") return;
-		updatePaths(path);
+		if(path_current != path) updatePaths(path);
 		
 		for( var i = input_fix_len; i < ds_list_size(inputs) - 1; i++ ) {
 			var key = inputs[| i].getValue();

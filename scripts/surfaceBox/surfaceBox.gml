@@ -1,30 +1,42 @@
-function surfaceBox(_onModify, def_path = "") constructor {
+function surfaceBox(_onModify, def_path = "") : widget() constructor {
 	onModify  = _onModify;	
 	self.def_path = def_path;
 	
-	active = false;
-	hover  = false;
 	open   = false;
+	open_rx = 0;
+	open_ry = 0;
 	
 	align = fa_center;
 	
+	static trigger = function() {
+		open = true;
+		with(dialogCall(o_dialog_assetbox, x + w + open_rx, y + open_ry)) {
+			target = other;
+			gotoDir(other.def_path);
+		}
+	}
+	
 	static draw = function(_x, _y, _w, _h, _surface, _m, _rx, _ry) {
+		x = _x;
+		y = _y;
+		w = _w;
+		h = _h;
+		open_rx = _rx;
+		open_ry = _ry;
+	
 		if(!open) {
 			draw_sprite_stretched(THEME.textbox, 3, _x, _y, _w, _h);
 			
 			if(hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + _h)) {
 				draw_sprite_stretched(THEME.textbox, 1, _x, _y, _w, _h);
-				if(mouse_press(mb_left, active)) {
-					open = true;
-					with(dialogCall(o_dialog_assetbox, _x + _w + _rx, _y + _ry)) {
-						target = other;
-						gotoDir(other.def_path);
-					}
-				}
+				if(mouse_press(mb_left, active))
+					trigger();
+				
 				if(mouse_click(mb_left, active))
 					draw_sprite_stretched(THEME.textbox, 2, _x, _y, _w, _h);	
 			} else {
-				draw_sprite_stretched(THEME.textbox, 0, _x, _y, _w, _h);		
+				draw_sprite_stretched_ext(THEME.textbox, 0, _x, _y, _w, _h, c_white, 0.5 + 0.5 * interactable);
+				if(mouse_press(mb_left)) deactivate();
 			}
 			
 			var pad = ui(12);
@@ -55,7 +67,9 @@ function surfaceBox(_onModify, def_path = "") constructor {
 			draw_sprite_ui_uniform(THEME.scroll_box_arrow, 0, _x + _w - ui(20), _y + _h / 2, 1, COLORS._main_icon);
 		}
 		
-		hover  = false;
-		active = false;
+		if(WIDGET_CURRENT == self)
+			draw_sprite_stretched(THEME.widget_selecting, 0, _x - ui(3), _y - ui(3), _w + ui(6), _h + ui(6));	
+		
+		resetFocus();
 	}
 }

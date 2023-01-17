@@ -3,8 +3,7 @@ function Node_Wrap_Area(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) co
 	
 	inputs[| 0] = nodeValue(0, "Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 	inputs[| 1] = nodeValue(1, "Area", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 16, 16, 4, 4, AREA_SHAPE.rectangle ])
-		.setDisplay(VALUE_DISPLAY.area)
-		.setUnitRef(function(index) { return getDimension(index); });;
+		.setDisplay(VALUE_DISPLAY.area, function() { return getDimension(0); });
 	
 	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
 	

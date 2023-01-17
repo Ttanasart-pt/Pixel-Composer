@@ -131,6 +131,15 @@ function LOAD_PATH(path, readonly = false) {
 		log_warning("LOAD, update", exception_print(e));
 	}
 	
+	try {
+		for(var i = 0; i < ds_list_size(create_list); i++) {
+			if(create_list[| i].inspectorUpdate != noone)
+				create_list[| i].inspectorUpdate();
+		}
+	} catch(e) {
+		log_warning("LOAD, update", exception_print(e));
+	}
+	
 	Render();
 	
 	if(!ds_queue_empty(CONNECTION_CONFLICT)) {

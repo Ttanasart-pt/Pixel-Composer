@@ -19,9 +19,11 @@ function Node_Lua_Surface(_x, _y, _group = -1) : Node(_x, _y, _group) constructo
 		
 		inputs[| index + 1] = nodeValue( index + 1, "Argument type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0 )
 			.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Number", "String", "Surface" ]);
-			
+		inputs[| index + 1].editWidget.interactable = false;
+		
 		inputs[| index + 2] = nodeValue( index + 2, "Argument value", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0 )
 			.setVisible(true, true);
+		inputs[| index + 2].editWidget.interactable = false;
 	}
 	
 	outputs[| 0] = nodeValue(0, "Execution thread", self, JUNCTION_CONNECT.output, VALUE_TYPE.node, noone );
@@ -81,6 +83,9 @@ function Node_Lua_Surface(_x, _y, _group = -1) : Node(_x, _y, _group) constructo
 				ds_list_add(_in, inputs[| i + 0]);
 				ds_list_add(_in, inputs[| i + 1]);
 				ds_list_add(_in, inputs[| i + 2]);
+				
+				inputs[| i + 1].editWidget.interactable = true;
+				inputs[| i + 2].editWidget.interactable = true;
 				
 				if(LOADING || APPENDING) {
 					var type = inputs[| i + 1].getValue();

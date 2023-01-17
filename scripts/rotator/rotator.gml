@@ -1,7 +1,4 @@
-function rotator(_onModify, _step = -1) constructor {
-	active = false;
-	hover  = false;
-	
+function rotator(_onModify, _step = -1) : widget() constructor {
 	onModify = _onModify;
 	step	 = _step;
 	
@@ -13,7 +10,16 @@ function rotator(_onModify, _step = -1) constructor {
 	
 	tb_value = new textBox(TEXTBOX_INPUT.number, onModify);
 	
+	static register = function(parent = noone) {
+		tb_value.register(parent);
+	}
+	
 	static draw = function(_x, _y, _data, _m) {
+		x = _x;
+		y = _y;
+		w = 0;
+		h = ui(96);
+		
 		var knob_y = _y + ui(48);
 		
 		tb_value.hover  = hover;
@@ -68,7 +74,6 @@ function rotator(_onModify, _step = -1) constructor {
 		draw_set_text(f_p0, fa_center, fa_center, COLORS._main_text);
 		draw_text(_x, knob_y, string(_data));
 		
-		active = false;
-		hover  = false;
+		resetFocus();
 	}
 }

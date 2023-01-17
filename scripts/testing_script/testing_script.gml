@@ -26,6 +26,20 @@ function __test_update_current_collections() {
 	
 	print("---------- COLLECTION UPDATING ENDED ----------");
 }
+function __test_update_sample_projects() {
+	print("---------- PROJECT UPDATING STARTED ----------");
+	
+	for( var i = 0; i < ds_list_size(SAMPLE_PROJECTS); i++ ) {
+		var _proj = SAMPLE_PROJECTS[| i];
+			
+		print("  > Updating " + _proj.path);
+		var _map = json_load(_proj.path);
+		_map[? "version"] = SAVEFILE_VERSION;
+		json_save(_proj.path, _map);
+	}
+	
+	print("---------- PROJECT UPDATING ENDED ----------");
+}
 
 function __test_load_current_collections() {
 	var st = ds_stack_create();

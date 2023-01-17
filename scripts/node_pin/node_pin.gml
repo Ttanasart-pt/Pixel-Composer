@@ -2,7 +2,7 @@ function Node_Pin(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 	name = "";
 	w = 32;
 	h = 32;
-	min_h = 0;
+	
 	auto_height = false;
 	junction_shift_y = 16;
 	previewable = false;

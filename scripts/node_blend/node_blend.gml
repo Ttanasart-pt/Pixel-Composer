@@ -33,17 +33,23 @@ function Node_Blend(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constr
 	
 	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
 	
+	input_display_list = [
+		["Surfaces",	 true],	0, 1, 4,
+		["Blend",		false], 2, 3, 
+		["Transform",	false], 5, 
+	]
+	
 	static process_data = function(_outSurf, _data, _output_index, _array_index) {
-		var _fore		= _data[1];
-		var _type		= _data[2];
-		var _opacity	= _data[3];
-		var _mask		= _data[4];
-		var _tile		= _data[5];
+		var _back	 = _data[0];
+		var _fore	 = _data[1];
+		var _type	 = _data[2];
+		var _opacity = _data[3];
+		var _mask	 = _data[4];
+		var _tile	 = _data[5];
 		
 		surface_set_target(_outSurf);
 		draw_clear_alpha(0, 0);
-		
-		draw_surface_blend(_data[0], _fore, _type, _opacity, _mask, _tile);
+		draw_surface_blend(_back, _fore, _type, _opacity, _mask, _tile);
 		surface_reset_target();
 		
 		return _outSurf;

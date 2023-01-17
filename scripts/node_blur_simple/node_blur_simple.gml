@@ -8,6 +8,8 @@ function Node_Blur_Simple(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) 
 	
 	uniform_umk = shader_get_uniform(shader, "useMask");
 	uniform_msk = shader_get_sampler_index(shader, "mask");
+	uniform_ovr = shader_get_uniform(shader, "overrideColor");
+	uniform_ovc = shader_get_uniform(shader, "overColor");
 	
 	inputs[| 0] = nodeValue(0, "Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 	inputs[| 1] = nodeValue(1, "Size", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 3)
@@ -18,9 +20,13 @@ function Node_Blur_Simple(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) 
 	
 	inputs[| 3] = nodeValue(3, "Mask", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 	
+	inputs[| 4] = nodeValue(4, "Override color", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	
+	inputs[| 5] = nodeValue(5, "Color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_black);
+	
 	input_display_list = [ 
 		["Surface",	false],	0, 3, 2, 
-		["Blur",	false],	1, 
+		["Blur",	false],	1, 4, 5, 
 	];
 	
 	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
@@ -30,6 +36,10 @@ function Node_Blur_Simple(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) 
 		var _size	= _data[1];
 		var _samp	= _data[2];
 		var _mask	= _data[3];
+		var _isovr  = _data[4];
+		var _overc  = _data[5];
+		
+		inputs[| 5].setVisible(_isovr);
 		
 		surface_set_target(_outSurf);
 			draw_clear_alpha(0, 0);
@@ -40,6 +50,9 @@ function Node_Blur_Simple(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) 
 			shader_set_uniform_f(uniform_siz, _size);
 			shader_set_uniform_i(uniform_sam, _samp);
 			
+			shader_set_uniform_i(uniform_ovr, _isovr);
+			shader_set_uniform_f_array(uniform_ovc, colToVec4(_overc));
+		
 			shader_set_uniform_i(uniform_umk, is_surface(_mask));
 			if(is_surface(_mask)) 
 				texture_set_stage(uniform_msk, surface_get_texture(_mask));

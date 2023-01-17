@@ -13,6 +13,7 @@ function array_safe_set(arr, index, value) {
 }
 
 function array_safe_get(arr, index, def = 0) {
+	if(index < 0) return def;
 	if(index >= array_length(arr)) return def;
 	return arr[index];
 }

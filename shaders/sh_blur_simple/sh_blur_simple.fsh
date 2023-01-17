@@ -11,6 +11,9 @@ uniform int useMask;
 uniform sampler2D mask;
 uniform int sampleMode;
 
+uniform int overrideColor;
+uniform vec4 overColor;
+
 float sampleMask() {
 	if(useMask == 0) return 1.;
 	vec4 m = texture2D( mask, v_vTexcoord );
@@ -18,7 +21,7 @@ float sampleMask() {
 }
 
 vec4 sampleTexture(vec2 pos) {
-	if(pos.x > 0. && pos.y > 0. && pos.x < 1. && pos.y < 1.)
+	if(pos.x >= 0. && pos.y >= 0. && pos.x <= 1. && pos.y <= 1.)
 		return texture2D(gm_BaseTexture, pos);
 	
 	if(sampleMode == 0) 
@@ -64,4 +67,6 @@ void main() {
 	clr /= totalWeight;
 	
     gl_FragColor = clr;
+	if(overrideColor == 1) 
+		gl_FragColor.rgb = overColor.rgb;
 }

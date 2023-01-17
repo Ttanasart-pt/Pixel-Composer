@@ -13,14 +13,29 @@ function Node_VFX_Spawner(_x, _y, _group = -1) : Node_VFX_Spawner_Base(_x, _y, _
 	
 	array_insert(input_display_list, 0, ["Trigger", true], input_len + 0, input_len + 1);
 	
+	static updateParticleForward = function(_render = true) {
+		var pt = outputs[| 0];
+		for( var i = 0; i < ds_list_size(pt.value_to); i++ ) {
+			var _n = pt.value_to[| i];
+			if(_n.value_from != pt) continue;
+			
+			if(variable_struct_exists(_n.node, "updateParticleForward"))
+				_n.node.updateParticleForward();
+		}
+	}
+	
 	static onSpawn = function(_time, part) {
 		part.step_int = inputs[| input_len + 1].getValue(_time);
 	}
 	
-	static onPartCreate = function(part) {
-		var pv = part.getPivot();
-		
+	static onPartCreate = function(part) {  
 		var vt = outputs[| 1];
+		if(ds_list_empty(vt.value_to)) return;
+		
+		var pv = part.getPivot();
+		for( var i = 0; i < ds_list_size(inputs); i++ )
+			current_data[i] = inputs[| i].getValue();
+		
 		for( var i = 0; i < ds_list_size(vt.value_to); i++ ) {
 			var _n = vt.value_to[| i];
 			if(_n.value_from != vt) continue;
@@ -29,9 +44,13 @@ function Node_VFX_Spawner(_x, _y, _group = -1) : Node_VFX_Spawner_Base(_x, _y, _
 	}
 	
 	static onPartStep = function(part) {
-		var pv = part.getPivot();
-		
 		var vt = outputs[| 2];
+		if(ds_list_empty(vt.value_to)) return;
+		
+		var pv = part.getPivot();
+		for( var i = 0; i < ds_list_size(inputs); i++ )
+			current_data[i] = inputs[| i].getValue();
+			
 		for( var i = 0; i < ds_list_size(vt.value_to); i++ ) {
 			var _n = vt.value_to[| i];
 			if(_n.value_from != vt) continue;
@@ -40,9 +59,13 @@ function Node_VFX_Spawner(_x, _y, _group = -1) : Node_VFX_Spawner_Base(_x, _y, _
 	}
 	
 	static onPartDestroy = function(part) {
-		var pv = part.getPivot();
-		
 		var vt = outputs[| 3];
+		if(ds_list_empty(vt.value_to)) return;
+		
+		var pv = part.getPivot();
+		for( var i = 0; i < ds_list_size(inputs); i++ )
+			current_data[i] = inputs[| i].getValue();
+			
 		for( var i = 0; i < ds_list_size(vt.value_to); i++ ) {
 			var _n = vt.value_to[| i];
 			if(_n.value_from != vt) continue;

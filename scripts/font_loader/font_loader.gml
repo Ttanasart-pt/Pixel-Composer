@@ -1,6 +1,6 @@
-globalvar FONT_LOADED, f_h3, f_h5, f_p0, f_p0b, f_p1, f_p2, f_p3, f_code;
+globalvar FONT_ISLOADED, f_h3, f_h5, f_p0, f_p0b, f_p1, f_p2, f_p3, f_code;
 
-FONT_LOADED = false;
+FONT_ISLOADED = false;
 
 function _font_path(rel) {
 	return DIRECTORY + "themes/" + PREF_MAP[? "theme"] + "/fonts/" + string_replace_all(rel, "./", "");
@@ -19,7 +19,7 @@ function _font_load_from_struct(str, def) {
 function font_clear(font) { if(font_exists(font)) font_delete(font); }
 
 function loadFonts() {
-	if(FONT_LOADED) {
+	if(FONT_ISLOADED) {
 		font_clear(f_h3);
 		font_clear(f_h5);
 					
@@ -44,7 +44,7 @@ function loadFonts() {
 		f_p2  = _f_p2;
 		f_p3  = _f_p3;
 		f_code = _f_code;
-		FONT_LOADED = false;
+		FONT_ISLOADED = false;
 		return;
 	}
 	
@@ -66,5 +66,5 @@ function loadFonts() {
 	
 	f_code = _font_load_from_struct(fontDef.code, _f_code);
 	
-	FONT_LOADED = true;
+	FONT_ISLOADED = true;
 }

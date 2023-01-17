@@ -1,6 +1,6 @@
 function Node_create_Export(_x, _y, _group = -1) {
 	var path = "";
-	if(!LOADING && !APPENDING) {
+	if(!LOADING && !APPENDING && !CLONING) {
 		path = get_save_filename(".png", "export");
 	}
 	
@@ -11,12 +11,18 @@ function Node_create_Export(_x, _y, _group = -1) {
 	return node;
 }
 
+enum NODE_EXPORT_FORMAT {
+	single,
+	sequence, 
+	gif,
+}
+
 function Node_Export(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 	name		= "Export";
 	previewable = false;
 	
 	w = 96;
-	min_h = 0;
+	
 	playing = false;
 	played  = 0;
 	
@@ -101,9 +107,9 @@ function Node_Export(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 		
 		execute_shell_simple(converter, shell_cmd,, 0);
 		
-		var noti = log_message("EXPORT", "Export gif as " + target_path, THEME.noti_icon_tick);
+		var noti = log_message("EXPORT", "Export gif as " + target_path, THEME.noti_icon_tick, COLORS._main_value_positive);
 		noti.path = filename_dir(target_path);
-		noti.setOnClick(function() { shellOpenExplorer(self.path); });
+		noti.setOnClick(function() { shellOpenExplorer(self.path); }, "Open in explorer", THEME.explorer);
 		
 		PANEL_MENU.setNotiIcon(THEME.noti_icon_tick);
 	}
@@ -172,7 +178,7 @@ function Node_Export(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 			}
 		}
 		
-		if(form == 0 || form == 1)
+		if(form == NODE_EXPORT_FORMAT.single || form == NODE_EXPORT_FORMAT.sequence)
 			s += ".png";
 		else
 			s += ".gif";
@@ -189,14 +195,14 @@ function Node_Export(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 		var _ts = current_time;
 		
 		if(is_array(surf)) {
+			var p = "";
 			for(var i = 0; i < array_length(surf); i++) {
 				var _surf = surf[i];
 				if(!is_surface(_surf)) continue;
 				
-				var p = "";
-				if(form == 2) {
+				if(form == NODE_EXPORT_FORMAT.gif) {
 					p = DIRECTORY + "temp\\" + string(i) + "\\" + string(100000 + ANIMATOR.current_frame) + ".png";
-				} else {
+				} else if(form == NODE_EXPORT_FORMAT.single || form == NODE_EXPORT_FORMAT.sequence) {
 					if(is_array(path) && array_length(path) == array_length(surf))
 						p = pathString(path[ safe_mod(i, array_length(path)) ], suff, i);
 					else
@@ -204,57 +210,58 @@ function Node_Export(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 				}
 					
 				surface_save(_surf, p);
-				
-				if(form != 2) {
-					var noti = log_message("EXPORT", "Export image as " + p, THEME.noti_icon_tick);
-					noti.path = filename_dir(p);
-					noti.setOnClick(function() { shellOpenExplorer(self.path); });
-					
-					PANEL_MENU.setNotiIcon(THEME.noti_icon_tick);
-				}
 			}
-		} else {
-			if(is_surface(surf)) {
-				var p = path;
-				if(is_array(path)) p = path[0];
+			
+			if(form == NODE_EXPORT_FORMAT.single || form == NODE_EXPORT_FORMAT.sequence) {
+				var noti = log_message("EXPORT", "Export " + string(array_length(surf)) + " images complete.", THEME.noti_icon_tick, COLORS._main_value_positive);
+				noti.path = filename_dir(p);
+				noti.setOnClick(function() { shellOpenExplorer(self.path); }, "Open in explorer", THEME.explorer);
 				
-				if(form == 2) {
-					p = DIRECTORY + "temp\\" + string(100000 + ANIMATOR.current_frame) + ".png";
-				} else {
-					p = pathString(p, suff);
-				}
+				PANEL_MENU.setNotiIcon(THEME.noti_icon_tick);
+			}
+		} else if(is_surface(surf)) {
+			var p = path;
+			if(is_array(path)) p = path[0];
 				
-				surface_save(surf, p);
+			if(form == NODE_EXPORT_FORMAT.gif)
+				p = DIRECTORY + "temp\\" + string(100000 + ANIMATOR.current_frame) + ".png";
+			else
+				p = pathString(p, suff);
+			
+			surface_save(surf, p);
 				
-				if(form != 2) {
-					var noti = log_message("EXPORT", "Export image as " + p, THEME.noti_icon_tick);
-					noti.path = filename_dir(p);
-					noti.setOnClick(function() { shellOpenExplorer(self.path); });
+			if(form == NODE_EXPORT_FORMAT.single || form == NODE_EXPORT_FORMAT.sequence) {
+				var noti = log_message("EXPORT", "Export image as " + p, THEME.noti_icon_tick, COLORS._main_value_positive);
+				noti.path = filename_dir(p);
+				noti.setOnClick(function() { shellOpenExplorer(self.path); }, "Open in explorer", THEME.explorer);
 					
-					PANEL_MENU.setNotiIcon(THEME.noti_icon_tick);
-				}
-			}	
+				PANEL_MENU.setNotiIcon(THEME.noti_icon_tick);
+			}
 		}
 	}
 	
 	static inspectorUpdate = function() {
 		if(LOADING || APPENDING) return;
+		if(playing) return;
 		
 		var path = inputs[| 1].getValue();
 		if(path == "") return;
-		var anim = inputs[| 3].getValue();
+		var form = inputs[| 3].getValue();
 		
-		if(anim) {
-			playing					= true;
-			played					= 0;
-			ANIMATOR.real_frame		= -1;
-			ANIMATOR.current_frame	= -1;
-			ANIMATOR.is_playing		= true;
-			
-			if(directory_exists(DIRECTORY + "temp"))
-				directory_destroy(DIRECTORY + "temp");
-		} else
+		if(form == NODE_EXPORT_FORMAT.single) {
 			export();
+			return;
+		}
+		
+		playing					= true;
+		played					= 0;
+		ANIMATOR.real_frame		= -1;
+		ANIMATOR.current_frame	= -1;
+		ANIMATOR.is_playing		= true;
+		ANIMATOR.rendering		= true;
+		
+		if(directory_exists(DIRECTORY + "temp"))
+			directory_destroy(DIRECTORY + "temp");
 	}
 	
 	static update = function() {

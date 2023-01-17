@@ -8,7 +8,8 @@ function Node_Noise_Tri(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) co
 	uniform_sca = shader_get_uniform(shader, "scale");
 	uniform_ang = shader_get_uniform(shader, "angle");
 	
-	uniform_sam = shader_get_uniform(shader, "useSampler");
+	uniform_sam    = shader_get_uniform(shader, "useSampler");
+	uniform_samTyp = shader_get_uniform(shader, "sampleMode");
 	
 	inputs[| 0] = nodeValue(0, "Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, def_surf_size2 )
 		.setDisplay(VALUE_DISPLAY.vector);
@@ -23,10 +24,13 @@ function Node_Noise_Tri(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) co
 	
 	inputs[| 4] = nodeValue(4, "Texture sample", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 		
+	inputs[| 5] = nodeValue(5, "Oversample mode", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 2)
+		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Empty", "Clamp", "Repeat" ]);
+	
 	input_display_list = [
 		["Output",	false], 0, 
 		["Noise",	false], 1, 2, 3,
-		["Texture",	false], 4,
+		["Texture",	false], 4, 5,
 	];
 	
 	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
@@ -41,16 +45,19 @@ function Node_Noise_Tri(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) co
 		var _pos = _data[2];
 		var _sca = _data[3];
 		var _sam = _data[4];
+		var _samTyp = _data[5];
 		
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1]);
 		
 		surface_set_target(_outSurf);
+		draw_clear_alpha(0, 0);
 		shader_set(shader);
 			shader_set_uniform_f_array(uniform_dim, [_dim[0], _dim[1]]);
 			shader_set_uniform_f(uniform_sed, _sed);
 			shader_set_uniform_f_array(uniform_pos, _pos);
 			shader_set_uniform_f_array(uniform_sca, _sca);
 			shader_set_uniform_i(uniform_sam, is_surface(_sam));
+			shader_set_uniform_i(uniform_samTyp, _samTyp);
 			
 			if(is_surface(_sam))
 				draw_surface_stretched(_sam, 0, 0, _dim[0], _dim[1]);

@@ -2,12 +2,13 @@ function Node_VFX_Repel(_x, _y, _group = -1) : Node_VFX_effector(_x, _y, _group)
 	name = "Repel";
 	node_draw_icon = s_node_vfx_repel;
 	
+	inputs[| 4].setVisible(false, false);
+	
 	function onAffect(part, str) {
 		var _area = current_data[1];
 		var _area_x = _area[0];
 		var _area_y = _area[1];
 		
-		var _vect = current_data[4];
 		var _sten = current_data[5];
 		var _rot_range = current_data[6];
 		var _sca_range = current_data[7];

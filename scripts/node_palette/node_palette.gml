@@ -2,9 +2,9 @@ function Node_Palette(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 	name		= "Palette";
 	previewable = false;
 	
-	min_h = 0;
+	
 	w = 96;
-	min_h = 0;
+	
 	
 	inputs[| 0] = nodeValue(0, "Palette", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, [ c_white ])
 		.setDisplay(VALUE_DISPLAY.palette);

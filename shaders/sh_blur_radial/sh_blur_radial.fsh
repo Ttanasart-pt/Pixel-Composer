@@ -19,7 +19,7 @@ float sampleMask() {
 }
 
 vec4 sampleTexture(vec2 pos) {
-	if(pos.x > 0. && pos.y > 0. && pos.x < 1. && pos.y < 1.)
+	if(pos.x >= 0. && pos.y >= 0. && pos.x <= 1. && pos.y <= 1.)
 		return texture2D(gm_BaseTexture, pos);
 	
 	if(sampleMode == 0) 

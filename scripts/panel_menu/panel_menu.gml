@@ -88,6 +88,9 @@ function Panel_Menu() : PanelContent() constructor {
 			[ "Update all current collections", function() { 
 				__test_update_current_collections();
 			}],
+			[ "Update sample projects", function() { 
+				__test_update_sample_projects();
+			}],
 			-1,
 			[ "Key displayer", function() { 
 				if(instance_exists(addon_key_displayer)) {

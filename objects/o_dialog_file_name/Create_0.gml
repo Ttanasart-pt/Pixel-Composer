@@ -22,6 +22,6 @@ event_inherited();
 		instance_destroy();
 	});
 	
-	TEXTBOX_ACTIVE  = tb_name;
+	WIDGET_CURRENT  = tb_name;
 	KEYBOARD_STRING = "";
 #endregion

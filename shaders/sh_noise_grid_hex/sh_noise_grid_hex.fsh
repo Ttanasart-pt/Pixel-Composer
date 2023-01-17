@@ -10,6 +10,21 @@ uniform vec2  scale;
 uniform float seed;
 
 uniform int useSampler;
+uniform int sampleMode;
+
+vec4 sampleTexture(vec2 pos) {
+	if(pos.x >= 0. && pos.y >= 0. && pos.x <= 1. && pos.y <= 1.)
+		return texture2D(gm_BaseTexture, pos);
+	
+	if(sampleMode == 0) 
+		return vec4(0.);
+	if(sampleMode == 1) 
+		return texture2D(gm_BaseTexture, clamp(pos, 0., 1.));
+	if(sampleMode == 2) 
+		return texture2D(gm_BaseTexture, fract(pos));
+	
+	return vec4(0.);
+}
 
 float random (in vec2 st, float seed) {
     return fract(sin(dot(st.xy + seed, vec2(1892.9898, 78.23453))) * 437.54123);
@@ -42,6 +57,6 @@ void main() {
 		gl_FragColor = vec4(vec3(n), 1.0);
 	} else {
 		vec2 samPos = floor(hx) / scale + 0.5 / scale;
-		gl_FragColor = texture2D( gm_BaseTexture, samPos );
+		gl_FragColor = sampleTexture( samPos );
 	}
 }

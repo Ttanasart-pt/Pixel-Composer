@@ -34,7 +34,7 @@
 		_k = ds_map_find_next(NODE_MAP, _k);
 	}
 	
-	if(UPDATE & RENDER_TYPE.full || ANIMATOR.rendering)
+	if(UPDATE & RENDER_TYPE.full || (ANIMATOR.rendering && ANIMATOR.frame_progress))
 		Render();
 	if(UPDATE & RENDER_TYPE.partial)
 		Render(true);

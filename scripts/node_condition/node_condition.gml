@@ -3,7 +3,7 @@ function Node_Condition(_x, _y, _group = -1) : Node(_x, _y, _group) constructor 
 	previewable = false;
 	
 	w = 96;
-	min_h = 0;
+	
 	
 	inputs[| 0] = nodeValue( 0, "Check value", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0 )
 		.setVisible(true, true);

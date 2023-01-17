@@ -121,6 +121,7 @@
 		pres[? "-"] = 1;
 		pres[? "*"] = 2;
 		pres[? "/"] = 2;
+		pres[? "^"] = 3;
 		pres[? "sin"] = 5;
 		pres[? "cos"] = 5;
 		pres[? "tan"] = 5;
@@ -207,6 +208,13 @@
 				if(ds_stack_size(vl) >= 2)		 return -ds_stack_pop(vl) + ds_stack_pop(vl);
 				else							 return -ds_stack_pop(vl);
 			case "*": if(ds_stack_size(vl) >= 2) return ds_stack_pop(vl) * ds_stack_pop(vl);	
+			case "^": 
+				if(ds_stack_size(vl) >= 2) {
+					var ex = ds_stack_pop(vl);
+					var bs = ds_stack_pop(vl);
+					return power(bs, ex);
+				}
+				return 1;
 			case "/": 
 				if(ds_stack_size(vl) >= 2) {
 					var _d = ds_stack_pop(vl);

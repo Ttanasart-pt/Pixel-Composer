@@ -281,7 +281,7 @@ event_inherited();
 		
 		var cw = ui(100);
 		var ch = th - ui(4);
-		var cx = x1 - cw;
+		var cx = x1 - cw - ui(8);
 		var category = "";
 		
 		for( var i = 0; i < array_length(COLOR_KEYS); i++ ) {
@@ -304,7 +304,7 @@ event_inherited();
 			}
 			
 			if(ind % 2 == 0)
-				draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, 0, yy - padd, sp_colors.w, th + padd * 2, COLORS.dialog_preference_prop_bg, 1);
+				draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, 0, yy - padd, sp_colors.surface_w, th + padd * 2, COLORS.dialog_preference_prop_bg, 1);
 					
 			var keyStr = string_replace_all(key, "_", " ");
 			keyStr = string_replace(keyStr, cat + " ", "");
@@ -357,6 +357,17 @@ event_inherited();
 		
 		for(var i = 0; i < ds_list_size(current_list); i++) {
 			var _pref = current_list[| i];
+			if(is_string(_pref)) continue;
+			
+			var name = _pref[0];
+			if(search_text != "" && string_pos(string_lower(search_text), string_lower(name)) == 0)
+				continue;
+			
+			_pref[2].register(sp_pref);
+		}
+		
+		for(var i = 0; i < ds_list_size(current_list); i++) {
+			var _pref = current_list[| i];
 			
 			if(is_string(_pref)) {
 				draw_set_text(f_p0b, fa_left, fa_top, COLORS._main_text_sub);
@@ -373,7 +384,7 @@ event_inherited();
 				continue;
 			
 			if(ind % 2 == 0)
-				draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, 0, yy - padd, sp_pref.w, th + padd * 2, COLORS.dialog_preference_prop_bg, 1);
+				draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, 0, yy - padd, sp_pref.surface_w, th + padd * 2, COLORS.dialog_preference_prop_bg, 1);
 				
 			draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text);
 			draw_text(ui(8), yy + th / 2, _pref[0]);
@@ -429,8 +440,10 @@ event_inherited();
 		var padd		= ui(8);
 		var hh			= 0;
 		var currGroup	= -1;
-		var x1			= sp_hotkey.surface_w;
-		
+		var x1		= sp_hotkey.surface_w;
+		var key_x1  = x1 - ui(32);
+		var modified = false;
+				
 		for(var j = 0; j < ds_list_size(HOTKEY_CONTEXT); j++) {
 			var ll = HOTKEYS[? HOTKEY_CONTEXT[| j]];
 			
@@ -439,7 +452,10 @@ event_inherited();
 				var group = key.context;
 				var name  = key.name;
 				var pkey  = key.key;
-				//var modi  = key.modi;
+				var modi  = key.modi;
+				
+				var dkey  = key.dKey;
+				var dmod  = key.dModi;
 				
 				if(search_text != "" && string_pos(string_lower(search_text), string_lower(name)) == 0)
 					continue;
@@ -457,7 +473,7 @@ event_inherited();
 			
 				if(i % 2 == 0) {
 					draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, 0, _y + hh - padd, 
-						sp_hotkey.w, th + padd * 2, COLORS.dialog_preference_prop_bg, 1);
+						sp_hotkey.surface_w, th + padd * 2, COLORS.dialog_preference_prop_bg, 1);
 				}
 			
 				draw_set_text(f_p0, fa_left, fa_top, COLORS._main_text);
@@ -469,10 +485,10 @@ event_inherited();
 				if(hk_editing == key) {
 					var _mod_prs = 0;
 					
-					if(key_mod_press(CTRL))	_mod_prs |= MOD_KEY.ctrl;
+					if(key_mod_press(CTRL))			_mod_prs |= MOD_KEY.ctrl;
 					if(keyboard_check(vk_shift))	_mod_prs |= MOD_KEY.shift;
 					if(keyboard_check(vk_alt))		_mod_prs |= MOD_KEY.alt;
-	
+					
 					if(keyboard_check_pressed(vk_escape)) {
 						key.key	 = "";
 						key.modi = 0;
@@ -480,20 +496,25 @@ event_inherited();
 						PREF_SAVE();
 					} else if(keyboard_check_pressed(vk_anykey)) {
 						var press = false;
-						for(var a = 32; a <= 126; a++) {
-							if(keyboard_check_pressed(a)) {
-								key.key	 = ord(string_upper(ansi_char(a)));
+						
+						for(var a = 0; a < array_length(vk_list); a++) {
+							if(!keyboard_check_pressed(vk_list[a])) continue;
+							key.key = vk_list[a];
+							press = true; 
+							break;
+						}
+												
+						if(!press) {
+							var k = ds_map_find_first(global.KEY_STRING_MAP);
+							var amo = ds_map_size(global.KEY_STRING_MAP);
+							repeat(amo) {
+								if(!keyboard_check_pressed(k)) {
+									k = ds_map_find_next(global.KEY_STRING_MAP, k);
+									continue;
+								}
+								key.key	= k;
 								press = true;
 								break;
-							}
-						}
-						if(!press) {
-							for(var a = 0; a < array_length(vk_list); a++) {
-								if(keyboard_check_pressed(vk_list[a])) {	
-									key.key = vk_list[a];
-									press = true; 
-									break;
-								}
 							}
 						}
 						
@@ -501,18 +522,44 @@ event_inherited();
 						PREF_SAVE();
 					}
 					
-					draw_sprite_stretched(THEME.button_hide, 2, x1 - ui(40) - kw, _y + hh - ui(6), kw + ui(32), th + ui(12));
+					draw_sprite_stretched(THEME.button_hide, 2, key_x1 - ui(40) - kw, _y + hh - ui(6), kw + ui(32), th + ui(12));
 				} else {
-					if(buttonInstant(THEME.button_hide, x1 - ui(40) - kw, _y + hh - ui(6), kw + ui(32), th + ui(12), 
-						_m, sFOCUS, sHOVER && sp_hotkey.hover) == 2) {
-							hk_editing = key;
-							keyboard_lastchar = pkey;
+					var bx = key_x1 - ui(40) - kw;
+					var by = _y + hh - ui(6);
+					if(buttonInstant(THEME.button_hide, bx, by, kw + ui(32), th + ui(12), _m, sFOCUS, sHOVER && sp_hotkey.hover) == 2) {
+						hk_editing = key;
+						keyboard_lastchar = pkey;
 					}
 				}
 				draw_set_text(f_p0, fa_right, fa_top, hk_editing == key? COLORS._main_text_accent : COLORS._main_text);
-				draw_text(x1 - ui(24), _y + hh, dk);
+				draw_text(key_x1 - ui(24), _y + hh, dk);
+				
+				if(key.key != dkey || key.modi != dmod) {
+					modified = true;
+					var bx = x1 - ui(32);
+					var by = _y + hh;
+					if(buttonInstant(THEME.button_hide, bx, by, ui(24), ui(24), _m, sFOCUS, sHOVER && sp_hotkey.hover, "Reset", THEME.refresh_s) == 2) {
+						key.key = dkey;
+						key.modi = dmod;
+					}
+				}
 				
 				hh += th + padd * 2;
+			}
+		}
+		
+		if(modified) {
+			var bx = x1 - ui(32);
+			var by = _y + ui(2);
+			if(buttonInstant(THEME.button_hide, bx, by, ui(24), ui(24), _m, sFOCUS, sHOVER && sp_hotkey.hover, "Reset all", THEME.refresh_s) == 2) {
+				for(var j = 0; j < ds_list_size(HOTKEY_CONTEXT); j++) {
+					var ll = HOTKEYS[? HOTKEY_CONTEXT[| j]];
+					for(var i = 0; i < ds_list_size(ll); i++) {
+						var key = ll[| i];
+						key.key = key.dKey;
+						key.modi = key.dModi;
+					}
+				}
 			}
 		}
 		

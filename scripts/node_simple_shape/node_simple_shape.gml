@@ -3,8 +3,10 @@ enum NODE_SHAPE_TYPE {
 	elipse,
 	regular,
 	star,
-	arc, 
-	capsule
+	arc,
+	teardrop,
+	cross,
+	leaf
 }
 
 function Node_Shape(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constructor {
@@ -17,6 +19,7 @@ function Node_Shape(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constr
 	uniform_side	= shader_get_uniform(shader, "sides");
 	uniform_angle	= shader_get_uniform(shader, "angle");
 	uniform_inner	= shader_get_uniform(shader, "inner");
+	uniform_outer	= shader_get_uniform(shader, "outer");
 	uniform_corner	= shader_get_uniform(shader, "corner");
 	uniform_arange	= shader_get_uniform(shader, "angle_range");
 	uniform_aa		= shader_get_uniform(shader, "aa");
@@ -24,13 +27,16 @@ function Node_Shape(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constr
 	uniform_bgCol	= shader_get_uniform(shader, "bgColor");
 	uniform_drawDF	= shader_get_uniform(shader, "drawDF");
 	
+	uniform_stRad	= shader_get_uniform(shader, "stRad");
+	uniform_edRad	= shader_get_uniform(shader, "edRad");
+	
 	inputs[| 0] = nodeValue(0, "Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, def_surf_size2 )
 		.setDisplay(VALUE_DISPLAY.vector);
 	
 	inputs[| 1] = nodeValue(1, "Backgroud", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
 	
 	inputs[| 2] = nodeValue(2, "Shape", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Rectangle", "Ellipse", "Regular polygon", "Star", "Arc", "Rounded rectangle" ]);
+		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Rectangle", "Ellipse", "Regular polygon", "Star", "Arc", "Teardrop", "Cross", "Leaf" ]);
 	
 	inputs[| 3] = nodeValue(3, "Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ def_surf_size / 2, def_surf_size / 2, def_surf_size / 2, def_surf_size / 2, AREA_SHAPE.rectangle ])
 		.setDisplay(VALUE_DISPLAY.area, function() { return inputs[| 0].getValue(); });
@@ -47,7 +53,7 @@ function Node_Shape(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constr
 	inputs[| 7] = nodeValue(7, "Rotation", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.rotation);
 	
-	inputs[| 8] = nodeValue(8, "Angle range", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 0, 0 ])
+	inputs[| 8] = nodeValue(8, "Angle range", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 0, 180 ])
 		.setDisplay(VALUE_DISPLAY.rotation_range);
 	
 	inputs[| 9] = nodeValue(9, "Corner radius", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
@@ -59,11 +65,15 @@ function Node_Shape(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constr
 	
 	inputs[| 12] = nodeValue(12, "Height", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
 	
+	inputs[| 13] = nodeValue(13, "Start radius", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.1)
+		.setDisplay(VALUE_DISPLAY.slider, [0, 1, 0.01])
+		.setVisible(false);
+		
 	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
 	
 	input_display_list = [
 		["Surface", false], 0, 6, 
-		["Shape",	false], 2, 3, 9, 4, 5, 7, 8, 
+		["Shape",	false], 2, 3, 9, 4, 13, 5, 7, 8, 
 		["Render",	true],	10, 1, 11, 12
 	];
 	
@@ -92,20 +102,22 @@ function Node_Shape(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constr
 			
 			shader_set(shader);
 			
+			inputs[| 4].setVisible(false);
+			inputs[| 5].setVisible(false);
+			inputs[| 7].setVisible(false);
+			inputs[| 8].setVisible(false);
+			inputs[| 9].setVisible(false);
+			inputs[| 13].setVisible(false);
+					
 			switch(_shape) {
-				case NODE_SHAPE_TYPE.rectangle :	
+				case NODE_SHAPE_TYPE.rectangle :
+					inputs[| 9].setVisible(true);
+					break;
 				case NODE_SHAPE_TYPE.elipse :	
-					inputs[| 4].setVisible(false);
-					inputs[| 5].setVisible(false);
-					inputs[| 7].setVisible(false);
-					inputs[| 8].setVisible(false);
-					inputs[| 9].setVisible(false);
 					break;
 				case NODE_SHAPE_TYPE.regular :
 					inputs[| 4].setVisible(true);
-					inputs[| 5].setVisible(false);
 					inputs[| 7].setVisible(true);
-					inputs[| 8].setVisible(false);
 					inputs[| 9].setVisible(true);
 					
 					shader_set_uniform_i(uniform_side, _data[4]);
@@ -115,19 +127,19 @@ function Node_Shape(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constr
 					inputs[| 4].setVisible(true);
 					inputs[| 5].setVisible(true);
 					inputs[| 7].setVisible(true);
-					inputs[| 8].setVisible(false);
 					inputs[| 9].setVisible(true);
+				
+					inputs[| 5].name = "Inner radius";
 				
 					shader_set_uniform_i(uniform_side, _data[4]);
 					shader_set_uniform_f(uniform_angle, degtorad(_data[7]));
 					shader_set_uniform_f(uniform_inner, _data[5]);
 					break;
 				case NODE_SHAPE_TYPE.arc :
-					inputs[| 4].setVisible(false);
 					inputs[| 5].setVisible(true);
-					inputs[| 7].setVisible(false);
 					inputs[| 8].setVisible(true);
-					inputs[| 9].setVisible(true);
+					
+					inputs[| 5].name = "Inner radius";
 					
 					var ar = _data[8];
 					var center =  degtorad(ar[0] + ar[1]) / 2;
@@ -136,12 +148,33 @@ function Node_Shape(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constr
 					shader_set_uniform_f_array(uniform_arange, [ sin(range), cos(range) ] );
 					shader_set_uniform_f(uniform_inner, _data[5] / 2);
 					break;
-				case NODE_SHAPE_TYPE.capsule :
-					inputs[| 4].setVisible(false);
-					inputs[| 5].setVisible(false);
-					inputs[| 7].setVisible(false);
-					inputs[| 8].setVisible(false);
+				case NODE_SHAPE_TYPE.teardrop :
+					inputs[| 5].setVisible(true);
+					inputs[| 13].setVisible(true);
+					
+					inputs[| 5].name = "End radius";
+					inputs[| 13].name = "Start radius";
+					
+					shader_set_uniform_f(uniform_edRad, _data[5]);
+					shader_set_uniform_f(uniform_stRad, _data[13]);
+					break;
+				case NODE_SHAPE_TYPE.cross :
 					inputs[| 9].setVisible(true);
+					inputs[| 13].setVisible(true);
+				
+					inputs[| 13].name = "Outer radius";
+					
+					shader_set_uniform_f(uniform_outer, _data[13]);
+					break;
+				case NODE_SHAPE_TYPE.leaf :
+					inputs[|  5].setVisible(true);
+					inputs[| 13].setVisible(true);
+				
+					inputs[|  5].name = "Inner radius";
+					inputs[| 13].name = "Outer radius";
+					
+					shader_set_uniform_f(uniform_inner, _data[5]);
+					shader_set_uniform_f(uniform_outer, _data[13]);
 					break;
 			}
 			

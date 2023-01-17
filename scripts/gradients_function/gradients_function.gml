@@ -47,23 +47,23 @@ function gradient_eval(_gradient, _time, _int = GRADIENT_INTER.smooth) {
 	
 	for(var i = 0; i < ds_list_size(_gradient); i++) {
 		var _key = _gradient[| i];
-		if(_key.time >= _time) {
-			if(i == 0) 
-				return _gradient[| 0].value;
-			else {
-				var c0 = _gradient[| i - 1].value;
-				if(_int == GRADIENT_INTER.smooth) {
-					var rat = (_time - _gradient[| i - 1].time) / (_gradient[| i].time - _gradient[| i - 1].time);
-					var c1 = _gradient[| i].value;
-					return merge_color(c0, c1, rat);
-				} else if(_int == GRADIENT_INTER.none) {
-					return c0;
-				}
-			}
+		if(_key.time < _time) continue;
+		if(_key.time == _time) return _gradient[| i].value;
+		
+		if(i == 0) //before first color
+			return _gradient[| 0].value;
+		
+		var c0 = _gradient[| i - 1].value;
+		if(_int == GRADIENT_INTER.smooth) {
+			var rat = (_time - _gradient[| i - 1].time) / (_gradient[| i].time - _gradient[| i - 1].time);
+			var c1 = _gradient[| i].value;
+			return merge_color(c0, c1, rat);
+		} else if(_int == GRADIENT_INTER.none) {
+			return c0;
 		}
 	}
 	
-	return _gradient[| ds_list_size(_gradient) - 1].value;
+	return _gradient[| ds_list_size(_gradient) - 1].value; //after last color
 }
 
 function gradient_add(_gradient, _addkey, _deleteDup) {

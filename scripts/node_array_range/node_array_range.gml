@@ -3,7 +3,7 @@ function Node_Array_Range(_x, _y, _group = -1) : Node(_x, _y, _group) constructo
 	previewable = false;
 	
 	w = 96;
-	min_h = 0;
+	
 	
 	inputs[| 0] = nodeValue(0, "Start", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0);
 	inputs[| 1] = nodeValue(1, "End", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 10);

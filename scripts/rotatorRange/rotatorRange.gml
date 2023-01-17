@@ -1,7 +1,4 @@
-function rotatorRange(_onModify) constructor {
-	active = false;
-	hover  = false;
-	
+function rotatorRange(_onModify) : widget() constructor {
 	onModify = _onModify;
 	
 	dragging = -1;
@@ -9,8 +6,27 @@ function rotatorRange(_onModify) constructor {
 	drag_sa  = 0;
 	drag_sc  = 0;
 	
+	tb_min = new textBox(TEXTBOX_INPUT.number, function(val) { onModify(0, val); } );
+	tb_min.slidable = true;
+	
+	tb_max = new textBox(TEXTBOX_INPUT.number, function(val) { onModify(1, val); } );
+	tb_max.slidable = true;
+	
 	static draw = function(_x, _y, _data, _m) {
+		x = _x;
+		y = _y;
+		w = 0;
+		h = ui(96);
+		
 		var knob_y = _y + ui(48);
+		
+		tb_min.active = active;
+		tb_min.hover  = hover;
+		tb_max.active = active;
+		tb_max.hover  = hover;
+		
+		tb_min.draw(_x - ui(40 + 16 + 80), knob_y - TEXTBOX_HEIGHT / 2, ui(80), TEXTBOX_HEIGHT, array_safe_get(_data, 0), _m);
+		tb_max.draw(_x + ui(40 + 16),      knob_y - TEXTBOX_HEIGHT / 2, ui(80), TEXTBOX_HEIGHT, array_safe_get(_data, 1), _m);
 		
 		draw_sprite_ui_uniform(THEME.rotator_bg, 0, _x, knob_y);
 		
@@ -121,7 +137,6 @@ function rotatorRange(_onModify) constructor {
 		draw_text(_x, knob_y - ui(12), string(_data[0]));
 		draw_text(_x, knob_y + ui(12), string(_data[1]));
 		
-		active = false;
-		hover  = false;
+		resetFocus();
 	}
 }

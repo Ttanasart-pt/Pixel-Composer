@@ -1,7 +1,4 @@
-function slider(_min, _max, _step, _onModify = noone, _onRelease = noone) constructor {
-	active = false;
-	hover  = false;
-	
+function slider(_min, _max, _step, _onModify = noone, _onRelease = noone) : widget() constructor {
 	minn = _min; curr_minn = _min;
 	maxx = _max; curr_maxx = _max;
 	step = _step;
@@ -21,7 +18,16 @@ function slider(_min, _max, _step, _onModify = noone, _onRelease = noone) constr
 	
 	tb_value = new textBox(TEXTBOX_INPUT.float, onApply);
 	
+	static register = function(parent = noone) {
+		tb_value.register(parent);
+	}
+	
 	static draw = function(_x, _y, _w, _h, _data, _m, tb_w = 64, halign = fa_left, valign = fa_top) {
+		x = _x;
+		y = _y;
+		w = _w;
+		h = _h;
+		
 		switch(halign) {
 			case fa_left:   _x = _x;			break;	
 			case fa_center: _x = _x - _w / 2;	break;	
@@ -83,7 +89,6 @@ function slider(_min, _max, _step, _onModify = noone, _onRelease = noone) constr
 			}
 		}
 		
-		hover  = false;
-		active = false;
+		resetFocus();
 	}
 }

@@ -87,14 +87,15 @@ event_inherited();
 						}
 					}
 					
-					if(sprite_exists(content.spr)) {
-						var sw = sprite_get_width(content.spr);
-						var sh = sprite_get_height(content.spr);
+					var spr = content.getSpr();
+					if(sprite_exists(spr)) {
+						var sw = sprite_get_width(spr);
+						var sh = sprite_get_height(spr);
 						var ss = img_size / max(sw, sh);
 						var sx = xx + (grid_size - sw * ss) / 2;
 						var sy = yy + (grid_size - sh * ss) / 2;
 						
-						draw_sprite_ext(content.spr, frame, sx, sy, ss, ss, 0, c_white, 1);
+						draw_sprite_ext(spr, frame, sx, sy, ss, ss, 0, c_white, 1);
 					}
 				}
 			}

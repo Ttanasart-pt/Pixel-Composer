@@ -29,7 +29,7 @@
 			
 			for( var i = 0; i < ds_list_size(_st.content); i++ ) {
 				var _f = _st.content[| i];
-				global.ASSET_MAP[? _f.path] = _f.spr;
+				global.ASSET_MAP[? _f.path] = _f;
 			}
 			
 			for( var i = 0; i < ds_list_size(_st.subDir); i++ ) {
@@ -53,7 +53,7 @@
 			if(valid) return s;
 		}
 		
-		var spr = global.ASSET_MAP[? key];
+		var spr = global.ASSET_MAP[? key].getSpr();
 		global.ASSET_CACHE[? key] = surface_create_from_sprite(spr);
 			
 		return global.ASSET_CACHE[? key];

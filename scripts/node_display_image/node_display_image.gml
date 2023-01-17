@@ -1,6 +1,6 @@
 function Node_create_Display_Image(_x, _y, _group = -1) {
 	var path = "";
-	if(!LOADING && !APPENDING) {
+	if(!LOADING && !APPENDING && !CLONING) {
 		path = get_open_filename(".png", "");
 		if(path == "") return noone;
 	}
@@ -16,7 +16,7 @@ function Node_create_Display_Image(_x, _y, _group = -1) {
 function Node_create_Display_Image_path(_x, _y, path) {
 	if(!file_exists(path)) return noone;
 	
-	var node = new Node_Display_Image(_x, _y);
+	var node = new Node_Display_Image(_x, _y, PANEL_GRAPH.getCurrentContext());
 	node.inputs[| 0].setValue(path);
 	node.doUpdate();
 	
@@ -37,9 +37,14 @@ function Node_Display_Image(_x, _y, _group = -1) : Node(_x, _y, _group) construc
 	
 	first_update = false;
 	
+	static inspectorUpdate = function() {
+		var path = inputs[| 0].getValue();
+		if(path == "") return;
+		updatePaths(path);
+		update();
+	}
+	
 	function updatePaths(path) {
-		if(path_current == path) return false;
-		
 		path = try_get_path(path);
 		if(path == -1) return false;
 		
@@ -68,7 +73,7 @@ function Node_Display_Image(_x, _y, _group = -1) : Node(_x, _y, _group) construc
 	static update = function() {
 		var path = inputs[| 0].getValue();
 		if(path == "") return;
-		updatePaths(path);
+		if(path_current != path) updatePaths(path);
 		
 		if(!spr || !sprite_exists(spr)) return;
 		

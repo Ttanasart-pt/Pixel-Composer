@@ -26,20 +26,18 @@ void main() {
 	vec3 result		= ambiance * base_color.rgb;
 	
 	vec3 lightPos = vec3(lightPosition.x / dimension.x, lightPosition.y / dimension.y, lightPosition.z);
-	float attenuation = 1.;
+	float attenuation = lightIntensity;
 	
 	float range = lightPosition.a / max(dimension.x, dimension.y);
+	vec3 lightDir;
 	
 	if(lightType == 0) {
-		attenuation = max(1. - sqrt( pow(v_vTexcoord.x - lightPos.x, 2.) + pow((v_vTexcoord.y - lightPos.y) / aspect, 2.)) / range, 0.);
-	} else if(lightType == 1) {
-		float angle = -atan(lightPos.y - .5, lightPos.x - .5);
-		attenuation = max((.5 + (v_vTexcoord.x - .5) * cos(angle) - (v_vTexcoord.y - .5) * sin(angle)) / range, 0.);
+		attenuation *= max(1. - sqrt( pow(v_vTexcoord.x - lightPos.x, 2.) + pow((v_vTexcoord.y - lightPos.y) / aspect, 2.)) / range, 0.);
+		lightDir = normalize(lightPos - vec3(v_vTexcoord.x, v_vTexcoord.y, 0.)); 
+	} else {
+		lightDir = normalize(lightPos - vec3(0.5, 0.5, 0.)); 
 	}
 	
-	attenuation *= lightIntensity;
-	
-	vec3 lightDir = normalize(lightPos - vec3(v_vTexcoord.x, v_vTexcoord.y, 0.)); 
 	float d = max(dot(normal, lightDir), 0.0);
 	vec3 diffuse = d * lightColor * base_color.rgb * attenuation;
 	result += diffuse;

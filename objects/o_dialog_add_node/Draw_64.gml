@@ -8,7 +8,7 @@ if !ready exit;
 #endregion
 
 #region search
-	TEXTBOX_ACTIVE = tb_search;
+	WIDGET_CURRENT = tb_search;
 	
 	if(search_string == "") {
 		tb_search.focus = false;

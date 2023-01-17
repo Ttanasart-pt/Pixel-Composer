@@ -31,14 +31,16 @@ function __part(_node) constructor {
 	
 	scx   = 1;
 	scy   = 1;
-	scx_s = 1;
-	scy_s = 1;
+	sc_sx  = 1;
+	sc_sy  = 1;
+	sct   = CURVE_DEF_11;
 	
 	rot		= 0;
 	follow	= false;
 	rot_s	= 0;
 	
 	col      = -1;
+	blend	 = c_white;
 	alp      = 1;
 	alp_draw = alp;
 	alp_fade = 0;
@@ -70,17 +72,18 @@ function __part(_node) constructor {
 		
 		wig = _wig;
 	}
-	function setTransform(_scx, _scy, _scxs, _scys, _rot, _rots, _follow) {
-		scx   = _scx;
-		scy   = _scy;
-		scx_s = _scxs;
-		scy_s = _scys;
+	function setTransform(_scx, _scy, _sct, _rot, _rots, _follow) {
+		sc_sx = _scx;
+		sc_sy = _scy;
+		sct   = _sct;
+		
 		rot   = _rot;
 		rot_s = _rots;
 		follow = _follow;
 	}
-	function setDraw(_col, _alp, _fade) {
+	function setDraw(_col, _blend, _alp, _fade) {
 		col      = _col;
+		blend	 = _blend;
 		alp      = _alp;
 		alp_draw = _alp;
 		alp_fade = _fade;
@@ -109,23 +112,17 @@ function __part(_node) constructor {
 		gy += g;
 		y += gy;
 		
-		if(scx_s < 0)	scx = max(scx + scx_s, 0);
-		else			scx = scx + scx_s;
-		if(scy_s < 0)	scy = max(scy + scy_s, 0);
-		else			scy = scy + scy_s;
-		
 		if(follow) 
 			rot = point_direction(xp, yp, x, y);
 		else
 			rot += rot_s;
-		alp_draw = alp * eval_curve_bezier_cubic_x(alp_fade, 1 - life / life_total);
 		
 		if(step_int > 0 && safe_mod(life, step_int) == 0) 
 			node.onPartStep(self);
 		if(life-- < 0) kill();
 	}
 	
-	function draw(exact) {
+	function draw(exact, surf_w, surf_h) {
 		if(!active) return;
 		var ss = surf;
 		if(is_array(surf)) {
@@ -148,7 +145,9 @@ function __part(_node) constructor {
 		}
 		if(!is_surface(ss)) return;
 		
-		var cc = (col == -1)? c_white : gradient_eval(col, 1 - life / life_total);
+		scx   = sc_sx * eval_curve_bezier_cubic_x(sct, 1 - life / life_total);
+		scy   = sc_sy * eval_curve_bezier_cubic_x(sct, 1 - life / life_total);
+		
 		var _xx, _yy;
 		var s_w = surface_get_width(ss) * scx;
 		var s_h = surface_get_height(ss) * scy;
@@ -175,6 +174,16 @@ function __part(_node) constructor {
 			_yy = round(_yy);
 		}
 		
+		var x0 = _xx - s_w * 1.5;
+		var y0 = _yy - s_h * 1.5;
+		var x1 = _xx + s_w * 1.5;
+		var y1 = _yy + s_h * 1.5;
+		
+		if(x0 > surf_w || y0 > surf_h || x1 < 0 || y1 < 0) return;
+		
+		var cc = (col == -1)? c_white : gradient_eval(col, 1 - life / life_total);
+		cc = colorMultiply(blend, cc);
+		alp_draw = alp * eval_curve_bezier_cubic_x(alp_fade, 1 - life / life_total);
 		draw_surface_ext_safe(ss, _xx, _yy, scx, scy, rot, cc, alp_draw);
 	}
 	

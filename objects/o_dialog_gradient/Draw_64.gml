@@ -13,7 +13,9 @@ if !ready exit;
 	var presets_w  = ui(240);
 	
 	var content_x = dialog_x + presets_w + ui(16);
-	var content_w = dialog_w - presets_w - ui(16);
+	var content_w = ui(556);
+	
+	var palette_x  = content_x + content_w + ui(16);
 	
 	draw_sprite_stretched(THEME.dialog_bg, 0, presets_x, dialog_y, presets_w, dialog_h);
 	if(sFOCUS) draw_sprite_stretched_ext(THEME.dialog_active, 0, presets_x, dialog_y, presets_w, dialog_h, COLORS._main_accent, 1);
@@ -21,9 +23,13 @@ if !ready exit;
 	draw_sprite_stretched(THEME.dialog_bg, 0, content_x, dialog_y, content_w, dialog_h);
 	if(sFOCUS) draw_sprite_stretched_ext(THEME.dialog_active, 0, content_x, dialog_y, content_w, dialog_h, COLORS._main_accent, 1);
 	
+	draw_sprite_stretched(THEME.dialog_bg, 0, palette_x, dialog_y, presets_w, dialog_h);
+	if(sFOCUS) draw_sprite_stretched_ext(THEME.dialog_active, 0, palette_x, dialog_y, presets_w, dialog_h, COLORS._main_accent, 1);
+	
 	draw_set_text(f_p0, fa_left, fa_top, COLORS._main_text_title);
 	draw_text(presets_x + ui(24), dialog_y + ui(16), "Presets");
 	draw_text(content_x + ui(24), dialog_y + ui(16), name);
+	draw_text(palette_x + ui(24), dialog_y + ui(16), "Palettes");
 #endregion
 
 #region presets
@@ -70,6 +76,13 @@ if !ready exit;
 		execute_shell_simple(_windir, _realpath);
 	}
 	bx -= ui(32);
+#endregion
+
+#region palette
+	draw_sprite_stretched(THEME.ui_panel_bg, 0, palette_x + ui(16), dialog_y + ui(44), ui(240 - 32), dialog_h - ui(60));
+	
+	sp_palettes.active = sFOCUS;
+	sp_palettes.draw(palette_x + ui(16 + 8), dialog_y + ui(44));
 #endregion
 
 #region gradient

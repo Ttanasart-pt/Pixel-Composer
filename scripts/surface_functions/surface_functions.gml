@@ -17,7 +17,7 @@ function draw_surface_part_ext_safe(surface, _l, _t, _w, _h, _x, _y, _xs = 1, _y
 
 function surface_size_to(surface, width, height) {
 	if(!surface_exists(surface)) return false;
-	if(width <= 1 && height <= 1) return false;
+	if(width < 1 && height < 1) return false;
 	
 	width = surface_valid_size(width);
 	height = surface_valid_size(height);

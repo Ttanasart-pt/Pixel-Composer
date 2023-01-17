@@ -3,7 +3,7 @@ function Node_Group_Input(_x, _y, _group = -1) : Node(_x, _y, _group) constructo
 	color = COLORS.node_blend_collection;
 	previewable = false;
 	auto_height = false;
-	input_index = -1;
+	input_fix_len = -1;
 	
 	inParent = undefined;
 	
@@ -152,10 +152,10 @@ function Node_Group_Input(_x, _y, _group = -1) : Node(_x, _y, _group) constructo
 		if(group == noone || !is_struct(group)) return noone;
 			
 		if(override_order) {
-			input_index = ds_list_size(group.inputs);
-			inputs[| 5].setValue(input_index);
+			input_fix_len = ds_list_size(group.inputs);
+			inputs[| 5].setValue(input_fix_len);
 		} else {
-			input_index = inputs[| 5].getValue();
+			input_fix_len = inputs[| 5].getValue();
 		}
 			
 		inParent = nodeValue(ds_list_size(group.inputs), "Value", group, JUNCTION_CONNECT.input, VALUE_TYPE.any, -1)
@@ -180,7 +180,7 @@ function Node_Group_Input(_x, _y, _group = -1) : Node(_x, _y, _group) constructo
 	static step = function() {
 		if(is_undefined(inParent)) return;
 		
-		inParent.name = name;	
+		inParent.name = name;
 	}
 	
 	static update = function() {
@@ -252,6 +252,7 @@ function Node_Group_Input(_x, _y, _group = -1) : Node(_x, _y, _group) constructo
 			}
 		}
 		
+		inParent.name = name;
 		onValueUpdate(0);
 	}
 	

@@ -21,7 +21,7 @@ function Node_Image_Sheet(_x, _y, _group = -1) : Node(_x, _y, _group) constructo
 	inputs[| 6]  = nodeValue(6, "Padding", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [0, 0, 0, 0])
 		.setDisplay(VALUE_DISPLAY.padding);
 	
-	inputs[| 7]  = nodeValue(7, "Output", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+	inputs[| 7]  = nodeValue(7, "Output", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1)
 		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Animation", "Array"]);
 	
 	inputs[| 8]  = nodeValue(8, "Animation speed", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1);
@@ -52,19 +52,21 @@ function Node_Image_Sheet(_x, _y, _group = -1) : Node(_x, _y, _group) constructo
 			else
 				inputs[| 3].setValue([ fill_h, fill_w ]);
 		
-			doUpdate(); 
-		}, "Generate"] );
+			inspectorUpdate();
+		}, "Auto fill"] );
 		
 	inputs[| 11] = nodeValue(11, "Sync animation", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.button, [ function() { 
 			var _amo	= inputs[| 3].getValue();
 			ANIMATOR.frames_total = max(1, _amo[0] * _amo[1]);
 		}, "Sync frames"] );
+		
+	inputs[| 12] = nodeValue(12, "Filter empty output", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
 	
 	input_display_list = [
 		["Sprite", false],	0, 1, 6, 10, 
 		["Sheet",  false],	3, 9, 4, 5, 
-		["Output", false],	7, 8, 11
+		["Output", false],	7, 8, 12, 11
 	];
 	
 	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
@@ -77,6 +79,8 @@ function Node_Image_Sheet(_x, _y, _group = -1) : Node(_x, _y, _group) constructo
 	curr_off  = [0, 0];
 	curr_dim  = [0, 0];
 	curr_amo  = [0, 0];
+	
+	sprite_valid = [];
 	
 	static getPreviewValue = function() { return inputs[| 0]; }
 	
@@ -117,6 +121,9 @@ function Node_Image_Sheet(_x, _y, _group = -1) : Node(_x, _y, _group) constructo
 		var _amo = curr_amo[0] * curr_amo[1];
 		
 		for(var i = _amo - 1; i >= 0; i--) {
+			if(!array_safe_get(sprite_valid, i, true))
+				continue;
+				
 			var _f = getSpritePosition(i);
 			var _fx0 = _x + _f[0] * _s;
 			var _fy0 = _y + _f[1] * _s;
@@ -243,7 +250,14 @@ function Node_Image_Sheet(_x, _y, _group = -1) : Node(_x, _y, _group) constructo
 		#endregion
 	}
 	
-	static update = function() {
+	static step = function() {
+		var _out  = inputs[| 7].getValue();
+		inputs[| 11].setVisible(!_out);
+		inputs[|  8].setVisible(!_out);
+		inputs[| 12].setVisible( _out);
+	}
+	
+	static inspectorUpdate = function() {
 		var _inSurf  = inputs[| 0].getValue();
 		if(!is_surface(_inSurf)) return;
 		
@@ -258,12 +272,17 @@ function Node_Image_Sheet(_x, _y, _group = -1) : Node(_x, _y, _group) constructo
 		var ww   = _dim[0] + _pad[0] + _pad[2];
 		var hh   = _dim[1] + _pad[1] + _pad[3];
 		
-		var _out = inputs[| 7].getValue();
+		var _out  = inputs[| 7].getValue();
+		var _filt = inputs[| 12].getValue();
 		
 		curr_dim = _dim;
-		curr_amo = _amo;
+		curr_amo = is_array(_amo)? _amo : [1, 1];
 		curr_off = _off;
-			
+		
+		var filSize = 4;
+		var _empS = surface_create(filSize, filSize);
+		var _buff = buffer_create(filSize * filSize * 4, buffer_fixed, 2);
+		
 		if(_out == 0) {
 			update_on_frame = true;
 			inputs[|  8].setVisible(true);
@@ -288,20 +307,57 @@ function Node_Image_Sheet(_x, _y, _group = -1) : Node(_x, _y, _group) constructo
 			inputs[|  8].setVisible(false);
 			inputs[| 11].setVisible(false);
 			
-			surf_array = array_create(_total);
+			for( var i = 0; i < array_length(surf_array); i++ ) {
+				if(is_surface(surf_array[i]))
+					surface_free(surf_array[i]);
+			}
+			
+			surf_array = [];
+			
 			for(var i = 0; i < _total; i++) {
-				surf_array[i] = surface_create_valid(ww, hh);
+				var _s = surface_create_valid(ww, hh);
 				var _spr_pos = getSpritePosition(i);
 				
-				surface_set_target(surf_array[i]);
+				surface_set_target(_s);
 					draw_clear_alpha(c_black, 0);
 					BLEND_OVER
 					draw_surface_part(_inSurf, _spr_pos[0], _spr_pos[1], _dim[0], _dim[1], _pad[2], _pad[1]);
 					BLEND_NORMAL
 				surface_reset_target();
+				
+				if(_filt) {
+					gpu_set_tex_filter(true);
+					surface_set_target(_empS);
+					draw_clear_alpha(0, 0);
+					BLEND_OVER
+					draw_surface_stretched(_s, 0, 0, filSize, filSize);
+					BLEND_NORMAL
+					surface_reset_target();
+					gpu_set_tex_filter(false);
+					
+					buffer_get_surface(_buff, _empS, 0);
+					buffer_seek(_buff, buffer_seek_start, 0);
+					var empty = true;
+					var c0 = buffer_read(_buff, buffer_u32) & ~(0b11111111 << 24);
+					repeat(filSize * filSize - 1) {
+						if(buffer_read(_buff, buffer_u32) & ~(0b11111111 << 24) != c0) {
+							empty = false;
+							break;
+						}
+					}
+					
+					if(!empty) 
+						array_push(surf_array, _s);
+					sprite_valid[i] = !empty;
+				} else {
+					array_push(surf_array, _s);
+					sprite_valid[i] = true;
+				}
 			}
 			outputs[| 0].setValue(surf_array);
 		}
 		
+		buffer_delete(_buff);
+		surface_free(_empS);
 	}
 }

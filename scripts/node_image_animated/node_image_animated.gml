@@ -1,6 +1,6 @@
 function Node_create_Image_Animated(_x, _y, _group = -1) {
 	var path = "";
-	if(!LOADING && !APPENDING) {
+	if(!LOADING && !APPENDING && !CLONING) {
 		path = get_open_filenames(".png", "");
 		if(path == "") return noone;
 	}
@@ -15,7 +15,7 @@ function Node_create_Image_Animated(_x, _y, _group = -1) {
 }
 
 function Node_create_Image_Animated_path(_x, _y, _path) {
-	var node = new Node_Image_Animated(_x, _y);
+	var node = new Node_Image_Animated(_x, _y, PANEL_GRAPH.getCurrentContext());
 	
 	node.inputs[| 0].setValue(_path);
 	node.doUpdate();
@@ -106,6 +106,13 @@ function Node_Image_Animated(_x, _y, _group = -1) : Node(_x, _y, _group) constru
 		}
 		
 		return true;
+	}
+	
+	static inspectorUpdate = function() {
+		var path = inputs[| 0].getValue();
+		if(path == "") return;
+		updatePaths(path);
+		update();
 	}
 	
 	static update = function() {

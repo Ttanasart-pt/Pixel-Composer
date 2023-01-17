@@ -40,7 +40,7 @@
 	addHotkey("", "Undo", "Z",		MOD_KEY.ctrl, function() { UNDO(); });
 	addHotkey("", "Redo", "Z",		MOD_KEY.ctrl | MOD_KEY.shift, function() { REDO(); });
 	
-	addHotkey("", "Full panel", vk_tab,	MOD_KEY.none, set_focus_fullscreen);
+	addHotkey("", "Full panel", "`",	MOD_KEY.none, set_focus_fullscreen);
 	
 	addHotkey("", "Render all", vk_f5,	MOD_KEY.none, function() { 
 		UPDATE |= RENDER_TYPE.full; 
@@ -83,6 +83,10 @@
 					break;
 				case ".json"  :
 					node = Node_create_Json_File_Read_path(PANEL_GRAPH.mouse_grid_x, PANEL_GRAPH.mouse_grid_y, path);
+					break;
+				case ".ase"  :
+				case ".aseprite"  :
+					node = Node_create_ASE_File_Read_path(PANEL_GRAPH.mouse_grid_x, PANEL_GRAPH.mouse_grid_y, path);
 					break;
 				case ".png"	 :
 				case ".jpg"	 :

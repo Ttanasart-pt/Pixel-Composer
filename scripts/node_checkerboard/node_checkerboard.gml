@@ -14,7 +14,7 @@ function Node_Checker(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) cons
 		.setDisplay(VALUE_DISPLAY.vector);
 	
 	inputs[| 1] = nodeValue(1, "Amount", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 2)
-		.setDisplay(VALUE_DISPLAY.slider, [2, 16, 0.1]);
+		.setDisplay(VALUE_DISPLAY.slider, [1, 16, 0.1]);
 	
 	inputs[| 2] = nodeValue(2, "Angle", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.rotation);
