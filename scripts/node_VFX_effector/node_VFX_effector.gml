@@ -140,8 +140,11 @@ function Node_VFX_effector(_x, _y, _group = -1) : Node(_x, _y, _group) construct
 			current_data[i] = inputs[| i].getValue();
 		}
 		
-		for( var i = 0; i < ds_list_size(val); i++ )
-			affect(val[| i]);
+		if(!is_array(val[0])) val = [ val ];
+		for( var i = 0; i < array_length(val); i++ )
+		for( var j = 0; j < array_length(val[i]); j++ ) {
+			affect(val[i][j]);
+		}
 		
 		var jun = outputs[| 0];
 		for(var j = 0; j < ds_list_size(jun.value_to); j++) {

@@ -1,3 +1,7 @@
+function __lua_noti(txt) {
+	noti_status(txt);
+}
+
 function __lua_draw_surface_general(surface, xx, yy, xs, ys, ang, color, alpha) { 
 	draw_surface_ext(surface, xx, yy, xs, ys, ang, color, alpha); 
 }
@@ -48,7 +52,7 @@ function __lua_blendmode_reset() {
 
 function __initLua() {
 	var lua_functions = [
-		["print",	 noti_status],
+		["print",	 __lua_noti],
 	
 		["drawGeneral",		__lua_draw_surface_general],
 		["drawBlend",		__lua_draw_surface_colored],

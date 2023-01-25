@@ -13,6 +13,7 @@ if !ready exit;
 #region scaler
 	var yy = dialog_y + ui(44);
 	
+	tb_scale_frame.register();
 	tb_scale_frame.active = sFOCUS;
 	tb_scale_frame.hover  = sHOVER;
 	draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text);
@@ -26,24 +27,9 @@ if !ready exit;
 	
 	var bx = sx1 + ui(16);
 	var by = yy;
-	if(buttonInstant(THEME.button_lime, bx, by, ui(34), ui(34), mouse_ui, sFOCUS, sHOVER, "", THEME.accept, 0, COLORS._main_icon_dark) == 2) {
-		var fac = scale_to / ANIMATOR.frames_total;
-		var key = ds_map_find_first(NODE_MAP);
-		repeat(ds_map_size(NODE_MAP)) {
-			var n = NODE_MAP[? key];
-			key = ds_map_find_next(NODE_MAP, key);
-			if(!n || !n.active) continue;
-			
-			for(var i = 0; i < ds_list_size(n.inputs); i++) {
-				var in = n.inputs[| i];
-				if(!in.animator.is_anim) continue;
-				for(var j = 0; j < ds_list_size(in.animator.values); j++) {
-					var t = in.animator.values[| j];
-					t.time = t.ratio * scale_to;
-				}
-			}
-		}
-		ANIMATOR.frames_total = scale_to;
-		instance_destroy();
-	}
+	
+	b_apply.register();
+	b_apply.hover  = sHOVER;
+	b_apply.active = sFOCUS;
+	b_apply.draw(bx, by, ui(36), ui(36), mouse_ui, THEME.button_lime);
 #endregion

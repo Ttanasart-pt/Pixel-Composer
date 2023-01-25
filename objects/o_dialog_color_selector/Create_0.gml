@@ -9,6 +9,12 @@ event_inherited();
 	name = "Color selector";
 	
 	selector = new colorSelector();
+	
+	b_apply = button(function() {
+		onApply(selector.current_color);
+		DIALOG_CLICK = false;
+		instance_destroy();
+	}).setIcon(THEME.accept, 0, COLORS._main_icon_dark);
 #endregion
 
 #region presets

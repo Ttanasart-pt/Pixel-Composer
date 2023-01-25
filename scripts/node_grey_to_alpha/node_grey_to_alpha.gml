@@ -1,5 +1,5 @@
 function Node_Grey_Alpha(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constructor {
-	name = "Grey to alpha";
+	name = "Grey to Alpha";
 	
 	shader = sh_grey_alpha;
 	uniform_rep	= shader_get_uniform(shader, "replace");
@@ -7,7 +7,7 @@ function Node_Grey_Alpha(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) c
 	
 	inputs[| 0] = nodeValue(0, "Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 	
-	inputs[| 1] = nodeValue(1, "Replace color", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
+	inputs[| 1] = nodeValue(1, "Replace color", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true, "Replace output with solid color.");
 	inputs[| 2] = nodeValue(2, "Color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white);
 	
 	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
@@ -23,7 +23,7 @@ function Node_Grey_Alpha(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) c
 		
 		surface_set_target(_outSurf);
 		draw_clear_alpha(0, 0);
-		BLEND_OVER
+		BLEND_OVERRIDE
 		
 		shader_set(shader);
 			shader_set_uniform_i(uniform_rep, _replace);

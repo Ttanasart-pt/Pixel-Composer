@@ -89,7 +89,7 @@ void main() {
 		for (int j = 0; j <= int(scale / 2.); j++) {
 			int _amo = int(scale) + int(float(j) * radiusShatter);
 			for (int i = 0; i <= _amo; i++) {
-				float ang = TAU / float(_amo) * float(i) + float(j) + time;
+				float ang = TAU / float(_amo) * float(i) + float(j) + random(vec2(0.684, 1.387)) + time;
 				float rad = pow(float(j) / scale, radiusScale) * scale * .5 + random(vec2(ang)) * 0.1;
 				vec2 neighbor = vec2(cos(ang) * rad, sin(ang) * rad);
 				vec2 point = neighbor + pos;

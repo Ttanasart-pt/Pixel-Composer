@@ -4,19 +4,12 @@
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
-uniform float strength;
 uniform vec2 center;
+uniform vec2 dimension;
+uniform float strength;
 uniform int sampleMode;
-uniform int blurMode;
 
-uniform int useMask;
-uniform sampler2D mask;
-
-float sampleMask() {
-	if(useMask == 0) return 1.;
-	vec4 m = texture2D( mask, v_vTexcoord );
-	return (m.r + m.g + m.b) / 3. * m.a;
-}
+#define ITERATION 64.
 
 vec4 sampleTexture(vec2 pos) {
 	if(pos.x >= 0. && pos.y >= 0. && pos.x <= 1. && pos.y <= 1.)
@@ -33,29 +26,22 @@ vec4 sampleTexture(vec2 pos) {
 }
 
 void main() {
-    vec2 uv = v_vTexcoord - center;
+	vec2 pxPos = v_vTexcoord * dimension;
+	vec2 pxCen = center * dimension;
+	vec2 vecPc  = pxPos - pxCen;
 	
-	float str = strength * sampleMask();
-	float nsamples = 64.;
-	float scale_factor = str * (1. / (nsamples * 2. - 1.));
-	vec4 color = vec4(0.0);
-    float blrStart = 0.;
+	float angle = atan(vecPc.y, vecPc.x);
+	float dist  = length(vecPc);
+	vec4 clr = vec4(0.);
+	float weight = 0.;
 	
-	if(blurMode == 0)
-		blrStart = 0.;
-	else if(blurMode == 1)
-		blrStart = -nsamples;
-	else if(blurMode == 2)
-		blrStart = -nsamples * 2. - 1.;
+	for(float i = -strength; i <= strength; i++) {
+		float ang = angle + i / 100.;
+		vec4 col = sampleTexture((pxCen + vec2(cos(ang), sin(ang)) * dist) / dimension);
+		
+		clr += col;
+		weight += col.a;
+	}
 	
-    for(float i = 0.; i < nsamples * 2. + 1.; i++) {
-        float scale = 1.0 + ((blrStart + i) * scale_factor);
-		vec2 pos = uv * scale + center;
-		color += sampleTexture(pos);
-    }
-    
-    color /= nsamples * 2. + 1.;
-    
-	gl_FragColor = color;
+    gl_FragColor = clr / weight;
 }
-

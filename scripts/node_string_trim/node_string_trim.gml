@@ -1,5 +1,5 @@
 function Node_String_Trim(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constructor {
-	name = "Text trim";
+	name = "Trim Text";
 	previewable = false;
 	
 	w = 96;

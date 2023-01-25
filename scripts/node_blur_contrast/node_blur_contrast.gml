@@ -1,5 +1,5 @@
 function Node_Blur_Contrast(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constructor {
-	name = "Blur contrast";
+	name = "Contrast Blur";
 	
 	shader = sh_blur_box_contrast;
 	uniform_dim = shader_get_uniform(shader, "dimension");
@@ -11,7 +11,7 @@ function Node_Blur_Contrast(_x, _y, _group = -1) : Node_Processor(_x, _y, _group
 	inputs[| 1] = nodeValue(1, "Size", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 3)
 		.setDisplay(VALUE_DISPLAY.slider, [1, 32, 1]);
 	
-	inputs[| 2] = nodeValue(2, "Treshold", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.2)
+	inputs[| 2] = nodeValue(2, "Threshold", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.2, "Brightness different to be blur together.")
 		.setDisplay(VALUE_DISPLAY.slider, [0, 1, 0.01]);
 	
 	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
@@ -30,7 +30,7 @@ function Node_Blur_Contrast(_x, _y, _group = -1) : Node_Processor(_x, _y, _group
 		
 		surface_set_target(pass);
 		draw_clear_alpha(0, 0);
-		BLEND_OVER
+		BLEND_OVERRIDE
 			shader_set(shader);
 			shader_set_uniform_f_array(uniform_dim, [ ww, hh ]);
 			shader_set_uniform_f(uniform_siz, _size);
@@ -43,7 +43,7 @@ function Node_Blur_Contrast(_x, _y, _group = -1) : Node_Processor(_x, _y, _group
 		
 		surface_set_target(_outSurf);
 		draw_clear_alpha(0, 0);
-		BLEND_OVER
+		BLEND_OVERRIDE
 			shader_set(shader);
 			shader_set_uniform_i(uniform_dir, 1);
 			draw_surface_safe(pass, 0, 0);

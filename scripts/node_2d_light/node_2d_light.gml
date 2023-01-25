@@ -6,7 +6,7 @@ enum LIGHT_SHAPE_2D {
 }
 
 function Node_2D_light(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constructor {
-	name = "2D light";
+	name = "2D Light";
 	
 	shader = sh_2d_light;
 	uniform_colr = shader_get_uniform(shader, "color");
@@ -15,6 +15,7 @@ function Node_2D_light(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) con
 	uniform_attn = shader_get_uniform(shader, "atten");
 	
 	inputs[| 0] = nodeValue(0, "Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
+	
 	inputs[| 1] = nodeValue(1, "Light shape", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Point", "Line", "Line asymmetric", "Spot" ]);
 	
@@ -23,6 +24,7 @@ function Node_2D_light(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) con
 		.setUnitRef(function(index) { return getDimension(index); });
 	
 	inputs[| 3] = nodeValue(3, "Range", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 16);
+	
 	inputs[| 4] = nodeValue(4, "Intensity", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
 		.setDisplay(VALUE_DISPLAY.slider, [0, 1, 0.01]);
 	
@@ -43,7 +45,7 @@ function Node_2D_light(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) con
 	inputs[| 10] = nodeValue(10, "Banding", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.slider, [0, 16, 1]);
 	
-	inputs[| 11] = nodeValue(11, "Attenuation", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+	inputs[| 11] = nodeValue(11, "Attenuation", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0, "Control how light fade out over distance.")
 		.setDisplay(VALUE_DISPLAY.enum_scroll, ["Quadratic", "Invert quadratic", "Linear"]);
 	
 	inputs[| 12] = nodeValue(12, "Radial banding", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)

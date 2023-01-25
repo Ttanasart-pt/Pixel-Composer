@@ -4,14 +4,14 @@ function Node_VFX_Renderer(_x, _y, _group = -1) : Node(_x, _y, _group) construct
 	inputs[| 0] = nodeValue(0, "Output dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, def_surf_size2)
 		.setDisplay(VALUE_DISPLAY.vector);
 		
-	inputs[| 1] = nodeValue(1, "Round position", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true );
+	inputs[| 1] = nodeValue(1, "Round position", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true, "Round position to the closest integer value to avoid jittering.");
 	
 	inputs[| 2] = nodeValue(2, "Blend mode", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0 )
 		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Normal", "Additive" ]);
 	
 	data_length = 1;
 	input_fix_len = ds_list_size(inputs);
-		
+	
 	static createNewInput = function() {
 		var index = ds_list_size(inputs);
 		inputs[| index] = nodeValue( index, "Particles", self, JUNCTION_CONNECT.input, VALUE_TYPE.object, noone )
@@ -73,9 +73,13 @@ function Node_VFX_Renderer(_x, _y, _group = -1) : Node(_x, _y, _group) construct
 			
 			for( var i = input_fix_len; i < ds_list_size(inputs) - 1; i++ ) {
 				var parts = inputs[| i].getValue(_time);
-				for(var j = 0; j < array_length(parts); j++) {
-					if(!parts[j].active) continue;
-					parts[j].draw(_exact, surf_w, surf_h);
+				
+				if(!is_array(parts[0])) parts = [ parts ];
+				
+				for(var j = 0; j < array_length(parts); j++)
+				for(var k = 0; k < array_length(parts[j]); k++) {
+					if(!parts[j][k].active) continue;
+					parts[j][k].draw(_exact, surf_w, surf_h);
 				}
 			}
 			

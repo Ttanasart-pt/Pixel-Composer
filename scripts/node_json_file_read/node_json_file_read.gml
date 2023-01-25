@@ -23,7 +23,7 @@ function Node_create_Json_File_Read_path(_x, _y, path) {
 }
 
 function Node_Json_File_Read(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
-	name = "JSON in";
+	name = "JSON File In";
 	color = COLORS.node_blend_input;
 	previewable = false;
 	

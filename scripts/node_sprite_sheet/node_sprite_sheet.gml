@@ -10,7 +10,7 @@ enum SPRITE_ANIM_GROUP {
 }
 
 function Node_Render_Sprite_Sheet(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
-	name		= "Sheet";
+	name		= "Render Spritesheet";
 	anim_drawn	= array_create(ANIMATOR.frames_total + 1, false);
 	
 	inputs[| 0] = nodeValue(0, "Sprites", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, PIXEL_SURFACE);
@@ -18,7 +18,7 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = -1) : Node(_x, _y, _group) co
 	inputs[| 1] = nodeValue(1, "Sprite set", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Animation", "Sprite array" ]);
 	
-	inputs[| 2] = nodeValue(2, "Frame step", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1);
+	inputs[| 2] = nodeValue(2, "Frame step", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1, "Number of frames until next sprite. Can be seen as (Step - 1) frame skip.");
 	
 	inputs[| 3] = nodeValue(3, "Packing type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Horizontal", "Vertical", "Grid" ]);

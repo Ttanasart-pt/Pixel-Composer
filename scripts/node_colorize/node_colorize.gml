@@ -9,6 +9,7 @@ function Node_Colorize(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) con
 	uniform_key = shader_get_uniform(shader, "keys");
 	
 	inputs[| 0] = nodeValue(0, "Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
+	
 	inputs[| 1] = nodeValue(1, "Gradient", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white)
 		.setDisplay(VALUE_DISPLAY.gradient);
 		
@@ -35,7 +36,7 @@ function Node_Colorize(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) con
 		
 		surface_set_target(_outSurf);
 			draw_clear_alpha(0, 0);
-			BLEND_OVER
+			BLEND_OVERRIDE
 			
 			shader_set(shader);
 			shader_set_uniform_i(uniform_grad_blend, ds_list_get(_gra_data, 0));

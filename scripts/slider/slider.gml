@@ -18,6 +18,11 @@ function slider(_min, _max, _step, _onModify = noone, _onRelease = noone) : widg
 	
 	tb_value = new textBox(TEXTBOX_INPUT.float, onApply);
 	
+	static setInteract = function(interactable = noone) { 
+		self.interactable = interactable;
+		tb_value.interactable = interactable;
+	}
+	
 	static register = function(parent = noone) {
 		tb_value.register(parent);
 	}

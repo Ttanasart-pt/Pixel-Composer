@@ -5,7 +5,7 @@ function Node_Particle(_x, _y, _group = -1) : Node_VFX_Spawner_Base(_x, _y, _gro
 	inputs[| input_len + 0] = nodeValue(input_len + 0, "Output dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, def_surf_size2)
 		.setDisplay(VALUE_DISPLAY.vector);
 		
-	inputs[| input_len + 1] = nodeValue(input_len + 1, "Round position", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true );
+	inputs[| input_len + 1] = nodeValue(input_len + 1, "Round position", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true, "Round position to the closest integer value to avoid jittering.");
 	
 	inputs[| input_len + 2] = nodeValue(input_len + 2, "Blend mode", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0 )
 		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Normal", "Additive" ]);

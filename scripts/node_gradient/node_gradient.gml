@@ -1,5 +1,5 @@
 function Node_Gradient(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constructor {
-	name = "Gradient";
+	name = "Draw Gradient";
 	
 	shader = sh_gradient;
 	uniform_grad_blend	= shader_get_uniform(shader, "gradient_blend");
@@ -102,7 +102,7 @@ function Node_Gradient(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) con
 			shader_set_uniform_f(uniform_radius, _rad * sqrt(2));
 			shader_set_uniform_f(uniform_radius_shf, _shf);
 			
-			BLEND_OVER
+			BLEND_OVERRIDE
 			if(is_surface(_msk))
 				draw_surface_stretched_ext(_msk, 0, 0, _dim[0], _dim[1], c_white, 1);
 			else

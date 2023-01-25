@@ -82,7 +82,7 @@ function Node_Dither(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) const
 		
 		surface_set_target(_outSurf);
 			draw_clear_alpha(0, 0);
-			BLEND_OVER
+			BLEND_OVERRIDE
 			
 			shader_set(shader);
 			

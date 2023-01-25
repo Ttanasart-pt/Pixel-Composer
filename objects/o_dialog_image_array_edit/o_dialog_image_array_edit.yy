@@ -31,7 +31,7 @@
   "properties": [],
   "overriddenProperties": [],
   "parent": {
-    "name": "inspector",
-    "path": "folders/dialog/inspector.yy",
+    "name": "dialog",
+    "path": "folders/dialog.yy",
   },
 }

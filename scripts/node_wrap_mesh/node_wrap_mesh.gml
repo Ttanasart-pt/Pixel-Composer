@@ -1,5 +1,5 @@
 function Node_Mesh_Warp(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constructor {
-	name = "Mesh warp";
+	name = "Mesh Warp";
 	
 	data = {
 		points : [[]],
@@ -8,7 +8,7 @@ function Node_Mesh_Warp(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) co
 	}
 	
 	inputs[| 0] = nodeValue(0, "Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
-	inputs[| 1] = nodeValue(1, "Sample", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 8)
+	inputs[| 1] = nodeValue(1, "Sample", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 8, "Amount of grid subdivision. Higher number means more grid, detail.")
 		.setDisplay(VALUE_DISPLAY.slider, [ 2, 32, 1 ] );
 	
 	inputs[| 2] = nodeValue(2, "Spring force", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.5)
@@ -17,7 +17,7 @@ function Node_Mesh_Warp(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) co
 	inputs[| 3] = nodeValue(3, "Mesh", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.button, [ function() { setTriangle(); doUpdate(); }, "Generate"] );
 	
-	inputs[| 4] = nodeValue(4, "Diagonal link", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	inputs[| 4] = nodeValue(4, "Diagonal link", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false, "Include diagonal link to prevent drastic grid deformation.");
 	
 	control_index = ds_list_size(inputs);
 	
@@ -54,11 +54,11 @@ function Node_Mesh_Warp(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) co
 	}
 	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
-		for(var i = 0; i < ds_list_size(data.tris); i++) {
-			data.tris[| i].drawPoints(_x, _y, _s);
-		}
 		for(var i = 0; i < ds_list_size(data.links); i++) {
 			data.links[| i].draw(_x, _y, _s);
+		}
+		for(var i = 0; i < ds_list_size(data.tris); i++) {
+			data.tris[| i].drawPoints(_x, _y, _s);
 		}
 		
 		var hover = -1;
@@ -268,7 +268,8 @@ function Node_Mesh_Warp(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) co
 		var gh = hh / sample;
 		
 		if(!useArray) {
-			var cont = surface_create_valid(ww, hh)
+			var cont = surface_create_valid(ww, hh);
+			
 			surface_set_target(cont);
 				shader_set(sh_content_sampler);
 				var uniform_dim = shader_get_uniform(sh_content_sampler, "dimension");
@@ -341,18 +342,17 @@ function Node_Mesh_Warp(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) co
 	}
 	
 	static reset = function() {
-		for(var i = 0; i < ds_list_size(data.tris); i++) {
+		for(var i = 0; i < ds_list_size(data.tris); i++)
 			data.tris[| i].reset();
-		}
 	}
 	
 	static setTriangle = function() {
 		var _inSurf		= inputs[| 0].getValue();
 		
 		regularTri(_inSurf);
-		for(var i = 0; i < ds_list_size(data.tris); i++) {
+		
+		for(var i = 0; i < ds_list_size(data.tris); i++)
 			data.tris[| i].initSurface(is_array(_inSurf)? _inSurf[0] : _inSurf);
-		}
 	}
 	
 	static affectPoint = function(c, p) {

@@ -77,7 +77,7 @@ function colorSelector(onApply = noone) constructor {
 	})
 	
 	scr_disp = buttonGroup(["Hue", "Value"], function(mode) { disp_mode = mode; } );
-
+	
 	function resetHSV() {
 		hue = round(color_get_hue(current_color));
 		sat = round(color_get_saturation(current_color));
@@ -210,6 +210,20 @@ function colorSelector(onApply = noone) constructor {
 			scr_disp.draw(tx, ty, ui(190), ui(32), disp_mode, mouse_ui);
 		#endregion
 		
+		#region register
+			scr_disp.register();
+			
+			tb_hue.register();
+			tb_sat.register();
+			tb_val.register();
+			
+			tb_red.register();
+			tb_green.register();
+			tb_blue.register();
+			
+			tb_hex.register();
+		#endregion
+		
 		#region data
 			var data_x = hue_x + ui(40);
 			var data_y = col_y + ui(40);
@@ -253,8 +267,7 @@ function colorSelector(onApply = noone) constructor {
 		draw_sprite_stretched_ext(THEME.color_picker_sample, 0, cx - ui(18), cy - ui(18), ui(36), ui(36), current_color, 1);
 		
 		cx += ui(48);
-		if(buttonInstant(THEME.button_hide, cx - ui(18), cy - ui(18), ui(36), ui(36), mouse_ui, focus, hover, "", THEME.color_picker_dropper, 0, c_white) == 2) {
+		if(buttonInstant(THEME.button_hide, cx - ui(18), cy - ui(18), ui(36), ui(36), mouse_ui, focus, hover, "", THEME.color_picker_dropper, 0, c_white) == 2)
 			dropper_active = true;
-		}
 	}
 }

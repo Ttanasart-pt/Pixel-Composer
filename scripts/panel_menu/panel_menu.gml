@@ -28,6 +28,21 @@ function Panel_Menu() : PanelContent() constructor {
 			-1,
 			[ "Preferences...", function() { dialogCall(o_dialog_preference); } ],
 			[ "Splash screen", function() { dialogCall(o_dialog_splash); } ],
+			-1,
+			[ "Addons", function(_x, _y, _depth) { 
+					var dia = instance_create_depth(_x - ui(4), _y, _depth - 1, o_dialog_menubox);
+					dia.setMenu([
+						[ "Key displayer", function() { 
+							if(instance_exists(addon_key_displayer)) {
+								instance_destroy(addon_key_displayer);
+								return;
+							}
+				
+							instance_create_depth(0, 0, 0, addon_key_displayer);
+						}]
+					]);
+					return dia;
+			}, ">" ],
 		]],
 		["Edit", [
 			[ "Undo", function() { UNDO(); }, ["", "Undo"]  ],
@@ -90,15 +105,6 @@ function Panel_Menu() : PanelContent() constructor {
 			}],
 			[ "Update sample projects", function() { 
 				__test_update_sample_projects();
-			}],
-			-1,
-			[ "Key displayer", function() { 
-				if(instance_exists(addon_key_displayer)) {
-					instance_destroy(addon_key_displayer);
-					return;
-				}
-				
-				instance_create_depth(0, 0, 0, addon_key_displayer);
 			}],
 		]]);
 	}

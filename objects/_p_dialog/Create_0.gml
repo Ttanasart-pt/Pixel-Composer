@@ -67,9 +67,6 @@
 #endregion
 
 #region focus
-	setFocus(self);
-	FOCUS_STR = "Dialog";
-	
 	function checkFocus() {
 		var x0 = dialog_x - dialog_resizable * 6;
 		var x1 = dialog_x + dialog_w + dialog_resizable * 6;
@@ -79,12 +76,10 @@
 		if(point_in_rectangle(mouse_mx, mouse_my, x0, y0, x1, y1)) {	
 			if(depth < DIALOG_DEPTH_HOVER) {
 				DIALOG_DEPTH_HOVER = depth;
-				HOVER = self;
+				HOVER = self.id;
 			
-				if(mouse_press(mb_any)) {
-					setFocus(self);
-					FOCUS_STR = "Dialog";
-				}
+				if(mouse_press(mb_any))
+					setFocus(self.id, "Dialog");
 			}
 		}
 	}
@@ -114,7 +109,7 @@
 		var y1 = dialog_y + dialog_h + dialog_resizable * 6;
 	
 		if(!point_in_rectangle(mouse_mx, mouse_my, x0, y0, x1, y1)) {
-			if(destroy_on_click_out && mouse_press(mb_left)) {
+			if(destroy_on_click_out && mouse_press(mb_any)) {
 				instance_destroy(self);
 				DIALOG_CLICK = false;
 			}

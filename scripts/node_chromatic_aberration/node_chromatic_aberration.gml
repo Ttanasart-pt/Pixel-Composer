@@ -1,5 +1,5 @@
 function Node_Chromatic_Aberration(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constructor {
-	name = "Chromatic aberration";
+	name = "Chromatic Aberration";
 	
 	shader = sh_chromatic_aberration;
 	uniform_dim = shader_get_uniform(shader, "dimension");
@@ -7,6 +7,7 @@ function Node_Chromatic_Aberration(_x, _y, _group = -1) : Node_Processor(_x, _y,
 	uniform_str = shader_get_uniform(shader, "strength");
 	
 	inputs[| 0] = nodeValue(0, "Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
+	
 	inputs[| 1] = nodeValue(1, "Center", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.vector)
 		.setUnitRef(function(index) { return getDimension(index); });
@@ -27,7 +28,7 @@ function Node_Chromatic_Aberration(_x, _y, _group = -1) : Node_Processor(_x, _y,
 	static process_data = function(_outSurf, _data, _output_index, _array_index) {
 		surface_set_target(_outSurf);
 		draw_clear_alpha(0, 0);
-		BLEND_OVER
+		BLEND_OVERRIDE
 		
 		var center = _data[1];
 		var stren = _data[2];

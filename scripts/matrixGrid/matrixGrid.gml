@@ -31,6 +31,17 @@ function matrixGrid(_type, _onModify, _unit = noone) : widget() constructor {
 	
 	extras = -1;
 	
+	static setInteract = function(interactable = noone) { 
+		self.interactable = interactable;
+		b_link.interactable = interactable;
+		
+		for( var i = 0; i < size; i++ )
+			tb[i].interactable = interactable;
+		
+		if(extras) 
+			extras.interactable = interactable;
+	}
+	
 	static register = function(parent = noone) {
 		b_link.register(parent);
 		
@@ -66,8 +77,8 @@ function matrixGrid(_type, _onModify, _unit = noone) : widget() constructor {
 		if(unit != noone && unit.reference != noone) {
 			_w += ui(4);
 			
-			unit.triggerButton.hover  = hover;
-			unit.triggerButton.active = active;
+			unit.triggerButton.hover  = ihover;
+			unit.triggerButton.active = iactive;
 			
 			unit.draw(_x + _w - ui(32), _y + _h / 2 - ui(32 / 2), ui(32), ui(32), _m);
 			_w -= ui(40);

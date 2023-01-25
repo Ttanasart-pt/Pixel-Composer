@@ -1,5 +1,5 @@
 function Node_ASE_layer(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
-	name = "ASE layer";
+	name = "ASE Layer";
 	update_on_frame = true;
 	always_output	= true;
 	previewable = false;
@@ -70,7 +70,7 @@ function Node_ASE_layer(_x, _y, _group = -1) : Node(_x, _y, _group) constructor 
 		
 		surface_set_target(surf);
 		draw_clear_alpha(0, 0);
-		BLEND_OVER
+		BLEND_OVERRIDE
 		draw_surface(_inSurf, xx, yy);
 		BLEND_NORMAL
 		surface_reset_target();

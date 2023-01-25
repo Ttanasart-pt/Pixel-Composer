@@ -12,6 +12,17 @@ function rotatorRange(_onModify) : widget() constructor {
 	tb_max = new textBox(TEXTBOX_INPUT.number, function(val) { onModify(1, val); } );
 	tb_max.slidable = true;
 	
+	static setInteract = function(interactable = noone) { 
+		self.interactable = interactable;
+		tb_min.interactable = interactable;
+		tb_max.interactable = interactable;
+	}
+	
+	static register = function(parent = noone) {
+		tb_min.register(parent);
+		tb_max.register(parent);
+	}
+	
 	static draw = function(_x, _y, _data, _m) {
 		x = _x;
 		y = _y;

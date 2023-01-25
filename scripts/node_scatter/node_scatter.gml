@@ -27,7 +27,7 @@ function Node_Scatter(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) cons
 	inputs[| 6] = nodeValue(6, "Distribution", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.enum_button, [ "Area", "Border" ]);
 	
-	inputs[| 7] = nodeValue(7, "Point at center", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	inputs[| 7] = nodeValue(7, "Point at center", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false, "Rotate each copy to face the spawn center.");
 	
 	inputs[| 8] = nodeValue(8, "Uniform scaling", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
 	
@@ -143,7 +143,7 @@ function Node_Scatter(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) cons
 		
 		surface_set_target(_outSurf);
 			draw_clear_alpha(0, 0);
-			BLEND_OVER
+			BLEND_OVERRIDE
 			
 			draw_surface_safe(temp_surf[res_index], 0, 0);
 			

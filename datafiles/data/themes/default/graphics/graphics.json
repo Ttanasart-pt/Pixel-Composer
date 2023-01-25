@@ -256,6 +256,20 @@
         "yorigin": 24,
         "slice": null
     },
+    "icon_visibility": {
+        "path": "./icon/s_icon_visibility.png",
+        "subimages": 1,
+        "xorigin": 24,
+        "yorigin": 24,
+        "slice": null
+    },
+    "info": {
+        "path": "./icon/s_info.png",
+        "subimages": 1,
+        "xorigin": 16,
+        "yorigin": 16,
+        "slice": null
+    },
     "junc_visible": {
         "path": "./icon/s_junc_visible_strip2.png",
         "subimages": 2,
@@ -305,6 +319,13 @@
         "yorigin": 24,
         "slice": null
     },
+    "text": {
+        "path": "./icon/s_name.png",
+        "subimages": 1,
+        "xorigin": 24,
+        "yorigin": 24,
+        "slice": null
+    },
     "node_processor": {
         "path": "./icon/s_node_processor.png",
         "subimages": 1,
@@ -335,6 +356,13 @@
     },
     "refresh_s": {
         "path": "./icon/s_refresh_16.png",
+        "subimages": 1,
+        "xorigin": 16,
+        "yorigin": 16,
+        "slice": null
+    },
+    "rigidSim": {
+        "path": "./icon/s_rigidSim.png",
         "subimages": 1,
         "xorigin": 16,
         "yorigin": 16,
@@ -997,8 +1025,8 @@
         "slice": null
     },
     "timeline_ease": {
-        "path": "./timeline/s_timeline_ease_strip4.png",
-        "subimages": 4,
+        "path": "./timeline/s_timeline_ease.png",
+        "subimages": 5,
         "xorigin": 24,
         "yorigin": 24,
         "slice": null
@@ -1017,15 +1045,15 @@
         }
     },
     "timeline_keyframe": {
-        "path": "./timeline/s_timeline_keyframes_strip4.png",
-        "subimages": 4,
+        "path": "./timeline/s_timeline_keyframes.png",
+        "subimages": 5,
         "xorigin": 16,
         "yorigin": 16,
         "slice": null
     },
     "timeline_keyframe_selecting": {
         "path": "./timeline/s_timeline_keyframe_selecting.png",
-        "subimages": 1,
+        "subimages": 2,
         "xorigin": 20,
         "yorigin": 20,
         "slice": null
@@ -1102,6 +1130,20 @@
     },
     "control_unpin": {
         "path": "./tool/s_control_unpin.png",
+        "subimages": 1,
+        "xorigin": 24,
+        "yorigin": 24,
+        "slice": null
+    },
+    "mesh_tool_edit": {
+        "path": "./tool/s_mesh_edit.png",
+        "subimages": 1,
+        "xorigin": 24,
+        "yorigin": 24,
+        "slice": null
+    },
+    "mesh_tool_delete": {
+        "path": "./tool/s_mesh_delete.png",
         "subimages": 1,
         "xorigin": 24,
         "yorigin": 24,

@@ -71,10 +71,6 @@ enum PADDING {
 	down
 }
 
-enum VALUE_TAG {
-	_default = 0,
-}
-
 function value_color(i) {
 	static JUNCTION_COLORS = [ $6691ff, $78e4ff, $5d3f8c, $5dde8f, $976bff, $4b00eb, $d1c2c2, $e3ff66, $b5b5ff, $ffa64d, #c1007c, $808080 ];
 	return JUNCTION_COLORS[safe_mod(max(0, i), array_length(JUNCTION_COLORS))];
@@ -88,7 +84,7 @@ function value_bit(i) {
 		case VALUE_TYPE.color		: return 1 << 4;
 		case VALUE_TYPE.surface		: return 1 << 5;
 		case VALUE_TYPE.path		: return 1 << 10;
-		case VALUE_TYPE.text		: return 1 << 10 | 1 << 1;
+		case VALUE_TYPE.text		: return 1 << 10;
 		case VALUE_TYPE.node		: return 1 << 12;
 		case VALUE_TYPE.object		: return 1 << 20;
 		case VALUE_TYPE.d3object	: return 1 << 21;
@@ -164,8 +160,8 @@ function isGraphable(type) {
 	return false;
 }
 
-function nodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_TAG._default) {
-	return new NodeValue(_index, _name, _node, _connect, _type, _value, _tag);
+function nodeValue(_index, _name, _node, _connect, _type, _value, _tooltip = "") {
+	return new NodeValue(_index, _name, _node, _connect, _type, _value, _tooltip);
 }
 
 function nodeValueUnit(value) constructor {
@@ -176,6 +172,7 @@ function nodeValueUnit(value) constructor {
 	triggerButton = button(function() { 
 		mode = !mode; 
 		value.unitConvert(mode);
+		value.node.update();
 	});
 	triggerButton.icon_blend = COLORS._main_icon_light;
 	triggerButton.icon = THEME.unit_ref;
@@ -240,7 +237,7 @@ function nodeValueUnit(value) constructor {
 	}
 }
 
-function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_TAG._default) constructor {
+function NodeValue(_index, _name, _node, _connect, _type, _value, _tooltip = "") constructor {
 	name  = _name;
 	node  = _node;
 	x	  = node.x;
@@ -248,7 +245,7 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 	index = _index;
 	type  = _type;
 	
-	tag = _tag;
+	tooltip = _tooltip;
 	
 	connect_type = _connect;
 	value_from   = noone;
@@ -607,7 +604,7 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 		#region notification
 			if(value_validation == VALIDATION.error && error_notification == noone) {
 				error_notification = noti_error(str);
-				error_notification.onClick = function() { PANEL_GRAPH.node_focus = node; };
+				error_notification.onClick = function() { PANEL_GRAPH.focusNode(node); };
 			}
 				
 			if(value_validation == VALIDATION.pass && error_notification != noone) {
@@ -623,12 +620,12 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 		var typeFrom = nodeFrom.type;
 		var display  = nodeFrom.display_type;
 		
-		if(typeFrom == VALUE_TYPE.color) {
-			if(display_type == VALUE_DISPLAY.gradient && display == VALUE_DISPLAY._default) {
+		if(display_type == VALUE_DISPLAY.gradient && typeFrom == VALUE_TYPE.color) {
+			if(display == VALUE_DISPLAY._default) {
 				ds_list_clear(dyna_depo);
 				ds_list_add(dyna_depo, new valueKey(0, value));
 				return dyna_depo;
-			} else if(display_type == VALUE_DISPLAY.gradient && display == VALUE_DISPLAY.palette) {
+			} else if(display == VALUE_DISPLAY.palette) {
 				ds_list_clear(dyna_depo);
 				var amo = array_length(value);
 				for( var i = 0; i < amo; i++ ) {
@@ -636,6 +633,8 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 				}
 				return dyna_depo;
 			}
+			
+			return value;
 		}
 		
 		if(display_type == VALUE_DISPLAY.area) {
@@ -699,7 +698,7 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 		
 		var _base = animator.getValue(_time);
 		
-		if(typ == VALUE_TYPE.surface && (type == VALUE_TYPE.integer || type == VALUE_TYPE.float)) { //Dimension conversion
+		if(typ == VALUE_TYPE.surface && (type == VALUE_TYPE.integer || type == VALUE_TYPE.float) && accept_array) { //Dimension conversion
 			if(is_array(val)) {
 				var eqSize = true;
 				var sArr = [];
@@ -744,7 +743,7 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 	}
 	
 	static getValueRecursive = function(_time = ANIMATOR.current_frame) {
-		var val = [ -1, VALUE_TYPE.any, VALUE_DISPLAY._default ];
+		var val = [ -1, self ];
 		
 		if(value_from == noone)
 			val = [animator.getValue(_time), self ];
@@ -832,9 +831,10 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 		return updated;
 	}
 	
-	static setFrom = function(_valueFrom, _update = true, checkRecur = true) {
+	static isConnectable = function(_valueFrom, checkRecur = true, log = false) {
 		if(_valueFrom == -1 || _valueFrom == undefined || _valueFrom == noone) {
-			noti_warning("LOAD: Cannot set node connection from " + string(_valueFrom) + " to " + string(name) + " of node " + string(node.name) + ".");
+			if(log)
+				noti_warning("LOAD: Cannot set node connection from " + string(_valueFrom) + " to " + string(name) + " of node " + string(node.name) + ".",, node);
 			return false;
 		}
 		
@@ -843,38 +843,50 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 		}
 		
 		if(_valueFrom == self) {
-			noti_warning("setFrom: Self connection is not allowed.");
+			if(log)
+				noti_warning("setFrom: Self connection is not allowed.",, node);
 			return false;
 		}
 		
 		if(value_bit(type) & value_bit(_valueFrom.type) == 0 && !value_type_directional(_valueFrom, self)) {
-			noti_warning("setFrom: Type mismatch");
+			if(log)
+				noti_warning("setFrom: Type mismatch",, node);
 			return false;
 		}
 		
 		if(connect_type == _valueFrom.connect_type) {
-			noti_warning("setFrom: Connect type mismatch");
+			if(log)
+				noti_warning("setFrom: Connect type mismatch",, node);
 			return false;
 		}
 		
 		if(checkRecur && _valueFrom.searchNodeBackward(node)) {
-			noti_warning("setFrom: Cycle connection");
+			if(log)
+				noti_warning("setFrom: Cycle connection",, node);
 			return false;
 		}
 			
 		if(!accept_array && _valueFrom.isArray()) {
-			noti_warning("setFrom: Array mismatch");
+			if(log)
+				noti_warning("setFrom: Array mismatch",, node);
+			return false;
+		}
+			
+		if(!accept_array && _valueFrom.type == VALUE_TYPE.surface && (type == VALUE_TYPE.integer || type == VALUE_TYPE.float)) {
+			if(log)
+				noti_warning("setFrom: Array mismatch",, node);
 			return false;
 		}
 		
-		if(value_from != noone) {
-			ds_list_remove(value_from.value_to, self);	
-		}
-		
-		if(_valueFrom == noone) {
-			removeFrom();
+		return true;
+	}
+	
+	static setFrom = function(_valueFrom, _update = true, checkRecur = true) {
+		if(!isConnectable(_valueFrom, checkRecur, true))
 			return false;
-		}
+		
+		if(value_from != noone)
+			ds_list_remove(value_from.value_to, self);
 		
 		var _o = animator.getValue();
 		recordAction(ACTION_TYPE.junction_connect, self, value_from);
@@ -1065,10 +1077,51 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 	static extractNode = function() {
 		if(extract_node == "") return noone;
 		
-		var tr = nodeBuild(extract_node, node.x, node.y);
-		tr.x -= tr.w + 32;
+		var ext = nodeBuild(extract_node, node.x, node.y);
+		ext.x -= ext.w + 32;
 		
-		setFrom(tr.outputs[| 0]);
+		setFrom(ext.outputs[| 0]);
+		
+		var animFrom = animator.values;
+		var len = 2;
+		
+		switch(extract_node) {
+			case "Node_Vector4": len++;
+			case "Node_Vector3": len++;
+			case "Node_Vector2": 
+				for( var j = 0; j < len; j++ ) {
+					var animTo = ext.inputs[| j].animator;
+					var animLs = animTo.values;
+					
+					animTo.is_anim = animator.is_anim;
+					ds_list_clear(animLs);
+				}
+				
+				for( var i = 0; i < ds_list_size(animFrom); i++ ) {
+					for( var j = 0; j < len; j++ ) {
+						var animTo = ext.inputs[| j].animator;
+						var animLs = animTo.values;
+						var a = animFrom[| i].clone(animTo);
+						
+						a.value = a.value[j];
+						ds_list_add(animLs, a);
+					}
+				}
+				break;
+			default:
+				var animTo = ext.inputs[| 0].animator;
+				var animLs = animTo.values;
+				
+				animTo.is_anim = animator.is_anim;
+				ds_list_clear(animLs);
+				
+				for( var i = 0; i < ds_list_size(animFrom); i++ )
+					ds_list_add(animLs, animFrom[| i].clone(animTo));
+				break;
+		}
+		
+		ext.update();
+		PANEL_ANIMATION.updatePropertyList();
 	}
 	
 	static serialize = function(scale = false) {
@@ -1125,7 +1178,7 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 			
 		if(!ds_map_exists(NODE_MAP, _node)) {
 			var txt = "Node connect error : Node ID " + string(_node) + " not found.";
-			log_warning("LOAD", "[Connect] " + txt);
+			log_warning("LOAD", "[Connect] " + txt, node);
 			return false;
 		}
 		
@@ -1133,17 +1186,17 @@ function NodeValue(_index, _name, _node, _connect, _type, _value, _tag = VALUE_T
 		var _ol = ds_list_size(_nd.outputs);
 			
 		if(log)
-			log_warning("LOAD", "[Connect] Reconnecting " + string(node.name) + " to " + _nd.name);
+			log_warning("LOAD", "[Connect] Reconnecting " + string(node.name) + " to " + _nd.name, node);
 			
 		if(con_index < _ol) {
 			if(setFrom(_nd.outputs[| con_index], false))
 				return true;
 			
-			log_warning("LOAD", "[Connect] Connection conflict " + string(node.name) + " to " + string(_nd.name) + " : Connection failed.");
+			log_warning("LOAD", "[Connect] Connection conflict " + string(node.name) + " to " + string(_nd.name) + " : Connection failed.", node);
 			return false;
 		}
 		
-		log_warning("LOAD", "[Connect] Connection conflict " + string(node.name) + " to " + string(_nd.name) + " : Node not exist.");
+		log_warning("LOAD", "[Connect] Connection conflict " + string(node.name) + " to " + string(_nd.name) + " : Node not exist.", node);
 		return false;
 	}
 	

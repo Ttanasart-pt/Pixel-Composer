@@ -46,3 +46,15 @@ if !ready exit;
 	if(b == 2)
 		PREF_MAP[? "dialog_add_node_grouping"] = !PREF_MAP[? "dialog_add_node_grouping"];
 #endregion
+
+//#region dec
+//	if(node_called) {
+//		var jx = 0;
+//		var jy = dialog_y + ui(26);
+		
+//		if(node_called.connect_type == JUNCTION_CONNECT.input) 
+//			jx = dialog_x;
+//		else 
+//			jx = dialog_x + dialog_w;
+//	}
+//#endregion

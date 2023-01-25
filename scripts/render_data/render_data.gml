@@ -6,14 +6,14 @@ enum RENDER_TYPE {
 
 global.RENDER_LOG = false;
 
-function __nodeLeafList(_list, _stack) {
+function __nodeLeafList(_list, _queue) {
 	for( var i = 0; i < ds_list_size(_list); i++ ) {
 		var _node = _list[| i];
 		if(!_node.active) continue;
 		
 		var _startNode = _node.isRenderable(true);
 		if(_startNode) {
-			ds_stack_push(_stack, _node);
+			ds_queue_enqueue(_queue, _node);
 			printIf(global.RENDER_LOG, "Push node " + _node.name + " to stack");
 		}
 	}
@@ -47,7 +47,7 @@ function Render(partial = false) {
 	}
 	
 	// get leaf node
-	ds_stack_clear(RENDER_STACK);
+	ds_queue_clear(RENDER_QUEUE);
 	var key = ds_map_find_first(NODE_MAP);
 	var amo = ds_map_size(NODE_MAP);
 	repeat(amo) {
@@ -65,14 +65,14 @@ function Render(partial = false) {
 		
 		var _startNode = _node.isRenderable();
 		if(_startNode) {
-			ds_stack_push(RENDER_STACK, _node);
+			ds_queue_enqueue(RENDER_QUEUE, _node);
 			printIf(global.RENDER_LOG, "    > Push " + _node.name + " node to stack");
 		}
 	}
 	
 	// render forward
-	while(!ds_stack_empty(RENDER_STACK)) {
-		rendering = ds_stack_pop(RENDER_STACK);
+	while(!ds_queue_empty(RENDER_QUEUE)) {
+		rendering = ds_queue_dequeue(RENDER_QUEUE);
 		
 		var txt = rendering.rendered? " [Skip]" : " [Update]";
 		if(!rendering.rendered) {
@@ -84,51 +84,4 @@ function Render(partial = false) {
 	}
 	
 	printIf(global.RENDER_LOG, "=== RENDER COMPLETE IN {" + string(current_time - t) + "ms} ===\n");
-}
-/*
-function renderNodeBackward(_node) { //unused
-	var RENDER_STACK = ds_stack_create();
-	ds_stack_push(RENDER_STACK, _node);
-	
-	var key = ds_map_find_first(NODE_MAP);
-	for(var i = 0; i < ds_map_size(NODE_MAP); i++) {
-		var _allnode = NODE_MAP[? key];
-		if(_allnode && !is_undefined(_allnode) && is_struct(_allnode) && string_pos("Node", instanceof(_allnode)))
-			_allnode.triggerRender();
-		key = ds_map_find_next(NODE_MAP, key);
-	}
-	
-	for(var i = 0; i < ds_list_size(_node.inputs); i++) {
-		var _in = _node.inputs[| i];
-			
-		if(_in.value_from) {
-			ds_stack_push(RENDER_STACK, _in.value_from.node);
-		}
-	}
-		
-	while(!ds_stack_empty(RENDER_STACK)) {
-		var _rendering = ds_stack_top(RENDER_STACK);
-		var _leaf = true;
-			
-		for(var i = 0; i < ds_list_size(_rendering.inputs); i++) {
-			var _in = _rendering.inputs[| i];
-			if(_in.value_from && !_in.value_from.node.rendered) {
-				ds_stack_push(RENDER_STACK, _in.value_from.node);
-				_leaf = false;
-			}
-		}
-			
-		if(_leaf) {
-			//show_debug_message("Rendering " + _rendering.name + " at " + string(ANIMATOR.current_frame));
-			_rendering.setRenderStatus(true);
-			if(_rendering.use_cache) {
-				if(!_rendering.recoverCache())
-					_rendering.doUpdate();
-			} else
-				_rendering.doUpdate();
-			ds_stack_pop(RENDER_STACK);
-		}
-	}
-		
-	ds_stack_destroy(RENDER_STACK);
 }

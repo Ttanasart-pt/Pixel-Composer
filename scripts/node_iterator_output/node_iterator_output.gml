@@ -17,9 +17,9 @@ function Node_Iterator_Output(_x, _y, _group = -1) : Node_Group_Output(_x, _y, _
 			
 		if(_ren == ITERATION_STATUS.loop) { //Go back to the beginning of the loop, reset render status for leaf node inside?
 			printIf(global.RENDER_LOG, "    > Loop restart: iteration " + string(group.iterated));
-			__nodeLeafList(group.nodes, RENDER_STACK);
+			__nodeLeafList(group.nodes, RENDER_QUEUE);
 			var loopEnt = inputs[| 2].value_from.node;
-			ds_stack_push(RENDER_STACK, loopEnt);
+			ds_queue_enqueue(RENDER_QUEUE, loopEnt);
 		} else if(_ren == ITERATION_STATUS.complete) { //Go out of loop
 			printIf(global.RENDER_LOG, "    > Loop completed");
 			group.setRenderStatus(true);
@@ -29,7 +29,7 @@ function Node_Iterator_Output(_x, _y, _group = -1) : Node_Group_Output(_x, _y, _
 				
 				if(_to.node.active && _to.value_from != noone && _to.value_from.node == group) {
 					_to.node.triggerRender();
-					if(_to.node.isUpdateReady()) ds_stack_push(RENDER_STACK, _to.node);
+					if(_to.node.isUpdateReady()) ds_queue_enqueue(RENDER_QUEUE, _to.node);
 				}
 			}
 		} else 

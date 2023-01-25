@@ -4,3 +4,10 @@ function eval_bezier(t, x0, y0, x1, y1, cx0, cy0, cx1, cy1) {
 	
 	return [xx, yy];
 }
+
+function eval_quadratic(t, x0, y0, x1, y1, cx, cy) {
+	var xx = power(1 - t, 2) * x0 + 2 * (1 - t) * (t) * cx + 2 * (t) * (1 - t) * cx + power(t, 2) * x1;
+	var yy = power(1 - t, 2) * y0 + 2 * (1 - t) * (t) * cy + 2 * (t) * (1 - t) * cy + power(t, 2) * y1;
+	
+	return [xx, yy];
+}

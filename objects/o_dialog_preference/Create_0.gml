@@ -214,12 +214,22 @@ event_inherited();
 		})
 	]);
 	
-	ds_list_add(pref_node, "Physic");
+	ds_list_add(pref_node, "Physics");
 	ds_list_add(pref_node, [
 		"Verlet iteration",
 		"verlet_iteration",
 		new textBox(TEXTBOX_INPUT.number, function(str) { 
 			PREF_MAP[? "verlet_iteration"] = real(str); 
+			PREF_SAVE();
+		})
+	]);
+	
+	ds_list_add(pref_node, [
+		"Gravity",
+		"physics_gravity",
+		new vectorBox(2, TEXTBOX_INPUT.number, function(val) { 
+			PREF_MAP[? "physics_gravity"] = val; 
+			physics_world_gravity(PREF_MAP[? "physics_gravity"][0], PREF_MAP[? "physics_gravity"][1]);
 			PREF_SAVE();
 		})
 	]);
@@ -394,6 +404,9 @@ event_inherited();
 			switch(instanceof(_pref[2])) {
 				case "textBox" :
 					_pref[2].draw(x1 - ui(4), yy + th / 2, ui(88), th, PREF_MAP[? _pref[1]], _m,, fa_right, fa_center);
+					break;
+				case "vectorBox" :
+					_pref[2].draw(x1 - ui(4 + 200), yy, ui(200), th, PREF_MAP[? _pref[1]], _m);
 					break;
 				case "checkBox" :
 					_pref[2].draw(x1 - ui(48), yy + th / 2, PREF_MAP[? _pref[1]], _m,, fa_center, fa_center);

@@ -123,7 +123,7 @@ function Node_Image_gif(_x, _y, _group = -1) : Node(_x, _y, _group) constructor 
 		
 		surface_set_target(_outsurf);
 		draw_clear_alpha(0, 0);
-		BLEND_OVER
+		BLEND_OVERRIDE
 		draw_sprite(spr, ANIMATOR.current_frame, 0, 0);
 		BLEND_NORMAL
 		surface_reset_target();

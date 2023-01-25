@@ -31,10 +31,10 @@ function Node_Repeat(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 		
 	inputs[| 10] = nodeValue(10, "Scale over copy", self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_11 );
 	
-	inputs[| 11] = nodeValue(11, "Path", self, JUNCTION_CONNECT.input, VALUE_TYPE.object, noone )
+	inputs[| 11] = nodeValue(11, "Path", self, JUNCTION_CONNECT.input, VALUE_TYPE.object, noone, "Make each copy follow along path." )
 		.setVisible(true, true);
 	
-	inputs[| 12] = nodeValue(12, "Path range", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [0, 1])
+	inputs[| 12] = nodeValue(12, "Path range", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [0, 1], "Range of the path to follow.")
 		.setDisplay(VALUE_DISPLAY.slider_range, [0, 1, 0.01]);
 	
 	inputs[| 13] = nodeValue(13, "Path shift", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0);
@@ -44,7 +44,7 @@ function Node_Repeat(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 		
 	inputs[| 15] = nodeValue(15, "Alpha over copy", self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_11 );
 	
-	inputs[| 16] = nodeValue(16, "Array select", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0 )
+	inputs[| 16] = nodeValue(16, "Array select", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0, "Whether to select image from an array in order, or at random." )
 		.setDisplay(VALUE_DISPLAY.enum_button, [ "Order", "Random" ]);
 	
 	inputs[| 17] = nodeValue(17, "Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, irandom(99999) );
@@ -71,10 +71,15 @@ function Node_Repeat(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 		.setDisplay(VALUE_DISPLAY.vector);
 		
 	inputs[| 25] = nodeValue(25, "Animator falloff", self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_10);
-	
-	inputs[| 26] = nodeValue(26, "Stack", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+	 
+	inputs[| 26] = nodeValue(26, "Stack", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0, "Place each copy next to each other, taking surface dimension into account.")
 		.setDisplay(VALUE_DISPLAY.enum_button, [ "None", "X", "Y" ]);
 	
+	inputs[| 27] = nodeValue(27, "Animator blend", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white);
+	
+	inputs[| 28] = nodeValue(28, "Animator alpha", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
+		.setDisplay(VALUE_DISPLAY.slider, [0, 1, 0.01]);
+		
 	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
 	
 	input_display_list = [
@@ -83,7 +88,7 @@ function Node_Repeat(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 		["Path",		 true],	11, 12, 13, 
 		["Transform",	false],	4, 26, 19, 5, 6, 10, 
 		["Render",		false],	14, 15,
-		["Animator",	 true],	20, 21, 25, 22, 23, 24, 
+		["Animator",	 true],	20, 21, 25, 22, 23, 24, 27, 28, 
 	];
 	
 	static getDimension = function() {
@@ -155,6 +160,9 @@ function Node_Repeat(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 		var _an_rot = inputs[| 23].getValue();
 		var _an_sca = inputs[| 24].getValue();
 		
+		var _an_bld = inputs[| 27].getValue();
+		var _an_alp = inputs[| 28].getValue();
+		
 		random_set_seed(_sed);
 		
 		inputs[|  4].setVisible( _pat == 0 || _pat == 1);
@@ -184,7 +192,8 @@ function Node_Repeat(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 						posx += _spos[0] + _rpos[0] * i;
 						posy += _spos[1] + _rpos[1] * i;
 					} else {
-						var rat = _prsh + _prng[0] + (_prng[1] - _prng[0]) * i / (_amo - 1);
+						var rat = _prsh + _prng[0] + (_prng[1] - _prng[0]) * i / _amo;
+						if(_prng[1] - _prng[0] == 0) break;
 						rat = abs(frac(rat));
 						
 						var _p = _path.getPointRatio(rat);
@@ -208,8 +217,9 @@ function Node_Repeat(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 				rot = _rrot[0] + (_rrot[1] - _rrot[0]) * i / (_amo - 1);
 				
 				var _an_dist = abs(i - _an_mid * (_amo - 1));
+				var _inf = 0;
 				if(_an_dist < _an_ran * _amo) {
-					var _inf = eval_curve_bezier_cubic_x(_an_fal, _an_dist / (_an_ran * _amo));
+					_inf = eval_curve_bezier_cubic_x(_an_fal, _an_dist / (_an_ran * _amo));
 					posx += _an_pos[0] * _inf;
 					posy += _an_pos[1] * _inf;
 					rot  += _an_rot    * _inf;
@@ -241,6 +251,9 @@ function Node_Repeat(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 				var pos = point_rotate(-sw / 2, -sh / 2, 0, 0, rot);
 				var cc  = gradient_eval(_grad, i / (_amo - 1), ds_list_get(_grad_data, 0));
 				var aa  = eval_curve_bezier_cubic_x(_alph, i / (_amo - 1));
+				
+				cc = merge_color(cc, colorMultiply(cc, _an_bld), _inf);
+				aa += _an_alp * _inf;
 				
 				draw_surface_ext_safe(_surf, posx + pos[0], posy + pos[1], scax, scay, rot, cc, aa);
 				

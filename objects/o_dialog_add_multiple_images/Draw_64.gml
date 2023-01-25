@@ -35,7 +35,7 @@ if !ready exit;
 						for( var i = 0; i < array_length(path_arr); i++ )  {
 							var path = path_arr[i];
 							Node_create_Image_path(nx, ny, path);
-							ny += ui(160);
+							ny += 160;
 						}
 						break;
 					case 1 :

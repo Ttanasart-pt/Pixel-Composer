@@ -1,6 +1,7 @@
 enum CURVE_TYPE {
 	none,
 	bezier,
+	cut,
 }
 
 function valueKey(_time, _value, _anim = noone, _in = 0, _ot = 0) constructor {
@@ -19,6 +20,16 @@ function valueKey(_time, _value, _anim = noone, _in = 0, _ot = 0) constructor {
 		self.time = time;	
 		ratio	= time / (ANIMATOR.frames_total - 1);
 	}
+	
+	static clone = function(target) {
+		var key = new valueKey(time, value, target);
+		key.ease_in			= ease_in;
+		key.ease_out		= ease_out;
+		key.ease_in_type	= ease_in_type;
+		key.ease_out_type	= ease_out_type;
+		
+		return key;
+	}
 }
 
 function valueAnimator(_val, _prop) constructor {
@@ -30,8 +41,15 @@ function valueAnimator(_val, _prop) constructor {
 	prop     = _prop;
 	
 	static interpolate = function(from, to, rat) {
+		if(prop.type == VALUE_TYPE.boolean)
+			return 0;
+			
 		if(to.ease_in_type == CURVE_TYPE.none && from.ease_out_type == CURVE_TYPE.none) 
 			return rat;
+		if(to.ease_in_type == CURVE_TYPE.cut) 
+			return 0;
+		if(from.ease_out_type == CURVE_TYPE.cut) 
+			return 1;
 		if(rat == 0 || rat == 1) 
 			return rat;
 		
@@ -42,38 +60,6 @@ function valueAnimator(_val, _prop) constructor {
 		
 		var bz = [0, eox, eoy, 1. - eix, eiy, 1];
 		return eval_curve_bezier_cubic_x(bz, rat);
-		
-		//var eo = rat;
-		//var ei = rat;
-		
-		//if(from.ease_out != 0) {
-		//	switch(from.ease_out_type) {
-		//		case CURVE_TYPE.bezier : 
-		//			eo = ease_cubic_in(rat);
-		//			eo = lerp(rat, eo, from.ease_out);
-		//			break;
-		//		case CURVE_TYPE.damping : 
-		//			eo = ease_damp_in(rat, 1 + from.ease_out * 10);
-		//			break;
-		//	}
-		//}
-		
-		//if(to.ease_in != 0) {
-		//	switch(to.ease_in_type) {
-		//		case CURVE_TYPE.bezier  : 
-		//			ei = ease_cubic_out(rat);
-		//			ei = lerp(rat, ei, to.ease_in);
-		//			break;
-		//		case CURVE_TYPE.damping : 
-		//			ei = ease_damp_out(rat, 1 + to.ease_in * 10);
-		//			break;
-		//	}
-		//}
-		
-		//if(from.ease_out_type == CURVE_TYPE.damping && to.ease_in_type == CURVE_TYPE.damping) 
-		//	return lerp(eo, ei, rat < 0.5 ? 4 * power(rat, 3) : 1 - power(-2 * rat + 2, 3) / 2);
-		
-		//return lerp(eo, ei, rat);
 	}
 	
 	static lerpValue = function(from, to, _lrp) {
@@ -107,7 +93,12 @@ function valueAnimator(_val, _prop) constructor {
 	}
 	
 	static getValue = function(_time = ANIMATOR.current_frame) {
-		if(prop.display_type == VALUE_DISPLAY.gradient) return processType(values);
+		if(prop.display_type == VALUE_DISPLAY.gradient) {
+			if(prop.connect_type == JUNCTION_CONNECT.input)
+				return processType(values);
+			else
+				return processType(values[| 0].value);
+		}
 		if(prop.type == VALUE_TYPE.path) return processType(values[| 0].value);
 		
 		if(ds_list_size(values) == 0) return processType(0);
@@ -208,7 +199,7 @@ function valueAnimator(_val, _prop) constructor {
 		if(!ds_list_exist(values, _key)) return 0;
 		MODIFIED = true;
 		
-		_time = clamp(_time, 0, ANIMATOR.frames_total - 1);
+		_time = max(_time, 0);
 		_key.setTime(_time);
 		ds_list_remove(values, _key);
 		

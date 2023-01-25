@@ -60,6 +60,11 @@ function Node_Pin(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 			active_draw_index = -1;
 		}
 		
+		if(name != "") {
+			draw_set_text(f_p0, fa_center, fa_bottom, COLORS._main_text);
+			draw_text_transformed(xx, yy - 12, name, _s, _s, 0);
+		}
+		
 		return drawJunctions(_x, _y, _mx, _my, _s);
 	}
 }

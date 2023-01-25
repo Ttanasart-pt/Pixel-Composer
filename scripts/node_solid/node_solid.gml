@@ -5,9 +5,11 @@ function Node_Solid(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constr
 		.setDisplay(VALUE_DISPLAY.vector);
 	
 	inputs[| 1] = nodeValue(1, "Color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white);
+	
 	inputs[| 2] = nodeValue(2, "Empty", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
 	
 	inputs[| 3] = nodeValue(3, "Mask", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
+	
 	inputs[| 4] = nodeValue(4, "Use mask dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
 	
 	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);

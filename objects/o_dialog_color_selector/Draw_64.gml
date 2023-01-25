@@ -58,9 +58,9 @@ if !ready exit;
 #region controls
 	var bx = content_x + content_w - ui(36);
 	var by = dialog_y + dialog_h - ui(36);
-	if(buttonInstant(THEME.button_lime, bx - ui(18), by - ui(18), ui(36), ui(36), mouse_ui, sFOCUS, sHOVER, "", THEME.accept, 0, COLORS._main_icon_dark) == 2) {
-		onApply(selector.current_color);
-		DIALOG_CLICK = false;
-		instance_destroy();
-	}
+	
+	b_apply.register();
+	b_apply.hover  = sHOVER;
+	b_apply.active = sFOCUS;
+	b_apply.draw(bx - ui(18), by - ui(18), ui(36), ui(36), mouse_ui, THEME.button_lime);
 #endregion

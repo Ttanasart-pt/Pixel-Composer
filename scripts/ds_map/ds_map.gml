@@ -29,6 +29,29 @@ function ds_map_override(original, newmap) {
 	}
 }
 
+function ds_map_arr_to_list(map) {
+	var k = ds_map_find_first(map);
+	
+	repeat(ds_map_size(map)) {
+		if(is_array(map[? k])) {
+			var l = ds_list_create_from_array(map[? k]);
+			ds_map_replace_list(map, k, l);
+		}
+		
+		k = ds_map_find_next(map, k);
+	}
+}
+
+function ds_map_list_to_arr(map) {
+	var k = ds_map_find_first(map);
+	
+	repeat(ds_map_size(map)) {
+		if(ds_map_is_list(map, k))
+			map[? k] = array_create_from_list(map[? k]);
+		
+		k = ds_map_find_next(map, k);
+	}
+}
 
 function ds_map_print(map) {
 	var txt = "{";

@@ -1,5 +1,5 @@
 function Node_Shadow_Cast(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constructor {
-	name = "Cast shadow";
+	name = "Cast Shadow";
 	
 	shader = sh_shadow_cast;
 	uniform_dim   = shader_get_uniform(shader, "dimension");
@@ -10,8 +10,21 @@ function Node_Shadow_Cast(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) 
 	uniform_ltyp  = shader_get_uniform(shader, "lightType");
 	uniform_lamb  = shader_get_uniform(shader, "lightAmb");
 	uniform_lclr  = shader_get_uniform(shader, "lightClr");
+	uniform_lint  = shader_get_uniform(shader, "lightInt");
 	uniform_sol   = shader_get_uniform(shader, "renderSolid");
-	uniform_solid = shader_get_sampler_index(shader, "solid");
+	
+	uniform_band  = shader_get_uniform(shader, "lightBand");
+	uniform_attn  = shader_get_uniform(shader, "lightAttn");
+	
+	uniform_ao		= shader_get_uniform(shader, "ao");
+	uniform_ao_str  = shader_get_uniform(shader, "aoStr");
+	
+	uniform_bg_use = shader_get_uniform(shader, "bgUse");
+	uniform_bg_thr = shader_get_uniform(shader, "bgThres");
+	uniform_mask   = shader_get_uniform(shader, "mask");
+	
+	uniform_sld_use = shader_get_uniform(shader, "useSolid");
+	uniform_solid   = shader_get_sampler_index(shader, "solid");
 	
 	inputs[| 0] = nodeValue(0, "Background", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 	
@@ -49,13 +62,36 @@ function Node_Shadow_Cast(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) 
 	inputs[| 8] = nodeValue(8, "Light radius", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 16);
 	
 	inputs[| 9] = nodeValue(9, "Render solid", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
+	
+	inputs[| 10] = nodeValue(10, "Use BG color", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false, "If checked, BG color will be used as shadow caster.");
+	
+	inputs[| 11] = nodeValue(11, "BG threshold", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.1)
+		.setDisplay(VALUE_DISPLAY.slider, [0, 1, 0.01]);
+	
+	inputs[| 12] = nodeValue(12, "Light intensity", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
+		.setDisplay(VALUE_DISPLAY.slider, [0, 2, 0.01]);
+	
+	inputs[| 13] = nodeValue(13, "Banding", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+		.setDisplay(VALUE_DISPLAY.slider, [0, 16, 1]);
+	
+	inputs[| 14] = nodeValue(14, "Attenuation", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0, "Control how light fade out over distance.")
+		.setDisplay(VALUE_DISPLAY.enum_scroll, ["Quadratic", "Invert quadratic", "Linear"]);
+	
+	inputs[| 15] = nodeValue(15, "Ambient occlusion", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+		.setDisplay(VALUE_DISPLAY.slider, [0, 16, 1]);
 		
+	inputs[| 16] = nodeValue(16, "Ambient occlusion strength", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.1)
+		.setDisplay(VALUE_DISPLAY.slider, [0, 0.2, 0.01]);
+	
 	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
 	
+	outputs[| 1] = nodeValue(1, "Light mask", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
+	
 	input_display_list = [
-		["Surface",	false], 0, 1, 
-		["Light",	false], 5, 8, 2, 3, 4, 
-		["Render",	false], 7, 6, 9, 
+		["Surface",			false], 0, 1, 
+		["Light",			false], 5, 12, 8, 2, 3, 4,
+		["Shadow caster",	false], 10, 11,
+		["Render",			false], 13, 14, 7, 6, 9, 15, 16,
 	];
 	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
@@ -82,15 +118,23 @@ function Node_Shadow_Cast(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) 
 		var _lclr  = _data[7];
 		var _lrad  = _data[8];
 		var _sol   = _data[9];
+		var _int   = _data[12];
+		var _band  = _data[13];
+		var _attn  = _data[14];
+		var _ao    = _data[15];
+		var _ao_str= _data[16];
+		
+		var _bg_use = _data[10];
+		var _bg_thr = _data[11];
 		
 		inputs[| 8].setVisible(_type == 0);
+		inputs[| 11].setVisible(_bg_use);
 		
 		if(!is_surface(_bg)) return _outSurf;
-		if(!is_surface(_solid)) return _outSurf;
 		
 		surface_set_target(_outSurf);
 		draw_clear_alpha(0, 0);
-		BLEND_OVER
+		BLEND_OVERRIDE
 		
 		shader_set(shader);
 			shader_set_uniform_f(uniform_dim, surface_get_width(_bg), surface_get_height(_bg));
@@ -102,7 +146,20 @@ function Node_Shadow_Cast(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) 
 			shader_set_uniform_f(uniform_lden, _den);
 			shader_set_uniform_i(uniform_ltyp, _type);
 			shader_set_uniform_i(uniform_sol, _sol);
-			texture_set_stage(uniform_solid, surface_get_texture(_solid));
+			shader_set_uniform_f(uniform_lint, _int);
+			shader_set_uniform_f(uniform_band, _band);
+			shader_set_uniform_f(uniform_attn, _attn);
+			shader_set_uniform_f(uniform_ao, _ao);
+			shader_set_uniform_f(uniform_ao_str, _ao_str);
+			
+			shader_set_uniform_i(uniform_mask, _output_index);
+			shader_set_uniform_i(uniform_bg_use, _bg_use);
+			shader_set_uniform_f(uniform_bg_thr, _bg_thr);
+			
+			shader_set_uniform_i(uniform_sld_use, is_surface(_solid));
+			if(is_surface(_solid))
+				texture_set_stage(uniform_solid, surface_get_texture(_solid));
+				
 			draw_surface_safe(_bg, 0, 0);
 		shader_reset();
 		

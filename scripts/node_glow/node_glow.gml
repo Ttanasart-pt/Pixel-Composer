@@ -42,7 +42,7 @@ function Node_Glow(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constru
 		
 		surface_set_target(_outSurf);
 		draw_clear_alpha(0, 0);
-		BLEND_OVER
+		BLEND_OVERRIDE
 		
 		shader_set(sh_lum2alpha);
 		shader_set_uniform_f_array(shader_get_uniform(sh_lum2alpha, "color"), colToVec4(cl));

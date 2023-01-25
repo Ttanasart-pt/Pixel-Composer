@@ -23,10 +23,13 @@ if !target exit;
 #endregion
 
 #region button
-	var bx = dialog_x + dialog_w - ui(108);
-	var by = y0;
+	var bw = ui(32);
+	var bh = ui(32);
 	
-	if(buttonInstant(THEME.button, bx, by, ui(88), ui(40), mouse_ui, sFOCUS, sHOVER) == 2) {
+	var bx = x1 - ui(10) - ui(16);
+	var by = dialog_y + ui(12);
+	
+	if(buttonInstant(THEME.button_hide, bx, by, bw, bh, mouse_ui, sFOCUS, sHOVER, "Add...", THEME.add,, COLORS._main_value_positive) == 2) {
 		var path = get_open_filenames(".png", "");
 		if(path != "") {
 			var paths = paths_to_array(path);
@@ -34,11 +37,13 @@ if !target exit;
 			
 			for( var i = 0; i < array_length(paths); i++ ) 
 				array_push(arr, paths[i]);
-				
+			
 			target.inputs[| 0].setValue(arr);
 		}
 	}
 	
-	draw_set_text(f_p0, fa_center, fa_center, COLORS._main_text);
-	draw_text(bx + ui(44), by + ui(20), "Add...");
+	bx -= ui(32 + 4);
+	
+	if(buttonInstant(THEME.button_hide, bx, by, bw, bh, mouse_ui, sFOCUS, sHOVER, "Sort by name", THEME.text) == 2)
+		sortByName();
 #endregion

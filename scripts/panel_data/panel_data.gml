@@ -281,8 +281,9 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 			if(content != noone) {
 				if(point_in_rectangle(mouse_mx, mouse_my, x + ui(2), y + ui(2), x + w - ui(4), y + h - ui(4))) {
 					HOVER = self;
-					if(mouse_press(mb_any))   setFocus(self);
-					if(sFOCUS && content) 
+					if(mouse_press(mb_any))   
+						setFocus(self);
+					if(FOCUS == self && content) 
 						FOCUS_STR = content.context_str;
 				}
 			} else {
@@ -377,7 +378,8 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 		
 		draw_surface_safe(content_surface, x, y);
 		
-		if(sFOCUS) draw_sprite_stretched_ext(THEME.ui_panel_active, 0, x + ui(2), y + ui(2), w - ui(4), h - ui(4), COLORS._main_accent, 1);
+		if(FOCUS == self) 
+			draw_sprite_stretched_ext(THEME.ui_panel_active, 0, x + ui(2), y + ui(2), w - ui(4), h - ui(4), COLORS._main_accent, 1);
 	}
 	
 	function remove() {
@@ -459,11 +461,13 @@ function PanelContent() constructor {
 	function drawContent(panel) {}
 }
 
-function setFocus(target) {
+function setFocus(target, fstring = noone) {
 	if(FOCUS != noone && is_struct(FOCUS) && FOCUS.content)
 		FOCUS.content.onFocusEnd();
 	
 	FOCUS = target;
+	if(fstring != noone) 
+		FOCUS_STR = fstring;
 	
 	if(FOCUS != noone && is_struct(FOCUS) && FOCUS.content)	
 		FOCUS.content.onFocusBegin();

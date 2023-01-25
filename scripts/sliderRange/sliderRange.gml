@@ -17,6 +17,12 @@ function sliderRange(_min, _max, _step, _onModify) : widget() constructor {
 	tb_value_min.slide_speed = 0.01;
 	tb_value_max.slide_speed = 0.01;
 	
+	static setInteract = function(interactable = noone) { 
+		self.interactable = interactable;
+		tb_value_min.interactable = interactable;
+		tb_value_max.interactable = interactable;
+	}
+	
 	static register = function(parent = noone) {
 		tb_value_min.register(parent);
 		tb_value_max.register(parent);

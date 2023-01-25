@@ -4,7 +4,7 @@ function Node_VFX_Spawner(_x, _y, _group = -1) : Node_VFX_Spawner_Base(_x, _y, _
 	inputs[| input_len + 0] = nodeValue(input_len + 0, "Spawn trigger", self, JUNCTION_CONNECT.input, VALUE_TYPE.node, false)
 		.setVisible(true, true);
 	
-	inputs[| input_len + 1] = nodeValue(input_len + 1, "Step interval", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1);
+	inputs[| input_len + 1] = nodeValue(input_len + 1, "Step interval", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1, "How often the 'on step' event is triggered.\nWith 1 being trigger every frame, 2 means triggered once every 2 frames.");
 	
 	outputs[| 0] = nodeValue(0, "Particles", self, JUNCTION_CONNECT.output, VALUE_TYPE.object, parts );
 	outputs[| 1] = nodeValue(1, "On create", self, JUNCTION_CONNECT.output, VALUE_TYPE.node, noone );

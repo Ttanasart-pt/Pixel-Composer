@@ -1,5 +1,5 @@
 function Node_String_Merge(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constructor {
-	name = "Text combine";
+	name = "Combine Text";
 	previewable   = false;
 	
 	w = 96;

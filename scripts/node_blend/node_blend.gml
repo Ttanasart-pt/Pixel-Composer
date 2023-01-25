@@ -31,10 +31,16 @@ function Node_Blend(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constr
 	inputs[| 5] = nodeValue(5, "Tiling", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Stretch", "Tile" ]);
 	
+	inputs[| 6] = nodeValue(6, "Output dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Background", "Forground", "Mask", "Maximum", "Constant" ]);
+	
+	inputs[| 7] = nodeValue(7, "Constant dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, def_surf_size2)
+		.setDisplay(VALUE_DISPLAY.vector);
+	
 	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
 	
 	input_display_list = [
-		["Surfaces",	 true],	0, 1, 4,
+		["Surfaces",	 true],	0, 1, 4, 6, 7,
 		["Blend",		false], 2, 3, 
 		["Transform",	false], 5, 
 	]
@@ -46,6 +52,37 @@ function Node_Blend(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constr
 		var _opacity = _data[3];
 		var _mask	 = _data[4];
 		var _tile	 = _data[5];
+		
+		var _outp	 = _data[6];
+		var _out_dim = _data[7];
+		
+		inputs[| 7].setVisible(_outp == 4);
+		var ww = 1, hh = 1;
+		
+		switch(_outp) {
+			case 0 :
+				ww = surface_get_width(_back);
+				hh = surface_get_height(_back);
+				break;
+			case 1 :
+				ww = surface_get_width(_fore);
+				hh = surface_get_height(_fore);
+				break;
+			case 2 :
+				ww = surface_get_width(_mask);
+				hh = surface_get_height(_mask);
+				break;
+			case 3 :
+				ww = max(surface_get_width(_back), surface_get_width(_fore), surface_get_width(_mask));
+				hh = max(surface_get_height(_back), surface_get_height(_fore), surface_get_height(_mask));
+				break;
+			case 4 :
+				ww = _out_dim[0];
+				hh = _out_dim[1];
+				break;
+		}
+		
+		_outSurf = surface_verify(_outSurf, ww, hh);
 		
 		surface_set_target(_outSurf);
 		draw_clear_alpha(0, 0);

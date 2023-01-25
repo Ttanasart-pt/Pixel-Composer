@@ -10,7 +10,7 @@ function Node_Convolution(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) 
 	inputs[| 1] = nodeValue(1, "Kernel", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, array_create(9))
 		.setDisplay(VALUE_DISPLAY.kernel);
 	
-	inputs[| 2] = nodeValue(2, "Oversample mode", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+	inputs[| 2] = nodeValue(2, "Oversample mode", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0, "How to deal with pixel outside the surface.\n    - Empty: Use empty pixel\n    - Clamp: Repeat edge pixel\n    - Repeat: Repeat texture.")
 		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Empty", "Clamp", "Repeat" ]);
 	
 	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
@@ -26,7 +26,7 @@ function Node_Convolution(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) 
 		
 		surface_set_target(_outSurf);
 		draw_clear_alpha(0, 0);
-		BLEND_OVER
+		BLEND_OVERRIDE
 		
 		shader_set(shader);
 			shader_set_uniform_f(uniform_dim, surface_get_width(_outSurf), surface_get_height(_outSurf));

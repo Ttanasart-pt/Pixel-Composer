@@ -21,7 +21,7 @@ function Node_Alpha_Hash(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) c
 	static process_data = function(_outSurf, _data, _output_index, _array_index) {
 		surface_set_target(_outSurf);
 		draw_clear_alpha(0, 0);
-		BLEND_OVER
+		BLEND_OVERRIDE
 		
 		shader_set(shader);
 			shader_set_uniform_f(uniform_dim, surface_get_width(_data[0]), surface_get_height(_data[0]));

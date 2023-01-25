@@ -1,5 +1,5 @@
 function Node_Sequence_Anim(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
-	name = "Sequence to Anim";
+	name = "Array to Anim";
 	update_on_frame = true;
 	
 	inputs[| 0] = nodeValue(0, "Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);

@@ -4,9 +4,9 @@ function Node_VFX_Spawner_Base(_x, _y, _group = -1) : Node(_x, _y, _group) const
 	inputs[| 0] = nodeValue(0, "Particle sprite", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0)
 		.setDisplay(noone, "particles");
 	
-	inputs[| 1] = nodeValue(1, "Spawn delay", self,  JUNCTION_CONNECT.input, VALUE_TYPE.integer, 4);
+	inputs[| 1] = nodeValue(1, "Spawn delay", self,  JUNCTION_CONNECT.input, VALUE_TYPE.integer, 4, "Frames delay between each particle spawn.");
 	
-	inputs[| 2] = nodeValue(2, "Spawn amount", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 2);
+	inputs[| 2] = nodeValue(2, "Spawn amount", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 2, "Amount of particle spawn in that frame.");
 	
 	inputs[| 3] = nodeValue(3, "Spawn area", self,   JUNCTION_CONNECT.input, VALUE_TYPE.float, [ def_surf_size / 2, def_surf_size / 2, def_surf_size / 2, def_surf_size / 2, AREA_SHAPE.rectangle ])
 		.setDisplay(VALUE_DISPLAY.area);
@@ -42,7 +42,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = -1) : Node(_x, _y, _group) const
 	
 	inputs[| 14] = nodeValue(14, "Alpha over time", self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_11);
 	
-	inputs[| 15] = nodeValue(15, "Rotate by direction", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	inputs[| 15] = nodeValue(15, "Rotate by direction", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false, "Make the particle rotates to follow its movement.");
 	
 	inputs[| 16] = nodeValue(16, "Spawn type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.enum_button, [ "Stream", "Burst" ]);
@@ -59,7 +59,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = -1) : Node(_x, _y, _group) const
 	
 	inputs[| 21] = nodeValue(21, "Loop", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true );
 	
-	inputs[| 22] = nodeValue(22, "Surface array", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0 )
+	inputs[| 22] = nodeValue(22, "Surface array", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0, "Whether to select image from an array in order, at random, or treat array as animation." )
 		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Random", "Order", "Animation" ])
 		.setVisible(false);
 	
@@ -81,7 +81,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = -1) : Node(_x, _y, _group) const
 	inputs[| 28] = nodeValue(28, "Random blend", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white)
 		.setDisplay(VALUE_DISPLAY.gradient);
 		
-	inputs[| 29] = nodeValue(29, "Directed from center", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	inputs[| 29] = nodeValue(29, "Directed from center", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false, "Make particle move away from the spawn center.");
 		
 	input_len = ds_list_size(inputs);
 	
@@ -102,6 +102,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = -1) : Node(_x, _y, _group) const
 	seed_origin = irandom(9999999);
 	seed = seed_origin;
 	spawn_index = 0;
+	scatter_index = 0;
 	def_surface = -1;
 	
 	current_data = [];
@@ -170,8 +171,9 @@ function Node_VFX_Spawner_Base(_x, _y, _group = -1) : Node(_x, _y, _group) const
 				} else if(_arr_type == 1) {
 					_index = safe_mod(spawn_index, array_length(_inSurf));
 					_spr = _inSurf[_index];
-				} else if(_arr_type == 2)
+				} else if(_arr_type == 2) {
 					_spr = _inSurf;
+				}
 			}
 			var xx = 0;
 			var yy = 0;
@@ -239,6 +241,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = -1) : Node(_x, _y, _group) const
 	
 	function reset() {
 		spawn_index = 0;
+		scatter_index = 0;
 		for(var i = 0; i < array_length(parts); i++) {
 			if(!parts[i].active) continue;
 			parts[i].kill();

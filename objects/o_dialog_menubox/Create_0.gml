@@ -4,6 +4,8 @@ event_inherited();
 #region data
 	draggable = false;
 	destroy_on_click_out = false;
+	selecting = -1;
+	
 	alarm[0] = -1;
 	menu = 1;
 	hght = ui(36);
@@ -32,7 +34,7 @@ event_inherited();
 			}
 			draw_set_font(f_p0);
 			var ww = string_width(menu[i][0]) + ui(64);
-				
+			
 			if(array_length(menu[i]) > 2) {
 				if(menu[i][2] == ">") {
 					
@@ -44,6 +46,9 @@ event_inherited();
 						ww += string_width(ss) + ui(16);
 					}
 				}
+			} else if(is_array(menu[i][1])) {
+				var amo = array_length(menu[i][1]);
+				ww = max(ww, ui(16) + amo * (hght + ui(4)));
 			}
 			dialog_w = max(dialog_w, ww);
 			

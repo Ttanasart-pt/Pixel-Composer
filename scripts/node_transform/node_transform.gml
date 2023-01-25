@@ -30,15 +30,15 @@ function Node_Transform(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) co
 	inputs[| 6] = nodeValue(6, "Scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 1 ])
 		.setDisplay(VALUE_DISPLAY.vector);
 	
-	inputs[| 7] = nodeValue(7, "Wrap", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	inputs[| 7] = nodeValue(7, "Tile", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false, "Repeat the surface to fill the screen.");
 	
-	inputs[| 8] = nodeValue(8, "Rotate by velocity", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
+	inputs[| 8] = nodeValue(8, "Rotate by velocity", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0, "Make the surface rotates to follow its movement.")
 		.setDisplay(VALUE_DISPLAY.slider, [0, 1, 0.01]);
 	
 	inputs[| 9] = nodeValue(9, "Output dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, OUTPUT_SCALING.same_as_input)
 		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Same as input", "Constant", "Relative to input" ]);
 	
-	inputs[| 10] = nodeValue(10, "Round position", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	inputs[| 10] = nodeValue(10, "Round position", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false, "Round position to the closest integer value to avoid jittering.");
 	
 	input_display_list = [ 0, 
 		["Output",		true],	9, 1, 7, 
@@ -184,7 +184,7 @@ function Node_Transform(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) co
 			
 			surface_set_target(_s);
 				draw_clear_alpha(0, 0);
-				BLEND_OVER
+				BLEND_OVERRIDE
 			
 				if(is_surface(ins)) {
 					var draw_x, draw_y;
@@ -204,7 +204,7 @@ function Node_Transform(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) co
 			var _cc = point_rotate(-_px, -_py, _ww / 2, _hh / 2, rot);
 			surface_set_target(_outSurf);
 				draw_clear_alpha(0, 0);
-				BLEND_OVER
+				BLEND_OVERRIDE
 				
 				draw_surface_ext_safe(_s, _cc[0], _cc[1], 1, 1, rot, c_white, 1);
 				
@@ -215,7 +215,7 @@ function Node_Transform(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) co
 		} else {
 			surface_set_target(_outSurf);
 				draw_clear_alpha(0, 0);
-				BLEND_OVER
+				BLEND_OVERRIDE
 				
 				var draw_x, draw_y;
 				draw_x = pos[0];

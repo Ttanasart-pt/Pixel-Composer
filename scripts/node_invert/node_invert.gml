@@ -8,7 +8,7 @@ function Node_Invert(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) const
 	static process_data = function(_outSurf, _data, _output_index, _array_index) {
 		surface_set_target(_outSurf);
 		draw_clear_alpha(0, 0);
-		BLEND_OVER
+		BLEND_OVERRIDE
 		
 		shader_set(sh_invert);
 			draw_surface_safe(_data[0], 0, 0);

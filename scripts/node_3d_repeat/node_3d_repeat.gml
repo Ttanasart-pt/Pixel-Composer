@@ -36,7 +36,7 @@ function Node_3D_Repeat(_x, _y, _group = -1) : Node(_x, _y, _group) constructor 
 	inputs[| 11] = nodeValue(11, "3D object", self, JUNCTION_CONNECT.input, VALUE_TYPE.d3object, noone)
 		.setVisible(true, true);
 	
-	inputs[| 12] = nodeValue(12, "Repeat", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1);
+	inputs[| 12] = nodeValue(12, "Repeat", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1, "Amount of copies to be generated.");
 	
 	inputs[| 13] = nodeValue(13, "Repeat position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.vector);

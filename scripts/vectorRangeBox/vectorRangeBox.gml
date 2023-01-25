@@ -33,6 +33,16 @@ function vectorRangeBox(_size, _type, _onModify, _unit = noone) : widget() const
 		label[i] = (i % 2? "max " : "min ") + axis[floor(i / 2)];
 	}
 	
+	static setInteract = function(interactable = noone) { 
+		self.interactable = interactable;
+		b_link.interactable = interactable;
+		
+		for( var i = 0; i < size; i++ ) 
+			tb[i].interactable = interactable;
+		if(extras) 
+			extras.interactable = interactable;
+	}
+	
 	static register = function(parent = noone) {
 		b_link.register(parent);
 		

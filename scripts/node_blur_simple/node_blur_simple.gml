@@ -15,12 +15,12 @@ function Node_Blur_Simple(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) 
 	inputs[| 1] = nodeValue(1, "Size", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 3)
 		.setDisplay(VALUE_DISPLAY.slider, [1, 32, 1]);
 	
-	inputs[| 2] = nodeValue(2, "Oversample mode", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+	inputs[| 2] = nodeValue(2, "Oversample mode", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0, "How to deal with pixel outside the surface.\n    - Empty: Use empty pixel\n    - Clamp: Repeat edge pixel\n    - Repeat: Repeat texture.")
 		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Empty", "Clamp", "Repeat" ]);
 	
 	inputs[| 3] = nodeValue(3, "Mask", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 	
-	inputs[| 4] = nodeValue(4, "Override color", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	inputs[| 4] = nodeValue(4, "Override color", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false, "Replace all color while keeping the alpha. Used to\nfix grey outline when bluring transparent pixel.");
 	
 	inputs[| 5] = nodeValue(5, "Color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_black);
 	
@@ -43,7 +43,7 @@ function Node_Blur_Simple(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) 
 		
 		surface_set_target(_outSurf);
 			draw_clear_alpha(0, 0);
-			BLEND_OVER
+			BLEND_OVERRIDE
 			
 			shader_set(shader);
 			shader_set_uniform_f(uniform_dim, surface_get_width(_data[0]), surface_get_height(_data[0]));

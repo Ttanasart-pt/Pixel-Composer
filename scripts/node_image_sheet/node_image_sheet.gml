@@ -1,5 +1,5 @@
 function Node_Image_Sheet(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
-	name  = "Splice sprite";
+	name  = "Splice Spritesheet";
 	
 	surf_array = [];
 	
@@ -111,7 +111,6 @@ function Node_Image_Sheet(_x, _y, _group = -1) : Node(_x, _y, _group) constructo
 		
 		var _out = inputs[| 7].getValue();
 		var _spc = inputs[| 5].getValue();
-		var _spd = inputs[| 8].getValue();
 		if(drag_type == 0) {
 			curr_dim = inputs[| 1].getValue();
 			curr_amo = inputs[| 3].getValue();
@@ -262,6 +261,7 @@ function Node_Image_Sheet(_x, _y, _group = -1) : Node(_x, _y, _group) constructo
 		if(!is_surface(_inSurf)) return;
 		
 		var _outSurf = outputs[| 0].getValue();
+		var _out  = inputs[| 7].getValue();
 		
 		var _dim	= inputs[| 1].getValue();
 		var _amo	= inputs[| 3].getValue();
@@ -272,7 +272,6 @@ function Node_Image_Sheet(_x, _y, _group = -1) : Node(_x, _y, _group) constructo
 		var ww   = _dim[0] + _pad[0] + _pad[2];
 		var hh   = _dim[1] + _pad[1] + _pad[3];
 		
-		var _out  = inputs[| 7].getValue();
 		var _filt = inputs[| 12].getValue();
 		
 		curr_dim = _dim;
@@ -283,81 +282,71 @@ function Node_Image_Sheet(_x, _y, _group = -1) : Node(_x, _y, _group) constructo
 		var _empS = surface_create(filSize, filSize);
 		var _buff = buffer_create(filSize * filSize * 4, buffer_fixed, 2);
 		
-		if(_out == 0) {
-			update_on_frame = true;
-			inputs[|  8].setVisible(true);
-			inputs[| 11].setVisible(true);
+		surf_array = [];
+		for( var i = 0; i < array_length(surf_array); i++ ) {
+			if(is_surface(surf_array[i]))
+				surface_free(surf_array[i]);
+		}
+		
+		for(var i = 0; i < _total; i++) {
+			var _s = surface_create_valid(ww, hh);
+			var _spr_pos = getSpritePosition(i);
 			
-			var _spd = inputs[| 8].getValue();
-			
-			_outSurf = surface_verify(_outSurf, ww, hh);
-			outputs[| 0].setValue(_outSurf);
-			
-			var ii = safe_mod(ANIMATOR.current_frame * _spd, _total);
-			var _spr_pos = getSpritePosition(ii);
-			
-			surface_set_target(_outSurf);
+			surface_set_target(_s);
 				draw_clear_alpha(c_black, 0);
-				BLEND_OVER
+				BLEND_OVERRIDE
 				draw_surface_part(_inSurf, _spr_pos[0], _spr_pos[1], _dim[0], _dim[1], _pad[2], _pad[1]);
 				BLEND_NORMAL
 			surface_reset_target();
-		} else if(_out == 1) {
-			update_on_frame = false;
-			inputs[|  8].setVisible(false);
-			inputs[| 11].setVisible(false);
-			
-			for( var i = 0; i < array_length(surf_array); i++ ) {
-				if(is_surface(surf_array[i]))
-					surface_free(surf_array[i]);
-			}
-			
-			surf_array = [];
-			
-			for(var i = 0; i < _total; i++) {
-				var _s = surface_create_valid(ww, hh);
-				var _spr_pos = getSpritePosition(i);
 				
-				surface_set_target(_s);
-					draw_clear_alpha(c_black, 0);
-					BLEND_OVER
-					draw_surface_part(_inSurf, _spr_pos[0], _spr_pos[1], _dim[0], _dim[1], _pad[2], _pad[1]);
-					BLEND_NORMAL
+			if(_filt) {
+				gpu_set_tex_filter(true);
+				surface_set_target(_empS);
+				draw_clear_alpha(0, 0);
+				BLEND_OVERRIDE
+				draw_surface_stretched(_s, 0, 0, filSize, filSize);
+				BLEND_NORMAL
 				surface_reset_target();
-				
-				if(_filt) {
-					gpu_set_tex_filter(true);
-					surface_set_target(_empS);
-					draw_clear_alpha(0, 0);
-					BLEND_OVER
-					draw_surface_stretched(_s, 0, 0, filSize, filSize);
-					BLEND_NORMAL
-					surface_reset_target();
-					gpu_set_tex_filter(false);
+				gpu_set_tex_filter(false);
 					
-					buffer_get_surface(_buff, _empS, 0);
-					buffer_seek(_buff, buffer_seek_start, 0);
-					var empty = true;
-					var c0 = buffer_read(_buff, buffer_u32) & ~(0b11111111 << 24);
-					repeat(filSize * filSize - 1) {
-						if(buffer_read(_buff, buffer_u32) & ~(0b11111111 << 24) != c0) {
-							empty = false;
-							break;
-						}
+				buffer_get_surface(_buff, _empS, 0);
+				buffer_seek(_buff, buffer_seek_start, 0);
+				var empty = true;
+				var c0 = buffer_read(_buff, buffer_u32) & ~(0b11111111 << 24);
+				repeat(filSize * filSize - 1) {
+					if(buffer_read(_buff, buffer_u32) & ~(0b11111111 << 24) != c0) {
+						empty = false;
+						break;
 					}
-					
-					if(!empty) 
-						array_push(surf_array, _s);
-					sprite_valid[i] = !empty;
-				} else {
-					array_push(surf_array, _s);
-					sprite_valid[i] = true;
 				}
+					
+				if(!empty) 
+					array_push(surf_array, _s);
+				sprite_valid[i] = !empty;
+			} else {
+				array_push(surf_array, _s);
+				sprite_valid[i] = true;
 			}
-			outputs[| 0].setValue(surf_array);
 		}
+			
+		if(_out == 1)
+			outputs[| 0].setValue(surf_array);
 		
 		buffer_delete(_buff);
 		surface_free(_empS);
+	}
+	
+	static update = function() {
+		var _out  = inputs[| 7].getValue();
+		if(_out == 1) {
+			outputs[| 0].setValue(surf_array);
+			update_on_frame = false;
+			return;
+		}
+		
+		var _spd = inputs[| 8].getValue();
+		update_on_frame = true;
+		var ind = safe_mod(ANIMATOR.current_frame * _spd, array_length(surf_array));
+		outputs[| 0].setValue(surf_array[ind]);
 	}
 }

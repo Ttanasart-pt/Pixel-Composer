@@ -12,6 +12,7 @@ function Panel_Preview() : PanelContent() constructor {
 	canvas_s = ui(1);
 	canvas_w = ui(128);
 	canvas_h = ui(128);
+	canvas_a = 0;
 	
 	canvas_bg = -1;
 	
@@ -19,6 +20,7 @@ function Panel_Preview() : PanelContent() constructor {
 	
 	canvas_hover = true;
 	canvas_dragging = false;
+	canvas_drag_key = 0;
 	canvas_drag_mx  = 0;
 	canvas_drag_my  = 0;
 	canvas_drag_sx  = 0;
@@ -153,10 +155,13 @@ function Panel_Preview() : PanelContent() constructor {
 			
 			var value = _prev_val.getValue();
 			
-			if(is_array(value))
+			if(is_array(value)) {
 				preview_sequence[i] = value;
-			else
+				canvas_a = array_length(value);
+			} else {
 				preview_surface[i] = value;
+				canvas_a = 0;
+			}
 			
 			if(preview_sequence[i] != 0) {
 				if(array_length(preview_sequence[i]) == 0) return;
@@ -185,12 +190,21 @@ function Panel_Preview() : PanelContent() constructor {
 			canvas_drag_my = my;
 			setMouseWrap();
 			
-			if(mouse_release(mb_middle)) 
+			if(mouse_release(canvas_drag_key)) 
 				canvas_dragging = false;
 		}
 		
 		if(pFOCUS && pHOVER && canvas_hover) {
+			var hold = false;
 			if(mouse_press(mb_middle)) {
+				hold = true;
+				canvas_drag_key = mb_middle;
+			} else if(mouse_press(mb_left) && key_mod_press(ALT)) {
+				hold = true;
+				canvas_drag_key = mb_left;
+			}
+			
+			if(hold) {
 				canvas_dragging = true;	
 				canvas_drag_mx  = mx;
 				canvas_drag_my  = my;
@@ -212,6 +226,7 @@ function Panel_Preview() : PanelContent() constructor {
 				canvas_y -= dy;
 			}
 		}
+		
 		canvas_hover = true;
 	}
 	
@@ -221,7 +236,6 @@ function Panel_Preview() : PanelContent() constructor {
 		
 		canvas_w = surface_get_width(prevS);
 		canvas_h = surface_get_height(prevS);
-				
 		
 		var ss = min((w - 32) / canvas_w, (h - 32 - toolbar_height) / canvas_h);
 		canvas_s = ss;
@@ -406,8 +420,12 @@ function Panel_Preview() : PanelContent() constructor {
 		
 		draw_set_text(f_p0, fa_right, fa_top, COLORS._main_text_sub);
 		draw_text(w - ui(8), right_menu_y, "frame " + string(ANIMATOR.current_frame) + "/" + string(ANIMATOR.frames_total));
+		
 		right_menu_y += string_height("l");
-		draw_text(w - ui(8), right_menu_y, string(canvas_w) + "x" + string(canvas_h) + "px");
+		var txt = string(canvas_w) + "x" + string(canvas_h) + "px";
+		if(canvas_a) txt = string(canvas_a) + " x " + txt;
+		draw_text(w - ui(8), right_menu_y, txt);
+		
 		right_menu_y += string_height("l");
 		draw_text(w - ui(8), right_menu_y, "x" + string(canvas_s));
 		right_menu_y += string_height("l");
@@ -426,6 +444,7 @@ function Panel_Preview() : PanelContent() constructor {
 			
 		if(pHOVER && my > h - toolbar_height - prev_size - ui(16)) {
 			canvas_hover = false;
+			
 			if(mouse_wheel_down())	preview_x_to = clamp(preview_x_to - prev_size, - preview_x_max, 0);
 			if(mouse_wheel_up())	preview_x_to = clamp(preview_x_to + prev_size, - preview_x_max, 0);
 		}
@@ -517,7 +536,7 @@ function Panel_Preview() : PanelContent() constructor {
 			_sny = grid_height;
 		}
 		
-		_node.drawOverlay(active && isHover, cx, cy, canvas_s, _mx, _my, _snx, _sny);
+		_node.drawOverlay(active && isHover && !key_mod_press(CTRL), cx, cy, canvas_s, _mx, _my, _snx, _sny);
 		
 		if(_node.tools != -1) {
 			var xx = ui(16);

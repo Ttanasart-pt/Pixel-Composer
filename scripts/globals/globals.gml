@@ -25,7 +25,7 @@
 	globalvar VERSION, SAVEFILE_VERSION, VERSION_STRING;
 	VERSION = 1110;
 	SAVEFILE_VERSION = 1100;
-	VERSION_STRING = "1.1.1.0";
+	VERSION_STRING = "1.11";
 	
 	globalvar NODES, NODE_MAP, APPEND_MAP, HOTKEYS, HOTKEY_CONTEXT;
 	
@@ -38,7 +38,7 @@
 	HOTKEY_CONTEXT[| 0] = "";
 	
 	globalvar CURSOR, TOOLTIP, DIALOG_DEPTH_HOVER;
-	globalvar UPDATE, RENDER_STACK;
+	globalvar UPDATE, RENDER_QUEUE;
 #endregion
 
 #region inputs
@@ -70,8 +70,8 @@
 	#macro mouse_my device_mouse_y_to_gui(0)
 	#macro mouse_ui [device_mouse_x_to_gui(0), device_mouse_y_to_gui(0)]
 	
-	#macro sFOCUS FOCUS == self
-	#macro sHOVER HOVER == self
+	#macro sFOCUS FOCUS == self.id
+	#macro sHOVER HOVER == self.id
 	
 	#macro DELTA_TIME delta_time / 1_000_000
 	
@@ -104,7 +104,6 @@
 	#endregion
 	
 	#region functions
-		#macro BLEND_OVER gpu_set_blendmode_ext(bm_one, bm_zero);
 		#macro BLEND_NORMAL gpu_set_blendmode(bm_normal);
 		#macro BLEND_ADD gpu_set_blendmode(bm_add);
 		#macro BLEND_OVERRIDE gpu_set_blendmode_ext(bm_one, bm_zero);

@@ -9,6 +9,7 @@ function Node_Twirl(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constr
 	uniform_sam = shader_get_uniform(shader, "sampleMode");
 	
 	inputs[| 0] = nodeValue(0, "Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
+	
 	inputs[| 1] = nodeValue(1, "Center", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.vector)
 		.setUnitRef(function(index) { return getDimension(index); });
@@ -18,7 +19,7 @@ function Node_Twirl(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constr
 	
 	inputs[| 3] = nodeValue(3, "Radius", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 16);
 	
-	inputs[| 4] = nodeValue(4, "Oversample mode", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+	inputs[| 4] = nodeValue(4, "Oversample mode", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0, "How to deal with pixel outside the surface.\n    - Empty: Use empty pixel\n    - Clamp: Repeat edge pixel\n    - Repeat: Repeat texture.")
 		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Empty", "Clamp", "Repeat" ]);
 		
 	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
@@ -40,7 +41,7 @@ function Node_Twirl(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constr
 	static process_data = function(_outSurf, _data, _output_index, _array_index) {
 		surface_set_target(_outSurf);
 		draw_clear_alpha(0, 0);
-		BLEND_OVER
+		BLEND_OVERRIDE
 		
 		var center = _data[1];
 		var stren = _data[2];

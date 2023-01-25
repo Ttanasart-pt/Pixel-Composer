@@ -1,5 +1,5 @@
 function Node_9Slice(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constructor {
-	name = "Nine slice";
+	name = "Nine Slice";
 	
 	inputs[| 0] = nodeValue(0, "Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 	
@@ -118,7 +118,7 @@ function Node_9Slice(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) const
 		
 		surface_set_target(_outSurf);
 			draw_clear_alpha(0, 0);
-			BLEND_OVER
+			BLEND_OVERRIDE
 			
 			var ww   = _dim[0];
 			var hh   = _dim[1];

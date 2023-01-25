@@ -26,7 +26,7 @@ event_inherited();
 		var yy = _y;
 		draw_clear_alpha(COLORS.dialog_about_bg, 0);
 		
-		BLEND_OVER
+		BLEND_OVERRIDE
 		draw_set_font(f_p2);
 		draw_set_color(COLORS._main_text_sub);
 		draw_text(cx, yy, "Special Thanks");

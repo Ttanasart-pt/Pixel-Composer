@@ -13,6 +13,7 @@ event_inherited();
 	key_dragging  = noone;
 	key_drag_sx   = 0;
 	key_drag_mx   = 0;
+	key_drag_dead = true;
 	
 	destroy_on_click_out = true;
 	
@@ -34,6 +35,11 @@ event_inherited();
 	
 	selector = new colorSelector(setColor);
 	selector.dropper_close = false;
+	
+	b_apply = button(function() {
+		onApply();
+		instance_destroy();
+	}).setIcon(THEME.accept, 0, COLORS._main_icon_dark);
 	
 	function setKeyPosition(key, position) {
 		key.time = position;

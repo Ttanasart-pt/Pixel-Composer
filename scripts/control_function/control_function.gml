@@ -35,30 +35,67 @@
 	WIDGET_CURRENT = noone;
 	WIDGET_CURRENT_SCROLL = noone;
 	
-	function widget_next() {
-		if(WIDGET_CURRENT == noone) return;
+	function widget_start() {
 		if(array_length(WIDGET_ACTIVE) == 0) return;
+		WIDGET_ACTIVE[0].activate();
+	}
+	
+	function widget_next() {
+		if(array_length(WIDGET_ACTIVE) == 0) return;
+		if(WIDGET_CURRENT == noone) {
+			widget_start()
+			return;
+		}
 		
 		var ind = array_find(WIDGET_ACTIVE, WIDGET_CURRENT);
 		WIDGET_CURRENT.deactivate();
 		
+		var wid = noone;
 		if(ind + 1 == array_length(WIDGET_ACTIVE))
-			WIDGET_ACTIVE[0].activate();
-		else 
-			WIDGET_ACTIVE[ind + 1].activate();
+			wid = array_safe_get(WIDGET_ACTIVE, 0);
+		else
+			wid = array_safe_get(WIDGET_ACTIVE, ind + 1);
+			
+		if(wid) wid.activate();
 	}
 	
 	function widget_previous() {
+		if(array_length(WIDGET_ACTIVE) == 0) return;
+		if(WIDGET_CURRENT == noone) {
+			widget_start()
+			return;
+		}
+		
+		var ind = array_find(WIDGET_ACTIVE, WIDGET_CURRENT);
+		WIDGET_CURRENT.deactivate();
+		
+		var wid = noone;
+		if(ind == 0)
+			wid = array_safe_get(WIDGET_ACTIVE, array_length(WIDGET_ACTIVE) - 1);
+		else 
+			wid = array_safe_get(WIDGET_ACTIVE, ind - 1);
+			
+		if(wid) wid.activate();
+	}
+	
+	function widget_set(_widget) {
+		if(array_length(WIDGET_ACTIVE) == 0) return;
+		
+		if(WIDGET_CURRENT) {
+			var ind = array_find(WIDGET_ACTIVE, WIDGET_CURRENT);
+			WIDGET_CURRENT.deactivate();
+		}
+		
+		_widget.activate();
+	}
+	
+	function widget_clear() {
 		if(WIDGET_CURRENT == noone) return;
 		if(array_length(WIDGET_ACTIVE) == 0) return;
 		
 		var ind = array_find(WIDGET_ACTIVE, WIDGET_CURRENT);
 		WIDGET_CURRENT.deactivate();
-		
-		if(ind == 0)
-			WIDGET_ACTIVE[array_length(WIDGET_ACTIVE) - 1].activate();
-		else 
-			WIDGET_ACTIVE[ind - 1].activate();
+		WIDGET_CURRENT = noone;
 	}
 	
 	function widget_trigger() {

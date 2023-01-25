@@ -6,6 +6,7 @@ event_inherited();
 	max_h = 640;
 	draggable = false;
 	destroy_on_click_out = true;
+	selecting = -1;
 	
 	scrollbox = noone;
 	
@@ -23,9 +24,13 @@ event_inherited();
 			var fullpath = DIRECTORY + "Fonts/" + data[i];
 			
 			if(sHOVER && sc_content.hover && point_in_rectangle(_m[0], _m[1], 0, _ly + 1, _dw, _ly + hght - 1)) {
+				selecting = i;
+			}
+			
+			if(selecting == i) {
 				draw_sprite_stretched_ext(THEME.textbox, 3, 0, _ly, _dw, hght, COLORS.dialog_menubox_highlight, 1);
 				
-				if(mouse_press(mb_left, sFOCUS)) {
+				if(sFOCUS && (mouse_press(mb_left) || keyboard_check_pressed(vk_enter))) {
 					scrollbox.onModify(i);
 					instance_destroy();
 				}
@@ -45,6 +50,19 @@ event_inherited();
 				
 				draw_sprite_ext(spr, 0, _dw - ui(8) - sw, _ly + hght / 2 - sh / 2, ss, ss, 0, c_white, 1);
 			}
+		}
+		
+		if(sFOCUS) {
+			if(keyboard_check_pressed(vk_up)) {
+				selecting--;
+				if(selecting < 0) selecting = array_length(data) - 1;
+			}
+			
+			if(keyboard_check_pressed(vk_down))
+				selecting = (selecting + 1) % array_length(data);
+			
+			if(keyboard_check_pressed(vk_escape))
+				instance_destroy();
 		}
 		
 		return _h;

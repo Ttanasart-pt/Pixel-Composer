@@ -1,5 +1,5 @@
 function Node_Perlin(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constructor {
-	name = "Perlin";
+	name = "Perlin Noise";
 	
 	shader = sh_perlin_tiled;
 	uniform_dim = shader_get_uniform(shader, "u_resolution");

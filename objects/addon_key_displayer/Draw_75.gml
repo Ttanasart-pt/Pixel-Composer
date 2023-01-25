@@ -24,7 +24,7 @@
 		alpha = lerp_linear(alpha, 0, 0.01);
 	
 	if(alpha > 0) {
-		draw_set_text(f_h3, fa_right, fa_bottom, COLORS._main_icon_dark);
+		draw_set_text(_f_h2, fa_right, fa_bottom, COLORS._main_icon_dark);
 		var ww = string_width(disp_text) + ui(16);
 		var hh = string_height(disp_text) + ui(16);
 		

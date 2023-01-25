@@ -24,7 +24,7 @@ function Node_Collection(_x, _y, _group = -1) : Node(_x, _y, _group) constructor
 		for(var i = custom_input_index; i < ds_list_size(inputs); i++) {
 			var _in = inputs[| i].from;
 			
-			ds_stack_push(RENDER_STACK, _in);
+			ds_queue_enqueue(RENDER_QUEUE, _in);
 			printIf(global.RENDER_LOG, "Push group input " + _in.name + " to stack");
 		}
 	}

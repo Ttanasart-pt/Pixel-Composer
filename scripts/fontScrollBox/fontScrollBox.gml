@@ -19,6 +19,11 @@ function fontScrollBox(_onModify) : widget() constructor {
 		}
 	}
 	
+	static setInteract = function(interactable = noone) { 
+		self.interactable = interactable;
+		extra_button.interactable = interactable;
+	}
+	
 	static draw = function(_x, _y, _w, _h, _text, _m = mouse_ui, _rx = 0, _ry = 0) {
 		x = _x;
 		y = _y;

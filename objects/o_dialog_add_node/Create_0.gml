@@ -31,22 +31,42 @@ event_inherited();
 	setPage(ADD_NODE_PAGE);
 	
 	function buildNode(_node, _param = "") {
-		instance_destroy();
-		
-		if(!_node) return;
+		if(!_node) {
+			instance_destroy();
+			return;
+		}
 		
 		var _new_node = noone;
 		var _inputs = 0, _outputs = 0;
 		
 		if(is_struct(_node) && instanceof(_node) == "NodeObject") {
 			_new_node = _node.build(node_target_x, node_target_y,, _param);
-			if(!_new_node) return;
+			if(!_new_node) {
+				instance_destroy();
+				return;
+			}
+			
 			_inputs = _new_node.inputs;
 			_outputs = _new_node.outputs;
 		} else {
 			var _new_list = APPEND(_node.path);
 			_inputs = ds_list_create();
 			_outputs = ds_list_create();
+			
+			var tx = 99999;
+			var ty = 99999;
+			for( var i = 0; i < ds_list_size(_new_list); i++ ) {
+				tx = min(tx, _new_list[| i].x);
+				ty = min(tx, _new_list[| i].y);
+			}
+			
+			var shx = tx - node_target_x;
+			var shy = ty - node_target_y;
+			
+			for( var i = 0; i < ds_list_size(_new_list); i++ ) {
+				_new_list[| i].x -= shx;
+				_new_list[| i].y -= shy;
+			}
 			
 			for( var i = 0; i < ds_list_size(_new_list); i++ ) {
 				var _in = _new_list[| i].inputs;
@@ -65,6 +85,7 @@ event_inherited();
 			ds_list_destroy(_new_list);
 		}
 		
+		//try to connect
 		if(node_called != noone) {
 			var _node_list = node_called.connect_type == JUNCTION_CONNECT.input? _outputs : _inputs;
 			for(var i = 0; i < ds_list_size(_node_list); i++) {
@@ -98,6 +119,8 @@ event_inherited();
 				}
 			}
 		}
+		
+		instance_destroy();
 	}
 	
 	catagory_pane = new scrollPane(ui(132), dialog_h - ui(66), function(_y, _m) {
@@ -168,7 +191,7 @@ event_inherited();
 					cProg = 0;
 					curr_height = 0;
 					
-					BLEND_OVER
+					BLEND_OVERRIDE
 					draw_sprite_stretched_ext(THEME.node_bg, 0, ui(16), yy, content_pane.surface_w - ui(32), ui(24), COLORS._main_icon, 1);
 					BLEND_NORMAL
 					
@@ -183,7 +206,7 @@ event_inherited();
 				var _nx   = grid_space + (grid_width + grid_space) * cProg;
 				var _boxx = _nx + (grid_width - grid_size) / 2;
 				
-				BLEND_OVER
+				BLEND_OVERRIDE
 				draw_sprite_stretched(THEME.node_bg, 0, _boxx, yy, grid_size, grid_size);
 				BLEND_NORMAL
 						
@@ -235,7 +258,7 @@ event_inherited();
 					hh += ui(8);
 					yy += ui(8);
 					
-					BLEND_OVER
+					BLEND_OVERRIDE
 					draw_sprite_stretched_ext(THEME.node_bg, 0, ui(8), yy, content_pane.surface_w - ui(24), ui(24), COLORS._main_icon, 1);
 					BLEND_NORMAL
 					
@@ -248,7 +271,7 @@ event_inherited();
 				}
 				
 				if(i % 2) {
-					BLEND_OVER
+					BLEND_OVERRIDE
 					draw_sprite_stretched_ext(THEME.node_bg, 0, ui(4), yy, list_width - ui(8), list_height, c_white, 0.2);
 					BLEND_NORMAL
 				}
@@ -390,7 +413,7 @@ event_inherited();
 				var _nx   = grid_space + (grid_width + grid_space) * index;
 				var _boxx = _nx + (grid_width - grid_size) / 2;
 				
-				BLEND_OVER
+				BLEND_OVERRIDE
 				if(is_array(s_res))
 					draw_sprite_stretched(THEME.node_bg, 0, _boxx, yy, grid_size, grid_size);
 				else
@@ -459,7 +482,7 @@ event_inherited();
 					_node = s_res;
 				
 				if(i % 2) {
-					BLEND_OVER
+					BLEND_OVERRIDE
 					draw_sprite_stretched_ext(THEME.node_bg, 0, ui(4), yy, list_width - ui(8), list_height, c_white, 0.2);
 					BLEND_NORMAL
 				}

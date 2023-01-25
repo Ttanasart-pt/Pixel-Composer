@@ -119,6 +119,7 @@ function Panel_Inspector() : PanelContent() constructor {
 					if(coll) {
 						var j = i + 1;
 						while(j < amo) {
+							if(j >= array_length(inspecting.input_display_list)) break;
 							var j_jun = inspecting.input_display_list[j];
 							if(is_array(j_jun))
 								break;
@@ -130,7 +131,7 @@ function Panel_Inspector() : PanelContent() constructor {
 					}
 					continue;
 				} else if(is_struct(jun_disp) && instanceof(jun_disp) == "Inspector_Custom_Renderer") {
-					jun_disp.register(contentPane);
+					if(pFOCUS) jun_disp.register(contentPane);
 					jun_disp.rx = ui(16) + x;
 					jun_disp.ry = top_bar_h + y;
 					
@@ -151,13 +152,12 @@ function Panel_Inspector() : PanelContent() constructor {
 			var lb_y = yy + lb_h / 2;
 			
 			var butx = ui(16);
-			
 			if(jun.isAnimable()) {
 				var index = jun.value_from == noone? jun.animator.is_anim : 2;
 				draw_sprite_ui_uniform(THEME.animate_clock, index, butx, lb_y, 1,, 0.8);
 				if(_hover && point_in_circle(_m[0], _m[1], butx, lb_y, ui(10))) {
 					draw_sprite_ui_uniform(THEME.animate_clock, index, butx, lb_y, 1,, 1);
-					TOOLTIP = "Toggle animation";
+					TOOLTIP = jun.value_from == noone? "Toggle animation" : "Remove link";
 					
 					if(mouse_press(mb_left, pFOCUS)) {
 						if(jun.value_from != noone)
@@ -183,6 +183,19 @@ function Panel_Inspector() : PanelContent() constructor {
 			draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text);
 			draw_text_add(ui(56), lb_y - ui(2), jun.name);
 			var lb_w = string_width(jun.name) + ui(32);
+			
+			#region tooltip
+				if(jun.tooltip != "") {
+					var tx = ui(56) + string_width(jun.name) + ui(16);
+					var ty = lb_y - ui(1);
+					
+					if(point_in_circle(_m[0], _m[1], tx, ty, ui(10))) {
+						TOOLTIP = jun.tooltip;
+						draw_sprite_ui(THEME.info, 0, tx, ty,,,, COLORS._main_icon_light, 1);
+					} else 
+						draw_sprite_ui(THEME.info, 0, tx, ty,,,, COLORS._main_icon_light, 0.75);
+				}
+			#endregion
 			
 			#region anim
 				if(lineBreak && jun.animator.is_anim) {
@@ -252,7 +265,6 @@ function Panel_Inspector() : PanelContent() constructor {
 				}
 			#endregion
 			
-			//TODO: Fix padding to be consistant to every widget
 			var _hsy = yy + lb_h;
 			var padd = ui(8);
 			
@@ -265,8 +277,9 @@ function Panel_Inspector() : PanelContent() constructor {
 			var widH	   = lineBreak? editBoxH : 0;
 			
 			if(jun.editWidget) {
-				jun.editWidget.setFocus(pFOCUS, _hover);
-				jun.editWidget.register(contentPane);
+				jun.editWidget.setInteract(jun.value_from == noone);
+				jun.editWidget.setActiveFocus(pFOCUS, _hover);
+				if(pFOCUS) jun.editWidget.register(contentPane);
 				
 				switch(jun.display_type) {
 					case VALUE_DISPLAY.button :
@@ -391,6 +404,8 @@ function Panel_Inspector() : PanelContent() constructor {
 				draw_text_add(ui(32), _hsy, jun.display_data);
 				
 				widH = string_height(jun.display_data);
+			} else {
+				widH = 0;
 			}
 			
 			if(false) {

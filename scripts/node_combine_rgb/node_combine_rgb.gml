@@ -34,7 +34,7 @@ function Node_Combine_RGB(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) 
 		
 		surface_set_target(_outSurf);
 		draw_clear_alpha(0, 0);
-		BLEND_OVER
+		BLEND_OVERRIDE
 		
 		shader_set(shader);
 			texture_set_stage(uniform_r, surface_get_texture(_r));

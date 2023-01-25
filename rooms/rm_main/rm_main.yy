@@ -33,7 +33,7 @@
     "inheritRoomSettings": false,
     "Width": 1600,
     "Height": 800,
-    "persistent": false,
+    "persistent": true,
   },
   "viewSettings": {
     "inheritViewSettings": false,
@@ -43,7 +43,7 @@
   },
   "physicsSettings": {
     "inheritPhysicsSettings": false,
-    "PhysicsWorld": false,
+    "PhysicsWorld": true,
     "PhysicsWorldGravityX": 0.0,
     "PhysicsWorldGravityY": 10.0,
     "PhysicsWorldPixToMetres": 0.1,

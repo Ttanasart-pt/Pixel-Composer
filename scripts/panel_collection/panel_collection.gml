@@ -78,7 +78,7 @@ function Panel_Collection() : PanelContent() constructor {
 						var _nx   = grid_space + (grid_width + grid_space) * j;
 						var _boxx = _nx + (grid_width - grid_size) / 2;
 						
-						BLEND_OVER
+						BLEND_OVERRIDE
 						draw_sprite_stretched(THEME.node_bg, 0, _boxx, yy, grid_size, grid_size);
 						BLEND_NORMAL
 						
@@ -114,7 +114,7 @@ function Panel_Collection() : PanelContent() constructor {
 						
 						draw_set_text(f_p2, fa_center, fa_top, COLORS._main_text);
 						name_height = max(name_height, string_height_ext(_node.name, -1, grid_size) + 8);
-						draw_text_ext(_boxx + grid_size / 2, yy + grid_size + ui(4), _node.name, -1, grid_width);
+						draw_text_ext_add(_boxx + grid_size / 2, yy + grid_size + ui(4), _node.name, -1, grid_width);
 					}
 				}
 				var hght = grid_size + grid_space + name_height;
@@ -132,7 +132,7 @@ function Panel_Collection() : PanelContent() constructor {
 				if(!_node) continue;
 				
 				if(i % 2) {
-					BLEND_OVER
+					BLEND_OVERRIDE
 					draw_sprite_stretched_ext(THEME.node_bg, 0, ui(4), yy, list_width - 8, list_height, c_white, 0.2);
 					BLEND_NORMAL
 				}
@@ -168,7 +168,7 @@ function Panel_Collection() : PanelContent() constructor {
 					draw_sprite_ui_uniform(THEME.group, 0, spr_x, spr_y, 0.75, c_white);
 				
 				draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text);
-				draw_text(list_height + ui(20), yy + list_height / 2, _node.name);
+				draw_text_add(list_height + ui(20), yy + list_height / 2, _node.name);
 				
 				yy += list_height;
 				hh += list_height;

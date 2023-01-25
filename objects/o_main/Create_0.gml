@@ -6,6 +6,8 @@
 	file_text_write_string(f, "[MESSAGE] " + t + "session begin" + "\n");
 	
 	file_text_close(f);
+	
+	gpu_set_tex_mip_enable(mip_off);
 #endregion
 
 #region window
@@ -22,7 +24,7 @@
 	CURSOR  = cr_default;
 	TOOLTIP = "";
 	KEYBOARD_STRING = "";
-	RENDER_STACK = ds_stack_create();
+	RENDER_QUEUE = ds_queue_create();
 	
 	_cursor	= CURSOR;
 	dc_check = 0;
@@ -30,6 +32,7 @@
 	kb_hold  = false;
 	kb_hkey  = 0;
 	
+	//show_debug_overlay(true);
 	//display_set_timing_method(tm_sleep);
 	
 	addHotkey("", "New file", "N",	MOD_KEY.ctrl, NEW);
@@ -50,10 +53,17 @@
 	HOTKEY_MOD = 0;
 #endregion
 
-#region coroutine
+#region gif reader
 	globalvar GIF_READER;
 	GIF_READER = ds_list_create();
 	gif_complete_st = ds_stack_create();
+#endregion
+
+#region tunnel
+	globalvar TUNNELS_IN, TUNNELS_IN_MAP, TUNNELS_OUT;
+	TUNNELS_IN = ds_map_create();
+	TUNNELS_IN_MAP = ds_map_create();
+	TUNNELS_OUT = ds_map_create();
 #endregion
 
 #region file drop
@@ -62,46 +72,67 @@
 	
 	function load_file_path(path) {
 		if(array_length(path) == 0) return; 
-		var is_multi = array_length(path) > 1 || directory_exists(path[0]);
-		
-		if(is_multi) {
-			with(dialogCall(o_dialog_add_multiple_images, WIN_W / 2, WIN_H / 2)) {
-				setPath(path);	
-			}
-		} else {
-			PANEL_GRAPH.onStepBegin();
-			path = path[0];
-			var ext = filename_ext(path);
-			var node = noone;
+		var type = "image";
+		for( var i = 0; i < array_length(path); i++ ) {
+			var p = path[i];
+			if(directory_exists(p)) continue;
+			var ext = filename_ext(p);
 			
 			switch(ext) {
-				case ".txt"  :
-					node = Node_create_Text_File_Read_path(PANEL_GRAPH.mouse_grid_x, PANEL_GRAPH.mouse_grid_y, path);
-					break;
-				case ".csv"  :
-					node = Node_create_CSV_File_Read_path(PANEL_GRAPH.mouse_grid_x, PANEL_GRAPH.mouse_grid_y, path);
-					break;
-				case ".json"  :
-					node = Node_create_Json_File_Read_path(PANEL_GRAPH.mouse_grid_x, PANEL_GRAPH.mouse_grid_y, path);
-					break;
-				case ".ase"  :
-				case ".aseprite"  :
-					node = Node_create_ASE_File_Read_path(PANEL_GRAPH.mouse_grid_x, PANEL_GRAPH.mouse_grid_y, path);
-					break;
 				case ".png"	 :
 				case ".jpg"	 :
 				case ".jpeg" :
-					node = Node_create_Image_path(PANEL_GRAPH.mouse_grid_x, PANEL_GRAPH.mouse_grid_y, path);
 					break;
-				case ".gif"  :
-					node = Node_create_Image_gif_path(PANEL_GRAPH.mouse_grid_x, PANEL_GRAPH.mouse_grid_y, path);
+				default:
+					type = "others";
 					break;
-				case ".obj" :
-					node = Node_create_3D_Obj_path(PANEL_GRAPH.mouse_grid_x, PANEL_GRAPH.mouse_grid_y, path);
-					break;
-				case ".pxc" :
-					LOAD_PATH(path);
-					break;
+			}
+		}
+		
+		var is_multi = type == "image" && (array_length(path) > 1 || directory_exists(path[0]));
+		
+		if(is_multi) {
+			with(dialogCall(o_dialog_add_multiple_images, WIN_W / 2, WIN_H / 2))
+				setPath(path);
+		} else {
+			PANEL_GRAPH.onStepBegin();
+			
+			var node = noone;
+			for( var i = 0; i < array_length(path); i++ ) {
+				var p = path[i];
+				var ext = filename_ext(p);
+				
+				switch(ext) {
+					case ".txt"  :
+						node = Node_create_Text_File_Read_path(PANEL_GRAPH.mouse_grid_x, PANEL_GRAPH.mouse_grid_y, p);
+						break;
+					case ".csv"  :
+						node = Node_create_CSV_File_Read_path(PANEL_GRAPH.mouse_grid_x, PANEL_GRAPH.mouse_grid_y, p);
+						break;
+					case ".json"  :
+						node = Node_create_Json_File_Read_path(PANEL_GRAPH.mouse_grid_x, PANEL_GRAPH.mouse_grid_y, p);
+						break;
+					case ".ase"  :
+					case ".aseprite"  :
+						node = Node_create_ASE_File_Read_path(PANEL_GRAPH.mouse_grid_x, PANEL_GRAPH.mouse_grid_y, p);
+						break;
+					case ".png"	 :
+					case ".jpg"	 :
+					case ".jpeg" :
+						node = Node_create_Image_path(PANEL_GRAPH.mouse_grid_x, PANEL_GRAPH.mouse_grid_y, p);
+						break;
+					case ".gif"  :
+						node = Node_create_Image_gif_path(PANEL_GRAPH.mouse_grid_x, PANEL_GRAPH.mouse_grid_y, p);
+						break;
+					case ".obj" :
+						node = Node_create_3D_Obj_path(PANEL_GRAPH.mouse_grid_x, PANEL_GRAPH.mouse_grid_y, p);
+						break;
+					case ".pxc" :
+						LOAD_PATH(p);
+						break;
+				}
+				
+				PANEL_GRAPH.mouse_grid_y += 160;
 			}
 			
 			if(node)
@@ -135,4 +166,8 @@
 #region dialog
 	globalvar DIALOGS;
 	DIALOGS = ds_list_create();
+#endregion
+
+#region file loader
+	global.FILE_LOAD_ASYNC = ds_map_create();
 #endregion

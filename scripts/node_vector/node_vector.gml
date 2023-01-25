@@ -12,6 +12,9 @@ function Node_Number(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) const
 	outputs[| 0] = nodeValue(0, "Number", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, 0);
 	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
+		var __ax = inputs[| 0].getValue();
+		if(is_array(__ax)) return;
+		
 		inputs[| 0].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
 	}
 	
@@ -50,10 +53,12 @@ function Node_Vector2(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) cons
 	drag_my   = 0;
 	drag_sx   = 0;
 	drag_sy   = 0;
-				
+	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var __ax = inputs[| 0].getValue();
 		var __ay = inputs[| 1].getValue();
+		
+		if(is_array(__ax) || is_array(__ay)) return;
 						
 		var _ax = __ax * _s + _x;
 		var _ay = __ay * _s + _y;
@@ -167,7 +172,7 @@ function Node_Vector4(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) cons
 	
 	outputs[| 0] = nodeValue(0, "Vector", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, [ 0, 0, 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.vector);
-	
+		
 	function process_data(_output, _data, index = 0) { 
 		var vec = [ _data[0], _data[1], _data[2], _data[3] ];
 		return vec; 
@@ -185,7 +190,7 @@ function Node_Vector4(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) cons
 }
 
 function Node_Vector_Split(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constructor {
-	name = "Vector split";
+	name = "Vector Split";
 	color = COLORS.node_blend_number;
 	previewable   = false;
 	
@@ -202,9 +207,7 @@ function Node_Vector_Split(_x, _y, _group = -1) : Node_Processor(_x, _y, _group)
 	outputs[| 3] = nodeValue(3, "w", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, 0);
 	
 	function process_data(_output, _data, _index = 0) { 
-		if(array_length(_data[0]) > _index)
-			return _data[0][_index]; 
-		return 0;
+		return array_safe_get(_data[0], _index);
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s) {

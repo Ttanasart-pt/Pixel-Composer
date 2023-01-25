@@ -13,7 +13,7 @@ function Node_Iterate(_x, _y, _group = -1) : Node_Collection(_x, _y, _group) con
 	
 	inputs[| 0] = nodeValue( 0, "Repeat", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1 );
 	
-	custom_input_index = 1;
+	custom_input_index = ds_list_size(inputs);
 	loop_start_time = 0;
 	ALWAYS_FULL = true;
 	
@@ -21,6 +21,7 @@ function Node_Iterate(_x, _y, _group = -1) : Node_Collection(_x, _y, _group) con
 		var input  = nodeBuild("Node_Iterator_Input", -256, -32, self);
 		var output = nodeBuild("Node_Iterator_Output", 256, -32, self);
 		
+		input.inputs[| 2].setValue(4);
 		output.inputs[| 2].setFrom(input.outputs[| 1]);
 	}
 	
@@ -46,7 +47,7 @@ function Node_Iterate(_x, _y, _group = -1) : Node_Collection(_x, _y, _group) con
 			
 		if(!allReady) return;
 		
-		__nodeLeafList(nodes, RENDER_STACK);
+		__nodeLeafList(nodes, RENDER_QUEUE);
 		initLoop();
 	}
 	

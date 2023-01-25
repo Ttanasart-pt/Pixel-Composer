@@ -66,7 +66,7 @@
 	if(!ds_list_empty(DIALOGS))
 		DIALOGS[| ds_list_size(DIALOGS) - 1].checkMouse();
 	
-	if(mouse_release(mb_left))
+	if(mouse_release(mb_any))
 		DIALOG_CLICK = true;
 #endregion
 
@@ -106,19 +106,19 @@
 	if(MOUSE_WRAP) {
 		var _pad = 2;
 		
-		if(mouse_x < _pad) {
-			window_mouse_set(window_get_width() - _pad, mouse_y);
+		if(mouse_mx < _pad) {
+			window_mouse_set(window_get_width() - _pad, mouse_my);
 			MOUSE_WRAPPING = 2;
-		} else if(mouse_x > window_get_width() - _pad) {
-			window_mouse_set(_pad, mouse_y);
+		} else if(mouse_mx > window_get_width() - _pad) {
+			window_mouse_set(_pad, mouse_my);
 			MOUSE_WRAPPING = 2;
 		}
 			
-		if(mouse_y < _pad) {
-			window_mouse_set(mouse_x, window_get_height() - _pad);
+		if(mouse_my < _pad) {
+			window_mouse_set(mouse_mx, window_get_height() - _pad);
 			MOUSE_WRAPPING = 2;
-		} else if(mouse_y > window_get_height() - _pad) {
-			window_mouse_set(mouse_x, _pad);
+		} else if(mouse_my > window_get_height() - _pad) {
+			window_mouse_set(mouse_mx, _pad);
 			MOUSE_WRAPPING = 2;
 		}
 	}

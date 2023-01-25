@@ -1,5 +1,5 @@
 function Node_Pixel_Sort(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constructor {
-	name = "Pixel sort";
+	name = "Pixel Sort";
 	
 	shader = sh_pixel_sort;
 	uniform_dim = shader_get_uniform(shader, "dimension");
@@ -8,9 +8,12 @@ function Node_Pixel_Sort(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) c
 	uniform_dir = shader_get_uniform(shader, "direction");
 	
 	inputs[| 0] = nodeValue(0, "Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
+	
 	inputs[| 1] = nodeValue(1, "Iteration", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 2);
+	
 	inputs[| 2] = nodeValue(2, "Threshold", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.1)
 		.setDisplay(VALUE_DISPLAY.slider, [0, 1, 0.01]);
+	
 	inputs[| 3] = nodeValue(3, "Direction", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.rotation, 90);
 	
@@ -33,7 +36,7 @@ function Node_Pixel_Sort(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) c
 		
 		surface_set_target(pp[1]);
 			draw_clear_alpha(0, 0);
-			BLEND_OVER
+			BLEND_OVERRIDE
 			draw_surface_safe(_in, 0, 0);
 			BLEND_NORMAL
 		surface_reset_target();
@@ -50,7 +53,7 @@ function Node_Pixel_Sort(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) c
 			
 			surface_set_target(sBase);
 			draw_clear_alpha(0, 0);
-			BLEND_OVER
+			BLEND_OVERRIDE
 				shader_set_uniform_f(uniform_itr, i);
 				draw_surface_safe(sDraw, 0, 0);
 			BLEND_NORMAL
@@ -60,7 +63,7 @@ function Node_Pixel_Sort(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) c
 		shader_reset();
 		
 		surface_set_target(_outSurf);
-			BLEND_OVER
+			BLEND_OVERRIDE
 			draw_surface_safe(sBase, 0, 0);
 			BLEND_NORMAL
 		surface_reset_target();

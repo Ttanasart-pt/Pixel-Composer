@@ -1,14 +1,15 @@
 function Node_Palette_Extract(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constructor {
-	name = "Palette extract";
-	
-	
+	name = "Palette Extract";
 	w = 96;
 	
 	inputs[| 0] = nodeValue(0, "Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 	
-	inputs[| 1] = nodeValue(1, "Colors", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 5);
+	inputs[| 1] = nodeValue(1, "Max colors", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 5, "Amount of color in a palette.");
 	
-	inputs[| 2] = nodeValue(2, "Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, irandom(99999));
+	inputs[| 2] = nodeValue(2, "Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, irandom(99999), "Random seed to be used to initialize K-mean algorithm.");
+	
+	inputs[| 3] = nodeValue(3, "Algorithm", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "K-mean", "Frequency", "All colors" ]);
 	
 	outputs[| 0] = nodeValue(0, "Palette", self, JUNCTION_CONNECT.output, VALUE_TYPE.color, [ ])
 		.setDisplay(VALUE_DISPLAY.palette);
@@ -17,13 +18,42 @@ function Node_Palette_Extract(_x, _y, _group = -1) : Node_Processor(_x, _y, _gro
 	
 	input_display_list = [
 		["Surface",	false],	0,
-		["Palette",	false],	1, 2,
+		["Palette",	false],	3, 1, 2,
 	]
 	
 	current_palette = [];
 	current_color = 0;
 	
-	function extractPalette(_surfFull, _size, _seed) {
+	function sortPalette(pal) {
+		array_sort(pal, function(c0, c1) {
+			var r0 = color_get_red(c0) / 255;
+			var r1 = color_get_red(c1) / 255;
+			var g0 = color_get_green(c0) / 255;
+			var g1 = color_get_green(c1) / 255;
+			var b0 = color_get_blue(c0) / 255;
+			var b1 = color_get_blue(c1) / 255;
+			
+			var l0 = sqrt( .241 * r0 + .691 * g0 + .068 * b0 );
+			var l1 = sqrt( .241 * r1 + .691 * g1 + .068 * b1 );
+			
+			if(abs(l0 - l1) > 0.05) return l0 > l1;
+			
+			var h0 = color_get_hue(c0) / 255;
+			var h1 = color_get_hue(c1) / 255;
+			
+			if(abs(h0 - h1) > 0.05) return h0 > h1;
+			
+			var s0 = color_get_saturation(c0) / 255;
+			var s1 = color_get_saturation(c1) / 255;
+			
+			var v0 = color_get_value(c0) / 255;
+			var v1 = color_get_value(c1) / 255;
+			
+			return s0 * v0 > s1 * v1;
+		})
+	}
+	
+	function extractKmean(_surfFull, _size, _seed, space = 0) {
 		var _surf = surface_create(min(32, surface_get_width(_surfFull)), min(32, surface_get_height(_surfFull)));
 		_size = max(1, _size);
 		
@@ -114,7 +144,7 @@ function Node_Palette_Extract(_x, _y, _group = -1) : Node_Processor(_x, _y, _gro
 			if(del < 0.001) break;
 		}
 		
-		var palette = array_create(_size);
+		var palette = [];
 		
 		for( var i = 0; i < _size; i++ ) {
 			var closet = 0;
@@ -131,22 +161,101 @@ function Node_Palette_Extract(_x, _y, _group = -1) : Node_Processor(_x, _y, _gro
 				}
 			}
 			
-			palette[i] = make_color_hsv(colors[closet][0] * 255, colors[closet][1] * 255, colors[closet][2] * 255);
+			var clr = make_color_hsv(colors[closet][0] * 255, colors[closet][1] * 255, colors[closet][2] * 255);
+			if(!array_exists(palette, clr))
+				array_push(palette, clr);
 		}
 		
 		surface_free(_surf);
+		sortPalette(palette);
 		
 		return palette;
+	}
+	
+	function extractFrequence(_surfFull, _size, _all = false) {
+		var _surf = surface_create(min(32, surface_get_width(_surfFull)), min(32, surface_get_height(_surfFull)));
+		_size = max(1, _size);
+		
+		var ww = surface_get_width(_surf);
+		var hh = surface_get_height(_surf);
+		
+		surface_set_target(_surf);
+		draw_clear_alpha(0, 0);
+		BLEND_OVERRIDE
+		gpu_set_texfilter(true);
+		draw_surface_stretched(_surfFull, 0, 0, ww, hh);
+		gpu_set_texfilter(false);
+		BLEND_NORMAL
+		surface_reset_target();
+		
+		var c_buffer = buffer_create(ww * hh * 4, buffer_fixed, 2);
+		var colors = array_create(ww * hh);
+		
+		buffer_get_surface(c_buffer, _surf, 0);
+		buffer_seek(c_buffer, buffer_seek_start, 0);
+		
+		var clrs = ds_map_create();
+		
+		for( var i = 0; i < ww * hh; i++ ) {
+			var c = buffer_read(c_buffer, buffer_u32) & ~(0b11111111 << 24);
+			if(ds_map_exists(clrs, c)) 
+				clrs[? c]++;
+			else
+				clrs[? c] = 0;
+		}
+			
+		buffer_delete(c_buffer);
+		var palette = [];
+		
+		if(_all) {
+			var amo = ds_map_size(clrs);
+			var k = ds_map_find_first(clrs);
+			repeat(amo) {
+				array_push(palette, k);
+				k = ds_map_find_next(clrs, k);
+			}
+			sortPalette(palette);
+		} else {
+			var pr = ds_priority_create();
+		
+			var amo = ds_map_size(clrs);
+			var k = ds_map_find_first(clrs);
+			repeat(amo) {
+				ds_priority_add(pr, k, clrs[? k]);
+				k = ds_map_find_next(clrs, k);
+			}
+		
+			for( var i = 0; i < _size; i++ ) {
+				if(ds_priority_empty(pr)) break;
+				array_push(palette, ds_priority_delete_max(pr));
+			}
+			
+			ds_priority_destroy(pr);
+		}
+		
+		ds_map_destroy(clrs);
+		return palette;
+	}
+	
+	static step = function() {
+		var _algo = inputs[| 3].getValue();
+		
+		inputs[| 1].setVisible(_algo != 2);
+		inputs[| 2].setVisible(_algo == 0);
 	}
 	
 	function process_data(_output, _data, index = 0) { 
 		var _surf = _data[0];
 		var _size = _data[1];
 		var _seed = _data[2];
+		var _algo = _data[3];
 		
 		if(!is_surface(_surf)) return [];
 		
-		return extractPalette(_surf, _size, _seed);
+		if(_algo == 0)
+			return extractKmean(_surf, _size, _seed);
+		else
+			return extractFrequence(_surf, _size, _algo == 2);
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s) {

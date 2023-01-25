@@ -9,7 +9,7 @@ function Node_create_CSV_File_Write(_x, _y, _group = -1) {
 }
 
 function Node_CSV_File_Write(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
-	name = "CSV out";
+	name = "CSV File Out";
 	color = COLORS.node_blend_input;
 	previewable = false;
 	

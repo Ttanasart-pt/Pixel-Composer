@@ -163,7 +163,7 @@ function Node_Image_Animated(_x, _y, _group = -1) : Node(_x, _y, _group) constru
 		
 		surface_set_target(surfs);
 			draw_clear_alpha(0, 0);
-			BLEND_OVER
+			BLEND_OVERRIDE
 			if(_end == ANIMATION_END.hide) {
 				if(frame < array_length(spr))
 					draw_sprite(spr[frame], 0, curr_x, curr_y);

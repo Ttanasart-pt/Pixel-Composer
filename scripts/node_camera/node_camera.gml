@@ -3,6 +3,7 @@ function Node_Camera(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) const
 	preview_alpha = 0.5;
 	
 	shader = sh_camera;
+	uni_backg   = shader_get_sampler_index(shader, "backg");
 	uni_scene   = shader_get_sampler_index(shader, "scene");
 	uni_dim_scn = shader_get_uniform(shader, "scnDimension");
 	uni_dim_cam = shader_get_uniform(shader, "camDimension");
@@ -18,7 +19,7 @@ function Node_Camera(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) const
 	inputs[| 2] = nodeValue(2, "Zoom", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
 		.setDisplay(VALUE_DISPLAY.slider, [ 0.01, 4, 0.01 ]);
 	
-	inputs[| 3] = nodeValue(3, "Oversample mode", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+	inputs[| 3] = nodeValue(3, "Oversample mode", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0, "How to deal with pixel outside the surface.\n    - Empty: Use empty pixel\n    - Clamp: Repeat edge pixel\n    - Repeat: Repeat texture.")
 		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Empty", "Clamp", "Repeat" ]);
 	
 	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
@@ -117,42 +118,64 @@ function Node_Camera(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) const
 		var _dw = round(surface_valid_size(_area[2]) * 2);
 		var _dh = round(surface_valid_size(_area[3]) * 2);
 		_outSurf = surface_verify(_outSurf, _dw, _dh);
+		var pingpong = [ surface_create(_dw, _dh), surface_create(_dw, _dh) ];
+		var ppInd = 0;
+		
+		surface_set_target(pingpong[0]);
+		draw_clear_alpha(0, 0);
+		BLEND_OVERRIDE
+		draw_surface(_data[0], 0, 0);
+		BLEND_NORMAL
+		surface_reset_target();
+		
+		surface_set_target(pingpong[1]);
+		draw_clear_alpha(0, 0);
+		surface_reset_target();
 		
 		var _px = round(_area[0]);
 		var _py = round(_area[1]);
 		
+		shader_set(shader);
+		shader_set_uniform_f(uni_dim_cam, _dw, _dh);
+		shader_set_uniform_f(uni_zom, _zoom);
+		shader_set_uniform_i(uni_sam_mod, _samp);
+		
+		var amo = (ds_list_size(inputs) - input_fix_len) / data_length - 1;
+		
+		for( var i = 0; i < amo; i++ ) {
+			ppInd = !ppInd;
+			
+			surface_set_target(pingpong[ppInd]);
+			var ind = input_fix_len + i * data_length;
+			
+			var sz = _data[ind + 1][2];
+			var sx = _data[ind + 1][0] * sz * _px;
+			var sy = _data[ind + 1][1] * sz * _py;
+			
+			var _surface = _data[ind];
+			var _scnW = surface_get_width(_surface);
+			var _scnH = surface_get_height(_surface);
+			
+			shader_set_uniform_f(uni_dim_scn, _scnW, _scnH);
+			shader_set_uniform_f(uni_blur, sz);
+			shader_set_uniform_f(uni_pos, (_px + sx) / _scnW, (_py + sy) / _scnH);
+			texture_set_stage(uni_backg, surface_get_texture(pingpong[!ppInd]));
+			texture_set_stage(uni_scene, surface_get_texture(_surface));
+			draw_sprite_ext(s_fx_pixel, 0, 0, 0, _dw, _dh, 0, c_white, 1);
+			surface_reset_target();
+		}
+		
+		shader_reset();
+		
 		surface_set_target(_outSurf);
 		draw_clear_alpha(0, 0);
-		shader_set(shader);
-			shader_set_uniform_f(uni_dim_cam, _dw, _dh);
-			shader_set_uniform_f(uni_zom, _zoom);
-			shader_set_uniform_i(uni_sam_mod, _samp);
-			
-			var amo = (ds_list_size(inputs) - input_fix_len) / data_length;
-			
-			for( var i = 0; i < amo; i++ ) {
-				var ind = i? input_fix_len + (i - 1) * data_length : 0;
-				var sx = 0;
-				var sy = 0;
-				var sz = 0;
-				
-				if(i) {
-					sz = _data[ind + 1][2];
-					sx = _data[ind + 1][0] * sz * _px;
-					sy = _data[ind + 1][1] * sz * _py;
-				}
-				
-				var _surface = _data[ind];
-				var _scnW = surface_get_width(_surface);
-				var _scnH = surface_get_height(_surface);
-				shader_set_uniform_f(uni_dim_scn, _scnW, _scnH);
-				shader_set_uniform_f(uni_blur, sz);
-				shader_set_uniform_f(uni_pos, (_px + sx) / _scnW, (_py + sy) / _scnH);
-				texture_set_stage(uni_scene, surface_get_texture(_surface));
-				draw_sprite_ext(s_fx_pixel, 0, 0, 0, _dw, _dh, 0, c_white, 1);
-			}
-		shader_reset();
+		BLEND_OVERRIDE
+		draw_surface(pingpong[ppInd], 0, 0);
+		BLEND_NORMAL
 		surface_reset_target();
+		
+		surface_free(pingpong[0]);
+		surface_free(pingpong[1]);
 		
 		return _outSurf;
 	}

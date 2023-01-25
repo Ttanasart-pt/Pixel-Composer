@@ -1,6 +1,8 @@
 function widget() constructor {
-	active = false;
-	hover  = false;
+	active  = false;
+	hover   = false;
+	iactive = false;
+	ihover  = false;
 	parent = noone;
 	interactable = true;
 	
@@ -8,6 +10,10 @@ function widget() constructor {
 	y = 0;
 	w = 0; 
 	h = 0;
+	
+	static setInteract = function(interactable = noone) { 
+		self.interactable = interactable;
+	}
 	
 	static register = function(parent = noone) { 
 		if(!interactable) return;
@@ -41,11 +47,11 @@ function widget() constructor {
 		WIDGET_CURRENT_SCROLL = noone;
 	}
 	
-	static setFocus = function(active = false, hover = false) {
-		if(!interactable) return;
-		
-		self.active = active;
-		self.hover = hover;
+	static setActiveFocus = function(active = false, hover = false) {
+		self.active  = interactable && active;
+		self.hover   = interactable && hover;
+		self.iactive = active;
+		self.ihover  = hover;
 	}
 	
 	static resetFocus = function() {

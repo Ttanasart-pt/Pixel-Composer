@@ -49,6 +49,8 @@
 	
 	PREF_MAP[? "dialog_add_node_grouping"] = true;
 	PREF_MAP[? "dialog_add_node_view"] = 0;
+	
+	PREF_MAP[? "physics_gravity"] = [ 0, 10 ];
 #endregion
 
 #region hotkeys	
@@ -167,6 +169,7 @@
 		
 		var _pref = ds_map_create();
 		ds_map_override(_pref, PREF_MAP);
+		ds_map_arr_to_list(_pref);
 		ds_map_add_map(map, "preferences", _pref);
 		
 		var path = DIRECTORY + "keys.json";
@@ -201,11 +204,16 @@
 		}
 		
 		if(ds_map_exists(map, "preferences")) {
+			ds_map_list_to_arr(map[? "preferences"]);
 			ds_map_override(PREF_MAP, map[? "preferences"]);
 		}
 		
 		ds_map_destroy(map);
 		
+		PREF_APPLY();
+	}
+	
+	function PREF_APPLY() {
 		var ww, hh;
 		
 		if(PREF_MAP[? "window_maximize"]) {
@@ -222,6 +230,8 @@
 		window_set_size(ww, hh);
 		window_set_position(display_get_width() / 2 - ww / 2, display_get_height() / 2 - hh / 2);
 		game_set_speed(PREF_MAP[? "ui_framerate"], gamespeed_fps);
+		
+		physics_world_gravity(PREF_MAP[? "physics_gravity"][0], PREF_MAP[? "physics_gravity"][1]);
 	}
 	
 	function find_hotkey(_context, _name) {

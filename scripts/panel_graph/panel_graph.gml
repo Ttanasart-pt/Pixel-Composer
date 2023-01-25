@@ -24,6 +24,8 @@ function Panel_Graph() : PanelContent() constructor {
 	graph_drag_my  = 0;
 	graph_drag_sx  = 0;
 	graph_drag_sy  = 0;
+	drag_key  = mb_middle;
+	drag_locking = false;
 	
 	mouse_graph_x = 0;
 	mouse_graph_y = 0;
@@ -54,12 +56,14 @@ function Panel_Graph() : PanelContent() constructor {
 	node_focus			= noone;
 	
 	junction_hovering = noone;
+	add_node_draw_junc = false;
+	add_node_draw_x_fix = 0;
+	add_node_draw_y_fix = 0;
+	add_node_draw_x = 0;
+	add_node_draw_y = 0;
 	
 	value_focus    = noone;
 	value_dragging = noone;
-	
-	show_grid = true;
-	drag_key  = mb_middle;
 	
 	minimap_show = false;
 	minimap_w = ui(160);
@@ -79,7 +83,9 @@ function Panel_Graph() : PanelContent() constructor {
 	context_frame_sx = 0; context_frame_ex = 0;
 	context_frame_sy = 0; context_frame_ey = 0;
 	
-	drag_locking = false;
+	show_grid	    = true;
+	show_dimension  = true;
+	show_compute    = true;
 	
 	toolbar_height = ui(40);
 	toolbars = [
@@ -113,6 +119,15 @@ function Panel_Graph() : PanelContent() constructor {
 			function() { return "Grid setting" }, 
 			function(param) { 
 				var gs = dialogCall(o_dialog_graph_grid, param.x, param.y); 
+				gs.anchor = ANCHOR.bottom | ANCHOR.left;
+			} 
+		],
+		[ 
+			THEME.icon_visibility,
+			function() { return 0; },
+			function() { return "Visibility settings" }, 
+			function(param) { 
+				var gs = dialogCall(o_dialog_graph_view, param.x, param.y); 
 				gs.anchor = ANCHOR.bottom | ANCHOR.left;
 			} 
 		],
@@ -168,6 +183,7 @@ function Panel_Graph() : PanelContent() constructor {
 	
 	addHotkey("Graph", "Blend",		"B", MOD_KEY.ctrl,	function() { doBlend(); });
 	addHotkey("Graph", "Compose",	"B", MOD_KEY.ctrl | MOD_KEY.shift,	function() { doCompose(); });
+	addHotkey("Graph", "Array",		"A", MOD_KEY.ctrl | MOD_KEY.shift,	function() { doArray(); });
 	
 	addHotkey("Graph", "Group",		"G", MOD_KEY.ctrl,					function() { doGroup(); });
 	addHotkey("Graph", "Ungroup",	"G", MOD_KEY.ctrl | MOD_KEY.shift,	function() { doUngroup(); });
@@ -182,6 +198,8 @@ function Panel_Graph() : PanelContent() constructor {
 	addHotkey("Graph", "Delete (break)",	vk_delete, MOD_KEY.shift,	function() { doDelete(false); });
 	addHotkey("Graph", "Delete (merge)",	vk_delete, MOD_KEY.none,	function() { doDelete(true); });
 	
+	addHotkey("Graph", "Paste",		"V", MOD_KEY.ctrl,	function() { pasteURL(clipboard_get_text()); });
+	
 	function stepBegin() {
 		var gr_x = graph_x * graph_s;
 		var gr_y = graph_y * graph_s;
@@ -192,6 +210,20 @@ function Panel_Graph() : PanelContent() constructor {
 		
 		mouse_grid_x = round(m_x / graph_line_s) * graph_line_s;
 		mouse_grid_y = round(m_y / graph_line_s) * graph_line_s;
+	}
+	
+	function focusNode(_node) {
+		node_focus = _node;
+		if(_node == noone) return;
+		
+		var cx = node_focus.x + node_focus.w / 2;
+		var cy = node_focus.y + node_focus.h / 2;
+		
+		graph_x = w / 2 / graph_s - cx;
+		graph_y = (h - toolbar_height) / 2 / graph_s - cy;
+		
+		graph_x = round(graph_x);
+		graph_y = round(graph_y);
 	}
 	
 	function toCenterNode() {
@@ -244,7 +276,7 @@ function Panel_Graph() : PanelContent() constructor {
 			if(mouse_press(mb_middle)) {
 				_doDragging = true;
 				drag_key = mb_middle;
-			} else if(mouse_press(mb_left) && key_mod_press(CTRL)) {
+			} else if(mouse_press(mb_left) && key_mod_press(ALT)) {
 				_doDragging = true;
 				drag_key = mb_left;
 			}
@@ -342,7 +374,7 @@ function Panel_Graph() : PanelContent() constructor {
 		#endregion
 		
 		if(mouse_on_graph && pFOCUS) {
-			if(mouse_press(mb_left) && !key_mod_press(CTRL)) {
+			if(mouse_press(mb_left) && !key_mod_press(ALT)) {
 				if(keyboard_check(vk_shift)) {
 					if(ds_list_empty(nodes_select_list) && node_focus) 
 						ds_list_add(nodes_select_list, node_focus);
@@ -356,8 +388,9 @@ function Panel_Graph() : PanelContent() constructor {
 							var fy0 = (node_focus.y + graph_y) * graph_s;
 							var fx1 = fx0 + node_focus.w * graph_s;
 							var fy1 = fy0 + node_focus.h * graph_s;
-						
+							
 							ds_list_clear(nodes_select_list);
+							
 							for(var i = 0; i < ds_list_size(nodes_list); i++) {
 								var _node = nodes_list[| i];
 								if(instanceof(_node) == "Node_Frame") continue;
@@ -447,6 +480,10 @@ function Panel_Graph() : PanelContent() constructor {
 							[ "Compose nodes", function() { 
 								doCompose();
 							}, ["Graph", "Compose"] ]);
+						array_push(menu,  
+							[ "Array from nodes", function() { 
+								doArray();
+							}, ["Graph", "Array"] ]);
 						
 						array_push(menu,  
 							[ "Group nodes", function() { 
@@ -486,7 +523,8 @@ function Panel_Graph() : PanelContent() constructor {
 		var hoverable = !bool(node_dragging) && pHOVER;
 		for(var i = 0; i < ds_list_size(nodes_list); i++) {
 			var _hov = nodes_list[| i].drawConnections(gr_x, gr_y, graph_s, mx, my, hoverable);
-			if(_hov != noone) hov = _hov;
+			if(_hov != noone)
+				hov = _hov;
 		}
 		
 		junction_hovering = node_hovering == noone? hov : noone;
@@ -496,8 +534,20 @@ function Panel_Graph() : PanelContent() constructor {
 			for(var i = 0; i < ds_list_size(nodes_list); i++) {
 				var n = nodes_list[| i];
 				if(instanceof(n) == "Node_Frame") continue;
+				n.onDrawNodeBehind(gr_x, gr_y, mx, my, graph_s);
 				var val = n.drawNode(gr_x, gr_y, mx, my, graph_s);
-				if(val) value_focus = val;
+				
+				if(val) {
+					if(key_mod_press(SHIFT))
+						TOOLTIP = [ val.getValue(), val.type ];
+						
+					if(key_mod_press(CTRL) && val.value_from != noone) {
+						value_focus = val.value_from;
+						if(mouse_press(mb_left))
+							val.removeFrom();
+					} else
+						value_focus = val;
+				}
 			}
 			
 			for(var i = 0; i < ds_list_size(nodes_list); i++) {
@@ -512,38 +562,38 @@ function Panel_Graph() : PanelContent() constructor {
 			if(node_dragging) {
 				node_focus = node_dragging;
 			
-				for(var i = 0; i < ds_list_size(nodes_list); i++) {
-					var _node = nodes_list[| i];
+				//for(var i = 0; i < ds_list_size(nodes_list); i++) { //drag node to group
+				//	var _node = nodes_list[| i];
 					
-					if(_node.pointIn(gr_x, gr_y, mx, my, graph_s) && variable_struct_exists(_node, "nodes")) {
-						var _recur = false;
-						if(ds_list_size(nodes_select_list) == 0) {
-							if(_node == node_dragging) _recur = true;	
-						} else {
-							for(var j = 0; j < ds_list_size(nodes_select_list); j++) {
-								var _n = nodes_select_list[| j];
-								if(_node == _n) _recur = true;
-							}
-						}
+				//	if(!_node.pointIn(gr_x, gr_y, mx, my, graph_s) || !variable_struct_exists(_node, "nodes"))
+				//		continue;
 					
-						if(!_recur) {
-							_node.drawActive(gr_x, gr_y, graph_s, 1);
-							if(mouse_release(mb_left) && !key_mod_press(CTRL)) {
-								if(ds_list_size(nodes_select_list) == 0) {
-									_node.add(node_dragging);
-									node_dragging.checkConnectGroup();
-								} else {
-									for(var j = 0; j < ds_list_size(nodes_select_list); j++) {
-										_node.add(nodes_select_list[| j]);
-									}
-									for(var j = 0; j < ds_list_size(nodes_select_list); j++) {
-										nodes_select_list[| j].checkConnectGroup();
-									}
-								}
-							}
-						}
-					}
-				}
+				//	var _recur = false;
+				//	if(ds_list_size(nodes_select_list) == 0) {
+				//		if(_node == node_dragging) _recur = true;	
+				//	} else {
+				//		for(var j = 0; j < ds_list_size(nodes_select_list); j++) {
+				//			var _n = nodes_select_list[| j];
+				//			if(_node == _n) _recur = true;
+				//		}
+				//	}
+					
+				//	if(_recur) 
+				//		continue;
+						
+				//	_node.drawActive(gr_x, gr_y, graph_s, 1);
+				//	if(mouse_release(mb_left) && key_mod_press(ALT)) {
+				//		if(ds_list_size(nodes_select_list) == 0) {
+				//			_node.add(node_dragging);
+				//			node_dragging.checkConnectGroup();
+				//		} else {
+				//			for(var j = 0; j < ds_list_size(nodes_select_list); j++) 
+				//				_node.add(nodes_select_list[| j]);
+				//			for(var j = 0; j < ds_list_size(nodes_select_list); j++) 
+				//				nodes_select_list[| j].checkConnectGroup();
+				//		}
+				//	}
+				//}
 			
 				if(ds_list_size(nodes_select_list) == 0) {
 					var nx = node_drag_sx + (mouse_graph_x - node_drag_mx);
@@ -556,7 +606,7 @@ function Panel_Graph() : PanelContent() constructor {
 					
 					node_dragging.move(nx, ny);
 				
-					if(mouse_release(mb_left) && !key_mod_press(CTRL)) {
+					if(mouse_release(mb_left)) {
 						if(nx != node_drag_sx || ny != node_drag_sy) {
 							recordAction(ACTION_TYPE.var_modify, node_dragging, [ node_drag_sx, "x" ]);
 							recordAction(ACTION_TYPE.var_modify, node_dragging, [ node_drag_sy, "y" ]);
@@ -600,7 +650,7 @@ function Panel_Graph() : PanelContent() constructor {
 		
 		if(mouse_on_graph && pFOCUS) {
 			if(node_focus && value_focus == noone) {
-				if(mouse_press(mb_left) && !key_mod_press(CTRL)) {
+				if(mouse_press(mb_left) && !key_mod_press(ALT)) {
 					node_dragging = node_focus;
 					node_drag_mx  = mouse_graph_x;
 					node_drag_my  = mouse_graph_y;
@@ -630,9 +680,9 @@ function Panel_Graph() : PanelContent() constructor {
 					draw_set_alpha(0.05);
 					draw_roundrect_ext(nodes_select_mx, nodes_select_my, mx, my, 6, 6, false);
 					draw_set_alpha(1);
-				
-					ds_list_clear(nodes_select_list);
-				
+					
+					//ds_list_clear(nodes_select_list);
+					
 					for(var i = 0; i < ds_list_size(nodes_list); i++) {
 						var _node = nodes_list[| i];
 						if(instanceof(_node) == "Node_Frame") continue;
@@ -640,9 +690,13 @@ function Panel_Graph() : PanelContent() constructor {
 						var _y = (_node.y + graph_y) * graph_s;
 						var _w = _node.w * graph_s;
 						var _h = _node.h * graph_s;
-					
-						if(rectangle_in_rectangle(_x, _y, _x + _w, _y + _h, nodes_select_mx, nodes_select_my, mx, my))
+						
+						var _sel = rectangle_in_rectangle(_x, _y, _x + _w, _y + _h, nodes_select_mx, nodes_select_my, mx, my);
+						
+						if(!ds_list_exist(nodes_select_list, _node) && _sel)
 							ds_list_add(nodes_select_list, _node);	
+						if(ds_list_exist(nodes_select_list, _node) && !_sel)
+							ds_list_remove(nodes_select_list, _node);	
 					}
 				}
 			
@@ -650,7 +704,7 @@ function Panel_Graph() : PanelContent() constructor {
 					nodes_select_drag = false;
 			}
 		
-			if(mouse_on_graph && mouse_press(mb_left, pFOCUS) && !key_mod_press(CTRL)) {
+			if(mouse_on_graph && mouse_press(mb_left, pFOCUS) && !key_mod_press(ALT)) {
 				if(!node_focus && !value_focus && !drag_locking) {
 					nodes_select_drag = true;
 					nodes_select_mx = mx;
@@ -757,8 +811,33 @@ function Panel_Graph() : PanelContent() constructor {
 			var _node = nodes_select_list[| i];
 			if(ds_list_size(_node.outputs) == 0) continue;
 			if(_node.outputs[| 0].type == VALUE_TYPE.surface) {
-				_compose.addFrom(_node.outputs[| 0]);
+				_compose.addInput(_node.outputs[| 0]);
 			}
+		}
+			
+		ds_list_clear(nodes_select_list);
+	}
+	
+	function doArray() {
+		if(ds_list_empty(nodes_select_list)) return;
+		
+		var cx = -99999;
+		var cy = 0;
+		
+		for(var i = 0; i < ds_list_size(nodes_select_list); i++) {
+			var _node = nodes_select_list[| i];
+			cx = max(cx, _node.x);
+			cy += _node.y;
+		}
+		cx = cx + 160;
+		cy = round(cy / ds_list_size(nodes_select_list) / 32) * 32;
+		
+		var _array = nodeBuild("Node_Array", cx, cy);
+		
+		for( var i = 0; i < ds_list_size(nodes_select_list); i++ ) {
+			var _node = nodes_select_list[| i];
+			if(ds_list_size(_node.outputs) == 0) continue;
+			_array.addInput(_node.outputs[| 0]);
 		}
 			
 		ds_list_clear(nodes_select_list);
@@ -971,16 +1050,36 @@ function Panel_Graph() : PanelContent() constructor {
 	
 	function drawJunctionConnect() {
 		if(value_dragging) {
-			draw_set_color(value_color(value_dragging.type));
-			
 			var xx = value_dragging.x;
 			var yy = value_dragging.y;
+			var _mx = mx;
+			var _my = my;
+			var target = noone;
 			
-			switch(PREF_MAP[? "curve_connection_line"]) {
-				case 0 : draw_line(xx, yy, mx, my); break;
-				case 1 : draw_line_curve(xx, yy, mx, my); break;
-				case 2 : draw_line_elbow(xx, yy, mx, my); break;
+			if(value_focus && value_focus != value_dragging && value_focus.connect_type != value_dragging.connect_type)
+				target = value_focus;
+			if(key_mod_press(CTRL) && node_hovering != noone && node_hovering.addInput != noone && value_dragging.connect_type == JUNCTION_CONNECT.output) {
+				target = node_hovering.getInput(value_dragging);
+				if(target != noone) 
+					node_hovering.active_draw_index = 1;
 			}
+			
+			if(target != noone) {
+				_mx = target.x;
+				_my = target.y;
+			}
+			
+			draw_set_color(value_color(value_dragging.type));
+			var th = PREF_MAP[? "connection_line_width"] * graph_s;
+			switch(PREF_MAP[? "curve_connection_line"]) {
+				case 0 : draw_line_width(xx, yy, _mx, _my, th); break;
+				case 1 : draw_line_curve(xx, yy, _mx, _my, th); break;
+				case 2 : draw_line_elbow(xx, yy, _mx, _my, th); break;
+			}
+			
+			value_dragging.drawJunction(graph_s, value_dragging.x, value_dragging.y);
+			if(target) 
+				target.drawJunction(graph_s, target.x, target.y);
 			
 			if(mouse_release(mb_left)) {
 				if(value_focus && value_focus != value_dragging) {
@@ -988,6 +1087,8 @@ function Panel_Graph() : PanelContent() constructor {
 						value_focus.setFrom(value_dragging);
 					else
 						value_dragging.setFrom(value_focus);
+				} else if(target != noone && value_dragging.connect_type == JUNCTION_CONNECT.output) {
+					node_hovering.addInput(value_dragging);
 				} else {
 					if(value_dragging.connect_type == JUNCTION_CONNECT.input)
 						value_dragging.removeFrom();
@@ -1006,13 +1107,8 @@ function Panel_Graph() : PanelContent() constructor {
 				
 				value_dragging = noone;
 			}
-		} else {
-			if(value_focus) {
-				if(mouse_press(mb_left, pFOCUS) && !key_mod_press(CTRL)) {
-					value_dragging = value_focus;
-				}
-			}
-		}
+		} else if(!value_dragging && value_focus && mouse_press(mb_left, pFOCUS) && !key_mod_press(ALT))
+			value_dragging = value_focus;
 	}
 	
 	function callAddDialog() {
@@ -1022,7 +1118,7 @@ function Panel_Graph() : PanelContent() constructor {
 			junction_hovering = other.junction_hovering;
 			
 			alarm[0] = 1;
-		}		
+		}
 	}
 	
 	function drawContext() {
@@ -1210,7 +1306,7 @@ function Panel_Graph() : PanelContent() constructor {
 		}
 		
 		if(pHOVER && point_in_rectangle(mx, my, mx0, my0, mx0 + ui(16), my0 + ui(16))) {
-			draw_sprite_ui(THEME.node_resize, 0, mx0 + ui(10), my0 + ui(10), 1, 1, 180, c_white, 0.75);
+			draw_sprite_ui(THEME.node_resize, 0, mx0 + ui(2), my0 + ui(2), 1, 1, 180, c_white, 0.75);
 			if(mouse_press(mb_left, pFOCUS)) {
 				minimap_dragging = true;
 				minimap_drag_sx = minimap_w;
@@ -1219,7 +1315,7 @@ function Panel_Graph() : PanelContent() constructor {
 				minimap_drag_my = my;
 			}
 		} else 
-			draw_sprite_ui(THEME.node_resize, 0, mx0 + ui(10), my0 + ui(10), 1, 1, 180, c_white, 0.3);
+			draw_sprite_ui(THEME.node_resize, 0, mx0 + ui(2), my0 + ui(2), 1, 1, 180, c_white, 0.3);
 	}
 	
 	function drawContextFrame() {
@@ -1319,6 +1415,7 @@ function Panel_Graph() : PanelContent() constructor {
 			case "Node_Iterate" :	bg = merge_color(COLORS.panel_bg_clear, COLORS.node_blend_loop, 0.05); break;
 			case "Node_VFX_Group" : bg = merge_color(COLORS.panel_bg_clear, COLORS.node_blend_vfx, 0.05); break;
 			case "Node_Feedback" :  bg = merge_color(COLORS.panel_bg_clear, COLORS.node_blend_feedback, 0.05); break;
+			case "Node_Rigid_Group" :  bg = merge_color(COLORS.panel_bg_clear, COLORS.node_blend_simulation, 0.05); break;
 		}
 		draw_clear(bg);
 		
@@ -1344,5 +1441,25 @@ function Panel_Graph() : PanelContent() constructor {
 			draw_text(w - ui(8), ui(28), "Rendering...");
 		else if(UPDATE == RENDER_TYPE.full)
 			draw_text(w - ui(8), ui(28), "Rendering partial...");
+	}
+	
+	function pasteURL(url) {
+		if(filename_ext(url) != ".png") return;
+		if(file_exists(url)) {
+			Node_create_Image_path(0, 0, url);
+			return;
+		}
+		
+		var path = DIRECTORY + "temp\\url_pasted_" + string(irandom_range(100000, 999999)) + ".png";
+		var img = http_get_file(url, path);
+		CLONING = true;
+		var node = Node_create_Image(0, 0);
+		CLONING = false;
+		var args = [node, path];
+		
+		global.FILE_LOAD_ASYNC[? img] = [ function(args) {
+			args[0].inputs[| 0].setValue(args[1]);
+			args[0].doUpdate();
+		}, args];
 	}
 }

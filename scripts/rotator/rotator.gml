@@ -10,6 +10,11 @@ function rotator(_onModify, _step = -1) : widget() constructor {
 	
 	tb_value = new textBox(TEXTBOX_INPUT.number, onModify);
 	
+	static setInteract = function(interactable = noone) { 
+		self.interactable = interactable;
+		tb_value.interactable = interactable;
+	}
+	
 	static register = function(parent = noone) {
 		tb_value.register(parent);
 	}

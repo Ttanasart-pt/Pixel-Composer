@@ -134,11 +134,6 @@ function Node_Image_Sequence(_x, _y, _group = -1) : Node(_x, _y, _group) constru
 		
 		var surfs = outputs[| 0].getValue();
 		
-		for(var i = 0; i < array_length(surfs); i++) {
-			if(is_surface(surfs[i]))
-				surface_free(surfs[i]);
-		}
-		
 		for(var i = 0; i < array_length(spr); i++) {
 			var _spr = spr[i];
 			var _w = sprite_get_width(_spr);
@@ -171,17 +166,17 @@ function Node_Image_Sequence(_x, _y, _group = -1) : Node(_x, _y, _group) constru
 					ww = sprite_get_width(_spr) + pad[0] + pad[2];
 					hh = sprite_get_height(_spr) + pad[1] + pad[3];
 					
-					surfs[i] = surface_create_valid(ww, hh);
+					surfs[i] = surface_verify(array_safe_get(surfs, i), ww, hh);
 					surface_set_target(surfs[i]);
 						draw_clear_alpha(0, 0);
-						BLEND_OVER
+						BLEND_OVERRIDE
 						draw_sprite(_spr, 0, pad[2], pad[1]);
 						BLEND_NORMAL
 					surface_reset_target();
 					break;
 				case CANVAS_SIZE.maximum :
 				case CANVAS_SIZE.minimum :
-					surfs[i] = surface_create_valid(ww, hh);
+					surfs[i] = surface_verify(array_safe_get(surfs, i), ww, hh);
 					var _w = sprite_get_width(_spr);
 					var _h = sprite_get_height(_spr);
 						
@@ -192,7 +187,7 @@ function Node_Image_Sequence(_x, _y, _group = -1) : Node(_x, _y, _group) constru
 						
 						surface_set_target(surfs[i]);
 							draw_clear_alpha(0, 0);
-							BLEND_OVER
+							BLEND_OVERRIDE
 							draw_sprite_ext(_spr, 0, sw, sh, ss, ss, 0, c_white, 1);
 							BLEND_NORMAL
 						surface_reset_target();
@@ -202,7 +197,7 @@ function Node_Image_Sequence(_x, _y, _group = -1) : Node(_x, _y, _group) constru
 						
 						surface_set_target(surfs[i]);
 							draw_clear_alpha(0, 0);
-							BLEND_OVER
+							BLEND_OVERRIDE
 							draw_sprite(_spr, 0, xx, yy);
 							BLEND_NORMAL
 						surface_reset_target();

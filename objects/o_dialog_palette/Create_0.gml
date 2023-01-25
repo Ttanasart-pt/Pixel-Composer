@@ -25,6 +25,11 @@ event_inherited();
 	selector = new colorSelector(setColor);
 	selector.dropper_close = false;
 	
+	b_apply = button(function() {
+		onApply(palette);
+		instance_destroy();
+	}).setIcon(THEME.accept, 0, COLORS._main_icon_dark);
+	
 	function setPalette(pal) {
 		palette = pal;	
 		index_selecting = 0;

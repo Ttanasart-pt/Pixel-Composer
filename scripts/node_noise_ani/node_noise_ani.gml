@@ -1,5 +1,5 @@
 function Node_Noise_Aniso(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constructor {
-	name = "Noise Anisotropic";
+	name = "Anisotropic Noise";
 	
 	shader = sh_ani_noise;
 	uniform_noi = shader_get_uniform(shader, "noiseAmount");

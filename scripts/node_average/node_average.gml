@@ -20,15 +20,16 @@ function Node_Average(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) cons
 		if(side / 2 >= 1) {
 			var _Surf = [ surface_create(side, side), surface_create(side / 2, side / 2) ];
 			var _ind = 1;
-		
+			
+			gpu_set_tex_filter(true);
+			
 			surface_set_target(_Surf[0]);
 			draw_clear_alpha(0, 0);
 			BLEND_OVERRIDE
-			draw_surface(inSurf, 0, 0);
+			draw_surface_stretched(inSurf, 0, 0, side, side);
 			BLEND_NORMAL
 			surface_reset_target();
 			
-			gpu_set_tex_filter(true);
 			for( var i = 0; i < lop; i++ ) {
 				surface_set_target(_Surf[_ind]);
 				draw_clear_alpha(0, 0);

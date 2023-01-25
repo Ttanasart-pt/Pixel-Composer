@@ -20,10 +20,10 @@ function Node_Line(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constru
 	inputs[| 6] = nodeValue(6, "Rotation", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.rotation);
 	
-	inputs[| 7] = nodeValue(7, "Path", self, JUNCTION_CONNECT.input, VALUE_TYPE.object, 0)
+	inputs[| 7] = nodeValue(7, "Path", self, JUNCTION_CONNECT.input, VALUE_TYPE.object, 0, "Draw line along path.")
 		.setVisible(true, true);
 	
-	inputs[| 8] = nodeValue(8, "Range", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [0, 1])
+	inputs[| 8] = nodeValue(8, "Range", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [0, 1], "Range of the path to draw.")
 		.setDisplay(VALUE_DISPLAY.slider_range, [0, 1, 0.01]);
 	
 	inputs[| 9] = nodeValue(9, "Shift", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
@@ -33,11 +33,13 @@ function Node_Line(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constru
 		.setDisplay(VALUE_DISPLAY.gradient);
 	
 	inputs[| 11] = nodeValue(11, "Width over length", self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_11);
+	
+	inputs[| 12] = nodeValue(12, "Span width over path", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false, "Apply the full 'width over length' to the trimmed path.");
 		
 	input_display_list = [
 		["Output",			true],	0, 1, 
 		["Line data",		false], 6, 7, 2, 
-		["Line settings",	false], 3, 11, 8, 9, 
+		["Line settings",	false], 3, 11, 12, 8, 9, 
 		["Wiggle",			false], 4, 5, 
 		["Render",			false], 10 
 	];
@@ -59,6 +61,7 @@ function Node_Line(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constru
 		var _color = _data[10];
 		var _col_data = inputs[| 10].getExtraData();
 		var _widc  = _data[11];
+		var _widap = _data[12];
 		
 		var _rtStr = min(_ratio[0], _ratio[1]);
 		var _rtLen = max(_ratio[0], _ratio[1]) - _rtStr;
@@ -106,7 +109,7 @@ function Node_Line(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constru
 					}
 					
 					_nw = random_range(_wid[0], _wid[1]);
-					_nw *= eval_curve_bezier_cubic_x(_widc, _prog_curr);
+					_nw *= eval_curve_bezier_cubic_x(_widc, _widap? _prog_curr / _rtLen : _prog_curr);
 					
 					if(_total <= _prog_curr - _prog) {
 						_na = point_direction(_ox, _oy, _nx, _ny) + 90;

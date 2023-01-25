@@ -20,7 +20,7 @@ function _sprite_path(rel, theme) {
 
 function _sprite_load_from_struct(str, theme, key) {
 	var path = _sprite_path(str.path, theme);
-	var s = sprite_add(path, str.subimages, false, false, str.xorigin, str.yorigin);
+	var s = sprite_add(path, str.subimages, false, true, str.xorigin, str.yorigin);
 	if(str.slice) {
 		var slice = sprite_nineslice_create();	
 		slice.enabled = str.slice.enabled;

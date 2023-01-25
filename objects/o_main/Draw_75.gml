@@ -1,17 +1,38 @@
 /// @description tooltip filedrop
 #region tooltip
-	if(TOOLTIP != "") {
-		draw_set_text(f_p0, fa_left, fa_top, COLORS._main_text);
-		
-		var tw = string_width(TOOLTIP);
-		var th = string_height(TOOLTIP);
-		
-		var mx = min(mouse_mx + ui(16), WIN_W - (tw + ui(16)));
-		var my = min(mouse_my + ui(16), WIN_H - (th + ui(16)));
-		
-		draw_sprite_stretched(THEME.textbox, 3, mx, my, tw + ui(16), th + ui(16));
-		draw_sprite_stretched(THEME.textbox, 0, mx, my, tw + ui(16), th + ui(16));
-		draw_text(mx + ui(8), my + ui(8), TOOLTIP);
+	if(is_array(TOOLTIP) || TOOLTIP != "") {
+		if(is_array(TOOLTIP)) {
+			var content = TOOLTIP[0];
+			var type    = TOOLTIP[1];
+			
+			switch(type) {
+				case VALUE_TYPE.float :
+				case VALUE_TYPE.integer :
+				case VALUE_TYPE.text :
+				case VALUE_TYPE.path :
+					draw_tooltip_text(string(content));
+					break;
+				case VALUE_TYPE.boolean :
+					draw_tooltip_text(content? "True" : "False");
+					break;
+				case VALUE_TYPE.curve :
+					draw_tooltip_text("[Curve]");
+					break;
+				case VALUE_TYPE.color :
+					draw_tooltip_color(content);
+					break;
+				case VALUE_TYPE.d3object :
+					draw_tooltip_text("[3D object]");
+					break;
+				case VALUE_TYPE.object :
+					draw_tooltip_text("[Object]");
+					break;
+				case VALUE_TYPE.surface :
+					draw_tooltip_surface(content);
+					break;
+			}
+		} else 
+			draw_tooltip_text(TOOLTIP);
 	}
 	TOOLTIP = "";
 #endregion

@@ -1,10 +1,8 @@
 function Node_Lua_Global(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
-	name = "Lua global";
+	name = "Lua Global";
 	preview_channel = 1;
 	previewable = false;
 	
-	
-		
 	inputs[| 0]  = nodeValue(0, "Lua code", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "")
 		.setDisplay(VALUE_DISPLAY.code);
 		
@@ -60,7 +58,7 @@ function Node_Lua_Global(_x, _y, _group = -1) : Node(_x, _y, _group) constructor
 		try {
 			lua_add_code(getState(), _code);
 		} catch(e) {
-			noti_warning(exception_print(e));
+			noti_warning(exception_print(e),, self);
 		}
 	}
 	

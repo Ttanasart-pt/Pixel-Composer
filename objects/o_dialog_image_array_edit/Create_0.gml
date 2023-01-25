@@ -3,19 +3,19 @@ event_inherited();
 
 #region data
 	destroy_on_click_out = true;
-	dialog_w = ui(648);
-	dialog_h = max(ui(500), WIN_H - ui(200));
+	dialog_w = ui(640);
+	dialog_h = ui(640);
 	
 	dialog_resizable = true;
 	dialog_w_min = ui(400);
-	dialog_h_min = ui(500);
+	dialog_h_min = ui(400);
 	dialog_w_max = WIN_W;
 	dialog_h_max = WIN_H;
 	
 	target = noone;
 	
 	function onResize() {
-		sp_content.resize(dialog_w - ui(150), dialog_h - ui(72));
+		sp_content.resize(dialog_w - ui(40), dialog_h - ui(76));
 	}	
 #endregion
 
@@ -24,7 +24,7 @@ event_inherited();
 	dragging = -1;
 	drag_spr = -1;
 	
-	sp_content = new scrollPane(dialog_w - ui(150), dialog_h - ui(72), function(_y, _m) {
+	sp_content = new scrollPane(dialog_w - ui(40), dialog_h - ui(76), function(_y, _m) {
 		if(!target) return 0;
 		draw_clear_alpha(COLORS.dialog_array_edit_bg, 0);
 		
@@ -128,6 +128,18 @@ event_inherited();
 		var val = arr[oldindex];
 		array_delete(arr, oldindex, 1);
 		array_insert(arr, newindex, val);
+		target.inputs[| 0].setValue(arr);
+		target.doUpdate();
+	}
+	
+	sortAsc = true;
+	function sortByName() {
+		if(!target) return 0;
+		var arr = target.inputs[| 0].getValue();
+		
+		array_sort(arr, bool(sortAsc));
+		sortAsc = !sortAsc;
+		
 		target.inputs[| 0].setValue(arr);
 		target.doUpdate();
 	}

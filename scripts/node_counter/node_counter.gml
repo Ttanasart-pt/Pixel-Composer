@@ -8,7 +8,9 @@ function Node_Counter(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) cons
 	
 	inputs[| 0] = nodeValue(0, "Start", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1);
 	inputs[| 1] = nodeValue(1, "Speed", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1);
-	inputs[| 2] = nodeValue(2, "Mode", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+	inputs[| 2] = nodeValue(2, "Mode", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0, @"Counting mode
+    - Frame count: Count value up/down per frame.
+    - Animation progress: Count from 0 (first frame) to 1 (last frame). ")
 		.setDisplay(VALUE_DISPLAY.enum_scroll, ["Frame count", "Animation progress"]);
 	
 	outputs[| 0] = nodeValue(0, "Counter", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, 0);

@@ -8,8 +8,6 @@ function Node_create_Image(_x, _y, _group = -1) {
 	var node = new Node_Image(_x, _y, _group);
 	node.inputs[| 0].setValue(path);
 	node.doUpdate();
-	
-	//ds_list_add(PANEL_GRAPH.nodes_list, node);
 	return node;
 }
 
@@ -19,8 +17,6 @@ function Node_create_Image_path(_x, _y, path) {
 	var node = new Node_Image(_x, _y, PANEL_GRAPH.getCurrentContext());
 	node.inputs[| 0].setValue(path);
 	node.doUpdate();
-	
-	//ds_list_add(PANEL_GRAPH.nodes_list, node);
 	return node;	
 }
 
@@ -104,7 +100,7 @@ function Node_Image(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 		
 		surface_set_target(_outsurf);
 		draw_clear_alpha(0, 0);
-		BLEND_OVER 
+		BLEND_OVERRIDE 
 		draw_sprite(spr, 0, pad[2], pad[1]);
 		BLEND_NORMAL
 		surface_reset_target();

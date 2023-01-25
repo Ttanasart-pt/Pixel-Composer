@@ -12,7 +12,9 @@ function Node_Normal_Light(_x, _y, _group = -1) : Node_Processor(_x, _y, _group)
 	uniform_light_typ = shader_get_uniform(sh_normal_light, "lightType");
 	
 	inputs[| 0] = nodeValue(0, "Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
+	
 	inputs[| 1] = nodeValue(1, "Normal map", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
+	
 	inputs[| 2] = nodeValue(2, "Normal intensity", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1);
 	
 	inputs[| 3] = nodeValue(3, "Ambient", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_black);
@@ -22,7 +24,9 @@ function Node_Normal_Light(_x, _y, _group = -1) : Node_Processor(_x, _y, _group)
 		.setUnitRef(function(index) { return getDimension(index); });
 	
 	inputs[| 5] = nodeValue(5, "Light range", self,	JUNCTION_CONNECT.input, VALUE_TYPE.float, 16);
+	
 	inputs[| 6] = nodeValue(6, "Light intensity", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 32);
+	
 	inputs[| 7] = nodeValue(7, "Light color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white);
 	
 	inputs[| 8] = nodeValue(8, "Light type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
@@ -57,7 +61,7 @@ function Node_Normal_Light(_x, _y, _group = -1) : Node_Processor(_x, _y, _group)
 		
 		surface_set_target(_outSurf);
 			draw_clear_alpha(0, 0);
-			BLEND_OVER 
+			BLEND_OVERRIDE 
 		
 			shader_set(sh_normal_light);
 			texture_set_stage(uniform_map, surface_get_texture(_map));

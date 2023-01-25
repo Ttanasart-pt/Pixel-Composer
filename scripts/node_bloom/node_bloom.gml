@@ -9,13 +9,13 @@ function Node_Bloom(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constr
 	uniform_mask = shader_get_sampler_index(shader, "mask");
 	
 	inputs[| 0] = nodeValue(0, "Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
-	inputs[| 1] = nodeValue(1, "Size", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 3)
+	inputs[| 1] = nodeValue(1, "Size", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 3, "Bloom blur radius.")
 		.setDisplay(VALUE_DISPLAY.slider, [1, 32, 1]);
 	
-	inputs[| 2] = nodeValue(2, "Tolerance", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.5)
+	inputs[| 2] = nodeValue(2, "Tolerance", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.5, "How bright a pixel should be to start blooming.")
 		.setDisplay(VALUE_DISPLAY.slider, [ 0, 1, 0.01]);
 	
-	inputs[| 3] = nodeValue(3, "Strength", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, .25)
+	inputs[| 3] = nodeValue(3, "Strength", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, .25, "Blend intensity.")
 		.setDisplay(VALUE_DISPLAY.slider, [ 0, 2, 0.01]);
 		
 	inputs[| 4] = nodeValue(4, "Mask", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
@@ -51,7 +51,7 @@ function Node_Bloom(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constr
 		
 		surface_set_target(_outSurf);
 			draw_clear_alpha(0, 0);
-			BLEND_OVER
+			BLEND_OVERRIDE
 		
 			var uniform_foreground = shader_get_sampler_index(sh_blend_add_alpha_adj, "fore");
 			var uniform_opacity    = shader_get_uniform(sh_blend_add_alpha_adj, "opacity");

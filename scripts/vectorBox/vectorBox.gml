@@ -30,6 +30,17 @@ function vectorBox(_size, _type, _onModify, _unit = noone) : widget() constructo
 		tb[i].slidable = true;
 	}
 	
+	static setInteract = function(interactable) { 
+		self.interactable = interactable;
+		b_link.interactable = interactable;
+		
+		if(extras) 
+			extras.interactable = interactable;
+			
+		for( var i = 0; i < size; i++ ) 
+			tb[i].interactable = interactable;
+	}
+	
 	static register = function(parent = noone) {
 		b_link.register(parent);
 		
@@ -60,8 +71,8 @@ function vectorBox(_size, _type, _onModify, _unit = noone) : widget() constructo
 		if(unit != noone && unit.reference != noone) {
 			_w += ui(4);
 			
-			unit.triggerButton.hover  = hover;
-			unit.triggerButton.active = active;
+			unit.triggerButton.hover  = ihover;
+			unit.triggerButton.active = iactive;
 			
 			unit.draw(_x + _w - ui(32), _y + _h / 2 - ui(32 / 2), ui(32), ui(32), _m);
 			_w -= ui(40);
@@ -80,8 +91,9 @@ function vectorBox(_size, _type, _onModify, _unit = noone) : widget() constructo
 		_x += ui(28);
 		_w -= ui(28);
 		
-		var ww  = _w / size;
-		for(var i = 0; i < size; i++) {
+		var sz = min(size, array_length(_data));
+		var ww = _w / sz;
+		for(var i = 0; i < sz; i++) {
 			tb[i].hover  = hover;
 			tb[i].active = active;
 			

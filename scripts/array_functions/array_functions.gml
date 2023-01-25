@@ -82,3 +82,22 @@ function array_max(arr) {
 		 mx = max(mx, arr[i]);
 	 return mx;
 }
+
+function array_get_dimension(arr) {
+	return is_array(arr)? array_length(arr) : 1;
+}
+
+function array_shape(arr, first = true, isSurface = false) {
+	if(!is_array(arr)) {
+		if(isSurface && is_surface(arr)) 
+			return (first? "" : " x ") + string(surface_get_width(arr)) + " x " + string(surface_get_height(arr)) + " px";
+		return "";
+	}
+	
+	var dim = string(array_length(arr));
+	
+	if(array_length(arr)) 
+		dim += array_shape(arr[0], false, isSurface);
+	
+	return (first? "" : " x ") + dim;
+}

@@ -9,9 +9,8 @@ function buttonGroupClass(_data, _onClick) : widget() constructor {
 	
 	current_selecting = 0;
 	
-	for(var i = 0; i < array_length(data); i++) {
-		buttons[i] = button(-1);	
-	}
+	for(var i = 0; i < array_length(data); i++) 
+		buttons[i] = button(-1);
 	
 	sb_small = new scrollBox(data, _onClick);
 	
@@ -20,6 +19,13 @@ function buttonGroupClass(_data, _onClick) : widget() constructor {
 			onClick(0);
 		else
 			onClick(current_selecting + 1);
+	}
+	
+	static setInteract = function(interactable = noone) { 
+		self.interactable = interactable;
+		for(var i = 0; i < array_length(data); i++) 
+			buttons[i].interactable = interactable;
+		sb_small.interactable = interactable;
 	}
 	
 	static register = function(parent = noone) { 

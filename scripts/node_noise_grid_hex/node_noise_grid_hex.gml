@@ -1,5 +1,5 @@
 function Node_Noise_Hex(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constructor {
-	name = "Hexagonal noise";
+	name = "Hexagonal Noise";
 	
 	shader = sh_noise_grid_hex;
 	uniform_dim = shader_get_uniform(shader, "dimension");

@@ -27,7 +27,7 @@ function Node_Stripe(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) const
 	inputs[| 2] = nodeValue(2, "Angle", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.rotation);
 	
-	inputs[| 3] = nodeValue(3, "Blend", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, 0);
+	inputs[| 3] = nodeValue(3, "Blend", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, 0, "Smoothly blend between each stripe.");
 	
 	inputs[| 4] = nodeValue(4, "Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [0, 0] )
 		.setDisplay(VALUE_DISPLAY.vector)

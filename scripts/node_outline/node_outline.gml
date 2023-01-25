@@ -20,7 +20,7 @@ function Node_Outline(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) cons
 	inputs[| 1] = nodeValue(1, "Width",   self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0);
 	inputs[| 2] = nodeValue(2, "Color",   self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white);
 	
-	inputs[| 3] = nodeValue(3, "Blend",   self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, 0);
+	inputs[| 3] = nodeValue(3, "Blend",   self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, 0, "Blend outline color with the original color.");
 	
 	inputs[| 4] = nodeValue(4, "Blend alpha",   self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
 		.setDisplay(VALUE_DISPLAY.slider, [0, 1, 0.01]);
@@ -30,12 +30,13 @@ function Node_Outline(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) cons
 	
 	inputs[| 6] = nodeValue(6, "Anti alising",   self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, 0);
 	
-	inputs[| 7] = nodeValue(7, "Oversample mode", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+	inputs[| 7] = nodeValue(7, "Oversample mode", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0, "How to deal with pixel outside the surface.\n    - Empty: Use empty pixel\n    - Clamp: Repeat edge pixel\n    - Repeat: Repeat texture.")
 		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Empty", "Clamp", "Repeat" ]);
 		
-	inputs[| 8] = nodeValue(8, "Start",   self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0);
+	inputs[| 8] = nodeValue(8, "Start",   self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0, "Shift outline inside, outside the shape.");
 		
 	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
+	
 	outputs[| 1] = nodeValue(1, "Outline", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
 	
 	input_display_list = [ 0,
@@ -58,7 +59,7 @@ function Node_Outline(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) cons
 		
 		surface_set_target(_outSurf);
 			draw_clear_alpha(0, 0);
-			BLEND_OVER
+			BLEND_OVERRIDE
 		
 			shader_set(shader);
 			shader_set_uniform_f_array(uniform_dim, [ww, hh]);

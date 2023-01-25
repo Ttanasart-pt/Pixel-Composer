@@ -126,8 +126,14 @@ if !ready exit;
 	}
 	
 	if(key_dragging) {
-		var tt = clamp((mouse_mx - gr_x) / gr_w, 0, 1);
-		setKeyPosition(key_dragging, tt);
+		if(abs(mouse_mx - key_drag_mx) > 4)
+			key_drag_dead = false;
+		
+		if(!key_drag_dead) {
+			var newT = key_drag_sx + (mouse_mx - key_drag_mx) / gr_w;
+			newT = clamp(newT, 0, 1);
+			setKeyPosition(key_dragging, newT);
+		}
 		
 		if(mouse_release(mb_left)) {
 			removeKeyOverlap(key_dragging);
@@ -142,10 +148,14 @@ if !ready exit;
 	
 	if(sHOVER && point_in_rectangle(mouse_mx, mouse_my, _x0, _y0, _x1, _y1)) {
 		if(mouse_press(mb_left, sFOCUS)) {
+			widget_clear();
 			if(hover) {
 				key_selecting = hover;
 				key_dragging  = hover;
-					
+				key_drag_sx	  = hover.time;
+				key_drag_mx	  = mouse_mx;
+				key_drag_dead = true;
+				
 				selector.setColor(key_dragging.value);
 			} else {
 				key_selecting = noone;
@@ -157,7 +167,10 @@ if !ready exit;
 					
 				key_selecting  = _newkey;
 				key_dragging   = _newkey;
-					
+				key_drag_sx	  = tt;
+				key_drag_mx	  = mouse_mx;
+				key_drag_dead = false;
+				
 				selector.setColor(key_dragging.value);
 			}
 		}
@@ -177,6 +190,7 @@ if !ready exit;
 	var txt = key_selecting? key_selecting.time * 100 : "-";
 	sl_position.active = sFOCUS;
 	sl_position.hover  = sHOVER;
+	sl_position.register();
 	sl_position.draw(op_x + ui(100), op_y, ui(content_w - 140), TEXTBOX_HEIGHT, txt, mouse_ui);
 #endregion
 
@@ -190,8 +204,9 @@ if !ready exit;
 #region controls
 	var bx = content_x + content_w - ui(36);
 	var by = dialog_y + dialog_h - ui(36);
-	if(buttonInstant(THEME.button_lime, bx - ui(18), by - ui(18), ui(36), ui(36), mouse_ui, sFOCUS, sHOVER, "", THEME.accept, 0, COLORS._main_icon_dark) == 2) {
-		onApply();
-		instance_destroy();
-	}
+	
+	b_apply.register();
+	b_apply.hover  = sHOVER;
+	b_apply.active = sFOCUS;
+	b_apply.draw(bx - ui(18), by - ui(18), ui(36), ui(36), mouse_ui, THEME.button_lime);
 #endregion

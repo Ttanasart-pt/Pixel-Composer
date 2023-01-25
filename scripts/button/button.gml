@@ -55,10 +55,13 @@ function buttonClass(_onClick, _icon = noone) : widget() constructor {
 			if(mouse_press(mb_left)) deactivate();
 		}
 		
-		if(icon) draw_sprite_ui_uniform(icon, icon_index, _x + _w / 2, _y + _h / 2,, icon_blend);
+		var aa = interactable * 0.25 + 0.75;
+		if(icon) draw_sprite_ui_uniform(icon, icon_index, _x + _w / 2, _y + _h / 2,, icon_blend, aa);
 		if(text != "") {
+			draw_set_alpha(aa);
 			draw_set_text(f_p0, fa_center, fa_center, COLORS._main_text);
 			draw_text(_x + _w / 2, _y + _h / 2, text);
+			draw_set_alpha(1);
 		}
 		
 		if(WIDGET_CURRENT == self)

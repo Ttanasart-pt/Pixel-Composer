@@ -2,6 +2,10 @@ function draw_surface_safe(surface, _x, _y) {
 	if(!is_surface(surface)) return;
 	draw_surface(surface, _x, _y);
 }
+function draw_surface_stretched_safe(surface, _x, _y, _w, _h) {
+	if(!is_surface(surface)) return;
+	draw_surface_stretched(surface, _x, _y, _w, _h);
+}
 function draw_surface_ext_safe(surface, _x, _y, _xs = 1, _ys = 1, _rot = 0, _col = c_white, _alpha = 1) {
 	if(!is_surface(surface)) return;
 	draw_surface_ext(surface, _x, _y, _xs, _ys, _rot, _col, _alpha);
@@ -34,7 +38,7 @@ function surface_size_to(surface, width, height) {
 function surface_copy_add(dst, src, _x = 0, _y = 0) {
 	surface_set_target(dst);
 	draw_clear_alpha(0, 0);
-	BLEND_OVER
+	BLEND_OVERRIDE
 		draw_surface_safe(src, _x, _y);
 	BLEND_NORMAL
 	surface_reset_target();
@@ -92,7 +96,7 @@ function surface_create_from_sprite_ext(spr, ind) {
 	
 	var s = surface_create_valid(sw, sh);
 	surface_set_target(s);
-		BLEND_OVER
+		BLEND_OVERRIDE
 		draw_clear_alpha(0, 0);
 		draw_sprite(spr, ind, sprite_get_xoffset(spr), sprite_get_yoffset(spr));
 		BLEND_NORMAL

@@ -1,4 +1,4 @@
-function Node_Boolean(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
+function Node_Boolean(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constructor {
 	name = "Boolean";
 	color = COLORS.node_blend_number;
 	previewable   = false;
@@ -17,7 +17,7 @@ function Node_Boolean(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s) {
 		draw_set_text(f_h5, fa_center, fa_center, COLORS._main_text);
-		var str	= outputs[| 0].getValue()? "True" : "False";
+		var str	= inputs[| 0].getValue()? "True" : "False";
 		
 		var bbox = drawGetBbox(xx, yy, _s);
 		var ss	= string_scale(str, bbox.w, bbox.h);

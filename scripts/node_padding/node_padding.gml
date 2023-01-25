@@ -39,7 +39,7 @@ function Node_Padding(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) cons
 			surface_set_target(_outSurf);
 				if(fill == 0) {
 					draw_clear_alpha(0, 0);
-					BLEND_OVER
+					BLEND_OVERRIDE
 				} else if(fill == 1) {
 					draw_clear_alpha(fillClr, 1);
 				}

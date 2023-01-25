@@ -6,6 +6,7 @@ event_inherited();
 	align = fa_center;
 	draggable = false;
 	destroy_on_click_out = true;
+	selecting = -1;
 	
 	scrollbox = noone;
 	
@@ -22,9 +23,13 @@ event_inherited();
 			var _ly = _y + i * hght;	
 			
 			if(sHOVER && sc_content.hover && point_in_rectangle(_m[0], _m[1], 0, _ly + 1, _dw, _ly + hght - 1)) {
+				selecting = i;
+			}
+			
+			if(selecting == i) {
 				draw_sprite_stretched_ext(THEME.textbox, 3, 0, _ly, _dw, hght, COLORS.dialog_menubox_highlight, 1);
 				
-				if(mouse_press(mb_left, sFOCUS)) {
+				if(sFOCUS && (mouse_press(mb_left) || keyboard_check_pressed(vk_enter))) {
 					scrollbox.onModify(i);
 					instance_destroy();
 				}
@@ -35,6 +40,19 @@ event_inherited();
 				draw_text_cut(_dw / 2, _ly + hght / 2, data[i], _dw);
 			else if(align == fa_left)
 				draw_text_cut(ui(8), _ly + hght / 2, data[i], _dw);
+		}
+		
+		if(sFOCUS) {
+			if(keyboard_check_pressed(vk_up)) {
+				selecting--;
+				if(selecting < 0) selecting = array_length(data) - 1;
+			}
+			
+			if(keyboard_check_pressed(vk_down))
+				selecting = (selecting + 1) % array_length(data);
+				
+			if(keyboard_check_pressed(vk_escape))
+				instance_destroy();
 		}
 		
 		return _h;

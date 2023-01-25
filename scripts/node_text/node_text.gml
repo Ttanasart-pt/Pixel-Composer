@@ -1,5 +1,5 @@
 function Node_Text(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constructor {
-	name = "Text";
+	name = "Draw Text";
 	font = f_p0;
 	
 	inputs[| 0] = nodeValue(0, "Text", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "")
@@ -97,7 +97,7 @@ function Node_Text(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constru
 		
 		surface_set_target(_outSurf);
 			draw_clear_alpha(0, 0);
-			BLEND_OVER
+			BLEND_OVERRIDE
 			
 			if(_dim[0] != 0 && _dim[1] != 0) {
 				var _hali = _data[7];

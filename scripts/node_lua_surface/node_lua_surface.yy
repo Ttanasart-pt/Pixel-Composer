@@ -5,7 +5,7 @@
   "isDnD": false,
   "isCompatibility": false,
   "parent": {
-    "name": "node",
-    "path": "folders/nodes/data/node.yy",
+    "name": "lua",
+    "path": "folders/nodes/data/lua.yy",
   },
 }

@@ -24,14 +24,25 @@ function paddingBox(_onModify, _unit = noone) : widget() constructor {
 	for(var i = 0; i < 4; i++)
 		tb[i] = new textBox(TEXTBOX_INPUT.float, onModifySingle[i]);
 	
+	static setInteract = function(interactable = noone) { 
+		self.interactable = interactable;
+		b_link.interactable = interactable;
+		
+		for( var i = 0; i < 4; i++ ) 
+			tb[i].interactable = interactable;
+	}
+	
 	static register = function(parent = noone) {
 		b_link.register();
 		
-		for(var i = 0; i < 4; i++)
-			tb[i].register(parent);
+		tb[1].register(parent);
 		
 		if(unit != noone && unit.reference != noone)
 			unit.triggerButton.register(parent);
+			
+		tb[2].register(parent);
+		tb[0].register(parent);
+		tb[3].register(parent);
 	}
 	
 	static draw = function(_x, _y, _data, _m) {
@@ -64,8 +75,8 @@ function paddingBox(_onModify, _unit = noone) : widget() constructor {
 		b_link.draw(bx + ui(4), by + ui(4), ui(24), ui(24), _m, THEME.button_hide);
 		
 		if(unit != noone && unit.reference != noone) {
-			unit.triggerButton.hover  = hover;
-			unit.triggerButton.active = active;
+			unit.triggerButton.hover  = ihover;
+			unit.triggerButton.active = iactive;
 			
 			unit.draw(_x + ui(48),  _y - ui(25), ui(32), ui(32), _m);
 		}

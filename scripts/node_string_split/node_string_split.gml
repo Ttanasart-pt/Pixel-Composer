@@ -1,5 +1,5 @@
 function Node_String_Split(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constructor {
-	name = "Text split";
+	name = "Split Text";
 	previewable   = false;
 	
 	w = 96;
@@ -7,7 +7,7 @@ function Node_String_Split(_x, _y, _group = -1) : Node_Processor(_x, _y, _group)
 	
 	inputs[| 0] = nodeValue(0, "Text", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "")
 		.setVisible(true, true);
-	inputs[| 1] = nodeValue(1, "Delimiter", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, " ");
+	inputs[| 1] = nodeValue(1, "Delimiter", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, " ", "Character that used to split text,\nleave blank to create character array.");
 	
 	outputs[| 0] = nodeValue(0, "Text", self, JUNCTION_CONNECT.output, VALUE_TYPE.text, "");
 	

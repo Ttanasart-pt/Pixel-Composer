@@ -44,7 +44,7 @@ function Node_Group_Output(_x, _y, _group = -1) : Node(_x, _y, _group) construct
 			printIf(global.RENDER_LOG, "Group output ready " + string(_to.node.isUpdateReady()));
 			
 			if(_to.node.isUpdateReady()) {
-				ds_stack_push(RENDER_STACK, _to.node);
+				ds_queue_enqueue(RENDER_QUEUE, _to.node);
 				printIf(global.RENDER_LOG, "Push node " + _to.node.name + " to stack");
 			}
 		}

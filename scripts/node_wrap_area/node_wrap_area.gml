@@ -1,5 +1,5 @@
 function Node_Wrap_Area(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constructor {
-	name = "Area warp";
+	name = "Area Warp";
 	
 	inputs[| 0] = nodeValue(0, "Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 	inputs[| 1] = nodeValue(1, "Area", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 16, 16, 4, 4, AREA_SHAPE.rectangle ])
@@ -29,7 +29,7 @@ function Node_Wrap_Area(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) co
 		
 		surface_set_target(_outSurf);
 			draw_clear_alpha(0, 0);
-			BLEND_OVER
+			BLEND_OVERRIDE
 			
 			draw_surface_ext_safe(_inSurf, cx - cw, cy - ch, ww, hh, 0, c_white, 1);
 			

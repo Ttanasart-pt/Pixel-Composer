@@ -18,10 +18,10 @@ function log_message(title, str, icon = noone, flash = false) {
 	return noti_status(string(title) + ": " + string(str), icon, flash);
 }
 
-function log_warning(title, str) {
+function log_warning(title, str, ref = noone) {
 	__log("[WARNING] ", string(title) + ": " + string(str));
 	
-	return noti_warning(string(title) + ": " + string(str));
+	return noti_warning(string(title) + ": " + string(str),, ref);
 }
 
 function log_crash(str) {

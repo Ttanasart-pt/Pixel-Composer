@@ -29,7 +29,7 @@ function Node_Transform_Single(_x, _y, _group = -1) : Node_Processor(_x, _y, _gr
 		
 		surface_set_target(_outSurf);
 		draw_clear_alpha(0, 0);
-		BLEND_OVER
+		BLEND_OVERRIDE
 		
 		draw_surface_ext_safe(_data[0], pos_x + origin[0] - psc_x, pos_y + origin[1] - psc_y, sca_x, sca_y, rot, c_white, 1);
 		

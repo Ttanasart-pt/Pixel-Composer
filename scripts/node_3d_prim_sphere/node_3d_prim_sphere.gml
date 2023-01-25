@@ -2,7 +2,7 @@ function Node_3D_Sphere(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) co
 	name = "3D Sphere";
 	dimension_index = 1;
 	
-	inputs[| 0] = nodeValue(0, "Subdivisions", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [8, 4])
+	inputs[| 0] = nodeValue(0, "Subdivisions", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [8, 4], "Amount of polygon in X and Y axis.")
 		.setDisplay(VALUE_DISPLAY.vector);
 	
 	inputs[| 1] = nodeValue(1, "Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, def_surf_size2)
@@ -115,13 +115,13 @@ function Node_3D_Sphere(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) co
 			var u3 = ha1 / 360;
 			var v3 = 0.5 + 0.5 * dsin(va1);
 			
-			vertex_add_pnt(VB, [hx0, hz0, hy0], [hx0, hz0, hy0], [u0, v0]);
-			vertex_add_pnt(VB, [hx1, hz1, hy1], [hx1, hz1, hy1], [u1, v1]);
-			vertex_add_pnt(VB, [hx2, hz2, hy2], [hx2, hz2, hy2], [u2, v2]);
-												 		
-			vertex_add_pnt(VB, [hx1, hz1, hy1], [hx1, hz1, hy1], [u1, v1]);
-			vertex_add_pnt(VB, [hx2, hz2, hy2], [hx2, hz2, hy2], [u2, v2]);
-			vertex_add_pnt(VB, [hx3, hz3, hy3], [hx3, hz3, hy3], [u3, v3]);
+			vertex_add_pnt(VB, [hx0, hz0, hy0], d3_normalize([hx0, hz0, hy0]), [u0, v0]);
+			vertex_add_pnt(VB, [hx1, hz1, hy1], d3_normalize([hx1, hz1, hy1]), [u1, v1]);
+			vertex_add_pnt(VB, [hx2, hz2, hy2], d3_normalize([hx2, hz2, hy2]), [u2, v2]);
+			
+			vertex_add_pnt(VB, [hx1, hz1, hy1], d3_normalize([hx1, hz1, hy1]), [u1, v1]);
+			vertex_add_pnt(VB, [hx2, hz2, hy2], d3_normalize([hx2, hz2, hy2]), [u2, v2]);
+			vertex_add_pnt(VB, [hx3, hz3, hy3], d3_normalize([hx3, hz3, hy3]), [u3, v3]);
 		}
 		
 		vertex_end(VB);

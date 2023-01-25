@@ -7,7 +7,7 @@ function Node_create_3D_Obj_path(_x, _y, path) {
 }
 
 function Node_3D_Obj(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
-	name = "3D Obj";
+	name = "3D Object";
 	
 	inputs[| 0] = nodeValue(0, "Path", self, JUNCTION_CONNECT.input, VALUE_TYPE.path, "")
 		.setDisplay(VALUE_DISPLAY.path_load, [ "*.obj", "" ]);
@@ -47,7 +47,7 @@ function Node_3D_Obj(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 	inputs[| 11] = nodeValue(11, "Object scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 1, 1 ])
 		.setDisplay(VALUE_DISPLAY.vector);
 		
-	inputs[| 12] = nodeValue(12, "Flip UV", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	inputs[| 12] = nodeValue(12, "Flip UV", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false, "Flip UV axis, can be use to fix some texture mapping error.");
 	
 	inputs[| 13] = nodeValue(13, "Object rotation", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 180 ])
 		.setDisplay(VALUE_DISPLAY.vector);

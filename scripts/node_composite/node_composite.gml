@@ -231,9 +231,7 @@ function Node_Composite(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) co
 	}
 	if(!LOADING && !APPENDING) createNewSurface();
 	
-	function addFrom(_nodeFrom) {
-		inputs[| ds_list_size(inputs) - data_length].setFrom(_nodeFrom);
-	}
+	//function getInput() { return inputs[| ds_list_size(inputs) - data_length]; }
 	
 	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
 	
@@ -569,7 +567,7 @@ function Node_Composite(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) co
 		
 		surface_set_target(_outSurf);
 		draw_clear_alpha(0, 0);
-		BLEND_OVER
+		BLEND_OVERRIDE
 			draw_surface_safe(temp_surf[res_index], 0, 0);
 		BLEND_NORMAL
 		surface_reset_target();

@@ -1,9 +1,6 @@
 function Node_Lua_Compute(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
-	name = "Lua compute";
-	preview_channel = 1;
-	
+	name = "Lua Compute";
 	previewable = false;
-	
 	
 	inputs[| 0]  = nodeValue(0, "Function name", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "render" + string(irandom_range(100000, 999999)));
 	
@@ -32,7 +29,7 @@ function Node_Lua_Compute(_x, _y, _group = -1) : Node(_x, _y, _group) constructo
 	
 	outputs[| 0] = nodeValue(0, "Execution thread", self, JUNCTION_CONNECT.output, VALUE_TYPE.node, noone );
 	
-	outputs[| 1] = nodeValue(1, "Return value", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
+	outputs[| 1] = nodeValue(1, "Return value", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, 0);
 	
 	luaArgumentRenderer();
 	
@@ -157,7 +154,7 @@ function Node_Lua_Compute(_x, _y, _group = -1) : Node(_x, _y, _group) constructo
 		var _func = inputs[| 0].getValue();
 		var _dimm = inputs[| 1].getValue();
 		
-		argument_val  = [];
+		argument_val = [];
 		for( var i = input_fix_len; i < ds_list_size(inputs) - data_length; i += data_length ) {
 			array_push(argument_val,  inputs[| i + 2].getValue());
 		}
@@ -166,7 +163,7 @@ function Node_Lua_Compute(_x, _y, _group = -1) : Node(_x, _y, _group) constructo
 		try {
 			res = lua_call_w(getState(), _func, argument_val);
 		} catch(e) {
-			noti_warning(exception_print(e));
+			noti_warning(exception_print(e),, self);
 		}
 		
 		outputs[| 1].setValue(res);

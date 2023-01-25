@@ -16,6 +16,7 @@ function areaBox(_onModify, _unit = noone) : widget() constructor {
 	
 	link_value = false;
 	current_data = [ 0, 0, 0, 0 ];
+	adjust_shape = true;
 	mode = AREA_MODE.area;
 	
 	onModifySingle[0] = function(val) { 
@@ -82,10 +83,27 @@ function areaBox(_onModify, _unit = noone) : widget() constructor {
 		onModify(3, data[3]);
 	}
 	
-	static register = function(parent = noone) {
+	static setInteract = function(interactable = noone) { 
+		self.interactable = interactable;
 		for(var i = 0; i < 4; i++) 
-			tb[i].register(parent);
-			
+			tb[i].interactable = interactable;
+	}
+	
+	static register = function(parent = noone) {
+		switch(mode) {
+			case AREA_MODE.two_point :
+			case AREA_MODE.area :	   
+				for(var i = 0; i < 4; i++) 
+					tb[i].register(parent);
+				break;
+			case AREA_MODE.padding : 
+				tb[1].register(parent);
+				tb[2].register(parent);
+				tb[0].register(parent);
+				tb[3].register(parent);
+				break;
+		}
+		
 		if(unit != noone && unit.reference != noone)
 			unit.triggerButton.register(parent);
 	}
@@ -97,7 +115,9 @@ function areaBox(_onModify, _unit = noone) : widget() constructor {
 		h = ui(204);
 		mode = ds_list_get(_extra_data, 0);
 		
-		if(buttonInstant(THEME.button_hide, _x - ui(48), _y + ui(64 - 48), ui(96), ui(96), _m, active, hover, "", THEME.inspector_area, array_safe_get(_data, 4), c_white) == 2) {
+		if(buttonInstant(THEME.button_hide, _x - ui(48), _y + ui(64 - 48), ui(96), ui(96), _m, adjust_shape && active, adjust_shape && hover, 
+			"", THEME.inspector_area, array_safe_get(_data, 4), c_white) == 2) {
+			
 			if(mouse_press(mb_left, active)) {
 				var val = (array_safe_get(_data, 4) + 1) % 2;
 				onModify(4, val);
@@ -238,8 +258,8 @@ function areaBox(_onModify, _unit = noone) : widget() constructor {
 		}
 			
 		if(unit != noone && unit.reference != noone) {
-			unit.triggerButton.hover  = hover;
-			unit.triggerButton.active = active;
+			unit.triggerButton.hover  = ihover;
+			unit.triggerButton.active = iactive;
 			
 			unit.draw(_x + ui(56 + 48 + 8), _y - ui(28), ui(32), ui(32), _m);
 		}

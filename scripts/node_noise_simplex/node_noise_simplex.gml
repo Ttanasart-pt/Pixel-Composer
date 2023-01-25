@@ -1,5 +1,5 @@
 function Node_Noise_Simplex(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constructor {
-	name = "Simplex noise";
+	name = "Simplex Noise";
 	
 	shader = sh_simplex;
 	uniform_pos = shader_get_uniform(shader, "position");

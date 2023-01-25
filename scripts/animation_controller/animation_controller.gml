@@ -7,6 +7,7 @@
 		framerate = 30;
 		is_playing = false;
 		frame_progress = false;
+		play_freeze = 0;
 		
 		rendering = false;
 		playback = ANIMATOR_END.loop;

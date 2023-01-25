@@ -37,7 +37,7 @@
 		}
 	}
 	
-	function noti_status(str, icon = noone, flash = false) {
+	function noti_status(str, icon = noone, flash = false, ref = noone) {
 		var noti = new notification(NOTI_TYPE.log, str, icon);
 		ds_list_add(STATUSES, noti);
 		
@@ -46,10 +46,16 @@
 			PANEL_MENU.noti_flash_color = flash;
 		}
 		
+		if(ref) {
+			var onClick = function() { PANEL_GRAPH.focusNode(self.ref); };
+			noti.ref = ref;
+			noti.onClick = method(noti, onClick);
+		}
+		
 		return noti;
 	}
 	
-	function noti_warning(str, icon = noone) {
+	function noti_warning(str, icon = noone, ref = noone) {
 		var noti = new notification(NOTI_TYPE.warning, str, icon, c_ui_orange, PREF_MAP[? "notification_time"]);
 		ds_list_add(STATUSES, noti);
 		ds_list_add(WARNING, noti);
@@ -57,6 +63,12 @@
 		if(PANEL_MENU) {
 			PANEL_MENU.noti_flash = 1;
 			PANEL_MENU.noti_flash_color = COLORS._main_accent;
+		}
+		
+		if(ref) {
+			var onClick = function() { PANEL_GRAPH.focusNode(self.ref); };
+			noti.ref = ref;
+			noti.onClick = method(noti, onClick);
 		}
 		return noti;
 	}

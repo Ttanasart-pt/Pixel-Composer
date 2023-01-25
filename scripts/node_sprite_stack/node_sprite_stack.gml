@@ -8,6 +8,7 @@ function Node_Sprite_Stack(_x, _y, _group = -1) : Node_Processor(_x, _y, _group)
 		.setDisplay(VALUE_DISPLAY.vector);
 	
 	inputs[| 2] = nodeValue(2, "Stack amount", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 4);
+	
 	inputs[| 3] = nodeValue(3, "Stack shift", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 0, 1 ] )
 		.setDisplay(VALUE_DISPLAY.vector);
 	
@@ -20,10 +21,10 @@ function Node_Sprite_Stack(_x, _y, _group = -1) : Node_Processor(_x, _y, _group)
 	
 	inputs[| 6] = nodeValue(6, "Stack blend", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white );
 	
-	inputs[| 7] = nodeValue(7, "Alpha end", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1 )
+	inputs[| 7] = nodeValue(7, "Alpha end", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1, "Alpha value for the last copy." )
 		.setDisplay(VALUE_DISPLAY.slider, [0, 1, .01]);
 	
-	inputs[| 8] = nodeValue(8, "Move base", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false );
+	inputs[| 8] = nodeValue(8, "Move base", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false, "Make each copy move the original image." );
 	
 	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
 	

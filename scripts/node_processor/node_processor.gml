@@ -140,10 +140,7 @@ function Node_Processor(_x, _y, _group = -1) : Node(_x, _y, _group) constructor 
 			if(array_length(inputs_data[i]) == 0) continue;
 			if(!inputs[| i].isArray(inputs_data[i])) continue;
 			
-			if(typeArray(inputs[| i].display_type)) {
-				process_amount = max(process_amount, array_length(inputs_data[i][0]));
-			} else 
-				process_amount = max(process_amount, array_length(inputs_data[i]));
+			process_amount = max(process_amount, array_length(inputs_data[i]));
 		}
 		
 		for(var i = 0; i < ds_list_size(outputs); i++)

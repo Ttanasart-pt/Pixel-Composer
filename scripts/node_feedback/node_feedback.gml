@@ -27,6 +27,6 @@ function Node_Feedback(_x, _y, _group = -1) : Node_Collection(_x, _y, _group) co
 			
 		if(!allReady) return;
 		
-		__nodeLeafList(nodes, RENDER_STACK);
+		__nodeLeafList(nodes, RENDER_QUEUE);
 	}
 }

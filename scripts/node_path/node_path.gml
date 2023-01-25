@@ -14,17 +14,20 @@ function Node_Path(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 		.setDisplay(VALUE_DISPLAY.enum_scroll, ["Entire line", "Segment"]);
 	
 	input_display_list = [
-		0, 2, 1,
+		["Path",	false], 0, 2, 1,
+		["Anchors",	false], 
 	];
 	
-	list_start = ds_list_size(inputs);
+	input_fix_len = ds_list_size(inputs);
+	input_display_list_len = array_length(input_display_list);
 	
 	function createAnchor(_x, _y) {
 		var index = ds_list_size(inputs);
 		
 		inputs[| index] = nodeValue(index, "Anchor",  self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ _x, _y, 0, 0, 0, 0 ])
 			.setDisplay(VALUE_DISPLAY.vector);
-			
+		array_push(input_display_list, index);
+		
 		return inputs[| index];
 	}
 	
@@ -63,14 +66,14 @@ function Node_Path(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var sample = PREF_MAP[? "path_resolution"];
 		var loop   = inputs[| 1].getValue();
-		var ansize = ds_list_size(inputs) - list_start;
+		var ansize = ds_list_size(inputs) - input_fix_len;
 
 		if(drag_point > -1) {
 			var dx = value_snap(drag_point_sx + (_mx - drag_point_mx) / _s, _snx);
 			var dy = value_snap(drag_point_sy + (_my - drag_point_my) / _s, _sny);
 			
 			if(drag_type < 2) {
-				var inp = inputs[| list_start + drag_point];
+				var inp = inputs[| input_fix_len + drag_point];
 				var anc = inp.getValue();
 				if(drag_type == 0) {
 					anc[0] = dx;
@@ -117,7 +120,7 @@ function Node_Path(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 				
 				var a = [];
 				for( var i = 0; i < 4; i++ ) 
-					a[i] = inputs[| list_start + i].getValue();
+					a[i] = inputs[| input_fix_len + i].getValue();
 				
 				a[0][0] = minx;
 				a[0][1] = miny;
@@ -132,7 +135,7 @@ function Node_Path(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 				a[3][1] = maxy;
 				
 				for( var i = 0; i < 4; i++ ) 
-					inputs[| list_start + i].setValue(a[i]);
+					inputs[| input_fix_len + i].setValue(a[i]);
 			} else if(drag_type == 3) {
 				var minx = min((_mx - _x) / _s, (drag_point_mx - _x) / _s);
 				var maxx = max((_mx - _x) / _s, (drag_point_mx - _x) / _s);
@@ -146,7 +149,7 @@ function Node_Path(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 				
 				var a = [];
 				for( var i = 0; i < 4; i++ ) 
-					a[i] = inputs[| list_start + i].getValue();
+					a[i] = inputs[| input_fix_len + i].getValue();
 				
 				a[0][0] = (minx + maxx) / 2;
 				a[0][1] = miny;
@@ -177,7 +180,7 @@ function Node_Path(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 				a[3][5] = -(maxy - miny) * 0.27614;
 				
 				for( var i = 0; i < 4; i++ ) 
-					inputs[| list_start + i].setValue(a[i]);
+					inputs[| input_fix_len + i].setValue(a[i]);
 			}
 			
 			
@@ -191,11 +194,11 @@ function Node_Path(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 			var _a1 = 0;
 			
 			if(i) {
-				_a0 = inputs[| list_start + i - 1].getValue();
-				_a1 = inputs[| list_start + i].getValue();
+				_a0 = inputs[| input_fix_len + i - 1].getValue();
+				_a1 = inputs[| input_fix_len + i].getValue();
 			} else {
-				_a0 = inputs[| list_start + ansize - 1].getValue();
-				_a1 = inputs[| list_start + 0].getValue();
+				_a0 = inputs[| input_fix_len + ansize - 1].getValue();
+				_a1 = inputs[| input_fix_len + 0].getValue();
 			}
 			
 			var _ox = 0, _oy = 0, _nx = 0, _ny = 0, p = 0;
@@ -215,7 +218,7 @@ function Node_Path(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 		var hover_type = 0;
 		
 		for(var i = 0; i < ansize; i++) {
-			var _a = inputs[| list_start + i].getValue();
+			var _a = inputs[| input_fix_len + i].getValue();
 			var xx = _x + _a[0] * _s;
 			var yy = _y + _a[1] * _s;
 			var cont = false;
@@ -257,7 +260,7 @@ function Node_Path(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 		}
 			
 		if(anchor_hover != -1) {
-			var _a = inputs[| list_start + anchor_hover].getValue();
+			var _a = inputs[| input_fix_len + anchor_hover].getValue();
 			if(keyboard_check(vk_shift) || PANEL_PREVIEW.tool_index == 1) {
 				draw_sprite_ui_uniform(THEME.cursor_path_anchor, 0, _mx + 16, _my + 16);
 				
@@ -267,7 +270,7 @@ function Node_Path(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 						_a[3] = 0;
 						_a[4] = 0;
 						_a[5] = 0;
-						inputs[| list_start + anchor_hover].setValue(_a);
+						inputs[| input_fix_len + anchor_hover].setValue(_a);
 					} else {
 						_a[2] = -8;
 						_a[3] = 0;
@@ -286,7 +289,8 @@ function Node_Path(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 				draw_sprite_ui_uniform(THEME.cursor_path_remove, 0, _mx + 16, _my + 16);
 				
 				if(mouse_press(mb_left, active)) {
-					ds_list_delete(inputs, list_start + anchor_hover);
+					ds_list_delete(inputs, input_fix_len + anchor_hover);
+					array_remove(input_display_list, input_fix_len + anchor_hover);
 					doUpdate();
 				}
 			} else {
@@ -313,7 +317,7 @@ function Node_Path(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 			draw_sprite_ui_uniform(THEME.cursor_path_add, 0, _mx + 16, _my + 16);
 			
 			if(mouse_press(mb_left, active)) {
-				drag_point    = ds_list_size(inputs) - list_start;
+				drag_point    = ds_list_size(inputs) - input_fix_len;
 				createAnchor(value_snap((_mx - _x) / _s, _snx), value_snap((_my - _y) / _s, _sny));
 				
 				drag_type     = -1;
@@ -326,8 +330,10 @@ function Node_Path(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 			draw_sprite_ui_uniform(THEME.cursor_path_add, 0, _mx + 16, _my + 16);
 			
 			if(mouse_press(mb_left, active)) {
-				while(ds_list_size(inputs) > list_start)
-					ds_list_delete(inputs, list_start);
+				while(ds_list_size(inputs) > input_fix_len) {
+					ds_list_delete(inputs, input_fix_len);
+				}
+				array_resize(input_display_list, input_display_list_len);
 				
 				drag_point    = 0;
 				drag_type     = PANEL_PREVIEW.tool_index;
@@ -344,7 +350,7 @@ function Node_Path(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 	static updateLength = function() {
 		length_total = 0;
 		var loop   = inputs[| 1].getValue();
-		var ansize = ds_list_size(inputs) - list_start;
+		var ansize = ds_list_size(inputs) - input_fix_len;
 		if(ansize < 2) {
 			lengths = [];
 			return;
@@ -356,9 +362,9 @@ function Node_Path(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 			array_resize(lengths, con);
 		
 		for(var i = 0; i < con; i++) {
-			var index_0 = list_start + i;
-			var index_1 = list_start + i + 1;
-			if(index_1 >= ds_list_size(inputs)) index_1 = list_start;
+			var index_0 = input_fix_len + i;
+			var index_1 = input_fix_len + i + 1;
+			if(index_1 >= ds_list_size(inputs)) index_1 = input_fix_len;
 			
 			var _a0 = inputs[| index_0].getValue();
 			var _a1 = inputs[| index_1].getValue();
@@ -385,11 +391,11 @@ function Node_Path(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 	static getSegmentRatio = function(_rat) {
 		var loop   = inputs[| 1].getValue();
 		var ansize = array_length(lengths);
-		var amo    = ds_list_size(inputs) - list_start;
+		var amo    = ds_list_size(inputs) - input_fix_len;
 		
 		if(amo < 1) return [0, 0];
 		if(_rat < 0) {
-			var _p0 = inputs[| list_start].getValue();
+			var _p0 = inputs[| input_fix_len].getValue();
 			return [_p0[0], _p0[1]];
 		}
 		
@@ -407,8 +413,8 @@ function Node_Path(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 			_i1 = 0; 
 		}
 		
-		var _a0 = inputs[| list_start + _i0].getValue();
-		var _a1 = inputs[| list_start + _i1].getValue();
+		var _a0 = inputs[| input_fix_len + _i0].getValue();
+		var _a1 = inputs[| input_fix_len + _i1].getValue();
 		
 		return eval_bezier(_t, _a0[0], _a0[1], _a1[0], _a1[1], _a0[0] + _a0[4], _a0[1] + _a0[5], _a1[0] + _a1[2], _a1[1] + _a1[3]);
 	}
@@ -416,16 +422,18 @@ function Node_Path(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 	static getPointRatio = function(_rat) {
 		var loop   = inputs[| 1].getValue();
 		var ansize = array_length(lengths);
-		var amo    = ds_list_size(inputs) - list_start;
+		var amo    = ds_list_size(inputs) - input_fix_len;
 		
 		if(ansize == 0) return [0, 0];
 		
 		var pix = clamp(_rat, 0, 1) * length_total;
+		var _a0, _a1;
 		
 		for(var i = 0; i < ansize; i++) {
+			_a0 = inputs[| input_fix_len + i].getValue();
+			_a1 = inputs[| input_fix_len + safe_mod(i + 1, amo)].getValue();
+				
 			if(pix <= lengths[i]) {
-				var _a0 = inputs[| list_start + i].getValue();
-				var _a1 = inputs[| list_start + safe_mod(i + 1, amo)].getValue();
 				var _t  = pix / lengths[i];
 				
 				if(!is_array(_a0) || !is_array(_a1))
@@ -463,7 +471,7 @@ function Node_Path(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 		if(LOADING_VERSION < 1090)
 			ds_list_insert(_inputs, 2, noone);
 		
-		for(var i = list_start; i < ds_list_size(_inputs); i++)
+		for(var i = input_fix_len; i < ds_list_size(_inputs); i++)
 			createAnchor(0, 0);
 	}
 }

@@ -14,6 +14,6 @@ if !ready exit;
 		hovering |= sHOVER && point_in_rectangle(mouse_mx, mouse_my, x0, y0, x1, y1);
 	}
 	
-	if(mouse_press(mb_left, !hovering))
+	if(mouse_press(mb_any, !hovering))
 		instance_destroy(self);
 #endregion

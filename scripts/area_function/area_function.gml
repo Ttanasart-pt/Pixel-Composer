@@ -8,7 +8,7 @@ enum AREA_SCATTER {
 	random
 }
 
-function area_get_random_point(area, distrib, scatter, index = 0, total = 1, _sed = 999) {
+function area_get_random_point(area, distrib = AREA_DISTRIBUTION.area, scatter = AREA_SCATTER.random, index = 0, total = 1, _sed = 999) {
 	if(total == 0) return [0, 0];
 	
 	var _area_x = array_safe_get(area, 0);

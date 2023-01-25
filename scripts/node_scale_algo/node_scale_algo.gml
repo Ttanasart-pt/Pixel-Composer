@@ -11,7 +11,7 @@ function Node_create_Scale_Algo(_x, _y, _group = -1, _param = "") {
 }
 
 function Node_Scale_Algo(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constructor {
-	name = "Scale Algo";
+	name = "Scale Algorithm";
 	
 	inputs[| 0] = nodeValue(0, "Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 	
@@ -53,7 +53,7 @@ function Node_Scale_Algo(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) c
 		
 		surface_set_target(_outSurf);
 		draw_clear_alpha(0, 0);
-		BLEND_OVER
+		BLEND_OVERRIDE
 		
 		var uniform_dim = shader_get_uniform(shader, "dimension");
 		var uniform_tol = shader_get_uniform(shader, "tol");

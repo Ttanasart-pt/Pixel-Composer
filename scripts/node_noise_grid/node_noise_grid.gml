@@ -1,5 +1,5 @@
 function Node_Grid_Noise(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constructor {
-	name = "Grid noise";
+	name = "Grid Noise";
 	
 	shader = sh_grid_noise;
 	uniform_dim = shader_get_uniform(shader, "dimension");

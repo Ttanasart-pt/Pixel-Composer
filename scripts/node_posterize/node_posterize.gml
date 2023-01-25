@@ -8,6 +8,7 @@ function Node_Posterize(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) co
 	uniform_key = shader_get_uniform(sh_posterize_palette, "keys");
 	
 	inputs[| 0] = nodeValue(0, "Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
+	
 	inputs[| 1] = nodeValue(1, "Palette", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, [ c_white ])
 		.setDisplay(VALUE_DISPLAY.palette);
 	
@@ -49,7 +50,7 @@ function Node_Posterize(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) co
 		
 			surface_set_target(_outSurf);
 				draw_clear_alpha(0, 0);
-				BLEND_OVER
+				BLEND_OVERRIDE
 				
 				shader_set(sh_posterize_palette);
 				shader_set_uniform_f_array(uniform_color, _colors);
@@ -66,7 +67,7 @@ function Node_Posterize(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) co
 			
 			surface_set_target(_outSurf);
 				draw_clear_alpha(0, 0);
-				BLEND_OVER
+				BLEND_OVERRIDE
 				
 				shader_set(sh_posterize);
 				shader_set_uniform_i(uniform_colors, _colors);

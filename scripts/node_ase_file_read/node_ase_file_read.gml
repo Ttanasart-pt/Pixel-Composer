@@ -23,7 +23,7 @@ function Node_create_ASE_File_Read_path(_x, _y, path) {
 }
 
 function Node_ASE_File_Read(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
-	name = "ASE in";
+	name = "ASE File In";
 	update_on_frame = true;
 	always_output	= true;
 	

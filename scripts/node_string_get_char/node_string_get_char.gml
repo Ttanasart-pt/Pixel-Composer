@@ -1,5 +1,5 @@
 function Node_String_Get_Char(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constructor {
-	name = "Get character";
+	name = "Get Character";
 	previewable   = false;
 	
 	w = 96;

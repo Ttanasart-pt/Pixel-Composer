@@ -1,26 +1,16 @@
 function Node_Corner(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constructor {
 	name = "Round corner";
 	
-	uniform_er_dim   = shader_get_uniform(sh_erode, "dimension");
-	uniform_er_size  = shader_get_uniform(sh_erode, "size");
-	uniform_er_bor   = shader_get_uniform(sh_erode, "border");
+	uniform_er_dim   = shader_get_uniform(sh_corner_erode, "dimension");
+	uniform_er_size  = shader_get_uniform(sh_corner_erode, "size");
 	
-	uniform_dim          = shader_get_uniform(sh_outline, "dimension");
-	uniform_border_size  = shader_get_uniform(sh_outline, "borderSize");
-	uniform_border_color = shader_get_uniform(sh_outline, "borderColor");
-	
-	uniform_blend		= shader_get_uniform(sh_outline, "is_blend");
-	uniform_blend_alpha = shader_get_uniform(sh_outline, "blend_alpha");
-	
-	uniform_side		= shader_get_uniform(sh_outline, "side");
-	uniform_aa  		= shader_get_uniform(sh_outline, "is_aa");
-	
-	uniform_out_only	= shader_get_uniform(sh_outline, "outline_only");
+	uniform_dim  = shader_get_uniform(sh_corner, "dimension");
+	uniform_rad  = shader_get_uniform(sh_corner, "rad");
 	
 	inputs[| 0] = nodeValue(0, "Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 	
 	inputs[| 1] = nodeValue(1, "Radius", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 2)
-		.setDisplay(VALUE_DISPLAY.slider, [1, 16, 1]);
+		.setDisplay(VALUE_DISPLAY.slider, [2, 16, 1]);
 	
 	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
 	
@@ -31,12 +21,11 @@ function Node_Corner(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) const
 		
 		surface_set_target(temp);
 			draw_clear_alpha(0, 0);
-			BLEND_OVER
+			BLEND_OVERRIDE
 			
-			shader_set(sh_erode);
+			shader_set(sh_corner_erode);
 			shader_set_uniform_f_array(uniform_er_dim, [surface_get_width(_data[0]), surface_get_height(_data[0])]);
 			shader_set_uniform_f(uniform_er_size, wd);
-			shader_set_uniform_i(uniform_er_bor, 1);
 			draw_surface_safe(_data[0], 0, 0);
 			
 			BLEND_NORMAL
@@ -45,18 +34,11 @@ function Node_Corner(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) const
 		
 		surface_set_target(_outSurf);
 			draw_clear_alpha(0, 0);
-			BLEND_OVER
+			BLEND_OVERRIDE
 			
-			shader_set(sh_outline);
+			shader_set(sh_corner);
 			shader_set_uniform_f_array(uniform_dim, [surface_get_width(_data[0]), surface_get_height(_data[0])]);
-			shader_set_uniform_f(uniform_border_size, wd);
-			shader_set_uniform_f_array(uniform_border_color, [0, 0, 0 ]);
-			
-			shader_set_uniform_i(uniform_side, 1);
-			shader_set_uniform_i(uniform_aa, 0);
-			shader_set_uniform_i(uniform_out_only, 0);
-			shader_set_uniform_i(uniform_blend, 1);
-			shader_set_uniform_f(uniform_blend_alpha, 0);
+			shader_set_uniform_f(uniform_rad, wd);
 			draw_surface_safe(temp, 0, 0);
 			
 			BLEND_NORMAL

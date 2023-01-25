@@ -26,6 +26,14 @@ function rangeBox(_type, _onModify) : widget() constructor {
 		tb[i].slidable = true;
 	}
 	
+	static setInteract = function(interactable = noone) { 
+		self.interactable = interactable;
+		b_link.interactable = interactable;
+		
+		for( var i = 0; i < 2; i++ )
+			tb[i].interactable = interactable;
+	}
+	
 	static register = function(parent = noone) {
 		b_link.register(parent);
 		

@@ -39,8 +39,20 @@ function controlPointBox(_onModify) : widget() constructor {
 		function(val) { onModify(PUPPET_CONTROL.mode, toNumber(val)); }
 	);
 	
+	static setInteract = function(interactable = noone) { 
+		self.interactable = interactable;
+		scMode.interactable = interactable;
+		tbCx.interactable = interactable;
+		tbCy.interactable = interactable;
+		tbFx.interactable = interactable;
+		tbFy.interactable = interactable;
+		tbW.interactable = interactable;
+		tbH.interactable = interactable;
+		rot.interactable = interactable;
+	}
+	
 	static register = function(parent = noone) {
-		sMode.register(parent); 
+		scMode.register(parent); 
 		tbCx.register(parent);
 		tbCy.register(parent);
 		tbFx.register(parent);

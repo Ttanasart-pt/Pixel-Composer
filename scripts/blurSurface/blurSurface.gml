@@ -26,7 +26,7 @@ function surface_apply_gaussian(surface, size, bg = false, bg_c = c_white, sampl
 		}
 	#endregion
 	
-	BLEND_OVER
+	BLEND_OVERRIDE
 	surface_set_target(hori);
 		draw_clear_alpha(bg_c, bg);
 		

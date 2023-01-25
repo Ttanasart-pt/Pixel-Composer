@@ -1,5 +1,5 @@
 function Node_Text_File_Write(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
-	name = "Text out";
+	name = "Text File Out";
 	color = COLORS.node_blend_input;
 	previewable = false;
 	

@@ -1,5 +1,5 @@
 function Node_Color_replace(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constructor {
-	name = "Color replace";
+	name = "Replace Color";
 	
 	shader = sh_palette_replace;
 	uniform_from       = shader_get_uniform(shader, "colorFrom");
@@ -14,20 +14,20 @@ function Node_Color_replace(_x, _y, _group = -1) : Node_Processor(_x, _y, _group
 	uniform_hrd  = shader_get_uniform(shader, "hardReplace");
 	
 	inputs[| 0] = nodeValue(0, "Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
-	inputs[| 1] = nodeValue(1, "Palette from", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, [ c_black ])
+	inputs[| 1] = nodeValue(1, "Palette from", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, [ c_black ], "Color to be replaced.")
 		.setDisplay(VALUE_DISPLAY.palette);
 	
-	inputs[| 2] = nodeValue(2, "Palette to", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, [ c_white ])
+	inputs[| 2] = nodeValue(2, "Palette to", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, [ c_white ], "Palette to be replaced to.")
 		.setDisplay(VALUE_DISPLAY.palette);
 	
-	inputs[| 3] = nodeValue(3, "Treshold", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.1)
+	inputs[| 3] = nodeValue(3, "Threshold", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.1)
 		.setDisplay(VALUE_DISPLAY.slider, [0, 1, 0.01]);
 	
-	inputs[| 4] = nodeValue(4, "Set others to black", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	inputs[| 4] = nodeValue(4, "Set others to black", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false, "Set pixel that doesn't match any color in 'palette from' to black.");
 	
 	inputs[| 5] = nodeValue(5, "Multiply alpha", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
 	
-	inputs[| 6] = nodeValue(6, "Hard replace", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	inputs[| 6] = nodeValue(6, "Hard replace", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true, "Completely override pixel with new color instead of blending between it.");
 	
 	input_display_list = [0, 
 		["Palette",		false], 1, 2, 
@@ -63,7 +63,7 @@ function Node_Color_replace(_x, _y, _group = -1) : Node_Processor(_x, _y, _group
 		
 		surface_set_target(_outSurf);
 		draw_clear_alpha(0, 0);
-		BLEND_OVER
+		BLEND_OVERRIDE
 		
 		shader_set(shader);
 			shader_set_uniform_f_array(uniform_from, _colorFrom);

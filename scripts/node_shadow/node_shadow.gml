@@ -52,7 +52,7 @@ function Node_Shadow(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) const
 		
 		surface_set_target(pass1);
 		draw_clear_alpha(0, 0);
-		BLEND_OVER
+		BLEND_OVERRIDE
 			shader_set(shader);
 				shader_set_uniform_f_array(uniform_dim,  [ surface_get_width(_outSurf), surface_get_height(_outSurf) ]);
 				shader_set_uniform_f(uniform_size, _border);
@@ -67,7 +67,7 @@ function Node_Shadow(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) const
 		
 		surface_set_target(_outSurf);
 		draw_clear_alpha(0, 0);
-		BLEND_OVER
+		BLEND_OVERRIDE
 			draw_surface_ext_safe(pass1, 0, 0, 1, 1, 0, cl, _stre);
 		BLEND_NORMAL
 			draw_surface_safe(_data[0], 0, 0);

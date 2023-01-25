@@ -20,7 +20,7 @@ function Node_Palette_replace(_x, _y, _group = -1) : Node_Processor(_x, _y, _gro
 	inputs[| 2] = nodeValue(2, "Palette to", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, [ c_white ])
 		.setDisplay(VALUE_DISPLAY.palette);
 	
-	inputs[| 3] = nodeValue(3, "Treshold", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.1)
+	inputs[| 3] = nodeValue(3, "Threshold", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.1)
 		.setDisplay(VALUE_DISPLAY.slider, [0, 1, 0.01]);
 	
 	inputs[| 4] = nodeValue(4, "Set others to black", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
@@ -63,7 +63,7 @@ function Node_Palette_replace(_x, _y, _group = -1) : Node_Processor(_x, _y, _gro
 		
 		surface_set_target(_outSurf);
 		draw_clear_alpha(0, 0);
-		BLEND_OVER
+		BLEND_OVERRIDE
 		
 		shader_set(shader);
 			shader_set_uniform_f_array(uniform_from, _colorFrom);

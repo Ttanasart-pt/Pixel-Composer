@@ -55,6 +55,7 @@ function Node_Group_Input(_x, _y, _group = -1) : Node(_x, _y, _group) constructo
 	outputs[| 0] = nodeValue(0, "Value", self, JUNCTION_CONNECT.output, VALUE_TYPE.any, 0);
 	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
+		if(inParent.isArray()) return;
 		inParent.drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
 	}
 	

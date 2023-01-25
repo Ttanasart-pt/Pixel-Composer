@@ -1,5 +1,5 @@
 function Node_Array_Add(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
-	name = "Array add";
+	name = "Array Add";
 	previewable = false;
 	
 	w = 96;
