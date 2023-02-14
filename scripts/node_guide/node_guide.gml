@@ -27,7 +27,7 @@ function __generate_node_guide() {
 	
 	CLONING = false;
 	
-	var path = "D:\\Project\\MakhamDev\\LTS-PixelComposer\\Pixels Composer\\datafiles\\data\\nodes\\node_guides.json"
+	var path = DIRECTORY + "node_guides.json";
 	json_save_struct(path, node_struct);
 	ds_map_destroy(node_struct);
 	game_end();
@@ -35,7 +35,7 @@ function __generate_node_guide() {
 
 function __init_node_guide() {
 	global.NODE_GUIDE = {};
-	var path = "data\\nodes\\node_guides.json";
+	var path = DIRECTORY + "node_guides.json";
 	if(!file_exists(path)) return;
 	
 	global.NODE_GUIDE = json_load_struct(path);

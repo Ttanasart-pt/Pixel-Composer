@@ -73,6 +73,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) constructor {
 	error_noti_update = noone;
 	error_update_enabled = false;
 	manual_updated = false;
+	manual_deletable = true;
 	
 	static resetDefault = function() {
 		var folder = instanceof(self);
@@ -253,8 +254,6 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) constructor {
 			
 			log_warning("RENDER", "Render error " + exception_print(exception), self);
 		}
-		
-		UPDATE_STEP++;
 	}
 	
 	static valueUpdate = function(index) {

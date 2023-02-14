@@ -78,12 +78,16 @@ function Node_Export(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 	inputs[| 10] = nodeValue("Quality", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 80)
 		.setDisplay(VALUE_DISPLAY.slider, [0, 100, 1])
 		.rejectArray();
-		
+	
+	outputs[| 0] = nodeValue("Loop exit", self, JUNCTION_CONNECT.output, VALUE_TYPE.any, 0);
+	
 	input_display_list = [
 		["Export",		false], 0, 1, 2, 4, 
 		["Format ",		false], 3, 9, 
 		["Settings",	false], 8, 5, 6, 7, 10, 
 	];
+	
+	in_loop = false;
 	
 	directory = DIRECTORY + "temp\\" + string(irandom_range(100000, 999999));
 	converter = working_directory + "ImageMagick\\convert.exe";
@@ -341,6 +345,8 @@ function Node_Export(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 	
 	static onInspectorUpdate = function() {
 		initExport();
+		
+		if(in_loop) Render();
 	}
 	
 	static onInspector2Update = function() {
@@ -354,6 +360,8 @@ function Node_Export(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 					
 			node.initExport();
 		}
+		
+		if(in_loop) Render();
 	}
 	
 	static initExport = function() {
@@ -381,7 +389,10 @@ function Node_Export(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 		directory_create(directory);
 	}
 	
+	loop_nodes = [ "Node_Iterate", "Node_Iterate_Each" ];
 	static step = function() {
+		in_loop = array_exists(loop_nodes, instanceof(group));
+		
 		var surf = inputs[| 0].getValue();
 		if(is_array(surf)) {
 			inputs[| 3].display_data		 = format_array;
@@ -408,11 +419,17 @@ function Node_Export(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 			inputs[|  9].editWidget.data_list = format_image;
 			inputs[| 10].setVisible(extn != 0);
 		}
+		
+		outputs[| 0].visible = in_loop;
 	}
 	
 	static update = function(frame = ANIMATOR.current_frame) {
 		var anim = inputs[| 3].getValue();
-		if(anim == NODE_EXPORT_FORMAT.single) return;
+		if(anim == NODE_EXPORT_FORMAT.single) {
+			if(in_loop && RENDERING) 
+				initExport();
+			return;
+		}
 		
 		if(!ANIMATOR.is_playing) {
 			playing = false;

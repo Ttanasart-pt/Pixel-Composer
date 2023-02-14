@@ -1,7 +1,9 @@
 #region save
 	globalvar LOADING, LOADING_VERSION, APPENDING, CLONING, SAFE_MODE;
 	globalvar MODIFIED, CURRENT_PATH, READONLY, CONNECTION_CONFLICT, GLOBAL_SEED, ALWAYS_FULL;
-	globalvar UPDATE_STEP;
+	globalvar RENDERING;
+	
+	RENDERING = false;
 	
 	LOADING = false;
 	CLONING = false;
@@ -9,7 +11,6 @@
 	APPENDING = false;
 	READONLY  = false;
 	SAFE_MODE = false;
-	UPDATE_STEP = 0;
 	
 	CURRENT_PATH = "";
 	MODIFIED  = false;

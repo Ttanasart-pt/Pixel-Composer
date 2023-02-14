@@ -50,18 +50,18 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 		return _n;
 	}
 	
-	function addNodeCatagory(name, list, filter = "") {
+	function addNodeCatagory(name, list, filter = []) {
 		ds_list_add(NODE_CATEGORY, { name: name, list: list, filter: filter });
 	}
 	
 	var group = ds_list_create();
-	addNodeCatagory("Group", group, "Node_Group");
+	addNodeCatagory("Group", group, ["Node_Group"]);
 		ds_list_add(group, "Groups");
 		addNodeObject(group, "Input",	s_node_group_input,	"Node_Group_Input",		[1, Node_Group_Input]);
 		addNodeObject(group, "Output",	s_node_group_output,"Node_Group_Output",	[1, Node_Group_Output]);
 	
 	var iter = ds_list_create();
-	addNodeCatagory("Loop", iter, "Node_Iterate");
+	addNodeCatagory("Loop", iter, ["Node_Iterate"]);
 		ds_list_add(iter, "Groups");
 		addNodeObject(iter, "Input",	s_node_loop_input,		"Node_Iterator_Input",	[1, Node_Iterator_Input]);
 		addNodeObject(iter, "Output",	s_node_loop_output,		"Node_Iterator_Output",	[1, Node_Iterator_Output]);
@@ -69,14 +69,23 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 		ds_list_add(iter, "Loops");
 		addNodeObject(iter, "Index",	s_node_iterator_index,	"Node_Iterator_Index",	[1, Node_Iterator_Index]);
 	
+	var itere = ds_list_create();
+	addNodeCatagory("Loop", itere, ["Node_Iterate_Each"]);
+		ds_list_add(itere, "Groups");
+		addNodeObject(itere, "Input",	s_node_group_input,		"Node_Group_Input",		[1, Node_Group_Input]);
+		addNodeObject(itere, "Output",	s_node_group_output,	"Node_Group_Output",	[1, Node_Group_Output]);
+		
+		ds_list_add(itere, "Loops");
+		addNodeObject(itere, "Index",	s_node_iterator_index,	"Node_Iterator_Index",	[1, Node_Iterator_Index]);
+	
 	var feed = ds_list_create();
-	addNodeCatagory("Feedback", feed, "Node_Feedback");
+	addNodeCatagory("Feedback", feed, ["Node_Feedback"]);
 		ds_list_add(feed, "Groups");
 		addNodeObject(feed, "Input",	s_node_feedback_input,	"Node_Feedback_Input",	[1, Node_Feedback_Input]);
 		addNodeObject(feed, "Output",	s_node_feedback_output,	"Node_Feedback_Output",	[1, Node_Feedback_Output]);
 	
 	var vfx = ds_list_create();
-	addNodeCatagory("VFX", vfx, "Node_VFX_Group");
+	addNodeCatagory("VFX", vfx, ["Node_VFX_Group"]);
 		ds_list_add(vfx, "Groups");
 		addNodeObject(vfx, "Input",			s_node_vfx_input,	"Node_Group_Input",		[1, Node_Group_Input]);
 		addNodeObject(vfx, "Output",		s_node_vfx_output,	"Node_Group_Output",	[1, Node_Group_Output]);
@@ -99,7 +108,7 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 		addNodeObject(vfx, "VFX Override",	s_node_vfx_override,	"Node_VFX_Override",	[1, Node_VFX_Override]).set_version(1120);
 	
 	var rigidSim = ds_list_create();
-	addNodeCatagory("RigidSim", rigidSim, "Node_Rigid_Group");
+	addNodeCatagory("RigidSim", rigidSim, ["Node_Rigid_Group"]);
 		ds_list_add(rigidSim, "Group");
 		addNodeObject(rigidSim, "Input",	s_node_group_input,	"Node_Group_Input",		[1, Node_Group_Input]);
 		addNodeObject(rigidSim, "Output",	s_node_group_output,"Node_Group_Output",	[1, Node_Group_Output]);
@@ -116,7 +125,7 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 		addNodeObject(rigidSim, "Rigidbody Override",	s_node_rigid_override,	"Node_Rigid_Override",		[1, Node_Rigid_Override]).set_version(1120);
 		
 	var fluidSim = ds_list_create();
-	addNodeCatagory("FluidSim", fluidSim, "Node_Fluid_Group");
+	addNodeCatagory("FluidSim", fluidSim, ["Node_Fluid_Group"]);
 		ds_list_add(fluidSim, "Group");
 		addNodeObject(fluidSim, "Input",	s_node_group_input,		"Node_Group_Input",		[1, Node_Group_Input]);
 		addNodeObject(fluidSim, "Output",	s_node_group_output,	"Node_Group_Output",	[1, Node_Group_Output]);
@@ -152,8 +161,8 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 		ds_list_add(input, "Files");
 		addNodeObject(input, "Text File In",		s_node_text_file_read,	"Node_Text_File_Read",		[1, Node_Text_File_Read], ["txt"]).set_version(1080);
 		addNodeObject(input, "Text File Out",		s_node_text_file_write,	"Node_Text_File_Write",		[1, Node_Text_File_Write], ["txt"]).set_version(1090);
-		addNodeObject(input, "CSV File In",			s_node_csv_file_read,	"Node_CSV_File_Read",		[1, Node_CSV_File_Read], ["comma"]).set_version(1090);
-		addNodeObject(input, "CSV File Out",		s_node_csv_file_write,	"Node_CSV_File_Write",		[1, Node_CSV_File_Write], ["comma"]).set_version(1090);
+		addNodeObject(input, "CSV File In",			s_node_csv_file_read,	"Node_CSV_File_Read",		[1, Node_CSV_File_Read], ["comma separated value"]).set_version(1090);
+		addNodeObject(input, "CSV File Out",		s_node_csv_file_write,	"Node_CSV_File_Write",		[1, Node_CSV_File_Write], ["comma separated value"]).set_version(1090);
 		addNodeObject(input, "JSON File In",		s_node_json_file_read,	"Node_Json_File_Read",		[1, Node_Json_File_Read]).set_version(1090);
 		addNodeObject(input, "JSON File Out",		s_node_json_file_write,	"Node_Json_File_Write",		[1, Node_Json_File_Write]).set_version(1090);
 		addNodeObject(input, "ASE File In",			s_node_ase_file,		"Node_ASE_File_Read",		[0, Node_create_ASE_File_Read]).set_version(1100);
@@ -162,10 +171,10 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 	var transform = ds_list_create();
 	addNodeCatagory("Transform", transform);
 		ds_list_add(transform, "Transformations");
-		addNodeObject(transform, "Transform",		s_node_transform,		"Node_Transform",		[1, Node_Transform]);
+		addNodeObject(transform, "Transform",		s_node_transform,		"Node_Transform",		[1, Node_Transform], ["move", "rotate", "scale"]);
 		addNodeObject(transform, "Scale",			s_node_scale,			"Node_Scale",			[1, Node_Scale], ["resize"]);
 		addNodeObject(transform, "Scale Algorithm",	s_node_scale_algo,		"Node_Scale_Algo",		[0, Node_create_Scale_Algo], ["scale2x", "scale3x"]);
-		addNodeObject(transform, "Flip",			s_node_flip,			"Node_Flip",			[1, Node_Flip]);
+		addNodeObject(transform, "Flip",			s_node_flip,			"Node_Flip",			[1, Node_Flip], ["mirror"]);
 		
 		ds_list_add(transform, "Warps");
 		addNodeObject(transform, "Crop",			s_node_crop,			"Node_Crop",			[1, Node_Crop]);
@@ -270,7 +279,7 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 		ds_list_add(threeD, "3D operations");
 		addNodeObject(threeD, "3D Transform",		s_node_3d_transform,	"Node_3D_Transform",	[1, Node_3D_Transform]).set_version(1080);
 		addNodeObject(threeD, "3D Combine",			s_node_3d_obj_combine,	"Node_3D_Combine",		[1, Node_3D_Combine]).set_version(1080);
-		addNodeObject(threeD, "3D Repeat",			s_node_3d_array,		"Node_3D_Repeat",		[1, Node_3D_Repeat], ["array", "3d array"]).set_version(1080);
+		addNodeObject(threeD, "3D Repeat",			s_node_3d_array,		"Node_3D_Repeat",		[1, Node_3D_Repeat], ["3d array"]).set_version(1080);
 		
 	var generator = ds_list_create();
 	addNodeCatagory("Generate", generator);
@@ -365,16 +374,16 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 		ds_list_add(values, "Arrays");
 		addNodeObject(values, "Array",			s_node_array,			"Node_Array",			[1, Node_Array]);
 		addNodeObject(values, "Array Range",	s_node_array_range,		"Node_Array_Range",		[1, Node_Array_Range]);
-		addNodeObject(values, "Array Add",		s_node_array_add,		"Node_Array_Add",		[1, Node_Array_Add]);
+		addNodeObject(values, "Array Add",		s_node_array_add,		"Node_Array_Add",		[1, Node_Array_Add], ["add array"]);
 		addNodeObject(values, "Array Length",	s_node_array_length,	"Node_Array_Length",	[1, Node_Array_Length]);
-		addNodeObject(values, "Array Get",		s_node_array_get,		"Node_Array_Get",		[1, Node_Array_Get]);
-		addNodeObject(values, "Array Set",		s_node_array_set,		"Node_Array_Set",		[1, Node_Array_Set]).set_version(1120);
-		addNodeObject(values, "Array Find",		s_node_array_find,		"Node_Array_Find",		[1, Node_Array_Find]).set_version(1120);
-		addNodeObject(values, "Array Insert",	s_node_array_insert,	"Node_Array_Insert",	[1, Node_Array_Insert]).set_version(1120);
-		addNodeObject(values, "Array Remove",	s_node_array_remove,	"Node_Array_Remove",	[1, Node_Array_Remove]).set_version(1120);
-		addNodeObject(values, "Array Reverse",	s_node_array_reverse,	"Node_Array_Reverse",	[1, Node_Array_Reverse]).set_version(1120);
-		addNodeObject(values, "Sort Array",		s_node_array_sort,		"Node_Array_Sort",		[1, Node_Array_Sort]).set_version(1120);
-		addNodeObject(values, "Shuffle Array",	s_node_array_shuffle,	"Node_Array_Shuffle",	[1, Node_Array_Shuffle]).set_version(1120);
+		addNodeObject(values, "Array Get",		s_node_array_get,		"Node_Array_Get",		[1, Node_Array_Get], ["get array"]);
+		addNodeObject(values, "Array Set",		s_node_array_set,		"Node_Array_Set",		[1, Node_Array_Set], ["set array"]).set_version(1120);
+		addNodeObject(values, "Array Find",		s_node_array_find,		"Node_Array_Find",		[1, Node_Array_Find], ["find array"]).set_version(1120);
+		addNodeObject(values, "Array Insert",	s_node_array_insert,	"Node_Array_Insert",	[1, Node_Array_Insert], ["insert array"]).set_version(1120);
+		addNodeObject(values, "Array Remove",	s_node_array_remove,	"Node_Array_Remove",	[1, Node_Array_Remove], ["remove array", "delete array", "array delete"]).set_version(1120);
+		addNodeObject(values, "Array Reverse",	s_node_array_reverse,	"Node_Array_Reverse",	[1, Node_Array_Reverse], ["reverse array"]).set_version(1120);
+		addNodeObject(values, "Sort Array",		s_node_array_sort,		"Node_Array_Sort",		[1, Node_Array_Sort], ["array sort"]).set_version(1120);
+		addNodeObject(values, "Shuffle Array",	s_node_array_shuffle,	"Node_Array_Shuffle",	[1, Node_Array_Shuffle], ["array shuffle"]).set_version(1120);
 		
 		ds_list_add(values, "Paths");
 		addNodeObject(values, "Path",			s_node_path,			"Node_Path",			[1, Node_Path]);
@@ -384,7 +393,7 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 		addNodeObject(values, "Transform Path",	s_node_path_transform,	"Node_Path_Transform",	[1, Node_Path_Transform]).set_version(1130);
 		addNodeObject(values, "Shift Path",		s_node_path_shift,		"Node_Path_Shift",		[1, Node_Path_Shift]).set_version(1130);
 		addNodeObject(values, "Trim Path",		s_node_path_trim,		"Node_Path_Trim",		[1, Node_Path_Trim]).set_version(1130);
-		addNodeObject(values, "Wave Path",		s_node_path_wave,		"Node_Path_Wave",		[1, Node_Path_Wave]).set_version(1130);
+		addNodeObject(values, "Wave Path",		s_node_path_wave,		"Node_Path_Wave",		[1, Node_Path_Wave], ["zigzag path"]).set_version(1130);
 		
 		ds_list_add(values, "Boolean");
 		addNodeObject(values, "Boolean",		s_node_boolean,		"Node_Boolean",		[1, Node_Boolean]);
@@ -423,7 +432,8 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 		ds_list_add(node, "Groups");
 		addNodeObject(node, "Group",			s_node_group,		"Node_Group",			[1, Node_Group]);
 		addNodeObject(node, "Feedback",			s_node_feedback,	"Node_Feedback",		[1, Node_Feedback]);
-		addNodeObject(node, "Loop",				s_node_loop,		"Node_Iterate",			[1, Node_Iterate], ["iterate"]);
+		addNodeObject(node, "Loop",				s_node_loop,		"Node_Iterate",			[1, Node_Iterate], ["iterate", "for"]);
+		addNodeObject(node, "Loop Array",		s_node_loop_array,	"Node_Iterate_Each",	[1, Node_Iterate_Each], ["iterate each", "for each", "array loop"]);
 		
 		ds_list_add(node, "Lua");
 		addNodeObject(node, "Lua Global",		s_node_lua_global,	"Node_Lua_Global",		[1, Node_Lua_Global]).set_version(1090);
@@ -437,6 +447,11 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 		addNodeObject(node, "Tunnel Out",		s_node_tunnel_out,	"Node_Tunnel_Out",		[1, Node_Tunnel_Out]);
 		addNodeObject(node, "Display Text",		s_node_text_display,"Node_Display_Text",	[1, Node_Display_Text]);
 		addNodeObject(node, "Display Image",	s_node_image,		"Node_Display_Image",	[0, Node_create_Display_Image]);
+	
+	var hid = ds_list_create();
+	addNodeCatagory("Hidden", hid, ["Hidden"]);
+		addNodeObject(hid, "Input",		s_node_feedback_input,	"Node_Iterator_Each_Input",		[1, Node_Iterator_Each_Input]);
+		addNodeObject(hid, "Output",	s_node_feedback_output,	"Node_Iterator_Each_Output",	[1, Node_Iterator_Each_Output]);
 #endregion
 
 #region node function

@@ -22,12 +22,60 @@ event_inherited();
 	node_selecting = 0;
 	node_focusing = -1;
 	
+	node_show_connectable = true;
+	
 	anchor = ANCHOR.left | ANCHOR.top;
+	
+	function filtered(node) {
+		if(!node_show_connectable) return true;
+		if(node_called == noone && junction_hovering == noone) return true;
+		if(!struct_has(global.NODE_GUIDE, node.node)) return true;
+		
+		var io = global.NODE_GUIDE[$ node.node];
+		
+		if(node_called) {
+			var call_in = node_called.connect_type == JUNCTION_CONNECT.input;
+			var ar = call_in? io.outputs : io.inputs;
+			var typ = node_called.type;
+			
+			for( var i = 0; i < array_length(ar); i++ ) {
+				var _in = call_in? node_called.type : ar[i];
+				var _ot = call_in? ar[i] : node_called.type;
+				
+				if(typeCompatible(_in, _ot, false)) return true;
+			}
+			
+			return false;
+		} else if(junction_hovering) {
+			var to = junction_hovering.type;
+			var fr = junction_hovering.value_from.type;
+			
+			for( var i = 0; i < array_length(io.inputs); i++ ) {
+				var _in = fr;
+				var _ot = io.inputs[i];
+				
+				if(typeCompatible(_in, _ot, false)) return true;
+			}
+			
+			for( var i = 0; i < array_length(io.outputs); i++ ) {
+				var _in = io.outputs[i];
+				var _ot = to;
+				
+				if(typeCompatible(_in, _ot, false)) return true;
+			}
+			
+			return false;
+		}
+		
+		return false;
+	}
 	
 	function setPage(pageIndex) {
 		ADD_NODE_PAGE	= pageIndex;
-		node_list		= NODE_CATEGORY[| ADD_NODE_PAGE].list;
+		node_list		= pageIndex == -1? noone : NODE_CATEGORY[| ADD_NODE_PAGE].list;
 	}
+	if(ADD_NODE_PAGE < 0)
+		ADD_NODE_PAGE = NODE_PAGE_DEFAULT;
 	setPage(ADD_NODE_PAGE);
 	
 	function buildNode(_node, _param = "") {
@@ -39,7 +87,7 @@ event_inherited();
 		var _new_node = noone;
 		var _inputs = 0, _outputs = 0;
 		
-		if(is_struct(_node) && instanceof(_node) == "NodeObject") {
+		if(instanceof(_node) == "NodeObject") {
 			_new_node = _node.build(node_target_x, node_target_y,, _param);
 			if(!_new_node) {
 				instance_destroy();
@@ -86,11 +134,11 @@ event_inherited();
 		}
 		
 		//try to connect
-		if(node_called != noone) {
+		if(node_called != noone) { //dragging from junction
 			var _node_list = node_called.connect_type == JUNCTION_CONNECT.input? _outputs : _inputs;
 			for(var i = 0; i < ds_list_size(_node_list); i++) {
 				var _target = _node_list[| i]; 
-				if( _target.isVisible() && (value_bit(_target.type) & value_bit(node_called.type)) ) {
+				if(_target.auto_connect && (value_bit(_target.type) & value_bit(node_called.type)) ) {
 					if(node_called.connect_type == JUNCTION_CONNECT.input) {
 						node_called.setFrom(_node_list[| i]);
 						_new_node.x -= _new_node.w;
@@ -99,13 +147,13 @@ event_inherited();
 					break;
 				}
 			}
-		} else if(junction_hovering != noone) {
+		} else if(junction_hovering != noone) { //right click on junction
 			var to = junction_hovering;
 			var from = junction_hovering.value_from;
 				
 			for( var i = 0; i < ds_list_size(_inputs); i++ ) {
 				var _in = _inputs[| i];
-				if(value_bit(_in.type) & value_bit(from.type)) {
+				if(_in.auto_connect && _in.isConnectable(from)) {
 					_in.setFrom(from);
 					break;
 				}
@@ -113,7 +161,7 @@ event_inherited();
 				
 			for( var i = 0; i < ds_list_size(_outputs); i++ ) {
 				var _ot = _outputs[| i];
-				if(value_bit(_ot.type) & value_bit(to.type)) {
+				if(to.isConnectable(_ot)) {
 					to.setFrom(_ot);
 					break;
 				}
@@ -124,26 +172,37 @@ event_inherited();
 	}
 	
 	catagory_pane = new scrollPane(ui(132), dialog_h - ui(66), function(_y, _m) {
-		draw_clear_alpha(COLORS.panel_bg_clear, 0);
+		draw_clear_alpha(COLORS._main_text, 0);
 		
 		var hh  = 0;
 		var hg  = ui(28);
-		var cnt = PANEL_GRAPH.getCurrentContext();
-		var context = cnt == -1? "" : instanceof(cnt);
+		var context = PANEL_GRAPH.getCurrentContext();
+		context = context == -1? "" : instanceof(context);
 		
-		for(var i = 0; i < ds_list_size(NODE_CATEGORY); i++) {
-			var cat = NODE_CATEGORY[| i];
-			var name = cat.name;
-			draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text);
+		var start = -1;
+		
+		for(var i = start; i < ds_list_size(NODE_CATEGORY); i++) {
+			var name = "";
 			
-			if(cat.filter != "") {
-				if(context != cat.filter) {
-					if(ADD_NODE_PAGE == i) setPage(NODE_PAGE_DEFAULT);
-					continue;
-				}	
-				draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text_accent);
+			if(i == -1) {
+				draw_set_text(f_p0b, fa_left, fa_center, COLORS._main_text_accent);
+				name = "All";
+			} else {
+				var cat = NODE_CATEGORY[| i];
+				name = cat.name;
+				draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text);
+			
+				if(array_length(cat.filter)) {
+					if(!array_exists(cat.filter, context)) {
+						if(ADD_NODE_PAGE == i) 
+							setPage(NODE_PAGE_DEFAULT);
+						continue;
+					}
+					draw_set_color(COLORS._main_text_accent);
+				}
 			}
 			
+			BLEND_OVERRIDE;
 			if(i == ADD_NODE_PAGE) {
 				draw_sprite_stretched(THEME.ui_panel_bg, 0, 0, _y + hh, ui(132), hg);
 			} else if(sHOVER && catagory_pane.hover && point_in_rectangle(_m[0], _m[1], 0, _y + hh, ui(100), _y + hh + hg - 1)) {
@@ -151,9 +210,11 @@ event_inherited();
 				if(mouse_click(mb_left, sFOCUS)) {
 					setPage(i);
 					content_pane.scroll_y		= 0;
+					content_pane.scroll_y_raw	= 0;
 					content_pane.scroll_y_to	= 0;
 				}
 			}
+			BLEND_NORMAL;
 			
 			draw_text(ui(8), _y + hh + hg / 2, name);
 			hh += hg;
@@ -164,12 +225,30 @@ event_inherited();
 	
 	content_pane = new scrollPane(dialog_w - ui(136), dialog_h - ui(66), function(_y, _m) {
 		draw_clear_alpha(c_white, 0);
-		
-		var node_count = ds_list_size(node_list);
 		var hh = 0;
 		var _hover = sHOVER && content_pane.hover;
+		var _list = node_list;
 		
-		if(PREF_MAP[? "dialog_add_node_view"] == 0) {
+		if(ADD_NODE_PAGE == -1) {
+			var context = PANEL_GRAPH.getCurrentContext();
+			context = context == -1? "" : instanceof(context);
+		
+			_list = ds_list_create();
+			for(var i = 0; i < ds_list_size(NODE_CATEGORY); i++) {
+				var cat = NODE_CATEGORY[| i];			
+				if(array_length(cat.filter) && !array_exists(cat.filter, context))
+					continue;
+				
+				for( var j = 0; j < ds_list_size(cat.list); j++ ) {
+					if(is_string(cat.list[| j])) continue;
+					ds_list_add(_list, cat.list[| j]);
+				}
+			}
+		}
+		
+		var node_count = ds_list_size(_list);
+		
+		if(PREF_MAP[? "dialog_add_node_view"] == 0) { //grid
 			var grid_size  = ui(64);
 			var grid_width = ui(80);
 			var grid_space = ui(12);
@@ -181,7 +260,7 @@ event_inherited();
 			hh += grid_space;
 			
 			for(var index = 0; index < node_count; index++) {
-				var _node = node_list[| index];
+				var _node = _list[| index];
 				if(is_string(_node)) {
 					if(!PREF_MAP[? "dialog_add_node_grouping"])
 						continue;
@@ -191,9 +270,9 @@ event_inherited();
 					cProg = 0;
 					curr_height = 0;
 					
-					BLEND_OVERRIDE
+					BLEND_OVERRIDE;
 					draw_sprite_stretched_ext(THEME.node_bg, 0, ui(16), yy, content_pane.surface_w - ui(32), ui(24), COLORS._main_icon, 1);
-					BLEND_NORMAL
+					BLEND_NORMAL;
 					
 					draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text);
 					draw_text(ui(16 + 16), yy + ui(12), _node);
@@ -202,13 +281,15 @@ event_inherited();
 					yy += ui(24 + 12);
 					continue;
 				}
-					
+				
+				if(!filtered(_node)) continue;
+				
 				var _nx   = grid_space + (grid_width + grid_space) * cProg;
 				var _boxx = _nx + (grid_width - grid_size) / 2;
 				
-				BLEND_OVERRIDE
+				BLEND_OVERRIDE;
 				draw_sprite_stretched(THEME.node_bg, 0, _boxx, yy, grid_size, grid_size);
-				BLEND_NORMAL
+				BLEND_NORMAL;
 						
 				if(_hover && point_in_rectangle(_m[0], _m[1], _nx, yy, _nx + grid_width, yy + grid_size)) {
 					draw_sprite_stretched_ext(THEME.node_active, 0, _boxx, yy, grid_size, grid_size, COLORS._main_accent, 1);
@@ -226,7 +307,7 @@ event_inherited();
 					draw_sprite_ui_uniform(THEME.node_new_badge, 0, _boxx + grid_size - ui(12), yy + ui(6));
 						
 				draw_set_text(f_p2, fa_center, fa_top, COLORS._main_text);
-				draw_text_ext_add(_boxx + grid_size / 2, yy + grid_size + 4, _node.name, -1, grid_width);
+				draw_text_ext_over(_boxx + grid_size / 2, yy + grid_size + 4, _node.name, -1, grid_width);
 				
 				var name_height = string_height_ext(_node.name, -1, grid_width) + 8;
 				curr_height = max(curr_height, grid_size + grid_space + name_height);
@@ -242,14 +323,15 @@ event_inherited();
 			
 			hh += curr_height;
 			yy += curr_height;
-		} else if(PREF_MAP[? "dialog_add_node_view"] == 1) {
+		} else if(PREF_MAP[? "dialog_add_node_view"] == 1) { //list
 			var list_width  = content_pane.surface_w;
 			var list_height = ui(28);
-			var yy         = _y + list_height / 2;
+			var yy      = _y + list_height / 2;
+			var bg_ind	= 0;
 			hh += list_height;
-		
+			
 			for(var i = 0; i < node_count; i++) {
-				var _node = node_list[| i];
+				var _node = _list[| i];
 				
 				if(is_string(_node)) {
 					if(!PREF_MAP[? "dialog_add_node_grouping"])
@@ -258,9 +340,9 @@ event_inherited();
 					hh += ui(8);
 					yy += ui(8);
 					
-					BLEND_OVERRIDE
+					BLEND_OVERRIDE;
 					draw_sprite_stretched_ext(THEME.node_bg, 0, ui(8), yy, content_pane.surface_w - ui(24), ui(24), COLORS._main_icon, 1);
-					BLEND_NORMAL
+					BLEND_NORMAL;
 					
 					draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text);
 					draw_text(ui(24), yy + ui(12), _node);
@@ -270,10 +352,12 @@ event_inherited();
 					continue;
 				}
 				
-				if(i % 2) {
-					BLEND_OVERRIDE
+				if(!filtered(_node)) continue;
+				
+				if(++bg_ind % 2) {
+					BLEND_OVERRIDE;
 					draw_sprite_stretched_ext(THEME.node_bg, 0, ui(4), yy, list_width - ui(8), list_height, c_white, 0.2);
-					BLEND_NORMAL
+					BLEND_NORMAL;
 				}
 				
 				if(_hover && point_in_rectangle(_m[0], _m[1], 0, yy, list_width, yy + list_height - 1)) {
@@ -299,12 +383,15 @@ event_inherited();
 				}
 				
 				draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text);
-				draw_text_add(tx, yy + list_height / 2, _node.name);
+				draw_text_over(tx, yy + list_height / 2, _node.name);
 				
 				yy += list_height;
 				hh += list_height;
 			}
 		}
+		
+		if(ADD_NODE_PAGE == -1) 
+			ds_list_destroy(_list);
 		
 		return hh;
 	});
@@ -343,6 +430,7 @@ event_inherited();
 	
 	function searchNodes() {
 		ds_list_clear(search_list);
+		var pr_list = ds_priority_create();
 		
 		var cnt = PANEL_GRAPH.getCurrentContext();
 		var context = cnt == -1? "" : instanceof(cnt);
@@ -352,7 +440,7 @@ event_inherited();
 		for(var i = 0; i < ds_list_size(NODE_CATEGORY); i++) {
 			var cat = NODE_CATEGORY[| i];
 			
-			if(cat.filter != "" && context != cat.filter)
+			if(array_length(cat.filter) && !array_exists(cat.filter, context))
 				continue;
 			
 			var _content = cat.list;
@@ -362,25 +450,32 @@ event_inherited();
 				if(is_string(_node)) continue;
 				if(ds_map_exists(search_map, _node.node)) continue;
 				
-				var match = string_pos(search_lower, string_lower(_node.name)) > 0;
+				var match = string_partial_match(string_lower(_node.name), search_lower);
 				var param = "";
 				for( var k = 0; k < array_length(_node.tags); k++ ) {
-					if(string_pos(search_lower, _node.tags[k]) == 0) 
-						continue;
-					match = true;
-					param = _node.tags[k];
+					var mat = string_partial_match(_node.tags[k], search_lower);
+					if(mat > match) {
+						match = mat;
+						param = _node.tags[k];
+					}
 				}
 				
-				if(!match) continue;
+				if(match == -9999) continue;
 				
-				ds_list_add(search_list, [_node, param]);
+				ds_priority_add(pr_list, [_node, param], match);
 				search_map[? _node.node] = 1;
 			}
 		}
 		
 		ds_map_destroy(search_map);
 		
-		searchCollection(search_list, search_string, false);
+		searchCollection(pr_list, search_string, false);
+		
+		repeat(ds_priority_size(pr_list)) {
+			ds_list_add(search_list, ds_priority_delete_max(pr_list));
+		}
+		
+		ds_priority_destroy(pr_list);
 	}
 	
 	search_pane = new scrollPane(dialog_w - ui(32), dialog_h - ui(66), function(_y, _m) {
@@ -390,7 +485,7 @@ event_inherited();
 		var hh = 0;
 		var _hover = sHOVER && search_pane.hover;
 		
-		if(PREF_MAP[? "dialog_add_node_view"] == 0) {
+		if(PREF_MAP[? "dialog_add_node_view"] == 0) { //grid view
 			var grid_size = ui(64);
 			var grid_width = ui(80);
 			var grid_space = ui(16);
@@ -413,12 +508,12 @@ event_inherited();
 				var _nx   = grid_space + (grid_width + grid_space) * index;
 				var _boxx = _nx + (grid_width - grid_size) / 2;
 				
-				BLEND_OVERRIDE
+				BLEND_OVERRIDE;
 				if(is_array(s_res))
 					draw_sprite_stretched(THEME.node_bg, 0, _boxx, yy, grid_size, grid_size);
 				else
 					draw_sprite_stretched_ext(THEME.node_bg, 0, _boxx, yy, grid_size, grid_size, COLORS.dialog_add_node_collection, 1);
-				BLEND_NORMAL
+				BLEND_NORMAL;
 					
 				if(variable_struct_exists(_node, "getSpr")) _node.getSpr();
 				if(sprite_exists(_node.spr)) {
@@ -441,7 +536,7 @@ event_inherited();
 				draw_set_text(f_p2, fa_center, fa_top, COLORS._main_text);
 				var txt = _node.name;
 				name_height = max(name_height, string_height_ext(txt, -1, grid_width) + ui(8));
-				draw_text_ext_add(_boxx + grid_size / 2, yy + grid_size + 4, txt, -1, grid_width);
+				draw_text_ext_over(_boxx + grid_size / 2, yy + grid_size + 4, txt, -1, grid_width);
 				
 				if(_hover && point_in_rectangle(_m[0], _m[1], _nx, yy, _nx + grid_width, yy + grid_size)) {
 					node_selecting = i;
@@ -466,7 +561,7 @@ event_inherited();
 					yy += hght;
 				}
 			}
-		} else if(PREF_MAP[? "dialog_add_node_view"] == 1) {
+		} else if(PREF_MAP[? "dialog_add_node_view"] == 1) { //list view
 			var list_width  = search_pane.surface_w;
 			var list_height = ui(28);
 			var yy = _y + list_height / 2;
@@ -482,9 +577,9 @@ event_inherited();
 					_node = s_res;
 				
 				if(i % 2) {
-					BLEND_OVERRIDE
+					BLEND_OVERRIDE;
 					draw_sprite_stretched_ext(THEME.node_bg, 0, ui(4), yy, list_width - ui(8), list_height, c_white, 0.2);
-					BLEND_NORMAL
+					BLEND_NORMAL;
 				}
 				
 				if(variable_struct_exists(_node, "getSpr")) _node.getSpr();
@@ -506,7 +601,7 @@ event_inherited();
 				}
 			
 				draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text);
-				draw_text_add(list_height + ui(20), yy + list_height / 2, _node.name);
+				draw_text_over(list_height + ui(20), yy + list_height / 2, _node.name);
 				
 				if(_hover && point_in_rectangle(_m[0], _m[1], 0, yy, list_width, yy + list_height - 1)) {
 					node_selecting = i;

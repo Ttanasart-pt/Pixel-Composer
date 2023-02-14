@@ -19,18 +19,29 @@ function __nodeLeafList(_list, _queue) {
 	}
 }
 
+global.group_inputs = [ "Node_Group_Input", "Node_Feedback_Input", "Node_Iterator_Input", "Node_Iterator_Each_Input" ];
+
+function __nodeIsLoop(_node) {
+	switch(instanceof(_node)) {
+		case "Node_Iterate" : 
+		case "Node_Iterate_Each" : 
+		case "Node_Feedback" :		
+			return true;
+	}
+	return false;
+}
+
 function __nodeInLoop(_node) {
 	var gr = _node.group;
 	while(gr != -1) {
-		if(instanceof(gr) == "Node_Iterate")  return true;
-		if(instanceof(gr) == "Node_Feedback") return true;
+		if(__nodeIsLoop(gr)) return true;
 		gr = gr.group;
 	}
 	return false;
 }
 
 function Render(partial = false) {
-	UPDATE_STEP++;
+	RENDERING = true;
 	
 	try {
 		var rendering = noone;
@@ -59,8 +70,7 @@ function Render(partial = false) {
 		
 			if(is_undefined(_node)) continue;
 			if(!is_struct(_node)) continue;
-			if(instanceof(_node) == "Node_Group_Input") continue;
-			if(instanceof(_node) == "Node_Iterator_Input") continue;
+			if(array_exists(global.group_inputs, instanceof(_node))) continue;
 		
 			if(!_node.active) continue;
 			if(_node.rendered) continue;
@@ -89,4 +99,6 @@ function Render(partial = false) {
 		printIf(global.RENDER_LOG, "=== RENDER COMPLETE IN {" + string(current_time - t) + "ms} ===\n");
 	} catch(e)
 		noti_warning("Rendering error: " + exception_print(e));
+	
+	RENDERING = false;
 }

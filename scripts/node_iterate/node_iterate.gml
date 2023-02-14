@@ -63,11 +63,11 @@ function Node_Iterate(_x, _y, _group = -1) : Node_Collection(_x, _y, _group) con
 		if(iter) {
 			iterated++;
 			
-			if(iterated == maxIter) {
+			if(iterated >= maxIter) {
 				render_time = get_timer() - loop_start_time;
+				iterated = 0;
 				return ITERATION_STATUS.complete;
-			} else if(iterated > maxIter)
-				return ITERATION_STATUS.complete;
+			} 
 			
 			resetAllRenderStatus();
 			return ITERATION_STATUS.loop;

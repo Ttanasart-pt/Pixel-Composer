@@ -949,11 +949,12 @@ function Panel_Graph() : PanelContent() constructor {
 	}
 	
 	function doDelete(_merge = false) {
-		if(node_focus != noone)
+		if(node_focus != noone && mode_focus.manual_deletable)
 			nodeDelete(node_focus, _merge);
 		
 		for(var i = 0; i < ds_list_size(nodes_select_list); i++) {
-			nodeDelete(nodes_select_list[| i], _merge);
+			if(nodes_select_list[| i].manual_deletable)
+				nodeDelete(nodes_select_list[| i], _merge);
 		}
 		ds_list_clear(nodes_select_list);
 	}
@@ -1427,6 +1428,7 @@ function Panel_Graph() : PanelContent() constructor {
 		switch(context) {
 			case "Node_Group" :			bg = merge_color(COLORS.panel_bg_clear, COLORS.node_blend_collection, 0.05); break;
 			case "Node_Iterate" :		bg = merge_color(COLORS.panel_bg_clear, COLORS.node_blend_loop, 0.05); break;
+			case "Node_Iterate_Each" :	bg = merge_color(COLORS.panel_bg_clear, COLORS.node_blend_loop, 0.05); break;
 			case "Node_VFX_Group" :		bg = merge_color(COLORS.panel_bg_clear, COLORS.node_blend_vfx, 0.05); break;
 			case "Node_Feedback" :		bg = merge_color(COLORS.panel_bg_clear, COLORS.node_blend_feedback, 0.05); break;
 			case "Node_Rigid_Group" :	bg = merge_color(COLORS.panel_bg_clear, COLORS.node_blend_simulation, 0.05); break;

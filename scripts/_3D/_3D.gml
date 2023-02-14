@@ -4,8 +4,12 @@ enum CAMERA_PROJ {
 }
 
 #region setup
-	globalvar PRIMITIVES, FORMAT_PT, FORMAT_PNT;
+	globalvar PRIMITIVES, FORMAT_P, FORMAT_PT, FORMAT_PNT;
 	PRIMITIVES = ds_map_create();
+
+	vertex_format_begin();
+	vertex_format_add_position_3d();
+	FORMAT_P = vertex_format_end();
 
 	vertex_format_begin();
 	vertex_format_add_position_3d();
@@ -113,6 +117,18 @@ enum CAMERA_PROJ {
 	PRIMITIVES[? "cube"] = VB;
 #endregion
 
+#region gixmo circle
+	var VB = vertex_create_buffer();
+	vertex_begin(VB, FORMAT_P);
+	
+	for( var i = 0; i <= 360; i += 12 )
+		vertex_position_3d(VB, cos(i), sin(i), 0);
+	
+	vertex_end(VB);
+	vertex_freeze(VB);
+	PRIMITIVES[? "gixmo_rotate"] = VB;
+#endregion
+
 #region helper
 	function _3d_node_init(iDim, iPos, iRot, iSca) {
 		VB = [];
@@ -157,7 +173,7 @@ enum CAMERA_PROJ {
 		draw_circle(cx, cy, 64, true);
 		
 		if(drag_index == 0) {
-			var dx  = (_mx - drag_mx) / _s * -6;
+			var dx  = (_mx - drag_mx) * -2;
 			_rot[1] = drag_sv - dx * (invx? -1 : 1);
 			
 			if(inputs[| input_rot].setValue(_rot)) 
@@ -168,7 +184,7 @@ enum CAMERA_PROJ {
 				UNDO_HOLDING = false;
 			}
 		} else if(drag_index == 1) {
-			var dy  = (_my - drag_my) / _s * 6;
+			var dy  = (_my - drag_my) * 2;
 			_rot[0] = drag_sv - dy * (invy? -1 : 1);
 			
 			if(inputs[| input_rot].setValue(_rot)) 
@@ -258,34 +274,36 @@ enum CAMERA_PROJ {
 		uniLightNrm = shader_get_uniform(shader, "useNormal");
 		
 		shader_set(shader);
-		shader_set_uniform_f_array(uniVertex_lightFor, lightFor);
-		shader_set_uniform_f_array(uniLightAmb, colorArrayFromReal(_aclr));
-		shader_set_uniform_f_array(uniLightClr, colorArrayFromReal(_lclr));
+		shader_set_uniform_f_array_safe(uniVertex_lightFor, lightFor);
+		shader_set_uniform_f_array_safe(uniLightAmb, colorArrayFromReal(_aclr));
+		shader_set_uniform_f_array_safe(uniLightClr, colorArrayFromReal(_lclr));
 		shader_set_uniform_f(uniLightInt, _lint);
 		shader_set_uniform_i(uniLightNrm, use_normal);
 		
 		var cam_view, cam_proj;
+		var dw = array_safe_get(_dim, 0);
+		var dh = array_safe_get(_dim, 1);
 		
 		if(_proj == CAMERA_PROJ.ortho) {
 			cam_view = matrix_build_lookat(0, 0, 128, 0, 0, 0, 0, 1, 0);
-			cam_proj = matrix_build_projection_ortho(_dim[0], _dim[1], 0.1, 256);
+			cam_proj = matrix_build_projection_ortho(dw, dh, 0.1, 256);
 		} else {
 			var _adjFov = power(_fov / 90, 1 / 4) * 90;
 			var dist = _dim[0] / 2 * dtan(90 - _adjFov);
 			cam_view = matrix_build_lookat(0, 0, 1 + dist, 0, 0, 0, 0, 1, 0);
-			cam_proj = matrix_build_projection_perspective(_dim[0], _dim[1], dist, dist + 256);
+			cam_proj = matrix_build_projection_perspective(dw, dh, dist, dist + 256);
 		}
 		
 		var cam = camera_get_active();
-		camera_set_view_size(cam, _dim[0], _dim[1]);
+		camera_set_view_size(cam, dw, dh);
 		camera_set_view_mat(cam, cam_view);
 		camera_set_proj_mat(cam, cam_proj);
 		camera_apply(cam);
 		
 		if(_proj == CAMERA_PROJ.ortho) 
-			matrix_stack_push(matrix_build(_dim[0] / 2 - _pos[0], _pos[1] - _dim[1] / 2, 0, 0, 0, 0, _dim[0] * _sca[0], _dim[1] * _sca[1], 1));
+			matrix_stack_push(matrix_build(dw / 2 - _pos[0], _pos[1] - dh / 2, 0, 0, 0, 0, dw * _sca[0], dh * _sca[1], 1));
 		else 							   				 		  
-			matrix_stack_push(matrix_build(_dim[0] / 2 - _pos[0], _pos[1] - _dim[1] / 2, 0, 0, 0, 0, _dim[0] * _sca[0], _dim[1] * _sca[1], 1));
+			matrix_stack_push(matrix_build(dw / 2 - _pos[0], _pos[1] - dh / 2, 0, 0, 0, 0, dw * _sca[0], dh * _sca[1], 1));
 		//matrix_stack_push(matrix_build(0, 0, 0, 0, 0, 0, 1, 1, 1));
 		
 		if(_applyLocal) _3d_local_transform(_lpos, _lrot, _lsca);
