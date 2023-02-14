@@ -6,24 +6,31 @@ function rangeBox(_type, _onModify) : widget() constructor {
 	b_link.icon = THEME.value_link;
 	
 	onModifyIndex = function(index, val) { 
+		var modi = false;
+		
 		if(linked) {
 			for( var i = 0; i < 2; i++ )
-				onModify(i, toNumber(val)); 
-			return;
+				modi |= onModify(i, toNumber(val)); 
+			return modi;
 		}
 		
-		onModify(index, toNumber(val)); 
+		return onModify(index, toNumber(val)); 
 	}
 	
 	label = [ "min", "max" ];
-	onModifySingle[0] = function(val) { onModifyIndex(0, toNumber(val)); }
-	onModifySingle[1] = function(val) { onModifyIndex(1, toNumber(val)); }
+	onModifySingle[0] = function(val) { return onModifyIndex(0, toNumber(val)); }
+	onModifySingle[1] = function(val) { return onModifyIndex(1, toNumber(val)); }
 	
 	extras = -1;
 	
 	for(var i = 0; i < 2; i++) {
 		tb[i] = new textBox(_type, onModifySingle[i]);
 		tb[i].slidable = true;
+	}
+	
+	static setSlideSpeed = function(speed) {
+		for(var i = 0; i < 2; i++)
+			tb[i].slide_speed = speed;
 	}
 	
 	static setInteract = function(interactable = noone) { 
@@ -73,10 +80,10 @@ function rangeBox(_type, _onModify) : widget() constructor {
 			for(var i = 0; i < 2; i++) {
 				tb[i].hover  = hover;
 				tb[i].active = active;
-			
+				
 				var bx  = _x + ww * i;
 				tb[i].draw(bx + ui(44), _y, ww - ui(44), _h, _data[i], _m);
-			
+				
 				draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text_sub);
 				draw_text(bx + ui(8), _y + _h / 2, label[i]);
 			}

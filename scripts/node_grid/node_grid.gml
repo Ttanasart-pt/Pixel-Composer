@@ -15,34 +15,34 @@ function Node_Grid(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constru
 	uniform_col2 = shader_get_uniform(shader, "col2");
 	uniform_sam = shader_get_uniform(shader, "useSampler");
 	
-	inputs[| 0] = nodeValue(0, "Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, def_surf_size2 )
+	inputs[| 0] = nodeValue("Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, def_surf_size2 )
 		.setDisplay(VALUE_DISPLAY.vector);
 	
-	inputs[| 1] = nodeValue(1, "Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ])
+	inputs[| 1] = nodeValue("Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.vector)
 		.setUnitRef(function(index) { return getDimension(index); });
 	
-	inputs[| 2] = nodeValue(2, "Scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 4, 4 ])
+	inputs[| 2] = nodeValue("Tiling", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 4, 4 ])
 		.setDisplay(VALUE_DISPLAY.vector);
 	
-	inputs[| 3] = nodeValue(3, "Gap", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.1)
+	inputs[| 3] = nodeValue("Gap", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.1)
 		.setDisplay(VALUE_DISPLAY.slider, [0, 0.5, 0.01]);
 	
-	inputs[| 4] = nodeValue(4, "Angle", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
+	inputs[| 4] = nodeValue("Angle", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
 		.setDisplay(VALUE_DISPLAY.rotation);
 		
-	inputs[| 5] = nodeValue(5, "Color 1", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white);
-	inputs[| 6] = nodeValue(6, "Color 2", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_black);
+	inputs[| 5] = nodeValue("Color 1", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white);
+	inputs[| 6] = nodeValue("Color 2", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_black);
 	
-	inputs[| 7] = nodeValue(7, "Texture", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
+	inputs[| 7] = nodeValue("Texture", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 	
-	inputs[| 8] = nodeValue(8, "Shift", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
+	inputs[| 8] = nodeValue("Shift", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
 		.setDisplay(VALUE_DISPLAY.slider, [-0.5, 0.5, 0.01]);
 		
-	inputs[| 9] = nodeValue(9, "Shift axis", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+	inputs[| 9] = nodeValue("Shift axis", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.enum_button, ["X", "Y"]);
 		
-	inputs[| 10] = nodeValue(10, "Height", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	inputs[| 10] = nodeValue("Height", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
 	
 	input_display_list = [
 		["Output",  false], 0,
@@ -50,7 +50,7 @@ function Node_Grid(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constru
 		["Render",	false], 5, 6, 7, 10
 	];
 	
-	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
+	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		inputs[| 1].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
@@ -77,15 +77,15 @@ function Node_Grid(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constru
 		shader_set(shader);
 			shader_set_uniform_f(uniform_pos, _pos[0] / _dim[0], _pos[1] / _dim[1]);
 			shader_set_uniform_f(uniform_dim, _dim[0], _dim[1]);
-			shader_set_uniform_f_array(uniform_sca, _sca);
+			shader_set_uniform_f_array_safe(uniform_sca, _sca);
 			shader_set_uniform_f(uniform_wid, _wid);
 			shader_set_uniform_f(uniform_ang, degtorad(_ang));
 			shader_set_uniform_f(uniform_sam, is_surface(_sam));
 			shader_set_uniform_f(uniform_shf, _shf);
 			shader_set_uniform_i(uniform_shx, _shx);
 			shader_set_uniform_i(uniform_hgt, _hgt);
-			shader_set_uniform_f_array(uniform_col1, colToVec4(_col1));
-			shader_set_uniform_f_array(uniform_col2, colToVec4(_col2));
+			shader_set_uniform_f_array_safe(uniform_col1, colToVec4(_col1));
+			shader_set_uniform_f_array_safe(uniform_col2, colToVec4(_col2));
 			
 			if(is_surface(_sam))
 				draw_surface_stretched(_sam, 0, 0, _dim[0], _dim[1]);

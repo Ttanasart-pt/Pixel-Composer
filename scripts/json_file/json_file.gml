@@ -1,3 +1,11 @@
+function json_encode_minify(map) {
+	return json_minify(json_encode(map));
+}
+
+function json_stringify_minify(map) {
+	return json_minify(json_stringify(map));
+}
+
 function json_load(path) {
 	if(!file_exists(path)) return noone;
 	
@@ -9,8 +17,8 @@ function json_load(path) {
 	return js;
 }
 
-function json_save(path, struct) {
-	var s = json_encode(struct);
+function json_save(path, map) {
+	var s = json_encode_minify(map);
 	
 	var f = file_text_open_write(path);
 	file_text_write_string(f, s);
@@ -29,7 +37,7 @@ function json_load_struct(path) {
 }
 
 function json_save_struct(path, struct) {
-	var s = json_stringify(struct);
+	var s = json_stringify_minify(struct);
 	
 	var f = file_text_open_write(path);
 	file_text_write_string(f, s);

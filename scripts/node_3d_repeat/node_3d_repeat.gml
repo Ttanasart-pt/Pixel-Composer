@@ -1,67 +1,69 @@
 function Node_3D_Repeat(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 	name = "3D Repeat";
 	
-	inputs[| 0] = nodeValue(0, "Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, def_surf_size2)
+	inputs[| 0] = nodeValue("Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, def_surf_size2)
 		.setDisplay(VALUE_DISPLAY.vector);
 	
-	inputs[| 1] = nodeValue(1, "Object position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 0 ])
+	inputs[| 1] = nodeValue("Object position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.vector);
 	
-	inputs[| 2] = nodeValue(2, "Object rotation", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 0 ])
+	inputs[| 2] = nodeValue("Object rotation", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.vector);
 	
-	inputs[| 3] = nodeValue(3, "Object scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 1, 1 ])
+	inputs[| 3] = nodeValue("Object scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 1, 1 ])
 		.setDisplay(VALUE_DISPLAY.vector);
 	
-	inputs[| 4] = nodeValue(4, "Render position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ def_surf_size / 2, def_surf_size / 2 ])
+	inputs[| 4] = nodeValue("Render position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ def_surf_size / 2, def_surf_size / 2 ])
 		.setDisplay(VALUE_DISPLAY.vector)
 		.setUnitRef( function() { return inputs[| 0].getValue(); });
 	
-	inputs[| 5] = nodeValue(5, "Render scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 1 ])
+	inputs[| 5] = nodeValue("Render scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 1 ])
 		.setDisplay(VALUE_DISPLAY.vector);
 		
-	inputs[| 6] = nodeValue(6, "Light direction", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
+	inputs[| 6] = nodeValue("Light direction", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
 		.setDisplay(VALUE_DISPLAY.rotation);
 		
-	inputs[| 7] = nodeValue(7, "Light height", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.5)
+	inputs[| 7] = nodeValue("Light height", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.5)
 		.setDisplay(VALUE_DISPLAY.slider, [-1, 1, 0.01]);
 		
-	inputs[| 8] = nodeValue(8, "Light intensity", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
+	inputs[| 8] = nodeValue("Light intensity", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
 		.setDisplay(VALUE_DISPLAY.slider, [0, 1, 0.01]);
 	
-	inputs[| 9] = nodeValue(9, "Light color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white);
+	inputs[| 9] = nodeValue("Light color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white);
 	
-	inputs[| 10] = nodeValue(10, "Ambient color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_grey);
+	inputs[| 10] = nodeValue("Ambient color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_grey);
 		
-	inputs[| 11] = nodeValue(11, "3D object", self, JUNCTION_CONNECT.input, VALUE_TYPE.d3object, noone)
+	inputs[| 11] = nodeValue("3D object", self, JUNCTION_CONNECT.input, VALUE_TYPE.d3object, noone)
 		.setVisible(true, true);
 	
-	inputs[| 12] = nodeValue(12, "Repeat", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1, "Amount of copies to be generated.");
+	inputs[| 12] = nodeValue("Repeat", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1, "Amount of copies to be generated.");
 	
-	inputs[| 13] = nodeValue(13, "Repeat position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 0, 0 ])
+	inputs[| 13] = nodeValue("Repeat position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.vector);
 	
-	inputs[| 14] = nodeValue(14, "Repeat rotation", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 0 ])
+	inputs[| 14] = nodeValue("Repeat rotation", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.vector);
 	
-	inputs[| 15] = nodeValue(15, "Repeat scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 1, 1 ])
+	inputs[| 15] = nodeValue("Repeat scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 1, 1 ])
 		.setDisplay(VALUE_DISPLAY.vector);
 	
-	inputs[| 16] = nodeValue(16, "Repeat pattern", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_button, [ "Linear", "Circular" ]);
+	inputs[| 16] = nodeValue("Repeat pattern", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+		.setDisplay(VALUE_DISPLAY.enum_button, [ "Linear", "Circular" ])
+		.rejectArray();
 	
-	inputs[| 17] = nodeValue(17, "Axis", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+	inputs[| 17] = nodeValue("Axis", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.enum_button, [ "x", "y", "z" ]);
 	
-	inputs[| 18] = nodeValue(18, "Radius", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1);
+	inputs[| 18] = nodeValue("Radius", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1);
 	
-	inputs[| 19] = nodeValue(19, "Rotation", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 0, 360 ])
+	inputs[| 19] = nodeValue("Rotation", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 0, 360 ])
 		.setDisplay(VALUE_DISPLAY.rotation_range);
 	
-	inputs[| 20] = nodeValue(20, "Projection", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_button, [ "Orthographic", "Perspective" ]);
+	inputs[| 20] = nodeValue("Projection", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+		.setDisplay(VALUE_DISPLAY.enum_button, [ "Orthographic", "Perspective" ])
+		.rejectArray();
 		
-	inputs[| 21] = nodeValue(21, "Field of view", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 60)
+	inputs[| 21] = nodeValue("Field of view", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 60)
 		.setDisplay(VALUE_DISPLAY.slider, [ 0, 90, 1 ]);
 	
 	input_display_list = [ 0, 11,
@@ -72,11 +74,11 @@ function Node_3D_Repeat(_x, _y, _group = -1) : Node(_x, _y, _group) constructor 
 	];
 	
 	
-	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
+	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
-	outputs[| 1] = nodeValue(1, "3D objects", self, JUNCTION_CONNECT.output, VALUE_TYPE.d3object, function() { return submit_vertex(); });
+	outputs[| 1] = nodeValue("3D objects", self, JUNCTION_CONNECT.output, VALUE_TYPE.d3object, function() { return submit_vertex(); });
 	
-	outputs[| 2] = nodeValue(2, "Normal pass", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
+	outputs[| 2] = nodeValue("Normal pass", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	output_display_list = [
 		0, 2, 1
@@ -152,7 +154,19 @@ function Node_3D_Repeat(_x, _y, _group = -1) : Node(_x, _y, _group) constructor 
 		_3d_clear_local_transform();
 	}
 	
-	static update = function() {
+	static step = function() {
+		var _proj = inputs[| 20].getValue();
+		var _patt = inputs[| 16].getValue();
+		
+		inputs[| 13].setVisible(_patt == 0);
+		
+		inputs[| 17].setVisible(_patt == 1);
+		inputs[| 18].setVisible(_patt == 1);
+		inputs[| 19].setVisible(_patt == 1);
+		inputs[| 21].setVisible(_proj);
+	}
+	
+	function update(frame = ANIMATOR.current_frame) {
 		var _dim  = inputs[| 0].getValue();
 		var _lpos = inputs[| 1].getValue();
 		var _lrot = inputs[| 2].getValue();
@@ -171,12 +185,6 @@ function Node_3D_Repeat(_x, _y, _group = -1) : Node(_x, _y, _group) constructor 
 		var _fov  = inputs[| 21].getValue();
 		
 		var _patt = inputs[| 16].getValue();
-		inputs[| 13].setVisible(_patt == 0);
-		
-		inputs[| 17].setVisible(_patt == 1);
-		inputs[| 18].setVisible(_patt == 1);
-		inputs[| 19].setVisible(_patt == 1);
-		inputs[| 21].setVisible(_proj);
 		
 		for( var i = 0; i < array_length(output_display_list) - 1; i++ ) {
 			var ind = output_display_list[i];

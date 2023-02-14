@@ -21,18 +21,18 @@ float sampleMask() {
 
 float hue2rgb( in float m1, in float m2, in float hue) {
 	if (hue < 0.0)
-        hue += 1.0;
-    else if (hue > 1.0)
-        hue -= 1.0;
+		hue += 1.0;
+	else if (hue > 1.0)
+		hue -= 1.0;
 
-    if ((6.0 * hue) < 1.0)
+	if ((6.0 * hue) < 1.0)
 		return m1 + (m2 - m1) * hue * 6.0;
-    else if ((2.0 * hue) < 1.0)
-        return m2;
-    else if ((3.0 * hue) < 2.0)
-        return m1 + (m2 - m1) * ((2.0 / 3.0) - hue) * 6.0;
-    else
-        return m1;
+	else if ((2.0 * hue) < 1.0)
+		return m2;
+	else if ((3.0 * hue) < 2.0)
+		return m1 + (m2 - m1) * ((2.0 / 3.0) - hue) * 6.0;
+	else
+		return m1;
 }
 
 vec3 hsl2rgb( in vec3 hsl ) {
@@ -53,8 +53,8 @@ vec3 hsl2rgb( in vec3 hsl ) {
 		g = hue2rgb(m1, m2, hsl.x);
 		b = hue2rgb(m1, m2, hsl.x - 1. / 3.);
 	}
-    
-    return vec3( r, g, b );
+	
+	return vec3( r, g, b );
 }
 
 vec3 rgb2hsl( in vec3 c ){
@@ -70,9 +70,9 @@ vec3 rgb2hsl( in vec3 c ){
 	l = ( cMax + cMin ) / 2.0;
 	if ( cMax > cMin ) {
 		float cDelta = cMax - cMin;
-        
+		
 		s = l < .5 ? cDelta / ( cMax + cMin ) : cDelta / ( 2.0 - ( cMax + cMin ) );
-        
+		
 		if ( r == cMax )
 			h = ( g - b ) / cDelta;
 		else if ( g == cMax )
@@ -105,5 +105,5 @@ void main() {
 	vec4 res = vec4(hsl2rgb(_hsl0), _col0.a);
 	if(preserveAlpha == 1) res.a = _col0.a;
 	
-    gl_FragColor = res;
+	gl_FragColor = res;
 }

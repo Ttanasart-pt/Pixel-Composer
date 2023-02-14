@@ -39,25 +39,30 @@ function Node_Image_Animated(_x, _y, _group = -1) : Node(_x, _y, _group) constru
 	update_on_frame = true;
 	always_output   = true;
 	
-	inputs[| 0]  = nodeValue(0, "Path", self, JUNCTION_CONNECT.input, VALUE_TYPE.path, [])
+	inputs[| 0]  = nodeValue("Path", self, JUNCTION_CONNECT.input, VALUE_TYPE.path, [])
 		.setDisplay(VALUE_DISPLAY.path_array, ["*.png", ""]);
 	
-	inputs[| 1]  = nodeValue(1, "Padding", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [0, 0, 0, 0])
-		.setDisplay(VALUE_DISPLAY.padding);
+	inputs[| 1]  = nodeValue("Padding", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [0, 0, 0, 0])
+		.setDisplay(VALUE_DISPLAY.padding)
+		.rejectArray();
 		
-	inputs[| 2] = nodeValue(2, "Stretch frame", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	inputs[| 2] = nodeValue("Stretch frame", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false)
+		.rejectArray();
 	
-	inputs[| 3] = nodeValue(3, "Frame duration", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1);
-	inputs[| 4] = nodeValue(4, "Animation end", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, ["Loop", "Ping pong", "Hold last frame", "Hide"]);
+	inputs[| 3] = nodeValue("Frame duration", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1)
+		.rejectArray();
 		
-	inputs[| 5] = nodeValue(5, "Set animation length to match", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+	inputs[| 4] = nodeValue("Animation end", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+		.setDisplay(VALUE_DISPLAY.enum_scroll, ["Loop", "Ping pong", "Hold last frame", "Hide"])
+		.rejectArray();
+		
+	inputs[| 5] = nodeValue("Set animation length to match", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.button, [ function() { 
 				if(array_length(spr) == 0) return;
 				ANIMATOR.frames_total = array_length(spr);
 			}, "Match length"] );
 	
-	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
+	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [
 		["Image", false],		0, 1,
@@ -108,14 +113,14 @@ function Node_Image_Animated(_x, _y, _group = -1) : Node(_x, _y, _group) constru
 		return true;
 	}
 	
-	static inspectorUpdate = function() {
+	static onInspectorUpdate = function() {
 		var path = inputs[| 0].getValue();
 		if(path == "") return;
 		updatePaths(path);
 		update();
 	}
 	
-	static update = function() {
+	static update = function(frame = ANIMATOR.current_frame) {
 		var path = inputs[| 0].getValue();
 		if(path == "") return;
 		if(is_array(path) && !array_equals(path, path_loaded)) 
@@ -140,36 +145,36 @@ function Node_Image_Animated(_x, _y, _group = -1) : Node(_x, _y, _group) constru
 		surfs = surface_verify(surfs, ww, hh);
 		outputs[| 0].setValue(surfs);
 		
-		var frame = floor(ANIMATOR.current_frame / spd);
+		var _frame = floor(ANIMATOR.current_frame / spd);
 		
 		switch(_end) {
 			case ANIMATION_END.loop : 
-				frame = safe_mod(frame, array_length(spr));
+				_frame = safe_mod(_frame, array_length(spr));
 				break;
 			case ANIMATION_END.ping :
-				frame = safe_mod(frame, array_length(spr) * 2 - 2);
-				if(frame >= array_length(spr))
-					frame = array_length(spr) * 2 - 2 - frame;
+				_frame = safe_mod(_frame, array_length(spr) * 2 - 2);
+				if(_frame >= array_length(spr))
+					_frame = array_length(spr) * 2 - 2 - _frame;
 				break;
 			case ANIMATION_END.hold :
-				frame = min(frame, array_length(spr) - 1);
+				_frame = min(_frame, array_length(spr) - 1);
 				break;
 		}
 		
-		var curr_w = sprite_get_width(spr[frame]);
-		var curr_h = sprite_get_height(spr[frame]);
+		var curr_w = sprite_get_width(spr[_frame]);
+		var curr_h = sprite_get_height(spr[_frame]);
 		var curr_x = pad[2] + (ww - curr_w) / 2;
 		var curr_y = pad[1] + (hh - curr_h) / 2;
 		
 		surface_set_target(surfs);
 			draw_clear_alpha(0, 0);
-			BLEND_OVERRIDE
+			BLEND_OVERRIDE;
 			if(_end == ANIMATION_END.hide) {
-				if(frame < array_length(spr))
-					draw_sprite(spr[frame], 0, curr_x, curr_y);
+				if(_frame < array_length(spr))
+					draw_sprite(spr[_frame], 0, curr_x, curr_y);
 			} else
-				draw_sprite(spr[frame], 0, curr_x, curr_y);
-			BLEND_NORMAL
+				draw_sprite(spr[_frame], 0, curr_x, curr_y);
+			BLEND_NORMAL;
 		surface_reset_target();
 	}
 }

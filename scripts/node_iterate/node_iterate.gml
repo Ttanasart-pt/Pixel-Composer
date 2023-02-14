@@ -11,7 +11,7 @@ function Node_Iterate(_x, _y, _group = -1) : Node_Collection(_x, _y, _group) con
 	
 	iterated = 0;
 	
-	inputs[| 0] = nodeValue( 0, "Repeat", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1 );
+	inputs[| 0] = nodeValue("Repeat", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1 );
 	
 	custom_input_index = ds_list_size(inputs);
 	loop_start_time = 0;
@@ -35,7 +35,7 @@ function Node_Iterate(_x, _y, _group = -1) : Node_Collection(_x, _y, _group) con
 				n.initLoop();
 		}
 		
-		printIf(global.RENDER_LOG, "LOOP INIT");
+		printIf(global.RENDER_LOG, "    > Loop begin");
 	}
 	
 	static getNextNodes = function() {
@@ -53,6 +53,8 @@ function Node_Iterate(_x, _y, _group = -1) : Node_Collection(_x, _y, _group) con
 	
 	static iterationStatus = function() {
 		var iter = true;
+		var maxIter = inputs[| 0].getValue();
+		if(!is_real(maxIter)) maxIter = 1;
 		for( var i = 0; i < ds_list_size(outputs); i++ ) {
 			var _out = outputs[| i].from;
 			iter &= _out.rendered;
@@ -61,10 +63,10 @@ function Node_Iterate(_x, _y, _group = -1) : Node_Collection(_x, _y, _group) con
 		if(iter) {
 			iterated++;
 			
-			if(iterated == inputs[| 0].getValue()) {
+			if(iterated == maxIter) {
 				render_time = get_timer() - loop_start_time;
 				return ITERATION_STATUS.complete;
-			} else if(iterated > inputs[| 0].getValue())
+			} else if(iterated > maxIter)
 				return ITERATION_STATUS.complete;
 			
 			resetAllRenderStatus();

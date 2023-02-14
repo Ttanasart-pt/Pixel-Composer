@@ -7,16 +7,15 @@ function Node_Rigid_Global(_x, _y, _group = -1) : Node(_x, _y, _group) construct
 	
 	object = noone;
 	
-	inputs[| 0] = nodeValue(0, "Gravity", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 10 ])
+	inputs[| 0] = nodeValue("Gravity", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 10 ])
 		.setDisplay(VALUE_DISPLAY.vector);
 	
 	current_gra = [0, 0];
 	
-	static update = function() {
+	static update = function(frame = ANIMATOR.current_frame) {
 		var _gra = inputs[| 0].getValue();
-		var _sim = inputs[| 1].getValue();
 		
-		if(current_gra[0] != _gra[0] || current_gra[1] != _gra[1]) {
+		if(current_gra[0] != array_safe_get(_gra, 0) || current_gra[1] != array_safe_get(_gra, 1)) {
 			physics_world_gravity(_gra[0], _gra[1]);
 			
 			current_gra[0] = _gra[0];

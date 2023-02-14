@@ -52,6 +52,15 @@ function scrollBox(_data, _onModify) : widget() constructor {
 				trigger();
 			if(mouse_click(mb_left, active))
 				draw_sprite_stretched(THEME.textbox, 2, _x, _y, w, _h);	
+			
+			if(is_array(data_list) && key_mod_press(SHIFT)) {
+				var ind = array_find(data_list, _text);
+				var len = array_length(data_list);
+				if(len) {
+					if(mouse_wheel_down())	onModify((ind + 1 + len) % len);
+					if(mouse_wheel_up())	onModify((ind - 1 + len) % len);
+				}
+			}
 		} else {
 			draw_sprite_stretched_ext(THEME.textbox, 0, _x, _y, w, _h, c_white, 0.5 + 0.5 * interactable);
 			if(mouse_press(mb_left)) deactivate();

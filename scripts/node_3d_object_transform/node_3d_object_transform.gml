@@ -1,45 +1,46 @@
-function Node_3D_Transform(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
+function Node_3D_Transform(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constructor {
 	name = "3D Transform";
 	
-	inputs[| 0] = nodeValue(0, "Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, def_surf_size2)
+	inputs[| 0] = nodeValue("Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, def_surf_size2)
 		.setDisplay(VALUE_DISPLAY.vector);
 	
-	inputs[| 1] = nodeValue(1, "Object position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 0 ])
+	inputs[| 1] = nodeValue("Object position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.vector);
 	
-	inputs[| 2] = nodeValue(2, "Object rotation", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 0 ])
+	inputs[| 2] = nodeValue("Object rotation", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.vector);
 	
-	inputs[| 3] = nodeValue(3, "Object scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 1, 1 ])
+	inputs[| 3] = nodeValue("Object scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 1, 1 ])
 		.setDisplay(VALUE_DISPLAY.vector);
 	
-	inputs[| 4] = nodeValue(4, "Render position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ def_surf_size / 2, def_surf_size / 2 ])
+	inputs[| 4] = nodeValue("Render position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ def_surf_size / 2, def_surf_size / 2 ])
 		.setDisplay(VALUE_DISPLAY.vector)
 		.setUnitRef( function() { return inputs[| 2].getValue(); });
 	
-	inputs[| 5] = nodeValue(5, "Render scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 1 ])
+	inputs[| 5] = nodeValue("Render scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 1 ])
 		.setDisplay(VALUE_DISPLAY.vector);
 		
-	inputs[| 6] = nodeValue(6, "Light direction", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
+	inputs[| 6] = nodeValue("Light direction", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
 		.setDisplay(VALUE_DISPLAY.rotation);
 		
-	inputs[| 7] = nodeValue(7, "Light height", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.5)
+	inputs[| 7] = nodeValue("Light height", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.5)
 		.setDisplay(VALUE_DISPLAY.slider, [-1, 1, 0.01]);
 		
-	inputs[| 8] = nodeValue(8, "Light intensity", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
+	inputs[| 8] = nodeValue("Light intensity", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
 		.setDisplay(VALUE_DISPLAY.slider, [0, 1, 0.01]);
 	
-	inputs[| 9] = nodeValue(9, "Light color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white);
+	inputs[| 9] = nodeValue("Light color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white);
 	
-	inputs[| 10] = nodeValue(10, "Ambient color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_grey);
+	inputs[| 10] = nodeValue("Ambient color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_grey);
 	
-	inputs[| 11] = nodeValue(11, "3D object", self, JUNCTION_CONNECT.input, VALUE_TYPE.d3object, noone)
+	inputs[| 11] = nodeValue("3D object", self, JUNCTION_CONNECT.input, VALUE_TYPE.d3object, noone)
 		.setVisible(true, true);
 		
-	inputs[| 12] = nodeValue(12, "Projection", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_button, [ "Orthographic", "Perspective" ]);
+	inputs[| 12] = nodeValue("Projection", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+		.setDisplay(VALUE_DISPLAY.enum_button, [ "Orthographic", "Perspective" ])
+		.rejectArray();
 		
-	inputs[| 13] = nodeValue(13, "Field of view", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 60)
+	inputs[| 13] = nodeValue("Field of view", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 60)
 		.setDisplay(VALUE_DISPLAY.slider, [ 0, 90, 1 ]);
 	
 	input_display_list = [ 0, 11,
@@ -48,11 +49,11 @@ function Node_3D_Transform(_x, _y, _group = -1) : Node(_x, _y, _group) construct
 		["Light",				 true], 6, 7, 8, 9, 10,
 	];
 	
-	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
+	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
-	outputs[| 1] = nodeValue(1, "3D object", self, JUNCTION_CONNECT.output, VALUE_TYPE.d3object, function() { return submit_vertex(); });
+	outputs[| 1] = nodeValue("3D object", self, JUNCTION_CONNECT.output, VALUE_TYPE.d3object, function() { return submit_vertex(); });
 	
-	outputs[| 2] = nodeValue(2, "Normal pass", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
+	outputs[| 2] = nodeValue("Normal pass", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	output_display_list = [
 		0, 2, 1
@@ -83,40 +84,39 @@ function Node_3D_Transform(_x, _y, _group = -1) : Node(_x, _y, _group) construct
 		_3d_clear_local_transform();
 	}
 	
-	static update = function() {
-		var _dim  = inputs[| 0].getValue();
-		var _lpos = inputs[| 1].getValue();
-		var _lrot = inputs[| 2].getValue();
-		var _lsca = inputs[| 3].getValue();
-		
-		var _pos  = inputs[| 4].getValue();
-		var _sca  = inputs[| 5].getValue();
-		
-		var _ldir = inputs[|  6].getValue();
-		var _lhgt = inputs[|  7].getValue();
-		var _lint = inputs[|  8].getValue();
-		var _lclr = inputs[|  9].getValue();
-		var _aclr = inputs[| 10].getValue();
-
+	static step = function() {
 		var _proj = inputs[| 12].getValue();
-		var _fov  = inputs[| 13].getValue();
-		
 		inputs[| 13].setVisible(_proj);
+	}
+	
+	static process_data = function(_outSurf, _data, _output_index, _array_index) {
+		var _dim  = _data[0];
+		var _lpos = _data[1];
+		var _lrot = _data[2];
+		var _lsca = _data[3];
 		
-		for( var i = 0; i < array_length(output_display_list) - 1; i++ ) {
-			var ind = output_display_list[i];
-			var _outSurf = outputs[| ind].getValue();
-			outputs[| ind].setValue(surface_verify(_outSurf, _dim[0], _dim[1]));
-			
-			var pass = "diff";
-			switch(ind) {
-				case 0 : pass = "diff" break;
-				case 2 : pass = "norm" break;
-			}
+		var _pos  = _data[4];
+		var _sca  = _data[5];
 		
-			_3d_pre_setup(_outSurf, _dim, _pos, _sca, _ldir, _lhgt, _lint, _lclr, _aclr, _lpos, _lrot, _lsca, _proj, _fov, pass, false);
-				submit_vertex();
-			_3d_post_setup();
+		var _ldir = _data[ 6];
+		var _lhgt = _data[ 7];
+		var _lint = _data[ 8];
+		var _lclr = _data[ 9];
+		var _aclr = _data[10];
+
+		var _proj = _data[12];
+		var _fov  = _data[13];
+		
+		var pass = "diff";
+		switch(_output_index) {
+			case 0 : pass = "diff" break;
+			case 2 : pass = "norm" break;
 		}
+		
+		_3d_pre_setup(_outSurf, _dim, _pos, _sca, _ldir, _lhgt, _lint, _lclr, _aclr, _lpos, _lrot, _lsca, _proj, _fov, pass, false);
+			submit_vertex();
+		_3d_post_setup();
+		
+		return _outSurf;
 	}
 }

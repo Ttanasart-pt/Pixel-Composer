@@ -30,54 +30,59 @@ function Node_Shape(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constr
 	uniform_stRad	= shader_get_uniform(shader, "stRad");
 	uniform_edRad	= shader_get_uniform(shader, "edRad");
 	
-	inputs[| 0] = nodeValue(0, "Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, def_surf_size2 )
+	inputs[| 0] = nodeValue("Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, def_surf_size2 )
 		.setDisplay(VALUE_DISPLAY.vector);
 	
-	inputs[| 1] = nodeValue(1, "Backgroud", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	inputs[| 1] = nodeValue("Backgroud", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
 	
-	inputs[| 2] = nodeValue(2, "Shape", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+	inputs[| 2] = nodeValue("Shape", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Rectangle", "Ellipse", "Regular polygon", "Star", "Arc", "Teardrop", "Cross", "Leaf" ]);
 	
-	inputs[| 3] = nodeValue(3, "Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ def_surf_size / 2, def_surf_size / 2, def_surf_size / 2, def_surf_size / 2, AREA_SHAPE.rectangle ])
+	inputs[| 3] = nodeValue("Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ def_surf_size / 2, def_surf_size / 2, def_surf_size / 2, def_surf_size / 2, AREA_SHAPE.rectangle ])
 		.setDisplay(VALUE_DISPLAY.area, function() { return inputs[| 0].getValue(); });
 	
-	inputs[| 4] = nodeValue(4, "Sides", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 3)
+	inputs[| 4] = nodeValue("Sides", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 3)
 		.setVisible(false);
 	
-	inputs[| 5] = nodeValue(5, "Inner radius", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.5)
+	inputs[| 5] = nodeValue("Inner radius", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.5)
 		.setDisplay(VALUE_DISPLAY.slider, [0, 1, 0.01])
 		.setVisible(false);
 	
-	inputs[| 6] = nodeValue(6, "Anti alising", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	inputs[| 6] = nodeValue("Anti alising", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
 	
-	inputs[| 7] = nodeValue(7, "Rotation", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+	inputs[| 7] = nodeValue("Rotation", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.rotation);
 	
-	inputs[| 8] = nodeValue(8, "Angle range", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 0, 180 ])
+	inputs[| 8] = nodeValue("Angle range", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 0, 180 ])
 		.setDisplay(VALUE_DISPLAY.rotation_range);
 	
-	inputs[| 9] = nodeValue(9, "Corner radius", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
+	inputs[| 9] = nodeValue("Corner radius", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
 		.setDisplay(VALUE_DISPLAY.slider, [0, 0.5, 0.01]);
 	
-	inputs[| 10] = nodeValue(10, "Shape color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white);
+	inputs[| 10] = nodeValue("Shape color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white);
 	
-	inputs[| 11] = nodeValue(11, "Background color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_black);
+	inputs[| 11] = nodeValue("Background color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_black);
 	
-	inputs[| 12] = nodeValue(12, "Height", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	inputs[| 12] = nodeValue("Height", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
 	
-	inputs[| 13] = nodeValue(13, "Start radius", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.1)
+	inputs[| 13] = nodeValue("Start radius", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.1)
 		.setDisplay(VALUE_DISPLAY.slider, [0, 1, 0.01])
 		.setVisible(false);
-		
-	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
+	
+	inputs[| 14] = nodeValue("Shape path", self, JUNCTION_CONNECT.input, VALUE_TYPE.pathnode, noone)
+		.setVisible(true, true);
+	
+	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [
 		["Surface", false], 0, 6, 
-		["Shape",	false], 2, 3, 9, 4, 13, 5, 7, 8, 
-		["Render",	true],	10, 1, 11, 12
+		["Shape",	false], 2, 14, 3, 9, 4, 13, 5, 7, 8, 
+		["Render",	 true],	10, 1, 11, 12
 	];
 	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
+		var _path	= inputs[| 14].getValue();
+		if(_path != noone && struct_has(_path, "getPointRatio")) return;
 		inputs[| 3].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
 	}
 	
@@ -90,11 +95,67 @@ function Node_Shape(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constr
 		var _corner = _data[9];
 		var _color  = _data[10];
 		var _df		= _data[12];
+		var _path	= _data[14];
 		var _bgcol  = _bg? colToVec4(_data[11]) : [0, 0, 0, 0];
 		
 		inputs[| 11].setVisible(_bg);
+		inputs[|  3].setVisible(true);
+		inputs[|  9].setVisible(true);
+		inputs[|  4].setVisible(true);
+		inputs[| 13].setVisible(true);
+		inputs[|  5].setVisible(true);
+		inputs[|  7].setVisible(true);
+		inputs[|  8].setVisible(true);
 		
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1]);
+		
+		if(_path != noone && struct_has(_path, "getPointRatio")) {
+			inputs[|  3].setVisible(false);
+			inputs[|  9].setVisible(false);
+			inputs[|  4].setVisible(false);
+			inputs[| 13].setVisible(false);
+			inputs[|  5].setVisible(false);
+			inputs[|  7].setVisible(false);
+			inputs[|  8].setVisible(false);
+			
+			surface_set_target(_outSurf);
+				if(_bg) draw_clear_alpha(0, 1);
+				else	draw_clear_alpha(0, 0);
+				
+				var points = [];
+				var segCount = _path.getSegmentCount();
+				if(segCount > 1) {
+					var quality = 8;
+					var sample = quality * segCount;
+					
+					for( var i = 0; i < sample; i++ ) {
+						var t = i / sample;
+						var pos = _path.getPointRatio(t);
+					
+						array_push(points, pos);
+					}
+					
+					var triangles = polygon_triangulate(points);
+					
+					draw_set_color(_color);
+					
+					draw_primitive_begin(pr_trianglelist);
+					for( var i = 0; i < array_length(triangles); i++ ) {
+						var tri = triangles[i];
+						var p0 = tri[0];
+						var p1 = tri[1];
+						var p2 = tri[2];
+						
+						draw_vertex(p0[0], p0[1]);
+						draw_vertex(p1[0], p1[1]);
+						draw_vertex(p2[0], p2[1]);
+					}
+					draw_primitive_end();
+				}
+			surface_reset_target();
+			
+			return _outSurf;
+		}
 		
 		surface_set_target(_outSurf);
 			if(_bg) draw_clear_alpha(0, 1);
@@ -145,7 +206,7 @@ function Node_Shape(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constr
 					var center =  degtorad(ar[0] + ar[1]) / 2;
 					var range  =  degtorad(ar[0] - ar[1]) / 2;
 					shader_set_uniform_f(uniform_angle, center);
-					shader_set_uniform_f_array(uniform_arange, [ sin(range), cos(range) ] );
+					shader_set_uniform_f_array_safe(uniform_arange, [ sin(range), cos(range) ] );
 					shader_set_uniform_f(uniform_inner, _data[5] / 2);
 					break;
 				case NODE_SHAPE_TYPE.teardrop :
@@ -178,15 +239,15 @@ function Node_Shape(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constr
 					break;
 			}
 			
-			shader_set_uniform_f_array(uniform_dim, _dim);
+			shader_set_uniform_f_array_safe(uniform_dim, _dim);
 			shader_set_uniform_i(uniform_shape, _shape);
-			shader_set_uniform_f_array(uniform_bgCol, _bgcol);
+			shader_set_uniform_f_array_safe(uniform_bgCol, _bgcol);
 			shader_set_uniform_i(uniform_aa, _aa);
 			shader_set_uniform_i(uniform_drawDF, _df);
 			shader_set_uniform_f(uniform_corner, _corner);
 					
-			shader_set_uniform_f_array(uniform_cent, [ _posit[0] / _dim[0], _posit[1] / _dim[1] ]);
-			shader_set_uniform_f_array(uniform_scal, [ _posit[2] / _dim[0], _posit[3] / _dim[1] ]);
+			shader_set_uniform_f_array_safe(uniform_cent, [ _posit[0] / _dim[0], _posit[1] / _dim[1] ]);
+			shader_set_uniform_f_array_safe(uniform_scal, [ _posit[2] / _dim[0], _posit[3] / _dim[1] ]);
 			
 			draw_sprite_ext(s_fx_pixel, 0, 0, 0, _dim[0], _dim[1], 0, _color, 1);
 			shader_reset();

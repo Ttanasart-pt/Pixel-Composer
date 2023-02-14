@@ -29,15 +29,16 @@ function Node_Display_Image(_x, _y, _group = -1) : Node(_x, _y, _group) construc
 	always_output   = true;
 	auto_height		= false;
 	
-	inputs[| 0]  = nodeValue(0, "Path", self, JUNCTION_CONNECT.input, VALUE_TYPE.path, "")
-		.setDisplay(VALUE_DISPLAY.path_load, ["*.png", ""]);
+	inputs[| 0]  = nodeValue("Path", self, JUNCTION_CONNECT.input, VALUE_TYPE.path, "")
+		.setDisplay(VALUE_DISPLAY.path_load, ["*.png", ""])
+		.rejectArray();
 	
 	spr = noone;
 	path_current = "";
 	
 	first_update = false;
 	
-	static inspectorUpdate = function() {
+	static onInspectorUpdate = function() {
 		var path = inputs[| 0].getValue();
 		if(path == "") return;
 		updatePaths(path);
@@ -48,7 +49,7 @@ function Node_Display_Image(_x, _y, _group = -1) : Node(_x, _y, _group) construc
 		path = try_get_path(path);
 		if(path == -1) return false;
 		
-		var ext = filename_ext(path);
+		var ext = string_lower(filename_ext(path));
 		var _name = string_replace(filename_name(path), filename_ext(path), "");
 		
 		switch(ext) {
@@ -70,7 +71,7 @@ function Node_Display_Image(_x, _y, _group = -1) : Node(_x, _y, _group) construc
 		return false;
 	}
 	
-	static update = function() {
+	static update = function(frame = ANIMATOR.current_frame) {
 		var path = inputs[| 0].getValue();
 		if(path == "") return;
 		if(path_current != path) updatePaths(path);

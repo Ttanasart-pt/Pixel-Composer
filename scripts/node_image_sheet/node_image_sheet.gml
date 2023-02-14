@@ -3,33 +3,33 @@ function Node_Image_Sheet(_x, _y, _group = -1) : Node(_x, _y, _group) constructo
 	
 	surf_array = [];
 	
-	inputs[| 0] = nodeValue(0, "Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0).rejectArray();
+	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 	
-	inputs[| 1]  = nodeValue(1, "Sprite size", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 32, 32 ])
+	inputs[| 1]  = nodeValue("Sprite size", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 32, 32 ])
 		.setDisplay(VALUE_DISPLAY.vector);
 	
-	inputs[| 2]  = nodeValue(2, "Row", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1); //unused
-	inputs[| 3]  = nodeValue(3, "Amount", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 1, 1 ])
+	inputs[| 2]  = nodeValue("Row", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1); //unused
+	inputs[| 3]  = nodeValue("Amount", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 1, 1 ])
 		.setDisplay(VALUE_DISPLAY.vector);
 	
-	inputs[| 4]  = nodeValue(4, "Offset", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 0, 0 ])
+	inputs[| 4]  = nodeValue("Offset", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.vector);
 	
-	inputs[| 5]  = nodeValue(5, "Spacing", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 0, 0 ])
+	inputs[| 5]  = nodeValue("Spacing", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.vector);
 	
-	inputs[| 6]  = nodeValue(6, "Padding", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [0, 0, 0, 0])
+	inputs[| 6]  = nodeValue("Padding", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [0, 0, 0, 0])
 		.setDisplay(VALUE_DISPLAY.padding);
 	
-	inputs[| 7]  = nodeValue(7, "Output", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1)
+	inputs[| 7]  = nodeValue("Output", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1)
 		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Animation", "Array"]);
 	
-	inputs[| 8]  = nodeValue(8, "Animation speed", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1);
+	inputs[| 8]  = nodeValue("Animation speed", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1);
 	
-	inputs[| 9]  = nodeValue(9, "Orientation", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+	inputs[| 9]  = nodeValue("Orientation", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Horizontal", "Vertical"]);
 	
-	inputs[| 10] = nodeValue(10, "Auto fill", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+	inputs[| 10] = nodeValue("Auto fill", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.button, [ function() { 
 			var _sur = inputs[| 0].getValue();
 			if(!is_surface(_sur) || _sur == DEF_SURFACE) return;
@@ -55,13 +55,13 @@ function Node_Image_Sheet(_x, _y, _group = -1) : Node(_x, _y, _group) constructo
 			inspectorUpdate();
 		}, "Auto fill"] );
 		
-	inputs[| 11] = nodeValue(11, "Sync animation", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+	inputs[| 11] = nodeValue("Sync animation", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.button, [ function() { 
 			var _amo	= inputs[| 3].getValue();
 			ANIMATOR.frames_total = max(1, _amo[0] * _amo[1]);
 		}, "Sync frames"] );
 		
-	inputs[| 12] = nodeValue(12, "Filter empty output", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	inputs[| 12] = nodeValue("Filter empty output", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
 	
 	input_display_list = [
 		["Sprite", false],	0, 1, 6, 10, 
@@ -69,7 +69,7 @@ function Node_Image_Sheet(_x, _y, _group = -1) : Node(_x, _y, _group) constructo
 		["Output", false],	7, 8, 12, 11
 	];
 	
-	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
+	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	drag_type = 0;	
 	drag_sx   = 0;
@@ -111,13 +111,14 @@ function Node_Image_Sheet(_x, _y, _group = -1) : Node(_x, _y, _group) constructo
 		
 		var _out = inputs[| 7].getValue();
 		var _spc = inputs[| 5].getValue();
+		
 		if(drag_type == 0) {
 			curr_dim = inputs[| 1].getValue();
 			curr_amo = inputs[| 3].getValue();
 			curr_off = inputs[| 4].getValue();
 		}
 		
-		var _amo = curr_amo[0] * curr_amo[1];
+		var _amo = array_safe_get(curr_amo, 0) * array_safe_get(curr_amo, 1);
 		
 		for(var i = _amo - 1; i >= 0; i--) {
 			if(!array_safe_get(sprite_valid, i, true))
@@ -198,7 +199,7 @@ function Node_Image_Sheet(_x, _y, _group = -1) : Node(_x, _y, _group) constructo
 				var dim = [_dx, _dy];
 				curr_dim = dim;
 							
-				if(keyboard_check(vk_shift)) {
+				if(key_mod_press(SHIFT)) {
 					dim[0] = max(_dx, _dy);
 					dim[1] = max(_dx, _dy);
 				}
@@ -253,10 +254,9 @@ function Node_Image_Sheet(_x, _y, _group = -1) : Node(_x, _y, _group) constructo
 		var _out  = inputs[| 7].getValue();
 		inputs[| 11].setVisible(!_out);
 		inputs[|  8].setVisible(!_out);
-		inputs[| 12].setVisible( _out);
 	}
 	
-	static inspectorUpdate = function() {
+	static onInspectorUpdate = function() {
 		var _inSurf  = inputs[| 0].getValue();
 		if(!is_surface(_inSurf)) return;
 		
@@ -279,7 +279,7 @@ function Node_Image_Sheet(_x, _y, _group = -1) : Node(_x, _y, _group) constructo
 		curr_off = _off;
 		
 		var filSize = 4;
-		var _empS = surface_create(filSize, filSize);
+		var _empS = surface_create_valid(filSize, filSize);
 		var _buff = buffer_create(filSize * filSize * 4, buffer_fixed, 2);
 		
 		surf_array = [];
@@ -294,18 +294,18 @@ function Node_Image_Sheet(_x, _y, _group = -1) : Node(_x, _y, _group) constructo
 			
 			surface_set_target(_s);
 				draw_clear_alpha(c_black, 0);
-				BLEND_OVERRIDE
+				BLEND_OVERRIDE;
 				draw_surface_part(_inSurf, _spr_pos[0], _spr_pos[1], _dim[0], _dim[1], _pad[2], _pad[1]);
-				BLEND_NORMAL
+				BLEND_NORMAL;
 			surface_reset_target();
 				
 			if(_filt) {
 				gpu_set_tex_filter(true);
 				surface_set_target(_empS);
 				draw_clear_alpha(0, 0);
-				BLEND_OVERRIDE
+				BLEND_OVERRIDE;
 				draw_surface_stretched(_s, 0, 0, filSize, filSize);
-				BLEND_NORMAL
+				BLEND_NORMAL;
 				surface_reset_target();
 				gpu_set_tex_filter(false);
 					
@@ -336,7 +336,7 @@ function Node_Image_Sheet(_x, _y, _group = -1) : Node(_x, _y, _group) constructo
 		surface_free(_empS);
 	}
 	
-	static update = function() {
+	static update = function(frame = ANIMATOR.current_frame) {
 		var _out  = inputs[| 7].getValue();
 		if(_out == 1) {
 			outputs[| 0].setValue(surf_array);
@@ -346,7 +346,10 @@ function Node_Image_Sheet(_x, _y, _group = -1) : Node(_x, _y, _group) constructo
 		
 		var _spd = inputs[| 8].getValue();
 		update_on_frame = true;
-		var ind = safe_mod(ANIMATOR.current_frame * _spd, array_length(surf_array));
-		outputs[| 0].setValue(surf_array[ind]);
+		
+		if(array_length(surf_array)) {
+			var ind = safe_mod(ANIMATOR.current_frame * _spd, array_length(surf_array));
+			outputs[| 0].setValue(surf_array[ind]);
+		}
 	}
 }

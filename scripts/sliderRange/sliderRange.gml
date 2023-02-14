@@ -9,13 +9,16 @@ function sliderRange(_min, _max, _step, _onModify) : widget() constructor {
 	drag_mx  = 0;
 	drag_sx  = 0;
 	
-	tb_value_min = new textBox(TEXTBOX_INPUT.float, function(val) { onModify(0, clamp(val, minn, maxx)); });
-	tb_value_max = new textBox(TEXTBOX_INPUT.float, function(val) { onModify(1, clamp(val, minn, maxx)); });
+	tb_value_min = new textBox(TEXTBOX_INPUT.number, function(val) { return onModify(0, clamp(val, minn, maxx)); });
+	tb_value_max = new textBox(TEXTBOX_INPUT.number, function(val) { return onModify(1, clamp(val, minn, maxx)); });
 	
 	tb_value_min.slidable = true;
 	tb_value_max.slidable = true;
-	tb_value_min.slide_speed = 0.01;
-	tb_value_max.slide_speed = 0.01;
+	
+	static setSlideSpeed = function(speed) {
+		tb_value_min.slide_speed = speed;
+		tb_value_max.slide_speed = speed;
+	}
 	
 	static setInteract = function(interactable = noone) { 
 		self.interactable = interactable;
@@ -67,8 +70,8 @@ function sliderRange(_min, _max, _step, _onModify) : widget() constructor {
 			if(key_mod_press(CTRL))
 				val = round(val);
 			
-			onModify(dragging, val);
-			UNDO_HOLDING = true;
+			if(onModify(dragging, val))
+				UNDO_HOLDING = true;
 			
 			if(mouse_release(mb_left)) {
 				UNDO_HOLDING = false;

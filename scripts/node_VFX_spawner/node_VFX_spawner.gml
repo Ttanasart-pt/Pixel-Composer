@@ -1,15 +1,17 @@
 function Node_VFX_Spawner(_x, _y, _group = -1) : Node_VFX_Spawner_Base(_x, _y, _group) constructor {
 	name = "Spawner";
+	color = COLORS.node_blend_vfx;
+	icon  = THEME.vfx;
 	
-	inputs[| input_len + 0] = nodeValue(input_len + 0, "Spawn trigger", self, JUNCTION_CONNECT.input, VALUE_TYPE.node, false)
+	inputs[| input_len + 0] = nodeValue("Spawn trigger", self, JUNCTION_CONNECT.input, VALUE_TYPE.node, false)
 		.setVisible(true, true);
 	
-	inputs[| input_len + 1] = nodeValue(input_len + 1, "Step interval", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1, "How often the 'on step' event is triggered.\nWith 1 being trigger every frame, 2 means triggered once every 2 frames.");
+	inputs[| input_len + 1] = nodeValue("Step interval", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1, "How often the 'on step' event is triggered.\nWith 1 being trigger every frame, 2 means triggered once every 2 frames.");
 	
-	outputs[| 0] = nodeValue(0, "Particles", self, JUNCTION_CONNECT.output, VALUE_TYPE.object, parts );
-	outputs[| 1] = nodeValue(1, "On create", self, JUNCTION_CONNECT.output, VALUE_TYPE.node, noone );
-	outputs[| 2] = nodeValue(2, "On step", self, JUNCTION_CONNECT.output, VALUE_TYPE.node, noone );
-	outputs[| 3] = nodeValue(3, "On destroy", self, JUNCTION_CONNECT.output, VALUE_TYPE.node, noone );
+	outputs[| 0] = nodeValue("Particles", self, JUNCTION_CONNECT.output, VALUE_TYPE.particle, parts );
+	outputs[| 1] = nodeValue("On create", self, JUNCTION_CONNECT.output, VALUE_TYPE.node, noone );
+	outputs[| 2] = nodeValue("On step", self, JUNCTION_CONNECT.output, VALUE_TYPE.node, noone );
+	outputs[| 3] = nodeValue("On destroy", self, JUNCTION_CONNECT.output, VALUE_TYPE.node, noone );
 	
 	array_insert(input_display_list, 0, ["Trigger", true], input_len + 0, input_len + 1);
 	
@@ -77,12 +79,8 @@ function Node_VFX_Spawner(_x, _y, _group = -1) : Node_VFX_Spawner_Base(_x, _y, _
 		var spr = inputs[| 0].getValue();
 		
 		if(spr == 0) {
-			if(def_surface == -1 || !surface_exists(def_surface)) { 
-				def_surface = PIXEL_SURFACE;
-				surface_set_target(def_surface);
-				draw_clear(c_white);
-				surface_reset_target();
-			}
+			if(!is_surface(def_surface)) 
+				return;
 			spr = def_surface;	
 		}
 		

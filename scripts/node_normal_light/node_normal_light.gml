@@ -11,33 +11,36 @@ function Node_Normal_Light(_x, _y, _group = -1) : Node_Processor(_x, _y, _group)
 	uniform_light_int = shader_get_uniform(sh_normal_light, "lightIntensity");
 	uniform_light_typ = shader_get_uniform(sh_normal_light, "lightType");
 	
-	inputs[| 0] = nodeValue(0, "Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
+	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 	
-	inputs[| 1] = nodeValue(1, "Normal map", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
+	inputs[| 1] = nodeValue("Normal map", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 	
-	inputs[| 2] = nodeValue(2, "Normal intensity", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1);
+	inputs[| 2] = nodeValue("Normal intensity", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1);
 	
-	inputs[| 3] = nodeValue(3, "Ambient", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_black);
+	inputs[| 3] = nodeValue("Ambient", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_black);
 	
-	inputs[| 4] = nodeValue(4, "Light position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, -1 ])
+	inputs[| 4] = nodeValue("Light position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, -1 ])
 		.setDisplay(VALUE_DISPLAY.vector)
 		.setUnitRef(function(index) { return getDimension(index); });
 	
-	inputs[| 5] = nodeValue(5, "Light range", self,	JUNCTION_CONNECT.input, VALUE_TYPE.float, 16);
+	inputs[| 5] = nodeValue("Light range", self,	JUNCTION_CONNECT.input, VALUE_TYPE.float, 16);
 	
-	inputs[| 6] = nodeValue(6, "Light intensity", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 32);
+	inputs[| 6] = nodeValue("Light intensity", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 32);
 	
-	inputs[| 7] = nodeValue(7, "Light color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white);
+	inputs[| 7] = nodeValue("Light color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white);
 	
-	inputs[| 8] = nodeValue(8, "Light type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+	inputs[| 8] = nodeValue("Light type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.enum_button, ["Point", "Sun"]);
 	
-	input_display_list = [ 0, 
+	inputs[| 9] = nodeValue("Active", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
+		active_index = 9;
+		
+	input_display_list = [ 9, 0, 
 		["Normal",	false], 1, 2, 
 		["Light",	false], 3, 8, 4, 5, 6, 7
 	];
 	
-	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
+	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var pos = inputs[| 4].getValue();
@@ -61,23 +64,23 @@ function Node_Normal_Light(_x, _y, _group = -1) : Node_Processor(_x, _y, _group)
 		
 		surface_set_target(_outSurf);
 			draw_clear_alpha(0, 0);
-			BLEND_OVERRIDE 
+			BLEND_OVERRIDE; 
 		
 			shader_set(sh_normal_light);
 			texture_set_stage(uniform_map, surface_get_texture(_map));
 			shader_set_uniform_f(uniform_hei, _hei);
-			shader_set_uniform_f_array(uniform_dim, [ surface_get_width(_data[0]), surface_get_height(_data[0]) ]);
-			shader_set_uniform_f_array(uniform_amb, [color_get_red(_amb) / 255, color_get_green(_amb) / 255, color_get_blue(_amb) / 255]);
+			shader_set_uniform_f_array_safe(uniform_dim, [ surface_get_width(_data[0]), surface_get_height(_data[0]) ]);
+			shader_set_uniform_f_array_safe(uniform_amb, [color_get_red(_amb) / 255, color_get_green(_amb) / 255, color_get_blue(_amb) / 255]);
 			
-			shader_set_uniform_f_array(uniform_light_pos, [ _light_pos[0], _light_pos[1], _light_pos[2] / 100, _light_ran ] );
-			shader_set_uniform_f_array(uniform_light_col, [color_get_red(_light_col) / 255, color_get_green(_light_col) / 255, color_get_blue(_light_col) / 255]);
+			shader_set_uniform_f_array_safe(uniform_light_pos, [ _light_pos[0], _light_pos[1], _light_pos[2] / 100, _light_ran ] );
+			shader_set_uniform_f_array_safe(uniform_light_col, [color_get_red(_light_col) / 255, color_get_green(_light_col) / 255, color_get_blue(_light_col) / 255]);
 			shader_set_uniform_f(uniform_light_int, _light_int);
 			shader_set_uniform_i(uniform_light_typ, _light_typ);
 			
 			draw_surface_safe(_data[0], 0, 0);
 			shader_reset();
 			
-			BLEND_NORMAL
+			BLEND_NORMAL;
 		surface_reset_target();
 		
 		return _outSurf;

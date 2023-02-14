@@ -7,51 +7,52 @@ enum FORCE_TYPE {
 	Turbulence,
 	Destroy
 }
-
+/*
 function Node_Particle_Effector(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 	name = "Effector";
 	previewable = false;
+	color = COLORS.node_blend_vfx;
+	icon  = THEME.vfx;
 	
 	w = 96;
 	h = 32 + 24;
 	min_h = h;
 	
-	inputs[| 0] = nodeValue(0, "Particle data", self, JUNCTION_CONNECT.input, VALUE_TYPE.object, -1 )
+	inputs[| 0] = nodeValue("Particle data", self, JUNCTION_CONNECT.input, VALUE_TYPE.object, -1 )
 		.setVisible(true, true);
 		
-	inputs[| 1] = nodeValue(1, "Output dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, def_surf_size2 )
+	inputs[| 1] = nodeValue("Output dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, def_surf_size2 )
 		.setDisplay(VALUE_DISPLAY.vector);
 	
-	inputs[| 2] = nodeValue(2, "Area", self,   JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 16, 16, 4, 4, AREA_SHAPE.rectangle ])
+	inputs[| 2] = nodeValue("Area", self,   JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 16, 16, 4, 4, AREA_SHAPE.rectangle ])
 		.setDisplay(VALUE_DISPLAY.area);
 	
-	inputs[| 3] = nodeValue(3, "Falloff", self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_01 )
-		.setDisplay(VALUE_DISPLAY.curve);
+	inputs[| 3] = nodeValue("Falloff", self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_01 );
 	
-	inputs[| 4] = nodeValue(4, "Falloff distance", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 4 );
+	inputs[| 4] = nodeValue("Falloff distance", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 4 );
 	
-	inputs[| 5] = nodeValue(5, "Effect type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0 )
+	inputs[| 5] = nodeValue("Effect type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0 )
 		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Wind", "Accelerate", "Attract", "Repel", "Vortex", "Turbulence", "Destroy" ] );
 	
-	inputs[| 6] = nodeValue(6, "Effect Vector", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ -1, 0 ] )
+	inputs[| 6] = nodeValue("Effect Vector", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ -1, 0 ] )
 		.setDisplay(VALUE_DISPLAY.vector);
 	
-	inputs[| 7] = nodeValue(7, "Strength", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1 );
+	inputs[| 7] = nodeValue("Strength", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1 );
 	
-	inputs[| 8] = nodeValue(8, "Rotate particle", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ] )
+	inputs[| 8] = nodeValue("Rotate particle", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ] )
 		.setDisplay(VALUE_DISPLAY.rotation_range);
 	
-	inputs[| 9] = nodeValue(9, "Scale particle", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 0, 0 ] )
+	inputs[| 9] = nodeValue("Scale particle", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 0, 0 ] )
 		.setDisplay(VALUE_DISPLAY.vector_range);
 	
-	inputs[| 10] = nodeValue(10, "Turbulence scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 16 );
+	inputs[| 10] = nodeValue("Turbulence scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 16 );
 	
 	input_display_list = [ 0, 1, 
 		["Area",	false], 2, 3, 4, 
 		["Effect",	false], 5, 10, 7, 6, 8, 9 
 	];
 	
-	outputs[| 0] = nodeValue(0, "Particle data", self, JUNCTION_CONNECT.output, VALUE_TYPE.object, -1 );
+	outputs[| 0] = nodeValue("Particle data", self, JUNCTION_CONNECT.output, VALUE_TYPE.object, -1 );
 	
 	current_data = [];
 	
@@ -91,12 +92,12 @@ function Node_Particle_Effector(_x, _y, _group = -1) : Node(_x, _y, _group) cons
 									distance_to_line(pv[0], pv[1], _area_x0, _area_y1, _area_x1, _area_y1), 
 									distance_to_line(pv[0], pv[1], _area_x0, _area_y0, _area_x0, _area_y1), 
 									distance_to_line(pv[0], pv[1], _area_x1, _area_y0, _area_x1, _area_y1));
-					str = eval_curve_bezier_cubic_t(_fall, clamp(_dst / _fads, 0., 1.));
+					str = eval_curve_x(_fall, clamp(_dst / _fads, 0., 1.));
 				}
 			} else if(_area_t == AREA_SHAPE.elipse) {
 				if(point_in_circle(pv[0], pv[1], _area_x, _area_y, min(_area_w, _area_h))) {
 					var _dst = point_distance(pv[0], pv[1], _area_x, _area_y);
-					str = eval_curve_bezier_cubic_t(_fall, clamp(_dst / _fads, 0., 1.));
+					str = eval_curve_x(_fall, clamp(_dst / _fads, 0., 1.));
 				}
 			}
 			
@@ -219,12 +220,12 @@ function Node_Particle_Effector(_x, _y, _group = -1) : Node(_x, _y, _group) cons
 								distance_to_line(pv[0], pv[1], _area_x0, _area_y1, _area_x1, _area_y1), 
 								distance_to_line(pv[0], pv[1], _area_x0, _area_y0, _area_x0, _area_y1), 
 								distance_to_line(pv[0], pv[1], _area_x1, _area_y0, _area_x1, _area_y1));
-				str = eval_curve_bezier_cubic_t(_fall, clamp(_dst / _fads, 0., 1.));
+				str = eval_curve_x(_fall, clamp(_dst / _fads, 0., 1.));
 			}
 		} else if(_area_t == AREA_SHAPE.elipse) {
 			if(point_in_circle(pv[0], pv[1], _area_x, _area_y, min(_area_w, _area_h))) {
 				var _dst = point_distance(pv[0], pv[1], _area_x, _area_y);
-				str = eval_curve_bezier_cubic_t(_fall, clamp(_dst / _fads, 0., 1.));
+				str = eval_curve_x(_fall, clamp(_dst / _fads, 0., 1.));
 			}
 		}
 		
@@ -291,7 +292,7 @@ function Node_Particle_Effector(_x, _y, _group = -1) : Node(_x, _y, _group) cons
 		else			part.scy += sign(part.scy) * scy_s;
 	}
 	
-	static update = function() {
+	static update = function(frame = ANIMATOR.current_frame) {
 		outputs[| 0].setValue(inputs[| 0].getValue());
 		var jun = outputs[| 0];
 		for(var j = 0; j < ds_list_size(jun.value_to); j++) {

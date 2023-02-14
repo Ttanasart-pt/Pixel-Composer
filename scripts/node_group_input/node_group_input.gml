@@ -1,5 +1,6 @@
 function Node_Group_Input(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 	name  = "Input";
+	destroy_when_upgroup = true;
 	color = COLORS.node_blend_collection;
 	previewable = false;
 	auto_height = false;
@@ -26,40 +27,47 @@ function Node_Group_Input(_x, _y, _group = -1) : Node(_x, _y, _group) constructo
 		/*Any*/		[ "Default", ],
 	]
 	
-	inputs[| 0] = nodeValue(0, "Display type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, display_list[0]);
+	inputs[| 0] = nodeValue("Display type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+		.setDisplay(VALUE_DISPLAY.enum_scroll, display_list[0])
+		.rejectArray();
 	
-	inputs[| 1] = nodeValue(1, "Range", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [0, 1])
+	inputs[| 1] = nodeValue("Range", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [0, 1])
 		.setDisplay(VALUE_DISPLAY.vector)
-		.setVisible(false);
+		.setVisible(false)
+		.rejectArray();
 	
-	inputs[| 2] = nodeValue(2, "Input type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Integer", "Float", "Boolean", "Color", "Surface", "Path", "Curve", "Text", "Object", "Node", "3D object", "Any" ]);
+	inputs[| 2] = nodeValue("Input type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Integer", "Float", "Boolean", "Color", "Surface", "Path", "Curve", "Text", "Object", "Node", "3D object", "Any" ])
+		.rejectArray();
 	
-	inputs[| 3] = nodeValue(3, "Enum label", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "")
-		.setVisible(false);
+	inputs[| 3] = nodeValue("Enum label", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "")
+		.setVisible(false)
+		.rejectArray();
 	
-	inputs[| 4] = nodeValue(4, "Vector size", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+	inputs[| 4] = nodeValue("Vector size", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.enum_button, [ "2", "3", "4" ])
-		.setVisible(false);
+		.setVisible(false)
+		.rejectArray();
 	
-	inputs[| 5] = nodeValue(5, "Order", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0);
+	inputs[| 5] = nodeValue("Order", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+		.rejectArray();
 	
-	inputs[| 6] = nodeValue(6, "Display gizmo", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
+	inputs[| 6] = nodeValue("Display gizmo", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true)
+		.rejectArray();
 	
 	input_display_list = [ 
 		["Display", false], 5, 6, 
 		["Data",	false], 2, 0, 4, 1, 3,
 	];
 	
-	outputs[| 0] = nodeValue(0, "Value", self, JUNCTION_CONNECT.output, VALUE_TYPE.any, 0);
+	outputs[| 0] = nodeValue("Value", self, JUNCTION_CONNECT.output, VALUE_TYPE.any, 0);
 	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		if(inParent.isArray()) return;
 		inParent.drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
 	}
 	
-	static onValueUpdate = function(index) {
+	static onValueUpdate = function(index = 0) {
 		if(is_undefined(inParent)) return;
 		
 		var _dtype = inputs[| 0].getValue();
@@ -76,6 +84,7 @@ function Node_Group_Input(_x, _y, _group = -1) : Node(_x, _y, _group) constructo
 					_to.removeFrom();
 			}
 			
+			inputs[| 0].display_data = display_list[_val_type];
 			inputs[| 0].editWidget.data_list = display_list[_val_type];
 			inputs[| 0].setValue(0);
 			_dtype = 0;
@@ -88,7 +97,7 @@ function Node_Group_Input(_x, _y, _group = -1) : Node(_x, _y, _group) constructo
 		var _val = inParent.getValue();
 		
 		switch(_dtype) {
-			case "Range" :	inParent.setDisplay(VALUE_DISPLAY.range, [_range[0], _range[1], 0.01]);		break;
+			case "Range" :	inParent.setDisplay(VALUE_DISPLAY.range);		break;
 			
 			case "Slider" :	inParent.setDisplay(VALUE_DISPLAY.slider, [_range[0], _range[1], 0.01]);	break;
 			case "Slider range" :	inParent.setDisplay(VALUE_DISPLAY.slider_range, [_range[0], _range[1], 0.01]);	break;
@@ -141,7 +150,10 @@ function Node_Group_Input(_x, _y, _group = -1) : Node(_x, _y, _group) constructo
 				inParent.setDisplay(VALUE_DISPLAY.palette);
 				break;
 				
-			case "Gradient":	inParent.setDisplay(VALUE_DISPLAY.gradient);	break;
+			case "Gradient":	
+				inParent.animator = new valueAnimator([ new gradientKey(0, c_white) ], inParent);
+				inParent.setDisplay(VALUE_DISPLAY.gradient);	
+				break;
 			default:			inParent.setDisplay(VALUE_DISPLAY._default);	break;
 		}
 		
@@ -158,8 +170,11 @@ function Node_Group_Input(_x, _y, _group = -1) : Node(_x, _y, _group) constructo
 		} else {
 			input_fix_len = inputs[| 5].getValue();
 		}
-			
-		inParent = nodeValue(ds_list_size(group.inputs), "Value", group, JUNCTION_CONNECT.input, VALUE_TYPE.any, -1)
+		
+		if(!is_undefined(inParent))
+			ds_list_remove(group.inputs, inParent);
+		
+		inParent = nodeValue("Value", group, JUNCTION_CONNECT.input, VALUE_TYPE.any, -1)
 			.setVisible(true, true);
 		inParent.from = self;
 			
@@ -181,10 +196,10 @@ function Node_Group_Input(_x, _y, _group = -1) : Node(_x, _y, _group) constructo
 	static step = function() {
 		if(is_undefined(inParent)) return;
 		
-		inParent.name = name;
+		inParent.name = display_name;
 	}
 	
-	static update = function() {
+	static update = function(frame = ANIMATOR.current_frame) {
 		if(is_undefined(inParent)) return;
 		
 		var _dtype = inputs[| 0].getValue();
@@ -214,8 +229,10 @@ function Node_Group_Input(_x, _y, _group = -1) : Node(_x, _y, _group) constructo
 	
 	static postDeserialize = function() {
 		createInput(false);
+		
 		var _inputs = load_map[? "inputs"];
 		inputs[| 5].applyDeserialize(_inputs[| 5], load_scale);
+		group.sortIO();
 		
 		inputs[| 2].applyDeserialize(_inputs[| 2], load_scale);
 		onValueUpdate(2);
@@ -259,7 +276,17 @@ function Node_Group_Input(_x, _y, _group = -1) : Node(_x, _y, _group) constructo
 	
 	static onDestroy = function() {
 		if(is_undefined(inParent)) return;
-		
 		ds_list_remove(group.inputs, inParent);
+	}
+	
+	static ungroup = function() {
+		var fr = inParent.value_from;
+		
+		for( var i = 0; i < ds_list_size(outputs[| 0].value_to); i++ ) {
+			var to = outputs[| 0].value_to[| i];
+			if(to.value_from != outputs[| 0]) continue;
+			
+			to.setFrom(fr);
+		}
 	}
 }

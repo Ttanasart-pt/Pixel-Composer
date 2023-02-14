@@ -32,8 +32,7 @@ function Node_Rigid_Group(_x, _y, _group = -1) : Node_Collection(_x, _y, _group)
 	}
 	
 	static onStep = function() {
-		if(!ANIMATOR.is_playing)
-			return;
+		RETURN_ON_REST
 		
 		if(ANIMATOR.current_frame == 0) 
 			reset();

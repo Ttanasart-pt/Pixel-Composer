@@ -6,12 +6,12 @@ function Node_Feedback_Output(_x, _y, _group = -1) : Node_Group_Output(_x, _y, _
 	h = 32 + 24 * 2;
 	min_h = h;
 	
-	inputs[| 2] = nodeValue(2, "Feedback loop", self, JUNCTION_CONNECT.input, VALUE_TYPE.node, -1)
+	inputs[| 2] = nodeValue("Feedback loop", self, JUNCTION_CONNECT.input, VALUE_TYPE.node, -1)
 		.setVisible(true, true);
 	
 	cache_value = -1;
 	
-	static update = function() {
+	static update = function(frame = ANIMATOR.current_frame) {
 		if(inputs[| 0].value_from == noone) return;
 		if(ANIMATOR.current_frame == ANIMATOR.frames_total - 1) {
 			cache_value = noone;

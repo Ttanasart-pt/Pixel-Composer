@@ -8,6 +8,7 @@ uniform vec2 dimension;
 uniform int tile_type;
 
 uniform int useMask;
+uniform int preserveAlpha;
 uniform sampler2D mask;
 uniform sampler2D fore;
 uniform float opacity;
@@ -36,6 +37,7 @@ void main() {
 	res.g = max(_col0.g, _col1.g);
 	res.b = max(_col0.b, _col1.b);
 	res.a = max(_col0.a, _col1.a);
+	if(preserveAlpha == 1) res.a = _col0.a;
 	
     gl_FragColor = res;
 }

@@ -178,7 +178,7 @@ function Panel_Collection() : PanelContent() constructor {
 					} else
 						draw_sprite_ui_uniform(THEME.group, 0, _boxx + grid_size / 2, yy + grid_size / 2, 1, c_white);
 					
-					if(mode == 0 && meta != noone) {
+					if(meta != noone && mode == 0) {
 						if(meta.steam) {
 							draw_sprite_ui_uniform(THEME.steam, 0, _boxx + ui(12), yy + ui(12), 1, COLORS._main_icon_dark, 1);
 							if(meta.author_steam_id == STEAM_USER_ID) 

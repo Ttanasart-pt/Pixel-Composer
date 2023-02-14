@@ -8,26 +8,28 @@ function matrixGrid(_type, _onModify, _unit = noone) : widget() constructor {
 	b_link.icon = THEME.value_link;
 	
 	onModifyIndex = function(index, val) { 
+		var modi = false;
+		
 		if(linked) {
 			for( var i = 0; i < size; i++ )
-				onModify(i, toNumber(val)); 
-			return;
+				modi |= onModify(i, toNumber(val)); 
+			return modi;
 		}
 		
-		onModify(index, toNumber(val)); 
+		return onModify(index, toNumber(val)); 
 	}
 	
-	onModifySingle[0] = function(val) { onModifyIndex(0, val); }
-	onModifySingle[1] = function(val) { onModifyIndex(1, val); }
-	onModifySingle[2] = function(val) { onModifyIndex(2, val); }
+	onModifySingle[0] = function(val) { return onModifyIndex(0, val); }
+	onModifySingle[1] = function(val) { return onModifyIndex(1, val); }
+	onModifySingle[2] = function(val) { return onModifyIndex(2, val); }
 	
-	onModifySingle[3] = function(val) { onModifyIndex(3, val); }
-	onModifySingle[4] = function(val) { onModifyIndex(4, val); }
-	onModifySingle[5] = function(val) { onModifyIndex(5, val); }
+	onModifySingle[3] = function(val) { return onModifyIndex(3, val); }
+	onModifySingle[4] = function(val) { return onModifyIndex(4, val); }
+	onModifySingle[5] = function(val) { return onModifyIndex(5, val); }
 	
-	onModifySingle[6] = function(val) { onModifyIndex(6, val); }
-	onModifySingle[7] = function(val) { onModifyIndex(7, val); }
-	onModifySingle[8] = function(val) { onModifyIndex(8, val); }
+	onModifySingle[6] = function(val) { return onModifyIndex(6, val); }
+	onModifySingle[7] = function(val) { return onModifyIndex(7, val); }
+	onModifySingle[8] = function(val) { return onModifyIndex(8, val); }
 	
 	extras = -1;
 	
@@ -58,6 +60,11 @@ function matrixGrid(_type, _onModify, _unit = noone) : widget() constructor {
 	for(var i = 0; i < size; i++) {
 		tb[i] = new textBox(_type, onModifySingle[i]);
 		tb[i].slidable = true;
+	}
+	
+	static setSlideSpeed = function(speed) {
+		for(var i = 0; i < size; i++)
+			tb[i].slide_speed = speed;
 	}
 	
 	static draw = function(_x, _y, _w, _h, _data, _m) {

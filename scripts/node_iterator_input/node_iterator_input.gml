@@ -8,6 +8,8 @@ function Node_Iterator_Input(_x, _y, _group = -1) : Node_Group_Input(_x, _y, _gr
 	h = 32 + 24 * 2;
 	min_h = h;
 	
+	cache_value = -1;
+	
 	outputs[| 0].getValueDefault = method(outputs[| 0], outputs[| 0].getValueRecursive); //Get value from outside loop
 	outputs[| 0].getValueRecursive = function() {
 		//show_debug_message("iteration " + string(group.iterated));
@@ -27,5 +29,5 @@ function Node_Iterator_Input(_x, _y, _group = -1) : Node_Group_Input(_x, _y, _gr
 		return [ _node_output.node.cache_value, inParent ];
 	}
 	
-	outputs[| 1] = nodeValue(1, "Loop entrance", self, JUNCTION_CONNECT.output, VALUE_TYPE.node, 0);
+	outputs[| 1] = nodeValue("Loop entrance", self, JUNCTION_CONNECT.output, VALUE_TYPE.node, 0);	
 }

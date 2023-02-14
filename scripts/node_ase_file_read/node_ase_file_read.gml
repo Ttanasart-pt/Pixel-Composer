@@ -29,20 +29,22 @@ function Node_ASE_File_Read(_x, _y, _group = -1) : Node(_x, _y, _group) construc
 	
 	w = 128;
 	
-	inputs[| 0]  = nodeValue(0, "Path", self, JUNCTION_CONNECT.input, VALUE_TYPE.path, "")
+	inputs[| 0]  = nodeValue("Path", self, JUNCTION_CONNECT.input, VALUE_TYPE.path, "")
 		.setDisplay(VALUE_DISPLAY.path_load, ["*.ase, *.aseprite", ""]);
 		
-	inputs[| 1]  = nodeValue(1, "Generate layers", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+	inputs[| 1]  = nodeValue("Generate layers", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.button, [ function() { refreshLayers(); }, "Generate"] );
 	
-	inputs[| 2]  = nodeValue(2, "Current tag", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "");
+	inputs[| 2]  = nodeValue("Current tag", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "");
 	
-	outputs[| 0] = nodeValue(0, "Output", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
+	outputs[| 0] = nodeValue("Output", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
-	outputs[| 1] = nodeValue(1, "Content", self, JUNCTION_CONNECT.output, VALUE_TYPE.object, self);
+	outputs[| 1] = nodeValue("Content", self, JUNCTION_CONNECT.output, VALUE_TYPE.object, self);
 	
-	outputs[| 2] = nodeValue(2, "Path", self, JUNCTION_CONNECT.output, VALUE_TYPE.path, "")
-		.setVisible(true, true);
+	outputs[| 2] = nodeValue("Path", self, JUNCTION_CONNECT.output, VALUE_TYPE.path, "");
+	
+	outputs[| 3] = nodeValue("Palette", self, JUNCTION_CONNECT.output, VALUE_TYPE.color, [])
+		.setDisplay(VALUE_DISPLAY.palette);
 	
 	hold_visibility = true;
 	layer_renderer = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) {
@@ -161,7 +163,6 @@ function Node_ASE_File_Read(_x, _y, _group = -1) : Node(_x, _y, _group) construc
 	layers = [];
 	tags = [];
 	_tag_delay = 0;
-	palette = [];
 	path_current = "";
 	
 	first_update = false;
@@ -209,7 +210,7 @@ function Node_ASE_File_Read(_x, _y, _group = -1) : Node(_x, _y, _group) construc
 		path = try_get_path(path);
 		if(path == -1) return false;
 		
-		var ext = filename_ext(path);
+		var ext = string_lower(filename_ext(path));
 		var _name = string_replace(filename_name(path), filename_ext(path), "");
 		
 		if(ext != ".ase" && ext != ".aseprite") return false;
@@ -239,9 +240,14 @@ function Node_ASE_File_Read(_x, _y, _group = -1) : Node(_x, _y, _group) construc
 							var g = pck[k][? "Green"];
 							var b = pck[k][? "Blue"];
 							var a = pck[k][? "Alpha"];
-							array_push(plt, [r, g, b, a])
+							array_push(plt, [r, g, b, a]);
 						}
 						content[? "Palette"] = plt;
+						
+						var p_arr = [];
+						for( var i = 0; i < array_length(plt); i++ )
+							array_push(p_arr, make_color_rgb(plt[i][0], plt[i][1], plt[i][2]));
+						outputs[| 3].setValue(p_arr);
 						break;
 					case 0x2004: //layer
 						var name = chunk[? "Name"];
@@ -269,7 +275,7 @@ function Node_ASE_File_Read(_x, _y, _group = -1) : Node(_x, _y, _group) construc
 		return true;
 	}
 	
-	static inspectorUpdate = function() {
+	static onInspectorUpdate = function() {
 		var path = inputs[| 0].getValue();
 		if(path == "") return;
 		updatePaths(path);
@@ -282,7 +288,7 @@ function Node_ASE_File_Read(_x, _y, _group = -1) : Node(_x, _y, _group) construc
 		}
 	}
 	
-	static update = function() {
+	static update = function(frame = ANIMATOR.current_frame) {
 		var path = inputs[| 0].getValue();
 		var current_tag = inputs[| 2].getValue();
 		if(path_current != path) updatePaths(path);

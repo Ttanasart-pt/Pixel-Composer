@@ -13,15 +13,23 @@ function Node_create_Scale_Algo(_x, _y, _group = -1, _param = "") {
 function Node_Scale_Algo(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constructor {
 	name = "Scale Algorithm";
 	
-	inputs[| 0] = nodeValue(0, "Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
+	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 	
-	inputs[| 1] = nodeValue(1, "Algorithm", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+	inputs[| 1] = nodeValue("Algorithm", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Scale2x", "Scale3x" ]);
 		
-	inputs[| 2] = nodeValue(2, "Tolerance", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
+	inputs[| 2] = nodeValue("Tolerance", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
 		.setDisplay(VALUE_DISPLAY.slider, [0, 1, 0.01]);
 	
-	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
+	inputs[| 3] = nodeValue("Active", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
+		active_index = 3;
+		
+	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
+	
+	input_display_list = [ 3,
+		["Surface",	 false], 0, 
+		["Scale",	 false], 1, 2, 
+	]
 	
 	static process_data = function(_outSurf, _data, _output_index, _array_index) {
 		var inSurf = _data[0];
@@ -53,18 +61,18 @@ function Node_Scale_Algo(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) c
 		
 		surface_set_target(_outSurf);
 		draw_clear_alpha(0, 0);
-		BLEND_OVERRIDE
+		BLEND_OVERRIDE;
 		
 		var uniform_dim = shader_get_uniform(shader, "dimension");
 		var uniform_tol = shader_get_uniform(shader, "tol");
 		
 		shader_set(shader);
-			shader_set_uniform_f_array(uniform_dim, [ ww, hh ]);
+			shader_set_uniform_f_array_safe(uniform_dim, [ ww, hh ]);
 			shader_set_uniform_f(uniform_tol, _data[2]);
 			draw_surface_ext_safe(_data[0], 0, 0, sc, sc, 0, c_white, 1);
 		shader_reset();
 		
-		BLEND_NORMAL
+		BLEND_NORMAL;
 		surface_reset_target();
 		
 		return _outSurf;

@@ -16,7 +16,11 @@ function slider(_min, _max, _step, _onModify = noone, _onRelease = noone) : widg
 	
 	hdw = ui(20);
 	
-	tb_value = new textBox(TEXTBOX_INPUT.float, onApply);
+	tb_value = new textBox(TEXTBOX_INPUT.number, onApply);
+	
+	static setSlideSpeed = function(speed) {
+		tb_value.slide_speed = speed;
+	}
 	
 	static setInteract = function(interactable = noone) { 
 		self.interactable = interactable;
@@ -72,9 +76,10 @@ function slider(_min, _max, _step, _onModify = noone, _onRelease = noone) : widg
 			if(key_mod_press(CTRL))
 				val = round(val);
 			
-			if(onModify != noone)
-				onModify(val);
-			UNDO_HOLDING = true;
+			if(onModify != noone) {
+				if(onModify(val))
+					UNDO_HOLDING = true;
+			}
 			
 			if(mouse_release(mb_left)) {
 				dragging = false;

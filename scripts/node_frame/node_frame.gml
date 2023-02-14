@@ -1,5 +1,5 @@
 function Node_Frame(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
-	name = "Empty frame";
+	name = "Frame";
 	w = 240;
 	h = 160;
 	bg_spr		= THEME.node_frame_bg;
@@ -13,10 +13,12 @@ function Node_Frame(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 	auto_height = false;
 	name_hover = false;
 	
-	inputs[| 0] = nodeValue(0, "Size", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 240, 160 ] )
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 0] = nodeValue("Size", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 240, 160 ] )
+		.setDisplay(VALUE_DISPLAY.vector)
+		.rejectArray();
 	
-	inputs[| 1] = nodeValue(1, "Color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white );
+	inputs[| 1] = nodeValue("Color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white )
+		.rejectArray();
 	
 	static step = function() {
 		var si = inputs[| 0].getValue();
@@ -31,7 +33,7 @@ function Node_Frame(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 		
 		draw_set_text(f_h5, fa_right, fa_bottom, COLORS._main_text);
 		draw_set_alpha(name_hover? 0.5 : 0.25);
-		draw_text_cut(xx + (w - 8) * _s, yy + (h - 8) * _s, name, w * _s);
+		draw_text_cut(xx + (w - 8) * _s, yy + (h - 8) * _s, display_name, w * _s);
 		draw_set_alpha(1);
 	}
 	
@@ -87,15 +89,15 @@ function Node_Frame(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 		var xx = x * _s + _x + w * _s;
 		var yy = y * _s + _y + h * _s;
 		draw_set_font(f_h5);
-		var ww = (string_width(name) + 16) / _s;
-		var hh = (string_height(name) + 16) / _s;
+		var ww = min(w * _s, string_width(display_name) + 16);
+		var hh = string_height(display_name) + 16;
 		
 		var _x0 = xx - ww;
 		var _y0 = yy - hh;
 		
 		var hover = point_in_rectangle(_mx, _my, _x0, _y0, xx, yy) && !point_in_rectangle(_mx, _my, xx - 16 * _s, yy - 16 * _s, xx, yy);
 		name_hover = hover;
-		//print(string(_my) + ", " + string(_y0));
+		//print(string(_my) + ": " + string(_y0) + ", " + string(yy));
 		
 		return hover;
 	}

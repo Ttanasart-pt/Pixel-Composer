@@ -7,47 +7,50 @@ enum OUTPUT_SCALING {
 function Node_Transform(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constructor {
 	name = "Transform";
 	
-	inputs[| 0] = nodeValue(0, "Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
+	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
 	
-	inputs[| 1] = nodeValue(1, "Output dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [1, 1])
+	inputs[| 1] = nodeValue("Output dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [1, 1])
 		.setDisplay(VALUE_DISPLAY.vector)
 		.setVisible(false);
 	
-	inputs[| 2] = nodeValue(2, "Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0.5, 0.5 ])
+	inputs[| 2] = nodeValue("Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0.5, 0.5 ])
 		.setDisplay(VALUE_DISPLAY.vector)
 		.setUnitRef(function(index) { return getDimension(index); }, VALUE_UNIT.reference);
 	
-	inputs[| 3] = nodeValue(3, "Anchor", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0.5, 0.5 ])
+	inputs[| 3] = nodeValue("Anchor", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0.5, 0.5 ])
 		.setDisplay(VALUE_DISPLAY.vector, button(function() { centerAnchor(); })
 											.setIcon(THEME.anchor)
 											.setTooltip("Set to center"));
 	
-	inputs[| 4] = nodeValue(4, "Relative anchor", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
+	inputs[| 4] = nodeValue("Relative anchor", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
 	
-	inputs[| 5] = nodeValue(5, "Rotation", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+	inputs[| 5] = nodeValue("Rotation", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.rotation);
 	
-	inputs[| 6] = nodeValue(6, "Scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 1 ])
+	inputs[| 6] = nodeValue("Scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 1 ])
 		.setDisplay(VALUE_DISPLAY.vector);
 	
-	inputs[| 7] = nodeValue(7, "Tile", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false, "Repeat the surface to fill the screen.");
+	inputs[| 7] = nodeValue("Tile", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false, "Repeat the surface to fill the screen.");
 	
-	inputs[| 8] = nodeValue(8, "Rotate by velocity", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0, "Make the surface rotates to follow its movement.")
+	inputs[| 8] = nodeValue("Rotate by velocity", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0, "Make the surface rotates to follow its movement.")
 		.setDisplay(VALUE_DISPLAY.slider, [0, 1, 0.01]);
 	
-	inputs[| 9] = nodeValue(9, "Output dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, OUTPUT_SCALING.same_as_input)
+	inputs[| 9] = nodeValue("Output dimension type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, OUTPUT_SCALING.same_as_input)
 		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Same as input", "Constant", "Relative to input" ]);
 	
-	inputs[| 10] = nodeValue(10, "Round position", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false, "Round position to the closest integer value to avoid jittering.");
+	inputs[| 10] = nodeValue("Round position", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false, "Round position to the closest integer value to avoid jittering.");
 	
-	input_display_list = [ 0, 
+	inputs[| 11] = nodeValue("Active", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
+		active_index = 11;
+		
+	input_display_list = [ 11, 0, 
 		["Output",		true],	9, 1, 7, 
 		["Position",	false], 2, 10, 
 		["Rotation",	false], 3, 5, 8, 
 		["Scale",		false], 6
 	];
 	
-	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
+	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	vel = 0;
 	prev_pos = [0, 0];
@@ -184,7 +187,7 @@ function Node_Transform(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) co
 			
 			surface_set_target(_s);
 				draw_clear_alpha(0, 0);
-				BLEND_OVERRIDE
+				BLEND_OVERRIDE;
 			
 				if(is_surface(ins)) {
 					var draw_x, draw_y;
@@ -198,24 +201,24 @@ function Node_Transform(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) co
 					draw_surface_tiled_ext_safe(ins, draw_x, draw_y, sca[0], sca[1], c_white, 1);
 				}
 				
-				BLEND_NORMAL
+				BLEND_NORMAL;
 			surface_reset_target();
 			
 			var _cc = point_rotate(-_px, -_py, _ww / 2, _hh / 2, rot);
 			surface_set_target(_outSurf);
 				draw_clear_alpha(0, 0);
-				BLEND_OVERRIDE
+				BLEND_OVERRIDE;
 				
 				draw_surface_ext_safe(_s, _cc[0], _cc[1], 1, 1, rot, c_white, 1);
 				
-				BLEND_NORMAL
+				BLEND_NORMAL;
 			surface_reset_target();
 			
 			surface_free(_s);
 		} else {
 			surface_set_target(_outSurf);
 				draw_clear_alpha(0, 0);
-				BLEND_OVERRIDE
+				BLEND_OVERRIDE;
 				
 				var draw_x, draw_y;
 				draw_x = pos[0];
@@ -227,7 +230,7 @@ function Node_Transform(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) co
 				}
 				draw_surface_ext_safe(ins, draw_x, draw_y, sca[0], sca[1], rot, c_white, 1);
 				
-				BLEND_NORMAL
+				BLEND_NORMAL;
 			surface_reset_target();
 		}
 		
@@ -326,12 +329,12 @@ function Node_Transform(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) co
 			
 		#endregion
 		
-		if(overlay_dragging && overlay_dragging < 3) {
+		if(overlay_dragging && overlay_dragging < 3) { //Transform
 			var px = _mx - overlay_drag_mx;
 			var py = _my - overlay_drag_my;
 			var pos_x, pos_y;
 			
-			if(keyboard_check(vk_shift)) {
+			if(key_mod_press(SHIFT)) {
 				var ang  = round(point_direction(overlay_drag_mx, overlay_drag_my, _mx, _my) / 45) * 45;
 				var dist = point_distance(overlay_drag_mx, overlay_drag_my, _mx, _my) / _s;
 				
@@ -352,11 +355,12 @@ function Node_Transform(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) co
 				var nanx = pos_x / ww;
 				var nany = pos_y / hh;
 				
-				if(keyboard_check(vk_alt)) {
-					var anchorUpdate = inputs[| 3].setValue([ nanx, nany ]);
-					var posUpdate = inputs[| 2].setValue([ overlay_drag_px + pos_x, overlay_drag_py + pos_y ]);
+				if(key_mod_press(ALT)) {
+					var modi = false;
+					modi |= inputs[| 3].setValue([ nanx, nany ]);
+					modi |= inputs[| 2].setValue([ overlay_drag_px + pos_x, overlay_drag_py + pos_y ]);
 					
-					if(anchorUpdate || posUpdate)
+					if(modi)
 						UNDO_HOLDING = true;
 				} else {
 					if(inputs[| 3].setValue([ nanx, nany ]))
@@ -409,7 +413,7 @@ function Node_Transform(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) co
 			var _sw = overlay_drag_sx + sw;
 			var _sh = overlay_drag_sy + sh;
 			
-			if(keyboard_check(vk_shift)) {
+			if(key_mod_press(SHIFT)) {
 				_sw = max(_sw, _sh);
 				_sh = _sw;
 			}

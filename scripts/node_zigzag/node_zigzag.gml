@@ -9,22 +9,22 @@ function Node_Zigzag(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) const
 	uniform_col1 = shader_get_uniform(shader, "col1");
 	uniform_col2 = shader_get_uniform(shader, "col2");
 	
-	inputs[| 0] = nodeValue(0, "Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, def_surf_size2 )
+	inputs[| 0] = nodeValue("Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, def_surf_size2 )
 		.setDisplay(VALUE_DISPLAY.vector);
 	
-	inputs[| 1] = nodeValue(1, "Amount", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1)
+	inputs[| 1] = nodeValue("Amount", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1)
 		.setDisplay(VALUE_DISPLAY.slider, [1, 16, 0.1]);
 		
-	inputs[| 2] = nodeValue(2, "Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [0, 0] )
+	inputs[| 2] = nodeValue("Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [0, 0] )
 		.setDisplay(VALUE_DISPLAY.vector)
 		.setUnitRef(function(index) { return getDimension(index); });
 	
-	inputs[| 3] = nodeValue(3, "Color 1", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white);
-	inputs[| 4] = nodeValue(4, "Color 2", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_black);
+	inputs[| 3] = nodeValue("Color 1", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white);
+	inputs[| 4] = nodeValue("Color 2", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_black);
 	
-	inputs[| 5] = nodeValue(5, "Smooth", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	inputs[| 5] = nodeValue("Smooth", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
 	
-	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
+	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [
 		["Output",  false], 0,
@@ -52,8 +52,8 @@ function Node_Zigzag(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) const
 			shader_set(shader);
 			shader_set_uniform_f(uniform_pos, _pos[0] / _dim[0], _pos[1] / _dim[1]);
 			shader_set_uniform_f(uniform_amo, _amo);
-			shader_set_uniform_f_array(uniform_col1, colToVec4(_col1));
-			shader_set_uniform_f_array(uniform_col2, colToVec4(_col2));
+			shader_set_uniform_f_array_safe(uniform_col1, colToVec4(_col1));
+			shader_set_uniform_f_array_safe(uniform_col2, colToVec4(_col2));
 			shader_set_uniform_i(uniform_bnd, _bnd);
 				draw_sprite_ext(s_fx_pixel, 0, 0, 0, _dim[0], _dim[1], 0, c_white, 1);
 			shader_reset();

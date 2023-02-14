@@ -9,25 +9,31 @@ function vectorBox(_size, _type, _onModify, _unit = noone) : widget() constructo
 	
 	onModifyIndex = function(index, val) { 
 		if(linked) {
+			var modi = false;
 			for( var i = 0; i < size; i++ )
-				onModify(i, toNumber(val)); 
-			return;
+				modi |= onModify(i, toNumber(val)); 
+			return modi;
 		}
 		
-		onModify(index, toNumber(val)); 
+		return onModify(index, toNumber(val)); 
 	}
 	
 	axis = [ "x", "y", "z", "w" ];
-	onModifySingle[0] = function(val) { onModifyIndex(0, val); }
-	onModifySingle[1] = function(val) { onModifyIndex(1, val); }
-	onModifySingle[2] = function(val) { onModifyIndex(2, val); }
-	onModifySingle[3] = function(val) { onModifyIndex(3, val); }
+	onModifySingle[0] = function(val) { return onModifyIndex(0, val); }
+	onModifySingle[1] = function(val) { return onModifyIndex(1, val); }
+	onModifySingle[2] = function(val) { return onModifyIndex(2, val); }
+	onModifySingle[3] = function(val) { return onModifyIndex(3, val); }
 	
 	extras = -1;
 	
 	for(var i = 0; i < size; i++) {
 		tb[i] = new textBox(_type, onModifySingle[i]);
 		tb[i].slidable = true;
+	}
+	
+	static setSlideSpeed = function(speed) {
+		for(var i = 0; i < size; i++)
+			tb[i].slide_speed = speed;
 	}
 	
 	static setInteract = function(interactable) { 

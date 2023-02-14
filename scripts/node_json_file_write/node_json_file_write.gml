@@ -5,16 +5,16 @@ function Node_Json_File_Write(_x, _y, _group = -1) : Node(_x, _y, _group) constr
 	
 	w = 128;
 	
-	
-	inputs[| 0]  = nodeValue(0, "Path", self, JUNCTION_CONNECT.input, VALUE_TYPE.path, "")
-		.setDisplay(VALUE_DISPLAY.path_save, ["*.json", ""]);
+	inputs[| 0]  = nodeValue("Path", self, JUNCTION_CONNECT.input, VALUE_TYPE.path, "")
+		.setDisplay(VALUE_DISPLAY.path_save, ["*.json", ""])
+		.rejectArray();
 		
 	static createNewInput = function() {
 		var index = ds_list_size(inputs);
-		inputs[| index + 0] = nodeValue( index + 0, "Key", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "" );
+		inputs[| index + 0] = nodeValue("Key", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "" );
 		
-		inputs[| index + 1] = nodeValue( index + 1, "value", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, 0 )
-			.setVisible(false, true);
+		inputs[| index + 1] = nodeValue("value", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, 0 )
+			.setVisible(false, false);
 		
 		array_push(input_display_list, index + 0);
 		array_push(input_display_list, index + 1);
@@ -41,7 +41,7 @@ function Node_Json_File_Write(_x, _y, _group = -1) : Node(_x, _y, _group) constr
 		for( var i = input_fix_len; i < ds_list_size(inputs); i += data_length ) {
 			if(inputs[| i].getValue() != "") {
 				ds_list_add(_in, inputs[| i + 0]);
-				ds_list_add(_in, inputs[| i + 1]);
+				ds_list_add(_in, inputs[| i + 1].setVisible(false, true));
 				
 				array_push(input_display_list, i + 0);
 				array_push(input_display_list, i + 1);
@@ -60,7 +60,7 @@ function Node_Json_File_Write(_x, _y, _group = -1) : Node(_x, _y, _group) constr
 		createNewInput();
 	}
 	
-	static onValueUpdate = function(index) {
+	static onValueUpdate = function(index = 0) {
 		if(index < input_fix_len) return;
 		if(LOADING || APPENDING) return;
 		
@@ -71,7 +71,7 @@ function Node_Json_File_Write(_x, _y, _group = -1) : Node(_x, _y, _group) constr
 		refreshDynamicInput();
 	}
 	
-	static update = function() {
+	static writeFile = function() {
 		var path = inputs[| 0].getValue();
 		if(path == "") return;
 		if(filename_ext(path) != ".json")
@@ -89,6 +89,9 @@ function Node_Json_File_Write(_x, _y, _group = -1) : Node(_x, _y, _group) constr
 		
 		json_save_struct(path, cont);
 	}
+	
+	static update = function(frame = ANIMATOR.current_frame) { writeFile(); }
+	static onInspectorUpdate = function() { writeFile(); }
 	
 	function onDrawNode(xx, yy, _mx, _my, _s) {
 		var bbox = drawGetBbox(xx, yy, _s);

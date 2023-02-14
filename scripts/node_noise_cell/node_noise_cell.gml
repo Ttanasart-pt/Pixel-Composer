@@ -1,32 +1,32 @@
 function Node_Cellular(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constructor {
 	name = "Cellular Noise";
 	
-	inputs[| 0] = nodeValue(0, "Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, def_surf_size2 )
+	inputs[| 0] = nodeValue("Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, def_surf_size2 )
 		.setDisplay(VALUE_DISPLAY.vector);
 	
-	inputs[| 1] = nodeValue(1, "Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ def_surf_size / 2, def_surf_size / 2])
+	inputs[| 1] = nodeValue("Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ def_surf_size / 2, def_surf_size / 2])
 		.setDisplay(VALUE_DISPLAY.vector)
 		.setUnitRef(function(index) { return getDimension(index); });
 	
-	inputs[| 2] = nodeValue(2, "Scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 4);
+	inputs[| 2] = nodeValue("Scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 4);
 	
-	inputs[| 3] = nodeValue(3, "Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0);
+	inputs[| 3] = nodeValue("Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0);
 	
-	inputs[| 4] = nodeValue(4, "Type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+	inputs[| 4] = nodeValue("Type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Point", "Edge", "Cell", "Crystal" ]);
 	
-	inputs[| 5] = nodeValue(5, "Contrast", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1);
+	inputs[| 5] = nodeValue("Contrast", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1);
 	
-	inputs[| 6] = nodeValue(6, "Pattern", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+	inputs[| 6] = nodeValue("Pattern", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.enum_button, [ "Uniform", "Radial" ]);
 	
-	inputs[| 7] = nodeValue(7, "Middle", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.5)
+	inputs[| 7] = nodeValue("Middle", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.5)
 		.setDisplay(VALUE_DISPLAY.slider, [0., 1., 0.01]);
 	
-	inputs[| 8] = nodeValue(8, "Radial scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 2)
+	inputs[| 8] = nodeValue("Radial scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 2)
 		.setDisplay(VALUE_DISPLAY.slider, [1., 10., 0.01]);
 	
-	inputs[| 9] = nodeValue(9, "Radial shatter", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
+	inputs[| 9] = nodeValue("Radial shatter", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
 		.setDisplay(VALUE_DISPLAY.slider, [-10., 10., 0.01])
 		.setVisible(false);
 	
@@ -37,7 +37,7 @@ function Node_Cellular(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) con
 		["Rendering",	false], 5, 7
 	];
 	
-	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
+	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		inputs[| 1].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
@@ -82,9 +82,9 @@ function Node_Cellular(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) con
 		
 		surface_set_target(_outSurf);
 		shader_set(shader);
-			shader_set_uniform_f_array(uniform_dim, _dim);
+			shader_set_uniform_f_array_safe(uniform_dim, _dim);
 			shader_set_uniform_f(uniform_tim, _tim);
-			shader_set_uniform_f_array(uniform_pos, _pos);
+			shader_set_uniform_f_array_safe(uniform_pos, _pos);
 			shader_set_uniform_f(uniform_sca, _sca);
 			shader_set_uniform_f(uniform_con, _con);
 			shader_set_uniform_f(uniform_mid, _mid);

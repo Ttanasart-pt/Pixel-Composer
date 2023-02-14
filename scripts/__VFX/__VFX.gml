@@ -24,9 +24,6 @@ function __part(_node) constructor {
 	
 	boundary_data = -1;
 	
-	fx  = 0;
-	fy  = 0;
-	
 	gy  = 0;
 	
 	scx   = 1;
@@ -122,7 +119,7 @@ function __part(_node) constructor {
 		if(life-- < 0) kill();
 	}
 	
-	function draw(exact, surf_w, surf_h) {
+	function draw(exact, surf_w, surf_h) { 
 		if(!active) return;
 		var ss = surf;
 		if(is_array(surf)) {
@@ -145,8 +142,8 @@ function __part(_node) constructor {
 		}
 		if(!is_surface(ss)) return;
 		
-		scx   = sc_sx * eval_curve_bezier_cubic_x(sct, 1 - life / life_total);
-		scy   = sc_sy * eval_curve_bezier_cubic_x(sct, 1 - life / life_total);
+		scx   = sc_sx * eval_curve_x(sct, 1 - life / life_total);
+		scy   = sc_sy * eval_curve_x(sct, 1 - life / life_total);
 		
 		var _xx, _yy;
 		var s_w = surface_get_width(ss) * scx;
@@ -183,7 +180,7 @@ function __part(_node) constructor {
 		
 		var cc = (col == -1)? c_white : gradient_eval(col, 1 - life / life_total);
 		cc = colorMultiply(blend, cc);
-		alp_draw = alp * eval_curve_bezier_cubic_x(alp_fade, 1 - life / life_total);
+		alp_draw = alp * eval_curve_x(alp_fade, 1 - life / life_total);
 		draw_surface_ext_safe(ss, _xx, _yy, scx, scy, rot, cc, alp_draw);
 	}
 	

@@ -1,5 +1,6 @@
 function Node_Group_Output(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 	name  = "Output";
+	destroy_when_upgroup = true;
 	color = COLORS.node_blend_collection;
 	previewable = false;
 	auto_height = false;
@@ -8,15 +9,16 @@ function Node_Group_Output(_x, _y, _group = -1) : Node(_x, _y, _group) construct
 	h = 32 + 24;
 	min_h = h;
 	
-	inputs[| 0] = nodeValue(0, "Value", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, -1)
+	inputs[| 0] = nodeValue("Value", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, -1)
 		.setVisible(true, true);
 	
-	inputs[| 1] = nodeValue(1, "Order", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0);
+	inputs[| 1] = nodeValue("Order", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+		.rejectArray();
 	
 	outParent = undefined;
 	output_index = -1;
 	
-	static onValueUpdate = function(index) {
+	static onValueUpdate = function(index = 0) {
 		if(is_undefined(outParent)) return;
 		
 		group.sortIO();
@@ -59,7 +61,10 @@ function Node_Group_Output(_x, _y, _group = -1) : Node(_x, _y, _group) construct
 				output_index = inputs[| 1].getValue();
 			}
 			
-			outParent = nodeValue(ds_list_size(group.outputs), "Value", group, JUNCTION_CONNECT.output, VALUE_TYPE.any, -1)
+			if(!is_undefined(outParent))
+				ds_list_remove(group.outputs, outParent);
+			
+			outParent = nodeValue("Value", group, JUNCTION_CONNECT.output, VALUE_TYPE.any, -1)
 				.setVisible(true, true);
 			outParent.from = self;
 			
@@ -77,7 +82,7 @@ function Node_Group_Output(_x, _y, _group = -1) : Node(_x, _y, _group) construct
 	static step = function() {
 		if(is_undefined(outParent)) return;
 		
-		outParent.name = name; 
+		outParent.name = display_name; 
 		
 		inputs[| 0].type = VALUE_TYPE.any;
 		if(inputs[| 0].value_from != noone) {
@@ -100,10 +105,25 @@ function Node_Group_Output(_x, _y, _group = -1) : Node(_x, _y, _group) construct
 	
 	static postDeserialize = function() {
 		createOutput(false);
+		
+		var _inputs = load_map[? "inputs"];
+		inputs[| 1].applyDeserialize(_inputs[| 1], load_scale);
+		group.sortIO();
 	}
 	
 	static onDestroy = function() {
 		if(is_undefined(outParent)) return;
 		ds_list_delete(group.outputs, ds_list_find_index(group.outputs, outParent));
+	}
+	
+	static ungroup = function() {
+		var fr = inputs[| 0].value_from;
+		
+		for( var i = 0; i < ds_list_size(outParent.value_to); i++ ) {
+			var to = outParent.value_to[| i];
+			if(to.value_from != outParent) continue;
+			
+			to.setFrom(fr);
+		}
 	}
 }

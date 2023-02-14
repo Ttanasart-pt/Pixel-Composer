@@ -4,8 +4,8 @@ function Node_String(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) const
 	
 	w = 96;
 	
-	inputs[| 0] = nodeValue(0, "Text", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "");
-	outputs[| 0] = nodeValue(0, "Text", self, JUNCTION_CONNECT.output, VALUE_TYPE.text, "");
+	inputs[| 0] = nodeValue("Text", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "");
+	outputs[| 0] = nodeValue("Text", self, JUNCTION_CONNECT.output, VALUE_TYPE.text, "");
 	
 	function process_data(_output, _data, _index = 0) { 
 		return _data[0];

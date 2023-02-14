@@ -3,16 +3,16 @@ function Node_Lua_Global(_x, _y, _group = -1) : Node(_x, _y, _group) constructor
 	preview_channel = 1;
 	previewable = false;
 	
-	inputs[| 0]  = nodeValue(0, "Lua code", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "")
+	inputs[| 0]  = nodeValue("Lua code", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "", o_dialog_lua_reference)
 		.setDisplay(VALUE_DISPLAY.code);
 		
-	inputs[| 1]  = nodeValue(1, "Run order", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+	inputs[| 1]  = nodeValue("Run order", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "On start", "Every frame" ]);
 	
-	inputs[| 2]  = nodeValue(2, "Execution thread", self, JUNCTION_CONNECT.input, VALUE_TYPE.node, noone)
+	inputs[| 2]  = nodeValue("Execution thread", self, JUNCTION_CONNECT.input, VALUE_TYPE.node, noone)
 		.setVisible(false, true);
 	
-	outputs[| 0] = nodeValue(0, "Execution thread", self, JUNCTION_CONNECT.output, VALUE_TYPE.node, noone );
+	outputs[| 0] = nodeValue("Execution thread", self, JUNCTION_CONNECT.output, VALUE_TYPE.node, noone );
 	
 	input_display_list = [ 
 		["Main",		false], 2, 1, 0,
@@ -20,6 +20,7 @@ function Node_Lua_Global(_x, _y, _group = -1) : Node(_x, _y, _group) constructor
 	
 	lua_state = lua_create();
 	
+	error_notification = noone;
 	compiled = false;
 	
 	static stepBegin = function() {
@@ -34,6 +35,15 @@ function Node_Lua_Global(_x, _y, _group = -1) : Node(_x, _y, _group) constructor
 		doStepBegin();
 		
 		value_validation[VALIDATION.error] = !compiled;
+		if(!compiled && error_notification == noone) {
+			error_notification = noti_error("Lua node [" + string(name) + "] not compiled.");
+			error_notification.onClick = function() { PANEL_GRAPH.focusNode(self); };
+		}
+				
+		if(compiled && error_notification != noone) {
+			noti_remove(error_notification);
+			error_notification = noone;
+		}
 	}
 	
 	static getState = function() {
@@ -46,11 +56,11 @@ function Node_Lua_Global(_x, _y, _group = -1) : Node(_x, _y, _group) constructor
 		if(index == 0 || index == 2) compiled = false;
 	}
 	
-	static onValueUpdate = function(index) {
+	static onValueUpdate = function(index = 0) {
 		if(index == 0 || index == 2) compiled = false;
 	}
 	
-	static update = function() {
+	static update = function(frame = ANIMATOR.current_frame) {
 		if(!compiled) return;
 		
 		var _code = inputs[| 0].getValue();
@@ -62,7 +72,7 @@ function Node_Lua_Global(_x, _y, _group = -1) : Node(_x, _y, _group) constructor
 		}
 	}
 	
-	static inspectorUpdate = function() { //compile
+	static onInspectorUpdate = function() { //compile
 		var _code = inputs[| 0].getValue();
 		compiled = true;
 		
@@ -73,5 +83,10 @@ function Node_Lua_Global(_x, _y, _group = -1) : Node(_x, _y, _group) constructor
 		}
 		
 		doUpdate();
+	}
+	
+	static onDestroy = function() {
+		if(error_notification != noone)
+			noti_remove(error_notification);
 	}
 }

@@ -11,25 +11,25 @@ function Node_Grid_Tri(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) con
 	uniform_clr0 = shader_get_uniform(shader, "color0");
 	uniform_clr1 = shader_get_uniform(shader, "color1");
 	
-	inputs[| 0] = nodeValue(0, "Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, def_surf_size2 )
+	inputs[| 0] = nodeValue("Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, def_surf_size2 )
 		.setDisplay(VALUE_DISPLAY.vector);
 	
-	inputs[| 1] = nodeValue(1, "Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ])
+	inputs[| 1] = nodeValue("Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.vector)
 		.setUnitRef(function(index) { return getDimension(index); });
 	
-	inputs[| 2] = nodeValue(2, "Scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 4, 4 ])
+	inputs[| 2] = nodeValue("Scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 4, 4 ])
 		.setDisplay(VALUE_DISPLAY.vector);
 	
-	inputs[| 3] = nodeValue(3, "Angle", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+	inputs[| 3] = nodeValue("Angle", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.rotation);
 	
-	inputs[| 4] = nodeValue(4, "Gap", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.1)
+	inputs[| 4] = nodeValue("Gap", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.1)
 		.setDisplay(VALUE_DISPLAY.slider, [0, 1, 0.01]);
 	
-	inputs[| 5] = nodeValue(5, "Color 1", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white);
+	inputs[| 5] = nodeValue("Color 1", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white);
 	
-	inputs[| 6] = nodeValue(6, "Color 2", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_black);
+	inputs[| 6] = nodeValue("Color 2", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_black);
 	
 	input_display_list = [
 		["Output",  false], 0,
@@ -37,7 +37,7 @@ function Node_Grid_Tri(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) con
 		["Render",	false], 5, 6, 
 	];
 	
-	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
+	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		inputs[| 1].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
@@ -64,8 +64,8 @@ function Node_Grid_Tri(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) con
 			shader_set_uniform_f(uniform_rot, degtorad(_rot));
 			shader_set_uniform_f(uniform_thk, _thk);
 			
-			shader_set_uniform_f_array(uniform_clr0, colToVec4(_clr0));
-			shader_set_uniform_f_array(uniform_clr1, colToVec4(_clr1));
+			shader_set_uniform_f_array_safe(uniform_clr0, colToVec4(_clr0));
+			shader_set_uniform_f_array_safe(uniform_clr1, colToVec4(_clr1));
 			
 			draw_sprite_ext(s_fx_pixel, 0, 0, 0, _dim[0], _dim[1], 0, c_white, 1);
 		shader_reset();

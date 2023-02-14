@@ -10,19 +10,19 @@ function Node_Combine_RGB(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) 
 	uniform_usea = shader_get_uniform(shader, "useA");
 	uniform_mode = shader_get_uniform(shader, "mode");
 	
-	inputs[| 0] = nodeValue(0, "Red",   self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
-	inputs[| 1] = nodeValue(1, "Green", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
-	inputs[| 2] = nodeValue(2, "Blue",  self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
-	inputs[| 3] = nodeValue(3, "Alpha", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
+	inputs[| 0] = nodeValue("Red",   self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
+	inputs[| 1] = nodeValue("Green", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
+	inputs[| 2] = nodeValue("Blue",  self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
+	inputs[| 3] = nodeValue("Alpha", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 	
-	inputs[| 4] = nodeValue(4, "Sampling type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+	inputs[| 4] = nodeValue("Sampling type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.enum_scroll, ["Brightness", "Channel value"]);
 	
-	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
+	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [
 		["Sampling",	false], 4,
-		["Surface",		false], 0, 1, 2, 3,
+		["Surface",		 true], 0, 1, 2, 3,
 	]
 	
 	static process_data = function(_outSurf, _data, _output_index, _array_index) {
@@ -34,7 +34,7 @@ function Node_Combine_RGB(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) 
 		
 		surface_set_target(_outSurf);
 		draw_clear_alpha(0, 0);
-		BLEND_OVERRIDE
+		BLEND_OVERRIDE;
 		
 		shader_set(shader);
 			texture_set_stage(uniform_r, surface_get_texture(_r));
@@ -48,7 +48,7 @@ function Node_Combine_RGB(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) 
 			draw_sprite_ext(s_fx_pixel, 0, 0, 0, surface_get_width(_outSurf), surface_get_width(_outSurf), 0, c_white, 1);
 		shader_reset();
 		
-		BLEND_NORMAL
+		BLEND_NORMAL;
 		surface_reset_target();
 		
 		return _outSurf;

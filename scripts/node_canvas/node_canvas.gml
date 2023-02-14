@@ -1,37 +1,48 @@
 function Node_Canvas(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 	name	= "Canvas";
 	color	= COLORS.node_blend_canvas;
+	preview_channel = 1;
 	
-	inputs[| 0] = nodeValue(0, "Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, def_surf_size2 )
+	inputs[| 0] = nodeValue("Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, def_surf_size2 )
 		.setDisplay(VALUE_DISPLAY.vector);
 	
-	inputs[| 1] = nodeValue(1, "Color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_black );
-	inputs[| 2] = nodeValue(2, "Brush size", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1 )
+	inputs[| 1] = nodeValue("Color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_black );
+	inputs[| 2] = nodeValue("Brush size", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1 )
 		.setDisplay(VALUE_DISPLAY.slider, [1, 32, 1]);
 	
-	inputs[| 3] = nodeValue(3, "Fill threshold", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.)
+	inputs[| 3] = nodeValue("Fill threshold", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.)
 		.setDisplay(VALUE_DISPLAY.slider, [0, 1, 0.01]);
 	
-	inputs[| 4] = nodeValue(4, "Fill type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+	inputs[| 4] = nodeValue("Fill type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.enum_scroll, ["4 connect", "8 connect", "Entire canvas"]);
 	
-	inputs[| 5] = nodeValue(5, "Draw preview overlay", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
+	inputs[| 5] = nodeValue("Draw preview overlay", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
 	
-	inputs[| 6] = nodeValue(6, "Brush", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, -1);
+	inputs[| 6] = nodeValue("Brush", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, -1);
 	
-	inputs[| 7] = nodeValue(7, "Surface amount", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1);
+	inputs[| 7] = nodeValue("Surface amount", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1);
 	
-	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
-	outputs[| 1] = nodeValue(1, "Preview", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
+	inputs[|  8] = nodeValue("Background", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, -1);
+	
+	inputs[|  9] = nodeValue("Background alpha", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1.)
+		.setDisplay(VALUE_DISPLAY.slider, [0, 1, 0.01]);
+		
+	inputs[| 10] = nodeValue("Render background", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	
+	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
+	outputs[| 1] = nodeValue("Preview", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [ 
 		["Output",	false],	0, 
 		["Brush",	false], 6, 1, 2, 
 		["Fill",	false], 3, 4, 
-		["Preview", false], 5 
+		["Display", false], 5, 8, 9, 10,
 	];
 	
+	canvas_surface = surface_create(1, 1);
 	surface_buffer = buffer_create(1 * 1 * 4, buffer_fixed, 2);
+	surface_w = 1;
+	surface_h = 1;
 	
 	tools = [
 		[ "Pencil",		THEME.canvas_tools_pencil ],
@@ -41,21 +52,64 @@ function Node_Canvas(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 		[ "Fill",		THEME.canvas_tools_bucket ],
 	];
 	
-	mouse_cur_x = 0;
-	mouse_cur_y = 0;
-	mouse_pre_x = 0;
-	mouse_pre_y = 0;
-	mouse_pre_draw_x = 0;
-	mouse_pre_draw_y = 0;
-	
-	mouse_holding = false;
-	
 	draw_stack  = ds_list_create();
 	
 	function surface_update() {
-		var _surf = outputs[| 0].getValue();
-		buffer_get_surface(surface_buffer, _surf, 0);
+		buffer_delete(surface_buffer);
+		
+		surface_w = surface_get_width(canvas_surface);
+		surface_h = surface_get_height(canvas_surface);
+		surface_buffer = buffer_create(surface_w * surface_h * 4, buffer_fixed, 4);
+		buffer_get_surface(surface_buffer, canvas_surface, 0);
+		
 		triggerRender();
+		apply_surface();
+	}
+	
+	function apply_surface() {
+		var _dim   = inputs[|  0].getValue();
+		var _bg    = inputs[|  8].getValue();
+		var _bga   = inputs[|  9].getValue();
+		var _bgr   = inputs[| 10].getValue();
+		
+		var _outSurf = outputs[| 0].getValue();
+		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1]);
+			
+		if(!is_surface(canvas_surface))
+			canvas_surface = surface_create_from_buffer(_dim[0], _dim[1], surface_buffer);
+		else if(surface_size_to(canvas_surface, _dim[0], _dim[1])) {
+			buffer_delete(surface_buffer);
+			surface_buffer = buffer_create(_dim[0] * _dim[1] * 4, buffer_fixed, 4);
+		}
+		
+		surface_set_target(_outSurf);
+		draw_clear_alpha(0, 0);
+		BLEND_OVER_ALPHA
+			if(_bgr && is_surface(_bg))
+				draw_surface_stretched_ext(_bg, 0, 0, _dim[0], _dim[1], c_white, _bga);
+			draw_surface(canvas_surface, 0, 0);
+		BLEND_NORMAL
+		surface_reset_target();
+		
+		outputs[| 0].setValue(_outSurf);
+		
+		/////
+		
+		var _surf_prev = outputs[| 1].getValue();
+		_surf_prev = surface_verify(_surf_prev, _dim[0], _dim[1]);
+		outputs[| 1].setValue(_surf_prev);
+			
+		surface_set_target(_surf_prev);
+		draw_clear_alpha(0, 0);
+		BLEND_OVER_ALPHA;
+			
+		if(is_surface(_bg))
+			draw_surface_stretched_ext(_bg, 0, 0, _dim[0], _dim[1], c_white, _bga);
+		draw_surface(canvas_surface, 0, 0);
+		
+		BLEND_NORMAL;
+		
+		surface_reset_target();
 	}
 	
 	function draw_point_size(_x, _y, _siz, _brush) {
@@ -177,134 +231,117 @@ function Node_Canvas(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 		}
 	}
 	
-	function color_diff(c1, c2) {
-		var _c1_r =  c1 & 255;
-		var _c1_g = (c1 >> 8) & 255;
-		var _c1_b = (c1 >> 16) & 255;
-		var _c1_a = (c1 >> 24) & 255;
+	function get_color_buffer(_x, _y) {
+		var pos = (surface_w * _y + _x) * 4;
+		if(pos > buffer_get_size(surface_buffer)) {
+			print("Error buffer overflow " + string(pos) + "/" + string(buffer_get_size(surface_buffer)));
+			return 0;
+		}
 		
-		var _c2_r =  c2 & 255;
-		var _c2_g = (c2 >> 8) & 255;
-		var _c2_b = (c2 >> 16) & 255;
-		var _c2_a = (c2 >> 24) & 255;
-		
-		var dist = sqrt(
-			sqr(_c1_r - _c2_r) + 
-			sqr(_c1_g - _c2_g) + 
-			sqr(_c1_b - _c2_b) + 
-			sqr(_c1_a - _c2_a)
-		);
-		
-		return dist / 510;
-	}
-	
-	function get_color_buffer(_x, _y, w, h) {
-		buffer_seek(surface_buffer, buffer_seek_start, (w * _y + _x) * 4);
+		buffer_seek(surface_buffer, buffer_seek_start, pos);
 		var c = buffer_read(surface_buffer, buffer_u32);
 		
 		return c;
 	}
 	
+	function ff_fillable(colorBase, colorFill, _x, _y, _thres) {
+		var d = color_diff(colorBase, get_color_buffer(_x, _y));
+		return d <= _thres && d != colorFill;
+	}
+	
 	function flood_fill_scanline(_x, _y, _surf, _thres, _corner = false) {
-		var w = surface_get_width(_surf);
-		var h = surface_get_height(_surf);
+		surface_update();
 		
-		var _c0 = draw_get_color() + (255 << 24);
-		var _c1 = get_color_buffer(_x, _y, w, h);
-		if(color_diff(_c0, _c1) <= _thres) return;
+		var colorFill = draw_get_color() + (255 << 24);
+		var colorBase = get_color_buffer(_x, _y);
+		
+		if(colorFill == colorBase) return;
 		
 		var x1, y1, x_start;
 		var spanAbove, spanBelow;
 
-		var stack = ds_stack_create();
-		ds_stack_push(stack, [_x, _y]);
-		while(!ds_stack_empty(stack)) {
-			var pos = ds_stack_pop(stack);
+		var queue = ds_queue_create();
+		ds_queue_enqueue(queue, [_x, _y]);
+		
+		while(!ds_queue_empty(queue)) {
+			var pos = ds_queue_dequeue(queue);
 			x1 = pos[0];
 			y1 = pos[1];
 			
-			while(x1 >= 0 && color_diff(_c1, get_color_buffer(x1, y1, w, h)) <= _thres) {
+			var colorCurr = get_color_buffer(x1, y1);
+			//print("Searching " + string(x1) + ", " + string(y1) + ": " + string(colorCurr));
+			
+			if(colorCurr == colorFill) continue;		//Color in queue already filled
+			
+			while(x1 >= 0 && ff_fillable(colorBase, colorFill, x1, y1, _thres))			//Shift left
 				x1--;
-			}
 			
 			x1++;
 			x_start = x1;
 			
-			spanAbove = 0;
-			spanBelow = 0;
+			spanAbove = false;
+			spanBelow = false;
 			
-			while(x1 < w && color_diff(_c1, get_color_buffer(x1, y1, w, h)) <= _thres) {
+			while(x1 < surface_w && ff_fillable(colorBase, colorFill, x1, y1, _thres)) {
 				draw_point(x1, y1);
-				buffer_seek(surface_buffer, buffer_seek_start, (w * y1 + x1) * 4);
-				buffer_write(surface_buffer, buffer_u32, _c0);
+				buffer_seek(surface_buffer, buffer_seek_start, (surface_w * y1 + x1) * 4);
+				buffer_write(surface_buffer, buffer_u32, colorFill);
 			    
+				//print("> Filling " + string(x1) + ", " + string(y1) + ": " + string(get_color_buffer(x1, y1)));
+				
 				if(y1 > 0) {
 					if(x1 == x_start && x1 > 0 && _corner) {
-						var _delta = color_diff(_c1, get_color_buffer(x1 - 1, y1 - 1, w, h));
-						if(!spanAbove && _delta <= _thres) {
-							ds_stack_push(stack, [x1 - 1, y1 - 1]);
-						    spanAbove = 1;
-					    } else if(spanAbove && _delta > _thres) {
-							spanAbove = 0;
+						if(!spanAbove && ff_fillable(colorBase, colorFill, x1 - 1, y1 - 1, _thres)) {
+							ds_queue_enqueue(queue, [x1 - 1, y1 - 1]);
+						    spanAbove = true;
 					    }
 					}
 					
-					var _delta = color_diff(_c1, get_color_buffer(x1, y1 - 1, w, h));
-					if(!spanAbove && _delta <= _thres) {
-						ds_stack_push(stack, [x1, y1 - 1]);
-					    spanAbove = 1;
-				    } else if(spanAbove && _delta > _thres) {
-						spanAbove = 0;
+					if(ff_fillable(colorBase, colorFill, x1, y1 - 1, _thres)) {
+						ds_queue_enqueue(queue, [x1, y1 - 1]);
 				    }
 				}
 				
-				if(y1 < h - 1) {
+				if(y1 < surface_h - 1) {
 					if(x1 == x_start && x1 > 0 && _corner) {
-						var _delta = color_diff(_c1, get_color_buffer(x1 - 1, y1 + 1, w, h));
-						if(!spanBelow && _delta <= _thres) {
-							ds_stack_push(stack, [x1 - 1, y1 + 1]);
-						    spanBelow = 1;
-					    } else if(spanBelow && _delta > _thres) {
-							spanBelow = 0;
+						if(!spanBelow && ff_fillable(colorBase, colorFill, x1 - 1, y1 + 1, _thres)) {
+							ds_queue_enqueue(queue, [x1 - 1, y1 + 1]);
+						    spanBelow = true;
 					    }
 					}
 					
-					var _delta = color_diff(_c1, get_color_buffer(x1, y1 + 1, w, h));
-					if(!spanBelow && _delta <= _thres) {
-					    ds_stack_push(stack, [x1, y1 + 1]);
-					    spanBelow = 1;
-				    } else if(spanBelow && _delta > _thres) {
-						spanBelow = 0;
+					if(ff_fillable(colorBase, colorFill, x1, y1 + 1, _thres)) {
+					    ds_queue_enqueue(queue, [x1, y1 + 1]);
 				    }
 				}
 			    x1++;
 			}
 			
-			if(x1 < w - 1 && _corner) {
-				var _delta = color_diff(_c1, get_color_buffer(x1, y1 - 1, w, h));
-				if(!spanAbove && _delta <= _thres) {
-					ds_stack_push(stack, [x1, y1 - 1]);
-					spanAbove = 1;
-				} else if(spanAbove && _delta > _thres) {
-					spanAbove = 0;
+			if(x1 < surface_w - 1 && _corner) {
+				if(y1 > 0) {
+					if(!spanAbove && ff_fillable(colorBase, colorFill, x1 + 1, y1 - 1, _thres)) {
+						ds_queue_enqueue(queue, [x1 + 1, y1 - 1]);
+						spanAbove = true;
+					}
 				}
 				
-				var _delta = color_diff(_c1, get_color_buffer(x1, y1 + 1, w, h));
-				if(!spanBelow && _delta <= _thres) {
-					ds_stack_push(stack, [x1, y1 + 1]);
-					spanBelow = 1;
-				} else if(spanBelow && _delta > _thres) {
-					spanBelow = 0;
+				if(y1 < surface_h - 1) {
+					if(!spanBelow && ff_fillable(colorBase, colorFill, x1 + 1, y1 + 1, _thres)) {
+						ds_queue_enqueue(queue, [x1 + 1, y1 + 1]);
+						spanBelow = true;
+					}
 				}
 			}
 		}	
+		
+		surface_update();
 	}
 	
 	function canvas_fill(_x, _y, _surf, _thres) {
 		var w = surface_get_width(_surf);
 		var h = surface_get_height(_surf);
 		
-		var _c1 = get_color_buffer(_x, _y, w, h);
+		var _c1 = get_color_buffer(_x, _y);
 		
 		for( var i = 0; i < w; i++ ) {
 			for( var j = 0; j < h; j++ ) {
@@ -313,7 +350,7 @@ function Node_Canvas(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 					continue;
 				}
 				
-				var _c2 = get_color_buffer(i, j, w, h);
+				var _c2 = get_color_buffer(i, j);
 				if(color_diff(_c1, _c2) <= _thres)
 					draw_point(i, j);
 			}
@@ -322,10 +359,19 @@ function Node_Canvas(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 		surface_update();
 	}
 	
+	mouse_cur_x = 0;
+	mouse_cur_y = 0;
+	mouse_pre_x = 0;
+	mouse_pre_y = 0;
+	mouse_pre_draw_x = 0;
+	mouse_pre_draw_y = 0;
+	
+	mouse_holding = false;
+	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		if(!active) return;
-		if(keyboard_check(vk_alt)) return;
 		
+		var _dim		= inputs[| 0].getValue();
 		var _col		= inputs[| 1].getValue();
 		var _siz		= inputs[| 2].getValue();
 		var _thr		= inputs[| 3].getValue();
@@ -333,15 +379,13 @@ function Node_Canvas(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 		var _prev		= inputs[| 5].getValue();
 		var _brush		= inputs[| 6].getValue();
 		
-		var _surf		= outputs[| 0].getValue();
-		var _surf_prev	= outputs[| 1].getValue();
-		var _surf_w		= surface_get_width(_surf);
-		var _surf_h		= surface_get_height(_surf);
+		if(!surface_exists(canvas_surface)) 
+			apply_surface();
+			
+		var _surf_w		= surface_get_width(canvas_surface);
+		var _surf_h		= surface_get_height(canvas_surface);
 		
-		if(!surface_exists(_surf)) return;
-		if(!surface_exists(_surf_prev)) return;
-		
-		surface_set_target(_surf);
+		surface_set_target(canvas_surface);
 		draw_set_color(_col);
 		
 		var _tool = PANEL_PREVIEW.tool_index;
@@ -351,9 +395,14 @@ function Node_Canvas(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 		mouse_cur_y = round((_my - _y) / _s - 0.5);
 		
 		if(_tool == 0 || _tool == 1) {
-			if(_tool == 1) gpu_set_blendmode(bm_subtract);
+			if(_tool == 0) BLEND_OVER_ALPHA;
 			
-			if(keyboard_check(vk_shift) && key_mod_press(CTRL)) {
+			if(_tool == 1) {
+				gpu_set_blendmode(bm_subtract);
+				gpu_set_colorwriteenable(false, false, false, true);
+			}
+			
+			if(key_mod_press(SHIFT) && key_mod_press(CTRL)) {
 				var aa = point_direction(mouse_pre_draw_x, mouse_pre_draw_y, mouse_cur_x, mouse_cur_y);
 				var dd = point_distance(mouse_pre_draw_x, mouse_pre_draw_y, mouse_cur_x, mouse_cur_y);
 				var _a = round(aa / 45) * 45;
@@ -367,7 +416,7 @@ function Node_Canvas(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 				draw_point_size(mouse_cur_x, mouse_cur_y, _siz, _brush);
 				
 				mouse_holding = true;
-				if(keyboard_check(vk_shift)) {
+				if(key_mod_press(SHIFT)) {
 					draw_line_size(mouse_pre_draw_x, mouse_pre_draw_y, mouse_cur_x, mouse_cur_y, _siz, _brush);
 					mouse_holding = false;
 				}
@@ -377,14 +426,19 @@ function Node_Canvas(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 			}
 			
 			if(mouse_holding && mouse_click(mb_left, active)) {
-				draw_point_size(mouse_cur_x, mouse_cur_y, _siz, _brush);
-				draw_line_size(mouse_pre_draw_x, mouse_pre_draw_y, mouse_cur_x, mouse_cur_y, _siz, _brush);
+				if(mouse_pre_draw_x != mouse_cur_x || mouse_pre_draw_y != mouse_cur_y) {
+					draw_point_size(mouse_cur_x, mouse_cur_y, _siz, _brush);
+					draw_line_size(mouse_pre_draw_x, mouse_pre_draw_y, mouse_cur_x, mouse_cur_y, _siz, _brush);
+				}
 				
 				mouse_pre_draw_x = mouse_cur_x;
 				mouse_pre_draw_y = mouse_cur_y;	
 			}
 			
-			if(_tool == 1) gpu_set_blendmode(bm_normal);
+			BLEND_NORMAL;
+			
+			if(_tool == 1)
+				gpu_set_colorwriteenable(true, true, true, true);
 			
 			if(mouse_release(mb_left)) {
 				surface_update();
@@ -393,9 +447,10 @@ function Node_Canvas(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 				
 			mouse_pre_x = mouse_cur_x;
 			mouse_pre_y = mouse_cur_y;
-		
+			apply_surface();
+			
 		} else if(_tool == 2 || _tool == 3) {
-			if(mouse_holding && keyboard_check(vk_shift)) {
+			if(mouse_holding && key_mod_press(SHIFT)) {
 				var ww = mouse_cur_x - mouse_pre_x;
 				var hh = mouse_cur_y - mouse_pre_y;
 				var ss = max(abs(ww), abs(hh));
@@ -412,26 +467,29 @@ function Node_Canvas(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 			}
 			
 			if(mouse_release(mb_left)) {
-				if(_tool == 2) {
+				BLEND_OVER_ALPHA;
+				if(_tool == 2)
 					draw_rect_size(mouse_pre_x, mouse_pre_y, mouse_cur_x, mouse_cur_y, _siz, _sub_tool, _brush);
-				} else if(_tool == 3) {
+				else if(_tool == 3)
 					draw_ellp_size(mouse_pre_x, mouse_pre_y, mouse_cur_x, mouse_cur_y, _siz, _sub_tool, _brush);
-				} 
+				BLEND_NORMAL;
 				
 				surface_update();
 				mouse_holding = false;
 			}
+			apply_surface();
+			
 		} else if(_tool == 4) {
 			if(point_in_rectangle(mouse_cur_x, mouse_cur_y, 0, 0, _surf_w - 1, _surf_h - 1) && mouse_press(mb_left)) {
 				switch(_fill_type) {
 					case 0 :	
-						flood_fill_scanline(mouse_cur_x, mouse_cur_y, _surf, _thr, false);
+						flood_fill_scanline(mouse_cur_x, mouse_cur_y, canvas_surface, _thr, false);
 						break;
 					case 1 :	
-						flood_fill_scanline(mouse_cur_x, mouse_cur_y, _surf, _thr, true);
+						flood_fill_scanline(mouse_cur_x, mouse_cur_y, canvas_surface, _thr, true);
 						break;
 					case 2 :	
-						canvas_fill(mouse_cur_x, mouse_cur_y, _surf, _thr);
+						canvas_fill(mouse_cur_x, mouse_cur_y, canvas_surface, _thr);
 						break;
 				}
 				
@@ -441,34 +499,41 @@ function Node_Canvas(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 		
 		surface_reset_target();
 		
-		surface_set_target(_surf_prev);
-		draw_clear_alpha(0, 0);
-		draw_surface_safe(_surf, 0, 0);
-		
-		draw_set_color(_col);
-		
-		if(_tool == 0 || _tool == 1) {
-			if(_tool == 1) gpu_set_blendmode(bm_subtract);
-			
-			if(keyboard_check(vk_shift))
-				draw_line_size(mouse_pre_draw_x, mouse_pre_draw_y, mouse_cur_x, mouse_cur_y, _siz, _brush);
-			else 
-				draw_point_size(mouse_cur_x, mouse_cur_y, _siz, _brush);
-				
-			if(_tool == 1) gpu_set_blendmode(bm_normal);
-		} else if (_tool == 2 || _tool == 3) {
-			if(mouse_holding) {
-				if(_tool == 2)
-					draw_rect_size(mouse_pre_x, mouse_pre_y, mouse_cur_x, mouse_cur_y, _siz, _sub_tool, _brush);
-				else if(_tool == 3)
-					draw_ellp_size(mouse_pre_x, mouse_pre_y, mouse_cur_x, mouse_cur_y, _siz, _sub_tool, _brush); 
-			}
-		}
-		
-		surface_reset_target();
-		
 		#region preview
-			if(_prev) draw_surface_ext(_surf_prev, _x, _y, _s, _s, 0, c_white, 1);
+			var _bg    = inputs[|  8].getValue();
+			var _bga   = inputs[|  9].getValue();
+		
+			var _surf_prev = outputs[| 1].getValue();
+			_surf_prev = surface_verify(_surf_prev, _dim[0], _dim[1]);
+			outputs[| 1].setValue(_surf_prev);
+			
+			surface_set_target(_surf_prev);
+			draw_clear_alpha(0, 0);
+			BLEND_OVER_ALPHA;
+			
+			if(is_surface(_bg))
+				draw_surface_stretched_ext(_bg, 0, 0, _dim[0], _dim[1], c_white, _bga);
+			draw_surface(canvas_surface, 0, 0);
+			
+			draw_set_color(_col);
+			if(_tool == 0 || _tool == 1) {
+				if(key_mod_press(SHIFT))
+					draw_line_size(mouse_pre_draw_x, mouse_pre_draw_y, mouse_cur_x, mouse_cur_y, _siz, _brush);
+				else 
+					draw_point_size(mouse_cur_x, mouse_cur_y, _siz, _brush);
+				
+				if(_tool == 1) gpu_set_blendmode(bm_normal);
+			} else if (_tool == 2 || _tool == 3) {
+				if(mouse_holding) {
+					if(_tool == 2)
+						draw_rect_size(mouse_pre_x, mouse_pre_y, mouse_cur_x, mouse_cur_y, _siz, _sub_tool, _brush);
+					else if(_tool == 3)
+						draw_ellp_size(mouse_pre_x, mouse_pre_y, mouse_cur_x, mouse_cur_y, _siz, _sub_tool, _brush); 
+				}
+			}
+			
+			BLEND_NORMAL;
+			surface_reset_target();
 			
 			if (_tool == 2 || _tool == 3) {
 				if(mouse_holding) {
@@ -492,29 +557,16 @@ function Node_Canvas(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 		#endregion
 	}
 	
-	static update = function() {
-		var _dim   = inputs[| 0].getValue();
-		
+	static step = function() {
 		var _outSurf = outputs[| 0].getValue();
-		if(!is_surface(_outSurf)) {
-			_outSurf =  surface_create_valid(_dim[0], _dim[1]);
-			outputs[| 0].setValue(_outSurf);
-			
-			buffer_set_surface(surface_buffer, _outSurf, 0);
-		} else {
-			if(surface_size_to(_outSurf, _dim[0], _dim[1])) {
-				buffer_delete(surface_buffer);
-				surface_buffer = -1;
-				surface_buffer = buffer_create(surface_get_width(_outSurf) * surface_get_height(_outSurf) * 4, buffer_fixed, 2);
-			}
-		}
+		if(is_surface(_outSurf)) return;
 		
-		var _outSurf = outputs[| 1].getValue();
-		if(!is_surface(_outSurf)) {
-			_outSurf =  surface_create_valid(_dim[0], _dim[1]);
-			outputs[| 1].setValue(_outSurf);
-		} else
-			surface_size_to(_outSurf, _dim[0], _dim[1]);
+		_outSurf = surface_create_from_buffer(surface_w, surface_h, surface_buffer);
+		outputs[| 0].setValue(_outSurf);
+	}
+	
+	static update = function(frame = ANIMATOR.current_frame) {
+		apply_surface();
 	}
 	
 	static doSerialize = function(_map) {
@@ -524,7 +576,8 @@ function Node_Canvas(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 	static postDeserialize = function() {
 		if(!ds_map_exists(load_map, "surface")) return;
 		surface_buffer = buffer_base64_decode(load_map[? "surface"]);
-		var _outSurf = outputs[| 0].getValue();
-		buffer_set_surface(surface_buffer, _outSurf, 0);
+		
+		buffer_set_surface(surface_buffer, canvas_surface, 0);
+		surface_update();
 	}
 }

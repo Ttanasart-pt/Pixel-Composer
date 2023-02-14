@@ -2,13 +2,20 @@ function Node_Crop(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constru
 	name = "Crop";
 	preview_alpha = 0.5;
 	
-	inputs[| 0] = nodeValue(0, "Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
+	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 	
-	inputs[| 1] = nodeValue(1, "Crop", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 0, 0, 0, 0 ])
+	inputs[| 1] = nodeValue("Crop", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 0, 0, 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.padding)
 		.setUnitRef(function(index) { return getDimension(index); });
 	
-	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
+	inputs[| 2] = nodeValue("Active", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
+		active_index = 2;
+		
+	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
+	
+	input_display_list = [ 2,
+		["Surface",	 false], 0, 1, 
+	]
 	
 	drag_side = -1;
 	drag_mx   = 0;
@@ -107,11 +114,11 @@ function Node_Crop(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constru
 		
 		surface_set_target(_outSurf);
 			draw_clear_alpha(0, 0);
-			BLEND_OVERRIDE
+			BLEND_OVERRIDE;
 			
 			draw_surface_safe(_inSurf, -_crop[2], -_crop[1]);
 			
-			BLEND_NORMAL
+			BLEND_NORMAL;
 		surface_reset_target();
 		
 		return _outSurf;

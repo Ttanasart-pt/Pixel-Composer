@@ -15,14 +15,14 @@ function Node_CSV_File_Write(_x, _y, _group = -1) : Node(_x, _y, _group) constru
 	
 	w = 128;
 	
+	inputs[| 0]  = nodeValue("Path", self, JUNCTION_CONNECT.input, VALUE_TYPE.path, "")
+		.setDisplay(VALUE_DISPLAY.path_save, ["*.csv", ""])
+		.rejectArray();
 	
-	inputs[| 0]  = nodeValue(0, "Path", self, JUNCTION_CONNECT.input, VALUE_TYPE.path, "")
-		.setDisplay(VALUE_DISPLAY.path_save, ["*.csv", ""]);
-	
-	inputs[| 1]  = nodeValue(1, "Content", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, "")
+	inputs[| 1]  = nodeValue("Content", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, "")
 		.setDisplay(true);
 	
-	static update = function() {
+	static writeFile = function() {
 		var path = inputs[| 0].getValue();
 		if(path == "") return;
 		if(filename_ext(path) != ".csv")
@@ -47,6 +47,9 @@ function Node_CSV_File_Write(_x, _y, _group = -1) : Node(_x, _y, _group) constru
 		file_text_write_string(f, str);
 		file_text_close(f);
 	}
+	
+	static update = function(frame = ANIMATOR.current_frame) { writeFile(); }
+	static onInspectorUpdate = function() { writeFile(); }
 	
 	function onDrawNode(xx, yy, _mx, _my, _s) {
 		var bbox = drawGetBbox(xx, yy, _s);

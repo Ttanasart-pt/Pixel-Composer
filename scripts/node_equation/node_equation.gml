@@ -6,18 +6,18 @@ function Node_Equation(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) con
 	w = 96;
 	
 	
-	inputs[| 0] = nodeValue(1, "Equation", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "");
+	inputs[| 0] = nodeValue("Equation", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "");
 	
 	static createNewInput = function() {
 		var index = ds_list_size(inputs);
-		inputs[| index + 0] = nodeValue( index + 0, "Argument name", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "" );
+		inputs[| index + 0] = nodeValue("Argument name", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "" );
 		
-		inputs[| index + 1] = nodeValue( index + 1, "Argument value", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0 )
+		inputs[| index + 1] = nodeValue("Argument value", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0 )
 			.setVisible(true, true);
 		inputs[| index + 1].editWidget.interactable = false;
 	}
 	
-	outputs[| 0] = nodeValue(0, "Result", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, 0);
+	outputs[| 0] = nodeValue("Result", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, 0);
 	
 	argument_renderer = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) {
 		argument_renderer.x = _x;
@@ -37,7 +37,7 @@ function Node_Equation(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) con
 			_jName.editWidget.draw(tx, ty, ui(128), _th, _jName.showValue(), _m, _jName.display_type);
 			
 			draw_set_text(f_p1, fa_center, fa_top, COLORS._main_text_sub);
-			draw_text_add(tx + ui(128 + 12), ty + ui(6), "=");
+			draw_text_over(tx + ui(128 + 12), ty + ui(6), "=");
 			
 			var _jValue = inputs[| i + 1];
 			_jValue.editWidget.setActiveFocus(_focus, _hover);
@@ -100,7 +100,7 @@ function Node_Equation(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) con
 		createNewInput();
 	}
 	
-	static onValueUpdate = function(index) {
+	static onValueUpdate = function(index = 0) {
 		if(index < input_fix_len) return;
 		if(LOADING || APPENDING) return;
 		
@@ -111,7 +111,7 @@ function Node_Equation(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) con
 		refreshDynamicInput();
 	}
 	
-	function process_data(_output, _data, index = 0) { 
+	function process_data(_output, _data, _output_index, _array_index = 0) {  
 		var eq = _data[0];
 		var params = {};
 		

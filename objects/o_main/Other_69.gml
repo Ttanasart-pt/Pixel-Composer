@@ -18,7 +18,7 @@ if(string(ev_id) == string(STEAM_UGC_ITEM_ID) && ev_type == "ugc_create_item") {
 	var _s = surface_create(prev_size, prev_size);
 	surface_set_target(_s);
 		draw_clear(COLORS._main_icon_dark);
-		draw_sprite_tiled(s_workshop_bg, 0, -64, -64);
+		draw_sprite_tiled(s_workshop_background, 0, -64, -64);
 		draw_sprite_stretched(s_workshop_frame, 0, 0, 0, prev_size, prev_size);
 		
 		if(spr == -1) spr = THEME.group;

@@ -25,14 +25,15 @@ function Node_Image(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 	color			= COLORS.node_blend_input;
 	always_output   = true;
 	
-	inputs[| 0]  = nodeValue(0, "Path", self, JUNCTION_CONNECT.input, VALUE_TYPE.path, "")
-		.setDisplay(VALUE_DISPLAY.path_load, ["*.png", ""]);
+	inputs[| 0]  = nodeValue("Path", self, JUNCTION_CONNECT.input, VALUE_TYPE.path, "")
+		.setDisplay(VALUE_DISPLAY.path_load, ["*.png", ""])
+		.rejectArray();
 		
-	inputs[| 1]  = nodeValue(1, "Padding", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [0, 0, 0, 0])
+	inputs[| 1]  = nodeValue("Padding", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [0, 0, 0, 0])
 		.setDisplay(VALUE_DISPLAY.padding);
 		
-	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
-	outputs[| 1] = nodeValue(1, "Path", self, JUNCTION_CONNECT.output, VALUE_TYPE.path, "")
+	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
+	outputs[| 1] = nodeValue("Path", self, JUNCTION_CONNECT.output, VALUE_TYPE.path, "")
 		.setVisible(true, true);
 	
 	spr = noone;
@@ -53,7 +54,7 @@ function Node_Image(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 		path = try_get_path(path);
 		if(path == -1) return false;
 		
-		var ext = filename_ext(path);
+		var ext = string_lower(filename_ext(path));
 		var _name = string_replace(filename_name(path), filename_ext(path), "");
 		
 		switch(ext) {
@@ -76,14 +77,14 @@ function Node_Image(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 		return false;
 	}
 	
-	static inspectorUpdate = function() {
+	static onInspectorUpdate = function() {
 		var path = inputs[| 0].getValue();
 		if(path == "") return;
 		updatePaths(path);
 		update();
 	}
 	
-	static update = function() {
+	static update = function(frame = ANIMATOR.current_frame) {
 		var path = inputs[| 0].getValue();
 		var pad  = inputs[| 1].getValue();
 		if(path == "") return;
@@ -100,9 +101,9 @@ function Node_Image(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 		
 		surface_set_target(_outsurf);
 		draw_clear_alpha(0, 0);
-		BLEND_OVERRIDE 
+		BLEND_OVERRIDE; 
 		draw_sprite(spr, 0, pad[2], pad[1]);
-		BLEND_NORMAL
+		BLEND_NORMAL;
 		surface_reset_target();
 		
 		if(!first_update) return;
@@ -122,7 +123,8 @@ function Node_Image(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 			_splice.inputs[| 0].setFrom(outputs[| 0], false);
 			_splice.inputs[| 1].setValue([ww, hh]);
 			_splice.inputs[| 2].setValue(amo);
-			_splice.inputs[| 3].setValue(amo);
+			_splice.inputs[| 3].setValue([ amo, 1 ]);
+			_splice.inspectorUpdate();
 					
 			ds_list_add(PANEL_GRAPH.nodes_select_list, self);
 			ds_list_add(PANEL_GRAPH.nodes_select_list, _splice);

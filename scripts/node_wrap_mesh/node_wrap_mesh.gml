@@ -7,33 +7,38 @@ function Node_Mesh_Warp(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) co
 		links  : ds_list_create()
 	}
 	
-	inputs[| 0] = nodeValue(0, "Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
-	inputs[| 1] = nodeValue(1, "Sample", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 8, "Amount of grid subdivision. Higher number means more grid, detail.")
+	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
+	
+	inputs[| 1] = nodeValue("Sample", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 8, "Amount of grid subdivision. Higher number means more grid, detail.")
 		.setDisplay(VALUE_DISPLAY.slider, [ 2, 32, 1 ] );
 	
-	inputs[| 2] = nodeValue(2, "Spring force", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.5)
+	inputs[| 2] = nodeValue("Spring force", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.5)
 		.setDisplay(VALUE_DISPLAY.slider, [ 0, 1, 0.01 ] );
 	
-	inputs[| 3] = nodeValue(3, "Mesh", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+	inputs[| 3] = nodeValue("Mesh", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.button, [ function() { setTriangle(); doUpdate(); }, "Generate"] );
 	
-	inputs[| 4] = nodeValue(4, "Diagonal link", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false, "Include diagonal link to prevent drastic grid deformation.");
+	inputs[| 4] = nodeValue("Diagonal link", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false, "Include diagonal link to prevent drastic grid deformation.");
 	
+	inputs[| 5] = nodeValue("Active", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
+		active_index = 5;
+		
 	control_index = ds_list_size(inputs);
 	
 	function createControl() {
 		var index = ds_list_size(inputs);
-		inputs[| index] = nodeValue(index, "Control point", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ PUPPET_FORCE_MODE.move, 16, 16, 8, 0, 8, 8])
+		inputs[| index] = nodeValue("Control point", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ PUPPET_FORCE_MODE.move, 16, 16, 8, 0, 8, 8])
 			.setDisplay(VALUE_DISPLAY.puppet_control)
 		
 		array_push(input_display_list, index);
 		return inputs[| index];
 	}
 	
-	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
-	outputs[| 1] = nodeValue(1, "Mesh data", self, JUNCTION_CONNECT.output, VALUE_TYPE.object, data);
+	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
-	input_display_list = [ 
+	outputs[| 1] = nodeValue("Mesh data", self, JUNCTION_CONNECT.output, VALUE_TYPE.object, data);
+	
+	input_display_list = [ 5, 
 		["Mesh",			false],	0, 1, 2, 4, 3,
 		["Control points",	false], 
 	];
@@ -41,8 +46,8 @@ function Node_Mesh_Warp(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) co
 	input_display_index = array_length(input_display_list);
 	
 	tools = [
-		[ "Add / Remove control point",  THEME.control_edit ],
-		[ "Pin, unpin mesh", [THEME.control_pin, THEME.control_unpin] ]
+		[ "Add / Remove (+ Shift) control point",  THEME.control_add ],
+		[ "Pin / unpin (+ Shift) mesh", THEME.control_pin ]
 	];
 	
 	attributes[? "pin"] = ds_map_create();
@@ -68,10 +73,14 @@ function Node_Mesh_Warp(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) co
 		}
 		
 		var _tool = PANEL_PREVIEW.tool_index;
-		var _sub_tool = PANEL_PREVIEW.tool_sub_index;
 		
 		if(!active) return;
 		if(_tool == 0) {
+			if(key_mod_press(SHIFT))
+				draw_sprite_ui_uniform(THEME.cursor_path_remove, 0, _mx + 16, _my + 16);
+			else
+				draw_sprite_ui_uniform(THEME.cursor_path_add, 0, _mx + 16, _my + 16);
+			
 			if(mouse_press(mb_left)) {
 				if(hover == -1) {
 					var i = createControl();
@@ -81,7 +90,7 @@ function Node_Mesh_Warp(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) co
 					i.drag_sy   = 0;
 					i.drag_mx   = _mx;
 					i.drag_my   = _my;
-				} else {
+				} else if(key_mod_press(SHIFT)) {
 					ds_list_delete(inputs, hover);	
 					array_delete(input_display_list, input_display_index + hover - control_index, 1);
 				}
@@ -90,6 +99,8 @@ function Node_Mesh_Warp(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) co
 				control(input_display_list);
 			}
 		} else if(_tool == 1) {
+			draw_sprite_ui_uniform(key_mod_press(SHIFT)? THEME.cursor_path_remove : THEME.cursor_path_add, 0, _mx + 16, _my + 16);
+			
 			draw_set_color(COLORS._main_accent);
 			var rad = 16;
 			draw_circle(_mx, _my, rad, true);
@@ -101,11 +112,11 @@ function Node_Mesh_Warp(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) co
 					var t = data.tris[| j];
 					
 					if(point_in_circle(t.p0.x, t.p0.y, _xx, _yy, rad / _s))
-						t.p0.setPin(!_sub_tool);
+						t.p0.setPin(!key_mod_press(SHIFT));
 					if(point_in_circle(t.p1.x, t.p1.y, _xx, _yy, rad / _s))
-						t.p1.setPin(!_sub_tool);
+						t.p1.setPin(!key_mod_press(SHIFT));
 					if(point_in_circle(t.p2.x, t.p2.y, _xx, _yy, rad / _s))
-						t.p2.setPin(!_sub_tool);
+						t.p2.setPin(!key_mod_press(SHIFT));
 				}
 			}
 		}
@@ -275,8 +286,8 @@ function Node_Mesh_Warp(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) co
 				var uniform_dim = shader_get_uniform(sh_content_sampler, "dimension");
 				var uniform_sam = shader_get_uniform(sh_content_sampler, "sampler");
 			
-				shader_set_uniform_f_array(uniform_dim, [ww, hh]);
-				shader_set_uniform_f_array(uniform_sam, [gw, gh]);
+				shader_set_uniform_f_array_safe(uniform_dim, [ww, hh]);
+				shader_set_uniform_f_array_safe(uniform_sam, [gw, gh]);
 				draw_surface_safe(surf, 0, 0);
 				shader_reset();
 			surface_reset_target();

@@ -10,26 +10,34 @@ function Node_Blur_Zoom(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) co
 	uniform_umk = shader_get_uniform(shader, "useMask");
 	uniform_msk = shader_get_sampler_index(shader, "mask");
 	
-	inputs[| 0] = nodeValue(0, "Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
+	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 	
-	inputs[| 1] = nodeValue(1, "Strength", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.2);
+	inputs[| 1] = nodeValue("Strength", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.2);
 	
-	inputs[| 2] = nodeValue(2, "Center",   self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ])
+	inputs[| 2] = nodeValue("Center",   self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.vector)
 		.setUnitRef(function(index) { return getDimension(index); });
 		
-	inputs[| 3] = nodeValue(3, "Oversample mode", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0, "How to deal with pixel outside the surface.\n    - Empty: Use empty pixel\n    - Clamp: Repeat edge pixel\n    - Repeat: Repeat texture.")
+	inputs[| 3] = nodeValue("Oversample mode", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0, "How to deal with pixel outside the surface.\n    - Empty: Use empty pixel\n    - Clamp: Repeat edge pixel\n    - Repeat: Repeat texture.")
 		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Empty", "Clamp", "Repeat" ]);
 		
-	inputs[| 4] = nodeValue(4, "Zoom mode", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1)
+	inputs[| 4] = nodeValue("Zoom mode", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1)
 		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Start", "Middle", "End" ]);
 		
-	inputs[| 5] = nodeValue(5, "Mask", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
+	inputs[| 5] = nodeValue("Blur mask", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 	
-	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
+	inputs[| 6] = nodeValue("Mask", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 	
-	input_display_list = [ 
-		["Surface",	false],	0, 3, 
+	inputs[| 7] = nodeValue("Mix", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
+		.setDisplay(VALUE_DISPLAY.slider, [0, 1, 0.01]);
+	
+	inputs[| 8] = nodeValue("Active", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
+		active_index = 8;
+	
+	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
+	
+	input_display_list = [ 8,
+		["Surface",	 true],	0, 3, 6, 7, 
 		["Blur",	false],	1, 2, 4, 5
 	];
 	
@@ -48,16 +56,18 @@ function Node_Blur_Zoom(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) co
 		var _sam = _data[3];
 		var _blr = _data[4];
 		var _msk = _data[5];
+		var _mask = _data[6];
+		var _mix  = _data[7];
 		_cen[0] /= surface_get_width(_outSurf);
 		_cen[1] /= surface_get_height(_outSurf);
 		
 		surface_set_target(_outSurf);
 			draw_clear_alpha(0, 0);
-			BLEND_OVERRIDE
+			BLEND_OVERRIDE;
 		
 			shader_set(shader);
 			shader_set_uniform_f(uniform_str, _str);
-			shader_set_uniform_f_array(uniform_cen, _cen);
+			shader_set_uniform_f_array_safe(uniform_cen, _cen);
 			shader_set_uniform_i(uniform_blr, _blr);
 			shader_set_uniform_i(uniform_sam, _sam);
 			
@@ -68,8 +78,10 @@ function Node_Blur_Zoom(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) co
 			draw_surface_safe(_data[0], 0, 0);
 			shader_reset();
 		
-			BLEND_NORMAL
+			BLEND_NORMAL;
 		surface_reset_target();
+		
+		_outSurf = mask_apply(_data[0], _outSurf, _mask, _mix);
 		
 		return _outSurf;
 	}

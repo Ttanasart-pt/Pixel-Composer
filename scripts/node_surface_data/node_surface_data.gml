@@ -3,16 +3,16 @@ function Node_Surface_data(_x, _y, _group = -1) : Node(_x, _y, _group) construct
 	color	= COLORS.node_blend_number;
 	previewable = false;
 	
-	inputs[| 0] = nodeValue(0, "Surface", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
+	inputs[| 0] = nodeValue("Surface", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 	
-	outputs[| 0] = nodeValue(0, "Dimension", self, JUNCTION_CONNECT.output, VALUE_TYPE.integer, [ 1, 1 ])
+	outputs[| 0] = nodeValue("Dimension", self, JUNCTION_CONNECT.output, VALUE_TYPE.integer, [ 1, 1 ])
 		.setDisplay(VALUE_DISPLAY.vector);
-	outputs[| 1] = nodeValue(1, "Array length", self, JUNCTION_CONNECT.output, VALUE_TYPE.integer, 0);
+	outputs[| 1] = nodeValue("Array length", self, JUNCTION_CONNECT.output, VALUE_TYPE.integer, 0);
 	
 	
 	w = 96;
 	
-	static update = function() {
+	static update = function(frame = ANIMATOR.current_frame) {
 		var _insurf	= inputs[| 0].getValue();
 		if(is_array(_insurf)) {
 			var len = array_length(_insurf);

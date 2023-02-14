@@ -15,17 +15,22 @@ function Node_Display_Text(_x, _y, _group = -1) : Node(_x, _y, _group) construct
 	name_hover = false;
 	draw_scale = 1;
 	
-	inputs[| 0] = nodeValue(0, "Color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white );
+	inputs[| 0] = nodeValue("Color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white )
+		.rejectArray();
 	
-	inputs[| 1] = nodeValue(1, "Text", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "Text");
+	inputs[| 1] = nodeValue("Text", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "Text")
+		.rejectArray();
 	
-	inputs[| 2] = nodeValue(2, "Style", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 2)
+	inputs[| 2] = nodeValue("Style", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 2)
 		.setDisplay(VALUE_DISPLAY.enum_scroll, ["Header", "Sub header", "Normal"])
+		.rejectArray();
 	
-	inputs[| 3] = nodeValue(3, "Alpha", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.75)
+	inputs[| 3] = nodeValue("Alpha", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.75)
 		.setDisplay(VALUE_DISPLAY.slider, [0, 1, 0.01])
+		.rejectArray();
 	
-	inputs[| 4] = nodeValue(4, "Line width", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1000000);
+	inputs[| 4] = nodeValue("Line width", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1000000)
+		.rejectArray();
 	
 	input_display_list = [1, 
 		["Styling", false], 2, 0, 3, 4];
@@ -200,7 +205,7 @@ function Node_Display_Text(_x, _y, _group = -1) : Node(_x, _y, _group) construct
 			array_push(_lines, ss);
 	}
 	
-	static onValueUpdate = function(index) {
+	static onValueUpdate = function(index = 0) {
 		if(index == 1 || index == 4)
 			line_update(inputs[| 1].getValue(), inputs[| 4].getValue());
 	}

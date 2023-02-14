@@ -7,17 +7,30 @@ function Node_Pixel_Sort(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) c
 	uniform_tre = shader_get_uniform(shader, "threshold");
 	uniform_dir = shader_get_uniform(shader, "direction");
 	
-	inputs[| 0] = nodeValue(0, "Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
+	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 	
-	inputs[| 1] = nodeValue(1, "Iteration", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 2);
+	inputs[| 1] = nodeValue("Iteration", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 2);
 	
-	inputs[| 2] = nodeValue(2, "Threshold", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.1)
+	inputs[| 2] = nodeValue("Threshold", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.1)
 		.setDisplay(VALUE_DISPLAY.slider, [0, 1, 0.01]);
 	
-	inputs[| 3] = nodeValue(3, "Direction", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+	inputs[| 3] = nodeValue("Direction", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.rotation, 90);
 	
-	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
+	inputs[| 4] = nodeValue("Mask", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
+	
+	inputs[| 5] = nodeValue("Mix", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
+		.setDisplay(VALUE_DISPLAY.slider, [0, 1, 0.01]);
+	
+	inputs[| 6] = nodeValue("Active", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
+		active_index = 6;
+	
+	input_display_list = [ 6, 
+		["Surface",		 true], 0, 4, 5, 
+		["Pixel sort",	false], 1, 2, 3, 
+	]
+	
+	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	static process_data = function(_outSurf, _data, _output_index, _array_index) {
 		var _in = _data[0];
@@ -31,14 +44,14 @@ function Node_Pixel_Sort(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) c
 		var sw = surface_get_width(_outSurf);
 		var sh = surface_get_height(_outSurf);
 		
-		var pp = [ surface_create(sw, sh), surface_create(sw, sh) ];
+		var pp = [ surface_create_valid(sw, sh), surface_create_valid(sw, sh) ];
 		var sBase, sDraw;
 		
 		surface_set_target(pp[1]);
 			draw_clear_alpha(0, 0);
-			BLEND_OVERRIDE
+			BLEND_OVERRIDE;
 			draw_surface_safe(_in, 0, 0);
-			BLEND_NORMAL
+			BLEND_NORMAL;
 		surface_reset_target();
 		
 		shader_set(shader);
@@ -53,23 +66,25 @@ function Node_Pixel_Sort(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) c
 			
 			surface_set_target(sBase);
 			draw_clear_alpha(0, 0);
-			BLEND_OVERRIDE
+			BLEND_OVERRIDE;
 				shader_set_uniform_f(uniform_itr, i);
 				draw_surface_safe(sDraw, 0, 0);
-			BLEND_NORMAL
+			BLEND_NORMAL;
 			surface_reset_target();
 		}
 		
 		shader_reset();
 		
 		surface_set_target(_outSurf);
-			BLEND_OVERRIDE
+			BLEND_OVERRIDE;
 			draw_surface_safe(sBase, 0, 0);
-			BLEND_NORMAL
+			BLEND_NORMAL;
 		surface_reset_target();
 		
 		surface_free(pp[0]);
 		surface_free(pp[1]); 
+		
+		_outSurf = mask_apply(_data[0], _outSurf, _data[4], _data[5]);
 		
 		return _outSurf;
 	}

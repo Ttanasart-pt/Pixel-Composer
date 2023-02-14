@@ -5,31 +5,37 @@ function Node_Condition(_x, _y, _group = -1) : Node(_x, _y, _group) constructor 
 	w = 96;
 	
 	
-	inputs[| 0] = nodeValue( 0, "Check value", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0 )
+	inputs[| 0] = nodeValue("Check value", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0 )
 		.setVisible(true, true);
 		
-	inputs[| 1] = nodeValue( 1, "Condition", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0 )
-		.setDisplay(VALUE_DISPLAY.enum_scroll, ["Equal", "Not equal", "Less", "Less or equal", "Greater", "Greater or equal"]);
-	inputs[| 2] = nodeValue( 2, "Compare to", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0 );
+	inputs[| 1] = nodeValue("Condition", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0 )
+		.setDisplay(VALUE_DISPLAY.enum_scroll, ["Equal", "Not equal", "Less", "Less or equal", "Greater", "Greater or equal"])
+		.rejectArray();
+		
+	inputs[| 2] = nodeValue("Compare to", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0 )
+		.rejectArray();
 	
-	inputs[| 3] = nodeValue( 3, "True", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, -1 )
+	inputs[| 3] = nodeValue("True", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, -1 )
 		.setVisible(true, true);
-	inputs[| 4] = nodeValue( 4, "False", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, -1 )
+		
+	inputs[| 4] = nodeValue("False", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, -1 )
 		.setVisible(true, true);
 	
-	inputs[| 5] = nodeValue( 5, "Eval mode", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0 )
-		.setDisplay(VALUE_DISPLAY.enum_scroll, ["Boolean", "Comparison"]);
+	inputs[| 5] = nodeValue("Eval mode", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0 )
+		.setDisplay(VALUE_DISPLAY.enum_scroll, ["Boolean", "Comparison"])
+		.rejectArray();
 	
-	inputs[| 6] = nodeValue( 6, "Boolean", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false )
-		.setVisible(true, true);
+	inputs[| 6] = nodeValue("Boolean", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false )
+		.setVisible(true, true)
+		.rejectArray();
 	
 	input_display_list = [ 5,
 		["Condition", false], 0, 1, 2, 6,
 		["Result",	  true], 3, 4
 	]
 	
-	outputs[| 0] = nodeValue(0, "Result", self, JUNCTION_CONNECT.output, VALUE_TYPE.any, []);
-	outputs[| 1] = nodeValue(1, "Bool", self, JUNCTION_CONNECT.output, VALUE_TYPE.boolean, false);
+	outputs[| 0] = nodeValue("Result", self, JUNCTION_CONNECT.output, VALUE_TYPE.any, []);
+	outputs[| 1] = nodeValue("Bool", self, JUNCTION_CONNECT.output, VALUE_TYPE.boolean, false);
 	
 	static step = function() {
 		var _mode = inputs[| 5].getValue();
@@ -40,7 +46,7 @@ function Node_Condition(_x, _y, _group = -1) : Node(_x, _y, _group) constructor 
 		inputs[| 6].setVisible(!_mode);
 	}
 	
-	static update = function() {
+	static update = function(frame = ANIMATOR.current_frame) {
 		var _true = inputs[| 3].getValue();
 		var _fals = inputs[| 4].getValue();
 		

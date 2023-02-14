@@ -1,40 +1,40 @@
 function Node_Line(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constructor {	
 	name = "Line";
 	
-	inputs[| 0] = nodeValue(0, "Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, def_surf_size2 )
+	inputs[| 0] = nodeValue("Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, def_surf_size2 )
 		.setDisplay(VALUE_DISPLAY.vector);
 	
-	inputs[| 1] = nodeValue(1, "Backgroud", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	inputs[| 1] = nodeValue("Backgroud", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
 	
-	inputs[| 2] = nodeValue(2, "Segment", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1)
+	inputs[| 2] = nodeValue("Segment", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1)
 		.setDisplay(VALUE_DISPLAY.slider, [1, 32, 1]);
 	
-	inputs[| 3] = nodeValue(3, "Width", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 2, 2 ])
+	inputs[| 3] = nodeValue("Width", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 2, 2 ])
 		.setDisplay(VALUE_DISPLAY.vector);
 	
-	inputs[| 4] = nodeValue(4, "Wiggle", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
+	inputs[| 4] = nodeValue("Wiggle", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
 		.setDisplay(VALUE_DISPLAY.slider, [0, 16, 0.01]);
 	
-	inputs[| 5] = nodeValue(5, "Random seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0);
+	inputs[| 5] = nodeValue("Random seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0);
 	
-	inputs[| 6] = nodeValue(6, "Rotation", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+	inputs[| 6] = nodeValue("Rotation", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.rotation);
 	
-	inputs[| 7] = nodeValue(7, "Path", self, JUNCTION_CONNECT.input, VALUE_TYPE.object, 0, "Draw line along path.")
+	inputs[| 7] = nodeValue("Path", self, JUNCTION_CONNECT.input, VALUE_TYPE.pathnode, 0, "Draw line along path.")
 		.setVisible(true, true);
 	
-	inputs[| 8] = nodeValue(8, "Range", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [0, 1], "Range of the path to draw.")
+	inputs[| 8] = nodeValue("Range", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [0, 1], "Range of the path to draw.")
 		.setDisplay(VALUE_DISPLAY.slider_range, [0, 1, 0.01]);
 	
-	inputs[| 9] = nodeValue(9, "Shift", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
+	inputs[| 9] = nodeValue("Shift", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
 		.setDisplay(VALUE_DISPLAY._default, 1 / 64);
 	
-	inputs[| 10] = nodeValue(10, "Color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white)
+	inputs[| 10] = nodeValue("Color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, [ new gradientKey(0, c_white) ] )
 		.setDisplay(VALUE_DISPLAY.gradient);
 	
-	inputs[| 11] = nodeValue(11, "Width over length", self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_11);
+	inputs[| 11] = nodeValue("Width over length", self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_11);
 	
-	inputs[| 12] = nodeValue(12, "Span width over path", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false, "Apply the full 'width over length' to the trimmed path.");
+	inputs[| 12] = nodeValue("Span width over path", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false, "Apply the full 'width over length' to the trimmed path.");
 		
 	input_display_list = [
 		["Output",			true],	0, 1, 
@@ -44,7 +44,7 @@ function Node_Line(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constru
 		["Render",			false], 10 
 	];
 	
-	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
+	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	static process_data = function(_outSurf, _data, _output_index, _array_index) {
 		var _dim   = _data[0];
@@ -66,7 +66,7 @@ function Node_Line(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constru
 		var _rtStr = min(_ratio[0], _ratio[1]);
 		var _rtLen = max(_ratio[0], _ratio[1]) - _rtStr;
 		
-		var _use_path = _pat != 0 && instanceof(_pat) == "Node_Path";
+		var _use_path = _pat != noone && struct_has(_pat, "getPointRatio");
 		if(_ang < 0) _ang = 360 + _ang;
 		
 		inputs[| 6].setVisible(!_use_path);
@@ -109,7 +109,7 @@ function Node_Line(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constru
 					}
 					
 					_nw = random_range(_wid[0], _wid[1]);
-					_nw *= eval_curve_bezier_cubic_x(_widc, _widap? _prog_curr / _rtLen : _prog_curr);
+					_nw *= eval_curve_x(_widc, _widap? _prog_curr / _rtLen : _prog_curr);
 					
 					if(_total <= _prog_curr - _prog) {
 						_na = point_direction(_ox, _oy, _nx, _ny) + 90;
@@ -170,7 +170,7 @@ function Node_Line(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constru
 					_sedIndex++;
 				
 					_nw = random_range(_wid[0], _wid[1]);
-					_nw *= eval_curve_bezier_cubic_x(_widc, _prog_curr);
+					_nw *= eval_curve_x(_widc, _prog_curr);
 					
 					if(_prog_curr > _prog) {
 						draw_set_color(gradient_eval(_color, _prog_eli / _rtLen, ds_list_get(_col_data, 0)));

@@ -12,20 +12,20 @@ function Node_Camera(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) const
 	uni_sam_mod = shader_get_uniform(shader, "sampleMode");
 	uni_blur    = shader_get_uniform(shader, "blur");
 	
-	inputs[| 0] = nodeValue(0, "Background", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
-	inputs[| 1] = nodeValue(1, "Focus area", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 16, 16, 4, 4, AREA_SHAPE.rectangle ])
+	inputs[| 0] = nodeValue("Background", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
+	inputs[| 1] = nodeValue("Focus area", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 16, 16, 4, 4, AREA_SHAPE.rectangle ])
 		.setDisplay(VALUE_DISPLAY.area, function() { return getDimension(0); });
 	
-	inputs[| 2] = nodeValue(2, "Zoom", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
+	inputs[| 2] = nodeValue("Zoom", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
 		.setDisplay(VALUE_DISPLAY.slider, [ 0.01, 4, 0.01 ]);
 	
-	inputs[| 3] = nodeValue(3, "Oversample mode", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0, "How to deal with pixel outside the surface.\n    - Empty: Use empty pixel\n    - Clamp: Repeat edge pixel\n    - Repeat: Repeat texture.")
+	inputs[| 3] = nodeValue("Oversample mode", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0, "How to deal with pixel outside the surface.\n    - Empty: Use empty pixel\n    - Clamp: Repeat edge pixel\n    - Repeat: Repeat texture.")
 		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Empty", "Clamp", "Repeat" ]);
 	
-	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
+	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [
-		["Surface",	 false], 0, 3,
+		["Surface",	  true], 0, 3,
 		["Camera",	 false], 1, 2,
 		["Elements",  true], 
 	];
@@ -38,9 +38,9 @@ function Node_Camera(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) const
 		var index = ds_list_size(inputs);
 		var _s    = floor((index - input_fix_len) / data_length);
 		
-		inputs[| index + 0] = nodeValue( index + 0, "Element " + string(_s), self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
+		inputs[| index + 0] = nodeValue("Element " + string(_s), self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 		
-		inputs[| index + 1] = nodeValue( index + 1, "Parallax " + string(_s), self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 0 ] )
+		inputs[| index + 1] = nodeValue("Parallax " + string(_s), self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 0 ] )
 			.setDisplay(VALUE_DISPLAY.vector)
 			.setUnitRef(function(index) { return getDimension(index); });
 		
@@ -111,6 +111,7 @@ function Node_Camera(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) const
 	}
 	
 	static process_data = function(_outSurf, _data, _output_index, _array_index) {
+		if(!is_surface(_data[0])) return;
 		var _area = _data[1];
 		var _zoom = _data[2];
 		var _samp = _data[3];
@@ -118,14 +119,14 @@ function Node_Camera(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) const
 		var _dw = round(surface_valid_size(_area[2]) * 2);
 		var _dh = round(surface_valid_size(_area[3]) * 2);
 		_outSurf = surface_verify(_outSurf, _dw, _dh);
-		var pingpong = [ surface_create(_dw, _dh), surface_create(_dw, _dh) ];
+		var pingpong = [ surface_create_valid(_dw, _dh), surface_create_valid(_dw, _dh) ];
 		var ppInd = 0;
 		
 		surface_set_target(pingpong[0]);
 		draw_clear_alpha(0, 0);
-		BLEND_OVERRIDE
+		BLEND_OVERRIDE;
 		draw_surface(_data[0], 0, 0);
-		BLEND_NORMAL
+		BLEND_NORMAL;
 		surface_reset_target();
 		
 		surface_set_target(pingpong[1]);
@@ -169,9 +170,9 @@ function Node_Camera(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) const
 		
 		surface_set_target(_outSurf);
 		draw_clear_alpha(0, 0);
-		BLEND_OVERRIDE
+		BLEND_OVERRIDE;
 		draw_surface(pingpong[ppInd], 0, 0);
-		BLEND_NORMAL
+		BLEND_NORMAL;
 		surface_reset_target();
 		
 		surface_free(pingpong[0]);

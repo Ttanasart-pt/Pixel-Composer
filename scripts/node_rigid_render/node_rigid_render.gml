@@ -1,18 +1,20 @@
 function Node_Rigid_Render(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 	name = "Render";
+	color = COLORS.node_blend_simulation;
 	icon  = THEME.rigidSim;
 	
-	inputs[| 0] = nodeValue(0, "Render dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, def_surf_size2)
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 0] = nodeValue("Render dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, def_surf_size2)
+		.setDisplay(VALUE_DISPLAY.vector)
+		.rejectArray();
 	
-	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
+	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	data_length = 1;
 	input_fix_len = ds_list_size(inputs);
 	
 	static createNewInput = function() {
 		var index = ds_list_size(inputs);
-		inputs[| index] = nodeValue( index, "Object", self, JUNCTION_CONNECT.input, VALUE_TYPE.object, noone )
+		inputs[| index] = nodeValue("Object", self, JUNCTION_CONNECT.input, VALUE_TYPE.rigid, noone )
 			.setVisible(true, true);
 	}
 	if(!LOADING && !APPENDING) createNewInput();
@@ -42,7 +44,7 @@ function Node_Rigid_Render(_x, _y, _group = -1) : Node(_x, _y, _group) construct
 		refreshDynamicInput();
 	}
 	
-	static update = function() {
+	static update = function(frame = ANIMATOR.current_frame) {
 		var _dim = inputs[| 0].getValue();
 		var _outSurf = outputs[| 0].getValue();
 		
@@ -67,7 +69,15 @@ function Node_Rigid_Render(_x, _y, _group = -1) : Node(_x, _y, _group) construct
 					if(_o == noone || !instance_exists(_o)) continue;
 					if(is_undefined(_o.phy_active)) continue;
 					
-					draw_surface_ext_safe(_o.surface, _o.phy_position_x, _o.phy_position_y, _o.image_xscale, _o.image_yscale, _o.image_angle);
+					var ixs = max(0, _o.image_xscale);
+					var iys = max(0, _o.image_yscale);
+					var xs = max(0, _o.xscale);
+					var ys = max(0, _o.yscale);
+					
+					var xx = lerp(_o.phy_com_x, _o.phy_position_x, xs);
+					var yy = lerp(_o.phy_com_y, _o.phy_position_y, ys);
+					
+					draw_surface_ext_safe(_o.surface, xx, yy, ixs * xs, iys * ys, _o.image_angle, _o.image_blend, _o.image_alpha);
 				}
 			}
 		}

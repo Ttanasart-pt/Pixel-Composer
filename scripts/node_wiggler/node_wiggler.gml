@@ -5,19 +5,18 @@ function Node_Wiggler(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) cons
 	
 	w = 96;
 	
-	
-	inputs[| 0] = nodeValue(0, "Range", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [0, 1])
+	inputs[| 0] = nodeValue("Range", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [0, 1])
 		.setDisplay(VALUE_DISPLAY.vector);
 	
-	inputs[| 1] = nodeValue(1, "Frequency", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 4 )
+	inputs[| 1] = nodeValue("Frequency", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 4 )
 		.setDisplay(VALUE_DISPLAY.slider, [1, 32, 1]);
 	
-	inputs[| 2] = nodeValue(2, "Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, irandom(9999999) );
+	inputs[| 2] = nodeValue("Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, irandom(9999999) );
 	
-	inputs[| 3] = nodeValue(3, "Display", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1 )
+	inputs[| 3] = nodeValue("Display", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1 )
 		.setDisplay(VALUE_DISPLAY.enum_scroll, ["Number", "Graph"])
 	
-	outputs[| 0] = nodeValue(0, "Output", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, 0);
+	outputs[| 0] = nodeValue("Output", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, 0);
 	
 	input_display_list = [
 		["Display",	true],	3,
@@ -26,31 +25,30 @@ function Node_Wiggler(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) cons
 	
 	random_value = array_create(64, 0);
 	
-	static onValueUpdate = function(index) {
-		var ran = inputs[| 0].getValue();
-		var fre = inputs[| 1].getValue();
-		var sed = inputs[| 2].getValue();
+	static onValueUpdate = function(index = 0) {
+		var ran = getSingleValue(0);
+		var fre = getSingleValue(1);
+		var sed = getSingleValue(2);
 		
 		var step = ANIMATOR.frames_total / 64;
-		for( var i = 0; i < 64; i++ ) {
+		for( var i = 0; i < 64; i++ )
 			random_value[i] = getWiggle(ran[0], ran[1], ANIMATOR.frames_total / fre, step * i, sed, 0, ANIMATOR.frames_total);
-		}
 	}
 	
-	function process_data(_output, _data, index = 0) { 
-		var ran = inputs[| 0].getValue();
-		var fre = inputs[| 1].getValue();
-		var sed = inputs[| 2].getValue();
+	function process_data(_output, _data, _output_index, _array_index = 0) {  
+		var ran = _data[0];
+		var fre = _data[1];
+		var sed = _data[2];
 		var time = ANIMATOR.current_frame;
 		
 		return getWiggle(ran[0], ran[1], ANIMATOR.frames_total / fre, time, sed, 0, ANIMATOR.frames_total);
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s) {
-		var ran  = inputs[| 0].getValue();
-		var fre  = inputs[| 1].getValue();
-		var sed  = inputs[| 2].getValue();
-		var disp = inputs[| 3].getValue();
+		var ran  = current_data[0];
+		var fre  = current_data[1];
+		var sed  = current_data[2];
+		var disp = current_data[3];
 		var time = ANIMATOR.current_frame;
 		var total_time = ANIMATOR.frames_total;
 		

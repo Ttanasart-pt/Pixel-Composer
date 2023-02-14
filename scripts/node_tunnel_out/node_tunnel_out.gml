@@ -5,9 +5,10 @@ function Node_Tunnel_Out(_x, _y, _group = -1) : Node(_x, _y, _group) constructor
 	
 	w = 96;
 	
-	inputs[| 0] = nodeValue( 0, "Name", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "" );
+	inputs[| 0] = nodeValue("Name", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "" )
+		.rejectArray();
 	
-	outputs[| 0] = nodeValue( 0, "Value out", self, JUNCTION_CONNECT.output, VALUE_TYPE.any, noone );
+	outputs[| 0] = nodeValue("Value out", self, JUNCTION_CONNECT.output, VALUE_TYPE.any, noone );
 	
 	static isRenderable = function(trigger = false) { return false; }
 	
@@ -22,6 +23,8 @@ function Node_Tunnel_Out(_x, _y, _group = -1) : Node(_x, _y, _group) constructor
 		if(!ds_map_exists(TUNNELS_IN, _key)) return;
 		
 		var node = TUNNELS_IN[? _key].node;
+		if(node.group != group) return;
+		
 		draw_set_color(COLORS.node_blend_tunnel);
 		draw_set_alpha(0.35);
 		draw_line_width(xx + w * _s / 2, yy + h * _s / 2, _x + (node.x + node.w / 2) * _s, _y + (node.y + node.h / 2) * _s, 6 * _s);
@@ -47,7 +50,7 @@ function Node_Tunnel_Out(_x, _y, _group = -1) : Node(_x, _y, _group) constructor
 		}
 	}
 	
-	static update = function() {
+	static update = function(frame = ANIMATOR.current_frame) {
 		var _key = inputs[| 0].getValue();
 		
 		if(ds_map_exists(TUNNELS_IN, _key))
@@ -62,4 +65,6 @@ function Node_Tunnel_Out(_x, _y, _group = -1) : Node(_x, _y, _group) constructor
 		var ss	= string_scale(str, bbox.w, bbox.h);
 		draw_text_transformed(bbox.xc, bbox.yc, str, ss, ss, 0);
 	}
+	
+	static postConnect = function() { onValueUpdate(); }
 }

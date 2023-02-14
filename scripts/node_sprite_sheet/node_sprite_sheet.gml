@@ -13,22 +13,27 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = -1) : Node(_x, _y, _group) co
 	name		= "Render Spritesheet";
 	anim_drawn	= array_create(ANIMATOR.frames_total + 1, false);
 	
-	inputs[| 0] = nodeValue(0, "Sprites", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, PIXEL_SURFACE);
+	inputs[| 0] = nodeValue("Sprites", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
 	
-	inputs[| 1] = nodeValue(1, "Sprite set", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Animation", "Sprite array" ]);
+	inputs[| 1] = nodeValue("Sprite set", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Animation", "Sprite array" ])
+		.rejectArray();
 	
-	inputs[| 2] = nodeValue(2, "Frame step", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1, "Number of frames until next sprite. Can be seen as (Step - 1) frame skip.");
+	inputs[| 2] = nodeValue("Frame step", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1, "Number of frames until next sprite. Can be seen as (Step - 1) frame skip.")
+		.rejectArray();
 	
-	inputs[| 3] = nodeValue(3, "Packing type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Horizontal", "Vertical", "Grid" ]);
+	inputs[| 3] = nodeValue("Packing type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Horizontal", "Vertical", "Grid" ])
+		.rejectArray();
 	
-	inputs[| 4] = nodeValue(4, "Grid column", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 4);
+	inputs[| 4] = nodeValue("Grid column", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 4)
+		.rejectArray();
 	
-	inputs[| 5] = nodeValue(5, "Alignment", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_button, [ "First", "Middle", "Last" ]);
+	inputs[| 5] = nodeValue("Alignment", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+		.setDisplay(VALUE_DISPLAY.enum_button, [ "First", "Middle", "Last" ])
+		.rejectArray();
 	
-	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
+	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	static step = function() {
 		var grup = inputs[| 1].getValue();
@@ -38,7 +43,7 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = -1) : Node(_x, _y, _group) co
 		inputs[| 4].setVisible(pack == SPRITE_STACK.grid);
 	}
 	
-	static update = function() {
+	static update = function(frame = ANIMATOR.current_frame) {
 		var inpt = inputs[| 0].getValue();
 		var grup = inputs[| 1].getValue();
 		var skip = inputs[| 2].getValue();
@@ -48,7 +53,10 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = -1) : Node(_x, _y, _group) co
 		
 		var oupt = outputs[| 0].getValue();
 		
-		if(grup != SPRITE_ANIM_GROUP.animation) return;
+		if(grup != SPRITE_ANIM_GROUP.animation) {
+			onInspectorUpdate();
+			return;
+		}
 		if(safe_mod(ANIMATOR.current_frame, skip) != 0) return;
 		
 		if(array_length(anim_drawn) != ANIMATOR.frames_total)
@@ -73,6 +81,7 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = -1) : Node(_x, _y, _group) co
 			var oo = noone;
 			if(!is_array(oupt))		oo = oupt;
 			else					oo = oupt[i];
+			if(!is_surface(oo)) break;
 			
 			var ww = surface_get_width(oo);
 			var hh = surface_get_height(oo);
@@ -80,13 +89,13 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = -1) : Node(_x, _y, _group) co
 			var _w = surface_get_width(inpt[i]);
 			var _h = surface_get_height(inpt[i]);
 			
-			var frame = floor(ANIMATOR.current_frame / skip);
+			var _frame = floor(ANIMATOR.current_frame / skip);
 			surface_set_target(oo);
-			BLEND_OVERRIDE
+			BLEND_OVERRIDE;
 			
 			switch(pack) {
 				case SPRITE_STACK.horizontal :
-					var px = frame * _w;
+					var px = _frame * _w;
 					switch(alig) {
 						case 0 :
 							draw_surface_safe(inpt[i], px, py);
@@ -100,7 +109,7 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = -1) : Node(_x, _y, _group) co
 					}
 					break;
 				case SPRITE_STACK.vertical :
-					var py = frame * _h;
+					var py = _frame * _h;
 					switch(alig) {
 						case 0 :
 							draw_surface_safe(inpt[i], px, py);
@@ -115,8 +124,8 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = -1) : Node(_x, _y, _group) co
 					break;
 				case SPRITE_STACK.grid :
 					var col  = inputs[| 4].getValue();
-					var _row = floor(frame / col);
-					var _col = safe_mod(frame, col);
+					var _row = floor(_frame / col);
+					var _col = safe_mod(_frame, col);
 					
 					px = _col * _w;
 					py = _row * _h;
@@ -126,17 +135,28 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = -1) : Node(_x, _y, _group) co
 			}
 			drawn = true;
 			
-			BLEND_NORMAL
+			BLEND_NORMAL;
 			surface_reset_target();
 		}
 		
-		if(drawn) {
+		if(drawn)
 			anim_drawn[ANIMATOR.current_frame] = true;
-			//print(string(ANIMATOR.current_frame) + ": " + string(drawn));
+	}
+	
+	static onInspectorUpdate = function() {
+		var key = ds_map_find_first(NODE_MAP);
+		repeat(ds_map_size(NODE_MAP)) {
+			var node = NODE_MAP[? key];
+			key = ds_map_find_next(NODE_MAP, key);
+			
+			if(!node.active) continue;
+			if(instanceof(node) != "Node_Render_Sprite_Sheet") continue;
+			
+			node.initRender();
 		}
 	}
 	
-	static inspectorUpdate = function() {
+	static initRender = function() {
 		for(var i = 0; i < array_length(anim_drawn); i++) anim_drawn[i] = false;
 		
 		var inpt = inputs[| 0].getValue();
@@ -238,7 +258,7 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = -1) : Node(_x, _y, _group) co
 				surface_set_target(_surf);
 				draw_clear_alpha(0, 0);
 				
-				BLEND_OVERRIDE
+				BLEND_OVERRIDE;
 				switch(pack) {
 					case SPRITE_STACK.horizontal :
 						var px = 0;
@@ -314,7 +334,7 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = -1) : Node(_x, _y, _group) co
 						}
 						break;
 					}
-					BLEND_NORMAL
+					BLEND_NORMAL;
 				surface_reset_target();
 				outputs[| 0].setValue(_surf);
 			} else

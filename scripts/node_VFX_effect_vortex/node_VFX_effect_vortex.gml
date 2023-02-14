@@ -4,9 +4,9 @@ function Node_VFX_Vortex(_x, _y, _group = -1) : Node_VFX_effector(_x, _y, _group
 	
 	inputs[| 4].setVisible(false, false);
 	
-	inputs[| 8] = nodeValue(8, "Attraction force", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 2 );
+	inputs[| 8] = nodeValue("Attraction force", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 2 );
 	
-	inputs[| 9] = nodeValue(9, "Clockwise", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true );
+	inputs[| 9] = nodeValue("Clockwise", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true );
 		
 	array_push(input_display_list, 8, 9);
 	

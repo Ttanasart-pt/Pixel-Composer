@@ -30,14 +30,16 @@ function Node_CSV_File_Read(_x, _y, _group = -1) : Node(_x, _y, _group) construc
 	w = 128;
 	
 	
-	inputs[| 0]  = nodeValue(0, "Path", self, JUNCTION_CONNECT.input, VALUE_TYPE.path, "")
-		.setDisplay(VALUE_DISPLAY.path_load, ["*.csv", ""]);
+	inputs[| 0]  = nodeValue("Path", self, JUNCTION_CONNECT.input, VALUE_TYPE.path, "")
+		.setDisplay(VALUE_DISPLAY.path_load, ["*.csv", ""])
+		.rejectArray();
 		
-	inputs[| 1]  = nodeValue(1, "Convert to number", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	inputs[| 1]  = nodeValue("Convert to number", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false)
+		.rejectArray();
 	
-	outputs[| 0] = nodeValue(0, "Content", self, JUNCTION_CONNECT.output, VALUE_TYPE.text, "");
+	outputs[| 0] = nodeValue("Content", self, JUNCTION_CONNECT.output, VALUE_TYPE.text, "");
 	
-	outputs[| 1] = nodeValue(1, "Path", self, JUNCTION_CONNECT.output, VALUE_TYPE.path, "")
+	outputs[| 1] = nodeValue("Path", self, JUNCTION_CONNECT.output, VALUE_TYPE.path, "")
 		.setVisible(true, true);
 	
 	content = "";
@@ -58,7 +60,7 @@ function Node_CSV_File_Read(_x, _y, _group = -1) : Node(_x, _y, _group) construc
 		path = try_get_path(path);
 		if(path == -1) return false;
 		
-		var ext = filename_ext(path);
+		var ext = string_lower(filename_ext(path));
 		var _name = string_replace(filename_name(path), filename_ext(path), "");
 		
 		if(ext != ".csv") return false;
@@ -89,14 +91,14 @@ function Node_CSV_File_Read(_x, _y, _group = -1) : Node(_x, _y, _group) construc
 		return true;
 	}
 	
-	static inspectorUpdate = function() {
+	static onInspectorUpdate = function() {
 		var path = inputs[| 0].getValue();
 		if(path == "") return;
 		updatePaths(path);
 		update();
 	}
 	
-	static update = function() {
+	static update = function(frame = ANIMATOR.current_frame) {
 		var path = inputs[| 0].getValue();
 		if(path == "") return;
 		if(path_current != path) updatePaths(path);

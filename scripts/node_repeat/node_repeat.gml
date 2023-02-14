@@ -1,86 +1,86 @@
 function Node_Repeat(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 	name = "Repeat";
 	
-	inputs[| 0] = nodeValue(0, "Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, PIXEL_SURFACE );
+	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone );
 	
-	inputs[| 1] = nodeValue(1, "Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, def_surf_size2)
+	inputs[| 1] = nodeValue("Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, def_surf_size2)
 		.setDisplay(VALUE_DISPLAY.vector);
 	
-	inputs[| 2] = nodeValue(2, "Amount", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 2);
+	inputs[| 2] = nodeValue("Amount", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 2);
 	
-	inputs[| 3] = nodeValue(3, "Pattern", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+	inputs[| 3] = nodeValue("Pattern", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Linear", "Grid", "Circular" ]);
 	
-	inputs[| 4] = nodeValue(4, "Repeat position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [def_surf_size / 2, 0])
+	inputs[| 4] = nodeValue("Repeat position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [def_surf_size / 2, 0])
 		.setDisplay(VALUE_DISPLAY.vector)
 		.setUnitRef(function() { return getDimension(); });
 	
-	inputs[| 5] = nodeValue(5, "Repeat rotation", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [0, 0])
+	inputs[| 5] = nodeValue("Repeat rotation", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [0, 0])
 		.setDisplay(VALUE_DISPLAY.rotation_range);
 	
-	inputs[| 6] = nodeValue(6, "Scale multiply", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1);
+	inputs[| 6] = nodeValue("Scale multiply", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1);
 	
-	inputs[| 7] = nodeValue(7, "Angle range", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [0, 360])
+	inputs[| 7] = nodeValue("Angle range", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [0, 360])
 		.setDisplay(VALUE_DISPLAY.rotation_range);
 	
-	inputs[| 8] = nodeValue(8, "Radius", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1);
+	inputs[| 8] = nodeValue("Radius", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1);
 		
-	inputs[| 9] = nodeValue(9, "Start position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [0, 0])
+	inputs[| 9] = nodeValue("Start position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [0, 0])
 		.setDisplay(VALUE_DISPLAY.vector)
 		.setUnitRef(function(index) { return inputs[| 1].getValue(); });
 		
-	inputs[| 10] = nodeValue(10, "Scale over copy", self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_11 );
+	inputs[| 10] = nodeValue("Scale over copy", self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_11 );
 	
-	inputs[| 11] = nodeValue(11, "Path", self, JUNCTION_CONNECT.input, VALUE_TYPE.object, noone, "Make each copy follow along path." )
+	inputs[| 11] = nodeValue("Path", self, JUNCTION_CONNECT.input, VALUE_TYPE.pathnode, noone, "Make each copy follow along path." )
 		.setVisible(true, true);
 	
-	inputs[| 12] = nodeValue(12, "Path range", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [0, 1], "Range of the path to follow.")
+	inputs[| 12] = nodeValue("Path range", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [0, 1], "Range of the path to follow.")
 		.setDisplay(VALUE_DISPLAY.slider_range, [0, 1, 0.01]);
 	
-	inputs[| 13] = nodeValue(13, "Path shift", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0);
+	inputs[| 13] = nodeValue("Path shift", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0);
 	
-	inputs[| 14] = nodeValue(14, "Color over copy", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white)
+	inputs[| 14] = nodeValue("Color over copy", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, [ new gradientKey(0, c_white) ] )
 		.setDisplay(VALUE_DISPLAY.gradient);
 		
-	inputs[| 15] = nodeValue(15, "Alpha over copy", self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_11 );
+	inputs[| 15] = nodeValue("Alpha over copy", self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_11 );
 	
-	inputs[| 16] = nodeValue(16, "Array select", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0, "Whether to select image from an array in order, or at random." )
+	inputs[| 16] = nodeValue("Array select", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0, "Whether to select image from an array in order, or at random." )
 		.setDisplay(VALUE_DISPLAY.enum_button, [ "Order", "Random" ]);
 	
-	inputs[| 17] = nodeValue(17, "Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, irandom(99999) );
+	inputs[| 17] = nodeValue("Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, irandom(99999) );
 	
-	inputs[| 18] = nodeValue(18, "Column", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 4);
+	inputs[| 18] = nodeValue("Column", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 4);
 	
-	inputs[| 19] = nodeValue(19, "Column shift", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [0, def_surf_size / 2])
+	inputs[| 19] = nodeValue("Column shift", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [0, def_surf_size / 2])
 		.setDisplay(VALUE_DISPLAY.vector)
 		.setUnitRef(function() { return getDimension(); });
 	
-	inputs[| 20] = nodeValue(20, "Animator midpoint", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.5)
+	inputs[| 20] = nodeValue("Animator midpoint", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.5)
 		.setDisplay(VALUE_DISPLAY.slider, [-1, 2, 0.01]);
 	
-	inputs[| 21] = nodeValue(21, "Animator range", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.1)
+	inputs[| 21] = nodeValue("Animator range", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.1)
 		.setDisplay(VALUE_DISPLAY.slider, [0, 1, 0.01]);
 	
-	inputs[| 22] = nodeValue(22, "Animator position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ])
+	inputs[| 22] = nodeValue("Animator position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.vector);
 	
-	inputs[| 23] = nodeValue(23, "Animator rotation", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+	inputs[| 23] = nodeValue("Animator rotation", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.rotation);
 		
-	inputs[| 24] = nodeValue(24, "Animator scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ])
+	inputs[| 24] = nodeValue("Animator scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.vector);
 		
-	inputs[| 25] = nodeValue(25, "Animator falloff", self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_10);
+	inputs[| 25] = nodeValue("Animator falloff", self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_10);
 	 
-	inputs[| 26] = nodeValue(26, "Stack", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0, "Place each copy next to each other, taking surface dimension into account.")
+	inputs[| 26] = nodeValue("Stack", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0, "Place each copy next to each other, taking surface dimension into account.")
 		.setDisplay(VALUE_DISPLAY.enum_button, [ "None", "X", "Y" ]);
 	
-	inputs[| 27] = nodeValue(27, "Animator blend", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white);
+	inputs[| 27] = nodeValue("Animator blend", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white);
 	
-	inputs[| 28] = nodeValue(28, "Animator alpha", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
+	inputs[| 28] = nodeValue("Animator alpha", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
 		.setDisplay(VALUE_DISPLAY.slider, [0, 1, 0.01]);
 		
-	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
+	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [
 		["Surface",		 true],	0, 1, 16, 17,
@@ -112,7 +112,7 @@ function Node_Repeat(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 		
 		var px = _x + _spos[0] * _s;
 		var py = _y + _spos[1] * _s;
-			
+		
 		if(_pat == 0 || _pat == 1) {
 			if(inputs[| 4].drawOverlay(active, px, py, _s, _mx, _my, _snx, _sny))
 				active = false;
@@ -122,11 +122,14 @@ function Node_Repeat(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 		}
 	}
 	
-	static update = function() {
+	function update(frame = ANIMATOR.current_frame) {
 		var _inSurf = inputs[| 0].getValue();
-		var _dim  = inputs[|  1].getValue();
-		var _amo  = inputs[|  2].getValue();
-		var _pat  = inputs[|  3].getValue();
+		if(is_array(_inSurf) && array_length(_inSurf) == 0) return;
+		if(!is_array(_inSurf) && !is_surface(_inSurf)) return;
+					
+		var _dim    = inputs[| 1].getValue();
+		var _amo    = inputs[| 2].getValue();
+		var _pat    = inputs[| 3].getValue();
 							  
 		var _spos = inputs[|  9].getValue();
 		
@@ -172,12 +175,12 @@ function Node_Repeat(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 		inputs[| 19].setVisible( _pat == 1);
 		inputs[| 26].setVisible( _pat == 0);
 		
+		var runx, runy, posx, posy, scax, scay, rot;
+		
 		var _outSurf = outputs[| 0].getValue();
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1]);
 		outputs[| 0].setValue(_outSurf);
-		
-		var runx, runy, posx, posy, scax, scay, rot;
-		
+			
 		surface_set_target(_outSurf);
 		draw_clear_alpha(0, 0);
 			runx = 0;
@@ -212,14 +215,14 @@ function Node_Repeat(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 					posy = _spos[1] + lengthdir_y(_arad, aa);
 				}
 				
-				scax = eval_curve_bezier_cubic_x(_msca, i / (_amo - 1)) * _rsca;
+				scax = eval_curve_x(_msca, i / (_amo - 1)) * _rsca;
 				scay = scax;
 				rot = _rrot[0] + (_rrot[1] - _rrot[0]) * i / (_amo - 1);
 				
 				var _an_dist = abs(i - _an_mid * (_amo - 1));
 				var _inf = 0;
 				if(_an_dist < _an_ran * _amo) {
-					_inf = eval_curve_bezier_cubic_x(_an_fal, _an_dist / (_an_ran * _amo));
+					_inf = eval_curve_x(_an_fal, _an_dist / (_an_ran * _amo));
 					posx += _an_pos[0] * _inf;
 					posy += _an_pos[1] * _inf;
 					rot  += _an_rot    * _inf;
@@ -250,7 +253,7 @@ function Node_Repeat(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 				
 				var pos = point_rotate(-sw / 2, -sh / 2, 0, 0, rot);
 				var cc  = gradient_eval(_grad, i / (_amo - 1), ds_list_get(_grad_data, 0));
-				var aa  = eval_curve_bezier_cubic_x(_alph, i / (_amo - 1));
+				var aa  = eval_curve_x(_alph, i / (_amo - 1));
 				
 				cc = merge_color(cc, colorMultiply(cc, _an_bld), _inf);
 				aa += _an_alp * _inf;
@@ -261,5 +264,7 @@ function Node_Repeat(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 				if(_rsta == 2)	runy += _sh / 2;
 			}
 		surface_reset_target();
+		
+		return _outSurf;
 	}
 }

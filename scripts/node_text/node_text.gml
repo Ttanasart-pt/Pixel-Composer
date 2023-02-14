@@ -2,35 +2,35 @@ function Node_Text(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constru
 	name = "Draw Text";
 	font = f_p0;
 	
-	inputs[| 0] = nodeValue(0, "Text", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "")
+	inputs[| 0] = nodeValue("Text", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "")
 		.setVisible(true, true);
 	
-	inputs[| 1] = nodeValue(1, "Font", self, JUNCTION_CONNECT.input, VALUE_TYPE.path, "")
+	inputs[| 1] = nodeValue("Font", self, JUNCTION_CONNECT.input, VALUE_TYPE.path, "")
 		.setDisplay(VALUE_DISPLAY.path_font);
 	
-	inputs[| 2] = nodeValue(2, "Size", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 16);
+	inputs[| 2] = nodeValue("Size", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 16);
 	
-	inputs[| 3] = nodeValue(3, "Anti-Aliasing ", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	inputs[| 3] = nodeValue("Anti-Aliasing ", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
 	
-	inputs[| 4] = nodeValue(4, "Character range", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 32, 128 ])
+	inputs[| 4] = nodeValue("Character range", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 32, 128 ])
 		.setDisplay(VALUE_DISPLAY.vector);
 	
-	inputs[| 5] = nodeValue(5, "Color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white);
+	inputs[| 5] = nodeValue("Color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white);
 	
-	inputs[| 6] = nodeValue(6, "Fixed dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, def_surf_size2 )
+	inputs[| 6] = nodeValue("Fixed dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, def_surf_size2 )
 		.setDisplay(VALUE_DISPLAY.vector)
 		.setVisible(true, false);
 	
-	inputs[| 7] = nodeValue(7, "Horizontal alignment", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0 )
+	inputs[| 7] = nodeValue("Horizontal alignment", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0 )
 		.setDisplay(VALUE_DISPLAY.enum_button, [ THEME.inspector_text_halign, THEME.inspector_text_halign, THEME.inspector_text_halign]);
 	
-	inputs[| 8] = nodeValue(8, "Vertical alignment", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0 )
+	inputs[| 8] = nodeValue("Vertical alignment", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0 )
 		.setDisplay(VALUE_DISPLAY.enum_button, [ THEME.inspector_text_valign, THEME.inspector_text_valign, THEME.inspector_text_valign ]);
 	
-	inputs[| 9] = nodeValue(9, "Output dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1 )
+	inputs[| 9] = nodeValue("Output dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1 )
 		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Fixed", "Dynamic" ]);
 	
-	inputs[| 10] = nodeValue(10, "Padding", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [0, 0, 0, 0])
+	inputs[| 10] = nodeValue("Padding", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [0, 0, 0, 0])
 		.setDisplay(VALUE_DISPLAY.padding);
 	
 	input_display_list = [
@@ -39,7 +39,7 @@ function Node_Text(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constru
 		["Font properties", false], 1, 2, 3, 4
 	];
 	
-	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
+	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	_font_current = "";
 	_size_current = 0;
@@ -97,7 +97,7 @@ function Node_Text(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constru
 		
 		surface_set_target(_outSurf);
 			draw_clear_alpha(0, 0);
-			BLEND_OVERRIDE
+			BLEND_OVERRIDE;
 			
 			if(_dim[0] != 0 && _dim[1] != 0) {
 				var _hali = _data[7];
@@ -122,7 +122,7 @@ function Node_Text(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constru
 				draw_text(_padd[PADDING.left], _padd[PADDING.up], str);
 			}
 			
-			BLEND_NORMAL
+			BLEND_NORMAL;
 		surface_reset_target();
 		
 		return _outSurf;

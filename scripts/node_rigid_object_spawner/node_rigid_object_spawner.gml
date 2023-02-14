@@ -1,28 +1,36 @@
 function Node_Rigid_Object_Spawner(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 	name = "Object Spawner";
+	color = COLORS.node_blend_simulation;
+	icon  = THEME.rigidSim;
 	w = 96;
 	min_h = 96;
 	
 	object = [];
 	
-	inputs[| 0] = nodeValue(0, "Object", self, JUNCTION_CONNECT.input, VALUE_TYPE.object, noone)
+	inputs[| 0] = nodeValue("Object", self, JUNCTION_CONNECT.input, VALUE_TYPE.rigid, noone)
 		.setVisible(true, true);
 	
-	inputs[| 1] = nodeValue(1, "Spawn area", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 16, 16, 4, 4, AREA_SHAPE.rectangle ])
-		.setDisplay(VALUE_DISPLAY.area);
+	inputs[| 1] = nodeValue("Spawn area", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, AREA_DEF)
+		.setDisplay(VALUE_DISPLAY.area)
+		.rejectArray();
 	
-	inputs[| 2] = nodeValue(2, "Spawn type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_button, [ "Stream", "Burst" ]);
+	inputs[| 2] = nodeValue("Spawn type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+		.setDisplay(VALUE_DISPLAY.enum_button, [ "Stream", "Burst" ])
+		.rejectArray();
 	
-	inputs[| 3] = nodeValue(3, "Spawn delay", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 4);
+	inputs[| 3] = nodeValue("Spawn delay", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 4)
+		.rejectArray();
 	
-	inputs[| 4] = nodeValue(4, "Spawn amount", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1);
+	inputs[| 4] = nodeValue("Spawn amount", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1)
+		.rejectArray();
 	
-	inputs[| 5] = nodeValue(5, "Spawn frame", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0);
+	inputs[| 5] = nodeValue("Spawn frame", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+		.rejectArray();
 	
-	inputs[| 6] = nodeValue(6, "Spawn", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
+	inputs[| 6] = nodeValue("Spawn", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true)
+		.rejectArray();
 	
-	outputs[| 0] = nodeValue(0, "Object", self, JUNCTION_CONNECT.output, VALUE_TYPE.object, self);
+	outputs[| 0] = nodeValue("Object", self, JUNCTION_CONNECT.output, VALUE_TYPE.rigid, self);
 	
 	input_display_list = [ 0,
 		["Spawn",	false],	6, 1, 2, 3, 5, 4,
@@ -61,9 +69,8 @@ function Node_Rigid_Object_Spawner(_x, _y, _group = -1) : Node(_x, _y, _group) c
 		}
 	}
 	
-	static update = function() {
-		if(!ANIMATOR.is_playing)
-			return;
+	static update = function(frame = ANIMATOR.current_frame) {
+		RETURN_ON_REST
 			
 		var _obj = inputs[| 0].getValue();
 		if(_obj == noone) return;
@@ -86,6 +93,7 @@ function Node_Rigid_Object_Spawner(_x, _y, _group = -1) : Node(_x, _y, _group) c
 		
 		var _obj = inputs[| 0].getValue();
 		if(_obj == noone) return;
+		if(is_array(_obj)) return;
 		
 		var _tex  = _obj.inputs[| 6].getValue();
 		var _spos = _obj.inputs[| 7].getValue();

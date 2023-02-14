@@ -30,10 +30,11 @@ function Node_Json_File_Read(_x, _y, _group = -1) : Node(_x, _y, _group) constru
 	w = 128;
 	
 	
-	inputs[| 0]  = nodeValue(0, "Path", self, JUNCTION_CONNECT.input, VALUE_TYPE.path, "")
-		.setDisplay(VALUE_DISPLAY.path_load, ["*.json", ""]);
+	inputs[| 0]  = nodeValue("Path", self, JUNCTION_CONNECT.input, VALUE_TYPE.path, "")
+		.setDisplay(VALUE_DISPLAY.path_load, ["*.json", ""])
+		.rejectArray();
 	
-	outputs[| 0] = nodeValue(0, "Path", self, JUNCTION_CONNECT.output, VALUE_TYPE.path, "")
+	outputs[| 0] = nodeValue("Path", self, JUNCTION_CONNECT.output, VALUE_TYPE.path, "")
 		.setVisible(true, true);
 	
 	data_length = 1;
@@ -41,10 +42,10 @@ function Node_Json_File_Read(_x, _y, _group = -1) : Node(_x, _y, _group) constru
 	
 	static createNewInput = function() {
 		var index = ds_list_size(inputs);
-		inputs[| index] = nodeValue( index, "Key", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "" )
+		inputs[| index] = nodeValue("Key", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "" )
 			.setVisible(true, true);
 		
-		outputs[| index] = nodeValue( index, "Values", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, 0 )
+		outputs[| index] = nodeValue("Values", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, 0 )
 			.setVisible(true, true);
 	}
 	if(!LOADING && !APPENDING) createNewInput();
@@ -63,7 +64,7 @@ function Node_Json_File_Read(_x, _y, _group = -1) : Node(_x, _y, _group) constru
 		return false;
 	}
 	
-	static inspectorUpdate = function() {
+	static onInspectorUpdate = function() {
 		var path = inputs[| 0].getValue();
 		if(path == "") return;
 		updatePaths(path);
@@ -98,7 +99,7 @@ function Node_Json_File_Read(_x, _y, _group = -1) : Node(_x, _y, _group) constru
 		createNewInput();
 	}
 	
-	static onValueUpdate = function(index) {
+	static onValueUpdate = function(index = 0) {
 		if(index < input_fix_len) return;
 		if(LOADING || APPENDING) return;
 		
@@ -109,7 +110,7 @@ function Node_Json_File_Read(_x, _y, _group = -1) : Node(_x, _y, _group) constru
 		path = try_get_path(path);
 		if(path == -1) return false;
 		
-		var ext = filename_ext(path);
+		var ext = string_lower(filename_ext(path));
 		var _name = string_replace(filename_name(path), filename_ext(path), "");
 		
 		if(ext != ".json") return false;
@@ -125,7 +126,7 @@ function Node_Json_File_Read(_x, _y, _group = -1) : Node(_x, _y, _group) constru
 		return true;
 	}
 	
-	static update = function() {
+	static update = function(frame = ANIMATOR.current_frame) {
 		var path = inputs[| 0].getValue();
 		if(path == "") return;
 		if(path_current != path) updatePaths(path);

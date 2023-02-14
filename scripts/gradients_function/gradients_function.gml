@@ -4,8 +4,21 @@ enum GRADIENT_INTER {
 	hue
 }
 
+function gradientKey(time, value) constructor {
+	self.time  = time;
+	self.value = value;
+	
+	static clone = function() { return new gradientKey(time, value); }
+	
+	static serialize = function() {
+		var m = ds_map_create();
+		m[? "time"]  = time;
+		m[? "value"] = value;
+		return m;
+	}
+}
+
 function draw_gradient(_x, _y, _w, _h, _grad, _int = GRADIENT_INTER.smooth) {
-	if(!ds_exists(_grad, ds_type_list)) return;
 	static RES = 48;
 	var _step  = _w / RES;
 	var _ox, _oc;
@@ -18,22 +31,22 @@ function draw_gradient(_x, _y, _w, _h, _grad, _int = GRADIENT_INTER.smooth) {
 	var _grad_color = [];
 	var _grad_time  = [];
 		
-	for(var i = 0; i < ds_list_size(_grad); i++) {
-		_grad_color[i * 4 + 0] = color_get_red(_grad[| i].value) / 255;
-		_grad_color[i * 4 + 1] = color_get_green(_grad[| i].value) / 255;
-		_grad_color[i * 4 + 2] = color_get_blue(_grad[| i].value) / 255;
+	for(var i = 0; i < array_length(_grad); i++) {
+		_grad_color[i * 4 + 0] = color_get_red(_grad[i].value) / 255;
+		_grad_color[i * 4 + 1] = color_get_green(_grad[i].value) / 255;
+		_grad_color[i * 4 + 2] = color_get_blue(_grad[i].value) / 255;
 		_grad_color[i * 4 + 3] = 1;
-		_grad_time[i]  = _grad[| i].time;
+		_grad_time[i]  = _grad[i].time;
 	}
 	
-	if(ds_list_empty(_grad)) {
+	if(array_length(_grad) == 0) {
 		draw_sprite_stretched(s_fx_pixel, 0, _x, _y, _w, _h)
 	} else {
 		shader_set(sh_gradient_display);
 		shader_set_uniform_i(uniform_grad_blend, _int);
-		shader_set_uniform_f_array(uniform_grad, _grad_color);
-		shader_set_uniform_f_array(uniform_grad_time, _grad_time);
-		shader_set_uniform_i(uniform_grad_key, ds_list_size(_grad));
+		shader_set_uniform_f_array_safe(uniform_grad, _grad_color);
+		shader_set_uniform_f_array_safe(uniform_grad_time, _grad_time);
+		shader_set_uniform_i(uniform_grad_key, array_length(_grad));
 			
 		draw_sprite_stretched(s_fx_pixel, 0, _x, _y, _w, _h)
 		shader_reset();
@@ -41,50 +54,62 @@ function draw_gradient(_x, _y, _w, _h, _grad, _int = GRADIENT_INTER.smooth) {
 }
 
 function gradient_eval(_gradient, _time, _int = GRADIENT_INTER.smooth) {
-	if(!ds_exists(_gradient, ds_type_list)) return c_white;
-	if(ds_list_size(_gradient) == 0) return c_white;
-	if(ds_list_size(_gradient) == 1) return _gradient[| 0].value;
+	if(array_length(_gradient) == 0) return c_white;
+	if(array_length(_gradient) == 1) return _gradient[0].value;
 	
-	for(var i = 0; i < ds_list_size(_gradient); i++) {
-		var _key = _gradient[| i];
+	for(var i = 0; i < array_length(_gradient); i++) {
+		var _key = _gradient[i];
 		if(_key.time < _time) continue;
-		if(_key.time == _time) return _gradient[| i].value;
+		if(_key.time == _time) return _gradient[i].value;
 		
 		if(i == 0) //before first color
-			return _gradient[| 0].value;
+			return _gradient[0].value;
 		
-		var c0 = _gradient[| i - 1].value;
+		var c0 = _gradient[i - 1].value;
 		if(_int == GRADIENT_INTER.smooth) {
-			var rat = (_time - _gradient[| i - 1].time) / (_gradient[| i].time - _gradient[| i - 1].time);
-			var c1 = _gradient[| i].value;
+			var rat = (_time - _gradient[i - 1].time) / (_gradient[i].time - _gradient[i - 1].time);
+			var c1 = _gradient[i].value;
 			return merge_color(c0, c1, rat);
 		} else if(_int == GRADIENT_INTER.none) {
 			return c0;
 		}
 	}
 	
-	return _gradient[| ds_list_size(_gradient) - 1].value; //after last color
+	return _gradient[array_length(_gradient) - 1].value; //after last color
 }
 
 function gradient_add(_gradient, _addkey, _deleteDup) {
-	if(!ds_exists(_gradient, ds_type_list)) return;
-	
-	if(ds_list_size(_gradient) == 0) {
-		ds_list_add(_gradient, _addkey);
+	if(array_length(_gradient) == 0) {
+		array_push(_gradient, _addkey);
 		return;
 	}
 		
-	for(var i = 0; i < ds_list_size(_gradient); i++) {
-		var _key = _gradient[| i];
+	for(var i = 0; i < array_length(_gradient); i++) {
+		var _key = _gradient[i];
+		
 		if(_key.time == _addkey.time) {
 			if(_deleteDup)
 				_key.value = _addkey.value;
 			return;
 		} else if(_key.time > _addkey.time) {
-			ds_list_insert(_gradient, i, _addkey);
+			array_insert(_gradient, i, _addkey);
 			return;
 		}
 	}
 		
-	ds_list_add(_gradient, _addkey);
+	array_push(_gradient, _addkey);
+}
+
+function gradient_to_array(_gradient) {
+	var _grad_color = [], _grad_time = []; 
+	
+	for(var i = 0; i < array_length(_gradient); i++) {
+		_grad_color[i * 4 + 0] = color_get_red(_gradient[i].value) / 255;
+		_grad_color[i * 4 + 1] = color_get_green(_gradient[i].value) / 255;
+		_grad_color[i * 4 + 2] = color_get_blue(_gradient[i].value) / 255;
+		_grad_color[i * 4 + 3] = 1;
+		_grad_time[i]  = _gradient[i].time;
+	}
+	
+	return [ _grad_color, _grad_time ];
 }

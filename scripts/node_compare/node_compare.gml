@@ -29,17 +29,16 @@ function Node_Compare(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 	
 	w = 96;
 	
-	
-	inputs[| 0] = nodeValue(0, "Type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+	inputs[| 0] = nodeValue("Type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Equal", "Not equal", "Greater", "Greater or equal", "Lesser", "Lesser or equal" ]);
 	
-	inputs[| 1] = nodeValue(1, "a", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
+	inputs[| 1] = nodeValue("a", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
 		.setVisible(true, true);
 		
-	inputs[| 2] = nodeValue(2, "b", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
+	inputs[| 2] = nodeValue("b", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
 		.setVisible(true, true);
 	
-	outputs[| 0] = nodeValue(0, "Result", self, JUNCTION_CONNECT.output, VALUE_TYPE.boolean, false);
+	outputs[| 0] = nodeValue("Result", self, JUNCTION_CONNECT.output, VALUE_TYPE.boolean, false);
 	
 	static _eval = function(mode, a, b) {
 		switch(mode) {
@@ -55,7 +54,7 @@ function Node_Compare(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 		return 0;
 	}
 	
-	function update() { 
+	function update(frame = ANIMATOR.current_frame) { 
 		var mode = inputs[| 0].getValue();
 		var a = inputs[| 1].getValue();
 		var b = inputs[| 2].getValue();

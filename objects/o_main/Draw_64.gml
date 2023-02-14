@@ -19,12 +19,14 @@
 #region panels
 	if(PANEL_MAIN == 0) setPanel();
 	
-	var surf = surface_get_target();
-	try
-		PANEL_MAIN.draw();
-	catch(e) {
-		while(surface_get_target() != surf)
-			surface_reset_target();
-		noti_warning("UI error: " + exception_print(e));
-	}
+	PANEL_MAIN.draw();
+	
+	//var surf = surface_get_target();
+	//try
+	//	PANEL_MAIN.draw();
+	//catch(e) {
+	//	while(surface_get_target() != surf)
+	//		surface_reset_target();
+	//	noti_warning("UI error: " + exception_print(e));
+	//}
 #endregion

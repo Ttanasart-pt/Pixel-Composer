@@ -2,16 +2,16 @@ function Node_Sampler(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) cons
 	name = "Sampler";
 	w = 96;
 	
-	inputs[| 0] = nodeValue(0, "Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
+	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 	
-	inputs[| 1] = nodeValue(1, "Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ])
+	inputs[| 1] = nodeValue("Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.vector)
 		.setUnitRef(function(index) { return getDimension(index); });
 		
-	inputs[| 2] = nodeValue(2, "Sampling size", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1, "Size of square around the position to sample and average pixel color.")
+	inputs[| 2] = nodeValue("Sampling size", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1, "Size of square around the position to sample and average pixel color.")
 		.setDisplay(VALUE_DISPLAY.slider, [1, 3, 1]);
 	
-	outputs[| 0] = nodeValue(0, "Color", self, JUNCTION_CONNECT.output, VALUE_TYPE.color, c_white);
+	outputs[| 0] = nodeValue("Color", self, JUNCTION_CONNECT.output, VALUE_TYPE.color, c_white);
 	
 	static getPreviewValue = function() { return inputs[| 0]; }
 	
@@ -45,7 +45,7 @@ function Node_Sampler(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) cons
 		draw_rectangle(x0, y0, x1, y1, true);
 	}
 	
-	function process_data(_output, _data, index = 0) { 
+	function process_data(_output, _data, _output_index, _array_index = 0) {  
 		var _surf = _data[0];
 		var _pos = _data[1];
 		var _sam = _data[2];
@@ -86,10 +86,14 @@ function Node_Sampler(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) cons
 		
 		if(bbox.h <= 0) return;
 		
-		var c = outputs[| 0].getValue();
-		if(is_array(c)) c = c[0];
+		var col = outputs[| 0].getValue();
 		
-		draw_set_color(c);
+		if(is_array(col)) {
+			drawPalette(col, bbox.x0, bbox.y0, bbox.w, bbox.h);
+			return;
+		}
+		
+		draw_set_color(col);
 		draw_rectangle(bbox.x0, bbox.y0, bbox.x1, bbox.y1, 0);
 	}
 }

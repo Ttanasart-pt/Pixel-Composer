@@ -1,17 +1,26 @@
 function Node_Mirror(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constructor {
 	name = "Mirror";
 	
-	inputs[| 0] = nodeValue(0, "Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
-	inputs[| 1] = nodeValue(1, "Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ])
+	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
+	
+	inputs[| 1] = nodeValue("Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.vector)
 		.setUnitRef(function(index) { return getDimension(index); });
 	
-	inputs[| 2] = nodeValue(2, "Angle", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+	inputs[| 2] = nodeValue("Angle", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.rotation);
 	
-	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
+	inputs[| 3] = nodeValue("Active", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
+		active_index = 3;
+		
+	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
-	outputs[| 1] = nodeValue(1, "Mirror mask", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
+	outputs[| 1] = nodeValue("Mirror mask", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
+	
+	input_display_list = [ 3,
+		["Surface",	 false], 0, 
+		["Mirror",	 false], 1, 2, 
+	]
 	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var _pos   = inputs[| 1].getValue();
@@ -38,7 +47,7 @@ function Node_Mirror(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) const
 		
 		surface_set_target(_outSurf);
 			draw_clear_alpha(0, 0);
-			BLEND_OVERRIDE
+			BLEND_OVERRIDE;
 			
 			shader = _output_index? sh_mirror_mask : sh_mirror;
 			uniform_dim = shader_get_uniform(shader, "dimension");
@@ -46,13 +55,13 @@ function Node_Mirror(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) const
 			uniform_ang = shader_get_uniform(shader, "angle");
 	
 			shader_set(shader);
-			shader_set_uniform_f_array(uniform_dim, _dim);
-			shader_set_uniform_f_array(uniform_pos, _pos);
+			shader_set_uniform_f_array_safe(uniform_dim, _dim);
+			shader_set_uniform_f_array_safe(uniform_pos, _pos);
 			shader_set_uniform_f(uniform_ang, degtorad(_ang));
 			draw_surface_safe(_data[0], 0, 0);
 			shader_reset();
 			
-			BLEND_NORMAL
+			BLEND_NORMAL;
 		surface_reset_target();
 		
 		return _outSurf;

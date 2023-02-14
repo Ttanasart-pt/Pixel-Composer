@@ -4,8 +4,9 @@ function Node_Array(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 	
 	w = 96;
 	
-	inputs[| 0] = nodeValue( 0, "Type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0 )
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Any", "Surface", "Number", "Text" ]);
+	inputs[| 0] = nodeValue("Type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0 )
+		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Any", "Surface", "Number", "Color", "Text" ])
+		.rejectArray();
 	
 	array_adjust_tool = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) {
 		var _h = ui(48);
@@ -30,7 +31,7 @@ function Node_Array(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 		var bxc = bx + bw / 2 - (string_width("Add") + ui(64)) / 2;
 		var byc = by + bh / 2;
 		draw_sprite_ui(THEME.add, 0, bxc + ui(24), byc,,,, COLORS._main_icon_light);
-		draw_text(bxc + ui(48), byc, "Add");
+		draw_text(bxc + ui(48), byc, get_text("add", "Add"));
 		
 		var bx = _x + bw + ui(8);
 		var amo = attributes[? "size"];
@@ -58,22 +59,27 @@ function Node_Array(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 	input_display_list_len = array_length(input_display_list);
 	data_length = 1;
 	
-	outputs[| 0] = nodeValue(0, "Array", self, JUNCTION_CONNECT.output, VALUE_TYPE.any, []);
+	outputs[| 0] = nodeValue("Array", self, JUNCTION_CONNECT.output, VALUE_TYPE.any, []);
 	
 	attributes[? "size"] = 1;
 	
-	static createNewInput = function() {
-		var index = ds_list_size(inputs);
+	static getType = function() {
 		var _type = inputs[| 0].getValue();
-		var _typ = VALUE_TYPE.any;
 		
 		switch(_type) {
-			case 1 : _typ = VALUE_TYPE.surface; break;
-			case 2 : _typ = VALUE_TYPE.float; break;
-			case 3 : _typ = VALUE_TYPE.text; break;
+			case 1 : return VALUE_TYPE.surface; 
+			case 2 : return VALUE_TYPE.float;
+			case 3 : return VALUE_TYPE.color;
+			case 4 : return VALUE_TYPE.text; 
+			default : return VALUE_TYPE.any;
 		}
+	}
+	
+	static createNewInput = function() {
+		var index = ds_list_size(inputs);
+		var _typ = getType();
 		
-		inputs[| index] = nodeValue( index, "Input", self, JUNCTION_CONNECT.input, _typ, -1 )
+		inputs[| index] = nodeValue("Input", self, JUNCTION_CONNECT.input, _typ, -1 )
 			.setVisible(true, true);
 		array_push(input_display_list, index);
 		
@@ -103,6 +109,7 @@ function Node_Array(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 		input_display_list = [];
 		for( var i = 0; i < ds_list_size(_l); i++ ) {
 			_l[| i].index = i;
+			_l[| i].setVisible(i < ds_list_size(_l) - 1);
 			array_push(input_display_list, i);
 			
 			if(i >= input_fix_len && _l[| i].value_from == noone)
@@ -117,25 +124,20 @@ function Node_Array(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 			lastNode = createNewInput();
 	}
 	
-	static onValueUpdate = function(index) {
+	static onValueUpdate = function(index = 0) {
 		if(index != 0) return;
-		
-		var _type = inputs[| 0].getValue();
-		var _typ = VALUE_TYPE.any;
-		
-		switch(_type) {
-			case 1 : _typ = VALUE_TYPE.surface; break;
-			case 2 : _typ = VALUE_TYPE.float; break;
-			case 3 : _typ = VALUE_TYPE.text; break;
-		}
+		var _typ = getType();
 		
 		for( var i = input_fix_len; i < ds_list_size(inputs); i++ ) {
-			if(_type) inputs[| i].type = _typ;
+			if(_typ != VALUE_TYPE.any) 
+				inputs[| i].type = _typ;
 			inputs[| i].resetDisplay();
 			
 			if(_typ && inputs[| i].value_from && (value_bit(inputs[| i].value_from.type) & value_bit(_typ) == 0))
 				inputs[| i].removeFrom();
 		}
+		
+		refreshDynamicInput();
 	}
 	
 	static onValueFromUpdate = function(index) {
@@ -144,15 +146,8 @@ function Node_Array(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 		refreshDynamicInput();
 	}
 	
-	static update = function() {
-		var _type = inputs[| 0].getValue();
-		var _typ = VALUE_TYPE.any;
-		
-		switch(_type) {
-			case 1 : _typ = VALUE_TYPE.surface; break;
-			case 2 : _typ = VALUE_TYPE.float; break;
-			case 3 : _typ = VALUE_TYPE.text; break;
-		}
+	static update = function(frame = ANIMATOR.current_frame) {
+		var _typ = getType();
 		
 		outputs[| 0].type = _typ;
 		var res = array_create(ds_list_size(inputs) - input_fix_len - 1);
@@ -160,10 +155,10 @@ function Node_Array(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 		
 		for( var i = input_fix_len; i < ds_list_size(inputs) - 1; i++ ) {
 			res[ind++] = inputs[| i].getValue();
-			inputs[| i].type = inputs[| i].value_from? inputs[| i].value_from.type : VALUE_TYPE.any;
+			inputs[| i].type = inputs[| i].value_from? inputs[| i].value_from.type : _typ;
 			
-			if(i == 0 && _type == 0)
-				outputs[| 0].type = inputs[| i].value_from? inputs[| i].value_from.type : VALUE_TYPE.any;
+			if(i == input_fix_len && _typ == VALUE_TYPE.any && inputs[| i].value_from)
+				outputs[| 0].type = inputs[| i].value_from.type;
 		}
 		
 		outputs[| 0].setValue(res);

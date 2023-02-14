@@ -18,34 +18,34 @@ function Node_Stripe(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) const
 	uniform_clr0 = shader_get_uniform(shader, "color0");
 	uniform_clr1 = shader_get_uniform(shader, "color1");
 	
-	inputs[| 0] = nodeValue(0, "Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, def_surf_size2 )
+	inputs[| 0] = nodeValue("Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, def_surf_size2 )
 		.setDisplay(VALUE_DISPLAY.vector);
 	
-	inputs[| 1] = nodeValue(1, "Amount", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
+	inputs[| 1] = nodeValue("Amount", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
 		.setDisplay(VALUE_DISPLAY.slider, [1, 16, 0.1]);
 	
-	inputs[| 2] = nodeValue(2, "Angle", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+	inputs[| 2] = nodeValue("Angle", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.rotation);
 	
-	inputs[| 3] = nodeValue(3, "Blend", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, 0, "Smoothly blend between each stripe.");
+	inputs[| 3] = nodeValue("Blend", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, 0, "Smoothly blend between each stripe.");
 	
-	inputs[| 4] = nodeValue(4, "Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [0, 0] )
+	inputs[| 4] = nodeValue("Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [0, 0] )
 		.setDisplay(VALUE_DISPLAY.vector)
 		.setUnitRef(function(index) { return getDimension(index); });
 		
-	inputs[| 5] = nodeValue(5, "Random", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
+	inputs[| 5] = nodeValue("Random", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
 		.setDisplay(VALUE_DISPLAY.slider, [0, 1, 0.01]);
 		
-	inputs[| 6] = nodeValue(6, "Random color", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	inputs[| 6] = nodeValue("Random color", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
 	
-	inputs[| 7] = nodeValue(7, "Colors", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white)
+	inputs[| 7] = nodeValue("Colors", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, [ new gradientKey(0, c_white) ] )
 		.setDisplay(VALUE_DISPLAY.gradient);
 	
-	inputs[| 8] = nodeValue(8, "Color 1", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white);
+	inputs[| 8] = nodeValue("Color 1", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white);
 	
-	inputs[| 9] = nodeValue(9, "Color 2", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_black);
+	inputs[| 9] = nodeValue("Color 2", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_black);
 	
-	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
+	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [ 
 		["Output",	true],	0,  
@@ -81,7 +81,7 @@ function Node_Stripe(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) const
 		var _gra = _data[7];
 		var _gra_data = inputs[| 7].getExtraData();
 		
-		var _g = getGradientData(_gra, _gra_data);
+		var _g = gradient_to_array(_gra);
 		var _grad_color = _g[0];
 		var _grad_time = _g[1];
 		
@@ -96,14 +96,14 @@ function Node_Stripe(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) const
 			shader_set_uniform_f(uniform_blend, _bnd);
 			shader_set_uniform_f(uniform_rand, _rnd);
 			
-			shader_set_uniform_f_array(uniform_clr0, colToVec4(_clr0));
-			shader_set_uniform_f_array(uniform_clr1, colToVec4(_clr1));
+			shader_set_uniform_f_array_safe(uniform_clr0, colToVec4(_clr0));
+			shader_set_uniform_f_array_safe(uniform_clr1, colToVec4(_clr1));
 			
 			shader_set_uniform_i(uniform_grad_use, _grad_use);
 			shader_set_uniform_i(uniform_grad_blend, ds_list_get(_gra_data, 0));
-			shader_set_uniform_f_array(uniform_grad, _grad_color);
-			shader_set_uniform_f_array(uniform_grad_time, _grad_time);
-			shader_set_uniform_i(uniform_grad_key, ds_list_size(_gra));
+			shader_set_uniform_f_array_safe(uniform_grad, _grad_color);
+			shader_set_uniform_f_array_safe(uniform_grad_time, _grad_time);
+			shader_set_uniform_i(uniform_grad_key, array_length(_gra));
 			
 				draw_sprite_ext(s_fx_pixel, 0, 0, 0, _dim[0], _dim[1], 0, c_white, 1);
 			shader_reset();

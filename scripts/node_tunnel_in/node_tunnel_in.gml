@@ -5,9 +5,10 @@ function Node_Tunnel_In(_x, _y, _group = -1) : Node(_x, _y, _group) constructor 
 	
 	w = 96;
 	
-	inputs[| 0] = nodeValue( 0, "Name", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "" );
+	inputs[| 0] = nodeValue("Name", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "" )
+		.rejectArray();
 		
-	inputs[| 1] = nodeValue( 1, "Value in", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, noone )
+	inputs[| 1] = nodeValue("Value in", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, noone )
 		.setVisible(true, true);
 	
 	error_notification = noone;
@@ -25,6 +26,7 @@ function Node_Tunnel_In(_x, _y, _group = -1) : Node(_x, _y, _group) constructor 
 		repeat(amo) {
 			if(TUNNELS_OUT[? k] == _key && ds_map_exists(NODE_MAP, k)) {
 				var node = NODE_MAP[? k];
+				if(node.group != group) continue;
 				
 				draw_set_color(COLORS.node_blend_tunnel);
 				draw_set_alpha(0.35);
@@ -37,7 +39,7 @@ function Node_Tunnel_In(_x, _y, _group = -1) : Node(_x, _y, _group) constructor 
 	}
 	
 	static onClone = function() { onValueUpdate(); }
-	static update = function() { onValueUpdate(); }
+	static update = function(frame = ANIMATOR.current_frame) { onValueUpdate(); }
 	
 	static resetMap = function() {
 		var _key = inputs[| 0].getValue();
@@ -67,7 +69,7 @@ function Node_Tunnel_In(_x, _y, _group = -1) : Node(_x, _y, _group) constructor 
 		}
 	}
 	
-	static onValueUpdate = function(index) {
+	static onValueUpdate = function(index = 0) {
 		var _key = inputs[| 0].getValue();
 		resetMap();
 		
@@ -123,5 +125,12 @@ function Node_Tunnel_In(_x, _y, _group = -1) : Node(_x, _y, _group) constructor 
 		var bbox = drawGetBbox(xx, yy, _s);
 		var ss	= string_scale(str, bbox.w, bbox.h);
 		draw_text_transformed(bbox.xc, bbox.yc, str, ss, ss, 0);
+	}
+	
+	static postConnect = function() { onValueUpdate(); }
+	
+	static onDestroy = function() {
+		if(error_notification != noone)
+			noti_remove(error_notification);
 	}
 }

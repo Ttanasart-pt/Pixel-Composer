@@ -75,6 +75,16 @@ function buttonGroupClass(_data, _onClick) : widget() constructor {
 					draw_sprite_ui_uniform(data[i], i, bx + ww / 2, _y + _h / 2);
 				}
 			}
+			
+			if(point_in_rectangle(_m[0], _m[1], _x, _y, _x + w, _y + _h)) {
+				if(is_array(data) && key_mod_press(SHIFT)) {
+					var len = array_length(data);
+					if(len) {
+						if(mouse_wheel_down())	onClick((_selecting + 1 + len) % len);
+						if(mouse_wheel_up())	onClick((_selecting - 1 + len) % len);
+					}
+				}
+			}
 		} else {
 			sb_small.hover = hover;
 			sb_small.active = active;

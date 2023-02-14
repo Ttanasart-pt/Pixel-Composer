@@ -1,19 +1,21 @@
 function Node_Counter(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constructor {
-	name = "Counter";
+	name = "Frame Index";
 	update_on_frame = true;
 	previewable = false;
 	
 	w = 96;
 	
+	inputs[| 0] = nodeValue("Start", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1);
 	
-	inputs[| 0] = nodeValue(0, "Start", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1);
-	inputs[| 1] = nodeValue(1, "Speed", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1);
-	inputs[| 2] = nodeValue(2, "Mode", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0, @"Counting mode
+	inputs[| 1] = nodeValue("Speed", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1);
+	
+	inputs[| 2] = nodeValue("Mode", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0, @"Counting mode
     - Frame count: Count value up/down per frame.
     - Animation progress: Count from 0 (first frame) to 1 (last frame). ")
-		.setDisplay(VALUE_DISPLAY.enum_scroll, ["Frame count", "Animation progress"]);
+		.setDisplay(VALUE_DISPLAY.enum_scroll, ["Frame count", "Animation progress"])
+		.rejectArray();
 	
-	outputs[| 0] = nodeValue(0, "Counter", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, 0);
+	outputs[| 0] = nodeValue("Value", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, 0);
 	
 	input_display_list = [
 		2, 0, 1
@@ -24,10 +26,10 @@ function Node_Counter(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) cons
 		inputs[| 0].setVisible(mode == 0);
 	}
 	
-	function process_data(_output, _data, index = 0) { 
+	function process_data(_output, _data, _output_index, _array_index = 0) {  
 		var time = ANIMATOR.current_frame;
-		var mode = inputs[| 2].getValue();
-		var val;
+		var mode = _data[2];
+		var val = 0;
 		
 		switch(mode) {
 			case 0 : val = _data[0] + time * _data[1]; break;

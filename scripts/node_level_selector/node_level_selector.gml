@@ -5,15 +5,23 @@ function Node_Level_Selector(_x, _y, _group = -1) : Node_Processor(_x, _y, _grou
 	uniform_middle = shader_get_uniform(shader, "middle");
 	uniform_range  = shader_get_uniform(shader, "range");
 	
-	inputs[| 0] = nodeValue(0, "Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
+	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 	
-	inputs[| 1] = nodeValue(1, "Mid point", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
+	inputs[| 1] = nodeValue("Mid point", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
 		.setDisplay(VALUE_DISPLAY.slider, [ 0, 1, 0.01]);
 	
-	inputs[| 2] = nodeValue(2, "Range",   self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.1)
+	inputs[| 2] = nodeValue("Range",   self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.1)
 		.setDisplay(VALUE_DISPLAY.slider, [ 0, 1, 0.01]);
 	
-	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
+	inputs[| 3] = nodeValue("Mask", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
+	
+	inputs[| 4] = nodeValue("Mix", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
+		.setDisplay(VALUE_DISPLAY.slider, [0, 1, 0.01]);
+	
+	inputs[| 5] = nodeValue("Active", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
+		active_index = 5;
+	
+	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	level_renderer = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) {
 		var _h = 128;
@@ -50,9 +58,10 @@ function Node_Level_Selector(_x, _y, _group = -1) : Node_Processor(_x, _y, _grou
 		return _h;
 	});
 	
-	input_display_list = [
+	input_display_list = [ 5, 
 		level_renderer,
-		["Level",	false],	0, 1, 2,
+		["Surface",	 true],	0, 3, 4, 
+		["Level",	false],	1, 2,
 	];
 	histogramInit();
 	
@@ -69,13 +78,13 @@ function Node_Level_Selector(_x, _y, _group = -1) : Node_Processor(_x, _y, _grou
 		}
 	}
 	
-	static process_data = function(_outSurf, _data, _output_index, _array_index) {
+	static process_data = function(_outSurf, _data, _output_index, _array_index) {		
 		var _middle = _data[1];
 		var _range  = _data[2];
 		
 		surface_set_target(_outSurf);
 			draw_clear_alpha(0, 0);
-			BLEND_OVERRIDE
+			BLEND_OVERRIDE;
 			
 			shader_set(shader);
 			shader_set_uniform_f(uniform_middle, _middle);
@@ -84,8 +93,10 @@ function Node_Level_Selector(_x, _y, _group = -1) : Node_Processor(_x, _y, _grou
 			draw_surface_safe(_data[0], 0, 0);
 			shader_reset();
 			
-			BLEND_NORMAL
+			BLEND_NORMAL;
 		surface_reset_target();
+		
+		_outSurf = mask_apply(_data[0], _outSurf, _data[3], _data[4]);
 		
 		return _outSurf;
 	}

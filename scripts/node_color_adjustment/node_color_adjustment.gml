@@ -16,39 +16,42 @@ function Node_Color_adjust(_x, _y, _group = -1) : Node_Processor(_x, _y, _group)
 	uniform_mask_use	= shader_get_uniform(shader, "use_mask");
 	uniform_mask		= shader_get_sampler_index(shader, "mask");
 	
-	inputs[| 0] = nodeValue(0, "Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
+	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 	
-	inputs[| 1] = nodeValue(1, "Brightness", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
+	inputs[| 1] = nodeValue("Brightness", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
 		.setDisplay(VALUE_DISPLAY.slider, [ -1, 1, 0.01]);
 	
-	inputs[| 2] = nodeValue(2, "Contrast",   self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.5)
+	inputs[| 2] = nodeValue("Contrast",   self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.5)
 		.setDisplay(VALUE_DISPLAY.slider, [  0, 1, 0.01]);
 	
-	inputs[| 3] = nodeValue(3, "Hue",        self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
+	inputs[| 3] = nodeValue("Hue",        self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
 		.setDisplay(VALUE_DISPLAY.slider, [ -1, 1, 0.01]);
 	
-	inputs[| 4] = nodeValue(4, "Saturation", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
+	inputs[| 4] = nodeValue("Saturation", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
 		.setDisplay(VALUE_DISPLAY.slider, [ -1, 1, 0.01]);
 	
-	inputs[| 5] = nodeValue(5, "Value",      self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
+	inputs[| 5] = nodeValue("Value",      self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
 		.setDisplay(VALUE_DISPLAY.slider, [ -1, 1, 0.01]);
 	
-	inputs[| 6] = nodeValue(6, "Blend",   self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white);
+	inputs[| 6] = nodeValue("Blend",   self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white);
 	
-	inputs[| 7] = nodeValue(7, "Blend alpha",  self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
+	inputs[| 7] = nodeValue("Blend alpha",  self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
 		.setDisplay(VALUE_DISPLAY.slider, [ 0, 1, 0.01]);
 	
-	inputs[| 8] = nodeValue(8, "Mask", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
+	inputs[| 8] = nodeValue("Mask", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 	
-	inputs[| 9] = nodeValue(9, "Alpha", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
+	inputs[| 9] = nodeValue("Alpha", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
 		.setDisplay(VALUE_DISPLAY.slider, [ 0, 1, 0.01]);
 	
-	inputs[| 10] = nodeValue(10, "Exposure", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
+	inputs[| 10] = nodeValue("Exposure", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
 		.setDisplay(VALUE_DISPLAY.slider, [ 0, 4, 0.01]);
-		
-	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
 	
-	input_display_list = [0, 8, 
+	inputs[| 11] = nodeValue("Active", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
+		active_index = 11;
+	
+	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
+	
+	input_display_list = [11, 0, 8, 
 		["Brightness",	false], 1, 10, 2, 
 		["HSV",			false], 3, 4, 5, 
 		["Color blend", false], 6, 7, 9
@@ -69,7 +72,7 @@ function Node_Color_adjust(_x, _y, _group = -1) : Node_Processor(_x, _y, _group)
 		
 		surface_set_target(_outSurf);
 		draw_clear_alpha(0, 0);
-		BLEND_OVERRIDE
+		BLEND_OVERRIDE;
 		
 		shader_set(shader);
 			shader_set_uniform_i(uniform_mask_use, _m != DEF_SURFACE);
@@ -82,7 +85,7 @@ function Node_Color_adjust(_x, _y, _group = -1) : Node_Processor(_x, _y, _group)
 			shader_set_uniform_f(uniform_sat, _sat);
 			shader_set_uniform_f(uniform_val, _val);
 			
-			shader_set_uniform_f_array(uniform_bl, [color_get_red(_bl) / 255, color_get_green(_bl) / 255, color_get_blue(_bl) / 255, 1.0]);
+			shader_set_uniform_f_array_safe(uniform_bl, [color_get_red(_bl) / 255, color_get_green(_bl) / 255, color_get_blue(_bl) / 255, 1.0]);
 			shader_set_uniform_f(uniform_bla, _bla);
 			
 			gpu_set_colorwriteenable(1, 1, 1, 0);
@@ -91,7 +94,7 @@ function Node_Color_adjust(_x, _y, _group = -1) : Node_Processor(_x, _y, _group)
 			if(is_surface(_data[0])) draw_surface_ext_safe(_data[0], 0, 0, 1, 1, 0, c_white, _alp);
 		shader_reset();
 		
-		BLEND_NORMAL
+		BLEND_NORMAL;
 		surface_reset_target();
 		
 		return _outSurf;

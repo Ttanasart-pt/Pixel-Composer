@@ -7,15 +7,22 @@ function Node_Time_Remap(_x, _y, _group = -1) : Node(_x, _y, _group) constructor
 	uniform_min = shader_get_uniform(shader, "vMin");
 	uniform_max = shader_get_uniform(shader, "vMax");
 	
-	inputs[| 0] = nodeValue(0, "Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
+	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0)
+		.rejectArray();
 	
-	inputs[| 1] = nodeValue(1, "Map", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
+	inputs[| 1] = nodeValue("Map", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0)
+		.rejectArray();
 	
-	inputs[| 2] = nodeValue(2, "Max life",   self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 3);
+	inputs[| 2] = nodeValue("Max life",   self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 3)
+		.rejectArray();
 	
-	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
+	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
-	static update = function() {
+	input_display_list = [ 
+		["Surface",	 false], 0, 1, 2, 
+	]
+	
+	static update = function(frame = ANIMATOR.current_frame) {
 		if(array_length(cached_output) != ANIMATOR.frames_total + 1)
 			return;
 			
@@ -35,12 +42,12 @@ function Node_Time_Remap(_x, _y, _group = -1) : Node(_x, _y, _group) constructor
 		texture_set_stage(uniform_map, surface_get_texture(_map));
 		
 		for(var i = 0; i <= _life; i++) {
-			var frame = clamp(ANIMATOR.current_frame - i, 0, ANIMATOR.frames_total - 1);
+			var _frame = clamp(ANIMATOR.current_frame - i, 0, ANIMATOR.frames_total - 1);
 			
-			if(is_surface(cached_output[frame])) {
+			if(is_surface(cached_output[_frame])) {
 				shader_set_uniform_f(uniform_min, i * ste);	
 				shader_set_uniform_f(uniform_max, i * ste + ste);	
-				draw_surface_safe(cached_output[frame], 0, 0);
+				draw_surface_safe(cached_output[_frame], 0, 0);
 			}
 		}
 		

@@ -6,11 +6,9 @@ function Node_create_Image_Sequence(_x, _y, _group = -1) {
 	}
 	
 	var node = new Node_Image_Sequence(_x, _y, _group);
-	var paths = paths_to_array(path);
+	var paths = string_splice(path, "\n");
 	node.inputs[| 0].setValue(paths);
 	node.doUpdate();
-	
-	//ds_list_add(PANEL_GRAPH.nodes_list, node);
 	return node;
 }
 
@@ -18,8 +16,6 @@ function Node_create_Image_Sequence_path(_x, _y, _path) {
 	var node = new Node_Image_Sequence(_x, _y, PANEL_GRAPH.getCurrentContext());
 	node.inputs[| 0].setValue(_path);
 	node.doUpdate();
-	
-	//ds_list_add(PANEL_GRAPH.nodes_list, node);
 	return node;
 }
 
@@ -40,31 +36,33 @@ function Node_Image_Sequence(_x, _y, _group = -1) : Node(_x, _y, _group) constru
 	color = COLORS.node_blend_input;
 	always_output   = true;
 	
-	inputs[| 0]  = nodeValue(0, "Path", self, JUNCTION_CONNECT.input, VALUE_TYPE.path, [])
+	inputs[| 0]  = nodeValue("Path", self, JUNCTION_CONNECT.input, VALUE_TYPE.path, [])
 		.setDisplay(VALUE_DISPLAY.path_array, ["*.png", ""]);
 	
-	inputs[| 1]  = nodeValue(1, "Padding", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [0, 0, 0, 0])
-		.setDisplay(VALUE_DISPLAY.padding);
+	inputs[| 1]  = nodeValue("Padding", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [0, 0, 0, 0])
+		.setDisplay(VALUE_DISPLAY.padding)
+		.rejectArray();
 	
-	inputs[| 2] = nodeValue(2, "Canvas size", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Individual", "Minimum", "Maximum" ]);
+	inputs[| 2] = nodeValue("Canvas size", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0) 
+		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Individual", "Minimum", "Maximum" ])
+		.rejectArray();
 	
-	inputs[| 3] = nodeValue(3, "Sizing method", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Padding / Crop", "Scale" ]);
+	inputs[| 3] = nodeValue("Sizing method", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Padding / Crop", "Scale" ])
+		.rejectArray();
 	
-	inputs[| 4] = nodeValue(4, "Edit", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+	inputs[| 4] = nodeValue("Edit", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.button, [ function() {
-			with(dialogCall(o_dialog_image_array_edit, WIN_W / 2, WIN_H / 2)) {
+			with(dialogCall(o_dialog_image_array_edit, WIN_W / 2, WIN_H / 2))
 				target = other;	
-			}
 		}, "Edit array" ]);
 	
 	input_display_list = [
 		["Sequence settings",	false], 4, 0, 1, 2, 3
 	];
 	
-	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, [ PIXEL_SURFACE ]);
-	outputs[| 1] = nodeValue(1, "Paths", self, JUNCTION_CONNECT.output, VALUE_TYPE.path, [] ).
+	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, []);
+	outputs[| 1] = nodeValue("Paths", self, JUNCTION_CONNECT.output, VALUE_TYPE.path, [] ).
 		setVisible(true, true);
 	
 	path_loaded = [];
@@ -87,7 +85,7 @@ function Node_Image_Sequence(_x, _y, _group = -1) : Node(_x, _y, _group) constru
 		return false;
 	}
 	
-	static inspectorUpdate = function() {
+	static onInspectorUpdate = function() {
 		var path = inputs[| 0].getValue();
 		if(path == "") return;
 		updatePaths(path);
@@ -95,6 +93,7 @@ function Node_Image_Sequence(_x, _y, _group = -1) : Node(_x, _y, _group) constru
 	}
 	
 	function updatePaths(paths) {
+		print(paths);
 		for(var i = 0; i < array_length(spr); i++) {
 			if(spr[i] && sprite_exists(spr[i]))
 				sprite_delete(spr[i]);
@@ -117,9 +116,10 @@ function Node_Image_Sequence(_x, _y, _group = -1) : Node(_x, _y, _group) constru
 		return true;
 	}
 	
-	static update = function() {
+	static update = function(frame = ANIMATOR.current_frame) {
 		var path = inputs[| 0].getValue();
 		if(path == "") return;
+		if(!is_array(path)) path = [ path ];
 		if(!array_equals(path, path_loaded)) 
 			updatePaths(path);
 		
@@ -169,9 +169,9 @@ function Node_Image_Sequence(_x, _y, _group = -1) : Node(_x, _y, _group) constru
 					surfs[i] = surface_verify(array_safe_get(surfs, i), ww, hh);
 					surface_set_target(surfs[i]);
 						draw_clear_alpha(0, 0);
-						BLEND_OVERRIDE
+						BLEND_OVERRIDE;
 						draw_sprite(_spr, 0, pad[2], pad[1]);
-						BLEND_NORMAL
+						BLEND_NORMAL;
 					surface_reset_target();
 					break;
 				case CANVAS_SIZE.maximum :
@@ -187,9 +187,9 @@ function Node_Image_Sequence(_x, _y, _group = -1) : Node(_x, _y, _group) constru
 						
 						surface_set_target(surfs[i]);
 							draw_clear_alpha(0, 0);
-							BLEND_OVERRIDE
+							BLEND_OVERRIDE;
 							draw_sprite_ext(_spr, 0, sw, sh, ss, ss, 0, c_white, 1);
-							BLEND_NORMAL
+							BLEND_NORMAL;
 						surface_reset_target();
 					} else {
 						var xx = (ww - _w) / 2;
@@ -197,9 +197,9 @@ function Node_Image_Sequence(_x, _y, _group = -1) : Node(_x, _y, _group) constru
 						
 						surface_set_target(surfs[i]);
 							draw_clear_alpha(0, 0);
-							BLEND_OVERRIDE
+							BLEND_OVERRIDE;
 							draw_sprite(_spr, 0, xx, yy);
-							BLEND_NORMAL
+							BLEND_NORMAL;
 						surface_reset_target();
 					}
 					break;

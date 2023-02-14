@@ -1,5 +1,7 @@
 function Node_VFX_effector(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 	name = "Effector";
+	color = COLORS.node_blend_vfx;
+	icon  = THEME.vfx;
 	previewable = false;
 	node_draw_icon = s_node_vfx_accel;
 	
@@ -7,34 +9,40 @@ function Node_VFX_effector(_x, _y, _group = -1) : Node(_x, _y, _group) construct
 	h = 80;
 	min_h = h;
 	
-	inputs[| 0] = nodeValue(0, "Particles", self, JUNCTION_CONNECT.input, VALUE_TYPE.object, -1 )
+	inputs[| 0] = nodeValue("Particles", self, JUNCTION_CONNECT.input, VALUE_TYPE.particle, -1 )
 		.setVisible(true, true);
 	
-	inputs[| 1] = nodeValue(1, "Area", self,   JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 16, 16, 4, 4, AREA_SHAPE.rectangle ])
-		.setDisplay(VALUE_DISPLAY.area);
+	inputs[| 1] = nodeValue("Area", self,   JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 16, 16, 4, 4, AREA_SHAPE.rectangle ])
+		.setDisplay(VALUE_DISPLAY.area)
+		.rejectArray();
 	
-	inputs[| 2] = nodeValue(2, "Falloff", self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_01 )
-		.setDisplay(VALUE_DISPLAY.curve);
+	inputs[| 2] = nodeValue("Falloff", self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_01 )
+		.rejectArray();
 	
-	inputs[| 3] = nodeValue(3, "Falloff distance", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 4 );
+	inputs[| 3] = nodeValue("Falloff distance", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 4 )
+		.rejectArray();
 	
-	inputs[| 4] = nodeValue(4, "Effect Vector", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ -1, 0 ] )
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 4] = nodeValue("Effect Vector", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ -1, 0 ] )
+		.setDisplay(VALUE_DISPLAY.vector)
+		.rejectArray();
 	
-	inputs[| 5] = nodeValue(5, "Strength", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1 );
+	inputs[| 5] = nodeValue("Strength", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1 )
+		.rejectArray();
 	
-	inputs[| 6] = nodeValue(6, "Rotate particle", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ] )
-		.setDisplay(VALUE_DISPLAY.rotation_range);
+	inputs[| 6] = nodeValue("Rotate particle", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ] )
+		.setDisplay(VALUE_DISPLAY.rotation_range)
+		.rejectArray();
 	
-	inputs[| 7] = nodeValue(7, "Scale particle", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 0, 0 ] )
-		.setDisplay(VALUE_DISPLAY.vector_range);
+	inputs[| 7] = nodeValue("Scale particle", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 0, 0 ] )
+		.setDisplay(VALUE_DISPLAY.vector_range)
+		.rejectArray();
 	
 	input_display_list = [ 0,
 		["Area",	false], 1, 2, 3,
 		["Effect",	false], 4, 5, 6, 7,
 	];
 	
-	outputs[| 0] = nodeValue(0, "Particles", self, JUNCTION_CONNECT.output, VALUE_TYPE.object, -1 );
+	outputs[| 0] = nodeValue("Particles", self, JUNCTION_CONNECT.output, VALUE_TYPE.particle, -1 );
 	
 	current_data = [];
 	
@@ -122,7 +130,7 @@ function Node_VFX_effector(_x, _y, _group = -1) : Node(_x, _y, _group) construct
 		
 		if(_dst <= _fads) {
 			var inf = in? 0.5 + _dst / _fads : 0.5 - _dst / _fads;
-			str = eval_curve_bezier_cubic_t(_fall, clamp(inf, 0., 1.));
+			str = eval_curve_x(_fall, clamp(inf, 0., 1.));
 		} else if(in)
 			str = 1;
 		
@@ -131,15 +139,15 @@ function Node_VFX_effector(_x, _y, _group = -1) : Node(_x, _y, _group) construct
 		onAffect(part, str);
 	}
 	
-	static update = function() {
+	static update = function(frame = ANIMATOR.current_frame) {
 		var val = inputs[| 0].getValue();
 		outputs[| 0].setValue(val);
 		if(val == -1) return;
 		
-		for( var i = 0; i < ds_list_size(inputs); i++ ) {
+		for( var i = 0; i < ds_list_size(inputs); i++ )
 			current_data[i] = inputs[| i].getValue();
-		}
 		
+		if(!is_array(val) || array_length(val) == 0) return;
 		if(!is_array(val[0])) val = [ val ];
 		for( var i = 0; i < array_length(val); i++ )
 		for( var j = 0; j < array_length(val[i]); j++ ) {

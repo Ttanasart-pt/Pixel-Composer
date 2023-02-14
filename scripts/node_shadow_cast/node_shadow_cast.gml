@@ -26,11 +26,11 @@ function Node_Shadow_Cast(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) 
 	uniform_sld_use = shader_get_uniform(shader, "useSolid");
 	uniform_solid   = shader_get_sampler_index(shader, "solid");
 	
-	inputs[| 0] = nodeValue(0, "Background", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
+	inputs[| 0] = nodeValue("Background", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 	
-	inputs[| 1] = nodeValue(1, "Solid", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
+	inputs[| 1] = nodeValue("Solid", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 	
-	inputs[| 2] = nodeValue(2, "Light Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ])
+	inputs[| 2] = nodeValue("Light Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.vector)
 		.setUnitRef(function(index) { 
 			var _surf = inputs[| 0].getValue();
@@ -46,49 +46,52 @@ function Node_Shadow_Cast(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) 
 			return [surface_get_width(_surf), surface_get_height(_surf)];
 		}, VALUE_UNIT.reference);
 		
-	inputs[| 3] = nodeValue(3, "Soft light radius", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
+	inputs[| 3] = nodeValue("Soft light radius", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
 		.setDisplay(VALUE_DISPLAY.slider, [0, 2, 0.01]);
 	
-	inputs[| 4] = nodeValue(4, "Light density", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1)
+	inputs[| 4] = nodeValue("Light density", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1)
 		.setDisplay(VALUE_DISPLAY.slider, [1, 16, 1]);
 	
-	inputs[| 5] = nodeValue(5, "Light type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+	inputs[| 5] = nodeValue("Light type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.enum_scroll, ["Point", "Sun"]);
 	
-	inputs[| 6] = nodeValue(6, "Ambient color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_grey);
+	inputs[| 6] = nodeValue("Ambient color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_grey);
 	
-	inputs[| 7] = nodeValue(7, "Light color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white);
+	inputs[| 7] = nodeValue("Light color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white);
 	
-	inputs[| 8] = nodeValue(8, "Light radius", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 16);
+	inputs[| 8] = nodeValue("Light radius", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 16);
 	
-	inputs[| 9] = nodeValue(9, "Render solid", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
+	inputs[| 9] = nodeValue("Render solid", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
 	
-	inputs[| 10] = nodeValue(10, "Use BG color", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false, "If checked, BG color will be used as shadow caster.");
+	inputs[| 10] = nodeValue("Use BG color", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false, "If checked, BG color will be used as shadow caster.");
 	
-	inputs[| 11] = nodeValue(11, "BG threshold", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.1)
+	inputs[| 11] = nodeValue("BG threshold", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.1)
 		.setDisplay(VALUE_DISPLAY.slider, [0, 1, 0.01]);
 	
-	inputs[| 12] = nodeValue(12, "Light intensity", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
+	inputs[| 12] = nodeValue("Light intensity", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
 		.setDisplay(VALUE_DISPLAY.slider, [0, 2, 0.01]);
 	
-	inputs[| 13] = nodeValue(13, "Banding", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+	inputs[| 13] = nodeValue("Banding", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.slider, [0, 16, 1]);
 	
-	inputs[| 14] = nodeValue(14, "Attenuation", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0, "Control how light fade out over distance.")
+	inputs[| 14] = nodeValue("Attenuation", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0, "Control how light fade out over distance.")
 		.setDisplay(VALUE_DISPLAY.enum_scroll, ["Quadratic", "Invert quadratic", "Linear"]);
 	
-	inputs[| 15] = nodeValue(15, "Ambient occlusion", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+	inputs[| 15] = nodeValue("Ambient occlusion", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.slider, [0, 16, 1]);
 		
-	inputs[| 16] = nodeValue(16, "Ambient occlusion strength", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.1)
+	inputs[| 16] = nodeValue("Ambient occlusion strength", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.1)
 		.setDisplay(VALUE_DISPLAY.slider, [0, 0.2, 0.01]);
 	
-	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
+	inputs[| 17] = nodeValue("Active", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
+		active_index = 17;
 	
-	outputs[| 1] = nodeValue(1, "Light mask", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
+	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
-	input_display_list = [
-		["Surface",			false], 0, 1, 
+	outputs[| 1] = nodeValue("Light mask", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
+	
+	input_display_list = [ 17, 
+		["Surface",			 true], 0, 1, 
 		["Light",			false], 5, 12, 8, 2, 3, 4,
 		["Shadow caster",	false], 10, 11,
 		["Render",			false], 13, 14, 7, 6, 9, 15, 16,
@@ -134,13 +137,13 @@ function Node_Shadow_Cast(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) 
 		
 		surface_set_target(_outSurf);
 		draw_clear_alpha(0, 0);
-		BLEND_OVERRIDE
+		BLEND_OVERRIDE;
 		
 		shader_set(shader);
 			shader_set_uniform_f(uniform_dim, surface_get_width(_bg), surface_get_height(_bg));
-			shader_set_uniform_f_array(uniform_lpos, _pos);
-			shader_set_uniform_f_array(uniform_lamb, colToVec4(_lamb));
-			shader_set_uniform_f_array(uniform_lclr, colToVec4(_lclr));
+			shader_set_uniform_f_array_safe(uniform_lpos, _pos);
+			shader_set_uniform_f_array_safe(uniform_lamb, colToVec4(_lamb));
+			shader_set_uniform_f_array_safe(uniform_lclr, colToVec4(_lclr));
 			shader_set_uniform_f(uniform_lrad, _rad);
 			shader_set_uniform_f(uniform_prad, _lrad);
 			shader_set_uniform_f(uniform_lden, _den);
@@ -163,7 +166,7 @@ function Node_Shadow_Cast(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) 
 			draw_surface_safe(_bg, 0, 0);
 		shader_reset();
 		
-		BLEND_NORMAL
+		BLEND_NORMAL;
 		surface_reset_target();
 		
 		return _outSurf;

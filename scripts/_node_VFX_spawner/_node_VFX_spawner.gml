@@ -1,93 +1,99 @@
 function Node_VFX_Spawner_Base(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 	name = "Spawner";
 	
-	inputs[| 0] = nodeValue(0, "Particle sprite", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0)
-		.setDisplay(noone, "particles");
+	inputs[| 0] = nodeValue("Particle sprite", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 	
-	inputs[| 1] = nodeValue(1, "Spawn delay", self,  JUNCTION_CONNECT.input, VALUE_TYPE.integer, 4, "Frames delay between each particle spawn.");
+	inputs[| 1] = nodeValue("Spawn delay", self,  JUNCTION_CONNECT.input, VALUE_TYPE.integer, 4, "Frames delay between each particle spawn.");
 	
-	inputs[| 2] = nodeValue(2, "Spawn amount", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 2, "Amount of particle spawn in that frame.");
+	inputs[| 2] = nodeValue("Spawn amount", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 2, "Amount of particle spawn in that frame.");
 	
-	inputs[| 3] = nodeValue(3, "Spawn area", self,   JUNCTION_CONNECT.input, VALUE_TYPE.float, [ def_surf_size / 2, def_surf_size / 2, def_surf_size / 2, def_surf_size / 2, AREA_SHAPE.rectangle ])
+	inputs[| 3] = nodeValue("Spawn area", self,   JUNCTION_CONNECT.input, VALUE_TYPE.float, [ def_surf_size / 2, def_surf_size / 2, def_surf_size / 2, def_surf_size / 2, AREA_SHAPE.rectangle ])
 		.setDisplay(VALUE_DISPLAY.area);
 	
-	inputs[| 4] = nodeValue(4, "Spawn distribution", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_button, [ "Area", "Border" ]);
+	inputs[| 4] = nodeValue("Spawn distribution", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Area", "Border", "Map", "Direct Data" ]);
 	
-	inputs[| 5] = nodeValue(5, "Lifespan", self,  JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 20, 30 ])
+	inputs[| 5] = nodeValue("Lifespan", self,  JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 20, 30 ])
 		.setDisplay(VALUE_DISPLAY.range);
 	
-	inputs[| 6] = nodeValue(6, "Spawn direction", self,  JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 45, 135 ])
+	inputs[| 6] = nodeValue("Spawn direction", self,  JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 45, 135 ])
 		.setDisplay(VALUE_DISPLAY.rotation_range);
 	
-	inputs[| 7] = nodeValue(7, "Acceleration", self,  JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ])
+	inputs[| 7] = nodeValue("Acceleration", self,  JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.range);
 	
-	inputs[| 8] = nodeValue(8, "Orientation", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [0, 0])
+	inputs[| 8] = nodeValue("Orientation", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [0, 0])
 		.setDisplay(VALUE_DISPLAY.rotation_range);
 		
-	inputs[| 9] = nodeValue(9, "Rotational speed", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ])
+	inputs[| 9] = nodeValue("Rotational speed", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.range);
 	
-	inputs[| 10] = nodeValue(10, "Spawn scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 1, 1, 1 ] )
+	inputs[| 10] = nodeValue("Spawn scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 1, 1, 1 ] )
 		.setDisplay(VALUE_DISPLAY.vector_range);
 	
-	inputs[| 11] = nodeValue(11, "Scale over time", self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_11 );
+	inputs[| 11] = nodeValue("Scale over time", self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_11 );
 	
-	inputs[| 12] = nodeValue(12, "Color over lifetime", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white)
+	inputs[| 12] = nodeValue("Color over lifetime", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, [ new gradientKey(0, c_white) ] )
 		.setDisplay(VALUE_DISPLAY.gradient);
 	
-	inputs[| 13] = nodeValue(13, "Alpha", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 1 ])
+	inputs[| 13] = nodeValue("Alpha", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 1 ])
 		.setDisplay(VALUE_DISPLAY.range);
 	
-	inputs[| 14] = nodeValue(14, "Alpha over time", self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_11);
+	inputs[| 14] = nodeValue("Alpha over time", self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_11);
 	
-	inputs[| 15] = nodeValue(15, "Rotate by direction", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false, "Make the particle rotates to follow its movement.");
+	inputs[| 15] = nodeValue("Rotate by direction", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false, "Make the particle rotates to follow its movement.");
 	
-	inputs[| 16] = nodeValue(16, "Spawn type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+	inputs[| 16] = nodeValue("Spawn type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.enum_button, [ "Stream", "Burst" ]);
 	
-	inputs[| 17] = nodeValue(17, "Spawn size", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 1 ] )
+	inputs[| 17] = nodeValue("Spawn size", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 1 ] )
 		.setDisplay(VALUE_DISPLAY.range);
 	
-	inputs[| 18] = nodeValue(18, "Spawn velocity", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [1, 2] )
+	inputs[| 18] = nodeValue("Spawn velocity", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [1, 2] )
 		.setDisplay(VALUE_DISPLAY.range);
 	
-	inputs[| 19] = nodeValue(19, "Gravity", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0 );
+	inputs[| 19] = nodeValue("Gravity", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0 );
 	
-	inputs[| 20] = nodeValue(20, "Wiggle", self, JUNCTION_CONNECT.input, VALUE_TYPE.float,  0 );
+	inputs[| 20] = nodeValue("Wiggle", self, JUNCTION_CONNECT.input, VALUE_TYPE.float,  0 );
 	
-	inputs[| 21] = nodeValue(21, "Loop", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true );
+	inputs[| 21] = nodeValue("Loop", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true );
 	
-	inputs[| 22] = nodeValue(22, "Surface array", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0, "Whether to select image from an array in order, at random, or treat array as animation." )
+	inputs[| 22] = nodeValue("Surface array", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0, "Whether to select image from an array in order, at random, or treat array as animation." )
 		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Random", "Order", "Animation" ])
 		.setVisible(false);
 	
-	inputs[| 23] = nodeValue(23, "Animation speed", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1 )
+	inputs[| 23] = nodeValue("Animation speed", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1 )
 		.setVisible(false);
 	
-	inputs[| 24] = nodeValue(24, "Scatter", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1)
+	inputs[| 24] = nodeValue("Scatter", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1)
 		.setDisplay(VALUE_DISPLAY.enum_button, [ "Uniform", "Random", "Data" ]);
 	
-	inputs[| 25] = nodeValue(25, "Boundary data", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [])
+	inputs[| 25] = nodeValue("Boundary data", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [])
 		.setVisible(false, true);
 	
-	inputs[| 26] = nodeValue(26, "On animation end", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, ANIM_END_ACTION.loop)
+	inputs[| 26] = nodeValue("On animation end", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, ANIM_END_ACTION.loop)
 		.setDisplay(VALUE_DISPLAY.enum_button, [ "Loop", "Ping pong", "Destroy" ])
 		.setVisible(false);
 		
-	inputs[| 27] = nodeValue(27, "Spawn", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
+	inputs[| 27] = nodeValue("Spawn", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
 	
-	inputs[| 28] = nodeValue(28, "Random blend", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white)
+	inputs[| 28] = nodeValue("Random blend", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, [ new gradientKey(0, c_white) ] )
 		.setDisplay(VALUE_DISPLAY.gradient);
 		
-	inputs[| 29] = nodeValue(29, "Directed from center", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false, "Make particle move away from the spawn center.");
-		
+	inputs[| 29] = nodeValue("Directed from center", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false, "Make particle move away from the spawn center.");
+	
+	inputs[| 30] = nodeValue("Distribution map", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0)
+	
+	inputs[| 31] = nodeValue("Distribution data", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [])
+		.setDisplay(VALUE_DISPLAY.vector);
+	
+	inputs[| 32] = nodeValue("Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, irandom_range(100000, 999999))
+	
 	input_len = ds_list_size(inputs);
 	
-	input_display_list = [
+	input_display_list = [ 32,
 		["Sprite",	   false],	0, 22, 23, 26,
-		["Spawn",		true],	27, 16, 1, 2, 3, 4, 24, 25, 5,
+		["Spawn",		true],	27, 16, 1, 2, 3, 4, 30, 31, 24, 25, 5,
 		["Movement",	true],	29, 6, 18, 7,
 		["Physics",		true],	19, 20,
 		["Rotation",	true],	15, 8, 9, 
@@ -99,8 +105,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = -1) : Node(_x, _y, _group) const
 	parts = array_create(PREF_MAP[? "part_max_amount"]);
 	parts_runner = 0;
 	
-	seed_origin = irandom(9999999);
-	seed = seed_origin;
+	seed = 0;
 	spawn_index = 0;
 	scatter_index = 0;
 	def_surface = -1;
@@ -114,30 +119,28 @@ function Node_VFX_Spawner_Base(_x, _y, _group = -1) : Node(_x, _y, _group) const
 		var _inSurf = current_data[0];
 		
 		if(_inSurf == 0) {
-			if(def_surface == -1 || !surface_exists(def_surface)) { 
-				def_surface = PIXEL_SURFACE;
-				surface_set_target(def_surface);
-				draw_clear(c_white);
-				surface_reset_target();
-			}
+			if(!is_surface(def_surface)) 
+				return;
 			_inSurf = def_surface;	
 		}
 		
 		var _spawn_amount	= current_data[ 2];
 		var _amo = _spawn_amount;
 		
-		var _spawn_area		= current_data[ 3];
-		var _distrib		= current_data[ 4];
-		var _scatter		= current_data[24];
+		var _spawn_area	= current_data[ 3];
+		var _distrib	= current_data[ 4];
+		var _dist_map	= current_data[30];
+		var _dist_data	= current_data[31];
+		var _scatter	= current_data[24];
 		
 		var _life			= current_data[ 5];
 		var _direction		= current_data[ 6];
 		var _directCenter	= current_data[29];
 		var _velocity		= current_data[18];
 		
-		var _accel			= current_data[ 7];
-		var _grav			= current_data[19];
-		var _wigg			= current_data[20];
+		var _accel	= current_data[ 7];
+		var _grav	= current_data[19];
+		var _wigg	= current_data[20];
 		
 		var _follow			= current_data[15];
 		var _rotation		= current_data[ 8];
@@ -158,8 +161,14 @@ function Node_VFX_Spawner_Base(_x, _y, _group = -1) : Node(_x, _y, _group) const
 		
 		if(_rotation[1] < _rotation[0]) _rotation[1] += 360;
 		
-		repeat(_amo) {
-			random_set_seed(seed++);
+		var _posDist = [];
+		if(_distrib == 2)
+			_posDist = get_points_from_dist(_dist_map, _amo, seed);
+		
+		for( var i = 0; i < _amo; i++ ) {
+			random_set_seed(seed); 
+			seed += 100;
+			
 			parts_runner = clamp(parts_runner, 0, array_length(parts) - 1);
 			var part = parts[parts_runner];
 			
@@ -190,11 +199,25 @@ function Node_VFX_Spawner_Base(_x, _y, _group = -1) : Node(_x, _y, _group) const
 					
 					part.boundary_data = _b;
 				} else {
-					var sp = area_get_random_point(_spawn_area, _distrib, _scatter, spawn_index, _spawn_amount, seed);
-					xx = sp[0];
-					yy = sp[1];
+					if(_distrib < 2) {
+						var sp = area_get_random_point(_spawn_area, _distrib, _scatter, spawn_index, _spawn_amount, seed);
+						xx = sp[0];
+						yy = sp[1];
 					
-					part.boundary_data = -1;
+						part.boundary_data = -1;
+					} else if(_distrib == 2) {
+						var sp = array_safe_get(_posDist, i);
+						if(!is_array(sp)) continue;
+						
+						xx = _spawn_area[0] + _spawn_area[2] * (sp[0] * 2 - 1.);
+						yy = _spawn_area[1] + _spawn_area[3] * (sp[1] * 2 - 1.);
+					} else if(_distrib == 3) {
+						sp = array_safe_get(_dist_data, spawn_index);
+						if(!is_array(sp)) continue;
+				
+						_x = sp[0];
+						_y = sp[1];
+					}
 				}
 			} else {
 				xx = _pos[0];
@@ -231,7 +254,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = -1) : Node(_x, _y, _group) const
 			spawn_index = safe_mod(spawn_index + 1, PREF_MAP[? "part_max_amount"]);
 			onSpawn(_time, part);
 			
-			parts_runner = safe_mod((parts_runner + 1), PREF_MAP[? "part_max_amount"]);
+			parts_runner = safe_mod(parts_runner + 1, PREF_MAP[? "part_max_amount"]);
 		}
 	}
 	
@@ -248,7 +271,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = -1) : Node(_x, _y, _group) const
 		}
 		
 		render();
-		seed = seed_origin;
+		seed = inputs[| 32].getValue();
 		
 		var _loop	= inputs[| 21].getValue();
 		if(!_loop) return;
@@ -258,7 +281,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = -1) : Node(_x, _y, _group) const
 			updateParticleForward(false);
 		}
 		
-		seed = seed_origin;
+		seed = inputs[| 32].getValue();
 	}
 	
 	function checkPartPool() {
@@ -306,14 +329,18 @@ function Node_VFX_Spawner_Base(_x, _y, _group = -1) : Node(_x, _y, _group) const
 	}
 	
 	static step = function() {
-		var _inSurf = inputs[| 0].getValue();
+		var _inSurf = inputs[|  0].getValue();
+		var _dist   = inputs[|  4].getValue();
 		var _scatt  = inputs[| 24].getValue();
 		var _dirAng = inputs[| 29].getValue();
 		
 		inputs[|  6].setVisible(!_dirAng);
 		inputs[| 22].setVisible(false);
 		inputs[| 23].setVisible(false);
+		inputs[| 26].setVisible(false);
 		inputs[| 25].setVisible(_scatt == 2);
+		inputs[| 30].setVisible(_dist == 2, _dist == 2);
+		inputs[| 31].setVisible(_dist == 3, _dist == 3);
 		
 		if(is_array(_inSurf)) {
 			inputs[| 22].setVisible(true);
@@ -333,8 +360,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = -1) : Node(_x, _y, _group) const
 	}
 	
 	static onStep = function() {
-		if(!ANIMATOR.frame_progress) return;
-		if(!ANIMATOR.is_playing) return;
+		RETURN_ON_REST
 		
 		if(ANIMATOR.current_frame == 0)
 			reset();
@@ -349,7 +375,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = -1) : Node(_x, _y, _group) const
 	
 	static onDrawOverlay = -1;
 	
-	static update = function() {}
+	static update = function(frame = ANIMATOR.current_frame) {}
 	static render = function() {}
 	
 	static onPartCreate = function(part) {}

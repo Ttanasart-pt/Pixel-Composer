@@ -28,22 +28,22 @@ function Node_Statistic(_x, _y, _group = -1) : Node(_x, _y, _group) constructor 
 	
 	w = 96;
 	
-	
-	inputs[| 0] = nodeValue(0, "Type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+	inputs[| 0] = nodeValue("Type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.enum_scroll, [ 
-			"Sum", "Mean", "Median", "Max", "Min"]);
+			"Sum", "Mean", "Median", "Max", "Min"])
+		.rejectArray();
 	
 	input_fix_len = ds_list_size(inputs);
 	data_length = 1;
 	
 	static createNewInput = function() {
 		var index = ds_list_size(inputs);
-		inputs[| index] = nodeValue( index, "Input", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, -1 )
+		inputs[| index] = nodeValue("Input", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, -1 )
 			.setVisible(true, true);
 	}
 	if(!LOADING && !APPENDING) createNewInput();
 	
-	outputs[| 0] = nodeValue(0, "Statistic", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, -1);
+	outputs[| 0] = nodeValue("Statistic", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, -1);
 	
 	static refreshDynamicInput = function() {
 		var _l = ds_list_create();
@@ -76,7 +76,7 @@ function Node_Statistic(_x, _y, _group = -1) : Node(_x, _y, _group) constructor 
 		refreshDynamicInput();
 	}
 	
-	static update = function() {
+	static update = function(frame = ANIMATOR.current_frame) {
 		var type = inputs[| 0].getValue();
 		var res = 0;
 		

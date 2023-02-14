@@ -9,6 +9,8 @@ function rotator(_onModify, _step = -1) : widget() constructor {
 	real_val = 0;
 	
 	tb_value = new textBox(TEXTBOX_INPUT.number, onModify);
+	tb_value.slidable = true;
+	tb_value.slide_speed = 1;
 	
 	static setInteract = function(interactable = noone) { 
 		self.interactable = interactable;
@@ -52,8 +54,8 @@ function rotator(_onModify, _step = -1) : widget() constructor {
 			draw_sprite_ui_uniform(THEME.rotator_knob, 1, px, py);
 			
 			if(val != drag_sv) {
-				onModify(val);
-				UNDO_HOLDING = true;
+				if(onModify(val))
+					UNDO_HOLDING = true;
 			}
 			
 			drag_sa = point_direction(_x, knob_y, _m[0], _m[1]);

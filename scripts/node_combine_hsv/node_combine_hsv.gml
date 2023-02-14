@@ -6,11 +6,11 @@ function Node_Combine_HSV(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) 
 	uniform_s = shader_get_sampler_index(shader, "samS");
 	uniform_v = shader_get_sampler_index(shader, "samV");
 	
-	inputs[| 0] = nodeValue(0, "Hue",        self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
-	inputs[| 1] = nodeValue(1, "Saturation", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
-	inputs[| 2] = nodeValue(2, "Value",      self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
+	inputs[| 0] = nodeValue("Hue",        self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
+	inputs[| 1] = nodeValue("Saturation", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
+	inputs[| 2] = nodeValue("Value",      self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 	
-	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
+	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	static process_data = function(_outSurf, _data, _output_index, _array_index) {
 		var _h = _data[0];
@@ -19,7 +19,7 @@ function Node_Combine_HSV(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) 
 		
 		surface_set_target(_outSurf);
 		draw_clear_alpha(0, 0);
-		BLEND_OVERRIDE
+		BLEND_OVERRIDE;
 		
 		shader_set(shader);
 			texture_set_stage(uniform_h, surface_get_texture(_h));
@@ -29,7 +29,7 @@ function Node_Combine_HSV(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) 
 			draw_sprite_ext(s_fx_pixel, 0, 0, 0, surface_get_width(_outSurf), surface_get_width(_outSurf), 0, c_white, 1);
 		shader_reset();
 		
-		BLEND_NORMAL
+		BLEND_NORMAL;
 		surface_reset_target();
 		
 		return _outSurf;

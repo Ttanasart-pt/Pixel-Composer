@@ -30,10 +30,10 @@ function Node_Image_gif(_x, _y, _group = -1) : Node(_x, _y, _group) constructor 
 	update_on_frame = true;
 	always_output   = true;
 	
-	inputs[| 0]  = nodeValue(0, "Path", self, JUNCTION_CONNECT.input, VALUE_TYPE.path, "")
+	inputs[| 0]  = nodeValue("Path", self, JUNCTION_CONNECT.input, VALUE_TYPE.path, "")
 		.setDisplay(VALUE_DISPLAY.path_load, ["*.gif", ""]);
 		
-	inputs[| 1] = nodeValue(1, "Set animation length to gif", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+	inputs[| 1] = nodeValue("Set animation length to gif", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.button, [ function() { 
 				if(!spr) return;
 				if(!sprite_exists(spr)) return;
@@ -41,8 +41,8 @@ function Node_Image_gif(_x, _y, _group = -1) : Node(_x, _y, _group) constructor 
 				ANIMATOR.framerate = 12;
 			}, "Match length"] );
 	
-	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
-	outputs[| 1] = nodeValue(1, "Path", self, JUNCTION_CONNECT.output, VALUE_TYPE.path, "")
+	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
+	outputs[| 1] = nodeValue("Path", self, JUNCTION_CONNECT.output, VALUE_TYPE.path, "")
 		.setVisible(true, true);
 	
 	spr = noone;
@@ -59,7 +59,7 @@ function Node_Image_gif(_x, _y, _group = -1) : Node(_x, _y, _group) constructor 
 		return false;
 	}
 	
-	static inspectorUpdate = function() {
+	static onInspectorUpdate = function() {
 		var path = inputs[| 0].getValue();
 		if(path == "") return;
 		updatePaths(path);
@@ -70,7 +70,7 @@ function Node_Image_gif(_x, _y, _group = -1) : Node(_x, _y, _group) constructor 
 		path = try_get_path(path);
 		if(path == -1) return false;
 		
-		var ext = filename_ext(path);
+		var ext = string_lower(filename_ext(path));
 		var _name = string_replace(filename_name(path), filename_ext(path), "");
 		
 		switch(ext) {
@@ -107,7 +107,7 @@ function Node_Image_gif(_x, _y, _group = -1) : Node(_x, _y, _group) constructor 
 		}
 	}
 	
-	static update = function() {
+	static update = function(frame = ANIMATOR.current_frame) {
 		var path = inputs[| 0].getValue();
 		if(path == "") return;
 		if(path_current != path) updatePaths(path);
@@ -123,9 +123,9 @@ function Node_Image_gif(_x, _y, _group = -1) : Node(_x, _y, _group) constructor 
 		
 		surface_set_target(_outsurf);
 		draw_clear_alpha(0, 0);
-		BLEND_OVERRIDE
+		BLEND_OVERRIDE;
 		draw_sprite(spr, ANIMATOR.current_frame, 0, 0);
-		BLEND_NORMAL
+		BLEND_NORMAL;
 		surface_reset_target();
 	}
 	

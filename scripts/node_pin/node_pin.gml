@@ -1,5 +1,5 @@
 function Node_Pin(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
-	name = "";
+	name = "Pin";
 	w = 32;
 	h = 32;
 	
@@ -10,12 +10,12 @@ function Node_Pin(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 	bg_spr = THEME.node_pin_bg;
 	bg_sel_spr = THEME.node_pin_bg_active;
 	
-	inputs[| 0] = nodeValue(0, "In", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, 0 )
+	inputs[| 0] = nodeValue("In", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, 0 )
 		.setVisible(true, true);
 	
-	outputs[| 0] = nodeValue(0, "Out", self, JUNCTION_CONNECT.output, VALUE_TYPE.any, 0);
+	outputs[| 0] = nodeValue("Out", self, JUNCTION_CONNECT.output, VALUE_TYPE.any, 0);
 	
-	static update = function() {
+	static update = function(frame = ANIMATOR.current_frame) {
 		inputs[| 0].type = inputs[| 0].value_from == noone? VALUE_TYPE.any : inputs[| 0].value_from.type;
 		outputs[| 0].type = inputs[| 0].type;
 		outputs[| 0].value_from = inputs[| 0].value_from;
@@ -60,9 +60,9 @@ function Node_Pin(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 			active_draw_index = -1;
 		}
 		
-		if(name != "") {
+		if(display_name != "") {
 			draw_set_text(f_p0, fa_center, fa_bottom, COLORS._main_text);
-			draw_text_transformed(xx, yy - 12, name, _s, _s, 0);
+			draw_text_transformed(xx, yy - 12, display_name, _s, _s, 0);
 		}
 		
 		return drawJunctions(_x, _y, _mx, _my, _s);

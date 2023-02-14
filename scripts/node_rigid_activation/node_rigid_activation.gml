@@ -1,26 +1,28 @@
 function Node_Rigid_Activate(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 	name = "Activate Physics";
+	color = COLORS.node_blend_simulation;
+	icon  = THEME.rigidSim;
 	w = 96;
 	min_h = 96;
 	
-	inputs[| 0] = nodeValue(0, "Object", self, JUNCTION_CONNECT.input, VALUE_TYPE.object, noone)
+	inputs[| 0] = nodeValue("Object", self, JUNCTION_CONNECT.input, VALUE_TYPE.rigid, noone)
 		.setVisible(true, true);
 	
-	inputs[| 1] = nodeValue(1, "Physics activated", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
+	inputs[| 1] = nodeValue("Physics activated", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true)
+		.rejectArray();
 	
-	outputs[| 0] = nodeValue(0, "Object", self, JUNCTION_CONNECT.output, VALUE_TYPE.object, noone);
+	outputs[| 0] = nodeValue("Object", self, JUNCTION_CONNECT.output, VALUE_TYPE.rigid, noone);
 	
 	input_display_list = [
 		["Object",		 true],	0,
 		["Activate",	false],	1,
 	]
 	
-	static update = function() {
+	static update = function(frame = ANIMATOR.current_frame) {
 		var _obj = inputs[| 0].getValue();
 		outputs[| 0].setValue(_obj);
 		
-		if(!ANIMATOR.is_playing)
-			return;
+		RETURN_ON_REST
 			
 		var _act = inputs[| 1].getValue();
 		

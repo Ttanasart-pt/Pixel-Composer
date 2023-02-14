@@ -21,8 +21,15 @@ function paddingBox(_onModify, _unit = noone) : widget() constructor {
 	onModifySingle[2] = function(val) { onModifyIndex(2, val); }
 	onModifySingle[3] = function(val) { onModifyIndex(3, val); }
 	
-	for(var i = 0; i < 4; i++)
-		tb[i] = new textBox(TEXTBOX_INPUT.float, onModifySingle[i]);
+	for(var i = 0; i < 4; i++) {
+		tb[i] = new textBox(TEXTBOX_INPUT.number, onModifySingle[i]);
+		tb[i].slidable = true;
+	}
+	
+	static setSlideSpeed = function(speed) {
+		for(var i = 0; i < 4; i++)
+			tb[i].slide_speed = speed;
+	}
 	
 	static setInteract = function(interactable = noone) { 
 		self.interactable = interactable;

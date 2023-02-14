@@ -21,53 +21,53 @@ function areaBox(_onModify, _unit = noone) : widget() constructor {
 	
 	onModifySingle[0] = function(val) { 
 		if(mode == AREA_MODE.area) {
-			onModify(0, toNumber(val)); 
+			return onModify(0, toNumber(val)); 
 		} else if(mode == AREA_MODE.padding) {
 			var v = toNumber(val);
 			if(link_value)	current_data = [ v, v, v, v ];
 			else			current_data[0] = v;
-			setAllData(current_data);
+			return setAllData(current_data);
 		} else if(mode == AREA_MODE.two_point) {
-			onModify(0, val);
+			return onModify(0, val);
 		}
 	}
 	
 	onModifySingle[1] = function(val) { 
 		if(mode == AREA_MODE.area) {
-			onModify(1, toNumber(val)); 
+			return onModify(1, toNumber(val)); 
 		} else if(mode == AREA_MODE.padding) {
 			var v = toNumber(val);
 			if(link_value)	current_data = [ v, v, v, v ];
 			else			current_data[1] = v;
-			setAllData(current_data);
+			return setAllData(current_data);
 		} else if(mode == AREA_MODE.two_point) {
-			onModify(1, val);
+			return onModify(1, val);
 		}
 	}
 	
 	onModifySingle[2] = function(val) { 
 		if(mode == AREA_MODE.area) {
-			onModify(2, toNumber(val)); 
+			return onModify(2, toNumber(val)); 
 		} else if(mode == AREA_MODE.padding) {
 			var v = toNumber(val);
 			if(link_value)	current_data = [ v, v, v, v ];
 			else			current_data[2] = v;
-			setAllData(current_data);
+			return setAllData(current_data);
 		} else if(mode == AREA_MODE.two_point) {
-			onModify(2, val);
+			return onModify(2, val);
 		}
 	}
 	
 	onModifySingle[3] = function(val) { 
 		if(mode == AREA_MODE.area) {
-			onModify(3, toNumber(val)); 
+			return onModify(3, toNumber(val)); 
 		} else if(mode == AREA_MODE.padding) {
 			var v = toNumber(val);
 			if(link_value)	current_data = [ v, v, v, v ];
 			else			current_data[3] = v;
-			setAllData(current_data);
+			return setAllData(current_data);
 		} else if(mode == AREA_MODE.two_point) {
-			onModify(3, val);
+			return onModify(3, val);
 		}
 	}
 	
@@ -76,11 +76,18 @@ function areaBox(_onModify, _unit = noone) : widget() constructor {
 		tb[i].slidable = true;
 	}
 	
+	static setSlideSpeed = function(speed) {
+		for(var i = 0; i < 4; i++)
+			tb[i].slide_speed = speed;
+	}
+	
 	static setAllData = function(data) {
-		onModify(0, data[0]);
-		onModify(1, data[1]);
-		onModify(2, data[2]);
-		onModify(3, data[3]);
+		var mod0 = onModify(0, data[0]);
+		var mod1 = onModify(1, data[1]);
+		var mod2 = onModify(2, data[2]);
+		var mod3 = onModify(3, data[3]);
+		
+		return mod0 || mod1 || mod2 || mod3;
 	}
 	
 	static setInteract = function(interactable = noone) { 

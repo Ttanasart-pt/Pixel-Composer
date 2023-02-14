@@ -5,14 +5,14 @@ function Node_Lerp(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constru
 	
 	w = 96;
 	
-	inputs[| 0] = nodeValue(1, "a", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0);
-	inputs[| 1] = nodeValue(2, "b", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0);
-	inputs[| 2] = nodeValue(3, "Progress", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
+	inputs[| 0] = nodeValue("a", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0);
+	inputs[| 1] = nodeValue("b", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0);
+	inputs[| 2] = nodeValue("Progress", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
 		.setDisplay(VALUE_DISPLAY.slider_range, [0, 1, .01]);
 	
-	outputs[| 0] = nodeValue(0, "Result", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, 0);
+	outputs[| 0] = nodeValue("Result", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, 0);
 	
-	function process_data(_output, _data, index = 0) { 
+	function process_data(_output, _data, _output_index, _array_index = 0) { 
 		return lerp(_data[0], _data[1], _data[2]);
 	}
 	

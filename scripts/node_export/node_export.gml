@@ -26,22 +26,25 @@ function Node_Export(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 	playing = false;
 	played  = 0;
 	
-	inputs[| 0] = nodeValue(0, "Surface", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
+	inputs[| 0] = nodeValue("Surface", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 	
-	inputs[| 1] = nodeValue(1, "Paths",   self, JUNCTION_CONNECT.input, VALUE_TYPE.path, "")
+	inputs[| 1] = nodeValue("Paths",   self, JUNCTION_CONNECT.input, VALUE_TYPE.path, "")
 		.setDisplay(VALUE_DISPLAY.path_save, ["*.png", ""])
-		.setVisible(true);
+		.setVisible(true)
+		.rejectArray();
 	
-	inputs[| 2] = nodeValue(2, "Template",  self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "%d%n")
-		.setDisplay(VALUE_DISPLAY.export_format);
+	inputs[| 2] = nodeValue("Template",  self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "%d%n")
+		.setDisplay(VALUE_DISPLAY.export_format)
+		.rejectArray();
 	
-	format_single = ["Single image (.png)", "Image sequence (.png)", "Animated gif (.gif)"];
-	format_array  = ["Multiple image (.png)", "Image sequence (.png)", "Animated gif (.gif)"];
+	format_single = ["Single image", "Image sequence", "Animated"];
+	format_array  = ["Multiple images", "Image sequences", "Animated"];
 	
-	inputs[| 3] = nodeValue(3, "Format", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, ["Single image (.png)", "Image sequence (.png)", "Animated gif (.gif)"]);
+	inputs[| 3] = nodeValue("Type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+		.setDisplay(VALUE_DISPLAY.enum_scroll, format_single)
+		.rejectArray();
 	
-	inputs[| 4] = nodeValue(4, "Template guides", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+	inputs[| 4] = nodeValue("Template guides", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.label, 
 @"%d          Directory
 %1d        Goes up 1 level
@@ -49,34 +52,87 @@ function Node_Export(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 %f           Frame
 %i           Array index" );
 
-	inputs[| 5] = nodeValue(5, "Loop", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true)
-		.setVisible(false);
+	inputs[| 5] = nodeValue("Loop", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true)
+		.setVisible(false)
+		.rejectArray();
 	
-	inputs[| 6] = nodeValue(6, "Frame optimization", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false)
-		.setVisible(false);
+	inputs[| 6] = nodeValue("Frame optimization", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false)
+		.setVisible(false)
+		.rejectArray();
 	
-	inputs[| 7] = nodeValue(7, "Color merge", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.02)
+	inputs[| 7] = nodeValue("Color merge", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.02)
 		.setDisplay(VALUE_DISPLAY.slider, [0, 1, 0.01])
-		.setVisible(false);
+		.setVisible(false)
+		.rejectArray();
 	
-	inputs[| 8] = nodeValue(8, "Framerate", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 30)
+	inputs[| 8] = nodeValue("Framerate", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 30)
+		.rejectArray();
 	
+	format_image     = [ ".png", ".jpg", ".webp" ];
+	format_animation = [ ".gif", ".webp" ];
+	
+	inputs[| 9] = nodeValue("Format", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+		.setDisplay(VALUE_DISPLAY.enum_scroll, format_image)
+		.rejectArray();
+	
+	inputs[| 10] = nodeValue("Quality", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 80)
+		.setDisplay(VALUE_DISPLAY.slider, [0, 100, 1])
+		.rejectArray();
+		
 	input_display_list = [
-		["Export",			false], 0, 1, 2, 4, 
-		["Format settings", false], 3, 
-		["Gif settings",	false], 8, 5, 6, 7
+		["Export",		false], 0, 1, 2, 4, 
+		["Format ",		false], 3, 9, 
+		["Settings",	false], 8, 5, 6, 7, 10, 
 	];
+	
+	directory = DIRECTORY + "temp\\" + string(irandom_range(100000, 999999));
+	converter = working_directory + "ImageMagick\\convert.exe";
+	magick    = working_directory + "ImageMagick\\magick.exe";
+	webp      = working_directory + "webp\\bin\\webpmux.exe";
 	
 	static onValueUpdate = function(_index) {
 		var form = inputs[| 3].getValue();
 		
+		if(_index == 3)
+			inputs[| 9].setValue(0);
+		
 		if(_index == 3 && form == 1)
 			inputs[| 2].setValue("%d%n%3f%i");
+	}
+	
+	static renderWebp = function(temp_path, target_path) {
+		var _path = file_find_first(temp_path + "*.png", 0);
+		var frames = [];
 		
-		inputs[| 5].setVisible(form == 2);
-		inputs[| 6].setVisible(form == 2);
-		inputs[| 7].setVisible(form == 2);
-		inputs[| 8].setVisible(form == 2);
+		while(_path != "") {
+		    var _frame    = "\"" + temp_path + string_replace_all(_path, ".png", "") + ".webp\"";
+			var _pathTemp = "\"" + temp_path + _path + "\"";
+			var shell_cmd = _pathTemp + " -define webp:lossless=true " + _frame;
+			
+			array_push(frames, _frame);
+			execute_shell(magick, shell_cmd);
+		
+		    _path = file_find_next();
+		}
+		
+		var rate = inputs[| 8].getValue();
+		var framerate = round(1 / rate * 1000);
+		
+		var cmd = "";
+		
+		for( var i = 0; i < array_length(frames); i++ )
+			cmd += "-frame " + frames[i] + " +" + string(framerate) + "+0+0+1 ";
+		
+		cmd += "-bgcolor 0,0,0,0 ";
+		cmd += "-o \"" + target_path + "\"";
+		
+		execute_shell(webp, cmd); 
+		
+		var noti = log_message("EXPORT", "Export webp as " + target_path, THEME.noti_icon_tick, COLORS._main_value_positive);
+		noti.path = filename_dir(target_path);
+		noti.setOnClick(function() { shellOpenExplorer(self.path); }, "Open in explorer", THEME.explorer);
+		
+		PANEL_MENU.setNotiIcon(THEME.noti_icon_tick);
 	}
 	
 	static renderGif = function(temp_path, target_path) {
@@ -85,7 +141,6 @@ function Node_Export(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 		var fuzz = inputs[| 7].getValue();
 		var rate = inputs[| 8].getValue();
 		
-		var converter = working_directory + "ImageMagick\\convert.exe";
 		var framerate = 100 / rate;
 		var loop_str = loop? 0 : 1;
 		
@@ -95,8 +150,6 @@ function Node_Export(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 			" -loop " + string(loop_str);
 		
 		if(opti) {
-			var first_image = string_replace(temp_path, "*", "100000");
-			
 			shell_cmd += " -fuzz " + string(fuzz * 100) + "%" +
 				" -layers OptimizeFrame" +
 				" -layers OptimizeTransparency";
@@ -105,7 +158,7 @@ function Node_Export(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 		shell_cmd += " " + temp_path + 
 					 " " + target_path;
 		
-		execute_shell_simple(converter, shell_cmd,, 0);
+		execute_shell(converter, shell_cmd);
 		
 		var noti = log_message("EXPORT", "Export gif as " + target_path, THEME.noti_icon_tick, COLORS._main_value_positive);
 		noti.path = filename_dir(target_path);
@@ -178,12 +231,52 @@ function Node_Export(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 			}
 		}
 		
-		if(form == NODE_EXPORT_FORMAT.single || form == NODE_EXPORT_FORMAT.sequence)
-			s += ".png";
-		else
-			s += ".gif";
+		s += ".png";
 		
 		return s;
+	}
+	
+	static save_surface = function(_surf, _path) {
+		var form = inputs[| 3].getValue();
+		
+		if(form == NODE_EXPORT_FORMAT.gif) {
+			surface_save(_surf, _path);
+			return _path;
+		}
+		
+		var extd = inputs[|  9].getValue();
+		var qual = inputs[| 10].getValue();
+		var ext  = array_safe_get(format_image, extd, ".png");
+		
+		var _pathOut = _path;
+		var _pathTemp = directory + "\\" + string(irandom_range(10000, 99999)) + ".png";
+		
+		switch(ext) {
+			case ".png": 
+				surface_save(_surf, _path);
+				break;
+			case ".jpg": 
+				surface_save(_surf, _pathTemp);
+				
+				_pathOut = "\"" + string_replace_all(_path, ".png", "") + ".jpg\"";
+				_pathTemp = "\"" + _pathTemp + "\"";
+				var shell_cmd = _pathTemp + " -quality " + string(qual) + " " + _pathOut;
+				
+				print(shell_cmd)
+				execute_shell(magick, shell_cmd);
+				break;
+			case ".webp": 
+				surface_save(_surf, _pathTemp);
+				
+				_pathOut = "\"" + string_replace_all(_path, ".png", "") + ".webp\"";
+				_pathTemp = "\"" + _pathTemp + "\"";
+				var shell_cmd = _pathTemp + " -quality " + string(qual) + " -define webp:lossless=true " + _pathOut;
+				
+				execute_shell(magick, shell_cmd);
+				break;
+		}
+		
+		return _pathOut;
 	}
 	
 	static export = function() {
@@ -201,18 +294,18 @@ function Node_Export(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 				if(!is_surface(_surf)) continue;
 				
 				if(form == NODE_EXPORT_FORMAT.gif) {
-					p = DIRECTORY + "temp\\" + string(i) + "\\" + string(100000 + ANIMATOR.current_frame) + ".png";
-				} else if(form == NODE_EXPORT_FORMAT.single || form == NODE_EXPORT_FORMAT.sequence) {
+					p = directory + "\\" + string(i) + "\\" + string(100000 + ANIMATOR.current_frame) + ".png";
+				} else {
 					if(is_array(path) && array_length(path) == array_length(surf))
 						p = pathString(path[ safe_mod(i, array_length(path)) ], suff, i);
 					else
 						p = pathString(path, suff, i);
 				}
 					
-				surface_save(_surf, p);
+				p = save_surface(_surf, p);
 			}
 			
-			if(form == NODE_EXPORT_FORMAT.single || form == NODE_EXPORT_FORMAT.sequence) {
+			if(form != NODE_EXPORT_FORMAT.gif) {
 				var noti = log_message("EXPORT", "Export " + string(array_length(surf)) + " images complete.", THEME.noti_icon_tick, COLORS._main_value_positive);
 				noti.path = filename_dir(p);
 				noti.setOnClick(function() { shellOpenExplorer(self.path); }, "Open in explorer", THEME.explorer);
@@ -224,13 +317,13 @@ function Node_Export(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 			if(is_array(path)) p = path[0];
 				
 			if(form == NODE_EXPORT_FORMAT.gif)
-				p = DIRECTORY + "temp\\" + string(100000 + ANIMATOR.current_frame) + ".png";
+				p = directory + "\\" + string(100000 + ANIMATOR.current_frame) + ".png";
 			else
 				p = pathString(p, suff);
 			
-			surface_save(surf, p);
+			p = save_surface(surf, p);
 				
-			if(form == NODE_EXPORT_FORMAT.single || form == NODE_EXPORT_FORMAT.sequence) {
+			if(form != NODE_EXPORT_FORMAT.gif) {
 				var noti = log_message("EXPORT", "Export image as " + p, THEME.noti_icon_tick, COLORS._main_value_positive);
 				noti.path = filename_dir(p);
 				noti.setOnClick(function() { shellOpenExplorer(self.path); }, "Open in explorer", THEME.explorer);
@@ -240,7 +333,30 @@ function Node_Export(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 		}
 	}
 	
-	static inspectorUpdate = function() {
+	inspUpdateTooltip   = "Export";
+	inspUpdateIcon      = [ THEME.sequence_control, 1, COLORS._main_value_positive ];
+	
+	insp2UpdateTooltip = "Export All";
+	insp2UpdateIcon    = [ THEME.play_all, 0, COLORS._main_value_positive ];
+	
+	static onInspectorUpdate = function() {
+		initExport();
+	}
+	
+	static onInspector2Update = function() {
+		var key = ds_map_find_first(NODE_MAP);
+		repeat(ds_map_size(NODE_MAP)) {
+			var node = NODE_MAP[? key];
+			key = ds_map_find_next(NODE_MAP, key);
+			
+			if(!node.active) continue;
+			if(instanceof(node) != "Node_Export") continue;
+					
+			node.initExport();
+		}
+	}
+	
+	static initExport = function() {
 		if(LOADING || APPENDING) return;
 		if(playing) return;
 		
@@ -260,17 +376,43 @@ function Node_Export(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 		ANIMATOR.is_playing		= true;
 		ANIMATOR.rendering		= true;
 		
-		if(directory_exists(DIRECTORY + "temp"))
-			directory_destroy(DIRECTORY + "temp");
+		if(directory_exists(directory))
+			directory_destroy(directory);
+		directory_create(directory);
 	}
 	
-	static update = function() {
+	static step = function() {
 		var surf = inputs[| 0].getValue();
-		if(is_array(surf))	inputs[| 3].display_data = format_array;
-		else				inputs[| 3].display_data = format_single;
+		if(is_array(surf)) {
+			inputs[| 3].display_data		 = format_array;
+			inputs[| 3].editWidget.data_list = format_array;
+		} else {
+			inputs[| 3].display_data	     = format_single;
+			inputs[| 3].editWidget.data_list = format_single;
+		}
 		
 		var anim = inputs[| 3].getValue();
-		if(!anim) return;
+		var extn = inputs[| 9].getValue();
+		
+		inputs[| 5].setVisible(anim == 2);
+		inputs[| 6].setVisible(anim == 2);
+		inputs[| 7].setVisible(anim == 2);
+		inputs[| 8].setVisible(anim == 2);
+		
+		if(anim == NODE_EXPORT_FORMAT.gif) {
+			inputs[|  9].display_data		  = format_animation;
+			inputs[|  9].editWidget.data_list = format_animation;
+			inputs[| 10].setVisible(extn == 1);
+		} else {
+			inputs[|  9].display_data		  = format_image;
+			inputs[|  9].editWidget.data_list = format_image;
+			inputs[| 10].setVisible(extn != 0);
+		}
+	}
+	
+	static update = function(frame = ANIMATOR.current_frame) {
+		var anim = inputs[| 3].getValue();
+		if(anim == NODE_EXPORT_FORMAT.single) return;
 		
 		if(!ANIMATOR.is_playing) {
 			playing = false;
@@ -284,29 +426,44 @@ function Node_Export(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 				
 		if(ANIMATOR.current_frame < ANIMATOR.frames_total - 1) 
 			return;
-				
-		ANIMATOR.is_playing = false;
-		playing = false;
-					
-		if(anim != 2)
+		
+		if(anim != NODE_EXPORT_FORMAT.gif)
 			return;
 				
+		var surf = inputs[| 0].getValue();
 		var path = inputs[| 1].getValue();
 		var suff = inputs[| 2].getValue();
+		var extd = inputs[| 9].getValue();
 		var temp_path, target_path;
 						
 		if(is_array(surf)) {
 			for(var i = 0; i < array_length(surf); i++) {
-				temp_path = "\"" + DIRECTORY + "temp\\" + string(i) + "\\" + "*.png\"";
+				temp_path = directory + "\\" + string(i) + "\\" + "*.png";
 				if(is_array(path))
 					target_path = pathString(path[ safe_mod(i, array_length(path)) ], suff, i);
 				else
 					target_path = pathString(path, suff, i);
-				renderGif(temp_path, "\"" + target_path + "\"");
+				
+				if(extd == 0) {
+					target_path = string_replace(target_path, ".png", ".gif");
+					renderGif("\"" + temp_path + "\"", "\"" + target_path + "\"");
+				} else if(extd == 1) {
+					target_path = string_replace(target_path, ".png", ".webp");
+					renderWebp(temp_path, target_path);
+				}
 			}
 		} else {
-			target_path = "\"" + pathString(path, suff) + "\"";
-			renderGif("\"" + DIRECTORY + "temp\\*.png\"", target_path);
+			target_path = pathString(path, suff);
+			
+			if(extd == 0) {
+				target_path = string_replace(target_path, ".png", ".gif");
+				renderGif("\"" + directory + "\\*.png\"", "\"" + target_path + "\"");
+			} else if(extd == 1) {
+				target_path = string_replace(target_path, ".png", ".webp");
+				renderWebp(directory + "\\", target_path);
+			}
 		}
+		
+		//directory_destroy(directory);
 	}
 }

@@ -5,41 +5,49 @@ enum NODE_SEP_SHAPE_OUTPUT_TYPE {
 
 function Node_Seperate_Shape(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 	name		= "Separate Shape";
+	error_update_enabled = true;
 	
-	inputs[| 0] = nodeValue(0, "Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
+	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0)
+		.rejectArray();
 	
-	inputs[| 1] = nodeValue(1, "Tolerance", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.2)
-		.setDisplay(VALUE_DISPLAY.slider, [0, 1, 0.01]);
+	inputs[| 1] = nodeValue("Tolerance", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.2)
+		.setDisplay(VALUE_DISPLAY.slider, [0, 1, 0.01])
+		.rejectArray();
 		
-	inputs[| 2] = nodeValue(2, "Override color", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
+	inputs[| 2] = nodeValue("Override color", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true)
+		.rejectArray();
 	
-	inputs[| 3] = nodeValue(3, "Color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white);
+	inputs[| 3] = nodeValue("Color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white)
+		.rejectArray();
 	
-	inputs[| 4] = nodeValue(4, "Ignore blank", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false, "Skip empty and black shape.");
+	inputs[| 4] = nodeValue("Ignore blank", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false, "Skip empty and black shape.")
+		.rejectArray();
 	
-	outputs[| 0] = nodeValue(0, "Surface out",	self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
+	outputs[| 0] = nodeValue("Surface out",	self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
-	outputs[| 1] = nodeValue(1, "Shape map",	self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
+	outputs[| 1] = nodeValue("Shape map",	self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
-	outputs[| 2] = nodeValue(2, "Boundary data",	self, JUNCTION_CONNECT.output, VALUE_TYPE.integer, []);
+	outputs[| 2] = nodeValue("Boundary data",	self, JUNCTION_CONNECT.output, VALUE_TYPE.integer, []);
 	
 	input_display_list = [
 		["Shape",	false], 0, 1, 4,
 		["Render",	false], 2, 3,
 	]
 	
-	temp_surf = [ PIXEL_SURFACE, PIXEL_SURFACE ];
+	temp_surf = [ surface_create(1, 1), surface_create(1, 1) ];
 	surface_buffer = buffer_create(1 * 1 * 4, buffer_fixed, 2);
+	surface_w = 1;
+	surface_h = 1;
 	
-	function get_color_buffer(_x, _y, w, h) {
-		buffer_seek(surface_buffer, buffer_seek_start, (w * _y + _x) * 4);
+	function get_color_buffer(_x, _y) {
+		buffer_seek(surface_buffer, buffer_seek_start, (surface_w * _y + _x) * 4);
 		var c = buffer_read(surface_buffer, buffer_u32);
 		return c;
 	}
 	
 	_prev_type = -1;
 	
-	static inspectorUpdate = function() {
+	static onInspectorUpdate = function() {
 		var _inSurf = inputs[| 0].getValue();
 		var _thres  = inputs[| 1].getValue();
 		var _ovr    = inputs[| 2].getValue();
@@ -51,7 +59,9 @@ function Node_Seperate_Shape(_x, _y, _group = -1) : Node(_x, _y, _group) constru
 		
 		var ww = surface_get_width(_inSurf);
 		var hh = surface_get_height(_inSurf);
-		
+		surface_w = ww;
+		surface_h = hh;
+	
 		for(var i = 0; i < 2; i++) {
 			temp_surf[i] = surface_verify(temp_surf[i], ww, hh);
 			
@@ -71,7 +81,8 @@ function Node_Seperate_Shape(_x, _y, _group = -1) : Node(_x, _y, _group) constru
 		shader_set_uniform_i(shader_get_uniform(sh_seperate_shape_ite, "ignore"), _ignore);
 		shader_set_uniform_f(shader_get_uniform(sh_seperate_shape_ite, "dimension"), ww, hh);
 		shader_set_uniform_f(shader_get_uniform(sh_seperate_shape_ite, "threshold"), _thres);
-		texture_set_stage(shader_get_sampler_index(sh_seperate_shape_ite, "map"), surface_get_texture(_inSurf));
+		if(is_surface(_inSurf))
+			texture_set_stage(shader_get_sampler_index(sh_seperate_shape_ite, "map"), surface_get_texture(_inSurf));
 		
 		var res_index = 0, iteration = ww + hh;
 		for(var i = 0; i <= iteration; i++) {
@@ -80,9 +91,9 @@ function Node_Seperate_Shape(_x, _y, _group = -1) : Node(_x, _y, _group) constru
 			
 			surface_set_target(temp_surf[bg]);
 			draw_clear_alpha(0, 0);
-			BLEND_OVERRIDE
+			BLEND_OVERRIDE;
 				draw_surface_safe(temp_surf[fg], 0, 0);
-			BLEND_NORMAL
+			BLEND_NORMAL;
 			surface_reset_target();
 			
 			res_index = bg;
@@ -93,15 +104,15 @@ function Node_Seperate_Shape(_x, _y, _group = -1) : Node(_x, _y, _group) constru
 		var _pixel_surface = surface_create_valid(PREF_MAP[? "shape_separation_max"], 1);
 		surface_set_target(_pixel_surface);
 		draw_clear_alpha(0, 0);
-		BLEND_OVERRIDE
+		BLEND_OVERRIDE;
 			shader_set(sh_seperate_shape_counter);
 			texture_set_stage(shader_get_sampler_index(sh_seperate_shape_counter, "surface"), surface_get_texture(temp_surf[res_index]));
-			shader_set_uniform_f_array(shader_get_uniform(sh_seperate_shape_counter, "dimension"), [ ww, hh ]);
+			shader_set_uniform_f_array_safe(shader_get_uniform(sh_seperate_shape_counter, "dimension"), [ ww, hh ]);
 			shader_set_uniform_i(shader_get_uniform(sh_seperate_shape_counter, "maxShape"), PREF_MAP[? "shape_separation_max"]);
 			shader_set_uniform_i(shader_get_uniform(sh_seperate_shape_counter, "ignore"), _ignore);
 				draw_sprite_ext(s_fx_pixel, 0, 0, 0, PREF_MAP[? "shape_separation_max"], 1, 0, c_white, 1);
 			shader_reset();
-		BLEND_NORMAL
+		BLEND_NORMAL;
 		surface_reset_target();
 		
 		var px = surface_getpixel(_pixel_surface, 0, 0);
@@ -124,7 +135,7 @@ function Node_Seperate_Shape(_x, _y, _group = -1) : Node(_x, _y, _group) constru
 				
 			surface_set_target(_outSurf);
 			draw_clear_alpha(0, 0);
-			BLEND_OVERRIDE
+			BLEND_OVERRIDE;
 				shader_set(sh_seperate_shape_sep);
 				var ccx = surface_getpixel_ext(_pixel_surface, 1 + i, 0);
 				var alpha = (ccx >> 24) & 255;
@@ -143,7 +154,7 @@ function Node_Seperate_Shape(_x, _y, _group = -1) : Node(_x, _y, _group) constru
 							
 				for( var j = min_x; j < max_x; j++ ) 
 				for( var k = min_y; k < max_y; k++ ) {
-					var _sc = get_color_buffer(j, k, ww, hh);
+					var _sc = get_color_buffer(j, k);
 					if(_sc != ccx) continue;
 					
 					t = min(t, k);
@@ -154,16 +165,17 @@ function Node_Seperate_Shape(_x, _y, _group = -1) : Node(_x, _y, _group) constru
 							
 				_boundary[i] = [l, t, r, b];
 					
-				texture_set_stage(shader_get_sampler_index(sh_seperate_shape_sep, "original"), surface_get_texture(_inSurf));
+				if(is_surface(_inSurf))
+					texture_set_stage(shader_get_sampler_index(sh_seperate_shape_sep, "original"), surface_get_texture(_inSurf));
 				shader_set_uniform_f(shader_get_uniform(sh_seperate_shape_sep, "color"), red, green, blue, alpha);
 				shader_set_uniform_i(shader_get_uniform(sh_seperate_shape_sep, "override"), _ovr);
-				shader_set_uniform_f_array(shader_get_uniform(sh_seperate_shape_sep, "overColor"), colToVec4(_ovrclr));
+				shader_set_uniform_f_array_safe(shader_get_uniform(sh_seperate_shape_sep, "overColor"), colToVec4(_ovrclr));
 				draw_surface_safe(temp_surf[res_index], 0, 0);
 				shader_reset();
-			BLEND_NORMAL
+			BLEND_NORMAL;
 			surface_reset_target();
 		}
 			
-		outputs[| 2].setValue(_boundary);
+		outputs[| 2].setValue(_boundary,,, false);
 	}
 }

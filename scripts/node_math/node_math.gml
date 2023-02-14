@@ -15,6 +15,9 @@ enum MATH_OPERATOR {
 	floor,
 	ceiling,
 	round,
+	
+	lerp,
+	abs
 }
 
 function Node_create_Math(_x, _y, _group = -1, _param = "") {
@@ -37,6 +40,9 @@ function Node_create_Math(_x, _y, _group = -1, _param = "") {
 		case "floor" :		node.inputs[| 0].setValue(MATH_OPERATOR.floor); break;
 		case "ceiling" :	node.inputs[| 0].setValue(MATH_OPERATOR.ceiling); break;
 		case "round" :		node.inputs[| 0].setValue(MATH_OPERATOR.round); break;
+		
+		case "lerp" :		node.inputs[| 0].setValue(MATH_OPERATOR.lerp); break;
+		case "abs" :		node.inputs[| 0].setValue(MATH_OPERATOR.abs); break;
 	}
 	
 	//ds_list_add(PANEL_GRAPH.nodes_list, node);
@@ -50,63 +56,54 @@ function Node_Math(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 	
 	w = 96;
 	
-	
-	inputs[| 0] = nodeValue(0, "Type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+	inputs[| 0] = nodeValue("Type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.enum_scroll, [ 
 			/* 0 -  9*/ "Add", "Subtract", "Multiply", "Divide", "Power", "Root", "Sin", "Cos", "Tan", "Modulo", 
-			/*10 - 12*/ "Floor", "Ceil", "Round" ]);
+			/*10 - 20*/ "Floor", "Ceil", "Round", "Lerp", "Abs" ])
+		.rejectArray();
 	
-	inputs[| 1] = nodeValue(1, "a", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
+	inputs[| 1] = nodeValue("a", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
 		.setVisible(true, true);
 		
-	inputs[| 2] = nodeValue(2, "b", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
+	inputs[| 2] = nodeValue("b", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
 		.setVisible(true, true);
 		
-	inputs[| 3] = nodeValue(3, "Degree angle", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
+	inputs[| 3] = nodeValue("Degree angle", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
 	
-	inputs[| 4] = nodeValue(4, "To integer", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	inputs[| 4] = nodeValue("To integer", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
 	
-	outputs[| 0] = nodeValue(0, "Result", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, 0);
+	inputs[| 5] = nodeValue("Amount", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0);
 	
-	static _eval = function(mode, a, b) {
-		var deg = inputs[| 3].getValue();
+	input_display_list = [
+		0, 1, 2, 5, 3, 4,
+	]
 		
-		switch(mode) {
-			case MATH_OPERATOR.add :		
-				if(is_real(a) && is_real(b))			return a + b;
-				else if(is_string(a) || is_string(b))	return string(a) + string(b);
+	outputs[| 0] = nodeValue("Result", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, 0);
+	
+	use_mod = 0;
+	use_deg = false;
+	
+	static _eval = function(a, b, c = 0) {
+		switch(use_mod) {
+			case MATH_OPERATOR.add :		return a + b;    
+			case MATH_OPERATOR.subtract :	return a - b;
+			case MATH_OPERATOR.multiply :	return a * b;
+			case MATH_OPERATOR.divide :		return b == 0? 0 : a / b;
 				
-			case MATH_OPERATOR.subtract :	
-				if(is_real(a) && is_real(b))			return a - b;
-				else if(is_string(a) || is_string(b))	return string_replace(string(a), string(b), "");
-				
-			case MATH_OPERATOR.multiply :	
-				if(is_real(a) && is_real(b))			return a * b;
-				else if(is_string(a) || is_real(b)) {
-					var s = "";
-					repeat(b) s += a;
-					return s;
-				} else if(is_string(b) || is_real(a)) {
-					var s = "";
-					repeat(a) s += b;
-					return s;
-				}
-				
-			case MATH_OPERATOR.divide :	
-				if(is_real(a) && is_real(b))			return b == 0? 0 : a / b;
-				else if(is_string(a) || is_string(b))	return string_replace_all(string(a), string(b), "");
+			case MATH_OPERATOR.power :		return power(a, b);
+			case MATH_OPERATOR.root :		return b == 0? 0 : power(a, 1 / b);
 			
-			case MATH_OPERATOR.power :		if(is_real(a) && is_real(b)) return power(a, b);
-			case MATH_OPERATOR.root :		if(is_real(a) && is_real(b)) return b == 0? 0 : power(a, 1 / b);
+			case MATH_OPERATOR.sin :		return sin(use_deg? degtorad(a) : a) * b;
+			case MATH_OPERATOR.cos :		return cos(use_deg? degtorad(a) : a) * b;
+			case MATH_OPERATOR.tan :		return tan(use_deg? degtorad(a) : a) * b;
+			case MATH_OPERATOR.modulo :		return safe_mod(a, b);
 			
-			case MATH_OPERATOR.sin :		if(is_real(a) && is_real(b)) return sin(deg? degtorad(a) : a) * b;
-			case MATH_OPERATOR.cos :		if(is_real(a) && is_real(b)) return cos(deg? degtorad(a) : a) * b;
-			case MATH_OPERATOR.tan :		if(is_real(a) && is_real(b)) return tan(deg? degtorad(a) : a) * b;
-			case MATH_OPERATOR.modulo :		if(is_real(a) && is_real(b)) return safe_mod(a, b);
+			case MATH_OPERATOR.floor :		return floor(a);
+			case MATH_OPERATOR.ceiling :	return ceil(a);
+			case MATH_OPERATOR.round :		return round(a);
 			
-			case MATH_OPERATOR.floor :		if(is_real(a)) return floor(a);
-			case MATH_OPERATOR.ceiling :	if(is_real(a)) return ceil(a);
-			case MATH_OPERATOR.round :		if(is_real(a)) return round(a);
+			case MATH_OPERATOR.lerp :		return lerp(a, b, c);
+			case MATH_OPERATOR.abs :		return abs(a);
 		}
 		return 0;
 	}
@@ -141,6 +138,7 @@ function Node_Math(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 		}
 		
 		inputs[| 2].name = "b";
+		inputs[| 5].setVisible(false);
 		
 		switch(mode) {
 			case MATH_OPERATOR.add :
@@ -161,36 +159,53 @@ function Node_Math(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 			case MATH_OPERATOR.floor :
 			case MATH_OPERATOR.ceiling :
 			case MATH_OPERATOR.round :
+			case MATH_OPERATOR.abs :
 				inputs[| 2].setVisible(false);
+				break;
+			case MATH_OPERATOR.lerp :
+				inputs[| 5].setVisible(true);
 				break;
 			default: return;
 		}
 	}
 	
-	function update() { 
-		var mode = inputs[| 0].getValue();
-		var a = inputs[| 1].getValue();
-		var b = inputs[| 2].getValue();
-		
+	function evalArray(a, b, c = 0) {
 		var as = is_array(a);
 		var bs = is_array(b);
-		var al = as? array_length(a) : 0;
-		var bl = bs? array_length(b) : 0;
+		var cs = is_array(c);
 		
-		var val = 0;
-		if(!as && !bs)
-			val = _eval(mode, a, b);
-		else if(!as && bs) {
-			for( var i = 0; i < bl; i++ )
-				val[i] = _eval(mode, a, b[i]);
-		} else if(as && !bs) {
-			for( var i = 0; i < al; i++ )
-				val[i] = _eval(mode, a[i], b);
-		} else {
-			for( var i = 0; i < max(al, bl); i++ ) 
-				val[i] = _eval(mode, array_safe_get(a, i), array_safe_get(b, i));
-		}
+		if(!as && !bs && !cs)
+			return _eval(a, b, c);
 		
+		if(!as) a = [ a ];
+		if(!bs) b = [ b ];
+		if(!cs) c = [ c ];
+		
+		var al = array_length(a);
+		var bl = array_length(b);
+		var cl = array_length(c);
+		
+		var amo = max(al, bl, cl);
+		var val = array_create(amo);
+		
+		for( var i = 0; i < amo; i++ ) 
+			val[i] = evalArray( 
+				array_safe_get(a, i,, ARRAY_OVERFLOW.loop), 
+				array_safe_get(b, i,, ARRAY_OVERFLOW.loop),
+				array_safe_get(c, i,, ARRAY_OVERFLOW.loop),
+			);
+		
+		return val;
+	}
+	
+	function update(frame = ANIMATOR.current_frame) {
+		use_mod = inputs[| 0].getValue();
+		var a	= inputs[| 1].getValue();
+		var b	= inputs[| 2].getValue();
+		use_deg = inputs[| 3].getValue();
+		var c	= inputs[| 5].getValue();
+		
+		var val = evalArray(a, b, c);
 		outputs[| 0].setValue(val);
 	}
 	
@@ -213,6 +228,9 @@ function Node_Math(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 			case MATH_OPERATOR.floor :		str = "floor"; break;
 			case MATH_OPERATOR.ceiling :	str = "ceil"; break;
 			case MATH_OPERATOR.round :		str = "round"; break;
+			
+			case MATH_OPERATOR.lerp :		str = "lerp"; break;
+			case MATH_OPERATOR.abs :		str = "abs"; break;
 			default: return;
 		}
 		

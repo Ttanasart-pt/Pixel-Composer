@@ -1,17 +1,17 @@
 function Node_Transform_Single(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constructor {
 	name = "Transform single";
 	
-	inputs[| 0] = nodeValue(0, "Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
+	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 	
-	inputs[| 1] = nodeValue(1, "Position x", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0);
-	inputs[| 2] = nodeValue(2, "Position y", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0);
-	inputs[| 3] = nodeValue(3, "Anchor x",   self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0);
-	inputs[| 4] = nodeValue(4, "Anchor y",   self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0);
-	inputs[| 5] = nodeValue(5, "Rotation",   self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0);
-	inputs[| 6] = nodeValue(6, "Scale x",    self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1);
-	inputs[| 7] = nodeValue(7, "Scale y",    self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1);
+	inputs[| 1] = nodeValue("Position x", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0);
+	inputs[| 2] = nodeValue("Position y", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0);
+	inputs[| 3] = nodeValue("Anchor x",   self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0);
+	inputs[| 4] = nodeValue("Anchor y",   self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0);
+	inputs[| 5] = nodeValue("Rotation",   self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0);
+	inputs[| 6] = nodeValue("Scale x",    self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1);
+	inputs[| 7] = nodeValue("Scale y",    self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1);
 	
-	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
+	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	static process_data = function(_outSurf, _data, _output_index, _array_index) {
 		var pos_x = _data[1];
@@ -29,11 +29,11 @@ function Node_Transform_Single(_x, _y, _group = -1) : Node_Processor(_x, _y, _gr
 		
 		surface_set_target(_outSurf);
 		draw_clear_alpha(0, 0);
-		BLEND_OVERRIDE
+		BLEND_OVERRIDE;
 		
 		draw_surface_ext_safe(_data[0], pos_x + origin[0] - psc_x, pos_y + origin[1] - psc_y, sca_x, sca_y, rot, c_white, 1);
 		
-		BLEND_NORMAL
+		BLEND_NORMAL;
 		surface_reset_target();
 		
 		return _outSurf;
@@ -112,7 +112,7 @@ function Node_Transform_Single(_x, _y, _group = -1) : Node_Processor(_x, _y, _gr
 			var py = value_snap(_my - overlay_drag_my, _sny);
 			var pos_x, pos_y;
 			
-			if(keyboard_check(vk_shift)) {
+			if(key_mod_press(SHIFT)) {
 				var ang  = round(point_direction(overlay_drag_mx, overlay_drag_my, _mx, _my) / 45) * 45;
 				var dist = point_distance(overlay_drag_mx, overlay_drag_my, _mx, _my) / _s;
 				

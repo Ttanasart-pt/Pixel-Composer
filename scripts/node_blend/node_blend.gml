@@ -17,31 +17,37 @@ function Node_create_Blend(_x, _y, _group = -1, _param = "") {
 function Node_Blend(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constructor {
 	name = "Blend";
 	
-	inputs[| 0] = nodeValue(0, "Background", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, DEF_SURFACE);
-	inputs[| 1] = nodeValue(1, "Foreground", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, DEF_SURFACE);
+	inputs[| 0] = nodeValue("Background", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, DEF_SURFACE);
+	inputs[| 1] = nodeValue("Foreground", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, DEF_SURFACE);
 	
-	inputs[| 2] = nodeValue(2, "Blend mode", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+	inputs[| 2] = nodeValue("Blend mode", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.enum_scroll, BLEND_TYPES );
 	
-	inputs[| 3] = nodeValue(3, "Opacity", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
+	inputs[| 3] = nodeValue("Opacity", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
 		.setDisplay(VALUE_DISPLAY.slider, [ 0, 1, 0.01]);
 	
-	inputs[| 4] = nodeValue(4, "Mask", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
+	inputs[| 4] = nodeValue("Mask", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 	
-	inputs[| 5] = nodeValue(5, "Tiling", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+	inputs[| 5] = nodeValue("Tiling", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Stretch", "Tile" ]);
 	
-	inputs[| 6] = nodeValue(6, "Output dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Background", "Forground", "Mask", "Maximum", "Constant" ]);
+	inputs[| 6] = nodeValue("Output dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Background", "Forground", "Mask", "Maximum", "Constant" ])
+		.rejectArray();
 	
-	inputs[| 7] = nodeValue(7, "Constant dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, def_surf_size2)
+	inputs[| 7] = nodeValue("Constant dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, def_surf_size2)
 		.setDisplay(VALUE_DISPLAY.vector);
 	
-	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
+	inputs[| 8] = nodeValue("Active", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
+		active_index = 8;
+		
+	inputs[| 9] = nodeValue("Preserve alpha", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
 	
-	input_display_list = [
+	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
+	
+	input_display_list = [ 8, 
 		["Surfaces",	 true],	0, 1, 4, 6, 7,
-		["Blend",		false], 2, 3, 
+		["Blend",		false], 2, 3, 9,
 		["Transform",	false], 5, 
 	]
 	
@@ -55,6 +61,7 @@ function Node_Blend(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constr
 		
 		var _outp	 = _data[6];
 		var _out_dim = _data[7];
+		var _pre_alp = _data[9];
 		
 		inputs[| 7].setVisible(_outp == 4);
 		var ww = 1, hh = 1;
@@ -86,7 +93,7 @@ function Node_Blend(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constr
 		
 		surface_set_target(_outSurf);
 		draw_clear_alpha(0, 0);
-		draw_surface_blend(_back, _fore, _type, _opacity, _mask, _tile);
+		draw_surface_blend(_back, _fore, _type, _opacity, _pre_alp, _mask, _tile);
 		surface_reset_target();
 		
 		return _outSurf;

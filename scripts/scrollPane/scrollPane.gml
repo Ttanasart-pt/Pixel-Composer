@@ -54,7 +54,7 @@ function scrollPane(_w, _h, ondraw) : widget() constructor {
 		scroll_y	 = round(scroll_y_raw);
 		draw_surface_safe(surface, x, y);
 		
-		if(active && point_in_rectangle(mx, my, 0, 0, surface_w, surface_h)) {
+		if(active && !key_mod_press(SHIFT) && point_in_rectangle(mx, my, 0, 0, surface_w, surface_h)) {
 			if(mouse_wheel_down())	scroll_y_to -= scroll_step;
 			if(mouse_wheel_up())	scroll_y_to += scroll_step;
 		}
@@ -100,9 +100,23 @@ function scrollPane(_w, _h, ondraw) : widget() constructor {
 			if(mouse_release(mb_left))
 				is_scrolling = false;
 		}
-	
-		draw_sprite_stretched_ext(THEME.ui_scrollbar, 0, scr_x, scr_y, scr_w, scr_h, bg_col, 1);
-		draw_sprite_stretched_ext(THEME.ui_scrollbar, 0, bar_x, bar_y, bar_w, bar_h, bar_col, 1);
+		
+		var bx0 = clamp(bar_x,         scr_x, scr_x + scr_w);
+		var bx1 = clamp(bar_x + bar_w, scr_x, scr_x + scr_w);
+		var ww = bx1 - bx0;
+		
+		var by0 = clamp(bar_y,         scr_y, scr_y + scr_h);
+		var by1 = clamp(bar_y + bar_h, scr_y, scr_y + scr_h);
+		var hh = by1 - by0;
+		
+		draw_sprite_stretched_ext(THEME.ui_scrollbar, 0, scr_x, scr_y, scr_w, scr_h,  bg_col, 1);
+		draw_sprite_stretched_ext(THEME.ui_scrollbar, 0,   bx0,   by0,    ww,    hh, bar_col, 1);
+		
+		//draw_set_color(c_white);
+		//draw_rectangle(scr_x - 2, scr_y - 2, scr_x + scr_w + 2, scr_y + scr_h + 2, 0);
+		//draw_set_color(c_red);
+		//draw_circle(mx, my, 2, false);
+		
 		if(active && point_in_rectangle(mx, my, scr_x - 2, scr_y - 2, scr_x + scr_w + 2, scr_y + scr_h + 2) || is_scrolling) {
 			draw_sprite_stretched_ext(THEME.ui_scrollbar, 0, bar_x, bar_y, bar_w, bar_h, bar_hcol, 1);
 			if(mouse_press(mb_left, active)) {

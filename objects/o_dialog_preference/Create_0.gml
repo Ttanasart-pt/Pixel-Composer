@@ -23,16 +23,16 @@ event_inherited();
 
 #region pages
 	page_current = 0;
-	page[0] = "General";
-	page[1] = "Node settings";
-	page[2] = "Appearances";
-	page[3] = "Colors";
-	page[4] = "Hotkeys";
+	page[0] = get_text("pref_pages_general",	"General");
+	page[1] = get_text("pref_pages_nodes",		"Node settings");
+	page[2] = get_text("pref_pages_appearance", "Appearances");
+	page[3] = get_text("pref_pages_colors",		"Colors");
+	page[4] = get_text("pref_pages_hotkeys",	"Hotkeys");
 	
 	pref_global = ds_list_create();
 	
 	ds_list_add(pref_global, [
-		"Show welcome screen",
+		get_text("pref_show_welcome_screen", "Show welcome screen"),
 		"show_splash",
 		new checkBox(function() { 
 			PREF_MAP[? "show_splash"] = !PREF_MAP[? "show_splash"];
@@ -42,7 +42,7 @@ event_inherited();
 	
 	PREF_MAP[? "_display_scaling"] = PREF_MAP[? "display_scaling"];
 	ds_list_add(pref_global, [
-		"GUI scaling",
+		get_text("pref_gui_scaling", "GUI scaling"),
 		"_display_scaling",
 		new slider(0.5, 2, 0.01, function(val) { 
 			PREF_MAP[? "_display_scaling"] = val;
@@ -61,7 +61,7 @@ event_inherited();
 	]);
 	
 	ds_list_add(pref_global, [
-		"Double click delay",
+		get_text("pref_double_click_delay", "Double click delay"),
 		"double_click_delay",
 		new slider(0, 1, 0.01, function(val) { 
 			PREF_MAP[? "double_click_delay"] = val; 
@@ -70,7 +70,7 @@ event_inherited();
 	]);
 	
 	ds_list_add(pref_global, [
-		"Keyboard hold start",
+		get_text("pref_keyboard_hold_start", "Keyboard hold start"),
 		"keyboard_repeat_start",
 		new slider(0, 1, 0.01, function(val) { 
 			PREF_MAP[? "keyboard_repeat_start"] = val; 
@@ -79,7 +79,7 @@ event_inherited();
 	]);
 	
 	ds_list_add(pref_global, [
-		"Keyboard repeat delay",
+		get_text("pref_keyboard_repeat_delay", "Keyboard repeat delay"),
 		"keyboard_repeat_speed",
 		new slider(0, 1, 0.01, function(val) { 
 			PREF_MAP[? "keyboard_repeat_speed"] = val; 
@@ -88,7 +88,7 @@ event_inherited();
 	]);
 	
 	ds_list_add(pref_global, [
-		"UI frame rate",
+		get_text("pref_ui_frame_rate", "UI frame rate"),
 		"ui_framerate",
 		new textBox(TEXTBOX_INPUT.number, function(str) { 
 			PREF_MAP[? "ui_framerate"] = max(15, round(real(str)));
@@ -98,7 +98,7 @@ event_inherited();
 	]);
 	
 	ds_list_add(pref_global, [
-		"Default surface size",
+		get_text("pref_default_surface_size", "Default surface size"),
 		"default_surface_side",
 		new textBox(TEXTBOX_INPUT.number, function(str) { 
 			PREF_MAP[? "default_surface_side"] = max(1, round(real(str)));
@@ -107,7 +107,7 @@ event_inherited();
 	]);
 	
 	ds_list_add(pref_global, [
-		"Show node render time",
+		get_text("pref_show_node_render_time", "Show node render time"),
 		"node_show_time",
 		new checkBox(function() { 
 			PREF_MAP[? "node_show_time"] = !PREF_MAP[? "node_show_time"]; 
@@ -116,7 +116,7 @@ event_inherited();
 	]);
 	
 	ds_list_add(pref_global, [
-		"Show node render status",
+		get_text("pref_show_node_render_status", "Show node render status"),
 		"node_show_render_status",
 		new checkBox(function() { 
 			PREF_MAP[? "node_show_render_status"] = !PREF_MAP[? "node_show_render_status"]; 
@@ -125,7 +125,7 @@ event_inherited();
 	]);
 	
 	ds_list_add(pref_global, [
-		"Collection preview speed",
+		get_text("pref_collection_preview_speed", "Collection preview speed"),
 		"collection_preview_speed",
 		new textBox(TEXTBOX_INPUT.number, function(str) { 
 			PREF_MAP[? "collection_preview_speed"] = max(1, round(real(str)));
@@ -135,7 +135,7 @@ event_inherited();
 	
 	
 	ds_list_add(pref_global, [
-		"Inspector line break width",
+		get_text("pref_inspector_line_break_width", "Inspector line break width"),
 		"inspector_line_break_width",
 		new textBox(TEXTBOX_INPUT.number, function(str) { 
 			PREF_MAP[? "inspector_line_break_width"] = max(1, round(real(str)));
@@ -144,7 +144,7 @@ event_inherited();
 	]);
 	
 	ds_list_add(pref_global, [
-		"Expand hovering panel",
+		get_text("pref_expand_hovering_panel", "Expand hovering panel"),
 		"expand_hover",
 		new checkBox(function() { 
 			PREF_MAP[? "expand_hover"] = !PREF_MAP[? "expand_hover"]; 
@@ -153,7 +153,7 @@ event_inherited();
 	]);
 	
 	ds_list_add(pref_global, [
-		"Graph zoom smoothing",
+		get_text("pref_graph_zoom_smoothing", "Graph zoom smoothing"),
 		"graph_zoom_smoooth",
 		new textBox(TEXTBOX_INPUT.number, function(str) { 
 			PREF_MAP[? "graph_zoom_smoooth"] = max(1, round(real(str)));
@@ -162,7 +162,7 @@ event_inherited();
 	]);
 	
 	ds_list_add(pref_global, [
-		"Warning notification time",
+		get_text("pref_warning_notification_time", "Warning notification time"),
 		"notification_time",
 		new textBox(TEXTBOX_INPUT.number, function(str) { 
 			PREF_MAP[? "notification_time"] = max(0, round(real(str)));
@@ -170,6 +170,15 @@ event_inherited();
 		})
 	]);
 
+	ds_list_add(pref_global, [
+		get_text("pref_enable_test_mode", "Enable test mode (require restart)"),
+		"test_mode",
+		new checkBox(function() { 
+			PREF_MAP[? "test_mode"] = !PREF_MAP[? "test_mode"]; 
+			PREF_SAVE();
+		})
+	]);
+	
 #endregion
 
 #region //NODE
@@ -177,7 +186,7 @@ event_inherited();
 	
 	ds_list_add(pref_node, "Particle");
 	ds_list_add(pref_node, [
-		"Max particles",
+		get_text("pref_max_particles", "Max particles"),
 		"part_max_amount",
 		new textBox(TEXTBOX_INPUT.number, function(str) { 
 			PREF_MAP[? "part_max_amount"] = real(str); 
@@ -187,7 +196,7 @@ event_inherited();
 	
 	ds_list_add(pref_node, "Separate shape");
 	ds_list_add(pref_node, [
-		"Max shapes",
+		get_text("pref_max_shapes", "Max shapes"),
 		"shape_separation_max",
 		new textBox(TEXTBOX_INPUT.number, function(str) { 
 			PREF_MAP[? "shape_separation_max"] = real(str); 
@@ -197,7 +206,7 @@ event_inherited();
 	
 	ds_list_add(pref_node, "Levels");
 	ds_list_add(pref_node, [
-		"Histogram resolution",
+		get_text("pref_histogram_resolution", "Histogram resolution"),
 		"level_resolution",
 		new textBox(TEXTBOX_INPUT.number, function(str) { 
 			PREF_MAP[? "level_resolution"] = real(str); 
@@ -206,7 +215,7 @@ event_inherited();
 	]);
 	
 	ds_list_add(pref_node, [
-		"Maximum sampling",
+		get_text("pref_maximum_sampling", "Maximum sampling"),
 		"level_max_sampling",
 		new textBox(TEXTBOX_INPUT.number, function(str) { 
 			PREF_MAP[? "level_max_sampling"] = real(str); 
@@ -216,7 +225,7 @@ event_inherited();
 	
 	ds_list_add(pref_node, "Physics");
 	ds_list_add(pref_node, [
-		"Verlet iteration",
+		get_text("pref_verlet_iteration", "Verlet iteration"),
 		"verlet_iteration",
 		new textBox(TEXTBOX_INPUT.number, function(str) { 
 			PREF_MAP[? "verlet_iteration"] = real(str); 
@@ -225,10 +234,10 @@ event_inherited();
 	]);
 	
 	ds_list_add(pref_node, [
-		"Gravity",
+		get_text("pref_gravity", "Gravity"),
 		"physics_gravity",
-		new vectorBox(2, TEXTBOX_INPUT.number, function(val) { 
-			PREF_MAP[? "physics_gravity"] = val; 
+		new vectorBox(2, TEXTBOX_INPUT.number, function(index, val) { 
+			PREF_MAP[? "physics_gravity"][index] = val; 
 			physics_world_gravity(PREF_MAP[? "physics_gravity"][0], PREF_MAP[? "physics_gravity"][1]);
 			PREF_SAVE();
 		})
@@ -240,18 +249,18 @@ event_inherited();
 	
 	ds_list_add(pref_appr, "Graph");
 	ds_list_add(pref_appr, [
-		"Connection thickness",
+		get_text("pref_connection_thickness", "Connection thickness"),
 		"connection_line_width",
-		new textBox(TEXTBOX_INPUT.float, function(str) { 
+		new textBox(TEXTBOX_INPUT.number, function(str) { 
 			PREF_MAP[? "connection_line_width"] = real(str); 
 			PREF_SAVE();
 		})
 	]);
 	
 	ds_list_add(pref_appr, [
-		"Connection curve smoothness",
+		get_text("pref_connection_curve_smoothness", "Connection curve smoothness"),
 		"connection_line_sample",
-		new textBox(TEXTBOX_INPUT.float, function(str) { 
+		new textBox(TEXTBOX_INPUT.number, function(str) { 
 			PREF_MAP[? "connection_line_sample"] = real(str); 
 			PREF_SAVE();
 		})
@@ -328,7 +337,7 @@ event_inherited();
 			
 			if(b == 2) {
 				var dialog = dialogCall(o_dialog_color_selector, WIN_W / 2, WIN_H / 2);
-				dialog.selector.setColor(val);
+				dialog.setDefault(val);
 				self.key = key;
 				dialog.onApply = function(color) { 
 					variable_struct_set(COLORS, self.key, color); 
@@ -498,9 +507,9 @@ event_inherited();
 				if(hk_editing == key) {
 					var _mod_prs = 0;
 					
-					if(key_mod_press(CTRL))			_mod_prs |= MOD_KEY.ctrl;
-					if(keyboard_check(vk_shift))	_mod_prs |= MOD_KEY.shift;
-					if(keyboard_check(vk_alt))		_mod_prs |= MOD_KEY.alt;
+					if(key_mod_press(CTRL))		_mod_prs |= MOD_KEY.ctrl;
+					if(key_mod_press(SHIFT))	_mod_prs |= MOD_KEY.shift;
+					if(key_mod_press(ALT))		_mod_prs |= MOD_KEY.alt;
 					
 					if(keyboard_check_pressed(vk_escape)) {
 						key.key	 = "";
@@ -551,7 +560,7 @@ event_inherited();
 					modified = true;
 					var bx = x1 - ui(32);
 					var by = _y + hh;
-					if(buttonInstant(THEME.button_hide, bx, by, ui(24), ui(24), _m, sFOCUS, sHOVER && sp_hotkey.hover, "Reset", THEME.refresh_s) == 2) {
+					if(buttonInstant(THEME.button_hide, bx, by, ui(24), ui(24), _m, sFOCUS, sHOVER && sp_hotkey.hover, get_text("reset", "Reset"), THEME.refresh_s) == 2) {
 						key.key = dkey;
 						key.modi = dmod;
 					}
@@ -564,7 +573,7 @@ event_inherited();
 		if(modified) {
 			var bx = x1 - ui(32);
 			var by = _y + ui(2);
-			if(buttonInstant(THEME.button_hide, bx, by, ui(24), ui(24), _m, sFOCUS, sHOVER && sp_hotkey.hover, "Reset all", THEME.refresh_s) == 2) {
+			if(buttonInstant(THEME.button_hide, bx, by, ui(24), ui(24), _m, sFOCUS, sHOVER && sp_hotkey.hover, get_text("reset_all", "Reset all"), THEME.refresh_s) == 2) {
 				for(var j = 0; j < ds_list_size(HOTKEY_CONTEXT); j++) {
 					var ll = HOTKEYS[? HOTKEY_CONTEXT[| j]];
 					for(var i = 0; i < ds_list_size(ll); i++) {

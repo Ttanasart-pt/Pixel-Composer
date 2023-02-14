@@ -9,20 +9,21 @@ function vectorRangeBox(_size, _type, _onModify, _unit = noone) : widget() const
 	
 	onModifyIndex = function(index, val) { 
 		if(linked) {
-			onModify(floor(index / 2) * 2 + 0, toNumber(val)); 
-			onModify(floor(index / 2) * 2 + 1, toNumber(val)); 
-			return;
+			var modi = false;
+			modi |= onModify(floor(index / 2) * 2 + 0, toNumber(val)); 
+			modi |= onModify(floor(index / 2) * 2 + 1, toNumber(val)); 
+			return modi;
 		}
 		
-		onModify(index, toNumber(val)); 
+		return onModify(index, toNumber(val)); 
 	}
 	
 	axis = [ "x", "y", "z", "w"];
 	label = [];
-	onModifySingle[0] = function(val) { onModifyIndex(0, toNumber(val)); }
-	onModifySingle[1] = function(val) { onModifyIndex(1, toNumber(val)); }
-	onModifySingle[2] = function(val) { onModifyIndex(2, toNumber(val)); }
-	onModifySingle[3] = function(val) { onModifyIndex(3, toNumber(val)); }
+	onModifySingle[0] = function(val) { return onModifyIndex(0, toNumber(val)); }
+	onModifySingle[1] = function(val) { return onModifyIndex(1, toNumber(val)); }
+	onModifySingle[2] = function(val) { return onModifyIndex(2, toNumber(val)); }
+	onModifySingle[3] = function(val) { return onModifyIndex(3, toNumber(val)); }
 	
 	extras = -1;
 	
@@ -31,6 +32,11 @@ function vectorRangeBox(_size, _type, _onModify, _unit = noone) : widget() const
 		tb[i].slidable = true;
 		
 		label[i] = (i % 2? "max " : "min ") + axis[floor(i / 2)];
+	}
+	
+	static setSlideSpeed = function(speed) {
+		for(var i = 0; i < size; i++)
+			tb[i].slide_speed = speed;
 	}
 	
 	static setInteract = function(interactable = noone) { 

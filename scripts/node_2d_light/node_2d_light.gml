@@ -14,53 +14,56 @@ function Node_2D_light(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) con
 	uniform_band = shader_get_uniform(shader, "band");
 	uniform_attn = shader_get_uniform(shader, "atten");
 	
-	inputs[| 0] = nodeValue(0, "Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
+	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 	
-	inputs[| 1] = nodeValue(1, "Light shape", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+	inputs[| 1] = nodeValue("Light shape", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Point", "Line", "Line asymmetric", "Spot" ]);
 	
-	inputs[| 2] = nodeValue(2, "Center", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 16, 16])
+	inputs[| 2] = nodeValue("Center", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 16, 16])
 		.setDisplay(VALUE_DISPLAY.vector)
 		.setUnitRef(function(index) { return getDimension(index); });
 	
-	inputs[| 3] = nodeValue(3, "Range", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 16);
+	inputs[| 3] = nodeValue("Range", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 16);
 	
-	inputs[| 4] = nodeValue(4, "Intensity", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
+	inputs[| 4] = nodeValue("Intensity", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
 		.setDisplay(VALUE_DISPLAY.slider, [0, 1, 0.01]);
 	
-	inputs[| 5] = nodeValue(5, "Color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white);
+	inputs[| 5] = nodeValue("Color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white);
 	
-	inputs[| 6] = nodeValue(6, "Start", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 16, 16])
+	inputs[| 6] = nodeValue("Start", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 16, 16])
 		.setDisplay(VALUE_DISPLAY.vector);
 	
-	inputs[| 7] = nodeValue(7, "Finish", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 32, 16])
+	inputs[| 7] = nodeValue("Finish", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 32, 16])
 		.setDisplay(VALUE_DISPLAY.vector);
 	
-	inputs[| 8] = nodeValue(8, "Sweep", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 15)
+	inputs[| 8] = nodeValue("Sweep", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 15)
 		.setDisplay(VALUE_DISPLAY.slider, [-80, 80, 1]);
 	
-	inputs[| 9] = nodeValue(9, "Sweep end", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+	inputs[| 9] = nodeValue("Sweep end", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.slider, [-80, 80, 1]);
 	
-	inputs[| 10] = nodeValue(10, "Banding", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+	inputs[| 10] = nodeValue("Banding", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.slider, [0, 16, 1]);
 	
-	inputs[| 11] = nodeValue(11, "Attenuation", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0, "Control how light fade out over distance.")
+	inputs[| 11] = nodeValue("Attenuation", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0, "Control how light fade out over distance.")
 		.setDisplay(VALUE_DISPLAY.enum_scroll, ["Quadratic", "Invert quadratic", "Linear"]);
 	
-	inputs[| 12] = nodeValue(12, "Radial banding", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+	inputs[| 12] = nodeValue("Radial banding", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.slider, [0, 16, 1]);
 	
-	inputs[| 13] = nodeValue(13, "Radial start", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+	inputs[| 13] = nodeValue("Radial start", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.rotation);
 	
-	inputs[| 14] = nodeValue(14, "Radial band ratio", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.5)
+	inputs[| 14] = nodeValue("Radial band ratio", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.5)
 		.setDisplay(VALUE_DISPLAY.slider, [0, 1, 0.01]);
-		
-	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
-	outputs[| 1] = nodeValue(1, "Light only", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
 	
-	input_display_list = [ 0, 
+	inputs[| 15] = nodeValue("Active", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
+		active_index = 15;
+		
+	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
+	outputs[| 1] = nodeValue("Light only", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
+	
+	input_display_list = [ 15, 0, 
 		["Shape",	false], 1, 2, 6, 7, 8, 9, 
 		["Light",	false], 3, 4, 5, 12, 13, 14,
 		["Render",	false], 11, 10 
@@ -150,14 +153,14 @@ function Node_2D_light(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) con
 			} else
 				draw_clear_alpha(c_black, 1);
 			
-			BLEND_ADD
+			BLEND_ADD;
 			shader_set(shader);
 			gpu_set_colorwriteenable(1, 1, 1, 0);
 			
 			shader_set_uniform_f(uniform_intn, _inten);
 			shader_set_uniform_f(uniform_band, _band);
 			shader_set_uniform_f(uniform_attn, _attn);
-			shader_set_uniform_f_array(uniform_colr, [ color_get_red(_color) / 255, color_get_green(_color) / 255, color_get_blue(_color) / 255 ]);
+			shader_set_uniform_f_array_safe(uniform_colr, [ color_get_red(_color) / 255, color_get_green(_color) / 255, color_get_blue(_color) / 255 ]);
 			
 			switch(_shape) {
 				case LIGHT_SHAPE_2D.point :
@@ -235,7 +238,7 @@ function Node_2D_light(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) con
 			
 			gpu_set_colorwriteenable(1, 1, 1, 1);
 			shader_reset();
-			BLEND_NORMAL
+			BLEND_NORMAL;
 		surface_reset_target(); 
 		
 		return _outSurf;

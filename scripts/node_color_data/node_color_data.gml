@@ -4,23 +4,23 @@ function Node_Color_Data(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) c
 	
 	w = 96;
 	
-	inputs[| 0] = nodeValue(0, "Color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white);
+	inputs[| 0] = nodeValue("Color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white);
 	inputs[| 0].setVisible(true, true);
 	
-	outputs[| 0] = nodeValue(0, "Red", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, 0);
-	outputs[| 1] = nodeValue(1, "Green", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, 0);
-	outputs[| 2] = nodeValue(2, "Blue", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, 0);
+	outputs[| 0] = nodeValue("Red", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, 0);
+	outputs[| 1] = nodeValue("Green", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, 0);
+	outputs[| 2] = nodeValue("Blue", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, 0);
 	
-	outputs[| 3] = nodeValue(3, "Hue", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, 0);
-	outputs[| 4] = nodeValue(4, "Saturation", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, 0);
-	outputs[| 5] = nodeValue(5, "Value", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, 0);
+	outputs[| 3] = nodeValue("Hue", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, 0);
+	outputs[| 4] = nodeValue("Saturation", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, 0);
+	outputs[| 5] = nodeValue("Value", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, 0);
 	
-	outputs[| 6] = nodeValue(6, "Brightness", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, 0);
+	outputs[| 6] = nodeValue("Brightness", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, 0);
 	
-	function process_data(_output, _data, index = 0) { 
+	function process_data(_output, _data, _output_index, _array_index = 0) {  
 		var c = _data[0];
 		
-		switch(index) {
+		switch(_output_index) {
 			case 0 : return color_get_red(c) / 255;
 			case 1 : return color_get_green(c) / 255;
 			case 2 : return color_get_blue(c) / 255;

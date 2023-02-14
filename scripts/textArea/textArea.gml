@@ -1,6 +1,7 @@
 enum TEXT_AREA_FORMAT {
 	_default,
-	code
+	code,
+	delimiter
 }
 
 function textArea(_input, _onModify, _extras = noone) : textInput(_input, _onModify, _extras) constructor {
@@ -73,11 +74,6 @@ function textArea(_input, _onModify, _extras = noone) : textInput(_input, _onMod
 	static cut_line = function() {
 		_input_text_line = [];
 		draw_set_font(font);
-		
-		if(string_pos("\n", _input_text) == 0) {
-			array_push(_input_text_line, _input_text);
-			return;
-		}
 		
 		var _txtLines = string_splice(_input_text, "\n");
 		var ss = "";
@@ -220,7 +216,7 @@ function textArea(_input, _onModify, _extras = noone) : textInput(_input, _onMod
 			apply();
 			
 		if(keyboard_check_pressed(vk_home)) {
-			if(keyboard_check(vk_shift)) {
+			if(key_mod_press(SHIFT)) {
 				if(cursor_select == -1)
 					cursor_select = cursor;
 			} else 
@@ -236,7 +232,7 @@ function textArea(_input, _onModify, _extras = noone) : textInput(_input, _onMod
 			}
 			
 		} else if(keyboard_check_pressed(vk_end)) {
-			if(keyboard_check(vk_shift)) {
+			if(key_mod_press(SHIFT)) {
 				if(cursor_select == -1)
 					cursor_select = cursor;
 			} else 
@@ -283,6 +279,8 @@ function textArea(_input, _onModify, _extras = noone) : textInput(_input, _onMod
 				draw_text(ch_x, ch_y, _str);
 			else if(format == TEXT_AREA_FORMAT.code)
 				draw_code(ch_x, ch_y, _str);
+			else if(format == TEXT_AREA_FORMAT.delimiter)
+				draw_text_delimiter(ch_x, ch_y, _str);
 			
 			ch_y += line_height();
 		}
@@ -389,7 +387,7 @@ function textArea(_input, _onModify, _extras = noone) : textInput(_input, _onMod
 			
 			#region cursor
 				if(KEYBOARD_PRESSED == vk_left) {
-					if(keyboard_check(vk_shift)) {
+					if(key_mod_press(SHIFT)) {
 						if(cursor_select == -1)
 							cursor_select = cursor;
 					} else 
@@ -405,7 +403,7 @@ function textArea(_input, _onModify, _extras = noone) : textInput(_input, _onMod
 					} 
 				}
 				if(KEYBOARD_PRESSED == vk_right) {
-					if(keyboard_check(vk_shift)) {
+					if(key_mod_press(SHIFT)) {
 						if(cursor_select == -1)
 							cursor_select = cursor;
 					} else 
@@ -447,7 +445,7 @@ function textArea(_input, _onModify, _extras = noone) : textInput(_input, _onMod
 						_target = _char;
 					}
 					
-					if(keyboard_check(vk_shift)) {
+					if(key_mod_press(SHIFT)) {
 						if(cursor_select == -1)
 							cursor_select = cursor;
 					} else 
@@ -481,7 +479,7 @@ function textArea(_input, _onModify, _extras = noone) : textInput(_input, _onMod
 						_target = _char;
 					}
 					
-					if(keyboard_check(vk_shift)) {
+					if(key_mod_press(SHIFT)) {
 						if(cursor_select == -1)
 							cursor_select = cursor;
 					} else 
@@ -530,7 +528,12 @@ function textArea(_input, _onModify, _extras = noone) : textInput(_input, _onMod
 						}
 						
 						if(char_run <= cursor && cursor <= char_run + _l) {
-							cursor_pos_x_to = ch_x + string_width(string_copy(_str, 1, cursor - char_run));
+							if(format == TEXT_AREA_FORMAT.delimiter) {
+								var str_cur = string_copy(_str, 1, cursor - char_run);
+								str_cur = string_replace_all(str_cur, " ", "<space>");
+								cursor_pos_x_to = ch_x + string_width(str_cur);
+							} else 
+								cursor_pos_x_to = ch_x + string_width(string_copy(_str, 1, cursor - char_run));
 							cursor_pos_y_to = ch_y;
 							cursor_line = i;
 						}

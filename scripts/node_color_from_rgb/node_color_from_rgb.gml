@@ -1,33 +1,39 @@
-function Node_Color_RGB(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
+function Node_Color_RGB(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constructor {
 	name		= "RGB Color";
 	previewable = false;
 	
 	w = 96;
 	
-	
-	inputs[| 0] = nodeValue(0, "Red", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
+	inputs[| 0] = nodeValue("Red", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
 		.setDisplay(VALUE_DISPLAY.slider, [0, 1, 0.01])
 		.setVisible(true, true);
 	
-	inputs[| 1] = nodeValue(1, "Green", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
+	inputs[| 1] = nodeValue("Green", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
 		.setDisplay(VALUE_DISPLAY.slider, [0, 1, 0.01])
 		.setVisible(true, true);
 	
-	inputs[| 2] = nodeValue(2, "Blue", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
+	inputs[| 2] = nodeValue("Blue", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
 		.setDisplay(VALUE_DISPLAY.slider, [0, 1, 0.01])
 		.setVisible(true, true);
 	
-	outputs[| 0] = nodeValue(0, "Color", self, JUNCTION_CONNECT.output, VALUE_TYPE.color, c_white);
+	outputs[| 0] = nodeValue("Color", self, JUNCTION_CONNECT.output, VALUE_TYPE.color, c_white);
 	
-	static update = function() { 
-		outputs[| 0].setValue(make_color_rgb(inputs[| 0].getValue() * 255, inputs[| 1].getValue() * 255, inputs[| 2].getValue() * 255));
+	static process_data = function(_outSurf, _data, _output_index, _array_index) {
+		return make_color_rgb(_data[0] * 255, _data[1] * 255, _data[2] * 255);
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s) {
 		var bbox = drawGetBbox(xx, yy, _s);
 		if(bbox.h < 1) return;
 		
-		draw_set_color(outputs[| 0].getValue());
+		var col = outputs[| 0].getValue();
+		
+		if(is_array(col)) {
+			drawPalette(col, bbox.x0, bbox.y0, bbox.w, bbox.h);
+			return;
+		}
+		
+		draw_set_color(col);
 		draw_rectangle(bbox.x0, bbox.y0, bbox.x1, bbox.y1, 0);
 	}
 }

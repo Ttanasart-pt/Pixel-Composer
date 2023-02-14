@@ -2,33 +2,33 @@ function Node_Lua_Surface(_x, _y, _group = -1) : Node(_x, _y, _group) constructo
 	name = "Lua Surface";
 	preview_channel = 1;
 	
-	inputs[| 0]  = nodeValue(0, "Function name", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "render" + string(irandom_range(100000, 999999)));
+	inputs[| 0]  = nodeValue("Function name", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "render" + string(irandom_range(100000, 999999)));
 	
-	inputs[| 1]  = nodeValue(1, "Output dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ def_surf_size, def_surf_size ])
+	inputs[| 1]  = nodeValue("Output dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ def_surf_size, def_surf_size ])
 		.setDisplay(VALUE_DISPLAY.vector);
 		
-	inputs[| 2]  = nodeValue(2, "Lua code", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "")
+	inputs[| 2]  = nodeValue("Lua code", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "", o_dialog_lua_reference)
 		.setDisplay(VALUE_DISPLAY.code);
 	
-	inputs[| 3]  = nodeValue(3, "Execution thread", self, JUNCTION_CONNECT.input, VALUE_TYPE.node, noone)
+	inputs[| 3]  = nodeValue("Execution thread", self, JUNCTION_CONNECT.input, VALUE_TYPE.node, noone)
 		.setVisible(false, true);
 	
 	static createNewInput = function() {
 		var index = ds_list_size(inputs);
-		inputs[| index + 0] = nodeValue( index + 0, "Argument name", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "" );
+		inputs[| index + 0] = nodeValue("Argument name", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "" );
 		
-		inputs[| index + 1] = nodeValue( index + 1, "Argument type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0 )
+		inputs[| index + 1] = nodeValue("Argument type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0 )
 			.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Number", "String", "Surface" ]);
 		inputs[| index + 1].editWidget.interactable = false;
 		
-		inputs[| index + 2] = nodeValue( index + 2, "Argument value", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0 )
+		inputs[| index + 2] = nodeValue("Argument value", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0 )
 			.setVisible(true, true);
 		inputs[| index + 2].editWidget.interactable = false;
 	}
 	
-	outputs[| 0] = nodeValue(0, "Execution thread", self, JUNCTION_CONNECT.output, VALUE_TYPE.node, noone );
+	outputs[| 0] = nodeValue("Execution thread", self, JUNCTION_CONNECT.output, VALUE_TYPE.node, noone );
 	
-	outputs[| 1] = nodeValue(1, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
+	outputs[| 1] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	luaArgumentRenderer();
 	
@@ -48,6 +48,7 @@ function Node_Lua_Surface(_x, _y, _group = -1) : Node(_x, _y, _group) constructo
 	
 	lua_state = lua_create();
 	
+	error_notification = noone;
 	compiled = false;
 	
 	if(!LOADING && !APPENDING) createNewInput();
@@ -62,6 +63,15 @@ function Node_Lua_Surface(_x, _y, _group = -1) : Node(_x, _y, _group) constructo
 		doStepBegin();
 		
 		value_validation[VALIDATION.error] = !compiled;
+		if(!compiled && error_notification == noone) {
+			error_notification = noti_error("Lua node [" + string(name) + "] not compiled.");
+			error_notification.onClick = function() { PANEL_GRAPH.focusNode(self); };
+		}
+		
+		if(compiled && error_notification != noone) {
+			noti_remove(error_notification);
+			error_notification = noone;
+		}
 	}
 	
 	static getState = function() {
@@ -119,7 +129,7 @@ function Node_Lua_Surface(_x, _y, _group = -1) : Node(_x, _y, _group) constructo
 		if(index == 0 || index == 2) compiled = false;
 	}
 	
-	static onValueUpdate = function(index) {
+	static onValueUpdate = function(index = 0) {
 		if(index == 0 || index == 2) compiled = false;
 		
 		if(index == 3) {
@@ -134,11 +144,11 @@ function Node_Lua_Surface(_x, _y, _group = -1) : Node(_x, _y, _group) constructo
 		if(index < input_fix_len) return;
 		if(LOADING || APPENDING) return;
 		
-		if((index - input_fix_len) % data_length == 0) { //Variable name
-			inputs[| index + 2].name = inputs[| index].getValue();
-			compiled = false;
-		} else if((index - input_fix_len) % data_length == 1) { //Variable type
+		compiled = false;
+		
+		if((index - input_fix_len) % data_length == 1) { //Variable type
 			var type = inputs[| index].getValue();
+			
 			switch(type) {
 				case 0 : inputs[| index + 1].type = VALUE_TYPE.float;	break;
 				case 1 : inputs[| index + 1].type = VALUE_TYPE.text;	break;
@@ -146,13 +156,19 @@ function Node_Lua_Surface(_x, _y, _group = -1) : Node(_x, _y, _group) constructo
 			}
 			
 			inputs[| index + 1].setDisplay(VALUE_DISPLAY._default);
-			compiled = false;
 		}
 		
 		refreshDynamicInput();
 	}
 	
-	static update = function() {
+	static step = function() {
+		for( var i = input_fix_len; i < ds_list_size(inputs) - data_length; i += data_length ) {
+			var name = inputs[| i + 0].getValue();
+			inputs[| i + 2].name = name;
+		}
+	}
+	
+	static update = function(frame = ANIMATOR.current_frame) {
 		if(!compiled) return;
 		
 		var _func = inputs[| 0].getValue();
@@ -177,7 +193,7 @@ function Node_Lua_Surface(_x, _y, _group = -1) : Node(_x, _y, _group) constructo
 		outputs[| 1].setValue(_outSurf);
 	}
 	
-	static inspectorUpdate = function() { //compile
+	static onInspectorUpdate = function() { //compile
 		var _func = inputs[| 0].getValue();
 		var _code = inputs[| 2].getValue();
 		argument_name = [];
@@ -217,5 +233,25 @@ function Node_Lua_Surface(_x, _y, _group = -1) : Node(_x, _y, _group) constructo
 	
 	static doApplyDeserialize = function() {
 		refreshDynamicInput();
+		
+		for( var i = input_fix_len; i < ds_list_size(inputs) - data_length; i += data_length ) {
+			var name = inputs[| i + 0].getValue();
+			var type = inputs[| i + 1].getValue();
+			
+			inputs[| i + 2].name = name;
+			
+			switch(type) {
+				case 0 : inputs[| i + 2].type = VALUE_TYPE.float;	break;
+				case 1 : inputs[| i + 2].type = VALUE_TYPE.text;	break;
+				case 2 : inputs[| i + 2].type = VALUE_TYPE.surface;	break;
+			}
+			
+			inputs[| i + 2].setDisplay(VALUE_DISPLAY._default);
+		}
+	}
+	
+	static onDestroy = function() {
+		if(error_notification != noone)
+			noti_remove(error_notification);
 	}
 }

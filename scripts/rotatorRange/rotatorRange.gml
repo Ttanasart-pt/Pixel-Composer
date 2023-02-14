@@ -6,11 +6,13 @@ function rotatorRange(_onModify) : widget() constructor {
 	drag_sa  = 0;
 	drag_sc  = 0;
 	
-	tb_min = new textBox(TEXTBOX_INPUT.number, function(val) { onModify(0, val); } );
+	tb_min = new textBox(TEXTBOX_INPUT.number, function(val) { return onModify(0, val); } );
 	tb_min.slidable = true;
+	tb_min.slide_speed = 1;
 	
-	tb_max = new textBox(TEXTBOX_INPUT.number, function(val) { onModify(1, val); } );
+	tb_max = new textBox(TEXTBOX_INPUT.number, function(val) { return onModify(1, val); } );
 	tb_max.slidable = true;
+	tb_max.slide_speed = 1;
 	
 	static setInteract = function(interactable = noone) { 
 		self.interactable = interactable;
@@ -87,15 +89,17 @@ function rotatorRange(_onModify) : widget() constructor {
 			var val, real_val;
 			
 			if(dragging == 2) {
+				var modi = false;
 				real_val[0]   = round(delta + drag_sv[0]);
 				val = key_mod_press(CTRL)? round(real_val[0] / 15) * 15 : real_val[0];
-				onModify(0, val);
+				modi |= onModify(0, val);
 				
 				real_val[1]   = round(delta + drag_sv[1]);
 				val = key_mod_press(CTRL)? round(real_val[1] / 15) * 15 : real_val[1];
-				onModify(1, val);
+				modi |= onModify(1, val);
 				
-				UNDO_HOLDING = true;
+				if(modi)
+					UNDO_HOLDING = true;
 			} else {
 				var _o = _data[dragging];
 				real_val   = round(delta + drag_sv);
@@ -104,14 +108,16 @@ function rotatorRange(_onModify) : widget() constructor {
 				draw_sprite_ui_uniform(THEME.rotator_knob, 1, px[dragging], py[dragging]);
 				
 				if(_data[dragging] != val) {
-					onModify(dragging, val);
+					var modi = false;
+					modi |= onModify(dragging, val);
 					
-					if(keyboard_check(vk_alt)) {
+					if(key_mod_press(ALT)) {
 						var dt = val - _o;
-						onModify(!dragging, _data[!dragging] - dt);
+						modi |= onModify(!dragging, _data[!dragging] - dt);
 					}
 				
-					UNDO_HOLDING = true;
+					if(modi)
+						UNDO_HOLDING = true;
 				}
 				
 				drag_sv = real_val;

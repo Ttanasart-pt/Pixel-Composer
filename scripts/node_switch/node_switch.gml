@@ -5,24 +5,25 @@ function Node_Switch(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 	w = 96;
 	
 	
-	inputs[| 0] = nodeValue( 0, "Index", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "" )
-		.setVisible(true, true);
+	inputs[| 0] = nodeValue("Index", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "" )
+		.setVisible(true, true)
+		.rejectArray();
 	
-	inputs[| 1] = nodeValue( 1, "Default value", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, 0 )
+	inputs[| 1] = nodeValue("Default value", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, 0 )
 		.setVisible(false, true);
 	
 	static createNewInput = function() {
 		var index = ds_list_size(inputs);
-		inputs[| index + 0] = nodeValue( index + 0, "Case", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "" );
+		inputs[| index + 0] = nodeValue("Case", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "" );
 		
-		inputs[| index + 1] = nodeValue( index + 1, "value", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, 0 )
+		inputs[| index + 1] = nodeValue("value", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, 0 )
 			.setVisible(false, true);
 		
 		array_push(input_display_list, index + 0);
 		array_push(input_display_list, index + 1);
 	}
 	
-	outputs[| 0] = nodeValue(0, "Result", self, JUNCTION_CONNECT.output, VALUE_TYPE.any, 0);
+	outputs[| 0] = nodeValue("Result", self, JUNCTION_CONNECT.output, VALUE_TYPE.any, 0);
 	
 	input_display_list = [ 0,
 		["Inputs", false], 1
@@ -76,7 +77,7 @@ function Node_Switch(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 		}
 	}
 	
-	static onValueUpdate = function(index) {
+	static onValueUpdate = function(index = 0) {
 		if(index < input_fix_len) return;
 		if(LOADING || APPENDING) return;
 		
@@ -87,7 +88,7 @@ function Node_Switch(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 		refreshDynamicInput();
 	}
 	
-	static update = function() {
+	static update = function(frame = ANIMATOR.current_frame) {
 		var sele = inputs[| 0].getValue();
 		var _res = inputs[| 1].getValue();
 		

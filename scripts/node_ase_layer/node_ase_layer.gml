@@ -4,12 +4,14 @@ function Node_ASE_layer(_x, _y, _group = -1) : Node(_x, _y, _group) constructor 
 	always_output	= true;
 	previewable = false;
 	
-	inputs[| 0] = nodeValue(0, "ASE data",	 self, JUNCTION_CONNECT.input, VALUE_TYPE.object, noone)
-		.setVisible(false, true);
+	inputs[| 0] = nodeValue("ASE data", self, JUNCTION_CONNECT.input, VALUE_TYPE.object, noone)
+		.setVisible(false, true)
+		.rejectArray();
 	
-	inputs[| 1] = nodeValue(1, "Use cel dimension",	 self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	inputs[| 1] = nodeValue("Use cel dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false)
+		.rejectArray();
 	
-	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
+	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	layer_object = noone;
 	_name = "";
@@ -33,7 +35,7 @@ function Node_ASE_layer(_x, _y, _group = -1) : Node(_x, _y, _group) constructor 
 		}
 	}
 	
-	static update = function() {
+	static update = function(frame = ANIMATOR.current_frame) {
 		var data = inputs[| 0].getValue();
 		if(data == noone) return;
 		
@@ -70,9 +72,9 @@ function Node_ASE_layer(_x, _y, _group = -1) : Node(_x, _y, _group) constructor 
 		
 		surface_set_target(surf);
 		draw_clear_alpha(0, 0);
-		BLEND_OVERRIDE
+		BLEND_OVERRIDE;
 		draw_surface(_inSurf, xx, yy);
-		BLEND_NORMAL
+		BLEND_NORMAL;
 		surface_reset_target();
 	}
 }

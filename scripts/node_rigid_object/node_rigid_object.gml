@@ -1,32 +1,42 @@
 function Node_Rigid_Object(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 	name = "Object";
+	color = COLORS.node_blend_simulation;
+	icon  = THEME.rigidSim;
 	w = 96;
 	min_h = 96;
 	
 	object = [];
 	
-	inputs[| 0] = nodeValue(0, "Affect by force", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
+	inputs[| 0] = nodeValue("Affect by force", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true)
+		.rejectArray();
 	
-	inputs[| 1] = nodeValue(1, "Weight", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.5);
+	inputs[| 1] = nodeValue("Weight", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.5)
+		.rejectArray();
 	
-	inputs[| 2] = nodeValue(2, "Contact friction", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.2);
+	inputs[| 2] = nodeValue("Contact friction", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.2)
+		.rejectArray();
 	
-	inputs[| 3] = nodeValue(3, "Air resistance", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.2);
+	inputs[| 3] = nodeValue("Air resistance", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.2)
+		.rejectArray();
 	
-	inputs[| 4] = nodeValue(4, "Rotation resistance", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.2);
+	inputs[| 4] = nodeValue("Rotation resistance", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.2)
+		.rejectArray();
 	
-	inputs[| 5] = nodeValue(5, "Shape", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Box", "Circle", "Custom" ]);
+	inputs[| 5] = nodeValue("Shape", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Box", "Circle", "Custom" ])
+		.rejectArray();
 	
-	inputs[| 6] = nodeValue(6, "Texture", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, PIXEL_SURFACE)
+	inputs[| 6] = nodeValue("Texture", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone)
+		.rejectArray();
 	
-	inputs[| 7] = nodeValue(7, "Start shape", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 16, 16, 4, 4, AREA_SHAPE.rectangle ])
+	inputs[| 7] = nodeValue("Start shape", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 16, 16, 4, 4, AREA_SHAPE.rectangle ])
 		.setDisplay(VALUE_DISPLAY.area);
 	inputs[| 7].editWidget.adjust_shape = false;
 	
-	inputs[| 8] = nodeValue(8, "Spawn", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true, "Make object spawn when start.");
+	inputs[| 8] = nodeValue("Spawn", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true, "Make object spawn when start.")
+		.rejectArray();
 	
-	inputs[| 9] = nodeValue(9, "Generate mesh", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+	inputs[| 9] = nodeValue("Generate mesh", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.button, [ function() {
 			var _tex  = inputs[| 6].getValue();
 			if(is_array(_tex)) {
@@ -37,9 +47,10 @@ function Node_Rigid_Object(_x, _y, _group = -1) : Node(_x, _y, _group) construct
 			update();
 		}, "Generate"] );
 	
-	inputs[| 10] = nodeValue(10, "Mesh expansion", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0);
+	inputs[| 10] = nodeValue("Mesh expansion", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
+		.rejectArray();
 	
-	outputs[| 0] = nodeValue(0, "Object", self, JUNCTION_CONNECT.output, VALUE_TYPE.object, self);
+	outputs[| 0] = nodeValue("Object", self, JUNCTION_CONNECT.output, VALUE_TYPE.rigid, self);
 	
 	input_display_list = [ 8,
 		["Texture",		false],	6,
@@ -291,7 +302,7 @@ function Node_Rigid_Object(_x, _y, _group = -1) : Node(_x, _y, _group) construct
 		
 		var uni_com = shader_get_uniform(sh_mesh_generation, "com");
 		var uni_dim = shader_get_uniform(sh_mesh_generation, "dimension");
-		var temp	= surface_create(ww, hh);
+		var temp	= surface_create_valid(ww, hh);
 		
 		surface_set_target(temp);
 		draw_clear_alpha(0, 0);
@@ -479,7 +490,7 @@ function Node_Rigid_Object(_x, _y, _group = -1) : Node(_x, _y, _group) construct
 		}
 	}
 	
-	static onValueUpdate = function(index) {
+	static onValueUpdate = function(index = 0) {
 		if(index == 5) {
 			var _spos = inputs[| 7].getValue();
 			var _shape = inputs[| 5].getValue();
@@ -597,7 +608,6 @@ function Node_Rigid_Object(_x, _y, _group = -1) : Node(_x, _y, _group) construct
 				var fixture = physics_fixture_create();
 				physics_fixture_set_polygon_shape(fixture);
 				
-				print(index);
 				for( var i = 0; i < len; i++ ) {
 					var _px0 = fxList[| i];
 					var _py0 = fyList[| i];
@@ -649,7 +659,7 @@ function Node_Rigid_Object(_x, _y, _group = -1) : Node(_x, _y, _group) construct
 		return object;
 	}
 	
-	static update = function() {
+	static update = function(frame = ANIMATOR.current_frame) {
 		if(ANIMATOR.current_frame == 0) return;
 		if(!isAnimated()) return;
 		

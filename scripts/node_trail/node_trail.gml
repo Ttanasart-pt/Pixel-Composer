@@ -2,22 +2,22 @@ function Node_Trail(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constr
 	name		= "Trail";
 	use_cache   = true;
 	
-	inputs[| 0] = nodeValue(0, "Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
-	inputs[| 1] = nodeValue(1, "Max life",   self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 3);
-	inputs[| 2] = nodeValue(2, "Step",       self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1);
-	inputs[| 3] = nodeValue(3, "Alpha decrease",	self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
+	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
+	inputs[| 1] = nodeValue("Max life",   self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 3);
+	inputs[| 2] = nodeValue("Step",       self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1);
+	inputs[| 3] = nodeValue("Alpha decrease",	self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
 		.setDisplay(VALUE_DISPLAY.slider, [0, 1, 0.01]);
 	
-	inputs[| 4] = nodeValue(4, "Blend mode", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+	inputs[| 4] = nodeValue("Blend mode", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.enum_scroll, BLEND_TYPES );
 	
-	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
+	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [
 		["Trail settings",	false], 0, 1, 2, 4, 3
 	];
 	
-	temp_surf = [ PIXEL_SURFACE, PIXEL_SURFACE ];
+	temp_surf = [ surface_create(1, 1), surface_create(1, 1) ];
 	
 	static process_data = function(_outSurf, _data, _output_index, _array_index) {
 		if(!inputs[| 0].value_from) 
@@ -61,9 +61,9 @@ function Node_Trail(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constr
 		
 		surface_set_target(_outSurf);
 		draw_clear_alpha(0, 0);
-		BLEND_OVERRIDE
+		BLEND_OVERRIDE;
 			draw_surface_safe(temp_surf[res_index], 0, 0);
-		BLEND_NORMAL
+		BLEND_NORMAL;
 		surface_reset_target();
 		
 		cacheCurrentFrame(_data[0]);

@@ -6,9 +6,9 @@ function Node_Unicode(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) cons
 	w = 96;
 	
 	
-	inputs[| 0] = nodeValue(0, "Unicode", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 64);
+	inputs[| 0] = nodeValue("Unicode", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 64);
 	
-	outputs[| 0] = nodeValue(0, "Character", self, JUNCTION_CONNECT.output, VALUE_TYPE.text, 0);
+	outputs[| 0] = nodeValue("Character", self, JUNCTION_CONNECT.output, VALUE_TYPE.text, 0);
 	
 	function process_data(_output, _data, index = 0) { 
 		return chr(_data[0]);

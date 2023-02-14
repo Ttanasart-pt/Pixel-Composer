@@ -10,7 +10,7 @@ function buttonGradientClass(_onApply) : widget() constructor {
 	
 	static trigger = function() {
 		var dialog = dialogCall(o_dialog_gradient, WIN_W / 2, WIN_H / 2);
-		dialog.setGradient(current_gradient, current_data);
+		dialog.setDefault(current_gradient, current_data);
 		dialog.onApply = onApply;
 	}
 	
@@ -23,13 +23,13 @@ function buttonGradientClass(_onApply) : widget() constructor {
 		current_data = _data;
 		
 		var click = false;
-		if(hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + _h)) {
+		if(ihover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + _h)) {
 			draw_sprite_stretched(THEME.button, 1, _x, _y, _w, _h);	
-			if(mouse_press(mb_left, active)) {
+			if(mouse_press(mb_left, iactive)) {
 				trigger();
 				click = true;
 			}
-			if(mouse_click(mb_left, active))
+			if(mouse_click(mb_left, iactive))
 				draw_sprite_stretched(THEME.button, 2, _x, _y, _w, _h);	
 		} else {
 			draw_sprite_stretched(THEME.button, 0, _x, _y, _w, _h);		

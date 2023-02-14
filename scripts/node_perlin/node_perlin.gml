@@ -9,29 +9,29 @@ function Node_Perlin(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) const
 	uniform_bri = shader_get_uniform(shader, "bright");
 	uniform_sed = shader_get_uniform(shader, "seed");
 	
-	inputs[| 0] = nodeValue(0, "Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, def_surf_size2 )
+	inputs[| 0] = nodeValue("Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, def_surf_size2 )
 		.setDisplay(VALUE_DISPLAY.vector);
 	
-	inputs[| 1] = nodeValue(1, "Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ])
+	inputs[| 1] = nodeValue("Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.vector)
 		.setUnitRef(function(index) { return getDimension(index); });
 	
-	inputs[| 2] = nodeValue(2, "Scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 5, 5 ])
+	inputs[| 2] = nodeValue("Scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 5, 5 ])
 		.setDisplay(VALUE_DISPLAY.vector);
 	
-	inputs[| 3] = nodeValue(3, "Iteration", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 2);
+	inputs[| 3] = nodeValue("Iteration", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 2);
 	
-	inputs[| 4] = nodeValue(4, "Brightness", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.5)
+	inputs[| 4] = nodeValue("Brightness", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.5)
 		.setDisplay(VALUE_DISPLAY.slider, [ 0, 1, 0.01]);
 		
-	inputs[| 5] = nodeValue(5, "Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, irandom(99999));
+	inputs[| 5] = nodeValue("Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, irandom(99999));
 	
 	input_display_list = [
-		["Surface",		false],	0, 5, 
+		["Surface",		 true],	0, 5, 
 		["Noise",		false],	1, 2, 3, 4
 	];
 	
-	outputs[| 0] = nodeValue(0, "Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, PIXEL_SURFACE);
+	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	static process_data = function(_outSurf, _data, _output_index, _array_index) {
 		var _dim = _data[0];
@@ -45,9 +45,9 @@ function Node_Perlin(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) const
 		
 		surface_set_target(_outSurf);
 		shader_set(shader);
-			shader_set_uniform_f_array(uniform_dim, _dim);
-			shader_set_uniform_f_array(uniform_pos, _pos);
-			shader_set_uniform_f_array(uniform_sca, _sca);
+			shader_set_uniform_f_array_safe(uniform_dim, _dim);
+			shader_set_uniform_f_array_safe(uniform_pos, _pos);
+			shader_set_uniform_f_array_safe(uniform_sca, _sca);
 			shader_set_uniform_f(uniform_bri, _bri);
 			shader_set_uniform_f(uniform_sed, _sed);
 			shader_set_uniform_i(uniform_ite, _ite);

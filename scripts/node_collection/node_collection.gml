@@ -3,12 +3,69 @@ enum COLLECTION_TAG {
 	loop = 2
 }
 
+function groupNodes(nodeArray, _group = noone, record = true, check_connect = true) {
+	UNDO_HOLDING = true;
+	
+	if(_group == noone) {
+		var cx = 0;
+		var cy = 0;
+		for(var i = 0; i < array_length(nodeArray); i++) {
+			var _node = nodeArray[i];
+			cx += _node.x;
+			cy += _node.y;
+		}
+		cx = round(cx / array_length(nodeArray) / 32) * 32;
+		cy = round(cy / array_length(nodeArray) / 32) * 32;
+		
+		_group = new Node_Group(cx, cy, PANEL_GRAPH.getCurrentContext());
+	}
+	
+	var _content = [];
+		
+	for(var i = 0; i < array_length(nodeArray); i++) {
+		_group.add(nodeArray[i]);
+		_content[i] = nodeArray[i];
+	}
+		
+	var _io = [];
+	if(check_connect) 
+	for(var i = 0; i < array_length(nodeArray); i++)
+		array_append(_io, nodeArray[i].checkConnectGroup());
+			
+	UNDO_HOLDING = false;	
+	if(record) recordAction(ACTION_TYPE.group, _group, { io: _io, content: _content });
+	
+	return _group;
+}
+
+function upgroupNode(collection, record = true) {
+	UNDO_HOLDING = true;
+	var _content = [];
+	var _io = [];
+	while(!ds_list_empty(collection.nodes)) {
+		var remNode = collection.nodes[| 0];
+		if(remNode.destroy_when_upgroup)	
+			array_push(_io, remNode);
+		else 
+			array_push(_content, remNode);
+		
+		collection.remove(remNode); 
+	}
+	
+	nodeDelete(collection);
+	UNDO_HOLDING = false;
+	
+	if(record) recordAction(ACTION_TYPE.ungroup, collection, { io: _io, content: _content });
+}
+
 function Node_Collection(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 	nodes = ds_list_create();
 	ungroupable = true;
 	
 	custom_input_index = 0;
 	custom_output_index = 0;
+	
+	metadata = new MetaDataManager();
 	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		for(var i = custom_input_index; i < ds_list_size(inputs); i++) {
@@ -65,20 +122,13 @@ function Node_Collection(_x, _y, _group = -1) : Node(_x, _y, _group) constructor
 		
 		recordAction(ACTION_TYPE.group_removed, self, _node);
 		
-		switch(instanceof(_node)) {
-			case "Node_Group_Input" :
-			case "Node_Group_Output" :
-			case "Node_Iterator_Input" :
-			case "Node_Iterator_Output" :
-			case "Node_Iterator_Index" :
-				nodeDelete(_node);
-				break;
-			default : 
-				_node.group = group;
-		}
-		
-		_node.x += x;
-		_node.y += y;
+		if(struct_has(_node, "ungroup"))
+			_node.ungroup();
+			
+		if(_node.destroy_when_upgroup) 
+			nodeDelete(_node);
+		else
+			_node.group = group;
 	}
 	
 	static clearCache = function() {
@@ -90,9 +140,8 @@ function Node_Collection(_x, _y, _group = -1) : Node(_x, _y, _group) constructor
 	static inspectorGroupUpdate = function() {
 		for(var i = 0; i < ds_list_size(nodes); i++) {
 			var _node = nodes[| i];
-			if(_node.inspectorUpdate == noone) continue;
-			
-			_node.inspectorUpdate();
+			if(_node.hasInspectorUpdate() == noone)
+				_node.inspectorUpdate();
 		}
 	}
 	
@@ -105,7 +154,7 @@ function Node_Collection(_x, _y, _group = -1) : Node(_x, _y, _group) constructor
 		for(var i = 0; i < ds_list_size(nodes); i++) {
 			var n = nodes[| i];
 			n.stepBegin();
-			if(n.inspectorUpdate != noone)
+			if(n.hasInspectorUpdate())
 				inspectorUpdate = inspectorGroupUpdate;
 			if(!n.use_cache) continue;
 			
@@ -208,10 +257,37 @@ function Node_Collection(_x, _y, _group = -1) : Node(_x, _y, _group) constructor
 		ds_priority_destroy(ar);
 	}
 	
-	static onDestroy = function() {
-		for( var i = 0; i < ds_list_size(nodes); i++ ) {
-			nodes[| i].destroy();
+	static onClone = function(target = PANEL_GRAPH.getCurrentContext()) {
+		var dups = ds_list_create();
+		
+		for(var i = 0; i < ds_list_size(nodes); i++) {
+			var _node = nodes[| i];
+			var _cnode = _node.clone(target);
+			ds_list_add(dups, _cnode);
+			
+			APPEND_MAP[? _node.node_id] = _cnode.node_id;
 		}
+		
+		APPENDING = true;
+		for(var i = 0; i < ds_list_size(dups); i++) {
+			var _node = dups[| i];
+			_node.connect();
+		}
+		APPENDING = false;
+		
+		ds_list_destroy(dups);
+	}
+	
+	static enable = function() { 
+		active = true;
+		for( var i = 0; i < ds_list_size(nodes); i++ )
+			nodes[| i].enable();
+	}
+	
+	static disable = function() {
+		active = false;
+		for( var i = 0; i < ds_list_size(nodes); i++ )
+			nodes[| i].disable();
 	}
 	
 	static resetAllRenderStatus = function() {

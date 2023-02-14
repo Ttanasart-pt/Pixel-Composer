@@ -356,7 +356,7 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 		ds_list_add(values, "Texts");
 		addNodeObject(values, "Text",			s_node_text,			"Node_String",			[1, Node_String]);
 		addNodeObject(values, "Unicode",		s_node_unicode,			"Node_Unicode",			[1, Node_Unicode]);
-		addNodeObject(values, "Combine Text",	s_node_text_combine,	"Node_String_Merge",	[1, Node_String_Merge]);
+		addNodeObject(values, "Combine Text",	s_node_text_combine,	"Node_Stringrte_Merge",	[1, Node_String_Merge]);
 		addNodeObject(values, "Join Text",		s_node_text_join,		"Node_String_Join",		[1, Node_String_Join]).set_version(1120);
 		addNodeObject(values, "Split Text",		s_node_text_splice,		"Node_String_Split",	[1, Node_String_Split]);
 		addNodeObject(values, "Trim Text",		s_node_text_trim,		"Node_String_Trim",		[1, Node_String_Trim]).set_version(1080);
