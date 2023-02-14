@@ -9,10 +9,14 @@ uniform vec4 gradient_color[16];
 uniform float gradient_time[16];
 uniform int keys;
 uniform float gradient_shift;
+uniform int multiply_alpha;
 
 void main() {
 	vec4 _col = v_vColour * texture2D( gm_BaseTexture, v_vTexcoord );
 	float prog = abs(dot(_col.rgb, vec3(0.2126, 0.7152, 0.0722)) + gradient_shift);
+	if(multiply_alpha == 1)
+		prog *= _col.a;
+		
 	if(prog > 1.) {
 		if(prog == floor(prog))
 			prog = 1.;

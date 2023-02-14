@@ -1,3 +1,8 @@
+function surface_blur_init() {
+	__blur_hori = surface_create(1, 1);
+	__blur_vert = surface_create(1, 1);
+}
+
 function surface_apply_gaussian(surface, size, bg = false, bg_c = c_white, sampleMode = 0, overColor = noone) {
 	static uni_bor = shader_get_uniform(sh_blur_gaussian, "sampleMode");
 	static uni_dim = shader_get_uniform(sh_blur_gaussian, "dimension");
@@ -7,8 +12,8 @@ function surface_apply_gaussian(surface, size, bg = false, bg_c = c_white, sampl
 	static uni_ovr = shader_get_uniform(sh_blur_gaussian, "overrideColor");
 	static uni_ovc = shader_get_uniform(sh_blur_gaussian, "overColor");
 	
-	var hori = surface_create_valid(surface_get_width(surface), surface_get_height(surface));	
-	var vert = surface_create_valid(surface_get_width(surface), surface_get_height(surface));	
+	__blur_hori = surface_verify(__blur_hori, surface_get_width(surface), surface_get_height(surface));	
+	__blur_vert = surface_verify(__blur_vert, surface_get_width(surface), surface_get_height(surface));	
 	
 	#region kernel generation
 		size = max(1, round(size));
@@ -26,37 +31,35 @@ function surface_apply_gaussian(surface, size, bg = false, bg_c = c_white, sampl
 		}
 	#endregion
 	
-	BLEND_OVERRIDE
-	surface_set_target(hori);
+	BLEND_OVERRIDE;
+	surface_set_target(__blur_hori);
 		draw_clear_alpha(bg_c, bg);
 		
 		shader_set(sh_blur_gaussian);
-		shader_set_uniform_f_array(uni_dim, [ surface_get_width(surface), surface_get_height(surface) ]);
-		shader_set_uniform_f_array(uni_wei, gau_array);
+		shader_set_uniform_f_array_safe(uni_dim, [ surface_get_width(surface), surface_get_height(surface) ]);
+		shader_set_uniform_f_array_safe(uni_wei, gau_array);
 		
 		shader_set_uniform_i(uni_bor, sampleMode);
 		shader_set_uniform_i(uni_sze, size);
 		shader_set_uniform_i(uni_hor, 1);
 		
 		shader_set_uniform_i(uni_ovr, overColor != noone);
-		shader_set_uniform_f_array(uni_ovc, colToVec4(overColor));
+		shader_set_uniform_f_array_safe(uni_ovc, colToVec4(overColor));
 		
 		draw_surface_safe(surface, 0, 0);
 		shader_reset();
 	surface_reset_target();
 	
-	surface_set_target(vert);
+	surface_set_target(__blur_vert);
 		draw_clear_alpha(bg_c, bg);
 		
 		shader_set(sh_blur_gaussian);
 		shader_set_uniform_i(uni_hor, 0);
 		
-		draw_surface_safe(hori, 0, 0);
+		draw_surface_safe(__blur_hori, 0, 0);
 		shader_reset();
 	surface_reset_target();
-	BLEND_NORMAL
+	BLEND_NORMAL;
 	
-	surface_free(hori);
-	
-	return vert;
+	return __blur_vert;
 }

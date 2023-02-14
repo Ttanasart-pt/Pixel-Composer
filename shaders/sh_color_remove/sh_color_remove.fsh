@@ -7,6 +7,7 @@ varying vec4 v_vColour;
 uniform vec4	colorFrom[32];
 uniform int		colorFrom_amo;
 uniform float	treshold;
+uniform int		invert;
 
 vec3 rgb2xyz( vec3 c ) {
     vec3 tmp;
@@ -40,7 +41,7 @@ void main() {
 		
 	vec3 lab = rgb2lab(col.rgb);
 	
-	float min_df = treshold;
+	float min_df = 999.;
 	for(int i = 0; i < colorFrom_amo; i++) {
 		vec3 labFrom = rgb2lab(colorFrom[i].rgb);
 	
@@ -48,8 +49,8 @@ void main() {
 		min_df = min(min_df, df);
 	}
 	
-	if(min_df < treshold)
-		gl_FragColor = vec4(1., 1., 1., 0.);
+	if((invert == 0 && min_df <= treshold) || (invert == 1 && min_df > treshold))
+		gl_FragColor = vec4(0.);
 	else	
 		gl_FragColor = baseColor;
 }

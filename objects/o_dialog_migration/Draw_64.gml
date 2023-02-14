@@ -21,7 +21,7 @@ draw_set_alpha(1);
 	draw_text_ext(dialog_x + ui(24), py, get_text("dialog_migration_content", 
 		"You can press migrate files or manually move all custom collections, assets, palettes, gradients, fonts and presets."), -1, dialog_w - ui(48));
 	
-	var bw = ui(96), bh = TEXTBOX_HEIGHT;
+	var bw = ui(112), bh = TEXTBOX_HEIGHT;
 	var bx1 = dialog_x + dialog_w - ui(16);
 	var by1 = dialog_y + dialog_h - ui(16);
 	var bx0 = bx1 - bw;
@@ -37,15 +37,26 @@ draw_set_alpha(1);
 	var b = buttonInstant(THEME.button, bx0, by0, bw, bh, mouse_ui, sFOCUS, sHOVER);
 	draw_text(bx0 + bw / 2, by0 + bh / 2, get_text("migrate_files", "Migrate files"));
 	if(b == 2) {
-		
+		var oldDir = environment_get_variable("userprofile") + "\\AppData\\Local\\Pixels_Composer\\";
+		var folders = [ "Assets", "Collections", "Fonts", "Gradients", "Palettes", "Presets", "Themes"];
+		for( var i = 0; i < array_length(folders); i++ ) {
+			var o = oldDir + folders[i] + "\\";
+			var n = DIRECTORY + folders[i] + "\\";
+			
+			if(directory_exists(o)) {
+				var shell = "/E /I " + o + " " + n;
+				execute_shell("Xcopy", shell);
+			}
+		}
 		instance_destroy();
 	}
 	
 	bx0 = dialog_x + ui(16);
+	bw = ui(160);
 	var b = buttonInstant(THEME.button, bx0, by0, bw, bh, mouse_ui, sFOCUS, sHOVER);
 	draw_text(bx0 + bw / 2, by0 + bh / 2, get_text("migrate_open_directory", "Open directory") + "...");
 	if(b == 2) {
-		var path = string(DIRECTORY);
-		if(file_exists(path)) shellOpenExplorer(path);
+		if(directory_exists(DIRECTORY)) 
+			shellOpenExplorer(DIRECTORY);
 	}
 #endregion

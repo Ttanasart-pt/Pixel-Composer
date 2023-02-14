@@ -5,6 +5,7 @@ function FileObject(_name, _path) constructor {
 	spr      = -1;
 	content  = -1;
 	surface  = noone;
+	meta = noone;
 	
 	static getSurface = function() {
 		if(is_surface(surface)) return surface;
@@ -24,6 +25,31 @@ function FileObject(_name, _path) constructor {
 		if(cent)
 			sprite_set_offset(spr, sprite_get_width(spr) / 2, sprite_get_height(spr) / 2);
 		return spr;
+	}
+	
+	static getMetadata = function() {
+		if(!file_exists(path)) return noone;
+		if(filename_ext(path) != ".pxcc") return noone;
+		if(meta != noone) return meta;
+		if(meta == undefined) return noone;
+		
+		var f = file_text_open_read(path);
+		var _f = file_text_read_all(f);
+		file_text_close(f);
+		
+		var m = json_decode(_f);
+		
+		if(ds_map_exists(m, "metadata")) {
+			meta = new MetaDataManager();
+			meta.deserialize(m[? "metadata"]);
+		} else 
+			meta = undefined;
+		meta.version = m[? "version"];
+		meta.name = name;
+		
+		ds_map_destroy(m);
+		
+		return meta;
 	}
 }
 
@@ -64,7 +90,7 @@ function DirectoryObject(name, path) constructor {
 				var f = new FileObject(string_replace(file, filename_ext(file), ""), path + "\\" + file);
 				ds_list_add(content, f);
 				
-				if(filename_ext(file) == ".png") {
+				if(string_lower(filename_ext(file)) == ".png") {
 					var icon_path = path + "\\" + file;
 					var amo = 1;
 					var p = string_pos("strip", icon_path);

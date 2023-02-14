@@ -1,15 +1,43 @@
-#macro CURVE_DEF_01 [0, 1/3, 1/3, 2/3, 2/3, 1]
-#macro CURVE_DEF_10 [1, 1/3, 2/3, 2/3, 1/3, 0]
-#macro CURVE_DEF_11 [1, 1/3,   1, 2/3,   1, 1]
+//curve format [-cx0, -cy0, x0, y0, +cx0, +cy0, -cx1, -cy1, x1, y1, +cx1, +cy1]
+//segment format [y0, +cx0, +cy0, -cx1, -cy1, y1];
+#macro CURVE_DEF_01 [0, 0, 0, 0, 1/3,  1/3, /**/ -1/3, -1/3, 1, 1, 0, 0]
+#macro CURVE_DEF_10 [0, 0, 0, 1, 1/3, -1/3, /**/ -1/3,  1/3, 1, 0, 0, 0]
+#macro CURVE_DEF_11 [0, 0, 0, 1, 1/3,    0, /**/ -1/3,    0, 1, 1, 0, 0]
 
-function draw_line_bezier_cubic(x0, y0, _w, _h, _bz) {
-	static SAMPLE = 32;
+function draw_curve(x0, y0, _w, _h, _bz) {
+	var segments = array_length(_bz) / 6 - 1;
 	
+	for( var i = 0; i < segments; i++ ) {
+		var ind = i * 6;
+		var _x0 = _bz[ind + 2];
+		var _y0 = _bz[ind + 3];
+	  //var bx0 = _x0 + _bz[ind + 0];
+	  //var by0 = _y0 + _bz[ind + 1];
+		var ax0 = _x0 + _bz[ind + 4];
+		var ay0 = _y0 + _bz[ind + 5];
+		
+		var _x1 = _bz[ind + 6 + 2];
+		var _y1 = _bz[ind + 6 + 3];
+		var bx1 = _x1 + _bz[ind + 6 + 0];
+		var by1 = _y1 + _bz[ind + 6 + 1];
+	  //var ax1 = _x1 + _bz[ind + 6 + 4];
+	  //var ay1 = _y1 + _bz[ind + 6 + 5];
+		
+		var dx0 = x0 + _w * _x0;
+		var dx1 = x0 + _w * _x1;
+		var dw  = dx1 - dx0;
+		var smp = ceil((_x1 - _x0) * 32);
+		
+		draw_curve_segment(dx0, y0, dw, _h, [_y0, ax0, ay0, bx1, by1, _y1], smp);
+	}
+}
+
+function draw_curve_segment(x0, y0, _w, _h, _bz, SAMPLE = 32) {
 	var _ox, _oy;
 	
 	for(var i = 0; i <= SAMPLE; i++) {
 		var t = i / SAMPLE;
-		var _r  = eval_bezier_cubic(t, _bz);
+		var _r  = eval_curve_segment_t_position(t, _bz);
 		var _rx = _r[0], _ry = _r[1];
 		
 		var _nx = _rx * _w + x0;
@@ -23,7 +51,7 @@ function draw_line_bezier_cubic(x0, y0, _w, _h, _bz) {
 	}
 }
 
-function eval_bezier_cubic(t, _bz) {
+function eval_curve_segment_t_position(t, _bz) {
 	return [ 
 		       power(1 - t, 3) * 0 
 			 + 3 * power(1 - t, 2) * t * _bz[1] 
@@ -37,15 +65,51 @@ function eval_bezier_cubic(t, _bz) {
 		];
 }
 
-function eval_curve_bezier_cubic_x(_bz, _x, _prec = 0.00001) {
+function eval_curve_segment_t(_bz, t) {
+	return power(1 - t, 3) * _bz[0]
+			 + 3 * power(1 - t, 2) * t * _bz[2] 
+			 + 3 * (1 - t) * power(t, 2) * _bz[4]
+			 + power(t, 3) * _bz[5];
+}
+
+function eval_curve_x(_bz, _x, _prec = 0.00001) {
+	var segments = array_length(_bz) / 6 - 1;
+	_x = clamp(_x, 0, 1);
+	
+	for( var i = 0; i < segments; i++ ) {
+		var ind = i * 6;
+		var _x0 = _bz[ind + 2];
+		var _y0 = _bz[ind + 3];
+	  //var bx0 = _x0 + _bz[ind + 0];
+	  //var by0 = _y0 + _bz[ind + 1];
+		var ax0 = _x0 + _bz[ind + 4];
+		var ay0 = _y0 + _bz[ind + 5];
+		
+		var _x1 = _bz[ind + 6 + 2];
+		var _y1 = _bz[ind + 6 + 3];
+		var bx1 = _x1 + _bz[ind + 6 + 0];
+		var by1 = _y1 + _bz[ind + 6 + 1];
+	  //var ax1 = _x1 + _bz[ind + 6 + 4];
+	  //var ay1 = _y1 + _bz[ind + 6 + 5];
+		
+		if(_x < _x0) continue;
+		if(_x > _x1) continue;
+		
+		return eval_curve_segment_x([_y0, ax0, ay0, bx1, by1, _y1], (_x - _x0) / (_x1 - _x0));
+	}
+	
+	return array_safe_get(_bz, array_length(_bz) - 3);
+}
+
+function eval_curve_segment_x(_bz, _x, _prec = 0.00001) {
 	var st = 0;
 	var ed = 1;
 	
 	var _xt = _x;
-	var _binRep = 5;
+	var _binRep = 8;
 	
-	if(_x == 0) return _bz[0];
-	if(_x == 1) return _bz[5];
+	if(_x <= 0) return _bz[0];
+	if(_x >= 1) return _bz[5];
 	if(_bz[0] == _bz[2] && _bz[0] == _bz[4] && _bz[0] == _bz[5]) return _bz[0];
 	
 	repeat(_binRep) {
@@ -55,7 +119,7 @@ function eval_curve_bezier_cubic_x(_bz, _x, _prec = 0.00001) {
 			 + power(_xt, 3) * 1;
 		
 		if(abs(_ftx - _x) < _prec)
-			return eval_curve_bezier_cubic_t(_bz, _xt);
+			return eval_curve_segment_t(_bz, _xt);
 		
 		if(_xt < _x)
 			st = _xt;
@@ -83,39 +147,12 @@ function eval_curve_bezier_cubic_x(_bz, _x, _prec = 0.00001) {
 			break;
 	}
 	
-	return eval_curve_bezier_cubic_t(_bz, _xt);
-}
-
-function eval_curve_bezier_cubic_t(_bz, t) {
-	return power(1 - t, 3) * _bz[0]
-			 + 3 * power(1 - t, 2) * t * _bz[2] 
-			 + 3 * (1 - t) * power(t, 2) * _bz[4]
-			 + power(t, 3) * _bz[5];
+	_xt = clamp(_xt, 0, 1);
+	return eval_curve_segment_t(_bz, _xt);
 }
 
 function bezier_range(bz) {
 	return [ min(bz[0], bz[2], bz[4], bz[5]), max(bz[0], bz[2], bz[4], bz[5]) ];
-}
-
-function bezier_interpol_x(a, b, t, iteration = 10) {
-	var fx, _x = 0.5, _x1, slope;
-	repeat(iteration) {
-		fx = (3 * a - 3 * b + 1) * _x * _x * _x
-			+ (3 * b - 6 * a) * _x * _x
-			+ 3 * a * _x
-			- t;
-		slope = 3 * (3 * a - 3 * b + 1) * _x * _x
-			+ 2 * (3 * b - 6 * a) * _x
-			+ 3 * a;
-				
-		_x -= fx / slope;
-	}
-			
-	return 3 * (1 - _x) * _x * _x + _x * _x * _x;
-}
-
-function ease_bezier(t, a, b) {
-	return 3 * power(1 - t, 2) * t * a + 3 * (1 - t) * power(t, 2) * b + power(t, 3);
 }
 
 function ease_cubic_in(rat) {

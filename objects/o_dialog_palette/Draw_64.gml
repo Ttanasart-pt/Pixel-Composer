@@ -65,7 +65,7 @@ if palette == 0 exit;
 	if(buttonInstant(THEME.button_hide, bx, by, ui(28), ui(28), mouse_ui, sFOCUS, sHOVER, "Open palette folder", THEME.folder) == 2) {
 		var _realpath = environment_get_variable("LOCALAPPDATA") + "\\Pixels_Composer\\Palettes";
 		var _windir   = environment_get_variable("WINDIR") + "\\explorer.exe";
-		execute_shell_simple(_windir, _realpath);
+		execute_shell(_windir, _realpath);
 	}
 	draw_sprite_ui_uniform(THEME.folder, 0, bx + ui(14), by + ui(14), 1, COLORS._main_icon);
 	bx -= ui(32);

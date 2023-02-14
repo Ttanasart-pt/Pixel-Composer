@@ -5,6 +5,7 @@ varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
 uniform vec2 dimension;
+uniform int preserveAlpha;
 uniform sampler2D fore;
 uniform vec2 position;
 uniform vec2 scale;

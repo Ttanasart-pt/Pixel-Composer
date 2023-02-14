@@ -2,7 +2,10 @@
 event_inherited();
 
 #region data
-	destroy_on_click_out = true;
+	anchor = ANCHOR.left | ANCHOR.top;
 	
+	padding = ui(8);
+	destroy_on_click_out = true;
 	warning_text = "";
+	life = 300;
 #endregion

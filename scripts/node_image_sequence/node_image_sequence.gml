@@ -93,7 +93,6 @@ function Node_Image_Sequence(_x, _y, _group = -1) : Node(_x, _y, _group) constru
 	}
 	
 	function updatePaths(paths) {
-		print(paths);
 		for(var i = 0; i < array_length(spr); i++) {
 			if(spr[i] && sprite_exists(spr[i]))
 				sprite_delete(spr[i]);

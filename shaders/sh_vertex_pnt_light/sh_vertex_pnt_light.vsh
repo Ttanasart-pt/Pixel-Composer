@@ -20,5 +20,5 @@ void main() {
 	float illumination    = -dot(world_space_norm, world_space_ligh);
 	
     v_vTexcoord = in_TextureCoord;
-	v_vNormalLight = max(0., min(1., illumination));
+	v_vNormalLight = clamp(illumination, 0., 1.);
 }

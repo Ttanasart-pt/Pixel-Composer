@@ -36,11 +36,11 @@
 	
 	environment_set_variable("IMGUI_DIALOG_WIDTH", string(800));
 	
-	var cmd = "assoc .pxc=\"" + string(program_directory) + "PixelComposer.exe\"";
-	execute_shell("", cmd);
+	var cmd = ".pxc=\"" + string(program_directory) + "PixelComposer.exe\"";
+	execute_shell("assoc", cmd);
 			
-	var cmd = "assoc .pxcc=\"" + string(program_directory) + "PixelComposer.exe\"";
-	execute_shell("", cmd);
+	var cmd = ".pxcc=\"" + string(program_directory) + "PixelComposer.exe\"";
+	execute_shell("assoc", cmd);
 #endregion
 
 #region parameter

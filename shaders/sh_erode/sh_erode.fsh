@@ -41,7 +41,7 @@ void main() {
 		}
 		
 		vec4 sam = texture2D( gm_BaseTexture, pxs );
-		if((alpha == 0 && length(sam.rgb) == 0.) || (alpha == 1 && sam.a == 0.)) {
+		if((alpha == 0 && length(sam.rgb) * sam.a == 0.) || (alpha == 1 && sam.a == 0.)) {
 			gl_FragColor = fill;
 			break;
 		}

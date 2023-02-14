@@ -1,4 +1,7 @@
 function array_create_from_list(list) {
+	if(list == undefined) return [];
+	if(!ds_exists(list, ds_type_list)) return [];
+	
 	var arr = array_create(ds_list_size(list));
 	for( var i = 0; i < ds_list_size(list); i++ )
 		arr[i] = list[| i];
@@ -6,13 +9,26 @@ function array_create_from_list(list) {
 }
 
 function array_safe_set(arr, index, value) {
+	if(!is_array(arr)) return def;
 	if(index < 0) return;
 	if(index >= array_length(arr)) return;
 	
 	array_set(arr, index, value);
 }
 
-function array_safe_get(arr, index, def = 0) {
+enum ARRAY_OVERFLOW {
+	_default,
+	loop
+}
+function array_safe_get(arr, index, def = 0, overflow = ARRAY_OVERFLOW._default) {
+	if(!is_array(arr)) return def;
+	
+	if(overflow == ARRAY_OVERFLOW.loop) {
+		if(index < 0)
+			index = array_length(arr) - safe_mod(abs(index), array_length(arr));
+		index = safe_mod(index, array_length(arr));
+	}
+	
 	if(index < 0) return def;
 	if(index >= array_length(arr)) return def;
 	return arr[index];
@@ -46,6 +62,19 @@ function array_push_unique(arr, val) {
 function array_append(arr, arr0) {
 	for( var i = 0; i < array_length(arr0); i++ )
 		array_push(arr, arr0[i]);
+	return arr;
+}
+
+function array_shuffle(arr) {
+	var r = array_length(arr) - 1;
+	for(var i = 0; i < r; i += 1) {
+	    var j = irandom_range(i,r);
+	    temp = arr[i];
+	    arr[i] = arr[j];
+	    arr[j] = temp;
+	}
+	
+	return arr;
 }
 
 function array_merge() {

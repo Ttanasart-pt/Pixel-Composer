@@ -1,3 +1,4 @@
+
 function Node_Iterator_Output(_x, _y, _group = -1) : Node_Group_Output(_x, _y, _group) constructor {
 	name  = "Output";
 	color = COLORS.node_blend_loop;

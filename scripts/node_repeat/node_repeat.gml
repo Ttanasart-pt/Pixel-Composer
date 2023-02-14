@@ -45,7 +45,7 @@ function Node_Repeat(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 	inputs[| 15] = nodeValue("Alpha over copy", self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_11 );
 	
 	inputs[| 16] = nodeValue("Array select", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0, "Whether to select image from an array in order, or at random." )
-		.setDisplay(VALUE_DISPLAY.enum_button, [ "Order", "Random" ]);
+		.setDisplay(VALUE_DISPLAY.enum_button, [ "Order", "Random", "Spread" ]);
 	
 	inputs[| 17] = nodeValue("Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, irandom(99999) );
 	
@@ -122,11 +122,7 @@ function Node_Repeat(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 		}
 	}
 	
-	function update(frame = ANIMATOR.current_frame) {
-		var _inSurf = inputs[| 0].getValue();
-		if(is_array(_inSurf) && array_length(_inSurf) == 0) return;
-		if(!is_array(_inSurf) && !is_surface(_inSurf)) return;
-					
+	function doRepeat(_outSurf, _inSurf) {
 		var _dim    = inputs[| 1].getValue();
 		var _amo    = inputs[| 2].getValue();
 		var _pat    = inputs[| 3].getValue();
@@ -166,21 +162,10 @@ function Node_Repeat(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 		var _an_bld = inputs[| 27].getValue();
 		var _an_alp = inputs[| 28].getValue();
 		
+		var _surf, runx, runy, posx, posy, scax, scay, rot;
+				   
 		random_set_seed(_sed);
 		
-		inputs[|  4].setVisible( _pat == 0 || _pat == 1);
-		inputs[|  7].setVisible( _pat == 2);
-		inputs[|  8].setVisible( _pat == 2);
-		inputs[| 18].setVisible( _pat == 1);
-		inputs[| 19].setVisible( _pat == 1);
-		inputs[| 26].setVisible( _pat == 0);
-		
-		var runx, runy, posx, posy, scax, scay, rot;
-		
-		var _outSurf = outputs[| 0].getValue();
-		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1]);
-		outputs[| 0].setValue(_outSurf);
-			
 		surface_set_target(_outSurf);
 		draw_clear_alpha(0, 0);
 			runx = 0;
@@ -232,7 +217,7 @@ function Node_Repeat(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 				
 				var _surf = _inSurf;
 				
-				if(is_array(_surf)) 
+				if(is_array(_inSurf)) 
 					_surf = array_safe_get(_inSurf, _arr? irandom(array_length(_inSurf) - 1) : i % array_length(_inSurf));
 				
 				var _sw = surface_get_width(_surf);
@@ -264,7 +249,46 @@ function Node_Repeat(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 				if(_rsta == 2)	runy += _sh / 2;
 			}
 		surface_reset_target();
+	}
+	
+	function update(frame = ANIMATOR.current_frame) {
+		var _inSurf = inputs[| 0].getValue();
+		if(is_array(_inSurf) && array_length(_inSurf) == 0) return;
+		if(!is_array(_inSurf) && !is_surface(_inSurf)) return;
+					
+		var _dim    = inputs[| 1].getValue();
+		var _pat    = inputs[| 3].getValue();
+							  
+		var _arr = inputs[| 16].getValue();
 		
-		return _outSurf;
+		inputs[|  4].setVisible( _pat == 0 || _pat == 1);
+		inputs[|  7].setVisible( _pat == 2);
+		inputs[|  8].setVisible( _pat == 2);
+		inputs[| 18].setVisible( _pat == 1);
+		inputs[| 19].setVisible( _pat == 1);
+		inputs[| 26].setVisible( _pat == 0);
+		
+		var runx, runy, posx, posy, scax, scay, rot;
+		var _outSurf = outputs[| 0].getValue();
+		
+		if(is_array(_inSurf) && _arr == 2) {
+			if(!is_array(_outSurf)) surface_free(_outSurf);
+			else {
+				for( var i = 0; i < array_length(_outSurf); i++ )
+					surface_free(_outSurf[i]);
+			}
+			
+			for( var i = 0; i < array_length(_inSurf); i++ ) {
+				var _out = surface_create(_dim[0], _dim[1]);
+				_outSurf[i] = _out;
+				doRepeat(_out, _inSurf[i]);
+			}
+			
+			outputs[| 0].setValue(_outSurf);
+		} else {
+			_outSurf = surface_verify(_outSurf, _dim[0], _dim[1]);
+			outputs[| 0].setValue(_outSurf);
+			doRepeat(_outSurf, _inSurf);
+		}
 	}
 }

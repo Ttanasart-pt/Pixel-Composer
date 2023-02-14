@@ -8,9 +8,9 @@
 
 #region classes
 	enum NOTI_TYPE {
-		log		 = 1 << 0,
-		warning  = 1 << 1,
-		error    = 1 << 2,
+		log		= 1 << 0,
+		warning = 1 << 1,
+		error	= 1 << 2,
 	}
 	
 	function notification(type, str, icon = noone, color = c_ui_blue_dkgrey, life = -1) constructor {
@@ -59,6 +59,9 @@
 		var noti = new notification(NOTI_TYPE.warning, str, icon, c_ui_orange, PREF_MAP[? "notification_time"]);
 		ds_list_add(STATUSES, noti);
 		ds_list_add(WARNING, noti);
+		show_debug_message(str);
+		
+		dialogCall(o_dialog_warning, mouse_mx + ui(16), mouse_my + ui(16)).warning_text = str;
 		
 		if(PANEL_MENU) {
 			PANEL_MENU.noti_flash = 1;
@@ -73,11 +76,16 @@
 		return noti;
 	}
 	
-	function noti_error(str, icon = noone) {
+	function noti_error(str, icon = noone, ref = noone) {
 		var noti = new notification(NOTI_TYPE.error, str, icon, c_ui_red);
 		ds_list_add(STATUSES, noti);
 		ds_list_add(ERRORS, noti);
 		
+		if(ref) {
+			var onClick = function() { PANEL_GRAPH.focusNode(self.ref); };
+			noti.ref = ref;
+			noti.onClick = method(noti, onClick);
+		}
 		return noti;
 	}
 	
