@@ -87,10 +87,12 @@ function array_merge() {
 }
 
 function array_clone(arr) {
-	var _res = array_create(array_length(arr));
-	 for( var i = 0; i < array_length(arr); i++ ) {
-		 _res[i] = arr[i];
-	 }
+	if(!is_array(arr))
+		return arr;
+	
+	var _res = [];
+	 for( var i = 0; i < array_length(arr); i++ )
+		 _res[i] = array_clone(arr[i]);
 	 return _res;
 }
 
@@ -129,4 +131,16 @@ function array_shape(arr, first = true, isSurface = false) {
 		dim += array_shape(arr[0], false, isSurface);
 	
 	return (first? "" : " x ") + dim;
+}
+
+function array_spread(arr, _arr = []) {
+	if(!is_array(arr)) {
+		array_push(_arr, arr);
+		return _arr;
+	}
+	
+	for( var i = 0; i < array_length(arr); i++ ) 
+		array_spread(arr[i], _arr);
+		
+	return _arr;
 }

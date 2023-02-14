@@ -1089,6 +1089,8 @@
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"group","folderPath":"folders/nodes/data/group.yy","order":6,},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"IO","folderPath":"folders/nodes/data/IO.yy","order":0,},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"iterate","folderPath":"folders/nodes/data/iterate.yy","order":10,},
+    {"resourceType":"GMFolder","resourceVersion":"1.0","name":"for each","folderPath":"folders/nodes/data/iterate/for each.yy","order":1,},
+    {"resourceType":"GMFolder","resourceVersion":"1.0","name":"for","folderPath":"folders/nodes/data/iterate/for.yy","order":0,},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"lua","folderPath":"folders/nodes/data/lua.yy","order":17,},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"node","folderPath":"folders/nodes/data/node.yy","order":11,},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"render","folderPath":"folders/nodes/data/render.yy","order":2,},
@@ -1144,8 +1146,6 @@
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"Steamworks","folderPath":"folders/Steamworks.yy","order":0,},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"UGC","folderPath":"folders/Steamworks/UGC.yy","order":0,},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"widgets","folderPath":"folders/widgets.yy","order":6,},
-    {"resourceType":"GMFolder","resourceVersion":"1.0","name":"for","folderPath":"folders/nodes/data/iterate/for.yy","order":0,},
-    {"resourceType":"GMFolder","resourceVersion":"1.0","name":"for each","folderPath":"folders/nodes/data/iterate/for each.yy","order":1,},
   ],
   "AudioGroups": [
     {"resourceType":"GMAudioGroup","resourceVersion":"1.3","name":"audiogroup_default","targets":-1,},

@@ -6,9 +6,22 @@ event_inherited();
 	dialog_h = ui(396);
 	destroy_on_click_out = true;
 	
-	name = "Color selector";
+	name = get_text("color_selector_title", "Color selector");
 	
+	previous_color = c_black;
 	selector = new colorSelector();
+	
+	function setDefault(color) {
+		selector.setColor(color);
+		previous_color = color;
+	}
+	
+	b_cancel = button(function() {
+		onApply(previous_color);
+		DIALOG_CLICK = false;
+		instance_destroy();
+	}).setIcon(THEME.revert, 0, COLORS._main_icon)
+	  .setTooltip("Revert and exit");
 	
 	b_apply = button(function() {
 		onApply(selector.current_color);

@@ -28,8 +28,8 @@ function Node_Blend(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constr
 	
 	inputs[| 4] = nodeValue("Mask", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 	
-	inputs[| 5] = nodeValue("Tiling", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Stretch", "Tile" ]);
+	inputs[| 5] = nodeValue("Fill mode", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "None", "Stretch", "Tile" ]);
 	
 	inputs[| 6] = nodeValue("Output dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Background", "Forground", "Mask", "Maximum", "Constant" ])
@@ -93,7 +93,7 @@ function Node_Blend(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constr
 		
 		surface_set_target(_outSurf);
 		draw_clear_alpha(0, 0);
-		draw_surface_blend(_back, _fore, _type, _opacity, _pre_alp, _mask, _tile);
+		draw_surface_blend(_back, _fore, _type, _opacity, _pre_alp, _mask, _tile - 1);
 		surface_reset_target();
 		
 		return _outSurf;

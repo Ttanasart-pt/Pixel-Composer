@@ -87,8 +87,6 @@ function Node_Export(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 		["Settings",	false], 8, 5, 6, 7, 10, 
 	];
 	
-	in_loop = false;
-	
 	directory = DIRECTORY + "temp\\" + string(irandom_range(100000, 999999));
 	converter = working_directory + "ImageMagick\\convert.exe";
 	magick    = working_directory + "ImageMagick\\magick.exe";
@@ -344,9 +342,8 @@ function Node_Export(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 	insp2UpdateIcon    = [ THEME.play_all, 0, COLORS._main_value_positive ];
 	
 	static onInspectorUpdate = function() {
-		initExport();
-		
-		if(in_loop) Render();
+		if(isInLoop())	Render();
+		else			doInspectorAction();
 	}
 	
 	static onInspector2Update = function() {
@@ -358,13 +355,13 @@ function Node_Export(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 			if(!node.active) continue;
 			if(instanceof(node) != "Node_Export") continue;
 					
-			node.initExport();
+			node.doInspectorAction();
 		}
 		
-		if(in_loop) Render();
+		if(isInLoop()) Render();
 	}
 	
-	static initExport = function() {
+	static doInspectorAction = function() {
 		if(LOADING || APPENDING) return;
 		if(playing) return;
 		
@@ -389,10 +386,7 @@ function Node_Export(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 		directory_create(directory);
 	}
 	
-	loop_nodes = [ "Node_Iterate", "Node_Iterate_Each" ];
 	static step = function() {
-		in_loop = array_exists(loop_nodes, instanceof(group));
-		
 		var surf = inputs[| 0].getValue();
 		if(is_array(surf)) {
 			inputs[| 3].display_data		 = format_array;
@@ -420,14 +414,14 @@ function Node_Export(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 			inputs[| 10].setVisible(extn != 0);
 		}
 		
-		outputs[| 0].visible = in_loop;
+		outputs[| 0].visible = isInLoop();
 	}
 	
 	static update = function(frame = ANIMATOR.current_frame) {
 		var anim = inputs[| 3].getValue();
 		if(anim == NODE_EXPORT_FORMAT.single) {
-			if(in_loop && RENDERING) 
-				initExport();
+			if(isInLoop() && RENDERING) 
+				doInspectorAction();
 			return;
 		}
 		

@@ -571,7 +571,7 @@ function Panel_Graph() : PanelContent() constructor {
 		#endregion
 		
 		#region dragging
-			if(mouse_release(mb_left))
+			if(mouse_press(mb_left))
 				node_dragging = noone;
 				
 			if(node_dragging) {
@@ -774,9 +774,14 @@ function Panel_Graph() : PanelContent() constructor {
 		}
 		
 		APPENDING = true;
+		var cx = 0;
+		var cy = 0;
 		for(var i = 0; i < ds_list_size(dups); i++) {
 			var _node = dups[| i];
 			_node.connect();
+			
+			cx += _node.x;
+			cy += _node.y;
 		}
 		APPENDING = false;
 		
@@ -784,8 +789,8 @@ function Panel_Graph() : PanelContent() constructor {
 		nodes_select_list = dups;
 		
 		node_dragging = nodes_select_list[| 0];
-		node_drag_mx  = 0;
-		node_drag_my  = 0;
+		node_drag_mx  = cx / ds_list_size(dups);
+		node_drag_my  = cy / ds_list_size(dups);
 		node_drag_sx  = 0;
 		node_drag_sy  = 0;
 		
@@ -949,7 +954,7 @@ function Panel_Graph() : PanelContent() constructor {
 	}
 	
 	function doDelete(_merge = false) {
-		if(node_focus != noone && mode_focus.manual_deletable)
+		if(node_focus != noone && node_focus.manual_deletable)
 			nodeDelete(node_focus, _merge);
 		
 		for(var i = 0; i < ds_list_size(nodes_select_list); i++) {

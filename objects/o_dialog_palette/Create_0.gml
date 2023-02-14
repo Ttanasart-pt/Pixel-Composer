@@ -6,7 +6,7 @@ event_inherited();
 	dialog_h = ui(440);
 	destroy_on_click_out = true;
 	
-	name = "Palette editor";
+	name = get_text("palette_editor_title", "Palette editor");
 	palette = 0;
 	
 	index_selecting = 0;
@@ -24,6 +24,20 @@ event_inherited();
 	onApply = noone;
 	selector = new colorSelector(setColor);
 	selector.dropper_close = false;
+	
+	previous_palette = c_black;
+	
+	function setDefault(pal) {
+		setPalette(pal);
+		previous_palette = array_clone(pal);
+	}
+	
+	b_cancel = button(function() {
+		onApply(previous_palette);
+		DIALOG_CLICK = false;
+		instance_destroy();
+	}).setIcon(THEME.revert, 0, COLORS._main_icon)
+	  .setTooltip("Revert and exit");
 	
 	b_apply = button(function() {
 		onApply(palette);

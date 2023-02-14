@@ -23,7 +23,7 @@ if palette == 0 exit;
 	if(sFOCUS) draw_sprite_stretched_ext(THEME.dialog_active, 0, content_x, dialog_y, content_w, dialog_h, COLORS._main_accent, 1);
 	
 	draw_set_text(f_p0, fa_left, fa_top, COLORS._main_text_title);
-	draw_text(presets_x + ui(24), dialog_y + ui(16), "Presets");
+	draw_text(presets_x + ui(24), dialog_y + ui(16), get_text("presets", "Presets"));
 	draw_text(content_x + ui(24), dialog_y + ui(16), name);
 #endregion
 
@@ -36,7 +36,7 @@ if palette == 0 exit;
 	var bx = presets_x + presets_w - ui(44);
 	var by = dialog_y + ui(10);
 	
-	if(buttonInstant(THEME.button_hide, bx, by, ui(28), ui(28), mouse_ui, sFOCUS, sHOVER, "Save current palette to preset", THEME.add) == 2) {
+	if(buttonInstant(THEME.button_hide, bx, by, ui(28), ui(28), mouse_ui, sFOCUS, sHOVER, get_text("add_preset", "Add to preset"), THEME.add) == 2) {
 		var dia = dialogCall(o_dialog_file_name, mouse_mx + ui(8), mouse_my + ui(8));
 		dia.onModify = function (txt) {
 			var file = file_text_open_write(txt + ".hex");
@@ -56,13 +56,13 @@ if palette == 0 exit;
 	}
 	bx -= ui(32);
 	
-	if(buttonInstant(THEME.button_hide, bx, by, ui(28), ui(28), mouse_ui, sFOCUS, sHOVER, "Refresh", THEME.refresh_s) == 2) {
+	if(buttonInstant(THEME.button_hide, bx, by, ui(28), ui(28), mouse_ui, sFOCUS, sHOVER, get_text("refresh", "Refresh"), THEME.refresh) == 2) {
 		presetCollect();
 	}
-	draw_sprite_ui_uniform(THEME.refresh_s, 0, bx + ui(14), by + ui(14), 1, COLORS._main_icon);
+	draw_sprite_ui_uniform(THEME.refresh, 0, bx + ui(14), by + ui(14), 1, COLORS._main_icon);
 	bx -= ui(32);
 	
-	if(buttonInstant(THEME.button_hide, bx, by, ui(28), ui(28), mouse_ui, sFOCUS, sHOVER, "Open palette folder", THEME.folder) == 2) {
+	if(buttonInstant(THEME.button_hide, bx, by, ui(28), ui(28), mouse_ui, sFOCUS, sHOVER, get_text("color_selector_open_palette", "Open palette folder"), THEME.folder) == 2) {
 		var _realpath = environment_get_variable("LOCALAPPDATA") + "\\Pixels_Composer\\Palettes";
 		var _windir   = environment_get_variable("WINDIR") + "\\explorer.exe";
 		execute_shell(_windir, _realpath);
@@ -80,7 +80,7 @@ if palette == 0 exit;
 	var max_col = 8;
 	var col = min(array_length(palette), max_col);
 	var row = ceil(array_length(palette) / col);
-	var ww = pl_w / col;
+	var ww = round(pl_w / col);
 	var hh = (pl_h + ui(6)) * row;
 	dialog_h = ui(408) + hh;
 	
@@ -91,12 +91,12 @@ if palette == 0 exit;
 		var bx = content_x + content_w - ui(50);
 		var by = dialog_y + ui(16);
 		
-		if(buttonInstant(THEME.button_hide, bx, by, ui(28), ui(28), mouse_ui, sFOCUS, sHOVER, "Sort color", THEME.sort) == 2) {
+		if(buttonInstant(THEME.button_hide, bx, by, ui(28), ui(28), mouse_ui, sFOCUS, sHOVER, get_text("palette_editor_sort", "Sort color"), THEME.sort) == 2) {
 			var dia = dialogCall(o_dialog_menubox, bx + ui(32), by);
 			dia.setMenu([ 
-				[ "Brighter", function() { sortPalette(__sortBright); } ], 
-				[ "Darker", function() { sortPalette(__sortDark); } ], 
-				[ "Hue", function() { sortPalette(__sortHue); } ], 
+				[ get_text("palette_editor_sort_brighter", "Brighter"), function() { sortPalette(__sortBright); } ], 
+				[ get_text("palette_editor_sort_darker", "Darker"),     function() { sortPalette(__sortDark); } ], 
+				[ get_text("palette_editor_sort_hue", "Hue"),           function() { sortPalette(__sortHue); } ], 
 			]);
 		}
 		
@@ -154,6 +154,7 @@ if palette == 0 exit;
 	if(array_length(palette) > 1) {
 		if(buttonInstant(THEME.button, bx, by, ui(28), ui(28), mouse_ui, sFOCUS, sHOVER, "", THEME.minus) == 2) {
 			array_delete(palette, index_selecting, 1);
+			index_selecting = clamp(index_selecting - 1, 0, array_length(palette) - 1);
 			onApply(palette);
 		}
 	} else {
@@ -162,12 +163,13 @@ if palette == 0 exit;
 	
 	bx -= ui(32);
 	if(buttonInstant(THEME.button, bx, by, ui(28), ui(28), mouse_ui, sFOCUS, sHOVER, "", THEME.add) == 2) {
+		index_selecting = array_length(palette);
 		palette[array_length(palette)] = c_black;
 		onApply(palette);
 	}
 	
 	bx = content_x + ui(18);
-	if(buttonInstant(THEME.button, bx, by, ui(28), ui(28), mouse_ui, sFOCUS, sHOVER, "Load palette file (.hex)", THEME.file) == 2) {
+	if(buttonInstant(THEME.button, bx, by, ui(28), ui(28), mouse_ui, sFOCUS, sHOVER, get_text("palette_editor_load", "Load palette file") + " (.hex)", THEME.file) == 2) {
 		var path = get_open_filename(".hex", "");
 		if(path != "") {
 			palette = loadPalette(path);
@@ -192,4 +194,10 @@ if palette == 0 exit;
 	b_apply.hover  = sHOVER;
 	b_apply.active = sFOCUS;
 	b_apply.draw(bx - ui(18), by - ui(18), ui(36), ui(36), mouse_ui, THEME.button_lime);
+	
+	bx -= ui(48);
+	b_cancel.register();
+	b_cancel.hover  = sHOVER;
+	b_cancel.active = sFOCUS;
+	b_cancel.draw(bx - ui(18), by - ui(18), ui(36), ui(36), mouse_ui, THEME.button_hide);
 #endregion

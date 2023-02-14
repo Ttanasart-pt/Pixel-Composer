@@ -257,6 +257,11 @@ function Node_Image_Sheet(_x, _y, _group = -1) : Node(_x, _y, _group) constructo
 	}
 	
 	static onInspectorUpdate = function() {
+		if(isInLoop())	Render();
+		else			doInspectorAction();
+	}
+	
+	static doInspectorAction = function() {
 		var _inSurf  = inputs[| 0].getValue();
 		if(!is_surface(_inSurf)) return;
 		
@@ -337,6 +342,9 @@ function Node_Image_Sheet(_x, _y, _group = -1) : Node(_x, _y, _group) constructo
 	}
 	
 	static update = function(frame = ANIMATOR.current_frame) {
+		if(isInLoop() && RENDERING) 
+			doInspectorAction();
+		
 		var _out  = inputs[| 7].getValue();
 		if(_out == 1) {
 			outputs[| 0].setValue(surf_array);

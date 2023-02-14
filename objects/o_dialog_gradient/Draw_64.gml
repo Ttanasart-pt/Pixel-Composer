@@ -27,9 +27,9 @@ if !ready exit;
 	if(sFOCUS) draw_sprite_stretched_ext(THEME.dialog_active, 0, palette_x, dialog_y, presets_w, dialog_h, COLORS._main_accent, 1);
 	
 	draw_set_text(f_p0, fa_left, fa_top, COLORS._main_text_title);
-	draw_text(presets_x + ui(24), dialog_y + ui(16), "Presets");
+	draw_text(presets_x + ui(24), dialog_y + ui(16), get_text("presets", "Presets"));
 	draw_text(content_x + ui(24), dialog_y + ui(16), name);
-	draw_text(palette_x + ui(24), dialog_y + ui(16), "Palettes");
+	draw_text(palette_x + ui(24), dialog_y + ui(16), get_text("palette", "Palettes"));
 #endregion
 
 #region presets
@@ -41,15 +41,14 @@ if !ready exit;
 	var bx = presets_x + presets_w - ui(44);
 	var by = dialog_y + ui(12);
 	
-	var _b = buttonInstant(THEME.button_hide, bx, by, ui(28), ui(28), mouse_ui, sFOCUS, sHOVER);
-	if(_b) TOOLTIP = "Add to preset";
+	var _b = buttonInstant(THEME.button_hide, bx, by, ui(28), ui(28), mouse_ui, sFOCUS, sHOVER, get_text("add_preset", "Add to preset"));
 	
 	if(_b == 2) {
 		var dia = dialogCall(o_dialog_file_name, mouse_mx + ui(8), mouse_my + ui(8));
 		dia.onModify = function (txt) {
 			var gradStr = "";
-			for(var i = 0; i < ds_list_size(gradient); i++) {
-				var gr = gradient[| i];
+			for(var i = 0; i < array_length(gradient); i++) {
+				var gr = gradient[i];
 				var cc = gr.value;
 				var tt = gr.time;
 				
@@ -66,7 +65,7 @@ if !ready exit;
 	draw_sprite_ui_uniform(THEME.add, 0, bx + ui(14), by + ui(14), 1, COLORS._main_icon);
 	bx -= ui(32);
 	
-	if(buttonInstant(THEME.button_hide, bx, by, ui(28), ui(28), mouse_ui, sFOCUS, sHOVER, "Refresh", THEME.refresh) == 2)
+	if(buttonInstant(THEME.button_hide, bx, by, ui(28), ui(28), mouse_ui, sFOCUS, sHOVER, get_text("refresh", "Refresh"), THEME.refresh) == 2)
 		presetCollect();
 	bx -= ui(32);
 	
@@ -95,12 +94,12 @@ if !ready exit;
 		var bx = content_x + content_w - ui(50);
 		var by = dialog_y + ui(16);
 		
-		if(buttonInstant(THEME.button_hide, bx, by, ui(28), ui(28), mouse_ui, sFOCUS, sHOVER, "Key blending", THEME.grad_blend) == 2) {
+		if(buttonInstant(THEME.button_hide, bx, by, ui(28), ui(28), mouse_ui, sFOCUS, sHOVER, get_text("gradient_editor_key_blend", "Key blending"), THEME.grad_blend) == 2) {
 			var dia = dialogCall(o_dialog_menubox, bx + ui(32), by);
 			dia.setMenu([ 
-				[ "RGB blend", function() { grad_data[| 0] = 0; } ], 
-				[ "HSV blend", function() { grad_data[| 0] = 2; } ], 
-				[ "Hard blend", function() { grad_data[| 0] = 1; } ], 
+				[ get_text("gradient_editor_blend_RGB",  "RGB blend"),  function() { grad_data[| 0] = 0; } ], 
+				[ get_text("gradient_editor_blend_HSV",  "HSV blend"),  function() { grad_data[| 0] = 2; } ], 
+				[ get_text("gradient_editor_blend_hard", "Hard blend"), function() { grad_data[| 0] = 1; } ], 
 			]);
 		}
 		bx -= ui(32);
@@ -111,8 +110,8 @@ if !ready exit;
 	draw_gradient(gr_x, gr_y, gr_w, gr_h, gradient, grad_data[| 0]);
 	
 	var hover = noone;
-	for(var i = 0; i < ds_list_size(gradient); i++) {
-		var _k  = gradient[| i];
+	for(var i = 0; i < array_length(gradient); i++) {
+		var _k  = gradient[i];
 		var _c  = _k.value;
 		var _kx = gr_x + _k.time * gr_w; 
 		var _in = _k == key_selecting? 1 : 0;
@@ -162,7 +161,7 @@ if !ready exit;
 				
 				var tt = clamp((mouse_mx - gr_x) / gr_w, 0, 1);
 				var cc = gradient_eval(gradient, tt);
-				var _newkey = new valueKey(tt, cc);
+				var _newkey = new gradientKey(tt, cc);
 				gradient_add(gradient, _newkey, true);
 					
 				key_selecting  = _newkey;
@@ -175,19 +174,17 @@ if !ready exit;
 			}
 		}
 			
-		if(mouse_press(mb_right, sFOCUS) && hover && ds_list_size(gradient) > 1) {
-			var _index = ds_list_find_index(gradient, hover);
-			ds_list_delete(gradient, _index);
-		}
+		if(mouse_press(mb_right, sFOCUS) && hover && array_length(gradient) > 1)
+			array_remove(gradient, hover);
 	}
 	
 	var op_x = content_x + ui(20);
 	var op_y = gr_y + gr_h + ui(12);
 	
 	draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text_sub);
-	draw_text(op_x, op_y + TEXTBOX_HEIGHT / 2, "Position")
+	draw_text(op_x, op_y + TEXTBOX_HEIGHT / 2, get_text("position", "Position"))
 	
-	var txt = key_selecting? key_selecting.time * 100 : "-";
+	var txt = key_selecting? key_selecting.time * 100 : 0;
 	sl_position.active = sFOCUS;
 	sl_position.hover  = sHOVER;
 	sl_position.register();
@@ -209,4 +206,10 @@ if !ready exit;
 	b_apply.hover  = sHOVER;
 	b_apply.active = sFOCUS;
 	b_apply.draw(bx - ui(18), by - ui(18), ui(36), ui(36), mouse_ui, THEME.button_lime);
+	
+	bx -= ui(48);
+	b_cancel.register();
+	b_cancel.hover  = sHOVER;
+	b_cancel.active = sFOCUS;
+	b_cancel.draw(bx - ui(18), by - ui(18), ui(36), ui(36), mouse_ui, THEME.button_hide);
 #endregion

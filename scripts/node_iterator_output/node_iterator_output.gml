@@ -66,36 +66,14 @@ function Node_Iterator_Output(_x, _y, _group = -1) : Node_Group_Output(_x, _y, _
 	static cloneValue = function(_prev_val, _val) {
 		if(inputs[| 0].value_from == noone) return _prev_val;
 		
-		var _arr     = inputs[| 0].value_from.isArray();
 		var is_surf	 = inputs[| 0].value_from.type == VALUE_TYPE.surface;
+		var _new_val;
 		
-		if(is_array(_prev_val)) {
-			for( var i = 0; i < array_length(_prev_val); i++ ) {
-				if(is_surf && is_surface(_prev_val[i])) 
-					surface_free(_prev_val[i]);
-			}
-		} else if(is_surf && is_surface(_prev_val)) 
-			surface_free(_prev_val);
-		
-		var _new_val = 0;
-		if(_arr) {
-			var amo  = array_length(_val);
-			_new_val = array_create(amo);
-			
-			if(is_surf) {
-				for( var i = 0; i < amo; i++ ) {
-					if(is_surface(_val[i]))	
-						_new_val[i] = surface_clone(_val[i]);
-				}
-			} else 
-				_new_val = _val;
-		} else {
-			if(is_surf) {
-				if(is_surface(_val))	
-					_new_val = surface_clone(_val);
-			} else
-				_new_val = _val;
-		}
+		surface_array_free(_prev_val);
+		if(is_surf)
+			_new_val = surface_array_clone(_val);
+		else 
+			_new_val = array_clone(_val);
 		
 		return _new_val;
 	}

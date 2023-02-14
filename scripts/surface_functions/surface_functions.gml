@@ -125,3 +125,29 @@ function surface_verify(surf, w, h) {
 	surface_size_to(surf, w, h);
 	return surf;
 }
+
+function surface_array_free(arr) {
+	if(!is_array(arr)) {
+		if(is_surface(arr)) surface_free(arr);
+		return;
+	}
+	
+	for( var i = 0; i < array_length(arr); i++ ) 
+		surface_array_free(arr[i]);
+}
+
+function surface_array_clone(arr) {
+	if(!is_array(arr)) {
+		if(is_surface(arr)) 
+			return surface_clone(arr);
+		else
+			return arr;
+	}
+	
+	var _arr = [];
+	
+	for( var i = 0; i < array_length(arr); i++ ) 
+		_arr[i] = surface_array_clone(arr[i]);
+	
+	return _arr;
+}

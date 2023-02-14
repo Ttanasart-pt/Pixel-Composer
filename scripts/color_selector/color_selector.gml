@@ -263,8 +263,8 @@ function colorSelector(onApply = noone) constructor {
 		var cx = col_x + ui(16);
 		var cy = col_y + ui(296);
 	
-		draw_sprite_stretched(THEME.color_picker_sample, 0, cx - ui(20), cy - ui(20), ui(40), ui(40));
-		draw_sprite_stretched_ext(THEME.color_picker_sample, 0, cx - ui(18), cy - ui(18), ui(36), ui(36), current_color, 1);
+		draw_sprite_stretched_ext(THEME.color_picker_box, 0, cx - ui(20), cy - ui(20), ui(40), ui(40), COLORS._main_icon_dark, 1);
+		draw_sprite_stretched_ext(THEME.color_picker_box, 1, cx - ui(18), cy - ui(18), ui(36), ui(36), current_color, 1);
 		
 		cx += ui(48);
 		if(buttonInstant(THEME.button_hide, cx - ui(18), cy - ui(18), ui(36), ui(36), mouse_ui, focus, hover, "", THEME.color_picker_dropper, 0, c_white) == 2)

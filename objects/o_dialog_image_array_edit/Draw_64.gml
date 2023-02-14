@@ -8,7 +8,7 @@ if !target exit;
 		draw_sprite_stretched_ext(THEME.dialog_active, 0, dialog_x, dialog_y, dialog_w, dialog_h, COLORS._main_accent, 1);
 	
 	draw_set_text(f_p0, fa_left, fa_top, COLORS._main_text_title);
-	draw_text(dialog_x + ui(24), dialog_y + ui(16), "Image array edit");
+	draw_text(dialog_x + ui(24), dialog_y + ui(16), get_text("array_edit_title", "Image array edit"));
 #endregion
 
 #region content
@@ -29,7 +29,7 @@ if !target exit;
 	var bx = x1 - ui(10) - ui(16);
 	var by = dialog_y + ui(12);
 	
-	if(buttonInstant(THEME.button_hide, bx, by, bw, bh, mouse_ui, sFOCUS, sHOVER, "Add...", THEME.add,, COLORS._main_value_positive) == 2) {
+	if(buttonInstant(THEME.button_hide, bx, by, bw, bh, mouse_ui, sFOCUS, sHOVER, get_text("add", "Add") + "...", THEME.add,, COLORS._main_value_positive) == 2) {
 		var path = get_open_filenames(".png", "");
 		if(path != "") {
 			var paths = paths_to_array(path);
@@ -44,6 +44,6 @@ if !target exit;
 	
 	bx -= ui(32 + 4);
 	
-	if(buttonInstant(THEME.button_hide, bx, by, bw, bh, mouse_ui, sFOCUS, sHOVER, "Sort by name", THEME.text) == 2)
+	if(buttonInstant(THEME.button_hide, bx, by, bw, bh, mouse_ui, sFOCUS, sHOVER, get_text("array_edit_sort_name", "Sort by name"), THEME.text) == 2)
 		sortByName();
 #endregion

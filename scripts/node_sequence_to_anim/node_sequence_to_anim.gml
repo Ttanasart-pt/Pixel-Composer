@@ -19,6 +19,6 @@ function Node_Sequence_Anim(_x, _y, _group = -1) : Node(_x, _y, _group) construc
 		}
 		
 		var _frame = safe_mod(floor(ANIMATOR.current_frame / spd), array_length(seq));
-		outputs[| 0].setValue(seq[_frame]);
+		outputs[| 0].setValue(array_safe_get(seq, _frame));
 	}
 }

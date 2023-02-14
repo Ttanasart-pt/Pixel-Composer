@@ -21,7 +21,7 @@ function Node_Processor(_x, _y, _group = -1) : Node(_x, _y, _group) constructor 
 		var _in = _n.getValue();
 		
 		if(_n.isArray()) 
-			return _in[_arr % array_length(_in)];
+			return array_safe_get(_in, _arr,, ARRAY_OVERFLOW.loop);
 		return _in;
 	}
 	

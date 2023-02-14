@@ -5,7 +5,7 @@ event_inherited();
 	dialog_w = ui(1068);
 	dialog_h = ui(476);
 	
-	name = "Gradient editor";
+	name = get_text("gradient_editor_title", "Gradient editor");
 	gradient = noone;
 	grad_data = noone;
 	
@@ -26,36 +26,61 @@ event_inherited();
 		if(key_selecting == noone) return;
 		key_selecting.value = color;
 	}
+	
 	function setGradient(grad, data) {
 		gradient = grad;	
 		grad_data = data;
-		if(!ds_list_empty(grad))
-			key_selecting = grad[| 0];
+		if(array_length(grad))
+			key_selecting = grad[0];
 	}
 	
 	selector = new colorSelector(setColor);
 	selector.dropper_close = false;
 	
+	previous_gradient = [];
+	previous_data	  = 0;
+	
+	function setDefault(grad, data) {
+		var _grad = [];
+		for( var i = 0; i < array_length(grad); i++ )
+			_grad[i] = grad[i].clone();
+		
+		setGradient(_grad, data);
+		previous_data = data[| 0];
+		
+		previous_gradient = [];
+		for( var i = 0; i < array_length(grad); i++ )
+			array_push(previous_gradient, grad[i].clone());
+	}
+	
+	b_cancel = button(function() {
+		grad_data[| 0] = previous_data;
+		onApply(previous_gradient);
+		DIALOG_CLICK = false;
+		instance_destroy();
+	}).setIcon(THEME.revert, 0, COLORS._main_icon)
+	  .setTooltip("Revert and exit");
+	
 	b_apply = button(function() {
-		onApply();
+		onApply(gradient);
 		instance_destroy();
 	}).setIcon(THEME.accept, 0, COLORS._main_icon_dark);
 	
 	function setKeyPosition(key, position) {
 		key.time = position;
 		
-		ds_list_remove(gradient, key);
+		array_remove(gradient, key);
 		gradient_add(gradient, key, false);
 	}
 	
 	function removeKeyOverlap(key) {
-		for(var i = 0; i < ds_list_size(gradient); i++) {
-			var _key = gradient[| i];
+		for(var i = 0; i < array_length(gradient); i++) {
+			var _key = gradient[i];
 			if(_key == key || _key.time != key.time) 
 				continue;
-				
+			
 			_key.value = key.value;
-			ds_list_remove(gradient, key);
+			array_remove(gradient, key);
 		}
 	}
 #endregion
@@ -65,7 +90,7 @@ event_inherited();
 		if(path == "") return noone;
 		if(!file_exists(path)) return noone;
 		
-		var grad = ds_list_create();
+		var grad = [];
 		var _t = file_text_open_read(path);
 		while(!file_text_eof(_t)) {
 			var key = file_text_readln(_t);
@@ -83,7 +108,7 @@ event_inherited();
 				_pos = toNumber(file_text_readln(_t));
 			}
 			
-			ds_list_add(grad, new valueKey(_pos, _col));
+			array_push(grad, new gradientKey(_pos, _col));
 		}
 		file_text_close(_t);
 		return grad;
@@ -129,10 +154,9 @@ event_inherited();
 			
 			if(_hover && isHover && mouse_press(mb_left, sFOCUS)) { 
 				var target = presets[| i];
-				ds_list_clear(gradient);
-				for( var i = 0; i < ds_list_size(target); i++ ) {
-					ds_list_add(gradient, new valueKey(target[| i].time, target[| i].value));
-				}
+				gradient = [];
+				for( var i = 0; i < array_length(target); i++ )
+					array_push(gradient, new gradientKey(target[i].time, target[i].value));
 			}
 			
 			yy += hg + ui(4);

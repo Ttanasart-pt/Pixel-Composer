@@ -1,6 +1,7 @@
 function NEW() {
 	nodeCleanUp();
 	setPanel();
+	instance_destroy(_p_dialog);
 	room_restart();
 	
 	gc_collect();

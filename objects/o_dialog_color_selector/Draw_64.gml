@@ -23,7 +23,7 @@ if !ready exit;
 		draw_sprite_stretched_ext(THEME.dialog_active, 0, content_x, dialog_y, content_w, dialog_h, COLORS._main_accent, 1);
 	
 	draw_set_text(f_p0, fa_left, fa_top, COLORS._main_text_title);
-	draw_text(presets_x + ui(24), dialog_y + ui(16), "Palettes");
+	draw_text(presets_x + ui(24), dialog_y + ui(16), get_text("palette", "Palettes"));
 	draw_text(content_x + ui(24), dialog_y + ui(16), name);
 #endregion
 
@@ -36,11 +36,11 @@ if !ready exit;
 	var bx = presets_x + presets_w - ui(44);
 	var by = dialog_y + ui(12);
 	
-	if(buttonInstant(THEME.button_hide, bx, by, ui(28), ui(28), mouse_ui, sFOCUS, sHOVER, "Refresh", THEME.refresh) == 2)
+	if(buttonInstant(THEME.button_hide, bx, by, ui(28), ui(28), mouse_ui, sFOCUS, sHOVER, get_text("refresh", "Refresh"), THEME.refresh) == 2)
 		presetCollect();
 	bx -= ui(32);
 	
-	if(buttonInstant(THEME.button_hide, bx, by, ui(28), ui(28), mouse_ui, sFOCUS, sHOVER, "Open palette folder", THEME.folder) == 2) {
+	if(buttonInstant(THEME.button_hide, bx, by, ui(28), ui(28), mouse_ui, sFOCUS, sHOVER, get_text("color_selector_open_palette", "Open palette folder"), THEME.folder) == 2) {
 		var _realpath = environment_get_variable("LOCALAPPDATA") + "\\Pixels_Composer\\Palettes";
 		var _windir   = environment_get_variable("WINDIR") + "\\explorer.exe";
 		execute_shell(_windir, _realpath);
@@ -63,4 +63,10 @@ if !ready exit;
 	b_apply.hover  = sHOVER;
 	b_apply.active = sFOCUS;
 	b_apply.draw(bx - ui(18), by - ui(18), ui(36), ui(36), mouse_ui, THEME.button_lime);
+	
+	bx -= ui(48);
+	b_cancel.register();
+	b_cancel.hover  = sHOVER;
+	b_cancel.active = sFOCUS;
+	b_cancel.draw(bx - ui(18), by - ui(18), ui(36), ui(36), mouse_ui, THEME.button_hide);
 #endregion

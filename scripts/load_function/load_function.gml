@@ -31,6 +31,7 @@ function LOAD_PATH(path, readonly = false, safe_mode = false) {
 	nodeCleanUp();
 	clearPanel();
 	setPanel();
+	instance_destroy(_p_dialog);
 	room_restart();
 	
 	var temp_path = DIRECTORY + "\_temp";

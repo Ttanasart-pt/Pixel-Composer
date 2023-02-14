@@ -4,7 +4,7 @@ function loadPalette(path) {
 	if(path != "" && file_exists(path)) {
 		var _t = file_text_open_read(path);
 		var _index = 0;
-		var ext = filename_ext(path);
+		var ext = string_lower(filename_ext(path));
 		while(!file_text_eof(_t)) {
 			var _w = file_text_readln(_t);
 			if(_w != "") {
@@ -20,9 +20,8 @@ function loadPalette(path) {
 					case ".pal" :
 						if(string_char_at(_w, 1) == "#") break;
 						var _c = string_splice(_w, " ");
-						if(array_length(_c) >= 3) {
-							pal[_index++] = make_color_rgb(string_decimal(_c[0]), string_decimal(_c[1]), string_decimal(_c[2]));
-						}
+						if(array_length(_c) >= 3)
+							pal[_index++] = make_color_rgb(toString(_c[0]), toString(_c[1]), toString(_c[2]));
 						break;
 				}
 			}

@@ -44,7 +44,47 @@ function draw_tooltip_palette(clr) {
 	drawPalette(clr, mx + ui(8), my + ui(8), ui(ww), ui(hh));
 }
 
+function draw_tooltip_surface_array(surf) {
+	var amo = array_length(surf);
+	var col = ceil(sqrt(amo));
+	var row = ceil(amo / col);
+	
+	var nn = min(ui(64), ui(320) / col);
+	var sw = nn;
+	var sh = nn;
+	
+	var ww = sw * col;
+	var hh = sh * row;
+	
+	var mx = min(mouse_mx + ui(16), WIN_W - (ww + ui(16)));
+	var my = min(mouse_my + ui(16), WIN_H - (hh + ui(16)));
+	
+	draw_sprite_stretched(THEME.textbox, 3, mx, my, ww + ui(16), hh + ui(16));
+	draw_sprite_stretched(THEME.textbox, 0, mx, my, ww + ui(16), hh + ui(16));
+	
+	for( var ind = 0; ind < amo; ind++ ) {
+		if(!is_surface(surf[ind])) continue;
+		
+		var i = floor(ind / col);
+		var j = ind % col;
+		
+		var sw = surface_get_width(surf[ind]);
+		var sh = surface_get_height(surf[ind]);
+		var ss = nn / max(sw, sh);
+		var cx = mx + ui(8) + j * nn + nn / 2;
+		var cy = my + ui(8) + i * nn + nn / 2;
+		
+		draw_surface_ext(surf[ind], cx - sw * ss / 2, cy - sh * ss / 2, ss, ss, 0, c_white, 1);
+		draw_set_color(COLORS._main_icon);
+		draw_rectangle(cx - sw * ss / 2, cy - sh * ss / 2, cx + sw * ss / 2 - 1, cy + sh * ss / 2 - 1, true);
+	}
+}
+
 function draw_tooltip_surface(surf) {
+	if(is_array(surf)) {
+		draw_tooltip_surface_array(array_spread(surf))
+		return;
+	}
 	if(!is_surface(surf)) return;
 	
 	var sw = surface_get_width(surf);

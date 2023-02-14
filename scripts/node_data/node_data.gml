@@ -1,3 +1,5 @@
+global.loop_nodes = [ "Node_Iterate", "Node_Iterate_Each" ];
+
 function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) constructor {
 	active  = true;
 	node_id = generateUUID();
@@ -162,6 +164,10 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) constructor {
 				return true;
 		}
 		return false;
+	}
+	
+	static isInLoop = function() {
+		return array_exists(global.loop_nodes, instanceof(group));
 	}
 	
 	static move = function(_x, _y) {
