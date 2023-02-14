@@ -14,12 +14,23 @@
 		
 		static setFrame = function(frame) {
 			var _c = current_frame;
-			frame = clamp(frame, 0, frames_total - 1);
+			frame = clamp(frame, 0, frames_total);
 			real_frame = frame;
 			current_frame = round(frame);
 			
-			if(_c != current_frame)
+			if(current_frame == frames_total) {
+				if(playback == ANIMATOR_END.stop || rendering) {
+					is_playing = false;
+					rendering = false;
+				} else
+					setFrame(0);
+			}
+			
+			if(_c != current_frame) {
 				frame_progress = true;
+				time_since_last_frame = 0;
+				UPDATE = RENDER_TYPE.full;
+			}
 		}
 	}
 #endregion

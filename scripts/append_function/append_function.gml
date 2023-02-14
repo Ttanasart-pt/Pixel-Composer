@@ -1,4 +1,4 @@
-function APPEND(_path) {
+function APPEND(_path, record = true) {
 	APPENDING	= true;
 	
 	var log = true;
@@ -9,6 +9,8 @@ function APPEND(_path) {
 		printlog("Decode error");
 		return noone;
 	}
+	
+	UNDO_HOLDING = true;
 	
 	if(ds_map_exists(_map, "version")) {
 		var _v = _map[? "version"];
@@ -116,6 +118,9 @@ function APPEND(_path) {
 		log_warning("APPEND, connect", exception_print(e));
 	}
 	
+	UNDO_HOLDING = false;
+	if(record) recordAction(ACTION_TYPE.collection_loaded, array_create_from_list(node_create), _path);
+	
 	ds_list_destroy(appended_list);
 	
 	APPENDING = false;
@@ -123,6 +128,16 @@ function APPEND(_path) {
 	UPDATE = RENDER_TYPE.full;
 	
 	log_message("FILE", "append file " + _path, THEME.noti_icon_file_load);
+	
+	if(ds_map_exists(_map, "metadata")) {
+		var meta = _map[? "metadata"];
+		for( var i = 0; i < ds_list_size(node_create); i++ ) {
+			var _node = node_create[| i];
+			if(!struct_has(_node, "metadata")) continue;
+			
+			_node.metadata.deserialize(meta, true);
+		}
+	}
 	
 	ds_map_destroy(_map);
 	return node_create;

@@ -9,15 +9,15 @@
 		if(!directory_exists(root))
 			directory_create(root);
 		
-		var _l = root + "\\_asset" + string(VERSION);
-		if(!file_exists(_l)) {
-			var f = file_text_open_write(_l);
-			file_text_write_real(f, 0);
-			file_text_close(f);
-			
+		var _l = root + "\\version";
+		if(file_exists(_l)) {
+			var res = json_load_struct(_l);
+			if(res.version < VERSION) 
+				zip_unzip("data/Assets.zip", root);
+		} else 
 			zip_unzip("data/Assets.zip", root);
-		}
-		
+		json_save_struct(_l, { version: VERSION });
+	
 		global.ASSETS = new DirectoryObject("Assets", root);
 		global.ASSETS.scan([".png"]);
 		

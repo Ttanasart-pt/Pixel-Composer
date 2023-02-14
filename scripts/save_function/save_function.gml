@@ -5,6 +5,8 @@ function NEW() {
 	
 	gc_collect();
 	SET_PATH("");
+	
+	SAFE_MODE = false;
 }
 
 function save_serialize() {
@@ -34,7 +36,9 @@ function save_serialize() {
 	_graph_map[? "graph_y"] = PANEL_GRAPH.graph_y;
 	ds_map_add_map(_map, "graph", _graph_map);
 	
-	var val  = json_encode(_map);
+	ds_map_add_map(_map, "metadata", METADATA.serialize());
+	
+	var val  = json_encode_minify(_map);
 	ds_map_destroy(_map);
 	return val;
 }
@@ -42,33 +46,31 @@ function save_serialize() {
 function SET_PATH(path) {
 	if(path == "") {
 		READONLY = false;
-		window_set_caption("Pixel Composer");
-	} else {
-		if(READONLY)
-			window_set_caption("[READ ONLY] " + filename_name(path) + " - Pixel Composer");
-		else {
-			var index = ds_list_find_index(RECENT_FILES, path);
-			if(CURRENT_PATH != path) {
-				if(index != -1)
-					ds_list_delete(RECENT_FILES, index);
-				ds_list_insert(RECENT_FILES, 0, path);
-				RECENT_SAVE();
-			}
-			CURRENT_PATH = filename_name(path);
-			window_set_caption(CURRENT_PATH + " - Pixel Composer");
+	} else if(!READONLY) {
+		var index = ds_list_find_index(RECENT_FILES, path);
+		if(CURRENT_PATH != path) {
+			if(index != -1)
+				ds_list_delete(RECENT_FILES, index);
+			ds_list_insert(RECENT_FILES, 0, path);
+			RECENT_SAVE();
 		}
+		CURRENT_PATH = filename_name(path);
 	}
 	
 	CURRENT_PATH = path;
 }
 
 function SAVE() {
+	if(DEMO) return false;
+	
 	if(CURRENT_PATH == "" || READONLY)
 		return SAVE_AS();
 	return SAVE_AT(CURRENT_PATH);
 }
 
 function SAVE_AS() {
+	if(DEMO) return false;
+	
 	var path = get_save_filename("Pixel Composer project (.pxc)|*.pxc", "");	
 	if(path == "") return false;
 	
@@ -84,6 +86,8 @@ function SAVE_AS() {
 }
 
 function SAVE_AT(path) {
+	if(DEMO) return false;
+	
 	if(file_exists(path))
 		file_delete(path);
 	var file = file_text_open_write(path);
@@ -99,8 +103,7 @@ function SAVE_AT(path) {
 	return true;
 }
 
-function SAVE_COLLECTIONS(_list, _path, save_surface = true) {
-	var file = file_text_open_write(_path);
+function SAVE_COLLECTIONS(_list, _path, save_surface = true, metadata = noone) {
 	var _map  = ds_map_create();
 	_map[? "version"] = SAVEFILE_VERSION;
 	
@@ -116,7 +119,7 @@ function SAVE_COLLECTIONS(_list, _path, save_surface = true) {
 	
 	if(save_surface) {
 		var preview_surface = PANEL_PREVIEW.getNodePreviewSurface();
-		if(preview_surface && is_surface(preview_surface)) {
+		if(is_surface(preview_surface)) {
 			var icon_path = string_copy(_path, 1, string_length(_path) - 5) + ".png";
 			surface_save(preview_surface, icon_path);
 		}
@@ -125,40 +128,47 @@ function SAVE_COLLECTIONS(_list, _path, save_surface = true) {
 	for(var i = 0; i < ds_list_size(_list); i++)
 		SAVE_NODE(_node_list, _list[| i], cx, cy, true);
 	ds_map_add_list(_map, "nodes", _node_list);
-		
-	file_text_write_string(file, json_encode(_map));
+	
+	if(metadata != noone)
+		ds_map_add_map(_map, "metadata", metadata.serialize());
+	
+	var file = file_text_open_write(_path);
+	file_text_write_string(file, json_encode_minify(_map));
 	file_text_close(file);
 	
 	ds_map_destroy(_map);
-	var pane = findPanel("Panel_Collection", PANEL_MAIN, noone);
+	var pane = findPanel(Panel_Collection, PANEL_MAIN, noone);
 	if(pane) pane.refreshContext();
 	
 	log_message("COLLECTION", "save collection at " + _path, THEME.noti_icon_file_save);
 	PANEL_MENU.setNotiIcon(THEME.noti_icon_file_save);
 }
 
-function SAVE_COLLECTION(_node, _path, save_surface = true) {
+function SAVE_COLLECTION(_node, _path, save_surface = true, metadata = noone) {
 	if(save_surface) {
 		var preview_surface = PANEL_PREVIEW.getNodePreviewSurface();
-		if(preview_surface && is_surface(preview_surface)) {
+		if(is_surface(preview_surface)) {
 			var icon_path = string_copy(_path, 1, string_length(_path) - 5) + ".png";
 			surface_save(preview_surface, icon_path);
 		}
 	}
 	
-	var file = file_text_open_write(_path);
 	var _map  = ds_map_create();
 	_map[? "version"] = SAVEFILE_VERSION;
 	
 	var _node_list = ds_list_create();
 	SAVE_NODE(_node_list, _node, _node.x, _node.y, true);
 	ds_map_add_list(_map, "nodes", _node_list);
-		
-	file_text_write_string(file, json_encode(_map));
+	
+	if(metadata != noone)
+		ds_map_add_map(_map, "metadata", metadata.serialize());
+	
+	var file = file_text_open_write(_path);
+	file_text_write_string(file, json_encode_minify(_map));
 	file_text_close(file);
 	
 	ds_map_destroy(_map);
-	var pane = findPanel("Panel_Collection", PANEL_MAIN, noone);
+	var pane = findPanel(Panel_Collection, PANEL_MAIN, noone);
 	if(pane) pane.refreshContext();
 	
 	log_message("COLLECTION", "save collection at " + _path, THEME.noti_icon_file_save);

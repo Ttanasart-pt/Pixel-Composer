@@ -1,4 +1,6 @@
-function LOAD() {
+function LOAD() {	
+	if(DEMO) return false;
+	
 	var path = get_open_filename("Pixel Composer project (.pxc)|*.pxc", "");
 	if(path == "") return;
 	if(filename_ext(path) != ".json" && filename_ext(path) != ".pxc") return;
@@ -11,7 +13,11 @@ function LOAD() {
 	ds_list_clear(ERRORS);
 }
 
-function LOAD_PATH(path, readonly = false) {
+function LOAD_PATH(path, readonly = false, safe_mode = false) {
+	SAFE_MODE = safe_mode;
+	
+	if(DEMO) return false;
+	
 	if(!file_exists(path)) {
 		log_warning("LOAD", "File not found");
 		return false;
@@ -83,14 +89,20 @@ function LOAD_PATH(path, readonly = false) {
 	}
 	
 	try {
-		if(ds_map_exists(_map, "graph")) {
-			var _graph_map			= _map[? "graph"];
-			PANEL_GRAPH.graph_x		= ds_map_try_get(_graph_map, "graph_x");
-			PANEL_GRAPH.graph_y		= ds_map_try_get(_graph_map, "graph_y");
-		}
+		if(ds_map_exists(_map, "metadata"))
+			METADATA.deserialize(_map[? "metadata"]);
 	} catch(e) {
-		log_warning("LOAD, graph", exception_print(e));
+		log_warning("LOAD, metadata", exception_print(e));
 	}
+	
+	//try {
+	//	if(ds_map_exists(_map, "graph")) {
+	//		PANEL_GRAPH.graph_x		= ds_map_try_get(_map[? "graph"], "graph_x");
+	//		PANEL_GRAPH.graph_y		= ds_map_try_get(_map[? "graph"], "graph_y");
+	//	}
+	//} catch(e) {
+	//	log_warning("LOAD, graph", exception_print(e));
+	//}
 	
 	ds_queue_clear(CONNECTION_CONFLICT);
 	
@@ -133,7 +145,7 @@ function LOAD_PATH(path, readonly = false) {
 	
 	try {
 		for(var i = 0; i < ds_list_size(create_list); i++) {
-			if(create_list[| i].inspectorUpdate != noone)
+			if(create_list[| i].hasInspectorUpdate())
 				create_list[| i].inspectorUpdate();
 		}
 	} catch(e) {

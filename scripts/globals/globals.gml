@@ -1,11 +1,15 @@
 #region save
-	globalvar LOADING, LOADING_VERSION, APPENDING, CLONING;
+	globalvar LOADING, LOADING_VERSION, APPENDING, CLONING, SAFE_MODE;
 	globalvar MODIFIED, CURRENT_PATH, READONLY, CONNECTION_CONFLICT, GLOBAL_SEED, ALWAYS_FULL;
+	globalvar UPDATE_STEP;
+	
 	LOADING = false;
 	CLONING = false;
 	LOADING_VERSION = 0;
 	APPENDING = false;
 	READONLY  = false;
+	SAFE_MODE = false;
+	UPDATE_STEP = 0;
 	
 	CURRENT_PATH = "";
 	MODIFIED  = false;
@@ -23,9 +27,9 @@
 	COLOR_KEYS = [];
 	
 	globalvar VERSION, SAVEFILE_VERSION, VERSION_STRING;
-	VERSION = 1110;
-	SAVEFILE_VERSION = 1100;
-	VERSION_STRING = "1.11";
+	VERSION = 1130;
+	SAVEFILE_VERSION = 1300;
+	VERSION_STRING = "1.13";
 	
 	globalvar NODES, NODE_MAP, APPEND_MAP, HOTKEYS, HOTKEY_CONTEXT;
 	
@@ -75,8 +79,13 @@
 	
 	#macro DELTA_TIME delta_time / 1_000_000
 	
-	#macro TESTING false
-	#macro Tester:TESTING true
+	#macro CONF_TESTING false
+	#macro Tester:CONF_TESTING true
+	globalvar TESTING;
+	TESTING = CONF_TESTING;
+	
+	#macro DEMO false
+	#macro Demo:DEMO true
 	
 	#region color
 		#macro c_ui_blue_dkblack	$251919
@@ -104,14 +113,20 @@
 	#endregion
 	
 	#region functions
-		#macro BLEND_NORMAL gpu_set_blendmode(bm_normal);
-		#macro BLEND_ADD gpu_set_blendmode(bm_add);
-		#macro BLEND_OVERRIDE gpu_set_blendmode_ext(bm_one, bm_zero);
+		#macro BLEND_NORMAL gpu_set_blendmode(bm_normal)
+		#macro BLEND_ADD gpu_set_blendmode(bm_add)
+		#macro BLEND_OVERRIDE gpu_set_blendmode_ext(bm_one, bm_zero)
+		#macro BLEND_OVER_ALPHA gpu_set_blendmode_ext_sepalpha(bm_one, bm_inv_src_alpha, bm_one, bm_one)
 	#endregion
 	
-	#macro PIXEL_SURFACE surface_create_valid(1, 1)
-	#macro print show_debug_message
 	#macro printlog if(log) show_debug_message
+	
+	#macro RETURN_ON_REST if(!ANIMATOR.is_playing || !ANIMATOR.frame_progress) return;
+	
+	function print(str) {
+		show_debug_message(str);
+		noti_status(str);
+	}
 	
 	function printIf(cond, log) {
 		if(!cond) return;
@@ -131,7 +146,7 @@
 #region default
 	globalvar DEF_SURFACE;
 	function DEF_SURFACE_RESET() {
-		DEF_SURFACE = PIXEL_SURFACE;
+		DEF_SURFACE = surface_create_valid(1, 1);
 		surface_set_target(DEF_SURFACE);
 			draw_clear_alpha(c_white, 0);
 		surface_reset_target();

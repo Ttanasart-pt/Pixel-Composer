@@ -7,104 +7,156 @@ function Panel_Menu() : PanelContent() constructor {
 	noti_icon_show = 0;
 	noti_icon_time = 0;
 	
-	menus = [
-		["File", [
-			[ "New", function() { 
-				NEW();
-			}, ["", "New file"] ],
-			[ "Open...", function() { LOAD(); }, ["", "Open"]  ],
-			[ "Save", function() { SAVE(); }, ["", "Save"]  ],
-			[ "Save as...", function() { SAVE_AS(); }, ["", "Save as"]  ],
-			[ "Recent files", function(_x, _y, _depth) { 
-					var dia = instance_create_depth(_x - ui(4), _y, _depth - 1, o_dialog_menubox);
-					var arr = [];
-					for(var i = 0; i < min(10, ds_list_size(RECENT_FILES)); i++)  {
-						var _rec = RECENT_FILES[| i];
-						array_push(arr, [ _rec, function(_x, _y, _depth, _path) { LOAD_PATH(_path); } ]);
-					}
-					dia.setMenu(arr);
-					return dia;
-			}, ">" ],
-			-1,
-			[ "Preferences...", function() { dialogCall(o_dialog_preference); } ],
-			[ "Splash screen", function() { dialogCall(o_dialog_splash); } ],
-			-1,
-			[ "Addons", function(_x, _y, _depth) { 
-					var dia = instance_create_depth(_x - ui(4), _y, _depth - 1, o_dialog_menubox);
-					dia.setMenu([
-						[ "Key displayer", function() { 
-							if(instance_exists(addon_key_displayer)) {
-								instance_destroy(addon_key_displayer);
-								return;
-							}
+	menu_file = [
+		[ get_text("panel_menu_new", "New"), function() { 
+			NEW();
+		}, ["", "New file"] ],
+		[ get_text("panel_menu_open", "Open") + "...", function() { LOAD(); }, ["", "Open"]  ],
+		[ get_text("panel_menu_save", "Save"), function() { SAVE(); }, ["", "Save"]  ],
+		[ get_text("panel_menu_save_as", "Save as..."), function() { SAVE_AS(); }, ["", "Save as"]  ],
+		[ get_text("panel_menu_recent_files", "Recent files"), function(_x, _y, _depth) { 
+				var dia = instance_create_depth(_x - ui(4), _y, _depth - 1, o_dialog_menubox);
+				var arr = [];
+				for(var i = 0; i < min(10, ds_list_size(RECENT_FILES)); i++)  {
+					var _rec = RECENT_FILES[| i];
+					array_push(arr, [ _rec, function(_x, _y, _depth, _path) { LOAD_PATH(_path); } ]);
+				}
+				dia.setMenu(arr);
+				return dia;
+		}, ">" ],
+		-1,
+		[ get_text("preferences", "Preferences") + "...", function() { dialogCall(o_dialog_preference); } ],
+		[ get_text("panel_menu_splash_screen", "Splash screen"), function() { dialogCall(o_dialog_splash); } ],
+		-1,
+		[ get_text("panel_menu_addons", "Addons"), function(_x, _y, _depth) { 
+				var dia = instance_create_depth(_x - ui(4), _y, _depth - 1, o_dialog_menubox);
+				dia.setMenu([
+					[ get_text("panel_menu_addons_key", "Key displayer"), function() { 
+						if(instance_exists(addon_key_displayer)) {
+							instance_destroy(addon_key_displayer);
+							return;
+						}
 				
-							instance_create_depth(0, 0, 0, addon_key_displayer);
-						}]
-					]);
-					return dia;
-			}, ">" ],
+						instance_create_depth(0, 0, 0, addon_key_displayer);
+					}]
+				]);
+				return dia;
+		}, ">" ],
+	];
+	
+	if(DEMO) {
+		array_delete(menu_file, 1, 4);
+	}
+	
+	menus = [
+		[ get_text("panel_menu_file", "File"), menu_file],
+		[ get_text("panel_menu_edit", "Edit"), [
+			[ get_text("undo", "Undo"), function() { UNDO(); }, ["", "Undo"]  ],
+			[ get_text("redo", "Redo"), function() { REDO(); }, ["", "Redo"]  ],
+			[ get_text("history_title", "Action history"), function() { dialogCall(o_dialog_history, mouse_mx, mouse_my);  } ],
 		]],
-		["Edit", [
-			[ "Undo", function() { UNDO(); }, ["", "Undo"]  ],
-			[ "Redo", function() { REDO(); }, ["", "Redo"]  ],
-		]],
-		["Preview", [
-			[ "Center preview", function() { PANEL_PREVIEW.do_fullView = true; }, ["Preview", "Focus content"] ], 
-			[ "Save current preview as...", function() { PANEL_PREVIEW.saveCurrentFrame(); }, ["Preview", "Save current frame"] ], 
-			[ "Preview background", [
+		[ get_text("panel_menu_preview", "Preview"), [
+			[ get_text("panel_menu_center_preview", "Center preview"), function() { PANEL_PREVIEW.do_fullView = true; }, ["Preview", "Focus content"] ], 
+			[ get_text("panel_menu_save_current_preview_as", "Save current preview as..."), function() { PANEL_PREVIEW.saveCurrentFrame(); }, ["Preview", "Save current frame"] ], 
+			[ get_text("panel_menu_preview_background", "Preview background"), [
 				[ s_menu_transparent,	function() { PANEL_PREVIEW.canvas_bg = -1; } ],
 				[ s_menu_white,			function() { PANEL_PREVIEW.canvas_bg = c_white; } ],
 				[ s_menu_black,			function() { PANEL_PREVIEW.canvas_bg = c_black; } ],
 			]], 
 			-1,
-			[ "Show Grid", function() { PANEL_PREVIEW.grid_show = !PANEL_PREVIEW.grid_show; }, ["Preview", "Toggle grid"] ],
-			[ "Grid setting...", function() { 
+			[ get_text("panel_menu_show_grid", "Show Grid"), function() { PANEL_PREVIEW.grid_show = !PANEL_PREVIEW.grid_show; }, ["Preview", "Toggle grid"] ],
+			[ get_text("panel_menu_grid_setting", "Grid setting..."), function() { 
 				var dia = dialogCall(o_dialog_preview_grid); 
 				dia.anchor = ANCHOR.none;
 			} ],
 		]], 
-		["Animation", [
-			[ "Animation setting...", function() { 
+		[ get_text("panel_menu_animation", "Animation"), [
+			[ get_text("panel_menu_animation_setting", "Animation setting..."), function() { 
 				var dia = dialogCall(o_dialog_animation); 
 				dia.anchor = ANCHOR.none;
 			} ],
 			-1,
-			[ "Animation scaler...", function() { 
+			[ get_text("panel_menu_animation_scaler", "Animation scaler..."), function() { 
 				dialogCall(o_dialog_anim_time_scaler); 
 			} ],
 		]],
-		["Rendering", [
-			[ "Render all nodes", function() { 
+		[ get_text("panel_menu_rendering", "Rendering"), [
+			[ get_text("panel_menu_render_all_nodes", "Render all nodes"), function() { 
 				for(var i = 0; i < ds_list_size(NODES); i++) 
 					NODES[| i].triggerRender();
 				UPDATE |= RENDER_TYPE.full; 
-			}, ["", "Render all"] ]
+			}, ["", "Render all"] ],
+			[ get_text("panel_menu_execute_exports", "Execute all export nodes"), function() { 
+				var key = ds_map_find_first(NODE_MAP);
+				repeat(ds_map_size(NODE_MAP)) {
+					var node = NODE_MAP[? key];
+					key = ds_map_find_next(NODE_MAP, key);
+			
+					if(!node.active) continue;
+					if(instanceof(node) != "Node_Export") continue;
+					
+					node.initExport();
+				}
+			}, ],
 		]],
-		["Panels", [
-			[ "Workspace", [
+		[ get_text("panel_menu_panels", "Panels"), [
+			[ get_text("panel_menu_workspace", "Workspace"), [
 				[ THEME.workspace_horizontal, function() { clearPanel(); PREF_MAP[? "panel_layout"] = 0; setPanel(); PREF_SAVE(); } ],
 				[ THEME.workspace_vertical, function() { clearPanel(); PREF_MAP[? "panel_layout"] = 1; setPanel(); PREF_SAVE(); } ]
 			]],
 			-1,
-			[ "Collections", function() {
+			[ get_text("panel_menu_collections", "Collections"), function() {
 				clearPanel();
 				PREF_MAP[? "panel_collection"] = !PREF_MAP[? "panel_collection"];
 				setPanel();
 				PREF_SAVE();
 			} ],
 		]],
+		[ get_text("panel_menu_help", "Help"), [
+			[ get_text("panel_menu_help_video", "Tutorial videos"), function() {
+				url_open("https://www.youtube.com/@makhamdev");
+			} ],
+			[ get_text("panel_menu_help_wiki", "Community Wiki"), function() {
+				url_open("https://pixel-composer.fandom.com/wiki/Pixel_Composer_Wiki");
+			} ],
+			-1,
+			[ get_text("panel_menu_itch", "itch.io page"), function() {
+				url_open("https://makham.itch.io/pixel-composer");
+			} ],
+			[ get_text("panel_menu_steam", "Steam page"), function() {
+				url_open("https://store.steampowered.com/app/2299510/Pixel_Composer");
+			} ],
+			-1,
+			[ get_text("panel_menu_directory", "Open local directory"), function() {
+				shellOpenExplorer(DIRECTORY);
+			} ],
+		]],
 	]
 	
 	if(TESTING) {
-		array_push(menus, ["Test", [
-			[ "Load all current collections", function() { 
+		array_push(menus, [ get_text("panel_menu_test", "Test"), [
+			[ get_text("panel_menu_test_load_all", "Load all current collections"), function() { 
 				__test_load_current_collections();
 			}],
-			[ "Update all current collections", function() { 
+			[ get_text("panel_menu_test_update_all", "Update all current collections"), function() { 
 				__test_update_current_collections();
 			}],
-			[ "Update sample projects", function() { 
+			[ get_text("panel_menu_test_add_meta", "Add metadata to current collections"), function() { 
+				__test_metadata_current_collections();
+			}],
+			[ get_text("panel_menu_test_update_sam", "Update sample projects"), function() { 
 				__test_update_sample_projects();
+			}],
+			-1,
+			[ get_text("panel_menu_test_load_nodes", "Load all nodes"), function() { 
+				__test_load_all_nodes();
+			}],
+			[ get_text("panel_menu_test_gen_guide", "Generate node guide"), function() { 
+				__generate_node_guide();
+			}],
+			-1,
+			[ get_text("panel_menu_test_crash", "Force crash"), function() { 
+				print(1 + "a");
 			}],
 		]]);
 	}
@@ -117,7 +169,7 @@ function Panel_Menu() : PanelContent() constructor {
 	function displayNewVersion() {
 		var xx = w - ui(88);
 		draw_set_text(f_p0b, fa_right, fa_center, COLORS._main_value_positive);
-		var txt = " Newer version available ";
+		var txt = " " + get_text("panel_menu_newer", "panel_menu_newer") + " ";
 		var ww = string_width(txt);
 			
 		if(pHOVER && point_in_rectangle(mx, my, xx - ww, 0, xx, h)) {
@@ -135,25 +187,25 @@ function Panel_Menu() : PanelContent() constructor {
 		var txt;
 		
 		if(ds_stack_empty(UNDO_STACK)) {
-			txt = "-Undo";
+			txt = "-" + get_text("undo", "Undo");
 		} else {
 			var act = ds_stack_top(UNDO_STACK);
 			if(array_length(act) > 1)
-				txt = "Undo " + string(array_length(act)) + " actions";
+				txt = get_text("undo", "Undo") + " " + string(array_length(act)) + " " + get_text("actions", "Actions");
 			else 
-				txt = "Undo " + act[0].toString();
+				txt = get_text("undo", "Undo") + " " + act[0].toString();
 		}
 		
 		menus[1][1][0][0] = txt;
 		
 		if(ds_stack_empty(REDO_STACK)) {
-			txt = "-Redo";
+			txt = "-" + get_text("redo", "Redo");
 		} else {
 			var act = ds_stack_top(REDO_STACK);
 			if(array_length(act) > 1)
-				txt = "Redo " + string(array_length(act)) + " actions";
+				txt = get_text("redo", "Redo") + " " + string(array_length(act)) + " " + get_text("actions", "Actions");
 			else 
-				txt = "Redo " + act[0].toString();
+				txt = get_text("redo", "Redo") + " " + act[0].toString();
 		}
 		
 		menus[1][1][1][0] = txt;
@@ -185,7 +237,7 @@ function Panel_Menu() : PanelContent() constructor {
 			}
 			
 			draw_set_text(f_p1, fa_center, fa_center, COLORS._main_text);
-			draw_text_add(xx + ww / 2, y + h / 2, menus[i][0]);
+			draw_text_over(xx + ww / 2, y + h / 2, menus[i][0]);
 			
 			xx += ww + 8;
 		}
@@ -221,7 +273,7 @@ function Panel_Menu() : PanelContent() constructor {
 					dia.anchor = ANCHOR.left | ANCHOR.top;
 				}
 				
-				TOOLTIP = string(warning_amo) + " warnings " + string(error_amo) + " errors";
+				TOOLTIP = string(warning_amo) + " " + get_text("warning", "Warnings") + " " + string(error_amo) + " " + get_text("errors", "Errors");
 			} else
 				draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, nx0, ny0 - nh / 2, nw, nh, cc, 1);
 			
@@ -263,20 +315,23 @@ function Panel_Menu() : PanelContent() constructor {
 			}
 		#endregion
 		
-		draw_set_text(f_p0, fa_right, fa_center, COLORS._main_text_sub);
-		var txt = "v. " + string(VERSION_STRING);
-		var ww = string_width(txt);
-		if(pHOVER && point_in_rectangle(mx, my, w - ui(16) - ww, 0, w - ui(16), h)) {
-			draw_sprite_stretched(THEME.menu_button, 0, w - ww - ui(22), ui(6), ww + ui(12), h - ui(12));
+		#region version
+			draw_set_text(f_p0, fa_right, fa_center, COLORS._main_text_sub);
+			var txt = "v. " + string(VERSION_STRING);
+			if(DEMO) txt += " DEMO";
+			var ww = string_width(txt);
+			if(pHOVER && point_in_rectangle(mx, my, w - ui(16) - ww, 0, w - ui(16), h)) {
+				draw_sprite_stretched(THEME.menu_button, 0, w - ww - ui(22), ui(6), ww + ui(12), h - ui(12));
 			
-			if(mouse_press(mb_left, pFOCUS)) {
-				dialogCall(o_dialog_release_note); 
+				if(mouse_press(mb_left, pFOCUS)) {
+					dialogCall(o_dialog_release_note); 
+				}
 			}
-		}
-		draw_text(w - ui(16), h / 2, txt);
+			draw_text(w - ui(16), h / 2, txt);
 		
-		if(o_main.version_latest > VERSION) 
-			displayNewVersion();
+			if(o_main.version_latest > VERSION) 
+				displayNewVersion();
+		#endregion
 			
 		undoUpdate();
 	}

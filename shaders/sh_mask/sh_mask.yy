@@ -4,7 +4,7 @@
   "name": "sh_mask",
   "type": 1,
   "parent": {
-    "name": "shader",
-    "path": "folders/shader.yy",
+    "name": "mask",
+    "path": "folders/shader/mask.yy",
   },
 }

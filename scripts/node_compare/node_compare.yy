@@ -5,7 +5,7 @@
   "isDnD": false,
   "isCompatibility": false,
   "parent": {
-    "name": "value",
-    "path": "folders/nodes/data/value.yy",
+    "name": "bool",
+    "path": "folders/nodes/data/value/bool.yy",
   },
 }

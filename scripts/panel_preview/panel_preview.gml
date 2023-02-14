@@ -66,7 +66,8 @@ function Panel_Preview() : PanelContent() constructor {
 		[ 
 			THEME.icon_reset_when_preview,
 			function() { return resetViewOnDoubleClick;  },
-			function() { return resetViewOnDoubleClick? "Center canvas on preview" : "Keep canvas on preview" }, 
+			function() { return resetViewOnDoubleClick? get_text("panel_preview_center_canvas_on_preview", "Center canvas on preview") :
+					get_text("panel_preview_keep_canvas_on_preview", "Keep canvas on preview"); }, 
 			function() { resetViewOnDoubleClick = !resetViewOnDoubleClick; } 
 		],
 		[ 
@@ -74,11 +75,11 @@ function Panel_Preview() : PanelContent() constructor {
 			function() { return splitView;  },
 			function() { 
 				switch(splitView) {
-					case 0 : return "Split view off";
-					case 1 : return "Horizontal split view";
-					case 2 : return "Vertical split view";
+					case 0 : return get_text("panel_preview_split_view_off", "Split view off");
+					case 1 : return get_text("panel_preview_horizontal_split_view", "Horizontal split view");
+					case 2 : return get_text("panel_preview_vertical_split_view", "Vertical split view");
 				}
-				return "Split view";
+				return get_text("panel_preview_split_view", "Split view");
 			}, 
 			function() { splitView = (splitView + 1) % 3; } 
 		],
@@ -87,19 +88,19 @@ function Panel_Preview() : PanelContent() constructor {
 			function() { return tileMode? 2 : 3;  },
 			function() { 
 				switch(tileMode) {
-					case 0 : return "Tile off";
-					case 1 : return "Tile horizontal";
-					case 2 : return "Tile vertical";
-					case 3 : return "Tile both";
+					case 0 : return get_text("panel_preview_tile_off", "Tile off");
+					case 1 : return get_text("panel_preview_tile_horizontal", "Tile horizontal");
+					case 2 : return get_text("panel_preview_tile_vertical", "Tile vertical");
+					case 3 : return get_text("panel_preview_tile_both", "Tile both");
 				}
-				return "Tile mode";
+				return get_text("panel_preview_tile_mode", "Tile mode");
 			}, 
 			function() { tileMode = tileMode? 0 : 3; } 
 		],
 		[ 
 			THEME.icon_grid_setting,
 			function() { return 0; },
-			function() { return "Grid setting" }, 
+			function() { return get_text("grid_title", "Grid setting") }, 
 			function(param) { 
 				var gs = dialogCall(o_dialog_preview_grid, param.x, param.y); 
 				gs.anchor = ANCHOR.bottom | ANCHOR.left;
@@ -110,12 +111,12 @@ function Panel_Preview() : PanelContent() constructor {
 	actions = [
 		[ 
 			THEME.icon_center_canvas,
-			"Center canvas", 
+			get_text("panel_preview_center_canvas", "Center canvas"), 
 			function() { fullView(); }
 		],
 		[ 
 			THEME.icon_preview_export,
-			"Export canvas", 
+			get_text("panel_preview_export_canvas", "Export canvas"), 
 			function() { saveCurrentFrame(); }
 		],
 	]
@@ -415,11 +416,11 @@ function Panel_Preview() : PanelContent() constructor {
 		draw_text(w - ui(8), right_menu_y, "fps " + string(fps));
 		right_menu_y += string_height("l");
 		
+		draw_set_text(f_p0, fa_right, fa_top, COLORS._main_text_sub);
+		draw_text(w - ui(8), right_menu_y, get_text("frame", "Frame") + " " + string(ANIMATOR.current_frame) + "/" + string(ANIMATOR.frames_total));
+		
 		var _node = getNodePreview();
 		if(_node == noone) return;
-		
-		draw_set_text(f_p0, fa_right, fa_top, COLORS._main_text_sub);
-		draw_text(w - ui(8), right_menu_y, "frame " + string(ANIMATOR.current_frame) + "/" + string(ANIMATOR.frames_total));
 		
 		right_menu_y += string_height("l");
 		var txt = string(canvas_w) + "x" + string(canvas_h) + "px";
@@ -714,8 +715,8 @@ function Panel_Preview() : PanelContent() constructor {
 		if(my < h - toolbar_height && mouse_press(mb_right, pFOCUS)) {
 			var dia = dialogCall(o_dialog_menubox, mouse_mx + ui(8), mouse_my + ui(8));
 			dia.setMenu([ 
-				[ "Save current preview as...", function() { PANEL_PREVIEW.saveCurrentFrame(); } ], 
-				[ "Save all current previews as...", function() { PANEL_PREVIEW.saveAllCurrentFrames(); } ], 
+				[ get_text("panel_preview_save", "Save current preview as") + "...", function() { PANEL_PREVIEW.saveCurrentFrame(); } ], 
+				[ get_text("panel_preview_save_all", "Save all current previews as") + "...", function() { PANEL_PREVIEW.saveAllCurrentFrames(); } ], 
 			]);
 		}
 		

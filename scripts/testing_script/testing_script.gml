@@ -26,6 +26,7 @@ function __test_update_current_collections() {
 	
 	print("---------- COLLECTION UPDATING ENDED ----------");
 }
+
 function __test_update_sample_projects() {
 	print("---------- PROJECT UPDATING STARTED ----------");
 	
@@ -52,8 +53,8 @@ function __test_load_current_collections() {
 	
 	print("---------- COLLECTION TESTING STARTED ----------");
 	
-	var sel = PANEL_GRAPH.node_focus, outj = noone;
-	if(sel != noone) outj = sel.outputs[| 0];
+	var sel = PANEL_GRAPH.node_focus;
+	var outj = sel == noone? noone : sel.outputs[| 0];
 			
 	while(!ds_stack_empty(st)) {
 		var _st = ds_stack_pop(st);
@@ -103,4 +104,75 @@ function __test_load_current_collections() {
 	ds_stack_destroy(st);
 	
 	print("---------- COLLECTION TESTING ENDED ----------");
+}
+
+function __test_load_all_nodes() {
+	var amo = ds_map_size(ALL_NODES);
+	var k = ds_map_find_first(ALL_NODES);
+	var xx = 0;
+	var yy = 0;
+	var col = 10;
+	var ind = 0;
+	var sel = PANEL_GRAPH.node_focus;
+	var outj = sel == noone? noone : sel.outputs[| 0];
+	
+	var index = 0;
+	var indst = 0; // 150 -- 175 -- 200
+	var inded = 1000;
+	
+	LOADING = true;
+	repeat(amo) {
+		if(index > inded) break;
+		if(index > indst) {
+			var b = ALL_NODES[? k].build(xx, yy);
+			
+			if(++ind > col) {
+				ind = 0;
+				xx = 0;
+				yy += 160;
+			} else 
+				xx += 160;
+			if(b) {
+				if(outj) 
+				for( var i = 0; i < ds_list_size(b.inputs); i++ ) {
+					if(b.inputs[| i].type != VALUE_TYPE.surface) continue;
+					b.inputs[| i].setFrom(outj);	
+					break;
+				}
+			}
+		}
+		
+		index++;
+		k = ds_map_find_next(ALL_NODES, k);
+	}
+	LOADING = false;
+}
+
+function __test_metadata_current_collections() {
+	var st = ds_stack_create();
+	ds_stack_push(st, PANEL_COLLECTION.context);
+	
+	print("---------- COLLECTION UPDATING STARTED ----------");
+	
+	var sel = PANEL_GRAPH.node_focus, outj = noone;
+	if(sel != noone) outj = sel.outputs[| 0];
+	
+	while(!ds_stack_empty(st)) {
+		var _st = ds_stack_pop(st);
+		for( var i = 0; i < ds_list_size(_st.content); i++ ) {
+			var _node = _st.content[| i];
+			
+			print("  > Updating " + _node.path);
+			var _map = json_load(_node.path);
+			ds_map_add_map(_map, "metadata", METADATA.serialize());
+			json_save(_node.path, _map);
+		}
+		
+		for( var i = 0; i < ds_list_size(_st.subDir); i++ )
+			ds_stack_push(st, _st.subDir[| i]);
+	}
+	
+	ds_stack_destroy(st);
+	
+	print("---------- COLLECTION UPDATING ENDED ----------");
 }

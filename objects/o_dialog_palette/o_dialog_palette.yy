@@ -9,8 +9,8 @@
   "spriteMaskId": null,
   "persistent": false,
   "parentObjectId": {
-    "name": "_p_dialog",
-    "path": "objects/_p_dialog/_p_dialog.yy",
+    "name": "_p_dialog_undo_block",
+    "path": "objects/_p_dialog_undo_block/_p_dialog_undo_block.yy",
   },
   "physicsObject": false,
   "physicsSensor": false,

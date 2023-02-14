@@ -4,7 +4,7 @@
   "name": "sh_2d_light",
   "type": 1,
   "parent": {
-    "name": "blend",
-    "path": "folders/shader/blend.yy",
+    "name": "filter",
+    "path": "folders/shader/filter.yy",
   },
 }

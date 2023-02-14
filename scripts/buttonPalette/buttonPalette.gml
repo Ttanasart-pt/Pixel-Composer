@@ -8,7 +8,7 @@ function buttonPaletteClass(_onApply) : widget() constructor {
 	
 	static trigger = function() {
 		var dialog = dialogCall(o_dialog_palette, WIN_W / 2, WIN_H / 2);
-		dialog.setPalette(current_palette);
+		dialog.setDefault(current_palette);
 		dialog.onApply = onApply;
 	}
 	
@@ -20,13 +20,13 @@ function buttonPaletteClass(_onApply) : widget() constructor {
 		current_palette = _color;
 		
 		var click = false;
-		if(hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + _h)) {
+		if(ihover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + _h)) {
 			draw_sprite_stretched(THEME.button, 1, _x, _y, _w, _h);	
-			if(mouse_press(mb_left, active)) {
+			if(mouse_press(mb_left, iactive)) {
 				trigger();
 				click = true;
 			}
-			if(mouse_click(mb_left, active))
+			if(mouse_click(mb_left, iactive))
 				draw_sprite_stretched(THEME.button, 2, _x, _y, _w, _h);	
 		} else {
 			draw_sprite_stretched(THEME.button, 0, _x, _y, _w, _h);		
@@ -44,9 +44,10 @@ function buttonPaletteClass(_onApply) : widget() constructor {
 	}
 }
 
-function drawPalette(_pal, _x, _y, _w, _h) {
+function drawPalette(_pal, _x, _y, _w, _h) { 
 	var ww = _w / array_length(_pal);
 	for(var i = 0; i < array_length(_pal); i++) {
+		if(!is_real(_pal[i])) continue;
 		draw_set_color(_pal[i]);
 		var _x0 = _x + i * ww;
 		var _x1 = _x0 + ww;

@@ -51,6 +51,8 @@
 	PREF_MAP[? "dialog_add_node_view"] = 0;
 	
 	PREF_MAP[? "physics_gravity"] = [ 0, 10 ];
+	
+	PREF_MAP[? "test_mode"] = false;
 #endregion
 
 #region hotkeys	
@@ -122,7 +124,7 @@
 		
 		var path = DIRECTORY + "recent.json";
 		var file = file_text_open_write(path);
-		file_text_write_string(file, json_encode(map));
+		file_text_write_string(file, json_encode_minify(map));
 		file_text_close(file);
 		ds_map_destroy(map);
 	}
@@ -167,6 +169,8 @@
 		
 		ds_map_add_list(map, "key", save_l);
 		
+		PREF_MAP[? "window_maximize"] = window_is_maximize();
+		
 		var _pref = ds_map_create();
 		ds_map_override(_pref, PREF_MAP);
 		ds_map_arr_to_list(_pref);
@@ -174,7 +178,7 @@
 		
 		var path = DIRECTORY + "keys.json";
 		var file = file_text_open_write(path);
-		file_text_write_string(file, json_encode(map));
+		file_text_write_string(file, json_encode_minify(map));
 		file_text_close(file);
 		ds_map_destroy(map);
 	}
@@ -214,24 +218,34 @@
 	}
 	
 	function PREF_APPLY() {
-		var ww, hh;
-		
-		if(PREF_MAP[? "window_maximize"]) {
-			ww = window_get_width();
-			hh = window_get_height();
-		} else {
-			ww = PREF_MAP[? "window_width"];
-			hh = PREF_MAP[? "window_height"];
-		}
-		
 		if(PREF_MAP[? "double_click_delay"] > 1)
 			PREF_MAP[? "double_click_delay"] /= 60;
 		
-		window_set_size(ww, hh);
-		window_set_position(display_get_width() / 2 - ww / 2, display_get_height() / 2 - hh / 2);
+		if(ds_map_exists(PREF_MAP, "test_mode"))
+			TESTING = PREF_MAP[? "test_mode"];
+		
+		if(PREF_MAP[? "window_maximize"]) {
+			run_in(1, function() {
+				window_set_size(PREF_MAP[? "window_width"], PREF_MAP[? "window_height"]);
+				run_in(15, function() { maximize_window(); });
+			});
+		} else {
+			var ww = PREF_MAP[? "window_width"];
+			var hh = PREF_MAP[? "window_height"];
+			
+			window_set_position(display_get_width() / 2 - ww / 2, display_get_height() / 2 - hh / 2);
+			window_set_size(ww, hh);
+		}
 		game_set_speed(PREF_MAP[? "ui_framerate"], gamespeed_fps);
 		
-		physics_world_gravity(PREF_MAP[? "physics_gravity"][0], PREF_MAP[? "physics_gravity"][1]);
+		if(ds_map_exists(PREF_MAP, "physics_gravity")) {
+			var grav = PREF_MAP[? "physics_gravity"];
+			if(!is_array(grav)) {
+				grav = [0, 10];
+				PREF_MAP[? "physics_gravity"] = grav;
+			}
+			physics_world_gravity(array_safe_get(grav, 0, 0), array_safe_get(grav, 1, 10));
+		}
 	}
 	
 	function find_hotkey(_context, _name) {

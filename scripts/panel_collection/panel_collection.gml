@@ -27,16 +27,61 @@ function Panel_Collection() : PanelContent() constructor {
 	
 	updated_path = noone;
 	updated_prog = 0;
+	data_path = "";
 	
-	contentMenu = [
-		[ "Replace with selected", function() { 
-			saveCollection(_menu_node.path, false);
-		} ],
-		[ "Delete", function() { 
-			file_delete(_menu_node.path);
-			refreshContext();
-		} ],
-	];
+	static initMenu = function() {
+		contentMenu = [
+			[ get_text("panel_collection_replace", "Replace with selected"), function() { 
+				saveCollection(_menu_node.path, false, _menu_node.meta);
+			} ],
+			[ get_text("panel_collection_edit_meta", "Edit metadata") + "...", function() { 
+				var dia = dialogCall(o_dialog_file_name_collection, mouse_mx + ui(8), mouse_my + ui(-320));
+				var meta = _menu_node.getMetadata();
+				if(meta != noone && meta != undefined) 
+					dia.meta = meta;
+			
+				dia.updating	= _menu_node;
+				dia.expand();
+			} ],
+			-1,
+			[ get_text("delete", "Delete"), function() { 
+				file_delete(_menu_node.path);
+				refreshContext();
+			} ],
+		];
+	
+		if(DEMO) array_delete(contentMenu, 0, 3);
+		else if(_menu_node && STEAM_ENABLED) {
+			var meta = _menu_node.getMetadata();
+			
+			if(!meta.steam) {
+				array_insert(contentMenu, 2, [  get_text("panel_collection_workshop_upload", "Upload to Workshop") + "...", function() { 
+					var dia = dialogCall(o_dialog_file_name_collection, mouse_mx + ui(8), mouse_my + ui(-320));
+					var meta = _menu_node.getMetadata();
+					if(meta != noone && meta != undefined) 
+						dia.meta = meta;
+				
+					dia.ugc			= 1;
+					dia.updating	= _menu_node;
+					dia.expand();
+				} ]);
+			}
+			
+			if(meta.steam && meta.author_steam_id == STEAM_USER_ID && meta.file_id != 0) {
+				array_insert(contentMenu, 2, [get_text("panel_collection_workshop_update", "Update workshop content") + "...", function() { 
+					var dia = dialogCall(o_dialog_file_name_collection, mouse_mx + ui(8), mouse_my + ui(-320));
+					var meta = _menu_node.getMetadata();
+					if(meta != noone && meta != undefined) 
+						dia.meta = meta;
+				
+					dia.ugc			= 2;
+					dia.updating	= _menu_node;
+					dia.expand();
+				} ]);
+			}
+		}
+	}
+	initMenu();
 	
 	search_string = "";
 	tb_search = new textBox(TEXTBOX_INPUT.text, function(str) { 
@@ -50,7 +95,16 @@ function Panel_Collection() : PanelContent() constructor {
 		draw_clear_alpha(c_white, 0);
 		
 		var nodes = search_string == ""? context.content : search_list;
-		var node_count = ds_list_size(nodes);
+		if(mode == 0 && context == root) nodes = STEAM_CONTENT;
+		var steamNode = [];
+		for( var i = 0; i < ds_list_size(STEAM_CONTENT); i++ ) {
+			var meta = STEAM_CONTENT[| i].meta;	
+			if(array_exists(meta.tags, context.name))
+				array_push(steamNode, STEAM_CONTENT[| i]);	
+		}
+		
+		var node_list  = ds_list_size(nodes);
+		var node_count = node_list + array_length(steamNode);
 		var hh = 0;
 		var frame = current_time * PREF_MAP[? "collection_preview_speed"] / 3000;
 		var _cw = contentPane.surface_w;
@@ -73,49 +127,73 @@ function Panel_Collection() : PanelContent() constructor {
 				name_height = 0;
 				for(var j = 0; j < col; j++) {
 					var index = i * col + j;
-					if(index < node_count) {
-						var _node = nodes[| index];
-						var _nx   = grid_space + (grid_width + grid_space) * j;
-						var _boxx = _nx + (grid_width - grid_size) / 2;
+					if(index >= node_count) break;
+					
+					var _node = index < node_list? nodes[| index] : steamNode[index - node_list];
+					var _nx   = grid_space + (grid_width + grid_space) * j;
+					var _boxx = _nx + (grid_width - grid_size) / 2;
 						
-						BLEND_OVERRIDE
-						draw_sprite_stretched(THEME.node_bg, 0, _boxx, yy, grid_size, grid_size);
-						BLEND_NORMAL
+					BLEND_OVERRIDE;
+					draw_sprite_stretched(THEME.node_bg, 0, _boxx, yy, grid_size, grid_size);
+					BLEND_NORMAL;
 						
-						if(_hover && point_in_rectangle(_m[0], _m[1], _nx, yy, _nx + grid_width, yy + grid_size)) {
-							draw_sprite_stretched_ext(THEME.node_active, 0, _boxx, yy, grid_size, grid_size, COLORS._main_accent, 1);
-							if(mouse_press(mb_left, pFOCUS))
-								file_dragging = _node;
+					var meta = noone;
+					if(variable_struct_exists(_node, "getMetadata")) 
+						meta = _node.getMetadata();
+						
+					if(_hover && point_in_rectangle(_m[0], _m[1], _nx, yy, _nx + grid_width, yy + grid_size)) {
+						draw_sprite_stretched_ext(THEME.node_active, 0, _boxx, yy, grid_size, grid_size, COLORS._main_accent, 1);
+						if(mouse_press(mb_left, pFOCUS))
+							file_dragging = _node;
 							
-							if(mouse_press(mb_right, pFOCUS)) {
-								_menu_node = _node;
-								var dia = dialogCall(o_dialog_menubox, mouse_mx + 8, mouse_my + 8);
-								dia.setMenu(contentMenu);	
-							}
+						if(mouse_press(mb_right, pFOCUS)) {
+							_menu_node = _node;
+							initMenu();
+							var dia = dialogCall(o_dialog_menubox, mouse_mx + 8, mouse_my + 8);
+							dia.setMenu(contentMenu);	
 						}
 						
-						if(_node.path == updated_path && updated_prog > 0) 
-							draw_sprite_stretched_ext(THEME.node_glow, 0, _boxx - 9, yy - 9, grid_size + 18, grid_size + 18, COLORS._main_value_positive, updated_prog);
-						
-						if(variable_struct_exists(_node, "getSpr")) _node.getSpr();
-						if(sprite_exists(_node.spr)) {
-							var sw = sprite_get_width(_node.spr);
-							var sh = sprite_get_height(_node.spr);
-							var ss = ui(32) / max(sw, sh);
-							
-							var xo = (sprite_get_xoffset(_node.spr) - sw / 2) * ss;
-							var yo = (sprite_get_yoffset(_node.spr) - sh / 2) * ss;
-							var sx = _boxx + grid_size / 2 + xo;
-							var sy = yy + grid_size / 2 + yo;
-							
-							draw_sprite_ext(_node.spr, frame, sx, sy, ss, ss, 0, c_white, 1);
-						} else
-							draw_sprite_ui_uniform(THEME.group, 0, _boxx + grid_size / 2, yy + grid_size / 2, 1, c_white);
-						
-						draw_set_text(f_p2, fa_center, fa_top, COLORS._main_text);
-						name_height = max(name_height, string_height_ext(_node.name, -1, grid_size) + 8);
-						draw_text_ext_add(_boxx + grid_size / 2, yy + grid_size + ui(4), _node.name, -1, grid_width);
+						if(!instance_exists(o_dialog_menubox) && meta != noone && meta != undefined) {
+							meta.name = _node.name;
+							TOOLTIP = meta;
+						}
 					}
+						
+					if(_node.path == updated_path && updated_prog > 0) 
+						draw_sprite_stretched_ext(THEME.node_glow, 0, _boxx - 9, yy - 9, grid_size + 18, grid_size + 18, COLORS._main_value_positive, updated_prog);
+						
+					if(variable_struct_exists(_node, "getSpr")) _node.getSpr();
+						
+					if(sprite_exists(_node.spr)) {
+						var sw = sprite_get_width(_node.spr);
+						var sh = sprite_get_height(_node.spr);
+						var ss = ui(32) / max(sw, sh);
+							
+						var xo = (sprite_get_xoffset(_node.spr) - sw / 2) * ss;
+						var yo = (sprite_get_yoffset(_node.spr) - sh / 2) * ss;
+						var sx = _boxx + grid_size / 2 + xo;
+						var sy = yy + grid_size / 2 + yo;
+							
+						draw_sprite_ext(_node.spr, frame, sx, sy, ss, ss, 0, c_white, 1);
+					} else
+						draw_sprite_ui_uniform(THEME.group, 0, _boxx + grid_size / 2, yy + grid_size / 2, 1, c_white);
+					
+					if(mode == 0 && meta != noone) {
+						if(meta.steam) {
+							draw_sprite_ui_uniform(THEME.steam, 0, _boxx + ui(12), yy + ui(12), 1, COLORS._main_icon_dark, 1);
+							if(meta.author_steam_id == STEAM_USER_ID) 
+								draw_sprite_ui_uniform(THEME.steam_creator, 0, _boxx + grid_size - ui(8), yy + ui(12), 1, COLORS._main_icon_dark, 1);
+						}
+						
+						if(meta.version < SAVEFILE_VERSION) {
+							draw_set_color(COLORS._main_accent);
+							draw_circle(_boxx + grid_size - ui(8), yy + grid_size - ui(8), 3, false);
+						}
+					}
+					
+					draw_set_text(f_p2, fa_center, fa_top, COLORS._main_text);
+					name_height = max(name_height, string_height_ext(_node.name, -1, grid_size) + 8);
+					draw_text_ext_over(_boxx + grid_size / 2, yy + grid_size + ui(4), _node.name, -1, grid_width);
 				}
 				var hght = grid_size + grid_space + name_height;
 				hh += hght;
@@ -128,13 +206,13 @@ function Panel_Collection() : PanelContent() constructor {
 			hh += list_height;
 		
 			for(var i = 0; i < node_count; i++) {
-				var _node = nodes[| i];
+				var _node = i < node_list? nodes[| i] : steamNode[i - node_list];
 				if(!_node) continue;
 				
 				if(i % 2) {
-					BLEND_OVERRIDE
+					BLEND_OVERRIDE;
 					draw_sprite_stretched_ext(THEME.node_bg, 0, ui(4), yy, list_width - 8, list_height, c_white, 0.2);
-					BLEND_NORMAL
+					BLEND_NORMAL;
 				}
 				
 				if(_hover && point_in_rectangle(_m[0], _m[1], 0, yy, list_width, yy + list_height - 1)) {
@@ -144,6 +222,7 @@ function Panel_Collection() : PanelContent() constructor {
 						
 					if(mouse_press(mb_right, pFOCUS)) {
 						_menu_node = _node;
+						initMenu();
 						var dia = dialogCall(o_dialog_menubox, mouse_mx + ui(8), mouse_my + ui(8));
 						dia.setMenu(contentMenu);
 					}
@@ -168,7 +247,7 @@ function Panel_Collection() : PanelContent() constructor {
 					draw_sprite_ui_uniform(THEME.group, 0, spr_x, spr_y, 0.75, c_white);
 				
 				draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text);
-				draw_text_add(list_height + ui(20), yy + list_height / 2, _node.name);
+				draw_text_over(list_height + ui(20), yy + list_height / 2, _node.name);
 				
 				yy += list_height;
 				hh += list_height;
@@ -209,16 +288,22 @@ function Panel_Collection() : PanelContent() constructor {
 		context.scan([".json", ".pxcc"]);	
 	}
 	
-	function saveCollection(_path, save_surface = true) {
+	function saveCollection(_name, save_surface = true, metadata = noone) {
 		if(PANEL_INSPECTOR.inspecting == noone) return;
 		
+		var _pre_name = (data_path == ""? "" : data_path + "\\") + _name;
+		var ext = filename_ext(_pre_name);
+		var _path = ext == ".pxcc"? _pre_name : _pre_name + ".pxcc";
+		
 		if(ds_list_empty(PANEL_GRAPH.nodes_select_list))
-			SAVE_COLLECTION(PANEL_INSPECTOR.inspecting, _path, save_surface);
+			SAVE_COLLECTION(PANEL_INSPECTOR.inspecting, _path, save_surface, metadata);
 		else
-			SAVE_COLLECTIONS(PANEL_GRAPH.nodes_select_list, _path, save_surface);
+			SAVE_COLLECTIONS(PANEL_GRAPH.nodes_select_list, _path, save_surface, metadata);
 		
 		updated_path = _path;
 		updated_prog = 1;
+		
+		refreshContext();
 	}
 	
 	function drawContent(panel) {
@@ -227,7 +312,7 @@ function Panel_Collection() : PanelContent() constructor {
 		var content_y = ui(48);
 		draw_sprite_stretched(THEME.ui_panel_bg, 1, group_w, content_y, content_w, content_h);
 		contentPane.active = pHOVER;
-		contentPane.draw(group_w, content_y, mx - group_w - ui(8), my - content_y);
+		contentPane.draw(group_w, content_y, mx - group_w, my - content_y);
 		
 		folderPane.active = pHOVER;
 		folderPane.draw(0, content_y, mx, my - content_y);
@@ -260,6 +345,7 @@ function Panel_Collection() : PanelContent() constructor {
 		var _x = ui(16);
 		var _y = ui(24);
 		var bh = line_height(f_p0b, 8);
+		var rootx = 0;
 		
 		for( var i = 0; i < array_length(roots); i++ ) {
 			var r = roots[i];
@@ -277,61 +363,66 @@ function Panel_Collection() : PanelContent() constructor {
 			_x += string_width(r[0]) + ui(20);
 		}
 		
+		rootx = _x;
+		
 		var bx = w - ui(40);
 		var by = ui(12);
 		
 		if(search_string == "") {
-			if(buttonInstant(THEME.button_hide, bx, by, ui(24), ui(24), [mx, my], pFOCUS, pHOVER, contentView? "Grid view" : "List view", THEME.view_mode, contentView) == 2) {
-				contentView = !contentView;
+			if(bx > rootx) {
+				var txt = contentView? get_text("view_grid", "Grid view") : get_text("view_list", "List view");
+				if(buttonInstant(THEME.button_hide, bx, by, ui(24), ui(24), [mx, my], pFOCUS, pHOVER, txt, THEME.view_mode, contentView) == 2) {
+					contentView = !contentView;
+				}
 			}
 			bx -= ui(32);
 			
-			if(mode == 0) {
-				if(context != root) {
-					if(buttonInstant(THEME.button_hide, bx, by, ui(24), ui(24), [mx, my], pFOCUS, pHOVER, "Add selecting node as collection", THEME.add, 0, COLORS._main_value_positive) == 2) {
-						if(PANEL_INSPECTOR.inspecting != noone) {
-							var dia = dialogCall(o_dialog_file_name, mouse_mx + ui(8), mouse_my + ui(8));
-							data_path = context.path;
-							if(PANEL_INSPECTOR.inspecting)
-								dia.tb_name._input_text = PANEL_INSPECTOR.inspecting.name;
-							dia.onModify = function (txt) {
-								var _pre_name = data_path + "\\" + txt;
-								var _name  = _pre_name + ".pxcc";
-								var _i = 0;
-								while(file_exists(_name)) {
-									_name = _pre_name + string(_i) + ".pxcc";
-									_i++;
-								}
-								
-								saveCollection(_name);
-							};
+			if(mode == 0 && !DEMO) {
+				if(bx > rootx) {
+					if(context != root) {
+						var txt = get_text("panel_collection_add_node", "Add selecting node as collection");
+						if(buttonInstant(THEME.button_hide, bx, by, ui(24), ui(24), [mx, my], pFOCUS, pHOVER, txt, THEME.add, 0, COLORS._main_value_positive) == 2) {
+							if(PANEL_INSPECTOR.inspecting != noone) {
+								data_path = context.path;
+								var dia = dialogCall(o_dialog_file_name_collection, mouse_mx + ui(8), mouse_my + ui(8));
+								if(PANEL_INSPECTOR.inspecting)
+									dia.meta.name = PANEL_INSPECTOR.inspecting.display_name;
+							}
 						}
+					} else {
+						draw_sprite_ui_uniform(THEME.add, 0, bx + ui(12), by + ui(12), 1, COLORS._main_icon_dark);	
 					}
-				} else {
-					draw_sprite_ui_uniform(THEME.add, 0, bx + ui(12), by + ui(12), 1, COLORS._main_icon_dark);	
 				}
 				bx -= ui(32);
 		
-				if(buttonInstant(THEME.button_hide, bx, by, ui(24), ui(24), [mx, my], pFOCUS, pHOVER, "Add folder") == 2) {
-					var dia = dialogCall(o_dialog_file_name, mouse_mx + 8, mouse_my + 8);
-					dia.onModify = function (txt) {
-						directory_create(txt);
-						refreshContext();
-					};
-					dia.path = context.path + "\\";
+				if(bx > rootx) {
+					var txt = get_text("panel_collection_add_folder", "Add folder");
+					if(buttonInstant(THEME.button_hide, bx, by, ui(24), ui(24), [mx, my], pFOCUS, pHOVER, txt) == 2) {
+						var dia = dialogCall(o_dialog_file_name, mouse_mx + 8, mouse_my + 8);
+						dia.onModify = function (txt) {
+							directory_create(txt);
+							refreshContext();
+						};
+						dia.path = context.path + "\\";
+					}
+					draw_sprite_ui_uniform(THEME.folder_add, 0, bx + ui(12), by + ui(12), 1, COLORS._main_icon);
+					draw_sprite_ui_uniform(THEME.folder_add, 1, bx + ui(12), by + ui(12), 1, COLORS._main_value_positive);
 				}
-				draw_sprite_ui_uniform(THEME.folder_add, 0, bx + ui(12), by + ui(12), 1, COLORS._main_icon);
-				draw_sprite_ui_uniform(THEME.folder_add, 1, bx + ui(12), by + ui(12), 1, COLORS._main_value_positive);
 				bx -= ui(32);
 			}
 		
-			if(buttonInstant(THEME.button_hide, bx, by, ui(24), ui(24), [mx, my], pFOCUS, pHOVER, "Open in file explorer", THEME.folder) == 2) {
-				shellOpenExplorer(context.path);
+			if(bx > rootx) {
+				var txt = get_text("panel_collection_open_file", "Open in file explorer");
+				if(buttonInstant(THEME.button_hide, bx, by, ui(24), ui(24), [mx, my], pFOCUS, pHOVER, txt, THEME.folder) == 2)
+					shellOpenExplorer(context.path);
 			}
 			bx -= ui(32);
-		
-			if(buttonInstant(THEME.button_hide, bx, by, ui(24), ui(24), [mx, my], pFOCUS, pHOVER, "Refresh", THEME.refresh) == 2)
-				refreshContext();
+			
+			if(bx > rootx) {
+				var txt = get_text("refresh", "Refresh");
+				if(buttonInstant(THEME.button_hide, bx, by, ui(24), ui(24), [mx, my], pFOCUS, pHOVER, txt, THEME.refresh) == 2)
+					refreshContext();
+			}
 			bx -= ui(32);
 		} else {
 			var tb_w = ui(200);
@@ -357,7 +448,7 @@ function Panel_Collection() : PanelContent() constructor {
 		var path = file_dragging.path;
 		ds_list_clear(PANEL_GRAPH.nodes_select_list);
 		
-		if(filename_ext(path) == ".png") {
+		if(string_lower(filename_ext(path)) == ".png") {
 			var app = Node_create_Image_path(0, 0, path);
 			
 			PANEL_GRAPH.node_focus	  = app;

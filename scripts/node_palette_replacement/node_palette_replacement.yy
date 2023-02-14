@@ -5,7 +5,7 @@
   "isDnD": false,
   "isCompatibility": false,
   "parent": {
-    "name": "effects",
-    "path": "folders/nodes/data/filter/effects.yy",
+    "name": "color",
+    "path": "folders/nodes/data/value/color.yy",
   },
 }

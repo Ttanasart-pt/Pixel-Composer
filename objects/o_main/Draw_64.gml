@@ -1,6 +1,6 @@
 /// @description init
 #region widget scroll
-	if(keyboard_check_pressed(vk_tab) && keyboard_check(vk_shift))
+	if(keyboard_check_pressed(vk_tab) && key_mod_press(SHIFT))
 		widget_previous();
 	else if(keyboard_check_pressed(vk_tab))
 		widget_next();
@@ -17,8 +17,14 @@
 #endregion
 
 #region panels
-	if(PANEL_MAIN != 0)
+	if(PANEL_MAIN == 0) setPanel();
+	
+	var surf = surface_get_target();
+	try
 		PANEL_MAIN.draw();
-	else 
-		setPanel();
+	catch(e) {
+		while(surface_get_target() != surf)
+			surface_reset_target();
+		noti_warning("UI error: " + exception_print(e));
+	}
 #endregion

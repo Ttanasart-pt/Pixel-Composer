@@ -3,14 +3,14 @@ function __init_theme() {
 	if(!directory_exists(root))
 		directory_create(root);
 			
-	var _l = root + "\\_theme" + string(VERSION);
+	//var _l = root + "\\version";
+	//if(file_exists(_l)) {
+	//	var res = json_load_struct(_l);
+	//	if(res.version >= VERSION) return;
+	//}
+	//json_save_struct(_l, { version: VERSION });
 	
-	//if(file_exists(_l)) return;
 	log_message("THEME", "unzipping default theme to DIRECTORY.");
-	var f = file_text_open_write(_l);
-	file_text_write_real(f, 0);
-	file_text_close(f);
-	
 	zip_unzip("data/themes/default.zip", root);
 }
 

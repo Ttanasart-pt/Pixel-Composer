@@ -1,45 +1,32 @@
 /// @description init
-#region step
-	if(PANEL_MAIN != 0)
-		PANEL_MAIN.step();
-	
-	for(var i = 0; i < ds_list_size(NODES); i++) {
-		NODES[| i].step();
-	}
-#endregion
-
 #region animation
 	ANIMATOR.frame_progress = false;
 	
 	if(ANIMATOR.is_playing && ANIMATOR.play_freeze == 0) {
 		ANIMATOR.time_since_last_frame += ANIMATOR.framerate * (delta_time / 1000000);
 		
-		if(ANIMATOR.time_since_last_frame >= 1) {
-			ANIMATOR.real_frame += 1;
-			ANIMATOR.time_since_last_frame = 0;
-		}
-			
-		if(round(ANIMATOR.real_frame) >= ANIMATOR.frames_total) {
-			if(ANIMATOR.playback == ANIMATOR_END.stop || ANIMATOR.rendering) {
-				ANIMATOR.setFrame(ANIMATOR.frames_total - 1);
-				ANIMATOR.is_playing = false;
-				ANIMATOR.rendering = false;
-			} else
-				ANIMATOR.setFrame(0);
-		} else {
-			var _c = ANIMATOR.current_frame;
-			ANIMATOR.current_frame = round(ANIMATOR.real_frame);
-			ANIMATOR.frame_progress = _c != ANIMATOR.current_frame;
-		}
+		if(ANIMATOR.time_since_last_frame >= 1)
+			ANIMATOR.setFrame(ANIMATOR.real_frame + 1);
 	} else {
 		ANIMATOR.setFrame(ANIMATOR.real_frame);
 		ANIMATOR.time_since_last_frame = 0;
 	}
 	
 	ANIMATOR.play_freeze = max(0, ANIMATOR.play_freeze - 1);
+#endregion
+
+#region step
+	VARIABLE.step();
 	
-	//if(ANIMATOR.frame_progress)
-	//	UPDATE = RENDER_TYPE.full;
+	try {
+		if(PANEL_MAIN != 0)
+			PANEL_MAIN.step();
+	
+		for(var i = 0; i < ds_list_size(NODES); i++) {
+			NODES[| i].step();
+		}
+	} catch(e) 
+		noti_warning("Step error: " + exception_print(e));
 #endregion
 
 #region hotkey
@@ -106,11 +93,6 @@
 #endregion
 
 #region window
-	if (window_command_check(window_command_maximize)) {
-		window_command_run(window_command_maximize);
-	    PREF_MAP[? "window_maximize"] = !PREF_MAP[? "window_maximize"];
-	}
-	
 	if (window_command_check(window_command_close)) {
 		if(MODIFIED && !READONLY) {
 			dialogCall(o_dialog_exit);
@@ -122,7 +104,13 @@
 	
 	if(_modified != MODIFIED) {
 		_modified = MODIFIED;
-		window_set_caption(CURRENT_PATH + (MODIFIED? "*" : "") + " - Pixel Composer");
+		
+		var cap = "";
+		if(SAFE_MODE)	cap += "[SAFE MODE] ";
+		if(READONLY)	cap += "[READ ONLY] ";
+		cap += CURRENT_PATH + (MODIFIED? "*" : "") + " - Pixel Composer";
+		
+		window_set_caption(cap);
 	}
 #endregion
 
@@ -141,5 +129,17 @@
 		}
 		
 		ds_stack_destroy(rem);
+	}
+#endregion
+
+#region steam
+	steam_update();
+	
+	if(STEAM_ENABLED) {
+		if (steam_is_screenshot_requested()) {
+		    var file = "PixelComposer_" + string(irandom_range(100_000, 999_999)) + ".png";
+		    screen_save(file);
+		    steam_send_screenshot(file, window_get_width(), window_get_height());
+		}
 	}
 #endregion

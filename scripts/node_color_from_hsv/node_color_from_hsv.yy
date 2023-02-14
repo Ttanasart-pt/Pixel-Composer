@@ -6,6 +6,6 @@
   "isCompatibility": false,
   "parent": {
     "name": "color",
-    "path": "folders/nodes/data/color.yy",
+    "path": "folders/nodes/data/value/color.yy",
   },
 }

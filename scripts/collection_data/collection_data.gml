@@ -7,16 +7,16 @@ function __initCollection() {
 	var root = DIRECTORY + "Collections";
 	if(!directory_exists(root))
 		directory_create(root);
-			
-	var _l = root + "\\_coll" + string(VERSION);
-	if(!file_exists(_l)) {
-		log_message("COLLECTION", "unzipping new collection to DIRECTORY.");
-		var f = file_text_open_write(_l);
-		file_text_write_real(f, 0);
-		file_text_close(f);
-		
+	
+	var _l = root + "\\version";
+	if(file_exists(_l)) {
+		var res = json_load_struct(_l);
+		if(res.version < VERSION) 
+			zip_unzip("data/Collections.zip", root);
+	} else 
 		zip_unzip("data/Collections.zip", root);
-	}
+	json_save_struct(_l, { version: VERSION });
+	
 	
 	refreshCollections();
 }
@@ -29,8 +29,8 @@ function refreshCollections() {
 	COLLECTIONS.open = true;
 }
 
-function searchCollection(_list, _search_str, _claer_list = true) {
-	if(_claer_list)
+function searchCollection(_list, _search_str, _clear_list = true) {
+	if(_clear_list)
 		ds_list_clear(_list);
 	
 	if(_search_str == "") return;

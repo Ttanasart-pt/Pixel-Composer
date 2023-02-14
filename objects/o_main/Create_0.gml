@@ -8,6 +8,8 @@
 	file_text_close(f);
 	
 	gpu_set_tex_mip_enable(mip_off);
+	gc_enable(true);
+	gc_target_frame_time(100);
 #endregion
 
 #region window
@@ -36,14 +38,17 @@
 	//display_set_timing_method(tm_sleep);
 	
 	addHotkey("", "New file", "N",	MOD_KEY.ctrl, NEW);
-	addHotkey("", "Save", "S",		MOD_KEY.ctrl, SAVE);
-	addHotkey("", "Save as", "S",	MOD_KEY.ctrl | MOD_KEY.shift, SAVE_AS);
-	addHotkey("", "Open", "O",		MOD_KEY.ctrl, function() { LOAD(); });
+	if(!DEMO) {
+		addHotkey("", "Save", "S",		MOD_KEY.ctrl, SAVE);
+		addHotkey("", "Save as", "S",	MOD_KEY.ctrl | MOD_KEY.shift, SAVE_AS);
+		addHotkey("", "Open", "O",		MOD_KEY.ctrl, function() { LOAD(); });
+	}
 	
 	addHotkey("", "Undo", "Z",		MOD_KEY.ctrl, function() { UNDO(); });
 	addHotkey("", "Redo", "Z",		MOD_KEY.ctrl | MOD_KEY.shift, function() { REDO(); });
 	
-	addHotkey("", "Full panel", "`",	MOD_KEY.none, set_focus_fullscreen);
+	addHotkey("", "Full panel", "`",			MOD_KEY.none, set_focus_fullscreen);
+	addHotkey("", "Open notification", vk_f12,	MOD_KEY.none, function() { dialogCall(o_dialog_notifications); });
 	
 	addHotkey("", "Render all", vk_f5,	MOD_KEY.none, function() { 
 		UPDATE |= RENDER_TYPE.full; 
@@ -71,12 +76,14 @@
 	drop_path = [];
 	
 	function load_file_path(path) {
+		if(!is_array(path)) path = [ path ];
 		if(array_length(path) == 0) return; 
+		
 		var type = "image";
 		for( var i = 0; i < array_length(path); i++ ) {
 			var p = path[i];
 			if(directory_exists(p)) continue;
-			var ext = filename_ext(p);
+			var ext = string_lower(filename_ext(p));
 			
 			switch(ext) {
 				case ".png"	 :
@@ -100,7 +107,7 @@
 			var node = noone;
 			for( var i = 0; i < array_length(path); i++ ) {
 				var p = path[i];
-				var ext = filename_ext(p);
+				var ext = string_lower(filename_ext(p));
 				
 				switch(ext) {
 					case ".txt"  :
@@ -157,7 +164,6 @@
 #region parameter
 	file_open_parameter = "";
 	
-	window_command_hook(window_command_maximize);
 	window_command_hook(window_command_close);
 	
 	_modified = false;
@@ -170,4 +176,29 @@
 
 #region file loader
 	global.FILE_LOAD_ASYNC = ds_map_create();
+#endregion
+
+#region steam
+	globalvar STEAM_ENABLED, STEAM_APP_ID, STEAM_USER_ID, STEAM_USERNAME;
+	globalvar STEAM_UGC_ITEM_UPLOADING, STEAM_UGC_ITEM_ID, STEAM_UGC_ITEM_FILE, STEAM_UGC_UPDATE_HANDLE;
+	globalvar STEAM_UGC_SUBMIT_ID, STEAM_UGC_UPDATE_MAP, STEAM_UGC_PUBLISH_ID, STEAM_UGC_UPDATE;
+	
+	STEAM_USER_ID = 0;
+	STEAM_USERNAME = "";
+	
+	STEAM_UGC_UPDATE_HANDLE = 0;
+	STEAM_UGC_ITEM_ID = 0;
+	STEAM_UGC_PUBLISH_ID = 0;
+	STEAM_UGC_SUBMIT_ID = 0;
+	STEAM_UGC_ITEM_UPLOADING = false;
+	STEAM_ENABLED = steam_initialised();
+	STEAM_UGC_UPDATE = false;
+	STEAM_UGC_UPDATE_MAP = ds_map_create();
+	
+	if(STEAM_ENABLED) {
+		STEAM_APP_ID = steam_get_app_id();
+		STEAM_USER_ID = steam_get_user_account_id();
+		STEAM_USERNAME = steam_get_persona_name();
+		steam_set_warning_message_hook();
+	}
 #endregion

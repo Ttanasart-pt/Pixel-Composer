@@ -1,7 +1,6 @@
 enum TEXTBOX_INPUT {
 	text,
-	number,
-	float
+	number
 }
 
 function textBox(_input, _onModify, _extras = noone) : textInput(_input, _onModify, _extras) constructor {
@@ -17,7 +16,7 @@ function textBox(_input, _onModify, _extras = noone) : textInput(_input, _onModi
 	sliding  = false;
 	slide_mx = 0;
 	slide_my = 0;
-	slide_speed = 1 / 16;
+	slide_speed = 1 / 10;
 	
 	starting_char = 1;
 	
@@ -65,13 +64,10 @@ function textBox(_input, _onModify, _extras = noone) : textInput(_input, _onModi
 	
 	static apply = function() {
 		var _input_text_current = _input_text;
+		disp_x_to = 0;
 		
 		switch(input) {
-			case TEXTBOX_INPUT.number	: 				
-				_input_text_current = evaluateFunction(_input_text);
-				_input_text_current = _input_text_current == ""? 0 : round(_input_text_current);
-				break;
-			case TEXTBOX_INPUT.float	: 
+			case TEXTBOX_INPUT.number : 
 				_input_text_current = evaluateFunction(_input_text);
 				break;
 		}
@@ -79,9 +75,8 @@ function textBox(_input, _onModify, _extras = noone) : textInput(_input, _onModi
 		if(no_empty && _input_text_current == "") 
 			_input_text_current = _last_text;
 		if(onModify) 
-			onModify(_input_text_current);
-			
-		disp_x_to = 0;
+			return onModify(_input_text_current);
+		return false;
 	}
 	
 	static move_cursor = function(delta) {
@@ -175,14 +170,14 @@ function textBox(_input, _onModify, _extras = noone) : textInput(_input, _onModi
 		#endregion
 			
 		if(keyboard_check_pressed(vk_home)) {
-			if(keyboard_check(vk_shift)) {
+			if(key_mod_press(SHIFT)) {
 				if(cursor_select == -1)
 					cursor_select = cursor;
 			} else 
 				cursor_select	= -1;
 			move_cursor(-cursor);
 		} else if(keyboard_check_pressed(vk_end)) {
-			if(keyboard_check(vk_shift)) {
+			if(key_mod_press(SHIFT)) {
 				if(cursor_select == -1)
 					cursor_select = cursor;
 			} else 
@@ -198,7 +193,7 @@ function textBox(_input, _onModify, _extras = noone) : textInput(_input, _onModi
 	}
 	
 	static display_text = function(_x, _y, _text, _w, _format, _m = -1) {
-		BLEND_OVERRIDE
+		BLEND_OVERRIDE;
 		if(!interactable) draw_set_alpha(0.5);
 		
 		switch(_format) {
@@ -248,10 +243,33 @@ function textBox(_input, _onModify, _extras = noone) : textInput(_input, _onModi
 				
 				draw_text(_x0, _y, str);
 				break;
+			case VALUE_DISPLAY.node_title :
+				draw_set_text(font == noone? f_p0 : font, fa_left, fa_top, color);
+				var _x0 = _x + disp_x, ch = "", len = string_length(_text), i = 1;
+				var cc = draw_get_color();
+				var str = "", title = 0;
+				
+				while(i <= len) {
+					ch = string_char_at(_text, i);
+					
+					if(ch == "[")
+						draw_set_color(COLORS._main_text_sub);
+					
+					draw_text(_x0, 0, ch);
+					_x0 += string_width(ch);
+					
+					if(ch == "]")
+						draw_set_color(cc);
+					
+					i++;
+				}
+				
+				draw_text(_x0, _y, str);
+				break;
 		}
 		
 		draw_set_alpha(1);
-		BLEND_NORMAL
+		BLEND_NORMAL;
 		
 		var _xx = _x, _ch, _chw;
 		var target = -999;
@@ -317,19 +335,15 @@ function textBox(_input, _onModify, _extras = noone) : textInput(_input, _onModi
 				if(!MOUSE_WRAPPING) {
 					var spd = (abs(dx) > abs(dy)? dx : dy) * slide_speed;
 				
-					if(keyboard_check(vk_alt))
+					if(key_mod_press(ALT))
 						spd /= 10;
 					if(key_mod_press(CTRL))
 						spd *= 10;
 					
 					_input_text = _input_text + spd;
-				
-					switch(input) {
-						case TEXTBOX_INPUT.number :	_input_text = round(_input_text);	break;
-					}
 					
-					apply();
-					UNDO_HOLDING = true;
+					if(apply())
+						UNDO_HOLDING = true;
 				}
 				
 				if(MOUSE_WRAPPING || _input_text != _ip) {
@@ -342,8 +356,10 @@ function textBox(_input, _onModify, _extras = noone) : textInput(_input, _onModi
 					deactivate();
 			}
 			
-			if(mouse_release(mb_left))
+			if(mouse_release(mb_left)) {
 				sliding = 0;
+				UNDO_HOLDING = false;
+			}
 		}
 		
 		switch(halign) {
@@ -380,7 +396,7 @@ function textBox(_input, _onModify, _extras = noone) : textInput(_input, _onModi
 			
 			#region cursor position
 				if(KEYBOARD_PRESSED == vk_left) {
-					if(keyboard_check(vk_shift)) {
+					if(key_mod_press(SHIFT)) {
 						if(cursor_select == -1)
 							cursor_select = cursor;
 					} else if(cursor_select != -1)
@@ -389,7 +405,7 @@ function textBox(_input, _onModify, _extras = noone) : textInput(_input, _onModi
 						move_cursor(-1);
 				}
 				if(KEYBOARD_PRESSED == vk_right) {
-					if(keyboard_check(vk_shift)) {
+					if(key_mod_press(SHIFT)) {
 						if(cursor_select == -1)
 							cursor_select = cursor;
 					} else if(cursor_select != -1)
@@ -400,7 +416,7 @@ function textBox(_input, _onModify, _extras = noone) : textInput(_input, _onModi
 			#endregion
 			
 			#region multiplier
-				if(_w > ui(80) && (input == TEXTBOX_INPUT.number || input == TEXTBOX_INPUT.float)) {
+				if(_w > ui(80) && input == TEXTBOX_INPUT.number) {
 					draw_set_text(f_p0b, fa_left, fa_center, COLORS._main_text_sub);
 					draw_set_alpha(0.5);
 				
@@ -409,18 +425,13 @@ function textBox(_input, _onModify, _extras = noone) : textInput(_input, _onModi
 					
 						if(mouse_press(mb_left, active)) {
 							var ktxt = _input_text;
-							if(input == TEXTBOX_INPUT.number) {
-								if(keyboard_check(vk_alt))	_input_text	= string(ceil(toNumber(ktxt) / 2));
-								else						_input_text	= string(ceil(toNumber(ktxt) * 2));
-							} else {
-								if(keyboard_check(vk_alt))	_input_text	= string(toNumber(ktxt) / 2);
-								else						_input_text	= string(toNumber(ktxt) * 2);
-							}
+							if(key_mod_press(ALT))	_input_text	= string(toNumber(ktxt) / 2);
+							else					_input_text	= string(toNumber(ktxt) * 2);
 							apply();
 						}
 					}
 				
-					if(keyboard_check(vk_alt))
+					if(key_mod_press(ALT))
 						draw_text(_x + ui(8), _y + _h / 2, "/2");
 					else
 						draw_text(_x + ui(8), _y + _h / 2, "x2");
@@ -513,6 +524,15 @@ function textBox(_input, _onModify, _extras = noone) : textInput(_input, _onModi
 					draw_sprite_stretched(THEME.textbox, 1, _x, _y, _w, _h);	
 				if(mouse_press(mb_left, active))
 					activate();
+				
+				if(input == TEXTBOX_INPUT.number && key_mod_press(SHIFT)) {
+					var amo = slide_speed;
+					if(key_mod_press(CTRL)) amo *= 10;
+					if(key_mod_press(ALT))  amo /= 10;
+					
+					if(mouse_wheel_down())	onModify(toNumber(_text) + amo);
+					if(mouse_wheel_up())	onModify(toNumber(_text) - amo);
+				}
 			} else if(!hide)
 				draw_sprite_stretched_ext(THEME.textbox, 0, _x, _y, _w, _h, c_white, 0.5 + 0.5 * interactable);
 			
@@ -520,13 +540,11 @@ function textBox(_input, _onModify, _extras = noone) : textInput(_input, _onModi
 				if(_w > ui(64))
 					draw_sprite_ui_uniform(THEME.text_slider, 0, _x + ui(20), _y + _h / 2, 1, COLORS._main_icon, 0.5);
 				
-				if(hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + _h)) {
-					if(mouse_press(mb_left, active)) {
-						sliding  = 1;
+				if(hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + _h) && mouse_press(mb_left, active)) {
+					sliding  = 1;
 						
-						slide_mx = _m[0];
-						slide_my = _m[1];
-					}
+					slide_mx = _m[0];
+					slide_my = _m[1];
 				} 
 			}
 			

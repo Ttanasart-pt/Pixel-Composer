@@ -94,18 +94,17 @@
 		PANEL_MAIN.refresh();
 	}
 	
-	function findPanel(_name, _pane, _res) {
-		if(instanceof(_pane) != "Panel") 
+	function findPanel(_type, _pane, _res) {
+		if(instanceof(_pane) != "Panel")
 			return _res;
 		if(!ds_exists(_pane.childs, ds_type_list))
 			return _res;
 		
-		if(ds_list_size(_pane.childs) == 0 && _pane.content && instanceof(_pane.content) == _name) {
+		if(ds_list_size(_pane.childs) == 0 && _pane.content && instanceof(_pane.content) == _type)
 			return _pane.content;
-		}
 		
 		for(var i = 0; i < ds_list_size(_pane.childs); i++) {
-			var _re = findPanel(_name, _pane.childs[| i], _res);
+			var _re = findPanel(_type, _pane.childs[| i], _res);
 			if(_re != noone)
 				_res = _re;
 		}

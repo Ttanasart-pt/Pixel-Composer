@@ -1,113 +1,189 @@
 function curveBox(_onModify) : widget() constructor {
 	onModify = _onModify;
 	
+	curve_surface = surface_create(1, 1);
 	node_dragging = -1;
+	node_drag_typ = -1;
 	
-	drag_range = 0;
-	drag_max   = 0;
-	
-	static get_y = function(val, _y, _h, y_max, y_range) {
-		return _y + _h * clamp((y_max - val) / y_range, 0, 1);
-	}
+	static get_x = function(val, _x, _w) { return _x + _w * clamp(    val, 0, 1); }
+	static get_y = function(val, _y, _h) { return _y + _h * clamp(1 - val, 0, 1); }
 	
 	static register = function() {}
 	
 	static draw = function(_x, _y, _w, _h, _data, _m) {
-		x = _x;
-		y = _y;
-		w = _w;
-		h = _h;
+		x = _x; y = _y;
+		w = _w; h = _h;
 		
-		static curve_amo = 3;
-		var curve_h = _h;
+		curve_surface = surface_verify(curve_surface, _w, _h);
 		
-		var					yS = _data[0];
-		var x0 = _data[1],	y0 = _data[2];
-		var x1 = _data[3],	y1 = _data[4];
-		var					yE = _data[5];
+		var points = array_length(_data) / 6;
+		draw_set_color(COLORS.widget_curve_outline);
+		draw_rectangle(_x, _y, _x + _w, _y + _h, true);
 		
-		var _range = bezier_range(_data);
-		var y_min = min(0, _range[0]);
-		var y_max = max(1, _range[1]);
-		var y_range = y_max - y_min;
-		
-		var yS = get_y(yS, _y, curve_h, y_max, y_range);
-		var yE = get_y(yE, _y, curve_h, y_max, y_range);
-			
-		#region draw frame
-			draw_set_color(COLORS.widget_curve_outline);
-			draw_set_alpha(0.5);
-			draw_line(_x, yS, _x + _w, yS);
-			draw_line(_x, yE, _x + _w, yE);
-			draw_set_alpha(1);
-			
-			draw_rectangle(_x, _y, _x + _w, _y + curve_h, true);
-		#endregion
-			
-		if(node_dragging == 0 || node_dragging == 3) {
-			var targ = node_dragging == 0? 0 : 5;
-			var _my = -((_m[1] - _y) / curve_h * drag_range - drag_max);
-			_my = clamp(_my, 0, 1);
+		if(node_dragging != -1) {
+			if(node_drag_typ == 0) { 
+				var node_point = (node_dragging - 2) / 6;
+				if(node_point > 0 && node_point < points - 1) {
+					var _mx = (_m[0] - _x) / _w;
+						_mx = clamp(_mx, 0, 1);
+					
+					var bfx = _data[node_dragging - 6];
+					var afx = _data[node_dragging + 6];
+					
+					if(_mx == bfx)		node_dragging -= 6;
+					else if(_mx == afx) node_dragging += 6;
+					else				_data[node_dragging + 0] = _mx;
+				}
 				
-			_data[targ] = _my;
+				var _my = 1 - (_m[1] - _y) / _h;
+					_my = clamp(_my, 0, 1);
+				_data[node_dragging + 1] = _my;
+				
+				//sort by x
+				var _xindex = [];
+				var _pindex = [];
+				for( var i = 0; i < points; i++ ) {
+					var ind = i * 6;
+					var _x0 = _data[ind + 2];
+					array_push(_xindex, _x0);
+					array_push(_pindex, _x0);
+				}
+				array_sort(_xindex, true);
+				
+				if(node_point > 0 && node_point < points - 1) {
+					var sorted = [];
+					for( var i = 0; i < points; i++ ) {
+						var prog = _xindex[i];
+						var ind  = array_find(_pindex, prog);
+				
+						array_push(sorted, _data[ind * 6 + 0]);
+						array_push(sorted, _data[ind * 6 + 1]);
+						array_push(sorted, _data[ind * 6 + 2]);
+						array_push(sorted, _data[ind * 6 + 3]);
+						array_push(sorted, _data[ind * 6 + 4]);
+						array_push(sorted, _data[ind * 6 + 5]);
+					}
+					
+					if(onModify(sorted))
+						UNDO_HOLDING = true;
+				} else if(onModify(_data))
+					UNDO_HOLDING = true;
+			} else { 
+				var _px = _data[node_dragging + 0];
+				var _py = _data[node_dragging + 1];
+				
+				var _mx = (_m[0] - _x) / _w;
+					_mx = clamp(_mx, 0, 1);
+				_data[node_dragging - 2] = (_px - _mx) * node_drag_typ;
+				_data[node_dragging + 2] = (_mx - _px) * node_drag_typ;
+				
+				var _my = 1 - (_m[1] - _y) / _h;
+					_my = clamp(_my, 0, 1);
+				_data[node_dragging - 1] = (_py - _my) * node_drag_typ;
+				_data[node_dragging + 3] = (_my - _py) * node_drag_typ;
+				
+				if(onModify(_data))
+					UNDO_HOLDING = true;
+			} 
 			
 			if(mouse_release(mb_left)) {
-				onModify(_data);
 				node_dragging = -1;
-			}
-		} else if(node_dragging != -1) {
-			var _mx =   (_m[0] - _x) / _w;
-			_mx = clamp(_mx, 0, 1);
-			
-			var _my = -((_m[1] - _y) / curve_h * drag_range - drag_max);
-			_my = clamp(_my, 0, 1);
+				node_drag_typ = -1;
 				
-			_data[1 + (node_dragging - 1) * 2 + 0] = _mx;
-			_data[1 + (node_dragging - 1) * 2 + 1] = _my;
-			
-			if(mouse_release(mb_left)) {
-				onModify(_data);
-				node_dragging = -1;
-			}
-		}
-			
-		var node_hovering = -1;
-		var points = [ [0, _data[0]], [_data[1], _data[2]], [_data[3], _data[4]], [1, _data[5]] ];
-		
-		var _sx = _x + points[0][0] * _w
-		var _sy = get_y(points[0][1], _y, curve_h, y_max, y_range);
-		var _ex = _x + points[3][0] * _w
-		var _ey = get_y(points[3][1], _y, curve_h, y_max, y_range);
-		
-		draw_set_color(COLORS.widget_curve_line);
-		
-		for(var i = 0; i < 4; i++) {
-			var _nx = _x + points[i][0] * _w;
-			var _ny = get_y(points[i][1], _y, curve_h, y_max, y_range);
-			
-			if(i == 1)
-				draw_line(_sx, _sy, _nx, _ny);
-			else if(i == 2)
-				draw_line(_nx, _ny, _ex, _ey);
-			
-			draw_circle(_nx, _ny, 3, false);
-			
-			if(hover && point_in_circle(_m[0], _m[1], _nx, _ny, 6)) {
-				draw_circle(_nx, _ny, 5, false);
-				node_hovering = i;
+				UNDO_HOLDING = false;
 			}
 		}
 		
-		var _dy = _y + (y_max - 1) / y_range * curve_h;
-		var _dh = -curve_h / y_range;
+		var node_hovering  = -1;
+		var node_hover_typ = -1;
+		var point_insert   = 1;
+		var _x1 = 0;
+		
+		for( var i = 0; i < points; i++ ) {
+			var ind = i * 6;
+			var _x0 = _data[ind + 2];
+			var _y0 = _data[ind + 3];
+			var bx0 = _x0 + _data[ind + 0];
+			var by0 = _y0 + _data[ind + 1];
+			var ax0 = _x0 + _data[ind + 4];
+			var ay0 = _y0 + _data[ind + 5];
+			
+			bx0 = get_x(bx0, _x, _w);
+			by0 = get_y(by0, _y, _h);
+			_x0 = get_x(_x0, _x, _w);
+			_y0 = get_y(_y0, _y, _h);
+			ax0 = get_x(ax0, _x, _w);
+			ay0 = get_y(ay0, _y, _h);
+			
+			draw_set_color(COLORS.widget_curve_line);
+			if(i > 0) { //draw pre line
+				draw_line(bx0, by0, _x0, _y0);
+				
+				draw_circle(bx0, by0, 3, false);
+				if(hover && point_in_circle(_m[0], _m[1], bx0, by0, 10)) {
+					draw_circle(bx0, by0, 5, false);
+					node_hovering = ind + 2;
+					node_hover_typ = -1;
+				}
+			}
+			
+			if(i < points - 1) { //draw post line
+				draw_line(ax0, ay0, _x0, _y0);
+				
+				draw_circle(ax0, ay0, 3, false);
+				if(hover && point_in_circle(_m[0], _m[1], ax0, ay0, 10)) {
+					draw_circle(ax0, ay0, 5, false);
+					node_hovering = ind + 2;
+					node_hover_typ = 1;
+				}
+			}
+			
+			draw_set_color(COLORS._main_accent);
+			draw_circle(_x0, _y0, 3, false);
+			if(hover && point_in_circle(_m[0], _m[1], _x0, _y0, 10)) {
+				draw_circle(_x0, _y0, 5, false);
+				node_hovering = ind + 2;
+				node_hover_typ = 0;
+			}
+			
+			if(_m[0] >= _x1 && _m[0] <= _x0)
+				point_insert = i;
+			_x1 = _x0;
+		}
 		
 		draw_set_color(COLORS._main_accent);
-		draw_line_bezier_cubic(_x, _dy, _w, _dh, _data);
+		draw_curve(_x, _y, _w, -_h, _data);
 		
-		if(mouse_press(mb_left, active) && node_hovering != -1) {
-			node_dragging = node_hovering;
-			drag_range = y_range;
-			drag_max   = y_max;
+		if(hover && point_in_rectangle(_m[0], _m[1], _x - ui(5), _y - ui(5), _x + _w + ui(5), _y + _h + ui(5))) {
+			if(mouse_press(mb_left, active)) {
+				if(node_hovering == -1) {
+					var _ind = point_insert * 6;
+					var _px = (_m[0] - _x) / _w;
+					var _py = 1 - (_m[1] - _y) / _h;
+				
+					array_insert(_data, _ind + 0, -0.1);
+					array_insert(_data, _ind + 1, 0);
+					array_insert(_data, _ind + 2, _px);
+					array_insert(_data, _ind + 3, _py);
+					array_insert(_data, _ind + 4, 0.1);
+					array_insert(_data, _ind + 5, 0);
+					if(onModify(_data))
+						UNDO_HOLDING = true;
+				
+					node_dragging = _ind + 2;
+					node_drag_typ = 0;
+				} else {
+					node_dragging = node_hovering;
+					node_drag_typ = node_hover_typ;
+				}
+			} else if(mouse_press(mb_right, active)) {
+				var node_point = (node_hovering - 2) / 6;
+				if(node_hover_typ == 0 && node_point > 0 && node_point < points - 1) {
+					array_delete(_data, node_point * 6, 6);
+					if(onModify(_data))
+						UNDO_HOLDING = true;
+				}
+			}
 		}
 		
 		resetFocus();

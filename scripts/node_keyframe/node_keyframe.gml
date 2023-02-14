@@ -59,7 +59,7 @@ function valueAnimator(_val, _prop) constructor {
 		var eiy = to.ease_in[1];
 		
 		var bz = [0, eox, eoy, 1. - eix, eiy, 1];
-		return eval_curve_bezier_cubic_x(bz, rat);
+		return eval_curve_segment_x(bz, rat);
 	}
 	
 	static lerpValue = function(from, to, _lrp) {
@@ -93,16 +93,11 @@ function valueAnimator(_val, _prop) constructor {
 	}
 	
 	static getValue = function(_time = ANIMATOR.current_frame) {
-		if(prop.display_type == VALUE_DISPLAY.gradient) {
-			if(prop.connect_type == JUNCTION_CONNECT.input)
-				return processType(values);
-			else
-				return processType(values[| 0].value);
-		}
-		if(prop.type == VALUE_TYPE.path) return processType(values[| 0].value);
-		
-		if(ds_list_size(values) == 0) return processType(0);
+		if(ds_list_size(values) == 0) return processTypeDefault();
 		if(ds_list_size(values) == 1) return processType(values[| 0].value);
+		
+		if(prop.display_type == VALUE_DISPLAY.gradient) return values[| 0].value;
+		if(prop.type == VALUE_TYPE.path) return processType(values[| 0].value);
 		if(!is_anim) return processType(values[| 0].value);
 		
 		var _time_first = values[| 0].time;
@@ -167,6 +162,11 @@ function valueAnimator(_val, _prop) constructor {
 		return processType(values[| ds_list_size(values) - 1].value); //Last frame
 	}
 	
+	static processTypeDefault = function() {
+		if(typeArray(prop.display_type)) return [];
+		return 0;
+	}
+	
 	static processType = function(_val) {
 		if(typeArray(prop.display_type) && is_array(_val)) {
 			for(var i = 0; i < array_length(_val); i++) 
@@ -181,7 +181,7 @@ function valueAnimator(_val, _prop) constructor {
 		
 		if(prop.type == VALUE_TYPE.integer && prop.unit.mode == VALUE_UNIT.constant)
 			return round(toNumber(_val));
-			
+		
 		switch(prop.type) {
 			case VALUE_TYPE.integer : 
 			case VALUE_TYPE.float   : return toNumber(_val);
@@ -230,8 +230,7 @@ function valueAnimator(_val, _prop) constructor {
 			if(isEqual(values[| 0].value, _val)) 
 				return false;
 			
-			if(_record)
-				recordAction(ACTION_TYPE.var_modify, values[| 0], [ values[| 0].value, "value" ]);
+			if(_record) recordAction(ACTION_TYPE.var_modify, values[| 0], [ values[| 0].value, "value", prop.name ]);
 			values[| 0].value = _val;
 			return true;
 		}
@@ -239,17 +238,15 @@ function valueAnimator(_val, _prop) constructor {
 		if(ds_list_size(values) == 0) {
 			var k = new valueKey(_time, _val, self, ease_in, ease_out);
 			ds_list_add(values, k);
-			if(_record)
-				recordAction(ACTION_TYPE.list_insert, values, [ k, ds_list_size(values) - 1 ]);
+			if(_record) recordAction(ACTION_TYPE.list_insert, values, [ k, ds_list_size(values) - 1, "add " + string(prop.name) + " keyframe" ]);
 			return true;
 		}
 		
 		for(var i = 0; i < ds_list_size(values); i++) {
 			var _key = values[| i];
 			if(_key.time == _time) {
-				if(_record) 
-					recordAction(ACTION_TYPE.var_modify, _key, [ _key.value, "value" ]);
 				if(_key.value != _val) {
+					if(_record) recordAction(ACTION_TYPE.var_modify, _key, [ _key.value, "value", prop.name ]);
 					_key.value = _val;
 					return true;
 				}
@@ -257,16 +254,14 @@ function valueAnimator(_val, _prop) constructor {
 			} else if(_key.time > _time) {
 				var k = new valueKey(_time, _val, self, ease_in, ease_out);
 				ds_list_insert(values, i, k);
-				if(_record)
-					recordAction(ACTION_TYPE.list_insert, values, [k, i]);
+				if(_record) recordAction(ACTION_TYPE.list_insert, values, [k, i, "add " + string(prop.name) + " keyframe" ]);
 				return true;
 			}
 		}
 		
 		var k = new valueKey(_time, _val, self, ease_in, ease_out);
+		if(_record) recordAction(ACTION_TYPE.list_insert, values, [ k, ds_list_size(values), "add " + string(prop.name) + " keyframe" ]);
 		ds_list_add(values, k);
-		if(_record)
-			recordAction(ACTION_TYPE.list_insert, values, [ k, ds_list_size(values) - 1 ]);
 		return true;
 	}
 	
@@ -282,15 +277,20 @@ function valueAnimator(_val, _prop) constructor {
 		
 		for(var i = 0; i < ds_list_size(values); i++) {
 			var _value_list = ds_list_create();
-			if(scale && prop.display_type != VALUE_DISPLAY.gradient)
+			if(scale)
 				_value_list[| 0] = values[| i].time / (ANIMATOR.frames_total - 1);
 			else
 				_value_list[| 0] = values[| i].time;
 			
-			if(typeArray(prop.display_type) && is_array(values[| i].value)) {
+			var val = values[| i].value;
+			if(typeArray(prop.display_type) && is_array(val)) {
 				var __v = ds_list_create();
-				for(var j = 0; j < array_length(values[| i].value); j++)
-					ds_list_add(__v, values[| i].value[j]);
+				for(var j = 0; j < array_length(val); j++) {
+					if(is_struct(val[j]))
+						ds_list_add_map(__v, val[j].serialize()); 
+					else 
+						ds_list_add(__v, val[j]); 
+				}
 				_value_list[| 1] = __v;
 				ds_list_mark_as_list(_value_list, 1);
 			} else {
@@ -312,37 +312,62 @@ function valueAnimator(_val, _prop) constructor {
 	}
 	
 	static deserialize = function(_list, scale = false) {
-		var base = getValue();
 		ds_list_clear(values);
 		
-		for(var i = 0; i < ds_list_size(_list); i++) {
-			var _key  = _list[| i];
-			var _time = _key[| 0];
-			if(prop.display_type == VALUE_DISPLAY.gradient) 
-				_time = _key[| 0];
-			else if(scale && _key[| 0] <= 1)
-				_time = round(_key[| 0] * (ANIMATOR.frames_total - 1));
+		if(prop.type == VALUE_TYPE.color && prop.display_type == VALUE_DISPLAY.gradient && LOADING_VERSION < 1300) { //backward compat: Gradient
+			var _val = [];
 			
-			var value    = ds_list_get(_key, 1);
-			var ease_in  = ds_list_get(_key, 2);
-			var ease_out = ds_list_get(_key, 3);
+			for(var i = 0; i < ds_list_size(_list); i++) {
+				var _keyframe = _list[| i];
+				var time  = ds_list_get(_keyframe, 0);
+				var value = ds_list_get(_keyframe, 1);
+				
+				array_push(_val, new gradientKey(time, value));
+			}
+			
+			var vk = new valueKey(0, _val, self);
+			ds_list_add(values, vk);
+			return;
+		}
+					
+		var base = getValue();
+		
+		for(var i = 0; i < ds_list_size(_list); i++) {
+			var _keyframe = _list[| i];
+			var _time = _keyframe[| 0];
+			
+			if(scale && _time <= 1)
+				_time = round(_time * (ANIMATOR.frames_total - 1));
+			
+			var value    = ds_list_get(_keyframe, 1);
+			var ease_in  = ds_list_get(_keyframe, 2);
+			var ease_out = ds_list_get(_keyframe, 3);
 			if(LOADING_VERSION >= 1090) {
 				ease_in  = array_create_from_list(ease_in);
 				ease_out = array_create_from_list(ease_out);
 			}
 			
-			var ease_in_type  = ds_list_get(_key, 4, CURVE_TYPE.bezier);
-			var ease_out_type = ds_list_get(_key, 5, CURVE_TYPE.bezier);
-			var _val  = _key[| 1];
+			var ease_in_type  = ds_list_get(_keyframe, 4, CURVE_TYPE.bezier);
+			var ease_out_type = ds_list_get(_keyframe, 5, CURVE_TYPE.bezier);
+			var _val = value;
 			
 			if(prop.type == VALUE_TYPE.path && prop.display_type == VALUE_DISPLAY.path_array) {
 				for(var j = 0; j < ds_list_size(value); j++)
 					_val[j] = value[| j];
-			} else if(typeArray(prop.display_type) && is_array(base)) {
-				_val = array_create(array_length(base));
-					
-				if(ds_exists(_key[| 1], ds_type_list)) {
-					for(var j = 0; j < ds_list_size(_key[| 1]); j++)
+			} else if(prop.type == VALUE_TYPE.color && prop.display_type == VALUE_DISPLAY.gradient) {
+				_val = [];
+				
+				if(ds_exists(value, ds_type_list)) {
+					for(var j = 0; j < ds_list_size(value); j++) {
+						var gKey = value[| j];
+						_val[j] = new gradientKey(gKey[? "time"], gKey[? "value"]);
+					}
+				}
+			} else if(typeArray(prop.display_type)) {
+				_val = [];
+				
+				if(ds_exists(value, ds_type_list)) {
+					for(var j = 0; j < ds_list_size(value); j++)
 						_val[j] = processValue(value[| j]);
 				}
 			} 

@@ -7,6 +7,8 @@
   "option_tvos_version": "1.0.0.0",
   "option_tvos_output_dir": "~/GameMakerStudio2/tvOS",
   "option_tvos_team_id": "",
+  "option_tvos_min_version": "10.0",
+  "option_tvos_cocoapods_checkbox": true,
   "option_tvos_icon_400": "${base_options_dir}/tvos/icons/400.png",
   "option_tvos_icon_400_2x": "${base_options_dir}/tvos/icons/400_2x.png",
   "option_tvos_icon_1280": "${base_options_dir}/tvos/icons/1280.png",

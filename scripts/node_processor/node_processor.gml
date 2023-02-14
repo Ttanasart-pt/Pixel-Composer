@@ -10,10 +10,11 @@ function Node_Processor(_x, _y, _group = -1) : Node(_x, _y, _group) constructor 
 	
 	process_amount	= 0;
 	dimension_index = 0;
+	active_index = -1;
 	
 	icon    = THEME.node_processor;
 	
-	static process_data = function(_outSurf, _data, _output_index, _array_index) { return _outSurf; }
+	static process_data = function(_outSurf, _data, _output_index, _array_index = 0) { return _outSurf; }
 	
 	static getSingleValue = function(_index, _arr = 0) {
 		var _n  = inputs[| _index];
@@ -48,21 +49,20 @@ function Node_Processor(_x, _y, _group = -1) : Node(_x, _y, _group) constructor 
 			if(outputs[| outIndex].type == VALUE_TYPE.d3object) //passing 3D vertex call
 				return _out;
 			
-			if(is_array(_out)) { //free surface if needed
-				if(outputs[| outIndex].type == VALUE_TYPE.surface)
-				for(var i = 1; i < array_length(_out); i++) {
+			if(is_array(_out) && outputs[| outIndex].type == VALUE_TYPE.surface) { //free surface if needed
+				for(var i = 1; i < array_length(_out); i++)
 					if(is_surface(_out[i])) surface_free(_out[i]);
-				}
-				
-				_out = array_safe_get(_out, 0);
 			}
 			
 			if(outputs[| outIndex].type == VALUE_TYPE.surface && dimension_index > -1) {
 				var surf = inputs_data[dimension_index];
 				var _sw = 1, _sh = 1;
-				if(inputs[| dimension_index].type == VALUE_TYPE.surface && is_surface(surf)) {
-					_sw = surface_get_width(surf);
-					_sh = surface_get_height(surf);
+				if(inputs[| dimension_index].type == VALUE_TYPE.surface) {
+					if(is_surface(surf)) {
+						_sw = surface_get_width(surf);
+						_sh = surface_get_height(surf);
+					} else 
+						return noone;
 				} else if(is_array(surf)) {
 					_sw = surf[0];
 					_sh = surf[1];
@@ -71,6 +71,14 @@ function Node_Processor(_x, _y, _group = -1) : Node(_x, _y, _group) constructor 
 			}
 			
 			current_data = inputs_data;
+			
+			if(active_index > -1 && !inputs_data[active_index]) { // skip
+				if(inputs[| 0].type == VALUE_TYPE.surface)
+					return surface_clone(inputs_data[0], _out);
+				else 
+					return inputs_data[0]
+			}
+			
 			return process_data(_out, inputs_data, outIndex, 0);
 		}
 		
@@ -110,9 +118,12 @@ function Node_Processor(_x, _y, _group = -1) : Node(_x, _y, _group) constructor 
 			if(outputs[| outIndex].type == VALUE_TYPE.surface && dimension_index > -1) {
 				var surf = _data[dimension_index];
 				var _sw = 1, _sh = 1;
-				if(inputs[| dimension_index].type == VALUE_TYPE.surface && is_surface(surf)) {
-					_sw = surface_get_width(surf);
-					_sh = surface_get_height(surf);
+				if(inputs[| dimension_index].type == VALUE_TYPE.surface) {
+					if(is_surface(surf)) {
+						_sw = surface_get_width(surf);
+						_sh = surface_get_height(surf);
+					} else 
+						return noone;
 				} else if(is_array(surf)) {
 					_sw = surf[0];
 					_sh = surf[1];
@@ -120,16 +131,22 @@ function Node_Processor(_x, _y, _group = -1) : Node(_x, _y, _group) constructor 
 				_out[l] = surface_verify(_out[l], _sw, _sh);
 			}
 			
-			if(l == preview_index) 
+			if(l == 0 || l == preview_index) 
 				current_data = _data;
 			
-			_out[l] = process_data(_out[l], _data, outIndex, l);
+			if(active_index > -1 && !_data[active_index]) { // skip
+				if(inputs[| 0].type == VALUE_TYPE.surface)
+					_out[l] = surface_clone(_data[0], _out[l]);
+				else 
+					_out[l] = _data[0];
+			} else 
+				_out[l] = process_data(_out[l], _data, outIndex, l);
 		}
 		
 		return _out;
 	}
 	
-	static update = function() {
+	static update = function(frame = ANIMATOR.current_frame) {
 		process_amount = 0;
 		inputs_data = array_create(ds_list_size(inputs));
 		
