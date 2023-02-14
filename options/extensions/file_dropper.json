@@ -1,9 +1,0 @@
-{
-  "extensionId": {
-    "name": "file_dropper",
-    "path": "extensions/file_dropper/file_dropper.yy"
-  },
-  "resourceVersion": "1.0",
-  "resourceType": "GMExtensionConfigSet",
-  "configurables": null
-}

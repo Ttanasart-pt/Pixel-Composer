@@ -1,9 +1,0 @@
-{
-  "extensionId": {
-    "name": "importFile",
-    "path": "extensions/importFile/importFile.yy"
-  },
-  "resourceVersion": "1.0",
-  "resourceType": "GMExtensionConfigSet",
-  "configurables": null
-}
