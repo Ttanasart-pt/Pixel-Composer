@@ -24,7 +24,7 @@ event_inherited();
 	t_auth  = new textArea(TEXTBOX_INPUT.text, function(str) { meta.author	    = str; });
 	t_cont  = new textArea(TEXTBOX_INPUT.text, function(str) { meta.contact	    = str; });
 	t_alias = new textArea(TEXTBOX_INPUT.text, function(str) { meta.alias	    = str; });
-	t_tags  = new textArrayBox(function() { return meta.tags; } , META_TAGS);
+	t_tags  = new textArrayBox(function() { return meta.tags; }, META_TAGS);
 	
 	t_desc.auto_update  = true;
 	t_auth.auto_update  = true;

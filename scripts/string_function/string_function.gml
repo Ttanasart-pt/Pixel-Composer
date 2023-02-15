@@ -24,7 +24,7 @@ function string_partial_match(str, key) {
 			kchr = string_char_at(key, run);
 		} else {
 			consec = 0;
-			misMatch++;
+			misMatch += amo - i;
 		}
 	}
 	

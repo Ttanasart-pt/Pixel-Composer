@@ -3,6 +3,8 @@ function scrollPane(_w, _h, ondraw) : widget() constructor {
 	scroll_y_raw	= 0;
 	scroll_y_to		= 0;
 	
+	x			= 0;
+	y			= 0;
 	w			= _w;
 	h			= _h;
 	surface_w   = _w - ui(12);
@@ -34,6 +36,9 @@ function scrollPane(_w, _h, ondraw) : widget() constructor {
 	}
 	
 	static draw = function(x, y, _mx = mouse_mx - x, _my = mouse_my - y) {
+		self.x = x;
+		self.y = y;
+		
 		var mx = _mx, my = _my;
 		hover = point_in_rectangle(mx, my, 0, 0, surface_w, surface_h);
 		

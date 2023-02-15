@@ -6,6 +6,9 @@ event_inherited();
 	
 	dialog_w = ui(960);
 	dialog_h = ui(600);
+	
+	pages = ["Sample projects", "Steam Workshop"];
+	project_page = 0;
 #endregion
 
 #region content
@@ -56,11 +59,13 @@ event_inherited();
 	
 	sp_sample = new scrollPane(x1 - x0 - ui(8), y1 - y0, function(_y, _m) {
 		draw_clear_alpha(COLORS.panel_bg_clear_inner, 0);
+		var list = project_page? STEAM_PROJECTS : SAMPLE_PROJECTS;
+		
 		var hh = 0;
 		var grid_heigh = ui(96);
 		var grid_width = ui(128);
 		var grid_space = ui(20);
-		var node_count = ds_list_size(SAMPLE_PROJECTS);
+		var node_count = ds_list_size(list);
 		var col        = floor(sp_sample.surface_w / (grid_width + grid_space));
 		var row        = ceil(node_count / col);
 		var hh         = grid_space;
@@ -72,44 +77,56 @@ event_inherited();
 			for(var j = 0; j < col; j++) {
 				var index = i * col + j;
 				if(index < node_count) {
-					var _node = SAMPLE_PROJECTS[| index];
-					var _nx   = grid_space + (grid_width + grid_space) * j;
-					var _boxx = _nx;
+					var _project = list[| index];
+					var _nx      = grid_space + (grid_width + grid_space) * j;
+					var _boxx    = _nx;
 					
 					draw_sprite_stretched(THEME.node_bg, 0, _boxx, yy, grid_width, grid_heigh);
 					if(sHOVER && sp_sample.hover && point_in_rectangle(_m[0], _m[1], _nx, yy, _nx + grid_width, yy + grid_heigh)) {
 						draw_sprite_stretched_ext(THEME.node_active, 0, _boxx, yy, grid_width, grid_heigh, COLORS._main_accent, 1);
 						if(mouse_press(mb_left, sFOCUS)) {
-							LOAD_PATH(_node.path, true);
+							LOAD_PATH(_project.path, true);
+							METADATA.steam = project_page;
+							if(project_page == 1)
+								METADATA.file_id = _project.getMetadata().file_id;
 							instance_destroy();
 						}
 					}
 					
-					if(_node.spr) {
+					var spr = _project.getSpr();
+					if(spr) {
 						var gw = grid_width - ui(4);
 						var gh = grid_heigh - ui(4);
 						
-						var sw = sprite_get_width(_node.spr);
-						var sh = sprite_get_height(_node.spr);
+						var sw = sprite_get_width(spr);
+						var sh = sprite_get_height(spr);
 						
 						var s = min(gw / sw, gh / sh) * 2;
-						draw_sprite_ui_uniform(_node.spr, 0, _boxx + grid_width / 2, yy + grid_heigh / 2, s);
+						
+						var ox = (sprite_get_xoffset(spr) - sw / 2) * s / 2;
+						var oy = (sprite_get_yoffset(spr) - sh / 2) * s / 2;
+						
+						draw_sprite_ui_uniform(spr, 0, _boxx + grid_width / 2 + ox, yy + grid_heigh / 2 + ox, s);
 					}
 					
 					var tx = _boxx + grid_width / 2;
 					var ty = yy + grid_heigh + ui(4);
 					draw_set_text(f_p2, fa_center, fa_top);
-					var _tw = string_width(_node.tag);
-					var _th = string_height(_node.tag);
+					if(project_page == 0) {
+						var _tw = string_width(_project.tag);
+						var _th = string_height(_project.tag);
 					
-					draw_set_color(COLORS.dialog_splash_badge);
-					draw_roundrect_ext(tx - _tw / 2 - ui(6), ty - ui(2), tx + _tw / 2 + ui(6), ty + _th, ui(8), ui(8), 0);
-					draw_set_color(_node.tag == "Getting started"? COLORS._main_text_accent : COLORS._main_text_sub);
-					draw_text(tx, ty - ui(2), _node.tag);
+						draw_set_color(COLORS.dialog_splash_badge);
+						draw_roundrect_ext(tx - _tw / 2 - ui(6), ty - ui(2), tx + _tw / 2 + ui(6), ty + _th, ui(8), ui(8), 0);
+						draw_set_color(_project.tag == "Getting started"? COLORS._main_text_accent : COLORS._main_text_sub);
+						draw_text(tx, ty - ui(2), _project.tag);						
+						
+						ty += line_height();
+					} 
 					
 					draw_set_text(f_p1, fa_center, fa_top, COLORS._main_text);
-					name_height = max(name_height, string_height_ext(_node.name, -1, grid_width) + ui(8));
-					draw_text_ext_add(tx, ty + line_height() - ui(2), _node.name, -1, grid_width);
+					name_height = max(name_height, string_height_ext(_project.name, -1, grid_width) + ui(8));
+					draw_text_ext_add(tx, ty - ui(2), _project.name, -1, grid_width);
 				}
 			}
 			var hght = grid_heigh + grid_space + name_height + ui(20);

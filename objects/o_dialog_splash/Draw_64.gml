@@ -49,13 +49,40 @@ if !ready exit;
 	x0 = x1 + ui(16);
 	x1 = dialog_x + dialog_w - ui(16);
 	
-	draw_set_text(f_p0, fa_left, fa_bottom, COLORS._main_text_sub);
-	draw_text(x0, y0 - ui(4), "Sample projects");
+	var bx = x0;
+	
+	for( var i = 0; i < array_length(pages); i++ ) {
+		draw_set_text(f_p0, fa_left, fa_bottom, COLORS._main_text_sub);
+		var tw = string_width(pages[i]) + ui(16);
+		
+		if(project_page == i) 
+			draw_sprite_stretched(THEME.ui_panel_bg, 0, bx, y0 - ui(32), tw, ui(40));
+		else if(point_in_rectangle(mouse_mx, mouse_my, bx, y0 - ui(32), bx + tw, y0)) {
+			draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, bx, y0 - ui(32), tw, ui(40), c_white, 0.5);
+			
+			if(mouse_click(mb_left, sFOCUS))
+				project_page = i;
+		}
+			
+		draw_text(bx + ui(8), y0 - ui(4), pages[i]);
+		
+		bx += tw;
+	}
+	
 	draw_sprite_stretched(THEME.ui_panel_bg, 0, x0, y0, x1 - x0, y1 - y0);
 	sp_sample.active = sFOCUS;
 	sp_sample.draw(x0 + ui(6), y0);
 	
-	draw_set_text(f_p1, fa_right, fa_bottom, COLORS._main_text_sub);
-	draw_text(x1 - ui(82), y0 - ui(4), "Art by ");
-	draw_sprite_ui_uniform(s_kenney, 0, x1, y0 - ui(4), 2, c_white, 0.5);
+	if(project_page == 0) {
+		draw_set_text(f_p1, fa_right, fa_bottom, COLORS._main_text_sub);
+		draw_text(x1 - ui(82), y0 - ui(4), "Art by ");
+		draw_sprite_ui_uniform(s_kenney, 0, x1, y0 - ui(4), 2, c_white, 0.5);
+	} else if(project_page == 1) {
+		var bx = x1 - ui(32);
+		var by = y0 - ui(32);
+		
+		if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), mouse_ui, sFOCUS, sHOVER, "Open Steam Workshop", THEME.steam) == 2) {
+			steam_activate_overlay_browser("https://steamcommunity.com/app/2299510/workshop/")
+		}
+	}
 #endregion

@@ -453,7 +453,7 @@ event_inherited();
 				var match = string_partial_match(string_lower(_node.name), search_lower);
 				var param = "";
 				for( var k = 0; k < array_length(_node.tags); k++ ) {
-					var mat = string_partial_match(_node.tags[k], search_lower);
+					var mat = string_partial_match(_node.tags[k], search_lower) - 1000;
 					if(mat > match) {
 						match = mat;
 						param = _node.tags[k];

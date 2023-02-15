@@ -6,8 +6,9 @@
 function LOAD_FOLDER(list, folder) {
 	var path = directory_get_current_working() + folder;
 	var file = file_find_first(path + "/*", fa_directory);
+	
 	while(file != "") {
-		if(filename_ext(file) == ".json" || filename_ext(file) == ".pxc") {
+		if(filename_ext(file) == ".pxc") {
 			var full_path = path + "\\" + file;
 			var f = new FileObject(string_replace(filename_name(file), filename_ext(file), ""), full_path);
 			var icon_path = string_replace(full_path, filename_ext(full_path), ".png");

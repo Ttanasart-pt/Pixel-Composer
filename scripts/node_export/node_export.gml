@@ -90,7 +90,7 @@ function Node_Export(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 	directory = DIRECTORY + "temp\\" + string(irandom_range(100000, 999999));
 	converter = working_directory + "ImageMagick\\convert.exe";
 	magick    = working_directory + "ImageMagick\\magick.exe";
-	webp      = working_directory + "webp\\bin\\webpmux.exe";
+	webp      = working_directory + "webp\\webpmux.exe";
 	
 	static onValueUpdate = function(_index) {
 		var form = inputs[| 3].getValue();

@@ -11,10 +11,13 @@ event_inherited();
 
 #region scroll
 	credits = [
+		[ "ImageMagick", "ImageMagick Studio LLC" ],
+		[ "File dialog module", "Samuel Venable" ],
+		[ "gif importer\nWindow commands\nApollow LUA compiler", "YellowAfterLife" ],
+		
 		[ "The Book of Shaders", "Patricio Gonzalez Vivo & Jen Lowe" ],
 		[ "Many noise and shape shaders", "Inigo Quilez" ],
 		[ "Chromatic aberration shader", "jcant0n" ],
-		[ "gif importer\nWindow commands\nExecute shell simple", "YellowAfterLife" ],
 		[ "Triangle grid", "Farini" ],
 		[ "Pixel sort", "Ciphrd" ],
 		[ "Simplex noise", "Ian McEwan" ],

@@ -7,16 +7,16 @@ event_inherited();
 	
 	target = noone;
 	
-	dialog_w = ui(608);
-	dialog_h = ui(320);
+	dialog_w = ui(632);
+	dialog_h = ui(360);
 	
 	anchor = ANCHOR.top | ANCHOR.right;
 	
 	dialog_resizable = true;
 	dialog_w_min = ui(200);
 	dialog_h_min = ui(120);
-	dialog_w_max = ui(640);
-	dialog_h_max = ui(480);
+	dialog_w_max = ui(1080);
+	dialog_h_max = ui(640);
 #endregion
 
 #region context
@@ -40,16 +40,34 @@ event_inherited();
 #endregion
 
 #region surface
-	folderW = ui(180);
-	content_w = dialog_w - ui(32) - folderW;
+	folderW = ui(200);
+	folderW_dragging = false;
+	folderW_drag_mx = 0;
+	folderW_drag_sx = 0;
+	
+	content_w = dialog_w - ui(36) - folderW;
 	content_h = dialog_h - ui(32);
 	
 	function onResize() {
-		content_w = dialog_w - ui(32) - folderW;
+		content_w = dialog_w - ui(36) - folderW;
 		content_h = dialog_h - ui(32);
 		contentPane.resize(content_w, content_h);
-		folderPane.resize(folderW - ui(16), content_h - ui(32));
+		folderPane.resize(folderW - ui(8), content_h - ui(32));
 	}
+	
+	folderPane = new scrollPane(folderW - ui(8), content_h - ui(32), function(_y, _m) {
+		draw_clear_alpha(COLORS.panel_bg_clear, 0);
+		var hh = 8;
+		
+		for(var i = 0; i < ds_list_size(global.ASSETS.subDir); i++) {
+			var hg = global.ASSETS.subDir[| i].draw(self, ui(8), _y + 8, _m, folderPane.surface_w - ui(16), 
+				sHOVER && folderPane.hover, sFOCUS, global.ASSETS);
+			hh += hg;
+			_y += hg;
+		}
+		
+		return hh + 8;
+	});
 	
 	contentPane = new scrollPane(content_w, content_h, function(_y, _m) {
 		draw_clear_alpha(c_white, 0);
@@ -62,7 +80,7 @@ event_inherited();
 		var grid_size = ui(64);
 		var img_size  = grid_size - ui(16);
 		var grid_space = ui(12);
-		var col = max(1, floor(content_w / (grid_size + grid_space)));
+		var col = max(1, floor(contentPane.surface_w / (grid_size + grid_space)));
 		var row = ceil(amo / col);
 		var yy  = _y + grid_space;
 			
@@ -75,9 +93,9 @@ event_inherited();
 					var content = contents[| index];
 					var xx   = grid_space + (grid_size + grid_space) * j;
 					
-					BLEND_OVERRIDE
+					BLEND_OVERRIDE;
 					draw_sprite_stretched(THEME.node_bg, 0, xx, yy, grid_size, grid_size);
-					BLEND_NORMAL
+					BLEND_NORMAL;
 						
 					if(sHOVER && contentPane.hover && point_in_rectangle(_m[0], _m[1], xx, yy, xx + grid_size, yy + grid_size)) {
 						draw_sprite_stretched_ext(THEME.node_active, 0, xx, yy, grid_size, grid_size, COLORS._main_accent, 1);
@@ -96,6 +114,9 @@ event_inherited();
 						var sy = yy + (grid_size - sh * ss) / 2;
 						
 						draw_sprite_ext(spr, frame, sx, sy, ss, ss, 0, c_white, 1);
+						
+						draw_set_text(f_p3, fa_right, fa_bottom, COLORS._main_accent);
+						draw_text(xx + grid_size - ui(1), yy + grid_size - ui(0), string(sw) + "x" + string(sh));
 					}
 				}
 			}
@@ -105,19 +126,5 @@ event_inherited();
 		}
 		
 		return hh;
-	});
-	
-	folderPane = new scrollPane(folderW - ui(16), content_h - ui(32), function(_y, _m) {
-		draw_clear_alpha(COLORS.panel_bg_clear, 0);
-		var hh = 8;
-		
-		for(var i = 0; i < ds_list_size(global.ASSETS.subDir); i++) {
-			var hg = global.ASSETS.subDir[| i].draw(self, ui(8), _y + 8, _m, folderPane.w - ui(16), 
-				sHOVER && folderPane.hover, sFOCUS, global.ASSETS);
-			hh += hg;
-			_y += hg;
-		}
-		
-		return hh + 8;
 	});
 #endregion

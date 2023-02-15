@@ -61,6 +61,15 @@ event_inherited();
 	]);
 	
 	ds_list_add(pref_global, [
+		get_text("auto_save_time", "Autosave delay (-1 to disable)"),
+		"auto_save_time",
+		new textBox(TEXTBOX_INPUT.number, function(val) { 
+			PREF_MAP[? "auto_save_time"] = val; 
+			PREF_SAVE();
+		})
+	]);
+	
+	ds_list_add(pref_global, [
 		get_text("pref_double_click_delay", "Double click delay"),
 		"double_click_delay",
 		new slider(0, 1, 0.01, function(val) { 

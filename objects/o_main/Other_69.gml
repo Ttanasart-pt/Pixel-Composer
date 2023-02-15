@@ -9,28 +9,16 @@ if(string(ev_id) == string(STEAM_UGC_ITEM_ID) && ev_type == "ugc_create_item") {
 	steam_ugc_set_item_title(STEAM_UGC_UPDATE_HANDLE, STEAM_UGC_ITEM_FILE.meta.name);
 	steam_ugc_set_item_description(STEAM_UGC_UPDATE_HANDLE, STEAM_UGC_ITEM_FILE.meta.description);
 	steam_ugc_set_item_visibility(STEAM_UGC_UPDATE_HANDLE, ugc_visibility_public);
-	steam_ugc_set_item_tags(STEAM_UGC_UPDATE_HANDLE, STEAM_UGC_ITEM_FILE.meta.tags);
-			
-	var spr       = STEAM_UGC_ITEM_FILE.spr;
-	var spr_path  = array_safe_get(STEAM_UGC_ITEM_FILE.spr_path, 0);
-	var prev_path = "steamUGCthumbnail";
-	var prev_size = 512;
-	var _s = surface_create(prev_size, prev_size);
-	surface_set_target(_s);
-		draw_clear(COLORS._main_icon_dark);
-		draw_sprite_tiled(s_workshop_background, 0, -64, -64);
-		draw_sprite_stretched(s_workshop_frame, 0, 0, 0, prev_size, prev_size);
-		
-		if(spr == -1) spr = THEME.group;
-		var ss = (prev_size - 160) / max(sprite_get_width(spr), sprite_get_height(spr));
-		var ox = (sprite_get_xoffset(spr) - sprite_get_width(spr) / 2) * ss;
-		var oy = (sprite_get_yoffset(spr) - sprite_get_height(spr) / 2) * ss;
-		draw_sprite_ext(spr, 0, prev_size / 2 + ox, prev_size / 2 + oy, ss, ss, 0, c_white, 1);
-	surface_reset_target();
-	surface_save(_s, prev_path);
-	surface_free(_s);
 	
-	steam_ugc_set_item_preview(STEAM_UGC_UPDATE_HANDLE, prev_path);
+	var tgs = array_clone(STEAM_UGC_ITEM_FILE.meta.tags);
+	switch(STEAM_UGC_TYPE) {
+		case STEAM_UGC_FILE_TYPE.collection :	array_insert(tgs, 0, "Collection");		break;
+		case STEAM_UGC_FILE_TYPE.project :		array_insert(tgs, 0, "Project");		break;
+		case STEAM_UGC_FILE_TYPE.node_preset :	array_insert(tgs, 0, "Node preset");	break;
+	}
+	
+	steam_ugc_set_item_tags(STEAM_UGC_UPDATE_HANDLE, tgs);
+	steam_ugc_set_item_preview(STEAM_UGC_UPDATE_HANDLE, "steamUGCthumbnail.png");
 	steam_ugc_set_item_content(STEAM_UGC_UPDATE_HANDLE, "steamUGC");
 	
 	STEAM_UGC_SUBMIT_ID = steam_ugc_submit_item_update(STEAM_UGC_UPDATE_HANDLE, "Uploaded");
@@ -40,12 +28,19 @@ if(string(ev_id) == string(STEAM_UGC_ITEM_ID) && ev_type == "ugc_create_item") {
 if(string(ev_id) == string(STEAM_UGC_SUBMIT_ID)) {
 	STEAM_UGC_ITEM_UPLOADING = false;
 	
+	var type = "";
+	switch(STEAM_UGC_TYPE) {
+		case STEAM_UGC_FILE_TYPE.collection :	type = "Collection";		break;
+		case STEAM_UGC_FILE_TYPE.project :		type = "Project";		break;
+		case STEAM_UGC_FILE_TYPE.node_preset :	type = "Node preset";	break;
+	}
+	
 	if(async_load[? "result"] == ugc_result_success) {
 		if(STEAM_UGC_UPDATE) {
-			log_message("WORKSHOP", "collection updated", THEME.workshop_update);
+			log_message("WORKSHOP", type + " updated", THEME.workshop_update);
 			PANEL_MENU.setNotiIcon(THEME.workshop_update);
 		} else {
-			log_message("WORKSHOP", "collection uploaded", THEME.workshop_upload);
+			log_message("WORKSHOP", type + " uploaded", THEME.workshop_upload);
 			PANEL_MENU.setNotiIcon(THEME.workshop_upload);
 		}
 		exit;

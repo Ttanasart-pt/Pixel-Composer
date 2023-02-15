@@ -29,7 +29,6 @@ function FileObject(_name, _path) constructor {
 	
 	static getMetadata = function() {
 		if(!file_exists(path)) return noone;
-		if(filename_ext(path) != ".pxcc") return noone;
 		if(meta != noone) return meta;
 		if(meta == undefined) return noone;
 		
@@ -39,11 +38,10 @@ function FileObject(_name, _path) constructor {
 		
 		var m = json_decode(_f);
 		
-		if(ds_map_exists(m, "metadata")) {
-			meta = new MetaDataManager();
+		meta = new MetaDataManager();
+		if(ds_map_exists(m, "metadata"))
 			meta.deserialize(m[? "metadata"]);
-		} else 
-			meta = undefined;
+		
 		meta.version = m[? "version"];
 		meta.name = name;
 		

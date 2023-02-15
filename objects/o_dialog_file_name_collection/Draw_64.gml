@@ -13,7 +13,7 @@
 	
 	t_desc.interactable  = !STEAM_UGC_ITEM_UPLOADING;
 	t_auth.interactable  = !STEAM_UGC_ITEM_UPLOADING && is_author;
-	t_cont.interactable  = !STEAM_UGC_ITEM_UPLOADING;
+	t_cont.interactable  = !STEAM_UGC_ITEM_UPLOADING && is_author;
 	t_tags.interactable  = !STEAM_UGC_ITEM_UPLOADING;
 	t_alias.interactable = !STEAM_UGC_ITEM_UPLOADING;
 	tb_name.interactable = !STEAM_UGC_ITEM_UPLOADING;
@@ -33,10 +33,10 @@
 		txt  = get_text("collection_update", "Update collection");
 	}
 	if(ugc == 1) {
-		txt  = get_text("workshop_upload", "Upload workshop");
+		txt  = get_text("workshop_upload", "Upload to Steam Workshop");
 		icon = THEME.workshop_upload;
 	} else if(ugc == 2) {
-		txt  = get_text("workshop_update", "Update workshop");
+		txt  = get_text("workshop_update", "Update Steam Workshop");
 		icon = THEME.workshop_update;
 	}
 	

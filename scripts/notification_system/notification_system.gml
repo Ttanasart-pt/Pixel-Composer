@@ -61,7 +61,8 @@
 		ds_list_add(WARNING, noti);
 		show_debug_message(str);
 		
-		dialogCall(o_dialog_warning, mouse_mx + ui(16), mouse_my + ui(16)).warning_text = str;
+		if(!instance_exists(o_dialog_warning))
+			dialogCall(o_dialog_warning, mouse_mx + ui(16), mouse_my + ui(16)).warning_text = str;
 		
 		if(PANEL_MENU) {
 			PANEL_MENU.noti_flash = 1;

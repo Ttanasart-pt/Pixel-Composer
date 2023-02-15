@@ -44,7 +44,7 @@ function Node_Repeat(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 		
 	inputs[| 15] = nodeValue("Alpha over copy", self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_11 );
 	
-	inputs[| 16] = nodeValue("Array select", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0, "Whether to select image from an array in order, or at random." )
+	inputs[| 16] = nodeValue("Array select", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0, "Whether to select image from an array in order, at random, pr spread or each image to one output." )
 		.setDisplay(VALUE_DISPLAY.enum_button, [ "Order", "Random", "Spread" ]);
 	
 	inputs[| 17] = nodeValue("Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, irandom(99999) );

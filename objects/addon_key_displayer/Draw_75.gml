@@ -12,6 +12,7 @@
 		
 		if(pres >= 32 && pres <= 126) {
 			pres = string_upper(ansi_char(pres));
+			if(pres == " ") pres = "space";
 			key += key == ""? pres : " + " + pres;
 		}
 	}

@@ -17,7 +17,7 @@ event_inherited();
 		var hght = line_height(f_p0, 8);
 		var _h   = array_length(arrayBox.data) * hght;
 		var _dw  = sc_content.surface_w;
-		var array = arrayBox.getArray();
+		var array = arrayBox.arraySet;
 		
 		for(var i = 0; i < array_length(arrayBox.data); i++) {
 			var _ly = _y + i * hght;	

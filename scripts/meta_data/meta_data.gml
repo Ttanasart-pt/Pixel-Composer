@@ -20,6 +20,7 @@ function MetaDataManager() constructor {
 		[ get_text("author", "Author"),				 function(meta) { return meta.author; }			, line_height() ],
 		[ get_text("contact_info", "Contact info"),	 function(meta) { return meta.contact; }		, line_height() ],
 		[ get_text("alias", "Alias"),				 function(meta) { return meta.alias; }			, line_height() ],
+		[ get_text("tags", "Tags"),					 function(meta) { return meta.tags; }			, line_height() ],
 	];
 	
 	static serialize = function() {

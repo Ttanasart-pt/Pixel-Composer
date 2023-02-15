@@ -24,6 +24,27 @@
 	}
 #endregion
 
+#region auto save
+	AUTO_SAVE_TIMER += delta_time / 1_000_000;
+	
+	if(PREF_MAP[? "auto_save_time"] > 0 && AUTO_SAVE_TIMER > PREF_MAP[? "auto_save_time"]) {
+		AUTO_SAVE_TIMER = 0;
+		var loc = DIRECTORY + "Autosave\\";
+		if(!directory_exists(loc))
+			directory_create(loc);
+		
+		var fname = string_replace(filename_name(CURRENT_PATH), filename_ext(CURRENT_PATH), "") + 
+			"_autosave" + string(current_year) + "-" + 
+			string_lead_zero(current_month, 2) + "-" + 
+			string_lead_zero(current_day, 2) + "T" + 
+			string_lead_zero(current_hour, 2) + 
+			string_lead_zero(current_minute, 2) + 
+			string_lead_zero(current_second, 2) + ".pxc";
+		
+		SAVE_AT(loc + fname, "Autosaved ");
+	}
+#endregion
+
 #region nodes
 	var _k = ds_map_find_first(NODE_MAP);
 	var _a = ds_map_size(NODE_MAP);
