@@ -46,12 +46,15 @@ function Panel_Inspector() : PanelContent() constructor {
 	meta_tb[1] = new textArea(TEXTBOX_INPUT.text, function(str) { current_meta.author		= str; });
 	meta_tb[2] = new textArea(TEXTBOX_INPUT.text, function(str) { current_meta.contact		= str; });
 	meta_tb[3] = new textArea(TEXTBOX_INPUT.text, function(str) { current_meta.alias		= str; });
+	meta_tb[4] = new textArrayBox(noone, META_TAGS);
 	for( var i = 0; i < array_length(meta_tb); i++ )
 		meta_tb[i].hide = true;
 	
 	meta_display = [ [ "Metadata", false ], [ "Variables", false ] ];
 	
 	var_editing = false;
+	
+	workshop_uploading = false;
 	
 	addHotkey("Inspector", "Copy property",		"C",   MOD_KEY.ctrl,	function() { propSelectCopy(); });
 	addHotkey("Inspector", "Paste property",	"V",   MOD_KEY.ctrl,	function() { propSelectPaste(); });
@@ -122,6 +125,7 @@ function Panel_Inspector() : PanelContent() constructor {
 			if(i == 0) {
 				var is_author = meta.author_steam_id == 0 || meta.author_steam_id == STEAM_USER_ID;
 				meta.displays[1][1].interactable = is_author;
+				meta.displays[2][1].interactable = is_author;
 				current_meta = meta;
 				
 				for( var j = 0; j < array_length(meta.displays); j++ ) {
@@ -135,7 +139,20 @@ function Panel_Inspector() : PanelContent() constructor {
 					meta_tb[j].setActiveFocus(pFOCUS, _hover);
 					if(pFOCUS) meta_tb[j].register(contentPane);
 					
-					var wh = meta_tb[j].draw(ui(16), yy, w - ui(16 + 48), display[2], display[1](meta), _m);
+					var wh;
+					
+					switch(instanceof(meta_tb[j])) {
+						case "textArea" :	
+							wh = meta_tb[j].draw(ui(16), yy, w - ui(16 + 48), display[2], display[1](meta), _m);
+							break;
+						case "textArrayBox" :	
+							meta_tb[j].arraySet = current_meta.tags;
+							var rx = x + ui(16);
+							var ry = y + top_bar_h;
+							wh = meta_tb[j].draw(ui(16), yy, w - ui(16 + 48), display[2], _m, rx, ry);
+							break;
+					}
+					
 					yy += wh + ui(8);
 					hh += wh + ui(8);
 				}
@@ -698,6 +715,32 @@ function Panel_Inspector() : PanelContent() constructor {
 				var f = file_text_open_write(path);
 				file_text_write_string(f, json_encode_minify(METADATA.serialize()));
 				file_text_close(f);
+			}
+			
+			by += ui(36);
+			if(CURRENT_PATH != "" && STEAM_ENABLED && !workshop_uploading) {
+				if(!METADATA.steam) {
+					if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), [mx, my], pFOCUS, pHOVER, "Upload to Steam Workshop", THEME.workshop_upload, 0, COLORS._main_icon) == 2) {
+						METADATA.author_steam_id = STEAM_USER_ID;
+						SAVE();
+						steam_ugc_create_project();
+						workshop_uploading = true;
+					}
+				}
+				
+				if(METADATA.steam && METADATA.author_steam_id == STEAM_USER_ID && METADATA.file_id != 0) {
+					if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), [mx, my], pFOCUS, pHOVER, "Update Steam Workshop", THEME.workshop_update, 0, COLORS._main_icon) == 2) {
+						SAVE();
+						steam_ugc_update_project();
+						workshop_uploading = true;
+					}
+				}
+			}
+			
+			if(workshop_uploading) {
+				draw_sprite_ui(THEME.loading_s, 0, bx + ui(16), by + ui(16),,, current_time / 5, COLORS._main_icon);
+				if(STEAM_UGC_ITEM_UPLOADING == false)
+					workshop_uploading = false;
 			}
 		}
 		

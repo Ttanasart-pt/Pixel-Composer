@@ -1,58 +1,65 @@
-function __initSteamUGC() {
-	globalvar STEAM_SUBS, STEAM_CONTENT;
-	STEAM_SUBS = ds_list_create();
-	STEAM_CONTENT = ds_list_create();
+function steam_ugc_create_collection(file) {
+	if(STEAM_UGC_ITEM_UPLOADING) return;
 	
-	if(!STEAM_ENABLED) return;
+	STEAM_UGC_UPDATE = false;
+	STEAM_UGC_ITEM_UPLOADING = true;
+	STEAM_UGC_ITEM_FILE = file;
+	STEAM_UGC_TYPE = STEAM_UGC_FILE_TYPE.collection;
 	
-	steam_ugc_get_subscribed_items(STEAM_SUBS);
+	directory_destroy(DIRECTORY + "steamUGC");
+	directory_create(DIRECTORY + "steamUGC");
+	file_copy(file.path, DIRECTORY + "steamUGC/" + filename_name(file.path));
+	file_copy(file.spr_path[0], DIRECTORY + "steamUGC/" + filename_name(file.spr_path[0]));
+	steam_ugc_collection_generate(file);
 	
-	for( var i = 0; i < ds_list_size(STEAM_SUBS); i++ ) {
-		var item_map = ds_map_create();
-		//print("Querying item ID " + string(STEAM_SUBS[| i]));
-		
-		if (steam_ugc_get_item_install_info(STEAM_SUBS[| i], item_map)) {
-			var info_map = ds_map_create();
-			var _update  = false;
-			
-			if (steam_ugc_get_item_update_info(STEAM_SUBS[| i], info_map))
-			    _update = info_map[? "needs_update"];
-			
-			ds_map_destroy(info_map);
-			
-			if(_update) {
-				steam_ugc_subscribe_item(STEAM_SUBS[| i]);
-				//print("Item need update");
-			} else {
-				__loadSteamUGC(STEAM_SUBS[| i], item_map);
-			}
-		} else {
-			steam_ugc_subscribe_item(STEAM_SUBS[| i]);
-			//print("Item not downloaded");
-		}
-		
-		ds_map_destroy(item_map);
-	}
+	STEAM_UGC_ITEM_ID = steam_ugc_create_item(STEAM_APP_ID, ugc_filetype_community);
 }
 
-function __loadSteamUGC(file_id, item_map) {
-	var _path = item_map[? "folder"];
-	var f = file_find_first(_path + "\\*.pxcc", 0);
-	file_find_close();
-				
-	var name = string_replace(filename_name(f), ".pxcc", "");
-	var file = new FileObject(name, _path + "\\" + f);
-	var icon_path = string_replace(_path + "\\" + f, ".pxcc", ".png");
-	var _temp = sprite_add(icon_path, 0, false, false, 0, 0);
-	var ww = sprite_get_width(_temp);
-	var hh = sprite_get_height(_temp);
-	var amo = ww % hh == 0? ww / hh : 1;
-	sprite_delete(_temp);
-	file.spr_path = [icon_path, amo, false];
-				
-	ds_list_add(STEAM_CONTENT, file);
-				
-	var meta = file.getMetadata();
-	meta.steam = true;
-	meta.file_id = file_id;
+function steam_ugc_update_collection(file, update_preview = false) {
+	if(STEAM_UGC_ITEM_UPLOADING) return;
+	
+	STEAM_UGC_UPDATE = true;
+	STEAM_UGC_ITEM_UPLOADING = true;
+	STEAM_UGC_ITEM_FILE = file;
+	STEAM_UGC_TYPE = STEAM_UGC_FILE_TYPE.collection;
+	
+	directory_destroy(DIRECTORY + "steamUGC");
+	directory_create(DIRECTORY + "steamUGC");
+	file_copy(file.path, DIRECTORY + "steamUGC/" + filename_name(file.path));
+	file_copy(file.spr_path[0], DIRECTORY + "steamUGC/" + filename_name(file.spr_path[0]));
+	
+	STEAM_UGC_PUBLISH_ID = file.meta.file_id;
+	STEAM_UGC_UPDATE_HANDLE = steam_ugc_start_item_update(STEAM_APP_ID, STEAM_UGC_PUBLISH_ID);
+	
+	steam_ugc_set_item_title(STEAM_UGC_UPDATE_HANDLE, STEAM_UGC_ITEM_FILE.meta.name);
+	steam_ugc_set_item_description(STEAM_UGC_UPDATE_HANDLE, STEAM_UGC_ITEM_FILE.meta.description);
+	
+	array_insert(STEAM_UGC_ITEM_FILE.meta.tags, 0, "Collection");
+	steam_ugc_set_item_tags(STEAM_UGC_UPDATE_HANDLE, STEAM_UGC_ITEM_FILE.meta.tags);
+	steam_ugc_set_item_content(STEAM_UGC_UPDATE_HANDLE, DIRECTORY + "steamUGC");
+	
+	STEAM_UGC_SUBMIT_ID = steam_ugc_submit_item_update(STEAM_UGC_UPDATE_HANDLE, "Updated");
+}
+
+function steam_ugc_collection_generate(file, dest_path = DIRECTORY + "steamUGCthumbnail.png") {
+	file_delete(dest_path);
+	var spr       = STEAM_UGC_ITEM_FILE.getSpr();
+	var prev_size = 512;
+	var _s = surface_create(prev_size, prev_size);
+	surface_set_target(_s);
+		draw_clear(COLORS._main_icon_dark);
+		draw_sprite_tiled(s_workshop_bg, 0, -64, -64);
+		draw_sprite_stretched(s_workshop_frame, 0, 0, 0, prev_size, prev_size);
+		
+		if(spr == -1) spr = THEME.group;
+		var ss = (prev_size - 160) / max(sprite_get_width(spr), sprite_get_height(spr));
+		var ox = (sprite_get_xoffset(spr) - sprite_get_width(spr) / 2) * ss;
+		var oy = (sprite_get_yoffset(spr) - sprite_get_height(spr) / 2) * ss;
+		draw_sprite_ext(spr, 0, prev_size / 2 + ox, prev_size / 2 + oy, ss, ss, 0, c_white, 1);
+		
+		draw_sprite_stretched(s_workshop_badge, 0, 8, 8, 88, 88);
+		draw_sprite_ext(THEME.group, 0, 40, 40, 1, 1, 0, COLORS._main_icon_dark, 1);
+	surface_reset_target();
+	surface_save(_s, dest_path);
+	surface_free(_s);
 }

@@ -14,11 +14,6 @@
 	log_message("SESSION", "Begin");
 	log_message("DIRECTORY", DIRECTORY);
 	
-	PREF_LOAD();
-	loadFonts();
-	loadGraphic(PREF_MAP[? "theme"]);
-	loadColor(PREF_MAP[? "theme"]);
-	
 	__initLocale();
 	__init_theme();
 	__initCollection();
@@ -28,6 +23,11 @@
 	__initLua();
 	__init_node_guide();
 	__initSteamUGC();
+	
+	PREF_LOAD();
+	loadFonts();
+	loadGraphic(PREF_MAP[? "theme"]);
+	loadColor(PREF_MAP[? "theme"]);
 	
 	setPanel();
 	

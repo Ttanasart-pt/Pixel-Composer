@@ -53,6 +53,8 @@
 	PREF_MAP[? "physics_gravity"] = [ 0, 10 ];
 	
 	PREF_MAP[? "test_mode"] = false;
+	
+	PREF_MAP[? "auto_save_time"] = 300;
 #endregion
 
 #region hotkeys	

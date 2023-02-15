@@ -86,7 +86,7 @@ function SAVE_AS() {
 	return true;
 }
 
-function SAVE_AT(path) {
+function SAVE_AT(path, log = "save at ") {
 	if(DEMO) return false;
 	
 	if(file_exists(path))
@@ -98,7 +98,7 @@ function SAVE_AT(path) {
 	READONLY  = false;
 	MODIFIED  = false;
 	
-	log_message("FILE", "save at " + path, THEME.noti_icon_file_save);
+	log_message("FILE", log + path, THEME.noti_icon_file_save);
 	PANEL_MENU.setNotiIcon(THEME.noti_icon_file_save);
 	
 	return true;

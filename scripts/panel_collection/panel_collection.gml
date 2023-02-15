@@ -55,7 +55,7 @@ function Panel_Collection() : PanelContent() constructor {
 			var meta = _menu_node.getMetadata();
 			
 			if(!meta.steam) {
-				array_insert(contentMenu, 2, [  get_text("panel_collection_workshop_upload", "Upload to Workshop") + "...", function() { 
+				array_insert(contentMenu, 2, [  get_text("panel_collection_workshop_upload", "Upload to Steam Workshop") + "...", function() { 
 					var dia = dialogCall(o_dialog_file_name_collection, mouse_mx + ui(8), mouse_my + ui(-320));
 					var meta = _menu_node.getMetadata();
 					if(meta != noone && meta != undefined) 
@@ -68,7 +68,7 @@ function Panel_Collection() : PanelContent() constructor {
 			}
 			
 			if(meta.steam && meta.author_steam_id == STEAM_USER_ID && meta.file_id != 0) {
-				array_insert(contentMenu, 2, [get_text("panel_collection_workshop_update", "Update workshop content") + "...", function() { 
+				array_insert(contentMenu, 2, [get_text("panel_collection_workshop_update", "Update Steam Workshop content") + "...", function() { 
 					var dia = dialogCall(o_dialog_file_name_collection, mouse_mx + ui(8), mouse_my + ui(-320));
 					var meta = _menu_node.getMetadata();
 					if(meta != noone && meta != undefined) 
@@ -95,12 +95,12 @@ function Panel_Collection() : PanelContent() constructor {
 		draw_clear_alpha(c_white, 0);
 		
 		var nodes = search_string == ""? context.content : search_list;
-		if(mode == 0 && context == root) nodes = STEAM_CONTENT;
+		if(mode == 0 && context == root) nodes = STEAM_COLLECTION;
 		var steamNode = [];
-		for( var i = 0; i < ds_list_size(STEAM_CONTENT); i++ ) {
-			var meta = STEAM_CONTENT[| i].meta;	
+		for( var i = 0; i < ds_list_size(STEAM_COLLECTION); i++ ) {
+			var meta = STEAM_COLLECTION[| i].meta;	
 			if(array_exists(meta.tags, context.name))
-				array_push(steamNode, STEAM_CONTENT[| i]);	
+				array_push(steamNode, STEAM_COLLECTION[| i]);	
 		}
 		
 		var node_list  = ds_list_size(nodes);

@@ -69,6 +69,9 @@
 	TUNNELS_IN = ds_map_create();
 	TUNNELS_IN_MAP = ds_map_create();
 	TUNNELS_OUT = ds_map_create();
+	
+	globalvar AUTO_SAVE_TIMER;
+	AUTO_SAVE_TIMER = 0;
 #endregion
 
 #region file drop
@@ -181,8 +184,15 @@
 #region steam
 	globalvar STEAM_ENABLED, STEAM_APP_ID, STEAM_USER_ID, STEAM_USERNAME;
 	globalvar STEAM_UGC_ITEM_UPLOADING, STEAM_UGC_ITEM_ID, STEAM_UGC_ITEM_FILE, STEAM_UGC_UPDATE_HANDLE;
-	globalvar STEAM_UGC_SUBMIT_ID, STEAM_UGC_UPDATE_MAP, STEAM_UGC_PUBLISH_ID, STEAM_UGC_UPDATE;
+	globalvar STEAM_UGC_SUBMIT_ID, STEAM_UGC_UPDATE_MAP, STEAM_UGC_PUBLISH_ID, STEAM_UGC_UPDATE, STEAM_UGC_TYPE;
 	
+	enum STEAM_UGC_FILE_TYPE {
+		collection,
+		project,
+		node_preset
+	}
+	
+	STEAM_UGC_TYPE = STEAM_UGC_FILE_TYPE.collection;
 	STEAM_USER_ID = 0;
 	STEAM_USERNAME = "";
 	
