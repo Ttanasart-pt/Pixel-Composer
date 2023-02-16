@@ -35,7 +35,6 @@ void main() {
 	float al = _col0.a + _col1.a * (1. - _col0.a);
 	vec4 res = ((_col0 * _col0.a) + (_col1 * _col1.a * (1. - _col0.a))) / al;
 	res.a = al;
-	if(preserveAlpha == 1) res.a = _col1.a;
 	
     gl_FragColor = res;
 }

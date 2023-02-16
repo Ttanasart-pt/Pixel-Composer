@@ -1,5 +1,5 @@
 globalvar BLEND_TYPES;
-BLEND_TYPES = [ "Normal", "Add", "Subtract", "Subtract keep alpha", "Multiply", "Multiply keep Alpha", "Screen", "Screen keep Alpha", "Contrast", "Overlay", "Maximum", "Minimum" ];
+BLEND_TYPES = [ "Normal", "Add", "Subtract", "Multiply", "Screen", "Contrast", "Overlay", "Hue", "Saturation", "Luminosity", "Maximum", "Minimum" ];
 
 enum BLEND_MODE {
 	normal,
@@ -60,7 +60,7 @@ function draw_surface_blend(background, foreground, blend, alpha, _pre_alp = tru
 		shader_set_uniform_i(uniform_tile,	tile);
 	}
 	
-	BLEND_OVERRIDE
+	BLEND_OVER_ALPHA
 	draw_surface_stretched_safe(background, 0, 0, surf_w, surf_h);
 	BLEND_NORMAL
 	shader_reset();

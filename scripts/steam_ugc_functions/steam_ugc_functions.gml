@@ -4,6 +4,7 @@ function __initSteamUGC() {
 	STEAM_COLLECTION = ds_list_create();
 	STEAM_PROJECTS   = ds_list_create();
 	
+	if(DEMO) return;
 	if(!STEAM_ENABLED) return;
 	
 	steam_ugc_get_subscribed_items(STEAM_SUBS);

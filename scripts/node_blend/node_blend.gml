@@ -128,8 +128,8 @@ function Node_Blend(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constr
 				hh = surface_get_height(_mask);
 				break;
 			case 3 :
-				ww = max(surface_get_width(_back), surface_get_width(_foreDraw), surface_get_width(_mask));
-				hh = max(surface_get_height(_back), surface_get_height(_foreDraw), surface_get_height(_mask));
+				ww = max(surface_get_width(_back), surface_get_width(_fore), surface_get_width(_mask));
+				hh = max(surface_get_height(_back), surface_get_height(_fore), surface_get_height(_mask));
 				break;
 			case 4 :
 				ww = _out_dim[0];

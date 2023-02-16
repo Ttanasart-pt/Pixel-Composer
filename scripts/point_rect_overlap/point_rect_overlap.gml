@@ -22,3 +22,7 @@ function point_rectangle_overlap(w, h, angle) {
 			
 	return [x0, y0];
 }
+
+function point_in_rectangle_points(px, py, x0, y0, x1, y1, x2, y2, x3, y3) {
+	return point_in_triangle(px, py, x0, y0, x1, y1, x2, y2) || point_in_triangle(px, py, x1, y1, x2, y2, x3, y3);
+}

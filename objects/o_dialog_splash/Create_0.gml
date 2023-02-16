@@ -7,7 +7,9 @@ event_inherited();
 	dialog_w = ui(960);
 	dialog_h = ui(600);
 	
-	pages = ["Sample projects", "Steam Workshop"];
+	pages = ["Sample projects"];
+	if(STEAM_ENABLED) 
+		array_push(pages, "Steam Workshop");
 	project_page = 0;
 #endregion
 

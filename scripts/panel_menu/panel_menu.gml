@@ -126,9 +126,13 @@ function Panel_Menu() : PanelContent() constructor {
 			[ get_text("panel_menu_steam", "Steam page"), function() {
 				url_open("https://store.steampowered.com/app/2299510/Pixel_Composer");
 			} ],
-			-1,
+			-1, 
 			[ get_text("panel_menu_directory", "Open local directory"), function() {
 				shellOpenExplorer(DIRECTORY);
+			} ],
+			[ get_text("panel_menu_reset_default", "Reset default collection, assets"), function() {
+				zip_unzip("data/Collections.zip", DIRECTORY + "Collections");
+				zip_unzip("data/Assets.zip", DIRECTORY + "Assets");
 			} ],
 		]],
 	]
