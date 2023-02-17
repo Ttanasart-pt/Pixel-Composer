@@ -81,8 +81,11 @@ if !ready exit;
 		var bx = x1 - ui(32);
 		var by = y0 - ui(32);
 		
-		if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), mouse_ui, sFOCUS, sHOVER, "Open Steam Workshop", THEME.steam) == 2) {
-			steam_activate_overlay_browser("https://steamcommunity.com/app/2299510/workshop/")
-		}
+		if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), mouse_ui, sFOCUS, sHOVER, "Open Steam Workshop", THEME.steam) == 2)
+			steam_activate_overlay_browser("https://steamcommunity.com/app/2299510/workshop/");
+		
+		bx -= ui(36);
+		if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), mouse_ui, sFOCUS, sHOVER, "Refresh content", THEME.refresh) == 2)
+			steamUCGload();
 	}
 #endregion

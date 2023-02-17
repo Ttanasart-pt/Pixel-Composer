@@ -1446,9 +1446,10 @@
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"Cards flipping.pxc","CopyToMask":-1,"filePath":"datafiles/Sample Projects",},
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"Dice.pxc","CopyToMask":-1,"filePath":"datafiles/Sample Projects",},
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"Shiny gem.pxc","CopyToMask":-1,"filePath":"datafiles/Sample Projects",},
-    {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"graphics x2.ai","CopyToMask":-1,"filePath":"datafiles/data/themes/default/graphics/icon",},
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"s_sort_24.png","CopyToMask":-1,"filePath":"datafiles/data/themes/default/graphics/icon",},
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"s_reverse.png","CopyToMask":-1,"filePath":"datafiles/data/themes/default/graphics/icon",},
+    {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"graphics x2.ai","CopyToMask":-1,"filePath":"datafiles/data/themes/default/graphics/icon",},
+    {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"s_workshop_download.png","CopyToMask":-1,"filePath":"datafiles/data/themes/default/graphics/icon",},
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"default.zip","CopyToMask":-1,"filePath":"datafiles/data/themes",},
   ],
   "MetaData": {

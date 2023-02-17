@@ -48,6 +48,36 @@ function Panel_Menu() : PanelContent() constructor {
 		array_delete(menu_file, 1, 4);
 	}
 	
+	menu_help = [ get_text("panel_menu_help", "Help"), [
+		[ get_text("panel_menu_help_video", "Tutorial videos"), function() {
+			url_open("https://www.youtube.com/@makhamdev");
+		} ],
+		[ get_text("panel_menu_help_wiki", "Community Wiki"), function() {
+			url_open("https://pixel-composer.fandom.com/wiki/Pixel_Composer_Wiki");
+		} ],
+		-1,
+		[ get_text("panel_menu_itch", "itch.io page"), function() {
+			url_open("https://makham.itch.io/pixel-composer");
+		} ],
+		[ get_text("panel_menu_steam", "Steam page"), function() {
+			url_open("https://store.steampowered.com/app/2299510/Pixel_Composer");
+		} ],
+		-1, 
+		[ get_text("panel_menu_directory", "Open local directory"), function() {
+			shellOpenExplorer(DIRECTORY);
+		} ],
+		[ get_text("panel_menu_reset_default", "Reset default collection, assets"), function() {
+			zip_unzip("data/Collections.zip", DIRECTORY + "Collections");
+			zip_unzip("data/Assets.zip", DIRECTORY + "Assets");
+		} ],
+	]];
+	
+	menu_help_steam = array_clone(menu_help);
+	array_push(menu_help_steam[1], -1, 
+		[ get_text("panel_menu_steam_workshop", "Steam Workshop"), function() {
+			steam_activate_overlay_browser("https://steamcommunity.com/app/2299510/workshop/");
+		} ]);
+	
 	menus = [
 		[ get_text("panel_menu_file", "File"), menu_file],
 		[ get_text("panel_menu_edit", "Edit"), [
@@ -112,29 +142,7 @@ function Panel_Menu() : PanelContent() constructor {
 				PREF_SAVE();
 			} ],
 		]],
-		[ get_text("panel_menu_help", "Help"), [
-			[ get_text("panel_menu_help_video", "Tutorial videos"), function() {
-				url_open("https://www.youtube.com/@makhamdev");
-			} ],
-			[ get_text("panel_menu_help_wiki", "Community Wiki"), function() {
-				url_open("https://pixel-composer.fandom.com/wiki/Pixel_Composer_Wiki");
-			} ],
-			-1,
-			[ get_text("panel_menu_itch", "itch.io page"), function() {
-				url_open("https://makham.itch.io/pixel-composer");
-			} ],
-			[ get_text("panel_menu_steam", "Steam page"), function() {
-				url_open("https://store.steampowered.com/app/2299510/Pixel_Composer");
-			} ],
-			-1, 
-			[ get_text("panel_menu_directory", "Open local directory"), function() {
-				shellOpenExplorer(DIRECTORY);
-			} ],
-			[ get_text("panel_menu_reset_default", "Reset default collection, assets"), function() {
-				zip_unzip("data/Collections.zip", DIRECTORY + "Collections");
-				zip_unzip("data/Assets.zip", DIRECTORY + "Assets");
-			} ],
-		]],
+		menu_help,
 	]
 	
 	if(TESTING) {
@@ -220,10 +228,11 @@ function Panel_Menu() : PanelContent() constructor {
 		draw_sprite_ui_uniform(THEME.icon_24, 0, h / 2, h / 2, 1, c_white);
 		var xx = h;
 		
+		menus[6] = STEAM_ENABLED? menu_help_steam : menu_help;
+		
 		if(pHOVER && point_in_rectangle(mx, my, 0, 0, ui(40), ui(32))) {
-			if(mouse_press(mb_left, pFOCUS)) {
+			if(mouse_press(mb_left, pFOCUS))
 				dialogCall(o_dialog_about);
-			}
 		}
 		
 		for(var i = 0; i < array_length(menus); i++) {

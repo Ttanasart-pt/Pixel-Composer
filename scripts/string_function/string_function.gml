@@ -33,6 +33,8 @@ function string_partial_match(str, key) {
 
 function string_real(val) {
 	if(is_string(val)) return val;
+	if(is_struct(val)) return string(val);
+	
 	if(is_array(val)) {
 		var s = "[";
 		for( var i = 0; i < array_length(val); i++ ) 

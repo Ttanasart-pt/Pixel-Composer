@@ -1,11 +1,19 @@
 function __initSteamUGC() {
 	globalvar STEAM_SUBS, STEAM_COLLECTION, STEAM_PROJECTS;
-	STEAM_SUBS = ds_list_create();
+	STEAM_SUBS		 = ds_list_create();
 	STEAM_COLLECTION = ds_list_create();
 	STEAM_PROJECTS   = ds_list_create();
 	
 	if(DEMO) return;
 	if(!STEAM_ENABLED) return;
+	
+	steamUCGload();
+}
+
+function steamUCGload() {
+	ds_list_clear(STEAM_SUBS);
+	ds_list_clear(STEAM_COLLECTION);
+	ds_list_clear(STEAM_PROJECTS);
 	
 	steam_ugc_get_subscribed_items(STEAM_SUBS);
 	
@@ -56,7 +64,7 @@ function __loadSteamUGC(file_id, item_map) {
 }
 
 function __loadSteamUGCCollection(file_id, f, path) {
-	var name = string_replace(filename_name(f), ".pxc", "");
+	var name = string_replace(filename_name(f), ".pxcc", "");
 	var file = new FileObject(name, path + "\\" + f);
 	var icon_path = string_replace(path + "\\" + f, ".pxcc", ".png");
 	if(file_exists(icon_path)) {

@@ -1,16 +1,5 @@
 function Node_create_Blend(_x, _y, _group = -1, _param = "") {
 	var node = new Node_Blend(_x, _y, _group);
-	
-	switch(_param) {
-	    case "normal" :			node.inputs[| 2].setValue(BLEND_MODE.normal)			break;
-	    case "add"	:			node.inputs[| 2].setValue(BLEND_MODE.add);				break;
-	    case "subtract" :		node.inputs[| 2].setValue(BLEND_MODE.subtract);			break;
-	    case "multiply" :		node.inputs[| 2].setValue(BLEND_MODE.multiply);			break;
-	    case "overlay" :		node.inputs[| 2].setValue(BLEND_MODE.overlay);			break;
-	    case "screen" :			node.inputs[| 2].setValue(BLEND_MODE.screen);			break;
-	    case "maxx" :			node.inputs[| 2].setValue(BLEND_MODE.maxx);				break;
-	    case "minn" :			node.inputs[| 2].setValue(BLEND_MODE.minn);				break;
-	}
 	return node;
 }
 
@@ -81,7 +70,7 @@ function Node_Blend(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constr
 		inputs[| 10].setVisible(_tile == 0);
 		inputs[| 11].setVisible(_tile == 0);
 		
-		if(_tile == 0) {
+		if(_tile == 0 && is_surface(_fore)) {
 			ww = surface_get_width(_back);
 			hh = surface_get_height(_back);
 			
@@ -120,16 +109,18 @@ function Node_Blend(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constr
 				hh = surface_get_height(_back);
 				break;
 			case 1 :
-				ww = surface_get_width(_foreDraw);
-				hh = surface_get_height(_foreDraw);
+				if(is_surface(_foreDraw)) {
+					ww = surface_get_width(_foreDraw);
+					hh = surface_get_height(_foreDraw);
+				}
 				break;
 			case 2 :
 				ww = surface_get_width(_mask);
 				hh = surface_get_height(_mask);
 				break;
 			case 3 :
-				ww = max(surface_get_width(_back), surface_get_width(_fore), surface_get_width(_mask));
-				hh = max(surface_get_height(_back), surface_get_height(_fore), surface_get_height(_mask));
+				ww = max(surface_get_width(_back), is_surface(_fore)? surface_get_width(_fore) : 1, surface_get_width(_mask));
+				hh = max(surface_get_height(_back), is_surface(_fore)? surface_get_height(_fore) : 1, surface_get_height(_mask));
 				break;
 			case 4 :
 				ww = _out_dim[0];

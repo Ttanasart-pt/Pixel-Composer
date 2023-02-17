@@ -30,32 +30,34 @@ function Panel_Collection() : PanelContent() constructor {
 	data_path = "";
 	
 	static initMenu = function() {
-		contentMenu = [
-			[ get_text("panel_collection_replace", "Replace with selected"), function() { 
-				saveCollection(_menu_node.path, false, _menu_node.meta);
-			} ],
-			[ get_text("panel_collection_edit_meta", "Edit metadata") + "...", function() { 
-				var dia = dialogCall(o_dialog_file_name_collection, mouse_mx + ui(8), mouse_my + ui(-320));
-				var meta = _menu_node.getMetadata();
-				if(meta != noone && meta != undefined) 
-					dia.meta = meta;
+		if(_menu_node == noone) return;
+		var meta = _menu_node.getMetadata();
+		
+		contentMenu = [];
+		
+		if(meta == noone || !meta.steam) {
+			contentMenu = [
+				[ get_text("panel_collection_replace", "Replace with selected"), function() { 
+					saveCollection(_menu_node.path, false, _menu_node.meta);
+				} ],
+				[ get_text("panel_collection_edit_meta", "Edit metadata") + "...", function() { 
+					var dia = dialogCall(o_dialog_file_name_collection, mouse_mx + ui(8), mouse_my + ui(-320));
+					var meta = _menu_node.getMetadata();
+					if(meta != noone && meta != undefined) 
+						dia.meta = meta;
 			
-				dia.updating	= _menu_node;
-				dia.expand();
-			} ],
-			-1,
-			[ get_text("delete", "Delete"), function() { 
-				file_delete(_menu_node.path);
-				refreshContext();
-			} ],
-		];
-	
-		if(DEMO) array_delete(contentMenu, 0, 3);
-		else if(_menu_node && STEAM_ENABLED) {
-			var meta = _menu_node.getMetadata();
-			
+					dia.updating	= _menu_node;
+					dia.expand();
+				} ],
+				-1,
+				[ get_text("delete", "Delete"), function() { 
+					file_delete(_menu_node.path);
+					refreshContext();
+				} ]
+			];
+		} else if(STEAM_ENABLED) {
 			if(!meta.steam) {
-				array_insert(contentMenu, 2, [  get_text("panel_collection_workshop_upload", "Upload to Steam Workshop") + "...", function() { 
+				array_push(contentMenu, [ get_text("panel_collection_workshop_upload", "Upload to Steam Workshop") + "...", function() { 
 					var dia = dialogCall(o_dialog_file_name_collection, mouse_mx + ui(8), mouse_my + ui(-320));
 					var meta = _menu_node.getMetadata();
 					if(meta != noone && meta != undefined) 
@@ -65,19 +67,33 @@ function Panel_Collection() : PanelContent() constructor {
 					dia.updating	= _menu_node;
 					dia.expand();
 				} ]);
-			}
-			
-			if(meta.steam && meta.author_steam_id == STEAM_USER_ID && meta.file_id != 0) {
-				array_insert(contentMenu, 2, [get_text("panel_collection_workshop_update", "Update Steam Workshop content") + "...", function() { 
-					var dia = dialogCall(o_dialog_file_name_collection, mouse_mx + ui(8), mouse_my + ui(-320));
-					var meta = _menu_node.getMetadata();
-					if(meta != noone && meta != undefined) 
-						dia.meta = meta;
+			} else {
+				if(meta.author_steam_id == STEAM_USER_ID && meta.file_id != 0) {
+					array_push(contentMenu, [get_text("panel_collection_workshop_update", "Update Steam Workshop content") + "...", function() { 
+						var dia = dialogCall(o_dialog_file_name_collection, mouse_mx + ui(8), mouse_my + ui(-320));
+						var meta = _menu_node.getMetadata();
+						if(meta != noone && meta != undefined) 
+							dia.meta = meta;
+						
+						dia.ugc			= 2;
+						dia.updating	= _menu_node;
+						dia.expand();
+					} ]);
+				}
 				
-					dia.ugc			= 2;
-					dia.updating	= _menu_node;
-					dia.expand();
-				} ]);
+				array_push(contentMenu, ["Unsubscribe", function() {
+					var meta = _menu_node.getMetadata();
+					var del_id = meta.file_id;
+					
+					for( var i = 0; i < ds_list_size(STEAM_COLLECTION); i++ ) {
+						print(STEAM_COLLECTION[| i].meta.file_id);
+						if(STEAM_COLLECTION[| i].getMetadata().file_id == del_id) {
+							ds_list_delete(STEAM_COLLECTION, i);
+							break;
+						}
+					}
+					steam_ugc_unsubscribe_item(del_id);
+				}]);
 			}
 		}
 	}
@@ -146,7 +162,7 @@ function Panel_Collection() : PanelContent() constructor {
 						if(mouse_press(mb_left, pFOCUS))
 							file_dragging = _node;
 							
-						if(mouse_press(mb_right, pFOCUS)) {
+						if(!DEMO && mouse_press(mb_right, pFOCUS)) {
 							_menu_node = _node;
 							initMenu();
 							var dia = dialogCall(o_dialog_menubox, mouse_mx + 8, mouse_my + 8);
@@ -220,7 +236,7 @@ function Panel_Collection() : PanelContent() constructor {
 					if(mouse_press(mb_left, pFOCUS))
 						file_dragging = _node;
 						
-					if(mouse_press(mb_right, pFOCUS)) {
+					if(!DEMO && mouse_press(mb_right, pFOCUS)) {
 						_menu_node = _node;
 						initMenu();
 						var dia = dialogCall(o_dialog_menubox, mouse_mx + ui(8), mouse_my + ui(8));
@@ -286,6 +302,9 @@ function Panel_Collection() : PanelContent() constructor {
 	
 	function refreshContext() {
 		context.scan([".json", ".pxcc"]);	
+		
+		if(STEAM_ENABLED)
+			steamUCGload();
 	}
 	
 	function saveCollection(_name, save_surface = true, metadata = noone) {

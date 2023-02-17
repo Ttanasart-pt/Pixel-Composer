@@ -6,7 +6,7 @@ function Node_Colorize(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) con
 	uniform_color	= shader_get_uniform(shader, "gradient_color");
 	uniform_time	= shader_get_uniform(shader, "gradient_time");
 	uniform_shift	= shader_get_uniform(shader, "gradient_shift");
-	uniform_key		= shader_get_uniform(shader, "keys");
+	uniform_key		= shader_get_uniform(shader, "gradient_keys");
 	uniform_alpha	= shader_get_uniform(shader, "multiply_alpha");
 	
 	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);

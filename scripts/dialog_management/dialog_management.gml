@@ -24,3 +24,10 @@ function menuCall(_x = mouse_mx, _y = mouse_my, menu = []) {
 	dia.setMenu(menu);
 	return dia;
 }
+
+function menuItem(name, func, spr = noone, hotkey = noone) constructor {
+	self.name	= name;
+	self.func	= func;
+	self.spr	= spr;
+	self.hotkey = hotkey;
+}

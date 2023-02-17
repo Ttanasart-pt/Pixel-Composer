@@ -19,6 +19,11 @@ function draw_surface_part_ext_safe(surface, _l, _t, _w, _h, _x, _y, _xs = 1, _y
 	draw_surface_part_ext(surface, _l, _t, _w, _h, _x, _y, _xs, _ys, _col, _alpha);
 }
 
+function surface_create_size(surf) {
+	if(!is_surface(surf)) return surface_create(1, 1);
+	return surface_create_valid(surface_get_width(surf), surface_get_height(surf));
+}
+
 function surface_size_to(surface, width, height) {
 	if(!surface_exists(surface)) return false;
 	if(width < 1 && height < 1) return false;

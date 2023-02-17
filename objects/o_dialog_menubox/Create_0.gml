@@ -28,31 +28,30 @@ event_inherited();
 		
 		draw_set_text(f_p0, fa_center, fa_center, COLORS._main_text);
 		for(var i = 0; i < array_length(menu); i++) {
-			if(!is_array(menu[i])) {
+			var menuItem = menu[i];
+			if(!is_array(menuItem)) {
 				dialog_h += ui(8);
 				continue;
 			}
 			draw_set_font(f_p0);
-			var ww = string_width(menu[i][0]) + ui(64);
+			var ww = string_width(menuItem[0]) + ui(64);
 			
-			if(array_length(menu[i]) > 2) {
-				if(menu[i][2] == ">") {
-					
-				} else if(is_array(menu[i][2])) {
-					var _key = find_hotkey(menu[i][2][0], menu[i][2][1]);
+			if(array_length(menuItem) > 2) {
+				if(is_array(menuItem[2])) {
+					var _key = find_hotkey(menuItem[2][0], menuItem[2][1]);
 					if(_key) {
 						draw_set_font(f_p1);
 						var ss = key_get_name(_key.key, _key.modi);	
 						ww += string_width(ss) + ui(16);
 					}
 				}
-			} else if(is_array(menu[i][1])) {
-				var amo = array_length(menu[i][1]);
+			} else if(is_array(menuItem[1])) {
+				var amo = array_length(menuItem[1]);
 				ww = max(ww, ui(16) + amo * (hght + ui(4)));
 			}
 			dialog_w = max(dialog_w, ww);
 			
-			if(is_array(menu[i][1]))
+			if(is_array(menuItem[1]))
 				dialog_h += hght;
 			dialog_h += hght;
 		}

@@ -9,7 +9,7 @@ function Node_Palette_Sort(_x, _y, _group = -1) : Node(_x, _y, _group) construct
 		.setVisible(true, true);
 	
 	inputs[| 1] = nodeValue("Order", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_button, [ "Brightness", "Hue (HSV)", "Saturation (SHV)", "Value (VHS)", "Red (RGB)", "Green (GBR)", "Blue (BRG)" ])
+		.setDisplay(VALUE_DISPLAY.enum_button, [ "Brightness", -1, "Hue (HSV)", "Saturation (SHV)", "Value (VHS)", -1, "Red (RGB)", "Green (GBR)", "Blue (BRG)" ])
 		.rejectArray();
 	
 	inputs[| 2] = nodeValue("Reverse", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);

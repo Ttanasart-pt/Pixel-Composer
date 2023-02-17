@@ -761,7 +761,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) constructor {
 	}
 	
 	static clearInputCache = function() {
-		for( var i = 0; i < ds_list_size(inputs); i++ ) 
+		for( var i = 0; i < ds_list_size(inputs); i++ )
 			inputs[| i].cache_value[0] = false;
 	}
 	

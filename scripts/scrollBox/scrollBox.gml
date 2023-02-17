@@ -1,7 +1,8 @@
 function scrollBox(_data, _onModify) : widget() constructor {
 	onModify  = _onModify;	
 	data_list = _data;
-	data = [];
+	data      = [];
+	curr_text = 0;
 	
 	open = false;
 	open_rx = 0;
@@ -11,16 +12,17 @@ function scrollBox(_data, _onModify) : widget() constructor {
 	extra_button = noone;
 	
 	static trigger = function() {
-		if(is_method(data_list))
-			data = data_list();
-		else 
-			data = data_list;
-			
+		if(is_method(data_list)) data = data_list();
+		else					 data = data_list;
+		
+		var ind = array_find(data, curr_text);
+		
 		open = true;
 		with(dialogCall(o_dialog_scrollbox, x + open_rx, y + open_ry)) {
 			scrollbox = other;	
+			initVal   = ind;
 			dialog_w  = other.w;
-			align = other.align;
+			align     = other.align;
 		}
 	}
 	
@@ -30,6 +32,7 @@ function scrollBox(_data, _onModify) : widget() constructor {
 		open_rx = _rx;
 		open_ry = _ry;
 		h = _h;
+		curr_text = _text;
 		
 		w = _w;
 		if(extra_button != noone) {

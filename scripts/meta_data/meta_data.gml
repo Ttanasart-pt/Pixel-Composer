@@ -103,6 +103,23 @@ function MetaDataManager() constructor {
 			_w = max(_w, string_width_ext(_ver, -1, ww));
 		}
 		
+		if(array_length(tags)) {
+			draw_set_font(f_p0);
+			_h += ui(8);
+			var tx = 0;
+			var hh = line_height(f_p0, ui(4));
+			var th = hh;
+			for( var i = 0; i < array_length(tags); i++ ) {
+				var ww = string_width(tags[i]) + ui(16);
+				if(tx + ww + ui(2) > _w - ui(16)) {
+					tx = 0;
+					th += hh + ui(2);
+				}
+				tx += ww + ui(2);
+			}
+			_h += th;
+		}
+		
 		var mx = min(mouse_mx + ui(16), WIN_W - (_w + ui(16)));
 		var my = min(mouse_my + ui(16), WIN_H - (_h + ui(16)));
 		
@@ -146,6 +163,27 @@ function MetaDataManager() constructor {
 			draw_text_ext(mx + ui(8), ty, _ver, -1, _w);
 			ty += string_height_ext(_ver, -1, _w);
 		}
+		
+		if(array_length(tags)) {
+			draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text);
+			ty += ui(8);
+			var tx = 0;
+			var hh = line_height(f_p0, ui(4));
+			
+			for( var i = 0; i < array_length(tags); i++ ) {
+				var ww = string_width(tags[i]) + ui(16);
+				if(tx + ww + ui(2) > _w - ui(16)) {
+					tx = 0;
+					ty += hh + ui(2);
+				}
+				
+				draw_sprite_stretched_ext(THEME.group_label, 0, mx + ui(8) + tx, ty, ww, hh, COLORS._main_icon, 1);
+				draw_text(mx + ui(8) + tx + ui(8), ty + hh / 2, tags[i]);
+			
+				tx += ww + ui(2);
+			}
+		}
+		
 	}
 }
 

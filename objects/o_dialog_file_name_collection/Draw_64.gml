@@ -29,15 +29,19 @@
 	
 	var txt  = get_text("new_collection_create", "Create collection");
 	var icon = THEME.accept;
+	var clr  = COLORS._main_value_positive;
 	if(updating != noone) { 
 		txt  = get_text("collection_update", "Update collection");
 	}
+	
 	if(ugc == 1) {
 		txt  = get_text("workshop_upload", "Upload to Steam Workshop");
 		icon = THEME.workshop_upload;
+		clr  = c_white;
 	} else if(ugc == 2) {
 		txt  = get_text("workshop_update", "Update Steam Workshop");
 		icon = THEME.workshop_update;
+		clr  = c_white;
 	}
 	
 	if(ugc_loading) {
@@ -48,7 +52,7 @@
 		if(STEAM_UGC_ITEM_UPLOADING == false)
 			instance_destroy();
 	} else {
-		if(buttonInstant(THEME.button_hide, bx, by, bw, bh, mouse_ui, sFOCUS, sHOVER, txt, icon, 0, COLORS._main_value_positive) == 2) {
+		if(buttonInstant(THEME.button_hide, bx, by, bw, bh, mouse_ui, sFOCUS, sHOVER, txt, icon, 0, clr) == 2) {
 			if(meta.author_steam_id == 0)
 				meta.author_steam_id = STEAM_USER_ID;
 			
@@ -73,6 +77,7 @@
 				steam_ugc_create_collection(updating);
 				ugc_loading = true;
 			} else if(ugc == 2) {
+				PANEL_COLLECTION.saveCollection(updating.path, false, updating.meta);
 				steam_ugc_update_collection(updating);
 				ugc_loading = true;
 			} else 

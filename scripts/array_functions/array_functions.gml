@@ -59,6 +59,12 @@ function array_push_unique(arr, val) {
 	array_push(arr, val);
 }
 
+
+function array_insert_unique(arr, ind, val) {
+	if(array_exists(arr, val)) return;
+	array_insert(arr, ind, val);
+}
+
 function array_append(arr, arr0) {
 	for( var i = 0; i < array_length(arr0); i++ )
 		array_push(arr, arr0[i]);

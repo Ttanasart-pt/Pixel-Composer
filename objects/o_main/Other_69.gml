@@ -12,9 +12,9 @@ if(string(ev_id) == string(STEAM_UGC_ITEM_ID) && ev_type == "ugc_create_item") {
 	
 	var tgs = array_clone(STEAM_UGC_ITEM_FILE.meta.tags);
 	switch(STEAM_UGC_TYPE) {
-		case STEAM_UGC_FILE_TYPE.collection :	array_insert(tgs, 0, "Collection");		break;
-		case STEAM_UGC_FILE_TYPE.project :		array_insert(tgs, 0, "Project");		break;
-		case STEAM_UGC_FILE_TYPE.node_preset :	array_insert(tgs, 0, "Node preset");	break;
+		case STEAM_UGC_FILE_TYPE.collection :	array_insert_unique(tgs, 0, "Collection");	break;
+		case STEAM_UGC_FILE_TYPE.project :		array_insert_unique(tgs, 0, "Project");		break;
+		case STEAM_UGC_FILE_TYPE.node_preset :	array_insert_unique(tgs, 0, "Node preset");	break;
 	}
 	
 	steam_ugc_set_item_tags(STEAM_UGC_UPDATE_HANDLE, tgs);
@@ -43,10 +43,12 @@ if(string(ev_id) == string(STEAM_UGC_SUBMIT_ID)) {
 			log_message("WORKSHOP", type + " uploaded", THEME.workshop_upload);
 			PANEL_MENU.setNotiIcon(THEME.workshop_upload);
 		}
+		
+		STEAM_SUB_ID = steam_ugc_subscribe_item(STEAM_UGC_PUBLISH_ID);
 		exit;
 	} 
 	
-	switch(async_load[? "result"]) {
+	switch(async_load[? "result"]) { #region error
 		case   2: log_warning("WORKSHOP", "Generic failure.");    break;
 		case   3: log_warning("WORKSHOP", "Your Steam client doesn't have a connection to the back-end.");    break;
 		case   5: log_warning("WORKSHOP", "Password/ticket is invalid."); break;
@@ -153,5 +155,5 @@ if(string(ev_id) == string(STEAM_UGC_SUBMIT_ID)) {
 		case 106: log_warning("WORKSHOP", "This Game Server Login Token (GSLT) has expired from disuse; it can be reset for use."); break;
 		case 107: log_warning("WORKSHOP", "user doesn't have enough wallet funds to complete the action");  break;
 		case 108: log_warning("WORKSHOP", "There are too many of this thing pending already");  break;
-	}
+	} #endregion
 }

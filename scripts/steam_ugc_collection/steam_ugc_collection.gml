@@ -9,7 +9,8 @@ function steam_ugc_create_collection(file) {
 	directory_destroy(DIRECTORY + "steamUGC");
 	directory_create(DIRECTORY + "steamUGC");
 	file_copy(file.path, DIRECTORY + "steamUGC/" + filename_name(file.path));
-	file_copy(file.spr_path[0], DIRECTORY + "steamUGC/" + filename_name(file.spr_path[0]));
+	if(array_safe_get(file.spr_path, 0, 0) != 0)
+		file_copy(file.spr_path[0], DIRECTORY + "steamUGC/" + filename_name(file.spr_path[0]));
 	steam_ugc_collection_generate(file);
 	
 	STEAM_UGC_ITEM_ID = steam_ugc_create_item(STEAM_APP_ID, ugc_filetype_community);
@@ -26,7 +27,8 @@ function steam_ugc_update_collection(file, update_preview = false) {
 	directory_destroy(DIRECTORY + "steamUGC");
 	directory_create(DIRECTORY + "steamUGC");
 	file_copy(file.path, DIRECTORY + "steamUGC/" + filename_name(file.path));
-	file_copy(file.spr_path[0], DIRECTORY + "steamUGC/" + filename_name(file.spr_path[0]));
+	if(array_safe_get(file.spr_path, 0, 0) != 0)
+		file_copy(file.spr_path[0], DIRECTORY + "steamUGC/" + filename_name(file.spr_path[0]));
 	
 	STEAM_UGC_PUBLISH_ID = file.meta.file_id;
 	STEAM_UGC_UPDATE_HANDLE = steam_ugc_start_item_update(STEAM_APP_ID, STEAM_UGC_PUBLISH_ID);

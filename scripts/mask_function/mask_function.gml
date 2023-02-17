@@ -1,5 +1,5 @@
 function mask_apply(original, edited, mask, mix = 1) {	
-	if(!is_surface(mask) || mix == 1) return edited;
+	if(!is_surface(mask) && mix == 1) return edited;
 	
 	var _s = surface_create_size(original);
 	
@@ -9,7 +9,7 @@ function mask_apply(original, edited, mask, mix = 1) {
 		texture_set_stage(shader_get_sampler_index(sh_mask, "edited"),	 surface_get_texture(edited));
 		
 		shader_set_uniform_i(shader_get_uniform(sh_mask, "useMask"), is_surface(mask));
-		texture_set_stage(shader_get_sampler_index(sh_mask, "mask"),	 surface_get_texture(mask));
+		texture_set_stage(shader_get_sampler_index(sh_mask, "mask"), surface_get_texture(mask));
 			
 		shader_set_uniform_f(shader_get_uniform(sh_mask, "mixRatio"), mix);
 		
