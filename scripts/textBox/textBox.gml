@@ -86,7 +86,7 @@ function textBox(_input, _onModify, _extras = noone) : textInput(_input, _onModi
 	
 	static getDisplayText = function(val) {
 		if(input == TEXTBOX_INPUT.text) return val;
-		return string(val);
+		return string_real(val);
 	}
 	
 	static editText = function() {
@@ -193,6 +193,7 @@ function textBox(_input, _onModify, _extras = noone) : textInput(_input, _onModi
 	}
 	
 	static display_text = function(_x, _y, _text, _w, _format, _m = -1) {
+		_text = string_real(_text);
 		BLEND_OVERRIDE;
 		if(!interactable) draw_set_alpha(0.5);
 		
@@ -306,6 +307,7 @@ function textBox(_input, _onModify, _extras = noone) : textInput(_input, _onModi
 		y = _y;
 		w = _w;
 		h = _h;
+		_text = string_real(_text);
 		_current_text = _text;
 		
 		if(extras && instanceof(extras) == "buttonClass") {
@@ -340,7 +342,7 @@ function textBox(_input, _onModify, _extras = noone) : textInput(_input, _onModi
 					if(key_mod_press(CTRL))
 						spd *= 10;
 					
-					_input_text = _input_text + spd;
+					_input_text = string_real(toNumber(_input_text) + spd);
 					
 					if(apply())
 						UNDO_HOLDING = true;
@@ -424,9 +426,8 @@ function textBox(_input, _onModify, _extras = noone) : textInput(_input, _onModi
 						draw_set_alpha(1);
 					
 						if(mouse_press(mb_left, active)) {
-							var ktxt = _input_text;
-							if(key_mod_press(ALT))	_input_text	= string(toNumber(ktxt) / 2);
-							else					_input_text	= string(toNumber(ktxt) * 2);
+							if(key_mod_press(ALT))	_input_text	= string_real(toNumber(_input_text) / 2);
+							else					_input_text	= string_real(toNumber(_input_text) * 2);
 							apply();
 						}
 					}
@@ -472,8 +473,6 @@ function textBox(_input, _onModify, _extras = noone) : textInput(_input, _onModi
 					disp_x_to += _w - ui(16);
 				if(cursor_pos_to > _x + _w - ui(16))  
 					disp_x_to -= _w - ui(16);
-					
-				//print("Cursor x : " + string(cursor_pos_to) + ", Display x : " + string(_x) + ", to x : " + string(disp_x_to) + ", max x : " + string(disp_x_max));
 				
 				cursor_pos		= cursor_pos == 0? cursor_pos_to : lerp_float(cursor_pos, cursor_pos_to, 4);
 				

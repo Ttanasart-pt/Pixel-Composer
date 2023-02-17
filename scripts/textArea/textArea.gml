@@ -252,6 +252,7 @@ function textArea(_input, _onModify, _extras = noone) : textInput(_input, _onMod
 	}
 	
 	static display_text = function(_x, _y, _text, _w, _mx = -1, _my = -1) {
+		_text = string_real(_text);
 		if(_w != _prev_width) {
 			_prev_width = _w;
 			cut_line();
@@ -341,6 +342,7 @@ function textArea(_input, _onModify, _extras = noone) : textInput(_input, _onMod
 		y = _y;
 		w = _w;
 		h = _h;
+		_text = string_real(_text);
 		_current_text = _text;
 		
 		if(extras && instanceof(extras) == "buttonClass") {
@@ -575,7 +577,7 @@ function textArea(_input, _onModify, _extras = noone) : textInput(_input, _onMod
 				draw_sprite_stretched(THEME.textbox, 0, _x, _y, _w, hh);
 			}
 			
-			display_text(tx, _y + ui(7), string(_text), _w - ui(4));
+			display_text(tx, _y + ui(7), _text, _w - ui(4));
 		}
 		
 		resetFocus();

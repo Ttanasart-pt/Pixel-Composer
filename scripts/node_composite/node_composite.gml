@@ -42,7 +42,7 @@ function Node_Composite(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) co
 	layer_remove = -1;
 	layer_renderer = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) {
 		var amo = (ds_list_size(inputs) - input_fix_len) / data_length - 1;
-		if(array_length(current_data) != ds_list_size(inputs)) return;
+		if(array_length(current_data) != ds_list_size(inputs)) return 0;
 		
 		var lh = 32;
 		var _h = 8 + max(1, amo) * (lh + 4) + 8;

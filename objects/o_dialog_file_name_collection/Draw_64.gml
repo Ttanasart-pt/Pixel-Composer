@@ -9,11 +9,11 @@
 	draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text_title);
 	draw_text(dialog_x + ui(16), dialog_y + ui(32), get_text("name", "Name"));
 	
-	var is_author = !meta.steam || meta.author_steam_id == 0 || meta.author_steam_id == STEAM_USER_ID;
+	//var is_author = !meta.steam || meta.author_steam_id == 0 || meta.author_steam_id == STEAM_USER_ID;
 	
 	t_desc.interactable  = !STEAM_UGC_ITEM_UPLOADING;
-	t_auth.interactable  = !STEAM_UGC_ITEM_UPLOADING && is_author;
-	t_cont.interactable  = !STEAM_UGC_ITEM_UPLOADING && is_author;
+	t_auth.interactable  = !STEAM_UGC_ITEM_UPLOADING;
+	t_cont.interactable  = !STEAM_UGC_ITEM_UPLOADING;
 	t_tags.interactable  = !STEAM_UGC_ITEM_UPLOADING;
 	t_alias.interactable = !STEAM_UGC_ITEM_UPLOADING;
 	tb_name.interactable = !STEAM_UGC_ITEM_UPLOADING;

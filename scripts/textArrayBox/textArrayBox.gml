@@ -38,7 +38,7 @@ function textArrayBox(arraySet, data) : widget() constructor {
 			draw_sprite_stretched(THEME.textbox, 2, _x, _y, _w, th);
 		} else {
 			if(hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + th)) {
-				draw_sprite_stretched(THEME.textbox, 1, _x, _y, _w, th);	
+				draw_sprite_stretched_ext(THEME.textbox, 1, _x, _y, _w, th, c_white, 0.5 + !hide * 0.5);	
 				if(mouse_press(mb_left, active)) {
 					with(dialogCall(o_dialog_arrayBox, _rx + _x, _ry + _y + th)) {
 						arrayBox = other;	

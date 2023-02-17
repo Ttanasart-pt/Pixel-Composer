@@ -52,3 +52,23 @@ function color_diff(c1, c2) {
 	var dist = sqrt(sqr(_c1_r - _c2_r) + sqr(_c1_g - _c2_g) + sqr(_c1_b - _c2_b) + sqr(_c1_a - _c2_a));
 	return dist;
 }
+
+#region sorting functions
+	function __valHSV(c, h, s, v) { return color_get_hue(c) * h + color_get_saturation(c) * s + color_get_value(c) * v; }
+	function __valRGB(c, r, g, b) { return color_get_red(c) * r + color_get_green(c) * g + color_get_blue(c) * b; }
+
+	function __sortBright(c1, c2) {
+		var l1 = 0.299 * color_get_red(c1) + 0.587 * color_get_green(c1) + 0.114 * color_get_blue(c1);
+		var l2 = 0.299 * color_get_red(c2) + 0.587 * color_get_green(c2) + 0.114 * color_get_blue(c2);
+		return l2 - l1;
+	}
+	function __sortDark(c1, c2) { return -__sortBright(c1, c2); }
+	
+	function __sortHue(c1, c2) { return __valHSV(c2, 65536, 256, 1) - __valHSV(c1, 65536, 256, 1); }
+	function __sortSat(c1, c2) { return __valHSV(c2, 256, 65536, 1) - __valHSV(c1, 256, 65536, 1); }
+	function __sortVal(c1, c2) { return __valHSV(c2, 256, 1, 65536) - __valHSV(c1, 256, 1, 65536); }
+	
+	function __sortRed(c1, c2)	 { return __valRGB(c2, 65536, 256, 1) - __valRGB(c1, 65536, 256, 1); }
+	function __sortGreen(c1, c2) { return __valRGB(c2, 1, 65536, 256) - __valRGB(c1, 1, 65536, 256); }
+	function __sortBlue(c1, c2)  { return __valRGB(c2, 256, 1, 65536) - __valRGB(c1, 256, 1, 65536); }
+#endregion

@@ -30,3 +30,21 @@ function string_partial_match(str, key) {
 	
 	return -9999;
 }
+
+function string_real(val) {
+	if(is_string(val)) return val;
+	if(is_array(val)) {
+		var s = "[";
+		for( var i = 0; i < array_length(val); i++ ) 
+			s += (i? ", " : "") + string_real(val[i]);
+		return s + "]";
+	}
+	
+	var pres;
+	for( pres = 0; pres < 5; pres++ ) {
+		if(frac(val * power(10, pres)) == 0)
+			break;
+	}
+	
+	return string_format(val, -1, pres);
+}

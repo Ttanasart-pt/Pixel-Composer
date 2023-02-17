@@ -185,7 +185,7 @@ function valueAnimator(_val, _prop) constructor {
 		switch(prop.type) {
 			case VALUE_TYPE.integer : 
 			case VALUE_TYPE.float   : return toNumber(_val);
-			case VALUE_TYPE.text    : return string(_val);
+			case VALUE_TYPE.text    : return string_real(_val);
 			case VALUE_TYPE.surface : 
 				if(is_string(_val))
 					return get_asset(_val);

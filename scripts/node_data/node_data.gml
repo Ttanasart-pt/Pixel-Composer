@@ -879,11 +879,11 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) constructor {
 		var _type = instanceof(self);
 		var _node = nodeBuild(_type, x, y, target);
 		CLONING = false;
+		LOADING_VERSION = SAVEFILE_VERSION;
 		
 		if(!_node) return;
 		
 		var _nid = _node.node_id;
-		
 		_node.deserialize(serialize());
 		_node.postDeserialize();
 		_node.applyDeserialize();
@@ -915,10 +915,8 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) constructor {
 		ds_map_add_map(_map, "attri", attributeSerialize());
 		
 		var _inputs = ds_list_create();
-		for(var i = 0; i < ds_list_size(inputs); i++) {
-			ds_list_add(_inputs, inputs[| i].serialize(scale, preset));
-			ds_list_mark_as_map(_inputs, i);
-		}
+		for(var i = 0; i < ds_list_size(inputs); i++)
+			ds_list_add_map(_inputs, inputs[| i].serialize(scale, preset));
 		ds_map_add_list(_map, "inputs", _inputs);
 		
 		doSerialize(_map);

@@ -30,7 +30,7 @@
 	globalvar VERSION, SAVEFILE_VERSION, VERSION_STRING;
 	VERSION = 1130;
 	SAVEFILE_VERSION = 1300;
-	VERSION_STRING = "1.13";
+	VERSION_STRING = "1.13.pr5";
 	
 	globalvar NODES, NODE_MAP, APPEND_MAP, HOTKEYS, HOTKEY_CONTEXT;
 	
@@ -125,8 +125,8 @@
 	#macro RETURN_ON_REST if(!ANIMATOR.is_playing || !ANIMATOR.frame_progress) return;
 	
 	function print(str) {
-		show_debug_message(str);
-		noti_status(str);
+		show_debug_message(string_real(str));
+		noti_status(string_real(str));
 	}
 	
 	function printIf(cond, log) {

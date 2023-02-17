@@ -11,7 +11,7 @@ function Node_Array_Sort(_x, _y, _group = -1) : Node(_x, _y, _group) constructor
 		.setDisplay(VALUE_DISPLAY.enum_button, [ "Ascending", "Descending" ])
 		.rejectArray();
 	
-	outputs[| 0] = nodeValue("Shuffled array", self, JUNCTION_CONNECT.output, VALUE_TYPE.any, []);
+	outputs[| 0] = nodeValue("Sorted array", self, JUNCTION_CONNECT.output, VALUE_TYPE.any, []);
 	
 	static update = function(frame = ANIMATOR.current_frame) {
 		var arr = inputs[| 0].getValue();

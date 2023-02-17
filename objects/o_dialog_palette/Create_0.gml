@@ -105,38 +105,6 @@ event_inherited();
 #endregion
 
 #region tools
-	function __sortBright(c1, c2) {
-		var r1 = color_get_red(c1);
-		var g1 = color_get_green(c1);
-		var b1 = color_get_blue(c1);
-		var l1 = 0.299 * r1 + 0.587 * g1 + 0.114 * b1;
-			
-		var r2 = color_get_red(c2);
-		var g2 = color_get_green(c2);
-		var b2 = color_get_blue(c2);
-		var l2 = 0.299 * r2 + 0.587 * g2 + 0.224 * b2;
-			
-		return l2 - l1;
-	}
-	
-	function __sortDark(c1, c2) {
-		return -__sortBright(c1, c2);
-	}
-	
-	function __sortHue(c1, c2) {
-		var h1 = color_get_hue(c1);
-		var s1 = color_get_saturation(c1);
-		var v1 = color_get_value(c1);
-		var l1 = 0.8 * h1 + 0.1 * s1 + 0.1 * v1;
-			
-		var h2 = color_get_hue(c2);
-		var s2 = color_get_saturation(c2);
-		var v2 = color_get_value(c2);
-		var l2 = 0.8 * h2 + 0.1 * s2 + 0.1 * v2;
-			
-		return l2 - l1;
-	}
-		
 	function sortPalette(sortFunc) {
 		array_sort(palette, sortFunc);
 		onApply(palette);

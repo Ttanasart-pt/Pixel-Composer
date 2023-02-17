@@ -770,7 +770,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		}
 		
 		if(type == VALUE_TYPE.text)
-			return string(value);
+			return string_real(value);
 		
 		if(typeFrom == VALUE_TYPE.integer && type == VALUE_TYPE.color)
 			return make_color_hsv(0, 0, value);
@@ -1057,7 +1057,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	
 	static getShowString = function() {
 		var val = showValue();
-		return string(val);
+		return string_real(val);
 	}
 	
 	static setString = function(str) {

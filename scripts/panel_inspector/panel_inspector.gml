@@ -123,9 +123,9 @@ function Panel_Inspector() : PanelContent() constructor {
 			}
 			
 			if(i == 0) {
-				var is_author = meta.author_steam_id == 0 || meta.author_steam_id == STEAM_USER_ID;
-				meta.displays[1][1].interactable = is_author;
-				meta.displays[2][1].interactable = is_author;
+				//var is_author = !meta.steam || (meta.author_steam_id == 0 || meta.author_steam_id == STEAM_USER_ID);
+				//meta.displays[1][1].interactable = is_author;
+				//meta.displays[2][1].interactable = is_author;
 				current_meta = meta;
 				
 				for( var j = 0; j < array_length(meta.displays); j++ ) {

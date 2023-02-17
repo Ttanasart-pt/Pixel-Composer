@@ -12,7 +12,7 @@
 				case VALUE_TYPE.integer :
 				case VALUE_TYPE.text :
 				case VALUE_TYPE.path :
-					draw_tooltip_text(string(content));
+					draw_tooltip_text(string_real(content));
 					break;
 				case VALUE_TYPE.boolean :
 					draw_tooltip_text(content? get_text("true", "True") : get_text("false", "False"));

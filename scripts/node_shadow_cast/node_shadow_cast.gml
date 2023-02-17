@@ -63,7 +63,7 @@ function Node_Shadow_Cast(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) 
 	
 	inputs[| 9] = nodeValue("Render solid", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
 	
-	inputs[| 10] = nodeValue("Use BG color", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false, "If checked, BG color will be used as shadow caster.");
+	inputs[| 10] = nodeValue("Use BG color", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false, "If checked, background color will be used as shadow caster.");
 	
 	inputs[| 11] = nodeValue("BG threshold", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.1)
 		.setDisplay(VALUE_DISPLAY.slider, [0, 1, 0.01]);
@@ -99,6 +99,7 @@ function Node_Shadow_Cast(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) 
 	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		inputs[| 2].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
+		if(array_length(current_data) != ds_list_size(inputs)) return;
 		
 		var _type = current_data[5];
 		if(_type == 0) {

@@ -413,6 +413,7 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 		
 		ds_list_add(color, "Palettes");
 		addNodeObject(color, "Palette",			s_node_palette,			"Node_Palette",			[1, Node_Palette]);
+		addNodeObject(color, "Sort Palette",	s_node_palette_sort,	"Node_Palette_Sort",	[1, Node_Palette_Sort]).set_version(1130);
 		addNodeObject(color, "Palette Extract",	s_node_palette_extract,	"Node_Palette_Extract",	[1, Node_Palette_Extract]).set_version(1100);
 		addNodeObject(color, "Palette Replace",	s_node_palette_replace,	"Node_Palette_Replace",	[1, Node_Palette_Replace]).set_version(1120);
 	
