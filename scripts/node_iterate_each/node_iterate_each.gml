@@ -3,6 +3,7 @@ function Node_Iterate_Each(_x, _y, _group = -1) : Node_Collection(_x, _y, _group
 	color = COLORS.node_blend_loop;
 	icon  = THEME.loop;
 	
+	combine_render_time = false;
 	iterated = 0;
 	
 	inputs[| 0] = nodeValue("Array", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, [] )
@@ -36,12 +37,13 @@ function Node_Iterate_Each(_x, _y, _group = -1) : Node_Collection(_x, _y, _group
 		iterated = 0;
 		loop_start_time = get_timer();
 		
-		var arrIn   = inputs[| 0].getValue();
-		var maxIter = is_array(arrIn)? array_length(arrIn) : 0;
-		var arrOut  = array_create(maxIter);
-		outputs[| 0].setValue(arrOut);
+		var arrIn = inputs[| 0].getValue();
+		var arrOut = outputs[| 0].getValue();
 		
-		//
+		if(array_length(arrOut) != array_length(arrIn)) {
+			surface_array_free(arrOut);
+			outputs[| 0].setValue([])
+		}
 		
 		printIf(global.RENDER_LOG, "    > Loop begin");
 	}

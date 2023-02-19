@@ -67,7 +67,8 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 		addNodeObject(iter, "Output",	s_node_loop_output,		"Node_Iterator_Output",	[1, Node_Iterator_Output]);
 		
 		ds_list_add(iter, "Loops");
-		addNodeObject(iter, "Index",	s_node_iterator_index,	"Node_Iterator_Index",	[1, Node_Iterator_Index]);
+		addNodeObject(iter, "Index",		s_node_iterator_index,	"Node_Iterator_Index",	[1, Node_Iterator_Index]);
+		addNodeObject(iter, "Loop amount",	s_node_iterator_amount,	"Node_Iterator_Length",	[1, Node_Iterator_Length]);
 	
 	var itere = ds_list_create();
 	addNodeCatagory("Loop", itere, ["Node_Iterate_Each"]);
@@ -76,7 +77,8 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 		addNodeObject(itere, "Output",	s_node_group_output,	"Node_Group_Output",	[1, Node_Group_Output]);
 		
 		ds_list_add(itere, "Loops");
-		addNodeObject(itere, "Index",	s_node_iterator_index,	"Node_Iterator_Index",	[1, Node_Iterator_Index]);
+		addNodeObject(itere, "Index",			s_node_iterator_index,	"Node_Iterator_Index",	[1, Node_Iterator_Index]);
+		addNodeObject(itere, "Array Length",	s_node_iterator_length,	"Node_Iterator_Each_Length",	[1, Node_Iterator_Each_Length]);
 	
 	var feed = ds_list_create();
 	addNodeCatagory("Feedback", feed, ["Node_Feedback"]);
@@ -219,7 +221,7 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 		addNodeObject(filter, "Glow",				s_node_glow,			"Node_Glow",			[1, Node_Glow]);
 		addNodeObject(filter, "Shadow",				s_node_shadow,			"Node_Shadow",			[1, Node_Shadow]);
 		addNodeObject(filter, "Bloom",				s_node_bloom,			"Node_Bloom",			[1, Node_Bloom]);
-		//addNodeObject(filter, "Trail",			s_node_trail,			"Node_Trail",			[1, Node_Trail]);
+		addNodeObject(filter, "Trail",				s_node_trail,			"Node_Trail",			[1, Node_Trail]);
 		addNodeObject(filter, "Erode",				s_node_erode,			"Node_Erode",			[1, Node_Erode]);
 		addNodeObject(filter, "Corner",				s_node_corner,			"Node_Corner",			[1, Node_Corner], ["round corner"]).set_version(1110);
 		addNodeObject(filter, "2D Light",			s_node_2d_light,		"Node_2D_light",		[1, Node_2D_light]);
@@ -289,9 +291,10 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 		addNodeObject(generator, "4 Points Gradient",	s_node_gradient_4points,	"Node_Gradient_Points",		[1, Node_Gradient_Points]);
 		
 		ds_list_add(generator, "Drawer");
-		addNodeObject(generator, "Line",				s_node_line,				"Node_Line",				[1, Node_Line]);
-		addNodeObject(generator, "Draw Text",			s_node_text_render,			"Node_Text",				[1, Node_Text]);
-		addNodeObject(generator, "Shape",				s_node_shape,				"Node_Shape",				[1, Node_Shape]);
+		addNodeObject(generator, "Line",			s_node_line,		"Node_Line",			[1, Node_Line]);
+		addNodeObject(generator, "Draw Text",		s_node_text_render,	"Node_Text",			[1, Node_Text]);
+		addNodeObject(generator, "Shape",			s_node_shape,		"Node_Shape",			[1, Node_Shape]);
+		addNodeObject(generator, "Polygon Shape",	s_node_shape,		"Node_Shape_Polygon",	[1, Node_Shape_Polygon]).set_version(1130);
 		
 		ds_list_add(generator, "Noises");
 		addNodeObject(generator, "Noise",				s_node_noise,				"Node_Noise",				[1, Node_Noise]);
@@ -337,8 +340,9 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 	var renderNode = ds_list_create();
 	addNodeCatagory("Render", renderNode);
 		ds_list_add(renderNode, "Renders");
-		addNodeObject(renderNode, "Render Spritesheet",		s_node_sprite_sheet,	"Node_Render_Sprite_Sheet",	[1, Node_Render_Sprite_Sheet]);
-		if(!DEMO) addNodeObject(renderNode, "Export",					s_node_export,			"Node_Export",				[0, Node_create_Export]);
+		addNodeObject(renderNode, "Render Spritesheet",	s_node_sprite_sheet,	"Node_Render_Sprite_Sheet",	[1, Node_Render_Sprite_Sheet]);
+		addNodeObject(renderNode, "Cache Array",		s_node_cache_array,		"Node_Cache_Array",			[1, Node_Cache_Array]).set_version(1130);
+		if(!DEMO) addNodeObject(renderNode, "Export",	s_node_export,			"Node_Export",				[0, Node_create_Export]);
 		//addNodeObject(renderNode, "Preview timeline",		s_node_timeline_preview,"Node_Timeline_Preview",	[1, Node_create_Timeline_Preview]);
 	
 	var values = ds_list_create();

@@ -61,6 +61,8 @@ function upgroupNode(collection, record = true) {
 function Node_Collection(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 	nodes = ds_list_create();
 	ungroupable = true;
+	auto_render_time = false;
+	combine_render_time = true;
 	
 	custom_input_index = 0;
 	custom_output_index = 0;
@@ -80,6 +82,7 @@ function Node_Collection(_x, _y, _group = -1) : Node(_x, _y, _group) constructor
 	static getNextNodes = function() {
 		for(var i = custom_input_index; i < ds_list_size(inputs); i++) {
 			var _in = inputs[| i].from;
+			if(!_in.renderActive) continue;
 			
 			ds_queue_enqueue(RENDER_QUEUE, _in);
 			printIf(global.RENDER_LOG, "Push group input " + _in.name + " to stack");
@@ -183,10 +186,12 @@ function Node_Collection(_x, _y, _group = -1) : Node(_x, _y, _group) constructor
 	}
 	
 	static step = function() {
-		render_time = 0;
+		if(combine_render_time) render_time = 0;
+		
 		for(var i = 0; i < ds_list_size(nodes); i++) {
 			nodes[| i].step();
-			render_time += nodes[| i].render_time;
+			if(combine_render_time) 
+				render_time += nodes[| i].render_time;
 		}
 		
 		if(PANEL_GRAPH.node_focus == self && panelFocus(PANEL_GRAPH) && DOUBLE_CLICK) {

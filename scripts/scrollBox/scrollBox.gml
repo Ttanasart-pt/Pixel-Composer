@@ -10,6 +10,7 @@ function scrollBox(_data, _onModify) : widget() constructor {
 	
 	align = fa_center;
 	extra_button = noone;
+	update_hover = true;
 	
 	static trigger = function() {
 		if(is_method(data_list)) data = data_list();
@@ -23,6 +24,7 @@ function scrollBox(_data, _onModify) : widget() constructor {
 			initVal   = ind;
 			dialog_w  = other.w;
 			align     = other.align;
+			update_hover = other.update_hover;
 		}
 	}
 	

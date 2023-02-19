@@ -1,5 +1,5 @@
 function Node_Feedback_Output(_x, _y, _group = -1) : Node_Group_Output(_x, _y, _group) constructor {
-	name  = "Output";
+	name  = "Feedback Output";
 	color = COLORS.node_blend_feedback;
 	
 	w = 96;

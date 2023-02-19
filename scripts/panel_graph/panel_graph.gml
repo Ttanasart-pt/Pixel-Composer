@@ -178,6 +178,7 @@ function Panel_Graph() : PanelContent() constructor {
 	
 	addHotkey("Graph", "Toggle grid",	 "G", MOD_KEY.none,		function() { show_grid = !show_grid; });
 	addHotkey("Graph", "Toggle preview", "H", MOD_KEY.none,		function() { setTriggerPreview(); });
+	addHotkey("Graph", "Toggle render",  "R", MOD_KEY.none,		function() { setTriggerRender(); });
 	
 	if(!DEMO)
 		addHotkey("Graph", "Export",	"E", MOD_KEY.ctrl,	function() { setCurrentExport(); });
@@ -449,6 +450,10 @@ function Panel_Graph() : PanelContent() constructor {
 						menuItem(get_text("panel_graph_toggle_preview", "Toggle node preview"), function() {
 							setTriggerPreview();
 						}, noone, ["Graph", "Toggle preview"]));
+					array_push(menu,  
+						menuItem(get_text("panel_graph_toggle_render", "Toggle node render"), function() {
+							setTriggerRender();
+						}, noone, ["Graph", "Toggle render"]));
 						
 					array_push(menu,  
 						menuItem(get_text("panel_graph_delete_and_merge_connection", "Delete and merge connection"), function() {
@@ -524,6 +529,7 @@ function Panel_Graph() : PanelContent() constructor {
 		
 		for(var i = 0; i < ds_list_size(nodes_select_list); i++) {
 			var _node = nodes_select_list[| i];
+			if(!_node) continue;
 			_node.drawActive(gr_x, gr_y, graph_s);
 		}
 		//print("Draw active: " + string(current_time - t)); t = current_time;
@@ -1027,6 +1033,17 @@ function Panel_Graph() : PanelContent() constructor {
 		for(var i = 0; i < ds_list_size(nodes_select_list); i++) {
 			if(i == 0) show = !nodes_select_list[| i].previewable;
 			nodes_select_list[| i].previewable = show;
+		}
+	}
+	
+	function setTriggerRender() {
+		if(node_focus != noone)
+			node_focus.renderActive = !node_focus.renderActive;
+		
+		var show = false;
+		for(var i = 0; i < ds_list_size(nodes_select_list); i++) {
+			if(i == 0) show = !nodes_select_list[| i].renderActive;
+			nodes_select_list[| i].renderActive = show;
 		}
 	}
 	

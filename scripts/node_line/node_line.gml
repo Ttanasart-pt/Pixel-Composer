@@ -36,10 +36,15 @@ function Node_Line(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constru
 	
 	inputs[| 12] = nodeValue("Span width over path", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false, "Apply the full 'width over length' to the trimmed path.");
 		
+	inputs[| 13] = nodeValue("Round cap", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	
+	inputs[| 14] = nodeValue("Round segment", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 4)
+		.setDisplay(VALUE_DISPLAY.slider, [2, 16, 1]);
+	
 	input_display_list = [
 		["Output",			true],	0, 1, 
 		["Line data",		false], 6, 7, 2, 
-		["Line settings",	false], 3, 11, 12, 8, 9, 
+		["Line settings",	false], 3, 11, 12, 8, 9, 13, 14, 
 		["Wiggle",			false], 4, 5, 
 		["Render",			false], 10 
 	];
@@ -63,8 +68,17 @@ function Node_Line(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constru
 		var _widc  = _data[11];
 		var _widap = _data[12];
 		
-		var _rtStr = min(_ratio[0], _ratio[1]);
-		var _rtLen = max(_ratio[0], _ratio[1]) - _rtStr;
+		var _cap   = _data[13];
+		var _capP  = _data[14];
+		
+		inputs[| 14].setVisible(_cap);
+		
+		var _rangeMin = min(_ratio[0], _ratio[1]);
+		var _rangeMax = max(_ratio[0], _ratio[1]);
+		if(_rangeMax == 1) _rangeMax = 0.99999;
+		
+		var _rtStr = _rangeMin;
+		var _rtLen = _rangeMax - _rangeMin;
 		
 		var _use_path = _pat != noone && struct_has(_pat, "getPointRatio");
 		if(_ang < 0) _ang = 360 + _ang;
@@ -80,20 +94,25 @@ function Node_Line(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constru
 			if(_bg) draw_clear_alpha(0, 1);
 			else	draw_clear_alpha(0, 0);
 			
-			var _ox, _nx, _oy, _ny, _ow, _nw, _oa, _na;
+			var _ox, _nx, _oy, _ny, _ow, _nw, _oa, _na, _oc, _nc;
 			
 			if(_use_path) {
 				var ww = _rtLen / _seg;
 				
-				var _total = _rtLen;
-				var _prog_curr = frac(_shift + _rtStr) - ww;
-				var _prog = _prog_curr + 1;
-				var _prog_eli = 0;
+				var _total		= _rtLen;
+				var _total_prev = _total;
+				var _freeze		= 0;
+				var _prog_curr	= frac(_shift + _rtStr) - ww;
+				var _prog		= _prog_curr + 1;
+				var _prog_eli	= 0;
+				var step = 0;
 				
 				while(_total > 0) {
-					if(_prog_curr >= 1) _prog_curr = 0;
-					else _prog_curr = min(_prog_curr + min(_total, ww), 1);
-					_prog_eli += min(_total, ww);
+					if(_prog_curr >= 1) 
+						_prog_curr = frac(_prog_curr);
+					else 
+						_prog_curr = min(_prog_curr + min(_total, ww), 1);
+					_prog_eli = _prog_eli + min(_total, ww);
 					
 					var p = _pat.getPointRatio(_prog_curr);
 					_nx = p[0];
@@ -109,26 +128,32 @@ function Node_Line(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constru
 					}
 					
 					_nw = random_range(_wid[0], _wid[1]);
-					_nw *= eval_curve_x(_widc, _widap? _prog_curr / _rtLen : _prog_curr);
+					_nw *= eval_curve_x(_widc, _widap? _prog_eli / _rtLen : _prog_curr);
 					
 					if(_total <= _prog_curr - _prog) {
 						_na = point_direction(_ox, _oy, _nx, _ny) + 90;
 					} else {
-						var np = _pat.getPointRatio(_prog_curr + ww);
-						var _nna = point_direction(_nx, _ny, np[0], np[1]) + 90;
-						
-						if(_total == _rtLen)
-							_na = _nna;
-						else {
-							var _da = point_direction(_ox, _oy, _nx, _ny) + 90;
-							_na = _da + angle_difference(_nna, _da) / 2;
-						}
+						var n0 = _pat.getPointRatio(_prog_curr - 0.001);
+						var n1 = _pat.getPointRatio(_prog_curr + 0.001);
+						_na = point_direction(n0[0], n0[1], n1[0], n1[1]) + 90;
 					}
 					
+					_nc = gradient_eval(_color, _prog_eli / _rtLen, ds_list_get(_col_data, 0));
+					
 					if(_prog_curr > _prog) {
-						draw_set_color(gradient_eval(_color, _prog_eli / _rtLen, ds_list_get(_col_data, 0)));
-						draw_line_width2_angle(_ox, _oy, _nx, _ny, _ow, _nw, _oa, _na);
-						_total -= (_prog_curr - _prog);
+						if(_cap) {
+							if(_total == _rtLen) {
+								draw_set_color(_oc);
+								draw_circle_angle(_ox, _oy, _ow / 2, _oa, _oa + 180, _capP);
+							}
+							if(_total - (_prog_curr - _prog) <= 0) {
+								draw_set_color(_nc);
+								draw_circle_angle(_nx, _ny, _nw / 2, _na - 180, _na, _capP);
+							}
+						}
+						
+						draw_line_width2_angle(_ox, _oy, _nx, _ny, _ow, _nw, _oa, _na, _oc, _nc);
+						_total -= _prog_curr - _prog;
 					}
 					
 					_prog = _prog_curr;
@@ -136,6 +161,10 @@ function Node_Line(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constru
 					_ox = _nx;
 					_oy = _ny;
 					_ow = _nw;
+					_oc = _nc;
+					
+					if(_total_prev == _total && ++_freeze > 16) break;
+					_total_prev = _total;
 				}
 			} else {
 				var x0, y0, x1, y1;
@@ -150,10 +179,10 @@ function Node_Line(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constru
 				var _d = point_direction(x0, y0, x1, y1);
 				
 				var ww = _rtLen / _seg;
-				var _total = _rtLen;
-				var _prog_curr = frac(_shift + _rtStr) - ww;
-				var _prog = _prog_curr + 1;
-				var _prog_eli = 0;
+				var _total		= _rtLen;
+				var _prog_curr	= frac(_shift + _rtStr) - ww;
+				var _prog		= _prog_curr + 1;
+				var _prog_eli	= 0;
 				
 				while(_total > 0) {
 					if(_prog_curr >= 1) _prog_curr = 0;
@@ -170,11 +199,23 @@ function Node_Line(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constru
 					_sedIndex++;
 				
 					_nw = random_range(_wid[0], _wid[1]);
-					_nw *= eval_curve_x(_widc, _prog_curr);
+					_nw *= eval_curve_x(_widc, _widap? _prog_eli / _rtLen : _prog_curr);
+					
+					_nc = gradient_eval(_color, _prog_eli / _rtLen, ds_list_get(_col_data, 0));
 					
 					if(_prog_curr > _prog) {
-						draw_set_color(gradient_eval(_color, _prog_eli / _rtLen, ds_list_get(_col_data, 0)));
-						draw_line_width2_angle(_ox, _oy, _nx, _ny, _ow, _nw, _d + 90, _d + 90);
+						if(_cap) {
+							if(_total == _rtLen){
+								draw_set_color(_oc);
+								draw_circle_angle(_ox, _oy, _ow / 2, _d + 180 - 90, _d + 180 + 90, _capP);
+							}
+							if(_total - (_prog_curr - _prog) <= 0){
+								draw_set_color(_nc);
+								draw_circle_angle(_nx, _ny, _nw / 2, _d - 90, _d + 90, _capP);
+							}
+						}
+						
+						draw_line_width2_angle(_ox, _oy, _nx, _ny, _ow, _nw, _d + 90, _d + 90, _oc, _nc);
 						_total -= (_prog_curr - _prog);
 					}
 					
@@ -182,6 +223,7 @@ function Node_Line(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constru
 					_ox = _nx;
 					_oy = _ny;
 					_ow = _nw;
+					_oc = _nc;
 				}
 			}
 		surface_reset_target();

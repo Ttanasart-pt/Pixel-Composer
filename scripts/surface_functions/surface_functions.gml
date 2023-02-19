@@ -121,10 +121,7 @@ function surface_copy_from(dst, src) {
 function surface_clone(surface, source = noone) {
 	if(!is_surface(surface)) return noone;
 	
-	if(source == noone)
-		source = surface_create_valid(surface_get_width(surface), surface_get_height(surface));
-	else 
-		source = surface_verify(source, surface_get_width(surface), surface_get_height(surface));
+	source = surface_verify(source, surface_get_width(surface), surface_get_height(surface));
 	
 	surface_set_target(source);
 	draw_clear_alpha(0, 0);

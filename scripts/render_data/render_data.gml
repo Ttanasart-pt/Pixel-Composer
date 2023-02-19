@@ -4,13 +4,14 @@ enum RENDER_TYPE {
 	full = 2
 }
 
-global.RENDER_LOG = true;
+global.RENDER_LOG = false;
 global.group_inputs = [ "Node_Group_Input", "Node_Feedback_Input", "Node_Iterator_Input", "Node_Iterator_Each_Input" ];
 
 function __nodeLeafList(_list, _queue) {
 	for( var i = 0; i < ds_list_size(_list); i++ ) {
 		var _node = _list[| i];
 		if(!_node.active) continue;
+		if(!_node.renderActive) continue;
 		
 		var _startNode = _node.isRenderable(true);
 		if(_startNode) {
@@ -70,6 +71,7 @@ function Render(partial = false) {
 			if(array_exists(global.group_inputs, instanceof(_node))) continue;
 		
 			if(!_node.active) continue;
+			if(!_node.renderActive) continue;
 			if(_node.rendered) continue;
 			if(__nodeInLoop(_node)) continue;
 		

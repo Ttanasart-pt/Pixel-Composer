@@ -43,6 +43,7 @@ function Node_Export(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 	inputs[| 3] = nodeValue("Type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.enum_scroll, format_single)
 		.rejectArray();
+	inputs[| 3].editWidget.update_hover = false;
 	
 	inputs[| 4] = nodeValue("Template guides", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.label, 
@@ -74,6 +75,7 @@ function Node_Export(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 	inputs[| 9] = nodeValue("Format", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.enum_scroll, format_image)
 		.rejectArray();
+	inputs[| 9].editWidget.update_hover = false;
 	
 	inputs[| 10] = nodeValue("Quality", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 80)
 		.setDisplay(VALUE_DISPLAY.slider, [0, 100, 1])

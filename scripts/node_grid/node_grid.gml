@@ -81,7 +81,7 @@ function Node_Grid(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constru
 			shader_set_uniform_f(uniform_wid, _wid);
 			shader_set_uniform_f(uniform_ang, degtorad(_ang));
 			shader_set_uniform_f(uniform_sam, is_surface(_sam));
-			shader_set_uniform_f(uniform_shf, _shf);
+			shader_set_uniform_f(uniform_shf, _shx? _shf / _sca[1] : _shf / _sca[0]);
 			shader_set_uniform_i(uniform_shx, _shx);
 			shader_set_uniform_i(uniform_hgt, _hgt);
 			shader_set_uniform_f_array_safe(uniform_col1, colToVec4(_col1));

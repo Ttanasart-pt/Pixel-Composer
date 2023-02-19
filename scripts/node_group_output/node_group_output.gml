@@ -1,5 +1,5 @@
 function Node_Group_Output(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
-	name  = "Output";
+	name  = "Group Output";
 	destroy_when_upgroup = true;
 	color = COLORS.node_blend_collection;
 	previewable = false;
@@ -31,6 +31,7 @@ function Node_Group_Output(_x, _y, _group = -1) : Node(_x, _y, _group) construct
 		
 		for(var j = 0; j < ds_list_size(outParent.value_to); j++) {
 			var _to = outParent.value_to[| j];
+			if(!_to.node.renderActive) continue;
 			printIf(global.RENDER_LOG, "Value to " + _to.name);
 			
 			if(!_to.node.active || _to.value_from == noone) {

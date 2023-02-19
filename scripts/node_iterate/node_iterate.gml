@@ -9,6 +9,7 @@ function Node_Iterate(_x, _y, _group = -1) : Node_Collection(_x, _y, _group) con
 	color = COLORS.node_blend_loop;
 	icon  = THEME.loop;
 	
+	combine_render_time = false;
 	iterated = 0;
 	
 	inputs[| 0] = nodeValue("Repeat", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1 );
@@ -42,6 +43,8 @@ function Node_Iterate(_x, _y, _group = -1) : Node_Collection(_x, _y, _group) con
 		var allReady = true;
 		for(var i = custom_input_index; i < ds_list_size(inputs); i++) {
 			var _in = inputs[| i].from;
+			if(!_in.renderActive) continue;
+			
 			allReady &= _in.isUpdateReady()
 		}
 			

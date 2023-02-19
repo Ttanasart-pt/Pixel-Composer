@@ -32,18 +32,12 @@ function Node_Particle(_x, _y, _group = -1) : Node_VFX_Spawner_Base(_x, _y, _gro
 	static onStep = function() {
 		if(!ANIMATOR.frame_progress) return;
 		
-		if(recoverCache()) {
-			triggerRender();
-			return;
-		}
-		
 		RETURN_ON_REST
 			
-		if(ANIMATOR.current_frame == 0) {
+		if(ANIMATOR.current_frame == 0)
 			reset();
-			runVFX(ANIMATOR.current_frame);
-		} else if(cached_output[ANIMATOR.current_frame - 1] != 0)
-			runVFX(ANIMATOR.current_frame);
+		
+		runVFX(ANIMATOR.current_frame);
 	}
 	
 	function render(_time = ANIMATOR.current_frame) {
@@ -67,9 +61,8 @@ function Node_Particle(_x, _y, _group = -1) : Node_VFX_Spawner_Base(_x, _y, _gro
 			var surf_w = surface_get_width(_outSurf);
 			var surf_h = surface_get_height(_outSurf);
 			
-			for(var i = 0; i < PREF_MAP[? "part_max_amount"]; i++) {
+			for(var i = 0; i < PREF_MAP[? "part_max_amount"]; i++)
 				parts[i].draw(_exact, surf_w, surf_h);
-			}
 			
 			BLEND_NORMAL;
 		surface_reset_target();

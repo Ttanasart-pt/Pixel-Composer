@@ -286,7 +286,7 @@ function valueAnimator(_val, _prop) constructor {
 			if(typeArray(prop.display_type) && is_array(val)) {
 				var __v = ds_list_create();
 				for(var j = 0; j < array_length(val); j++) {
-					if(is_struct(val[j]))
+					if(is_struct(val[j]) && struct_has(val[j], "serialize"))
 						ds_list_add_map(__v, val[j].serialize()); 
 					else 
 						ds_list_add(__v, val[j]); 

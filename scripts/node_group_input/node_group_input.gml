@@ -1,5 +1,5 @@
 function Node_Group_Input(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
-	name  = "Input";
+	name  = "Group Input";
 	destroy_when_upgroup = true;
 	color = COLORS.node_blend_collection;
 	previewable = false;
@@ -39,6 +39,7 @@ function Node_Group_Input(_x, _y, _group = -1) : Node(_x, _y, _group) constructo
 	inputs[| 2] = nodeValue("Input type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Integer", "Float", "Boolean", "Color", "Surface", "Path", "Curve", "Text", "Object", "Node", "3D object", "Any" ])
 		.rejectArray();
+	inputs[| 2].editWidget.update_hover = false;
 	
 	inputs[| 3] = nodeValue("Enum label", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "")
 		.setVisible(false)
@@ -48,6 +49,7 @@ function Node_Group_Input(_x, _y, _group = -1) : Node(_x, _y, _group) constructo
 		.setDisplay(VALUE_DISPLAY.enum_button, [ "2", "3", "4" ])
 		.setVisible(false)
 		.rejectArray();
+	inputs[| 2].editWidget.update_hover = false;
 	
 	inputs[| 5] = nodeValue("Order", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.rejectArray();

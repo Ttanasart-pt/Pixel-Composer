@@ -10,6 +10,7 @@ event_inherited();
 	
 	scrollbox = noone;
 	initVal   = 0;
+	update_hover = true;
 	
 	anchor = ANCHOR.top | ANCHOR.left;
 	
@@ -56,10 +57,12 @@ event_inherited();
 			_h  += hght;
 		}
 		
-		UNDO_HOLDING = true;
-		if(hovering > -1) scrollbox.onModify(hovering);
-		else			  scrollbox.onModify(initVal);
-		UNDO_HOLDING = false;
+		if(update_hover) {
+			UNDO_HOLDING = true;
+			if(hovering > -1) scrollbox.onModify(hovering);
+			else			  scrollbox.onModify(initVal);
+			UNDO_HOLDING = false;
+		}
 		
 		if(sFOCUS) {
 			if(keyboard_check_pressed(vk_up)) {

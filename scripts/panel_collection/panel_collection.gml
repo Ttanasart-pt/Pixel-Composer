@@ -55,7 +55,12 @@ function Panel_Collection() : PanelContent() constructor {
 					refreshContext();
 				})
 			];
-		} else if(STEAM_ENABLED) {
+			
+			if(STEAM_ENABLED) 
+				array_push(contentMenu, -1);
+		} 
+		
+		if(STEAM_ENABLED) {
 			if(!meta.steam) {
 				array_push(contentMenu, menuItem(get_text("panel_collection_workshop_upload", "Upload to Steam Workshop") + "...", function() { 
 					var dia = dialogCall(o_dialog_file_name_collection, mouse_mx + ui(8), mouse_my + ui(-320));

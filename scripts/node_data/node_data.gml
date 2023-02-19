@@ -2,6 +2,7 @@ global.loop_nodes = [ "Node_Iterate", "Node_Iterate_Each" ];
 
 function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) constructor {
 	active  = true;
+	renderActive = true;
 	node_id = generateUUID();
 	group   = _group;
 	destroy_when_upgroup = false;
@@ -59,6 +60,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) constructor {
 	rendered        = false;
 	update_on_frame = false;
 	render_time		= 0;
+	auto_render_time = true;
 	
 	use_cache		= false;
 	cached_output	= [];
@@ -252,7 +254,8 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) constructor {
 			var t = get_timer();
 			update();
 			setRenderStatus(true);
-			render_time = get_timer() - t;
+			if(auto_render_time)
+				render_time = get_timer() - t;
 		} catch(exception) {
 			var sCurr = surface_get_target();
 			while(surface_get_target() != sBase)
@@ -277,8 +280,12 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) constructor {
 		
 		for(var j = 0; j < ds_list_size(inputs); j++) {
 			var _in = inputs[| j];
-			if(_in.value_from == noone) continue;
-			if (!_in.value_from.node.rendered)
+			var val_from = _in.value_from;
+			if(val_from == noone) continue;
+			if(!val_from.node.active) continue;
+			if(!val_from.node.renderActive) continue;
+			
+			if (!val_from.node.rendered)
 				return false;
 		}
 		
@@ -355,7 +362,8 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) constructor {
 	
 	static drawNodeBase = function(xx, yy, _s) {
 		if(!active) return;
-		draw_sprite_stretched_ext(bg_spr, 0, xx, yy, w * _s, h * _s, color, 0.75);
+		var aa = 0.25 + 0.5 * renderActive;
+		draw_sprite_stretched_ext(bg_spr, 0, xx, yy, w * _s, h * _s, color, aa);
 	}
 	
 	static drawGetBbox = function(xx, yy, _s) {
@@ -377,13 +385,15 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) constructor {
 	
 	static drawNodeName = function(xx, yy, _s) {
 		if(!active) return;
+		
 		draw_name = false;
 		var _name = display_name == ""? name : display_name;
 		if(_name == "") return;
 		if(_s < 0.75) return;
 		draw_name = true;
 		
-		draw_sprite_stretched_ext(THEME.node_bg_name, 0, xx, yy, w * _s, ui(20), color, 0.75);
+		var aa = 0.25 + 0.5 * renderActive;
+		draw_sprite_stretched_ext(THEME.node_bg_name, 0, xx, yy, w * _s, ui(20), color, aa);
 		
 		var cc = COLORS._main_text;
 		if(PREF_MAP[? "node_show_render_status"] && !rendered)
@@ -394,11 +404,16 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) constructor {
 		if(hasInspectorUpdate()) icon = THEME.refresh_s;
 		var ts = clamp(power(_s, 0.5), 0.5, 1);
 		
+		var aa = 0.5 + 0.5 * renderActive;
+		draw_set_alpha(aa);
+		
 		if(icon && _s > 0.75) {
-			draw_sprite_ui_uniform(icon, 0, xx + ui(12), yy + ui(10));	
+			draw_sprite_ui_uniform(icon, 0, xx + ui(12), yy + ui(10),,, aa);	
 			draw_text_cut(xx + ui(24), yy + ui(10), _name, w * _s - ui(24), ts);
 		} else
 			draw_text_cut(xx + ui(8), yy + ui(10), _name, w * _s - ui(8), ts);
+			
+		draw_set_alpha(1);
 	}
 	
 	static drawJunctions = function(_x, _y, _mx, _my, _s) {
@@ -552,8 +567,9 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) constructor {
 		var ps = min((w * _s - 8) / pw, (h * _s - 8) / ph);
 		var px = xx + w * _s / 2 - pw * ps / 2;
 		var py = yy + h * _s / 2 - ph * ps / 2;
-			
-		draw_surface_ext_safe(surf, px, py, ps, ps, 0, c_white, 1);
+		
+		var aa = 0.5 + 0.5 * renderActive;
+		draw_surface_ext_safe(surf, px, py, ps, ps, 0, c_white, aa);
 	}
 	
 	static getNodeDimension = function() {
@@ -725,6 +741,9 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) constructor {
 	static onDestroy = function() {}
 	
 	static isRenderable = function(trigger = false) {
+		if(!active) return false;
+		if(!renderActive) return false;
+		
 		var _startNode = true;
 		for(var j = 0; j < ds_list_size(inputs); j++) {
 			var _in = inputs[| j];
@@ -732,8 +751,9 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) constructor {
 			
 			if(trigger)
 				triggerRender();
-					
-			if(_in.value_from != noone && !_in.value_from.node.rendered)
+			
+			var val_from = _in.value_from;
+			if(val_from != noone && !val_from.node.rendered && val_from.node.active && val_from.node.renderActive)
 				_startNode = false;
 		}
 		return _startNode;
@@ -746,6 +766,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) constructor {
 			
 			for(var j = 0; j < ds_list_size(_ot.value_to); j++) {
 				var _to = _ot.value_to[| j];
+				if(!_to.node.renderActive) continue;
 				if(!_to.node.active || _to.value_from == noone) continue; 
 				if(_to.value_from.node != self) continue;
 				
@@ -776,21 +797,22 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) constructor {
 		cacheArrayCheck();
 		if(ANIMATOR.current_frame > ANIMATOR.frames_total) return;
 		
-		var _os = cached_output[ANIMATOR.current_frame];
-		if(is_surface(_os))
-			surface_copy_size(_os, _frame);
-		else {
-			_os = surface_clone(_frame);
-			cached_output[ANIMATOR.current_frame] = _os;
-		}
+		cached_output[ANIMATOR.current_frame] = surface_clone(_frame, cached_output[ANIMATOR.current_frame]);
 		
 		array_safe_set(cache_result, ANIMATOR.current_frame, true);
 	}
+	
 	static cacheExist = function(frame = ANIMATOR.current_frame) {
 		if(frame >= array_length(cached_output)) return false;
 		if(frame >= array_length(cache_result)) return false;
-		if(!array_safe_get(cache_result, frame)) return false;
+		//if(!array_safe_get(cache_result, frame)) return false;
 		return true;
+	}
+	
+	static getCacheFrame = function(frame = ANIMATOR.current_frame) {
+		if(!cacheExist(frame)) return noone;
+		var surf = array_safe_get(cached_output, frame);
+		return surf;
 	}
 	
 	static recoverCache = function(frame = ANIMATOR.current_frame) {
@@ -810,6 +832,8 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) constructor {
 		return true;
 	}
 	static clearCache = function() {
+		return;
+		
 		if(array_length(cached_output) != ANIMATOR.frames_total + 1)
 			array_resize(cached_output, ANIMATOR.frames_total + 1);
 		for(var i = 0; i < array_length(cached_output); i++) {
@@ -904,12 +928,13 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) constructor {
 		var _map = ds_map_create();
 		
 		if(!preset) {
-			_map[? "id"]	= node_id;
-			_map[? "name"]	= display_name;
-			_map[? "x"]		= x;
-			_map[? "y"]		= y;
-			_map[? "type"]  = instanceof(self);
-			_map[? "group"] = group == -1? -1 : group.node_id;
+			_map[? "id"]	 = node_id;
+			_map[? "render"] = renderActive;
+			_map[? "name"]	 = display_name;
+			_map[? "x"]		 = x;
+			_map[? "y"]		 = y;
+			_map[? "type"]   = instanceof(self);
+			_map[? "group"]  = group == -1? -1 : group.node_id;
 		}
 		
 		ds_map_add_map(_map, "attri", attributeSerialize());
@@ -950,6 +975,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) constructor {
 		
 			x = ds_map_try_get(load_map, "x");
 			y = ds_map_try_get(load_map, "y");
+			renderActive = ds_map_try_get(load_map, "render", true);
 		}
 		
 		if(ds_map_exists(load_map, "attri"))

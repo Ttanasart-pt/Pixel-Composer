@@ -41,7 +41,10 @@
 			string_lead_zero(current_minute, 2) + 
 			string_lead_zero(current_second, 2) + ".pxc";
 		
-		SAVE_AT(loc + fname, "Autosaved ");
+		try
+			SAVE_AT(loc + fname, "Autosaved ");
+		catch(e)
+			print(exception_print(e));
 	}
 #endregion
 

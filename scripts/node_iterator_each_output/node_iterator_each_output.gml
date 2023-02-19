@@ -1,5 +1,5 @@
 function Node_Iterator_Each_Output(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
-	name  = "Output";
+	name  = "Loop Output";
 	color = COLORS.node_blend_loop;
 	
 	manual_deletable = false;
@@ -24,6 +24,7 @@ function Node_Iterator_Each_Output(_x, _y, _group = -1) : Node(_x, _y, _group) c
 			var _ot = group.outputs[| 0];
 			for(var j = 0; j < ds_list_size(_ot.value_to); j++) {
 				var _to = _ot.value_to[| j];
+				if(!_to.node.renderActive) continue;
 				
 				if(_to.node.active && _to.value_from != noone && _to.value_from.node == group) {
 					_to.node.triggerRender();
@@ -47,13 +48,11 @@ function Node_Iterator_Each_Output(_x, _y, _group = -1) : Node(_x, _y, _group) c
 		if(inputs[| 0].value_from == noone) return _prev_val;
 		
 		var is_surf	 = inputs[| 0].value_from.type == VALUE_TYPE.surface;
-		var _new_val;
+		var _new_val = [];
 		
 		surface_array_free(_prev_val);
-		if(is_surf)
-			_new_val = surface_array_clone(_val);
-		else 
-			_new_val = array_clone(_val);
+		if(is_surf)	_new_val = surface_array_clone(_val);
+		else		_new_val = array_clone(_val);
 		
 		return _new_val;
 	}
@@ -69,7 +68,8 @@ function Node_Iterator_Each_Output(_x, _y, _group = -1) : Node(_x, _y, _group) c
 		var _val = group.outputs[| 0].getValue();
 		if(!is_array(_val)) return;
 		
-		_val[ind] = cloneValue(array_safe_get(_val, ind), inputs[| 0].getValue());
+		_val[@ ind] = cloneValue(array_safe_get(_val, ind), inputs[| 0].getValue());
+		
 		group.outputs[| 0].setValue(_val);
 		outputs[| 0].setValue(_val);
 	}

@@ -44,6 +44,7 @@ function Node_Path(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 		[ "Circle path",   THEME.path_tools_circle ],
 	];
 	
+	anchors			= [];
 	lengths			= [];
 	length_total	= 0;
 	
@@ -404,6 +405,7 @@ function Node_Path(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 		var ansize = ds_list_size(inputs) - input_fix_len;
 		if(ansize < 2) {
 			lengths = [];
+			anchors = [];
 			return;
 		}
 		var sample = PREF_MAP[? "path_resolution"];
@@ -411,6 +413,7 @@ function Node_Path(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 		var con  = loop? ansize : ansize - 1;
 		if(array_length(lengths) != con)
 			array_resize(lengths, con);
+		array_resize(anchors, ansize);
 		
 		for(var i = 0; i < con; i++) {
 			var index_0 = input_fix_len + i;
@@ -419,6 +422,8 @@ function Node_Path(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 			
 			var _a0 = inputs[| index_0].getValue();
 			var _a1 = inputs[| index_1].getValue();
+			anchors[i]     = _a0;
+			anchors[i + 1] = _a1;
 			
 			var l = 0;
 			
@@ -483,17 +488,19 @@ function Node_Path(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 		var _a0, _a1;
 		
 		for(var i = 0; i < ansize; i++) {
-			_a0 = inputs[| input_fix_len + i].getValue();
-			_a1 = inputs[| input_fix_len + safe_mod(i + 1, amo)].getValue();
+			_a0 = anchors[i];
+			_a1 = anchors[safe_mod(i + 1, amo)];
 				
-			if(pix <= lengths[i]) {
-				var _t  = pix / lengths[i];
-				
-				if(!is_array(_a0) || !is_array(_a1))
-					return [0, 0];
-				return eval_bezier(_t, _a0[0], _a0[1], _a1[0], _a1[1], _a0[0] + _a0[4], _a0[1] + _a0[5], _a1[0] + _a1[2], _a1[1] + _a1[3]);
+			if(pix > lengths[i]) {
+				pix -= lengths[i];
+				continue;
 			}
-			pix -= lengths[i];
+			
+			var _t  = pix / lengths[i];
+				
+			if(!is_array(_a0) || !is_array(_a1))
+				return [0, 0];
+			return eval_bezier(_t, _a0[0], _a0[1], _a1[0], _a1[1], _a0[0] + _a0[4], _a0[1] + _a0[5], _a1[0] + _a1[2], _a1[1] + _a1[3]);
 		}
 		
 		return [0, 0];

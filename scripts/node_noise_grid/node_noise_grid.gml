@@ -24,7 +24,7 @@ function Node_Grid_Noise(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) c
 	inputs[| 3] = nodeValue("Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0);
 	
 	inputs[| 4] = nodeValue("Shift", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
-		.setDisplay(VALUE_DISPLAY.slider, [-2, 2, 0.01]);
+		.setDisplay(VALUE_DISPLAY.slider, [-0.5, 0.5, 0.01]);
 		
 	inputs[| 5] = nodeValue("Texture sample", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 	

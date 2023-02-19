@@ -1,5 +1,5 @@
 function Node_Iterator_Each_Input(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
-	name  = "Input";
+	name  = "Loop Input";
 	color = COLORS.node_blend_loop;
 	
 	manual_deletable = false;

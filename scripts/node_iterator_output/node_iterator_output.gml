@@ -1,6 +1,5 @@
-
 function Node_Iterator_Output(_x, _y, _group = -1) : Node_Group_Output(_x, _y, _group) constructor {
-	name  = "Output";
+	name  = "Loop Output";
 	color = COLORS.node_blend_loop;
 	
 	w = 96;
@@ -49,6 +48,7 @@ function Node_Iterator_Output(_x, _y, _group = -1) : Node_Group_Output(_x, _y, _
 			var _ot = outParent;
 			for(var j = 0; j < ds_list_size(_ot.value_to); j++) {
 				var _to = _ot.value_to[| j];
+				if(!_to.node.renderActive) continue;
 				
 				if(_to.node.active && _to.value_from != noone && _to.value_from.node == group) {
 					_to.node.triggerRender();

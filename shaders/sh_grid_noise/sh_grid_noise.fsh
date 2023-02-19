@@ -25,10 +25,15 @@ void main() {
 	vec2 st = v_vTexcoord - position / dimension;
     vec2 pos = vec2(st * scale);
 	
-	if(shiftAxis == 0)
-		pos.x += random(vec2(0., floor(pos.y))) * shift;
-	else if(shiftAxis == 1)
-		pos.y += random(vec2(0., floor(pos.x))) * shift;
+	if(shiftAxis == 0) {
+		//pos.x += random(vec2(0., floor(pos.y)));
+		if(mod(pos.y, 2.) > 1.)
+			pos.x += shift;
+	} else if(shiftAxis == 1) {
+		//pos.y += random(vec2(0., floor(pos.x)));
+		if(mod(pos.x, 2.) > 1.)
+			pos.y += shift;
+	}
 	
 	if(useSampler == 0) {
 		vec2 i = floor(pos);
