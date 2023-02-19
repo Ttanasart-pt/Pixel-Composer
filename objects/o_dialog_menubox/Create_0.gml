@@ -12,11 +12,14 @@ event_inherited();
 	children = ds_list_create();
 	ds_list_add(children, self);
 	
+	show_icon = false;
+	
 	function setMenu(_menu) {
 		menu = _menu;
 		dialog_x = x;
 		dialog_y = y;
 		
+		show_icon = false;
 		dialog_w = 0;
 		dialog_h = 0;
 		
@@ -28,33 +31,41 @@ event_inherited();
 		
 		draw_set_text(f_p0, fa_center, fa_center, COLORS._main_text);
 		for(var i = 0; i < array_length(menu); i++) {
-			var menuItem = menu[i];
-			if(!is_array(menuItem)) {
+			var _menuItem = menu[i];
+			if(_menuItem == -1) {
 				dialog_h += ui(8);
 				continue;
 			}
-			draw_set_font(f_p0);
-			var ww = string_width(menuItem[0]) + ui(64);
 			
-			if(array_length(menuItem) > 2) {
-				if(is_array(menuItem[2])) {
-					var _key = find_hotkey(menuItem[2][0], menuItem[2][1]);
+			draw_set_font(f_p0);
+			var ww = string_width(_menuItem.name) + ui(64);
+			
+			if(instanceof(_menuItem) == "MenuItemGroup") {
+				var amo = array_length(_menuItem.group);
+				ww = max(ww, ui(16) + amo * (hght + ui(4)));
+				dialog_h += hght;
+			} 
+			
+			if(instanceof(_menuItem) == "MenuItem") {
+				if(_menuItem.hotkey != noone) {
+					var _key = find_hotkey(_menuItem.hotkey[0], _menuItem.hotkey[1]);
 					if(_key) {
 						draw_set_font(f_p1);
 						var ss = key_get_name(_key.key, _key.modi);	
 						ww += string_width(ss) + ui(16);
 					}
-				}
-			} else if(is_array(menuItem[1])) {
-				var amo = array_length(menuItem[1]);
-				ww = max(ww, ui(16) + amo * (hght + ui(4)));
+				} 
+				
+				if(_menuItem.spr != noone)
+					show_icon = true;
 			}
-			dialog_w = max(dialog_w, ww);
 			
-			if(is_array(menuItem[1]))
-				dialog_h += hght;
+			dialog_w = max(dialog_w, ww);
 			dialog_h += hght;
 		}
+		
+		if(show_icon)
+			dialog_w += ui(32);
 		
 		if(dialog_x + dialog_w > WIN_W - ui(16))
 			dialog_x = WIN_W - ui(16) - dialog_w;

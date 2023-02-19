@@ -92,14 +92,13 @@ if palette == 0 exit;
 		var by = dialog_y + ui(16);
 		
 		if(buttonInstant(THEME.button_hide, bx, by, ui(28), ui(28), mouse_ui, sFOCUS, sHOVER, get_text("palette_editor_sort", "Sort color"), THEME.sort) == 2) {
-			var dia = dialogCall(o_dialog_menubox, bx + ui(32), by);
-			dia.setMenu([ 
-				[ get_text("palette_editor_sort_brighter", "Brighter"), function() { sortPalette(__sortBright); } ], 
-				[ get_text("palette_editor_sort_darker", "Darker"),     function() { sortPalette(__sortDark); } ],
+			menuCall( bx + ui(32), by, [ 
+				menuItem(get_text("palette_editor_sort_brighter", "Brighter"), function() { sortPalette(__sortBright); }), 
+				menuItem(get_text("palette_editor_sort_darker", "Darker"),     function() { sortPalette(__sortDark); }),
 				-1,
-				[ get_text("palette_editor_sort_hue", "Hue"),           function() { sortPalette(__sortHue); } ], 
-				[ get_text("palette_editor_sort_sat", "Saturation"),    function() { sortPalette(__sortSat); } ], 
-				[ get_text("palette_editor_sort_val", "Value"),         function() { sortPalette(__sortVal); } ], 
+				menuItem(get_text("palette_editor_sort_hue", "Hue"),           function() { sortPalette(__sortHue); }), 
+				menuItem(get_text("palette_editor_sort_sat", "Saturation"),    function() { sortPalette(__sortSat); }), 
+				menuItem(get_text("palette_editor_sort_val", "Value"),         function() { sortPalette(__sortVal); }), 
 			]);
 		}
 		bx -= ui(32);

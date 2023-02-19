@@ -8,115 +8,111 @@ function Panel_Menu() : PanelContent() constructor {
 	noti_icon_time = 0;
 	
 	menu_file = [
-		[ get_text("panel_menu_new", "New"), function() { 
-			NEW();
-		}, ["", "New file"] ],
-		[ get_text("panel_menu_open", "Open") + "...", function() { LOAD(); }, ["", "Open"]  ],
-		[ get_text("panel_menu_save", "Save"), function() { SAVE(); }, ["", "Save"]  ],
-		[ get_text("panel_menu_save_as", "Save as..."), function() { SAVE_AS(); }, ["", "Save as"]  ],
-		[ get_text("panel_menu_recent_files", "Recent files"), function(_x, _y, _depth) { 
-				var dia = instance_create_depth(_x - ui(4), _y, _depth - 1, o_dialog_menubox);
+		menuItem(get_text("panel_menu_new", "New"), function() { NEW(); }, THEME.new_file, ["", "New file"]),
+		menuItem(get_text("panel_menu_open", "Open") + "...", function() { LOAD(); }, THEME.noti_icon_file_load, ["", "Open"]),
+		menuItem(get_text("panel_menu_save", "Save"), function() { SAVE(); }, THEME.save, ["", "Save"]),
+		menuItem(get_text("panel_menu_save_as", "Save as..."), function() { SAVE_AS(); }, THEME.save, ["", "Save as"]),
+		menuItem(get_text("panel_menu_recent_files", "Recent files"), function(_x, _y, _depth) { 
 				var arr = [];
 				for(var i = 0; i < min(10, ds_list_size(RECENT_FILES)); i++)  {
 					var _rec = RECENT_FILES[| i];
-					array_push(arr, [ _rec, function(_x, _y, _depth, _path) { LOAD_PATH(_path); } ]);
+					array_push(arr, menuItem(_rec, function(_x, _y, _depth, _path) { LOAD_PATH(_path); }));
 				}
-				dia.setMenu(arr);
-				return dia;
-		}, ">" ],
+				
+				return submenuCall(_x, _y, _depth, arr);
+		}).setIsShelf(),
 		-1,
-		[ get_text("preferences", "Preferences") + "...", function() { dialogCall(o_dialog_preference); } ],
-		[ get_text("panel_menu_splash_screen", "Splash screen"), function() { dialogCall(o_dialog_splash); } ],
+		menuItem(get_text("preferences", "Preferences") + "...", function() { dialogCall(o_dialog_preference); }, THEME.gear),
+		menuItem(get_text("panel_menu_splash_screen", "Splash screen"), function() { dialogCall(o_dialog_splash); }),
 		-1,
-		[ get_text("panel_menu_addons", "Addons"), function(_x, _y, _depth) { 
-				var dia = instance_create_depth(_x - ui(4), _y, _depth - 1, o_dialog_menubox);
-				dia.setMenu([
-					[ get_text("panel_menu_addons_key", "Key displayer"), function() { 
-						if(instance_exists(addon_key_displayer)) {
-							instance_destroy(addon_key_displayer);
-							return;
-						}
+		menuItem(get_text("panel_menu_addons", "Addons"), function(_x, _y, _depth) { 
+			return submenuCall(_x, _y, _depth, [
+				menuItem(get_text("panel_menu_addons_key", "Key displayer"), function() { 
+					if(instance_exists(addon_key_displayer)) {
+						instance_destroy(addon_key_displayer);
+						return;
+					}
 						
-						instance_create_depth(0, 0, 0, addon_key_displayer);
-					}]
-				]);
-				return dia;
-		}, ">" ],
+					instance_create_depth(0, 0, 0, addon_key_displayer);
+				})
+			]);
+		}, THEME.addon ).setIsShelf(),
 	];
 	
-	if(DEMO) {
-		array_delete(menu_file, 1, 4);
-	}
+	if(DEMO) array_delete(menu_file, 1, 4);
 	
-	menu_help = [ get_text("panel_menu_help", "Help"), [
-		[ get_text("panel_menu_help_video", "Tutorial videos"), function() {
+	menu_help = [
+		menuItem(get_text("panel_menu_help_video", "Tutorial videos"), function() {
 			url_open("https://www.youtube.com/@makhamdev");
-		} ],
-		[ get_text("panel_menu_help_wiki", "Community Wiki"), function() {
+		}, THEME.youtube),
+		menuItem(get_text("panel_menu_help_wiki", "Community Wiki"), function() {
 			url_open("https://pixel-composer.fandom.com/wiki/Pixel_Composer_Wiki");
-		} ],
+		}, THEME.wiki),
 		-1,
-		[ get_text("panel_menu_itch", "itch.io page"), function() {
+		menuItem(get_text("panel_menu_itch", "itch.io page"), function() {
 			url_open("https://makham.itch.io/pixel-composer");
-		} ],
-		[ get_text("panel_menu_steam", "Steam page"), function() {
+		}, THEME.itch),
+		menuItem(get_text("panel_menu_steam", "Steam page"), function() {
 			url_open("https://store.steampowered.com/app/2299510/Pixel_Composer");
-		} ],
+		}, THEME.steam),
 		-1, 
-		[ get_text("panel_menu_directory", "Open local directory"), function() {
+		menuItem(get_text("panel_menu_directory", "Open local directory"), function() {
 			shellOpenExplorer(DIRECTORY);
-		} ],
-		[ get_text("panel_menu_reset_default", "Reset default collection, assets"), function() {
+		}, THEME.folder),
+		menuItem(get_text("panel_menu_directory", "Open autosave directory"), function() {
+			shellOpenExplorer(DIRECTORY + "autosave\\");
+		}, THEME.folder),
+		menuItem(get_text("panel_menu_reset_default", "Reset default collection, assets"), function() {
 			zip_unzip("data/Collections.zip", DIRECTORY + "Collections");
 			zip_unzip("data/Assets.zip", DIRECTORY + "Assets");
-		} ],
-	]];
+		}),
+	];
 	
 	menu_help_steam = array_clone(menu_help);
-	array_push(menu_help_steam[1], -1, 
-		[ get_text("panel_menu_steam_workshop", "Steam Workshop"), function() {
+	array_push(menu_help_steam, -1, 
+		menuItem(get_text("panel_menu_steam_workshop", "Steam Workshop"), function() {
 			steam_activate_overlay_browser("https://steamcommunity.com/app/2299510/workshop/");
-		} ]);
+		}, THEME.steam) );
 	
 	menus = [
-		[ get_text("panel_menu_file", "File"), menu_file],
+		[ get_text("panel_menu_file", "File"), menu_file ],
 		[ get_text("panel_menu_edit", "Edit"), [
-			[ get_text("undo", "Undo"), function() { UNDO(); }, ["", "Undo"]  ],
-			[ get_text("redo", "Redo"), function() { REDO(); }, ["", "Redo"]  ],
-			[ get_text("history_title", "Action history"), function() { dialogCall(o_dialog_history, mouse_mx, mouse_my);  } ],
+			menuItem(get_text("undo", "Undo"), function() { UNDO(); }, THEME.undo, ["", "Undo"]),
+			menuItem(get_text("redo", "Redo"), function() { REDO(); }, THEME.redo, ["", "Redo"]),
+			menuItem(get_text("history_title", "Action history"), function() { dialogCall(o_dialog_history, mouse_mx, mouse_my); }),
 		]],
 		[ get_text("panel_menu_preview", "Preview"), [
-			[ get_text("panel_menu_center_preview", "Center preview"), function() { PANEL_PREVIEW.do_fullView = true; }, ["Preview", "Focus content"] ], 
-			[ get_text("panel_menu_save_current_preview_as", "Save current preview as..."), function() { PANEL_PREVIEW.saveCurrentFrame(); }, ["Preview", "Save current frame"] ], 
-			[ get_text("panel_menu_preview_background", "Preview background"), [
+			menuItem(get_text("panel_menu_center_preview", "Center preview"), function() { PANEL_PREVIEW.do_fullView = true; }, THEME.icon_center_canvas, ["Preview", "Focus content"]), 
+			menuItem(get_text("panel_menu_save_current_preview_as", "Save current preview as..."), function() { PANEL_PREVIEW.saveCurrentFrame(); }, noone, ["Preview", "Save current frame"]), 
+			menuItemGroup(get_text("panel_menu_preview_background", "Preview background"), [
 				[ s_menu_transparent,	function() { PANEL_PREVIEW.canvas_bg = -1; } ],
 				[ s_menu_white,			function() { PANEL_PREVIEW.canvas_bg = c_white; } ],
 				[ s_menu_black,			function() { PANEL_PREVIEW.canvas_bg = c_black; } ],
-			]], 
+			]), 
 			-1,
-			[ get_text("panel_menu_show_grid", "Show Grid"), function() { PANEL_PREVIEW.grid_show = !PANEL_PREVIEW.grid_show; }, ["Preview", "Toggle grid"] ],
-			[ get_text("panel_menu_grid_setting", "Grid setting..."), function() { 
+			menuItem(get_text("panel_menu_show_grid", "Show Grid"), function() { PANEL_PREVIEW.grid_show = !PANEL_PREVIEW.grid_show; }, [ THEME.icon_grid, 1 ], ["Preview", "Toggle grid"]),
+			menuItem(get_text("panel_menu_grid_setting", "Grid setting..."), function() { 
 				var dia = dialogCall(o_dialog_preview_grid); 
 				dia.anchor = ANCHOR.none;
-			} ],
+			}, THEME.icon_grid_setting),
 		]], 
 		[ get_text("panel_menu_animation", "Animation"), [
-			[ get_text("panel_menu_animation_setting", "Animation setting..."), function() { 
+			menuItem(get_text("panel_menu_animation_setting", "Animation setting..."), function() { 
 				var dia = dialogCall(o_dialog_animation); 
 				dia.anchor = ANCHOR.none;
-			} ],
+			}, THEME.animation_setting),
 			-1,
-			[ get_text("panel_menu_animation_scaler", "Animation scaler..."), function() { 
+			menuItem(get_text("panel_menu_animation_scaler", "Animation scaler..."), function() { 
 				dialogCall(o_dialog_anim_time_scaler); 
-			} ],
+			}, THEME.animation_timing),
 		]],
 		[ get_text("panel_menu_rendering", "Rendering"), [
-			[ get_text("panel_menu_render_all_nodes", "Render all nodes"), function() { 
+			menuItem(get_text("panel_menu_render_all_nodes", "Render all nodes"), function() { 
 				for(var i = 0; i < ds_list_size(NODES); i++) 
 					NODES[| i].triggerRender();
 				UPDATE |= RENDER_TYPE.full; 
-			}, ["", "Render all"] ],
-			[ get_text("panel_menu_execute_exports", "Execute all export nodes"), function() { 
+			}, [ THEME.sequence_control, 1 ], ["", "Render all"]),
+			menuItem(get_text("panel_menu_execute_exports", "Execute all export nodes"), function() { 
 				var key = ds_map_find_first(NODE_MAP);
 				repeat(ds_map_size(NODE_MAP)) {
 					var node = NODE_MAP[? key];
@@ -127,49 +123,49 @@ function Panel_Menu() : PanelContent() constructor {
 					
 					node.initExport();
 				}
-			}, ],
+			}),
 		]],
 		[ get_text("panel_menu_panels", "Panels"), [
-			[ get_text("panel_menu_workspace", "Workspace"), [
+			menuItemGroup(get_text("panel_menu_workspace", "Workspace"), [
 				[ THEME.workspace_horizontal, function() { clearPanel(); PREF_MAP[? "panel_layout"] = 0; setPanel(); PREF_SAVE(); } ],
 				[ THEME.workspace_vertical, function() { clearPanel(); PREF_MAP[? "panel_layout"] = 1; setPanel(); PREF_SAVE(); } ]
-			]],
+			]),
 			-1,
-			[ get_text("panel_menu_collections", "Collections"), function() {
+			menuItem(get_text("panel_menu_collections", "Collections"), function() {
 				clearPanel();
 				PREF_MAP[? "panel_collection"] = !PREF_MAP[? "panel_collection"];
 				setPanel();
 				PREF_SAVE();
-			} ],
+			}),
 		]],
-		menu_help,
+		[ get_text("panel_menu_help", "Help"), menu_help ],
 	]
 	
 	if(TESTING) {
 		array_push(menus, [ get_text("panel_menu_test", "Test"), [
-			[ get_text("panel_menu_test_load_all", "Load all current collections"), function() { 
+			menuItem(get_text("panel_menu_test_load_all", "Load all current collections"), function() { 
 				__test_load_current_collections();
-			}],
-			[ get_text("panel_menu_test_update_all", "Update all current collections"), function() { 
+			}),
+			menuItem(get_text("panel_menu_test_update_all", "Update all current collections"), function() { 
 				__test_update_current_collections();
-			}],
-			[ get_text("panel_menu_test_add_meta", "Add metadata to current collections"), function() { 
+			}),
+			menuItem(get_text("panel_menu_test_add_meta", "Add metadata to current collections"), function() { 
 				__test_metadata_current_collections();
-			}],
-			[ get_text("panel_menu_test_update_sam", "Update sample projects"), function() { 
+			}),
+			menuItem(get_text("panel_menu_test_update_sam", "Update sample projects"), function() { 
 				__test_update_sample_projects();
-			}],
+			}),
 			-1,
-			[ get_text("panel_menu_test_load_nodes", "Load all nodes"), function() { 
+			menuItem(get_text("panel_menu_test_load_nodes", "Load all nodes"), function() { 
 				__test_load_all_nodes();
-			}],
-			[ get_text("panel_menu_test_gen_guide", "Generate node guide"), function() { 
+			}),
+			menuItem(get_text("panel_menu_test_gen_guide", "Generate node guide"), function() { 
 				__generate_node_guide();
-			}],
+			}),
 			-1,
-			[ get_text("panel_menu_test_crash", "Force crash"), function() { 
+			menuItem(get_text("panel_menu_test_crash", "Force crash"), function() { 
 				print(1 + "a");
-			}],
+			}),
 		]]);
 	}
 	
@@ -199,7 +195,7 @@ function Panel_Menu() : PanelContent() constructor {
 		var txt;
 		
 		if(ds_stack_empty(UNDO_STACK)) {
-			txt = "-" + get_text("undo", "Undo");
+			txt = get_text("undo", "Undo");
 		} else {
 			var act = ds_stack_top(UNDO_STACK);
 			if(array_length(act) > 1)
@@ -208,10 +204,11 @@ function Panel_Menu() : PanelContent() constructor {
 				txt = get_text("undo", "Undo") + " " + act[0].toString();
 		}
 		
-		menus[1][1][0][0] = txt;
+		menus[1][1][0].active = !ds_stack_empty(UNDO_STACK);
+		menus[1][1][0].name = txt;
 		
 		if(ds_stack_empty(REDO_STACK)) {
-			txt = "-" + get_text("redo", "Redo");
+			txt = get_text("redo", "Redo");
 		} else {
 			var act = ds_stack_top(REDO_STACK);
 			if(array_length(act) > 1)
@@ -220,7 +217,8 @@ function Panel_Menu() : PanelContent() constructor {
 				txt = get_text("redo", "Redo") + " " + act[0].toString();
 		}
 		
-		menus[1][1][1][0] = txt;
+		menus[1][1][1].active = !ds_stack_empty(REDO_STACK);
+		menus[1][1][1].name = txt;
 	}
 	
 	function drawContent(panel) {
@@ -228,7 +226,7 @@ function Panel_Menu() : PanelContent() constructor {
 		draw_sprite_ui_uniform(THEME.icon_24, 0, h / 2, h / 2, 1, c_white);
 		var xx = h;
 		
-		menus[6] = STEAM_ENABLED? menu_help_steam : menu_help;
+		menus[6][1] = STEAM_ENABLED? menu_help_steam : menu_help;
 		
 		if(pHOVER && point_in_rectangle(mx, my, 0, 0, ui(40), ui(32))) {
 			if(mouse_press(mb_left, pFOCUS))
@@ -244,8 +242,7 @@ function Panel_Menu() : PanelContent() constructor {
 				draw_sprite_stretched(THEME.menu_button, 0, xc - ww / 2, ui(6), ww, h - ui(12));
 					
 				if((mouse_press(mb_left, pFOCUS)) || instance_exists(o_dialog_menubox)) {
-					var dia = dialogCall(o_dialog_menubox, x + xx, y + h);
-					dia.setMenu(menus[i][1]);
+					menuCall( x + xx, y + h, menus[i][1]);
 				}
 			}
 			

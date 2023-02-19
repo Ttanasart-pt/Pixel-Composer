@@ -5,7 +5,7 @@ function draw_surface_blend(background, foreground, blend, alpha, _pre_alp = tru
 	if(!is_surface(background)) return;
 	
 	var sh = sh_blend_normal
-	switch(BLEND_TYPES[blend]) {
+	switch(array_safe_get(BLEND_TYPES, blend)) {
 		case "Normal" :		sh = sh_blend_normal	break;
 		case "Add" :		sh = sh_blend_add;		break;
 		case "Subtract" :	sh = sh_blend_subtract;	break;
@@ -44,7 +44,7 @@ function draw_surface_blend(background, foreground, blend, alpha, _pre_alp = tru
 		shader_set_uniform_i(uniform_tile,	tile);
 	}
 	
-	BLEND_OVER_ALPHA
+	BLEND_ALPHA
 	draw_surface_stretched_safe(background, 0, 0, surf_w, surf_h);
 	BLEND_NORMAL
 	shader_reset();

@@ -567,7 +567,7 @@ function Node_Composite(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) co
 		
 		surface_set_target(_outSurf);
 		draw_clear_alpha(0, 0);
-		BLEND_OVER_ALPHA;
+		BLEND_ALPHA_MULP;
 		for(var i = 0; i < imageAmo; i++) {
 			var vis  = _vis[| i];
 			if(!vis) continue;

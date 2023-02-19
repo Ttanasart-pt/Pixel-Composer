@@ -61,7 +61,7 @@ function Panel_Inspector() : PanelContent() constructor {
 	addHotkey("Inspector", "Toggle animation",	"I",   MOD_KEY.none,	function() { anim_toggling = true; });
 	
 	group_menu = [
-		[ "Expand all", function() {
+		menuItem("Expand all", function() {
 			if(inspecting == noone) return;
 			if(inspecting.input_display_list == -1) return;
 			
@@ -70,8 +70,8 @@ function Panel_Inspector() : PanelContent() constructor {
 				if(!is_array(dlist[i])) continue;
 				dlist[i][@ 1] = false;
 			}
-		}],
-		[ "Collapse all", function() {
+		}),
+		menuItem("Collapse all", function() {
 			if(inspecting == noone) return;
 			if(inspecting.input_display_list == -1) return;
 			
@@ -80,7 +80,7 @@ function Panel_Inspector() : PanelContent() constructor {
 				if(!is_array(dlist[i])) continue;
 				dlist[i][@ 1] = true;
 			}
-		}],
+		}),
 	]
 	
 	function onResize() {
@@ -606,32 +606,31 @@ function Panel_Inspector() : PanelContent() constructor {
 					prop_selecting = jun;
 						
 				if(mouse_press(mb_right, pFOCUS && mbRight)) {
-					__dialog_junction = jun;
-					var dia = dialogCall(o_dialog_menubox, mouse_mx, mouse_my);
-					var menuItem = [
-						[ get_text("panel_inspector_reset", "Reset value"), function() { 
+					var _menuItem = [
+						menuItem(get_text("panel_inspector_reset", "Reset value"), function() { 
 							__dialog_junction.setValue(__dialog_junction.def_val);
-							}],
-						[ __dialog_junction.animator.is_anim? get_text("panel_inspector_remove", "Remove animation") : get_text("panel_inspector_add", "Add animation"), function() { 
+							}),
+						menuItem(jun.animator.is_anim? get_text("panel_inspector_remove", "Remove animation") : get_text("panel_inspector_add", "Add animation"), function() { 
 							__dialog_junction.animator.is_anim = !__dialog_junction.animator.is_anim; 
 							PANEL_ANIMATION.updatePropertyList();
-							}],
+							}),
 						-1,
-						[ get_text("copy", "Copy"), function() {
+						menuItem(get_text("copy", "Copy"), function() {
 							clipboard_set_text(__dialog_junction.getShowString());
-							}, ["Inspector", "Copy property"]],
-						[ get_text("paste", "Paste"), function() {
+							}, THEME.copy, ["Inspector", "Copy property"]),
+						menuItem(get_text("paste", "Paste"), function() {
 							__dialog_junction.setString(clipboard_get_text());
-							}, ["Inspector", "Paste property"]],
+							}, THEME.paste, ["Inspector", "Paste property"]),
 					];
 					
 					if(jun.extract_node != "") {
-						array_insert(menuItem, 2, [ get_text("panel_inspector_extract", "Extract to node"), function() { 
+						array_insert(_menuItem, 2, menuItem(get_text("panel_inspector_extract", "Extract to node"), function() { 
 							__dialog_junction.extractNode();
-						}]);
+						}));
 					}
 					
-					dia.setMenu( menuItem );
+					var dia = menuCall(,, _menuItem);
+					__dialog_junction = jun;
 				}
 			}
 		}

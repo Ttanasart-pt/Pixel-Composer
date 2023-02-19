@@ -420,8 +420,7 @@ function Node_Export(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 	static update = function(frame = ANIMATOR.current_frame) {
 		var anim = inputs[| 3].getValue();
 		if(anim == NODE_EXPORT_FORMAT.single) {
-			if(isInLoop() && RENDERING) 
-				doInspectorAction();
+			if(isInLoop()) export();
 			return;
 		}
 		
@@ -434,7 +433,7 @@ function Node_Export(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 			return;
 			
 		export();
-				
+		
 		if(ANIMATOR.current_frame < ANIMATOR.frames_total - 1) 
 			return;
 		

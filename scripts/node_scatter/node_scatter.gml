@@ -41,8 +41,12 @@ function Node_Scatter(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) cons
 	inputs[| 14] = nodeValue("Distribution data", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [])
 		.setDisplay(VALUE_DISPLAY.vector);
 	
-	inputs[| 15] = nodeValue("Array surface", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+	inputs[| 15] = nodeValue("Array", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0, @"What to do when input array of surface.
+- Spread: Create Array of output each scattering single surface.
+- Mixed: Create single output scattering multiple images.")
 		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Spread output",  "Mixed" ]);
+		
+	inputs[| 16] = nodeValue("Multiply alpha", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
 		
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
@@ -50,7 +54,7 @@ function Node_Scatter(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) cons
 		["Surface",		false], 0, 1, 15, 10, 
 		["Scatter",		false], 5, 6, 13, 14, 9, 2,
 		["Transform",	false], 3, 8, 7, 4,
-		["Render",		false], 11, 12
+		["Render",		false], 11, 12, 16, 
 	];
 	
 	temp_surf = [ surface_create(1, 1), surface_create(1, 1) ];
@@ -103,6 +107,7 @@ function Node_Scatter(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) cons
 		var color	= _data[11];
 		var _bldTyp	= inputs[| 11].getExtraData();
 		var alpha	= _data[12];
+		var mulpA	= _data[16];
 		
 		var _in_w, _in_h;
 		
@@ -112,7 +117,9 @@ function Node_Scatter(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) cons
 		
 		surface_set_target(_outSurf);
 			draw_clear_alpha(0, 0);
-			BLEND_OVER_ALPHA;
+			if(mulpA) BLEND_ALPHA_MULP;
+			else      BLEND_ALPHA;
+			
 			var _sed = seed;
 			var res_index = 0, bg = 0;
 			for(var i = 0; i < _amount; i++) {
@@ -131,7 +138,7 @@ function Node_Scatter(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) cons
 				} else if(_dist == 3) {
 					sp = array_safe_get(_distData, i);
 					if(!is_array(sp)) continue;
-				
+					
 					_x = sp[0];
 					_y = sp[1];
 				}

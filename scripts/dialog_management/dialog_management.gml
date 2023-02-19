@@ -19,15 +19,46 @@ function dialogCall(_dia, _x = noone, _y = noone, param = {}) {
 	return dia;
 }
 
-function menuCall(_x = mouse_mx, _y = mouse_my, menu = []) {
+function menuCall(_x = mouse_mx + ui(4), _y = mouse_my + ui(4), menu = []) {
 	var dia = dialogCall(o_dialog_menubox, _x, _y);
 	dia.setMenu(menu);
 	return dia;
 }
 
-function menuItem(name, func, spr = noone, hotkey = noone) constructor {
+function submenuCall(_x, _y, _depth, menu = []) {
+	var dia = instance_create_depth(_x - ui(4), _y, _depth - 1, o_dialog_menubox);
+	dia.setMenu(menu);
+	return dia;
+}
+
+function menuItem(name, func, spr = noone, hotkey = noone) {
+	return new MenuItem(name, func, spr, hotkey);
+}
+function MenuItem(name, func, spr = noone, hotkey = noone) constructor {
+	active = true;
 	self.name	= name;
 	self.func	= func;
 	self.spr	= spr;
 	self.hotkey = hotkey;
+	
+	isShelf = false;
+	
+	static setIsShelf = function() {
+		isShelf = true;
+		return self;
+	}
+	
+	static deactivate = function() {
+		active = false;
+		return self;
+	}
+}
+
+function menuItemGroup(name, group) {
+	return new MenuItemGroup(name, group);
+}
+function MenuItemGroup(name, group) constructor {
+	active = true;
+	self.name	= name;
+	self.group  = group;
 }

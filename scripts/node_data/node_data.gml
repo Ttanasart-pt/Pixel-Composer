@@ -258,7 +258,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) constructor {
 			while(surface_get_target() != sBase)
 				surface_reset_target();
 			
-			log_warning("RENDER", "Render error " + exception_print(exception), self);
+			log_warning("RENDER", exception_print(exception), self);
 		}
 	}
 	

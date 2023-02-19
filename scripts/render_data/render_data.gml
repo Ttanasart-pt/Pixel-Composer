@@ -4,7 +4,8 @@ enum RENDER_TYPE {
 	full = 2
 }
 
-global.RENDER_LOG = false;
+global.RENDER_LOG = true;
+global.group_inputs = [ "Node_Group_Input", "Node_Feedback_Input", "Node_Iterator_Input", "Node_Iterator_Each_Input" ];
 
 function __nodeLeafList(_list, _queue) {
 	for( var i = 0; i < ds_list_size(_list); i++ ) {
@@ -18,8 +19,6 @@ function __nodeLeafList(_list, _queue) {
 		}
 	}
 }
-
-global.group_inputs = [ "Node_Group_Input", "Node_Feedback_Input", "Node_Iterator_Input", "Node_Iterator_Each_Input" ];
 
 function __nodeIsLoop(_node) {
 	switch(instanceof(_node)) {
@@ -41,8 +40,6 @@ function __nodeInLoop(_node) {
 }
 
 function Render(partial = false) {
-	RENDERING = true;
-	
 	try {
 		var rendering = noone;
 		var error = 0;
@@ -91,14 +88,12 @@ function Render(partial = false) {
 			if(!rendering.rendered) {
 				rendering.doUpdate();
 				rendering.setRenderStatus(true);
+				rendering.getNextNodes();
 			}
 			printIf(global.RENDER_LOG, "Rendered " + rendering.name + " [" + string(instanceof(rendering)) + "]" + txt);
-			rendering.getNextNodes();
 		}
 	
 		printIf(global.RENDER_LOG, "=== RENDER COMPLETE IN {" + string(current_time - t) + "ms} ===\n");
 	} catch(e)
-		noti_warning("Rendering error: " + exception_print(e));
-	
-	RENDERING = false;
+		noti_warning(exception_print(e));
 }

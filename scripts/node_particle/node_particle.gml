@@ -60,7 +60,7 @@ function Node_Particle(_x, _y, _group = -1) : Node_VFX_Spawner_Base(_x, _y, _gro
 			draw_clear_alpha(0, 0);
 		
 			if(_blend == PARTICLE_BLEND_MODE.normal)
-				BLEND_OVER_ALPHA;
+				BLEND_ALPHA;
 			else if(_blend == PARTICLE_BLEND_MODE.additive) 
 				BLEND_ADD;
 			

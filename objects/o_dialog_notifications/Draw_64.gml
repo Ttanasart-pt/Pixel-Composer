@@ -19,19 +19,19 @@ if !ready exit;
 	var error = !!(filter & NOTI_TYPE.error);
 	var b = buttonInstant(THEME.button_hide, bx, by, ww, hh, mouse_ui, sFOCUS, sHOVER,, THEME.noti_icon_error, error, c_white, 0.3 + error * 0.7);
 	if(b == 2) filter = filter ^ NOTI_TYPE.error;
-	if(b == 3) dialogCall(o_dialog_menubox, mouse_mx + ui(8), mouse_my + ui(8)).setMenu(rightClickMenu);
+	if(b == 3) menuCall(,, rightClickMenu);
 	bx -= ui(36);
 	
 	var warn = !!(filter & NOTI_TYPE.warning);
 	var b = buttonInstant(THEME.button_hide, bx, by, ww, hh, mouse_ui, sFOCUS, sHOVER,, THEME.noti_icon_warning, warn, c_white, 0.3 + warn * 0.7);
 	if(b == 2) filter = filter ^ NOTI_TYPE.warning;
-	if(b == 3) dialogCall(o_dialog_menubox, mouse_mx + ui(8), mouse_my + ui(8)).setMenu(rightClickMenu);
+	if(b == 3) menuCall(,, rightClickMenu);
 	bx -= ui(36);
 	
 	var log = !!(filter & NOTI_TYPE.log);
 	var b = buttonInstant(THEME.button_hide, bx, by, ww, hh, mouse_ui, sFOCUS, sHOVER,, THEME.noti_icon_log, log, c_white, 0.3 + log * 0.7);
 	if(b == 2) filter = filter ^ NOTI_TYPE.log;
-	if(b == 3) dialogCall(o_dialog_menubox, mouse_mx + ui(8), mouse_my + ui(8)).setMenu(rightClickMenu);
+	if(b == 3) menuCall(,, rightClickMenu);
 	
 	draw_sprite_stretched(THEME.ui_panel_bg, 0, dialog_x + ui(24), dialog_y + ui(48), dialog_w - ui(48), dialog_h - ui(72));
 	sp_noti.active = sHOVER;

@@ -30,7 +30,7 @@
 	globalvar VERSION, SAVEFILE_VERSION, VERSION_STRING;
 	VERSION = 1130;
 	SAVEFILE_VERSION = 1300;
-	VERSION_STRING = "1.13.pr7";
+	VERSION_STRING = "1.13.pr11";
 	
 	globalvar NODES, NODE_MAP, APPEND_MAP, HOTKEYS, HOTKEY_CONTEXT;
 	
@@ -117,7 +117,9 @@
 		#macro BLEND_NORMAL gpu_set_blendmode(bm_normal)
 		#macro BLEND_ADD gpu_set_blendmode(bm_add)
 		#macro BLEND_OVERRIDE gpu_set_blendmode_ext(bm_one, bm_zero)
-		#macro BLEND_OVER_ALPHA gpu_set_blendmode_ext_sepalpha(bm_one, bm_inv_src_alpha, bm_one, bm_one)
+		
+		#macro BLEND_ALPHA gpu_set_blendmode_ext_sepalpha(bm_one, bm_inv_src_alpha, bm_one, bm_one)
+		#macro BLEND_ALPHA_MULP gpu_set_blendmode_ext_sepalpha(bm_src_alpha, bm_inv_src_alpha, bm_one, bm_one)
 	#endregion
 	
 	#macro printlog if(log) show_debug_message

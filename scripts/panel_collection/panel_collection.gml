@@ -37,10 +37,10 @@ function Panel_Collection() : PanelContent() constructor {
 		
 		if(meta == noone || !meta.steam) {
 			contentMenu = [
-				[ get_text("panel_collection_replace", "Replace with selected"), function() { 
+				menuItem(get_text("panel_collection_replace", "Replace with selected"), function() { 
 					saveCollection(_menu_node.path, false, _menu_node.meta);
-				} ],
-				[ get_text("panel_collection_edit_meta", "Edit metadata") + "...", function() { 
+				}),
+				menuItem(get_text("panel_collection_edit_meta", "Edit metadata") + "...", function() { 
 					var dia = dialogCall(o_dialog_file_name_collection, mouse_mx + ui(8), mouse_my + ui(-320));
 					var meta = _menu_node.getMetadata();
 					if(meta != noone && meta != undefined) 
@@ -48,16 +48,16 @@ function Panel_Collection() : PanelContent() constructor {
 			
 					dia.updating	= _menu_node;
 					dia.expand();
-				} ],
+				}),
 				-1,
-				[ get_text("delete", "Delete"), function() { 
+				menuItem(get_text("delete", "Delete"), function() { 
 					file_delete(_menu_node.path);
 					refreshContext();
-				} ]
+				})
 			];
 		} else if(STEAM_ENABLED) {
 			if(!meta.steam) {
-				array_push(contentMenu, [ get_text("panel_collection_workshop_upload", "Upload to Steam Workshop") + "...", function() { 
+				array_push(contentMenu, menuItem(get_text("panel_collection_workshop_upload", "Upload to Steam Workshop") + "...", function() { 
 					var dia = dialogCall(o_dialog_file_name_collection, mouse_mx + ui(8), mouse_my + ui(-320));
 					var meta = _menu_node.getMetadata();
 					if(meta != noone && meta != undefined) 
@@ -66,10 +66,10 @@ function Panel_Collection() : PanelContent() constructor {
 					dia.ugc			= 1;
 					dia.updating	= _menu_node;
 					dia.expand();
-				} ]);
+				}));
 			} else {
 				if(meta.author_steam_id == STEAM_USER_ID && meta.file_id != 0) {
-					array_push(contentMenu, [get_text("panel_collection_workshop_update", "Update Steam Workshop content") + "...", function() { 
+					array_push(contentMenu, menuItem(get_text("panel_collection_workshop_update", "Update Steam Workshop content") + "...", function() { 
 						var dia = dialogCall(o_dialog_file_name_collection, mouse_mx + ui(8), mouse_my + ui(-320));
 						var meta = _menu_node.getMetadata();
 						if(meta != noone && meta != undefined) 
@@ -78,10 +78,10 @@ function Panel_Collection() : PanelContent() constructor {
 						dia.ugc			= 2;
 						dia.updating	= _menu_node;
 						dia.expand();
-					} ]);
+					}));
 				}
 				
-				array_push(contentMenu, ["Unsubscribe", function() {
+				array_push(contentMenu, menuItem("Unsubscribe", function() {
 					var meta = _menu_node.getMetadata();
 					var del_id = meta.file_id;
 					
@@ -93,7 +93,7 @@ function Panel_Collection() : PanelContent() constructor {
 						}
 					}
 					steam_ugc_unsubscribe_item(del_id);
-				}]);
+				}));
 			}
 		}
 	}
@@ -165,8 +165,7 @@ function Panel_Collection() : PanelContent() constructor {
 						if(!DEMO && mouse_press(mb_right, pFOCUS)) {
 							_menu_node = _node;
 							initMenu();
-							var dia = dialogCall(o_dialog_menubox, mouse_mx + 8, mouse_my + 8);
-							dia.setMenu(contentMenu);	
+							menuCall(,, contentMenu);	
 						}
 						
 						if(!instance_exists(o_dialog_menubox) && meta != noone && meta != undefined) {
@@ -239,8 +238,7 @@ function Panel_Collection() : PanelContent() constructor {
 					if(!DEMO && mouse_press(mb_right, pFOCUS)) {
 						_menu_node = _node;
 						initMenu();
-						var dia = dialogCall(o_dialog_menubox, mouse_mx + ui(8), mouse_my + ui(8));
-						dia.setMenu(contentMenu);
+						menuCall(,, contentMenu);
 					}
 				}
 				

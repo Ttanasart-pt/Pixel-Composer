@@ -187,6 +187,16 @@ event_inherited();
 			PREF_SAVE();
 		})
 	]);
+
+	ds_list_add(pref_global, [
+		get_text("pref_legacy_exception", "Use legacy exception handler"),
+		"use_legacy_exception",
+		new checkBox(function() { 
+			PREF_MAP[? "use_legacy_exception"] = !PREF_MAP[? "use_legacy_exception"]; 
+			PREF_APPLY();
+			PREF_SAVE();
+		})
+	]);
 	
 #endregion
 

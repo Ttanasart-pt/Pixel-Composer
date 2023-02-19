@@ -164,7 +164,7 @@ function Panel_Animation() : PanelContent() constructor {
 	}
 	
 	keyframe_menu = [
-		[ get_text("panel_animation_ease_in", "Ease in"),  [ 
+		menuItemGroup(get_text("panel_animation_ease_in", "Ease in"),  [ 
 			[ [THEME.timeline_ease, 0], function() { 
 				for( var i = 0; i < ds_list_size(keyframe_selecting); i++ ) {
 					var k = keyframe_selecting[| i];
@@ -200,8 +200,8 @@ function Panel_Animation() : PanelContent() constructor {
 					k.ease_in = [0, 0];
 				}
 			}, get_text("panel_animation_ease_hold", "Hold") ],
-		]],
-		[ get_text("panel_animation_ease_out", "Ease out"),  [ 
+		]),
+		menuItemGroup(get_text("panel_animation_ease_out", "Ease out"),  [ 
 			[ [THEME.timeline_ease, 0], function() { 
 				for( var i = 0; i < ds_list_size(keyframe_selecting); i++ ) {
 					var k = keyframe_selecting[| i];
@@ -230,16 +230,16 @@ function Panel_Animation() : PanelContent() constructor {
 					k.ease_out = [0, 1];
 				}
 			}, get_text("panel_animation_ease_sharp", "Sharp") ],
-		]],
+		]),
 		-1,
-		[ get_text("align", "Align"),  [ 
+		menuItemGroup(get_text("align", "Align"),  [ 
 			[ [THEME.timeline_key_halign, 0], function() { alignKeys(fa_left); } ],
 			[ [THEME.timeline_key_halign, 1], function() { alignKeys(fa_center); } ],
 			[ [THEME.timeline_key_halign, 2], function() { alignKeys(fa_right); } ],
-		]],
-		[ get_text("panel_animation_stagger", "Stagger"), function() { stagger_mode = 1; }],
+		]),
+		menuItem(get_text("panel_animation_stagger", "Stagger"), function() { stagger_mode = 1; }),
 		-1,
-		[ get_text("delete", "Delete"), function() { deleteKeys(); }, [ "Animation", "Delete keys" ] ],
+		menuItem(get_text("delete", "Delete"), function() { deleteKeys(); }, noone, [ "Animation", "Delete keys" ]),
 	];
 	
 	function onResize() {
@@ -1202,9 +1202,8 @@ function Panel_Animation() : PanelContent() constructor {
 		}
 						
 		if(mouse_press(mb_right, pFOCUS)) {
-			if(!ds_list_empty(keyframe_selecting)) {
-				dialogCall(o_dialog_menubox, mouse_mx + ui(8), mouse_my + ui(8)).setMenu(keyframe_menu);
-			}
+			if(!ds_list_empty(keyframe_selecting))
+				menuCall(,, keyframe_menu);
 		}
 						
 		if(keyframe_dragging) {

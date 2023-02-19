@@ -64,7 +64,7 @@ function Node_VFX_Renderer(_x, _y, _group = -1) : Node(_x, _y, _group) construct
 			draw_clear_alpha(0, 0);
 		
 			if(_blend == PARTICLE_BLEND_MODE.normal)
-				BLEND_OVER_ALPHA;
+				BLEND_ALPHA;
 			else if(_blend == PARTICLE_BLEND_MODE.additive) 
 				BLEND_ADD;
 			

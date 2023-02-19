@@ -28,6 +28,7 @@ function Panel_Preview() : PanelContent() constructor {
 	
 	preview_node	= [ noone, noone ];
 	preview_surface = [ 0, 0 ];
+	tile_surface    = surface_create(1, 1);
 	
 	preview_x		= 0;
 	preview_x_to	= 0;
@@ -59,7 +60,7 @@ function Panel_Preview() : PanelContent() constructor {
 	splitViewStart = 0;
 	splitViewMouse = 0;
 	
-	tileMode = false;
+	tileMode = 0;
 	
 	toolbar_height = ui(40);
 	toolbars = [
@@ -85,7 +86,7 @@ function Panel_Preview() : PanelContent() constructor {
 		],
 		[
 			THEME.icon_tile_view,
-			function() { return tileMode? 2 : 3;  },
+			function() { var t = [3, 0, 1, 2]; return array_safe_get(t, tileMode);  },
 			function() { 
 				switch(tileMode) {
 					case 0 : return get_text("panel_preview_tile_off", "Tile off");
@@ -95,7 +96,14 @@ function Panel_Preview() : PanelContent() constructor {
 				}
 				return get_text("panel_preview_tile_mode", "Tile mode");
 			}, 
-			function() { tileMode = tileMode? 0 : 3; } 
+			function(data) { 
+				menuCall(data.x + ui(28), data.y + ui(28), [
+					menuItem(get_text("panel_preview_tile_off", "Tile off"),				function() { tileMode = 0; }),
+					menuItem(get_text("panel_preview_tile_horizontal", "Tile horizontal"),	function() { tileMode = 1; }),
+					menuItem(get_text("panel_preview_tile_vertical", "Tile vertical"),		function() { tileMode = 2; }),
+					menuItem(get_text("panel_preview_tile_both", "Tile both"),				function() { tileMode = 3; }),
+				]);
+			} 
 		],
 		[ 
 			THEME.icon_grid_setting,
@@ -326,8 +334,22 @@ function Panel_Preview() : PanelContent() constructor {
 							var aa = preview_node[0].preview_alpha;
 							draw_surface_ext_safe(preview_surface[0], psx, psy, ss, ss, 0, c_white, aa); 
 							break;
-						case 1 : draw_surface_ext_safe(preview_surface[0], psx, psy, ss, ss, 0, c_white, 1); break;
-						case 2 : draw_surface_ext_safe(preview_surface[0], psx, psy, ss, ss, 0, c_white, 1); break;
+						case 1 : 
+							tile_surface = surface_verify(tile_surface, w, surface_get_height(preview_surface[0]) * ss);
+							surface_set_target(tile_surface);
+								draw_clear_alpha(0, 0);
+								draw_surface_tiled_ext_safe(preview_surface[0], psx, 0, ss, ss, c_white, 1); 
+							surface_reset_target();
+							draw_surface(tile_surface, 0, psy);
+							break;
+						case 2 : 
+							tile_surface = surface_verify(tile_surface, surface_get_width(preview_surface[0]) * ss, h);
+							surface_set_target(tile_surface);
+								draw_clear_alpha(0, 0);
+								draw_surface_tiled_ext_safe(preview_surface[0], psx, 0, ss, ss, c_white, 1); 
+							surface_reset_target();
+							draw_surface(tile_surface, psx, 0);
+							break;
 						case 3 : draw_surface_tiled_ext_safe(preview_surface[0], psx, psy, ss, ss, c_white, 1); break;
 					}
 				}
@@ -713,10 +735,9 @@ function Panel_Preview() : PanelContent() constructor {
 		}
 		
 		if(my < h - toolbar_height && mouse_press(mb_right, pFOCUS)) {
-			var dia = dialogCall(o_dialog_menubox, mouse_mx + ui(8), mouse_my + ui(8));
-			dia.setMenu([ 
-				[ get_text("panel_preview_save", "Save current preview as") + "...", function() { PANEL_PREVIEW.saveCurrentFrame(); } ], 
-				[ get_text("panel_preview_save_all", "Save all current previews as") + "...", function() { PANEL_PREVIEW.saveAllCurrentFrames(); } ], 
+			menuCall(,, [ 
+				menuItem(get_text("panel_preview_save", "Save current preview as") + "...", function() { PANEL_PREVIEW.saveCurrentFrame(); }), 
+				menuItem(get_text("panel_preview_save_all", "Save all current previews as") + "...", function() { PANEL_PREVIEW.saveAllCurrentFrames(); }), 
 			]);
 		}
 		

@@ -106,13 +106,12 @@ event_inherited();
 		}
 		
 		if(menu > -1) {
-			var dia = dialogCall(o_dialog_menubox, mouse_mx, mouse_my);
-			dia.setMenu( [
-				[ "Remove", function() {
+			menuCall(,, [
+				menuItem("Remove", function() {
 					var arr = target.inputs[| 0].getValue();
 					array_delete(arr, menuOn, 1);
 					target.inputs[| 0].setValue(arr);
-				}]
+				})
 			] );	
 		}
 		

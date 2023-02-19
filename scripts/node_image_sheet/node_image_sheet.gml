@@ -342,8 +342,7 @@ function Node_Image_Sheet(_x, _y, _group = -1) : Node(_x, _y, _group) constructo
 	}
 	
 	static update = function(frame = ANIMATOR.current_frame) {
-		if(isInLoop() && RENDERING) 
-			doInspectorAction();
+		if(isInLoop()) doInspectorAction();
 		
 		var _out  = inputs[| 7].getValue();
 		if(_out == 1) {

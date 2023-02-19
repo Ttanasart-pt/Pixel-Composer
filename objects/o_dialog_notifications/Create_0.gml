@@ -16,26 +16,26 @@ event_inherited();
 	filter = NOTI_TYPE.log | NOTI_TYPE.warning | NOTI_TYPE.error;
 	
 	rightClickMenu = [ 
-		[ "Clear log messages", function() { 
+		menuItem("Clear log messages", function() { 
 			for( var i = ds_list_size(STATUSES) - 1; i >= 0; i-- ) {
 				if(STATUSES[| i].type == NOTI_TYPE.log) 
 					ds_list_delete(STATUSES, i);
 			}
-		} ], 
-		[ "Clear warning messages", function() { 
+		}), 
+		menuItem("Clear warning messages", function() { 
 			for( var i = ds_list_size(STATUSES) - 1; i >= 0; i-- ) {
 				if(STATUSES[| i].type == NOTI_TYPE.warning) 
 					ds_list_delete(STATUSES, i);
 			}
-		} ],
+		}),
 		-1,
-		[ "Clear all notifications", function() { 
+		menuItem("Clear all notifications", function() { 
 			ds_list_clear(STATUSES);
-		} ],
+		}),
 		-1,
-		[ "Open log file", function() { 
+		menuItem("Open log file", function() { 
 			shellOpenExplorer(DIRECTORY + "log.txt");
-		} ],
+		}),
 	];
 	
 	sp_noti = new scrollPane(dialog_w - ui(80), dialog_h - ui(88), function(_y, _m) {
@@ -58,57 +58,56 @@ event_inherited();
 			var _w = sp_noti.w - ui(12);
 			var _h = ui(8) + string_height_ext(noti.txt, -1, txw) + ui(8);
 			
-			draw_sprite_stretched_ext(THEME.group_label, 0, 0, yy + ui(2), _w, _h - ui(4), COLORS.dialog_notification_bg, 1);
-			
-			if(sHOVER && sp_noti.hover && point_in_rectangle(_m[0], _m[1], 0, yy, _w, yy + _h - ui(4))) {
-				draw_sprite_stretched_ext(THEME.group_label, 0, 0, yy + ui(2), _w, _h - ui(4), COLORS.dialog_notification_bg_hover, 1);
-				
-				if(noti.tooltip != "")
-					TOOLTIP = noti.tooltip;
-				
-				if(noti.onClick != noone && mouse_press(mb_left, sFOCUS))
-					noti.onClick();
-				
-				if(mouse_press(mb_right, sFOCUS)) {
-					var dia = dialogCall(o_dialog_menubox, mouse_mx + ui(8), mouse_my + ui(8));
-					dia.noti = noti;
-					dia.setMenu([ 
-						[ "Copy notification message", function() { 
-							clipboard_set_text(o_dialog_menubox.noti.txt);
-						} ], 
-						[ "Delete notification", function() { 
-							ds_list_remove(STATUSES, o_dialog_menubox.noti);
-						} ], 
-					]);
-				}
-			}
-			
-			if(noti.life_max > 0) {
-				var _nwx = sp_noti.w - ui(12) - ui(40);
-				var _nw  = _nwx * noti.life / noti.life_max;
-				
-				draw_sprite_stretched_ext(THEME.group_label, 0, ui(40), yy + ui(2), _nw, _h - ui(4), COLORS.dialog_notification_icon_bg, 1);
-			}
-			
-			draw_sprite_stretched_ext(THEME.group_label, 0, 0, yy + ui(2), ui(48), _h - ui(4), noti.color, 1);
-			
-			if(noti.icon_end != noone)
-				draw_sprite_ui(noti.icon_end, 1, _w - ui(24), yy + _h / 2,,,, COLORS._main_icon);
-			
-			var ic = noti.icon;
-			if(noti.icon == noone) {
-				switch(noti.type) {
-					case NOTI_TYPE.log :	 ic = THEME.noti_icon_log; break;	
-					case NOTI_TYPE.warning : ic = THEME.noti_icon_warning; break;	
-					case NOTI_TYPE.error :	 ic = THEME.noti_icon_error; break;	
-				}
-			}
-			
-			draw_sprite_ui(ic, 1, ui(24), yy + _h / 2);
-			
-			var tx = ui(48) + timeW + ui(12);
-			
 			if(yy >= -_h && yy <= sp_noti.h) {
+				draw_sprite_stretched_ext(THEME.group_label, 0, 0, yy + ui(2), _w, _h - ui(4), COLORS.dialog_notification_bg, 1);
+			
+				if(sHOVER && sp_noti.hover && point_in_rectangle(_m[0], _m[1], 0, yy, _w, yy + _h - ui(4))) {
+					draw_sprite_stretched_ext(THEME.group_label, 0, 0, yy + ui(2), _w, _h - ui(4), COLORS.dialog_notification_bg_hover, 1);
+				
+					if(noti.tooltip != "")
+						TOOLTIP = noti.tooltip;
+				
+					if(noti.onClick != noone && mouse_press(mb_left, sFOCUS))
+						noti.onClick();
+				
+					if(mouse_press(mb_right, sFOCUS)) {
+						var dia = menuCall(,, [ 
+							menuItem("Copy notification message", function() { 
+								clipboard_set_text(o_dialog_menubox.noti.txt);
+							}), 
+							menuItem("Delete notification", function() { 
+								ds_list_remove(STATUSES, o_dialog_menubox.noti);
+							}), 
+						]);
+						dia.noti = noti;
+					}
+				}
+			
+				if(noti.life_max > 0) {
+					var _nwx = sp_noti.w - ui(12) - ui(40);
+					var _nw  = _nwx * noti.life / noti.life_max;
+				
+					draw_sprite_stretched_ext(THEME.group_label, 0, ui(40), yy + ui(2), _nw, _h - ui(4), COLORS.dialog_notification_icon_bg, 1);
+				}
+			
+				draw_sprite_stretched_ext(THEME.group_label, 0, 0, yy + ui(2), ui(48), _h - ui(4), noti.color, 1);
+			
+				if(noti.icon_end != noone)
+					draw_sprite_ui(noti.icon_end, 1, _w - ui(24), yy + _h / 2,,,, COLORS._main_icon);
+			
+				var ic = noti.icon;
+				if(noti.icon == noone) {
+					switch(noti.type) {
+						case NOTI_TYPE.log :	 ic = THEME.noti_icon_log; break;	
+						case NOTI_TYPE.warning : ic = THEME.noti_icon_warning; break;	
+						case NOTI_TYPE.error :	 ic = THEME.noti_icon_error; break;	
+					}
+				}
+			
+				draw_sprite_ui(ic, 1, ui(24), yy + _h / 2);
+			
+				var tx = ui(48) + timeW + ui(12);
+			
 				draw_set_text(f_p3, fa_right, fa_center, COLORS._main_text_sub);
 				draw_text_ext(tx - ui(4), yy + _h / 2, noti.time, -1, txw);
 			
@@ -118,6 +117,8 @@ event_inherited();
 			
 			yy += _h;
 			hh += _h;
+			
+			if(yy > sp_noti.h) break;
 		}
 		
 		return hh;

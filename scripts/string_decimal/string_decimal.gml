@@ -12,9 +12,16 @@ function string_decimal(str) {
 function toNumber(str) {
 	if(is_real(str)) return str;
 	
+	var expo = 0;
+	if(string_pos("e", str)) {
+		var pos = string_pos("e", str);
+		expo = toNumber(string_copy(str, pos + 1, string_length(str) - pos));
+	}
+	
+	str = string_replace_all(str, ",", ".");
 	str = string_decimal(str);
 	if(str == "") return 0;
 	if(str == ".") return 0;
-	if(str == "-") return 0;	
-	return real(str);
+	if(str == "-") return 0;
+	return real(str) * power(10, expo);
 }

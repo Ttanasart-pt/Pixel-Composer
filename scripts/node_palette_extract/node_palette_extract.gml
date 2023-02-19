@@ -23,7 +23,7 @@ function Node_Palette_Extract(_x, _y, _group = -1) : Node(_x, _y, _group) constr
 	static getPreviewValue = function() { return inputs[| 0]; }
 	
 	input_display_list = [
-		["Surface",	 true],	0, 4, 
+		["Surface",	 true],	0, 4,
 		["Palette",	false],	3, 1, 2,
 	]
 	
@@ -59,7 +59,7 @@ function Node_Palette_Extract(_x, _y, _group = -1) : Node(_x, _y, _group) constr
 		})
 	}
 	
-	function extractKmean(_surfFull, _size, _seed, space = 0) {
+	function extractKmean(_surfFull, _size, _seed) {
 		var _surf = surface_create_valid(min(32, surface_get_width(_surfFull)), min(32, surface_get_height(_surfFull)));
 		_size = max(1, _size);
 		
@@ -76,7 +76,7 @@ function Node_Palette_Extract(_x, _y, _group = -1) : Node(_x, _y, _group) constr
 		surface_reset_target();
 		
 		var c_buffer = buffer_create(ww * hh * 4, buffer_fixed, 2);
-		var colors = array_create(ww * hh);
+		var colors = [];
 		
 		buffer_get_surface(c_buffer, _surf, 0);
 		buffer_seek(c_buffer, buffer_seek_start, 0);
@@ -85,11 +85,16 @@ function Node_Palette_Extract(_x, _y, _group = -1) : Node(_x, _y, _group) constr
 		var _max = [ 0, 0, 0 ];
 		
 		for( var i = 0; i < ww * hh; i++ ) {
-			var c = buffer_read(c_buffer, buffer_u32) & ~(0b11111111 << 24);
-			colors[i] = [ color_get_hue(c) / 255, color_get_saturation(c) / 255, color_get_value(c) / 255, 0 ];
+			var b = buffer_read(c_buffer, buffer_u32);
+			var c = b & ~(0b11111111 << 24);
+			var a = b & (0b11111111 << 24);
+			if(a == 0) continue;
+			
+			var col = [ color_get_hue(c) / 255, color_get_saturation(c) / 255, color_get_value(c) / 255, 0 ];
+			array_push(colors, col);
 			for( var j = 0; j < 3; j++ ) {
-				_min[j] = min(_min[j], colors[i][j]);
-				_max[j] = max(_max[j], colors[i][j]);
+				_min[j] = min(_min[j], col[j]);
+				_max[j] = max(_max[j], col[j]);
 			}
 		}
 			
@@ -108,7 +113,7 @@ function Node_Palette_Extract(_x, _y, _group = -1) : Node(_x, _y, _group) constr
 				_cnt[i][2] = cnt[i][2];
 			}
 			
-			for( var i = 0; i < ww * hh; i++ ) {
+			for( var i = 0; i < array_length(colors); i++ ) {
 				var ind = 0;
 				var dist = 999;
 				var _cl = colors[i];
@@ -128,7 +133,7 @@ function Node_Palette_Extract(_x, _y, _group = -1) : Node(_x, _y, _group) constr
 			for( var i = 0; i < _size; i++ )
 				cnt[i] = [ 0, 0, 0, 0 ];
 				
-			for( var i = 0; i < ww * hh; i++ ) {
+			for( var i = 0; i < array_length(colors); i++ ) {
 				var _cl = colors[i];
 				cnt[_cl[3]][0] += _cl[0];
 				cnt[_cl[3]][1] += _cl[1];
@@ -157,7 +162,7 @@ function Node_Palette_Extract(_x, _y, _group = -1) : Node(_x, _y, _group) constr
 			var dist = 999;
 			var _cl = cnt[i];
 			
-			for( var j = 0; j < ww * hh; j++ ) {
+			for( var j = 0; j < array_length(colors); j++ ) {
 				var _cn = colors[j];
 				var d = point_distance_3d(_cl[0], _cl[1], _cl[2], _cn[0], _cn[1], _cn[2]);
 				
@@ -190,7 +195,10 @@ function Node_Palette_Extract(_x, _y, _group = -1) : Node(_x, _y, _group) constr
 		var palette = [];
 		
 		for( var i = 0; i < ww * hh; i++ ) {
-			var c = buffer_read(c_buffer, buffer_u32) & ~(0b11111111 << 24);
+			var b = buffer_read(c_buffer, buffer_u32);
+			var c = b & ~(0b11111111 << 24);
+			var a = b & (0b11111111 << 24);
+			if(a == 0) continue;
 			c = make_color_rgb(color_get_red(c), color_get_green(c), color_get_blue(c));
 			if(!array_exists(palette, c)) 
 				array_push(palette, c);
@@ -225,7 +233,10 @@ function Node_Palette_Extract(_x, _y, _group = -1) : Node(_x, _y, _group) constr
 		
 		var clrs = ds_map_create();
 		for( var i = 0; i < ww * hh; i++ ) {
-			var c = buffer_read(c_buffer, buffer_u32) & ~(0b11111111 << 24);
+			var b = buffer_read(c_buffer, buffer_u32);
+			var c = b & ~(0b11111111 << 24);
+			var a = b & (0b11111111 << 24);
+			if(a == 0) continue;
 			c = make_color_rgb(color_get_red(c), color_get_green(c), color_get_blue(c));
 			if(ds_map_exists(clrs, c)) 
 				clrs[? c]++;

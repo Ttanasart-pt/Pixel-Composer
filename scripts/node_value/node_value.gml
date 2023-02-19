@@ -181,6 +181,21 @@ function typeCompatible(fromType, toType, directional_cast = true) {
 	return value_type_directional(fromType, toType);
 }
 
+function typeIncompatible(from, to) {
+	if(from.type == VALUE_TYPE.surface && (to.type == VALUE_TYPE.integer || to.type == VALUE_TYPE.float)) {
+		switch(to.display_type) {
+			case VALUE_DISPLAY.area : 
+			case VALUE_DISPLAY.kernel : 
+			case VALUE_DISPLAY.vector_range : 
+			case VALUE_DISPLAY.puppet_control : 
+			case VALUE_DISPLAY.padding : 
+			case VALUE_DISPLAY.curve : return true;
+		}
+	}
+	
+	return false;
+}
+
 enum KEYFRAME_END {
 	hold,
 	loop,
@@ -978,6 +993,12 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		}
 		
 		if(!typeCompatible(_valueFrom.type, type)) {
+			if(log) 
+				noti_warning("setFrom: Type mismatch",, node);
+			return false;
+		}
+		
+		if(typeIncompatible(_valueFrom, self)) {
 			if(log) 
 				noti_warning("setFrom: Type mismatch",, node);
 			return false;

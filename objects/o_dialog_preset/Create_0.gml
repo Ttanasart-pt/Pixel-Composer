@@ -37,14 +37,13 @@ event_inherited();
 				}
 				
 				if(mouse_click(mb_right, sFOCUS)) {
-					var dia = dialogCall(o_dialog_menubox, mouse_mx + ui(8), mouse_my + ui(8));
-					dia.path = preset.path;
-					dia.setMenu([ 
-						[ "Delete", function() { 
+					var dia = menuCall(,, [ 
+						menuItem("Delete", function() { 
 							file_delete(o_dialog_menubox.path);
 							__initPresets();
-						} ], 
+						}), 
 					]);
+					dia.path = preset.path;
 				}
 			}
 			

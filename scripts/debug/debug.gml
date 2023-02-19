@@ -68,37 +68,44 @@ function exception_print(e) {
 	return str;
 }
 
-exception_unhandled_handler(function(ex) {
-	var path = string(DIRECTORY) + "prev_crash.pxc";
-	SAVE_AT(path);
+function setException() {
+	exception_unhandled_handler(function(ex) {
+		var path = string(DIRECTORY) + "prev_crash.pxc";
+		SAVE_AT(path);
 	
-	var tt = "\n-------------------------- OH NO --------------------------\n\n";
-	tt += "\n" + ex.longMessage;
-	tt += "\n" + ex.script;
-	tt += "\n-------------------------- STACK TRACE --------------------------\n\n";
-	for( var i = 0; i < array_length(ex.stacktrace); i++ ) {
-		tt += ex.stacktrace[i] + "\n";
-	}
-	tt += "\n---------------------------- :( ----------------------------\n";
+		var tt = "\n-------------------------- OH NO --------------------------\n\n";
+		tt += "\n" + ex.longMessage;
+		tt += "\n" + ex.script;
+		tt += "\n-------------------------- STACK TRACE --------------------------\n\n";
+		for( var i = 0; i < array_length(ex.stacktrace); i++ ) {
+			tt += ex.stacktrace[i] + "\n";
+		}
+		tt += "\n---------------------------- :( ----------------------------\n";
 	
-	var path = string(DIRECTORY) + "crash_log.txt";
-	file_text_write_all(path, tt);
-	clipboard_set_text(tt);
-	show_debug_message(tt);
+		var path = string(DIRECTORY) + "crash_log.txt";
+		file_text_write_all(path, tt);
+		clipboard_set_text(tt);
+		show_debug_message(tt);
 	
-	var tt = "\n-------------------------- OH NO --------------------------\n\n";
-	tt += ex.longMessage;
-	tt += "\n---------------------------- :( ----------------------------\n";
+		var tt = "\n-------------------------- OH NO --------------------------\n\n";
+		tt += ex.longMessage;
+		tt += "\n---------------------------- :( ----------------------------\n";
+		
+		tt += "\n\nCrash log stored in clipboard and saved at " + path;
+		tt += "\n\nRelaunch the program?";
 	
-	tt += "\n\nCrash log stored in clipboard and saved at " + path;
-	tt += "\n\nRelaunch the program?";
+		widget_set_caption("Pixel Composer crashed");
+		widget_set_icon(DIRECTORY + "icon.png");
 	
-	widget_set_caption("Pixel Composer crashed");
-	widget_set_icon(DIRECTORY + "icon.png");
-	
-	if(show_question(tt)) {
-		var path = executable_get_pathname();
-		execute_shell(path, "--crashed");
-	}
-    return 0;
-});
+		if(show_question(tt)) {
+			var path = executable_get_pathname();
+			execute_shell(path, "--crashed");
+		}
+	    return 0;
+	});
+}
+setException();
+
+function resetException() {
+	exception_unhandled_handler(undefined);
+}

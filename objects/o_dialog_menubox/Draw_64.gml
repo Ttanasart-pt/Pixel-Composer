@@ -3,44 +3,45 @@
 	var yy = dialog_y;
 	
 	draw_sprite_stretched(THEME.textbox, 3, dialog_x, dialog_y, dialog_w, dialog_h);
+	//if(show_icon)
+	//	draw_sprite_stretched(THEME.textbox_code, 0, dialog_x, dialog_y, ui(36), dialog_h);
 	
 	for(var i = 0; i < array_length(menu); i++) {
 		var _menuItem = menu[i];
 		
-		if(!is_array(_menuItem)) {
-			draw_sprite_stretched(THEME.menu_separator, 0, dialog_x + ui(8), yy, dialog_w - ui(16), ui(6));
+		if(_menuItem == -1) {
+			var bx = dialog_x + ui(8);
+			var bw = dialog_w - ui(16);
+			draw_sprite_stretched(THEME.menu_separator, 0, bx, yy, bw, ui(6));
 			yy += ui(8);
 			
 			continue;
 		}
-		var _h = hght;
-		var label = _menuItem[0];
-		var activated = string_char_at(label, 1) != "-";
-		if(!activated) label = string_copy(label, 2, string_length(label) - 1);
 		
-		if(is_array(_menuItem[1]))
+		var _h = hght;
+		var label = _menuItem.name;
+		
+		if(instanceof(_menuItem) == "MenuItemGroup")
 			_h += hght;
 		
-		var hoverable = activated && sHOVER;
+		var hoverable = _menuItem.active && sHOVER;
 		if(hoverable && point_in_rectangle(mouse_mx, mouse_my, dialog_x, yy + 1, dialog_x + dialog_w, yy + _h - 1))
 			selecting = i;
 			
 		if(selecting == i) {
-			draw_sprite_stretched_ext(THEME.textbox, 3, dialog_x, yy, dialog_w, _h, COLORS.dialog_menubox_highlight, 1);
+			draw_sprite_stretched_ext(THEME.textbox, 3, dialog_x, yy, dialog_w, _h, COLORS.dialog_menubox_highlight, 0.75);
 			
-			if(!is_array(_menuItem[1]) && sFOCUS && (mouse_release(mb_left) || keyboard_check_released(vk_enter))) {
-				var res = _menuItem[1](dialog_x + dialog_w, yy, depth, _menuItem[0]);
-				if(array_safe_get(_menuItem, 2, 0) == ">")
-					ds_list_add(children, res);
-				else
-					instance_destroy(o_dialog_menubox);
+			if(instanceof(_menuItem) == "MenuItem" && sFOCUS && (mouse_release(mb_left) || keyboard_check_released(vk_enter))) {
+				var res = _menuItem.func(dialog_x + dialog_w, yy, depth, _menuItem.name);
+				if(_menuItem.isShelf) ds_list_add(children, res);
+				else				  instance_destroy(o_dialog_menubox);
 			}
 		}
 		
-		if(is_array(_menuItem[1])) { //submenu
-			var _submenus = _menuItem[1];
+		if(instanceof(_menuItem) == "MenuItemGroup") {
+			var _submenus = _menuItem.group;
 			draw_set_text(f_p1, fa_center, fa_center, COLORS._main_text_sub);
-			draw_set_alpha(activated * 0.5 + 0.5);
+			draw_set_alpha(_menuItem.active * 0.5 + 0.5);
 			draw_text(dialog_x + dialog_w / 2, yy + hght / 2, label);
 			draw_set_alpha(1);
 			
@@ -50,11 +51,11 @@
 			
 			for(var j = 0; j < amo; j++) {
 				var _submenu = _submenus[j];
-				var _bx = _sx + j * (hght + ui(4));
-				var _by = yy + hght + hght / 2 - ui(4);
-				var _spr = noone, _ind = 0;
-				var _sprs = _submenu[0];
-				var _tlp = array_safe_get(_submenu, 2, "");
+				var _bx		 = _sx + j * (hght + ui(4));
+				var _by		 = yy + hght + hght / 2 - ui(4);
+				var _spr	 = noone, _ind = 0;
+				var _sprs	 = _submenu[0];
+				var _tlp	 = array_safe_get(_submenu, 2, "");
 				
 				if(is_array(_sprs)) {
 					_spr = _sprs[0];
@@ -78,17 +79,23 @@
 				draw_sprite_ui_uniform(_spr, _ind, _bx, _by);
 			}
 		} else {
+			var tx = dialog_x + show_icon * ui(32) + ui(16);
+			
+			if(_menuItem.spr != noone) {
+				var spr = is_array(_menuItem.spr)? _menuItem.spr[0] : _menuItem.spr;
+				var ind = is_array(_menuItem.spr)? _menuItem.spr[1] : 0;
+				draw_sprite_ui(spr, ind, dialog_x + ui(24), yy + hght / 2,,,, COLORS._main_icon, 0.75);
+			}
+			
 			draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text);
-			draw_set_alpha(activated * 0.5 + 0.5);
-			draw_text(dialog_x + ui(16), yy + hght / 2, label);
+			draw_set_alpha(_menuItem.active * 0.5 + 0.5);
+			draw_text(tx, yy + hght / 2, label);
 			draw_set_alpha(1);
-		}
-		
-		if(array_length(_menuItem) > 2) {
-			if(_menuItem[2] == ">") {
+			
+			if(_menuItem.isShelf) {
 				draw_sprite_ui_uniform(THEME.arrow, 0, dialog_x + dialog_w - ui(20), yy + hght / 2, 1, COLORS._main_icon);	
-			} else if(is_array(_menuItem[2])) {
-				var _key = find_hotkey(_menuItem[2][0], _menuItem[2][1]);
+			} else if(_menuItem.hotkey != noone) {
+				var _key = find_hotkey(_menuItem.hotkey[0], _menuItem.hotkey[1]);
 				if(_key) {
 					draw_set_text(f_p1, fa_right, fa_center, COLORS._main_text_sub);
 					draw_text(dialog_x + dialog_w - ui(16), yy + hght / 2, key_get_name(_key.key, _key.modi));	

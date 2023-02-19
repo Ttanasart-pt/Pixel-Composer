@@ -84,7 +84,7 @@ function Node_Canvas(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 		
 		surface_set_target(_outSurf);
 		draw_clear_alpha(0, 0);
-		BLEND_OVER_ALPHA
+		BLEND_ALPHA
 			if(_bgr && is_surface(_bg))
 				draw_surface_stretched_ext(_bg, 0, 0, _dim[0], _dim[1], c_white, _bga);
 			draw_surface(canvas_surface, 0, 0);
@@ -101,7 +101,7 @@ function Node_Canvas(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 			
 		surface_set_target(_surf_prev);
 		draw_clear_alpha(0, 0);
-		BLEND_OVER_ALPHA;
+		BLEND_ALPHA;
 			
 		if(is_surface(_bg))
 			draw_surface_stretched_ext(_bg, 0, 0, _dim[0], _dim[1], c_white, _bga);
@@ -395,7 +395,7 @@ function Node_Canvas(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 		mouse_cur_y = round((_my - _y) / _s - 0.5);
 		
 		if(_tool == 0 || _tool == 1) {
-			if(_tool == 0) BLEND_OVER_ALPHA;
+			if(_tool == 0) BLEND_ALPHA;
 			
 			if(_tool == 1) {
 				gpu_set_blendmode(bm_subtract);
@@ -467,7 +467,7 @@ function Node_Canvas(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 			}
 			
 			if(mouse_release(mb_left)) {
-				BLEND_OVER_ALPHA;
+				BLEND_ALPHA;
 				if(_tool == 2)
 					draw_rect_size(mouse_pre_x, mouse_pre_y, mouse_cur_x, mouse_cur_y, _siz, _sub_tool, _brush);
 				else if(_tool == 3)
@@ -509,7 +509,7 @@ function Node_Canvas(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 			
 			surface_set_target(_surf_prev);
 			draw_clear_alpha(0, 0);
-			BLEND_OVER_ALPHA;
+			BLEND_ALPHA;
 			
 			if(is_surface(_bg))
 				draw_surface_stretched_ext(_bg, 0, 0, _dim[0], _dim[1], c_white, _bga);

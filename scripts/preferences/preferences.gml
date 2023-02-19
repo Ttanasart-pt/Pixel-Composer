@@ -55,6 +55,7 @@
 	PREF_MAP[? "test_mode"] = false;
 	
 	PREF_MAP[? "auto_save_time"] = 300;
+	PREF_MAP[? "use_legacy_exception"] = false;
 #endregion
 
 #region hotkeys	
@@ -225,6 +226,13 @@
 		
 		if(ds_map_exists(PREF_MAP, "test_mode"))
 			TESTING = PREF_MAP[? "test_mode"];
+		
+		if(ds_map_exists(PREF_MAP, "use_legacy_exception")) {
+			if(PREF_MAP[? "use_legacy_exception"])
+				resetException();
+			else 
+				setException();
+		}
 		
 		if(PREF_MAP[? "window_maximize"]) {
 			run_in(1, function() {

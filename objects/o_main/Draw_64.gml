@@ -25,6 +25,6 @@
 	catch(e) {
 		while(surface_get_target() != surf)
 			surface_reset_target();
-		noti_warning("UI error: " + exception_print(e));
+		noti_warning(exception_print(e));
 	}
 #endregion

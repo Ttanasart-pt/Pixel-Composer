@@ -207,7 +207,7 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = -1) : Node(_x, _y, _group) co
 				surface_reset_target();
 			}
 			
-			if(!arr) _surf = _surf[0];
+			if(!arr) _surf = array_safe_get(_surf, 0);
 			outputs[| 0].setValue(_surf);
 		} else {
 			if(is_array(inpt)) {
