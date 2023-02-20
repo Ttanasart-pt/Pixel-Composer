@@ -221,7 +221,7 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 		addNodeObject(filter, "Glow",				s_node_glow,			"Node_Glow",			[1, Node_Glow]);
 		addNodeObject(filter, "Shadow",				s_node_shadow,			"Node_Shadow",			[1, Node_Shadow]);
 		addNodeObject(filter, "Bloom",				s_node_bloom,			"Node_Bloom",			[1, Node_Bloom]);
-		addNodeObject(filter, "Trail",				s_node_trail,			"Node_Trail",			[1, Node_Trail]);
+		addNodeObject(filter, "Trail",				s_node_trail,			"Node_Trail",			[1, Node_Trail]).set_version(1130);
 		addNodeObject(filter, "Erode",				s_node_erode,			"Node_Erode",			[1, Node_Erode]);
 		addNodeObject(filter, "Corner",				s_node_corner,			"Node_Corner",			[1, Node_Corner], ["round corner"]).set_version(1110);
 		addNodeObject(filter, "2D Light",			s_node_2d_light,		"Node_2D_light",		[1, Node_2D_light]);
@@ -398,6 +398,7 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 		addNodeObject(values, "Shift Path",		s_node_path_shift,		"Node_Path_Shift",		[1, Node_Path_Shift]).set_version(1130);
 		addNodeObject(values, "Trim Path",		s_node_path_trim,		"Node_Path_Trim",		[1, Node_Path_Trim]).set_version(1130);
 		addNodeObject(values, "Wave Path",		s_node_path_wave,		"Node_Path_Wave",		[1, Node_Path_Wave], ["zigzag path"]).set_version(1130);
+		addNodeObject(values, "Reverse Path",	s_node_path_reverse,	"Node_Path_Reverse",	[1, Node_Path_Reverse]).set_version(1130);
 		
 		ds_list_add(values, "Boolean");
 		addNodeObject(values, "Boolean",		s_node_boolean,		"Node_Boolean",		[1, Node_Boolean]);

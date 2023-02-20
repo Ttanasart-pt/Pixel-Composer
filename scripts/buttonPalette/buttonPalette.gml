@@ -63,7 +63,7 @@ function drawPaletteGrid(_pal, _x, _y, _w, _gs = 24, c_color = -1) {
 	
 	for(var i = 0; i < array_length(_pal); i++) {
 		draw_set_color(_pal[i]);
-		var _x0 = _x + (i % col) * _gs;
+		var _x0 = _x + safe_mod(i, col) * _gs;
 		var _y0 = _y + floor(i / col) * _gs;
 		draw_rectangle(_x0, _y0 + 1, _x0 + _gs, _y0 + _gs, false);
 	}
@@ -71,7 +71,7 @@ function drawPaletteGrid(_pal, _x, _y, _w, _gs = 24, c_color = -1) {
 	if(c_color > -1) {
 		for(var i = 0; i < array_length(_pal); i++) {
 			if(c_color == _pal[i]) {
-				var _x0 = _x + (i % col) * _gs;
+				var _x0 = _x + safe_mod(i, col) * _gs;
 				var _y0 = _y + floor(i / col) * _gs;
 				
 				draw_set_color(c_white);

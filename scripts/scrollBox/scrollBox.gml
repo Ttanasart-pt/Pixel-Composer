@@ -62,8 +62,8 @@ function scrollBox(_data, _onModify) : widget() constructor {
 				var ind = array_find(data_list, _text);
 				var len = array_length(data_list);
 				if(len) {
-					if(mouse_wheel_down())	onModify((ind + 1 + len) % len);
-					if(mouse_wheel_up())	onModify((ind - 1 + len) % len);
+					if(mouse_wheel_down())	onModify(safe_mod(ind + 1 + len, len));
+					if(mouse_wheel_up())	onModify(safe_mod(ind - 1 + len, len));
 				}
 			}
 		} else {

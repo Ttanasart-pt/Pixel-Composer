@@ -16,7 +16,7 @@
 #endregion
 
 #region step
-	VARIABLE.step();
+	//VARIABLE.step();
 	
 	try {
 		if(PANEL_MAIN != 0)

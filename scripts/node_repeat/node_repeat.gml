@@ -190,7 +190,7 @@ function Node_Repeat(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 					}
 				} else if(_pat == 1) {
 					var row = floor(i / _col);
-					var col = i % _col;
+					var col = safe_mod(i, _col);
 					
 					posx = _spos[0] + _rpos[0] * col + _cls[0] * row;
 					posy = _spos[1] + _rpos[1] * col + _cls[1] * row;
@@ -218,7 +218,7 @@ function Node_Repeat(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 				var _surf = _inSurf;
 				
 				if(is_array(_inSurf)) 
-					_surf = array_safe_get(_inSurf, _arr? irandom(array_length(_inSurf) - 1) : i % array_length(_inSurf));
+					_surf = array_safe_get(_inSurf, _arr? irandom(array_length(_inSurf) - 1) : safe_mod(i, array_length(_inSurf)));
 				
 				var _sw = surface_get_width(_surf);
 				var _sh = surface_get_height(_surf);

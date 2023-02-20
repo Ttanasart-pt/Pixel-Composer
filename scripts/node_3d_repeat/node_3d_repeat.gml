@@ -143,7 +143,7 @@ function Node_3D_Repeat(_x, _y, _group = -1) : Node(_x, _y, _group) constructor 
 				matrix_set(matrix_world, matrix_stack_top());
 				
 				if(is_array(sv)) {
-					var index = i % array_length(sv);
+					var index = safe_mod(i, array_length(sv));
 					var _sv = sv[index];
 					_sv(index);
 				} else

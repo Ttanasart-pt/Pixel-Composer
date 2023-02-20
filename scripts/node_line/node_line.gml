@@ -29,7 +29,7 @@ function Node_Line(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constru
 	inputs[| 9] = nodeValue("Shift", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
 		.setDisplay(VALUE_DISPLAY._default, 1 / 64);
 	
-	inputs[| 10] = nodeValue("Color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, [ new gradientKey(0, c_white) ] )
+	inputs[| 10] = nodeValue("Color over length", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, [ new gradientKey(0, c_white) ] )
 		.setDisplay(VALUE_DISPLAY.gradient);
 	
 	inputs[| 11] = nodeValue("Width over length", self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_11);
@@ -41,12 +41,16 @@ function Node_Line(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constru
 	inputs[| 14] = nodeValue("Round segment", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 4)
 		.setDisplay(VALUE_DISPLAY.slider, [2, 16, 1]);
 	
+	inputs[| 15] = nodeValue("Span color over path", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false, "Apply the full 'color over length' to the trimmed path.");
+	
+	inputs[| 16] = nodeValue("Greyscale over width", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	
 	input_display_list = [
 		["Output",			true],	0, 1, 
 		["Line data",		false], 6, 7, 2, 
 		["Line settings",	false], 3, 11, 12, 8, 9, 13, 14, 
 		["Wiggle",			false], 4, 5, 
-		["Render",			false], 10 
+		["Render",			false], 10, 15, 16, 
 	];
 	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
@@ -70,6 +74,8 @@ function Node_Line(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constru
 		
 		var _cap   = _data[13];
 		var _capP  = _data[14];
+		var _colP  = _data[15];
+		var _colW  = _data[16];
 		
 		inputs[| 14].setVisible(_cap);
 		
@@ -108,6 +114,9 @@ function Node_Line(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constru
 				var step = 0;
 				
 				while(_total > 0) {
+					if(_rtLen == 0) break;
+					if(ww <= 0.001) break;
+					
 					if(_prog_curr >= 1) 
 						_prog_curr = frac(_prog_curr);
 					else 
@@ -138,7 +147,7 @@ function Node_Line(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constru
 						_na = point_direction(n0[0], n0[1], n1[0], n1[1]) + 90;
 					}
 					
-					_nc = gradient_eval(_color, _prog_eli / _rtLen, ds_list_get(_col_data, 0));
+					_nc = gradient_eval(_color, _colP? _prog_eli / _rtLen : _prog_curr, ds_list_get(_col_data, 0));
 					
 					if(_prog_curr > _prog) {
 						if(_cap) {
@@ -152,7 +161,7 @@ function Node_Line(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constru
 							}
 						}
 						
-						draw_line_width2_angle(_ox, _oy, _nx, _ny, _ow, _nw, _oa, _na, _oc, _nc);
+						draw_line_width2_angle(_ox, _oy, _nx, _ny, _ow, _nw, _oa, _na, _oc, _nc, _colW);
 						_total -= _prog_curr - _prog;
 					}
 					
@@ -201,7 +210,7 @@ function Node_Line(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constru
 					_nw = random_range(_wid[0], _wid[1]);
 					_nw *= eval_curve_x(_widc, _widap? _prog_eli / _rtLen : _prog_curr);
 					
-					_nc = gradient_eval(_color, _prog_eli / _rtLen, ds_list_get(_col_data, 0));
+					_nc = gradient_eval(_color, _colP? _prog_eli / _rtLen : _prog_curr, ds_list_get(_col_data, 0));
 					
 					if(_prog_curr > _prog) {
 						if(_cap) {
@@ -215,7 +224,7 @@ function Node_Line(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constru
 							}
 						}
 						
-						draw_line_width2_angle(_ox, _oy, _nx, _ny, _ow, _nw, _d + 90, _d + 90, _oc, _nc);
+						draw_line_width2_angle(_ox, _oy, _nx, _ny, _ow, _nw, _d + 90, _d + 90, _oc, _nc, _colW);
 						_total -= (_prog_curr - _prog);
 					}
 					

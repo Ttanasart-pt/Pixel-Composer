@@ -594,7 +594,7 @@ function Panel_Preview() : PanelContent() constructor {
 					draw_sprite_stretched(THEME.button, 2, xx, yy, ui(40), ui(40));
 				
 				if(is_array(_node.tools[i][1])) {
-					var _ind = tool_sub_index % array_length(_node.tools[i][1]);
+					var _ind = safe_mod(tool_sub_index, array_length(_node.tools[i][1]));
 					draw_sprite_ui_uniform(_node.tools[i][1][_ind], 0, xx + ui(20), yy + ui(20));
 				} else
 					draw_sprite_ui_uniform(_node.tools[i][1], 0, xx + ui(20), yy + ui(20));

@@ -78,9 +78,9 @@ function ase_layer(name) constructor {
 		if(tag != noone) {
 			var st = tag[? "Frame start"];
 			var ed = tag[? "Frame end"];
-			ind = st + index % (ed - st + 1);
+			ind = st + safe_mod(index, ed - st + 1);
 		} else 
-			ind = index % array_length(cels);
+			ind = safe_mod(index, array_length(cels));
 		
 		return array_safe_get(cels, ind);
 	}

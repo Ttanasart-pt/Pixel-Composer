@@ -185,7 +185,7 @@ function Node_2D_light(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) con
 							nx = _pos[0] + lengthdir_x(_range, dir);
 							ny = _pos[1] + lengthdir_y(_range, dir);
 							
-							if((i % bnd_amo) / bnd_amo < _rbnr && i) {
+							if(safe_mod(i, bnd_amo) / bnd_amo < _rbnr && i) {
 								draw_vertex_color(_pos[0], _pos[1], c_white, 1);
 								draw_vertex_color(ox, oy, c_black, 1);
 								draw_vertex_color(nx, ny, c_black, 1);

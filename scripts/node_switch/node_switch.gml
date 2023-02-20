@@ -81,7 +81,7 @@ function Node_Switch(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 		if(index < input_fix_len) return;
 		if(LOADING || APPENDING) return;
 		
-		if((index - input_fix_len) % data_length == 0) { //Variable name
+		if(safe_mod(index - input_fix_len, data_length) == 0) { //Variable name
 			inputs[| index + 1].name = inputs[| index].getValue() + " value";
 		}
 		

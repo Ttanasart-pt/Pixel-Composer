@@ -71,7 +71,7 @@ function __loadSteamUGCCollection(file_id, f, path) {
 		var _temp = sprite_add(icon_path, 0, false, false, 0, 0);
 		var ww = sprite_get_width(_temp);
 		var hh = sprite_get_height(_temp);
-		var amo = ww % hh == 0? ww / hh : 1;
+		var amo = safe_mod(ww, hh) == 0? ww / hh : 1;
 		sprite_delete(_temp);
 		file.spr_path = [icon_path, amo, false];
 	}

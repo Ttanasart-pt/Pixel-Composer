@@ -825,7 +825,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	}
 	
 	static _getValue = function(_time = ANIMATOR.current_frame, applyUnit = true, arrIndex = 0) {
-		//__count("getValue")
 		var _val = getValueRecursive(_time);
 		var val = _val[0];
 		var nod = _val[1];

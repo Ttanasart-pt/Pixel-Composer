@@ -143,7 +143,7 @@ function Node_Lua_Compute(_x, _y, _group = -1) : Node(_x, _y, _group) constructo
 		
 		compiled = false;
 		
-		if((index - input_fix_len) % data_length == 1) { //Variable type
+		if(safe_mod(index - input_fix_len,  data_length) == 1) { //Variable type
 			var type = inputs[| index].getValue();
 			
 			switch(type) {

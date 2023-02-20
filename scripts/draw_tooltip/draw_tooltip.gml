@@ -66,7 +66,7 @@ function draw_tooltip_surface_array(surf) {
 		if(!is_surface(surf[ind])) continue;
 		
 		var i = floor(ind / col);
-		var j = ind % col;
+		var j = safe_mod(ind, col);
 		
 		var sw = surface_get_width(surf[ind]);
 		var sh = surface_get_height(surf[ind]);

@@ -58,7 +58,7 @@ event_inherited();
 			}
 			
 			if(keyboard_check_pressed(vk_down))
-				selecting = (selecting + 1) % array_length(arrayBox.data);
+				selecting = safe_mod(selecting + 1, array_length(arrayBox.data));
 				
 			if(keyboard_check_pressed(vk_escape))
 				instance_destroy();

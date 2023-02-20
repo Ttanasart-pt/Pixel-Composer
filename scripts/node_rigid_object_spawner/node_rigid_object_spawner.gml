@@ -81,7 +81,7 @@ function Node_Rigid_Object_Spawner(_x, _y, _group = -1) : Node(_x, _y, _group) c
 		var _spw = inputs[| 6].getValue();
 		
 		if(_spw) {
-			if(_typ == 0 && (ANIMATOR.current_frame % _del == 0)) 
+			if(_typ == 0 && (safe_mod(ANIMATOR.current_frame, _del) == 0)) 
 				spawn();
 			if(_typ == 1 && ANIMATOR.current_frame == _frm) 
 				spawn();

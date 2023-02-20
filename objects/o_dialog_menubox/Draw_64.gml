@@ -113,7 +113,7 @@
 		}
 			
 		if(keyboard_check_pressed(vk_down))
-			selecting = (selecting + 1) % array_length(menu);
+			selecting = safe_mod(selecting + 1, array_length(menu));
 			
 		if(keyboard_check_pressed(vk_escape))
 			instance_destroy();

@@ -120,7 +120,7 @@ function Node_ASE_File_Read(_x, _y, _group = -1) : Node(_x, _y, _group) construc
 			var st = tag[? "Frame start"];
 			var ed = tag[? "Frame end"];
 			var rn = ed - st + 1;
-			var progFr = (ANIMATOR.current_frame - _tag_delay) % rn + 1;
+			var progFr = safe_mod(ANIMATOR.current_frame - _tag_delay, rn) + 1;
 			var prog = progFr / rn;
 			var txt = "";
 			

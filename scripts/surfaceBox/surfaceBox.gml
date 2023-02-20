@@ -52,7 +52,7 @@ function surfaceBox(_onModify, def_path = "") : widget() constructor {
 			draw_rectangle(sx0, sy0, sx1, sy1, true);
 			
 			if(is_array(_surface) && array_length(_surface))
-				_surface = _surface[round(current_time / 250) % array_length(_surface)];
+				_surface = _surface[safe_mod(round(current_time / 250), array_length(_surface))];
 			
 			if(is_surface(_surface)) {
 				var sfw = surface_get_width(_surface);	

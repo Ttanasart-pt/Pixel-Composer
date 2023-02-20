@@ -23,7 +23,7 @@ function draw_line_width2(x0, y0, x1, y1, w0, w1, cap = false) {
 	}
 }
 
-function draw_line_width2_angle(x0, y0, x1, y1, w0, w1, a0 = 0, a1 = 0, _oc = c_white, _nc = c_white) {
+function draw_line_width2_angle(x0, y0, x1, y1, w0, w1, a0 = 0, a1 = 0, _oc = c_white, _nc = c_white, widColor = false) {
 	var _x0 = x0 + lengthdir_x(w0 / 2, a0);
 	var _y0 = y0 + lengthdir_y(w0 / 2, a0);
 	var _x1 = x1 + lengthdir_x(w1 / 2, a1);
@@ -31,10 +31,10 @@ function draw_line_width2_angle(x0, y0, x1, y1, w0, w1, a0 = 0, a1 = 0, _oc = c_
 	
 	//draw_set_color(c_red);
 	draw_primitive_begin(pr_trianglestrip);
-		draw_vertex_color( x0,  y0, _oc, 1);
-		draw_vertex_color( x1,  y1, _nc, 1);
-		draw_vertex_color(_x0, _y0, _oc, 1);
-		draw_vertex_color(_x1, _y1, _nc, 1);
+		draw_vertex_color( x0,  y0, widColor? merge_color(_oc, c_black, 0.5) : _oc, 1);
+		draw_vertex_color( x1,  y1, widColor? merge_color(_nc, c_black, 0.5) : _nc, 1);
+		draw_vertex_color(_x0, _y0, widColor? merge_color(_oc, c_black, 0.0) : _oc, 1);
+		draw_vertex_color(_x1, _y1, widColor? merge_color(_nc, c_black, 0.0) : _nc, 1);
 	draw_primitive_end();
 	
 	var _x0 = x0 + lengthdir_x(w0 / 2, a0 + 180);
@@ -44,9 +44,9 @@ function draw_line_width2_angle(x0, y0, x1, y1, w0, w1, a0 = 0, a1 = 0, _oc = c_
 	
 	//draw_set_color(c_blue);
 	draw_primitive_begin(pr_trianglestrip);
-		draw_vertex_color( x0,  y0, _oc, 1);
-		draw_vertex_color( x1,  y1, _nc, 1);
-		draw_vertex_color(_x0, _y0, _oc, 1);
-		draw_vertex_color(_x1, _y1, _nc, 1);
+		draw_vertex_color( x0,  y0, widColor? merge_color(_oc, c_black, 0.5) : _oc, 1);
+		draw_vertex_color( x1,  y1, widColor? merge_color(_nc, c_black, 0.5) : _nc, 1);
+		draw_vertex_color(_x0, _y0, widColor? merge_color(_oc, c_black, 1.0) : _oc, 1);
+		draw_vertex_color(_x1, _y1, widColor? merge_color(_nc, c_black, 1.0) : _nc, 1);
 	draw_primitive_end();
 }

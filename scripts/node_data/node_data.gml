@@ -541,8 +541,10 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) constructor {
 	
 	static drawPreview = function(xx, yy, _s) {
 		if(!active) return;
+		
 		var _node = outputs[| preview_channel];
 		if(_node.type != VALUE_TYPE.surface) return;
+		
 		var surf = _node.getValue();
 		preview_amount = 0;
 		if(is_array(surf)) {

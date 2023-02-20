@@ -44,10 +44,10 @@ function polygon_points_classify(points) {
 	var side, _side = 0;
 	var convexs  = [];
 	var reflects = [];
-	var startindex = (maxindex - 1 + len) % len;
+	var startindex = safe_mod(maxindex - 1 + len, len);
 	
 	for( var i = 0; i < len; i++ ) {
-		var index = (startindex + i) % len;
+		var index = safe_mod(startindex + i, len);
 		var _px0 = points[index][0];
 		var _py0 = points[index][1];
 		var _px1 = points[safe_mod(index + 1, len)][0];
@@ -106,8 +106,8 @@ function polygon_triangulate(points, tolerance = 4) {
 		var len = array_length(pointInd);
 		var c0 = convexes[0];
 		var c0i = array_find(pointInd, c0);
-		var c1 = pointInd[(c0i - 1 + len) % len];
-		var c2 = pointInd[(c0i + 1) % len];
+		var c1 = pointInd[safe_mod(c0i - 1 + len, len)];
+		var c2 = pointInd[safe_mod(c0i + 1, len)];
 		
 		var p0 = points[c0];
 		var p1 = points[c1];
@@ -137,8 +137,8 @@ function polygon_triangulate(points, tolerance = 4) {
 			
 			if(array_exists(reflected, c1)) {
 				var c1i = array_find(pointInd, c1);
-				var c1b = (c1i - 1 + len) % len;
-				var c1a = (c1i + 1) % len;
+				var c1b = safe_mod(c1i - 1 + len, len);
+				var c1a = safe_mod(c1i + 1, len);
 				
 				var p1b = points[pointInd[c1b]];
 				var p1a = points[pointInd[c1a]];
@@ -152,8 +152,8 @@ function polygon_triangulate(points, tolerance = 4) {
 			
 			if(array_exists(reflected, c2)) {
 				var c2i = array_find(pointInd, c2);
-				var c2b = (c2i - 1 + len) % len;
-				var c2a = (c2i + 1) % len;
+				var c2b = safe_mod(c2i - 1 + len, len);
+				var c2a = safe_mod(c2i + 1, len);
 				
 				var p2b = points[pointInd[c2b]];
 				var p2a = points[pointInd[c2a]];

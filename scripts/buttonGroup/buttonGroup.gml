@@ -80,8 +80,8 @@ function buttonGroupClass(_data, _onClick) : widget() constructor {
 				if(is_array(data) && key_mod_press(SHIFT)) {
 					var len = array_length(data);
 					if(len) {
-						if(mouse_wheel_down())	onClick((_selecting + 1 + len) % len);
-						if(mouse_wheel_up())	onClick((_selecting - 1 + len) % len);
+						if(mouse_wheel_down())	onClick(safe_mod(_selecting + 1 + len, len));
+						if(mouse_wheel_up())	onClick(safe_mod(_selecting - 1 + len, len));
 					}
 				}
 			}
