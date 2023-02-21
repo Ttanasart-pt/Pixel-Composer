@@ -142,6 +142,8 @@ if palette == 0 exit;
 				array_delete(palette, index_dragging, 1);
 				array_insert(palette, hover, tt);
 				index_selecting = hover;
+				
+				onApply(palette);
 			}
 		}
 		

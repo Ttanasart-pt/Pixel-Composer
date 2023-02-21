@@ -25,6 +25,8 @@ event_inherited();
 	setColor = function(color) {
 		if(key_selecting == noone) return;
 		key_selecting.value = color;
+		
+		onApply(gradient);
 	}
 	
 	function setGradient(grad, data) {
@@ -71,6 +73,8 @@ event_inherited();
 		
 		array_remove(gradient, key);
 		gradient_add(gradient, key, false);
+		
+		onApply(gradient);
 	}
 	
 	function removeKeyOverlap(key) {
@@ -82,6 +86,8 @@ event_inherited();
 			_key.value = key.value;
 			array_remove(gradient, key);
 		}
+		
+		onApply(gradient);
 	}
 #endregion
 

@@ -13,6 +13,10 @@
 #endregion
 
 #region window
+	gameframe_init();
+	//gameframe_can_input = false;
+	gameframe_button_array = [];
+	
 	depth = 0;
 	win_wp = WIN_W;
 	win_hp = WIN_H;

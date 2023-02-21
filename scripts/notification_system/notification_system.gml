@@ -26,6 +26,8 @@
 		self.tooltip = "";
 		self.icon_end = noone;
 		
+		self.amount = 1;
+		
 		self.time = string_lead_zero(current_hour, 2) + ":" + string_lead_zero(current_minute, 2) + "." + string_lead_zero(current_second, 2);
 		
 		static setOnClick = function(onClick, tooltip = "", icon_end = noone) {
@@ -38,6 +40,11 @@
 	}
 	
 	function noti_status(str, icon = noone, flash = false, ref = noone) {
+		if(!ds_list_empty(STATUSES) && STATUSES[| ds_list_size(STATUSES) - 1].txt == str) {
+			STATUSES[| ds_list_size(STATUSES) - 1].amount++;
+			return;
+		}
+		
 		var noti = new notification(NOTI_TYPE.log, str, icon);
 		ds_list_add(STATUSES, noti);
 		
@@ -56,6 +63,16 @@
 	}
 	
 	function noti_warning(str, icon = noone, ref = noone) {
+		if(PANEL_MENU) {
+			PANEL_MENU.noti_flash = 1;
+			PANEL_MENU.noti_flash_color = COLORS._main_accent;
+		}
+		
+		if(!ds_list_empty(STATUSES) && STATUSES[| ds_list_size(STATUSES) - 1].txt == str) {
+			STATUSES[| ds_list_size(STATUSES) - 1].amount++;
+			return;
+		}
+		
 		var noti = new notification(NOTI_TYPE.warning, str, icon, c_ui_orange, PREF_MAP[? "notification_time"]);
 		ds_list_add(STATUSES, noti);
 		ds_list_add(WARNING, noti);
@@ -63,11 +80,6 @@
 		
 		if(!instance_exists(o_dialog_warning))
 			dialogCall(o_dialog_warning, mouse_mx + ui(16), mouse_my + ui(16)).warning_text = str;
-		
-		if(PANEL_MENU) {
-			PANEL_MENU.noti_flash = 1;
-			PANEL_MENU.noti_flash_color = COLORS._main_accent;
-		}
 		
 		if(ref) {
 			var onClick = function() { PANEL_GRAPH.focusNode(self.ref); };

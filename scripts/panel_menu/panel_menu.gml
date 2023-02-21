@@ -325,19 +325,46 @@ function Panel_Menu() : PanelContent() constructor {
 			}
 		#endregion
 		
+		var x1 = w - ui(6);
+		
+		#region actions
+			var bs = ui(28);
+			
+			if(buttonInstant(THEME.button_hide_fill, x1 - bs, ui(6), bs, bs, [mx, my], pFOCUS, pHOVER,, THEME.window_exit, 0, COLORS._main_accent) == 2) {
+				game_end();
+			}
+			x1 -= bs + ui(8);
+			
+			if(buttonInstant(THEME.button_hide_fill, x1 - bs, ui(6), bs, bs, [mx, my], pFOCUS, pHOVER,, THEME.window_maximize, window_is_maximize(), COLORS._main_icon) == 2) {
+				if(window_is_maximize())
+					window_restore();
+				else
+					maximize_window();
+			}
+			x1 -= bs + ui(8);
+			
+			if(buttonInstant(THEME.button_hide_fill, x1 - bs, ui(6), bs, bs, [mx, my], pFOCUS, pHOVER,, THEME.window_minimize, 0, COLORS._main_icon) == 2) {
+				//minimize_window();
+				
+				
+				window_set_position(0, 0);
+			}
+			x1 -= bs + ui(8);
+		#endregion
+		
 		#region version
 			draw_set_text(f_p0, fa_right, fa_center, COLORS._main_text_sub);
 			var txt = "v. " + string(VERSION_STRING);
 			if(DEMO) txt += " DEMO";
-			var ww = string_width(txt);
-			if(pHOVER && point_in_rectangle(mx, my, w - ui(16) - ww, 0, w - ui(16), h)) {
-				draw_sprite_stretched(THEME.menu_button, 0, w - ww - ui(22), ui(6), ww + ui(12), h - ui(12));
+			var ww = string_width(txt) + ui(12);
+			if(pHOVER && point_in_rectangle(mx, my, x1 - ww, 0, x1, h)) {
+				draw_sprite_stretched(THEME.menu_button, 0, x1 - ww, ui(6), ww, h - ui(12));
 			
 				if(mouse_press(mb_left, pFOCUS)) {
 					dialogCall(o_dialog_release_note); 
 				}
 			}
-			draw_text(w - ui(16), h / 2, txt);
+			draw_text(x1 - ui(6), h / 2, txt);
 		
 			if(o_main.version_latest > VERSION) 
 				displayNewVersion();

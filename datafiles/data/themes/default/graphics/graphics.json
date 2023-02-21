@@ -1051,6 +1051,34 @@
         "yorigin": 24,
         "slice": null
     },
+    "window_exit": {
+        "path": "./icon/s_window_exit.png",
+        "subimages": 1,
+        "xorigin": 16,
+        "yorigin": 16,
+        "slice": null
+    },
+    "window_minimize": {
+        "path": "./icon/s_window_minimize.png",
+        "subimages": 1,
+        "xorigin": 16,
+        "yorigin": 16,
+        "slice": null
+    },
+    "window_maximize": {
+        "path": "./icon/s_window_maximize.png",
+        "subimages": 2,
+        "xorigin": 16,
+        "yorigin": 16,
+        "slice": null
+    },
+    "window_fullscreen": {
+        "path": "./icon/s_window_fullscreen.png",
+        "subimages": 2,
+        "xorigin": 16,
+        "yorigin": 16,
+        "slice": null
+    },
     "icon_splash_show_on_start": {
         "path": "./icon/s_icon_spalsh_show_on_start_strip2.png",
         "subimages": 2,

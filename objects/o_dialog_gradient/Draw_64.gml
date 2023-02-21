@@ -96,9 +96,9 @@ if !ready exit;
 		
 		if(buttonInstant(THEME.button_hide, bx, by, ui(28), ui(28), mouse_ui, sFOCUS, sHOVER, get_text("gradient_editor_key_blend", "Key blending"), THEME.grad_blend) == 2) {
 			menuCall( bx + ui(32), by, [ 
-				menuItem(get_text("gradient_editor_blend_RGB",  "RGB blend"),  function() { grad_data[| 0] = 0; }), 
-				menuItem(get_text("gradient_editor_blend_HSV",  "HSV blend"),  function() { grad_data[| 0] = 2; }), 
-				menuItem(get_text("gradient_editor_blend_hard", "Hard blend"), function() { grad_data[| 0] = 1; }), 
+				menuItem(get_text("gradient_editor_blend_RGB",  "RGB blend"),  function() { grad_data[| 0] = 0; onApply(gradient); }), 
+				menuItem(get_text("gradient_editor_blend_HSV",  "HSV blend"),  function() { grad_data[| 0] = 2; onApply(gradient); }), 
+				menuItem(get_text("gradient_editor_blend_hard", "Hard blend"), function() { grad_data[| 0] = 1; onApply(gradient); }), 
 			]);
 		}
 		bx -= ui(32);

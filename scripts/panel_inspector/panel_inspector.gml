@@ -211,7 +211,7 @@ function Panel_Inspector() : PanelContent() constructor {
 		var lb_y = yy + lb_h / 2;
 			
 		var butx = ui(16);
-		if(jun.isAnimable()) {
+		if(jun.connect_type == JUNCTION_CONNECT.input && jun.isAnimable()) {
 			var index = jun.value_from == noone? jun.animator.is_anim : 2;
 			draw_sprite_ui_uniform(THEME.animate_clock, index, butx, lb_y, 1,, 0.8);
 			if(_hover && point_in_circle(_m[0], _m[1], butx, lb_y, ui(10))) {
@@ -262,7 +262,7 @@ function Panel_Inspector() : PanelContent() constructor {
 		#endregion
 			
 		#region anim
-			if(lineBreak && jun.animator.is_anim) {
+			if(jun.connect_type == JUNCTION_CONNECT.input && lineBreak && jun.animator.is_anim) {
 				var bx = w - ui(64);
 				var by = lb_y;
 				if(buttonInstant(THEME.button_hide, bx - ui(12), by - ui(12), ui(24), ui(24), _m, pFOCUS, _hover, "", THEME.prop_keyframe, 2) == 2) {
@@ -343,10 +343,15 @@ function Panel_Inspector() : PanelContent() constructor {
 		var mbRight	   = true;
 			
 		if(jun.editWidget) {
-			jun.editWidget.setInteract(jun.value_from == noone);
 			jun.editWidget.setActiveFocus(pFOCUS, _hover);
-			if(pFOCUS) jun.editWidget.register(contentPane);
-				
+			
+			if(jun.connect_type == JUNCTION_CONNECT.input) {
+				jun.editWidget.setInteract(jun.value_from == noone);
+				if(pFOCUS) jun.editWidget.register(contentPane);
+			} else {
+				jun.editWidget.setInteract(false);
+			}
+			
 			switch(jun.display_type) {
 				case VALUE_DISPLAY.button :
 					jun.editWidget.draw(editBoxX, editBoxY, editBoxW, editBoxH, _m);
@@ -513,7 +518,9 @@ function Panel_Inspector() : PanelContent() constructor {
 		inspecting.inspecting = true;
 		prop_hover = noone;
 		var jun = noone;
-		var amo = inspecting.input_display_list == -1? ds_list_size(inspecting.inputs) : array_length(inspecting.input_display_list);
+		var amoIn  = inspecting.input_display_list == -1? ds_list_size(inspecting.inputs) : array_length(inspecting.input_display_list);
+		var amoOut = ds_list_size(inspecting.outputs);
+		var amo    = amoIn + 1 + amoOut;
 		var hh = ui(40);
 		
 		tb_prop_filter.register(contentPane);
@@ -522,61 +529,74 @@ function Panel_Inspector() : PanelContent() constructor {
 		tb_prop_filter.draw(ui(32), _y + ui(4), con_w - ui(64), ui(28), filter_text, _m);
 		draw_sprite_ui(THEME.search, 0, ui(32 + 16), _y + ui(4 + 14), 1, 1, 0, COLORS._main_icon, 1);
 		
+		var xc = con_w / 2;
+		
 		for(var i = 0; i < amo; i++) {
-			var xc = con_w / 2;
 			var yy = hh + _y;
 			
-			if(inspecting.input_display_list == -1) {
-				jun = inspecting.inputs[| i];
-			} else {
-				if(i >= array_length(inspecting.input_display_list)) break;
-				var jun_disp = inspecting.input_display_list[i];
-				if(is_array(jun_disp)) {
-					var txt  = jun_disp[0];
-					var coll = jun_disp[1] && filter_text == "";
+			if(i < amoIn) {
+				if(inspecting.input_display_list == -1) {
+					jun = inspecting.inputs[| i];
+				} else {
+					if(i >= array_length(inspecting.input_display_list)) break;
+					var jun_disp = inspecting.input_display_list[i];
+					if(is_array(jun_disp)) {
+						var txt  = jun_disp[0];
+						var coll = jun_disp[1] && filter_text == "";
 					
-					if(_hover && point_in_rectangle(_m[0], _m[1], 0, yy, con_w, yy + ui(32))) {
-						draw_sprite_stretched_ext(THEME.group_label, 0, 0, yy, con_w, ui(32), COLORS.panel_inspector_group_hover, 1);
+						if(_hover && point_in_rectangle(_m[0], _m[1], 0, yy, con_w, yy + ui(32))) {
+							draw_sprite_stretched_ext(THEME.group_label, 0, 0, yy, con_w, ui(32), COLORS.panel_inspector_group_hover, 1);
 						
-						if(mouse_press(mb_left, pFOCUS))
-							jun_disp[@ 1] = !coll;
-						if(mouse_press(mb_right, pFOCUS))
-							menuCall(, , group_menu);
-					} else
-						draw_sprite_stretched_ext(THEME.group_label, 0, 0, yy, con_w, ui(32), COLORS.panel_inspector_group_bg, 1);
+							if(mouse_press(mb_left, pFOCUS))
+								jun_disp[@ 1] = !coll;
+							if(mouse_press(mb_right, pFOCUS))
+								menuCall(, , group_menu);
+						} else
+							draw_sprite_stretched_ext(THEME.group_label, 0, 0, yy, con_w, ui(32), COLORS.panel_inspector_group_bg, 1);
 					
-					if(filter_text == "") {
-						draw_sprite_ui(THEME.arrow, 0, ui(16), yy + ui(32) / 2, 1, 1, -90 + coll * 90, COLORS.panel_inspector_group_bg, 1);	
-					}
-					
-					draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text);
-					draw_text(ui(32), yy + ui(32) / 2, txt);
-					
-					hh += ui(32 + 8);
-					
-					if(coll) {
-						var j = i + 1;
-						while(j < amo) {
-							if(j >= array_length(inspecting.input_display_list)) break;
-							var j_jun = inspecting.input_display_list[j];
-							if(is_array(j_jun))
-								break;
-							else
-								j++;
+						if(filter_text == "") {
+							draw_sprite_ui(THEME.arrow, 0, ui(16), yy + ui(32) / 2, 1, 1, -90 + coll * 90, COLORS.panel_inspector_group_bg, 1);	
 						}
-						i = j - 1;
+					
+						draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text);
+						draw_text(ui(32), yy + ui(32) / 2, txt);
+					
+						hh += ui(32 + 8);
+					
+						if(coll) {
+							var j = i + 1;
+							while(j < amo) {
+								if(j >= array_length(inspecting.input_display_list)) break;
+								var j_jun = inspecting.input_display_list[j];
+								if(is_array(j_jun))
+									break;
+								else
+									j++;
+							}
+							i = j - 1;
+							continue;
+						}
+						continue;
+					} else if(is_struct(jun_disp) && instanceof(jun_disp) == "Inspector_Custom_Renderer") {
+						if(pFOCUS) jun_disp.register(contentPane);
+						jun_disp.rx = ui(16) + x;
+						jun_disp.ry = top_bar_h + y;
+					
+						hh += jun_disp.draw(ui(6), yy, con_w - ui(12), _m, _hover, pFOCUS) + ui(8);
 						continue;
 					}
-					continue;
-				} else if(is_struct(jun_disp) && instanceof(jun_disp) == "Inspector_Custom_Renderer") {
-					if(pFOCUS) jun_disp.register(contentPane);
-					jun_disp.rx = ui(16) + x;
-					jun_disp.ry = top_bar_h + y;
-					
-					hh += jun_disp.draw(ui(6), yy, con_w - ui(12), _m, _hover, pFOCUS) + ui(8);
-					continue;
+					jun = inspecting.inputs[| inspecting.input_display_list[i]];
 				}
-				jun = inspecting.inputs[| inspecting.input_display_list[i]];
+			} else if(i == amoIn) { 
+				hh += ui(8 + 32 + 8);
+				
+				draw_sprite_stretched_ext(THEME.group_label, 0, 0, yy + ui(8), con_w, ui(32), COLORS._main_icon_dark, 0.85);
+				draw_set_text(f_p0b, fa_center, fa_center, COLORS._main_text_sub);
+				draw_text(xc, yy + ui(8 + 16), "Outputs");
+				continue;
+			} else {
+				var outInd = i - amoIn - 1;
+				jun = inspecting.outputs[| outInd];
 			}
 			
 			if(!is_struct(jun)) continue;
@@ -614,22 +634,28 @@ function Panel_Inspector() : PanelContent() constructor {
 					prop_selecting = jun;
 						
 				if(mouse_press(mb_right, pFOCUS && mbRight)) {
-					var _menuItem = [
-						menuItem(get_text("panel_inspector_reset", "Reset value"), function() { 
-							__dialog_junction.setValue(__dialog_junction.def_val);
-							}),
-						menuItem(jun.animator.is_anim? get_text("panel_inspector_remove", "Remove animation") : get_text("panel_inspector_add", "Add animation"), function() { 
-							__dialog_junction.animator.is_anim = !__dialog_junction.animator.is_anim; 
-							PANEL_ANIMATION.updatePropertyList();
-							}),
-						-1,
+					var _menuItem = [];
+					
+					if(i < amoIn) {
+						array_push(_menuItem, menuItem(get_text("panel_inspector_reset", "Reset value"), function() { 
+								__dialog_junction.setValue(__dialog_junction.def_val);
+								}),
+							menuItem(jun.animator.is_anim? get_text("panel_inspector_remove", "Remove animation") : get_text("panel_inspector_add", "Add animation"), function() { 
+								__dialog_junction.animator.is_anim = !__dialog_junction.animator.is_anim; 
+								PANEL_ANIMATION.updatePropertyList();
+								}),
+							-1,
+						);
+					}
+						
+					array_push(_menuItem, 
 						menuItem(get_text("copy", "Copy"), function() {
 							clipboard_set_text(__dialog_junction.getShowString());
 							}, THEME.copy, ["Inspector", "Copy property"]),
 						menuItem(get_text("paste", "Paste"), function() {
 							__dialog_junction.setString(clipboard_get_text());
 							}, THEME.paste, ["Inspector", "Paste property"]),
-					];
+					);
 					
 					if(jun.extract_node != "") {
 						array_insert(_menuItem, 2, menuItem(get_text("panel_inspector_extract", "Extract to node"), function() { 
