@@ -1,8 +1,9 @@
-function textArrayBox(arraySet, data) : widget() constructor {
+function textArrayBox(arraySet, data, onModify = noone) : widget() constructor {
 	self.getArray = arraySet;
 	self.arraySet = noone;
 	
 	self.data  = data;
+	self.onModify = onModify;
 	
 	hide = false;
 	open = false;

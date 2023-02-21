@@ -41,6 +41,8 @@ event_inherited();
 				if(sFOCUS && (mouse_press(mb_left) || keyboard_check_pressed(vk_enter))) {
 					if(exists)	array_remove(array, arrayBox.data[i]);
 					else		array_push(array, arrayBox.data[i]);
+					
+					if(arrayBox.onModify) arrayBox.onModify();
 				}
 			}
 			

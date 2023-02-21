@@ -63,6 +63,7 @@ enum VALUE_DISPLAY {
 	export_format,
 	code,
 	node_title,
+	text_array,
 	
 	//path
 	path_save,
@@ -158,6 +159,7 @@ function typeArray(_type) {
 		case VALUE_DISPLAY.path_array :
 		case VALUE_DISPLAY.palette :
 		case VALUE_DISPLAY.gradient :
+		case VALUE_DISPLAY.text_array :
 			return 2;
 	}
 	return 0;
@@ -319,7 +321,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	value_to     = ds_list_create();
 	value_to_arr = [];
 	accept_array = true;
-	force_array  = false;
+	array_depth  = 0;
 	auto_connect = true;
 	setFrom_condition = -1;
 	
@@ -383,11 +385,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		return self;
 	}
 	
-	static forceArray = function() {
-		force_array = true;
-		return self;
-	}
-	
 	static rejectArray = function() {
 		accept_array = false;
 		return self;
@@ -399,8 +396,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	}
 	
 	static isAnimable = function() {
-		if(display_type == VALUE_DISPLAY.gradient)
-			return false;
+		if(display_type == VALUE_DISPLAY.gradient)	 return false;
+		if(display_type == VALUE_DISPLAY.text_array) return false;
 		return true;
 	}
 	
@@ -659,17 +656,29 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				});
 				break;
 			case VALUE_TYPE.text :
-				editWidget = new textArea(TEXTBOX_INPUT.text, function(str) { 
-					return setValueDirect(str); 
-				});
-				
-				if(display_type == VALUE_DISPLAY.code) {
-					editWidget.font = f_code;
-					editWidget.format = TEXT_AREA_FORMAT.code;
-					editWidget.min_lines = 4;
+				switch(display_type) {
+					case VALUE_DISPLAY._default :
+						editWidget = new textArea(TEXTBOX_INPUT.text, function(str) { 
+							return setValueDirect(str); 
+						});
+						extract_node = "Node_String";
+						break;
+					
+					case VALUE_DISPLAY.code :
+						editWidget = new textArea(TEXTBOX_INPUT.text, function(str) { 
+							return setValueDirect(str); 
+						});
+						
+						editWidget.font = f_code;
+						editWidget.format = TEXT_AREA_FORMAT.code;
+						editWidget.min_lines = 4;
+						extract_node = "Node_String";
+						break;
+					
+					case VALUE_DISPLAY.text_array :
+						editWidget = new textArrayBox(function() { return animator.values[| 0].value; }, display_data, function() { node.update(); });
+						break;
 				}
-				
-				extract_node = "Node_String";
 				break;
 			case VALUE_TYPE.surface :
 				editWidget = new surfaceBox(function(ind) { 
@@ -784,8 +793,14 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			}
 		}
 		
-		if(type == VALUE_TYPE.text)
-			return string_real(value);
+		if(type == VALUE_TYPE.text) {
+			switch(display_type) {
+				case VALUE_DISPLAY.text_array : 
+					return value;
+				default:
+					return string_real(value);
+			}
+		}
 		
 		if(typeFrom == VALUE_TYPE.integer && type == VALUE_TYPE.color)
 			return make_color_hsv(0, 0, value);
@@ -924,22 +939,27 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		cache_array[0] = true;
 		
-		if(!is_array(val)) {
+		if(!is_array(val)) { //Value is array
 			cache_array[1] = false;
 			return cache_array[1];
 		}
 		
-		if(!force_array && !typeArray(display_type)) {
+		if(array_depth == 0 && !typeArray(display_type)) { //Value is not an array by default, and no array depth enforced
 			cache_array[1] = true;
 			return cache_array[1];
 		}
+		
+		var ar = val;
+		repeat(array_depth + typeArray(display_type)) { //Recursively get the first member of subarray to check if value has depth of "array_depth" or not
+			if(!is_array(ar) || !array_length(ar)) { //empty array
+				cache_array[1] = false;
+				return cache_array[1];
+			}
 			
-		if(array_length(val) > 0) {
-			cache_array[1] = is_array(val[0]);
-			return cache_array[1];
+			ar = ar[0];
 		}
 		
-		cache_array[1] = false;
+		cache_array[1] = is_array(ar);
 		return cache_array[1];
 	}
 	

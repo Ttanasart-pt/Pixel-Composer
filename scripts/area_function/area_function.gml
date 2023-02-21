@@ -10,6 +10,10 @@ enum AREA_SCATTER {
 	random
 }
 
+function area_get_bbox(area) {
+	return [ area[0] - area[2], area[1] - area[3], area[0] + area[2], area[1] + area[3] ];
+}
+
 function area_get_random_point(area, distrib = AREA_DISTRIBUTION.area, scatter = AREA_SCATTER.random, index = 0, total = 1, _sed = 999) {
 	if(total == 0) return [0, 0];
 	

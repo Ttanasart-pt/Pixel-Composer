@@ -459,10 +459,18 @@ function Panel_Inspector() : PanelContent() constructor {
 							break;
 						case VALUE_TYPE.text : 
 							var _hh = 0;
-							if(instanceof(jun.editWidget) == "textBox")
-								_hh = jun.editWidget.draw(editBoxX, editBoxY, editBoxW, editBoxH, jun.showValue(), _m, jun.display_type);
-							else if(instanceof(jun.editWidget) == "textArea")
-								_hh = jun.editWidget.draw(ui(16), _hsy, w - ui(16 + 48), editBoxH, jun.showValue(), _m, jun.display_type);
+							switch(instanceof(jun.editWidget)) {
+								case "textBox":
+									_hh = jun.editWidget.draw(editBoxX, editBoxY, editBoxW, editBoxH, jun.showValue(), _m, jun.display_type);
+									break;
+								case "textArea":
+									_hh = jun.editWidget.draw(ui(16), _hsy, w - ui(16 + 48), editBoxH, jun.showValue(), _m, jun.display_type);
+									break;
+								case "textArrayBox":
+									_hh = jun.editWidget.draw(ui(16), editBoxY, editBoxW, editBoxH, _m, ui(16) + x, top_bar_h + y);
+									break;
+							}
+							
 							widH = _hh;
 							break;
 					}

@@ -1,0 +1,10 @@
+{
+  "resourceType": "GMShader",
+  "resourceVersion": "1.0",
+  "name": "sh_trail_filler_pass2",
+  "type": 1,
+  "parent": {
+    "name": "filter",
+    "path": "folders/shader/filter.yy",
+  },
+}

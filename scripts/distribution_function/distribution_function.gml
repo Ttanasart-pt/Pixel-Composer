@@ -22,7 +22,7 @@ function get_point_from_dist(distMap, attempt = 4) {
 	return res;
 }
 
-function get_points_from_dist(distMap, amount, seed = 0) {
+function get_points_from_dist(distMap, amount, seed = 0, attempt = 8) {
 	if(amount < 1) return [];
 	if(!is_surface(distMap)) return [];
 	
@@ -34,6 +34,7 @@ function get_points_from_dist(distMap, amount, seed = 0) {
 		shader_set(sh_sample_points);
 		shader_set_uniform_f(shader_get_uniform(sh_sample_points, "dimension"), 
 			surface_get_width(distMap) / amount, surface_get_height(distMap));
+		shader_set_uniform_i(shader_get_uniform(sh_sample_points, "attempt"), attempt);
 		shader_set_uniform_f(shader_get_uniform(sh_sample_points, "seed"), seed);
 		
 			draw_surface_stretched(distMap, 0, 0, amount, 1);
@@ -55,7 +56,8 @@ function get_points_from_dist(distMap, amount, seed = 0) {
 		else {
 			var _x = color_get_red(cc) / 255;
 			var _y = color_get_green(cc) / 255;
-			pos[i] = [_x, _y];
+			var _v = color_get_blue(cc) / 255;
+			pos[i] = [_x, _y, _v];
 		}
 	}
 	

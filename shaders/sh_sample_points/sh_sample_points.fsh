@@ -4,7 +4,7 @@
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
-const int attempt = 8;
+uniform int attempt;
 uniform float seed;
 uniform vec2 dimension;
 
@@ -22,10 +22,11 @@ void main() {
 		float _w = random(vec2( i, i) + v_vTexcoord.x,   8.10684 + seed);
 		
 		vec4 col = texture2D( gm_BaseTexture, vec2(_x, _y) );
-		float br = (col.r + col.g + col.b) / 3. * col.a * _w;
+		float gr = (col.r + col.g + col.b) / 3.;
+		float br = gr * col.a * _w;
 		if(br > v) {
 			v = br;
-			gl_FragColor = vec4(_x, _y, 0., 1.);
+			gl_FragColor = vec4(_x, _y, gr, 1.);
 		}
 	}
 }

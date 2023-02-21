@@ -412,6 +412,7 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 		addNodeObject(color, "RGB Color",		s_node_color_from_rgb,	"Node_Color_RGB",		[1, Node_Color_RGB]);
 		addNodeObject(color, "HSV Color",		s_node_color_from_hsv,	"Node_Color_HSV",		[1, Node_Color_HSV]);
 		addNodeObject(color, "Gradient",		s_node_gradient_out,	"Node_Gradient_Out",	[1, Node_Gradient_Out]);
+		addNodeObject(color, "Gradient Shift",	s_node_gradient_out,	"Node_Gradient_Shift",	[1, Node_Gradient_Shift]);
 		addNodeObject(color, "Sampler",			s_node_sampler,			"Node_Sampler",			[1, Node_Sampler]);
 		addNodeObject(color, "Color Data",		s_node_color_data,		"Node_Color_Data",		[1, Node_Color_Data]);
 		addNodeObject(color, "Find pixel",		s_node_pixel_find,		"Node_Find_Pixel",		[1, Node_Find_Pixel]).set_version(1130);
