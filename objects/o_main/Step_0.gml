@@ -93,15 +93,6 @@
 #endregion
 
 #region window
-	if (window_command_check(window_command_close)) {
-		if(MODIFIED && !READONLY) {
-			dialogCall(o_dialog_exit);
-		} else {
-			PREF_SAVE();
-			game_end();
-		}
-	}
-	
 	if(_modified != MODIFIED) {
 		_modified = MODIFIED;
 		

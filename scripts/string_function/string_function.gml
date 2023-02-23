@@ -50,3 +50,8 @@ function string_real(val) {
 	
 	return string_format(val, -1, pres);
 }
+
+function filename_name_only(name) {
+	name = filename_name(name);
+	return string_replace(name, filename_ext(name), "")
+}

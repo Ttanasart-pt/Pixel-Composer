@@ -55,7 +55,7 @@ event_inherited();
 			if(noti.type & filter == 0) continue;
 			
 			draw_set_font(f_p2);
-			var _w = sp_noti.w - ui(12);
+			var _w = sp_noti.surface_w;
 			var _h = ui(8) + string_height_ext(noti.txt, -1, txw) + ui(8);
 			
 			if(yy >= -_h && yy <= sp_noti.h) {
@@ -63,7 +63,7 @@ event_inherited();
 			
 				if(sHOVER && sp_noti.hover && point_in_rectangle(_m[0], _m[1], 0, yy, _w, yy + _h - ui(4))) {
 					draw_sprite_stretched_ext(THEME.group_label, 0, 0, yy + ui(2), _w, _h - ui(4), COLORS.dialog_notification_bg_hover, 1);
-				
+					
 					if(noti.tooltip != "")
 						TOOLTIP = noti.tooltip;
 				
@@ -131,8 +131,6 @@ event_inherited();
 			
 			yy += _h;
 			hh += _h;
-			
-			if(yy > sp_noti.h) break;
 		}
 		
 		return hh;

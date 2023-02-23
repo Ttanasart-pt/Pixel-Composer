@@ -19,6 +19,11 @@ function Node_Particle(_x, _y, _group = -1) : Node_VFX_Spawner_Base(_x, _y, _gro
 	
 	def_surface = -1;
 	
+	insp2UpdateTooltip = "Clear cache";
+	insp2UpdateIcon    = [ THEME.cache, 0, COLORS._main_icon ];
+	
+	static onInspector2Update = function() { clearCache(); }
+	
 	static onValueUpdate = function(index = 0) {
 		if(index == input_len + 0) {
 			var _dim		= inputs[| input_len + 0].getValue();
@@ -27,13 +32,15 @@ function Node_Particle(_x, _y, _group = -1) : Node_VFX_Spawner_Base(_x, _y, _gro
 			_outSurf = surface_verify(_outSurf, _dim[0], _dim[1]);
 			outputs[| 0].setValue(_outSurf);
 		}
+		
+		if(ANIMATOR.is_playing)
+			ANIMATOR.setFrame(-1);
 	}
 	
 	static onStep = function() {
-		if(!ANIMATOR.frame_progress) return;
+		if(recoverCache() || !ANIMATOR.is_playing)
+			return;
 		
-		RETURN_ON_REST
-			
 		if(ANIMATOR.current_frame == 0)
 			reset();
 		
@@ -67,6 +74,7 @@ function Node_Particle(_x, _y, _group = -1) : Node_VFX_Spawner_Base(_x, _y, _gro
 			BLEND_NORMAL;
 		surface_reset_target();
 		
-		cacheCurrentFrame(_outSurf);
+		if(ANIMATOR.is_playing)
+			cacheCurrentFrame(_outSurf);
 	}
 }

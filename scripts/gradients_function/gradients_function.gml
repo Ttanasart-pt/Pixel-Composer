@@ -32,6 +32,8 @@ function draw_gradient(_x, _y, _w, _h, _grad, _int = GRADIENT_INTER.smooth) {
 	var _grad_time  = [];
 		
 	for(var i = 0; i < array_length(_grad); i++) {
+		if(_grad[i].value == undefined) return;
+		
 		_grad_color[i * 4 + 0] = color_get_red(_grad[i].value) / 255;
 		_grad_color[i * 4 + 1] = color_get_green(_grad[i].value) / 255;
 		_grad_color[i * 4 + 2] = color_get_blue(_grad[i].value) / 255;
@@ -104,6 +106,8 @@ function gradient_to_array(_gradient) {
 	var _grad_color = [], _grad_time = []; 
 	
 	for(var i = 0; i < array_length(_gradient); i++) {
+		if(is_undefined(_gradient[i].value)) continue;
+		
 		_grad_color[i * 4 + 0] = color_get_red(_gradient[i].value) / 255;
 		_grad_color[i * 4 + 1] = color_get_green(_gradient[i].value) / 255;
 		_grad_color[i * 4 + 2] = color_get_blue(_gradient[i].value) / 255;

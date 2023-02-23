@@ -18,7 +18,7 @@ uniform int	  sampleMode;
 
 uniform int outline_only;
 
-#define TAU   6.28318
+#define TAU 6.283185307179586
 
 vec2 round(in vec2 v) {
 	v.x = fract(v.x) > 0.5? ceil(v.x) : floor(v.x);	
@@ -67,12 +67,19 @@ void main() {
 	
 	if(borderSize + borderStart > 0.) {
 		outline_alpha = 0.;
-		float tauDiv = TAU / 64.;
 		for(float i = 1.; i <= 32.; i++) {
 			if(i > borderStart + borderSize) break;
 			
-			for(float j = 0.; j < 64.; j++) {
-				float ang = j * tauDiv;
+			float base = 1.;
+			float top  = 0.;
+			for(float j = 0.; j <= 64.; j++) {
+				float ang = top / base * TAU;
+				top += 2.;
+				if(top >= base) {
+					top = 1.;
+					base *= 2.;
+				}
+		
 				vec2  pxs = (pixelPosition + vec2( cos(ang),  sin(ang)) * i) / dimension;
 				vec4  sam = sampleTexture( pxs );
 					

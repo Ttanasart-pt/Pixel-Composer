@@ -253,8 +253,13 @@ enum CAMERA_PROJ {
 		matrix_stack_pop();
 	}
 	
-	function _3d_pre_setup(_outSurf, _dim, _pos, _sca, _ldir, _lhgt, _lint, _lclr, _aclr, _lpos, _lrot, _lsca, _proj = CAMERA_PROJ.perspective, _fov = 60, _pass = "diff", _applyLocal = true) {
+	function _3d_pre_setup(_outSurf, _dim, _pos, _sca, _ldir, _lhgt, _lint, _lclr, _aclr, _lpos, _lrot, _lsca, _cam, _pass = "diff", _scale = noone) {
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1]);
+		
+		var _proj = _cam.projection;
+		var _fov  = _cam.fov;
+		var _applyLocal		= _scale == noone? true : _scale.local;
+		var scaleDimension  = _scale == noone? true : _scale.dimension;
 		
 		var lightFor = [ -cos(degtorad(_ldir)), -_lhgt, -sin(degtorad(_ldir)) ];
 		
@@ -301,9 +306,9 @@ enum CAMERA_PROJ {
 		camera_apply(cam);
 		
 		if(_proj == CAMERA_PROJ.ortho) 
-			matrix_stack_push(matrix_build(dw / 2 - _pos[0], _pos[1] - dh / 2, 0, 0, 0, 0, dw * _sca[0], dh * _sca[1], 1));
+			matrix_stack_push(matrix_build(dw / 2 - _pos[0], _pos[1] - dh / 2, 0, 0, 0, 0, (scaleDimension? dw : 1) * _sca[0], (scaleDimension? dh : 1) * _sca[1], 1));
 		else 							   				 		  
-			matrix_stack_push(matrix_build(dw / 2 - _pos[0], _pos[1] - dh / 2, 0, 0, 0, 0, dw * _sca[0], dh * _sca[1], 1));
+			matrix_stack_push(matrix_build(dw / 2 - _pos[0], _pos[1] - dh / 2, 0, 0, 0, 0, (scaleDimension? dw : 1) * _sca[0], (scaleDimension? dh : 1) * _sca[1], 1));
 		//matrix_stack_push(matrix_build(0, 0, 0, 0, 0, 0, 1, 1, 1));
 		
 		if(_applyLocal) _3d_local_transform(_lpos, _lrot, _lsca);

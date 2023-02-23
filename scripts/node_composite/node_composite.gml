@@ -236,7 +236,7 @@ function Node_Composite(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) co
 	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
-	temp_surf = [ surface_create(1, 1), surface_create(1, 1) ];
+	temp_surface = [ surface_create(1, 1), surface_create(1, 1) ];
 	
 	surf_dragging = -1;
 	input_dragging = -1;
@@ -554,9 +554,9 @@ function Node_Composite(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) co
 			surface_size_to(_outSurf, ww, hh);
 		
 		for(var i = 0; i < 2; i++) {
-			temp_surf[i] = surface_verify(temp_surf[i], surface_get_width(_outSurf), surface_get_height(_outSurf));
+			temp_surface[i] = surface_verify(temp_surface[i], surface_get_width(_outSurf), surface_get_height(_outSurf));
 			
-			surface_set_target(temp_surf[i]);
+			surface_set_target(temp_surface[i]);
 			draw_clear_alpha(0, 0);
 			surface_reset_target();
 		}

@@ -4,13 +4,13 @@
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
+#define TAU 6.283185307179586
+
 uniform vec2  dimension;
 uniform vec2  scale;
 uniform vec2  shift;
 uniform float height;
 uniform int   slope;
-
-#define TAU   6.28318
 
 float bright(in vec4 col) {
 	return (col.r + col.g + col.b) / 3. * col.a;
@@ -18,8 +18,7 @@ float bright(in vec4 col) {
 
 void main() {
 	vec2 pixelStep = 1. / dimension;
-    float tauDiv = TAU / 32.;
-	
+    
     vec4 col = texture2D(gm_BaseTexture, v_vTexcoord);
 	vec4 col1;
 	gl_FragColor = col;
@@ -34,12 +33,20 @@ void main() {
 	if(b0 == 0.) return;
 	
 	float b1 = b0;
-	float ang, added_distance, _b1;
+	float added_distance, _b1;
 	vec2 shf, pxs;
 	
 	for(float i = 1.; i < height; i++) {
-		for(float j = 0.; j < 32.; j++) {
-			ang = j * tauDiv;
+		float base = 1.;
+		float top  = 0.;
+		for(float j = 0.; j <= 64.; j++) {
+			float ang = top / base * TAU;
+			top += 2.;
+			if(top >= base) {
+				top = 1.;
+				base *= 2.;
+			}
+			
 			added_distance = 1. + cos(abs(shift_angle - ang)) * shift_distance;
 				
 			shf = vec2( cos(ang),  sin(ang)) * (i * added_distance) / scale;

@@ -19,9 +19,9 @@ function dialogCall(_dia, _x = noone, _y = noone, param = {}) {
 	return dia;
 }
 
-function menuCall(_x = mouse_mx + ui(4), _y = mouse_my + ui(4), menu = []) {
+function menuCall(_x = mouse_mx + ui(4), _y = mouse_my + ui(4), menu = [], align = fa_left) {
 	var dia = dialogCall(o_dialog_menubox, _x, _y);
-	dia.setMenu(menu);
+	dia.setMenu(menu, align);
 	return dia;
 }
 

@@ -5,7 +5,7 @@ function FileObject(_name, _path) constructor {
 	spr      = -1;
 	content  = -1;
 	surface  = noone;
-	meta = noone;
+	meta	 = noone;
 	
 	static getSurface = function() {
 		if(is_surface(surface)) return surface;
@@ -44,6 +44,12 @@ function FileObject(_name, _path) constructor {
 		
 		meta.version = m[? "version"];
 		meta.name = name;
+		
+		switch(filename_ext(path)) {
+			case ".pxc"  : meta.type = FILE_TYPE.project; break;
+			case ".pxcc" : meta.type = FILE_TYPE.collection; break;
+			default :	   meta.type = FILE_TYPE.assets; break;
+		}
 		
 		ds_map_destroy(m);
 		

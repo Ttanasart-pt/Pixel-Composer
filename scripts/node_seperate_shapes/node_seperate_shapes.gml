@@ -34,7 +34,7 @@ function Node_Seperate_Shape(_x, _y, _group = -1) : Node(_x, _y, _group) constru
 		["Render",	false], 2, 3,
 	]
 	
-	temp_surf = [ surface_create(1, 1), surface_create(1, 1) ];
+	temp_surface = [ surface_create(1, 1), surface_create(1, 1) ];
 	surface_buffer = buffer_create(1 * 1 * 4, buffer_fixed, 2);
 	surface_w = 1;
 	surface_h = 1;
@@ -63,16 +63,16 @@ function Node_Seperate_Shape(_x, _y, _group = -1) : Node(_x, _y, _group) constru
 		surface_h = hh;
 	
 		for(var i = 0; i < 2; i++) {
-			temp_surf[i] = surface_verify(temp_surf[i], ww, hh);
+			temp_surface[i] = surface_verify(temp_surface[i], ww, hh);
 			
-			surface_set_target(temp_surf[i]);
+			surface_set_target(temp_surface[i]);
 			draw_clear_alpha(0, 0);
 			surface_reset_target();
 		}
 		
 		shader_set(sh_seperate_shape_index);
 		shader_set_uniform_i(shader_get_uniform(sh_seperate_shape_index, "ignore"), _ignore);
-		surface_set_target(temp_surf[1]);
+		surface_set_target(temp_surface[1]);
 			draw_sprite_stretched(s_fx_pixel, 0, 0, 0, ww, hh);
 		surface_reset_target();
 		shader_reset();
@@ -89,10 +89,10 @@ function Node_Seperate_Shape(_x, _y, _group = -1) : Node(_x, _y, _group) constru
 			var bg = i % 2;
 			var fg = !bg;
 			
-			surface_set_target(temp_surf[bg]);
+			surface_set_target(temp_surface[bg]);
 			draw_clear_alpha(0, 0);
 			BLEND_OVERRIDE;
-				draw_surface_safe(temp_surf[fg], 0, 0);
+				draw_surface_safe(temp_surface[fg], 0, 0);
 			BLEND_NORMAL;
 			surface_reset_target();
 			
@@ -106,7 +106,7 @@ function Node_Seperate_Shape(_x, _y, _group = -1) : Node(_x, _y, _group) constru
 		draw_clear_alpha(0, 0);
 		BLEND_OVERRIDE;
 			shader_set(sh_seperate_shape_counter);
-			texture_set_stage(shader_get_sampler_index(sh_seperate_shape_counter, "surface"), surface_get_texture(temp_surf[res_index]));
+			texture_set_stage(shader_get_sampler_index(sh_seperate_shape_counter, "surface"), surface_get_texture(temp_surface[res_index]));
 			shader_set_uniform_f_array_safe(shader_get_uniform(sh_seperate_shape_counter, "dimension"), [ ww, hh ]);
 			shader_set_uniform_i(shader_get_uniform(sh_seperate_shape_counter, "maxShape"), PREF_MAP[? "shape_separation_max"]);
 			shader_set_uniform_i(shader_get_uniform(sh_seperate_shape_counter, "ignore"), _ignore);
@@ -127,7 +127,7 @@ function Node_Seperate_Shape(_x, _y, _group = -1) : Node(_x, _y, _group) constru
 			
 		buffer_delete(surface_buffer);
 		surface_buffer = buffer_create(ww * hh * 4, buffer_fixed, 2);
-		buffer_get_surface(surface_buffer, temp_surf[res_index], 0);
+		buffer_get_surface(surface_buffer, temp_surface[res_index], 0);
 			
 		for(var i = 0; i < px; i++) {
 			_outSurf = surface_create_valid(ww, hh);
@@ -170,7 +170,7 @@ function Node_Seperate_Shape(_x, _y, _group = -1) : Node(_x, _y, _group) constru
 				shader_set_uniform_f(shader_get_uniform(sh_seperate_shape_sep, "color"), red, green, blue, alpha);
 				shader_set_uniform_i(shader_get_uniform(sh_seperate_shape_sep, "override"), _ovr);
 				shader_set_uniform_f_array_safe(shader_get_uniform(sh_seperate_shape_sep, "overColor"), colToVec4(_ovrclr));
-				draw_surface_safe(temp_surf[res_index], 0, 0);
+				draw_surface_safe(temp_surface[res_index], 0, 0);
 				shader_reset();
 			BLEND_NORMAL;
 			surface_reset_target();

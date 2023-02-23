@@ -15,7 +15,7 @@ function Node_Find_Pixel(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) c
 	
 	static getPreviewValue = function() { return inputs[| 0]; }
 	
-	surf = surface_create(1, 1);
+	temp_surface = [ surface_create(1, 1) ];
 	
 	function process_data(_output, _data, _output_index, _array_index = 0) {  
 		var _surf = _data[0];
@@ -23,9 +23,9 @@ function Node_Find_Pixel(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) c
 		
 		if(!is_surface(_surf)) return [0, 0];
 		
-		surf = surface_verify(surf, 1, 1);
+		temp_surface[0] = surface_verify(temp_surface[0], 1, 1);
 		
-		surface_set_target(surf);
+		surface_set_target(temp_surface[0]);
 		draw_clear_alpha(0, 0);
 		shader_set(shader);
 			texture_set_stage(shader_tex, surface_get_texture(_surf));
@@ -34,7 +34,7 @@ function Node_Find_Pixel(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) c
 		shader_reset();
 		surface_reset_target();
 		
-		var pos = surface_getpixel(surf, 0, 0);
+		var pos = surface_getpixel(temp_surface[0], 0, 0);
 		var _x  = round(color_get_red(pos)   / 255 * surface_get_width(_surf));
 		var _y  = round(color_get_green(pos) / 255 * surface_get_height(_surf));
 		

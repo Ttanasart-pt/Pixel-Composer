@@ -580,4 +580,8 @@ function Node_Canvas(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 		buffer_set_surface(surface_buffer, canvas_surface, 0);
 		surface_update();
 	}
+	
+	static onCleanUp = function() {
+		surface_free(canvas_surface);
+	}
 }

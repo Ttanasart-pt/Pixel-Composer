@@ -106,31 +106,39 @@ void main() {
 	}
 	
 	if(ao > 0.) {
-		float tauDiv = TAU / 32.;
 		float ambient = 0.;
 		
-		for(float i = 0.; i < ao; i++) 
-		for(float j = 0.; j < 32.; j++) {
-			float ang = j * tauDiv;
-			vec2 _pos = v_vTexcoord + vec2(cos(ang), sin(ang)) * i * tx;
+		for(float i = 0.; i < ao; i++) {
+			float base = 1.;
+			float top  = 0.;
+			for(float j = 0.; j <= 64.; j++) {
+				float ang = top / base * TAU;
+				top += 2.;
+				if(top >= base) {
+					top = 1.;
+					base *= 2.;
+				}
+		
+				vec2 _pos = v_vTexcoord + vec2(cos(ang), sin(ang)) * i * tx;
 			
-			if(_pos.x < 0. || _pos.y < 0. || _pos.x > 1. || _pos.y > 1.)
-				continue;
+				if(_pos.x < 0. || _pos.y < 0. || _pos.x > 1. || _pos.y > 1.)
+					continue;
 			
-			if(useSolid == 1) {
-				vec4 _sl = texture2D( solid, _pos );
-				if(_sl.a == 1.) 
-					ambient++;
-			}
+				if(useSolid == 1) {
+					vec4 _sl = texture2D( solid, _pos );
+					if(_sl.a == 1.) 
+						ambient++;
+				}
 			
-			if(bgUse == 1) {
-				vec4 hg = texture2D( gm_BaseTexture, _pos );
-				if(distance(bg, hg) >= bgThres)
-					ambient++;
+				if(bgUse == 1) {
+					vec4 hg = texture2D( gm_BaseTexture, _pos );
+					if(distance(bg, hg) >= bgThres)
+						ambient++;
+				}
 			}
 		}
 		
-		lightAmo += ambient * aoStr;
+		lightAmo += ambient * aoStr * aoStr;
 	}
 	
 	int lightCatched = 0;

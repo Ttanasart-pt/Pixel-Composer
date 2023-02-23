@@ -70,7 +70,10 @@ function Node_3D_Obj(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 		.setDisplay(VALUE_DISPLAY.slider, [ 0, 90, 1 ])
 		.rejectArray();
 	
-	input_display_list = [ 2, 
+	inputs[| 17] = nodeValue("Scale view with dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true)
+	
+	input_display_list = [ 
+		["Surface",				false], 2, 17, 
 		["Geometry",			false], 0, 1, 
 		["Object transform",	false], 14, 13, 11,
 		["Camera",				false], 15, 16, 3, 5, 
@@ -92,8 +95,10 @@ function Node_3D_Obj(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 	
 	_3d_node_init(2, /*Transform*/ 3, 13, 5);
 	
+	tex_surface = surface_create(1, 1);
+	
 	function reset_tex() {
-		tex_surface = surface_create(1, 1);
+		tex_surface = surface_verify(tex_surface, 1, 1);
 		surface_set_target(tex_surface);
 			draw_clear(c_black);
 		surface_reset_target();
@@ -226,6 +231,7 @@ function Node_3D_Obj(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 		
 		var _proj = inputs[| 15].getValue();
 		var _fov  = inputs[| 16].getValue();
+		var _dimS = inputs[| 17].getValue();
 		
 		inputs[| 16].setVisible(_proj == 1);
 		
@@ -239,10 +245,17 @@ function Node_3D_Obj(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 				case 0 : pass = "diff" break;
 				case 2 : pass = "norm" break;
 			}
-		
-			_3d_pre_setup(_outSurf, _dim, _pos, _sca, _ldir, _lhgt, _lint, _lclr, _aclr, _lpos, _lrot, _lsca, _proj, _fov, pass, false);
+			
+			var _cam   = { projection: _proj, fov: _fov };
+			var _scale = { local: false, dimension: _dimS };
+			
+			_3d_pre_setup(_outSurf, _dim, _pos, _sca, _ldir, _lhgt, _lint, _lclr, _aclr, _lpos, _lrot, _lsca, _cam, pass, _scale);
 				submit_vertex();
 			_3d_post_setup();
 		}
+	}
+	
+	static onCleanUp = function() {
+		surface_free(tex_surface);	
 	}
 }

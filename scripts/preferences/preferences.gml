@@ -56,6 +56,9 @@
 	
 	PREF_MAP[? "auto_save_time"] = 300;
 	PREF_MAP[? "use_legacy_exception"] = false;
+	
+	PREF_MAP[? "dialog_add_node_w"] = 532;
+	PREF_MAP[? "dialog_add_node_h"] = 400;
 #endregion
 
 #region hotkeys	
@@ -172,7 +175,9 @@
 		
 		ds_map_add_list(map, "key", save_l);
 		
-		PREF_MAP[? "window_maximize"] = window_is_maximize();
+		PREF_MAP[? "window_maximize"]	= gameframe_is_maximized();
+		PREF_MAP[? "window_width"]		= gameframe_restoreRect_hx[2];
+		PREF_MAP[? "window_height"]		= gameframe_restoreRect_hx[3];
 		
 		var _pref = ds_map_create();
 		ds_map_override(_pref, PREF_MAP);
@@ -234,17 +239,16 @@
 				setException();
 		}
 		
-		if(PREF_MAP[? "window_maximize"]) {
-			run_in(1, function() {
-				window_set_size(PREF_MAP[? "window_width"], PREF_MAP[? "window_height"]);
-				run_in(15, function() { maximize_window(); });
-			});
-		} else {
-			var ww = PREF_MAP[? "window_width"];
-			var hh = PREF_MAP[? "window_height"];
+		if(!LOADING) {
+			if(PREF_MAP[? "window_maximize"]) {
+				gameframe_maximize();
+			} else {
+				var ww = PREF_MAP[? "window_width"];
+				var hh = PREF_MAP[? "window_height"];
 			
-			window_set_position(display_get_width() / 2 - ww / 2, display_get_height() / 2 - hh / 2);
-			window_set_size(ww, hh);
+				window_set_position(display_get_width() / 2 - ww / 2, display_get_height() / 2 - hh / 2);
+				window_set_size(ww, hh);
+			}
 		}
 		game_set_speed(PREF_MAP[? "ui_framerate"], gamespeed_fps);
 		

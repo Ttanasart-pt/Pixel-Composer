@@ -1,7 +1,6 @@
 /// @description init
 #region window
 	//if(keyboard_check_pressed(vk_f12)) DEBUG = !DEBUG;
-	gameframe_update();
 	
 	if(_cursor != CURSOR) {
 		window_set_cursor(CURSOR);
@@ -9,7 +8,7 @@
 	}
 	CURSOR = cr_default;
 	
-	if((win_wp != WIN_W || win_hp != WIN_H) && (WIN_W > 1 && WIN_H > 1))
+	if(!gameframe_is_minimized() && (win_wp != WIN_W || win_hp != WIN_H) && (WIN_W > 1 && WIN_H > 1))
 		display_refresh();
 #endregion
 

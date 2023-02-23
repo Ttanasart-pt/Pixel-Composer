@@ -20,16 +20,24 @@ void main() {
 	if(col.a == 1.) 
 		return;
 	
-	float tauDiv = TAU / angle_sample;
-	for(float i = 1.; i <= distance_sample; i++)
-	for(float j = 0.; j < angle_sample; j++) {
-		float ang = j * tauDiv;
-		vec2  pxs = (pixelPosition + vec2( cos(ang),  sin(ang)) * scale * i) / dimension;
-		vec4  sam = texture2D( gm_BaseTexture, pxs );
-				
-		if(sam.a < 1.) continue;
+	for(float i = 1.; i <= distance_sample; i++) {
+		float base = 1.;
+		float top  = 0.;
+		for(float j = 0.; j <= 64.; j++) {
+			float ang = top / base * TAU;
+			top += 2.;
+			if(top >= base) {
+				top = 1.;
+				base *= 2.;
+			}
 			
-		gl_FragColor = sam;
-		return;
+			vec2  pxs = (pixelPosition + vec2( cos(ang),  sin(ang)) * scale * i) / dimension;
+			vec4  sam = texture2D( gm_BaseTexture, pxs );
+				
+			if(sam.a < 1.) continue;
+			
+			gl_FragColor = sam;
+			return;
+		}
 	}
 }

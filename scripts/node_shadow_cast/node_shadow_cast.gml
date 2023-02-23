@@ -81,7 +81,7 @@ function Node_Shadow_Cast(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) 
 		.setDisplay(VALUE_DISPLAY.slider, [0, 16, 1]);
 		
 	inputs[| 16] = nodeValue("Ambient occlusion strength", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.1)
-		.setDisplay(VALUE_DISPLAY.slider, [0, 0.2, 0.01]);
+		.setDisplay(VALUE_DISPLAY.slider, [0, 0.5, 0.01]);
 	
 	inputs[| 17] = nodeValue("Active", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
 		active_index = 17;

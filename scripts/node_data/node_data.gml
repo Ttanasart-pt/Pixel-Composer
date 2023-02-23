@@ -17,8 +17,8 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) constructor {
 	if(!LOADING && !APPENDING) {
 		recordAction(ACTION_TYPE.node_added, self);
 		NODE_MAP[? node_id] = self;
+		MODIFIED = true;
 	}
-	MODIFIED = true;
 	
 	name = "";
 	display_name = "";
@@ -65,6 +65,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) constructor {
 	use_cache		= false;
 	cached_output	= [];
 	cache_result	= [];
+	temp_surface    = [];
 	
 	tools			= -1;
 	
@@ -173,9 +174,11 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) constructor {
 	}
 	
 	static move = function(_x, _y) {
+		if(x == _x && y == _y) return;
+		
 		x = _x;
 		y = _y;
-		MODIFIED = true;
+		if(!LOADING) MODIFIED = true;
 	}
 	
 	inspUpdateTooltip   = get_text("panel_inspector_execute", "Execute node");
@@ -194,9 +197,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) constructor {
 	insp2UpdateTooltip = get_text("panel_inspector_execute", "Execute node");
 	insp2UpdateIcon    = [ THEME.sequence_control, 1, COLORS._main_value_positive ];
 	
-	static inspector2Update = function() {
-		onInspectorSecondaryUpdate();
-	}
+	static inspector2Update = function() { onInspector2Update(); }
 	static onInspector2Update = noone;
 	static hasInspector2Update = function() { return onInspector2Update != noone; }
 	
@@ -297,7 +298,6 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) constructor {
 	static triggerRender = function() {
 		setRenderStatus(false);
 		UPDATE |= RENDER_TYPE.partial;
-		cache_result[0] = false;
 		//ds_queue_enqueue(RENDER_QUEUE, self);
 		
 		for(var i = 0; i < ds_list_size(outputs); i++) {
@@ -450,8 +450,8 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) constructor {
 		var xx = x * _s + _x;
 		var yy = y * _s + _y;
 		
-		show_input_name = point_in_rectangle(_mx, _my, xx - 8 * _s, yy + 20 * _s, xx + 8 * _s, yy + h * _s);
-		show_output_name = point_in_rectangle(_mx, _my, xx + (w - 8) * _s, yy + 20 * _s, xx + (w + 8) * _s, yy + h * _s);
+		show_input_name  = PANEL_GRAPH.pHOVER && point_in_rectangle(_mx, _my, xx - 8 * _s, yy + 20 * _s, xx + 8 * _s, yy + h * _s);
+		show_output_name = PANEL_GRAPH.pHOVER && point_in_rectangle(_mx, _my, xx + (w - 8) * _s, yy + 20 * _s, xx + (w + 8) * _s, yy + h * _s);
 		
 		if(show_input_name) {
 			for(var i = 0; i < amo; i++) {
@@ -468,13 +468,11 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) constructor {
 		}
 		
 		if(show_output_name) {
-			for(var i = 0; i < ds_list_size(outputs); i++) {
+			for(var i = 0; i < ds_list_size(outputs); i++)
 				outputs[| i].drawNameBG(_s);
-			}
 			
-			for(var i = 0; i < ds_list_size(outputs); i++) {
+			for(var i = 0; i < ds_list_size(outputs); i++)
 				outputs[| i].drawName(_s, _mx, _my);
-			}
 		}
 	}
 	
@@ -498,7 +496,8 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) constructor {
 			var c1 = value_color(jun.type);
 			var hover = false;
 			var th = max(1, PREF_MAP[? "connection_line_width"] * _s);
-				
+			
+			if(PANEL_GRAPH.pHOVER)
 			switch(PREF_MAP[? "curve_connection_line"]) {
 				case 0 : 
 					hover = distance_to_line(mx, my, jx, jy, frx, fry) < 6;
@@ -719,6 +718,12 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) constructor {
 			ds_list_clear(jun.value_to);
 		}
 		
+		for( var i = 0; i < ds_list_size(inputs); i++ )
+			inputs[| i].destroy();
+		
+		for( var i = 0; i < ds_list_size(outputs); i++ )
+			outputs[| i].destroy();
+		
 		onDestroy();
 	}
 	
@@ -807,7 +812,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) constructor {
 	static cacheExist = function(frame = ANIMATOR.current_frame) {
 		if(frame >= array_length(cached_output)) return false;
 		if(frame >= array_length(cache_result)) return false;
-		//if(!array_safe_get(cache_result, frame)) return false;
+		if(!array_safe_get(cache_result, frame, false)) return false;
 		return true;
 	}
 	
@@ -834,7 +839,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) constructor {
 		return true;
 	}
 	static clearCache = function() {
-		return;
+		if(!use_cache) return;
 		
 		if(array_length(cached_output) != ANIMATOR.frames_total + 1)
 			array_resize(cached_output, ANIMATOR.frames_total + 1);
@@ -845,6 +850,12 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) constructor {
 			cached_output[i] = 0;
 			cache_result[i] = false;
 		}
+	}
+	static clearCacheForward = function() {
+		clearCache();
+		for( var i = 0; i < ds_list_size(outputs); i++ )
+		for( var j = 0; j < ds_list_size(outputs[| i].value_to); j++ )
+			outputs[| i].value_to[| j].node.clearCacheForward();
 	}
 	
 	static checkConnectGroup = function(_type = "group") {
@@ -1039,15 +1050,18 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) constructor {
 	static postConnect = function() {}
 	
 	static cleanUp = function() {
-		for( var i = 0; i < ds_list_size(inputs); i++ ) {
+		for( var i = 0; i < ds_list_size(inputs); i++ )
 			inputs[| i].cleanUp();
-		}
-		for( var i = 0; i < ds_list_size(outputs); i++ ) {
+		for( var i = 0; i < ds_list_size(outputs); i++ )
 			outputs[| i].cleanUp();
-		}
 		
 		ds_list_destroy(inputs);
 		ds_list_destroy(outputs);
 		ds_map_destroy(attributes);
+		
+		for( var i = 0; i < array_length(temp_surface); i++ )
+			surface_free(temp_surface[i]);
 	}
+	
+	static onCleanUp = function() {}
 }

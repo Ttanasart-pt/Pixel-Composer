@@ -34,7 +34,7 @@ const mat3 laplac = mat3(  1.,   1.,  1.,
 						   1.,  -8.,  1., 
 						   1.,   1.,  1);
 						   
-#define TAU  6.28318
+#define TAU 6.283185307179586
 
 float bright(in vec4 col) {
 	return dot(col.rgb, vec3(0.2126, 0.7152, 0.0722)) * col.a;

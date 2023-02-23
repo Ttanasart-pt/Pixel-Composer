@@ -60,3 +60,8 @@
 		draw_set_alpha(1);
 	}
 #endregion
+
+#region frame
+	draw_set_color(COLORS._main_icon_dark);
+	draw_rectangle(1, 1, WIN_W - 2, WIN_H - 2, true);
+#endregion

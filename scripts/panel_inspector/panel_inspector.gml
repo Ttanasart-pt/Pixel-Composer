@@ -420,27 +420,8 @@ function Panel_Inspector() : PanelContent() constructor {
 							switch(jun.display_type) {
 								case VALUE_DISPLAY.path_load :
 								case VALUE_DISPLAY.path_save :
-									jun.editWidget.draw(editBoxX, editBoxY, editBoxW, editBoxH, jun.showValue(), _m);
-									break;
-										
 								case VALUE_DISPLAY.path_array :
-									var val = jun.showValue(), txt = "";
-									var pathExist = jun.value_validation == VALIDATION.pass;
-										
-									if(is_array(val) && array_length(val))
-										txt = "[" + string(array_length(val)) + "] " + val[0];
-									else
-										txt = string(val);
-									
-									jun.editWidget.draw(editBoxX, editBoxY, editBoxW, editBoxH, _m,, pathExist? COLORS._main_text : COLORS._main_value_negative);
-									var icx = editBoxX + editBoxW - ui(16);
-									var icy = editBoxY + editBoxH / 2;
-									draw_sprite_ui_uniform(pathExist? THEME.button_path_icon : THEME.button_path_not_found_icon, 0, icx, icy, 1,, 1);
-									draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text);
-									draw_text_cut(editBoxX + ui(8), editBoxY + editBoxH / 2, txt, editBoxW - ui(60));
-									
-									if(!pathExist && _hover && point_in_rectangle(_m[0], _m[1], icx - ui(17), icy - ui(17), icx + ui(17), icy + ui(17)))
-										TOOLTIP = get_text("panel_inspector_file_not_exist", "File not exist");
+									jun.editWidget.draw(editBoxX, editBoxY, editBoxW, editBoxH, jun.showValue(), _m);
 									break;
 								case VALUE_DISPLAY.path_font :
 									var val = jun.showValue();

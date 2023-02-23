@@ -38,7 +38,7 @@
 	}
 	
 	function setPanel() {
-		PANEL_MAIN = new Panel(noone, 0, 0, WIN_SW, WIN_SH);
+		PANEL_MAIN = new Panel(noone, ui(2), ui(2), WIN_SW - ui(4), WIN_SH - ui(4));
 		
 		PANEL_MENU      = new Panel_Menu();
 		PANEL_INSPECTOR = new Panel_Inspector();

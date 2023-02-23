@@ -51,14 +51,8 @@ function Node_Image_Sequence(_x, _y, _group = -1) : Node(_x, _y, _group) constru
 		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Padding / Crop", "Scale" ])
 		.rejectArray();
 	
-	inputs[| 4] = nodeValue("Edit", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.button, [ function() {
-			with(dialogCall(o_dialog_image_array_edit, WIN_W / 2, WIN_H / 2))
-				target = other;	
-		}, "Edit array" ]);
-	
 	input_display_list = [
-		["Sequence settings",	false], 4, 0, 1, 2, 3
+		["Array settings",	false], 0, 1, 2, 3
 	];
 	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, []);

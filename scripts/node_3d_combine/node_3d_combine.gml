@@ -52,7 +52,10 @@ function Node_3D_Combine(_x, _y, _group = -1) : Node(_x, _y, _group) constructor
 		.setDisplay(VALUE_DISPLAY.slider, [ 0, 90, 1 ])
 		.rejectArray();
 	
-	input_display_list = [ 0, 
+	inputs[| 13] = nodeValue("Scale view with dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true)
+	
+	input_display_list = [ 
+		["Surface",				false], 0, 13, 
 		["Object transform",	false], 1, 2, 3,
 		["Camera",				false], 11, 12, 4, 5,
 		["Light",				false], 6, 7, 8, 9, 10,
@@ -161,6 +164,7 @@ function Node_3D_Combine(_x, _y, _group = -1) : Node(_x, _y, _group) constructor
 		
 		var _proj = inputs[| 11].getValue();
 		var _fov  = inputs[| 12].getValue();
+		var _dimS = inputs[| 13].getValue();
 		
 		inputs[| 12].setVisible(_proj);
 		
@@ -175,7 +179,10 @@ function Node_3D_Combine(_x, _y, _group = -1) : Node(_x, _y, _group) constructor
 				case 2 : pass = "norm" break;
 			}
 		
-			_3d_pre_setup(_outSurf, _dim, _pos, _sca, _ldir, _lhgt, _lint, _lclr, _aclr, _lpos, _lrot, _lsca, _proj, _fov, pass, false);
+			var _cam   = { projection: _proj, fov: _fov };
+			var _scale = { local: false, dimension: _dimS };
+			
+			_3d_pre_setup(_outSurf, _dim, _pos, _sca, _ldir, _lhgt, _lint, _lclr, _aclr, _lpos, _lrot, _lsca, _cam, pass, _scale);
 				submit_vertex();
 			_3d_post_setup();
 		}

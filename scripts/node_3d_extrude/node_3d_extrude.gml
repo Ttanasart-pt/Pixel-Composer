@@ -54,7 +54,10 @@ function Node_3D_Extrude(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) c
 	inputs[| 17] = nodeValue("Field of view", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 60)
 		.setDisplay(VALUE_DISPLAY.slider, [ 0, 90, 1 ]);
 	
-	input_display_list = [1, 
+	inputs[| 18] = nodeValue("Scale view with dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true)
+	
+	input_display_list = [
+		["Surface",			 false], 1, 18, 
 		["Geometry",		 false], 0, 8, 14,
 		["Object transform", false], 2, 3, 4,
 		["Camera",			 false], 16, 17, 5, 7, 15,
@@ -264,6 +267,7 @@ function Node_3D_Extrude(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) c
 		
 		var _proj = _data[16];
 		var _fov  = _data[17];
+		var _dimS = _data[18];
 		
 		inputs[| 17].setVisible(_proj);
 		
@@ -279,7 +283,10 @@ function Node_3D_Extrude(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) c
 		if(_upda && ANIMATOR.frame_progress)
 			generateMesh();
 		
-		_3d_pre_setup(_outSurf, _dim, _pos, _sca, _ldir, _lhgt, _lint, _lclr, _aclr, _lpos, _lrot, _lsca, _proj, _fov, pass, false);
+		var _cam   = { projection: _proj, fov: _fov };
+		var _scale = { local: false, dimension: _dimS };
+			
+		_3d_pre_setup(_outSurf, _dim, _pos, _sca, _ldir, _lhgt, _lint, _lclr, _aclr, _lpos, _lrot, _lsca, _cam, pass, _scale);
 			submit_vertex(_array_index);
 		_3d_post_setup();
 		

@@ -26,6 +26,14 @@ function Node_VFX_Spawner(_x, _y, _group = -1) : Node_VFX_Spawner_Base(_x, _y, _
 		}
 	}
 	
+	static onStep = function() {
+		RETURN_ON_REST
+		
+		if(ANIMATOR.current_frame == 0)
+			reset();
+		runVFX(ANIMATOR.current_frame);
+	}
+	
 	static onSpawn = function(_time, part) {
 		part.step_int = inputs[| input_len + 1].getValue(_time);
 	}

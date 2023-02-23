@@ -34,7 +34,7 @@ if palette == 0 exit;
 	sp_presets.draw(presets_x + ui(24), dialog_y + ui(44));
 	
 	var bx = presets_x + presets_w - ui(44);
-	var by = dialog_y + ui(10);
+	var by = dialog_y + ui(12);
 	
 	if(buttonInstant(THEME.button_hide, bx, by, ui(28), ui(28), mouse_ui, sFOCUS, sHOVER, get_text("add_preset", "Add to preset"), THEME.add) == 2) {
 		var dia = dialogCall(o_dialog_file_name, mouse_mx + ui(8), mouse_my + ui(8));

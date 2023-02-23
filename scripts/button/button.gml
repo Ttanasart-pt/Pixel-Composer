@@ -75,8 +75,12 @@ function buttonClass(_onClick, _icon = noone) : widget() constructor {
 
 function buttonInstant(spr, _x, _y, _w, _h, _m, _act, _hvr, _tip = "", _icon = noone, _icon_index = 0, _icon_blend = COLORS._main_icon, _icon_alpha = 1) {
 	var res = 0;
+	var cc  = is_array(_icon_blend)? _icon_blend[0] : _icon_blend;
 	
 	if(_hvr && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + _h)) {
+		if(is_array(_icon_blend))
+			cc = _icon_blend[1];
+			
 		res = 1;
 		draw_sprite_stretched(spr, 1, _x, _y, _w, _h);	
 		if(_tip != "") 
@@ -87,13 +91,18 @@ function buttonInstant(spr, _x, _y, _w, _h, _m, _act, _hvr, _tip = "", _icon = n
 		if(mouse_press(mb_right, _act))
 			res = 3;
 			
+		if(mouse_release(mb_left, _act))
+			res = -2;
+		if(mouse_release(mb_right, _act))
+			res = -3;
+			
 		if(mouse_click(mb_left, _act))
 			draw_sprite_stretched(spr, 2, _x, _y, _w, _h);	
 	} else
 		draw_sprite_stretched(spr, 0, _x, _y, _w, _h);		
 	
 	if(_icon)
-		draw_sprite_ui_uniform(_icon, _icon_index, _x + _w / 2, _y + _h / 2, 1, _icon_blend, _icon_alpha);
+		draw_sprite_ui_uniform(_icon, _icon_index, _x + _w / 2, _y + _h / 2, 1, cc, _icon_alpha);
 	
 	return res;
 }

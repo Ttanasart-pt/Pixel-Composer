@@ -49,7 +49,7 @@ function __part(_node) constructor {
 	anim_speed = 1;
 	anim_end   = ANIM_END_ACTION.loop;
 	
-	function create(_surf, _x, _y, _life) {
+	static create = function(_surf, _x, _y, _life) {
 		active	= true;
 		surf	= _surf;
 		x		= _x;
@@ -61,7 +61,7 @@ function __part(_node) constructor {
 		node.onPartCreate(self);
 	}
 	
-	function setPhysic(_sx, _sy, _ac, _g, _wig) {
+	static setPhysic = function(_sx, _sy, _ac, _g, _wig) {
 		sx  = _sx;
 		sy  = _sy;
 		ac  = _ac;
@@ -69,7 +69,8 @@ function __part(_node) constructor {
 		
 		wig = _wig;
 	}
-	function setTransform(_scx, _scy, _sct, _rot, _rots, _follow) {
+	
+	static setTransform = function(_scx, _scy, _sct, _rot, _rots, _follow) {
 		sc_sx = _scx;
 		sc_sy = _scy;
 		sct   = _sct;
@@ -78,7 +79,8 @@ function __part(_node) constructor {
 		rot_s = _rots;
 		follow = _follow;
 	}
-	function setDraw(_col, _blend, _alp, _fade) {
+	
+	static setDraw = function(_col, _blend, _alp, _fade) {
 		col      = _col;
 		blend	 = _blend;
 		alp      = _alp;
@@ -86,12 +88,12 @@ function __part(_node) constructor {
 		alp_fade = _fade;
 	}
 	
-	function kill() {
+	static kill = function() {
 		active = false;
 		node.onPartDestroy(self);
 	}
 	
-	static step = function() {
+	static step = function() { 
 		if(!active) return;
 		var xp = x, yp = y;
 		x  += sx;
@@ -119,7 +121,7 @@ function __part(_node) constructor {
 		if(life-- < 0) kill();
 	}
 	
-	function draw(exact, surf_w, surf_h) { 
+	static draw = function(exact, surf_w, surf_h) { 
 		if(!active) return;
 		var ss = surf;
 		if(is_array(surf)) {
@@ -142,8 +144,10 @@ function __part(_node) constructor {
 		}
 		if(!is_surface(ss)) return;
 		
-		scx   = sc_sx * eval_curve_x(sct, 1 - life / life_total);
-		scy   = sc_sy * eval_curve_x(sct, 1 - life / life_total);
+		var lifeRat = 1 - life / life_total;
+		var scCurve = eval_curve_x(sct, lifeRat);
+		scx   = sc_sx * scCurve;
+		scy   = sc_sy * scCurve;
 		
 		var _xx, _yy;
 		var s_w = surface_get_width(ss) * scx;
@@ -176,15 +180,15 @@ function __part(_node) constructor {
 		var x1 = _xx + s_w * 1.5;
 		var y1 = _yy + s_h * 1.5;
 		
-		if(x0 > surf_w || y0 > surf_h || x1 < 0 || y1 < 0) return;
+		if(x0 > surf_w || y0 > surf_h || x1 < 0 || y1 < 0) return; //culling
 		
-		var cc = (col == -1)? c_white : gradient_eval(col, 1 - life / life_total);
-		cc = colorMultiply(blend, cc);
-		alp_draw = alp * eval_curve_x(alp_fade, 1 - life / life_total);
-		draw_surface_ext_safe(ss, _xx, _yy, scx, scy, rot, cc, alp_draw);
+		var cc = (col == -1)? c_white : gradient_eval(col, lifeRat);
+		if(blend != c_white) cc = colorMultiply(blend, cc);
+		alp_draw = alp * eval_curve_x(alp_fade, lifeRat);
+		draw_surface_ext(ss, _xx, _yy, scx, scy, rot, cc, alp_draw);
 	}
 	
-	function getPivot() {
+	static getPivot = function() {
 		if(boundary_data == -1) 
 			return [x, y];
 		

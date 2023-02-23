@@ -1,12 +1,21 @@
 function NEW() {
+	if(MODIFIED && !READONLY) {
+		var dia = dialogCall(o_dialog_load);
+		dia.newFile		= true;
+	} else
+		__NEW();
+}
+
+function __NEW() {
 	nodeCleanUp();
 	setPanel();
 	instance_destroy(_p_dialog);
-	room_restart();
+	//room_restart();
 	
 	gc_collect();
 	SET_PATH("");
 	
+	MODIFIED = false;
 	SAFE_MODE = false;
 }
 

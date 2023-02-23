@@ -30,7 +30,7 @@ function Node_Blur_Contrast(_x, _y, _group = -1) : Node_Processor(_x, _y, _group
 	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
-	pass = surface_create(1, 1);
+	temp_surface = [ surface_create(1, 1) ];
 	
 	static process_data = function(_outSurf, _data, _output_index, _array_index) {
 		var _surf = _data[0];
@@ -42,9 +42,9 @@ function Node_Blur_Contrast(_x, _y, _group = -1) : Node_Processor(_x, _y, _group
 		var ww = surface_get_width(_surf);
 		var hh = surface_get_height(_surf);
 		
-		pass = surface_verify(pass, ww, hh);
+		temp_surface[0] = surface_verify(temp_surface[0], ww, hh);
 		
-		surface_set_target(pass);
+		surface_set_target(temp_surface[0]);
 		draw_clear_alpha(0, 0);
 		BLEND_OVERRIDE;
 			shader_set(shader);
@@ -62,7 +62,7 @@ function Node_Blur_Contrast(_x, _y, _group = -1) : Node_Processor(_x, _y, _group
 		BLEND_OVERRIDE;
 			shader_set(shader);
 			shader_set_uniform_i(uniform_dir, 1);
-			draw_surface_safe(pass, 0, 0);
+			draw_surface_safe(temp_surface[0], 0, 0);
 			shader_reset();
 		BLEND_NORMAL;
 		surface_reset_target();

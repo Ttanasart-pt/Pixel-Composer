@@ -3,6 +3,8 @@ function Node_VFX_Renderer(_x, _y, _group = -1) : Node(_x, _y, _group) construct
 	color = COLORS.node_blend_vfx;
 	icon  = THEME.vfx;
 	
+	use_cache = true;
+	
 	inputs[| 0] = nodeValue("Output dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, def_surf_size2)
 		.setDisplay(VALUE_DISPLAY.vector);
 		
@@ -24,6 +26,11 @@ function Node_VFX_Renderer(_x, _y, _group = -1) : Node(_x, _y, _group) construct
 	if(!LOADING && !APPENDING) createNewInput();
 		
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
+	
+	insp2UpdateTooltip = "Clear cache";
+	insp2UpdateIcon    = [ THEME.cache, 0, COLORS._main_icon ];
+	
+	static onInspector2Update = function() { clearCache(); }
 	
 	static refreshDynamicInput = function() {
 		var _l = ds_list_create();
@@ -51,6 +58,11 @@ function Node_VFX_Renderer(_x, _y, _group = -1) : Node(_x, _y, _group) construct
 	}
 	
 	function update(_time = ANIMATOR.current_frame) {
+		if(!ANIMATOR.is_playing) {
+			recoverCache();
+			return;
+		}
+		
 		var _dim	= inputs[| 0].getValue(_time);
 		var _exact 	= inputs[| 1].getValue(_time);
 		var _blend 	= inputs[| 2].getValue(_time);

@@ -197,7 +197,7 @@ function valueAnimator(_val, _prop) constructor {
 	
 	static setKeyTime = function(_key, _time, _replace = true) {
 		if(!ds_list_exist(values, _key)) return 0;
-		MODIFIED = true;
+		if(!LOADING) MODIFIED = true;
 		
 		_time = max(_time, 0);
 		_key.setTime(_time);
@@ -224,8 +224,6 @@ function valueAnimator(_val, _prop) constructor {
 	}
 	
 	static setValue = function(_val = 0, _record = true, _time = ANIMATOR.current_frame, ease_in = 0, ease_out = 0) {
-		MODIFIED = true;
-		
 		if(!is_anim) {
 			if(isEqual(values[| 0].value, _val)) 
 				return false;

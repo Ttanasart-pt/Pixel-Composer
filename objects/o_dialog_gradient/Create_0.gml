@@ -155,7 +155,7 @@ event_inherited();
 				draw_sprite_stretched_ext(THEME.node_active, 1, ui(4), yy, sp_preset_w - ui(16), hg, COLORS._main_accent, 1);
 				
 			draw_set_text(f_p2, fa_left, fa_top, COLORS._main_text_sub);
-			draw_text(ui(16), yy + ui(8), preset_name[| i]);
+			draw_text(ui(16), yy + ui(8), filename_name_only(preset_name[| i]));
 			draw_gradient(ui(16), yy + ui(28), ww, ui(16), presets[| i]);
 			
 			if(_hover && isHover && mouse_press(mb_left, sFOCUS)) { 
@@ -223,7 +223,7 @@ event_inherited();
 				draw_sprite_stretched_ext(THEME.node_active, 1, ui(4), yy, sp_palette_w - ui(16), _height, COLORS._main_accent, 1);
 			
 			draw_set_text(f_p2, fa_left, fa_top, COLORS._main_text_sub);
-			draw_text(ui(16), yy + ui(8), palette_name[| i]);
+			draw_text(ui(16), yy + ui(8), filename_name_only(palette_name[| i]));
 			if(palette_selecting == i)
 				drawPaletteGrid(palettes[| i], ui(16), yy + ui(28), ww, _gs);
 			else

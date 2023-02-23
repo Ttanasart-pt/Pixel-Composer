@@ -14,7 +14,7 @@ event_inherited();
 	
 	show_icon = false;
 	
-	function setMenu(_menu) {
+	function setMenu(_menu, align = fa_left) {
 		menu = _menu;
 		dialog_x = x;
 		dialog_y = y;
@@ -67,10 +67,12 @@ event_inherited();
 		if(show_icon)
 			dialog_w += ui(32);
 		
-		if(dialog_x + dialog_w > WIN_W - ui(16))
-			dialog_x = WIN_W - ui(16) - dialog_w;
-		if(dialog_y + dialog_h > WIN_H - ui(16))
-			dialog_y = WIN_H - ui(16) - dialog_h;
+		dialog_y = min(dialog_y, WIN_H - dialog_h);
+		
+		switch(align) {
+			case fa_left:	dialog_x = round(min(dialog_x, WIN_W - dialog_w)); break;
+			case fa_center: dialog_x = round(min(dialog_x - dialog_w / 2, WIN_W - dialog_w)); break;
+		}
 		
 		ready = true;
 	}

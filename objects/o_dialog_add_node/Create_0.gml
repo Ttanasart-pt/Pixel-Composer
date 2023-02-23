@@ -9,13 +9,8 @@ event_inherited();
 	node_called   = noone;
 	junction_hovering = noone;
 	
-	if(ADD_NODE_W == -1 || ADD_NODE_H == -1) {
-		ADD_NODE_W = ui(532);
-		ADD_NODE_H = ui(400);
-	}
-	
-	dialog_w = ADD_NODE_W;
-	dialog_h = ADD_NODE_H;
+	dialog_w = PREF_MAP[? "dialog_add_node_w"];
+	dialog_h = PREF_MAP[? "dialog_add_node_h"];
 	
 	destroy_on_click_out = true;
 	
@@ -409,8 +404,8 @@ event_inherited();
 		content_pane.resize(dialog_w - ui(136), dialog_h - ui(66));
 		search_pane.resize(dialog_w - ui(32), dialog_h - ui(66));
 		
-		ADD_NODE_W = dialog_w;
-		ADD_NODE_H = dialog_h;
+		PREF_MAP[? "dialog_add_node_w"] = dialog_w;
+		PREF_MAP[? "dialog_add_node_h"] = dialog_h;
 	}
 #endregion
 

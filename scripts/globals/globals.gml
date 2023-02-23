@@ -30,7 +30,7 @@
 	globalvar VERSION, SAVEFILE_VERSION, VERSION_STRING;
 	VERSION = 1130;
 	SAVEFILE_VERSION = 1300;
-	VERSION_STRING = "1.13.pr14";
+	VERSION_STRING = "1.13";
 	
 	globalvar NODES, NODE_MAP, APPEND_MAP, HOTKEYS, HOTKEY_CONTEXT;
 	
@@ -56,10 +56,8 @@
 	HOVER = noone;
 	DIALOG_CLICK = true;
 	
-	globalvar ADD_NODE_PAGE, ADD_NODE_W, ADD_NODE_H;
+	globalvar ADD_NODE_PAGE;
 	ADD_NODE_PAGE = 0;
-	ADD_NODE_W = -1;
-	ADD_NODE_H = -1;
 #endregion
 
 #region macro

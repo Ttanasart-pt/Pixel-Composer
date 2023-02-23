@@ -54,7 +54,10 @@ function Node_3D_Cylinder(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) 
 	inputs[| 19] = nodeValue("Taper", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
 		.setDisplay(VALUE_DISPLAY.slider, [ 0, 1, 0.01 ]);
 	
-	input_display_list = [2, 
+	inputs[| 20] = nodeValue("Scale view with dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true)
+	
+	input_display_list = [
+		["Surface",				false], 2, 20, 
 		["Geometry",			false], 0, 1, 19,
 		["Object transform",	false], 16, 15, 9,
 		["Camera",				false], 17, 18, 3, 5, 
@@ -187,6 +190,7 @@ function Node_3D_Cylinder(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) 
 		
 		var _proj = _data[17];
 		var _fov  = _data[18];
+		var _dimS = _data[20];
 		
 		inputs[| 18].setVisible(_proj);
 		
@@ -196,7 +200,10 @@ function Node_3D_Cylinder(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) 
 			case 2 : pass = "norm" break;
 		}
 		
-		_3d_pre_setup(_outSurf, _dim, _pos, _sca, _ldir, _lhgt, _lint, _lclr, _aclr, _lpos, _lrot, _lsca, _proj, _fov, pass);
+		var _cam   = { projection: _proj, fov: _fov };
+		var _scale = { local: true, dimension: _dimS };
+			
+		_3d_pre_setup(_outSurf, _dim, _pos, _sca, _ldir, _lhgt, _lint, _lclr, _aclr, _lpos, _lrot, _lsca, _cam, pass, _scale);
 		
 		matrix_set(matrix_world, matrix_stack_top());
 		vertex_submit(VB_top, pr_trianglelist, surface_get_texture(face_top));

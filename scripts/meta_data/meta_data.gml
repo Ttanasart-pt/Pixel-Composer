@@ -1,6 +1,12 @@
 #region tags
 	globalvar META_TAGS;
 	META_TAGS = [ "3D", "Disappear", "Effect", "Filter", "Generator", "Transform", "Transition", "Utility" ];
+	
+	enum FILE_TYPE {
+		project,
+		collection,
+		assets
+	}
 #endregion
 
 function MetaDataManager() constructor {
@@ -9,6 +15,7 @@ function MetaDataManager() constructor {
 	author		= "";
 	contact		= "";
 	alias		= "";
+	type		= FILE_TYPE.collection;
 	author_steam_id = 0;
 	file_id		= 0;
 	tags		= [];
@@ -65,6 +72,22 @@ function MetaDataManager() constructor {
 	static drawTooltip = function() {
 		var ww = ui(320), _w = 0;
 		var _h = 0;
+		
+		if(type == FILE_TYPE.assets) {
+			draw_set_font(f_p0);
+			_h = string_height(name);
+			_w = string_width(name);
+			
+			var mx = min(mouse_mx + ui(16), WIN_W - (_w + ui(16)));
+			var my = min(mouse_my + ui(16), WIN_H - (_h + ui(16)));
+			
+			draw_sprite_stretched(THEME.textbox, 3, mx, my, _w + ui(16), _h + ui(16));
+			draw_sprite_stretched(THEME.textbox, 0, mx, my, _w + ui(16), _h + ui(16));
+			
+			draw_set_text(f_p0, fa_left, fa_top, COLORS._main_text);
+			draw_text(mx + ui(8), my + ui(8), name);
+			return;
+		}
 		
 		var _aut = "By " + author;
 		var _ver = get_text("meta_old_version", "Created on an older version");

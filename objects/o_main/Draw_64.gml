@@ -1,4 +1,9 @@
 /// @description init
+if(gameframe_is_minimized()) {
+	gameframe_update();
+	exit;
+}
+
 #region widget scroll
 	if(keyboard_check_pressed(vk_tab) && key_mod_press(SHIFT))
 		widget_previous();
@@ -27,4 +32,30 @@
 			surface_reset_target();
 		noti_warning(exception_print(e));
 	}
+	
+	gameframe_update();
+#endregion
+
+#region window
+	var pd = gameframe_resize_padding;
+	
+	if(mouse_mx > 0 && mouse_mx < pd && mouse_my > 0 && mouse_my < WIN_H)
+		CURSOR = cr_size_we;
+	if(mouse_mx > WIN_W - pd && mouse_mx < WIN_W && mouse_my > 0 && mouse_my < WIN_H)
+		CURSOR = cr_size_we;
+		
+	if(mouse_mx > 0 && mouse_mx < WIN_W && mouse_my > 0 && mouse_my < pd)
+		CURSOR = cr_size_ns;
+	if(mouse_mx > 0 && mouse_mx < WIN_W && mouse_my > WIN_H - pd && mouse_my < WIN_H)
+		CURSOR = cr_size_ns;
+	
+	if(mouse_mx > 0 && mouse_mx < pd && mouse_my > 0 && mouse_my < pd)
+		CURSOR = cr_size_nwse;
+	if(mouse_mx > WIN_W - pd && mouse_mx < WIN_W && mouse_my > WIN_H - pd && mouse_my < WIN_H)
+		CURSOR = cr_size_nwse;
+	
+	if(mouse_mx > 0 && mouse_mx < pd && mouse_my > WIN_H - pd && mouse_my < WIN_H)
+		CURSOR = cr_size_nesw;
+	if(mouse_mx > WIN_W - pd && mouse_mx < WIN_W && mouse_my > 0 && mouse_my < pd)
+		CURSOR = cr_size_nesw;
 #endregion

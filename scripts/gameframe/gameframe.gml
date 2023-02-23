@@ -83,10 +83,14 @@ function gameframe_update() {
 		if (__titleHit) {
 			var __now = current_time;
 			if (__now < gameframe_last_title_click_at + gameframe_double_click_time) {
-				if (gameframe_isMaximized_hx) gameframe_restore(); else gameframe_maximize();
+				//if (gameframe_isMaximized_hx) gameframe_restore(); else gameframe_maximize();
 			} else {
 				gameframe_last_title_click_at = __now;
-				if (gameframe_isMaximized_hx) gameframe_drag_start(32); else gameframe_drag_start(16);
+				if (gameframe_isMaximized_hx) {
+					gameframe_drag_start(32); 
+				} else {
+					gameframe_drag_start(16);
+				}
 			}
 		} else if (__flags != 0 && gameframe_can_resize) {
 			gameframe_drag_start(__flags);
@@ -586,6 +590,7 @@ function gameframe_tools_rect_set_to(_this1, _o) {
 #region gameframe
 
 function gameframe_minimize() {
+	gameframe_drag_flags = 0;
 	/// gameframe_minimize()
 	/// @returns {void}
 	if (gameframe_is_natively_minimized()) exit;
@@ -931,6 +936,7 @@ function gameframe_delayed_item_create() {
 
 function gameframe_drag_start(__flags) {
 	// gameframe_drag_start(_flags:int)
+	gameframe_drag_init = 0;
 	gameframe_drag_flags = __flags;
 	gameframe_drag_mx = (display_mouse_get_x() | 0);
 	gameframe_drag_my = (display_mouse_get_y() | 0);
@@ -942,6 +948,12 @@ function gameframe_drag_start(__flags) {
 
 function gameframe_drag_stop() {
 	// gameframe_drag_stop()
+	
+	if(gameframe_drag_flags == 16) {
+		if(display_mouse_get_y() <= gameframe_resize_padding)
+			gameframe_maximize();
+	}
+	
 	gameframe_drag_flags = 0;
 }
 
@@ -956,7 +968,17 @@ function gameframe_drag_update() {
 	var __mx = (display_mouse_get_x() | 0);
 	var __my = (display_mouse_get_y() | 0);
 	switch (gameframe_drag_flags) {
-		case 16: window_set_position(__mx - (gameframe_drag_mx - gameframe_drag_left), __my - (gameframe_drag_my - gameframe_drag_top)); break;
+		case 16: 
+			if(gameframe_drag_init == 0) {
+				var dist = point_distance(gameframe_drag_mx, gameframe_drag_my, __mx, __my);
+				if(dist > 8) {
+					gameframe_drag_init = 1;
+					//gameframe_drag_mx = __mx;
+					//gameframe_drag_my = __my;
+				}
+			} else 
+				window_set_position(__mx - (gameframe_drag_mx - gameframe_drag_left), __my - (gameframe_drag_my - gameframe_drag_top)); 
+			break;
 		case 32:
 			if (point_distance(__mx, __my, gameframe_drag_mx, gameframe_drag_my) > 5) {
 				var __x;
@@ -1029,6 +1051,7 @@ function gameframe_tools_keyctl_update() {
 	for (var __g1 = array_length(gameframe_tools_keyctl_keys); _i < __g1; _i++) {
 		gameframe_tools_keyctl_update_key(gameframe_tools_keyctl_keys[_i]);
 	}
+	
 	if (gameframe_tools_keyctl_up[2/* pressed */]) {
 		if (gameframe_can_resize) gameframe_maximize();
 	} else if (gameframe_tools_keyctl_down[2/* pressed */]) {
@@ -1278,6 +1301,8 @@ gameframe_delayed_frame_index = 0;
 // gameframe_drag:
 globalvar gameframe_drag_flags; /// @is {int}
 gameframe_drag_flags = 0;
+globalvar gameframe_drag_init; /// @is {int}
+gameframe_drag_init = 0;
 globalvar gameframe_drag_mx; /// @is {int}
 gameframe_drag_mx = 0;
 globalvar gameframe_drag_my; /// @is {int}

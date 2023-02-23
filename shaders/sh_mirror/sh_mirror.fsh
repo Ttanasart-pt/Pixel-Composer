@@ -1,7 +1,7 @@
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
-#define TAU 6.28318
+#define TAU 6.283185307179586
 #define pi1 3.14159
 #define pi2 1.57079
 

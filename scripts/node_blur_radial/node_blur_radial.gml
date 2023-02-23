@@ -9,7 +9,7 @@ function Node_Blur_Radial(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) 
 	
 	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 	
-	inputs[| 1] = nodeValue("Strength", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
+	inputs[| 1] = nodeValue("Strength", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 45)
 		.setDisplay(VALUE_DISPLAY.rotation);
 	
 	inputs[| 2] = nodeValue("Center",   self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ])
@@ -47,8 +47,8 @@ function Node_Blur_Radial(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) 
 		var _str = _data[1];
 		var _cen = _data[2];
 		var _sam = _data[3];
-		var _mask = _data[3];
-		var _mix  = _data[4];
+		var _mask = _data[4];
+		var _mix  = _data[5];
 		_cen[0] /= surface_get_width(_outSurf);
 		_cen[1] /= surface_get_height(_outSurf);
 		

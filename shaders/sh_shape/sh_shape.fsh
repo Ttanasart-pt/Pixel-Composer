@@ -27,7 +27,7 @@ uniform vec2 scale;
 uniform vec4 bgColor;
 
 #define PI  3.14159265359
-#define TAU 6.28318530718
+#define TAU 6.283185307179586
 
 float sdRegularPolygon(in vec2 p, in float r, in int n, in float ang ) {
     // these 4 lines can be precomputed for a given shape

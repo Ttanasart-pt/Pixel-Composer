@@ -55,11 +55,14 @@ function Node_3D_Cube(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) cons
 	inputs[| 21] = nodeValue("Field of view", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 60)
 		.setDisplay(VALUE_DISPLAY.slider, [ 0, 90, 1 ]);
 	
-	input_display_list = [1,
-		["Object transform",false], 19, 18, 12,
-		["Camera",			false], 20, 21, 2, 4, 
-		["Texture",			 true],	0, 5, 6, 7, 8, 9, 10, 11,
-		["Light",			false], 13, 14, 15, 16, 17,
+	inputs[| 22] = nodeValue("Scale view with dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true)
+	
+	input_display_list = [
+		["Surface",			 false], 1, 22, 
+		["Object transform", false], 19, 18, 12,
+		["Camera",			 false], 20, 21, 2, 4, 
+		["Texture",			  true], 0, 5, 6, 7, 8, 9, 10, 11,
+		["Light",			 false], 13, 14, 15, 16, 17,
 	];
 	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
@@ -131,6 +134,7 @@ function Node_3D_Cube(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) cons
 		
 		var _proj = _data[20];
 		var _fov  = _data[21];
+		var _dimS = _data[22];
 		
 		inputs[| 21].setVisible(_proj);
 		
@@ -143,7 +147,10 @@ function Node_3D_Cube(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) cons
 			case 2 : pass = "norm" break;
 		}
 		
-		_3d_pre_setup(_outSurf, _dim, _pos, _sca, _ldir, _lhgt, _lint, _lclr, _aclr, _lpos, _lrot, _lsca, _proj, _fov, pass);
+		var _cam   = { projection: _proj, fov: _fov };
+		var _scale = { local: true, dimension: _dimS };
+			
+		_3d_pre_setup(_outSurf, _dim, _pos, _sca, _ldir, _lhgt, _lint, _lclr, _aclr, _lpos, _lrot, _lsca, _cam, pass, _scale);
 		
 		if(_usetex) {
 			for(var i = 0; i < 6; i++) {

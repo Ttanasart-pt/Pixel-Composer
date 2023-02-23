@@ -37,6 +37,14 @@ function Panel_Menu() : PanelContent() constructor {
 				})
 			]);
 		}, THEME.addon ).setIsShelf(),
+		-1,
+		menuItem(get_text("fullscreen", "Toggle fullscreen"), function() { 
+			if(gameframe_is_fullscreen_window())
+				gameframe_set_fullscreen(0);
+			else
+				gameframe_set_fullscreen(2);
+		},, ["", "Fullscreen"]),
+		menuItem(get_text("exit", "Close program"), function() { window_close(); }),
 	];
 	
 	if(DEMO) array_delete(menu_file, 1, 4);
@@ -242,12 +250,12 @@ function Panel_Menu() : PanelContent() constructor {
 				draw_sprite_stretched(THEME.menu_button, 0, xc - ww / 2, ui(6), ww, h - ui(12));
 					
 				if((mouse_press(mb_left, pFOCUS)) || instance_exists(o_dialog_menubox)) {
-					menuCall( x + xx, y + h, menus[i][1]);
+					menuCall( xx, h, menus[i][1]);
 				}
 			}
 			
 			draw_set_text(f_p1, fa_center, fa_center, COLORS._main_text);
-			draw_text_over(xx + ww / 2, y + h / 2, menus[i][0]);
+			draw_text_over(xx + ww / 2, h / 2, menus[i][0]);
 			
 			xx += ww + 8;
 		}
@@ -257,7 +265,7 @@ function Panel_Menu() : PanelContent() constructor {
 			var error_amo = ds_list_size(ERRORS);
 			
 			var nx0 = xx + ui(24);
-			var ny0 = y + h / 2;
+			var ny0 = h / 2;
 			
 			draw_set_text(f_p0, fa_left, fa_center);
 			var wr_w = ui(20) + ui(8) + string_width(string(warning_amo));
@@ -331,34 +339,42 @@ function Panel_Menu() : PanelContent() constructor {
 			var bs = ui(28);
 			
 			if(buttonInstant(THEME.button_hide_fill, x1 - bs, ui(6), bs, bs, [mx, my], pFOCUS, pHOVER,, THEME.window_exit, 0, COLORS._main_accent) == 2) {
-				game_end();
+				window_close();
 			}
-			x1 -= bs + ui(8);
+			x1 -= bs + ui(4);
 			
-			if(buttonInstant(THEME.button_hide_fill, x1 - bs, ui(6), bs, bs, [mx, my], pFOCUS, pHOVER,, THEME.window_maximize, window_is_maximize(), COLORS._main_icon) == 2) {
-				if(window_is_maximize())
-					window_restore();
+			var win_max = gameframe_is_maximized() || gameframe_is_fullscreen_window();
+			if(buttonInstant(THEME.button_hide_fill, x1 - bs, ui(6), bs, bs, [mx, my], pFOCUS, pHOVER,, THEME.window_maximize, win_max, [ COLORS._main_icon, CDEF.lime ]) == 2) {
+				if(gameframe_is_fullscreen_window()) {
+					gameframe_set_fullscreen(0);
+					gameframe_restore();
+				} else if(gameframe_is_maximized())
+					gameframe_restore();
 				else
-					maximize_window();
+					gameframe_maximize();
 			}
-			x1 -= bs + ui(8);
+			x1 -= bs + ui(4);
+			  
+			if(buttonInstant(THEME.button_hide_fill, x1 - bs, ui(6), bs, bs, [mx, my], pFOCUS, pHOVER,, THEME.window_minimize, 0, [ COLORS._main_icon, CDEF.yellow ]) == -2) {
+				gameframe_minimize();
+			}
+			x1 -= bs + ui(4);
 			
-			if(buttonInstant(THEME.button_hide_fill, x1 - bs, ui(6), bs, bs, [mx, my], pFOCUS, pHOVER,, THEME.window_minimize, 0, COLORS._main_icon) == 2) {
-				//minimize_window();
-				
-				
-				window_set_position(0, 0);
+			if(buttonInstant(THEME.button_hide_fill, x1 - bs, ui(6), bs, bs, [mx, my], pFOCUS, pHOVER,, THEME.window_fullscreen, gameframe_is_fullscreen_window(), [ COLORS._main_icon, CDEF.cyan ]) == 2) {
+				if(gameframe_is_fullscreen_window())
+					gameframe_set_fullscreen(0);
+				else
+					gameframe_set_fullscreen(2);
 			}
-			x1 -= bs + ui(8);
+			x1 -= bs + ui(4);
 		#endregion
 		
 		#region version
 			draw_set_text(f_p0, fa_right, fa_center, COLORS._main_text_sub);
 			var txt = "v. " + string(VERSION_STRING);
-			if(DEMO) txt += " DEMO";
 			var ww = string_width(txt) + ui(12);
 			if(pHOVER && point_in_rectangle(mx, my, x1 - ww, 0, x1, h)) {
-				draw_sprite_stretched(THEME.menu_button, 0, x1 - ww, ui(6), ww, h - ui(12));
+				draw_sprite_stretched(THEME.button_hide_fill, 1, x1 - ww, ui(6), ww, h - ui(12));
 			
 				if(mouse_press(mb_left, pFOCUS)) {
 					dialogCall(o_dialog_release_note); 
@@ -368,6 +384,40 @@ function Panel_Menu() : PanelContent() constructor {
 		
 			if(o_main.version_latest > VERSION) 
 				displayNewVersion();
+		#endregion
+		
+		#region title
+			var txt = "";
+			if(CURRENT_PATH == "") 
+				txt = "Untitled";
+			else 
+				txt = filename_name(CURRENT_PATH);
+			if(MODIFIED)
+				txt += "*";
+			txt += " - Pixel Composer";
+			if(DEMO) txt += " DEMO";
+			
+			var tx0  = nx0;
+			var tx1  = x1 - ww;
+			var maxW = abs(tx0 - tx1);
+			var tcx  = (tx0 + tx1) / 2;
+			
+			draw_set_font(f_p0b);
+			var tc = string_cut(txt, maxW);
+			var tw = string_width(tc) + ui(16);
+			
+			if(buttonInstant(THEME.button_hide_fill, tcx - tw / 2, h / 2 - ui(14), tw, ui(28), [mx, my], pFOCUS, pHOVER) == 2) {
+				var arr = [];
+				for(var i = 0; i < min(10, ds_list_size(RECENT_FILES)); i++)  {
+					var _rec = RECENT_FILES[| i];
+					array_push(arr, menuItem(_rec, function(_x, _y, _depth, _path) { LOAD_PATH(_path); }));
+				}
+				
+				var dia = menuCall(tcx, h, arr, fa_center);
+			}
+			
+			draw_set_text(f_p0b, fa_center, fa_center, COLORS._main_text_sub);
+			draw_text(tcx, h / 2, tc);
 		#endregion
 			
 		undoUpdate();

@@ -48,7 +48,10 @@ function Node_3D_Sphere(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) co
 	inputs[| 15] = nodeValue("Field of view", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 60)
 		.setDisplay(VALUE_DISPLAY.slider, [ 0, 90, 1 ]);
 	
-	input_display_list = [1, 
+	inputs[| 16] = nodeValue("Scale view with dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true)
+	
+	input_display_list = [
+		["Surface",				false], 1, 16, 
 		["Geometry",			false], 0,
 		["Object transform",	false], 13, 12, 6,
 		["Camera",				false], 14, 15, 2, 4, 
@@ -174,6 +177,7 @@ function Node_3D_Sphere(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) co
 		
 		var _proj = _data[14];
 		var _fov  = _data[15];
+		var _dimS = _data[16];
 		
 		inputs[| 15].setVisible(_proj);
 		
@@ -183,7 +187,10 @@ function Node_3D_Sphere(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) co
 			case 2 : pass = "norm" break;
 		}
 		
-		_3d_pre_setup(_outSurf, _dim, _pos, _sca, _ldir, _lhgt, _lint, _lclr, _aclr, _lpos, _lrot, _lsca, _proj, _fov, pass);
+		var _cam   = { projection: _proj, fov: _fov };
+		var _scale = { local: true, dimension: _dimS };
+			
+		_3d_pre_setup(_outSurf, _dim, _pos, _sca, _ldir, _lhgt, _lint, _lclr, _aclr, _lpos, _lrot, _lsca, _cam, pass, _scale);
 			vertex_submit(VB, pr_trianglelist, surface_get_texture(texture));
 		_3d_post_setup();
 		

@@ -6,7 +6,7 @@ varying vec4 v_vColour;
 
 uniform vec2 dimension;
 uniform float size;
-#define TAU   6.28318
+#define TAU 6.283185307179586
 
 void main() {
 	vec2 pixelPosition = v_vTexcoord * dimension;

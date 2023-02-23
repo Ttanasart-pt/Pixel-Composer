@@ -26,7 +26,7 @@ function Node_SDF(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) construc
 		["SDF",		false], 2, 3, 
 	]
 	
-	pass = [ surface_create(1, 1), surface_create(1, 1) ];
+	temp_surface = [ surface_create(1, 1), surface_create(1, 1) ];
 	
 	static process_data = function(_outSurf, _data, _output_index, _array_index) {
 		var inSurf = _data[0];
@@ -36,11 +36,11 @@ function Node_SDF(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) construc
 		var sh = surface_get_height(inSurf);
 		var n  = max(sw, sh);
 		
-		pass[0]  = surface_verify(pass[0], n, n);
-		pass[1]  = surface_verify(pass[1], n, n);
+		temp_surface[0]  = surface_verify(temp_surface[0], n, n);
+		temp_surface[1]  = surface_verify(temp_surface[1], n, n);
 		_outSurf = surface_verify(_outSurf, sw, sh);
 		
-		surface_set_target(pass[0]);
+		surface_set_target(temp_surface[0]);
 		draw_clear_alpha(0, 0);
 		BLEND_OVERRIDE;
 		
@@ -60,7 +60,7 @@ function Node_SDF(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) construc
 			stepSize /= 2;
 			bg = !bg;
 			
-			surface_set_target(pass[bg]);
+			surface_set_target(temp_surface[bg]);
 			draw_clear_alpha(0, 0);
 			BLEND_OVERRIDE;
 			
@@ -68,7 +68,7 @@ function Node_SDF(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) construc
 				shader_set_uniform_f(uniform_sdf_dim, n, n );
 				shader_set_uniform_f(uniform_sdf_stp, stepSize);
 				shader_set_uniform_i(uniform_sdf_sid, _side);
-				draw_surface_safe(pass[!bg], 0, 0);
+				draw_surface_safe(temp_surface[!bg], 0, 0);
 			shader_reset();
 			
 			BLEND_NORMAL;
@@ -82,7 +82,7 @@ function Node_SDF(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) construc
 		shader_set(sh_sdf_dist);
 			shader_set_uniform_i(uniform_dst_sid, _side);
 			shader_set_uniform_f(uniform_dst_dst, _dist);
-			draw_surface_safe(pass[bg], 0, 0);
+			draw_surface_safe(temp_surface[bg], 0, 0);
 		shader_reset();
 		
 		BLEND_NORMAL;

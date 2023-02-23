@@ -46,7 +46,7 @@ function Node_Blend(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constr
 		["Transform",	false], 5, 10, 11, 
 	]
 	
-	temp = surface_create(1, 1);
+	temp_surface = [ surface_create(1, 1) ];
 	
 	static process_data = function(_outSurf, _data, _output_index, _array_index) {
 		var _back	 = _data[0];
@@ -77,8 +77,8 @@ function Node_Blend(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constr
 			var fw = surface_get_width(_fore);
 			var fh = surface_get_height(_fore);
 			
-			temp = surface_verify(temp, ww, hh);
-			_foreDraw = temp;
+			temp_surface[0] = surface_verify(temp_surface[0], ww, hh);
+			_foreDraw = temp_surface[0];
 			
 			var sx = 0;
 			var sy = 0;
@@ -95,7 +95,7 @@ function Node_Blend(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constr
 				case 2 : sy = hh - fh; break;
 			}
 			
-			surface_set_target(temp);
+			surface_set_target(temp_surface[0]);
 			draw_clear_alpha(0, 0);
 			BLEND_ALPHA
 				draw_surface(_fore, sx, sy);

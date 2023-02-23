@@ -13,8 +13,5 @@ function display_refresh() {
 	PANEL_PREVIEW.fullView();
 		
 	o_main.alarm[0] = 10;
-		
-	PREF_MAP[? "window_width"]	= WIN_W;
-	PREF_MAP[? "window_height"]	= WIN_H;
 	PREF_SAVE();
 }

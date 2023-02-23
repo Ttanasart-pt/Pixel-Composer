@@ -10,6 +10,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 	parent = _parent;
 	if(parent) ds_list_add(parent.childs, self);
 	
+	padding = ui(2);
 	content = noone;
 	childs = ds_list_create();
 	anchor = ANCHOR.none;
@@ -33,11 +34,16 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 		surface_set_target(mask_surface);
 		draw_clear(c_black);
 		gpu_set_blendmode(bm_subtract);
-		draw_sprite_stretched(THEME.ui_panel_bg, 0, ui(2), ui(2), w - ui(4), h - ui(4));
+		draw_sprite_stretched(THEME.ui_panel_bg, 0, padding, padding, w - padding * 2, h - padding * 2);
 		gpu_set_blendmode(bm_normal);
 		surface_reset_target();
 	}
 	resetMask();
+	
+	function setPadding(padding) {
+		self.padding = padding;
+		resetMask();
+	}
 	
 	function refresh() {
 		if(is_surface(content_surface) && surface_exists(content_surface)) 
@@ -354,7 +360,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 	
 	function drawPanel() {
 		if(w <= ui(16)) return;
-		draw_sprite_stretched(THEME.ui_panel_bg, 0, x + ui(2), y + ui(2), w - ui(4), h - ui(4));
+		draw_sprite_stretched(THEME.ui_panel_bg, 0, x + padding, y + padding, w - padding * 2, h - padding * 2);
 		
 		if(!is_surface(mask_surface)) {
 			mask_surface = surface_create_valid(w, h);
@@ -379,7 +385,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 		draw_surface_safe(content_surface, x, y);
 		
 		if(FOCUS == self) 
-			draw_sprite_stretched_ext(THEME.ui_panel_active, 0, x + ui(2), y + ui(2), w - ui(4), h - ui(4), COLORS._main_accent, 1);
+			draw_sprite_stretched_ext(THEME.ui_panel_active, 0, x + padding, y + padding, w - padding * 2, h - padding * 2, COLORS._main_accent, 1);
 	}
 	
 	function remove() {

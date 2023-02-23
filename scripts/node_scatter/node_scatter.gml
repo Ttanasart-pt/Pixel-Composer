@@ -61,8 +61,6 @@ function Node_Scatter(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) cons
 		["Render",		false], 11, 12, 16, 
 	];
 	
-	temp_surf = [ surface_create(1, 1), surface_create(1, 1) ];
-	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		if(process_amount > 1) return;
 		
@@ -127,7 +125,7 @@ function Node_Scatter(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) cons
 		
 		var _posDist = [];
 		if(_dist == 2 && is_surface(_distMap)) 
-			_posDist = get_points_from_dist(_distMap, _amount);
+			_posDist = get_points_from_dist(_distMap, _amount, seed);
 		
 		surface_set_target(_outSurf);
 			draw_clear_alpha(0, 0);

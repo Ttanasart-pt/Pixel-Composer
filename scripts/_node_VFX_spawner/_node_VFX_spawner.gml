@@ -359,13 +359,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = -1) : Node(_x, _y, _group) const
 		onStep();
 	}
 	
-	static onStep = function() {
-		RETURN_ON_REST
-		
-		if(ANIMATOR.current_frame == 0)
-			reset();
-		runVFX(ANIMATOR.current_frame);
-	}
+	static onStep = function() {}
 	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		inputs[| 3].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);

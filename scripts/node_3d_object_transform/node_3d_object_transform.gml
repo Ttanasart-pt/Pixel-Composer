@@ -43,7 +43,10 @@ function Node_3D_Transform(_x, _y, _group = -1) : Node_Processor(_x, _y, _group)
 	inputs[| 13] = nodeValue("Field of view", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 60)
 		.setDisplay(VALUE_DISPLAY.slider, [ 0, 90, 1 ]);
 	
-	input_display_list = [ 0, 11,
+	inputs[| 14] = nodeValue("Scale view with dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true)
+	
+	input_display_list = [ 11,
+		["Surface",				false], 0, 14, 
 		["Object transform",	false], 1, 2, 3,
 		["Camera",				false], 12, 13, 4, 5,
 		["Light",				 true], 6, 7, 8, 9, 10,
@@ -106,6 +109,7 @@ function Node_3D_Transform(_x, _y, _group = -1) : Node_Processor(_x, _y, _group)
 
 		var _proj = _data[12];
 		var _fov  = _data[13];
+		var _dimS = _data[14];
 		
 		var pass = "diff";
 		switch(_output_index) {
@@ -113,7 +117,10 @@ function Node_3D_Transform(_x, _y, _group = -1) : Node_Processor(_x, _y, _group)
 			case 2 : pass = "norm" break;
 		}
 		
-		_3d_pre_setup(_outSurf, _dim, _pos, _sca, _ldir, _lhgt, _lint, _lclr, _aclr, _lpos, _lrot, _lsca, _proj, _fov, pass, false);
+		var _cam   = { projection: _proj, fov: _fov };
+		var _scale = { local: false, dimension: _dimS };
+			
+		_3d_pre_setup(_outSurf, _dim, _pos, _sca, _ldir, _lhgt, _lint, _lclr, _aclr, _lpos, _lrot, _lsca, _cam, pass, _scale);
 			submit_vertex();
 		_3d_post_setup();
 		

@@ -4,7 +4,7 @@
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
-#define TAU   6.28318
+#define TAU 6.283185307179586
 
 uniform vec2 dimension;
 uniform vec2 center[4];

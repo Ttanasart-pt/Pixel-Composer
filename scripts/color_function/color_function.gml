@@ -17,15 +17,19 @@ function colorBrightness(clr) {
 }
 
 function colorMultiply(c1, c2) {
-	var r1 = color_get_red(c1) / 255;
-	var g1 = color_get_green(c1) / 255;
-	var b1 = color_get_blue(c1) / 255;
+	if(c1 * c2 == 0) return 0;
+	if(c1 == c_white) return c2;
+	if(c2 == c_white) return c1;
 	
-	var r2 = color_get_red(c2) / 255;
-	var g2 = color_get_green(c2) / 255;
-	var b2 = color_get_blue(c2) / 255;
+	var r1 = color_get_red(c1);
+	var g1 = color_get_green(c1);
+	var b1 = color_get_blue(c1);
 	
-	return make_color_rgb((r1 * r2) * 255, (g1 * g2) * 255, (b1 * b2) * 255);
+	var r2 = color_get_red(c2);
+	var g2 = color_get_green(c2);
+	var b2 = color_get_blue(c2);
+	
+	return make_color_rgb((r1 * r2) / 255, (g1 * g2) / 255, (b1 * b2) / 255);
 }
 
 function color_diff(c1, c2) {

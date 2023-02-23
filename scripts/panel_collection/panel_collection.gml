@@ -141,9 +141,9 @@ function Panel_Collection() : PanelContent() constructor {
 			var row = ceil(node_count / col);
 			var yy  = _y + grid_space;
 			var name_height = 0;
-			
+				
 			hh += grid_space;
-		
+			
 			for(var i = 0; i < row; i++) {
 				name_height = 0;
 				for(var j = 0; j < col; j++) {
@@ -212,10 +212,11 @@ function Panel_Collection() : PanelContent() constructor {
 					}
 					
 					draw_set_text(f_p2, fa_center, fa_top, COLORS._main_text);
-					name_height = max(name_height, string_height_ext(_node.name, -1, grid_size) + 8);
+					name_height = max(name_height, string_height_ext(_node.name, -1, grid_width) + 8);
 					draw_text_ext_over(_boxx + grid_size / 2, yy + grid_size + ui(4), _node.name, -1, grid_width);
 				}
-				var hght = grid_size + grid_space + name_height;
+				
+				var hght = grid_size + name_height + ui(8);
 				hh += hght;
 				yy += hght;
 			}

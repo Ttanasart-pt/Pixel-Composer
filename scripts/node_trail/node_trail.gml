@@ -6,8 +6,10 @@ function Node_Trail(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 	uni_dimension	= shader_get_uniform(shader1, "dimension");
 	uni_mode		= shader_get_uniform(shader1, "mode");
 	uni_range		= shader_get_uniform(shader1, "range");
+	uni_colr		= shader_get_uniform(shader1, "matchColor");
+	uni_blend		= shader_get_uniform(shader1, "blendColor");
 	uni_seg_st		= shader_get_uniform(shader1, "segmentStart");
-	uni_seg_sz		= shader_get_uniform(shader1, "segmentSize");
+	uni_seg_sz		= shader_get_uniform(shader1, "segmentSize");	
 	uni_sam_prev	= shader_get_sampler_index(shader1, "prevFrame");
 	
 	shader2 = sh_trail_filler_pass2;
@@ -15,11 +17,17 @@ function Node_Trail(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 	
 	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 	
-	inputs[| 1] = nodeValue("Max life",   self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 5);
+	inputs[| 1] = nodeValue("Max life", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 5);
 	
-	inputs[| 2] = nodeValue("Loop",   self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	inputs[| 2] = nodeValue("Loop", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
 	
-	inputs[| 3] = nodeValue("Max distance",   self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, -1);
+	inputs[| 3] = nodeValue("Max distance", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, -1, "Maximum distance to search for movement, set to -1 to search the entire image.");
+	
+	inputs[| 4] = nodeValue("Match color", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true, "Make trail track pixels of the same color, instead of the closet pixels.");
+	
+	inputs[| 5] = nodeValue("Blend color", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true, "Blend color between two pixel smoothly.");
+	
+	inputs[| 6] = nodeValue("Alpha over life", self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_11);
 	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
@@ -27,10 +35,18 @@ function Node_Trail(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 	
 	input_display_list = [
 		["Surface",			 true], 0, 
-		["Trail settings",	false], 1, 3, 2
+		["Trail settings",	false], 1, 2,
+		["Tracking",		false], 3, 4, 5, 
+		["Modification",	false], 6, 
 	];
 	
-	temp = [ surface_create(1, 1), surface_create(1, 1), surface_create(1, 1) ];
+	temp_surface = [ surface_create(1, 1), surface_create(1, 1), surface_create(1, 1) ];
+	
+	static step = function() {
+		var _colr  = inputs[| 4].getValue();
+		
+		inputs[| 5].setVisible(!_colr);
+	}
 	
 	static update = function() {
 		if(!inputs[| 0].value_from) return;
@@ -40,13 +56,16 @@ function Node_Trail(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 		var _life  = inputs[| 1].getValue();
 		var _loop  = inputs[| 2].getValue();
 		var _rang  = inputs[| 3].getValue();
+		var _colr  = inputs[| 4].getValue();
+		var _blend = inputs[| 5].getValue();
+		var _alpha = inputs[| 6].getValue();
 		
 		if(!is_surface(_surf)) return;
 		cacheCurrentFrame(_surf);
 		
-		for( var i = 0; i < array_length(temp); i++ ) {
-			temp[i] = surface_verify(temp[i], surface_get_width(_surf), surface_get_height(_surf));
-			surface_set_target(temp[i]);
+		for( var i = 0; i < array_length(temp_surface); i++ ) {
+			temp_surface[i] = surface_verify(temp_surface[i], surface_get_width(_surf), surface_get_height(_surf));
+			surface_set_target(temp_surface[i]);
 			draw_clear_alpha(0, 0);
 			surface_reset_target();
 		}
@@ -70,58 +89,64 @@ function Node_Trail(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 			if(_loop && frame_idx < 0) frame_idx = ANIMATOR.frames_total + frame_idx;
 			
 			var prev = _loop? safe_mod(frame_idx - 1 + ANIMATOR.frames_total, ANIMATOR.frames_total) : frame_idx - 1;
-			if(!is_surface(getCacheFrame(frame_idx))) continue;
+			var _prevFrame = getCacheFrame(prev);
+			var _currFrame = getCacheFrame(frame_idx);
 			
-			if(!is_surface(getCacheFrame(prev))) {
-				surface_set_target(temp[0]);
-				draw_surface(getCacheFrame(frame_idx), 0, 0);
+			if(!is_surface(_currFrame)) continue;
+			
+			if(!is_surface(_prevFrame)) {
+				surface_set_target(temp_surface[0]);
+				draw_surface(_currFrame, 0, 0);
 				surface_reset_target();
 				
-				surface_set_target(temp[2]);
-				draw_surface(getCacheFrame(frame_idx), 0, 0);
+				surface_set_target(temp_surface[2]);
+				draw_surface(_currFrame, 0, 0);
 				surface_reset_target();
 				continue;
 			}
 			
 			shader_set(shader1);
 			shader_set_uniform_f(uni_dimension, surface_get_width(_surf), surface_get_height(_surf));
-			shader_set_uniform_f(uni_range, _rang? _rang : surface_get_width(_surf) / 2);
+			shader_set_uniform_f(uni_range, _rang? _rang : surface_get_width(_surf) * 1.5);
+			shader_set_uniform_i(uni_colr, _colr);
+			shader_set_uniform_i(uni_blend, _blend);
 			shader_set_uniform_f(uni_seg_st, (frame_amo - i) / frame_amo);
 			shader_set_uniform_f(uni_seg_sz, 1 / frame_amo);
-			texture_set_stage(uni_sam_prev, surface_get_texture(getCacheFrame(prev)));
+			texture_set_stage(uni_sam_prev, surface_get_texture(_prevFrame));
 			
 				shader_set_uniform_i(uni_mode, 1);
-				surface_set_target(temp[0]);
-				draw_surface(getCacheFrame(frame_idx), 0, 0);
+				surface_set_target(temp_surface[0]);
+				draw_surface(_currFrame, 0, 0);
 				surface_reset_target();
 			
 				shader_set_uniform_i(uni_mode, 0);
-				surface_set_target(temp[2]);
-				draw_surface(getCacheFrame(frame_idx), 0, 0);
+				surface_set_target(temp_surface[2]);
+				draw_surface(_currFrame, 0, 0);
 				surface_reset_target();
 			
 			shader_reset();
 		}
 		
-		surface_set_target(temp[1]);
+		surface_set_target(temp_surface[1]);
 		shader_set(shader2);
 		shader_set_uniform_f(uni2_dimension, surface_get_width(_surf), surface_get_height(_surf));
-		draw_surface(temp[0], 0, 0);
+		draw_surface(temp_surface[0], 0, 0);
 		shader_reset();
 		surface_reset_target();
 		
 		surface_set_target(_outUV);
 		draw_clear_alpha(0, 0);
 		BLEND_ALPHA;
-			draw_surface_safe(temp[1], 0, 0);
+			draw_surface_safe(temp_surface[1], 0, 0);
 		BLEND_NORMAL;
 		surface_reset_target();
 		
 		surface_set_target(_outSurf);
 		draw_clear_alpha(0, 0);
 		BLEND_ALPHA;
-			draw_surface_safe(temp[2], 0, 0);
+			draw_surface_safe(temp_surface[2], 0, 0);
 		BLEND_NORMAL;
 		surface_reset_target();
 	}
+	
 }

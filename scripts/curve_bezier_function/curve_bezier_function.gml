@@ -72,7 +72,15 @@ function eval_curve_segment_t(_bz, t) {
 			 + power(t, 3) * _bz[5];
 }
 
-function eval_curve_x(_bz, _x, _prec = 0.00001) {
+function eval_curve_x(_bz, _x, _prec = 0.00001) { 
+	static _CURVE_DEF_01 = [0, 0, 0, 0, 1/3,  1/3, /**/ -1/3, -1/3, 1, 1, 0, 0];
+	static _CURVE_DEF_10 = [0, 0, 0, 1, 1/3, -1/3, /**/ -1/3,  1/3, 1, 0, 0, 0];
+	static _CURVE_DEF_11 = [0, 0, 0, 1, 1/3,    0, /**/ -1/3,    0, 1, 1, 0, 0];
+	
+	if(array_equals(_bz, _CURVE_DEF_11)) return 1;
+	if(array_equals(_bz, _CURVE_DEF_01)) return _x;
+	if(array_equals(_bz, _CURVE_DEF_10)) return 1 - _x;
+	
 	var segments = array_length(_bz) / 6 - 1;
 	_x = clamp(_x, 0, 1);
 	

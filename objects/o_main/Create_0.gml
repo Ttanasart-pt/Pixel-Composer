@@ -15,7 +15,11 @@
 #region window
 	gameframe_init();
 	//gameframe_can_input = false;
-	gameframe_button_array = [];
+	gameframe_set_cursor = false;
+	gameframe_caption_height_normal = ui(40);
+	gameframe_button_array = [  game_frame_button_create("", s_kenney, 0, function() {}),
+								game_frame_button_create("", s_kenney, 0, function() {}),
+							 ];
 	
 	depth = 0;
 	win_wp = WIN_W;
@@ -53,6 +57,13 @@
 	
 	addHotkey("", "Full panel", "`",			MOD_KEY.none, set_focus_fullscreen);
 	addHotkey("", "Open notification", vk_f12,	MOD_KEY.none, function() { dialogCall(o_dialog_notifications); });
+	
+	addHotkey("", "Fullscreen", vk_f11,	MOD_KEY.none, function() { 
+		if(gameframe_is_fullscreen_window())
+			gameframe_set_fullscreen(0);
+		else
+			gameframe_set_fullscreen(2);
+	});
 	
 	addHotkey("", "Render all", vk_f5,	MOD_KEY.none, function() { 
 		UPDATE |= RENDER_TYPE.full; 
@@ -170,8 +181,6 @@
 
 #region parameter
 	file_open_parameter = "";
-	
-	window_command_hook(window_command_close);
 	
 	_modified = false;
 #endregion

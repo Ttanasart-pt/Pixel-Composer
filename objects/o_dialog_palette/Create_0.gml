@@ -83,9 +83,9 @@ event_inherited();
 			draw_sprite_stretched(THEME.ui_panel_bg, 1, ui(4), yy, sp_preset_w - ui(16), hg);
 			if(isHover) 
 				draw_sprite_stretched_ext(THEME.node_active, 1, ui(4), yy, sp_preset_w - ui(16), hg, COLORS._main_accent, 1);
-				
+			
 			draw_set_text(f_p2, fa_left, fa_top, COLORS._main_text_sub);
-			draw_text(ui(16), yy + ui(8), preset_name[| i]);
+			draw_text(ui(16), yy + ui(8), filename_name_only(preset_name[| i]));
 			drawPalette(presets[| i], ui(16), yy + ui(28), ww, ui(16));
 			
 			if(isHover && mouse_press(mb_left, sFOCUS)) {

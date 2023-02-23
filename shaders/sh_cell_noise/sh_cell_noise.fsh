@@ -17,7 +17,7 @@ uniform float radiusScale;
 uniform float radiusShatter;
 
 #define PI 3.14159265359
-#define TAU 6.28318
+#define TAU 6.283185307179586
 
 vec2 random2( vec2 p ) {
     return fract(sin(vec2(dot(p, vec2(127.1, 311.7)), dot(p, vec2(269.5, 183.3)))) * 43758.5453);

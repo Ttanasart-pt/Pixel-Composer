@@ -14,6 +14,16 @@ function LOAD() {
 }
 
 function LOAD_PATH(path, readonly = false, safe_mode = false) {
+	if(MODIFIED && !READONLY) {
+		var dia = dialogCall(o_dialog_load);
+		dia.path		= path;
+		dia.readonly	= readonly;
+		dia.safe_mode	= safe_mode;
+	} else
+		__LOAD_PATH(path, readonly, safe_mode);
+}
+
+function __LOAD_PATH(path, readonly = false, safe_mode = false) {
 	SAFE_MODE = safe_mode;
 	
 	if(DEMO) return false;
@@ -28,18 +38,19 @@ function LOAD_PATH(path, readonly = false, safe_mode = false) {
 		return false;
 	}
 	
+	LOADING = true;
+	
 	nodeCleanUp();
 	clearPanel();
 	setPanel();
 	instance_destroy(_p_dialog);
-	room_restart();
+	//room_restart();
 	
 	var temp_path = DIRECTORY + "\_temp";
 	if(file_exists(temp_path)) file_delete(temp_path);
 	file_copy(path, temp_path);
 	
 	ALWAYS_FULL = false;
-	LOADING		= true;
 	READONLY	= readonly;
 	SET_PATH(path);
 	

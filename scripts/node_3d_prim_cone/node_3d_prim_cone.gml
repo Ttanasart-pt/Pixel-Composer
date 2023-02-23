@@ -48,7 +48,10 @@ function Node_3D_Cone(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) cons
 	
 	inputs[| 16] = nodeValue("Textures side", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 	
-	input_display_list = [0, 
+	inputs[| 17] = nodeValue("Scale view with dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true)
+	
+	input_display_list = [
+		["Surface",				false], 0, 17, 
 		["Geometry",			false], 14, 
 		["Object transform",	false], 11, 10, 4,
 		["Camera",				false], 12, 13, 1, 3, 
@@ -160,6 +163,7 @@ function Node_3D_Cone(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) cons
 		
 		var _proj = _data[12];
 		var _fov  = _data[13];
+		var _dimS = _data[17];
 		
 		inputs[| 13].setVisible(_proj);
 		
@@ -169,7 +173,10 @@ function Node_3D_Cone(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) cons
 			case 2 : pass = "norm" break;
 		}
 		
-		_3d_pre_setup(_outSurf, _dim, _pos, _sca, _ldir, _lhgt, _lint, _lclr, _aclr, _lpos, _lrot, _lsca, _proj, _fov, pass);
+		var _cam   = { projection: _proj, fov: _fov };
+		var _scale = { local: true, dimension: _dimS };
+			
+		_3d_pre_setup(_outSurf, _dim, _pos, _sca, _ldir, _lhgt, _lint, _lclr, _aclr, _lpos, _lrot, _lsca, _cam, pass, _scale);
 		
 		matrix_set(matrix_world, matrix_stack_top());
 		vertex_submit(VB_top, pr_trianglelist, surface_get_texture(face_bas));
