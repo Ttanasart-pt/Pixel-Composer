@@ -1,7 +1,8 @@
-function Node_create_Image_Animated(_x, _y, _group = -1) {
+function Node_create_Image_Animated(_x, _y, _group = noone) {
 	var path = "";
 	if(!LOADING && !APPENDING && !CLONING) {
 		path = get_open_filenames(".png", "");
+		key_release();
 		if(path == "") return noone;
 	}
 	
@@ -31,7 +32,7 @@ enum ANIMATION_END {
 	hide
 }
 
-function Node_Image_Animated(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
+function Node_Image_Animated(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name  = "";
 	spr   = [];
 	color = COLORS.node_blend_input;

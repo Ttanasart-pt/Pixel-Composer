@@ -3,7 +3,7 @@ event_inherited();
 
 #region data
 	destroy_on_click_out = true;
-	dialog_w = ui(640);
+	dialog_w = ui(648);
 	dialog_h = ui(640);
 	
 	dialog_resizable = true;
@@ -15,7 +15,7 @@ event_inherited();
 	target = noone;
 	
 	function onResize() {
-		sp_content.resize(dialog_w - ui(40), dialog_h - ui(76));
+		sp_content.resize(dialog_w - ui(padding + padding), dialog_h - ui(title_height + padding));
 	}	
 #endregion
 
@@ -24,7 +24,7 @@ event_inherited();
 	dragging = -1;
 	drag_spr = -1;
 	
-	sp_content = new scrollPane(dialog_w - ui(40), dialog_h - ui(76), function(_y, _m) {
+	sp_content = new scrollPane(dialog_w - ui(padding + padding), dialog_h - ui(title_height + padding), function(_y, _m) {
 		if(!target) return 0;
 		draw_clear_alpha(COLORS.dialog_array_edit_bg, 0);
 		

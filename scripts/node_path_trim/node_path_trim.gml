@@ -1,4 +1,4 @@
-function Node_Path_Trim(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
+function Node_Path_Trim(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name		= "Trim Path";
 	previewable = false;
 	
@@ -11,6 +11,11 @@ function Node_Path_Trim(_x, _y, _group = -1) : Node(_x, _y, _group) constructor 
 		.setDisplay(VALUE_DISPLAY.slider_range, [ 0, 1, 0.01 ]);
 	
 	outputs[| 0] = nodeValue("Path", self, JUNCTION_CONNECT.output, VALUE_TYPE.pathnode, self);
+	
+	static getSegmentCount = function() { 
+		var _path = inputs[| 0].getValue();
+		return struct_has(_path, "getSegmentCount")? _path.getSegmentCount() : 0; 
+	}
 	
 	static getPointRatio = function(_rat) {
 		var _path = inputs[| 0].getValue();

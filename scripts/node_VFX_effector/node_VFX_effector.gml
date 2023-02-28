@@ -1,4 +1,4 @@
-function Node_VFX_effector(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
+function Node_VFX_effector(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Effector";
 	color = COLORS.node_blend_vfx;
 	icon  = THEME.vfx;

@@ -1,8 +1,7 @@
 /// @description init
 #region data
-	with(_p_dialog) {
+	with(_p_dialog)
 		other.depth = min(depth - 1, other.depth);
-	}
 	ds_list_add(DIALOGS, self);
 	
 	dialog_w = 320;
@@ -12,18 +11,21 @@
 	dialog_x = 0;
 	dialog_y = 0;
 	
-	dialog_resizable = false;
-	dialog_resizing = 0;
-	dialog_resiz_sw = 0;
-	dialog_resiz_sh = 0;
-	dialog_resiz_mx = 0;
-	dialog_resiz_my = 0;
-	dialog_w_min = 320;
-	dialog_h_min = 320;
-	dialog_w_max = WIN_W;
-	dialog_h_max = WIN_H;
-	onResize = -1;
+	title_height = 64;
+	padding = 24;
 	
+	children = [];
+	parent   = noone;
+	
+	alarm[0] = 1;
+	ready = false;
+	
+	destroy_on_escape    = true;
+	destroy_on_click_out = false;
+	anchor = ANCHOR.none;
+#endregion
+
+#region windows
 	draggable = true;
 	dialog_dragging = false;
 	dialog_drag_sx  = 0;
@@ -41,29 +43,75 @@
 			if(mouse_release(mb_left))
 				dialog_dragging = false;
 		}
-	
-		if(sFOCUS) {
-			if(destroy_on_escape && mouse_press(vk_escape))
-				instance_destroy(self);
-			if(mouse_press(mb_left)) {
-				if(point_in_rectangle(mouse_mx, mouse_my, dialog_x, dialog_y, 
-				dialog_x + dialog_w, dialog_y + 32)) {
-					dialog_dragging = true;
-					dialog_drag_sx  = dialog_x;
-					dialog_drag_sy  = dialog_y;
-					dialog_drag_mx  = mouse_mx;
-					dialog_drag_my  = mouse_my;
-				}
+		
+		if(sFOCUS && mouse_press(mb_left)) {
+			if(point_in_rectangle(mouse_mx, mouse_my, dialog_x, dialog_y, dialog_x + dialog_w, dialog_y + ui(title_height))) {
+				dialog_dragging = true;
+				dialog_drag_sx  = dialog_x;
+				dialog_drag_sy  = dialog_y;
+				dialog_drag_mx  = mouse_mx;
+				dialog_drag_my  = mouse_my;
 			}
 		}
 	}
 	
-	alarm[0] = 1;
-	ready = false;
+	dialog_resizable = false;
+	dialog_resizing = 0;
+	dialog_resiz_sw = 0;
+	dialog_resiz_sh = 0;
+	dialog_resiz_mx = 0;
+	dialog_resiz_my = 0;
+	dialog_w_min = 320;
+	dialog_h_min = 320;
+	dialog_w_max = WIN_W;
+	dialog_h_max = WIN_H;
+	onResize = -1;
 	
-	destroy_on_escape    = true;
-	destroy_on_click_out = false;
-	anchor = ANCHOR.none;
+	function doResize() {
+		if(!dialog_resizable) return;
+		
+		if(dialog_resizing & 1 << 0 != 0) {
+			var ww = dialog_resiz_sw + (mouse_mx - dialog_resiz_mx);
+			ww = clamp(ww, dialog_w_min, dialog_w_max);
+			dialog_w = ww;
+		} 
+		
+		if(dialog_resizing & 1 << 1 != 0) {
+			var hh = dialog_resiz_sh + (mouse_my - dialog_resiz_my);
+			hh = clamp(hh, dialog_h_min, dialog_h_max);
+			dialog_h = hh;
+		}
+		
+		if(mouse_release(mb_left)) dialog_resizing = 0;
+		
+		if(sHOVER && distance_to_line(mouse_mx, mouse_my, dialog_x + dialog_w, dialog_y, 
+			dialog_x + dialog_w, dialog_y + dialog_h) < 12) {
+				
+			CURSOR = cr_size_we;
+			if(mouse_press(mb_left, sFOCUS)) {
+				dialog_resizing |= 1 << 0;
+				dialog_resiz_sw = dialog_w;
+				dialog_resiz_mx = mouse_mx;
+				dialog_resiz_my = mouse_my;
+			}
+		} 
+			
+		if(sHOVER && distance_to_line(mouse_mx, mouse_my, dialog_x, dialog_y + dialog_h, 
+			dialog_x + dialog_w, dialog_y + dialog_h) < 12) {
+				
+			if(CURSOR == cr_size_we)
+				CURSOR = cr_size_nwse;
+			else
+				CURSOR = cr_size_ns;
+			
+			if(mouse_press(mb_left, sFOCUS)) {
+				dialog_resizing |= 1 << 1;
+				dialog_resiz_sh = dialog_h;
+				dialog_resiz_mx = mouse_mx;
+				dialog_resiz_my = mouse_my;
+			}
+		}
+	}
 #endregion
 
 #region focus
@@ -77,10 +125,17 @@
 			if(depth < DIALOG_DEPTH_HOVER) {
 				DIALOG_DEPTH_HOVER = depth;
 				HOVER = self.id;
-			
-				if(mouse_press(mb_any))
-					setFocus(self.id, "Dialog");
 			}
+		}
+	}
+	
+	function checkDepth() {
+		if(HOVER != self.id) return;
+		
+		if(mouse_press(mb_any)) {
+			setFocus(self.id, "Dialog");
+			with(_p_dialog)
+				other.depth = min(other.depth, depth - 1);
 		}
 	}
 	
@@ -97,22 +152,28 @@
 		dialog_x = round(dialog_x);
 		dialog_y = round(dialog_y);
 	}
-#endregion
 
-#region action
 	function checkMouse() {
 		if(!DIALOG_CLICK) return;
+		
+		for( var i = 0; i < array_length(children); i++ )
+			if(instance_exists(children[i])) return;
 		
 		var x0 = dialog_x - dialog_resizable * 6;
 		var x1 = dialog_x + dialog_w + dialog_resizable * 6;
 		var y0 = dialog_y - dialog_resizable * 6;
 		var y1 = dialog_y + dialog_h + dialog_resizable * 6;
-	
-		if(!point_in_rectangle(mouse_mx, mouse_my, x0, y0, x1, y1)) {
-			if(destroy_on_click_out && mouse_press(mb_any)) {
-				instance_destroy(self);
-				DIALOG_CLICK = false;
-			}
+		
+		if(destroy_on_click_out && mouse_press(mb_any) && !point_in_rectangle(mouse_mx, mouse_my, x0, y0, x1, y1)) {
+			instance_destroy(self);
+			DIALOG_CLICK = false;
 		}
+	}
+#endregion
+
+#region children
+	function addChildren(object) {
+		object.parent = self;
+		array_push_unique(children, object.id);
 	}
 #endregion

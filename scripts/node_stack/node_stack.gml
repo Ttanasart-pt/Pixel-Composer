@@ -1,4 +1,4 @@
-function Node_Stack(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
+function Node_Stack(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name		= "Stack";
 	
 	inputs[| 0] = nodeValue("Axis", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)

@@ -81,7 +81,8 @@ function SAVE() {
 function SAVE_AS() {
 	if(DEMO) return false;
 	
-	var path = get_save_filename("Pixel Composer project (.pxc)|*.pxc", "");	
+	var path = get_save_filename("Pixel Composer project (.pxc)|*.pxc", ""); 
+	key_release();
 	if(path == "") return false;
 	
 	if(filename_ext(path) != ".pxc")
@@ -197,9 +198,8 @@ function SAVE_NODE(_list, _node, dx = 0, dy = 0, scale = false) {
 	m[? "x"] -= dx;
 	m[? "y"] -= dy;
 	var c = PANEL_GRAPH.getCurrentContext();
-	if(c != -1) c = c.node_id;
-	if(m[? "group"] == c)
-		m[? "group"] = -1;
+	if(c != noone) c = c.node_id;
+	if(m[? "group"] == c) m[? "group"] = noone;
 	
 	ds_list_add(_list, m);
 	ds_list_mark_as_map(_list, ds_list_size(_list) - 1);

@@ -1,4 +1,4 @@
-function Node_Trail(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
+function Node_Trail(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name		= "Trail";
 	use_cache   = true;
 	
@@ -107,7 +107,7 @@ function Node_Trail(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 			
 			shader_set(shader1);
 			shader_set_uniform_f(uni_dimension, surface_get_width(_surf), surface_get_height(_surf));
-			shader_set_uniform_f(uni_range, _rang? _rang : surface_get_width(_surf) * 1.5);
+			shader_set_uniform_f(uni_range, _rang? _rang : surface_get_width(_surf) / 2);
 			shader_set_uniform_i(uni_colr, _colr);
 			shader_set_uniform_i(uni_blend, _blend);
 			shader_set_uniform_f(uni_seg_st, (frame_amo - i) / frame_amo);

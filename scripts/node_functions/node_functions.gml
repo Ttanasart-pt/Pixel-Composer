@@ -130,3 +130,10 @@
 		}
 	}
 #endregion
+
+#region utilities
+	function previewWindow(node) {
+		if(node == noone) return;
+		var dia = dialogCall(o_dialog_preview_window, mouse_mx, mouse_my, {node_target: node, preview_channel: node.preview_channel}, true);
+	}
+#endregion

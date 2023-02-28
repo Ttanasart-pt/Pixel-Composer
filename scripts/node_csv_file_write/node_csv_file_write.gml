@@ -1,4 +1,4 @@
-function Node_create_CSV_File_Write(_x, _y, _group = -1) {
+function Node_create_CSV_File_Write(_x, _y, _group = noone) {
 	var path = "";
 	
 	var node = new Node_CSV_File_Write(_x, _y, _group);
@@ -8,7 +8,7 @@ function Node_create_CSV_File_Write(_x, _y, _group = -1) {
 	return node;
 }
 
-function Node_CSV_File_Write(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
+function Node_CSV_File_Write(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "CSV File Out";
 	color = COLORS.node_blend_input;
 	previewable = false;

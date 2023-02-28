@@ -9,7 +9,7 @@ enum SPRITE_ANIM_GROUP {
 	all_sprites
 }
 
-function Node_Render_Sprite_Sheet(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
+function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name		= "Render Spritesheet";
 	anim_drawn	= array_create(ANIMATOR.frames_total + 1, false);
 	

@@ -1,7 +1,8 @@
-function Node_create_Text_File_Read(_x, _y, _group = -1) {
+function Node_create_Text_File_Read(_x, _y, _group = noone) {
 	var path = "";
 	if(!LOADING && !APPENDING && !CLONING) {
 		path = get_open_filename(".txt", "");
+		key_release();
 		if(path == "") return noone;
 	}
 	
@@ -22,7 +23,7 @@ function Node_create_Text_File_Read_path(_x, _y, path) {
 	return node;	
 }
 
-function Node_Text_File_Read(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
+function Node_Text_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Text File In";
 	color = COLORS.node_blend_input;
 	previewable = false;
@@ -69,9 +70,7 @@ function Node_Text_File_Read(_x, _y, _group = -1) : Node(_x, _y, _group) constru
 			case ".txt":
 				outputs[| 1].setValue(path);
 				
-				var f = file_text_open_read(path);
-				content = file_text_read_all(f);
-				file_text_close(f);
+				content = file_text_read_all(path);
 				
 				if(path_current == "") 
 					first_update = true;

@@ -1,4 +1,4 @@
-function Node_Iterator_Length(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
+function Node_Iterator_Length(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Loop Amount";
 	destroy_when_upgroup = true;
 	color = COLORS.node_blend_loop;

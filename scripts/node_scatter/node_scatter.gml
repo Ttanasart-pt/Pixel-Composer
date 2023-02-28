@@ -1,4 +1,4 @@
-function Node_Scatter(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constructor {
+function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Scatter";
 	dimension_index = 1;
 	

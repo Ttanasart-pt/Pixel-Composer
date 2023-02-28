@@ -1,4 +1,4 @@
-function Node_Average(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constructor {
+function Node_Average(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Average";
 	
 	shader = sh_average;
@@ -20,20 +20,25 @@ function Node_Average(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) cons
 	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
+	outputs[| 1] = nodeValue("Color", self, JUNCTION_CONNECT.output, VALUE_TYPE.color, c_black);
+	
+	colors = [];
+	
 	static process_data = function(_outSurf, _data, _output_index, _array_index) {
 		var inSurf = _data[0];
 		if(!is_surface(inSurf)) return _outSurf;
 		
+		if(_output_index == 1)
+			return array_safe_get(colors, _array_index);
+			
 		var side = max(surface_get_width(inSurf), surface_get_height(inSurf));
 		var lop = ceil(log2(side));
 		var cc;
 		side = power(2, lop);
 		
 		if(side / 2 >= 1) {
-			var _Surf = [ surface_create_valid(side, side), surface_create_valid(side / 2, side / 2) ];
+			var _Surf = [ surface_create_valid(side, side), surface_create_valid(side, side) ];
 			var _ind = 1;
-			
-			gpu_set_tex_filter(true);
 			
 			surface_set_target(_Surf[0]);
 			draw_clear_alpha(0, 0);
@@ -42,17 +47,20 @@ function Node_Average(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) cons
 			BLEND_NORMAL;
 			surface_reset_target();
 			
-			for( var i = 0; i < lop; i++ ) {
+			shader_set(sh_average);
+			for( var i = 0; i <= lop; i++ ) {
+				shader_set_uniform_f(uniform_dim, side);
+				
 				surface_set_target(_Surf[_ind]);
 				draw_clear_alpha(0, 0);
-				draw_surface_ext(_Surf[!_ind], 0, 0, 0.5, 0.5, 0, c_white, 1);
+				draw_surface(_Surf[!_ind], 0, 0);
 				surface_reset_target();
-			
-				if(side / 4 >= 1) surface_resize(_Surf[!_ind], side / 4, side / 4);
+				
 				_ind = !_ind;
 				side /= 2;
 			}
-			gpu_set_tex_filter(false);
+			shader_reset();
+			
 			cc = surface_getpixel(_Surf[!_ind], 0, 0);
 			
 			surface_free(_Surf[0]);
@@ -65,6 +73,7 @@ function Node_Average(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) cons
 		surface_reset_target();
 		
 		_outSurf = mask_apply(_data[0], _outSurf, _data[1], _data[2]);
+		colors[_array_index] = cc;
 		
 		return _outSurf;
 	}

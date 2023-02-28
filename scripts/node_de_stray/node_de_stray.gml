@@ -1,4 +1,4 @@
-function Node_De_Stray(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constructor {
+function Node_De_Stray(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "De-Stray";
 	
 	shader = sh_de_stray;

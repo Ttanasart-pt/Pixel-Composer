@@ -6,6 +6,7 @@ varying vec4 v_vColour;
 
 uniform vec2 dimension;
 uniform float rad;
+uniform sampler2D original;
 
 #define TAU 6.283185307179586
 
@@ -47,7 +48,7 @@ void main() {
 	}
 	
 	if(minDistance < maxCorner)
-		gl_FragColor = vec4(vec3(1.), 1.);
+		gl_FragColor = texture2D(original, v_vTexcoord);
 	else 
 		gl_FragColor = vec4(vec3(0.), 1.);
 }

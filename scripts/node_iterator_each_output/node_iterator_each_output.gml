@@ -1,4 +1,4 @@
-function Node_Iterator_Each_Output(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
+function Node_Iterator_Each_Output(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name  = "Loop Output";
 	color = COLORS.node_blend_loop;
 	
@@ -16,7 +16,7 @@ function Node_Iterator_Each_Output(_x, _y, _group = -1) : Node(_x, _y, _group) c
 			
 		if(_ren == ITERATION_STATUS.loop) { //Go back to the beginning of the loop, reset render status for leaf node inside?
 			printIf(global.RENDER_LOG, "    > Loop restart: iteration " + string(group.iterated));
-			__nodeLeafList(group.nodes, RENDER_QUEUE);
+			__nodeLeafList(group.getNodeList(), RENDER_QUEUE);
 		} else if(_ren == ITERATION_STATUS.complete) { //Go out of loop
 			printIf(global.RENDER_LOG, "    > Loop completed");
 			group.setRenderStatus(true);

@@ -13,20 +13,24 @@ function colorSelector(onApply = noone) constructor {
 	dropper_active = false;
 	dropper_close  = true;
 	dropper_color  = c_white;
+	interactable = true;
 	
 	disp_mode = 0;
 	
 	color_surface = surface_create_valid(ui(256), ui(256));
 	
 	tb_hue = new slider(0, 255, 1, function(_val) {
+		if(!interactable) return;
 		hue = clamp(_val, 0, 255);
 		setHSV();
 	})
 	tb_sat = new slider(0, 255, 1, function(_val) {
+		if(!interactable) return;
 		sat = clamp(_val, 0, 255);
 		setHSV();
 	})
 	tb_val= new slider(0, 255, 1, function(_val) {
+		if(!interactable) return;
 		val = clamp(_val, 0, 255);
 		setHSV();
 	})
@@ -36,6 +40,7 @@ function colorSelector(onApply = noone) constructor {
 	tb_val.hdw = ui(16);
 	
 	tb_red = new slider(0, 255, 1, function(_val) {
+		if(!interactable) return;
 		var r = clamp(_val, 0, 255);
 		var g = color_get_green(current_color);
 		var b = color_get_blue(current_color);
@@ -44,6 +49,7 @@ function colorSelector(onApply = noone) constructor {
 		resetHSV();
 	})
 	tb_green = new slider(0, 255, 1, function(_val) {
+		if(!interactable) return;
 		var r = color_get_red(current_color);
 		var g = clamp(_val, 0, 255);
 		var b = color_get_blue(current_color);
@@ -52,6 +58,7 @@ function colorSelector(onApply = noone) constructor {
 		resetHSV();
 	})
 	tb_blue = new slider(0, 255, 1, function(_val) {
+		if(!interactable) return;
 		var r = color_get_red(current_color);
 		var g = color_get_green(current_color);
 		var b = clamp(_val, 0, 255);
@@ -65,6 +72,7 @@ function colorSelector(onApply = noone) constructor {
 	tb_blue.hdw = ui(16);
 	
 	tb_hex = new textBox(TEXTBOX_INPUT.text, function(str) {
+		if(!interactable) return;
 		if(str == "") return;
 		if(string_char_at(str, 1) == "#") str = string_replace(str, "#", "");
 		
@@ -86,6 +94,7 @@ function colorSelector(onApply = noone) constructor {
 		if(onApply != noone) onApply(current_color);
 	}
 	function setHSV() {
+		if(!interactable) return;
 		current_color = make_color_hsv(hue, sat, val);	
 		if(onApply != noone) onApply(current_color);
 	}
@@ -167,7 +176,7 @@ function colorSelector(onApply = noone) constructor {
 				draw_sprite_stretched_ext(s_ui_base_white, 0, col_x + ui(hue - 6), col_y + ui(256 - sat - 6), ui(12), ui(12), current_color, 1);
 			}
 			
-			if(mouse_press(mb_left, focus)) {
+			if(mouse_press(mb_left, interactable && focus)) {
 				if(point_in_rectangle(mouse_mx, mouse_my, hue_x, hue_y, hue_x + ui(16), hue_y + ui(256))) {
 					area_dragging = true;
 				} else if(point_in_rectangle(mouse_mx, mouse_my, col_x, col_y, col_x + ui(256), col_y + ui(256))) {

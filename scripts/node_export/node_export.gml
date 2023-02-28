@@ -1,7 +1,8 @@
-function Node_create_Export(_x, _y, _group = -1) {
+function Node_create_Export(_x, _y, _group = noone) {
 	var path = "";
 	if(!LOADING && !APPENDING && !CLONING) {
-		path = get_save_filename(".png", "export");
+		path = get_save_filename(".png", "export"); 
+		key_release();
 	}
 	
 	var node = new Node_Export(_x, _y, _group);
@@ -17,11 +18,9 @@ enum NODE_EXPORT_FORMAT {
 	gif,
 }
 
-function Node_Export(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
+function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name		= "Export";
-	previewable = false;
-	
-	w = 96;
+	preview_channel = 1;
 	
 	playing = false;
 	played  = 0;
@@ -34,11 +33,10 @@ function Node_Export(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 		.rejectArray();
 	
 	inputs[| 2] = nodeValue("Template",  self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "%d%n")
-		.setDisplay(VALUE_DISPLAY.export_format)
 		.rejectArray();
 	
-	format_single = ["Single image", "Image sequence", "Animated"];
-	format_array  = ["Multiple images", "Image sequences", "Animated"];
+	format_single = ["Single image", "Image sequence", "Animation"];
+	format_array  = ["Multiple images", "Image sequences", "Animation"];
 	
 	inputs[| 3] = nodeValue("Type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.enum_scroll, format_single)
@@ -82,6 +80,9 @@ function Node_Export(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 		.rejectArray();
 	
 	outputs[| 0] = nodeValue("Loop exit", self, JUNCTION_CONNECT.output, VALUE_TYPE.any, 0);
+	
+	outputs[| 1] = nodeValue("Preview", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone)
+		.setVisible(false);
 	
 	input_display_list = [
 		["Export",		false], 0, 1, 2, 4, 
@@ -190,12 +191,12 @@ function Node_Export(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 							var float_str = string_digits(str);
 							if(float_str != "") {
 								var float_val = string_digits(float_str);
-								var str_val = max(float_val - string_length(string(ANIMATOR.current_frame)), 0);
+								var str_val = max(float_val - string_length(string(ANIMATOR.current_frame + 1)), 0);
 								repeat(str_val)
 									s += "0";
 							}
 								
-							s += string(ANIMATOR.current_frame);
+							s += string(ANIMATOR.current_frame + 1);
 							res = true;
 							break;
 						case "i" :
@@ -283,7 +284,7 @@ function Node_Export(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 		return _pathOut;
 	}
 	
-	static export = function() {
+	static export = function() { 
 		var surf = inputs[| 0].getValue();
 		var path = inputs[| 1].getValue();
 		var suff = inputs[| 2].getValue();
@@ -298,7 +299,7 @@ function Node_Export(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 				if(!is_surface(_surf)) continue;
 				
 				if(form == NODE_EXPORT_FORMAT.gif) {
-					p = directory + "\\" + string(i) + "\\" + string(100000 + ANIMATOR.current_frame) + ".png";
+					p = directory + "\\" + string(i) + "\\" + string(100000 + ANIMATOR.current_frame + 1) + ".png";
 				} else {
 					if(is_array(path) && array_length(path) == array_length(surf))
 						p = pathString(path[ safe_mod(i, array_length(path)) ], suff, i);
@@ -321,7 +322,7 @@ function Node_Export(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 			if(is_array(path)) p = path[0];
 				
 			if(form == NODE_EXPORT_FORMAT.gif)
-				p = directory + "\\" + string(100000 + ANIMATOR.current_frame) + ".png";
+				p = directory + "\\" + string(100000 + ANIMATOR.current_frame + 1) + ".png";
 			else
 				p = pathString(p, suff);
 			
@@ -344,7 +345,7 @@ function Node_Export(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 	insp2UpdateIcon    = [ THEME.play_all, 0, COLORS._main_value_positive ];
 	
 	static onInspectorUpdate = function() {
-		if(isInLoop())	Render();
+		if(isInLoop())	UPDATE |= RENDER_TYPE.full;
 		else			doInspectorAction();
 	}
 	
@@ -360,7 +361,7 @@ function Node_Export(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 			node.doInspectorAction();
 		}
 		
-		if(isInLoop()) Render();
+		if(isInLoop()) UPDATE |= RENDER_TYPE.full;
 	}
 	
 	static doInspectorAction = function() {
@@ -397,6 +398,8 @@ function Node_Export(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
 			inputs[| 3].display_data	     = format_single;
 			inputs[| 3].editWidget.data_list = format_single;
 		}
+		
+		outputs[| 1].setValue(surf);
 		
 		var anim = inputs[| 3].getValue();
 		var extn = inputs[| 9].getValue();

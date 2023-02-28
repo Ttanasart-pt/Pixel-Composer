@@ -1,4 +1,4 @@
-function Node_Time_Remap(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
+function Node_Time_Remap(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Time Remap";
 	use_cache = true;
 	

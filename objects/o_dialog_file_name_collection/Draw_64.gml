@@ -88,7 +88,7 @@
 	bx += bw + ui(4);
 	var txt = get_text("new_collection_meta_edit", "Edit metadata");
 	if(buttonInstant(THEME.button_hide, bx, by, bw, bh, mouse_ui, sFOCUS, sHOVER, txt, THEME.hamburger) == 2) {
-		expand();
+		doExpand();
 	}
 #endregion
 

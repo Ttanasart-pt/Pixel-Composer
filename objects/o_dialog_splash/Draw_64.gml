@@ -43,7 +43,7 @@ if !ready exit;
 	draw_set_text(f_p0, fa_left, fa_bottom, COLORS._main_text_sub);
 	draw_text(x0, y0 - ui(4), "Recent files");
 	draw_sprite_stretched(THEME.ui_panel_bg, 0, x0, y0, x1 - x0, y1 - y0);
-	sp_recent.active = sFOCUS;
+	sp_recent.setActiveFocus(sFOCUS, sHOVER);
 	sp_recent.draw(x0 + ui(6), y0);
 	
 	x0 = x1 + ui(16);
@@ -70,7 +70,7 @@ if !ready exit;
 	}
 	
 	draw_sprite_stretched(THEME.ui_panel_bg, 0, x0, y0, x1 - x0, y1 - y0);
-	sp_sample.active = sFOCUS;
+	sp_sample.setActiveFocus(sFOCUS, sHOVER);
 	sp_sample.draw(x0 + ui(6), y0);
 	
 	if(project_page == 0) {

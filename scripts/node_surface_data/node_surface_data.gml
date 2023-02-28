@@ -1,4 +1,4 @@
-function Node_Surface_data(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
+function Node_Surface_data(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name	= "Surface data";
 	color	= COLORS.node_blend_number;
 	previewable = false;

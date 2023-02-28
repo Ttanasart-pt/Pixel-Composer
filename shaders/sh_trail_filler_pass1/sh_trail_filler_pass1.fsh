@@ -25,6 +25,7 @@ void main() {
 		return;
 	}
 	
+	float colThres = 0.02;
 	vec2 texel = 1. / dimension;
 	
 	for(float i = 0.; i <= range; i++) {
@@ -55,19 +56,19 @@ void main() {
 			
 				vec4 colS = texture2D( prevFrame, posS );
 				if(mode == 0 && matchColor == 1) {
-					if(matchColor == 1 && distance(colS, col0) > 0.1) continue;
+					if(matchColor == 1 && distance(colS, col0) >= colThres) continue;
 					gl_FragColor = col0;
 					return;
 				} else {
-					if(searchStage == 0 && ((matchColor == 0 && colS.a > 0.5) || (matchColor == 1 && distance(colS, col0) < 0.1))) {
+					if(searchStage == 0 && ((matchColor == 0 && colS.a > 0.5) || (matchColor == 1 && distance(colS, col0) <= colThres))) {
 						searchStage = 1;
 						_colS = colS;
 						gl_FragColor = col0;
-					} else if(searchStage == 1 && ((matchColor == 0 && colS.a < 0.5) || (matchColor == 1 && distance(colS, col0) > 0.1))) {
+					} else if(searchStage == 1 && ((matchColor == 0 && colS.a < 0.5) || (matchColor == 1 && distance(colS, col0) >= colThres))) {
 						if(matchColor == 0)
-							gl_FragColor = mix(_colS, col0, blendColor == 0? 1. : k / (k + i));
+							gl_FragColor = mix(_colS, col0, blendColor == 0? 1. : 1. - i / k);
 						else
-							gl_FragColor = vec4(norm.x, norm.y, segmentStart + segmentSize * (1. - k / (k + i)), 1.);
+							gl_FragColor = vec4(norm.x, norm.y, segmentStart + segmentSize * (i / k), 1.);
 						return;
 					}
 				}

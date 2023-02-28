@@ -1,4 +1,4 @@
-function Node_Fluid_Turbulence(_x, _y, _group = -1) : Node_Fluid(_x, _y, _group) constructor {
+function Node_Fluid_Turbulence(_x, _y, _group = noone) : Node_Fluid(_x, _y, _group) constructor {
 	name  = "Turbulence";
 	w = 96;
 	min_h = 96;

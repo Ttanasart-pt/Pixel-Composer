@@ -8,12 +8,12 @@ event_inherited();
 	destroy_on_click_out = true;
 	
 	onResize = function() {
-		sp_note.resize(dialog_w - ui(80), dialog_h - ui(88));
+		sp_note.resize(dialog_w - ui(padding + padding), dialog_h - ui(title_height + padding));
 	}
 	
 	is_open = array_create(array_length(global.lua_functions), false);
 	
-	sp_note = new scrollPane(dialog_w - ui(80), dialog_h - ui(88), function(_y, _m) {
+	sp_note = new scrollPane(dialog_w - ui(padding + padding), dialog_h - ui(title_height + padding), function(_y, _m) {
 		draw_clear_alpha(c_white, 0);
 		
 		var f = global.lua_functions;

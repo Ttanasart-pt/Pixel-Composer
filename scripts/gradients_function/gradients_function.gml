@@ -30,7 +30,7 @@ function draw_gradient(_x, _y, _w, _h, _grad, _int = GRADIENT_INTER.smooth) {
 	
 	var _grad_color = [];
 	var _grad_time  = [];
-		
+	
 	for(var i = 0; i < array_length(_grad); i++) {
 		if(_grad[i].value == undefined) return;
 		

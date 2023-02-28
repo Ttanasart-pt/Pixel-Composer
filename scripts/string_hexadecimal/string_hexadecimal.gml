@@ -18,7 +18,7 @@ function string_hexadecimal(str){
 }
 
 function number_to_hex(val) {
-	static HEX = "0123456789abcdef";
+	static HEX = "0123456789ABCDEF";
 	var ss = "";
 	while(val > 0) {
 		var i = val % 16;
@@ -32,12 +32,17 @@ function number_to_hex(val) {
 	return ss;
 }
 
-function color_get_hex(color) {
+function color_get_alpha(color) {
+	return (color & (0xFF << 24)) >> 24;
+}
+
+function color_get_hex(color, alpha = false) {
 	var r = color_get_red(color);
 	var g = color_get_green(color);
 	var b = color_get_blue(color);
+	var a = color_get_alpha(color);
 		
-	var hex = number_to_hex(r) + number_to_hex(g) + number_to_hex(b);
+	var hex = number_to_hex(r) + number_to_hex(g) + number_to_hex(b) + (alpha? " " + number_to_hex(a) : "");
 	return hex;
 }
 

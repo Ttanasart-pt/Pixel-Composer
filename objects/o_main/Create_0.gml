@@ -47,8 +47,8 @@
 	
 	addHotkey("", "New file", "N",	MOD_KEY.ctrl, NEW);
 	if(!DEMO) {
-		addHotkey("", "Save", "S",		MOD_KEY.ctrl, SAVE);
-		addHotkey("", "Save as", "S",	MOD_KEY.ctrl | MOD_KEY.shift, SAVE_AS);
+		addHotkey("", "Save", "S",		MOD_KEY.ctrl, SAVE );
+		addHotkey("", "Save as", "S",	MOD_KEY.ctrl | MOD_KEY.shift, SAVE_AS );
 		addHotkey("", "Open", "O",		MOD_KEY.ctrl, function() { LOAD(); });
 	}
 	

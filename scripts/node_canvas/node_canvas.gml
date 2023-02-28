@@ -1,4 +1,4 @@
-function Node_Canvas(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
+function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name	= "Canvas";
 	color	= COLORS.node_blend_canvas;
 	preview_channel = 1;

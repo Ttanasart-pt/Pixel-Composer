@@ -1,4 +1,4 @@
-function Node_Path_Blend(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
+function Node_Path_Blend(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name		= "Blend Path";
 	previewable = false;
 	
@@ -17,6 +17,21 @@ function Node_Path_Blend(_x, _y, _group = -1) : Node(_x, _y, _group) constructor
 		.rejectArray();
 	
 	outputs[| 0] = nodeValue("Path", self, JUNCTION_CONNECT.output, VALUE_TYPE.pathnode, self);
+	
+	static getSegmentCount = function() { 
+		var _path1 = inputs[| 0].getValue();
+		var _path2 = inputs[| 1].getValue();
+		var _lerp  = inputs[| 2].getValue();
+		
+		var p1 = _path1 != noone && struct_has(_path1, "getSegmentCount");
+		var p2 = _path2 != noone && struct_has(_path2, "getSegmentCount");
+		
+		if(!p1 && !p2) return 0;
+		if( p1 && !p2) return _path1.getSegmentCount();
+		if(!p1 &&  p2) return _path2.getSegmentCount();
+		
+		return max(_path1.getSegmentCount(), _path2.getSegmentCount());
+	}
 	
 	static getPointRatio = function(_rat) {
 		var _path1 = inputs[| 0].getValue();

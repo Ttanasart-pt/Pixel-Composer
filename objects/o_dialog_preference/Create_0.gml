@@ -5,6 +5,7 @@ event_inherited();
 	dialog_w = ui(640);
 	dialog_h = ui(480);
 	
+	page_width = 160;
 	destroy_on_click_out = true;
 	destroy_on_escape    = false;
 #endregion
@@ -15,9 +16,9 @@ event_inherited();
 	dialog_h_min = ui(480);
 	
 	onResize = function() {
-		sp_pref.resize(dialog_w - ui(192), dialog_h - ui(88));
-		sp_hotkey.resize(dialog_w - ui(192), dialog_h - ui(88));
-		sp_colors.resize(dialog_w - ui(192), dialog_h - ui(128));
+		sp_pref.resize(dialog_w - ui(padding + padding + page_width), dialog_h - ui(title_height + padding));
+		sp_hotkey.resize(dialog_w - ui(padding + padding + page_width), dialog_h - ui(title_height + padding));
+		sp_colors.resize(dialog_w - ui(padding + padding + page_width), dialog_h - (title_height + ui(padding + 40)));
 	}
 #endregion
 
@@ -26,7 +27,7 @@ event_inherited();
 	page[0] = get_text("pref_pages_general",	"General");
 	page[1] = get_text("pref_pages_nodes",		"Node settings");
 	page[2] = get_text("pref_pages_appearance", "Appearances");
-	page[3] = get_text("pref_pages_colors",		"Colors");
+	page[3] = get_text("pref_pages_theme",		"Theme");
 	page[4] = get_text("pref_pages_hotkeys",	"Hotkeys");
 	
 	pref_global = ds_list_create();
@@ -308,7 +309,7 @@ event_inherited();
 		});
 	sb_theme.align = fa_left;
 	
-	sp_colors = new scrollPane(dialog_w - ui(192), dialog_h - ui(128), function(_y, _m, _r) {
+	sp_colors = new scrollPane(dialog_w - ui(padding + padding + page_width), dialog_h - (title_height + ui(padding) + ui(40)), function(_y, _m, _r) {
 		draw_clear_alpha(COLORS.panel_bg_clear, 0);
 		var hh		= 0;
 		var th		= ui(28);
@@ -363,6 +364,8 @@ event_inherited();
 					overrideColor();
 				};
 				dialog.selector.onApply = dialog.onApply;
+				
+				addChildren(dialog);
 			}
 			
 			yy += th + padd + ui(8);
@@ -384,7 +387,7 @@ event_inherited();
 #region draw
 	current_list = pref_global;
 	
-	sp_pref = new scrollPane(dialog_w - ui(192), dialog_h - ui(88), function(_y, _m, _r) {
+	sp_pref = new scrollPane(dialog_w - ui(padding + padding + page_width), dialog_h - ui(title_height + padding), function(_y, _m, _r) {
 		draw_clear_alpha(COLORS.panel_bg_clear, 0);
 		var hh		= 0;
 		var th		= TEXTBOX_HEIGHT;
@@ -426,8 +429,7 @@ event_inherited();
 				
 			draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text);
 			draw_text(ui(8), yy + th / 2, _pref[0]);
-			_pref[2].active = sFOCUS; 
-			_pref[2].hover  = sHOVER && sp_pref.hover;
+			_pref[2].setActiveFocus(sFOCUS, sHOVER && sp_pref.hover); 
 				
 			switch(instanceof(_pref[2])) {
 				case "textBox" :
@@ -464,6 +466,7 @@ event_inherited();
 	tb_search = new textBox(TEXTBOX_INPUT.text, function(str) {
 		search_text = str;
 	});
+	tb_search.align	= fa_left;
 	
 	search_text = "";
 #endregion
@@ -476,11 +479,11 @@ event_inherited();
 	];
 	hk_editing = noone;
 	
-	sp_hotkey = new scrollPane(dialog_w - ui(192), dialog_h - ui(88), function(_y, _m) {
-		draw_clear_alpha(COLORS.panel_bg_clear, 0);
+	sp_hotkey = new scrollPane(dialog_w - ui(padding + padding + page_width), dialog_h - ui(title_height + padding), function(_y, _m) {
+		draw_clear_alpha(COLORS.panel_bg_clear, 1);
 		var padd		= ui(8);
 		var hh			= 0;
-		var currGroup	= -1;
+		var currGroup	= noone;
 		var x1		= sp_hotkey.surface_w;
 		var key_x1  = x1 - ui(32);
 		var modified = false;

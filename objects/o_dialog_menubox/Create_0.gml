@@ -72,6 +72,7 @@ event_inherited();
 		switch(align) {
 			case fa_left:	dialog_x = round(min(dialog_x, WIN_W - dialog_w)); break;
 			case fa_center: dialog_x = round(min(dialog_x - dialog_w / 2, WIN_W - dialog_w)); break;
+			case fa_right:	dialog_x = round(max(dialog_x - dialog_w, 0)); break;
 		}
 		
 		ready = true;

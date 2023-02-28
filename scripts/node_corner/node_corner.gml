@@ -1,4 +1,4 @@
-function Node_Corner(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constructor {
+function Node_Corner(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Round corner";
 	
 	uniform_er_dim   = shader_get_uniform(sh_corner_erode, "dimension");
@@ -52,6 +52,7 @@ function Node_Corner(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) const
 			shader_set(sh_corner);
 			shader_set_uniform_f_array_safe(uniform_dim, [surface_get_width(_data[0]), surface_get_height(_data[0])]);
 			shader_set_uniform_f(uniform_rad, wd);
+			shader_set_surface(sh_corner, "original", _data[0]);
 			draw_surface_safe(temp, 0, 0);
 			
 			BLEND_NORMAL;

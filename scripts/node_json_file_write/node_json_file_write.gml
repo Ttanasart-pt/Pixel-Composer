@@ -1,4 +1,4 @@
-function Node_Json_File_Write(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
+function Node_Json_File_Write(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "JSON File Out";
 	color = COLORS.node_blend_input;
 	previewable = false;

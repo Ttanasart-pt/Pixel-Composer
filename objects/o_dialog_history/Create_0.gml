@@ -7,7 +7,6 @@ event_inherited();
 	
 	destroy_on_click_out = true;
 	
-	padding = ui(24);
 	anchor = ANCHOR.left | ANCHOR.top;
 	hold = false;
 	
@@ -15,7 +14,6 @@ event_inherited();
 	dialog_w_min = 320;
 	dialog_h_min = 320;
 	hovering = -1;
-	drag_height = ui(48);
 	
 	redo_list = ds_list_create();
 	undo_list = ds_list_create();
@@ -43,10 +41,10 @@ event_inherited();
 
 #region content
 	onResize = function() {
-		sc_history.resize(dialog_w - ui(padding + padding), dialog_h - ui(64 + padding));
+		sc_history.resize(dialog_w - ui(padding + padding), dialog_h - ui(title_height + padding));
 	}
 	
-	sc_history = new scrollPane(dialog_w - ui(padding + padding), dialog_h - ui(64 + padding), function(_y, _m) {
+	sc_history = new scrollPane(dialog_w - ui(padding + padding), dialog_h - ui(title_height + padding), function(_y, _m) {
 		draw_clear_alpha(COLORS._main_text, 0);
 		
 		if((ds_list_size(redo_list) != ds_stack_size(REDO_STACK)) || (ds_list_size(undo_list) != ds_stack_size(UNDO_STACK)))

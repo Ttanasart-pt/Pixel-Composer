@@ -1,4 +1,4 @@
-function Node_Feedback(_x, _y, _group = -1) : Node_Collection(_x, _y, _group) constructor {
+function Node_Feedback(_x, _y, _group = noone) : Node_Collection(_x, _y, _group) constructor {
 	name  = "Feedback";
 	color = COLORS.node_blend_feedback;
 	icon  = THEME.feedback;
@@ -29,6 +29,6 @@ function Node_Feedback(_x, _y, _group = -1) : Node_Collection(_x, _y, _group) co
 			
 		if(!allReady) return;
 		
-		__nodeLeafList(nodes, RENDER_QUEUE);
+		__nodeLeafList(getNodeList(), RENDER_QUEUE);
 	}
 }

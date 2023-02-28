@@ -33,7 +33,7 @@ function __nodeIsLoop(_node) {
 
 function __nodeInLoop(_node) {
 	var gr = _node.group;
-	while(gr != -1) {
+	while(gr != noone) {
 		if(__nodeIsLoop(gr)) return true;
 		gr = gr.group;
 	}

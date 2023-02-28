@@ -1,9 +1,9 @@
-function Node_create_Blend(_x, _y, _group = -1, _param = "") {
+function Node_create_Blend(_x, _y, _group = noone, _param = "") {
 	var node = new Node_Blend(_x, _y, _group);
 	return node;
 }
 
-function Node_Blend(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constructor {
+function Node_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Blend";
 	
 	inputs[| 0] = nodeValue("Background", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, DEF_SURFACE);

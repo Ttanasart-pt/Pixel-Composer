@@ -2,13 +2,14 @@
 event_inherited();
 
 #region display
-	draggable = false;
+	draggable = true;
 	destroy_on_click_out = true;
 	
 	target = noone;
 	
 	dialog_w = ui(632);
 	dialog_h = ui(360);
+	title_height = 48;
 	
 	anchor = ANCHOR.top | ANCHOR.right;
 	

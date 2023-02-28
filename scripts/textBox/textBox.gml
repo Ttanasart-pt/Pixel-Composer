@@ -84,11 +84,6 @@ function textBox(_input, _onModify, _extras = noone) : textInput(_input, _onModi
 		cursor = safe_mod(cursor + delta + ll, ll);
 	}
 	
-	static getDisplayText = function(val) {
-		if(input == TEXTBOX_INPUT.text) return val;
-		return string_real(val);
-	}
-	
 	static editText = function() {
 		#region text editor
 			if(key_mod_press(CTRL) && keyboard_check_pressed(ord("A"))) {
@@ -307,8 +302,6 @@ function textBox(_input, _onModify, _extras = noone) : textInput(_input, _onModi
 		y = _y;
 		w = _w;
 		h = _h;
-		_text = string_real(_text);
-		_current_text = _text;
 		
 		if(extras && instanceof(extras) == "buttonClass") {
 			extras.hover  = hover;
@@ -317,6 +310,10 @@ function textBox(_input, _onModify, _extras = noone) : textInput(_input, _onModi
 			extras.draw(_x + _w - ui(32), _y + _h / 2 - ui(32 / 2), ui(32), ui(32), _m, THEME.button_hide);
 			_w -= ui(40);
 		}
+		
+		draw_set_font(font == noone? f_p0 : font);
+		_text = string_real(_text);
+		_current_text = _text;
 		
 		if(sliding > 0) {
 			var dx =   _m[0] - slide_mx;
@@ -376,8 +373,8 @@ function textBox(_input, _onModify, _extras = noone) : textInput(_input, _onModi
 			case fa_bottom: _y = _y - _h;		break;	
 		}
 		
-		var _dpX = _x + ui(8);
-		var _dpY = _y;
+		var tb_surf_x = _x + ui(8);
+		var tb_surf_y = _y;
 		
 		draw_set_text(font == noone? f_p0 : font, fa_left, fa_top);
 		
@@ -441,7 +438,7 @@ function textBox(_input, _onModify, _extras = noone) : textInput(_input, _onModi
 			#endregion
 			
 			#region draw
-				var txt = getDisplayText(_input_text);
+				var txt = _input_text;
 				draw_set_text(font == noone? f_p0 : font, fa_left, fa_top);
 				var tw = string_width(txt);
 				var th = string_height(txt);
@@ -492,9 +489,9 @@ function textBox(_input, _onModify, _extras = noone) : textInput(_input, _onModi
 				
 				surface_set_target(text_surface);
 				draw_clear_alpha(0, 0);
-					display_text(tx - _dpX, _h / 2 - th / 2, txt, _w - ui(4), _format, _mx);
+					display_text(tx - tb_surf_x, _h / 2 - th / 2, txt, _w - ui(4), _format, _mx);
 				surface_reset_target();
-				draw_surface(text_surface, _dpX, _dpY);
+				draw_surface(text_surface, tb_surf_x, tb_surf_y);
 		
 				draw_set_color(COLORS._main_text_accent);
 				draw_line_width(cursor_pos, c_y0, cursor_pos, c_y1, 2);
@@ -505,10 +502,14 @@ function textBox(_input, _onModify, _extras = noone) : textInput(_input, _onModi
 			if(!point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + _h) && mouse_press(mb_left))
 				deactivate();
 		} else {
-			var txt = getDisplayText(_text);
 			draw_set_text(font == noone? f_p0 : font, fa_left, fa_center);
-			var tw = string_width(txt);
-			var th = string_height(txt);
+			var _display_text = _text;
+			if(input == TEXTBOX_INPUT.number) {
+				var dig = floor(_w / string_width("0")) - 3;
+				_display_text = string_real(_display_text, dig);
+			}
+			var tw = string_width(_display_text);
+			var th = string_height(_display_text);
 				
 			switch(align) {
 				case fa_left   :				break;
@@ -549,9 +550,9 @@ function textBox(_input, _onModify, _extras = noone) : textInput(_input, _onModi
 			
 			surface_set_target(text_surface);
 			draw_clear_alpha(0, 0);
-				display_text(tx - _dpX, _h / 2 - th / 2, txt, _w - ui(4), _format);
+				display_text(tx - tb_surf_x, _h / 2 - th / 2, _display_text, _w - ui(4), _format);
 			surface_reset_target();
-			draw_surface(text_surface, _dpX, _dpY);
+			draw_surface(text_surface, tb_surf_x, tb_surf_y);
 		}
 		
 		resetFocus();

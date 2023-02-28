@@ -1,4 +1,4 @@
-function Node_Camera(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constructor {
+function Node_Camera(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Camera";
 	preview_alpha = 0.5;
 	
@@ -11,6 +11,7 @@ function Node_Camera(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) const
 	uni_zom     = shader_get_uniform(shader, "zoom");
 	uni_sam_mod = shader_get_uniform(shader, "sampleMode");
 	uni_blur    = shader_get_uniform(shader, "blur");
+	uni_fix_bg  = shader_get_uniform(shader, "fixBG");
 	
 	inputs[| 0] = nodeValue("Background", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 	inputs[| 1] = nodeValue("Focus area", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 16, 16, 4, 4, AREA_SHAPE.rectangle ])
@@ -22,10 +23,12 @@ function Node_Camera(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) const
 	inputs[| 3] = nodeValue("Oversample mode", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0, "How to deal with pixel outside the surface.\n    - Empty: Use empty pixel\n    - Clamp: Repeat edge pixel\n    - Repeat: Repeat texture.")
 		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Empty", "Clamp", "Repeat" ]);
 	
+	inputs[| 4] = nodeValue("Fix background", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [
-		["Surface",	  true], 0, 3,
+		["Surface",	  true], 0, 3, 4, 
 		["Camera",	 false], 1, 2,
 		["Elements",  true], 
 	];
@@ -115,6 +118,7 @@ function Node_Camera(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) const
 		var _area = _data[1];
 		var _zoom = _data[2];
 		var _samp = _data[3];
+		var _fix  = _data[4];
 		
 		var _dw = round(surface_valid_size(_area[2]) * 2);
 		var _dh = round(surface_valid_size(_area[3]) * 2);
@@ -122,10 +126,32 @@ function Node_Camera(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) const
 		var pingpong = [ surface_create_valid(_dw, _dh), surface_create_valid(_dw, _dh) ];
 		var ppInd = 0;
 		
+		var _px = round(_area[0]);
+		var _py = round(_area[1]);
+		var _pw = round(_area[2]);
+		var _ph = round(_area[3]);
+		var amo = (ds_list_size(inputs) - input_fix_len) / data_length - 1;
+		
 		surface_set_target(pingpong[0]);
 		draw_clear_alpha(0, 0);
 		BLEND_OVERRIDE;
-		draw_surface(_data[0], 0, 0);
+		if(amo <= 0) {
+			if(_fix) {
+				if(_samp)	draw_surface_tiled(_data[0], 0, 0);
+				else		draw_surface(_data[0], 0, 0);
+			} else {
+				var sx = _px / _zoom - _pw;
+				var sy = _py / _zoom - _ph;
+				if(_samp)	draw_surface_tiled_ext(_data[0], -sx, -sy, 1 / _zoom, 1 / _zoom, c_white, 1);
+				else		draw_surface_ext(_data[0], -sx, -sy, 1 / _zoom, 1 / _zoom, 0, c_white, 1);
+			}
+		} else {
+			var sx = _px / _zoom - _pw;
+			var sy = _py / _zoom - _ph;
+				
+			if(_fix)	draw_surface(_data[0], 0, 0);
+			else		draw_surface_tiled_ext(_data[0], sx, sy, 1 / _zoom, 1 / _zoom, c_white, 1);
+		}
 		BLEND_NORMAL;
 		surface_reset_target();
 		
@@ -133,15 +159,10 @@ function Node_Camera(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) const
 		draw_clear_alpha(0, 0);
 		surface_reset_target();
 		
-		var _px = round(_area[0]);
-		var _py = round(_area[1]);
-		
 		shader_set(shader);
 		shader_set_uniform_f(uni_dim_cam, _dw, _dh);
 		shader_set_uniform_f(uni_zom, _zoom);
 		shader_set_uniform_i(uni_sam_mod, _samp);
-		
-		var amo = (ds_list_size(inputs) - input_fix_len) / data_length - 1;
 		
 		for( var i = 0; i < amo; i++ ) {
 			ppInd = !ppInd;
@@ -160,8 +181,9 @@ function Node_Camera(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) const
 			shader_set_uniform_f(uni_dim_scn, _scnW, _scnH);
 			shader_set_uniform_f(uni_blur, sz);
 			shader_set_uniform_f(uni_pos, (_px + sx) / _scnW, (_py + sy) / _scnH);
-			texture_set_stage(uni_backg, surface_get_texture(pingpong[!ppInd]));
-			texture_set_stage(uni_scene, surface_get_texture(_surface));
+			shader_set_uniform_i(uni_fix_bg, !i && _fix);
+			texture_set_stage(uni_backg, surface_get_texture(pingpong[!ppInd])); //prev surface
+			texture_set_stage(uni_scene, surface_get_texture(_surface)); //surface to draw
 			draw_sprite_ext(s_fx_pixel, 0, 0, 0, _dw, _dh, 0, c_white, 1);
 			surface_reset_target();
 		}

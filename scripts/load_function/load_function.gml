@@ -2,6 +2,7 @@ function LOAD() {
 	if(DEMO) return false;
 	
 	var path = get_open_filename("Pixel Composer project (.pxc)|*.pxc", "");
+	key_release();
 	if(path == "") return;
 	if(filename_ext(path) != ".json" && filename_ext(path) != ".pxc") return;
 				

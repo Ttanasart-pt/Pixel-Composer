@@ -133,11 +133,29 @@ function areaBox(_onModify, _unit = noone) : widget() constructor {
 		
 		if(onSurfaceSize != -1) {
 			if(buttonInstant(THEME.button_hide, _x - ui(76), _y + ui(28 - 12), ui(24), ui(24), _m, active, hover, "Fill surface", THEME.fill, 0, c_white) == 2) {
-				var ss = onSurfaceSize();
-				onModify(0, toNumber(ss[0] / 2));
-				onModify(1, toNumber(ss[1] / 2));
-				onModify(2, toNumber(ss[0] / 2));
-				onModify(3, toNumber(ss[1] / 2));
+				switch(mode) {
+					case AREA_MODE.area :
+						var ss = onSurfaceSize();
+						onModify(0, ss[0] / 2);
+						onModify(1, ss[1] / 2);
+						onModify(2, ss[0] / 2);
+						onModify(3, ss[1] / 2);
+						break;
+					case AREA_MODE.padding :   
+						var ss = onSurfaceSize();
+						onModify(0, 0);
+						onModify(1, 0);
+						onModify(2, 0);
+						onModify(3, 0);
+						break;
+					case AREA_MODE.two_point : 
+						var ss = onSurfaceSize();
+						onModify(0, 0);
+						onModify(1, 0);
+						onModify(2, ss[0]);
+						onModify(3, ss[1]);
+						break;
+				}
 			}
 			
 			var txt = "";

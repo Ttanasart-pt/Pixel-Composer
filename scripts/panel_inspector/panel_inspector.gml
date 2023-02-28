@@ -93,7 +93,7 @@ function Panel_Inspector() : PanelContent() constructor {
 		var _hover = pHOVER && contentPane.hover;
 		
 		var context = PANEL_GRAPH.getCurrentContext();
-		var meta = context == -1? METADATA : context.metadata;
+		var meta = context == noone? METADATA : context.metadata;
 		if(meta == noone) return 0;
 			
 		var hh = ui(8);
@@ -139,7 +139,7 @@ function Panel_Inspector() : PanelContent() constructor {
 					meta_tb[j].setActiveFocus(pFOCUS, _hover);
 					if(pFOCUS) meta_tb[j].register(contentPane);
 					
-					var wh;
+					var wh = 0;
 					
 					switch(instanceof(meta_tb[j])) {
 						case "textArea" :	
@@ -681,8 +681,24 @@ function Panel_Inspector() : PanelContent() constructor {
 			dialogCall(o_dialog_preset, x + bx, y + by + ui(36), { "node": inspecting });
 		
 		by += ui(36);
-		if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), [mx, my], pFOCUS, pHOVER, get_text("panel_inspector_out_visible", "Outputs visibility"), THEME.node_output_visible, 1) == 2)
-			dialogCall(o_dialog_output_visibility, x + bx, y + by + ui(36), { "node": inspecting });
+		if(struct_has(inspecting, "array_process")) {
+			var txt = get_text("panel_inspector_array_processor", "Array processor: ");
+			switch(inspecting.array_process) {
+				case ARRAY_PROCESS.loop :		txt += "Loop"			break;
+				case ARRAY_PROCESS.hold :		txt += "Hold"			break;
+				case ARRAY_PROCESS.expand :		txt += "Expand"			break;
+				case ARRAY_PROCESS.expand_inv : txt += "Expand inverse" break;
+			}
+			
+			if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), [mx, my], pFOCUS, pHOVER, txt, THEME.icon_array_processor, inspecting.array_process) == 2) {
+				menuCall(x + bx, y + by + ui(36), [
+					menuItem("Loop",			function(){ inspecting.array_process = ARRAY_PROCESS.loop;		 UPDATE |= RENDER_TYPE.full; }),
+					menuItem("Hold",			function(){ inspecting.array_process = ARRAY_PROCESS.hold;		 UPDATE |= RENDER_TYPE.full; }),
+					menuItem("Expand",			function(){ inspecting.array_process = ARRAY_PROCESS.expand;	 UPDATE |= RENDER_TYPE.full; }),
+					menuItem("Expand inverse",  function(){ inspecting.array_process = ARRAY_PROCESS.expand_inv; UPDATE |= RENDER_TYPE.full; }),
+				]);
+			}
+		}
 		
 		var bx = w - ui(44);
 		var by = ui(12);
@@ -713,9 +729,9 @@ function Panel_Inspector() : PanelContent() constructor {
 			var txt = "Untitled";
 			var context = PANEL_GRAPH.getCurrentContext();
 			
-			if(context == -1 && file_exists(CURRENT_PATH))
+			if(context == noone && file_exists(CURRENT_PATH))
 				txt = string_replace(filename_name(CURRENT_PATH), filename_ext(CURRENT_PATH), "");
-			else if(context != -1)
+			else if(context != noone)
 				txt = context.name;
 			
 			draw_set_text(f_h5, fa_center, fa_center, COLORS._main_text);
@@ -732,21 +748,25 @@ function Panel_Inspector() : PanelContent() constructor {
 			}
 			
 			by += ui(36);
-			if(CURRENT_PATH != "" && STEAM_ENABLED && !workshop_uploading) {
-				if(!METADATA.steam) {
-					if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), [mx, my], pFOCUS, pHOVER, "Upload to Steam Workshop", THEME.workshop_upload, 0, COLORS._main_icon) == 2) {
-						METADATA.author_steam_id = STEAM_USER_ID;
-						SAVE();
-						steam_ugc_create_project();
-						workshop_uploading = true;
+			if(STEAM_ENABLED && !workshop_uploading) {
+				if(CURRENT_PATH == "") {
+					buttonInstant(noone, bx, by, ui(32), ui(32), [mx, my], pFOCUS, pHOVER, get_text("panel_inspector_workshop_save", "Save file before upload"), THEME.workshop_upload, 0, COLORS._main_icon, 0.5);
+				} else {
+					if(!METADATA.steam) {
+						if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), [mx, my], pFOCUS, pHOVER, get_text("panel_inspector_workshop_upload", "Upload to Steam Workshop"), THEME.workshop_upload, 0, COLORS._main_icon) == 2) {
+							METADATA.author_steam_id = STEAM_USER_ID;
+							SAVE();
+							steam_ugc_create_project();
+							workshop_uploading = true;
+						}
 					}
-				}
 				
-				if(METADATA.steam && METADATA.author_steam_id == STEAM_USER_ID && METADATA.file_id != 0) {
-					if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), [mx, my], pFOCUS, pHOVER, "Update Steam Workshop", THEME.workshop_update, 0, COLORS._main_icon) == 2) {
-						SAVE();
-						steam_ugc_update_project();
-						workshop_uploading = true;
+					if(METADATA.steam && METADATA.author_steam_id == STEAM_USER_ID && METADATA.file_id != 0) {
+						if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), [mx, my], pFOCUS, pHOVER, get_text("panel_inspector_workshop_update", "Update Steam Workshop"), THEME.workshop_update, 0, COLORS._main_icon) == 2) {
+							SAVE();
+							steam_ugc_update_project();
+							workshop_uploading = true;
+						}
 					}
 				}
 			}

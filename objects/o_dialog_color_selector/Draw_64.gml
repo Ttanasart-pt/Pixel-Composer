@@ -30,7 +30,7 @@ if !ready exit;
 #region palette
 	draw_sprite_stretched(THEME.ui_panel_bg, 0, presets_x + ui(16), dialog_y + ui(44), ui(240 - 32), dialog_h - ui(60));
 	
-	sp_presets.active = sFOCUS;
+	sp_presets.setActiveFocus(sFOCUS, sHOVER);
 	sp_presets.draw(presets_x + ui(24), dialog_y + ui(44));
 	
 	var bx = presets_x + presets_w - ui(44);
@@ -60,13 +60,11 @@ if !ready exit;
 	var by = dialog_y + dialog_h - ui(36);
 	
 	b_apply.register();
-	b_apply.hover  = sHOVER;
-	b_apply.active = sFOCUS;
+	b_apply.setActiveFocus(sFOCUS, sHOVER);
 	b_apply.draw(bx - ui(18), by - ui(18), ui(36), ui(36), mouse_ui, THEME.button_lime);
 	
 	bx -= ui(48);
 	b_cancel.register();
-	b_cancel.hover  = sHOVER;
-	b_cancel.active = sFOCUS;
+	b_cancel.setActiveFocus(sFOCUS, sHOVER);
 	b_cancel.draw(bx - ui(18), by - ui(18), ui(36), ui(36), mouse_ui, THEME.button_hide);
 #endregion

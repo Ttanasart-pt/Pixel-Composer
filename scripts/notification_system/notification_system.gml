@@ -40,18 +40,18 @@
 	}
 	
 	function noti_status(str, icon = noone, flash = false, ref = noone) {
-		if(!ds_list_empty(STATUSES) && STATUSES[| ds_list_size(STATUSES) - 1].txt == str) {
-			STATUSES[| ds_list_size(STATUSES) - 1].amount++;
-			return;
-		}
-		
-		var noti = new notification(NOTI_TYPE.log, str, icon);
-		ds_list_add(STATUSES, noti);
-		
 		if(flash && PANEL_MENU) {
 			PANEL_MENU.noti_flash = 1;
 			PANEL_MENU.noti_flash_color = flash;
 		}
+		
+		if(!ds_list_empty(STATUSES) && STATUSES[| ds_list_size(STATUSES) - 1].txt == str) {
+			STATUSES[| ds_list_size(STATUSES) - 1].amount++;
+			return STATUSES[| ds_list_size(STATUSES) - 1];
+		}
+		
+		var noti = new notification(NOTI_TYPE.log, str, icon);
+		ds_list_add(STATUSES, noti);
 		
 		if(ref) {
 			var onClick = function() { PANEL_GRAPH.focusNode(self.ref); };
@@ -70,7 +70,7 @@
 		
 		if(!ds_list_empty(STATUSES) && STATUSES[| ds_list_size(STATUSES) - 1].txt == str) {
 			STATUSES[| ds_list_size(STATUSES) - 1].amount++;
-			return;
+			return STATUSES[| ds_list_size(STATUSES) - 1];
 		}
 		
 		var noti = new notification(NOTI_TYPE.warning, str, icon, c_ui_orange, PREF_MAP[? "notification_time"]);

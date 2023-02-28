@@ -4,6 +4,7 @@ event_inherited();
 #region data
 	dialog_w = ui(812);
 	dialog_h = ui(440);
+	title_height = 52;
 	destroy_on_click_out = true;
 	
 	name = get_text("palette_editor_title", "Palette editor");
@@ -11,6 +12,7 @@ event_inherited();
 	
 	index_selecting = 0;
 	index_dragging = -1;
+	interactable = true;
 	
 	setColor = function(color) {
 		if(index_selecting == -1 || palette == 0) return;
@@ -88,7 +90,7 @@ event_inherited();
 			draw_text(ui(16), yy + ui(8), filename_name_only(preset_name[| i]));
 			drawPalette(presets[| i], ui(16), yy + ui(28), ww, ui(16));
 			
-			if(isHover && mouse_press(mb_left, sFOCUS)) {
+			if(isHover && mouse_press(mb_left, interactable && sFOCUS)) {
 				palette = array_create(array_length(presets[| i]));
 				for( var j = 0; j < array_length(presets[| i]); j++ ) {
 					palette[j] = presets[| i][j];

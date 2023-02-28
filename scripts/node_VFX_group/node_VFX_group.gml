@@ -1,4 +1,4 @@
-function Node_VFX_Group(_x, _y, _group = -1) : Node_Collection(_x, _y, _group) constructor {
+function Node_VFX_Group(_x, _y, _group = noone) : Node_Collection(_x, _y, _group) constructor {
 	name  = "VFX";
 	color = COLORS.node_blend_vfx;
 	icon  = THEME.vfx;

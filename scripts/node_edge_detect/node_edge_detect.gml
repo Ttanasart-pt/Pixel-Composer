@@ -1,4 +1,4 @@
-function Node_Edge_Detect(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constructor {
+function Node_Edge_Detect(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Edge Detect";
 	
 	shader = sh_edge_detect;

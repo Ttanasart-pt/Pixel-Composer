@@ -1,4 +1,4 @@
-function Node_Group_Output(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
+function Node_Group_Output(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name  = "Group Output";
 	destroy_when_upgroup = true;
 	color = COLORS.node_blend_collection;

@@ -17,11 +17,14 @@
 	
 	if(PANEL_MAIN != 0)
 		PANEL_MAIN.stepBegin();
-	DIALOG_DEPTH_HOVER = 0;
 	
-	with(_p_dialog) {
-		checkFocus();	
-	}
+	DIALOG_DEPTH_HOVER = 0;
+	with(_p_dialog) checkFocus();
+	with(_p_dialog) checkDepth();
+	
+	with(_p_dialog) doDrag();
+	with(_p_dialog) doResize();
+	with(_p_dialog) checkMouse();
 #endregion
 
 #region auto save
@@ -58,7 +61,7 @@
 	
 	if(UPDATE & RENDER_TYPE.full || (ANIMATOR.rendering && ANIMATOR.frame_progress))
 		Render();
-	if(UPDATE & RENDER_TYPE.partial)
+	else if(UPDATE & RENDER_TYPE.partial)
 		Render(true);
 	UPDATE = RENDER_TYPE.none;
 #endregion
@@ -85,9 +88,6 @@
 #endregion
 
 #region dialog
-	if(!ds_list_empty(DIALOGS))
-		DIALOGS[| ds_list_size(DIALOGS) - 1].checkMouse();
-	
 	if(mouse_release(mb_any))
 		DIALOG_CLICK = true;
 #endregion

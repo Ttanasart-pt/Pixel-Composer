@@ -62,9 +62,8 @@ void main() {
 	vec2 samPos = v_vTexcoord;
 	
 	if(iterate == 1) {
-		for(float i = 0.; i < strength; i++) {
+		for(float i = 0.; i < strength; i++) 
 			samPos = shiftMap(samPos, 1.);
-		}
 	} else
 		samPos = shiftMap(samPos, strength);
 	

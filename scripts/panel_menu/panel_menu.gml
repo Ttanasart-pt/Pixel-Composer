@@ -56,13 +56,13 @@ function Panel_Menu() : PanelContent() constructor {
 		menuItem(get_text("panel_menu_help_wiki", "Community Wiki"), function() {
 			url_open("https://pixel-composer.fandom.com/wiki/Pixel_Composer_Wiki");
 		}, THEME.wiki),
-		-1,
-		menuItem(get_text("panel_menu_itch", "itch.io page"), function() {
-			url_open("https://makham.itch.io/pixel-composer");
-		}, THEME.itch),
-		menuItem(get_text("panel_menu_steam", "Steam page"), function() {
-			url_open("https://store.steampowered.com/app/2299510/Pixel_Composer");
-		}, THEME.steam),
+		//-1,
+		//menuItem(get_text("panel_menu_itch", "itch.io page"), function() {
+		//	url_open("https://makham.itch.io/pixel-composer");
+		//}, THEME.itch),
+		//menuItem(get_text("panel_menu_steam", "Steam page"), function() {
+		//	url_open("https://store.steampowered.com/app/2299510/Pixel_Composer");
+		//}, THEME.steam),
 		-1, 
 		menuItem(get_text("panel_menu_directory", "Open local directory"), function() {
 			shellOpenExplorer(DIRECTORY);
@@ -125,11 +125,11 @@ function Panel_Menu() : PanelContent() constructor {
 				repeat(ds_map_size(NODE_MAP)) {
 					var node = NODE_MAP[? key];
 					key = ds_map_find_next(NODE_MAP, key);
-			
+					
 					if(!node.active) continue;
 					if(instanceof(node) != "Node_Export") continue;
 					
-					node.initExport();
+					node.doInspectorAction();
 				}
 			}),
 		]],
@@ -180,23 +180,6 @@ function Panel_Menu() : PanelContent() constructor {
 	function setNotiIcon(icon) {
 		noti_icon = icon;
 		noti_icon_time = 90;
-	}
-	
-	function displayNewVersion() {
-		var xx = w - ui(88);
-		draw_set_text(f_p0b, fa_right, fa_center, COLORS._main_value_positive);
-		var txt = " " + get_text("panel_menu_newer", "panel_menu_newer") + " ";
-		var ww = string_width(txt);
-			
-		if(pHOVER && point_in_rectangle(mx, my, xx - ww, 0, xx, h)) {
-			draw_sprite_stretched(THEME.menu_button, 0, xx - ww - ui(6), ui(6), ww + ui(12), h - ui(12));
-				
-			if(mouse_press(mb_left, pFOCUS)) {
-				url_open("https://makham.itch.io/pixel-composer");
-			}
-		}
-			
-		draw_text(xx, h / 2, txt);
 	}
 	
 	function undoUpdate() {
@@ -261,8 +244,13 @@ function Panel_Menu() : PanelContent() constructor {
 		}
 		
 		#region notification
-			var warning_amo = ds_list_size(WARNING);
-			var error_amo = ds_list_size(ERRORS);
+			var warning_amo = 0;
+			for( var i = 0; i < ds_list_size(WARNING); i++ )
+				warning_amo += WARNING[| i].amount;
+			
+			var error_amo = 0;
+			for( var i = 0; i < ds_list_size(ERRORS); i++ )
+				error_amo += ERRORS[| i].amount;
 			
 			var nx0 = xx + ui(24);
 			var ny0 = h / 2;
@@ -325,6 +313,8 @@ function Panel_Menu() : PanelContent() constructor {
 					draw_sprite_stretched_ext(THEME.menu_button, 1, nx0, ny0 - wh / 2, ww, wh, cc, 1);
 					if(mouse_press(mb_left, other.pFOCUS)) 
 						instance_destroy();
+					if(mouse_press(mb_right, other.pFOCUS)) 
+						menuCall(,, menu);
 				} else 
 					draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, nx0, ny0 - wh / 2, ww, wh, cc, 1);
 				draw_text(nx0 + ww / 2, ny0, name);
@@ -372,6 +362,7 @@ function Panel_Menu() : PanelContent() constructor {
 		#region version
 			draw_set_text(f_p0, fa_right, fa_center, COLORS._main_text_sub);
 			var txt = "v. " + string(VERSION_STRING);
+			if(STEAM_ENABLED) txt += " Steam";
 			var ww = string_width(txt) + ui(12);
 			if(pHOVER && point_in_rectangle(mx, my, x1 - ww, 0, x1, h)) {
 				draw_sprite_stretched(THEME.button_hide_fill, 1, x1 - ww, ui(6), ww, h - ui(12));
@@ -381,9 +372,6 @@ function Panel_Menu() : PanelContent() constructor {
 				}
 			}
 			draw_text(x1 - ui(6), h / 2, txt);
-		
-			if(o_main.version_latest > VERSION) 
-				displayNewVersion();
 		#endregion
 		
 		#region title

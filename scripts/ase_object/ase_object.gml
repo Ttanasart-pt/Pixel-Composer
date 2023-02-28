@@ -4,14 +4,11 @@ function ase_cel(_layer, _data, _file) constructor {
 	layerTarget = _layer;
 	
 	static checkSurface = function() {
-		if(is_surface(data[? "Surface"])) return;
-		
 		var width  = data[? "Width"];
 		var height = data[? "Height"];
-		data[? "Surface"] = surface_create(width, height);
+		data[? "Surface"] = surface_verify(data[? "Surface"], width, height);
 		
 		var color  = file[? "Color depth"];
-		
 		if(color == 32) {//rgba 
 			buffer_set_surface(data[? "Buffer"], data[? "Surface"], 0);
 			return;

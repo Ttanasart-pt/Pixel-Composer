@@ -6,7 +6,7 @@ function Node_create_3D_Obj_path(_x, _y, path) {
 	return node;
 }
 
-function Node_3D_Obj(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
+function Node_3D_Obj(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "3D Object";
 	
 	inputs[| 0] = nodeValue("Path", self, JUNCTION_CONNECT.input, VALUE_TYPE.path, "")

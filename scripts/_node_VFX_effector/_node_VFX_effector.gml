@@ -8,7 +8,7 @@ enum FORCE_TYPE {
 	Destroy
 }
 /*
-function Node_Particle_Effector(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
+function Node_Particle_Effector(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Effector";
 	previewable = false;
 	color = COLORS.node_blend_vfx;

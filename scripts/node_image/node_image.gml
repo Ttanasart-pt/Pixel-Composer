@@ -1,7 +1,8 @@
-function Node_create_Image(_x, _y, _group = -1) {
+function Node_create_Image(_x, _y, _group = noone) {
 	var path = "";
 	if(!LOADING && !APPENDING && !CLONING) {
 		path = get_open_filename(".png", "");
+		key_release();
 		if(path == "") return noone;
 	}
 	
@@ -20,7 +21,7 @@ function Node_create_Image_path(_x, _y, path) {
 	return node;	
 }
 
-function Node_Image(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
+function Node_Image(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name			= "";
 	color			= COLORS.node_blend_input;
 	always_output   = true;

@@ -1,4 +1,4 @@
-function Node_SDF(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constructor {
+function Node_SDF(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "SDF";
 	
 	uniform_sdf_dim = shader_get_uniform(sh_sdf, "dimension");

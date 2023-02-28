@@ -1,4 +1,4 @@
-function Node_Frame(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
+function Node_Frame(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Frame";
 	w = 240;
 	h = 160;

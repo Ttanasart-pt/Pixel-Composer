@@ -45,7 +45,7 @@ enum _BIN_TYPE {
 //Subtract       = 17
 //Divide         = 18
 
-global.ASE_LOG = false;
+global.ASE_LOG = true;
 
 globalvar __ase_format_header;
 __ase_format_header = [
@@ -442,8 +442,8 @@ function read_ase_chunk(file) {
 					}
 					
 					var _rawBuff = buffer_decompress(_compBuff);
-					if(_rawBuff != -1)
-						chunk[? "Buffer"] = _rawBuff;
+					if(_rawBuff != -1) chunk[? "Buffer"] = _rawBuff;
+					printIf(global.ASE_LOG, "    Buffer size: " + string(compressLength));
 					
 					buffer_delete(_compBuff);
 					break;

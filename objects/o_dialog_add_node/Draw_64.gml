@@ -15,11 +15,11 @@ if !ready exit;
 		tb_search.hover = false;
 		tb_search.sprite_index = 1;
 		
-		catagory_pane.active = sFOCUS;
+		catagory_pane.setActiveFocus(sFOCUS, sHOVER);
 		catagory_pane.draw(dialog_x + ui(14), dialog_y + ui(52));
 	
 		draw_sprite_stretched(THEME.ui_panel_bg, 0, dialog_x + ui(120), dialog_y + ui(52), dialog_w - ui(134), dialog_h - ui(66));
-		content_pane.active = sFOCUS;
+		content_pane.setActiveFocus(sFOCUS, sHOVER);
 		content_pane.draw(dialog_x + ui(120), dialog_y + ui(52));
 		
 		node_selecting = 0;
@@ -27,7 +27,7 @@ if !ready exit;
 		tb_search.focus = true;
 		tb_search.hover = true;
 		draw_sprite_stretched(THEME.ui_panel_bg, 0, dialog_x + ui(14), dialog_y + ui(52), dialog_w - ui(28), dialog_h - ui(66));
-		search_pane.active = sFOCUS;
+		search_pane.setActiveFocus(sFOCUS, sHOVER);
 		search_pane.draw(dialog_x + ui(16), dialog_y + ui(52));
 	}
 	

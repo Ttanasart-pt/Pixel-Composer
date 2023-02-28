@@ -1,4 +1,4 @@
-function Node_3D_Combine(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
+function Node_3D_Combine(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "3D Combine";
 	
 	inputs[| 0] = nodeValue("Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, def_surf_size2)

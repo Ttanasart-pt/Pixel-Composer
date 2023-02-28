@@ -1,4 +1,4 @@
-function Node_Grid_Noise(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constructor {
+function Node_Grid_Noise(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Grid Noise";
 	
 	shader = sh_grid_noise;
@@ -32,7 +32,7 @@ function Node_Grid_Noise(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) c
 		.setDisplay(VALUE_DISPLAY.enum_button, ["x", "y"]);
 	
 	input_display_list = [
-		["Ouptut",	false], 0,
+		["Output",	false], 0,
 		["Noise",	false], 3, 1, 2, 6, 4, 
 		["Render",	false], 5, 
 	];

@@ -13,24 +13,21 @@ if !ready exit;
 #region draw
 	var yy = dialog_y + ui(64);
 	
-	cb_grid.active = sFOCUS; 
-	cb_grid.hover  = sHOVER;
+	cb_grid.setActiveFocus(sFOCUS, sHOVER);
 	cb_grid.register();
 	draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text);
 	draw_text(dialog_x + ui(32), yy, "Grid");
 	cb_grid.draw(dialog_x + dialog_w - ui(48), yy, PANEL_GRAPH.show_grid, mouse_ui,, fa_center, fa_center);
 	
 	yy += ui(40);
-	cb_dim.active = sFOCUS; 
-	cb_dim.hover  = sHOVER;
+	cb_dim.setActiveFocus(sFOCUS, sHOVER);
 	cb_dim.register();
 	draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text);
 	draw_text(dialog_x + ui(32), yy, "Dimension");
 	cb_dim.draw(dialog_x + dialog_w - ui(48), yy, PANEL_GRAPH.show_dimension, mouse_ui,, fa_center, fa_center);
 	
 	yy += ui(40);
-	cb_com.active = sFOCUS; 
-	cb_com.hover  = sHOVER;
+	cb_com.setActiveFocus(sFOCUS, sHOVER);
 	cb_com.register();
 	draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text);
 	draw_text(dialog_x + ui(32), yy, "Compute time");

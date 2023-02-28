@@ -2,8 +2,8 @@
   "resourceType": "GMScript",
   "resourceVersion": "1.0",
   "name": "globals",
-  "isDnD": false,
   "isCompatibility": false,
+  "isDnD": false,
   "parent": {
     "name": "scritps",
     "path": "folders/main/scritps.yy",

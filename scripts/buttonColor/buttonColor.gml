@@ -1,9 +1,7 @@
-function buttonColor(_onApply) {
-	return new buttonColorClass(_onApply);
-}
-
-function buttonColorClass(_onApply) : widget() constructor {
+function buttonColor(_onApply, dialog = noone) : widget() constructor {
 	onApply = _onApply;
+	parentDialog = dialog;
+	
 	onColorPick = function() {
 		var dialog = dialogCall(o_dialog_color_selector, WIN_W / 2, WIN_H / 2);
 		dialog.selector.dropper_active = true;
@@ -17,11 +15,20 @@ function buttonColorClass(_onApply) : widget() constructor {
 	b_picker = button(onColorPick);
 	b_picker.icon = THEME.color_picker_dropper;
 	
+	function apply(value) {
+		if(!interactable) return;
+		onApply(value);
+	}
+	
 	static trigger = function() { 
 		var dialog = dialogCall(o_dialog_color_selector, WIN_W / 2, WIN_H / 2);
 		dialog.setDefault(current_color);
-		dialog.selector.onApply = onApply;
-		dialog.onApply = onApply;
+		dialog.selector.onApply = apply;
+		dialog.onApply = apply;
+		dialog.interactable = interactable;
+		
+		if(parentDialog)
+			parentDialog.addChildren(dialog);
 	}
 	
 	static draw = function(_x, _y, _w, _h, _color, _m) {
@@ -37,13 +44,13 @@ function buttonColorClass(_onApply) : widget() constructor {
 		
 		var _cw = _w - ui(40);
 		var click = false;
-		if(hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _cw, _y + _h)) {
+		if(ihover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _cw, _y + _h)) {
 			draw_sprite_stretched(THEME.button, 1, _x, _y, _cw, _h);	
-			if(mouse_press(mb_left, active)) {
+			if(mouse_press(mb_left, iactive)) {
 				trigger();
 				click = true;
 			}
-			if(mouse_click(mb_left, active))
+			if(mouse_click(mb_left, iactive))
 				draw_sprite_stretched(THEME.button, 2, _x, _y, _cw, _h);	
 		} else {
 			draw_sprite_stretched(THEME.button, 0, _x, _y, _cw, _h);		

@@ -9,10 +9,7 @@ function json_stringify_minify(map) {
 function json_load(path) {
 	if(!file_exists(path)) return noone;
 	
-	var f = file_text_open_read(path);
-	var s = file_text_read_all(f);
-	file_text_close(f);
-	
+	var s = file_text_read_all(path);
 	var js = json_decode(s);
 	return js;
 }
@@ -28,10 +25,7 @@ function json_save(path, map) {
 function json_load_struct(path) {
 	if(!file_exists(path)) return noone;
 	
-	var f = file_text_open_read(path);
-	var s = file_text_read_all(f);
-	file_text_close(f);
-	
+	var s = file_text_read_all(path);
 	var js = json_parse(s);
 	return js;
 }

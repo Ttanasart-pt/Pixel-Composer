@@ -1,4 +1,4 @@
-function Node_Particle(_x, _y, _group = -1) : Node_VFX_Spawner_Base(_x, _y, _group) constructor {
+function Node_Particle(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y, _group) constructor {
 	name = "Particle";
 	use_cache = true;
 	
@@ -10,7 +10,7 @@ function Node_Particle(_x, _y, _group = -1) : Node_VFX_Spawner_Base(_x, _y, _gro
 	inputs[| input_len + 1] = nodeValue("Round position", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true, "Round position to the closest integer value to avoid jittering.");
 	
 	inputs[| input_len + 2] = nodeValue("Blend mode", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0 )
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Normal", "Additive" ]);
+		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Normal", "Alpha", "Additive" ]);
 	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
@@ -61,6 +61,8 @@ function Node_Particle(_x, _y, _group = -1) : Node_VFX_Spawner_Base(_x, _y, _gro
 			draw_clear_alpha(0, 0);
 		
 			if(_blend == PARTICLE_BLEND_MODE.normal)
+				BLEND_NORMAL;
+			else if(_blend == PARTICLE_BLEND_MODE.alpha)
 				BLEND_ALPHA;
 			else if(_blend == PARTICLE_BLEND_MODE.additive) 
 				BLEND_ADD;

@@ -31,7 +31,7 @@ function string_partial_match(str, key) {
 	return -9999;
 }
 
-function string_real(val) {
+function string_real(val, digMax = 999) {
 	if(is_string(val)) return val;
 	if(is_struct(val)) return string(val);
 	
@@ -42,10 +42,14 @@ function string_real(val) {
 		return s + "]";
 	}
 	
-	var pres;
-	for( pres = 0; pres < 5; pres++ ) {
-		if(frac(val * power(10, pres)) == 0)
+	if(val == 0) return "0";
+	
+	var pres, p = 1;
+	var presMax = min(5, digMax - ceil(log10(ceil(abs(val)))));
+	for( pres = 0; pres < presMax; pres++ ) {
+		if(frac(val * p) == 0)
 			break;
+		p *= 10;
 	}
 	
 	return string_format(val, -1, pres);

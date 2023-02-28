@@ -172,7 +172,7 @@ event_inherited();
 		var hh  = 0;
 		var hg  = ui(28);
 		var context = PANEL_GRAPH.getCurrentContext();
-		context = context == -1? "" : instanceof(context);
+		context = context == noone? "" : instanceof(context);
 		
 		var start = -1;
 		
@@ -226,7 +226,7 @@ event_inherited();
 		
 		if(ADD_NODE_PAGE == -1) {
 			var context = PANEL_GRAPH.getCurrentContext();
-			context = context == -1? "" : instanceof(context);
+			context = context == noone? "" : instanceof(context);
 		
 			_list = ds_list_create();
 			for(var i = 0; i < ds_list_size(NODE_CATEGORY); i++) {
@@ -420,6 +420,7 @@ event_inherited();
 		search_string = string(str); 
 		searchNodes();
 	});
+	tb_search.align			= fa_left;
 	tb_search.auto_update	= true;
 	WIDGET_CURRENT			= tb_search;
 	
@@ -428,7 +429,7 @@ event_inherited();
 		var pr_list = ds_priority_create();
 		
 		var cnt = PANEL_GRAPH.getCurrentContext();
-		var context = cnt == -1? "" : instanceof(cnt);
+		var context = cnt == noone? "" : instanceof(cnt);
 		var search_lower = string_lower(search_string);
 		var search_map = ds_map_create();
 		

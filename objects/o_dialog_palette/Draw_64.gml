@@ -30,7 +30,7 @@ if palette == 0 exit;
 #region presets
 	draw_sprite_stretched(THEME.ui_panel_bg, 0, presets_x + ui(16), dialog_y + ui(44), ui(240 - 32), dialog_h - ui(60));
 	
-	sp_presets.active = sFOCUS;
+	sp_presets.setActiveFocus(sFOCUS, sHOVER);
 	sp_presets.draw(presets_x + ui(24), dialog_y + ui(44));
 	
 	var bx = presets_x + presets_w - ui(44);
@@ -91,7 +91,7 @@ if palette == 0 exit;
 		var bx = content_x + content_w - ui(50);
 		var by = dialog_y + ui(16);
 		
-		if(buttonInstant(THEME.button_hide, bx, by, ui(28), ui(28), mouse_ui, sFOCUS, sHOVER, get_text("palette_editor_sort", "Sort color"), THEME.sort) == 2) {
+		if(buttonInstant(THEME.button_hide, bx, by, ui(28), ui(28), mouse_ui, interactable && sFOCUS, sHOVER, get_text("palette_editor_sort", "Sort color"), THEME.sort) == 2) {
 			menuCall( bx + ui(32), by, [ 
 				menuItem(get_text("palette_editor_sort_brighter", "Brighter"), function() { sortPalette(__sortBright); }), 
 				menuItem(get_text("palette_editor_sort_darker", "Darker"),     function() { sortPalette(__sortDark); }),
@@ -103,7 +103,7 @@ if palette == 0 exit;
 		}
 		bx -= ui(32);
 		
-		if(buttonInstant(THEME.button_hide, bx, by, ui(28), ui(28), mouse_ui, sFOCUS, sHOVER, get_text("palette_editor_reverse", "Reverse palette"), THEME.reverse) == 2) {
+		if(buttonInstant(THEME.button_hide, bx, by, ui(28), ui(28), mouse_ui, interactable && sFOCUS, sHOVER, get_text("palette_editor_reverse", "Reverse palette"), THEME.reverse) == 2) {
 			palette = array_reverse(palette);
 			onApply(palette);
 		}
@@ -153,7 +153,8 @@ if palette == 0 exit;
 	
 	if(mouse_press(mb_left, sFOCUS) && hover > -1) {
 		index_selecting = hover;
-		index_dragging = hover;
+		if(interactable)
+			index_dragging = hover;
 		selector.setColor(palette[hover]);
 	}
 	
@@ -161,7 +162,7 @@ if palette == 0 exit;
 	var by = pl_y - ui(2);
 	
 	if(array_length(palette) > 1) {
-		if(buttonInstant(THEME.button, bx, by, ui(28), ui(28), mouse_ui, sFOCUS, sHOVER, "", THEME.minus) == 2) {
+		if(buttonInstant(THEME.button, bx, by, ui(28), ui(28), mouse_ui, interactable && sFOCUS, sHOVER, "", THEME.minus) == 2) {
 			array_delete(palette, index_selecting, 1);
 			index_selecting = clamp(index_selecting - 1, 0, array_length(palette) - 1);
 			onApply(palette);
@@ -171,15 +172,16 @@ if palette == 0 exit;
 	}
 	
 	bx -= ui(32);
-	if(buttonInstant(THEME.button, bx, by, ui(28), ui(28), mouse_ui, sFOCUS, sHOVER, "", THEME.add) == 2) {
+	if(buttonInstant(THEME.button, bx, by, ui(28), ui(28), mouse_ui, interactable && sFOCUS, sHOVER, "", THEME.add) == 2) {
 		index_selecting = array_length(palette);
 		palette[array_length(palette)] = c_black;
 		onApply(palette);
 	}
 	
 	bx = content_x + ui(18);
-	if(buttonInstant(THEME.button, bx, by, ui(28), ui(28), mouse_ui, sFOCUS, sHOVER, get_text("palette_editor_load", "Load palette file") + " (.hex)", THEME.file) == 2) {
+	if(buttonInstant(THEME.button, bx, by, ui(28), ui(28), mouse_ui, interactable && sFOCUS, sHOVER, get_text("palette_editor_load", "Load palette file") + " (.hex)", THEME.file) == 2) {
 		var path = get_open_filename(".hex", "");
+		key_release();
 		if(path != "") {
 			palette = loadPalette(path);
 			onApply(palette);
@@ -200,13 +202,11 @@ if palette == 0 exit;
 	var by = dialog_y + dialog_h - ui(36);
 	
 	b_apply.register();
-	b_apply.hover  = sHOVER;
-	b_apply.active = sFOCUS;
+	b_apply.setActiveFocus(sFOCUS, sHOVER);
 	b_apply.draw(bx - ui(18), by - ui(18), ui(36), ui(36), mouse_ui, THEME.button_lime);
 	
 	bx -= ui(48);
 	b_cancel.register();
-	b_cancel.hover  = sHOVER;
-	b_cancel.active = sFOCUS;
+	b_cancel.setActiveFocus(sFOCUS, sHOVER);
 	b_cancel.draw(bx - ui(18), by - ui(18), ui(36), ui(36), mouse_ui, THEME.button_hide);
 #endregion

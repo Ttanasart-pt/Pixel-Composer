@@ -1,7 +1,8 @@
-function Node_create_Image_gif(_x, _y, _group = -1) {
+function Node_create_Image_gif(_x, _y, _group = noone) {
 	var path = "";
 	if(!LOADING && !APPENDING && !CLONING) {
 		path = get_open_filename(".gif", "");
+		key_release();
 		if(path == "") return noone;
 	}
 	
@@ -24,7 +25,7 @@ function Node_create_Image_gif_path(_x, _y, path) {
 	return node;
 }
 
-function Node_Image_gif(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
+function Node_Image_gif(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name			= "";
 	color			= COLORS.node_blend_input;
 	update_on_frame = true;

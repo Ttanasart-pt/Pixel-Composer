@@ -61,6 +61,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) constructor {
 	update_on_frame = false;
 	render_time		= 0;
 	auto_render_time = true;
+	updated			= false;
 	
 	use_cache		= false;
 	cached_output	= [];
@@ -298,7 +299,6 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) constructor {
 	static triggerRender = function() {
 		setRenderStatus(false);
 		UPDATE |= RENDER_TYPE.partial;
-		//ds_queue_enqueue(RENDER_QUEUE, self);
 		
 		for(var i = 0; i < ds_list_size(outputs); i++) {
 			var jun = outputs[| i];
@@ -316,7 +316,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) constructor {
 	static setRenderStatus = function(result) {
 		rendered = result;
 		
-		if(!result && group != -1) 
+		if(!result && group != noone) 
 			group.setRenderStatus(result);
 	}
 	
@@ -730,7 +730,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) constructor {
 	static restore = function() { 
 		if(active) return;
 		enable();
-		ds_list_add(group == -1? NODES : group.nodes, self);
+		ds_list_add(group == noone? NODES : group.getNodeList(), self);
 	}
 	
 	static onValidate = function() {
@@ -930,12 +930,12 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) constructor {
 		NODE_MAP[? _nid] = _node;
 		PANEL_ANIMATION.updatePropertyList();
 		
-		onClone(_node);
+		onClone(_node, target);
 		
 		return _node;
 	}
 	
-	static onClone = function(target = PANEL_GRAPH.getCurrentContext()) {}
+	static onClone = function(_NewNode, target = PANEL_GRAPH.getCurrentContext()) {}
 	
 	static serialize = function(scale = false, preset = false) {
 		var _map = ds_map_create();
@@ -947,7 +947,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) constructor {
 			_map[? "x"]		 = x;
 			_map[? "y"]		 = y;
 			_map[? "type"]   = instanceof(self);
-			_map[? "group"]  = group == -1? -1 : group.node_id;
+			_map[? "group"]  = group == noone? group : group.node_id;
 		}
 		
 		ds_map_add_map(_map, "attri", attributeSerialize());
@@ -958,6 +958,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) constructor {
 		ds_map_add_list(_map, "inputs", _inputs);
 		
 		doSerialize(_map);
+		processSerialize(_map);
 		return _map;
 	}
 	
@@ -967,6 +968,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) constructor {
 		return att;
 	}
 	static doSerialize = function(_map) {}
+	static processSerialize = function(_map) {}
 	
 	load_scale = false;
 	load_map = -1;
@@ -994,15 +996,20 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) constructor {
 		if(ds_map_exists(load_map, "attri"))
 			attributeDeserialize(load_map[? "attri"]);
 		
+		doDeserialize();
+		processDeserialize();
+		
 		if(!ds_map_exists(load_map, "inputs"))
 			return;
 	}
+	static doDeserialize = function() {}
 	
 	static attributeDeserialize = function(attr) {
 		ds_map_override(attributes, attr);
 	}
 	
 	static postDeserialize = function() {}
+	static processDeserialize = function() {}
 	
 	static applyDeserialize = function(preset = false) {
 		var _inputs = load_map[? "inputs"];
@@ -1021,9 +1028,9 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) constructor {
 	static doApplyDeserialize = function() {}
 	
 	static loadGroup = function() {
-		if(_group == -1) {
+		if(_group == noone) {
 			var c = PANEL_GRAPH.getCurrentContext();
-			if(c != -1) c.add(self);
+			if(c != noone) c.add(self);
 		} else {
 			if(APPENDING) _group = GetAppendID(_group);
 			

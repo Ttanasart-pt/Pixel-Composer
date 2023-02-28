@@ -1,5 +1,5 @@
 /*
-function Node_Processor(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
+function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	array_process  = ARRAY_PROCESS.loop;
 	process_amount = 0;
 	inputs_data    = [];

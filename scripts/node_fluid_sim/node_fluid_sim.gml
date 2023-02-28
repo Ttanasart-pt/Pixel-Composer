@@ -1,4 +1,4 @@
-function Node_Fluid_Group(_x, _y, _group = -1) : Node_Collection(_x, _y, _group) constructor {
+function Node_Fluid_Group(_x, _y, _group = noone) : Node_Collection(_x, _y, _group) constructor {
 	name  = "FluidSim";
 	color = COLORS.node_blend_fluid;
 	icon  = THEME.fluid_sim;

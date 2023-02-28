@@ -20,7 +20,7 @@ enum MATH_OPERATOR {
 	abs
 }
 
-function Node_create_Math(_x, _y, _group = -1, _param = "") {
+function Node_create_Math(_x, _y, _group = noone, _param = "") {
 	var node = new Node_Math(_x, _y, _group);
 	
 	switch(_param) {
@@ -49,7 +49,7 @@ function Node_create_Math(_x, _y, _group = -1, _param = "") {
 	return node;
 }
 
-function Node_Math(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
+function Node_Math(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name		= "Math";
 	color		= COLORS.node_blend_number;
 	previewable = false;

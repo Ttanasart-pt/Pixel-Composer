@@ -1,4 +1,4 @@
-function Node_Fluid_Add_Collider(_x, _y, _group = -1) : Node_Fluid(_x, _y, _group) constructor {
+function Node_Fluid_Add_Collider(_x, _y, _group = noone) : Node_Fluid(_x, _y, _group) constructor {
 	name  = "Add Collider";
 	color = COLORS.node_blend_fluid;
 	icon  = THEME.fluid_sim;

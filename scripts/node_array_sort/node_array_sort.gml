@@ -1,4 +1,4 @@
-function Node_Array_Sort(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
+function Node_Array_Sort(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Sort Array";
 	previewable = false;
 	
@@ -16,6 +16,10 @@ function Node_Array_Sort(_x, _y, _group = -1) : Node(_x, _y, _group) constructor
 	static update = function(frame = ANIMATOR.current_frame) {
 		var arr = inputs[| 0].getValue();
 		var asc = inputs[| 1].getValue();
+		
+		inputs[| 0].type = VALUE_TYPE.any;
+		outputs[| 0].type = VALUE_TYPE.any;
+			
 		if(!is_array(arr)) return;
 		
 		if(inputs[| 0].value_from != noone) {
@@ -24,7 +28,7 @@ function Node_Array_Sort(_x, _y, _group = -1) : Node(_x, _y, _group) constructor
 		}
 		
 		var _arr = array_clone(arr);
-		array_sort(_arr, !bool(asc));
+		array_sort(_arr, bool(!asc));
 		
 		outputs[| 0].setValue(_arr);
 	}

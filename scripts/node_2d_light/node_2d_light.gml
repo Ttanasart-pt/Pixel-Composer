@@ -5,7 +5,7 @@ enum LIGHT_SHAPE_2D {
 	spot
 }
 
-function Node_2D_light(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constructor {
+function Node_2D_light(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "2D Light";
 	
 	shader = sh_2d_light;

@@ -14,7 +14,7 @@ uniform int shiftAxis;
 uniform int useSampler;
 
 float randomSeed (in vec2 st, float _seed) {
-    return fract(sin(dot(st.xy, vec2(12.9898, 78.233))) * (43758.5453123 + _seed));
+    return fract(sin(dot(st.xy + vec2(5.0654, 9.684), vec2(12.9898, 78.233))) * (43758.5453123 + _seed));
 }
 
 float random (in vec2 st) {

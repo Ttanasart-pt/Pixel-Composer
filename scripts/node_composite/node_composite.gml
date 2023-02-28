@@ -10,7 +10,7 @@ enum COMPOSE_OUTPUT_SCALING {
 	constant
 }
 
-function Node_Composite(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constructor {
+function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name		= "Composite";
 	
 	shader = sh_blend_normal_dim;

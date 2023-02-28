@@ -1,7 +1,8 @@
-function Node_create_ASE_File_Read(_x, _y, _group = -1) {
+function Node_create_ASE_File_Read(_x, _y, _group = noone) {
 	var path = "";
 	if(!LOADING && !APPENDING && !CLONING) {
 		path = get_open_filename(".ase", "");
+		key_release();
 		if(path == "") return noone;
 	}
 	
@@ -22,7 +23,7 @@ function Node_create_ASE_File_Read_path(_x, _y, path) {
 	return node;	
 }
 
-function Node_ASE_File_Read(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
+function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "ASE File In";
 	update_on_frame = true;
 	always_output	= true;
@@ -245,7 +246,7 @@ function Node_ASE_File_Read(_x, _y, _group = -1) : Node(_x, _y, _group) construc
 						content[? "Palette"] = plt;
 						
 						var p_arr = [];
-						for( var i = 0; i < array_length(plt); i++ )
+						for( var k = 0; k < array_length(plt); k++ )
 							array_push(p_arr, make_color_rgb(plt[i][0], plt[i][1], plt[i][2]));
 						outputs[| 3].setValue(p_arr);
 						break;

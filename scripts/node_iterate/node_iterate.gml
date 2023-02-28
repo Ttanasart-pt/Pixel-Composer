@@ -4,7 +4,7 @@ enum ITERATION_STATUS {
 	complete,
 }
 
-function Node_Iterate(_x, _y, _group = -1) : Node_Collection(_x, _y, _group) constructor {
+function Node_Iterate(_x, _y, _group = noone) : Node_Collection(_x, _y, _group) constructor {
 	name = "Loop";
 	color = COLORS.node_blend_loop;
 	icon  = THEME.loop;
@@ -29,9 +29,10 @@ function Node_Iterate(_x, _y, _group = -1) : Node_Collection(_x, _y, _group) con
 	static initLoop = function() {
 		iterated = 0;
 		loop_start_time = get_timer();
+		var node_list   = getNodeList();
 		
-		for( var i = 0; i < ds_list_size(nodes); i++ ) {
-			var n = nodes[| i];
+		for( var i = 0; i < ds_list_size(node_list); i++ ) {
+			var n = node_list[| i];
 			if(variable_struct_exists(n, "initLoop"))
 				n.initLoop();
 		}
@@ -50,7 +51,7 @@ function Node_Iterate(_x, _y, _group = -1) : Node_Collection(_x, _y, _group) con
 			
 		if(!allReady) return;
 		
-		__nodeLeafList(nodes, RENDER_QUEUE);
+		__nodeLeafList(getNodeList(), RENDER_QUEUE);
 		initLoop();
 	}
 	

@@ -1,4 +1,4 @@
-function Node_Normal_Light(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constructor {
+function Node_Normal_Light(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Normal Light";
 	
 	uniform_map = shader_get_sampler_index(sh_normal_light, "normalMap");

@@ -1,2 +1,3 @@
 /// @description 
 name = "";
+menu = [];

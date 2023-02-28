@@ -1,4 +1,4 @@
-function Node_Fluid(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
+function Node_Fluid(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	color = COLORS.node_blend_fluid;
 	icon  = THEME.fluid_sim;
 	

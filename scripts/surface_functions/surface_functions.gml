@@ -22,6 +22,7 @@ function draw_surface_part_ext_safe(surface, _l, _t, _w, _h, _x, _y, _xs = 1, _y
 
 //check
 function is_surface(s) {
+	if(is_undefined(s)) return false;
 	if(is_array(s)) return false;
 	if(!is_real(s)) return false;
 	if(!s) return false;

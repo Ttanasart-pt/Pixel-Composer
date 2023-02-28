@@ -1,4 +1,4 @@
-function Node_Text(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constructor {
+function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Draw Text";
 	font = f_p0;
 	

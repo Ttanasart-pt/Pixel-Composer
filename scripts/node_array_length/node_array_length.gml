@@ -1,4 +1,4 @@
-function Node_Array_Length(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
+function Node_Array_Length(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name		= "Array Length";
 	previewable = false;
 	
@@ -13,6 +13,7 @@ function Node_Array_Length(_x, _y, _group = -1) : Node(_x, _y, _group) construct
 	
 	function update(frame = ANIMATOR.current_frame) { 
 		var _arr = inputs[| 0].getValue();
+		inputs[| 0].type = inputs[| 0].value_from == noone? VALUE_TYPE.any : inputs[| 0].value_from.type;
 		
 		if(!is_array(_arr) || array_length(_arr) == 0) {
 			outputs[| 0].setValue(0);

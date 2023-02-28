@@ -1,4 +1,4 @@
-function Node_Perlin_Smear(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constructor {
+function Node_Perlin_Smear(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Smear noise";
 	
 	shader = sh_perlin_smear;

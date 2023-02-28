@@ -1,4 +1,4 @@
-function Node_Level_Selector(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constructor {
+function Node_Level_Selector(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Level Selector";
 	
 	shader = sh_level_selector;

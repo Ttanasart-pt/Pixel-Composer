@@ -4,10 +4,12 @@ event_inherited();
 #region data
 	dialog_w = ui(1068);
 	dialog_h = ui(476);
+	title_height = 52;
 	
 	name = get_text("gradient_editor_title", "Gradient editor");
 	gradient = noone;
 	grad_data = noone;
+	interactable = true;
 	
 	key_selecting = noone;
 	key_dragging  = noone;
@@ -18,6 +20,7 @@ event_inherited();
 	destroy_on_click_out = true;
 	
 	sl_position = new slider(0, 100, 0.1, function(val) { 
+		if(!interactable) return;
 		if(key_selecting == noone) return;
 		setKeyPosition(key_selecting, val / 100);
 	}, function() { removeKeyOverlap(key_selecting); })
@@ -158,7 +161,7 @@ event_inherited();
 			draw_text(ui(16), yy + ui(8), filename_name_only(preset_name[| i]));
 			draw_gradient(ui(16), yy + ui(28), ww, ui(16), presets[| i]);
 			
-			if(_hover && isHover && mouse_press(mb_left, sFOCUS)) { 
+			if(_hover && isHover && mouse_press(mb_left, interactable && sFOCUS)) { 
 				var target = presets[| i];
 				gradient = [];
 				for( var i = 0; i < array_length(target); i++ )
@@ -229,7 +232,7 @@ event_inherited();
 			else
 				drawPalette(palettes[| i], ui(16), yy + ui(28), ww, ui(20));
 			
-			if(!click_block && mouse_click(mb_left, sFOCUS)) {
+			if(!click_block && mouse_click(mb_left, interactable && sFOCUS)) {
 				if(palette_selecting == i && _hover && point_in_rectangle(_m[0], _m[1], ui(16), yy + ui(28), ui(16) + ww, yy + ui(28) + _height)) {
 					var m_ax = _m[0] - ui(16);
 					var m_ay = _m[1] - (yy + ui(28));

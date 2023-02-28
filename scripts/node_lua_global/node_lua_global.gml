@@ -1,4 +1,4 @@
-function Node_Lua_Global(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
+function Node_Lua_Global(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Lua Global";
 	preview_channel = 1;
 	previewable = false;

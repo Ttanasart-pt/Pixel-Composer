@@ -1,4 +1,4 @@
-function Node_VFX_Spawner(_x, _y, _group = -1) : Node_VFX_Spawner_Base(_x, _y, _group) constructor {
+function Node_VFX_Spawner(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y, _group) constructor {
 	name = "Spawner";
 	color = COLORS.node_blend_vfx;
 	icon  = THEME.vfx;

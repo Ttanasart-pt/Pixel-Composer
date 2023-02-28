@@ -1,4 +1,4 @@
-function Node_Cellular(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constructor {
+function Node_Cellular(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Cellular Noise";
 	
 	inputs[| 0] = nodeValue("Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, def_surf_size2 )

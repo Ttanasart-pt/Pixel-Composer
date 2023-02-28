@@ -11,9 +11,24 @@ uniform vec2  scale;
 uniform vec2  shift;
 uniform float height;
 uniform int   slope;
+uniform int   sampleMode;
 
 float bright(in vec4 col) {
 	return (col.r + col.g + col.b) / 3. * col.a;
+}
+
+vec4 sampleTexture(vec2 pos) {
+	if(pos.x >= 0. && pos.y >= 0. && pos.x <= 1. && pos.y <= 1.)
+		return texture2D(gm_BaseTexture, pos);
+	
+	if(sampleMode == 0) 
+		return vec4(0.);
+	if(sampleMode == 1) 
+		return texture2D(gm_BaseTexture, clamp(pos, 0., 1.));
+	if(sampleMode == 2) 
+		return texture2D(gm_BaseTexture, fract(pos));
+	
+	return vec4(0.);
 }
 
 void main() {
@@ -52,12 +67,8 @@ void main() {
 			shf = vec2( cos(ang),  sin(ang)) * (i * added_distance) / scale;
 			pxs = v_vTexcoord + shf * pixelStep;
 				
-			if(pxs.x < 0. || pxs.y < 0. || pxs.x > 1. || pxs.y > 1.) 
-				_b1 = 0.;
-			else {
-				col1 = texture2D( gm_BaseTexture, pxs );
-				_b1 = bright(col1);
-			}
+			col1 = sampleTexture( pxs );
+			_b1  = bright(col1);
 				
 			if(_b1 < b1) {
 				slope_distance = min(slope_distance, i);

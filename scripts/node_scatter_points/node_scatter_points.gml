@@ -1,4 +1,4 @@
-function Node_Scatter_Points(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
+function Node_Scatter_Points(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Scatter Points";
 	color = COLORS.node_blend_number;
 	previewable   = false;
@@ -86,7 +86,7 @@ function Node_Scatter_Points(_x, _y, _group = -1) : Node(_x, _y, _group) constru
 			}
 		} else {
 			pos = [];
-			var p = get_points_from_dist(_distMap, _amo, _seed, _fix? 1 : 8);
+			var p = get_points_from_dist(_distMap, _amo, _seed, 8);
 			for( var i = 0; i < array_length(p); i++ ) {
 				if(p[i] == 0) continue;
 				if(_fix) {

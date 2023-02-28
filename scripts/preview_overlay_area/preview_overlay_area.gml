@@ -145,6 +145,8 @@ function preview_overlay_area_two_point(active, _x, _y, _s, _mx, _my, _snx, _sny
 	var y0 = _y0 * _s + _y;
 	var x1 = _x1 * _s + _x;
 	var y1 = _y1 * _s + _y;
+	var xc = (x0 + x1) / 2;
+	var yc = (y0 + y1) / 2;
 	
 	draw_set_color(COLORS._main_accent);
 	switch(__at) {
@@ -152,6 +154,7 @@ function preview_overlay_area_two_point(active, _x, _y, _s, _mx, _my, _snx, _sny
 		case AREA_SHAPE.elipse :	draw_ellipse(x0, y0, x1, y1, true); break;
 	}
 	
+	draw_sprite_ui_uniform(THEME.anchor, 1, xc, yc);
 	draw_sprite_ui_uniform(THEME.anchor_selector, 0, x0, y0);
 	draw_sprite_ui_uniform(THEME.anchor_selector, 0, x1, y1);
 	
@@ -167,12 +170,24 @@ function preview_overlay_area_two_point(active, _x, _y, _s, _mx, _my, _snx, _sny
 			drag_type = 0;
 			UNDO_HOLDING = false;
 		}
-	}
-	
-	if(drag_type == 2) {
+	} else if(drag_type == 2) {
 		var _xx = value_snap(drag_sx + (_mx - drag_mx) / _s, _snx);
 		var _yy = value_snap(drag_sy + (_my - drag_my) / _s, _sny);
 		_val = [_x0, _y0, _xx, _yy, __at];
+		
+		if(setValue(_val))
+			UNDO_HOLDING = true;
+							
+		if(mouse_release(mb_left)) {
+			drag_type = 0;
+			UNDO_HOLDING = false;
+		}
+	} else if(drag_type == 3) {
+		var __x0 = value_snap(drag_sx + (_mx - drag_mx) / _s, _snx);
+		var __y0 = value_snap(drag_sy + (_my - drag_my) / _s, _sny);
+		var __x1 = value_snap(_x1 + (__x0 - _x0), _snx);
+		var __y1 = value_snap(_y1 + (__y0 - _y0), _sny);
+		_val = [__x0, __y0, __x1, __y1, __at];
 		
 		if(setValue(_val))
 			UNDO_HOLDING = true;
@@ -202,6 +217,17 @@ function preview_overlay_area_two_point(active, _x, _y, _s, _mx, _my, _snx, _sny
 			drag_type = 2;	
 			drag_sx   = _x1;
 			drag_sy   = _y1;
+			drag_mx   = _mx;
+			drag_my   = _my;
+		}
+	} else if(active && point_in_rectangle(_mx, _my, x0, y0, x1, y1)) {
+		draw_sprite_ui_uniform(THEME.anchor, 1, xc, yc);
+		hover = 3;
+		
+		if(mouse_press(mb_left)) {
+			drag_type = 3;	
+			drag_sx   = _x0;
+			drag_sy   = _y0;
 			drag_mx   = _mx;
 			drag_my   = _my;
 		}

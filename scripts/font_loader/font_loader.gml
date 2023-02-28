@@ -48,10 +48,7 @@ function loadFonts() {
 		return;
 	}
 	
-	var f = file_text_open_read(path);
-	var s = file_text_read_all(f);
-	file_text_close(f);
-	
+	var s = file_text_read_all(path);
 	var fontDef = json_parse(s);
 	
 	f_h3 = _font_load_from_struct(fontDef.h3, _f_h3);

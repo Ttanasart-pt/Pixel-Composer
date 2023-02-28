@@ -6,7 +6,7 @@ enum STAT_OPERATOR {
 	_min
 }
 
-function Node_create_Statistic(_x, _y, _group = -1, _param = "") {
+function Node_create_Statistic(_x, _y, _group = noone, _param = "") {
 	var node = new Node_Statistic(_x, _y, _group);
 	//ds_list_add(PANEL_GRAPH.nodes_list, node);
 	
@@ -22,7 +22,7 @@ function Node_create_Statistic(_x, _y, _group = -1, _param = "") {
 	return node;
 }
 
-function Node_Statistic(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
+function Node_Statistic(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Statistic";
 	previewable = false;
 	

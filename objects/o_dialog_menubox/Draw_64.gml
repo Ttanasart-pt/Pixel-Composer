@@ -32,7 +32,7 @@
 			draw_sprite_stretched_ext(THEME.textbox, 3, dialog_x, yy, dialog_w, _h, COLORS.dialog_menubox_highlight, 0.75);
 			
 			if(instanceof(_menuItem) == "MenuItem" && sFOCUS && (mouse_release(mb_left) || keyboard_check_released(vk_enter))) {
-				var res = _menuItem.func(dialog_x + dialog_w, yy, depth, _menuItem.name);
+				var res = _menuItem.func(dialog_x + dialog_w, yy, depth, _menuItem.name, i);
 				if(_menuItem.isShelf) ds_list_add(children, res);
 				else				  instance_destroy(o_dialog_menubox);
 			}

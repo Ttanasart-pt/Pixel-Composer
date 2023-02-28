@@ -61,16 +61,14 @@ if !ready exit;
 	if(is_dir) {
 		var dir_y = dialog_y + ui(172);
 		
-		cb_recursive.active = sFOCUS;
-		cb_recursive.hover  = sHOVER;
+		cb_recursive.setActiveFocus(sFOCUS, sHOVER);
 		cb_recursive.draw(dialog_x + dialog_w - ui(48), dir_y, dir_recursive, mouse_ui);
 		
 		draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text);
 		draw_text(dialog_x + ui(24), dir_y + ui(14), "Recursive");
 		
 		dir_y += ui(40);
-		tb_filter.active = sFOCUS;
-		tb_filter.hover  = sHOVER;
+		tb_filter.setActiveFocus(sFOCUS, sHOVER);
 		tb_filter.draw(dialog_x + ui(100), dir_y, dialog_w - ui(120), ui(36), dir_filter, mouse_ui);
 		
 		draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text);

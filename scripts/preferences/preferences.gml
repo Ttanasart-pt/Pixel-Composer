@@ -185,9 +185,7 @@
 		ds_map_add_map(map, "preferences", _pref);
 		
 		var path = DIRECTORY + "keys.json";
-		var file = file_text_open_write(path);
-		file_text_write_string(file, json_encode_minify(map));
-		file_text_close(file);
+		file_text_write_all(path, json_encode_minify(map));
 		ds_map_destroy(map);
 	}
 	
@@ -195,12 +193,7 @@
 		var path = DIRECTORY + "keys.json";
 		if(!file_exists(path)) return;
 		
-		var file = file_text_open_read(path);
-		var load_str = "";
-		while(!file_text_eof(file)) {
-			load_str += file_text_readln(file);
-		}
-		file_text_close(file);
+		var load_str = file_text_read_all(path);
 		var map = json_decode(load_str);	
 		
 		if(ds_map_exists(map, "key")) {

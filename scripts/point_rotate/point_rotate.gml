@@ -2,8 +2,6 @@ function point_rotate(px, py, ox, oy, a) {
 	a = angle_difference(a, 0);
 	if(a == 0)   return [ px, py ];
 	if(a == 180) return [ ox + (ox - px), oy + (oy - py) ];
-	if(a == 90)  return [ ox + (oy - py), oy + (ox - px) ];
-	if(a == -90) return [ ox + (py - oy), oy + (px - ox) ];
 	
 	var cx = px - ox;
 	var cy = py - oy;

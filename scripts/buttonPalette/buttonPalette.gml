@@ -1,15 +1,21 @@
-function buttonPalette(_onApply) {
-	return new buttonPaletteClass(_onApply);
-}
-
-function buttonPaletteClass(_onApply) : widget() constructor {
+function buttonPalette(_onApply, dialog = noone) : widget() constructor {
 	onApply = _onApply;
+	parentDialog = dialog;
 	current_palette = noone;
+	
+	function apply(value) {
+		if(!interactable) return;
+		onApply(value);
+	}
 	
 	static trigger = function() {
 		var dialog = dialogCall(o_dialog_palette, WIN_W / 2, WIN_H / 2);
 		dialog.setDefault(current_palette);
-		dialog.onApply = onApply;
+		dialog.onApply = apply;
+		dialog.interactable = interactable;
+		
+		if(parentDialog)
+			parentDialog.addChildren(dialog);
 	}
 	
 	static draw = function(_x, _y, _w, _h, _color, _m) {

@@ -1,19 +1,23 @@
-function file_text_read_all(file) {
+function file_text_read_all(path) {
+	var f = file_text_open_read(path);
 	var s = "";
-	while(!file_text_eof(file))	
-		s += file_text_readln(file);
+	while(!file_text_eof(f))	
+		s += file_text_readln(f);
+	file_text_close(f);
 	return s;
 }
 
-function file_text_read_all_lines(file) {
+function file_text_read_all_lines(path) {
+	var f = file_text_open_read(path);
 	var s = [];
-	while(!file_text_eof(file))	
-		array_push(s, file_text_readln(file));
+	while(!file_text_eof(f))	
+		array_push(s, file_text_readln(f));
+	file_text_close(f);
 	return s;
 }
 
-function file_text_write_all(file, str) {
-	var f = file_text_open_write(file);
+function file_text_write_all(path, str) {
+	var f = file_text_open_write(path);
 	file_text_write_string(f, str);
 	file_text_close(f);
 }

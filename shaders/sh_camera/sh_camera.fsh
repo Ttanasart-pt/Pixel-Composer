@@ -12,6 +12,7 @@ uniform vec2 position;
 uniform float zoom;
 uniform float blur;
 uniform int sampleMode;
+uniform int fixBG;
 
 vec4 sampleTexture(sampler2D samp, vec2 pos) {
 	if(pos.x >= 0. && pos.y >= 0. && pos.x <= 1. && pos.y <= 1.)
@@ -30,7 +31,7 @@ vec4 sampleTexture(sampler2D samp, vec2 pos) {
 void main() {
 	vec2 pos = position + (v_vTexcoord - vec2(.5)) * (camDimension / scnDimension) * zoom;
     vec4 _col0 = sampleTexture( scene, pos );
-	vec4 _col1 = sampleTexture( backg, pos );
+	vec4 _col1 = sampleTexture( backg, fixBG == 1? v_vTexcoord - position + vec2(.5) : pos );
     
 	float al = _col0.a + _col1.a * (1. - _col0.a);
 	vec4 res = ((_col0 * _col0.a) + (_col1 * _col1.a * (1. - _col0.a))) / al;

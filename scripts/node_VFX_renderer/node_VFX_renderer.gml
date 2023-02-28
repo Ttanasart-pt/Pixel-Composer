@@ -1,4 +1,4 @@
-function Node_VFX_Renderer(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
+function Node_VFX_Renderer(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Renderer";
 	color = COLORS.node_blend_vfx;
 	icon  = THEME.vfx;
@@ -12,7 +12,7 @@ function Node_VFX_Renderer(_x, _y, _group = -1) : Node(_x, _y, _group) construct
 		.rejectArray();
 	
 	inputs[| 2] = nodeValue("Blend mode", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0 )
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Normal", "Additive" ])
+		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Normal", "Alpha", "Additive" ])
 		.rejectArray();
 	
 	data_length = 1;
@@ -76,6 +76,8 @@ function Node_VFX_Renderer(_x, _y, _group = -1) : Node(_x, _y, _group) construct
 			draw_clear_alpha(0, 0);
 		
 			if(_blend == PARTICLE_BLEND_MODE.normal)
+				BLEND_NORMAL;
+			else if(_blend == PARTICLE_BLEND_MODE.alpha) 
 				BLEND_ALPHA;
 			else if(_blend == PARTICLE_BLEND_MODE.additive) 
 				BLEND_ADD;

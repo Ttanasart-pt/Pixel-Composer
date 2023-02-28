@@ -6,6 +6,7 @@ enum ANIM_END_ACTION {
 
 enum PARTICLE_BLEND_MODE {
 	normal,
+	alpha,
 	additive
 }
 

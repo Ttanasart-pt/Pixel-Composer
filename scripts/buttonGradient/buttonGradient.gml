@@ -1,17 +1,23 @@
-function buttonGradient(_onApply) {
-	return new buttonGradientClass(_onApply);
-}
-
-function buttonGradientClass(_onApply) : widget() constructor {
+function buttonGradient(_onApply, dialog = noone) : widget() constructor {
 	onApply = _onApply;
+	parentDialog = dialog;
 	
 	current_gradient = noone;
 	current_data = noone;
 	
+	function apply(value) {
+		if(!interactable) return;
+		onApply(value);
+	}
+	
 	static trigger = function() {
 		var dialog = dialogCall(o_dialog_gradient, WIN_W / 2, WIN_H / 2);
 		dialog.setDefault(current_gradient, current_data);
-		dialog.onApply = onApply;
+		dialog.onApply = apply;
+		dialog.interactable = interactable;
+		
+		if(parentDialog)
+			parentDialog.addChildren(dialog);
 	}
 	
 	static draw = function(_x, _y, _w, _h, _gradient, _data, _m) {

@@ -1,4 +1,4 @@
-function Node_Rigid_Object_Spawner(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
+function Node_Rigid_Object_Spawner(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Object Spawner";
 	color = COLORS.node_blend_simulation;
 	icon  = THEME.rigidSim;

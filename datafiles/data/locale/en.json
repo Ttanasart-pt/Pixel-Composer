@@ -1,5 +1,5 @@
 {
-    "version": 1122,
+    "version": 1132,
     "preferences":      "Preferences",
     "show_on_startup":  "Show on startup",
     "recent_files":     "Recent files",
@@ -53,6 +53,8 @@
     "accept":       "Accept",
     "apply":        "Apply",
     "ignore":       "Ignore",
+    "pin":          "Pin",
+    "unpin":        "Unpin",
 
     "safe_mode":    "SAFE MODE",
 
@@ -106,7 +108,7 @@
     "graph_visibility_dim":     "Dimension",
     "graph_visibility_compute": "Compute time",
 
-    "output_visibility_title":   "Outputs settings",
+    "output_visibility_title":   "Outputs visibility",
 
     "new_file_placeholder":         "New file",
 
@@ -129,19 +131,23 @@
     "array_edit_sort_name": "Sort by name",
 
     "noti_title":          "Notification",
-    "noti_pin":            "Pin",
-    "noti_unpin":          "Unpin",
     "noti_clear_log":      "Clear log messages",
     "noti_clear_warn":     "Clear warning messages",
     "noti_clear_all":      "Clear all notifications",
     "noti_open_log":       "Open log file",
     "noti_copy_message":   "Copy notification message",
     "noti_delete_message": "Delete notification",
+    "noti_hide_error":     "Hide error",
+    "noti_show_error":     "Show error",
+    "noti_hide_warning":   "Hide warning",
+    "noti_show_warning":   "Show warning",
+    "noti_hide_log":       "Hide log",
+    "noti_show_log":       "Show log",
 
     "pref_pages_general":    "General",
     "pref_pages_nodes":      "Node settings",
     "pref_pages_appearance": "Appearances",
-    "pref_pages_colors":     "Colors",
+    "pref_pages_theme":      "Theme",
     "pref_pages_hotkeys":    "Hotkeys",
     "pref_reset_colors":     "Reset colors",
 
@@ -230,6 +236,9 @@
     "panel_graph_send_to_preview":          "Send to preview",
     "panel_graph_send_to_export":           "Send to export",
     "panel_graph_toggle_preview":           "Toggle node preview",
+    "panel_graph_toggle_render":            "Toggle node render",
+    "panel_graph_enter_group":              "Enter group",
+    "panel_graph_preview_window":           "Send to preview window",
     "panel_graph_delete_and_merge_connection":  "Delete and merge connection",
     "panel_graph_delete_and_cut_connection":    "Delete and cut connection",
     "panel_graph_add_transform":        "Add transform",
@@ -304,6 +313,9 @@
     "panel_inspector_execute":          "Execute node",
     "panel_inspector_cache_desp":       "This node cache output for performance.\nClick to clear all cached frames in this node.",
     "panel_inspector_set_default":      "Set as default",
+    "panel_inspector_workshop_save":    "Save file before upload",
+    "panel_inspector_workshop_upload":  "Upload to Steam Workshop",
+    "panel_inspector_workshop_update":  "Update Steam Workshop",
 
     "dialog_migration_title":       "Program directory changed in 1.13",
     "dialog_migration_content":     "This means all custom collections, assets, palettes, gradients, fonts, presets have to be move manually.",

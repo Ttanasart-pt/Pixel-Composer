@@ -14,8 +14,7 @@ if !ready exit;
 	var yy = dialog_y + ui(44);
 	
 	tb_scale_frame.register();
-	tb_scale_frame.active = sFOCUS;
-	tb_scale_frame.hover  = sHOVER;
+	tb_scale_frame.setActiveFocus(sFOCUS, sHOVER);
 	draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text);
 	draw_text(dialog_x + ui(32), yy + ui(17), "Target frame length");
 	var tb_x = dialog_x + ui(200);
@@ -29,7 +28,6 @@ if !ready exit;
 	var by = yy;
 	
 	b_apply.register();
-	b_apply.hover  = sHOVER;
-	b_apply.active = sFOCUS;
+	b_apply.setActiveFocus(sFOCUS, sHOVER);
 	b_apply.draw(bx, by, ui(36), ui(36), mouse_ui, THEME.button_lime);
 #endregion

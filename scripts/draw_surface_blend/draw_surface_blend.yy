@@ -2,8 +2,8 @@
   "resourceType": "GMScript",
   "resourceVersion": "1.0",
   "name": "draw_surface_blend",
-  "isDnD": false,
   "isCompatibility": false,
+  "isDnD": false,
   "parent": {
     "name": "surface",
     "path": "folders/functions/surface.yy",

@@ -26,6 +26,10 @@ function Panel_Preview() : PanelContent() constructor {
 	canvas_drag_sx  = 0;
 	canvas_drag_sy  = 0;
 	
+	sample_color = noone;
+	sample_x = noone;
+	sample_y = noone;
+	
 	preview_node	= [ noone, noone ];
 	preview_surface = [ 0, 0 ];
 	tile_surface    = surface_create(1, 1);
@@ -133,6 +137,7 @@ function Panel_Preview() : PanelContent() constructor {
 	
 	addHotkey("Preview", "Focus content",		"F", MOD_KEY.none,	function() { fullView(); });
 	addHotkey("Preview", "Save current frame",	"S", MOD_KEY.shift,	function() { saveCurrentFrame(); });
+	addHotkey("Preview", "Preview window",		"P", MOD_KEY.ctrl,	function() { previewWindow(getNodePreview()); });
 	
 	addHotkey("Preview", "Toggle grid",			"G", MOD_KEY.ctrl,	function() { grid_show = !grid_show; });
 	
@@ -346,7 +351,7 @@ function Panel_Preview() : PanelContent() constructor {
 							tile_surface = surface_verify(tile_surface, surface_get_width(preview_surface[0]) * ss, h);
 							surface_set_target(tile_surface);
 								draw_clear_alpha(0, 0);
-								draw_surface_tiled_ext_safe(preview_surface[0], psx, 0, ss, ss, c_white, 1); 
+								draw_surface_tiled_ext_safe(preview_surface[0], 0, psy, ss, ss, c_white, 1); 
 							surface_reset_target();
 							draw_surface(tile_surface, psx, 0);
 							break;
@@ -400,6 +405,23 @@ function Panel_Preview() : PanelContent() constructor {
 				break;
 		}
 		
+		if(!instance_exists(o_dialog_menubox)) {
+			sample_color = noone;
+			sample_x = noone;
+			sample_y = noone;
+		
+			if(mouse_on_preview && (mouse_press(mb_right) || key_mod_press(CTRL))) {
+				var _sx = sample_x;
+				var _sy = sample_y;
+				
+				sample_x = floor((mx - canvas_x) / canvas_s);
+				sample_y = floor((my - canvas_y) / canvas_s);
+				var surf = getNodePreviewSurface();
+				if(is_surface(surf))
+					sample_color = surface_getpixel_ext(surf, sample_x, sample_y);
+			}
+		}
+		
 		if(is_surface(preview_surface[0])) {
 			if(grid_show) {
 				var _gw = grid_width  * canvas_s;
@@ -433,7 +455,7 @@ function Panel_Preview() : PanelContent() constructor {
 	}
 	
 	function drawPreviewOverlay() {
-		right_menu_y = ui(8);
+		right_menu_y = ui(32);
 		draw_set_text(f_p0, fa_right, fa_top, fps >= ANIMATOR.framerate? COLORS._main_text_sub : COLORS._main_value_negative);
 		draw_text(w - ui(8), right_menu_y, "fps " + string(fps));
 		right_menu_y += string_height("l");
@@ -607,6 +629,42 @@ function Panel_Preview() : PanelContent() constructor {
 		toolbar_height = ui(40);
 		var ty = h - toolbar_height;
 		//draw_sprite_stretched_ext(THEME.toolbar_shadow, 0, 0, ty - 12 + 4, w, 12, c_white, 0.5);
+		
+		var scHeight = ui(32);
+		
+		draw_set_color(COLORS.panel_toolbar_fill);
+		draw_set_alpha(0.5);
+		draw_rectangle(0, 0, w, scHeight, false);
+		draw_set_alpha(1);
+		
+		var cx = ui(10);
+		var cy = ui(10);
+		var cw = ui(32);
+		var ch = scHeight - ui(16);
+		
+		if(sample_color != noone) {
+			draw_set_color(sample_color);
+			draw_rectangle(cx, cy, cx + cw, cy + ch, false);
+		}
+		draw_set_color(COLORS.panel_toolbar_outline);
+		draw_rectangle(cx, cy, cx + cw, cy + ch, true);
+			
+		if(sample_color != noone) {
+			var tx = cx + cw + ui(16);
+			var hx = color_get_hex(sample_color);
+			draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text);
+			draw_text(tx, cy + ch / 2, hx);
+			
+			tx += string_width(hx) + ui(8);
+			draw_set_color(COLORS._main_text_sub);
+			draw_text(tx, cy + ch / 2, "(" + string(color_get_alpha(sample_color)) + ")");
+		}
+		
+		if(sample_x != noone) {
+			draw_set_text(f_p0, fa_right, fa_center, COLORS._main_text_sub);
+			draw_text(w - ui(10), cy + ch / 2, "[" + string(sample_x) + ", " + string(sample_y) + "]");
+		}
+		
 		draw_set_color(COLORS.panel_toolbar_fill);
 		draw_rectangle(0, ty, w, h, false);
 		
@@ -736,8 +794,13 @@ function Panel_Preview() : PanelContent() constructor {
 		
 		if(my < h - toolbar_height && mouse_press(mb_right, pFOCUS)) {
 			menuCall(,, [ 
+				menuItem(get_text("panel_graph_preview_window", "Send to preview window"), function() { previewWindow(getNodePreview()); }, noone, ["Preview", "Preview window"]), 
+				-1,
 				menuItem(get_text("panel_preview_save", "Save current preview as") + "...", function() { PANEL_PREVIEW.saveCurrentFrame(); }), 
 				menuItem(get_text("panel_preview_save_all", "Save all current previews as") + "...", function() { PANEL_PREVIEW.saveAllCurrentFrames(); }), 
+				-1,
+				menuItem(get_text("panel_preview_copy_color", "Copy color [") + string(sample_color) + "]", function() { clipboard_set_text(sample_color); }), 
+				menuItem(get_text("panel_preview_copy_color", "Copy hex [") + string(color_get_hex(sample_color)) + "]", function() { clipboard_set_text(color_get_hex(sample_color)); }), 
 			]);
 		}
 		
@@ -749,7 +812,8 @@ function Panel_Preview() : PanelContent() constructor {
 		var prevS = getNodePreviewSurface();
 		if(!is_surface(prevS)) return;
 		
-		var path = get_save_filename(".png", "export");
+		var path = get_save_filename(".png", "export"); 
+		key_release();
 		if(path == "") return;
 		if(filename_ext(path) != ".png") path += ".png";
 		
@@ -757,7 +821,8 @@ function Panel_Preview() : PanelContent() constructor {
 	}
 	
 	function saveAllCurrentFrames() {
-		var path = get_save_filename(".png", "export");
+		var path = get_save_filename(".png", "export"); 
+		key_release();
 		if(path == "") return;
 		
 		var ext = ".png";

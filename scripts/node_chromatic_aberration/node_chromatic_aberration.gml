@@ -1,4 +1,4 @@
-function Node_Chromatic_Aberration(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constructor {
+function Node_Chromatic_Aberration(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Chromatic Aberration";
 	
 	shader = sh_chromatic_aberration;

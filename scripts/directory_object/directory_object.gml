@@ -32,10 +32,7 @@ function FileObject(_name, _path) constructor {
 		if(meta != noone) return meta;
 		if(meta == undefined) return noone;
 		
-		var f = file_text_open_read(path);
-		var _f = file_text_read_all(f);
-		file_text_close(f);
-		
+		var _f = file_text_read_all(path);
 		var m = json_decode(_f);
 		
 		meta = new MetaDataManager();

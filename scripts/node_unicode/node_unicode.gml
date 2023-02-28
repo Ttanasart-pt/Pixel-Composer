@@ -1,4 +1,4 @@
-function Node_Unicode(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constructor {
+function Node_Unicode(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Unicode";
 	color = COLORS.node_blend_number;
 	previewable   = false;

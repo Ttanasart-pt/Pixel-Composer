@@ -136,6 +136,7 @@ function Panel_Graph() : PanelContent() constructor {
 	addHotkey("Graph", "Add node",			    "A", MOD_KEY.none,	function() { callAddDialog(); });
 	addHotkey("Graph", "Focus content",			"F", MOD_KEY.none,	function() { fullView(); });
 	addHotkey("Graph", "Preview focusing node",	"P", MOD_KEY.none,	function() { setCurrentPreview(); });
+	addHotkey("Graph", "Preview window",		"P", MOD_KEY.ctrl,	function() { previewWindow(node_focus); });
 	addHotkey("Graph", "Import image",			"I", MOD_KEY.none,	function() { nodeBuild("Node_Image", mouse_grid_x, mouse_grid_y); });
 	addHotkey("Graph", "Import image array",	"I", MOD_KEY.shift,	function() { nodeBuild("Node_Image_Sequence", mouse_grid_x, mouse_grid_y); });
 	addHotkey("Graph", "Add number",			"1", MOD_KEY.none,	function() { nodeBuild("Node_Number",  mouse_grid_x, mouse_grid_y); });
@@ -174,7 +175,6 @@ function Panel_Graph() : PanelContent() constructor {
 			ds_list_add(nodes_select_list, nodes_list[| i]);	
 		}
 	});
-	addHotkey("Graph", "Duplicate",		"D", MOD_KEY.ctrl,		function() { doDuplicate(); });
 	
 	addHotkey("Graph", "Toggle grid",	 "G", MOD_KEY.none,		function() { show_grid = !show_grid; });
 	addHotkey("Graph", "Toggle preview", "H", MOD_KEY.none,		function() { setTriggerPreview(); });
@@ -200,7 +200,9 @@ function Panel_Graph() : PanelContent() constructor {
 	addHotkey("Graph", "Delete (break)",	vk_delete, MOD_KEY.shift,	function() { doDelete(false); });
 	addHotkey("Graph", "Delete (merge)",	vk_delete, MOD_KEY.none,	function() { doDelete(true); });
 	
-	addHotkey("Graph", "Paste",		"V", MOD_KEY.ctrl,	function() { pasteURL(clipboard_get_text()); });
+	addHotkey("Graph", "Duplicate",	"D", MOD_KEY.ctrl,					function() { doDuplicate(); });
+	addHotkey("Graph", "Copy",		"C", MOD_KEY.ctrl,	function() { doCopy(); });
+	addHotkey("Graph", "Paste",		"V", MOD_KEY.ctrl,	function() { doPaste(clipboard_get_text()); });
 	
 	function stepBegin() {
 		var gr_x = graph_x * graph_s;
@@ -440,12 +442,18 @@ function Panel_Graph() : PanelContent() constructor {
 						menuItem(get_text("panel_graph_send_to_preview", "Send to preview"), function() {
 							setCurrentPreview(node_hover);
 						}));
+					array_push(menu,  
+						menuItem(get_text("panel_graph_preview_window", "Send to preview window"), function() {
+							previewWindow(node_hover);
+						}, noone, ["Graph", "Preview window"]));
+						
 					if(DEMO) {
 						array_push(menu,  
 							menuItem(get_text("panel_graph_send_to_export", "Send to export"), function() {
 								setCurrentExport(node_hover);
 							}, noone, ["Graph", "Export"]));
 					}
+					
 					array_push(menu,  
 						menuItem(get_text("panel_graph_toggle_preview", "Toggle node preview"), function() {
 							setTriggerPreview();
@@ -454,7 +462,14 @@ function Panel_Graph() : PanelContent() constructor {
 						menuItem(get_text("panel_graph_toggle_render", "Toggle node render"), function() {
 							setTriggerRender();
 						}, noone, ["Graph", "Toggle render"]));
-						
+					
+					if(struct_has(node_hover, "nodes")) {
+						array_push(menu,  
+							menuItem(get_text("panel_graph_enter_group", "Enter group"), function() {
+								PANEL_GRAPH.addContext(node_hover);
+							}, THEME.group));
+					}
+					
 					array_push(menu,  
 						menuItem(get_text("panel_graph_delete_and_merge_connection", "Delete and merge connection"), function() {
 							doDelete(true);
@@ -467,6 +482,10 @@ function Panel_Graph() : PanelContent() constructor {
 						menuItem(get_text("duplicate", "Duplicate"), function() {
 							doDuplicate();
 						}, THEME.duplicate, ["Graph", "Duplicate"]));
+					array_push(menu,  
+						menuItem(get_text("copy", "Copy"), function() {
+							doCopy();
+						}, THEME.copy, ["Graph", "Copy"]));
 					
 					array_push(menu, -1);
 					array_push(menu, menuItem(get_text("panel_graph_add_transform", "Add transform"), addNodeTransform, noone, ["Graph", "Transform node"]));
@@ -515,8 +534,28 @@ function Panel_Graph() : PanelContent() constructor {
 					}
 					
 					menuCall(,, menu );
-				} else
+				} else {
+					var menu = [];
+					if(node_focus != noone || ds_list_size(nodes_select_list)) {
+						array_push(menu,  
+							menuItem(get_text("copy", "Copy"), function() {
+								doCopy();
+							}, THEME.copy, ["Graph", "Copy"])
+						);
+					}
+					
+					if(clipboard_get_text() != "") {
+						array_push(menu,  
+							menuItem(get_text("paste", "Paste"), function() {
+								doPaste(clipboard_get_text());
+							}, THEME.paste, ["Graph", "Paste"])
+						);
+					}
+					
 					callAddDialog();
+					menuCall(o_dialog_add_node.dialog_x - ui(8), o_dialog_add_node.dialog_y + ui(4), menu, fa_right );
+					setFocus(o_dialog_add_node.id, "Dialog");
+				}
 			}
 		}
 		//print("Node selection time: " + string(current_time - t)); t = current_time;
@@ -580,6 +619,7 @@ function Panel_Graph() : PanelContent() constructor {
 			if(node_dragging) {
 				node_focus = node_dragging;
 				
+				// TODO: Mode node(s) into group.
 				//for(var i = 0; i < ds_list_size(nodes_list); i++) { //drag node to group
 				//	var _node = nodes_list[| i];
 					
@@ -613,7 +653,7 @@ function Panel_Graph() : PanelContent() constructor {
 				//	}
 				//}
 				
-				if(ds_list_size(nodes_select_list) == 0) {
+				if(ds_list_size(nodes_select_list) == 0) { // move single node
 					var nx = node_drag_sx + (mouse_graph_x - node_drag_mx);
 					var ny = node_drag_sy + (mouse_graph_y - node_drag_my);
 					
@@ -628,7 +668,7 @@ function Panel_Graph() : PanelContent() constructor {
 						recordAction(ACTION_TYPE.var_modify, node_dragging, [ node_drag_sx, "x", "node x position" ]);
 						recordAction(ACTION_TYPE.var_modify, node_dragging, [ node_drag_sy, "y", "node y position" ]);
 					}
-				} else {
+				} else { // move multiple nodes
 					var nx = node_drag_sx + (mouse_graph_x - node_drag_mx);
 					var ny = node_drag_sy + (mouse_graph_y - node_drag_my);
 					
@@ -749,56 +789,147 @@ function Panel_Graph() : PanelContent() constructor {
 	}
 	
 	function doDuplicate() {
+		var nodeArray = [];
 		if(ds_list_empty(nodes_select_list)) {
 			if(node_focus == noone) return;
-			node_dragging = node_focus.clone();
-			node_drag_mx  = node_dragging.x;
-			node_drag_my  = node_dragging.y;
-			node_drag_sx  = node_dragging.x;
-			node_drag_sy  = node_dragging.y;
-				
-			node_drag_ox  = -1;
-			node_drag_oy  = -1;
+			nodeArray = [node_focus];
+		} else {
+			for(var i = 0; i < ds_list_size(nodes_select_list); i++)
+				nodeArray[i] = nodes_select_list[| i];
+		}
+		
+		var _map  = ds_map_create();
+		var _node = ds_list_create();
+		for(var i = 0; i < array_length(nodeArray); i++)
+			SAVE_NODE(_node, nodeArray[i]);
+		ds_map_add_list(_map, "nodes", _node);
+		
+		var _app = __APPEND_MAP(_map);
+		ds_map_destroy(_map);
 			
-			PANEL_ANIMATION.updatePropertyList();
-			UPDATE = RENDER_TYPE.full;
+		if(ds_list_size(_app) == 0) {
+			ds_list_destroy(_app);
 			return;
 		}
-		
-		var dups = ds_list_create();
-		ds_map_clear(APPEND_MAP);
-		
-		for(var i = 0; i < ds_list_size(nodes_select_list); i++) {
-			var _node = nodes_select_list[| i];
-			var _cnode = _node.clone();
-			ds_list_add(dups, _cnode);
 			
-			APPEND_MAP[? _node.node_id] = _cnode.node_id;
-		}
-		
-		APPENDING = true;
-		var cx = 0;
-		var cy = 0;
-		for(var i = 0; i < ds_list_size(dups); i++) {
-			var _node = dups[| i];
-			_node.connect();
-			
-			cx += _node.x;
-			cy += _node.y;
+		var x0 = 99999999;
+		var y0 = 99999999;
+		for(var i = 0; i < ds_list_size(_app); i++) {
+			var _node = _app[| i];
+				
+			x0 = min(x0, _node.x);
+			y0 = min(y0, _node.y);
 		}
 		APPENDING = false;
 		
+		node_dragging = _app[| 0];
+		node_drag_mx  = x0; node_drag_my  = y0;
+		node_drag_sx  = x0; node_drag_sy  = y0;
+		node_drag_ox  = x0; node_drag_oy  = y0;
+			
 		ds_list_destroy(nodes_select_list);
-		nodes_select_list = dups;
+		nodes_select_list = _app;
+	}
+	
+	function doInstance() {
+		if(node_focus == noone) return;
+		if(!struct_has(node_focus, "nodes")) return;
 		
-		node_dragging = nodes_select_list[| 0];
-		node_drag_mx  = cx / ds_list_size(dups);
-		node_drag_my  = cy / ds_list_size(dups);
-		node_drag_sx  = 0;
-		node_drag_sy  = 0;
+		if(node_focus.instanceBase == noone) {
+			node_focus.isInstancer = true;
+			
+			CLONING = true;
+			var _type = instanceof(node_focus);
+			var _node = nodeBuild(_type, x, y);
+			CLONING = false;
+			
+			_node.setInstance(node_focus);
+		}
 		
-		PANEL_ANIMATION.updatePropertyList();
-		UPDATE = RENDER_TYPE.full;
+		var n = _node.clone();
+		
+		node_dragging = n;
+		node_drag_mx  = n.x; node_drag_my  = n.y;
+		node_drag_sx  = n.x; node_drag_sy  = n.y;
+		node_drag_ox  = n.x; node_drag_oy  = n.y;
+	}
+	
+	function doCopy() {
+		clipboard_set_text("");
+		
+		var nodeArray = [];
+		if(ds_list_empty(nodes_select_list)) {
+			if(node_focus == noone) return;
+			nodeArray = [node_focus];
+		} else {
+			for(var i = 0; i < ds_list_size(nodes_select_list); i++) {
+				var _node = nodes_select_list[| i];
+				nodeArray[i] = _node;
+			}
+		}
+		
+		var _map  = ds_map_create();
+		var _node = ds_list_create();
+		for(var i = 0; i < array_length(nodeArray); i++)
+			SAVE_NODE(_node, nodeArray[i]);
+		ds_map_add_list(_map, "nodes", _node);
+		
+		clipboard_set_text(json_encode_minify(_map));
+		ds_map_destroy(_map);
+	}
+	
+	function doPaste(txt = "") {
+		var _map = json_decode(txt);
+		if(_map != -1) {
+			ds_map_clear(APPEND_MAP);
+			var _app = __APPEND_MAP(_map);
+			ds_map_destroy(_map);
+			if(_app == noone) 
+				return;
+			
+			if(ds_list_size(_app) == 0) {
+				ds_list_destroy(_app);
+				return;
+			}
+			
+			var x0 = 99999999;
+			var y0 = 99999999;
+			for(var i = 0; i < ds_list_size(_app); i++) {
+				var _node = _app[| i];
+				
+				x0 = min(x0, _node.x);
+				y0 = min(y0, _node.y);
+			}
+			APPENDING = false;
+		
+			node_dragging = _app[| 0];
+			node_drag_mx  = x0; node_drag_my  = y0;
+			node_drag_sx  = x0; node_drag_sy  = y0;
+			node_drag_ox  = x0; node_drag_oy  = y0;
+			
+			ds_list_destroy(nodes_select_list);
+			nodes_select_list = _app;
+			return;
+		}
+		
+		if(filename_ext(txt) == ".png") {
+			if(file_exists(txt)) {
+				Node_create_Image_path(0, 0, txt);
+				return;
+			}
+		
+			var path = DIRECTORY + "temp\\url_pasted_" + string(irandom_range(100000, 999999)) + ".png";
+			var img = http_get_file(txt, path);
+			CLONING = true;
+			var node = Node_create_Image(0, 0);
+			CLONING = false;
+			var args = [node, path];
+		
+			global.FILE_LOAD_ASYNC[? img] = [ function(args) {
+				args[0].inputs[| 0].setValue(args[1]);
+				args[0].doUpdate();
+			}, args];
+		}
 	}
 	
 	function doBlend() {
@@ -1155,6 +1286,7 @@ function Panel_Graph() : PanelContent() constructor {
 			node_target_y = other.mouse_grid_y;
 			junction_hovering = other.junction_hovering;
 			
+			resetPosition();
 			alarm[0] = 1;
 		}
 	}
@@ -1170,7 +1302,7 @@ function Panel_Graph() : PanelContent() constructor {
 				tt = "Global";
 			} else {
 				var _cnt = node_context[| i];
-				tt = _cnt.name;
+				tt = _cnt.display_name == ""? _cnt.name : _cnt.display_name;
 			}
 			
 			tw = string_width(tt);
@@ -1192,7 +1324,7 @@ function Panel_Graph() : PanelContent() constructor {
 					} else {
 						for(var j = ds_list_size(node_context) - 1; j > i; j--)
 							ds_list_delete(node_context, j);
-						nodes_list = node_context[| i].nodes;
+						nodes_list = node_context[| i].getNodeList();
 						toCenterNode();
 						PANEL_ANIMATION.updatePropertyList();
 						break;
@@ -1362,17 +1494,13 @@ function Panel_Graph() : PanelContent() constructor {
 		if(context_frame_progress == 1) 
 			context_framing = false;
 		
-		var _s = graph_s;
-		var _x = graph_x * _s;
-		var _y = graph_y * _s;
-		
 		var _fr_x0 = 0, _fr_y0 = 0;
 		var _fr_x1 = w, _fr_y1 = h;
 		
-		var _to_x0 = _x + context_frame_sx * _s;
-		var _to_y0 = _y + context_frame_sy * _s;
-		var _to_x1 = _x + context_frame_ex * _s;
-		var _to_y1 = _y + context_frame_ey * _s;
+		var _to_x0 = context_frame_sx;
+		var _to_y0 = context_frame_sy;
+		var _to_x1 = context_frame_ex;
+		var _to_y1 = context_frame_ey;
 		
 		var prog = context_frame_direct? context_frame_progress : 1 - context_frame_progress;
 		var frm_x0 = lerp(_fr_x0, _to_x0, prog);
@@ -1387,8 +1515,11 @@ function Panel_Graph() : PanelContent() constructor {
 	}
 	
 	function addContext(node) {
-		nodes_list = node.nodes;
-		ds_list_add(node_context, node);
+		var _node = node.getNodeBase();
+		setContextFrame(false, _node);
+		
+		nodes_list = _node.nodes;
+		ds_list_add(node_context, _node);
 		
 		node_dragging = noone;
 		ds_list_clear(nodes_select_list);
@@ -1396,27 +1527,25 @@ function Panel_Graph() : PanelContent() constructor {
 		
 		toCenterNode();
 		PANEL_ANIMATION.updatePropertyList();
-		
-		setContextFrame(false, node)
 	}
 	
 	function setContextFrame(dirr, node) {
 		context_framing = true;
 		context_frame_direct   = dirr;
 		context_frame_progress = 0;
-		context_frame_sx = node.x;
-		context_frame_sy = node.y;
-		context_frame_ex = node.x + node.w;
-		context_frame_ey = node.y + node.h;
+		context_frame_sx = w / 2 - 8;
+		context_frame_sy = h / 2 - 8;
+		context_frame_ex = context_frame_sx + 16;
+		context_frame_ey = context_frame_sy + 16;
 	}
 	
 	function getCurrentContext() {
-		if(ds_list_empty(node_context)) return -1;
+		if(ds_list_empty(node_context)) return noone;
 		return node_context[| ds_list_size(node_context) - 1];
 	}
 	
 	function getNodeList(cont = getCurrentContext()) {
-		return cont == -1? NODES : cont.nodes;
+		return cont == noone? NODES : cont.getNodeList();
 	}
 	
 	function dropFile(path) {
@@ -1475,25 +1604,5 @@ function Panel_Graph() : PanelContent() constructor {
 			draw_text(w - ui(8), ui(28), get_text("panel_graph_rendering", "Rendering") + "...");
 		else if(UPDATE == RENDER_TYPE.full)
 			draw_text(w - ui(8), ui(28), get_text("panel_graph_rendering_partial", "Rendering partial") + "...");
-	}
-	
-	function pasteURL(url) {
-		if(filename_ext(url) != ".png") return;
-		if(file_exists(url)) {
-			Node_create_Image_path(0, 0, url);
-			return;
-		}
-		
-		var path = DIRECTORY + "temp\\url_pasted_" + string(irandom_range(100000, 999999)) + ".png";
-		var img = http_get_file(url, path);
-		CLONING = true;
-		var node = Node_create_Image(0, 0);
-		CLONING = false;
-		var args = [node, path];
-		
-		global.FILE_LOAD_ASYNC[? img] = [ function(args) {
-			args[0].inputs[| 0].setValue(args[1]);
-			args[0].doUpdate();
-		}, args];
 	}
 }

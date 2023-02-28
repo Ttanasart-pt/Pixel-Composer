@@ -1,4 +1,4 @@
-function Node_Array(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
+function Node_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Array";
 	previewable = false;
 	

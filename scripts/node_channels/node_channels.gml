@@ -1,4 +1,4 @@
-function Node_RGB_Channel(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constructor {
+function Node_RGB_Channel(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "RGBA Extract";
 	
 	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
@@ -21,7 +21,7 @@ function Node_RGB_Channel(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) 
 				case 0 : shader_set(_out? sh_channel_R_grey : sh_channel_R); break;
 				case 1 : shader_set(_out? sh_channel_G_grey : sh_channel_G); break;
 				case 2 : shader_set(_out? sh_channel_B_grey : sh_channel_B); break;
-				case 3 : shader_set(sh_channel_A); break;
+				case 3 : shader_set(_out? sh_channel_A_grey : sh_channel_A); break;
 			}
 			draw_surface_safe(_data[0], 0, 0);
 			shader_reset();

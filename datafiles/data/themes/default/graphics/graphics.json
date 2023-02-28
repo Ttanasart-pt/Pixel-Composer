@@ -1086,6 +1086,13 @@
         "yorigin": 24,
         "slice": null
     },
+    "icon_array_processor": {
+        "path": "./icon/s_icon_array_processor.png",
+        "subimages": 4,
+        "xorigin": 24,
+        "yorigin": 24,
+        "slice": null
+    },
     "menu_button": {
         "path": "./UI/s_menu_button.png",
         "subimages": 1,

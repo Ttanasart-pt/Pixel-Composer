@@ -1,4 +1,4 @@
-function Node_VFX_Attract(_x, _y, _group = -1) : Node_VFX_effector(_x, _y, _group) constructor {
+function Node_VFX_Attract(_x, _y, _group = noone) : Node_VFX_effector(_x, _y, _group) constructor {
 	name = "Attract";
 	node_draw_icon = s_node_vfx_attract;
 	

@@ -1,7 +1,4 @@
 function APPEND(_path, record = true) {
-	APPENDING	= true;
-	
-	var log = true;
 	if(_path == "") return noone;
 	var _map = json_load(_path);
 	
@@ -10,6 +7,16 @@ function APPEND(_path, record = true) {
 		return noone;
 	}
 	
+	var node_create = __APPEND_MAP(_map);
+	if(record) recordAction(ACTION_TYPE.collection_loaded, array_create_from_list(node_create), _path);
+	log_message("FILE", "append file " + _path, THEME.noti_icon_file_load);
+	
+	return node_create;
+}
+
+function __APPEND_MAP(_map) {
+	static log   = true;
+	APPENDING	 = true;
 	UNDO_HOLDING = true;
 	
 	if(ds_map_exists(_map, "version")) {
@@ -19,14 +26,12 @@ function APPEND(_path, record = true) {
 			var warn = "File version mismatch : loading file verion " + string(_v) + " to Pixel Composer " + string(SAVEFILE_VERSION);
 			log_warning("FILE", warn)
 		}
-	} else {
-		var warn = "File version mismatch : loading old format to Pixel Composer " + string(SAVEFILE_VERSION);
-		log_warning("FILE", warn)
 	}
 	
-	var _node_list = _map[? "nodes"];
+	if(!ds_map_exists(_map, "nodes")) return noone;
+	var _node_list	  = _map[? "nodes"];
 	var appended_list = ds_list_create();
-	var node_create = ds_list_create();
+	var node_create   = ds_list_create();
 	
 	ds_queue_clear(CONNECTION_CONFLICT);
 	ds_map_clear(APPEND_MAP);
@@ -119,15 +124,12 @@ function APPEND(_path, record = true) {
 	}
 	
 	UNDO_HOLDING = false;
-	if(record) recordAction(ACTION_TYPE.collection_loaded, array_create_from_list(node_create), _path);
 	
 	ds_list_destroy(appended_list);
 	
 	APPENDING = false;
 	PANEL_ANIMATION.updatePropertyList();
 	UPDATE = RENDER_TYPE.full;
-	
-	log_message("FILE", "append file " + _path, THEME.noti_icon_file_load);
 	
 	if(ds_map_exists(_map, "metadata")) {
 		var meta = _map[? "metadata"];
@@ -144,8 +146,10 @@ function APPEND(_path, record = true) {
 }
 
 function GetAppendID(old_id) {
+	if(old_id == noone) return noone;
+	
 	if(ds_map_exists(APPEND_MAP, old_id)) 
 		return APPEND_MAP[? old_id];
 	print("Get append ID error: " + string(old_id));
-	return -1;
+	return noone;
 }

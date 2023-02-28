@@ -8,29 +8,29 @@ if !target exit;
 		draw_sprite_stretched_ext(THEME.dialog_active, 0, dialog_x, dialog_y, dialog_w, dialog_h, COLORS._main_accent, 1);
 	
 	draw_set_text(f_p0, fa_left, fa_top, COLORS._main_text_title);
-	draw_text(dialog_x + ui(24), dialog_y + ui(16), get_text("array_edit_title", "Image array edit"));
+	draw_text(dialog_x + ui(padding), dialog_y + ui(20), get_text("array_edit_title", "Image array edit"));
 #endregion
 
 #region content
-	var x0 = dialog_x + ui(20);
-	var x1 = x0 + sp_content.w;
-	var y0 = dialog_y + ui(56);
-	var y1 = y0 + sp_content.h;
+	var px = dialog_x + ui(padding);
+	var py = dialog_y + ui(title_height);
+	var pw = dialog_w - ui(padding + padding);
+	var ph = dialog_h - ui(title_height + padding);
 	
-	draw_sprite_stretched(THEME.ui_panel_bg, 1, x0 - ui(6), y0 - ui(6), x1 - x0 + ui(12), y1 - y0 + ui(12));
-	sp_content.active = sFOCUS;
-	sp_content.draw(x0, y0);
+	draw_sprite_stretched(THEME.ui_panel_bg, 0, px - ui(8), py - ui(8), pw + ui(16), ph + ui(16));
+	sp_content.setActiveFocus(sFOCUS, sHOVER);
+	sp_content.draw(px, py);
 #endregion
 
 #region button
-	var bw = ui(32);
-	var bh = ui(32);
-	
-	var bx = x1 - ui(10) - ui(16);
-	var by = dialog_y + ui(12);
+	var bw = ui(28);
+	var bh = ui(28);
+	var bx = dialog_x + dialog_w - ui(padding - 8) - bw;
+	var by = dialog_y + ui(18);
 	
 	if(buttonInstant(THEME.button_hide, bx, by, bw, bh, mouse_ui, sFOCUS, sHOVER, get_text("add", "Add") + "...", THEME.add,, COLORS._main_value_positive) == 2) {
 		var path = get_open_filenames(".png", "");
+		key_release();
 		if(path != "") {
 			var paths = paths_to_array(path);
 			var arr = target.inputs[| 0].getValue();
@@ -42,7 +42,7 @@ if !target exit;
 		}
 	}
 	
-	bx -= ui(32 + 4);
+	bx -= ui(36);
 	
 	if(buttonInstant(THEME.button_hide, bx, by, bw, bh, mouse_ui, sFOCUS, sHOVER, get_text("array_edit_sort_name", "Sort by name"), THEME.text) == 2)
 		sortByName();

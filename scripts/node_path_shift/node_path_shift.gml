@@ -1,4 +1,4 @@
-function Node_Path_Shift(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
+function Node_Path_Shift(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name		= "Shift Path";
 	previewable = false;
 	
@@ -10,6 +10,11 @@ function Node_Path_Shift(_x, _y, _group = -1) : Node(_x, _y, _group) constructor
 	inputs[| 1] = nodeValue("Distance", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0);
 	
 	outputs[| 0] = nodeValue("Path", self, JUNCTION_CONNECT.output, VALUE_TYPE.pathnode, self);
+	
+	static getSegmentCount = function() { 
+		var _path = inputs[| 0].getValue();
+		return struct_has(_path, "getSegmentCount")? _path.getSegmentCount() : 0; 
+	}
 	
 	static getPointRatio = function(_rat) {
 		var _path = inputs[| 0].getValue();

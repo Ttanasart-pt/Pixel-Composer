@@ -1,4 +1,4 @@
-function Node_Texture_Remap(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constructor {
+function Node_Texture_Remap(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Texture Remap";
 	
 	shader = sh_texture_remap;

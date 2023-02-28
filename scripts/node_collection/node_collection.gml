@@ -42,8 +42,9 @@ function upgroupNode(collection, record = true) {
 	UNDO_HOLDING = true;
 	var _content = [];
 	var _io = [];
-	while(!ds_list_empty(collection.nodes)) {
-		var remNode = collection.nodes[| 0];
+	var node_list = collection.getNodeList();
+	while(!ds_list_empty(node_list)) {
+		var remNode = node_list[| 0];
 		if(remNode.destroy_when_upgroup)	
 			array_push(_io, remNode);
 		else 
@@ -58,16 +59,29 @@ function upgroupNode(collection, record = true) {
 	if(record) recordAction(ACTION_TYPE.ungroup, collection, { io: _io, content: _content });
 }
 
-function Node_Collection(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
+function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	nodes = ds_list_create();
 	ungroupable = true;
 	auto_render_time = false;
 	combine_render_time = true;
 	
+	isInstancer  = false;
+	instanceBase = noone;
+	
 	custom_input_index = 0;
 	custom_output_index = 0;
 	
 	metadata = new MetaDataManager();
+	
+	static getNodeBase = function() {
+		if(instanceBase == noone) return self;
+		return instanceBase.getNodeBase();
+	}
+	
+	static getNodeList = function() {
+		if(instanceBase == noone) return nodes;
+		return instanceBase.getNodeList();
+	}
 	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		for(var i = custom_input_index; i < ds_list_size(inputs); i++) {
@@ -103,13 +117,13 @@ function Node_Collection(_x, _y, _group = -1) : Node(_x, _y, _group) constructor
 			}
 		}
 			
-		if(!result && group != -1) 
+		if(!result && group != noone) 
 			group.setRenderStatus(result);
 	}
 	
 	function add(_node) {
-		ds_list_add(nodes, _node);
-		var list = _node.group == -1? PANEL_GRAPH.nodes_list : _node.group.nodes;
+		ds_list_add(getNodeList(), _node);
+		var list = _node.group == noone? PANEL_GRAPH.nodes_list : _node.group.getNodeList();
 		var _pos = ds_list_find_index(list, _node);
 		ds_list_delete(list, _pos);
 		
@@ -118,9 +132,10 @@ function Node_Collection(_x, _y, _group = -1) : Node(_x, _y, _group) constructor
 	}
 	
 	function remove(_node) {
-		var _pos = ds_list_find_index(nodes, _node);
-		ds_list_delete(nodes, _pos);
-		var list = group == -1? PANEL_GRAPH.nodes_list : group.nodes;
+		var node_list = getNodeList();
+		var _pos = ds_list_find_index(node_list, _node);
+		ds_list_delete(node_list, _pos);
+		var list = group == noone? PANEL_GRAPH.nodes_list : group.getNodeList();
 		ds_list_add(list, _node);
 		
 		recordAction(ACTION_TYPE.group_removed, self, _node);
@@ -135,14 +150,16 @@ function Node_Collection(_x, _y, _group = -1) : Node(_x, _y, _group) constructor
 	}
 	
 	static clearCache = function() {
-		for(var i = 0; i < ds_list_size(nodes); i++) {
-			nodes[| i].clearCache();
+		var node_list = getNodeList();
+		for(var i = 0; i < ds_list_size(node_list); i++) {
+			node_list[| i].clearCache();
 		}
 	}
 	
 	static inspectorGroupUpdate = function() {
-		for(var i = 0; i < ds_list_size(nodes); i++) {
-			var _node = nodes[| i];
+		var node_list = getNodeList();
+		for(var i = 0; i < ds_list_size(node_list); i++) {
+			var _node = node_list[| i];
 			if(_node.hasInspectorUpdate() == noone)
 				_node.inspectorUpdate();
 		}
@@ -154,8 +171,9 @@ function Node_Collection(_x, _y, _group = -1) : Node(_x, _y, _group) constructor
 		
 		array_safe_set(cache_result, ANIMATOR.current_frame, true);
 		
-		for(var i = 0; i < ds_list_size(nodes); i++) {
-			var n = nodes[| i];
+		var node_list = getNodeList();
+		for(var i = 0; i < ds_list_size(node_list); i++) {
+			var n = node_list[| i];
 			n.stepBegin();
 			if(n.hasInspectorUpdate())
 				inspectorUpdate = inspectorGroupUpdate;
@@ -188,10 +206,11 @@ function Node_Collection(_x, _y, _group = -1) : Node(_x, _y, _group) constructor
 	static step = function() {
 		if(combine_render_time) render_time = 0;
 		
-		for(var i = 0; i < ds_list_size(nodes); i++) {
-			nodes[| i].step();
+		var node_list = getNodeList();
+		for(var i = 0; i < ds_list_size(node_list); i++) {
+			node_list[| i].step();
 			if(combine_render_time) 
-				render_time += nodes[| i].render_time;
+				render_time += node_list[| i].render_time;
 		}
 		
 		if(PANEL_GRAPH.node_focus == self && panelFocus(PANEL_GRAPH) && DOUBLE_CLICK) {
@@ -262,7 +281,12 @@ function Node_Collection(_x, _y, _group = -1) : Node(_x, _y, _group) constructor
 		ds_priority_destroy(ar);
 	}
 	
-	static onClone = function(target = PANEL_GRAPH.getCurrentContext()) {
+	static onClone = function(_newNode, target = PANEL_GRAPH.getCurrentContext()) {
+		if(instanceBase != noone) {
+			_newNode.instanceBase = instanceBase;
+			return;
+		}
+		
 		var dups = ds_list_create();
 		
 		for(var i = 0; i < ds_list_size(nodes); i++) {
@@ -285,25 +309,42 @@ function Node_Collection(_x, _y, _group = -1) : Node(_x, _y, _group) constructor
 	
 	static enable = function() { 
 		active = true;
-		for( var i = 0; i < ds_list_size(nodes); i++ )
-			nodes[| i].enable();
+		var node_list = getNodeList();
+		for( var i = 0; i < ds_list_size(node_list); i++ )
+			node_list[| i].enable();
 	}
 	
 	static disable = function() {
 		active = false;
-		for( var i = 0; i < ds_list_size(nodes); i++ )
-			nodes[| i].disable();
+		var node_list = getNodeList();
+		for( var i = 0; i < ds_list_size(node_list); i++ )
+			node_list[| i].disable();
 	}
 	
 	static resetAllRenderStatus = function() {
-		for( var i = 0; i < ds_list_size(nodes); i++ ) {
-			nodes[| i].setRenderStatus(false);
-			if(variable_struct_exists(nodes[| i], "nodes"))
-				nodes[| i].resetAllRenderStatus();
+		var node_list = getNodeList();
+		for( var i = 0; i < ds_list_size(node_list); i++ ) {
+			node_list[| i].setRenderStatus(false);
+			if(variable_struct_exists(node_list[| i], "nodes"))
+				node_list[| i].resetAllRenderStatus();
 		}
 	}
 	
+	static setInstance = function(node) {
+		instanceBase = node;
+	}
+	
+	static resetInstance = function() {
+		instanceBase = noone;
+	}
+	
+	static processSerialize = function(_map) {
+		_map[? "instance_base"]	= instanceBase? instanceBase.node_id : noone;
+	}
+	
 	static preConnect = function() {
+		instanceBase = GetAppendID(ds_map_try_get(load_map, "instance_base", noone));
+		
 		sortIO();
 		applyDeserialize();
 	}

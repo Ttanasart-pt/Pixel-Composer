@@ -28,13 +28,14 @@
 	COLOR_KEYS = [];
 	
 	globalvar VERSION, SAVEFILE_VERSION, VERSION_STRING;
-	VERSION = 1130;
-	SAVEFILE_VERSION = 1300;
-	VERSION_STRING = "1.13";
+	VERSION = 1134;
+	SAVEFILE_VERSION = 1330;
+	VERSION_STRING = "1.13.4";
 	
-	globalvar NODES, NODE_MAP, APPEND_MAP, HOTKEYS, HOTKEY_CONTEXT;
+	globalvar NODES, NODE_MAP, APPEND_MAP, HOTKEYS, HOTKEY_CONTEXT, NODE_INSTANCES;
 	
-	NODES		= ds_list_create();
+	NODES			= ds_list_create();
+	NODE_INSTANCES	= ds_list_create();
 	NODE_MAP	= ds_map_create();
 	APPEND_MAP  = ds_map_create();
 	
@@ -125,8 +126,8 @@
 	#macro RETURN_ON_REST if(!ANIMATOR.is_playing || !ANIMATOR.frame_progress) return;
 	
 	function print(str) {
-		show_debug_message(string_real(str));
-		noti_status(string_real(str));
+		show_debug_message(string(str));
+		noti_status(string(str));
 	}
 	
 	function printIf(cond, log) {

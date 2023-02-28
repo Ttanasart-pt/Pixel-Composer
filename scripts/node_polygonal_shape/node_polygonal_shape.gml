@@ -1,4 +1,4 @@
-function Node_Shape_Polygon(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constructor {
+function Node_Shape_Polygon(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Polygon Shape";
 	
 	shapesArray = [ "Rectangle", "Ellipse", "Star", "Capsule", "Ring", "Arc", "Gear", "Cross" ];

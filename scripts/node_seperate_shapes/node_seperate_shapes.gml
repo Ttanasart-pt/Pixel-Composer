@@ -3,7 +3,7 @@ enum NODE_SEP_SHAPE_OUTPUT_TYPE {
 	array
 }
 
-function Node_Seperate_Shape(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
+function Node_Seperate_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name		= "Separate Shape";
 	error_update_enabled = true;
 	

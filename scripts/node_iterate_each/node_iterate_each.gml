@@ -1,4 +1,4 @@
-function Node_Iterate_Each(_x, _y, _group = -1) : Node_Collection(_x, _y, _group) constructor {
+function Node_Iterate_Each(_x, _y, _group = noone) : Node_Collection(_x, _y, _group) constructor {
 	name = "Loop Array";
 	color = COLORS.node_blend_loop;
 	icon  = THEME.loop;
@@ -24,7 +24,7 @@ function Node_Iterate_Each(_x, _y, _group = -1) : Node_Collection(_x, _y, _group
 	}
 	
 	static getNextNodes = function() {
-		__nodeLeafList(nodes, RENDER_QUEUE);
+		__nodeLeafList(getNodeList(), RENDER_QUEUE);
 		initLoop();
 	}
 	

@@ -1,4 +1,4 @@
-function Node_Fluid_Apply_Velocity(_x, _y, _group = -1) : Node_Fluid(_x, _y, _group) constructor {
+function Node_Fluid_Apply_Velocity(_x, _y, _group = noone) : Node_Fluid(_x, _y, _group) constructor {
 	name  = "Apply Velocity";
 	w = 96;
 	min_h = 96;

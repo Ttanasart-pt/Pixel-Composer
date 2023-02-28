@@ -36,10 +36,7 @@ function _sprite_load_from_struct(str, theme, key) {
 
 function __getGraphicList() {
 	var path = _sprite_path("./graphics.json", "default");
-	var f = file_text_open_read(path);
-	var s = file_text_read_all(f);
-	file_text_close(f);
-	
+	var s = file_text_read_all(path);
 	return json_parse(s);
 }
 
@@ -52,10 +49,7 @@ function loadGraphic(theme = "default") {
 		return;
 	}
 	
-	var f = file_text_open_read(path);
-	var s = file_text_read_all(f);
-	file_text_close(f);
-	
+	var s = file_text_read_all(path);
 	var graphics = variable_struct_get_names(sprDef);
 	var sprStr = json_parse(s);
 	

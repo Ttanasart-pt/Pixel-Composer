@@ -7,15 +7,13 @@ event_inherited();
 	
 	node = noone;
 	destroy_on_click_out = true;
-	drag_height = ui(48);
-	
-	padding = ui(24);
+		
 	anchor = ANCHOR.left | ANCHOR.top;
 	hold = false;
 #endregion
 
 #region content
-	sc_outputs = new scrollPane(dialog_w - ui(padding + padding), dialog_h - ui(56 + padding), function(_y, _m) {
+	sc_outputs = new scrollPane(dialog_w - ui(padding + padding), dialog_h - ui(title_height + padding), function(_y, _m) {
 		draw_clear_alpha(COLORS._main_text, 0);
 		if(node == noone) return 0;
 		

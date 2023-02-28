@@ -82,7 +82,7 @@ function buttonInstant(spr, _x, _y, _w, _h, _m, _act, _hvr, _tip = "", _icon = n
 			cc = _icon_blend[1];
 			
 		res = 1;
-		draw_sprite_stretched(spr, 1, _x, _y, _w, _h);	
+		if(spr) draw_sprite_stretched(spr, 1, _x, _y, _w, _h);	
 		if(_tip != "") 
 			TOOLTIP = _tip;
 			
@@ -96,9 +96,9 @@ function buttonInstant(spr, _x, _y, _w, _h, _m, _act, _hvr, _tip = "", _icon = n
 		if(mouse_release(mb_right, _act))
 			res = -3;
 			
-		if(mouse_click(mb_left, _act))
+		if(spr && mouse_click(mb_left, _act))
 			draw_sprite_stretched(spr, 2, _x, _y, _w, _h);	
-	} else
+	} else if(spr)
 		draw_sprite_stretched(spr, 0, _x, _y, _w, _h);		
 	
 	if(_icon)

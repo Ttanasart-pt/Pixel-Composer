@@ -7,7 +7,6 @@
 	
 	dialog_w = ww + padding * 2 + ui(32);
 	dialog_h = hh + padding * 2;
-	drag_height = dialog_h;
 	
 	dialog_x = clamp(x, 0, WIN_W - dialog_w);
 	dialog_y = clamp(y, 0, WIN_H - dialog_h);

@@ -154,13 +154,12 @@ function typeArray(_type) {
 		case VALUE_DISPLAY.kernel :
 			
 		case VALUE_DISPLAY.curve :
-			return 1;
 			
 		case VALUE_DISPLAY.path_array :
 		case VALUE_DISPLAY.palette :
 		case VALUE_DISPLAY.gradient :
 		case VALUE_DISPLAY.text_array :
-			return 2;
+			return 1;
 	}
 	return 0;
 }
@@ -327,6 +326,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	
 	def_val		= _value;
 	animator	= new valueAnimator(_value, self);
+	rawAnimator = animator;
 	on_end		= KEYFRAME_END.hold;
 	unit		= new nodeValueUnit(self);
 	extra_data	= ds_list_create();
@@ -595,7 +595,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			case VALUE_TYPE.color :
 				switch(display_type) {
 					case VALUE_DISPLAY._default :
-						editWidget = buttonColor(function(color) { 
+						editWidget = new buttonColor(function(color) { 
 							MODIFIED = true;
 							return setValueDirect(color);
 						} );
@@ -603,7 +603,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						extract_node = "Node_Color";
 						break;
 					case VALUE_DISPLAY.gradient :
-						editWidget = buttonGradient(function(gradient) { 
+						editWidget = new buttonGradient(function(gradient) { 
 							MODIFIED = true;
 							return setValueDirect(gradient);
 						} );
@@ -613,7 +613,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						extract_node = "Node_Gradient_Out";
 						break;
 					case VALUE_DISPLAY.palette :
-						editWidget = buttonPalette(function(color) { 
+						editWidget = new buttonPalette(function(color) { 
 							MODIFIED = true;
 							return setValueDirect(color);
 						} );
@@ -632,6 +632,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 							button(function() { 
 								MODIFIED = true;
 								var path = get_open_filename(display_data[0], display_data[1]);
+								key_release();
 								if(path == "") return noone;
 								return setValueDirect(path);
 							}, THEME.button_path_icon)
@@ -645,6 +646,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 							button(function() { 
 								MODIFIED = true;
 								var path = get_save_filename(display_data[0], display_data[1]);
+								key_release();
 								if(path == "") return noone;
 								return setValueDirect(path);
 							}, THEME.button_path_icon)
@@ -767,19 +769,19 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		var typeFrom = nodeFrom.type;
 		var display  = nodeFrom.display_type;
 		
-		if(display_type == VALUE_DISPLAY.gradient && typeFrom == VALUE_TYPE.color) {
-			if(display == VALUE_DISPLAY._default) {
-				var grad = [ new gradientKey(0, value) ];
-				return grad;
-			} else if(display == VALUE_DISPLAY.palette) {
+		if(display_type == VALUE_DISPLAY.gradient && typeFrom == VALUE_TYPE.color) { 
+			if(display == VALUE_DISPLAY.gradient) 
+				return value;
+			if(is_array(value)) {
 				var amo = array_length(value);
 				var grad = array_create(amo);
 				for( var i = 0; i < amo; i++ )
-					grad[i] = new valueKey(i / amo, value[i]);
+					grad[i] = new gradientKey(i / amo, value[i]);
 				return grad;
-			}
+			} 
 			
-			return value;
+			var grad = [ new gradientKey(0, value) ];
+			return grad;
 		}
 		
 		if(display_type == VALUE_DISPLAY.palette && !is_array(value)) {
@@ -985,6 +987,23 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		return cache_array[1];
 	}
 	
+	static arrayLength = function(val = undefined) {
+		if(val == undefined)
+			val = getValue();
+		
+		if(!isArray(val)) 
+			return 0;
+		
+		if(array_depth == 0 && !typeArray(display_type)) 
+			return array_length(val);
+		
+		var ar = val;
+		repeat(array_depth - 1 + typeArray(display_type))
+			ar = ar[0];
+		
+		return array_length(ar);
+	}
+	
 	static setValue = function(val = 0, record = true, time = ANIMATOR.current_frame, _update = true) {
 		val = unit.invApply(val);
 		return setValueDirect(val, record, time, _update);
@@ -996,6 +1015,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		var _n = animator.getValue();
 		
 		if(display_type == VALUE_DISPLAY.gradient) updated = true;
+		if(display_type == VALUE_DISPLAY.palette)  updated = true;
 		
 		if(updated) {
 			if(connect_type == JUNCTION_CONNECT.input) {
@@ -1381,7 +1401,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		var _node = con_node;
 		if(APPENDING) {
 			_node = GetAppendID(con_node);
-			if(_node == -1)
+			if(_node == noone)
 				return true;
 		}
 			

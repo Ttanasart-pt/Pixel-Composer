@@ -1,4 +1,4 @@
-function Node_Path_Wave(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
+function Node_Path_Wave(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name		= "Wave Path";
 	previewable = false;
 	
@@ -21,6 +21,11 @@ function Node_Path_Wave(_x, _y, _group = -1) : Node(_x, _y, _group) constructor 
 		["Path",	 true], 0,
 		["Wave",	false], 1, 2, 3, 4, 
 	]
+	
+	static getSegmentCount = function() { 
+		var _path = inputs[| 0].getValue();
+		return struct_has(_path, "getSegmentCount")? _path.getSegmentCount() : 0; 
+	}
 	
 	static getPointRatio = function(_rat) {
 		var _path = inputs[| 0].getValue();

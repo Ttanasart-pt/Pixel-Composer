@@ -32,9 +32,8 @@ float noise (in vec2 st) {
 }
 
 void main() {
-	vec2 st = v_vTexcoord + position;
-    vec2 pos = vec2(st * scale);
-	float amp = bright;
+    vec2 pos = position + v_vTexcoord * scale;
+	float amp = pow(2., float(iteration) - 1.)  / (pow(2., float(iteration)) - 1.);
     float n = 0.;
 	
 	for(int i = 0; i < iteration; i++) {

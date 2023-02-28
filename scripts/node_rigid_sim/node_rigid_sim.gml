@@ -1,4 +1,4 @@
-function Node_Rigid_Group(_x, _y, _group = -1) : Node_Collection(_x, _y, _group) constructor {
+function Node_Rigid_Group(_x, _y, _group = noone) : Node_Collection(_x, _y, _group) constructor {
 	name  = "RigidSim";
 	color = COLORS.node_blend_simulation;
 	icon  = THEME.rigidSim;
@@ -22,8 +22,9 @@ function Node_Rigid_Group(_x, _y, _group = -1) : Node_Collection(_x, _y, _group)
 		physics_pause_enable(true);
 		
 		time_source_start(time_source_create(time_source_global, 1, time_source_units_frames, function() {
-			for( var i = 0; i < ds_list_size(nodes); i++ ) {
-				var n = nodes[| i];
+			var node_list = getNodeList();
+			for( var i = 0; i < ds_list_size(node_list); i++ ) {
+				var n = node_list[| i];
 				if(variable_struct_exists(n, "reset"))
 					n.reset();
 			}

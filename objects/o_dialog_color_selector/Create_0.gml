@@ -4,7 +4,9 @@ event_inherited();
 #region data
 	dialog_w = ui(812);
 	dialog_h = ui(396);
+	title_height = 52;
 	destroy_on_click_out = true;
+	interactable = true;
 	
 	name = get_text("color_selector_title", "Color selector");
 	
@@ -86,7 +88,7 @@ event_inherited();
 			else
 				drawPalette(presets[| i], ui(16), yy + ui(28), ww, ui(20));
 			
-			if(!click_block && mouse_click(mb_left, sFOCUS)) {
+			if(!click_block && mouse_click(mb_left, interactable && sFOCUS)) {
 				if(preset_selecting == i && _hover && point_in_rectangle(_m[0], _m[1], ui(16), yy + ui(28), ui(16) + ww, yy + ui(28) + _height)) {
 					var m_ax = _m[0] - ui(16);
 					var m_ay = _m[1] - (yy + ui(28));

@@ -1,4 +1,4 @@
-function Node_Sequence_Anim(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
+function Node_Sequence_Anim(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Array to Anim";
 	update_on_frame = true;
 	

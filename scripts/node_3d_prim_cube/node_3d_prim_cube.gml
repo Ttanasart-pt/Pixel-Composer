@@ -1,4 +1,4 @@
-function Node_3D_Cube(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constructor {
+function Node_3D_Cube(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "3D Cube";
 	dimension_index = 1;
 	

@@ -1,4 +1,4 @@
-function Node_3D_Cylinder(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constructor {
+function Node_3D_Cylinder(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "3D Cylinder";
 	dimension_index = 2;
 	

@@ -1,4 +1,4 @@
-function Node_Array_Shuffle(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
+function Node_Array_Shuffle(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Shuffle Array";
 	previewable = false;
 	
@@ -15,6 +15,10 @@ function Node_Array_Shuffle(_x, _y, _group = -1) : Node(_x, _y, _group) construc
 	static update = function(frame = ANIMATOR.current_frame) {
 		var arr = inputs[| 0].getValue();
 		var sed = inputs[| 1].getValue();
+		
+		inputs[| 0].type = VALUE_TYPE.any;
+		outputs[| 0].type = VALUE_TYPE.any;
+		
 		if(!is_array(arr)) return;
 		
 		if(inputs[| 0].value_from != noone) {

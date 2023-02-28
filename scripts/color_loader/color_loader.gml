@@ -15,17 +15,11 @@ function loadColor(theme = "default") {
 	
 	var oclr = {};
 	if(file_exists(pathO)) {
-		var f = file_text_open_read(pathO);
-		var s = file_text_read_all(f);
-		file_text_close(f);
-		
+		var s = file_text_read_all(pathO);
 		oclr = json_parse(s);
 	}
 	
-	var f = file_text_open_read(path);
-	var s = file_text_read_all(f);
-	file_text_close(f);
-	
+	var s = file_text_read_all(path);
 	var clrs = json_parse(s);
 	
 	var defkeys = variable_struct_get_names(clrs.define);

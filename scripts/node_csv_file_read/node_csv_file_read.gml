@@ -1,7 +1,8 @@
-function Node_create_CSV_File_Read(_x, _y, _group = -1) {
+function Node_create_CSV_File_Read(_x, _y, _group = noone) {
 	var path = "";
 	if(!LOADING && !APPENDING && !CLONING) {
 		path = get_open_filename(".csv", "");
+		key_release();
 		if(path == "") return noone;
 	}
 	
@@ -22,13 +23,12 @@ function Node_create_CSV_File_Read_path(_x, _y, path) {
 	return node;	
 }
 
-function Node_CSV_File_Read(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
+function Node_CSV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "CSV File In";
 	color = COLORS.node_blend_input;
 	previewable = false;
 	
 	w = 128;
-	
 	
 	inputs[| 0]  = nodeValue("Path", self, JUNCTION_CONNECT.input, VALUE_TYPE.path, "")
 		.setDisplay(VALUE_DISPLAY.path_load, ["*.csv", ""])
@@ -67,11 +67,10 @@ function Node_CSV_File_Read(_x, _y, _group = -1) : Node(_x, _y, _group) construc
 			
 		outputs[| 1].setValue(path);
 		
-		var f = file_text_open_read(path);
-		content = file_text_read_all_lines(f);
-		file_text_close(f);
+		content = file_text_read_all_lines(path);
 		
 		var convert = inputs[| 1].getValue();
+		outputs[| 0].type = convert? VALUE_TYPE.float : VALUE_TYPE.text;
 		if(convert) {
 			for( var i = 0; i < array_length(content); i++ ) {
 				var c = content[i];

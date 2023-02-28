@@ -291,19 +291,16 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 		addNodeObject(generator, "4 Points Gradient",	s_node_gradient_4points,	"Node_Gradient_Points",		[1, Node_Gradient_Points]);
 		
 		ds_list_add(generator, "Drawer");
-		addNodeObject(generator, "Line",			s_node_line,		"Node_Line",			[1, Node_Line]);
-		addNodeObject(generator, "Draw Text",		s_node_text_render,	"Node_Text",			[1, Node_Text]);
-		addNodeObject(generator, "Shape",			s_node_shape,		"Node_Shape",			[1, Node_Shape]);
-		addNodeObject(generator, "Polygon Shape",	s_node_shape,		"Node_Shape_Polygon",	[1, Node_Shape_Polygon]).set_version(1130);
+		addNodeObject(generator, "Line",			s_node_line,			"Node_Line",			[1, Node_Line]);
+		addNodeObject(generator, "Draw Text",		s_node_text_render,		"Node_Text",			[1, Node_Text]);
+		addNodeObject(generator, "Shape",			s_node_shape,			"Node_Shape",			[1, Node_Shape]);
+		addNodeObject(generator, "Polygon Shape",	s_node_shape_polygon,	"Node_Shape_Polygon",	[1, Node_Shape_Polygon]).set_version(1130);
 		
 		ds_list_add(generator, "Noises");
 		addNodeObject(generator, "Noise",				s_node_noise,				"Node_Noise",				[1, Node_Noise]);
 		addNodeObject(generator, "Perlin Noise",		s_node_noise_perlin,		"Node_Perlin",				[1, Node_Perlin]);
 		addNodeObject(generator, "Simplex Noise",		s_node_noise_simplex,		"Node_Noise_Simplex",		[1, Node_Noise_Simplex], ["perlin"]).set_version(1080);
 		addNodeObject(generator, "Cellular Noise",		s_node_noise_cell,			"Node_Cellular",			[1, Node_Cellular], ["voronoi", "worley"]);
-		addNodeObject(generator, "Grid Noise",			s_node_grid_noise,			"Node_Grid_Noise",			[1, Node_Grid_Noise]);
-		addNodeObject(generator, "Triangular Noise",	s_node_grid_tri_noise,		"Node_Noise_Tri",			[1, Node_Noise_Tri]).set_version(1090);
-		addNodeObject(generator, "Hexagonal Noise",		s_node_grid_hex_noise,		"Node_Noise_Hex",			[1, Node_Noise_Hex]).set_version(1090);
 		addNodeObject(generator, "Anisotropic Noise",	s_node_noise_aniso,			"Node_Noise_Aniso",			[1, Node_Noise_Aniso]);
 		
 		ds_list_add(generator, "Patterns");
@@ -326,7 +323,8 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 		addNodeObject(generator, "FluidSim",			s_node_fluidSim_group,		"Node_Fluid_Group",			[1, Node_Fluid_Group]).set_version(1120);
 		
 		ds_list_add(generator, "Others");
-		addNodeObject(generator, "Separate Shape",	    s_node_sepearte_shape,		"Node_Seperate_Shape",		[1, Node_Seperate_Shape]);
+		addNodeObject(generator, "Separate Shape",	s_node_sepearte_shape,	"Node_Seperate_Shape",	[1, Node_Seperate_Shape]);
+		addNodeObject(generator, "Flood Fill",		s_node_flood_fill,		"Node_Flood_Fill",		[1, Node_Flood_Fill]).set_version(1133);
 	
 	var compose = ds_list_create();
 	addNodeCatagory("Compose", compose);
@@ -457,8 +455,11 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 	
 	var hid = ds_list_create();
 	addNodeCatagory("Hidden", hid, ["Hidden"]);
-		addNodeObject(hid, "Input",		s_node_feedback_input,	"Node_Iterator_Each_Input",		[1, Node_Iterator_Each_Input]);
-		addNodeObject(hid, "Output",	s_node_feedback_output,	"Node_Iterator_Each_Output",	[1, Node_Iterator_Each_Output]);
+		addNodeObject(hid, "Input",				s_node_feedback_input,	"Node_Iterator_Each_Input",		[1, Node_Iterator_Each_Input]);
+		addNodeObject(hid, "Output",			s_node_feedback_output,	"Node_Iterator_Each_Output",	[1, Node_Iterator_Each_Output]);
+		addNodeObject(hid, "Grid Noise",		s_node_grid_noise,		"Node_Grid_Noise",				[1, Node_Grid_Noise]);
+		addNodeObject(hid, "Triangular Noise",	s_node_grid_tri_noise,	"Node_Noise_Tri",				[1, Node_Noise_Tri]).set_version(1090);
+		addNodeObject(hid, "Hexagonal Noise",	s_node_grid_hex_noise,	"Node_Noise_Hex",				[1, Node_Noise_Hex]).set_version(1090);
 #endregion
 
 #region node function
@@ -480,7 +481,7 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 	}
 	
 	function nodeDelete(node, _merge = false) {
-		var list = node.group == -1? NODES : node.group.nodes;
+		var list = node.group == noone? NODES : node.group.getNodeList();
 		ds_list_remove(list, node);
 		node.destroy(_merge);
 		

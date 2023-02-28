@@ -29,7 +29,7 @@ event_inherited();
 		PANEL_PREVIEW.grid_opacity = clamp(real(str), 0, 1);	
 	});
 	
-	cl_color = buttonColor(function(color) {
+	cl_color = new buttonColor(function(color) {
 		PANEL_PREVIEW.grid_color = color;
-	});
+	}, self);
 #endregion

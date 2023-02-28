@@ -43,7 +43,6 @@
 			
 			if(key_press(hotkey.key, hotkey.modi)) {
 				hotkey.action();
-				key_release();
 				break;
 			}
 		}
@@ -54,12 +53,9 @@
 		for(var i = 0; i < ds_list_size(list); i++) {
 			var hotkey	= list[| i];
 			
-			if(hotkey.key != -1) {
-				if(key_press(hotkey.key, hotkey.modi)) {
-					hotkey.action();
-					key_release();
-					break;
-				}
+			if(hotkey.key != -1 && key_press(hotkey.key, hotkey.modi)) {
+				hotkey.action();
+				break;
 			}
 		}
 	}

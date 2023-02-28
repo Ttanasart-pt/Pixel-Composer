@@ -47,7 +47,7 @@ function Panel_Collection() : PanelContent() constructor {
 						dia.meta = meta;
 			
 					dia.updating	= _menu_node;
-					dia.expand();
+					dia.doExpand();
 				}),
 				-1,
 				menuItem(get_text("delete", "Delete"), function() { 
@@ -70,7 +70,7 @@ function Panel_Collection() : PanelContent() constructor {
 				
 					dia.ugc			= 1;
 					dia.updating	= _menu_node;
-					dia.expand();
+					dia.doExpand();
 				}));
 			} else {
 				if(meta.author_steam_id == STEAM_USER_ID && meta.file_id != 0) {
@@ -82,7 +82,7 @@ function Panel_Collection() : PanelContent() constructor {
 						
 						dia.ugc			= 2;
 						dia.updating	= _menu_node;
-						dia.expand();
+						dia.doExpand();
 					}));
 				}
 				

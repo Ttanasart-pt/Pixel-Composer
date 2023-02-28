@@ -31,7 +31,7 @@ event_inherited();
 	t_cont.auto_update  = true;
 	t_alias.auto_update = true;
 	
-	function expand() {
+	function doExpand() {
 		meta_expand = true;
 		
 		dialog_w = dialog_w_expand;

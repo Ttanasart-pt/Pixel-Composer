@@ -1,4 +1,4 @@
-function Node_Dither(_x, _y, _group = -1) : Node_Processor(_x, _y, _group) constructor {
+function Node_Dither(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	static dither2 =    [  0,  2,
 					       3,  1 ];
 	static dither4 =    [  0,  8,  2, 10,

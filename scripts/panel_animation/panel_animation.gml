@@ -17,7 +17,7 @@ function Panel_Animation() : PanelContent() constructor {
 		timeline_w = w - tool_width - ui(12);
 		timeline_surface = surface_create_valid(timeline_w, timeline_h);
 		timeline_mask = surface_create_valid(timeline_w, timeline_h);
-	
+		
 		dope_sheet_w = w - tool_width;
 		dope_sheet_h = h - timeline_h - ui(20);
 		dope_sheet_surface = surface_create_valid(dope_sheet_w, 1);

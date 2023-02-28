@@ -1,14 +1,17 @@
 enum ARRAY_PROCESS {
 	loop,
-	hold
+	hold,
+	expand,
+	expand_inv,
 }
 
-function Node_Processor(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
+function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	array_process	= ARRAY_PROCESS.loop;
 	current_data	= [];
 	inputs_data		= [];
 	
 	process_amount	= 0;
+	process_length  = [];
 	dimension_index = 0;
 	active_index = -1;
 	
@@ -20,9 +23,16 @@ function Node_Processor(_x, _y, _group = -1) : Node(_x, _y, _group) constructor 
 		var _n  = inputs[| _index];
 		var _in = _n.getValue();
 		
-		if(_n.isArray()) 
-			return array_safe_get(_in, _arr,, ARRAY_OVERFLOW.loop);
-		return _in;
+		if(!_n.isArray()) return _in;
+		
+		switch(array_process) {
+			case ARRAY_PROCESS.loop :		_index = safe_mod(_arr, array_length(_in)); break;
+			case ARRAY_PROCESS.hold :		_index = min(_arr, array_length(_in) - 1);  break;
+			case ARRAY_PROCESS.expand :		_index = floor(_arr / process_length[_index][1]) % process_length[_index][0]; break;
+			case ARRAY_PROCESS.expand_inv : _index = floor(_arr / process_length[ds_list_size(inputs) - 1 - _index][1]) % process_length[_index][0]; break;
+		}
+				
+		return array_safe_get(_in, _index);
 	}
 	
 	static getDimension = function(arr = 0) {
@@ -109,8 +119,10 @@ function Node_Processor(_x, _y, _group = -1) : Node(_x, _y, _group) constructor 
 				}
 				var _index = 0;
 				switch(array_process) {
-					case ARRAY_PROCESS.loop : _index = safe_mod(l, array_length(_in)); break;
-					case ARRAY_PROCESS.hold : _index = min(l, array_length(_in) - 1);  break;
+					case ARRAY_PROCESS.loop :		_index = safe_mod(l, array_length(_in)); break;
+					case ARRAY_PROCESS.hold :		_index = min(l, array_length(_in) - 1);  break;
+					case ARRAY_PROCESS.expand :		_index = floor(l / process_length[i][1]) % process_length[i][0]; break;
+					case ARRAY_PROCESS.expand_inv : _index = floor(l / process_length[ds_list_size(inputs) - 1 - i][1]) % process_length[i][0]; break;
 				}
 				_data[i] = _in[_index];
 			}
@@ -147,20 +159,47 @@ function Node_Processor(_x, _y, _group = -1) : Node(_x, _y, _group) constructor 
 	}
 	
 	static update = function(frame = ANIMATOR.current_frame) {
-		process_amount = 0;
-		inputs_data = array_create(ds_list_size(inputs));
+		process_amount	= 0;
+		inputs_data		= array_create(ds_list_size(inputs));
+		process_length  = array_create(ds_list_size(inputs));
 		
 		for(var i = 0; i < ds_list_size(inputs); i++) { //pre-collect current input data
-			inputs_data[i] = inputs[| i].getValue();
+			var val = inputs[| i].getValue();
+			var amo = inputs[| i].arrayLength(val);
 			
-			if(!is_array(inputs_data[i])) continue;
-			if(array_length(inputs_data[i]) == 0) continue;
-			if(!inputs[| i].isArray(inputs_data[i])) continue;
+			inputs_data[i] = val;
 			
-			process_amount = max(process_amount, array_length(inputs_data[i]));
+			switch(array_process) {
+				case ARRAY_PROCESS.loop : 
+				case ARRAY_PROCESS.hold :   
+					process_amount = max(process_amount, amo);	
+					break;
+				case ARRAY_PROCESS.expand : 
+				case ARRAY_PROCESS.expand_inv : 
+					if(amo && process_amount == 0)
+						process_amount = 1;
+					process_amount *= max(1, amo);
+					break;
+			}
+			
+			process_length[i] = [max(1, amo), process_amount];
+		}
+		
+		var amoMax = process_amount;
+		for( var i = 0; i < array_length(process_length); i++ ) {
+			amoMax /= process_length[i][0];
+			process_length[i][1] = amoMax;
 		}
 		
 		for(var i = 0; i < ds_list_size(outputs); i++)
 			outputs[| i].setValue(preProcess(i));
+	}
+	
+	static processSerialize = function(_map) {
+		_map[? "array_process"] = array_process;
+	}
+	
+	static processDeserialize = function() {
+		array_process = ds_map_try_get(load_map, "array_process", ARRAY_PROCESS.loop);
 	}
 }

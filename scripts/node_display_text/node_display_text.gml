@@ -1,4 +1,4 @@
-function Node_Display_Text(_x, _y, _group = -1) : Node(_x, _y, _group) constructor {
+function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Display Text";
 	w = 240;
 	h = 160;

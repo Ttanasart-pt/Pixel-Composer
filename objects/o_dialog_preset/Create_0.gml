@@ -8,12 +8,11 @@ event_inherited();
 	node = noone;
 	destroy_on_click_out = true;
 	
-	padding = ui(24);
 	anchor = ANCHOR.left | ANCHOR.top;
 #endregion
 
 #region content
-	sc_presets = new scrollPane(dialog_w - ui(padding + padding), dialog_h - ui(64 + padding), function(_y, _m) {
+	sc_presets = new scrollPane(dialog_w - ui(padding + padding), dialog_h - ui(title_height + padding), function(_y, _m) {
 		draw_clear_alpha(COLORS.panel_bg_clear, 0);
 		if(node == noone) return 0;
 		
