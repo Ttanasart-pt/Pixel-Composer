@@ -176,3 +176,49 @@ function surface_array_clone(arr) {
 	
 	return _arr;
 }
+
+function surface_array_serialize(arr) {
+	var _arr = __surface_array_serialize(arr);
+	return json_stringify(_arr);
+}
+
+function __surface_array_serialize(arr) {
+	if(!is_array(arr)) {
+		if(is_surface(arr)) {
+			var buff = buffer_create(surface_get_width(arr) * surface_get_height(arr) * 4, buffer_fixed, 1);
+			buffer_get_surface(buff, arr, 0);
+			var comp = buffer_compress(buff, 0, buffer_get_size(buff));
+			var enc = buffer_base64_encode(comp, 0, buffer_get_size(comp));
+			buffer_delete(buff);
+			return { width: surface_get_width(arr), height: surface_get_height(arr), buffer: enc };
+		} else
+			return arr;
+	}
+	
+	var _arr = [];
+	
+	for( var i = 0; i < array_length(arr); i++ ) 
+		_arr[i] = __surface_array_serialize(arr[i]);
+	
+	return _arr;
+}
+
+function surface_array_deserialize(arr, index = -1) {
+	var _arr = json_parse(arr);
+	return index == -1? __surface_array_deserialize(_arr, index) : __surface_array_deserialize(_arr[index]);
+}
+	
+function __surface_array_deserialize(arr) {
+	if(!is_array(arr)) {
+		var buff = buffer_base64_decode(arr.buffer);
+		var buff = buffer_decompress(buff);
+		return surface_create_from_buffer(arr.width, arr.height, buff);
+	}
+	
+	var _arr = [];
+	
+	for( var i = 0; i < array_length(arr); i++ ) 
+		_arr[i] = __surface_array_deserialize(arr[i]);
+	
+	return _arr;
+}

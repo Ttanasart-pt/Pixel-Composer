@@ -5,6 +5,8 @@ enum ARRAY_PROCESS {
 	expand_inv,
 }
 
+#macro PROCESSOR_OVERLAY_CHECK if(array_length(current_data) != ds_list_size(inputs)) return;
+
 function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	array_process	= ARRAY_PROCESS.loop;
 	current_data	= [];

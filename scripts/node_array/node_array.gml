@@ -171,6 +171,10 @@ function Node_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			createNewInput();
 	}
 	
+	static doApplyDeserialize = function() {
+		onValueUpdate(0);
+	}
+	
 	static attributeSerialize = function() {
 		var att = ds_map_create();
 		ds_map_override(att, attributes);
@@ -179,10 +183,5 @@ function Node_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	
 	static attributeDeserialize = function(attr) {
 		ds_map_override(attributes, attr);
-		
-		var amo = ds_map_find_value(attributes, "size");
-		//var _add = amo - (ds_list_size(inputs) - input_fix_len);
-		//repeat(_add)
-		//	createNewInput();
 	}
 }

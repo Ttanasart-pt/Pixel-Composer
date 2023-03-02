@@ -11,7 +11,7 @@ function Node_Colorize(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	
 	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 	
-	inputs[| 1] = nodeValue("Gradient", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, [ new gradientKey(0, c_black), new gradientKey(1, c_white) ] )
+	inputs[| 1] = nodeValue("Gradient", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, new gradientObject([ c_black, c_white ]) )
 		.setDisplay(VALUE_DISPLAY.gradient);
 		
 	inputs[| 2] = nodeValue("Gradient shift", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
@@ -36,11 +36,10 @@ function Node_Colorize(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	
 	static process_data = function(_outSurf, _data, _output_index, _array_index) {
 		var _gra		= _data[1];
-		var _gra_data	= inputs[| 1].getExtraData();
 		var _gra_shift	= _data[2];
 		var _alpha		= _data[6];
 		
-		var _grad = gradient_to_array(_gra);
+		var _grad = _gra.toArray();
 		var _grad_color = _grad[0];
 		var _grad_time	= _grad[1];
 		
@@ -49,11 +48,11 @@ function Node_Colorize(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			BLEND_OVERRIDE;
 			
 			shader_set(shader);
-			shader_set_uniform_i(uniform_grad_blend, ds_list_get(_gra_data, 0));
+			shader_set_uniform_i(uniform_grad_blend, _gra.type);
 			shader_set_uniform_f_array_safe(uniform_color, _grad_color);
 			shader_set_uniform_f_array_safe(uniform_time,  _grad_time);
 			shader_set_uniform_f(uniform_shift,  _gra_shift);
-			shader_set_uniform_i(uniform_key, array_length(_gra));
+			shader_set_uniform_i(uniform_key, array_length(_gra.keys));
 			shader_set_uniform_i(uniform_alpha, _alpha);
 			
 			draw_surface_safe(_data[0], 0, 0);

@@ -1,13 +1,12 @@
 /// @description init
 #region animation
-	ANIMATOR.frame_progress = false;
-	
 	if(ANIMATOR.is_playing && ANIMATOR.play_freeze == 0) {
 		ANIMATOR.time_since_last_frame += ANIMATOR.framerate * (delta_time / 1000000);
 		
 		if(ANIMATOR.time_since_last_frame >= 1)
 			ANIMATOR.setFrame(ANIMATOR.real_frame + 1);
 	} else {
+		ANIMATOR.frame_progress = false;
 		ANIMATOR.setFrame(ANIMATOR.real_frame);
 		ANIMATOR.time_since_last_frame = 0;
 	}

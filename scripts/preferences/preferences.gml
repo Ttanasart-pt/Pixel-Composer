@@ -59,6 +59,8 @@
 	
 	PREF_MAP[? "dialog_add_node_w"] = 532;
 	PREF_MAP[? "dialog_add_node_h"] = 400;
+	
+	PREF_MAP[? "panel_menu_resource_monitor"] = false;
 #endregion
 
 #region hotkeys	

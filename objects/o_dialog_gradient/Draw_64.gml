@@ -2,6 +2,7 @@
 if !ready exit;
 
 #region dropper
+	selector.interactable = interactable;
 	if(selector.dropper_active) {
 		selector.drawDropper(self);
 		exit;
@@ -28,7 +29,9 @@ if !ready exit;
 	
 	draw_set_text(f_p0, fa_left, fa_top, COLORS._main_text_title);
 	draw_text(presets_x + ui(24), dialog_y + ui(16), get_text("presets", "Presets"));
-	draw_text(content_x + ui(24), dialog_y + ui(16), name);
+	draw_text(content_x + (!interactable * ui(32)) + ui(24), dialog_y + ui(16), name);
+	if(!interactable)
+		draw_sprite_ui(THEME.lock, 0, content_x + ui(24 + 12), dialog_y + ui(16 + 12),,,, COLORS._main_icon);
 	draw_text(palette_x + ui(24), dialog_y + ui(16), get_text("palette", "Palettes"));
 #endregion
 
@@ -47,8 +50,8 @@ if !ready exit;
 		var dia = dialogCall(o_dialog_file_name, mouse_mx + ui(8), mouse_my + ui(8));
 		dia.onModify = function (txt) {
 			var gradStr = "";
-			for(var i = 0; i < array_length(gradient); i++) {
-				var gr = gradient[i];
+			for(var i = 0; i < array_length(gradient.keys); i++) {
+				var gr = gradient.keys[i];
 				var cc = gr.value;
 				var tt = gr.time;
 				
@@ -96,9 +99,9 @@ if !ready exit;
 		
 		if(buttonInstant(THEME.button_hide, bx, by, ui(28), ui(28), mouse_ui, interactable && sFOCUS, sHOVER, get_text("gradient_editor_key_blend", "Key blending"), THEME.grad_blend) == 2) {
 			menuCall( bx + ui(32), by, [ 
-				menuItem(get_text("gradient_editor_blend_RGB",  "RGB blend"),  function() { grad_data[| 0] = 0; onApply(gradient); }), 
-				menuItem(get_text("gradient_editor_blend_HSV",  "HSV blend"),  function() { grad_data[| 0] = 2; onApply(gradient); }), 
-				menuItem(get_text("gradient_editor_blend_hard", "Hard blend"), function() { grad_data[| 0] = 1; onApply(gradient); }), 
+				menuItem(get_text("gradient_editor_blend_RGB",  "RGB blend"),  function() { gradient.type = 0; onApply(gradient); }), 
+				menuItem(get_text("gradient_editor_blend_HSV",  "HSV blend"),  function() { gradient.type = 2; onApply(gradient); }), 
+				menuItem(get_text("gradient_editor_blend_hard", "Hard blend"), function() { gradient.type = 1; onApply(gradient); }), 
 			]);
 		}
 		bx -= ui(32);
@@ -106,11 +109,11 @@ if !ready exit;
 	
 	draw_sprite_stretched(THEME.textbox, 3, gr_x - ui(6), gr_y - ui(6), gr_w + ui(12), gr_h + ui(12));
 	draw_sprite_stretched(THEME.textbox, 0, gr_x - ui(6), gr_y - ui(6), gr_w + ui(12), gr_h + ui(12));
-	draw_gradient(gr_x, gr_y, gr_w, gr_h, gradient, grad_data[| 0]);
+	gradient.draw(gr_x, gr_y, gr_w, gr_h);
 	
 	var hover = noone;
-	for(var i = 0; i < array_length(gradient); i++) {
-		var _k  = gradient[i];
+	for(var i = 0; i < array_length(gradient.keys); i++) {
+		var _k  = gradient.keys[i];
 		var _c  = _k.value;
 		var _kx = gr_x + _k.time * gr_w; 
 		var _in = _k == key_selecting? 1 : 0;
@@ -161,9 +164,9 @@ if !ready exit;
 				key_selecting = noone;
 				
 				var tt = clamp((mouse_mx - gr_x) / gr_w, 0, 1);
-				var cc = gradient_eval(gradient, tt);
+				var cc = gradient.eval(tt);
 				var _newkey = new gradientKey(tt, cc);
-				gradient_add(gradient, _newkey, true);
+				gradient.add(_newkey, true);
 					
 				key_selecting  = _newkey;
 				key_dragging   = _newkey;
@@ -175,8 +178,8 @@ if !ready exit;
 			}
 		}
 			
-		if(mouse_press(mb_right, interactable && sFOCUS) && hover && array_length(gradient) > 1)
-			array_remove(gradient, hover);
+		if(mouse_press(mb_right, interactable && sFOCUS) && hover && array_length(gradient.keys) > 1)
+			array_remove(gradient.keys, hover);
 	}
 	
 	var op_x = content_x + ui(20);

@@ -4,14 +4,14 @@ function Node_Gradient_Out(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	
 	w = 96;
 	
-	inputs[| 0] = nodeValue("Gradient", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, [ new gradientKey(0, c_white) ] )
+	inputs[| 0] = nodeValue("Gradient", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, new gradientObject(c_white) )
 		.setDisplay(VALUE_DISPLAY.gradient);
 	
 	inputs[| 1] = nodeValue("Sample", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0, "Position to sample a color from the gradient.")
 		.setDisplay(VALUE_DISPLAY.slider, [0, 1, 0.01])
 		.rejectArray();
 	
-	outputs[| 0] = nodeValue("Gradient", self, JUNCTION_CONNECT.output, VALUE_TYPE.color, [ new gradientKey(0, c_white) ] )
+	outputs[| 0] = nodeValue("Gradient", self, JUNCTION_CONNECT.output, VALUE_TYPE.color, new gradientObject(c_white) )
 		.setDisplay(VALUE_DISPLAY.gradient);
 	
 	outputs[| 1] = nodeValue("Color", self, JUNCTION_CONNECT.output, VALUE_TYPE.color, c_white);
@@ -23,7 +23,7 @@ function Node_Gradient_Out(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		var pos = _data[1];
 		
 		if(_output_index == 0) return pal;
-		if(_output_index == 1) return gradient_eval(pal, pos);
+		if(_output_index == 1) return pal.eval(pos);
 		return 0;
 	}
 	
@@ -32,6 +32,6 @@ function Node_Gradient_Out(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		if(bbox.h < 1) return;
 		
 		var grad = getSingleValue(0);
-		draw_gradient(bbox.x0, bbox.y0, bbox.w, bbox.h, grad, inputs[| 0].extra_data[| 0]);
+		grad.draw(bbox.x0, bbox.y0, bbox.w, bbox.h);
 	}
 }

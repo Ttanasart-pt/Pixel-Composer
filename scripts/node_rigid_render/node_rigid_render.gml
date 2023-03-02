@@ -2,6 +2,7 @@ function Node_Rigid_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	name = "Render";
 	color = COLORS.node_blend_simulation;
 	icon  = THEME.rigidSim;
+	use_cache = true;
 	
 	inputs[| 0] = nodeValue("Render dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, def_surf_size2)
 		.setDisplay(VALUE_DISPLAY.vector)
@@ -18,6 +19,11 @@ function Node_Rigid_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			.setVisible(true, true);
 	}
 	if(!LOADING && !APPENDING) createNewInput();
+	
+	insp2UpdateTooltip = "Clear cache";
+	insp2UpdateIcon    = [ THEME.cache, 0, COLORS._main_icon ];
+	
+	static onInspector2Update = function() { clearCache(); }
 	
 	static refreshDynamicInput = function() {
 		var _l = ds_list_create();
@@ -45,6 +51,9 @@ function Node_Rigid_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	}
 	
 	static update = function(frame = ANIMATOR.current_frame) {
+		if(recoverCache() || !ANIMATOR.is_playing)
+			return;
+			
 		var _dim = inputs[| 0].getValue();
 		var _outSurf = outputs[| 0].getValue();
 		
@@ -65,7 +74,7 @@ function Node_Rigid_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 				if(!is_array(obj)) obj = [ obj ];
 				
 				for( var k = 0; k < array_length(obj); k++ ) {
-					var _o = obj[k];
+					var _o = obj[k]; 
 					if(_o == noone || !instance_exists(_o)) continue;
 					if(is_undefined(_o.phy_active)) continue;
 					
@@ -89,6 +98,7 @@ function Node_Rigid_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		}
 		
 		surface_reset_target();
+		cacheCurrentFrame(_outSurf);
 	}
 	
 	static postDeserialize = function() {

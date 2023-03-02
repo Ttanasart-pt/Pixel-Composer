@@ -8,7 +8,6 @@ event_inherited();
 	
 	name = get_text("gradient_editor_title", "Gradient editor");
 	gradient = noone;
-	grad_data = noone;
 	interactable = true;
 	
 	key_selecting = noone;
@@ -32,34 +31,23 @@ event_inherited();
 		onApply(gradient);
 	}
 	
-	function setGradient(grad, data) {
-		gradient = grad;	
-		grad_data = data;
-		if(array_length(grad))
-			key_selecting = grad[0];
+	function setGradient(grad) { 
+		gradient = grad;
+		if(array_length(grad.keys))
+			key_selecting = grad.keys[0];
 	}
 	
 	selector = new colorSelector(setColor);
 	selector.dropper_close = false;
 	
-	previous_gradient = [];
-	previous_data	  = 0;
+	previous_gradient = noone;
 	
-	function setDefault(grad, data) {
-		var _grad = [];
-		for( var i = 0; i < array_length(grad); i++ )
-			_grad[i] = grad[i].clone();
-		
-		setGradient(_grad, data);
-		previous_data = data[| 0];
-		
-		previous_gradient = [];
-		for( var i = 0; i < array_length(grad); i++ )
-			array_push(previous_gradient, grad[i].clone());
+	function setDefault(grad) {
+		setGradient(grad);
+		previous_gradient = grad.clone();
 	}
 	
 	b_cancel = button(function() {
-		grad_data[| 0] = previous_data;
 		onApply(previous_gradient);
 		DIALOG_CLICK = false;
 		instance_destroy();
@@ -74,20 +62,21 @@ event_inherited();
 	function setKeyPosition(key, position) {
 		key.time = position;
 		
-		array_remove(gradient, key);
-		gradient_add(gradient, key, false);
+		array_remove(gradient.keys, key);
+		gradient.add(key, false);
 		
 		onApply(gradient);
 	}
 	
 	function removeKeyOverlap(key) {
-		for(var i = 0; i < array_length(gradient); i++) {
-			var _key = gradient[i];
+		var keys = gradient.keys;
+		for(var i = 0; i < array_length(keys); i++) {
+			var _key = keys[i];
 			if(_key == key || _key.time != key.time) 
 				continue;
 			
 			_key.value = key.value;
-			array_remove(gradient, key);
+			array_remove(keys, key);
 		}
 		
 		onApply(gradient);
@@ -99,7 +88,9 @@ event_inherited();
 		if(path == "") return noone;
 		if(!file_exists(path)) return noone;
 		
-		var grad = [];
+		var grad = new gradientObject();
+		grad.keys = [];
+		
 		var _t = file_text_open_read(path);
 		while(!file_text_eof(_t)) {
 			var key = file_text_readln(_t);
@@ -117,7 +108,7 @@ event_inherited();
 				_pos = toNumber(file_text_readln(_t));
 			}
 			
-			array_push(grad, new gradientKey(_pos, _col));
+			array_push(grad.keys, new gradientKey(_pos, _col));
 		}
 		file_text_close(_t);
 		return grad;
@@ -141,6 +132,7 @@ event_inherited();
 	}
 	presetCollect();
 	
+	hovering_name = "";
 	sp_preset_w = ui(240 - 32 - 16);
 	sp_presets = new scrollPane(sp_preset_w, dialog_h - ui(62), function(_y, _m) {
 		var ww  = sp_preset_w - ui(40);
@@ -159,13 +151,21 @@ event_inherited();
 				
 			draw_set_text(f_p2, fa_left, fa_top, COLORS._main_text_sub);
 			draw_text(ui(16), yy + ui(8), filename_name_only(preset_name[| i]));
-			draw_gradient(ui(16), yy + ui(28), ww, ui(16), presets[| i]);
+			presets[| i].draw(ui(16), yy + ui(28), ww, ui(16));
 			
-			if(_hover && isHover && mouse_press(mb_left, interactable && sFOCUS)) { 
-				var target = presets[| i];
-				gradient = [];
-				for( var i = 0; i < array_length(target); i++ )
-					array_push(gradient, new gradientKey(target[i].time, target[i].value));
+			if(_hover && isHover) {
+				if(mouse_press(mb_left, interactable && sFOCUS))
+					gradient.keys = presets[| i].keys;
+				
+				if(mouse_press(mb_right, interactable && sFOCUS)) {
+					hovering_name = preset_name[| i];
+					menuCall(,, [
+						menuItem("Delete gradient", function() { 
+							file_delete( DIRECTORY + "Gradients/" + hovering_name); 
+							presetCollect();
+						})
+					])
+				}
 			}
 			
 			yy += hg + ui(4);

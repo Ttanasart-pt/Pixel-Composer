@@ -142,22 +142,24 @@ function colorSelector(onApply = noone) constructor {
 			var h = shader_get_uniform(sh_color_picker_hue, "hue");
 			shader_set_uniform_f(h, hue / 256);
 			
-			draw_surface_safe(color_surface, col_x, col_y);
+			draw_surface_ext_safe(color_surface, col_x, col_y,,,,, interactable * 0.5 + 0.5);
+			shader_reset();
 		} else if(disp_mode == 1) {
 			shader_set(sh_color_picker_value);
 			var v = shader_get_uniform(sh_color_picker_value, "value");
 			shader_set_uniform_f(v, val / 256);
 			
-			draw_surface_safe(color_surface, col_x, col_y);
+			draw_surface_ext_safe(color_surface, col_x, col_y,,,,, interactable * 0.5 + 0.5);
+			shader_reset();
 		} 
-		shader_reset();
 		
-		#region hue
+		#region side control
 			var hue_x = col_x + ui(280);
 			var hue_y = col_y;
 			
 			draw_sprite_stretched(THEME.ui_panel_bg, 0, hue_x - ui(8), hue_y - ui(8), ui(32), ui(256 + 16));
 		
+			draw_set_alpha(interactable * 0.9 + 0.1);
 			for(var i = 0; i < 256; i++) {
 				if(disp_mode == 0)
 					draw_set_color(make_color_hsv(i, 255, 255));
@@ -165,7 +167,8 @@ function colorSelector(onApply = noone) constructor {
 					draw_set_color(make_color_hsv(hue, 255, 255 - i));
 				draw_rectangle(hue_x, hue_y + ui(i), hue_x + ui(16), hue_y + ui(i + 1), false);
 			}
-		
+			draw_set_alpha(1);
+			
 			if(disp_mode == 0) {
 				var hy = hue_y + ui(hue);
 				draw_sprite_stretched_ext(s_ui_base_white, 0, hue_x - ui(3), hy - ui(6), ui(24), ui(10), make_color_hsv(hue, 255, 255), 1);

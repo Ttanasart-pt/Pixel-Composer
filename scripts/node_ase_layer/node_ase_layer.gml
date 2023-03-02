@@ -28,7 +28,7 @@ function Node_ASE_layer(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		layer_object = noone;
 		
 		for( var i = 0; i < array_length(data.layers); i++ ) {
-			if(data.layers[i].name != name) continue;
+			if(data.layers[i].name != display_name) continue;
 			
 			layer_object = data.layers[i];
 			break;
@@ -39,8 +39,8 @@ function Node_ASE_layer(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		var data = inputs[| 0].getValue();
 		if(data == noone) return;
 		
-		if(_name != name) {
-			_name = name;
+		if(_name != display_name) {
+			_name = display_name;
 			findLayer();
 		}
 		

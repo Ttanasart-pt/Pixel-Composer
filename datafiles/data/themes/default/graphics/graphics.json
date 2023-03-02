@@ -1093,6 +1093,20 @@
         "yorigin": 24,
         "slice": null
     },
+    "tunnel": {
+        "path": "./icon/s_tunnel.png",
+        "subimages": 2,
+        "xorigin": 24,
+        "yorigin": 24,
+        "slice": null
+    },
+    "lock": {
+        "path": "./icon/s_lock.png",
+        "subimages": 2,
+        "xorigin": 24,
+        "yorigin": 24,
+        "slice": null
+    },
     "menu_button": {
         "path": "./UI/s_menu_button.png",
         "subimages": 1,

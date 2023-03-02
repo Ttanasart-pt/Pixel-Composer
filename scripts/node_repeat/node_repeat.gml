@@ -39,7 +39,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	
 	inputs[| 13] = nodeValue("Path shift", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0);
 	
-	inputs[| 14] = nodeValue("Color over copy", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, [ new gradientKey(0, c_white) ] )
+	inputs[| 14] = nodeValue("Color over copy", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, new gradientObject(c_white) )
 		.setDisplay(VALUE_DISPLAY.gradient);
 		
 	inputs[| 15] = nodeValue("Alpha over copy", self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_11 );
@@ -143,7 +143,6 @@ function Node_Repeat(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		var _prsh = inputs[| 13].getValue();
 		
 		var _grad = inputs[| 14].getValue();
-		var _grad_data = inputs[| 14].getExtraData();
 		var _alph = inputs[| 15].getValue();
 		
 		var _arr = inputs[| 16].getValue();
@@ -237,7 +236,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				}
 				
 				var pos = point_rotate(-sw / 2, -sh / 2, 0, 0, rot);
-				var cc  = gradient_eval(_grad, i / (_amo - 1), ds_list_get(_grad_data, 0));
+				var cc  = _grad.eval(i / (_amo - 1));
 				var aa  = eval_curve_x(_alph, i / (_amo - 1));
 				
 				cc = merge_color(cc, colorMultiply(cc, _an_bld), _inf);

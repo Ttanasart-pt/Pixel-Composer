@@ -27,7 +27,7 @@ function Node_Pixel_Cloud(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	inputs[| 3] = nodeValue("Strength map", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 	
-	inputs[| 4] = nodeValue("Color over lifetime", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, [ new gradientKey(0, c_white) ] )
+	inputs[| 4] = nodeValue("Color over lifetime", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, new gradientObject(c_white) )
 		.setDisplay(VALUE_DISPLAY.gradient);
 	
 	inputs[| 5] = nodeValue("Distance", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1);
@@ -51,16 +51,13 @@ function Node_Pixel_Cloud(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	static process_data = function(_outSurf, _data, _output_index, _array_index) {
 		var _sed = _data[1];
 		var _str = _data[2];
-		var _map = _data[3];
-		
-		var _gra = _data[4];
-		var _gra_data = inputs[| 4].getExtraData();
-		
+		var _map = _data[3];		
+		var _gra = _data[4];		
 		var _dis = _data[5];
 		var _alp = _data[6];
 		var _rnd = _data[7];
 		
-		var _grad = gradient_to_array(_gra);
+		var _grad = _gra.toArray();
 		var _grad_color = _grad[0];
 		var _grad_time	= _grad[1];
 		
@@ -79,10 +76,10 @@ function Node_Pixel_Cloud(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 				shader_set_uniform_i(uniform_map_use, 0);
 			}
 			
-			shader_set_uniform_i(uniform_grad_blend, ds_list_get(_gra_data, 0));
+			shader_set_uniform_i(uniform_grad_blend, _gra.type);
 			shader_set_uniform_f_array_safe(uniform_grad, _grad_color);
 			shader_set_uniform_f_array_safe(uniform_grad_time, _grad_time);
-			shader_set_uniform_i(uniform_grad_key, array_length(_gra));
+			shader_set_uniform_i(uniform_grad_key, array_length(_gra.keys));
 			
 			shader_set_uniform_f_array_safe(uniform_alpha, _alp);
 			shader_set_uniform_i(uniform_alamo, array_length(_alp));

@@ -7,6 +7,8 @@ function Panel_Menu() : PanelContent() constructor {
 	noti_icon_show = 0;
 	noti_icon_time = 0;
 	
+	
+	
 	menu_file = [
 		menuItem(get_text("panel_menu_new", "New"), function() { NEW(); }, THEME.new_file, ["", "New file"]),
 		menuItem(get_text("panel_menu_open", "Open") + "...", function() { LOAD(); }, THEME.noti_icon_file_load, ["", "Open"]),
@@ -34,7 +36,8 @@ function Panel_Menu() : PanelContent() constructor {
 					}
 						
 					instance_create_depth(0, 0, 0, addon_key_displayer);
-				})
+				}),
+				
 			]);
 		}, THEME.addon ).setIsShelf(),
 		-1,
@@ -301,22 +304,21 @@ function Panel_Menu() : PanelContent() constructor {
 			nx0 += nw + ui(8);
 		#endregion
 		
-		#region window
+		#region addons 
 			var wh = ui(32);
-			var cc = c_white;
 			
 			with(addon) {
 				draw_set_text(f_p0, fa_center, fa_center, COLORS._main_text);
 				var ww = string_width(name) + ui(16);
 				
 				if(other.pHOVER && point_in_rectangle(other.mx, other.my, nx0, ny0 - wh / 2, nx0 + ww, ny0 + wh / 2)) {
-					draw_sprite_stretched_ext(THEME.menu_button, 1, nx0, ny0 - wh / 2, ww, wh, cc, 1);
+					draw_sprite_stretched(THEME.menu_button, 1, nx0, ny0 - wh / 2, ww, wh);
 					if(mouse_press(mb_left, other.pFOCUS)) 
 						instance_destroy();
 					if(mouse_press(mb_right, other.pFOCUS)) 
 						menuCall(,, menu);
 				} else 
-					draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, nx0, ny0 - wh / 2, ww, wh, cc, 1);
+					draw_sprite_stretched(THEME.ui_panel_bg, 1, nx0, ny0 - wh / 2, ww, wh);
 				draw_text(nx0 + ww / 2, ny0, name);
 				
 				nx0 += ww + ui(4);

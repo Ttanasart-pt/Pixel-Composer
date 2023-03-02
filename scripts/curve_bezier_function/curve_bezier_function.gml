@@ -4,7 +4,7 @@
 #macro CURVE_DEF_10 [0, 0, 0, 1, 1/3, -1/3, /**/ -1/3,  1/3, 1, 0, 0, 0]
 #macro CURVE_DEF_11 [0, 0, 0, 1, 1/3,    0, /**/ -1/3,    0, 1, 1, 0, 0]
 
-function draw_curve(x0, y0, _w, _h, _bz) {
+function draw_curve(x0, y0, _w, _h, _bz, miny = 0, maxy = 1) {
 	var segments = array_length(_bz) / 6 - 1;
 	
 	for( var i = 0; i < segments; i++ ) {
@@ -28,17 +28,18 @@ function draw_curve(x0, y0, _w, _h, _bz) {
 		var dw  = dx1 - dx0;
 		var smp = ceil((_x1 - _x0) * 32);
 		
-		draw_curve_segment(dx0, y0, dw, _h, [_y0, ax0, ay0, bx1, by1, _y1], smp);
+		draw_curve_segment(dx0, y0, dw, _h, [_y0, ax0, ay0, bx1, by1, _y1], smp, miny, maxy);
 	}
 }
 
-function draw_curve_segment(x0, y0, _w, _h, _bz, SAMPLE = 32) {
+function draw_curve_segment(x0, y0, _w, _h, _bz, SAMPLE = 32, miny = 0, maxy = 1) {
 	var _ox, _oy;
 	
 	for(var i = 0; i <= SAMPLE; i++) {
 		var t = i / SAMPLE;
 		var _r  = eval_curve_segment_t_position(t, _bz);
 		var _rx = _r[0], _ry = _r[1];
+		_ry = (_ry - miny) / (maxy - miny);
 		
 		var _nx = _rx * _w + x0;
 		var _ny = (_h? _ry : 1 - _ry) * abs(_h) + y0;

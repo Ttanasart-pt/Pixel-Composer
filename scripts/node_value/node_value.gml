@@ -157,7 +157,6 @@ function typeArray(_type) {
 			
 		case VALUE_DISPLAY.path_array :
 		case VALUE_DISPLAY.palette :
-		case VALUE_DISPLAY.gradient :
 		case VALUE_DISPLAY.text_array :
 			return 1;
 	}
@@ -331,6 +330,10 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	unit		= new nodeValueUnit(self);
 	extra_data	= ds_list_create();
 	dyna_depo   = ds_list_create();
+	
+	draw_line_shift_x		= 0;
+	draw_line_shift_y		= 0;
+	draw_line_shift_hover	= false;
 	
 	visible = _connect == JUNCTION_CONNECT.output || _type == VALUE_TYPE.surface || _type == VALUE_TYPE.path;
 	show_in_inspector = true;
@@ -777,10 +780,12 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				var grad = array_create(amo);
 				for( var i = 0; i < amo; i++ )
 					grad[i] = new gradientKey(i / amo, value[i]);
-				return grad;
+				var g = new gradientObject();
+				g.keys = grad;
+				return g;
 			} 
 			
-			var grad = [ new gradientKey(0, value) ];
+			var grad = new gradientObject(value);
 			return grad;
 		}
 		
@@ -827,10 +832,10 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		}
 		
 		if(typeFrom == VALUE_TYPE.integer && type == VALUE_TYPE.color)
-			return make_color_hsv(0, 0, value);
+			return value;
 		
-		if((typeFrom == VALUE_TYPE.float || typeFrom == VALUE_TYPE.boolean) && type == VALUE_TYPE.color)
-			return make_color_hsv(0, 0, value * 255);
+		if((typeFrom == VALUE_TYPE.integer || typeFrom == VALUE_TYPE.float || typeFrom == VALUE_TYPE.boolean) && type == VALUE_TYPE.color)
+			return value >= 1? value : make_color_hsv(0, 0, value * 255);
 			
 		if(typeFrom == VALUE_TYPE.boolean && type == VALUE_TYPE.text)
 			return value? "true" : "false";
@@ -1022,9 +1027,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				node.triggerRender();
 				if(_update)
 					node.valueUpdate(index);
+				node.clearCacheForward();
 			}
 			
-			node.clearCacheForward();
 			cache_array[0] = false;
 			cache_value[0] = false;
 		}
@@ -1118,6 +1123,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		cache_array[0] = false;
 		cache_value[0] = false;
+		
+		draw_line_shift_x	= 0;
+		draw_line_shift_y	= 0;
 		
 		if(!LOADING) MODIFIED = true;
 		return true;
@@ -1356,10 +1364,12 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		ds_map_add_list(_map, "raw value", animator.serialize(scale));
 		
-		_map[? "on end"] = on_end;
-		_map[? "visible"] = visible;
-		_map[? "unit"] = unit.mode;
-		_map[? "anim"] = animator.is_anim;
+		_map[? "on end"]	 = on_end;
+		_map[? "visible"]	 = visible;
+		_map[? "unit"]		 = unit.mode;
+		_map[? "anim"]		 = animator.is_anim;
+		_map[? "shift x"]	 = draw_line_shift_x;
+		_map[? "shift y"]	 = draw_line_shift_y;
 		_map[? "from node"]  = !preset && value_from? value_from.node.node_id	: -1;
 		_map[? "from index"] = !preset && value_from? value_from.index			: -1;
 		
@@ -1376,9 +1386,11 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(_map == noone) return;
 		
 		printIf(TESTING, "     |- Applying deserialize to junction " + name + " of node " + node.name);
-		on_end = ds_map_try_get(_map, "on end", on_end);
-		visible	= ds_map_try_get(_map, "visible", visible);
-		unit.mode = ds_map_try_get(_map, "unit", VALUE_UNIT.constant);
+		on_end		= ds_map_try_get(_map, "on end", on_end);
+		visible		= ds_map_try_get(_map, "visible", visible);
+		unit.mode	= ds_map_try_get(_map, "unit", VALUE_UNIT.constant);
+		draw_line_shift_x = ds_map_try_get(_map, "shift x");
+		draw_line_shift_y = ds_map_try_get(_map, "shift y");
 		
 		animator.deserialize(_map[? "raw value"], scale);
 		

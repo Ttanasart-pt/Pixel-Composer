@@ -18,6 +18,8 @@ function Node_Fluid_Update(_x, _y, _group = noone) : Node_Fluid(_x, _y, _group) 
 	outputs[| 0] = nodeValue("Fluid Domain", self, JUNCTION_CONNECT.output, VALUE_TYPE.fdomain, noone);
 	
 	static update = function(frame = ANIMATOR.current_frame) {
+		if(!ANIMATOR.is_playing) return;
+		
 		var _dom = inputs[| 0].getValue(frame);
 		var _act = inputs[| 1].getValue(frame);
 		if(_dom == noone || !instance_exists(_dom)) return;

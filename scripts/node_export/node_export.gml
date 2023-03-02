@@ -79,6 +79,8 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		.setDisplay(VALUE_DISPLAY.slider, [0, 100, 1])
 		.rejectArray();
 	
+	inputs[| 11] = nodeValue("Sequence begin", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+	
 	outputs[| 0] = nodeValue("Loop exit", self, JUNCTION_CONNECT.output, VALUE_TYPE.any, 0);
 	
 	outputs[| 1] = nodeValue("Preview", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone)
@@ -87,7 +89,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	input_display_list = [
 		["Export",		false], 0, 1, 2, 4, 
 		["Format ",		false], 3, 9, 
-		["Settings",	false], 8, 5, 6, 7, 10, 
+		["Settings",	false], 8, 5, 6, 7, 10, 11, 
 	];
 	
 	directory = DIRECTORY + "temp\\" + string(irandom_range(100000, 999999));
@@ -173,7 +175,8 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	}
 	
 	static pathString = function(path, suff, index = 0) {
-		var form = inputs[| 3].getValue();
+		var form = inputs[|  3].getValue();
+		var strt = inputs[| 11].getValue();
 		
 		var s = "", i = 1, ch, ch_s;
 		var len = string_length(suff);
@@ -191,12 +194,12 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 							var float_str = string_digits(str);
 							if(float_str != "") {
 								var float_val = string_digits(float_str);
-								var str_val = max(float_val - string_length(string(ANIMATOR.current_frame + 1)), 0);
+								var str_val = max(float_val - string_length(string(ANIMATOR.current_frame + strt)), 0);
 								repeat(str_val)
 									s += "0";
 							}
 								
-							s += string(ANIMATOR.current_frame + 1);
+							s += string(ANIMATOR.current_frame + strt);
 							res = true;
 							break;
 						case "i" :
@@ -299,7 +302,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				if(!is_surface(_surf)) continue;
 				
 				if(form == NODE_EXPORT_FORMAT.gif) {
-					p = directory + "\\" + string(i) + "\\" + string(100000 + ANIMATOR.current_frame + 1) + ".png";
+					p = directory + "\\" + string(i) + "\\" + string_lead_zero(ANIMATOR.current_frame, 5) + ".png";
 				} else {
 					if(is_array(path) && array_length(path) == array_length(surf))
 						p = pathString(path[ safe_mod(i, array_length(path)) ], suff, i);
@@ -322,7 +325,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			if(is_array(path)) p = path[0];
 				
 			if(form == NODE_EXPORT_FORMAT.gif)
-				p = directory + "\\" + string(100000 + ANIMATOR.current_frame + 1) + ".png";
+				p = directory + "\\" + string_lead_zero(ANIMATOR.current_frame, 5) + ".png";
 			else
 				p = pathString(p, suff);
 			
@@ -344,7 +347,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	insp2UpdateTooltip = "Export All";
 	insp2UpdateIcon    = [ THEME.play_all, 0, COLORS._main_value_positive ];
 	
-	static onInspectorUpdate = function() {
+	static onInspectorUpdate = function() {		
 		if(isInLoop())	UPDATE |= RENDER_TYPE.full;
 		else			doInspectorAction();
 	}
@@ -366,7 +369,6 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	
 	static doInspectorAction = function() {
 		if(LOADING || APPENDING) return;
-		if(playing) return;
 		
 		var path = inputs[| 1].getValue();
 		if(path == "") return;
@@ -404,10 +406,11 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		var anim = inputs[| 3].getValue();
 		var extn = inputs[| 9].getValue();
 		
-		inputs[| 5].setVisible(anim == 2);
-		inputs[| 6].setVisible(anim == 2);
-		inputs[| 7].setVisible(anim == 2);
-		inputs[| 8].setVisible(anim == 2);
+		inputs[|  5].setVisible(anim == 2);
+		inputs[|  6].setVisible(anim == 2);
+		inputs[|  7].setVisible(anim == 2);
+		inputs[|  8].setVisible(anim == 2);
+		inputs[| 11].setVisible(anim == 1);
 		
 		if(anim == NODE_EXPORT_FORMAT.gif) {
 			inputs[|  9].display_data		  = format_animation;

@@ -183,7 +183,7 @@ function __part(_node) constructor {
 		
 		if(x0 > surf_w || y0 > surf_h || x1 < 0 || y1 < 0) return; //culling
 		
-		var cc = (col == -1)? c_white : gradient_eval(col, lifeRat);
+		var cc = (col == -1)? c_white : col.eval(lifeRat);
 		if(blend != c_white) cc = colorMultiply(blend, cc);
 		alp_draw = alp * eval_curve_x(alp_fade, lifeRat);
 		draw_surface_ext(ss, _xx, _yy, scx, scy, rot, cc, alp_draw);

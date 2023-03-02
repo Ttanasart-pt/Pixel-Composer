@@ -29,7 +29,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	inputs[| 9] = nodeValue("Shift", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
 		.setDisplay(VALUE_DISPLAY._default, 1 / 64);
 	
-	inputs[| 10] = nodeValue("Color over length", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, [ new gradientKey(0, c_white) ] )
+	inputs[| 10] = nodeValue("Color over length", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, new gradientObject(c_white) )
 		.setDisplay(VALUE_DISPLAY.gradient);
 	
 	inputs[| 11] = nodeValue("Width over length", self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_11);
@@ -68,7 +68,6 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		var _shift = _data[9];
 		
 		var _color = _data[10];
-		var _col_data = inputs[| 10].getExtraData();
 		var _widc  = _data[11];
 		var _widap = _data[12];
 		
@@ -147,7 +146,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 						_na = point_direction(n0[0], n0[1], n1[0], n1[1]) + 90;
 					}
 					
-					_nc = gradient_eval(_color, _colP? _prog_eli / _rtLen : _prog_curr, ds_list_get(_col_data, 0));
+					_nc = _color.eval(_colP? _prog_eli / _rtLen : _prog_curr);
 					
 					if(_prog_curr > _prog) {
 						if(_cap) {
@@ -210,7 +209,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 					_nw = random_range(_wid[0], _wid[1]);
 					_nw *= eval_curve_x(_widc, _widap? _prog_eli / _rtLen : _prog_curr);
 					
-					_nc = gradient_eval(_color, _colP? _prog_eli / _rtLen : _prog_curr, ds_list_get(_col_data, 0));
+					_nc = _color.eval(_colP? _prog_eli / _rtLen : _prog_curr);
 					
 					if(_prog_curr > _prog) {
 						if(_cap) {

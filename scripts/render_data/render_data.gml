@@ -4,7 +4,7 @@ enum RENDER_TYPE {
 	full = 2
 }
 
-global.RENDER_LOG = false;
+global.RENDER_LOG	= false;
 global.group_inputs = [ "Node_Group_Input", "Node_Feedback_Input", "Node_Iterator_Input", "Node_Iterator_Each_Input" ];
 
 function __nodeLeafList(_list, _queue) {
@@ -40,7 +40,7 @@ function __nodeInLoop(_node) {
 	return false;
 }
 
-function Render(partial = false) {
+function Render(partial = false, runAction = false) {
 	try {
 		var rendering = noone;
 		var error = 0;
@@ -78,7 +78,7 @@ function Render(partial = false) {
 			var _startNode = _node.isRenderable();
 			if(_startNode) {
 				ds_queue_enqueue(RENDER_QUEUE, _node);
-				printIf(global.RENDER_LOG, "    > Push " + _node.name + " node to stack");
+				printIf(global.RENDER_LOG, "    > Push " + _node.name + " (" + _node.display_name + ") node to stack");
 			}
 		}
 	
@@ -86,13 +86,76 @@ function Render(partial = false) {
 		while(!ds_queue_empty(RENDER_QUEUE)) {
 			rendering = ds_queue_dequeue(RENDER_QUEUE);
 		
-			var txt = rendering.rendered? " [Skip]" : " [Update]";
 			if(!rendering.rendered) {
 				rendering.doUpdate();
 				rendering.setRenderStatus(true);
+				printIf(global.RENDER_LOG, "Rendered " + rendering.name + " (" + rendering.display_name + ") [" + string(instanceof(rendering)) + "] (Update)");
+				
+				rendering.getNextNodes();
+				
+				if(runAction && rendering.hasInspectorUpdate())
+					rendering.inspectorUpdate();
+			} else 
+				printIf(global.RENDER_LOG, "Rendered " + rendering.name + " (" + rendering.display_name + ") [" + string(instanceof(rendering)) + "] (Skip)");
+		}
+	
+		printIf(global.RENDER_LOG, "=== RENDER COMPLETE IN {" + string(current_time - t) + "ms} ===\n");
+	} catch(e)
+		noti_warning(exception_print(e));
+}
+
+function __renderListReset(list) {
+	for( var i = 0; i < ds_list_size(list); i++ ) {
+		list[| i].setRenderStatus(false);
+		if(struct_has(list[| i], "nodes"))
+			__renderListReset(list[| i].nodes);
+	}
+}
+
+function RenderListAction(list, context = PANEL_GRAPH.getCurrentContext()) {
+	try {
+		var rendering = noone;
+		var error = 0;
+		var t = current_time;
+		printIf(global.RENDER_LOG, "=== RENDER ACTION START [frame " + string(ANIMATOR.current_frame) + "] ===");
+		
+		__renderListReset(list);
+		
+		// get leaf node
+		ds_queue_clear(RENDER_QUEUE);
+		for( var i = 0; i < ds_list_size(list); i++ ) {
+			var _node = list[| i];
+			
+			if(is_undefined(_node)) continue;
+			if(!is_struct(_node)) continue;
+			
+			if(!_node.active) continue;
+			if(!_node.renderActive) continue;
+			if(_node.rendered) continue;
+			if(__nodeInLoop(_node)) continue;
+		
+			var _startNode = _node.isRenderable();
+			if(_startNode) {
+				ds_queue_enqueue(RENDER_QUEUE, _node);
+				printIf(global.RENDER_LOG, "    > Push " + _node.name + " (" + _node.display_name + ") node to stack");
+			}
+		}
+		
+		// render forward
+		while(!ds_queue_empty(RENDER_QUEUE)) {
+			rendering = ds_queue_dequeue(RENDER_QUEUE);
+			if(rendering.group == context) break;
+			
+			var txt = rendering.rendered? " [Skip]" : " [Update]";
+			if(!rendering.rendered) {
+				rendering.doUpdate();
+				if(rendering.hasInspectorUpdate())
+					rendering.inspectorUpdate();
+					
+				rendering.setRenderStatus(true);
 				rendering.getNextNodes();
 			}
-			printIf(global.RENDER_LOG, "Rendered " + rendering.name + " [" + string(instanceof(rendering)) + "]" + txt);
+			printIf(global.RENDER_LOG, "Rendered " + rendering.name + " (" + rendering.display_name + ") [" + string(instanceof(rendering)) + "]" + txt);
 		}
 	
 		printIf(global.RENDER_LOG, "=== RENDER COMPLETE IN {" + string(current_time - t) + "ms} ===\n");

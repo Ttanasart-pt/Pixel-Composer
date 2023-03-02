@@ -51,6 +51,10 @@ function Panel_Graph() : PanelContent() constructor {
 	nodes_select_mx     = 0;
 	nodes_select_my     = 0;
 	
+	nodes_junction_d    = noone;
+	nodes_junction_dx   = 0;
+	nodes_junction_dy   = 0;
+	
 	node_hovering		= noone;
 	node_hover			= noone;
 	node_focus			= noone;
@@ -202,7 +206,7 @@ function Panel_Graph() : PanelContent() constructor {
 	
 	addHotkey("Graph", "Duplicate",	"D", MOD_KEY.ctrl,					function() { doDuplicate(); });
 	addHotkey("Graph", "Copy",		"C", MOD_KEY.ctrl,	function() { doCopy(); });
-	addHotkey("Graph", "Paste",		"V", MOD_KEY.ctrl,	function() { doPaste(clipboard_get_text()); });
+	addHotkey("Graph", "Paste",		"V", MOD_KEY.ctrl,	function() { doPaste(); });
 	
 	function stepBegin() {
 		var gr_x = graph_x * graph_s;
@@ -536,21 +540,18 @@ function Panel_Graph() : PanelContent() constructor {
 					menuCall(,, menu );
 				} else {
 					var menu = [];
-					if(node_focus != noone || ds_list_size(nodes_select_list)) {
-						array_push(menu,  
-							menuItem(get_text("copy", "Copy"), function() {
-								doCopy();
-							}, THEME.copy, ["Graph", "Copy"])
-						);
-					}
 					
-					if(clipboard_get_text() != "") {
-						array_push(menu,  
-							menuItem(get_text("paste", "Paste"), function() {
-								doPaste(clipboard_get_text());
-							}, THEME.paste, ["Graph", "Paste"])
-						);
-					}
+					array_push(menu,  
+						menuItem(get_text("copy", "Copy"), function() {
+							doCopy();
+						}, THEME.copy, ["Graph", "Copy"]).setActive(node_focus != noone || ds_list_size(nodes_select_list))
+					);
+					
+					array_push(menu,  
+						menuItem(get_text("paste", "Paste"), function() {
+							doPaste();
+						}, THEME.paste, ["Graph", "Paste"]).setActive(clipboard_get_text() != "")
+					);
 					
 					callAddDialog();
 					menuCall(o_dialog_add_node.dialog_x - ui(8), o_dialog_add_node.dialog_y + ui(4), menu, fa_right );
@@ -586,10 +587,12 @@ function Panel_Graph() : PanelContent() constructor {
 		
 		#region draw node
 			//var t = current_time;
+			for(var i = 0; i < ds_list_size(nodes_list); i++)
+				nodes_list[| i].onDrawNodeBehind(gr_x, gr_y, mx, my, graph_s);
+			
 			for(var i = 0; i < ds_list_size(nodes_list); i++) {
 				var n = nodes_list[| i];
 				if(instanceof(n) == "Node_Frame") continue;
-				n.onDrawNodeBehind(gr_x, gr_y, mx, my, graph_s);
 				var val = n.drawNode(gr_x, gr_y, mx, my, graph_s);
 				
 				if(val) {
@@ -774,9 +777,29 @@ function Panel_Graph() : PanelContent() constructor {
 				if(mouse_release(mb_left))
 					nodes_select_drag = false;
 			}
+			
+			if(nodes_junction_d != noone) {
+				var shx = nodes_junction_dx + (mx - nodes_select_mx) / graph_s;
+				var shy = nodes_junction_dy + (my - nodes_select_my) / graph_s;
+				
+				shx = value_snap(shx, key_mod_press(CTRL)? 1 : 4);
+				shy = value_snap(shy, key_mod_press(CTRL)? 1 : 4);
+				
+				nodes_junction_d.draw_line_shift_x = shx;
+				nodes_junction_d.draw_line_shift_y = shy;
+				
+				if(mouse_release(mb_left))
+					nodes_junction_d = noone;
+			}
 		
 			if(mouse_on_graph && mouse_press(mb_left, pFOCUS) && !key_mod_press(ALT)) {
-				if(!node_focus && !value_focus && !drag_locking) {
+				if(junction_hovering && junction_hovering.draw_line_shift_hover) {
+					nodes_select_mx		= mx;
+					nodes_select_my		= my;
+					nodes_junction_d	= junction_hovering;
+					nodes_junction_dx	= junction_hovering.draw_line_shift_x;
+					nodes_junction_dy	= junction_hovering.draw_line_shift_y;
+				} else if(!node_focus && !value_focus && !drag_locking) {
 					nodes_select_drag = true;
 					nodes_select_mx = mx;
 					nodes_select_my = my;
@@ -878,7 +901,8 @@ function Panel_Graph() : PanelContent() constructor {
 		ds_map_destroy(_map);
 	}
 	
-	function doPaste(txt = "") {
+	function doPaste() {
+		var txt = clipboard_get_text();
 		var _map = json_decode(txt);
 		if(_map != -1) {
 			ds_map_clear(APPEND_MAP);

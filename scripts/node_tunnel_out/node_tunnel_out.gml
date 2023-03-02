@@ -27,7 +27,11 @@ function Node_Tunnel_Out(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		
 		draw_set_color(COLORS.node_blend_tunnel);
 		draw_set_alpha(0.35);
-		draw_line_width(xx + w * _s / 2, yy + h * _s / 2, _x + (node.x + node.w / 2) * _s, _y + (node.y + node.h / 2) * _s, 6 * _s);
+		var frx = _x + (node.x + node.w / 2) * _s;
+		var fry = _y + (node.y + node.h / 2) * _s;
+		var tox = xx + w * _s / 2;
+		var toy = yy + h * _s / 2;
+		draw_line_dashed(frx, fry, tox, toy, 8 * _s, 16 * _s, current_time / 100);
 		draw_set_alpha(1);
 	}
 	

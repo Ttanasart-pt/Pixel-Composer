@@ -153,7 +153,7 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 				break;
 				
 			case "Gradient":	
-				inParent.animator = new valueAnimator([ new gradientKey(0, c_white) ], inParent);
+				inParent.animator = new valueAnimator(new gradientObject(c_white), inParent);
 				inParent.setDisplay(VALUE_DISPLAY.gradient);	
 				break;
 			default:			inParent.setDisplay(VALUE_DISPLAY._default);	break;

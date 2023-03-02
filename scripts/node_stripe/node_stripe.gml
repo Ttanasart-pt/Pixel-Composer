@@ -38,7 +38,7 @@ function Node_Stripe(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		
 	inputs[| 6] = nodeValue("Random color", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
 	
-	inputs[| 7] = nodeValue("Colors", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, [ new gradientKey(0, c_white) ] )
+	inputs[| 7] = nodeValue("Colors", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, new gradientObject(c_white) )
 		.setDisplay(VALUE_DISPLAY.gradient);
 	
 	inputs[| 8] = nodeValue("Color 1", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white);
@@ -79,9 +79,8 @@ function Node_Stripe(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		inputs[| 9].setVisible(!_grad_use);
 		
 		var _gra = _data[7];
-		var _gra_data = inputs[| 7].getExtraData();
 		
-		var _g = gradient_to_array(_gra);
+		var _g = _gra.toArray();
 		var _grad_color = _g[0];
 		var _grad_time = _g[1];
 		
@@ -100,10 +99,10 @@ function Node_Stripe(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			shader_set_uniform_f_array_safe(uniform_clr1, colToVec4(_clr1));
 			
 			shader_set_uniform_i(uniform_grad_use, _grad_use);
-			shader_set_uniform_i(uniform_grad_blend, ds_list_get(_gra_data, 0));
+			shader_set_uniform_i(uniform_grad_blend, _gra.type);
 			shader_set_uniform_f_array_safe(uniform_grad, _grad_color);
 			shader_set_uniform_f_array_safe(uniform_grad_time, _grad_time);
-			shader_set_uniform_i(uniform_grad_key, array_length(_gra));
+			shader_set_uniform_i(uniform_grad_key, array_length(_gra.keys));
 			
 				draw_sprite_ext(s_fx_pixel, 0, 0, 0, _dim[0], _dim[1], 0, c_white, 1);
 			shader_reset();

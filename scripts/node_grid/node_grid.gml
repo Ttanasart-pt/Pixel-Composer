@@ -34,7 +34,7 @@ function Node_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	inputs[| 4] = nodeValue("Angle", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
 		.setDisplay(VALUE_DISPLAY.rotation);
 		
-	inputs[| 5] = nodeValue("Tile color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, [ new gradientKey(0, c_white) ] )
+	inputs[| 5] = nodeValue("Tile color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, new gradientObject(c_white) )
 		.setDisplay(VALUE_DISPLAY.gradient);
 		
 	inputs[| 6] = nodeValue("Gap color",  self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_black);
@@ -79,8 +79,7 @@ function Node_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		var _col_gap = _data[6];
 		var _gra	 = _data[5];
 		
-		var _gra_data = inputs[| 5].getExtraData();
-		var _grad = gradient_to_array(_gra);
+		var _grad = _gra.toArray();;
 		var _grad_color = _grad[0];
 		var _grad_time	= _grad[1];
 		
@@ -105,10 +104,10 @@ function Node_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			
 			shader_set_uniform_f_array_safe(uniform_col_gap, colToVec4(_col_gap));
 			
-			shader_set_uniform_i(uniform_grad_blend, ds_list_get(_gra_data, 0));
+			shader_set_uniform_i(uniform_grad_blend, _gra.type);
 			shader_set_uniform_f_array_safe(uniform_grad, _grad_color);
 			shader_set_uniform_f_array_safe(uniform_grad_time, _grad_time);
-			shader_set_uniform_i(uniform_grad_key, array_length(_gra));
+			shader_set_uniform_i(uniform_grad_key, array_length(_gra.keys));
 			
 			if(is_surface(_sam))
 				draw_surface_stretched(_sam, 0, 0, _dim[0], _dim[1]);

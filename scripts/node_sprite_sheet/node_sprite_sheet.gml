@@ -35,6 +35,8 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
+	refreshSurface = false;
+	
 	static step = function() {
 		var grup = inputs[| 1].getValue();
 		var pack = inputs[| 3].getValue();
@@ -51,12 +53,51 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 		var grid = inputs[| 4].getValue();
 		var alig = inputs[| 5].getValue();
 		
-		var oupt = outputs[| 0].getValue();
-		
 		if(grup != SPRITE_ANIM_GROUP.animation) {
-			onInspectorUpdate();
+			initRender();
 			return;
+		} else if(ANIMATOR.rendering & ANIMATOR.frame_progress && ANIMATOR.current_frame == 0 && !refreshSurface) {
+			var skip = inputs[| 2].getValue();
+			
+			if(is_array(inpt) && array_length(inpt) == 0) return;
+			var arr = is_array(inpt);
+			if(!arr) inpt = [ inpt ];
+			var _surf = [];
+			
+			for(var i = 0; i < array_length(inpt); i++) { 
+				if(!is_surface(inpt[i])) continue;
+				var ww = surface_get_width(inpt[i]);
+				var hh = surface_get_height(inpt[i]);
+				
+				switch(pack) {
+					case SPRITE_STACK.horizontal :
+						ww *= floor(ANIMATOR.frames_total / skip);
+						break;
+					case SPRITE_STACK.vertical :
+						hh *= floor(ANIMATOR.frames_total / skip);
+						break;
+					case SPRITE_STACK.grid :
+						var amo = floor(ANIMATOR.frames_total / skip);
+						var col = inputs[| 4].getValue();
+						var row = ceil(amo / col);
+						
+						ww *= col;
+						hh *= row;
+						break;
+				}
+				
+				_surf[i] = surface_create_valid(ww, hh);
+				surface_set_target(_surf[i]);
+				draw_clear_alpha(0, 0);
+				surface_reset_target();
+				
+				refreshSurface = true;
+			}
+			
+			if(!arr) _surf = array_safe_get(_surf, 0);
+			outputs[| 0].setValue(_surf);
 		}
+		
 		if(safe_mod(ANIMATOR.current_frame, skip) != 0) return;
 		
 		if(array_length(anim_drawn) != ANIMATOR.frames_total)
@@ -71,6 +112,7 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 			}
 		}
 		
+		var oupt = outputs[| 0].getValue();
 		if(is_array(oupt) && (array_length(inpt) != array_length(oupt))) return;
 		
 		var px = 0, py = 0;
@@ -130,6 +172,7 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 					px = _col * _w;
 					py = _row * _h;
 					
+					//print(display_name + ": " + string(ANIMATOR.current_frame) + ", " + string(inpt[i]) + "| " + string(px) + ", " + string(py));
 					draw_surface_safe(inpt[i], px, py);
 					break;
 			}
@@ -143,7 +186,7 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 			anim_drawn[ANIMATOR.current_frame] = true;
 	}
 	
-	static onInspectorUpdate = function() {
+	static onInspectorUpdate = function(updateAll = true) {
 		var key = ds_map_find_first(NODE_MAP);
 		repeat(ds_map_size(NODE_MAP)) {
 			var node = NODE_MAP[? key];
@@ -156,7 +199,7 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 		}
 	}
 	
-	static initRender = function() {
+	static initRender = function() { 
 		for(var i = 0; i < array_length(anim_drawn); i++) anim_drawn[i] = false;
 		
 		var inpt = inputs[| 0].getValue();
@@ -165,50 +208,13 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 		var alig = inputs[| 5].getValue();
 		
 		if(grup == SPRITE_ANIM_GROUP.animation) {
+			refreshSurface = false;
 			if(!LOADING && !APPENDING) {
 				ANIMATOR.setFrame(-1);
 				ANIMATOR.is_playing = true;
 				ANIMATOR.rendering = true;
 				ANIMATOR.frame_progress = true;
 			}
-			
-			var skip = inputs[| 2].getValue();
-			
-			if(is_array(inpt) && array_length(inpt) == 0) return;
-			var arr = is_array(inpt);
-			if(!arr) inpt = [ inpt ];
-			var _surf = [];
-			
-			for(var i = 0; i < array_length(inpt); i++) {
-				if(!is_surface(inpt[i])) continue;
-				var ww = surface_get_width(inpt[i]);
-				var hh = surface_get_height(inpt[i]);
-				
-				switch(pack) {
-					case SPRITE_STACK.horizontal :
-						ww *= floor(ANIMATOR.frames_total / skip);
-						break;
-					case SPRITE_STACK.vertical :
-						hh *= floor(ANIMATOR.frames_total / skip);
-						break;
-					case SPRITE_STACK.grid :
-						var amo = floor(ANIMATOR.frames_total / skip);
-						var col = inputs[| 4].getValue();
-						var row = ceil(amo / col);
-						
-						ww *= col;
-						hh *= row;
-						break;
-				}
-				
-				_surf[i] = surface_create_valid(ww, hh);
-				surface_set_target(_surf[i]);
-				draw_clear_alpha(0, 0);
-				surface_reset_target();
-			}
-			
-			if(!arr) _surf = array_safe_get(_surf, 0);
-			outputs[| 0].setValue(_surf);
 		} else {
 			if(is_array(inpt)) {
 				if(array_length(inpt) == 0) return;

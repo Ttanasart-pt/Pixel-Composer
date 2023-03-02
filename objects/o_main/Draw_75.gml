@@ -33,7 +33,7 @@
 					draw_tooltip_surface(content);
 					break;
 				case VALUE_TYPE.rigid :
-					draw_tooltip_text("[" + get_text("tooltip_rigid_object", "Rigidbody Object") + "id: " + string(content) + "]");
+					draw_tooltip_text("[" + get_text("tooltip_rigid_object", "Rigidbody Object") + "id: " + string(content[$ "object"]) + "]");
 					break;
 				case VALUE_TYPE.particle :
 					draw_tooltip_text("[" + get_text("tooltip_particle_object", "Particle Object") + "]");

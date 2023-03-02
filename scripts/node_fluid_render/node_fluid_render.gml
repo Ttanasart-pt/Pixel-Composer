@@ -2,6 +2,7 @@ function Node_Fluid_Render(_x, _y, _group = noone) : Node_Fluid(_x, _y, _group) 
 	name  = "Render Domain";
 	color = COLORS.node_blend_fluid;
 	icon  = THEME.fluid_sim;
+	use_cache = true;
 	
 	inputs[| 0] = nodeValue("Fluid Domain", self, JUNCTION_CONNECT.input, VALUE_TYPE.fdomain, noone)
 		.setVisible(true, true);
@@ -22,7 +23,15 @@ function Node_Fluid_Render(_x, _y, _group = noone) : Node_Fluid(_x, _y, _group) 
 	
 	outputs[| 1] = nodeValue("Domain", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
+	insp2UpdateTooltip = "Clear cache";
+	insp2UpdateIcon    = [ THEME.cache, 0, COLORS._main_icon ];
+	
+	static onInspector2Update = function() { clearCache(); }
+	
 	static update = function(frame = ANIMATOR.current_frame) {
+		if(recoverCache() || !ANIMATOR.is_playing)
+			return;
+			
 		var _dom = inputs[| 0].getValue(frame);
 		var _dim = inputs[| 1].getValue(frame);
 		var _int = inputs[| 2].getValue(frame);
@@ -52,5 +61,7 @@ function Node_Fluid_Render(_x, _y, _group = noone) : Node_Fluid(_x, _y, _group) 
 			if(_drw && is_surface(_dom.sf_world)) 
 				draw_surface_stretched(_dom.sf_world, 0, 0, _dim[0], _dim[1]);
 		surface_reset_target();
+		
+		cacheCurrentFrame(_outSurf);
 	}
 }

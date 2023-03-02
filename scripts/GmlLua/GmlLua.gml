@@ -59,6 +59,14 @@ function __lua_set_color_alpha(color = c_white, alpha = 1) {
 	draw_set_color(color);
 	draw_set_alpha(alpha);
 }
+function __lua_get_color(_x, _y) {
+	var surf = surface_get_target();
+	if(!is_surface(surf)) return 0;
+	return surface_getpixel_ext(surf, _x, _y);
+}
+function __lua_get_color_surface(surface, _x, _y) {
+	return surface_getpixel_ext(surface, _x, _y);
+}
 
 function __lua_color_make_rgb(r, g, b, normalize = false) {
 	if(normalize)
@@ -108,7 +116,11 @@ function __initLua() {
 			[["alpha", "number", "Draw alpha"], ]],
 		["setColorAlpha",	__lua_set_color_alpha, "setColorAlpha(color = white, alpha = 1)", "Set current drawing color and alpha.", 
 			[["color", "color", "Draw color"], ["alpha", "number", "Draw alpha"], ]],
-		
+		["getColor",		__lua_get_color, "getColor(x, y)", "Get color from current surface.", 
+			[["x", "number", "Sample x position"], ["y", "number", "Sample y position"], ]],
+		["getColorSurface",		__lua_get_color_surface, "getColorSurface(surface, x, y)", "Get color from surface.", 
+			[["surface", "surface", "Surface to get color from"], ["x", "number", "Sample x position"], ["y", "number", "Sample y position"], ]],
+			
 		["drawRect",			__lua_draw_rectangle, "drawRect(x0, y0, x1, y1)", "Draw filled rectangle.", 
 			[["x0", "number", "Left position"], ["y0", "number", "Top position"], ["x1", "number", "Right position"], ["y1", "number", "Bottom position"], ]],
 		["drawRectOutline",		__lua_draw_rectangle_outline, "drawRectOutline(x0, y0, x1, y1, thick = 1)", "Draw rectangle outline.", 

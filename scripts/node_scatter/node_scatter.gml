@@ -30,7 +30,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	inputs[| 10] = nodeValue("Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, irandom(9999999));
 	
-	inputs[| 11] = nodeValue("Random blend", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, [ new gradientKey(0, c_white) ] )
+	inputs[| 11] = nodeValue("Random blend", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, new gradientObject(c_white) )
 		.setDisplay(VALUE_DISPLAY.gradient);
 	
 	inputs[| 12] = nodeValue("Alpha", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 1 ])
@@ -112,7 +112,6 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		var seed	= _data[10];
 		
 		var color	= _data[11];
-		var _bldTyp	= inputs[| 11].getExtraData();
 		var alpha	= _data[12];
 		var mulpA	= _data[16];
 		var useV	= _data[17];
@@ -189,7 +188,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 				if(vCol && _v != noone)
 					grSamp *= _v;
 				
-				var clr = gradient_eval(color, grSamp, _bldTyp[| 0]); 
+				var clr = color.eval(grSamp); 
 				var alp = random_range_seed(alpha[0], alpha[1], posS); posS++;
 				
 				draw_surface_ext_safe(surf, _x, _y, _scx, _scy, _r, clr, alp);

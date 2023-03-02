@@ -2,6 +2,7 @@
 if !ready exit;
 
 #region dropper
+	selector.interactable = interactable;
 	if(selector.dropper_active) {
 		selector.drawDropper(self);
 		exit;
@@ -24,7 +25,9 @@ if !ready exit;
 	
 	draw_set_text(f_p0, fa_left, fa_top, COLORS._main_text_title);
 	draw_text(presets_x + ui(24), dialog_y + ui(16), get_text("palette", "Palettes"));
-	draw_text(content_x + ui(24), dialog_y + ui(16), name);
+	draw_text(content_x + (!interactable * ui(32)) + ui(24), dialog_y + ui(16), name);
+	if(!interactable)
+		draw_sprite_ui(THEME.lock, 0, content_x + ui(24 + 12), dialog_y + ui(16 + 12),,,, COLORS._main_icon);
 #endregion
 
 #region palette

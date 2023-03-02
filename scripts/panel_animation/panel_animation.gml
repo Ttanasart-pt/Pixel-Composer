@@ -79,8 +79,11 @@ function Panel_Animation() : PanelContent() constructor {
 	addHotkey("", "Play/Pause",		vk_space, MOD_KEY.none,	function() { 
 		ANIMATOR.is_playing = !ANIMATOR.is_playing; 
 		ANIMATOR.frame_progress = true;
-		if(ANIMATOR.is_playing && ANIMATOR.frames_total)
+		ANIMATOR.time_since_last_frame = 0;
+		
+		if(ANIMATOR.is_playing && ANIMATOR.frames_total) 
 			ANIMATOR.setFrame(0);
+		
 	});
 	addHotkey("", "First frame",	vk_home,  MOD_KEY.none,	function() { ANIMATOR.setFrame(0); });
 	addHotkey("", "Last frame",		vk_end,   MOD_KEY.none,	function() { ANIMATOR.setFrame(ANIMATOR.frames_total - 1); });
@@ -90,7 +93,10 @@ function Panel_Animation() : PanelContent() constructor {
 	addHotkey("", "Previous frame",	vk_left, MOD_KEY.none,	function() { 
 		ANIMATOR.setFrame(max(ANIMATOR.real_frame - 1, 0));
 	});
-	addHotkey("Animation", "Delete keys",	vk_delete, MOD_KEY.none, function() { deleteKeys(); });
+	addHotkey("Animation", "Delete keys",	vk_delete,	MOD_KEY.none, function() { deleteKeys(); });
+	addHotkey("Animation", "Duplicate",		"D",		MOD_KEY.ctrl, function() { doDuplicate(); });
+	addHotkey("Animation", "Copy",			"C",		MOD_KEY.ctrl, function() { doCopy(); });
+	addHotkey("Animation", "Paste",			"V",		MOD_KEY.ctrl, function() { doPaste(); });
 	
 	function deleteKeys() {
 		for( var i = 0; i < ds_list_size(keyframe_selecting); i++ ) {
@@ -98,6 +104,7 @@ function Panel_Animation() : PanelContent() constructor {
 			k.anim.removeKey(k);
 		}
 		ds_list_clear(keyframe_selecting);
+		updatePropertyList();
 	}
 	
 	function alignKeys(halign = fa_left) {
@@ -239,7 +246,10 @@ function Panel_Animation() : PanelContent() constructor {
 		]),
 		menuItem(get_text("panel_animation_stagger", "Stagger"), function() { stagger_mode = 1; }),
 		-1,
-		menuItem(get_text("delete", "Delete"), function() { deleteKeys(); }, noone, [ "Animation", "Delete keys" ]),
+		menuItem(get_text("delete", "Delete"),		 function() { deleteKeys(); },	noone, [ "Animation", "Delete keys" ]),
+		menuItem(get_text("duplicate", "Duplicate"), function() { doDuplicate(); }, THEME.duplicate, [ "Animation", "Duplicate" ]),
+		menuItem(get_text("copy", "Copy"),			 function() { doCopy(); },		THEME.copy, [ "Animation", "Copy" ]),
+		menuItem(get_text("paste", "Paste"),		 function() { doPaste(); },		THEME.paste, [ "Animation", "Paste" ]),
 	];
 	
 	function onResize() {
@@ -1091,6 +1101,77 @@ function Panel_Animation() : PanelContent() constructor {
 			if(mouse_release(mb_left))
 				keyframe_boxing = false;
 		}
+		#region drag key
+			if(keyframe_dragging) {
+				if(keyframe_drag_type == KEYFRAME_DRAG_TYPE.move) {
+					var tt = round((mx - bar_x - timeline_shift) / ui(timeline_scale)) - 1;
+					tt = max(tt, 0);
+					var sh = tt - keyframe_dragging.time;
+								
+					for( var i = 0; i < ds_list_size(keyframe_selecting); i++ ) {
+						var k  = keyframe_selecting[| i];
+						var kt = k.time + sh;
+						
+						k.anim.setKeyTime(k, kt, false);
+					}
+								
+					timeline_show_time     = floor(tt);
+								
+					if(mouse_release(mb_left) || mouse_press(mb_left)) {
+						keyframe_dragging = noone;
+									
+						for( var i = 0; i < ds_list_size(keyframe_selecting); i++ ) {
+							var k  = keyframe_selecting[| i];
+							k.anim.setKeyTime(k, k.time);
+						}
+					}
+				} else {
+					var dx = abs((keyframe_dragging.time + 1) - (mx - bar_x - timeline_shift) / ui(timeline_scale)) / 2;
+					dx = clamp(dx, 0, 1);
+					if(dx > 0.2) keyframe_dragout = true;
+				
+					var dy = (my - keyframe_drag_my) / 32;
+				
+					var _in = keyframe_dragging.ease_in;
+					var _ot = keyframe_dragging.ease_out;
+				
+					switch(keyframe_drag_type) {
+						case KEYFRAME_DRAG_TYPE.ease_in :
+							for( var i = 0; i < ds_list_size(keyframe_selecting); i++ ) {
+								var k = keyframe_selecting[| i];
+								k.ease_in_type  = keyframe_dragout? CURVE_TYPE.bezier : CURVE_TYPE.none;
+								k.ease_in[0] = dx;
+							}
+						
+							break;
+						case KEYFRAME_DRAG_TYPE.ease_out :
+							for( var i = 0; i < ds_list_size(keyframe_selecting); i++ ) {
+								var k = keyframe_selecting[| i];
+								k.ease_out_type = keyframe_dragout? CURVE_TYPE.bezier : CURVE_TYPE.none;
+								k.ease_out[0] =  dx;
+							}
+							break;
+						case KEYFRAME_DRAG_TYPE.ease_both :
+							for( var i = 0; i < ds_list_size(keyframe_selecting); i++ ) {
+								var k  = keyframe_selecting[| i];
+								k.ease_in_type  = keyframe_dragout? CURVE_TYPE.bezier : CURVE_TYPE.none;
+								k.ease_out_type = keyframe_dragout? CURVE_TYPE.bezier : CURVE_TYPE.none;
+							
+								k.ease_in[0] = dx;
+								k.ease_out[0] = dx;
+							}
+							break;
+					}
+								
+					if(mouse_release(mb_left)) {
+						recordAction(ACTION_TYPE.var_modify, keyframe_dragging, [_in, "ease_in"]);
+						recordAction(ACTION_TYPE.var_modify, keyframe_dragging, [_ot, "ease_out"]);
+								
+						keyframe_dragging = noone;
+					}
+				}
+			}
+		#endregion
 		
 		#region draw keys
 			for( var i = 0; i < ds_list_size(anim_properties); i++ ) {
@@ -1205,77 +1286,7 @@ function Panel_Animation() : PanelContent() constructor {
 			if(!ds_list_empty(keyframe_selecting))
 				menuCall(,, keyframe_menu);
 		}
-						
-		if(keyframe_dragging) {
-			if(keyframe_drag_type == KEYFRAME_DRAG_TYPE.move) {
-				var tt = round((mx - bar_x - timeline_shift) / ui(timeline_scale)) - 1;
-				tt = max(tt, 0);
-				var sh = tt - keyframe_dragging.time;
-								
-				for( var i = 0; i < ds_list_size(keyframe_selecting); i++ ) {
-					var k  = keyframe_selecting[| i];
-					var kt = k.time + sh;
-									
-					k.anim.setKeyTime(k, kt, false);
-				}
-								
-				timeline_show_time     = floor(tt);
-								
-				if(mouse_release(mb_left)) {
-					keyframe_dragging = noone;
-									
-					for( var i = 0; i < ds_list_size(keyframe_selecting); i++ ) {
-						var k  = keyframe_selecting[| i];
-						k.anim.setKeyTime(k, k.time);
-					}
-				}
-			} else {
-				var dx = abs((keyframe_dragging.time + 1) - (mx - bar_x - timeline_shift) / ui(timeline_scale)) / 2;
-				dx = clamp(dx, 0, 1);
-				if(dx > 0.2) keyframe_dragout = true;
 				
-				var dy = (my - keyframe_drag_my) / 32;
-				
-				var _in = keyframe_dragging.ease_in;
-				var _ot = keyframe_dragging.ease_out;
-				
-				switch(keyframe_drag_type) {
-					case KEYFRAME_DRAG_TYPE.ease_in :
-						for( var i = 0; i < ds_list_size(keyframe_selecting); i++ ) {
-							var k = keyframe_selecting[| i];
-							k.ease_in_type  = keyframe_dragout? CURVE_TYPE.bezier : CURVE_TYPE.none;
-							k.ease_in[0] = dx;
-						}
-						
-						break;
-					case KEYFRAME_DRAG_TYPE.ease_out :
-						for( var i = 0; i < ds_list_size(keyframe_selecting); i++ ) {
-							var k = keyframe_selecting[| i];
-							k.ease_out_type = keyframe_dragout? CURVE_TYPE.bezier : CURVE_TYPE.none;
-							k.ease_out[0] =  dx;
-						}
-						break;
-					case KEYFRAME_DRAG_TYPE.ease_both :
-						for( var i = 0; i < ds_list_size(keyframe_selecting); i++ ) {
-							var k  = keyframe_selecting[| i];
-							k.ease_in_type  = keyframe_dragout? CURVE_TYPE.bezier : CURVE_TYPE.none;
-							k.ease_out_type = keyframe_dragout? CURVE_TYPE.bezier : CURVE_TYPE.none;
-							
-							k.ease_in[0] = dx;
-							k.ease_out[0] = dx;
-						}
-						break;
-				}
-								
-				if(mouse_release(mb_left)) {
-					recordAction(ACTION_TYPE.var_modify, keyframe_dragging, [_in, "ease_in"]);
-					recordAction(ACTION_TYPE.var_modify, keyframe_dragging, [_ot, "ease_out"]);
-								
-					keyframe_dragging = noone;
-				}
-			}
-		}
-					
 		if(stagger_mode == 2) {
 			var ts = keyframe_selecting[| stagger_index].time;
 			var tm = round((mx - bar_x - timeline_shift) / ui(timeline_scale)) - 1;
@@ -1389,5 +1400,42 @@ function Panel_Animation() : PanelContent() constructor {
 			TOOLTIP = get_text("frame", "Frame") + " " + string(timeline_show_time + 1) + "/" + string(ANIMATOR.frames_total);
 			timeline_show_time = -1;
 		}
+	}
+	
+	function doDuplicate() {
+		if(ds_list_empty(keyframe_selecting)) return;
+		
+		var clones = ds_list_create();
+		for( var i = 0; i < ds_list_size(keyframe_selecting); i++ ) {
+			ds_list_add(clones, keyframe_selecting[| i].cloneAnimator());
+		}
+		
+		ds_list_destroy(keyframe_selecting);
+		keyframe_selecting = clones;
+		
+		keyframe_dragging  = keyframe_selecting[| 0];
+		keyframe_drag_type = KEYFRAME_DRAG_TYPE.move;
+		keyframe_drag_mx   = mx;
+		keyframe_drag_my   = my;
+	}
+	
+	copy_clipboard = ds_list_create();
+	function doCopy() {
+		ds_list_clear(copy_clipboard);
+		for( var i = 0; i < ds_list_size(keyframe_selecting); i++ )
+			ds_list_add(copy_clipboard, keyframe_selecting[| i]);
+	}
+	
+	function doPaste() {
+		if(ds_list_empty(copy_clipboard)) return;
+		
+		var shf  = 0;
+		var minx = ANIMATOR.frames_total + 2;
+		for( var i = 0; i < ds_list_size(copy_clipboard); i++ )
+			minx = min(minx, copy_clipboard[| i].time);
+		shf = ANIMATOR.current_frame - minx; print(minx);
+		
+		for( var i = 0; i < ds_list_size(copy_clipboard); i++ )
+			copy_clipboard[| i].cloneAnimator(shf);
 	}
 }

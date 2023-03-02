@@ -48,6 +48,11 @@ function MenuItem(name, func, spr = noone, hotkey = noone) constructor {
 		return self;
 	}
 	
+	static setActive = function(active) {
+		self.active = active;
+		return self;
+	}
+	
 	static deactivate = function() {
 		active = false;
 		return self;

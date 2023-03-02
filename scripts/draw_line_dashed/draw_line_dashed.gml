@@ -1,4 +1,4 @@
-function draw_line_dashed(x0, y0, x1, y1, th = 1, dash_distance = 8) {
+function draw_line_dashed(x0, y0, x1, y1, th = 1, dash_distance = 8, dash_shift = 0) {
 	var dis = point_distance(x0, y0, x1, y1);
 	var dir = point_direction(x0, y0, x1, y1);
 	var part = ceil(dis / dash_distance);
@@ -6,19 +6,20 @@ function draw_line_dashed(x0, y0, x1, y1, th = 1, dash_distance = 8) {
 	var dx = lengthdir_x(1, dir);
 	var dy = lengthdir_y(1, dir);
 	
-	var ox, oy, nx, ny;
-	var dd = 0;
+	var ox, oy, nx, ny, od, nd;
+	var rat = dash_distance / dis;
 	
 	for( var i = 0; i <= part; i++ ) {
-		dd = min(dis, i * dash_distance);
-		nx = x0 + dx * dd;
-		ny = y0 + dy * dd;
+		nd = dis * frac(i * rat + dash_shift / dis);
+		nx = x0 + dx * nd;
+		ny = y0 + dy * nd;
 		
-		if(i && i % 2)
+		if(i && i % 2 && nd > od)
 			draw_line_width(ox, oy, nx, ny, th);
 		
 		ox = nx;
 		oy = ny;
+		od = nd;
 	}
 }
 

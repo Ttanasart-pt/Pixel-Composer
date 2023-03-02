@@ -72,6 +72,8 @@ event_inherited();
 	}
 	presetCollect();
 	
+	hovering_name = "";
+	
 	sp_preset_w = ui(240 - 32 - 16);
 	sp_presets = new scrollPane(sp_preset_w, dialog_h - ui(62), function(_y, _m) {
 		var ww  = sp_preset_w - ui(40);
@@ -90,10 +92,21 @@ event_inherited();
 			draw_text(ui(16), yy + ui(8), filename_name_only(preset_name[| i]));
 			drawPalette(presets[| i], ui(16), yy + ui(28), ww, ui(16));
 			
-			if(isHover && mouse_press(mb_left, interactable && sFOCUS)) {
-				palette = array_create(array_length(presets[| i]));
-				for( var j = 0; j < array_length(presets[| i]); j++ ) {
-					palette[j] = presets[| i][j];
+			if(isHover) {
+				if(mouse_press(mb_left, interactable && sFOCUS)) {
+					palette = array_create(array_length(presets[| i]));
+					for( var j = 0; j < array_length(presets[| i]); j++ )
+						palette[j] = presets[| i][j];
+				}
+				
+				if(mouse_press(mb_right, interactable && sFOCUS)) {
+					hovering_name = preset_name[| i];
+					menuCall(,, [
+						menuItem("Delete palette", function() { 
+							file_delete( DIRECTORY + "Palettes/" + hovering_name); 
+							presetCollect();
+						})
+					])
 				}
 			}
 			

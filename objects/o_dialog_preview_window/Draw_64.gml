@@ -19,18 +19,39 @@ if(node_target == noone) {
 	
 	surface_set_target(content_surface);
 		draw_clear_alpha(c_black, 0);
-		var surf = node_target.outputs[| preview_channel].getValue();
-		if(!is_surface(surf)) return;
-		
-		var sw = surface_get_width(surf);
-		var sh = surface_get_height(surf);
-		if(scale == 0)
-			scale = min(pw / sw, ph / sh);
-		var sx = pw / 2 - (sw * scale) / 2 + panx;
-		var sy = ph / 2 - (sh * scale) / 2 + pany;
-		
 		draw_sprite_tiled(s_transparent, 0, 0, 0);
-		draw_surface_ext(surf, sx, sy, scale, scale, 0, c_white, 1);
+		
+		var surf = node_target.outputs[| preview_channel].getValue();
+		if(is_array(surf))
+			surf = array_spread(surf);
+		else 
+			surf = [ surf ];
+		
+		var dx  = 0;
+		var dy  = 0;
+		var ind = 0;
+		var col = round(sqrt(array_length(surf)));
+		
+		for( var i = 0; i < array_length(surf); i++ ) {
+			var s  = surf[i];
+			var sw = surface_get_width(s);
+			var sh = surface_get_height(s);
+			if(scale == 0)
+				scale = min(pw / sw, ph / sh);
+			var sx = dx + pw / 2 - (sw * scale) / 2 + panx;
+			var sy = dy + ph / 2 - (sh * scale) / 2 + pany;
+		
+			draw_surface_ext(s, sx, sy, scale, scale, 0, c_white, 1);
+			draw_set_color(COLORS._main_icon);
+			draw_rectangle(sx, sy, sx + sw * scale, sy + sh * scale, true);
+			
+			if(++ind >= col) {
+				ind = 0;
+				dx  = 0;
+				dy += (sh + 2) * scale;
+			} else
+				dx += (sw + 2) * scale;
+		}
 	surface_reset_target();
 	draw_surface(content_surface, px, py);
 	
@@ -68,7 +89,7 @@ if(node_target == noone) {
 	
 	draw_sprite_stretched_ext(THEME.dialog_bg, 0, dialog_x, dialog_y, dialog_w, title_height, c_white, title_show);
 	
-	draw_set_alpha(title_show);
+	draw_set_alpha(0.5 + title_show * 0.5);
 	draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text_title);
 	draw_text(dialog_x + ui(padding + 8), dialog_y + ui(title_height) / 2, node_target.getFullName());
 	draw_set_alpha(1);

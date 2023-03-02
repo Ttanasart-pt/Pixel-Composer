@@ -9,6 +9,6 @@ uniform float thres;
 
 void main() {
     vec4 col = texture2D( gm_BaseTexture, v_vTexcoord );
-	float n = step(distance(col, color), thres);
+	float n = step(distance(col * col.a, color * color.a), thres);
 	gl_FragColor = vec4(vec3(n), 1.);
 }

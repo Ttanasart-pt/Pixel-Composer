@@ -163,6 +163,7 @@ function Node_Math(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 				inputs[| 2].setVisible(false);
 				break;
 			case MATH_OPERATOR.lerp :
+				inputs[| 2].setVisible(true);
 				inputs[| 5].setVisible(true);
 				break;
 			default: return;

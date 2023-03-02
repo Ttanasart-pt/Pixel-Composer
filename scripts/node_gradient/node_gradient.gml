@@ -18,7 +18,7 @@ function Node_Gradient(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	inputs[| 0] = nodeValue("Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, def_surf_size2 )
 		.setDisplay(VALUE_DISPLAY.vector);
 	
-	inputs[| 1] = nodeValue("Gradient", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, [ new gradientKey(0, c_white) ] )
+	inputs[| 1] = nodeValue("Gradient", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, new gradientObject(c_white) )
 		.setDisplay(VALUE_DISPLAY.gradient);
 	
 	inputs[| 2] = nodeValue("Type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
@@ -58,7 +58,6 @@ function Node_Gradient(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1]);
 			
 		var _gra = _data[1];
-		var _gra_data = inputs[| 1].getExtraData();
 		
 		var _typ = _data[2];
 		var _ang = _data[3];
@@ -68,7 +67,7 @@ function Node_Gradient(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		var _lop = _data[7];
 		var _msk = _data[8];
 		
-		var _grad = gradient_to_array(_gra);
+		var _grad = _gra.toArray();
 		var _grad_color = _grad[0];
 		var _grad_time	= _grad[1];
 		
@@ -83,10 +82,10 @@ function Node_Gradient(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		surface_set_target(_outSurf);
 		draw_clear_alpha(0, 0);
 		shader_set(shader);
-			shader_set_uniform_i(uniform_grad_blend, ds_list_get(_gra_data, 0));
+			shader_set_uniform_i(uniform_grad_blend, _gra.type);
 			shader_set_uniform_f_array_safe(uniform_grad, _grad_color);
 			shader_set_uniform_f_array_safe(uniform_grad_time, _grad_time);
-			shader_set_uniform_i(uniform_grad_key, array_length(_gra));
+			shader_set_uniform_i(uniform_grad_key, array_length(_gra.keys));
 			shader_set_uniform_i(uniform_grad_loop, _lop);
 			
 			shader_set_uniform_f_array_safe(uniform_center, [_cnt[0] / _dim[0], _cnt[1] / _dim[1]]);

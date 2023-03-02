@@ -21,12 +21,27 @@ function valueKey(_time, _value, _anim = noone, _in = 0, _ot = 0) constructor {
 		ratio	= time / (ANIMATOR.frames_total - 1);
 	}
 	
-	static clone = function(target) {
+	static clone = function(target = noone) {
 		var key = new valueKey(time, value, target);
 		key.ease_in			= ease_in;
 		key.ease_out		= ease_out;
 		key.ease_in_type	= ease_in_type;
 		key.ease_out_type	= ease_out_type;
+		
+		return key;
+	}
+	
+	static cloneAnimator = function(shift = 0, value = noone, anim = noone) {
+		anim  = anim  == noone? self.anim  : anim;
+		value = value == noone? self.value : value;
+		
+		var key = new valueKey(time + shift, value, anim);
+		key.ease_in			= ease_in;
+		key.ease_out		= ease_out;
+		key.ease_in_type	= ease_in_type;
+		key.ease_out_type	= ease_out_type;
+		ds_list_add(anim.values, key);
+		anim.setKeyTime(key, time + shift);
 		
 		return key;
 	}
@@ -281,7 +296,9 @@ function valueAnimator(_val, _prop) constructor {
 				_value_list[| 0] = values[| i].time;
 			
 			var val = values[| i].value;
-			if(typeArray(prop.display_type) && is_array(val)) {
+			if(is_struct(val)) {
+				_value_list[| 1] = val.serialize();
+			} else if(typeArray(prop.display_type) && is_array(val)) {
 				var __v = ds_list_create();
 				for(var j = 0; j < array_length(val); j++) {
 					if(is_struct(val[j]) && struct_has(val[j], "serialize"))
@@ -312,19 +329,22 @@ function valueAnimator(_val, _prop) constructor {
 	static deserialize = function(_list, scale = false) {
 		ds_list_clear(values);
 		
-		if(prop.type == VALUE_TYPE.color && prop.display_type == VALUE_DISPLAY.gradient && LOADING_VERSION < 1300) { //backward compat: Gradient
+		if(prop.type == VALUE_TYPE.color && prop.display_type == VALUE_DISPLAY.gradient && LOADING_VERSION < SAVEFILE_VERSION) { //backward compat: Gradient
 			var _val = [];
+			var value = _list[| 0][| 1];
 			
-			for(var i = 0; i < ds_list_size(_list); i++) {
-				var _keyframe = _list[| i];
-				var time  = ds_list_get(_keyframe, 0);
-				var value = ds_list_get(_keyframe, 1);
+			if(ds_exists(value, ds_type_list)) 
+			for(var i = 0; i < ds_list_size(value); i++) {
+				var _keyframe = value[| i];
+				var _t = ds_map_try_get(_keyframe, "time");
+				var _v = ds_map_try_get(_keyframe, "value");
 				
-				array_push(_val, new gradientKey(time, value));
+				array_push(_val, new gradientKey(_t, _v));
 			}
 			
-			var vk = new valueKey(0, _val, self);
-			ds_list_add(values, vk);
+			var grad = new gradientObject();
+			grad.keys = _val;
+			ds_list_add(values, new valueKey(0, grad, self));
 			return;
 		}
 					
@@ -353,14 +373,8 @@ function valueAnimator(_val, _prop) constructor {
 				for(var j = 0; j < ds_list_size(value); j++)
 					_val[j] = value[| j];
 			} else if(prop.type == VALUE_TYPE.color && prop.display_type == VALUE_DISPLAY.gradient) {
-				_val = [];
-				
-				if(ds_exists(value, ds_type_list)) {
-					for(var j = 0; j < ds_list_size(value); j++) {
-						var gKey = value[| j];
-						_val[j] = new gradientKey(gKey[? "time"], gKey[? "value"]);
-					}
-				}
+				var grad = new gradientObject();
+				_val = grad.deserialize(value);
 			} else if(typeArray(prop.display_type)) {
 				_val = [];
 				

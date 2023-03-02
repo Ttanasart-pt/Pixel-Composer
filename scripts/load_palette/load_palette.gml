@@ -13,7 +13,7 @@ function loadPalette(path) {
 						var _r = string_hexadecimal(string_copy(_w, 1, 2));
 						var _g = string_hexadecimal(string_copy(_w, 3, 2));
 						var _b = string_hexadecimal(string_copy(_w, 5, 2));
-					
+						
 						pal[_index++] = make_color_rgb(_r, _g, _b);
 						break;
 					case ".gpl" :

@@ -3,7 +3,6 @@ function buttonGradient(_onApply, dialog = noone) : widget() constructor {
 	parentDialog = dialog;
 	
 	current_gradient = noone;
-	current_data = noone;
 	
 	function apply(value) {
 		if(!interactable) return;
@@ -12,7 +11,7 @@ function buttonGradient(_onApply, dialog = noone) : widget() constructor {
 	
 	static trigger = function() {
 		var dialog = dialogCall(o_dialog_gradient, WIN_W / 2, WIN_H / 2);
-		dialog.setDefault(current_gradient, current_data);
+		dialog.setDefault(current_gradient);
 		dialog.onApply = apply;
 		dialog.interactable = interactable;
 		
@@ -20,13 +19,12 @@ function buttonGradient(_onApply, dialog = noone) : widget() constructor {
 			parentDialog.addChildren(dialog);
 	}
 	
-	static draw = function(_x, _y, _w, _h, _gradient, _data, _m) {
+	static draw = function(_x, _y, _w, _h, _gradient, _m) {
 		x = _x;
 		y = _y;
 		w = _w;
 		h = _h;
 		current_gradient = _gradient;
-		current_data = _data;
 		
 		var click = false;
 		if(ihover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + _h)) {
@@ -42,7 +40,7 @@ function buttonGradient(_onApply, dialog = noone) : widget() constructor {
 			if(mouse_press(mb_left)) deactivate();
 		}
 		
-		draw_gradient(_x + ui(6), _y + ui(6), _w - ui(12), _h - ui(12), _gradient, _data[| 0]);
+		_gradient.draw(_x + ui(6), _y + ui(6), _w - ui(12), _h - ui(12));
 		
 		if(WIDGET_CURRENT == self)
 			draw_sprite_stretched(THEME.widget_selecting, 0, _x - ui(3), _y - ui(3), _w + ui(6), _h + ui(6));	

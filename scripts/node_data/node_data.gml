@@ -492,24 +492,35 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) constructor {
 			var frx = jun.value_from.x;
 			var fry = jun.value_from.y;
 					
-			var c0 = value_color(jun.value_from.type);
-			var c1 = value_color(jun.type);
+			var c0  = value_color(jun.value_from.type);
+			var c1  = value_color(jun.type);
+			
+			var shx = jun.draw_line_shift_x * _s;
+			var shy = jun.draw_line_shift_y * _s;
+			
+			var cx  = round((frx + jx) / 2 + shx);
+			var cy  = round((fry + jy) / 2 + shy);
+			
 			var hover = false;
 			var th = max(1, PREF_MAP[? "connection_line_width"] * _s);
 			
 			if(PANEL_GRAPH.pHOVER)
 			switch(PREF_MAP[? "curve_connection_line"]) {
 				case 0 : 
-					hover = distance_to_line(mx, my, jx, jy, frx, fry) < 6;
+					hover = distance_to_line(mx, my, jx, jy, frx, fry) < max(th * 2, 6);
 					break;
 				case 1 : 
-					hover = distance_to_curve(mx, my, jx, jy, frx, fry) < 6;
+					hover = distance_to_curve(mx, my, jx, jy, frx, fry, cx, cy, _s) < max(th * 2, 6);
+					jun.draw_line_shift_hover = hover;
 					break;
 				case 2 : 
-					var cx = (jx + frx) / 2;
-					hover = distance_to_line(mx, my, jx, jy, cx, jy) < 6;
-					hover |= distance_to_line(mx, my, cx, jy, cx, fry) < 6;
-					hover |= distance_to_line(mx, my, cx, fry, frx, fry) < 6;
+					var ch = distance_to_line(mx, my,  cx,  jy,  cx, fry) < max(th * 2, 6);
+					
+					hover  = distance_to_line(mx, my,  jx,  jy,  cx,  jy) < max(th * 2, 6);
+					hover |= ch;
+					hover |= distance_to_line(mx, my,  cx, fry, frx, fry) < max(th * 2, 6);
+					
+					jun.draw_line_shift_hover = ch;
 					break;
 			}
 				
@@ -530,8 +541,8 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) constructor {
 					else 
 						draw_line_dashed_color(jx, jy, frx, fry, th, c1, c0, 12 * _s);
 					break;
-				case 1 : draw_line_curve_color(jx, jy, frx, fry, th, c0, c1, ty); break;
-				case 2 : draw_line_elbow_color(jx, jy, frx, fry, th, c0, c1, ty); break;
+				case 1 : draw_line_curve_color(jx, jy, frx, fry, cx, cy, _s, th, c0, c1, ty); break;
+				case 2 : draw_line_elbow_color(jx, jy, frx, fry, cx, th, c1, c0, ty); break;
 			}
 		}
 		
@@ -781,9 +792,9 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) constructor {
 				
 				if(_to.node.isUpdateReady()) {
 					ds_queue_enqueue(RENDER_QUEUE, _to.node);
-					printIf(global.RENDER_LOG, "    > Push " + _to.node.name + " node to stack");
+					printIf(global.RENDER_LOG, "    >| Push " + _to.node.name + " (" + _to.node.display_name + ") node to stack");
 				} else 
-					printIf(global.RENDER_LOG, "    > Node " + _to.node.name + " not ready");
+					printIf(global.RENDER_LOG, "    >| Node " + _to.node.name + " not ready");
 			}
 		}	
 	}
@@ -794,22 +805,25 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) constructor {
 	}
 	
 	static cacheArrayCheck = function() {
-		if(array_length(cached_output) != ANIMATOR.frames_total + 1)
-			array_resize(cached_output, ANIMATOR.frames_total + 1);
-		if(array_length(cache_result) != ANIMATOR.frames_total + 1)
-			array_resize(cache_result, ANIMATOR.frames_total + 1);
+		if(array_length(cached_output) != ANIMATOR.frames_total)
+			array_resize(cached_output, ANIMATOR.frames_total);
+		if(array_length(cache_result) != ANIMATOR.frames_total)
+			array_resize(cache_result, ANIMATOR.frames_total);
 	}
 	
 	static cacheCurrentFrame = function(_frame) {
 		cacheArrayCheck();
-		if(ANIMATOR.current_frame > ANIMATOR.frames_total) return;
+		if(ANIMATOR.current_frame < 0) return;
 		
-		cached_output[ANIMATOR.current_frame] = surface_clone(_frame, cached_output[ANIMATOR.current_frame]);
+		surface_array_free(cached_output[ANIMATOR.current_frame]);
+		cached_output[ANIMATOR.current_frame] = surface_array_clone(_frame);
 		
 		array_safe_set(cache_result, ANIMATOR.current_frame, true);
 	}
 	
 	static cacheExist = function(frame = ANIMATOR.current_frame) {
+		if(frame < 0) return false;
+		
 		if(frame >= array_length(cached_output)) return false;
 		if(frame >= array_length(cache_result)) return false;
 		if(!array_safe_get(cache_result, frame, false)) return false;
@@ -817,6 +831,8 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) constructor {
 	}
 	
 	static getCacheFrame = function(frame = ANIMATOR.current_frame) {
+		if(frame < 0) return false;
+		
 		if(!cacheExist(frame)) return noone;
 		var surf = array_safe_get(cached_output, frame);
 		return surf;
@@ -826,23 +842,15 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) constructor {
 		if(!cacheExist(frame)) return false;
 		
 		var _s = cached_output[ANIMATOR.current_frame];
-		if(!is_surface(_s)) return false;
-		
-		var _outSurf	= outputs[| 0].getValue();
-		if(is_surface(_outSurf)) 
-			surface_copy_size(_outSurf, _s);
-		else {
-			_outSurf = surface_clone(_s);
-			outputs[| 0].setValue(_outSurf);
-		}
+		outputs[| 0].setValue(_s);
 			
 		return true;
 	}
-	static clearCache = function() {
+	static clearCache = function() { 
 		if(!use_cache) return;
 		
-		if(array_length(cached_output) != ANIMATOR.frames_total + 1)
-			array_resize(cached_output, ANIMATOR.frames_total + 1);
+		if(array_length(cached_output) != ANIMATOR.frames_total)
+			array_resize(cached_output, ANIMATOR.frames_total);
 		for(var i = 0; i < array_length(cached_output); i++) {
 			var _s = cached_output[i];
 			if(is_surface(_s))
@@ -986,7 +994,8 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) constructor {
 		
 			if(ds_map_exists(load_map, "name"))
 				display_name = ds_map_try_get(load_map, "name", "");
-			_group = ds_map_try_get(load_map, "group");
+			_group = ds_map_try_get(load_map, "group", noone);
+			if(_group == -1) _group = noone;
 		
 			x = ds_map_try_get(load_map, "x");
 			y = ds_map_try_get(load_map, "y");

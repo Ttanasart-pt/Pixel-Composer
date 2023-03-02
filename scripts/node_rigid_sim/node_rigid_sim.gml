@@ -17,7 +17,7 @@ function Node_Rigid_Group(_x, _y, _group = noone) : Node_Collection(_x, _y, _gro
 	//physics_world_update_iterations(30);
 	//physics_world_update_speed(100)
 	
-	static reset = function() {
+	static reset = function() { 
 		instance_destroy(oRigidbody);
 		physics_pause_enable(true);
 		
@@ -35,7 +35,7 @@ function Node_Rigid_Group(_x, _y, _group = noone) : Node_Collection(_x, _y, _gro
 	static onStep = function() {
 		RETURN_ON_REST
 		
-		if(ANIMATOR.current_frame == 0) 
+		if(ANIMATOR.current_frame == 0)
 			reset();
 		
 		setRenderStatus(false);

@@ -18,6 +18,11 @@ function draw_tooltip_color(clr) {
 		return;
 	}
 	
+	if(is_string(clr)) {
+		draw_tooltip_gradient(clr);
+		return;
+	}
+	
 	var ww = ui(32);
 	var hh = ui(32);
 		
@@ -42,6 +47,19 @@ function draw_tooltip_palette(clr) {
 	draw_sprite_stretched(THEME.textbox, 0, mx, my, ww + ui(16), hh + ui(16));
 	
 	drawPalette(clr, mx + ui(8), my + ui(8), ui(ww), ui(hh));
+}
+
+function draw_tooltip_gradient(clr) {
+	var ww = min(ui(160), ui(32) * array_length(clr));
+	var hh = ui(32);
+		
+	var mx = min(mouse_mx + ui(16), WIN_W - (ww + ui(16)));
+	var my = min(mouse_my + ui(16), WIN_H - (hh + ui(16)));
+		
+	draw_sprite_stretched(THEME.textbox, 3, mx, my, ww + ui(16), hh + ui(16));
+	draw_sprite_stretched(THEME.textbox, 0, mx, my, ww + ui(16), hh + ui(16));
+	
+	clr.draw(mx + ui(8), my + ui(8), ui(ww), ui(hh));
 }
 
 function draw_tooltip_surface_array(surf) {

@@ -14,6 +14,6 @@ vec3 hsv2rgb(vec3 c) {
 void main() {
 	vec3 _rgb = hsv2rgb(vec3(hue, v_vTexcoord.x, 1.0 - v_vTexcoord.y)); 
 	
-	vec4 color = vec4(_rgb.r, _rgb.g, _rgb.b, 1.0);
+	vec4 color = vec4(_rgb.r, _rgb.g, _rgb.b, v_vColour.a);
     gl_FragColor = color;
 }

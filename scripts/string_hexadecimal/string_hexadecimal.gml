@@ -1,5 +1,5 @@
 function string_hexadecimal(str){
-	static HEX = "0123456789abcdef";
+	static HEX = "0123456789ABCDEF";
 	
 	var i = string_length(str);
 	var d = 1;
@@ -7,7 +7,7 @@ function string_hexadecimal(str){
 	
 	while(i > 0) {
 		var ch = string_char_at(str, i);
-		var val = string_pos(ch, HEX) - 1;
+		var val = string_pos(string_upper(ch), HEX) - 1;
 		v += val * d;
 		
 		d *= 16;
@@ -30,10 +30,6 @@ function number_to_hex(val) {
 	}
 	
 	return ss;
-}
-
-function color_get_alpha(color) {
-	return (color & (0xFF << 24)) >> 24;
 }
 
 function color_get_hex(color, alpha = false) {

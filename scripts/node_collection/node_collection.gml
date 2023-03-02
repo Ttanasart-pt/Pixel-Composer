@@ -73,6 +73,27 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	
 	metadata = new MetaDataManager();
 	
+	inspUpdateTooltip   = get_text("panel_inspector_execute", "Execute node contents");
+	inspUpdateIcon      = [ THEME.sequence_control, 1, COLORS._main_value_positive ];
+	
+	static inspectorUpdate = function() { 
+		onInspectorUpdate(); 
+	}
+	static onInspectorUpdate = function() {
+		RenderListAction(nodes, group);
+	}
+	
+	static hasInspectorUpdate = function(group = false) { 
+		if(!group) return false;
+		
+		for( var i = 0; i < ds_list_size(nodes); i++ ) {
+			if(nodes[| i].hasInspectorUpdate())
+				return true;
+		}
+		
+		return false;
+	}
+	
 	static getNodeBase = function() {
 		if(instanceBase == noone) return self;
 		return instanceBase.getNodeBase();
@@ -156,18 +177,8 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		}
 	}
 	
-	static inspectorGroupUpdate = function() {
-		var node_list = getNodeList();
-		for(var i = 0; i < ds_list_size(node_list); i++) {
-			var _node = node_list[| i];
-			if(_node.hasInspectorUpdate() == noone)
-				_node.inspectorUpdate();
-		}
-	}
-	
 	static stepBegin = function() {
 		use_cache = false;
-		inspectorUpdate = noone;
 		
 		array_safe_set(cache_result, ANIMATOR.current_frame, true);
 		
@@ -175,8 +186,6 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		for(var i = 0; i < ds_list_size(node_list); i++) {
 			var n = node_list[| i];
 			n.stepBegin();
-			if(n.hasInspectorUpdate())
-				inspectorUpdate = inspectorGroupUpdate;
 			if(!n.use_cache) continue;
 			
 			use_cache = true;

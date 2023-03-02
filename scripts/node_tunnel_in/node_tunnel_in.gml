@@ -13,6 +13,14 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	error_notification = noone;
 	
+	insp2UpdateTooltip = "Create tunnel out";
+	insp2UpdateIcon    = [ THEME.tunnel, 0, c_white ];
+	
+	static onInspector2Update = function() {		
+		var n = nodeBuild("Node_Tunnel_Out", x + 128, y);
+		n.inputs[| 0].setValue(inputs[| 0].getValue());
+	}
+	
 	static onDrawNodeBehind = function(_x, _y, _mx, _my, _s) {
 		var xx = _x + x * _s;
 		var yy = _y + y * _s;
@@ -30,7 +38,11 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 				
 				draw_set_color(COLORS.node_blend_tunnel);
 				draw_set_alpha(0.35);
-				draw_line_width(xx + w * _s / 2, yy + h * _s / 2, _x + (node.x + node.w / 2) * _s, _y + (node.y + node.h / 2) * _s, 6 * _s);
+				var frx = xx + w * _s / 2;
+				var fry = yy + h * _s / 2;
+				var tox = _x + (node.x + node.w / 2) * _s;
+				var toy = _y + (node.y + node.h / 2) * _s;
+				draw_line_dashed(frx, fry, tox, toy, 8 * _s, 16 * _s, current_time / 100);
 				draw_set_alpha(1);
 			}
 			

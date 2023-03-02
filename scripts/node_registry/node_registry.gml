@@ -409,8 +409,6 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 		addNodeObject(color, "Color",			s_node_color_out,		"Node_Color",			[1, Node_Color]);
 		addNodeObject(color, "RGB Color",		s_node_color_from_rgb,	"Node_Color_RGB",		[1, Node_Color_RGB]);
 		addNodeObject(color, "HSV Color",		s_node_color_from_hsv,	"Node_Color_HSV",		[1, Node_Color_HSV]);
-		addNodeObject(color, "Gradient",		s_node_gradient_out,	"Node_Gradient_Out",	[1, Node_Gradient_Out]);
-		addNodeObject(color, "Gradient Shift",	s_node_gradient_shift,	"Node_Gradient_Shift",	[1, Node_Gradient_Shift]);
 		addNodeObject(color, "Sampler",			s_node_sampler,			"Node_Sampler",			[1, Node_Sampler]);
 		addNodeObject(color, "Color Data",		s_node_color_data,		"Node_Color_Data",		[1, Node_Color_Data]);
 		addNodeObject(color, "Find pixel",		s_node_pixel_find,		"Node_Find_Pixel",		[1, Node_Find_Pixel]).set_version(1130);
@@ -420,6 +418,13 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 		addNodeObject(color, "Sort Palette",	s_node_palette_sort,	"Node_Palette_Sort",	[1, Node_Palette_Sort]).set_version(1130);
 		addNodeObject(color, "Palette Extract",	s_node_palette_extract,	"Node_Palette_Extract",	[1, Node_Palette_Extract]).set_version(1100);
 		addNodeObject(color, "Palette Replace",	s_node_palette_replace,	"Node_Palette_Replace",	[1, Node_Palette_Replace]).set_version(1120);
+		
+		ds_list_add(color, "Gradient");
+		addNodeObject(color, "Gradient",			s_node_gradient_out,		"Node_Gradient_Out",			[1, Node_Gradient_Out]);
+		addNodeObject(color, "Gradient Palette",	s_node_gradient_palette,	"Node_Gradient_Palette",		[1, Node_Gradient_Palette]).set_version(1135);
+		addNodeObject(color, "Gradient Shift",		s_node_gradient_shift,		"Node_Gradient_Shift",			[1, Node_Gradient_Shift]);
+		addNodeObject(color, "Gradient Replace",	s_node_gradient_replace,	"Node_Gradient_Replace_Color",	[1, Node_Gradient_Replace_Color]).set_version(1135);
+		addNodeObject(color, "Gradient Data",		s_node_gradient_data,		"Node_Gradient_Extract",		[1, Node_Gradient_Extract]).set_version(1135);
 	
 	var animation = ds_list_create();
 	addNodeCatagory("Animation", animation);
@@ -452,7 +457,11 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 		addNodeObject(node, "Tunnel Out",		s_node_tunnel_out,	"Node_Tunnel_Out",		[1, Node_Tunnel_Out]);
 		addNodeObject(node, "Display Text",		s_node_text_display,"Node_Display_Text",	[1, Node_Display_Text]);
 		addNodeObject(node, "Display Image",	s_node_image,		"Node_Display_Image",	[0, Node_create_Display_Image]);
-	
+		
+		ds_list_add(node, "Cache");
+		addNodeObject(node, "Cache",		s_node_cache,		"Node_Cache",		[1, Node_Cache]).set_version(1134);
+		addNodeObject(node, "Cache Array",	s_node_cache_array,	"Node_Cache_Array",	[1, Node_Cache_Array]).set_version(1130);
+		
 	var hid = ds_list_create();
 	addNodeCatagory("Hidden", hid, ["Hidden"]);
 		addNodeObject(hid, "Input",				s_node_feedback_input,	"Node_Iterator_Each_Input",		[1, Node_Iterator_Each_Input]);

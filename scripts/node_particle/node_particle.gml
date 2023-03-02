@@ -53,7 +53,6 @@ function Node_Particle(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y, _
 		var _blend 		= inputs[| input_len + 2].getValue(_time);
 		
 		var _outSurf	= outputs[| 0].getValue();
-		
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1]);
 		outputs[| 0].setValue(_outSurf);
 		

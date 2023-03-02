@@ -41,7 +41,7 @@
 		if(instanceof(_menuItem) == "MenuItemGroup") {
 			var _submenus = _menuItem.group;
 			draw_set_text(f_p1, fa_center, fa_center, COLORS._main_text_sub);
-			draw_set_alpha(_menuItem.active * 0.5 + 0.5);
+			draw_set_alpha(_menuItem.active * 0.75 + 0.25);
 			draw_text(dialog_x + dialog_w / 2, yy + hght / 2, label);
 			draw_set_alpha(1);
 			
@@ -84,11 +84,11 @@
 			if(_menuItem.spr != noone) {
 				var spr = is_array(_menuItem.spr)? _menuItem.spr[0] : _menuItem.spr;
 				var ind = is_array(_menuItem.spr)? _menuItem.spr[1] : 0;
-				draw_sprite_ui(spr, ind, dialog_x + ui(24), yy + hght / 2,,,, COLORS._main_icon, 0.75);
+				draw_sprite_ui(spr, ind, dialog_x + ui(24), yy + hght / 2,,,, COLORS._main_icon, _menuItem.active * 0.5 + 0.25);
 			}
 			
 			draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text);
-			draw_set_alpha(_menuItem.active * 0.5 + 0.5);
+			draw_set_alpha(_menuItem.active * 0.75 + 0.25);
 			draw_text(tx, yy + hght / 2, label);
 			draw_set_alpha(1);
 			
@@ -98,7 +98,9 @@
 				var _key = find_hotkey(_menuItem.hotkey[0], _menuItem.hotkey[1]);
 				if(_key) {
 					draw_set_text(f_p1, fa_right, fa_center, COLORS._main_text_sub);
+					draw_set_alpha(_menuItem.active * 0.75 + 0.25);
 					draw_text(dialog_x + dialog_w - ui(16), yy + hght / 2, key_get_name(_key.key, _key.modi));	
+					draw_set_alpha(1);
 				}	
 			}
 		}
