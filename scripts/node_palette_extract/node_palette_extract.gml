@@ -311,7 +311,7 @@ function Node_Palette_Extract(_x, _y, _group = noone) : Node(_x, _y, _group) con
 		if(willUpdate) extractPalettes();
 	}
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s) {
+	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		var bbox = drawGetBbox(xx, yy, _s);
 		if(bbox.h < 1) return;
 		

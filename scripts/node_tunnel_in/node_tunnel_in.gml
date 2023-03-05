@@ -25,12 +25,13 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		var xx = _x + x * _s;
 		var yy = _y + y * _s;
 		
-		var hover = point_in_rectangle(_mx, _my, xx, yy, xx + w * _s, yy + h * _s);
+		var hover = PANEL_GRAPH.pHOVER && point_in_rectangle(_mx, _my, xx, yy, xx + w * _s, yy + h * _s);
+		hover |= instance_exists(o_dialog_tunnels) && o_dialog_tunnels.tunnel_hover == self;
 		if(!hover) return;
 		
 		var _key = inputs[| 0].getValue();
-		var amo = ds_map_size(TUNNELS_OUT);
-		var k = ds_map_find_first(TUNNELS_OUT);
+		var amo  = ds_map_size(TUNNELS_OUT);
+		var k    = ds_map_find_first(TUNNELS_OUT);
 		repeat(amo) {
 			if(TUNNELS_OUT[? k] == _key && ds_map_exists(NODE_MAP, k)) {
 				var node = NODE_MAP[? k];
@@ -42,7 +43,7 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 				var fry = yy + h * _s / 2;
 				var tox = _x + (node.x + node.w / 2) * _s;
 				var toy = _y + (node.y + node.h / 2) * _s;
-				draw_line_dashed(frx, fry, tox, toy, 8 * _s, 16 * _s, current_time / 100);
+				draw_line_dashed(frx, fry, tox, toy, 8 * _s, 16 * _s, current_time / 10);
 				draw_set_alpha(1);
 			}
 			
@@ -99,6 +100,8 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 				NODE_MAP[? k].checkDuplicate();
 			k = ds_map_find_next(TUNNELS_IN_MAP, k);	
 		}
+		
+		UPDATE |= RENDER_TYPE.full;
 	}
 	
 	static step = function() {
@@ -130,7 +133,7 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		}
 	}
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s) {
+	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		draw_set_text(f_h5, fa_center, fa_center, COLORS._main_text);
 		var str	= string(inputs[| 0].getValue());
 		

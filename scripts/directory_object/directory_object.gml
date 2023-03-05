@@ -7,11 +7,24 @@ function FileObject(_name, _path) constructor {
 	surface  = noone;
 	meta	 = noone;
 	
+	retrive_data = false;
+	thumbnail_data = -1;
+	thumbnail = noone;
+	
 	static getSurface = function() {
 		if(is_surface(surface)) return surface;
 		var spr = getSpr();
 		surface = surface_create_from_sprite_ext(spr, 0);
 		return surface;
+	}
+	
+	static getThumbnail = function() {
+		if(!retrive_data) getMetadata();
+		
+		if(thumbnail_data == -1) return noone;
+		if(thumbnail != noone && is_surface(thumbnail)) return thumbnail;
+		
+		thumbnail = surface_decode(thumbnail_data);
 	}
 	
 	static getSpr = function() {
@@ -28,6 +41,7 @@ function FileObject(_name, _path) constructor {
 	}
 	
 	static getMetadata = function() {
+		retrive_data = true;
 		if(!file_exists(path)) return noone;
 		if(meta != noone) return meta;
 		if(meta == undefined) return noone;
@@ -38,14 +52,17 @@ function FileObject(_name, _path) constructor {
 		meta = new MetaDataManager();
 		if(ds_map_exists(m, "metadata"))
 			meta.deserialize(m[? "metadata"]);
+		if(ds_map_exists(m, "preview")) {
+			thumbnail_data = json_try_parse(m[? "preview"], -1);
+		}
 		
 		meta.version = m[? "version"];
 		meta.name = name;
 		
 		switch(filename_ext(path)) {
-			case ".pxc"  : meta.type = FILE_TYPE.project; break;
-			case ".pxcc" : meta.type = FILE_TYPE.collection; break;
-			default :	   meta.type = FILE_TYPE.assets; break;
+			case ".pxc"  : meta.type = FILE_TYPE.project;		break;
+			case ".pxcc" : meta.type = FILE_TYPE.collection;	break;
+			default :	   meta.type = FILE_TYPE.assets;		break;
 		}
 		
 		ds_map_destroy(m);

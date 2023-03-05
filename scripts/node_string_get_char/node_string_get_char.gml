@@ -16,7 +16,7 @@ function Node_String_Get_Char(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 		return string_char_at(_data[0], _data[1]);
 	}
 	
-	function onDrawNode(xx, yy, _mx, _my, _s) {
+	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		draw_set_text(f_h5, fa_center, fa_center, COLORS._main_text);
 		var str = inputs[| 0].getValue();
 		var bbox = drawGetBbox(xx, yy, _s);

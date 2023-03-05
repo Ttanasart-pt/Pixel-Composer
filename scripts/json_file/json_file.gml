@@ -26,12 +26,17 @@ function json_load_struct(path) {
 	if(!file_exists(path)) return noone;
 	
 	var s = file_text_read_all(path);
-	var js = json_parse(s);
+	var js = json_try_parse(s);
 	return js;
 }
 
-function json_save_struct(path, struct) {
-	var s = json_stringify_minify(struct);
+function json_save_struct(path, struct, pretty = false) {
+	var s;
+	
+	if(pretty)
+		s = json_beautify(json_stringify(struct));
+	else 
+		s = json_stringify_minify(struct);
 	
 	var f = file_text_open_write(path);
 	file_text_write_string(f, s);

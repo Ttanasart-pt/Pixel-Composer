@@ -107,7 +107,7 @@ function Node_Switch(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		outputs[| 0].setValue(_res);
 	}
 	
-	function onDrawNode(xx, yy, _mx, _my, _s) {
+	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		var frm = inputs[| 1];
 		var sele = inputs[| 0].getValue();
 		var _res = inputs[| 1].getValue();

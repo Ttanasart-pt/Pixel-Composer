@@ -27,7 +27,7 @@ function Node_Gradient_Out(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		return 0;
 	}
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s) {
+	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		var bbox = drawGetBbox(xx, yy, _s);
 		if(bbox.h < 1) return;
 		

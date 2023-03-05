@@ -33,16 +33,30 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 		.setDisplay(VALUE_DISPLAY.enum_button, [ "First", "Middle", "Last" ])
 		.rejectArray();
 	
+	inputs[| 6] = nodeValue("Spacing", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0);
+	
+	inputs[| 7] = nodeValue("Padding", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 0, 0, 0, 0 ])
+		.setDisplay(VALUE_DISPLAY.padding)
+		
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	refreshSurface = false;
+	
+	input_display_list = [
+		["Surface",	 false], 0, 1, 2,
+		["Packing",	 false], 3, 4, 5, 6, 7, 
+	]
 	
 	static step = function() {
 		var grup = inputs[| 1].getValue();
 		var pack = inputs[| 3].getValue();
 		
+		if(pack == 0)	inputs[| 5].editWidget.data = [ "Top", "Center", "Bottom" ];
+		else			inputs[| 5].editWidget.data = [ "Left", "Center", "Right" ];
+		
 		inputs[| 2].setVisible(grup == SPRITE_ANIM_GROUP.animation);
 		inputs[| 4].setVisible(pack == SPRITE_STACK.grid);
+		inputs[| 5].setVisible(pack != SPRITE_STACK.grid);
 	}
 	
 	static update = function(frame = ANIMATOR.current_frame) {
@@ -52,6 +66,8 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 		var pack = inputs[| 3].getValue();
 		var grid = inputs[| 4].getValue();
 		var alig = inputs[| 5].getValue();
+		var spac = inputs[| 6].getValue();
+		var padd = inputs[| 7].getValue();
 		
 		if(grup != SPRITE_ANIM_GROUP.animation) {
 			initRender();
@@ -63,29 +79,33 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 			var arr = is_array(inpt);
 			if(!arr) inpt = [ inpt ];
 			var _surf = [];
+			var amo = floor(ANIMATOR.frames_total / skip);
 			
 			for(var i = 0; i < array_length(inpt); i++) { 
 				if(!is_surface(inpt[i])) continue;
-				var ww = surface_get_width(inpt[i]);
-				var hh = surface_get_height(inpt[i]);
+				var sw = surface_get_width(inpt[i]);
+				var sh = surface_get_height(inpt[i]);
+				var ww = sw, hh = sh;
 				
 				switch(pack) {
-					case SPRITE_STACK.horizontal :
-						ww *= floor(ANIMATOR.frames_total / skip);
+					case SPRITE_STACK.horizontal :						
+						ww = sw * amo + spac * (amo - 1);
 						break;
 					case SPRITE_STACK.vertical :
-						hh *= floor(ANIMATOR.frames_total / skip);
+						hh = sh * amo + spac * (amo - 1);
 						break;
 					case SPRITE_STACK.grid :
 						var amo = floor(ANIMATOR.frames_total / skip);
 						var col = inputs[| 4].getValue();
 						var row = ceil(amo / col);
 						
-						ww *= col;
-						hh *= row;
+						ww = sw * col + spac * (col - 1);
+						hh = sh * row + spac * (row - 1);
 						break;
 				}
 				
+				ww += padd[0] + padd[2];
+				hh += padd[1] + padd[3];
 				_surf[i] = surface_create_valid(ww, hh);
 				surface_set_target(_surf[i]);
 				draw_clear_alpha(0, 0);
@@ -115,9 +135,10 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 		var oupt = outputs[| 0].getValue();
 		if(is_array(oupt) && (array_length(inpt) != array_length(oupt))) return;
 		
-		var px = 0, py = 0;
 		var drawn = false;
-		
+		var px = padd[2];
+		var py = padd[1];
+						
 		for(var i = 0; i < array_length(inpt); i++) {
 			if(!is_surface(inpt[i])) break;
 			var oo = noone;
@@ -137,7 +158,7 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 			
 			switch(pack) {
 				case SPRITE_STACK.horizontal :
-					var px = _frame * _w;
+					var px = padd[2] + _frame * _w + max(0, _frame - 1) * spac;
 					switch(alig) {
 						case 0 :
 							draw_surface_safe(inpt[i], px, py);
@@ -151,7 +172,7 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 					}
 					break;
 				case SPRITE_STACK.vertical :
-					var py = _frame * _h;
+					var py = padd[1] + _frame * _h + max(0, _frame - 1) * spac;
 					switch(alig) {
 						case 0 :
 							draw_surface_safe(inpt[i], px, py);
@@ -169,8 +190,8 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 					var _row = floor(_frame / col);
 					var _col = safe_mod(_frame, col);
 					
-					px = _col * _w;
-					py = _row * _h;
+					px = padd[2] + _col * _w + max(0, _col - 1) * spac;
+					py = padd[1] + _row * _h + max(0, _row - 1) * spac;
 					
 					//print(display_name + ": " + string(ANIMATOR.current_frame) + ", " + string(inpt[i]) + "| " + string(px) + ", " + string(py));
 					draw_surface_safe(inpt[i], px, py);
@@ -206,6 +227,8 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 		var grup = inputs[| 1].getValue();
 		var pack = inputs[| 3].getValue();
 		var alig = inputs[| 5].getValue();
+		var spac = inputs[| 6].getValue();
+		var padd = inputs[| 7].getValue();
 		
 		if(grup == SPRITE_ANIM_GROUP.animation) {
 			refreshSurface = false;
@@ -225,6 +248,7 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 					case SPRITE_STACK.horizontal :
 						for(var i = 0; i < array_length(inpt); i++) {
 							ww += surface_get_width(inpt[i]);
+							if(i) ww += spac;
 							hh  = max(hh, surface_get_height(inpt[i]));
 						}
 						break;
@@ -232,6 +256,7 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 						for(var i = 0; i < array_length(inpt); i++) {
 							ww  = max(ww, surface_get_width(inpt[i]));
 							hh += surface_get_height(inpt[i]);
+							if(i) hh += spac;
 						}
 						break;
 					case SPRITE_STACK.grid :
@@ -245,20 +270,24 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 						for(var i = 0; i < row; i++) {
 							var row_w = 0;
 							var row_h = 0;
-						
+							
 							for(var j = 0; j < col; j++) {
 								var index = i * col + j;
 								if(index >= amo) break;
 								row_w += surface_get_width(inpt[index]);
+								if(j) row_w += spac;
 								row_h  = max(row_h, surface_get_height(inpt[index]));
 							}
 							
 							ww  = max(ww, row_w);
-							hh += row_h;
+							hh += row_h							
+							if(i) hh += spac;
 						}
 						break;
 				}
 				
+				ww += padd[0] + padd[2];
+				hh += padd[1] + padd[3];
 				var _surf = surface_create_valid(ww, hh);
 				
 				surface_set_target(_surf);
@@ -267,8 +296,8 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 				BLEND_OVERRIDE;
 				switch(pack) {
 					case SPRITE_STACK.horizontal :
-						var px = 0;
-						var py = 0;
+						var px = padd[2];
+						var py = padd[1];
 						for(var i = 0; i < array_length(inpt); i++) {
 							var _w = surface_get_width(inpt[i]);
 							var _h = surface_get_height(inpt[i]);
@@ -285,12 +314,12 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 									break;
 							}
 							
-							px += _w;
+							px += _w + spac;
 						}
 						break;
 					case SPRITE_STACK.vertical :
-						var px = 0;
-						var py = 0;
+						var px = padd[2];
+						var py = padd[1];
 						for(var i = 0; i < array_length(inpt); i++) {
 							var _w = surface_get_width(inpt[i]);
 							var _h = surface_get_height(inpt[i]);
@@ -307,7 +336,7 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 									break;
 							}
 							
-							py += _h;
+							py += _h + spac;
 						}
 						break;
 					case SPRITE_STACK.grid :
@@ -317,13 +346,13 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 						
 						var row_w = 0;
 						var row_h = 0;
-						var px = 0;
-						var py = 0;
+						var px = padd[2];
+						var py = padd[1];
 						
 						for(var i = 0; i < row; i++) {
 							var row_w = 0;
 							var row_h = 0;
-							px = 0;
+							px = padd[2];
 								
 							for(var j = 0; j < col; j++) {
 								var index = i * col + j;
@@ -333,10 +362,10 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 								var _h = surface_get_height(inpt[index]);
 								draw_surface_safe(inpt[index], px, py);
 								
-								px += _w;
+								px += _w + spac;
 								row_h = max(row_h, _h);
 							}
-							py += row_h;
+							py += row_h + spac;
 						}
 						break;
 					}

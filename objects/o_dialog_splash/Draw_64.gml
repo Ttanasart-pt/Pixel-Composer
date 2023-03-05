@@ -36,7 +36,7 @@ if !ready exit;
 	}
 	
 	var x0 = dialog_x + ui(16);
-	var x1 = x0 + ui(288);
+	var x1 = x0 + recent_width;
 	var y0 = dialog_y + ui(128);
 	var y1 = dialog_y + dialog_h - ui(16);
 	
@@ -46,10 +46,28 @@ if !ready exit;
 	sp_recent.setActiveFocus(sFOCUS, sHOVER);
 	sp_recent.draw(x0 + ui(6), y0);
 	
+	var bx = x1 - ui(28);
+	var by = y0 - ui(28 + 4);
+	if(buttonInstant(THEME.button_hide, bx, by, ui(28), ui(28), mouse_ui, sFOCUS, sHOVER, "Clear recent files", THEME.icon_delete,, COLORS._main_value_negative) == 2) {
+		ds_list_clear(RECENT_FILES);
+		RECENT_SAVE();
+	}
+	bx -= ui(28 + 4);
+	if(buttonInstant(THEME.button_hide, bx, by, ui(28), ui(28), mouse_ui, sFOCUS, sHOVER, recent_thumbnail? "Hide thumbnail" : "Show thumbnail", THEME.splash_thumbnail, recent_thumbnail) == 2) {
+		recent_thumbnail = !recent_thumbnail;
+	}
+	
+	var expandAction = false;
+	var expand = PREF_MAP[? "splash_expand_recent"];
+	if(buttonInstant(THEME.button_hide_fill, x1, (y0 + y1) / 2 - ui(32), ui(16), ui(32), mouse_ui, sFOCUS, sHOVER,, THEME.arrow, expand? 2 : 0) == 2) {
+		PREF_MAP[? "splash_expand_recent"] = !PREF_MAP[? "splash_expand_recent"];
+		expandAction = true;
+	}
+	
 	x0 = x1 + ui(16);
 	x1 = dialog_x + dialog_w - ui(16);
 	
-	var bx = x0;
+	bx = x0;
 	
 	for( var i = 0; i < array_length(pages); i++ ) {
 		draw_set_text(f_p0, fa_left, fa_bottom, COLORS._main_text_sub);
@@ -74,9 +92,11 @@ if !ready exit;
 	sp_sample.draw(x0 + ui(6), y0);
 	
 	if(project_page == 0) {
-		draw_set_text(f_p1, fa_right, fa_bottom, COLORS._main_text_sub);
-		draw_text(x1 - ui(82), y0 - ui(4), "Art by ");
-		draw_sprite_ui_uniform(s_kenney, 0, x1, y0 - ui(4), 2, c_white, 0.5);
+		if(!expand) {
+			draw_set_text(f_p1, fa_right, fa_bottom, COLORS._main_text_sub);
+			draw_text(x1 - ui(82), y0 - ui(4), "Art by ");
+			draw_sprite_ui_uniform(s_kenney, 0, x1, y0 - ui(4), 2, c_white, 0.5);
+		}
 	} else if(project_page == 1) {
 		var bx = x1 - ui(32);
 		var by = y0 - ui(32);
@@ -87,5 +107,10 @@ if !ready exit;
 		bx -= ui(36);
 		if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), mouse_ui, sFOCUS, sHOVER, "Refresh content", THEME.refresh) == 2)
 			steamUCGload();
+	}
+	
+	if(expandAction) {
+		recent_width = PREF_MAP[? "splash_expand_recent"]? ui(576) : ui(288);
+		resize();
 	}
 #endregion

@@ -2,11 +2,14 @@ function rotator(_onModify, _step = -1) : widget() constructor {
 	onModify = _onModify;
 	step	 = _step;
 	
+	scale    = 1;
 	dragging = false;
 	drag_sv  = 0;
 	drag_sa  = 0;
-	
 	real_val = 0;
+	
+	spr_bg   = THEME.rotator_bg;
+	spr_knob = THEME.rotator_knob;
 	
 	tb_value = new textBox(TEXTBOX_INPUT.number, onModify);
 	tb_value.slidable = true;
@@ -21,22 +24,24 @@ function rotator(_onModify, _step = -1) : widget() constructor {
 		tb_value.register(parent);
 	}
 	
-	static draw = function(_x, _y, _data, _m) {
+	static draw = function(_x, _y, _data, _m, draw_tb = true) {
 		x = _x;
 		y = _y;
 		w = 0;
 		h = ui(96);
 		
-		var knob_y = _y + ui(48);
+		var knob_y = _y + ui(48) * scale;
 		
-		tb_value.hover  = hover;
-		tb_value.active = active;
-		tb_value.draw(_x + ui(64), knob_y - ui(17), ui(64), TEXTBOX_HEIGHT, _data, _m);
+		if(draw_tb) {
+			tb_value.hover  = hover;
+			tb_value.active = active;
+			tb_value.draw(_x + ui(64), knob_y - ui(17), ui(64), TEXTBOX_HEIGHT, _data, _m);
+		}
 		
-		draw_sprite_ui_uniform(THEME.rotator_bg, 0, _x, knob_y);
+		draw_sprite_ui_uniform(spr_bg, 0, _x, knob_y, scale);
 		
-		var px = _x     + lengthdir_x(ui(36), _data);
-		var py = knob_y + lengthdir_y(ui(36), _data);
+		var px = _x     + lengthdir_x(ui(36) * scale, _data);
+		var py = knob_y + lengthdir_y(ui(36) * scale, _data);
 		
 		if(dragging) {
 			var delta = angle_difference(point_direction(_x, knob_y, _m[0], _m[1]), drag_sa);
@@ -51,7 +56,7 @@ function rotator(_onModify, _step = -1) : widget() constructor {
 			if(step != -1)
 				val = round(real_val / step) * step;
 			
-			draw_sprite_ui_uniform(THEME.rotator_knob, 1, px, py);
+			draw_sprite_ui_uniform(spr_knob, 1, px, py, scale);
 			
 			if(val != drag_sv) {
 				if(onModify(val))
@@ -66,8 +71,8 @@ function rotator(_onModify, _step = -1) : widget() constructor {
 				UNDO_HOLDING = false;
 			}
 			
-		} else if(hover && point_in_circle(_m[0], _m[1], _x, knob_y, ui(48))) {
-			draw_sprite_ui_uniform(THEME.rotator_knob, 1, px, py);
+		} else if(hover && point_in_circle(_m[0], _m[1], _x, knob_y, ui(48) * scale)) {
+			draw_sprite_ui_uniform(spr_knob, 1, px, py, scale);
 				
 			if(mouse_press(mb_left, active)) {
 				dragging = true;
@@ -75,7 +80,7 @@ function rotator(_onModify, _step = -1) : widget() constructor {
 				drag_sa  = point_direction(_x, knob_y, _m[0], _m[1]);
 			}
 		} else {
-			draw_sprite_ui_uniform(THEME.rotator_knob, 0, px, py);
+			draw_sprite_ui_uniform(spr_knob, 0, px, py, scale);
 		}
 		
 		draw_set_text(f_p0, fa_center, fa_center, COLORS._main_text);

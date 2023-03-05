@@ -44,7 +44,7 @@ function Node_Wiggler(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		return getWiggle(ran[0], ran[1], ANIMATOR.frames_total / fre, time, sed, 0, ANIMATOR.frames_total);
 	}
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s) {
+	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		var ran  = current_data[0];
 		var fre  = current_data[1];
 		var sed  = current_data[2];

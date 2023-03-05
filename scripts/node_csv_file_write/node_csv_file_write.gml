@@ -51,7 +51,7 @@ function Node_CSV_File_Write(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	static update = function(frame = ANIMATOR.current_frame) { writeFile(); }
 	static onInspectorUpdate = function() { writeFile(); }
 	
-	function onDrawNode(xx, yy, _mx, _my, _s) {
+	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		var bbox = drawGetBbox(xx, yy, _s);
 		
 		var str = filename_name(inputs[| 0].getValue());

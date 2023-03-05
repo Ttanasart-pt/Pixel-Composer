@@ -626,6 +626,223 @@
         "yorigin": 24,
         "slice": null
     },
+    "node_resize": {
+        "path": "./icon/s_node_resize.png",
+        "subimages": 1,
+        "xorigin": 32,
+        "yorigin": 32,
+        "slice": null
+    },
+    "icon_curve_connection": {
+        "path": "./icon/s_icon_curve_connection.png",
+        "subimages": 4,
+        "xorigin": 24,
+        "yorigin": 24,
+        "slice": null
+    },
+    "node_output_visible": {
+        "path": "./icon/s_icon_output_visibility.png",
+        "subimages": 1,
+        "xorigin": 24,
+        "yorigin": 24,
+        "slice": null
+    },
+    "icon_minimap": {
+        "path": "./icon/s_icon_minimap_strip2.png",
+        "subimages": 2,
+        "xorigin": 24,
+        "yorigin": 24,
+        "slice": null
+    },
+    "noti_icon_tick": {
+        "path": "./icon/s_noti_icon_tick.png",
+        "subimages": 1,
+        "xorigin": 20,
+        "yorigin": 20,
+        "slice": null
+    },
+    "noti_icon_error": {
+        "path": "./icon/s_noti_icon_error_strip2.png",
+        "subimages": 2,
+        "xorigin": 20,
+        "yorigin": 20,
+        "slice": null
+    },
+    "noti_icon_warning": {
+        "path": "./icon/s_noti_icon_warning_strip2.png",
+        "subimages": 2,
+        "xorigin": 20,
+        "yorigin": 20,
+        "slice": null
+    },
+    "noti_icon_log": {
+        "path": "./icon/s_noti_icon_log_strip2.png",
+        "subimages": 2,
+        "xorigin": 20,
+        "yorigin": 20,
+        "slice": null
+    },
+    "noti_icon_file_load": {
+        "path": "./icon/s_noti_icon_file_load.png",
+        "subimages": 1,
+        "xorigin": 20,
+        "yorigin": 20,
+        "slice": null
+    },
+    "noti_icon_file_save": {
+        "path": "./icon/s_noti_icon_file_save.png",
+        "subimages": 1,
+        "xorigin": 20,
+        "yorigin": 20,
+        "slice": null
+    },
+    "icon_center_canvas": {
+        "path": "./icon/s_icon_center_canvas.png",
+        "subimages": 1,
+        "xorigin": 24,
+        "yorigin": 24,
+        "slice": null
+    },
+    "icon_grid": {
+        "path": "./icon/s_icon_grid_strip2.png",
+        "subimages": 2,
+        "xorigin": 24,
+        "yorigin": 24,
+        "slice": null
+    },
+    "icon_grid_setting": {
+        "path": "./icon/s_icon_grid_setting.png",
+        "subimages": 1,
+        "xorigin": 24,
+        "yorigin": 24,
+        "slice": null
+    },
+    "icon_preview_export": {
+        "path": "./icon/s_icon_preview_export.png",
+        "subimages": 1,
+        "xorigin": 24,
+        "yorigin": 24,
+        "slice": null
+    },
+    "icon_reset_when_preview": {
+        "path": "./icon/s_icon_reset_when_preview_strip2.png",
+        "subimages": 2,
+        "xorigin": 24,
+        "yorigin": 24,
+        "slice": null
+    },
+    "icon_split_view": {
+        "path": "./icon/s_icon_split_view_strip3.png",
+        "subimages": 3,
+        "xorigin": 24,
+        "yorigin": 24,
+        "slice": null
+    },
+    "icon_tile_view": {
+        "path": "./icon/s_icon_tile_view_strip4.png",
+        "subimages": 4,
+        "xorigin": 24,
+        "yorigin": 24,
+        "slice": null
+    },
+    "icon_active_split": {
+        "path": "./icon/s_panel_active_split.png",
+        "subimages": 1,
+        "xorigin": 12,
+        "yorigin": 12,
+        "slice": null
+    },
+    "revert": {
+        "path": "./icon/s_icon_revert.png",
+        "subimages": 1,
+        "xorigin": 24,
+        "yorigin": 24,
+        "slice": null
+    },
+    "save": {
+        "path": "./icon/s_icon_save.png",
+        "subimages": 1,
+        "xorigin": 24,
+        "yorigin": 24,
+        "slice": null
+    },
+    "window_exit": {
+        "path": "./icon/s_window_exit.png",
+        "subimages": 1,
+        "xorigin": 16,
+        "yorigin": 16,
+        "slice": null
+    },
+    "window_minimize": {
+        "path": "./icon/s_window_minimize.png",
+        "subimages": 1,
+        "xorigin": 16,
+        "yorigin": 16,
+        "slice": null
+    },
+    "window_maximize": {
+        "path": "./icon/s_window_maximize.png",
+        "subimages": 2,
+        "xorigin": 16,
+        "yorigin": 16,
+        "slice": null
+    },
+    "window_fullscreen": {
+        "path": "./icon/s_window_fullscreen.png",
+        "subimages": 2,
+        "xorigin": 16,
+        "yorigin": 16,
+        "slice": null
+    },
+    "icon_splash_show_on_start": {
+        "path": "./icon/s_icon_spalsh_show_on_start_strip2.png",
+        "subimages": 2,
+        "xorigin": 24,
+        "yorigin": 24,
+        "slice": null
+    },
+    "icon_array_processor": {
+        "path": "./icon/s_icon_array_processor.png",
+        "subimages": 4,
+        "xorigin": 24,
+        "yorigin": 24,
+        "slice": null
+    },
+    "tunnel": {
+        "path": "./icon/s_tunnel.png",
+        "subimages": 2,
+        "xorigin": 24,
+        "yorigin": 24,
+        "slice": null
+    },
+    "lock": {
+        "path": "./icon/s_lock.png",
+        "subimages": 2,
+        "xorigin": 24,
+        "yorigin": 24,
+        "slice": null
+    },
+    "node_move": {
+        "path": "./icon/s_node_move.png",
+        "subimages": 1,
+        "xorigin": 0,
+        "yorigin": 0,
+        "slice": null
+    },
+    "splash_thumbnail": {
+        "path": "./icon/s_icon_splash_thumbnail.png",
+        "subimages": 2,
+        "xorigin": 24,
+        "yorigin": 24,
+        "slice": null
+    },
+    "node_goto": {
+        "path": "./icon/s_node_goto.png",
+        "subimages": 1,
+        "xorigin": 24,
+        "yorigin": 24,
+        "slice": null
+    },
     "inspector_area": {
         "path": "./inspector/s_inspector_area_strip2.png",
         "subimages": 2,
@@ -878,6 +1095,19 @@
             "bottom": 7
         }
     },
+    "node_frame_title": {
+        "path": "./node/s_node_frame_title.png",
+        "subimages": 1,
+        "xorigin": 0,
+        "yorigin": 0,
+        "slice": {
+            "enabled": true,
+            "left": 7,
+            "right": 7,
+            "top": 7,
+            "bottom": 7
+        }
+    },
     "node_junction_name_bg": {
         "path": "./node/s_node_junction_name_bg.png",
         "subimages": 1,
@@ -891,13 +1121,6 @@
             "bottom": 15
         }
     },
-    "node_resize": {
-        "path": "./icon/s_node_resize.png",
-        "subimages": 1,
-        "xorigin": 32,
-        "yorigin": 32,
-        "slice": null
-    },
     "node_state": {
         "path": "./node/s_node_state_strip2.png",
         "subimages": 2,
@@ -905,25 +1128,51 @@
         "yorigin": 12,
         "slice": null
     },
-    "icon_curve_connection": {
-        "path": "./icon/s_icon_curve_connection_strip3.png",
-        "subimages": 3,
-        "xorigin": 24,
-        "yorigin": 24,
-        "slice": null
+    "node_slider": {
+        "path": "./node/widget/s_node_slider.png",
+        "subimages": 5,
+        "xorigin": 0,
+        "yorigin": 0,
+        "slice": {
+            "enabled": true,
+            "left": 4,
+            "right": 4,
+            "top": 4,
+            "bottom": 4
+        }
     },
-    "node_output_visible": {
-        "path": "./icon/s_icon_output_visibility.png",
+    "node_rotator_bg": {
+        "path": "./node/widget/s_node_rotator_bg.png",
         "subimages": 1,
-        "xorigin": 24,
-        "yorigin": 24,
+        "xorigin": 80,
+        "yorigin": 80,
         "slice": null
     },
-    "icon_minimap": {
-        "path": "./icon/s_icon_minimap_strip2.png",
+    "node_rotator_knob": {
+        "path": "./node/widget/s_node_rotator_knob_strip2.png",
         "subimages": 2,
-        "xorigin": 24,
-        "yorigin": 24,
+        "xorigin": 20,
+        "yorigin": 20,
+        "slice": null
+    },
+    "node_checkbox": {
+        "path": "./node/widget/s_node_checkbox_strip4.png",
+        "subimages": 4,
+        "xorigin": 0,
+        "yorigin": 0,
+        "slice": {
+            "enabled": true,
+            "left": 7,
+            "right": 7,
+            "top": 7,
+            "bottom": 7
+        }
+    },
+    "node_coor_pin": {
+        "path": "./node/widget/s_node_coor_pin.png",
+        "subimages": 1,
+        "xorigin": 6,
+        "yorigin": 6,
         "slice": null
     },
     "menu_separator": {
@@ -938,174 +1187,6 @@
             "top": 0,
             "bottom": 0
         }
-    },
-    "noti_icon_tick": {
-        "path": "./icon/s_noti_icon_tick.png",
-        "subimages": 1,
-        "xorigin": 20,
-        "yorigin": 20,
-        "slice": null
-    },
-    "noti_icon_error": {
-        "path": "./icon/s_noti_icon_error_strip2.png",
-        "subimages": 2,
-        "xorigin": 20,
-        "yorigin": 20,
-        "slice": null
-    },
-    "noti_icon_warning": {
-        "path": "./icon/s_noti_icon_warning_strip2.png",
-        "subimages": 2,
-        "xorigin": 20,
-        "yorigin": 20,
-        "slice": null
-    },
-    "noti_icon_log": {
-        "path": "./icon/s_noti_icon_log_strip2.png",
-        "subimages": 2,
-        "xorigin": 20,
-        "yorigin": 20,
-        "slice": null
-    },
-    "noti_icon_file_load": {
-        "path": "./icon/s_noti_icon_file_load.png",
-        "subimages": 1,
-        "xorigin": 20,
-        "yorigin": 20,
-        "slice": null
-    },
-    "noti_icon_file_save": {
-        "path": "./icon/s_noti_icon_file_save.png",
-        "subimages": 1,
-        "xorigin": 20,
-        "yorigin": 20,
-        "slice": null
-    },
-    "icon_center_canvas": {
-        "path": "./icon/s_icon_center_canvas.png",
-        "subimages": 1,
-        "xorigin": 24,
-        "yorigin": 24,
-        "slice": null
-    },
-    "icon_grid": {
-        "path": "./icon/s_icon_grid_strip2.png",
-        "subimages": 2,
-        "xorigin": 24,
-        "yorigin": 24,
-        "slice": null
-    },
-    "icon_grid_setting": {
-        "path": "./icon/s_icon_grid_setting.png",
-        "subimages": 1,
-        "xorigin": 24,
-        "yorigin": 24,
-        "slice": null
-    },
-    "icon_preview_export": {
-        "path": "./icon/s_icon_preview_export.png",
-        "subimages": 1,
-        "xorigin": 24,
-        "yorigin": 24,
-        "slice": null
-    },
-    "icon_reset_when_preview": {
-        "path": "./icon/s_icon_reset_when_preview_strip2.png",
-        "subimages": 2,
-        "xorigin": 24,
-        "yorigin": 24,
-        "slice": null
-    },
-    "icon_split_view": {
-        "path": "./icon/s_icon_split_view_strip3.png",
-        "subimages": 3,
-        "xorigin": 24,
-        "yorigin": 24,
-        "slice": null
-    },
-    "icon_tile_view": {
-        "path": "./icon/s_icon_tile_view_strip4.png",
-        "subimages": 4,
-        "xorigin": 24,
-        "yorigin": 24,
-        "slice": null
-    },
-    "icon_active_split": {
-        "path": "./icon/s_panel_active_split.png",
-        "subimages": 1,
-        "xorigin": 12,
-        "yorigin": 12,
-        "slice": null
-    },
-    "revert": {
-        "path": "./icon/s_icon_revert.png",
-        "subimages": 1,
-        "xorigin": 24,
-        "yorigin": 24,
-        "slice": null
-    },
-    "save": {
-        "path": "./icon/s_icon_save.png",
-        "subimages": 1,
-        "xorigin": 24,
-        "yorigin": 24,
-        "slice": null
-    },
-    "window_exit": {
-        "path": "./icon/s_window_exit.png",
-        "subimages": 1,
-        "xorigin": 16,
-        "yorigin": 16,
-        "slice": null
-    },
-    "window_minimize": {
-        "path": "./icon/s_window_minimize.png",
-        "subimages": 1,
-        "xorigin": 16,
-        "yorigin": 16,
-        "slice": null
-    },
-    "window_maximize": {
-        "path": "./icon/s_window_maximize.png",
-        "subimages": 2,
-        "xorigin": 16,
-        "yorigin": 16,
-        "slice": null
-    },
-    "window_fullscreen": {
-        "path": "./icon/s_window_fullscreen.png",
-        "subimages": 2,
-        "xorigin": 16,
-        "yorigin": 16,
-        "slice": null
-    },
-    "icon_splash_show_on_start": {
-        "path": "./icon/s_icon_spalsh_show_on_start_strip2.png",
-        "subimages": 2,
-        "xorigin": 24,
-        "yorigin": 24,
-        "slice": null
-    },
-    "icon_array_processor": {
-        "path": "./icon/s_icon_array_processor.png",
-        "subimages": 4,
-        "xorigin": 24,
-        "yorigin": 24,
-        "slice": null
-    },
-    "tunnel": {
-        "path": "./icon/s_tunnel.png",
-        "subimages": 2,
-        "xorigin": 24,
-        "yorigin": 24,
-        "slice": null
-    },
-    "lock": {
-        "path": "./icon/s_lock.png",
-        "subimages": 2,
-        "xorigin": 24,
-        "yorigin": 24,
-        "slice": null
     },
     "menu_button": {
         "path": "./UI/s_menu_button.png",

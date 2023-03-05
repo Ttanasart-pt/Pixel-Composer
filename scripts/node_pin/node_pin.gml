@@ -7,6 +7,9 @@ function Node_Pin(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	junction_shift_y = 16;
 	previewable = false;
 	
+	isHovering  = false;
+	hoverExpand = 0;
+	
 	bg_spr = THEME.node_pin_bg;
 	bg_sel_spr = THEME.node_pin_bg_active;
 	
@@ -32,19 +35,41 @@ function Node_Pin(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		var xx = x * _s + _x;
 		var yy = y * _s + _y;
 		
-		inputs[| 0].x = xx;
+		inputs[| 0].x = xx - hoverExpand * 12 * _s;
 		inputs[| 0].y = yy;
 		
-		outputs[| 0].x = xx;
+		outputs[| 0].x = xx + hoverExpand * 12 * _s;
 		outputs[| 0].y = yy;
 	}
 	
 	static drawJunctions = function(_x, _y, _mx, _my, _s) {
+		isHovering = false;
 		var hover = noone;
+		var xx	  = x * _s + _x;
+		var yy	  = y * _s + _y;
+		var hov   = PANEL_GRAPH.value_dragging; 
 		
-		var jun = inputs[| 0].value_from == noone? inputs[| 0] : outputs[| 0];
-		if(jun.drawJunction(_s, _mx, _my, false))
-			hover = jun;
+		if(hov == noone && point_in_rectangle(_mx, _my, xx - 16 * _s, yy - 12 * _s, xx + 16 * _s, yy + 12 * _s)) { 
+			isHovering = true;
+			
+			draw_sprite_stretched(THEME.node_bg, 0, xx - 12 * _s, yy - 12 * _s, 24 * _s, 24 * _s);
+			if(inputs[| 0].drawJunction(_s, _mx, _my, false))
+				hover = inputs[| 0];
+			if(outputs[| 0].drawJunction(_s, _mx, _my, false))
+				hover = outputs[| 0];
+		} else if(hoverExpand > 0) {
+			inputs[| 0].drawJunction(_s, _mx, _my, false)
+			outputs[| 0].drawJunction(_s, _mx, _my, false)
+		} else {
+			var jun;
+			if(hov != noone) jun = hov.connect_type == JUNCTION_CONNECT.input? outputs[| 0] : inputs[| 0];
+			else			 jun = inputs[| 0].value_from == noone? inputs[| 0] : outputs[| 0];
+			
+			if(jun.drawJunction(_s, _mx, _my, false))
+				hover = jun;
+		}
+		
+		hoverExpand = lerp(hoverExpand, isHovering, 1 / 5);
 		
 		return hover;
 	}

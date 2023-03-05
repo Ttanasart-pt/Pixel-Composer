@@ -89,7 +89,7 @@ function Node_Text_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		outputs[| 0].setValue(content);
 	}
 	
-	function onDrawNode(xx, yy, _mx, _my, _s) {
+	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		var bbox = drawGetBbox(xx, yy, _s);
 		
 		var str = filename_name(path_current);

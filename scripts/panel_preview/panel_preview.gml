@@ -559,8 +559,8 @@ function Panel_Preview() : PanelContent() constructor {
 		var isHover = pHOVER && mouse_on_preview;
 		
 		if(_node.tools != -1) {
-			var xx = ui(16);
-			var yy = ui(16);
+			var xx = ui(8);
+			var yy = ui(40);
 			
 			for(var i = 0; i < array_length(_node.tools); i++) {
 				var b = buttonInstant(THEME.button, xx, yy, ui(40), ui(40), [_mx, _my], pFOCUS, isHover);
@@ -584,8 +584,8 @@ function Panel_Preview() : PanelContent() constructor {
 		_node.drawOverlay(active && isHover && !key_mod_press(CTRL), cx, cy, canvas_s, _mx, _my, _snx, _sny);
 		
 		if(_node.tools != -1) {
-			var xx = ui(16);
-			var yy = ui(16);
+			var xx = ui(8);
+			var yy = ui(40);
 			
 			for(var i = 0; i < array_length(_node.tools); i++) {
 				var b = buttonInstant(THEME.button, xx, yy, ui(40), ui(40), [_mx, _my], pFOCUS, isHover);

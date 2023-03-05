@@ -77,7 +77,7 @@ function Node_Fluid_Vortex(_x, _y, _group = noone) : Node_Fluid(_x, _y, _group) 
 		outputs[| 1].setValue(vSurface);
 	}
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s) {
+	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		var bbox = drawGetBbox(xx, yy, _s);
 		
 		draw_sprite_fit(s_node_fluidSim_vortex, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);

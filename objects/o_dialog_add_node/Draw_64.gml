@@ -61,6 +61,40 @@ if !ready exit;
 	}
 #endregion
 
+#region tooltip
+	if(node_tooltip != noone) {
+		var ww = ui(300 + 8);
+		var hh = ui(16);
+		
+		var txt = node_tooltip.tooltip;
+		var spr = node_tooltip.tooltip_spr;
+		
+		draw_set_font(f_p1);
+		
+		if(spr) {
+			ww = ui(8) + sprite_get_width(spr);
+			hh = ui(8) + sprite_get_height(spr);
+		} else 
+			hh = ui(16) + string_height_ext(txt, -1, ww - ui(16));
+		
+		var x0 = min(node_tooltip_x, WIN_W - ww - ui(8));
+		var x1 = node_tooltip_x + ww;
+		var y1 = node_tooltip_y - ui(8);
+		var y0 = y1 - hh;
+		
+		draw_sprite_stretched_ext(THEME.textbox, 3, x0, y0, ww, hh, COLORS._main_icon, 1);
+		draw_sprite_stretched(THEME.textbox, 0, x0, y0, ww, hh);
+		
+		if(spr) 
+			draw_sprite(spr, 0, x0 + ui(4), y0 + ui(4));
+		
+		draw_set_text(f_p1, fa_left, fa_bottom, COLORS._main_text)
+		draw_text_ext(x0 + ui(8), y1 - ui(8), txt, -1, ww - ui(16));
+	}
+	
+	node_tooltip = noone;
+#endregion
+
 //#region dec
 //	if(node_called) {
 //		var jx = 0;

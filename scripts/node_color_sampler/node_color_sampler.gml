@@ -81,7 +81,7 @@ function Node_Sampler(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		return make_color_rgb(r, g, b);
 	}
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s) {
+	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		var bbox = drawGetBbox(xx, yy, _s);
 		
 		if(bbox.h <= 0) return;

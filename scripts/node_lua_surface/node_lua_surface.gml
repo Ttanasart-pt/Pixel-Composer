@@ -18,9 +18,8 @@ function Node_Lua_Surface(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		inputs[| index + 0] = nodeValue("Argument name", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "" );
 		
 		inputs[| index + 1] = nodeValue("Argument type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0 )
-			.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Number", "String", "Surface" ]);
+			.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Number", "String", "Surface" ], { update_hover: false });
 		inputs[| index + 1].editWidget.interactable = false;
-		inputs[| index + 1].editWidget.update_hover = false;
 		
 		inputs[| index + 2] = nodeValue("Argument value", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0 )
 			.setVisible(true, true);

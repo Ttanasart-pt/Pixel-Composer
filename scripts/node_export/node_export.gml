@@ -39,9 +39,8 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	format_array  = ["Multiple images", "Image sequences", "Animation"];
 	
 	inputs[| 3] = nodeValue("Type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, format_single)
+		.setDisplay(VALUE_DISPLAY.enum_scroll, format_single, { update_hover: false })
 		.rejectArray();
-	inputs[| 3].editWidget.update_hover = false;
 	
 	inputs[| 4] = nodeValue("Template guides", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.label, 
@@ -71,9 +70,8 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	format_animation = [ ".gif", ".webp" ];
 	
 	inputs[| 9] = nodeValue("Format", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, format_image)
+		.setDisplay(VALUE_DISPLAY.enum_scroll, format_image, { update_hover: false })
 		.rejectArray();
-	inputs[| 9].editWidget.update_hover = false;
 	
 	inputs[| 10] = nodeValue("Quality", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 80)
 		.setDisplay(VALUE_DISPLAY.slider, [0, 100, 1])

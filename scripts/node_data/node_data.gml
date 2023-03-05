@@ -22,6 +22,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) constructor {
 	
 	name = "";
 	display_name = "";
+	tooltip = "";
 	x = _x;
 	y = _y;
 	
@@ -31,6 +32,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) constructor {
 	auto_height = true;
 	
 	draw_name = true;
+	draggable = true;
 	
 	input_display_list = -1;
 	output_display_list = -1;
@@ -73,6 +75,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) constructor {
 	on_dragdrop_file = -1;
 	
 	anim_show = true;
+	dopesheet_y = 0;
 	
 	value_validation = array_create(3);
 	
@@ -80,6 +83,27 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) constructor {
 	error_update_enabled = false;
 	manual_updated = false;
 	manual_deletable = true;
+	
+	static initTooltip = function() {
+		if(!struct_has(global.NODE_GUIDE, instanceof(self))) return;
+		
+		var _n = global.NODE_GUIDE[$ instanceof(self)];
+		var _ins = _n.inputs;
+		var _ots = _n.outputs;
+		
+		var amo = min(ds_list_size(inputs), array_length(_ins));
+		for( var i = 0; i < amo; i++ ) {
+			inputs[| i].name    = _ins[i].name;
+			inputs[| i].tooltip = _ins[i].tooltip;
+		}
+		
+		var amo = min(ds_list_size(outputs), array_length(_ots));
+		for( var i = 0; i < amo; i++ ) {
+			outputs[| i].name    = _ots[i].name;
+			outputs[| i].tooltip = _ots[i].tooltip;
+		}
+	}
+	run_in(1, initTooltip);
 	
 	static resetDefault = function() {
 		var folder = instanceof(self);
@@ -476,10 +500,28 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) constructor {
 		}
 	}
 	
-	static drawConnections = function(_x, _y, _s, mx, my, _active) { 
+	static drawConnections = function(_x, _y, _s, mx, my, _active, aa = 1) { 
 		if(!active) return;
 		
 		var hovering = noone;
+		var drawLineIndex = 1;
+		
+		for(var i = 0; i < ds_list_size(outputs); i++) {
+			var jun       = outputs[| i];
+			var connected = false;
+			
+			for( var j = 0; j < ds_list_size(jun.value_to); j++ ) {
+				if(jun.value_to[| j].value_from == jun) 
+					connected = true;
+			}
+			
+			if(connected) {
+				jun.drawLineIndex = drawLineIndex;
+				drawLineIndex += 0.5;
+			}
+		}
+		
+		var drawLineIndex = 1;
 		for(var i = 0; i < ds_list_size(inputs); i++) {
 			var jun = inputs[| i];
 			var jx = jun.x;
@@ -488,6 +530,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) constructor {
 			if(jun.value_from == noone) continue;
 			if(!jun.value_from.node.active) continue;
 			if(!jun.isVisible()) continue;
+			jun.drawLineIndex = drawLineIndex;
 			
 			var frx = jun.value_from.x;
 			var fry = jun.value_from.y;
@@ -503,6 +546,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) constructor {
 			
 			var hover = false;
 			var th = max(1, PREF_MAP[? "connection_line_width"] * _s);
+			jun.draw_line_shift_hover = false;
 			
 			if(PANEL_GRAPH.pHOVER)
 			switch(PREF_MAP[? "curve_connection_line"]) {
@@ -511,39 +555,62 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) constructor {
 					break;
 				case 1 : 
 					hover = distance_to_curve(mx, my, jx, jy, frx, fry, cx, cy, _s) < max(th * 2, 6);
-					jun.draw_line_shift_hover = hover;
+					if(PANEL_GRAPH._junction_hovering == noone)
+						jun.draw_line_shift_hover = hover;
 					break;
 				case 2 : 
-					var ch = distance_to_line(mx, my,  cx,  jy,  cx, fry) < max(th * 2, 6);
+					hover  = distance_to_elbow(mx, my, frx, fry, jx, jy, cx, cy, _s, jun.value_from.drawLineIndex, jun.drawLineIndex) < max(th * 2, 6);
 					
-					hover  = distance_to_line(mx, my,  jx,  jy,  cx,  jy) < max(th * 2, 6);
-					hover |= ch;
-					hover |= distance_to_line(mx, my,  cx, fry, frx, fry) < max(th * 2, 6);
+					if(PANEL_GRAPH._junction_hovering == noone)
+						jun.draw_line_shift_hover = elbow_distance_center(mx, my, frx, fry, jx, jy, cx, cy, _s) < max(th * 2, 6);
+					break;
+				case 3 :
+					hover  = distance_to_elbow_diag(mx, my, frx, fry, jx, jy, cx, cy, _s, jun.value_from.drawLineIndex, jun.drawLineIndex) < max(th * 2, 6);
 					
-					jun.draw_line_shift_hover = ch;
+					if(PANEL_GRAPH._junction_hovering == noone)
+						jun.draw_line_shift_hover = hover;
 					break;
 			}
-				
+			
 			if(_active && hover)
 				hovering = jun;
-				
-			if(_active && PANEL_GRAPH.junction_hovering == jun || (instance_exists(o_dialog_add_node) && o_dialog_add_node.junction_hovering == jun))
+			
+			var thicken = false;
+			thicken |= PANEL_GRAPH.nodes_junction_d == jun;
+			thicken |= _active && PANEL_GRAPH.junction_hovering == jun && PANEL_GRAPH._junction_hovering == noone;
+			thicken |= instance_exists(o_dialog_add_node) && o_dialog_add_node.junction_hovering == jun;
+			
+			if(thicken)
 				th *= 2;
-				
+			
+			var corner = PREF_MAP[? "connection_line_corner"] * _s;
 			var ty = LINE_STYLE.solid;
 			if(jun.type == VALUE_TYPE.node)
 				ty = LINE_STYLE.dashed;
-				
+			
+			jx  *= aa;
+			jy  *= aa;
+			frx *= aa;
+			fry *= aa;
+			th  *= aa;
+			cx  *= aa;
+			cy  *= aa;
+			var ss  = _s * aa;
+			corner *= aa;
+			
 			switch(PREF_MAP[? "curve_connection_line"]) {
 				case 0 : 
 					if(ty == LINE_STYLE.solid)
 						draw_line_width_color(jx, jy, frx, fry, th, c1, c0);
 					else 
-						draw_line_dashed_color(jx, jy, frx, fry, th, c1, c0, 12 * _s);
+						draw_line_dashed_color(jx, jy, frx, fry, th, c1, c0, 12 * ss);
 					break;
-				case 1 : draw_line_curve_color(jx, jy, frx, fry, cx, cy, _s, th, c0, c1, ty); break;
-				case 2 : draw_line_elbow_color(jx, jy, frx, fry, cx, th, c1, c0, ty); break;
+				case 1 : draw_line_curve_color(jx, jy, frx, fry, cx, cy, ss, th, c0, c1, ty); break;
+				case 2 : draw_line_elbow_color(frx, fry, jx, jy, cx, cy, ss, th, c1, c0, corner, jun.value_from.drawLineIndex, jun.drawLineIndex, ty); break;
+				case 3 : draw_line_elbow_diag_color(frx, fry, jx, jy, cx, cy, ss, th, c1, c0, corner, jun.value_from.drawLineIndex, jun.drawLineIndex, ty); break;
 			}
+			
+			drawLineIndex += 0.5;
 		}
 		
 		return hovering;
@@ -652,9 +719,9 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) constructor {
 		} 
 		drawDimension(xx, yy, _s);
 		
-		onDrawNode(xx, yy, _mx, _my, _s);
+		onDrawNode(xx, yy, _mx, _my, _s, PANEL_GRAPH.node_hovering == self, PANEL_GRAPH.node_focus == self);
 		drawNodeName(xx, yy, _s);
-
+		
 		if(active_draw_index > -1) {
 			draw_sprite_stretched_ext(bg_sel_spr, 0, xx, yy, round(w * _s), round(h * _s), active_draw_index > 1? COLORS.node_border_file_drop : COLORS._main_accent, 1);
 			active_draw_index = -1;
@@ -663,7 +730,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) constructor {
 		return drawJunctions(xx, yy, _mx, _my, _s);
 	}
 	static onDrawNodeBehind = function(_x, _y, _mx, _my, _s) {}
-	static onDrawNode = function(xx, yy, _mx, _my, _s) {}
+	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover = false, _focus = false) {}
 	
 	static drawBadge = function(_x, _y, _s) {
 		if(!active) return;

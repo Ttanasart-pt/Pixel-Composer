@@ -204,7 +204,7 @@ function __surface_array_serialize(arr) {
 }
 
 function surface_array_deserialize(arr, index = -1) {
-	var _arr = json_parse(arr);
+	var _arr = json_try_parse(arr);
 	return index == -1? __surface_array_deserialize(_arr, index) : __surface_array_deserialize(_arr[index]);
 }
 	
@@ -221,4 +221,22 @@ function __surface_array_deserialize(arr) {
 		_arr[i] = __surface_array_deserialize(arr[i]);
 	
 	return _arr;
+}
+
+function surface_encode(surface) {
+	if(!is_surface(surface)) return "";
+	
+	var buff = buffer_create(surface_get_width(surface) * surface_get_height(surface) * 4, buffer_fixed, 1);
+	buffer_get_surface(buff, surface, 0);
+	var comp = buffer_compress(buff, 0, buffer_get_size(buff));
+	var enc = buffer_base64_encode(comp, 0, buffer_get_size(comp));
+	buffer_delete(buff);
+	var str = { width: surface_get_width(surface), height: surface_get_height(surface), buffer: enc };
+	return json_stringify(str);
+}
+
+function surface_decode(struct) {
+	var buff = buffer_base64_decode(struct.buffer);
+	var buff = buffer_decompress(buff);
+	return surface_create_from_buffer(struct.width, struct.height, buff);
 }

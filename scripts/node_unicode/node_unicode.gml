@@ -14,7 +14,7 @@ function Node_Unicode(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		return chr(_data[0]);
 	}
 	
-	function onDrawNode(xx, yy, _mx, _my, _s) {
+	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		var bbox = drawGetBbox(xx, yy, _s);
 		var str = outputs[| 0].getValue();
 		var ss	= string_scale(str, bbox.w, bbox.h);

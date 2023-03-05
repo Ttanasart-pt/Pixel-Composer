@@ -7,8 +7,8 @@ event_inherited();
 	disp_text = "";
 	depth = -999;
 	
-	show_doubleclick = true;
-	show_graph = false;
+	show_doubleclick = false;
+	show_graph		 = false;
 	
 	menu = [
 		menuItem("Toggle double click bar", function() { show_doubleclick = !show_doubleclick; }),

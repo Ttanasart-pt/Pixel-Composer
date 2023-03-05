@@ -37,23 +37,25 @@ void main() {
 	
 	if(useSolid == 1 && sl.a == 1.) {
 		if(mask == 0)
-			gl_FragColor = renderSolid == 1? sl : lightAmb;
+			gl_FragColor = renderSolid == 1? sl : bg * lightAmb;
 		else if(mask == 1)
 			gl_FragColor = vec4(vec3(0.), bg.a);
 		return;	
 	}
 	
 	float bright = 1.;
-	vec2 tx = 1. / dimension;
+	vec2 tx		 = 1. / dimension;
+	vec2 aspect  = vec2(dimension) / dimension.x;
 	
+	vec2 pxPos   = v_vTexcoord * dimension;
 	vec2 ang, lang;
 	vec2 lightPosTx = lightPos * tx;
 	float dst;
 	
 	if(lightType == 0) {
-		ang = normalize(lightPosTx - v_vTexcoord) * tx;
-		lang = vec2(ang.y, -ang.x) * lightRadius;
-		dst = length(lightPos - v_vTexcoord * dimension);
+		ang  = normalize(lightPos - pxPos) * tx;
+		lang = vec2(ang.y, -ang.x) * lightRadius * dimension;
+		dst  = length(lightPos - pxPos);
 	} else if(lightType == 1) {
 		ang = normalize(lightPosTx - vec2(.5)) * tx;
 		lang = vec2(ang.y, -ang.x) * lightRadius;
@@ -75,8 +77,8 @@ void main() {
 			vec2 _lightPos, _ang;
 			
 			if(lightType == 0) {
-				_lightPos = lightPosTx + lang * (float(j) - softlight);
-				_ang = normalize(_lightPos - v_vTexcoord) * tx;
+				_lightPos = lightPos + lang * (float(j) - softlight);
+				_ang = normalize(_lightPos - pxPos) * tx;
 			} else if(lightType == 1) {
 				_lightPos = vec2(.5) + ang * dimension + lang * (float(j) - softlight);
 				_ang = normalize(_lightPos - vec2(.5)) * tx;
@@ -167,7 +169,7 @@ void main() {
 		shadow = ceil(shadow * lightBand) / lightBand;
 		
 	if(mask == 0)
-		gl_FragColor = vec4(bg.rgb * mix(lightAmb, lightClr, shadow * lightInt).rgb, bg.a);
+		gl_FragColor = vec4(bg.rgb * mix(lightClr * lightAmb, lightClr, shadow * lightInt).rgb, bg.a);
 	else if(mask == 1)
 		gl_FragColor = vec4(vec3(shadow * lightInt), bg.a);
 }

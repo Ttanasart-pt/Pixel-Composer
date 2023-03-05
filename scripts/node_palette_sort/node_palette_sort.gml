@@ -42,7 +42,7 @@ function Node_Palette_Sort(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		outputs[| 0].setValue(_pal);
 	}
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s) {
+	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		var bbox = drawGetBbox(xx, yy, _s);
 		if(bbox.h < 1) return;
 		

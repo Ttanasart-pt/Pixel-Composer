@@ -35,7 +35,7 @@ function Node_Cache(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		cacheCurrentFrame(_surf);
 	}
 	
-	function onDrawNode(xx, yy, _mx, _my, _s) {
+	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		if(cache_loading)
 			draw_sprite_ui(THEME.loading, 0, xx + w * _s / 2, yy + h * _s / 2, _s, _s, current_time / 2, COLORS._main_icon, 1);
 	}

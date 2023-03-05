@@ -700,7 +700,7 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			object = [ spawn() ];
 	}
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s) {
+	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		var bbox = drawGetBbox(xx, yy, _s);
 		var _tex  = inputs[| 6].getValue();
 		if(is_array(_tex) && array_length(_tex)) _tex = _tex[0];

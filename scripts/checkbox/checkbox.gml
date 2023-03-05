@@ -1,5 +1,6 @@
 function checkBox(_onClick) : widget() constructor {
 	onClick = _onClick;
+	spr = THEME.checkbox;
 	
 	static trigger = function() { 
 		if(!onClick) return;
@@ -26,10 +27,10 @@ function checkBox(_onClick) : widget() constructor {
 		}
 		
 		var aa = interactable * 0.25 + 0.75;
-		draw_sprite_stretched_ext(THEME.checkbox, _value * 2, _dx, _dy, ss, ss, c_white, aa);
+		draw_sprite_stretched_ext(spr, _value * 2, _dx, _dy, ss, ss, c_white, aa);
 		
 		if(hover && point_in_rectangle(_m[0], _m[1], _dx, _dy, _dx + ss, _dy + ss)) {
-			draw_sprite_stretched_ext(THEME.checkbox, _value * 2 + 1, _dx, _dy, ss, ss, c_white, aa);	
+			draw_sprite_stretched_ext(spr, _value * 2 + 1, _dx, _dy, ss, ss, c_white, aa);	
 			
 			if(mouse_press(mb_left, active))
 				trigger();

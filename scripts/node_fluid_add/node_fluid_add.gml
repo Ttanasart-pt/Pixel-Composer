@@ -76,7 +76,7 @@ function Node_Fluid_Add(_x, _y, _group = noone) : Node_Fluid(_x, _y, _group) con
 		_prevPos[1] = _pos[1];
 	}
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s) {
+	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		var bbox = drawGetBbox(xx, yy, _s);
 		var _mat = inputs[| 1].getValue();
 		if(!is_surface(_mat)) return;

@@ -16,19 +16,20 @@ function Node_Time_Remap(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	inputs[| 2] = nodeValue("Max life",   self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 3)
 		.rejectArray();
 	
+	inputs[| 3] = nodeValue("Loop", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false)
+	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [ 
-		["Surface",	 false], 0, 1, 2, 
+		["Surface",	 false], 0, 1, 
+		["Remap",	 false], 2, 3,
 	]
 	
 	static update = function(frame = ANIMATOR.current_frame) {
-		if(array_length(cached_output) != ANIMATOR.frames_total + 1)
-			return;
-			
 		var _inSurf  = inputs[| 0].getValue();
 		var _map     = inputs[| 1].getValue();
 		var _life    = inputs[| 2].getValue();
+		var _loop    = inputs[| 3].getValue();
 		
 		var _surf  = outputs[| 0].getValue();
 		_surf = surface_verify(_surf, surface_get_width(_inSurf), surface_get_height(_inSurf));
@@ -42,13 +43,18 @@ function Node_Time_Remap(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		texture_set_stage(uniform_map, surface_get_texture(_map));
 		
 		for(var i = 0; i <= _life; i++) {
-			var _frame = clamp(ANIMATOR.current_frame - i, 0, ANIMATOR.frames_total - 1);
+			var _frame = ANIMATOR.current_frame - i;
+			if(_loop)
+				_frame = _frame < 0? ANIMATOR.frames_total - 1 + _frame : _frame;
+			else 
+				_frame = clamp(_frame, 0, ANIMATOR.frames_total - 1);
 			
-			if(is_surface(cached_output[_frame])) {
-				shader_set_uniform_f(uniform_min, i * ste);	
-				shader_set_uniform_f(uniform_max, i * ste + ste);	
-				draw_surface_safe(cached_output[_frame], 0, 0);
-			}
+			var s = array_safe_get(cached_output, _frame)
+			if(!is_surface(s)) continue;
+			
+			shader_set_uniform_f(uniform_min, i * ste);	
+			shader_set_uniform_f(uniform_max, i * ste + ste);	
+			draw_surface_safe(s, 0, 0);
 		}
 		
 		shader_reset();

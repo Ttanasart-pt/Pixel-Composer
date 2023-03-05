@@ -58,9 +58,11 @@ function Node_Glow(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		draw_clear_alpha(0, 0);
 		BLEND_OVERRIDE;
 		
+		var s = surface_apply_gaussian(pass1, _size, false, c_black, 0);
+		
 		shader_set(sh_lum2alpha);
 		shader_set_uniform_f_array_safe(shader_get_uniform(sh_lum2alpha, "color"), colToVec4(cl));
-			draw_surface_ext_safe(surface_apply_gaussian(pass1, _size, false, c_black, 0), 0, 0, 1, 1, 0, c_white, _stre);
+			draw_surface_ext_safe(s, 0, 0, 1, 1, 0, c_white, _stre);
 		shader_reset();
 		
 		BLEND_NORMAL;
@@ -68,6 +70,7 @@ function Node_Glow(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		draw_surface_safe(_data[0], 0, 0);
 		surface_reset_target();
 		surface_free(pass1);
+		surface_free(s);
 		
 		_outSurf = mask_apply(_data[0], _outSurf, _data[5], _data[6]);
 		

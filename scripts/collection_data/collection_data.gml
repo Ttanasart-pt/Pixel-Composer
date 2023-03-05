@@ -11,7 +11,7 @@ function __initCollection() {
 	var _l = root + "\\version";
 	if(file_exists(_l)) {
 		var res = json_load_struct(_l);
-		if(res.version < VERSION) 
+		if(!is_struct(res) || !struct_has(res, "version") || res.version < VERSION) 
 			zip_unzip("data/Collections.zip", root);
 	} else 
 		zip_unzip("data/Collections.zip", root);

@@ -47,7 +47,7 @@ function Node_Array_Set(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		outputs[| 0].setValue(arr);
 	}
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s) {
+	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		draw_set_text(f_h3, fa_center, fa_center, COLORS._main_text);
 		var idx = inputs[| 1].getValue();
 		

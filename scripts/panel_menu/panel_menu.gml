@@ -7,8 +7,6 @@ function Panel_Menu() : PanelContent() constructor {
 	noti_icon_show = 0;
 	noti_icon_time = 0;
 	
-	
-	
 	menu_file = [
 		menuItem(get_text("panel_menu_new", "New"), function() { NEW(); }, THEME.new_file, ["", "New file"]),
 		menuItem(get_text("panel_menu_open", "Open") + "...", function() { LOAD(); }, THEME.noti_icon_file_load, ["", "Open"]),
@@ -148,6 +146,9 @@ function Panel_Menu() : PanelContent() constructor {
 				setPanel();
 				PREF_SAVE();
 			}),
+			menuItem(get_text("tunnels", "Tunnels"), function() {
+				dialogCall(o_dialog_tunnels);
+			},, ["Graph", "Tunnels"]),
 		]],
 		[ get_text("panel_menu_help", "Help"), menu_help ],
 	]
@@ -171,7 +172,7 @@ function Panel_Menu() : PanelContent() constructor {
 				__test_load_all_nodes();
 			}),
 			menuItem(get_text("panel_menu_test_gen_guide", "Generate node guide"), function() { 
-				__generate_node_guide();
+				__generate_node_data();
 			}),
 			-1,
 			menuItem(get_text("panel_menu_test_crash", "Force crash"), function() { 
@@ -398,12 +399,16 @@ function Panel_Menu() : PanelContent() constructor {
 			
 			if(buttonInstant(THEME.button_hide_fill, tcx - tw / 2, h / 2 - ui(14), tw, ui(28), [mx, my], pFOCUS, pHOVER) == 2) {
 				var arr = [];
+				var tip = [];
 				for(var i = 0; i < min(10, ds_list_size(RECENT_FILES)); i++)  {
 					var _rec = RECENT_FILES[| i];
+					var _dat = RECENT_FILE_DATA[| i];
 					array_push(arr, menuItem(_rec, function(_x, _y, _depth, _path) { LOAD_PATH(_path); }));
+					array_push(tip, [ method(_dat, _dat.getThumbnail), VALUE_TYPE.surface ]);
 				}
 				
 				var dia = menuCall(tcx, h, arr, fa_center);
+				dia.tooltips = tip;
 			}
 			
 			draw_set_text(f_p0b, fa_center, fa_center, COLORS._main_text_sub);

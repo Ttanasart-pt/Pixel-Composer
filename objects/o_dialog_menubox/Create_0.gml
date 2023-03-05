@@ -12,6 +12,7 @@ event_inherited();
 	children = ds_list_create();
 	ds_list_add(children, self);
 	
+	tooltips = [];
 	show_icon = false;
 	
 	function setMenu(_menu, align = fa_left) {

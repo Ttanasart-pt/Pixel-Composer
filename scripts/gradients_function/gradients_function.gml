@@ -140,7 +140,7 @@ function gradientObject(color = c_black) constructor {
 	}
 	
 	static deserialize = function(str) {
-		var s = json_parse(str);
+		var s = json_try_parse(str);
 		type = s.type;
 		keys = [];
 		for( var i = 0; i < array_length(s.keys); i++ )

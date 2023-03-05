@@ -21,8 +21,9 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	static process_data = function(_outSurf, _data, _output_index, _array_index = 0) { return _outSurf; }
 	
-	static getSingleValue = function(_index, _arr = 0) {
-		var _n  = inputs[| _index];
+	static getSingleValue = function(_index, _arr = 0, output = false) {
+		var _l  = output? outputs : inputs;
+		var _n  = _l[| _index];
 		var _in = _n.getValue();
 		
 		if(!_n.isArray()) return _in;
@@ -31,7 +32,7 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 			case ARRAY_PROCESS.loop :		_index = safe_mod(_arr, array_length(_in)); break;
 			case ARRAY_PROCESS.hold :		_index = min(_arr, array_length(_in) - 1);  break;
 			case ARRAY_PROCESS.expand :		_index = floor(_arr / process_length[_index][1]) % process_length[_index][0]; break;
-			case ARRAY_PROCESS.expand_inv : _index = floor(_arr / process_length[ds_list_size(inputs) - 1 - _index][1]) % process_length[_index][0]; break;
+			case ARRAY_PROCESS.expand_inv : _index = floor(_arr / process_length[ds_list_size(_l) - 1 - _index][1]) % process_length[_index][0]; break;
 		}
 				
 		return array_safe_get(_in, _index);

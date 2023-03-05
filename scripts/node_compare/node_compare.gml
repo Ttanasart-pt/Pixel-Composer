@@ -81,7 +81,7 @@ function Node_Compare(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 		outputs[| 0].setValue(val);
 	}
 	
-	function onDrawNode(xx, yy, _mx, _my, _s) {
+	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		draw_set_text(f_h3, fa_center, fa_center, COLORS._main_text);
 		var str = "";
 		switch(inputs[| 0].getValue()) {

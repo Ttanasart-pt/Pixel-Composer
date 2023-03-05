@@ -16,6 +16,8 @@ function valueKey(_time, _value, _anim = noone, _in = 0, _ot = 0) constructor {
 	ease_in_type  = CURVE_TYPE.none;
 	ease_out_type = CURVE_TYPE.none;
 	
+	dopesheet_x = 0;
+	
 	static setTime = function(time) {
 		self.time = time;	
 		ratio	= time / (ANIMATOR.frames_total - 1);
@@ -31,9 +33,20 @@ function valueKey(_time, _value, _anim = noone, _in = 0, _ot = 0) constructor {
 		return key;
 	}
 	
-	static cloneAnimator = function(shift = 0, value = noone, anim = noone) {
-		anim  = anim  == noone? self.anim  : anim;
-		value = value == noone? self.value : value;
+	static cloneAnimator = function(shift = 0, anim = noone, removeDup = true) {
+		if(anim != noone) { //check value compat between animator
+			if(value_bit(self.anim.prop.type) & value_bit(anim.prop.type) == 0) {
+				noti_warning("Type incompatible");
+				return noone;
+			}
+			
+			if(typeArray(self.anim.prop.display_type) != typeArray(anim.prop.display_type)) {
+				noti_warning("Type incompatible");
+				return noone;
+			}
+		}
+		
+		if(anim == noone) anim = self.anim;
 		
 		var key = new valueKey(time + shift, value, anim);
 		key.ease_in			= ease_in;
@@ -41,7 +54,7 @@ function valueKey(_time, _value, _anim = noone, _in = 0, _ot = 0) constructor {
 		key.ease_in_type	= ease_in_type;
 		key.ease_out_type	= ease_out_type;
 		ds_list_add(anim.values, key);
-		anim.setKeyTime(key, time + shift);
+		anim.setKeyTime(key, time + shift, removeDup);
 		
 		return key;
 	}
@@ -54,6 +67,8 @@ function valueAnimator(_val, _prop) constructor {
 	
 	is_anim  = false;
 	prop     = _prop;
+	
+	dopesheet_y = 0;
 	
 	static interpolate = function(from, to, rat) {
 		if(prop.type == VALUE_TYPE.boolean)
@@ -329,7 +344,7 @@ function valueAnimator(_val, _prop) constructor {
 	static deserialize = function(_list, scale = false) {
 		ds_list_clear(values);
 		
-		if(prop.type == VALUE_TYPE.color && prop.display_type == VALUE_DISPLAY.gradient && LOADING_VERSION < SAVEFILE_VERSION) { //backward compat: Gradient
+		if(prop.type == VALUE_TYPE.color && prop.display_type == VALUE_DISPLAY.gradient && LOADING_VERSION < 1340) { //backward compat: Gradient
 			var _val = [];
 			var value = _list[| 0][| 1];
 			

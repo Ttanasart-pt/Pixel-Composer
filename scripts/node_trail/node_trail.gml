@@ -50,7 +50,6 @@ function Node_Trail(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	
 	static update = function() {
 		if(!inputs[| 0].value_from) return;
-		if(array_length(cached_output) != ANIMATOR.frames_total + 1) return;
 		
 		var _surf  = inputs[| 0].getValue();
 		var _life  = inputs[| 1].getValue();

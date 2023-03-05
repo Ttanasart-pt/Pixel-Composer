@@ -58,7 +58,7 @@ function Node_Fluid_Apply_Velocity(_x, _y, _group = noone) : Node_Fluid(_x, _y, 
         fd_rectangle_add_velocity_surface(_dom, _mat, _pos[0] - sw / 2, _pos[1] - sh / 2, 1, 1, _vel[0], _vel[1]);
 	}
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s) {
+	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		var bbox = drawGetBbox(xx, yy, _s);
 		var _mat = inputs[| 1].getValue();
 		if(!is_surface(_mat)) return;

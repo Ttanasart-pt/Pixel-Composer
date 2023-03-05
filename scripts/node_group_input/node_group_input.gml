@@ -37,19 +37,17 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		.rejectArray();
 	
 	inputs[| 2] = nodeValue("Input type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Integer", "Float", "Boolean", "Color", "Surface", "Path", "Curve", "Text", "Object", "Node", "3D object", "Any" ])
+		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Integer", "Float", "Boolean", "Color", "Surface", "Path", "Curve", "Text", "Object", "Node", "3D object", "Any" ], { update_hover: false })
 		.rejectArray();
-	inputs[| 2].editWidget.update_hover = false;
 	
 	inputs[| 3] = nodeValue("Enum label", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "")
 		.setVisible(false)
 		.rejectArray();
 	
 	inputs[| 4] = nodeValue("Vector size", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_button, [ "2", "3", "4" ])
+		.setDisplay(VALUE_DISPLAY.enum_button, [ "2", "3", "4" ], { update_hover: false })
 		.setVisible(false)
 		.rejectArray();
-	inputs[| 2].editWidget.update_hover = false;
 	
 	inputs[| 5] = nodeValue("Order", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.rejectArray();

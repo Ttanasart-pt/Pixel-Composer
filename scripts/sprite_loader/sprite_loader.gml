@@ -37,7 +37,7 @@ function _sprite_load_from_struct(str, theme, key) {
 function __getGraphicList() {
 	var path = _sprite_path("./graphics.json", "default");
 	var s = file_text_read_all(path);
-	return json_parse(s);
+	return json_try_parse(s);
 }
 
 function loadGraphic(theme = "default") {
@@ -51,7 +51,7 @@ function loadGraphic(theme = "default") {
 	
 	var s = file_text_read_all(path);
 	var graphics = variable_struct_get_names(sprDef);
-	var sprStr = json_parse(s);
+	var sprStr = json_try_parse(s);
 	
 	for( var i = 0; i < array_length(graphics); i++ ) {
 		var key = graphics[i];

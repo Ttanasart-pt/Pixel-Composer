@@ -123,7 +123,7 @@ function Node_Math(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		}
 		
 		switch(mode) {
-			case MATH_OPERATOR.root :
+			case MATH_OPERATOR.round :
 			case MATH_OPERATOR.floor :
 			case MATH_OPERATOR.ceiling :
 				inputs[| 4].setVisible(true);
@@ -134,6 +134,8 @@ function Node_Math(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 				break;
 			default:
 				inputs[| 4].setVisible(false);
+				
+				outputs[| 0].type = VALUE_TYPE.float;
 				break;
 		}
 		
@@ -210,7 +212,7 @@ function Node_Math(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		outputs[| 0].setValue(val);
 	}
 	
-	function onDrawNode(xx, yy, _mx, _my, _s) {
+	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		draw_set_text(f_h3, fa_center, fa_center, COLORS._main_text);
 		var str = "";
 		switch(inputs[| 0].getValue()) {

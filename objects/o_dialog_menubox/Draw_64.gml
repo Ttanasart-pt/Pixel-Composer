@@ -25,8 +25,11 @@
 			_h += hght;
 		
 		var hoverable = _menuItem.active && sHOVER;
-		if(hoverable && point_in_rectangle(mouse_mx, mouse_my, dialog_x, yy + 1, dialog_x + dialog_w, yy + _h - 1))
+		if(hoverable && point_in_rectangle(mouse_mx, mouse_my, dialog_x, yy + 1, dialog_x + dialog_w, yy + _h - 1)) {
 			selecting = i;
+			var tips = array_safe_get(tooltips, i, noone);
+			if(tips != noone) TOOLTIP = tips;
+		}
 			
 		if(selecting == i) {
 			draw_sprite_stretched_ext(THEME.textbox, 3, dialog_x, yy, dialog_w, _h, COLORS.dialog_menubox_highlight, 0.75);

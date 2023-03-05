@@ -9,45 +9,96 @@ event_inherited();
 	
 	pages = ["Sample projects"];
 	if(STEAM_ENABLED) 
-		array_push(pages, "Steam Workshop");
+		array_push(pages, "Workshop");
 	project_page = 0;
+	
+	thumbnail_retriever = 0;
+	recent_thumbnail = false;
+	
+	recent_width = PREF_MAP[? "splash_expand_recent"]? ui(576) : ui(288);
 #endregion
 
 #region content
+	function resize() {
+		var x0 = dialog_x + ui(16);
+		var x1 = x0 + recent_width;
+		var y0 = dialog_y + ui(128);
+		var y1 = dialog_y + dialog_h - ui(16);
+		
+		sp_recent.resize(x1 - x0 - ui(8), y1 - y0);
+		
+		x0 = x1 + ui(16);
+		x1 = dialog_x + dialog_w - ui(16);
+	
+		sp_sample.resize(x1 - x0 - ui(8), y1 - y0);
+	}
+
 	var x0 = dialog_x + ui(16);
-	var x1 = x0 + ui(288);
+	var x1 = x0 + recent_width;
 	var y0 = dialog_y + ui(128);
 	var y1 = dialog_y + dialog_h - ui(16);
 	
 	sp_recent = new scrollPane(x1 - x0 - ui(8), y1 - y0, function(_y, _m) {
 		draw_clear_alpha(COLORS.panel_bg_clear_inner, 0);
-		var ww  = sp_recent.surface_w - ui(2);
+		var expand = PREF_MAP[? "splash_expand_recent"];
+		var ww  = ui(268);
 		var hh	= 0;
 		var pad = ui(8);
-		var hg	= ui(16) + line_height(f_p0b) + line_height(f_p1);
+		var hgt	= ui(16) + line_height(f_p0b) + line_height(f_p1);
 		_y += pad;
 		
-		for(var i = 0; i < ds_list_size(RECENT_FILES); i++)  {
-			var _rec = RECENT_FILES[| i];
-			if(!file_exists(_rec)) continue;
-			draw_sprite_stretched(THEME.ui_panel_bg, 1, 0, _y, ww, hg);
+		var col = expand? 2 : 1;
+		var row = ceil(ds_list_size(RECENT_FILES) / col);
+		
+		for(var i = 0; i < row; i++) {
+			for(var j = 0; j < col; j++) {
+				var ind  = i * col + j;
+				if(ind >= ds_list_size(RECENT_FILES)) break;
 			
-			if(sHOVER && sp_recent.hover && point_in_rectangle(_m[0], _m[1], 0, _y, ww, _y + hg)) {
-				draw_sprite_stretched_ext(THEME.node_active, 0, 0, _y, ww, hg, COLORS._main_accent, 1);
-				
-				if(mouse_press(mb_left, sFOCUS)) {
-					LOAD_PATH(_rec);
-					instance_destroy();
+				var _rec = RECENT_FILES[| ind];
+				var _dat = RECENT_FILE_DATA[| ind];
+				if(!file_exists(_rec)) continue;
+			
+				var thmb = noone;
+				var hg = hgt;
+				if(recent_thumbnail) {
+					hg = ui(100);
+					thmb = _dat.getThumbnail();
 				}
+				
+				var fx = j * (ww + ui(8));
+			
+				draw_sprite_stretched(THEME.ui_panel_bg, 1, fx, _y, ww, hg);
+				if(thmb && _y + hg > 0 && _y < sp_recent.h) {
+					var sw = surface_get_width(thmb);
+					var sh = surface_get_height(thmb);
+					
+					var ss = (ww - ui(8)) / sw;
+					var sy = (((sh * ss) - hg) * clamp((_y + hg) / (sp_recent.h + hg), 0, 1)) / ss;
+					
+					draw_surface_part_ext(thmb, 0, sy, sw, (hg - ui(8)) / ss, fx + ui(4), _y + ui(4), ss, ss, COLORS._main_icon_light, 0.9);
+					draw_sprite_stretched_ext(s_fade_up, 0, fx + ui(4), _y + hg - ui(64), ww - ui(8), ui(64), COLORS._main_icon_dark, 1);
+				}
+			
+				if(sHOVER && sp_recent.hover && point_in_rectangle(_m[0], _m[1], fx, _y, fx + ww, _y + hg)) {
+					TOOLTIP = [ _dat.getThumbnail(), VALUE_TYPE.surface ];
+				
+					draw_sprite_stretched_ext(THEME.node_active, 0, fx, _y, ww, hg, COLORS._main_accent, 1);
+				
+					if(mouse_press(mb_left, sFOCUS)) {
+						LOAD_PATH(_rec);
+						instance_destroy();
+					}
+				}
+			
+				var ly = recent_thumbnail? _y + hg - (line_height(f_p0b) + line_height(f_p1)) - ui(8) : _y + ui(8);
+				draw_set_text(f_p0b, fa_left, fa_top, COLORS._main_text);
+				draw_text(fx + ui(12), ly, filename_name(_rec));
+			
+				ly += line_height();
+				draw_set_text(f_p1, fa_left, fa_top, COLORS._main_text_sub);
+				draw_text_cut(fx + ui(12), ly, _rec, ww - ui(24));
 			}
-			
-			var ly = _y + ui(8);
-			draw_set_text(f_p0b, fa_left, fa_top, COLORS._main_text);
-			draw_text(ui(12), ly, filename_name(_rec));
-			
-			ly += line_height();
-			draw_set_text(f_p1, fa_left, fa_top, COLORS._main_text_sub);
-			draw_text_cut(ui(12), ly, _rec, ww - ui(24));
 			
 			hh += hg + pad;
 			_y += hg + pad;

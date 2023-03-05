@@ -285,6 +285,15 @@ event_inherited();
 			PREF_SAVE();
 		})
 	]);
+	
+	ds_list_add(pref_appr, [
+		get_text("pref_connection_aa", "Connection anti aliasing"),
+		"connection_line_aa",
+		new textBox(TEXTBOX_INPUT.number, function(str) { 
+			PREF_MAP[? "connection_line_aa"] = max(1, real(str)); 
+			PREF_SAVE();
+		})
+	]);
 #endregion
 
 #region theme

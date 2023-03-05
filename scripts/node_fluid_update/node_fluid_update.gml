@@ -31,7 +31,7 @@ function Node_Fluid_Update(_x, _y, _group = noone) : Node_Fluid(_x, _y, _group) 
 		texture_set_interpolation(false);
 	}
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s) {
+	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		var bbox = drawGetBbox(xx, yy, _s);
 		var _act = inputs[| 1].getValue();
 		draw_sprite_fit(_act? s_node_fluidSim_update : s_node_fluidSim_update_paused, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);

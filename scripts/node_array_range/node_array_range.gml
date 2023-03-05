@@ -29,7 +29,7 @@ function Node_Array_Range(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		outputs[| 0].setValue(arr);
 	}
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s) {
+	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		draw_set_text(f_p0, fa_center, fa_center, COLORS._main_text);
 		var str = inputs[| 0].getValue();
 		var edd = inputs[| 1].getValue();

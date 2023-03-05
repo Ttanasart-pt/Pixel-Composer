@@ -49,7 +49,7 @@ function loadFonts() {
 	}
 	
 	var s = file_text_read_all(path);
-	var fontDef = json_parse(s);
+	var fontDef = json_try_parse(s);
 	
 	f_h3 = _font_load_from_struct(fontDef.h3, _f_h3);
 	f_h5 = _font_load_from_struct(fontDef.h5, _f_h5);

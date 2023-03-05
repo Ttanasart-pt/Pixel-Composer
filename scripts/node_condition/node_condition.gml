@@ -85,7 +85,7 @@ function Node_Condition(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		outputs[| 1].setValue(res);
 	}
 	
-	function onDrawNode(xx, yy, _mx, _my, _s) {
+	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		var val = outputs[| 1].getValue();
 		var frm = val? inputs[| 3] : inputs[| 4];
 		var to  = outputs[| 0];

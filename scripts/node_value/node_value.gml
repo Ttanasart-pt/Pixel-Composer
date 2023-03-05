@@ -217,11 +217,12 @@ enum VALUE_UNIT {
 	reference
 }
 
-function isGraphable(type) {
-	switch(type) {
-		case VALUE_TYPE.integer :
-		case VALUE_TYPE.float   : return true;
-	}
+function isGraphable(prop) {
+	if(prop.type == VALUE_TYPE.integer || prop.type == VALUE_TYPE.float) 
+		return true;
+	if(prop.type == VALUE_TYPE.color && prop.display_type == VALUE_DISPLAY._default) 
+		return true;
+		
 	return false;
 }
 
@@ -326,6 +327,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	def_val		= _value;
 	animator	= new valueAnimator(_value, self);
 	rawAnimator = animator;
+	graph_h		= ui(64);
 	on_end		= KEYFRAME_END.hold;
 	unit		= new nodeValueUnit(self);
 	extra_data	= ds_list_create();
@@ -334,6 +336,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	draw_line_shift_x		= 0;
 	draw_line_shift_y		= 0;
 	draw_line_shift_hover	= false;
+	drawLineIndex			= 1;
 	
 	visible = _connect == JUNCTION_CONNECT.output || _type == VALUE_TYPE.surface || _type == VALUE_TYPE.path;
 	show_in_inspector = true;
@@ -342,6 +345,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	if(_type == VALUE_TYPE.curve)
 		display_type = VALUE_DISPLAY.curve;
 	display_data = -1;
+	display_attribute = noone;
 	
 	value_validation = VALIDATION.pass;
 	error_notification = noone;
@@ -380,9 +384,10 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		return self;
 	}
 	
-	static setDisplay = function(_type = VALUE_DISPLAY._default, _data = -1) {
-		display_type = _type;
-		display_data = _data;
+	static setDisplay = function(_type = VALUE_DISPLAY._default, _data = -1, _attr = noone) {
+		display_type	  = _type;
+		display_data	  = _data;
+		display_attribute = _attr;
 		resetDisplay();
 		
 		return self;
@@ -560,6 +565,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 							if(val == -1) return;
 							return setValueDirect(toNumber(val)); 
 						} );
+						if(is_struct(display_attribute)) {
+							editWidget.update_hover = display_attribute[$ "update_hover"];
+						}
 						
 						rejectConnect();
 						extract_node = "";
@@ -603,6 +611,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 							return setValueDirect(color);
 						} );
 						
+						graph_h		 = ui(16);
 						extract_node = "Node_Color";
 						break;
 					case VALUE_DISPLAY.gradient :
@@ -1039,7 +1048,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		return updated;
 	}
 	
-	static isConnectable = function(_valueFrom, checkRecur = true, log = false) {
+	static isConnectable = function(_valueFrom, checkRecur = true, log = false) {		
 		if(_valueFrom == -1 || _valueFrom == undefined || _valueFrom == noone) {
 			if(log)
 				noti_warning("LOAD: Cannot set node connection from " + string(_valueFrom) + " to " + string(name) + " of node " + string(node.name) + ".",, node);
@@ -1056,7 +1065,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			return false;
 		}
 		
-		if(!typeCompatible(_valueFrom.type, type)) {
+		if(!typeCompatible(_valueFrom.type, type)) { 
 			if(log) 
 				noti_warning("setFrom: Type mismatch",, node);
 			return false;
@@ -1076,7 +1085,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		if(checkRecur && _valueFrom.searchNodeBackward(node)) {
 			if(log)
-				noti_warning("setFrom: Cycle connection",, node);
+				noti_warning("setFrom: Cyclic connection not allowed.",, node);
 			return false;
 		}
 		

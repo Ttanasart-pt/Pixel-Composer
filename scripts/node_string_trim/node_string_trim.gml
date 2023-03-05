@@ -19,7 +19,7 @@ function Node_String_Trim(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		return str;
 	}
 	
-	function onDrawNode(xx, yy, _mx, _my, _s) {
+	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		var str = inputs[| 1].getValue();
 		if(is_array(str) && array_length(str)) 
 			str = str[0];

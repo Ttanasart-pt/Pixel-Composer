@@ -10,13 +10,28 @@ function Node_Tunnel_Out(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	
 	outputs[| 0] = nodeValue("Value out", self, JUNCTION_CONNECT.output, VALUE_TYPE.any, noone );
 	
-	static isRenderable = function(trigger = false) { return false; }
+	insp2UpdateTooltip = "Goto tunnel in";
+	insp2UpdateIcon    = [ THEME.tunnel, 1, c_white ];
+	
+	static onInspector2Update = function() {		
+		var _key = inputs[| 0].getValue();
+		if(!ds_map_exists(TUNNELS_IN, _key)) return;
+		
+		var _node = TUNNELS_IN[? _key].node;
+		graphFocusNode(_node);
+	}
+	
+	static isRenderable = function(trigger = false) { 
+		var _key = inputs[| 0].getValue();
+		return !ds_map_exists(TUNNELS_IN, _key);
+	}
 	
 	static onDrawNodeBehind = function(_x, _y, _mx, _my, _s) {
 		var xx = _x + x * _s;
 		var yy = _y + y * _s;
 		
-		var hover = point_in_rectangle(_mx, _my, xx, yy, xx + w * _s, yy + h * _s);
+		var hover = PANEL_GRAPH.pHOVER && point_in_rectangle(_mx, _my, xx, yy, xx + w * _s, yy + h * _s);
+		hover |= instance_exists(o_dialog_tunnels) && o_dialog_tunnels.tunnel_hover == self;
 		if(!hover) return;
 		
 		var _key = inputs[| 0].getValue();
@@ -31,7 +46,7 @@ function Node_Tunnel_Out(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		var fry = _y + (node.y + node.h / 2) * _s;
 		var tox = xx + w * _s / 2;
 		var toy = yy + h * _s / 2;
-		draw_line_dashed(frx, fry, tox, toy, 8 * _s, 16 * _s, current_time / 100);
+		draw_line_dashed(frx, fry, tox, toy, 8 * _s, 16 * _s, current_time / 10);
 		draw_set_alpha(1);
 	}
 	
@@ -41,6 +56,8 @@ function Node_Tunnel_Out(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		var _key = inputs[| 0].getValue();
 		
 		TUNNELS_OUT[? node_id] = _key;
+		
+		UPDATE |= RENDER_TYPE.full;
 	}
 	
 	static step = function() {
@@ -61,7 +78,7 @@ function Node_Tunnel_Out(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 			outputs[| 0].setValue(TUNNELS_IN[? _key].getValue());
 	}
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s) {
+	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		draw_set_text(f_h5, fa_center, fa_center, COLORS._main_text);
 		var str	= string(inputs[| 0].getValue());
 		

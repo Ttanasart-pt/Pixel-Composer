@@ -72,7 +72,7 @@ function Node_Path_Transform(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		outputs[| 0].setValue(self);
 	}
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s) {
+	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		var bbox = drawGetBbox(xx, yy, _s);
 		draw_sprite_fit(s_node_path_transform, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
 	}

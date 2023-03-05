@@ -23,7 +23,7 @@ function Node_Array_Length(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		outputs[| 0].setValue(array_length(_arr));
 	}
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s) {
+	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		draw_set_text(f_h5, fa_center, fa_center, COLORS._main_text);
 		var str	= string(outputs[| 0].getValue());
 		

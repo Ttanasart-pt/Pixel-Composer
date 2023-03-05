@@ -16,11 +16,11 @@ function loadColor(theme = "default") {
 	var oclr = {};
 	if(file_exists(pathO)) {
 		var s = file_text_read_all(pathO);
-		oclr = json_parse(s);
+		oclr = json_try_parse(s);
 	}
 	
 	var s = file_text_read_all(path);
-	var clrs = json_parse(s);
+	var clrs = json_try_parse(s);
 	
 	var defkeys = variable_struct_get_names(clrs.define);
 	COLOR_KEYS = defkeys;

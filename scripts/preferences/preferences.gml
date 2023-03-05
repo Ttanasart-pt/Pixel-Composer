@@ -11,8 +11,9 @@
 	PREF_MAP[? "keyboard_repeat_start"] = 0.50;
 	PREF_MAP[? "keyboard_repeat_speed"] = 0.10;
 	
-	PREF_MAP[? "show_splash"] = true;
-	PREF_MAP[? "notification_time"] = 180;
+	PREF_MAP[? "show_splash"]			= true;
+	PREF_MAP[? "splash_expand_recent"]  = false;
+	PREF_MAP[? "notification_time"]		= 180;
 	
 	PREF_MAP[? "display_scaling"] = 1;
 	
@@ -22,7 +23,9 @@
 	
 	PREF_MAP[? "connection_line_width"]	 = 2;
 	PREF_MAP[? "connection_line_sample"] = 1;
-	PREF_MAP[? "curve_connection_line"]	 = true;
+	PREF_MAP[? "connection_line_corner"] = 8;
+	PREF_MAP[? "connection_line_aa"]     = 2;
+	PREF_MAP[? "curve_connection_line"]	 = 1;
 	
 	PREF_MAP[? "default_surface_side"]	= 32;
 	
@@ -121,8 +124,9 @@
 #endregion
 
 #region recent files
-	globalvar RECENT_FILES;
-	RECENT_FILES = ds_list_create();
+	globalvar RECENT_FILES, RECENT_FILE_DATA;
+	RECENT_FILES	 = ds_list_create();
+	RECENT_FILE_DATA = ds_list_create();
 	
 	function RECENT_SAVE() {
 		var map = ds_map_create();
@@ -157,6 +161,23 @@
 				if(!file_exists(l[| i])) continue;
 				ds_list_add(RECENT_FILES, l[| i]);
 			}
+		}
+		
+		RECENT_REFRESH();
+	}
+	
+	function RECENT_REFRESH() {
+		for( var i = 0; i < ds_list_size(RECENT_FILE_DATA); i++ ) {
+			var d = RECENT_FILE_DATA[| i];
+			if(sprite_exists(d.spr)) sprite_delete(d.spr);
+			if(surface_exists(d.thumbnail)) surface_free(d.thumbnail);
+		}
+		
+		ds_list_clear(RECENT_FILE_DATA);
+		
+		for( var i = 0; i < ds_list_size(RECENT_FILES); i++ ) {
+			var p = RECENT_FILES[| i];
+			RECENT_FILE_DATA[| i] = new FileObject(filename_name_only(p), p);
 		}
 	}
 #endregion

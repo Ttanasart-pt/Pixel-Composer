@@ -48,6 +48,8 @@ function save_serialize() {
 	
 	ds_map_add_map(_map, "metadata", METADATA.serialize());
 	
+	_map[? "preview"] = surface_encode(PANEL_PREVIEW.getNodePreviewSurface());
+	
 	var val  = json_encode_minify(_map);
 	ds_map_destroy(_map);
 	return val;
@@ -63,6 +65,7 @@ function SET_PATH(path) {
 				ds_list_delete(RECENT_FILES, index);
 			ds_list_insert(RECENT_FILES, 0, path);
 			RECENT_SAVE();
+			RECENT_REFRESH();
 		}
 		CURRENT_PATH = filename_name(path);
 	}

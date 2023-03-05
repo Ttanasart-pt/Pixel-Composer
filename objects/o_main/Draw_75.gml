@@ -7,6 +7,8 @@
 			var content = TOOLTIP[0];
 			var type    = TOOLTIP[1];
 			
+			if(is_method(content)) content = content();
+			
 			switch(type) {
 				case VALUE_TYPE.float :
 				case VALUE_TYPE.integer :

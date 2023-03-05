@@ -46,7 +46,7 @@ function Node_Area(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		return [_data[0][0], _data[0][1], _data[1][0], _data[1][1], _data[2]];
 	}
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s) {
+	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		var bbox = drawGetBbox(xx, yy, _s);
 		draw_sprite_fit(THEME.node_draw_area, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
 	}

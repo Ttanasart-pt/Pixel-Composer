@@ -358,8 +358,8 @@ function Panel_Inspector() : PanelContent() constructor {
 					break;
 				default :
 					switch(jun.type) {
-						case VALUE_TYPE.float :
 						case VALUE_TYPE.integer :
+						case VALUE_TYPE.float :
 							switch(jun.display_type) {
 								case VALUE_DISPLAY._default :
 								case VALUE_DISPLAY.range :

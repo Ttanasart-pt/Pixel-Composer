@@ -34,7 +34,7 @@ function Node_Gradient_Shift(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 		return _outSurf;
 	}
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s) {
+	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		var bbox = drawGetBbox(xx, yy, _s);
 		if(bbox.h < 1) return;
 		

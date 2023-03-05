@@ -35,7 +35,10 @@ function draw_line_curve(x0, y0, x1, y1, thick = 1) {
 	//buffer_delete(buff);
 }
 
-function draw_line_curve_color(x0, y0, x1, y1, xc, yc, _s, thick, col1, col2, type = LINE_STYLE.solid) {
+function draw_line_curve_color(x0, y0, x1, y1, xc = noone, yc = noone, _s = 1, thick = 1, col1 = c_white, col2 = c_white, type = LINE_STYLE.solid) {
+	if(xc == noone) xc = (x0 + x1) / 2;
+	if(yc == noone) yc = (y0 + y1) / 2;
+	
 	var sample = ceil((abs(x0 - x1) + abs(y0 - y1)) / 16 * PREF_MAP[? "connection_line_sample"]);
 	sample = clamp(sample, 8, 128);
 	
@@ -69,11 +72,11 @@ function draw_line_curve_color(x0, y0, x1, y1, xc, yc, _s, thick, col1, col2, ty
 		if(i) {
 			switch(type) {
 				case LINE_STYLE.solid :
-					draw_line_width_color(ox, oy, nx, ny, thick, oc, nc);
+					draw_line_round_color(ox, oy, nx, ny, thick, oc, nc);
 					break;
 				case LINE_STYLE.dashed :
 					if(floor(i / dash_distance) % 2)
-						draw_line_width_color(ox, oy, nx, ny, thick, oc, nc);
+						draw_line_round_color(ox, oy, nx, ny, thick, oc, nc);
 					break;
 			}
 		}
@@ -120,28 +123,4 @@ function distance_to_curve(mx, my, x0, y0, x1, y1, xc, yc, _s) {
 	}
 	
 	return dist;
-}
-
-function draw_line_elbow(x0, y0, x1, y1, thick = 1, type = LINE_STYLE.solid) {
-	var cx = (x0 + x1) / 2;
-	draw_line_width(x0, y0, cx, y0, thick);
-	draw_line_width(cx, y0 - thick / 2 * sign(y1 - y0), cx, y1 + thick / 2 * sign(y1 - y0), thick);
-	draw_line_width(cx, y1, x1, y1, thick);
-}
-
-function draw_line_elbow_color(x0, y0, x1, y1, cx, thick, col1, col2, type = LINE_STYLE.solid) {
-	var _x0 = min(x0, x1);
-	var _x1 = max(x0, x1);
-	var rat = (cx - _x0) / (_x1 - _x0);
-	var cm  = merge_color(col1, col2, rat);
-	
-	if(type == LINE_STYLE.solid) {
-		draw_line_width_color(x0, y0, cx, y0, thick, col1, cm);
-		draw_line_width_color(cx, y0 - thick / 2 * sign(y1 - y0), cx, y1 + thick / 2 * sign(y1 - y0), thick, cm, cm);
-		draw_line_width_color(cx, y1, x1, y1, thick, cm, col2);
-	} else {
-		draw_line_dashed_color(x0, y0, cx, y0, thick, col1, cm, 12);
-		draw_line_dashed_color(cx, y0 - thick / 2 * sign(y1 - y0), cx, y1 + thick / 2 * sign(y1 - y0), thick, cm, cm, 12);
-		draw_line_dashed_color(cx, y1, x1, y1, thick, cm, col2, 12);
-	}	
 }

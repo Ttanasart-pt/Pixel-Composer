@@ -21,7 +21,8 @@
 	__initPresets();
 	__initFontFolder();
 	__initLua();
-	__init_node_guide();
+	__init_node_data();
+	__init_nodes();
 	__initSteamUGC();
 	
 	PREF_LOAD();

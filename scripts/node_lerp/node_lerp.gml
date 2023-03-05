@@ -16,7 +16,7 @@ function Node_Lerp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		return lerp(_data[0], _data[1], _data[2]);
 	}
 	
-	function onDrawNode(xx, yy, _mx, _my, _s) {
+	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		draw_set_text(f_h5, fa_center, fa_center, COLORS._main_text);
 		var str = "lerp";
 		

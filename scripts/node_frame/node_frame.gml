@@ -2,6 +2,7 @@ function Node_Frame(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Frame";
 	w = 240;
 	h = 160;
+	alpha = 1;
 	bg_spr		= THEME.node_frame_bg;
 	
 	size_dragging = false;
@@ -20,20 +21,26 @@ function Node_Frame(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	inputs[| 1] = nodeValue("Color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white )
 		.rejectArray();
 	
+	inputs[| 2] = nodeValue("Alpha", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.75 )
+		.setDisplay(VALUE_DISPLAY.slider, [ 0, 1, 0.01 ])
+		.rejectArray();
+	
 	static step = function() {
 		var si = inputs[| 0].getValue();
 		w = si[0];
 		h = si[1];
 		
 		color  = inputs[| 1].getValue();
+		alpha  = inputs[| 2].getValue();
 	}
 	
 	static drawNodeBase = function(xx, yy, _s) {
-		draw_sprite_stretched_ext(bg_spr, 0, xx, yy, w * _s, h * _s, color, 0.75);
+		draw_sprite_stretched_ext(bg_spr, 0, xx, yy, w * _s, h * _s, color, alpha);
+		var txt = display_name == ""? name : display_name;
 		
-		draw_set_text(f_h5, fa_right, fa_bottom, COLORS._main_text);
-		draw_set_alpha(name_hover? 0.5 : 0.25);
-		draw_text_cut(xx + (w - 8) * _s, yy + (h - 8) * _s, display_name, w * _s);
+		draw_set_text(f_h5, fa_left, fa_top, COLORS._main_text);
+		draw_set_alpha(clamp(alpha + name_hover * 0.5, 0, 1));
+		draw_text_cut(xx + 24, yy + 4 * _s, txt, (w - 8) * _s - 24);
 		draw_set_alpha(1);
 	}
 	
@@ -45,8 +52,10 @@ function Node_Frame(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		if(size_dragging) {
 			w = size_dragging_w + (mouse_mx - size_dragging_mx) / _s;
 			h = size_dragging_h + (mouse_my - size_dragging_my) / _s;
-			w = round(w / 32) * 32;
-			h = round(h / 32) * 32;
+			if(!key_mod_press(CTRL)) {
+				w = round(w / 32) * 32;
+				h = round(h / 32) * 32;
+			}
 			
 			if(mouse_release(mb_left)) {
 				size_dragging = false;
@@ -65,13 +74,17 @@ function Node_Frame(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		
 		var x1 = xx + w * _s;
 		var y1 = yy + h * _s;
-		var x0 = xx + w * _s - 16 * _s;
-		var y0 = yy + h * _s - 16 * _s;
-		var ics = max(0.25, 0.5 * _s);
-		draw_sprite_ext(THEME.node_resize, 0, x1 - 4 * _s, y1 - 4 * _s, ics, ics, 0, c_white, 0.5);
+		var x0 = x1 - 16;
+		var y0 = y1 - 16;
+		var ics = 0.5;
+		
+		draw_sprite_ext(THEME.node_move, 0, xx + 4, yy + 4 * _s, ics, ics, 0, c_white, 0.25 + 0.35 * name_hover);
+		
+		if(point_in_rectangle(_mx, _my, xx, yy, x1, y1) || size_dragging)
+			draw_sprite_ext(THEME.node_resize, 0, x1 - 4, y1 - 4, ics, ics, 0, c_white, 0.5);
 		
 		if(!name_hover && point_in_rectangle(_mx, _my, x0, y0, x1, y1)) {
-			draw_sprite_ext(THEME.node_resize, 0, x1 - 4 * _s, y1 - 4 * _s, ics, ics, 0, c_white, 1);
+			draw_sprite_ext(THEME.node_resize, 0, x1 - 4, y1 - 4, ics, ics, 0, c_white, 1);
 			PANEL_GRAPH.drag_locking = true;
 			
 			if(mouse_press(mb_left)) {
@@ -86,18 +99,16 @@ function Node_Frame(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	}
 	
 	static pointIn = function(_x, _y, _mx, _my, _s) {
-		var xx = x * _s + _x + w * _s;
-		var yy = y * _s + _y + h * _s;
+		var xx = x * _s + _x;
+		var yy = y * _s + _y;
+		
+		var txt = display_name == ""? name : display_name;
 		draw_set_font(f_h5);
-		var ww = min(w * _s, string_width(display_name) + 16);
-		var hh = string_height(display_name) + 16;
+		var ww  = string_width(txt) + 24 + 8;
+		var hh  = string_height("l") + 8;
 		
-		var _x0 = xx - ww;
-		var _y0 = yy - hh;
-		
-		var hover = point_in_rectangle(_mx, _my, _x0, _y0, xx, yy) && !point_in_rectangle(_mx, _my, xx - 16 * _s, yy - 16 * _s, xx, yy);
+		var hover = point_in_rectangle(_mx, _my, xx, yy, xx + ww, yy + hh);
 		name_hover = hover;
-		//print(string(_my) + ": " + string(_y0) + ", " + string(yy));
 		
 		return hover;
 	}

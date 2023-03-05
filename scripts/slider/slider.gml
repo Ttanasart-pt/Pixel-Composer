@@ -14,7 +14,10 @@ function slider(_min, _max, _step, _onModify = noone, _onRelease = noone) : widg
 	drag_mx  = 0;
 	drag_sx  = 0;
 	
-	hdw = ui(20);
+	spr		= THEME.slider;
+	blend   = c_white;
+	
+	handle_w = ui(20);
 	
 	tb_value = new textBox(TEXTBOX_INPUT.number, onApply);
 	
@@ -55,19 +58,23 @@ function slider(_min, _max, _step, _onModify = noone, _onRelease = noone) : widg
 			curr_maxx = (_data <= maxx)? maxx : maxx + ceil(abs(_data - maxx) / _rang) * _rang;
 		}
 		
-		var sw = _w - (tb_w + ui(16));
+		var sw = _w;
 		
-		tb_value.hover  = hover;
-		tb_value.active = active;
-		tb_value.draw(_x + sw + ui(16), _y, tb_w, _h, _data, _m);
+		if(tb_w > 0) {
+			sw = _w - (tb_w + ui(16));
+			
+			tb_value.hover  = hover;
+			tb_value.active = active;
+			tb_value.draw(_x + sw + ui(16), _y, tb_w, _h, _data, _m);
+		}
 		
-		draw_sprite_stretched(THEME.slider, 0, _x, _y + _h / 2 - ui(4), sw, ui(8));	
+		draw_sprite_stretched_ext(spr, 0, _x, _y + _h / 2 - ui(4), sw, ui(8), blend, 1);	
 		
 		var _kx = _x + clamp((_data - curr_minn) / (curr_maxx - curr_minn), 0, 1) * sw;
-		draw_sprite_stretched(THEME.slider, 1, _kx - hdw / 2, _y, hdw, _h);
+		draw_sprite_stretched_ext(spr, 1, _kx - handle_w / 2, _y, handle_w, _h, blend, 1);
 		
 		if(dragging) {
-			draw_sprite_stretched(THEME.slider, 3, _kx - hdw / 2, _y, hdw, _h);
+			draw_sprite_stretched_ext(spr, 3, _kx - handle_w / 2, _y, handle_w, _h, blend, 1);
 			
 			var val = (_m[0] - _x) / sw * (curr_maxx - curr_minn) + curr_minn;
 			val = round(val / step) * step;
@@ -88,8 +95,8 @@ function slider(_min, _max, _step, _onModify = noone, _onRelease = noone) : widg
 				UNDO_HOLDING = false;
 			}
 		} else {
-			if(hover && (point_in_rectangle(_m[0], _m[1], _x, _y, _x + sw, _y + _h) || point_in_rectangle(_m[0], _m[1], _kx - hdw / 2, _y, _kx + hdw / 2, _y + _h))) {
-				draw_sprite_stretched(THEME.slider, 2, _kx - hdw / 2, _y, hdw, _h);
+			if(hover && (point_in_rectangle(_m[0], _m[1], _x, _y, _x + sw, _y + _h) || point_in_rectangle(_m[0], _m[1], _kx - handle_w / 2, _y, _kx + handle_w / 2, _y + _h))) {
+				draw_sprite_stretched_ext(spr, 2, _kx - handle_w / 2, _y, handle_w, _h, blend, 1);
 				
 				if(mouse_press(mb_left, active)) {
 					dragging = true;

@@ -1174,8 +1174,8 @@ function gameframe_tools_mon_get_active() {
 		gameframe_tools_mon_get_active_list = __list;
 	}
 	var __count = gameframe_get_monitors(__list);
-	var __cx1 = window_get_x() + (window_get_width() div 2);
-	var __cy1 = window_get_y() + (window_get_height() div 2);
+	var __cx1   = window_get_x() + (window_get_width() div 2);
+	var __cy1   = window_get_y() + (window_get_height() div 2);
 	var _i = 0;
 	for (var __g1 = __count; _i < __g1; _i++) {
 		var __item = __list[|_i];

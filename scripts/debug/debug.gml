@@ -2,7 +2,7 @@
 	globalvar DEBUG_COUNTER;
 	DEBUG_COUNTER = ds_map_create();
 	
-	function __count(key) {
+	function __debug_counter(key) {
 		if(ds_map_exists(DEBUG_COUNTER, key)) 
 			DEBUG_COUNTER[? key]++;
 		else 
@@ -104,7 +104,7 @@ function setException() {
 	    return 0;
 	});
 }
-setException();
+//setException();
 
 function resetException() {
 	exception_unhandled_handler(undefined);
