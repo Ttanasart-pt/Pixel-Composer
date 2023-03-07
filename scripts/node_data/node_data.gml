@@ -1,6 +1,6 @@
 global.loop_nodes = [ "Node_Iterate", "Node_Iterate_Each" ];
 
-function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) constructor {
+function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x, _y) constructor {
 	active  = true;
 	renderActive = true;
 	node_id = generateUUID();
@@ -29,7 +29,8 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) constructor {
 	w = 128;
 	h = 128;
 	min_h = 0;
-	auto_height = true;
+	draw_padding = 8;
+	auto_height  = true;
 	
 	draw_name = true;
 	draggable = true;
@@ -318,8 +319,6 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) constructor {
 		return true;
 	}
 	
-	static update = function(frame = ANIMATOR.current_frame) {}
-	
 	static triggerRender = function() {
 		setRenderStatus(false);
 		UPDATE |= RENDER_TYPE.partial;
@@ -391,10 +390,10 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) constructor {
 	}
 	
 	static drawGetBbox = function(xx, yy, _s) {
-		var x0 = xx + 8 * _s;
-		var x1 = xx + (w - 8) * _s;
-		var y0 = yy + 20 * draw_name + 8 * _s;
-		var y1 = yy + (h - 8) * _s;
+		var x0 = xx + draw_padding * _s;
+		var x1 = xx + (w - draw_padding) * _s;
+		var y0 = yy + 20 * draw_name + draw_padding * _s;
+		var y1 = yy + (h - draw_padding) * _s;
 		
 		return { x0: x0, 
 				 x1 : x1, 
@@ -481,12 +480,16 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) constructor {
 			for(var i = 0; i < amo; i++) {
 				var ind = getInputJunctionIndex(i);
 				if(ind == noone) continue;
+				if(!inputs[| ind]) continue;
+				
 				inputs[| ind].drawNameBG(_s);
 			}
 			
 			for(var i = 0; i < amo; i++) {
 				var ind = getInputJunctionIndex(i);
 				if(ind == noone) continue;
+				if(!inputs[| ind]) continue;
+				
 				inputs[| ind].drawName(_s, _mx, _my);
 			}
 		}
@@ -606,8 +609,8 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) constructor {
 						draw_line_dashed_color(jx, jy, frx, fry, th, c1, c0, 12 * ss);
 					break;
 				case 1 : draw_line_curve_color(jx, jy, frx, fry, cx, cy, ss, th, c0, c1, ty); break;
-				case 2 : draw_line_elbow_color(frx, fry, jx, jy, cx, cy, ss, th, c1, c0, corner, jun.value_from.drawLineIndex, jun.drawLineIndex, ty); break;
-				case 3 : draw_line_elbow_diag_color(frx, fry, jx, jy, cx, cy, ss, th, c1, c0, corner, jun.value_from.drawLineIndex, jun.drawLineIndex, ty); break;
+				case 2 : draw_line_elbow_color(frx, fry, jx, jy, cx, cy, ss, th, c0, c1, corner, jun.value_from.drawLineIndex, jun.drawLineIndex, ty); break;
+				case 3 : draw_line_elbow_diag_color(frx, fry, jx, jy, cx, cy, ss, th, c0, c1, corner, jun.value_from.drawLineIndex, jun.drawLineIndex, ty); break;
 			}
 			
 			drawLineIndex += 0.5;
@@ -991,10 +994,12 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) constructor {
 		var _type = instanceof(self);
 		var _node = nodeBuild(_type, x, y, target);
 		CLONING = false;
+		
 		LOADING_VERSION = SAVEFILE_VERSION;
 		
 		if(!_node) return;
 		
+		CLONING = true;
 		var _nid = _node.node_id;
 		_node.deserialize(serialize());
 		_node.postDeserialize();
@@ -1004,6 +1009,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) constructor {
 		NODE_MAP[? node_id] = self;
 		NODE_MAP[? _nid] = _node;
 		PANEL_ANIMATION.updatePropertyList();
+		CLONING = false;
 		
 		onClone(_node, target);
 		

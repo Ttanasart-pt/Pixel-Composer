@@ -266,6 +266,11 @@ function __initLua() {
 		["stringSplit",			string_split, "stringSplit(string, delimiter)", "Separate string to arrays.", 
 			[["string", "text", "Text input"], ["delimiter", "text", "Text that will use to cut the string"], ]],
 		
+		"Project",
+		["Project.frame",		noone, "Project.frame",			"Get current frame index (start at 0)."],
+		["Project.frameTotal",	noone, "Project.frameTotal",	"Get animation length."],
+		["Project.fps",			noone, "Project.fps",			"Get animation framerate."],
+		
 		"Debug",
 		["print",	 __lua_noti, "print(string)", "Display text on notification.", 
 			[["string", "text", "Text to display"], ]],
@@ -276,6 +281,7 @@ function __initLua() {
 	
 	for( var i = 0; i < array_length(global.lua_functions); i++ ) {
 		if(is_string(global.lua_functions[i])) continue;
+		if(global.lua_functions[i][1] == noone) continue;
 		LUA_API[? global.lua_functions[i][0]] = global.lua_functions[i][1];
 	}
 }
@@ -289,7 +295,22 @@ function lua_create() {
 		k = ds_map_find_next(LUA_API, k);
 	}
 	
+	lua_add_code(state, @"
+Project = {};
+Project.frame	   = 0;
+Project.frameTotal = 0;
+Project.fps		   = 0;
+");
+	
 	return state;
+}
+
+function lua_projectData(state) {
+	lua_add_code(state, @"
+Project.frame	   = " + string(ANIMATOR.current_frame) + @";
+Project.frameTotal = " + string(ANIMATOR.frames_total) + @";
+Project.fps		   = " + string(ANIMATOR.framerate) + @";
+");
 }
 
 function _lua_error(msg, state) {

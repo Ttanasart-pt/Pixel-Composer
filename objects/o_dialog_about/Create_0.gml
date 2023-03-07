@@ -51,7 +51,7 @@ event_inherited();
 		draw_set_font(f_p0);
 		draw_set_color(COLORS._main_text_sub);
 		yy += ui(40); 
-		draw_text_ext(cx, yy, "Made with GameMaker Studio 2, Abode Illustrator, Aseprite", -1, sc_thank.w - ui(16));
+		draw_text_ext(cx, yy, "Made with GameMaker Studio 2, Adobe Illustrator, Aseprite", -1, sc_thank.w - ui(16));
 		yy += ui(32);
 		BLEND_NORMAL
 		

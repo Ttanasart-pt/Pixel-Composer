@@ -22,7 +22,10 @@
 #endregion
 
 #region main
-	globalvar DEBUG, THEME, CDEF, COLORS, COLOR_KEYS;
+	globalvar OS, DEBUG, THEME, CDEF, COLORS, COLOR_KEYS;
+	OS = os_type;
+	//OS = os_macosx;
+	
 	DEBUG = false;
 	THEME = {};
 	COLOR_KEYS = [];

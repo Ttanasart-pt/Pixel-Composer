@@ -104,7 +104,7 @@ function setException() {
 	    return 0;
 	});
 }
-//setException();
+setException();
 
 function resetException() {
 	exception_unhandled_handler(undefined);

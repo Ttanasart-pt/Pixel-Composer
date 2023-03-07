@@ -141,9 +141,9 @@ function eval_curve_segment_x(_bz, _x, _prec = 0.00001) {
 	var _newRep = 8;
 	
 	repeat(_newRep) {
-		var slope =   (9 * _bz[1] - 9 * _bz[3] + 3) * _xt * _xt
+		var slope =   (  9 * _bz[1] - 9 * _bz[3] + 3) * _xt * _xt
 					+ (-12 * _bz[1] + 6 * _bz[3]) * _xt
-					+ 3 * _bz[1];
+					+    3 * _bz[1];
 		var _ftx = power(1 - _xt, 3) * 0 
 				 + 3 * power(1 - _xt, 2) * _xt * _bz[1] 
 				 + 3 * (1 - _xt) * power(_xt, 2) * _bz[3]

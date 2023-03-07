@@ -14,6 +14,7 @@ event_inherited();
 	
 	thumbnail_retriever = 0;
 	recent_thumbnail = false;
+	show_autosaves = false;
 	
 	recent_width = PREF_MAP[? "splash_expand_recent"]? ui(576) : ui(288);
 #endregion

@@ -457,7 +457,7 @@ function PanelContent() constructor {
 	
 	function stepBegin() {}
 	
-	function draw(panel) {
+	function draw(panel) { 
 		pFOCUS = FOCUS == panel;
 		pHOVER = HOVER == panel;
 		

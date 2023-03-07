@@ -93,7 +93,6 @@
 	}
 	
 	function addHotkey(_context, _name, _key, _mod, _action) {
-		if(_key == "") _key = -1;
 		if(is_string(_key)) {
 			var ind = key_get_index(_key);
 			_key = ind? ind : ord(_key);

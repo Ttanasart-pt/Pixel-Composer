@@ -49,12 +49,12 @@ float eval_curve_segment_x(in float _y0, in float ax0, in float ay0, in float bx
 		_xt = (st + ed) / 2.;
 	}
 	
-	int _newRep = 8;
+	int _newRep = 16;
 	
 	for(int i = 0; i < _newRep; i++) {
-		float slope = (9. * ax0 - 9. * bx1 + 3.) * _xt * _xt
+		float slope = (  9. * ax0 - 9. * bx1 + 3.) * _xt * _xt
 					+ (-12. * ax0 + 6. * bx1) * _xt
-					+ 3. * ax0;
+					+    3. * ax0;
 		float _ftx = 3. * pow(1. - _xt, 2.) * _xt * ax0 
 				   + 3. * (1. - _xt) * pow(_xt, 2.) * bx1
 				   + pow(_xt, 3.)

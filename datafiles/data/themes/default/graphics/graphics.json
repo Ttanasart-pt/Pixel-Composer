@@ -766,6 +766,13 @@
         "yorigin": 24,
         "slice": null
     },
+    "save_auto": {
+        "path": "./icon/s_icon_save_auto.png",
+        "subimages": 1,
+        "xorigin": 24,
+        "yorigin": 24,
+        "slice": null
+    },
     "window_exit": {
         "path": "./icon/s_window_exit.png",
         "subimages": 1,

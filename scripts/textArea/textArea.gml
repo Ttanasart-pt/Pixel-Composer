@@ -227,6 +227,7 @@ function textArea(_input, _onModify, _extras = noone) : textInput(_input, _onMod
 			else {
 				var _str = _input_text_line[cursor_line];
 				while(string_char_at(_input_text, cursor) != "\n") {
+					if(cursor <= 0) break;
 					cursor--;
 				}
 			}

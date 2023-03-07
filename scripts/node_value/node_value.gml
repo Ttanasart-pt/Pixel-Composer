@@ -398,6 +398,11 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		return self;
 	}
 	
+	static setArrayDepth = function(aDepth) {
+		array_depth = aDepth;
+		return self;
+	}
+	
 	static rejectConnect = function() {
 		auto_connect = false;
 		return self;

@@ -18,22 +18,32 @@ function Node_Path_Transform(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	
 	outputs[| 0] = nodeValue("Path", self, JUNCTION_CONNECT.output, VALUE_TYPE.pathnode, self);
 	
+	static getLineCount = function() { 
+		var _path = inputs[| 0].getValue();
+		return struct_has(_path, "getLineCount")? _path.getLineCount() : 1; 
+	}
+	
 	static getSegmentCount = function() { 
 		var _path = inputs[| 0].getValue();
 		return struct_has(_path, "getSegmentCount")? _path.getSegmentCount() : 0; 
 	}
 	
-	static getPointRatio = function(_rat) {
+	static getPointRatio = function(_rat, ind = 0) {
 		var _path = inputs[| 0].getValue();
 		var _pos  = inputs[| 1].getValue();
 		var _rot  = inputs[| 2].getValue();
 		var _sca  = inputs[| 3].getValue();
 		
+		if(is_array(_path)) {
+			_path = array_safe_get(_path, ind);
+			ind = 0;
+		}
+		
 		if(!is_struct(_path) || !struct_has(_path, "getPointRatio"))
 			return [ 0, 0 ];
 		
-		var _b = _path.getBoundary();
-		var _p = _path.getPointRatio(_rat);
+		var _b = struct_has(_path, "getBoundary")? _path.getBoundary() : [0, 0, 0, 0];
+		var _p = _path.getPointRatio(_rat, ind);
 		
 		var cx = (_b[0] + _b[2]) / 2;
 		var cy = (_b[1] + _b[1]) / 2;

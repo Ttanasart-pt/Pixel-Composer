@@ -108,6 +108,14 @@ function __LOAD_PATH(path, readonly = false, safe_mode = false) {
 		log_warning("LOAD, metadata", exception_print(e));
 	}
 	
+	GLOBAL = new Node_Global();
+	try {
+		if(ds_map_exists(_map, "global"))
+			GLOBAL.deserialize(_map[? "global"]);
+	} catch(e) {
+		log_warning("LOAD, global", exception_print(e));
+	}
+	
 	//try {
 	//	if(ds_map_exists(_map, "graph")) {
 	//		PANEL_GRAPH.graph_x		= ds_map_try_get(_map[? "graph"], "graph_x");

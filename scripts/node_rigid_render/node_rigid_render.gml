@@ -50,6 +50,14 @@ function Node_Rigid_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		refreshDynamicInput();
 	}
 	
+	static step = function() {
+		var _dim = inputs[| 0].getValue();
+		var _outSurf = outputs[| 0].getValue();
+		
+		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1]);
+		outputs[| 0].setValue(_outSurf);
+	}
+	
 	static update = function(frame = ANIMATOR.current_frame) {
 		if(recoverCache() || !ANIMATOR.is_playing)
 			return;

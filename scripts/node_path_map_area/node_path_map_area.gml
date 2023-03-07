@@ -17,20 +17,30 @@ function Node_Path_Map_Area(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		inputs[| 1].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
 	}
 	
+	static getLineCount = function() { 
+		var _path = inputs[| 0].getValue();
+		return struct_has(_path, "getLineCount")? _path.getLineCount() : 1; 
+	}
+	
 	static getSegmentCount = function() { 
 		var _path = inputs[| 0].getValue();
 		return struct_has(_path, "getSegmentCount")? _path.getSegmentCount() : 0; 
 	}
 	
-	static getPointRatio = function(_rat) {
+	static getPointRatio = function(_rat, ind = 0) {
 		var _path = inputs[| 0].getValue();
 		var _area = inputs[| 1].getValue();
+		
+		if(is_array(_path)) {
+			_path = array_safe_get(_path, ind);
+			ind = 0;
+		}
 		
 		if(!is_struct(_path) || !struct_has(_path, "getPointRatio"))
 			return [ 0, 0 ];
 		
 		var _b = _path.getBoundary();
-		var _p = _path.getPointRatio(_rat);
+		var _p = _path.getPointRatio(_rat, ind);
 		
 		_p[0] = (_area[0] - _area[2]) + (_p[0] - _b[0]) / (_b[2] - _b[0]) * _area[2] * 2;
 		_p[1] = (_area[1] - _area[3]) + (_p[1] - _b[1]) / (_b[3] - _b[1]) * _area[3] * 2;

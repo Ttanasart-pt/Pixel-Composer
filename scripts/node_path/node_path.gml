@@ -218,6 +218,8 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			
 			var _ox = 0, _oy = 0, _nx = 0, _ny = 0, p = 0;
 			for(var j = 0; j < sample; j++) {
+				if(array_length(_a0) < 6) continue;
+			
 				p = eval_bezier(j / sample, _a0[0], _a0[1], _a1[0], _a1[1], _a0[0] + _a0[4], _a0[1] + _a0[5], _a1[0] + _a1[2], _a1[1] + _a1[3]);
 				_nx = _x + p[0] * _s;
 				_ny = _y + p[1] * _s;
@@ -246,6 +248,8 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			
 			var _ox = 0, _oy = 0, _nx = 0, _ny = 0, p = 0;
 			for(var j = 0; j < sample; j++) {
+				if(array_length(_a0) < 6) continue;
+				
 				p = eval_bezier(j / sample, _a0[0], _a0[1], _a1[0], _a1[1], _a0[0] + _a0[4], _a0[1] + _a0[5], _a1[0] + _a1[2], _a1[1] + _a1[3]);
 				_nx = _x + p[0] * _s;
 				_ny = _y + p[1] * _s;
@@ -268,6 +272,8 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			var cont = false;
 			var _ax0 = 0, _ay0 = 0;
 			var _ax1 = 0, _ay1 = 0;
+			
+			if(array_length(_a) < 6) continue;
 			
 			if(_a[2] != 0 || _a[3] != 0 || _a[4] != 0 || _a[5] != 0) {
 				_ax0 = _x + (_a[0] + _a[2]) * _s;
@@ -477,6 +483,8 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		return eval_bezier(_t, _a0[0], _a0[1], _a1[0], _a1[1], _a0[0] + _a0[4], _a0[1] + _a0[5], _a1[0] + _a1[2], _a1[1] + _a1[3]);
 	}
 	
+	static getLineCount = function() { return 1; }
+	
 	static getPointRatio = function(_rat) {
 		var loop   = inputs[| 1].getValue();
 		var ansize = array_length(lengths);
@@ -565,9 +573,6 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	
 	static postDeserialize = function() {
 		var _inputs = load_map[? "inputs"];
-		
-		if(LOADING_VERSION < 1090)
-			ds_list_insert(_inputs, 2, noone);
 		
 		for(var i = input_fix_len; i < ds_list_size(_inputs); i++)
 			createAnchor(0, 0);

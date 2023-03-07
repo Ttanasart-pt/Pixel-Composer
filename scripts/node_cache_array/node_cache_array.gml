@@ -4,10 +4,17 @@ function Node_Cache_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 	
+	inputs[| 1] = nodeValue("Start frame", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, -1, "Frame index to start caching, set to -1 to start at the first frame.");
+	
+	inputs[| 2] = nodeValue("Stop frame", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, -1, "Frame index to stop caching (inclusive), set to -1 to stop at the last frame.");
+	
+	inputs[| 3] = nodeValue("Step", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1, "Cache every N frames, set to 1 to cache every frame.");
+	
 	outputs[| 0] = nodeValue("Cache array", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, []);
 	
 	input_display_list = [
 		["Surface", true], 0, 
+		["Range",  false], 1, 2, 3,
 	];
 	
 	cache_loading			= false;
@@ -28,7 +35,20 @@ function Node_Cache_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	}
 	
 	static update = function() {
-		outputs[| 0].setValue(cached_output);
+		var ss  = [];
+		var str = inputs[| 1].getValue();
+		var lst = inputs[| 2].getValue();
+		var stp = inputs[| 3].getValue();
+		
+		if(str == -1) str = 0;
+		if(lst == -1) lst = ANIMATOR.frames_total;
+		
+		if(lst > str && stp > 0) 
+		for( var i = str; i <= lst; i += stp ) {
+			if(cacheExist(i))
+				array_push(ss, cached_output[i]);
+		}
+		outputs[| 0].setValue(ss);
 		
 		if(!ANIMATOR.is_playing) return;
 		if(!inputs[| 0].value_from) return;

@@ -5,6 +5,7 @@ function Node_Number(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	w = 96;
 	min_h = 32 + 24 * 1;
+	draw_padding = 4;
 	
 	wd_slider = new slider(0, 1, 0.01, function(val) { inputs[| 0].setValue(val); } );
 	wd_slider.spr   = THEME.node_slider;
@@ -85,7 +86,7 @@ function Node_Number(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		var stp  = inputs[| 4].getValue();
 		
 		if(inputs[| 0].value_from != noone || disp == 0) {
-			draw_set_text(f_h5, fa_center, fa_center, COLORS._main_text);
+			draw_set_text(f_h1, fa_center, fa_center, COLORS._main_text);
 			var str	= string(val);
 			var ss	= string_scale(str, bbox.w, bbox.h);
 			draw_text_transformed(bbox.xc, bbox.yc, str, ss, ss, 0);
@@ -133,6 +134,7 @@ function Node_Vector2(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	w = 96;
 	min_h = 32 + 24 * 2;
+	draw_padding = 4;
 	
 	inputs[| 0] = nodeValue("x", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
 		.setVisible(true, true);
@@ -258,7 +260,7 @@ function Node_Vector2(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		var bbox = drawGetBbox(xx, yy, _s);
 		
 		if(disp == 0 || inputs[| 0].value_from != noone || inputs[| 1].value_from != noone) {
-			draw_set_text(f_p0, fa_center, fa_center, COLORS._main_text);
+			draw_set_text(f_h1, fa_center, fa_center, COLORS._main_text);
 			var str	= string(vec[0]) + "\n" + string(vec[1]);
 			var ss	= string_scale(str, bbox.w, bbox.h);
 			draw_text_transformed(bbox.xc, bbox.yc, str, ss, ss, 0);
@@ -391,6 +393,7 @@ function Node_Vector3(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	w = 96;
 	min_h = 32 + 24 * 3;
+	draw_padding = 4;
 	
 	inputs[| 0] = nodeValue("x", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
 		.setVisible(true, true);
@@ -425,7 +428,7 @@ function Node_Vector3(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-		draw_set_text(f_p0, fa_center, fa_center, COLORS._main_text);
+		draw_set_text(f_h1, fa_center, fa_center, COLORS._main_text);
 		var vec = getSingleValue(0,, true);
 		var str	= string(vec[0]) + "\n" + string(vec[1]) + "\n" + string(vec[2]);
 		
@@ -442,6 +445,7 @@ function Node_Vector4(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	w = 96;
 	min_h = 32 + 24 * 4;
+	draw_padding = 4;
 	
 	inputs[| 0] = nodeValue("x", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
 		.setVisible(true, true);
@@ -479,7 +483,7 @@ function Node_Vector4(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-		draw_set_text(f_p0, fa_center, fa_center, COLORS._main_text);
+		draw_set_text(f_h1, fa_center, fa_center, COLORS._main_text);
 		var vec = getSingleValue(0,, true);
 		var str	= string(vec[0]) + "\n" + string(vec[1]) + "\n" + string(vec[2]) + "\n" + string(vec[3]);
 		
@@ -496,6 +500,7 @@ function Node_Vector_Split(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	
 	w = 96;
 	min_h = 32 + 24 * 4;
+	draw_padding = 4;
 	
 	inputs[| 0] = nodeValue("Vector", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.vector)
@@ -522,7 +527,7 @@ function Node_Vector_Split(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-		draw_set_text(f_p0, fa_center, fa_center, COLORS._main_text);
+		draw_set_text(f_h1, fa_center, fa_center, COLORS._main_text);
 		var str	= string(outputs[| 0].getValue()) + "\n" + string(outputs[| 1].getValue()) 
 			+ "\n" + string(outputs[| 2].getValue()) + "\n" + string(outputs[| 3].getValue());
 		

@@ -1,7 +1,16 @@
 /// @description main directory, parameter
+print("===== Game Start Begin =====");
+
 #region directory
 	globalvar DIRECTORY;
-	DIRECTORY = environment_get_variable("userprofile") + "\\AppData\\Local\\PixelComposer\\";
+	DIRECTORY = "";
+	
+	if(OS == os_windows)
+		DIRECTORY = environment_get_variable("userprofile") + "\\AppData\\Local\\PixelComposer\\";
+	else if(OS == os_macosx)
+		DIRECTORY = environment_get_variable("HOME") + "/PixelComposer/";
+	show_debug_message(DIRECTORY);
+		
 	if(!directory_exists(DIRECTORY))
 		directory_create(DIRECTORY);
 	if(!directory_exists(DIRECTORY + "temp"))
@@ -13,6 +22,8 @@
 	log_newline();
 	log_message("SESSION", "Begin");
 	log_message("DIRECTORY", DIRECTORY);
+	
+	window_set_showborder(false);
 	
 	__initLocale();
 	__init_theme();
@@ -68,3 +79,5 @@
 #region lua
 	lua_error_handler = _lua_error;
 #endregion
+
+print("===== Game Start End =====");

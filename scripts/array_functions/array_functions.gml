@@ -24,9 +24,10 @@ function array_safe_get(arr, index, def = 0, overflow = ARRAY_OVERFLOW._default)
 	if(!is_array(arr)) return def;
 	
 	if(overflow == ARRAY_OVERFLOW.loop) {
+		var len = array_length(arr);
 		if(index < 0)
-			index = array_length(arr) - safe_mod(abs(index), array_length(arr));
-		index = safe_mod(index, array_length(arr));
+			index = len - safe_mod(abs(index), len);
+		index = safe_mod(index, len);
 	}
 	
 	if(index < 0) return def;

@@ -26,7 +26,7 @@ function Node_VFX_Spawner(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y
 		}
 	}
 	
-	static onStep = function() {
+	static onUpdate = function() {
 		RETURN_ON_REST
 		
 		if(ANIMATOR.current_frame == 0)

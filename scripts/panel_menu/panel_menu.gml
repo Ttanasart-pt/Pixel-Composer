@@ -21,6 +21,7 @@ function Panel_Menu() : PanelContent() constructor {
 				
 				return submenuCall(_x, _y, _depth, arr);
 		}).setIsShelf(),
+		menuItem(get_text("panel_menu_auto_save_folder", "Open autosave folder"), function() { shellOpenExplorer(DIRECTORY + "autosave"); }, THEME.save_auto),
 		-1,
 		menuItem(get_text("preferences", "Preferences") + "...", function() { dialogCall(o_dialog_preference); }, THEME.gear),
 		menuItem(get_text("panel_menu_splash_screen", "Splash screen"), function() { dialogCall(o_dialog_splash); }),
@@ -35,7 +36,6 @@ function Panel_Menu() : PanelContent() constructor {
 						
 					instance_create_depth(0, 0, 0, addon_key_displayer);
 				}),
-				
 			]);
 		}, THEME.addon ).setIsShelf(),
 		-1,
@@ -218,15 +218,19 @@ function Panel_Menu() : PanelContent() constructor {
 	
 	function drawContent(panel) {
 		draw_clear_alpha(COLORS.panel_bg_clear, 0);
-		draw_sprite_ui_uniform(THEME.icon_24, 0, h / 2, h / 2, 1, c_white);
-		var xx = h;
-		
 		menus[6][1] = STEAM_ENABLED? menu_help_steam : menu_help;
 		
-		if(pHOVER && point_in_rectangle(mx, my, 0, 0, ui(40), ui(32))) {
+		var xx = ui(40);
+		if(OS == os_windows)		xx = ui(24);
+		else if(OS == os_macosx)	xx = ui(156);
+		
+		draw_sprite_ui_uniform(THEME.icon_24, 0, xx, h / 2, 1, c_white);
+		if(pHOVER && point_in_rectangle(mx, my, xx - ui(16), 0, xx + ui(16), ui(32))) {
 			if(mouse_press(mb_left, pFOCUS))
 				dialogCall(o_dialog_about);
 		}
+		
+		xx += ui(20);
 		
 		for(var i = 0; i < array_length(menus); i++) {
 			draw_set_text(f_p1, fa_center, fa_center, COLORS._main_text);
@@ -327,6 +331,8 @@ function Panel_Menu() : PanelContent() constructor {
 		#endregion
 		
 		var x1 = w - ui(6);
+		if(OS == os_windows)		x1 = w - ui(6);
+		else if(OS == os_macosx)	x1 = ui(8 + 28);
 		
 		#region actions
 			var bs = ui(28);
@@ -334,7 +340,8 @@ function Panel_Menu() : PanelContent() constructor {
 			if(buttonInstant(THEME.button_hide_fill, x1 - bs, ui(6), bs, bs, [mx, my], pFOCUS, pHOVER,, THEME.window_exit, 0, COLORS._main_accent) == 2) {
 				window_close();
 			}
-			x1 -= bs + ui(4);
+			if(OS == os_windows)		x1 -= bs + ui(4);
+			else if(OS == os_macosx)	x1 += bs + ui(4);
 			
 			var win_max = gameframe_is_maximized() || gameframe_is_fullscreen_window();
 			if(buttonInstant(THEME.button_hide_fill, x1 - bs, ui(6), bs, bs, [mx, my], pFOCUS, pHOVER,, THEME.window_maximize, win_max, [ COLORS._main_icon, CDEF.lime ]) == 2) {
@@ -346,12 +353,14 @@ function Panel_Menu() : PanelContent() constructor {
 				else
 					gameframe_maximize();
 			}
-			x1 -= bs + ui(4);
+			if(OS == os_windows)		x1 -= bs + ui(4);
+			else if(OS == os_macosx)	x1 += bs + ui(4);
 			  
 			if(buttonInstant(THEME.button_hide_fill, x1 - bs, ui(6), bs, bs, [mx, my], pFOCUS, pHOVER,, THEME.window_minimize, 0, [ COLORS._main_icon, CDEF.yellow ]) == -2) {
 				gameframe_minimize();
 			}
-			x1 -= bs + ui(4);
+			if(OS == os_windows)		x1 -= bs + ui(4);
+			else if(OS == os_macosx)	x1 += bs + ui(4);
 			
 			if(buttonInstant(THEME.button_hide_fill, x1 - bs, ui(6), bs, bs, [mx, my], pFOCUS, pHOVER,, THEME.window_fullscreen, gameframe_is_fullscreen_window(), [ COLORS._main_icon, CDEF.cyan ]) == 2) {
 				if(gameframe_is_fullscreen_window())
@@ -359,8 +368,11 @@ function Panel_Menu() : PanelContent() constructor {
 				else
 					gameframe_set_fullscreen(2);
 			}
-			x1 -= bs + ui(4);
+			if(OS == os_windows)		x1 -= bs + ui(4);
+			else if(OS == os_macosx)	x1 += bs + ui(4);
 		#endregion
+		
+		if(OS == os_macosx)	x1 = w - ui(8);
 		
 		#region version
 			draw_set_text(f_p0, fa_right, fa_center, COLORS._main_text_sub);

@@ -344,7 +344,7 @@ function valueAnimator(_val, _prop) constructor {
 	static deserialize = function(_list, scale = false) {
 		ds_list_clear(values);
 		
-		if(prop.type == VALUE_TYPE.color && prop.display_type == VALUE_DISPLAY.gradient && LOADING_VERSION < 1340) { //backward compat: Gradient
+		if(prop.type == VALUE_TYPE.color && prop.display_type == VALUE_DISPLAY.gradient && LOADING_VERSION < 1340 && !CLONING) { //backward compat: Gradient
 			var _val = [];
 			var value = _list[| 0][| 1];
 			

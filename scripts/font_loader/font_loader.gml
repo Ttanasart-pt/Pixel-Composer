@@ -1,4 +1,4 @@
-globalvar FONT_ISLOADED, f_h3, f_h5, f_p0, f_p0b, f_p1, f_p2, f_p3, f_code;
+globalvar FONT_ISLOADED, f_h1, f_h3, f_h5, f_p0, f_p0b, f_p1, f_p2, f_p3, f_code;
 
 FONT_ISLOADED = false;
 
@@ -36,6 +36,7 @@ function loadFonts() {
 	var path = _font_path("./fonts.json");
 	if(!file_exists(path)) {
 		noti_status("Font not defined at " + path + ", rollback to default fonts.");
+		f_h1  = _f_h1;
 		f_h3  = _f_h3;
 		f_h5  = _f_h5;
 		f_p0  = _f_p0;
@@ -51,6 +52,7 @@ function loadFonts() {
 	var s = file_text_read_all(path);
 	var fontDef = json_try_parse(s);
 	
+	f_h1 = _font_load_from_struct(fontDef.h1, _f_h1);
 	f_h3 = _font_load_from_struct(fontDef.h3, _f_h3);
 	f_h5 = _font_load_from_struct(fontDef.h5, _f_h5);
 	

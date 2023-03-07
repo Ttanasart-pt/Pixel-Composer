@@ -57,6 +57,14 @@ function Node_VFX_Renderer(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		refreshDynamicInput();
 	}
 	
+	function step() {
+		var _dim		= inputs[| 0].getValue();
+		var _outSurf	= outputs[| 0].getValue();
+		
+		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1]);
+		outputs[| 0].setValue(_outSurf);
+	}
+	
 	function update(_time = ANIMATOR.current_frame) {
 		if(!ANIMATOR.is_playing) {
 			recoverCache();

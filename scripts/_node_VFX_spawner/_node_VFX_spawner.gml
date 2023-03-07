@@ -327,7 +327,17 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		render(_time);
 	}
 	
-	static step = function() {
+	static step = function() {}
+	
+	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
+		inputs[| 3].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
+		if(onDrawOverlay != -1)
+			onDrawOverlay(active, _x, _y, _s, _mx, _my);
+	}
+	
+	static onDrawOverlay = -1;
+	
+	static update = function(frame = ANIMATOR.current_frame) {
 		var _inSurf = inputs[|  0].getValue();
 		var _dist   = inputs[|  4].getValue();
 		var _scatt  = inputs[| 24].getValue();
@@ -355,20 +365,11 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		if(_spawn_type == 0)	inputs[| 1].name = "Spawn delay";
 		else					inputs[| 1].name = "Spawn frame";
 		
-		onStep();
+		onUpdate();
 	}
 	
-	static onStep = function() {}
+	static onUpdate = function() {}
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
-		inputs[| 3].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
-		if(onDrawOverlay != -1)
-			onDrawOverlay(active, _x, _y, _s, _mx, _my);
-	}
-	
-	static onDrawOverlay = -1;
-	
-	static update = function(frame = ANIMATOR.current_frame) {}
 	static render = function() {}
 	
 	static onPartCreate = function(part) {}

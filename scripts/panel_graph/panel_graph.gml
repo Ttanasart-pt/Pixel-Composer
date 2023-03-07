@@ -855,7 +855,12 @@ function Panel_Graph() : PanelContent() constructor {
 			SAVE_NODE(_node, nodeArray[i]);
 		ds_map_add_list(_map, "nodes", _node);
 		
+		APPENDING = true;
+		CLONING	  = true;
 		var _app = __APPEND_MAP(_map);
+		APPENDING = false;
+		CLONING	  = false;
+		
 		ds_map_destroy(_map);
 			
 		if(ds_list_size(_app) == 0) {
@@ -871,7 +876,6 @@ function Panel_Graph() : PanelContent() constructor {
 			x0 = min(x0, _node.x);
 			y0 = min(y0, _node.y);
 		}
-		APPENDING = false;
 		
 		node_dragging = _app[| 0];
 		node_drag_mx  = x0; node_drag_my  = y0;
@@ -934,7 +938,12 @@ function Panel_Graph() : PanelContent() constructor {
 		var _map = json_decode(txt);
 		if(_map != -1) {
 			ds_map_clear(APPEND_MAP);
+			APPENDING = true;
+			CLONING	  = true;
 			var _app = __APPEND_MAP(_map);
+			APPENDING = false;
+			CLONING	  = false;
+			
 			ds_map_destroy(_map);
 			if(_app == noone) 
 				return;

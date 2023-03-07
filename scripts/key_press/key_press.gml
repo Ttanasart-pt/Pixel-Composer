@@ -137,6 +137,7 @@ enum MOD_KEY {
 
 function key_press(_key, _mod) {
 	if(WIDGET_CURRENT) return false;
+	if(_key < 0 || _key == "") return false;
 	
 	if(keyboard_check_pressed(_key) && HOTKEY_MOD == _mod)
 		return true;

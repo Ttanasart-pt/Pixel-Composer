@@ -1,13 +1,13 @@
 #region anomation class
 	function AnimationManager() constructor {
-		frames_total = 30;
-		current_frame = 0;
-		real_frame = 0;
+		frames_total	= 30;
+		current_frame	= 0;
+		real_frame		= 0;
 		time_since_last_frame = 0;
-		framerate = 30;
-		is_playing = false;
-		frame_progress = false;
-		play_freeze = 0;
+		framerate		= 30;
+		is_playing		= false;
+		frame_progress	= false;
+		play_freeze		= 0;
 		
 		rendering = false;
 		playback = ANIMATOR_END.loop;

@@ -22,24 +22,34 @@ function Node_Path_Wave(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		["Wave",	false], 1, 2, 3, 4, 
 	]
 	
+	static getLineCount = function() { 
+		var _path = inputs[| 0].getValue();
+		return struct_has(_path, "getLineCount")? _path.getLineCount() : 1; 
+	}
+	
 	static getSegmentCount = function() { 
 		var _path = inputs[| 0].getValue();
 		return struct_has(_path, "getSegmentCount")? _path.getSegmentCount() : 0; 
 	}
 	
-	static getPointRatio = function(_rat) {
+	static getPointRatio = function(_rat, ind = 0) {
 		var _path = inputs[| 0].getValue();
 		var _fre  = inputs[| 1].getValue();
 		var _amo  = inputs[| 2].getValue();
 		var _shf  = inputs[| 3].getValue();
 		var _smt  = inputs[| 4].getValue();
 		
+		if(is_array(_path)) {
+			_path = array_safe_get(_path, ind);
+			ind = 0;
+		}
+		
 		if(!is_struct(_path) || !struct_has(_path, "getPointRatio"))
 			return [ 0, 0 ];
 		
-		var _p0 = _path.getPointRatio(clamp(_rat - 0.001, 0, 0.999999));
-		var _p  = _path.getPointRatio(_rat);
-		var _p1 = _path.getPointRatio(clamp(_rat + 0.001, 0, 0.999999));
+		var _p0 = _path.getPointRatio(clamp(_rat - 0.001, 0, 0.999999), ind);
+		var _p  = _path.getPointRatio(_rat, ind);
+		var _p1 = _path.getPointRatio(clamp(_rat + 0.001, 0, 0.999999), ind);
 		
 		var dir = point_direction(_p0[0], _p0[1], _p1[0], _p1[1]) + 90;
 		var prg;

@@ -11,7 +11,7 @@ function Node_Gradient_Shift(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	inputs[| 1] = nodeValue("Shift", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
 		.setDisplay(VALUE_DISPLAY.slider, [-1, 1, 0.01]);
 	
-	inputs[| 2] = nodeValue("Loop", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false)
+	inputs[| 2] = nodeValue("Wrap", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false)
 	
 	outputs[| 0] = nodeValue("Gradient", self, JUNCTION_CONNECT.output, VALUE_TYPE.color, new gradientObject(c_white) )
 		.setDisplay(VALUE_DISPLAY.gradient);
@@ -24,10 +24,20 @@ function Node_Gradient_Shift(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 		var lop = _data[2];
 		
 		_outSurf = new gradientObject();
+		_outSurf.keys = [];
+		
 		for( var i = 0; i < array_length(pal.keys); i++ ) {
 			var k = pal.keys[i];
-			_outSurf.keys[i] = new gradientKey(k.time + sft, k.value);
-			if(lop) _outSurf.keys[i].time = frac(_outSurf.keys[i].time);
+			var key = new gradientKey(k.time + sft, k.value);
+			
+			if(lop) {
+				var t = frac(key.time);
+				if(t < 0) t = 1 + t;
+				
+				key.time = t;
+			}
+			
+			_outSurf.add(key);
 		}
 		
 		_outSurf.type = pal.type;

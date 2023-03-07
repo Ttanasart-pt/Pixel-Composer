@@ -48,6 +48,8 @@ function save_serialize() {
 	
 	ds_map_add_map(_map, "metadata", METADATA.serialize());
 	
+	ds_map_add_map(_map, "global", GLOBAL.serialize());
+	
 	_map[? "preview"] = surface_encode(PANEL_PREVIEW.getNodePreviewSurface());
 	
 	var val  = json_encode_minify(_map);

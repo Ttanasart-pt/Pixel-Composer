@@ -10,7 +10,7 @@ function draw_line_elbow_color(x0, y0, x1, y1, cx = noone, cy = noone, _s = 1, t
 	var inv = x1 - 16 * indexOut * _s <= x0 + 16 * indexIn * _s;
 	var rat = inv?  (_y1 == _y0? 0.5 : (cy - _y0) / (_y1 - _y0)) : 
 					(_x1 == _x0? 0.5 : (cx - _x0) / (_x1 - _x0));
-	var cm  = merge_color(col1, col2, rat);
+	var cm  = merge_color(col1, col2, clamp(rat, 0, 1));
 	
 	var iy = sign(y1 - y0);
 	var iy0 = sign(cy - y0);
@@ -31,8 +31,8 @@ function draw_line_elbow_color(x0, y0, x1, y1, cx = noone, cy = noone, _s = 1, t
 			draw_line_round_color(xx1, cy + corner * iy1, xx1, y1 - corns * iy1, thick,   cm, col2);
 			
 			if(corns) {
-				draw_corner(xx0 - corns, y0, xx0, y0, xx0, y0 + corns * iy0, thick, cm);
-				draw_corner(xx1, y1 - corns * iy1, xx1, y1, xx1 + corns, y1, thick, cm);
+				draw_corner(xx0 - corns, y0, xx0, y0, xx0, y0 + corns * iy0, thick, col1);
+				draw_corner(xx1, y1 - corns * iy1, xx1, y1, xx1 + corns, y1, thick, col2);
 			}
 			
 			if(corner) {	

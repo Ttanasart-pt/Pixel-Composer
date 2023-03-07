@@ -79,11 +79,13 @@ function Panel_Animation() : PanelContent() constructor {
 	
 	addHotkey("", "Play/Pause",		vk_space, MOD_KEY.none,	function() { 
 		ANIMATOR.is_playing = !ANIMATOR.is_playing; 
-		ANIMATOR.frame_progress = true;
+		ANIMATOR.current_frame = -1;
 		ANIMATOR.time_since_last_frame = 0;
 		
-		if(ANIMATOR.is_playing && ANIMATOR.frames_total) 
+		if(ANIMATOR.is_playing && ANIMATOR.frames_total) {
 			ANIMATOR.setFrame(0);
+			ANIMATOR.frame_progress = true;
+		}
 		
 	});
 	addHotkey("", "First frame",	vk_home,  MOD_KEY.none,	function() { ANIMATOR.setFrame(0); });

@@ -56,6 +56,10 @@ if !ready exit;
 	if(buttonInstant(THEME.button_hide, bx, by, ui(28), ui(28), mouse_ui, sFOCUS, sHOVER, recent_thumbnail? "Hide thumbnail" : "Show thumbnail", THEME.splash_thumbnail, recent_thumbnail) == 2) {
 		recent_thumbnail = !recent_thumbnail;
 	}
+	bx -= ui(28 + 4);
+	if(buttonInstant(THEME.button_hide, bx, by, ui(28), ui(28), mouse_ui, sFOCUS, sHOVER, "Open autosave folder", THEME.save_auto, 0) == 2) {
+		shellOpenExplorer(DIRECTORY + "autosave");
+	}
 	
 	var expandAction = false;
 	var expand = PREF_MAP[? "splash_expand_recent"];

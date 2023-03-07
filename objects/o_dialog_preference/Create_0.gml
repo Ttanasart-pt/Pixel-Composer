@@ -531,8 +531,8 @@ event_inherited();
 			
 				draw_set_text(f_p0, fa_left, fa_top, COLORS._main_text);
 				draw_text(ui(16), _y + hh, name);
-			
-				var dk = key_get_name(key.key, key.modi);
+				
+				var dk = key.key == -1? "None" : key_get_name(key.key, key.modi);
 				var kw = string_width(dk);
 			
 				if(hk_editing == key) {
@@ -543,7 +543,7 @@ event_inherited();
 					if(key_mod_press(ALT))		_mod_prs |= MOD_KEY.alt;
 					
 					if(keyboard_check_pressed(vk_escape)) {
-						key.key	 = "";
+						key.key	 = -1;
 						key.modi = 0;
 						
 						PREF_SAVE();
@@ -584,7 +584,11 @@ event_inherited();
 						keyboard_lastchar = pkey;
 					}
 				}
-				draw_set_text(f_p0, fa_right, fa_top, hk_editing == key? COLORS._main_text_accent : COLORS._main_text);
+				
+				var cc = key.key == -1? COLORS._main_text_sub : COLORS._main_text;
+				if(hk_editing == key) cc = COLORS._main_text_accent;
+				
+				draw_set_text(f_p0, fa_right, fa_top, cc);
 				draw_text(key_x1 - ui(24), _y + hh, dk);
 				
 				if(key.key != dkey || key.modi != dmod) {

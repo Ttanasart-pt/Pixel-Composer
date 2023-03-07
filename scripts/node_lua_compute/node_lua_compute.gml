@@ -54,10 +54,8 @@ function Node_Lua_Compute(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	if(!LOADING && !APPENDING) createNewInput();
 	
 	static stepBegin = function() {
-		if(ANIMATOR.frame_progress) {
+		if(ANIMATOR.frame_progress)
 			setRenderStatus(false);
-			UPDATE |= RENDER_TYPE.partial;
-		}
 		
 		setHeight();
 		doStepBegin();
@@ -76,7 +74,7 @@ function Node_Lua_Compute(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		var _type = inputs[| 1].getValue();
 		switch(_type) {
 			case 0 : outputs[| 1].type = VALUE_TYPE.float; break;
-			case 1 : outputs[| 1].type = VALUE_TYPE.text; break;
+			case 1 : outputs[| 1].type = VALUE_TYPE.text;  break;
 		}
 	}
 	
@@ -165,6 +163,9 @@ function Node_Lua_Compute(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	static update = function(frame = ANIMATOR.current_frame) {
 		if(!compiled) return;
+		if(!ANIMATOR.is_playing || !ANIMATOR.frame_progress) return;
+		
+		lua_projectData(getState());
 		
 		var _func = inputs[| 0].getValue();
 		var _dimm = inputs[| 1].getValue();

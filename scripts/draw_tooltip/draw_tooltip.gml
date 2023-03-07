@@ -18,7 +18,7 @@ function draw_tooltip_color(clr) {
 		return;
 	}
 	
-	if(is_string(clr)) {
+	if(is_struct(clr)) {
 		draw_tooltip_gradient(clr);
 		return;
 	}
@@ -50,7 +50,7 @@ function draw_tooltip_palette(clr) {
 }
 
 function draw_tooltip_gradient(clr) {
-	var ww = min(ui(160), ui(32) * array_length(clr));
+	var ww = ui(160);
 	var hh = ui(32);
 		
 	var mx = min(mouse_mx + ui(16), WIN_W - (ww + ui(16)));

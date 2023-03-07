@@ -77,8 +77,8 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 					} else 
 						return noone;
 				} else if(is_array(surf)) {
-					_sw = surf[0];
-					_sh = surf[1];
+					_sw = array_safe_get(surf, 0, 1);
+					_sh = array_safe_get(surf, 1, 1);
 				}
 				_out = surface_verify(_out, _sw, _sh);
 			}

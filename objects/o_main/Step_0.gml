@@ -1,4 +1,5 @@
 /// @description init
+//print("===== Step start =====");
 #region animation
 	if(ANIMATOR.is_playing && ANIMATOR.play_freeze == 0) {
 		ANIMATOR.time_since_last_frame += ANIMATOR.framerate * (delta_time / 1000000);
@@ -15,7 +16,7 @@
 #endregion
 
 #region step
-	//VARIABLE.step();
+	GLOBAL.step();
 	
 	try {
 		if(PANEL_MAIN != 0)
@@ -40,7 +41,7 @@
 			var hotkey = l[| i];
 			var name = hotkey.name;
 			
-			if(key_press(hotkey.key, hotkey.modi)) {
+			if(hotkey.key != -1 && key_press(hotkey.key, hotkey.modi)) {
 				hotkey.action();
 				break;
 			}
@@ -129,3 +130,4 @@
 		}
 	}
 #endregion
+//print("===== Step end =====");

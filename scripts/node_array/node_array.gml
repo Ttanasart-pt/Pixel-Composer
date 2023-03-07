@@ -172,7 +172,12 @@ function Node_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	}
 	
 	static doApplyDeserialize = function() {
-		onValueUpdate(0);
+		var _typ = getType();
+		
+		for( var i = input_fix_len; i < ds_list_size(inputs); i++ ) {
+			if(_typ != VALUE_TYPE.any) 
+				inputs[| i].type = _typ;
+		}
 	}
 	
 	static attributeSerialize = function() {

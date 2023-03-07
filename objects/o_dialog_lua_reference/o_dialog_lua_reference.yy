@@ -9,8 +9,8 @@
   "managed": true,
   "overriddenProperties": [],
   "parent": {
-    "name": "menu",
-    "path": "folders/dialog/menu.yy",
+    "name": "guide",
+    "path": "folders/dialog/guide.yy",
   },
   "parentObjectId": {
     "name": "_p_dialog",

@@ -1,11 +1,11 @@
 {
   "resourceType": "GMScript",
   "resourceVersion": "1.0",
-  "name": "variable_data",
+  "name": "node_array_shift",
   "isCompatibility": false,
   "isDnD": false,
   "parent": {
-    "name": "scritps",
-    "path": "folders/main/scritps.yy",
+    "name": "array",
+    "path": "folders/nodes/data/value/array.yy",
   },
 }

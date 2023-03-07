@@ -135,9 +135,10 @@ function Panel_Preview() : PanelContent() constructor {
 	
 	tb_framerate = new textBox(TEXTBOX_INPUT.number, function(val) { preview_rate = real(val); });
 	
-	addHotkey("Preview", "Focus content",		"F", MOD_KEY.none,	function() { fullView(); });
-	addHotkey("Preview", "Save current frame",	"S", MOD_KEY.shift,	function() { saveCurrentFrame(); });
-	addHotkey("Preview", "Preview window",		"P", MOD_KEY.ctrl,	function() { previewWindow(getNodePreview()); });
+	addHotkey("Preview", "Focus content",			"F", MOD_KEY.none,	function() { fullView(); });
+	addHotkey("Preview", "Save current frame",		"S", MOD_KEY.shift,	function() { saveCurrentFrame(); });
+	addHotkey("Preview", "Save all current frame",	-1, MOD_KEY.none,	function() { saveAllCurrentFrames(); });
+	addHotkey("Preview", "Preview window",			"P", MOD_KEY.ctrl,	function() { previewWindow(getNodePreview()); });
 	
 	addHotkey("Preview", "Toggle grid",			"G", MOD_KEY.ctrl,	function() { grid_show = !grid_show; });
 	
@@ -246,7 +247,12 @@ function Panel_Preview() : PanelContent() constructor {
 	
 	function fullView() {
 		var prevS = getNodePreviewSurface();
-		if(!is_surface(prevS)) return;
+		if(!is_surface(prevS)) {
+			canvas_s = 1;
+			canvas_x = w / 2;
+			canvas_y = (h - toolbar_height) / 2;
+			return;
+		}
 		
 		canvas_w = surface_get_width(prevS);
 		canvas_h = surface_get_height(prevS);
