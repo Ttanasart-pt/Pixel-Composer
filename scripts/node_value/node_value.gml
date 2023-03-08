@@ -686,7 +686,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						editWidget = new fontScrollBox(
 							function(val) {
 								MODIFIED = true;
-								return setValueDirect(DIRECTORY + "Fonts\\" + FONT_INTERNAL[val]);
+								return setValueDirect(DIRECTORY + "Fonts/" + FONT_INTERNAL[val]);
 							}
 						);
 						break;

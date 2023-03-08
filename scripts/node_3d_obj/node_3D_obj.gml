@@ -158,7 +158,7 @@ function Node_3D_Obj(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			materialIndex = _v.material_index;
 			use_normal    = _v.use_normal;
 			if(_v.mtl_path != "")
-				_pathMtl  = _dir + "\\" + _v.mtl_path;
+				_pathMtl  = _dir + "/" + _v.mtl_path;
 		}
 		
 		if(updateMat) {

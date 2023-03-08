@@ -82,9 +82,21 @@
 #endregion
 
 #region file drop
-	if(array_length(drop_path)) {
-		load_file_path(drop_path);
-		drop_path = [];
+	if(OS == os_windows) {
+		if(array_length(drop_path)) {
+			load_file_path(drop_path);
+			drop_path = [];
+		}
+	} else if(OS == os_macosx) {		
+		file_dnd_set_files(file_dnd_pattern, file_dnd_allowfiles, file_dnd_allowdirs, file_dnd_allowmulti);
+		file_dnd_filelist = file_dnd_get_files();
+		
+		if(file_dnd_filelist != "" && _file_dnd_filelist != file_dnd_filelist) {
+			var path  = string_trim(file_dnd_filelist);
+			load_file_path(string_splice(path, "\n"));
+		}
+		
+		_file_dnd_filelist = file_dnd_filelist;
 	}
 #endregion
 

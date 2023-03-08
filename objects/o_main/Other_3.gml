@@ -5,7 +5,6 @@
 #endregion
 
 #region steam
-	if(STEAM_ENABLED) {
+	if(STEAM_ENABLED)
 		steam_shutdown();
-	}
 #endregion

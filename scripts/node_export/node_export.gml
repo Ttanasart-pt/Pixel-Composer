@@ -89,10 +89,10 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		["Settings",	false], 8, 5, 6, 7, 10, 11, 
 	];
 	
-	directory = DIRECTORY + "temp\\" + string(irandom_range(100000, 999999));
-	converter = working_directory + "ImageMagick\\convert.exe";
-	magick    = working_directory + "ImageMagick\\magick.exe";
-	webp      = working_directory + "webp\\webpmux.exe";
+	directory = DIRECTORY + "temp/" + string(irandom_range(100000, 999999));
+	converter = working_directory + "ImageMagick/convert.exe";
+	magick    = working_directory + "ImageMagick/magick.exe";
+	webp      = working_directory + "webp/webpmux.exe";
 	
 	static onValueUpdate = function(_index) {
 		var form = inputs[| 3].getValue();
@@ -204,15 +204,15 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 							res = true;
 							break;
 						case "d" : 
-							var dir = filename_dir(path) + "\\";
+							var dir = filename_dir(path) + "/";
 							
 							var float_str = string_digits(str);
 							if(float_str != "") {
 								var float_val = string_digits(float_str);
 								var dir_s = "";
-								var sep = string_splice(dir, "\\");
+								var sep = string_splice(dir, "/");
 								for(var j = 0; j < array_length(sep) - float_val; j++) {
-									dir_s += sep[j] + "\\";
+									dir_s += sep[j] + "/";
 								}
 								s += dir_s;
 							} else 
@@ -254,7 +254,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		var ext  = array_safe_get(format_image, extd, ".png");
 		
 		var _pathOut = _path;
-		var _pathTemp = directory + "\\" + string(irandom_range(10000, 99999)) + ".png";
+		var _pathTemp = directory + "/" + string(irandom_range(10000, 99999)) + ".png";
 		
 		switch(ext) {
 			case ".png": 
@@ -299,7 +299,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				if(!is_surface(_surf)) continue;
 				
 				if(form == NODE_EXPORT_FORMAT.gif) {
-					p = directory + "\\" + string(i) + "\\" + string_lead_zero(ANIMATOR.current_frame, 5) + ".png";
+					p = directory + "/" + string(i) + "/" + string_lead_zero(ANIMATOR.current_frame, 5) + ".png";
 				} else {
 					if(is_array(path) && array_length(path) == array_length(surf))
 						p = pathString(path[ safe_mod(i, array_length(path)) ], suff, i);
@@ -322,7 +322,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			if(is_array(path)) p = path[0];
 				
 			if(form == NODE_EXPORT_FORMAT.gif)
-				p = directory + "\\" + string_lead_zero(ANIMATOR.current_frame, 5) + ".png";
+				p = directory + "/" + string_lead_zero(ANIMATOR.current_frame, 5) + ".png";
 			else
 				p = pathString(p, suff);
 			
@@ -453,7 +453,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 						
 		if(is_array(surf)) {
 			for(var i = 0; i < array_length(surf); i++) {
-				temp_path = directory + "\\" + string(i) + "\\" + "*.png";
+				temp_path = directory + "/" + string(i) + "/" + "*.png";
 				if(is_array(path))
 					target_path = pathString(path[ safe_mod(i, array_length(path)) ], suff, i);
 				else
@@ -472,10 +472,10 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			
 			if(extd == 0) {
 				target_path = string_replace(target_path, ".png", ".gif");
-				renderGif("\"" + directory + "\\*.png\"", "\"" + target_path + "\"");
+				renderGif("\"" + directory + "/*.png\"", "\"" + target_path + "\"");
 			} else if(extd == 1) {
 				target_path = string_replace(target_path, ".png", ".webp");
-				renderWebp(directory + "\\", target_path);
+				renderWebp(directory + "/", target_path);
 			}
 		}
 		

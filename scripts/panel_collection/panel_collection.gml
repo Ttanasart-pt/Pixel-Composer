@@ -314,7 +314,7 @@ function Panel_Collection() : PanelContent() constructor {
 	function saveCollection(_name, save_surface = true, metadata = noone) {
 		if(PANEL_INSPECTOR.inspecting == noone) return;
 		
-		var _pre_name = (data_path == ""? "" : data_path + "\\") + _name;
+		var _pre_name = (data_path == ""? "" : data_path + "/") + _name;
 		var ext = filename_ext(_pre_name);
 		var _path = ext == ".pxcc"? _pre_name : _pre_name + ".pxcc";
 		
@@ -426,7 +426,7 @@ function Panel_Collection() : PanelContent() constructor {
 							directory_create(txt);
 							refreshContext();
 						};
-						dia.path = context.path + "\\";
+						dia.path = context.path + "/";
 					}
 					draw_sprite_ui_uniform(THEME.folder_add, 0, bx + ui(12), by + ui(12), 1, COLORS._main_icon);
 					draw_sprite_ui_uniform(THEME.folder_add, 1, bx + ui(12), by + ui(12), 1, COLORS._main_value_positive);

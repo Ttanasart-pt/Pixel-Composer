@@ -99,24 +99,24 @@ function DirectoryObject(name, path) constructor {
 		for( var i = 0; i < ds_list_size(_temp_name); i++ ) {
 			var file = _temp_name[| i];
 			
-			if(directory_exists(path + "\\" + file)) {
-				var _fol_path = path + "\\" + file;
+			if(directory_exists(path + "/" + file)) {
+				var _fol_path = path + "/" + file;
 				var fol = new DirectoryObject(file, _fol_path);
 				fol.scan(file_type);
 				ds_list_add(subDir, fol);
 			} else if(array_exists(file_type, filename_ext(file))) {
-				var f = new FileObject(string_replace(file, filename_ext(file), ""), path + "\\" + file);
+				var f = new FileObject(string_replace(file, filename_ext(file), ""), path + "/" + file);
 				ds_list_add(content, f);
 				
 				if(string_lower(filename_ext(file)) == ".png") {
-					var icon_path = path + "\\" + file;
+					var icon_path = path + "/" + file;
 					var amo = 1;
 					var p = string_pos("strip", icon_path);
 					if(p) amo = toNumber(string_copy(icon_path, p, string_length(icon_path) - p + 1));
 					
 					f.spr_path = [icon_path, amo, false];
 				} else {
-					var icon_path = path + "\\" + filename_change_ext(file, ".png");
+					var icon_path = path + "/" + filename_change_ext(file, ".png");
 					if(!file_exists(icon_path)) continue;
 					
 					var _temp = sprite_add(icon_path, 0, false, false, 0, 0);

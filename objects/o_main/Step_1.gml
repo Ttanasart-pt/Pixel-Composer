@@ -32,7 +32,7 @@
 	
 	if(PREF_MAP[? "auto_save_time"] > 0 && AUTO_SAVE_TIMER > PREF_MAP[? "auto_save_time"]) {
 		AUTO_SAVE_TIMER = 0;
-		var loc = DIRECTORY + "Autosave\\";
+		var loc = DIRECTORY + "Autosave/";
 		if(!directory_exists(loc))
 			directory_create(loc);
 		

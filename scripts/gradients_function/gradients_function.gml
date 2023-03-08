@@ -129,7 +129,7 @@ function gradientObject(color = c_black) constructor {
 			_grad_color[i * 4 + 1] = color_get_green(keys[i].value) / 255;
 			_grad_color[i * 4 + 2] = color_get_blue(keys[i].value) / 255;
 			_grad_color[i * 4 + 3] = 1;
-			_grad_time[i]  = keys[i].time;
+			_grad_time[i] = keys[i].time;
 		}
 	
 		return [ _grad_color, _grad_time ];

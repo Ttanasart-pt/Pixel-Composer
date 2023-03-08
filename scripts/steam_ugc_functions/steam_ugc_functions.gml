@@ -48,14 +48,14 @@ function steamUCGload() {
 function __loadSteamUGC(file_id, item_map) {
 	var _path = item_map[? "folder"];
 	
-	var f = file_find_first(_path + "\\*.pxcc", 0);
+	var f = file_find_first(_path + "/*.pxcc", 0);
 	file_find_close();
 	if(f != "") {
 		__loadSteamUGCCollection(file_id, f, _path);
 		return;
 	}
 	
-	var p = file_find_first(_path + "\\*.pxc", 0);
+	var p = file_find_first(_path + "/*.pxc", 0);
 	file_find_close();
 	if(p != "") {
 		__loadSteamUGCProject(file_id, p, _path);
@@ -65,8 +65,8 @@ function __loadSteamUGC(file_id, item_map) {
 
 function __loadSteamUGCCollection(file_id, f, path) {
 	var name = string_replace(filename_name(f), ".pxcc", "");
-	var file = new FileObject(name, path + "\\" + f);
-	var icon_path = string_replace(path + "\\" + f, ".pxcc", ".png");
+	var file = new FileObject(name, path + "/" + f);
+	var icon_path = string_replace(path + "/" + f, ".pxcc", ".png");
 	if(file_exists(icon_path)) {
 		var _temp = sprite_add(icon_path, 0, false, false, 0, 0);
 		var ww = sprite_get_width(_temp);
@@ -85,8 +85,8 @@ function __loadSteamUGCCollection(file_id, f, path) {
 
 function __loadSteamUGCProject(file_id, f, path) {
 	var name = string_replace(filename_name(f), ".pxc", "");
-	var file = new FileObject(name, path + "\\" + f);
-	var icon_path = path + "\\thumbnail.png";
+	var file = new FileObject(name, path + "/" + f);
+	var icon_path = path + "/thumbnail.png";
 	file.spr_path = [icon_path, 1, false];
 	
 	ds_list_add(STEAM_PROJECTS, file);

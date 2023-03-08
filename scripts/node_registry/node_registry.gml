@@ -7,7 +7,7 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 	
 	tooltip	     = "";
 	
-	var pth = DIRECTORY + "Nodes\\tooltip\\" + node + ".png";
+	var pth = DIRECTORY + "Nodes/tooltip/" + node + ".png";
 	if(file_exists(pth))
 		tooltip_spr = sprite_add(pth, 0, false, false, 0, 0);
 	else

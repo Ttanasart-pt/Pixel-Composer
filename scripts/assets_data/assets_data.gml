@@ -9,7 +9,7 @@
 		if(!directory_exists(root))
 			directory_create(root);
 		
-		var _l = root + "\\version";
+		var _l = root + "/version";
 		if(file_exists(_l)) {
 			var res = json_load_struct(_l);
 			if(!is_struct(res) || !struct_has(res, "version") || res.version < VERSION) 

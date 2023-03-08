@@ -1,7 +1,9 @@
 /// @description init
-if(gameframe_is_minimized()) {
+if(OS == os_windows && gameframe_is_minimized()) {
 	gameframe_update();
 	exit;
+} else if(OS == os_macosx) {
+	mac_window_step();
 }
 
 #region widget scroll

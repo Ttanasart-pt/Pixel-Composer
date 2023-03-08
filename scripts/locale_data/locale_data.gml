@@ -3,9 +3,9 @@
 	LOCALE = {}
 	
 	function __initLocale() {
-		var lfile = "data\\locale\\en.json";
+		var lfile = "data/locale/en.json";
 		var root = DIRECTORY + "Locale";
-		var path = root + "\\en.json";
+		var path = root + "/en.json";
 		
 		if(!directory_exists(root))
 			directory_create(root);

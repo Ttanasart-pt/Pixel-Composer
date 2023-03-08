@@ -6,7 +6,7 @@ print("===== Game Start Begin =====");
 	DIRECTORY = "";
 	
 	if(OS == os_windows)
-		DIRECTORY = environment_get_variable("userprofile") + "\\AppData\\Local\\PixelComposer\\";
+		DIRECTORY = environment_get_variable("userprofile") + "/AppData/Local/PixelComposer/";
 	else if(OS == os_macosx)
 		DIRECTORY = environment_get_variable("HOME") + "/PixelComposer/";
 	show_debug_message(DIRECTORY);

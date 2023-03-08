@@ -119,6 +119,8 @@
     {"name":"gameframe","order":2,"path":"folders/sprites/gameframe.yy",},
     {"name":"widgets","order":5,"path":"folders/widgets.yy",},
     {"name":"guide","order":12,"path":"folders/dialog/guide.yy",},
+    {"name":"MAC","order":13,"path":"folders/Extensions/MAC.yy",},
+    {"name":"window","order":29,"path":"folders/functions/window.yy",},
   ],
   "ResourceOrderSettings": [
     {"name":"s_node_corner","order":14,"path":"sprites/s_node_corner/s_node_corner.yy",},
@@ -975,6 +977,7 @@
     {"name":"s_node_cache","order":27,"path":"sprites/s_node_cache/s_node_cache.yy",},
     {"name":"node_repeat","order":26,"path":"scripts/node_repeat/node_repeat.yy",},
     {"name":"sh_fd_advect_velocity_1_glsl","order":7,"path":"shaders/sh_fd_advect_velocity_1_glsl/sh_fd_advect_velocity_1_glsl.yy",},
+    {"name":"mac_window_step","order":1,"path":"scripts/mac_window_step/mac_window_step.yy",},
     {"name":"s_node_image","order":4,"path":"sprites/s_node_image/s_node_image.yy",},
     {"name":"__node_value_processor","order":7,"path":"scripts/__node_value_processor/__node_value_processor.yy",},
     {"name":"s_node_group_input","order":16,"path":"sprites/s_node_group_input/s_node_group_input.yy",},

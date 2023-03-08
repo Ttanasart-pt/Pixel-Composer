@@ -7,6 +7,11 @@ function Panel_Menu() : PanelContent() constructor {
 	noti_icon_show = 0;
 	noti_icon_time = 0;
 	
+	if(OS == os_windows)
+		action_buttons = ["exit", "maximize", "minimize", "fullscreen"];
+	else if(OS == os_macosx)
+		action_buttons = ["exit", "minimize", "maximize", "fullscreen"];
+	
 	menu_file = [
 		menuItem(get_text("panel_menu_new", "New"), function() { NEW(); }, THEME.new_file, ["", "New file"]),
 		menuItem(get_text("panel_menu_open", "Open") + "...", function() { LOAD(); }, THEME.noti_icon_file_load, ["", "Open"]),
@@ -69,7 +74,7 @@ function Panel_Menu() : PanelContent() constructor {
 			shellOpenExplorer(DIRECTORY);
 		}, THEME.folder),
 		menuItem(get_text("panel_menu_directory", "Open autosave directory"), function() {
-			shellOpenExplorer(DIRECTORY + "autosave\\");
+			shellOpenExplorer(DIRECTORY + "autosave/");
 		}, THEME.folder),
 		menuItem(get_text("panel_menu_reset_default", "Reset default collection, assets"), function() {
 			zip_unzip("data/Collections.zip", DIRECTORY + "Collections");
@@ -221,16 +226,28 @@ function Panel_Menu() : PanelContent() constructor {
 		menus[6][1] = STEAM_ENABLED? menu_help_steam : menu_help;
 		
 		var xx = ui(40);
-		if(OS == os_windows)		xx = ui(24);
-		else if(OS == os_macosx)	xx = ui(156);
+		if(OS == os_windows)
+			xx = ui(24);
+		else if(OS == os_macosx) {
+			xx = ui(140);
+			draw_set_color(COLORS._main_icon_dark);
+			draw_line_round(xx, ui(8), xx, h - ui(8), 3);
+		}
 		
-		draw_sprite_ui_uniform(THEME.icon_24, 0, xx, h / 2, 1, c_white);
-		if(pHOVER && point_in_rectangle(mx, my, xx - ui(16), 0, xx + ui(16), ui(32))) {
+		var bx = xx;
+		if(OS == os_macosx)
+			bx = w - ui(24);
+		
+		draw_sprite_ui_uniform(THEME.icon_24, 0, bx, h / 2, 1, c_white);
+		if(pHOVER && point_in_rectangle(mx, my, bx - ui(16), 0, bx + ui(16), ui(32))) {
 			if(mouse_press(mb_left, pFOCUS))
 				dialogCall(o_dialog_about);
 		}
 		
-		xx += ui(20);
+		if(OS == os_windows)
+			xx += ui(20);
+		else if(OS == os_macosx)
+			xx += ui(8);
 		
 		for(var i = 0; i < array_length(menus); i++) {
 			draw_set_text(f_p1, fa_center, fa_center, COLORS._main_text);
@@ -337,42 +354,70 @@ function Panel_Menu() : PanelContent() constructor {
 		#region actions
 			var bs = ui(28);
 			
-			if(buttonInstant(THEME.button_hide_fill, x1 - bs, ui(6), bs, bs, [mx, my], pFOCUS, pHOVER,, THEME.window_exit, 0, COLORS._main_accent) == 2) {
-				window_close();
+			for( var i = 0; i < array_length(action_buttons); i++ ) {
+				var action = action_buttons[i];
+				
+				switch(action) {
+					case "exit":
+						if(buttonInstant(THEME.button_hide_fill, x1 - bs, ui(6), bs, bs, [mx, my], pFOCUS, pHOVER,, THEME.window_exit, 0, COLORS._main_accent) == 2)
+							window_close();
+						break;
+					case "maximize":
+						var win_max = gameframe_is_maximized() || gameframe_is_fullscreen_window();
+						if(OS == os_macosx)
+							win_max = __win_is_maximized;
+						
+						if(buttonInstant(THEME.button_hide_fill, x1 - bs, ui(6), bs, bs, [mx, my], pFOCUS, pHOVER,, THEME.window_maximize, win_max, [ COLORS._main_icon, CDEF.lime ]) == 2) {
+							if(OS == os_windows) {
+								if(gameframe_is_fullscreen_window()) {
+									gameframe_set_fullscreen(0);
+									gameframe_restore();
+								} else if(gameframe_is_maximized())
+									gameframe_restore();
+								else
+									gameframe_maximize();
+							} else if(OS == os_macosx) {
+								if(__win_is_maximized)  mac_window_minimize();
+								else                    mac_window_maximize();
+							}
+						}
+						break;
+					case "minimize":
+						if(OS == os_windows)
+						if(buttonInstant(THEME.button_hide_fill, x1 - bs, ui(6), bs, bs, [mx, my], pFOCUS, pHOVER,, THEME.window_minimize, 0, [ COLORS._main_icon, CDEF.yellow ]) == -2) {
+							if(OS == os_windows)
+								gameframe_minimize();
+							else if(OS == os_macosx) {
+								
+							}
+						}
+						
+						if(OS == os_macosx) {
+							buttonInstant(THEME.button_hide, x1 - bs, ui(6), bs, bs, [mx, my], pFOCUS, pHOVER,, THEME.window_minimize, 0, [ COLORS._main_icon, COLORS._main_icon ]);
+						}
+						break;
+					case "fullscreen":
+						var win_full = OS == os_windows? gameframe_is_fullscreen_window() : window_get_fullscreen();
+						if(buttonInstant(THEME.button_hide_fill, x1 - bs, ui(6), bs, bs, [mx, my], pFOCUS, pHOVER,, THEME.window_fullscreen, win_full, [ COLORS._main_icon, CDEF.cyan ]) == 2) {
+							if(OS == os_windows)
+								gameframe_set_fullscreen(gameframe_is_fullscreen_window()? 0 : 2);
+							else if(OS == os_macosx) {
+								if(window_get_fullscreen()) {
+									window_set_fullscreen(false);
+									mac_window_minimize();
+								} else
+									window_set_fullscreen(true);
+							}
+						}
+						break;
+				}
+				
+				if(OS == os_windows)		x1 -= bs + ui(4);
+				else if(OS == os_macosx)	x1 += bs + ui(4);
 			}
-			if(OS == os_windows)		x1 -= bs + ui(4);
-			else if(OS == os_macosx)	x1 += bs + ui(4);
-			
-			var win_max = gameframe_is_maximized() || gameframe_is_fullscreen_window();
-			if(buttonInstant(THEME.button_hide_fill, x1 - bs, ui(6), bs, bs, [mx, my], pFOCUS, pHOVER,, THEME.window_maximize, win_max, [ COLORS._main_icon, CDEF.lime ]) == 2) {
-				if(gameframe_is_fullscreen_window()) {
-					gameframe_set_fullscreen(0);
-					gameframe_restore();
-				} else if(gameframe_is_maximized())
-					gameframe_restore();
-				else
-					gameframe_maximize();
-			}
-			if(OS == os_windows)		x1 -= bs + ui(4);
-			else if(OS == os_macosx)	x1 += bs + ui(4);
-			  
-			if(buttonInstant(THEME.button_hide_fill, x1 - bs, ui(6), bs, bs, [mx, my], pFOCUS, pHOVER,, THEME.window_minimize, 0, [ COLORS._main_icon, CDEF.yellow ]) == -2) {
-				gameframe_minimize();
-			}
-			if(OS == os_windows)		x1 -= bs + ui(4);
-			else if(OS == os_macosx)	x1 += bs + ui(4);
-			
-			if(buttonInstant(THEME.button_hide_fill, x1 - bs, ui(6), bs, bs, [mx, my], pFOCUS, pHOVER,, THEME.window_fullscreen, gameframe_is_fullscreen_window(), [ COLORS._main_icon, CDEF.cyan ]) == 2) {
-				if(gameframe_is_fullscreen_window())
-					gameframe_set_fullscreen(0);
-				else
-					gameframe_set_fullscreen(2);
-			}
-			if(OS == os_windows)		x1 -= bs + ui(4);
-			else if(OS == os_macosx)	x1 += bs + ui(4);
 		#endregion
 		
-		if(OS == os_macosx)	x1 = w - ui(8);
+		if(OS == os_macosx)	x1 = w - ui(40);
 		
 		#region version
 			draw_set_text(f_p0, fa_right, fa_center, COLORS._main_text_sub);

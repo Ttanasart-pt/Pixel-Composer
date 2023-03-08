@@ -10,16 +10,23 @@
 	gpu_set_tex_mip_enable(mip_off);
 	gc_enable(true);
 	gc_target_frame_time(100);
+	
+	window_set_min_width(480)
+	window_set_min_height(480);
 #endregion
 
 #region window
-	gameframe_init();
-	//gameframe_can_input = false;
-	gameframe_set_cursor = false;
-	gameframe_caption_height_normal = ui(40);
-	gameframe_button_array = [  game_frame_button_create("", s_kenney, 0, function() {}),
-								game_frame_button_create("", s_kenney, 0, function() {}),
-							 ];
+	if(OS == os_windows) {
+		gameframe_init();
+		//gameframe_can_input = false;
+		gameframe_set_cursor = false;
+		gameframe_caption_height_normal = ui(40);
+		gameframe_button_array = [  game_frame_button_create("", s_kenney, 0, function() {}),
+									game_frame_button_create("", s_kenney, 0, function() {}),
+								 ];
+	} else if(OS == os_macosx) {
+		mac_window_init();
+	}
 	
 	depth = 0;
 	win_wp = WIN_W;
@@ -90,7 +97,20 @@
 #endregion
 
 #region file drop
-	file_dropper_init();
+	if(OS == os_windows) {
+		file_dropper_init();
+	} else if(OS == os_macosx) {
+		file_dnd_set_hwnd(window_handle());
+		file_dnd_set_enabled(true);
+		
+		_file_dnd_filelist  = "";
+		file_dnd_filelist   = "";
+		file_dnd_pattern    = "*.*";
+		file_dnd_allowfiles = true; 
+		file_dnd_allowdirs  = true;
+		file_dnd_allowmulti = true;
+	}
+	
 	drop_path = [];
 	
 	function load_file_path(path) {

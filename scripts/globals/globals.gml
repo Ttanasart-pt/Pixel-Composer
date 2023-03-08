@@ -75,6 +75,8 @@
 	
 	#macro mouse_mx device_mouse_x_to_gui(0)
 	#macro mouse_my device_mouse_y_to_gui(0)
+	#macro mouse_raw_x (device_mouse_raw_x(0) + window_get_x())
+	#macro mouse_raw_y (device_mouse_raw_y(0) + window_get_y())
 	#macro mouse_ui [device_mouse_x_to_gui(0), device_mouse_y_to_gui(0)]
 	
 	#macro sFOCUS FOCUS == self.id

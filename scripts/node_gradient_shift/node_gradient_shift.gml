@@ -13,6 +13,9 @@ function Node_Gradient_Shift(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	
 	inputs[| 2] = nodeValue("Wrap", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false)
 	
+	inputs[| 3] = nodeValue("Scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
+		.setDisplay(VALUE_DISPLAY.slider, [0, 2, 0.01]);
+	
 	outputs[| 0] = nodeValue("Gradient", self, JUNCTION_CONNECT.output, VALUE_TYPE.color, new gradientObject(c_white) )
 		.setDisplay(VALUE_DISPLAY.gradient);
 	
@@ -22,13 +25,14 @@ function Node_Gradient_Shift(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 		var pal = _data[0];
 		var sft = _data[1];
 		var lop = _data[2];
+		var sca = _data[3];
 		
 		_outSurf = new gradientObject();
 		_outSurf.keys = [];
 		
 		for( var i = 0; i < array_length(pal.keys); i++ ) {
 			var k = pal.keys[i];
-			var key = new gradientKey(k.time + sft, k.value);
+			var key = new gradientKey((0.5 + (k.time - 0.5) * sca) + sft, k.value);
 			
 			if(lop) {
 				var t = frac(key.time);

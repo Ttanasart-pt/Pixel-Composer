@@ -4,7 +4,7 @@ function __generate_node_data() {
 	
 	CLONING = true;
 	
-	var dir  = DIRECTORY + "Nodes\\";
+	var dir  = DIRECTORY + "Nodes//";
 	if(!directory_exists(dir)) directory_create(dir);
 	
 	repeat(amo) {
@@ -52,7 +52,7 @@ function __generate_node_data() {
 function __init_node_data() {
 	global.NODE_GUIDE = {};
 	
-	var dir  = DIRECTORY + "Nodes\\";
+	var dir  = DIRECTORY + "Nodes/";
 	if(!directory_exists(dir))
 		directory_create(dir);
 			
@@ -68,14 +68,16 @@ function __init_node_data() {
 		f = file_find_next();
 	}
 	
-	//var _l = dir + "\\version";
+	//var _l = dir + "/version";
 	//if(file_exists(_l)) {
 	//	var res = json_load_struct(_l);
 	//	if(res.version >= VERSION) return;
 	//}
 	//json_save_struct(_l, { version: VERSION });
 	
-	var tooltipDir = DIRECTORY + "Nodes\\";
-	if(file_exists("data\\tooltip.zip"))
-		zip_unzip("data\\tooltip.zip", tooltipDir);
+	var tooltipDir = DIRECTORY + "Nodes/";
+	if(file_exists("data/tooltip.zip"))
+		zip_unzip("data/tooltip.zip", tooltipDir);
+	else
+		noti_status("Tooltip image file not found.")
 }

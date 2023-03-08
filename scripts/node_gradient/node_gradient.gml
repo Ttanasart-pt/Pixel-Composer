@@ -40,11 +40,14 @@ function Node_Gradient(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	
 	inputs[| 8] = nodeValue("Mask", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
 	
+	inputs[| 9] = nodeValue("Scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
+		.setDisplay(VALUE_DISPLAY.slider, [0, 2, 0.01]);
+		
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [
 		["Output",		true],	0, 8, 
-		["Gradient",	false], 1, 5, 7,
+		["Gradient",	false], 1, 5, 9, 7,
 		["Shape",		false], 2, 3, 4, 6
 	];
 	
@@ -66,10 +69,14 @@ function Node_Gradient(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		var _cnt = _data[6];
 		var _lop = _data[7];
 		var _msk = _data[8];
+		var _sca = _data[9];
 		
 		var _grad = _gra.toArray();
 		var _grad_color = _grad[0];
 		var _grad_time	= _grad[1];
+		
+		for( var i = 0; i < array_length(_grad_time); i++ )
+			_grad_time[i] = 0.5 + (_grad_time[i] - 0.5) * _sca;
 		
 		if(_typ == 0 || _typ == 2) {
 			inputs[| 3].setVisible(true);

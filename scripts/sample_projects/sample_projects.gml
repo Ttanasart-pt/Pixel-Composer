@@ -4,13 +4,13 @@
 #endregion
 
 function LOAD_FOLDER(list, folder) {
-	var path = directory_get_current_working() + folder;
+	var path = DIRECTORY + "Welcome files/" + folder;
 	var file = file_find_first(path + "/*", fa_directory);
 	
-	while(file != "") {
+	while(file != "") {		
 		if(filename_ext(file) == ".pxc") {
-			var full_path = path + "\\" + file;
-			var f = new FileObject(string_replace(filename_name(file), filename_ext(file), ""), full_path);
+			var full_path = path + "/" + file;
+			var f = new FileObject(filename_name_only(file), full_path);
 			var icon_path = string_replace(full_path, filename_ext(full_path), ".png");
 				
 			if(file_exists(icon_path)) {
@@ -29,6 +29,8 @@ function LOAD_FOLDER(list, folder) {
 
 function LOAD_SAMPLE() {
 	ds_list_clear(SAMPLE_PROJECTS);
+	
+	zip_unzip("Welcome files.zip", DIRECTORY + "Welcome files")
 	
 	LOAD_FOLDER(SAMPLE_PROJECTS, "Getting started");
 	LOAD_FOLDER(SAMPLE_PROJECTS, "Sample Projects");
