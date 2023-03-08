@@ -30,4 +30,6 @@ function Node_VFX_Attract(_x, _y, _group = noone) : Node_VFX_effector(_x, _y, _g
 		if(scy_s < 0)	part.sc_sy =  lerp_linear(part.sc_sy, 0, abs(scy_s));
 		else			part.sc_sy += sign(part.sc_sy) * scy_s;
 	}
+	
+	PATCH_STATIC
 }

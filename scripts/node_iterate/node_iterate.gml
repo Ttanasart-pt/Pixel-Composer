@@ -79,4 +79,6 @@ function Node_Iterate(_x, _y, _group = noone) : Node_Collection(_x, _y, _group) 
 		
 		return ITERATION_STATUS.not_ready;
 	}
+	
+	PATCH_STATIC
 }

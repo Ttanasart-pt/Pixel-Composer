@@ -1,9 +1,6 @@
 {
   "resourceType": "GMExtensionConfigSet",
   "configurables": null,
-  "extensionId": {
-    "name": "FileDropper",
-    "path": "extensions/FileDropper/FileDropper.yy"
-  },
+  "extensionId": null,
   "resourceVersion": "1.0"
 }

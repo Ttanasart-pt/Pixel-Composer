@@ -10,6 +10,8 @@ function Node_Iterator_Input(_x, _y, _group = noone) : Node_Group_Input(_x, _y, 
 	
 	cache_value = -1;
 	
+	PATCH_STATIC
+	
 	outputs[| 0].getValueDefault = method(outputs[| 0], outputs[| 0].getValueRecursive); //Get value from outside loop
 	outputs[| 0].getValueRecursive = function() {
 		//show_debug_message("iteration " + string(group.iterated));
@@ -30,4 +32,6 @@ function Node_Iterator_Input(_x, _y, _group = noone) : Node_Group_Input(_x, _y, 
 	}
 	
 	outputs[| 1] = nodeValue("Loop entrance", self, JUNCTION_CONNECT.output, VALUE_TYPE.node, 0);	
+	
+	PATCH_STATIC
 }

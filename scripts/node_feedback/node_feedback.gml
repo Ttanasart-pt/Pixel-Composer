@@ -31,4 +31,6 @@ function Node_Feedback(_x, _y, _group = noone) : Node_Collection(_x, _y, _group)
 		
 		__nodeLeafList(getNodeList(), RENDER_QUEUE);
 	}
+	
+	PATCH_STATIC
 }

@@ -377,6 +377,8 @@
   "gradleinject": "",
   "hasConvertedCodeInjection": true,
   "helpfile": "",
+  "HTML5CodeInjection": "",
+  "html5Props": false,
   "IncludedResources": [
     "Included Files\\ApolloHelp.html",
     "Included Files\\LuaLicense.txt",

@@ -23,4 +23,6 @@ function Node_Fluid_Group(_x, _y, _group = noone) : Node_Collection(_x, _y, _gro
 		setRenderStatus(false);
 		UPDATE |= RENDER_TYPE.full;
 	}
+	
+	PATCH_STATIC
 }

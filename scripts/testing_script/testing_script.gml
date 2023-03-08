@@ -124,7 +124,9 @@ function __test_load_all_nodes() {
 	repeat(amo) {
 		if(index > inded) break;
 		if(index > indst) {
-			var b = ALL_NODES[? k].build(xx, yy);
+			var node = ALL_NODES[? k];
+			print("==== Building " + node.node);
+			var b = node.build(xx, yy);
 			
 			if(++ind > col) {
 				ind = 0;

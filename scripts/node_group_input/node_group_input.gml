@@ -217,6 +217,8 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		inParent.name = display_name;
 	}
 	
+	PATCH_STATIC
+	
 	static update = function(frame = ANIMATOR.current_frame) {
 		if(is_undefined(inParent)) return;
 		

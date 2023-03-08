@@ -160,3 +160,7 @@
 	}
 	DEF_SURFACE_RESET();
 #endregion
+
+#region PATCH	
+	#macro PATCH_STATIC static _doUpdate = function() { doUpdate() };
+#endregion

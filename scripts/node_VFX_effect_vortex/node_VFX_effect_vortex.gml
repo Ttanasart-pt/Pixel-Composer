@@ -43,4 +43,6 @@ function Node_VFX_Vortex(_x, _y, _group = noone) : Node_VFX_effector(_x, _y, _gr
 		if(scy_s < 0)	part.scy = lerp_linear(part.scy, 0, abs(scy_s));
 		else			part.scy += sign(part.scy) * scy_s;
 	}
+	
+	PATCH_STATIC
 }

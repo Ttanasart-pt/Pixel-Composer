@@ -12,4 +12,6 @@ function Node_VFX_Group(_x, _y, _group = noone) : Node_Collection(_x, _y, _group
 		renderer.inputs[| renderer.input_fix_len].setFrom(input.outputs[| 0]);
 		output.inputs[| 0].setFrom(renderer.outputs[| 0]);
 	}
+	
+	PATCH_STATIC
 }

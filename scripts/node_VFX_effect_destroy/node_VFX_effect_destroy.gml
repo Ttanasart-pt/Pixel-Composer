@@ -12,4 +12,6 @@ function Node_VFX_Destroy(_x, _y, _group = noone) : Node_VFX_effector(_x, _y, _g
 		if(random(1) < str * _sten)
 			part.kill();
 	}
+	
+	PATCH_STATIC
 }

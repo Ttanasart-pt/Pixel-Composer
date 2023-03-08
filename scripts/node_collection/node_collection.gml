@@ -234,6 +234,8 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	
 	static onStep = function() {}
 	
+	PATCH_STATIC
+	
 	static triggerRender = function() {
 		for(var i = custom_input_index; i < ds_list_size(inputs); i++) {
 			var jun_node = inputs[| i].from;

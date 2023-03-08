@@ -65,4 +65,6 @@ function Node_Iterate_Each(_x, _y, _group = noone) : Node_Collection(_x, _y, _gr
 		resetAllRenderStatus();
 		return ITERATION_STATUS.loop;
 	}
+	
+	PATCH_STATIC
 }
