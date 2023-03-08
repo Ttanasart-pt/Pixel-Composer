@@ -1,0 +1,9 @@
+{
+  "extensionId": {
+    "name": "window_frame",
+    "path": "extensions/window_frame/window_frame.yy"
+  },
+  "resourceVersion": "1.0",
+  "resourceType": "GMExtensionConfigSet",
+  "configurables": null
+}

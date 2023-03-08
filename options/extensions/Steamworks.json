@@ -1,0 +1,24 @@
+{
+  "resourceType": "GMExtensionConfigSet",
+  "configurables": {
+    "fc7d5b5e-1344-49ee-bca6-8579b0c68d50": null,
+    "2d6a1c61-98e7-4289-8eff-d70ef6dac1ff": {
+      "Default": {
+        "value": "C:\\\\Steamworks\\\\sdk\\\\1.55"
+      }
+    },
+    "c37a2e1d-c82f-4d90-9d0a-b4a2b3b3da08": null,
+    "2d512363-a8c0-4025-8b9f-b53e231b025d": {
+      "Default": {
+        "value": "2299510"
+      }
+    },
+    "96a61e5d-c4ac-4104-b5ac-c8ef936e2609": {
+      "Default": {
+        "value": "Enabled"
+      }
+    }
+  },
+  "extensionId": null,
+  "resourceVersion": "1.0"
+}
