@@ -73,6 +73,8 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	
 	metadata = new MetaDataManager();
 	
+	attributes[? "Separator"] = [];
+	
 	inspUpdateTooltip   = get_text("panel_inspector_execute", "Execute node contents");
 	inspUpdateIcon      = [ THEME.sequence_control, 1, COLORS._main_value_positive ];
 	
@@ -245,8 +247,12 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	}
 	
 	static sortIO = function() {
+		input_display_list = [];
+		
+		var sep = attributes[? "Separator"];		
+		array_sort(sep, function(a0, a1) { return a0[0] - a1[0]; });
 		var siz = ds_list_size(inputs);
-		var ar = ds_priority_create();
+		var ar  = ds_priority_create();
 		
 		for( var i = custom_input_index; i < siz; i++ ) {
 			var _in = inputs[| i];
@@ -255,14 +261,21 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 			ds_priority_add(ar, _in, _or);
 		}
 		
-		for( var i = siz - 1; i >= custom_input_index; i-- ) {
+		for( var i = siz - 1; i >= custom_input_index; i-- )
 			ds_list_delete(inputs, i);
-		}
 		
+		for( var i = 0; i < custom_input_index; i++ ) 
+			array_push(input_display_list, i);
+			
 		for( var i = custom_input_index; i < siz; i++ ) {
 			var _jin = ds_priority_delete_min(ar);
 			_jin.index = i;
 			ds_list_add(inputs, _jin);
+			array_push(input_display_list, i);
+		}
+		
+		for( var i = array_length(sep) - 1; i >= 0; i-- ) {
+			array_insert(input_display_list, sep[i][0], [ sep[i][1], false, i ]);
 		}
 		
 		ds_priority_destroy(ar);
@@ -357,4 +370,16 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		sortIO();
 		applyDeserialize();
 	}
+	
+	static attributeSerialize = function() {
+		var att = ds_map_create();
+		att[? "Separator"] = json_stringify(attributes[? "Separator"]);
+		return att;
+	}
+	
+	static attributeDeserialize = function(attr) {
+		if(ds_map_exists(attr, "Separator"))
+			attributes[? "Separator"] = json_parse(attr[? "Separator"]);
+	}
+	
 }

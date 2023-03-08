@@ -850,6 +850,20 @@
         "yorigin": 24,
         "slice": null
     },
+    "node_create": {
+        "path": "./icon/s_node_create.png",
+        "subimages": 1,
+        "xorigin": 24,
+        "yorigin": 24,
+        "slice": null
+    },
+    "node_use_global": {
+        "path": "./icon/s_node_use_global.png",
+        "subimages": 3,
+        "xorigin": 16,
+        "yorigin": 16,
+        "slice": null
+    },
     "inspector_area": {
         "path": "./inspector/s_inspector_area_strip2.png",
         "subimages": 2,

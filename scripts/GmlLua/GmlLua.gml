@@ -301,6 +301,7 @@ Project.frame	   = 0;
 Project.frameTotal = 0;
 Project.fps		   = 0;
 ");
+	lua_projectData(state);
 	
 	return state;
 }

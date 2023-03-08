@@ -173,10 +173,11 @@ function Node_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	
 	static doApplyDeserialize = function() {
 		var _typ = getType();
+		if(_typ == VALUE_TYPE.any) return;
 		
 		for( var i = input_fix_len; i < ds_list_size(inputs); i++ ) {
-			if(_typ != VALUE_TYPE.any) 
-				inputs[| i].type = _typ;
+			inputs[| i].type = _typ;
+			inputs[| i].resetDisplay();
 		}
 	}
 	

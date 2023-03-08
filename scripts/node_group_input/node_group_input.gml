@@ -30,15 +30,17 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	inputs[| 0] = nodeValue("Display type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.enum_scroll, display_list[0])
 		.rejectArray();
+	inputs[| 0].editWidget.update_hover = false;
 	
 	inputs[| 1] = nodeValue("Range", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [0, 1])
-		.setDisplay(VALUE_DISPLAY.vector)
+		.setDisplay(VALUE_DISPLAY.vector_range)
 		.setVisible(false)
 		.rejectArray();
 	
 	inputs[| 2] = nodeValue("Input type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Integer", "Float", "Boolean", "Color", "Surface", "Path", "Curve", "Text", "Object", "Node", "3D object", "Any" ], { update_hover: false })
 		.rejectArray();
+	inputs[| 2].editWidget.update_hover = false;
 	
 	inputs[| 3] = nodeValue("Enum label", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "")
 		.setVisible(false)
@@ -55,9 +57,13 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	inputs[| 6] = nodeValue("Display gizmo", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true)
 		.rejectArray();
 	
+	inputs[| 7] = nodeValue("Step", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.01)
+		.setVisible(false)
+		.rejectArray();
+		
 	input_display_list = [ 
 		["Display", false], 5, 6, 
-		["Data",	false], 2, 0, 4, 1, 3,
+		["Data",	false], 2, 0, 4, 1, 7, 3,
 	];
 	
 	outputs[| 0] = nodeValue("Value", self, JUNCTION_CONNECT.output, VALUE_TYPE.any, 0);
@@ -70,11 +76,12 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	static onValueUpdate = function(index = 0) {
 		if(is_undefined(inParent)) return;
 		
-		var _dtype = inputs[| 0].getValue();
-		var _range = inputs[| 1].getValue();
-		var _val_type = inputs[| 2].getValue();
+		var _dtype	    = inputs[| 0].getValue();
+		var _range	    = inputs[| 1].getValue();
+		var _val_type	= inputs[| 2].getValue();
 		var _enum_label = inputs[| 3].getValue();
-		var _vec_size = inputs[| 4].getValue();
+		var _vec_size	= inputs[| 4].getValue();
+		var _step		= inputs[| 7].getValue();
 		
 		if(index == 2) {
 			var _o = outputs[| 0];
@@ -97,12 +104,23 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		var _val = inParent.getValue();
 		
 		switch(_dtype) {
-			case "Range" :	inParent.setDisplay(VALUE_DISPLAY.range);		break;
+			case "Range" :	
+				inParent.setDisplay(VALUE_DISPLAY.range); 
+				break;
 			
-			case "Slider" :	inParent.setDisplay(VALUE_DISPLAY.slider, [_range[0], _range[1], 0.01]);	break;
-			case "Slider range" :	inParent.setDisplay(VALUE_DISPLAY.slider_range, [_range[0], _range[1], 0.01]);	break;
+			case "Slider" :	
+				inParent.setDisplay(VALUE_DISPLAY.slider, [_range[0], _range[1], _step]);	
+				break;
+			case "Slider range" :	
+				if(!is_array(_val) || array_length(_val) != 2) 
+					inParent.animator = new valueAnimator([0, 0], inParent);
+				inParent.setDisplay(VALUE_DISPLAY.slider_range, [_range[0], _range[1], _step]);	
+				break;
 				
-			case "Rotation" : inParent.setDisplay(VALUE_DISPLAY.rotation);	break;
+			case "Rotation" : 
+				inParent.setDisplay(VALUE_DISPLAY.rotation);	
+				break;
+				
 			case "Rotation range" :
 				if(!is_array(_val) || array_length(_val) != 2) 
 					inParent.animator = new valueAnimator([0, 0], inParent);
@@ -209,11 +227,13 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		inputs[| 1].setVisible(false);
 		inputs[| 3].setVisible(false);
 		inputs[| 4].setVisible(false);
+		inputs[| 7].setVisible(false);
 		
 		switch(_dtype) {
-			case "Range" :
 			case "Slider" :
 			case "Slider range" :
+				inputs[| 7].setVisible(true);
+			case "Range" :
 				inputs[| 1].setVisible(true);
 				break;
 			case "Enum button" :
@@ -246,28 +266,6 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 			if(i == 2 || i == 5) continue;
 			inputs[| i].applyDeserialize(_inputs[| i], load_scale);
 			var raw_val = _inputs[| i][? "raw value"];
-		}
-		
-		if(LOADING_VERSION < 1060) {
-			var _dtype = inputs[| 0].getValue();
-			switch(_dtype) {
-				case VALUE_DISPLAY.range :			inputs[| 0].setValue( 1); break;
-				case VALUE_DISPLAY.rotation :		inputs[| 0].setValue( 2); break;
-				case VALUE_DISPLAY.rotation_range :	inputs[| 0].setValue( 3); break;
-				case VALUE_DISPLAY.slider :			inputs[| 0].setValue( 4); break;
-				case VALUE_DISPLAY.slider_range :	inputs[| 0].setValue( 5); break;
-				case VALUE_DISPLAY.padding :		inputs[| 0].setValue( 6); break;
-				case VALUE_DISPLAY.vector :			inputs[| 0].setValue( 7); break;
-				case VALUE_DISPLAY.vector_range :	inputs[| 0].setValue( 8); break;
-				case VALUE_DISPLAY.area :			inputs[| 0].setValue( 9); break;
-				case VALUE_DISPLAY.enum_button :	inputs[| 0].setValue(10); break;
-				case VALUE_DISPLAY.enum_scroll :	inputs[| 0].setValue(11); break;
-				
-				case VALUE_DISPLAY.gradient :		inputs[| 0].setValue( 1); break;
-				case VALUE_DISPLAY.palette :		inputs[| 0].setValue( 2); break;
-				
-				default : inputs[| 0].setValue( 0); break;
-			}
 		}
 		
 		inParent.name = name;

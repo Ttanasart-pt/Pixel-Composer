@@ -356,6 +356,15 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	cache_value = [ false, undefined ];
 	cache_array = [ false, false ];
 	
+	global_use  = false;
+	global_key  = "";
+	global_edit = new textBox(TEXTBOX_INPUT.text, function(str) { 
+		global_key = str; 
+		node.triggerRender(); 
+	});
+	global_edit.boxColor = COLORS._main_value_positive;
+	global_edit.align    = fa_left;
+	
 	static setDefault = function(vals) {
 		if(LOADING || APPENDING) return self;
 		
@@ -367,9 +376,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	}
 	
 	static setUnitRef = function(ref, mode = VALUE_UNIT.constant) {
-		unit.reference = ref;
-		unit.mode = mode;
-		cache_value[0] = false;
+		unit.reference  = ref;
+		unit.mode		= mode;
+		cache_value[0]  = false;
 		
 		return self;
 	}
@@ -938,11 +947,15 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	static getValueRecursive = function(_time = ANIMATOR.current_frame) {
 		var val = [ -1, self ];
 		
-		if(value_from == noone)
-			val = [ animator.getValue(_time), self ];
-		else if(value_from != self) {
+		if(value_from == noone) {
+			var _val = animator.getValue(_time);
+			
+			if(global_use && GLOBAL.inputGetable(self, global_key)) 
+				return GLOBAL.getInput(global_key).getValueRecursive(_time);
+			else
+				val = [ _val, self ];
+		} else if(value_from != self)
 			val = value_from.getValueRecursive(_time); 
-		}
 		
 		return val;
 	}
@@ -1386,6 +1399,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		_map[? "shift y"]	 = draw_line_shift_y;
 		_map[? "from node"]  = !preset && value_from? value_from.node.node_id	: -1;
 		_map[? "from index"] = !preset && value_from? value_from.index			: -1;
+		_map[? "global_use"] = global_use;
+		_map[? "global_key"] = global_key;
 		
 		ds_map_add_list(_map, "data", ds_list_clone(extra_data));
 		
@@ -1405,6 +1420,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		unit.mode	= ds_map_try_get(_map, "unit", VALUE_UNIT.constant);
 		draw_line_shift_x = ds_map_try_get(_map, "shift x");
 		draw_line_shift_y = ds_map_try_get(_map, "shift y");
+		global_use = ds_map_try_get(_map, "global_use");
+		global_key = ds_map_try_get(_map, "global_key");
 		
 		animator.deserialize(_map[? "raw value"], scale);
 		

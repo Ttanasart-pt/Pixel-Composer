@@ -50,7 +50,7 @@ function Panel_Inspector() : PanelContent() constructor {
 	for( var i = 0; i < array_length(meta_tb); i++ )
 		meta_tb[i].hide = true;
 	
-	meta_display = [ [ "Metadata", false ], [ "Variables", true ] ];
+	meta_display = [ [ "Metadata", false ], [ "Global variables", false ] ];
 	
 	var_editing = false;
 	
@@ -170,6 +170,14 @@ function Panel_Inspector() : PanelContent() constructor {
 						var wd_w  = w - ui(16 + 48);
 						var wd_h  = ui(32);
 						
+						if(j) {
+							draw_set_color(merge_color(c_black, COLORS.panel_toolbar_separator, 0.75));
+							draw_line_round(wd_x + ui(8), yy, wd_x + wd_w - ui(16), yy, 4);
+							
+							yy += ui(10);
+							hh += ui(10);
+						}
+						
 						_edit.tb_name.setActiveFocus(pFOCUS, _hover);
 						_edit.sc_type.setActiveFocus(pFOCUS, _hover);
 						_edit.sc_disp.setActiveFocus(pFOCUS, _hover);
@@ -183,18 +191,23 @@ function Panel_Inspector() : PanelContent() constructor {
 						_edit.sc_type.draw(wd_x, yy, wd_w / 2 - ui(2), wd_h, _edit.val_type_name[_edit.type_index], _m, ui(16) + x, top_bar_h + y);
 						_edit.sc_disp.draw(wd_x + wd_w / 2 + ui(2), yy, wd_w / 2 - ui(2), wd_h, _edit.sc_disp.data_list[_edit.disp_index], _m, ui(16) + x, top_bar_h + y);
 						
-						yy += wd_h + ui(8);
-						hh += wd_h + ui(8);
+						yy += wd_h + ui(4);
+						hh += wd_h + ui(4);
+						
+						var wd_h = _inpu.editor.draw(wd_x, yy, wd_w, _m, pFOCUS, _hover);
+						
+						yy += wd_h + ui(4);
+						hh += wd_h + ui(4);
 					}
 					
 					if(del != noone)
 						ds_list_delete(GLOBAL.inputs, del);
 				} else {
 					for( var j = 0; j < ds_list_size(GLOBAL.inputs); j++ ) {
-						var widg    = drawWidget(yy, _m, GLOBAL.inputs[| j]);
+						var widg    = drawWidget(yy, _m, GLOBAL.inputs[| j], true);
 						var widH    = widg[0];
 						var mbRight = widg[1];
-					
+						
 						yy += lb_h + widH + padd;
 						hh += lb_h + widH + padd;
 					}
@@ -261,7 +274,7 @@ function Panel_Inspector() : PanelContent() constructor {
 		return hh;
 	}
 	
-	static drawWidget = function(yy, _m, jun) {
+	static drawWidget = function(yy, _m, jun, global_var = true) {
 		var con_w	= contentPane.surface_w - ui(4);
 		var _hover	= pHOVER && contentPane.hover;
 		var xc		= con_w / 2;
@@ -270,7 +283,7 @@ function Panel_Inspector() : PanelContent() constructor {
 		var lb_y = yy + lb_h / 2;
 			
 		var butx = ui(16);
-		if(jun.connect_type == JUNCTION_CONNECT.input && jun.isAnimable()) {
+		if(jun.connect_type == JUNCTION_CONNECT.input && jun.isAnimable() && !jun.global_use && !global_var) {
 			var index = jun.value_from == noone? jun.animator.is_anim : 2;
 			draw_sprite_ui_uniform(THEME.animate_clock, index, butx, lb_y, 1,, 0.8);
 			if(_hover && point_in_circle(_m[0], _m[1], butx, lb_y, ui(10))) {
@@ -288,19 +301,30 @@ function Panel_Inspector() : PanelContent() constructor {
 				}
 			}
 		}
-			
+		
 		butx += ui(20);
-		index = jun.visible;
-		draw_sprite_ui_uniform(THEME.junc_visible, index, butx, lb_y, 1,, 0.8);
-		if(_hover && point_in_circle(_m[0], _m[1], butx, lb_y, ui(10))) {
-			draw_sprite_ui_uniform(THEME.junc_visible, index, butx, lb_y, 1,, 1);
-			TOOLTIP = get_text("visibility", "Visibility");
+		if(!global_var) {			
+			if(jun.global_use) {
+				draw_sprite_ui_uniform(THEME.node_use_global, GLOBAL.inputGetable(jun, jun.global_key)? 0 : 2, butx, lb_y, 1,, 0.8);
+			} else {
+				index = jun.visible;
+				draw_sprite_ui_uniform(THEME.junc_visible, index, butx, lb_y, 1,, 0.8);
+				if(_hover && point_in_circle(_m[0], _m[1], butx, lb_y, ui(10))) {
+					draw_sprite_ui_uniform(THEME.junc_visible, index, butx, lb_y, 1,, 1);
+					TOOLTIP = get_text("visibility", "Visibility");
 				
-			if(mouse_press(mb_left, pFOCUS))
-				jun.visible = !jun.visible;
-		}
-				
-		draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text);
+					if(mouse_press(mb_left, pFOCUS))
+						jun.visible = !jun.visible;
+				}
+			}
+		} else
+			draw_sprite_ui_uniform(THEME.node_use_global, 0, butx, lb_y, 1,, 0.8);
+		
+		var cc = COLORS._main_text;
+		if(jun.global_use)
+			cc = GLOBAL.inputGetable(jun, jun.global_key)? COLORS._main_value_positive : COLORS._main_value_negative;
+		
+		draw_set_text(f_p0, fa_left, fa_center, cc);
 		draw_text_over(ui(56), lb_y - ui(2), jun.name);
 		var lb_w = string_width(jun.name) + ui(32);
 			
@@ -321,7 +345,7 @@ function Panel_Inspector() : PanelContent() constructor {
 		#endregion
 			
 		#region anim
-			if(jun.connect_type == JUNCTION_CONNECT.input && lineBreak && jun.animator.is_anim) {
+			if(jun.connect_type == JUNCTION_CONNECT.input && lineBreak && jun.animator.is_anim && !global_var) {
 				var bx = w - ui(64);
 				var by = lb_y;
 				if(buttonInstant(THEME.button_hide, bx - ui(12), by - ui(12), ui(24), ui(24), _m, pFOCUS, _hover, "", THEME.prop_keyframe, 2) == 2) {
@@ -388,7 +412,18 @@ function Panel_Inspector() : PanelContent() constructor {
 					jun.on_end = safe_mod(jun.on_end + 1, sprite_get_number(THEME.prop_on_end));
 			}
 		#endregion
-			
+		
+		#region use global
+			if(jun.connect_type == JUNCTION_CONNECT.input && lineBreak && !jun.animator.is_anim && !global_var) {
+				var bx = w - ui(64);
+				var by = lb_y;
+				var ic_b = jun.global_use? c_white : COLORS._main_icon;
+				if(buttonInstant(THEME.button_hide, bx - ui(12), by - ui(12), ui(24), ui(24), _m, pFOCUS, _hover, "Use global variable", THEME.node_use_global, jun.global_use, ic_b) == 2) {
+					jun.global_use = !jun.global_use;
+				}
+			}
+		#endregion
+		
 		var _hsy = yy + lb_h;
 		var padd = ui(8);
 			
@@ -400,8 +435,16 @@ function Panel_Inspector() : PanelContent() constructor {
 			
 		var widH	   = lineBreak? editBoxH : 0;
 		var mbRight	   = true;
+		
+		if(jun.global_use) {
+			jun.global_edit.boxColor = GLOBAL.inputGetable(jun, jun.global_key)? COLORS._main_value_positive : COLORS._main_value_negative;
+			jun.global_edit.setActiveFocus(pFOCUS, _hover);
+			jun.global_edit.setInteract(jun.value_from == noone);
+			if(pFOCUS) jun.global_edit.register(contentPane);
 			
-		if(jun.editWidget) {
+			var wd_h = jun.global_edit.draw(editBoxX, editBoxY, editBoxW, editBoxH, jun.global_key, _m);
+			widH = lineBreak? wd_h : 0;
+		} else if(jun.editWidget) {
 			jun.editWidget.setActiveFocus(pFOCUS, _hover);
 			
 			if(jun.connect_type == JUNCTION_CONNECT.input) {
@@ -650,7 +693,8 @@ function Panel_Inspector() : PanelContent() constructor {
 			
 			var lb_h    = line_height(f_p0) + ui(8);
 			var padd    = ui(8);
-			var widg    = drawWidget(yy, _m, jun);
+			
+			var widg    = drawWidget(yy, _m, jun, false);
 			var widH    = widg[0];
 			var mbRight = widg[1];
 			
@@ -689,6 +733,10 @@ function Panel_Inspector() : PanelContent() constructor {
 					}
 						
 					array_push(_menuItem, 
+						menuItem(get_text("use_global_var", "Use global variable"), function() {
+							__dialog_junction.global_use = !__dialog_junction.global_use;
+							}),
+						-1,
 						menuItem(get_text("copy", "Copy"), function() {
 							clipboard_set_text(__dialog_junction.getShowString());
 							}, THEME.copy, ["Inspector", "Copy property"]),
@@ -756,6 +804,11 @@ function Panel_Inspector() : PanelContent() constructor {
 					menuItem("Expand",			function(){ inspecting.array_process = ARRAY_PROCESS.expand;	 UPDATE |= RENDER_TYPE.full; }),
 					menuItem("Expand inverse",  function(){ inspecting.array_process = ARRAY_PROCESS.expand_inv; UPDATE |= RENDER_TYPE.full; }),
 				]);
+			}
+		} else if(ds_map_exists(inspecting.attributes, "Separator")) {
+			if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), [mx, my], pFOCUS, pHOVER, "Input management", THEME.view_group, 1) == 2) {
+				var dia = dialogCall(o_dialog_group_input_order, x + bx, y + by + ui(36));
+				dia.node = inspecting;
 			}
 		}
 		

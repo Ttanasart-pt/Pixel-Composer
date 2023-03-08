@@ -46,8 +46,7 @@ function Node_Lua_Global(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	}
 	
 	static getState = function() {
-		if(inputs[| 2].value_from == noone)
-			return lua_state;
+		if(inputs[| 2].value_from == noone) return lua_state;
 		return inputs[| 2].value_from.node.getState();
 	}
 	
@@ -62,18 +61,16 @@ function Node_Lua_Global(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	static update = function(frame = ANIMATOR.current_frame) {
 		if(!compiled) return;
 		if(!ANIMATOR.is_playing || !ANIMATOR.frame_progress) return;
-		//print("Run lua global at " + string(ANIMATOR.current_frame));
-		
-		lua_projectData(getState());
 		
 		var _code = inputs[| 0].getValue();
 		var _type = inputs[| 1].getValue();
 		
-		is_beginning = inputs[| 2].value_from == noone;
-		if(is_beginning && ANIMATOR.current_frame == 0) { //rerfesh state on the first frame
+		if(ANIMATOR.current_frame == 0) { //rerfesh state on the first frame
 			lua_state_destroy(lua_state);
 			lua_state = lua_create();
 		}
+		
+		lua_projectData(getState());
 		
 		if(ANIMATOR.current_frame == 0 || _type == 1) {
 			try 
@@ -97,6 +94,7 @@ function Node_Lua_Global(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	}
 	
 	static onDestroy = function() {
+		lua_state_destroy(lua_state);
 		if(error_notification != noone)
 			noti_remove(error_notification);
 	}

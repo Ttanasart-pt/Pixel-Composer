@@ -918,6 +918,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	}
 	static clearCache = function() { 
 		if(!use_cache) return;
+		if(!renderActive) return;
 		
 		if(array_length(cached_output) != ANIMATOR.frames_total)
 			array_resize(cached_output, ANIMATOR.frames_total);
@@ -930,6 +931,8 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		}
 	}
 	static clearCacheForward = function() {
+		if(!renderActive) return;
+		
 		clearCache();
 		for( var i = 0; i < ds_list_size(outputs); i++ )
 		for( var j = 0; j < ds_list_size(outputs[| i].value_to); j++ )

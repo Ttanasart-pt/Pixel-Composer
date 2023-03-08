@@ -165,8 +165,6 @@ function Node_Lua_Compute(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		if(!compiled) return;
 		if(!ANIMATOR.is_playing || !ANIMATOR.frame_progress) return;
 		
-		lua_projectData(getState());
-		
 		var _func = inputs[| 0].getValue();
 		var _dimm = inputs[| 1].getValue();
 		
@@ -174,6 +172,13 @@ function Node_Lua_Compute(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		for( var i = input_fix_len; i < ds_list_size(inputs) - data_length; i += data_length ) {
 			array_push(argument_val,  inputs[| i + 2].getValue());
 		}
+		
+		if(ANIMATOR.current_frame == 0) { //rerfesh state on the first frame
+			lua_state_destroy(lua_state);
+			lua_state = lua_create();
+		}
+		
+		lua_projectData(getState());
 		
 		var res = 0;
 		try {
@@ -243,6 +248,7 @@ function Node_Lua_Compute(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	}
 	
 	static onDestroy = function() {
+		lua_state_destroy(lua_state);
 		if(error_notification != noone)
 			noti_remove(error_notification);
 	}

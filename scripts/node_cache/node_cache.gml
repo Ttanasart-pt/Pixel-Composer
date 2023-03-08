@@ -14,6 +14,11 @@ function Node_Cache(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	cache_content			= "";
 	cache_loading_progress  = 0;
 	
+	insp2UpdateTooltip = "Clear cache";
+	insp2UpdateIcon    = [ THEME.cache, 0, COLORS._main_icon ];
+	
+	static onInspector2Update = function() { clearCache(); }
+	
 	static step = function() {
 		if(cache_loading) {
 			cached_output[cache_loading_progress] = surface_array_deserialize(cache_content, cache_loading_progress);

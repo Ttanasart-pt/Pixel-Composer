@@ -13,20 +13,35 @@ function variable_editor(nodeVal) constructor {
 		/*Text*/	[ "Default", ],
 	]
 	
-	tb_name = new textArea(TEXTBOX_INPUT.text, function(str) { value.name = str; });
+	tb_name = new textArea(TEXTBOX_INPUT.text, function(str) { 
+		value_name = str;
+		value.name = str;
+		UPDATE |= RENDER_TYPE.full;
+	});
+	
+	vb_range = new vectorBox(2, TEXTBOX_INPUT.number, function(index, val) { 
+		slider_range[index] = val;
+	});
+	
+	tb_step = new textBox(TEXTBOX_INPUT.number, function(val) { 
+		slider_step = val;
+	});
 	
 	sc_type = new scrollBox(val_type_name, function(val) {
 		type_index = val;
 		sc_disp.data_list = display_list[val];
 		disp_index = 0;
-		
 		refreshInput();
+		
+		UPDATE |= RENDER_TYPE.full;
 	} );
 	sc_type.update_hover = false;
 	
 	sc_disp = new scrollBox(display_list[0], function(val) {
 		disp_index = val;
 		refreshInput();
+		
+		UPDATE |= RENDER_TYPE.full;
 	} );
 	sc_disp.update_hover = false;
 	
@@ -36,6 +51,9 @@ function variable_editor(nodeVal) constructor {
 	
 	disp_index  = 0;
 	_disp_index = 0;
+	
+	slider_range = [ 0, 1 ];
+	slider_step  = 0.01;
 	
 	static refreshInput = function() {
 		value.type = val_type[type_index];
@@ -117,10 +135,41 @@ function variable_editor(nodeVal) constructor {
 			case "Gradient" :		value.setDisplay(VALUE_DISPLAY.gradient);		break;
 			case "Palette" :		value.setDisplay(VALUE_DISPLAY.palette);		break;
 			
-			case "Import" :		value.setDisplay(VALUE_DISPLAY.path_load);		break;
-			case "Export" :		value.setDisplay(VALUE_DISPLAY.path_save);		break;
-			case "Font" :		value.setDisplay(VALUE_DISPLAY.path_font);		break;
+			case "Import" :		value.setDisplay(VALUE_DISPLAY.path_load, ["", ""]);	break;
+			case "Export" :		value.setDisplay(VALUE_DISPLAY.path_save, ["", ""]);	break;
+			case "Font" :		value.setDisplay(VALUE_DISPLAY.path_font);				break;
 		}
+	}
+	
+	static draw = function(_x, _y, _w, _m, _focus, _hover) {
+		var _h = 0;
+		
+		switch(sc_disp.data_list[disp_index]) {
+			case "Slider" :			
+			case "Slider range" :	
+				var wd_h = ui(32);
+				var lb_w = ui(72);
+				
+				vb_range.setActiveFocus(_focus, _hover);
+				 tb_step.setActiveFocus(_focus, _hover);
+				
+				draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text_sub);
+				draw_text(_x + ui(8), _y + wd_h / 2, "Range");
+						
+				vb_range.draw(_x + lb_w, _y, _w - lb_w, wd_h, slider_range, _m);
+				_h += wd_h + ui(4);
+				_y += wd_h + ui(4);
+				
+				draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text_sub);
+				draw_text(_x + ui(8), _y + wd_h / 2, "Step");
+				
+				 tb_step.draw(_x + lb_w, _y, _w - lb_w, wd_h, slider_step , _m);
+				_h += wd_h + ui(8);
+				_y += wd_h + ui(8);
+				break;
+		}
+		
+		return _h;
 	}
 }
 
@@ -139,15 +188,35 @@ function Node_Global(_x = 0, _y = 0) : __Node_Base(_x, _y) constructor {
 	value   = ds_map_create();
 	input_display_list = -1;
 	
+	static valueUpdate = function(index) {
+		UPDATE |= RENDER_TYPE.full;
+	}
+	
 	static createValue = function() {
-		var _in = nodeValue("New value", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0);
-		_in.editor = new variable_editor(_in);
+		var _in         = nodeValue("New value", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0);
+		_in.editor      = new variable_editor(_in);
 		ds_list_add(inputs, _in);
 		
 		return _in;
 	}
 	
-	static getValue = function(key, def = noone) {
+	static inputExist = function(key) {
+		return ds_map_exists(value, key);
+	}
+	
+	static inputGetable = function(from, key) {
+		if(!inputExist(key)) return false;
+		var to = value[? key];
+		
+		if(!typeCompatible(from.type, to.type))
+			return false;
+		if(typeIncompatible(from, to))
+			return false;
+		
+		return true;
+	}
+	
+	static getInput = function(key, def = noone) {
 		if(!ds_map_exists(value, key)) return def;
 		return value[? key];
 	}
@@ -155,7 +224,7 @@ function Node_Global(_x = 0, _y = 0) : __Node_Base(_x, _y) constructor {
 	static step = function() {
 		for( var i = 0; i < ds_list_size(inputs); i++ ) {
 			var val = inputs[| i].getValue();
-			value[? inputs[| i].name] = val;
+			value[? inputs[| i].name] = inputs[| i];
 		}
 	}
 	
@@ -166,9 +235,11 @@ function Node_Global(_x = 0, _y = 0) : __Node_Base(_x, _y) constructor {
 		for(var i = 0; i < ds_list_size(inputs); i++) {
 			var _ser = inputs[| i].serialize();
 			
-			_ser[? "global_type"] = inputs[| i].editor.type_index;
-			_ser[? "global_disp"] = inputs[| i].editor.disp_index;
-			_ser[? "global_name"] = inputs[| i].editor.value_name;
+			_ser[? "global_type"]	 = inputs[| i].editor.type_index;
+			_ser[? "global_disp"]	 = inputs[| i].editor.disp_index;
+			_ser[? "global_name"]	 = inputs[| i].editor.value_name;
+			_ser[? "global_s_range"] = ds_list_create_from_array(inputs[| i].editor.slider_range);
+			_ser[? "global_s_step "] = inputs[| i].editor.slider_step;
 			
 			ds_list_add(_inputs, _ser);	
 			ds_list_mark_as_map(_inputs, i);
@@ -182,17 +253,23 @@ function Node_Global(_x = 0, _y = 0) : __Node_Base(_x, _y) constructor {
 	static deserialize = function(_map) {
 		var _inputs = _map[? "inputs"];
 		
-		if(!ds_list_empty(_inputs) && !ds_list_empty(inputs)) {
-			for(var i = 0; i < ds_list_size(_inputs); i++) {
-				var _in  = createValue();
-				var _des = _inputs[| i];
-				
-				_in.deserialize(_des);
-				_in.editor.type_index = ds_map_try_get(_des, "global_type", 0);
-				_in.editor.disp_index = ds_map_try_get(_des, "global_disp", 0);
-				_in.editor.value_name = ds_map_try_get(_des, "global_name", "");
-				_in.editor.refreshInput();
-			}	
+		for(var i = 0; i < ds_list_size(_inputs); i++) {
+			var _des = _inputs[| i];
+			var _in  = createValue();
+			
+			_in.editor.type_index = ds_map_try_get(_des, "global_type", 0);
+			_in.editor.disp_index = ds_map_try_get(_des, "global_disp", 0);
+			_in.editor.disp_index = ds_map_try_get(_des, "global_disp", 0);
+			_in.editor.value_name = ds_map_try_get(_des, "global_name", "");
+			
+			_in.editor.slider_range = array_create_from_list(ds_map_try_get(_des, "global_s_range", [ 0, 0 ]));
+			_in.editor.slider_step  = ds_map_try_get(_des, "global_s_step",  0.01);
+			
+			_in.editor.refreshInput();
+			
+			_in.applyDeserialize(_des);
 		}
+		
+		step();
 	}
 }

@@ -520,9 +520,9 @@ function textBox(_input, _onModify, _extras = noone) : textInput(_input, _onModi
 			
 			if(hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + _h)) {
 				if(hide)
-					draw_sprite_stretched_ext(THEME.textbox, 1, _x, _y, _w, _h, c_white, 0.5);	
+					draw_sprite_stretched_ext(THEME.textbox, 1, _x, _y, _w, _h, boxColor, 0.5);	
 				else
-					draw_sprite_stretched(THEME.textbox, 1, _x, _y, _w, _h);	
+					draw_sprite_stretched_ext(THEME.textbox, 1, _x, _y, _w, _h, boxColor, 1.0);	
 				if(mouse_press(mb_left, active))
 					activate();
 				
@@ -535,7 +535,7 @@ function textBox(_input, _onModify, _extras = noone) : textInput(_input, _onModi
 					if(mouse_wheel_up())	onModify(toNumber(_text) - amo);
 				}
 			} else if(!hide)
-				draw_sprite_stretched_ext(THEME.textbox, 0, _x, _y, _w, _h, c_white, 0.5 + 0.5 * interactable);
+				draw_sprite_stretched_ext(THEME.textbox, 0, _x, _y, _w, _h, boxColor, 0.5 + 0.5 * interactable);
 			
 			if(slidable) {
 				if(_w > ui(64))
