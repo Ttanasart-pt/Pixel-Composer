@@ -22,6 +22,8 @@ function Panel_Inspector() : PanelContent() constructor {
 	keyframe_drag_st  = 0;
 	
 	anim_toggling = false;
+	anim_hold     = noone;
+	visi_hold     = noone;
 	
 	min_w = ui(160);
 	lineBreak = true;
@@ -33,12 +35,12 @@ function Panel_Inspector() : PanelContent() constructor {
 	tb_prop_filter	= new textBox(TEXTBOX_INPUT.text, function(txt) {
 		filter_text = txt;
 	})
-	tb_prop_filter.no_empty = false;
-	tb_prop_filter.auto_update = true;
-	tb_prop_filter.font = f_p0;
-	tb_prop_filter.color = COLORS._main_text_sub;
-	tb_prop_filter.align  = fa_center;
-	tb_prop_filter.hide = true;
+	tb_prop_filter.no_empty		= false;
+	tb_prop_filter.auto_update	= true;
+	tb_prop_filter.font			= f_p0;
+	tb_prop_filter.color		= COLORS._main_text_sub;
+	tb_prop_filter.align		= fa_center;
+	tb_prop_filter.hide			= true;
 	filter_text = "";
 	
 	current_meta = -1;
@@ -287,6 +289,9 @@ function Panel_Inspector() : PanelContent() constructor {
 			var index = jun.value_from == noone? jun.animator.is_anim : 2;
 			draw_sprite_ui_uniform(THEME.animate_clock, index, butx, lb_y, 1,, 0.8);
 			if(_hover && point_in_circle(_m[0], _m[1], butx, lb_y, ui(10))) {
+				if(anim_hold != noone)
+					jun.animator.is_anim = anim_hold;
+				
 				draw_sprite_ui_uniform(THEME.animate_clock, index, butx, lb_y, 1,, 1);
 				TOOLTIP = jun.value_from == noone? get_text("panel_inspector_toggle_anim", "Toggle animation") : get_text("panel_inspector_remove_link", "Remove link");
 					
@@ -296,11 +301,15 @@ function Panel_Inspector() : PanelContent() constructor {
 					else {
 						recordAction(ACTION_TYPE.var_modify, jun.animator, [ jun.animator.is_anim, "is_anim", jun.name + " animation" ]);
 						jun.animator.is_anim = !jun.animator.is_anim;
+						anim_hold = jun.animator.is_anim;
 					}
 					PANEL_ANIMATION.updatePropertyList();
 				}
 			}
 		}
+		
+		if(anim_hold != noone && mouse_release(mb_left))
+			anim_hold = noone;
 		
 		butx += ui(20);
 		if(!global_var) {			
@@ -310,15 +319,23 @@ function Panel_Inspector() : PanelContent() constructor {
 				index = jun.visible;
 				draw_sprite_ui_uniform(THEME.junc_visible, index, butx, lb_y, 1,, 0.8);
 				if(_hover && point_in_circle(_m[0], _m[1], butx, lb_y, ui(10))) {
+					if(visi_hold != noone)
+						jun.visible = visi_hold;
+					
 					draw_sprite_ui_uniform(THEME.junc_visible, index, butx, lb_y, 1,, 1);
 					TOOLTIP = get_text("visibility", "Visibility");
 				
-					if(mouse_press(mb_left, pFOCUS))
+					if(mouse_press(mb_left, pFOCUS)) {
 						jun.visible = !jun.visible;
+						visi_hold = jun.visible;
+					}
 				}
 			}
 		} else
 			draw_sprite_ui_uniform(THEME.node_use_global, 0, butx, lb_y, 1,, 0.8);
+		
+		if(visi_hold != noone && mouse_release(mb_left))
+			visi_hold = noone;
 		
 		var cc = COLORS._main_text;
 		if(jun.global_use)

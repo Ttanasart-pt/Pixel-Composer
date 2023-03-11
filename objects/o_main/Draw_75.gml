@@ -13,6 +13,7 @@
 				case VALUE_TYPE.float :
 				case VALUE_TYPE.integer :
 				case VALUE_TYPE.text :
+				case VALUE_TYPE.struct :
 				case VALUE_TYPE.path :
 					draw_tooltip_text(string_real(content));
 					break;

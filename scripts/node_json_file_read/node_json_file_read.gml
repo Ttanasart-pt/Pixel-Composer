@@ -38,14 +38,18 @@ function Node_Json_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	outputs[| 0] = nodeValue("Path", self, JUNCTION_CONNECT.output, VALUE_TYPE.path, "")
 		.setVisible(true, true);
 	
+	outputs[| 1] = nodeValue("Struct", self, JUNCTION_CONNECT.output, VALUE_TYPE.struct, {});
+	
 	data_length = 1;
-	input_fix_len = ds_list_size(inputs);
+	input_fix_len  = ds_list_size(inputs);
+	output_fix_len = ds_list_size(outputs);
 	
 	static createNewInput = function() {
 		var index = ds_list_size(inputs);
 		inputs[| index] = nodeValue("Key", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "" )
 			.setVisible(true, true);
 		
+		var index = ds_list_size(outputs);
 		outputs[| index] = nodeValue("Values", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, 0 )
 			.setVisible(true, true);
 	}
@@ -76,20 +80,26 @@ function Node_Json_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		var _in = ds_list_create();
 		var _ot = ds_list_create();
 		
-		for( var i = 0; i < ds_list_size(inputs); i++ ) {
-			if(i < input_fix_len || inputs[| i].getValue() != "") {
-				ds_list_add(_in, inputs[| i]);
-				ds_list_add(_ot, outputs[| i]);
+		for( var i = 0; i < input_fix_len; i++ )
+			ds_list_add(_in, inputs[| i]);
+		
+		for( var i = 0; i < output_fix_len; i++ )
+			ds_list_add(_ot, outputs[| i]);
+		
+		for( var i = input_fix_len; i < ds_list_size(inputs); i++ ) {
+			if(inputs[| i].getValue() != "") {
+				ds_list_add(_in,  inputs[| i + 0]);
+				ds_list_add(_ot, outputs[| i + 1]);
 			} else {
-				delete inputs[| i];
-				delete outputs[| i];
+				delete  inputs[| i + 0];
+				delete outputs[| i + 1];
 			}
 		}
 		
-		for( var i = 0; i < ds_list_size(_in); i++ ) {
+		for( var i = 0; i < ds_list_size(_in); i++ )
 			_in[| i].index = i;
+		for( var i = 0; i < ds_list_size(_ot); i++ )
 			_ot[| i].index = i;
-		}
 		
 		ds_list_destroy(inputs);
 		inputs = _in;
@@ -132,21 +142,39 @@ function Node_Json_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		if(path == "") return;
 		if(path_current != path) updatePaths(path);
 		
+		outputs[| 1].setValue(content);
+		
 		for( var i = input_fix_len; i < ds_list_size(inputs) - 1; i++ ) {
 			var key = inputs[| i].getValue();
+			var out = outputs[| i + 1];
 			
-			outputs[| i].name = key;
-			if(variable_struct_exists(content, key)) {
-				var val = variable_struct_get(content, key);
-				outputs[| i].setValue(val);
+			out.name = key;
+			var keys = string_splice(key, ".");
+			var _str = content;
+			
+			for( var j = 0; j < array_length(keys); j++ ) {
+				var k = keys[j];
 				
-				if(is_array(val) && array_length(val))
-					outputs[| i].type = is_string(val[0])? VALUE_TYPE.text : VALUE_TYPE.float;
-				else
-					outputs[| i].type = is_string(val)? VALUE_TYPE.text : VALUE_TYPE.float;
-			} else {
-				outputs[| i].setValue(0);
-				outputs[| i].type = VALUE_TYPE.float;
+				if(!variable_struct_exists(_str, k)) {
+					out.setValue(0);
+					out.type = VALUE_TYPE.float;
+					break;
+				}
+				
+				var val = variable_struct_get(_str, k);
+				if(j == array_length(keys) - 1) {
+					if(is_struct(val))
+						out.type = VALUE_TYPE.struct;
+					else if(is_array(val) && array_length(val))
+						out.type = is_string(val[0])? VALUE_TYPE.text : VALUE_TYPE.float;
+					else
+						out.type = is_string(val)? VALUE_TYPE.text : VALUE_TYPE.float;
+					
+					out.setValue(val);
+				}
+				
+				if(is_struct(val))	_str = val;
+				else				break;
 			}
 		}
 	}

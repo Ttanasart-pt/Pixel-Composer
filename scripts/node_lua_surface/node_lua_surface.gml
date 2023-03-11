@@ -13,12 +13,14 @@ function Node_Lua_Surface(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	inputs[| 3]  = nodeValue("Execution thread", self, JUNCTION_CONNECT.input, VALUE_TYPE.node, noone)
 		.setVisible(false, true);
 	
+	inputs[| 4]  = nodeValue("Execute on frame", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true)
+	
 	static createNewInput = function() {
 		var index = ds_list_size(inputs);
 		inputs[| index + 0] = nodeValue("Argument name", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "" );
 		
 		inputs[| index + 1] = nodeValue("Argument type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0 )
-			.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Number", "String", "Surface" ], { update_hover: false });
+			.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Number", "String", "Surface", "Struct" ], { update_hover: false });
 		inputs[| index + 1].editWidget.interactable = false;
 		
 		inputs[| index + 2] = nodeValue("Argument value", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0 )
@@ -32,7 +34,7 @@ function Node_Lua_Surface(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	luaArgumentRenderer();
 	
-	input_display_list = [ 3,
+	input_display_list = [ 3, 4, 
 		["Function",	false], 0, 1,
 		["Arguments",	false], argument_renderer,
 		["Script",		false], 2,
@@ -47,6 +49,7 @@ function Node_Lua_Surface(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	argument_val  = [];
 	
 	lua_state = lua_create();
+	lua_error_handler = _lua_error;
 	
 	error_notification = noone;
 	compiled = false;
@@ -93,7 +96,8 @@ function Node_Lua_Surface(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 				ds_list_add(_in, inputs[| i + 2]);
 				
 				inputs[| i + 1].editWidget.interactable = true;
-				inputs[| i + 2].editWidget.interactable = true;
+				if(inputs[| i + 2].editWidget != noone)
+					inputs[| i + 2].editWidget.interactable = true;
 				
 				if(LOADING || APPENDING) {
 					var type = inputs[| i + 1].getValue();
@@ -101,6 +105,7 @@ function Node_Lua_Surface(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 						case 0 : inputs[| i + 2].type = VALUE_TYPE.float;	break;
 						case 1 : inputs[| i + 2].type = VALUE_TYPE.text;	break;
 						case 2 : inputs[| i + 2].type = VALUE_TYPE.surface;	break;
+						case 3 : inputs[| i + 2].type = VALUE_TYPE.struct;	break;
 					}
 					
 					inputs[| i + 2].setDisplay(VALUE_DISPLAY._default);
@@ -151,6 +156,7 @@ function Node_Lua_Surface(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 				case 0 : inputs[| index + 1].type = VALUE_TYPE.float;	break;
 				case 1 : inputs[| index + 1].type = VALUE_TYPE.text;	break;
 				case 2 : inputs[| index + 1].type = VALUE_TYPE.surface;	break;
+				case 3 : inputs[| index + 1].type = VALUE_TYPE.struct;	break;
 			}
 			
 			inputs[| index + 1].setDisplay(VALUE_DISPLAY._default);
@@ -172,16 +178,20 @@ function Node_Lua_Surface(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		
 		var _func = inputs[| 0].getValue();
 		var _dimm = inputs[| 1].getValue();
+		var _exec = inputs[| 4].getValue();
+		
+		if(!_exec) return;
 		
 		argument_val  = [];
 		for( var i = input_fix_len; i < ds_list_size(inputs) - data_length; i += data_length ) {
 			array_push(argument_val,  inputs[| i + 2].getValue());
 		}
 		
-		if(ANIMATOR.current_frame == 0) { //rerfesh state on the first frame
-			lua_state_destroy(lua_state);
-			lua_state = lua_create();
-		}
+		//if(ANIMATOR.current_frame == 0) { //rerfesh state on the first frame
+		//	lua_state_destroy(lua_state);
+		//	lua_state = lua_create();
+		//	addCode();
+		//}
 		
 		lua_projectData(getState());
 		
@@ -189,17 +199,14 @@ function Node_Lua_Surface(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		_outSurf = surface_verify(_outSurf, _dimm[0], _dimm[1]);
 		
 		surface_set_target(_outSurf);
-			try {
-				lua_call_w(getState(), _func, argument_val);
-			} catch(e) {
-				noti_warning(exception_print(e),, self);
-			}
+			try      lua_call_w(getState(), _func, argument_val);
+			catch(e) noti_warning(exception_print(e),, self);
 		surface_reset_target();
 		
 		outputs[| 1].setValue(_outSurf);
 	}
 	
-	static onInspectorUpdate = function() { //compile
+	static addCode = function() {
 		var _func = inputs[| 0].getValue();
 		var _code = inputs[| 2].getValue();
 		argument_name = [];
@@ -218,7 +225,10 @@ function Node_Lua_Surface(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		lua_code += "\nend";
 		
 		lua_add_code(getState(), lua_code);
-		
+	}
+	
+	static onInspectorUpdate = function() { //compile
+		addCode();	
 		compiled = true;
 		
 		for( var i = 0; i < ds_list_size(outputs[| 0].value_to); i++ ) {
@@ -232,6 +242,9 @@ function Node_Lua_Surface(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	static postDeserialize = function() {
 		var _inputs = load_map[? "inputs"];
+		
+		if(LOADING_VERSION < 1380 && !CLONING)
+			ds_list_insert(_inputs, 4, noone);
 		
 		for(var i = input_fix_len; i < ds_list_size(_inputs); i += data_length)
 			createNewInput();
@@ -250,6 +263,7 @@ function Node_Lua_Surface(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 				case 0 : inputs[| i + 2].type = VALUE_TYPE.float;	break;
 				case 1 : inputs[| i + 2].type = VALUE_TYPE.text;	break;
 				case 2 : inputs[| i + 2].type = VALUE_TYPE.surface;	break;
+				case 3 : inputs[| i + 2].type = VALUE_TYPE.struct;	break;
 			}
 			
 			inputs[| i + 2].setDisplay(VALUE_DISPLAY._default);

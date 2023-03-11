@@ -143,3 +143,6 @@
 	}
 #endregion
 //print("===== Step end =====");
+
+if(keyboard_check_pressed(ord("Q")))
+	panelSerialize();

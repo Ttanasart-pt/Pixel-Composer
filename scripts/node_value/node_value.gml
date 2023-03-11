@@ -23,6 +23,7 @@ enum VALUE_TYPE {
 	particle  = 13,
 	rigid     = 14,
 	fdomain   = 15,
+	struct    = 16,
 }
 
 enum VALUE_DISPLAY {
@@ -96,6 +97,7 @@ function value_color(i) {
 		$5dde8f, //particle
 		$e3ff66, //rigid
 		#4da6ff, //fdomain
+		$5d3f8c, //struct
 	];
 	return JUNCTION_COLORS[safe_mod(max(0, i), array_length(JUNCTION_COLORS))];
 }
@@ -116,6 +118,7 @@ function value_bit(i) {
 		case VALUE_TYPE.particle	: return 1 << 16;
 		case VALUE_TYPE.rigid   	: return 1 << 17;
 		case VALUE_TYPE.fdomain 	: return 1 << 18;
+		case VALUE_TYPE.struct   	: return 1 << 19;
 		
 		case VALUE_TYPE.node		: return 1 << 32;
 		
@@ -189,7 +192,8 @@ function typeIncompatible(from, to) {
 			case VALUE_DISPLAY.vector_range : 
 			case VALUE_DISPLAY.puppet_control : 
 			case VALUE_DISPLAY.padding : 
-			case VALUE_DISPLAY.curve : return true;
+			case VALUE_DISPLAY.curve : 
+				return true;
 		}
 	}
 	
@@ -1389,6 +1393,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	static serialize = function(scale = false, preset = false) {
 		var _map = ds_map_create();
 		
+		//print("  = > Serializing: " + name);
 		ds_map_add_list(_map, "raw value", animator.serialize(scale));
 		
 		_map[? "on end"]	 = on_end;

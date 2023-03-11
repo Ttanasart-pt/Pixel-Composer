@@ -77,8 +77,8 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	newMesh(0);
 	
 	tools = [
-		[ "Mesh edit",		THEME.mesh_tool_edit ],
-		[ "Anchor remove",  THEME.mesh_tool_delete ],
+		new NodeTool( "Mesh edit",		THEME.mesh_tool_edit ),
+		new NodeTool( "Anchor remove",  THEME.mesh_tool_delete ),
 	];
 	
 	static getPreviewValue = function() { return inputs[| 6]; }
@@ -103,7 +103,6 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		var lx = attributes[? mshx];
 		var ly = attributes[? mshy];
 		var len = ds_list_size(lx);
-		var _tool = PANEL_PREVIEW.tool_index;
 		
 		if(previewing == 0) {
 			if(_shp == 2) {
@@ -182,7 +181,7 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			
 			draw_line_width(_dx0, _dy0, _dx1, _dy1, hover == i + 0.5? 4 : 2);
 			
-			if(_tool == 0 && distance_to_line(_mx, _my, _dx0, _dy0, _dx1, _dy1) < 6)
+			if(isUsingTool(0) && distance_to_line(_mx, _my, _dx0, _dy0, _dx1, _dy1) < 6)
 				_hover = i + 0.5;
 		}
 		
@@ -197,13 +196,13 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			var _dy = _y + _py * _s;
 			
 			//draw_text(_dx, _dy - 8, i);
-			if(_tool == -1)
+			if(isNotUsingTool())
 				draw_circle(_dx, _dy, 4, false)
-			else
+			else {
 				draw_sprite_ui_uniform(THEME.anchor_selector, hover == i, _dx, _dy);
-			
-			if(_tool >= 0 && point_distance(_mx, _my, _dx, _dy) < 8)
-				_hover = i;
+				if(point_distance(_mx, _my, _dx, _dy) < 8)
+					_hover = i;
+			}
 		}
 		
 		hover = _hover;
@@ -227,13 +226,13 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			
 		if(frac(hover) == 0) {
 			if(mouse_click(mb_left, active)) {
-				if(_tool == 0) {
+				if(isUsingTool(0)) {
 					anchor_dragging = hover;
 					anchor_drag_sx  = lx[| hover];
 					anchor_drag_sy  = ly[| hover];
 					anchor_drag_mx  = _mx;
 					anchor_drag_my  = _my;
-				} else if(_tool == 1) {
+				} else if(isUsingTool(1)) {
 					if(ds_list_size(lx) > 3) {
 						ds_list_delete(lx, hover);
 						ds_list_delete(ly, hover);

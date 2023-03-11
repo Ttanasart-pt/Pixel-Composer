@@ -5,7 +5,7 @@ function Node_Path_Array(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	w = 96;
 	
 	input_fix_len = ds_list_size(inputs);
-	data_length = 1;
+	data_length   = 1;
 	
 	outputs[| 0] = nodeValue("Path array", self, JUNCTION_CONNECT.output, VALUE_TYPE.pathnode, self);
 	
@@ -22,11 +22,10 @@ function Node_Path_Array(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	static refreshDynamicInput = function() {
 		var _l = ds_list_create();
 		
-		for( var i = 0; i < input_fix_len; i++ ) {
+		for( var i = 0; i < input_fix_len; i++ ) 
 			_l[| i] = inputs[| i];
-		}
 		
-		for( var i = input_fix_len; i < ds_list_size(inputs); i++ ) {
+		for( var i = input_fix_len; i < ds_list_size(inputs); i += data_length ) {
 			if(inputs[| i].value_from)
 				ds_list_add(_l, inputs[| i]);
 			else
@@ -50,7 +49,7 @@ function Node_Path_Array(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	
 	static getLineCount = function() { 
 		var l = 0;
-		for( var i = input_fix_len; i < ds_list_size(inputs) - 1; i++ ) {
+		for( var i = input_fix_len; i < ds_list_size(inputs) - 1; i += data_length ) {
 			var _path = inputs[| i].getValue();
 			l += struct_has(_path, "getLineCount")? _path.getLineCount() : 1; 
 		}
@@ -62,7 +61,7 @@ function Node_Path_Array(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	}
 	
 	static getPointRatio = function(_rat, ind = 0) {
-		for( var i = input_fix_len; i < ds_list_size(inputs) - 1; i++ ) {
+		for( var i = input_fix_len; i < ds_list_size(inputs) - 1; i += data_length ) {
 			var _path = inputs[| i].getValue();
 			var lc = struct_has(_path, "getLineCount")? _path.getLineCount() : 1; 
 			

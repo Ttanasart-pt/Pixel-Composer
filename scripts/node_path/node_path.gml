@@ -14,18 +14,21 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		.setDisplay(VALUE_DISPLAY.enum_scroll, ["Entire line", "Segment"])
 		.rejectArray();
 	
+	inputs[| 3] = nodeValue("Round anchor", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false)
+		.rejectArray();
+	
 	input_display_list = [
-		["Path",	false], 0, 2, 1,
+		["Path",	false], 0, 2, 1, 3, 
 		["Anchors",	false], 
 	];
 	
 	input_fix_len = ds_list_size(inputs);
 	input_display_list_len = array_length(input_display_list);
 	
-	function createAnchor(_x, _y) {
+	function createAnchor(_x, _y, _dxx = 0, _dxy = 0, _dyx = 0, _dyy = 0) {
 		var index = ds_list_size(inputs);
 		
-		inputs[| index] = nodeValue("Anchor",  self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ _x, _y, 0, 0, 0, 0 ])
+		inputs[| index] = nodeValue("Anchor",  self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ _x, _y, _dxx, _dxy, _dyx, _dyy ])
 			.setDisplay(VALUE_DISPLAY.vector);
 		array_push(input_display_list, index);
 		
@@ -37,11 +40,16 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		
 	outputs[| 1] = nodeValue("Path data", self, JUNCTION_CONNECT.output, VALUE_TYPE.pathnode, self);
 	
+	tool_pathDrawer = new NodeTool( "Draw path", THEME.path_tools_draw )	
+		.addSetting("Smoothness", VALUE_TYPE.float,   function(val) { tool_pathDrawer.attribute.thres = val; }, "thres", 4)
+		.addSetting("Replace",    VALUE_TYPE.boolean, function() { tool_pathDrawer.attribute.create = !tool_pathDrawer.attribute.create; }, "create", true);
+	
 	tools = [
-		[ "Anchor add / remove (+ Shift)",  THEME.path_tools_add ],
-		[ "Edit Control point",   THEME.path_tools_anchor ],
-		[ "Rectangle path",   THEME.path_tools_rectangle ],
-		[ "Circle path",   THEME.path_tools_circle ],
+		new NodeTool( "Anchor add / remove (+ Shift)", THEME.path_tools_add ),
+		new NodeTool( "Edit Control point", THEME.path_tools_anchor ),
+		tool_pathDrawer,
+		new NodeTool( "Rectangle path", THEME.path_tools_rectangle ),
+		new NodeTool( "Circle path", THEME.path_tools_circle ),
 	];
 	
 	anchors			= [];
@@ -49,6 +57,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	length_total	= 0;
 	
 	drag_point    = -1;
+	drag_points   = [];
 	drag_type     = 0;
 	drag_point_mx = 0;
 	drag_point_my = 0;
@@ -69,11 +78,11 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		var sample = PREF_MAP[? "path_resolution"];
 		var loop   = inputs[| 1].getValue();
 		var ansize = ds_list_size(inputs) - input_fix_len;
-
-		if(drag_point > -1) {
+		
+		if(drag_point > -1) {			
 			var dx = value_snap(drag_point_sx + (_mx - drag_point_mx) / _s, _snx);
 			var dy = value_snap(drag_point_sy + (_my - drag_point_my) / _s, _sny);
-			
+		
 			if(drag_type < 2) {
 				var inp = inputs[| input_fix_len + drag_point];
 				var anc = inp.getValue();
@@ -110,6 +119,106 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			
 				inp.setValue(anc);
 			} else if(drag_type == 2) {
+				var ox, oy, nx, ny;
+				var pxx = (_mx - _x) / _s;
+				var pxy = (_my - _y) / _s;
+				
+				draw_set_color(COLORS._main_accent);
+				for( var i = 0; i < array_length(drag_points); i++ ) {
+					var _p  = drag_points[i];
+					nx = _x + _p[0] * _s;
+					ny = _y + _p[1] * _s;
+					
+					if(i) 
+						draw_line(ox, oy, nx, ny);
+					
+					ox = nx;
+					oy = ny;
+				}
+				
+				if(point_distance(drag_point_mx, drag_point_my, pxx, pxy) > 4) {
+					array_push(drag_points, [ pxx, pxy ]);
+					
+					drag_point_mx = pxx;
+					drag_point_my = pxy;
+				}
+				
+				if(mouse_release(mb_left)) {
+					var amo		= array_length(drag_points);
+					var _p      = 0;
+					var points	= [];
+					var thres   = tool_pathDrawer.attribute.thres;
+					var replace = tool_pathDrawer.attribute.create;
+					var asize   = ds_list_size(inputs) - input_fix_len;
+					
+					for( var i = 0; i < amo; i++ ) {
+						var pT = drag_points[i];
+						
+						if(i == 0 || i == amo - 1) {
+							array_push(points, i);
+							continue;
+						}
+						
+						var maxT = 0;
+						var pF   = drag_points[_p];
+						
+						for( var j = _p; j < i; j++ ) {
+							var pP = drag_points[j];
+							
+							maxT = max(maxT, distance_to_line(pP[0], pP[1], pF[0], pF[1], pT[0], pT[1]));
+						}
+						
+						if(maxT >= thres) {
+							array_push(points, i);
+							_p = i;
+						}
+					}
+					
+					var amo = array_length(points);
+					if(!replace) amo = min(amo, asize);
+					
+					var i   = 0;
+					var anc = [];
+					
+					for( i = 0; i < amo; i++ ) {
+						var _ind = points[i];
+						var _p   = drag_points[_ind];
+						var dxx  = 0;
+						var dxy  = 0;
+						var dyx  = 0;
+						var dyy  = 0;
+						
+						if(i > 0 && i < amo - 1) {
+							var _p0 = drag_points[points[i - 1]];
+							var _p1 = drag_points[points[i + 1]];
+							
+							var d0  = point_direction(_p0[0], _p0[1], _p[0], _p[1]);
+							var d1  = point_direction(_p[0], _p[1], _p1[0], _p1[1]);
+							
+							var dd  = d0 + angle_difference(d1, d0) / 2;
+							var ds0 = point_distance(_p0[0], _p0[1], _p[0], _p[1]);
+							var ds1 = point_distance(_p[0], _p[1], _p1[0], _p1[1]);
+							
+							dxx = lengthdir_x(ds0 / 3, dd + 180);
+							dxy = lengthdir_y(ds0 / 3, dd + 180);
+							dyx = lengthdir_x(ds1 / 3, dd);
+							dyy = lengthdir_y(ds1 / 3, dd);
+						}
+						
+						anc = [_p[0], _p[1], dxx, dxy, dyx, dyy];
+						if(input_fix_len + i >= ds_list_size(inputs))
+							createAnchor(_p[0], _p[1], dxx, dxy, dyx, dyy);
+						else 
+							inputs[| input_fix_len + i].setValue(anc);
+					}
+					
+					if(!replace) {
+						for(; i < asize; i++ ) {
+							inputs[| input_fix_len + i].setValue(anc);
+						}
+					}
+				}
+			} else if(drag_type == 3) {
 				var minx = min((_mx - _x) / _s, (drag_point_mx - _x) / _s);
 				var maxx = max((_mx - _x) / _s, (drag_point_mx - _x) / _s);
 				var miny = min((_my - _y) / _s, (drag_point_my - _y) / _s);
@@ -144,7 +253,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 				
 				for( var i = 0; i < 4; i++ ) 
 					inputs[| input_fix_len + i].setValue(a[i]);
-			} else if(drag_type == 3) {
+			} else if(drag_type == 4) {
 				var minx = min((_mx - _x) / _s, (drag_point_mx - _x) / _s);
 				var maxx = max((_mx - _x) / _s, (drag_point_mx - _x) / _s);
 				var miny = min((_my - _y) / _s, (drag_point_my - _y) / _s);
@@ -197,7 +306,6 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 					inputs[| input_fix_len + i].setValue(a[i]);
 			}
 			
-			
 			if(mouse_release(mb_left))
 				drag_point = -1;
 		}
@@ -225,7 +333,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 				_ny = _y + p[1] * _s;
 				
 				if(j) {
-					if((key_mod_press(CTRL) || PANEL_PREVIEW.tool_index == 0) && distance_to_line(_mx, _my, _ox, _oy, _nx, _ny) < 4)
+					if((key_mod_press(CTRL) || isUsingTool(0)) && distance_to_line(_mx, _my, _ox, _oy, _nx, _ny) < 4)
 						line_hover = i;
 				}
 				
@@ -308,10 +416,44 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 				hover_type   = -1;
 			}
 		}
+		
+		if(isUsingTool(2)) {
+			draw_sprite_ui_uniform(THEME.path_tools_draw, 0, _mx + 16, _my + 16);
 			
-		if(anchor_hover != -1) {
+			if(mouse_press(mb_left, active)) {
+				var replace = tool_pathDrawer.attribute.create;
+				if(replace) {
+					while(ds_list_size(inputs) > input_fix_len)
+						ds_list_delete(inputs, input_fix_len);
+					array_resize(input_display_list, input_display_list_len);
+				}
+				
+				drag_point    = 0;
+				drag_type     = 2;
+				drag_points   = [ [ (_mx - _x) / _s, (_my - _y) / _s ] ];
+				drag_point_mx = (_mx - _x) / _s;
+				drag_point_my = (_my - _y) / _s;
+			}
+		} else if(isUsingTool(3) || isUsingTool(4)) {
+			draw_sprite_ui_uniform(THEME.cursor_path_add, 0, _mx + 16, _my + 16);
+			
+			if(mouse_press(mb_left, active)) {
+				while(ds_list_size(inputs) > input_fix_len)
+					ds_list_delete(inputs, input_fix_len);
+				array_resize(input_display_list, input_display_list_len);
+				
+				drag_point    = 0;
+				drag_type     = isUsingTool(3)? 3 : 4;
+				drag_point_mx = _mx;
+				drag_point_my = _my;
+				inputs[| 1].setValue(true);
+				
+				repeat(4)
+					createAnchor(value_snap((_mx - _x) / _s, _snx), value_snap((_my - _y) / _s, _sny));
+			}
+		} else if(anchor_hover != -1) {
 			var _a = inputs[| input_fix_len + anchor_hover].getValue();
-			if(PANEL_PREVIEW.tool_index == 1) {
+			if(isUsingTool(1)) {
 				draw_sprite_ui_uniform(THEME.cursor_path_anchor, 0, _mx + 16, _my + 16);
 				
 				if(mouse_press(mb_left, active)) {
@@ -363,7 +505,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 					} 
 				}
 			}
-		} else if(key_mod_press(CTRL) || PANEL_PREVIEW.tool_index == 0) {
+		} else if(key_mod_press(CTRL) || isUsingTool(0)) {
 			draw_sprite_ui_uniform(THEME.cursor_path_add, 0, _mx + 16, _my + 16);
 			
 			if(mouse_press(mb_left, active)) {
@@ -384,30 +526,13 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 				drag_point_sx = (_mx - _x) / _s;
 				drag_point_sy = (_my - _y) / _s;
 			}
-		} else if(PANEL_PREVIEW.tool_index >= 2) {
-			draw_sprite_ui_uniform(THEME.cursor_path_add, 0, _mx + 16, _my + 16);
-			
-			if(mouse_press(mb_left, active)) {
-				while(ds_list_size(inputs) > input_fix_len) {
-					ds_list_delete(inputs, input_fix_len);
-				}
-				array_resize(input_display_list, input_display_list_len);
-				
-				drag_point    = 0;
-				drag_type     = PANEL_PREVIEW.tool_index;
-				drag_point_mx = _mx;
-				drag_point_my = _my;
-				inputs[| 1].setValue(true);
-				
-				repeat(4)
-					createAnchor(value_snap((_mx - _x) / _s, _snx), value_snap((_my - _y) / _s, _sny));
-			}
 		}
 	}
 	
 	static updateLength = function() {
 		length_total = 0;
 		var loop   = inputs[| 1].getValue();
+		var rond   = inputs[| 3].getValue();
 		var ansize = ds_list_size(inputs) - input_fix_len;
 		if(ansize < 2) {
 			lengths = [];
@@ -430,6 +555,11 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			var _a1 = inputs[| index_1].getValue();
 			anchors[i]     = _a0;
 			anchors[i + 1] = _a1;
+			
+			if(rond) {
+				_a0[0] = round(_a0[0]);	_a0[1] = round(_a0[1]);
+				_a1[0] = round(_a1[0]);	_a1[1] = round(_a1[1]);
+			}
 			
 			var l = 0;
 			
@@ -454,12 +584,15 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	
 	static getSegmentRatio = function(_rat) {
 		var loop   = inputs[| 1].getValue();
+		var rond   = inputs[| 3].getValue();
 		var ansize = array_length(lengths);
 		var amo    = ds_list_size(inputs) - input_fix_len;
 		
 		if(amo < 1) return [0, 0];
 		if(_rat < 0) {
 			var _p0 = inputs[| input_fix_len].getValue();
+			if(rond)
+				return [round(_p0[0]), round(_p0[1])];
 			return [_p0[0], _p0[1]];
 		}
 		
@@ -471,6 +604,8 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		if(_i1 >= amo) {
 			if(!loop) {
 				var _p1 = inputs[| ds_list_size(inputs) - 1].getValue()
+				if(rond)
+					return [round(_p1[0]), round(_p1[1])];
 				return [_p1[0], _p1[1]];
 			}
 			
@@ -480,6 +615,11 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		var _a0 = inputs[| input_fix_len + _i0].getValue();
 		var _a1 = inputs[| input_fix_len + _i1].getValue();
 		
+		if(rond) {
+			_a0[0] = round(_a0[0]);	_a0[1] = round(_a0[1]);
+			_a1[0] = round(_a1[0]);	_a1[1] = round(_a1[1]);
+		}
+		
 		return eval_bezier(_t, _a0[0], _a0[1], _a1[0], _a1[1], _a0[0] + _a0[4], _a0[1] + _a0[5], _a1[0] + _a1[2], _a1[1] + _a1[3]);
 	}
 	
@@ -487,6 +627,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	
 	static getPointRatio = function(_rat) {
 		var loop   = inputs[| 1].getValue();
+		var rond   = inputs[| 3].getValue();
 		var ansize = array_length(lengths);
 		var amo    = ds_list_size(inputs) - input_fix_len;
 		
@@ -499,6 +640,11 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			_a0 = anchors[i];
 			_a1 = anchors[safe_mod(i + 1, amo)];
 				
+			if(rond) {
+				_a0[0] = round(_a0[0]);	_a0[1] = round(_a0[1]);
+				_a1[0] = round(_a1[0]);	_a1[1] = round(_a1[1]);
+			}
+		
 			if(pix > lengths[i]) {
 				pix -= lengths[i];
 				continue;
@@ -508,7 +654,8 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 				
 			if(!is_array(_a0) || !is_array(_a1))
 				return [0, 0];
-			return eval_bezier(_t, _a0[0], _a0[1], _a1[0], _a1[1], _a0[0] + _a0[4], _a0[1] + _a0[5], _a1[0] + _a1[2], _a1[1] + _a1[3]);
+			var _p = eval_bezier(_t, _a0[0], _a0[1], _a1[0], _a1[1], _a0[0] + _a0[4], _a0[1] + _a0[5], _a1[0] + _a1[2], _a1[1] + _a1[3]);
+			return _p;
 		}
 		
 		return [0, 0];
@@ -573,6 +720,9 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	
 	static postDeserialize = function() {
 		var _inputs = load_map[? "inputs"];
+		
+		if(LOADING_VERSION < 1380 && !CLONING)
+			ds_list_insert(_inputs, 3, noone);
 		
 		for(var i = input_fix_len; i < ds_list_size(_inputs); i++)
 			createAnchor(0, 0);

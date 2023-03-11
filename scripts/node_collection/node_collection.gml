@@ -74,6 +74,8 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	metadata = new MetaDataManager();
 	
 	attributes[? "Separator"] = [];
+	attributes[? "w"] = 128;
+	attributes[? "h"] = 128;
 	
 	inspUpdateTooltip   = get_text("panel_inspector_execute", "Execute node contents");
 	inspUpdateIcon      = [ THEME.sequence_control, 1, COLORS._main_value_positive ];
@@ -106,9 +108,24 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		return instanceBase.getNodeList();
 	}
 	
+	static setHeight = function() {
+		var _hi = ui(32);
+		var _ho = ui(32);
+		
+		for( var i = 0; i < ds_list_size(inputs); i++ )
+			if(inputs[| i].isVisible()) _hi += 24;
+		
+		for( var i = 0; i < ds_list_size(outputs); i++ )
+			if(outputs[| i].isVisible()) _ho += 24;
+		
+		var preH = (preview_surface && previewable)? 128 : 0;
+		
+		h = max(min_h, preH, _hi, _ho);
+	}
+	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		for(var i = custom_input_index; i < ds_list_size(inputs); i++) {
-			var _in = inputs[| i];
+			var _in   = inputs[| i];
 			var _show = _in.from.inputs[| 6].getValue();
 			
 			if(!_show) continue;
@@ -228,6 +245,8 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 			PANEL_GRAPH.addContext(self);
 			DOUBLE_CLICK = false;
 		}
+		
+		w = attributes[? "w"];
 		
 		onStep();
 	}
@@ -376,12 +395,16 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	static attributeSerialize = function() {
 		var att = ds_map_create();
 		att[? "Separator"] = json_stringify(attributes[? "Separator"]);
+		att[? "w"] = attributes[? "w"];
+		att[? "h"] = attributes[? "h"];
 		return att;
 	}
 	
 	static attributeDeserialize = function(attr) {
 		if(ds_map_exists(attr, "Separator"))
 			attributes[? "Separator"] = json_parse(attr[? "Separator"]);
+		attributes[? "w"] = ds_map_try_get(attr, "w", 128);
+		attributes[? "h"] = ds_map_try_get(attr, "h", 128);
 	}
 	
 }

@@ -9,7 +9,7 @@ function Panel_Animation() : PanelContent() constructor {
 	context_str = "Animation";
 	
 	timeline_h = ui(28);
-	min_w = ui(348);
+	min_w = ui(32);
 	min_h = ui(48);
 	tool_width = ui(280);
 	
@@ -1359,6 +1359,9 @@ function Panel_Animation() : PanelContent() constructor {
 	
 	function drawAnimationControl() {
 		var bx = ui(8);
+		if(w < ui(348)) 
+			bx = w / 2 - ui(36) * 6 / 2;
+			
 		var by = h - ui(40);
 		if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), [mx, my], pFOCUS, pHOVER, get_text("stop", "Stop"), THEME.sequence_control, 4, ANIMATOR.is_playing? COLORS._main_accent : COLORS._main_icon) == 2) {
 			ANIMATOR.is_playing = false;
@@ -1393,6 +1396,8 @@ function Panel_Animation() : PanelContent() constructor {
 			ANIMATOR.setFrame(ANIMATOR.real_frame + 1);
 		}
 		
+		if(w < ui(348)) return;
+		
 		bx = w - ui(44);
 		if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), [mx, my], pFOCUS, pHOVER, get_text("panel_animation_animation_settings", "Animation settings"), THEME.animation_setting, 2) == 2)
 			dialogCall(o_dialog_animation, x + bx + 32, y + by - 8);
@@ -1414,9 +1419,13 @@ function Panel_Animation() : PanelContent() constructor {
 	function drawContent(panel) {
 		draw_clear_alpha(COLORS.panel_bg_clear, 0);
 		
-		drawTimeline();
-		if(dope_sheet_h > 8)
-			drawDopesheet();
+		if(w < ui(348)) {
+			draw_sprite_stretched(THEME.ui_panel_bg, 1, ui(8), h - ui(32 + 8), w - ui(16), ui(32));
+		} else {
+			drawTimeline();
+			if(dope_sheet_h > 8)
+				drawDopesheet();
+		}
 		drawAnimationControl();
 		
 		if(timeline_show_time > -1) {

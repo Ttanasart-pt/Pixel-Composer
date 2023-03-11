@@ -19,6 +19,7 @@ function Node_Lua_Global(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	];
 	
 	lua_state = lua_create();
+	lua_error_handler = _lua_error;
 	
 	is_beginning = false;
 	error_notification = noone;
@@ -65,18 +66,17 @@ function Node_Lua_Global(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		var _code = inputs[| 0].getValue();
 		var _type = inputs[| 1].getValue();
 		
-		if(ANIMATOR.current_frame == 0) { //rerfesh state on the first frame
-			lua_state_destroy(lua_state);
-			lua_state = lua_create();
-		}
+		//if(ANIMATOR.current_frame == 0) { //rerfesh state on the first frame
+		//	lua_state_destroy(lua_state);
+		//	lua_state = lua_create();
+		//	addCode();
+		//}
 		
 		lua_projectData(getState());
 		
 		if(ANIMATOR.current_frame == 0 || _type == 1) {
-			try 
-				lua_add_code(getState(), _code);
-			catch(e)
-				noti_warning(exception_print(e),, self);
+			try		 lua_add_code(getState(), _code);
+			catch(e) noti_warning(exception_print(e),, self);
 		}
 	}
 	

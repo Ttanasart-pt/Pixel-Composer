@@ -41,22 +41,22 @@ function draw_code(_x, _y, str) {
 	var tx = _x
 	var ty = _y;
 	
-	var isStr = true;
-	var stringSplice = string_splice(str, "\"");
-	var amo = array_length(stringSplice);
+	var isStr  = true;
+	var strSpl = string_splice(str, "\"");
+	var amo    = array_length(strSpl);
 	var word;
 	
 	for( var i = 0; i < amo; i++ ) {
-		var _w = stringSplice[i];
+		var _w = strSpl[i];
 		_w = string_trim_end(_w);
 		
 		isStr = !isStr;
 		
 		if(isStr) {
-			word = "\"" + _w;
+			word = "\"" + string(_w);
 			if(i < amo - 1) word += "\"";
 			
-			draw_set_color(isStr? COLORS.lua_highlight_string : COLORS._main_text);
+			draw_set_color(COLORS.lua_highlight_string);
 			draw_text(tx, ty, word);
 			tx += string_width(word);
 			continue;

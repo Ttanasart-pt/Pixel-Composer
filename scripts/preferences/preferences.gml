@@ -29,8 +29,8 @@
 	
 	PREF_MAP[? "default_surface_side"]	= 32;
 	
-	PREF_MAP[? "panel_layout"] = 1;
-	PREF_MAP[? "panel_collection"] = true;
+	PREF_MAP[? "panel_layout_file"] = "Vertical";
+	PREF_MAP[? "panel_collection"]  = true;
 	
 	PREF_MAP[? "inspector_line_break_width"] = 500;
 	

@@ -140,10 +140,25 @@ function Panel_Menu() : PanelContent() constructor {
 			}),
 		]],
 		[ get_text("panel_menu_panels", "Panels"), [
-			menuItemGroup(get_text("panel_menu_workspace", "Workspace"), [
-				[ THEME.workspace_horizontal, function() { clearPanel(); PREF_MAP[? "panel_layout"] = 0; setPanel(); PREF_SAVE(); } ],
-				[ THEME.workspace_vertical, function() { clearPanel(); PREF_MAP[? "panel_layout"] = 1; setPanel(); PREF_SAVE(); } ]
-			]),
+			menuItem(get_text("panel_menu_workspace", "Workspace"), function(_x, _y, _depth) { 
+				var arr = [], lays = [];
+				var f   = file_find_first(DIRECTORY + "layouts/*", 0);
+				while(f != "") {
+					array_push(lays, filename_name_only(f));
+					f = file_find_next();
+				}
+				
+				for(var i = 0; i < array_length(lays); i++)  {
+					array_push(arr, menuItem(lays[i], 
+						function(_x, _y, _depth, _path) { 
+							PREF_MAP[? "panel_layout_file"] = _path;
+							PREF_SAVE();
+							setPanel();
+						}));
+				}
+				
+				return submenuCall(_x, _y, _depth, arr);
+			}).setIsShelf(),
 			-1,
 			menuItem(get_text("panel_menu_collections", "Collections"), function() {
 				clearPanel();

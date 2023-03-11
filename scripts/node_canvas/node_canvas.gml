@@ -39,17 +39,26 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		["Display", false], 5, 8, 9, 10,
 	];
 	
-	canvas_surface = surface_create(1, 1);
+	canvas_surface  = surface_create(1, 1);
+	drawing_surface = surface_create(1, 1);
 	surface_buffer = buffer_create(1 * 1 * 4, buffer_fixed, 2);
 	surface_w = 1;
 	surface_h = 1;
 	
+	tool_channel_edit      = new checkBoxGroup(THEME.tools_canvas_channel, function(ind, val) { tool_attribute.channel[ind] = val; });
+	tool_attribute.channel = [ true, true, true, true ];
+	tool_attribute.alpha   = 1;
+	tool_settings = [
+		[ "Channel", tool_channel_edit, "channel", tool_attribute ],
+		[ "Alpha", new textBox(TEXTBOX_INPUT.number, function(alp) { tool_attribute.alpha = alp; }), "alpha", tool_attribute ],
+	];
+	
 	tools = [
-		[ "Pencil",		THEME.canvas_tools_pencil ],
-		[ "Eraser",		THEME.canvas_tools_eraser ],
-		[ "Rectangle",	[ THEME.canvas_tools_rect, THEME.canvas_tools_rect_fill ]],
-		[ "Ellipse",	[ THEME.canvas_tools_ellip, THEME.canvas_tools_ellip_fill ]],
-		[ "Fill",		THEME.canvas_tools_bucket ],
+		new NodeTool( "Pencil",		THEME.canvas_tools_pencil ),
+		new NodeTool( "Eraser",		THEME.canvas_tools_eraser ),
+		new NodeTool( "Rectangle",	[ THEME.canvas_tools_rect, THEME.canvas_tools_rect_fill ]),
+		new NodeTool( "Ellipse",	[ THEME.canvas_tools_ellip, THEME.canvas_tools_ellip_fill ]),
+		new NodeTool( "Fill",		THEME.canvas_tools_bucket ),
 	];
 	
 	draw_stack  = ds_list_create();
@@ -64,6 +73,18 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		
 		triggerRender();
 		apply_surface();
+	}
+	
+	function apply_draw_surface() {
+		BLEND_ALPHA;
+		if(isUsingTool(1))
+			gpu_set_blendmode(bm_subtract);
+		draw_surface_ext(drawing_surface, 0, 0, 1, 1, 0, c_white, tool_attribute.alpha);
+				
+		surface_set_target(drawing_surface);
+			draw_clear_alpha(0, 0);
+		surface_reset_target();
+		BLEND_NORMAL;
 	}
 	
 	function apply_surface() {
@@ -81,6 +102,8 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			buffer_delete(surface_buffer);
 			surface_buffer = buffer_create(_dim[0] * _dim[1] * 4, buffer_fixed, 4);
 		}
+		
+		drawing_surface = surface_verify(drawing_surface, _dim[0], _dim[1]);
 		
 		surface_set_target(_outSurf);
 		draw_clear_alpha(0, 0);
@@ -133,7 +156,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			var _sw = surface_get_width(_brush);
 			var _sh = surface_get_height(_brush);
 			
-			draw_surface_ext(_brush, _x - floor(_sw / 2), _y - floor(_sh / 2), 1, 1, 0, draw_get_color(), 1);
+			draw_surface_ext(_brush, _x - floor(_sw / 2), _y - floor(_sh / 2), 1, 1, 0, draw_get_color(), draw_get_alpha());
 		}
 	}
 	
@@ -284,7 +307,10 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			spanBelow = false;
 			
 			while(x1 < surface_w && ff_fillable(colorBase, colorFill, x1, y1, thr)) {
+				draw_set_alpha(tool_attribute.alpha);
 				draw_point(x1, y1);
+				draw_set_alpha(1);
+				
 				buffer_seek(surface_buffer, buffer_seek_start, (surface_w * y1 + x1) * 4);
 				buffer_write(surface_buffer, buffer_u32, colorFill);
 			    
@@ -345,6 +371,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		var _c1 = get_color_buffer(_x, _y);
 		var thr = _thres * _thres;
 		
+		draw_set_alpha(tool_attribute.alpha);
 		for( var i = 0; i < w; i++ ) {
 			for( var j = 0; j < h; j++ ) {
 				if(i == _x && j == _y) {
@@ -356,7 +383,8 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				if(color_diff(_c1, _c2, true) <= thr)
 					draw_point(i, j);
 			}
-		}	
+		}
+		draw_set_alpha(1);
 		
 		surface_update();
 	}
@@ -391,114 +419,122 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		surface_set_target(canvas_surface);
 		draw_set_color(_col);
 		
-		var _tool = PANEL_PREVIEW.tool_index;
-		var _sub_tool = PANEL_PREVIEW.tool_sub_index;
+		gpu_set_colorwriteenable(tool_attribute.channel[0], tool_attribute.channel[1], tool_attribute.channel[2], tool_attribute.channel[3]);
 		
-		if(active) {
-			if(_tool == 0 || _tool == 1) {
-				if(_tool == 0) BLEND_ALPHA;
-			
-				if(_tool == 1) {
-					gpu_set_blendmode(bm_subtract);
-					gpu_set_colorwriteenable(false, false, false, true);
-				}
-			
-				if(key_mod_press(SHIFT) && key_mod_press(CTRL)) {
-					var aa = point_direction(mouse_pre_draw_x, mouse_pre_draw_y, mouse_cur_x, mouse_cur_y);
-					var dd = point_distance(mouse_pre_draw_x, mouse_pre_draw_y, mouse_cur_x, mouse_cur_y);
-					var _a = round(aa / 45) * 45;
-					dd = dd * cos(degtorad(_a - aa));
+		if(isUsingTool(0) || isUsingTool(1)) {
+			if(key_mod_press(SHIFT) && key_mod_press(CTRL)) {
+				var aa = point_direction(mouse_pre_draw_x, mouse_pre_draw_y, mouse_cur_x, mouse_cur_y);
+				var dd = point_distance(mouse_pre_draw_x, mouse_pre_draw_y, mouse_cur_x, mouse_cur_y);
+				var _a = round(aa / 45) * 45;
+				dd = dd * cos(degtorad(_a - aa));
 				
-					mouse_cur_x = mouse_pre_draw_x + lengthdir_x(dd, _a);
-					mouse_cur_y = mouse_pre_draw_y + lengthdir_y(dd, _a);
-				}
+				mouse_cur_x = mouse_pre_draw_x + lengthdir_x(dd, _a);
+				mouse_cur_y = mouse_pre_draw_y + lengthdir_y(dd, _a);
+			}
 			
-				if(mouse_press(mb_left)) {
+			if(mouse_press(mb_left, active)) {
+				drawing_surface = surface_verify(drawing_surface, _dim[0], _dim[1]);
+				BLEND_ALPHA;
+				surface_set_target(drawing_surface);
+					draw_clear_alpha(0, 0);
 					draw_point_size(mouse_cur_x, mouse_cur_y, _siz, _brush);
+				surface_reset_target();
 				
-					mouse_holding = true;
-					if(key_mod_press(SHIFT)) {
+				mouse_holding = true;
+				if(key_mod_press(SHIFT)) {
+					BLEND_ALPHA;
+					surface_set_target(drawing_surface);
 						draw_line_size(mouse_pre_draw_x, mouse_pre_draw_y, mouse_cur_x, mouse_cur_y, _siz, _brush);
-						mouse_holding = false;
-					}
-				
-					mouse_pre_draw_x = mouse_cur_x;
-					mouse_pre_draw_y = mouse_cur_y;	
+					surface_reset_target();
+					mouse_holding = false;
+					
+					apply_draw_surface();
+					surface_update();
 				}
+				
+				mouse_pre_draw_x = mouse_cur_x;
+				mouse_pre_draw_y = mouse_cur_y;	
+			}
 			
-				if(mouse_holding && mouse_click(mb_left, active)) {
-					if(mouse_pre_draw_x != mouse_cur_x || mouse_pre_draw_y != mouse_cur_y) {
+			if(mouse_holding && mouse_click(mb_left, active)) {
+				if(mouse_pre_draw_x != mouse_cur_x || mouse_pre_draw_y != mouse_cur_y) {
+					BLEND_ALPHA;
+					surface_set_target(drawing_surface);
 						draw_point_size(mouse_cur_x, mouse_cur_y, _siz, _brush);
 						draw_line_size(mouse_pre_draw_x, mouse_pre_draw_y, mouse_cur_x, mouse_cur_y, _siz, _brush);
-					}
-				
-					mouse_pre_draw_x = mouse_cur_x;
-					mouse_pre_draw_y = mouse_cur_y;	
-				}
-			
-				BLEND_NORMAL;
-			
-				if(_tool == 1)
-					gpu_set_colorwriteenable(true, true, true, true);
-			
-				if(mouse_release(mb_left)) {
-					surface_update();
-					mouse_holding = false;
+					surface_reset_target();
 				}
 				
+				mouse_pre_draw_x = mouse_cur_x;
+				mouse_pre_draw_y = mouse_cur_y;	
+			}
+			
+			if(mouse_holding && mouse_release(mb_left)) {
+				mouse_holding = false;
+				apply_draw_surface();
+				surface_update();
+			}
+			
+			BLEND_NORMAL;
+			
+			mouse_pre_x = mouse_cur_x;
+			mouse_pre_y = mouse_cur_y;
+			apply_surface();
+			
+		} else if(isUsingTool(2) || isUsingTool(3)) {
+			if(mouse_holding && key_mod_press(SHIFT)) {
+				var ww = mouse_cur_x - mouse_pre_x;
+				var hh = mouse_cur_y - mouse_pre_y;
+				var ss = max(abs(ww), abs(hh));
+				
+				mouse_cur_x = mouse_pre_x + ss * sign(ww);
+				mouse_cur_y = mouse_pre_y + ss * sign(hh);
+			}
+			
+			if(mouse_press(mb_left, active)) {
 				mouse_pre_x = mouse_cur_x;
 				mouse_pre_y = mouse_cur_y;
-				apply_surface();
-			
-			} else if(_tool == 2 || _tool == 3) {
-				if(mouse_holding && key_mod_press(SHIFT)) {
-					var ww = mouse_cur_x - mouse_pre_x;
-					var hh = mouse_cur_y - mouse_pre_y;
-					var ss = max(abs(ww), abs(hh));
 				
-					mouse_cur_x = mouse_pre_x + ss * sign(ww);
-					mouse_cur_y = mouse_pre_y + ss * sign(hh);
-				}
+				mouse_holding = true;
+			}
 			
-				if(mouse_press(mb_left)) {
-					mouse_pre_x = mouse_cur_x;
-					mouse_pre_y = mouse_cur_y;
+			if(mouse_holding && mouse_release(mb_left)) {
+				BLEND_ALPHA;
+				surface_set_target(drawing_surface);
+					draw_clear_alpha(0, 0);
+					if(isUsingTool(2))
+						draw_rect_size(mouse_pre_x, mouse_pre_y, mouse_cur_x, mouse_cur_y, _siz, isUsingTool(2, 1), _brush);
+					else if(isUsingTool(3))
+						draw_ellp_size(mouse_pre_x, mouse_pre_y, mouse_cur_x, mouse_cur_y, _siz, isUsingTool(3, 1), _brush);
+				surface_reset_target();
+				BLEND_NORMAL;
 				
-					mouse_holding = true;
-				}
+				apply_draw_surface();
+				surface_update();
+				mouse_holding = false;
+			}
+			apply_surface();
 			
-				if(mouse_release(mb_left)) {
-					BLEND_ALPHA;
-					if(_tool == 2)
-						draw_rect_size(mouse_pre_x, mouse_pre_y, mouse_cur_x, mouse_cur_y, _siz, _sub_tool, _brush);
-					else if(_tool == 3)
-						draw_ellp_size(mouse_pre_x, mouse_pre_y, mouse_cur_x, mouse_cur_y, _siz, _sub_tool, _brush);
-					BLEND_NORMAL;
-				
-					surface_update();
-					mouse_holding = false;
+		} else if(isUsingTool(4)) {
+			if(point_in_rectangle(mouse_cur_x, mouse_cur_y, 0, 0, _surf_w - 1, _surf_h - 1) && mouse_press(mb_left)) {
+				switch(_fill_type) {
+					case 0 :	
+						flood_fill_scanline(mouse_cur_x, mouse_cur_y, canvas_surface, _thr, false);
+						break;
+					case 1 :	
+						flood_fill_scanline(mouse_cur_x, mouse_cur_y, canvas_surface, _thr, true);
+						break;
+					case 2 :	
+						canvas_fill(mouse_cur_x, mouse_cur_y, canvas_surface, _thr);
+						break;
 				}
-				apply_surface();
-			
-			} else if(_tool == 4) {
-				if(point_in_rectangle(mouse_cur_x, mouse_cur_y, 0, 0, _surf_w - 1, _surf_h - 1) && mouse_press(mb_left)) {
-					switch(_fill_type) {
-						case 0 :	
-							flood_fill_scanline(mouse_cur_x, mouse_cur_y, canvas_surface, _thr, false);
-							break;
-						case 1 :	
-							flood_fill_scanline(mouse_cur_x, mouse_cur_y, canvas_surface, _thr, true);
-							break;
-						case 2 :	
-							canvas_fill(mouse_cur_x, mouse_cur_y, canvas_surface, _thr);
-							break;
-					}
 				
-					surface_update();
-				}
+				surface_update();
 			}
 		}
 		
+		draw_set_alpha(1);
+		gpu_set_colorwriteenable(true, true, true, true);
 		surface_reset_target();
 		
 		#region preview
@@ -513,31 +549,34 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			draw_clear_alpha(0, 0);
 			BLEND_ALPHA;
 			
-			if(is_surface(_bg))
-				draw_surface_stretched_ext(_bg, 0, 0, _dim[0], _dim[1], c_white, _bga);
+			if(is_surface(_bg)) draw_surface_stretched_ext(_bg, 0, 0, _dim[0], _dim[1], c_white, _bga);
 			draw_surface(canvas_surface, 0, 0);
 			
+			BLEND_ALPHA;
+			if(isUsingTool(1))
+				gpu_set_blendmode(bm_subtract);
+			draw_surface_ext(drawing_surface, 0, 0, 1, 1, 0, c_white, tool_attribute.alpha);
+			BLEND_NORMAL;
+			
 			draw_set_color(_col);
-			if(_tool == 0 || _tool == 1) {
+			if(isUsingTool(0) || isUsingTool(1)) {
 				if(key_mod_press(SHIFT))
 					draw_line_size(mouse_pre_draw_x, mouse_pre_draw_y, mouse_cur_x, mouse_cur_y, _siz, _brush);
 				else 
 					draw_point_size(mouse_cur_x, mouse_cur_y, _siz, _brush);
 				
-				if(_tool == 1) gpu_set_blendmode(bm_normal);
-			} else if (_tool == 2 || _tool == 3) {
-				if(mouse_holding) {
-					if(_tool == 2)
-						draw_rect_size(mouse_pre_x, mouse_pre_y, mouse_cur_x, mouse_cur_y, _siz, _sub_tool, _brush);
-					else if(_tool == 3)
-						draw_ellp_size(mouse_pre_x, mouse_pre_y, mouse_cur_x, mouse_cur_y, _siz, _sub_tool, _brush); 
-				}
+				if(isUsingTool(1)) gpu_set_blendmode(bm_normal);
+			} else if (mouse_holding) {
+				if(isUsingTool(2))
+					draw_rect_size(mouse_pre_x, mouse_pre_y, mouse_cur_x, mouse_cur_y, _siz, isUsingTool(2, 1), _brush);
+				else if(isUsingTool(3))
+					draw_ellp_size(mouse_pre_x, mouse_pre_y, mouse_cur_x, mouse_cur_y, _siz, isUsingTool(3, 1), _brush); 
 			}
 			
 			BLEND_NORMAL;
 			surface_reset_target();
 			
-			if (_tool == 2 || _tool == 3) {
+			if (isUsingTool(2) || isUsingTool(3)) {
 				if(mouse_holding) {
 					var _pr_x = _x + mouse_pre_x * _s;
 					var _pr_y = _y + mouse_pre_y * _s;
@@ -549,7 +588,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				}
 			}
 			
-			if(_tool > -1 && point_in_rectangle(mouse_cur_x, mouse_cur_y, 0, 0, _surf_w - 1, _surf_h - 1)) {
+			if(!isNotUsingTool() && point_in_rectangle(mouse_cur_x, mouse_cur_y, 0, 0, _surf_w - 1, _surf_h - 1)) {
 				var _pr_x = _x + mouse_cur_x * _s;
 				var _pr_y = _y + mouse_cur_y * _s;
 				

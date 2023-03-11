@@ -998,28 +998,28 @@
     },
     "node_junctions_array": {
         "path": "./node/s_node_junctions_array.png",
-        "subimages": 16,
+        "subimages": 17,
         "xorigin": 16,
         "yorigin": 16,
         "slice": null
     },
     "node_junctions_array_hover": {
         "path": "./node/s_node_junctions_array_hover.png",
-        "subimages": 16,
+        "subimages": 17,
         "xorigin": 16,
         "yorigin": 16,
         "slice": null
     },
     "node_junctions_single": {
         "path": "./node/s_node_junctions_single.png",
-        "subimages": 16,
+        "subimages": 17,
         "xorigin": 16,
         "yorigin": 16,
         "slice": null
     },
     "node_junctions_single_hover": {
         "path": "./node/s_node_junctions_single_hover.png",
-        "subimages": 16,
+        "subimages": 17,
         "xorigin": 16,
         "yorigin": 16,
         "slice": null
@@ -1549,6 +1549,20 @@
         "subimages": 1,
         "xorigin": 24,
         "yorigin": 24,
+        "slice": null
+    },
+    "path_tools_draw": {
+        "path": "./tool/s_path_tools_draw.png",
+        "subimages": 1,
+        "xorigin": 24,
+        "yorigin": 24,
+        "slice": null
+    },
+    "tools_canvas_channel": {
+        "path": "./tool/s_canvas_channel.png",
+        "subimages": 4,
+        "xorigin": 12,
+        "yorigin": 12,
         "slice": null
     },
     "splice_draw": {

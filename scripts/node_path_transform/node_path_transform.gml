@@ -16,7 +16,20 @@ function Node_Path_Transform(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	inputs[| 3] = nodeValue("Scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 1 ])
 		.setDisplay(VALUE_DISPLAY.vector);
 	
+	inputs[| 4] = nodeValue("Anchor", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ])
+		.setDisplay(VALUE_DISPLAY.vector);
+		
 	outputs[| 0] = nodeValue("Path", self, JUNCTION_CONNECT.output, VALUE_TYPE.pathnode, self);
+	
+	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
+		var pos = inputs[| 4].getValue();
+		var px  = _x + pos[0] * _s;
+		var py  = _y + pos[1] * _s;
+		
+		active &= !inputs[| 1].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
+		active &= !inputs[| 2].drawOverlay(active, px, py, _s, _mx, _my, _snx, _sny);
+		active &= !inputs[| 4].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny, THEME.anchor );
+	}
 	
 	static getLineCount = function() { 
 		var _path = inputs[| 0].getValue();
@@ -33,6 +46,7 @@ function Node_Path_Transform(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		var _pos  = inputs[| 1].getValue();
 		var _rot  = inputs[| 2].getValue();
 		var _sca  = inputs[| 3].getValue();
+		var _anc  = inputs[| 4].getValue();
 		
 		if(is_array(_path)) {
 			_path = array_safe_get(_path, ind);
@@ -45,13 +59,10 @@ function Node_Path_Transform(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		var _b = struct_has(_path, "getBoundary")? _path.getBoundary() : [0, 0, 0, 0];
 		var _p = _path.getPointRatio(_rat, ind);
 		
-		var cx = (_b[0] + _b[2]) / 2;
-		var cy = (_b[1] + _b[1]) / 2;
+		_p[0] = _anc[0] + (_p[0] - _anc[0]) * _sca[0];
+		_p[1] = _anc[1] + (_p[1] - _anc[1]) * _sca[1];
 		
-		_p[0] = cx + (_p[0] - cx) * _sca[0];
-		_p[1] = cy + (_p[1] - cy) * _sca[1];
-		
-		_p = point_rotate(_p[0], _p[1], cx, cy, _rot);
+		_p = point_rotate(_p[0], _p[1], _anc[0], _anc[1], _rot);
 		
 		_p[0] += _pos[0];
 		_p[1] += _pos[1];

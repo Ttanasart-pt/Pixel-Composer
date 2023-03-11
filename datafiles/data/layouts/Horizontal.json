@@ -1,0 +1,29 @@
+{
+    "panel": {
+        "split": "h",
+        "width": -400,
+        "content": [
+            {
+                "split": "v",
+                "width": -48,
+                "content": [
+                    {
+                        "split": "v",
+                        "width": -400,
+                        "content": [
+                            { "content": "PREVIEW" },
+                            { "content": "GRAPH" }
+                        ]
+                    },
+                    { "content": "ANIMATION" }
+                ]
+            },
+            { "content": "INSPECTOR" }
+        ]
+    },
+    "collection": {
+        "parent": "GRAPH",
+        "width": 460,
+        "split": "h"
+    }
+}

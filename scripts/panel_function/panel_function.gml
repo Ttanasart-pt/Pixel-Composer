@@ -37,6 +37,51 @@
 		PANEL_COLLECTION = 0;
 	}
 	
+	function loadPanelStruct(panel, str) {
+		if(variable_struct_exists(str, "split")) {
+			var pan = panel;
+			if(str.split == "v")
+				pan = panel.split_v(ui(str.width));
+			else if(str.split == "h")
+				pan = panel.split_h(ui(str.width));
+			
+			if(variable_struct_exists(str, "content")) {
+				loadPanelStruct(pan[0], str.content[0]);
+				loadPanelStruct(pan[1], str.content[1]);
+			}
+		} else if(variable_struct_exists(str, "content"))
+			panel.set(getPanelFromName(str.content));
+	}
+	
+	function getPanelFromName(name) {
+		switch(name) {
+			case "INSPECTOR" : return PANEL_INSPECTOR;
+			case "ANIMATION" : return PANEL_ANIMATION;
+			case "PREVIEW"   : return PANEL_PREVIEW;
+			case "GRAPH"	 : return PANEL_GRAPH;
+		}
+		
+		return noone;
+	}
+	
+	function loadPanel(path, panel) {
+		var f = json_load_struct(path);
+		loadPanelStruct(panel, f.panel);
+		
+		if(PREF_MAP[? "panel_collection"]) {
+			var pan  = getPanelFromName(f.collection.parent);
+			var p;
+			
+			if(f.collection.split == "v")
+				p = pan.panel.split_v(ui(f.collection.width));
+			else if(f.collection.split == "h")
+				p = pan.panel.split_h(ui(f.collection.width));
+			
+			p[0].set(PANEL_COLLECTION);
+			p[1].set(pan);
+		}
+	}
+	
 	function setPanel() {
 		PANEL_MAIN = new Panel(noone, ui(2), ui(2), WIN_SW - ui(4), WIN_SH - ui(4));
 		
@@ -50,45 +95,8 @@
 		var split_menu	= PANEL_MAIN.split_v(ui(40));
 		split_menu[0].set(PANEL_MENU);
 		
-		var split_ins	= split_menu[1].split_h(ui(-400));
-		split_ins[1].set(PANEL_INSPECTOR);
-		
-		switch(PREF_MAP[? "panel_layout"]) {
-			case 0 :
-				var split_anim	= split_ins[0].split_v(ui(-48));
-				split_anim[1].set(PANEL_ANIMATION);
-				
-				var split_prev	= split_anim[0].split_v(ui(-500));
-				if(split_prev == noone) break;
-				
-				split_prev[0].set(PANEL_PREVIEW);
-				split_prev[1].set(PANEL_GRAPH);
-				
-				if(PREF_MAP[? "panel_collection"]) {
-					var pane = split_prev[1].split_h(ui(460));
-					if(pane == noone) break;
-					pane[1].set(PANEL_GRAPH);
-					pane[0].set(PANEL_COLLECTION);
-				}
-				break;
-			case 1 :
-				var split_anim	= split_ins[0].split_v(ui(-300));
-				split_anim[1].set(PANEL_ANIMATION);
-				
-				var split_prev	= split_anim[0].split_h(ui(400));
-				if(split_prev == noone) break;
-				
-				split_prev[0].set(PANEL_PREVIEW);
-				split_prev[1].set(PANEL_GRAPH);
-				
-				if(PREF_MAP[? "panel_collection"]) {
-					var pane = split_anim[1].split_h(ui(500));
-					if(pane == noone) break;
-					pane[1].set(PANEL_ANIMATION);
-					pane[0].set(PANEL_COLLECTION);
-				}
-				break;
-		}
+		zip_unzip("data/layouts.zip", DIRECTORY);
+		loadPanel(DIRECTORY + "layouts/" + PREF_MAP[? "panel_layout_file"] + ".json", split_menu[1]);
 		
 		PANEL_ANIMATION.updatePropertyList();
 		PANEL_MAIN.refresh();
@@ -110,6 +118,57 @@
 		}
 		
 		return _res;
+	}
+	
+	function panelInit() {
+		panel_dragging = noone;
+		panel_hovering = noone;
+		panel_split = 0;
+	}
+	
+	function panelDraw() {
+		if(panel_dragging) {
+			draw_surface_ext(panel_dragging.dragSurface, mouse_mx + 8, mouse_my + 8, 0.5, 0.5, 0, c_white, 0.5);
+			
+			if(mouse_release(mb_left)) {
+				var p = [];
+				var c = panel_hovering.content;
+				panel_hovering.content = noone;
+				
+				switch(panel_split) {
+					case 0 : p = panel_hovering.split_v( panel_hovering.h / 2); break; 
+					case 1 : p = panel_hovering.split_h( panel_hovering.w / 2); break;
+					case 2 : p = panel_hovering.split_h( panel_hovering.w / 2); break;
+					case 3 : p = panel_hovering.split_v( panel_hovering.h / 2); break;
+				}
+				
+				p[(panel_split + 1) % 2].set(c);
+				p[(panel_split + 0) % 2].set(panel_dragging);
+				
+				panel_hovering.refreshSize();
+				
+				panel_hovering = noone;
+				panel_dragging = noone;
+			}
+		}
+	}
+	
+	function panelSerialize() {
+		var cont = _panelSerialize(PANEL_MAIN);
+		print(json_stringify(cont, true));
+	}
+	
+	function _panelSerialize(panel) {
+		var cont = {};
+		
+		cont.content = panel.content == noone? noone : instanceof(panel.content);
+		cont.split   = panel.split;
+		
+		cont.child = [];
+		for( var i = 0; i < ds_list_size(panel.childs); i++ )
+			cont.child[i] = _panelSerialize(panel.childs[| i]);
+		
+		return cont;
 	}
 #endregion
 

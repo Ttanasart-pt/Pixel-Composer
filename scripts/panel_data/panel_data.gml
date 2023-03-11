@@ -19,6 +19,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 	y = _y;
 	w = _w;
 	h = _h;
+	split = -1;
 	
 	min_w = ui(32);
 	min_h = ui(32);
@@ -26,6 +27,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 	dragging  = -1;
 	drag_sval = 0;
 	drag_sm   = 0;
+	mouse_active = true;
 	
 	content_surface = surface_create_valid(w, h);
 	mask_surface    = surface_create_valid(w, h);
@@ -60,9 +62,8 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 		if(content != noone) 
 			content.refresh();
 			
-		for( var i = 0; i < ds_list_size(childs); i++ ) {
+		for( var i = 0; i < ds_list_size(childs); i++ )
 			childs[| i].refresh();
-		}
 	}
 	
 	function move(dx, dy) {
@@ -97,19 +98,48 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 		return true;
 	}
 	
-	function refreshSize() {
-		for(var i = 0; i < ds_list_size(childs); i++)
-			childs[| i].refreshSize();
-		
-		refreshContentSize();
-	}
-		
-	function refreshContentSize() {
+	function refreshSize() { //refresh content surface after resize
 		if(content) {
 			content.w = w;
 			content.h = h;
 			content.onResize();
+		} else if(ds_list_size(childs) == 2) {
+			print("=== Refreshing (" + string(w) + ", " + string(h) + ") " + string(split) + " ===");
+			
+			var tw = childs[| 0].w + childs[| 1].w;
+			var th = childs[| 0].h + childs[| 1].h;
+			
+			var fixChild = childs[| 1].x == x && childs[| 1].y == y;
+			
+			childs[| fixChild].x = x;
+			childs[| fixChild].y = y;
+			
+			if(split == 0) {
+				childs[|  fixChild].w = childs[| fixChild].w / tw * w;
+				childs[|  fixChild].h = h;
+			
+				childs[| !fixChild].x = x + childs[| fixChild].w;
+				childs[| !fixChild].y = y;
+					
+				childs[| !fixChild].w = w - childs[| fixChild].w;
+				childs[| !fixChild].h = h;
+			} else if(split == 1) {	
+				childs[|  fixChild].w = w;
+				childs[|  fixChild].h = childs[| fixChild].h / th * h;
+			
+				childs[| !fixChild].x = x;
+				childs[| !fixChild].y = y + childs[| fixChild].h;
+					
+				childs[| !fixChild].w = w;
+				childs[| !fixChild].h = h - childs[| fixChild].h;
+			}
+			
+			for(var i = 0; i < ds_list_size(childs); i++) {
+				childs[| i].refreshSize();
+			}
 		}
+		
+		refresh();
 	}
 	
 	function resize(dw, dh, oppose = ANCHOR.left) {
@@ -139,7 +169,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 			resetMask();
 		}
 		
-		refreshContentSize();
+		refreshSize();
 	}
 	
 	function set(_content) {
@@ -153,6 +183,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 		if(_w < 0) _w = w + _w;
 		var _panelParent = new Panel(parent, x, y, w, h);
 		_panelParent.anchor = anchor;
+		_panelParent.split  = 0;
 		
 		var _panelL = self;
 		ds_list_add(_panelParent.childs, _panelL);
@@ -185,6 +216,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 		if(_h < 0) _h = h + _h;
 		var _panelParent = new Panel(parent, x, y, w, h);
 		_panelParent.anchor = anchor;
+		_panelParent.split  = 1;
 		
 		var _panelT = self;
 		ds_list_add(_panelParent.childs, _panelT);
@@ -212,6 +244,8 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 	
 	function stepBegin() {
 		if(content) content.panelStepBegin(self);
+		
+		if(o_main.panel_dragging != noone) dragging = -1;
 		
 		if(dragging == 1) {
 			var _mx = clamp(mouse_mx, ui(16), WIN_W - ui(16));
@@ -310,10 +344,19 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 	
 	function draw() {
 		if(content != noone) {
-			drawPanel();
+			if(!keyboard_check(ord("W")))
+				drawPanel();
 			return;
 		}
-			
+		
+		if(keyboard_check(ord("W")) && point_in_rectangle(mouse_mx, mouse_my, x, y, x + w, y + h)) {
+			draw_set_color(c_lime);
+			draw_set_alpha(0.1);
+			draw_rectangle(x + 8, y + 8, x + w - 8, y + h - 8, false);
+			draw_set_alpha(1);
+			draw_rectangle(x + 8, y + 8, x + w - 8, y + h - 8,  true);
+		}
+		
 		if(ds_list_empty(childs)) 
 			return;
 		
@@ -360,6 +403,11 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 	
 	function drawPanel() {
 		if(w <= ui(16)) return;
+		var p = ui(8);
+		var m_in = point_in_rectangle(mouse_mx, mouse_my, x + p, y + p, x + w - p, y + h - p);
+		var m_ot = point_in_rectangle(mouse_mx, mouse_my, x, y, x + w, y + h);
+		mouse_active = m_in;
+		
 		draw_sprite_stretched(THEME.ui_panel_bg, 0, x + padding, y + padding, w - padding * 2, h - padding * 2);
 		
 		if(!is_surface(mask_surface)) {
@@ -383,9 +431,71 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 		surface_reset_target();
 		
 		draw_surface_safe(content_surface, x, y);
+			
+		if(FOCUS == self) {
+			draw_sprite_stretched_ext(THEME.ui_panel_active, 0, x + padding, y + padding, w - padding * 2, h - padding * 2, COLORS._main_accent, 1);	
+			if(content && !m_in && m_ot && DOUBLE_CLICK) {
+				content.dragSurface = surface_clone(content_surface);
+				o_main.panel_dragging = content;
+				
+				content = noone;				
+				var ind = !ds_list_find_index(parent.childs, self); //index of the other child
+				var sib = parent.childs[| ind];
+				
+				if(parent.childs[| ind].content == noone) { //other child is compound panel
+					var gparent = parent.parent;
+					var pind    = ds_list_find_index(gparent.childs, parent); //index of parent in grandparent object
+					gparent.childs[| pind] = sib;
+					gparent.refreshSize();
+				} else { //other child is content panel, set parent to content panel
+					parent.set(sib.content);
+					ds_list_clear(parent.childs);
+				}
+			}
+		}
 		
-		if(FOCUS == self) 
-			draw_sprite_stretched_ext(THEME.ui_panel_active, 0, x + padding, y + padding, w - padding * 2, h - padding * 2, COLORS._main_accent, 1);
+		if(o_main.panel_dragging != noone && m_ot) {
+			var dx = (mouse_mx - x) / w;
+			var dy = (mouse_my - y) / h;
+			var p  = ui(8);
+			
+			draw_set_color(COLORS._main_accent);
+			o_main.panel_hovering = self;
+			
+			if(dx + dy > 1) {
+				if((1 - dx) + dy > 1) {
+					draw_set_alpha(.4);
+					draw_roundrect_ext(x + p, y + h / 2 + p, x + w - p, y + h - p, 8, 8, false);
+					draw_set_alpha(1.);
+					draw_roundrect_ext(x + p, y + h / 2 + p, x + w - p, y + h - p, 8, 8,  true);
+					
+					o_main.panel_split = 3;
+				} else {
+					draw_set_alpha(.4);
+					draw_roundrect_ext(x + p + w / 2, y + p, x + w - p, y + h - p, 8, 8, false);
+					draw_set_alpha(1.);
+					draw_roundrect_ext(x + p + w / 2, y + p, x + w - p, y + h - p, 8, 8,  true);
+					
+					o_main.panel_split = 1;
+				}
+			} else {
+				if((1 - dx) + dy > 1) {
+					draw_set_alpha(.4);
+					draw_roundrect_ext(x + p, y + p, x + w / 2 - p, y + h - p, 8, 8, false);
+					draw_set_alpha(1.);
+					draw_roundrect_ext(x + p, y + p, x + w / 2 - p, y + h - p, 8, 8,  true);
+					
+					o_main.panel_split = 2;
+				} else {
+					draw_set_alpha(.4);
+					draw_roundrect_ext(x + p, y + p, x + w - p, y + h / 2 - p, 8, 8, false);
+					draw_set_alpha(1.);
+					draw_roundrect_ext(x + p, y + p, x + w - p, y + h / 2 - p, 8, 8,  true);
+					
+					o_main.panel_split = 0;
+				}
+			}
+		}
 	}
 	
 	function remove() {
@@ -406,6 +516,7 @@ function PanelContent() constructor {
 	draggable = true;
 	expandable = true;
 	
+	panel = noone;
 	mx = 0;
 	my = 0;
 	
@@ -419,6 +530,8 @@ function PanelContent() constructor {
 	
 	pFOCUS = false;
 	pHOVER = false;
+	
+	dragSurface = surface_create(1, 1);
 	
 	function refresh() {
 		onResize();
@@ -438,6 +551,7 @@ function PanelContent() constructor {
 	}
 	
 	function onSetPanel(panel) {
+		self.panel = panel;
 		setPanelSize(panel);
 		initSize();
 		onResize();
@@ -458,8 +572,8 @@ function PanelContent() constructor {
 	function stepBegin() {}
 	
 	function draw(panel) { 
-		pFOCUS = FOCUS == panel;
-		pHOVER = HOVER == panel;
+		pFOCUS = FOCUS == panel && panel.mouse_active;
+		pHOVER = HOVER == panel && panel.mouse_active;
 		
 		drawContent(panel);
 	}

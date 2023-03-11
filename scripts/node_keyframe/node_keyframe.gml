@@ -311,9 +311,12 @@ function valueAnimator(_val, _prop) constructor {
 				_value_list[| 0] = values[| i].time;
 			
 			var val = values[| i].value;
-			if(is_struct(val)) {
+			
+			if(prop.type == VALUE_TYPE.struct)
+				_value_list[| 1] = json_stringify(val);
+			else if(is_struct(val))
 				_value_list[| 1] = val.serialize();
-			} else if(typeArray(prop.display_type) && is_array(val)) {
+			else if(typeArray(prop.display_type) && is_array(val)) {
 				var __v = ds_list_create();
 				for(var j = 0; j < array_length(val); j++) {
 					if(is_struct(val[j]) && struct_has(val[j], "serialize"))
@@ -323,9 +326,8 @@ function valueAnimator(_val, _prop) constructor {
 				}
 				_value_list[| 1] = __v;
 				ds_list_mark_as_list(_value_list, 1);
-			} else {
+			} else
 				_value_list[| 1] = values[| i].value;
-			}
 			
 			_value_list[| 2] = ds_list_create_from_array(values[| i].ease_in);
 				ds_list_mark_as_list(_value_list, 2);
@@ -384,7 +386,9 @@ function valueAnimator(_val, _prop) constructor {
 			var ease_out_type = ds_list_get(_keyframe, 5, CURVE_TYPE.bezier);
 			var _val = value;
 			
-			if(prop.type == VALUE_TYPE.path && prop.display_type == VALUE_DISPLAY.path_array) {
+			if(prop.type == VALUE_TYPE.struct)
+				_val = json_parse(value);
+			else if(prop.type == VALUE_TYPE.path && prop.display_type == VALUE_DISPLAY.path_array) {
 				for(var j = 0; j < ds_list_size(value); j++)
 					_val[j] = value[| j];
 			} else if(prop.type == VALUE_TYPE.color && prop.display_type == VALUE_DISPLAY.gradient) {

@@ -10,9 +10,6 @@
 	gpu_set_tex_mip_enable(mip_off);
 	gc_enable(true);
 	gc_target_frame_time(100);
-	
-	window_set_min_width(480)
-	window_set_min_height(480);
 #endregion
 
 #region window
@@ -24,9 +21,8 @@
 		gameframe_button_array = [  game_frame_button_create("", s_kenney, 0, function() {}),
 									game_frame_button_create("", s_kenney, 0, function() {}),
 								 ];
-	} else if(OS == os_macosx) {
+	} else if(OS == os_macosx)
 		mac_window_init();
-	}
 	
 	depth = 0;
 	win_wp = WIN_W;
@@ -48,6 +44,8 @@
 	kb_time  = 0;
 	kb_hold  = false;
 	kb_hkey  = 0;
+	
+	panelInit();
 	
 	//show_debug_overlay(true);
 	//display_set_timing_method(tm_sleep);

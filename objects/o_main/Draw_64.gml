@@ -35,6 +35,8 @@ if(OS == os_windows && gameframe_is_minimized()) {
 		noti_warning(exception_print(e));
 	}
 	
+	panelDraw();
+	
 	gameframe_update();
 #endregion
 

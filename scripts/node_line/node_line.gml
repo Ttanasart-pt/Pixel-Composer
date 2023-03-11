@@ -120,8 +120,8 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		var _rangeMax = max(_ratio[0], _ratio[1]);
 		if(_rangeMax == 1) _rangeMax = 0.99999;
 		
-		var _rtStr = _rangeMin;
-		var _rtLen = _rangeMax - _rangeMin;
+		var _rtStr = min(_rangeMin, _rangeMax);
+		var _rtMax = max(_rangeMin, _rangeMax);
 		
 		var _use_path = _pat != noone;
 		
@@ -150,30 +150,31 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 				else if(struct_has(_pat, "getLineCount"))
 					lineLen = _pat.getLineCount();
 				
+				if(_rtMax > 0) 
 				for( var i = 0; i < lineLen; i++ ) {
-					var ww   = min(_rtLen, 1 / _seg);
+					var _stepLen = min(_rtMax, 1 / _seg);
+					if(_stepLen <= 0.00001) continue;
 					
-					var _total		= _rtLen;
+					var _total		= _rtMax;
 					var _total_prev = _total;
 					var _freeze		= 0;
-					var _prog_curr	= frac(_shift + _rtStr) - ww;
+					var _prog_curr	= frac(_shift) - _stepLen;
 					var _prog		= _prog_curr + 1;
-					var _prog_eli	= 0;
+					var _prog_total	= 0;
 					var points		= [];
 				
 					while(_total > 0) {
-						if(_rtLen == 0) break;
-						if(ww <= 0.001) break;
-					
-						if(_prog_curr >= 1) _prog_curr = frac(_prog_curr);
-						else				_prog_curr = min(_prog_curr + min(_total, ww), 1);
-						_prog_eli = _prog_eli + min(_total, ww);
+						if(_prog_curr >= 1) //cut overflow path
+							_prog_curr = frac(_prog_curr);
+						else 
+							_prog_curr = min(_prog_curr + min(_total, _stepLen), 1); //move forward _stepLen or _total (if less) stop at 1
+						_prog_total += min(_total, _stepLen);
 						
 						var p = arrPath? _pat[i].getPointRatio(_prog_curr) : _pat.getPointRatio(_prog_curr, i);
-						_nx = p[0];
-						_ny = p[1];
+						_nx   = p[0];
+						_ny   = p[1];
 						
-						if(_total < _rtLen) {
+						if(_total < _rtMax) {
 							var _d = point_direction(_ox, _oy, _nx, _ny);
 							_nx += lengthdir_x(random1D(_sed + _sedIndex, -_wig, _wig), _d + 90); 
 							_sedIndex++;
@@ -182,11 +183,12 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 							_sedIndex++;
 						}
 						
-						array_push(points, [_nx, _ny, _prog_eli / _rtLen, _prog_curr]);
+						if(_prog_total > _rtStr) //prevent drawing point before range start.
+							array_push(points, [_nx, _ny, _prog_total / _rtMax, _prog_curr]);
 						
 						if(_prog_curr > _prog)
 							_total -= _prog_curr - _prog;
-					
+						
 						_prog = _prog_curr;
 						_ox = _nx;
 						_oy = _ny;
@@ -195,7 +197,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 						_total_prev = _total;
 					}
 					
-					lines[i] = points;
+					array_push(lines, points);
 				}
 			} else {
 				var x0, y0, x1, y1;
@@ -208,17 +210,17 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 				var _d = point_direction(x0, y0, x1, y1);
 				var _od = _d, _nd = _d;
 				
-				var ww = _rtLen / _seg;
-				var _total		= _rtLen;
-				var _prog_curr	= frac(_shift + _rtStr) - ww;
+				var ww          = _rtMax / _seg;
+				var _total		= _rtMax;
+				var _prog_curr	= frac(_shift) - ww;
 				var _prog		= _prog_curr + 1;
-				var _prog_eli	= 0;
+				var _prog_total	= 0;
 				var points = [];
 				
 				while(_total > 0) {
 					if(_prog_curr >= 1) _prog_curr = 0;
 					else _prog_curr = min(_prog_curr + min(_total, ww), 1);
-					_prog_eli += min(_total, ww);
+					_prog_total += min(_total, ww);
 					
 					_nx = x0 + lengthdir_x(_l * _prog_curr, _d);
 					_ny = y0 + lengthdir_y(_l * _prog_curr, _d);
@@ -227,7 +229,8 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 					_nx += lengthdir_x(wgLen, _d + 90); 
 					_ny += lengthdir_y(wgLen, _d + 90);
 					
-					array_push(points, [_nx, _ny, _prog_eli / _rtLen, _prog_curr]);
+					if(_prog_total > _rtStr) //prevent drawing point before range start.
+						array_push(points, [_nx, _ny, _prog_total / _rtMax, _prog_curr]);
 					
 					if(_prog_curr > _prog)
 						_total -= (_prog_curr - _prog);

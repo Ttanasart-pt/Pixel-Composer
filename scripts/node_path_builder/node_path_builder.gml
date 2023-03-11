@@ -8,7 +8,7 @@ function Node_Path_Builder(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		.setVisible(true, true)
 		.setArrayDepth(2);
 	
-	inputs[| 1] = nodeValue("Connected", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	inputs[| 1] = nodeValue("Connected", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false, "If set to true, will draw a single path from one point to another. If not set will treat each pair of points as an individual line.");
 	
 	outputs[| 0] = nodeValue("Path", self, JUNCTION_CONNECT.output, VALUE_TYPE.pathnode, self);
 	
@@ -30,6 +30,9 @@ function Node_Path_Builder(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			_p0 = array_safe_get(_lines, floor(_st) + 0,, ARRAY_OVERFLOW._default);
 			_p1 = array_safe_get(_lines, floor(_st) + 1,, ARRAY_OVERFLOW._default);
 			
+			if(!is_array(_p0)) return [0, 0];
+			if(!is_array(_p1)) return [0, 0];
+			
 			_x  = lerp(_p0[0], _p1[0], frac(_st));
 			_y  = lerp(_p0[1], _p1[1], frac(_st));
 		
@@ -37,6 +40,9 @@ function Node_Path_Builder(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		} else {
 			_p0 = array_safe_get(_lines, _ind * 2 + 0,, ARRAY_OVERFLOW._default);
 			_p1 = array_safe_get(_lines, _ind * 2 + 1,, ARRAY_OVERFLOW._default);
+			
+			if(!is_array(_p0)) return [0, 0];
+			if(!is_array(_p1)) return [0, 0];
 			
 			_x  = lerp(_p0[0], _p1[0], _rat);
 			_y  = lerp(_p0[1], _p1[1], _rat);

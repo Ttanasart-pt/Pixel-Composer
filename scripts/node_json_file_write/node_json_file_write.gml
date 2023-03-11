@@ -9,6 +9,9 @@ function Node_Json_File_Write(_x, _y, _group = noone) : Node(_x, _y, _group) con
 		.setDisplay(VALUE_DISPLAY.path_save, ["*.json", ""])
 		.rejectArray();
 		
+	inputs[| 1]  = nodeValue("Struct", self, JUNCTION_CONNECT.input, VALUE_TYPE.struct, {})
+		.setVisible(true, true);
+	
 	static createNewInput = function() {
 		var index = ds_list_size(inputs);
 		inputs[| index + 0] = nodeValue("Key", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "" );
@@ -20,7 +23,7 @@ function Node_Json_File_Write(_x, _y, _group = noone) : Node(_x, _y, _group) con
 		array_push(input_display_list, index + 1);
 	}
 	
-	input_display_list = [ 0,
+	input_display_list = [ 0, 1, 
 		["Inputs", false],
 	]
 	
@@ -37,6 +40,12 @@ function Node_Json_File_Write(_x, _y, _group = noone) : Node(_x, _y, _group) con
 			ds_list_add(_in, inputs[| i]);
 		
 		array_resize(input_display_list, input_display_len);
+		
+		if(inputs[| 1].value_from != noone) {
+			ds_list_destroy(inputs);
+			inputs = _in;
+			return;
+		}
 		
 		for( var i = input_fix_len; i < ds_list_size(inputs); i += data_length ) {
 			if(inputs[| i].getValue() != "") {
@@ -76,18 +85,30 @@ function Node_Json_File_Write(_x, _y, _group = noone) : Node(_x, _y, _group) con
 		if(path == "") return;
 		if(filename_ext(path) != ".json")
 			path += ".json";
-			
+		
 		var cont = {};
-		for( var i = input_fix_len; i < ds_list_size(inputs) - data_length; i += data_length ) {
-			var _key = inputs[| i + 0].getValue();
-			var _val = inputs[| i + 1].getValue();
+		
+		if(inputs[| 1].value_from == noone) {
+			for( var i = input_fix_len; i < ds_list_size(inputs) - data_length; i += data_length ) {
+				var _key = inputs[| i + 0].getValue();
+				var _val = inputs[| i + 1].getValue();
 			
-			inputs[| i + 1].type = inputs[| i + 1].value_from? inputs[| i + 1].value_from.type : VALUE_TYPE.any;
+				inputs[| i + 1].type = inputs[| i + 1].value_from? inputs[| i + 1].value_from.type : VALUE_TYPE.any;
 			
-			variable_struct_set(cont, _key, _val);
-		}
+				variable_struct_set(cont, _key, _val);
+			}
+		} else 
+			cont = inputs[| 1].getValue();
 		
 		json_save_struct(path, cont);
+	}
+	
+	function step() { 
+		for(var i = input_fix_len; i < ds_list_size(inputs) - data_length; i += data_length) {
+			var inp  = inputs[| i + 1];
+			var typ  = inp.value_from == noone? VALUE_TYPE.any : inp.value_from.type;
+			inp.type = typ;
+		}
 	}
 	
 	static update = function(frame = ANIMATOR.current_frame) { writeFile(); }

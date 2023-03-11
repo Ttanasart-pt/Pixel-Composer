@@ -1,3 +1,6 @@
+globalvar SAVING;
+SAVING = false;
+
 function NEW() {
 	if(MODIFIED && !READONLY) {
 		var dia = dialogCall(o_dialog_load);
@@ -28,9 +31,9 @@ function save_serialize() {
 	
 	repeat(ds_map_size(NODE_MAP)) {
 		var _node = NODE_MAP[? _key];
-		if(_node.active) {
+		
+		if(_node.active)
 			ds_list_add_map(_node_list, _node.serialize());
-		}
 		
 		_key = ds_map_find_next(NODE_MAP, _key);	
 	}
@@ -104,12 +107,15 @@ function SAVE_AS() {
 function SAVE_AT(path, log = "save at ") {
 	if(DEMO) return false;
 	
+	SAVING = true;
+	
 	if(file_exists(path))
 		file_delete(path);
 	var file = file_text_open_write(path);
 	file_text_write_string(file, save_serialize());
 	file_text_close(file);
 	
+	SAVING    = false;
 	READONLY  = false;
 	MODIFIED  = false;
 	
@@ -153,7 +159,7 @@ function SAVE_COLLECTIONS(_list, _path, save_surface = true, metadata = noone) {
 	file_text_close(file);
 	
 	ds_map_destroy(_map);
-	var pane = findPanel(Panel_Collection, PANEL_MAIN, noone);
+	var pane = findPanel("Panel_Collection", PANEL_MAIN, noone);
 	if(pane) pane.refreshContext();
 	
 	log_message("COLLECTION", "save collection at " + _path, THEME.noti_icon_file_save);
@@ -184,7 +190,7 @@ function SAVE_COLLECTION(_node, _path, save_surface = true, metadata = noone) {
 	file_text_close(file);
 	
 	ds_map_destroy(_map);
-	var pane = findPanel(Panel_Collection, PANEL_MAIN, noone);
+	var pane = findPanel("Panel_Collection", PANEL_MAIN, noone);
 	if(pane) pane.refreshContext();
 	
 	log_message("COLLECTION", "save collection at " + _path, THEME.noti_icon_file_save);

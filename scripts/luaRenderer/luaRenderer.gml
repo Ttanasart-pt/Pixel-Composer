@@ -27,13 +27,15 @@ function luaArgumentRenderer() {
 			draw_text_add(tx + ui(8), ty + _th + ui(6) + ui(6), "Value");
 			
 			var _jValue = inputs[| i + 2];
-			_jValue.editWidget.setActiveFocus(_focus, _hover);
-			if(_typ == 2) {
-				_jValue.editWidget.draw(tx + ui(64), ty + _th + ui(6), _w - ui(64), ui(96), _jValue.showValue(), _m, argument_renderer.rx, argument_renderer.ry);
-				_h += ui(96 + 8);
-			} else {
-				_jValue.editWidget.draw(tx + ui(64), ty + _th + ui(6), _w - ui(64), TEXTBOX_HEIGHT, _jValue.showValue(), _m);
-				_h += TEXTBOX_HEIGHT + ui(8);
+			if(_jValue.editWidget != noone) {
+				_jValue.editWidget.setActiveFocus(_focus, _hover);
+				if(_typ == 2) {
+					_jValue.editWidget.draw(tx + ui(64), ty + _th + ui(6), _w - ui(64), ui(96), _jValue.showValue(), _m, argument_renderer.rx, argument_renderer.ry);
+					_h += ui(96 + 8);
+				} else {
+					_jValue.editWidget.draw(tx + ui(64), ty + _th + ui(6), _w - ui(64), TEXTBOX_HEIGHT, _jValue.showValue(), _m);
+					_h += TEXTBOX_HEIGHT + ui(8);
+				}
 			}
 			
 			hh += _h;
@@ -48,7 +50,8 @@ function luaArgumentRenderer() {
 		for( var i = input_fix_len; i < ds_list_size(inputs); i += data_length ) {
 			inputs[| i + 1].editWidget.register(parent);
 			inputs[| i + 0].editWidget.register(parent);
-			inputs[| i + 2].editWidget.register(parent);
+			if(inputs[| i + 2].editWidget != noone)
+				inputs[| i + 2].editWidget.register(parent);
 		}
 	}
 }

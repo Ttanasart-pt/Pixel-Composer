@@ -24,7 +24,7 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	
 	inputs[| 4] = nodeValue("Starting rule", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "", o_dialog_l_system);
 	
-	inputs[| 5] = nodeValue("End replacement", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "");
+	inputs[| 5] = nodeValue("End replacement", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "", "Replace symbol of the last generated rule, for example a=F to replace all a with F. Use comma to separate different replacements.");
 	
 	inputs[| 6] = nodeValue("Starting angle", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 90)
 		.setDisplay(VALUE_DISPLAY.rotation);

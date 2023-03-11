@@ -59,6 +59,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	preview_alpha = 1;
 	preview_x     = 0;
 	preview_y     = 0;
+	preview_align = fa_center;
 	
 	rendered        = false;
 	update_on_frame = false;
@@ -84,6 +85,9 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	error_update_enabled = false;
 	manual_updated = false;
 	manual_deletable = true;
+	
+	tool_settings	= [];
+	tool_attribute	= {};
 	
 	static initTooltip = function() {
 		if(!struct_has(global.NODE_GUIDE, instanceof(self))) return;
@@ -647,8 +651,15 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		var pw = surface_get_width(surf);
 		var ph = surface_get_height(surf);
 		var ps = min((w * _s - 8) / pw, (h * _s - 8) / ph);
-		var px = xx + w * _s / 2 - pw * ps / 2;
-		var py = yy + h * _s / 2 - ph * ps / 2;
+		var px = xx + w * _s / 2 - pw * ps / 2, py = yy;
+		switch(preview_align) {
+			case fa_center :
+				py = yy + h * _s / 2 - ph * ps / 2;
+				break;
+			case fa_top :
+				py = yy;
+				break;
+		}
 		
 		var aa = 0.5 + 0.5 * renderActive;
 		draw_surface_ext_safe(surf, px, py, ps, ps, 0, c_white, aa);
@@ -992,6 +1003,20 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		return nodes;
 	}
 	
+	static isNotUsingTool = function() {
+		return PANEL_PREVIEW.tool_current == noone;
+	}
+	
+	static isUsingTool = function(index, subtool = noone) {
+		if(tools == -1) 
+			return false;
+		if(PANEL_PREVIEW.tool_current != tools[index])
+			return false;
+		if(subtool == noone)
+			return true;
+		return tools[index].selecting == subtool;
+	}
+	
 	static clone = function(target = PANEL_GRAPH.getCurrentContext()) {
 		CLONING = true;
 		var _type = instanceof(self);
@@ -1023,6 +1048,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	
 	static serialize = function(scale = false, preset = false) {
 		var _map = ds_map_create();
+		//print(" > Serializing: " + name);
 		
 		if(!preset) {
 			_map[? "id"]	 = node_id;
@@ -1095,15 +1121,17 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	
 	static postDeserialize = function() {}
 	static processDeserialize = function() {}
-	
+		
 	static applyDeserialize = function(preset = false) {
 		var _inputs = load_map[? "inputs"];
 		var amo = min(ds_list_size(inputs), ds_list_size(_inputs));
 		
-		printIf(TESTING, "  > Applying deserialize to node " + name);
+		printIf(TESTING, "  > Applying deserialize to node " + name + " (amount: " + string(amo) + ")");
 		
-		for(var i = 0; i < amo; i++)
+		for(var i = 0; i < amo; i++) {
+			if(inputs[| i] == noone) continue;
 			inputs[| i].applyDeserialize(_inputs[| i], load_scale, preset);
+		}
 		
 		printIf(TESTING, "  > Applying deserialize to node " + name + " completed");
 		

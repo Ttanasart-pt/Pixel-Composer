@@ -46,8 +46,8 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	input_display_index = array_length(input_display_list);
 	
 	tools = [
-		[ "Add / Remove (+ Shift) control point",  THEME.control_add ],
-		[ "Pin / unpin (+ Shift) mesh", THEME.control_pin ]
+		new NodeTool( "Add / Remove (+ Shift) control point",  THEME.control_add ),
+		new NodeTool( "Pin / unpin (+ Shift) mesh", THEME.control_pin )
 	];
 	
 	attributes[? "pin"] = ds_map_create();
@@ -72,10 +72,8 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				hover = i;
 		}
 		
-		var _tool = PANEL_PREVIEW.tool_index;
-		
 		if(!active) return;
-		if(_tool == 0) {
+		if(isUsingTool(0)) {
 			if(key_mod_press(SHIFT))
 				draw_sprite_ui_uniform(THEME.cursor_path_remove, 0, _mx + 16, _my + 16);
 			else
@@ -98,7 +96,7 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				reset();
 				control(input_display_list);
 			}
-		} else if(_tool == 1) {
+		} else if(isUsingTool(1)) {
 			draw_sprite_ui_uniform(key_mod_press(SHIFT)? THEME.cursor_path_remove : THEME.cursor_path_add, 0, _mx + 16, _my + 16);
 			
 			draw_set_color(COLORS._main_accent);
