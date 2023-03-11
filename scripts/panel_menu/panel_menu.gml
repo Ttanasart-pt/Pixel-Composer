@@ -1,5 +1,5 @@
 function Panel_Menu() : PanelContent() constructor {
-	draggable  = false;
+	draggable  = true;
 	
 	noti_flash = 0;
 	noti_flash_color = COLORS._main_accent;
@@ -7,9 +7,9 @@ function Panel_Menu() : PanelContent() constructor {
 	noti_icon_show = 0;
 	noti_icon_time = 0;
 	
-	if(OS == os_windows)
+	if(PREF_MAP[? "panel_menu_right_control"])
 		action_buttons = ["exit", "maximize", "minimize", "fullscreen"];
-	else if(OS == os_macosx)
+	else
 		action_buttons = ["exit", "minimize", "maximize", "fullscreen"];
 	
 	menu_file = [
@@ -148,6 +148,15 @@ function Panel_Menu() : PanelContent() constructor {
 					f = file_find_next();
 				}
 				
+				array_push(arr, menuItem("Save layout", function() {
+					var dia = dialogCall(o_dialog_file_name, mouse_mx + ui(8), mouse_my + ui(8));
+					dia.onModify = function(name) { 
+						var cont = panelSerialize();
+						json_save_struct(DIRECTORY + "layouts/" + name + ".json", cont);
+					};
+				}));
+				array_push(arr, -1);
+				
 				for(var i = 0; i < array_length(lays); i++)  {
 					array_push(arr, menuItem(lays[i], 
 						function(_x, _y, _depth, _path) { 
@@ -161,9 +170,8 @@ function Panel_Menu() : PanelContent() constructor {
 			}).setIsShelf(),
 			-1,
 			menuItem(get_text("panel_menu_collections", "Collections"), function() {
-				clearPanel();
 				PREF_MAP[? "panel_collection"] = !PREF_MAP[? "panel_collection"];
-				setPanel();
+				resetPanel();
 				PREF_SAVE();
 			}),
 			menuItem(get_text("tunnels", "Tunnels"), function() {
@@ -239,48 +247,90 @@ function Panel_Menu() : PanelContent() constructor {
 	function drawContent(panel) {
 		draw_clear_alpha(COLORS.panel_bg_clear, 0);
 		menus[6][1] = STEAM_ENABLED? menu_help_steam : menu_help;
+		var hori = w > h;
 		
 		var xx = ui(40);
-		if(OS == os_windows)
-			xx = ui(24);
-		else if(OS == os_macosx) {
-			xx = ui(140);
-			draw_set_color(COLORS._main_icon_dark);
-			draw_line_round(xx, ui(8), xx, h - ui(8), 3);
+		var yy = ui(8);
+		
+		if(hori) {
+			if(PREF_MAP[? "panel_menu_right_control"])
+				xx = ui(24);
+			else {
+				xx = ui(140);
+				draw_set_color(COLORS._main_icon_dark);
+				draw_line_round(xx, ui(8), xx, h - ui(8), 3);
+			}
+		
+			var bx = xx;
+			if(!PREF_MAP[? "panel_menu_right_control"])
+				bx = w - ui(24);
+		
+			draw_sprite_ui_uniform(THEME.icon_24, 0, bx, h / 2, 1, c_white);
+			if(pHOVER && point_in_rectangle(mx, my, bx - ui(16), 0, bx + ui(16), ui(32))) {
+				if(mouse_press(mb_left, pFOCUS))
+					dialogCall(o_dialog_about);
+			}
+		} else {
+			var bx = ui(20);
+			var by = h - ui(20);
+			
+			draw_sprite_ui_uniform(THEME.icon_24, 0, bx, by, 1, c_white);
+			if(pHOVER && point_in_rectangle(mx, my, bx - ui(16), by - ui(16), bx + ui(16), by + ui(16))) {
+				if(mouse_press(mb_left, pFOCUS))
+					dialogCall(o_dialog_about);
+			}
 		}
 		
-		var bx = xx;
-		if(OS == os_macosx)
-			bx = w - ui(24);
-		
-		draw_sprite_ui_uniform(THEME.icon_24, 0, bx, h / 2, 1, c_white);
-		if(pHOVER && point_in_rectangle(mx, my, bx - ui(16), 0, bx + ui(16), ui(32))) {
-			if(mouse_press(mb_left, pFOCUS))
-				dialogCall(o_dialog_about);
+		if(hori) {
+			if(PREF_MAP[? "panel_menu_right_control"])
+				xx += ui(20);
+			else
+				xx += ui(8);
+			yy = 0;
+		} else {
+			xx = ui(8);
+			yy = w < ui(200)? ui(72) : ui(40);
 		}
 		
-		if(OS == os_windows)
-			xx += ui(20);
-		else if(OS == os_macosx)
-			xx += ui(8);
+		var xc, x0, x1, yc, y0, y1;
 		
 		for(var i = 0; i < array_length(menus); i++) {
 			draw_set_text(f_p1, fa_center, fa_center, COLORS._main_text);
 			var ww = string_width(menus[i][0]) + ui(16);
-			var xc = xx + ww / 2;
+			var hh = line_height() + ui(8);
 			
-			if(pHOVER && point_in_rectangle(mx, my, xc - ww / 2, 0, xc + ww / 2, h)) {
-				draw_sprite_stretched(THEME.menu_button, 0, xc - ww / 2, ui(6), ww, h - ui(12));
+			if(hori) {
+				xc = xx + ww / 2;
+				yc = h / 2;
+				
+				x0 = xx;
+				x1 = xx + ww;
+				y0 = ui(6);
+				y1 = h - ui(6);
+			} else {
+				xc = w / 2;
+				yc = yy + hh / 2;
+				
+				x0 = ui(6);
+				x1 = w - ui(6);
+				y0 = yy;
+				y1 = yy + hh;
+			}
+			
+			if(pHOVER && point_in_rectangle(mx, my, x0, y0, x1, y1)) {
+				draw_sprite_stretched(THEME.menu_button, 0, x0, y0, x1 - x0, y1 - y0);
 					
 				if((mouse_press(mb_left, pFOCUS)) || instance_exists(o_dialog_menubox)) {
-					menuCall( xx, h, menus[i][1]);
+					if(hori) menuCall( x + x0, y + y1, menus[i][1]);
+					else     menuCall( x + x1, y + y0, menus[i][1]);
 				}
 			}
 			
 			draw_set_text(f_p1, fa_center, fa_center, COLORS._main_text);
-			draw_text_over(xx + ww / 2, h / 2, menus[i][0]);
+			draw_text_over(xc, yc, menus[i][0]);
 			
-			xx += ww + 8;
+			if(hori) xx += ww + 8;
+			else     yy += hh + 8;
 		}
 		
 		#region notification
@@ -292,8 +342,13 @@ function Panel_Menu() : PanelContent() constructor {
 			for( var i = 0; i < ds_list_size(ERRORS); i++ )
 				error_amo += ERRORS[| i].amount;
 			
-			var nx0 = xx + ui(24);
-			var ny0 = h / 2;
+			if(hori) {
+				var nx0 = xx + ui(24);
+				var ny0 = h / 2;
+			} else {
+				var nx0 = ui(8);
+				var ny0 = yy + ui(16);
+			}
 			
 			draw_set_text(f_p0, fa_left, fa_center);
 			var wr_w = ui(20) + ui(8) + string_width(string(warning_amo));
@@ -305,7 +360,7 @@ function Panel_Menu() : PanelContent() constructor {
 			} else 
 				noti_icon_show = lerp_float(noti_icon_show, 0, 4);
 			
-			var nw = ui(16) + wr_w + ui(16) + er_w + noti_icon_show * ui(32);
+			var nw = hori? ui(16) + wr_w + ui(16) + er_w + noti_icon_show * ui(32) : w - ui(16);
 			var nh = ui(32);
 			
 			noti_flash = lerp_linear(noti_flash, 0, 0.02);
@@ -330,23 +385,25 @@ function Panel_Menu() : PanelContent() constructor {
 			if(noti_icon_show > 0)
 				draw_sprite_ui(noti_icon, 0, nx0 + nw - ui(16), ny0,,,,, noti_icon_show);
 				
-			var wr_x = nx0 + ui(8);
+			var wr_x = hori? nx0 + ui(8) : w / 2 - (wr_w + er_w + ui(16)) / 2;
 			draw_sprite_ui_uniform(THEME.noti_icon_warning, warning_amo? 1 : 0, wr_x + ui(10), ny0);
 			draw_text(wr_x + ui(28), ny0, warning_amo);
 			
-			var er_x = nx0 + ui(8) + wr_w + ui(16);
-			draw_sprite_ui_uniform(THEME.noti_icon_error, error_amo? 1 : 0, er_x + ui(10), ny0);
-			draw_text(er_x + ui(28), ny0, error_amo);
+			wr_x += wr_w + ui(16);
+			draw_sprite_ui_uniform(THEME.noti_icon_error, error_amo? 1 : 0, wr_x + ui(10), ny0);
+			draw_text(wr_x + ui(28), ny0, error_amo);
 			
-			nx0 += nw + ui(8);
+			if(hori) nx0 += nw + ui(8);
+			else	 ny0 += nh + ui(8);
 		#endregion
 		
 		#region addons 
 			var wh = ui(32);
+			if(!hori) nx0 = ui(8);
 			
 			with(addon) {
 				draw_set_text(f_p0, fa_center, fa_center, COLORS._main_text);
-				var ww = string_width(name) + ui(16);
+				var ww = hori? string_width(name) + ui(16) : w - ui(16);
 				
 				if(other.pHOVER && point_in_rectangle(other.mx, other.my, nx0, ny0 - wh / 2, nx0 + ww, ny0 + wh / 2)) {
 					draw_sprite_stretched(THEME.menu_button, 1, nx0, ny0 - wh / 2, ww, wh);
@@ -358,13 +415,16 @@ function Panel_Menu() : PanelContent() constructor {
 					draw_sprite_stretched(THEME.ui_panel_bg, 1, nx0, ny0 - wh / 2, ww, wh);
 				draw_text(nx0 + ww / 2, ny0, name);
 				
-				nx0 += ww + ui(4);
+				if(hori) nx0 += ww + ui(4);
+				else     ny0 += hh + ui(4);
 			}
 		#endregion
 		
 		var x1 = w - ui(6);
-		if(OS == os_windows)		x1 = w - ui(6);
-		else if(OS == os_macosx)	x1 = ui(8 + 28);
+		if(PREF_MAP[? "panel_menu_right_control"])
+			x1 = w - ui(6);
+		else
+			x1 = ui(8 + 28);
 		
 		#region actions
 			var bs = ui(28);
@@ -427,26 +487,44 @@ function Panel_Menu() : PanelContent() constructor {
 						break;
 				}
 				
-				if(OS == os_windows)		x1 -= bs + ui(4);
-				else if(OS == os_macosx)	x1 += bs + ui(4);
+				if(PREF_MAP[? "panel_menu_right_control"])
+					x1 -= bs + ui(4);
+				else 
+					x1 += bs + ui(4);
 			}
 		#endregion
 		
-		if(OS == os_macosx)	x1 = w - ui(40);
+		if(!PREF_MAP[? "panel_menu_right_control"])	x1 = w - ui(40);
 		
 		#region version
-			draw_set_text(f_p0, fa_right, fa_center, COLORS._main_text_sub);
 			var txt = "v. " + string(VERSION_STRING);
 			if(STEAM_ENABLED) txt += " Steam";
-			var ww = string_width(txt) + ui(12);
-			if(pHOVER && point_in_rectangle(mx, my, x1 - ww, 0, x1, h)) {
-				draw_sprite_stretched(THEME.button_hide_fill, 1, x1 - ww, ui(6), ww, h - ui(12));
 			
-				if(mouse_press(mb_left, pFOCUS)) {
-					dialogCall(o_dialog_release_note); 
+			if(hori) {
+				draw_set_text(f_p0, fa_right, fa_center, COLORS._main_text_sub);
+				var ww = string_width(txt) + ui(12);
+				if(pHOVER && point_in_rectangle(mx, my, x1 - ww, 0, x1, h)) {
+					draw_sprite_stretched(THEME.button_hide_fill, 1, x1 - ww, ui(6), ww, h - ui(12));
+			
+					if(mouse_press(mb_left, pFOCUS)) {
+						dialogCall(o_dialog_release_note); 
+					}
 				}
+				draw_text(x1 - ui(6), h / 2, txt);
+			} else {
+				var x1 = ui(40);
+				var y1 = h - ui(20);
+				
+				draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text_sub);
+				var ww = string_width(txt) + ui(12);
+				if(pHOVER && point_in_rectangle(mx, my, x1, y1 - ui(16), x1 + ww, y1 + ui(16))) {
+					draw_sprite_stretched(THEME.button_hide_fill, 1, x1, y1 - ui(16), ww, ui(32));
+					
+					if(mouse_press(mb_left, pFOCUS))
+						dialogCall(o_dialog_release_note); 
+				}
+				draw_text(x1 + ui(6), y1, txt);
 			}
-			draw_text(x1 - ui(6), h / 2, txt);
 		#endregion
 		
 		#region title
@@ -460,16 +538,41 @@ function Panel_Menu() : PanelContent() constructor {
 			txt += " - Pixel Composer";
 			if(DEMO) txt += " DEMO";
 			
-			var tx0  = nx0;
-			var tx1  = x1 - ww;
-			var maxW = abs(tx0 - tx1);
-			var tcx  = (tx0 + tx1) / 2;
+			var tx0, tx1, maxW, tcx;
+			var ty0, ty1;
+			var tbx0, tby0;
+			
+			if(hori) {
+				tx0 = nx0;
+				tx1 = x1 - ww;
+				ty0 = 0;
+				ty1 = h;
+				
+				tcx  = (tx0 + tx1) / 2;
+			} else {
+				tx0 = ui(8);
+				tx1 = w < ui(200)? w - ui(16) : w - ui(144);
+				ty0 = w < ui(200)? ui(36) : ui(6);
+				
+				tcx  = tx0;
+			}
+			
+			maxW = abs(tx0 - tx1);
 			
 			draw_set_font(f_p0b);
 			var tc = string_cut(txt, maxW);
 			var tw = string_width(tc) + ui(16);
+			var th = ui(28);
 			
-			if(buttonInstant(THEME.button_hide_fill, tcx - tw / 2, h / 2 - ui(14), tw, ui(28), [mx, my], pFOCUS, pHOVER) == 2) {
+			if(hori) {
+				tbx0 = tcx - tw / 2;
+				tby0 = ty1 / 2 - ui(14);
+			} else {
+				tbx0 = tx0;
+				tby0 = ty0;
+			}
+			
+			if(buttonInstant(THEME.button_hide_fill, tbx0, tby0, tw, th, [mx, my], pFOCUS, pHOVER) == 2) {
 				var arr = [];
 				var tip = [];
 				for(var i = 0; i < min(10, ds_list_size(RECENT_FILES)); i++)  {
@@ -479,12 +582,17 @@ function Panel_Menu() : PanelContent() constructor {
 					array_push(tip, [ method(_dat, _dat.getThumbnail), VALUE_TYPE.surface ]);
 				}
 				
-				var dia = menuCall(tcx, h, arr, fa_center);
+				var dia = hori? menuCall(x + tcx, y + h, arr, fa_center) : menuCall(x + w, y + tby0, arr);
 				dia.tooltips = tip;
 			}
 			
-			draw_set_text(f_p0b, fa_center, fa_center, COLORS._main_text_sub);
-			draw_text(tcx, h / 2, tc);
+			if(hori) {
+				draw_set_text(f_p0b, fa_center, fa_center, COLORS._main_text_sub);
+				draw_text(tcx, (ty0 + ty1) / 2, tc);
+			} else {
+				draw_set_text(f_p0b, fa_left, fa_center, COLORS._main_text_sub);
+				draw_text(tx0 + ui(8), tby0 + th / 2, tc);
+			}
 		#endregion
 			
 		undoUpdate();

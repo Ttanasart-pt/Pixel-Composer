@@ -7,7 +7,7 @@ function display_refresh() {
 	display_set_gui_size(WIN_SW, WIN_SH);
 		
 	clearPanel();
-	setPanel();
+	resetPanel();
 		
 	PANEL_GRAPH.fullView();
 	PANEL_PREVIEW.fullView();

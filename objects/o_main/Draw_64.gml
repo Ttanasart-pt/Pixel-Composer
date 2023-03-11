@@ -24,7 +24,7 @@ if(OS == os_windows && gameframe_is_minimized()) {
 #endregion
 
 #region panels
-	if(PANEL_MAIN == 0) setPanel();
+	if(PANEL_MAIN == 0) resetPanel();
 	
 	var surf = surface_get_target();
 	try

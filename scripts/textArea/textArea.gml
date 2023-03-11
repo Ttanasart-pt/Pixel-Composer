@@ -89,6 +89,22 @@ function textArea(_input, _onModify, _extras = noone) : textInput(_input, _onMod
 				var word = words[j];
 				if(j) word = " " + word;
 				
+				if(string_width(word) > line_width) { //the entire word is longer than a line
+					for( var k = 1; k <= string_length(word); k++ ) {
+						var ch = string_char_at(word, k);
+						
+						if(currW + string_width(ch) > line_width) {
+							array_push(_input_text_line, currL);
+							currW = 0;
+							currL = "";
+						}
+						
+						currL += ch;
+						currW += string_width(ch);
+					}
+					continue;
+				} 
+				
 				if(currW + string_width(word) > line_width) {
 					array_push(_input_text_line, currL);
 					currW = 0;

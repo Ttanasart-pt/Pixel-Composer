@@ -8,8 +8,12 @@
 	}
 	CURSOR = cr_default;
 	
-	if(!gameframe_is_minimized() && (win_wp != WIN_W || win_hp != WIN_H) && (WIN_W > 1 && WIN_H > 1))
+	if(!gameframe_is_minimized() && (win_wp != WIN_W || win_hp != WIN_H) && (WIN_W > 1 && WIN_H > 1)) {
+		if(!win_resize) CURRENT_PANEL = panelSerialize();
 		display_refresh();
+		win_resize = true;
+	} else 
+		win_resize = false;
 #endregion
 
 #region focus

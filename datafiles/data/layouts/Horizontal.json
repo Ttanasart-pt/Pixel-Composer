@@ -1,29 +1,43 @@
 {
     "panel": {
-        "split": "h",
-        "width": -400,
-        "content": [
+        "split": "v",
+        "width": 40,
+        "content": [{
+                "content": "Panel_Menu"
+            },
             {
-                "split": "v",
-                "width": -48,
-                "content": [
-                    {
+                "split": "h",
+                "width": -400,
+                "content": [{
                         "split": "v",
-                        "width": -400,
-                        "content": [
-                            { "content": "PREVIEW" },
-                            { "content": "GRAPH" }
+                        "width": -48,
+                        "content": [{
+                                "split": "v",
+                                "width": -400,
+                                "content": [{
+                                        "content": "Panel_Preview"
+                                    },
+                                    {
+                                        "content": "Panel_Graph"
+                                    }
+                                ]
+                            },
+                            {
+                                "content": "Panel_Animation"
+                            }
                         ]
                     },
-                    { "content": "ANIMATION" }
+                    {
+                        "content": "Panel_Inspector"
+                    }
                 ]
-            },
-            { "content": "INSPECTOR" }
+            }
         ]
     },
-    "collection": {
-        "parent": "GRAPH",
+    "Panel_Collection": {
+        "parent": "Panel_Graph",
         "width": 460,
-        "split": "h"
+        "split": "h",
+        "index": 0
     }
 }

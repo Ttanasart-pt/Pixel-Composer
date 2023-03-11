@@ -64,6 +64,7 @@
 	PREF_MAP[? "dialog_add_node_h"] = 400;
 	
 	PREF_MAP[? "panel_menu_resource_monitor"] = false;
+	PREF_MAP[? "panel_menu_right_control"] = os_type == os_windows;
 #endregion
 
 #region hotkeys	

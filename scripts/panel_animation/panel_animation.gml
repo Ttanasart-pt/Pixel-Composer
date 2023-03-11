@@ -77,6 +77,43 @@ function Panel_Animation() : PanelContent() constructor {
 	
 	prev_cache = array_create(ANIMATOR.frames_total);
 	
+	control_buttons = [
+		[ function() { return get_text("stop", "Stop"); }, 
+		  function() { return 4; }, 
+		  function() { return ANIMATOR.is_playing? COLORS._main_accent : COLORS._main_icon; },
+		  function() {
+			ANIMATOR.is_playing = false;
+			ANIMATOR.setFrame(0);
+		} ],
+		[ function() { return ANIMATOR.is_playing? get_text("pause", "Pause") : get_text("play", "Play"); }, 
+		  function() { return !ANIMATOR.is_playing; }, 
+		  function() { return ANIMATOR.is_playing? COLORS._main_accent : COLORS._main_icon; },
+		  function() {
+			ANIMATOR.is_playing = !ANIMATOR.is_playing;
+			ANIMATOR.frame_progress = true;
+		} ],
+		[ function() { return get_text("panel_animation_go_to_first_frame", "Go to first frame"); }, 
+		  function() { return 3; }, 
+		  function() { return COLORS._main_icon; },
+		  function() { ANIMATOR.setFrame(0); } 
+		],
+		[ function() { return get_text("panel_animation_go_to_last_frame", "Go to last frame"); }, 
+		  function() { return 2; }, 
+		  function() { return COLORS._main_icon; },
+		  function() { ANIMATOR.setFrame(ANIMATOR.frames_total - 1); } 
+		],
+		[ function() { return get_text("panel_animation_previous_frame", "Previous frame"); }, 
+		  function() { return 5; }, 
+		  function() { return COLORS._main_icon; },
+		  function() { ANIMATOR.setFrame(ANIMATOR.real_frame - 1); } 
+		],
+		[ function() { return get_text("panel_animation_next_frame", "Next frame"); }, 
+		  function() { return 6; }, 
+		  function() { return COLORS._main_icon; },
+		  function() { ANIMATOR.setFrame(ANIMATOR.real_frame + 1); } 
+		],
+	];
+	
 	addHotkey("", "Play/Pause",		vk_space, MOD_KEY.none,	function() { 
 		ANIMATOR.is_playing = !ANIMATOR.is_playing; 
 		ANIMATOR.current_frame = -1;
@@ -1359,44 +1396,63 @@ function Panel_Animation() : PanelContent() constructor {
 	
 	function drawAnimationControl() {
 		var bx = ui(8);
-		if(w < ui(348)) 
-			bx = w / 2 - ui(36) * 6 / 2;
-			
 		var by = h - ui(40);
-		if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), [mx, my], pFOCUS, pHOVER, get_text("stop", "Stop"), THEME.sequence_control, 4, ANIMATOR.is_playing? COLORS._main_accent : COLORS._main_icon) == 2) {
-			ANIMATOR.is_playing = false;
-			ANIMATOR.setFrame(0);
+		
+		if(w < ui(348)) {
+			bx = w / 2 - ui(36) * 6 / 2;	
+			by = h - ui(40);
 		}
 		
-		bx += ui(36);
-		var ind = !ANIMATOR.is_playing;
-		var cc  = ANIMATOR.is_playing? COLORS._main_accent : COLORS._main_icon;
-		if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), [mx, my], pFOCUS, pHOVER, ANIMATOR.is_playing? get_text("pause", "Pause") : get_text("play", "Play"), THEME.sequence_control, ind, cc) == 2) {
-			ANIMATOR.is_playing = !ANIMATOR.is_playing;
-			ANIMATOR.frame_progress = true;
+		for( var i = 0; i < array_length(control_buttons); i++ ) {
+			var but = control_buttons[i];
+			var txt = but[0]();
+			var ind = but[1]();
+			var cc  = but[2]();
+			var fnc = but[3];
+			
+			if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), [mx, my], pFOCUS, pHOVER, txt, THEME.sequence_control, ind, cc) == 2) 
+				fnc();
+			
+			bx += ui(36);
 		}
 		
-		bx += ui(36);
-		if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), [mx, my], pFOCUS, pHOVER, get_text("panel_animation_go_to_first_frame", "Go to first frame"), THEME.sequence_control, 3) == 2) {
-			ANIMATOR.setFrame(0);
-		}
+		if(w < ui(348)) {
+			if(h < 72) return;
 			
-		bx += ui(36);
-		if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), [mx, my], pFOCUS, pHOVER, get_text("panel_animation_go_to_last_frame", "Go to last frame"), THEME.sequence_control, 2) == 2) {
-			ANIMATOR.setFrame(ANIMATOR.frames_total - 1);
-		}
+			var y0 = ui(8);
+			var y1 = h - ui(48);
+			var cy = (y0 + y1) / 2;
 			
-		bx += ui(36);
-		if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), [mx, my], pFOCUS, pHOVER, get_text("panel_animation_previous_frame", "Previous frame"), THEME.sequence_control, 5) == 2) {
-			ANIMATOR.setFrame(ANIMATOR.real_frame - 1);
-		}
+			draw_sprite_stretched(THEME.ui_panel_bg, 1, ui(8), y0, w - ui(16), y1 - y0);
 			
-		bx += ui(36);
-		if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), [mx, my], pFOCUS, pHOVER, get_text("panel_animation_next_frame", "Next frame"), THEME.sequence_control, 6) == 2) {
-			ANIMATOR.setFrame(ANIMATOR.real_frame + 1);
+			var pw = w - ui(16);
+			var px = ui(8) + pw * (ANIMATOR.current_frame / ANIMATOR.frames_total);
+			draw_set_color(COLORS._main_accent);
+			draw_line(px, y0, px, y1);
+			
+			if(point_in_rectangle(mx, my, ui(8), y0, w - ui(16), y1)) {
+				if(mouse_click(mb_left, pFOCUS)) {
+					var rfrm = (mx - ui(8)) / (w - ui(16)) * ANIMATOR.frames_total;
+					ANIMATOR.setFrame(clamp(rfrm, 0, ANIMATOR.frames_total - 1));
+				}
+			}
+			
+			var txt = string(ANIMATOR.current_frame + 1) + "/" + string(ANIMATOR.frames_total);
+			
+			if(h < 100) {
+				draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text_sub);
+				draw_text(ui(16), cy, "Frame");
+				draw_set_text(f_p1, fa_right, fa_center, ANIMATOR.is_playing? COLORS._main_accent : COLORS._main_text_sub);
+				draw_text(w - ui(16), cy, txt);
+			} else {
+				draw_set_text(f_p1, fa_center, fa_center, COLORS._main_text_sub);
+				draw_text(w / 2, cy - ui(16), "Frame");
+			
+				draw_set_text(f_h3, fa_center, fa_center, ANIMATOR.is_playing? COLORS._main_accent : COLORS._main_text_sub);
+				draw_text(w / 2, cy + ui(6), txt);
+			}
+			return;
 		}
-		
-		if(w < ui(348)) return;
 		
 		bx = w - ui(44);
 		if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), [mx, my], pFOCUS, pHOVER, get_text("panel_animation_animation_settings", "Animation settings"), THEME.animation_setting, 2) == 2)
@@ -1420,7 +1476,7 @@ function Panel_Animation() : PanelContent() constructor {
 		draw_clear_alpha(COLORS.panel_bg_clear, 0);
 		
 		if(w < ui(348)) {
-			draw_sprite_stretched(THEME.ui_panel_bg, 1, ui(8), h - ui(32 + 8), w - ui(16), ui(32));
+			//
 		} else {
 			drawTimeline();
 			if(dope_sheet_h > 8)

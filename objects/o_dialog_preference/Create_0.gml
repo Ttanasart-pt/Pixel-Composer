@@ -54,7 +54,7 @@ event_inherited();
 				return;
 				
 			PREF_MAP[? "display_scaling"] = PREF_MAP[? "_display_scaling"];
-			setPanel();
+			resetPanel();
 			loadFonts();
 			
 			time_source_start(time_source_create(time_source_global, 1, time_source_units_frames, onResize));
@@ -291,6 +291,15 @@ event_inherited();
 		"connection_line_aa",
 		new textBox(TEXTBOX_INPUT.number, function(str) { 
 			PREF_MAP[? "connection_line_aa"] = max(1, real(str)); 
+			PREF_SAVE();
+		})
+	])
+	
+	ds_list_add(pref_appr, [
+		get_text("panel_menu_right_control", "Use Windows style window control."),
+		"panel_menu_right_control",
+		new checkBox(function() { 
+			PREF_MAP[? "panel_menu_right_control"] = !PREF_MAP[? "panel_menu_right_control"]; 
 			PREF_SAVE();
 		})
 	]);

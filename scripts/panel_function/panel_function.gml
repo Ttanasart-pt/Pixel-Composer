@@ -38,66 +38,92 @@
 	}
 	
 	function loadPanelStruct(panel, str) {
-		if(variable_struct_exists(str, "split")) {
+		if(variable_struct_exists(str, "split") && is_array(str.content)) {
 			var pan = panel;
 			if(str.split == "v")
 				pan = panel.split_v(ui(str.width));
 			else if(str.split == "h")
 				pan = panel.split_h(ui(str.width));
 			
-			if(variable_struct_exists(str, "content")) {
+			if(pan != noone) {
 				loadPanelStruct(pan[0], str.content[0]);
 				loadPanelStruct(pan[1], str.content[1]);
 			}
-		} else if(variable_struct_exists(str, "content"))
+		} else {
 			panel.set(getPanelFromName(str.content));
+		}
 	}
 	
 	function getPanelFromName(name) {
 		switch(name) {
-			case "INSPECTOR" : return PANEL_INSPECTOR;
-			case "ANIMATION" : return PANEL_ANIMATION;
-			case "PREVIEW"   : return PANEL_PREVIEW;
-			case "GRAPH"	 : return PANEL_GRAPH;
+			case "Panel_Menu"       : return PANEL_MENU;
+			case "Panel_Inspector"  : return PANEL_INSPECTOR;
+			case "Panel_Animation"  : return PANEL_ANIMATION;
+			case "Panel_Preview"    : return PANEL_PREVIEW;
+			case "Panel_Graph"      : return PANEL_GRAPH;
+			case "Panel_Collection" : return PANEL_COLLECTION;
 		}
 		
 		return noone;
 	}
 	
 	function loadPanel(path, panel) {
-		var f = json_load_struct(path);
-		loadPanelStruct(panel, f.panel);
+		CURRENT_PANEL = json_load_struct(path);
+		loadPanelStruct(panel, CURRENT_PANEL.panel);
+	}
+	
+	function panelAdd(panel) {
+		var f = CURRENT_PANEL;
 		
-		if(PREF_MAP[? "panel_collection"]) {
-			var pan  = getPanelFromName(f.collection.parent);
+		if(struct_has(f, panel)) {
+			var str = f[$ panel];
+			var pan = getPanelFromName(str.parent);
 			var p;
 			
-			if(f.collection.split == "v")
-				p = pan.panel.split_v(ui(f.collection.width));
-			else if(f.collection.split == "h")
-				p = pan.panel.split_h(ui(f.collection.width));
+			if(str.split == "v")
+				p = pan.panel.split_v(ui(str.width));
+			else if(str.split == "h")
+				p = pan.panel.split_h(ui(str.width));
 			
-			p[0].set(PANEL_COLLECTION);
-			p[1].set(pan);
+			p[ str.index].set(PANEL_COLLECTION);
+			p[!str.index].set(pan);
 		}
 	}
 	
-	function setPanel() {
-		PANEL_MAIN = new Panel(noone, ui(2), ui(2), WIN_SW - ui(4), WIN_SH - ui(4));
-		
-		PANEL_MENU      = new Panel_Menu();
-		PANEL_INSPECTOR = new Panel_Inspector();
-		PANEL_ANIMATION = new Panel_Animation();
-		PANEL_PREVIEW   = new Panel_Preview();
-		PANEL_GRAPH     = new Panel_Graph();
+	function panelObjectInit() {
+		PANEL_MAIN       = new Panel(noone, ui(2), ui(2), WIN_SW - ui(4), WIN_SH - ui(4));
+		PANEL_MENU       = new Panel_Menu();
+		PANEL_INSPECTOR  = new Panel_Inspector();
+		PANEL_ANIMATION  = new Panel_Animation();
+		PANEL_PREVIEW    = new Panel_Preview();
+		PANEL_GRAPH      = new Panel_Graph();
 		PANEL_COLLECTION = new Panel_Collection();
+	}
+	
+	function resetPanel() {
+		clearPanel();
+		panelObjectInit();
+		loadPanelStruct(PANEL_MAIN, CURRENT_PANEL.panel);
 		
-		var split_menu	= PANEL_MAIN.split_v(ui(40));
-		split_menu[0].set(PANEL_MENU);
+		if(PREF_MAP[? "panel_collection"])
+			panelAdd("Panel_Collection");
 		
+		PANEL_MAIN.refresh();
+	}
+	
+	function setPanel() {
+		globalvar CURRENT_PANEL;
+		
+		panelObjectInit();
 		zip_unzip("data/layouts.zip", DIRECTORY);
-		loadPanel(DIRECTORY + "layouts/" + PREF_MAP[? "panel_layout_file"] + ".json", split_menu[1]);
+		var file = DIRECTORY + "layouts/" + PREF_MAP[? "panel_layout_file"] + ".json"; 
+		if(!file_exists(file))
+			file = DIRECTORY + "layouts/Horizontal.json"; 
+		loadPanel(file, PANEL_MAIN);
 		
+		if(PREF_MAP[? "panel_collection"])
+			panelAdd("Panel_Collection");
+			
 		PANEL_ANIMATION.updatePropertyList();
 		PANEL_MAIN.refresh();
 	}
@@ -129,23 +155,41 @@
 	function panelDraw() {
 		if(panel_dragging) {
 			draw_surface_ext(panel_dragging.dragSurface, mouse_mx + 8, mouse_my + 8, 0.5, 0.5, 0, c_white, 0.5);
-			
 			if(mouse_release(mb_left)) {
 				var p = [];
-				var c = panel_hovering.content;
-				panel_hovering.content = noone;
 				
-				switch(panel_split) {
-					case 0 : p = panel_hovering.split_v( panel_hovering.h / 2); break; 
-					case 1 : p = panel_hovering.split_h( panel_hovering.w / 2); break;
-					case 2 : p = panel_hovering.split_h( panel_hovering.w / 2); break;
-					case 3 : p = panel_hovering.split_v( panel_hovering.h / 2); break;
+				if(panel_hovering == PANEL_MAIN) { //split main panel
+					var panel = new Panel(noone, ui(2), ui(2), WIN_SW - ui(4), WIN_SH - ui(4));
+					var main  = PANEL_MAIN;
+					
+					switch(panel_split) {
+						case 0 : p = panel.split_v( panel.h / 2); break; 
+						case 1 : p = panel.split_h( panel.w / 2); break;
+						case 2 : p = panel.split_h( panel.w / 2); break;
+						case 3 : p = panel.split_v( panel.h / 2); break;
+					}
+					
+					panel.parent.childs[| (panel_split + 1) % 2] = main;
+					main.parent = panel.parent;
+					panel.parent.childs[| (panel_split + 0) % 2].set(panel_dragging);
+					
+					PANEL_MAIN.refreshSize();
+				} else {
+					var c = panel_hovering.content;
+					panel_hovering.content = noone;
+					
+					switch(panel_split) {
+						case 0 : p = panel_hovering.split_v( panel_hovering.h / 2); break; 
+						case 1 : p = panel_hovering.split_h( panel_hovering.w / 2); break;
+						case 2 : p = panel_hovering.split_h( panel_hovering.w / 2); break;
+						case 3 : p = panel_hovering.split_v( panel_hovering.h / 2); break;
+					}
+				
+					p[(panel_split + 1) % 2].set(c);
+					p[(panel_split + 0) % 2].set(panel_dragging);
+					
+					panel_hovering.refreshSize();
 				}
-				
-				p[(panel_split + 1) % 2].set(c);
-				p[(panel_split + 0) % 2].set(panel_dragging);
-				
-				panel_hovering.refreshSize();
 				
 				panel_hovering = noone;
 				panel_dragging = noone;
@@ -154,19 +198,48 @@
 	}
 	
 	function panelSerialize() {
-		var cont = _panelSerialize(PANEL_MAIN);
-		print(json_stringify(cont, true));
+		var cont = {};
+		cont.panel = _panelSerialize(PANEL_MAIN);
+		return cont;
 	}
 	
 	function _panelSerialize(panel) {
 		var cont = {};
+		var ind = 0;
 		
-		cont.content = panel.content == noone? noone : instanceof(panel.content);
-		cont.split   = panel.split;
+		if(panel.split != "" && ds_list_size(panel.childs) == 2) {
+			cont.split = panel.split;
+			if(panel.split == "h") {
+				ind = panel.childs[| 1].w < panel.childs[| 0].w;
+				cont.width = panel.childs[| ind].w * (panel.childs[| ind].x == panel.x? 1 : -1);
+				
+			} else {
+				ind = panel.childs[| 1].h < panel.childs[| 0].h;
+				cont.width = panel.childs[| ind].h * (panel.childs[| ind].y == panel.y? 1 : -1);
+			}
+			
+			cont.content = [];
+			ind = panel.childs[| 1].x == panel.x && panel.childs[| 1].y == panel.y;
+			for( var i = 0; i < ds_list_size(panel.childs); i++ )
+				cont.content[i] = _panelSerialize(panel.childs[| (ind + i) % 2]);
+		} else if(panel.content != noone)
+			cont.content = instanceof(panel.content);
 		
-		cont.child = [];
-		for( var i = 0; i < ds_list_size(panel.childs); i++ )
-			cont.child[i] = _panelSerialize(panel.childs[| i]);
+		return cont;
+	}
+	
+	function panelSerializeArray() {
+		return _panelSerializeArray(PANEL_MAIN);
+	}
+	
+	function _panelSerializeArray(panel) {
+		var cont = [];
+		
+		if(panel.content == noone) {
+			for( var i = 0; i < ds_list_size(panel.childs); i++ )
+				cont[i] = _panelSerializeArray(panel.childs[| i]);
+		} else
+			cont = instanceof(panel.content);
 		
 		return cont;
 	}

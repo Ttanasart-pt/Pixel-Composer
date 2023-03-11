@@ -819,15 +819,14 @@ function Panel_Preview() : PanelContent() constructor {
 		}
 	}
 	
-	function drawContent(panel) {
+	function drawContent(panel) { 
 		mouse_on_preview = pHOVER && point_in_rectangle(mx, my, 0, toolbar_height, w, h - toolbar_height);
 		
 		draw_clear(COLORS.panel_bg_clear);
-		if(canvas_bg == -1) {
-			if(canvas_s >= 1) draw_sprite_tiled_ext(s_transparent, 0, canvas_x, canvas_y, canvas_s, canvas_s, c_white, 0.5);
-		} else {
+		if(canvas_bg == -1 && canvas_s >= 1) 
+			draw_sprite_tiled_ext(s_transparent, 0, canvas_x, canvas_y, canvas_s, canvas_s, c_white, 0.5);
+		else
 			draw_clear(canvas_bg);
-		}
 		
 		dragCanvas();
 		getPreviewData();

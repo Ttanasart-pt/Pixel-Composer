@@ -19,7 +19,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 	y = _y;
 	w = _w;
 	h = _h;
-	split = -1;
+	split = "";
 	
 	min_w = ui(32);
 	min_h = ui(32);
@@ -48,15 +48,8 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 	}
 	
 	function refresh() {
-		if(is_surface(content_surface) && surface_exists(content_surface)) 
-			surface_size_to(content_surface, w, h);
-		else
-			content_surface = surface_create_valid(w, h);
-		
-		if(is_surface(mask_surface) && surface_exists(mask_surface)) 
-			surface_size_to(mask_surface, w, h);
-		else
-			mask_surface = surface_create_valid(w, h);
+		content_surface = surface_verify(content_surface, w, h);
+		mask_surface    = surface_verify(mask_surface, w, h);
 		resetMask();
 		
 		if(content != noone) 
@@ -98,23 +91,24 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 		return true;
 	}
 	
-	function refreshSize() { //refresh content surface after resize
+	function refreshSize(recur = true) { //refresh content surface after resize
+		//__debug_counter("refresh size");
 		if(content) {
 			content.w = w;
 			content.h = h;
 			content.onResize();
 		} else if(ds_list_size(childs) == 2) {
-			print("=== Refreshing (" + string(w) + ", " + string(h) + ") " + string(split) + " ===");
+			//print("=== Refreshing (" + string(w) + ", " + string(h) + ") " + string(split) + " ===");
 			
 			var tw = childs[| 0].w + childs[| 1].w;
 			var th = childs[| 0].h + childs[| 1].h;
 			
-			var fixChild = childs[| 1].x == x && childs[| 1].y == y;
+			var fixChild = split == "h"? childs[| 1].x < childs[| 0].x : childs[| 1].y < childs[| 0].y;
 			
 			childs[| fixChild].x = x;
 			childs[| fixChild].y = y;
 			
-			if(split == 0) {
+			if(split == "h") {
 				childs[|  fixChild].w = childs[| fixChild].w / tw * w;
 				childs[|  fixChild].h = h;
 			
@@ -123,7 +117,10 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 					
 				childs[| !fixChild].w = w - childs[| fixChild].w;
 				childs[| !fixChild].h = h;
-			} else if(split == 1) {	
+				
+				childs[|  fixChild].anchor = ANCHOR.left;
+				childs[| !fixChild].anchor = ANCHOR.right;
+			} else if(split == "v") {	
 				childs[|  fixChild].w = w;
 				childs[|  fixChild].h = childs[| fixChild].h / th * h;
 			
@@ -132,8 +129,12 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 					
 				childs[| !fixChild].w = w;
 				childs[| !fixChild].h = h - childs[| fixChild].h;
+				
+				childs[|  fixChild].anchor = ANCHOR.top;
+				childs[| !fixChild].anchor = ANCHOR.bottom;
 			}
 			
+			if(recur)
 			for(var i = 0; i < ds_list_size(childs); i++) {
 				childs[| i].refreshSize();
 			}
@@ -157,19 +158,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 		w = max(w + dw, min_w);
 		h = max(h + dh, min_h);
 		
-		if(w > 1 && h > 1) {
-			if(is_surface(content_surface)) 
-				surface_size_to(content_surface, w, h);
-			
-			if(is_surface(mask_surface)) 
-				surface_size_to(mask_surface, w, h);
-			else 
-				mask_surface = surface_create_valid(w, h);
-			
-			resetMask();
-		}
-		
-		refreshSize();
+		refreshSize(false);
 	}
 	
 	function set(_content) {
@@ -178,12 +167,15 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 	}
 	
 	function split_h(_w) {
-		if(abs(_w) > w) return noone;
+		if(abs(_w) > w) {
+			print("Error: Split panel larger than size w (" + string(_w) + " > " + string(w) + ")");
+			return noone;
+		}
 		
 		if(_w < 0) _w = w + _w;
 		var _panelParent = new Panel(parent, x, y, w, h);
 		_panelParent.anchor = anchor;
-		_panelParent.split  = 0;
+		_panelParent.split  = "h";
 		
 		var _panelL = self;
 		ds_list_add(_panelParent.childs, _panelL);
@@ -211,12 +203,15 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 	}
 	
 	function split_v(_h) {
-		if(abs(_h) > h) return noone;
+		if(abs(_h) > h) {
+			print("Error: Split panel larger than size h (" + string(_h) + " > " + string(h) + ")");
+			return noone;
+		}
 		
 		if(_h < 0) _h = h + _h;
 		var _panelParent = new Panel(parent, x, y, w, h);
 		_panelParent.anchor = anchor;
-		_panelParent.split  = 1;
+		_panelParent.split  = "v";
 		
 		var _panelT = self;
 		ds_list_add(_panelParent.childs, _panelT);
@@ -399,6 +394,9 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 					break;
 			}
 		}
+		
+		if(self == PANEL_MAIN && o_main.panel_dragging != noone && key_mod_press(CTRL))
+			checkHover();
 	}
 	
 	function drawPanel() {
@@ -415,7 +413,9 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 			resetMask();
 		}
 		
-		if(!is_surface(content_surface)) content_surface = surface_create_valid(w, h);
+		if(!is_surface(content_surface)) 
+			content_surface = surface_create_valid(w, h);
+			
 		surface_set_target(content_surface);
 			draw_clear(COLORS.panel_bg_clear);
 			if(content) {
@@ -442,58 +442,71 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 				var ind = !ds_list_find_index(parent.childs, self); //index of the other child
 				var sib = parent.childs[| ind];
 				
-				if(parent.childs[| ind].content == noone) { //other child is compound panel
+				if(sib.content == noone && ds_list_size(sib.childs) == 2) { //other child is compound panel
 					var gparent = parent.parent;
-					var pind    = ds_list_find_index(gparent.childs, parent); //index of parent in grandparent object
-					gparent.childs[| pind] = sib;
-					gparent.refreshSize();
-				} else { //other child is content panel, set parent to content panel
+					if(gparent == noone) {
+						sib.x = PANEL_MAIN.x; sib.y = PANEL_MAIN.y;
+						sib.w = PANEL_MAIN.w; sib.h = PANEL_MAIN.h;
+						
+						PANEL_MAIN = sib;
+						sib.parent = noone;
+						PANEL_MAIN.refreshSize();
+					} else {
+						var pind    = ds_list_find_index(gparent.childs, parent); //index of parent in grandparent object
+						gparent.childs[| pind] = sib; //replace parent with sibling
+						sib.parent = gparent;
+						gparent.refreshSize();
+					}
+				} else if(sib.content != noone) { //other child is content panel, set parent to content panel
 					parent.set(sib.content);
 					ds_list_clear(parent.childs);
 				}
 			}
 		}
 		
-		if(o_main.panel_dragging != noone && m_ot) {
-			var dx = (mouse_mx - x) / w;
-			var dy = (mouse_my - y) / h;
-			var p  = ui(8);
+		if(o_main.panel_dragging != noone && m_ot && !key_mod_press(CTRL))
+			checkHover();
+	}
+	
+	function checkHover() {
+		var dx = (mouse_mx - x) / w;
+		var dy = (mouse_my - y) / h;
+		var p  = ui(8);
 			
-			draw_set_color(COLORS._main_accent);
-			o_main.panel_hovering = self;
+		draw_set_color(COLORS._main_accent);
+		o_main.panel_hovering = self;
 			
-			if(dx + dy > 1) {
-				if((1 - dx) + dy > 1) {
-					draw_set_alpha(.4);
-					draw_roundrect_ext(x + p, y + h / 2 + p, x + w - p, y + h - p, 8, 8, false);
-					draw_set_alpha(1.);
-					draw_roundrect_ext(x + p, y + h / 2 + p, x + w - p, y + h - p, 8, 8,  true);
+		if(dx + dy > 1) {
+			if((1 - dx) + dy > 1) {
+				draw_set_alpha(.4);
+				draw_roundrect_ext(x + p, y + h / 2 + p, x + w - p, y + h - p, 8, 8, false);
+				draw_set_alpha(1.);
+				draw_roundrect_ext(x + p, y + h / 2 + p, x + w - p, y + h - p, 8, 8,  true);
 					
-					o_main.panel_split = 3;
-				} else {
-					draw_set_alpha(.4);
-					draw_roundrect_ext(x + p + w / 2, y + p, x + w - p, y + h - p, 8, 8, false);
-					draw_set_alpha(1.);
-					draw_roundrect_ext(x + p + w / 2, y + p, x + w - p, y + h - p, 8, 8,  true);
-					
-					o_main.panel_split = 1;
-				}
+				o_main.panel_split = 3;
 			} else {
-				if((1 - dx) + dy > 1) {
-					draw_set_alpha(.4);
-					draw_roundrect_ext(x + p, y + p, x + w / 2 - p, y + h - p, 8, 8, false);
-					draw_set_alpha(1.);
-					draw_roundrect_ext(x + p, y + p, x + w / 2 - p, y + h - p, 8, 8,  true);
+				draw_set_alpha(.4);
+				draw_roundrect_ext(x + p + w / 2, y + p, x + w - p, y + h - p, 8, 8, false);
+				draw_set_alpha(1.);
+				draw_roundrect_ext(x + p + w / 2, y + p, x + w - p, y + h - p, 8, 8,  true);
 					
-					o_main.panel_split = 2;
-				} else {
-					draw_set_alpha(.4);
-					draw_roundrect_ext(x + p, y + p, x + w - p, y + h / 2 - p, 8, 8, false);
-					draw_set_alpha(1.);
-					draw_roundrect_ext(x + p, y + p, x + w - p, y + h / 2 - p, 8, 8,  true);
+				o_main.panel_split = 1;
+			}
+		} else {
+			if((1 - dx) + dy > 1) {
+				draw_set_alpha(.4);
+				draw_roundrect_ext(x + p, y + p, x + w / 2 - p, y + h - p, 8, 8, false);
+				draw_set_alpha(1.);
+				draw_roundrect_ext(x + p, y + p, x + w / 2 - p, y + h - p, 8, 8,  true);
 					
-					o_main.panel_split = 0;
-				}
+				o_main.panel_split = 2;
+			} else {
+				draw_set_alpha(.4);
+				draw_roundrect_ext(x + p, y + p, x + w - p, y + h / 2 - p, 8, 8, false);
+				draw_set_alpha(1.);
+				draw_roundrect_ext(x + p, y + p, x + w - p, y + h / 2 - p, 8, 8,  true);
+					
+				o_main.panel_split = 0;
 			}
 		}
 	}
