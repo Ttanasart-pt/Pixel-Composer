@@ -1,4 +1,5 @@
 function Panel_Graph() : PanelContent() constructor {
+	title = "Graph";
 	context_str = "Graph";
 	
 	scale			= [ 0.25, 0.33, 0.5, 0.65, 0.8, 1, 1.2, 1.35, 1.5];
@@ -211,12 +212,13 @@ function Panel_Graph() : PanelContent() constructor {
 	addHotkey("Graph", "Paste",		"V", MOD_KEY.ctrl,	function() { doPaste(); });
 	
 	addHotkey("Graph", "Tunnels",	"T", MOD_KEY.none,	function() { 
-		var dia = dialogCall(o_dialog_tunnels, mouse_mx + ui(8), mouse_my + ui(8)); 
+		var tun = new Panel_Tunnels();
+		var dia = dialogPanelCall(tun, mouse_mx + ui(8), mouse_my + ui(8)); 
 		dia.anchor = ANCHOR.left | ANCHOR.top;
 		dia.resetPosition();
 		
-		dia.build_x = PANEL_GRAPH.mouse_grid_x
-		dia.build_y = PANEL_GRAPH.mouse_grid_y
+		tun.build_x = PANEL_GRAPH.mouse_grid_x;
+		tun.build_y = PANEL_GRAPH.mouse_grid_y;
 	});
 	
 	function stepBegin() {
@@ -636,10 +638,8 @@ function Panel_Graph() : PanelContent() constructor {
 			}
 			_junction_hovering = value_focus;
 			
-			for(var i = 0; i < ds_list_size(nodes_list); i++) {
+			for(var i = 0; i < ds_list_size(nodes_list); i++)
 				nodes_list[| i].drawBadge(gr_x, gr_y, graph_s);	
-				nodes_list[| i].drawJunctionNames(gr_x, gr_y, mx, my, graph_s);	
-			}
 			//print("Draw node: " + string(current_time - t)); t = current_time;
 		#endregion
 		
@@ -1357,6 +1357,14 @@ function Panel_Graph() : PanelContent() constructor {
 			}
 		} else if(!value_dragging && value_focus && mouse_press(mb_left, pFOCUS) && !key_mod_press(ALT))
 			value_dragging = value_focus;
+		
+		#region draw junction name
+			var gr_x = graph_x * graph_s;
+			var gr_y = graph_y * graph_s;
+			for(var i = 0; i < ds_list_size(nodes_list); i++) {
+				nodes_list[| i].drawJunctionNames(gr_x, gr_y, mx, my, graph_s);	
+			}
+		#endregion
 	}
 	
 	function callAddDialog() {

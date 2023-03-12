@@ -1278,18 +1278,17 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		return -1;
 	}
 	
-	static drawJunction = function(_s, _mx, _my) {
+	static drawJunction = function(_s, _mx, _my, sca = 1) {
 		if(!isVisible()) return false;
 		
 		var ss = max(0.25, _s / 2);
 		var is_hover = false;
 		
-		if(PANEL_GRAPH.pHOVER && point_in_circle(_mx, _my, x, y, 10 * _s)) {
+		if(PANEL_GRAPH.pHOVER && point_in_circle(_mx, _my, x, y, 10 * _s * sca)) {
 			is_hover = true;
 			draw_sprite_ext(isArray()? THEME.node_junctions_array_hover : THEME.node_junctions_single_hover, type, x, y, ss, ss, 0, c_white, 1);
-		} else {
+		} else
 			draw_sprite_ext(isArray()? THEME.node_junctions_array : THEME.node_junctions_single, type, x, y, ss, ss, 0, c_white, 1);
-		}
 		
 		return is_hover;
 	}

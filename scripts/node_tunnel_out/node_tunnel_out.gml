@@ -31,7 +31,8 @@ function Node_Tunnel_Out(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		var yy = _y + y * _s;
 		
 		var hover = PANEL_GRAPH.pHOVER && point_in_rectangle(_mx, _my, xx, yy, xx + w * _s, yy + h * _s);
-		hover |= instance_exists(o_dialog_tunnels) && o_dialog_tunnels.tunnel_hover == self;
+		var tun   = findPanel("Panel_Tunnels");
+		hover |= tun && tun.tunnel_hover == self;
 		if(!hover) return;
 		
 		var _key = inputs[| 0].getValue();

@@ -62,7 +62,7 @@
 	addHotkey("", "Redo", "Z",		MOD_KEY.ctrl | MOD_KEY.shift, function() { REDO(); });
 	
 	addHotkey("", "Full panel", "`",			MOD_KEY.none, set_focus_fullscreen);
-	addHotkey("", "Open notification", vk_f12,	MOD_KEY.none, function() { dialogCall(o_dialog_notifications); });
+	addHotkey("", "Open notification", vk_f12,	MOD_KEY.none, function() { dialogPanelCall(new Panel_Notification()); });
 	
 	addHotkey("", "Fullscreen", vk_f11,	MOD_KEY.none, function() { 
 		if(gameframe_is_fullscreen_window())

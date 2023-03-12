@@ -18,6 +18,9 @@
 		graph,
 		collection
 	}
+	
+	#macro PANEL_PADDING padding      = in_dialog? ui(24) : ui(16); \
+						 title_height = in_dialog? ui(64) : ui(56);
 #endregion
 
 #region functions 
@@ -50,7 +53,8 @@
 				loadPanelStruct(pan[1], str.content[1]);
 			}
 		} else {
-			panel.set(getPanelFromName(str.content));
+			var cont = getPanelFromName(str.content)
+			if(cont != noone) panel.set(cont);
 		}
 	}
 	
@@ -62,6 +66,10 @@
 			case "Panel_Preview"    : return PANEL_PREVIEW;
 			case "Panel_Graph"      : return PANEL_GRAPH;
 			case "Panel_Collection" : return PANEL_COLLECTION;
+			
+			case "Panel_Workspace"  : return new Panel_Workspace();
+			case "Panel_Tunnels"    : return new Panel_Tunnels();
+			case "Panel_History"    : return new Panel_History();
 		}
 		
 		return noone;
@@ -87,6 +95,9 @@
 			
 			p[ str.index].set(PANEL_COLLECTION);
 			p[!str.index].set(pan);
+		} else {
+			var pan = getPanelFromName(panel);
+			if(pan) dialogPanelCall(pan);
 		}
 	}
 	
@@ -128,7 +139,19 @@
 		PANEL_MAIN.refresh();
 	}
 	
-	function findPanel(_type, _pane, _res) {
+	function findPanel(_type, _pane = PANEL_MAIN) {
+		var pan = _findPanel(_type, _pane);
+		if(pan) return pan;
+		
+		with(o_dialog_panel) {
+			if(instanceof(content) == _type) 
+				return content;
+		}
+		
+		return noone;
+	}
+	
+	function _findPanel(_type, _pane, _res = noone) {
 		if(instanceof(_pane) != "Panel")
 			return _res;
 		if(!ds_exists(_pane.childs, ds_type_list))
@@ -138,9 +161,8 @@
 			return _pane.content;
 		
 		for(var i = 0; i < ds_list_size(_pane.childs); i++) {
-			var _re = findPanel(_type, _pane.childs[| i], _res);
-			if(_re != noone)
-				_res = _re;
+			var _re = _findPanel(_type, _pane.childs[| i], _res);
+			if(_re != noone) _res = _re;
 		}
 		
 		return _res;
@@ -150,15 +172,56 @@
 		panel_dragging = noone;
 		panel_hovering = noone;
 		panel_split = 0;
+		
+		panel_mouse = 0;
+		
+		panel_draw_x0 = noone; panel_draw_x0_to = noone;
+		panel_draw_y0 = noone; panel_draw_y0_to = noone;
+		panel_draw_x1 = noone; panel_draw_x1_to = noone;
+		panel_draw_y1 = noone; panel_draw_y1_to = noone;
+		
+		panel_draw_depth = 0;
 	}
 	
 	function panelDraw() {
+		panel_draw_x0 = panel_draw_x0 == noone? panel_draw_x0_to : lerp_float(panel_draw_x0, panel_draw_x0_to, 3);
+		panel_draw_y0 = panel_draw_y0 == noone? panel_draw_y0_to : lerp_float(panel_draw_y0, panel_draw_y0_to, 3);
+		panel_draw_x1 = panel_draw_x1 == noone? panel_draw_x1_to : lerp_float(panel_draw_x1, panel_draw_x1_to, 3);
+		panel_draw_y1 = panel_draw_y1 == noone? panel_draw_y1_to : lerp_float(panel_draw_y1, panel_draw_y1_to, 3);
+		
+		panel_draw_depth = lerp_float(panel_draw_depth, panel_split == 4, 3);
+		
+		if(panel_draw_x0_to != noone) {
+			draw_set_color(COLORS._main_accent);
+			
+			if(panel_split == 4) {
+				var dist = ui(8) * panel_draw_depth;
+				draw_set_alpha(.2);
+				draw_roundrect_ext(panel_draw_x0 - dist, panel_draw_y0 - dist, panel_draw_x1 - dist, panel_draw_y1 - dist, 8, 8, false);
+				draw_set_alpha(1.);
+				draw_roundrect_ext(panel_draw_x0 - dist, panel_draw_y0 - dist, panel_draw_x1 - dist, panel_draw_y1 - dist, 8, 8,  true);		
+			
+				draw_set_alpha(.2);
+				draw_roundrect_ext(panel_draw_x0 + dist, panel_draw_y0 + dist, panel_draw_x1 + dist, panel_draw_y1 + dist, 8, 8, false);
+				draw_set_alpha(1.);
+				draw_roundrect_ext(panel_draw_x0 + dist, panel_draw_y0 + dist, panel_draw_x1 + dist, panel_draw_y1 + dist, 8, 8,  true);		
+			} else {
+				draw_set_alpha(.4);
+				draw_roundrect_ext(panel_draw_x0, panel_draw_y0, panel_draw_x1, panel_draw_y1, 8, 8, false);
+				draw_set_alpha(1.);
+				draw_roundrect_ext(panel_draw_x0, panel_draw_y0, panel_draw_x1, panel_draw_y1, 8, 8,  true);		
+			}
+		}
+		
 		if(panel_dragging) {
 			draw_surface_ext(panel_dragging.dragSurface, mouse_mx + 8, mouse_my + 8, 0.5, 0.5, 0, c_white, 0.5);
-			if(mouse_release(mb_left)) {
+			if((panel_mouse == 0 && mouse_release(mb_left)) || (panel_mouse == 1 && mouse_press(mb_left))) {
 				var p = [];
 				
-				if(panel_hovering == PANEL_MAIN) { //split main panel
+				if(panel_split == 4) {
+					var panel = instanceof(panel_dragging) == "Panel"? panel_dragging.content : panel_dragging;
+					dialogPanelCall(panel);
+				} else if(panel_hovering == PANEL_MAIN) { //split main panel
 					var panel = new Panel(noone, ui(2), ui(2), WIN_SW - ui(4), WIN_SH - ui(4));
 					var main  = PANEL_MAIN;
 					
@@ -193,6 +256,12 @@
 				
 				panel_hovering = noone;
 				panel_dragging = noone;
+				
+				panel_draw_x0 = noone; panel_draw_x0_to = noone;
+				panel_draw_y0 = noone; panel_draw_y0_to = noone;
+				panel_draw_x1 = noone; panel_draw_x1_to = noone;
+				panel_draw_y1 = noone; panel_draw_y1_to = noone;
+				panel_draw_depth = 0;
 			}
 		}
 	}

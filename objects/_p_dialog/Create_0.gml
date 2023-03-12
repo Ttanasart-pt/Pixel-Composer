@@ -37,8 +37,8 @@
 		if(!draggable) return;
 		
 		if(dialog_dragging) {
-			dialog_x = clamp(dialog_drag_sx + mouse_mx - dialog_drag_mx,      0, WIN_W);
-			dialog_y = clamp(dialog_drag_sy + mouse_my - dialog_drag_my, ui(40), WIN_H);
+			dialog_x = clamp(dialog_drag_sx + mouse_mx - dialog_drag_mx, ui(16) - dialog_w, WIN_W - ui(16));
+			dialog_y = clamp(dialog_drag_sy + mouse_my - dialog_drag_my, ui(16) - dialog_h, WIN_H - ui(16));
 		
 			if(mouse_release(mb_left))
 				dialog_dragging = false;

@@ -1,4 +1,5 @@
 function Panel_Preview() : PanelContent() constructor {
+	title = "Preview";
 	context_str = "Preview";
 	
 	last_focus = noone;
@@ -252,17 +253,17 @@ function Panel_Preview() : PanelContent() constructor {
 		if(!is_surface(prevS)) {
 			canvas_s = 1;
 			canvas_x = w / 2;
-			canvas_y = (h - toolbar_height) / 2;
+			canvas_y = (h - toolbar_height * 2) / 2;
 			return;
 		}
 		
 		canvas_w = surface_get_width(prevS);
 		canvas_h = surface_get_height(prevS);
 		
-		var ss = min((w - 32) / canvas_w, (h - 32 - toolbar_height) / canvas_h);
+		var ss = min((w - 32) / canvas_w, (h - 32 - toolbar_height * 2) / canvas_h);
 		canvas_s = ss;
 		canvas_x = w / 2 - canvas_w * canvas_s / 2;
-		canvas_y = (h - toolbar_height) / 2 - canvas_h * canvas_s / 2;
+		canvas_y = h / 2 - canvas_h * canvas_s / 2;
 		
 		if(PANEL_GRAPH.node_focus) {
 			canvas_x -= PANEL_GRAPH.node_focus.preview_x * canvas_s;

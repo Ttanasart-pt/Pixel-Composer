@@ -87,8 +87,9 @@ function distance_to_elbow(mx, my, x0, y0, x1, y1, cx, cy, _s, indexIn = 1, inde
 	}
 }
 
-function elbow_distance_center(mx, my, x0, y0, x1, y1, cx, cy, _s) {
-	var inv = x1 - 16 * _s <= x0 + 16 * _s;
+function elbow_distance_center(mx, my, x0, y0, x1, y1, cx, cy, _s, indexIn = 1, indexOut = 1) {
+	var inv = x1 - 16 * _s * indexOut <= x0 + 16 * _s * indexIn;
+	
 	if(inv)
 		return distance_to_line(mx, my, x0, cy, x1, cy);
 	else

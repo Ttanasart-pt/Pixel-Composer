@@ -159,7 +159,7 @@ function SAVE_COLLECTIONS(_list, _path, save_surface = true, metadata = noone) {
 	file_text_close(file);
 	
 	ds_map_destroy(_map);
-	var pane = findPanel("Panel_Collection", PANEL_MAIN, noone);
+	var pane = findPanel("Panel_Collection");
 	if(pane) pane.refreshContext();
 	
 	log_message("COLLECTION", "save collection at " + _path, THEME.noti_icon_file_save);
@@ -190,7 +190,7 @@ function SAVE_COLLECTION(_node, _path, save_surface = true, metadata = noone) {
 	file_text_close(file);
 	
 	ds_map_destroy(_map);
-	var pane = findPanel("Panel_Collection", PANEL_MAIN, noone);
+	var pane = findPanel("Panel_Collection");
 	if(pane) pane.refreshContext();
 	
 	log_message("COLLECTION", "save collection at " + _path, THEME.noti_icon_file_save);

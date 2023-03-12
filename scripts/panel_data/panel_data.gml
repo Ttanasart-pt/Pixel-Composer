@@ -339,18 +339,18 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 	
 	function draw() {
 		if(content != noone) {
-			if(!keyboard_check(ord("W")))
+			//if(!keyboard_check(ord("W")))
 				drawPanel();
 			return;
 		}
 		
-		if(keyboard_check(ord("W")) && point_in_rectangle(mouse_mx, mouse_my, x, y, x + w, y + h)) {
-			draw_set_color(c_lime);
-			draw_set_alpha(0.1);
-			draw_rectangle(x + 8, y + 8, x + w - 8, y + h - 8, false);
-			draw_set_alpha(1);
-			draw_rectangle(x + 8, y + 8, x + w - 8, y + h - 8,  true);
-		}
+		//if(keyboard_check(ord("W")) && point_in_rectangle(mouse_mx, mouse_my, x, y, x + w, y + h)) {
+		//	draw_set_color(c_lime);
+		//	draw_set_alpha(0.1);
+		//	draw_rectangle(x + 8, y + 8, x + w - 8, y + h - 8, false);
+		//	draw_set_alpha(1);
+		//	draw_rectangle(x + 8, y + 8, x + w - 8, y + h - 8,  true);
+		//}
 		
 		if(ds_list_empty(childs)) 
 			return;
@@ -432,40 +432,71 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 		
 		draw_surface_safe(content_surface, x, y);
 			
-		if(FOCUS == self) {
+		if(FOCUS == self && parent != noone) {
 			draw_sprite_stretched_ext(THEME.ui_panel_active, 0, x + padding, y + padding, w - padding * 2, h - padding * 2, COLORS._main_accent, 1);	
-			if(content && !m_in && m_ot && DOUBLE_CLICK) {
-				content.dragSurface = surface_clone(content_surface);
-				o_main.panel_dragging = content;
+			
+			if(content && !m_in && m_ot) {
+				draw_sprite_stretched_ext(THEME.ui_panel_active, 0, x + padding, y + padding, w - padding * 2, h - padding * 2, c_white, 0.4);	
 				
-				content = noone;				
-				var ind = !ds_list_find_index(parent.childs, self); //index of the other child
-				var sib = parent.childs[| ind];
-				
-				if(sib.content == noone && ds_list_size(sib.childs) == 2) { //other child is compound panel
-					var gparent = parent.parent;
-					if(gparent == noone) {
-						sib.x = PANEL_MAIN.x; sib.y = PANEL_MAIN.y;
-						sib.w = PANEL_MAIN.w; sib.h = PANEL_MAIN.h;
+				if(DOUBLE_CLICK) {
+					extract();
+					panel_mouse = 0;
+				} else if(mouse_press(mb_right)) {
+					var arr = [
+						menuItem("Move",    function() { 
+							extract(); 
+							panel_mouse = 1;
+						}),
+						menuItem("Pop out", function() { popWindow(); }, THEME.node_goto),
+					];
+					if(instanceof(content) != "Panel_Menu")
+						array_push(arr, menuItem("Close",   function() { 
+							extract();
+							o_main.panel_dragging = noone;
+						}, THEME.cross));
 						
-						PANEL_MAIN = sib;
-						sib.parent = noone;
-						PANEL_MAIN.refreshSize();
-					} else {
-						var pind    = ds_list_find_index(gparent.childs, parent); //index of parent in grandparent object
-						gparent.childs[| pind] = sib; //replace parent with sibling
-						sib.parent = gparent;
-						gparent.refreshSize();
-					}
-				} else if(sib.content != noone) { //other child is content panel, set parent to content panel
-					parent.set(sib.content);
-					ds_list_clear(parent.childs);
+					menuCall(,, arr);
 				}
 			}
 		}
 		
 		if(o_main.panel_dragging != noone && m_ot && !key_mod_press(CTRL))
 			checkHover();
+	}
+	
+	function extract() {
+		content.dragSurface = surface_clone(content_surface);
+		o_main.panel_dragging = content;
+				
+		content = noone;
+		var ind = !ds_list_find_index(parent.childs, self); //index of the other child
+		var sib = parent.childs[| ind];
+				
+		if(sib.content == noone && ds_list_size(sib.childs) == 2) { //other child is compound panel
+			var gparent = parent.parent;
+			if(gparent == noone) {
+				sib.x = PANEL_MAIN.x; sib.y = PANEL_MAIN.y;
+				sib.w = PANEL_MAIN.w; sib.h = PANEL_MAIN.h;
+						
+				PANEL_MAIN = sib;
+				sib.parent = noone;
+				PANEL_MAIN.refreshSize();
+			} else {
+				var pind    = ds_list_find_index(gparent.childs, parent); //index of parent in grandparent object
+				gparent.childs[| pind] = sib; //replace parent with sibling
+				sib.parent = gparent;
+				gparent.refreshSize();
+			}
+		} else if(sib.content != noone) { //other child is content panel, set parent to content panel
+			parent.set(sib.content);
+			ds_list_clear(parent.childs);
+		}
+	}
+	
+	function popWindow() {
+		dialogPanelCall(content);
+		extract();
+		o_main.panel_dragging = noone;
 	}
 	
 	function checkHover() {
@@ -475,38 +506,54 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 			
 		draw_set_color(COLORS._main_accent);
 		o_main.panel_hovering = self;
+		
+		var x0 = x + p;
+		var y0 = y + p;
+		var x1 = x + w - p;
+		var y1 = y + h - p;
+		var xc = x + w / 2;
+		var yc = y + h / 2;
+		
+		if(self == PANEL_MAIN && point_in_rectangle(mouse_mx, mouse_my, x + w * 1 / 3, y + h * 1 / 3, x + w * 2 / 3, y + h * 2 / 3)) {
+			o_main.panel_split = 4;
 			
-		if(dx + dy > 1) {
-			if((1 - dx) + dy > 1) {
-				draw_set_alpha(.4);
-				draw_roundrect_ext(x + p, y + h / 2 + p, x + w - p, y + h - p, 8, 8, false);
-				draw_set_alpha(1.);
-				draw_roundrect_ext(x + p, y + h / 2 + p, x + w - p, y + h - p, 8, 8,  true);
-					
-				o_main.panel_split = 3;
-			} else {
-				draw_set_alpha(.4);
-				draw_roundrect_ext(x + p + w / 2, y + p, x + w - p, y + h - p, 8, 8, false);
-				draw_set_alpha(1.);
-				draw_roundrect_ext(x + p + w / 2, y + p, x + w - p, y + h - p, 8, 8,  true);
-					
-				o_main.panel_split = 1;
-			}
+			o_main.panel_draw_x0_to = x + w * 1 / 3;
+			o_main.panel_draw_y0_to = y + h * 1 / 3;
+			o_main.panel_draw_x1_to = x + w * 2 / 3;
+			o_main.panel_draw_y1_to = y + h * 2 / 3;
 		} else {
-			if((1 - dx) + dy > 1) {
-				draw_set_alpha(.4);
-				draw_roundrect_ext(x + p, y + p, x + w / 2 - p, y + h - p, 8, 8, false);
-				draw_set_alpha(1.);
-				draw_roundrect_ext(x + p, y + p, x + w / 2 - p, y + h - p, 8, 8,  true);
+			if(dx + dy > 1) {
+				if((1 - dx) + dy > 1) {
+					o_main.panel_draw_x0_to = x0;
+					o_main.panel_draw_y0_to = yc;
+					o_main.panel_draw_x1_to = x1;
+					o_main.panel_draw_y1_to = y1;
 					
-				o_main.panel_split = 2;
+					o_main.panel_split = 3;
+				} else {
+					o_main.panel_draw_x0_to = xc;
+					o_main.panel_draw_y0_to = y0;
+					o_main.panel_draw_x1_to = x1;
+					o_main.panel_draw_y1_to = y1;
+					
+					o_main.panel_split = 1;
+				}
 			} else {
-				draw_set_alpha(.4);
-				draw_roundrect_ext(x + p, y + p, x + w - p, y + h / 2 - p, 8, 8, false);
-				draw_set_alpha(1.);
-				draw_roundrect_ext(x + p, y + p, x + w - p, y + h / 2 - p, 8, 8,  true);
+				if((1 - dx) + dy > 1) {
+					o_main.panel_draw_x0_to = x0;
+					o_main.panel_draw_y0_to = y0;
+					o_main.panel_draw_x1_to = xc;
+					o_main.panel_draw_y1_to = y1;
 					
-				o_main.panel_split = 0;
+					o_main.panel_split = 2;
+				} else {
+					o_main.panel_draw_x0_to = x0;
+					o_main.panel_draw_y0_to = y0;
+					o_main.panel_draw_x1_to = x1;
+					o_main.panel_draw_y1_to = yc;
+					
+					o_main.panel_split = 0;
+				}
 			}
 		}
 	}
@@ -525,9 +572,10 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 }
 
 function PanelContent() constructor {
+	title		= "";
 	context_str = "";
-	draggable = true;
-	expandable = true;
+	draggable   = true;
+	expandable  = true;
 	
 	panel = noone;
 	mx = 0;
@@ -544,7 +592,10 @@ function PanelContent() constructor {
 	pFOCUS = false;
 	pHOVER = false;
 	
+	in_dialog = false;
+	
 	dragSurface = surface_create(1, 1);
+	showHeader  = true;
 	
 	function refresh() {
 		onResize();

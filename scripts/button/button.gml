@@ -73,7 +73,7 @@ function buttonClass(_onClick, _icon = noone) : widget() constructor {
 	}
 }
 
-function buttonInstant(spr, _x, _y, _w, _h, _m, _act, _hvr, _tip = "", _icon = noone, _icon_index = 0, _icon_blend = COLORS._main_icon, _icon_alpha = 1) {
+function buttonInstant(spr, _x, _y, _w, _h, _m, _act, _hvr, _tip = "", _icon = noone, _icon_index = 0, _icon_blend = COLORS._main_icon, _icon_alpha = 1, _icon_scale = 1) {
 	var res = 0;
 	var cc  = is_array(_icon_blend)? _icon_blend[0] : _icon_blend;
 	
@@ -102,7 +102,7 @@ function buttonInstant(spr, _x, _y, _w, _h, _m, _act, _hvr, _tip = "", _icon = n
 		draw_sprite_stretched(spr, 0, _x, _y, _w, _h);		
 	
 	if(_icon)
-		draw_sprite_ui_uniform(_icon, _icon_index, _x + _w / 2, _y + _h / 2, 1, cc, _icon_alpha);
+		draw_sprite_ui_uniform(_icon, _icon_index, _x + _w / 2, _y + _h / 2, _icon_scale, cc, _icon_alpha);
 	
 	return res;
 }

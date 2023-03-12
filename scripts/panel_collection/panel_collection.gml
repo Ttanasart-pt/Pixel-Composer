@@ -1,4 +1,5 @@
 function Panel_Collection() : PanelContent() constructor {
+	title = "Collection"
 	expandable = false;
 	
 	group_w   = ui(180);
@@ -278,11 +279,13 @@ function Panel_Collection() : PanelContent() constructor {
 	});
 	
 	folderPane = new scrollPane(group_w - ui(4), content_h, function(_y, _m) {
-		draw_clear(COLORS.panel_bg_clear);
+		draw_clear_alpha(COLORS.panel_bg_clear, 0);
+		draw_sprite_stretched(THEME.ui_panel_bg, 0, ui(8), 0, folderPane.surface_w - ui(8), folderPane.surface_h);
 		var hh = ui(8);
+		_y += ui(8);
 		
 		for(var i = 0; i < ds_list_size(root.subDir); i++) {
-			var hg = root.subDir[| i].draw(self, ui(8), _y, _m, folderPane.w - ui(20), pHOVER && folderPane.hover, pFOCUS, root);
+			var hg = root.subDir[| i].draw(self, ui(8 + in_dialog * 8), _y, _m, folderPane.w - ui(20), pHOVER && folderPane.hover, pFOCUS, root);
 			hh += hg;
 			_y += hg;
 		}

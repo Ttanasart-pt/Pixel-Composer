@@ -5,7 +5,7 @@
   "isCompatibility": false,
   "isDnD": false,
   "parent": {
-    "name": "data",
-    "path": "folders/panels/data.yy",
+    "name": "graph",
+    "path": "folders/panels/data/graph.yy",
   },
 }

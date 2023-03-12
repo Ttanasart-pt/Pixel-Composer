@@ -11,9 +11,25 @@ function dialogCall(_dia, _x = noone, _y = noone, param = {}, create = false) {
 	dia.resetPosition();
 	
 	var args = variable_struct_get_names(param);
-	for( var i = 0; i < array_length(args); i++ ) {
+	for( var i = 0; i < array_length(args); i++ )
 		variable_instance_set(dia, args[i], variable_struct_get(param, args[i]));
-	}
+	
+	setFocus(dia.id, "Dialog");
+	return dia;
+}
+
+function dialogPanelCall(_panel, _x = noone, _y = noone) {
+	if(_x == noone) _x = WIN_SW / 2;
+	if(_y == noone) _y = WIN_SH / 2;
+	
+	var dia = instance_create_depth(_x, _y, 0, o_dialog_panel);
+	dia.setContent(_panel);
+	
+	dia.x = _x;
+	dia.y = _y;
+	dia.xstart = _x;
+	dia.ystart = _y;
+	dia.resetPosition();
 	
 	setFocus(dia.id, "Dialog");
 	return dia;
@@ -31,15 +47,16 @@ function submenuCall(_x, _y, _depth, menu = []) {
 	return dia;
 }
 
-function menuItem(name, func, spr = noone, hotkey = noone) {
-	return new MenuItem(name, func, spr, hotkey);
+function menuItem(name, func, spr = noone, hotkey = noone, toggle = noone) {
+	return new MenuItem(name, func, spr, hotkey, toggle);
 }
-function MenuItem(name, func, spr = noone, hotkey = noone) constructor {
+function MenuItem(name, func, spr = noone, hotkey = noone, toggle = noone) constructor {
 	active = true;
 	self.name	= name;
 	self.func	= func;
 	self.spr	= spr;
 	self.hotkey = hotkey;
+	self.toggle = toggle;
 	
 	isShelf = false;
 	

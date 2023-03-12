@@ -326,6 +326,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			else
 				p = pathString(p, suff);
 			
+			//print("Exporting " + p);
 			p = save_surface(surf, p);
 				
 			if(form != NODE_EXPORT_FORMAT.gif) {
@@ -436,7 +437,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		
 		if(!ANIMATOR.frame_progress || !playing || ANIMATOR.current_frame <= -1)
 			return;
-			
+		
 		export();
 		
 		if(ANIMATOR.current_frame < ANIMATOR.frames_total - 1) 

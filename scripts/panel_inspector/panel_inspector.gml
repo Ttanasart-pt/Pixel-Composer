@@ -4,6 +4,7 @@ function Inspector_Custom_Renderer(draw) : widget() constructor {
 }
 
 function Panel_Inspector() : PanelContent() constructor {
+	title = "Inspector";
 	context_str = "Inspector";
 	
 	inspecting = noone;

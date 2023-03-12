@@ -209,16 +209,21 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		var _s    = floor((index - input_fix_len) / data_length);
 		
 		inputs[| index + 0] = nodeValue(_s? ("Surface " + string(_s)) : "Background", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
+		inputs[| index + 0].surface_index = index;
+		inputs[| index + 0].hover_effect  = 0;
 		
 		inputs[| index + 1] = nodeValue("Position " + string(_s), self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ] )
 			.setDisplay(VALUE_DISPLAY.vector)
 			.setUnitRef(function(index) { return [ overlay_w, overlay_h ]; });
+		inputs[| index + 1].surface_index = index;
 		
 		inputs[| index + 2] = nodeValue("Rotation " + string(_s), self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0 )
 			.setDisplay(VALUE_DISPLAY.rotation);
+		inputs[| index + 2].surface_index = index;
 		
 		inputs[| index + 3] = nodeValue("Scale " + string(_s), self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 1 ] )
 			.setDisplay(VALUE_DISPLAY.vector);
+		inputs[| index + 3].surface_index = index;
 		
 		array_push(input_display_list, index + 0);
 		array_push(input_display_list, index + 1);
@@ -251,6 +256,182 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	overlay_w = 0;
 	overlay_h = 0;
+	
+	static getInputAmount = function() {
+		return input_fix_len + (ds_list_size(inputs) - input_fix_len) / data_length;
+	}
+	
+	static getInputIndex = function(index) {
+		if(index < input_fix_len) return index;
+		return input_fix_len + (index - input_fix_len) * data_length;
+	}
+	
+	static setHeight = function() {
+		var _hi = ui(32);
+		var _ho = ui(32);
+		
+		for( var i = 0; i < getInputAmount(); i++ ) 
+			if(inputs[| getInputIndex(i)].isVisible())	
+				_hi += 24;
+			
+		for( var i = 0; i < ds_list_size(outputs); i++ ) 
+			if(outputs[| i].isVisible()) 
+				_ho += 24;
+		
+		h = max(min_h, (preview_surface && previewable)? 128 : 0, _hi, _ho);
+	}
+	
+	static drawJunctions = function(_x, _y, _mx, _my, _s) {
+		if(!active) return;
+		var hover = noone;
+		var amo = array_length(input_display_list);
+		
+		var hov = PANEL_GRAPH._junction_hovering;
+		var ind = -1;
+		if(hov != noone && struct_has(hov, "surface_index"))
+			ind = hov.surface_index;
+		
+		for( var i = 0; i < getInputAmount(); i++ ) {
+			var idx = getInputIndex(i);
+			if(!inputs[| idx].isVisible()) continue;
+			
+			if(inputs[| idx].drawJunction(_s, _mx, _my, 1.5))	
+				hover = inputs[| idx];
+			
+			if(idx >= input_fix_len && inputs[| idx].hover_effect > 0) {
+				var _px0 =  999999;
+				var _py0 =  999999;
+				var _px1 = -999999;
+				var _py1 = -999999;
+				var _drw = false;
+				var _hov = inputs[| idx].hover_effect;
+				
+				for( var j = 1; j < data_length; j++ ) {
+					if(!inputs[| idx + j].isVisible()) continue;
+					_px0 = min( _px0, inputs[| idx + j].x );
+					_py0 = min( _py0, inputs[| idx + j].y );
+					_px1 = max( _px1, inputs[| idx + j].x );
+					_py1 = max( _py1, inputs[| idx + j].y );
+					_drw = true;
+				}
+				
+				if(!_drw) continue;
+				
+				if(_hov > 0.5)
+				draw_sprite_stretched_ext(THEME.node_bg_pill, 0, _px0 - 16 * _s, _py0 - 16 * _s, _px1 - _px0 + 32 * _s, _py1 - _py0 + 32 * _s, COLORS._main_icon_dark, (_hov - 0.5) * 2);
+				
+				for( var j = 1; j < data_length; j++ ) {
+					if(inputs[| idx + j].drawJunction(_s, _mx, _my, 1.5))	
+						hover = inputs[| idx + j];
+				}
+			}
+		}
+		
+		for(var i = 0; i < ds_list_size(outputs); i++)
+			if(outputs[| i].drawJunction(_s, _mx, _my))
+				hover = outputs[| i];
+		
+		return hover;
+	}
+	
+	static drawJunctionNames = function(_x, _y, _mx, _my, _s) {
+		if(!active) return;
+		var amo = input_display_list == -1? ds_list_size(inputs) : array_length(input_display_list);
+		var jun;
+		
+		var xx = x * _s + _x;
+		var yy = y * _s + _y;
+		
+		show_input_name  = PANEL_GRAPH.pHOVER && point_in_rectangle(_mx, _my, xx - 8 * _s, yy + 20 * _s, xx + 8 * _s, yy + h * _s);
+		show_output_name = PANEL_GRAPH.pHOVER && point_in_rectangle(_mx, _my, xx + (w - 8) * _s, yy + 20 * _s, xx + (w + 8) * _s, yy + h * _s);
+		
+		var hov = PANEL_GRAPH._junction_hovering;
+		var ind = -1;
+		if(hov != noone && struct_has(hov, "surface_index"))
+			ind = hov.surface_index;
+		
+		if(ind != -1) {
+			for( var j = 1; j < data_length; j++ )
+				inputs[| ind + j].drawNameBG(_s);
+				
+			for( var j = 1; j < data_length; j++ )
+				inputs[| ind + j].drawName(_s, _mx, _my);
+		} else if(show_input_name) {
+			for( var i = 0; i < getInputAmount(); i++ ) {
+				var idx = getInputIndex(i);
+				
+				if(idx == ind) continue;
+				inputs[| idx].drawNameBG(_s);
+			}
+				
+			for( var i = 0; i < getInputAmount(); i++ ) {
+				var idx = getInputIndex(i);
+				
+				if(idx == ind) continue;
+				inputs[| idx].drawName(_s, _mx, _my);
+			}
+		}
+		
+		if(show_output_name) {
+			for(var i = 0; i < ds_list_size(outputs); i++)
+				outputs[| i].drawNameBG(_s);
+			
+			for(var i = 0; i < ds_list_size(outputs); i++)
+				outputs[| i].drawName(_s, _mx, _my);
+		}
+	}
+	
+	static preDraw = function(_x, _y, _s) {
+		var xx = x * _s + _x;
+		var yy = y * _s + _y;
+		var jun;
+		
+		var inamo = input_display_list == -1? ds_list_size(inputs) : array_length(input_display_list);
+		var _in = yy + ui(32) * _s;
+		
+		var hov = PANEL_GRAPH._junction_hovering;
+		var ind = -1;
+		if(hov != noone && struct_has(hov, "surface_index"))
+			ind = hov.surface_index;
+		
+		for( var i = 0; i < getInputAmount(); i++ ) {
+			var idx = getInputIndex(i);
+			jun = ds_list_get(inputs, idx, noone);
+			if(jun == noone || is_undefined(jun)) continue;
+			jun.x = xx;
+			jun.y = _in;
+			
+			if(i >= input_fix_len) {
+				jun.hover_effect = lerp_float(jun.hover_effect, ind == idx, 3);
+				var sp = jun.hover_effect * 24;
+				var sx = xx - sp * _s;
+				var sy = _in;
+				
+				for( var j = 1; j < data_length; j++ ) {
+					var _jun = ds_list_get(inputs, idx + j, noone);
+					_jun.x = sx;
+					_jun.y = sy;
+					
+					sy += sp * _s * _jun.isVisible();
+				}
+			}
+			
+			_in += 24 * _s * jun.isVisible();
+		}
+		
+		var outamo = output_display_list == -1? ds_list_size(outputs) : array_length(output_display_list);
+		
+		xx = xx + w * _s;
+		_in = yy + ui(32) * _s;
+		for(var i = 0; i < outamo; i++) {
+			var idx = getOutputJunctionIndex(i);
+			jun = outputs[| idx];
+			
+			jun.x = xx;
+			jun.y = _in;
+			_in += 24 * _s * jun.isVisible();
+		}
+	}
 	
 	static onValueFromUpdate = function(index) {
 		if(LOADING || APPENDING) return;

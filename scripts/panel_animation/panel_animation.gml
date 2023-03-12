@@ -6,10 +6,11 @@ enum KEYFRAME_DRAG_TYPE {
 }
 
 function Panel_Animation() : PanelContent() constructor {
+	title = "Animation";
 	context_str = "Animation";
 	
 	timeline_h = ui(28);
-	min_w = ui(32);
+	min_w = ui(40);
 	min_h = ui(48);
 	tool_width = ui(280);
 	
@@ -1397,31 +1398,44 @@ function Panel_Animation() : PanelContent() constructor {
 	function drawAnimationControl() {
 		var bx = ui(8);
 		var by = h - ui(40);
+		var mini = w < ui(348);
 		
-		if(w < ui(348)) {
-			bx = w / 2 - ui(36) * 6 / 2;	
-			by = h - ui(40);
+		if(mini) by = h - ui(40);
+		
+		var amo = array_length(control_buttons);
+		var col = floor((w - ui(8)) / ui(36));
+		var row = ceil(amo / col);
+		if(col < 1) return;
+		
+		for( var i = 0; i < row; i++ ) {
+			var colAmo = min(amo - i * col, col);
+			if(mini) 
+				bx = w / 2 - ui(36) * colAmo / 2;
+			
+			for( var j = 0; j < colAmo; j++ ) {
+				var ind = i * col + j;
+				if(ind >= amo) return;
+				var but = control_buttons[ind];
+				var txt = but[0]();
+				var ind = but[1]();
+				var cc  = but[2]();
+				var fnc = but[3];
+			
+				if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), [mx, my], pFOCUS, pHOVER, txt, THEME.sequence_control, ind, cc) == 2) 
+					fnc();
+			
+				bx += ui(36);
+			}
+			
+			
 		}
 		
-		for( var i = 0; i < array_length(control_buttons); i++ ) {
-			var but = control_buttons[i];
-			var txt = but[0]();
-			var ind = but[1]();
-			var cc  = but[2]();
-			var fnc = but[3];
-			
-			if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), [mx, my], pFOCUS, pHOVER, txt, THEME.sequence_control, ind, cc) == 2) 
-				fnc();
-			
-			bx += ui(36);
-		}
-		
-		if(w < ui(348)) {
-			if(h < 72) return;
-			
+		if(mini) {
 			var y0 = ui(8);
-			var y1 = h - ui(48);
+			var y1 = by - ui(8) + ui(36);
 			var cy = (y0 + y1) / 2;
+			
+			if(y1 - y0 < 12) return;
 			
 			draw_sprite_stretched(THEME.ui_panel_bg, 1, ui(8), y0, w - ui(16), y1 - y0);
 			
@@ -1439,16 +1453,16 @@ function Panel_Animation() : PanelContent() constructor {
 			
 			var txt = string(ANIMATOR.current_frame + 1) + "/" + string(ANIMATOR.frames_total);
 			
-			if(h < 100) {
+			if(y1 - y0 < ui(40)) {
 				draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text_sub);
 				draw_text(ui(16), cy, "Frame");
 				draw_set_text(f_p1, fa_right, fa_center, ANIMATOR.is_playing? COLORS._main_accent : COLORS._main_text_sub);
 				draw_text(w - ui(16), cy, txt);
 			} else {
 				draw_set_text(f_p1, fa_center, fa_center, COLORS._main_text_sub);
-				draw_text(w / 2, cy - ui(16), "Frame");
+				draw_text(w / 2, cy - ui(12), "Frame");
 			
-				draw_set_text(f_h3, fa_center, fa_center, ANIMATOR.is_playing? COLORS._main_accent : COLORS._main_text_sub);
+				draw_set_text(f_h5, fa_center, fa_center, ANIMATOR.is_playing? COLORS._main_accent : COLORS._main_text_sub);
 				draw_text(w / 2, cy + ui(6), txt);
 			}
 			return;
@@ -1457,19 +1471,18 @@ function Panel_Animation() : PanelContent() constructor {
 		bx = w - ui(44);
 		if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), [mx, my], pFOCUS, pHOVER, get_text("panel_animation_animation_settings", "Animation settings"), THEME.animation_setting, 2) == 2)
 			dialogCall(o_dialog_animation, x + bx + 32, y + by - 8);
-			
-		if(dope_sheet_h > 8) {
-			by -= ui(40);
-			if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), [mx, my], pFOCUS, pHOVER, get_text("panel_animation_scale_animation", "Scale animation"), THEME.animation_timing, 2) == 2) {
-				var dia = dialogCall(o_dialog_anim_time_scaler, x + bx + ui(32), y + by - ui(8));
-				dia.anchor = ANCHOR.right | ANCHOR.bottom;
-			}
-			
-			by = ui(8);
-			var txt = show_node_outside_context? get_text("panel_animation_hide_node", "Hide node outside context") : get_text("panel_animation_show_node", "Show node outside context");
-			if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(24), [mx, my], pFOCUS, pHOVER, txt, THEME.junc_visible, show_node_outside_context) == 2)
-				show_node_outside_context = !show_node_outside_context;
+		
+		by -= ui(40); if(by < 8) return;
+		if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), [mx, my], pFOCUS, pHOVER, get_text("panel_animation_scale_animation", "Scale animation"), THEME.animation_timing, 2) == 2) {
+			var dia = dialogCall(o_dialog_anim_time_scaler, x + bx + ui(32), y + by - ui(8));
+			dia.anchor = ANCHOR.right | ANCHOR.bottom;
 		}
+		
+		if(by < ui(28)) return;
+		by = ui(8);
+		var txt = show_node_outside_context? get_text("panel_animation_hide_node", "Hide node outside context") : get_text("panel_animation_show_node", "Show node outside context");
+		if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(24), [mx, my], pFOCUS, pHOVER, txt, THEME.junc_visible, show_node_outside_context) == 2)
+			show_node_outside_context = !show_node_outside_context;
 	}
 	
 	function drawContent(panel) {

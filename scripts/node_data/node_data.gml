@@ -569,7 +569,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 					hover  = distance_to_elbow(mx, my, frx, fry, jx, jy, cx, cy, _s, jun.value_from.drawLineIndex, jun.drawLineIndex) < max(th * 2, 6);
 					
 					if(PANEL_GRAPH._junction_hovering == noone)
-						jun.draw_line_shift_hover = elbow_distance_center(mx, my, frx, fry, jx, jy, cx, cy, _s) < max(th * 2, 6);
+						jun.draw_line_shift_hover = hover;
 					break;
 				case 3 :
 					hover  = distance_to_elbow_diag(mx, my, frx, fry, jx, jy, cx, cy, _s, jun.value_from.drawLineIndex, jun.drawLineIndex) < max(th * 2, 6);

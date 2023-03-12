@@ -59,6 +59,8 @@ event_inherited();
 				
 				if(_menuItem.spr != noone)
 					show_icon = true;
+				if(_menuItem.toggle != noone)
+					show_icon = true;
 			}
 			
 			dialog_w = max(dialog_w, ww);

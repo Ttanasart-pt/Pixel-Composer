@@ -1,5 +1,5 @@
 function Panel_Menu() : PanelContent() constructor {
-	draggable  = true;
+	title = "Menu";
 	
 	noti_flash = 0;
 	noti_flash_color = COLORS._main_accent;
@@ -93,7 +93,7 @@ function Panel_Menu() : PanelContent() constructor {
 		[ get_text("panel_menu_edit", "Edit"), [
 			menuItem(get_text("undo", "Undo"), function() { UNDO(); }, THEME.undo, ["", "Undo"]),
 			menuItem(get_text("redo", "Redo"), function() { REDO(); }, THEME.redo, ["", "Redo"]),
-			menuItem(get_text("history_title", "Action history"), function() { dialogCall(o_dialog_history, mouse_mx, mouse_my); }),
+			menuItem(get_text("history_title", "Action history"), function() { dialogPanelCall(new Panel_History()); }),
 		]],
 		[ get_text("panel_menu_preview", "Preview"), [
 			menuItem(get_text("panel_menu_center_preview", "Center preview"), function() { PANEL_PREVIEW.do_fullView = true; }, THEME.icon_center_canvas, ["Preview", "Focus content"]), 
@@ -173,9 +173,14 @@ function Panel_Menu() : PanelContent() constructor {
 				PREF_MAP[? "panel_collection"] = !PREF_MAP[? "panel_collection"];
 				resetPanel();
 				PREF_SAVE();
-			}),
+			},,, function() { return findPanel("Panel_Collection") != noone; } ),
+			menuItem(get_text("panel_menu_graph", "Graph"),			function() { panelAdd("Panel_Graph") },,,		function() { return findPanel("Panel_Graph") != noone; } ),
+			menuItem(get_text("panel_menu_preview", "Preview"),		function() { panelAdd("Panel_Preview") },,,		function() { return findPanel("Panel_Preview") != noone; } ),
+			menuItem(get_text("panel_menu_inspector", "Inspector"), function() { panelAdd("Panel_Inspector") },,,	function() { return findPanel("Panel_Inspector") != noone; } ),
+			menuItem(get_text("panel_menu_workspace", "Workspace"), function() { panelAdd("Panel_Workspace") },,,	function() { return findPanel("Panel_Workspace") != noone; } ),
+			menuItem(get_text("panel_menu_animation", "Animation"), function() { panelAdd("Panel_Animation") },,,	function() { return findPanel("Panel_Animation") != noone; } ),
 			menuItem(get_text("tunnels", "Tunnels"), function() {
-				dialogCall(o_dialog_tunnels);
+				dialogPanelCall(new Panel_Tunnels());
 			},, ["Graph", "Tunnels"]),
 		]],
 		[ get_text("panel_menu_help", "Help"), menu_help ],
@@ -292,7 +297,25 @@ function Panel_Menu() : PanelContent() constructor {
 			yy = w < ui(200)? ui(72) : ui(40);
 		}
 		
-		var xc, x0, x1, yc, y0, y1;
+		var sx = xx;
+		var xc, x0, x1, yc, y0, y1, _mx = xx;
+		var row = 1, maxRow = ceil(h / ui(40));
+		
+		var _ww = 0;
+		for(var i = 0; i < array_length(menus) - 1; i++) {
+			draw_set_text(f_p1, fa_center, fa_center, COLORS._main_text);
+			var ww = string_width(menus[i][0]) + ui(16 + 8);
+			_ww += ww;
+			if(_ww > w * 0.4 - sx) {
+				row++;
+				_ww = 0;
+			} 
+		}
+		
+		row = min(row, maxRow);
+		var _curRow = 0, currY;
+		var _rowH   = (h - ui(12)) / row;
+		var _ww     = 0;
 		
 		for(var i = 0; i < array_length(menus); i++) {
 			draw_set_text(f_p1, fa_center, fa_center, COLORS._main_text);
@@ -301,12 +324,14 @@ function Panel_Menu() : PanelContent() constructor {
 			
 			if(hori) {
 				xc = xx + ww / 2;
-				yc = h / 2;
 				
 				x0 = xx;
 				x1 = xx + ww;
-				y0 = ui(6);
-				y1 = h - ui(6);
+				y0 = ui(6) + _rowH * _curRow;
+				y1 = y0 + _rowH;
+				
+				yc = (y0 + y1) / 2;
+				currY = yc;
 			} else {
 				xc = w / 2;
 				yc = yy + hh / 2;
@@ -327,10 +352,18 @@ function Panel_Menu() : PanelContent() constructor {
 			}
 			
 			draw_set_text(f_p1, fa_center, fa_center, COLORS._main_text);
-			draw_text_over(xc, yc, menus[i][0]);
+			draw_text_add(xc, yc, menus[i][0]);
 			
-			if(hori) xx += ww + 8;
-			else     yy += hh + 8;
+			if(hori) {
+				xx  += ww + 8;
+				_mx  = max(_mx, xx);
+				_ww += ww + 8;
+				if(_ww > w * 0.4 - sx) {
+					_curRow++;
+					_ww = 0;
+					xx  = sx;
+				}
+			} else     yy += hh + 8;
 		}
 		
 		#region notification
@@ -343,7 +376,7 @@ function Panel_Menu() : PanelContent() constructor {
 				error_amo += ERRORS[| i].amount;
 			
 			if(hori) {
-				var nx0 = xx + ui(24);
+				var nx0 = _mx + ui(24);
 				var ny0 = h / 2;
 			} else {
 				var nx0 = ui(8);
@@ -370,7 +403,7 @@ function Panel_Menu() : PanelContent() constructor {
 			if(pHOVER && point_in_rectangle(mx, my, nx0, ny0 - nh / 2, nx0 + nw, ny0 + nh / 2)) {
 				draw_sprite_stretched_ext(THEME.menu_button, 0, nx0, ny0 - nh / 2, nw, nh, cc, 1);
 				if(mouse_press(mb_left, pFOCUS)) {
-					var dia = dialogCall(o_dialog_notifications, nx0, ny0 + nh / 2 + ui(4));
+					var dia = dialogPanelCall(new Panel_Notification(), nx0, ny0 + nh / 2 + ui(4));
 					dia.anchor = ANCHOR.left | ANCHOR.top;
 				}
 				
@@ -501,16 +534,30 @@ function Panel_Menu() : PanelContent() constructor {
 			if(STEAM_ENABLED) txt += " Steam";
 			
 			if(hori) {
-				draw_set_text(f_p0, fa_right, fa_center, COLORS._main_text_sub);
+				draw_set_text(f_p0, fa_center, fa_center, COLORS._main_text_sub);
 				var ww = string_width(txt) + ui(12);
-				if(pHOVER && point_in_rectangle(mx, my, x1 - ww, 0, x1, h)) {
-					draw_sprite_stretched(THEME.button_hide_fill, 1, x1 - ww, ui(6), ww, h - ui(12));
+				
+				if(h > ui(76)) {
+					ww += ui(16);
+					var _x0 = w - ui(8) - ww;
+					var _y0 = h - ui(40);
+					var _x1 = w - ui(8);
+					var _y1 = h - ui(8);
+				} else {
+					var _x0 = x1 - ww;
+					var _y0 = ui(6);
+					var _x1 = x1;
+					var _y1 = h - ui(6);
+				}
+				
+				if(pHOVER && point_in_rectangle(mx, my, _x0, _y0, _x1, _y1)) {
+					draw_sprite_stretched(THEME.button_hide_fill, 1, _x0, _y0, _x1 - _x0, _y1 - _y0);
 			
 					if(mouse_press(mb_left, pFOCUS)) {
 						dialogCall(o_dialog_release_note); 
 					}
 				}
-				draw_text(x1 - ui(6), h / 2, txt);
+				draw_text((_x0 + _x1) / 2, (_y0 + _y1) / 2, txt);
 			} else {
 				var x1 = ui(40);
 				var y1 = h - ui(20);
@@ -543,10 +590,17 @@ function Panel_Menu() : PanelContent() constructor {
 			var tbx0, tby0;
 			
 			if(hori) {
-				tx0 = nx0;
-				tx1 = x1 - ww;
-				ty0 = 0;
-				ty1 = h;
+				if(h > ui(76)) {
+					tx0 = nx0;
+					tx1 = w - ui(8);
+					ty0 = 0;
+					ty1 = h;
+				} else {
+					tx0 = nx0;
+					tx1 = x1 - ww;
+					ty0 = 0;
+					ty1 = h;
+				}
 				
 				tcx  = (tx0 + tx1) / 2;
 			} else {

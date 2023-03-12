@@ -63,10 +63,16 @@
 		_k = ds_map_find_next(NODE_MAP, _k);
 	}
 	
-	if(UPDATE & RENDER_TYPE.full || (ANIMATOR.rendering && ANIMATOR.frame_progress))
-		Render();
-	else if(UPDATE & RENDER_TYPE.partial)
-		Render(true);
+	if(ANIMATOR.is_playing || ANIMATOR.rendering) {
+		if(ANIMATOR.frame_progress)
+			Render();
+		ANIMATOR.frame_progress = false;
+	} else {
+		if(UPDATE & RENDER_TYPE.full) {
+			Render();
+		} else if(UPDATE & RENDER_TYPE.partial)
+			Render(true);
+	}
 	UPDATE = RENDER_TYPE.none;
 #endregion
 

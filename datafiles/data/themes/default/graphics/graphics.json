@@ -864,6 +864,13 @@
         "yorigin": 16,
         "slice": null
     },
+    "icon_toggle": {
+        "path": "./icon/s_icon_toggle.png",
+        "subimages": 1,
+        "xorigin": 16,
+        "yorigin": 16,
+        "slice": null
+    },
     "inspector_area": {
         "path": "./inspector/s_inspector_area_strip2.png",
         "subimages": 2,
@@ -1148,6 +1155,19 @@
         "xorigin": 12,
         "yorigin": 12,
         "slice": null
+    },
+    "node_bg_pill": {
+        "path": "./node/s_node_bg_pill.png",
+        "subimages": 1,
+        "xorigin": 0,
+        "yorigin": 0,
+        "slice": {
+            "enabled": true,
+            "left": 15,
+            "right": 15,
+            "top": 15,
+            "bottom": 15
+        }
     },
     "node_slider": {
         "path": "./node/widget/s_node_slider.png",

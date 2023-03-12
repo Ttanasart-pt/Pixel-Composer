@@ -90,6 +90,11 @@
 				draw_sprite_ui(spr, ind, dialog_x + ui(24), yy + hght / 2,,,, COLORS._main_icon, _menuItem.active * 0.5 + 0.25);
 			}
 			
+			if(_menuItem.toggle != noone) {
+				var tog = _menuItem.toggle();
+				if(tog) draw_sprite_ui(THEME.icon_toggle, 0, dialog_x + ui(24), yy + hght / 2,,,, COLORS._main_icon);
+			}
+			
 			draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text);
 			draw_set_alpha(_menuItem.active * 0.75 + 0.25);
 			draw_text(tx, yy + hght / 2, label);
