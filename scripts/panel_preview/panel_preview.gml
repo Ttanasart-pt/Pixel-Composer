@@ -194,6 +194,8 @@ function Panel_Preview() : PanelContent() constructor {
 		}
 	}
 	
+	function onFocusBegin() { PANEL_PREVIEW = self; }
+	
 	function dragCanvas() {
 		if(canvas_dragging) {
 			if(!MOUSE_WRAPPING) {
@@ -466,6 +468,13 @@ function Panel_Preview() : PanelContent() constructor {
 	
 	function drawPreviewOverlay() {
 		right_menu_y = toolbar_height - ui(4);
+		
+		if(PANEL_PREVIEW == self) {
+			draw_set_text(f_p0, fa_right, fa_top, COLORS._main_text_accent);
+			draw_text(w - ui(8), right_menu_y, "Active");
+			right_menu_y += string_height("l");
+		}
+		
 		draw_set_text(f_p0, fa_right, fa_top, fps >= ANIMATOR.framerate? COLORS._main_text_sub : COLORS._main_value_negative);
 		draw_text(w - ui(8), right_menu_y, "fps " + string(fps));
 		right_menu_y += string_height("l");
@@ -713,11 +722,13 @@ function Panel_Preview() : PanelContent() constructor {
 				draw_set_color(COLORS._main_text_sub);
 				draw_text(tx, cy + ch / 2, "(" + string(color_get_alpha(sample_color)) + ")");
 			}
+		}
 		
-			if(sample_x != noone) {
-				draw_set_text(f_p0, fa_right, fa_center, COLORS._main_text_sub);
-				draw_text(w - ui(10), cy + ch / 2, "[" + string(sample_x) + ", " + string(sample_y) + "]");
-			}
+		if(pHOVER) {
+			draw_set_text(f_p0, fa_right, fa_center, COLORS._main_text_sub);
+			var mpx = floor((mx - canvas_x) / canvas_s);
+			var mpy = floor((my - canvas_y) / canvas_s);
+			draw_text(w - ui(10), toolbar_height / 2 - ui(4), "[" + string(mpx) + ", " + string(mpy) + "]");
 		}
 		
 		draw_set_color(COLORS.panel_toolbar_fill);
@@ -824,7 +835,7 @@ function Panel_Preview() : PanelContent() constructor {
 		mouse_on_preview = pHOVER && point_in_rectangle(mx, my, 0, toolbar_height, w, h - toolbar_height);
 		
 		draw_clear(COLORS.panel_bg_clear);
-		if(canvas_bg == -1 && canvas_s >= 1) 
+		if(canvas_bg == -1 && canvas_s >= 0.1) 
 			draw_sprite_tiled_ext(s_transparent, 0, canvas_x, canvas_y, canvas_s, canvas_s, c_white, 0.5);
 		else
 			draw_clear(canvas_bg);
@@ -850,8 +861,8 @@ function Panel_Preview() : PanelContent() constructor {
 			menuCall(,, [ 
 				menuItem(get_text("panel_graph_preview_window", "Send to preview window"), function() { previewWindow(getNodePreview()); }, noone, ["Preview", "Preview window"]), 
 				-1,
-				menuItem(get_text("panel_preview_save", "Save current preview as") + "...", function() { PANEL_PREVIEW.saveCurrentFrame(); }), 
-				menuItem(get_text("panel_preview_save_all", "Save all current previews as") + "...", function() { PANEL_PREVIEW.saveAllCurrentFrames(); }), 
+				menuItem(get_text("panel_preview_save", "Save current preview as") + "...", function() { saveCurrentFrame(); }), 
+				menuItem(get_text("panel_preview_save_all", "Save all current previews as") + "...", function() { saveAllCurrentFrames(); }), 
 				-1,
 				menuItem(get_text("panel_preview_copy_color", "Copy color [") + string(sample_color) + "]", function() { clipboard_set_text(sample_color); }), 
 				menuItem(get_text("panel_preview_copy_color", "Copy hex [") + string(color_get_hex(sample_color)) + "]", function() { clipboard_set_text(color_get_hex(sample_color)); }), 

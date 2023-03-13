@@ -61,6 +61,7 @@ function Node_Gradient(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1]);
 			
 		var _gra = _data[1];
+		//print("Draw gradient " + string(_gra))
 		
 		var _typ = _data[2];
 		var _ang = _data[3];

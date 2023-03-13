@@ -76,7 +76,7 @@ function Node_Lua_Surface(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	}
 	
 	static getState = function() {
-		if(inputs[| 3].value_from == noone)
+		if(inputs[| 3].value_from == noone) 
 			return lua_state;
 		return inputs[| 3].value_from.node.getState();
 	}

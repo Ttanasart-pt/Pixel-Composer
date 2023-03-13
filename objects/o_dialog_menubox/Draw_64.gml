@@ -91,7 +91,7 @@
 			}
 			
 			if(_menuItem.toggle != noone) {
-				var tog = _menuItem.toggle();
+				var tog = _menuItem.toggle(_menuItem);
 				if(tog) draw_sprite_ui(THEME.icon_toggle, 0, dialog_x + ui(24), yy + hght / 2,,,, COLORS._main_icon);
 			}
 			

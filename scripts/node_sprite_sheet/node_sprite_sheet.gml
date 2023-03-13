@@ -123,7 +123,7 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 		if(array_length(anim_drawn) != ANIMATOR.frames_total)
 			array_resize(anim_drawn, ANIMATOR.frames_total);
 			
-		if(ANIMATOR.current_frame < ANIMATOR.frames_total) {
+		if(ANIMATOR.current_frame >= 0 && ANIMATOR.current_frame < ANIMATOR.frames_total) {
 			if(anim_drawn[ANIMATOR.current_frame]) return;
 			
 			if(ANIMATOR.is_playing && ANIMATOR.frame_progress) {
@@ -203,8 +203,8 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 			surface_reset_target();
 		}
 		
-		if(drawn)
-			anim_drawn[ANIMATOR.current_frame] = true;
+		if(drawn) 
+			array_safe_set(anim_drawn, ANIMATOR.current_frame, true);
 	}
 	
 	static onInspectorUpdate = function(updateAll = true) {

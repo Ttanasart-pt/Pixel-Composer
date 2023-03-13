@@ -297,6 +297,8 @@ function Panel_Animation() : PanelContent() constructor {
 		menuItem(get_text("paste", "Paste"),		 function() { doPaste(value_focusing); },		THEME.paste, [ "Animation", "Paste" ]),
 	];
 	
+	function onFocusBegin() { PANEL_ANIMATION = self; }
+	
 	function onResize() {
 		initSize();
 		
@@ -879,7 +881,7 @@ function Panel_Animation() : PanelContent() constructor {
 				} else
 					draw_sprite_ui_uniform(THEME.timeline_clock, 1, ui(22), ty - 1, 1, COLORS._main_icon, 0.75);
 				
-				var hov = point_in_rectangle(msx, msy, 0, ty - ui(8), w, ty + ui(8));
+				var hov = pHOVER && point_in_rectangle(msx, msy, 0, ty - ui(8), w, ty + ui(8));
 				if(hov) {
 					value_hovering = prop;
 					if(mouse_click(mb_left, pFOCUS))
@@ -1427,12 +1429,12 @@ function Panel_Animation() : PanelContent() constructor {
 				bx += ui(36);
 			}
 			
-			
+			by -= ui(36);
 		}
 		
 		if(mini) {
 			var y0 = ui(8);
-			var y1 = by - ui(8) + ui(36);
+			var y1 = by + ui(36) - ui(8);
 			var cy = (y0 + y1) / 2;
 			
 			if(y1 - y0 < 12) return;

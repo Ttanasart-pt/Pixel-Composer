@@ -21,6 +21,7 @@ function draw_surface_part_ext_safe(surface, _l, _t, _w, _h, _x, _y, _xs = 1, _y
 }
 
 //check
+gml_pragma("forceinline");
 function is_surface(s) {
 	if(is_undefined(s)) return false;
 	if(is_array(s)) return false;
@@ -188,7 +189,7 @@ function __surface_array_serialize(arr) {
 			var buff = buffer_create(surface_get_width(arr) * surface_get_height(arr) * 4, buffer_fixed, 1);
 			buffer_get_surface(buff, arr, 0);
 			var comp = buffer_compress(buff, 0, buffer_get_size(buff));
-			var enc = buffer_base64_encode(comp, 0, buffer_get_size(comp));
+			var enc  = buffer_base64_encode(comp, 0, buffer_get_size(comp));
 			buffer_delete(buff);
 			return { width: surface_get_width(arr), height: surface_get_height(arr), buffer: enc };
 		} else
@@ -205,13 +206,13 @@ function __surface_array_serialize(arr) {
 
 function surface_array_deserialize(arr, index = -1) {
 	var _arr = json_try_parse(arr);
-	return index == -1? __surface_array_deserialize(_arr, index) : __surface_array_deserialize(_arr[index]);
+	return index == -1? __surface_array_deserialize(_arr) : __surface_array_deserialize(_arr[index]);
 }
 	
 function __surface_array_deserialize(arr) {
 	if(!is_array(arr)) {
 		var buff = buffer_base64_decode(arr.buffer);
-		var buff = buffer_decompress(buff);
+		    buff = buffer_decompress(buff);
 		return surface_create_from_buffer(arr.width, arr.height, buff);
 	}
 	

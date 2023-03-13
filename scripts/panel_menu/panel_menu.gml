@@ -150,6 +150,7 @@ function Panel_Menu() : PanelContent() constructor {
 				
 				array_push(arr, menuItem("Save layout", function() {
 					var dia = dialogCall(o_dialog_file_name, mouse_mx + ui(8), mouse_my + ui(8));
+					dia.name = PREF_MAP[? "panel_layout_file"];
 					dia.onModify = function(name) { 
 						var cont = panelSerialize();
 						json_save_struct(DIRECTORY + "layouts/" + name + ".json", cont);
@@ -163,22 +164,20 @@ function Panel_Menu() : PanelContent() constructor {
 							PREF_MAP[? "panel_layout_file"] = _path;
 							PREF_SAVE();
 							setPanel();
-						}));
+						},,, function(item) { return item.name == PREF_MAP[? "panel_layout_file"]; } ));
 				}
 				
 				return submenuCall(_x, _y, _depth, arr);
 			}).setIsShelf(),
 			-1,
-			menuItem(get_text("panel_menu_collections", "Collections"), function() {
-				PREF_MAP[? "panel_collection"] = !PREF_MAP[? "panel_collection"];
-				resetPanel();
-				PREF_SAVE();
-			},,, function() { return findPanel("Panel_Collection") != noone; } ),
-			menuItem(get_text("panel_menu_graph", "Graph"),			function() { panelAdd("Panel_Graph") },,,		function() { return findPanel("Panel_Graph") != noone; } ),
-			menuItem(get_text("panel_menu_preview", "Preview"),		function() { panelAdd("Panel_Preview") },,,		function() { return findPanel("Panel_Preview") != noone; } ),
-			menuItem(get_text("panel_menu_inspector", "Inspector"), function() { panelAdd("Panel_Inspector") },,,	function() { return findPanel("Panel_Inspector") != noone; } ),
-			menuItem(get_text("panel_menu_workspace", "Workspace"), function() { panelAdd("Panel_Workspace") },,,	function() { return findPanel("Panel_Workspace") != noone; } ),
-			menuItem(get_text("panel_menu_animation", "Animation"), function() { panelAdd("Panel_Animation") },,,	function() { return findPanel("Panel_Animation") != noone; } ),
+			menuItem(get_text("panel_menu_collections", "Collections"),		function() { panelAdd("Panel_Collection", true) },,,	function() { return findPanel("Panel_Collection") != noone; } ),
+			menuItem(get_text("panel_menu_graph", "Graph"),					function() { panelAdd("Panel_Graph", true) },,,			function() { return findPanel("Panel_Graph") != noone; } ),
+			menuItem(get_text("panel_menu_preview", "Preview"),				function() { panelAdd("Panel_Preview", true) },,,		function() { return findPanel("Panel_Preview") != noone; } ),
+			menuItem(get_text("panel_menu_inspector", "Inspector"),			function() { panelAdd("Panel_Inspector", true) },,,		function() { return findPanel("Panel_Inspector") != noone; } ),
+			menuItem(get_text("panel_menu_workspace", "Workspace"),			function() { panelAdd("Panel_Workspace", true) },,,		function() { return findPanel("Panel_Workspace") != noone; } ),
+			menuItem(get_text("panel_menu_animation", "Animation"),			function() { panelAdd("Panel_Animation", true) },,,		function() { return findPanel("Panel_Animation") != noone; } ),
+			menuItem(get_text("panel_menu_notification", "Notification"),   function() { panelAdd("Panel_Notification", true) },,,	function() { return findPanel("Panel_Notification") != noone; } ),
+			menuItem(get_text("panel_menu_nodes", "Nodes"),					function() { panelAdd("Panel_Nodes", true) },,,			function() { return findPanel("Panel_Nodes") != noone; } ),
 			menuItem(get_text("tunnels", "Tunnels"), function() {
 				dialogPanelCall(new Panel_Tunnels());
 			},, ["Graph", "Tunnels"]),
@@ -213,6 +212,8 @@ function Panel_Menu() : PanelContent() constructor {
 			}),
 		]]);
 	}
+	
+	function onFocusBegin() { PANEL_MENU = self; }
 	
 	function setNotiIcon(icon) {
 		noti_icon = icon;

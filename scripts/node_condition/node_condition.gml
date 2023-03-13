@@ -4,7 +4,6 @@ function Node_Condition(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	w = 96;
 	
-	
 	inputs[| 0] = nodeValue("Check value", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0 )
 		.setVisible(true, true);
 		
@@ -76,10 +75,12 @@ function Node_Condition(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		
 		if(res) {
 			outputs[| 0].setValue(_true);
-			outputs[| 0].type = inputs[| 3].type;
+			outputs[| 0].type         = inputs[| 3].type;
+			outputs[| 0].display_type = inputs[| 3].display_type;
 		} else {
 			outputs[| 0].setValue(_fals);
-			outputs[| 0].type = inputs[| 4].type;	
+			outputs[| 0].type	      = inputs[| 4].type;	
+			outputs[| 0].display_type = inputs[| 4].display_type;
 		}
 		
 		outputs[| 1].setValue(res);

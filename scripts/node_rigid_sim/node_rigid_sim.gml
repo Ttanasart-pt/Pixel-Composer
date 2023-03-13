@@ -21,25 +21,18 @@ function Node_Rigid_Group(_x, _y, _group = noone) : Node_Collection(_x, _y, _gro
 		instance_destroy(oRigidbody);
 		physics_pause_enable(true);
 		
-		time_source_start(time_source_create(time_source_global, 1, time_source_units_frames, function() {
-			var node_list = getNodeList();
-			for( var i = 0; i < ds_list_size(node_list); i++ ) {
-				var n = node_list[| i];
-				if(variable_struct_exists(n, "reset"))
-					n.reset();
-			}
-			physics_pause_enable(false);
-		}));
+		var node_list = getNodeList();
+		for( var i = 0; i < ds_list_size(node_list); i++ ) {
+			var n = node_list[| i];
+			if(variable_struct_exists(n, "reset"))
+				n.reset();
+		}
+		physics_pause_enable(false);
 	}
 	
-	static onStep = function() {
-		RETURN_ON_REST
-		
+	static update = function() {
 		if(ANIMATOR.current_frame == 0)
 			reset();
-		
-		setRenderStatus(false);
-		UPDATE |= RENDER_TYPE.full;
 	}
 	
 	PATCH_STATIC

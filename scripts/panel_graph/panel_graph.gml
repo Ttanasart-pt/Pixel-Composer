@@ -221,6 +221,8 @@ function Panel_Graph() : PanelContent() constructor {
 		tun.build_y = PANEL_GRAPH.mouse_grid_y;
 	});
 	
+	function onFocusBegin() { PANEL_GRAPH = self; }
+	
 	function stepBegin() {
 		var gr_x = graph_x * graph_s;
 		var gr_y = graph_y * graph_s;
@@ -376,9 +378,8 @@ function Panel_Graph() : PanelContent() constructor {
 		var gr_y = graph_y * graph_s;
 		
 		//var t = current_time;
-		for(var i = 0; i < ds_list_size(nodes_list); i++) {
+		for(var i = 0; i < ds_list_size(nodes_list); i++)
 			nodes_list[| i].preDraw(gr_x, gr_y, graph_s);
-		}
 		//print("Predraw time: " + string(current_time - t)); t = current_time;
 		
 		#region draw frame
@@ -396,6 +397,13 @@ function Panel_Graph() : PanelContent() constructor {
 				var n = nodes_list[| i];
 				if(n.pointIn(gr_x, gr_y, mx, my, graph_s))
 					node_hovering = n;	
+			}
+			
+			if(node_hovering != noone && pFOCUS && struct_has(node_hovering, "nodes") && DOUBLE_CLICK) {
+				addContext(node_hovering);
+				DOUBLE_CLICK = false;
+				
+				node_hovering = noone;
 			}
 		#endregion
 		//print("Hover time: " + string(current_time - t)); t = current_time;
@@ -452,7 +460,7 @@ function Panel_Graph() : PanelContent() constructor {
 					} else {
 						ds_list_clear(nodes_select_list);
 						
-						if(DOUBLE_CLICK)
+						if(DOUBLE_CLICK && !PANEL_INSPECTOR.locked)
 							PANEL_INSPECTOR.inspecting = noone;
 					}
 				}

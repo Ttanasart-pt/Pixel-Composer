@@ -28,7 +28,7 @@ function Node_Pin(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		var xx = x * _s + _x;
 		var yy = y * _s + _y;
 		
-		return point_in_circle(_mx, _my, xx, yy, 24);
+		return point_in_circle(_mx, _my, xx, yy, _s * 24);
 	}
 	
 	static preDraw = function(_x, _y, _s) {
@@ -53,19 +53,19 @@ function Node_Pin(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			isHovering = true;
 			
 			draw_sprite_stretched(THEME.node_bg, 0, xx - 12 * _s, yy - 12 * _s, 24 * _s, 24 * _s);
-			if(inputs[| 0].drawJunction(_s, _mx, _my, false))
+			if(inputs[| 0].drawJunction(_s, _mx, _my))
 				hover = inputs[| 0];
-			if(outputs[| 0].drawJunction(_s, _mx, _my, false))
+			if(outputs[| 0].drawJunction(_s, _mx, _my))
 				hover = outputs[| 0];
 		} else if(hoverExpand > 0) {
-			inputs[| 0].drawJunction(_s, _mx, _my, false)
-			outputs[| 0].drawJunction(_s, _mx, _my, false)
+			inputs[| 0].drawJunction(_s, _mx, _my)
+			outputs[| 0].drawJunction(_s, _mx, _my)
 		} else {
 			var jun;
 			if(hov != noone) jun = hov.connect_type == JUNCTION_CONNECT.input? outputs[| 0] : inputs[| 0];
 			else			 jun = inputs[| 0].value_from == noone? inputs[| 0] : outputs[| 0];
 			
-			if(jun.drawJunction(_s, _mx, _my, false))
+			if(jun.drawJunction(_s, _mx, _my,))
 				hover = jun;
 		}
 		

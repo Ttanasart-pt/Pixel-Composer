@@ -58,18 +58,20 @@
 		}
 	}
 	
-	function getPanelFromName(name) {
+	function getPanelFromName(name, create = false) {
 		switch(name) {
-			case "Panel_Menu"       : return PANEL_MENU;
-			case "Panel_Inspector"  : return PANEL_INSPECTOR;
-			case "Panel_Animation"  : return PANEL_ANIMATION;
-			case "Panel_Preview"    : return PANEL_PREVIEW;
-			case "Panel_Graph"      : return PANEL_GRAPH;
-			case "Panel_Collection" : return PANEL_COLLECTION;
+			case "Panel_Menu"       : return (create || findPanel(name))? new Panel_Menu()		 : PANEL_MENU;
+			case "Panel_Inspector"  : return (create || findPanel(name))? new Panel_Inspector()	 : PANEL_INSPECTOR;
+			case "Panel_Animation"  : return (create || findPanel(name))? new Panel_Animation()	 : PANEL_ANIMATION;
+			case "Panel_Preview"    : return (create || findPanel(name))? new Panel_Preview()	 : PANEL_PREVIEW;
+			case "Panel_Graph"      : return (create || findPanel(name))? new Panel_Graph()		 : PANEL_GRAPH;
 			
-			case "Panel_Workspace"  : return new Panel_Workspace();
-			case "Panel_Tunnels"    : return new Panel_Tunnels();
-			case "Panel_History"    : return new Panel_History();
+			case "Panel_Collection"		: return new Panel_Collection();
+			case "Panel_Workspace"		: return new Panel_Workspace();
+			case "Panel_Tunnels"		: return new Panel_Tunnels();
+			case "Panel_History"		: return new Panel_History();
+			case "Panel_Notification"   : return new Panel_Notification();
+			case "Panel_Nodes"			: return new Panel_Nodes();
 		}
 		
 		return noone;
@@ -80,25 +82,9 @@
 		loadPanelStruct(panel, CURRENT_PANEL.panel);
 	}
 	
-	function panelAdd(panel) {
-		var f = CURRENT_PANEL;
-		
-		if(struct_has(f, panel)) {
-			var str = f[$ panel];
-			var pan = getPanelFromName(str.parent);
-			var p;
-			
-			if(str.split == "v")
-				p = pan.panel.split_v(ui(str.width));
-			else if(str.split == "h")
-				p = pan.panel.split_h(ui(str.width));
-			
-			p[ str.index].set(PANEL_COLLECTION);
-			p[!str.index].set(pan);
-		} else {
-			var pan = getPanelFromName(panel);
-			if(pan) dialogPanelCall(pan);
-		}
+	function panelAdd(panel, create = false) {
+		var pan = getPanelFromName(panel, create);
+		if(pan) dialogPanelCall(pan);
 	}
 	
 	function panelObjectInit() {
@@ -115,10 +101,6 @@
 		clearPanel();
 		panelObjectInit();
 		loadPanelStruct(PANEL_MAIN, CURRENT_PANEL.panel);
-		
-		if(PREF_MAP[? "panel_collection"])
-			panelAdd("Panel_Collection");
-		
 		PANEL_MAIN.refresh();
 	}
 	
@@ -126,15 +108,14 @@
 		globalvar CURRENT_PANEL;
 		
 		panelObjectInit();
-		zip_unzip("data/layouts.zip", DIRECTORY);
+		if(!directory_exists(DIRECTORY + "layouts")) 
+			zip_unzip("data/layouts.zip", DIRECTORY);
+			
 		var file = DIRECTORY + "layouts/" + PREF_MAP[? "panel_layout_file"] + ".json"; 
 		if(!file_exists(file))
 			file = DIRECTORY + "layouts/Horizontal.json"; 
 		loadPanel(file, PANEL_MAIN);
 		
-		if(PREF_MAP[? "panel_collection"])
-			panelAdd("Panel_Collection");
-			
 		PANEL_ANIMATION.updatePropertyList();
 		PANEL_MAIN.refresh();
 	}
@@ -338,10 +319,10 @@
 
 #region function
 	function panelHover(content) {
-		return HOVER && is_struct(HOVER) && instanceof(HOVER) == "Panel" && HOVER.content == content;
+		return HOVER && is_struct(HOVER) && instanceof(HOVER) == "Panel" && instanceof(HOVER.content) == instanceof(content);
 	}
 	
 	function panelFocus(content) {
-		return FOCUS && is_struct(FOCUS) && instanceof(FOCUS) == "Panel" && FOCUS.content == content;
+		return FOCUS && is_struct(FOCUS) && instanceof(FOCUS) == "Panel" && instanceof(FOCUS.content) == instanceof(content);
 	}
 #endregion

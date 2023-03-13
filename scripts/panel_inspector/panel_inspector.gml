@@ -7,8 +7,9 @@ function Panel_Inspector() : PanelContent() constructor {
 	title = "Inspector";
 	context_str = "Inspector";
 	
-	inspecting = noone;
-	top_bar_h  = ui(96);
+	locked		= false;
+	inspecting	= noone;
+	top_bar_h	= ui(96);
 	
 	prop_hover = noone;
 	prop_selecting = noone;
@@ -86,6 +87,8 @@ function Panel_Inspector() : PanelContent() constructor {
 		}),
 	]
 	
+	function onFocusBegin() { PANEL_INSPECTOR = self; }
+	
 	function onResize() {
 		initSize();
 		contentPane.resize(content_w, content_h);
@@ -131,7 +134,7 @@ function Panel_Inspector() : PanelContent() constructor {
 					var display = meta.displays[j];
 					
 					draw_set_text(f_p0, fa_left, fa_top, COLORS._main_text);
-					draw_text_over(ui(16), yy, display[0]);
+					draw_text_add(ui(16), yy, display[0]);
 					yy += line_height() + ui(6);
 					hh += line_height() + ui(6);
 				
@@ -799,6 +802,11 @@ function Panel_Inspector() : PanelContent() constructor {
 		draw_set_text(f_p1, fa_center, fa_center, COLORS._main_text_sub);
 		draw_text(w / 2, ui(56), inspecting.name);
 		
+		var lx = w / 2 - string_width(inspecting.name) / 2 - ui(18);
+		var ly = ui(56 - 8);
+		if(buttonInstant(THEME.button_hide, lx, ly, ui(16), ui(16), [mx, my], pFOCUS, pHOVER, "Lock", THEME.lock, !locked, locked? COLORS._main_icon_light : COLORS._main_icon,, 0.5) == 2)
+			locked = !locked;
+		
 		var bx = ui(8);
 		var by = ui(12);
 			
@@ -850,7 +858,7 @@ function Panel_Inspector() : PanelContent() constructor {
 	}
 	
 	function drawContent(panel) {
-		draw_clear_alpha(COLORS.panel_bg_clear, 0);
+		draw_clear(COLORS.panel_bg_clear);
 		lineBreak = w < PREF_MAP[? "inspector_line_break_width"];
 		
 		draw_sprite_stretched(THEME.ui_panel_bg, 1, ui(8), top_bar_h - ui(8), w - ui(16), h - top_bar_h);
@@ -867,7 +875,7 @@ function Panel_Inspector() : PanelContent() constructor {
 				txt = context.name;
 			
 			draw_set_text(f_h5, fa_center, fa_center, COLORS._main_text);
-			draw_text_over(w / 2, ui(30), txt);
+			draw_text_add(w / 2, ui(30), txt);
 			
 			var bx = w - ui(44);
 			var by = ui(12);
@@ -913,7 +921,7 @@ function Panel_Inspector() : PanelContent() constructor {
 		contentPane.active = pHOVER;
 		contentPane.draw(ui(16), top_bar_h, mx - ui(16), my - top_bar_h);
 		
-		if(PANEL_GRAPH.node_focus && inspecting != PANEL_GRAPH.node_focus) {
+		if(!locked && PANEL_GRAPH.node_focus && inspecting != PANEL_GRAPH.node_focus) {
 			inspecting = PANEL_GRAPH.node_focus;
 			if(inspecting != noone)
 				inspecting.onInspect();

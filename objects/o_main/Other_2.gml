@@ -1,5 +1,5 @@
 /// @description main directory, parameter
-print("===== Game Start Begin =====");
+//print("===== Game Start Begin =====");
 
 #region directory
 	globalvar DIRECTORY;
@@ -80,4 +80,4 @@ print("===== Game Start Begin =====");
 	lua_error_handler = _lua_error;
 #endregion
 
-print("===== Game Start End =====");
+//print("===== Game Start End =====");

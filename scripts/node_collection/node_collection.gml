@@ -241,11 +241,6 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 				render_time += node_list[| i].render_time;
 		}
 		
-		if(PANEL_GRAPH.node_focus == self && panelFocus(PANEL_GRAPH) && DOUBLE_CLICK) {
-			PANEL_GRAPH.addContext(self);
-			DOUBLE_CLICK = false;
-		}
-		
 		w = attributes[? "w"];
 		
 		onStep();

@@ -38,6 +38,7 @@ function token_splice(str) {
 }
 
 function draw_code(_x, _y, str) {
+	//print("  > Drawing: " + str);
 	var tx = _x
 	var ty = _y;
 	
@@ -48,7 +49,7 @@ function draw_code(_x, _y, str) {
 	
 	for( var i = 0; i < amo; i++ ) {
 		var _w = strSpl[i];
-		_w = string_trim_end(_w);
+		_w = string_replace_all(_w, "\n", "");
 		
 		isStr = !isStr;
 		

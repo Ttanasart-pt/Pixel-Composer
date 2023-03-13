@@ -293,6 +293,8 @@ function Panel_Collection() : PanelContent() constructor {
 		return hh;
 	});
 	
+	function onFocusBegin() { PANEL_COLLECTION = self; }
+	
 	function onResize() {
 		initSize();
 		

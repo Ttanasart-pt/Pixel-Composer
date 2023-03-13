@@ -25,19 +25,19 @@ vec2 cellular(vec2 P) {
 	vec3 oi = vec3(-1.0, 0.0, 1.0);
 	vec3 of = vec3(-0.5, 0.5, 1.5);
 	vec3 px = permute(Pi.x + oi);
-	vec3 p = permute(px.x + Pi.y + oi); // p11, p12, p13
+	vec3 p  = permute(px.x + Pi.y + oi); // p11, p12, p13
 	vec3 ox = fract(p * K) - Ko;
 	vec3 oy = mod7(floor(p * K)) * K - Ko;
 	vec3 dx = Pf.x + 0.5 + jitter * ox;
 	vec3 dy = Pf.y - of + jitter * oy;
 	vec3 d1 = dx * dx + dy * dy; // d11, d12 and d13, squared
-	p = permute(px.y + Pi.y + oi); // p21, p22, p23
+	p  = permute(px.y + Pi.y + oi); // p21, p22, p23
 	ox = fract(p * K) - Ko;
 	oy = mod7(floor(p * K)) * K - Ko;
 	dx = Pf.x - 0.5 + jitter * ox;
 	dy = Pf.y - of + jitter * oy;
 	vec3 d2 = dx * dx + dy * dy; // d21, d22 and d23, squared
-	p = permute(px.z + Pi.y + oi); // p31, p32, p33
+	p  = permute(px.z + Pi.y + oi); // p31, p32, p33
 	ox = fract(p * K) - Ko;
 	oy = mod7(floor(p * K)) * K - Ko;
 	dx = Pf.x - 1.5 + jitter * ox;
@@ -57,11 +57,9 @@ vec2 cellular(vec2 P) {
 	return sqrt(d1.xy);
 }
 
-float color(vec2 xy) { return cellular(xy).y * 2.0 - 1.0; }
-
 void main() {
-    vec2 p = (v_vTexcoord - position / dimension) * scale * 2.0 - 1.0;
-    float n = 0.5 + 0.5 * color(p);
+    vec2 p  = (v_vTexcoord - position / dimension) * scale * 2.0 - 1.0;
+    float n = cellular(p).y;
 	
     gl_FragColor = vec4(vec3(n), 1.);
 }

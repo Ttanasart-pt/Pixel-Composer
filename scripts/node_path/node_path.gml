@@ -136,7 +136,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 					oy = ny;
 				}
 				
-				if(point_distance(drag_point_mx, drag_point_my, pxx, pxy) > 4) {
+				if(point_distance(drag_point_mx, drag_point_my, pxx, pxy) > 4 / _s) {
 					array_push(drag_points, [ pxx, pxy ]);
 					
 					drag_point_mx = pxx;
@@ -181,7 +181,8 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 					var anc = [];
 					
 					for( i = 0; i < amo; i++ ) {
-						var _ind = points[i];
+						var  ind = replace? i : clamp(i / amo * array_length(points), 0, array_length(points) - 1);
+						var _ind = points[ind];
 						var _p   = drag_points[_ind];
 						var dxx  = 0;
 						var dxy  = 0;

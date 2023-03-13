@@ -15,6 +15,7 @@ uniform float radiusShatter;
 uniform int pattern;
 
 #define TAU 6.283185307179586
+#define PI 3.14159265359
 
 vec2 random2( vec2 p ) {
     return fract(sin(vec2(dot(p, vec2(127.1, 311.7)), dot(p, vec2(269.5, 183.3)))) * 43758.5453);
@@ -40,8 +41,8 @@ void main() {
 	    for (int y = -1; y <= 1; y++) {
 	        for (int x = -1; x <= 1; x++) {
 	            vec2 neighbor = vec2(float(x), float(y));
-	            vec2 point = random2(i_st + neighbor);
-				point += 0.5 + 0.5 * sin(time + 6.2831 * point);
+	            vec2 point = random2(mod(i_st + neighbor, scale));
+				point += 0.5 + 0.5 * sin(time + TAU * point);
 			
 	            vec2 _diff = neighbor + point - f_st;
 	            float dist = length(_diff);
@@ -58,11 +59,11 @@ void main() {
 		for(int y = -2; y <= 2; y++)
 		for(int x = -2; x <= 2; x++) {
 			vec2 g = mg + vec2(float(x), float(y));
-			vec2 point = random2(i_st + g);
-			point += 0.5 + 0.5 * sin(time + 6.2831 * point);
+			vec2 point = random2(mod(i_st + g, scale));
+			point += 0.5 + 0.5 * sin(time + TAU * point);
 		
 			vec2 r = g + point - f_st;
-			if(dot(mr - r, mr - r) > .0001)
+			if(dot(mr - r, mr - r) > .000001)
 				md = min( md, dot( 0.5 * (mr + r), normalize(r - mr)) );
 		}
 	} else if(pattern == 1) {

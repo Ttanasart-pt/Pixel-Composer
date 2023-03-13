@@ -1,6 +1,7 @@
 function Panel_Tunnels() : PanelContent() constructor {
 	#region data
 		title = "Tunnels";
+		showHeader  = false;
 		
 		w = ui(320);
 		h = ui(480);
@@ -14,7 +15,6 @@ function Panel_Tunnels() : PanelContent() constructor {
 		tunnel_ins = [];
 		tunnel_select = noone;
 		tunnel_hover  = noone;
-		showHeader  = false;
 		
 		function scanNodes() {
 			var amo = ds_map_size(NODE_MAP);
@@ -62,11 +62,11 @@ function Panel_Tunnels() : PanelContent() constructor {
 	function onResize() {
 		PANEL_PADDING
 		
-		sc_tunnel.resize(w - ui(padding + padding), h - ui(title_height + padding));
+		sc_tunnel.resize(w - ui(padding + padding), h - ui(title_height + padding + 40));
 	}
 	
 	#region content
-		sc_tunnel = new scrollPane(w - ui(padding + padding), h - ui(title_height + padding), function(_y, _m) {
+		sc_tunnel = new scrollPane(w - ui(padding + padding), h - ui(title_height + padding + 40), function(_y, _m) {
 			draw_clear_alpha(COLORS.panel_bg_clear, 0);
 			var _h  = 0;
 			var ww  = sc_tunnel.surface_w;

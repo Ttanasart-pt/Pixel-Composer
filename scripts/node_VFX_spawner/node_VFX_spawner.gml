@@ -3,12 +3,14 @@ function Node_VFX_Spawner(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y
 	color = COLORS.node_blend_vfx;
 	icon  = THEME.vfx;
 	
+	attributes[? "Output pool"] = false;
+	
 	inputs[| input_len + 0] = nodeValue("Spawn trigger", self, JUNCTION_CONNECT.input, VALUE_TYPE.node, false)
 		.setVisible(true, true);
 	
 	inputs[| input_len + 1] = nodeValue("Step interval", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1, "How often the 'on step' event is triggered.\nWith 1 being trigger every frame, 2 means triggered once every 2 frames.");
 	
-	outputs[| 0] = nodeValue("Particles", self, JUNCTION_CONNECT.output, VALUE_TYPE.particle, parts );
+	outputs[| 0] = nodeValue("Particles", self, JUNCTION_CONNECT.output, VALUE_TYPE.particle, [] );
 	outputs[| 1] = nodeValue("On create", self, JUNCTION_CONNECT.output, VALUE_TYPE.node, noone );
 	outputs[| 2] = nodeValue("On step", self, JUNCTION_CONNECT.output, VALUE_TYPE.node, noone );
 	outputs[| 3] = nodeValue("On destroy", self, JUNCTION_CONNECT.output, VALUE_TYPE.node, noone );
@@ -32,6 +34,18 @@ function Node_VFX_Spawner(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y
 		if(ANIMATOR.current_frame == 0)
 			reset();
 		runVFX(ANIMATOR.current_frame);
+		
+		if(attributes[? "Output pool"]) {
+			outputs[| 0].setValue(parts);
+			return;
+		} else {
+			var _parts = [];
+			for( var i = 0; i < array_length(parts); i++ ) {
+				if(!parts[i].active) continue;
+				array_push(_parts, parts[i]);
+			}
+			outputs[| 0].setValue(_parts);
+		}
 	}
 	
 	static onSpawn = function(_time, part) {

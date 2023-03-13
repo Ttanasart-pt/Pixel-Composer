@@ -98,25 +98,26 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		var _path	= _data[14];
 		var _bgcol  = _bg? colToVec4(_data[11]) : [0, 0, 0, 0];
 		
-		inputs[| 11].setVisible(_bg);
 		inputs[|  3].setVisible(true);
-		inputs[|  9].setVisible(true);
 		inputs[|  4].setVisible(true);
-		inputs[| 13].setVisible(true);
 		inputs[|  5].setVisible(true);
+		inputs[|  6].setVisible(_path == noone);
 		inputs[|  7].setVisible(true);
 		inputs[|  8].setVisible(true);
+		inputs[|  9].setVisible(true);
+		inputs[| 11].setVisible(_bg);
+		inputs[| 13].setVisible(true);
 		
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1]);
 		
 		if(_path != noone && struct_has(_path, "getPointRatio")) {
 			inputs[|  3].setVisible(false);
-			inputs[|  9].setVisible(false);
 			inputs[|  4].setVisible(false);
-			inputs[| 13].setVisible(false);
 			inputs[|  5].setVisible(false);
 			inputs[|  7].setVisible(false);
 			inputs[|  8].setVisible(false);
+			inputs[|  9].setVisible(false);
+			inputs[| 13].setVisible(false);
 			
 			surface_set_target(_outSurf);
 				if(_bg) draw_clear_alpha(0, 1);
@@ -138,7 +139,6 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 					var triangles = polygon_triangulate(points);
 					
 					draw_set_color(_color);
-					
 					draw_primitive_begin(pr_trianglelist);
 					for( var i = 0; i < array_length(triangles); i++ ) {
 						var tri = triangles[i];

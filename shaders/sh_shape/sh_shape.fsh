@@ -1,6 +1,5 @@
-//
-// Simple passthrough fragment shader
-//
+#extension GL_OES_standard_derivatives : require
+
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
@@ -142,7 +141,7 @@ void main() {
 	else if(aa == 0)
 		color = step(d, 0.0);
 	else
-		color = smoothstep(0.05, 0., d);
+		color = smoothstep(0.02, -0.02, d);
 	
 	gl_FragColor = mix(bgColor, v_vColour, color);
 }

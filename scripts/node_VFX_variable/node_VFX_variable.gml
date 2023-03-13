@@ -15,52 +15,60 @@ function Node_VFX_Variable(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	input_display_list = [ 0 ];
 	
 	outputs[| 0] = nodeValue("Positions", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, [] )
-		.setDisplay(VALUE_DISPLAY.vector);
+		.setDisplay(VALUE_DISPLAY.vector)
+		.setVisible(false);
 	
 	outputs[| 1] = nodeValue("Scales", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, [] )
-		.setDisplay(VALUE_DISPLAY.vector);
+		.setDisplay(VALUE_DISPLAY.vector)
+		.setVisible(false);
 	
-	outputs[| 2] = nodeValue("Rotations", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, 0 );
+	outputs[| 2] = nodeValue("Rotations", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, 0 )
+		.setVisible(false);
 	
-	outputs[| 3] = nodeValue("Blending", self, JUNCTION_CONNECT.output, VALUE_TYPE.color, 0 );
+	outputs[| 3] = nodeValue("Blending", self, JUNCTION_CONNECT.output, VALUE_TYPE.color, 0 )
+		.setVisible(false);
 	
-	outputs[| 4] = nodeValue("Alpha", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, 0 );
+	outputs[| 4] = nodeValue("Alpha", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, 0 )
+		.setVisible(false);
 	
-	outputs[| 5] = nodeValue("Life", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, 0 );
+	outputs[| 5] = nodeValue("Life", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, 0 )
+		.setVisible(false);
 	
-	outputs[| 6] = nodeValue("Max life", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, 0 );
+	outputs[| 6] = nodeValue("Max life", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, 0 )
+		.setVisible(false);
+	
+	outputs[| 7] = nodeValue("Surface", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone )
+		.setVisible(false);
+	
+	outputs[| 8] = nodeValue("Velocity", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, [] )
+		.setDisplay(VALUE_DISPLAY.vector)
+		.setVisible(false);
 	
 	static update = function(frame = ANIMATOR.current_frame) {
 		var parts = inputs[| 0].getValue();
 		if(!is_array(parts)) return;
 		
-		var _get = [];
 		var _val = [];
 		
-		for( var i = 0; i < ds_list_size(outputs); i++ ) {
-			_get[i] = false;
-			var _in = outputs[| i];
-			for( var j = 0; j < ds_list_size(_in.value_to); j++ )
-				if(_in.value_to[| j].value_from == _in) _get[i] = true;
-			
-			_val[i] = [];
-			if(_get[i]) _val[i] = array_create(array_length(parts));
-		}
+		for( var i = 0; i < ds_list_size(outputs); i++ )
+			_val[i] = array_create(array_length(parts));
 		
 		for( var i = 0; i < array_length(parts); i++ ) {
 			var part = parts[i];
 			
-			if(_get[0]) _val[0][i] = [part.x,   part.y];
-			if(_get[1]) _val[1][i] = [part.scx, part.scy];
-			if(_get[2]) _val[2][i] = part.rot;
-			if(_get[3]) _val[3][i] = part.blend;
-			if(_get[4]) _val[4][i] = part.alp;
-			if(_get[5]) _val[5][i] = part.life;
-			if(_get[6]) _val[6][i] = part.life_total;
+			if(outputs[| 0].visible) _val[0][i] = [part.x,   part.y];
+			if(outputs[| 1].visible) _val[1][i] = [part.scx, part.scy];
+			if(outputs[| 2].visible) _val[2][i] = part.rot;
+			if(outputs[| 3].visible) _val[3][i] = part.blend;
+			if(outputs[| 4].visible) _val[4][i] = part.alp;
+			if(outputs[| 5].visible) _val[5][i] = part.life;
+			if(outputs[| 6].visible) _val[6][i] = part.life_total;
+			if(outputs[| 7].visible) _val[7][i] = part.surf;
+			if(outputs[| 8].visible) _val[8][i] = [part.sx, part.sy];
 		}
 		
 		for( var i = 0; i < ds_list_size(outputs); i++ )
-			if(_get[i]) outputs[| i].setValue(_val[i]);
+			if(outputs[| i].visible) outputs[| i].setValue(_val[i]);
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {

@@ -39,7 +39,11 @@
 					draw_tooltip_text("[" + get_text("tooltip_rigid_object", "Rigidbody Object") + "id: " + string(content[$ "object"]) + "]");
 					break;
 				case VALUE_TYPE.particle :
-					draw_tooltip_text("[" + get_text("tooltip_particle_object", "Particle Object") + "]");
+					var txt = "[" + 
+						get_text("tooltip_particle_object", "Particle Object") + 
+						" (size: " + string(array_length(content)) + ") " + 
+						"]";
+					draw_tooltip_text(txt);
 					break;
 				case VALUE_TYPE.pathnode :
 					draw_tooltip_text("[" + get_text("tooltip_path_object", "Path Object") + "]");

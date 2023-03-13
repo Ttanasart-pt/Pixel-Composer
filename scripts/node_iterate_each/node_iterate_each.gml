@@ -55,6 +55,7 @@ function Node_Iterate_Each(_x, _y, _group = noone) : Node_Collection(_x, _y, _gr
 		if(!is_real(maxIter)) maxIter = 1;
 		
 		iterated++;
+		//print("Iterating " + string(iterated) + "/" + string(maxIter))
 			
 		if(iterated >= maxIter) {
 			render_time = get_timer() - loop_start_time;

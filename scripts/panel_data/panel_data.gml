@@ -21,8 +21,8 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 	h = _h;
 	split = "";
 	
-	min_w = ui(32);
-	min_h = ui(32);
+	min_w = ui(40);
+	min_h = ui(40);
 	
 	dragging  = -1;
 	drag_sval = 0;
@@ -75,27 +75,19 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 	}
 	
 	function resizable(dw, dh, oppose = ANCHOR.left) {
-		if(content && (w + dw < content.min_w || h + dh < content.min_h)) {
-			return false;
-		}
+		if(content)
+			return w + dw > content.min_w && h + dh > content.min_h;
 		
-		var rec = true;
-		for(var i = 0; i < ds_list_size(childs); i++) {
-			var panel = childs[| i];
-			
-			if(panel.anchor != oppose || panel.content == noone)
-				if(!panel.resizable(dw, dh))
-					return false;
-		}
-		
-		return true;
+		var hori = oppose == ANCHOR.left || oppose == ANCHOR.right;
+		var ind  = hori? childs[| 1].w > childs[| 0].w : childs[| 1].h > childs[| 0].h;
+		return childs[| ind].resizable(dw, dh, oppose);
 	}
 	
 	function refreshSize(recur = true) { //refresh content surface after resize
 		//__debug_counter("refresh size");
 		if(content) {
-			content.w = w;
-			content.h = h;
+			content.w = max(w, content.min_w);
+			content.h = max(h, content.min_h);
 			content.onResize();
 		} else if(ds_list_size(childs) == 2) {
 			//print("=== Refreshing (" + string(w) + ", " + string(h) + ") " + string(split) + " ===");
@@ -109,26 +101,26 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 			childs[| fixChild].y = y;
 			
 			if(split == "h") {
-				childs[|  fixChild].w = childs[| fixChild].w / tw * w;
-				childs[|  fixChild].h = h;
+				childs[|  fixChild].w = round(childs[| fixChild].w / tw * w);
+				childs[|  fixChild].h = round(h);
 			
 				childs[| !fixChild].x = x + childs[| fixChild].w;
 				childs[| !fixChild].y = y;
 					
-				childs[| !fixChild].w = w - childs[| fixChild].w;
-				childs[| !fixChild].h = h;
+				childs[| !fixChild].w = round(w - childs[| fixChild].w);
+				childs[| !fixChild].h = round(h);
 				
 				childs[|  fixChild].anchor = ANCHOR.left;
 				childs[| !fixChild].anchor = ANCHOR.right;
 			} else if(split == "v") {	
-				childs[|  fixChild].w = w;
-				childs[|  fixChild].h = childs[| fixChild].h / th * h;
+				childs[|  fixChild].w = round(w);
+				childs[|  fixChild].h = round(childs[| fixChild].h / th * h);
 			
 				childs[| !fixChild].x = x;
 				childs[| !fixChild].y = y + childs[| fixChild].h;
 					
-				childs[| !fixChild].w = w;
-				childs[| !fixChild].h = h - childs[| fixChild].h;
+				childs[| !fixChild].w = round(w);
+				childs[| !fixChild].h = round(h - childs[| fixChild].h);
 				
 				childs[|  fixChild].anchor = ANCHOR.top;
 				childs[| !fixChild].anchor = ANCHOR.bottom;
@@ -148,15 +140,14 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 		
 		var _w = dw, _h = dh;
 		
-		for(var i = 0; i < ds_list_size(childs); i++) {
-			var panel = childs[| i];
-			
-			if(panel.anchor != oppose || panel.content == noone)
-				panel.resize(dw, dh, oppose);
+		if(ds_list_size(childs) == 2) {
+			var hori = oppose == ANCHOR.left || oppose == ANCHOR.right;
+			var ind  = hori? childs[| 1].w > childs[| 0].w : childs[| 1].h > childs[| 0].h;
+			childs[| ind].resize(dw, dh, oppose);
 		}
 		
-		w = max(w + dw, min_w);
-		h = max(h + dh, min_h);
+		w = max(round(w + dw), min_w);
+		h = max(round(h + dh), min_h);
 		
 		refreshSize(false);
 	}
@@ -244,7 +235,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 		
 		if(dragging == 1) {
 			var _mx = clamp(mouse_mx, ui(16), WIN_W - ui(16));
-			var dw = _mx - drag_sm;
+			var dw  = round(_mx - drag_sm);
 			var res = true;
 			
 			for(var i = 0; i < ds_list_size(childs); i++) {
@@ -276,10 +267,13 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 				}
 			}
 			
-			if(mouse_release(mb_left)) dragging = -1;
+			if(mouse_release(mb_left)) {
+				refreshSize();
+				dragging = -1;
+			}
 		} else if(dragging == 2) {
 			var _my = clamp(mouse_my, ui(16), WIN_H - ui(16));
-			var dh = _my - drag_sm;
+			var dh  = round(_my - drag_sm);
 			var res = true;
 			
 			for(var i = 0; i < ds_list_size(childs); i++) {
@@ -311,7 +305,10 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 				}
 			}
 			
-			if(mouse_release(mb_left)) dragging = -1;
+			if(mouse_release(mb_left)) {
+				refreshSize();
+				dragging = -1;
+			}
 		} else {
 			if(content != noone) {
 				if(point_in_rectangle(mouse_mx, mouse_my, x + ui(2), y + ui(2), x + w - ui(4), y + h - ui(4))) {
@@ -355,7 +352,17 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 		if(ds_list_empty(childs)) 
 			return;
 		
+		var min_w = ui(32);
+		var min_h = ui(32);
 		var _drag = true;
+		if(split == "h") {
+			min_w = childs[| 0].min_w + childs[| 1].min_w;
+			min_h = max(childs[| 0].min_h + childs[| 1].min_h);
+		} else {
+			min_w = max(childs[| 0].min_w, childs[| 1].min_w);
+			min_h = childs[| 0].min_h + childs[| 1].min_h;
+		}
+		
 		for(var i = 0; i < ds_list_size(childs); i++) {
 			var _panel = childs[| i];
 			if(_panel.content && !_panel.content.draggable)
@@ -368,10 +375,11 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 				
 			if!(_drag && (HOVER == noone || is_struct(HOVER)))
 				continue;
-				
+			
+			var p = ui(6 - 1);
 			switch(_panel.anchor) {
 				case ANCHOR.left :
-					if(!point_in_rectangle(mouse_mx, mouse_my, _panel.x + _panel.w - ui(2), _panel.y, _panel.x + _panel.w + ui(2), _panel.y + _panel.h))
+					if(!point_in_rectangle(mouse_mx, mouse_my, _panel.x + _panel.w - p, _panel.y, _panel.x + _panel.w + p, _panel.y + _panel.h))
 						break;
 							
 					CURSOR = cr_size_we;
@@ -382,7 +390,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 					}
 					break;
 				case ANCHOR.top :
-					if(!point_in_rectangle(mouse_mx, mouse_my, _panel.x, _panel.y + _panel.h - ui(2), _panel.x + _panel.w, _panel.y + _panel.h + ui(2)))
+					if(!point_in_rectangle(mouse_mx, mouse_my, _panel.x, _panel.y + _panel.h - p, _panel.x + _panel.w, _panel.y + _panel.h + p))
 						break;
 							
 					CURSOR = cr_size_ns;
@@ -401,7 +409,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 	
 	function drawPanel() {
 		if(w <= ui(16)) return;
-		var p = ui(8);
+		var p = ui(6);
 		var m_in = point_in_rectangle(mouse_mx, mouse_my, x + p, y + p, x + w - p, y + h - p);
 		var m_ot = point_in_rectangle(mouse_mx, mouse_my, x, y, x + w, y + h);
 		mouse_active = m_in;
@@ -421,6 +429,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 			if(content) {
 				min_w = content.min_w;
 				min_h = content.min_h;
+				//print(string(instanceof(content) + ": " + string(h)));
 				if(w >= min_w && h >= min_h)
 					content.draw(self);
 			}
@@ -583,11 +592,12 @@ function PanelContent() constructor {
 	
 	x = 0;
 	y = 0;
-	w = 1;
-	h = 1;
+	w = 640;
+	h = 480;
+	padding = ui(16);
 	
-	min_w = ui(32);
-	min_h = ui(32);
+	min_w = ui(40);
+	min_h = ui(40);
 	
 	pFOCUS = false;
 	pHOVER = false;

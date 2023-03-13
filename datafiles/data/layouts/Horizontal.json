@@ -1,43 +1,35 @@
 {
     "panel": {
-        "split": "v",
-        "width": 40,
         "content": [{
-                "content": "Panel_Menu"
-            },
-            {
-                "split": "h",
-                "width": -400,
+            "content": "Panel_Menu"
+        }, {
+            "content": [{
                 "content": [{
-                        "split": "v",
-                        "width": -48,
-                        "content": [{
-                                "split": "v",
-                                "width": -400,
-                                "content": [{
-                                        "content": "Panel_Preview"
-                                    },
-                                    {
-                                        "content": "Panel_Graph"
-                                    }
-                                ]
-                            },
-                            {
-                                "content": "Panel_Animation"
-                            }
-                        ]
-                    },
-                    {
-                        "content": "Panel_Inspector"
-                    }
-                ]
-            }
-        ]
-    },
-    "Panel_Collection": {
-        "parent": "Panel_Graph",
-        "width": 460,
-        "split": "h",
-        "index": 0
+                    "content": [{
+                        "content": "Panel_Preview"
+                    }, {
+                        "content": "Panel_Graph"
+                    }],
+                    "split": "v",
+                    "width": 300
+                }, {
+                    "content": "Panel_Animation"
+                }],
+                "split": "v",
+                "width": -48
+            }, {
+                "content": [{
+                    "content": "Panel_Workspace"
+                }, {
+                    "content": "Panel_Inspector"
+                }],
+                "split": "v",
+                "width": 40
+            }],
+            "split": "h",
+            "width": -400
+        }],
+        "split": "v",
+        "width": 40
     }
 }

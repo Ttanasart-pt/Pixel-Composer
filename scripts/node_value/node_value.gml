@@ -800,7 +800,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		var display  = nodeFrom.display_type;
 		
 		if(display_type == VALUE_DISPLAY.gradient && typeFrom == VALUE_TYPE.color) { 
-			if(display == VALUE_DISPLAY.gradient) 
+			if(display == VALUE_DISPLAY.gradient || (is_struct(value) && instanceof(value) == "gradientObject")) 
 				return value;
 			if(is_array(value)) {
 				var amo = array_length(value);
@@ -962,15 +962,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			val = value_from.getValueRecursive(_time); 
 		
 		return val;
-	}
-	
-	static getExtraData = function() {
-		if(value_from != noone && value_from != self) {
-			if(display_type == VALUE_DISPLAY.gradient && value_from.display_type != VALUE_DISPLAY.gradient) 
-				return extra_data;
-			return value_from.getExtraData();
-		}
-		return extra_data;
 	}
 	
 	static __anim = function() {

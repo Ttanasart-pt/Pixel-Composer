@@ -717,7 +717,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	
 	static drawNode = function(_x, _y, _mx, _my, _s) {
 		if(!active) return;
-		if(group != PANEL_GRAPH.getCurrentContext()) return;
+		//if(group != PANEL_GRAPH.getCurrentContext()) return;
 		
 		var xx = x * _s + _x;
 		var yy = y * _s + _y;

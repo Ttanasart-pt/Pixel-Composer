@@ -362,6 +362,12 @@ function textArea(_input, _onModify, _extras = noone) : textInput(_input, _onMod
 		_text = string_real(_text);
 		_current_text = _text;
 		
+		//if(format == TEXT_AREA_FORMAT.code) {
+		//	print("=== TEXT BOX ===");
+		//	print(_text);
+		//	print(_current_text);
+		//}
+		
 		if(extras && instanceof(extras) == "buttonClass") {
 			extras.hover  = hover;
 			extras.active = active;

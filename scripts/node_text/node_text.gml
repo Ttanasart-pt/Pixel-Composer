@@ -49,7 +49,12 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	static generateFont = function(_path, _size, _aa, _range) {
 		if(ANIMATOR.is_playing) return;
 		
-		if(_path == _font_current && _size == _size_current && _aa == _aa_current && _rang_current[0] == _range[0] && _rang_current[1] == _range[1]) return;
+		if(_path == _font_current && 
+		   _size == _size_current && 
+		   _aa == _aa_current && 
+		   _rang_current[0] == _range[0] && 
+		   _rang_current[1] == _range[1]) return;
+		 
 		_font_current    = _path;
 		_size_current    = _size;
 		_aa_current      = _aa;
@@ -59,6 +64,7 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		if(file_exists(_path)) {
 			if(font != f_p0 && font_exists(font)) 
 				font_delete(font);
+			
 			font_add_enable_aa(_aa);
 			font = font_add(_path, _size, false, false, _range[0], _range[1]);
 		}

@@ -388,6 +388,7 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 			ds_list_add(values, "Texts");
 			addNodeObject(values, "Text",			s_node_text,			"Node_String",			[1, Node_String]);
 			addNodeObject(values, "Unicode",		s_node_unicode,			"Node_Unicode",			[1, Node_Unicode]);
+			addNodeObject(values, "Text Length",	s_node_text_length,		"Node_String_Length",	[1, Node_String_Length]).setVersion(1138);
 			addNodeObject(values, "Combine Text",	s_node_text_combine,	"Node_String_Merge",	[1, Node_String_Merge]);
 			addNodeObject(values, "Join Text",		s_node_text_join,		"Node_String_Join",		[1, Node_String_Join]).setVersion(1120);
 			addNodeObject(values, "Split Text",		s_node_text_splice,		"Node_String_Split",	[1, Node_String_Split]);
@@ -406,6 +407,7 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 			addNodeObject(values, "Array Remove",	s_node_array_remove,	"Node_Array_Remove",	[1, Node_Array_Remove], ["remove array", "delete array", "array delete"]).setVersion(1120);
 			addNodeObject(values, "Array Reverse",	s_node_array_reverse,	"Node_Array_Reverse",	[1, Node_Array_Reverse], ["reverse array"]).setVersion(1120);
 			addNodeObject(values, "Array Shift",	s_node_array_shift,		"Node_Array_Shift",		[1, Node_Array_Shift]).setVersion(1137);
+			addNodeObject(values, "Array Zip",		s_node_array_zip,		"Node_Array_Zip",		[1, Node_Array_Zip]).setVersion(1138);
 			addNodeObject(values, "Sort Array",		s_node_array_sort,		"Node_Array_Sort",		[1, Node_Array_Sort], ["array sort"]).setVersion(1120);
 			addNodeObject(values, "Shuffle Array",	s_node_array_shuffle,	"Node_Array_Shuffle",	[1, Node_Array_Shuffle], ["array shuffle"]).setVersion(1120);
 		
@@ -545,7 +547,8 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 	}
 	
 	function graphFocusNode(node) {
-		PANEL_INSPECTOR.inspecting = node;
+		if(!PANEL_INSPECTOR.locked)
+			PANEL_INSPECTOR.inspecting = node;
 		ds_list_clear(PANEL_GRAPH.nodes_select_list);
 		PANEL_GRAPH.node_focus = node;
 		PANEL_GRAPH.fullView();

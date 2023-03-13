@@ -24,6 +24,9 @@ function Node_VFX_Override(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	inputs[| 5] = nodeValue("Alpha", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0 );
 	
+	inputs[| 6] = nodeValue("Surface", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone )
+		.setVisible(true, false);
+	
 	outputs[| 0] = nodeValue("Particles", self, JUNCTION_CONNECT.output, VALUE_TYPE.particle, -1 );
 	
 	static update = function(frame = ANIMATOR.current_frame) {
@@ -35,6 +38,7 @@ function Node_VFX_Override(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		var _rot = inputs[| 3].getValue();
 		var _col = inputs[| 4].getValue();
 		var _alp = inputs[| 5].getValue();
+		var _srf = inputs[| 6].getValue();
 		
 		for( var i = 0; i < array_length(parts); i++ ) {
 			var part = parts[i];
@@ -57,6 +61,9 @@ function Node_VFX_Override(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			
 			if(is_array(_alp) && array_length(_alp) > i )
 				part.alp = array_safe_get(_alp, i);
+			
+			if(is_array(_srf) && array_length(_srf) > i )
+				part.surf = array_safe_get(_srf, i);
 		}
 		
 		outputs[| 0].setValue(parts);

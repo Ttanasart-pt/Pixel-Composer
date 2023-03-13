@@ -20,6 +20,8 @@ enum ARRAY_OVERFLOW {
 	_default,
 	loop
 }
+
+gml_pragma("forceinline");
 function array_safe_get(arr, index, def = 0, overflow = ARRAY_OVERFLOW._default) {
 	if(!is_array(arr)) return def;
 	
@@ -34,6 +36,7 @@ function array_safe_get(arr, index, def = 0, overflow = ARRAY_OVERFLOW._default)
 	if(index >= array_length(arr)) return def;
 	return arr[index];
 }
+
 
 function array_exists(arr, val) {
 	for( var i = 0; i < array_length(arr); i++ ) {
