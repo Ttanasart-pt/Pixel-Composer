@@ -103,7 +103,7 @@ function curveBox(_onModify) : widget() constructor {
 		var msy = _m[1] - _y;
 		
 		surface_set_target(curve_surface);
-		draw_clear_alpha(0, 0);
+		DRAW_CLEAR
 			draw_set_color(COLORS.widget_curve_line);
 			draw_set_alpha(0.75);
 			var y0 = _h - _h * (0 - miny) / (maxy - miny);

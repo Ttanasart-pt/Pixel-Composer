@@ -25,6 +25,8 @@ function Node_Perlin_Smear(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
+	attribute_surface_depth();
+	
 	static process_data = function(_outSurf, _data, _output_index, _array_index) {
 		var _dim = _data[0];
 		var _pos = _data[1];
@@ -32,7 +34,7 @@ function Node_Perlin_Smear(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		var _ite = _data[3];
 		var _bri = _data[4];
 		
-		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1]);
+		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
 		
 		surface_set_target(_outSurf);
 		shader_set(shader);

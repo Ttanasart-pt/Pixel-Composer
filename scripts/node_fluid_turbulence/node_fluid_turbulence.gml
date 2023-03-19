@@ -59,7 +59,7 @@ function Node_Fluid_Turbulence(_x, _y, _group = noone) : Node_Fluid(_x, _y, _gro
 		
 		with(_dom) {
 			fd_rectangle_set_target(id, _mod? FD_TARGET_TYPE.ADD_VELOCITY : FD_TARGET_TYPE.REPLACE_VELOCITY);
-			draw_surface(vSurface, 0, 0);
+			draw_surface_safe(vSurface, 0, 0);
 			fd_rectangle_reset_target(id);
 		}
 		

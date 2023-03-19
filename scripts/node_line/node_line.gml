@@ -48,17 +48,25 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	inputs[| 17] = nodeValue("1px mode", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false, "Render pixel perfect 1px line.");
 	
+	inputs[| 18] = nodeValue("Texture", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
+	
+	inputs[| 19] = nodeValue("Fix length", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false, "Fix length of each segment instead of segment count.");
+	
+	inputs[| 20] = nodeValue("Segment length", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 4);
+	
 	input_display_list = [
 		["Output",			true],	0, 1, 
-		["Line data",		false], 6, 7, 2, 
+		["Line data",		false], 6, 7, 19, 2, 20, 
 		["Line settings",	false], 17, 3, 11, 12, 8, 9, 13, 14, 
 		["Wiggle",			false], 4, 5, 
-		["Render",			false], 10, 15, 16, 
+		["Render",			false], 10, 15, 16, 18, 
 	];
 	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	lines = [];
+	
+	attribute_surface_depth();
 	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		draw_set_color(COLORS._main_accent);
@@ -83,13 +91,22 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	}
 	
 	static step = function() {
-		var px = !inputs[| 17].getValue();
+		var px    = !inputs[| 17].getValue();
+		var _tex  = inputs[| 18].value_from != noone;
+		var _flen = inputs[| 19].getValue();
 		
 		inputs[|  3].setVisible(px);
 		inputs[| 11].setVisible(px);
 		inputs[| 12].setVisible(px);
-		inputs[| 13].setVisible(px);
+		inputs[| 13].setVisible(px && !_tex);
 		inputs[| 14].setVisible(px);
+		inputs[| 18].setVisible(px);
+		
+		inputs[| 15].setVisible(_tex);
+		inputs[| 16].setVisible(_tex);
+		
+		inputs[|  2].setVisible(!_flen);
+		inputs[| 20].setVisible( _flen);
 	}
 	
 	static process_data = function(_outSurf, _data, _output_index, _array_index) {
@@ -113,6 +130,10 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		var _colP  = _data[15];
 		var _colW  = _data[16];
 		var _1px   = _data[17];
+		var _tex   = _data[18];
+		
+		var _fixL  = _data[19];
+		var _segL  = _data[20];
 		
 		inputs[| 14].setVisible(_cap);
 		
@@ -124,6 +145,11 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		var _rtMax = max(_rangeMin, _rangeMax);
 		
 		var _use_path = _pat != noone;
+		var _useTex   = inputs[| 18].value_from != noone;
+		if(_useTex) {
+			_cap = false;
+			_1px = false;
+		}
 		
 		if(_ang < 0) _ang = 360 + _ang;
 		
@@ -132,11 +158,11 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		random_set_seed(_sed);
 		var _sedIndex = 0;
 		
-		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1]);
+		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
 		
 		surface_set_target(_outSurf);
 			if(_bg) draw_clear_alpha(0, 1);
-			else	draw_clear_alpha(0, 0);
+			else	DRAW_CLEAR
 			
 			var _ox, _nx, _nx1, _oy, _ny, _ny1;
 			var _ow, _nw, _oa, _na, _oc, _nc;
@@ -144,55 +170,87 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			
 			if(_use_path) {
 				var lineLen = 1;
-				var arrPath = is_array(_pat);
-				if(arrPath) 
-					lineLen = array_length(_pat)
-				else if(struct_has(_pat, "getLineCount"))
+				if(struct_has(_pat, "getLineCount"))
 					lineLen = _pat.getLineCount();
 				
 				if(_rtMax > 0) 
 				for( var i = 0; i < lineLen; i++ ) {
-					var _stepLen = min(_rtMax, 1 / _seg);
+					var _useDistance = _fixL && struct_has(_pat, "getLength");
+					var _pathLength  = _useDistance? _pat.getLength(i) : 1;
+					var _segLength   = struct_has(_pat, "getAccuLength")? _pat.getAccuLength(i) : [];
+					var _segIndex    = 0;
+					
+					var _pathStr = _rtStr;
+					var _pathEnd = _rtMax;
+					
+					var _stepLen = min(_pathEnd, 1 / _seg); //Distance to move per step
 					if(_stepLen <= 0.00001) continue;
 					
-					var _total		= _rtMax;
-					var _total_prev = _total;
-					var _freeze		= 0;
-					var _prog_curr	= frac(_shift) - _stepLen;
-					var _prog		= _prog_curr + 1;
-					var _prog_total	= 0;
+					var _total		= _pathEnd;	//Length remaining
+					var _total_prev = _total;	//Use to prevent infinite loop
+					var _freeze		= 0;		//Use to prevent infinite loop
+					
+					var _prog_curr	= frac(_shift);		//Pointer to the current position
+					var _prog_next  = 0;
+					var _prog		= _prog_curr + 1;	//Record previous position to delete from _total
+					var _prog_total	= 0;				//Record how far the pointer have moved so far
 					var points		= [];
-				
-					while(_total > 0) {
-						if(_prog_curr >= 1) //cut overflow path
-							_prog_curr = frac(_prog_curr);
-						else 
-							_prog_curr = min(_prog_curr + min(_total, _stepLen), 1); //move forward _stepLen or _total (if less) stop at 1
-						_prog_total += min(_total, _stepLen);
+					var p;
+					
+					if(_useDistance) {						
+						_pathStr   *= _pathLength;
+						_pathEnd   *= _pathLength;
+						_stepLen    = min(_segL, _pathEnd);	//TODO: Change this to node input
 						
-						var p = arrPath? _pat[i].getPointRatio(_prog_curr) : _pat.getPointRatio(_prog_curr, i);
-						_nx   = p[0];
-						_ny   = p[1];
+						_total	   *= _pathLength;
+						_total_prev = _total;
 						
-						if(_total < _rtMax) {
-							var _d = point_direction(_ox, _oy, _nx, _ny);
-							_nx += lengthdir_x(random1D(_sed + _sedIndex, -_wig, _wig), _d + 90); 
-							_sedIndex++;
-						
-							_ny += lengthdir_y(random1D(_sed + _sedIndex, -_wig, _wig), _d + 90); 
-							_sedIndex++;
+						_prog_curr *= _pathLength;
+					}
+					
+					while(_total >= 0) {
+						if(_useDistance) {
+							var segmentLength = array_safe_get(_segLength, _segIndex, 99999);
+							
+							_prog_next = _prog_curr % _pathLength; //Wrap overflow path
+							_prog_next = min(_prog_curr + _stepLen, _pathLength, segmentLength);
+							
+							if(_prog_next == segmentLength)
+								_segIndex = (_segIndex + 1) % array_length(_segLength);
+						} else {
+							if(_prog_curr >= 1) //Wrap overflow path
+								_prog_next = frac(_prog_curr);
+							else 
+								_prog_next = min(_prog_curr + _stepLen, 1); //Move forward _stepLen or _total (if less) stop at 1
 						}
 						
-						if(_prog_total > _rtStr) //prevent drawing point before range start.
-							array_push(points, [_nx, _ny, _prog_total / _rtMax, _prog_curr]);
+						if(_useDistance) 
+							p = _pat.getPointDistance(_prog_curr, i);
+						else if(!_useDistance) 
+							p = _pat.getPointRatio(_prog_curr, i);
 						
-						if(_prog_curr > _prog)
-							_total -= _prog_curr - _prog;
+						_nx = p.x;
+						_ny = p.y;
 						
-						_prog = _prog_curr;
-						_ox = _nx;
-						_oy = _ny;
-					
+						if(_total < _pathEnd) { //Do not wiggle the last point.
+							var _d = point_direction(_ox, _oy, _nx, _ny);
+							_nx   += lengthdir_x(random1D(_sed + _sedIndex, -_wig, _wig), _d + 90); _sedIndex++;
+							_ny   += lengthdir_y(random1D(_sed + _sedIndex, -_wig, _wig), _d + 90); _sedIndex++;
+						}
+						
+						if(_prog_total >= _pathStr) //Do not point before range start. Do this instead of starting at _rtStr to prevent wiggle.
+							array_push(points, [ _nx, _ny, _prog_total / _pathEnd, _prog_curr ]);
+						
+						if(_prog_next > _prog_curr) {
+							_prog_total += _prog_next - _prog_curr;
+							_total      -= _prog_next - _prog_curr;
+						}
+						_stepLen = min(_stepLen, _total);
+						
+						_prog_curr = _prog_next;
+						_ox		   = _nx;
+						_oy		   = _ny;
+						
 						if(_total_prev == _total && ++_freeze > 16) break;
 						_total_prev = _total;
 					}
@@ -247,6 +305,11 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 				if(array_length(points) < 2) continue;
 				
 				var pxs = [];
+				
+				if(_useTex) {
+					var tex = surface_get_texture(_tex);
+					draw_primitive_begin_texture(pr_trianglestrip, tex);
+				}
 				
 				for( var j = 0; j < array_length(points); j++ ) {
 					var p0   = points[j];
@@ -304,8 +367,26 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 								_nd = _nd0 + angle_difference(_nd1, _nd0) / 2;
 							} else 
 								_nd = point_direction(_ox, _oy, _nx, _ny);
-						
-							draw_line_width2_angle(_ox, _oy, _nx, _ny, _ow, _nw, _od + 90, _nd + 90, _oc, _nc, _colW);
+							
+							if(_useTex) {
+								var _len = array_length(points) - 1;
+								
+								var ox0 = _ox + lengthdir_x(_ow / 2, _od + 90);
+								var oy0 = _oy + lengthdir_y(_ow / 2, _od + 90);
+								var nx0 = _nx + lengthdir_x(_nw / 2, _nd + 90);
+								var ny0 = _ny + lengthdir_y(_nw / 2, _nd + 90);
+	
+								var ox1 = _ox + lengthdir_x(_ow / 2, _od + 90 + 180);
+								var oy1 = _oy + lengthdir_y(_ow / 2, _od + 90 + 180);
+								var nx1 = _nx + lengthdir_x(_nw / 2, _nd + 90 + 180);
+								var ny1 = _ny + lengthdir_y(_nw / 2, _nd + 90 + 180);
+								
+								draw_vertex_texture_color(ox0, oy0, 0, (j - 1) / _len, _oc, 1);
+								draw_vertex_texture_color(ox1, oy1, 1, (j - 1) / _len, _oc, 1);
+								draw_vertex_texture_color(nx0, ny0, 0, (j - 0) / _len, _nc, 1);
+								draw_vertex_texture_color(nx1, ny1, 1, (j - 0) / _len, _nc, 1);
+							} else
+								draw_line_width2_angle(_ox, _oy, _nx, _ny, _ow, _nw, _od + 90, _nd + 90, _oc, _nc, _colW);
 						} else {
 							var p1   = points[j + 1];
 							_nd = point_direction(_nx, _ny, p1[0], p1[1]);
@@ -319,83 +400,8 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 					}
 				}
 				
-				//if(_1px && array_length(pxs)) {
-				//	var ox, oy, nx, ny, px, py;
-				//	var lns = [];
-					
-				//	for( var i = 0; i < array_length(pxs); i++ ) {
-				//		nx = pxs[i][0];
-				//		ny = pxs[i][1];
-						
-				//		if(i == 0) {
-				//			ox = nx;
-				//			oy = ny;
-							
-				//			px = nx;
-				//			py = ny;
-				//			continue;
-				//		}
-						
-				//		if((ox != nx && oy != ny) || i == array_length(pxs) - 1) {
-				//			array_push(lns, [ ox, oy, nx, ny, pxs[i][2] ]);
-							
-				//			ox = nx;
-				//			oy = ny;
-				//		}
-						
-				//		px = nx;
-				//		py = ny;
-				//	}
-					
-				//	ox = pxs[0][0];
-				//	oy = pxs[0][1];
-				//	_ox = ox;
-				//	_oy = oy;
-				//	var oc = pxs[0][2], nc;
-					
-				//	//print("=====")
-				//	//for( var i = 1; i < array_length(lns) - 1; i++ ) {
-				//	//	var l0 = lns[i - 1];
-				//	//	var l1 = lns[i + 0];
-				//	//	var l2 = lns[i + 1];
-						
-				//	//	var d0 = l0[1] * l0[1] + l0[0] * l0[0];
-				//	//	var d1 = l1[1] * l1[1] + l1[0] * l1[0];
-				//	//	var d2 = l2[1] * l2[1] + l2[0] * l2[0];
-						
-				//	//	if(sign(d1 - d0) != sign(d2 - d1) && d0 != d1 && d1 != d2 && d0 != d2) {
-				//	//		print(string(d0) + ", " + string(d1) + ", " + string(d2) + ", ");
-				//	//		//var t1 = l1[0];
-				//	//		//var t2 = l1[1];
-							
-				//	//		//lns[i + 0][0] = l2[0];
-				//	//		//lns[i + 0][1] = l2[1];
-				//	//		//lns[i + 1][0] = t1;
-				//	//		//lns[i + 1][1] = t2;
-							
-				//	//		lns[i + 0][2] = c_red;
-				//	//		lns[i + 1][2] = c_lime;
-				//	//	}
-				//	//}
-					
-				//	for( var i = 0; i < array_length(lns); i++ ) {
-				//		var ll = lns[i];
-				//		//print(string(ll[0]) + ", " + string(ll[1]) + ": " + string(ll[1] / ll[0]));
-						
-				//		nc = ll[4];
-						
-				//		nc = make_color_hsv(random(255), 255, 255);
-				//		oc = nc;
-				//		draw_line_color(ll[0], ll[1], ll[2], ll[3], oc, nc);
-						
-				//		ox = nx;
-				//		oy = ny;
-				//		oc = nc;
-				//	}
-					
-				//	if(point_distance(nx, ny, _ox, _oy) <= 1)
-				//		draw_line_color(nx, ny, _ox, _oy, nc, nc);
-				//}
+				if(_useTex)
+					draw_primitive_end();
 			}
 		surface_reset_target();
 		

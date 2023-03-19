@@ -32,6 +32,8 @@ function Node_Pixel_Sort(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
+	attribute_surface_depth();
+	
 	static process_data = function(_outSurf, _data, _output_index, _array_index) {
 		var _in = _data[0];
 		
@@ -48,7 +50,7 @@ function Node_Pixel_Sort(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		var sBase, sDraw;
 		
 		surface_set_target(pp[1]);
-			draw_clear_alpha(0, 0);
+			DRAW_CLEAR
 			BLEND_OVERRIDE;
 			draw_surface_safe(_in, 0, 0);
 			BLEND_NORMAL;
@@ -65,7 +67,7 @@ function Node_Pixel_Sort(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 			sDraw = pp[!it];
 			
 			surface_set_target(sBase);
-			draw_clear_alpha(0, 0);
+			DRAW_CLEAR
 			BLEND_OVERRIDE;
 				shader_set_uniform_f(uniform_itr, i);
 				draw_surface_safe(sDraw, 0, 0);

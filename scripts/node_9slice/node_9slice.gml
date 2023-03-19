@@ -15,6 +15,8 @@ function Node_9Slice(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
+	attribute_surface_depth();
+	
 	drag_side = -1;
 	drag_mx   = 0;
 	drag_my   = 0;
@@ -114,10 +116,10 @@ function Node_9Slice(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		var _fill		= _data[3];
 		
 		if(!surface_exists(_inSurf)) return;
-		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1]);
+		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
 		
 		surface_set_target(_outSurf);
-			draw_clear_alpha(0, 0);
+			DRAW_CLEAR
 			BLEND_OVERRIDE;
 			
 			var ww   = _dim[0];
@@ -135,34 +137,34 @@ function Node_9Slice(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			var sw = (ww - sp_l - sp_r) / cw;
 			var sh = (hh - sp_t - sp_b) / ch;
 
-			draw_surface_part_ext(_inSurf,           0,           0, sp_l, sp_t,         0,         0, 1, 1, c_white, 1);
-			draw_surface_part_ext(_inSurf, in_w - sp_r,           0, sp_r, sp_t, ww - sp_r,         0, 1, 1, c_white, 1);
-			draw_surface_part_ext(_inSurf,           0, in_h - sp_b, sp_l, sp_b,         0, hh - sp_b, 1, 1, c_white, 1);
-			draw_surface_part_ext(_inSurf, in_w - sp_r, in_h - sp_b, sp_r, sp_b, ww - sp_r, hh - sp_b, 1, 1, c_white, 1);
+			draw_surface_part_ext_safe(_inSurf,           0,           0, sp_l, sp_t,         0,         0, 1, 1, c_white, 1);
+			draw_surface_part_ext_safe(_inSurf, in_w - sp_r,           0, sp_r, sp_t, ww - sp_r,         0, 1, 1, c_white, 1);
+			draw_surface_part_ext_safe(_inSurf,           0, in_h - sp_b, sp_l, sp_b,         0, hh - sp_b, 1, 1, c_white, 1);
+			draw_surface_part_ext_safe(_inSurf, in_w - sp_r, in_h - sp_b, sp_r, sp_b, ww - sp_r, hh - sp_b, 1, 1, c_white, 1);
 			
 			if(_fill == 0) {
-				draw_surface_part_ext(_inSurf, sp_l,           0, cw, sp_t, sp_l,         0, sw, 1, c_white, 1);
-				draw_surface_part_ext(_inSurf, sp_l, in_h - sp_b, cw, sp_b, sp_l, hh - sp_b, sw, 1, c_white, 1);
+				draw_surface_part_ext_safe(_inSurf, sp_l,           0, cw, sp_t, sp_l,         0, sw, 1, c_white, 1);
+				draw_surface_part_ext_safe(_inSurf, sp_l, in_h - sp_b, cw, sp_b, sp_l, hh - sp_b, sw, 1, c_white, 1);
 	
-				draw_surface_part_ext(_inSurf,           0, sp_t, sp_l, ch,         0, sp_t, 1, sh, c_white, 1);
-				draw_surface_part_ext(_inSurf, in_w - sp_r, sp_t, sp_r, ch, ww - sp_r, sp_t, 1, sh, c_white, 1);
+				draw_surface_part_ext_safe(_inSurf,           0, sp_t, sp_l, ch,         0, sp_t, 1, sh, c_white, 1);
+				draw_surface_part_ext_safe(_inSurf, in_w - sp_r, sp_t, sp_r, ch, ww - sp_r, sp_t, 1, sh, c_white, 1);
     
-				draw_surface_part_ext(_inSurf, sp_l, sp_t, cw, ch, sp_l, sp_t, sw, sh, c_white, 1);
+				draw_surface_part_ext_safe(_inSurf, sp_l, sp_t, cw, ch, sp_l, sp_t, sw, sh, c_white, 1);
 			} else if(_fill == 1) {
 				var _cw_max = ww - sp_r;
 				var _ch_max = hh - sp_b;
 				
 				var _x = sp_l;
 				while(_x < _cw_max) {
-					draw_surface_part_ext(_inSurf, sp_l,           0, min(cw, _cw_max - _x), sp_t, _x,         0, 1, 1, c_white, 1);
-					draw_surface_part_ext(_inSurf, sp_l, in_h - sp_b, min(cw, _cw_max - _x), sp_b, _x, hh - sp_b, 1, 1, c_white, 1);
+					draw_surface_part_ext_safe(_inSurf, sp_l,           0, min(cw, _cw_max - _x), sp_t, _x,         0, 1, 1, c_white, 1);
+					draw_surface_part_ext_safe(_inSurf, sp_l, in_h - sp_b, min(cw, _cw_max - _x), sp_b, _x, hh - sp_b, 1, 1, c_white, 1);
 					_x += cw;
 				}
 				
 				var _y = sp_t;
 				while(_y < _ch_max) {
-					draw_surface_part_ext(_inSurf,           0, sp_t, sp_l, min(ch, _ch_max - _y),         0, _y, 1, 1, c_white, 1);
-					draw_surface_part_ext(_inSurf, in_w - sp_r, sp_t, sp_r, min(ch, _ch_max - _y), ww - sp_r, _y, 1, 1, c_white, 1);
+					draw_surface_part_ext_safe(_inSurf,           0, sp_t, sp_l, min(ch, _ch_max - _y),         0, _y, 1, 1, c_white, 1);
+					draw_surface_part_ext_safe(_inSurf, in_w - sp_r, sp_t, sp_r, min(ch, _ch_max - _y), ww - sp_r, _y, 1, 1, c_white, 1);
 					_y += ch;
 				}
 				
@@ -171,7 +173,7 @@ function Node_9Slice(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 				while(_x < _cw_max) {
 					_y = sp_t;
 					while(_y < _ch_max) {
-						draw_surface_part_ext(_inSurf, sp_l, sp_t, min(cw, _cw_max - _x), min(ch, _ch_max - _y), _x, _y, 1, 1, c_white, 1);
+						draw_surface_part_ext_safe(_inSurf, sp_l, sp_t, min(cw, _cw_max - _x), min(ch, _ch_max - _y), _x, _y, 1, 1, c_white, 1);
 						_y += ch;
 					}
 					_x += cw;

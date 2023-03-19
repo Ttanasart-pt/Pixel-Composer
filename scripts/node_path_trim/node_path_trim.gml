@@ -22,6 +22,26 @@ function Node_Path_Trim(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		return struct_has(_path, "getSegmentCount")? _path.getSegmentCount() : 0; 
 	}
 	
+	static getLength = function() { 
+		var _path = inputs[| 0].getValue();
+		return struct_has(_path, "getLength")? _path.getLength() : 0; 
+	}
+	
+	static getSegmentLength = function() { 
+		var _path = inputs[| 0].getValue();
+		return struct_has(_path, "getSegmentLength")? _path.getSegmentLength() : [];
+	}
+	
+	static getAccuLength = function() { 
+		var _path = inputs[| 0].getValue();
+		return struct_has(_path, "getAccuLength")? _path.getAccuLength() : []; 
+	}
+	
+	static getBoundary = function() { 
+		var _path = inputs[| 0].getValue();
+		return struct_has(_path, "getBoundary")? _path.getBoundary() : new BoundingBox( 0, 0, 1, 1 ); 
+	}
+		
 	static getPointRatio = function(_rat, ind = 0) {
 		var _path = inputs[| 0].getValue();
 		var _rng  = inputs[| 1].getValue();
@@ -32,12 +52,14 @@ function Node_Path_Trim(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		}
 		
 		if(!is_struct(_path) || !struct_has(_path, "getPointRatio"))
-			return [ 0, 0 ];
+			return new Point();
 		
 		_rat = _rng[0] + _rat * (_rng[1] - _rng[0]);
-		var _p  = _path.getPointRatio(_rat, ind);
-		
-		return _p;
+		return _path.getPointRatio(_rat, ind).clone();
+	}
+	
+	static getPointDistance = function(_dist, ind = 0) {
+		return getPointRatio(_dist / getLength(), ind);
 	}
 	
 	function update() { 

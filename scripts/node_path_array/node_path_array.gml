@@ -56,8 +56,64 @@ function Node_Path_Array(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		return l; 
 	}
 	
-	static getSegmentCount = function() { 
-		return 0; 
+	static getLength = function(ind = 0) { 
+		for( var i = input_fix_len; i < ds_list_size(inputs) - 1; i += data_length ) {
+			var _path = inputs[| i].getValue();
+			var lc    = struct_has(_path, "getLineCount")? _path.getLineCount() : 1; 
+			
+			if(ind < lc) return _path.getLength(ind).clone();
+			ind -= lc;
+		}
+		
+		return 0;
+	}
+	
+	static getBoundary = function(ind = 0) { 
+		for( var i = input_fix_len; i < ds_list_size(inputs) - 1; i += data_length ) {
+			var _path = inputs[| i].getValue();
+			var lc    = struct_has(_path, "getLineCount")? _path.getLineCount() : 1; 
+			
+			if(ind < lc) return _path.getBoundary(ind).clone();
+			ind -= lc;
+		}
+		
+		return 0;
+	}
+	
+	static getSegmentLength = function(ind = 0) { 
+		for( var i = input_fix_len; i < ds_list_size(inputs) - 1; i += data_length ) {
+			var _path = inputs[| i].getValue();
+			var lc    = struct_has(_path, "getLineCount")? _path.getLineCount() : 1; 
+			
+			if(ind < lc) return _path.getSegmentLength(ind).clone();
+			ind -= lc;
+		}
+		
+		return [];
+	}
+	
+	static getAccuLength = function(ind = 0) { 
+		for( var i = input_fix_len; i < ds_list_size(inputs) - 1; i += data_length ) {
+			var _path = inputs[| i].getValue();
+			var lc    = struct_has(_path, "getLineCount")? _path.getLineCount() : 1; 
+			
+			if(ind < lc) return _path.getAccuLength(ind).clone();
+			ind -= lc;
+		}
+		
+		return 0;
+	}
+	
+	static getSegmentCount = function(ind = 0) { 
+		for( var i = input_fix_len; i < ds_list_size(inputs) - 1; i += data_length ) {
+			var _path = inputs[| i].getValue();
+			var lc    = struct_has(_path, "getLineCount")? _path.getLineCount() : 1; 
+			
+			if(ind < lc) return _path.getSegmentCount(ind).clone();
+			ind -= lc;
+		}
+		
+		return 0;
 	}
 	
 	static getPointRatio = function(_rat, ind = 0) {
@@ -65,12 +121,23 @@ function Node_Path_Array(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 			var _path = inputs[| i].getValue();
 			var lc = struct_has(_path, "getLineCount")? _path.getLineCount() : 1; 
 			
-			if(ind < lc)
-				return _path.getPointRatio(_rat, ind);
+			if(ind < lc) return _path.getPointRatio(_rat, ind).clone();
 			ind -= lc;
 		}
 		
-		return [ 0, 0 ];
+		return new Point();
+	}
+	
+	static getPointDistance = function(_dist, ind = 0) {
+		for( var i = input_fix_len; i < ds_list_size(inputs) - 1; i += data_length ) {
+			var _path = inputs[| i].getValue();
+			var lc = struct_has(_path, "getLineCount")? _path.getLineCount() : 1; 
+			
+			if(ind < lc) return _path.getPointDistance(_dist, ind).clone();
+			ind -= lc;
+		}
+		
+		return new Point();
 	}
 	
 	static update = function(frame = ANIMATOR.current_frame) {

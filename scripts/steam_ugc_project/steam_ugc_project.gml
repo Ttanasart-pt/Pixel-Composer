@@ -73,6 +73,6 @@ function steam_ugc_project_generate(dest_path = "steamUGCthumbnail.png") {
 		draw_sprite_stretched(s_workshop_badge, 0, 8, 8, 88, 88);
 		draw_sprite_ext(THEME.project, 0, 40, 40, 1, 1, 0, COLORS._main_icon_dark, 1);
 	surface_reset_target();
-	surface_save(_s, dest_path);
+	surface_save_safe(_s, dest_path);
 	surface_free(_s);
 }

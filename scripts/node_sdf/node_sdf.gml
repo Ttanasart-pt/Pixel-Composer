@@ -26,22 +26,25 @@ function Node_SDF(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) const
 		["SDF",		false], 2, 3, 
 	]
 	
+	attribute_surface_depth();
+	
 	temp_surface = [ surface_create(1, 1), surface_create(1, 1) ];
 	
 	static process_data = function(_outSurf, _data, _output_index, _array_index) {
 		var inSurf = _data[0];
 		var _side  = _data[2];
 		var _dist  = _data[3];
-		var sw = surface_get_width(inSurf);
-		var sh = surface_get_height(inSurf);
-		var n  = max(sw, sh);
+		var sw	   = surface_get_width(inSurf);
+		var sh	   = surface_get_height(inSurf);
+		var n	   = max(sw, sh);
+		var cDep   = attrDepth();
 		
-		temp_surface[0]  = surface_verify(temp_surface[0], n, n);
-		temp_surface[1]  = surface_verify(temp_surface[1], n, n);
-		_outSurf = surface_verify(_outSurf, sw, sh);
+		temp_surface[0]  = surface_verify(temp_surface[0], n, n, cDep);
+		temp_surface[1]  = surface_verify(temp_surface[1], n, n, cDep);
+		_outSurf = surface_verify(_outSurf, sw, sh, cDep);
 		
 		surface_set_target(temp_surface[0]);
-		draw_clear_alpha(0, 0);
+		DRAW_CLEAR
 		BLEND_OVERRIDE;
 		
 		shader_set(sh_sdf_tex);
@@ -61,7 +64,7 @@ function Node_SDF(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) const
 			bg = !bg;
 			
 			surface_set_target(temp_surface[bg]);
-			draw_clear_alpha(0, 0);
+			DRAW_CLEAR
 			BLEND_OVERRIDE;
 			
 			shader_set(sh_sdf);
@@ -76,7 +79,7 @@ function Node_SDF(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) const
 		}
 		
 		surface_set_target(_outSurf);
-		draw_clear_alpha(0, 0);
+		DRAW_CLEAR
 		BLEND_OVERRIDE;
 		
 		shader_set(sh_sdf_dist);

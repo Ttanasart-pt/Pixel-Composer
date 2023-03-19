@@ -116,7 +116,7 @@
 		if(!is_array(path)) path = [ path ];
 		if(array_length(path) == 0) return; 
 		
-		var type = "image";
+		var type = "others";
 		for( var i = 0; i < array_length(path); i++ ) {
 			var p = path[i];
 			if(directory_exists(p)) continue;
@@ -126,9 +126,7 @@
 				case ".png"	 :
 				case ".jpg"	 :
 				case ".jpeg" :
-					break;
-				default:
-					type = "others";
+					type = "image";
 					break;
 			}
 		}

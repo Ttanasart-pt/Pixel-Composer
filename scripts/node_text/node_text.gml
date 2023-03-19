@@ -41,6 +41,8 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
+	attribute_surface_depth();
+	
 	_font_current = "";
 	_size_current = 0;
 	_aa_current   = false;
@@ -98,11 +100,11 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		}
 		
 		ww += _padd[PADDING.left] + _padd[PADDING.right];
-		hh += _padd[PADDING.up] + _padd[PADDING.down];
-		_outSurf = surface_verify(_outSurf, ww, hh);
+		hh += _padd[PADDING.top] + _padd[PADDING.bottom];
+		_outSurf = surface_verify(_outSurf, ww, hh, attrDepth());
 		
 		surface_set_target(_outSurf);
-			draw_clear_alpha(0, 0);
+			DRAW_CLEAR
 			BLEND_OVERRIDE;
 			
 			if(_dim[0] != 0 && _dim[1] != 0) {
@@ -122,10 +124,10 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 					case 2 : draw_set_valign(fa_bottom);	ty = hh;		break;
 				}
 				
-				draw_text(_padd[PADDING.left] + tx, _padd[PADDING.up] + ty, str);
+				draw_text(_padd[PADDING.left] + tx, _padd[PADDING.top] + ty, str);
 			} else {
 				draw_set_text(font, fa_left, fa_top, _col);
-				draw_text(_padd[PADDING.left], _padd[PADDING.up], str);
+				draw_text(_padd[PADDING.left], _padd[PADDING.top], str);
 			}
 			
 			BLEND_NORMAL;

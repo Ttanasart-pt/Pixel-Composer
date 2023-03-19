@@ -1,5 +1,6 @@
 function Node_Scale(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Scale";
+	dimension_index = -1;
 	
 	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 	
@@ -22,10 +23,13 @@ function Node_Scale(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		["Scale",	false], 2, 1, 3,
 	];
 	
+	attribute_surface_depth();
+	
 	static process_data = function(_outSurf, _data, _output_index, _array_index) {
-		var scale	= _data[1];
-		var mode	= _data[2];
-		var targ	= _data[3];
+		var scale = _data[1];
+		var mode  = _data[2];
+		var targ  = _data[3];
+		var cDep  = attrDepth();
 		
 		inputs[| 1].setVisible(mode == 0);
 		inputs[| 3].setVisible(mode == 1);
@@ -42,10 +46,10 @@ function Node_Scale(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 				break;
 		}
 		
-		_outSurf = surface_verify(_outSurf, ww, hh);
+		_outSurf = surface_verify(_outSurf, ww, hh, cDep);
 		
 		surface_set_target(_outSurf);
-			draw_clear_alpha(0, 0);
+			DRAW_CLEAR
 			BLEND_OVERRIDE;
 			draw_surface_stretched_safe(_data[0], 0, 0, ww, hh);
 			BLEND_NORMAL;

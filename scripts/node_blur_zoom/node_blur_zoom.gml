@@ -41,6 +41,8 @@ function Node_Blur_Zoom(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		["Blur",	false],	1, 2, 4, 5
 	];
 	
+	attribute_surface_depth();
+	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var pos = inputs[| 2].getValue();
 		var px = _x + pos[0] * _s;
@@ -62,7 +64,7 @@ function Node_Blur_Zoom(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		_cen[1] /= surface_get_height(_outSurf);
 		
 		surface_set_target(_outSurf);
-			draw_clear_alpha(0, 0);
+			DRAW_CLEAR
 			BLEND_OVERRIDE;
 		
 			shader_set(shader);

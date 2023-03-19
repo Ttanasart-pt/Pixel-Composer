@@ -40,6 +40,8 @@ function Node_Skew(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
+	attribute_surface_depth();
+
 	static centerAnchor = function() {
 		if(!is_surface(current_data[0])) return;
 		var ww = surface_get_width(current_data[0]);
@@ -60,7 +62,7 @@ function Node_Skew(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		var _samp = _data[5];
 		
 		surface_set_target(_outSurf);
-			draw_clear_alpha(0, 0);
+			DRAW_CLEAR
 			BLEND_OVERRIDE;
 			
 			shader_set(shader);

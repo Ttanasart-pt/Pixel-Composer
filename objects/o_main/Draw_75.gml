@@ -36,7 +36,7 @@
 					draw_tooltip_surface(content);
 					break;
 				case VALUE_TYPE.rigid :
-					draw_tooltip_text("[" + get_text("tooltip_rigid_object", "Rigidbody Object") + "id: " + string(content[$ "object"]) + "]");
+					draw_tooltip_text("[" + get_text("tooltip_rigid_object", "Rigidbody Object") + " (id: " + string(content[$ "object"]) + ")(]");
 					break;
 				case VALUE_TYPE.particle :
 					var txt = "[" + 
@@ -49,7 +49,19 @@
 					draw_tooltip_text("[" + get_text("tooltip_path_object", "Path Object") + "]");
 					break;
 				case VALUE_TYPE.fdomain :
-					draw_tooltip_text("[" + get_text("tooltip_fluid_object", "Fluid Domain Object") + "id: " + string(content) + "]");
+					draw_tooltip_text("[" + get_text("tooltip_fluid_object", "Fluid Domain Object") + " (id: " + string(content) + ")]");
+					break;
+				case VALUE_TYPE.strands :
+					var txt = get_text("tooltip_strand_object", "Strands Object");
+					if(is_struct(content))
+						txt += " (strands: " + string(array_length(content.hairs)) + ")";
+					draw_tooltip_text("[" + txt + "]");
+					break;
+				case VALUE_TYPE.mesh :
+					var txt = get_text("tooltip_mesh_object", "Mesh Object");
+					if(is_struct(content))
+						txt += " (triangles: " + string(array_length(content.triangles)) + ")";
+					draw_tooltip_text("[" + txt + "]");
 					break;
 			}
 		} else 

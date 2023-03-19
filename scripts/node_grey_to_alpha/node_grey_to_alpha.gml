@@ -20,6 +20,8 @@ function Node_Grey_Alpha(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		["Surface",	 false], 0, 1, 2, 
 	]
 	
+	attribute_surface_depth();
+	
 	static step = function() {
 		var _replace	= inputs[| 1].getValue();	
 		inputs[| 2].setVisible(_replace);
@@ -30,7 +32,7 @@ function Node_Grey_Alpha(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		var _color		= inputs[| 2].getValue();
 		
 		surface_set_target(_outSurf);
-		draw_clear_alpha(0, 0);
+		DRAW_CLEAR
 		BLEND_OVERRIDE;
 		
 		shader_set(shader);

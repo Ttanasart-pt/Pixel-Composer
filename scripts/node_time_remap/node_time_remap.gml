@@ -25,6 +25,8 @@ function Node_Time_Remap(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		["Remap",	 false], 2, 3,
 	]
 	
+	attribute_surface_depth();
+	
 	static update = function(frame = ANIMATOR.current_frame) {
 		var _inSurf  = inputs[| 0].getValue();
 		var _map     = inputs[| 1].getValue();
@@ -32,13 +34,13 @@ function Node_Time_Remap(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		var _loop    = inputs[| 3].getValue();
 		
 		var _surf  = outputs[| 0].getValue();
-		_surf = surface_verify(_surf, surface_get_width(_inSurf), surface_get_height(_inSurf));
+		_surf = surface_verify(_surf, surface_get_width(_inSurf), surface_get_height(_inSurf), attrDepth());
 		outputs[| 0].setValue(_surf);
 		
 		var ste = 1 / _life;
 		
 		surface_set_target(_surf);
-		draw_clear_alpha(0, 0);
+		DRAW_CLEAR
 		shader_set(shader);
 		texture_set_stage(uniform_map, surface_get_texture(_map));
 		

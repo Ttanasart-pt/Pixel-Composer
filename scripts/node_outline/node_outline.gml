@@ -53,6 +53,8 @@ function Node_Outline(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		["Render",	false], 2, 3, 4, 6,
 	];
 	
+	attribute_surface_depth();
+	
 	static process_data = function(_outSurf, _data, _output_index, _array_index) { 
 		var ww = surface_get_width(_data[0]);
 		var hh = surface_get_height(_data[0]);
@@ -67,7 +69,7 @@ function Node_Outline(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		var bst   = _data[8];
 		
 		surface_set_target(_outSurf);
-			draw_clear_alpha(0, 0);
+			DRAW_CLEAR
 			BLEND_OVERRIDE;
 		
 			shader_set(shader);

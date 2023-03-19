@@ -534,7 +534,7 @@ function Panel_Graph() : PanelContent() constructor {
 						}).setIsShelf()
 					);
 					
-					if(!ds_list_empty(nodes_select_list)) {
+					if(ds_list_size(nodes_select_list) >= 2) {
 						array_push(menu, -1);
 						array_push(menu,  
 							menuItem(get_text("panel_graph_blend_nodes", "Blend nodes"), function() { 
@@ -605,7 +605,7 @@ function Panel_Graph() : PanelContent() constructor {
 		var aa = PREF_MAP[? "connection_line_aa"];
 		connection_surface = surface_verify(connection_surface, w * aa, h * aa);
 		surface_set_target(connection_surface);
-		draw_clear_alpha(0, 0);
+		DRAW_CLEAR
 		
 		var hov = noone;
 		var hoverable = !bool(node_dragging) && pHOVER;
@@ -746,6 +746,7 @@ function Panel_Graph() : PanelContent() constructor {
 						
 						for(var i = 0; i < ds_list_size(nodes_select_list); i++) {
 							var _n = nodes_select_list[| i];
+							if(_n == noone) continue;
 							recordAction(ACTION_TYPE.var_modify, _n, [ _n.x + shfx, "x", "node x position" ]);
 							recordAction(ACTION_TYPE.var_modify, _n, [ _n.y + shfy, "y", "node y position" ]);
 						}
@@ -1676,6 +1677,7 @@ function Panel_Graph() : PanelContent() constructor {
 			case "Node_Feedback" :		bg = merge_color(COLORS.panel_bg_clear, COLORS.node_blend_feedback, 0.05); break;
 			case "Node_Rigid_Group" :	bg = merge_color(COLORS.panel_bg_clear, COLORS.node_blend_simulation, 0.05); break;
 			case "Node_Fluid_Group" :	bg = merge_color(COLORS.panel_bg_clear, COLORS.node_blend_fluid, 0.05); break;
+			case "Node_Strand_Group" :	bg = merge_color(COLORS.panel_bg_clear, COLORS.node_blend_strand, 0.05); break;
 		}
 		draw_clear(bg);
 		

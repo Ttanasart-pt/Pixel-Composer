@@ -6,6 +6,6 @@
   "isDnD": false,
   "parent": {
     "name": "inspectors",
-    "path": "folders/panels/data/inspectors.yy",
+    "path": "folders/panels/inspectors.yy",
   },
 }

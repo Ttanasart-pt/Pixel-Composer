@@ -29,6 +29,8 @@ function Node_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		["Wrap",	 false], 1, 2, 3, 4
 	]
 	
+	attribute_surface_depth();
+
 	drag_side = -1;
 	drag_mx = 0;
 	drag_my = 0;
@@ -177,7 +179,7 @@ function Node_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		var br = _data[4];
 		
 		surface_set_target(_outSurf);
-			draw_clear_alpha(0, 0);
+			DRAW_CLEAR
 			BLEND_OVERRIDE;
 			draw_set_color(c_white);
 			

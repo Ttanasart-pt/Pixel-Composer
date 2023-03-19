@@ -61,6 +61,8 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		["Render",		false], 11, 12, 16, 
 	];
 	
+	attribute_surface_depth();
+	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		if(process_amount > 1) return;
 		
@@ -127,7 +129,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			_posDist = get_points_from_dist(_distMap, _amount, seed);
 		
 		surface_set_target(_outSurf);
-			draw_clear_alpha(0, 0);
+			DRAW_CLEAR
 			if(mulpA) BLEND_ALPHA_MULP;
 			else      BLEND_ALPHA;
 			

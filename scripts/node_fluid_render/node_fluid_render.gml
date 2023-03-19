@@ -23,6 +23,8 @@ function Node_Fluid_Render(_x, _y, _group = noone) : Node_Fluid(_x, _y, _group) 
 	
 	outputs[| 1] = nodeValue("Domain", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
+	attribute_surface_depth();
+	
 	insp2UpdateTooltip = "Clear cache";
 	insp2UpdateIcon    = [ THEME.cache, 0, COLORS._main_icon ];
 	
@@ -40,7 +42,7 @@ function Node_Fluid_Render(_x, _y, _group = noone) : Node_Fluid(_x, _y, _group) 
 		if(_dom == noone || !instance_exists(_dom)) return;
 		
 		var _outSurf = outputs[| 0].getValue();
-		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1]);
+		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
 		outputs[| 0].setValue(_outSurf);
 		
 		var fSurf = _dom.sf_material_0;
@@ -48,18 +50,18 @@ function Node_Fluid_Render(_x, _y, _group = noone) : Node_Fluid(_x, _y, _group) 
 		outputs[| 1].setValue(_dom.sf_world);
 		
 		surface_set_target(_outSurf);
-			draw_clear_alpha(0, 0);
+			DRAW_CLEAR
 			
 			BLEND_OVERRIDE;
 			shader_set(sh_fd_visualize_colorize_glsl);
 			gpu_set_texfilter(_int);
-			draw_surface_stretched(fSurf, 0, 0, _dim[0], _dim[1]);
+			draw_surface_stretched_safe(fSurf, 0, 0, _dim[0], _dim[1]);
 			gpu_set_texfilter(false);
 			shader_reset();
 			BLEND_NORMAL;
 			
 			if(_drw && is_surface(_dom.sf_world)) 
-				draw_surface_stretched(_dom.sf_world, 0, 0, _dim[0], _dim[1]);
+				draw_surface_stretched_safe(_dom.sf_world, 0, 0, _dim[0], _dim[1]);
 		surface_reset_target();
 		
 		cacheCurrentFrame(_outSurf);

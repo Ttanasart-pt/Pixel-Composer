@@ -178,9 +178,8 @@ function Panel_Menu() : PanelContent() constructor {
 			menuItem(get_text("panel_menu_animation", "Animation"),			function() { panelAdd("Panel_Animation", true) },,,		function() { return findPanel("Panel_Animation") != noone; } ),
 			menuItem(get_text("panel_menu_notification", "Notification"),   function() { panelAdd("Panel_Notification", true) },,,	function() { return findPanel("Panel_Notification") != noone; } ),
 			menuItem(get_text("panel_menu_nodes", "Nodes"),					function() { panelAdd("Panel_Nodes", true) },,,			function() { return findPanel("Panel_Nodes") != noone; } ),
-			menuItem(get_text("tunnels", "Tunnels"), function() {
-				dialogPanelCall(new Panel_Tunnels());
-			},, ["Graph", "Tunnels"]),
+			menuItem(get_text("panel_menu_globalvar", "Global Variables"),	function() { panelAdd("Panel_Globalvar", true) },,,		function() { return findPanel("Panel_Globalvar") != noone; } ),
+			menuItem(get_text("tunnels", "Tunnels"),						function() { panelAdd("Panel_Tunnels", true) },,,		function() { return findPanel("Panel_Tunnels") != noone; } ),
 		]],
 		[ get_text("panel_menu_help", "Help"), menu_help ],
 	]

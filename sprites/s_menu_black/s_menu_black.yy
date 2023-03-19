@@ -25,8 +25,8 @@
   "nineSlice": null,
   "origin": 4,
   "parent": {
-    "name": "preview",
-    "path": "folders/panels/preview.yy",
+    "name": "sprites",
+    "path": "folders/panels/preview/sprites.yy",
   },
   "preMultiplyAlpha": false,
   "sequence": {

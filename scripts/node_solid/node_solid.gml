@@ -19,6 +19,8 @@ function Node_Solid(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		["Solid",	false], 1, 2,
 	];
 	
+	attribute_surface_depth();
+	
 	static process_data = function(_outSurf, _data, _output_index, _array_index) {
 		var _dim = _data[0];
 		var _col = _data[1];
@@ -29,16 +31,17 @@ function Node_Solid(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		inputs[| 4].setVisible(is_surface(_msk));
 		if(is_surface(_msk) && _msd)
 			_dim = [ surface_get_width(_msk), surface_get_height(_msk) ];
-		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1]);
+		
+		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
 		
 		if(_emp) {
 			surface_set_target(_outSurf);
-				draw_clear_alpha(0, 0);
+				DRAW_CLEAR
 			surface_reset_target();
 			return _outSurf;
 		}
 		surface_set_target(_outSurf);
-			draw_clear_alpha(0, 0);
+			DRAW_CLEAR
 			
 			shader_set(sh_solid);
 			if(is_surface(_msk))

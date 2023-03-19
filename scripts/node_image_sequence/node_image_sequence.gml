@@ -32,7 +32,7 @@ enum CANVAS_SIZING {
 }
 
 function Node_Image_Sequence(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
-	name  = "";
+	name  = "Image Array";
 	spr   = [];
 	color = COLORS.node_blend_input;
 	always_output   = true;
@@ -59,6 +59,8 @@ function Node_Image_Sequence(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, []);
 	outputs[| 1] = nodeValue("Paths", self, JUNCTION_CONNECT.output, VALUE_TYPE.path, [] ).
 		setVisible(true, true);
+	
+	attribute_surface_depth();
 	
 	path_loaded = [];
 	
@@ -100,9 +102,15 @@ function Node_Image_Sequence(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 			path_loaded[i] = paths[i];
 			var path = try_get_path(paths[i]);
 			if(path == -1) continue;
+			var ext = string_lower(filename_ext(path));
 			
-			name  = string_replace(filename_name(path), filename_ext(path), "");
-			array_push(spr, sprite_add(path, 1, false, false, 0, 0));
+			switch(ext) {
+				case ".png"	 :
+				case ".jpg"	 :
+				case ".jpeg" :
+					array_push(spr, sprite_add(path, 1, false, false, 0, 0));
+					break;
+			}
 		}
 		
 		outputs[| 1].setValue(paths);
@@ -160,9 +168,9 @@ function Node_Image_Sequence(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 					ww = sprite_get_width(_spr) + pad[0] + pad[2];
 					hh = sprite_get_height(_spr) + pad[1] + pad[3];
 					
-					surfs[i] = surface_verify(array_safe_get(surfs, i), ww, hh);
+					surfs[i] = surface_verify(array_safe_get(surfs, i), ww, hh, attrDepth());
 					surface_set_target(surfs[i]);
-						draw_clear_alpha(0, 0);
+						DRAW_CLEAR
 						BLEND_OVERRIDE;
 						draw_sprite(_spr, 0, pad[2], pad[1]);
 						BLEND_NORMAL;
@@ -170,7 +178,7 @@ function Node_Image_Sequence(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 					break;
 				case CANVAS_SIZE.maximum :
 				case CANVAS_SIZE.minimum :
-					surfs[i] = surface_verify(array_safe_get(surfs, i), ww, hh);
+					surfs[i] = surface_verify(array_safe_get(surfs, i), ww, hh, attrDepth());
 					var _w = sprite_get_width(_spr);
 					var _h = sprite_get_height(_spr);
 						
@@ -180,7 +188,7 @@ function Node_Image_Sequence(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 						var sh = (hh - _h * ss) / 2;
 						
 						surface_set_target(surfs[i]);
-							draw_clear_alpha(0, 0);
+							DRAW_CLEAR
 							BLEND_OVERRIDE;
 							draw_sprite_ext(_spr, 0, sw, sh, ss, ss, 0, c_white, 1);
 							BLEND_NORMAL;
@@ -190,7 +198,7 @@ function Node_Image_Sequence(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 						var yy = (hh - _h) / 2;
 						
 						surface_set_target(surfs[i]);
-							draw_clear_alpha(0, 0);
+							DRAW_CLEAR
 							BLEND_OVERRIDE;
 							draw_sprite(_spr, 0, xx, yy);
 							BLEND_NORMAL;

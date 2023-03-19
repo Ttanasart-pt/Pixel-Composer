@@ -1,23 +1,86 @@
 //draw
 function draw_surface_safe(surface, _x, _y) {
 	if(!is_surface(surface)) return;
-	draw_surface(surface, _x, _y);
+	
+	__channel_pre(surface);
+		draw_surface(surface, _x, _y);
+	__channel_pos(surface);
 }
 function draw_surface_stretched_safe(surface, _x, _y, _w, _h) {
 	if(!is_surface(surface)) return;
-	draw_surface_stretched(surface, _x, _y, _w, _h);
+	
+	__channel_pre(surface);
+		draw_surface_stretched(surface, _x, _y, _w, _h);
+	__channel_pos(surface);
 }
 function draw_surface_ext_safe(surface, _x, _y, _xs = 1, _ys = 1, _rot = 0, _col = c_white, _alpha = 1) {
 	if(!is_surface(surface)) return;
-	draw_surface_ext(surface, _x, _y, _xs, _ys, _rot, _col, _alpha);
+	
+	__channel_pre(surface);
+		draw_surface_ext(surface, _x, _y, _xs, _ys, _rot, _col, _alpha);
+	__channel_pos(surface);
+}
+function draw_surface_tiled_safe(surface, _x, _y) {
+	if(!is_surface(surface)) return;
+	
+	__channel_pre(surface);
+		draw_surface_tiled(surface, _x, _y);
+	__channel_pos(surface);
 }
 function draw_surface_tiled_ext_safe(surface, _x, _y, _xs = 1, _ys = 1, _col = c_white, _alpha = 1) {
 	if(!is_surface(surface)) return;
-	draw_surface_tiled_ext(surface, _x, _y, _xs, _ys, _col, _alpha);
+	
+	__channel_pre(surface);
+		draw_surface_tiled_ext(surface, _x, _y, _xs, _ys, _col, _alpha);
+	__channel_pos(surface);
 }
 function draw_surface_part_ext_safe(surface, _l, _t, _w, _h, _x, _y, _xs = 1, _ys = 1, _rot = 0, _col = c_white, _alpha = 1) {
 	if(!is_surface(surface)) return;
-	draw_surface_part_ext(surface, _l, _t, _w, _h, _x, _y, _xs, _ys, _col, _alpha);
+	
+	__channel_pre(surface);
+		draw_surface_part_ext(surface, _l, _t, _w, _h, _x, _y, _xs, _ys, _col, _alpha);
+	__channel_pos(surface);
+}
+
+function surface_save_safe(surface, path) {
+	if(!is_surface(surface)) return;
+	var f = surface_get_format(surface);
+	var w = surface_get_width(surface);
+	var h = surface_get_height(surface);
+	var s = noone;
+	
+	switch(f) {
+		case surface_rgba4unorm  :
+		case surface_rgba8unorm	 :
+		case surface_rgba16float :
+		case surface_rgba32float :
+			surface_save(surface, path);
+			return;
+		case surface_r8unorm	 :
+			s = surface_create(w, h, surface_rgba8unorm);
+			break;
+		case surface_r16float	 :
+			s = surface_create(w, h, surface_rgba16float);
+			break;
+		case surface_r32float	 :
+			s = surface_create(w, h, surface_rgba32float);
+			break;
+		default:
+			return;
+	}
+	
+	surface_set_target(s);
+	shader_set(sh_draw_single_channel);
+		DRAW_CLEAR
+		BLEND_OVERRIDE
+		draw_surface(s, 0, 0);
+		BLEND_NORMAL
+	shader_reset();
+	surface_reset_target();
+	
+	surface_save(s, path);
+	surface_free(s);
+	return;
 }
 
 //check
@@ -35,32 +98,32 @@ function is_surface(s) {
 	return true;
 }
 
-function surface_verify(surf, w, h) {
+gml_pragma("forceinline");
+function surface_verify(surf, w, h, format = surface_rgba8unorm) {
 	if(!is_surface(surf))
-		return surface_create_valid(w, h);
-	surface_size_to(surf, w, h);
-	return surf;
+		return surface_create_valid(w, h, format);
+	return surface_size_to(surf, w, h, format);
 }
 
 //create
-function surface_create_size(surface) {
-	var s = surface_create_valid(surface_get_width(surface), surface_get_height(surface));
+function surface_create_size(surface, format = surface_rgba8unorm) {
+	var s = surface_create_valid(surface_get_width(surface), surface_get_height(surface), format);
 	surface_set_target(s);
-	draw_clear_alpha(0, 0);
+	DRAW_CLEAR
 	surface_reset_target();
 	return s;
 }
 
-function surface_create_valid(w, h) {
-	var s = surface_create(surface_valid_size(w), surface_valid_size(h));
+function surface_create_valid(w, h, format = surface_rgba8unorm) {
+	var s = surface_create(surface_valid_size(w), surface_valid_size(h), format);
 	surface_set_target(s);
-	draw_clear_alpha(0, 0);
+	DRAW_CLEAR
 	surface_reset_target();
 	return s;
 }
 
-function surface_create_from_buffer(w, h, buff) {
-	var s = surface_create_valid(surface_valid_size(w), surface_valid_size(h));
+function surface_create_from_buffer(w, h, buff, format = surface_rgba8unorm) {
+	var s = surface_create_valid(surface_valid_size(w), surface_valid_size(h), format);
 	buffer_set_surface(buff, s, 0);
 	return s;
 }
@@ -79,15 +142,15 @@ function surface_create_from_sprite(spr) {
 	return s;
 }
 
-function surface_create_from_sprite_ext(spr, ind) {
+function surface_create_from_sprite_ext(spr, ind, format = surface_rgba8unorm) {
 	if(!sprite_exists(spr)) return noone;
 	var sw = sprite_get_width(spr);
 	var sh = sprite_get_height(spr);
 	
-	var s = surface_create_valid(sw, sh);
+	var s = surface_create_valid(sw, sh, format);
 	surface_set_target(s);
 		BLEND_OVERRIDE;
-		draw_clear_alpha(0, 0);
+		DRAW_CLEAR
 		draw_sprite(spr, ind, sprite_get_xoffset(spr), sprite_get_yoffset(spr));
 		BLEND_NORMAL
 	surface_reset_target();
@@ -95,38 +158,43 @@ function surface_create_from_sprite_ext(spr, ind) {
 	return s;
 }
 
-function surface_size_to(surface, width, height) {
-	if(!is_surface(surface)) return false;
-	if(width < 1 && height < 1) return false;
+function surface_size_to(surface, width, height, format = noone) {
+	if(!is_surface(surface))	return surface;
+	if(width < 1 && height < 1) return surface;
 	
-	width = surface_valid_size(width);
+	if(format != noone && surface_get_format(surface) != format) {
+		surface_free(surface);
+		return surface_create_valid(width, height, format);
+	}
+	
+	width  = surface_valid_size(width);
 	height = surface_valid_size(height);
 	
 	var ww = surface_get_width(surface);	
 	var hh = surface_get_height(surface);	
 	
-	if(ww == width && hh == height) return false;
+	if(ww == width && hh == height) return surface;
 	
 	surface_resize(surface, width, height);
-	return true;
+	return surface;
 }
 
-function surface_copy_from(dst, src) {
+function surface_copy_from(dst, src, format = noone) {
 	surface_set_target(dst);
-	draw_clear_alpha(0, 0);
+	DRAW_CLEAR
 	BLEND_OVERRIDE;
 		draw_surface_safe(src, 0, 0);
 	BLEND_NORMAL
 	surface_reset_target();
 }
 
-function surface_clone(surface, source = noone) {
+function surface_clone(surface, source = noone, format = noone) {
 	if(!is_surface(surface)) return noone;
 	
-	source = surface_verify(source, surface_get_width(surface), surface_get_height(surface));
+	source = surface_verify(source, surface_get_width(surface), surface_get_height(surface), format == noone? surface_get_format(surface) : format);
 	
 	surface_set_target(source);
-	draw_clear_alpha(0, 0);
+	DRAW_CLEAR
 	BLEND_OVERRIDE;
 		draw_surface_safe(surface, 0, 0);
 	BLEND_NORMAL
@@ -135,13 +203,13 @@ function surface_clone(surface, source = noone) {
 	return source;
 }
 
-function surface_copy_size(dest, source) {
+function surface_copy_size(dest, source, format = noone) {
 	if(!is_surface(dest)) return;
 	if(!is_surface(source)) return;
 	
-	surface_size_to(dest, surface_get_width(source), surface_get_height(source));
+	surface_size_to(dest, surface_get_width(source), surface_get_height(source), format);
 	surface_set_target(dest);
-	draw_clear_alpha(0, 0);
+	DRAW_CLEAR
 	surface_reset_target();
 	
 	surface_copy_from(dest, source);
@@ -240,4 +308,25 @@ function surface_decode(struct) {
 	var buff = buffer_base64_decode(struct.buffer);
 	var buff = buffer_decompress(buff);
 	return surface_create_from_buffer(struct.width, struct.height, buff);
+}
+
+function surface_bit_size(format) {
+	switch(format) {
+		case surface_rgba4unorm :  return 4 * 0.5; break;
+		case surface_rgba8unorm :  return 4 * 1; break;
+		case surface_rgba16float : return 4 * 2; break;
+		case surface_rgba32float : return 4 * 4; break;
+		
+		case surface_r8unorm  : return 1 * 1; break;
+		case surface_r16float : return 1 * 2; break;
+		case surface_r32float : return 1 * 3; break;
+	}
+	return 1;
+}
+
+function surface_get_size(surface) {
+	var sw = surface_get_width(surface);
+	var sh = surface_get_height(surface);
+	var sz = sw * sh * surface_bit_size(surface_get_format(surface));
+	return sz;
 }

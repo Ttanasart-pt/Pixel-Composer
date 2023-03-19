@@ -35,6 +35,8 @@ function Node_Bloom(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
+	attribute_surface_depth();
+	
 	surface_blur_init();
 	
 	static process_data = function(_outSurf, _data, _output_index, _array_index) {
@@ -42,7 +44,7 @@ function Node_Bloom(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		var _tole = _data[2];
 		var _stre = _data[3];
 		var _mask = _data[4];
-		var pass1 = surface_create_valid(surface_get_width(_outSurf), surface_get_height(_outSurf));	
+		var pass1 = surface_create_valid(surface_get_width(_outSurf), surface_get_height(_outSurf), attrDepth());	
 		
 		surface_set_target(pass1);
 		draw_clear_alpha(c_black, 1);
@@ -61,7 +63,7 @@ function Node_Bloom(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		surface_free(pass1);
 		
 		surface_set_target(_outSurf);
-			draw_clear_alpha(0, 0);
+			DRAW_CLEAR
 			BLEND_OVERRIDE;
 		
 			var uniform_foreground = shader_get_sampler_index(sh_blend_add_alpha_adj, "fore");

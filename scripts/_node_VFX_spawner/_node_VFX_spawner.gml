@@ -102,7 +102,11 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		["Render",		true],	21
 	];
 	
-	parts = array_create(PREF_MAP[? "part_max_amount"]);
+	attributes[? "part_amount"] = 512;
+	array_push(attributeEditors, ["Maximum particles", "part_amount",
+		new textBox(TEXTBOX_INPUT.number, function(val) { attributes[? "part_amount"] = val; }) ]);
+	
+	parts = array_create(attributes[? "part_amount"]);
 	parts_runner = 0;
 	
 	seed = 0;
@@ -112,7 +116,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	
 	current_data = [];
 	
-	for(var i = 0; i < PREF_MAP[? "part_max_amount"]; i++)
+	for(var i = 0; i < attributes[? "part_amount"]; i++)
 		parts[i] = new __part(self);
 		
 	static spawn = function(_time = ANIMATOR.current_frame, _pos = -1) {
@@ -250,10 +254,10 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 			part.setPhysic(_vx, _vy, _acc, _grav, _wigg);
 			part.setTransform(_scx, _scy, _scale_time, _rot, _rot_spd, _follow);
 			part.setDraw(_color, _bld, _alp, _fade);
-			spawn_index = safe_mod(spawn_index + 1, PREF_MAP[? "part_max_amount"]);
+			spawn_index = safe_mod(spawn_index + 1, attributes[? "part_amount"]);
 			onSpawn(_time, part);
 			
-			parts_runner = safe_mod(parts_runner + 1, PREF_MAP[? "part_max_amount"]);
+			parts_runner = safe_mod(parts_runner + 1, attributes[? "part_amount"]);
 		}
 	}
 	
@@ -284,7 +288,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	}
 	
 	function checkPartPool() {
-		var _part_amo = PREF_MAP[? "part_max_amount"];
+		var _part_amo = attributes[? "part_amount"];
 		var _curr_amo = array_length(parts);
 		
 		if(_part_amo > _curr_amo) {

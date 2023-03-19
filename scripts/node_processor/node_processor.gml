@@ -8,7 +8,7 @@ enum ARRAY_PROCESS {
 #macro PROCESSOR_OVERLAY_CHECK if(array_length(current_data) != ds_list_size(inputs)) return;
 
 function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
-	array_process	= ARRAY_PROCESS.loop;
+	attributes[? "array_process"] = ARRAY_PROCESS.loop;
 	current_data	= [];
 	inputs_data		= [];
 	
@@ -19,6 +19,10 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	icon    = THEME.node_processor;
 	
+	array_push(attributeEditors, "Array processor");
+	array_push(attributeEditors, [ "Array process type", "array_process", 
+		new scrollBox([ "Loop", "Hold", "Expand", "Expand inverse" ], function(val) { attributes[? "array_process"] = val; } ) ]);
+	
 	static process_data = function(_outSurf, _data, _output_index, _array_index = 0) { return _outSurf; }
 	
 	static getSingleValue = function(_index, _arr = 0, output = false) {
@@ -28,7 +32,7 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		
 		if(!_n.isArray()) return _in;
 		
-		switch(array_process) {
+		switch(attributes[? "array_process"]) {
 			case ARRAY_PROCESS.loop :		_index = safe_mod(_arr, array_length(_in)); break;
 			case ARRAY_PROCESS.hold :		_index = min(_arr, array_length(_in) - 1);  break;
 			case ARRAY_PROCESS.expand :		_index = floor(_arr / process_length[_index][1]) % process_length[_index][0]; break;
@@ -67,7 +71,7 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 					if(is_surface(_out[i])) surface_free(_out[i]);
 			}
 			
-			if(outputs[| outIndex].type == VALUE_TYPE.surface && dimension_index > -1) {
+			if(outputs[| outIndex].type == VALUE_TYPE.surface && dimension_index > -1) { //resize surface
 				var surf = inputs_data[dimension_index];
 				var _sw = 1, _sh = 1;
 				if(inputs[| dimension_index].type == VALUE_TYPE.surface) {
@@ -80,7 +84,8 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 					_sw = array_safe_get(surf, 0, 1);
 					_sh = array_safe_get(surf, 1, 1);
 				}
-				_out = surface_verify(_out, _sw, _sh);
+				
+				_out = surface_verify(_out, _sw, _sh, attrDepth());
 			}
 			
 			current_data = inputs_data;
@@ -121,7 +126,7 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 					continue;
 				}
 				var _index = 0;
-				switch(array_process) {
+				switch(attributes[? "array_process"]) {
 					case ARRAY_PROCESS.loop :		_index = safe_mod(l, array_length(_in)); break;
 					case ARRAY_PROCESS.hold :		_index = min(l, array_length(_in) - 1);  break;
 					case ARRAY_PROCESS.expand :		_index = floor(l / process_length[i][1]) % process_length[i][0]; break;
@@ -143,7 +148,8 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 					_sw = surf[0];
 					_sh = surf[1];
 				}
-				_out[l] = surface_verify(_out[l], _sw, _sh);
+				
+				_out[l] = surface_verify(_out[l], _sw, _sh, attrDepth());
 			}
 			
 			if(l == 0 || l == preview_index) 
@@ -172,7 +178,7 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 			
 			inputs_data[i] = val;
 			
-			switch(array_process) {
+			switch(attributes[? "array_process"]) {
 				case ARRAY_PROCESS.loop : 
 				case ARRAY_PROCESS.hold :   
 					process_amount = max(process_amount, amo);	
@@ -199,10 +205,10 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	}
 	
 	static processSerialize = function(_map) {
-		_map[? "array_process"] = array_process;
+		_map[? "array_process"] = attributes[? "array_process"];
 	}
 	
 	static processDeserialize = function() {
-		array_process = ds_map_try_get(load_map, "array_process", ARRAY_PROCESS.loop);
+		attributes[? "array_process"] = ds_map_try_get(load_map, "array_process", ARRAY_PROCESS.loop);
 	}
 }

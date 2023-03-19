@@ -39,6 +39,8 @@ function Node_Curve(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		["Curve",	false],	1, 2, 3, 4, 
 	];
 	
+	attribute_surface_depth();
+	
 	static process_data = function(_outSurf, _data, _output_index, _array_index) {		
 		var _wcur = _data[1];
 		var _rcur = _data[2];
@@ -46,7 +48,7 @@ function Node_Curve(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		var _bcur = _data[4];
 		
 		surface_set_target(_outSurf);
-		draw_clear_alpha(0, 0);
+		DRAW_CLEAR
 		BLEND_OVERRIDE;
 		
 		shader_set(shader);

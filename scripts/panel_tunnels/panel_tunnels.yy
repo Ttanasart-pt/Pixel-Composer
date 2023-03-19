@@ -6,6 +6,6 @@
   "isDnD": false,
   "parent": {
     "name": "graph",
-    "path": "folders/panels/data/graph.yy",
+    "path": "folders/panels/graph.yy",
   },
 }

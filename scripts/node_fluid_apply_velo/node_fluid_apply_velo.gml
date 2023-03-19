@@ -33,7 +33,7 @@ function Node_Fluid_Apply_Velocity(_x, _y, _group = noone) : Node_Fluid(_x, _y, 
 			var mx = _x + _pos[0] * _s - sw / 2;
 			var my = _y + _pos[1] * _s - sh / 2;
 			
-			draw_surface_ext(_mat, mx, my, _s, _s, 0, c_white, 0.5);
+			draw_surface_ext_safe(_mat, mx, my, _s, _s, 0, c_white, 0.5);
 		}
 		
 		inputs[| 2].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);

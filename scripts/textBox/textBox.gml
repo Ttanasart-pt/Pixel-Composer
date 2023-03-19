@@ -489,7 +489,7 @@ function textBox(_input, _onModify, _extras = noone) : textInput(_input, _onModi
 				}
 				
 				surface_set_target(text_surface);
-				draw_clear_alpha(0, 0);
+				DRAW_CLEAR
 					display_text(tx - tb_surf_x, _h / 2 - th / 2, txt, _w - ui(4), _format, _mx);
 				surface_reset_target();
 				draw_surface(text_surface, tb_surf_x, tb_surf_y);
@@ -550,7 +550,7 @@ function textBox(_input, _onModify, _extras = noone) : textInput(_input, _onModi
 			}
 			
 			surface_set_target(text_surface);
-			draw_clear_alpha(0, 0);
+			DRAW_CLEAR
 				display_text(tx - tb_surf_x, _h / 2 - th / 2, _display_text, _w - ui(4), _format);
 			surface_reset_target();
 			draw_surface(text_surface, tb_surf_x, tb_surf_y);

@@ -186,7 +186,7 @@ function __part(_node) constructor {
 		var cc = (col == -1)? c_white : col.eval(lifeRat);
 		if(blend != c_white) cc = colorMultiply(blend, cc);
 		alp_draw = alp * eval_curve_x(alp_fade, lifeRat);
-		draw_surface_ext(ss, _xx, _yy, scx, scy, rot, cc, alp_draw);
+		draw_surface_ext_safe(ss, _xx, _yy, scx, scy, rot, cc, alp_draw);
 	}
 	
 	static getPivot = function() {

@@ -33,6 +33,8 @@ function Node_Camera(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		["Elements",  true], 
 	];
 	
+	attribute_surface_depth();
+
 	input_display_len = array_length(input_display_list);
 	input_fix_len	= ds_list_size(inputs);
 	data_length		= 2;
@@ -119,11 +121,12 @@ function Node_Camera(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		var _zoom = _data[2];
 		var _samp = _data[3];
 		var _fix  = _data[4];
+		var cDep  = attrDepth();
 		
 		var _dw = round(surface_valid_size(_area[2]) * 2);
 		var _dh = round(surface_valid_size(_area[3]) * 2);
-		_outSurf = surface_verify(_outSurf, _dw, _dh);
-		var pingpong = [ surface_create_valid(_dw, _dh), surface_create_valid(_dw, _dh) ];
+		_outSurf = surface_verify(_outSurf, _dw, _dh, cDep);
+		var pingpong = [ surface_create_valid(_dw, _dh, cDep), surface_create_valid(_dw, _dh, cDep) ];
 		var ppInd = 0;
 		
 		var _px = round(_area[0]);
@@ -133,30 +136,30 @@ function Node_Camera(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		var amo = (ds_list_size(inputs) - input_fix_len) / data_length - 1;
 		
 		surface_set_target(pingpong[0]);
-		draw_clear_alpha(0, 0);
+		DRAW_CLEAR
 		BLEND_OVERRIDE;
 		if(amo <= 0) {
 			if(_fix) {
-				if(_samp)	draw_surface_tiled(_data[0], 0, 0);
-				else		draw_surface(_data[0], 0, 0);
+				if(_samp)	draw_surface_tiled_safe(_data[0], 0, 0);
+				else		draw_surface_safe(_data[0], 0, 0);
 			} else {
 				var sx = _px / _zoom - _pw;
 				var sy = _py / _zoom - _ph;
-				if(_samp)	draw_surface_tiled_ext(_data[0], -sx, -sy, 1 / _zoom, 1 / _zoom, c_white, 1);
-				else		draw_surface_ext(_data[0], -sx, -sy, 1 / _zoom, 1 / _zoom, 0, c_white, 1);
+				if(_samp)	draw_surface_tiled_ext_safe(_data[0], -sx, -sy, 1 / _zoom, 1 / _zoom, c_white, 1);
+				else		draw_surface_ext_safe(_data[0], -sx, -sy, 1 / _zoom, 1 / _zoom, 0, c_white, 1);
 			}
 		} else {
 			var sx = _px / _zoom - _pw;
 			var sy = _py / _zoom - _ph;
 				
-			if(_fix)	draw_surface(_data[0], 0, 0);
-			else		draw_surface_tiled_ext(_data[0], sx, sy, 1 / _zoom, 1 / _zoom, c_white, 1);
+			if(_fix)	draw_surface_safe(_data[0], 0, 0);
+			else		draw_surface_tiled_ext_safe(_data[0], sx, sy, 1 / _zoom, 1 / _zoom, c_white, 1);
 		}
 		BLEND_NORMAL;
 		surface_reset_target();
 		
 		surface_set_target(pingpong[1]);
-		draw_clear_alpha(0, 0);
+		DRAW_CLEAR
 		surface_reset_target();
 		
 		shader_set(shader);
@@ -191,9 +194,9 @@ function Node_Camera(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		shader_reset();
 		
 		surface_set_target(_outSurf);
-		draw_clear_alpha(0, 0);
+		DRAW_CLEAR
 		BLEND_OVERRIDE;
-		draw_surface(pingpong[ppInd], 0, 0);
+		draw_surface_safe(pingpong[ppInd], 0, 0);
 		BLEND_NORMAL;
 		surface_reset_target();
 		

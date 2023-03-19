@@ -21,12 +21,14 @@ function Node_Normal(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
+	attribute_surface_depth();
+	
 	static process_data = function(_outSurf, _data, _output_index, _array_index) {
 		var _hei = _data[1];
 		var _smt = _data[2];
 		
 		surface_set_target(_outSurf);
-		draw_clear_alpha(0, 0);
+		DRAW_CLEAR
 		BLEND_OVERRIDE;
 		
 		shader_set(sh_normal);

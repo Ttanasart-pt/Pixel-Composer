@@ -318,7 +318,7 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		outputs[| 0].setValue(surf);
 		
 		surface_set_target(surf);
-		draw_clear_alpha(0, 0);
+		DRAW_CLEAR
 		
 		for( var i = 0; i < array_length(layers); i++ ) {
 			layers[i].tag = tag;
@@ -333,7 +333,7 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			var xx = cel.data[? "X"];
 			var yy = cel.data[? "Y"];
 			
-			draw_surface(_inSurf, xx, yy);
+			draw_surface_safe(_inSurf, xx, yy);
 		}
 		
 		surface_reset_target();

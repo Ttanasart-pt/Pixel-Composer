@@ -20,7 +20,7 @@ function Node_Path_Sample(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		if(!struct_has(_path, "getPointRatio")) 
 			return [ 0, 0 ];
 		
-		return _path.getPointRatio(_rat);
+		return _path.getPointRatio(_rat).toArray();
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {

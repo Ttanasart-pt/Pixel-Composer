@@ -40,6 +40,8 @@ function Node_Bevel(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		["Transform",	false], 2, 3, 
 	];
 	
+	attribute_surface_depth();
+	
 	static process_data = function(_outSurf, _data, _output_index, _array_index) {
 		var _hei = _data[1];
 		var _shf = _data[2];
@@ -48,7 +50,7 @@ function Node_Bevel(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		var _sam = _data[8];
 		
 		surface_set_target(_outSurf);
-			draw_clear_alpha(0, 0);
+			DRAW_CLEAR
 			BLEND_OVERRIDE;
 		
 			shader_set(shader);

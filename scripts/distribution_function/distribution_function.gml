@@ -29,7 +29,7 @@ function get_points_from_dist(distMap, amount, seed = 0, attempt = 8) {
 	var surf = surface_create_valid(amount, 1);
 	
 	surface_set_target(surf);
-	draw_clear_alpha(0, 0);
+	DRAW_CLEAR
 	BLEND_OVERRIDE;
 		shader_set(sh_sample_points);
 		shader_set_uniform_f(shader_get_uniform(sh_sample_points, "dimension"), 
@@ -37,7 +37,7 @@ function get_points_from_dist(distMap, amount, seed = 0, attempt = 8) {
 		shader_set_uniform_i(shader_get_uniform(sh_sample_points, "attempt"), attempt);
 		shader_set_uniform_f(shader_get_uniform(sh_sample_points, "seed"), seed);
 		
-			draw_surface_stretched(distMap, 0, 0, amount, 1);
+			draw_surface_stretched_safe(distMap, 0, 0, amount, 1);
 		shader_reset();
 	BLEND_NORMAL;
 	surface_reset_target();

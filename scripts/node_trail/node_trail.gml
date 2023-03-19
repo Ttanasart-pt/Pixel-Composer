@@ -42,6 +42,8 @@ function Node_Trail(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	
 	temp_surface = [ surface_create(1, 1), surface_create(1, 1), surface_create(1, 1) ];
 	
+	attribute_surface_depth();
+	
 	static step = function() {
 		var _colr  = inputs[| 4].getValue();
 		
@@ -58,23 +60,23 @@ function Node_Trail(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		var _colr  = inputs[| 4].getValue();
 		var _blend = inputs[| 5].getValue();
 		var _alpha = inputs[| 6].getValue();
-		
+		var cDep   = attrDepth();
 		if(!is_surface(_surf)) return;
 		cacheCurrentFrame(_surf);
 		
 		for( var i = 0; i < array_length(temp_surface); i++ ) {
-			temp_surface[i] = surface_verify(temp_surface[i], surface_get_width(_surf), surface_get_height(_surf));
+			temp_surface[i] = surface_verify(temp_surface[i], surface_get_width(_surf), surface_get_height(_surf), cDep);
 			surface_set_target(temp_surface[i]);
-			draw_clear_alpha(0, 0);
+			DRAW_CLEAR
 			surface_reset_target();
 		}
 			
 		var _outSurf = outputs[| 0].getValue();
-		_outSurf = surface_verify(_outSurf, surface_get_width(_surf), surface_get_height(_surf));
+		_outSurf = surface_verify(_outSurf, surface_get_width(_surf), surface_get_height(_surf), cDep);
 		outputs[| 0].setValue(_outSurf);
 			
 		var _outUV = outputs[| 1].getValue();
-		_outUV = surface_verify(_outUV, surface_get_width(_surf), surface_get_height(_surf));
+		_outUV = surface_verify(_outUV, surface_get_width(_surf), surface_get_height(_surf), cDep);
 		outputs[| 1].setValue(_outUV);
 		
 		var curf = ANIMATOR.current_frame;
@@ -95,11 +97,11 @@ function Node_Trail(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			
 			if(!is_surface(_prevFrame)) {
 				surface_set_target(temp_surface[0]);
-				draw_surface(_currFrame, 0, 0);
+				draw_surface_safe(_currFrame, 0, 0);
 				surface_reset_target();
 				
 				surface_set_target(temp_surface[2]);
-				draw_surface(_currFrame, 0, 0);
+				draw_surface_safe(_currFrame, 0, 0);
 				surface_reset_target();
 				continue;
 			}
@@ -115,12 +117,12 @@ function Node_Trail(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			
 				shader_set_uniform_i(uni_mode, 1);
 				surface_set_target(temp_surface[0]);
-				draw_surface(_currFrame, 0, 0);
+				draw_surface_safe(_currFrame, 0, 0);
 				surface_reset_target();
 			
 				shader_set_uniform_i(uni_mode, 0);
 				surface_set_target(temp_surface[2]);
-				draw_surface(_currFrame, 0, 0);
+				draw_surface_safe(_currFrame, 0, 0);
 				surface_reset_target();
 			
 			shader_reset();
@@ -129,19 +131,19 @@ function Node_Trail(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		surface_set_target(temp_surface[1]);
 		shader_set(shader2);
 		shader_set_uniform_f(uni2_dimension, surface_get_width(_surf), surface_get_height(_surf));
-		draw_surface(temp_surface[0], 0, 0);
+		draw_surface_safe(temp_surface[0], 0, 0);
 		shader_reset();
 		surface_reset_target();
 		
 		surface_set_target(_outUV);
-		draw_clear_alpha(0, 0);
+		DRAW_CLEAR
 		BLEND_ALPHA;
 			draw_surface_safe(temp_surface[1], 0, 0);
 		BLEND_NORMAL;
 		surface_reset_target();
 		
 		surface_set_target(_outSurf);
-		draw_clear_alpha(0, 0);
+		DRAW_CLEAR
 		BLEND_ALPHA;
 			draw_surface_safe(temp_surface[2], 0, 0);
 		BLEND_NORMAL;

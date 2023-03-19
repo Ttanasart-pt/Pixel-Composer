@@ -28,7 +28,7 @@ function Node_Transform_Single(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 		var origin = point_rotate(0, 0, anc_x, anc_y, rot);
 		
 		surface_set_target(_outSurf);
-		draw_clear_alpha(0, 0);
+		DRAW_CLEAR
 		BLEND_OVERRIDE;
 		
 		draw_surface_ext_safe(_data[0], pos_x + origin[0] - psc_x, pos_y + origin[1] - psc_y, sca_x, sca_y, rot, c_white, 1);

@@ -245,7 +245,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		var form = inputs[| 3].getValue();
 		
 		if(form == NODE_EXPORT_FORMAT.gif) {
-			surface_save(_surf, _path);
+			surface_save_safe(_surf, _path);
 			return _path;
 		}
 		
@@ -258,10 +258,10 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		
 		switch(ext) {
 			case ".png": 
-				surface_save(_surf, _path);
+				surface_save_safe(_surf, _path);
 				break;
 			case ".jpg": 
-				surface_save(_surf, _pathTemp);
+				surface_save_safe(_surf, _pathTemp);
 				
 				_pathOut = "\"" + string_replace_all(_path, ".png", "") + ".jpg\"";
 				_pathTemp = "\"" + _pathTemp + "\"";
@@ -271,7 +271,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				execute_shell(magick, shell_cmd);
 				break;
 			case ".webp": 
-				surface_save(_surf, _pathTemp);
+				surface_save_safe(_surf, _pathTemp);
 				
 				_pathOut = "\"" + string_replace_all(_path, ".png", "") + ".webp\"";
 				_pathTemp = "\"" + _pathTemp + "\"";

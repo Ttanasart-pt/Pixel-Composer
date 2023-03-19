@@ -13,6 +13,8 @@ function Node_Rigid_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	data_length = 1;
 	input_fix_len = ds_list_size(inputs);
 	
+	attribute_surface_depth();
+	
 	static createNewInput = function() {
 		var index = ds_list_size(inputs);
 		inputs[| index] = nodeValue("Object", self, JUNCTION_CONNECT.input, VALUE_TYPE.rigid, noone )
@@ -54,7 +56,7 @@ function Node_Rigid_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		var _dim = inputs[| 0].getValue();
 		var _outSurf = outputs[| 0].getValue();
 		
-		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1]);
+		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
 		outputs[| 0].setValue(_outSurf);
 	}
 	
@@ -65,11 +67,11 @@ function Node_Rigid_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		var _dim = inputs[| 0].getValue();
 		var _outSurf = outputs[| 0].getValue();
 		
-		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1]);
+		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
 		outputs[| 0].setValue(_outSurf);
 		
 		surface_set_target(_outSurf);
-		draw_clear_alpha(0, 0);
+		DRAW_CLEAR
 		
 		for( var i = input_fix_len; i < ds_list_size(inputs) - 1; i++ ) {
 			var objNode = inputs[| i].getValue();

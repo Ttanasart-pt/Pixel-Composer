@@ -61,7 +61,7 @@ function surfaceBox(_onModify, def_path = "") : widget() constructor {
 				var _sx = sx0 + sw / 2 - ss * sfw / 2;
 				var _sy = sy0 + sh / 2 - ss * sfh / 2;
 				
-				draw_surface_ext(_surface, _sx, _sy, ss, ss, 0, c_white, 1);
+				draw_surface_ext_safe(_surface, _sx, _sy, ss, ss, 0, c_white, 1);
 			}
 			
 			draw_sprite_ui_uniform(THEME.scroll_box_arrow, 0, _x + _w - ui(20), _y + _h / 2, 1, COLORS._main_icon);

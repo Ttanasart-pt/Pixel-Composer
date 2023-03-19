@@ -41,7 +41,7 @@ if(node_target == noone) {
 			var sx = dx + pw / 2 - (sw * scale) / 2 + panx;
 			var sy = dy + ph / 2 - (sh * scale) / 2 + pany;
 		
-			draw_surface_ext(s, sx, sy, scale, scale, 0, c_white, 1);
+			draw_surface_ext_safe(s, sx, sy, scale, scale, 0, c_white, 1);
 			draw_set_color(COLORS._main_icon);
 			draw_rectangle(sx, sy, sx + sw * scale, sy + sh * scale, true);
 			
@@ -53,7 +53,7 @@ if(node_target == noone) {
 				dx += (sw + 2) * scale;
 		}
 	surface_reset_target();
-	draw_surface(content_surface, px, py);
+	draw_surface_safe(content_surface, px, py);
 	
 	if(panning) {
 		panx = pan_sx + (mouse_mx - pan_mx);

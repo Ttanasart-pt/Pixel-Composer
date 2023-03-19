@@ -21,6 +21,9 @@
 	
 	#macro PANEL_PADDING padding      = in_dialog? ui(24) : ui(16); \
 						 title_height = in_dialog? ui(64) : ui(56);
+	
+	#macro PANEL_TITLE  draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text_title); \
+					    draw_text_over(in_dialog? ui(56) : ui(24), title_height / 2 - (!in_dialog) * ui(4), title);
 #endregion
 
 #region functions 
@@ -40,24 +43,6 @@
 		PANEL_COLLECTION = 0;
 	}
 	
-	function loadPanelStruct(panel, str) {
-		if(variable_struct_exists(str, "split") && is_array(str.content)) {
-			var pan = panel;
-			if(str.split == "v")
-				pan = panel.split_v(ui(str.width));
-			else if(str.split == "h")
-				pan = panel.split_h(ui(str.width));
-			
-			if(pan != noone) {
-				loadPanelStruct(pan[0], str.content[0]);
-				loadPanelStruct(pan[1], str.content[1]);
-			}
-		} else {
-			var cont = getPanelFromName(str.content)
-			if(cont != noone) panel.set(cont);
-		}
-	}
-	
 	function getPanelFromName(name, create = false) {
 		switch(name) {
 			case "Panel_Menu"       : return (create || findPanel(name))? new Panel_Menu()		 : PANEL_MENU;
@@ -72,9 +57,33 @@
 			case "Panel_History"		: return new Panel_History();
 			case "Panel_Notification"   : return new Panel_Notification();
 			case "Panel_Nodes"			: return new Panel_Nodes();
+			case "Panel_Globalvar"		: return new Panel_Globalvar();
 		}
 		
 		return noone;
+	}
+	
+	function loadPanelStruct(panel, str) {
+		var cont = str.content;
+		
+		if(variable_struct_exists(str, "split")) {
+			var pan = panel;
+			if(str.split == "v")
+				pan = panel.split_v(ui(str.width));
+			else if(str.split == "h")
+				pan = panel.split_h(ui(str.width));
+			
+			if(pan != noone) {
+				loadPanelStruct(pan[0], cont[0]);
+				loadPanelStruct(pan[1], cont[1]);
+			}
+		} else {
+			if(!is_array(cont)) cont = [ cont ];
+			for( var i = 0; i < array_length(cont); i++ ) {
+				var _cont = getPanelFromName(cont[i])
+				if(_cont != noone) panel.setContent(_cont);
+			}
+		}
 	}
 	
 	function loadPanel(path, panel) {
@@ -125,8 +134,10 @@
 		if(pan) return pan;
 		
 		with(o_dialog_panel) {
-			if(instanceof(content) == _type) 
-				return content;
+			for( var i = 0; i < array_length(content); i++ ) {
+				if(instanceof(content[i]) == _type) 
+					return content[i];
+			}
 		}
 		
 		return noone;
@@ -138,8 +149,11 @@
 		if(!ds_exists(_pane.childs, ds_type_list))
 			return _res;
 		
-		if(ds_list_size(_pane.childs) == 0 && _pane.content && instanceof(_pane.content) == _type)
-			return _pane.content;
+		if(ds_list_size(_pane.childs) == 0) {
+			for( var i = 0; i < array_length(_pane.content); i++ ) 
+				if(instanceof(_pane.content[i]) == _type)
+					return _pane.content[i];
+		}
 		
 		for(var i = 0; i < ds_list_size(_pane.childs); i++) {
 			var _re = _findPanel(_type, _pane.childs[| i], _res);
@@ -199,9 +213,12 @@
 			if((panel_mouse == 0 && mouse_release(mb_left)) || (panel_mouse == 1 && mouse_press(mb_left))) {
 				var p = [];
 				
-				if(panel_split == 4) {
-					var panel = instanceof(panel_dragging) == "Panel"? panel_dragging.content : panel_dragging;
-					dialogPanelCall(panel);
+				if(panel_split == 4) { 
+					if(panel_hovering == PANEL_MAIN) { //pop out
+						var panel = instanceof(panel_dragging) == "Panel"? panel_dragging.content : panel_dragging;
+						dialogPanelCall(panel);
+					} else 
+						panel_hovering.setContent(panel_dragging, true);
 				} else if(panel_hovering == PANEL_MAIN) { //split main panel
 					var panel = new Panel(noone, ui(2), ui(2), WIN_SW - ui(4), WIN_SH - ui(4));
 					var main  = PANEL_MAIN;
@@ -215,12 +232,12 @@
 					
 					panel.parent.childs[| (panel_split + 1) % 2] = main;
 					main.parent = panel.parent;
-					panel.parent.childs[| (panel_split + 0) % 2].set(panel_dragging);
+					panel.parent.childs[| (panel_split + 0) % 2].setContent(panel_dragging);
 					
 					PANEL_MAIN.refreshSize();
 				} else {
 					var c = panel_hovering.content;
-					panel_hovering.content = noone;
+					panel_hovering.content = [];
 					
 					switch(panel_split) {
 						case 0 : p = panel_hovering.split_v( panel_hovering.h / 2); break; 
@@ -229,8 +246,8 @@
 						case 3 : p = panel_hovering.split_v( panel_hovering.h / 2); break;
 					}
 				
-					p[(panel_split + 1) % 2].set(c);
-					p[(panel_split + 0) % 2].set(panel_dragging);
+					p[(panel_split + 1) % 2].setContent(c);
+					p[(panel_split + 0) % 2].setContent(panel_dragging);
 					
 					panel_hovering.refreshSize();
 				}
@@ -257,6 +274,7 @@
 		var cont = {};
 		var ind = 0;
 		
+		cont.content = [];
 		if(panel.split != "" && ds_list_size(panel.childs) == 2) {
 			cont.split = panel.split;
 			if(panel.split == "h") {
@@ -268,12 +286,13 @@
 				cont.width = panel.childs[| ind].h * (panel.childs[| ind].y == panel.y? 1 : -1);
 			}
 			
-			cont.content = [];
 			ind = panel.childs[| 1].x == panel.x && panel.childs[| 1].y == panel.y;
 			for( var i = 0; i < ds_list_size(panel.childs); i++ )
 				cont.content[i] = _panelSerialize(panel.childs[| (ind + i) % 2]);
-		} else if(panel.content != noone)
-			cont.content = instanceof(panel.content);
+		} else {
+			for( var i = 0; i < array_length(panel.content); i++ )
+				cont.content[i] = instanceof(panel.content[i]);
+		}
 		
 		return cont;
 	}
@@ -285,11 +304,13 @@
 	function _panelSerializeArray(panel) {
 		var cont = [];
 		
-		if(panel.content == noone) {
+		if(!ds_list_empty(panel.childs)) {
 			for( var i = 0; i < ds_list_size(panel.childs); i++ )
 				cont[i] = _panelSerializeArray(panel.childs[| i]);
-		} else
-			cont = instanceof(panel.content);
+		} else {
+			for( var i = 0; i < array_length(panel.content); i++ )
+				cont[i] = instanceof(panel.content[i]);
+		}
 		
 		return cont;
 	}
@@ -298,7 +319,7 @@
 #region fullscreen
 	function set_focus_fullscreen() {
 		if(FULL_SCREEN_CONTENT != noone) {
-			PANEL_MAIN.childs[| 1].content = noone;
+			PANEL_MAIN.childs[| 1].content = [];
 			FULL_SCREEN_CONTENT = noone;
 			PANEL_MAIN.refreshSize();
 			return;
@@ -309,20 +330,26 @@
 		if(panel == noone) return;
 		if(!is_struct(panel)) return;
 		if(instanceof(panel) != "Panel") return;
-		if(panel.content == noone) return;
+		if(array_length(panel.content) == 0) return;
 		if(!panel.content.expandable) return;
 		
-		PANEL_MAIN.childs[| 1].set(panel.content);
+		PANEL_MAIN.childs[| 1].setContent(panel.content);
 		FULL_SCREEN_CONTENT = panel;
 	}
 #endregion
 
 #region function
 	function panelHover(content) {
-		return HOVER && is_struct(HOVER) && instanceof(HOVER) == "Panel" && instanceof(HOVER.content) == instanceof(content);
+		if(!HOVER) return false;
+		if(instanceof(HOVER) != "Panel") return false;
+		
+		return instanceof(HOVER.getContent()) == instanceof(content);
 	}
 	
 	function panelFocus(content) {
-		return FOCUS && is_struct(FOCUS) && instanceof(FOCUS) == "Panel" && instanceof(FOCUS.content) == instanceof(content);
+		if(!FOCUS) return false;
+		if(instanceof(FOCUS) != "Panel") return false;
+		
+		return instanceof(FOCUS.getContent()) == instanceof(content);
 	}
 #endregion

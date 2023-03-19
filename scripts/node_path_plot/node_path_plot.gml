@@ -37,8 +37,11 @@ function Node_Path_Plot(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		[ "Equation",  false ], 1, 2, 3, 4, 6, 
 	]
 	
-	static getLineCount    = function() { return 1; }
-	static getSegmentCount = function() { return 0; }
+	boundary = new BoundingBox( 0, 0, 1, 1 );
+	
+	static getLineCount		= function() { return 1; }
+	static getSegmentCount	= function() { return 0; }
+	static getBoundary		= function() { return boundary; }
 	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		inputs[| 5].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
@@ -57,49 +60,49 @@ function Node_Path_Plot(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		
 		_rat = _ran[0] + (_rat * (_ran[1] - _ran[0]));
 		
-		var _p = [ 0, 0 ];
+		var _p = new Point();
 		
 		switch(_coor) {
 			case 0 :
 				switch(_eqa) {
 					case 0 : 
-						_p[0] = _rat * _iran[0] + _shf[0];
-						_p[1] = evaluateFunction(_eq0, { x: _rat * _iran[0] + _shf[0] });
+						_p.x = _rat * _iran[0] + _shf[0];
+						_p.y = evaluateFunction(_eq0, { x: _rat * _iran[0] + _shf[0] });
 						break;
 					case 1 : 
-						_p[0] = evaluateFunction(_eq0, { y: _rat * _iran[1] + _shf[1] });
-						_p[1] = _rat * _iran[1] + _shf[1];
+						_p.x = evaluateFunction(_eq0, { y: _rat * _iran[1] + _shf[1] });
+						_p.y = _rat * _iran[1] + _shf[1];
 						break;
 					case 2 : 
-						_p[0] = evaluateFunction(_eq0, { t: _rat * _iran[0] + _shf[0] });
-						_p[1] = evaluateFunction(_eq1, { t: _rat * _iran[1] + _shf[1] });
+						_p.x = evaluateFunction(_eq0, { t: _rat * _iran[0] + _shf[0] });
+						_p.y = evaluateFunction(_eq1, { t: _rat * _iran[1] + _shf[1] });
 						break;
 				}
 				break;
 			case 1 :
-				var _a = [ 0, 0 ];
+				var _a = new Point();
 				switch(_eqa) {
 					case 0 : 
-						_a[0] = _rat * _iran[0] + _shf[0];
-						_a[1] = evaluateFunction(_eq0, { r: _rat * _iran[0] + _shf[0] });
+						_a.x = _rat * _iran[0] + _shf[0];
+						_a.y = evaluateFunction(_eq0, { r: _rat * _iran[0] + _shf[0] });
 						break;
 					case 1 : 
-						_a[0] = evaluateFunction(_eq0, { O: _rat * _iran[1] + _shf[1] });
-						_a[1] = _rat * _iran[1] + _shf[1];
+						_a.x = evaluateFunction(_eq0, { O: _rat * _iran[1] + _shf[1] });
+						_a.y = _rat * _iran[1] + _shf[1];
 						break;
 					case 2 : 
-						_a[0] = evaluateFunction(_eq0, { t: _rat * _iran[0] + _shf[0] });
-						_a[1] = evaluateFunction(_eq1, { t: _rat * _iran[1] + _shf[1] });
+						_a.x = evaluateFunction(_eq0, { t: _rat * _iran[0] + _shf[0] });
+						_a.y = evaluateFunction(_eq1, { t: _rat * _iran[1] + _shf[1] });
 						break;
 				}
 				
-				_p[0] =  cos(_a[1]) * _a[0];
-				_p[1] = -sin(_a[1]) * _a[0];
+				_p.x =  cos(_a.y) * _a.x;
+				_p.y = -sin(_a.y) * _a.x;
 				break;
 		}
 		
-		_p[0] =  _p[0] * _sca[0] + _orig[0];
-		_p[1] = -_p[1] * _sca[1] + _orig[1];
+		_p.x =  _p.x * _sca[0] + _orig[0];
+		_p.y = -_p.y * _sca[1] + _orig[1];
 		
 		return _p;
 	}
@@ -155,7 +158,10 @@ function Node_Path_Plot(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		}
 	}
 	
-	function update() { outputs[| 0].setValue(self); }
+	function update() { 
+		updateBoundary();
+		outputs[| 0].setValue(self); 
+	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		var bbox = drawGetBbox(xx, yy, _s);

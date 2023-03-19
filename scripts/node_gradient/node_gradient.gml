@@ -51,6 +51,8 @@ function Node_Gradient(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		["Shape",		false], 2, 3, 4, 6
 	];
 	
+	attribute_surface_depth();
+	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		inputs[| 6].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
 	}
@@ -58,7 +60,7 @@ function Node_Gradient(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	static process_data = function(_outSurf, _data, _output_index, _array_index) {
 		var _dim = _data[0];
 		
-		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1]);
+		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
 			
 		var _gra = _data[1];
 		//print("Draw gradient " + string(_gra))
@@ -88,7 +90,7 @@ function Node_Gradient(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		}
 		
 		surface_set_target(_outSurf);
-		draw_clear_alpha(0, 0);
+		DRAW_CLEAR
 		shader_set(shader);
 			shader_set_uniform_i(uniform_grad_blend, _gra.type);
 			shader_set_uniform_f_array_safe(uniform_grad, _grad_color);

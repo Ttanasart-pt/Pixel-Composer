@@ -25,7 +25,14 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		/*Node*/	[ "Default", ],
 		/*3D*/		[ "Default", ],
 		/*Any*/		[ "Default", ],
-	]
+		/*Pathnode*/[ "Default", ],
+		/*Particle*/[ "Default", ],
+		/*Rigid*/	[ "Default", ],
+		/*Fdomain*/	[ "Default", ],
+		/*Struct*/	[ "Default", ],
+		/*Strand*/	[ "Default", ],
+		/*Mesh*/	[ "Default", ],
+	];
 	
 	inputs[| 0] = nodeValue("Display type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.enum_scroll, display_list[0])
@@ -38,7 +45,8 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		.rejectArray();
 	
 	inputs[| 2] = nodeValue("Input type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Integer", "Float", "Boolean", "Color", "Surface", "Path", "Curve", "Text", "Object", "Node", "3D object", "Any" ], { update_hover: false })
+		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Integer", "Float", "Boolean", "Color", "Surface", "File Path", "Curve", "Text", "Object", "Node", 
+												 "3D object", "Any", "Path", "Particle", "Rigidbody Object", "Fluid Domain", "Struct", "Strands", "Mesh" ], { update_hover: false })
 		.rejectArray();
 	inputs[| 2].editWidget.update_hover = false;
 	

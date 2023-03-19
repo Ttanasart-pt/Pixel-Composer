@@ -39,6 +39,8 @@ function Node_Blur_Simple(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
+	attribute_surface_depth();
+	
 	static process_data = function(_outSurf, _data, _output_index, _array_index) {		
 		if(!is_surface(_data[0])) return _outSurf;
 		var _size	= _data[1];
@@ -52,7 +54,7 @@ function Node_Blur_Simple(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		inputs[| 5].setVisible(_isovr);
 		
 		surface_set_target(_outSurf);
-			draw_clear_alpha(0, 0);
+			DRAW_CLEAR
 			BLEND_OVERRIDE;
 			
 			shader_set(shader);

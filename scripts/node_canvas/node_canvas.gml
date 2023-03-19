@@ -39,6 +39,8 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		["Display", false], 5, 8, 9, 10,
 	];
 	
+	attribute_surface_depth();
+	
 	canvas_surface  = surface_create(1, 1);
 	drawing_surface = surface_create(1, 1);
 	surface_buffer = buffer_create(1 * 1 * 4, buffer_fixed, 2);
@@ -79,10 +81,10 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		BLEND_ALPHA;
 		if(isUsingTool(1))
 			gpu_set_blendmode(bm_subtract);
-		draw_surface_ext(drawing_surface, 0, 0, 1, 1, 0, c_white, tool_attribute.alpha);
+		draw_surface_ext_safe(drawing_surface, 0, 0, 1, 1, 0, c_white, tool_attribute.alpha);
 				
 		surface_set_target(drawing_surface);
-			draw_clear_alpha(0, 0);
+			DRAW_CLEAR
 		surface_reset_target();
 		BLEND_NORMAL;
 		
@@ -94,25 +96,27 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		var _bg    = inputs[|  8].getValue();
 		var _bga   = inputs[|  9].getValue();
 		var _bgr   = inputs[| 10].getValue();
+		var cDep   = attrDepth();
 		
 		var _outSurf = outputs[| 0].getValue();
-		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1]);
+		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], cDep);
 			
 		if(!is_surface(canvas_surface))
 			canvas_surface = surface_create_from_buffer(_dim[0], _dim[1], surface_buffer);
-		else if(surface_size_to(canvas_surface, _dim[0], _dim[1])) {
+		else if(surface_get_width(canvas_surface) != _dim[0] || surface_get_height(canvas_surface) != _dim[1]) {
 			buffer_delete(surface_buffer);
 			surface_buffer = buffer_create(_dim[0] * _dim[1] * 4, buffer_fixed, 4);
+			canvas_surface = surface_size_to(canvas_surface, _dim[0], _dim[1]);
 		}
 		
-		drawing_surface = surface_verify(drawing_surface, _dim[0], _dim[1]);
+		drawing_surface = surface_verify(drawing_surface, _dim[0], _dim[1], cDep);
 		
 		surface_set_target(_outSurf);
-		draw_clear_alpha(0, 0);
+		DRAW_CLEAR
 		BLEND_ALPHA
 			if(_bgr && is_surface(_bg))
 				draw_surface_stretched_ext(_bg, 0, 0, _dim[0], _dim[1], c_white, _bga);
-			draw_surface(canvas_surface, 0, 0);
+			draw_surface_safe(canvas_surface, 0, 0);
 		BLEND_NORMAL
 		surface_reset_target();
 		
@@ -121,16 +125,16 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		/////
 		
 		var _surf_prev = outputs[| 1].getValue();
-		_surf_prev = surface_verify(_surf_prev, _dim[0], _dim[1]);
+		_surf_prev = surface_verify(_surf_prev, _dim[0], _dim[1], cDep);
 		outputs[| 1].setValue(_surf_prev);
 			
 		surface_set_target(_surf_prev);
-		draw_clear_alpha(0, 0);
+		DRAW_CLEAR
 		BLEND_ALPHA;
 			
 		if(is_surface(_bg))
 			draw_surface_stretched_ext(_bg, 0, 0, _dim[0], _dim[1], c_white, _bga);
-		draw_surface(canvas_surface, 0, 0);
+		draw_surface_safe(canvas_surface, 0, 0);
 		
 		BLEND_NORMAL;
 		
@@ -158,7 +162,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			var _sw = surface_get_width(_brush);
 			var _sh = surface_get_height(_brush);
 			
-			draw_surface_ext(_brush, _x - floor(_sw / 2), _y - floor(_sh / 2), 1, 1, 0, draw_get_color(), draw_get_alpha());
+			draw_surface_ext_safe(_brush, _x - floor(_sw / 2), _y - floor(_sh / 2), 1, 1, 0, draw_get_color(), draw_get_alpha());
 		}
 	}
 	
@@ -429,10 +433,10 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			}
 			
 			if(mouse_press(mb_left, active)) {
-				drawing_surface = surface_verify(drawing_surface, _dim[0], _dim[1]);
+				drawing_surface = surface_verify(drawing_surface, _dim[0], _dim[1], attrDepth());
 				BLEND_ALPHA;
 				surface_set_target(drawing_surface);
-					draw_clear_alpha(0, 0);
+					DRAW_CLEAR
 					draw_point_size(mouse_cur_x, mouse_cur_y, _siz, _brush);
 				surface_reset_target();
 				
@@ -495,7 +499,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			if(mouse_holding && mouse_release(mb_left)) {
 				BLEND_ALPHA;
 				surface_set_target(drawing_surface);
-					draw_clear_alpha(0, 0);
+					DRAW_CLEAR
 					if(isUsingTool(2))
 						draw_rect_size(mouse_pre_x, mouse_pre_y, mouse_cur_x, mouse_cur_y, _siz, isUsingTool(2, 1), _brush);
 					else if(isUsingTool(3))
@@ -535,20 +539,20 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			var _bga   = inputs[|  9].getValue();
 		
 			var _surf_prev = outputs[| 1].getValue();
-			_surf_prev = surface_verify(_surf_prev, _dim[0], _dim[1]);
+			_surf_prev = surface_verify(_surf_prev, _dim[0], _dim[1], attrDepth());
 			outputs[| 1].setValue(_surf_prev);
 			
 			surface_set_target(_surf_prev);
-			draw_clear_alpha(0, 0);
+			DRAW_CLEAR
 			BLEND_ALPHA;
 			
 			if(is_surface(_bg)) draw_surface_stretched_ext(_bg, 0, 0, _dim[0], _dim[1], c_white, _bga);
-			draw_surface(canvas_surface, 0, 0);
+			draw_surface_safe(canvas_surface, 0, 0);
 			
 			BLEND_ALPHA;
 			if(isUsingTool(1))
 				gpu_set_blendmode(bm_subtract);
-			draw_surface_ext(drawing_surface, 0, 0, 1, 1, 0, c_white, tool_attribute.alpha);
+			draw_surface_ext_safe(drawing_surface, 0, 0, 1, 1, 0, c_white, tool_attribute.alpha);
 			BLEND_NORMAL;
 			
 			draw_set_color(_col);
@@ -619,7 +623,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		
 		var _dim     = inputs[|  0].getValue();
 		var _outSurf = outputs[| 0].getValue();
-		_outSurf     = surface_verify(_outSurf, _dim[0], _dim[1]);
+		_outSurf     = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
 		canvas_surface = surface_create_from_buffer(_dim[0], _dim[1], surface_buffer);
 		
 		apply_surface();

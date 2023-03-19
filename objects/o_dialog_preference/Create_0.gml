@@ -204,55 +204,6 @@ event_inherited();
 #region //NODE
 	pref_node = ds_list_create();
 	
-	ds_list_add(pref_node, "Particle");
-	ds_list_add(pref_node, [
-		get_text("pref_max_particles", "Max particles"),
-		"part_max_amount",
-		new textBox(TEXTBOX_INPUT.number, function(str) { 
-			PREF_MAP[? "part_max_amount"] = real(str); 
-			PREF_SAVE();
-		})
-	]);
-	
-	ds_list_add(pref_node, "Separate shape");
-	ds_list_add(pref_node, [
-		get_text("pref_max_shapes", "Max shapes"),
-		"shape_separation_max",
-		new textBox(TEXTBOX_INPUT.number, function(str) { 
-			PREF_MAP[? "shape_separation_max"] = real(str); 
-			PREF_SAVE();
-		})
-	]);
-	
-	ds_list_add(pref_node, "Levels");
-	ds_list_add(pref_node, [
-		get_text("pref_histogram_resolution", "Histogram resolution"),
-		"level_resolution",
-		new textBox(TEXTBOX_INPUT.number, function(str) { 
-			PREF_MAP[? "level_resolution"] = real(str); 
-			PREF_SAVE();
-		})
-	]);
-	
-	ds_list_add(pref_node, [
-		get_text("pref_maximum_sampling", "Maximum sampling"),
-		"level_max_sampling",
-		new textBox(TEXTBOX_INPUT.number, function(str) { 
-			PREF_MAP[? "level_max_sampling"] = real(str); 
-			PREF_SAVE();
-		})
-	]);
-	
-	ds_list_add(pref_node, "Physics");
-	ds_list_add(pref_node, [
-		get_text("pref_verlet_iteration", "Verlet iteration"),
-		"verlet_iteration",
-		new textBox(TEXTBOX_INPUT.number, function(str) { 
-			PREF_MAP[? "verlet_iteration"] = real(str); 
-			PREF_SAVE();
-		})
-	]);
-	
 	ds_list_add(pref_node, [
 		get_text("pref_gravity", "Gravity"),
 		"physics_gravity",

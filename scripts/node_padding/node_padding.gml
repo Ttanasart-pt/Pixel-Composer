@@ -23,10 +23,13 @@ function Node_Padding(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		["Padding", false], 1, 2, 3
 	];
 	
+	attribute_surface_depth();
+	
 	static process_data = function(_outSurf, _data, _output_index, _array_index) {
 		var padding	= _data[1];
 		var fill	= _data[2];
 		var fillClr = _data[3];
+		var cDep    = attrDepth();
 		
 		inputs[| 3].setVisible(fill);
 		
@@ -37,11 +40,11 @@ function Node_Padding(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		var sh	= hh + padding[1] + padding[3];
 		
 		if(sw > 1 && sh > 1) { 
-			_outSurf = surface_verify(_outSurf, sw, sh);
+			_outSurf = surface_verify(_outSurf, sw, sh, cDep);
 			
 			surface_set_target(_outSurf);
 				if(fill == 0) {
-					draw_clear_alpha(0, 0);
+					DRAW_CLEAR
 					BLEND_OVERRIDE;
 				} else if(fill == 1) {
 					draw_clear_alpha(fillClr, 1);

@@ -1,3 +1,8 @@
+enum DIMENSION {
+	width,
+	height
+}
+
 function vectorBox(_size, _type, _onModify, _unit = noone) : widget() constructor {
 	size     = _size;
 	onModify = _onModify;
@@ -66,6 +71,7 @@ function vectorBox(_size, _type, _onModify, _unit = noone) : widget() constructo
 		w = _w;
 		h = _h;
 		
+		if(!is_array(_data)) return;
 		if(extras && instanceof(extras) == "buttonClass") {
 			extras.hover  = hover;
 			extras.active = active;

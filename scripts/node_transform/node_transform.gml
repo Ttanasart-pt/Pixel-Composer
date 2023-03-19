@@ -52,6 +52,8 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
+	attribute_surface_depth();
+
 	vel = 0;
 	prev_pos = [0, 0];
 	
@@ -147,6 +149,8 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		var sca = _data[6];
 		var wrp = _data[7];
 		
+		var cDep = attrDepth();
+		
 		var ww  = surface_get_width(ins);
 		var hh  = surface_get_height(ins);
 		var _ww = ww, _hh = hh;
@@ -168,7 +172,7 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				break;
 		}
 		if(_ww <= 0 || _hh <= 0) return;
-		_outSurf = surface_verify(_outSurf, _ww, _hh);
+		_outSurf = surface_verify(_outSurf, _ww, _hh, cDep);
 		
 		anc[0] *= ww * sca[0];
 		anc[1] *= hh * sca[1];
@@ -183,10 +187,10 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			var _h = _hh * sqrt(2);
 			var _px = (_w - _ww) / 2;
 			var _py = (_h - _hh) / 2;
-			var _s = surface_create_valid(_w, _h);
+			var _s = surface_create_valid(_w, _h, cDep);
 			
 			surface_set_target(_s);
-				draw_clear_alpha(0, 0);
+				DRAW_CLEAR
 				BLEND_OVERRIDE;
 			
 				if(is_surface(ins)) {
@@ -206,7 +210,7 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			
 			var _cc = point_rotate(-_px, -_py, _ww / 2, _hh / 2, rot);
 			surface_set_target(_outSurf);
-				draw_clear_alpha(0, 0);
+				DRAW_CLEAR
 				BLEND_OVERRIDE;
 				
 				draw_surface_ext_safe(_s, _cc[0], _cc[1], 1, 1, rot, c_white, 1);
@@ -217,7 +221,7 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			surface_free(_s);
 		} else {
 			surface_set_target(_outSurf);
-				draw_clear_alpha(0, 0);
+				DRAW_CLEAR
 				BLEND_OVERRIDE;
 				
 				var draw_x, draw_y;

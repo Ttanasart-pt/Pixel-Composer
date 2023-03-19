@@ -22,6 +22,8 @@ function Node_Average(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	outputs[| 1] = nodeValue("Color", self, JUNCTION_CONNECT.output, VALUE_TYPE.color, c_black);
 	
+	attribute_surface_depth();
+
 	colors = [];
 	
 	static process_data = function(_outSurf, _data, _output_index, _array_index) {
@@ -32,7 +34,7 @@ function Node_Average(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			return array_safe_get(colors, _array_index);
 			
 		var side = max(surface_get_width(inSurf), surface_get_height(inSurf));
-		var lop = ceil(log2(side));
+		var lop  = ceil(log2(side));
 		var cc;
 		side = power(2, lop);
 		
@@ -41,9 +43,9 @@ function Node_Average(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			var _ind = 1;
 			
 			surface_set_target(_Surf[0]);
-			draw_clear_alpha(0, 0);
+			DRAW_CLEAR
 			BLEND_OVERRIDE;
-			draw_surface_stretched(inSurf, 0, 0, side, side);
+			draw_surface_stretched_safe(inSurf, 0, 0, side, side);
 			BLEND_NORMAL;
 			surface_reset_target();
 			
@@ -52,8 +54,8 @@ function Node_Average(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 				shader_set_uniform_f(uniform_dim, side);
 				
 				surface_set_target(_Surf[_ind]);
-				draw_clear_alpha(0, 0);
-				draw_surface(_Surf[!_ind], 0, 0);
+				DRAW_CLEAR
+				draw_surface_safe(_Surf[!_ind], 0, 0);
 				surface_reset_target();
 				
 				_ind = !_ind;

@@ -22,6 +22,8 @@ function Node_Mirror(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		["Mirror",	 false], 1, 2, 
 	]
 	
+	attribute_surface_depth();
+	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var _pos   = inputs[| 1].getValue();
 		var _ang   = inputs[| 2].getValue();
@@ -46,7 +48,7 @@ function Node_Mirror(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		var _ang = _data[2];
 		
 		surface_set_target(_outSurf);
-			draw_clear_alpha(0, 0);
+			DRAW_CLEAR
 			BLEND_OVERRIDE;
 			
 			shader = _output_index? sh_mirror_mask : sh_mirror;

@@ -1095,7 +1095,7 @@ function gameframe_std_Std_stringify(_value) {
 	if (is_struct(_value)) {
 		var _e = _value[$"__enum__"];
 		if (_e == undefined) return string(_value);
-		var _ects = _e.constructors;
+		var _ects = _e._constructor;
 		if (_ects != undefined) {
 			_i = _value.__enumIndex__;
 			if (_i >= 0 && _i < array_length(_ects)) _s = _ects[_i]; else _s = "?";

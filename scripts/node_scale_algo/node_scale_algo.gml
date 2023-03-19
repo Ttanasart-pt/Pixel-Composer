@@ -31,11 +31,14 @@ function Node_Scale_Algo(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		["Scale",	 false], 1, 2, 
 	]
 	
+	attribute_surface_depth();
+	
 	static process_data = function(_outSurf, _data, _output_index, _array_index) {
 		var inSurf = _data[0];
-		var algo = _data[1];
-		var ww = surface_get_width(inSurf);
-		var hh = surface_get_height(inSurf);
+		var algo   = _data[1];
+		var ww     = surface_get_width(inSurf);
+		var hh     = surface_get_height(inSurf);
+		var cDep   = attrDepth();
 		var shader;
 		var sc = 2;
 		
@@ -46,7 +49,7 @@ function Node_Scale_Algo(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 				var sw = ww * 2;
 				var sh = hh * 2;
 				
-				_outSurf = surface_verify(_outSurf, sw, sh);
+				_outSurf = surface_verify(_outSurf, sw, sh, cDep);
 				break;
 			case 1 :
 				shader = sh_scale3x;
@@ -54,13 +57,13 @@ function Node_Scale_Algo(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 				var sw = ww * 3;
 				var sh = hh * 3;
 				
-				_outSurf = surface_verify(_outSurf, sw, sh);
+				_outSurf = surface_verify(_outSurf, sw, sh, cDep);
 				break;
 			default: return _outSurf;
 		}
 		
 		surface_set_target(_outSurf);
-		draw_clear_alpha(0, 0);
+		DRAW_CLEAR
 		BLEND_OVERRIDE;
 		
 		var uniform_dim = shader_get_uniform(shader, "dimension");

@@ -34,6 +34,8 @@ function Node_Checker(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		["Render",	false], 4, 5,
 	];
 	
+	attribute_surface_depth();
+	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var pos = inputs[| 3].getValue();
 		var px = _x + pos[0] * _s;
@@ -52,7 +54,7 @@ function Node_Checker(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		var _col1 = _data[4];
 		var _col2 = _data[5];
 		
-		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1]);
+		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
 			
 		surface_set_target(_outSurf);
 			shader_set(shader);

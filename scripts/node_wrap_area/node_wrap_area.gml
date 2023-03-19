@@ -16,6 +16,8 @@ function Node_Wrap_Area(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		["Area",	 false], 1, 
 	]
 	
+	attribute_surface_depth();
+
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		inputs[| 1].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
 	}
@@ -37,7 +39,7 @@ function Node_Wrap_Area(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		var hh = ch / surface_get_height(_inSurf) * 2;
 		
 		surface_set_target(_outSurf);
-			draw_clear_alpha(0, 0);
+			DRAW_CLEAR
 			BLEND_OVERRIDE;
 			
 			draw_surface_ext_safe(_inSurf, cx - cw, cy - ch, ww, hh, 0, c_white, 1);

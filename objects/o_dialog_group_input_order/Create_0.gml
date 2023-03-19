@@ -8,8 +8,6 @@ event_inherited();
 	node = noone;
 	destroy_on_click_out = true;
 	
-	anchor = ANCHOR.left | ANCHOR.top;
-	
 	sep_dragging = -1;
 	
 	sep_editing = -1;

@@ -35,13 +35,14 @@ function Node_Glow(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	surface_blur_init();
+	attribute_surface_depth();
 	
 	static process_data = function(_outSurf, _data, _output_index, _array_index) {
 		var _border = _data[1];
 		var _size = _data[2];
 		var _stre = _data[3];
 		var cl    = _data[4];
-		var pass1 = surface_create_valid(surface_get_width(_outSurf), surface_get_height(_outSurf));	
+		var pass1 = surface_create_valid(surface_get_width(_outSurf), surface_get_height(_outSurf), attrDepth());	
 		
 		surface_set_target(pass1);
 		draw_clear_alpha(c_black, 1);
@@ -55,7 +56,7 @@ function Node_Glow(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		surface_reset_target();
 		
 		surface_set_target(_outSurf);
-		draw_clear_alpha(0, 0);
+		DRAW_CLEAR
 		BLEND_OVERRIDE;
 		
 		var s = surface_apply_gaussian(pass1, _size, false, c_black, 0);

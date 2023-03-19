@@ -871,6 +871,13 @@
         "yorigin": 16,
         "slice": null
     },
+    "strandSim": {
+        "path": "./icon/s_strandSim.png",
+        "subimages": 1,
+        "xorigin": 16,
+        "yorigin": 16,
+        "slice": null
+    },
     "inspector_area": {
         "path": "./inspector/s_inspector_area_strip2.png",
         "subimages": 2,
@@ -1005,28 +1012,28 @@
     },
     "node_junctions_array": {
         "path": "./node/s_node_junctions_array.png",
-        "subimages": 17,
+        "subimages": 19,
         "xorigin": 16,
         "yorigin": 16,
         "slice": null
     },
     "node_junctions_array_hover": {
         "path": "./node/s_node_junctions_array_hover.png",
-        "subimages": 17,
+        "subimages": 19,
         "xorigin": 16,
         "yorigin": 16,
         "slice": null
     },
     "node_junctions_single": {
         "path": "./node/s_node_junctions_single.png",
-        "subimages": 17,
+        "subimages": 19,
         "xorigin": 16,
         "yorigin": 16,
         "slice": null
     },
     "node_junctions_single_hover": {
         "path": "./node/s_node_junctions_single_hover.png",
-        "subimages": 17,
+        "subimages": 19,
         "xorigin": 16,
         "yorigin": 16,
         "slice": null
@@ -1578,6 +1585,13 @@
         "yorigin": 24,
         "slice": null
     },
+    "path_tools_transform": {
+        "path": "./tool/s_path_tools_transform.png",
+        "subimages": 1,
+        "xorigin": 24,
+        "yorigin": 24,
+        "slice": null
+    },
     "tools_canvas_channel": {
         "path": "./tool/s_canvas_channel.png",
         "subimages": 4,
@@ -1587,6 +1601,41 @@
     },
     "splice_draw": {
         "path": "./tool/s_splice_draw.png",
+        "subimages": 1,
+        "xorigin": 24,
+        "yorigin": 24,
+        "slice": null
+    },
+    "strand_comb": {
+        "path": "./tool/s_strand_tool_comb.png",
+        "subimages": 1,
+        "xorigin": 24,
+        "yorigin": 24,
+        "slice": null
+    },
+    "strand_cut": {
+        "path": "./tool/s_strand_tool_cut.png",
+        "subimages": 1,
+        "xorigin": 24,
+        "yorigin": 24,
+        "slice": null
+    },
+    "strand_grab": {
+        "path": "./tool/s_strand_tool_grab.png",
+        "subimages": 1,
+        "xorigin": 24,
+        "yorigin": 24,
+        "slice": null
+    },
+    "strand_push": {
+        "path": "./tool/s_strand_tool_push.png",
+        "subimages": 1,
+        "xorigin": 24,
+        "yorigin": 24,
+        "slice": null
+    },
+    "strand_stretch": {
+        "path": "./tool/s_strand_tool_stretch.png",
         "subimages": 1,
         "xorigin": 24,
         "yorigin": 24,
@@ -1620,6 +1669,45 @@
     },
     "button_hide_fill": {
         "path": "./widget/s_button_hide_fill_strip3.png",
+        "subimages": 3,
+        "xorigin": 0,
+        "yorigin": 0,
+        "slice": {
+            "enabled": true,
+            "left": 7,
+            "right": 7,
+            "top": 7,
+            "bottom": 7
+        }
+    },
+    "button_hide_left": {
+        "path": "./widget/s_button_hide_left.png",
+        "subimages": 3,
+        "xorigin": 0,
+        "yorigin": 0,
+        "slice": {
+            "enabled": true,
+            "left": 7,
+            "right": 7,
+            "top": 7,
+            "bottom": 7
+        }
+    },
+    "button_hide_middle": {
+        "path": "./widget/s_button_hide_middle.png",
+        "subimages": 3,
+        "xorigin": 0,
+        "yorigin": 0,
+        "slice": {
+            "enabled": true,
+            "left": 7,
+            "right": 7,
+            "top": 7,
+            "bottom": 7
+        }
+    },
+    "button_hide_right": {
+        "path": "./widget/s_button_hide_right.png",
         "subimages": 3,
         "xorigin": 0,
         "yorigin": 0,

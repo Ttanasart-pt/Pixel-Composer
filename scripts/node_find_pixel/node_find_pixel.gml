@@ -26,7 +26,7 @@ function Node_Find_Pixel(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		temp_surface[0] = surface_verify(temp_surface[0], 1, 1);
 		
 		surface_set_target(temp_surface[0]);
-		draw_clear_alpha(0, 0);
+		DRAW_CLEAR
 		shader_set(shader);
 			texture_set_stage(shader_tex, surface_get_texture(_surf));
 			shader_set_uniform_f(shader_dim, surface_get_width(_surf), surface_get_height(_surf));

@@ -6,6 +6,9 @@ function buttonGroupClass(_data, _onClick) : widget() constructor {
 	data    = _data;
 	onClick = _onClick;
 	display_button = false;
+	buttonSpr = [ THEME.button_left, THEME.button_middle, THEME.button_right ];
+	font	= f_p0;
+	fColor  = COLORS._main_text;
 	
 	current_selecting = 0;
 	
@@ -61,7 +64,7 @@ function buttonGroupClass(_data, _onClick) : widget() constructor {
 				buttons[i].active = active;
 			
 				var bx  = _x + ww * i;
-				var spr = i == 0 ? THEME.button_left : (i == amo - 1? THEME.button_right : THEME.button_middle);
+				var spr = i == 0 ? buttonSpr[0] : (i == amo - 1? buttonSpr[2] : buttonSpr[1]);
 			
 				if(_selecting == i)
 					draw_sprite_stretched(spr, 2, bx, _y, ww, _h);	
@@ -69,7 +72,7 @@ function buttonGroupClass(_data, _onClick) : widget() constructor {
 					onClick(i);
 			
 				if(is_string(data[i])) {
-					draw_set_text(f_p0, fa_center, fa_center, COLORS._main_text);
+					draw_set_text(font, fa_center, fa_center, fColor);
 					draw_text(bx + ww / 2, _y + _h / 2, data[i]);
 				} else if(sprite_exists(data[i])) {
 					draw_sprite_ui_uniform(data[i], i, bx + ww / 2, _y + _h / 2);

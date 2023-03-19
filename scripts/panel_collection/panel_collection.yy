@@ -5,7 +5,7 @@
   "isCompatibility": false,
   "isDnD": false,
   "parent": {
-    "name": "data",
-    "path": "folders/panels/data.yy",
+    "name": "_others",
+    "path": "folders/panels/_others.yy",
   },
 }

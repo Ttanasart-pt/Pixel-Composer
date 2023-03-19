@@ -637,7 +637,7 @@ function gif_std_enum_getIndex() {
 		if (is_struct(_value)) {
 			var _e = variable_struct_get(_value, "__enum__");
 			if (_e == undefined) return string(_value);
-			var _ects = _e.constructors;
+			var _ects = _e._constructor;
 			if (_ects != undefined) {
 				_i = _value.__enumIndex__;
 				if (_i >= 0 && _i < array_length(_ects)) _s = _ects[_i]; else _s = "?";
@@ -911,8 +911,8 @@ function gif_std_enum_getIndex() {
 #endregion
 
 #region gif_std.haxe.enum
-	function gif_std_haxe_enum(_id, _name, _constructors) constructor {
-		static constructors = undefined;
+	function gif_std_haxe_enum(_id, _name, _constructor) constructor {
+		static _constructor = undefined;
 		static marker = undefined;
 		static index = undefined;
 		static name = undefined;
@@ -920,7 +920,7 @@ function gif_std_enum_getIndex() {
 		self.marker = gif_std_haxe_type_markerValue;
 		self.index = _id;
 		self.name = _name;
-		self.constructors = _constructors;
+		self._constructor = _constructor;
 		static __class__ = "enum";
 	}
 	mt_gif_std_haxe_enum.i_constructor = gif_std_haxe_enum;

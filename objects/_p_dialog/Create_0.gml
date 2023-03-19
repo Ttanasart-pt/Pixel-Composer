@@ -26,7 +26,8 @@
 #endregion
 
 #region windows
-	draggable = true;
+	mouse_active	= false;
+	draggable		= true;
 	dialog_dragging = false;
 	dialog_drag_sx  = 0;
 	dialog_drag_sy  = 0;
@@ -34,6 +35,7 @@
 	dialog_drag_my  = 0;
 	
 	function doDrag() {
+		mouse_active = true;
 		if(!draggable) return;
 		
 		if(dialog_dragging) {
@@ -44,8 +46,9 @@
 				dialog_dragging = false;
 		}
 		
-		if(sFOCUS && mouse_press(mb_left)) {
-			if(point_in_rectangle(mouse_mx, mouse_my, dialog_x, dialog_y, dialog_x + dialog_w, dialog_y + ui(title_height))) {
+		if(point_in_rectangle(mouse_mx, mouse_my, dialog_x, dialog_y, dialog_x + dialog_w, dialog_y + ui(title_height))) {
+			mouse_active = false;
+			if(mouse_press(mb_left, sFOCUS)) {
 				dialog_dragging = true;
 				dialog_drag_sx  = dialog_x;
 				dialog_drag_sy  = dialog_y;
@@ -86,7 +89,8 @@
 		
 		if(sHOVER && distance_to_line(mouse_mx, mouse_my, dialog_x + dialog_w, dialog_y, 
 			dialog_x + dialog_w, dialog_y + dialog_h) < 12) {
-				
+			
+			mouse_active = false;
 			CURSOR = cr_size_we;
 			if(mouse_press(mb_left, sFOCUS)) {
 				dialog_resizing |= 1 << 0;
@@ -98,7 +102,8 @@
 			
 		if(sHOVER && distance_to_line(mouse_mx, mouse_my, dialog_x, dialog_y + dialog_h, 
 			dialog_x + dialog_w, dialog_y + dialog_h) < 12) {
-				
+			
+			mouse_active = false;
 			if(CURSOR == cr_size_we)
 				CURSOR = cr_size_nwse;
 			else

@@ -11,9 +11,11 @@ function Node_HSV_Channel(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	outputs[| 3] = nodeValue("Alpha", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
+	attribute_surface_depth();
+	
 	static process_data = function(_outSurf, _data, output_index) {
 		surface_set_target(_outSurf);
-		draw_clear_alpha(0, 0);
+		DRAW_CLEAR
 		BLEND_OVERRIDE;
 			switch(output_index) {
 				case 0 : shader_set(sh_channel_H); break;

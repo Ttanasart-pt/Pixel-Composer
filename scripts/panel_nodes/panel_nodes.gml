@@ -1,9 +1,13 @@
 function Panel_Nodes() : PanelContent() constructor {
 	#region data
 		title = "Nodes";
+		showHeader  = false;
 		
 		w = ui(320);
 		h = ui(480);
+		
+		title_height = 64;
+		padding = 24;
 		
 		search_string = "";
 		
@@ -18,7 +22,7 @@ function Panel_Nodes() : PanelContent() constructor {
 	#endregion
 
 	function onResize() {
-		sc_nodes.resize(w - ui(padding + padding), h - ui(padding + padding + 40));
+		sc_nodes.resize(w - ui(padding + padding), h - ui(padding + title_height + 40));
 	}
 	
 	function drawNodeList(_list, _x0, _x1, _y, _m) {
@@ -89,7 +93,7 @@ function Panel_Nodes() : PanelContent() constructor {
 	}
 	
 	#region content
-		sc_nodes = new scrollPane(w - ui(padding + padding), h - ui(padding + padding + 40), function(_y, _m) {
+		sc_nodes = new scrollPane(w - ui(padding + padding), h - ui(title_height + padding + 40), function(_y, _m) {
 			draw_clear_alpha(COLORS.panel_bg_clear, 0);
 			var _h = drawNodeList(NODES, 0, sc_nodes.surface_w, _y, _m);
 			return _h;
@@ -97,10 +101,13 @@ function Panel_Nodes() : PanelContent() constructor {
 	#endregion
 
 	function drawContent(panel) {
+		PANEL_PADDING
+		PANEL_TITLE
+		
 		var px = ui(padding);
-		var py = ui(padding);
+		var py = ui(title_height);
 		var pw = w - ui(padding + padding);
-		var ph = h - ui(padding + padding);
+		var ph = h - ui(title_height + padding);
 		
 		draw_sprite_stretched(THEME.ui_panel_bg, !in_dialog, px - ui(8), py - ui(8), pw + ui(16), ph + ui(16));
 		tb_search.setActiveFocus(pFOCUS, pHOVER);
@@ -108,7 +115,7 @@ function Panel_Nodes() : PanelContent() constructor {
 		
 		sc_nodes.setActiveFocus(pFOCUS, pHOVER);
 		sc_nodes.draw(px, py + ui(40), mx - px, my - (py + ui(40)));
-	
+		
 		//var bx = w - ui(32 + 16);
 		//var by = title_height / 2 - ui(14);
 			

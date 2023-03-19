@@ -27,6 +27,21 @@ function Node_Path_Map_Area(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		return struct_has(_path, "getSegmentCount")? _path.getSegmentCount() : 0; 
 	}
 	
+	static getLength = function() { 
+		var _path = inputs[| 0].getValue();
+		return struct_has(_path, "getLength")? _path.getLength() : 0; 
+	}
+	
+	static getSegmentLength = function() { 
+		var _path = inputs[| 0].getValue();
+		return struct_has(_path, "getSegmentLength")? _path.getSegmentLength() : []; 
+	}
+	
+	static getAccuLength = function() { 
+		var _path = inputs[| 0].getValue();
+		return struct_has(_path, "getAccuLength")? _path.getAccuLength() : []; 
+	}
+		
 	static getPointRatio = function(_rat, ind = 0) {
 		var _path = inputs[| 0].getValue();
 		var _area = inputs[| 1].getValue();
@@ -37,20 +52,27 @@ function Node_Path_Map_Area(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		}
 		
 		if(!is_struct(_path) || !struct_has(_path, "getPointRatio"))
-			return [ 0, 0 ];
+			return new Point();
 		
 		var _b = _path.getBoundary();
-		var _p = _path.getPointRatio(_rat, ind);
+		var _p = _path.getPointRatio(_rat, ind).clone();
 		
-		_p[0] = (_area[0] - _area[2]) + (_p[0] - _b[0]) / (_b[2] - _b[0]) * _area[2] * 2;
-		_p[1] = (_area[1] - _area[3]) + (_p[1] - _b[1]) / (_b[3] - _b[1]) * _area[3] * 2;
+		_p.x = (_area[AREA_INDEX.center_x] - _area[AREA_INDEX.half_w]) + (_p.x - _b.minx) / _b.width  * _area[AREA_INDEX.half_w] * 2;
+		_p.y = (_area[AREA_INDEX.center_y] - _area[AREA_INDEX.half_h]) + (_p.y - _b.miny) / _b.height * _area[AREA_INDEX.half_h] * 2;
 		
 		return _p;
 	}
 	
+	static getPointDistance = function(_dist, ind = 0) {
+		return getPointRatio(_dist / getLength(), ind);
+	}
+	
 	static getBoundary = function() {
 		var _area = inputs[| 1].getValue();
-		return [ _area[0] - _area[2], _area[1] - _area[3], _area[0] + _area[2], _area[1] + _area[3] ];
+		return new BoundingBox( _area[AREA_INDEX.center_x] - _area[AREA_INDEX.half_w], 
+								_area[AREA_INDEX.center_y] - _area[AREA_INDEX.half_h], 
+								_area[AREA_INDEX.center_x] + _area[AREA_INDEX.half_w], 
+								_area[AREA_INDEX.center_y] + _area[AREA_INDEX.half_h] );
 	}
 	
 	function update() { 

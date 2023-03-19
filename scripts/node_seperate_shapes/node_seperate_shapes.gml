@@ -34,10 +34,16 @@ function Node_Seperate_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		["Render",	false], 2, 3,
 	]
 	
+	attribute_surface_depth();
+	
 	temp_surface = [ surface_create(1, 1), surface_create(1, 1) ];
 	surface_buffer = buffer_create(1 * 1 * 4, buffer_fixed, 2);
 	surface_w = 1;
 	surface_h = 1;
+	
+	attributes[? "max_shape"] = 32;
+	array_push(attributeEditors, ["Maximum shapes", "max_shape",
+		new textBox(TEXTBOX_INPUT.number, function(val) { attributes[? "max_shape"] = val; })]);
 	
 	function get_color_buffer(_x, _y) {
 		buffer_seek(surface_buffer, buffer_seek_start, (surface_w * _y + _x) * 4);
@@ -63,10 +69,10 @@ function Node_Seperate_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		surface_h = hh;
 	
 		for(var i = 0; i < 2; i++) {
-			temp_surface[i] = surface_verify(temp_surface[i], ww, hh);
+			temp_surface[i] = surface_verify(temp_surface[i], ww, hh, attrDepth());
 			
 			surface_set_target(temp_surface[i]);
-			draw_clear_alpha(0, 0);
+			DRAW_CLEAR
 			surface_reset_target();
 		}
 		
@@ -90,7 +96,7 @@ function Node_Seperate_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 			var fg = !bg;
 			
 			surface_set_target(temp_surface[bg]);
-			draw_clear_alpha(0, 0);
+			DRAW_CLEAR
 			BLEND_OVERRIDE;
 				draw_surface_safe(temp_surface[fg], 0, 0);
 			BLEND_NORMAL;
@@ -101,16 +107,16 @@ function Node_Seperate_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		
 		shader_reset();
 		
-		var _pixel_surface = surface_create_valid(PREF_MAP[? "shape_separation_max"], 1);
+		var _pixel_surface = surface_create_valid(attributes[? "max_shape"], 1);
 		surface_set_target(_pixel_surface);
-		draw_clear_alpha(0, 0);
+		DRAW_CLEAR
 		BLEND_OVERRIDE;
 			shader_set(sh_seperate_shape_counter);
 			texture_set_stage(shader_get_sampler_index(sh_seperate_shape_counter, "surface"), surface_get_texture(temp_surface[res_index]));
 			shader_set_uniform_f_array_safe(shader_get_uniform(sh_seperate_shape_counter, "dimension"), [ ww, hh ]);
-			shader_set_uniform_i(shader_get_uniform(sh_seperate_shape_counter, "maxShape"), PREF_MAP[? "shape_separation_max"]);
+			shader_set_uniform_i(shader_get_uniform(sh_seperate_shape_counter, "maxShape"), attributes[? "max_shape"]);
 			shader_set_uniform_i(shader_get_uniform(sh_seperate_shape_counter, "ignore"), _ignore);
-				draw_sprite_ext(s_fx_pixel, 0, 0, 0, PREF_MAP[? "shape_separation_max"], 1, 0, c_white, 1);
+				draw_sprite_ext(s_fx_pixel, 0, 0, 0, attributes[? "max_shape"], 1, 0, c_white, 1);
 			shader_reset();
 		BLEND_NORMAL;
 		surface_reset_target();
@@ -134,7 +140,7 @@ function Node_Seperate_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 			_val[@ i] = _outSurf;
 				
 			surface_set_target(_outSurf);
-			draw_clear_alpha(0, 0);
+			DRAW_CLEAR
 			BLEND_OVERRIDE;
 				shader_set(sh_seperate_shape_sep);
 				var ccx = surface_getpixel_ext(_pixel_surface, 1 + i, 0);

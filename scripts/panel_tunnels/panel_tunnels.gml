@@ -8,7 +8,7 @@ function Panel_Tunnels() : PanelContent() constructor {
 		
 		title_height = 64;
 		padding = 24;
-	
+		
 		build_x = 0;
 		build_y = 0;
 		
@@ -58,7 +58,7 @@ function Panel_Tunnels() : PanelContent() constructor {
 			}
 		}
 	#endregion
-
+	
 	function onResize() {
 		PANEL_PADDING
 		
@@ -151,9 +151,8 @@ function Panel_Tunnels() : PanelContent() constructor {
 
 	function drawContent(panel) {
 		PANEL_PADDING
+		PANEL_TITLE
 		
-		draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text_title);
-		draw_text_over(in_dialog? ui(56) : ui(24), title_height / 2, title);
 		scanNodes();
 		
 		var px = ui(padding);
@@ -169,9 +168,9 @@ function Panel_Tunnels() : PanelContent() constructor {
 	
 		sc_tunnel.setActiveFocus(pFOCUS, pHOVER);
 		sc_tunnel.draw(px, py + ui(40), mx - px, my - (py + ui(40)));
-	
+		
 		var bx = w - ui(32 + 16);
-		var by = title_height / 2 - ui(14);
+		var by = title_height / 2 - ui(16 + !in_dialog * 2);
 			
 		if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), [mx, my], pFOCUS, pHOVER, "Create tunnel", THEME.tunnel, 1, c_white) == 2) {
 			nodeBuild("Node_Tunnel_In", build_x, build_y);

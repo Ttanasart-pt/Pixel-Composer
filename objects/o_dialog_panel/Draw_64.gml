@@ -17,7 +17,7 @@ if !ready exit;
 		content.y = cy;
 		content.onStepBegin();
 
-		content.pFOCUS = sFOCUS;
+		content.pFOCUS = sFOCUS && mouse_active;
 		content.pHOVER = sHOVER;
 		
 		panel = surface_verify(panel, dialog_w - content.showHeader * padding * 2, 
@@ -26,7 +26,7 @@ if !ready exit;
 			resetMask();
 		
 		surface_set_target(panel);
-			draw_clear_alpha(0, 0);
+			DRAW_CLEAR
 			content.drawContent(panel);
 			
 			gpu_set_blendmode(bm_subtract);

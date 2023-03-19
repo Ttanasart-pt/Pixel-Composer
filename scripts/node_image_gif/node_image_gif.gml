@@ -26,7 +26,7 @@ function Node_create_Image_gif_path(_x, _y, path) {
 }
 
 function Node_Image_gif(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
-	name			= "";
+	name			= "Image GIF";
 	color			= COLORS.node_blend_input;
 	update_on_frame = true;
 	always_output   = true;
@@ -45,6 +45,8 @@ function Node_Image_gif(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	outputs[| 1] = nodeValue("Path", self, JUNCTION_CONNECT.output, VALUE_TYPE.path, "")
 		.setVisible(true, true);
+	
+	attribute_surface_depth();
 	
 	spr = noone;
 	path_current = "";
@@ -71,12 +73,11 @@ function Node_Image_gif(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		path = try_get_path(path);
 		if(path == -1) return false;
 		
-		var ext = string_lower(filename_ext(path));
+		var ext   = string_lower(filename_ext(path));
 		var _name = string_replace(filename_name(path), filename_ext(path), "");
 		
 		switch(ext) {
 			case ".gif":
-				name			= _name;
 				outputs[| 1].setValue(path);
 				
 				if(spr) sprite_delete(spr);
@@ -118,12 +119,12 @@ function Node_Image_gif(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		var ww = sprite_get_width(spr);
 		var hh = sprite_get_height(spr);
 		
-		var _outsurf  = outputs[| 0].getValue();
-		_outsurf = surface_verify(_outsurf, ww, hh);
+		var _outsurf = outputs[| 0].getValue();
+		_outsurf = surface_verify(_outsurf, ww, hh, attrDepth());
 		outputs[| 0].setValue(_outsurf);
 		
 		surface_set_target(_outsurf);
-		draw_clear_alpha(0, 0);
+		DRAW_CLEAR
 		BLEND_OVERRIDE;
 		draw_sprite(spr, ANIMATOR.current_frame, 0, 0);
 		BLEND_NORMAL;

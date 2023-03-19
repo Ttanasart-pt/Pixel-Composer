@@ -37,6 +37,8 @@ function Node_Dilate(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		["Dilate",	false],	1, 2, 3,
 	];
 	
+	attribute_surface_depth();
+	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var pos = inputs[| 1].getValue();
 		var px = _x + pos[0] * _s;
@@ -48,7 +50,7 @@ function Node_Dilate(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	static process_data = function(_outSurf, _data, _output_index, _array_index) {		
 		surface_set_target(_outSurf);
-		draw_clear_alpha(0, 0);
+		DRAW_CLEAR
 		BLEND_OVERRIDE;
 		
 		var center = _data[1];

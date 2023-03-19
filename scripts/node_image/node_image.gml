@@ -22,7 +22,7 @@ function Node_create_Image_path(_x, _y, path) {
 }
 
 function Node_Image(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
-	name			= "";
+	name = "Image";
 	color			= COLORS.node_blend_input;
 	always_output   = true;
 	
@@ -36,6 +36,8 @@ function Node_Image(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	outputs[| 1] = nodeValue("Path", self, JUNCTION_CONNECT.output, VALUE_TYPE.path, "")
 		.setVisible(true, true);
+	
+	attribute_surface_depth();
 	
 	spr = noone;
 	path_current = "";
@@ -63,7 +65,7 @@ function Node_Image(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			case ".jpg":
 			case ".jpeg":
 			case ".gif":
-				name = _name;
+				display_name = _name;
 				outputs[| 1].setValue(path);
 				
 				if(spr) sprite_delete(spr);
@@ -97,11 +99,11 @@ function Node_Image(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		var hh = sprite_get_height(spr) + pad[1] + pad[3];
 		
 		var _outsurf  = outputs[| 0].getValue();
-		_outsurf = surface_verify(_outsurf, ww, hh);
+		_outsurf = surface_verify(_outsurf, ww, hh, attrDepth());
 		outputs[| 0].setValue(_outsurf);
 		
 		surface_set_target(_outsurf);
-		draw_clear_alpha(0, 0);
+		DRAW_CLEAR
 		BLEND_OVERRIDE; 
 		draw_sprite(spr, 0, pad[2], pad[1]);
 		BLEND_NORMAL;

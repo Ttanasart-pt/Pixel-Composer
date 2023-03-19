@@ -30,6 +30,8 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		.setDisplay(VALUE_DISPLAY.vector)
 		.setVisible(false);
 	
+	attribute_surface_depth();
+	
 	input_fix_len	= ds_list_size(inputs);
 	data_length		= 4;
 	
@@ -121,7 +123,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			var _ssw = surface_get_width(_surf);
 			var _ssh = surface_get_height(_surf);
 			var _sss = min(ssh / _ssw, ssh / _ssh);
-			draw_surface_ext(_surf, _sx0, _sy0, _sss, _sss, 0, c_white, 1);
+			draw_surface_ext_safe(_surf, _sx0, _sy0, _sss, _sss, 0, c_white, 1);
 			
 			draw_set_text(f_p1, fa_left, fa_center, hover? COLORS._main_text : COLORS._main_text);
 			draw_set_alpha(aa);
@@ -699,10 +701,11 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	static process_data = function(_outSurf, _data, _output_index, _array_index) {
 		if(array_length(_data) < 4) return _outSurf;
-		var _pad = _data[0];
+		var _pad	  = _data[0];
 		var _dim_type = _data[1];
-		var _dim = _data[2];
-		var base = _data[3];
+		var _dim	  = _data[2];
+		var base	  = _data[3];
+		var cDep	  = attrDepth();
 		var ww = 0, hh = 0;
 		
 		switch(_dim_type) {
@@ -731,14 +734,13 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		overlay_w = ww;
 		overlay_h = hh;
 	
-		if(is_surface(base)) 
-			surface_size_to(_outSurf, ww, hh);
+		if(is_surface(base)) surface_size_to(_outSurf, ww, hh, cDep);
 		
 		for(var i = 0; i < 2; i++) {
-			temp_surface[i] = surface_verify(temp_surface[i], surface_get_width(_outSurf), surface_get_height(_outSurf));
+			temp_surface[i] = surface_verify(temp_surface[i], surface_get_width(_outSurf), surface_get_height(_outSurf), cDep);
 			
 			surface_set_target(temp_surface[i]);
-			draw_clear_alpha(0, 0);
+			DRAW_CLEAR
 			surface_reset_target();
 		}
 		
@@ -747,7 +749,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		var _vis = attributes[? "layer_visible"];
 		
 		surface_set_target(_outSurf);
-		draw_clear_alpha(0, 0);
+		DRAW_CLEAR
 		BLEND_ALPHA_MULP;
 		for(var i = 0; i < imageAmo; i++) {
 			var vis  = _vis[| i];

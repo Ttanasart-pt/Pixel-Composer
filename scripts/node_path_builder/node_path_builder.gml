@@ -19,6 +19,15 @@ function Node_Path_Builder(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		return _conn? 1 : floor(array_length(_lines) / 2); 
 	}
 	
+	static getBoundary		= function() { 
+		var boundary = new BoundingBox();
+		var _lines = inputs[| 0].getValue();
+		for( var i = 0; i < array_length(_lines); i++ )
+			boundary.addPoint(_lines[i][0], _lines[i][1]);
+		
+		return boundary; 
+	}
+	
 	static getPointRatio = function(_rat, _ind = 0) {
 		var _lines = inputs[| 0].getValue();
 		var _conn  = inputs[| 1].getValue();
@@ -30,24 +39,24 @@ function Node_Path_Builder(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			_p0 = array_safe_get(_lines, floor(_st) + 0,, ARRAY_OVERFLOW._default);
 			_p1 = array_safe_get(_lines, floor(_st) + 1,, ARRAY_OVERFLOW._default);
 			
-			if(!is_array(_p0)) return [0, 0];
-			if(!is_array(_p1)) return [0, 0];
+			if(!is_array(_p0)) return new Point();
+			if(!is_array(_p1)) return new Point();
 			
 			_x  = lerp(_p0[0], _p1[0], frac(_st));
 			_y  = lerp(_p0[1], _p1[1], frac(_st));
 		
-			return [ _x, _y ];
+			return new Point( _x, _y );
 		} else {
 			_p0 = array_safe_get(_lines, _ind * 2 + 0,, ARRAY_OVERFLOW._default);
 			_p1 = array_safe_get(_lines, _ind * 2 + 1,, ARRAY_OVERFLOW._default);
 			
-			if(!is_array(_p0)) return [0, 0];
-			if(!is_array(_p1)) return [0, 0];
+			if(!is_array(_p0)) return new Point();
+			if(!is_array(_p1)) return new Point();
 			
 			_x  = lerp(_p0[0], _p1[0], _rat);
 			_y  = lerp(_p0[1], _p1[1], _rat);
 		
-			return [ _x, _y ];
+			return new Point( _x, _y );
 		}
 	}
 	

@@ -14,6 +14,8 @@ function Node_Particle(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y, _
 	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
+	attribute_surface_depth();
+	
 	array_insert(input_display_list, 0, ["Output", true], input_len + 0);
 	array_push(input_display_list, input_len + 1, input_len + 2);
 	
@@ -29,7 +31,7 @@ function Node_Particle(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y, _
 			var _dim		= inputs[| input_len + 0].getValue();
 			var _outSurf	= outputs[| 0].getValue();
 			
-			_outSurf = surface_verify(_outSurf, _dim[0], _dim[1]);
+			_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
 			outputs[| 0].setValue(_outSurf);
 		}
 		
@@ -41,7 +43,7 @@ function Node_Particle(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y, _
 		var _dim		= inputs[| input_len + 0].getValue();
 		var _outSurf	= outputs[| 0].getValue();
 			
-		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1]);
+		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
 		outputs[| 0].setValue(_outSurf);
 	}
 	
@@ -50,7 +52,7 @@ function Node_Particle(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y, _
 			if(!recoverCache()) {
 				var _dim		= inputs[| input_len + 0].getValue();
 				var _outSurf	= outputs[| 0].getValue();
-				_outSurf = surface_verify(_outSurf, _dim[0], _dim[1]);
+				_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
 				outputs[| 0].setValue(_outSurf);
 			}
 			
@@ -69,11 +71,11 @@ function Node_Particle(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y, _
 		var _blend 		= inputs[| input_len + 2].getValue(_time);
 		
 		var _outSurf	= outputs[| 0].getValue();
-		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1]);
+		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
 		outputs[| 0].setValue(_outSurf);
 		
 		surface_set_target(_outSurf);
-			draw_clear_alpha(0, 0);
+			DRAW_CLEAR
 		
 			if(_blend == PARTICLE_BLEND_MODE.normal)
 				BLEND_NORMAL;
@@ -85,7 +87,7 @@ function Node_Particle(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y, _
 			var surf_w = surface_get_width(_outSurf);
 			var surf_h = surface_get_height(_outSurf);
 			
-			for(var i = 0; i < PREF_MAP[? "part_max_amount"]; i++)
+			for(var i = 0; i < attributes[? "part_amount"]; i++)
 				parts[i].draw(_exact, surf_w, surf_h);
 			
 			BLEND_NORMAL;

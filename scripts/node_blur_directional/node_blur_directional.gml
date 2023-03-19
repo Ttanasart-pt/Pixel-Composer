@@ -28,6 +28,8 @@ function Node_Blur_Directional(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
+	attribute_surface_depth();
+	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var _surf = outputs[| 0].getValue();
 		if(is_array(_surf)) {
@@ -47,7 +49,7 @@ function Node_Blur_Directional(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 		var _mask = _data[3];
 		var _mix  = _data[4];
 		surface_set_target(_outSurf);
-			draw_clear_alpha(0, 0);
+			DRAW_CLEAR
 			BLEND_OVERRIDE;
 		
 			shader_set(shader);

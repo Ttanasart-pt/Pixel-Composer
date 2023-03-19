@@ -24,6 +24,8 @@ function Node_Stack(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
+	attribute_surface_depth();
+	
 	static refreshDynamicInput = function() {
 		var _l = ds_list_create();
 		for( var i = 0; i < ds_list_size(inputs); i++ ) {
@@ -87,11 +89,11 @@ function Node_Stack(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		}
 		
 		var _outSurf = outputs[| 0].getValue();
-		_outSurf = surface_verify(_outSurf, ww, hh);
+		_outSurf = surface_verify(_outSurf, ww, hh, attrDepth());
 		outputs[| 0].setValue(_outSurf);
 		
 		surface_set_target(_outSurf);
-			draw_clear_alpha(0, 0);
+			DRAW_CLEAR
 			BLEND_ALPHA;
 			
 			var sx = 0, sy = 0;

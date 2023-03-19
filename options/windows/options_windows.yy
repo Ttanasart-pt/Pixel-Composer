@@ -14,7 +14,7 @@
   "option_windows_description_info": "Pixel Composer",
   "option_windows_disable_sandbox": true,
   "option_windows_display_cursor": true,
-  "option_windows_display_name": "Pixel Composer 1.13.8",
+  "option_windows_display_name": "Pixel Composer 1.14.0",
   "option_windows_enable_steam": false,
   "option_windows_executable_name": "PixelComposer.exe",
   "option_windows_icon": "icons/icon.ico",
@@ -33,6 +33,6 @@
   "option_windows_steam_use_alternative_launcher": false,
   "option_windows_texture_page": "2048x2048",
   "option_windows_use_splash": false,
-  "option_windows_version": "1.13.8.0",
+  "option_windows_version": "1.14.0.0",
   "option_windows_vsync": false,
 }

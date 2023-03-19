@@ -92,7 +92,7 @@ function draw_tooltip_surface_array(surf) {
 		var cx = mx + ui(8) + j * nn + nn / 2;
 		var cy = my + ui(8) + i * nn + nn / 2;
 		
-		draw_surface_ext(surf[ind], cx - sw * ss / 2, cy - sh * ss / 2, ss, ss, 0, c_white, 1);
+		draw_surface_ext_safe(surf[ind], cx - sw * ss / 2, cy - sh * ss / 2, ss, ss, 0, c_white, 1);
 		draw_set_color(COLORS._main_icon);
 		draw_rectangle(cx - sw * ss / 2, cy - sh * ss / 2, cx + sw * ss / 2 - 1, cy + sh * ss / 2 - 1, true);
 	}

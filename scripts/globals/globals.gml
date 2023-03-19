@@ -31,9 +31,9 @@
 	COLOR_KEYS = [];
 	
 	globalvar VERSION, SAVEFILE_VERSION, VERSION_STRING;
-	VERSION = 1138;
-	SAVEFILE_VERSION = 1380;
-	VERSION_STRING = "1.13.8";
+	VERSION = 1140;
+	SAVEFILE_VERSION = 1400;
+	VERSION_STRING = "1.14.0";
 	
 	globalvar NODES, NODE_MAP, APPEND_MAP, HOTKEYS, HOTKEY_CONTEXT, NODE_INSTANCES;
 	
@@ -115,15 +115,6 @@
 		#macro c_ui_lime_light		$b2ffd0
 		
 		#macro c_ui_white			$ffffff
-	#endregion
-	
-	#region functions
-		#macro BLEND_NORMAL gpu_set_blendmode(bm_normal)
-		#macro BLEND_ADD gpu_set_blendmode(bm_add)
-		#macro BLEND_OVERRIDE gpu_set_blendmode_ext(bm_one, bm_zero)
-		
-		#macro BLEND_ALPHA gpu_set_blendmode_ext_sepalpha(bm_one, bm_inv_src_alpha, bm_one, bm_one)
-		#macro BLEND_ALPHA_MULP gpu_set_blendmode_ext_sepalpha(bm_src_alpha, bm_inv_src_alpha, bm_one, bm_one)
 	#endregion
 	
 	#macro printlog if(log) show_debug_message

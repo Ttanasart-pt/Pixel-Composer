@@ -79,6 +79,7 @@
         "node_blend_simulation": "cyan",
         "node_blend_fluid": "blue_dark",
         "node_blend_canvas": ["white", "orange", 0.5],
+        "node_blend_strand": "orange",
         "node_path_overlay_control_line": "blue_grey",
         "node_wiggler_frame": "blue_grey",
         "node_border_file_drop": "cyan",

@@ -30,6 +30,8 @@ function Node_Posterize(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
+	attribute_surface_depth();
+	
 	static step = function() {
 		var _use_pal = inputs[| 2].getValue();
 		
@@ -52,7 +54,7 @@ function Node_Posterize(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			}
 		
 			surface_set_target(_outSurf);
-				draw_clear_alpha(0, 0);
+				DRAW_CLEAR
 				BLEND_OVERRIDE;
 				
 				shader_set(sh_posterize_palette);
@@ -69,7 +71,7 @@ function Node_Posterize(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			var _gamma = _data[4];
 			
 			surface_set_target(_outSurf);
-				draw_clear_alpha(0, 0);
+				DRAW_CLEAR
 				BLEND_OVERRIDE;
 				
 				shader_set(sh_posterize);

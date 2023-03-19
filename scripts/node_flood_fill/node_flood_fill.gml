@@ -31,6 +31,8 @@ function Node_Flood_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	
 	temp_surface = [ surface_create(1, 1), surface_create(1, 1) ];
 	
+	attribute_surface_depth();
+	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		inputs[| 4].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
 	}
@@ -50,16 +52,16 @@ function Node_Flood_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		var sh = surface_get_height(inSurf);
 		
 		for( var i = 0; i < array_length(temp_surface); i++ )
-			temp_surface[i] = surface_verify(temp_surface[i], sw, sh);
+			temp_surface[i] = surface_verify(temp_surface[i], sw, sh, attrDepth());
 		
 		surface_set_target(temp_surface[0]);
-			draw_clear_alpha(0, 0);
+			DRAW_CLEAR
 			
 			shader_set(sh_flood_fill_thres);
 			shader_set_f(sh_flood_fill_thres, "color", colaToVec4(_filC));
 			shader_set_f(sh_flood_fill_thres, "thres", _thr);
 				BLEND_OVERRIDE
-				draw_surface(inSurf, 0, 0);
+				draw_surface_safe(inSurf, 0, 0);
 				BLEND_NORMAL
 			shader_reset();
 			
@@ -75,26 +77,26 @@ function Node_Flood_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 			ind = !ind;
 			
 			surface_set_target(temp_surface[ind]);
-			draw_clear_alpha(0, 0);
+			DRAW_CLEAR
 			
 			shader_set(sh_flood_fill_it);
 			shader_set_f(sh_flood_fill_it, "dimension", [ sw, sh ]);
 			shader_set_i(sh_flood_fill_it, "diagonal", _dia);
 				BLEND_OVERRIDE
-				draw_surface(temp_surface[!ind], 0, 0);
+				draw_surface_safe(temp_surface[!ind], 0, 0);
 				BLEND_NORMAL
 			shader_reset();
 			surface_reset_target();
 		}
 		
 		surface_set_target(_outSurf);
-		draw_clear_alpha(0, 0);
+		DRAW_CLEAR
 		
 		shader_set(sh_flood_fill_replace);
 		shader_set_f(sh_flood_fill_replace, "color", colToVec4(_col));
 		shader_set_surface(sh_flood_fill_replace, "mask", temp_surface[ind]);
 			BLEND_OVERRIDE
-			draw_surface(inSurf, 0, 0);
+			draw_surface_safe(inSurf, 0, 0);
 			BLEND_NORMAL
 		shader_reset();
 		surface_reset_target();

@@ -1,6 +1,7 @@
-function scrollBox(_data, _onModify) : widget() constructor {
+function scrollBox(_data, _onModify, update_hover = true) : widget() constructor {
 	onModify  = _onModify;	
 	data_list = _data;
+	self.update_hover = update_hover;
 	data      = [];
 	curr_text = 0;
 	
@@ -10,7 +11,6 @@ function scrollBox(_data, _onModify) : widget() constructor {
 	
 	align = fa_center;
 	extra_button = noone;
-	update_hover = true;
 	
 	static trigger = function() {
 		if(is_method(data_list)) data = data_list();

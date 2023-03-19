@@ -32,6 +32,7 @@ function Node_Lua_Surface(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	outputs[| 1] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
+	attribute_surface_depth();
 	luaArgumentRenderer();
 	
 	input_display_list = [ 3, 4, 
@@ -174,7 +175,7 @@ function Node_Lua_Surface(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	static update = function(frame = ANIMATOR.current_frame) {
 		if(!compiled) return;
-		if(!ANIMATOR.is_playing || !ANIMATOR.frame_progress) return;
+		//if(!ANIMATOR.is_playing || !ANIMATOR.frame_progress) return;
 		
 		var _func = inputs[| 0].getValue();
 		var _dimm = inputs[| 1].getValue();
@@ -196,7 +197,7 @@ function Node_Lua_Surface(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		lua_projectData(getState());
 		
 		var _outSurf = outputs[| 1].getValue();
-		_outSurf = surface_verify(_outSurf, _dimm[0], _dimm[1]);
+		_outSurf = surface_verify(_outSurf, _dimm[0], _dimm[1], attrDepth());
 		
 		surface_set_target(_outSurf);
 			try      lua_call_w(getState(), _func, argument_val);
@@ -228,13 +229,23 @@ function Node_Lua_Surface(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	}
 	
 	static onInspectorUpdate = function() { //compile
-		addCode();	
+		var thrd = inputs[| 3].value_from;
+		if(thrd == noone) {
+			doCompile();
+			return;
+		}
+		
+		thrd.node.onInspectorUpdate();
+	}
+	
+	static doCompile = function() {
+		addCode();
 		compiled = true;
 		
 		for( var i = 0; i < ds_list_size(outputs[| 0].value_to); i++ ) {
 			var _j = outputs[| 0].value_to[| i];
 			if(_j.value_from != outputs[| 0]) continue;
-			_j.node.inspectorUpdate();
+			_j.node.doCompile();
 		}
 		
 		doUpdate();

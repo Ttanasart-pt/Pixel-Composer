@@ -6,6 +6,6 @@
   "isDnD": false,
   "parent": {
     "name": "preview",
-    "path": "folders/panels/data/preview.yy",
+    "path": "folders/panels/preview.yy",
   },
 }

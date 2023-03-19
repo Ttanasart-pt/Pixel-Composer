@@ -91,6 +91,8 @@ function Node_Repeat(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		["Animator",	 true],	20, 21, 25, 22, 23, 24, 27, 28, 
 	];
 	
+	attribute_surface_depth();
+	
 	static getDimension = function() {
 		var _surf = inputs[| 0].getValue();
 		if(is_array(_surf)) {
@@ -166,7 +168,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		random_set_seed(_sed);
 		
 		surface_set_target(_outSurf);
-		draw_clear_alpha(0, 0);
+		DRAW_CLEAR
 			runx = 0;
 			runy = 0;
 			
@@ -184,8 +186,8 @@ function Node_Repeat(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 						rat = abs(frac(rat));
 						
 						var _p = _path.getPointRatio(rat);
-						posx = _p[0];
-						posy = _p[1];
+						posx = _p.x;
+						posy = _p.y;
 					}
 				} else if(_pat == 1) {
 					var row = floor(i / _col);
@@ -255,9 +257,10 @@ function Node_Repeat(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		if(is_array(_inSurf) && array_length(_inSurf) == 0) return;
 		if(!is_array(_inSurf) && !is_surface(_inSurf)) return;
 					
-		var _dim    = inputs[| 1].getValue();
-		var _pat    = inputs[| 3].getValue();
-							  
+		var _dim = inputs[| 1].getValue();
+		var _pat = inputs[| 3].getValue();
+		var cDep = attrDepth();
+		
 		var _arr = inputs[| 16].getValue();
 		
 		inputs[|  4].setVisible( _pat == 0 || _pat == 1);
@@ -278,14 +281,14 @@ function Node_Repeat(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			}
 			
 			for( var i = 0; i < array_length(_inSurf); i++ ) {
-				var _out = surface_create(_dim[0], _dim[1]);
+				var _out = surface_create(_dim[0], _dim[1], cDep);
 				_outSurf[i] = _out;
 				doRepeat(_out, _inSurf[i]);
 			}
 			
 			outputs[| 0].setValue(_outSurf);
 		} else {
-			_outSurf = surface_verify(_outSurf, _dim[0], _dim[1]);
+			_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], cDep);
 			outputs[| 0].setValue(_outSurf);
 			doRepeat(_outSurf, _inSurf);
 		}

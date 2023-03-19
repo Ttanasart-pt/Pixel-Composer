@@ -6,6 +6,6 @@
   "isDnD": false,
   "parent": {
     "name": "menu",
-    "path": "folders/panels/data/menu.yy",
+    "path": "folders/panels/menu.yy",
   },
 }

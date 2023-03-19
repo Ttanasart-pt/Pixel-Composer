@@ -42,6 +42,8 @@ function Node_Gradient_Points(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 		["Colors",		false],	9, 10, 2, 4, 6, 8,
 	];
 	
+	attribute_surface_depth();
+	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		if(inputs[| 1].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny)) active = false;
 		if(inputs[| 3].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny)) active = false;
@@ -63,7 +65,7 @@ function Node_Gradient_Points(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 	static process_data = function(_outSurf, _data, _output_index, _array_index) {
 		var _dim = _data[0];
 		
-		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1]);
+		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
 		
 		var _usePal = _data[9];
 		var _pal    = _data[10];
@@ -86,7 +88,7 @@ function Node_Gradient_Points(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 			colArr = array_merge(colorArrayFromReal(_1col), colorArrayFromReal(_2col), colorArrayFromReal(_3col), colorArrayFromReal(_4col))
 		
 		surface_set_target(_outSurf);
-		draw_clear_alpha(0, 0);
+		DRAW_CLEAR
 		shader_set(shader);
 			shader_set_uniform_f_array_safe(uniform_dim, [_dim[0], _dim[1]]);
 			shader_set_uniform_f_array_safe(uniform_cen, array_merge(_1cen, _2cen, _3cen, _4cen));

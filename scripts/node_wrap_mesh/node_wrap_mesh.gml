@@ -43,7 +43,13 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		["Control points",	false], 
 	];
 	
+	attribute_surface_depth();
+
 	input_display_index = array_length(input_display_list);
+	
+	attributes[? "iteration"] = 4;
+	array_push(attributeEditors, ["Iteration", "iteration", 
+		new textBox(TEXTBOX_INPUT.number, function(val) { attributes[? "iteration"] = val; })]);
 	
 	tools = [
 		new NodeTool( "Add / Remove (+ Shift) control point",  THEME.control_add ),
@@ -120,7 +126,7 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		}
 	}
 	
-	function point(node, index, _x, _y) constructor {
+	function _Point(node, index, _x, _y) constructor {
 		self.index = index;
 		self.node = node;
 		x = _x;
@@ -221,7 +227,7 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		}
 	}
 	
-	function triangle(_p0, _p1, _p2) constructor {
+	function _Triangle(_p0, _p1, _p2) constructor {
 		p0 = _p0;
 		p1 = _p1;
 		p2 = _p2;
@@ -310,13 +316,13 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			}
 			
 			if(fill) {
-				data.points[i][j] = new point(self, ind++, min(j * gw, ww), min(i * gh, hh));
+				data.points[i][j] = new _Point(self, ind++, min(j * gw, ww), min(i * gh, hh));
 				if(i == 0) continue;
 				
 				if(j && data.points[i - 1][j] != 0 && data.points[i][j - 1] != 0) 
-					ds_list_add(data.tris, new triangle(data.points[i - 1][j], data.points[i][j - 1], data.points[i][j]));
+					ds_list_add(data.tris, new _Triangle(data.points[i - 1][j], data.points[i][j - 1], data.points[i][j]));
 				if(j < sample && data.points[i - 1][j] != 0 && data.points[i - 1][j + 1] != 0)
-					ds_list_add(data.tris, new triangle(data.points[i - 1][j], data.points[i - 1][j + 1], data.points[i][j]));
+					ds_list_add(data.tris, new _Triangle(data.points[i - 1][j], data.points[i - 1][j + 1], data.points[i][j]));
 			} else
 				data.points[i][j] = 0;
 		}
@@ -421,7 +427,7 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			}
 		}
 		
-		var it = PREF_MAP[? "verlet_iteration"];
+		var it = attributes[? "iteration"];
 		var resit = it;
 		var _rat = power(1 / it, 2);
 		
@@ -454,10 +460,10 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		reset();
 		control();
 		
-		_outSurf = surface_verify(_outSurf, surface_get_width(_inSurf), surface_get_height(_inSurf));
+		_outSurf = surface_verify(_outSurf, surface_get_width(_inSurf), surface_get_height(_inSurf), attrDepth());
 		
 		surface_set_target(_outSurf);
-		draw_clear_alpha(0, 0);
+		DRAW_CLEAR
 			for(var i = 0; i < ds_list_size(data.tris); i++)
 				data.tris[| i].drawSurface(_inSurf);
 		surface_reset_target();	

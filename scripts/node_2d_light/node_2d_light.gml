@@ -69,6 +69,8 @@ function Node_2D_light(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		["Render",	false], 11, 10 
 	];
 	
+	attribute_surface_depth();
+	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var _shape = inputs[| 1].getValue();
 		
@@ -148,7 +150,7 @@ function Node_2D_light(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		
 		surface_set_target(_outSurf);
 			if(_output_index == 0) {
-				draw_clear_alpha(0, 0);
+				DRAW_CLEAR
 				draw_surface_safe(_data[0], 0, 0);
 			} else
 				draw_clear_alpha(c_black, 1);

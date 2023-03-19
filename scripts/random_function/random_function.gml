@@ -29,6 +29,8 @@ function random_range_seed(from, to, seed) {
 }
 
 function random1D(seed, startRange = 0, endRange = 1) {
+	if(startRange == endRange) return startRange;
+	
 	var _f = frac(seed);
 	if(_f == 0) {
 		random_set_seed(GLOBAL_SEED + seed);
@@ -42,6 +44,19 @@ function random1D(seed, startRange = 0, endRange = 1) {
 	var f2 = random_range(startRange, endRange);
 	
 	return lerp(f1, f2, _f);
+}
+
+function perlin1D(seed, scale = 1, octave = 1, startRange = 0, endRange = 1) {
+	var amp = power(2., octave - 1.)  / (power(2., octave) - 1.);
+	var val = 0;
+	
+	repeat(octave) {
+		val = sin(seed * scale) * amp;
+		scale *= 2;
+		amp /= 2;
+	}
+	
+	return lerp(startRange, endRange, val);
 }
 
 function getWiggle(_min, _max, _freq, _time, seed_shift = 0, startTime = noone, endTime = noone) {

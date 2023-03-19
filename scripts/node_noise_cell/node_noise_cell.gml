@@ -39,6 +39,8 @@ function Node_Cellular(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
+	attribute_surface_depth();
+	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		inputs[| 1].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
 	}
@@ -58,7 +60,7 @@ function Node_Cellular(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		var _rad = _data[8];
 		var _sht = _data[9];
 		
-		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1]);
+		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
 		
 		if(_type == 0)
 			shader = sh_cell_noise;

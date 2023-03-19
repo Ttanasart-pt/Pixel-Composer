@@ -9,6 +9,13 @@ enum AREA_MODE {
 	two_point,
 }
 
+enum AREA_INDEX {
+	center_x,
+	center_y,
+	half_w,
+	half_h
+}
+
 function areaBox(_onModify, _unit = noone) : widget() constructor {
 	onModify = _onModify;
 	unit	 = _unit;

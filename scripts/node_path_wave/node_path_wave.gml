@@ -32,6 +32,26 @@ function Node_Path_Wave(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		return struct_has(_path, "getSegmentCount")? _path.getSegmentCount() : 0; 
 	}
 	
+	static getLength = function() { 
+		var _path = inputs[| 0].getValue();
+		return struct_has(_path, "getLength")? _path.getLength() : 0; 
+	}
+	
+	static getSegmentLength = function() { 
+		var _path = inputs[| 0].getValue();
+		return struct_has(_path, "getSegmentLength")? _path.getSegmentLength() : [];
+	}
+	
+	static getAccuLength = function() { 
+		var _path = inputs[| 0].getValue();
+		return struct_has(_path, "getAccuLength")? _path.getAccuLength() : []; 
+	}
+		
+	static getBoundary = function() { 
+		var _path = inputs[| 0].getValue();
+		return struct_has(_path, "getBoundary")? _path.getBoundary() : new BoundingBox( 0, 0, 1, 1 ); 
+	}
+	
 	static getPointRatio = function(_rat, ind = 0) {
 		var _path = inputs[| 0].getValue();
 		var _fre  = inputs[| 1].getValue();
@@ -45,22 +65,26 @@ function Node_Path_Wave(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		}
 		
 		if(!is_struct(_path) || !struct_has(_path, "getPointRatio"))
-			return [ 0, 0 ];
+			return new Point();
 		
 		var _p0 = _path.getPointRatio(clamp(_rat - 0.001, 0, 0.999999), ind);
-		var _p  = _path.getPointRatio(_rat, ind);
+		var _p  = _path.getPointRatio(_rat, ind).clone();
 		var _p1 = _path.getPointRatio(clamp(_rat + 0.001, 0, 0.999999), ind);
 		
-		var dir = point_direction(_p0[0], _p0[1], _p1[0], _p1[1]) + 90;
+		var dir = point_direction(_p0.x, _p0.y, _p1.x, _p1.y) + 90;
 		var prg;
 		
 		if(_smt) prg = cos((_shf + _rat * _fre) * pi * 2);
 		else	 prg = (abs(frac(_shf + _rat * _fre) * 2 - 1) - 0.5) * 2;
 		
-		_p[0] = _p[0] + lengthdir_x(prg * _amo, dir);
-		_p[1] = _p[1] + lengthdir_y(prg * _amo, dir);
+		_p.x = _p.x + lengthdir_x(prg * _amo, dir);
+		_p.y = _p.y + lengthdir_y(prg * _amo, dir);
 		
 		return _p;
+	}
+	
+	static getPointDistance = function(_dist, ind = 0) {
+		return getPointRatio(_dist / getLength(), ind);
 	}
 	
 	function update() { 

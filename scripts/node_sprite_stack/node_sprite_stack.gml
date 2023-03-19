@@ -34,6 +34,8 @@ function Node_Sprite_Stack(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		["Render",  false], 6, 7, 
 	];
 	
+	attribute_surface_depth();
+	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var pos = inputs[| 4].getValue();
 		var px = _x + pos[0] * _s;
@@ -55,7 +57,7 @@ function Node_Sprite_Stack(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		var _alp  = _data[7];
 		var _mov  = _data[8];
 		
-		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1]);
+		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
 		
 		if(_mov) {
 			_pos[0] -= _shf[0] * _amo;
@@ -63,7 +65,7 @@ function Node_Sprite_Stack(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		}
 		
 		surface_set_target(_outSurf);
-		draw_clear_alpha(0, 0);
+		DRAW_CLEAR
 			if(is_surface(_in)) {
 				var _ww = surface_get_width(_in);
 				var _hh = surface_get_width(_in);

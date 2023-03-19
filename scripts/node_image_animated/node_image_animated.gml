@@ -33,7 +33,7 @@ enum ANIMATION_END {
 }
 
 function Node_Image_Animated(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
-	name  = "";
+	name  = "Animation";
 	spr   = [];
 	color = COLORS.node_blend_input;
 	
@@ -69,6 +69,8 @@ function Node_Image_Animated(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		["Image", false],		0, 1,
 		["Animation", false],	5, 2, 3, 4,
 	];
+	
+	attribute_surface_depth();
 	
 	path_loaded = [];
 	
@@ -106,9 +108,17 @@ function Node_Image_Animated(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 			path_loaded[i] = paths[i];
 			var path = try_get_path(paths[i]);
 			if(path == -1) continue;
+			display_name  = string_replace(filename_name(path), filename_ext(path), "");
 			
-			name  = string_replace(filename_name(path), filename_ext(path), "");
-			array_push(spr, sprite_add(path, 1, false, false, 0, 0));
+			var ext = string_lower(filename_ext(path));
+			
+			switch(ext) {
+				case ".png"	 :
+				case ".jpg"	 :
+				case ".jpeg" :
+					array_push(spr, sprite_add(path, 1, false, false, 0, 0));
+					break;
+			}
 		}
 		
 		return true;
@@ -143,7 +153,7 @@ function Node_Image_Animated(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		hh += pad[1] + pad[3];
 		
 		var surfs = outputs[| 0].getValue();
-		surfs = surface_verify(surfs, ww, hh);
+		surfs = surface_verify(surfs, ww, hh, attrDepth());
 		outputs[| 0].setValue(surfs);
 		
 		var _frame = floor(ANIMATOR.current_frame / spd);
@@ -168,7 +178,7 @@ function Node_Image_Animated(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		var curr_y = pad[1] + (hh - curr_h) / 2;
 		
 		surface_set_target(surfs);
-			draw_clear_alpha(0, 0);
+			DRAW_CLEAR
 			BLEND_OVERRIDE;
 			if(_end == ANIMATION_END.hide) {
 				if(_frame < array_length(spr))

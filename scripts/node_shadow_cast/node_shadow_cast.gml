@@ -97,6 +97,8 @@ function Node_Shadow_Cast(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		["Render",			false], 13, 14, 7, 6, 9, 15, 16,
 	];
 	
+	attribute_surface_depth();
+	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		inputs[| 2].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
 		if(array_length(current_data) != ds_list_size(inputs)) return;
@@ -137,7 +139,7 @@ function Node_Shadow_Cast(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		if(!is_surface(_bg)) return _outSurf;
 		
 		surface_set_target(_outSurf);
-		draw_clear_alpha(0, 0);
+		DRAW_CLEAR
 		BLEND_OVERRIDE;
 		
 		shader_set(shader);

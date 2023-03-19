@@ -37,6 +37,8 @@ function Node_Local_Analyze(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		["Effect",	false],	1, 2, 4,
 	];
 	
+	attribute_surface_depth();
+	
 	static process_data = function(_outSurf, _data, _output_index, _array_index) {
 		var _alg = _data[1];
 		var _siz = _data[2];
@@ -44,7 +46,7 @@ function Node_Local_Analyze(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		var _shp = _data[4];
 		
 		surface_set_target(_outSurf);
-		draw_clear_alpha(0, 0);
+		DRAW_CLEAR
 		BLEND_OVERRIDE;
 		
 		shader_set(shader);

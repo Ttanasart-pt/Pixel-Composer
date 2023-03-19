@@ -46,6 +46,8 @@ function Node_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		["Transform",	false], 5, 10, 11, 
 	]
 	
+	attribute_surface_depth();
+	
 	temp_surface = [ surface_create(1, 1) ];
 	
 	static process_data = function(_outSurf, _data, _output_index, _array_index) {
@@ -62,6 +64,7 @@ function Node_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		
 		var _halign = _data[10];
 		var _valign = _data[11];
+		var cDep    = attrDepth();
 		
 		inputs[| 7].setVisible(_outp == 4);
 		var ww = 1, hh = 1;
@@ -77,7 +80,7 @@ function Node_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 			var fw = surface_get_width(_fore);
 			var fh = surface_get_height(_fore);
 			
-			temp_surface[0] = surface_verify(temp_surface[0], ww, hh);
+			temp_surface[0] = surface_verify(temp_surface[0], ww, hh, cDep);
 			_foreDraw = temp_surface[0];
 			
 			var sx = 0;
@@ -96,9 +99,9 @@ function Node_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 			}
 			
 			surface_set_target(temp_surface[0]);
-			draw_clear_alpha(0, 0);
+			DRAW_CLEAR
 			BLEND_ALPHA
-				draw_surface(_fore, sx, sy);
+				draw_surface_safe(_fore, sx, sy);
 			BLEND_NORMAL
 			surface_reset_target();
 		}
@@ -128,10 +131,10 @@ function Node_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 				break;
 		}
 		
-		_outSurf = surface_verify(_outSurf, ww, hh);
+		_outSurf = surface_verify(_outSurf, ww, hh, cDep);
 		
 		surface_set_target(_outSurf);
-		draw_clear_alpha(0, 0);
+		DRAW_CLEAR
 		draw_surface_blend(_back, _foreDraw, _type, _opacity, _pre_alp, _mask, max(0, _tile - 1));
 		surface_reset_target();
 		

@@ -45,7 +45,7 @@ function Node_Fluid_Add_Collider(_x, _y, _group = noone) : Node_Fluid(_x, _y, _g
 		if(!is_surface(_dom.sf_world)) return;
 		
 		surface_set_target(_dom.sf_world);
-			draw_surface_stretched(_mat, _area[0] - _area[2], _area[1] - _area[3], _area[2] * 2, _area[3] * 2);
+			draw_surface_stretched_safe(_mat, _area[0] - _area[2], _area[1] - _area[3], _area[2] * 2, _area[3] * 2);
 		surface_reset_target();
 	}
 	

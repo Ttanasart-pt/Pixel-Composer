@@ -169,7 +169,7 @@ function Node_Lua_Compute(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	static update = function(frame = ANIMATOR.current_frame) {
 		if(!compiled) return;
-		if(!ANIMATOR.is_playing || !ANIMATOR.frame_progress) return;
+		//if(!ANIMATOR.is_playing || !ANIMATOR.frame_progress) return;
 		
 		var _func = inputs[| 0].getValue();
 		var _dimm = inputs[| 1].getValue();
@@ -219,14 +219,23 @@ function Node_Lua_Compute(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	}
 	
 	static onInspectorUpdate = function() { //compile
-		addCode();
+		var thrd = inputs[| 3].value_from;
+		if(thrd == noone) {
+			doCompile();
+			return;
+		}
 		
+		thrd.node.onInspectorUpdate();
+	}
+	
+	static doCompile = function() {
 		compiled = true;
+		addCode();
 		
 		for( var i = 0; i < ds_list_size(outputs[| 0].value_to); i++ ) {
 			var _j = outputs[| 0].value_to[| i];
 			if(_j.value_from != outputs[| 0]) continue;
-			_j.node.inspectorUpdate();
+			_j.node.doCompile();
 		}
 		
 		doUpdate();

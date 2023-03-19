@@ -41,7 +41,8 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	is_dynamic_output = false;
 	inputs  = ds_list_create();
 	outputs = ds_list_create();
-	attributes = ds_map_create();
+	attributes		 = ds_map_create();
+	attributeEditors = [];
 	
 	show_input_name = false;
 	show_output_name = false;
@@ -668,17 +669,28 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	static getNodeDimension = function() {
 		if(!is_surface(preview_surface)) {	
 			if(ds_list_size(outputs))
-				return array_shape(outputs[| 0].getValue());
+				return "[" + array_shape(outputs[| 0].getValue()) + "]";
 			return "";
 		}
 		
 		var pw = surface_get_width(preview_surface);
 		var ph = surface_get_height(preview_surface);
+		var format = surface_get_format(preview_surface);
 		
-		var txt = string(pw) + " x " + string(ph) + " px";
-		if(preview_amount) 
-			txt = string(preview_amount) + " x " + txt;
-			
+		var txt = "[" + string(pw) + " x " + string(ph) + " ";
+		if(preview_amount) txt = string(preview_amount) + " x " + txt;
+		
+		switch(format) {
+			case surface_rgba4unorm	 : txt += "4RGBA";	break;
+			case surface_rgba8unorm	 : txt += "8RGBA";	break;
+			case surface_rgba16float : txt += "16RGBA"; break;
+			case surface_rgba32float : txt += "32RGBA"; break;
+			case surface_r8unorm	 : txt += "8BW";	break;
+			case surface_r16float	 : txt += "16BW";	break;
+			case surface_r32float	 : txt += "32BW";	break;
+		}
+		txt += "]";
+		
 		return txt;
 	}
 	
@@ -691,9 +703,9 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		var ty = yy + (h + 4) * _s;
 		
 		if(PANEL_GRAPH.show_dimension) {
-			var txt = "[" + string(getNodeDimension()) + "]";
+			var txt = string(getNodeDimension());
 			draw_text(round(tx), round(ty), txt);
-			ty += line_height() * 0.8;
+			ty += string_height(txt) - 4 * _s;
 		}
 		
 		if(PANEL_GRAPH.show_compute) {
@@ -861,7 +873,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	static getNextNodes = function() {
 		for(var i = 0; i < ds_list_size(outputs); i++) {
 			var _ot = outputs[| i];
-			if(_ot.type == VALUE_TYPE.node) continue;
+			//if(_ot.type == VALUE_TYPE.node) continue;
 			
 			for(var j = 0; j < ds_list_size(_ot.value_to); j++) {
 				var _to = _ot.value_to[| j];
@@ -1184,4 +1196,21 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	}
 	
 	static onCleanUp = function() {}
+	
+	// helper function
+	static attrDepth = function() { 
+		if(ds_map_exists(attributes, "color_depth")) {
+			var form = attributes[? "color_depth"];
+			if(inputs[| 0].type == VALUE_TYPE.surface) 
+				form--;
+			if(form >= 0)
+				return array_safe_get(global.SURFACE_FORMAT, form, surface_rgba8unorm);
+		}
+		
+		var _s = inputs[| 0].getValue();
+		while(is_array(_s) && array_length(_s)) _s = _s[0];
+		if(!is_surface(_s)) 
+			return surface_rgba8unorm;
+		return surface_get_format(_s);
+	}
 }

@@ -11,6 +11,7 @@ function L_Turtle(x = 0, y = 0, ang = 90) constructor {
 function Node_Path_L_System(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name		= "L System";
 	previewable = false;
+	w = 96;
 	
 	inputs[| 0] = nodeValue("Length", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 8);
 	
@@ -81,6 +82,7 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		["Rules",		false], 3, 4, rule_renderer, 5, 
 	];
 	lines = [];
+	boundary = new BoundingBox();
 	
 	static refreshDynamicInput = function() {
 		var _l = ds_list_create();
@@ -137,20 +139,23 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	
 	static getLineCount = function() { return floor(array_length(lines) / 2); }
 	
+	static getBoundary	= function() { return boundary; }
+	
 	static getPointRatio = function(_rat, _ind = 0) {
 		var _p0 = array_safe_get(lines, _ind * 2 + 0,, ARRAY_OVERFLOW._default);
 		var _p1 = array_safe_get(lines, _ind * 2 + 1,, ARRAY_OVERFLOW._default);
 		
-		if(!is_array(_p0) || array_length(_p0) < 2) return [0, 0];
-		if(!is_array(_p1) || array_length(_p1) < 2) return [0, 0];
+		if(!is_array(_p0) || array_length(_p0) < 2) return new Point();
+		if(!is_array(_p1) || array_length(_p1) < 2) return new Point();
 		
 		var _x  = lerp(_p0[0], _p1[0], _rat);
 		var _y  = lerp(_p0[1], _p1[1], _rat);
 		
-		return [ _x, _y ];
+		return new Point( _x, _y );
 	}
 	
 	function update() { 
+			
 		var _len = inputs[| 0].getValue();
 		var _ang = inputs[| 1].getValue();
 		var _pos = inputs[| 2].getValue();
@@ -238,6 +243,10 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		}
 		
 		ds_stack_destroy(st);
+		
+		boundary = new BoundingBox();
+		for( var i = 0; i < array_length(lines); i++ )
+			boundary.addPoint(lines[i][0], lines[i][1]);
 		
 		outputs[| 0].setValue(self);
 	}

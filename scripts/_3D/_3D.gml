@@ -265,7 +265,7 @@ enum CAMERA_PROJ {
 		
 		gpu_set_ztestenable(true);
 		surface_set_target(_outSurf);
-		draw_clear_alpha(0, 0);
+		DRAW_CLEAR
 		
 		var shader = sh_vertex_pnt_light;
 		if(_pass == "diff")			shader = sh_vertex_pnt_light;

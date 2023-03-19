@@ -24,6 +24,8 @@ enum VALUE_TYPE {
 	rigid     = 14,
 	fdomain   = 15,
 	struct    = 16,
+	strands   = 17,
+	mesh	  = 18,
 }
 
 enum VALUE_DISPLAY {
@@ -72,13 +74,6 @@ enum VALUE_DISPLAY {
 	path_font,
 }
 
-enum PADDING {
-	right,
-	up,
-	left,
-	down
-}
-
 function value_color(i) {
 	static JUNCTION_COLORS = [ 
 		$6691ff, //int 
@@ -98,6 +93,8 @@ function value_color(i) {
 		$e3ff66, //rigid
 		#4da6ff, //fdomain
 		$5d3f8c, //struct
+		$6691ff, //strand
+		$d1c2c2, //mesh
 	];
 	return JUNCTION_COLORS[safe_mod(max(0, i), array_length(JUNCTION_COLORS))];
 }
@@ -119,6 +116,8 @@ function value_bit(i) {
 		case VALUE_TYPE.rigid   	: return 1 << 17;
 		case VALUE_TYPE.fdomain 	: return 1 << 18;
 		case VALUE_TYPE.struct   	: return 1 << 19;
+		case VALUE_TYPE.strands   	: return 1 << 20;
+		case VALUE_TYPE.mesh	  	: return 1 << 21;
 		
 		case VALUE_TYPE.node		: return 1 << 32;
 		
@@ -139,6 +138,11 @@ function value_type_directional(f, t) {
 	if(f == VALUE_TYPE.float   && t == VALUE_TYPE.color) return true;
 	if(f == VALUE_TYPE.color   && t == VALUE_TYPE.integer) return true;
 	if(f == VALUE_TYPE.color   && t == VALUE_TYPE.float  ) return true;
+	
+	if(f == VALUE_TYPE.strands && t == VALUE_TYPE.pathnode ) return true;
+	
+	if(f == VALUE_TYPE.color && t == VALUE_TYPE.struct ) return true;
+	if(f == VALUE_TYPE.mesh  && t == VALUE_TYPE.struct ) return true;
 	
 	return false;
 }

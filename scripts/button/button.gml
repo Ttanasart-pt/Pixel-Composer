@@ -7,8 +7,9 @@ function buttonClass(_onClick, _icon = noone) : widget() constructor {
 	icon_blend = c_white;
 	icon_index = 0;
 	
-	text = "";
+	text	= "";
 	tooltip = "";
+	blend   = c_white;
 	
 	onClick = _onClick;
 	
@@ -40,18 +41,20 @@ function buttonClass(_onClick, _icon = noone) : widget() constructor {
 		w = _w;
 		h = _h;
 		
+		var b = colorMultiply(self.blend, blend);
+		
 		var click = false;
 		if(hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + _h)) {
-			draw_sprite_stretched_ext(spr, 1, _x, _y, _w, _h, blend, 1);	
+			draw_sprite_stretched_ext(spr, 1, _x, _y, _w, _h, b, 1);	
 			if(mouse_press(mb_left, active)) {
 				trigger();
 				click = true;
 			}
 			if(mouse_click(mb_left, active))
-				draw_sprite_stretched_ext(spr, 2, _x, _y, _w, _h, blend, 1);	
+				draw_sprite_stretched_ext(spr, 2, _x, _y, _w, _h, b, 1);	
 			if(tooltip != "") TOOLTIP = tooltip;
 		} else {
-			draw_sprite_stretched_ext(spr, 0, _x, _y, _w, _h, blend, 1);	
+			draw_sprite_stretched_ext(spr, 0, _x, _y, _w, _h, b, 1);	
 			if(mouse_press(mb_left)) deactivate();
 		}
 		

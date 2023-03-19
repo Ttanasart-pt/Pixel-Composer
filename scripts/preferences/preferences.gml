@@ -36,12 +36,6 @@
 	PREF_MAP[? "node_show_render_status"] = false;
 	PREF_MAP[? "node_show_time"] = true;
 	
-	PREF_MAP[? "part_max_amount"] = 1024;
-	PREF_MAP[? "shape_separation_max"] = 256;
-	PREF_MAP[? "level_resolution"] = 64;
-	PREF_MAP[? "level_max_sampling"] = 32;
-	PREF_MAP[? "verlet_iteration"] = 4;
-	
 	PREF_MAP[? "collection_preview_speed"] = 60;
 	PREF_MAP[? "expand_hover"] = false;
 	

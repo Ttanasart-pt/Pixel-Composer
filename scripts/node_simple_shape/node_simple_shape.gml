@@ -80,6 +80,8 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		["Render",	 true],	10, 1, 11, 12
 	];
 	
+	attribute_surface_depth();
+	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var _path	= inputs[| 14].getValue();
 		if(_path != noone && struct_has(_path, "getPointRatio")) return;
@@ -108,7 +110,7 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		inputs[| 11].setVisible(_bg);
 		inputs[| 13].setVisible(true);
 		
-		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1]);
+		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
 		
 		if(_path != noone && struct_has(_path, "getPointRatio")) {
 			inputs[|  3].setVisible(false);
@@ -121,7 +123,7 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 			
 			surface_set_target(_outSurf);
 				if(_bg) draw_clear_alpha(0, 1);
-				else	draw_clear_alpha(0, 0);
+				else	DRAW_CLEAR
 				
 				var points = [];
 				var segCount = _path.getSegmentCount();
@@ -142,13 +144,13 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 					draw_primitive_begin(pr_trianglelist);
 					for( var i = 0; i < array_length(triangles); i++ ) {
 						var tri = triangles[i];
-						var p0 = tri[0];
-						var p1 = tri[1];
-						var p2 = tri[2];
+						var p0  = tri[0];
+						var p1  = tri[1];
+						var p2  = tri[2];
 						
-						draw_vertex(p0[0], p0[1]);
-						draw_vertex(p1[0], p1[1]);
-						draw_vertex(p2[0], p2[1]);
+						draw_vertex(p0.x, p0.y);
+						draw_vertex(p1.x, p1.y);
+						draw_vertex(p2.x, p2.y);
 					}
 					draw_primitive_end();
 				}
@@ -159,7 +161,7 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		
 		surface_set_target(_outSurf);
 			if(_bg) draw_clear_alpha(0, 1);
-			else	draw_clear_alpha(0, 0);
+			else	DRAW_CLEAR
 			
 			shader_set(shader);
 			

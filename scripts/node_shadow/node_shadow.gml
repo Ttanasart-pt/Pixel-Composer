@@ -38,7 +38,8 @@ function Node_Shadow(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	];
 	
 	surface_blur_init();
-	
+	attribute_surface_depth();
+		
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var _surf = outputs[| 0].getValue();
 		if(is_array(_surf)) {
@@ -59,10 +60,10 @@ function Node_Shadow(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		var _border = _data[4];
 		var _size   = _data[5];
 		
-		var pass1   = surface_create_valid(surface_get_width(_outSurf), surface_get_height(_outSurf));	
+		var pass1   = surface_create_valid(surface_get_width(_outSurf), surface_get_height(_outSurf), attrDepth());	
 		
 		surface_set_target(pass1);
-		draw_clear_alpha(0, 0);
+		DRAW_CLEAR
 		BLEND_OVERRIDE;
 			shader_set(shader);
 				shader_set_uniform_f_array_safe(uniform_dim,  [ surface_get_width(_outSurf), surface_get_height(_outSurf) ]);
@@ -75,7 +76,7 @@ function Node_Shadow(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		surface_reset_target();
 		
 		surface_set_target(_outSurf);
-		draw_clear_alpha(0, 0);
+		DRAW_CLEAR
 		BLEND_OVERRIDE;
 			draw_surface_ext_safe(surface_apply_gaussian(pass1, _size, false, cl), 0, 0, 1, 1, 0, cl, _stre);
 		BLEND_NORMAL;

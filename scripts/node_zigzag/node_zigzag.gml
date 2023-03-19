@@ -32,6 +32,8 @@ function Node_Zigzag(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		["Render",	false], 3, 4, 5,
 	];
 	
+	attribute_surface_depth();
+	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		inputs[| 2].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
 	}
@@ -45,10 +47,10 @@ function Node_Zigzag(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		var _col2 = _data[4];
 		var _bnd  = _data[5];
 		
-		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1]);
+		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
 			
 		surface_set_target(_outSurf);
-		draw_clear_alpha(0, 0);
+		DRAW_CLEAR
 			shader_set(shader);
 			shader_set_uniform_f(uniform_pos, _pos[0] / _dim[0], _pos[1] / _dim[1]);
 			shader_set_uniform_f(uniform_amo, _amo);

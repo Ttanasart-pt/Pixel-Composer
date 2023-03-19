@@ -23,6 +23,8 @@ function Node_Level_Selector(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
+	attribute_surface_depth();
+	
 	level_renderer = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) {
 		var _h = 128;
 		var x0 = _x;
@@ -83,7 +85,7 @@ function Node_Level_Selector(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 		var _range  = _data[2];
 		
 		surface_set_target(_outSurf);
-			draw_clear_alpha(0, 0);
+			DRAW_CLEAR
 			BLEND_OVERRIDE;
 			
 			shader_set(shader);

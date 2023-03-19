@@ -96,7 +96,7 @@ function Node_Fluid_Domain(_x, _y, _group = noone) : Node_Fluid(_x, _y, _group) 
 		surface_set_target(domain.sf_world);
 			draw_clear_alpha($00FFFF, 0);
 			if(is_surface(coll))
-				draw_surface_stretched(coll, 0, 0, _dim[0], _dim[1]);
+				draw_surface_stretched_safe(coll, 0, 0, _dim[0], _dim[1]);
 		surface_reset_target();
 		
 		fd_rectangle_set_material_dissipation_type(domain, mdisTyp);

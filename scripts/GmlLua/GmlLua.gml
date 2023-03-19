@@ -3,17 +3,21 @@ function __lua_noti(txt) {
 }
 
 function __lua_draw_surface_general(surface, xx, yy, xs = 1, ys = 1, rot = 0, color = c_white, alpha = 1) { 
-	draw_surface_ext(surface, xx, yy, xs, ys, rot, color, alpha); 
+	if(!is_surface(surface)) return;
+	draw_surface_ext_safe(surface, xx, yy, xs, ys, rot, color, alpha); 
 }
 function __lua_draw_surface_transform(surface, xx, yy, xs = 1, ys = 1, rot = 0) { 
+	if(!is_surface(surface)) return;
 	if(argument_count == 5) ys = argument[4];
-	draw_surface_ext(surface, xx, yy, xs, ys, rot, c_white, 1); 
+	draw_surface_ext_safe(surface, xx, yy, xs, ys, rot, c_white, 1); 
 }
 function __lua_draw_surface_colored(surface, xx, yy, color = c_white, alpha = 1) { 
-	draw_surface_ext(surface, xx, yy, 1, 1, 0, color, alpha); 
+	if(!is_surface(surface)) return;
+	draw_surface_ext_safe(surface, xx, yy, 1, 1, 0, color, alpha); 
 }
 function __lua_draw_surface(surface, xx, yy) { 
-	draw_surface(surface, xx, yy); 
+	if(!is_surface(surface)) return;
+	draw_surface_safe(surface, xx, yy); 
 }
 function __lua_draw_rectangle(x0, y0, x1, y1) { 
 	draw_rectangle(x0, y0, x1, y1, false);
@@ -65,6 +69,7 @@ function __lua_get_color(_x, _y) {
 	return surface_getpixel_ext(surf, _x, _y);
 }
 function __lua_get_color_surface(surface, _x, _y) {
+	if(!is_surface(surface)) return;
 	return surface_getpixel_ext(surface, _x, _y);
 }
 

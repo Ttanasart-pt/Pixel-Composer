@@ -53,6 +53,8 @@ function Node_Stripe(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		["Render",	false], 6, 7, 8, 9, 3
 	];
 	
+	attribute_surface_depth();
+	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var pos = inputs[| 4].getValue();
 		var px = _x + pos[0] * _s;
@@ -84,7 +86,7 @@ function Node_Stripe(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		var _grad_color = _g[0];
 		var _grad_time = _g[1];
 		
-		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1]);
+		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
 			
 		surface_set_target(_outSurf);
 			shader_set(shader);

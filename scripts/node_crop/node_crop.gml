@@ -17,6 +17,8 @@ function Node_Crop(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		["Surface",	 false], 0, 1, 
 	]
 	
+	attribute_surface_depth();
+	
 	drag_side = -1;
 	drag_mx   = 0;
 	drag_my   = 0;
@@ -113,7 +115,7 @@ function Node_Crop(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1]);
 		
 		surface_set_target(_outSurf);
-			draw_clear_alpha(0, 0);
+			DRAW_CLEAR
 			BLEND_OVERRIDE;
 			
 			draw_surface_safe(_inSurf, -_crop[2], -_crop[1]);

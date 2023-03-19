@@ -237,8 +237,8 @@ function Panel_Preview() : PanelContent() constructor {
 			if(canvas_s > 16)		inc = 2;
 			else if(canvas_s > 8)	inc = 1;
 			
-			if(mouse_wheel_down()) canvas_s = max(round(canvas_s / inc) * inc - inc, 0.25);
-			if(mouse_wheel_up())   canvas_s = min(round(canvas_s / inc) * inc + inc, 32);
+			if(mouse_wheel_down()) canvas_s = max(round(canvas_s / inc) * inc - inc, 0.10);
+			if(mouse_wheel_up())   canvas_s = min(round(canvas_s / inc) * inc + inc, 64);
 			if(_canvas_s != canvas_s) {
 				var dx = (canvas_s - _canvas_s) * ((mx - canvas_x) / _canvas_s);
 				var dy = (canvas_s - _canvas_s) * ((my - canvas_y) / _canvas_s);
@@ -354,18 +354,18 @@ function Panel_Preview() : PanelContent() constructor {
 						case 1 : 
 							tile_surface = surface_verify(tile_surface, w, surface_get_height(preview_surface[0]) * ss);
 							surface_set_target(tile_surface);
-								draw_clear_alpha(0, 0);
+								DRAW_CLEAR
 								draw_surface_tiled_ext_safe(preview_surface[0], psx, 0, ss, ss, c_white, 1); 
 							surface_reset_target();
-							draw_surface(tile_surface, 0, psy);
+							draw_surface_safe(tile_surface, 0, psy);
 							break;
 						case 2 : 
 							tile_surface = surface_verify(tile_surface, surface_get_width(preview_surface[0]) * ss, h);
 							surface_set_target(tile_surface);
-								draw_clear_alpha(0, 0);
+								DRAW_CLEAR
 								draw_surface_tiled_ext_safe(preview_surface[0], 0, psy, ss, ss, c_white, 1); 
 							surface_reset_target();
-							draw_surface(tile_surface, psx, 0);
+							draw_surface_safe(tile_surface, psx, 0);
 							break;
 						case 3 : draw_surface_tiled_ext_safe(preview_surface[0], psx, psy, ss, ss, c_white, 1); break;
 					}
@@ -492,6 +492,12 @@ function Panel_Preview() : PanelContent() constructor {
 		
 		right_menu_y += string_height("l");
 		draw_text(w - ui(8), right_menu_y, "x" + string(canvas_s));
+		
+		right_menu_y += string_height("l");
+		var mpx = floor((mx - canvas_x) / canvas_s);
+		var mpy = floor((my - canvas_y) / canvas_s);
+		draw_text(w - ui(8), right_menu_y, "[" + string(mpx) + ", " + string(mpy) + "]");
+		
 		right_menu_y += string_height("l");
 		
 		var pseq = getNodePreviewSequence();
@@ -620,7 +626,7 @@ function Panel_Preview() : PanelContent() constructor {
 				} if(b == 2)
 					tool.toggle();
 				
-				if(pFOCUS && keyboard_check_pressed(ord(string(i + 1))))
+				if(pFOCUS && WIDGET_CURRENT == noone && keyboard_check_pressed(ord(string(i + 1))))
 					tool.toggle();
 				
 				if(tool_current == tool)
@@ -658,7 +664,7 @@ function Panel_Preview() : PanelContent() constructor {
 			tool_x = lerp_float(tool_x, tool_x_to, 5);
 			var tolx  = tool_x + ui(16);
 			var toly  = ui(8);
-			var tolw  = ui(64);
+			var tolw  = ui(48);
 			var tolh  = toolbar_height - ui(20);
 			var tol_max_w = ui(32);
 			
@@ -722,13 +728,6 @@ function Panel_Preview() : PanelContent() constructor {
 				draw_set_color(COLORS._main_text_sub);
 				draw_text(tx, cy + ch / 2, "(" + string(color_get_alpha(sample_color)) + ")");
 			}
-		}
-		
-		if(pHOVER) {
-			draw_set_text(f_p0, fa_right, fa_center, COLORS._main_text_sub);
-			var mpx = floor((mx - canvas_x) / canvas_s);
-			var mpy = floor((my - canvas_y) / canvas_s);
-			draw_text(w - ui(10), toolbar_height / 2 - ui(4), "[" + string(mpx) + ", " + string(mpy) + "]");
 		}
 		
 		draw_set_color(COLORS.panel_toolbar_fill);
@@ -882,7 +881,7 @@ function Panel_Preview() : PanelContent() constructor {
 		if(path == "") return;
 		if(filename_ext(path) != ".png") path += ".png";
 		
-		surface_save(prevS, path);
+		surface_save_safe(prevS, path);
 	}
 	
 	function saveAllCurrentFrames() {
@@ -899,7 +898,7 @@ function Panel_Preview() : PanelContent() constructor {
 			var prev   = pseq[i];
 			if(!is_surface(prev)) continue;
 			var _name = name + string(ind) + ext;
-			surface_save(prev, _name);
+			surface_save_safe(prev, _name);
 			ind++;
 		}
 	}

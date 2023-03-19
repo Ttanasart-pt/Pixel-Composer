@@ -304,12 +304,12 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		var temp	= surface_create_valid(ww, hh);
 		
 		surface_set_target(temp);
-		draw_clear_alpha(0, 0);
+		DRAW_CLEAR
 		shader_set(sh_mesh_generation);
 		
 		shader_set_uniform_f(uni_dim, ww, hh);
 		shader_set_uniform_f(uni_com, cmX, cmY);
-		draw_surface(_tex, 0, 0);
+		draw_surface_safe(_tex, 0, 0);
 		
 		shader_reset();
 		surface_reset_target();

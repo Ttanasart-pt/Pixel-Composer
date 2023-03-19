@@ -39,6 +39,8 @@ function Node_Grid_Noise(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
+	attribute_surface_depth();
+	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		inputs[| 1].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
 	}
@@ -52,10 +54,10 @@ function Node_Grid_Noise(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		var _sam = _data[5];
 		var _shfAx = _data[6];
 		
-		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1]);
+		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
 		
 		surface_set_target(_outSurf);
-		draw_clear_alpha(0, 0);
+		DRAW_CLEAR
 		shader_set(shader);
 			shader_set_uniform_f_array_safe(uniform_dim, _dim);
 			shader_set_uniform_f_array_safe(uniform_pos, _pos);
@@ -66,7 +68,7 @@ function Node_Grid_Noise(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 			shader_set_uniform_f(uniform_sed, _sed);
 			
 			if(is_surface(_sam))
-				draw_surface_stretched(_sam, 0, 0, _dim[0], _dim[1]);
+				draw_surface_stretched_safe(_sam, 0, 0, _dim[0], _dim[1]);
 			else
 				draw_sprite_ext(s_fx_pixel, 0, 0, 0, _dim[0], _dim[1], 0, c_white, 1);
 		shader_reset();

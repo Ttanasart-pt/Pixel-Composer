@@ -27,13 +27,15 @@ function Node_Corner(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
+	attribute_surface_depth();
+	
 	static process_data = function(_outSurf, _data, _output_index, _array_index) {
 		var wd = _data[1];
 		
-		var temp = surface_create_valid(surface_get_width(_data[0]), surface_get_height(_data[0]));
+		var temp = surface_create_valid(surface_get_width(_data[0]), surface_get_height(_data[0]), attrDepth());
 		
 		surface_set_target(temp);
-			draw_clear_alpha(0, 0);
+			DRAW_CLEAR
 			BLEND_OVERRIDE;
 			
 			shader_set(sh_corner_erode);
@@ -46,7 +48,7 @@ function Node_Corner(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		surface_reset_target();
 		
 		surface_set_target(_outSurf);
-			draw_clear_alpha(0, 0);
+			DRAW_CLEAR
 			BLEND_OVERRIDE;
 			
 			shader_set(sh_corner);

@@ -23,20 +23,16 @@ function Panel_Inspector() : PanelContent() constructor {
 	keyframe_dragging = noone;
 	keyframe_drag_st  = 0;
 	
-	anim_toggling = false;
-	anim_hold     = noone;
-	visi_hold     = noone;
+	globalvar_viewer_init();
+	drawWidgetInit();
 	
 	min_w = ui(160);
-	lineBreak = true;
 	
 	tb_node_name	= new textBox(TEXTBOX_INPUT.text, function(txt) {
 		if(inspecting) inspecting.display_name = txt;
 	})
 	
-	tb_prop_filter	= new textBox(TEXTBOX_INPUT.text, function(txt) {
-		filter_text = txt;
-	})
+	tb_prop_filter	= new textBox(TEXTBOX_INPUT.text, function(txt) { filter_text = txt; })
 	tb_prop_filter.no_empty		= false;
 	tb_prop_filter.auto_update	= true;
 	tb_prop_filter.font			= f_p0;
@@ -44,6 +40,12 @@ function Panel_Inspector() : PanelContent() constructor {
 	tb_prop_filter.align		= fa_center;
 	tb_prop_filter.hide			= true;
 	filter_text = "";
+	
+	prop_page_button = buttonGroup([ "Properties", "Settings" ], function(val) { prop_page = val; });
+	prop_page_button.buttonSpr	= [ THEME.button_hide_left, THEME.button_hide_middle, THEME.button_hide_right ];
+	prop_page_button.font		= f_p1;
+	prop_page_button.fColor		= COLORS._main_text_sub;
+	prop_page = 0;
 	
 	current_meta = -1;
 	meta_tb[0] = new textArea(TEXTBOX_INPUT.text, function(str) { current_meta.description	= str; });	
@@ -55,8 +57,6 @@ function Panel_Inspector() : PanelContent() constructor {
 		meta_tb[i].hide = true;
 	
 	meta_display = [ [ "Metadata", false ], [ "Global variables", false ] ];
-	
-	var_editing = false;
 	
 	workshop_uploading = false;
 	
@@ -161,70 +161,17 @@ function Panel_Inspector() : PanelContent() constructor {
 					hh += wh + ui(8);
 				}
 			} else if (i == 1) {
-				var lb_h    = line_height(f_p0) + ui(8);
-				var padd    = ui(8);
-				
-				if(var_editing) {
-					var del = noone;
-					yy += ui(8);
-					hh += ui(8);
-					
-					for( var j = 0; j < ds_list_size(GLOBAL.inputs); j++ ) {
-						var _inpu = GLOBAL.inputs[| j];
-						var _edit = _inpu.editor;
-						var wd_x  = ui(16);
-						var wd_w  = w - ui(16 + 48);
-						var wd_h  = ui(32);
-						
-						if(j) {
-							draw_set_color(merge_color(c_black, COLORS.panel_toolbar_separator, 0.75));
-							draw_line_round(wd_x + ui(8), yy, wd_x + wd_w - ui(16), yy, 4);
-							
-							yy += ui(10);
-							hh += ui(10);
-						}
-						
-						_edit.tb_name.setActiveFocus(pFOCUS, _hover);
-						_edit.sc_type.setActiveFocus(pFOCUS, _hover);
-						_edit.sc_disp.setActiveFocus(pFOCUS, _hover);
-						
-						_edit.tb_name.draw(wd_x, yy, wd_w - ui(36), wd_h, _inpu.name, _m, TEXTBOX_INPUT.text);
-						if(buttonInstant(THEME.button_hide, wd_w - ui(16), yy + ui(2), ui(32), ui(32), _m, pFOCUS, _hover,, THEME.icon_delete,, COLORS._main_value_negative) == 2) 
-							del = j;
-						yy += wd_h + ui(8);
-						hh += wd_h + ui(8);
-						
-						_edit.sc_type.draw(wd_x, yy, wd_w / 2 - ui(2), wd_h, _edit.val_type_name[_edit.type_index], _m, ui(16) + x, top_bar_h + y);
-						_edit.sc_disp.draw(wd_x + wd_w / 2 + ui(2), yy, wd_w / 2 - ui(2), wd_h, _edit.sc_disp.data_list[_edit.disp_index], _m, ui(16) + x, top_bar_h + y);
-						
-						yy += wd_h + ui(4);
-						hh += wd_h + ui(4);
-						
-						var wd_h = _inpu.editor.draw(wd_x, yy, wd_w, _m, pFOCUS, _hover);
-						
-						yy += wd_h + ui(4);
-						hh += wd_h + ui(4);
-					}
-					
-					if(del != noone)
-						ds_list_delete(GLOBAL.inputs, del);
-				} else {
-					for( var j = 0; j < ds_list_size(GLOBAL.inputs); j++ ) {
-						var widg    = drawWidget(yy, _m, GLOBAL.inputs[| j], true);
-						var widH    = widg[0];
-						var mbRight = widg[1];
-						
-						yy += lb_h + widH + padd;
-						hh += lb_h + widH + padd;
-					}
-				}
+				var gvh = globalvar_viewer_draw(ui(16), yy, contentPane.surface_w - ui(24), _m, pFOCUS, _hover, contentPane, ui(16) + x, top_bar_h + y);
+				yy += gvh + ui(8);
+				hh += gvh + ui(8);
 				
 				var bh = ui(36);
-				var bx = ui(4);
-				var by = yy + ui(8);
+				var bx = ui(16);
+				var by = yy;
+				var bbw = contentPane.surface_w - ui(24);
 				
 				if(var_editing) {
-					var bw = (con_w - ui(8)) / 2 - ui(4);
+					var bw = bbw / 2 - ui(4);
 					
 					if(buttonInstant(THEME.button_hide, bx, by, bw, bh, _m, pFOCUS, _hover) == 2)
 						var_editing = !var_editing;
@@ -243,7 +190,7 @@ function Panel_Inspector() : PanelContent() constructor {
 				
 					if(buttonInstant(THEME.button_hide, bx, by, bw, bh, _m, pFOCUS, _hover) == 2)
 						GLOBAL.createValue();
-				
+					
 					var txt  = get_text("add", "Add");
 					var icon = THEME.add;
 				
@@ -253,7 +200,7 @@ function Panel_Inspector() : PanelContent() constructor {
 					draw_sprite_ui(icon, 0, bxc + ui(24), byc,,,, colr);
 					draw_text(bxc + ui(48), byc, txt);
 				} else {
-					var bw = con_w - ui(8);
+					var bw = bbw;
 					
 					if(buttonInstant(THEME.button_hide, bx, by, bw, bh, _m, pFOCUS, _hover) == 2)
 						var_editing = !var_editing;
@@ -280,333 +227,6 @@ function Panel_Inspector() : PanelContent() constructor {
 		return hh;
 	}
 	
-	static drawWidget = function(yy, _m, jun, global_var = true) {
-		var con_w	= contentPane.surface_w - ui(4);
-		var _hover	= pHOVER && contentPane.hover;
-		var xc		= con_w / 2;
-		
-		var lb_h = line_height(f_p0) + ui(8);
-		var lb_y = yy + lb_h / 2;
-			
-		var butx = ui(16);
-		if(jun.connect_type == JUNCTION_CONNECT.input && jun.isAnimable() && !jun.global_use && !global_var) {
-			var index = jun.value_from == noone? jun.animator.is_anim : 2;
-			draw_sprite_ui_uniform(THEME.animate_clock, index, butx, lb_y, 1,, 0.8);
-			if(_hover && point_in_circle(_m[0], _m[1], butx, lb_y, ui(10))) {
-				if(anim_hold != noone)
-					jun.animator.is_anim = anim_hold;
-				
-				draw_sprite_ui_uniform(THEME.animate_clock, index, butx, lb_y, 1,, 1);
-				TOOLTIP = jun.value_from == noone? get_text("panel_inspector_toggle_anim", "Toggle animation") : get_text("panel_inspector_remove_link", "Remove link");
-					
-				if(mouse_press(mb_left, pFOCUS)) {
-					if(jun.value_from != noone)
-						jun.removeFrom();
-					else {
-						recordAction(ACTION_TYPE.var_modify, jun.animator, [ jun.animator.is_anim, "is_anim", jun.name + " animation" ]);
-						jun.animator.is_anim = !jun.animator.is_anim;
-						anim_hold = jun.animator.is_anim;
-					}
-					PANEL_ANIMATION.updatePropertyList();
-				}
-			}
-		}
-		
-		if(anim_hold != noone && mouse_release(mb_left))
-			anim_hold = noone;
-		
-		butx += ui(20);
-		if(!global_var) {			
-			if(jun.global_use) {
-				draw_sprite_ui_uniform(THEME.node_use_global, GLOBAL.inputGetable(jun, jun.global_key)? 0 : 2, butx, lb_y, 1,, 0.8);
-			} else {
-				index = jun.visible;
-				draw_sprite_ui_uniform(THEME.junc_visible, index, butx, lb_y, 1,, 0.8);
-				if(_hover && point_in_circle(_m[0], _m[1], butx, lb_y, ui(10))) {
-					if(visi_hold != noone)
-						jun.visible = visi_hold;
-					
-					draw_sprite_ui_uniform(THEME.junc_visible, index, butx, lb_y, 1,, 1);
-					TOOLTIP = get_text("visibility", "Visibility");
-				
-					if(mouse_press(mb_left, pFOCUS)) {
-						jun.visible = !jun.visible;
-						visi_hold = jun.visible;
-					}
-				}
-			}
-		} else
-			draw_sprite_ui_uniform(THEME.node_use_global, 0, butx, lb_y, 1,, 0.8);
-		
-		if(visi_hold != noone && mouse_release(mb_left))
-			visi_hold = noone;
-		
-		var cc = COLORS._main_text;
-		if(jun.global_use)
-			cc = GLOBAL.inputGetable(jun, jun.global_key)? COLORS._main_value_positive : COLORS._main_value_negative;
-		
-		draw_set_text(f_p0, fa_left, fa_center, cc);
-		draw_text_over(ui(56), lb_y - ui(2), jun.name);
-		var lb_w = string_width(jun.name) + ui(32);
-			
-		#region tooltip
-			if(jun.tooltip != "") {
-				var tx = ui(56) + string_width(jun.name) + ui(16);
-				var ty = lb_y - ui(1);
-					
-				if(point_in_circle(_m[0], _m[1], tx, ty, ui(10))) {
-					if(is_string(jun.tooltip))
-						TOOLTIP = jun.tooltip;
-					else if(mouse_click(mb_left, pFOCUS))
-						dialogCall(jun.tooltip);
-					draw_sprite_ui(THEME.info, 0, tx, ty,,,, COLORS._main_icon_light, 1);
-				} else 
-					draw_sprite_ui(THEME.info, 0, tx, ty,,,, COLORS._main_icon_light, 0.75);
-			}
-		#endregion
-			
-		#region anim
-			if(jun.connect_type == JUNCTION_CONNECT.input && lineBreak && jun.animator.is_anim && !global_var) {
-				var bx = w - ui(64);
-				var by = lb_y;
-				if(buttonInstant(THEME.button_hide, bx - ui(12), by - ui(12), ui(24), ui(24), _m, pFOCUS, _hover, "", THEME.prop_keyframe, 2) == 2) {
-					for(var j = 0; j < ds_list_size(jun.animator.values); j++) {
-						var _key = jun.animator.values[| j];
-						if(_key.time > ANIMATOR.current_frame) {
-							ANIMATOR.setFrame(_key.time);
-							break;
-						}
-					}
-				}
-						
-				bx -= ui(26);
-				var cc = COLORS.panel_animation_keyframe_unselected;
-				var kfFocus = false;
-				for(var j = 0; j < ds_list_size(jun.animator.values); j++) {
-					if(jun.animator.values[| j].time == ANIMATOR.current_frame) {
-						cc = COLORS.panel_animation_keyframe_selected;
-						kfFocus = true;
-						break;
-					}
-				}
-						
-				if(buttonInstant(THEME.button_hide, bx - ui(12), by - ui(12), ui(24), ui(24), _m, pFOCUS, _hover, kfFocus? get_text("panel_inspector_remove_key", "Remove keyframe") : 
-					get_text("panel_inspector_add_key", "Add keyframe"), THEME.prop_keyframe, 1, cc) == 2) {
-					var _add = false;
-					for(var j = 0; j < ds_list_size(jun.animator.values); j++) {
-						var _key = jun.animator.values[| j];
-						if(_key.time == ANIMATOR.current_frame) {
-							if(ds_list_size(jun.animator.values) > 1)
-								ds_list_delete(jun.animator.values, j);
-							_add = true;
-							break;
-						} else if(_key.time > ANIMATOR.current_frame) {
-							ds_list_insert(jun.animator.values, j, new valueKey(ANIMATOR.current_frame, jun.showValue(), jun.animator));
-							_add = true;
-							break;	
-						}
-					}
-					if(!_add) ds_list_add(jun.animator.values, new valueKey(ANIMATOR.current_frame, jun.showValue(), jun.animator));
-				}
-						
-				bx -= ui(26);
-				if(buttonInstant(THEME.button_hide, bx - ui(12), by - ui(12), ui(24), ui(24), _m, pFOCUS, _hover, "", THEME.prop_keyframe, 0) == 2) {
-					var _t = -1;
-					for(var j = 0; j < ds_list_size(jun.animator.values); j++) {
-						var _key = jun.animator.values[| j];
-						if(_key.time < ANIMATOR.current_frame) {
-							_t = _key.time;
-						}
-					}
-					if(_t > -1) ANIMATOR.setFrame(_t);
-				}
-						
-				var lhf = lb_h / 2 - 4;
-				draw_set_color(COLORS.panel_inspector_key_separator);
-				draw_line(bx - ui(20), by - lhf, bx - ui(20), by + lhf);
-					
-				draw_set_color(COLORS.panel_inspector_key_separator);
-				draw_line(bx - ui(20), by - lhf, bx - ui(20), by + lhf);
-					
-				bx -= ui(26 + 12);
-				if(buttonInstant(THEME.button_hide, bx - ui(12), by - ui(12), ui(24), ui(24), _m, pFOCUS, _hover, get_text("panel_animation_looping_mode", "Looping mode") + " " + ON_END_NAME[jun.on_end], THEME.prop_on_end, jun.on_end) == 2)
-					jun.on_end = safe_mod(jun.on_end + 1, sprite_get_number(THEME.prop_on_end));
-			}
-		#endregion
-		
-		#region use global
-			if(jun.connect_type == JUNCTION_CONNECT.input && lineBreak && !jun.animator.is_anim && !global_var) {
-				var bx = w - ui(64);
-				var by = lb_y;
-				var ic_b = jun.global_use? c_white : COLORS._main_icon;
-				if(buttonInstant(THEME.button_hide, bx - ui(12), by - ui(12), ui(24), ui(24), _m, pFOCUS, _hover, "Use global variable", THEME.node_use_global, jun.global_use, ic_b) == 2) {
-					jun.global_use = !jun.global_use;
-				}
-			}
-		#endregion
-		
-		var _hsy = yy + lb_h;
-		var padd = ui(8);
-			
-		var labelWidth = max(lb_w, min(ui(80) + w * 0.2, ui(200)));
-		var editBoxW   = w - ui(16 + 48) - !lineBreak * labelWidth;
-		var editBoxH   = lineBreak? TEXTBOX_HEIGHT : lb_h;
-		var editBoxX   = ui(16)	+ !lineBreak * labelWidth;
-		var editBoxY   = lineBreak? _hsy : yy;
-			
-		var widH	   = lineBreak? editBoxH : 0;
-		var mbRight	   = true;
-		
-		if(jun.global_use) {
-			jun.global_edit.boxColor = GLOBAL.inputGetable(jun, jun.global_key)? COLORS._main_value_positive : COLORS._main_value_negative;
-			jun.global_edit.setActiveFocus(pFOCUS, _hover);
-			jun.global_edit.setInteract(jun.value_from == noone);
-			if(pFOCUS) jun.global_edit.register(contentPane);
-			
-			var wd_h = jun.global_edit.draw(editBoxX, editBoxY, editBoxW, editBoxH, jun.global_key, _m);
-			widH = lineBreak? wd_h : 0;
-		} else if(jun.editWidget) {
-			jun.editWidget.setActiveFocus(pFOCUS, _hover);
-			
-			if(jun.connect_type == JUNCTION_CONNECT.input) {
-				jun.editWidget.setInteract(jun.value_from == noone);
-				if(pFOCUS) jun.editWidget.register(contentPane);
-			} else {
-				jun.editWidget.setInteract(false);
-			}
-			
-			switch(jun.display_type) {
-				case VALUE_DISPLAY.button :
-					jun.editWidget.draw(editBoxX, editBoxY, editBoxW, editBoxH, _m);
-					break;
-				default :
-					switch(jun.type) {
-						case VALUE_TYPE.integer :
-						case VALUE_TYPE.float :
-							switch(jun.display_type) {
-								case VALUE_DISPLAY._default :
-								case VALUE_DISPLAY.range :
-								case VALUE_DISPLAY.vector :
-									jun.editWidget.draw(editBoxX, editBoxY, editBoxW, editBoxH, jun.showValue(), _m);
-									break;
-								case VALUE_DISPLAY.vector_range :
-									var ebH = jun.editWidget.draw(editBoxX, editBoxY, editBoxW, editBoxH, jun.showValue(), _m);
-									widH = lineBreak? ebH : ebH - lb_h;
-									break;
-								case VALUE_DISPLAY.enum_scroll :
-									jun.editWidget.draw(editBoxX, editBoxY, editBoxW, editBoxH, array_safe_get(jun.display_data, jun.showValue()), _m, ui(16) + x, top_bar_h + y);
-									break;
-								case VALUE_DISPLAY.enum_button :
-									jun.editWidget.draw(editBoxX, editBoxY, editBoxW, editBoxH, jun.showValue(), _m, ui(16) + x, top_bar_h + y);
-									break;
-								case VALUE_DISPLAY.padding :
-									jun.editWidget.draw(xc, _hsy + ui(32), jun.showValue(), _m);
-									widH = ui(192);
-									break;
-								case VALUE_DISPLAY.rotation :
-								case VALUE_DISPLAY.rotation_range :
-									jun.editWidget.draw(xc, _hsy, jun.showValue(), _m);
-									widH = ui(96);
-									break;
-								case VALUE_DISPLAY.slider :
-								case VALUE_DISPLAY.slider_range :
-									jun.editWidget.draw(editBoxX, editBoxY, editBoxW, editBoxH, jun.showValue(), _m);
-									break;
-								case VALUE_DISPLAY.area :
-									jun.editWidget.draw(xc, _hsy + ui(40), jun.showValue(), jun.extra_data, _m);
-									widH = ui(204);
-									break;
-								case VALUE_DISPLAY.puppet_control :
-									widH = jun.editWidget.draw(editBoxX, editBoxY, editBoxW, jun.showValue(), _m, ui(16) + x, top_bar_h + y);
-									break;
-								case VALUE_DISPLAY.kernel :
-									var ebH = jun.editWidget.draw(editBoxX, editBoxY, editBoxW, editBoxH, jun.showValue(), _m);
-									widH = lineBreak? ebH : ebH - lb_h;
-									break;
-							}
-							break;
-						case VALUE_TYPE.boolean :
-							editBoxX = lineBreak? editBoxX : (labelWidth + con_w) / 2;
-							jun.editWidget.draw(editBoxX, editBoxY, jun.showValue(), _m, editBoxH);
-							break;
-						case VALUE_TYPE.color :
-							switch(jun.display_type) {
-								case VALUE_DISPLAY.gradient :
-									jun.editWidget.draw(editBoxX, editBoxY, editBoxW, editBoxH, jun.showValue(), _m);
-									break;
-								default :
-									jun.editWidget.draw(editBoxX, editBoxY, editBoxW, editBoxH, jun.showValue(), _m);
-									break;
-							}
-							break;
-						case VALUE_TYPE.path :
-							switch(jun.display_type) {
-								case VALUE_DISPLAY.path_load :
-								case VALUE_DISPLAY.path_save :
-								case VALUE_DISPLAY.path_array :
-									jun.editWidget.draw(editBoxX, editBoxY, editBoxW, editBoxH, jun.showValue(), _m);
-									break;
-								case VALUE_DISPLAY.path_font :
-									var val = jun.showValue();
-									if(file_exists(val))
-										val = filename_name(val);
-									jun.editWidget.draw(editBoxX, editBoxY, editBoxW, editBoxH, val, _m, ui(16) + x, top_bar_h + y);
-									break;
-							}
-							break;
-						case VALUE_TYPE.surface :
-							editBoxH = ui(96);
-							jun.editWidget.draw(editBoxX, editBoxY, editBoxW, editBoxH, jun.showValue(), _m, ui(16) + x, top_bar_h + y);
-							widH = lineBreak? editBoxH : editBoxH - lb_h;
-							break;
-						case VALUE_TYPE.curve :
-							editBoxH = ui(160);
-							jun.editWidget.draw(ui(32), _hsy, w - ui(80), editBoxH, jun.showValue(), _m);
-							if(point_in_rectangle(_m[0], _m[1], ui(32), _hsy, ui(32) + w - ui(80), _hsy + editBoxH))
-								mbRight = false;
-							widH = editBoxH;
-							break;
-						case VALUE_TYPE.text : 
-							var _hh = 0;
-							switch(instanceof(jun.editWidget)) {
-								case "textBox":
-									_hh = jun.editWidget.draw(editBoxX, editBoxY, editBoxW, editBoxH, jun.showValue(), _m, jun.display_type);
-									break;
-								case "textArea":
-									_hh = jun.editWidget.draw(ui(16), _hsy, w - ui(16 + 48), editBoxH, jun.showValue(), _m, jun.display_type);
-									break;
-								case "textArrayBox":
-									_hh = jun.editWidget.draw(ui(16), editBoxY, editBoxW, editBoxH, _m, ui(16) + x, top_bar_h + y);
-									break;
-							}
-							
-							widH = _hh;
-							break;
-					}
-			}
-		} else if(jun.display_type == VALUE_DISPLAY.label) {
-			draw_set_text(f_p1, fa_left, fa_top, COLORS._main_text_sub);
-			draw_text_over(ui(32), _hsy, jun.display_data);
-				
-			widH = string_height(jun.display_data);
-		} else
-			widH = 0;
-			
-		if(false) {
-			var __hsy = yy;
-			draw_set_alpha(0.5);
-			draw_set_color(c_aqua);
-			draw_rectangle(ui(8), __hsy, contentPane.w - ui(16), __hsy + lb_h, 0);	__hsy += lb_h;
-			draw_set_color(c_red);
-			draw_rectangle(ui(8), __hsy, contentPane.w - ui(16), __hsy + widH, 0);	__hsy += widH;
-			draw_set_color(c_lime);
-			draw_rectangle(ui(8), __hsy, contentPane.w - ui(16), __hsy + padd, 0);
-			draw_set_alpha(1);
-		}
-		
-		return [ widH, mbRight ];
-	}	
-	
 	contentPane = new scrollPane(content_w, content_h, function(_y, _m) {
 		var con_w = contentPane.surface_w - ui(4);
 		var _hover = pHOVER && contentPane.hover;
@@ -620,20 +240,78 @@ function Panel_Inspector() : PanelContent() constructor {
 			return drawMeta(_y, _m);
 		
 		inspecting.inspecting = true;
-		prop_hover = noone;
-		var jun = noone;
-		var amoIn  = inspecting.input_display_list == -1? ds_list_size(inspecting.inputs) : array_length(inspecting.input_display_list);
-		var amoOut = ds_list_size(inspecting.outputs);
-		var amo    = amoIn + 1 + amoOut;
-		var hh = ui(40);
+		prop_hover	= noone;
+		var jun		= noone;
+		var amoIn	= inspecting.input_display_list == -1? ds_list_size(inspecting.inputs) : array_length(inspecting.input_display_list);
+		var amoOut	= ds_list_size(inspecting.outputs);
+		var amo		= amoIn + 1 + amoOut;
+		var hh		= ui(40);
 		
-		tb_prop_filter.register(contentPane);
-		tb_prop_filter.active = pFOCUS;
-		tb_prop_filter.hover  = pHOVER;
-		tb_prop_filter.draw(ui(32), _y + ui(4), con_w - ui(64), ui(28), filter_text, _m);
-		draw_sprite_ui(THEME.search, 0, ui(32 + 16), _y + ui(4 + 14), 1, 1, 0, COLORS._main_icon, 1);
+		//tb_prop_filter.register(contentPane);
+		//tb_prop_filter.active = pFOCUS;
+		//tb_prop_filter.hover  = pHOVER;
+		//tb_prop_filter.draw(ui(32), _y + ui(4), con_w - ui(64), ui(28), filter_text, _m);
+		//draw_sprite_ui(THEME.search, 0, ui(32 + 16), _y + ui(4 + 14), 1, 1, 0, COLORS._main_icon, 1);
+		
+		prop_page_button.setActiveFocus(pFOCUS, pHOVER);
+		prop_page_button.draw(ui(32), _y + ui(4), contentPane.w - ui(76), ui(28), prop_page, _m);
 		
 		var xc = con_w / 2;
+		
+		if(prop_page == 1) {
+			hh += ui(8);
+			var hg  = ui(32);
+			var yy  = hh;
+			var wx1 = con_w - ui(8);
+			var ww  = max(ui(180), con_w / 3);
+			var wx0 = wx1 - ww;
+			
+			for( var i = 0; i < array_length(inspecting.attributeEditors); i++ ) {
+				var edt = inspecting.attributeEditors[i];
+				
+				if(is_string(edt)) {
+					var lby = yy + ui(12);
+					draw_set_alpha(0.5);
+					draw_set_text(f_p1, fa_center, fa_center, COLORS._main_text_sub);
+					draw_text_over(xc, lby, edt);
+					
+					var lbw = string_width(edt) / 2;
+					draw_set_color(COLORS._main_text_sub);
+					draw_line_round(xc + lbw + ui(16), lby,   wx1, lby, 2);
+					draw_line_round(xc - lbw - ui(16), lby, ui(8), lby, 2);
+					draw_set_alpha(1.0);
+					
+					yy += ui(32);
+					hh += ui(32);
+					continue;
+				}
+				
+				var val = inspecting.attributes[? edt[1]];
+				edt[2].setActiveFocus(pFOCUS, pHOVER);
+				
+				if(instanceof(edt[2]) == "buttonClass") {
+					edt[2].text = edt[0];
+					edt[2].draw(ui(8), yy, con_w - ui(16), hg, _m); 
+					
+					yy += hg + ui(8);
+					hh += hg + ui(8);
+					continue;
+				} 
+				
+				draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text);
+				draw_text_over(ui(8), yy + hg / 2, edt[0]);
+				
+				switch(instanceof(edt[2])) {
+					case "textBox" :	edt[2].draw(wx0, yy, ww, hg, val, _m); break;
+					case "checkBox" :	edt[2].draw(wx0 + ww / 2 - hg / 2, yy - hg / 2, val, _m, hg); break;
+					case "scrollBox" :	edt[2].draw(wx0, yy, ww, hg, edt[2].data_list[val], _m, x + contentPane.x, y + contentPane.y); break;
+				}
+				
+				yy += hg + ui(8);
+				hh += hg + ui(8);
+			}
+			return hh;
+		}
 		
 		for(var i = 0; i < amo; i++) {
 			var yy = hh + _y;
@@ -715,7 +393,7 @@ function Panel_Inspector() : PanelContent() constructor {
 			var lb_h    = line_height(f_p0) + ui(8);
 			var padd    = ui(8);
 			
-			var widg    = drawWidget(yy, _m, jun, false);
+			var widg    = drawWidget(ui(16), yy, contentPane.surface_w - ui(24), _m, jun, false, pHOVER && contentPane.hover, pFOCUS, contentPane, ui(16) + x, top_bar_h + y);
 			var widH    = widg[0];
 			var mbRight = widg[1];
 			
@@ -812,31 +490,6 @@ function Panel_Inspector() : PanelContent() constructor {
 			
 		if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), [mx, my], pFOCUS, pHOVER, get_text("presets", "Presets"), THEME.preset, 1) == 2)
 			dialogCall(o_dialog_preset, x + bx, y + by + ui(36), { "node": inspecting });
-		
-		by += ui(36);
-		if(struct_has(inspecting, "array_process")) {
-			var txt = get_text("panel_inspector_array_processor", "Array processor: ");
-			switch(inspecting.array_process) {
-				case ARRAY_PROCESS.loop :		txt += "Loop"			break;
-				case ARRAY_PROCESS.hold :		txt += "Hold"			break;
-				case ARRAY_PROCESS.expand :		txt += "Expand"			break;
-				case ARRAY_PROCESS.expand_inv : txt += "Expand inverse" break;
-			}
-			
-			if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), [mx, my], pFOCUS, pHOVER, txt, THEME.icon_array_processor, inspecting.array_process) == 2) {
-				menuCall(x + bx, y + by + ui(36), [
-					menuItem("Loop",			function(){ inspecting.array_process = ARRAY_PROCESS.loop;		 UPDATE |= RENDER_TYPE.full; }),
-					menuItem("Hold",			function(){ inspecting.array_process = ARRAY_PROCESS.hold;		 UPDATE |= RENDER_TYPE.full; }),
-					menuItem("Expand",			function(){ inspecting.array_process = ARRAY_PROCESS.expand;	 UPDATE |= RENDER_TYPE.full; }),
-					menuItem("Expand inverse",  function(){ inspecting.array_process = ARRAY_PROCESS.expand_inv; UPDATE |= RENDER_TYPE.full; }),
-				]);
-			}
-		} else if(ds_map_exists(inspecting.attributes, "Separator")) {
-			if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), [mx, my], pFOCUS, pHOVER, "Input management", THEME.view_group, 1) == 2) {
-				var dia = dialogCall(o_dialog_group_input_order, x + bx, y + by + ui(36));
-				dia.node = inspecting;
-			}
-		}
 		
 		var bx = w - ui(44);
 		var by = ui(12);

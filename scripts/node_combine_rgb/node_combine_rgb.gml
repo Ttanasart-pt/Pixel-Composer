@@ -25,6 +25,8 @@ function Node_Combine_RGB(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		["Surface",		 true], 0, 1, 2, 3,
 	]
 	
+	attribute_surface_depth();
+	
 	static process_data = function(_outSurf, _data, _output_index, _array_index) {
 		var _r = _data[0];
 		var _g = _data[1];
@@ -33,7 +35,7 @@ function Node_Combine_RGB(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		var _mode = _data[4];
 		
 		surface_set_target(_outSurf);
-		draw_clear_alpha(0, 0);
+		DRAW_CLEAR
 		BLEND_OVERRIDE;
 		
 		shader_set(shader);

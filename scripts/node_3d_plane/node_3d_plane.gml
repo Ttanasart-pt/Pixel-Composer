@@ -125,7 +125,7 @@ function Node_3D_Plane(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		inputs[| 9].setVisible(_proj);
 		
 		surface_set_target(_outSurf);
-		draw_clear_alpha(0, 0);
+		DRAW_CLEAR
 		BLEND_OVERRIDE;
 		
 			shader = sh_vertex_pt;

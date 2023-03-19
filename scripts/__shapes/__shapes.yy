@@ -5,7 +5,7 @@
   "isCompatibility": false,
   "isDnD": false,
   "parent": {
-    "name": "draw",
-    "path": "folders/functions/draw.yy",
+    "name": "geometry",
+    "path": "folders/functions/geometry.yy",
   },
 }

@@ -1,3 +1,10 @@
+enum PADDING {
+	right,
+	top,
+	left,
+	bottom
+}
+
 function paddingBox(_onModify, _unit = noone) : widget() constructor {
 	onModify = _onModify;
 	unit	 = _unit;

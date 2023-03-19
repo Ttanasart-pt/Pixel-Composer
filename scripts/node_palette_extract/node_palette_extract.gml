@@ -30,6 +30,8 @@ function Node_Palette_Extract(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	current_palette = [];
 	current_color = 0;
 	
+	attribute_surface_depth();
+	
 	function sortPalette(pal) {
 		array_sort(pal, function(c0, c1) {
 			var r0 = color_get_red(c0) / 255;
@@ -60,17 +62,17 @@ function Node_Palette_Extract(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	}
 	
 	function extractKmean(_surfFull, _size, _seed) {
-		var _surf = surface_create_valid(min(32, surface_get_width(_surfFull)), min(32, surface_get_height(_surfFull)));
+		var _surf = surface_create_valid(min(32, surface_get_width(_surfFull)), min(32, surface_get_height(_surfFull)), attrDepth());
 		_size = max(1, _size);
 		
 		var ww = surface_get_width(_surf);
 		var hh = surface_get_height(_surf);
 		
 		surface_set_target(_surf);
-		draw_clear_alpha(0, 0);
+		DRAW_CLEAR
 		BLEND_OVERRIDE;
 		gpu_set_texfilter(true);
-		draw_surface_stretched(_surfFull, 0, 0, ww, hh);
+		draw_surface_stretched_safe(_surfFull, 0, 0, ww, hh);
 		gpu_set_texfilter(false);
 		BLEND_NORMAL;
 		surface_reset_target();
@@ -217,9 +219,9 @@ function Node_Palette_Extract(_x, _y, _group = noone) : Node(_x, _y, _group) con
 		var hh = surface_get_height(_surf);
 		
 		surface_set_target(_surf);
-		draw_clear_alpha(0, 0);
+		DRAW_CLEAR
 		BLEND_OVERRIDE;
-		draw_surface_stretched(_surfFull, 0, 0, ww, hh);
+		draw_surface_stretched_safe(_surfFull, 0, 0, ww, hh);
 		BLEND_NORMAL;
 		surface_reset_target();
 		

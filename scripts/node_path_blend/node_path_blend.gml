@@ -41,18 +41,36 @@ function Node_Path_Blend(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		var p1 = _path1 != noone && struct_has(_path1, "getPointRatio");
 		var p2 = _path2 != noone && struct_has(_path2, "getPointRatio");
 			
-		if(!p1 && !p2) return [ 0, 0 ];
+		if(!p1 && !p2) return new Point();
 		if( p1 && !p2) return _path1.getPointRatio(_rat);
 		if(!p1 &&  p2) return _path2.getPointRatio(_rat);
 		
 		var _p1 = _path1.getPointRatio(_rat);
 		var _p2 = _path2.getPointRatio(_rat);
-		var r = [];
+		var _r  = new Point();
 		
-		r[0] = lerp(array_safe_get(_p1, 0), array_safe_get(_p2, 0), _lerp);
-		r[1] = lerp(array_safe_get(_p1, 1), array_safe_get(_p2, 1), _lerp);
+		_r.x = lerp(_p1.x, _p2.x, _lerp);
+		_r.y = lerp(_p1.y, _p2.y, _lerp);
 		
-		return r;
+		return _r;
+	}
+	
+	static getLength = function(ind = 0) { 
+		var _path1 = inputs[| 0].getValue();
+		var _path2 = inputs[| 1].getValue();
+		var _lerp  = inputs[| 2].getValue();
+		
+		var p1 = _path1 != noone && struct_has(_path1, "getLength");
+		var p2 = _path2 != noone && struct_has(_path2, "getLength");
+			
+		if(!p1 && !p2) return 0;
+		if( p1 && !p2) return _path1.getLength(ind);
+		if(!p1 &&  p2) return _path2.getLength(ind);
+		
+		var _p1 = _path1.getLength(ind);
+		var _p2 = _path2.getLength(ind);
+		
+		return lerp(_p1, _p2, _lerp);
 	}
 	
 	static getBoundary = function() {
@@ -63,18 +81,14 @@ function Node_Path_Blend(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		var p1 = _path1 != noone && struct_has(_path1, "getPointRatio");
 		var p2 = _path2 != noone && struct_has(_path2, "getPointRatio");
 			
-		if(!p1 && !p2) return [ 0, 0, 1, 1 ];
+		if(!p1 && !p2) return new BoundingBox();
 		if( p1 && !p2) return _path1.getBoundary();
 		if(!p1 &&  p2) return _path2.getBoundary();
 		
 		var _p1 = _path1.getBoundary();
 		var _p2 = _path2.getBoundary();
 		
-		return [ lerp(_p1[0], _p2[0], _lerp),
-				 lerp(_p1[1], _p2[1], _lerp),
-				 lerp(_p1[2], _p2[2], _lerp),
-				 lerp(_p1[3], _p2[3], _lerp),
-				];
+		return _p1.lerpTo(_p2, _lerp);
 	}
 	
 	function update() { 

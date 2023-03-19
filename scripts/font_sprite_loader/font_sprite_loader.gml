@@ -13,7 +13,7 @@ FONT_SPRITES = ds_map_create();
 		
 		var s = surface_create(ww, hh);
 		surface_set_target(s);
-		draw_clear_alpha(0, 0);
+		DRAW_CLEAR
 		draw_text(0, 0, name);
 		surface_reset_target();
 		

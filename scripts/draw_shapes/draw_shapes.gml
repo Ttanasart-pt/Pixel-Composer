@@ -65,3 +65,7 @@ function draw_ellipse_dash(x0, y0, x1, y1, th = 1, dash = 8) {
 		oy = ny;
 	}
 }
+
+function draw_circle_dash(_x, _y, rad, th = 1, dash = 8) {
+	draw_ellipse_dash(_x - rad, _y - rad, _x + rad, _y + rad, th, dash);
+}

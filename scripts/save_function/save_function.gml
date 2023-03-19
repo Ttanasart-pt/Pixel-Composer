@@ -143,7 +143,7 @@ function SAVE_COLLECTIONS(_list, _path, save_surface = true, metadata = noone) {
 		var preview_surface = PANEL_PREVIEW.getNodePreviewSurface();
 		if(is_surface(preview_surface)) {
 			var icon_path = string_copy(_path, 1, string_length(_path) - 5) + ".png";
-			surface_save(preview_surface, icon_path);
+			surface_save_safe(preview_surface, icon_path);
 		}
 	}
 	
@@ -171,7 +171,7 @@ function SAVE_COLLECTION(_node, _path, save_surface = true, metadata = noone) {
 		var preview_surface = PANEL_PREVIEW.getNodePreviewSurface();
 		if(is_surface(preview_surface)) {
 			var icon_path = string_copy(_path, 1, string_length(_path) - 5) + ".png";
-			surface_save(preview_surface, icon_path);
+			surface_save_safe(preview_surface, icon_path);
 		}
 	}
 	

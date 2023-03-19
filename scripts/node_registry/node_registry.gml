@@ -153,7 +153,7 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 			addNodeObject(fluidSim, "Input",	s_node_group_input,		"Node_Group_Input",		[1, Node_Group_Input]);
 			addNodeObject(fluidSim, "Output",	s_node_group_output,	"Node_Group_Output",	[1, Node_Group_Output]);
 		
-			ds_list_add(fluidSim, "System");
+			ds_list_add(fluidSim, "Domain");
 			addNodeObject(fluidSim, "Fluid Domain",		s_node_fluidSim_domain,			"Node_Fluid_Domain",		[1, Node_Fluid_Domain]).setVersion(1120);
 			addNodeObject(fluidSim, "Update Domain",	s_node_fluidSim_update,			"Node_Fluid_Update",		[1, Node_Fluid_Update]).setVersion(1120);
 			addNodeObject(fluidSim, "Render Domain",	s_node_fluidSim_render,			"Node_Fluid_Render",		[1, Node_Fluid_Render]).setVersion(1120);
@@ -166,7 +166,26 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 			addNodeObject(fluidSim, "Vortex",			s_node_fluidSim_vortex,			"Node_Fluid_Vortex",			[1, Node_Fluid_Vortex]).setVersion(1120);
 			addNodeObject(fluidSim, "Repulse",			s_node_fluidSim_repulse,		"Node_Fluid_Repulse",			[1, Node_Fluid_Repulse]).setVersion(1120);
 			addNodeObject(fluidSim, "Turbulence",		s_node_fluidSim_turbulence,		"Node_Fluid_Turbulence",		[1, Node_Fluid_Turbulence]).setVersion(1120);
-	
+		
+		var strandSim = ds_list_create();
+		addNodeCatagory("StrandSim", strandSim, ["Node_Strand_Group"]);
+			ds_list_add(strandSim, "Group");
+			addNodeObject(strandSim, "Input",	s_node_group_input,		"Node_Group_Input",		[1, Node_Group_Input]);
+			addNodeObject(strandSim, "Output",	s_node_group_output,	"Node_Group_Output",	[1, Node_Group_Output]);
+			
+			ds_list_add(strandSim, "System");
+			addNodeObject(strandSim, "Strand Create",	s_node_strandSim_create,	"Node_Strand_Create",	[1, Node_Strand_Create]).setVersion(1140);
+			addNodeObject(strandSim, "Strand Update",	s_node_strandSim_update,	"Node_Strand_Update",	[1, Node_Strand_Update]).setVersion(1140);
+			addNodeObject(strandSim, "Strand Render",	s_node_strandSim_render,	"Node_Strand_Render",	[1, Node_Strand_Render]).setVersion(1140);
+			addNodeObject(strandSim, "Strand Render Texture",	s_node_strandSim_render_texture,	"Node_Strand_Render_Texture",	[1, Node_Strand_Render_Texture]).setVersion(1140);
+			
+			ds_list_add(strandSim, "Affectors");
+			addNodeObject(strandSim, "Strand Gravity",		 s_node_strandSim_gravity,	"Node_Strand_Gravity",		 [1, Node_Strand_Gravity]).setVersion(1140);
+			addNodeObject(strandSim, "Strand Force Apply",	 s_node_strandSim_force,	"Node_Strand_Force_Apply",	 [1, Node_Strand_Force_Apply]).setVersion(1140);
+			addNodeObject(strandSim, "Strand Break",		 s_node_strandSim_break,	"Node_Strand_Break",		 [1, Node_Strand_Break]).setVersion(1140);
+			addNodeObject(strandSim, "Strand Length Adjust", s_node_strandSim_length,	"Node_Strand_Length_Adjust", [1, Node_Strand_Length_Adjust]).setVersion(1140);
+			addNodeObject(strandSim, "Strand Collision",	s_node_strandSim_collide,		"Node_Strand_Collision",	[1, Node_Strand_Collision]).setVersion(1140);
+			
 		var input = ds_list_create();
 		NODE_PAGE_DEFAULT = ds_list_size(NODE_CATEGORY);
 		ADD_NODE_PAGE = NODE_PAGE_DEFAULT;
@@ -343,6 +362,7 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 			addNodeObject(generator, "RigidSim",			s_node_rigidSim,			"Node_Rigid_Group",			[1, Node_Rigid_Group],, "Create group for rigidbody simulation.").setVersion(1110);
 			addNodeObject(generator, "RigidSim Global",		s_node_rigidSim_global,		"Node_Rigid_Global",		[1, Node_Rigid_Global]).setVersion(1110);
 			addNodeObject(generator, "FluidSim",			s_node_fluidSim_group,		"Node_Fluid_Group",			[1, Node_Fluid_Group],, "Create group for fluid simulation.").setVersion(1120);
+			addNodeObject(generator, "StrandSim",			s_node_strandSim,			"Node_Strand_Group",		[1, Node_Strand_Group], ["Hair"], "Create group for hair simulation.").setVersion(1140);
 		
 			ds_list_add(generator, "Others");
 			addNodeObject(generator, "Separate Shape",	s_node_sepearte_shape,	"Node_Seperate_Shape",	[1, Node_Seperate_Shape],, "Separate disconnected pixel each into an image in an image array.");
@@ -356,11 +376,13 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 			addNodeObject(compose, "Stack",					s_node_draw_stack,		"Node_Stack",				[1, Node_Stack],, "Place image next to each other linearly, or on top of each other.").setVersion(1070);
 			addNodeObject(compose, "Camera",				s_node_camera,			"Node_Camera",				[1, Node_Camera],, "Create camera that crop image to fix dimension with control of position, zoom. Also can be use to create parallax effect.");
 			addNodeObject(compose, "Render Spritesheet",	s_node_sprite_sheet,	"Node_Render_Sprite_Sheet",	[1, Node_Render_Sprite_Sheet],, "Create spritesheet from image array or animation.");
+			addNodeObject(compose, "Pack Sprites",			s_node_pack_sprite,		"Node_Pack_Sprites",		[1, Node_Pack_Sprites]).setVersion(1140);
 	
 		var renderNode = ds_list_create();
 		addNodeCatagory("Render", renderNode);
 			ds_list_add(renderNode, "Renders");
 			addNodeObject(renderNode, "Render Spritesheet",	s_node_sprite_sheet,	"Node_Render_Sprite_Sheet",	[1, Node_Render_Sprite_Sheet]);
+			addNodeObject(renderNode, "Pack Sprites",		s_node_pack_sprite,		"Node_Pack_Sprites",		[1, Node_Pack_Sprites]).setVersion(1140);
 			if(!DEMO) addNodeObject(renderNode, "Export",	s_node_export,			"Node_Export",				[0, Node_create_Export]);
 			//addNodeObject(renderNode, "Preview timeline",		s_node_timeline_preview,"Node_Timeline_Preview",	[1, Node_create_Timeline_Preview]);
 	
@@ -430,10 +452,14 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 			addNodeObject(values, "Boolean",		s_node_boolean,		"Node_Boolean",		[1, Node_Boolean]);
 			addNodeObject(values, "Compare",		s_node_compare,		"Node_Compare",		[0, Node_create_Compare], ["equal", "greater", "lesser"]);
 			addNodeObject(values, "Logic Opr",		s_node_logic_opr,	"Node_Logic",		[0, Node_create_Logic], [ "and", "or", "not", "nand", "nor" , "xor" ]);
-		
+			
 			ds_list_add(values, "Struct");
 			addNodeObject(values, "Struct",			s_node_struct,		"Node_Struct",		[1, Node_Struct]);
 			addNodeObject(values, "Struct Get",		s_node_struct_get,	"Node_Struct_Get",	[1, Node_Struct_Get]);
+			
+			ds_list_add(values, "Mesh");
+			addNodeObject(values, "Path to Mesh",	s_node_mesh_path,		"Node_Mesh_Create_Path",	[1, Node_Mesh_Create_Path],, "Create mesh from path.").setVersion(1140);
+			addNodeObject(values, "Mesh Transform",	s_node_mesh_transform,	"Node_Mesh_Transform",		[1, Node_Mesh_Transform]).setVersion(1140);
 			
 		var color = ds_list_create();
 		addNodeCatagory("Color", color);
@@ -444,6 +470,7 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 			addNodeObject(color, "Sampler",			s_node_sampler,			"Node_Sampler",			[1, Node_Sampler],, "Sample color from an image.");
 			addNodeObject(color, "Color Data",		s_node_color_data,		"Node_Color_Data",		[1, Node_Color_Data],, "Get data (rgb, hsv, brightness) from color.");
 			addNodeObject(color, "Find pixel",		s_node_pixel_find,		"Node_Find_Pixel",		[1, Node_Find_Pixel],, "Get the position of the first pixel with a given color.").setVersion(1130);
+			addNodeObject(color, "Mix Color",		s_node_color_mix,		"Node_Color_Mix",		[1, Node_Color_Mix]).setVersion(1140);
 		
 			ds_list_add(color, "Palettes");
 			addNodeObject(color, "Palette",			s_node_palette,			"Node_Palette",			[1, Node_Palette]);
@@ -552,5 +579,40 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 		ds_list_clear(PANEL_GRAPH.nodes_select_list);
 		PANEL_GRAPH.node_focus = node;
 		PANEL_GRAPH.fullView();
+	}
+	
+	global.SURFACE_FORMAT = [
+		surface_rgba4unorm,
+		surface_rgba8unorm,
+		surface_rgba16float,
+		surface_rgba32float,
+		surface_r8unorm,
+		surface_r16float,
+		surface_r32float
+	];
+	
+	global.SURFACE_FORMAT_NAME = [
+		"4 bit RGBA", 
+		"8 bit RGBA", 
+		"16 bit RGBA", 
+		"32 bit RGBA", 
+		"8 bit Greyscale", 
+		"16 bit Greyscale", 
+		"32 bit Greyscale"
+	];
+	
+	global.SURFACE_FORMAT_NAME_PROCESS = [ "Input" ];
+	global.SURFACE_FORMAT_NAME_PROCESS = array_append(global.SURFACE_FORMAT_NAME_PROCESS, global.SURFACE_FORMAT_NAME);
+	
+	function attribute_surface_depth() {
+		attributes[? "color_depth"] = inputs[| 0].type == VALUE_TYPE.surface? 0 : 1;
+		depth_array = inputs[| 0].type == VALUE_TYPE.surface? global.SURFACE_FORMAT_NAME_PROCESS : global.SURFACE_FORMAT_NAME;
+		
+		array_push(attributeEditors, "Surface");
+		array_push(attributeEditors, ["Color depth", "color_depth", 
+			new scrollBox(depth_array, function(val) { 
+				attributes[? "color_depth"] = val;
+				triggerRender();
+			}, false)]);
 	}
 #endregion

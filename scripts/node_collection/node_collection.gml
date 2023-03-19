@@ -77,6 +77,12 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	attributes[? "w"] = 128;
 	attributes[? "h"] = 128;
 	
+	array_push(attributeEditors, ["Edit separator", "Separator",
+		button(function() {
+			var dia = dialogCall(o_dialog_group_input_order);
+			dia.node = self;
+		}) ]);
+	
 	inspUpdateTooltip   = get_text("panel_inspector_execute", "Execute node contents");
 	inspUpdateIcon      = [ THEME.sequence_control, 1, COLORS._main_value_positive ];
 	

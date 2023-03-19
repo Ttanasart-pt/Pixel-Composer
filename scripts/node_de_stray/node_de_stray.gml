@@ -19,9 +19,11 @@ function Node_De_Stray(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		["Surface",	 false], 0, 1,
 	]
 	
+	attribute_surface_depth();
+	
 	static process_data = function(_outSurf, _data, _output_index, _array_index) {
 		surface_set_target(_outSurf);
-		draw_clear_alpha(0, 0);
+		DRAW_CLEAR
 		BLEND_OVERRIDE;
 		
 		shader_set(shader);

@@ -60,7 +60,7 @@ function Node_ASE_layer(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		
 		if(cel == 0) {
 			surface_set_target(surf);
-			draw_clear_alpha(0, 0);
+			DRAW_CLEAR
 			surface_reset_target();
 			return;
 		}
@@ -71,9 +71,9 @@ function Node_ASE_layer(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		var yy = celDim? 0 : cel.data[? "Y"];
 		
 		surface_set_target(surf);
-		draw_clear_alpha(0, 0);
+		DRAW_CLEAR
 		BLEND_OVERRIDE;
-		draw_surface(_inSurf, xx, yy);
+		draw_surface_safe(_inSurf, xx, yy);
 		BLEND_NORMAL;
 		surface_reset_target();
 	}

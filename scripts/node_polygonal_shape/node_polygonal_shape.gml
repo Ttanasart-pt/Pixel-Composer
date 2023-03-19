@@ -26,7 +26,7 @@ function Node_Shape_Polygon(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		.setDisplay(VALUE_DISPLAY.vector)
 		.setUnitRef(function(index) { return getDimension(index); }, VALUE_UNIT.reference);
 	
-	inputs[| 8] = nodeValue("Sides", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 32)
+	inputs[| 8] = nodeValue("Sides", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 16)
 		.setDisplay(VALUE_DISPLAY.slider, [2, 64, 1]);
 	
 	inputs[| 9] = nodeValue("Inner radius", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.5)
@@ -48,15 +48,24 @@ function Node_Shape_Polygon(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		.setDisplay(VALUE_DISPLAY.rotation_range);
 	
 	inputs[| 15] = nodeValue("Round cap", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	
+	inputs[| 16] = nodeValue("Mesh", self, JUNCTION_CONNECT.input, VALUE_TYPE.mesh, noone)
+		.setVisible(true, true);
 		
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
+		
+	outputs[| 1] = nodeValue("Mesh", self, JUNCTION_CONNECT.output, VALUE_TYPE.mesh, noone);
+		
+	outputs[| 2] = nodeValue("Path", self, JUNCTION_CONNECT.output, VALUE_TYPE.pathnode, noone);
 	
-	input_display_list = [
+	input_display_list = [ 16, 
 		["Surface",		false], 0, 
 		["Transform",	false], 5, 6, 7, 
 		["Shape",		false], 4, 8, 9, 10, 11, 12, 13, 14, 15, 
 		["Render",		 true],	1, 2, 3, 
 	];
+	
+	attribute_surface_depth();
 	
 	node_draw_transform_init();
 	
@@ -64,15 +73,28 @@ function Node_Shape_Polygon(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		if(array_length(current_data) != ds_list_size(inputs)) return;
 		if(process_amount > 1) return;
 		
-		node_draw_transform_box(active, _x, _y, _s, _mx, _my, _snx, _sny, 5, 6, 7);
+		draw_set_color(c_grey);
+		mesh.draw(_x, _y, _s);
+		node_draw_transform_box(active, _x, _y, _s, _mx, _my, _snx, _sny, 5, 6, 7, true);
 	}
 	
-	static draw_vertex_transform = function(_x, _y, _pos, _rot) {
-		var p = point_rotate(_x, _y, 0, 0, _rot);
-		draw_vertex(p[0] + _pos[0], p[1] + _pos[1]);
+	static vertex_transform = function(_p, _pos, _rot) {
+		var p = point_rotate(_p.x, _p.y, 0, 0, _rot);
+		_p.x = _pos[0] + p[0];
+		_p.y = _pos[1] + p[1];
+		
+		draw_vertex(_p.x, _p.y);
 	}
+	
+	mesh = new Mesh();
+	path = new PathSegment();
 	
 	static process_data = function(_outSurf, _data, _output_index, _array_index) {
+		if(_output_index == 1)
+			return mesh;
+		if(_output_index == 2)
+			return path;
+		
 		var _dim	= _data[0];
 		var _bg		= _data[1];
 		var _bgc	= _data[2];
@@ -89,6 +111,7 @@ function Node_Shape_Polygon(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		var _thTap  = _data[13];
 		var _aRan   = _data[14];
 		var _cap    = _data[15];
+		var _mesh   = _data[16];
 		
 		inputs[|  8].setVisible(_shp == 1 || _shp == 2 || _shp == 3 || _shp == 4 || _shp == 5);
 		inputs[|  9].setVisible(_shp == 2 || _shp == 4 || _shp == 5 || _shp == 6 || _shp == 7);
@@ -99,7 +122,7 @@ function Node_Shape_Polygon(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		inputs[| 14].setVisible(_shp == 5);
 		inputs[| 15].setVisible(_shp == 5);
 		
-		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1]);
+		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
 		
 		var data = {
 			side:	_side,
@@ -114,43 +137,72 @@ function Node_Shape_Polygon(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		
 		surface_set_target(_outSurf);
 			if(_bg) draw_clear_alpha(_bgc, 1);
-			else	draw_clear_alpha(0, 0);
+			else	DRAW_CLEAR
 			
 			draw_set_color(_shc);
 			draw_primitive_begin(pr_trianglelist);
-			var points = [];
 			
-			switch(array_safe_get(shapesArray, _shp)) {
-				case "Rectangle" : points = SHAPE_rectangle(_sca);		break;
-				case "Ellipse"	 : points = SHAPE_circle(_sca, data);	break;
-				case "Star"		 : points = SHAPE_star(_sca, data);		break;
-				case "Capsule"	 : points = SHAPE_capsule(_sca, data);	break;
-				case "Ring"		 : points = SHAPE_ring(_sca, data);		break;
-				case "Arc"		 : points = SHAPE_arc(_sca, data);		break;
-				case "Gear"		 : points = SHAPE_gear(_sca, data);		break;
-				case "Cross"	 : points = SHAPE_cross(_sca, data);	break;
-			}
-			
-			var shapes = [];
-			for( var i = 0; i < array_length(points); i++ ) {
-				if(points[i].type == SHAPE_TYPE.points)
-					shapes[i] = polygon_triangulate(points[i].points);
-				else if(points[i].type == SHAPE_TYPE.triangles)
-					shapes[i] = points[i].triangles;
-			}
-			
-			for( var i = 0; i < array_length(shapes); i++ ) {
-				var triangles = shapes[i];
-				
-				for( var j = 0; j < array_length(triangles); j++ ) {
-					var tri = triangles[j];
+			if(_mesh != noone) {
+				for( var j = 0; j < array_length(_mesh.triangles); j++ ) {
+					var tri = _mesh.triangles[j];
 					var p0 = tri[0];
 					var p1 = tri[1];
 					var p2 = tri[2];
 					
-					draw_vertex_transform(p0[0], p0[1], _pos, _rot);
-					draw_vertex_transform(p1[0], p1[1], _pos, _rot);
-					draw_vertex_transform(p2[0], p2[1], _pos, _rot);
+					draw_vertex(p0.x, p0.y);
+					draw_vertex(p1.x, p1.y);
+					draw_vertex(p2.x, p2.y);
+				}
+				
+				outputs[| 2].setVisible(false, false);
+			} else {
+				outputs[| 2].setVisible(true, true);
+				
+				var shapeData = [];
+			
+				switch(array_safe_get(shapesArray, _shp)) {
+					case "Rectangle" : shapeData = SHAPE_rectangle(_sca);		break;
+					case "Ellipse"	 : shapeData = SHAPE_circle(_sca, data);	break;
+					case "Star"		 : shapeData = SHAPE_star(_sca, data);		break;
+					case "Capsule"	 : shapeData = SHAPE_capsule(_sca, data);	break;
+					case "Ring"		 : shapeData = SHAPE_ring(_sca, data);		break;
+					case "Arc"		 : shapeData = SHAPE_arc(_sca, data);		break;
+					case "Gear"		 : shapeData = SHAPE_gear(_sca, data);		break;
+					case "Cross"	 : shapeData = SHAPE_cross(_sca, data);		break;
+				}
+				
+				var points  = shapeData[0];
+				var segment = shapeData[1];
+				
+				for( var i = 0; i < array_length(segment); i++ ) {
+					var _p = segment[i];
+					var p = point_rotate(_p.x, _p.y, 0, 0, _rot);
+					_p.x = _pos[0] + p[0];
+					_p.y = _pos[1] + p[1];
+				}
+				path.setSegment(segment);
+				
+				var shapes = [];
+				for( var i = 0; i < array_length(points); i++ ) {
+					if(points[i].type == SHAPE_TYPE.points)
+						shapes[i] = polygon_triangulate(points[i].points);
+					else if(points[i].type == SHAPE_TYPE.triangles)
+						shapes[i] = points[i].triangles;
+				}
+				
+				mesh.triangles = [];
+				for( var i = 0; i < array_length(shapes); i++ ) {
+					var triangles = shapes[i];
+				
+					for( var j = 0; j < array_length(triangles); j++ ) {
+						var tri = triangles[j];
+						
+						vertex_transform(tri[0], _pos, _rot);
+						vertex_transform(tri[1], _pos, _rot);
+						vertex_transform(tri[2], _pos, _rot);
+						
+						array_push(mesh.triangles, tri);
+					}
 				}
 			}
 			draw_primitive_end();

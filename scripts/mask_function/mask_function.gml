@@ -1,7 +1,8 @@
 function mask_apply(original, edited, mask, mix = 1) {	
 	if(!is_surface(mask) && mix == 1) return edited;
 	
-	var _s = surface_create_size(original);
+	var _f = surface_get_format(edited);
+	var _s = surface_create_size(original, _f);
 	
 	surface_set_target(_s);
 	shader_set(sh_mask);
