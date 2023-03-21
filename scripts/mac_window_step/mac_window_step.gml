@@ -1,4 +1,6 @@
 function mac_window_step() {
+	if(--__win_delay) return;
+	
 	var _mx = mouse_raw_x;
 	var _my = mouse_raw_y;
 	

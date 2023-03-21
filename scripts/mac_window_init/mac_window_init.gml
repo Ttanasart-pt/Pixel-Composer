@@ -9,6 +9,7 @@ enum WINDOW_DRAG_MODE {
 function mac_window_init() {
 	globalvar __win_is_maximized, __win_min_x, __win_min_y, __win_min_w, __win_min_h;
 	
+	__win_delay = 2;
 	__win_is_dragging = 0;
 	__win_drag_mx = 0;
 	__win_drag_my = 0;

@@ -251,7 +251,7 @@
 				setException();
 		}
 		
-		if(!LOADING) {
+		if(OS != os_macosx && !LOADING) {
 			if(PREF_MAP[? "window_maximize"]) {
 				gameframe_maximize();
 			} else {
