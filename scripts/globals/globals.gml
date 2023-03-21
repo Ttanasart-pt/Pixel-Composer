@@ -90,7 +90,11 @@
 	TESTING = CONF_TESTING;
 	
 	#macro DEMO false
-	#macro Demo:DEMO true
+	#macro Demo:DEMO  true
+	#macro Alpha:DEMO true
+	
+	#macro ALPHA false
+	#macro Alpha:ALPHA true
 	
 	#region color
 		#macro c_ui_blue_dkblack	$251919

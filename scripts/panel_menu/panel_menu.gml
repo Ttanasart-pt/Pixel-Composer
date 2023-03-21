@@ -53,7 +53,7 @@ function Panel_Menu() : PanelContent() constructor {
 		menuItem(get_text("exit", "Close program"), function() { window_close(); }),
 	];
 	
-	if(DEMO) array_delete(menu_file, 1, 4);
+	if(DEMO) array_delete(menu_file, 1, 5);
 	
 	menu_help = [
 		menuItem(get_text("panel_menu_help_video", "Tutorial videos"), function() {
@@ -583,7 +583,8 @@ function Panel_Menu() : PanelContent() constructor {
 			if(MODIFIED)
 				txt += "*";
 			txt += " - Pixel Composer";
-			if(DEMO) txt += " DEMO";
+			if(ALPHA)		txt += " ALPHA";
+			else if(DEMO)	txt += " DEMO";
 			
 			var tx0, tx1, maxW, tcx;
 			var ty0, ty1;
