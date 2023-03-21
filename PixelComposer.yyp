@@ -8,7 +8,9 @@
   "configs": {
     "children": [
       {"children":[],"name":"Tester",},
-      {"children":[],"name":"Demo",},
+      {"children":[
+          {"children":[],"name":"Alpha",},
+        ],"name":"Demo",},
     ],
     "name": "Default",
   },
