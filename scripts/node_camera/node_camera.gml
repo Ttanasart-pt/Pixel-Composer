@@ -28,12 +28,13 @@ function Node_Camera(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [
-		["Surface",	  true], 0, 3, 4, 
+		["Surface",	  true], 0, 4, 
 		["Camera",	 false], 1, 2,
 		["Elements",  true], 
 	];
 	
 	attribute_surface_depth();
+	attribute_oversample();
 
 	input_display_len = array_length(input_display_list);
 	input_fix_len	= ds_list_size(inputs);
@@ -119,7 +120,7 @@ function Node_Camera(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		if(!is_surface(_data[0])) return;
 		var _area = _data[1];
 		var _zoom = _data[2];
-		var _samp = _data[3];
+		var _samp = ds_map_try_get(attributes, "oversample");
 		var _fix  = _data[4];
 		var cDep  = attrDepth();
 		

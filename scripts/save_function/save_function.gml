@@ -53,7 +53,9 @@ function save_serialize() {
 	
 	ds_map_add_map(_map, "global", GLOBAL.serialize());
 	
-	_map[? "preview"] = surface_encode(PANEL_PREVIEW.getNodePreviewSurface());
+	var prev = PANEL_PREVIEW.getNodePreviewSurface();
+	if(!is_surface(prev)) _map[? "preview"] = "";
+	else				  _map[? "preview"] = surface_encode(surface_size_lim(prev, 128, 128));
 	
 	var val  = json_encode_minify(_map);
 	ds_map_destroy(_map);

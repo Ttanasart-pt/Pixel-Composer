@@ -878,6 +878,41 @@
         "yorigin": 16,
         "slice": null
     },
+    "star": {
+        "path": "./icon/s_star.png",
+        "subimages": 1,
+        "xorigin": 16,
+        "yorigin": 16,
+        "slice": null
+    },
+    "panel_graph": {
+        "path": "./icon/s_panel_graph.png",
+        "subimages": 1,
+        "xorigin": 16,
+        "yorigin": 16,
+        "slice": null
+    },
+    "panel_preview": {
+        "path": "./icon/s_panel_preview.png",
+        "subimages": 1,
+        "xorigin": 16,
+        "yorigin": 16,
+        "slice": null
+    },
+    "panel_inspector": {
+        "path": "./icon/s_panel_inspector.png",
+        "subimages": 1,
+        "xorigin": 16,
+        "yorigin": 16,
+        "slice": null
+    },
+    "panel_animation": {
+        "path": "./icon/s_panel_animation.png",
+        "subimages": 1,
+        "xorigin": 16,
+        "yorigin": 16,
+        "slice": null
+    },
     "inspector_area": {
         "path": "./inspector/s_inspector_area_strip2.png",
         "subimages": 2,

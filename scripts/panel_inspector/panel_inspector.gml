@@ -6,6 +6,10 @@ function Inspector_Custom_Renderer(draw) : widget() constructor {
 function Panel_Inspector() : PanelContent() constructor {
 	title = "Inspector";
 	context_str = "Inspector";
+	icon  = THEME.panel_inspector;
+	
+	w = ui(400);
+	h = ui(640);
 	
 	locked		= false;
 	inspecting	= noone;
@@ -60,9 +64,9 @@ function Panel_Inspector() : PanelContent() constructor {
 	
 	workshop_uploading = false;
 	
-	addHotkey("Inspector", "Copy property",		"C",   MOD_KEY.ctrl,	function() { propSelectCopy(); });
-	addHotkey("Inspector", "Paste property",	"V",   MOD_KEY.ctrl,	function() { propSelectPaste(); });
-	addHotkey("Inspector", "Toggle animation",	"I",   MOD_KEY.none,	function() { anim_toggling = true; });
+	addHotkey("Inspector", "Copy property",		"C",   MOD_KEY.ctrl,	function() { PANEL_INSPECTOR.propSelectCopy(); });
+	addHotkey("Inspector", "Paste property",	"V",   MOD_KEY.ctrl,	function() { PANEL_INSPECTOR.propSelectPaste(); });
+	addHotkey("Inspector", "Toggle animation",	"I",   MOD_KEY.none,	function() { PANEL_INSPECTOR.anim_toggling = true; });
 	
 	group_menu = [
 		menuItem("Expand all", function() {
@@ -406,7 +410,7 @@ function Panel_Inspector() : PanelContent() constructor {
 			if(_hover && point_in_rectangle(_m[0], _m[1], 4, _selY, contentPane.surface_w - ui(4), _selY + _selH)) {
 				draw_sprite_stretched_ext(THEME.prop_selecting, 0, 4, _selY, contentPane.surface_w - ui(8), _selH, COLORS._main_accent, 1);
 				if(anim_toggling) {
-					jun.animator.is_anim = !jun.animator.is_anim;
+					jun.setAnim(!jun.is_anim);
 					PANEL_ANIMATION.updatePropertyList();
 					anim_toggling = false;
 				}
@@ -420,15 +424,26 @@ function Panel_Inspector() : PanelContent() constructor {
 					var _menuItem = [];
 					
 					if(i < amoIn) {
-						array_push(_menuItem, menuItem(get_text("panel_inspector_reset", "Reset value"), function() { 
+						array_push(_menuItem, 
+							menuItem(get_text("panel_inspector_reset", "Reset value"), function() { 
 								__dialog_junction.setValue(__dialog_junction.def_val);
 								}),
-							menuItem(jun.animator.is_anim? get_text("panel_inspector_remove", "Remove animation") : get_text("panel_inspector_add", "Add animation"), function() { 
-								__dialog_junction.animator.is_anim = !__dialog_junction.animator.is_anim; 
+							menuItem(jun.is_anim? get_text("panel_inspector_remove", "Remove animation") : get_text("panel_inspector_add", "Add animation"), function() { 
+								__dialog_junction.setAnim(!__dialog_junction.is_anim); 
 								PANEL_ANIMATION.updatePropertyList();
 								}),
-							-1,
 						);
+						
+						if(jun.sepable) {
+							array_push(_menuItem, 
+								menuItem(jun.sep_axis? get_text("panel_inspector_axis_combine", "Combine axis") : get_text("panel_inspector_axis_separate", "Separate axis"), function() { 
+									__dialog_junction.sep_axis = !__dialog_junction.sep_axis; 
+									PANEL_ANIMATION.updatePropertyList();
+									}),
+							);
+						}
+						
+						array_push(_menuItem, -1);
 					}
 						
 					array_push(_menuItem, 
@@ -516,9 +531,12 @@ function Panel_Inspector() : PanelContent() constructor {
 		
 		draw_sprite_stretched(THEME.ui_panel_bg, 1, ui(8), top_bar_h - ui(8), w - ui(16), h - top_bar_h);
 		
-		if(inspecting)
+		if(inspecting) {
+			title = inspecting.display_name == ""? inspecting.name : inspecting.display_name;
 			drawInspectingNode();
-		else {
+		} else {
+			title = "Inspector";
+			
 			var txt = "Untitled";
 			var context = PANEL_GRAPH.getCurrentContext();
 			

@@ -30,12 +30,13 @@ function Node_Noise_Hex(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	input_display_list = [
 		["Output",	false], 0, 
 		["Noise",	false], 1, 2, 3,
-		["Texture",	false], 4, 5
+		["Texture",	false], 4
 	];
 	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	attribute_surface_depth();
+	attribute_oversample();
 	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		inputs[| 2].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
@@ -47,7 +48,7 @@ function Node_Noise_Hex(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		var _pos = _data[2];
 		var _sca = _data[3];
 		var _sam = _data[4];
-		var _samTyp = _data[5];
+		var _samTyp = ds_map_try_get(attributes, "oversample");
 		
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
 		

@@ -3,8 +3,8 @@
   "resourceVersion": "1.0",
   "name": "sh_mesh_generation",
   "parent": {
-    "name": "shader",
-    "path": "folders/shader.yy",
+    "name": "misc",
+    "path": "folders/shader/misc.yy",
   },
   "type": 1,
 }

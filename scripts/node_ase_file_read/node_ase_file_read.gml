@@ -99,7 +99,7 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		
 		draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, _x, by, _w, _h, COLORS.node_composite_bg_blend, 1);
 		
-		var index = inputs[| 2].value_from == noone? inputs[| 2].animator.is_anim : 2;
+		var index = inputs[| 2].value_from == noone? inputs[| 2].is_anim : 2;
 		draw_sprite_ui_uniform(THEME.animate_clock, index, abx, lb_y, 1,, 0.8);
 		if(_hover && point_in_circle(_m[0], _m[1], abx, lb_y, ui(10))) {
 			draw_sprite_ui_uniform(THEME.animate_clock, index, abx, lb_y, 1,, 1);
@@ -109,7 +109,7 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 				if(inputs[| 2].value_from != noone)
 					inputs[| 2].removeFrom();
 				else
-					inputs[| 2].animator.is_anim = !inputs[| 2].animator.is_anim;
+					inputs[| 2].setAnim(!inputs[| 2].is_anim);
 				PANEL_ANIMATION.updatePropertyList();
 			}
 		}

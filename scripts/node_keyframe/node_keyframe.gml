@@ -60,14 +60,15 @@ function valueKey(_time, _value, _anim = noone, _in = 0, _ot = 0) constructor {
 	}
 }
 
-function valueAnimator(_val, _prop) constructor {
-	values  = ds_list_create();
-	show_graph = false;
+function valueAnimator(_val, _prop, _sep_axis = false) constructor {
+	suffix   = "";
+	values	 = ds_list_create();
+	sep_axis = _sep_axis;
 	ds_list_add(values, new valueKey(0, _val, self));
+	//print(_prop.name + ": " + string(_val));
 	
-	is_anim  = false;
+	index	 = 0;
 	prop     = _prop;
-	
 	dopesheet_y = 0;
 	
 	static interpolate = function(from, to, rat) {
@@ -122,19 +123,24 @@ function valueAnimator(_val, _prop) constructor {
 		return processType(lerp(from.value, to.value, _lrp));
 	}
 	
+	static getName = function() { return prop.name + suffix; }
+	
 	static getValue = function(_time = ANIMATOR.current_frame) {
 		if(ds_list_size(values) == 0) return processTypeDefault();
-		if(ds_list_size(values) == 1) return processType(values[| 0].value);
+		if(ds_list_size(values) == 1) {
+			//if(prop.name == "Position") print(values[| 0].value);
+			return processType(values[| 0].value);
+		}
 		
 		if(prop.display_type == VALUE_DISPLAY.gradient) return values[| 0].value;
 		if(prop.type == VALUE_TYPE.path) return processType(values[| 0].value);
-		if(!is_anim) return processType(values[| 0].value);
+		if(!prop.is_anim) return processType(values[| 0].value);
 		
 		var _time_first = values[| 0].time;
 		var _time_last  = values[| ds_list_size(values) - 1].time;
 		var _time_dura  = _time_last - _time_first;
 			
-		if(_time > _time_last) {
+		if(_time > _time_last) { //loop
 			switch(prop.on_end) {
 				case KEYFRAME_END.loop : 
 					_time = _time_first + safe_mod(_time - _time_last, _time_dura + 1);
@@ -193,12 +199,12 @@ function valueAnimator(_val, _prop) constructor {
 	}
 	
 	static processTypeDefault = function() {
-		if(typeArray(prop.display_type)) return [];
+		if(!sep_axis && typeArray(prop.display_type)) return [];
 		return 0;
 	}
 	
 	static processType = function(_val) {
-		if(typeArray(prop.display_type) && is_array(_val)) {
+		if(!sep_axis && typeArray(prop.display_type) && is_array(_val)) {
 			for(var i = 0; i < array_length(_val); i++) 
 				_val[i] = processValue(_val[i]);			
 			return _val;
@@ -254,7 +260,7 @@ function valueAnimator(_val, _prop) constructor {
 	}
 	
 	static setValue = function(_val = 0, _record = true, _time = ANIMATOR.current_frame, ease_in = 0, ease_out = 0) {
-		if(!is_anim) {
+		if(!prop.is_anim) {
 			if(isEqual(values[| 0].value, _val)) 
 				return false;
 			
@@ -297,7 +303,7 @@ function valueAnimator(_val, _prop) constructor {
 		if(ds_list_size(values) > 1)
 			ds_list_remove(values, key);
 		else
-			is_anim = false;
+			prop.is_anim = false;
 	}
 	
 	static serialize = function(scale = false) {
@@ -316,7 +322,7 @@ function valueAnimator(_val, _prop) constructor {
 				_value_list[| 1] = json_stringify(val);
 			else if(is_struct(val))
 				_value_list[| 1] = val.serialize();
-			else if(typeArray(prop.display_type) && is_array(val)) {
+			else if(!sep_axis && typeArray(prop.display_type) && is_array(val)) {
 				var __v = ds_list_create();
 				for(var j = 0; j < array_length(val); j++) {
 					if(is_struct(val[j]) && struct_has(val[j], "serialize"))
@@ -375,12 +381,8 @@ function valueAnimator(_val, _prop) constructor {
 				_time = round(_time * (ANIMATOR.frames_total - 1));
 			
 			var value    = ds_list_get(_keyframe, 1);
-			var ease_in  = ds_list_get(_keyframe, 2);
-			var ease_out = ds_list_get(_keyframe, 3);
-			if(LOADING_VERSION >= 1090) {
-				ease_in  = array_create_from_list(ease_in);
-				ease_out = array_create_from_list(ease_out);
-			}
+			var ease_in  = array_create_from_list(ds_list_get(_keyframe, 2));
+			var ease_out = array_create_from_list(ds_list_get(_keyframe, 3));
 			
 			var ease_in_type  = ds_list_get(_keyframe, 4, CURVE_TYPE.bezier);
 			var ease_out_type = ds_list_get(_keyframe, 5, CURVE_TYPE.bezier);
@@ -394,7 +396,7 @@ function valueAnimator(_val, _prop) constructor {
 			} else if(prop.type == VALUE_TYPE.color && prop.display_type == VALUE_DISPLAY.gradient) {
 				var grad = new gradientObject();
 				_val = grad.deserialize(value);
-			} else if(typeArray(prop.display_type)) {
+			} else if(!sep_axis && typeArray(prop.display_type)) {
 				_val = [];
 				
 				if(ds_exists(value, ds_type_list)) {

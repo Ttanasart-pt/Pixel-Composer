@@ -33,6 +33,7 @@ function surface_apply_gaussian(surface, size, bg = false, bg_c = c_white, sampl
 	#endregion
 	
 	BLEND_OVERRIDE;
+	gpu_set_tex_filter(true);
 	surface_set_target(__blur_hori);
 		draw_clear_alpha(bg_c, bg);
 		
@@ -60,6 +61,7 @@ function surface_apply_gaussian(surface, size, bg = false, bg_c = c_white, sampl
 		draw_surface_safe(__blur_hori, 0, 0);
 		shader_reset();
 	surface_reset_target();
+	gpu_set_tex_filter(false);
 	BLEND_NORMAL;
 	
 	return __blur_vert;

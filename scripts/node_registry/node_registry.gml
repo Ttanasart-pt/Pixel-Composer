@@ -74,7 +74,12 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 		ds_list_add(NODE_CATEGORY, { name: name, list: list, filter: filter });
 	}
 	
-	function __init_nodes() {
+	function __initNodes() {
+		var path = DIRECTORY + "Nodes/fav.json";
+		global.FAV_NODES = [];
+		if(file_exists(path))
+			global.FAV_NODES = json_load_struct(path);
+		
 		var group = ds_list_create();
 		addNodeCatagory("Group", group, ["Node_Group"]);
 			ds_list_add(group, "Groups");
@@ -185,10 +190,14 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 			addNodeObject(strandSim, "Strand Break",		 s_node_strandSim_break,	"Node_Strand_Break",		 [1, Node_Strand_Break]).setVersion(1140);
 			addNodeObject(strandSim, "Strand Length Adjust", s_node_strandSim_length,	"Node_Strand_Length_Adjust", [1, Node_Strand_Length_Adjust]).setVersion(1140);
 			addNodeObject(strandSim, "Strand Collision",	s_node_strandSim_collide,		"Node_Strand_Collision",	[1, Node_Strand_Collision]).setVersion(1140);
-			
-		var input = ds_list_create();
+		
 		NODE_PAGE_DEFAULT = ds_list_size(NODE_CATEGORY);
 		ADD_NODE_PAGE = NODE_PAGE_DEFAULT;
+		
+		var fav = ds_list_create();
+		addNodeCatagory("Favourites", fav);
+		
+		var input = ds_list_create();
 		addNodeCatagory("IO", input);
 			ds_list_add(input, "Images");
 			addNodeObject(input, "Canvas",				s_node_canvas,			"Node_Canvas",					[1, Node_Canvas], ["draw"], "Draw on surface using brush, eraser, etc.")
@@ -471,20 +480,20 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 			addNodeObject(color, "Color Data",		s_node_color_data,		"Node_Color_Data",		[1, Node_Color_Data],, "Get data (rgb, hsv, brightness) from color.");
 			addNodeObject(color, "Find pixel",		s_node_pixel_find,		"Node_Find_Pixel",		[1, Node_Find_Pixel],, "Get the position of the first pixel with a given color.").setVersion(1130);
 			addNodeObject(color, "Mix Color",		s_node_color_mix,		"Node_Color_Mix",		[1, Node_Color_Mix]).setVersion(1140);
-		
+			
 			ds_list_add(color, "Palettes");
 			addNodeObject(color, "Palette",			s_node_palette,			"Node_Palette",			[1, Node_Palette]);
 			addNodeObject(color, "Sort Palette",	s_node_palette_sort,	"Node_Palette_Sort",	[1, Node_Palette_Sort]).setVersion(1130);
 			addNodeObject(color, "Palette Extract",	s_node_palette_extract,	"Node_Palette_Extract",	[1, Node_Palette_Extract],, "Extract palette from an image.").setVersion(1100);
 			addNodeObject(color, "Palette Replace",	s_node_palette_replace,	"Node_Palette_Replace",	[1, Node_Palette_Replace]).setVersion(1120);
-		
+			
 			ds_list_add(color, "Gradient");
 			addNodeObject(color, "Gradient",			s_node_gradient_out,		"Node_Gradient_Out",			[1, Node_Gradient_Out]);
 			addNodeObject(color, "Gradient Palette",	s_node_gradient_palette,	"Node_Gradient_Palette",		[1, Node_Gradient_Palette],, "Create gradient from palette.").setVersion(1135);
 			addNodeObject(color, "Gradient Shift",		s_node_gradient_shift,		"Node_Gradient_Shift",			[1, Node_Gradient_Shift],, "Move gradients keys.");
 			addNodeObject(color, "Gradient Replace",	s_node_gradient_replace,	"Node_Gradient_Replace_Color",	[1, Node_Gradient_Replace_Color]).setVersion(1135);
 			addNodeObject(color, "Gradient Data",		s_node_gradient_data,		"Node_Gradient_Extract",		[1, Node_Gradient_Extract],, "Get palatte and array of key positions from gradient.").setVersion(1135);
-	
+		
 		var animation = ds_list_create();
 		addNodeCatagory("Animation", animation);
 			ds_list_add(animation, "Animations");
@@ -497,7 +506,7 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 			ds_list_add(node, "Logic");
 			addNodeObject(node, "Condition",		s_node_condition,	"Node_Condition",	[1, Node_Condition],, "Given a condition, output one value if true, another value is false.");
 			addNodeObject(node, "Switch",			s_node_switch,		"Node_Switch",		[1, Node_Switch],, "Given an index, output value base on index matching.").setVersion(1090);
-		
+			
 			ds_list_add(node, "Groups");
 			addNodeObject(node, "Group",			s_node_group,		"Node_Group",			[1, Node_Group]);
 			addNodeObject(node, "Feedback",			s_node_feedback,	"Node_Feedback",		[1, Node_Feedback],, "Create group that reuse output from last frame to the current one.");
@@ -528,6 +537,7 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 			addNodeObject(hid, "Grid Noise",		s_node_grid_noise,		"Node_Grid_Noise",				[1, Node_Grid_Noise]);
 			addNodeObject(hid, "Triangular Noise",	s_node_grid_tri_noise,	"Node_Noise_Tri",				[1, Node_Noise_Tri]).setVersion(1090);
 			addNodeObject(hid, "Hexagonal Noise",	s_node_grid_hex_noise,	"Node_Noise_Hex",				[1, Node_Noise_Hex]).setVersion(1090);
+		
 	}
 #endregion
 
@@ -580,7 +590,9 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 		PANEL_GRAPH.node_focus = node;
 		PANEL_GRAPH.fullView();
 	}
-	
+#endregion
+
+#region attribute
 	global.SURFACE_FORMAT = [
 		surface_rgba4unorm,
 		surface_rgba8unorm,
@@ -601,17 +613,52 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 		"32 bit Greyscale"
 	];
 	
+	global.SURFACE_INTERPOLATION = [
+		"No aliasing", 
+		"Linear", 
+		"Bicubic", 
+		"radSin"
+	];
+	
+	global.SURFACE_OVERSAMPLE = [
+		"Empty", 
+		"Clamp", 
+		"Repeat"
+	];
+	
 	global.SURFACE_FORMAT_NAME_PROCESS = [ "Input" ];
 	global.SURFACE_FORMAT_NAME_PROCESS = array_append(global.SURFACE_FORMAT_NAME_PROCESS, global.SURFACE_FORMAT_NAME);
 	
-	function attribute_surface_depth() {
+	function attribute_surface_depth(label = true) {
 		attributes[? "color_depth"] = inputs[| 0].type == VALUE_TYPE.surface? 0 : 1;
 		depth_array = inputs[| 0].type == VALUE_TYPE.surface? global.SURFACE_FORMAT_NAME_PROCESS : global.SURFACE_FORMAT_NAME;
 		
-		array_push(attributeEditors, "Surface");
+		if(label) array_push(attributeEditors, "Surface");
 		array_push(attributeEditors, ["Color depth", "color_depth", 
 			new scrollBox(depth_array, function(val) { 
 				attributes[? "color_depth"] = val;
+				triggerRender();
+			}, false)]);
+	}
+	
+	function attribute_interpolation(label = false) {
+		attributes[? "interpolation"] = 0;
+		
+		if(label) array_push(attributeEditors, "Surface");
+		array_push(attributeEditors, ["Texture interpolation", "interpolation", 
+			new scrollBox(global.SURFACE_INTERPOLATION, function(val) { 
+				attributes[? "interpolation"] = val;
+				triggerRender();
+			}, false)]);
+	}
+	
+	function attribute_oversample(label = false) {
+		attributes[? "oversample"] = 0;
+		
+		if(label) array_push(attributeEditors, "Surface");
+		array_push(attributeEditors, ["Oversample", "oversample", 
+			new scrollBox(global.SURFACE_OVERSAMPLE, function(val) { 
+				attributes[? "oversample"] = val;
 				triggerRender();
 			}, false)]);
 	}

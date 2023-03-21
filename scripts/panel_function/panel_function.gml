@@ -93,7 +93,9 @@
 	
 	function panelAdd(panel, create = false) {
 		var pan = getPanelFromName(panel, create);
-		if(pan) dialogPanelCall(pan);
+		if(pan == noone) return noone;
+		
+		return dialogPanelCall(pan);
 	}
 	
 	function panelObjectInit() {

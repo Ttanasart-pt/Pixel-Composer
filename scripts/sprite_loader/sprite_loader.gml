@@ -1,4 +1,4 @@
-function __init_theme() {
+function __initTheme() {
 	var root = DIRECTORY + "Themes";
 	if(!directory_exists(root))
 		directory_create(root);

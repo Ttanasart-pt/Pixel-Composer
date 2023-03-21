@@ -25,15 +25,16 @@ function Node_Edge_Detect(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [ 5, 
-		["Surface",		 true],	0, 2, 3, 4, 
+		["Surface",		 true],	0, 3, 4, 
 		["Edge detect",	false],	1, 
 	];
 	
 	attribute_surface_depth();
+	attribute_oversample();
 	
 	static process_data = function(_outSurf, _data, _output_index, _array_index) {
 		var ft = _data[1];
-		var ov = _data[2];
+		var ov = ds_map_try_get(attributes, "oversample");
 		
 		surface_set_target(_outSurf);
 		DRAW_CLEAR

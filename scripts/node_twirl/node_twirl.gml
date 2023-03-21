@@ -33,11 +33,13 @@ function Node_Twirl(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [ 7, 
-		["Surface",	 true],	0, 4, 5, 6, 
+		["Surface",	 true],	0, 5, 6, 
 		["Twirl",	false],	1, 2, 3,
 	];
 	
 	attribute_surface_depth();
+	attribute_oversample();
+	attribute_interpolation();
 	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var pos = inputs[| 1].getValue();
@@ -49,26 +51,20 @@ function Node_Twirl(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	}
 	
 	static process_data = function(_outSurf, _data, _output_index, _array_index) {		
-		surface_set_target(_outSurf);
-		DRAW_CLEAR
-		BLEND_OVERRIDE;
-		
 		var center = _data[1];
-		var stren = _data[2];
-		var rad   = _data[3];
-		var sam   = _data[4];
+		var stren  = _data[2];
+		var rad    = _data[3];
+		var sam    = ds_map_try_get(attributes, "oversample");
 		
-		shader_set(shader);
+		surface_set_shader(_outSurf, shader);
+		shader_set_interpolation(_data[0]);
 			shader_set_uniform_f_array_safe(uniform_dim, [ surface_get_width(_data[0]), surface_get_height(_data[0]) ]);
 			shader_set_uniform_f_array_safe(uniform_cen, center);
 			shader_set_uniform_f(uniform_str, stren);
 			shader_set_uniform_f(uniform_rad, rad);
 			shader_set_uniform_i(uniform_sam, sam);
 			draw_surface_safe(_data[0], 0, 0);
-		shader_reset();
-		
-		BLEND_NORMAL;
-		surface_reset_target();
+		surface_reset_shader();
 		
 		_outSurf = mask_apply(_data[0], _outSurf, _data[5], _data[6]);
 		

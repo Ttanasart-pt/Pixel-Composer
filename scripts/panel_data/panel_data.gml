@@ -50,6 +50,20 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 	tab_holding_sx = 0;
 	tab_holding_sy = 0;
 	
+	border_rb_close = menuItem("Close",   function() { 
+		extract();
+		o_main.panel_dragging = noone;
+	}, THEME.cross);
+	
+	border_rb_menu = [
+		menuItem("Move",    function() { 
+			extract(); 
+			panel_mouse = 1;
+		}),
+		menuItem("Pop out", function() { popWindow(); }, THEME.node_goto),
+		border_rb_close
+	];
+	
 	static getContent = function() { return array_safe_get(content, content_index, noone, ARRAY_OVERFLOW._default); }
 	static hasContent = function() { return bool(array_length(content)); }
 	
@@ -198,8 +212,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 		for( var i = 0; i < array_length(content); i++ ) 
 			content[i].onSetPanel(self);
 			
-		if(_switch)
-			content_index = array_find(content, _content);
+		if(_switch) content_index = array_find(content, _content);
 			
 		refresh();
 	}
@@ -458,7 +471,10 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 			draw_set_text(f_p3, fa_left, fa_bottom, COLORS._main_text_sub);
 			for( var i = 0; i < array_length(content); i++ ) {
 				var txt = content[i].title;
+				var icn = content[i].icon;
+				
 				var tbw = string_width(txt) + ui(16);
+				if(icn != noone) tbw += ui(16 + 4);
 				var foc = false;
 				
 				tab_width += tbw + ui(2);
@@ -498,9 +514,23 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 						tab_holding_my = msy;
 						tab_holding_sx = tab_holding.tab_x;
 					}
+					
+					if(mouse_press(mb_right, FOCUS == self)) {
+						var menu = array_clone(border_rb_menu);
+						if(instanceof(content[i]) == "Panel_Menu")
+							array_remove(menu, 2, border_rb_close);
+						
+						menuCall(,, menu);
+					}
 				}
 				
-				draw_set_text(f_p3, fa_left, fa_bottom, foc? COLORS.panel_bg_clear_inner : COLORS._main_text_sub);
+				var cc = foc? COLORS.panel_bg_clear_inner : COLORS._main_text_sub;
+				if(icn != noone) {
+					draw_sprite_ui(icn, 0, _tbx + ui(8 + 8), tab_height / 2 + ui(1),,,, cc);
+					_tbx += ui(20);
+				}
+				
+				draw_set_text(f_p3, fa_left, fa_bottom, cc);
 				draw_text(_tbx + ui(8), tab_height - ui(2), txt);
 				
 				tbx += tbw + ui(2);
@@ -517,11 +547,18 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 				
 				var _tbx = tab_holding.tab_x;
 				var txt  = tab_holding.title;
+				var icn  = tab_holding.icon;
 				var tbw  = string_width(txt) + ui(16);
+				if(icn != noone) tbw += ui(16 + 4);
 				
 				draw_set_color(COLORS._main_accent);
 				draw_roundrect_ext(_tbx, tby, _tbx + tbw, tby + ui(32), ui(8), ui(8), false);
 				
+				var cc = COLORS.panel_bg_clear_inner;
+				if(icn != noone) {
+					draw_sprite_ui(icn, 0, _tbx + ui(8 + 8), tab_height / 2 + ui(1),,,, cc);
+					_tbx += ui(20);
+				}
 				draw_set_text(f_p3, fa_left, fa_bottom, COLORS.panel_bg_clear_inner);
 				draw_text(_tbx + ui(8), tab_height - ui(2), txt);
 				
@@ -605,20 +642,11 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 					extract();
 					panel_mouse = 0;
 				} else if(mouse_press(mb_right)) {
-					var arr = [
-						menuItem("Move",    function() { 
-							extract(); 
-							panel_mouse = 1;
-						}),
-						menuItem("Pop out", function() { popWindow(); }, THEME.node_goto),
-					];
-					if(instanceof(getContent()) != "Panel_Menu")
-						array_push(arr, menuItem("Close",   function() { 
-							extract();
-							o_main.panel_dragging = noone;
-						}, THEME.cross));
+					var menu = array_clone(border_rb_menu);
+					if(instanceof(getContent()) == "Panel_Menu")
+						array_remove(menu, 2, border_rb_close);
 						
-					menuCall(,, arr);
+					menuCall(,, menu);
 				}
 			}
 		}
@@ -752,7 +780,8 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 }
 
 function PanelContent() constructor {
-	title		= "";
+	title	= "";
+	icon	= noone;
 	context_str = "";
 	draggable   = true;
 	expandable  = true;

@@ -49,10 +49,10 @@ function __generate_node_data() {
 	game_end();
 }
 
-function __init_node_data() {
+function __initNodeData() {
 	global.NODE_GUIDE = {};
 	
-	var dir  = DIRECTORY + "Nodes/";
+	var dir  = DIRECTORY + "Nodes/Guides";
 	if(!directory_exists(dir))
 		directory_create(dir);
 			

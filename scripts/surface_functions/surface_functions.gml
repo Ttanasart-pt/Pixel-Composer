@@ -158,6 +158,20 @@ function surface_create_from_sprite_ext(spr, ind, format = surface_rgba8unorm) {
 	return s;
 }
 
+function surface_size_lim(surface, width, height) {
+	var sw = surface_get_width(surface);
+	var sh = surface_get_height(surface);
+	if(sw <= width && sh <= height) return surface;
+	
+	var ss = min(width / sw, height / sh);
+	var s  = surface_create(sw * ss, sh * ss);
+	surface_set_target(s);
+	DRAW_CLEAR;
+	draw_surface_ext(surface, 0, 0, ss, ss, 0, c_white, 1);
+	surface_reset_target();
+	return s;
+}
+
 function surface_size_to(surface, width, height, format = noone) {
 	if(!is_surface(surface))	return surface;
 	if(width < 1 && height < 1) return surface;

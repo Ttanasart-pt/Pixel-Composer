@@ -34,14 +34,16 @@ function Node_Skew(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		active_index = 8;
 		
 	input_display_list = [ 8, 
-		["Surface",	 true],	0, 5, 6, 7, 
+		["Surface",	 true],	0, 6, 7, 
 		["Skew",	false],	1, 2, 4,
 	]
 	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	attribute_surface_depth();
-
+	attribute_oversample();
+	attribute_interpolation();
+	
 	static centerAnchor = function() {
 		if(!is_surface(current_data[0])) return;
 		var ww = surface_get_width(current_data[0]);
@@ -59,23 +61,17 @@ function Node_Skew(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		var _amou = _data[2];
 		//var _wrap = _data[3];
 		var _cent = _data[4];
-		var _samp = _data[5];
+		var _samp = ds_map_try_get(attributes, "oversample");
 		
-		surface_set_target(_outSurf);
-			DRAW_CLEAR
-			BLEND_OVERRIDE;
-			
-			shader_set(shader);
+		surface_set_shader(_outSurf, shader);
+		shader_set_interpolation(_data[0]);
 			shader_set_uniform_f(uniform_dim, surface_get_width(_data[0]), surface_get_height(_data[0]));
 			shader_set_uniform_f(uniform_cen, _cent[0], _cent[1]);
 			shader_set_uniform_i(uniform_axs, _axis);
 			shader_set_uniform_f(uniform_amo, _amou);
 			shader_set_uniform_i(uniform_sam, _samp);
 			draw_surface_safe(_data[0], 0, 0);
-			shader_reset();
-			
-			BLEND_NORMAL;
-		surface_reset_target();
+		surface_reset_shader();
 		
 		_outSurf = mask_apply(_data[0], _outSurf, _data[6], _data[7]);
 		

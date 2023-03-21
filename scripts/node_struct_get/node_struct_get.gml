@@ -31,9 +31,13 @@ function Node_Struct_Get(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 				
 			var val = variable_struct_get(_str, k);
 			if(j == array_length(keys) - 1) {
-				if(is_struct(val))
-					out.type = VALUE_TYPE.struct;
-				else if(is_array(val) && array_length(val))
+				if(is_struct(val)) {
+					if(instanceof(val) == "Surface") {
+						out.type = VALUE_TYPE.surface;
+						val = val.get();
+					} else
+						out.type = VALUE_TYPE.struct;
+				} else if(is_array(val) && array_length(val))
 					out.type = is_string(val[0])? VALUE_TYPE.text : VALUE_TYPE.float;
 				else
 					out.type = is_string(val)? VALUE_TYPE.text : VALUE_TYPE.float;

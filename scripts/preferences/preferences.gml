@@ -96,7 +96,7 @@
 		
 		if(!ds_map_exists(HOTKEYS, _context)) {
 			HOTKEYS[? _context] = ds_list_create();
-			if(ds_list_find_index(HOTKEY_CONTEXT, _context) == -1)
+			if(!ds_list_exist(HOTKEY_CONTEXT, _context))
 				ds_list_add(HOTKEY_CONTEXT, _context);
 		}
 		
@@ -203,6 +203,9 @@
 		var path = DIRECTORY + "keys.json";
 		file_text_write_all(path, json_encode_minify(map));
 		ds_map_destroy(map);
+		
+		var path = DIRECTORY + "Nodes/fav.json";
+		json_save_struct(path, global.FAV_NODES);
 	}
 	
 	function PREF_LOAD() {

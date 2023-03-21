@@ -44,6 +44,7 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	];
 	
 	attribute_surface_depth();
+	attribute_interpolation();
 
 	input_display_index = array_length(input_display_list);
 	
@@ -462,11 +463,11 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		
 		_outSurf = surface_verify(_outSurf, surface_get_width(_inSurf), surface_get_height(_inSurf), attrDepth());
 		
-		surface_set_target(_outSurf);
-		DRAW_CLEAR
-			for(var i = 0; i < ds_list_size(data.tris); i++)
-				data.tris[| i].drawSurface(_inSurf);
-		surface_reset_target();	
+		surface_set_shader(_outSurf);
+		shader_set_interpolation(_outSurf);
+		for(var i = 0; i < ds_list_size(data.tris); i++)
+			data.tris[| i].drawSurface(_inSurf);
+		surface_reset_shader();	
 		
 		return _outSurf;
 	}

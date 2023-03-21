@@ -30,6 +30,7 @@ function Node_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	]
 	
 	attribute_surface_depth();
+	attribute_interpolation();
 
 	drag_side = -1;
 	drag_mx = 0;
@@ -178,9 +179,8 @@ function Node_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		var bl = _data[3];
 		var br = _data[4];
 		
-		surface_set_target(_outSurf);
-			DRAW_CLEAR
-			BLEND_OVERRIDE;
+		surface_set_shader(_outSurf);
+		shader_set_interpolation(_data[0]);
 			draw_set_color(c_white);
 			
 			var tex = surface_get_texture(_data[0]);
@@ -222,9 +222,7 @@ function Node_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 				}
 			}
 			draw_primitive_end();
-		
-			BLEND_NORMAL;
-		surface_reset_target();
+		surface_reset_shader();
 		
 		return _outSurf;
 	}

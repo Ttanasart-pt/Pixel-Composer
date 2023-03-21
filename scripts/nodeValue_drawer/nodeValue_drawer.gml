@@ -16,11 +16,11 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover, _focus, _scr
 			
 	var butx = xx;
 	if(jun.connect_type == JUNCTION_CONNECT.input && jun.isAnimable() && !jun.global_use && !global_var) {
-		var index = jun.value_from == noone? jun.animator.is_anim : 2;
+		var index = jun.value_from == noone? jun.is_anim : 2;
 		draw_sprite_ui_uniform(THEME.animate_clock, index, butx, lb_y, 1,, 0.8);
 		if(_hover && point_in_circle(_m[0], _m[1], butx, lb_y, ui(10))) {
 			if(anim_hold != noone)
-				jun.animator.is_anim = anim_hold;
+				jun.setAnim(anim_hold);
 				
 			draw_sprite_ui_uniform(THEME.animate_clock, index, butx, lb_y, 1,, 1);
 			TOOLTIP = jun.value_from == noone? get_text("panel_inspector_toggle_anim", "Toggle animation") : get_text("panel_inspector_remove_link", "Remove link");
@@ -29,9 +29,9 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover, _focus, _scr
 				if(jun.value_from != noone)
 					jun.removeFrom();
 				else {
-					recordAction(ACTION_TYPE.var_modify, jun.animator, [ jun.animator.is_anim, "is_anim", jun.name + " animation" ]);
-					jun.animator.is_anim = !jun.animator.is_anim;
-					anim_hold = jun.animator.is_anim;
+					recordAction(ACTION_TYPE.var_modify, jun.animator, [ jun.is_anim, "is_anim", jun.name + " animation" ]);
+					jun.setAnim(!jun.is_anim);
+					anim_hold = jun.is_anim;
 				}
 				PANEL_ANIMATION.updatePropertyList();
 			}
@@ -92,7 +92,7 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover, _focus, _scr
 	#endregion
 			
 	#region anim
-		if(jun.connect_type == JUNCTION_CONNECT.input && lineBreak && jun.animator.is_anim && !global_var) {
+		if(jun.connect_type == JUNCTION_CONNECT.input && lineBreak && jun.is_anim && !global_var) {
 			var bx = xx + ww - ui(12);
 			var by = lb_y;
 			if(buttonInstant(THEME.button_hide, bx - ui(12), by - ui(12), ui(24), ui(24), _m, _focus, _hover, "", THEME.prop_keyframe, 2) == 2) {
@@ -160,7 +160,7 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover, _focus, _scr
 	#endregion
 		
 	#region use global
-		if(jun.connect_type == JUNCTION_CONNECT.input && lineBreak && !jun.animator.is_anim && !global_var) {
+		if(jun.connect_type == JUNCTION_CONNECT.input && lineBreak && !jun.is_anim && !global_var) {
 			var bx = xx + ww - ui(12);
 			var by = lb_y;
 			var ic_b = jun.global_use? c_white : COLORS._main_icon;

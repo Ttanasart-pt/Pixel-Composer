@@ -31,6 +31,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		.setVisible(false);
 	
 	attribute_surface_depth();
+	attribute_interpolation();
 	
 	input_fix_len	= ds_list_size(inputs);
 	data_length		= 4;
@@ -748,9 +749,8 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		var imageAmo = (ds_list_size(inputs) - input_fix_len) / data_length;
 		var _vis = attributes[? "layer_visible"];
 		
-		surface_set_target(_outSurf);
-		DRAW_CLEAR
-		BLEND_ALPHA_MULP;
+		surface_set_shader(_outSurf, sh_sample, true, BLEND.alphamulp);
+		
 		for(var i = 0; i < imageAmo; i++) {
 			var vis  = _vis[| i];
 			if(!vis) continue;
@@ -773,10 +773,10 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			
 			var _d0 = point_rotate(cx - _sw / 2, cy - _sh / 2, cx, cy, _rot);
 			
+			shader_set_interpolation(_s);
 			draw_surface_ext_safe(_s, _d0[0], _d0[1], _sca[0], _sca[1], _rot);
 		}
-		BLEND_NORMAL;
-		surface_reset_target();
+		surface_reset_shader();
 		
 		return _outSurf;
 	}

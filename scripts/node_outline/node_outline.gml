@@ -49,11 +49,12 @@ function Node_Outline(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	input_display_list = [ 11, 
 		["Surface",	 true], 0, 9, 10, 
-		["Outline",	false], 1, 5, 7, 8,
+		["Outline",	false], 1, 5, 8,
 		["Render",	false], 2, 3, 4, 6,
 	];
 	
 	attribute_surface_depth();
+	attribute_oversample();
 	
 	static process_data = function(_outSurf, _data, _output_index, _array_index) { 
 		var ww = surface_get_width(_data[0]);
@@ -65,7 +66,7 @@ function Node_Outline(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		var alpha = _data[4];
 		var side  = _data[5];
 		var aa    = _data[6];
-		var sam   = _data[7];
+		var sam   = ds_map_try_get(attributes, "oversample");
 		var bst   = _data[8];
 		
 		surface_set_target(_outSurf);

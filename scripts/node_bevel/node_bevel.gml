@@ -35,25 +35,22 @@ function Node_Bevel(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [ 7, 
-		["Surface",		 true], 0, 8, 5, 6, 
+		["Surface",		 true], 0, 5, 6, 
 		["Bevel",		false], 4, 1, 
 		["Transform",	false], 2, 3, 
 	];
 	
 	attribute_surface_depth();
+	attribute_oversample();
 	
 	static process_data = function(_outSurf, _data, _output_index, _array_index) {
 		var _hei = _data[1];
 		var _shf = _data[2];
 		var _sca = _data[3];
 		var _slp = _data[4];
-		var _sam = _data[8];
+		var _sam = ds_map_try_get(attributes, "oversample");
 		
-		surface_set_target(_outSurf);
-			DRAW_CLEAR
-			BLEND_OVERRIDE;
-		
-			shader_set(shader);
+		surface_set_shader(_outSurf, shader);
 			shader_set_uniform_f(uniform_hei, _hei);
 			shader_set_uniform_f_array_safe(uniform_shf, _shf);
 			shader_set_uniform_f_array_safe(uniform_sca, _sca);
@@ -62,10 +59,7 @@ function Node_Bevel(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 			shader_set_uniform_i(uniform_sam, _sam);
 			
 			draw_surface_safe(_data[0], 0, 0);
-			shader_reset();
-			
-			BLEND_NORMAL;
-		surface_reset_target();
+		surface_reset_shader();
 		
 		_outSurf = mask_apply(_data[0], _outSurf, _data[5], _data[6]);
 		

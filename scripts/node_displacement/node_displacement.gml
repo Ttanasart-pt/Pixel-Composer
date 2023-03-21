@@ -46,7 +46,7 @@ If set, then strength value control how many times the effect applies on itself.
 		active_index = 10;
 	
 	input_display_list = [ 10, 
-		["Surface",		 true],	0, 7, 8, 9, 
+		["Surface",		 true],	0, 8, 9, 
 		["Displace",	false], 1, 3, 4, 
 		["Color",		false], 5, 2, 
 		["Algorithm",	 true],	6
@@ -55,6 +55,8 @@ If set, then strength value control how many times the effect applies on itself.
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	attribute_surface_depth();
+	attribute_oversample();
+	attribute_interpolation();
 	
 	static process_data = function(_outSurf, _data, _output_index, _array_index) {		
 		switch(_data[5]) {
@@ -71,11 +73,8 @@ If set, then strength value control how many times the effect applies on itself.
 		var mw = surface_get_width(_data[1]);
 		var mh = surface_get_height(_data[1]);
 		
-		surface_set_target(_outSurf);
-			DRAW_CLEAR
-			BLEND_OVERRIDE;
-		
-			shader_set(shader);
+		surface_set_shader(_outSurf, shader);
+		shader_set_interpolation(_data[0]);
 			texture_set_stage(displace_map_sample, surface_get_texture(_data[1]));
 			shader_set_uniform_f_array_safe(uniform_dim, [ww, hh]);
 			shader_set_uniform_f_array_safe(uniform_map_dim, [mw, mh]);
@@ -84,12 +83,9 @@ If set, then strength value control how many times the effect applies on itself.
 			shader_set_uniform_f(uniform_mid, _data[4]);
 			shader_set_uniform_i(uniform_rg, _data[5]);
 			shader_set_uniform_i(uniform_it, _data[6]);
-			shader_set_uniform_i(uniform_sam, _data[7]);
+			shader_set_uniform_i(uniform_sam, ds_map_try_get(attributes, "oversample"));
 			draw_surface_safe(_data[0], 0, 0);
-			shader_reset();
-			
-			BLEND_NORMAL;
-		surface_reset_target();
+		surface_reset_shader();
 		
 		_outSurf = mask_apply(_data[0], _outSurf, _data[8], _data[9]);
 		

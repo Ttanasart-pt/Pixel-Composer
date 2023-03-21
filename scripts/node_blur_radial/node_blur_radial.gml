@@ -30,11 +30,12 @@ function Node_Blur_Radial(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [ 6, 
-		["Surface",	 true],	0, 3, 4, 5, 
+		["Surface",	 true],	0, 4, 5, 
 		["Blur",	false],	1, 2,
 	];
 	
 	attribute_surface_depth();
+	attribute_oversample();
 	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var pos = inputs[| 2].getValue();
@@ -48,7 +49,7 @@ function Node_Blur_Radial(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	static process_data = function(_outSurf, _data, _output_index, _array_index) {		
 		var _str = _data[1];
 		var _cen = _data[2];
-		var _sam = _data[3];
+		var _sam = ds_map_try_get(attributes, "oversample");
 		var _mask = _data[4];
 		var _mix  = _data[5];
 		_cen[0] /= surface_get_width(_outSurf);

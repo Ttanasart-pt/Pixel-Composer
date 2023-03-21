@@ -26,14 +26,14 @@
 	window_set_showborder(false);
 	
 	__initLocale();
-	__init_theme();
+	__initTheme();
 	__initCollection();
 	__initAssets();
 	__initPresets();
 	__initFontFolder();
 	__initLua();
-	__init_node_data();
-	__init_nodes();
+	__initNodeData();
+	__initNodes();
 	__initSteamUGC();
 	
 	PREF_LOAD();

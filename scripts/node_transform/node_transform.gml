@@ -53,7 +53,8 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	attribute_surface_depth();
-
+	attribute_interpolation();
+	
 	vel = 0;
 	prev_pos = [0, 0];
 	
@@ -209,33 +210,26 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			surface_reset_target();
 			
 			var _cc = point_rotate(-_px, -_py, _ww / 2, _hh / 2, rot);
-			surface_set_target(_outSurf);
-				DRAW_CLEAR
-				BLEND_OVERRIDE;
-				
-				draw_surface_ext_safe(_s, _cc[0], _cc[1], 1, 1, rot, c_white, 1);
-				
-				BLEND_NORMAL;
-			surface_reset_target();
+			surface_set_shader(_outSurf);
+			shader_set_interpolation(_s);
+			draw_surface_ext_safe(_s, _cc[0], _cc[1], 1, 1, rot, c_white, 1);
+			surface_reset_shader();
 			
 			surface_free(_s);
 		} else {
-			surface_set_target(_outSurf);
-				DRAW_CLEAR
-				BLEND_OVERRIDE;
+			var draw_x, draw_y;
+			draw_x = pos[0];
+			draw_y = pos[1];
 				
-				var draw_x, draw_y;
-				draw_x = pos[0];
-				draw_y = pos[1];
-				
-				if(pos_exact) {
-					draw_x = round(draw_x);
-					draw_y = round(draw_y);
-				}
-				draw_surface_ext_safe(ins, draw_x, draw_y, sca[0], sca[1], rot, c_white, 1);
-				
-				BLEND_NORMAL;
-			surface_reset_target();
+			if(pos_exact) {
+				draw_x = round(draw_x);
+				draw_y = round(draw_y);
+			}
+			
+			surface_set_shader(_outSurf);	
+			shader_set_interpolation(ins);
+			draw_surface_ext_safe(ins, draw_x, draw_y, sca[0], sca[1], rot, c_white, 1);
+			surface_reset_shader();
 		}
 		
 		return _outSurf;
@@ -466,7 +460,7 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		}
 		
 		#region path
-			if(inputs[| 2].animator.is_anim && inputs[| 2].value_from == noone) {
+			if(inputs[| 2].is_anim && inputs[| 2].value_from == noone && !inputs[| 2].sep_axis) {
 				var posInp = inputs[| 2];
 				var allPos = posInp.animator.values;
 				var ox, oy, nx, ny;

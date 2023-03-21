@@ -3,8 +3,8 @@
   "resourceVersion": "1.0",
   "name": "sh_find_boundary",
   "parent": {
-    "name": "shader",
-    "path": "folders/shader.yy",
+    "name": "misc",
+    "path": "folders/shader/misc.yy",
   },
   "type": 1,
 }

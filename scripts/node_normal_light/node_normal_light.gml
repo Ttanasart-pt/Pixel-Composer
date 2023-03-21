@@ -1,15 +1,16 @@
 function Node_Normal_Light(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Normal Light";
 	
-	uniform_map = shader_get_sampler_index(sh_normal_light, "normalMap");
-	uniform_hei = shader_get_uniform(sh_normal_light, "normalHeight");
-	uniform_dim = shader_get_uniform(sh_normal_light, "dimension");
+	shader = sh_normal_light;
+	uniform_map = shader_get_sampler_index(shader, "normalMap");
+	uniform_hei = shader_get_uniform(shader, "normalHeight");
+	uniform_dim = shader_get_uniform(shader, "dimension");
 	
-	uniform_amb = shader_get_uniform(sh_normal_light, "ambiance");
-	uniform_light_pos = shader_get_uniform(sh_normal_light, "lightPosition");
-	uniform_light_col = shader_get_uniform(sh_normal_light, "lightColor");
-	uniform_light_int = shader_get_uniform(sh_normal_light, "lightIntensity");
-	uniform_light_typ = shader_get_uniform(sh_normal_light, "lightType");
+	uniform_amb = shader_get_uniform(shader, "ambiance");
+	uniform_light_pos = shader_get_uniform(shader, "lightPosition");
+	uniform_light_col = shader_get_uniform(shader, "lightColor");
+	uniform_light_int = shader_get_uniform(shader, "lightIntensity");
+	uniform_light_typ = shader_get_uniform(shader, "lightType");
 	
 	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 	
@@ -64,26 +65,20 @@ function Node_Normal_Light(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		var _light_col = _data[7];
 		var _light_typ = _data[8];
 		
-		surface_set_target(_outSurf);
-			DRAW_CLEAR
-			BLEND_OVERRIDE; 
+		surface_set_shader(_outSurf, shader);
 		
-			shader_set(sh_normal_light);
-			texture_set_stage(uniform_map, surface_get_texture(_map));
-			shader_set_uniform_f(uniform_hei, _hei);
-			shader_set_uniform_f_array_safe(uniform_dim, [ surface_get_width(_data[0]), surface_get_height(_data[0]) ]);
-			shader_set_uniform_f_array_safe(uniform_amb, [color_get_red(_amb) / 255, color_get_green(_amb) / 255, color_get_blue(_amb) / 255]);
+		texture_set_stage(uniform_map, surface_get_texture(_map));
+		shader_set_uniform_f(uniform_hei, _hei);
+		shader_set_uniform_f_array_safe(uniform_dim, [ surface_get_width(_data[0]), surface_get_height(_data[0]) ]);
+		shader_set_uniform_f_array_safe(uniform_amb, [color_get_red(_amb) / 255, color_get_green(_amb) / 255, color_get_blue(_amb) / 255]);
 			
-			shader_set_uniform_f_array_safe(uniform_light_pos, [ _light_pos[0], _light_pos[1], _light_pos[2] / 100, _light_ran ] );
-			shader_set_uniform_f_array_safe(uniform_light_col, [color_get_red(_light_col) / 255, color_get_green(_light_col) / 255, color_get_blue(_light_col) / 255]);
-			shader_set_uniform_f(uniform_light_int, _light_int);
-			shader_set_uniform_i(uniform_light_typ, _light_typ);
+		shader_set_uniform_f_array_safe(uniform_light_pos, [ _light_pos[0], _light_pos[1], _light_pos[2] / 100, _light_ran ] );
+		shader_set_uniform_f_array_safe(uniform_light_col, [color_get_red(_light_col) / 255, color_get_green(_light_col) / 255, color_get_blue(_light_col) / 255]);
+		shader_set_uniform_f(uniform_light_int, _light_int);
+		shader_set_uniform_i(uniform_light_typ, _light_typ);
 			
-			draw_surface_safe(_data[0], 0, 0);
-			shader_reset();
-			
-			BLEND_NORMAL;
-		surface_reset_target();
+		draw_surface_safe(_data[0], 0, 0);
+		surface_reset_shader();
 		
 		return _outSurf;
 	}

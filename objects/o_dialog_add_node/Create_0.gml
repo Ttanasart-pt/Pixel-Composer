@@ -24,6 +24,24 @@ event_inherited();
 	
 	anchor = ANCHOR.left | ANCHOR.top;
 	
+	node_menu_selecting = noone;
+	
+	function rightClick(node) {
+		node_menu_selecting = node;
+		var fav  = array_exists(global.FAV_NODES, node.node);
+		
+		var menu = [
+			menuItem(fav? "Remove from favorite" : "Add to favorite", function() {
+				if(array_exists(global.FAV_NODES, node_menu_selecting.node))
+					array_remove(global.FAV_NODES, node_menu_selecting.node);
+				else 
+					array_push(global.FAV_NODES, node_menu_selecting.node);
+			}, THEME.star)
+		];
+		
+		menuCall(,, menu);
+	}
+	
 	function filtered(node) {
 		if(!node_show_connectable) return true;
 		if(node_called == noone && junction_hovering == noone) return true;
@@ -72,8 +90,7 @@ event_inherited();
 		ADD_NODE_PAGE	= pageIndex;
 		node_list		= pageIndex == -1? noone : NODE_CATEGORY[| ADD_NODE_PAGE].list;
 	}
-	if(ADD_NODE_PAGE < 0)
-		ADD_NODE_PAGE = NODE_PAGE_DEFAULT;
+	ADD_NODE_PAGE = 0;
 	setPage(ADD_NODE_PAGE);
 	
 	function buildNode(_node, _param = "") {
@@ -242,9 +259,23 @@ event_inherited();
 					ds_list_add(_list, cat.list[| j]);
 				}
 			}
+		} else if(ADD_NODE_PAGE == 0) {
+			_list = ds_list_create();
+			for( var i = 0; i < array_length(global.FAV_NODES); i++ ) {
+				var _nodeIndex = global.FAV_NODES[i];
+				ds_list_add(_list, ALL_NODES[? _nodeIndex]);
+			}
 		}
 		
 		var node_count = ds_list_size(_list);
+		
+		if(ADD_NODE_PAGE == NODE_PAGE_DEFAULT && node_count == 0) {
+			draw_set_text(f_h3, fa_center, fa_bottom, COLORS._main_text_sub);
+			draw_text(content_pane.w / 2, content_pane.h / 2 - ui(8), "No favorites");
+			
+			draw_set_text(f_p0, fa_center, fa_top, COLORS._main_text_sub);
+			draw_text(content_pane.w / 2, content_pane.h / 2 - ui(4), "Right click on a node and select 'Add to favorite'\nto add node to favorite panel.");
+		}
 		
 		if(PREF_MAP[? "dialog_add_node_view"] == 0) { //grid
 			var grid_size  = ui(64);
@@ -293,6 +324,8 @@ event_inherited();
 					draw_sprite_stretched_ext(THEME.node_active, 0, _boxx, yy, grid_size, grid_size, COLORS._main_accent, 1);
 					if(mouse_press(mb_left, sFOCUS))
 						buildNode(_node);
+					else if(mouse_press(mb_right, sFOCUS))
+						rightClick(_node);
 				}
 						
 				var spr_x = _boxx + grid_size / 2;
@@ -312,7 +345,11 @@ event_inherited();
 				}
 				if(_node.new_node)
 					draw_sprite_ui_uniform(THEME.node_new_badge, 0, _boxx + grid_size - ui(12), yy + ui(6));
-						
+				
+				var fav = array_exists(global.FAV_NODES, _node.node);
+				if(fav) 
+					draw_sprite_ui_uniform(THEME.star, 0, _boxx + grid_size - ui(10), yy + grid_size - ui(10), 0.7, COLORS._main_accent, 1.);
+					
 				draw_set_text(f_p2, fa_center, fa_top, COLORS._main_text);
 				draw_text_ext_over(_boxx + grid_size / 2, yy + grid_size + 4, _node.name, -1, grid_width);
 				
@@ -377,9 +414,14 @@ event_inherited();
 					draw_sprite_stretched_ext(THEME.node_active, 0, ui(4), yy, list_width - ui(8), list_height, COLORS._main_accent, 1);
 					if(mouse_press(mb_left, sFOCUS))
 						buildNode(_node);
+					else if(mouse_press(mb_right, sFOCUS))
+						rightClick(_node);
 				}
 				
-				var spr_x = list_height / 2 + ui(14);
+				var fav = array_exists(global.FAV_NODES, _node.node);
+				if(fav) draw_sprite_ui_uniform(THEME.star, 0, ui(20), yy + list_height / 2, 0.7, COLORS._main_accent, 1.);
+				
+				var spr_x = list_height / 2 + ui(32);
 				var spr_y = yy + list_height / 2;
 				
 				if(variable_struct_exists(_node, "getSpr")) _node.getSpr();
@@ -388,7 +430,7 @@ event_inherited();
 					draw_sprite_ext(_node.spr, 0, spr_x, spr_y, ss, ss, 0, c_white, 1);
 				}
 				
-				var tx = list_height + ui(20);
+				var tx = list_height + ui(40);
 				
 				if(_node.new_node) {
 					draw_sprite_ui_uniform(THEME.node_new_badge, 0, tx + ui(16), yy + list_height / 2 + ui(1));
@@ -396,14 +438,14 @@ event_inherited();
 				}
 				
 				draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text);
-				draw_text_over(tx, yy + list_height / 2, _node.name);
+				draw_text_add(tx, yy + list_height / 2, _node.name);
 				
 				yy += list_height;
 				hh += list_height;
 			}
 		}
 		
-		if(ADD_NODE_PAGE == -1) 
+		if(ADD_NODE_PAGE < 1) 
 			ds_list_destroy(_list);
 		
 		return hh;
@@ -556,6 +598,8 @@ event_inherited();
 					node_selecting = i;
 					if(mouse_press(mb_left, sFOCUS))
 						buildNode(_node, _param);
+					else if(struct_has(_node, "node") && mouse_press(mb_right, sFOCUS))
+						rightClick(_node);
 				}
 				
 				if(node_selecting == i) {
@@ -573,6 +617,9 @@ event_inherited();
 					} else 
 						draw_sprite_ui_uniform(THEME.info, 0, _boxx + ui(8), yy + ui(8), 0.7, COLORS._main_icon, 0.5);
 				}
+				var fav = struct_has(_node, "node") && array_exists(global.FAV_NODES, _node.node);
+				if(fav) 
+					draw_sprite_ui_uniform(THEME.star, 0, _boxx + grid_size - ui(10), yy + grid_size - ui(10), 0.7, COLORS._main_accent, 1.);
 					
 				if(node_focusing == i)
 					search_pane.scroll_y_to = -max(0, hh - search_pane.h);	
@@ -616,16 +663,20 @@ event_inherited();
 					var _sox = sprite_get_xoffset(_node.spr);
 					var _soy = sprite_get_yoffset(_node.spr);
 					
-					var _sx = list_height / 2 + ui(14);
+					var _sx = list_height / 2 + ui(32);
 					var _sy = yy + list_height / 2;
 					_sx += _sw * _ss / 2 - _sox * _ss;
 					_sy += _sh * _ss / 2 - _soy * _ss;
 				
 					draw_sprite_ext(_node.spr, _si, _sx, _sy, _ss, _ss, 0, c_white, 1);
 				}
-			
+				
+				
+				var fav = struct_has(_node, "node") && array_exists(global.FAV_NODES, _node.node);
+				if(fav) draw_sprite_ui_uniform(THEME.star, 0, ui(20), yy + list_height / 2, 0.7, COLORS._main_accent, 1.);
+				
 				draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text);
-				draw_text_over(list_height + ui(20), yy + list_height / 2, _node.name);
+				draw_text_add(list_height + ui(40), yy + list_height / 2, _node.name);
 				
 				if(_hover && point_in_rectangle(_m[0], _m[1], 0, yy, list_width, yy + list_height - 1)) {
 					if(struct_has(_node, "tooltip") && _node.tooltip != "") {
@@ -637,6 +688,8 @@ event_inherited();
 					node_selecting = i;
 					if(mouse_press(mb_left, sFOCUS))
 						buildNode(_node, _param);
+					else if(struct_has(_node, "node") && mouse_press(mb_right, sFOCUS))
+						rightClick(_node);
 				}
 				
 				if(node_selecting == i) {

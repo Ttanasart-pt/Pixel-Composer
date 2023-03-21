@@ -16,6 +16,7 @@ function Node_9Slice(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	attribute_surface_depth();
+	attribute_interpolation();
 	
 	drag_side = -1;
 	drag_mx   = 0;
@@ -118,10 +119,8 @@ function Node_9Slice(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		if(!surface_exists(_inSurf)) return;
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
 		
-		surface_set_target(_outSurf);
-			DRAW_CLEAR
-			BLEND_OVERRIDE;
-			
+		surface_set_shader(_outSurf);
+		shader_set_interpolation(_inSurf);
 			var ww   = _dim[0];
 			var hh   = _dim[1];
 			var in_w = surface_get_width(_inSurf);
@@ -179,9 +178,7 @@ function Node_9Slice(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 					_x += cw;
 				}
 			}
-			
-			BLEND_NORMAL;
-		surface_reset_target();
+		surface_reset_shader();
 		
 		return _outSurf;
 	}

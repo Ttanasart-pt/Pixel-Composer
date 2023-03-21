@@ -24,7 +24,7 @@ event_inherited();
 			
 			for(var i = 0; i < ds_list_size(n.inputs); i++) {
 				var in = n.inputs[| i];
-				if(!in.animator.is_anim) continue;
+				if(!in.is_anim) continue;
 				for(var j = 0; j < ds_list_size(in.animator.values); j++) {
 					var t = in.animator.values[| j];
 					t.time = t.ratio * scale_to;

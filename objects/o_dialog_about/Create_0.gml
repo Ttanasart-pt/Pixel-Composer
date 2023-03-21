@@ -21,10 +21,12 @@ event_inherited();
 		[ "Triangle grid", "Farini" ],
 		[ "Pixel sort", "Ciphrd" ],
 		[ "Simplex noise", "Ian McEwan" ],
+		
+		[ "Additional help", "ChatGPT by OpenAI" ],
 	]
 	
 	sc_thank = new scrollPane(dialog_w - ui(64), thank_h, function(_y, _m) {
-		var cx = (dialog_w - ui(64)) / 2;
+		var cx = sc_thank.surface_w / 2;
 		var _h = _y;
 		var yy = _y;
 		draw_clear_alpha(COLORS.dialog_about_bg, 0);

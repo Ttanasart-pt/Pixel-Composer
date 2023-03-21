@@ -23,16 +23,17 @@ function Node_Blur(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [ 7,
-		["Surface",	 true],	0, 2, 5, 6, 
+		["Surface",	 true],	0, 5, 6, 
 		["Blur",	false],	1, 3, 4, 
 	];
 	
 	attribute_surface_depth();
+	attribute_oversample();
 	surface_blur_init();
 	
 	static process_data = function(_outSurf, _data, _output_index, _array_index) {		
 		var _size  = _data[1];
-		var _clamp = _data[2];
+		var _clamp = ds_map_try_get(attributes, "oversample");
 		var _isovr = _data[3];
 		var _mask  = _data[5];
 		var _mix   = _data[6];

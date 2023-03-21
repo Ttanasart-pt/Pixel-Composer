@@ -21,7 +21,7 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	array_push(attributeEditors, "Array processor");
 	array_push(attributeEditors, [ "Array process type", "array_process", 
-		new scrollBox([ "Loop", "Hold", "Expand", "Expand inverse" ], function(val) { attributes[? "array_process"] = val; } ) ]);
+		new scrollBox([ "Loop", "Hold", "Expand", "Expand inverse" ], function(val) { attributes[? "array_process"] = val; }, false) ]);
 	
 	static process_data = function(_outSurf, _data, _output_index, _array_index = 0) { return _outSurf; }
 	
@@ -97,7 +97,8 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 					return inputs_data[0]
 			}
 			
-			return process_data(_out, inputs_data, outIndex, 0);
+			var data = process_data(_out, inputs_data, outIndex, 0);						/// Process data
+			return data;
 		}
 		
 		if(outputs[| outIndex].type == VALUE_TYPE.d3object) { //passing 3D vertex call
@@ -160,8 +161,9 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 					_out[l] = surface_clone(_data[0], _out[l]);
 				else 
 					_out[l] = _data[0];
-			} else 
-				_out[l] = process_data(_out[l], _data, outIndex, l);
+			} else {
+				_out[l] = process_data(_out[l], _data, outIndex, l);						/// Process data
+			}
 		}
 		
 		return _out;

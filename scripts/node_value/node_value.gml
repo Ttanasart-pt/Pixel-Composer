@@ -312,6 +312,12 @@ function nodeValueUnit(value) constructor {
 	}
 }
 
+global.displaySuffix_Range		= [ "min", "max" ];
+global.displaySuffix_Area		= [ "x", "y", "w", "h" ];
+global.displaySuffix_Padding	= [ "right", "top", "left", "bottom" ];
+global.displaySuffix_VecRange	= [ "x min", "x max", "y min", "y max" ];
+global.displaySuffix_Axis		= [ "x", "y", "z", "w"];
+
 function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constructor {
 	name  = _name;
 	node  = _node;
@@ -332,10 +338,18 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	auto_connect = true;
 	setFrom_condition = -1;
 	
+	is_anim		= false;
+	sep_axis	= false;
+	sepable		= is_array(_value) && array_length(_value) > 1;
+	animator	= new valueAnimator(_value, self, false);
+	animators	= [];
+	if(is_array(_value))
+	for( var i = 0; i < array_length(_value); i++ ) {
+		animators[i] = new valueAnimator(_value[i], self, true);
+		animators[i].index = i;
+	}
+	
 	def_val		= _value;
-	animator	= new valueAnimator(_value, self);
-	rawAnimator = animator;
-	graph_h		= ui(64);
 	on_end		= KEYFRAME_END.hold;
 	unit		= new nodeValueUnit(self);
 	extra_data	= ds_list_create();
@@ -345,6 +359,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	draw_line_shift_y		= 0;
 	draw_line_shift_hover	= false;
 	drawLineIndex			= 1;
+	
+	show_graph	= false;
+	graph_h		= ui(64);
 	
 	visible = _connect == JUNCTION_CONNECT.output || _type == VALUE_TYPE.surface || _type == VALUE_TYPE.path;
 	show_in_inspector = true;
@@ -461,12 +478,15 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 					case VALUE_DISPLAY.range :
 						editWidget = new rangeBox(_txt, function(index, val) { 
 							MODIFIED = true;
-							var _val = animator.getValue();
-							_val[index] = val;
-							return setValueDirect(_val);
+							//var _val = animator.getValue();
+							//_val[index] = val;
+							return setValueDirect(val, index);
 						} );
 						if(type == VALUE_TYPE.integer) editWidget.setSlideSpeed(1);
 						if(display_data != -1) editWidget.extras = display_data;
+						
+						for( var i = 0; i < array_length(animators); i++ )
+							animators[i].suffix = " " + array_safe_get(global.displaySuffix_Range, i);
 						
 						extract_node = "Node_Number";
 						break;
@@ -475,9 +495,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						if(array_length(val) <= 4) {
 							editWidget = new vectorBox(array_length(animator.getValue()), _txt, function(index, val) { 
 								MODIFIED = true;
-								var _val = animator.getValue();
-								_val[index] = val;
-								return setValueDirect(_val);
+								//var _val = animator.getValue();
+								//_val[index] = val;
+								return setValueDirect(val, index);
 							}, unit );
 							if(type == VALUE_TYPE.integer) editWidget.setSlideSpeed(1);
 							if(display_data != -1) editWidget.extras = display_data;
@@ -489,15 +509,19 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 							else if(array_length(val) == 4)
 								extract_node = "Node_Vector4";
 						}
+						
+						for( var i = 0; i < array_length(animators); i++ )
+							animators[i].suffix = " " + array_safe_get(global.displaySuffix_Axis, i);
+						
 						break;
 					case VALUE_DISPLAY.vector_range :
 						var val = animator.getValue();
 						
 						editWidget = new vectorRangeBox(array_length(val), _txt, function(index, val) { 
 							MODIFIED = true;
-							var _val = animator.getValue();
-							_val[index] = val;
-							return setValueDirect(_val);
+							//var _val = animator.getValue();
+							//_val[index] = val;
+							return setValueDirect(val, index);
 						}, unit );
 						if(type == VALUE_TYPE.integer) editWidget.setSlideSpeed(1);
 						if(display_data != -1) editWidget.extras = display_data;
@@ -508,11 +532,15 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 							extract_node = "Node_Vector3";
 						else if(array_length(val) == 4)
 							extract_node = "Node_Vector4";
+							
+						for( var i = 0; i < array_length(animators); i++ )
+							animators[i].suffix = " " + array_safe_get(global.displaySuffix_VecRange, i);
+						
 						break;
 					case VALUE_DISPLAY.rotation :
-						editWidget = new rotator(function(val, _save) {
+						editWidget = new rotator(function(val) {
 							MODIFIED = true;
-							return setValueDirect(val, _save);
+							return setValueDirect(val);
 						}, display_data );
 						
 						extract_node = "Node_Number";
@@ -520,10 +548,13 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 					case VALUE_DISPLAY.rotation_range :
 						editWidget = new rotatorRange(function(index, val) { 
 							MODIFIED = true;
-							var _val = animator.getValue();
-							_val[index] = round(val);
-							return setValueDirect(_val);
+							//var _val = animator.getValue();
+							//_val[index] = round(val);
+							return setValueDirect(val, index);
 						} );
+						
+						for( var i = 0; i < array_length(animators); i++ )
+							animators[i].suffix = " " + array_safe_get(global.displaySuffix_Range, i);
 						
 						extract_node = "Node_Vector2";
 						break;
@@ -539,34 +570,43 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 					case VALUE_DISPLAY.slider_range :
 						editWidget = new sliderRange(display_data[0], display_data[1], display_data[2], function(index, val) {
 							MODIFIED = true; 
-							var _val = animator.getValue();
-							_val[index] = val;
-							return setValueDirect(_val);
+							//var _val = animator.getValue();
+							//_val[index] = val;
+							return setValueDirect(val, index);
 						} );
 						if(type == VALUE_TYPE.integer) editWidget.setSlideSpeed(1);
+						
+						for( var i = 0; i < array_length(animators); i++ )
+							animators[i].suffix = " " + array_safe_get(global.displaySuffix_Range, i);
 						
 						extract_node = "Node_Vector2";
 						break;
 					case VALUE_DISPLAY.area :
 						editWidget = new areaBox(function(index, val) { 
 							MODIFIED = true;
-							var _val = animator.getValue();
-							_val[index] = val;
-							return setValueDirect(_val);
+							//var _val = animator.getValue();
+							//_val[index] = val;
+							return setValueDirect(val, index);
 						}, unit);
 						if(type == VALUE_TYPE.integer) editWidget.setSlideSpeed(1);
 						if(display_data != -1) editWidget.onSurfaceSize = display_data;
+						
+						for( var i = 0; i < array_length(animators); i++ )
+							animators[i].suffix = " " + array_safe_get(global.displaySuffix_Area, i);
 						
 						extract_node = "Node_Area";
 						break;
 					case VALUE_DISPLAY.padding :
 						editWidget = new paddingBox(function(index, val) { 
 							MODIFIED = true;
-							var _val = animator.getValue();
-							_val[index] = val;
-							return setValueDirect(_val);
+							//var _val = animator.getValue();
+							//_val[index] = val;
+							return setValueDirect(val, index);
 						}, unit);
 						if(type == VALUE_TYPE.integer) editWidget.setSlideSpeed(1);
+						
+						for( var i = 0; i < array_length(animators); i++ )
+							animators[i].suffix = " " + array_safe_get(global.displaySuffix_Padding, i);
 						
 						extra_data[| 0] = AREA_MODE.area;
 						extract_node = "Node_Vector4";
@@ -574,9 +614,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 					case VALUE_DISPLAY.puppet_control :
 						editWidget = new controlPointBox(function(index, val) { 
 							MODIFIED = true;
-							var _val = animator.getValue();
-							_val[index] = val;
-							return setValueDirect(_val);
+							//var _val = animator.getValue();
+							//_val[index] = val;
+							return setValueDirect(val, index);
 						});
 						
 						extract_node = "";
@@ -612,6 +652,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						}, unit );
 						if(type == VALUE_TYPE.integer) editWidget.setSlideSpeed(1);
 						if(display_data != -1) editWidget.extras = display_data;
+						
+						for( var i = 0; i < array_length(animators); i++ )
+							animators[i].suffix = " " + string(i);
 						
 						extract_node = "";
 						break;
@@ -899,6 +942,16 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		return val;
 	}
 	
+	static __getAnimValue = function(_time = ANIMATOR.current_frame) {
+		if(sep_axis) {
+			var val = [];
+			for( var i = 0; i < array_length(animators); i++ )
+				val[i] = animators[i].getValue(_time);
+			return val;
+		} else	
+			return animator.getValue(_time);
+	}
+	
 	static _getValue = function(_time = ANIMATOR.current_frame, applyUnit = true, arrIndex = 0) {
 		var _val = getValueRecursive(_time);
 		var val = _val[0];
@@ -906,7 +959,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		var typ = nod.type;
 		var dis = nod.display_type;
 		
-		var _base = animator.getValue(_time);
+		var _base = __getAnimValue(_time);
 		
 		if(typ == VALUE_TYPE.surface && (type == VALUE_TYPE.integer || type == VALUE_TYPE.float) && accept_array) { //Dimension conversion
 			if(is_array(val)) {
@@ -956,7 +1009,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		var val = [ -1, self ];
 		
 		if(value_from == noone) {
-			var _val = animator.getValue(_time);
+			var _val = __getAnimValue(_time);
 			
 			if(global_use && GLOBAL.inputGetable(self, global_key)) 
 				return GLOBAL.getInput(global_key).getValueRecursive(_time);
@@ -968,16 +1021,21 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		return val;
 	}
 	
-	static __anim = function() {
-		return animator.is_anim || node.update_on_frame;
+	static setAnim = function(anim) {
+		is_anim = anim;
 	}
+	
+	static __anim = function() {
+		return is_anim || node.update_on_frame;
+	}
+	
 	static isAnimated = function() {
 		if(value_from == noone) return __anim();
 		else					return value_from.isAnimated() || value_from.__anim();
 	}
 	
 	static showValue = function() {
-		var val = getValue(, false);
+		var val = getValue(, false); 
 		if(isArray()) {
 			if(array_length(val) == 0) return 0;
 			return val[safe_mod(node.preview_index, array_length(val))];
@@ -1037,13 +1095,26 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	
 	static setValue = function(val = 0, record = true, time = ANIMATOR.current_frame, _update = true) {
 		val = unit.invApply(val);
-		return setValueDirect(val, record, time, _update);
+		return setValueDirect(val, noone, record, time, _update);
 	}
 	
-	static setValueDirect = function(val = 0, record = true, time = ANIMATOR.current_frame, _update = true) {
-		var _o = animator.getValue();
-		var updated = animator.setValue(val, connect_type == JUNCTION_CONNECT.input && record, time); 
-		var _n = animator.getValue();
+	static setValueDirect = function(val = 0, index = noone, record = true, time = ANIMATOR.current_frame, _update = true) {
+		var updated = false;
+		
+		if(sep_axis) {
+			if(index == noone) {
+				for( var i = 0; i < array_length(animators); i++ )
+					updated |= animators[i].setValue(val[i], connect_type == JUNCTION_CONNECT.input && record, time); 
+			} else
+				updated = animators[index].setValue(val, connect_type == JUNCTION_CONNECT.input && record, time); 
+		} else {
+			if(index != noone) {
+				var _val = animator.getValue(time);
+				_val[index] = val;
+				updated = animator.setValue(_val, connect_type == JUNCTION_CONNECT.input && record, time); 
+			} else 
+				updated = animator.setValue(val, connect_type == JUNCTION_CONNECT.input && record, time); 
+		}
 		
 		if(display_type == VALUE_DISPLAY.gradient) updated = true;
 		if(display_type == VALUE_DISPLAY.palette)  updated = true;
@@ -1353,7 +1424,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 					var animTo = ext.inputs[| j].animator;
 					var animLs = animTo.values;
 					
-					animTo.is_anim = animator.is_anim;
+					ext.setAnim(is_anim);
 					ds_list_clear(animLs);
 				}
 				
@@ -1372,7 +1443,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				var animTo = ext.inputs[| 0].animator;
 				var animLs = animTo.values;
 				
-				animTo.is_anim = animator.is_anim;
+				ext.setAnim(is_anim);
 				ds_list_clear(animLs);
 				
 				for( var i = 0; i < ds_list_size(animFrom); i++ )
@@ -1387,19 +1458,24 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	static serialize = function(scale = false, preset = false) {
 		var _map = ds_map_create();
 		
-		//print("  = > Serializing: " + name);
-		ds_map_add_list(_map, "raw value", animator.serialize(scale));
-		
 		_map[? "on end"]	 = on_end;
 		_map[? "visible"]	 = visible;
 		_map[? "unit"]		 = unit.mode;
-		_map[? "anim"]		 = animator.is_anim;
+		_map[? "sep_axis"]	 = sep_axis;
 		_map[? "shift x"]	 = draw_line_shift_x;
 		_map[? "shift y"]	 = draw_line_shift_y;
 		_map[? "from node"]  = !preset && value_from? value_from.node.node_id	: -1;
 		_map[? "from index"] = !preset && value_from? value_from.index			: -1;
 		_map[? "global_use"] = global_use;
 		_map[? "global_key"] = global_key;
+		_map[? "anim"]		 = is_anim;
+		
+		ds_map_add_list(_map, "raw value", animator.serialize(scale));
+		
+		var _anims = ds_list_create();
+		for( var i = 0; i < array_length(animators); i++ )
+			ds_list_add_list(_anims, animators[i].serialize(scale));
+		ds_map_add_list(_map, "animators", _anims);
 		
 		ds_map_add_list(_map, "data", ds_list_clone(extra_data));
 		
@@ -1417,14 +1493,22 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		on_end		= ds_map_try_get(_map, "on end", on_end);
 		visible		= ds_map_try_get(_map, "visible", visible);
 		unit.mode	= ds_map_try_get(_map, "unit", VALUE_UNIT.constant);
+		global_use	= ds_map_try_get(_map, "global_use");
+		global_key	= ds_map_try_get(_map, "global_key");
+		sep_axis	= ds_map_try_get(_map, "sep_axis");
+		is_anim		= ds_map_try_get(_map, "anim");
+		
 		draw_line_shift_x = ds_map_try_get(_map, "shift x");
 		draw_line_shift_y = ds_map_try_get(_map, "shift y");
-		global_use = ds_map_try_get(_map, "global_use");
-		global_key = ds_map_try_get(_map, "global_key");
 		
 		animator.deserialize(_map[? "raw value"], scale);
 		
-		animator.is_anim = _map[? "anim"];
+		if(ds_map_exists(_map, "animators")) {
+			var anims	 = _map[? "animators"];
+			for( var i = 0; i < ds_list_size(anims); i++ )
+				animators[i].deserialize(anims[| i], scale);
+		}
+		
 		if(!preset) {
 			con_node = _map[? "from node"];
 			con_index = _map[? "from index"];

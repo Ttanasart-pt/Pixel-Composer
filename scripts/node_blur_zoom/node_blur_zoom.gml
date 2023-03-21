@@ -37,11 +37,12 @@ function Node_Blur_Zoom(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [ 8,
-		["Surface",	 true],	0, 3, 6, 7, 
+		["Surface",	 true],	0, 6, 7, 
 		["Blur",	false],	1, 2, 4, 5
 	];
 	
 	attribute_surface_depth();
+	attribute_oversample();
 	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var pos = inputs[| 2].getValue();
@@ -55,7 +56,7 @@ function Node_Blur_Zoom(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	static process_data = function(_outSurf, _data, _output_index, _array_index) {
 		var _str = _data[1];
 		var _cen = _data[2];
-		var _sam = _data[3];
+		var _sam = ds_map_try_get(attributes, "oversample");
 		var _blr = _data[4];
 		var _msk = _data[5];
 		var _mask = _data[6];

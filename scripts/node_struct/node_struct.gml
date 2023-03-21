@@ -47,11 +47,11 @@ function Node_Struct(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	static onValueUpdate = function(index = 0) {
 		if(LOADING || APPENDING) return;
 		
-		if(safe_mod(index - input_fix_len, data_length) == 0) { //Variable name
-			inputs[| index + 1].name = inputs[| index].getValue() + " value";
-		}
-		
 		refreshDynamicInput();
+		
+		if(index < 0) return;
+		if(safe_mod(index - input_fix_len, data_length) == 0)
+			inputs[| index + 1].name = inputs[| index].getValue() + " value";
 	}
 	
 	function step() { 
@@ -69,7 +69,10 @@ function Node_Struct(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			var key = inputs[| i + 0].getValue();
 			var val = inputs[| i + 1].getValue();
 			
-			str[$ key] = val;
+			if(inputs[| i + 1].type == VALUE_TYPE.surface)
+				str[$ key] = new Surface(val);
+			else
+				str[$ key] = val;
 		}
 		
 		outputs[| 0].setValue(str);

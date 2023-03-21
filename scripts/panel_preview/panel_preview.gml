@@ -1,6 +1,7 @@
 function Panel_Preview() : PanelContent() constructor {
 	title = "Preview";
 	context_str = "Preview";
+	icon  = THEME.panel_preview;
 	
 	last_focus = noone;
 	
@@ -34,6 +35,8 @@ function Panel_Preview() : PanelContent() constructor {
 	preview_node	= [ noone, noone ];
 	preview_surface = [ 0, 0 ];
 	tile_surface    = surface_create(1, 1);
+	
+	inspect_node = noone;
 	
 	preview_x		= 0;
 	preview_x_to	= 0;
@@ -138,12 +141,11 @@ function Panel_Preview() : PanelContent() constructor {
 	
 	tb_framerate = new textBox(TEXTBOX_INPUT.number, function(val) { preview_rate = real(val); });
 	
-	addHotkey("Preview", "Focus content",			"F", MOD_KEY.none,	function() { fullView(); });
-	addHotkey("Preview", "Save current frame",		"S", MOD_KEY.shift,	function() { saveCurrentFrame(); });
-	addHotkey("Preview", "Save all current frame",	-1, MOD_KEY.none,	function() { saveAllCurrentFrames(); });
-	addHotkey("Preview", "Preview window",			"P", MOD_KEY.ctrl,	function() { previewWindow(getNodePreview()); });
-	
-	addHotkey("Preview", "Toggle grid",			"G", MOD_KEY.ctrl,	function() { grid_show = !grid_show; });
+	addHotkey("Preview", "Focus content",			"F", MOD_KEY.none,	function() { PANEL_PREVIEW.fullView(); });
+	addHotkey("Preview", "Save current frame",		"S", MOD_KEY.shift,	function() { PANEL_PREVIEW.saveCurrentFrame(); });
+	addHotkey("Preview", "Save all current frame",	-1, MOD_KEY.none,	function() { PANEL_PREVIEW.saveAllCurrentFrames(); });
+	addHotkey("Preview", "Preview window",			"P", MOD_KEY.ctrl,	function() { PANEL_PREVIEW.previewWindow(PANEL_PREVIEW.getNodePreview()); });
+	addHotkey("Preview", "Toggle grid",				"G", MOD_KEY.ctrl,	function() { PANEL_PREVIEW.grid_show = !PANEL_PREVIEW.grid_show; });
 	
 	function setNodePreview(node) {
 		if(resetViewOnDoubleClick)
@@ -233,9 +235,11 @@ function Panel_Preview() : PanelContent() constructor {
 			}
 			
 			var _canvas_s = canvas_s;
-			var inc = 0.5;
+			var inc = 0.1;
 			if(canvas_s > 16)		inc = 2;
 			else if(canvas_s > 8)	inc = 1;
+			else if(canvas_s > 3)	inc = 0.5;
+			else if(canvas_s > 1)	inc = 0.25;
 			
 			if(mouse_wheel_down()) canvas_s = max(round(canvas_s / inc) * inc - inc, 0.10);
 			if(mouse_wheel_up())   canvas_s = min(round(canvas_s / inc) * inc + inc, 64);
@@ -340,6 +344,10 @@ function Panel_Preview() : PanelContent() constructor {
 			var ssw = surface_get_width(preview_surface[1]);
 			var ssh = surface_get_height(preview_surface[1]);
 		}
+		
+		var _node = getNodePreview();
+		if(_node)
+			title = _node.display_name == ""? _node.name : _node.display_name;
 		
 		switch(splitView) {
 			case 0 :
@@ -799,7 +807,7 @@ function Panel_Preview() : PanelContent() constructor {
 			} else 
 				draw_line_width(sx, 0, sx, h, 1);
 			
-			draw_sprite_ui_uniform(THEME.icon_active_split, 0, splitSelection? sx + ui(16) : sx - ui(16), ui(16),, COLORS._main_accent);
+			draw_sprite_ui_uniform(THEME.icon_active_split, 0, splitSelection? sx + ui(16) : sx - ui(16), toolbar_height + ui(16),, COLORS._main_accent);
 			
 			if(mouse_on_preview && mouse_press(mb_left, pFOCUS)) {
 				if(point_in_rectangle(mx, my, 0, 0, sx, h))
@@ -839,15 +847,20 @@ function Panel_Preview() : PanelContent() constructor {
 		else
 			draw_clear(canvas_bg);
 		
+		title = "Preview";
+		
 		dragCanvas();
 		getPreviewData();
 		drawNodePreview();
 		drawPreviewOverlay();
 		
-		if(PANEL_GRAPH.node_focus)
-			drawNodeTools(pFOCUS, PANEL_GRAPH.node_focus);
-		if(last_focus != PANEL_GRAPH.node_focus) {
-			last_focus = PANEL_GRAPH.node_focus;
+		if(PANEL_PREVIEW == self)
+			inspect_node = PANEL_GRAPH.node_focus;
+		
+		if(inspect_node)
+			drawNodeTools(pFOCUS, inspect_node);
+		if(last_focus != inspect_node) {
+			last_focus   = inspect_node;
 			tool_current = noone;
 		}
 		

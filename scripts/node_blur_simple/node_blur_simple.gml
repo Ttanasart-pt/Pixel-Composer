@@ -33,18 +33,19 @@ function Node_Blur_Simple(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		active_index = 8;
 	
 	input_display_list = [ 8, 
-		["Surface",	 true],	0, 2, 6, 7, 
+		["Surface",	 true],	0, 6, 7, 
 		["Blur",	false],	1, 3, 4, 5, 
 	];
 	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	attribute_surface_depth();
+	attribute_oversample();
 	
 	static process_data = function(_outSurf, _data, _output_index, _array_index) {		
 		if(!is_surface(_data[0])) return _outSurf;
 		var _size	= _data[1];
-		var _samp	= _data[2];
+		var _samp	= ds_map_try_get(attributes, "oversample");
 		var _mask	= _data[3];
 		var _isovr  = _data[4];
 		var _overc  = _data[5];

@@ -27,20 +27,13 @@ function Node_Normal(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		var _hei = _data[1];
 		var _smt = _data[2];
 		
-		surface_set_target(_outSurf);
-		DRAW_CLEAR
-		BLEND_OVERRIDE;
-		
-		shader_set(sh_normal);
-			shader_set_uniform_f(uniform_hei, _hei);
-			shader_set_uniform_i(uniform_smt, _smt);
-			shader_set_uniform_f_array_safe(uniform_dim, [ surface_get_width(_data[0]), surface_get_height(_data[0]) ]);
+		surface_set_shader(_outSurf, sh_normal);
+		shader_set_uniform_f(uniform_hei, _hei);
+		shader_set_uniform_i(uniform_smt, _smt);
+		shader_set_uniform_f_array_safe(uniform_dim, [ surface_get_width(_data[0]), surface_get_height(_data[0]) ]);
 			
-			draw_surface_safe(_data[0], 0, 0);
-		shader_reset();
-		
-		BLEND_NORMAL;
-		surface_reset_target();
+		draw_surface_safe(_data[0], 0, 0);
+		surface_reset_shader();
 		
 		return _outSurf;
 	}

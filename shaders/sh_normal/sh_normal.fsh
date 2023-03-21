@@ -8,9 +8,7 @@ uniform vec2 dimension;
 uniform float height;
 uniform int smooth;
 
-float bright(in vec4 col) {
-	return dot(col.rgb, vec3(0.2126, 0.7152, 0.0722)) * col.a;
-}
+float bright(in vec4 col) { return dot(col.rgb, vec3(0.2126, 0.7152, 0.0722)) * col.a; }
 
 void main() {
 	vec2 pixelStep = 1. / dimension;

@@ -21,6 +21,7 @@ function Node_Chromatic_Aberration(_x, _y, _group = noone) : Node_Processor(_x, 
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	attribute_surface_depth();
+	attribute_interpolation();
 	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var pos = inputs[| 1].getValue();
@@ -31,22 +32,16 @@ function Node_Chromatic_Aberration(_x, _y, _group = noone) : Node_Processor(_x, 
 	}
 	
 	static process_data = function(_outSurf, _data, _output_index, _array_index) {
-		surface_set_target(_outSurf);
-		DRAW_CLEAR
-		BLEND_OVERRIDE;
-		
 		var center = _data[1];
 		var stren = _data[2];
 		
-		shader_set(shader);
+		surface_set_shader(_outSurf, shader);
+		shader_set_interpolation(_data[0]);
 			shader_set_uniform_f_array_safe(uniform_dim, [ surface_get_width(_data[0]), surface_get_height(_data[0]) ]);
 			shader_set_uniform_f_array_safe(uniform_cen, center);
 			shader_set_uniform_f(uniform_str, stren);
 			draw_surface_safe(_data[0], 0, 0);
-		shader_reset();
-		
-		BLEND_NORMAL;
-		surface_reset_target();
+		surface_reset_shader();
 		
 		return _outSurf;
 	}
