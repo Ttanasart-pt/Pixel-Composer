@@ -106,6 +106,16 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 			addNodeObject(itere, "Index",			s_node_iterator_index,	"Node_Iterator_Index",	[1, Node_Iterator_Index]);
 			addNodeObject(itere, "Array Length",	s_node_iterator_length,	"Node_Iterator_Each_Length",	[1, Node_Iterator_Each_Length]);
 	
+		var filter = ds_list_create();
+		addNodeCatagory("Filter", filter, ["Node_Iterate_Filter"]);
+			ds_list_add(filter, "Groups");
+			addNodeObject(filter, "Input",	s_node_group_input,		"Node_Group_Input",		[1, Node_Group_Input]);
+			addNodeObject(filter, "Output",	s_node_group_output,	"Node_Group_Output",	[1, Node_Group_Output]);
+		
+			ds_list_add(filter, "Loops");
+			addNodeObject(filter, "Index",			s_node_iterator_index,	"Node_Iterator_Index",			[1, Node_Iterator_Index]);
+			addNodeObject(filter, "Array Length",	s_node_iterator_length,	"Node_Iterator_Each_Length",	[1, Node_Iterator_Each_Length]);
+	
 		var feed = ds_list_create();
 		addNodeCatagory("Feedback", feed, ["Node_Feedback"]);
 			ds_list_add(feed, "Groups");
@@ -512,6 +522,7 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 			addNodeObject(node, "Feedback",			s_node_feedback,	"Node_Feedback",		[1, Node_Feedback],, "Create group that reuse output from last frame to the current one.");
 			addNodeObject(node, "Loop",				s_node_loop,		"Node_Iterate",			[1, Node_Iterate], ["iterate", "for"], "Create group that reuse output as input repeatedly in one frame.");
 			addNodeObject(node, "Loop Array",		s_node_loop_array,	"Node_Iterate_Each",	[1, Node_Iterate_Each], ["iterate each", "for each", "array loop"], "Create group that iterate to each member in an array.");
+			addNodeObject(node, "Filter Array",		s_node_filter_array,"Node_Iterate_Filter",	[1, Node_Iterate_Filter], "Filter array using condition.");
 		
 			ds_list_add(node, "Lua");
 			addNodeObject(node, "Lua Global",		s_node_lua_global,	"Node_Lua_Global",		[1, Node_Lua_Global]).setVersion(1090);
@@ -532,8 +543,10 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 		
 		var hid = ds_list_create();
 		addNodeCatagory("Hidden", hid, ["Hidden"]);
-			addNodeObject(hid, "Input",				s_node_feedback_input,	"Node_Iterator_Each_Input",		[1, Node_Iterator_Each_Input]);
-			addNodeObject(hid, "Output",			s_node_feedback_output,	"Node_Iterator_Each_Output",	[1, Node_Iterator_Each_Output]);
+			addNodeObject(hid, "Input",				s_node_loop_input,		"Node_Iterator_Each_Input",		[1, Node_Iterator_Each_Input]);
+			addNodeObject(hid, "Output",			s_node_loop_output,		"Node_Iterator_Each_Output",	[1, Node_Iterator_Each_Output]);
+			addNodeObject(hid, "Input",				s_node_loop_input,		"Node_Iterator_Filter_Input",	[1, Node_Iterator_Filter_Input]);
+			addNodeObject(hid, "Output",			s_node_loop_output,		"Node_Iterator_Filter_Output",	[1, Node_Iterator_Filter_Output]);
 			addNodeObject(hid, "Grid Noise",		s_node_grid_noise,		"Node_Grid_Noise",				[1, Node_Grid_Noise]);
 			addNodeObject(hid, "Triangular Noise",	s_node_grid_tri_noise,	"Node_Noise_Tri",				[1, Node_Noise_Tri]).setVersion(1090);
 			addNodeObject(hid, "Hexagonal Noise",	s_node_grid_hex_noise,	"Node_Noise_Hex",				[1, Node_Noise_Hex]).setVersion(1090);

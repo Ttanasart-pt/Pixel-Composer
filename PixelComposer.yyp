@@ -7,7 +7,6 @@
   ],
   "configs": {
     "children": [
-      {"children":[],"name":"Tester",},
       {"children":[
           {"children":[],"name":"Alpha",},
         ],"name":"Demo",},
@@ -167,6 +166,7 @@
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"Steamworks","folderPath":"folders/Steamworks.yy",},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"UGC","folderPath":"folders/Steamworks/UGC.yy",},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"widgets","folderPath":"folders/widgets.yy",},
+    {"resourceType":"GMFolder","resourceVersion":"1.0","name":"for filter","folderPath":"folders/nodes/data/iterate/for filter.yy",},
   ],
   "IncludedFiles": [
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"ApolloHelp.html","CopyToMask":-1,"filePath":"datafiles",},
@@ -525,7 +525,7 @@
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"Tree sway.png","CopyToMask":-1,"filePath":"datafiles/Sample Projects",},
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"Tree sway.pxc","CopyToMask":-1,"filePath":"datafiles/Sample Projects",},
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"Steamworks_Extension_Documentation.html","CopyToMask":0,"filePath":"datafiles",},
-    {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"ucrtbased.dll","ConfigValues":{"Tester":{"CopyToMask":"64",},},"CopyToMask":-1,"filePath":"datafiles",},
+    {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"ucrtbased.dll","ConfigValues":{},"CopyToMask":-1,"filePath":"datafiles",},
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"webpmux.exe","CopyToMask":-1,"filePath":"datafiles/webp",},
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"Welcome files.zip","CopyToMask":-1,"filePath":"datafiles",},
   ],
@@ -583,6 +583,7 @@
     {"id":{"name":"textInput","path":"scripts/textInput/textInput.yy",},},
     {"id":{"name":"node_dither","path":"scripts/node_dither/node_dither.yy",},},
     {"id":{"name":"sh_perlin_smear","path":"shaders/sh_perlin_smear/sh_perlin_smear.yy",},},
+    {"id":{"name":"node_iterate_filter","path":"scripts/node_iterate_filter/node_iterate_filter.yy",},},
     {"id":{"name":"node_array_remove","path":"scripts/node_array_remove/node_array_remove.yy",},},
     {"id":{"name":"node_path_blend","path":"scripts/node_path_blend/node_path_blend.yy",},},
     {"id":{"name":"node_switch","path":"scripts/node_switch/node_switch.yy",},},
@@ -747,6 +748,7 @@
     {"id":{"name":"s_node_vfx_override","path":"sprites/s_node_vfx_override/s_node_vfx_override.yy",},},
     {"id":{"name":"rotatorRange","path":"scripts/rotatorRange/rotatorRange.yy",},},
     {"id":{"name":"font_loader","path":"scripts/font_loader/font_loader.yy",},},
+    {"id":{"name":"node_iterator_filter_input","path":"scripts/node_iterator_filter_input/node_iterator_filter_input.yy",},},
     {"id":{"name":"point_rotate","path":"scripts/point_rotate/point_rotate.yy",},},
     {"id":{"name":"s_node_vfx_variable","path":"sprites/s_node_vfx_variable/s_node_vfx_variable.yy",},},
     {"id":{"name":"node_struct","path":"scripts/node_struct/node_struct.yy",},},
@@ -899,6 +901,7 @@
     {"id":{"name":"draw_set_text","path":"scripts/draw_set_text/draw_set_text.yy",},},
     {"id":{"name":"s_node_array","path":"sprites/s_node_array/s_node_array.yy",},},
     {"id":{"name":"s_node_warp","path":"sprites/s_node_warp/s_node_warp.yy",},},
+    {"id":{"name":"node_iterator_filter_output","path":"scripts/node_iterator_filter_output/node_iterator_filter_output.yy",},},
     {"id":{"name":"color_function","path":"scripts/color_function/color_function.yy",},},
     {"id":{"name":"fd_rectangle_set_pressure_size","path":"scripts/fd_rectangle_set_pressure_size/fd_rectangle_set_pressure_size.yy",},},
     {"id":{"name":"node_color_data","path":"scripts/node_color_data/node_color_data.yy",},},
@@ -1078,6 +1081,7 @@
     {"id":{"name":"node_rigid_object","path":"scripts/node_rigid_object/node_rigid_object.yy",},},
     {"id":{"name":"areaBox","path":"scripts/areaBox/areaBox.yy",},},
     {"id":{"name":"__global_object_depths","path":"scripts/__global_object_depths/__global_object_depths.yy",},},
+    {"id":{"name":"s_node_filter_array","path":"sprites/s_node_filter_array/s_node_filter_array.yy",},},
     {"id":{"name":"node_noise_grid_hex","path":"scripts/node_noise_grid_hex/node_noise_grid_hex.yy",},},
     {"id":{"name":"node_lua_global","path":"scripts/node_lua_global/node_lua_global.yy",},},
     {"id":{"name":"o_dialog_preset","path":"objects/o_dialog_preset/o_dialog_preset.yy",},},
