@@ -1,3 +1,5 @@
 extensions
 datafiles/data/themes/default
 options
+options/extensions
+options/mac
