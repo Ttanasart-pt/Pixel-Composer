@@ -1,9 +1,0 @@
-{
-  "extensionId": {
-    "name": "WindowMaximize",
-    "path": "extensions/WindowMaximize/WindowMaximize.yy"
-  },
-  "resourceVersion": "1.0",
-  "resourceType": "GMExtensionConfigSet",
-  "configurables": null
-}

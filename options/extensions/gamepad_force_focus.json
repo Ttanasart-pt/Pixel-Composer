@@ -1,9 +1,0 @@
-{
-  "extensionId": {
-    "name": "gamepad_force_focus",
-    "path": "extensions/gamepad_force_focus/gamepad_force_focus.yy"
-  },
-  "resourceVersion": "1.0",
-  "resourceType": "GMExtensionConfigSet",
-  "configurables": null
-}
