@@ -40,6 +40,8 @@
 	}
 	
 	function noti_status(str, icon = noone, flash = false, ref = noone) {
+		show_debug_message("STATUS: " + str);
+		
 		if(flash && PANEL_MENU) {
 			PANEL_MENU.noti_flash = 1;
 			PANEL_MENU.noti_flash_color = flash;
@@ -63,6 +65,8 @@
 	}
 	
 	function noti_warning(str, icon = noone, ref = noone) {
+		show_debug_message("WARNING: " + str);
+		
 		if(PANEL_MENU) {
 			PANEL_MENU.noti_flash = 1;
 			PANEL_MENU.noti_flash_color = COLORS._main_accent;
@@ -76,7 +80,6 @@
 		var noti = new notification(NOTI_TYPE.warning, str, icon, c_ui_orange, PREF_MAP[? "notification_time"]);
 		ds_list_add(STATUSES, noti);
 		ds_list_add(WARNING, noti);
-		show_debug_message(str);
 		
 		if(!instance_exists(o_dialog_warning))
 			dialogCall(o_dialog_warning, mouse_mx + ui(16), mouse_my + ui(16)).warning_text = str;
@@ -90,6 +93,8 @@
 	}
 	
 	function noti_error(str, icon = noone, ref = noone) {
+		show_debug_message("ERROR: " + str);
+		
 		var noti = new notification(NOTI_TYPE.error, str, icon, c_ui_red);
 		ds_list_add(STATUSES, noti);
 		ds_list_add(ERRORS, noti);
