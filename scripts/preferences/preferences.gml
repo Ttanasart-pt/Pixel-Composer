@@ -233,8 +233,6 @@
 		}
 		
 		ds_map_destroy(map);
-		
-		PREF_APPLY();
 	}
 	
 	function PREF_APPLY() {

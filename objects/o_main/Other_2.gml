@@ -7,16 +7,23 @@
 	
 	if(OS == os_windows)
 		DIRECTORY = environment_get_variable("userprofile") + "/AppData/Local/PixelComposer/";
-	else if(OS == os_macosx)
-		DIRECTORY = string(environment_get_variable("HOME")) + "/PixelComposer/";
+	else if(OS == os_macosx) {
+		var home_dir = environment_get_variable("HOME");
+		if(string(home_dir) == "0")
+			log_message("DIRECTORY", "Directory not found.");
+		else 
+			DIRECTORY = string(home_dir) + "/PixelComposer/";
+	}
 	show_debug_message(DIRECTORY);
-		
+	
 	if(!directory_exists(DIRECTORY))
 		directory_create(DIRECTORY);
 	if(!directory_exists(DIRECTORY + "temp"))
 		directory_create(DIRECTORY + "temp");
 	
 	METADATA = __getdefaultMetaData();
+	
+	PREF_LOAD();
 	
 	log_clear();
 	log_newline();
@@ -36,7 +43,7 @@
 	__initNodes();
 	__initSteamUGC();
 	
-	PREF_LOAD();
+	PREF_APPLY();
 	loadFonts();
 	loadGraphic(PREF_MAP[? "theme"]);
 	loadColor(PREF_MAP[? "theme"]);
