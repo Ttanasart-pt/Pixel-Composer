@@ -20,9 +20,8 @@ function scrollBox(_data, _onModify, update_hover = true) : widget() constructor
 		
 		open = true;
 		with(dialogCall(o_dialog_scrollbox, x + open_rx, y + open_ry)) {
-			scrollbox = other;	
+			initScroll(other);
 			initVal   = ind;
-			dialog_w  = other.w;
 			align     = other.align;
 			update_hover = other.update_hover;
 		}

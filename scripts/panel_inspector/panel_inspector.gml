@@ -60,7 +60,10 @@ function Panel_Inspector() : PanelContent() constructor {
 	for( var i = 0; i < array_length(meta_tb); i++ )
 		meta_tb[i].hide = true;
 	
-	meta_display = [ [ "Metadata", false ], [ "Global variables", false ] ];
+	meta_display = [ 
+		[ "Metadata", false ], 
+		[ "Global variables", false, button(function() { panelAdd("Panel_Globalvar", true); }, THEME.node_goto).setIcon(THEME.node_goto, 0, COLORS._main_icon) ] 
+	];
 	
 	workshop_uploading = false;
 	
@@ -111,7 +114,12 @@ function Panel_Inspector() : PanelContent() constructor {
 		var yy = _y + ui(8);
 		
 		for( var i = 0; i < 2; i++ ) {
-			if(_hover && point_in_rectangle(_m[0], _m[1], 0, yy, con_w, yy + ui(32))) {
+			var _meta = meta_display[i];
+			var _txt  = array_safe_get(_meta, 0);
+			var _b	  = array_safe_get(_meta, 2, noone);
+			var _x1   = con_w - (_b != noone) * ui(30);
+			
+			if(_hover && point_in_rectangle(_m[0], _m[1], 0, yy, _x1, yy + ui(32))) {
 				draw_sprite_stretched_ext(THEME.group_label, 0, 0, yy, con_w, ui(32), COLORS.panel_inspector_group_hover, 1);
 						
 				if(mouse_press(mb_left, pFOCUS))
@@ -119,10 +127,15 @@ function Panel_Inspector() : PanelContent() constructor {
 			} else
 				draw_sprite_stretched_ext(THEME.group_label, 0, 0, yy, con_w, ui(32), COLORS.panel_inspector_group_bg, 1);
 			
+			if(_b != noone) {
+				_b.setActiveFocus(pFOCUS, _hover);
+				_b.draw(_x1, yy + ui(2), ui(28), ui(28), _m, THEME.button_hide_fill);
+			}
+			
 			draw_sprite_ui(THEME.arrow, meta_display[i][1]? 0 : 3, ui(16), yy + ui(32) / 2, 1, 1, 0, COLORS.panel_inspector_group_bg, 1);	
 			
 			draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text);
-			draw_text(ui(32), yy + ui(32) / 2, meta_display[i][0]);
+			draw_text(ui(32), yy + ui(32) / 2, _txt);
 			
 			yy += ui(32 + 8);
 			hh += ui(32 + 8);

@@ -3,8 +3,8 @@
   "resourceVersion": "1.0",
   "name": "s_node_color_mix",
   "bbox_bottom": 63,
-  "bbox_left": 1,
-  "bbox_right": 64,
+  "bbox_left": 0,
+  "bbox_right": 63,
   "bbox_top": 0,
   "bboxMode": 0,
   "collisionKind": 1,
@@ -13,14 +13,14 @@
   "edgeFiltering": false,
   "For3D": false,
   "frames": [
-    {"resourceType":"GMSpriteFrame","resourceVersion":"1.1","name":"6c782cb4-7f9e-425d-9773-b1930c446a21",},
+    {"resourceType":"GMSpriteFrame","resourceVersion":"1.1","name":"bb45ad69-af04-4e6a-9d9e-c15c1de8fe01",},
   ],
   "gridX": 0,
   "gridY": 0,
   "height": 64,
   "HTile": false,
   "layers": [
-    {"resourceType":"GMImageLayer","resourceVersion":"1.0","name":"69aa9ab2-2b5f-4a33-8a9d-1693f3174952","blendMode":0,"displayName":"default","isLocked":false,"opacity":100.0,"visible":true,},
+    {"resourceType":"GMImageLayer","resourceVersion":"1.0","name":"b720a9c9-a0f0-4d7e-aa51-4e718722c51e","blendMode":0,"displayName":"default","isLocked":false,"opacity":100.0,"visible":true,},
   ],
   "nineSlice": null,
   "origin": 4,
@@ -54,7 +54,7 @@
     "timeUnits": 1,
     "tracks": [
       {"resourceType":"GMSpriteFramesTrack","resourceVersion":"1.0","name":"frames","builtinName":0,"events":[],"inheritsTrackColour":true,"interpolation":1,"isCreationTrack":false,"keyframes":{"resourceType":"KeyframeStore<SpriteFrameKeyframe>","resourceVersion":"1.0","Keyframes":[
-            {"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"1.0","Channels":{"0":{"resourceType":"SpriteFrameKeyframe","resourceVersion":"1.0","Id":{"name":"6c782cb4-7f9e-425d-9773-b1930c446a21","path":"sprites/s_node_color_mix/s_node_color_mix.yy",},},},"Disabled":false,"id":"f7fd0a5e-f412-458a-8a9f-5117b59a4403","IsCreationKey":false,"Key":0.0,"Length":1.0,"Stretch":false,},
+            {"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"1.0","Channels":{"0":{"resourceType":"SpriteFrameKeyframe","resourceVersion":"1.0","Id":{"name":"bb45ad69-af04-4e6a-9d9e-c15c1de8fe01","path":"sprites/s_node_color_mix/s_node_color_mix.yy",},},},"Disabled":false,"id":"9201adfa-3d8e-4b1f-b3b9-7d16fa1981d6","IsCreationKey":false,"Key":0.0,"Length":1.0,"Stretch":false,},
           ],},"modifiers":[],"spriteId":null,"trackColour":0,"tracks":[],"traits":0,},
     ],
     "visibleRange": null,
@@ -70,5 +70,5 @@
   },
   "type": 0,
   "VTile": false,
-  "width": 65,
+  "width": 64,
 }

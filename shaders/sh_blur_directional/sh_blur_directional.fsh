@@ -4,13 +4,14 @@
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
+uniform float size;
 uniform float strength;
 uniform float direction;
 
 vec4 dirBlur(vec2 angle) {
     vec4 acc = vec4(0.);
     
-    const float delta = 2.0 / 32.;
+    float delta = 1. / size;
     
     for(float i = -1.0; i <= 1.0; i += delta) {
 		vec4 col = texture2D( gm_BaseTexture, v_vTexcoord - vec2(angle.x * i, angle.y * i));

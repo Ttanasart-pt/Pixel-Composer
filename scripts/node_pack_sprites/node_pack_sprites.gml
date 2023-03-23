@@ -6,26 +6,33 @@ function Node_Pack_Sprites(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	inputs[| 1] = nodeValue("Algorithm", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Skyline", "Shelf", "Top left", "Best fit" ], { update_hover: false })
 	
-	inputs[| 2] = nodeValue("Max width", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 32);
+	inputs[| 2] = nodeValue("Max width", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 128);
 	
-	inputs[| 3] = nodeValue("Max height", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 32);
+	inputs[| 3] = nodeValue("Max height", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 128);
+	
+	inputs[| 4] = nodeValue("Spacing", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0);
 	
 	outputs[| 0] = nodeValue("Packed image", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	outputs[| 1] = nodeValue("Atlas data", self, JUNCTION_CONNECT.output, VALUE_TYPE.struct, []);
 	
+	input_display_list = [
+		0, 4, 1, 2, 3,
+	]
+	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var rect = outputs[| 1].getValue();
+		var spac = inputs[| 4].getValue();
 		
 		draw_set_color(COLORS._main_accent);
 		
 		for( var i = 0; i < array_length(rect); i++ ) {
 			var r = rect[i];
 			draw_rectangle(
-				_x + r.x * _s, 
-				_y + r.y * _s, 
-				_x + r.x * _s + r.w * _s, 
-				_y + r.y * _s + r.h * _s, true);
+				_x + _s * (r.x + spac), 
+				_y + _s * (r.y + spac), 
+				_x + _s * (r.x + r.w - spac), 
+				_y + _s * (r.y + r.h - spac), true);
 		}
 	}
 	
@@ -39,6 +46,7 @@ function Node_Pack_Sprites(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	static update = function() {
 		var _inpt = inputs[| 0].getValue();
 		var _algo = inputs[| 1].getValue();
+		var _spac = inputs[| 4].getValue();
 		
 		if(!is_array(_inpt) || array_length(_inpt) == 0) return;
 		
@@ -48,7 +56,8 @@ function Node_Pack_Sprites(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			var s = _inpt[i];
 			if(!is_surface(s)) continue;
 			
-			_rects[i] = new spriteAtlasData(0, 0, surface_get_width(s), surface_get_height(s), s, i);
+			_rects[i] = new spriteAtlasData(0, 0, surface_get_width(s)  + _spac * 2, 
+												  surface_get_height(s) + _spac * 2, s, i);
 		}
 		
 		var pack;
@@ -88,7 +97,7 @@ function Node_Pack_Sprites(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			
 			for( var i = 0; i < array_length(rect); i++ ) {
 				var r = rect[i];
-				draw_surface(r.surface, r.x, r.y);
+				draw_surface(r.surface, r.x + _spac, r.y + _spac);
 			}
 			
 			BLEND_NORMAL

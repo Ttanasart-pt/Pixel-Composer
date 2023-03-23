@@ -11,8 +11,7 @@ if !ready exit;
 	WIDGET_CURRENT = tb_search;
 	
 	if(search_string == "") {
-		tb_search.focus = false;
-		tb_search.hover = false;
+		tb_search.setActiveFocus(false, false);
 		tb_search.sprite_index = 1;
 		
 		catagory_pane.setActiveFocus(sFOCUS, sHOVER);
@@ -24,8 +23,7 @@ if !ready exit;
 		
 		node_selecting = 0;
 	} else {
-		tb_search.focus = true;
-		tb_search.hover = true;
+		tb_search.setActiveFocus(true, true);
 		draw_sprite_stretched(THEME.ui_panel_bg, 0, dialog_x + ui(14), dialog_y + ui(52), dialog_w - ui(28), dialog_h - ui(66));
 		search_pane.setActiveFocus(sFOCUS, sHOVER);
 		search_pane.draw(dialog_x + ui(16), dialog_y + ui(52));

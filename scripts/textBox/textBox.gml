@@ -298,7 +298,7 @@ function textBox(_input, _onModify, _extras = noone) : textInput(_input, _onModi
 		}
 	}
 	
-	static draw = function(_x, _y, _w, _h, _text, _m, _format = VALUE_DISPLAY._default, halign = fa_left, valign = fa_top) {
+	static draw = function(_x, _y, _w, _h, _text, _m = mouse_ui, _format = VALUE_DISPLAY._default, halign = fa_left, valign = fa_top) {
 		x = _x;
 		y = _y;
 		w = _w;

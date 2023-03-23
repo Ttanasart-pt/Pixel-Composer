@@ -592,7 +592,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						if(display_data != -1) editWidget.onSurfaceSize = display_data;
 						
 						for( var i = 0; i < array_length(animators); i++ )
-							animators[i].suffix = " " + array_safe_get(global.displaySuffix_Area, i);
+							animators[i].suffix = " " + array_safe_get(global.displaySuffix_Area, i, "");
 						
 						extract_node = "Node_Area";
 						break;

@@ -129,6 +129,7 @@
 		
 		PANEL_ANIMATION.updatePropertyList();
 		PANEL_MAIN.refresh();
+		PANEL_MAIN.refreshSize();
 	}
 	
 	function findPanel(_type, _pane = PANEL_MAIN) {
