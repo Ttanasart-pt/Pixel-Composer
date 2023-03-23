@@ -5,7 +5,7 @@
   "isCompatibility": false,
   "isDnD": false,
   "parent": {
-    "name": "for",
-    "path": "folders/nodes/data/iterate/for.yy",
+    "name": "iterate",
+    "path": "folders/nodes/data/iterate.yy",
   },
 }

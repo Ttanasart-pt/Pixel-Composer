@@ -14,7 +14,7 @@
 		else 
 			DIRECTORY = string(home_dir) + "/PixelComposer/";
 	}
-	show_debug_message(DIRECTORY);
+	show_debug_message("Current working directory: " + string(DIRECTORY));
 	
 	if(!directory_exists(DIRECTORY))
 		directory_create(DIRECTORY);

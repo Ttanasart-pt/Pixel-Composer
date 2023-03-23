@@ -470,11 +470,11 @@ event_inherited();
 #endregion
 
 #region search
-	search_string = "";
-	search_list = ds_list_create();
-	keyboard_lastchar = "";
-	KEYBOARD_STRING = "";
-	keyboard_lastkey = -1;
+	search_string		= "";
+	search_list			= ds_list_create();
+	keyboard_lastchar	= "";
+	KEYBOARD_STRING		= "";
+	keyboard_lastkey	= -1;
 	
 	tb_search = new textBox(TEXTBOX_INPUT.text, function(str) { 
 		search_string = string(str); 
@@ -488,10 +488,10 @@ event_inherited();
 		ds_list_clear(search_list);
 		var pr_list = ds_priority_create();
 		
-		var cnt = PANEL_GRAPH.getCurrentContext();
-		var context = cnt == noone? "" : instanceof(cnt);
+		var cnt			 = PANEL_GRAPH.getCurrentContext();
+		var context		 = cnt == noone? "" : instanceof(cnt);
 		var search_lower = string_lower(search_string);
-		var search_map = ds_map_create();
+		var search_map	 = ds_map_create();
 		
 		for(var i = 0; i < ds_list_size(NODE_CATEGORY); i++) {
 			var cat = NODE_CATEGORY[| i];
@@ -527,9 +527,8 @@ event_inherited();
 		
 		searchCollection(pr_list, search_string, false);
 		
-		repeat(ds_priority_size(pr_list)) {
+		repeat(ds_priority_size(pr_list))
 			ds_list_add(search_list, ds_priority_delete_max(pr_list));
-		}
 		
 		ds_priority_destroy(pr_list);
 	}
@@ -537,14 +536,30 @@ event_inherited();
 	search_pane = new scrollPane(dialog_w - ui(32), dialog_h - ui(66), function(_y, _m) {
 		draw_clear_alpha(c_white, 0);
 		
-		var amo = ds_list_size(search_list);
-		var hh = 0;
-		var _hover = sHOVER && search_pane.hover;
+		var equation = string_char_at(search_string, 0) == "=";
+		var amo		 = ds_list_size(search_list);
+		var hh		 = 0;
+		var _hover	 = sHOVER && search_pane.hover;
+		
+		var grid_size  = ui(64);
+		var grid_width = ui(80);
+		var grid_space = ui(16);
+			
+		if(equation) {
+			var eq = string_replace(search_string, "=", "");
+			
+			draw_set_text(f_h5, fa_center, fa_bottom, COLORS._main_text_sub);
+			draw_text_ext(search_pane.w / 2, search_pane.h / 2 - ui(8), "Create equation: " + eq, -1, search_pane.w - ui(32));
+			
+			draw_set_text(f_p0, fa_center, fa_top, COLORS._main_text_sub);
+			draw_text(search_pane.w / 2, search_pane.h / 2 - ui(4), "Press Enter to create equation node.");
+			
+			if(keyboard_check_pressed(vk_enter))
+				buildNode(ALL_NODES[? "Node_Equation"], eq);
+			return hh;
+		}
 		
 		if(PREF_MAP[? "dialog_add_node_view"] == 0) { //grid view
-			var grid_size = ui(64);
-			var grid_width = ui(80);
-			var grid_space = ui(16);
 			var col = floor(search_pane.surface_w / (grid_width + grid_space));
 			var yy = _y + grid_space;
 			var index = 0;

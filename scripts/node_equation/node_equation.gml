@@ -1,10 +1,39 @@
+function Node_create_Equation(_x, _y, _group = noone, _param = "") {
+	var node = new Node_Equation(_x, _y, _group);
+	if(_param == "") return node;
+	
+	node.inputs[| 0].setValue(_param);
+	var ind  = 1;
+	var amo  = string_length(_param);
+	var str  = "";
+	var pres = global.EQUATION_PRES;
+	var vars = [];
+	
+	for( var ind = 1; ind <= amo; ind++ ) {
+		var ch = string_char_at(_param, ind);
+		if(ds_map_exists(pres, ch) || ch == "(" || ch == ")") {
+			if(str != "" && str != toNumber(str)) 
+				array_push_unique(vars, str);
+			str = "";
+		} else
+			str += ch;
+	}
+	
+	if(str != "" && str != toNumber(str)) 
+		array_push_unique(vars, str);
+	
+	for( var i = 0; i < array_length(vars); i++ )
+		node.inputs[| 1 + i * 2].setValue(vars[i]);
+	
+	return node;
+}
+
 function Node_Equation(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name		= "Equation";
 	color		= COLORS.node_blend_number;
 	previewable = false;
 	
 	w = 96;
-	
 	
 	inputs[| 0] = nodeValue("Equation", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "");
 	
@@ -53,15 +82,14 @@ function Node_Equation(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	});
 	
 	argument_renderer.register = function(parent = noone) {
-		for( var i = input_fix_len; i < ds_list_size(inputs); i++ ) {
+		for( var i = input_fix_len; i < ds_list_size(inputs); i++ )
 			inputs[| i].editWidget.register(parent);
-		}
 	}
 	
 	input_display_list = [ 
 		["Function",	false], 0,
 		["Arguments",	false], argument_renderer,
-		["Inputs",		true], 
+		["Inputs",		 true], 
 	]
 	
 	input_fix_len	  = ds_list_size(inputs);
@@ -79,10 +107,13 @@ function Node_Equation(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		array_resize(input_display_list, input_display_len);
 		
 		for( var i = input_fix_len; i < ds_list_size(inputs); i += data_length ) {
-			if(inputs[| i].getValue() != "") {
+			var varName = inputs[| i].getValue();
+			
+			if(varName != "") {
 				ds_list_add(_in, inputs[| i + 0]);
 				ds_list_add(_in, inputs[| i + 1]);
-				inputs[| i + 1].editWidget.interactable = true;
+				inputs[| i + 1].editWidget.setInteract(true);
+				inputs[| i + 1].name = varName;
 				
 				array_push(input_display_list, i + 1);
 			} else {
@@ -101,12 +132,10 @@ function Node_Equation(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	}
 	
 	static onValueUpdate = function(index = 0) {
-		if(index < input_fix_len) return;
 		if(LOADING || APPENDING) return;
 		
-		if(safe_mod(index - input_fix_len, data_length) == 0) { //Variable name
+		if(safe_mod(index - input_fix_len, data_length) == 0) //Variable name
 			inputs[| index + 1].name = inputs[| index].getValue();
-		}
 		
 		refreshDynamicInput();
 	}

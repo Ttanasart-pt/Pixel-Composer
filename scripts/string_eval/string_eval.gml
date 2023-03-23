@@ -1,27 +1,28 @@
 #region evaluator
+	global.EQUATION_PRES    = ds_map_create();
+	global.EQUATION_PRES[? "+"]     = 1;
+	global.EQUATION_PRES[? "-"]     = 1;
+	global.EQUATION_PRES[? "*"]     = 2;
+	global.EQUATION_PRES[? "/"]     = 2;
+	global.EQUATION_PRES[? "^"]     = 3;
+	global.EQUATION_PRES[? "sin"]   = 5;
+	global.EQUATION_PRES[? "cos"]   = 5;
+	global.EQUATION_PRES[? "tan"]   = 5;
+	global.EQUATION_PRES[? "abs"]   = 5;
+	global.EQUATION_PRES[? "round"] = 5;
+	global.EQUATION_PRES[? "ceil"]  = 5;
+	global.EQUATION_PRES[? "floor"] = 5;
+
 	function evaluateFunction(fx, params = {}) {
-		static pres = ds_map_create();
-		pres[? "+"]     = 1;
-		pres[? "-"]     = 1;
-		pres[? "*"]     = 2;
-		pres[? "/"]     = 2;
-		pres[? "^"]     = 3;
-		pres[? "sin"]   = 5;
-		pres[? "cos"]   = 5;
-		pres[? "tan"]   = 5;
-		pres[? "abs"]   = 5;
-		pres[? "round"] = 5;
-		pres[? "ceil"]  = 5;
-		pres[? "floor"] = 5;
-		
-		var vl = ds_stack_create();
-		var op = ds_stack_create();
+		var pres = global.EQUATION_PRES;
+		var vl   = ds_stack_create();
+		var op   = ds_stack_create();
 		
 		fx = string_replace_all(fx,  " ", "");
 		fx = string_replace_all(fx, "\n", "");
 		
 		var len = string_length(fx);
-		var l  = 1;
+		var l   = 1;
 		var ch, cch;
 		
 		while(l <= len) {

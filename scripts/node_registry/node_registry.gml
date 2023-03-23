@@ -417,7 +417,7 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 			ds_list_add(values, "Numbers");
 			addNodeObject(values, "Number",			s_node_number,			"Node_Number",			[1, Node_Number]);
 			addNodeObject(values, "Math",			s_node_math,			"Node_Math",			[0, Node_create_Math], [ "add", "subtract", "multiply", "divide", "power", "modulo", "round", "ceiling", "floor", "sin", "cos", "tan", "abs" ]);
-			addNodeObject(values, "Equation",		s_node_equation,		"Node_Equation",		[1, Node_Equation],, "Evaluate string of equation. With an option for setting variables.");
+			addNodeObject(values, "Equation",		s_node_equation,		"Node_Equation",		[0, Node_create_Equation],, "Evaluate string of equation. With an option for setting variables.");
 			addNodeObject(values, "Random",			s_node_random,			"Node_Random",			[1, Node_Random]);
 			addNodeObject(values, "Statistic",		s_node_statistic,		"Node_Statistic",		[0, Node_create_Statistic], ["sum", "average", "mean", "median", "min", "max"]);
 			addNodeObject(values, "Vector2",		s_node_vec2,			"Node_Vector2",			[1, Node_Vector2]);
@@ -438,7 +438,7 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 		
 			ds_list_add(values, "Arrays");
 			addNodeObject(values, "Array",			s_node_array,			"Node_Array",			[1, Node_Array]);
-			addNodeObject(values, "Array Range",	s_node_array_range,		"Node_Array_Range",		[1, Node_Array_Range],, "Create array of number in range by setting start, end and step size.");
+			addNodeObject(values, "Array Range",	s_node_array_range,		"Node_Array_Range",		[1, Node_Array_Range],, "Create array of numbers by setting start, end and step length.");
 			addNodeObject(values, "Array Add",		s_node_array_add,		"Node_Array_Add",		[1, Node_Array_Add], ["add array"]);
 			addNodeObject(values, "Array Length",	s_node_array_length,	"Node_Array_Length",	[1, Node_Array_Length]);
 			addNodeObject(values, "Array Get",		s_node_array_get,		"Node_Array_Get",		[1, Node_Array_Get], ["get array"]);
@@ -451,7 +451,9 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 			addNodeObject(values, "Array Zip",		s_node_array_zip,		"Node_Array_Zip",		[1, Node_Array_Zip]).setVersion(1138);
 			addNodeObject(values, "Sort Array",		s_node_array_sort,		"Node_Array_Sort",		[1, Node_Array_Sort], ["array sort"]).setVersion(1120);
 			addNodeObject(values, "Shuffle Array",	s_node_array_shuffle,	"Node_Array_Shuffle",	[1, Node_Array_Shuffle], ["array shuffle"]).setVersion(1120);
-		
+			addNodeObject(values, "Loop Array",		s_node_loop_array,		"Node_Iterate_Each",	[1, Node_Iterate_Each], ["iterate each", "for each", "array loop"], "Create group that iterate to each member in an array.");
+			addNodeObject(values, "Filter Array",	s_node_filter_array,	"Node_Iterate_Filter",	[1, Node_Iterate_Filter], "Filter array using condition.").setVersion(1140);
+			
 			ds_list_add(values, "Paths");
 			addNodeObject(values, "Path",			s_node_path,			"Node_Path",			[1, Node_Path]);
 			addNodeObject(values, "Path Array",		s_node_path_array,		"Node_Path_Array",		[1, Node_Path_Array]).setVersion(1137);
@@ -522,8 +524,8 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 			addNodeObject(node, "Feedback",			s_node_feedback,	"Node_Feedback",		[1, Node_Feedback],, "Create group that reuse output from last frame to the current one.");
 			addNodeObject(node, "Loop",				s_node_loop,		"Node_Iterate",			[1, Node_Iterate], ["iterate", "for"], "Create group that reuse output as input repeatedly in one frame.");
 			addNodeObject(node, "Loop Array",		s_node_loop_array,	"Node_Iterate_Each",	[1, Node_Iterate_Each], ["iterate each", "for each", "array loop"], "Create group that iterate to each member in an array.");
-			addNodeObject(node, "Filter Array",		s_node_filter_array,"Node_Iterate_Filter",	[1, Node_Iterate_Filter], "Filter array using condition.");
-		
+			addNodeObject(node, "Filter Array",		s_node_filter_array,"Node_Iterate_Filter",	[1, Node_Iterate_Filter], "Filter array using condition.").setVersion(1140);
+			
 			ds_list_add(node, "Lua");
 			addNodeObject(node, "Lua Global",		s_node_lua_global,	"Node_Lua_Global",		[1, Node_Lua_Global]).setVersion(1090);
 			addNodeObject(node, "Lua Surface",		s_node_lua_surface,	"Node_Lua_Surface",		[1, Node_Lua_Surface]).setVersion(1090);

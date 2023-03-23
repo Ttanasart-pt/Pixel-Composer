@@ -96,6 +96,7 @@
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"IO","folderPath":"folders/nodes/data/IO.yy",},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"iterate","folderPath":"folders/nodes/data/iterate.yy",},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"for each","folderPath":"folders/nodes/data/iterate/for each.yy",},
+    {"resourceType":"GMFolder","resourceVersion":"1.0","name":"for filter","folderPath":"folders/nodes/data/iterate/for filter.yy",},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"for","folderPath":"folders/nodes/data/iterate/for.yy",},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"lua","folderPath":"folders/nodes/data/lua.yy",},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"node","folderPath":"folders/nodes/data/node.yy",},
@@ -166,7 +167,6 @@
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"Steamworks","folderPath":"folders/Steamworks.yy",},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"UGC","folderPath":"folders/Steamworks/UGC.yy",},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"widgets","folderPath":"folders/widgets.yy",},
-    {"resourceType":"GMFolder","resourceVersion":"1.0","name":"for filter","folderPath":"folders/nodes/data/iterate/for filter.yy",},
   ],
   "IncludedFiles": [
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"ApolloHelp.html","CopyToMask":-1,"filePath":"datafiles",},
