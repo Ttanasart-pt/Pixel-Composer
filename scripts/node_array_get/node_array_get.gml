@@ -36,6 +36,7 @@ function Node_Array_Get(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		
 		switch(_ovf) {
 			case 0 :
+				if(index < 0) index = _len + index;
 				index = clamp(index, 0, _len - 1);
 				break;
 			case 1 :

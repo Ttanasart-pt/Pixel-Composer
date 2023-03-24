@@ -116,15 +116,6 @@ function __LOAD_PATH(path, readonly = false, safe_mode = false) {
 		log_warning("LOAD, global", exception_print(e));
 	}
 	
-	//try {
-	//	if(ds_map_exists(_map, "graph")) {
-	//		PANEL_GRAPH.graph_x		= ds_map_try_get(_map[? "graph"], "graph_x");
-	//		PANEL_GRAPH.graph_y		= ds_map_try_get(_map[? "graph"], "graph_y");
-	//	}
-	//} catch(e) {
-	//	log_warning("LOAD, graph", exception_print(e));
-	//}
-	
 	ds_queue_clear(CONNECTION_CONFLICT);
 	
 	try {

@@ -82,10 +82,10 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	
 	value_validation = array_create(3);
 	
-	error_noti_update = noone;
+	error_noti_update	 = noone;
 	error_update_enabled = false;
-	manual_updated = false;
-	manual_deletable = true;
+	manual_updated		 = false;
+	manual_deletable	 = true;
 	
 	tool_settings	= [];
 	tool_attribute	= {};
@@ -852,22 +852,26 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	static onDestroy = function() {}
 	
 	static isRenderable = function(trigger = false) {
-		if(!active) return false;
+		if(!active)	return false;
 		if(!renderActive) return false;
 		
 		var _startNode = true;
 		for(var j = 0; j < ds_list_size(inputs); j++) {
 			var _in = inputs[| j];
-			if(_in.type == VALUE_TYPE.node) continue;
+			if( _in.type == VALUE_TYPE.node) continue;
 			
-			if(trigger)
-				triggerRender();
+			if(trigger) triggerRender();
 			
 			var val_from = _in.value_from;
-			if(val_from != noone && !val_from.node.rendered && val_from.node.active && val_from.node.renderActive)
-				_startNode = false;
+			if( val_from == noone) continue;
+			if(!val_from.node.active) continue;
+			if(!val_from.node.renderActive) continue;
+			if( val_from.node.rendered == noone) continue;
+			
+			return false;
 		}
-		return _startNode;
+		
+		return true;
 	}
 	
 	static getNextNodes = function() {

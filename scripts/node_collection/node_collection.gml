@@ -86,12 +86,8 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	inspUpdateTooltip   = get_text("panel_inspector_execute", "Execute node contents");
 	inspUpdateIcon      = [ THEME.sequence_control, 1, COLORS._main_value_positive ];
 	
-	static inspectorUpdate = function() { 
-		onInspectorUpdate(); 
-	}
-	static onInspectorUpdate = function() {
-		RenderListAction(nodes, group);
-	}
+	static inspectorUpdate   = function() { onInspectorUpdate(); }
+	static onInspectorUpdate = function() { RenderListAction(nodes, group); }
 	
 	static hasInspectorUpdate = function(group = false) { 
 		if(!group) return false;

@@ -4,7 +4,7 @@ enum RENDER_TYPE {
 	full = 2
 }
 
-global.RENDER_LOG	= false;
+global.RENDER_LOG	= true;
 global.group_inputs = [ "Node_Group_Input", "Node_Feedback_Input", "Node_Iterator_Input", "Node_Iterator_Each_Input" ];
 
 function __nodeLeafList(_list, _queue) {
@@ -25,7 +25,8 @@ function __nodeIsLoop(_node) {
 	switch(instanceof(_node)) {
 		case "Node_Iterate" : 
 		case "Node_Iterate_Each" : 
-		case "Node_Feedback" :		
+		case "Node_Iterate_Filter" : 
+		case "Node_Feedback" :
 			return true;
 	}
 	return false;
@@ -107,17 +108,19 @@ function Render(partial = false, runAction = false) {
 function __renderListReset(list) {
 	for( var i = 0; i < ds_list_size(list); i++ ) {
 		list[| i].setRenderStatus(false);
+		
 		if(struct_has(list[| i], "nodes"))
 			__renderListReset(list[| i].nodes);
 	}
 }
 
 function RenderListAction(list, context = PANEL_GRAPH.getCurrentContext()) {
+	printIf(global.RENDER_LOG, "=== RENDER LIST ACTION START [frame " + string(ANIMATOR.current_frame) + "] ===");
+	
 	try {
 		var rendering = noone;
-		var error = 0;
-		var t = current_time;
-		printIf(global.RENDER_LOG, "=== RENDER ACTION START [frame " + string(ANIMATOR.current_frame) + "] ===");
+		var error	  = 0;
+		var t		  = current_time;
 		
 		__renderListReset(list);
 		
@@ -127,15 +130,13 @@ function RenderListAction(list, context = PANEL_GRAPH.getCurrentContext()) {
 			var _node = list[| i];
 			
 			if(is_undefined(_node)) continue;
-			if(!is_struct(_node)) continue;
+			if(!is_struct(_node))	continue;
 			
-			if(!_node.active) continue;
+			if(!_node.active)		continue;
 			if(!_node.renderActive) continue;
-			if(_node.rendered) continue;
-			if(__nodeInLoop(_node)) continue;
+			if(_node.rendered)		continue;
 		
-			var _startNode = _node.isRenderable();
-			if(_startNode) {
+			if(_node.isRenderable()) {
 				ds_queue_enqueue(RENDER_QUEUE, _node);
 				printIf(global.RENDER_LOG, "    > Push " + _node.name + " (" + _node.display_name + ") node to stack");
 			}
@@ -149,8 +150,10 @@ function RenderListAction(list, context = PANEL_GRAPH.getCurrentContext()) {
 			var txt = rendering.rendered? " [Skip]" : " [Update]";
 			if(!rendering.rendered) {
 				rendering.doUpdate();
-				if(rendering.hasInspectorUpdate())
+				if(rendering.hasInspectorUpdate()) {
 					rendering.inspectorUpdate();
+					printIf(global.RENDER_LOG, " > Toggle manual execution " + rendering.name + " (" + rendering.display_name + ")");
+				}
 					
 				rendering.setRenderStatus(true);
 				rendering.getNextNodes();

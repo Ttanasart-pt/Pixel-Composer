@@ -288,6 +288,8 @@ event_inherited();
 			var cProg = 0;
 			hh += grid_space;
 			
+			grid_width = (content_pane.surface_w - grid_space) / col - grid_space;
+			
 			for(var index = 0; index < node_count; index++) {
 				var _node = _list[| index];
 				if(is_string(_node)) {
@@ -565,6 +567,7 @@ event_inherited();
 			var index = 0;
 			var name_height = 0;
 			
+			grid_width = (search_pane.surface_w - grid_space) / col - grid_space;
 			hh += (grid_space + grid_size) * 2;
 			
 			for(var i = 0; i < amo; i++) {

@@ -320,7 +320,7 @@ function Panel_Inspector() : PanelContent() constructor {
 				
 				switch(instanceof(edt[2])) {
 					case "textBox" :	edt[2].draw(wx0, yy, ww, hg, val, _m); break;
-					case "checkBox" :	edt[2].draw(wx0 + ww / 2 - hg / 2, yy - hg / 2, val, _m, hg); break;
+					case "checkBox" :	edt[2].draw(wx0 + ww / 2 - ui(28) / 2, yy + ui(2), val, _m, ui(28)); break;
 					case "scrollBox" :	edt[2].draw(wx0, yy, ww, hg, edt[2].data_list[val], _m, x + contentPane.x, y + contentPane.y); break;
 				}
 				

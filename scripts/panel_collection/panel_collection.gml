@@ -143,6 +143,8 @@ function Panel_Collection() : PanelContent() constructor {
 			var yy  = _y + grid_space;
 			var name_height = 0;
 				
+			grid_width = (contentPane.surface_w - grid_space) / col - grid_space;
+				
 			hh += grid_space;
 			
 			for(var i = 0; i < row; i++) {

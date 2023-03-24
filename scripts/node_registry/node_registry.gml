@@ -676,4 +676,13 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 				triggerRender();
 			}, false)]);
 	}
+	
+	function attribute_auto_execute(label = false) {
+		attributes[? "auto_exe"] = false;
+		if(label) array_push(attributeEditors, "Node");
+		array_push(attributeEditors, ["Auto execute", "auto_exe", 
+		new checkBox(function() { 
+			attributes[? "auto_exe"] = !attributes[? "auto_exe"];
+		})]);
+	}
 #endregion

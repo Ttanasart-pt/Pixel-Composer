@@ -44,11 +44,6 @@ function save_serialize() {
 	_anim_map[? "framerate"] = ANIMATOR.framerate;
 	ds_map_add_map(_map, "animator", _anim_map);
 	
-	var _graph_map = ds_map_create();
-	_graph_map[? "graph_x"] = PANEL_GRAPH.graph_x;
-	_graph_map[? "graph_y"] = PANEL_GRAPH.graph_y;
-	ds_map_add_map(_map, "graph", _graph_map);
-	
 	ds_map_add_map(_map, "metadata", METADATA.serialize());
 	
 	ds_map_add_map(_map, "global", GLOBAL.serialize());

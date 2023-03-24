@@ -88,6 +88,8 @@ function Panel_Graph() : PanelContent() constructor {
 	connection_aa = 2;
 	connection_surface = surface_create(1, 1);
 	
+	toolbar_height = ui(40);
+	
 	function toCenterNode() {
 		if(ds_list_empty(nodes_list)) {
 			graph_x = round(w / 2 / graph_s);
@@ -121,7 +123,6 @@ function Panel_Graph() : PanelContent() constructor {
 	function initSize() { toCenterNode(); }
 	initSize();
 	
-	toolbar_height = ui(40);
 	toolbars = [
 		[ 
 			THEME.icon_center_canvas,

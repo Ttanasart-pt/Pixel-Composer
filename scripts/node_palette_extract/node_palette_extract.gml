@@ -14,16 +14,13 @@ function Node_Palette_Extract(_x, _y, _group = noone) : Node(_x, _y, _group) con
 		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "K-mean", "Frequency", "All colors" ])
 		.rejectArray();
 	
-	inputs[| 4] = nodeValue("Animated surface", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false)
-		.rejectArray();
-	
 	outputs[| 0] = nodeValue("Palette", self, JUNCTION_CONNECT.output, VALUE_TYPE.color, [ ])
 		.setDisplay(VALUE_DISPLAY.palette);
 	
 	static getPreviewValue = function() { return inputs[| 0]; }
 	
 	input_display_list = [
-		["Surface",	 true],	0, 4,
+		["Surface",	 true],	0,
 		["Palette",	false],	3, 1, 2,
 	]
 	
@@ -31,6 +28,7 @@ function Node_Palette_Extract(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	current_color = 0;
 	
 	attribute_surface_depth();
+	attribute_auto_execute(true);
 	
 	function sortPalette(pal) {
 		array_sort(pal, function(c0, c1) {
@@ -309,8 +307,8 @@ function Node_Palette_Extract(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	static onValueFromUpdate = function() { extractPalettes(); }
 	
 	function update() {  
-		var willUpdate = inputs[| 4].getValue();
-		if(willUpdate) extractPalettes();
+		if(attributes[? "auto_exe"])
+			extractPalettes();
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {

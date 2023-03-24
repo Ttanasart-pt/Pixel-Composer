@@ -1,11 +1,6 @@
-enum NODE_SEP_SHAPE_OUTPUT_TYPE {
-	node,
-	array
-}
-
 function Node_Seperate_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name		= "Separate Shape";
-	error_update_enabled = true;
+	//error_update_enabled = true;
 	
 	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0)
 		.rejectArray();
@@ -25,9 +20,7 @@ function Node_Seperate_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	
 	outputs[| 0] = nodeValue("Surface out",	self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
-	outputs[| 1] = nodeValue("Shape map",	self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
-	
-	outputs[| 2] = nodeValue("Boundary data",	self, JUNCTION_CONNECT.output, VALUE_TYPE.integer, []);
+	outputs[| 1] = nodeValue("Boundary data",	self, JUNCTION_CONNECT.output, VALUE_TYPE.integer, []);
 	
 	input_display_list = [
 		["Shape",	false], 0, 1, 4,
@@ -35,6 +28,7 @@ function Node_Seperate_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	]
 	
 	attribute_surface_depth();
+	attribute_auto_execute(true);
 	
 	temp_surface = [ surface_create(1, 1), surface_create(1, 1) ];
 	surface_buffer = buffer_create(1 * 1 * 4, buffer_fixed, 2);
@@ -53,7 +47,14 @@ function Node_Seperate_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	
 	_prev_type = -1;
 	
-	static onInspectorUpdate = function() {
+	static onInspectorUpdate = function() { separateShape(); }
+	
+	static update = function() {
+		if(attributes[? "auto_exe"])
+			separateShape();
+	}
+	
+	static separateShape = function() {
 		var _inSurf = inputs[| 0].getValue();
 		var _thres  = inputs[| 1].getValue();
 		var _ovr    = inputs[| 2].getValue();
@@ -182,6 +183,6 @@ function Node_Seperate_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 			surface_reset_target();
 		}
 			
-		outputs[| 2].setValue(_boundary,,, false);
+		outputs[| 1].setValue(_boundary,,, false);
 	}
 }

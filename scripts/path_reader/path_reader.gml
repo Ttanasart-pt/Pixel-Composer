@@ -23,7 +23,7 @@ function paths_to_array(paths, recur = false, _filter = "") {
 				var file_full = curr_path + "/" + file;
 				if(directory_exists(file_full) && recur) {
 					ds_stack_push(st, file_full);
-				} else if(path_is_image(file_full) && regx.eval(file_full)) {
+				} else if(path_is_image(file_full) && regx.isMatch(file_full)) {
 					array_push(_paths, file_full);
 				}
 			
@@ -32,8 +32,6 @@ function paths_to_array(paths, recur = false, _filter = "") {
 			file_find_close();
 		}
 		
-		regx.free();
-		delete regx;
 		ds_stack_destroy(st);
 	} else if(file_exists(paths))
 		array_push(_paths, paths);
