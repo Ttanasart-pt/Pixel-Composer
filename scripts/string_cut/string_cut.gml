@@ -3,25 +3,26 @@ function draw_text_cut(x, y, str, w, scale = 1) {
 }
 
 function string_cut(str, w, tail = "...", scale = 1) {
-	var ww  = 0;
-	var ind = 1;
-	var ss  = "";
-	var tw = string_width(tail);
+	var ww   = 0;
+	var ind  = 1;
+	var ss   = "";
+	var _str = str;
+	var tw = string_width(tail) * scale;
 	if(string_width(str) <= w) return str;
 	
-	while(ind <= string_length(str)) {
-		var ch = string_char_at(str, ind);
-		var _w = string_width(ch) * scale;
+	var amo = string_length(str);
+	for( var i = 1; i <= amo; i++ ) {
+		var ch = string_char_at(str, 1);
+		   str = string_copy(str, 2, string_length(str) - 1);
 		
-		if(ww + _w + tw >= w) {
-			ss += tail;
-			break;
-		} else
-			ss += ch;
-		
+		var _w  = string_width(ch) * scale;
 		ww += _w;
 		
-		ind++;
+		var _tl = string_width(str) * scale;
+		
+		if(ww + tw > w)
+			return ww + _tl <= w? _str : ss + tail;
+		ss += ch;
 	}
 	
 	return ss;

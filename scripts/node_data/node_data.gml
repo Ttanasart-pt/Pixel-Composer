@@ -401,14 +401,14 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		var y0 = yy + 20 * draw_name + draw_padding * _s;
 		var y1 = yy + (h - draw_padding) * _s;
 		
-		return { x0: x0, 
+		return { x0 : x0, 
 				 x1 : x1, 
-				 y0: y0, 
+				 y0 : y0, 
 				 y1 : y1, 
-				 xc: (x0 + x1) / 2, 
-				 yc: (y0 + y1) / 2, 
-				 w: x1 - x0, 
-				 h: y1 - y0 
+				 xc : (x0 + x1) / 2, 
+				 yc : (y0 + y1) / 2, 
+				 w  : x1 - x0, 
+				 h  : y1 - y0 
 			  };
 	}
 	
