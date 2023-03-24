@@ -54,8 +54,10 @@ function Node_Array_Remove(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			if(!is_array(index)) index = [ index ];
 			array_sort(index, false);
 			
-			for( var i = 0; i < array_length(index); i++ )
+			for( var i = 0; i < array_length(index); i++ ) {
+				if(index[i] < 0) index[i] = array_length(arr) - 1 + index[i];
 				array_delete(arr, index[i], 1);
+			}
 		} else {
 			if(!is_array(value)) value = [ value ];
 			

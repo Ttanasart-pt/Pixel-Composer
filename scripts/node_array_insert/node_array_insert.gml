@@ -39,14 +39,19 @@ function Node_Array_Insert(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		var arr = array_clone(_arr);
 		if(is_array(index)) {
 			if(!is_array(value)) value = [ value ];
-			for( var i = 0; i < array_length(index); i++ )
+			for( var i = 0; i < array_length(index); i++ ) {
+				if(index[i] < 0) index[i] = array_length(arr) - 1 + index[i];
 				array_insert(arr, index[i], array_safe_get(value, i,, ARRAY_OVERFLOW.loop));
+			}
 		} else {
+			if(index < 0) index = array_length(arr) - 1 + index;
+			
 			if(is_array(value)) {
 				for( var i = 0; i < array_length(value); i++ ) 
 					array_insert(arr, index + i, value[i]);
-			} else
+			} else {
 				array_insert(arr, index, value);
+			}
 		}
 		
 		outputs[| 0].setValue(arr);
