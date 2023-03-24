@@ -3,6 +3,7 @@ global.loop_nodes = [ "Node_Iterate", "Node_Iterate_Each" ];
 function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x, _y) constructor {
 	active  = true;
 	renderActive = true;
+	
 	node_id = generateUUID();
 	group   = _group;
 	destroy_when_upgroup = false;
@@ -11,7 +12,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	color   = c_white;
 	icon    = noone;
 	bg_spr  = THEME.node_bg;
-	bg_sel_spr = THEME.node_active;
+	bg_sel_spr	  = THEME.node_active;
 	anim_priority = ds_map_size(NODE_MAP);
 	
 	if(!LOADING && !APPENDING) {

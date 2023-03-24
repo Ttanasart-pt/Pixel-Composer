@@ -33,6 +33,11 @@ function Node_Flood_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	
 	attribute_surface_depth();
 	
+	attributes[? "fill_iteration"] = -1;
+	array_push(attributeEditors, "Algorithm");
+	array_push(attributeEditors, ["Fill iteration", "fill_iteration", 
+		new textBox(TEXTBOX_INPUT.number, function(val) { attributes[? "fill_iteration"] = val; })]);
+	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		inputs[| 4].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
 	}
@@ -72,7 +77,7 @@ function Node_Flood_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		surface_reset_target();
 		
 		var ind = 0;
-		var it  = sw + sh;
+		var it  = attributes[? "fill_iteration"] == -1? sw + sh : attributes[? "fill_iteration"];
 		repeat(it) {
 			ind = !ind;
 			

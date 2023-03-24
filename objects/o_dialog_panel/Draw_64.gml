@@ -17,7 +17,7 @@ if !ready exit;
 		content.y = cy;
 		content.onStepBegin();
 
-		content.pFOCUS = sFOCUS && mouse_active;
+		content.pFOCUS = sFOCUS;
 		content.pHOVER = sHOVER;
 		
 		panel = surface_verify(panel, dialog_w - content.showHeader * padding * 2, 

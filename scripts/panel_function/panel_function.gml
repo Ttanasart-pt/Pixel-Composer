@@ -137,10 +137,8 @@
 		if(pan) return pan;
 		
 		with(o_dialog_panel) {
-			for( var i = 0; i < array_length(content); i++ ) {
-				if(instanceof(content[i]) == _type) 
-					return content[i];
-			}
+			if(instanceof(content) == _type) 
+				return content;
 		}
 		
 		return noone;

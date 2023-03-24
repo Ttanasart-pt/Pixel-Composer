@@ -4,7 +4,7 @@ enum RENDER_TYPE {
 	full = 2
 }
 
-global.RENDER_LOG	= true;
+global.RENDER_LOG	= false;
 global.group_inputs = [ "Node_Group_Input", "Node_Feedback_Input", "Node_Iterator_Input", "Node_Iterator_Each_Input" ];
 
 function __nodeLeafList(_list, _queue) {

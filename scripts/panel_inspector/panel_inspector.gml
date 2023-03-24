@@ -178,6 +178,12 @@ function Panel_Inspector() : PanelContent() constructor {
 					hh += wh + ui(8);
 				}
 			} else if (i == 1) {
+				if(findPanel("Panel_Globalvar")) {
+					yy += ui(4);
+					hh += ui(4);
+					continue;
+				}
+				
 				var gvh = globalvar_viewer_draw(ui(16), yy, contentPane.surface_w - ui(24), _m, pFOCUS, _hover, contentPane, ui(16) + x, top_bar_h + y);
 				yy += gvh + ui(8);
 				hh += gvh + ui(8);

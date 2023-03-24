@@ -1,5 +1,6 @@
 function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Spawner";
+	update_on_frame = true;
 	
 	inputs[| 0] = nodeValue("Particle sprite", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 	

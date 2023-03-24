@@ -10,7 +10,7 @@ event_inherited();
 	
 	panel        = surface_create(dialog_w, dialog_h);
 	mask_surface = noone;
-	content = noone;
+	content		 = noone;
 	destroy_on_click_out = true;
 	
 	function setContent(content) {

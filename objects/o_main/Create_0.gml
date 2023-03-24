@@ -15,9 +15,10 @@
 #region window
 	if(OS == os_windows) {
 		gameframe_init();
-		//gameframe_can_input = false;
 		gameframe_set_cursor = false;
-		gameframe_caption_height_normal = ui(40);
+		gameframe_caption_height_normal		= ui(40);
+		gameframe_caption_height_maximized  = ui(40);
+		
 		gameframe_button_array = [  game_frame_button_create("", s_kenney, 0, function() {}),
 									game_frame_button_create("", s_kenney, 0, function() {}),
 								 ];
@@ -163,7 +164,7 @@
 					case ".jpeg" :
 						node = Node_create_Image_path(PANEL_GRAPH.mouse_grid_x, PANEL_GRAPH.mouse_grid_y, p);
 						break;
-					case ".gif"  :
+					case ".gif" :
 						node = Node_create_Image_gif_path(PANEL_GRAPH.mouse_grid_x, PANEL_GRAPH.mouse_grid_y, p);
 						break;
 					case ".obj" :
@@ -171,6 +172,9 @@
 						break;
 					case ".pxc" :
 						LOAD_PATH(p);
+						break;
+					case ".pxcc" :
+						APPEND(p);
 						break;
 				}
 				
