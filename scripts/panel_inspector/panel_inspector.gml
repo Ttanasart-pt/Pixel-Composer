@@ -19,7 +19,7 @@ function Panel_Inspector() : PanelContent() constructor {
 	prop_selecting = noone;
 	
 	function initSize() {
-		content_w = w - ui(28);
+		content_w = w - ui(32);
 		content_h = h - top_bar_h - ui(12);
 	}
 	initSize();
@@ -271,8 +271,7 @@ function Panel_Inspector() : PanelContent() constructor {
 		var hh		= ui(40);
 		
 		//tb_prop_filter.register(contentPane);
-		//tb_prop_filter.active = pFOCUS;
-		//tb_prop_filter.hover  = pHOVER;
+		//tb_prop_filter.setActiveFocus(pHOVER, pFOCUS);
 		//tb_prop_filter.draw(ui(32), _y + ui(4), con_w - ui(64), ui(28), filter_text, _m);
 		//draw_sprite_ui(THEME.search, 0, ui(32 + 16), _y + ui(4 + 14), 1, 1, 0, COLORS._main_icon, 1);
 		
@@ -505,8 +504,7 @@ function Panel_Inspector() : PanelContent() constructor {
 	function drawInspectingNode() {
 		tb_node_name.font = f_h5;
 		tb_node_name.hide = true;
-		tb_node_name.active = pFOCUS;
-		tb_node_name.hover  = pHOVER;
+		tb_node_name.setActiveFocus(pFOCUS, pHOVER);
 		tb_node_name.align = fa_center;
 		var txt = inspecting.display_name == ""? inspecting.name : inspecting.display_name;
 		tb_node_name.draw(ui(64), ui(14), w - ui(128), ui(32), txt, [mx, my], VALUE_DISPLAY.node_title);
@@ -608,7 +606,7 @@ function Panel_Inspector() : PanelContent() constructor {
 			}
 		}
 		
-		contentPane.active = pHOVER;
+		contentPane.setActiveFocus(pFOCUS, pHOVER);
 		contentPane.draw(ui(16), top_bar_h, mx - ui(16), my - top_bar_h);
 		
 		if(!locked && PANEL_GRAPH.node_focus && inspecting != PANEL_GRAPH.node_focus) {

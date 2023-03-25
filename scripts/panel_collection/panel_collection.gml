@@ -24,11 +24,11 @@ function Panel_Collection() : PanelContent() constructor {
 	search_list = ds_list_create();
 	
 	file_dragging = noone;
-	_menu_node = noone;
+	_menu_node    = noone;
 	
 	updated_path = noone;
 	updated_prog = 0;
-	data_path = "";
+	data_path    = "";
 	
 	static initMenu = function() {
 		if(_menu_node == noone) return;
@@ -113,7 +113,7 @@ function Panel_Collection() : PanelContent() constructor {
 	tb_search.auto_update = true;
 	
 	contentView = 0;
-	contentPane = new scrollPane(content_w, content_h, function(_y, _m) {
+	contentPane = new scrollPane(content_w - ui(6), content_h, function(_y, _m) {
 		draw_clear_alpha(c_white, 0);
 		
 		var nodes = search_string == ""? context.content : search_list;
@@ -143,7 +143,7 @@ function Panel_Collection() : PanelContent() constructor {
 			var yy  = _y + grid_space;
 			var name_height = 0;
 				
-			grid_width = (contentPane.surface_w - grid_space) / col - grid_space;
+			grid_width = round(contentPane.surface_w - grid_space) / col - grid_space;
 				
 			hh += grid_space;
 			
@@ -280,7 +280,7 @@ function Panel_Collection() : PanelContent() constructor {
 		return hh;
 	});
 	
-	folderPane = new scrollPane(group_w - ui(4), content_h, function(_y, _m) {
+	folderPane = new scrollPane(group_w - ui(8), content_h, function(_y, _m) {
 		draw_clear_alpha(COLORS.panel_bg_clear, 0);
 		draw_sprite_stretched(THEME.ui_panel_bg, 0, ui(8), 0, folderPane.surface_w - ui(8), folderPane.surface_h);
 		var hh = ui(8);
@@ -300,9 +300,8 @@ function Panel_Collection() : PanelContent() constructor {
 	function onResize() {
 		initSize();
 		
-		folderPane.resize(group_w - ui(4), content_h);
-		contentPane.resize(content_w, content_h);
-		folderPane.resize(group_w - ui(4), content_h);
+		folderPane.resize(group_w - ui(8), content_h);
+		contentPane.resize(content_w - ui(6), content_h);
 	}
 	
 	function setContext(cont) {
@@ -341,10 +340,10 @@ function Panel_Collection() : PanelContent() constructor {
 		
 		var content_y = ui(48);
 		draw_sprite_stretched(THEME.ui_panel_bg, 1, group_w, content_y, content_w, content_h);
-		contentPane.active = pHOVER;
+		contentPane.setActiveFocus(pFOCUS, pHOVER);
 		contentPane.draw(group_w, content_y, mx - group_w, my - content_y);
 		
-		folderPane.active = pHOVER;
+		folderPane.setActiveFocus(pFOCUS, pHOVER);
 		folderPane.draw(0, content_y, mx, my - content_y);
 		
 		#region resize width
@@ -461,56 +460,58 @@ function Panel_Collection() : PanelContent() constructor {
 			
 			tb_search.draw(tb_x, tb_y, tb_w, TEXTBOX_HEIGHT, search_string, [mx, my]);
 		}
-		
+	}
+	
+	function drawGUI() {
 		if(file_dragging) {
 			if(file_dragging.spr)
-				draw_sprite_ext(file_dragging.spr, 0, mx, my, 1, 1, 0, c_white, 0.5);
+				draw_sprite_ext(file_dragging.spr, 0, mouse_mx, mouse_my, 1, 1, 0, c_white, 0.5);
 			
 			if(panelHover(PANEL_GRAPH)) 
-				dragToGraph();
+				dragToGraph(HOVER.getContent());
 			
 			if(mouse_release(mb_left)) 
 				file_dragging = noone;
 		}
 	}
 	
-	static dragToGraph = function() {
+	static dragToGraph = function(graph) {
 		var path = file_dragging.path;
-		ds_list_clear(PANEL_GRAPH.nodes_select_list);
+		ds_list_clear(graph.nodes_select_list);
 		
 		if(string_lower(filename_ext(path)) == ".png") {
 			var app = Node_create_Image_path(0, 0, path);
 			
-			PANEL_GRAPH.node_focus	  = app;
-			PANEL_GRAPH.node_dragging = app;
-			PANEL_GRAPH.node_drag_sx  = app.x;
-			PANEL_GRAPH.node_drag_sy  = app.y;
+			graph.node_focus	  = app;
+			graph.node_dragging = app;
+			graph.node_drag_sx  = app.x;
+			graph.node_drag_sy  = app.y;
 		} else {
 			var app = APPEND(file_dragging.path);
 			
 			if(!is_struct(app) && ds_exists(app, ds_type_list)) {
-				PANEL_GRAPH.node_focus	      = noone;
-				ds_list_copy(PANEL_GRAPH.nodes_select_list, app);
+				graph.node_focus = noone;
+				ds_list_copy(graph.nodes_select_list, app);
 					
 				if(!ds_list_empty(app)) {
-					PANEL_GRAPH.node_dragging = app[| 0];
-					PANEL_GRAPH.node_drag_sx  = app[| 0].x;
-					PANEL_GRAPH.node_drag_sy  = app[| 0].y;
+					graph.node_dragging = app[| 0];
+					graph.node_drag_sx  = app[| 0].x;
+					graph.node_drag_sy  = app[| 0].y;
 				}
 				ds_list_destroy(app);
 			} else {
-				PANEL_GRAPH.node_focus	  = app;
-				PANEL_GRAPH.node_dragging = app;
-				PANEL_GRAPH.node_drag_sx  = app.x;
-				PANEL_GRAPH.node_drag_sy  = app.y;
+				graph.node_focus	= app;
+				graph.node_dragging = app;
+				graph.node_drag_sx  = app.x;
+				graph.node_drag_sy  = app.y;
 			}
 		}
 		
-		PANEL_GRAPH.node_drag_mx  = 0;
-		PANEL_GRAPH.node_drag_my  = 0;
+		graph.node_drag_mx  = 0;
+		graph.node_drag_my  = 0;
 				
-		PANEL_GRAPH.node_drag_ox  = 0;
-		PANEL_GRAPH.node_drag_oy  = 0;
+		graph.node_drag_ox  = 0;
+		graph.node_drag_oy  = 0;
 		
 		file_dragging = false;
 	}

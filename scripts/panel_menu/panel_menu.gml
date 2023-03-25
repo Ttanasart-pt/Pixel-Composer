@@ -177,9 +177,21 @@ function Panel_Menu() : PanelContent() constructor {
 			menuItem(get_text("panel_menu_workspace", "Workspace"),			function() { panelAdd("Panel_Workspace", true) },,,		function() { return findPanel("Panel_Workspace") != noone; } ),
 			menuItem(get_text("panel_menu_animation", "Animation"),			function() { panelAdd("Panel_Animation", true) },,,		function() { return findPanel("Panel_Animation") != noone; } ),
 			menuItem(get_text("panel_menu_notification", "Notification"),   function() { panelAdd("Panel_Notification", true) },,,	function() { return findPanel("Panel_Notification") != noone; } ),
-			menuItem(get_text("panel_menu_nodes", "Nodes"),					function() { panelAdd("Panel_Nodes", true) },,,			function() { return findPanel("Panel_Nodes") != noone; } ),
 			menuItem(get_text("panel_menu_globalvar", "Global Variables"),	function() { panelAdd("Panel_Globalvar", true) },,,		function() { return findPanel("Panel_Globalvar") != noone; } ),
-			menuItem(get_text("tunnels", "Tunnels"),						function() { panelAdd("Panel_Tunnels", true) },,,		function() { return findPanel("Panel_Tunnels") != noone; } ),
+			
+			menuItem(get_text("panel_menu_nodes", "Nodes"), function(_x, _y, _depth) { 
+				return submenuCall(_x, _y, _depth, [
+					menuItem(get_text("panel_menu_nodes", "Nodes"),					function() { panelAdd("Panel_Nodes", true) },,,			function() { return findPanel("Panel_Nodes") != noone; } ),
+					menuItem(get_text("tunnels", "Tunnels"),						function() { panelAdd("Panel_Tunnels", true) },,,		function() { return findPanel("Panel_Tunnels") != noone; } ),
+				]);
+			} ).setIsShelf(),
+			
+			menuItem(get_text("panel_menu_color", "Color"), function(_x, _y, _depth) { 
+				return submenuCall(_x, _y, _depth, [
+					menuItem(get_text("panel_menu_color", "Color"),		function() { panelAdd("Panel_Color", true) },,,		function() { return findPanel("Panel_Color") != noone; } ),
+					menuItem(get_text("panel_menu_palette", "Palette"),	function() { panelAdd("Panel_Palette", true) },,,	function() { return findPanel("Panel_Palette") != noone; } ),
+				]);
+			} ).setIsShelf(),
 		]],
 		[ get_text("panel_menu_help", "Help"), menu_help ],
 	]

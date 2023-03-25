@@ -33,8 +33,7 @@ function rotator(_onModify, _step = -1) : widget() constructor {
 		var knob_y = _y + ui(48) * scale;
 		
 		if(draw_tb) {
-			tb_value.hover  = hover;
-			tb_value.active = active;
+			tb_value.setActiveFocus(hover, active);
 			tb_value.draw(_x + ui(64), knob_y - ui(17), ui(64), TEXTBOX_HEIGHT, _data, _m);
 		}
 		

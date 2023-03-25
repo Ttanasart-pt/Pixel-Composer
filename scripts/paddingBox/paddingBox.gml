@@ -68,8 +68,7 @@ function paddingBox(_onModify, _unit = noone) : widget() constructor {
 		draw_sprite_ui_uniform(THEME.inspector_padding, 0, _x, _y + ui(64));
 		
 		for(var i = 0; i < 4; i++) {
-			tb[i].hover  = hover;
-			tb[i].active = active;
+			tb[i].setActiveFocus(hover, active);
 			tb[i].align  = fa_center;
 		}
 		
@@ -78,8 +77,7 @@ function paddingBox(_onModify, _unit = noone) : widget() constructor {
 		tb[2].draw(_x - ui(64) - ui(64), _y + ui(64 - 17),          ui(64), TEXTBOX_HEIGHT, _data[2], _m);
 		tb[3].draw(_x - ui(32),          _y + ui(64 + 48 + 8),      ui(64), TEXTBOX_HEIGHT, _data[3], _m);
 		
-		b_link.hover = hover;
-		b_link.active = active;
+		b_link.setActiveFocus(hover, active);
 		b_link.icon_index = linked;
 		b_link.icon_blend = linked? COLORS._main_accent : COLORS._main_icon;
 		b_link.tooltip = linked? "Unlink axis" : "Link axis";
@@ -89,9 +87,7 @@ function paddingBox(_onModify, _unit = noone) : widget() constructor {
 		b_link.draw(bx + ui(4), by + ui(4), ui(24), ui(24), _m, THEME.button_hide);
 		
 		if(unit != noone && unit.reference != noone) {
-			unit.triggerButton.hover  = ihover;
-			unit.triggerButton.active = iactive;
-			
+			unit.triggerButton.setActiveFocus(ihover, iactive);			
 			unit.draw(_x + ui(48),  _y - ui(25), ui(32), ui(32), _m);
 		}
 		

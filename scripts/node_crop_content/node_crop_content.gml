@@ -60,8 +60,8 @@ function Node_Crop_Content(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 				temp_surface[i] = surface_verify(temp_surface[i], 1, 1, cDep);
 			
 				shader_set(sh_find_boundary);
-				shader_set_f(sh_find_boundary, "dimension", _dim);
-				shader_set_i(sh_find_boundary, "mode", i);
+				shader_set_f("dimension", _dim);
+				shader_set_i("mode", i);
 				surface_set_target(temp_surface[i]);
 					DRAW_CLEAR
 					BLEND_OVERRIDE;

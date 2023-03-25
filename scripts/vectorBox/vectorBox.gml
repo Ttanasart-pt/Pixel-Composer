@@ -73,9 +73,7 @@ function vectorBox(_size, _type, _onModify, _unit = noone) : widget() constructo
 		
 		if(!is_array(_data)) return;
 		if(extras && instanceof(extras) == "buttonClass") {
-			extras.hover  = hover;
-			extras.active = active;
-			
+			extras.setActiveFocus(hover, active);
 			extras.draw(_x + _w - ui(32), _y + _h / 2 - ui(32 / 2), ui(32), ui(32), _m, THEME.button_hide);
 			_w -= ui(40);
 		}
@@ -83,15 +81,12 @@ function vectorBox(_size, _type, _onModify, _unit = noone) : widget() constructo
 		if(unit != noone && unit.reference != noone) {
 			_w += ui(4);
 			
-			unit.triggerButton.hover  = ihover;
-			unit.triggerButton.active = iactive;
-			
+			unit.triggerButton.setActiveFocus(ihover, iactive);
 			unit.draw(_x + _w - ui(32), _y + _h / 2 - ui(32 / 2), ui(32), ui(32), _m);
 			_w -= ui(40);
 		}
 		
-		b_link.hover = hover;
-		b_link.active = active;
+		b_link.setActiveFocus(hover, active);
 		b_link.icon_index = linked;
 		b_link.icon_blend = linked? COLORS._main_accent : COLORS._main_icon;
 		b_link.tooltip = linked? "Unlink axis" : "Link axis";
@@ -106,8 +101,7 @@ function vectorBox(_size, _type, _onModify, _unit = noone) : widget() constructo
 		var sz = min(size, array_length(_data));
 		var ww = _w / sz;
 		for(var i = 0; i < sz; i++) {
-			tb[i].hover  = hover;
-			tb[i].active = active;
+			tb[i].setActiveFocus(hover, active);
 			
 			var bx  = _x + ww * i;
 			tb[i].draw(bx + ui(24), _y, ww - ui(24), _h, _data[i], _m);

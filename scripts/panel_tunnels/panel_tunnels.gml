@@ -1,13 +1,12 @@
 function Panel_Tunnels() : PanelContent() constructor {
-	#region data
-		title = "Tunnels";
-		showHeader  = false;
+	title = "Tunnels";
+	showHeader	 = false;
+	title_height = 64;
+	padding		 = 24;
 		
+	#region data
 		w = ui(320);
 		h = ui(480);
-		
-		title_height = 64;
-		padding = 24;
 		
 		build_x = 0;
 		build_y = 0;

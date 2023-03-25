@@ -1489,7 +1489,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(_map == undefined) return;
 		if(_map == noone) return;
 		
-		printIf(TESTING, "     |- Applying deserialize to junction " + name + " of node " + node.name);
+		//printIf(TESTING, "     |- Applying deserialize to junction " + name + " of node " + node.name);
 		on_end		= ds_map_try_get(_map, "on end", on_end);
 		visible		= ds_map_try_get(_map, "visible", visible);
 		unit.mode	= ds_map_try_get(_map, "unit", VALUE_UNIT.constant);

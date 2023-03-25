@@ -218,7 +218,7 @@ function colorSelector(onApply = noone) constructor {
 			var tx = hue_x + ui(36);
 			var ty = _y + ui(4);
 			
-			scr_disp.active = focus; scr_disp.hover = hover;
+			scr_disp.setActiveFocus(hover, focus);
 			scr_disp.draw(tx, ty, ui(190), ui(32), disp_mode, mouse_ui);
 		#endregion
 		
@@ -245,9 +245,9 @@ function colorSelector(onApply = noone) constructor {
 			draw_text(data_x, data_y + ui(36 * 1 + 15), "S")
 			draw_text(data_x, data_y + ui(36 * 2 + 15), "V");
 	
-			tb_hue.active = focus; tb_hue.hover = hover;
-			tb_sat.active = focus; tb_sat.hover = hover;
-			tb_val.active = focus; tb_val.hover = hover;
+			tb_hue.setActiveFocus(hover, focus);
+			tb_sat.setActiveFocus(hover, focus);
+			tb_val.setActiveFocus(hover, focus);
 	
 			tb_hue.draw(data_x + ui(28), data_y + ui(36 * 0), ui(160), ui(30), round(color_get_hue(current_color)),			mouse_ui);
 			tb_sat.draw(data_x + ui(28), data_y + ui(36 * 1), ui(160), ui(30), round(color_get_saturation(current_color)),	mouse_ui);
@@ -260,9 +260,9 @@ function colorSelector(onApply = noone) constructor {
 			draw_text(data_x, data_y + ui(36 * 1 + 15), "G");
 			draw_text(data_x, data_y + ui(36 * 2 + 15), "B");
 			
-			tb_red.active   = focus; tb_red.hover   = hover;
-			tb_green.active = focus; tb_green.hover = hover;
-			tb_blue.active  = focus; tb_blue.hover  = hover;
+			tb_red.setActiveFocus(hover, focus);
+			tb_green.setActiveFocus(hover, focus);
+			tb_blue.setActiveFocus(hover, focus);
 			
 			tb_red.draw  (data_x + ui(28), data_y + ui(36 * 0), ui(160), ui(30), color_get_red(current_color),   mouse_ui);
 			tb_green.draw(data_x + ui(28), data_y + ui(36 * 1), ui(160), ui(30), color_get_green(current_color), mouse_ui);

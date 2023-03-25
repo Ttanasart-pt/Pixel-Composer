@@ -238,7 +238,7 @@ event_inherited();
 		return hh;
 	});
 	
-	content_pane = new scrollPane(dialog_w - ui(136), dialog_h - ui(66), function(_y, _m) {
+	content_pane = new scrollPane(dialog_w - ui(140), dialog_h - ui(66), function(_y, _m) {
 		draw_clear_alpha(c_white, 0);
 		var hh = 0;
 		var _hover = sHOVER && content_pane.hover;
@@ -288,7 +288,7 @@ event_inherited();
 			var cProg = 0;
 			hh += grid_space;
 			
-			grid_width = (content_pane.surface_w - grid_space) / col - grid_space;
+			grid_width = round(content_pane.surface_w - grid_space) / col - grid_space;
 			
 			for(var index = 0; index < node_count; index++) {
 				var _node = _list[| index];
@@ -463,8 +463,8 @@ event_inherited();
 	
 	onResize = function() {
 		catagory_pane.resize(ui(132), dialog_h - ui(66));
-		content_pane.resize(dialog_w - ui(136), dialog_h - ui(66));
-		search_pane.resize(dialog_w - ui(32), dialog_h - ui(66));
+		content_pane.resize(dialog_w - ui(140), dialog_h - ui(66));
+		search_pane.resize(dialog_w - ui(36), dialog_h - ui(66));
 		
 		PREF_MAP[? "dialog_add_node_w"] = dialog_w;
 		PREF_MAP[? "dialog_add_node_h"] = dialog_h;
@@ -535,7 +535,7 @@ event_inherited();
 		ds_priority_destroy(pr_list);
 	}
 	
-	search_pane = new scrollPane(dialog_w - ui(32), dialog_h - ui(66), function(_y, _m) {
+	search_pane = new scrollPane(dialog_w - ui(36), dialog_h - ui(66), function(_y, _m) {
 		draw_clear_alpha(c_white, 0);
 		
 		var equation = string_char_at(search_string, 0) == "=";
@@ -567,7 +567,7 @@ event_inherited();
 			var index = 0;
 			var name_height = 0;
 			
-			grid_width = (search_pane.surface_w - grid_space) / col - grid_space;
+			grid_width = round(search_pane.surface_w - grid_space) / col - grid_space;
 			hh += (grid_space + grid_size) * 2;
 			
 			for(var i = 0; i < amo; i++) {

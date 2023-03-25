@@ -82,7 +82,7 @@ event_inherited();
 				continue;
 			}
 			
-			if(sHOVER && sc_content.hover && point_in_rectangle(_m[0], _m[1], 0, _ly + 1, _dw, _ly + hght - 1)) {
+			if(sc_content.hover && point_in_rectangle(_m[0], _m[1], 0, _ly + 1, _dw, _ly + hght - 1)) {
 				selecting = i;
 				hovering  = data[i];
 			}
@@ -90,7 +90,7 @@ event_inherited();
 			if(selecting == i) {
 				draw_sprite_stretched_ext(THEME.textbox, 3, 0, _ly, _dw, hght, COLORS.dialog_menubox_highlight, 1);
 				
-				if(sFOCUS && (mouse_press(mb_left) || keyboard_check_pressed(vk_enter))) {
+				if(sc_content.active && (mouse_press(mb_left) || keyboard_check_pressed(vk_enter))) {
 					initVal = i;
 					instance_destroy();
 				}
@@ -115,7 +115,7 @@ event_inherited();
 			UNDO_HOLDING = false;
 		}
 		
-		if(sFOCUS) {
+		if(sc_content.active) {
 			if(keyboard_check_pressed(vk_up)) {
 				selecting--;
 				if(selecting < 0) selecting = array_length(data) - 1;

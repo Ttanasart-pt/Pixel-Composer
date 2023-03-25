@@ -63,8 +63,7 @@ function vectorRangeBox(_size, _type, _onModify, _unit = noone) : widget() const
 		w = _w;
 		h = _h * 2 + ui(4);
 		
-		b_link.hover = hover;
-		b_link.active = active;
+		b_link.setActiveFocus(hover, active);
 		b_link.icon_index = linked;
 		b_link.icon_blend = linked? COLORS._main_accent : COLORS._main_icon;
 		b_link.tooltip = linked? "Unlink axis" : "Link axis";
@@ -77,17 +76,14 @@ function vectorRangeBox(_size, _type, _onModify, _unit = noone) : widget() const
 		_w -= ui(28);
 		
 		if(extras && instanceof(extras) == "buttonClass") {
-			extras.hover  = hover;
-			extras.active = active;
-			
+			extras.setActiveFocus(hover, active);
 			extras.draw(_x + _w - ui(32), _y + _h / 2 - ui(32 / 2), ui(32), ui(32), _m, THEME.button_hide);
 			_w -= ui(40);
 		}
 		
 		var ww  = _w / size * 2;
 		for(var i = 0; i < size; i++) {
-			tb[i].hover  = hover;
-			tb[i].active = active;
+			tb[i].setActiveFocus(hover, active);
 			
 			var bx  = _x + ww * floor(i / 2);
 			var by  = _y + i % 2 * (_h + ui(4));

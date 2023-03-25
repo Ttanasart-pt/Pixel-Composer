@@ -38,13 +38,14 @@ function buttonColor(_onApply, dialog = noone) : widget() constructor {
 		h = _h;
 		current_color = toNumber(_color);
 		
-		b_picker.hover  = hover;
-		b_picker.active = active;
+		b_picker.setActiveFocus(hover, active);
 		b_picker.draw(_x + _w - ui(32), _y + _h / 2 - ui(16), ui(32), ui(32), _m, THEME.button_hide);
 		
 		var _cw = _w - ui(40);
+		var hoverRect = point_in_rectangle(_m[0], _m[1], _x, _y, _x + _cw, _y + _h);
+		
 		var click = false;
-		if(ihover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _cw, _y + _h)) {
+		if(ihover && hoverRect) {
 			draw_sprite_stretched(THEME.button, 1, _x, _y, _cw, _h);	
 			if(mouse_press(mb_left, iactive)) {
 				trigger();
@@ -62,8 +63,13 @@ function buttonColor(_onApply, dialog = noone) : widget() constructor {
 		if(WIDGET_CURRENT == self)
 			draw_sprite_stretched(THEME.widget_selecting, 0, _x - ui(3), _y - ui(3), _w + ui(6), _h + ui(6));	
 		
-		resetFocus();
+		if(DRAGGING && DRAGGING.type == "Color" && hover && hoverRect) {
+			draw_sprite_stretched_ext(THEME.ui_panel_active, 0, _x, _y, _cw, _h, COLORS._main_value_positive, 1);	
+			if(mouse_release(mb_left))
+				onApply(DRAGGING.data);
+		}
 		
+		resetFocus();
 		return click;
 	}
 }

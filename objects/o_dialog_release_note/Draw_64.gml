@@ -13,6 +13,6 @@ if !ready exit;
 	
 	draw_sprite_stretched(THEME.ui_panel_bg, 0, dialog_x + ui(24), dialog_y + ui(48), dialog_w - ui(48), dialog_h - ui(72));
 	
-	sp_note.active = sHOVER;
+	sp_note.setActiveFocus(sHOVER, sFOCUS);
 	sp_note.draw(dialog_x + ui(40), dialog_y + ui(56));
 #endregion

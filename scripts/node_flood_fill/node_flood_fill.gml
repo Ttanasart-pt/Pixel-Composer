@@ -63,8 +63,8 @@ function Node_Flood_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 			DRAW_CLEAR
 			
 			shader_set(sh_flood_fill_thres);
-			shader_set_f(sh_flood_fill_thres, "color", colaToVec4(_filC));
-			shader_set_f(sh_flood_fill_thres, "thres", _thr);
+			shader_set_f("color", colaToVec4(_filC));
+			shader_set_f("thres", _thr);
 				BLEND_OVERRIDE
 				draw_surface_safe(inSurf, 0, 0);
 				BLEND_NORMAL
@@ -85,8 +85,8 @@ function Node_Flood_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 			DRAW_CLEAR
 			
 			shader_set(sh_flood_fill_it);
-			shader_set_f(sh_flood_fill_it, "dimension", [ sw, sh ]);
-			shader_set_i(sh_flood_fill_it, "diagonal", _dia);
+			shader_set_f("dimension", [ sw, sh ]);
+			shader_set_i("diagonal", _dia);
 				BLEND_OVERRIDE
 				draw_surface_safe(temp_surface[!ind], 0, 0);
 				BLEND_NORMAL
@@ -98,8 +98,8 @@ function Node_Flood_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		DRAW_CLEAR
 		
 		shader_set(sh_flood_fill_replace);
-		shader_set_f(sh_flood_fill_replace, "color", colToVec4(_col));
-		shader_set_surface(sh_flood_fill_replace, "mask", temp_surface[ind]);
+		shader_set_f("color", colToVec4(_col));
+		shader_set_surface("mask", temp_surface[ind]);
 			BLEND_OVERRIDE
 			draw_surface_safe(inSurf, 0, 0);
 			BLEND_NORMAL

@@ -60,8 +60,7 @@ function buttonGroupClass(_data, _onClick) : widget() constructor {
 		
 		if(display_button) {
 			for(var i = 0; i < amo; i++) {
-				buttons[i].hover  = hover;
-				buttons[i].active = active;
+				buttons[i].setActiveFocus(hover, active);
 			
 				var bx  = _x + ww * i;
 				var spr = i == 0 ? buttonSpr[0] : (i == amo - 1? buttonSpr[2] : buttonSpr[1]);
@@ -89,8 +88,7 @@ function buttonGroupClass(_data, _onClick) : widget() constructor {
 				}
 			}
 		} else {
-			sb_small.hover = hover;
-			sb_small.active = active;
+			sb_small.setActiveFocus(hover, active);
 			sb_small.draw(_x, _y, _w, _h, data[_selecting], _m, _rx, _ry);
 		}
 		

@@ -44,7 +44,7 @@ function Node_Array_Insert(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 				array_insert(arr, index[i], array_safe_get(value, i,, ARRAY_OVERFLOW.loop));
 			}
 		} else {
-			if(index < 0) index = array_length(arr) - 1 + index;
+			if(index < 0) index = array_length(arr) + index;
 			
 			if(is_array(value)) {
 				for( var i = 0; i < array_length(value); i++ ) 

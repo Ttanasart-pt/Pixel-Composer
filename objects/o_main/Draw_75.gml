@@ -70,6 +70,25 @@
 	TOOLTIP = "";
 #endregion
 
+#region dragging
+	if(DRAGGING != noone) {
+		switch(DRAGGING.type) {
+			case "Palette" :
+				drawPalette(DRAGGING.data, mouse_mx, mouse_my, ui(128), ui(24));
+				break;
+			case "Color" :
+				draw_set_color(DRAGGING.data);
+				draw_set_alpha(0.5);
+				draw_rectangle(mouse_mx + ui(-16), mouse_my + ui(-16), mouse_mx + ui(-16 + 32), mouse_my + ui(-16 + 32), false);
+				draw_set_alpha(1);
+				break;
+		}
+		
+		if(mouse_release(mb_left)) 
+			DRAGGING = noone;
+	}
+#endregion
+
 #region safe mode
 	if(SAFE_MODE) {
 		draw_sprite_stretched_ext(THEME.ui_panel_active, 0, 0, 0, WIN_W, WIN_H, COLORS._main_value_negative, 1);
@@ -80,7 +99,12 @@
 	}
 #endregion
 
+#region draw gui top
+	PANEL_MAIN.drawGUI();
+#endregion
+
 #region frame
 	draw_set_color(COLORS._main_icon_dark);
 	draw_rectangle(1, 1, WIN_W - 2, WIN_H - 2, true);
+#endregion
 #endregion

@@ -54,7 +54,7 @@ function Node_Corner(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			shader_set(sh_corner);
 			shader_set_uniform_f_array_safe(uniform_dim, [surface_get_width(_data[0]), surface_get_height(_data[0])]);
 			shader_set_uniform_f(uniform_rad, wd);
-			shader_set_surface(sh_corner, "original", _data[0]);
+			shader_set_surface("original", _data[0]);
 			draw_surface_safe(temp, 0, 0);
 			
 			BLEND_NORMAL;

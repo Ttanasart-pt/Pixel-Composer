@@ -55,7 +55,7 @@ function Node_Fluid_Repulse(_x, _y, _group = noone) : Node_Fluid(_x, _y, _group)
 			shader_set(sh_fd_repulse);
 			BLEND_OVERRIDE;
 		
-			shader_set_f(sh_fd_repulse, "strength", _str);
+			shader_set_f("strength", _str);
 			draw_sprite_stretched(s_fx_pixel, 0, _pos[0] - _rad, _pos[1] - _rad, _rad * 2, _rad * 2);
 			BLEND_NORMAL;
 			shader_reset();

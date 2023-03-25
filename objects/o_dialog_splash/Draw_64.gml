@@ -114,7 +114,7 @@ if !ready exit;
 	}
 	
 	if(expandAction) {
-		recent_width = PREF_MAP[? "splash_expand_recent"]? ui(576) : ui(288);
+		recent_width = PREF_MAP[? "splash_expand_recent"]? ui(564) : ui(288);
 		resize();
 	}
 #endregion

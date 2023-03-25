@@ -33,10 +33,8 @@ function rotatorRange(_onModify) : widget() constructor {
 		
 		var knob_y = _y + ui(48);
 		
-		tb_min.active = active;
-		tb_min.hover  = hover;
-		tb_max.active = active;
-		tb_max.hover  = hover;
+		tb_min.setActiveFocus(hover, active);
+		tb_max.setActiveFocus(hover, active);
 		
 		tb_min.draw(_x - ui(40 + 16 + 80), knob_y - TEXTBOX_HEIGHT / 2, ui(80), TEXTBOX_HEIGHT, array_safe_get(_data, 0), _m);
 		tb_max.draw(_x + ui(40 + 16),      knob_y - TEXTBOX_HEIGHT / 2, ui(80), TEXTBOX_HEIGHT, array_safe_get(_data, 1), _m);

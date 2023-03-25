@@ -16,8 +16,6 @@ function Node_Array_Get(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		.setDisplay(VALUE_DISPLAY.enum_scroll, ["Clamp", "Loop", "Ping Pong"])
 		.rejectArray();
 	
-	inputs[| 3] = nodeValue("Index", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0);
-	
 	outputs[| 0] = nodeValue("Value", self, JUNCTION_CONNECT.output, VALUE_TYPE.any, 0);
 	
 	static step = function() {
@@ -30,7 +28,7 @@ function Node_Array_Get(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		}
 	}
 	
-	static getArray = function(_arr, index, _ovf, _dim = 0) {
+	static getArray = function(_arr, index, _ovf) {
 		if(!is_array(_arr)) return;
 		if(is_array(index)) return;
 		
@@ -38,12 +36,12 @@ function Node_Array_Get(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		
 		switch(_ovf) {
 			case 0 :
-				if(index < 0) index = _len - 1 + index;
+				if(index < 0) index = _len + index;
 				index = clamp(index, 0, _len - 1);
 				break;
 			case 1 :
 				index = safe_mod(index, _len);
-				if(index < 0) index = _len - 1 + index;
+				if(index < 0) index = _len + index;
 				break;
 			case 2 :
 				var _pplen = (_len - 1) * 2;
@@ -63,14 +61,13 @@ function Node_Array_Get(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		
 		var index = inputs[| 1].getValue();
 		var _ovf  = inputs[| 2].getValue();
-		var _dim  = inputs[| 3].getValue();
 		var res   = is_array(index)? array_create(array_length(index)) : 0;
 		
 		if(is_array(index)) {
 			for( var i = 0; i < array_length(index); i++ )
-				res[i] = getArray(_arr, index[i], _ovf, _dim);
+				res[i] = getArray(_arr, index[i], _ovf);
 		} else 
-			res = getArray(_arr, index, _ovf, _dim);
+			res = getArray(_arr, index, _ovf);
 		
 		outputs[| 0].setValue(res);
 	}

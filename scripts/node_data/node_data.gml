@@ -35,6 +35,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	
 	draw_name = true;
 	draggable = true;
+	droppable = [];
 	
 	input_display_list = -1;
 	output_display_list = -1;
@@ -1063,6 +1064,8 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	
 	static onClone = function(_NewNode, target = PANEL_GRAPH.getCurrentContext()) {}
 	
+	static onDrop = function() {}
+	
 	static serialize = function(scale = false, preset = false) {
 		var _map = ds_map_create();
 		//print(" > Serializing: " + name);
@@ -1143,14 +1146,14 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		var _inputs = load_map[? "inputs"];
 		var amo = min(ds_list_size(inputs), ds_list_size(_inputs));
 		
-		printIf(TESTING, "  > Applying deserialize to node " + name + " (amount: " + string(amo) + ")");
+		//printIf(TESTING, "  > Applying deserialize to node " + name + " (amount: " + string(amo) + ")");
 		
 		for(var i = 0; i < amo; i++) {
 			if(inputs[| i] == noone) continue;
 			inputs[| i].applyDeserialize(_inputs[| i], load_scale, preset);
 		}
 		
-		printIf(TESTING, "  > Applying deserialize to node " + name + " completed");
+		//printIf(TESTING, "  > Applying deserialize to node " + name + " completed");
 		
 		doApplyDeserialize();
 	}

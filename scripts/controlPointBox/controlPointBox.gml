@@ -66,15 +66,15 @@ function controlPointBox(_onModify) : widget() constructor {
 		x = _x;
 		y = _y;
 		
-		tbCx.hover   = hover; tbCx.active   = active;
-		tbCy.hover   = hover; tbCy.active   = active;
-		tbFx.hover   = hover; tbFx.active   = active;
-		tbFy.hover   = hover; tbFy.active   = active;
-		tbW.hover    = hover; tbW.active    = active;
-		sW.hover     = hover; sW.active     = active;
-		tbH.hover    = hover; tbH.active    = active;
-		scMode.hover = hover; scMode.active = active;
-		rot.hover    = hover; rot.active    = active;
+		tbCx.setActiveFocus(hover, active);
+		tbCy.setActiveFocus(hover, active);
+		tbFx.setActiveFocus(hover, active);
+		tbFy.setActiveFocus(hover, active);
+		tbW.setActiveFocus(hover, active);
+		sW.setActiveFocus(hover, active);
+		tbH.setActiveFocus(hover, active);
+		scMode.setActiveFocus(hover, active);
+		rot.setActiveFocus(hover, active);
 		
 		var yy = _y;
 		

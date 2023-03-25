@@ -1,4 +1,5 @@
-function shader_set_i(shader, uniform, value) {
+function shader_set_i(uniform, value) {
+	var shader = shader_current();
 	if(is_array(value)) {
 		shader_set_i_array(shader, uniform, value);
 		return;
@@ -19,7 +20,8 @@ function shader_set_i_array(shader, uniform, array) {
 	shader_set_uniform_i_array(shader_get_uniform(shader, uniform), array);
 }
 
-function shader_set_f(shader, uniform, value) {
+function shader_set_f(uniform, value) {
+	var shader = shader_current();
 	if(is_array(value)) {
 		shader_set_f_array(shader, uniform, value);
 		return;
@@ -47,7 +49,8 @@ function shader_set_uniform_f_array_safe(uniform, array) {
 	shader_set_uniform_f_array(uniform, array);
 }
 
-function shader_set_surface(shader, sampler, surface) {
+function shader_set_surface(sampler, surface) {
+	var shader = shader_current();
 	if(!is_surface(surface)) return;
 	
 	var t = shader_get_sampler_index(shader, sampler);
@@ -68,8 +71,8 @@ function shader_set_surface(shader, sampler, surface) {
 		var intp   = ds_map_try_get(attributes, "interpolation", 0);
 		
 		gpu_set_tex_filter(intp);
-		shader_set_i(shader, "interpolation", intp);
-		shader_set_f(shader, "sampleDimension", surface_get_width(surface), surface_get_height(surface));
+		shader_set_i("interpolation", intp);
+		shader_set_f("sampleDimension", surface_get_width(surface), surface_get_height(surface));
 	}
 	
 	function surface_set_shader(surface, shader = sh_sample, clear = true, blend = BLEND.over) {

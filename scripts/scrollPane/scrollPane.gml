@@ -40,7 +40,7 @@ function scrollPane(_w, _h, ondraw) : widget() constructor {
 		self.y = y;
 		
 		var mx = _mx, my = _my;
-		hover = point_in_rectangle(mx, my, 0, 0, surface_w, surface_h);
+		hover &= point_in_rectangle(mx, my, 0, 0, surface_w, surface_h);
 		
 		if(!is_surface(surface)) surface = surface_create_valid(surface_w, surface_h);
 		surface_set_target(surface);
@@ -59,13 +59,14 @@ function scrollPane(_w, _h, ondraw) : widget() constructor {
 		scroll_y	 = round(scroll_y_raw);
 		draw_surface_safe(surface, x, y);
 		
-		if(active && !key_mod_press(SHIFT) && point_in_rectangle(mx, my, 0, 0, surface_w, surface_h)) {
+		if(hover && !key_mod_press(SHIFT)) {
 			if(mouse_wheel_down())	scroll_y_to -= scroll_step;
 			if(mouse_wheel_up())	scroll_y_to += scroll_step;
 		}
 		
 		if(abs(content_h) > 0) {
-			draw_scroll(x + surface_w + ui(4), y + ui(6), true, surface_h - ui(12), -scroll_y / content_h, surface_h / (surface_h + content_h), 
+			var scr_w = sprite_get_width(THEME.ui_scrollbar);
+			draw_scroll(x + w - scr_w, y + ui(6), true, surface_h - ui(12), -scroll_y / content_h, surface_h / (surface_h + content_h), 
 				COLORS.scrollbar_bg, COLORS.scrollbar_idle, COLORS.scrollbar_hover, x + _mx, y + _my);
 		}
 	}

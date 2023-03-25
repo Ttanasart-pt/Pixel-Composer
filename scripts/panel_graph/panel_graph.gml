@@ -1718,6 +1718,38 @@ function Panel_Graph() : PanelContent() constructor {
 			draw_text(w - ui(8), ui(28), get_text("panel_graph_rendering", "Rendering") + "...");
 		else if(UPDATE == RENDER_TYPE.full)
 			draw_text(w - ui(8), ui(28), get_text("panel_graph_rendering_partial", "Rendering partial") + "...");
+		
+		if(DRAGGING && pHOVER) {
+			var droppable = true;
+			if(node_hovering && array_exists(node_hovering.droppable, DRAGGING.type)) {
+				var n  = node_hovering;
+				var nx = graph_x + n.x * graph_s;
+				var ny = graph_y + n.y * graph_s;
+				var nw = n.w * graph_s;
+				var nh = n.h * graph_s;
+				
+				draw_sprite_stretched_ext(THEME.ui_panel_active, 0, nx, ny, nw, nh, COLORS._main_value_positive, 1);
+				if(mouse_release(mb_left))
+					node_hovering.onDrop();
+			} else {
+				draw_sprite_stretched_ext(THEME.ui_panel_active, 0, 2, 2, w - 4, h - 4, COLORS._main_value_positive, 1);	
+				if(mouse_release(mb_left))
+					checkDropItem();
+			}
+		}
+	}
+	
+	static checkDropItem = function() {
+		switch(DRAGGING.type) {
+			case "Color":
+				var node = nodeBuild("Node_Color", mouse_grid_x, mouse_grid_y, getCurrentContext());
+				node.inputs[| 0].setValue(DRAGGING.data);
+				break;
+			case "Palette":
+				var node = nodeBuild("Node_Palette", mouse_grid_x, mouse_grid_y, getCurrentContext());
+				node.inputs[| 0].setValue(DRAGGING.data);
+				break;
+		}
 	}
 	
 	static bringNodeToFront = function(node) {

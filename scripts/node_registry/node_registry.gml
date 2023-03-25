@@ -396,14 +396,11 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 			addNodeObject(compose, "Camera",				s_node_camera,			"Node_Camera",				[1, Node_Camera],, "Create camera that crop image to fix dimension with control of position, zoom. Also can be use to create parallax effect.");
 			addNodeObject(compose, "Render Spritesheet",	s_node_sprite_sheet,	"Node_Render_Sprite_Sheet",	[1, Node_Render_Sprite_Sheet],, "Create spritesheet from image array or animation.");
 			addNodeObject(compose, "Pack Sprites",			s_node_pack_sprite,		"Node_Pack_Sprites",		[1, Node_Pack_Sprites],, "Combine array of images with different dimension using different algorithms.").setVersion(1140);
-	
-		var renderNode = ds_list_create();
-		addNodeCatagory("Render", renderNode);
-			ds_list_add(renderNode, "Renders");
-			addNodeObject(renderNode, "Render Spritesheet",	s_node_sprite_sheet,	"Node_Render_Sprite_Sheet",	[1, Node_Render_Sprite_Sheet]);
-			addNodeObject(renderNode, "Pack Sprites",		s_node_pack_sprite,		"Node_Pack_Sprites",		[1, Node_Pack_Sprites]).setVersion(1140);
-			if(!DEMO) addNodeObject(renderNode, "Export",	s_node_export,			"Node_Export",				[0, Node_create_Export]);
-			//addNodeObject(renderNode, "Preview timeline",		s_node_timeline_preview,"Node_Timeline_Preview",	[1, Node_create_Timeline_Preview]);
+			
+			if(!DEMO) {
+				ds_list_add(compose, "Export");
+				addNodeObject(compose, "Export",	s_node_export,		"Node_Export",			[0, Node_create_Export]);
+			}
 	
 		var values = ds_list_create();
 		addNodeCatagory("Values", values);
@@ -427,15 +424,18 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 			addNodeObject(values, "Scatter Points",	s_node_scatter_point,	"Node_Scatter_Points",	[1, Node_Scatter_Points],, "Generate array of vector 2 points for scattering.").setVersion(1120);
 		
 			ds_list_add(values, "Texts");
-			addNodeObject(values, "Text",			s_node_text,			"Node_String",			[1, Node_String]);
-			addNodeObject(values, "Unicode",		s_node_unicode,			"Node_Unicode",			[1, Node_Unicode]);
-			addNodeObject(values, "Text Length",	s_node_text_length,		"Node_String_Length",	[1, Node_String_Length]).setVersion(1138);
-			addNodeObject(values, "Combine Text",	s_node_text_combine,	"Node_String_Merge",	[1, Node_String_Merge]);
-			addNodeObject(values, "Join Text",		s_node_text_join,		"Node_String_Join",		[1, Node_String_Join]).setVersion(1120);
-			addNodeObject(values, "Split Text",		s_node_text_splice,		"Node_String_Split",	[1, Node_String_Split]);
-			addNodeObject(values, "Trim Text",		s_node_text_trim,		"Node_String_Trim",		[1, Node_String_Trim]).setVersion(1080);
-			addNodeObject(values, "Get Character",	s_node_text_char_get,	"Node_String_Get_Char",	[1, Node_String_Get_Char]).setVersion(1100);
-		
+			addNodeObject(values, "Text",			s_node_text,			"Node_String",					[1, Node_String]);
+			addNodeObject(values, "Unicode",		s_node_unicode,			"Node_Unicode",					[1, Node_Unicode]);
+			addNodeObject(values, "Text Length",	s_node_text_length,		"Node_String_Length",			[1, Node_String_Length]).setVersion(1138);
+			addNodeObject(values, "Combine Text",	s_node_text_combine,	"Node_String_Merge",			[1, Node_String_Merge]);
+			addNodeObject(values, "Join Text",		s_node_text_join,		"Node_String_Join",				[1, Node_String_Join]).setVersion(1120);
+			addNodeObject(values, "Split Text",		s_node_text_splice,		"Node_String_Split",			[1, Node_String_Split]);
+			addNodeObject(values, "Trim Text",		s_node_text_trim,		"Node_String_Trim",				[1, Node_String_Trim]).setVersion(1080);
+			addNodeObject(values, "Get Character",	s_node_text_char_get,	"Node_String_Get_Char",			[1, Node_String_Get_Char]).setVersion(1100);
+			addNodeObject(values, "RegEx Match",	s_node_regex_match,		"Node_String_Regex_Match",		[1, Node_String_Regex_Match]).setVersion(1140);
+			addNodeObject(values, "RegEx Search",	s_node_regex_search,	"Node_String_Regex_Search",		[1, Node_String_Regex_Search]).setVersion(1140);
+			addNodeObject(values, "RegEx Replace",	s_node_regex_replace,	"Node_String_Regex_Replace",	[1, Node_String_Regex_Replace]).setVersion(1140);
+			
 			ds_list_add(values, "Arrays");
 			addNodeObject(values, "Array",			s_node_array,			"Node_Array",			[1, Node_Array]);
 			addNodeObject(values, "Array Range",	s_node_array_range,		"Node_Array_Range",		[1, Node_Array_Range],, "Create array of numbers by setting start, end and step length.");

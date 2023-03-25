@@ -15,7 +15,7 @@ function APPEND(_path, record = true) {
 }
 
 function __APPEND_MAP(_map) {
-	static log   = true;
+	static log   = false;
 	APPENDING	 = true;
 	UNDO_HOLDING = true;
 	

@@ -35,9 +35,10 @@
 	
 	draw_set_circle_precision(64);
 	DIALOG_DEPTH_HOVER = 0;
-	UPDATE  = RENDER_TYPE.none;
-	CURSOR  = cr_default;
-	TOOLTIP = "";
+	UPDATE   = RENDER_TYPE.none;
+	CURSOR   = cr_default;
+	TOOLTIP  = "";
+	DRAGGING = noone;
 	KEYBOARD_STRING = "";
 	RENDER_QUEUE = ds_queue_create();
 	

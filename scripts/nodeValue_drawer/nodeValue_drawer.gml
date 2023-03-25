@@ -255,14 +255,7 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover, _focus, _scr
 						jun.editWidget.draw(editBoxX, editBoxY, jun.showValue(), _m, editBoxH);
 						break;
 					case VALUE_TYPE.color :
-						switch(jun.display_type) {
-							case VALUE_DISPLAY.gradient :
-								jun.editWidget.draw(editBoxX, editBoxY, editBoxW, editBoxH, jun.showValue(), _m);
-								break;
-							default :
-								jun.editWidget.draw(editBoxX, editBoxY, editBoxW, editBoxH, jun.showValue(), _m);
-								break;
-						}
+						jun.editWidget.draw(editBoxX, editBoxY, editBoxW, editBoxH, jun.showValue(), _m);
 						break;
 					case VALUE_TYPE.path :
 						switch(jun.display_type) {

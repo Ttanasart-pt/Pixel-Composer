@@ -224,8 +224,7 @@ function areaBox(_onModify, _unit = noone) : widget() constructor {
 		}
 		
 		for(var i = 0; i < 4; i++) {
-			tb[i].hover  = hover;
-			tb[i].active = active;
+			tb[i].setActiveFocus(hover, active);
 			tb[i].align  = fa_center;
 		}
 		
@@ -290,9 +289,7 @@ function areaBox(_onModify, _unit = noone) : widget() constructor {
 		}
 			
 		if(unit != noone && unit.reference != noone) {
-			unit.triggerButton.hover  = ihover;
-			unit.triggerButton.active = iactive;
-			
+			unit.triggerButton.setActiveFocus(hover, active);
 			unit.draw(_x + ui(56 + 48 + 8), _y - ui(28), ui(32), ui(32), _m);
 		}
 		

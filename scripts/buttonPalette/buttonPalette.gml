@@ -25,8 +25,9 @@ function buttonPalette(_onApply, dialog = noone) : widget() constructor {
 		h = _h;
 		current_palette = _color;
 		
-		var click = false;
-		if(ihover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + _h)) {
+		var click	  = false;
+		var hoverRect = point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + _h);
+		if(ihover && hoverRect) {
 			draw_sprite_stretched(THEME.button, 1, _x, _y, _w, _h);	
 			if(mouse_press(mb_left, iactive)) {
 				trigger();
@@ -41,11 +42,16 @@ function buttonPalette(_onApply, dialog = noone) : widget() constructor {
 		
 		drawPalette(_color, _x + ui(6), _y + ui(6), _w - ui(12), _h - ui(12));
 		
-		resetFocus();
-		
 		if(WIDGET_CURRENT == self)
 			draw_sprite_stretched(THEME.widget_selecting, 0, _x - ui(3), _y - ui(3), _w + ui(6), _h + ui(6));	
 		
+		if(DRAGGING && DRAGGING.type == "Palette" && hover && hoverRect) {
+			draw_sprite_stretched_ext(THEME.ui_panel_active, 0, _x, _y, _w, _h, COLORS._main_value_positive, 1);	
+			if(mouse_release(mb_left))
+				onApply(DRAGGING.data);
+		}
+		
+		resetFocus();
 		return click;
 	}
 }

@@ -63,8 +63,7 @@ function slider(_min, _max, _step, _onModify = noone, _onRelease = noone) : widg
 		if(tb_w > 0) {
 			sw = _w - (tb_w + ui(16));
 			
-			tb_value.hover  = hover;
-			tb_value.active = active;
+			tb_value.setActiveFocus(hover, active);
 			tb_value.draw(_x + sw + ui(16), _y, tb_w, _h, _data, _m);
 		}
 		

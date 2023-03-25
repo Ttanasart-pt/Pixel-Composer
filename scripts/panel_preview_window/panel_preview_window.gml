@@ -56,11 +56,6 @@ function Panel_Preview_Window() : PanelContent() constructor {
 	]
 
 	function drawContent(panel) {
-		var px = 0;
-		var py = 0;
-		var pw = w;
-		var ph = h;
-		
 		if(node_target == noone) return;
 		title = node_target.getFullName();
 		surfaceCheck();
@@ -85,9 +80,9 @@ function Panel_Preview_Window() : PanelContent() constructor {
 				var sw = surface_get_width(s);
 				var sh = surface_get_height(s);
 				if(scale == 0)
-					scale = min(pw / sw, ph / sh);
-				var sx = dx + pw / 2 - (sw * scale) / 2 + panx;
-				var sy = dy + ph / 2 - (sh * scale) / 2 + pany;
+					scale = min(w / sw, h / sh);
+				var sx = dx + w / 2 - (sw * scale) / 2 + panx;
+				var sy = dy + h / 2 - (sh * scale) / 2 + pany;
 		
 				draw_surface_ext_safe(s, sx, sy, scale, scale, 0, c_white, 1);
 				draw_set_color(COLORS._main_icon);
@@ -101,7 +96,7 @@ function Panel_Preview_Window() : PanelContent() constructor {
 					dx += (sw + 2) * scale;
 			}
 		surface_reset_target();
-		draw_surface_safe(content_surface, px, py);
+		draw_surface_safe(content_surface, 0, 0);
 	
 		if(panning) {
 			panx = pan_sx + (mouse_mx - pan_mx);

@@ -307,8 +307,7 @@ function Panel_Preview() : PanelContent() constructor {
 			ww = max(ww, string_width(_node.outputs[| i].name) + ui(40));
 		}
 		sbChannel.data_list = chName;
-		sbChannel.hover = pHOVER;
-		sbChannel.active = pFOCUS;
+		sbChannel.setActiveFocus(pFOCUS, pHOVER);
 		
 		sbChannel.draw(_x - ww, _y - hh / 2, ww, hh, currName, [mx, my], x, y);
 		right_menu_y += ui(40);

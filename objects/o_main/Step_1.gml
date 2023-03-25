@@ -34,7 +34,7 @@
 #region auto save
 	AUTO_SAVE_TIMER += delta_time / 1_000_000;
 	
-	if(PREF_MAP[? "auto_save_time"] > 0 && AUTO_SAVE_TIMER > PREF_MAP[? "auto_save_time"]) {
+	if(MODIFIED && PREF_MAP[? "auto_save_time"] > 0 && AUTO_SAVE_TIMER > PREF_MAP[? "auto_save_time"]) {
 		AUTO_SAVE_TIMER = 0;
 		var loc = DIRECTORY + "Autosave/";
 		if(!directory_exists(loc))

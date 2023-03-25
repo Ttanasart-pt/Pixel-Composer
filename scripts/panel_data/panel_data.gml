@@ -649,10 +649,19 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 					menuCall(,, menu);
 				}
 			}
-		}
+		} 
 		
 		if(o_main.panel_dragging != noone && m_ot && !key_mod_press(CTRL))
 			checkHover();
+	}
+	
+	function drawGUI() {
+		for( var i = 0; i < ds_list_size(childs); i++ ) 
+			childs[| i].drawGUI();
+		
+		var con = getContent();
+		if(con == noone) return;
+		con.drawGUI();
 	}
 	
 	function extract() {
@@ -794,7 +803,8 @@ function PanelContent() constructor {
 	y = 0;
 	w = 640;
 	h = 480;
-	padding = ui(16);
+	padding		 = ui(16);
+	title_height = ui(24);
 	
 	tab_x = 0;
 	
@@ -848,6 +858,7 @@ function PanelContent() constructor {
 	function stepBegin() {}
 	
 	function draw(panel) { 
+		self.panel = panel;
 		pFOCUS = FOCUS == panel && panel.mouse_active;
 		pHOVER = HOVER == panel && panel.mouse_active;
 		
@@ -855,6 +866,8 @@ function PanelContent() constructor {
 	}
 	
 	function drawContent(panel) {}
+	
+	function drawGUI() {}
 }
 
 function setFocus(target, fstring = noone) {

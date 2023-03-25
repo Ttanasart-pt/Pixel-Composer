@@ -33,8 +33,7 @@ function fontScrollBox(_onModify) : widget() constructor {
 		
 		w = _w;
 		if(extra_button != noone) {
-			extra_button.hover  = hover;
-			extra_button.active = active;
+			extra_button.setActiveFocus(hover, active);
 			extra_button.draw(_x + _w - ui(32), _y + _h / 2 - ui(32 / 2), ui(32), ui(32), _m, THEME.button_hide);
 			w -= ui(40);
 		}
