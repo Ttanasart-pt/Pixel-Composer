@@ -6,6 +6,18 @@ function FileObject(_name, _path) constructor {
 	content  = -1;
 	surface  = noone;
 	meta	 = noone;
+	type = FILE_TYPE.collection;
+	
+	switch(string_lower(filename_ext(path))) {
+		case ".png" :	
+		case ".jpg" :	
+		case ".gif" :	
+			type = FILE_TYPE.assets;
+			break;
+		case ".pxc" :	
+			type = FILE_TYPE.project;
+			break;
+	}
 	
 	retrive_data = false;
 	thumbnail_data = -1;

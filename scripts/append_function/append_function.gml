@@ -1,4 +1,4 @@
-function APPEND(_path, record = true) {
+function APPEND(_path, context = PANEL_GRAPH.getCurrentContext()) {
 	if(_path == "") return noone;
 	var _map = json_load(_path);
 	
@@ -7,14 +7,14 @@ function APPEND(_path, record = true) {
 		return noone;
 	}
 	
-	var node_create = __APPEND_MAP(_map);
-	if(record) recordAction(ACTION_TYPE.collection_loaded, array_create_from_list(node_create), _path);
+	var node_create = __APPEND_MAP(_map, context);
+	recordAction(ACTION_TYPE.collection_loaded, array_create_from_list(node_create), _path);
 	log_message("FILE", "append file " + _path, THEME.noti_icon_file_load);
 	
 	return node_create;
 }
 
-function __APPEND_MAP(_map) {
+function __APPEND_MAP(_map, context = PANEL_GRAPH.getCurrentContext()) {
 	static log   = false;
 	APPENDING	 = true;
 	UNDO_HOLDING = true;
@@ -48,7 +48,7 @@ function __APPEND_MAP(_map) {
 			var _node = appended_list[| i];
 			_node.loadGroup();
 		
-			if(_node.group == PANEL_GRAPH.getCurrentContext())
+			if(_node.group == context)
 				ds_list_add(node_create, _node);
 		}
 	} catch(e) {

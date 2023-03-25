@@ -168,7 +168,7 @@ function Panel_Collection() : PanelContent() constructor {
 					if(_hover && point_in_rectangle(_m[0], _m[1], _nx, yy, _nx + grid_width, yy + grid_size)) {
 						draw_sprite_stretched_ext(THEME.node_active, 0, _boxx, yy, grid_size, grid_size, COLORS._main_accent, 1);
 						if(mouse_press(mb_left, pFOCUS))
-							file_dragging = _node;
+							DRAGGING = { type : _node.type == FILE_TYPE.collection? "Collection" : "Asset", data : _node }
 							
 						if(!DEMO && mouse_press(mb_right, pFOCUS)) {
 							_menu_node = _node;
@@ -242,7 +242,7 @@ function Panel_Collection() : PanelContent() constructor {
 				if(_hover && point_in_rectangle(_m[0], _m[1], 0, yy, list_width, yy + list_height - 1)) {
 					draw_sprite_stretched_ext(THEME.node_active, 0, ui(4), yy, list_width - ui(8), list_height, COLORS._main_accent, 1);
 					if(mouse_press(mb_left, pFOCUS))
-						file_dragging = _node;
+						DRAGGING = { type : _node.type == FILE_TYPE.collection? "Collection" : "Asset", data : _node }
 						
 					if(!DEMO && mouse_press(mb_right, pFOCUS)) {
 						_menu_node = _node;
@@ -460,59 +460,5 @@ function Panel_Collection() : PanelContent() constructor {
 			
 			tb_search.draw(tb_x, tb_y, tb_w, TEXTBOX_HEIGHT, search_string, [mx, my]);
 		}
-	}
-	
-	function drawGUI() {
-		if(file_dragging) {
-			if(file_dragging.spr)
-				draw_sprite_ext(file_dragging.spr, 0, mouse_mx, mouse_my, 1, 1, 0, c_white, 0.5);
-			
-			if(panelHover(PANEL_GRAPH)) 
-				dragToGraph(HOVER.getContent());
-			
-			if(mouse_release(mb_left)) 
-				file_dragging = noone;
-		}
-	}
-	
-	static dragToGraph = function(graph) {
-		var path = file_dragging.path;
-		ds_list_clear(graph.nodes_select_list);
-		
-		if(string_lower(filename_ext(path)) == ".png") {
-			var app = Node_create_Image_path(0, 0, path);
-			
-			graph.node_focus	  = app;
-			graph.node_dragging = app;
-			graph.node_drag_sx  = app.x;
-			graph.node_drag_sy  = app.y;
-		} else {
-			var app = APPEND(file_dragging.path);
-			
-			if(!is_struct(app) && ds_exists(app, ds_type_list)) {
-				graph.node_focus = noone;
-				ds_list_copy(graph.nodes_select_list, app);
-					
-				if(!ds_list_empty(app)) {
-					graph.node_dragging = app[| 0];
-					graph.node_drag_sx  = app[| 0].x;
-					graph.node_drag_sy  = app[| 0].y;
-				}
-				ds_list_destroy(app);
-			} else {
-				graph.node_focus	= app;
-				graph.node_dragging = app;
-				graph.node_drag_sx  = app.x;
-				graph.node_drag_sy  = app.y;
-			}
-		}
-		
-		graph.node_drag_mx  = 0;
-		graph.node_drag_my  = 0;
-				
-		graph.node_drag_ox  = 0;
-		graph.node_drag_oy  = 0;
-		
-		file_dragging = false;
 	}
 }

@@ -82,6 +82,16 @@
 				draw_rectangle(mouse_mx + ui(-16), mouse_my + ui(-16), mouse_mx + ui(-16 + 32), mouse_my + ui(-16 + 32), false);
 				draw_set_alpha(1);
 				break;
+			case "Asset" :
+				var ss = 32 / max(sprite_get_width(DRAGGING.data.spr), sprite_get_height(DRAGGING.data.spr))
+				draw_sprite_ext(DRAGGING.data.spr, 0, mouse_mx, mouse_my, ss, ss, 0, c_white, 0.5);
+				break;
+			case "Collection" :
+				if(DRAGGING.data.spr) {
+					var ss = 32 / max(sprite_get_width(DRAGGING.data.spr), sprite_get_height(DRAGGING.data.spr))
+					draw_sprite_ext(DRAGGING.data.spr, 0, mouse_mx, mouse_my, ss, ss, 0, c_white, 0.5);
+				}
+				break;
 		}
 		
 		if(mouse_release(mb_left)) 

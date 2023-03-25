@@ -1749,6 +1749,38 @@ function Panel_Graph() : PanelContent() constructor {
 				var node = nodeBuild("Node_Palette", mouse_grid_x, mouse_grid_y, getCurrentContext());
 				node.inputs[| 0].setValue(DRAGGING.data);
 				break;
+			case "Asset":
+				var app = Node_create_Image_path(mouse_grid_x, mouse_grid_y, DRAGGING.data.path);
+				break;
+			case "Collection":
+				var path = DRAGGING.data.path;
+				ds_list_clear(nodes_select_list);
+				
+				var app = APPEND(DRAGGING.data.path, getCurrentContext());
+			
+				if(!is_struct(app) && ds_exists(app, ds_type_list)) {
+					var cx = 0;
+					var cy = 0;
+					
+					for( var i = 0; i < ds_list_size(app); i++ ) {
+						cx += app[| i].x;
+						cy += app[| i].y;
+					}
+					
+					cx /= ds_list_size(app);
+					cy /= ds_list_size(app);
+					
+					for( var i = 0; i < ds_list_size(app); i++ ) {
+						app[| i].x = app[| i].x - cx + mouse_grid_x;
+						app[| i].y = app[| i].y - cy + mouse_grid_y;
+					}
+					
+					ds_list_destroy(app);
+				} else {
+					app.x = mouse_grid_x;
+					app.y = mouse_grid_y;
+				}
+				break;
 		}
 	}
 	
