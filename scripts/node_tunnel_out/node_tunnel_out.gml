@@ -21,7 +21,7 @@ function Node_Tunnel_Out(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		graphFocusNode(_node);
 	}
 	
-	static isRenderable = function(trigger = false) { 
+	static isRenderable = function() { 
 		var _key = inputs[| 0].getValue();
 		return !ds_map_exists(TUNNELS_IN, _key);
 	}

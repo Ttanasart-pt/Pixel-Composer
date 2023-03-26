@@ -17,8 +17,8 @@ function Panel_Graph() : PanelContent() constructor {
 	graph_drag_my  = 0;
 	graph_drag_sx  = 0;
 	graph_drag_sy  = 0;
-	drag_key  = mb_middle;
-	drag_locking = false;
+	drag_key	   = mb_middle;
+	drag_locking   = false;
 	
 	mouse_graph_x = 0;
 	mouse_graph_y = 0;
@@ -640,9 +640,11 @@ function Panel_Graph() : PanelContent() constructor {
 		}
 		//print("Draw connection: " + string(current_time - t)); t = current_time;
 		surface_reset_target();
-		gpu_set_texfilter(true);
-		draw_surface_ext(connection_surface, 0, 0, 1 / aa, 1 / aa, 0, c_white, 1);
-		gpu_set_texfilter(false);
+		shader_set(sh_downsample);
+		shader_set_f("down", aa);
+		shader_set_f("dimension", surface_get_width(connection_surface), surface_get_height(connection_surface));
+		draw_surface(connection_surface, 0, 0);
+		shader_reset();
 		
 		junction_hovering = node_hovering == noone? hov : noone;
 		value_focus = noone;
@@ -886,7 +888,7 @@ function Panel_Graph() : PanelContent() constructor {
 		var _map  = ds_map_create();
 		var _node = ds_list_create();
 		for(var i = 0; i < array_length(nodeArray); i++)
-			SAVE_NODE(_node, nodeArray[i]);
+			SAVE_NODE(_node, nodeArray[i],,,, getCurrentContext());
 		ds_map_add_list(_map, "nodes", _node);
 		
 		APPENDING = true;
@@ -960,7 +962,7 @@ function Panel_Graph() : PanelContent() constructor {
 		var _map  = ds_map_create();
 		var _node = ds_list_create();
 		for(var i = 0; i < array_length(nodeArray); i++)
-			SAVE_NODE(_node, nodeArray[i]);
+			SAVE_NODE(_node, nodeArray[i],,,, getCurrentContext());
 		ds_map_add_list(_map, "nodes", _node);
 		
 		clipboard_set_text(json_encode_minify(_map));
@@ -1720,17 +1722,10 @@ function Panel_Graph() : PanelContent() constructor {
 			draw_text(w - ui(8), ui(28), get_text("panel_graph_rendering_partial", "Rendering partial") + "...");
 		
 		if(DRAGGING && pHOVER) {
-			var droppable = true;
-			if(node_hovering && array_exists(node_hovering.droppable, DRAGGING.type)) {
-				var n  = node_hovering;
-				var nx = graph_x + n.x * graph_s;
-				var ny = graph_y + n.y * graph_s;
-				var nw = n.w * graph_s;
-				var nh = n.h * graph_s;
-				
-				draw_sprite_stretched_ext(THEME.ui_panel_active, 0, nx, ny, nw, nh, COLORS._main_value_positive, 1);
+			if(node_hovering && node_hovering.droppable(DRAGGING)) {
+				node_hovering.draw_droppable = true;
 				if(mouse_release(mb_left))
-					node_hovering.onDrop();
+					node_hovering.onDrop(DRAGGING);
 			} else {
 				draw_sprite_stretched_ext(THEME.ui_panel_active, 0, 2, 2, w - 4, h - 4, COLORS._main_value_positive, 1);	
 				if(mouse_release(mb_left))
@@ -1740,15 +1735,52 @@ function Panel_Graph() : PanelContent() constructor {
 	}
 	
 	static checkDropItem = function() {
+		var node = noone;
+		
 		switch(DRAGGING.type) {
 			case "Color":
-				var node = nodeBuild("Node_Color", mouse_grid_x, mouse_grid_y, getCurrentContext());
+				node = nodeBuild("Node_Color", mouse_grid_x, mouse_grid_y, getCurrentContext());
 				node.inputs[| 0].setValue(DRAGGING.data);
 				break;
 			case "Palette":
-				var node = nodeBuild("Node_Palette", mouse_grid_x, mouse_grid_y, getCurrentContext());
+				node = nodeBuild("Node_Palette", mouse_grid_x, mouse_grid_y, getCurrentContext());
 				node.inputs[| 0].setValue(DRAGGING.data);
 				break;
+			case "Gradient":
+				node = nodeBuild("Node_Gradient_Out", mouse_grid_x, mouse_grid_y, getCurrentContext());
+				node.inputs[| 0].setValue(DRAGGING.data);
+				break;
+			
+			case "Number":
+				if(is_array(DRAGGING.data) && array_length(DRAGGING.data) <= 4) {
+					switch(array_length(DRAGGING.data)) {
+						case 2 : node = nodeBuild("Node_Vector2", mouse_grid_x, mouse_grid_y, getCurrentContext()); break;
+						case 3 : node = nodeBuild("Node_Vector3", mouse_grid_x, mouse_grid_y, getCurrentContext()); break;
+						case 4 : node = nodeBuild("Node_Vector4", mouse_grid_x, mouse_grid_y, getCurrentContext()); break;
+					}
+					
+					for( var i = 0; i < array_length(DRAGGING.data); i++ )
+						node.inputs[| i].setValue(DRAGGING.data[i]);
+				} else {
+					node = nodeBuild("Node_Number", mouse_grid_x, mouse_grid_y, getCurrentContext());
+					node.inputs[| 0].setValue(DRAGGING.data);
+				}
+				break;
+			case "Bool":
+				node = nodeBuild("Node_Boolean", mouse_grid_x, mouse_grid_y, getCurrentContext());
+				node.inputs[| 0].setValue(DRAGGING.data);
+				break;
+			case "Text":
+				node = nodeBuild("Node_String", mouse_grid_x, mouse_grid_y, getCurrentContext());
+				node.inputs[| 0].setValue(DRAGGING.data);
+				break;
+			case "Path":
+				node = nodeBuild("Node_Path", mouse_grid_x, mouse_grid_y, getCurrentContext());
+				break;
+			case "Struct":
+				node = nodeBuild("Node_Struct", mouse_grid_x, mouse_grid_y, getCurrentContext());
+				break;
+				
 			case "Asset":
 				var app = Node_create_Image_path(mouse_grid_x, mouse_grid_y, DRAGGING.data.path);
 				break;
@@ -1782,6 +1814,9 @@ function Panel_Graph() : PanelContent() constructor {
 				}
 				break;
 		}
+			
+		if(key_mod_press(SHIFT) && node && struct_has(DRAGGING, "from") && DRAGGING.from.value_from == noone)
+			DRAGGING.from.setFrom(node.outputs[| 0]);
 	}
 	
 	static bringNodeToFront = function(node) {

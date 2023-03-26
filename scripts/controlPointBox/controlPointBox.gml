@@ -10,8 +10,6 @@ enum PUPPET_CONTROL {
 
 enum PUPPET_FORCE_MODE {
 	move,
-	pinch,
-	inflate,
 	wind,
 }
 
@@ -33,48 +31,32 @@ function controlPointBox(_onModify) : widget() constructor {
 	
 	sW   = new slider(0, 32, 0.1, function(val) { onModify(PUPPET_CONTROL.width,  toNumber(val)); });
 	
-	sMode = ["Move", "Pinch", "Inflate", "Wind"];
+	sMode = ["Move", "Wind"];
 	scMode = new scrollBox(
 		sMode, 
 		function(val) { onModify(PUPPET_CONTROL.mode, toNumber(val)); }
 	);
 	
+	widgets = [ scMode, tbCx, tbCy, tbFx, tbFy, tbW, tbH, rot ];
+	
 	static setInteract = function(interactable = noone) { 
 		self.interactable = interactable;
-		scMode.interactable = interactable;
-		tbCx.interactable = interactable;
-		tbCy.interactable = interactable;
-		tbFx.interactable = interactable;
-		tbFy.interactable = interactable;
-		tbW.interactable = interactable;
-		tbH.interactable = interactable;
-		rot.interactable = interactable;
+		
+		for( var i = 0; i < array_length(widgets); i++ ) 
+			widgets[i].setInteract(interactable);
 	}
 	
 	static register = function(parent = noone) {
-		scMode.register(parent); 
-		tbCx.register(parent);
-		tbCy.register(parent);
-		tbFx.register(parent);
-		tbFy.register(parent);
-		tbW.register(parent); 
-		tbH.register(parent); 
-		rot.register(parent); 
+		for( var i = 0; i < array_length(widgets); i++ ) 
+			widgets[i].register(parent); 
 	}
 	
 	static draw = function(_x, _y, _w, _data, _m, _rx, _ry) {
 		x = _x;
 		y = _y;
 		
-		tbCx.setActiveFocus(hover, active);
-		tbCy.setActiveFocus(hover, active);
-		tbFx.setActiveFocus(hover, active);
-		tbFy.setActiveFocus(hover, active);
-		tbW.setActiveFocus(hover, active);
-		sW.setActiveFocus(hover, active);
-		tbH.setActiveFocus(hover, active);
-		scMode.setActiveFocus(hover, active);
-		rot.setActiveFocus(hover, active);
+		for( var i = 0; i < array_length(widgets); i++ )
+			widgets[i].setActiveFocus(hover, active);
 		
 		var yy = _y;
 		
@@ -105,20 +87,9 @@ function controlPointBox(_onModify) : widget() constructor {
 				sW.draw(_x + lw, yy, _w - lw, TEXTBOX_HEIGHT, _data[PUPPET_CONTROL.width],  _m);
 				yy += TEXTBOX_HEIGHT + ui(8);
 				break;
-			case PUPPET_FORCE_MODE.pinch: 
-			case PUPPET_FORCE_MODE.inflate: 
-				draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text);
-				draw_text(_x, yy + ui(17), "radius");
-				sW.draw(_x + lw, yy, _w - lw, TEXTBOX_HEIGHT, _data[PUPPET_CONTROL.width],  _m);
-				yy += TEXTBOX_HEIGHT + ui(8);
-				
-				draw_text(_x, yy + ui(17), "strength");
-				tbH.draw(_x + lw, yy, _w - lw, TEXTBOX_HEIGHT, _data[PUPPET_CONTROL.height], _m);
-				yy += TEXTBOX_HEIGHT + ui(8);
-				break;
 			case PUPPET_FORCE_MODE.wind: 
 				draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text);
-				draw_text(_x, yy + ui(17), "stength");
+				draw_text(_x, yy + ui(17), "strength");
 				tbFx.draw(_x + lw, yy, _w - lw, TEXTBOX_HEIGHT, _data[PUPPET_CONTROL.fx],  _m);
 				yy += TEXTBOX_HEIGHT + ui(8);
 				
@@ -133,7 +104,6 @@ function controlPointBox(_onModify) : widget() constructor {
 		}
 		
 		resetFocus();
-		
 		return yy - _y;
 	}
 }

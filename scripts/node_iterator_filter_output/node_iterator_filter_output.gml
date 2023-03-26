@@ -28,7 +28,7 @@ function Node_Iterator_Filter_Output(_x, _y, _group = noone) : Node(_x, _y, _gro
 				
 				if(_to.node.active && _to.value_from != noone && _to.value_from.node == group) {
 					_to.node.triggerRender();
-					if(_to.node.isUpdateReady()) ds_queue_enqueue(RENDER_QUEUE, _to.node);
+					if(_to.node.isRenderable()) ds_queue_enqueue(RENDER_QUEUE, _to.node);
 				}
 			}
 		} else 

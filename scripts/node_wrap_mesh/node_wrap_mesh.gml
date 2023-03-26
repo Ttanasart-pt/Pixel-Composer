@@ -3,8 +3,8 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	data = {
 		points : [[]],
-		tris   : ds_list_create(),
-		links  : ds_list_create()
+		tris   : [],
+		links  : []
 	}
 	
 	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
@@ -22,6 +22,9 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	inputs[| 5] = nodeValue("Active", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
 		active_index = 5;
+	
+	inputs[| 6] = nodeValue("Link strength", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0, "Link length preservation, setting it to 1 will prevent any stretching, contraction.")
+		.setDisplay(VALUE_DISPLAY.slider, [ 0, 1, 0.01 ] );
 		
 	control_index = ds_list_size(inputs);
 	
@@ -39,7 +42,8 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	outputs[| 1] = nodeValue("Mesh data", self, JUNCTION_CONNECT.output, VALUE_TYPE.object, data);
 	
 	input_display_list = [ 5, 
-		["Mesh",			false],	0, 1, 2, 4, 3,
+		["Mesh",			false],	0, 1, 3,
+		["Link",			false],	4, 6,
 		["Control points",	false], 
 	];
 	
@@ -66,12 +70,10 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	}
 	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
-		for(var i = 0; i < ds_list_size(data.links); i++) {
-			data.links[| i].draw(_x, _y, _s);
-		}
-		for(var i = 0; i < ds_list_size(data.tris); i++) {
-			data.tris[| i].drawPoints(_x, _y, _s);
-		}
+		for(var i = 0; i < array_length(data.links); i++)
+			data.links[i].draw(_x, _y, _s);
+		for(var i = 0; i < array_length(data.tris); i++)
+			data.tris[i].drawPoints(_x, _y, _s);
 		
 		var hover = -1;
 		for(var i = control_index; i < ds_list_size(inputs); i++) {
@@ -113,8 +115,8 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			var _yy = (_my - _y) / _s;
 			
 			if(mouse_click(mb_left)) {
-				for(var j = 0; j < ds_list_size(data.tris); j++) {
-					var t = data.tris[| j];
+				for(var j = 0; j < array_length(data.tris); j++) {
+					var t = data.tris[j];
 					
 					if(point_in_circle(t.p0.x, t.p0.y, _xx, _yy, rad / _s))
 						t.p0.setPin(!key_mod_press(SHIFT));
@@ -210,11 +212,12 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 		len = point_distance(p0.x, p0.y, p1.x, p1.y);
 		
-		static resolve = function() {
+		static resolve = function(strength = 1) {
 			var _len = point_distance(p0.x, p0.y, p1.x, p1.y);
 			var _dir = point_direction(p0.x, p0.y, p1.x, p1.y);
-		
-			var f  = k * (_len - len);
+			
+			var _slen = lerp(_len, len, strength);
+			var f  = k * (_len - _slen);
 			var dx = lengthdir_x(f, _dir);
 			var dy = lengthdir_y(f, _dir);
 			
@@ -358,17 +361,16 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	}
 	
 	static reset = function() {
-		for(var i = 0; i < ds_list_size(data.tris); i++)
-			data.tris[| i].reset();
+		for(var i = 0; i < array_length(data.tris); i++)
+			data.tris[i].reset();
 	}
 	
 	static setTriangle = function() {
-		var _inSurf		= inputs[| 0].getValue();
-		
+		var _inSurf = inputs[| 0].getValue();
 		regularTri(_inSurf);
 		
-		for(var i = 0; i < ds_list_size(data.tris); i++)
-			data.tris[| i].initSurface(is_array(_inSurf)? _inSurf[0] : _inSurf);
+		for(var i = 0; i < array_length(data.tris); i++)
+			data.tris[i].initSurface(is_array(_inSurf)? _inSurf[0] : _inSurf);
 	}
 	
 	static affectPoint = function(c, p) {
@@ -388,20 +390,6 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				
 				p.planMove(fx * inf, fy * inf);
 				break;
-			case PUPPET_FORCE_MODE.pinch:
-				var dis = point_distance(cx, cy, p.x, p.y);
-				var inf = power(clamp(1 - dis / cw, 0, 1), 2) / 2;
-				var dir = point_direction(p.x, p.y, cx, cy);
-				
-				p.planMove(lengthdir_x(inf, dir) * ch, lengthdir_y(inf, dir) * ch);
-				break;
-			case PUPPET_FORCE_MODE.inflate:
-				var dis = point_distance(cx, cy, p.x, p.y);
-				var inf = power(clamp(1 - dis / cw, 0, 1), 2) / 2;
-				var dir = point_direction(cx, cy, p.x, p.y);
-				
-				p.planMove(lengthdir_x(inf, dir) * ch, lengthdir_y(inf, dir) * ch);
-				break;
 			case PUPPET_FORCE_MODE.wind:
 				var lx0 = cx + lengthdir_x(1000, fy);
 				var ly0 = cy + lengthdir_y(1000, fy);
@@ -418,39 +406,39 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	}
 	
 	static control = function() {
+		var lStr = inputs[| 6].getValue();
+		
 		for(var i = control_index; i < ds_list_size(inputs); i++) {
 			var c = inputs[| i].getValue();
 			
-			for(var j = 0; j < ds_list_size(data.tris); j++) {
-				affectPoint(c, data.tris[| j].p0);
-				affectPoint(c, data.tris[| j].p1);
-				affectPoint(c, data.tris[| j].p2);
+			for( var j = 0; j < array_length(data.points); j++ )
+			for( var k = 0; k < array_length(data.points[j]); k++ ) {
+				if(data.points[j][k] == 0) continue;
+				affectPoint(c, data.points[j][k]);
 			}
 		}
 		
-		var it = attributes[? "iteration"];
-		var resit = it;
-		var _rat = power(1 / it, 2);
+		var it    = attributes[? "iteration"];
+		var _rat  = 1 / it;
 		
 		repeat(it) {
-			for(var j = 0; j < ds_list_size(data.tris); j++) {
-				var t = data.tris[| j];
-				t.p0.stepMove(_rat);
-				t.p1.stepMove(_rat);
-				t.p2.stepMove(_rat);
+			for( var j = 0; j < array_length(data.points); j++ )
+			for( var k = 0; k < array_length(data.points[j]); k++ ) {
+				if(data.points[j][k] == 0) continue;
+				data.points[j][k].stepMove(_rat);
 			}
 			
-			repeat(resit) {
-				for(var i = 0; i < ds_list_size(data.links); i++)
-					data.links[| i].resolve();
+			if(lStr > 0)
+			repeat(it) {
+				for(var i = 0; i < array_length(data.links); i++)
+					data.links[i].resolve(lStr);
 			}
 		}
 		
-		for(var j = 0; j < ds_list_size(data.tris); j++) {
-			var t = data.tris[| j];
-			t.p0.clearMove();
-			t.p1.clearMove();
-			t.p2.clearMove();
+		for( var j = 0; j < array_length(data.points); j++ )
+		for( var k = 0; k < array_length(data.points[j]); k++ ) {
+			if(data.points[j][k] == 0) continue;
+			data.points[j][k].clearMove();
 		}
 	}
 	
@@ -465,8 +453,8 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		
 		surface_set_shader(_outSurf);
 		shader_set_interpolation(_outSurf);
-		for(var i = 0; i < ds_list_size(data.tris); i++)
-			data.tris[| i].drawSurface(_inSurf);
+		for(var i = 0; i < array_length(data.tris); i++)
+			data.tris[i].drawSurface(_inSurf);
 		surface_reset_shader();	
 		
 		return _outSurf;

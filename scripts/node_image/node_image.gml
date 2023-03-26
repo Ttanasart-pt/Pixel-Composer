@@ -95,7 +95,7 @@ function Node_Image(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		
 		if(!spr || !sprite_exists(spr)) return;
 		
-		var ww = sprite_get_width(spr) + pad[0] + pad[2];
+		var ww = sprite_get_width(spr)  + pad[0] + pad[2];
 		var hh = sprite_get_height(spr) + pad[1] + pad[3];
 		
 		var _outsurf  = outputs[| 0].getValue();

@@ -45,7 +45,7 @@ vec3 hsvMix(vec3 c1, vec3 c2, float t) {
 	return hsv2rgb(h);
 }
 
-vec4 gradientEval(in float prog) {
+vec3 gradientEval(in float prog) {
 	vec4 col = vec4(0.);
 	
 	for(int i = 0; i < 16; i++) {
@@ -72,9 +72,9 @@ vec4 gradientEval(in float prog) {
 		}
 	}
 	
-	return col;
+	return col.rgb;
 }
 
 void main() {
-	gl_FragColor = gradientEval(v_vTexcoord.x);
+	gl_FragColor = vec4(gradientEval(v_vTexcoord.x), v_vColour.a);
 }

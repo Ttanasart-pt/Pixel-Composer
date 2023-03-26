@@ -136,6 +136,8 @@
     {"name":"sprites","order":12,"path":"folders/sprites.yy",},
     {"name":"gameframe","order":2,"path":"folders/sprites/gameframe.yy",},
     {"name":"widgets","order":5,"path":"folders/widgets.yy",},
+    {"name":"transition","order":52,"path":"folders/shader/transition.yy",},
+    {"name":"tween","order":33,"path":"folders/functions/tween.yy",},
   ],
   "ResourceOrderSettings": [
     {"name":"s_node_corner","order":14,"path":"sprites/s_node_corner/s_node_corner.yy",},
@@ -978,6 +980,7 @@
     {"name":"sh_blend_normal_dim","order":10,"path":"shaders/sh_blend_normal_dim/sh_blend_normal_dim.yy",},
     {"name":"node_skew","order":11,"path":"scripts/node_skew/node_skew.yy",},
     {"name":"s_node_canvas","order":3,"path":"sprites/s_node_canvas/s_node_canvas.yy",},
+    {"name":"sh_downsample","order":1,"path":"shaders/sh_downsample/sh_downsample.yy",},
     {"name":"sh_remove_black","order":33,"path":"shaders/sh_remove_black/sh_remove_black.yy",},
     {"name":"path_parser","order":3,"path":"scripts/path_parser/path_parser.yy",},
     {"name":"node_crop_content","order":14,"path":"scripts/node_crop_content/node_crop_content.yy",},

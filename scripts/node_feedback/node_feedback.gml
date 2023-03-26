@@ -24,7 +24,7 @@ function Node_Feedback(_x, _y, _group = noone) : Node_Collection(_x, _y, _group)
 			var _in = inputs[| i].from;
 			if(!_in.renderActive) continue;
 			
-			allReady &= _in.isUpdateReady()
+			allReady &= _in.isRenderable()
 		}
 			
 		if(!allReady) return;

@@ -5,9 +5,9 @@ function shader_set_i(uniform, value) {
 		return;
 	}
 		
-	if(argument_count > 3) {
+	if(argument_count > 2) {
 		var array = [];
-		for( var i = 2; i < argument_count; i++ )
+		for( var i = 1; i < argument_count; i++ )
 			array_push(array, argument[i]);
 		shader_set_i_array(shader, uniform, array)
 		return;
@@ -27,9 +27,9 @@ function shader_set_f(uniform, value) {
 		return;
 	}
 		
-	if(argument_count > 3) {
+	if(argument_count > 2) {
 		var array = [];
-		for( var i = 2; i < argument_count; i++ )
+		for( var i = 1; i < argument_count; i++ )
 			array_push(array, argument[i]);
 		shader_set_f_array(shader, uniform, array)
 		return;

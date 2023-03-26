@@ -72,7 +72,7 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover, _focus, _scr
 		cc = GLOBAL.inputGetable(jun, jun.global_key)? COLORS._main_value_positive : COLORS._main_value_negative;
 		
 	draw_set_text(f_p0, fa_left, fa_center, cc);
-	draw_text_over(xx + ui(40), lb_y - ui(2), jun.name);
+	draw_text_add(xx + ui(40), lb_y - ui(2), jun.name);
 	var lb_w = string_width(jun.name) + ui(32);
 			
 	#region tooltip

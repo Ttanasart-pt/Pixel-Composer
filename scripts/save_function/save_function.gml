@@ -122,7 +122,7 @@ function SAVE_AT(path, log = "save at ") {
 	return true;
 }
 
-function SAVE_COLLECTIONS(_list, _path, save_surface = true, metadata = noone) {
+function SAVE_COLLECTIONS(_list, _path, save_surface = true, metadata = noone, context = PANEL_GRAPH.getCurrentContext()) {
 	var _map  = ds_map_create();
 	_map[? "version"] = SAVEFILE_VERSION;
 	
@@ -145,7 +145,7 @@ function SAVE_COLLECTIONS(_list, _path, save_surface = true, metadata = noone) {
 	}
 	
 	for(var i = 0; i < ds_list_size(_list); i++)
-		SAVE_NODE(_node_list, _list[| i], cx, cy, true);
+		SAVE_NODE(_node_list, _list[| i], cx, cy, true, context);
 	ds_map_add_list(_map, "nodes", _node_list);
 	
 	if(metadata != noone)
@@ -163,7 +163,7 @@ function SAVE_COLLECTIONS(_list, _path, save_surface = true, metadata = noone) {
 	PANEL_MENU.setNotiIcon(THEME.noti_icon_file_save);
 }
 
-function SAVE_COLLECTION(_node, _path, save_surface = true, metadata = noone) {
+function SAVE_COLLECTION(_node, _path, save_surface = true, metadata = noone, context = PANEL_GRAPH.getCurrentContext()) {
 	if(save_surface) {
 		var preview_surface = PANEL_PREVIEW.getNodePreviewSurface();
 		if(is_surface(preview_surface)) {
@@ -176,7 +176,7 @@ function SAVE_COLLECTION(_node, _path, save_surface = true, metadata = noone) {
 	_map[? "version"] = SAVEFILE_VERSION;
 	
 	var _node_list = ds_list_create();
-	SAVE_NODE(_node_list, _node, _node.x, _node.y, true);
+	SAVE_NODE(_node_list, _node, _node.x, _node.y, true, context);
 	ds_map_add_list(_map, "nodes", _node_list);
 	
 	if(metadata != noone)
@@ -194,20 +194,19 @@ function SAVE_COLLECTION(_node, _path, save_surface = true, metadata = noone) {
 	PANEL_MENU.setNotiIcon(THEME.noti_icon_file_save);
 }
 
-function SAVE_NODE(_list, _node, dx = 0, dy = 0, scale = false) {
+function SAVE_NODE(_list, _node, dx = 0, dy = 0, scale = false, context = PANEL_GRAPH.getCurrentContext()) {
 	if(variable_struct_exists(_node, "nodes")) {
-		for(var i = 0; i < ds_list_size(_node.nodes); i++) {
-			var _n = _node.nodes[| i];
-			SAVE_NODE(_list, _n, dx, dy, scale);
-		}
+		for(var i = 0; i < ds_list_size(_node.nodes); i++)
+			SAVE_NODE(_list, _node.nodes[| i], dx, dy, scale, context);
 	}
 	
 	var m = _node.serialize(scale);
 	m[? "x"] -= dx;
 	m[? "y"] -= dy;
-	var c = PANEL_GRAPH.getCurrentContext();
-	if(c != noone) c = c.node_id;
-	if(m[? "group"] == c) m[? "group"] = noone;
+	
+	var c = context == noone? noone : context.node_id;
+	if(m[? "group"] == c) 
+		m[? "group"] = noone;
 	
 	ds_list_add(_list, m);
 	ds_list_mark_as_map(_list, ds_list_size(_list) - 1);

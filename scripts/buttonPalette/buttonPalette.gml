@@ -56,15 +56,17 @@ function buttonPalette(_onApply, dialog = noone) : widget() constructor {
 	}
 }
 
-function drawPalette(_pal, _x, _y, _w, _h) { 
+function drawPalette(_pal, _x, _y, _w, _h, _a = 1) { 
 	var ww = _w / array_length(_pal);
+	draw_set_alpha(_a);
 	for(var i = 0; i < array_length(_pal); i++) {
 		if(!is_real(_pal[i])) continue;
 		draw_set_color(_pal[i]);
 		var _x0 = _x + i * ww;
-		var _x1 = _x0 + ww;
+		var _x1 = _x0 + ww - 1;
 		draw_rectangle(_x0, _y, _x1, _y + _h, false);
 	}
+	draw_set_alpha(1);
 }
 
 

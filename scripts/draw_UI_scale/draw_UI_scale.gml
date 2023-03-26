@@ -9,6 +9,17 @@ function line_height(font = noone, offset = 0) {
 	return hh;
 }
 
+function line_width(txt, font = noone, offset = 0) {
+	var ff = draw_get_font();
+	
+	if(font != noone)
+		draw_set_font(font);
+	var ww = string_width(txt) + offset * UI_SCALE;
+	
+	draw_set_font(ff);
+	return ww;
+}
+
 #macro TEXTBOX_HEIGHT line_height(f_p0, 12)
 
 gml_pragma("forceinline");

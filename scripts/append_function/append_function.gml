@@ -38,7 +38,7 @@ function __APPEND_MAP(_map, context = PANEL_GRAPH.getCurrentContext()) {
 	var t = current_time;
 	
 	for(var i = 0; i < ds_list_size(_node_list); i++) {
-		var _node = nodeLoad(_node_list[| i], true);
+		var _node = nodeLoad(_node_list[| i], true, context);
 		if(_node) ds_list_add(appended_list, _node);
 	}
 	printlog("Load time: " + string(current_time - t)); t = current_time;
@@ -46,7 +46,7 @@ function __APPEND_MAP(_map, context = PANEL_GRAPH.getCurrentContext()) {
 	try {
 		for(var i = 0; i < ds_list_size(appended_list); i++) {
 			var _node = appended_list[| i];
-			_node.loadGroup();
+			_node.loadGroup(context);
 		
 			if(_node.group == context)
 				ds_list_add(node_create, _node);

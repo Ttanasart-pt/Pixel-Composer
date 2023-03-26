@@ -325,7 +325,7 @@ function Panel_Collection() : PanelContent() constructor {
 		var _path = ext == ".pxcc"? _pre_name : _pre_name + ".pxcc";
 		
 		if(ds_list_empty(PANEL_GRAPH.nodes_select_list))
-			SAVE_COLLECTION(PANEL_INSPECTOR.inspecting, _path, save_surface, metadata);
+			SAVE_COLLECTION(PANEL_INSPECTOR.inspecting, _path, save_surface, metadata, PANEL_INSPECTOR.inspecting.group);
 		else
 			SAVE_COLLECTIONS(PANEL_GRAPH.nodes_select_list, _path, save_surface, metadata);
 		

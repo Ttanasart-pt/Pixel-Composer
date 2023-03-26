@@ -142,6 +142,10 @@
 		}
 	}
 #endregion
+
+#region tween
+	tweenStep();
+#endregion
 //print("===== Step end =====");
 
 //if(keyboard_check_pressed(ord("Q"))) {

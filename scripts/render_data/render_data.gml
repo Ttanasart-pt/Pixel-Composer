@@ -13,7 +13,8 @@ function __nodeLeafList(_list, _queue) {
 		if(!_node.active) continue;
 		if(!_node.renderActive) continue;
 		
-		var _startNode = _node.isRenderable(true);
+		_node.triggerRender();
+		var _startNode = _node.isRenderable();
 		if(_startNode) {
 			ds_queue_enqueue(_queue, _node);
 			printIf(global.RENDER_LOG, "Push node " + _node.name + " to stack");
@@ -68,19 +69,19 @@ function Render(partial = false, runAction = false) {
 			key = ds_map_find_next(NODE_MAP, key);
 		
 			if(is_undefined(_node)) continue;
-			if(!is_struct(_node)) continue;
+			if(!is_struct(_node))	continue;
 			if(array_exists(global.group_inputs, instanceof(_node))) continue;
 		
-			if(!_node.active) continue;
+			if(!_node.active)		continue;
 			if(!_node.renderActive) continue;
-			if(_node.rendered) continue;
+			if(_node.rendered)		continue;
 			if(__nodeInLoop(_node)) continue;
 		
 			var _startNode = _node.isRenderable();
-			if(_startNode) {
+			printIf(global.RENDER_LOG, "    > Check leaf " + _node.name + " (" + _node.display_name + "): " + string(_startNode));
+			
+			if(_startNode)
 				ds_queue_enqueue(RENDER_QUEUE, _node);
-				printIf(global.RENDER_LOG, "    > Push " + _node.name + " (" + _node.display_name + ") node to stack");
-			}
 		}
 	
 		// render forward

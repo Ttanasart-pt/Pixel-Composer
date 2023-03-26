@@ -82,7 +82,7 @@ function gradientObject(color = c_black) constructor {
 		return keys[array_length(keys) - 1].value; //after last color
 	}
 	
-	static draw = function(_x, _y, _w, _h) {
+	static draw = function(_x, _y, _w, _h, _a = 1) {
 		static RES = 48;
 		var _step  = _w / RES;
 		var _ox, _oc;
@@ -106,7 +106,7 @@ function gradientObject(color = c_black) constructor {
 		}
 	
 		if(array_length(keys) == 0) {
-			draw_sprite_stretched(s_fx_pixel, 0, _x, _y, _w, _h)
+			draw_sprite_stretched_ext(s_fx_pixel, 0, _x, _y, _w, _h, c_white, _a)
 		} else {
 			shader_set(sh_gradient_display);
 			shader_set_uniform_i(uniform_grad_blend, type);
@@ -114,7 +114,7 @@ function gradientObject(color = c_black) constructor {
 			shader_set_uniform_f_array_safe(uniform_grad_time, _grad_time);
 			shader_set_uniform_i(uniform_grad_key, array_length(keys));
 			
-			draw_sprite_stretched(s_fx_pixel, 0, _x, _y, _w, _h)
+			draw_sprite_stretched_ext(s_fx_pixel, 0, _x, _y, _w, _h, c_white, _a)
 			shader_reset();
 		}
 	}

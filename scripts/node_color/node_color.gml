@@ -11,9 +11,6 @@ function Node_Color(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		return _data[0];
 	}
 	
-	droppable	= ["Color"];
-	static onDrop = function() { inputs[| 0].setValue(DRAGGING.data); }
-	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		var bbox = drawGetBbox(xx, yy, _s);
 		if(bbox.h < 1) return;

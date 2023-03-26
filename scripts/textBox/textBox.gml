@@ -388,6 +388,8 @@ function textBox(_input, _onModify, _extras = noone) : textInput(_input, _onModi
 		draw_sprite_stretched_ext(THEME.textbox, 3, _x, _y, _w, _h, boxColor, 1);
 		disp_x = lerp_float(disp_x, disp_x_to, 5);
 		
+		var hoverRect = point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + _h);
+		
 		if(self == WIDGET_CURRENT) { 
 			draw_sprite_stretched(THEME.textbox, sprite_index == -1? 2 : sprite_index, _x, _y, _w, _h);
 			editText();
@@ -481,7 +483,7 @@ function textBox(_input, _onModify, _extras = noone) : textInput(_input, _onModi
 				
 				var _mx = -1;
 				var _my = -1;
-				if(mouse_press(mb_any, active) && hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + _h)) {
+				if(mouse_press(mb_any, active) && hover && hoverRect) {
 					_mx = _m[0];
 					_my = _m[1];
 				}
@@ -516,7 +518,7 @@ function textBox(_input, _onModify, _extras = noone) : textInput(_input, _onModi
 				case fa_right  : tx -= tw;		break;
 			}
 			
-			if(hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + _h)) {
+			if(hover && hoverRect) {
 				if(hide)
 					draw_sprite_stretched_ext(THEME.textbox, 1, _x, _y, _w, _h, boxColor, 0.5);	
 				else
@@ -554,8 +556,13 @@ function textBox(_input, _onModify, _extras = noone) : textInput(_input, _onModi
 			draw_surface(text_surface, tb_surf_x, tb_surf_y);
 		}
 		
-		resetFocus();
+		if(DRAGGING && (DRAGGING.type == "Text" || DRAGGING.type == "Number") && hover && hoverRect) {
+			draw_sprite_stretched_ext(THEME.ui_panel_active, 0, _x, _y, _w, _h, COLORS._main_value_positive, 1);
+			if(mouse_release(mb_left))
+				onModify(DRAGGING.data);
+		}
 		
+		resetFocus();		
 		sprite_index = -1;
 		return _h;
 	}

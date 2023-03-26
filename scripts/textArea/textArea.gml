@@ -403,6 +403,8 @@ function textArea(_input, _onModify, _extras = noone) : textInput(_input, _onMod
 			}
 		}
 		
+		var hoverRect = point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + hh);
+		
 		if(self == WIDGET_CURRENT) { 
 			draw_set_text(font, fa_left, fa_top, COLORS._main_text);
 			draw_sprite_stretched(THEME.textbox, 2, _x, _y, _w, hh);
@@ -570,7 +572,7 @@ function textArea(_input, _onModify, _extras = noone) : textInput(_input, _onMod
 				
 				var _mx = -1;
 				var _my = -1;
-				if(hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + hh)) {
+				if(hover && hoverRect) {
 					_mx = _m[0];
 					_my = _m[1];
 				}
@@ -587,7 +589,7 @@ function textArea(_input, _onModify, _extras = noone) : textInput(_input, _onMod
 				deactivate();
 			}
 		} else {
-			if(hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + hh)) {
+			if(hover && hoverRect) {
 				if(hide)
 					draw_sprite_stretched_ext(THEME.textbox, 1, _x, _y, _w, hh, c_white, 0.5);	
 				else
@@ -599,6 +601,12 @@ function textArea(_input, _onModify, _extras = noone) : textInput(_input, _onMod
 			}
 			
 			display_text(tx, _y + ui(7), _text, _w - ui(4));
+		}
+		
+		if(DRAGGING && (DRAGGING.type == "Text" || DRAGGING.type == "Number") && hover && hoverRect) {
+			draw_sprite_stretched_ext(THEME.ui_panel_active, 0, _x, _y, _w, hh, COLORS._main_value_positive, 1);
+			if(mouse_release(mb_left))
+				onModify(DRAGGING.data);
 		}
 		
 		resetFocus();

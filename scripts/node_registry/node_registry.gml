@@ -556,14 +556,14 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 #endregion
 
 #region node function
-	function nodeLoad(_data, scale = false) {
+	function nodeLoad(_data, scale = false, _group = PANEL_GRAPH.getCurrentContext()) {
 		if(!ds_exists(_data, ds_type_map)) return noone;
 		
 		var _x    = ds_map_try_get(_data, "x", 0);
 		var _y    = ds_map_try_get(_data, "y", 0);
 		var _type = ds_map_try_get(_data, "type", 0);
 		
-		var _node = nodeBuild(_type, _x, _y);
+		var _node = nodeBuild(_type, _x, _y, _group);
 		
 		if(_node) {
 			var map = ds_map_clone(_data);

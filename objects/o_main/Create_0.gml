@@ -249,3 +249,7 @@
 		steam_set_warning_message_hook();
 	}
 #endregion
+
+#region tween
+	tweenInit();
+#endregion

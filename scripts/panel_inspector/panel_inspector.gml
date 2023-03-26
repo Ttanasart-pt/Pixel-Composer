@@ -15,8 +15,12 @@ function Panel_Inspector() : PanelContent() constructor {
 	inspecting	= noone;
 	top_bar_h	= ui(96);
 	
-	prop_hover = noone;
-	prop_selecting = noone;
+	prop_hover		= noone;
+	prop_selecting  = noone;
+	
+	prop_dragging   = noone;
+	prop_sel_drag_x = 0;
+	prop_sel_drag_y = 0;
 	
 	function initSize() {
 		content_w = w - ui(32);
@@ -413,17 +417,31 @@ function Panel_Inspector() : PanelContent() constructor {
 			}
 			
 			var lb_h    = line_height(f_p0) + ui(8);
+			var lb_w    = line_width(jun.name, f_p0) + ui(16);
 			var padd    = ui(8);
 			
+			var _selY	= yy - ui(0);
+			var lbHov   = point_in_rectangle(_m[0], _m[1], ui(48), _selY, ui(48) + lb_w, _selY + lb_h);
+			if(lbHov) 
+				draw_sprite_stretched_ext(THEME.group_label, 0, ui(48), _selY + ui(2), lb_w, lb_h - ui(4), COLORS._main_icon_dark, 0.85);
+				
 			var widg    = drawWidget(ui(16), yy, contentPane.surface_w - ui(24), _m, jun, false, pHOVER && contentPane.hover, pFOCUS, contentPane, ui(16) + x, top_bar_h + y);
 			var widH    = widg[0];
 			var mbRight = widg[1];
 			
 			hh += lb_h + widH + padd;
 			
-			var _selY  = yy - ui(0);
 			var _selY1 = yy + lb_h + widH + ui(2);
 			var _selH  = _selY1 - _selY;
+			
+			if(_hover && lbHov) {
+				if(prop_dragging == noone && mouse_press(mb_left, pFOCUS)) {
+					prop_dragging = jun;
+					
+					prop_sel_drag_x = mouse_mx;
+	  				prop_sel_drag_y = mouse_my;
+				}
+			}
 			
 			if(_hover && point_in_rectangle(_m[0], _m[1], 4, _selY, contentPane.surface_w - ui(4), _selY + _selH)) {
 				draw_sprite_stretched_ext(THEME.prop_selecting, 0, 4, _selY, contentPane.surface_w - ui(8), _selH, COLORS._main_accent, 1);
@@ -487,6 +505,16 @@ function Panel_Inspector() : PanelContent() constructor {
 					__dialog_junction = jun;
 				}
 			}
+		}
+		
+		if(prop_dragging) {
+			if(DRAGGING == noone && point_distance(prop_sel_drag_x, prop_sel_drag_y, mouse_mx, mouse_my) > 16) {
+				prop_dragging.dragValue();
+				prop_dragging = noone;
+			}
+			
+			if(mouse_release(mb_left))
+				prop_dragging = noone;
 		}
 		
 		return hh;

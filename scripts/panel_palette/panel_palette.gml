@@ -115,7 +115,7 @@ function Panel_Palette() : PanelContent() constructor {
 			presetCollect();
 		
 		bx -= ui(32)
-		if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), [mx, my], pFOCUS, pHOVER, "Change view", THEME.icon_visibility, 1, COLORS._main_icon) == 2) 
+		if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), [mx, my], pFOCUS, pHOVER, "Change preview size", THEME.icon_visibility, 1, COLORS._main_icon) == 2) 
 			view_mode = (view_mode + 1) % 3;
 	}
 }

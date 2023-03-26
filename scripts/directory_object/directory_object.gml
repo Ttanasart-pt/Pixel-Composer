@@ -41,6 +41,12 @@ function FileObject(_name, _path) constructor {
 	
 	static getSpr = function() {
 		if(sprite_exists(spr)) return spr;
+		if(array_length(spr_path) == 0) {
+			spr = sprite_add(self.path, 0, false, false, 0, 0);
+			sprite_set_offset(spr, sprite_get_width(spr) / 2, sprite_get_height(spr) / 2);
+			return spr;
+		}
+		
 		var path = array_safe_get(spr_path, 0);
 		var amo  = array_safe_get(spr_path, 1);
 		var cent = array_safe_get(spr_path, 2);

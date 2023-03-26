@@ -35,7 +35,6 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	
 	draw_name = true;
 	draggable = true;
-	droppable = [];
 	
 	input_display_list = -1;
 	output_display_list = -1;
@@ -53,7 +52,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	inspecting = false;
 	previewing = 0;
 	
-	preview_surface = noone;
+	preview_surface		 = noone;
 	preview_amount  = 0;
 	previewable   = true;
 	preview_speed = 0;
@@ -62,7 +61,14 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	preview_alpha = 1;
 	preview_x     = 0;
 	preview_y     = 0;
-	preview_align = fa_center;
+	
+	preview_surface_prev = noone;
+	preview_trans  = 1;
+	preview_drop_x = 0;
+	preview_drop_y = 0;
+	
+	preview_mx = 0;
+	preview_my = 0;
 	
 	rendered        = false;
 	update_on_frame = false;
@@ -128,7 +134,6 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		
 		doUpdate();
 	}
-	
 	run_in(1, method(self, resetDefault));
 	
 	static getInputJunctionIndex = function(index) {
@@ -309,23 +314,6 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	static onValueUpdate = function(index = 0) {}
 	static onValueFromUpdate = function(index) {}
 	
-	static isUpdateReady = function() {
-		//if(rendered) return false;
-		
-		for(var j = 0; j < ds_list_size(inputs); j++) {
-			var _in = inputs[| j];
-			var val_from = _in.value_from;
-			if(val_from == noone) continue;
-			if(!val_from.node.active) continue;
-			if(!val_from.node.renderActive) continue;
-			
-			if (!val_from.node.rendered)
-				return false;
-		}
-		
-		return true;
-	}
-	
 	static triggerRender = function() {
 		setRenderStatus(false);
 		UPDATE |= RENDER_TYPE.partial;
@@ -339,6 +327,63 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 				_to.node.triggerRender();
 			}
 		}
+	}
+	
+	//static isUpdateReady = function() { //Removed, same as isRenderable()
+	//	for(var j = 0; j < ds_list_size(inputs); j++) {
+	//		var _in = inputs[| j];
+	//		var val_from = _in.value_from;
+	//		if(val_from == noone) continue;
+	//		if(!val_from.node.active) continue;
+	//		if(!val_from.node.renderActive) continue;
+			
+	//		if (!val_from.node.rendered)
+	//			return false;
+	//	}
+		
+	//	return true;
+	//}
+	
+	static isRenderable = function() { //Check if every input is ready (updated)
+		if(!active)	return false;
+		if(!renderActive) return false;
+		
+		var _startNode = true;
+		for(var j = 0; j < ds_list_size(inputs); j++) {
+			var _in = inputs[| j];
+			if( _in.type == VALUE_TYPE.node) continue;
+			
+			var val_from = _in.value_from;
+			if( val_from == noone) continue;
+			if(!val_from.node.active) continue;
+			if(!val_from.node.renderActive) continue;
+			if(!val_from.node.rendered)
+				return false;
+		}
+		
+		return true;
+	}
+	
+	static getNextNodes = function() {
+		for(var i = 0; i < ds_list_size(outputs); i++) {
+			var _ot = outputs[| i];
+			//if(_ot.type == VALUE_TYPE.node) continue;
+			
+			for(var j = 0; j < ds_list_size(_ot.value_to); j++) {
+				var _to = _ot.value_to[| j];
+				if(!_to.node.renderActive) continue;
+				if(!_to.node.active || _to.value_from == noone) continue; 
+				if(_to.value_from.node != self) continue;
+				
+				_to.node.triggerRender();
+				
+				if(_to.node.isRenderable()) {
+					ds_queue_enqueue(RENDER_QUEUE, _to.node);
+					printIf(global.RENDER_LOG, "    >| Push " + _to.node.name + " (" + _to.node.display_name + ") node to stack");
+				} else 
+					printIf(global.RENDER_LOG, "    >| Node " + _to.node.name + " not ready");
+			}
+		}	
 	}
 	
 	static onInspect = function() {}
@@ -427,7 +472,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		
 		var cc = COLORS._main_text;
 		if(PREF_MAP[? "node_show_render_status"] && !rendered)
-			cc = isUpdateReady()? COLORS._main_value_positive : COLORS._main_value_negative;
+			cc = isRenderable()? COLORS._main_value_positive : COLORS._main_value_negative;
 		
 		draw_set_text(f_p1, fa_left, fa_center, cc);
 		
@@ -598,6 +643,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 			if(jun.type == VALUE_TYPE.node)
 				ty = LINE_STYLE.dashed;
 			
+			var ss  = _s * aa;
 			jx  *= aa;
 			jy  *= aa;
 			frx *= aa;
@@ -605,7 +651,6 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 			th  *= aa;
 			cx  *= aa;
 			cy  *= aa;
-			var ss  = _s * aa;
 			corner *= aa;
 			
 			switch(PREF_MAP[? "curve_connection_line"]) {
@@ -649,23 +694,45 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		}
 		
 		preview_surface = is_surface(surf)? surf : noone;
-		if(!is_surface(surf)) return;
+		if(preview_surface == noone) return;
 		
-		var pw = surface_get_width(surf);
-		var ph = surface_get_height(surf);
+		var pw = surface_get_width(preview_surface);
+		var ph = surface_get_height(preview_surface);
 		var ps = min((w * _s - 8) / pw, (h * _s - 8) / ph);
-		var px = xx + w * _s / 2 - pw * ps / 2, py = yy;
-		switch(preview_align) {
-			case fa_center :
-				py = yy + h * _s / 2 - ph * ps / 2;
-				break;
-			case fa_top :
-				py = yy;
-				break;
+		var px = xx + w * _s / 2 - pw * ps / 2;
+		var py = yy + h * _s / 2 - ph * ps / 2;
+		var aa = 0.5 + 0.5 * renderActive;
+		
+		if(preview_trans == 1) {
+			draw_surface_ext_safe(preview_surface, px, py, ps, ps, 0, c_white, aa);
+			return;
 		}
 		
-		var aa = 0.5 + 0.5 * renderActive;
-		draw_surface_ext_safe(surf, px, py, ps, ps, 0, c_white, aa);
+		if(preview_trans < 1 && is_surface(preview_surface_prev)) {
+			preview_trans = lerp_float(preview_trans, 1, 8);
+			var _pw = surface_get_width(preview_surface_prev);
+			var _ph = surface_get_height(preview_surface_prev);
+			var _ps = min((w * _s - 8) / _pw, (h * _s - 8) / _ph);
+			var _px = xx + w * _s / 2 - _pw * _ps / 2;
+			var _py = yy + h * _s / 2 - _ph * _ps / 2;
+			
+			draw_surface_ext_safe(preview_surface_prev, _px, _py, _ps, _ps, 0, c_white, aa);
+			
+			shader_set(sh_trans_node_prev_drop);
+			shader_set_f("dimension", _pw, _ph);
+			shader_set_f("position", (preview_drop_x - px) / (_pw * _ps), (preview_drop_y - py) / (_ph * _ps));
+			shader_set_f("prog", preview_trans);
+			draw_surface_ext_safe(preview_surface, px, py, ps, ps, 0, c_white, aa);
+			shader_reset();
+		} else if(is_surface(preview_surface_prev))
+			surface_free(preview_surface_prev);
+	}
+	
+	static previewDropAnimation = function() {
+		preview_surface_prev = surface_clone(preview_surface);
+		preview_trans  = 0;
+		preview_drop_x = preview_mx;
+		preview_drop_y = preview_my;
 	}
 	
 	static getNodeDimension = function() {
@@ -736,6 +803,9 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		var xx = x * _s + _x;
 		var yy = y * _s + _y;
 		
+		preview_mx = _mx;
+		preview_my = _my;
+		
 		if(value_validation[VALIDATION.error] || error_noti_update != noone)
 			draw_sprite_stretched_ext(THEME.node_glow, 0, xx - 9, yy - 9, w * _s + 18, h * _s + 18, COLORS._main_value_negative, 1);
 		
@@ -754,6 +824,10 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 			draw_sprite_stretched_ext(bg_sel_spr, 0, xx, yy, round(w * _s), round(h * _s), active_draw_index > 1? COLORS.node_border_file_drop : COLORS._main_accent, 1);
 			active_draw_index = -1;
 		}
+		
+		if(draw_droppable)
+			draw_sprite_stretched_ext(THEME.ui_panel_active, 0, xx, yy, w * _s, h * _s, COLORS._main_value_positive, 1);
+		draw_droppable = false;
 		
 		return drawJunctions(xx, yy, _mx, _my, _s);
 	}
@@ -852,51 +926,6 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	}
 	
 	static onDestroy = function() {}
-	
-	static isRenderable = function(trigger = false) {
-		if(!active)	return false;
-		if(!renderActive) return false;
-		
-		var _startNode = true;
-		for(var j = 0; j < ds_list_size(inputs); j++) {
-			var _in = inputs[| j];
-			if( _in.type == VALUE_TYPE.node) continue;
-			
-			if(trigger) triggerRender();
-			
-			var val_from = _in.value_from;
-			if( val_from == noone) continue;
-			if(!val_from.node.active) continue;
-			if(!val_from.node.renderActive) continue;
-			if( val_from.node.rendered == noone) continue;
-			
-			return false;
-		}
-		
-		return true;
-	}
-	
-	static getNextNodes = function() {
-		for(var i = 0; i < ds_list_size(outputs); i++) {
-			var _ot = outputs[| i];
-			//if(_ot.type == VALUE_TYPE.node) continue;
-			
-			for(var j = 0; j < ds_list_size(_ot.value_to); j++) {
-				var _to = _ot.value_to[| j];
-				if(!_to.node.renderActive) continue;
-				if(!_to.node.active || _to.value_from == noone) continue; 
-				if(_to.value_from.node != self) continue;
-				
-				_to.node.triggerRender();
-				
-				if(_to.node.isUpdateReady()) {
-					ds_queue_enqueue(RENDER_QUEUE, _to.node);
-					printIf(global.RENDER_LOG, "    >| Push " + _to.node.name + " (" + _to.node.display_name + ") node to stack");
-				} else 
-					printIf(global.RENDER_LOG, "    >| Node " + _to.node.name + " not ready");
-			}
-		}	
-	}
 	
 	static clearInputCache = function() {
 		for( var i = 0; i < ds_list_size(inputs); i++ )
@@ -1064,7 +1093,24 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	
 	static onClone = function(_NewNode, target = PANEL_GRAPH.getCurrentContext()) {}
 	
-	static onDrop = function() {}
+	draw_droppable = false;
+	static droppable = function(dragObj) {
+		for( var i = 0; i < ds_list_size(inputs); i++ ) {
+			if(dragObj.type == inputs[| i].drop_key)
+				return true;
+		}
+		return false;
+	}
+	
+	static onDrop = function(dragObj) {
+		for( var i = 0; i < ds_list_size(inputs); i++ ) {
+			if(dragObj.type == inputs[| i].drop_key) {
+				inputs[| i].setValue(dragObj.data);
+				previewDropAnimation();
+				return;
+			}
+		}
+	}
 	
 	static serialize = function(scale = false, preset = false) {
 		var _map = ds_map_create();
@@ -1160,9 +1206,9 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	
 	static doApplyDeserialize = function() {}
 	
-	static loadGroup = function() {
+	static loadGroup = function(context = PANEL_GRAPH.getCurrentContext()) {
 		if(_group == noone) {
-			var c = PANEL_GRAPH.getCurrentContext();
+			var c = context;
 			if(c != noone) c.add(self);
 		} else {
 			if(APPENDING) _group = GetAppendID(_group);

@@ -448,6 +448,29 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		return true;
 	}
 	
+	static setDropKey = function() {
+		switch(type) {
+			case VALUE_TYPE.integer		: drop_key = "Number"; break;
+			case VALUE_TYPE.float		: drop_key = "Number"; break;
+			case VALUE_TYPE.boolean		: drop_key = "Bool";   break;
+			case VALUE_TYPE.color		: 
+				switch(display_type) {
+					case VALUE_DISPLAY.palette :  drop_key = "Palette";  break;
+					case VALUE_DISPLAY.gradient : drop_key = "Gradient"; break;
+					default : drop_key = "Color";
+				}
+				break;
+			case VALUE_TYPE.path		: drop_key = "Asset";  break;
+			case VALUE_TYPE.text		: drop_key = "Text";   break;
+			case VALUE_TYPE.pathnode	: drop_key = "Path";   break;
+			case VALUE_TYPE.struct   	: drop_key = "Struct"; break;
+			
+			default: 
+				drop_key = "None";
+		}
+	}
+	setDropKey();
+	
 	static resetDisplay = function() {
 		editWidget = noone;
 		switch(display_type) {
@@ -788,6 +811,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				show_in_inspector = true;
 				break;
 		}
+		
+		setDropKey();
 	}
 	resetDisplay();
 	
@@ -959,8 +984,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		var typ = nod.type;
 		var dis = nod.display_type;
 		
-		var _base = __getAnimValue(_time);
-		
 		if(typ == VALUE_TYPE.surface && (type == VALUE_TYPE.integer || type == VALUE_TYPE.float) && accept_array) { //Dimension conversion
 			if(is_array(val)) {
 				var eqSize = true;
@@ -986,12 +1009,12 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			return [1, 1];
 		} 
 		
-		if(is_array(_base) && !typeArrayDynamic(display_type)) { //Balance array (generate uniform array from single values)
+		if(is_array(def_val) && !typeArrayDynamic(display_type)) { //Balance array (generate uniform array from single values)
 			if(!is_array(val)) {
-				val = array_create(array_length(_base), val);	
+				val = array_create(array_length(def_val), val);	
 				return valueProcess(val, nod, applyUnit, arrIndex);
-			} else if(array_length(val) < array_length(_base)) {
-				for( var i = array_length(val); i < array_length(_base); i++ )
+			} else if(array_length(val) < array_length(def_val)) {
+				for( var i = array_length(val); i < array_length(def_val); i++ )
 					val[i] = 0;
 			}
 		}
@@ -1453,6 +1476,23 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		ext.update();
 		PANEL_ANIMATION.updatePropertyList();
+	}
+	
+	static dragValue = function() {
+		if(drop_key == "None") return;
+		
+		DRAGGING = { 
+			type: drop_key, 
+			data: showValue(),
+		}
+		
+		if(type == VALUE_TYPE.path) {
+			DRAGGING.data = new FileObject(node.name, DRAGGING.data);
+			DRAGGING.data.getSpr();
+		}
+		
+		if(connect_type == JUNCTION_CONNECT.input)
+			DRAGGING.from = self;
 	}
 	
 	static serialize = function(scale = false, preset = false) {

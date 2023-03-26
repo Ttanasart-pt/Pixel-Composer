@@ -859,8 +859,10 @@ function PanelContent() constructor {
 	
 	function draw(panel) { 
 		self.panel = panel;
-		pFOCUS = FOCUS == panel && panel.mouse_active;
-		pHOVER = HOVER == panel && panel.mouse_active;
+		if(o_main.panel_dragging == noone) {
+			pFOCUS = FOCUS == panel && panel.mouse_active;
+			pHOVER = HOVER == panel && panel.mouse_active;
+		}
 		
 		drawContent(panel);
 	}
