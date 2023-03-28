@@ -1076,10 +1076,16 @@ function Panel_Animation() : PanelContent() constructor {
 								
 			if(stagger_mode == 1 && ds_list_exist(keyframe_selecting, keyframe))
 				cc = key_hover == keyframe? COLORS.panel_animation_keyframe_selected : COLORS._main_accent;
-						
-			draw_sprite_ui_uniform(THEME.timeline_keyframe, keyframe.ease_in_type == CURVE_TYPE.cut? 4 : 1, t, prop_y, 1, cc);
+			
+			var ind = 1;
+			if(keyframe.ease_in_type == CURVE_TYPE.cut)
+				ind = 4;
+			if(keyframe.anim.prop.type == VALUE_TYPE.trigger)
+				ind = 4;
+			
+			draw_sprite_ui_uniform(THEME.timeline_keyframe, ind, t, prop_y, 1, cc);
 			if(ds_list_exist(keyframe_selecting, keyframe)) 
-				draw_sprite_ui_uniform(THEME.timeline_keyframe_selecting, keyframe.ease_in_type == CURVE_TYPE.cut, t, prop_y, 1, COLORS._main_accent);
+				draw_sprite_ui_uniform(THEME.timeline_keyframe_selecting, ind != 1, t, prop_y, 1, COLORS._main_accent);
 						
 			if(keyframe_boxing) {
 				var box_x0 = min(keyframe_box_sx, msx);

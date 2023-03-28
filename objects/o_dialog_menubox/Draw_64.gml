@@ -1,4 +1,6 @@
 /// @description init
+if(!ready) exit;
+
 #region draw
 	var yy = dialog_y;
 	

@@ -80,7 +80,7 @@ function Node_Image(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		return false;
 	}
 	
-	static onInspectorUpdate = function() {
+	static onInspector1Update = function() {
 		var path = inputs[| 0].getValue();
 		if(path == "") return;
 		updatePaths(path);
@@ -127,7 +127,7 @@ function Node_Image(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			_splice.inputs[| 1].setValue([ww, hh]);
 			_splice.inputs[| 2].setValue(amo);
 			_splice.inputs[| 3].setValue([ amo, 1 ]);
-			_splice.inspectorUpdate();
+			_splice.inspector1Update();
 					
 			ds_list_add(PANEL_GRAPH.nodes_select_list, self);
 			ds_list_add(PANEL_GRAPH.nodes_select_list, _splice);

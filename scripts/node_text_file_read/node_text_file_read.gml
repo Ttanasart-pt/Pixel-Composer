@@ -52,7 +52,7 @@ function Node_Text_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		return false;
 	}
 	
-	static onInspectorUpdate = function() {
+	static onInspector1Update = function() {
 		var path = inputs[| 0].getValue();
 		if(path == "") return;
 		updatePaths(path);

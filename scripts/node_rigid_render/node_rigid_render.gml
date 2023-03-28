@@ -90,8 +90,8 @@ function Node_Rigid_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 					
 					var ixs = max(0, _o.image_xscale);
 					var iys = max(0, _o.image_yscale);
-					var xs = max(0, _o.xscale);
-					var ys = max(0, _o.yscale);
+					var xs  = max(0, _o.xscale);
+					var ys  = max(0, _o.yscale);
 					
 					var xx = lerp(_o.phy_com_x, _o.phy_position_x, xs);
 					var yy = lerp(_o.phy_com_y, _o.phy_position_y, ys);

@@ -2,7 +2,7 @@ function Node_3D_Cube(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	name = "3D Cube";
 	dimension_index = 1;
 	
-	inputs[| 0] = nodeValue("Main texture", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, DEF_SURFACE);
+	inputs[| 0] = nodeValue("Main texture", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, USE_DEF);
 	
 	inputs[| 1] = nodeValue("Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, def_surf_size2)
 		.setDisplay(VALUE_DISPLAY.vector);
@@ -115,10 +115,10 @@ function Node_3D_Cube(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	static process_data = function(_outSurf, _data, _output_index, _array_index) {
 		var _inSurf = _data[0];
-		var _dim = _data[1];
-		var _pos = _data[2];
-		//var _rot = _data[3];
-		var _sca = _data[4];
+		var _dim    = _data[1];
+		var _pos    = _data[2];
+		//var _rot  = _data[3];
+		var _sca    = _data[4];
 		
 		var _lpos = _data[19];
 		var _lrot = _data[18];

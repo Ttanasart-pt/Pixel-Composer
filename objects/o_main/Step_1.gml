@@ -1,4 +1,18 @@
 /// @description init
+#region minimize
+	if(OS == os_windows && gameframe_is_minimized()) {
+		if(!minimized)
+			game_set_speed(1, gamespeed_fps);
+		minimized = true;
+		exit;
+	}
+
+	if(minimized) {
+		game_set_speed(PREF_MAP[? "ui_framerate"], gamespeed_fps);
+		minimized = false;
+	}
+#endregion
+
 #region window
 	//if(keyboard_check_pressed(vk_f12)) DEBUG = !DEBUG;
 	
@@ -56,6 +70,8 @@
 #endregion
 
 #region nodes
+	DEF_SURFACE_RESET();
+	
 	var _k = ds_map_find_first(NODE_MAP);
 	var _a = ds_map_size(NODE_MAP);
 	repeat(_a) {

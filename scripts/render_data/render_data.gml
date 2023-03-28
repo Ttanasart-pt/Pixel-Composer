@@ -4,10 +4,16 @@ enum RENDER_TYPE {
 	full = 2
 }
 
-global.RENDER_LOG	= false;
-global.group_inputs = [ "Node_Group_Input", "Node_Feedback_Input", "Node_Iterator_Input", "Node_Iterator_Each_Input" ];
+#region globalvar
+	global.RENDER_DEBUG = false;
+	
+	global.RENDER_LOG	= false;
+	global.group_inputs = [ "Node_Group_Input", "Node_Feedback_Input", "Node_Iterator_Input", "Node_Iterator_Each_Input" ];
+#endregion
 
-function __nodeLeafList(_list, _queue) {
+function __nodeLeafList(_list) {
+	var nodes = [];
+	
 	for( var i = 0; i < ds_list_size(_list); i++ ) {
 		var _node = _list[| i];
 		if(!_node.active) continue;
@@ -16,10 +22,12 @@ function __nodeLeafList(_list, _queue) {
 		_node.triggerRender();
 		var _startNode = _node.isRenderable();
 		if(_startNode) {
-			ds_queue_enqueue(_queue, _node);
+			array_push(nodes, _node);
 			printIf(global.RENDER_LOG, "Push node " + _node.name + " to stack");
 		}
 	}
+	
+	return nodes;
 }
 
 function __nodeIsLoop(_node) {
@@ -43,12 +51,13 @@ function __nodeInLoop(_node) {
 }
 
 function Render(partial = false, runAction = false) {
+	var t = current_time;
+	printIf(global.RENDER_LOG, "=== RENDER START [frame " + string(ANIMATOR.current_frame) + "] ===");
+	
 	try {
 		var rendering = noone;
 		var error = 0;
-		var t = current_time;
-		printIf(global.RENDER_LOG, "=== RENDER START [frame " + string(ANIMATOR.current_frame) + "] ===");
-	
+		
 		if(!partial || ALWAYS_FULL) {
 			var _key = ds_map_find_first(NODE_MAP);
 			var amo = ds_map_size(NODE_MAP);
@@ -78,10 +87,12 @@ function Render(partial = false, runAction = false) {
 			if(__nodeInLoop(_node)) continue;
 		
 			var _startNode = _node.isRenderable();
-			printIf(global.RENDER_LOG, "    > Check leaf " + _node.name + " (" + _node.display_name + "): " + string(_startNode));
-			
-			if(_startNode)
+			if(_startNode) {
+				printIf(global.RENDER_LOG, "    > Found leaf " + _node.name + " (" + _node.display_name + ")");
+				
+				_node.triggerRender();
 				ds_queue_enqueue(RENDER_QUEUE, _node);
+			}
 		}
 	
 		// render forward
@@ -90,20 +101,23 @@ function Render(partial = false, runAction = false) {
 		
 			if(!rendering.rendered) {
 				rendering.doUpdate();
-				rendering.setRenderStatus(true);
 				printIf(global.RENDER_LOG, "Rendered " + rendering.name + " (" + rendering.display_name + ") [" + string(instanceof(rendering)) + "] (Update)");
 				
-				rendering.getNextNodes();
+				var nextNodes = rendering.getNextNodes();
+				for( var i = 0; i < array_length(nextNodes); i++ ) {
+					if(!nextNodes[i].isRenderable()) continue;
+					ds_queue_enqueue(RENDER_QUEUE, nextNodes[i]);
+				}
 				
-				if(runAction && rendering.hasInspectorUpdate())
-					rendering.inspectorUpdate();
+				if(runAction && rendering.hasInspector1Update())
+					rendering.inspector1Update();
 			} else 
 				printIf(global.RENDER_LOG, "Rendered " + rendering.name + " (" + rendering.display_name + ") [" + string(instanceof(rendering)) + "] (Skip)");
 		}
-	
-		printIf(global.RENDER_LOG, "=== RENDER COMPLETE IN {" + string(current_time - t) + "ms} ===\n");
 	} catch(e)
 		noti_warning(exception_print(e));
+	
+	printIf(global.RENDER_LOG, "=== RENDER COMPLETE IN {" + string(current_time - t) + "ms} ===\n");
 }
 
 function __renderListReset(list) {
@@ -151,13 +165,16 @@ function RenderListAction(list, context = PANEL_GRAPH.getCurrentContext()) {
 			var txt = rendering.rendered? " [Skip]" : " [Update]";
 			if(!rendering.rendered) {
 				rendering.doUpdate();
-				if(rendering.hasInspectorUpdate()) {
-					rendering.inspectorUpdate();
+				if(rendering.hasInspector1Update()) {
+					rendering.inspector1Update();
 					printIf(global.RENDER_LOG, " > Toggle manual execution " + rendering.name + " (" + rendering.display_name + ")");
 				}
-					
-				rendering.setRenderStatus(true);
-				rendering.getNextNodes();
+				
+				var nextNodes = rendering.getNextNodes();
+				for( var i = 0; i < array_length(nextNodes); i++ ) {
+					if(!nextNodes[i].isRenderable()) continue;
+					ds_queue_enqueue(RENDER_QUEUE, nextNodes[i]);
+				}
 			}
 			printIf(global.RENDER_LOG, "Rendered " + rendering.name + " (" + rendering.display_name + ") [" + string(instanceof(rendering)) + "]" + txt);
 		}

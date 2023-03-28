@@ -39,9 +39,10 @@ void main() {
 	gl_FragColor = col;
 	bool done = false;
 	
+	vec2 shiftPx = -shift / dimension;
 	float b0 = bright(col);
-	float shift_angle    = atan(shift.y, shift.x);
-	float shift_distance = length(shift);
+	float shift_angle    = atan(shiftPx.y, shiftPx.x);
+	float shift_distance = length(shiftPx);
 	float slope_distance = height * b0;
 	float max_distance = height;
 	

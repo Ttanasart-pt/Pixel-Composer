@@ -57,7 +57,7 @@ function Node_Image_Animated(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		.setDisplay(VALUE_DISPLAY.enum_scroll, ["Loop", "Ping pong", "Hold last frame", "Hide"])
 		.rejectArray();
 		
-	inputs[| 5] = nodeValue("Set animation length to match", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+	inputs[| 5] = nodeValue("Set animation length to match", self, JUNCTION_CONNECT.input, VALUE_TYPE.trigger, 0)
 		.setDisplay(VALUE_DISPLAY.button, [ function() { 
 				if(array_length(spr) == 0) return;
 				ANIMATOR.frames_total = array_length(spr);
@@ -124,7 +124,7 @@ function Node_Image_Animated(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		return true;
 	}
 	
-	static onInspectorUpdate = function() {
+	static onInspector1Update = function() {
 		var path = inputs[| 0].getValue();
 		if(path == "") return;
 		updatePaths(path);

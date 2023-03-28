@@ -247,6 +247,16 @@ event_inherited();
 	])
 	
 	ds_list_add(pref_appr, [
+		get_text("pref_connection_anim", "Connection line animation"),
+		"connection_line_transition",
+		new checkBox(function() { 
+			PREF_MAP[? "connection_line_transition"] = 
+				!PREF_MAP[? "connection_line_transition"];
+			PREF_SAVE();
+		})
+	])
+	
+	ds_list_add(pref_appr, [
 		get_text("panel_menu_right_control", "Use Windows style window control."),
 		"panel_menu_right_control",
 		new checkBox(function() { 

@@ -15,17 +15,27 @@ function __part(_node) constructor {
 	node   = _node;
 	active = false;
 	surf   = noone;
+	prevx  = 0;
+	prevy  = 0;
 	x   = 0;
 	y   = 0;
-	sx  = 0;
-	sy  = 0;
+	speedx  = 0;
+	speedy  = 0;
+	turning = 0;
+	turnSpd = 0
+	
 	ac  = 0;
-	g   = 0;
 	wig = 0;
+	spVec = [ 0, 0 ];
 	
 	boundary_data = -1;
 	
-	gy  = 0;
+	g    = 0;
+	gDir = -90;
+	_gx  = 0;
+	_gy  = 0;
+	gx   = 0;
+	gy   = 0;
 	
 	scx   = 1;
 	scy   = 1;
@@ -53,21 +63,28 @@ function __part(_node) constructor {
 	static create = function(_surf, _x, _y, _life) {
 		active	= true;
 		surf	= _surf;
-		x		= _x;
-		y		= _y;
-		gy		= 0;
+		x	= _x;
+		y	= _y;
+		gx	= 0;
+		gy	= 0;
 		
 		life = _life;
 		life_total = life;
 		node.onPartCreate(self);
 	}
 	
-	static setPhysic = function(_sx, _sy, _ac, _g, _wig) {
-		sx  = _sx;
-		sy  = _sy;
-		ac  = _ac;
-		g   = _g;
+	static setPhysic = function(_sx, _sy, _ac, _g, _gDir, _wig, _turn, _turnSpd) {
+		speedx = _sx;
+		speedy = _sy;
+		ac   = _ac;
+		g    = _g;
+		gDir = _gDir;
+		_gx  = lengthdir_x(g, gDir);
+		_gy  = lengthdir_y(g, gDir);
 		
+		turning = _turn;
+		turnSpd = _turnSpd;
+	
 		wig = _wig;
 	}
 	
@@ -96,30 +113,45 @@ function __part(_node) constructor {
 	
 	static step = function() { 
 		if(!active) return;
-		var xp = x, yp = y;
-		x  += sx;
-		y  += sy;
+		x += speedx;
+		y += speedy;
 		
-		var dirr = point_direction(0, 0, sx, sy);
-		var diss = point_distance(0, 0, sx, sy);
-		if(diss > 0) {
-			diss += ac;
-			dirr += random_range(-wig, wig);
-			sx = lengthdir_x(diss, dirr);
-			sy = lengthdir_y(diss, dirr);
+		var dirr = point_direction(0, 0, speedx, speedy);
+		var diss = point_distance(0, 0, speedx, speedy);
+		diss += ac;
+			
+		if(speedx != 0 || speedy != 0) {
+			if(wig != 0)
+				dirr += random_range(-wig, wig);
+			
+			if(turning != 0) {
+				var trn = turnSpd? turning * diss : turning;
+				dirr += trn
+			}
 		}
 		
-		gy += g;
-		y += gy;
+		speedx = lengthdir_x(diss, dirr);
+		speedy = lengthdir_y(diss, dirr);
 		
-		if(follow) 
-			rot = point_direction(xp, yp, x, y);
-		else
-			rot += rot_s;
+		if(_gx != 0 || _gy != 0) {
+			gx += _gx;
+			gy += _gy;
+			x += gx;
+			y += gy;
+		}
+		
+		if(follow)  rot = spVec[1];
+		else        rot += rot_s;
 		
 		if(step_int > 0 && safe_mod(life, step_int) == 0) 
 			node.onPartStep(self);
 		if(life-- < 0) kill();
+		
+		spVec[0] = point_distance(prevx, prevy, x, y);
+		spVec[1] = point_direction(prevx, prevy, x, y);
+		
+		prevx = x;
+		prevy = y;
 	}
 	
 	static draw = function(exact, surf_w, surf_h) { 
@@ -201,3 +233,16 @@ function __part(_node) constructor {
 		return [cx, cy];
 	}
 }
+
+#region helper
+	#macro UPDATE_PART_FORWARD static updateParticleForward = function() {		\
+		var pt = outputs[| 0];													\
+		for( var i = 0; i < ds_list_size(pt.value_to); i++ ) {					\
+			var _n = pt.value_to[| i];											\
+			if(_n.value_from != pt) continue;									\
+																				\
+			if(variable_struct_exists(_n.node, "updateParticleForward"))		\
+				_n.node.updateParticleForward();								\
+		}																		\
+	}
+#endregion

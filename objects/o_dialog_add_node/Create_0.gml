@@ -55,6 +55,8 @@ event_inherited();
 			var typ = node_called.type;
 			
 			for( var i = 0; i < array_length(ar); i++ ) {
+				if(!ar[i].visible) continue;
+				
 				var _in = call_in? node_called.type : ar[i].type;
 				var _ot = call_in? ar[i].type : node_called.type;
 				
@@ -69,6 +71,7 @@ event_inherited();
 			for( var i = 0; i < array_length(io.inputs); i++ ) {
 				var _in = fr;
 				var _ot = io.inputs[i].type;
+				if(!io.inputs[i].visible) continue;
 				
 				if(typeCompatible(_in, _ot, false)) return true;
 			}
@@ -91,7 +94,7 @@ event_inherited();
 		node_list		= pageIndex == -1? noone : NODE_CATEGORY[| ADD_NODE_PAGE].list;
 	}
 	ADD_NODE_PAGE = 0;
-	setPage(ADD_NODE_PAGE);
+	setPage(NODE_PAGE_DEFAULT);
 	
 	function buildNode(_node, _param = "") {
 		if(!_node) {
@@ -109,11 +112,17 @@ event_inherited();
 				return;
 			}
 			
-			_inputs = _new_node.inputs;
+			if(array_exists(global.RECENT_NODES, _node.node)) 
+				array_remove(global.RECENT_NODES, _node.node);
+			array_insert(global.RECENT_NODES, 0, _node.node);
+			if(array_length(global.RECENT_NODES) > 20)
+				array_pop(global.RECENT_NODES);
+			
+			_inputs  = _new_node.inputs;
 			_outputs = _new_node.outputs;
 		} else {
 			var _new_list = APPEND(_node.path);
-			_inputs = ds_list_create();
+			_inputs  = ds_list_create();
 			_outputs = ds_list_create();
 			
 			var tx = 99999;
@@ -153,6 +162,8 @@ event_inherited();
 			var _node_list = node_called.connect_type == JUNCTION_CONNECT.input? _outputs : _inputs;
 			for(var i = 0; i < ds_list_size(_node_list); i++) {
 				var _target = _node_list[| i]; 
+				if(!_target.visible) continue;
+				
 				if(_target.auto_connect && (value_bit(_target.type) & value_bit(node_called.type)) ) {
 					if(node_called.connect_type == JUNCTION_CONNECT.input) {
 						node_called.setFrom(_node_list[| i]);
@@ -168,6 +179,7 @@ event_inherited();
 				
 			for( var i = 0; i < ds_list_size(_inputs); i++ ) {
 				var _in = _inputs[| i];
+				
 				if(_in.auto_connect && _in.isConnectable(from)) {
 					_in.setFrom(from);
 					break;
@@ -242,7 +254,7 @@ event_inherited();
 		draw_clear_alpha(c_white, 0);
 		var hh = 0;
 		var _hover = sHOVER && content_pane.hover;
-		var _list = node_list;
+		var _list  = node_list;
 		
 		if(ADD_NODE_PAGE == -1) {
 			var context = PANEL_GRAPH.getCurrentContext();
@@ -259,12 +271,25 @@ event_inherited();
 					ds_list_add(_list, cat.list[| j]);
 				}
 			}
-		} else if(ADD_NODE_PAGE == 0) {
+		} else if(ADD_NODE_PAGE == NODE_PAGE_DEFAULT) {
 			_list = ds_list_create();
+			
+			ds_list_add(_list, "Favourites");
 			for( var i = 0; i < array_length(global.FAV_NODES); i++ ) {
 				var _nodeIndex = global.FAV_NODES[i];
 				ds_list_add(_list, ALL_NODES[? _nodeIndex]);
 			}
+			
+			ds_list_add(_list, "Recents");
+			for( var i = 0; i < array_length(global.RECENT_NODES); i++ ) {
+				var _nodeIndex = global.RECENT_NODES[i];
+				ds_list_add(_list, ALL_NODES[? _nodeIndex]);
+			}
+		}
+		
+		if(_list == noone) {
+			setPage(NODE_PAGE_DEFAULT);
+			return 0;
 		}
 		
 		var node_count = ds_list_size(_list);

@@ -120,18 +120,21 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	}
 	
 	static getNextNodes = function() {
-		var _key = inputs[| 0].getValue();
-		var amo = ds_map_size(TUNNELS_OUT);
+		var nodes = [];
+		var _key  = inputs[| 0].getValue();
+		var amo   = ds_map_size(TUNNELS_OUT);
 		var k = ds_map_find_first(TUNNELS_OUT);
 		
 		repeat(amo) {
 			if(TUNNELS_OUT[? k] == _key) {
 				NODE_MAP[? k].triggerRender();
-				ds_queue_enqueue(RENDER_QUEUE, NODE_MAP[? k]);
+				array_push(nodes, NODE_MAP[? k]);
 			}
 			
 			k = ds_map_find_next(TUNNELS_OUT, k);
 		}
+		
+		return nodes;
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {

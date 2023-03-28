@@ -90,13 +90,23 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	
 	inputs[| 32] = nodeValue("Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, irandom_range(100000, 999999))
 	
+	inputs[| 33] = nodeValue("Gravity direction", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, -90 )
+		.setDisplay(VALUE_DISPLAY.rotation);
+	
+	inputs[| 34] = nodeValue("Turning", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ] )
+		.setDisplay(VALUE_DISPLAY.range);
+	
+	inputs[| 35] = nodeValue("Turn both directions", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false, "Apply randomized 1, -1 multiplier to the turning speed." );
+	
+	inputs[| 36] = nodeValue("Turn scale with speed", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false );
+		
 	input_len = ds_list_size(inputs);
 	
 	input_display_list = [ 32,
 		["Sprite",	   false],	0, 22, 23, 26,
 		["Spawn",		true],	27, 16, 1, 2, 3, 4, 30, 31, 24, 25, 5,
-		["Movement",	true],	29, 6, 18, 7,
-		["Physics",		true],	19, 20,
+		["Movement",	true],	29, 6, 18,
+		["Physics",		true],	7, 19, 33, 20, 34, 35, 36, 
 		["Rotation",	true],	15, 8, 9, 
 		["Scale",		true],	10, 17, 11, 
 		["Color",		true],	12, 28, 13, 14, 
@@ -145,7 +155,11 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		
 		var _accel	= current_data[ 7];
 		var _grav	= current_data[19];
+		var _gvDir	= current_data[33];
 		var _wigg	= current_data[20];
+		var _turn	= current_data[34];
+		var _turnBi	= current_data[35];
+		var _turnSc	= current_data[36];
 		
 		var _follow			= current_data[15];
 		var _rotation		= current_data[ 8];
@@ -252,7 +266,10 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 			part.anim_speed = _anim_speed;
 			part.anim_end = _anim_end;
 				
-			part.setPhysic(_vx, _vy, _acc, _grav, _wigg);
+			var _trn = random_range(_turn[0], _turn[1]);
+			if(_turnBi) _trn *= choose(-1, 1);
+				
+			part.setPhysic(_vx, _vy, _acc, _grav, _gvDir, _wigg, _trn, _turnSc);
 			part.setTransform(_scx, _scy, _scale_time, _rot, _rot_spd, _follow);
 			part.setDraw(_color, _bld, _alp, _fade);
 			spawn_index = safe_mod(spawn_index + 1, attributes[? "part_amount"]);
@@ -264,7 +281,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	
 	static onSpawn = function(_time, part) {}
 	
-	static updateParticleForward = function(_render = true) {}
+	static updateParticleForward = function() {}
 	
 	function reset() {
 		spawn_index = 0;
@@ -282,7 +299,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		
 		for(var i = 0; i < ANIMATOR.frames_total; i++) {
 			runVFX(i, false);
-			updateParticleForward(false);
+			updateParticleForward();
 		}
 		
 		seed = inputs[| 32].getValue();

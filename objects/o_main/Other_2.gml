@@ -32,6 +32,7 @@
 	
 	window_set_showborder(false);
 	
+	__initSurfaceFormat();
 	__initLocale();
 	__initTheme();
 	__initCollection();

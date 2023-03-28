@@ -29,7 +29,7 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	inputs[| 9]  = nodeValue("Orientation", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Horizontal", "Vertical"]);
 	
-	inputs[| 10] = nodeValue("Auto fill", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+	inputs[| 10] = nodeValue("Auto fill", self, JUNCTION_CONNECT.input, VALUE_TYPE.trigger, 0)
 		.setDisplay(VALUE_DISPLAY.button, [ function() { 
 			var _sur = inputs[| 0].getValue();
 			if(!is_surface(_sur) || _sur == DEF_SURFACE) return;
@@ -52,10 +52,10 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 			else
 				inputs[| 3].setValue([ fill_h, fill_w ]);
 		
-			inspectorUpdate();
+			inspector1Update();
 		}, "Auto fill"] );
 		
-	inputs[| 11] = nodeValue("Sync animation", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+	inputs[| 11] = nodeValue("Sync animation", self, JUNCTION_CONNECT.input, VALUE_TYPE.trigger, 0)
 		.setDisplay(VALUE_DISPLAY.button, [ function() { 
 			var _amo	= inputs[| 3].getValue();
 			ANIMATOR.frames_total = max(1, _amo[0] * _amo[1]);
@@ -261,7 +261,7 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		inputs[|  8].setVisible(!_out);
 	}
 	
-	static onInspectorUpdate = function() {
+	static onInspector1Update = function() {
 		if(isInLoop())	Render();
 		else			doInspectorAction();
 	}

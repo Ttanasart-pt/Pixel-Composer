@@ -64,7 +64,8 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 	suffix   = "";
 	values	 = ds_list_create();
 	sep_axis = _sep_axis;
-	ds_list_add(values, new valueKey(0, _val, self));
+	if(_prop.type != VALUE_TYPE.trigger)
+		ds_list_add(values, new valueKey(0, _val, self));
 	//print(_prop.name + ": " + string(_val));
 	
 	index	 = 0;
@@ -126,15 +127,29 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 	static getName = function() { return prop.name + suffix; }
 	
 	static getValue = function(_time = ANIMATOR.current_frame) {
-		if(ds_list_size(values) == 0) return processTypeDefault();
-		if(ds_list_size(values) == 1) {
-			//if(prop.name == "Position") print(values[| 0].value);
-			return processType(values[| 0].value);
+		if(prop.type == VALUE_TYPE.trigger) {
+			for(var i = 0; i < ds_list_size(values); i++) { //Find trigger
+				var _key = values[| i];
+				if(_key.time == _time) 
+					return _key.value;
+			}
+			return false;
 		}
 		
-		if(prop.display_type == VALUE_DISPLAY.gradient) return values[| 0].value;
-		if(prop.type == VALUE_TYPE.path) return processType(values[| 0].value);
-		if(!prop.is_anim) return processType(values[| 0].value);
+		if(ds_list_size(values) == 0) 
+			return processTypeDefault();
+		
+		if(ds_list_size(values) == 1)
+			return processType(values[| 0].value);
+		
+		if(prop.display_type == VALUE_DISPLAY.gradient) 
+			return values[| 0].value;
+		
+		if(prop.type == VALUE_TYPE.path)
+			return processType(values[| 0].value);
+		
+		if(!prop.is_anim) 
+			return processType(values[| 0].value);
 		
 		var _time_first = values[| 0].time;
 		var _time_last  = values[| ds_list_size(values) - 1].time;
@@ -225,7 +240,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 			case VALUE_TYPE.surface : 
 				if(is_string(_val))
 					return get_asset(_val);
-				return is_surface(_val)? _val : DEF_SURFACE;
+				return _val;
 		}
 		
 		return _val;
@@ -260,6 +275,22 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 	}
 	
 	static setValue = function(_val = 0, _record = true, _time = ANIMATOR.current_frame, ease_in = 0, ease_out = 0) {
+		if(prop.type == VALUE_TYPE.trigger) {
+			for(var i = 0; i < ds_list_size(values); i++) { //Find trigger
+				var _key = values[| i];
+				if(_key.time == _time)  {
+					_key.value = _val;
+					return false;
+				} else if(_key.time > _time) {
+					ds_list_insert(values, i, new valueKey(_time, _val, self));
+					return true;
+				}
+			}
+			
+			ds_list_add(values, new valueKey(_time, _val, self));
+			return true;
+		}
+		
 		if(!prop.is_anim) {
 			if(isEqual(values[| 0].value, _val)) 
 				return false;

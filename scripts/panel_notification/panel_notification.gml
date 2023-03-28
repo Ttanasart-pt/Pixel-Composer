@@ -139,14 +139,12 @@ function Panel_Notification() : PanelContent() constructor {
 	
 	function drawContent(panel) { 
 		PANEL_PADDING
-		
-		draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text_title);
-		draw_text_over(in_dialog? ui(56) : ui(24), title_height / 2, title);
+		PANEL_TITLE
 		
 		var ww = ui(28);
 		var hh = ui(28);
 		var bx = w - ui(in_dialog? padding - 8 : padding) - ww;
-		var by = title_height / 2 - ui(14);
+		var by = title_height / 2 - ui(16 + !in_dialog * 2);
 	
 		var error = !!(filter & NOTI_TYPE.error);
 		var toolt = error? get_text("noti_hide_error", "Hide error") : get_text("noti_show_error", "Show error");

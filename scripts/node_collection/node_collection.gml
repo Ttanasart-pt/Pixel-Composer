@@ -83,17 +83,17 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 			dia.node = self;
 		}) ]);
 	
-	inspUpdateTooltip   = get_text("panel_inspector_execute", "Execute node contents");
-	inspUpdateIcon      = [ THEME.sequence_control, 1, COLORS._main_value_positive ];
+	insp1UpdateTooltip   = get_text("panel_inspector_execute", "Execute node contents");
+	insp1UpdateIcon      = [ THEME.sequence_control, 1, COLORS._main_value_positive ];
 	
-	static inspectorUpdate   = function() { onInspectorUpdate(); }
-	static onInspectorUpdate = function() { RenderListAction(nodes, group); }
+	static inspector1Update   = function() { onInspector1Update(); }
+	static onInspector1Update = function() { RenderListAction(nodes, group); }
 	
-	static hasInspectorUpdate = function(group = false) { 
+	static hasInspector1Update = function(group = false) { 
 		if(!group) return false;
 		
 		for( var i = 0; i < ds_list_size(nodes); i++ ) {
-			if(nodes[| i].hasInspectorUpdate())
+			if(nodes[| i].hasInspector1Update())
 				return true;
 		}
 		
@@ -136,13 +136,16 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	}
 	
 	static getNextNodes = function() {
+		var nodes = [];
 		for(var i = custom_input_index; i < ds_list_size(inputs); i++) {
 			var _in = inputs[| i].from;
 			if(!_in.renderActive) continue;
 			
-			ds_queue_enqueue(RENDER_QUEUE, _in);
+			array_push(nodes, _in);
 			printIf(global.RENDER_LOG, "Push group input " + _in.name + " to stack");
 		}
+		
+		return nodes;
 	}
 	
 	static setRenderStatus = function(result) {
@@ -252,12 +255,12 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	
 	PATCH_STATIC
 	
-	static triggerRender = function() {
-		for(var i = custom_input_index; i < ds_list_size(inputs); i++) {
-			var jun_node = inputs[| i].from;
-			jun_node.triggerRender();
-		}
-	}
+	//static triggerRender = function() {
+	//	for(var i = custom_input_index; i < ds_list_size(inputs); i++) {
+	//		var jun_node = inputs[| i].from;
+	//		jun_node.triggerRender();
+	//	}
+	//}
 	
 	static preConnect = function() {
 		sortIO();

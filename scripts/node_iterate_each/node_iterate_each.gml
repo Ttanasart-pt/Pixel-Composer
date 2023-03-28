@@ -24,8 +24,8 @@ function Node_Iterate_Each(_x, _y, _group = noone) : Node_Collection(_x, _y, _gr
 	}
 	
 	static getNextNodes = function() {
-		__nodeLeafList(getNodeList(), RENDER_QUEUE);
 		initLoop();
+		return __nodeLeafList(getNodeList());
 	}
 	
 	static onStep = function() {

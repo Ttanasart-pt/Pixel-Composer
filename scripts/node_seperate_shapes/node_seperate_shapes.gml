@@ -9,13 +9,13 @@ function Node_Seperate_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		.setDisplay(VALUE_DISPLAY.slider, [0, 1, 0.01])
 		.rejectArray();
 		
-	inputs[| 2] = nodeValue("Override color", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true)
+	inputs[| 2] = nodeValue("Override color", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false)
 		.rejectArray();
 	
 	inputs[| 3] = nodeValue("Color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white)
 		.rejectArray();
 	
-	inputs[| 4] = nodeValue("Ignore blank", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false, "Skip empty and black shape.")
+	inputs[| 4] = nodeValue("Ignore blank", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true, "Skip empty and black shape.")
 		.rejectArray();
 	
 	outputs[| 0] = nodeValue("Surface out",	self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
@@ -47,7 +47,7 @@ function Node_Seperate_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	
 	_prev_type = -1;
 	
-	static onInspectorUpdate = function() { separateShape(); }
+	static onInspector1Update = function() { separateShape(); }
 	
 	static update = function() {
 		if(attributes[? "auto_exe"])

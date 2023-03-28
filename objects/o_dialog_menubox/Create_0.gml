@@ -70,12 +70,12 @@ event_inherited();
 		if(show_icon)
 			dialog_w += ui(32);
 		
-		dialog_y = min(dialog_y, WIN_H - dialog_h);
+		dialog_y = min(dialog_y, WIN_H - dialog_h - 2);
 		
 		switch(align) {
-			case fa_left:	dialog_x = round(min(dialog_x, WIN_W - dialog_w)); break;
-			case fa_center: dialog_x = round(min(dialog_x - dialog_w / 2, WIN_W - dialog_w)); break;
-			case fa_right:	dialog_x = round(max(dialog_x - dialog_w, 0)); break;
+			case fa_left:	dialog_x = round(min(dialog_x, WIN_W - dialog_w - 2)); break;
+			case fa_center: dialog_x = round(min(dialog_x - dialog_w / 2, WIN_W - dialog_w - 2)); break;
+			case fa_right:	dialog_x = round(max(dialog_x - dialog_w, 2)); break;
 		}
 		
 		ready = true;

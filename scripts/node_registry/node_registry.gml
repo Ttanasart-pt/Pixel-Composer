@@ -11,12 +11,12 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 	if(file_exists(pth))
 		tooltip_spr = sprite_add(pth, 0, false, false, 0, 0);
 	else
-		tooltip_spr  = noone;
+		tooltip_spr = noone;
 	new_node     = false;
 	
 	if(struct_has(global.NODE_GUIDE, node)) {
 		var _n = global.NODE_GUIDE[$ node];
-		name    = _n.name;
+		name   = _n.name;
 		if(_n.tooltip != "")
 			tooltip = _n.tooltip;
 	}
@@ -75,17 +75,18 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 	}
 	
 	function __initNodes() {
-		var path = DIRECTORY + "Nodes/fav.json";
-		global.FAV_NODES = [];
-		if(file_exists(path))
-			global.FAV_NODES = json_load_struct(path);
+		var favPath = DIRECTORY + "Nodes/fav.json";
+		global.FAV_NODES = file_exists(favPath)? json_load_struct(favPath) : [];
+		
+		var recPath = DIRECTORY + "Nodes/recent.json";
+		global.RECENT_NODES = file_exists(recPath)? json_load_struct(recPath) : [];
 		
 		var group = ds_list_create();
 		addNodeCatagory("Group", group, ["Node_Group"]);
 			ds_list_add(group, "Groups");
 			addNodeObject(group, "Input",	s_node_group_input,	"Node_Group_Input",		[1, Node_Group_Input]);
 			addNodeObject(group, "Output",	s_node_group_output,"Node_Group_Output",	[1, Node_Group_Output]);
-	
+		
 		var iter = ds_list_create();
 		addNodeCatagory("Loop", iter, ["Node_Iterate"]);
 			ds_list_add(iter, "Groups");
@@ -326,7 +327,7 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 			ds_list_add(threeD, "2D operations");
 			addNodeObject(threeD, "Normal",				s_node_normal,			"Node_Normal",			[1, Node_Normal],, "Create normal map using greyscale value as height.");
 			addNodeObject(threeD, "Normal Light",		s_node_normal_light,	"Node_Normal_Light",	[1, Node_Normal_Light],, "Light up the image using normal mapping.");
-			addNodeObject(threeD, "Bevel",				s_node_bevel,			"Node_Bevel",			[1, Node_Bevel],, "Apply 2D bevel on the image.");
+			addNodeObject(threeD, "Bevel",				s_node_bevel,			"Node_Bevel",			[1, Node_Bevel], ["shade", "auto shade"], "Apply 2D bevel on the image.");
 			addNodeObject(threeD, "Sprite Stack",		s_node_stack,			"Node_Sprite_Stack",	[1, Node_Sprite_Stack],, "Create sprite stack either from repeating a single image or stacking different images using array.");
 		
 			ds_list_add(threeD, "3D generates");
@@ -474,6 +475,10 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 			addNodeObject(values, "Compare",		s_node_compare,		"Node_Compare",		[0, Node_create_Compare], ["equal", "greater", "lesser"]);
 			addNodeObject(values, "Logic Opr",		s_node_logic_opr,	"Node_Logic",		[0, Node_create_Logic], [ "and", "or", "not", "nand", "nor" , "xor" ]);
 			
+			ds_list_add(values, "Trigger");
+			addNodeObject(values, "Trigger",			s_node_trigger,			"Node_Trigger",			[1, Node_Trigger]).setVersion(1140);
+			addNodeObject(values, "Boolean Trigger",	s_node_trigger_bool,	"Node_Trigger_Bool",	[1, Node_Trigger_Bool], ["trigger boolean"]).setVersion(1140);
+			
 			ds_list_add(values, "Struct");
 			addNodeObject(values, "Struct",			s_node_struct,		"Node_Struct",		[1, Node_Struct]);
 			addNodeObject(values, "Struct Get",		s_node_struct_get,	"Node_Struct_Get",	[1, Node_Struct_Get]);
@@ -607,26 +612,6 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 #endregion
 
 #region attribute
-	global.SURFACE_FORMAT = [
-		surface_rgba4unorm,
-		surface_rgba8unorm,
-		surface_rgba16float,
-		surface_rgba32float,
-		surface_r8unorm,
-		surface_r16float,
-		surface_r32float
-	];
-	
-	global.SURFACE_FORMAT_NAME = [
-		"4 bit RGBA", 
-		"8 bit RGBA", 
-		"16 bit RGBA", 
-		"32 bit RGBA", 
-		"8 bit Greyscale", 
-		"16 bit Greyscale", 
-		"32 bit Greyscale"
-	];
-	
 	global.SURFACE_INTERPOLATION = [
 		"No aliasing", 
 		"Linear", 
@@ -640,8 +625,41 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 		"Repeat"
 	];
 	
-	global.SURFACE_FORMAT_NAME_PROCESS = [ "Input" ];
-	global.SURFACE_FORMAT_NAME_PROCESS = array_append(global.SURFACE_FORMAT_NAME_PROCESS, global.SURFACE_FORMAT_NAME);
+	function __initSurfaceFormat() {
+		var surface_format = [
+			surface_rgba4unorm,
+			surface_rgba8unorm,
+			surface_rgba16float,
+			surface_rgba32float,
+			surface_r8unorm,
+			surface_r16float,
+			surface_r32float
+		];
+	
+		var surface_format_name = [
+			"4 bit RGBA", 
+			"8 bit RGBA", 
+			"16 bit RGBA", 
+			"32 bit RGBA", 
+			"8 bit Greyscale", 
+			"16 bit Greyscale", 
+			"32 bit Greyscale"
+		];
+	
+		global.SURFACE_FORMAT		= [];
+		global.SURFACE_FORMAT_NAME  = []; 
+	
+		for( var i = 0; i < array_length(surface_format); i++ ) {
+			if(surface_format_is_supported(surface_format[i])) {
+				array_push(global.SURFACE_FORMAT, surface_format[i]);
+				array_push(global.SURFACE_FORMAT_NAME, surface_format_name[i]);
+			} else
+				log_message("WARNING", "Surface format [" + surface_format_name[i] + "] not supported in this device.");
+		}
+		
+		global.SURFACE_FORMAT_NAME_PROCESS = [ "Input" ];
+		global.SURFACE_FORMAT_NAME_PROCESS = array_append(global.SURFACE_FORMAT_NAME_PROCESS, global.SURFACE_FORMAT_NAME);
+	}
 	
 	function attribute_surface_depth(label = true) {
 		attributes[? "color_depth"] = inputs[| 0].type == VALUE_TYPE.surface? 0 : 1;

@@ -302,7 +302,7 @@ function Node_Palette_Extract(_x, _y, _group = noone) : Node(_x, _y, _group) con
 		outputs[| 0].setValue(res);
 	}
 	
-	static onInspectorUpdate = function() { extractPalettes(); }
+	static onInspector1Update = function() { extractPalettes(); }
 	static onValueUpdate	 = function() { extractPalettes(); }
 	static onValueFromUpdate = function() { extractPalettes(); }
 	

@@ -52,13 +52,16 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	inputs[| 17] = nodeValue("Use value", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, [ "Scale" ], "Apply the third value in each data point (if exist) on given properties.")
 		.setDisplay(VALUE_DISPLAY.text_array, [ "Scale",  "Rotation", "Color" ]);
 		
+	inputs[| 18] = nodeValue("Blend mode", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Normal", "Add" ]);
+		
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [ 
 		["Surface",		false], 0, 1, 15, 10, 
 		["Scatter",		false], 5, 6, 13, 14, 17, 9, 2,
 		["Transform",	false], 3, 8, 7, 4,
-		["Render",		false], 11, 12, 16, 
+		["Render",		false], 18, 11, 12, 16, 
 	];
 	
 	attribute_surface_depth();
@@ -117,6 +120,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		var alpha	= _data[12];
 		var mulpA	= _data[16];
 		var useV	= _data[17];
+		var blend   = _data[18];
 		
 		var _in_w, _in_h;
 		
@@ -130,8 +134,15 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		
 		surface_set_target(_outSurf);
 			DRAW_CLEAR
-			if(mulpA) BLEND_ALPHA_MULP;
-			else      BLEND_ALPHA;
+			switch(blend) {
+				case 0 :
+					if(mulpA) BLEND_ALPHA_MULP;
+					else      BLEND_ALPHA;
+					break;
+				case 1 :
+					BLEND_ADD;
+					break;
+			}
 			
 			var _sed = seed;
 			var res_index = 0, bg = 0;

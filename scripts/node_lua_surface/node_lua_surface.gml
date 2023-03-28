@@ -228,14 +228,14 @@ function Node_Lua_Surface(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		lua_add_code(getState(), lua_code);
 	}
 	
-	static onInspectorUpdate = function() { //compile
+	static onInspector1Update = function() { //compile
 		var thrd = inputs[| 3].value_from;
 		if(thrd == noone) {
 			doCompile();
 			return;
 		}
 		
-		thrd.node.onInspectorUpdate();
+		thrd.node.onInspector1Update();
 	}
 	
 	static doCompile = function() {

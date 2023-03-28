@@ -25,6 +25,7 @@
 	PREF_MAP[? "connection_line_sample"] = 1;
 	PREF_MAP[? "connection_line_corner"] = 8;
 	PREF_MAP[? "connection_line_aa"]     = 2;
+	PREF_MAP[? "connection_line_transition"] = true;
 	PREF_MAP[? "curve_connection_line"]	 = 1;
 	
 	PREF_MAP[? "default_surface_side"]	= 32;
@@ -204,8 +205,8 @@
 		file_text_write_all(path, json_encode_minify(map));
 		ds_map_destroy(map);
 		
-		var path = DIRECTORY + "Nodes/fav.json";
-		json_save_struct(path, global.FAV_NODES);
+		json_save_struct(DIRECTORY + "Nodes/fav.json",	  global.FAV_NODES);
+		json_save_struct(DIRECTORY + "Nodes/recent.json", global.RECENT_NODES);
 	}
 	
 	function PREF_LOAD() {

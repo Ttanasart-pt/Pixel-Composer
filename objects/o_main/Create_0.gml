@@ -203,6 +203,7 @@
 
 #region parameter
 	file_open_parameter = "";
+	minimized = false;
 	
 	_modified = false;
 #endregion

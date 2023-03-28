@@ -218,7 +218,7 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 		outputs[| 1].setValue(_atl);
 	}
 	
-	static onInspectorUpdate = function(updateAll = true) {
+	static onInspector1Update = function(updateAll = true) {
 		var key = ds_map_find_first(NODE_MAP);
 		repeat(ds_map_size(NODE_MAP)) {
 			var node = NODE_MAP[? key];

@@ -60,7 +60,8 @@
 			case "Panel_Globalvar"		: return new Panel_Globalvar();
 			
 			case "Panel_Color"		: return new Panel_Color();
-			case "Panel_Palette"		: return new Panel_Palette();
+			case "Panel_Palette"	: return new Panel_Palette();
+			case "Panel_Gradient"	: return new Panel_Gradient();
 		}
 		
 		return noone;

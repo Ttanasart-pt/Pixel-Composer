@@ -43,6 +43,16 @@ function Node_Bevel(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	attribute_surface_depth();
 	attribute_oversample();
 	
+	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
+		var _surf = current_data[0];
+		if(!is_surface(_surf)) return;
+		
+		var _pw = surface_get_width(_surf) * _s / 2;
+		var _ph = surface_get_height(_surf) * _s / 2;
+		
+		inputs[| 2].drawOverlay(active, _x + _pw, _y + _ph, _s, _mx, _my, _snx, _sny);
+	}
+	
 	static process_data = function(_outSurf, _data, _output_index, _array_index) {
 		var _hei = _data[1];
 		var _shf = _data[2];

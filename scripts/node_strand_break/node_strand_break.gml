@@ -7,6 +7,8 @@ function Node_Strand_Break(_x, _y, _group = noone) : _Node_Strand_Affector(_x, _
 	inputs[| input_fix_len + 0] = nodeValue("Chance", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
 		.setDisplay(VALUE_DISPLAY.slider, [ 0, 1, 0.01 ]);
 	
+	inputs[| input_fix_len + 1] = nodeValue("Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, irandom_range(100000, 999999));
+	
 	array_push(input_display_list, 
 		["Break",	false], input_fix_len + 0, input_fix_len + 1
 	);

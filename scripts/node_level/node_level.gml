@@ -90,7 +90,7 @@ function Node_Level(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	
 	static onValueFromUpdate = function(index) {
 		if(index == 0) {
-			update();
+			doUpdate();
 			if(array_length(current_data) > 0)
 				histogramUpdate(current_data[0]);
 		}

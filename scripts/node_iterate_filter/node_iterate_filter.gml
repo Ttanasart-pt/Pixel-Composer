@@ -26,8 +26,8 @@ function Node_Iterate_Filter(_x, _y, _group = noone) : Node_Collection(_x, _y, _
 	}
 	
 	static getNextNodes = function() {
-		__nodeLeafList(getNodeList(), RENDER_QUEUE);
 		initLoop();
+		return __nodeLeafList(getNodeList());
 	}
 	
 	static onStep = function() {

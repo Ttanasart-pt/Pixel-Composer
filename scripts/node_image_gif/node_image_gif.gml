@@ -34,7 +34,7 @@ function Node_Image_gif(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	inputs[| 0]  = nodeValue("Path", self, JUNCTION_CONNECT.input, VALUE_TYPE.path, "")
 		.setDisplay(VALUE_DISPLAY.path_load, ["*.gif", ""]);
 		
-	inputs[| 1] = nodeValue("Set animation length to gif", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+	inputs[| 1] = nodeValue("Set animation length to gif", self, JUNCTION_CONNECT.input, VALUE_TYPE.trigger, 0)
 		.setDisplay(VALUE_DISPLAY.button, [ function() { 
 				if(!spr) return;
 				if(!sprite_exists(spr)) return;
@@ -62,7 +62,7 @@ function Node_Image_gif(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		return false;
 	}
 	
-	static onInspectorUpdate = function() {
+	static onInspector1Update = function() {
 		var path = inputs[| 0].getValue();
 		if(path == "") return;
 		updatePaths(path);

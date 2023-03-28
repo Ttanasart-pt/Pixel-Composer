@@ -45,6 +45,10 @@ function array_exists(arr, val) {
 	return false;
 }
 
+function array_empty(arr) {
+	return array_length(arr) == 0;
+}
+
 function array_find(arr, val) {
 	for( var i = 0; i < array_length(arr); i++ ) {
 		if(arr[i] == val) return i;

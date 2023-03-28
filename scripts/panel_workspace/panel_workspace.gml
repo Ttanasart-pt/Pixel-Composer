@@ -8,6 +8,8 @@ function Panel_Workspace() : PanelContent() constructor {
 	scroll_max = 0;
 	hori = false;
 	
+	layout_selecting = "";
+	
 	function refreshContent() {
 		workspaces = [];
 		
@@ -33,12 +35,14 @@ function Panel_Workspace() : PanelContent() constructor {
 		var y0 = hori? ui(6) : ui(6) + scroll, y1;
 		var ww = 0;
 		var hh = 0;
+		var amo = array_length(workspaces);
 		
 		draw_set_text(f_p1, hori? fa_left : fa_center, fa_top, COLORS._main_text_sub);
 		
-		for( var i = 0; i < array_length(workspaces); i++ ) {
-			var tw = hori? string_width(workspaces[i]) + ui(16) : w - ui(16);
-			var th = string_height(workspaces[i]) + ui(8);
+		for( var i = 0; i <= amo; i++ ) {
+			var str = i == amo? "+" : workspaces[i];
+			var tw  = hori? string_width(str) + ui(16) : w - ui(16);
+			var th  = string_height(str) + ui(8);
 			
 			x1 = x0 + tw;
 			y1 = y0 + th;
@@ -47,14 +51,47 @@ function Panel_Workspace() : PanelContent() constructor {
 				draw_sprite_stretched(THEME.button_hide_fill, 1, x0, y0, x1 - x0, y1 - y0);
 				
 				if(mouse_press(mb_left, pFOCUS)) {
-					PREF_MAP[? "panel_layout_file"] = workspaces[i];
-					PREF_SAVE();
-					setPanel();
+					if(i == amo) {
+						var dia = dialogCall(o_dialog_file_name, mouse_mx + ui(8), mouse_my + ui(8));
+						dia.name = PREF_MAP[? "panel_layout_file"];
+						dia.onModify = function(name) { 
+							var cont = panelSerialize();
+							json_save_struct(DIRECTORY + "layouts/" + name + ".json", cont);
+							
+							PREF_MAP[? "panel_layout_file"] = name;
+							PREF_SAVE();
+							refreshContent();
+						};
+					} else {
+						PREF_MAP[? "panel_layout_file"] = str;
+						PREF_SAVE();
+						setPanel();
+					}
+				} 
+				
+				if(mouse_press(mb_right, pFOCUS)) {
+					layout_selecting = str;
+					menuCall(,, [
+						menuItem("Select", function() { 
+							PREF_MAP[? "panel_layout_file"] = layout_selecting;
+							PREF_SAVE();
+							setPanel();
+						}),
+						menuItem("Replace with current", function() { 
+							var cont = panelSerialize();
+							json_save_struct(DIRECTORY + "layouts/" + layout_selecting + ".json", cont);
+
+						}),
+						menuItem("Delete", function() { 
+							file_delete(DIRECTORY + "layouts/" + layout_selecting + ".json");
+							refreshContent();
+						}, THEME.cross),
+					]);
 				}
 			}
 			
-			draw_set_color(PREF_MAP[? "panel_layout_file"] == workspaces[i]? COLORS._main_text : COLORS._main_text_sub)
-			draw_text_add(hori? x0 + ui(8) : (x0 + x1) / 2, y0 + ui(4), workspaces[i]);
+			draw_set_color(PREF_MAP[? "panel_layout_file"] == str? COLORS._main_text : COLORS._main_text_sub)
+			draw_text_add(hori? x0 + ui(8) : (x0 + x1) / 2, y0 + ui(4), str);
 			
 			if(hori) {
 				x0 += tw + ui(4);

@@ -1,6 +1,6 @@
-function draw_sprite_fit(spr, ind, xx, yy, w, h) {
+function draw_sprite_fit(spr, ind, xx, yy, w, h, color = c_white, alpha = 1) {
 	var ss = min(w / sprite_get_width(spr), h / sprite_get_height(spr));
-	draw_sprite_ext(spr, ind, xx, yy, ss, ss, 0, c_white, 1);
+	draw_sprite_ext(spr, ind, xx, yy, ss, ss, 0, color, alpha);
 }
 
 function draw_surface_fit(surf, xx, yy, w, h) {

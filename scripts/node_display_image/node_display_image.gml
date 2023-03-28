@@ -39,7 +39,7 @@ function Node_Display_Image(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	
 	first_update = false;
 	
-	static onInspectorUpdate = function() {
+	static onInspector1Update = function() {
 		var path = inputs[| 0].getValue();
 		if(path == "") return;
 		updatePaths(path);

@@ -17,16 +17,7 @@ function Node_VFX_Spawner(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y
 	
 	array_insert(input_display_list, 0, ["Trigger", true], input_len + 0, input_len + 1);
 	
-	static updateParticleForward = function(_render = true) {
-		var pt = outputs[| 0];
-		for( var i = 0; i < ds_list_size(pt.value_to); i++ ) {
-			var _n = pt.value_to[| i];
-			if(_n.value_from != pt) continue;
-			
-			if(variable_struct_exists(_n.node, "updateParticleForward"))
-				_n.node.updateParticleForward();
-		}
-	}
+	UPDATE_PART_FORWARD
 	
 	static onUpdate = function() {
 		RETURN_ON_REST

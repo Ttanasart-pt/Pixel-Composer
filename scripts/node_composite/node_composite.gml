@@ -97,7 +97,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 					
 				if(mouse_click(mb_left, _focus) && _vis[| ind] != hold_visibility) {
 					_vis[| ind] = hold_visibility;
-					update();
+					doUpdate();
 				}
 			} else 
 				draw_sprite_ui_uniform(THEME.junc_visible, vis, _bx, _cy + lh / 2, 1, COLORS._main_icon, 0.5 + 0.5 * vis);
@@ -179,7 +179,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 					ds_list_insert(inputs, targt + i, ext[i]);
 				}
 				
-				update();
+				doUpdate();
 			}
 			layer_dragging = noone;
 		}
@@ -204,7 +204,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			if(input_display_list[i] > idx)
 				input_display_list[i] = input_display_list[i] - data_length;
 		}
-		update();
+		doUpdate();
 	}
 	
 	function createNewSurface() {

@@ -1,4 +1,6 @@
 /// @description tooltip filedrop
+if(OS == os_windows && gameframe_is_minimized()) exit;
+
 #region tooltip
 	if(is_array(TOOLTIP) || TOOLTIP != "") {
 		if(is_struct(TOOLTIP) && struct_has(TOOLTIP, "drawTooltip")) {
@@ -36,7 +38,7 @@
 					draw_tooltip_surface(content);
 					break;
 				case VALUE_TYPE.rigid :
-					draw_tooltip_text("[" + get_text("tooltip_rigid_object", "Rigidbody Object") + " (id: " + string(content[$ "object"]) + ")(]");
+					draw_tooltip_text("[" + get_text("tooltip_rigid_object", "Rigidbody Object") + " (id: " + string(content[$ "object"]) + ")]");
 					break;
 				case VALUE_TYPE.particle :
 					var txt = "[" + 

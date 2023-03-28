@@ -26,6 +26,9 @@ enum VALUE_TYPE {
 	struct    = 16,
 	strands   = 17,
 	mesh	  = 18,
+	trigger	  = 19,
+	
+	action	  = 99,
 }
 
 enum VALUE_DISPLAY {
@@ -95,7 +98,10 @@ function value_color(i) {
 		$5d3f8c, //struct
 		$6691ff, //strand
 		$d1c2c2, //mesh
+		$5dde8f, //trigger
 	];
+	
+	if(i == 99) return $5dde8f;
 	return JUNCTION_COLORS[safe_mod(max(0, i), array_length(JUNCTION_COLORS))];
 }
 
@@ -120,6 +126,9 @@ function value_bit(i) {
 		case VALUE_TYPE.mesh	  	: return 1 << 21;
 		
 		case VALUE_TYPE.node		: return 1 << 32;
+		
+		case VALUE_TYPE.trigger		: return 1 << 22;
+		case VALUE_TYPE.action		: return 1 << 22 | 1 << 3;
 		
 		case VALUE_TYPE.any			: return ~0 & ~(1 << 32);
 	}
@@ -234,10 +243,6 @@ function isGraphable(prop) {
 	return false;
 }
 
-function nodeValue(_name, _node, _connect, _type, _value, _tooltip = "") {
-	return new NodeValue(_name, _node, _connect, _type, _value, _tooltip);
-}
-
 function nodeValueUnit(value) constructor {
 	self.value = value;
 	
@@ -247,7 +252,7 @@ function nodeValueUnit(value) constructor {
 		mode = !mode; 
 		value.cache_value[0] = false;
 		value.unitConvert(mode);
-		value.node.update();
+		value.node.doUpdate();
 	});
 	triggerButton.icon_blend = COLORS._main_icon_light;
 	triggerButton.icon = THEME.unit_ref;
@@ -318,6 +323,10 @@ global.displaySuffix_Padding	= [ "right", "top", "left", "bottom" ];
 global.displaySuffix_VecRange	= [ "x min", "x max", "y min", "y max" ];
 global.displaySuffix_Axis		= [ "x", "y", "z", "w"];
 
+function nodeValue(_name, _node, _connect, _type, _value, _tooltip = "") {
+	return new NodeValue(_name, _node, _connect, _type, _value, _tooltip);
+}
+
 function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constructor {
 	name  = _name;
 	node  = _node;
@@ -355,8 +364,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	extra_data	= ds_list_create();
 	dyna_depo   = ds_list_create();
 	
-	draw_line_shift_x		= 0;
-	draw_line_shift_y		= 0;
+	draw_line_shift_x	= 0;
+	draw_line_shift_y	= 0;
+	draw_line_thick		= new Tween(1,,, 1.5);
 	draw_line_shift_hover	= false;
 	drawLineIndex			= 1;
 	
@@ -534,7 +544,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						}
 						
 						for( var i = 0; i < array_length(animators); i++ )
-							animators[i].suffix = " " + array_safe_get(global.displaySuffix_Axis, i);
+							animators[i].suffix = " " + string(array_safe_get(global.displaySuffix_Axis, i));
 						
 						break;
 					case VALUE_DISPLAY.vector_range :
@@ -557,7 +567,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 							extract_node = "Node_Vector4";
 							
 						for( var i = 0; i < array_length(animators); i++ )
-							animators[i].suffix = " " + array_safe_get(global.displaySuffix_VecRange, i);
+							animators[i].suffix = " " + string(array_safe_get(global.displaySuffix_VecRange, i));
 						
 						break;
 					case VALUE_DISPLAY.rotation :
@@ -798,7 +808,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 					case VALUE_DISPLAY.text_array :
 						editWidget = new textArrayBox(function() { 
 							MODIFIED = true;
-							return animator.values[| 0].value; }, display_data, function() { node.update(); 
+							return animator.values[| 0].value; }, display_data, function() { node.doUpdate(); 
 						});
 						break;
 				}
@@ -946,7 +956,10 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			if(applyUnit)
 				return unit.apply(value, arrIndex);
 		}
-			
+		
+		if(type == VALUE_TYPE.surface && connect_type == JUNCTION_CONNECT.input && !is_surface(value) && def_val == USE_DEF)
+			return DEF_SURFACE;
+		
 		return value;
 	}
 	
@@ -1046,6 +1059,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	
 	static setAnim = function(anim) {
 		is_anim = anim;
+		PANEL_ANIMATION.updatePropertyList();
 	}
 	
 	static __anim = function() {
@@ -1167,6 +1181,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		}
 		
 		if(_valueFrom == value_from) {
+			print("whaT")
 			return false;
 		}
 		
@@ -1218,11 +1233,11 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	static setFrom = function(_valueFrom, _update = true, checkRecur = true) {
 		if(_valueFrom == noone)
 			return removeFrom();
-			
-		if(!isConnectable(_valueFrom, checkRecur, true))
+		
+		if(!isConnectable(_valueFrom, checkRecur, true)) 
 			return false;
 		
-		if(setFrom_condition != -1 && !setFrom_condition(_valueFrom))
+		if(setFrom_condition != -1 && !setFrom_condition(_valueFrom)) 
 			return false;
 		
 		if(value_from != noone)
@@ -1248,6 +1263,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		draw_line_shift_y	= 0;
 		
 		if(!LOADING) MODIFIED = true;
+		
 		return true;
 	}
 	
@@ -1375,9 +1391,16 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		if(PANEL_GRAPH.pHOVER && point_in_circle(_mx, _my, x, y, 10 * _s * sca)) {
 			is_hover = true;
-			draw_sprite_ext(isArray()? THEME.node_junctions_array_hover : THEME.node_junctions_single_hover, type, x, y, ss, ss, 0, c_white, 1);
-		} else
-			draw_sprite_ext(isArray()? THEME.node_junctions_array : THEME.node_junctions_single, type, x, y, ss, ss, 0, c_white, 1);
+			if(type == VALUE_TYPE.action)
+				draw_sprite_ext(THEME.node_junction_inspector, 1, x, y, ss, ss, 0, c_white, 1);
+			else 
+				draw_sprite_ext(isArray()? THEME.node_junctions_array_hover : THEME.node_junctions_single_hover, type, x, y, ss, ss, 0, c_white, 1);
+		} else {
+			if(type == VALUE_TYPE.action)
+				draw_sprite_ext(THEME.node_junction_inspector, 0, x, y, ss, ss, 0, c_white, 1);
+			else 
+				draw_sprite_ext(isArray()? THEME.node_junctions_array : THEME.node_junctions_single, type, x, y, ss, ss, 0, c_white, 1);
+		}
 		
 		return is_hover;
 	}
@@ -1387,15 +1410,18 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		draw_set_text(f_p1, fa_left, fa_center);
 		
-		var tw = string_width(name) + 16;
+		var tw = string_width(name) + 32;
 		var th = string_height(name) + 16;
 		
-		if(connect_type == JUNCTION_CONNECT.input) {
+		if(type == VALUE_TYPE.action) {
+			var tx = x;
+			draw_sprite_stretched_ext(THEME.node_junction_name_bg, 0, tx - tw / 2, y - th, tw, th, c_white, 0.5);
+		} else if(connect_type == JUNCTION_CONNECT.input) {
 			var tx = x - 12 * _s;
-			draw_sprite_stretched_ext(THEME.node_junction_name_bg, 0, tx - tw, y - th / 2, tw + 16, th, c_white, 0.5);
+			draw_sprite_stretched_ext(THEME.node_junction_name_bg, 0, tx - tw + 16, y - th / 2, tw, th, c_white, 0.5);
 		} else {
 			var tx = x + 12 * _s;
-			draw_sprite_stretched_ext(THEME.node_junction_name_bg, 0, tx - 16, y - th / 2, tw + 16, th, c_white, 0.5);
+			draw_sprite_stretched_ext(THEME.node_junction_name_bg, 0, tx - 16, y - th / 2, tw, th, c_white, 0.5);
 		}
 	}
 	static drawName = function(_s, _mx, _my) {
@@ -1405,7 +1431,11 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		var _draw_cc = _hover? COLORS._main_text : COLORS._main_text_sub;
 		draw_set_text(f_p1, fa_left, fa_center, _draw_cc);
 		
-		if(connect_type == JUNCTION_CONNECT.input) {
+		if(type == VALUE_TYPE.action) {
+			var tx = x;
+			draw_set_text(f_p1, fa_center, fa_center, _draw_cc);
+			draw_text(tx, y - (line_height() + 16) / 2, name);
+		} else if(connect_type == JUNCTION_CONNECT.input) {
 			var tx = x - 12 * _s;
 			draw_set_halign(fa_right);
 			draw_text(tx, y, name);
@@ -1474,7 +1504,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				break;
 		}
 		
-		ext.update();
+		ext.doUpdate();
 		PANEL_ANIMATION.updatePropertyList();
 	}
 	

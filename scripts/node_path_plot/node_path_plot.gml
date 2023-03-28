@@ -158,6 +158,16 @@ function Node_Path_Plot(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		}
 	}
 	
+	function updateBoundary() {
+		boundary = new BoundingBox( 0, 0, 1, 1 );
+		var sample = 64;
+		
+		for( var i = 0; i <= sample; i++ ) {
+			var p = getPointRatio(i / sample);
+			boundary.addPoint(p.x, p.y);
+		}
+	}
+	
 	function update() { 
 		updateBoundary();
 		outputs[| 0].setValue(self); 

@@ -25,10 +25,11 @@ function Node_Group_Output(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	}
 	
 	static getNextNodes = function() {
-		if(is_undefined(outParent)) return;
+		if(is_undefined(outParent)) return [];
 		group.setRenderStatus(true);
 		//printIf(global.RENDER_LOG, "Value to amount " + string(ds_list_size(outParent.value_to)));
 		
+		var nodes = [];
 		for(var j = 0; j < ds_list_size(outParent.value_to); j++) {
 			var _to = outParent.value_to[| j];
 			if(!_to.node.renderActive) continue;
@@ -47,34 +48,37 @@ function Node_Group_Output(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			printIf(global.RENDER_LOG, "Group output ready " + string(_to.node.isRenderable()));
 			
 			if(_to.node.isRenderable()) {
-				ds_queue_enqueue(RENDER_QUEUE, _to.node);
+				array_push(nodes, _to.node);
 				printIf(global.RENDER_LOG, "Push node " + _to.node.name + " to stack");
 			}
 		}
+		
+		return nodes;
 	}
 	
 	static createOutput = function(override_order = true) {
-		if(group && is_struct(group)) {
-			if(override_order) {
-				output_index = ds_list_size(group.outputs);
-				inputs[| 1].setValue(output_index);
-			} else {
-				output_index = inputs[| 1].getValue();
-			}
-			
-			if(!is_undefined(outParent))
-				ds_list_remove(group.outputs, outParent);
-			
-			outParent = nodeValue("Value", group, JUNCTION_CONNECT.output, VALUE_TYPE.any, -1)
-				.setVisible(true, true);
-			outParent.from = self;
-			
-			ds_list_add(group.outputs, outParent);
-			group.setHeight();
-			group.sortIO();
+		if(group == noone) return;
+		if(!is_struct(group)) return;
 		
-			outParent.setFrom(inputs[| 0]);
+		if(override_order) {
+			output_index = ds_list_size(group.outputs);
+			inputs[| 1].setValue(output_index);
+		} else {
+			output_index = inputs[| 1].getValue();
 		}
+			
+		if(!is_undefined(outParent))
+			ds_list_remove(group.outputs, outParent);
+			
+		outParent = nodeValue("Value", group, JUNCTION_CONNECT.output, VALUE_TYPE.any, -1)
+			.setVisible(true, true);
+		outParent.from = self;
+			
+		ds_list_add(group.outputs, outParent);
+		group.setHeight();
+		group.sortIO();
+		
+		outParent.setFrom(inputs[| 0]);
 	}
 	
 	if(!LOADING && !APPENDING)
@@ -95,14 +99,14 @@ function Node_Group_Output(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		outParent.display_type = inputs[| 0].display_type;
 	}
 	
-	static triggerRender = function() {
-		if(is_undefined(outParent)) return;
+	//static triggerRender = function() {
+	//	if(is_undefined(outParent)) return;
 		
-		for(var j = 0; j < ds_list_size(outParent.value_to); j++) {
-			if(outParent.value_to[| j].value_from == outParent)
-				outParent.value_to[| j].node.triggerRender();
-		}
-	}
+	//	for(var j = 0; j < ds_list_size(outParent.value_to); j++) {
+	//		if(outParent.value_to[| j].value_from == outParent)
+	//			outParent.value_to[| j].node.triggerRender();
+	//	}
+	//}
 	
 	static postDeserialize = function() {
 		createOutput(false);

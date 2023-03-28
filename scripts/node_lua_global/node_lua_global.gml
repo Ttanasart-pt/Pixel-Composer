@@ -80,14 +80,14 @@ function Node_Lua_Global(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		}
 	}
 	
-	static onInspectorUpdate = function() { //compile
+	static onInspector1Update = function() { //compile
 		var thrd = inputs[| 2].value_from;
 		if(thrd == noone) {
 			doCompile();
 			return;
 		}
 		
-		thrd.node.onInspectorUpdate();
+		thrd.node.onInspector1Update();
 	}
 	
 	static doCompile = function() {

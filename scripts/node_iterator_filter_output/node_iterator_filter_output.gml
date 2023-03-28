@@ -11,12 +11,13 @@ function Node_Iterator_Filter_Output(_x, _y, _group = noone) : Node(_x, _y, _gro
 		.setVisible(true, true);
 		
 	static getNextNodes = function() {
-		if(!struct_has(group, "iterationStatus")) return;
-		var _ren = group.iterationStatus();
+		if(!struct_has(group, "iterationStatus")) return [];
+		var _ren  = group.iterationStatus();
+		var nodes = [];
 			
 		if(_ren == ITERATION_STATUS.loop) { //Go back to the beginning of the loop, reset render status for leaf node inside?
 			printIf(global.RENDER_LOG, "    > Loop restart: iteration " + string(group.iterated));
-			__nodeLeafList(group.getNodeList(), RENDER_QUEUE);
+			nodes = array_append(nodes, __nodeLeafList(group.getNodeList()));
 		} else if(_ren == ITERATION_STATUS.complete) { //Go out of loop
 			printIf(global.RENDER_LOG, "    > Loop completed");
 			group.setRenderStatus(true);
@@ -28,11 +29,14 @@ function Node_Iterator_Filter_Output(_x, _y, _group = noone) : Node(_x, _y, _gro
 				
 				if(_to.node.active && _to.value_from != noone && _to.value_from.node == group) {
 					_to.node.triggerRender();
-					if(_to.node.isRenderable()) ds_queue_enqueue(RENDER_QUEUE, _to.node);
+					if(_to.node.isRenderable()) 
+						array_push(nodes, _to.node);
 				}
 			}
 		} else 
 			printIf(global.RENDER_LOG, "    > Loop not ready");
+		
+		return nodes;
 	}
 	
 	static step = function() {

@@ -512,21 +512,27 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			}
 			apply_surface();
 			
-		} else if(isUsingTool(4)) {
-			if(point_in_rectangle(mouse_cur_x, mouse_cur_y, 0, 0, _surf_w - 1, _surf_h - 1) && mouse_press(mb_left)) {
-				switch(_fill_type) {
-					case 0 :	
-						flood_fill_scanline(mouse_cur_x, mouse_cur_y, canvas_surface, _thr, false);
-						break;
-					case 1 :	
-						flood_fill_scanline(mouse_cur_x, mouse_cur_y, canvas_surface, _thr, true);
-						break;
-					case 2 :	
-						canvas_fill(mouse_cur_x, mouse_cur_y, canvas_surface, _thr);
-						break;
-				}
+		} 
+		
+		if(isUsingTool(4) || (DRAGGING && DRAGGING.type == "Color")) {
+			if(point_in_rectangle(mouse_cur_x, mouse_cur_y, 0, 0, _surf_w - 1, _surf_h - 1)) {
+				var fill = DRAGGING? mouse_release(mb_left) : mouse_press(mb_left);
 				
-				surface_store_buffer();
+				if(fill) {
+					if(DRAGGING) draw_set_color(DRAGGING.data);
+					switch(_fill_type) {
+						case 0 :	
+							flood_fill_scanline(mouse_cur_x, mouse_cur_y, canvas_surface, _thr, false);
+							break;
+						case 1 :	
+							flood_fill_scanline(mouse_cur_x, mouse_cur_y, canvas_surface, _thr, true);
+							break;
+						case 2 :	
+							canvas_fill(mouse_cur_x, mouse_cur_y, canvas_surface, _thr);
+							break;
+					}	
+					surface_store_buffer();
+				}
 			}
 		}
 		

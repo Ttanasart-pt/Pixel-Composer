@@ -614,9 +614,6 @@ function Panel_Graph() : PanelContent() constructor {
 		}
 		//print("Node selection time: " + string(current_time - t)); t = current_time;
 		
-		if(node_hovering && node_hovering.on_dragdrop_file != -1)
-			node_hovering.drawActive(gr_x, gr_y, graph_s, 1);
-		
 		if(node_focus)
 			node_focus.drawActive(gr_x, gr_y, graph_s);
 		
@@ -1328,9 +1325,12 @@ function Panel_Graph() : PanelContent() constructor {
 				}
 			}
 			
+			var drawCorner = value_dragging.type == VALUE_TYPE.action;
 			if(target != noone) {
 				_mx = target.x;
 				_my = target.y;
+				
+				drawCorner |= target.type == VALUE_TYPE.action;
 			}
 			
 			var col = value_color(value_dragging.type);
@@ -1338,24 +1338,47 @@ function Panel_Graph() : PanelContent() constructor {
 			draw_set_color(col);
 			var th = PREF_MAP[? "connection_line_width"] * graph_s;
 			switch(PREF_MAP[? "curve_connection_line"]) {
-				case 0 : draw_line_width(xx, yy, _mx, _my, th); break;
+				case 0 : 
+					draw_line_width(xx, yy, _mx, _my, th); 
+					break;
 				case 1 : 
-					if(value_dragging.connect_type == JUNCTION_CONNECT.output)
-						draw_line_curve_color(_mx, _my, xx, yy,,, graph_s, th, col, col);
-					else 
-						draw_line_curve_color(xx, yy, _mx, _my,,, graph_s, th, col, col);
+					if(drawCorner) {
+						if(value_dragging.type == VALUE_TYPE.action)
+							draw_line_curve_corner(_mx, _my, xx, yy, graph_s, th, col, col);
+						else
+							draw_line_curve_corner(xx, yy, _mx, _my, graph_s, th, col, col);
+					} else {
+						if(value_dragging.connect_type == JUNCTION_CONNECT.output)
+							draw_line_curve_color(_mx, _my, xx, yy,,, graph_s, th, col, col);
+						else 
+							draw_line_curve_color(xx, yy, _mx, _my,,, graph_s, th, col, col);
+					}
 					break;
 				case 2 : 
-					if(value_dragging.connect_type == JUNCTION_CONNECT.output)
-						draw_line_elbow_color(xx, yy, _mx, _my,,, graph_s, th, col, col, corner);
-					else 
-						draw_line_elbow_color(_mx, _my, xx, yy,,, graph_s, th, col, col, corner);
+					if(drawCorner) {
+						if(value_dragging.type == VALUE_TYPE.action)
+							draw_line_elbow_corner(_mx, _my, xx, yy, graph_s, th, col, col, corner);
+						else
+							draw_line_elbow_corner(xx, yy, _mx, _my, graph_s, th, col, col, corner);
+					} else {
+						if(value_dragging.connect_type == JUNCTION_CONNECT.output)
+							draw_line_elbow_color(xx, yy, _mx, _my,,, graph_s, th, col, col, corner);
+						else 
+							draw_line_elbow_color(_mx, _my, xx, yy,,, graph_s, th, col, col, corner);
+					}
 					break;
 				case 3 : 
-					if(value_dragging.connect_type == JUNCTION_CONNECT.output)
-						draw_line_elbow_diag_color(xx, yy, _mx, _my,,, graph_s, th, col, col, corner);
-					else 													
-						draw_line_elbow_diag_color(_mx, _my, xx, yy,,, graph_s, th, col, col, corner);
+					if(drawCorner) {
+						if(value_dragging.type == VALUE_TYPE.action)
+							draw_line_elbow_diag_corner(_mx, _my, xx, yy, graph_s, th, col, col, corner);
+						else
+							draw_line_elbow_diag_corner(xx, yy, _mx, _my, graph_s, th, col, col, corner);
+					} else {
+						if(value_dragging.connect_type == JUNCTION_CONNECT.output)
+							draw_line_elbow_diag_color(xx, yy, _mx, _my,,, graph_s, th, col, col, corner);
+						else 													
+							draw_line_elbow_diag_color(_mx, _my, xx, yy,,, graph_s, th, col, col, corner);
+					}
 					break;
 			}
 			
@@ -1366,7 +1389,7 @@ function Panel_Graph() : PanelContent() constructor {
 			if(mouse_release(mb_left)) {
 				if(value_focus && value_focus != value_dragging) {
 					if(value_focus.connect_type == JUNCTION_CONNECT.input)
-						value_focus.setFrom(value_dragging);
+						var res = value_focus.setFrom(value_dragging);
 					else
 						value_dragging.setFrom(value_focus);
 				} else if(target != noone && value_dragging.connect_type == JUNCTION_CONNECT.input) {

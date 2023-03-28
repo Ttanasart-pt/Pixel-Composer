@@ -1,11 +1,11 @@
 {
   "resourceType": "GMScript",
   "resourceVersion": "1.0",
-  "name": "node_rigid_sim",
+  "name": "panel_gradient",
   "isCompatibility": false,
   "isDnD": false,
   "parent": {
-    "name": "rigidSim",
-    "path": "folders/nodes/data/rigidSim.yy",
+    "name": "colors",
+    "path": "folders/panels/colors.yy",
   },
 }

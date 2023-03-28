@@ -84,36 +84,6 @@ event_inherited();
 #endregion
 
 #region preset
-	function loadGradient(path) {
-		if(path == "") return noone;
-		if(!file_exists(path)) return noone;
-		
-		var grad = new gradientObject();
-		grad.keys = [];
-		
-		var _t = file_text_open_read(path);
-		while(!file_text_eof(_t)) {
-			var key = file_text_readln(_t);
-			var _col = 0, _pos = 0;
-			
-			if(string_pos(",", key)) {
-				var keys = string_splice(key, ",");
-				if(array_length(keys) != 2) continue;
-				
-				_col = toNumber(keys[0]);
-				_pos = toNumber(keys[1]);
-			} else {
-				_col = toNumber(key);
-				if(file_text_eof(_t)) break;
-				_pos = toNumber(file_text_readln(_t));
-			}
-			
-			array_push(grad.keys, new gradientKey(_pos, _col));
-		}
-		file_text_close(_t);
-		return grad;
-	}
-	
 	presets		= ds_list_create();
 	preset_name = ds_list_create();
 	

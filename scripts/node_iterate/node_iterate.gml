@@ -49,10 +49,10 @@ function Node_Iterate(_x, _y, _group = noone) : Node_Collection(_x, _y, _group) 
 			allReady &= _in.isRenderable()
 		}
 			
-		if(!allReady) return;
+		if(!allReady) return [];
 		
-		__nodeLeafList(getNodeList(), RENDER_QUEUE);
 		initLoop();
+		return __nodeLeafList(getNodeList());
 	}
 	
 	static iterationStatus = function() {

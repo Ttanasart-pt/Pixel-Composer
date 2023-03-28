@@ -522,6 +522,10 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 						
 						menuCall(,, menu);
 					}
+					
+					if(DRAGGING) {
+						content_index = i;
+					}
 				}
 				
 				var cc = foc? COLORS.panel_bg_clear_inner : COLORS._main_text_sub;
@@ -820,6 +824,7 @@ function PanelContent() constructor {
 	showHeader  = true;
 	
 	function refresh() {
+		setPanelSize(panel);
 		onResize();
 	}
 	
@@ -829,6 +834,7 @@ function PanelContent() constructor {
 	function onFocusEnd() {}
 	
 	function initSize() {}
+	
 	function setPanelSize(panel) {
 		x = panel.tx;
 		y = panel.ty;

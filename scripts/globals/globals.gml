@@ -33,14 +33,14 @@
 	globalvar VERSION, SAVEFILE_VERSION, VERSION_STRING;
 	VERSION = 1140;
 	SAVEFILE_VERSION = 1400;
-	VERSION_STRING = "1.14.0pr5";
+	VERSION_STRING = "1.14.0pr7";
 	
 	globalvar NODES, NODE_MAP, APPEND_MAP, HOTKEYS, HOTKEY_CONTEXT, NODE_INSTANCES;
 	
 	NODES			= ds_list_create();
 	NODE_INSTANCES	= ds_list_create();
-	NODE_MAP	= ds_map_create();
-	APPEND_MAP  = ds_map_create();
+	NODE_MAP	    = ds_map_create();
+	APPEND_MAP      = ds_map_create();
 	
 	HOTKEYS			= ds_map_create();
 	HOTKEY_CONTEXT	= ds_list_create();
@@ -146,11 +146,16 @@
 #endregion
 
 #region default
-	globalvar DEF_SURFACE;
+	globalvar DEF_SURFACE, USE_DEF;
+	DEF_SURFACE = noone;
+	USE_DEF = -10;
+	
 	function DEF_SURFACE_RESET() {
-		DEF_SURFACE = surface_create_valid(1, 1);
+		if(is_surface(DEF_SURFACE)) return;
+		
+		DEF_SURFACE = surface_create_valid(32, 32);
 		surface_set_target(DEF_SURFACE);
-			draw_clear_alpha(c_white, 0);
+			draw_clear(c_white);
 		surface_reset_target();
 	}
 	DEF_SURFACE_RESET();

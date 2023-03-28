@@ -1,6 +1,6 @@
 /// @description init
 if(OS == os_windows && gameframe_is_minimized()) {
-	gameframe_update();
+	//gameframe_update();
 	exit;
 } else if(OS == os_macosx) {
 	mac_window_step();

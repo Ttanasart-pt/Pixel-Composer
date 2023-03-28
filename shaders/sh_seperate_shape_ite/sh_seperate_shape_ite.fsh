@@ -9,11 +9,11 @@ uniform float threshold;
 uniform int ignore;
 uniform sampler2D map;
 
-float sampVal(vec4 col) { return length(col.rgb) * col.a; }
+vec3 sampVal(vec4 col) { return col.rgb * col.a; }
 
 void main() {
 	vec4 zero = vec4(0.);
-	float baseCol = sampVal(texture2D( map, v_vTexcoord ));
+	vec3 baseCol = sampVal(texture2D( map, v_vTexcoord ));
 	
 	if(ignore == 1 && baseCol == 0.) {
 		gl_FragColor = vec4(0.);
@@ -26,12 +26,12 @@ void main() {
 	for(float i = -1.; i <= 1.; i++)
 	for(float j = -1.; j <= 1.; j++) {
 		vec2 pos = clamp(v_vTexcoord + vec2(i, j) / dimension, 0., 1.);
-		float samCl = sampVal(texture2D( map, pos ));
+		vec3 samCl = sampVal(texture2D( map, pos ));
 		
 		if(ignore == 1 && samCl == 0.)
 			continue;
 		
-		if(abs(samCl - baseCol) <= threshold) {
+		if(distance(samCl, baseCol) <= threshold) {
 			vec4 _col = texture2D( gm_BaseTexture, pos );
 			_index_min.x = min(_index_min.x, _col.r);
 			_index_min.y = min(_index_min.y, _col.g);

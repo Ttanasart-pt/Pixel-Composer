@@ -27,9 +27,9 @@ function Node_Feedback(_x, _y, _group = noone) : Node_Collection(_x, _y, _group)
 			allReady &= _in.isRenderable()
 		}
 			
-		if(!allReady) return;
+		if(!allReady) return [];
 		
-		__nodeLeafList(getNodeList(), RENDER_QUEUE);
+		return __nodeLeafList(getNodeList());
 	}
 	
 	PATCH_STATIC

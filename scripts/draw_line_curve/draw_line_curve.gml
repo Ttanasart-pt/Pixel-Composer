@@ -87,6 +87,43 @@ function draw_line_curve_color(x0, y0, x1, y1, xc = noone, yc = noone, _s = 1, t
 	}
 }
 
+function draw_line_curve_corner(x0, y0, x1, y1, _s = 1, thick = 1, col1 = c_white, col2 = c_white) {
+	var sample = ceil((abs(x0 - x1) + abs(y0 - y1)) / 16 * PREF_MAP[? "connection_line_sample"]);
+	sample = clamp(sample, 8, 128);
+	
+	var x2 = lerp(x0, x1, 0.9);
+	var x3 = x1;
+	var y2 = lerp(y0, y1, 0.1);
+	var y3 = y1;
+	
+	var c   = draw_get_color();
+	var ox, oy, nx, ny, t, it, oc, nc;
+	
+	for( var i = 0; i <= sample; i++ )  {
+		t  = i / sample;
+		it = 1 - t;
+		
+		nx =      x0 *				  power(t, 3) 
+			+ 3 * x2 * power(it, 1) * power(t, 2) 
+			+ 3 * x3 * power(it, 2) * power(t, 1) 
+			+     x1 * power(it, 3);
+			
+		ny =      y0 *                power(t, 3) 
+			+ 3 * y2 * power(it, 1) * power(t, 2) 
+			+ 3 * y3 * power(it, 2) * power(t, 1) 
+			+     y1 * power(it, 3);
+			
+		nc = merge_color(col1, col2, t);
+		
+		if(i)
+			draw_line_round_color(ox, oy, nx, ny, thick, oc, nc);
+		
+		ox = nx;
+		oy = ny;
+		oc = nc;
+	}
+}
+
 function distance_to_curve(mx, my, x0, y0, x1, y1, xc, yc, _s) {
 	var sample = ceil((abs(x0 - x1) + abs(y0 - y1)) / 16 * PREF_MAP[? "connection_line_sample"]);
 	sample = clamp(sample, 8, 128);
@@ -114,6 +151,42 @@ function distance_to_curve(mx, my, x0, y0, x1, y1, xc, yc, _s) {
 			+ 6 * yc * power(it, 2) * power(t, 2) 
 			+ 4 * y3 * power(it, 3) * power(t, 1) 
 			+     y1 * power(it, 4);
+			
+		if(i)
+			dist = min(dist, distance_to_line(mx, my, ox, oy, nx, ny));
+		
+		ox = nx;
+		oy = ny;
+	}
+	
+	return dist;
+}
+
+function distance_to_curve_corner(mx, my, x0, y0, x1, y1, _s) {
+	var sample = ceil((abs(x0 - x1) + abs(y0 - y1)) / 16 * PREF_MAP[? "connection_line_sample"]);
+	sample = clamp(sample, 8, 128);
+	
+	var dist = 999999;
+	var ox, oy, nx, ny, t, it;
+	
+	var x2 = lerp(x0, x1, 0.9);
+	var x3 = x1;
+	var y2 = lerp(y0, y1, 0.1);
+	var y3 = y1;
+	
+	for( var i = 0; i <= sample; i++ )  {
+		t = i / sample;
+		it = 1 - t;
+		
+		nx =      x0 *				  power(t, 3) 
+			+ 3 * x2 * power(it, 1) * power(t, 2) 
+			+ 3 * x3 * power(it, 2) * power(t, 1) 
+			+     x1 * power(it, 3);
+			
+		ny =      y0 *                power(t, 3) 
+			+ 3 * y2 * power(it, 1) * power(t, 2) 
+			+ 3 * y3 * power(it, 2) * power(t, 1) 
+			+     y1 * power(it, 3);
 			
 		if(i)
 			dist = min(dist, distance_to_line(mx, my, ox, oy, nx, ny));

@@ -339,13 +339,13 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		}
 	}
 	
-	inspUpdateTooltip   = "Export";
-	inspUpdateIcon      = [ THEME.sequence_control, 1, COLORS._main_value_positive ];
+	insp1UpdateTooltip   = "Export";
+	insp1UpdateIcon      = [ THEME.sequence_control, 1, COLORS._main_value_positive ];
 	
 	insp2UpdateTooltip = "Export All";
 	insp2UpdateIcon    = [ THEME.play_all, 0, COLORS._main_value_positive ];
 	
-	static onInspectorUpdate = function() {		
+	static onInspector1Update = function() {		
 		if(isInLoop())	UPDATE |= RENDER_TYPE.full;
 		else			doInspectorAction();
 	}

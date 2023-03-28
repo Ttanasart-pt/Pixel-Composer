@@ -33,7 +33,7 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	inputs[| 0]  = nodeValue("Path", self, JUNCTION_CONNECT.input, VALUE_TYPE.path, "")
 		.setDisplay(VALUE_DISPLAY.path_load, ["*.ase, *.aseprite", ""]);
 		
-	inputs[| 1]  = nodeValue("Generate layers", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+	inputs[| 1]  = nodeValue("Generate layers", self, JUNCTION_CONNECT.input, VALUE_TYPE.trigger, 0)
 		.setDisplay(VALUE_DISPLAY.button, [ function() { refreshLayers(); }, "Generate"] );
 	
 	inputs[| 2]  = nodeValue("Current tag", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "");
@@ -247,7 +247,7 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 						
 						var p_arr = [];
 						for( var k = 0; k < array_length(plt); k++ )
-							array_push(p_arr, make_color_rgb(plt[i][0], plt[i][1], plt[i][2]));
+							array_push(p_arr, make_color_rgb(plt[k][0], plt[k][1], plt[k][2]));
 						outputs[| 3].setValue(p_arr);
 						break;
 					case 0x2004: //layer
@@ -276,7 +276,7 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		return true;
 	}
 	
-	static onInspectorUpdate = function() {
+	static onInspector1Update = function() {
 		var path = inputs[| 0].getValue();
 		if(path == "") return;
 		updatePaths(path);

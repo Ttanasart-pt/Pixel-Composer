@@ -117,7 +117,7 @@ function Panel_Nodes() : PanelContent() constructor {
 		sc_nodes.draw(px, py + ui(40), mx - px, my - (py + ui(40)));
 		
 		//var bx = w - ui(32 + 16);
-		//var by = title_height / 2 - ui(14);
+		//var by = title_height / 2 - ui(16 + !in_dialog * 2);
 			
 		//if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), [mx, my], pFOCUS, pHOVER, "Create tunnel", THEME.tunnel, 1, c_white) == 2) {
 		//	nodeBuild("Node_Tunnel_In", build_x, build_y);

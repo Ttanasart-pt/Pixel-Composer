@@ -188,8 +188,9 @@ function Panel_Menu() : PanelContent() constructor {
 			
 			menuItem(get_text("panel_menu_color", "Color"), function(_x, _y, _depth) { 
 				return submenuCall(_x, _y, _depth, [
-					menuItem(get_text("panel_menu_color", "Color"),		function() { panelAdd("Panel_Color", true) },,,		function() { return findPanel("Panel_Color") != noone; } ),
-					menuItem(get_text("panel_menu_palette", "Palette"),	function() { panelAdd("Panel_Palette", true) },,,	function() { return findPanel("Panel_Palette") != noone; } ),
+					menuItem(get_text("panel_menu_color", "Color"),		 function() { panelAdd("Panel_Color", true) },,,	function() { return findPanel("Panel_Color") != noone; } ),
+					menuItem(get_text("panel_menu_palette", "Palette"),	 function() { panelAdd("Panel_Palette", true) },,,	function() { return findPanel("Panel_Palette") != noone; } ),
+					menuItem(get_text("panel_menu_gradient", "Gradient"),function() { panelAdd("Panel_Gradient", true) },,,	function() { return findPanel("Panel_Gradient") != noone; } ),
 				]);
 			} ).setIsShelf(),
 		]],

@@ -1,4 +1,6 @@
 /// @description init
+if(OS == os_windows && gameframe_is_minimized()) exit;
+
 //print("===== Step start =====");
 #region animation
 	if(ANIMATOR.is_playing && ANIMATOR.play_freeze == 0) {

@@ -15,7 +15,7 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	inputs[| 2] = nodeValue("Spring force", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.5)
 		.setDisplay(VALUE_DISPLAY.slider, [ 0, 1, 0.01 ] );
 	
-	inputs[| 3] = nodeValue("Mesh", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+	inputs[| 3] = nodeValue("Mesh", self, JUNCTION_CONNECT.input, VALUE_TYPE.trigger, 0)
 		.setDisplay(VALUE_DISPLAY.button, [ function() { setTriangle(); doUpdate(); }, "Generate"] );
 	
 	inputs[| 4] = nodeValue("Diagonal link", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false, "Include diagonal link to prevent drastic grid deformation.");
@@ -30,7 +30,7 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	function createControl() {
 		var index = ds_list_size(inputs);
-		inputs[| index] = nodeValue("Control point", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ PUPPET_FORCE_MODE.move, 16, 16, 8, 0, 8, 8])
+		inputs[| index] = nodeValue("Control point", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ PUPPET_FORCE_MODE.move, 16, 16, 8, 0, 8, 8 ])
 			.setDisplay(VALUE_DISPLAY.puppet_control)
 		
 		array_push(input_display_list, index);
@@ -51,6 +51,7 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	attribute_interpolation();
 
 	input_display_index = array_length(input_display_list);
+	points = [];
 	
 	attributes[? "iteration"] = 4;
 	array_push(attributeEditors, ["Iteration", "iteration", 
@@ -61,12 +62,9 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		new NodeTool( "Pin / unpin (+ Shift) mesh", THEME.control_pin )
 	];
 	
-	attributes[? "pin"] = ds_map_create();
-	
 	static onValueFromUpdate = function(index) {
-		if(index == 0 && ds_list_empty(data.tris)) {
+		if(index == 0 && array_empty(data.tris))
 			setTriangle();
-		}
 	}
 	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
@@ -91,7 +89,7 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			if(mouse_press(mb_left)) {
 				if(hover == -1) {
 					var i = createControl();
-					i.setValue( [PUPPET_FORCE_MODE.move, value_snap(_mx - _x, _snx) / _s, value_snap(_my - _y, _sny) / _s, 0, 0, 8, 8] );
+					i.setValue( [ PUPPET_FORCE_MODE.move, value_snap(_mx - _x, _snx) / _s, value_snap(_my - _y, _sny) / _s, 0, 0, 8, 8 ] );
 					i.drag_type = 2;
 					i.drag_sx   = 0;
 					i.drag_sy   = 0;
@@ -132,17 +130,19 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	function _Point(node, index, _x, _y) constructor {
 		self.index = index;
 		self.node = node;
-		x = _x;
-		y = _y;
+		x  = _x;
+		y  = _y;
 		xp = x;
 		yp = y;
+		
+		node.points[index] = self;
 		
 		ndx = 0;
 		ndy = 0;
 		
-		sx = x;
-		sy = y;
-		pin = ds_map_exists(node.attributes[? "pin"], index);
+		sx  = x;
+		sy  = y;
+		pin = false;
 		
 		static reset = function() {
 			x = sx;
@@ -196,11 +196,6 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		}
 		
 		static setPin = function(pin) {
-			if(!pin && ds_map_exists(node.attributes[? "pin"], index))
-				ds_map_delete(node.attributes[? "pin"], index);
-			if(pin && !ds_map_exists(node.attributes[? "pin"], index))
-				ds_map_add(node.attributes[? "pin"], index, 1);
-			
 			self.pin = pin;	
 		}
 	}
@@ -301,9 +296,10 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			surface_reset_target();
 		}
 		
+		points	    = [];
 		data.points = [[]];
-		ds_list_clear(data.tris);
-		ds_list_clear(data.links);
+		data.tris	= [];
+		data.links	= [];
 		
 		var ind = 0;
 		for(var i = 0; i <= sample; i++) 
@@ -324,9 +320,9 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				if(i == 0) continue;
 				
 				if(j && data.points[i - 1][j] != 0 && data.points[i][j - 1] != 0) 
-					ds_list_add(data.tris, new _Triangle(data.points[i - 1][j], data.points[i][j - 1], data.points[i][j]));
+					array_push(data.tris, new _Triangle(data.points[i - 1][j], data.points[i][j - 1], data.points[i][j]));
 				if(j < sample && data.points[i - 1][j] != 0 && data.points[i - 1][j + 1] != 0)
-					ds_list_add(data.tris, new _Triangle(data.points[i - 1][j], data.points[i - 1][j + 1], data.points[i][j]));
+					array_push(data.tris, new _Triangle(data.points[i - 1][j], data.points[i - 1][j + 1], data.points[i][j]));
 			} else
 				data.points[i][j] = 0;
 		}
@@ -336,22 +332,22 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			if(data.points[i][j] == 0) continue;
 			
 			if(i && data.points[i - 1][j] != 0) {
-				ds_list_add(data.links, new link(data.points[i][j], data.points[i - 1][j]));
+				array_push(data.links, new link(data.points[i][j], data.points[i - 1][j]));
 			}
 			if(j && data.points[i][j - 1] != 0) {
-				ds_list_add(data.links, new link(data.points[i][j], data.points[i][j - 1]));
+				array_push(data.links, new link(data.points[i][j], data.points[i][j - 1]));
 			}
 			
 			if(diagon) {
 				if(i && j && data.points[i - 1][j - 1] != 0) {
 					var l = new link(data.points[i][j], data.points[i - 1][j - 1]);
 					l.k = spring;
-					ds_list_add(data.links, l);
+					array_push(data.links, l);
 				}
 				if(i && j < sample && data.points[i - 1][j + 1] != 0) {
 					var l = new link(data.points[i][j], data.points[i - 1][j + 1]);
 					l.k = spring;
-					ds_list_add(data.links, l);
+					array_push(data.links, l);
 				}
 			}
 		}
@@ -464,19 +460,43 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		var _inputs = load_map[? "inputs"];
 		
 		for(var i = control_index; i < ds_list_size(_inputs); i++) {
-			createControl();
-			inputs[| i].deserialize(_inputs[| i]);
+			var inp = createControl();
+			print(instanceof(inp))
+			inp.applyDeserialize(_inputs[| i]);
 		}
 	}
 	
 	static attributeSerialize = function() {
 		var att = ds_map_create();
-		ds_map_add_map(att, "pin", attributes[? "pin"]);
+		
+		var pinList = ds_list_create();
+		for( var j = 0; j < array_length(data.points); j++ )
+		for( var k = 0; k < array_length(data.points[j]); k++ ) {
+			var p = data.points[j][k];
+			if(p == 0) continue;
+			if(p.pin) ds_list_add(pinList, p.index);
+		}
+			
+		ds_map_add_list(att, "pin", pinList);
 		return att;
 	}
 	
+	loadPin = noone;
 	static attributeDeserialize = function(attr) {
-		if(ds_map_exists(attr, "pin"))
-			attributes[? "pin"] = ds_map_clone(attr[? "pin"]);
+		if(ds_map_exists(attr, "pin")) 
+			loadPin = attr[? "pin"];
+	}
+	
+	static postConnect = function() {
+		setTriangle();
+		
+		if(loadPin != noone) {
+			for( var i = 0; i < ds_list_size(loadPin); i++ ) {
+				var ind = loadPin[| i];
+				if(ind < array_length(points))
+					points[ind].pin = true;
+			}
+			loadPin = noone;
+		}
 	}
 }

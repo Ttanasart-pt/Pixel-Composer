@@ -154,8 +154,9 @@
 			if(anchor & ANCHOR.top)    dialog_y = min(ystart, WIN_SH - dialog_h);
 			if(anchor & ANCHOR.bottom) dialog_y = max(ystart - dialog_h, 0);
 		}
-		dialog_x = round(dialog_x);
-		dialog_y = round(dialog_y);
+		
+		dialog_x = round(clamp(dialog_x, 2, WIN_SW - dialog_w - 2));
+		dialog_y = round(clamp(dialog_y, 2, WIN_SH - dialog_h - 2));
 	}
 
 	function checkMouse() {

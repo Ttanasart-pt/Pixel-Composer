@@ -147,7 +147,7 @@ function Node_Vector2(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	inputs[| 3] = nodeValue("Display", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Number", "Coordinate" ]);
 	
-	inputs[| 4] = nodeValue("Reset to center", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+	inputs[| 4] = nodeValue("Reset to center", self, JUNCTION_CONNECT.input, VALUE_TYPE.trigger, 0)
 		.setDisplay(VALUE_DISPLAY.button, [ function () { 
 			wd_minx		= -1;
 			wd_miny		= -1;
