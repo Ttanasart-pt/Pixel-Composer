@@ -1,5 +1,5 @@
 //draw
-function draw_surface_safe(surface, _x, _y) {
+function draw_surface_safe(surface, _x = 0, _y = 0) {
 	if(!is_surface(surface)) return;
 	
 	__channel_pre(surface);

@@ -23,7 +23,7 @@ function __nodeLeafList(_list) {
 		var _startNode = _node.isRenderable();
 		if(_startNode) {
 			array_push(nodes, _node);
-			printIf(global.RENDER_LOG, "Push node " + _node.name + " to stack");
+			printIf(global.RENDER_LOG, "		> Push node " + _node.name + " to stack");
 		}
 	}
 	
@@ -83,36 +83,41 @@ function Render(partial = false, runAction = false) {
 		
 			if(!_node.active)		continue;
 			if(!_node.renderActive) continue;
-			if(_node.rendered)		continue;
+			if(_node.rendered) {
+				printIf(global.RENDER_LOG, "    > Skip rendered " + _node.name + " (" + _node.display_name + ")");
+				continue;
+			}
+			
 			if(__nodeInLoop(_node)) continue;
-		
-			var _startNode = _node.isRenderable();
+			
+			var _startNode = _node.isRenderable(global.RENDER_LOG);
 			if(_startNode) {
 				printIf(global.RENDER_LOG, "    > Found leaf " + _node.name + " (" + _node.display_name + ")");
 				
 				_node.triggerRender();
 				ds_queue_enqueue(RENDER_QUEUE, _node);
-			}
+			} else 
+				printIf(global.RENDER_LOG, "    > Skip leaf " + _node.name + " (" + _node.display_name + ")");
 		}
 	
 		// render forward
 		while(!ds_queue_empty(RENDER_QUEUE)) {
 			rendering = ds_queue_dequeue(RENDER_QUEUE);
 		
+			var txt = rendering.rendered? " [Skip]" : " [Update]";
+			
 			if(!rendering.rendered) {
 				rendering.doUpdate();
-				printIf(global.RENDER_LOG, "Rendered " + rendering.name + " (" + rendering.display_name + ") [" + string(instanceof(rendering)) + "] (Update)");
 				
 				var nextNodes = rendering.getNextNodes();
-				for( var i = 0; i < array_length(nextNodes); i++ ) {
-					if(!nextNodes[i].isRenderable()) continue;
+				for( var i = 0; i < array_length(nextNodes); i++ )
 					ds_queue_enqueue(RENDER_QUEUE, nextNodes[i]);
-				}
 				
 				if(runAction && rendering.hasInspector1Update())
 					rendering.inspector1Update();
-			} else 
-				printIf(global.RENDER_LOG, "Rendered " + rendering.name + " (" + rendering.display_name + ") [" + string(instanceof(rendering)) + "] (Skip)");
+			}
+			
+			printIf(global.RENDER_LOG, "Rendered " + rendering.name + " (" + rendering.display_name + ") [" + string(instanceof(rendering)) + "]" + txt);
 		}
 	} catch(e)
 		noti_warning(exception_print(e));
@@ -153,7 +158,7 @@ function RenderListAction(list, context = PANEL_GRAPH.getCurrentContext()) {
 		
 			if(_node.isRenderable()) {
 				ds_queue_enqueue(RENDER_QUEUE, _node);
-				printIf(global.RENDER_LOG, "    > Push " + _node.name + " (" + _node.display_name + ") node to stack");
+				printIf(global.RENDER_LOG, "		> Push " + _node.name + " (" + _node.display_name + ") node to stack");
 			}
 		}
 		
@@ -163,6 +168,7 @@ function RenderListAction(list, context = PANEL_GRAPH.getCurrentContext()) {
 			if(rendering.group == context) break;
 			
 			var txt = rendering.rendered? " [Skip]" : " [Update]";
+			
 			if(!rendering.rendered) {
 				rendering.doUpdate();
 				if(rendering.hasInspector1Update()) {
@@ -171,11 +177,10 @@ function RenderListAction(list, context = PANEL_GRAPH.getCurrentContext()) {
 				}
 				
 				var nextNodes = rendering.getNextNodes();
-				for( var i = 0; i < array_length(nextNodes); i++ ) {
-					if(!nextNodes[i].isRenderable()) continue;
+				for( var i = 0; i < array_length(nextNodes); i++ ) 
 					ds_queue_enqueue(RENDER_QUEUE, nextNodes[i]);
-				}
 			}
+			
 			printIf(global.RENDER_LOG, "Rendered " + rendering.name + " (" + rendering.display_name + ") [" + string(instanceof(rendering)) + "]" + txt);
 		}
 	

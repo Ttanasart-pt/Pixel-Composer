@@ -61,7 +61,7 @@ function Node_Path_Array(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 			var _path = inputs[| i].getValue();
 			var lc    = struct_has(_path, "getLineCount")? _path.getLineCount() : 1; 
 			
-			if(ind < lc) return _path.getLength(ind).clone();
+			if(ind < lc) return _path.getLength(ind);
 			ind -= lc;
 		}
 		
@@ -73,7 +73,7 @@ function Node_Path_Array(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 			var _path = inputs[| i].getValue();
 			var lc    = struct_has(_path, "getLineCount")? _path.getLineCount() : 1; 
 			
-			if(ind < lc) return _path.getBoundary(ind).clone();
+			if(ind < lc) return _path.getBoundary(ind);
 			ind -= lc;
 		}
 		
@@ -85,7 +85,7 @@ function Node_Path_Array(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 			var _path = inputs[| i].getValue();
 			var lc    = struct_has(_path, "getLineCount")? _path.getLineCount() : 1; 
 			
-			if(ind < lc) return _path.getSegmentLength(ind).clone();
+			if(ind < lc) return _path.getSegmentLength(ind);
 			ind -= lc;
 		}
 		
@@ -97,7 +97,7 @@ function Node_Path_Array(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 			var _path = inputs[| i].getValue();
 			var lc    = struct_has(_path, "getLineCount")? _path.getLineCount() : 1; 
 			
-			if(ind < lc) return _path.getAccuLength(ind).clone();
+			if(ind < lc) return _path.getAccuLength(ind);
 			ind -= lc;
 		}
 		
@@ -109,7 +109,7 @@ function Node_Path_Array(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 			var _path = inputs[| i].getValue();
 			var lc    = struct_has(_path, "getLineCount")? _path.getLineCount() : 1; 
 			
-			if(ind < lc) return _path.getSegmentCount(ind).clone();
+			if(ind < lc) return _path.getSegmentCount(ind);
 			ind -= lc;
 		}
 		

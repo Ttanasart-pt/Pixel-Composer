@@ -29,7 +29,6 @@ function Node_Image_gif(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	name			= "Image GIF";
 	color			= COLORS.node_blend_input;
 	update_on_frame = true;
-	always_output   = true;
 	
 	inputs[| 0]  = nodeValue("Path", self, JUNCTION_CONNECT.input, VALUE_TYPE.path, "")
 		.setDisplay(VALUE_DISPLAY.path_load, ["*.gif", ""]);

@@ -53,7 +53,6 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	show_input_name  = false;
 	show_output_name = false;
 	
-	always_output = false;
 	inspecting	  = false;
 	previewing	  = 0;
 	
@@ -248,24 +247,6 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		if(use_cache) cacheArrayCheck();
 		var willUpdate = false;
 		
-		if(always_output) {
-			for(var i = 0; i < ds_list_size(outputs); i++) {
-				if(outputs[| i].type != VALUE_TYPE.surface) 
-					continue;
-				var val = outputs[| i].getValue();
-				
-				if(is_array(val)) {
-					for(var j = 0; j < array_length(val); j++) {
-						var _surf = val[j];
-						if(is_surface(_surf) && _surf != DEF_SURFACE)
-							continue;
-						willUpdate = true;
-					}
-				} else if(!is_surface(val) || val == DEF_SURFACE)
-					willUpdate = true;
-			}
-		}
-		
 		if(ANIMATOR.frame_progress) {
 			if(update_on_frame)
 				willUpdate = true;
@@ -350,7 +331,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 			nodes[i].triggerRender();
 	}
 		
-	static isRenderable = function() { //Check if every input is ready (updated)
+	static isRenderable = function(log = false) { //Check if every input is ready (updated)
 		if(!active)	return false;
 		if(!renderActive) return false;
 		
@@ -360,8 +341,8 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 			if( _in.type == VALUE_TYPE.node) continue;
 			
 			var val_from = _in.value_from;
-			if( val_from == noone) continue;
-			if(!val_from.node.active) continue;
+			if( val_from == noone)			continue;
+			if(!val_from.node.active)		continue;
 			if(!val_from.node.renderActive) continue;
 			if(!val_from.node.rendered)
 				return false;
@@ -380,10 +361,10 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 				var _to = _ot.value_to[| j];
 				if(!_to.node.active || _to.value_from == noone) continue; 
 				
-				printIf(global.RENDER_LOG, "      -> Check render " + _to.node.name + " from " + _to.value_from.node.name);
+				printIf(global.RENDER_LOG, "       |--> Check render " + _to.node.name + " from " + _to.value_from.node.name);
 				if(_to.value_from.node != self) continue;
 				
-				printIf(global.RENDER_LOG, "      --> Check complete, push " + _to.node.name + " to stack.");
+				printIf(global.RENDER_LOG, "         >> Check complete, push " + _to.node.name + " to stack.");
 				array_push(nodes, _to.node);
 			}
 		}	
@@ -394,6 +375,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	static onInspect = function() {}
 	
 	static setRenderStatus = function(result) {
+		printIf(global.RENDER_LOG, "				>> Set render status for " + name + " : " + string(result));
 		rendered = result;
 		
 		if(!result && group != noone) 
@@ -466,15 +448,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		var y0 = yy + 20 * draw_name + draw_padding * _s;
 		var y1 = yy + (h - draw_padding) * _s;
 		
-		return { x0 : x0, 
-				 x1 : x1, 
-				 y0 : y0, 
-				 y1 : y1, 
-				 xc : (x0 + x1) / 2, 
-				 yc : (y0 + y1) / 2, 
-				 w  : x1 - x0, 
-				 h  : y1 - y0 
-			  };
+		return new node_bbox(x0, y0, x1, y1);
 	}
 	
 	static drawNodeName = function(xx, yy, _s) {
@@ -490,7 +464,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		draw_sprite_stretched_ext(THEME.node_bg_name, 0, xx, yy, w * _s, ui(20), color, aa);
 		
 		var cc = COLORS._main_text;
-		if(PREF_MAP[? "node_show_render_status"] && !rendered)
+		if(/*PREF_MAP[? "node_show_render_status"] && */!rendered)
 			cc = isRenderable()? COLORS._main_value_positive : COLORS._main_value_negative;
 		
 		draw_set_text(f_p1, fa_left, fa_center, cc);

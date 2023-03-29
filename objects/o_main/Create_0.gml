@@ -19,7 +19,8 @@
 		gameframe_caption_height_normal		= ui(40);
 		gameframe_caption_height_maximized  = ui(40);
 		
-		gameframe_button_array = [  game_frame_button_create("", s_kenney, 0, function() {}),
+		gameframe_button_array = [  
+									game_frame_button_create("", s_kenney, 0, function() {}),
 									game_frame_button_create("", s_kenney, 0, function() {}),
 								 ];
 	} else if(OS == os_macosx)

@@ -35,7 +35,6 @@ function Node_Image_Sequence(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	name  = "Image Array";
 	spr   = [];
 	color = COLORS.node_blend_input;
-	always_output   = true;
 	
 	inputs[| 0]  = nodeValue("Path", self, JUNCTION_CONNECT.input, VALUE_TYPE.path, [])
 		.setDisplay(VALUE_DISPLAY.path_array, ["*.png", ""]);
@@ -135,6 +134,8 @@ function Node_Image_Sequence(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		var _ww = -1, _hh = -1;
 		
 		var surfs = outputs[| 0].getValue();
+		surface_array_free(surfs);
+		surfs = [];
 		
 		for(var i = 0; i < array_length(spr); i++) {
 			var _spr = spr[i];
@@ -168,7 +169,7 @@ function Node_Image_Sequence(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 					ww = sprite_get_width(_spr) + pad[0] + pad[2];
 					hh = sprite_get_height(_spr) + pad[1] + pad[3];
 					
-					surfs[i] = surface_verify(array_safe_get(surfs, i), ww, hh, attrDepth());
+					surfs[i] = surface_create(ww, hh, attrDepth());
 					surface_set_target(surfs[i]);
 						DRAW_CLEAR
 						BLEND_OVERRIDE;
@@ -178,7 +179,7 @@ function Node_Image_Sequence(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 					break;
 				case CANVAS_SIZE.maximum :
 				case CANVAS_SIZE.minimum :
-					surfs[i] = surface_verify(array_safe_get(surfs, i), ww, hh, attrDepth());
+					surfs[i] = surface_create(ww, hh, attrDepth());
 					var _w = sprite_get_width(_spr);
 					var _h = sprite_get_height(_spr);
 						

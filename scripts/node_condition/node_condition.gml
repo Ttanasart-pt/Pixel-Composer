@@ -21,15 +21,19 @@ function Node_Condition(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		.setVisible(true, true);
 	
 	inputs[| 5] = nodeValue("Eval mode", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0 )
-		.setDisplay(VALUE_DISPLAY.enum_scroll, ["Boolean", "Comparison"])
+		.setDisplay(VALUE_DISPLAY.enum_scroll, ["Boolean", "Number compare", "Text compare" ])
 		.rejectArray();
 	
 	inputs[| 6] = nodeValue("Boolean", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false )
 		.setVisible(true, true)
 		.rejectArray();
 	
+	inputs[| 7] = nodeValue("Text 1", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "" );
+	
+	inputs[| 8] = nodeValue("Text 2", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "" );
+		
 	input_display_list = [ 5,
-		["Condition", false], 0, 1, 2, 6,
+		["Condition", false], 0, 1, 2, 6, 7, 8, 
 		["Result",	  true], 3, 4
 	]
 	
@@ -39,10 +43,12 @@ function Node_Condition(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	static step = function() {
 		var _mode = inputs[| 5].getValue();
 		
-		inputs[| 0].setVisible(_mode);
-		inputs[| 1].setVisible(_mode);
-		inputs[| 2].setVisible(_mode);
-		inputs[| 6].setVisible(!_mode);
+		inputs[| 0].setVisible(_mode == 1, _mode == 1);
+		inputs[| 1].setVisible(_mode == 1);
+		inputs[| 2].setVisible(_mode == 1, _mode == 1);
+		inputs[| 6].setVisible(_mode == 0, _mode == 0);
+		inputs[| 7].setVisible(_mode == 2, _mode == 2);
+		inputs[| 8].setVisible(_mode == 2, _mode == 2);
 	}
 	
 	static update = function(frame = ANIMATOR.current_frame) {
@@ -55,23 +61,28 @@ function Node_Condition(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		var _cond = inputs[| 1].getValue();
 		var _valu = inputs[| 2].getValue();
 		var _bool = inputs[| 6].getValue();
+		var _txt1 = inputs[| 7].getValue();
+		var _txt2 = inputs[| 8].getValue();
 		
 		inputs[| 3].type = inputs[| 3].value_from == noone? VALUE_TYPE.any : inputs[| 3].value_from.type;
 		inputs[| 4].type = inputs[| 4].value_from == noone? VALUE_TYPE.any : inputs[| 4].value_from.type;
 		
 		var res = false;
 		
-		if(_mode) {
-			switch(_cond) {
-				case 0 : res = _chck == _valu; break;
-				case 1 : res = _chck != _valu; break;
-				case 2 : res = _chck <  _valu; break;
-				case 3 : res = _chck <= _valu; break;
-				case 4 : res = _chck >  _valu; break;
-				case 5 : res = _chck >= _valu; break;
-			}
-		} else
-			res = _bool;
+		switch(_mode) {
+			case 0 : res = _bool; break;
+			case 1 :
+				switch(_cond) {
+					case 0 : res = _chck == _valu; break;
+					case 1 : res = _chck != _valu; break;
+					case 2 : res = _chck <  _valu; break;
+					case 3 : res = _chck <= _valu; break;
+					case 4 : res = _chck >  _valu; break;
+					case 5 : res = _chck >= _valu; break;
+				}
+				break;
+			case 2 : res = _txt1 == _txt2; break;
+		}
 		
 		if(res) {
 			outputs[| 0].setValue(_true);

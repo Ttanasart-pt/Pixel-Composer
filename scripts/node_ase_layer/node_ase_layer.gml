@@ -1,7 +1,6 @@
 function Node_ASE_layer(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "ASE Layer";
 	update_on_frame = true;
-	always_output	= true;
 	previewable = false;
 	
 	inputs[| 0] = nodeValue("ASE data", self, JUNCTION_CONNECT.input, VALUE_TYPE.object, noone)

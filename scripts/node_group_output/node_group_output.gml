@@ -26,31 +26,29 @@ function Node_Group_Output(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	static getNextNodes = function() {
 		if(is_undefined(outParent)) return [];
-		group.setRenderStatus(true);
+		//group.setRenderStatus(true);
 		//printIf(global.RENDER_LOG, "Value to amount " + string(ds_list_size(outParent.value_to)));
 		
 		var nodes = [];
 		for(var j = 0; j < ds_list_size(outParent.value_to); j++) {
 			var _to = outParent.value_to[| j];
 			if(!_to.node.renderActive) continue;
-			printIf(global.RENDER_LOG, "Value to " + _to.name);
+			//printIf(global.RENDER_LOG, "Value to " + _to.name);
 			
 			if(!_to.node.active || _to.value_from == noone) {
-				printIf(global.RENDER_LOG, "no value from");
+				//printIf(global.RENDER_LOG, "no value from");
 				continue; 
 			}
 			
 			if(_to.value_from.node != group) {
-				printIf(global.RENDER_LOG, "value from not equal group");
+				//printIf(global.RENDER_LOG, "value from not equal group");
 				continue; 
 			}
 				
-			printIf(global.RENDER_LOG, "Group output ready " + string(_to.node.isRenderable()));
+			//printIf(global.RENDER_LOG, "Group output ready " + string(_to.node.isRenderable()));
 			
-			if(_to.node.isRenderable()) {
-				array_push(nodes, _to.node);
-				printIf(global.RENDER_LOG, "Push node " + _to.node.name + " to stack");
-			}
+			array_push(nodes, _to.node);
+			printIf(global.RENDER_LOG, "         >> Check complete, push " + _to.node.name + " to stack.");
 		}
 		
 		return nodes;

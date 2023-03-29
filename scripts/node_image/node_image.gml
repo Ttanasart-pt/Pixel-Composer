@@ -24,7 +24,6 @@ function Node_create_Image_path(_x, _y, path) {
 function Node_Image(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Image";
 	color			= COLORS.node_blend_input;
-	always_output   = true;
 	
 	inputs[| 0]  = nodeValue("Path", self, JUNCTION_CONNECT.input, VALUE_TYPE.path, "")
 		.setDisplay(VALUE_DISPLAY.path_load, ["*.png", ""])

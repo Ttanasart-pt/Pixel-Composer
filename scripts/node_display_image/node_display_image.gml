@@ -27,7 +27,6 @@ function Node_create_Display_Image_path(_x, _y, path) {
 
 function Node_Display_Image(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name			= "";
-	always_output   = true;
 	auto_height		= false;
 	
 	inputs[| 0]  = nodeValue("Path", self, JUNCTION_CONNECT.input, VALUE_TYPE.path, "")

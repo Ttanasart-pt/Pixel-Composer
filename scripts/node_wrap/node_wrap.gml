@@ -179,50 +179,75 @@ function Node_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		var bl = _data[3];
 		var br = _data[4];
 		
-		surface_set_shader(_outSurf);
-		shader_set_interpolation(_data[0]);
-			draw_set_color(c_white);
+		var sw = surface_get_width(_data[0]);
+		var sh = surface_get_height(_data[0]);
+		
+		var teq = round(tl[1]) == round(tr[1]);
+		var beq = round(bl[1]) == round(br[1]);
+		var leq = round(tl[0]) == round(bl[0]);
+		var req = round(tr[0]) == round(br[0]);
+		
+		if(teq && beq && leq && req) {
+			surface_set_shader(_outSurf)
+			shader_set_interpolation(_data[0]);
+			draw_surface_stretched_safe(_data[0], tl[0], tl[1], tr[0] - tl[0], bl[1] - tl[1]);
+			surface_reset_shader();
+		} else {
+			surface_set_shader(_outSurf, sh_warp_4points);
+			shader_set_interpolation(_data[0]);
+				shader_set_f("p0", br[0] / sw, br[1] / sh);
+				shader_set_f("p1", tr[0] / sw, tr[1] / sh);
+				shader_set_f("p2", tl[0] / sw, tl[1] / sh);
+				shader_set_f("p3", bl[0] / sw, bl[1] / sh);
 			
-			var tex = surface_get_texture(_data[0]);
-			draw_primitive_begin_texture(pr_trianglestrip, tex);
+				draw_surface(_data[0], 0, 0);
+			surface_reset_shader();
+		}
+		
+		//surface_set_shader(_outSurf);
+		//shader_set_interpolation(_data[0]);
+		//	draw_set_color(c_white);
 			
-			var res = 4;
-			var _i0, _i1, _j0, _j1;
-			var tl_x = tl[0];
-			var tl_y = tl[1];
-			var tr_x = tr[0];
-			var tr_y = tr[1];
-			var bl_x = bl[0];
-			var bl_y = bl[1];
-			var br_x = br[0];
-			var br_y = br[1];
+		//	var tex = surface_get_texture(_data[0]);
+		//	draw_primitive_begin_texture(pr_trianglestrip, tex);
 			
-			for( var i = 0; i < res; i++ ) {
-				for( var j = 0; j < res; j++ ) {
-					_i0 = i / res;
-					_i1 = (i + 1) / res;
-					_j0 = j / res;
-					_j1 = (j + 1) / res;
+		//	var res = 4;
+		//	var _i0, _i1, _j0, _j1;
+		//	var tl_x = tl[0];
+		//	var tl_y = tl[1];
+		//	var tr_x = tr[0];
+		//	var tr_y = tr[1];
+		//	var bl_x = bl[0];
+		//	var bl_y = bl[1];
+		//	var br_x = br[0];
+		//	var br_y = br[1];
+			
+		//	for( var i = 0; i < res; i++ ) {
+		//		for( var j = 0; j < res; j++ ) {
+		//			_i0 = i / res;
+		//			_i1 = (i + 1) / res;
+		//			_j0 = j / res;
+		//			_j1 = (j + 1) / res;
 					
-					var _tlx = lerp(lerp(tl_x, tr_x, _i0), lerp(bl_x, br_x, _i0), _j0);
-					var _tly = lerp(lerp(tl_y, tr_y, _i0), lerp(bl_y, br_y, _i0), _j0);
-					var _trx = lerp(lerp(tl_x, tr_x, _i1), lerp(bl_x, br_x, _i1), _j0);
-					var _try = lerp(lerp(tl_y, tr_y, _i1), lerp(bl_y, br_y, _i1), _j0);
+		//			var _tlx = lerp(lerp(tl_x, tr_x, _i0), lerp(bl_x, br_x, _i0), _j0);
+		//			var _tly = lerp(lerp(tl_y, tr_y, _i0), lerp(bl_y, br_y, _i0), _j0);
+		//			var _trx = lerp(lerp(tl_x, tr_x, _i1), lerp(bl_x, br_x, _i1), _j0);
+		//			var _try = lerp(lerp(tl_y, tr_y, _i1), lerp(bl_y, br_y, _i1), _j0);
 					
-					var _blx = lerp(lerp(tl_x, tr_x, _i0), lerp(bl_x, br_x, _i0), _j1);
-					var _bly = lerp(lerp(tl_y, tr_y, _i0), lerp(bl_y, br_y, _i0), _j1);
-					var _brx = lerp(lerp(tl_x, tr_x, _i1), lerp(bl_x, br_x, _i1), _j1);
-					var _bry = lerp(lerp(tl_y, tr_y, _i1), lerp(bl_y, br_y, _i1), _j1);
+		//			var _blx = lerp(lerp(tl_x, tr_x, _i0), lerp(bl_x, br_x, _i0), _j1);
+		//			var _bly = lerp(lerp(tl_y, tr_y, _i0), lerp(bl_y, br_y, _i0), _j1);
+		//			var _brx = lerp(lerp(tl_x, tr_x, _i1), lerp(bl_x, br_x, _i1), _j1);
+		//			var _bry = lerp(lerp(tl_y, tr_y, _i1), lerp(bl_y, br_y, _i1), _j1);
 					
-					draw_vertex_texture(_tlx, _tly, _i0, _j0);
-					draw_vertex_texture(_trx, _try, _i1, _j0);
+		//			draw_vertex_texture(_tlx, _tly, _i0, _j0);
+		//			draw_vertex_texture(_trx, _try, _i1, _j0);
 					
-					draw_vertex_texture(_blx, _bly, _i0, _j1);
-					draw_vertex_texture(_brx, _bry, _i1, _j1);
-				}
-			}
-			draw_primitive_end();
-		surface_reset_shader();
+		//			draw_vertex_texture(_blx, _bly, _i0, _j1);
+		//			draw_vertex_texture(_brx, _bry, _i1, _j1);
+		//		}
+		//	}
+		//	draw_primitive_end();
+		//surface_reset_shader();
 		
 		return _outSurf;
 	}

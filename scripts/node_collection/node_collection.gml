@@ -142,13 +142,14 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 			if(!_in.renderActive) continue;
 			
 			array_push(nodes, _in);
-			printIf(global.RENDER_LOG, "Push group input " + _in.name + " to stack");
+			printIf(global.RENDER_LOG, "         >> Check complete, push " + _in.name + " to stack.");
 		}
 		
 		return nodes;
 	}
 	
 	static setRenderStatus = function(result) {
+		printIf(global.RENDER_LOG, "				>> Set render status for " + name + " : " + string(result));
 		rendered = result;
 		
 		if(result) {

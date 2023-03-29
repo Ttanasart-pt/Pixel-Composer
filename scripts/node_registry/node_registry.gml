@@ -239,17 +239,17 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 			addNodeObject(transform, "Flip",			s_node_flip,			"Node_Flip",			[1, Node_Flip], ["mirror"], "Flip image horizontally or vertically.");
 		
 			ds_list_add(transform, "Warps");
-			addNodeObject(transform, "Crop",			s_node_crop,			"Node_Crop",			[1, Node_Crop],, "Crop out image to create smaller ones.");
-			addNodeObject(transform, "Crop Content",	s_node_crop_content,	"Node_Crop_Content",	[1, Node_Crop_Content],, "Crop out empty pixel pixel from the image.");
-			addNodeObject(transform, "Warp",			s_node_warp,			"Node_Warp",			[1, Node_Warp], ["wrap"], "Warp image by freely moving the corners.");
-			addNodeObject(transform, "Skew",			s_node_skew,			"Node_Skew",			[1, Node_Skew],, "Skew image horizontally, or vertically.");
-			addNodeObject(transform, "Mesh Warp",		s_node_warp_mesh,		"Node_Mesh_Warp",		[1, Node_Mesh_Warp], ["mesh wrap"], "Wrap image by converting it to mesh, and using control points.");
-			addNodeObject(transform, "Polar",			s_node_polar,			"Node_Polar",			[1, Node_Polar],, "Convert image to polar coordinate.");
-			addNodeObject(transform, "Area Warp",		s_node_padding,			"Node_Wrap_Area",		[1, Node_Wrap_Area],, "Wrap image to fit area value (x, y, w, h).");
+			addNodeObject(transform, "Crop",			 s_node_crop,			"Node_Crop",			 [1, Node_Crop],, "Crop out image to create smaller ones.");
+			addNodeObject(transform, "Crop Content",	 s_node_crop_content,	"Node_Crop_Content",	 [1, Node_Crop_Content],, "Crop out empty pixel pixel from the image.");
+			addNodeObject(transform, "Warp",			 s_node_warp,			"Node_Warp",			 [1, Node_Warp], ["wrap"], "Warp image by freely moving the corners.");
+			addNodeObject(transform, "Skew",			 s_node_skew,			"Node_Skew",			 [1, Node_Skew],, "Skew image horizontally, or vertically.");
+			addNodeObject(transform, "Mesh Warp",		 s_node_warp_mesh,		"Node_Mesh_Warp",		 [1, Node_Mesh_Warp], ["mesh wrap"], "Wrap image by converting it to mesh, and using control points.");
+			addNodeObject(transform, "Polar",			 s_node_polar,			"Node_Polar",			 [1, Node_Polar],, "Convert image to polar coordinate.");
+			addNodeObject(transform, "Area Warp",		 s_node_padding,		"Node_Wrap_Area",		 [1, Node_Wrap_Area],, "Wrap image to fit area value (x, y, w, h).");
 		
 			ds_list_add(transform, "Others");
 			addNodeObject(transform, "Composite",		s_node_compose,			"Node_Composite",		[1, Node_Composite], ["merge"], "Combine multiple images with controllable position, rotation, scale.");
-			addNodeObject(transform, "Nine Slice",		s_node_9patch,			"Node_9Slice",			[1, Node_9Slice], ["9", "splice"], "Cut image into 3x3 parts, and scale/repeat only the middle part.");
+			addNodeObject(transform, "Nine Slice",		s_node_9patch,			"Node_9Slice",			[1, Node_9Slice], ["9 slice", "splice"], "Cut image into 3x3 parts, and scale/repeat only the middle part.");
 			addNodeObject(transform, "Padding",			s_node_padding,			"Node_Padding",			[1, Node_Padding],, "Make image bigger by adding space in 4 directions.");
 		
 		var filter = ds_list_create();
@@ -258,7 +258,7 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 			addNodeObject(filter, "Blend",				s_node_blend,			"Node_Blend",			[0, Node_create_Blend], ["normal", "add", "subtract", "multiply", "screen", "maxx", "minn"], "Blend 2 images using different blendmodes.");
 			addNodeObject(filter, "RGBA Combine",		s_node_RGB_combine,		"Node_Combine_RGB",		[1, Node_Combine_RGB],, "Combine 4 image in to one. Each image use to control RGBA channel.").setVersion(1070);
 			addNodeObject(filter, "HSV Combine",		s_node_HSV_combine,		"Node_Combine_HSV",		[1, Node_Combine_HSV],, "Combine 4 image in to one. Each image use to control HSVA channel.").setVersion(1070);
-		
+			
 			ds_list_add(filter, "Blurs");
 			addNodeObject(filter, "Blur",				s_node_blur,			"Node_Blur",			[1, Node_Blur], ["gaussian blur"], "Blur image smoothly.");
 			addNodeObject(filter, "Simple Blur",		s_node_blur_simple,		"Node_Blur_Simple",		[1, Node_Blur_Simple],, "Blur image using simpler algorithm. Allowing for variable blur strength.").setVersion(1070);
@@ -268,7 +268,7 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 			addNodeObject(filter, "Lens Blur",			s_node_bokeh,			"Node_Blur_Bokeh",		[1, Node_Blur_Bokeh], ["bokeh"], "Create bokeh effect. Blur lighter color in a lens-like manner.").setVersion(1110);
 			addNodeObject(filter, "Contrast Blur",		s_node_blur_contrast,	"Node_Blur_Contrast",	[1, Node_Blur_Contrast],, "Blur only pixel of a similiar color.");
 			addNodeObject(filter, "Average",			s_node_average,			"Node_Average",			[1, Node_Average],, "Average color of every pixels in the image.").setVersion(1110);
-		
+			
 			ds_list_add(filter, "Warps");
 			addNodeObject(filter, "Mirror",				s_node_mirror,			"Node_Mirror",			[1, Node_Mirror],, "Reflect the image along a reflection line.").setVersion(1070);
 			addNodeObject(filter, "Twirl",				s_node_twirl,			"Node_Twirl",			[1, Node_Twirl], ["twist"], "Twist the image around a mid point.");
@@ -294,8 +294,9 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 			addNodeObject(filter, "Convolution",		s_node_convolution,		"Node_Convolution",		[1, Node_Convolution], ["kernel"], "Apply convolution operation on each pixel using a custom 3x3 kernel.").setVersion(1090);
 			addNodeObject(filter, "Local Analyze",		s_node_local_analyze,	"Node_Local_Analyze",	[1, Node_Local_Analyze],, "Apply non-linear operation (minimum, maximum) on each pixel locally.").setVersion(1110);
 			addNodeObject(filter, "SDF",				s_node_sdf,				"Node_SDF",				[1, Node_SDF],, "Create signed distance field using jump flooding algorithm.").setVersion(1130);
+			addNodeObject(filter, "Replace Image",		s_node_sdf,				"Node_Surface_Replace",	[1, Node_Surface_Replace]).setVersion(1140);
 			addNodeObject(filter, "Chromatic Aberration",	s_node_chromatic_abarration,	"Node_Chromatic_Aberration",	[1, Node_Chromatic_Aberration],, "Apply chromatic aberration effect to the image.");
-		
+			
 			ds_list_add(filter, "Colors");
 			addNodeObject(filter, "Replace Color",		s_node_color_replace,	"Node_Color_replace",	[1, Node_Color_replace], ["isolate color", "select color", "palette swap"], "Replace color that match one palette with another palette.");
 			addNodeObject(filter, "Remove Color",		s_node_color_remove,	"Node_Color_Remove",	[1, Node_Color_Remove], ["delete color"], "Remove color that match a palette.");
@@ -418,12 +419,13 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 			addNodeObject(values, "Equation",		s_node_equation,		"Node_Equation",		[0, Node_create_Equation],, "Evaluate string of equation. With an option for setting variables.");
 			addNodeObject(values, "Random",			s_node_random,			"Node_Random",			[1, Node_Random]);
 			addNodeObject(values, "Statistic",		s_node_statistic,		"Node_Statistic",		[0, Node_create_Statistic], ["sum", "average", "mean", "median", "min", "max"]);
+			addNodeObject(values, "Convert Base",	s_node_base_conversion,	"Node_Base_Convert",	[1, Node_Base_Convert], ["base convert", "binary", "hexadecimal"]).setVersion(1140);
 			addNodeObject(values, "Vector2",		s_node_vec2,			"Node_Vector2",			[1, Node_Vector2]);
 			addNodeObject(values, "Vector3",		s_node_vec3,			"Node_Vector3",			[1, Node_Vector3]);
 			addNodeObject(values, "Vector4",		s_node_vec4,			"Node_Vector4",			[1, Node_Vector4]);
 			addNodeObject(values, "Vector Split",	s_node_vec_split,		"Node_Vector_Split",	[1, Node_Vector_Split]);
 			addNodeObject(values, "Scatter Points",	s_node_scatter_point,	"Node_Scatter_Points",	[1, Node_Scatter_Points],, "Generate array of vector 2 points for scattering.").setVersion(1120);
-		
+			
 			ds_list_add(values, "Texts");
 			addNodeObject(values, "Text",			s_node_text,			"Node_String",					[1, Node_String]);
 			addNodeObject(values, "Unicode",		s_node_unicode,			"Node_Unicode",					[1, Node_Unicode]);
@@ -457,6 +459,7 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 			
 			ds_list_add(values, "Paths");
 			addNodeObject(values, "Path",			s_node_path,			"Node_Path",			[1, Node_Path]);
+			addNodeObject(values, "Path Anchor",	s_node_path_anchor,		"Node_Path_Anchor",		[1, Node_Path_Anchor]).setVersion(1140);
 			addNodeObject(values, "Path Array",		s_node_path_array,		"Node_Path_Array",		[1, Node_Path_Array]).setVersion(1137);
 			addNodeObject(values, "Sample Path",	s_node_path_sample,		"Node_Path_Sample",		[1, Node_Path_Sample],, "Sample a 2D position from a path");
 			addNodeObject(values, "Blend Path",		s_node_path_blend,		"Node_Path_Blend",		[1, Node_Path_Blend],, "Blend between 2 paths.");
@@ -614,7 +617,7 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 #region attribute
 	global.SURFACE_INTERPOLATION = [
 		"No aliasing", 
-		"Linear", 
+		"Bilinear", 
 		"Bicubic", 
 		"radSin"
 	];

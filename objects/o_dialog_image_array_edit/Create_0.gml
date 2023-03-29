@@ -6,7 +6,8 @@ event_inherited();
 	dialog_w = ui(648);
 	dialog_h = ui(640);
 	
-	dialog_resizable = true;
+	draggable = false;
+	dialog_resizable = false;
 	dialog_w_min = ui(400);
 	dialog_h_min = ui(400);
 	dialog_w_max = WIN_W;
@@ -71,7 +72,10 @@ event_inherited();
 					}
 				}
 				
-				var spr = target.spr[index];
+				var spr   = array_safe_get(target.spr, index, noone);
+				if(spr == noone || !sprite_exists(spr)) 
+					spr = s_texture_default;
+				
 				var spr_w = sprite_get_width(spr);
 				var spr_h = sprite_get_height(spr);
 				var spr_s = min((ww - ui(16)) / spr_w, (hh - ui(16)) / spr_h);
