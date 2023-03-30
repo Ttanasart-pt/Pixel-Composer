@@ -76,6 +76,12 @@ function shader_set_surface(sampler, surface) {
 	}
 	
 	function surface_set_shader(surface, shader = sh_sample, clear = true, blend = BLEND.over) {
+		if(!is_surface(surface)) {
+			__surface_set = false;
+			return;
+		}
+		
+		__surface_set = true;
 		surface_set_target(surface);
 		if(clear) DRAW_CLEAR;
 		
@@ -90,6 +96,8 @@ function shader_set_surface(sampler, surface) {
 	}
 	
 	function surface_reset_shader() {
+		if(!__surface_set) return;
+		
 		gpu_set_tex_filter(false);
 		BLEND_NORMAL;
 		surface_reset_target();

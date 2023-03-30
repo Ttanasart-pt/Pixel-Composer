@@ -735,7 +735,8 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		overlay_w = ww;
 		overlay_h = hh;
 	
-		if(is_surface(base)) surface_size_to(_outSurf, ww, hh, cDep);
+		if(is_surface(base)) 
+			_outSurf = surface_size_to(_outSurf, ww, hh, cDep);
 		
 		for(var i = 0; i < 2; i++) {
 			temp_surface[i] = surface_verify(temp_surface[i], surface_get_width(_outSurf), surface_get_height(_outSurf), cDep);

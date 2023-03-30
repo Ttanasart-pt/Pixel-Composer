@@ -277,12 +277,16 @@ event_inherited();
 			ds_list_add(_list, "Favourites");
 			for( var i = 0; i < array_length(global.FAV_NODES); i++ ) {
 				var _nodeIndex = global.FAV_NODES[i];
+				if(!ds_map_exists(ALL_NODES, _nodeIndex)) continue;
+				
 				ds_list_add(_list, ALL_NODES[? _nodeIndex]);
 			}
 			
 			ds_list_add(_list, "Recents");
 			for( var i = 0; i < array_length(global.RECENT_NODES); i++ ) {
 				var _nodeIndex = global.RECENT_NODES[i];
+				if(!ds_map_exists(ALL_NODES, _nodeIndex)) continue;
+				
 				ds_list_add(_list, ALL_NODES[? _nodeIndex]);
 			}
 		}
