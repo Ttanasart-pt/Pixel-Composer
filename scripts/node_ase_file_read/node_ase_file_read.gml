@@ -189,6 +189,8 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			
 			for( var j = 0; j < ds_list_size(outputs[| 1].value_to); j++ ) {
 				var _targNode = outputs[| 1].value_to[| j].node;
+				if(!_targNode.active) continue;
+				
 				if(_targNode.display_name == _name) {
 					_node = _targNode;
 					break;

@@ -1180,6 +1180,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 			_map[? "y"]		 = y;
 			_map[? "type"]   = instanceof(self);
 			_map[? "group"]  = group == noone? group : group.node_id;
+			_map[? "preview"] = previewable;
 		}
 		
 		ds_map_add_map(_map, "attri", attributeSerialize());
@@ -1220,15 +1221,16 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 				node_id = ds_map_try_get(load_map, "id");
 		
 			NODE_MAP[? node_id] = self;
-		
+			
 			if(ds_map_exists(load_map, "name"))
 				display_name = ds_map_try_get(load_map, "name", "");
 			_group = ds_map_try_get(load_map, "group", noone);
 			if(_group == -1) _group = noone;
-		
+			
 			x = ds_map_try_get(load_map, "x");
 			y = ds_map_try_get(load_map, "y");
 			renderActive = ds_map_try_get(load_map, "render", true);
+			previewable  = ds_map_try_get(load_map, "preview", previewable);
 		}
 		
 		if(ds_map_exists(load_map, "attri"))

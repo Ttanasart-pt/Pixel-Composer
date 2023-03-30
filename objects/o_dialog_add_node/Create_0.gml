@@ -294,13 +294,13 @@ event_inherited();
 		
 		var node_count = ds_list_size(_list);
 		
-		if(ADD_NODE_PAGE == NODE_PAGE_DEFAULT && node_count == 0) {
-			draw_set_text(f_h3, fa_center, fa_bottom, COLORS._main_text_sub);
-			draw_text(content_pane.w / 2, content_pane.h / 2 - ui(8), "No favorites");
+		//if(ADD_NODE_PAGE == NODE_PAGE_DEFAULT && array_length(global.FAV_NODES) == 0) {
+		//	draw_set_text(f_h3, fa_center, fa_bottom, COLORS._main_text_sub);
+		//	draw_text(content_pane.w / 2, content_pane.h / 2 - ui(8), "No favorites");
 			
-			draw_set_text(f_p0, fa_center, fa_top, COLORS._main_text_sub);
-			draw_text(content_pane.w / 2, content_pane.h / 2 - ui(4), "Right click on a node and select 'Add to favorite'\nto add node to favorite panel.");
-		}
+		//	draw_set_text(f_p0, fa_center, fa_top, COLORS._main_text_sub);
+		//	draw_text(content_pane.w / 2, content_pane.h / 2 - ui(4), "Right click on a node and select 'Add to favorite'\nto add node to favorite panel.");
+		//}
 		
 		if(PREF_MAP[? "dialog_add_node_view"] == 0) { //grid
 			var grid_size  = ui(64);

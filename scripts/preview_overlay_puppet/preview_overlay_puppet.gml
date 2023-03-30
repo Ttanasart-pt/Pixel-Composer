@@ -157,7 +157,7 @@ function preview_overlay_puppet(active, _x, _y, _s, _mx, _my, _snx, _sny) {
 			_val[PUPPET_CONTROL.fy] = _nx;
 	}
 	
-	if(drag_type >= 0) {
+	if(drag_type > 0) {
 		if(setValue( _val ))
 			UNDO_HOLDING = true;
 			

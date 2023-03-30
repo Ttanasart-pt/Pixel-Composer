@@ -8,6 +8,7 @@ uniform vec2 dimension;
 uniform sampler2D target;
 uniform vec2 target_dim;
 uniform float threshold;
+uniform float index;
 
 float random (in vec2 st) {
     return fract(sin(dot(st.xy, vec2(12.9898, 78.233))) * 43758.5453123);
@@ -43,6 +44,7 @@ void main() {
 	float target_pixels = target_dim.x * target_dim.y * (1. - threshold);
 	float match = 0.;
 	vec2  matchPos = vec2(0., 0.);
+	vec2  matchUv  = vec2(0., 0.);
 	
 	for( float i = 0.; i < target_dim.x; i++ ) 
 	for( float j = 0.; j < target_dim.y; j++ ) {
@@ -53,9 +55,10 @@ void main() {
 		float matchTemp = matchTemplate(uv);
 		if(matchTemp > match) {
 			match    = matchTemp;
-			matchPos = vec2(i, j) / target_dim;
+			matchPos = vec2(i, j) / (target_dim - 1.);
+			matchUv  = uv / dimension;
 		}
 	}
 	
-    gl_FragColor = match >= target_pixels? vec4(matchPos, random(matchPos), 1.) : vec4(vec3(0.), 0.);
+    gl_FragColor = match >= target_pixels? vec4(matchPos, index, 1.) : vec4(vec3(0.), 0.);
 }

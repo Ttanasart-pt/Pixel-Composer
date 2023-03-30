@@ -13,4 +13,3 @@
 #endregion
 
 event_inherited();
-

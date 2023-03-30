@@ -67,7 +67,7 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			setTriangle();
 	}
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) { 
 		for(var i = 0; i < array_length(data.links); i++)
 			data.links[i].draw(_x, _y, _s);
 		for(var i = 0; i < array_length(data.tris); i++)
