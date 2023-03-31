@@ -2,12 +2,12 @@ function Node_Surface_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 	name = "Replace Image";
 	preview_channel = 1;
 	
-	inputs[| 0] = nodeValue("Base image", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone );
+	inputs[| 0] = nodeValue("Base Image", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone );
 	
-	inputs[| 1] = nodeValue("Target image", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone )
+	inputs[| 1] = nodeValue("Target Image", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone )
 		.setArrayDepth(1);
 	
-	inputs[| 2] = nodeValue("Replacement image", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone )
+	inputs[| 2] = nodeValue("Replacement Image", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone )
 		.setArrayDepth(1);
 	
 	inputs[| 3] = nodeValue("Threshold", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.1 )
@@ -17,7 +17,7 @@ function Node_Surface_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 	
 	inputs[| 5] = nodeValue("Fast Mode", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true )
 	
-	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
+	outputs[| 0] = nodeValue("Surface Out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [
 		["Surface",		 true], 0, 1, 2, 

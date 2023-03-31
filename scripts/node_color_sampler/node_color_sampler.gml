@@ -66,7 +66,7 @@ function Node_Sampler(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			if(px >= ww) continue;
 			if(py >= hh) continue;
 			
-			var cc = surface_getpixel(_surf, px, py);
+			var cc = surface_get_pixel(_surf, px, py);
 			
 			r += color_get_red(cc);
 			g += color_get_green(cc);

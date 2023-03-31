@@ -20,6 +20,7 @@ void main() {
 	vec2 px = v_vTexcoord * dimension;
 	float pixels_count  = target_dim.x * target_dim.y;
 	float target_pixels = pixels_count * (1. - threshold);
+	float content_px    = 0.;
 	float match = 0.;
 	vec2 baseTx = 1. / dimension;
 	vec2 targTx = 1. / target_dim;
@@ -28,11 +29,14 @@ void main() {
 	
 	for( float i = 0.; i < target_dim.x; i++ ) 
 	for( float j = 0.; j < target_dim.y; j++ ) {
+		vec4 targ = texture2D( target, vec2(i, j) * targTx );
+		if(targ.a == 0.) continue;
+		
 		vec2 bpx  = px + vec2(i, j);
 		vec4 base = texture2D( gm_BaseTexture, bpx * baseTx );
-		vec4 targ = texture2D( target, vec2(i, j) * targTx );
 		
-		if(distance(base.rgb * base.a, targ.rgb * targ.a) <= threshold) {
+		content_px++;
+		if(distance(base, targ) <= 2. * threshold) {
 			match++;
 			if(match >= target_pixels) {
 				gl_FragColor = vec4(1., index, 0., 1.);
@@ -41,5 +45,8 @@ void main() {
 		}
 	}
 	
-	//gl_FragColor = vec4(match / pixels_count, index, 0., 1.);
+	if(match / content_px >= (1. - threshold)) {
+		gl_FragColor = vec4(1., index, 0., 1.);
+		return;
+	}
 }

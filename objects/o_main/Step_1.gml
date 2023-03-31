@@ -84,9 +84,9 @@
 			Render(true);
 		ANIMATOR.frame_progress = false;
 	} else {
-		if(UPDATE & RENDER_TYPE.full) {
+		if(UPDATE & RENDER_TYPE.full)
 			Render();
-		} else if(UPDATE & RENDER_TYPE.partial)
+		else if(UPDATE & RENDER_TYPE.partial)
 			Render(true);
 	}
 	UPDATE = RENDER_TYPE.none;

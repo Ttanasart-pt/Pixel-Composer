@@ -122,7 +122,7 @@ function Node_Seperate_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		BLEND_NORMAL;
 		surface_reset_target();
 		
-		var px = surface_getpixel(_pixel_surface, 0, 0);
+		var px = surface_get_pixel(_pixel_surface, 0, 0);
 		
 		if(px == 0) return;
 		
@@ -144,7 +144,7 @@ function Node_Seperate_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 			DRAW_CLEAR
 			BLEND_OVERRIDE;
 				shader_set(sh_seperate_shape_sep);
-				var ccx = surface_getpixel_ext(_pixel_surface, 1 + i, 0);
+				var ccx = surface_get_pixel_ext(_pixel_surface, 1 + i, 0);
 				var alpha = (ccx >> 24) & 255;
 				var blue = (ccx >> 16) & 255;
 				var green = (ccx >> 8) & 255;

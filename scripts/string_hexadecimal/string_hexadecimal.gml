@@ -33,10 +33,11 @@ function number_to_hex(val) {
 }
 
 function color_get_hex(color, alpha = false) {
-	var r = color_get_red(color);
-	var g = color_get_green(color);
-	var b = color_get_blue(color);
-	var a = color_get_alpha(color);
+	var arr = is_array(color) && array_length(color) == 4;
+	var r   = arr? round(color[0] * 256) : color_get_red(color);
+	var g   = arr? round(color[1] * 256) : color_get_green(color);
+	var b   = arr? round(color[2] * 256) : color_get_blue(color);
+	var a   = arr? round(color[3] * 256) : color_get_alpha(color);
 		
 	var hex = number_to_hex(r) + number_to_hex(g) + number_to_hex(b) + (alpha? " " + number_to_hex(a) : "");
 	return hex;

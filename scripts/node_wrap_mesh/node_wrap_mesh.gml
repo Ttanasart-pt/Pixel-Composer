@@ -308,10 +308,10 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			if(useArray) {
 				fill = true;
 			} else {
-				var c0 = surface_getpixel(cont, j * gw,     i * gh);
-				var c1 = surface_getpixel(cont, j * gw - 1, i * gh);
-				var c2 = surface_getpixel(cont, j * gw,     i * gh - 1);
-				var c3 = surface_getpixel(cont, j * gw - 1, i * gh - 1);
+				var c0 = surface_get_pixel(cont, j * gw,     i * gh);
+				var c1 = surface_get_pixel(cont, j * gw - 1, i * gh);
+				var c2 = surface_get_pixel(cont, j * gw,     i * gh - 1);
+				var c3 = surface_get_pixel(cont, j * gw - 1, i * gh - 1);
 				fill = c0 + c1 + c2 + c3 > 0;
 			}
 			

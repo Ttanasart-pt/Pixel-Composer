@@ -1142,6 +1142,7 @@
     {"name":"node_3d_prim_sphere","order":13,"path":"scripts/node_3d_prim_sphere/node_3d_prim_sphere.yy",},
     {"name":"dialog_management","order":2,"path":"scripts/dialog_management/dialog_management.yy",},
     {"name":"draw_shapes","order":10,"path":"scripts/draw_shapes/draw_shapes.yy",},
+    {"name":"string_eval_tree","order":2,"path":"scripts/string_eval_tree/string_eval_tree.yy",},
     {"name":"sh_surface_replace_fast_replace","order":3,"path":"shaders/sh_surface_replace_fast_replace/sh_surface_replace_fast_replace.yy",},
     {"name":"node_solid","order":14,"path":"scripts/node_solid/node_solid.yy",},
     {"name":"sh_blend_luma","order":19,"path":"shaders/sh_blend_luma/sh_blend_luma.yy",},

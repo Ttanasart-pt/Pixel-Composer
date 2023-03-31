@@ -437,7 +437,7 @@ function Panel_Preview() : PanelContent() constructor {
 				sample_y = floor((my - canvas_y) / canvas_s);
 				var surf = getNodePreviewSurface();
 				if(is_surface(surf))
-					sample_color = surface_getpixel_ext(surf, sample_x, sample_y);
+					sample_color = surface_get_pixel_ext(surf, sample_x, sample_y);
 			}
 		}
 		
@@ -716,7 +716,7 @@ function Panel_Preview() : PanelContent() constructor {
 			var cy = ui(10);
 			var cw = ui(32);
 			var ch = scHeight - ui(16);
-		
+			
 			if(sample_color != noone) {
 				draw_set_color(sample_color);
 				draw_rectangle(cx, cy, cx + cw, cy + ch, false);

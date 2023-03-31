@@ -129,7 +129,7 @@ function __APPEND_MAP(_map, context = PANEL_GRAPH.getCurrentContext()) {
 	
 	APPENDING = false;
 	PANEL_ANIMATION.updatePropertyList();
-	UPDATE = RENDER_TYPE.full;
+	UPDATE |= RENDER_TYPE.full;
 	
 	if(ds_map_exists(_map, "metadata")) {
 		var meta = _map[? "metadata"];

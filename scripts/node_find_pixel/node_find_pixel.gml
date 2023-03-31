@@ -34,7 +34,7 @@ function Node_Find_Pixel(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		shader_reset();
 		surface_reset_target();
 		
-		var pos = surface_getpixel(temp_surface[0], 0, 0);
+		var pos = surface_get_pixel(temp_surface[0], 0, 0);
 		var _x  = round(color_get_red(pos)   / 255 * surface_get_width(_surf));
 		var _y  = round(color_get_green(pos) / 255 * surface_get_height(_surf));
 		

@@ -1688,6 +1688,7 @@
     {"id":{"name":"dialog_management","path":"scripts/dialog_management/dialog_management.yy",},},
     {"id":{"name":"draw_shapes","path":"scripts/draw_shapes/draw_shapes.yy",},},
     {"id":{"name":"node_channels","path":"scripts/node_channels/node_channels.yy",},},
+    {"id":{"name":"string_eval_tree","path":"scripts/string_eval_tree/string_eval_tree.yy",},},
     {"id":{"name":"sh_surface_replace_fast_replace","path":"shaders/sh_surface_replace_fast_replace/sh_surface_replace_fast_replace.yy",},},
     {"id":{"name":"node_solid","path":"scripts/node_solid/node_solid.yy",},},
     {"id":{"name":"sh_blend_luma","path":"shaders/sh_blend_luma/sh_blend_luma.yy",},},

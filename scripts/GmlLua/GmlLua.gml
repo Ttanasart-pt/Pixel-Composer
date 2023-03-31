@@ -66,11 +66,11 @@ function __lua_set_color_alpha(color = c_white, alpha = 1) {
 function __lua_get_color(_x, _y) {
 	var surf = surface_get_target();
 	if(!is_surface(surf)) return 0;
-	return surface_getpixel_ext(surf, _x, _y);
+	return surface_get_pixel_ext(surf, _x, _y);
 }
 function __lua_get_color_surface(surface, _x, _y) {
 	if(!is_surface(surface)) return;
-	return surface_getpixel_ext(surface, _x, _y);
+	return surface_get_pixel_ext(surface, _x, _y);
 }
 
 function __lua_color_make_rgb(r, g, b, normalize = false) {

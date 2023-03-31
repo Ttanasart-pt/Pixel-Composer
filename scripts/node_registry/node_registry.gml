@@ -653,11 +653,11 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 		global.SURFACE_FORMAT_NAME  = []; 
 	
 		for( var i = 0; i < array_length(surface_format); i++ ) {
-			if(surface_format_is_supported(surface_format[i])) {
-				array_push(global.SURFACE_FORMAT, surface_format[i]);
-				array_push(global.SURFACE_FORMAT_NAME, surface_format_name[i]);
-			} else
-				log_message("WARNING", "Surface format [" + surface_format_name[i] + "] not supported in this device.");
+			var sup = surface_format_is_supported(surface_format[i]);
+			array_push(global.SURFACE_FORMAT, surface_format[i]);
+			array_push(global.SURFACE_FORMAT_NAME, (sup? "" : "-") + surface_format_name[i]);
+			
+			if(!sup) log_message("WARNING", "Surface format [" + surface_format_name[i] + "] not supported in this device.");
 		}
 		
 		global.SURFACE_FORMAT_NAME_PROCESS = [ "Input" ];
@@ -665,8 +665,8 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 	}
 	
 	function attribute_surface_depth(label = true) {
-		attributes[? "color_depth"] = inputs[| 0].type == VALUE_TYPE.surface? 0 : 1;
 		depth_array = inputs[| 0].type == VALUE_TYPE.surface? global.SURFACE_FORMAT_NAME_PROCESS : global.SURFACE_FORMAT_NAME;
+		attributes[? "color_depth"] = array_find(depth_array, "8 bit RGBA");
 		
 		if(label) array_push(attributeEditors, "Surface");
 		array_push(attributeEditors, ["Color depth", "color_depth", 

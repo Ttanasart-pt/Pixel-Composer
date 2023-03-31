@@ -47,14 +47,17 @@ function surface_save_safe(surface, path) {
 	var f = surface_get_format(surface);
 	var w = surface_get_width(surface);
 	var h = surface_get_height(surface);
-	var s = noone;
+	var s = surface_create(w, h, surface_rgba8unorm);
 	
 	switch(f) {
 		case surface_rgba4unorm  :
 		case surface_rgba8unorm	 :
 		case surface_rgba16float :
 		case surface_rgba32float :
-			surface_save(surface, path);
+			surface_set_shader(s, sh_draw_normal);
+				draw_surface(surface, 0, 0);
+			surface_reset_shader();
+			surface_save(s, path);
 			return;
 		case surface_r8unorm	 :
 			s = surface_create(w, h, surface_rgba8unorm);
@@ -69,14 +72,9 @@ function surface_save_safe(surface, path) {
 			return;
 	}
 	
-	surface_set_target(s);
-	shader_set(sh_draw_single_channel);
-		DRAW_CLEAR
-		BLEND_OVERRIDE
-		draw_surface(s, 0, 0);
-		BLEND_NORMAL
-	shader_reset();
-	surface_reset_target();
+	surface_set_shader(s, sh_draw_single_channel);
+		draw_surface(surface, 0, 0);
+	surface_reset_shader();
 	
 	surface_save(s, path);
 	surface_free(s);
@@ -103,6 +101,25 @@ function surface_verify(surf, w, h, format = surface_rgba8unorm) {
 	if(!is_surface(surf))
 		return surface_create_valid(w, h, format);
 	return surface_size_to(surf, w, h, format);
+}
+
+//get
+function surface_get_pixel(surface, _x, _y) {
+	if(!is_surface(surface)) return;
+	var f  = surface_get_format(surface);
+	var px = surface_getpixel(surface, _x, _y);
+	
+	if(is_real(px)) return px;
+	return round(px[0] * (255 * power(256, 0))) + round(px[1] * (255 * power(256, 1))) + round(px[2] * (255 * power(256, 2)));
+}
+
+function surface_get_pixel_ext(surface, _x, _y) {
+	if(!is_surface(surface)) return;
+	var f  = surface_get_format(surface);
+	var px = surface_getpixel_ext(surface, _x, _y);
+	
+	if(is_real(px)) return px;
+	return round(px[0] * (255 * power(256, 0))) + round(px[1] * (255 * power(256, 1))) + round(px[2] * (255 * power(256, 2))) + round(px[3] * (255 * power(256, 3)));
 }
 
 //create

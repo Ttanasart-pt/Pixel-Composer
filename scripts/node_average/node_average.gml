@@ -63,12 +63,12 @@ function Node_Average(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			}
 			shader_reset();
 			
-			cc = surface_getpixel(_Surf[!_ind], 0, 0);
+			cc = surface_get_pixel(_Surf[!_ind], 0, 0);
 			
 			surface_free(_Surf[0]);
 			surface_free(_Surf[1]);
 		} else 
-			cc = surface_getpixel(inSurf, 0, 0);
+			cc = surface_get_pixel(inSurf, 0, 0);
 		
 		surface_set_target(_outSurf);
 		draw_clear(cc);

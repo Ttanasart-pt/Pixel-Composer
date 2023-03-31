@@ -183,7 +183,7 @@ function __LOAD_PATH(path, readonly = false, safe_mode = false) {
 		log_warning("LOAD, connect", exception_print(e));
 	}
 	
-	UPDATE = RENDER_TYPE.full;
+	UPDATE |= RENDER_TYPE.full;
 	
 	LOADING = false;
 	MODIFIED = false;

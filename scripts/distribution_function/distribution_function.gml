@@ -10,7 +10,7 @@ function get_point_from_dist(distMap, attempt = 4) {
 		var _x = irandom(w - 1);
 		var _y = irandom(h - 1);
 		
-		var p = surface_getpixel(distMap, _x, _y);
+		var p = surface_get_pixel(distMap, _x, _y);
 		var r = color_get_red(p);
 		
 		if(r > v) {

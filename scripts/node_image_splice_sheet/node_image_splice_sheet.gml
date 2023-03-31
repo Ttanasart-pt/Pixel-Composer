@@ -29,7 +29,7 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	inputs[| 9]  = nodeValue("Orientation", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Horizontal", "Vertical"]);
 	
-	inputs[| 10] = nodeValue("Auto fill", self, JUNCTION_CONNECT.input, VALUE_TYPE.trigger, 0)
+	inputs[| 10] = nodeValue("Auto fill", self, JUNCTION_CONNECT.input, VALUE_TYPE.trigger, 0, "Automatically set amount based on sprite size.")
 		.setDisplay(VALUE_DISPLAY.button, [ function() { 
 			var _sur = inputs[| 0].getValue();
 			if(!is_surface(_sur) || _sur == DEF_SURFACE) return;
@@ -62,11 +62,16 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		}, "Sync frames"] );
 		
 	inputs[| 12] = nodeValue("Filter empty output", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+		
+	inputs[| 13] = nodeValue("Filtered Pixel", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Transparent", "Color" ]);
+	
+	inputs[| 14] = nodeValue("Filtered Color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_black)
 	
 	input_display_list = [
-		["Sprite", false],	0, 1, 6, 10, 
-		["Sheet",  false],	3, 9, 4, 5, 
-		["Output", false],	7, 8, 12, 11
+		["Sprite", false],	0, 1, 6, 
+		["Sheet",  false],	3, 10, 9, 4, 5, 
+		["Output", false],	7, 8, 12, 13, 14, 11
 	];
 	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
@@ -256,9 +261,14 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	}
 	
 	static step = function() {
-		var _out  = inputs[| 7].getValue();
+		var _out  = inputs[|  7].getValue();
+		var _filt = inputs[| 12].getValue();
+		var _flty = inputs[| 13].getValue();
+		
 		inputs[| 11].setVisible(!_out);
 		inputs[|  8].setVisible(!_out);
+		inputs[| 13].setVisible(_filt);
+		inputs[| 14].setVisible(_filt && _flty);
 	}
 	
 	static onInspector1Update = function() {
@@ -284,6 +294,9 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		var hh   = _dim[1] + _pad[1] + _pad[3];
 		
 		var _filt = inputs[| 12].getValue();
+		var _fltp = inputs[| 13].getValue();
+		var _flcl = inputs[| 14].getValue();
+		
 		var cDep  = attrDepth();
 		curr_dim = _dim;
 		curr_amo = is_array(_amo)? _amo : [1, 1];
@@ -323,9 +336,13 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 				buffer_get_surface(_buff, _empS, 0);
 				buffer_seek(_buff, buffer_seek_start, 0);
 				var empty = true;
-				var c0 = buffer_read(_buff, buffer_u32) & ~(0b11111111 << 24);
+				
 				repeat(filSize * filSize - 1) {
-					if(buffer_read(_buff, buffer_u32) & ~(0b11111111 << 24) != c0) {
+					var c = buffer_read(_buff, buffer_u32);
+					if(_fltp == 0 && ((c & 0xFF000000) >> 24) != 0) {
+						empty = false;
+						break;
+					} else if(_fltp == 1 && (c & 0x00FFFFFF) != _flcl) {
 						empty = false;
 						break;
 					}

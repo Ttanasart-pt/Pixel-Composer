@@ -29,7 +29,7 @@
 			if(_c != current_frame) {
 				frame_progress = true;
 				time_since_last_frame = 0;
-				UPDATE = RENDER_TYPE.full;
+				UPDATE |= RENDER_TYPE.full;
 			} else 
 				frame_progress = false;
 		}

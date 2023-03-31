@@ -71,8 +71,8 @@ function Node_Crop_Content(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 				shader_reset();
 			}
 			
-			var minBox = surface_getpixel_ext(temp_surface[DIMENSION.width] , 0, 0);
-			var maxBox = surface_getpixel_ext(temp_surface[DIMENSION.height], 0, 0);
+			var minBox = surface_get_pixel_ext(temp_surface[DIMENSION.width] , 0, 0);
+			var maxBox = surface_get_pixel_ext(temp_surface[DIMENSION.height], 0, 0);
 			
 			var _minx = max(0, color_get_red(minBox)  * 256 + color_get_green(minBox) - 1);
 			var _miny = max(0, color_get_blue(minBox) * 256 + color_get_alpha(minBox) - 1);

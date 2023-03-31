@@ -396,7 +396,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	global_edit = new textBox(TEXTBOX_INPUT.text, function(str) { 
 		global_key = str; 
 		node.triggerRender(); 
-		UPDATE = RENDER_TYPE.partial;
+		UPDATE |= RENDER_TYPE.partial;
 	});
 	global_edit.boxColor = COLORS._main_value_positive;
 	global_edit.align    = fa_left;
@@ -1163,7 +1163,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				if(_update) node.valueUpdate(index);
 				node.clearCacheForward();
 				
-				UPDATE = RENDER_TYPE.partial;
+				UPDATE |= RENDER_TYPE.partial;
 			}
 			
 			cache_array[0] = false;
@@ -1257,7 +1257,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			node.triggerRender();
 			node.clearCacheForward();
 			
-			UPDATE = RENDER_TYPE.partial;
+			UPDATE |= RENDER_TYPE.partial;
 		}
 		
 		cache_array[0] = false;

@@ -51,7 +51,7 @@ function Node_Flood_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		var _thr = _data[6];
 		var _dia = _data[7];
 		
-		var _filC = surface_getpixel_ext(inSurf, _pos[0], _pos[1]);
+		var _filC = surface_get_pixel_ext(inSurf, _pos[0], _pos[1]);
 		
 		var sw = surface_get_width(inSurf);
 		var sh = surface_get_height(inSurf);

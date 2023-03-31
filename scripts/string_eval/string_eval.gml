@@ -1,4 +1,4 @@
-#region evaluator
+#region data
 	global.EQUATION_PRES    = ds_map_create();
 	global.EQUATION_PRES[? "+"]     = 1;
 	global.EQUATION_PRES[? "-"]     = 1;
@@ -12,7 +12,9 @@
 	global.EQUATION_PRES[? "round"] = 5;
 	global.EQUATION_PRES[? "ceil"]  = 5;
 	global.EQUATION_PRES[? "floor"] = 5;
+#endregion
 
+#region evaluator
 	function evaluateFunction(fx, params = {}) {
 		var pres = global.EQUATION_PRES;
 		var vl   = ds_stack_create();
