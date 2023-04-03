@@ -6,7 +6,6 @@ enum RENDER_TYPE {
 
 #region globalvar
 	global.RENDER_DEBUG = false;
-	
 	global.RENDER_LOG	= false;
 	global.group_inputs = [ "Node_Group_Input", "Node_Feedback_Input", "Node_Iterator_Input", "Node_Iterator_Each_Input" ];
 #endregion

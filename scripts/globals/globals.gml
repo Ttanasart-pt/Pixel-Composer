@@ -85,16 +85,16 @@
 	#macro DELTA_TIME delta_time / 1_000_000
 	
 	#macro CONF_TESTING false
-	#macro Tester:CONF_TESTING true
 	globalvar TESTING;
 	TESTING = CONF_TESTING;
 	
-	#macro DEMO false
-	#macro Demo:DEMO  true
-	#macro Alpha:DEMO true
+	#macro DEMO	false
+	#macro ItchDemo:DEMO  true
+	#macro SteamDemo:DEMO true
+	#macro MacAlpha:DEMO  true
 	
 	#macro ALPHA false
-	#macro Alpha:ALPHA true
+	#macro MacAlpha:ALPHA true
 	
 	#region color
 		#macro c_ui_blue_dkblack	$251919

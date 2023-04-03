@@ -8,8 +8,12 @@
   "configs": {
     "children": [
       {"children":[
-          {"children":[],"name":"Alpha",},
-        ],"name":"Demo",},
+          {"children":[],"name":"SteamDemo",},
+        ],"name":"Steam",},
+      {"children":[
+          {"children":[],"name":"ItchDemo",},
+          {"children":[],"name":"MacAlpha",},
+        ],"name":"Itch",},
     ],
     "name": "Default",
   },
