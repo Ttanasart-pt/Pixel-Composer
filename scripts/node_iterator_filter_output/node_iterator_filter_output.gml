@@ -10,31 +10,42 @@ function Node_Iterator_Filter_Output(_x, _y, _group = noone) : Node(_x, _y, _gro
 	inputs[| 1] = nodeValue("Result", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false )
 		.setVisible(true, true);
 		
+	static getNextNodesRaw = function() {
+		var nodes = [];
+		
+		var _ot = group.outputs[| 0];
+		for(var j = 0; j < ds_list_size(_ot.value_to); j++) {
+			var _to = _ot.value_to[| j];
+			if(!_to.node.renderActive) continue;
+				
+			if(_to.node.active && _to.value_from != noone && _to.value_from.node == group) {
+				if(_to.node.isRenderable()) 
+					array_push(nodes, _to.node);
+			}
+		}
+		
+		return nodes;
+	}
+	
 	static getNextNodes = function() {
 		if(!struct_has(group, "iterationStatus")) return [];
 		var _ren  = group.iterationStatus();
 		var nodes = [];
-			
+		
+		LOG_BLOCK_START();
+		LOG_IF(global.RENDER_LOG, "Call get next node from loop output.");
+		
 		if(_ren == ITERATION_STATUS.loop) { //Go back to the beginning of the loop, reset render status for leaf node inside?
-			printIf(global.RENDER_LOG, "    > Loop restart: iteration " + string(group.iterated));
+			LOG_IF(global.RENDER_LOG, "Loop restart: iteration " + string(group.iterated));
 			nodes = array_append(nodes, __nodeLeafList(group.getNodeList()));
 		} else if(_ren == ITERATION_STATUS.complete) { //Go out of loop
-			printIf(global.RENDER_LOG, "    > Loop completed");
+			LOG_IF(global.RENDER_LOG, "Loop completed");
 			group.setRenderStatus(true);
-			
-			var _ot = group.outputs[| 0];
-			for(var j = 0; j < ds_list_size(_ot.value_to); j++) {
-				var _to = _ot.value_to[| j];
-				if(!_to.node.renderActive) continue;
-				
-				if(_to.node.active && _to.value_from != noone && _to.value_from.node == group) {
-					_to.node.triggerRender();
-					if(_to.node.isRenderable()) 
-						array_push(nodes, _to.node);
-				}
-			}
+			nodes = getNextNodesRaw();
 		} else 
-			printIf(global.RENDER_LOG, "    > Loop not ready");
+			LOG_IF(global.RENDER_LOG, "Loop not ready");
+		
+		LOG_BLOCK_END();
 		
 		return nodes;
 	}
@@ -67,6 +78,9 @@ function Node_Iterator_Filter_Output(_x, _y, _group = noone) : Node(_x, _y, _gro
 			array_push(_val, _new_val);
 		}
 		
+		LOG("Value " + string(val) + " filter result " + string(res) + " to array " + string(_val));
+		
 		group.outputs[| 0].setValue(_val);
+		group.iterationUpdate();
 	}
 }

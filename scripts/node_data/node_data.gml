@@ -276,6 +276,8 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	static doUpdate = function() { 
 		if(SAFE_MODE) return;
 		var sBase = surface_get_target();
+		LOG_BLOCK_START();
+		LOG_IF(global.RENDER_LOG, "DoUpdate called from " + name);
 		
 		for( var i = 0; i < ds_list_size(inputs); i++ ) {
 			if(inputs[| i].type != VALUE_TYPE.trigger) continue;
@@ -287,9 +289,12 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		
 		try {
 			var t = get_timer();
+			if(!is_instanceof(self, Node_Collection)) 
+				setRenderStatus(true);
+				
 			update();
-			setRenderStatus(true);
-			if(auto_render_time)
+			
+			if(!is_instanceof(self, Node_Collection))
 				render_time = get_timer() - t;
 		} catch(exception) {
 			var sCurr = surface_get_target();
@@ -308,6 +313,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 			var trigger = inspectInput2.getValue();
 			if(trigger) onInspector2Update();
 		}
+		LOG_BLOCK_END();
 	}
 	
 	static valueUpdate = function(index) {
@@ -321,16 +327,18 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	static onValueFromUpdate = function(index) {}
 	
 	static triggerRender = function() {
-		printIf(global.RENDER_LOG, "      -> Trigger render for " + name + " (" + display_name + ")");
+		LOG_BLOCK_START();
+		LOG_IF(global.RENDER_LOG, "Trigger render for " + name + " (" + display_name + ")");
 		
 		setRenderStatus(false);
 		UPDATE |= RENDER_TYPE.partial;
 		
-		var nodes = getNextNodes();
+		var nodes = getNextNodesRaw();
 		for(var i = 0; i < array_length(nodes); i++)
 			nodes[i].triggerRender();
+		LOG_BLOCK_END();
 	}
-		
+
 	static isRenderable = function(log = false) { //Check if every input is ready (updated)
 		if(!active)	return false;
 		if(!renderActive) return false;
@@ -351,8 +359,14 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		return true;
 	}
 	
+	static getNextNodesRaw = function() { return getNextNodes(); }
+	
 	static getNextNodes = function() {
 		var nodes = [];
+		
+		LOG_BLOCK_START();
+		LOG_IF(global.RENDER_LOG, "Call get next node from: " + name);
+		LOG_BLOCK_START();
 		
 		for(var i = 0; i < ds_list_size(outputs); i++) {
 			var _ot = outputs[| i];
@@ -361,25 +375,25 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 				var _to = _ot.value_to[| j];
 				if(!_to.node.active || _to.value_from == noone) continue; 
 				
-				printIf(global.RENDER_LOG, "       |--> Check render " + _to.node.name + " from " + _to.value_from.node.name);
+				LOG_IF(global.RENDER_LOG, "Check render " + _to.node.name + " from " + _to.value_from.node.name);
 				if(_to.value_from.node != self) continue;
 				
-				printIf(global.RENDER_LOG, "         >> Check complete, push " + _to.node.name + " to stack.");
+				LOG_IF(global.RENDER_LOG, "Check complete, push " + _to.node.name + " to stack.");
 				array_push(nodes, _to.node);
 			}
 		}	
 		
+		LOG_BLOCK_END();
+		LOG_BLOCK_END();
 		return nodes;
 	}
 	
 	static onInspect = function() {}
 	
 	static setRenderStatus = function(result) {
-		printIf(global.RENDER_LOG, "				>> Set render status for " + name + " : " + string(result));
-		rendered = result;
+		LOG_LINE_IF(global.RENDER_LOG, "Set render status for " + name + " : " + string(result));
 		
-		if(!result && group != noone) 
-			group.setRenderStatus(result);
+		rendered = result;
 	}
 	
 	static pointIn = function(_x, _y, _mx, _my, _s) {

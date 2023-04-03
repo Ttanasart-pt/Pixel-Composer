@@ -836,6 +836,7 @@
     {"name":"render_data","order":3,"path":"scripts/render_data/render_data.yy",},
     {"name":"o_dialog_graph_view","order":4,"path":"objects/o_dialog_graph_view/o_dialog_graph_view.yy",},
     {"name":"fd_rectangle_get_velocity_height","order":22,"path":"scripts/fd_rectangle_get_velocity_height/fd_rectangle_get_velocity_height.yy",},
+    {"name":"logger","order":1,"path":"scripts/logger/logger.yy",},
     {"name":"s_node_blur_directional","order":11,"path":"sprites/s_node_blur_directional/s_node_blur_directional.yy",},
     {"name":"s_node_average","order":50,"path":"sprites/s_node_average/s_node_average.yy",},
     {"name":"s_node_sprite_sheet","order":1,"path":"sprites/s_node_sprite_sheet/s_node_sprite_sheet.yy",},

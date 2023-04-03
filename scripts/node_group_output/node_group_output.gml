@@ -29,6 +29,7 @@ function Node_Group_Output(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		//group.setRenderStatus(true);
 		//printIf(global.RENDER_LOG, "Value to amount " + string(ds_list_size(outParent.value_to)));
 		
+		LOG_BLOCK_START();
 		var nodes = [];
 		for(var j = 0; j < ds_list_size(outParent.value_to); j++) {
 			var _to = outParent.value_to[| j];
@@ -48,8 +49,9 @@ function Node_Group_Output(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			//printIf(global.RENDER_LOG, "Group output ready " + string(_to.node.isRenderable()));
 			
 			array_push(nodes, _to.node);
-			printIf(global.RENDER_LOG, "         >> Check complete, push " + _to.node.name + " to stack.");
+			LOG_IF(global.RENDER_LOG, "Check complete, push " + _to.node.name + " to stack.");
 		}
+		LOG_BLOCK_END();
 		
 		return nodes;
 	}

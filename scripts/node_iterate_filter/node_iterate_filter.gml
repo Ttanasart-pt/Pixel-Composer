@@ -11,7 +11,7 @@ function Node_Iterate_Filter(_x, _y, _group = noone) : Node_Collection(_x, _y, _
 	inputs[| 0] = nodeValue("Array", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, [] )
 		.setVisible(true, true);
 	
-	outputs[| 0] = nodeValue("Array", self, JUNCTION_CONNECT.output, VALUE_TYPE.any, [] );
+	outputs[| 0] = nodeValue("Array", self, JUNCTION_CONNECT.output, VALUE_TYPE.any, noone );
 	
 	custom_input_index = ds_list_size(inputs);
 	custom_output_index = ds_list_size(inputs);
@@ -36,6 +36,7 @@ function Node_Iterate_Filter(_x, _y, _group = noone) : Node_Collection(_x, _y, _
 	}
 	
 	static initLoop = function() {
+		resetRender();
 		iterated = 0;
 		loop_start_time = get_timer();
 		
@@ -45,24 +46,38 @@ function Node_Iterate_Filter(_x, _y, _group = noone) : Node_Collection(_x, _y, _
 		surface_array_free(arrOut);
 		outputs[| 0].setValue([])
 		
-		printIf(global.RENDER_LOG, "    > Loop begin");
+		LOG("Loop begin");
+		var _val = outputs[| 0].getValue();
+		LOG("Output original value " + string(_val));
 	}
 	
-	static iterationStatus = function() {
-		var iter = true;
+	static getIterationCount = function() {
 		var arrIn = inputs[| 0].getValue();
 		var maxIter = is_array(arrIn)? array_length(arrIn) : 0;
 		if(!is_real(maxIter)) maxIter = 1;
 		
-		iterated++;
-			
-		if(iterated >= maxIter) {
-			render_time = get_timer() - loop_start_time;
-			iterated = 0;
-			return ITERATION_STATUS.complete;
+		return maxIter;
+	}
+	
+	static iterationUpdate = function() {
+		var siz = ds_list_size(outputs); // check if every output is updated
+		for( var i = custom_output_index; i < siz; i++ ) {
+			var _o = outputs[| i];
+			if(_o.node.rendered) return;
 		}
 		
-		resetAllRenderStatus();
+		var maxIter = getIterationCount();
+		iterated++;
+		
+		if(iterated >= maxIter)
+			render_time = get_timer() - loop_start_time;
+		else 
+			resetRender();
+	}
+	
+	static iterationStatus = function() {
+		if(iterated >= getIterationCount())
+			return ITERATION_STATUS.complete;
 		return ITERATION_STATUS.loop;
 	}
 	

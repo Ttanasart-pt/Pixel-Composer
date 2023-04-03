@@ -136,20 +136,24 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	}
 	
 	static getNextNodes = function() {
+		LOG_BLOCK_START();
 		var nodes = [];
 		for(var i = custom_input_index; i < ds_list_size(inputs); i++) {
 			var _in = inputs[| i].from;
 			if(!_in.renderActive) continue;
 			
 			array_push(nodes, _in);
-			printIf(global.RENDER_LOG, "         >> Check complete, push " + _in.name + " to stack.");
+			LOG_IF(global.RENDER_LOG, "Check complete, push " + _in.name + " to stack.");
 		}
 		
+		LOG_BLOCK_END();
 		return nodes;
 	}
 	
 	static setRenderStatus = function(result) {
-		printIf(global.RENDER_LOG, "				>> Set render status for " + name + " : " + string(result));
+		LOG_BLOCK_START();
+		LOG_IF(global.RENDER_LOG, "Set render status for " + name + " : " + string(result));
+		LOG_BLOCK_END();
 		rendered = result;
 		
 		if(result) {
@@ -365,13 +369,18 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 			node_list[| i].disable();
 	}
 	
-	static resetAllRenderStatus = function() {
-		var node_list = getNodeList();
-		for( var i = 0; i < ds_list_size(node_list); i++ ) {
-			node_list[| i].setRenderStatus(false);
-			if(variable_struct_exists(node_list[| i], "nodes"))
-				node_list[| i].resetAllRenderStatus();
+	static resetRender = function() {
+		LOG_BLOCK_START();
+		LOG_IF(global.RENDER_LOG, "Reset Render for collection " + name);
+		
+		for( var i = 0; i < ds_list_size(nodes); i++ ) {
+			LOG_IF(global.RENDER_LOG, "Reset Render for " + nodes[| i].name);
+			nodes[| i].rendered = false;
 		}
+		
+		rendered = false;
+		
+		LOG_BLOCK_END();
 	}
 	
 	static setInstance = function(node) {

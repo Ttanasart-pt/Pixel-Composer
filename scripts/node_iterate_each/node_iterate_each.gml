@@ -23,6 +23,10 @@ function Node_Iterate_Each(_x, _y, _group = noone) : Node_Collection(_x, _y, _gr
 		output.inputs[| 0].setFrom(input.outputs[| 0]);
 	}
 	
+	static getNextNodesRaw = function() {
+		return __nodeLeafList(getNodeList());
+	}
+	
 	static getNextNodes = function() {
 		initLoop();
 		return __nodeLeafList(getNodeList());
@@ -34,6 +38,7 @@ function Node_Iterate_Each(_x, _y, _group = noone) : Node_Collection(_x, _y, _gr
 	}
 	
 	static initLoop = function() {
+		resetRender();
 		iterated = 0;
 		loop_start_time = get_timer();
 		
@@ -45,25 +50,44 @@ function Node_Iterate_Each(_x, _y, _group = noone) : Node_Collection(_x, _y, _gr
 			outputs[| 0].setValue([])
 		}
 		
-		printIf(global.RENDER_LOG, "    > Loop begin");
+		LOG_LINE_IF(global.RENDER_LOG, "Loop begin");
 	}
 	
-	static iterationStatus = function() {
-		var iter = true;
+	static getIterationCount = function() {
 		var arrIn = inputs[| 0].getValue();
 		var maxIter = is_array(arrIn)? array_length(arrIn) : 0;
 		if(!is_real(maxIter)) maxIter = 1;
 		
-		iterated++;
-		//print("Iterating " + string(iterated) + "/" + string(maxIter))
-			
-		if(iterated >= maxIter) {
-			render_time = get_timer() - loop_start_time;
-			iterated = 0;
-			return ITERATION_STATUS.complete;
+		return maxIter;
+	}
+	
+	static iterationUpdate = function() {
+		var siz = ds_list_size(outputs); // check if every output is updated
+		for( var i = custom_output_index; i < siz; i++ ) {
+			var _o = outputs[| i];
+			if(_o.node.rendered) return;
 		}
 		
-		resetAllRenderStatus();
+		var maxIter = getIterationCount();
+		iterated++;
+		
+		LOG_BLOCK_START();
+		LOG_IF(global.RENDER_LOG, "Iteration update: " + string(iterated) + "/" + string(maxIter));
+		
+		if(iterated >= maxIter) {
+			LOG_IF(global.RENDER_LOG, "Iteration complete");
+			render_time = get_timer() - loop_start_time;
+		} else {
+			LOG_IF(global.RENDER_LOG, "Iteration not completed, reset render status.");
+			resetRender();
+		}
+		
+		LOG_BLOCK_END();
+	}
+	
+	static iterationStatus = function() {
+		if(iterated >= getIterationCount())
+			return ITERATION_STATUS.complete;
 		return ITERATION_STATUS.loop;
 	}
 	

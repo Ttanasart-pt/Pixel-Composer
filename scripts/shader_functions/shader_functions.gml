@@ -67,7 +67,6 @@ function shader_set_surface(sampler, surface) {
 	}
 
 	function shader_set_interpolation(surface) {
-		var shader = shader_current();
 		var intp   = ds_map_try_get(attributes, "interpolation", 0);
 		
 		gpu_set_tex_filter(intp);

@@ -15,6 +15,7 @@ function Node_Particle(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y, _
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	attribute_surface_depth();
+	attribute_interpolation();
 	
 	array_insert(input_display_list, 0, ["Output", true], input_len + 0);
 	array_push(input_display_list, input_len + 1, input_len + 2);
@@ -74,9 +75,8 @@ function Node_Particle(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y, _
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
 		outputs[| 0].setValue(_outSurf);
 		
-		surface_set_target(_outSurf);
-			DRAW_CLEAR
-		
+		surface_set_shader(_outSurf);
+		shader_set_interpolation(_outSurf);
 			if(_blend == PARTICLE_BLEND_MODE.normal)
 				BLEND_NORMAL;
 			else if(_blend == PARTICLE_BLEND_MODE.alpha)
@@ -91,7 +91,7 @@ function Node_Particle(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y, _
 				parts[i].draw(_exact, surf_w, surf_h);
 			
 			BLEND_NORMAL;
-		surface_reset_target();
+		surface_reset_shader();
 		
 		if(ANIMATOR.is_playing)
 			cacheCurrentFrame(_outSurf);

@@ -120,9 +120,12 @@
 		if(array_length(path) == 0) return; 
 		
 		var type = "others";
+		
+		if(array_length(path) == 1 && directory_exists(path[0]))
+			type = "image";
+			
 		for( var i = 0; i < array_length(path); i++ ) {
 			var p = path[i];
-			if(directory_exists(p)) continue;
 			var ext = string_lower(filename_ext(p));
 			
 			switch(ext) {

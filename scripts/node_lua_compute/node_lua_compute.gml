@@ -106,6 +106,15 @@ function Node_Lua_Compute(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 				if(inputs[| i + 2].editWidget != noone)
 					inputs[| i + 2].editWidget.interactable = true;
 				
+				var type = inputs[| i + 1].getValue();
+				switch(type) {
+					case 0 : inputs[| i + 2].type = VALUE_TYPE.float;	break;
+					case 1 : inputs[| i + 2].type = VALUE_TYPE.text;	break;
+					case 2 : inputs[| i + 2].type = VALUE_TYPE.surface;	break;
+					case 3 : inputs[| i + 2].type = VALUE_TYPE.struct;	break;
+				}
+					
+				inputs[| i + 2].setDisplay(VALUE_DISPLAY._default);
 				array_push(input_display_list, i + 2);
 			} else {
 				delete inputs[| i + 0];
@@ -139,24 +148,9 @@ function Node_Lua_Compute(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 			compiled = false;
 		}
 		
-		if(index < input_fix_len) return;
 		if(LOADING || APPENDING) return;
 		
 		compiled = false;
-		
-		if(safe_mod(index - input_fix_len,  data_length) == 1) { //Variable type
-			var type = inputs[| index].getValue();
-			
-			switch(type) {
-				case 0 : inputs[| index + 1].type = VALUE_TYPE.float;	break;
-				case 1 : inputs[| index + 1].type = VALUE_TYPE.text;	break;
-				case 2 : inputs[| index + 1].type = VALUE_TYPE.surface;	break;
-				case 3 : inputs[| index + 1].type = VALUE_TYPE.struct;	break;
-			}
-			
-			inputs[| index + 1].setDisplay(VALUE_DISPLAY._default);
-		}
-		
 		refreshDynamicInput();
 	}
 	

@@ -127,7 +127,6 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		
 		repeat(amo) {
 			if(TUNNELS_OUT[? k] == _key) {
-				NODE_MAP[? k].triggerRender();
 				array_push(nodes, NODE_MAP[? k]);
 			}
 			

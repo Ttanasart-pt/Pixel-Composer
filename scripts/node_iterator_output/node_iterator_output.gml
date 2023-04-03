@@ -37,11 +37,15 @@ function Node_Iterator_Output(_x, _y, _group = noone) : Node_Group_Output(_x, _y
 		if(!struct_has(_node_it, "iterationStatus")) return nodes;
 		var _ren = _node_it.iterationStatus();
 			
+		LOG_BLOCK_START();	
+		
 		if(_ren == ITERATION_STATUS.loop) { //Go back to the beginning of the loop, reset render status for leaf node inside?
-			printIf(global.RENDER_LOG, "    > Loop restart: iteration " + string(group.iterated));
+			LOG_IF(global.RENDER_LOG, "Loop restart: iteration " + string(group.iterated));
+			
+			group.resetRender();
 			nodes = array_append(nodes, __nodeLeafList(group.getNodeList()));
 		} else if(_ren == ITERATION_STATUS.complete) { //Go out of loop
-			printIf(global.RENDER_LOG, "    > Loop completed");
+			LOG_IF(global.RENDER_LOG, "Loop completed");
 			group.setRenderStatus(true);
 			var _ot = outParent;
 			for(var j = 0; j < ds_list_size(_ot.value_to); j++) {
@@ -54,8 +58,10 @@ function Node_Iterator_Output(_x, _y, _group = noone) : Node_Group_Output(_x, _y
 				}
 			}
 		} else 
-			printIf(global.RENDER_LOG, "    > Loop not ready");
-			
+			LOG_IF(global.RENDER_LOG, "Loop not ready");
+		
+		LOG_BLOCK_END();
+		
 		return nodes;
 	}
 	

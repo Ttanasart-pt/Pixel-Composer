@@ -1326,6 +1326,7 @@
     {"id":{"name":"render_data","path":"scripts/render_data/render_data.yy",},},
     {"id":{"name":"o_dialog_graph_view","path":"objects/o_dialog_graph_view/o_dialog_graph_view.yy",},},
     {"id":{"name":"fd_rectangle_get_velocity_height","path":"scripts/fd_rectangle_get_velocity_height/fd_rectangle_get_velocity_height.yy",},},
+    {"id":{"name":"logger","path":"scripts/logger/logger.yy",},},
     {"id":{"name":"addon_key_displayer","path":"objects/addon_key_displayer/addon_key_displayer.yy",},},
     {"id":{"name":"s_node_blur_directional","path":"sprites/s_node_blur_directional/s_node_blur_directional.yy",},},
     {"id":{"name":"distance_to_line","path":"scripts/distance_to_line/distance_to_line.yy",},},

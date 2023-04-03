@@ -27,6 +27,8 @@ function Node_Iterate(_x, _y, _group = noone) : Node_Collection(_x, _y, _group) 
 	}
 	
 	static initLoop = function() {
+		resetRender();
+		
 		iterated = 0;
 		loop_start_time = get_timer();
 		var node_list   = getNodeList();
@@ -37,7 +39,7 @@ function Node_Iterate(_x, _y, _group = noone) : Node_Collection(_x, _y, _group) 
 				n.initLoop();
 		}
 		
-		printIf(global.RENDER_LOG, "    > Loop begin");
+		LOG_LINE_IF(global.RENDER_LOG, "Loop begin");
 	}
 	
 	static getNextNodes = function() {
@@ -73,7 +75,7 @@ function Node_Iterate(_x, _y, _group = noone) : Node_Collection(_x, _y, _group) 
 				return ITERATION_STATUS.complete;
 			} 
 			
-			resetAllRenderStatus();
+			resetRender();
 			return ITERATION_STATUS.loop;
 		}
 		

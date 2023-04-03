@@ -7,7 +7,8 @@ varying vec4 v_vColour;
 uniform vec2 dimension;
 uniform sampler2D target;
 uniform vec2 target_dim;
-uniform float threshold;
+uniform float colorThreshold;
+uniform float pixelThreshold;
 uniform float index;
 
 float random (in vec2 st) {
@@ -29,7 +30,7 @@ float matchTemplate(vec2 pos) {
 		vec4 base = texture2D( gm_BaseTexture, bpx * baseTx );
 		
 		content_px++;
-		if(distance(base, targ) <= 2. * threshold)
+		if(distance(base, targ) <= 2. * colorThreshold)
 			match++;
 	}
 	
@@ -63,5 +64,5 @@ void main() {
 		}
 	}
 	
-    gl_FragColor = match >= (1. - threshold)? vec4(matchPos, index, 1.) : vec4(vec3(0.), 0.);
+    gl_FragColor = match >= (1. - pixelThreshold)? vec4(matchPos, index, 1.) : vec4(vec3(0.), 0.);
 }

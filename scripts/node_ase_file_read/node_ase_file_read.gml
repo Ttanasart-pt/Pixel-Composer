@@ -136,7 +136,9 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			if(_hover && point_in_rectangle(_m[0], _m[1], _x + 8, _yy, _x + _w - 8, _yy + hh)) {
 				draw_sprite_stretched_ext(THEME.node_bg_name, 1, _x + 8, _yy, _w - 16, hh, c_white, 0.1);
 				if(mouse_click(mb_left, _focus)) {
-					inputs[| 2].setValue(tag[? "Name"]);
+					var _currTag = inputs[| 2].getValue();
+					var _tagName = tag[? "Name"];
+					inputs[| 2].setValue(_currTag == _tagName? "" : _tagName);
 				}
 			}
 			
@@ -150,11 +152,11 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		tag_renderer.h = _h;
 		return _h;
 	});
-	
+
 	input_display_list = [
 		["File",	 true], 0,
 		["Layers",	false], 1, layer_renderer, 
-		["Tags",	false], tag_renderer,
+		["Tags",	false], 2, tag_renderer,
 	];
 	
 	attributes[? "layer_visible"] = ds_list_create();

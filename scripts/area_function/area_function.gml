@@ -28,8 +28,10 @@ function area_get_random_point(area, distrib = AREA_DISTRIBUTION.area, scatter =
 		case AREA_DISTRIBUTION.area : 
 			if(scatter == AREA_SCATTER.uniform) {
 				var _col = ceil(sqrt(total));
+				var _row = ceil(total / _col);
+				
 				var _iwid = _area_w * 2 / _col;
-				var _ihig = _area_h * 2 / _col;
+				var _ihig = _area_h * 2 / _row;
 	
 				var _irow = floor(index / _col);
 				var _icol = safe_mod(index, _col);

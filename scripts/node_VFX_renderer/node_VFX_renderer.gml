@@ -19,6 +19,7 @@ function Node_VFX_Renderer(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	input_fix_len = ds_list_size(inputs);
 	
 	attribute_surface_depth();
+	attribute_interpolation();
 	
 	static createNewInput = function() {
 		var index = ds_list_size(inputs);
@@ -82,8 +83,8 @@ function Node_VFX_Renderer(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
 		outputs[| 0].setValue(_outSurf);
 		
-		surface_set_target(_outSurf);
-			DRAW_CLEAR
+		surface_set_shader(_outSurf);
+		shader_set_interpolation(_outSurf);
 		
 			if(_blend == PARTICLE_BLEND_MODE.normal)
 				BLEND_NORMAL;
@@ -108,7 +109,7 @@ function Node_VFX_Renderer(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			}
 			
 			BLEND_NORMAL;
-		surface_reset_target();
+		surface_reset_shader();
 		
 		cacheCurrentFrame(_outSurf);
 	}

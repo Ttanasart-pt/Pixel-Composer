@@ -7,7 +7,8 @@ varying vec4 v_vColour;
 uniform vec2 dimension;
 uniform sampler2D target;
 uniform vec2 target_dim;
-uniform float threshold;
+uniform float colorThreshold;
+uniform float pixelThreshold;
 uniform float index;
 
 void main() {
@@ -19,7 +20,7 @@ void main() {
 	
 	vec2 px = v_vTexcoord * dimension;
 	float pixels_count  = target_dim.x * target_dim.y;
-	float target_pixels = pixels_count * (1. - threshold);
+	float target_pixels = pixels_count * (1. - pixelThreshold);
 	float content_px    = 0.;
 	float match = 0.;
 	vec2 baseTx = 1. / dimension;
@@ -36,7 +37,7 @@ void main() {
 		vec4 base = texture2D( gm_BaseTexture, bpx * baseTx );
 		
 		content_px++;
-		if(distance(base, targ) <= 2. * threshold) {
+		if(distance(base, targ) <= 2. * colorThreshold) {
 			match++;
 			if(match >= target_pixels) {
 				gl_FragColor = vec4(1., index, 0., 1.);
@@ -45,7 +46,7 @@ void main() {
 		}
 	}
 	
-	if(match / content_px >= (1. - threshold)) {
+	if(match / content_px >= (1. - pixelThreshold)) {
 		gl_FragColor = vec4(1., index, 0., 1.);
 		return;
 	}
