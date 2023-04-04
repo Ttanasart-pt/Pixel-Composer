@@ -53,5 +53,5 @@ vec4 texture2Dintp( sampler2D texture, vec2 uv ) {
 /////////////// SAMPLING ///////////////
 
 void main() {
-    gl_FragColor = texture2Dintp( gm_BaseTexture, v_vTexcoord );
+    gl_FragColor = texture2Dintp( gm_BaseTexture, v_vTexcoord ) * v_vColour;
 }

@@ -18,6 +18,13 @@ function Node_Group_Output(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	outParent = undefined;
 	output_index = -1;
 	
+	static setRenderStatus = function(result) {
+		LOG_LINE_IF(global.RENDER_LOG, "Set render status for " + name + " : " + string(result));
+		
+		rendered = result;
+		if(group) group.setRenderStatus(result);
+	}
+	
 	static onValueUpdate = function(index = 0) {
 		if(is_undefined(outParent)) return;
 		

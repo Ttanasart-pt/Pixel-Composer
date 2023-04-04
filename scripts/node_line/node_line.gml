@@ -102,8 +102,8 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		inputs[| 14].setVisible(px);
 		inputs[| 18].setVisible(px);
 		
-		inputs[| 15].setVisible(_tex);
-		inputs[| 16].setVisible(_tex);
+		inputs[| 15].setVisible(!_tex);
+		inputs[| 16].setVisible(!_tex);
 		
 		inputs[|  2].setVisible(!_flen);
 		inputs[| 20].setVisible( _flen);
@@ -238,8 +238,9 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 							_ny   += lengthdir_y(random1D(_sed + _sedIndex, -_wig, _wig), _d + 90); _sedIndex++;
 						}
 						
-						if(_prog_total >= _pathStr) //Do not point before range start. Do this instead of starting at _rtStr to prevent wiggle.
-							array_push(points, [ _nx, _ny, _prog_total / _pathEnd, _prog_curr ]);
+						if(_prog_total >= _pathStr) { //Do not add point before range start. Do this instead of starting at _rtStr to prevent wiggle. 
+							array_push(points, [ _nx, _ny, _prog_total / _pathEnd, _prog_curr / _pathLength ]);
+						}
 						
 						if(_prog_next > _prog_curr) {
 							_prog_total += _prog_next - _prog_curr;

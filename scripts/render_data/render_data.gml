@@ -180,9 +180,9 @@ function RenderListAction(list, context = PANEL_GRAPH.getCurrentContext()) {
 			rendering = ds_queue_dequeue(RENDER_QUEUE);
 			if(rendering.group == context) break;
 			
-			var txt = rendering.rendered? " [Skip]" : " [Update]";
+			var txt = rendering.isRenderable()? " [Skip]" : " [Update]";
 			
-			if(!rendering.rendered) {
+			if(!rendering.isRenderable()) {
 				rendering.doUpdate();
 				if(rendering.hasInspector1Update()) {
 					rendering.inspector1Update();

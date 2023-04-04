@@ -248,16 +248,13 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		var willUpdate = false;
 		
 		if(ANIMATOR.frame_progress) {
-			if(update_on_frame)
-				willUpdate = true;
+			if(update_on_frame) willUpdate = true;
+			if(isAnimated()) willUpdate = true;
 				
-			if(isAnimated())
-				willUpdate = true;
-		}
-		
-		if(willUpdate) {
-			setRenderStatus(false);
-			UPDATE |= RENDER_TYPE.partial;
+			if(willUpdate) {
+				setRenderStatus(false);
+				UPDATE |= RENDER_TYPE.partial;
+			}
 		}
 		
 		if(auto_height)
@@ -352,7 +349,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 			if( val_from == noone)			continue;
 			if(!val_from.node.active)		continue;
 			if(!val_from.node.renderActive) continue;
-			if(!val_from.node.rendered)
+			if(!val_from.node.rendered && !val_from.node.update_on_frame)
 				return false;
 		}
 		

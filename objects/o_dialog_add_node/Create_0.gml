@@ -527,6 +527,8 @@ event_inherited();
 		for(var i = 0; i < ds_list_size(NODE_CATEGORY); i++) {
 			var cat = NODE_CATEGORY[| i];
 			
+			if(i == NODE_PAGE_DEFAULT)
+				continue;
 			if(array_length(cat.filter) && !array_exists(cat.filter, context))
 				continue;
 			

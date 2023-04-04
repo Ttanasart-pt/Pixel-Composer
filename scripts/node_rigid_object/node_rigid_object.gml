@@ -673,7 +673,7 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	}
 	
 	static step = function() {
-		var _shp     = inputs[| 5].getValue();
+		var _shp = inputs[| 5].getValue();
 		inputs[| 9].setVisible(_shp == 2);
 		
 		var _tex  = inputs[| 6].getValue();
@@ -688,15 +688,15 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	}
 	
 	static reset = function() {
-		var _spwn = inputs[| 8].getValue();
-		if(!_spwn) return;
-		
 		var _tex  = inputs[| 6].getValue();
 		for( var i = 0; i < array_length(object); i++ ) {
 			if(instance_exists(object[i]))
 				instance_destroy(object[i]);
 		}
 		object = [];
+		
+		var _spwn = inputs[| 8].getValue();
+		if(!_spwn) return;
 		
 		if(is_array(_tex)) {
 			for( var i = 0; i < array_length(_tex); i++ )

@@ -69,7 +69,7 @@
 	}
 #endregion
 
-#region nodes
+#region render
 	DEF_SURFACE_RESET();
 	
 	var _k = ds_map_find_first(NODE_MAP);

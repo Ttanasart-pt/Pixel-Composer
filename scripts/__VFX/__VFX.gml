@@ -219,7 +219,6 @@ function __part(_node) constructor {
 		if(blend != c_white) cc = colorMultiply(blend, cc);
 		alp_draw = alp * eval_curve_x(alp_fade, lifeRat);
 		
-		shader_set_f("sampleDimension", surface_get_width(ss), surface_get_height(ss));
 		draw_surface_ext_safe(ss, _xx, _yy, scx, scy, rot, cc, alp_draw);
 	}
 	

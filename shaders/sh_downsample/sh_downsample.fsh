@@ -19,5 +19,5 @@ void main() {
 	
 	col /= down * down;	
 	
-    gl_FragColor = col;
+    gl_FragColor = col * v_vColour;
 }
