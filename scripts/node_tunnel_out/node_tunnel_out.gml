@@ -23,7 +23,9 @@ function Node_Tunnel_Out(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	
 	static isRenderable = function() { 
 		var _key = inputs[| 0].getValue();
-		return !ds_map_exists(TUNNELS_IN, _key);
+		if(!ds_map_exists(TUNNELS_IN, _key)) return false;
+		
+		return TUNNELS_IN[? _key].node.rendered;
 	}
 	
 	static onDrawNodeBehind = function(_x, _y, _mx, _my, _s) {

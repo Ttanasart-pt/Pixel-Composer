@@ -340,7 +340,6 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		if(!active)	return false;
 		if(!renderActive) return false;
 		
-		var _startNode = true;
 		for(var j = 0; j < ds_list_size(inputs); j++) {
 			var _in = inputs[| j];
 			if( _in.type == VALUE_TYPE.node) continue;
@@ -349,8 +348,10 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 			if( val_from == noone)			continue;
 			if(!val_from.node.active)		continue;
 			if(!val_from.node.renderActive) continue;
-			if(!val_from.node.rendered && !val_from.node.update_on_frame)
+			if(!val_from.node.rendered && !val_from.node.update_on_frame) {
+				//LOG_LINE_IF(global.RENDER_LOG && name == "Tunnel Out", "Non renderable because: " + string(val_from.node.name));
 				return false;
+			}
 		}
 		
 		return true;

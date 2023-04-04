@@ -126,9 +126,8 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		var k = ds_map_find_first(TUNNELS_OUT);
 		
 		repeat(amo) {
-			if(TUNNELS_OUT[? k] == _key) {
+			if(TUNNELS_OUT[? k] == _key)
 				array_push(nodes, NODE_MAP[? k]);
-			}
 			
 			k = ds_map_find_next(TUNNELS_OUT, k);
 		}

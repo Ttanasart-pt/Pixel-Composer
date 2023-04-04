@@ -111,13 +111,12 @@ function Render(partial = false, runAction = false) {
 		// render forward
 		while(!ds_queue_empty(RENDER_QUEUE)) {
 			rendering = ds_queue_dequeue(RENDER_QUEUE);
+			var renderable = rendering.isRenderable();
 			
 			LOG_BLOCK_START();
-			LOG_IF(global.RENDER_LOG, "Rendering " + rendering.name + " (" + rendering.display_name + ")");
-		
-			var txt = rendering.isRenderable()? " [Update]" : " [Skip]";
+			LOG_IF(global.RENDER_LOG, "Rendering " + rendering.name + " (" + rendering.display_name + ") ");
 			
-			if(rendering.isRenderable()) {
+			if(renderable) {
 				rendering.doUpdate();
 				
 				var nextNodes = rendering.getNextNodes();
@@ -128,7 +127,7 @@ function Render(partial = false, runAction = false) {
 					rendering.inspector1Update();
 			}
 			
-			LOG_IF(global.RENDER_LOG, "Rendered " + rendering.name + " (" + rendering.display_name + ") [" + string(instanceof(rendering)) + "]" + txt);
+			LOG_IF(global.RENDER_LOG, "Rendered " + rendering.name + " (" + rendering.display_name + ") [" + string(instanceof(rendering)) + "]" + (renderable? " [Update]" : " [Skip]"));
 			LOG_BLOCK_END();
 		}
 	} catch(e)
