@@ -1,4 +1,4 @@
-function preview_overlay_vector(active, _x, _y, _s, _mx, _my, _snx, _sny, _spr) {
+function preview_overlay_vector(interact, active, _x, _y, _s, _mx, _my, _snx, _sny, _spr) {
 	var _val = getValue();
 	var hover = -1;
 	if(is_array(_val[0])) return hover;
@@ -32,7 +32,7 @@ function preview_overlay_vector(active, _x, _y, _s, _mx, _my, _snx, _sny, _spr) 
 		}
 	}
 						
-	if(point_in_circle(_mx, _my, _ax, _ay, 8)) {
+	if(interact && point_in_circle(_mx, _my, _ax, _ay, 8)) {
 		hover = 1;
 		draw_sprite_ui_uniform(_spr, 1, _ax, _ay);
 		if(mouse_press(mb_left, active)) {

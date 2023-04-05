@@ -1355,35 +1355,31 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	drag_sx   = 0;
 	drag_sy   = 0;
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
-		if(value_from != noone) return;
+		if(type != VALUE_TYPE.integer && type != VALUE_TYPE.float) return -1;
 		
-		switch(type) {
-			case VALUE_TYPE.integer :
-			case VALUE_TYPE.float :
-				switch(display_type) {
-					case VALUE_DISPLAY._default :
-						var _angle = argument_count >  8? argument[ 8] : 0;
-						var _scale = argument_count >  9? argument[ 9] : 1;
-						var _spr   = argument_count > 10? argument[10] : THEME.anchor_selector;
-						return preview_overlay_scalar(active, _x, _y, _s, _mx, _my, _snx, _sny, _angle, _scale, _spr);
+		switch(display_type) {
+			case VALUE_DISPLAY._default :
+				var _angle = argument_count >  8? argument[ 8] : 0;
+				var _scale = argument_count >  9? argument[ 9] : 1;
+				var _spr   = argument_count > 10? argument[10] : THEME.anchor_selector;
+				return preview_overlay_scalar(value_from != noone, active, _x, _y, _s, _mx, _my, _snx, _sny, _angle, _scale, _spr);
 						
-					case VALUE_DISPLAY.rotation :
-						var _rad = argument_count >  8? argument[ 8] : 64;
-						return preview_overlay_rotation(active, _x, _y, _s, _mx, _my, _snx, _sny, _rad);
+			case VALUE_DISPLAY.rotation :
+				var _rad = argument_count >  8? argument[ 8] : 64;
+				return preview_overlay_rotation(value_from != noone, active, _x, _y, _s, _mx, _my, _snx, _sny, _rad);
 						
-					case VALUE_DISPLAY.vector :
-						var _spr = argument_count > 8? argument[8] : THEME.anchor_selector;
-						var _sca = argument_count > 9? argument[9] : 1;
-						return preview_overlay_vector(active, _x, _y, _s, _mx, _my, _snx, _sny, _spr);
+			case VALUE_DISPLAY.vector :
+				var _spr = argument_count > 8? argument[8] : THEME.anchor_selector;
+				var _sca = argument_count > 9? argument[9] : 1;
+				return preview_overlay_vector(value_from != noone, active, _x, _y, _s, _mx, _my, _snx, _sny, _spr);
 						
-					case VALUE_DISPLAY.area :
-						return preview_overlay_area(active, _x, _y, _s, _mx, _my, _snx, _sny, display_data);
+			case VALUE_DISPLAY.area :
+				return preview_overlay_area(value_from != noone, active, _x, _y, _s, _mx, _my, _snx, _sny, display_data);
 						
-					case VALUE_DISPLAY.puppet_control :
-						return preview_overlay_puppet(active, _x, _y, _s, _mx, _my, _snx, _sny);
-				}
-				break;
+			case VALUE_DISPLAY.puppet_control :
+				return preview_overlay_puppet(value_from != noone, active, _x, _y, _s, _mx, _my, _snx, _sny);
 		}
+		
 		return -1;
 	}
 	

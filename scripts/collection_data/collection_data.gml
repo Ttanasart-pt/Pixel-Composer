@@ -11,11 +11,11 @@ function __initCollection() {
 	var _l = root + "/version";
 	if(file_exists(_l)) {
 		var res = json_load_struct(_l);
-		if(!is_struct(res) || !struct_has(res, "version") || res.version < VERSION) 
+		if(!is_struct(res) || !struct_has(res, "version") || res.version < COLLECTION_VERSION) 
 			zip_unzip("data/Collections.zip", root);
 	} else 
 		zip_unzip("data/Collections.zip", root);
-	json_save_struct(_l, { version: VERSION });
+	json_save_struct(_l, { version: COLLECTION_VERSION });
 	
 	
 	refreshCollections();

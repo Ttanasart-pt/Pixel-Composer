@@ -1,4 +1,4 @@
-function preview_overlay_area_padding(active, _x, _y, _s, _mx, _my, _snx, _sny, display_data) {
+function preview_overlay_area_padding(interact, active, _x, _y, _s, _mx, _my, _snx, _sny, display_data) {
 	var _val = showValue();
 	var hover = -1;
 	
@@ -25,6 +25,8 @@ function preview_overlay_area_padding(active, _x, _y, _s, _mx, _my, _snx, _sny, 
 		case AREA_SHAPE.rectangle :	draw_rectangle(x0, y0, x1, y1, true); break;
 		case AREA_SHAPE.elipse :	draw_ellipse(x0, y0, x1, y1, true); break;
 	}
+	
+	if(!interact) return -1;
 	
 	draw_sprite_ui_uniform(THEME.anchor, 0, xc, yc);
 	draw_sprite_ui_uniform(THEME.anchor_solid_hori, 0, xc, y0,,,, 0);
@@ -130,7 +132,7 @@ function preview_overlay_area_padding(active, _x, _y, _s, _mx, _my, _snx, _sny, 
 	return hover;
 }
 
-function preview_overlay_area_two_point(active, _x, _y, _s, _mx, _my, _snx, _sny) {
+function preview_overlay_area_two_point(interact, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 	var _val = showValue();
 	var hover = -1;
 	
@@ -153,6 +155,8 @@ function preview_overlay_area_two_point(active, _x, _y, _s, _mx, _my, _snx, _sny
 		case AREA_SHAPE.rectangle :	draw_rectangle(x0, y0, x1, y1, true); break;
 		case AREA_SHAPE.elipse :	draw_ellipse(x0, y0, x1, y1, true); break;
 	}
+	
+	if(!interact) return -1;
 	
 	draw_sprite_ui_uniform(THEME.anchor, 1, xc, yc);
 	draw_sprite_ui_uniform(THEME.anchor_selector, 0, x0, y0);
@@ -236,7 +240,7 @@ function preview_overlay_area_two_point(active, _x, _y, _s, _mx, _my, _snx, _sny
 	return hover;
 }
 
-function preview_overlay_area_span(active, _x, _y, _s, _mx, _my, _snx, _sny) {
+function preview_overlay_area_span(interact, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 	var _val = showValue();
 	var hover = -1;
 	
@@ -256,6 +260,8 @@ function preview_overlay_area_span(active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		case AREA_SHAPE.rectangle :	draw_rectangle(_ax - _aw, _ay - _ah, _ax + _aw, _ay + _ah, true); break;
 		case AREA_SHAPE.elipse :	draw_ellipse(_ax - _aw, _ay - _ah, _ax + _aw, _ay + _ah, true); break;
 	}
+	
+	if(!interact) return -1;
 	
 	draw_sprite_ui_uniform(THEME.anchor, 0, _ax, _ay);
 	draw_sprite_ui_uniform(THEME.anchor_selector, 0, _ax + _aw, _ay + _ah);
@@ -331,19 +337,18 @@ function preview_overlay_area_span(active, _x, _y, _s, _mx, _my, _snx, _sny) {
 	return hover;
 }
 
-function preview_overlay_area(active, _x, _y, _s, _mx, _my, _snx, _sny, display_data) {
+function preview_overlay_area(interact, active, _x, _y, _s, _mx, _my, _snx, _sny, display_data) {
 	var _val = getValue();
 	var hover = -1;
 	if(is_array(_val[0])) return hover;
 	
 	var mode = editWidget.mode;
-	
 	if(mode == AREA_MODE.area)
-		hover =  preview_overlay_area_span(active, _x, _y, _s, _mx, _my, _snx, _sny);
+		hover =  preview_overlay_area_span(interact, active, _x, _y, _s, _mx, _my, _snx, _sny);
 	else if(mode == AREA_MODE.padding) 
-		hover = preview_overlay_area_padding(active, _x, _y, _s, _mx, _my, _snx, _sny, display_data)
+		hover = preview_overlay_area_padding(interact, active, _x, _y, _s, _mx, _my, _snx, _sny, display_data)
 	else if(mode == AREA_MODE.two_point) 
-		hover = preview_overlay_area_two_point(active, _x, _y, _s, _mx, _my, _snx, _sny);
+		hover = preview_overlay_area_two_point(interact, active, _x, _y, _s, _mx, _my, _snx, _sny);
 	
 	return hover;
 }

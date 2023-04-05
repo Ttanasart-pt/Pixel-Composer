@@ -62,6 +62,8 @@ event_inherited();
 		
 		dialog_h = min(max_h, hh);
 		sc_content.resize(dialog_w, dialog_h);
+		
+		resetPosition();
 	}
 	
 	sc_content = new scrollPane(0, 0, function(_y, _m) {
@@ -96,7 +98,7 @@ event_inherited();
 					draw_sprite_stretched_ext(THEME.textbox, 3, 0, _ly, _dw, hght, COLORS.dialog_menubox_highlight, 1);
 				
 					if(sc_content.active && (mouse_press(mb_left) || keyboard_check_pressed(vk_enter))) {
-						initVal = i;
+						initVal = array_find(scrollbox.data, txt);
 						instance_destroy();
 					}
 				}

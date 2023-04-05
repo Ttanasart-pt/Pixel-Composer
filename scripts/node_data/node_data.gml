@@ -794,7 +794,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		preview_drop_y = preview_my;
 	}
 	
-	static getNodeDimension = function() {
+	static getNodeDimension = function(showFormat = true) {
 		if(!is_surface(preview_surface)) {	
 			if(ds_list_size(outputs))
 				return "[" + array_shape(outputs[| 0].getValue()) + "]";
@@ -809,14 +809,15 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		if(preview_amount) txt = string(preview_amount) + " x " + txt;
 		
 		switch(format) {
-			case surface_rgba4unorm	 : txt += "4RGBA";	break;
-			case surface_rgba8unorm	 : txt += "8RGBA";	break;
-			case surface_rgba16float : txt += "16RGBA"; break;
-			case surface_rgba32float : txt += "32RGBA"; break;
-			case surface_r8unorm	 : txt += "8BW";	break;
-			case surface_r16float	 : txt += "16BW";	break;
-			case surface_r32float	 : txt += "32BW";	break;
+			case surface_rgba4unorm	 : txt += showFormat? "4RGBA"	: "4R";  break;
+			case surface_rgba8unorm	 : txt += showFormat? "8RGBA"	: "8R";  break;
+			case surface_rgba16float : txt += showFormat? "16RGBA"	: "16R"; break;
+			case surface_rgba32float : txt += showFormat? "32RGBA"	: "32R"; break;
+			case surface_r8unorm	 : txt += showFormat? "8BW"		: "8B";  break;
+			case surface_r16float	 : txt += showFormat? "16BW"	: "16B"; break;
+			case surface_r32float	 : txt += showFormat? "32BW"	: "32B"; break;
 		}
+		
 		txt += "]";
 		
 		return txt;
@@ -831,7 +832,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		var ty = yy + (h + 4) * _s;
 		
 		if(PANEL_GRAPH.show_dimension) {
-			var txt = string(getNodeDimension());
+			var txt = string(getNodeDimension(_s > 0.65));
 			draw_text(round(tx), round(ty), txt);
 			ty += string_height(txt) - 4 * _s;
 		}

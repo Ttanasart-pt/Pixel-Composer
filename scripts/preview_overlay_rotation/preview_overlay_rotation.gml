@@ -1,4 +1,4 @@
-function preview_overlay_rotation(active, _x, _y, _s, _mx, _my, _snx, _sny, _rad) {
+function preview_overlay_rotation(interact, active, _x, _y, _s, _mx, _my, _snx, _sny, _rad) {
 	var _val = getValue();
 	var hover = -1;
 	if(is_array(_val)) return hover;
@@ -27,7 +27,7 @@ function preview_overlay_rotation(active, _x, _y, _s, _mx, _my, _snx, _sny, _rad
 		}
 	}
 						
-	if(point_in_circle(_mx, _my, _ax, _ay, 8)) {
+	if(interact && point_in_circle(_mx, _my, _ax, _ay, 8)) {
 		draw_set_color(COLORS._main_accent);
 		draw_set_alpha(0.5);
 		draw_circle(_x, _y, _rad, true);

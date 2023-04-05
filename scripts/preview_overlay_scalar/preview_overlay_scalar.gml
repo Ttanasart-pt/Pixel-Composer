@@ -1,4 +1,4 @@
-function preview_overlay_scalar(active, _x, _y, _s, _mx, _my, _snx, _sny, _angle, _scale, _spr) {
+function preview_overlay_scalar(interact, active, _x, _y, _s, _mx, _my, _snx, _sny, _angle, _scale, _spr) {
 	var _val = getValue();
 	var hover = -1;
 	if(is_array(_val)) return hover;
@@ -25,7 +25,7 @@ function preview_overlay_scalar(active, _x, _y, _s, _mx, _my, _snx, _sny, _angle
 		}
 	}
 						
-	if(point_in_circle(_mx, _my, _ax, _ay, 8)) {
+	if(interact && point_in_circle(_mx, _my, _ax, _ay, 8)) {
 		hover = 1;
 		index = 1;
 		if(mouse_press(mb_left, active)) {

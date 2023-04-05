@@ -476,7 +476,7 @@ event_inherited();
 			}
 		}
 		
-		if(ADD_NODE_PAGE < 1) 
+		if(ADD_NODE_PAGE == -1) 
 			ds_list_destroy(_list);
 		
 		return hh;
@@ -527,7 +527,7 @@ event_inherited();
 		for(var i = 0; i < ds_list_size(NODE_CATEGORY); i++) {
 			var cat = NODE_CATEGORY[| i];
 			
-			if(i == NODE_PAGE_DEFAULT)
+			if(!struct_has(cat, "list"))
 				continue;
 			if(array_length(cat.filter) && !array_exists(cat.filter, context))
 				continue;

@@ -1,4 +1,4 @@
-function preview_overlay_puppet(active, _x, _y, _s, _mx, _my, _snx, _sny) {
+function preview_overlay_puppet(interact, active, _x, _y, _s, _mx, _my, _snx, _sny) {
 	var _val = getValue();
 	var hover = -1;
 	if(is_array(_val[0])) return hover;
@@ -167,7 +167,7 @@ function preview_overlay_puppet(active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		}
 	}
 						
-	if(point_in_circle(_mx, _my, _ax, _ay, 8)) {
+	if(interact && point_in_circle(_mx, _my, _ax, _ay, 8)) {
 		hover = 1;
 		draw_sprite_ui_uniform(THEME.anchor_selector, 1, _ax, _ay);
 		if(mouse_press(mb_left, active)) {
@@ -179,7 +179,7 @@ function preview_overlay_puppet(active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		}
 	} 
 						
-	if(_val[PUPPET_CONTROL.mode] == PUPPET_FORCE_MODE.move && point_in_circle(_mx, _my, _ax1, _ay1, 8)) {
+	if(interact && _val[PUPPET_CONTROL.mode] == PUPPET_FORCE_MODE.move && point_in_circle(_mx, _my, _ax1, _ay1, 8)) {
 		hover = 2;
 		draw_sprite_ui_uniform(THEME.anchor_selector, 0, _ax1, _ay1);
 		if(mouse_press(mb_left, active)) {

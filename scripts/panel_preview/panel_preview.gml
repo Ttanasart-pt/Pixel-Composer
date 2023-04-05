@@ -500,10 +500,12 @@ function Panel_Preview() : PanelContent() constructor {
 		right_menu_y += string_height("l");
 		draw_text(w - ui(8), right_menu_y, "x" + string(canvas_s));
 		
-		right_menu_y += string_height("l");
-		var mpx = floor((mx - canvas_x) / canvas_s);
-		var mpy = floor((my - canvas_y) / canvas_s);
-		draw_text(w - ui(8), right_menu_y, "[" + string(mpx) + ", " + string(mpy) + "]");
+		if(pHOVER) {
+			right_menu_y += string_height("l");
+			var mpx = floor((mx - canvas_x) / canvas_s);
+			var mpy = floor((my - canvas_y) / canvas_s);
+			draw_text(w - ui(8), right_menu_y, "[" + string(mpx) + ", " + string(mpy) + "]");
+		}
 		
 		right_menu_y += string_height("l");
 		

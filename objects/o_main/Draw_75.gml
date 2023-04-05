@@ -129,7 +129,6 @@ if(OS == os_windows && gameframe_is_minimized()) exit;
 #endregion
 
 #region frame
-	draw_set_color(COLORS._main_icon_dark);
+	draw_set_color(merge_color(COLORS._main_icon, COLORS._main_icon_dark, 0.95));
 	draw_rectangle(1, 1, WIN_W - 2, WIN_H - 2, true);
-#endregion
 #endregion

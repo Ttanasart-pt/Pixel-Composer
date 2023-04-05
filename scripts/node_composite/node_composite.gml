@@ -354,11 +354,16 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			ind = hov.surface_index;
 		
 		if(ind != -1) {
-			for( var j = 1; j < data_length; j++ )
+			for( var j = 1; j < data_length; j++ ) {
+				if(ind + j >= ds_list_size(inputs)) break;
 				inputs[| ind + j].drawNameBG(_s);
+			}
 				
-			for( var j = 1; j < data_length; j++ )
+			for( var j = 1; j < data_length; j++ ) {
+				if(ind + j >= ds_list_size(inputs)) break;
 				inputs[| ind + j].drawName(_s, _mx, _my);
+			}
+			
 		} else if(show_input_name) {
 			for( var i = 0; i < getInputAmount(); i++ ) {
 				var idx = getInputIndex(i);

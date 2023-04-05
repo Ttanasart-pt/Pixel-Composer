@@ -9,6 +9,7 @@ function string_decimal(str) {
 	return (neg? "-" : "") + (dec? string_digits(pre) + "." + string_digits(pos) : string_digits(str));
 }
 
+gml_pragma("forceinline");
 function toNumber(str) {
 	if(is_real(str)) return str;
 	
