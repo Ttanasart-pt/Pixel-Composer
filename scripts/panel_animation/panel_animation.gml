@@ -37,8 +37,10 @@ function Panel_Animation() : PanelContent() constructor {
 	ds_name_surface = surface_create_valid(tool_width - ui(16), 1);
 	
 	timeline_scubbing = false;
-	timeline_scub_st = 0;
-	timeline_scale = 20;
+	timeline_scub_st  = 0;
+	timeline_scale    = 20;
+	timeline_separate = 5;
+	timeline_sep_line = 1;
 	_scrub_frame = -1;
 	
 	timeline_shift = 0;
@@ -415,7 +417,7 @@ function Panel_Animation() : PanelContent() constructor {
 			draw_sprite_stretched(THEME.ui_panel_bg, 1, 0, 0, bar_w, bar_h);
 			draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, 0, 0, bar_total_w, bar_h, COLORS.panel_animation_timeline_blend, 1);
 			
-			for(var i = 10; i <= ANIMATOR.frames_total; i += 10) {
+			for(var i = timeline_separate; i <= ANIMATOR.frames_total; i += timeline_separate) {
 				var bar_line_x = i * ui(timeline_scale) + timeline_shift;
 				draw_set_color(COLORS.panel_animation_frame_divider);
 				draw_line(bar_line_x, ui(12), bar_line_x, bar_h);
@@ -508,14 +510,31 @@ function Panel_Animation() : PanelContent() constructor {
 			}
 			
 			if(pHOVER && point_in_rectangle(mx, my, bar_x, 16, bar_x + bar_w, bar_y - 8)) {
-				if(mouse_wheel_down()) {
-					timeline_scale = max(timeline_scale - 1, 1);
-					timeline_shift_to = 0;
+				var sca = timeline_scale;
+				
+				if(mouse_wheel_down()) timeline_scale = max(timeline_scale - 1 * SCROLL_SPEED, 1);
+				if(mouse_wheel_up())   timeline_scale = min(timeline_scale + 1 * SCROLL_SPEED, 24);
+				
+				timeline_separate = 5;
+				timeline_sep_line = 1;
+				
+				if(timeline_scale <= 10) {
+					timeline_separate = 10;
+					timeline_sep_line = 2;
 				}
+				
+				if(timeline_scale <= 3) {
+					timeline_separate = 20;
+					timeline_sep_line = 5;
+				}
+				
+				if(sca != timeline_scale) {
+					var mfb = (mx - bar_x - timeline_shift) / ui(timeline_scale);
+					var mfa = (mx - bar_x - timeline_shift) / ui(sca);
 					
-				if(mouse_wheel_up()) {
-					timeline_scale = min(timeline_scale + 1, 24);
-					timeline_shift_to = 0;
+					timeline_shift_to = clamp(timeline_shift_to - (mfa - mfb) * timeline_scale, 
+						-max(bar_total_w - bar_w + 32, 0), 0);
+					timeline_shift = timeline_shift_to;
 				}
 						
 				if(mouse_press(mb_middle, pFOCUS)) {
@@ -529,10 +548,8 @@ function Panel_Animation() : PanelContent() constructor {
 			}
 					
 			if(pHOVER && point_in_rectangle(mx, my, bar_x, bar_y, bar_x + min(timeline_w, timeline_shift + bar_total_w), bar_y + bar_h)) { //preview
-				if(mouse_wheel_down())
-					timeline_shift_to = clamp(timeline_shift_to - 64, -max(bar_total_w - bar_w + 32, 0), 0);
-				if(mouse_wheel_up())
-					timeline_shift_to = clamp(timeline_shift_to + 64, -max(bar_total_w - bar_w + 32, 0), 0);
+				if(mouse_wheel_down()) timeline_shift_to = clamp(timeline_shift_to - 64 * SCROLL_SPEED, -max(bar_total_w - bar_w + 32, 0), 0);
+				if(mouse_wheel_up())   timeline_shift_to = clamp(timeline_shift_to + 64 * SCROLL_SPEED, -max(bar_total_w - bar_w + 32, 0), 0);
 						
 				if(mouse_press(mb_left, pFOCUS)) {
 					timeline_scubbing = true;
@@ -1119,9 +1136,9 @@ function Panel_Animation() : PanelContent() constructor {
 		#region scroll
 			dope_sheet_y = lerp_float(dope_sheet_y, dope_sheet_y_to, 4);
 					
-			if(pHOVER && point_in_rectangle(mx, my, ui(8), ui(8), tool_width, ui(8) + dope_sheet_h)) {
-				if(mouse_wheel_down())	dope_sheet_y_to = clamp(dope_sheet_y_to - ui(32), -dope_sheet_y_max, 0);
-				if(mouse_wheel_up())	dope_sheet_y_to = clamp(dope_sheet_y_to + ui(32), -dope_sheet_y_max, 0);
+			if(pHOVER && point_in_rectangle(mx, my, ui(8), ui(8), bar_x, ui(8) + dope_sheet_h)) {
+				if(mouse_wheel_down())	dope_sheet_y_to = clamp(dope_sheet_y_to - ui(32) * SCROLL_SPEED, -dope_sheet_y_max, 0);
+				if(mouse_wheel_up())	dope_sheet_y_to = clamp(dope_sheet_y_to + ui(32) * SCROLL_SPEED, -dope_sheet_y_max, 0);
 			}
 					
 			var scr_x = bar_x + dope_sheet_w + ui(4);
@@ -1217,11 +1234,13 @@ function Panel_Animation() : PanelContent() constructor {
 			
 			dope_sheet_y_max = max(0, dope_sheet_y_max - dope_sheet_h + ui(48));
 			
-			for(var i = 10; i <= ANIMATOR.frames_total; i += 10) {
+			for(var i = timeline_sep_line; i <= ANIMATOR.frames_total; i += timeline_sep_line) {
 				var bar_line_x = i * ui(timeline_scale) + timeline_shift;
 				draw_set_color(COLORS.panel_animation_frame_divider);
+				draw_set_alpha(i % timeline_separate == 0? 1 : 0.1);
 				draw_line(bar_line_x, ui(16), bar_line_x, dope_sheet_h);
 			}
+			draw_set_alpha(1);
 		#endregion
 		
 		#region stretch
@@ -1497,7 +1516,7 @@ function Panel_Animation() : PanelContent() constructor {
 			draw_set_color(COLORS.panel_animation_timeline_top);
 			draw_rectangle(0, 0, bar_show_w, ui(16), false);
 			
-			for(var i = 10; i <= ANIMATOR.frames_total; i += 10) {
+			for(var i = timeline_separate; i <= ANIMATOR.frames_total; i += timeline_separate) {
 				var bar_line_x = i * ui(timeline_scale) + timeline_shift;
 				draw_set_text(f_p2, fa_right, fa_top, COLORS._main_text_sub);
 				draw_text(bar_line_x - ui(2), 0, string(i));

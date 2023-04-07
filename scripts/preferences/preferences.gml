@@ -8,6 +8,8 @@
 	PREF_MAP[? "path_resolution"] = 32;
 	
 	PREF_MAP[? "double_click_delay"] = 0.25;
+	PREF_MAP[? "mouse_wheel_speed"]  = 1.00;
+	
 	PREF_MAP[? "keyboard_repeat_start"] = 0.50;
 	PREF_MAP[? "keyboard_repeat_speed"] = 0.10;
 	

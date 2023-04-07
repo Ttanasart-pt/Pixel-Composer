@@ -60,8 +60,8 @@ function scrollPane(_w, _h, ondraw) : widget() constructor {
 		draw_surface_safe(surface, x, y);
 		
 		if(hover && !key_mod_press(SHIFT)) {
-			if(mouse_wheel_down())	scroll_y_to -= scroll_step;
-			if(mouse_wheel_up())	scroll_y_to += scroll_step;
+			if(mouse_wheel_down())	scroll_y_to -= scroll_step * SCROLL_SPEED;
+			if(mouse_wheel_up())	scroll_y_to += scroll_step * SCROLL_SPEED;
 		}
 		
 		if(abs(content_h) > 0) {

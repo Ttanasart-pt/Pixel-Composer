@@ -531,8 +531,8 @@ function textBox(_input, _onModify, _extras = noone) : textInput(_input, _onModi
 					if(key_mod_press(CTRL)) amo *= 10;
 					if(key_mod_press(ALT))  amo /= 10;
 					
-					if(mouse_wheel_down())	onModify(toNumber(_text) + amo);
-					if(mouse_wheel_up())	onModify(toNumber(_text) - amo);
+					if(mouse_wheel_down())	onModify(toNumber(_text) + amo * SCROLL_SPEED);
+					if(mouse_wheel_up())	onModify(toNumber(_text) - amo * SCROLL_SPEED);
 				}
 			} else if(!hide)
 				draw_sprite_stretched_ext(THEME.textbox, 0, _x, _y, _w, _h, boxColor, 0.5 + 0.5 * interactable);

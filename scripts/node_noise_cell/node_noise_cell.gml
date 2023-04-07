@@ -30,11 +30,13 @@ function Node_Cellular(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		.setDisplay(VALUE_DISPLAY.slider, [-10., 10., 0.01])
 		.setVisible(false);
 	
+	inputs[| 10] = nodeValue("Colored", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false)
+	
 	input_display_list = [
 		["Output",		false], 0, 
 		["Noise",		false], 4, 6, 3, 1, 2, 
 		["Radial",		false], 8, 9,
-		["Rendering",	false], 5, 7
+		["Rendering",	false], 5, 7, 10, 
 	];
 	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
@@ -55,10 +57,13 @@ function Node_Cellular(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		var _pat  = _data[6];
 		var _mid  = _data[7];
 		
-		inputs[| 8].setVisible(_pat == 1);
-		inputs[| 9].setVisible(_pat == 1);
-		var _rad = _data[8];
-		var _sht = _data[9];
+		inputs[|  8].setVisible(_pat == 1);
+		inputs[|  9].setVisible(_pat == 1);
+		inputs[| 10].setVisible(_type == 2);
+		
+		var _rad = _data[ 8];
+		var _sht = _data[ 9];
+		var _col = _data[10];
 		
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
 		
@@ -81,6 +86,7 @@ function Node_Cellular(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		
 		uniform_rad = shader_get_uniform(shader, "radiusScale");
 		uniform_sht = shader_get_uniform(shader, "radiusShatter");
+		uniform_col = shader_get_uniform(shader, "colored");
 		
 		surface_set_target(_outSurf);
 		shader_set(shader);
@@ -93,6 +99,7 @@ function Node_Cellular(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			shader_set_uniform_f(uniform_rad, _rad);
 			shader_set_uniform_f(uniform_sht, _sht);
 			shader_set_uniform_i(uniform_pat, _pat);
+			shader_set_uniform_i(uniform_col, _col);
 			draw_sprite_ext(s_fx_pixel, 0, 0, 0, _dim[0], _dim[1], 0, c_white, 1);
 		shader_reset();
 		surface_reset_target();

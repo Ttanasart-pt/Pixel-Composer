@@ -10,8 +10,18 @@ uniform vec2  scale;
 uniform float seed;
 uniform float shift;
 uniform int shiftAxis;
-
 uniform int useSampler;
+
+uniform int colored;
+uniform vec2 colorRanR;
+uniform vec2 colorRanG;
+uniform vec2 colorRanB;
+
+vec3 hsv2rgb(vec3 c) {
+    vec4 K = vec4(1.0, 2.0 / 3.0, 1.0 / 3.0, 3.0);
+    vec3 p = abs(fract(c.xxx + K.xyz) * 6.0 - K.www);
+    return c.z * mix(K.xxx, clamp(p - K.xxx, 0.0, 1.0), c.y);
+}
 
 float randomSeed (in vec2 st, float _seed) {
     return fract(sin(dot(st.xy + vec2(5.0654, 9.684), vec2(12.9898, 78.233))) * (43758.5453123 + _seed));
@@ -36,9 +46,23 @@ void main() {
 	}
 	
 	if(useSampler == 0) {
-		vec2 i = floor(pos);
-		float n = random(i);
-		gl_FragColor = vec4(vec3(n), 1.0);
+		vec2 n = floor(pos);
+		
+		if(colored == 0) {
+			gl_FragColor = vec4(vec3(random(n)), 1.0);
+		} else if(colored == 1) {
+			float randR = colorRanR[0] + random(n) * (colorRanR[1] - colorRanR[0]);
+			float randG = colorRanG[0] + random(n + vec2(1.7227, 4.55529)) * (colorRanG[1] - colorRanG[0]);
+			float randB = colorRanB[0] + random(n + vec2(6.9950, 6.82063)) * (colorRanB[1] - colorRanB[0]);
+		
+			gl_FragColor = vec4(randR, randG, randB, 1.0);
+		} else if(colored == 2) {
+			float randH = colorRanR[0] + random(n) * (colorRanR[1] - colorRanR[0]);
+			float randS = colorRanG[0] + random(n + vec2(1.7227, 4.55529)) * (colorRanG[1] - colorRanG[0]);
+			float randV = colorRanB[0] + random(n + vec2(6.9950, 6.82063)) * (colorRanB[1] - colorRanB[0]);
+		
+			gl_FragColor = vec4(hsv2rgb(vec3(randH, randS, randV)), 1.0);
+		} 
 	} else {
 		vec2 samPos = floor(pos) / scale + 0.5 / scale;
 		gl_FragColor = texture2D( gm_BaseTexture, samPos );

@@ -31,7 +31,7 @@ if !ready exit;
 				page_current = i;
 		}
 		
-		draw_text(dialog_x + ui(padding), yl + hg / 2, page[i]);
+		draw_text(dialog_x + ui(padding + 8), yl + hg / 2, page[i]);
 		yl += hg;
 	}
 #endregion
@@ -56,15 +56,11 @@ if !ready exit;
 		current_list = pref_global;
 		sp_pref.setActiveFocus(sHOVER, sFOCUS);
 		sp_pref.draw(px, py);
-	} else if(page_current == 1) {
-		current_list = pref_node;
-		sp_pref.setActiveFocus(sHOVER, sFOCUS);
-		sp_pref.draw(px, py);
-	} else if(page_current == 2) {
+	}  else if(page_current == 1) {
 		current_list = pref_appr;
 		sp_pref.setActiveFocus(sHOVER, sFOCUS);
 		sp_pref.draw(px, py);
-	} else if(page_current == 3) {
+	} else if(page_current == 2) {
 		var _w = ui(200);
 		var _h = TEXTBOX_HEIGHT;
 		
@@ -87,7 +83,7 @@ if !ready exit;
 		
 		sp_colors.setActiveFocus(sHOVER, sFOCUS);
 		sp_colors.draw(px, py + ui(40));
-	} else if(page_current == 4) {
+	} else if(page_current == 3) {
 		if(mouse_press(mb_left, sFOCUS)) 
 			hk_editing = noone;
 		

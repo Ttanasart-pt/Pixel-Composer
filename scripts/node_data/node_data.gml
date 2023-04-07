@@ -476,7 +476,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		draw_sprite_stretched_ext(THEME.node_bg_name, 0, xx, yy, w * _s, ui(20), color, aa);
 		
 		var cc = COLORS._main_text;
-		if(/*PREF_MAP[? "node_show_render_status"] && */!rendered)
+		if(PREF_MAP[? "node_show_render_status"] && !rendered)
 			cc = isRenderable()? COLORS._main_value_positive : COLORS._main_value_negative;
 		
 		draw_set_text(f_p1, fa_left, fa_center, cc);
@@ -1203,6 +1203,11 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 			ds_list_add_map(_inputs, inputs[| i].serialize(scale, preset));
 		ds_map_add_list(_map, "inputs", _inputs);
 		
+		var _outputs = ds_list_create();
+		for(var i = 0; i < ds_list_size(outputs); i++)
+			ds_list_add_map(_outputs, outputs[| i].serialize(scale, preset));
+		ds_map_add_list(_map, "outputs", _outputs);
+		
 		var _trigger = ds_list_create();
 		ds_list_add_map(_trigger, inspectInput1.serialize(scale, preset));
 		ds_list_add_map(_trigger, inspectInput2.serialize(scale, preset));
@@ -1269,6 +1274,14 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		for(var i = 0; i < amo; i++) {
 			if(inputs[| i] == noone) continue;
 			inputs[| i].applyDeserialize(_inputs[| i], load_scale, preset);
+		}
+		
+		if(ds_map_exists(load_map, "outputs")) {
+			var _outputs = load_map[? "outputs"];
+			for(var i = 0; i < ds_list_size(outputs); i++) {
+				if(outputs[| i] == noone) continue;
+				outputs[| i].applyDeserialize(_outputs[| i], load_scale, preset);
+			}
 		}
 		
 		if(ds_map_exists(load_map, "inspectInputs")) {

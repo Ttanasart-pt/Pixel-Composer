@@ -22,6 +22,17 @@ vec4 mod289(vec4 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
 vec4 permute(vec4 x) { return mod289(((x * 34.0) + 10.0) * x); }
 vec4 taylorInvSqrt(vec4 r) { return 1.79284291400159 - 0.85373472095314 * r; }
 
+uniform int  colored;
+uniform vec2 colorRanR;
+uniform vec2 colorRanG;
+uniform vec2 colorRanB;
+
+vec3 hsv2rgb(vec3 c) {
+    vec4 K = vec4(1.0, 2.0 / 3.0, 1.0 / 3.0, 3.0);
+    vec3 p = abs(fract(c.xxx + K.xyz) * 6.0 - K.www);
+    return c.z * mix(K.xxx, clamp(p - K.xxx, 0.0, 1.0), c.y);
+}
+
 float snoise(vec3 vec) { 
 	vec3 v = vec * 4.;
 	
@@ -100,8 +111,8 @@ float snoise(vec3 vec) {
 	return n;
 }
 
-void main() {
-    vec2 p = ((v_vTexcoord + position.xy) / scale) * 2.0 - 1.0;
+float simplex(in vec2 st) {
+    vec2 p = ((st + position.xy) / scale) * 2.0 - 1.0;
 	float _z = 1. + position.z;
     vec3 xyz = vec3(p, _z);
     
@@ -115,6 +126,23 @@ void main() {
 		xyz *= 2.;
 	}
 	
-    gl_FragColor = vec4(vec3(n), 1.);
+	return n;
+}
 
+void main() {
+	if(colored == 0) {
+		gl_FragColor = vec4(vec3(simplex(v_vTexcoord)), 1.0);
+	} else if(colored == 1) {
+		float randR = colorRanR[0] + simplex(v_vTexcoord) * (colorRanR[1] - colorRanR[0]);
+		float randG = colorRanG[0] + simplex(v_vTexcoord + vec2(1.7227, 4.55529)) * (colorRanG[1] - colorRanG[0]);
+		float randB = colorRanB[0] + simplex(v_vTexcoord + vec2(6.9950, 6.82063)) * (colorRanB[1] - colorRanB[0]);
+		
+		gl_FragColor = vec4(randR, randG, randB, 1.0);
+	} else if(colored == 2) {
+		float randH = colorRanR[0] + simplex(v_vTexcoord) * (colorRanR[1] - colorRanR[0]);
+		float randS = colorRanG[0] + simplex(v_vTexcoord + vec2(1.7227, 4.55529)) * (colorRanG[1] - colorRanG[0]);
+		float randV = colorRanB[0] + simplex(v_vTexcoord + vec2(6.9950, 6.82063)) * (colorRanB[1] - colorRanB[0]);
+		
+		gl_FragColor = vec4(hsv2rgb(vec3(randH, randS, randV)), 1.0);
+	}
 }

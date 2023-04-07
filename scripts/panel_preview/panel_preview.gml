@@ -524,8 +524,8 @@ function Panel_Preview() : PanelContent() constructor {
 		if(pHOVER && my > h - toolbar_height - prev_size - ui(16) && my > toolbar_height) {
 			canvas_hover = false;
 			
-			if(mouse_wheel_down())	preview_x_to = clamp(preview_x_to - prev_size, - preview_x_max, 0);
-			if(mouse_wheel_up())	preview_x_to = clamp(preview_x_to + prev_size, - preview_x_max, 0);
+			if(mouse_wheel_down())	preview_x_to = clamp(preview_x_to - prev_size * SCROLL_SPEED, - preview_x_max, 0);
+			if(mouse_wheel_up())	preview_x_to = clamp(preview_x_to + prev_size * SCROLL_SPEED, - preview_x_max, 0);
 		}
 			
 		preview_x_max = 0;
@@ -710,8 +710,8 @@ function Panel_Preview() : PanelContent() constructor {
 			
 			tol_max_w = max(0, tol_max_w - w);			
 			if(point_in_rectangle(mx, my, 0, 0, w, toolbar_height)) {
-				if(mouse_wheel_up())   tool_x_to = clamp(tool_x_to + ui(64), -tol_max_w, 0);
-				if(mouse_wheel_down()) tool_x_to = clamp(tool_x_to - ui(64), -tol_max_w, 0);
+				if(mouse_wheel_up())   tool_x_to = clamp(tool_x_to + ui(64) * SCROLL_SPEED, -tol_max_w, 0);
+				if(mouse_wheel_down()) tool_x_to = clamp(tool_x_to - ui(64) * SCROLL_SPEED, -tol_max_w, 0);
 			}
 		} else { //color sampler
 			var cx = ui(10);

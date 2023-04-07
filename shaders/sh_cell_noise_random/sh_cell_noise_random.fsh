@@ -13,6 +13,7 @@ uniform float middle;
 uniform float radiusScale;
 uniform float radiusShatter;
 uniform int pattern;
+uniform int colored;
 
 #define TAU 6.283185307179586
 
@@ -24,6 +25,13 @@ float random (in vec2 st) {
     return fract(sin(dot(st.xy, vec2(12.9898, 78.233))) * 43758.5453123);
 }
 
+vec3 colorNoise(in vec2 st) {
+	float randR = random(st);
+	float randG = random(st + vec2(1.7227, 4.55529));
+	float randB = random(st + vec2(6.9950, 6.82063));
+		
+	return vec3(randR, randG, randB);
+}
 
 void main() {
 	vec2 pos = position / dimension;
@@ -72,6 +80,10 @@ void main() {
 		}
 	}
 
-	float c = middle + (random(mp) - middle) * contrast;
-    gl_FragColor = vec4(vec3(c), 1.0);
+	if(colored == 0) {
+		float c = middle + (random(mp) - middle) * contrast;
+	    gl_FragColor = vec4(vec3(c), 1.0);
+	} else if(colored == 1) {
+		gl_FragColor = vec4(colorNoise(mp), 1.);
+	}
 }

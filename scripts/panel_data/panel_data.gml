@@ -542,8 +542,8 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 			
 			tab_width = max(0, tab_width - w + ui(32));
 			if(point_in_rectangle(msx, msy, 0, 0, w, tab_height)) {
-				if(mouse_wheel_up())	tab_x_to = clamp(tab_x_to + ui(64), -tab_width, 0);
-				if(mouse_wheel_down())	tab_x_to = clamp(tab_x_to - ui(64), -tab_width, 0);
+				if(mouse_wheel_up())	tab_x_to = clamp(tab_x_to + ui(64) * SCROLL_SPEED, -tab_width, 0);
+				if(mouse_wheel_down())	tab_x_to = clamp(tab_x_to - ui(64) * SCROLL_SPEED, -tab_width, 0);
 			}
 			
 			if(tab_holding) {

@@ -25,10 +25,9 @@ event_inherited();
 #region pages
 	page_current = 0;
 	page[0] = get_text("pref_pages_general",	"General");
-	page[1] = get_text("pref_pages_nodes",		"Node settings");
-	page[2] = get_text("pref_pages_appearance", "Appearances");
-	page[3] = get_text("pref_pages_theme",		"Theme");
-	page[4] = get_text("pref_pages_hotkeys",	"Hotkeys");
+	page[1] = get_text("pref_pages_appearance", "Appearances");
+	page[2] = get_text("pref_pages_theme",		"Theme");
+	page[3] = get_text("pref_pages_hotkeys",	"Hotkeys");
 	
 	pref_global = ds_list_create();
 	
@@ -75,6 +74,15 @@ event_inherited();
 		"double_click_delay",
 		new slider(0, 1, 0.01, function(val) { 
 			PREF_MAP[? "double_click_delay"] = val; 
+			PREF_SAVE();
+		})
+	]);
+	
+	ds_list_add(pref_global, [
+		get_text("pref_mouse_wheel_speed", "Scroll speed"),
+		"mouse_wheel_speed",
+		new textBox(TEXTBOX_INPUT.number, function(val) { 
+			PREF_MAP[? "mouse_wheel_speed"] = val; 
 			PREF_SAVE();
 		})
 	]);
@@ -199,20 +207,6 @@ event_inherited();
 		})
 	]);
 	
-#endregion
-
-#region //NODE
-	pref_node = ds_list_create();
-	
-	ds_list_add(pref_node, [
-		get_text("pref_gravity", "Gravity"),
-		"physics_gravity",
-		new vectorBox(2, TEXTBOX_INPUT.number, function(index, val) { 
-			PREF_MAP[? "physics_gravity"][index] = val; 
-			physics_world_gravity(PREF_MAP[? "physics_gravity"][0], PREF_MAP[? "physics_gravity"][1]);
-			PREF_SAVE();
-		})
-	]);
 #endregion
 
 #region appearance

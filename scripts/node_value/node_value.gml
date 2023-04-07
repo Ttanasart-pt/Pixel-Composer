@@ -1362,22 +1362,22 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				var _angle = argument_count >  8? argument[ 8] : 0;
 				var _scale = argument_count >  9? argument[ 9] : 1;
 				var _spr   = argument_count > 10? argument[10] : THEME.anchor_selector;
-				return preview_overlay_scalar(value_from != noone, active, _x, _y, _s, _mx, _my, _snx, _sny, _angle, _scale, _spr);
+				return preview_overlay_scalar(value_from == noone, active, _x, _y, _s, _mx, _my, _snx, _sny, _angle, _scale, _spr);
 						
 			case VALUE_DISPLAY.rotation :
 				var _rad = argument_count >  8? argument[ 8] : 64;
-				return preview_overlay_rotation(value_from != noone, active, _x, _y, _s, _mx, _my, _snx, _sny, _rad);
+				return preview_overlay_rotation(value_from == noone, active, _x, _y, _s, _mx, _my, _snx, _sny, _rad);
 						
 			case VALUE_DISPLAY.vector :
 				var _spr = argument_count > 8? argument[8] : THEME.anchor_selector;
 				var _sca = argument_count > 9? argument[9] : 1;
-				return preview_overlay_vector(value_from != noone, active, _x, _y, _s, _mx, _my, _snx, _sny, _spr);
+				return preview_overlay_vector(value_from == noone, active, _x, _y, _s, _mx, _my, _snx, _sny, _spr);
 						
 			case VALUE_DISPLAY.area :
-				return preview_overlay_area(value_from != noone, active, _x, _y, _s, _mx, _my, _snx, _sny, display_data);
+				return preview_overlay_area(value_from == noone, active, _x, _y, _s, _mx, _my, _snx, _sny, display_data);
 						
 			case VALUE_DISPLAY.puppet_control :
-				return preview_overlay_puppet(value_from != noone, active, _x, _y, _s, _mx, _my, _snx, _sny);
+				return preview_overlay_puppet(value_from == noone, active, _x, _y, _s, _mx, _my, _snx, _sny);
 		}
 		
 		return -1;
@@ -1528,8 +1528,12 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	static serialize = function(scale = false, preset = false) {
 		var _map = ds_map_create();
 		
-		_map[? "on end"]	 = on_end;
 		_map[? "visible"]	 = visible;
+		
+		if(connect_type == JUNCTION_CONNECT.output) 
+			return _map;
+		
+		_map[? "on end"]	 = on_end;
 		_map[? "unit"]		 = unit.mode;
 		_map[? "sep_axis"]	 = sep_axis;
 		_map[? "shift x"]	 = draw_line_shift_x;
@@ -1559,9 +1563,12 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(_map == undefined) return;
 		if(_map == noone) return;
 		
+		visible = ds_map_try_get(_map, "visible", visible);
+		if(connect_type == JUNCTION_CONNECT.output) 
+			return;
+		
 		//printIf(TESTING, "     |- Applying deserialize to junction " + name + " of node " + node.name);
 		on_end		= ds_map_try_get(_map, "on end", on_end);
-		visible		= ds_map_try_get(_map, "visible", visible);
 		unit.mode	= ds_map_try_get(_map, "unit", VALUE_UNIT.constant);
 		global_use	= ds_map_try_get(_map, "global_use");
 		global_key	= ds_map_try_get(_map, "global_key");
