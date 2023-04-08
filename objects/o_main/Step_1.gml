@@ -81,7 +81,7 @@
 	
 	if(ANIMATOR.is_playing || ANIMATOR.rendering) {
 		if(ANIMATOR.frame_progress)
-			Render(true);
+			Render();
 		ANIMATOR.frame_progress = false;
 	} else {
 		if(UPDATE & RENDER_TYPE.full)

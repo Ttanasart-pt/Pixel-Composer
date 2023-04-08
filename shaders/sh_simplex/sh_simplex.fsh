@@ -16,6 +16,7 @@ varying vec4 v_vColour;
 uniform vec2 scale;
 uniform vec3 position;
 uniform int  iteration;
+uniform int  layerMode;
 
 vec3 mod289(vec3 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
 vec4 mod289(vec4 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
@@ -112,15 +113,18 @@ float snoise(vec3 vec) {
 }
 
 float simplex(in vec2 st) {
-    vec2 p = ((st + position.xy) / scale) * 2.0 - 1.0;
+    vec2 p   = ((st + position.xy) / scale) * 2.0 - 1.0;
 	float _z = 1. + position.z;
     vec3 xyz = vec3(p, _z);
     
 	float amp = pow(2., float(iteration) - 1.)  / (pow(2., float(iteration)) - 1.);
     float n = 0.;
+	if(layerMode == 0)		n = 0.;
+	else if(layerMode == 1) n = 1.;
 	
 	for(int i = 0; i < iteration; i++) {
-		n += snoise(xyz) * amp;
+		if(layerMode == 0)		n +=  snoise(xyz) * amp;
+		else if(layerMode == 1) n *= (snoise(xyz) * amp) + (1. - amp);
 		
 		amp *= .5;
 		xyz *= 2.;

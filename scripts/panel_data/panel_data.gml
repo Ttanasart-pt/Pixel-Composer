@@ -493,14 +493,14 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 				if(i == content_index) {
 					foc = FOCUS == self;
 					draw_set_color(FOCUS == self? COLORS._main_accent : COLORS.panel_bg_clear);
-					draw_roundrect_ext(_tbx, tby, _tbx + tbw, tby + ui(32), ui(8), ui(8), false);
+					draw_roundrect_ext(_tbx, tby, _tbx + tbw, tby + ui(32), THEME_VALUE.panel_corner_radius, THEME_VALUE.panel_corner_radius, false);
 				} else {
 					draw_set_color(COLORS.panel_bg_clear_inner);
-					draw_roundrect_ext(_tbx, tby, _tbx + tbw, tby + ui(32), ui(8), ui(8), false);
+					draw_roundrect_ext(_tbx, tby, _tbx + tbw, tby + ui(32), THEME_VALUE.panel_corner_radius, THEME_VALUE.panel_corner_radius, false);
 					
 					if(HOVER == self && _hov) {
 						draw_set_color(COLORS.panel_bg_clear);
-						draw_roundrect_ext(_tbx, tby, _tbx + tbw, tby + ui(32), ui(8), ui(8), false);
+						draw_roundrect_ext(_tbx, tby, _tbx + tbw, tby + ui(32), THEME_VALUE.panel_corner_radius, THEME_VALUE.panel_corner_radius, false);
 					}
 				}
 				
@@ -556,7 +556,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 				if(icn != noone) tbw += ui(16 + 4);
 				
 				draw_set_color(COLORS._main_accent);
-				draw_roundrect_ext(_tbx, tby, _tbx + tbw, tby + ui(32), ui(8), ui(8), false);
+				draw_roundrect_ext(_tbx, tby, _tbx + tbw, tby + ui(32), THEME_VALUE.panel_corner_radius, THEME_VALUE.panel_corner_radius, false);
 				
 				var cc = COLORS.panel_bg_clear_inner;
 				if(icn != noone) {

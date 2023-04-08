@@ -3,15 +3,15 @@ function __initTheme() {
 	if(!directory_exists(root))
 		directory_create(root);
 			
-	//var _l = root + "/version";
-	//if(file_exists(_l)) {
-	//	var res = json_load_struct(_l);
-	//	if(res.version >= VERSION) return;
-	//}
-	//json_save_struct(_l, { version: VERSION });
+	var _l = root + "/version";
+	if(file_exists(_l)) {
+		var res = json_load_struct(_l);
+		if(res.version >= THEME_VERSION) return;
+	}
+	json_save_struct(_l, { version: THEME_VERSION });
 	
 	log_message("THEME", "unzipping default theme to DIRECTORY.");
-	zip_unzip("data/themes/default.zip", root);
+	zip_unzip("data/themes/theme.zip", root);
 }
 
 function _sprite_path(rel, theme) {

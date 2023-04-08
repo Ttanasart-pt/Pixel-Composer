@@ -5,7 +5,7 @@ function preview_overlay_rotation(interact, active, _x, _y, _s, _mx, _my, _snx, 
 	
 	var _ax = _x + lengthdir_x(_rad, _val);
 	var _ay = _y + lengthdir_y(_rad, _val);
-	draw_sprite_ui(THEME.anchor_rotate, 0, _ax, _ay, 1, 1, _val - 90, c_white, 1);
+	draw_sprite_colored(THEME.anchor_rotate, 0, _ax, _ay, 1, 1, _val - 90, c_white, 1);
 						
 	if(drag_type) {
 		draw_set_color(COLORS._main_accent);
@@ -13,7 +13,7 @@ function preview_overlay_rotation(interact, active, _x, _y, _s, _mx, _my, _snx, 
 		draw_circle(_x, _y, _rad, true);
 		draw_set_alpha(1);
 							
-		draw_sprite_ui(THEME.anchor_rotate, 1, _ax, _ay, 1, 1, _val - 90, c_white, 1);
+		draw_sprite_colored(THEME.anchor_rotate, 1, _ax, _ay, 1, 1, _val - 90, c_white, 1);
 		var angle = point_direction(_x, _y, _mx, _my);
 		if(key_mod_press(CTRL))
 			angle = round(angle / 15) * 15;
@@ -34,7 +34,7 @@ function preview_overlay_rotation(interact, active, _x, _y, _s, _mx, _my, _snx, 
 		draw_set_alpha(1);
 		hover = 1;
 							
-		draw_sprite_ui(THEME.anchor_rotate, 1, _ax, _ay, 1, 1, _val - 90, c_white, 1);
+		draw_sprite_colored(THEME.anchor_rotate, 1, _ax, _ay, 1, 1, _val - 90, c_white, 1);
 		if(mouse_press(mb_left, active)) {
 			drag_type = 1;
 			drag_mx   = _mx;

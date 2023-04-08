@@ -236,6 +236,9 @@
 		}
 		
 		ds_map_destroy(map);
+		
+		if(!directory_exists(DIRECTORY + "Themes/" + PREF_MAP[? "theme"]))
+			PREF_MAP[? "theme"] = "default";
 	}
 	
 	function PREF_APPLY() {

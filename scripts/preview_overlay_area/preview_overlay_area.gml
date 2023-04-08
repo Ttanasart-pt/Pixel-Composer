@@ -28,11 +28,11 @@ function preview_overlay_area_padding(interact, active, _x, _y, _s, _mx, _my, _s
 	
 	if(!interact) return -1;
 	
-	draw_sprite_ui_uniform(THEME.anchor, 0, xc, yc);
-	draw_sprite_ui_uniform(THEME.anchor_solid_hori, 0, xc, y0,,,, 0);
-	draw_sprite_ui_uniform(THEME.anchor_solid_hori, 0, xc, y1,,,, 0);
-	draw_sprite_ui_uniform(THEME.anchor_solid_hori, 0, x0, yc,,,, 90);
-	draw_sprite_ui_uniform(THEME.anchor_solid_hori, 0, x1, yc,,,, 90);
+	draw_sprite_colored(THEME.anchor, 0, xc, yc);
+	draw_sprite_colored(THEME.anchor_solid_hori, 0, xc, y0,, 0);
+	draw_sprite_colored(THEME.anchor_solid_hori, 0, xc, y1,, 0);
+	draw_sprite_colored(THEME.anchor_solid_hori, 0, x0, yc,, 90);
+	draw_sprite_colored(THEME.anchor_solid_hori, 0, x1, yc,, 90);
 	
 	if(drag_type == 1) {
 		var _xx = value_snap(drag_sx - (_mx - drag_mx) / _s, _snx);
@@ -81,7 +81,7 @@ function preview_overlay_area_padding(interact, active, _x, _y, _s, _mx, _my, _s
 	}
 	
 	if(active && point_in_circle(_mx, _my, xc, y0, 16)) {
-		draw_sprite_ui_uniform(THEME.anchor_solid_hori, 1, xc, y0,,,, 0);
+		draw_sprite_colored(THEME.anchor_solid_hori, 1, xc, y0);
 		hover = 1;
 		
 		if(mouse_press(mb_left)) {
@@ -90,7 +90,7 @@ function preview_overlay_area_padding(interact, active, _x, _y, _s, _mx, _my, _s
 			drag_my   = _my;
 		}
 	} else if(active && point_in_circle(_mx, _my, xc, y1, 16)) {
-		draw_sprite_ui_uniform(THEME.anchor_solid_hori, 1, xc, y1,,,, 0);
+		draw_sprite_colored(THEME.anchor_solid_hori, 1, xc, y1);
 		hover = 3;
 		
 		if(mouse_press(mb_left)) {
@@ -99,7 +99,7 @@ function preview_overlay_area_padding(interact, active, _x, _y, _s, _mx, _my, _s
 			drag_my   = _my;
 		}
 	} else if(active && point_in_circle(_mx, _my, x0, yc, 16)) {
-		draw_sprite_ui_uniform(THEME.anchor_solid_hori, 1, x0, yc,,,, 90);
+		draw_sprite_colored(THEME.anchor_solid_hori, 1, x0, yc,, 90);
 		hover = 0;
 		
 		if(mouse_press(mb_left)) {
@@ -108,7 +108,7 @@ function preview_overlay_area_padding(interact, active, _x, _y, _s, _mx, _my, _s
 			drag_mx   = _mx;
 		}
 	} else if(active && point_in_circle(_mx, _my, x1, yc, 16)) {
-		draw_sprite_ui_uniform(THEME.anchor_solid_hori, 1, x1, yc,,,, 90);
+		draw_sprite_colored(THEME.anchor_solid_hori, 1, x1, yc,, 90);
 		hover = 2;
 		
 		if(mouse_press(mb_left)) {
@@ -117,7 +117,7 @@ function preview_overlay_area_padding(interact, active, _x, _y, _s, _mx, _my, _s
 			drag_mx   = _mx;
 		}
 	} else if(active && point_in_rectangle(_mx, _my, x0, y0, x1, y1)) {
-		draw_sprite_ui_uniform(THEME.anchor, 1, xc, yc);
+		draw_sprite_colored(THEME.anchor, 1, xc, yc);
 		hover = 4;
 		
 		if(mouse_press(mb_left)) {
@@ -158,9 +158,9 @@ function preview_overlay_area_two_point(interact, active, _x, _y, _s, _mx, _my, 
 	
 	if(!interact) return -1;
 	
-	draw_sprite_ui_uniform(THEME.anchor, 1, xc, yc);
-	draw_sprite_ui_uniform(THEME.anchor_selector, 0, x0, y0);
-	draw_sprite_ui_uniform(THEME.anchor_selector, 0, x1, y1);
+	draw_sprite_colored(THEME.anchor, 1, xc, yc);
+	draw_sprite_colored(THEME.anchor_selector, 0, x0, y0);
+	draw_sprite_colored(THEME.anchor_selector, 0, x1, y1);
 	
 	if(drag_type == 1) {
 		var _xx = value_snap(drag_sx + (_mx - drag_mx) / _s, _snx);
@@ -203,7 +203,7 @@ function preview_overlay_area_two_point(interact, active, _x, _y, _s, _mx, _my, 
 	}
 	
 	if(active && point_in_circle(_mx, _my, x0, y0, 8)) {
-		draw_sprite_ui_uniform(THEME.anchor_selector, 1, x0, y0);
+		draw_sprite_colored(THEME.anchor_selector, 1, x0, y0);
 		hover = 1;
 		
 		if(mouse_press(mb_left)) {
@@ -214,7 +214,7 @@ function preview_overlay_area_two_point(interact, active, _x, _y, _s, _mx, _my, 
 			drag_my   = _my;
 		}
 	} else if(active && point_in_circle(_mx, _my, x1, y1, 8)) {
-		draw_sprite_ui_uniform(THEME.anchor_selector, 1, x1, y1);
+		draw_sprite_colored(THEME.anchor_selector, 1, x1, y1);
 		hover = 2;
 		
 		if(mouse_press(mb_left)) {
@@ -225,7 +225,7 @@ function preview_overlay_area_two_point(interact, active, _x, _y, _s, _mx, _my, 
 			drag_my   = _my;
 		}
 	} else if(active && point_in_rectangle(_mx, _my, x0, y0, x1, y1)) {
-		draw_sprite_ui_uniform(THEME.anchor, 1, xc, yc);
+		draw_sprite_colored(THEME.anchor, 1, xc, yc);
 		hover = 3;
 		
 		if(mouse_press(mb_left)) {
@@ -263,13 +263,13 @@ function preview_overlay_area_span(interact, active, _x, _y, _s, _mx, _my, _snx,
 	
 	if(!interact) return -1;
 	
-	draw_sprite_ui_uniform(THEME.anchor, 0, _ax, _ay);
-	draw_sprite_ui_uniform(THEME.anchor_selector, 0, _ax + _aw, _ay + _ah);
+	draw_sprite_colored(THEME.anchor, 0, _ax, _ay);
+	draw_sprite_colored(THEME.anchor_selector, 0, _ax + _aw, _ay + _ah);
 						
 	if(point_in_circle(_mx, _my, _ax + _aw, _ay + _ah, 8))
-		draw_sprite_ui_uniform(THEME.anchor_selector, 1, _ax + _aw, _ay + _ah);
+		draw_sprite_colored(THEME.anchor_selector, 1, _ax + _aw, _ay + _ah);
 	else if(point_in_rectangle(_mx, _my, _ax - _aw, _ay - _ah, _ax + _aw, _ay + _ah))
-		draw_sprite_ui_uniform(THEME.anchor, 0, _ax, _ay, 1.25, c_white);
+		draw_sprite_colored(THEME.anchor, 0, _ax, _ay, 1.25, c_white);
 						
 	if(drag_type == 1) {
 		var _xx = value_snap(drag_sx + (_mx - drag_mx) / _s, _snx);

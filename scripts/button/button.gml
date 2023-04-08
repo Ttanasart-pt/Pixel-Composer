@@ -50,8 +50,10 @@ function buttonClass(_onClick, _icon = noone) : widget() constructor {
 				trigger();
 				click = true;
 			}
-			if(mouse_click(mb_left, active))
-				draw_sprite_stretched_ext(spr, 2, _x, _y, _w, _h, b, 1);	
+			if(mouse_click(mb_left, active)) {
+				draw_sprite_stretched_ext(spr, 2, _x, _y, _w, _h, b, 1);
+				draw_sprite_stretched_ext(spr, 3, _x, _y, _w, _h, COLORS._main_accent, 1);
+			}
 			if(tooltip != "") TOOLTIP = tooltip;
 		} else {
 			draw_sprite_stretched_ext(spr, 0, _x, _y, _w, _h, b, 1);	
@@ -68,7 +70,7 @@ function buttonClass(_onClick, _icon = noone) : widget() constructor {
 		}
 		
 		if(WIDGET_CURRENT == self)
-			draw_sprite_stretched(THEME.widget_selecting, 0, _x - ui(3), _y - ui(3), _w + ui(6), _h + ui(6));	
+			draw_sprite_stretched_ext(THEME.widget_selecting, 0, _x - ui(3), _y - ui(3), _w + ui(6), _h + ui(6), COLORS._main_accent, 1);
 		
 		resetFocus();
 		
@@ -99,8 +101,10 @@ function buttonInstant(spr, _x, _y, _w, _h, _m, _act, _hvr, _tip = "", _icon = n
 		if(mouse_release(mb_right, _act))
 			res = -3;
 			
-		if(spr && mouse_click(mb_left, _act))
+		if(spr && mouse_click(mb_left, _act)) {
 			draw_sprite_stretched(spr, 2, _x, _y, _w, _h);	
+			draw_sprite_stretched_ext(spr, 3, _x, _y, _w, _h, COLORS._main_accent, 1);	
+		}
 	} else if(spr)
 		draw_sprite_stretched(spr, 0, _x, _y, _w, _h);		
 	

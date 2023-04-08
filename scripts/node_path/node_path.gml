@@ -469,24 +469,24 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 				draw_line(_ax0, _ay0, xx, yy);
 				draw_line(_ax1, _ay1, xx, yy);
 				
-				draw_sprite_ui_uniform(THEME.anchor_selector, 2, _ax0, _ay0);
-				draw_sprite_ui_uniform(THEME.anchor_selector, 2, _ax1, _ay1);
+				draw_sprite_colored(THEME.anchor_selector, 2, _ax0, _ay0);
+				draw_sprite_colored(THEME.anchor_selector, 2, _ax1, _ay1);
 			}
 			
-			draw_sprite_ui_uniform(THEME.anchor_selector, 0, xx, yy);
+			draw_sprite_colored(THEME.anchor_selector, 0, xx, yy);
 			
 			if(drag_point == i) {
-				draw_sprite_ui_uniform(THEME.anchor_selector, 1, xx, yy);
+				draw_sprite_colored(THEME.anchor_selector, 1, xx, yy);
 			} else if(point_in_circle(_mx, _my, xx, yy, 8)) {
-				draw_sprite_ui_uniform(THEME.anchor_selector, 1, xx, yy);
+				draw_sprite_colored(THEME.anchor_selector, 1, xx, yy);
 				anchor_hover = i;
 				hover_type   = 0;
 			} else if(cont && point_in_circle(_mx, _my, _ax0, _ay0, 8)) {
-				draw_sprite_ui_uniform(THEME.anchor_selector, 0, _ax0, _ay0);
+				draw_sprite_colored(THEME.anchor_selector, 0, _ax0, _ay0);
 				anchor_hover = i;
 				hover_type   = 1;
 			} else if(cont && point_in_circle(_mx, _my, _ax1, _ay1, 8)) {
-				draw_sprite_ui_uniform(THEME.anchor_selector, 0, _ax1, _ay1);
+				draw_sprite_colored(THEME.anchor_selector, 0, _ax1, _ay1);
 				anchor_hover =  i;
 				hover_type   = -1;
 			}
@@ -503,10 +503,10 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			draw_set_color(COLORS._main_accent);
 			draw_rectangle_border(minx, miny, maxx, maxy, 1 + (hov == 5));
 			
-			draw_sprite_ui_uniform(THEME.anchor_selector, hov == 1, minx, miny);
-			draw_sprite_ui_uniform(THEME.anchor_selector, hov == 2, maxx, miny);
-			draw_sprite_ui_uniform(THEME.anchor_selector, hov == 3, minx, maxy);
-			draw_sprite_ui_uniform(THEME.anchor_selector, hov == 4, maxx, maxy);
+			draw_sprite_colored(THEME.anchor_selector, hov == 1, minx, miny);
+			draw_sprite_colored(THEME.anchor_selector, hov == 2, maxx, miny);
+			draw_sprite_colored(THEME.anchor_selector, hov == 3, minx, maxy);
+			draw_sprite_colored(THEME.anchor_selector, hov == 4, maxx, maxy);
 			
 			if(hov && mouse_press(mb_left, active)) {
 				transform_type = hov;

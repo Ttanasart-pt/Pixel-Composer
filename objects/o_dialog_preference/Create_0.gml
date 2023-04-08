@@ -279,7 +279,7 @@ event_inherited();
 			loadFonts();
 			loadGraphic(thm);
 			loadColor(thm);
-		});
+		}, false);
 	sb_theme.align = fa_left;
 	
 	sp_colors = new scrollPane(dialog_w - ui(padding + padding + page_width), dialog_h - (title_height + ui(padding) + ui(40)), function(_y, _m, _r) {

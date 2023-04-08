@@ -31,6 +31,23 @@ function Node_Iterator_Output(_x, _y, _group = noone) : Node_Group_Output(_x, _y
 	
 	cache_value = -1;
 	
+	static getNextNodesRaw = function() {
+		var nodes = [];
+		
+		var _ot = outParent;
+		for(var j = 0; j < ds_list_size(_ot.value_to); j++) {
+			var _to = _ot.value_to[| j];
+			if(!_to.node.renderActive) continue;
+				
+			if(_to.node.active && _to.value_from != noone && _to.value_from.node == group) {
+				if(_to.node.isRenderable()) 
+					array_push(nodes, _to.node);
+			}
+		}
+		
+		return nodes;
+	}
+	
 	static getNextNodes = function() {
 		var nodes	 = [];
 		var _node_it = group;
@@ -41,22 +58,11 @@ function Node_Iterator_Output(_x, _y, _group = noone) : Node_Group_Output(_x, _y
 		
 		if(_ren == ITERATION_STATUS.loop) { //Go back to the beginning of the loop, reset render status for leaf node inside?
 			LOG_IF(global.RENDER_LOG, "Loop restart: iteration " + string(group.iterated));
-			
-			group.resetRender();
 			nodes = array_append(nodes, __nodeLeafList(group.getNodeList()));
 		} else if(_ren == ITERATION_STATUS.complete) { //Go out of loop
 			LOG_IF(global.RENDER_LOG, "Loop completed");
 			group.setRenderStatus(true);
-			var _ot = outParent;
-			for(var j = 0; j < ds_list_size(_ot.value_to); j++) {
-				var _to = _ot.value_to[| j];
-				if(!_to.node.renderActive) continue;
-				
-				if(_to.node.active && _to.value_from != noone && _to.value_from.node == group) {
-					if(_to.node.isRenderable()) 
-						array_push(nodes, _to.node);
-				}
-			}
+			nodes = getNextNodesRaw();
 		} else 
 			LOG_IF(global.RENDER_LOG, "Loop not ready");
 		
@@ -89,5 +95,6 @@ function Node_Iterator_Output(_x, _y, _group = noone) : Node_Group_Output(_x, _y
 		
 		var _val = inputs[| 0].getValue();
 		cache_value = cloneValue(cache_value, _val);
+		group.iterationUpdate();
 	}
 }

@@ -391,7 +391,10 @@ function textBox(_input, _onModify, _extras = noone) : textInput(_input, _onModi
 		var hoverRect = point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + _h);
 		
 		if(self == WIDGET_CURRENT) { 
-			draw_sprite_stretched(THEME.textbox, sprite_index == -1? 2 : sprite_index, _x, _y, _w, _h);
+			if(sprite_index == -1)
+				draw_sprite_stretched_ext(THEME.textbox, 2, _x, _y, _w, _h, COLORS._main_accent, 1);
+			else 
+				draw_sprite_stretched(THEME.textbox, sprite_index, _x, _y, _w, _h);
 			editText();
 			
 			#region cursor position
@@ -404,6 +407,7 @@ function textBox(_input, _onModify, _extras = noone) : textInput(_input, _onModi
 					else 
 						move_cursor(-1);
 				}
+				
 				if(KEYBOARD_PRESSED == vk_right) {
 					if(key_mod_press(SHIFT)) {
 						if(cursor_select == -1)
@@ -478,7 +482,7 @@ function textBox(_input, _onModify, _extras = noone) : textInput(_input, _onModi
 					draw_set_color(COLORS.widget_text_highlight);
 					var x1 = tx + string_width(string_copy(txt, 1, cursor_select));
 					
-					draw_roundrect_ext(cursor_pos, c_y0, x1, c_y1, ui(8), ui(8), 0);
+					draw_roundrect_ext(cursor_pos, c_y0, x1, c_y1, THEME_VALUE.highlight_corner_radius, THEME_VALUE.highlight_corner_radius, 0);
 				}
 				
 				var _mx = -1;

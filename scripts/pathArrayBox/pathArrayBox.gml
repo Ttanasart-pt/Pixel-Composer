@@ -59,7 +59,7 @@ function pathArrayBox(_target, _data, _onClick) : widget() constructor {
 		draw_set_alpha(1);
 		
 		if(WIDGET_CURRENT == self)
-			draw_sprite_stretched(THEME.widget_selecting, 0, _x - ui(3), _y - ui(3), _w + ui(6), _h + ui(6));	
+			draw_sprite_stretched_ext(THEME.widget_selecting, 0, _x - ui(3), _y - ui(3), _w + ui(6), _h + ui(6), COLORS._main_accent, 1);	
 		
 		resetFocus();
 		

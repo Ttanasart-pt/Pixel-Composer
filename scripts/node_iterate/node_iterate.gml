@@ -57,29 +57,39 @@ function Node_Iterate(_x, _y, _group = noone) : Node_Collection(_x, _y, _group) 
 		return __nodeLeafList(getNodeList());
 	}
 	
-	static iterationStatus = function() {
-		var iter = true;
+	static getIterationCount = function() {
 		var maxIter = inputs[| 0].getValue();
-		if(!is_real(maxIter)) maxIter = 1;
-		for( var i = 0; i < ds_list_size(outputs); i++ ) {
-			var _out = outputs[| i].from;
-			iter &= _out.rendered;
+		return maxIter;
+	}
+	
+	static iterationUpdate = function() {
+		var siz = ds_list_size(outputs); // check if every output is updated
+		for( var i = custom_output_index; i < siz; i++ ) {
+			var _o = outputs[| i];
+			if(!_o.node.rendered) return;
 		}
 		
-		if(iter) {
-			iterated++;
-			
-			if(iterated >= maxIter) {
-				render_time = get_timer() - loop_start_time;
-				iterated = 0;
-				return ITERATION_STATUS.complete;
-			} 
-			
+		var maxIter = getIterationCount();
+		iterated++;
+		
+		LOG_BLOCK_START();
+		LOG_IF(global.RENDER_LOG, "Iteration update: " + string(iterated) + "/" + string(maxIter));
+		
+		if(iterated >= maxIter) {
+			LOG_IF(global.RENDER_LOG, "Iteration complete");
+			render_time = get_timer() - loop_start_time;
+		} else {
+			LOG_IF(global.RENDER_LOG, "Iteration not completed, reset render status.");
 			resetRender();
-			return ITERATION_STATUS.loop;
 		}
 		
-		return ITERATION_STATUS.not_ready;
+		LOG_BLOCK_END();
+	}
+	
+	static iterationStatus = function() {
+		if(iterated >= getIterationCount())
+			return ITERATION_STATUS.complete;
+		return ITERATION_STATUS.loop;
 	}
 	
 	PATCH_STATIC

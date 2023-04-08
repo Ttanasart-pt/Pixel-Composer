@@ -407,7 +407,7 @@ function textArea(_input, _onModify, _extras = noone) : textInput(_input, _onMod
 		
 		if(self == WIDGET_CURRENT) { 
 			draw_set_text(font, fa_left, fa_top, COLORS._main_text);
-			draw_sprite_stretched(THEME.textbox, 2, _x, _y, _w, hh);
+			draw_sprite_stretched_ext(THEME.textbox, 2, _x, _y, _w, hh, COLORS._main_accent, 1);
 			editText();
 			
 			#region cursor
@@ -540,15 +540,15 @@ function textArea(_input, _onModify, _extras = noone) : textInput(_input, _onMod
 								var x1 = tx + string_width(string_copy(_str, 1, ch_sel_min - char_run));
 								var x2 = tx + string_width(string_copy(_str, 1, ch_sel_max - char_run));
 						
-								draw_roundrect_ext(x1, ch_y, x2, ch_y + c_h, ui(8), ui(8), 0);
+								draw_roundrect_ext(x1, ch_y, x2, ch_y + c_h, THEME_VALUE.highlight_corner_radius, THEME_VALUE.highlight_corner_radius, 0);
 							} else if(char_run >= ch_sel_min && char_run + _l < ch_sel_max) {
 								var x2 = tx + string_width(_str);
 								
-								draw_roundrect_ext(tx, ch_y, x2, ch_y + c_h, ui(8), ui(8), 0);
+								draw_roundrect_ext(tx, ch_y, x2, ch_y + c_h, THEME_VALUE.highlight_corner_radius, THEME_VALUE.highlight_corner_radius, 0);
 							} else if(char_run > ch_sel_min && char_run <= ch_sel_max && char_run + _l >= ch_sel_max) {
 								var x2 = tx + string_width(string_copy(_str, 1, ch_sel_max - char_run));
 								
-								draw_roundrect_ext(tx, ch_y, x2, ch_y + c_h, ui(8), ui(8), 0);
+								draw_roundrect_ext(tx, ch_y, x2, ch_y + c_h, THEME_VALUE.highlight_corner_radius, THEME_VALUE.highlight_corner_radius, 0);
 							}
 						}
 						

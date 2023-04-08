@@ -65,9 +65,10 @@ function buttonGroupClass(_data, _onClick) : widget() constructor {
 				var bx  = _x + ww * i;
 				var spr = i == 0 ? buttonSpr[0] : (i == amo - 1? buttonSpr[2] : buttonSpr[1]);
 			
-				if(_selecting == i)
+				if(_selecting == i) {
 					draw_sprite_stretched(spr, 2, bx, _y, ww, _h);	
-				else if(buttons[i].draw(bx, _y, ww, _h, _m, spr))
+					draw_sprite_stretched_ext(spr, 3, bx, _y, ww, _h, COLORS._main_accent, 1);	
+				} else if(buttons[i].draw(bx, _y, ww, _h, _m, spr))
 					onClick(i);
 			
 				if(is_string(data[i])) {
@@ -93,7 +94,7 @@ function buttonGroupClass(_data, _onClick) : widget() constructor {
 		}
 		
 		if(WIDGET_CURRENT == self)
-			draw_sprite_stretched(THEME.widget_selecting, 0, x - ui(3), y - ui(3), w + ui(6), h + ui(6));	
+			draw_sprite_stretched_ext(THEME.widget_selecting, 0, x - ui(3), y - ui(3), w + ui(6), h + ui(6), COLORS._main_accent, 1);	
 		
 		resetFocus();
 	}

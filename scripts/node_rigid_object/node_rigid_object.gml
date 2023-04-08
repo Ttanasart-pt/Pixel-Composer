@@ -201,7 +201,7 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			if(isNotUsingTool())
 				draw_circle(_dx, _dy, 4, false)
 			else {
-				draw_sprite_ui_uniform(THEME.anchor_selector, hover == i, _dx, _dy);
+				draw_sprite_colored(THEME.anchor_selector, hover == i, _dx, _dy);
 				if(point_distance(_mx, _my, _dx, _dy) < 8)
 					_hover = i;
 			}

@@ -1,11 +1,14 @@
 #region colors
-	CDEF = {};
+	globalvar CDEF, COLORS, THEME_VALUE;
+	
+	CDEF   = {};
 	COLORS = {};
+	THEME_VALUE = {};
 #endregion
 
 function loadColor(theme = "default") {
 	var dirr = DIRECTORY + "themes/" + theme;
-	var path  = dirr + "/colors.json";
+	var path  = dirr + "/values.json";
 	var pathO = dirr + "/override.json";
 	
 	if(!file_exists(path)) {
@@ -16,11 +19,14 @@ function loadColor(theme = "default") {
 	var oclr = {};
 	if(file_exists(pathO)) {
 		var s = file_text_read_all(pathO);
-		oclr = json_try_parse(s);
+		oclr  = json_try_parse(s);
 	}
 	
-	var s = file_text_read_all(path);
+	var s    = file_text_read_all(path);
 	var clrs = json_try_parse(s);
+	
+	var valkeys = variable_struct_get_names(clrs.values);
+	THEME_VALUE = clrs.values;
 	
 	var defkeys = variable_struct_get_names(clrs.define);
 	COLOR_KEYS = defkeys;
@@ -38,7 +44,7 @@ function loadColor(theme = "default") {
 	
 	for( var i = 0; i < array_length(defkeys); i++ ) {
 		var key = defkeys[i];
-		var c = c_white;
+		var c   = c_white;
 		
 		if(variable_struct_exists(oclr, key)) {
 			c = variable_struct_get(oclr, key);
@@ -57,6 +63,14 @@ function loadColor(theme = "default") {
 		}
 		
 		variable_struct_set(COLORS, key, c);
+	}
+	
+	for( var i = 0; i < array_length(valkeys); i++ ) {
+		var key = valkeys[i];
+		if(variable_struct_exists(oclr, key)) {
+			var c = variable_struct_get(oclr, key);
+			variable_struct_set(THEME_VALUE, key, c);
+		}
 	}
 	
 	var arrkeys = variable_struct_get_names(clrs.array);

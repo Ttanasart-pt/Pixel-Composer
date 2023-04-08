@@ -5,6 +5,10 @@ varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
 uniform vec2 dimension;
+uniform float tolerance;
+
+bool sameColor(in vec4 c1, in vec4 c2) { return length(c1 - c2) <= tolerance; }
+float bright(in vec4 c) { return dot(c.rgb, vec3(0.2126, 0.7152, 0.0722)) * c.a; }
 
 void main() {
 	/*
@@ -12,30 +16,47 @@ void main() {
 		D E F
 		G H I
 	*/
-	vec4 E = texture2D( gm_BaseTexture, v_vTexcoord );
+	vec4 E   = texture2D( gm_BaseTexture, v_vTexcoord );
 	vec2 dim = 1. / dimension;
-	
-	if(E.a > 0.) {
-		vec4 A = texture2D( gm_BaseTexture, v_vTexcoord + vec2(-dim.x,  dim.y));
-		vec4 B = texture2D( gm_BaseTexture, v_vTexcoord + vec2(    0.,  dim.y));
-		vec4 C = texture2D( gm_BaseTexture, v_vTexcoord + vec2( dim.x,  dim.y));
-		
-		vec4 D = texture2D( gm_BaseTexture, v_vTexcoord + vec2(-dim.x,     .0));
-		vec4 F = texture2D( gm_BaseTexture, v_vTexcoord + vec2( dim.x,     .0));
-		
-		vec4 G = texture2D( gm_BaseTexture, v_vTexcoord + vec2(-dim.x, -dim.y));
-		vec4 H = texture2D( gm_BaseTexture, v_vTexcoord + vec2(    0., -dim.y));
-		vec4 I = texture2D( gm_BaseTexture, v_vTexcoord + vec2( dim.x, -dim.y));
-		
-		if(B.a > 0. && D.a > 0. && C.a + F.a + H.a + G.a == 0.)
-			E.a = 0.;
-		else if(B.a > 0. && F.a > 0. && A.a + D.a + H.a + I.a == 0.)
-			E.a = 0.;
-		else if(H.a > 0. && D.a > 0. && A.a + B.a + F.a + I.a == 0.)
-			E.a = 0.;
-		else if(H.a > 0. && F.a > 0. && B.a + C.a + D.a + G.a == 0.)
-			E.a = 0.;
-	}
-	
 	gl_FragColor = E;
+	
+	if(E.a == 0.) return;
+	
+	vec4 e = E;
+	
+	vec4 A = texture2D( gm_BaseTexture, v_vTexcoord + vec2(-dim.x,  dim.y));
+	vec4 B = texture2D( gm_BaseTexture, v_vTexcoord + vec2(    0.,  dim.y));
+	vec4 C = texture2D( gm_BaseTexture, v_vTexcoord + vec2( dim.x,  dim.y));
+		
+	vec4 D = texture2D( gm_BaseTexture, v_vTexcoord + vec2(-dim.x,     .0));
+	vec4 F = texture2D( gm_BaseTexture, v_vTexcoord + vec2( dim.x,     .0));
+		
+	vec4 G = texture2D( gm_BaseTexture, v_vTexcoord + vec2(-dim.x, -dim.y));
+	vec4 H = texture2D( gm_BaseTexture, v_vTexcoord + vec2(    0., -dim.y));
+	vec4 I = texture2D( gm_BaseTexture, v_vTexcoord + vec2( dim.x, -dim.y));
+		
+	if(sameColor(F, H) && sameColor(E, B) && sameColor(E, D) && sameColor(E, A) && !sameColor(E, C) && !sameColor(E, F) && !sameColor(E, G) && !sameColor(E, H)) {
+		E = I.a == 0.? F : I;
+		if(bright(E) < bright(e))
+			gl_FragColor = E;
+		return;
+	}
+	if(sameColor(D, H) && sameColor(E, B) && sameColor(E, C) && sameColor(E, F) && !sameColor(E, A) && !sameColor(E, D) && !sameColor(E, H) && !sameColor(E, I)) {
+		E = G.a == 0.? D : G;
+		if(bright(E) < bright(e))
+			gl_FragColor = E;
+		return;
+	}
+	if(sameColor(F, B) && sameColor(E, D) && sameColor(E, G) && sameColor(E, H) && !sameColor(E, A) && !sameColor(E, B) && !sameColor(E, F) && !sameColor(E, I)) {
+		E = C.a == 0.? F : C;
+		if(bright(E) < bright(e))
+			gl_FragColor = E;
+		return;
+	}
+	if(sameColor(D, B) && sameColor(E, F) && sameColor(E, I) && sameColor(E, H) && !sameColor(E, C) && !sameColor(E, B) && !sameColor(E, D) && !sameColor(E, G)) {
+		E = A.a == 0.? D : A;
+		if(bright(E) < bright(e))
+			gl_FragColor = E;
+		return;
+	}
 }

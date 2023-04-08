@@ -20,7 +20,7 @@ function Node_Number(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	inputs[| 1] = nodeValue("Integer", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
 	
 	inputs[| 2] = nodeValue("Display", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Number", "Slider", "Ratator" ], { update_hover: false });
+		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Number", "Slider", "Rotator" ], { update_hover: false });
 	
 	inputs[| 3] = nodeValue("Range", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 1 ])
 		.setDisplay(VALUE_DISPLAY.vector_range);
@@ -186,10 +186,10 @@ function Node_Vector2(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		var _ay = __ay * _s + _y;
 		var _val;
 		
-		draw_sprite_ui_uniform(THEME.anchor_selector, 0, _ax, _ay);
+		draw_sprite_colored(THEME.anchor_selector, 0, _ax, _ay);
 						
 		if(drag_type) {
-			draw_sprite_ui_uniform(THEME.anchor_selector, 1, _ax, _ay);
+			draw_sprite_colored(THEME.anchor_selector, 1, _ax, _ay);
 			var _nx = value_snap((drag_sx + (_mx - drag_mx) - _x) / _s, _snx);
 			var _ny = value_snap((drag_sy + (_my - drag_my) - _y) / _s, _sny);
 			if(key_mod_press(CTRL)) {
@@ -214,7 +214,7 @@ function Node_Vector2(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 						
 		if(point_in_circle(_mx, _my, _ax, _ay, 8)) {
 			hover = 1;
-			draw_sprite_ui_uniform(THEME.anchor_selector, 1, _ax, _ay);
+			draw_sprite_colored(THEME.anchor_selector, 1, _ax, _ay);
 			if(mouse_press(mb_left, active)) {
 				drag_type = 1;
 				drag_mx   = _mx;

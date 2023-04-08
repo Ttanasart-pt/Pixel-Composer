@@ -1425,9 +1425,9 @@ function Panel_Animation() : PanelContent() constructor {
 			
 		if(keyframe_boxing) {
 			draw_set_color(COLORS._main_accent);
-			draw_roundrect_ext(keyframe_box_sx, keyframe_box_sy, msx, msy, 6, 6, true);
+			draw_roundrect_ext(keyframe_box_sx, keyframe_box_sy, msx, msy, THEME_VALUE.selection_corner_radius, THEME_VALUE.selection_corner_radius, true);
 			draw_set_alpha(0.05);
-			draw_roundrect_ext(keyframe_box_sx, keyframe_box_sy, msx, msy, 6, 6, false);
+			draw_roundrect_ext(keyframe_box_sx, keyframe_box_sy, msx, msy, THEME_VALUE.selection_corner_radius, THEME_VALUE.selection_corner_radius, false);
 			draw_set_alpha(1);
 					
 			if(mouse_release(mb_left))

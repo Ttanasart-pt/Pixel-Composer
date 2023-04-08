@@ -34,9 +34,11 @@ function checkBoxGroup(sprs, _onClick) : widget() constructor {
 		var aa = interactable * 0.25 + 0.75;
 		for( var i = 0; i < size; i++ ) {
 			var spr = i == 0 ? THEME.button_left : (i == size - 1? THEME.button_right : THEME.button_middle);
-			draw_sprite_stretched_ext(spr, _value[i] * 2, _dx, _dy, ss, ss, c_white, aa);
-			
+			var ind = _value[i] * 2;
+				
 			if(hover && point_in_rectangle(_m[0], _m[1], _dx, _dy, _dx + ss, _dy + ss)) {			
+				ind = 1
+				
 				if(holding != noone)
 					trigger(i, holding);
 				
@@ -46,13 +48,17 @@ function checkBoxGroup(sprs, _onClick) : widget() constructor {
 				}
 			} else
 				if(mouse_press(mb_left)) deactivate();
+			
+			draw_sprite_stretched_ext(spr, ind, _dx, _dy, ss, ss, c_white, aa);
+			if(_value[i])
+				draw_sprite_stretched_ext(spr, 3, _dx, _dy, ss, ss, COLORS._main_accent, 1);
 			draw_sprite_stretched_ext(sprs, i, _dx, _dy, ss, ss, c_white, 0.5 + _value[i] * 0.5);
 			
 			_dx += ss;
 		}
 		
 		if(WIDGET_CURRENT == self)
-			draw_sprite_stretched(THEME.widget_selecting, 0, _dx - ui(3), _dy - ui(3), ss + ui(6), ss + ui(6));	
+			draw_sprite_stretched_ext(THEME.widget_selecting, 0, _dx - ui(3), _dy - ui(3), ss + ui(6), ss + ui(6), COLORS._main_accent, 1);	
 		
 		resetFocus();
 	}

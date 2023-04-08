@@ -73,7 +73,7 @@ function slider(_min, _max, _step, _onModify = noone, _onRelease = noone) : widg
 		draw_sprite_stretched_ext(spr, 1, _kx - handle_w / 2, _y, handle_w, _h, blend, 1);
 		
 		if(dragging) {
-			draw_sprite_stretched_ext(spr, 3, _kx - handle_w / 2, _y, handle_w, _h, blend, 1);
+			draw_sprite_stretched_ext(spr, 3, _kx - handle_w / 2, _y, handle_w, _h, COLORS._main_accent, 1);
 			
 			var val = (_m[0] - _x) / sw * (curr_maxx - curr_minn) + curr_minn;
 			val = round(val / step) * step;

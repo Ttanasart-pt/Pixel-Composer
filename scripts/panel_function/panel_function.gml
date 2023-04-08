@@ -197,19 +197,19 @@
 			if(panel_split == 4) {
 				var dist = ui(8) * panel_draw_depth;
 				draw_set_alpha(.2);
-				draw_roundrect_ext(panel_draw_x0 - dist, panel_draw_y0 - dist, panel_draw_x1 - dist, panel_draw_y1 - dist, 8, 8, false);
+				draw_roundrect_ext(panel_draw_x0 - dist, panel_draw_y0 - dist, panel_draw_x1 - dist, panel_draw_y1 - dist, THEME_VALUE.panel_corner_radius, THEME_VALUE.panel_corner_radius, false);
 				draw_set_alpha(1.);
-				draw_roundrect_ext(panel_draw_x0 - dist, panel_draw_y0 - dist, panel_draw_x1 - dist, panel_draw_y1 - dist, 8, 8,  true);		
+				draw_roundrect_ext(panel_draw_x0 - dist, panel_draw_y0 - dist, panel_draw_x1 - dist, panel_draw_y1 - dist, THEME_VALUE.panel_corner_radius, THEME_VALUE.panel_corner_radius,  true);		
 			
 				draw_set_alpha(.2);
-				draw_roundrect_ext(panel_draw_x0 + dist, panel_draw_y0 + dist, panel_draw_x1 + dist, panel_draw_y1 + dist, 8, 8, false);
+				draw_roundrect_ext(panel_draw_x0 + dist, panel_draw_y0 + dist, panel_draw_x1 + dist, panel_draw_y1 + dist, THEME_VALUE.panel_corner_radius, THEME_VALUE.panel_corner_radius, false);
 				draw_set_alpha(1.);
-				draw_roundrect_ext(panel_draw_x0 + dist, panel_draw_y0 + dist, panel_draw_x1 + dist, panel_draw_y1 + dist, 8, 8,  true);		
+				draw_roundrect_ext(panel_draw_x0 + dist, panel_draw_y0 + dist, panel_draw_x1 + dist, panel_draw_y1 + dist, THEME_VALUE.panel_corner_radius, THEME_VALUE.panel_corner_radius,  true);		
 			} else {
 				draw_set_alpha(.4);
-				draw_roundrect_ext(panel_draw_x0, panel_draw_y0, panel_draw_x1, panel_draw_y1, 8, 8, false);
+				draw_roundrect_ext(panel_draw_x0, panel_draw_y0, panel_draw_x1, panel_draw_y1, THEME_VALUE.panel_corner_radius, THEME_VALUE.panel_corner_radius, false);
 				draw_set_alpha(1.);
-				draw_roundrect_ext(panel_draw_x0, panel_draw_y0, panel_draw_x1, panel_draw_y1, 8, 8,  true);		
+				draw_roundrect_ext(panel_draw_x0, panel_draw_y0, panel_draw_x1, panel_draw_y1, THEME_VALUE.panel_corner_radius, THEME_VALUE.panel_corner_radius,  true);		
 			}
 		}
 		

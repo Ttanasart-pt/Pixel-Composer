@@ -811,9 +811,9 @@ function Panel_Graph() : PanelContent() constructor {
 			if(nodes_select_drag) {
 				if(point_distance(nodes_select_mx, nodes_select_my, mx, my) > 16) {
 					draw_set_color(COLORS._main_accent);
-					draw_roundrect_ext(nodes_select_mx, nodes_select_my, mx, my, 6, 6, true);
+					draw_roundrect_ext(nodes_select_mx, nodes_select_my, mx, my, THEME_VALUE.selection_corner_radius, THEME_VALUE.selection_corner_radius, true);
 					draw_set_alpha(0.05);
-					draw_roundrect_ext(nodes_select_mx, nodes_select_my, mx, my, 6, 6, false);
+					draw_roundrect_ext(nodes_select_mx, nodes_select_my, mx, my, THEME_VALUE.selection_corner_radius, THEME_VALUE.selection_corner_radius, false);
 					draw_set_alpha(1);
 					
 					//ds_list_clear(nodes_select_list);
@@ -1581,7 +1581,7 @@ function Panel_Graph() : PanelContent() constructor {
 				var nh = n.h * ss;
 				
 				draw_set_color(n.color);
-				draw_roundrect_ext(nx, ny, nx + nw, ny + nh, 2, 2, false);
+				draw_roundrect_ext(nx, ny, nx + nw, ny + nh, THEME_VALUE.minimap_corner_radius, THEME_VALUE.minimap_corner_radius, false);
 			}
 			draw_set_alpha(1);
 			
@@ -1660,7 +1660,7 @@ function Panel_Graph() : PanelContent() constructor {
 		
 		draw_set_color(COLORS._main_accent);
 		draw_set_alpha(0.5);
-		draw_roundrect_ext(frm_x0, frm_y0, frm_x1, frm_y1, 8, 8, true);
+		draw_roundrect_ext(frm_x0, frm_y0, frm_x1, frm_y1, THEME_VALUE.panel_corner_radius, THEME_VALUE.panel_corner_radius, true);
 		draw_set_alpha(1);
 	}
 	

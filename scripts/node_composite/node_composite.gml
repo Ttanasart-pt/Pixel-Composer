@@ -320,8 +320,14 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				
 				if(!_drw) continue;
 				
-				if(_hov > 0.5)
-				draw_sprite_stretched_ext(THEME.node_bg_pill, 0, _px0 - 16 * _s, _py0 - 16 * _s, _px1 - _px0 + 32 * _s, _py1 - _py0 + 32 * _s, COLORS._main_icon_dark, (_hov - 0.5) * 2);
+				//if(_hov > 0.5) {
+				//	var pilx = _px0 - 16 * _s;
+				//	var pily = _py0 - 16 * _s;
+				//	var pilw = _px1 - _px0 + 32 * _s;
+				//	var pilh = _py1 - _py0 + 32 * _s;
+					
+				//	draw_sprite_stretched_ext(THEME.node_bg_pill, 0, pilx, pily, pilw, pilh, COLORS._main_icon_dark, (_hov - 0.5) * 2);
+				//}
 				
 				for( var j = 1; j < data_length; j++ ) {
 					if(inputs[| idx + j].drawJunction(_s, _mx, _my, 1.5))	
@@ -621,8 +627,8 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				_ri = 1;
 			}
 			
-			draw_sprite_ui_uniform(THEME.anchor_rotate, _ri, _rr[0], _rr[1],,,, _rot);
-			draw_sprite_ui_uniform(THEME.anchor_scale,  _si, _d3[0], _d3[1],,,, _rot);
+			draw_sprite_colored(THEME.anchor_rotate, _ri, _rr[0], _rr[1],, _rot);
+			draw_sprite_colored(THEME.anchor_scale,  _si, _d3[0], _d3[1],, _rot);
 			
 			draw_set_color(_borcol);
 			draw_line(_d0[0], _d0[1], _d1[0], _d1[1]);

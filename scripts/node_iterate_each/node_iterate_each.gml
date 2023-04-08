@@ -65,7 +65,7 @@ function Node_Iterate_Each(_x, _y, _group = noone) : Node_Collection(_x, _y, _gr
 		var siz = ds_list_size(outputs); // check if every output is updated
 		for( var i = custom_output_index; i < siz; i++ ) {
 			var _o = outputs[| i];
-			if(_o.node.rendered) return;
+			if(!_o.node.rendered) return;
 		}
 		
 		var maxIter = getIterationCount();

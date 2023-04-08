@@ -29,14 +29,14 @@ event_inherited();
 					exists = true;
 			}
 			
-			var ind = exists? 2 : 0;
+			var ind = 0;
 			
 			if(sHOVER && sc_content.hover && point_in_rectangle(_m[0], _m[1], 0, _ly + 1, _dw, _ly + hght - 1))
 				selecting = i;
 			
 			if(selecting == i) {
 				draw_sprite_stretched_ext(THEME.textbox, 3, 0, _ly, _dw, hght, COLORS.dialog_menubox_highlight, 1);
-				ind++;
+				ind = 1;
 				
 				if(sFOCUS && (mouse_press(mb_left) || keyboard_check_pressed(vk_enter))) {
 					if(exists)	array_remove(array, arrayBox.data[i]);
@@ -48,6 +48,8 @@ event_inherited();
 			
 			var bs = ui(22);
 			draw_sprite_stretched(THEME.checkbox, ind, ui(20) - bs / 2, yc - bs / 2, bs, bs);
+			if(exists)
+				draw_sprite_stretched_ext(THEME.checkbox, 2, ui(20) - bs / 2, yc - bs / 2, bs, bs, COLORS._main_accent, 1);
 			
 			draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text);
 			draw_text_cut(ui(40), yc, arrayBox.data[i], _dw);

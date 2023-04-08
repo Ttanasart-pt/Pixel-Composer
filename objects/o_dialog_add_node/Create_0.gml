@@ -374,8 +374,11 @@ event_inherited();
 					} else 
 						draw_sprite_ui_uniform(THEME.info, 0, _boxx + ui(8), yy + ui(8), 0.7, COLORS._main_icon, 0.5);
 				}
-				if(_node.new_node)
-					draw_sprite_ui_uniform(THEME.node_new_badge, 0, _boxx + grid_size - ui(12), yy + ui(6));
+				
+				if(_node.new_node) {
+					draw_sprite_ui_uniform(THEME.node_new_badge, 0, _boxx + grid_size - ui(12), yy + ui(6),, COLORS._main_accent);
+					draw_sprite_ui_uniform(THEME.node_new_badge, 1, _boxx + grid_size - ui(12), yy + ui(6));
+				}
 				
 				var fav = array_exists(global.FAV_NODES, _node.node);
 				if(fav) 
@@ -464,7 +467,8 @@ event_inherited();
 				var tx = list_height + ui(40);
 				
 				if(_node.new_node) {
-					draw_sprite_ui_uniform(THEME.node_new_badge, 0, tx + ui(16), yy + list_height / 2 + ui(1));
+					draw_sprite_ui_uniform(THEME.node_new_badge, 0, tx + ui(16), yy + list_height / 2 + ui(1),, COLORS._main_accent);
+					draw_sprite_ui_uniform(THEME.node_new_badge, 1, tx + ui(16), yy + list_height / 2 + ui(1));
 					tx += ui(40);
 				}
 				

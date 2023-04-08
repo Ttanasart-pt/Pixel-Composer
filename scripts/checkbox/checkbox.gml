@@ -27,18 +27,20 @@ function checkBox(_onClick) : widget() constructor {
 		}
 		
 		var aa = interactable * 0.25 + 0.75;
-		draw_sprite_stretched_ext(spr, _value * 2, _dx, _dy, ss, ss, c_white, aa);
+		draw_sprite_stretched_ext(spr, 0, _dx, _dy, ss, ss, c_white, aa);
 		
 		if(hover && point_in_rectangle(_m[0], _m[1], _dx, _dy, _dx + ss, _dy + ss)) {
-			draw_sprite_stretched_ext(spr, _value * 2 + 1, _dx, _dy, ss, ss, c_white, aa);	
+			draw_sprite_stretched_ext(spr, 1, _dx, _dy, ss, ss, c_white, aa);	
 			
 			if(mouse_press(mb_left, active))
 				trigger();
 		} else
 			if(mouse_press(mb_left)) deactivate();
 		
+		if(_value) draw_sprite_stretched_ext(spr, 2, _dx, _dy, ss, ss, COLORS._main_accent, aa);
+		
 		if(WIDGET_CURRENT == self)
-			draw_sprite_stretched(THEME.widget_selecting, 0, _dx - ui(3), _dy - ui(3), ss + ui(6), ss + ui(6));	
+			draw_sprite_stretched_ext(THEME.widget_selecting, 0, _dx - ui(3), _dy - ui(3), ss + ui(6), ss + ui(6), COLORS._main_accent, 1);	
 		
 		resetFocus();
 	}

@@ -1,12 +1,6 @@
 function Node_Blur_Radial(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Radial Blur";
 	
-	shader = sh_blur_radial;
-	uniform_cen = shader_get_uniform(shader, "center");
-	uniform_dim = shader_get_uniform(shader, "dimension");
-	uniform_str = shader_get_uniform(shader, "strength");
-	uniform_sam = shader_get_uniform(shader, "sampleMode");
-	
 	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 	
 	inputs[| 1] = nodeValue("Strength", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 45)
@@ -36,6 +30,7 @@ function Node_Blur_Radial(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	attribute_surface_depth();
 	attribute_oversample();
+	attribute_interpolation();
 	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var pos = inputs[| 2].getValue();
@@ -55,21 +50,15 @@ function Node_Blur_Radial(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		_cen[0] /= surface_get_width(_outSurf);
 		_cen[1] /= surface_get_height(_outSurf);
 		
-		surface_set_target(_outSurf);
-			DRAW_CLEAR
-			BLEND_OVERRIDE;
-		
-			shader_set(shader);
-			shader_set_uniform_f(uniform_dim, surface_get_width(_outSurf), surface_get_height(_outSurf));
-			shader_set_uniform_f(uniform_str, abs(_str));
-			shader_set_uniform_f_array_safe(uniform_cen, _cen);
-			shader_set_uniform_i(uniform_sam, _sam);
+		surface_set_shader(_outSurf, sh_blur_radial);
+		shader_set_interpolation(_data[0]);
+		shader_set_f("dimension", surface_get_width(_outSurf), surface_get_height(_outSurf));
+		shader_set_f("strength", abs(_str));
+		shader_set_f("center", _cen);
+		shader_set_i("sampleMode", _sam);
 			
 			draw_surface_safe(_data[0], 0, 0);
-			shader_reset();
-		
-			BLEND_NORMAL;
-		surface_reset_target();
+		surface_reset_shader();
 		
 		_outSurf = mask_apply(_data[0], _outSurf, _mask, _mix);
 		

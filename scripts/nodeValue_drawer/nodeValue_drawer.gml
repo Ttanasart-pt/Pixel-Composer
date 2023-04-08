@@ -17,12 +17,12 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover, _focus, _scr
 	var butx = xx;
 	if(jun.connect_type == JUNCTION_CONNECT.input && jun.isAnimable() && !jun.global_use && !global_var) {
 		var index = jun.value_from == noone? jun.is_anim : 2;
-		draw_sprite_ui_uniform(THEME.animate_clock, index, butx, lb_y, 1,, 0.8);
+		draw_sprite_ui_uniform(THEME.animate_clock, index, butx, lb_y, 1, index == 2? COLORS._main_accent : c_white, 0.8);
 		if(_hover && point_in_circle(_m[0], _m[1], butx, lb_y, ui(10))) {
 			if(anim_hold != noone)
 				jun.setAnim(anim_hold);
 				
-			draw_sprite_ui_uniform(THEME.animate_clock, index, butx, lb_y, 1,, 1);
+			draw_sprite_ui_uniform(THEME.animate_clock, index, butx, lb_y, 1, index == 2? COLORS._main_accent : c_white, 1);
 			TOOLTIP = jun.value_from == noone? get_text("panel_inspector_toggle_anim", "Toggle animation") : get_text("panel_inspector_remove_link", "Remove link");
 					
 			if(mouse_press(mb_left, _focus)) {

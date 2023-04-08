@@ -64,7 +64,7 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 		inputs[| 5].setVisible(pack != SPRITE_STACK.grid);
 	}
 	
-	static update = function(frame = ANIMATOR.current_frame) {
+	static update = function(frame = ANIMATOR.current_frame) { 
 		var inpt = inputs[| 0].getValue();
 		var grup = inputs[| 1].getValue();
 		var skip = inputs[| 2].getValue();
@@ -220,6 +220,7 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 	
 	static onInspector1Update = function(updateAll = true) {
 		var key = ds_map_find_first(NODE_MAP);
+		
 		repeat(ds_map_size(NODE_MAP)) {
 			var node = NODE_MAP[? key];
 			key = ds_map_find_next(NODE_MAP, key);

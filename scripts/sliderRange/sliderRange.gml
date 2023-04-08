@@ -3,6 +3,7 @@ function sliderRange(_min, _max, _step, _onModify) : widget() constructor {
 	maxx = _max;
 	step = _step;
 	
+	spr = THEME.slider;
 	onModify = _onModify;
 	
 	dragging = -1;
@@ -47,20 +48,20 @@ function sliderRange(_min, _max, _step, _onModify) : widget() constructor {
 		tb_value_max.draw(_x + _w - tb_w, _y, tb_w, TEXTBOX_HEIGHT, _data[1], _m);
 		
 		var _x0 = _x + tb_w + ui(16);
-		draw_sprite_stretched(THEME.slider, 0, _x0, _y + _h / 2 - ui(4), sw, ui(8));	
+		draw_sprite_stretched(spr, 0, _x0, _y + _h / 2 - ui(4), sw, ui(8));	
 		
 		var _slider_x0 = _x0 + clamp((_data[0] - minn) / (maxx - minn), 0, 1) * sw;
 		var _slider_x1 = _x0 + clamp((_data[1] - minn) / (maxx - minn), 0, 1) * sw;
 		
-		draw_sprite_stretched(THEME.slider, 4, min(_slider_x0, _slider_x1), _y + _h / 2 - ui(4), abs(_slider_x1 - _slider_x0), ui(8));	
-		draw_sprite_stretched(THEME.slider, 1, _slider_x0 - ui(10), _y, ui(20), _h);
-		draw_sprite_stretched(THEME.slider, 1, _slider_x1 - ui(10), _y, ui(20), _h);
+		draw_sprite_stretched_ext(spr, 4, min(_slider_x0, _slider_x1), _y + _h / 2 - ui(4), abs(_slider_x1 - _slider_x0), ui(8), COLORS._main_accent, 1);	
+		draw_sprite_stretched(spr, 1, _slider_x0 - ui(10), _y, ui(20), _h);
+		draw_sprite_stretched(spr, 1, _slider_x1 - ui(10), _y, ui(20), _h);
 		
 		if(dragging > -1) {
 			if(dragging == 0)
-				draw_sprite_stretched(THEME.slider, 3, _slider_x0 - ui(10), _y, ui(20), _h);
+				draw_sprite_stretched_ext(spr, 3, _slider_x0 - ui(10), _y, ui(20), _h, COLORS._main_accent, 1);
 			else if(dragging == 1)
-				draw_sprite_stretched(THEME.slider, 3, _slider_x1 - ui(10), _y, ui(20), _h);
+				draw_sprite_stretched_ext(spr, 3, _slider_x1 - ui(10), _y, ui(20), _h, COLORS._main_accent, 1);
 			
 			var val = (_m[0] - _x0) / sw * (maxx - minn) + minn;
 			val = round(val / step) * step;
@@ -79,11 +80,11 @@ function sliderRange(_min, _max, _step, _onModify) : widget() constructor {
 			var _hover = -1;
 				
 			if(point_in_rectangle(_m[0], _m[1], _slider_x0 - ui(10), _y, _slider_x0 + ui(10), _y + _h)) {
-				draw_sprite_stretched(THEME.slider, 2, _slider_x0 - ui(10), _y, ui(20), _h);
+				draw_sprite_stretched(spr, 2, _slider_x0 - ui(10), _y, ui(20), _h);
 				_hover = 0;
 			}
 			if(point_in_rectangle(_m[0], _m[1], _slider_x1 - ui(10), _y, _slider_x1 + ui(10), _y + _h)) {
-				draw_sprite_stretched(THEME.slider, 2, _slider_x1 - ui(10), _y, ui(20), _h);
+				draw_sprite_stretched(spr, 2, _slider_x1 - ui(10), _y, ui(20), _h);
 				_hover = 1;
 			}
 				

@@ -20,7 +20,9 @@ function line_width(txt, font = noone, offset = 0) {
 	return ww;
 }
 
-#macro TEXTBOX_HEIGHT line_height(f_p0, 12)
+#region global
+	#macro TEXTBOX_HEIGHT line_height(f_p0, 12)
 
-gml_pragma("forceinline");
-function ui(val) { return val * UI_SCALE; }
+	gml_pragma("forceinline");
+	function ui(val) { return val * UI_SCALE; }
+#endregion

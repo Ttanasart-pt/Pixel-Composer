@@ -35,7 +35,7 @@ function surfaceBox(_onModify, def_path = "") : widget() constructor {
 					trigger();
 				
 				if(mouse_click(mb_left, active))
-					draw_sprite_stretched(THEME.textbox, 2, _x, _y, _w, _h);	
+					draw_sprite_stretched_ext(THEME.textbox, 2, _x, _y, _w, _h, COLORS._main_accent, 1);	
 			} else {
 				draw_sprite_stretched_ext(THEME.textbox, 0, _x, _y, _w, _h, c_white, 0.5 + 0.5 * interactable);
 				if(mouse_press(mb_left)) deactivate();
@@ -70,7 +70,7 @@ function surfaceBox(_onModify, def_path = "") : widget() constructor {
 		}
 		
 		if(WIDGET_CURRENT == self)
-			draw_sprite_stretched(THEME.widget_selecting, 0, _x - ui(3), _y - ui(3), _w + ui(6), _h + ui(6));	
+			draw_sprite_stretched_ext(THEME.widget_selecting, 0, _x - ui(3), _y - ui(3), _w + ui(6), _h + ui(6), COLORS._main_accent, 1);	
 		
 		if(DRAGGING && DRAGGING.type == "Asset" && hover && hoverRect) {
 			draw_sprite_stretched_ext(THEME.ui_panel_active, 0, _x, _y, _w, _h, COLORS._main_value_positive, 1);	

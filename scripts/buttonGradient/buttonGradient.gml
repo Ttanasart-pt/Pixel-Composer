@@ -34,8 +34,10 @@ function buttonGradient(_onApply, dialog = noone) : widget() constructor {
 				trigger();
 				click = true;
 			}
-			if(mouse_click(mb_left, iactive))
+			if(mouse_click(mb_left, iactive)) {
 				draw_sprite_stretched(THEME.button, 2, _x, _y, _w, _h);	
+				draw_sprite_stretched_ext(THEME.button, 3, _x, _y, _w, _h, COLORS._main_accent, 1);	
+			}
 		} else {
 			draw_sprite_stretched(THEME.button, 0, _x, _y, _w, _h);		
 			if(mouse_press(mb_left)) deactivate();
@@ -44,7 +46,7 @@ function buttonGradient(_onApply, dialog = noone) : widget() constructor {
 		_gradient.draw(_x + ui(6), _y + ui(6), _w - ui(12), _h - ui(12));
 		
 		if(WIDGET_CURRENT == self)
-			draw_sprite_stretched(THEME.widget_selecting, 0, _x - ui(3), _y - ui(3), _w + ui(6), _h + ui(6));	
+			draw_sprite_stretched_ext(THEME.widget_selecting, 0, _x - ui(3), _y - ui(3), _w + ui(6), _h + ui(6), COLORS._main_accent, 1);
 		
 		if(DRAGGING && DRAGGING.type == "Gradient" && hover && hoverRect) {
 			draw_sprite_stretched_ext(THEME.ui_panel_active, 0, _x, _y, _w, _h, COLORS._main_value_positive, 1);	

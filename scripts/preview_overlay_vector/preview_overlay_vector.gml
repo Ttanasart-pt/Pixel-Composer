@@ -9,10 +9,10 @@ function preview_overlay_vector(interact, active, _x, _y, _s, _mx, _my, _snx, _s
 	var _ax = __ax * _s + _x;
 	var _ay = __ay * _s + _y;
 						
-	draw_sprite_ui_uniform(_spr, 0, _ax, _ay);
+	draw_sprite_colored(_spr, 0, _ax, _ay);
 						
 	if(drag_type) {
-		draw_sprite_ui_uniform(_spr, 1, _ax, _ay);
+		draw_sprite_colored(_spr, 1, _ax, _ay);
 		var _nx = value_snap((drag_sx + (_mx - drag_mx) - _x) / _s, _snx);
 		var _ny = value_snap((drag_sy + (_my - drag_my) - _y) / _s, _sny);
 		if(key_mod_press(CTRL)) {
@@ -34,7 +34,7 @@ function preview_overlay_vector(interact, active, _x, _y, _s, _mx, _my, _snx, _s
 						
 	if(interact && point_in_circle(_mx, _my, _ax, _ay, 8)) {
 		hover = 1;
-		draw_sprite_ui_uniform(_spr, 1, _ax, _ay);
+		draw_sprite_colored(_spr, 1, _ax, _ay);
 		if(mouse_press(mb_left, active)) {
 			drag_type = 1;
 			drag_mx   = _mx;

@@ -108,8 +108,8 @@
 		draw_line_width(pd3x, pd3y, pd1x, pd1y, hovering == 0? 2 : 1);
 		draw_line_width(pd3x, pd3y, pd2x, pd2y, hovering == 0? 2 : 1);
 		
-		draw_sprite_ui_uniform(THEME.anchor_rotate, hovering == 1,  prx,  pry,,,, _rot);
-		draw_sprite_ui_uniform(THEME.anchor_scale,  hovering == 2, pd3x, pd3y,,,, _rot);
+		draw_sprite_colored(THEME.anchor_rotate, hovering == 1,  prx,  pry,, _rot);
+		draw_sprite_colored(THEME.anchor_scale,  hovering == 2, pd3x, pd3y,, _rot);
 		
 		if(hovering == -1) return;
 		if(drag_type > -1) return;

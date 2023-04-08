@@ -88,18 +88,18 @@ function Node_Transform_Single(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 			var br = point_rotate(bx1, by1, bax, bay, rot);
 		
 			draw_set_color(COLORS._main_accent);
-			draw_sprite_ui_uniform(THEME.anchor, 0, bax, bay);
+			draw_sprite_colored(THEME.anchor, 0, bax, bay);
 			
-			draw_sprite_ui_uniform(THEME.anchor_selector, 0, tl[0], tl[1]);
-			draw_sprite_ui_uniform(THEME.anchor_selector, 0, tr[0], tr[1]);
-			draw_sprite_ui_uniform(THEME.anchor_selector, 0, bl[0], bl[1]);
-			draw_sprite_ui_uniform(THEME.anchor_selector, 0, br[0], br[1]);
+			draw_sprite_colored(THEME.anchor_selector, 0, tl[0], tl[1]);
+			draw_sprite_colored(THEME.anchor_selector, 0, tr[0], tr[1]);
+			draw_sprite_colored(THEME.anchor_selector, 0, bl[0], bl[1]);
+			draw_sprite_colored(THEME.anchor_selector, 0, br[0], br[1]);
 			
-			if(point_in_circle(_mx, _my, bax, bay, 8))			draw_sprite_ui_uniform(THEME.anchor, 0, bax, bay, 1.25);
-			else if(point_in_circle(_mx, _my, tl[0], tl[1], 8))	draw_sprite_ui_uniform(THEME.anchor_selector, 1, tl[0], tl[1]);
-			else if(point_in_circle(_mx, _my, tr[0], tr[1], 8))	draw_sprite_ui_uniform(THEME.anchor_selector, 1, tr[0], tr[1]);			
-			else if(point_in_circle(_mx, _my, bl[0], bl[1], 8))	draw_sprite_ui_uniform(THEME.anchor_selector, 1, bl[0], bl[1]);			
-			else if(point_in_circle(_mx, _my, br[0], br[1], 8))	draw_sprite_ui_uniform(THEME.anchor_selector, 1, br[0], br[1]);
+			if(point_in_circle(_mx, _my, bax, bay, 8))			draw_sprite_colored(THEME.anchor, 0, bax, bay, 1.25);
+			else if(point_in_circle(_mx, _my, tl[0], tl[1], 8))	draw_sprite_colored(THEME.anchor_selector, 1, tl[0], tl[1]);
+			else if(point_in_circle(_mx, _my, tr[0], tr[1], 8))	draw_sprite_colored(THEME.anchor_selector, 1, tr[0], tr[1]);			
+			else if(point_in_circle(_mx, _my, bl[0], bl[1], 8))	draw_sprite_colored(THEME.anchor_selector, 1, bl[0], bl[1]);			
+			else if(point_in_circle(_mx, _my, br[0], br[1], 8))	draw_sprite_colored(THEME.anchor_selector, 1, br[0], br[1]);
 				
 			draw_line(tl[0], tl[1], tr[0], tr[1]);
 			draw_line(tl[0], tl[1], bl[0], bl[1]);

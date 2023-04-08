@@ -162,20 +162,20 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		var _bw = curr_amo[0] * (curr_dim[0] + _spc[0]) - _spc[0]; _bw *= _s;
 		var _bh = curr_amo[1] * (curr_dim[1] + _spc[1]) - _spc[1]; _bh *= _s;
 		
-		draw_sprite_ui_uniform(THEME.anchor, 0, _ax, _ay);
-		draw_sprite_ui_uniform(THEME.anchor_selector, 0, _ax + _aw, _ay + _ah);
-		draw_sprite_ui_uniform(THEME.anchor_arrow, 0, _ax + _bw + _s * 4, _ay + _bh / 2);
-		draw_sprite_ui_uniform(THEME.anchor_arrow, 0, _ax + _bw / 2, _ay + _bh + _s * 4,,,, -90);
+		draw_sprite_colored(THEME.anchor, 0, _ax, _ay);
+		draw_sprite_colored(THEME.anchor_selector, 0, _ax + _aw, _ay + _ah);
+		draw_sprite_colored(THEME.anchor_arrow, 0, _ax + _bw + _s * 4, _ay + _bh / 2);
+		draw_sprite_colored(THEME.anchor_arrow, 0, _ax + _bw / 2, _ay + _bh + _s * 4,, -90);
 		
 		if(active) {
 			if(point_in_circle(_mx, _my, _ax + _aw, _ay + _ah, 8))
-				draw_sprite_ui_uniform(THEME.anchor_selector, 1, _ax + _aw, _ay + _ah);
+				draw_sprite_colored(THEME.anchor_selector, 1, _ax + _aw, _ay + _ah);
 			else if(point_in_rectangle(_mx, _my, _ax - _aw, _ay - _ah, _ax + _aw, _ay + _ah))
-				draw_sprite_ui_uniform(THEME.anchor, 0, _ax, _ay, 1.25, c_white);
+				draw_sprite_colored(THEME.anchor, 0, _ax, _ay, 1.25, c_white);
 			else if(point_in_circle(_mx, _my, _ax + _bw + _s * 4, _ay + _bh / 2, 8))
-				draw_sprite_ui_uniform(THEME.anchor_arrow, 1, _ax + _bw + _s * 4, _ay + _bh / 2);
+				draw_sprite_colored(THEME.anchor_arrow, 1, _ax + _bw + _s * 4, _ay + _bh / 2);
 			else if(point_in_circle(_mx, _my, _ax + _bw / 2, _ay + _bh + _s * 4, 8))
-				draw_sprite_ui_uniform(THEME.anchor_arrow, 1, _ax + _bw / 2, _ay + _bh + _s * 4,,,, -90);
+				draw_sprite_colored(THEME.anchor_arrow, 1, _ax + _bw / 2, _ay + _bh + _s * 4,, -90);
 		}
 		
 		#region area

@@ -638,13 +638,15 @@ function Panel_Preview() : PanelContent() constructor {
 				if(pFOCUS && WIDGET_CURRENT == noone && keyboard_check_pressed(ord(string(i + 1))))
 					tool.toggle();
 				
-				if(tool_current == tool)
+				if(tool_current == tool) {
 					draw_sprite_stretched(THEME.button, 2, xx, yy, ui(40), ui(40));
+					draw_sprite_stretched_ext(THEME.button, 3, xx, yy, ui(40), ui(40), COLORS._main_accent, 1);	
+				}
 				
 				if(tool.subtools > 0)
-					draw_sprite_ui_uniform(tool.spr[tool.selecting], 0, xx + ui(20), yy + ui(20));
+					draw_sprite_colored(tool.spr[tool.selecting], 0, xx + ui(20), yy + ui(20));
 				else
-					draw_sprite_ui_uniform(tool.spr, 0, xx + ui(20), yy + ui(20));
+					draw_sprite_colored(tool.spr, 0, xx + ui(20), yy + ui(20));
 				yy += ui(48);
 			}
 		} else 

@@ -37,7 +37,7 @@ function preview_overlay_scalar(interact, active, _x, _y, _s, _mx, _my, _snx, _s
 		}
 	} 
 						
-	draw_sprite_ui_uniform(_spr, index, _ax, _ay);
+	draw_sprite_colored(_spr, index, _ax, _ay);
 	
 	return hover;
 }

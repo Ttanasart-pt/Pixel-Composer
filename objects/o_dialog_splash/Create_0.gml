@@ -171,7 +171,7 @@ event_inherited();
 						var _th = string_height(_project.tag);
 					
 						draw_set_color(COLORS.dialog_splash_badge);
-						draw_roundrect_ext(tx - _tw / 2 - ui(6), ty - ui(2), tx + _tw / 2 + ui(6), ty + _th, ui(8), ui(8), 0);
+						draw_roundrect_ext(tx - _tw / 2 - ui(6), ty - ui(2), tx + _tw / 2 + ui(6), ty + _th, THEME_VALUE.selection_corner_radius, THEME_VALUE.selection_corner_radius, 0);
 						draw_set_color(_project.tag == "Getting started"? COLORS._main_text_accent : COLORS._main_text_sub);
 						draw_text(tx, ty - ui(2), _project.tag);						
 						

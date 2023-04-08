@@ -8,7 +8,7 @@ uniform vec2 dimension;
 uniform float tolerance;
 
 bool sameColor(in vec4 c1, in vec4 c2) {
-	return length(c1 - c2) < tolerance;
+	return length(c1 - c2) <= tolerance;
 }
 
 void main() {
@@ -16,23 +16,23 @@ void main() {
 	
 	vec2 _dim = 1. / dimension;
     
-	vec4 col_t = texture2D( gm_BaseTexture, v_vTexcoord + vec2(0.,  _dim.y));
-	vec4 col_b = texture2D( gm_BaseTexture, v_vTexcoord + vec2(0., -_dim.y));
+	vec4 T = texture2D( gm_BaseTexture, v_vTexcoord + vec2(0.,  _dim.y));
+	vec4 B = texture2D( gm_BaseTexture, v_vTexcoord + vec2(0., -_dim.y));
     
-	vec4 col_l = texture2D( gm_BaseTexture, v_vTexcoord + vec2(-_dim.x, 0.));
-	vec4 col_r = texture2D( gm_BaseTexture, v_vTexcoord + vec2( _dim.x, 0.));
+	vec4 L = texture2D( gm_BaseTexture, v_vTexcoord + vec2(-_dim.x, 0.));
+	vec4 R = texture2D( gm_BaseTexture, v_vTexcoord + vec2( _dim.x, 0.));
 	
-	if(!sameColor(curr_color, col_t)) {
-		if(sameColor(col_t, col_b) && sameColor(col_b, col_l) && sameColor(col_l, col_r))
-			curr_color = col_t;
-		else if(sameColor(col_t, col_l) && sameColor(col_t, col_r))
-			curr_color = col_t;
-		else if(sameColor(col_t, col_b) && sameColor(col_t, col_r))
-			curr_color = col_t;
-		else if(sameColor(col_t, col_b) && sameColor(col_t, col_l))
-			curr_color = col_t;
-	} else if(!sameColor(curr_color, col_b) && sameColor(col_b, col_l) && sameColor(col_b, col_r))
-		curr_color = col_b;
+	if(!sameColor(curr_color, T)) {
+		if(sameColor(T, B) && sameColor(B, L) && sameColor(L, R))
+			curr_color = T;
+		else if(sameColor(T, L) && sameColor(T, R))
+			curr_color = T;
+		else if(sameColor(T, B) && sameColor(T, R))
+			curr_color = T;
+		else if(sameColor(T, B) && sameColor(T, L))
+			curr_color = T;
+	} else if(!sameColor(curr_color, B) && sameColor(B, L) && sameColor(B, R))
+		curr_color = B;
 	
 	gl_FragColor = curr_color;
 }
