@@ -82,6 +82,8 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		["Rules",		false], 3, 4, rule_renderer, 5, 
 	];
 	lines = [];
+	
+	current_length  = 0;
 	boundary = new BoundingBox();
 	
 	static refreshDynamicInput = function() {
@@ -137,9 +139,16 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		}
 	}
 	
-	static getLineCount = function() { return floor(array_length(lines) / 2); }
-	
 	static getBoundary	= function() { return boundary; }
+	
+	static getLineCount		= function() { return floor(array_length(lines) / 2); }
+	static getSegmentCount	= function() { return 1; }
+	static getLength		= function() { return current_length; }
+	static getAccuLength	= function() { return [ 0, current_length ]; }
+	
+	static getPointDistance = function(_dist, ind = 0) {
+		return getPointRatio(_dist / current_length, ind); 
+	}
 	
 	static getPointRatio = function(_rat, _ind = 0) {
 		var _p0 = array_safe_get(lines, _ind * 2 + 0,, ARRAY_OVERFLOW._default);
@@ -155,13 +164,14 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	}
 	
 	function update() { 
-			
 		var _len = inputs[| 0].getValue();
 		var _ang = inputs[| 1].getValue();
 		var _pos = inputs[| 2].getValue();
 		var _itr = inputs[| 3].getValue();
 		var _san = inputs[| 6].getValue();
 		lines = [];
+		
+		current_length = _len;
 		
 		if(ds_list_size(inputs) < input_fix_len + 2) return;
 		
@@ -236,7 +246,7 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node(_x, _y, _group) const
 					break;
 				case "+": t.ang += _ang; break;
 				case "-": t.ang -= _ang; break;
-				case "|": t.ang += 180; break;
+				case "|": t.ang += 180;  break;
 				case "[": ds_stack_push(st, t.clone()); break;
 				case "]": t = ds_stack_pop(st);			break;
 			}

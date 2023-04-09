@@ -70,6 +70,7 @@
 #endregion
 
 #region render
+	//physics_pause_enable(true);
 	DEF_SURFACE_RESET();
 	
 	var _k = ds_map_find_first(NODE_MAP);

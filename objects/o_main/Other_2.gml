@@ -58,7 +58,7 @@
 	
 	var cmd = ".pxc=\"" + string(program_directory) + "PixelComposer.exe\"";
 	execute_shell("assoc", cmd);
-			
+	
 	var cmd = ".pxcc=\"" + string(program_directory) + "PixelComposer.exe\"";
 	execute_shell("assoc", cmd);
 #endregion
@@ -69,7 +69,8 @@
 	if(parameter_count() > 1) {
 		var path = parameter_string(1);
 		if(path == "--crashed") {
-			dialogCall(o_dialog_crashed);
+			if(PREF_MAP[? "show_crash_dialog"])
+				dialogCall(o_dialog_crashed);
 		} else {
 			path = string_replace_all(path, "\n", "");
 			path = string_replace_all(path, "\"", "");

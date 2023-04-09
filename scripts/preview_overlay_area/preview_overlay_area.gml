@@ -269,7 +269,7 @@ function preview_overlay_area_span(interact, active, _x, _y, _s, _mx, _my, _snx,
 	if(point_in_circle(_mx, _my, _ax + _aw, _ay + _ah, 8))
 		draw_sprite_colored(THEME.anchor_selector, 1, _ax + _aw, _ay + _ah);
 	else if(point_in_rectangle(_mx, _my, _ax - _aw, _ay - _ah, _ax + _aw, _ay + _ah))
-		draw_sprite_colored(THEME.anchor, 0, _ax, _ay, 1.25, c_white);
+		draw_sprite_colored(THEME.anchor, 0, _ax, _ay, 1.25);
 						
 	if(drag_type == 1) {
 		var _xx = value_snap(drag_sx + (_mx - drag_mx) / _s, _snx);

@@ -166,10 +166,15 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 				break;
 			}
 		}
-			
+		
+		if(rendered)
+			exitGroup();
+		
 		if(!result && group != noone) 
 			group.setRenderStatus(result);
 	}
+	
+	static exitGroup = function() {}
 	
 	function add(_node) {
 		ds_list_add(getNodeList(), _node);

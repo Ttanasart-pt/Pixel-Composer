@@ -4,7 +4,6 @@
 	var f = file_text_open_append(path);
 	var t = _log_template();
 	file_text_write_string(f, "[MESSAGE] " + t + "session begin" + "\n");
-	
 	file_text_close(f);
 	
 	gpu_set_tex_mip_enable(mip_off);
@@ -42,6 +41,9 @@
 	DRAGGING = noone;
 	KEYBOARD_STRING = "";
 	RENDER_QUEUE = ds_queue_create();
+	
+	globalvar AUTO_SAVE_TIMER;
+	AUTO_SAVE_TIMER = 0;
 	
 	_cursor	= CURSOR;
 	dc_check = 0;
@@ -90,12 +92,9 @@
 
 #region tunnel
 	globalvar TUNNELS_IN, TUNNELS_IN_MAP, TUNNELS_OUT;
-	TUNNELS_IN = ds_map_create();
+	TUNNELS_IN     = ds_map_create();
 	TUNNELS_IN_MAP = ds_map_create();
-	TUNNELS_OUT = ds_map_create();
-	
-	globalvar AUTO_SAVE_TIMER;
-	AUTO_SAVE_TIMER = 0;
+	TUNNELS_OUT    = ds_map_create();
 #endregion
 
 #region file drop
@@ -199,16 +198,15 @@
 #region version
 	version_check = -1;
 	version_latest = 0;
-	if(os_is_network_connected()) {
-		var version = "https://gist.githubusercontent.com/Ttanasart-pt/d9eefbda84a78863c122b8b155bc0cda/raw/version.txt";
-		version_check = http_get(version);
-	}
+	//if(os_is_network_connected()) {
+	//	var version = "https://gist.githubusercontent.com/Ttanasart-pt/d9eefbda84a78863c122b8b155bc0cda/raw/version.txt";
+	//	version_check = http_get(version);
+	//}
 #endregion
 
 #region parameter
 	file_open_parameter = "";
 	minimized = false;
-	
 	_modified = false;
 #endregion
 
@@ -257,4 +255,7 @@
 
 #region tween
 	tweenInit();
+	
+	physics_world_update_iterations(300);
+	physics_world_update_speed(60);
 #endregion

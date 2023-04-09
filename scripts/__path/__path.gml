@@ -7,7 +7,6 @@ function Path() constructor {
 	
 	static getBoundary		= function() { return boundary; }
 	static getAccuLength	= function() { return lengthAccs; }
-	static getSegmentLength	= function() { return lengths; }
 	static getLength		= function() { return lengthTotal; }
 	static getSegmentCount  = function() { return 1; }
 	static getLineCount     = function() { return 1; }

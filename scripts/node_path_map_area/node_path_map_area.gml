@@ -32,11 +32,6 @@ function Node_Path_Map_Area(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		return struct_has(_path, "getLength")? _path.getLength() : 0; 
 	}
 	
-	static getSegmentLength = function() { 
-		var _path = inputs[| 0].getValue();
-		return struct_has(_path, "getSegmentLength")? _path.getSegmentLength() : []; 
-	}
-	
 	static getAccuLength = function() { 
 		var _path = inputs[| 0].getValue();
 		return struct_has(_path, "getAccuLength")? _path.getAccuLength() : []; 

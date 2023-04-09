@@ -23,12 +23,7 @@ function Node_Path_Reverse(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		var _path = inputs[| 0].getValue();
 		return struct_has(_path, "getLength")? _path.getLength() : 0; 
 	}
-	
-	static getSegmentLength = function() { 
-		var _path = inputs[| 0].getValue();
-		return struct_has(_path, "getSegmentLength")? _path.getSegmentLength() : []; 
-	}
-	
+		
 	static getAccuLength = function() { 
 		var _path = inputs[| 0].getValue();
 		return struct_has(_path, "getAccuLength")? _path.getAccuLength() : []; 

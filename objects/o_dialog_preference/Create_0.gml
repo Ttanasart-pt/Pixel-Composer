@@ -207,6 +207,16 @@ event_inherited();
 		})
 	]);
 	
+	ds_list_add(pref_global, [
+		get_text("pref_crash_dialog", "Show dialog after crash"),
+		"show_crash_dialog",
+		new checkBox(function() { 
+			PREF_MAP[? "show_crash_dialog"] = !PREF_MAP[? "show_crash_dialog"]; 
+			PREF_APPLY();
+			PREF_SAVE();
+		})
+	]);
+	
 #endregion
 
 #region appearance

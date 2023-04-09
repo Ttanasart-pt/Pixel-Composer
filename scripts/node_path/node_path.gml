@@ -643,7 +643,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		}
 		var sample = PREF_MAP[? "path_resolution"];
 		
-		var con  = loop? ansize : ansize - 1;
+		var con = loop? ansize : ansize - 1;
 		lengths		= [];
 		lengthAccs	= [];
 		array_resize(anchors, ansize);
@@ -687,7 +687,6 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	static getBoundary		= function() { return boundary; }
 	
 	static getLength		= function() { return lengthTotal; }
-	static getSegmentLength	= function() { return lengths; }
 	static getAccuLength	= function() { return lengthAccs; }
 	
 	static getPointDistance = function(_dist) {

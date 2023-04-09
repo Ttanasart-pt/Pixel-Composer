@@ -177,6 +177,8 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 				for( var i = 0; i < lineLen; i++ ) {
 					var _useDistance = _fixL && struct_has(_pat, "getLength");
 					var _pathLength  = _useDistance? _pat.getLength(i) : 1;
+					if(_pathLength == 0) continue;
+					
 					var _segLength   = struct_has(_pat, "getAccuLength")? _pat.getAccuLength(i) : [];
 					var _segIndex    = 0;
 					
@@ -207,7 +209,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 						
 						_prog_curr *= _pathLength;
 					}
-					
+						
 					while(_total >= 0) {
 						if(_useDistance) {
 							var segmentLength = array_safe_get(_segLength, _segIndex, 99999);

@@ -10,6 +10,12 @@ uniform float tolerance;
 bool sameColor(in vec4 c1, in vec4 c2) { return length(c1 - c2) <= tolerance; }
 float bright(in vec4 c) { return dot(c.rgb, vec3(0.2126, 0.7152, 0.0722)) * c.a; }
 
+vec4 sample(vec2 st) {
+	if(st.x < 0. || st.y < 0.) return vec4(0.);
+	if(st.x > 1. || st.y > 1.) return vec4(0.);
+	return texture2D( gm_BaseTexture, st);
+}
+
 void main() {
 	/*
 		A B C
@@ -24,16 +30,16 @@ void main() {
 	
 	vec4 e = E;
 	
-	vec4 A = texture2D( gm_BaseTexture, v_vTexcoord + vec2(-dim.x,  dim.y));
-	vec4 B = texture2D( gm_BaseTexture, v_vTexcoord + vec2(    0.,  dim.y));
-	vec4 C = texture2D( gm_BaseTexture, v_vTexcoord + vec2( dim.x,  dim.y));
-		
-	vec4 D = texture2D( gm_BaseTexture, v_vTexcoord + vec2(-dim.x,     .0));
-	vec4 F = texture2D( gm_BaseTexture, v_vTexcoord + vec2( dim.x,     .0));
-		
-	vec4 G = texture2D( gm_BaseTexture, v_vTexcoord + vec2(-dim.x, -dim.y));
-	vec4 H = texture2D( gm_BaseTexture, v_vTexcoord + vec2(    0., -dim.y));
-	vec4 I = texture2D( gm_BaseTexture, v_vTexcoord + vec2( dim.x, -dim.y));
+	vec4 A = sample( v_vTexcoord + vec2(-dim.x,  dim.y) );
+	vec4 B = sample( v_vTexcoord + vec2(    0.,  dim.y) );
+	vec4 C = sample( v_vTexcoord + vec2( dim.x,  dim.y) );
+													    
+	vec4 D = sample( v_vTexcoord + vec2(-dim.x,     .0) );
+	vec4 F = sample( v_vTexcoord + vec2( dim.x,     .0) );
+													    
+	vec4 G = sample( v_vTexcoord + vec2(-dim.x, -dim.y) );
+	vec4 H = sample( v_vTexcoord + vec2(    0., -dim.y) );
+	vec4 I = sample( v_vTexcoord + vec2( dim.x, -dim.y) );
 		
 	if(sameColor(F, H) && sameColor(E, B) && sameColor(E, D) && sameColor(E, A) && !sameColor(E, C) && !sameColor(E, F) && !sameColor(E, G) && !sameColor(E, H)) {
 		E = I.a == 0.? F : I;

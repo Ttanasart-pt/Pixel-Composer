@@ -80,18 +80,6 @@ function Node_Path_Array(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		return 0;
 	}
 	
-	static getSegmentLength = function(ind = 0) { 
-		for( var i = input_fix_len; i < ds_list_size(inputs) - 1; i += data_length ) {
-			var _path = inputs[| i].getValue();
-			var lc    = struct_has(_path, "getLineCount")? _path.getLineCount() : 1; 
-			
-			if(ind < lc) return _path.getSegmentLength(ind);
-			ind -= lc;
-		}
-		
-		return [];
-	}
-	
 	static getAccuLength = function(ind = 0) { 
 		for( var i = input_fix_len; i < ds_list_size(inputs) - 1; i += data_length ) {
 			var _path = inputs[| i].getValue();

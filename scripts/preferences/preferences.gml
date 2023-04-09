@@ -61,6 +61,8 @@
 	
 	PREF_MAP[? "panel_menu_resource_monitor"] = false;
 	PREF_MAP[? "panel_menu_right_control"] = os_type == os_windows;
+	
+	PREF_MAP[? "show_crash_dialog"] = false;
 #endregion
 
 #region hotkeys	
