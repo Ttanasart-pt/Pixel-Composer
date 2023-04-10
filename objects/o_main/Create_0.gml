@@ -256,6 +256,5 @@
 #region tween
 	tweenInit();
 	
-	physics_world_update_iterations(300);
-	physics_world_update_speed(60);
+	physics_world_update_iterations(100);
 #endregion

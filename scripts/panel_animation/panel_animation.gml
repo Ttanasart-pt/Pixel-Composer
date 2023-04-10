@@ -952,9 +952,17 @@ function Panel_Animation() : PanelContent() constructor {
 			} else
 				draw_sprite_ui_uniform(THEME.arrow, _node.anim_show? 3 : 0, ui(10), _node_y, 1, COLORS._main_icon, 0.75);
 			
-			draw_set_color(node_ordering == _node? COLORS._main_text_accent : COLORS._main_text_sub);
-			draw_set_alpha(aa);
-			draw_text(ui(20), _node_y - ui(2), _node.name);
+			var nodeName = "[" + _node.name + "] ";
+			var tw = string_width(nodeName);
+			
+			draw_set_color(node_ordering == _node? COLORS._main_text_accent : COLORS._main_text);
+			
+			draw_set_alpha(0.4);
+			draw_text(ui(20),      _node_y - ui(2), nodeName);
+			
+			draw_set_alpha(0.9);
+			draw_text(ui(20) + tw, _node_y - ui(2), _node.display_name);
+			
 			draw_set_alpha(1);
 			
 			if(!_node.anim_show) {

@@ -15,11 +15,9 @@ function Node_Rigid_Group(_x, _y, _group = noone) : Node_Collection(_x, _y, _gro
 		_output.inputs[| 0].setFrom(_render.outputs[| 0]);
 	}
 	
-	//physics_world_update_iterations(30);
-	//physics_world_update_speed(100)
-	
 	static reset = function() { 
 		instance_destroy(oRigidbody);
+		
 		physics_pause_enable(true);
 		
 		var node_list = getNodeList();
@@ -28,6 +26,7 @@ function Node_Rigid_Group(_x, _y, _group = noone) : Node_Collection(_x, _y, _gro
 			if(variable_struct_exists(n, "reset"))
 				n.reset();
 		}
+		
 		physics_pause_enable(false);
 	}
 	

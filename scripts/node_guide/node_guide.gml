@@ -75,7 +75,7 @@ function __initNodeData() {
 	
 	if(file_exists(_l)) {
 		var res = json_load_struct(_l);
-		if(res.version >= VERSION) return;
+		if(res.version == VERSION) return;
 	}
 	json_save_struct(_l, { version: VERSION });
 	

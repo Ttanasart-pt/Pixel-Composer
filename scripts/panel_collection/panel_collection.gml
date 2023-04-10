@@ -208,7 +208,7 @@ function Panel_Collection() : PanelContent() constructor {
 								draw_sprite_ui_uniform(THEME.steam_creator, 0, _boxx + grid_size - ui(8), yy + ui(12), 1, COLORS._main_icon_dark, 1);
 						}
 						
-						if(meta.version < SAVEFILE_VERSION) {
+						if(meta.version != SAVEFILE_VERSION) {
 							draw_set_color(COLORS._main_accent);
 							draw_circle(_boxx + grid_size - ui(8), yy + grid_size - ui(8), 3, false);
 						}

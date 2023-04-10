@@ -49,7 +49,7 @@ function Node_Image_Animated(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	inputs[| 2] = nodeValue("Stretch frame", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false)
 		.rejectArray();
 	
-	inputs[| 3] = nodeValue("Frame duration", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1)
+	inputs[| 3] = nodeValue("Frame duration", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
 		.rejectArray();
 		
 	inputs[| 4] = nodeValue("Animation end", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
@@ -173,6 +173,9 @@ function Node_Image_Animated(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 				_frame = min(_frame, array_length(spr) - 1);
 				break;
 		}
+		
+		var _spr   = array_safe_get(spr, _frame, noone);
+		if(_spr == noone) return;
 		
 		var curr_w = sprite_get_width(spr[_frame]);
 		var curr_h = sprite_get_height(spr[_frame]);

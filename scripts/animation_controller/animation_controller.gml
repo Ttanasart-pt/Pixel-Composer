@@ -13,6 +13,8 @@
 		playback = ANIMATOR_END.loop;
 		
 		static setFrame = function(frame) {
+			//if(frame == 0) resetAnimation();
+			
 			var _c = current_frame;
 			frame = clamp(frame, 0, frames_total);
 			real_frame = frame;
@@ -32,6 +34,17 @@
 				UPDATE |= RENDER_TYPE.full;
 			} else 
 				frame_progress = false;
+		}
+		
+		static resetAnimation = function() {
+			var _key = ds_map_find_first(NODE_MAP);
+			var amo = ds_map_size(NODE_MAP);
+		
+			repeat(amo) {
+				var _node = NODE_MAP[? _key];
+				_node.resetAnimation();
+				_key = ds_map_find_next(NODE_MAP, _key);	
+			}
 		}
 	}
 #endregion

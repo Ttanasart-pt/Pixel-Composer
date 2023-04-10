@@ -25,8 +25,8 @@ function __log(title, str, fname = "log.txt") {
 	file_text_close(f);
 }
 
-function log_message(title, str, icon = noone, flash = false) {
-	__log("[MESSAGE] ", string(title) + ": " + string(str));
+function log_message(title, str, icon = noone, flash = false, write = true) {
+	if(write) __log("[MESSAGE] ", string(title) + ": " + string(str));
 	
 	return noti_status(string(title) + ": " + string(str), icon, flash);
 }

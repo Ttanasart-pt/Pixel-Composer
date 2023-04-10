@@ -1030,7 +1030,7 @@ function Panel_Graph() : PanelContent() constructor {
 		if(ds_list_empty(nodes_select_list)) return;
 		if(ds_list_size(nodes_select_list) != 2) return;
 		
-		var cx = 0;
+		var cx = nodes_select_list[| 0].x;
 		var cy = 0;
 		for(var i = 0; i < ds_list_size(nodes_select_list); i++) {
 			var _node = nodes_select_list[| i];
@@ -1057,7 +1057,7 @@ function Panel_Graph() : PanelContent() constructor {
 	function doCompose() {
 		if(ds_list_empty(nodes_select_list)) return;
 		
-		var cx = -99999;
+		var cx = nodes_select_list[| 0].x;
 		var cy = 0;
 		
 		for(var i = 0; i < ds_list_size(nodes_select_list); i++) {
@@ -1084,7 +1084,7 @@ function Panel_Graph() : PanelContent() constructor {
 	function doArray() {
 		if(ds_list_empty(nodes_select_list)) return;
 		
-		var cx = -99999;
+		var cx = nodes_select_list[| 0].x;
 		var cy = 0;
 		
 		for(var i = 0; i < ds_list_size(nodes_select_list); i++) {

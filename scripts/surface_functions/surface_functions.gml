@@ -45,6 +45,12 @@ function draw_surface_part_ext_safe(surface, _l, _t, _w, _h, _x, _y, _xs = 1, _y
 function surface_save_safe(surface, path) {
 	if(!is_surface(surface)) return;
 	var f = surface_get_format(surface);
+	
+	if(f == surface_rgba8unorm) {
+		surface_save(surface, path);
+		return;
+	}
+	
 	var w = surface_get_width(surface);
 	var h = surface_get_height(surface);
 	var s = surface_create(w, h, surface_rgba8unorm);

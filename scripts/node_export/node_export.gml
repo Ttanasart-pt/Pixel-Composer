@@ -132,7 +132,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		
 		execute_shell(webp, cmd); 
 		
-		var noti = log_message("EXPORT", "Export webp as " + target_path, THEME.noti_icon_tick, COLORS._main_value_positive);
+		var noti = log_message("EXPORT", "Export webp as " + target_path, THEME.noti_icon_tick, COLORS._main_value_positive, false);
 		noti.path = filename_dir(target_path);
 		noti.setOnClick(function() { shellOpenExplorer(self.path); }, "Open in explorer", THEME.explorer);
 		
@@ -164,7 +164,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		
 		execute_shell(converter, shell_cmd);
 		
-		var noti = log_message("EXPORT", "Export gif as " + target_path, THEME.noti_icon_tick, COLORS._main_value_positive);
+		var noti = log_message("EXPORT", "Export gif as " + target_path, THEME.noti_icon_tick, COLORS._main_value_positive, false);
 		noti.path = filename_dir(target_path);
 		noti.setOnClick(function() { shellOpenExplorer(self.path); }, "Open in explorer", THEME.explorer);
 		
@@ -253,13 +253,14 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		var qual = inputs[| 10].getValue();
 		var ext  = array_safe_get(format_image, extd, ".png");
 		
-		var _pathOut = _path;
+		var _pathOut  = _path;
 		var _pathTemp = directory + "/" + string(irandom_range(10000, 99999)) + ".png";
 		
 		switch(ext) {
 			case ".png": 
 				surface_save_safe(_surf, _path);
 				break;
+				
 			case ".jpg": 
 				surface_save_safe(_surf, _pathTemp);
 				
@@ -270,6 +271,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				print(shell_cmd)
 				execute_shell(magick, shell_cmd);
 				break;
+				
 			case ".webp": 
 				surface_save_safe(_surf, _pathTemp);
 				
@@ -311,7 +313,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			}
 			
 			if(form != NODE_EXPORT_FORMAT.gif) {
-				var noti = log_message("EXPORT", "Export " + string(array_length(surf)) + " images complete.", THEME.noti_icon_tick, COLORS._main_value_positive);
+				var noti = log_message("EXPORT", "Export " + string(array_length(surf)) + " images complete.", THEME.noti_icon_tick, COLORS._main_value_positive, false);
 				noti.path = filename_dir(p);
 				noti.setOnClick(function() { shellOpenExplorer(self.path); }, "Open in explorer", THEME.explorer);
 				
@@ -330,7 +332,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			p = save_surface(surf, p);
 				
 			if(form != NODE_EXPORT_FORMAT.gif) {
-				var noti = log_message("EXPORT", "Export image as " + p, THEME.noti_icon_tick, COLORS._main_value_positive);
+				var noti = log_message("EXPORT", "Export image as " + p, THEME.noti_icon_tick, COLORS._main_value_positive, false);
 				noti.path = filename_dir(p);
 				noti.setOnClick(function() { shellOpenExplorer(self.path); }, "Open in explorer", THEME.explorer);
 					

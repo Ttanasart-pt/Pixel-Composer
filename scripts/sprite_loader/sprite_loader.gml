@@ -6,7 +6,7 @@ function __initTheme() {
 	var _l = root + "/version";
 	if(file_exists(_l)) {
 		var res = json_load_struct(_l);
-		if(res.version >= THEME_VERSION) return;
+		if(res.version == THEME_VERSION) return;
 	}
 	json_save_struct(_l, { version: THEME_VERSION });
 	

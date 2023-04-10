@@ -123,7 +123,7 @@
 		globalvar CURRENT_PANEL;
 		
 		panelObjectInit();
-		if(!directory_exists(DIRECTORY + "layouts")) 
+		//if(!directory_exists(DIRECTORY + "layouts")) 
 			zip_unzip("data/layouts.zip", DIRECTORY);
 			
 		var file = DIRECTORY + "layouts/" + PREF_MAP[? "panel_layout_file"] + ".json"; 

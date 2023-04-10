@@ -73,39 +73,46 @@ function Node_Rigid_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		surface_set_target(_outSurf);
 		DRAW_CLEAR
 		
-		for( var i = input_fix_len; i < ds_list_size(inputs) - 1; i++ ) {
-			var objNode = inputs[| i].getValue();
-			if(!is_array(objNode)) objNode = [ objNode ];
-			
-			for( var j = 0; j < array_length(objNode); j++ ) {
-				if(!variable_struct_exists(objNode[j], "object")) continue;
-				var obj = objNode[j].object;
-				
-				if(!is_array(obj)) obj = [ obj ];
-				
-				for( var k = 0; k < array_length(obj); k++ ) {
-					var _o = obj[k]; 
-					if(_o == noone || !instance_exists(_o)) continue;
-					if(is_undefined(_o.phy_active)) continue;
-					
-					var ixs = max(0, _o.image_xscale);
-					var iys = max(0, _o.image_yscale);
-					var xs  = max(0, _o.xscale);
-					var ys  = max(0, _o.yscale);
-					
-					var xx = lerp(_o.phy_com_x, _o.phy_position_x, xs);
-					var yy = lerp(_o.phy_com_y, _o.phy_position_y, ys);
-					
-					draw_surface_ext_safe(_o.surface, xx, yy, ixs * xs, iys * ys, _o.image_angle, _o.image_blend, _o.image_alpha);
-				}
-			}
-		}
-		
 		if(TESTING && keyboard_check(ord("D"))) {
 			var flag = phy_debug_render_shapes | phy_debug_render_coms;
 			draw_set_color(c_white);
 			physics_world_draw_debug(flag);
+		} else {
+			for( var i = input_fix_len; i < ds_list_size(inputs) - 1; i++ ) {
+				var objNode = inputs[| i].getValue();
+				if(!is_array(objNode)) objNode = [ objNode ];
+				
+				for( var j = 0; j < array_length(objNode); j++ ) {
+					if(!variable_struct_exists(objNode[j], "object")) continue;
+					var obj = objNode[j].object;
+					
+					if(!is_array(obj)) obj = [ obj ];
+					
+					for( var k = 0; k < array_length(obj); k++ ) {
+						var _o = obj[k]; 
+						if(_o == noone || !instance_exists(_o)) continue;
+						if(is_undefined(_o.phy_active)) continue;
+						
+						var ixs = max(0, _o.xscale);
+						var iys = max(0, _o.yscale);
+						
+						var xx = _o.phy_position_x;
+						var yy = _o.phy_position_y;
+						
+						draw_surface_ext_safe(_o.surface, xx, yy, ixs, iys, _o.image_angle, _o.image_blend, _o.image_alpha);
+						
+						//draw_set_color(c_red);
+						//draw_circle(_o.phy_com_x, _o.phy_com_y, 2, false);
+						
+						//draw_set_color(c_blue);
+						//draw_circle(_o.phy_position_x, _o.phy_position_y, 2, false);
+					}
+				}
+			}
 		}
+		
+		draw_set_color(c_white);
+		physics_draw_debug();
 		
 		surface_reset_target();
 		cacheCurrentFrame(_outSurf);

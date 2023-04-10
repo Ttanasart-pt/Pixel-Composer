@@ -58,7 +58,7 @@ function Node_Rigid_Override(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 			}
 			
 			if(is_array(_rot) && array_length(_rot) > i)
-				obj.phy_rotation = _rot[i];
+				obj.image_angle = _rot[i];
 			
 			if(is_array(_col) && array_length(_col) > i)
 				obj.image_blend = _col[i];

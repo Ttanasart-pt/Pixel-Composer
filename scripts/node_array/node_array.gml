@@ -62,6 +62,13 @@ function Node_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	outputs[| 0] = nodeValue("Array", self, JUNCTION_CONNECT.output, VALUE_TYPE.any, []);
 	
 	attributes[? "size"] = 1;
+	attributes[? "spread_value"] = false;
+	
+	array_push(attributeEditors, "Node");
+	array_push(attributeEditors, ["Spread array", "spread_value", 
+	new checkBox(function() { 
+		attributes[? "spread_value"] = !attributes[? "spread_value"];
+	})]);
 	
 	static getType = function() {
 		var _type = inputs[| 0].getValue();
@@ -150,11 +157,17 @@ function Node_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		var _typ = getType();
 		
 		outputs[| 0].type = _typ;
-		var res = array_create(ds_list_size(inputs) - input_fix_len - 1);
+		var res = [];
 		var ind = 0;
 		
 		for( var i = input_fix_len; i < ds_list_size(inputs) - 1; i++ ) {
-			res[ind++] = inputs[| i].getValue();
+			var val = inputs[| i].getValue();
+			
+			if(is_array(val) && attributes[? "spread_value"])
+				array_append(res, val);
+			else
+				array_push(res, val);
+			
 			inputs[| i].type = inputs[| i].value_from? inputs[| i].value_from.type : _typ;
 			
 			if(i == input_fix_len && _typ == VALUE_TYPE.any && inputs[| i].value_from)

@@ -62,7 +62,7 @@ function Node_Rigid_Variable(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 			
 			if(_get[0]) _val[0][i] = [ obj.x, obj.y ];
 			if(_get[1]) _val[1][i] = [ obj.xscale, obj.yscale ];
-			if(_get[2]) _val[2][i] = [ obj.phy_rotation ];
+			if(_get[2]) _val[2][i] = [ obj.image_angle ];
 			if(_get[3]) _val[3][i] = [ obj.image_blend ];
 			if(_get[4]) _val[4][i] = [ obj.image_alpha ];
 			if(_get[5]) _val[5][i] = [ obj.phy_linear_velocity_x, obj.phy_linear_velocity_y ];

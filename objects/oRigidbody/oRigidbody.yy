@@ -4,6 +4,7 @@
   "name": "oRigidbody",
   "eventList": [
     {"resourceType":"GMEvent","resourceVersion":"1.0","name":"","collisionObjectId":null,"eventNum":0,"eventType":0,"isDnD":false,},
+    {"resourceType":"GMEvent","resourceVersion":"1.0","name":"","collisionObjectId":null,"eventNum":64,"eventType":8,"isDnD":false,},
   ],
   "managed": true,
   "overriddenProperties": [],
@@ -37,5 +38,5 @@
     "path": "sprites/s_fx_pixel/s_fx_pixel.yy",
   },
   "spriteMaskId": null,
-  "visible": false,
+  "visible": true,
 }

@@ -1329,6 +1329,8 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	static preConnect = function() {}
 	static postConnect = function() {}
 	
+	static resetAnimation = function() {}
+	
 	static cleanUp = function() {
 		for( var i = 0; i < ds_list_size(inputs); i++ )
 			inputs[| i].cleanUp();

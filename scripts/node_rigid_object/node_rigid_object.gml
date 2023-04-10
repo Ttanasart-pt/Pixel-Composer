@@ -7,7 +7,8 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	w = 96;
 	min_h = 96;
 	
-	object = [];
+	object     = [];
+	attributes[? "mesh"] = [];
 	
 	inputs[| 0] = nodeValue("Affect by force", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true)
 		.rejectArray();
@@ -61,20 +62,12 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	];
 	
 	static newMesh = function(index) {
-		var mx = "mesh_x" + string(index);
-		var my = "mesh_y" + string(index);
-		
-		attributes[? mx] = ds_list_create();
-		attributes[? mx][| 0] = 0;
-		attributes[? mx][| 1] = 32;
-		attributes[? mx][| 2] = 32;
-		attributes[? mx][| 3] = 0;
-	
-		attributes[? my] = ds_list_create();
-		attributes[? my][| 0] = 0;
-		attributes[? my][| 1] = 0;
-		attributes[? my][| 2] = 32;
-		attributes[? my][| 3] = 32;
+		var mesh = ds_map_try_get(attributes, "mesh", []);
+		mesh[index] = [ [ 0,  0], 
+						[32,  0], 
+						[32, 32], 
+						[ 0, 32] ];
+		attributes[? "mesh"] = mesh;
 	}
 	newMesh(0);
 	
@@ -97,14 +90,8 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		var _shp = inputs[| 5].getValue();
 		var _box = inputs[| 7].getValue();
 		
-		var mshx = "mesh_x" + string(preview_index);
-		var mshy = "mesh_y" + string(preview_index);
-		if(!ds_map_exists(attributes, mshx))
-			newMesh(preview_index);
-		
-		var lx = attributes[? mshx];
-		var ly = attributes[? mshy];
-		var len = ds_list_size(lx);
+		var meshes = attributes[? "mesh"];
+		if(preview_index >= array_length(meshes)) return;
 		
 		if(previewing == 0) {
 			if(_shp == 2) {
@@ -115,28 +102,33 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 				
 				draw_set_color(is_convex? COLORS._main_accent : COLORS._main_value_negative);
 				
-				for( var i = 0; i < len; i++ ) {
-					var _px0 = lx[| i];
-					var _py0 = ly[| i];
-					var _px1 = lx[| safe_mod(i + 1, len)];
-					var _py1 = ly[| safe_mod(i + 1, len)];
+				for( var j = 0; j < array_length(meshes); j++ ) {
+					var _m = meshes[j];
+					var _l = array_length(_m);
 					
-					_px0 = (_px0 / tw) * 2 - 1;
-					_py0 = (_py0 / th) * 2 - 1;
-					_px1 = (_px1 / tw) * 2 - 1;
-					_py1 = (_py1 / th) * 2 - 1;
+					for( var i = 0; i < _l; i++ ) {
+						var _px0 = _m[i][0];
+						var _py0 = _m[i][1];
+						var _px1 = _m[safe_mod(i + 1, _l)][0];
+						var _py1 = _m[safe_mod(i + 1, _l)][1];
+						
+						_px0 = (_px0 / tw) * 2 - 1;
+						_py0 = (_py0 / th) * 2 - 1;
+						_px1 = (_px1 / tw) * 2 - 1;
+						_py1 = (_py1 / th) * 2 - 1;
 					
-					_px0 = _box[0] + (_box[2]) * _px0;
-					_py0 = _box[1] + (_box[3]) * _py0;
-					_px1 = _box[0] + (_box[2]) * _px1;
-					_py1 = _box[1] + (_box[3]) * _py1;
+						_px0 = _box[0] + (_box[2]) * _px0;
+						_py0 = _box[1] + (_box[3]) * _py0;
+						_px1 = _box[0] + (_box[2]) * _px1;
+						_py1 = _box[1] + (_box[3]) * _py1;
 					
-					var _dx0 = _x + _px0 * _s;
-					var _dy0 = _y + _py0 * _s;
-					var _dx1 = _x + _px1 * _s;
-					var _dy1 = _y + _py1 * _s;
+						var _dx0 = _x + _px0 * _s;
+						var _dy0 = _y + _py0 * _s;
+						var _dx1 = _x + _px1 * _s;
+						var _dy1 = _y + _py1 * _s;
 			
-					draw_line_width(_dx0, _dy0, _dx1, _dy1, 1);
+						draw_line_width(_dx0, _dy0, _dx1, _dy1, 1);
+					}
 				}
 				
 				draw_set_color(COLORS._main_accent);
@@ -162,14 +154,17 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		var _hover = -1, _side = 0;
 		draw_set_color(is_convex? COLORS._main_accent : COLORS._main_value_negative);
 		
+		var mesh = meshes[preview_index];
+		var len  = array_length(mesh);
+		
 		is_convex = true;
 		for( var i = 0; i < len; i++ ) {
-			var _px0 = lx[| i];
-			var _py0 = ly[| i];
-			var _px1 = lx[| safe_mod(i + 1, len)];
-			var _py1 = ly[| safe_mod(i + 1, len)];
-			var _px2 = lx[| safe_mod(i + 2, len)];
-			var _py2 = ly[| safe_mod(i + 2, len)];
+			var _px0 = mesh[safe_mod(i + 0, len)][0];
+			var _py0 = mesh[safe_mod(i + 0, len)][1];
+			var _px1 = mesh[safe_mod(i + 1, len)][0];
+			var _py1 = mesh[safe_mod(i + 1, len)][1];
+			var _px2 = mesh[safe_mod(i + 2, len)][0];
+			var _py2 = mesh[safe_mod(i + 2, len)][1];
 			
 			var side = cross_product(_px0, _py0, _px1, _py1, _px2, _py2);
 			if(_side != 0 && sign(_side) != sign(side)) 
@@ -191,8 +186,8 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		draw_set_text(f_p1, fa_center, fa_bottom);
 		
 		for( var i = 0; i < len; i++ ) {
-			var _px = lx[| i];
-			var _py = ly[| i];
+			var _px = mesh[i][0];
+			var _py = mesh[i][1];
 			
 			var _dx = _x + _px * _s;
 			var _dy = _y + _py * _s;
@@ -216,8 +211,8 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			dx = value_snap(dx, _snx);
 			dy = value_snap(dy, _sny);
 			
-			lx[| anchor_dragging] = dx;
-			ly[| anchor_dragging] = dy;
+			mesh[anchor_dragging][0] = dx;
+			mesh[anchor_dragging][1] = dy;
 			
 			if(mouse_release(mb_left))
 				anchor_dragging = -1;
@@ -230,15 +225,13 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			if(mouse_click(mb_left, active)) {
 				if(isUsingTool(0)) {
 					anchor_dragging = hover;
-					anchor_drag_sx  = lx[| hover];
-					anchor_drag_sy  = ly[| hover];
+					anchor_drag_sx  = mesh[hover][0];
+					anchor_drag_sy  = mesh[hover][1];
 					anchor_drag_mx  = _mx;
 					anchor_drag_my  = _my;
 				} else if(isUsingTool(1)) {
-					if(ds_list_size(lx) > 3) {
-						ds_list_delete(lx, hover);
-						ds_list_delete(ly, hover);
-					}
+					if(array_length(mesh) > 3)
+						array_delete(mesh, hover, 1);
 				}
 			}
 		} else {
@@ -248,8 +241,8 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 				ds_list_insert(ly, ind, (_my - _y) / _s);
 				
 				anchor_dragging = ind;
-				anchor_drag_sx  = lx[| ind];
-				anchor_drag_sy  = ly[| ind];
+				anchor_drag_sx  = mesh[ind][0];
+				anchor_drag_sy  = mesh[ind][1];
 				anchor_drag_mx  = _mx;
 				anchor_drag_my  = _my;
 			}
@@ -267,13 +260,8 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		
 		if(!is_surface(_tex)) return;
 		
-		var mshx = "mesh_x" + string(index);
-		var mshy = "mesh_y" + string(index);
-		
-		var lx = attributes[? mshx];
-		var ly = attributes[? mshy];
-		ds_list_clear(lx);
-		ds_list_clear(ly);
+		var meshes = attributes[? "mesh"];
+		var mesh   = [];
 		
 		var ww = surface_get_width(_tex);
 		var hh = surface_get_height(_tex);
@@ -349,29 +337,26 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 					py = cmY + lengthdir_y(dist, dirr);
 				}
 				
-				ds_list_add(lx, px);
-				ds_list_add(ly, py);
+				array_push(mesh, [ px, py ]);
 			}
 			
-			removeColinear(index);
-			removeConcave(index);
+			mesh = removeColinear(mesh);
+			mesh = removeConcave(mesh);
 			
 			var _sm = ds_map_create();
 			
-			for( var i = 0; i < ds_list_size(lx); i++ )
-				_sm[? point_direction_positive(cmX, cmY, lx[| i], ly[| i])] = [lx[| i], ly[| i]];
+			for( var i = 0; i < array_length(mesh); i++ )
+				_sm[? point_direction_positive(cmX, cmY, mesh[i][0], mesh[i][1])] = [ mesh[i][0], mesh[i][1] ];
 			
 			var keys = ds_map_keys_to_array(_sm);
+			mesh = [];
 			
 			if(array_length(keys)) {
 				array_sort(keys, false);
 				
-				ds_list_clear(lx);
-				ds_list_clear(ly);
-			
 				for( var i = 0; i < array_length(keys); i++ ) {
-					ds_list_add(lx, _sm[? keys[i]][0]);
-					ds_list_add(ly, _sm[? keys[i]][1]);
+					var k = keys[i];
+					array_push( mesh, [_sm[? k][0], _sm[? k][1]] );
 				}
 			}
 			
@@ -381,26 +366,23 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		ds_map_destroy(_pm);
 		surface_free(temp);
 		buffer_delete(surface_buffer);
+		
+		meshes[index] = mesh;
+		attributes[? "mesh"] = meshes;
 	}
 	
-	static removeColinear = function(index = 0) {
-		var mshx = "mesh_x" + string(index);
-		var mshy = "mesh_y" + string(index);
-		
-		var fxList = attributes[? mshx];
-		var fyList = attributes[? mshy];
-			
-		var len = ds_list_size(fxList), _side = 0;
+	static removeColinear = function(mesh) {
+		var len   = array_length(mesh), _side = 0;
 		var remSt = [];
 		var tolerance = 5;
 		
 		for( var i = 0; i < len; i++ ) {
-			var _px0 = fxList[| i];
-			var _py0 = fyList[| i];
-			var _px1 = fxList[| safe_mod(i + 1, len)];
-			var _py1 = fyList[| safe_mod(i + 1, len)];
-			var _px2 = fxList[| safe_mod(i + 2, len)];
-			var _py2 = fyList[| safe_mod(i + 2, len)];
+			var _px0 = mesh[safe_mod(i + 0, len)][0];
+			var _py0 = mesh[safe_mod(i + 0, len)][1];
+			var _px1 = mesh[safe_mod(i + 1, len)][0];
+			var _py1 = mesh[safe_mod(i + 1, len)][1];
+			var _px2 = mesh[safe_mod(i + 2, len)][0];
+			var _py2 = mesh[safe_mod(i + 2, len)][1];
 				
 			var dir0 = point_direction(_px0, _py0, _px1, _py1);
 			var dir1 = point_direction(_px1, _py1, _px2, _py2);
@@ -412,27 +394,21 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		array_sort(remSt, false);
 		for( var i = 0; i < array_length(remSt); i++ ) {
 			var ind = remSt[i];
-			
-			ds_list_delete(fxList, ind);
-			ds_list_delete(fyList, ind);
+			array_delete(mesh, ind, 1);
 		}
+		
+		return mesh;
 	}
 	
-	static removeConcave = function(index = 0) {
-		var mshx = "mesh_x" + string(index);
-		var mshy = "mesh_y" + string(index);
-		
-		var fxList = attributes[? mshx];
-		var fyList = attributes[? mshy];
-			
-		var len = ds_list_size(fxList);
+	static removeConcave = function(mesh) {
+		var len = array_length(mesh);
 		if(len <= 3) return;
 		
 		var startIndex = 0;
 		var maxx = 0;
 		
 		for( var i = 0; i < len; i++ ) {
-			var _px0 = fxList[| i];
+			var _px0 = mesh[i][0];
 			
 			if(_px0 > maxx) {
 				maxx = _px0;
@@ -457,12 +433,12 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			printIf(log, "Checking " + string(potentialPoint) + " Against " + string(anchorPoint) + " Test " + string(anchorTest))
 			if(potentialPoint == startIndex) break;
 			
-			var _px0 = fxList[| anchorPoint];
-			var _py0 = fyList[| anchorPoint];
-			var _px1 = fxList[| potentialPoint];
-			var _py1 = fyList[| potentialPoint];
-			var _px2 = fxList[| anchorTest];
-			var _py2 = fyList[| anchorTest];
+			var _px0 = mesh[anchorPoint][0];
+			var _py0 = mesh[anchorPoint][1];
+			var _px1 = mesh[potentialPoint][0];
+			var _py1 = mesh[potentialPoint][1];
+			var _px2 = mesh[anchorTest][0];
+			var _py2 = mesh[anchorTest][1];
 			
 			var side = sign(cross_product(_px0, _py0, _px1, _py1, _px2, _py2));
 			if(_side == 0 || _side == side) {
@@ -485,15 +461,15 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		
 		for( var i = 0; i < array_length(remSt); i++ ) {
 			var ind = remSt[i];
-			
-			ds_list_delete(fxList, ind);
-			ds_list_delete(fyList, ind);
+			array_delete(mesh, ind, 1);
 		}
+		
+		return mesh;
 	}
 	
 	static onValueUpdate = function(index = 0) {
 		if(index == 5) {
-			var _spos = inputs[| 7].getValue();
+			var _spos  = inputs[| 7].getValue();
 			var _shape = inputs[| 5].getValue();
 			_spos[4] = _shape;
 			inputs[| 7].setValue(_spos);
@@ -545,8 +521,8 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		
 		if(object == noone) {
 			object = instance_create_depth(ox - _spos[2], oy - _spos[3], 0, oRigidbody);
-			object.image_xscale = _spos[2] / ww * 2;
-			object.image_yscale = _spos[3] / hh * 2;
+			object.xscale = _spos[2] / ww * 2;
+			object.yscale = _spos[3] / hh * 2;
 			object.surface = _tex;
 		} else if(instance_exists(object)) {
 			for( var i = 0; i < array_length(object.fixture); i++ )
@@ -564,23 +540,19 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			physics_fixture_set_circle_shape(fixture, min(_spos[2], _spos[3]));
 			fixtureCreate(fixture, object);
 		} else if(_shp == 2) {
-			var mshx = "mesh_x" + string(index);
-			var mshy = "mesh_y" + string(index);
-		
-			var fxList = attributes[? mshx];
-			var fyList = attributes[? mshy];
-			var cx = 0, cy = 0;
-			var cmx = 0, cmy = 0;
+			var mesh = attributes[? "mesh"][index];
+			var cx   = 0, cy   = 0;
+			var cmx  = 0, cmy  = 0;
 			
-			var len = ds_list_size(fxList), _side = 0;
+			var len = array_length(mesh), _side = 0;
 			is_convex = true;
 			for( var i = 0; i < len; i++ ) {
-				var _px0 = fxList[| i];
-				var _py0 = fyList[| i];
-				var _px1 = fxList[| safe_mod(i + 1, len)];
-				var _py1 = fyList[| safe_mod(i + 1, len)];
-				var _px2 = fxList[| safe_mod(i + 2, len)];
-				var _py2 = fyList[| safe_mod(i + 2, len)];
+				var _px0 = mesh[safe_mod(i + 0, len)][0];
+				var _py0 = mesh[safe_mod(i + 0, len)][1];
+				var _px1 = mesh[safe_mod(i + 1, len)][0];
+				var _py1 = mesh[safe_mod(i + 1, len)][1];
+				var _px2 = mesh[safe_mod(i + 2, len)][0];
+				var _py2 = mesh[safe_mod(i + 2, len)][1];
 				
 				var side = cross_product(_px0, _py0, _px1, _py1, _px2, _py2);
 				if(_side != 0 && sign(_side) != sign(side)) 
@@ -611,8 +583,8 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 				physics_fixture_set_polygon_shape(fixture);
 				
 				for( var i = 0; i < len; i++ ) {
-					var _px0 = fxList[| i];
-					var _py0 = fyList[| i];
+					var _px0 = mesh[i][0];
+					var _py0 = mesh[i][1];
 					
 					_px0 = (_px0 / ww) * 2 - 1;
 					_py0 = (_py0 / hh) * 2 - 1;
@@ -620,7 +592,7 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 					_px0 = _spos[2] * _px0;
 					_py0 = _spos[3] * _py0;
 					
-					physics_fixture_add_point(fixture, _px0, _py0);
+					physics_fixture_add_point(fixture, round(_px0), round(_py0));
 				}
 				
 				fixtureCreate(fixture, object);
@@ -629,10 +601,10 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 					var fixture = physics_fixture_create();
 					physics_fixture_set_polygon_shape(fixture);
 					
-					var _px0 = fxList[| i];
-					var _py0 = fyList[| i];
-					var _px1 = fxList[| safe_mod(i + 1, len)];
-					var _py1 = fyList[| safe_mod(i + 1, len)];
+					var _px0 = mesh[safe_mod(i + 0, len)][0];
+					var _py0 = mesh[safe_mod(i + 0, len)][1];
+					var _px1 = mesh[safe_mod(i + 1, len)][0];
+					var _py1 = mesh[safe_mod(i + 1, len)][1];
 						
 					_px0 = (_px0 / ww) * 2 - 1;
 					_py0 = (_py0 / hh) * 2 - 1;
@@ -662,14 +634,10 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	}
 	
 	static update = function(frame = ANIMATOR.current_frame) {
-		if(ANIMATOR.current_frame == 0) {
-			reset();
-			return;
-		}
 		if(!isAnimated()) return;
 		
-		for( var i = 0; i < array_length(object); i++ )
-			spawn(noone, i, object[i]);
+		//for( var i = 0; i < array_length(object); i++ )
+		//	spawn(noone, i, object[i]);
 	}
 	
 	static step = function() {
@@ -679,11 +647,10 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		var _tex  = inputs[| 6].getValue();
 		
 		if(is_array(_tex)) {
-			for( var i = 0; i < array_length(_tex); i++ ) {
-				var mshx = "mesh_x" + string(i);
-				if(!ds_map_exists(attributes, mshx))
-					newMesh(i);
-			}
+			var meshes = attributes[? "mesh"];
+			
+			for( var i = array_length(meshes); i < array_length(_tex); i++ )
+				newMesh(i);
 		}
 	}
 	
@@ -716,21 +683,15 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	static attributeSerialize = function() {
 		var att = ds_map_create();
-		var k = ds_map_find_first(attributes);
-		repeat(ds_map_size(attributes)) {
-			ds_map_add_list(att, k, ds_list_clone(attributes[? k]));
-			k = ds_map_find_next(attributes, k);
-		}
+		
+		var mesh = ds_map_try_get(attributes, "mesh", []);
+		att[? "mesh"]       = json_stringify(mesh);
 		
 		return att;
 	}
 	
 	static attributeDeserialize = function(attr) {
-		var k = ds_map_find_first(attr);
-		ds_map_clear(attributes);
-		repeat(ds_map_size(attr)) {
-			ds_map_add_list(attributes, k, ds_list_clone(attr[? k]));
-			k = ds_map_find_next(attr, k);
-		}
+		if(ds_map_exists(attr, "mesh"))
+			attributes[? "mesh"] = json_parse(attr[? "mesh"]);
 	}
 }
