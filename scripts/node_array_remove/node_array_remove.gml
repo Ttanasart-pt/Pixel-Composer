@@ -18,6 +18,9 @@ function Node_Array_Remove(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	inputs[| 3] = nodeValue("Value", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, 0)
 		.setVisible(true, true);
 	
+	inputs[| 4] = nodeValue("Spread array", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false )
+		.rejectArray();
+		
 	outputs[| 0] = nodeValue("Array", self, JUNCTION_CONNECT.output, VALUE_TYPE.any, 0);
 	
 	static step = function() {
@@ -47,6 +50,7 @@ function Node_Array_Remove(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		var type  = inputs[| 1].getValue();
 		var index = inputs[| 2].getValue();
 		var value = inputs[| 3].getValue();
+		var spred = inputs[| 4].getValue();
 		
 		var arr = array_clone(_arr);
 		
@@ -59,7 +63,7 @@ function Node_Array_Remove(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 				array_delete(arr, index[i], 1);
 			}
 		} else {
-			if(!is_array(value)) value = [ value ];
+			if(!spred || !is_array(value)) value = [ value ];
 			
 			for( var i = 0; i < array_length(value); i++ )
 				array_remove(arr, value[i]);

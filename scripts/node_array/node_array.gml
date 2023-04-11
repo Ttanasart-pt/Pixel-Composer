@@ -8,6 +8,9 @@ function Node_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Any", "Surface", "Number", "Color", "Text" ])
 		.rejectArray();
 	
+	inputs[| 1] = nodeValue("Spread array", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false )
+		.rejectArray();
+	
 	array_adjust_tool = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) {
 		var _h = ui(48);
 		
@@ -53,7 +56,7 @@ function Node_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		return _h;
 	});
 	
-	input_display_list = [ 0, array_adjust_tool ];
+	input_display_list = [ 0, 1, array_adjust_tool ];
 	
 	input_fix_len = ds_list_size(inputs);
 	input_display_list_len = array_length(input_display_list);
@@ -63,12 +66,6 @@ function Node_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	
 	attributes[? "size"] = 1;
 	attributes[? "spread_value"] = false;
-	
-	array_push(attributeEditors, "Node");
-	array_push(attributeEditors, ["Spread array", "spread_value", 
-	new checkBox(function() { 
-		attributes[? "spread_value"] = !attributes[? "spread_value"];
-	})]);
 	
 	static getType = function() {
 		var _type = inputs[| 0].getValue();
@@ -159,11 +156,12 @@ function Node_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		outputs[| 0].type = _typ;
 		var res = [];
 		var ind = 0;
+		var spd = inputs[| 1].getValue();
 		
 		for( var i = input_fix_len; i < ds_list_size(inputs) - 1; i++ ) {
 			var val = inputs[| i].getValue();
 			
-			if(is_array(val) && attributes[? "spread_value"])
+			if(is_array(val) && spd)
 				array_append(res, val);
 			else
 				array_push(res, val);
@@ -194,13 +192,4 @@ function Node_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		}
 	}
 	
-	static attributeSerialize = function() {
-		var att = ds_map_create();
-		ds_map_override(att, attributes);
-		return att;
-	}
-	
-	static attributeDeserialize = function(attr) {
-		ds_map_override(attributes, attr);
-	}
 }

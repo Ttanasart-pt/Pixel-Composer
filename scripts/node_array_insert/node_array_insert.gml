@@ -14,6 +14,9 @@ function Node_Array_Insert(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	inputs[| 2] = nodeValue("Value", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, 0)
 		.setVisible(true, true);
 	
+	inputs[| 3] = nodeValue("Spread array", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false )
+		.rejectArray();
+		
 	outputs[| 0] = nodeValue("Array", self, JUNCTION_CONNECT.output, VALUE_TYPE.any, 0);
 	
 	static update = function(frame = ANIMATOR.current_frame) {
@@ -27,6 +30,7 @@ function Node_Array_Insert(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		
 		var index = inputs[| 1].getValue();
 		var value = inputs[| 2].getValue();
+		var spred = inputs[| 3].getValue();
 		var _len = array_length(_arr);
 		
 		if(inputs[| 0].value_from != noone) {
@@ -46,7 +50,7 @@ function Node_Array_Insert(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		} else {
 			if(index < 0) index = array_length(arr) + index;
 			
-			if(is_array(value)) {
+			if(is_array(value) && spred) {
 				for( var i = 0; i < array_length(value); i++ ) 
 					array_insert(arr, index + i, value[i]);
 			} else {

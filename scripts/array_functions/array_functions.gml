@@ -40,7 +40,7 @@ function array_safe_get(arr, index, def = 0, overflow = ARRAY_OVERFLOW._default)
 
 function array_exists(arr, val) {
 	for( var i = 0; i < array_length(arr); i++ ) {
-		if(arr[i] == val) return true;
+		if(isEqual(arr[i], val)) return true;
 	}
 	return false;
 }
@@ -51,7 +51,7 @@ function array_empty(arr) {
 
 function array_find(arr, val) {
 	for( var i = 0; i < array_length(arr); i++ ) {
-		if(arr[i] == val) return i;
+		if(isEqual(arr[i], val)) return i;
 	}
 	return -1;
 }

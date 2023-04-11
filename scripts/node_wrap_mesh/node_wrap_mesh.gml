@@ -55,7 +55,10 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	attributes[? "iteration"] = 4;
 	array_push(attributeEditors, ["Iteration", "iteration", 
-		new textBox(TEXTBOX_INPUT.number, function(val) { attributes[? "iteration"] = val; })]);
+		new textBox(TEXTBOX_INPUT.number, function(val) { 
+			attributes[? "iteration"] = val;
+			triggerRender();
+		})]);
 	
 	tools = [
 		new NodeTool( "Add / Remove (+ Shift) control point",  THEME.control_add ),

@@ -3,9 +3,9 @@ function Panel_Graph() : PanelContent() constructor {
 	context_str = "Graph";
 	icon  = THEME.panel_graph;
 	
-	scale			= [ 0.25, 0.33, 0.5, 0.65, 0.8, 1, 1.2, 1.35, 1.5];
-	graph_s_index	= 5;
-	graph_s			= ui(scale[graph_s_index]);
+	scale			= [ 0.01, 0.02, 0.05, 0.10, 0.15, 0.20, 0.25, 0.33, 0.5, 0.65, 0.8, 1, 1.2, 1.35, 1.5, 2.0];
+	graph_s_index	= array_find(scale, 1);
+	graph_s			= 1;
 	graph_s_to		= graph_s;
 	graph_line_s	= 32;
 	grid_color      = c_white;
@@ -348,9 +348,12 @@ function Panel_Graph() : PanelContent() constructor {
 	}
 	
 	function drawGrid() {
+		var gls = graph_line_s;
+		if(graph_s <= 0.15) gls *= 10;
+		
 		var gr_x  = graph_x * graph_s;
 		var gr_y  = graph_y * graph_s;
-		var gr_ls = graph_line_s * graph_s;
+		var gr_ls = gls * graph_s;
 		var xx = -gr_ls, xs = safe_mod(gr_x, gr_ls);
 		var yy = -gr_ls, ys = safe_mod(gr_y, gr_ls);
 		

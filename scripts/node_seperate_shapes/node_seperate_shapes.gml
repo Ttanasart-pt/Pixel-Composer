@@ -37,7 +37,10 @@ function Node_Seperate_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	
 	attributes[? "max_shape"] = 32;
 	array_push(attributeEditors, ["Maximum shapes", "max_shape",
-		new textBox(TEXTBOX_INPUT.number, function(val) { attributes[? "max_shape"] = val; })]);
+		new textBox(TEXTBOX_INPUT.number, function(val) { 
+			attributes[? "max_shape"] = val;
+			triggerRender();
+		})]);
 	
 	function get_color_buffer(_x, _y) {
 		buffer_seek(surface_buffer, buffer_seek_start, (surface_w * _y + _x) * 4);

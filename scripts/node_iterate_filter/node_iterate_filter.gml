@@ -46,9 +46,9 @@ function Node_Iterate_Filter(_x, _y, _group = noone) : Node_Collection(_x, _y, _
 		surface_array_free(arrOut);
 		outputs[| 0].setValue([])
 		
-		LOG("Loop begin");
+		LOG_LINE_IF(global.RENDER_LOG, "Loop begin");
 		var _val = outputs[| 0].getValue();
-		LOG("Output original value " + string(_val));
+		LOG_LINE_IF(global.RENDER_LOG, "Output original value " + string(_val));
 	}
 	
 	static getIterationCount = function() {
