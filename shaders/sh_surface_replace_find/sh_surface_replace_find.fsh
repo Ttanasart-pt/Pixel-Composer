@@ -11,14 +11,18 @@ uniform float colorThreshold;
 uniform float pixelThreshold;
 uniform float index;
 
-float random (in vec2 st) {
-    return fract(sin(dot(st.xy, vec2(12.9898, 78.233))) * 43758.5453123);
-}
+uniform int mode;
+uniform float seed;
+uniform float size;
+
+float random (in vec2 st) { return fract(sin(dot(st.xy + seed, vec2(12.9898, 78.233))) * 43758.5453123); }
+float round(float val) { return fract(val) > 0.5? ceil(val) : floor(val); }
+
+vec2 baseTx = 1. / dimension;
+vec2 targTx = 1. / target_dim;
 
 float matchTemplate(vec2 pos) {	
-	float match = 0.;
-	vec2 baseTx = 1. / dimension;
-	vec2 targTx = 1. / target_dim;
+	float _match = 0.;
 	float content_px = 0.;
 	
 	for( float i = 0.; i < target_dim.x; i++ ) 
@@ -31,10 +35,10 @@ float matchTemplate(vec2 pos) {
 		
 		content_px++;
 		if(distance(base, targ) <= 2. * colorThreshold)
-			match++;
+			_match++;
 	}
 	
-	return match / content_px;
+	return _match / content_px;
 }
 
 void main() {
@@ -64,5 +68,6 @@ void main() {
 		}
 	}
 	
-    gl_FragColor = match >= (1. - pixelThreshold)? vec4(matchPos, index, 1.) : vec4(vec3(0.), 0.);
+	float ind = mode == 0? index : round(random(matchUv) * (size - 1.)) / size;
+    gl_FragColor = match > (1. - pixelThreshold - 1. / (target_dim.x * target_dim.y))? vec4(matchPos, ind, 1.) : vec4(0.);
 }

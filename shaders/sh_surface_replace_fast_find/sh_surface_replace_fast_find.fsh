@@ -11,6 +11,13 @@ uniform float colorThreshold;
 uniform float pixelThreshold;
 uniform float index;
 
+uniform int mode;
+uniform float seed;
+uniform float size;
+
+float random (in vec2 st) { return fract(sin(dot(st.xy + seed, vec2(12.9898, 78.233))) * 43758.5453123); }
+float round(float val) { return fract(val) > 0.5? ceil(val) : floor(val); }
+
 void main() {
 	vec4 base = texture2D( gm_BaseTexture, v_vTexcoord );
 	if(base.a == 0.) {
@@ -47,7 +54,7 @@ void main() {
 	}
 	
 	if(match / content_px >= (1. - pixelThreshold)) {
-		gl_FragColor = vec4(1., index, 0., 1.);
-		return;
+		float ind = mode == 0? index : round(random(v_vTexcoord) * (size - 1.)) / size;
+		gl_FragColor = vec4(1., ind, 0., 1.);
 	}
 }

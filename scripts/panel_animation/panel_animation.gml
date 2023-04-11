@@ -73,6 +73,7 @@ function Panel_Animation() : PanelContent() constructor {
 	
 	node_ordering = noone;
 	show_node_outside_context = true;
+	node_name_type = 0;
 	
 	stagger_mode  = 0;
 	stagger_index = 0;
@@ -956,12 +957,18 @@ function Panel_Animation() : PanelContent() constructor {
 			var tw = string_width(nodeName);
 			
 			draw_set_color(node_ordering == _node? COLORS._main_text_accent : COLORS._main_text);
+			var txx = ui(20);
 			
-			draw_set_alpha(0.4);
-			draw_text(ui(20),      _node_y - ui(2), nodeName);
+			if(node_name_type == 0 || node_name_type == 1 || _node.display_name == "") {
+				draw_set_alpha(0.4);
+				draw_text(txx, _node_y - ui(2), nodeName);
+				txx += tw;
+			}
 			
-			draw_set_alpha(0.9);
-			draw_text(ui(20) + tw, _node_y - ui(2), _node.display_name);
+			if(node_name_type == 0 || node_name_type == 2) {
+				draw_set_alpha(0.9);
+				draw_text(txx, _node_y - ui(2), _node.display_name);
+			}
 			
 			draw_set_alpha(1);
 			
@@ -1647,6 +1654,17 @@ function Panel_Animation() : PanelContent() constructor {
 		var txt = show_node_outside_context? get_text("panel_animation_hide_node", "Hide node outside context") : get_text("panel_animation_show_node", "Show node outside context");
 		if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(24), [mx, my], pFOCUS, pHOVER, txt, THEME.junc_visible, show_node_outside_context) == 2)
 			show_node_outside_context = !show_node_outside_context;
+		
+		by += ui(28);
+		var txt = "";
+		switch(node_name_type) {
+			case 0 : txt = get_text("panel_animation_name_full", "Show full name"); break;
+			case 1 : txt = get_text("panel_animation_name_type", "Show node type"); break;
+			case 2 : txt = get_text("panel_animation_name_only", "Show node name"); break;
+		}
+		
+		if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(24), [mx, my], pFOCUS, pHOVER, txt, THEME.node_name_type) == 2)
+			node_name_type = (node_name_type + 1) % 3;
 	}
 	
 	function drawContent(panel) {
