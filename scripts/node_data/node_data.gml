@@ -1343,6 +1343,8 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		
 		for( var i = 0; i < array_length(temp_surface); i++ )
 			surface_free(temp_surface[i]);
+		
+		onCleanUp();
 	}
 	
 	static onCleanUp = function() {}

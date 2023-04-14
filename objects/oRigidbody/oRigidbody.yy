@@ -38,5 +38,5 @@
     "path": "sprites/s_fx_pixel/s_fx_pixel.yy",
   },
   "spriteMaskId": null,
-  "visible": true,
+  "visible": false,
 }

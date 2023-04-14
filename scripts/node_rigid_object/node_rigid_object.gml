@@ -2,7 +2,7 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	name = "Object";
 	color = COLORS.node_blend_simulation;
 	icon  = THEME.rigidSim;
-	update_on_frame = true;
+	//update_on_frame = true;
 	
 	w = 96;
 	min_h = 96;
@@ -509,7 +509,8 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		if(is_array(_tex)) {
 			index = safe_mod(index, array_length(_tex));
 			_tex = _tex[index];
-		}
+		} else 
+			index = 0;
 		
 		var _spos   = inputs[| 7].getValue();
 		
@@ -529,7 +530,7 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 				physics_remove_fixture(object, object.fixture[i]);
 			object.fixture = [];
 		} else 
-			return;
+			return noone;
 		
 		if(_shp == 0) {
 			var fixture = physics_fixture_create();
@@ -540,7 +541,11 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			physics_fixture_set_circle_shape(fixture, min(_spos[2], _spos[3]));
 			fixtureCreate(fixture, object);
 		} else if(_shp == 2) {
-			var mesh = attributes[? "mesh"][index];
+			var meshes = attributes[? "mesh"];
+			if(array_safe_get(meshes, index, noone) == noone)
+				return noone;
+				
+			var mesh = meshes[index];
 			var cx   = 0, cy   = 0;
 			var cmx  = 0, cmy  = 0;
 			

@@ -334,10 +334,16 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 					if(_cap) {
 						if(j == 1){
 							draw_set_color(_oc);
-							draw_circle_angle(_ox, _oy, _ow / 2, _d + 180 - 90, _d + 180 + 90, _capP);
+							draw_set_color(c_white);
+							
+							_d = point_direction(_ox, _oy, _nx, _ny);
+							draw_circle_angle(_ox, _oy, _ow / 2, _d - 90, _d + 90, _capP);
 						}
 						if(j == array_length(points) - 1) {
 							draw_set_color(_nc);
+							draw_set_color(c_black);
+							
+							_d = point_direction(_ox, _oy, _nx, _ny);
 							draw_circle_angle(_nx, _ny, _nw / 2, _d - 90, _d + 90, _capP);
 						}
 					}

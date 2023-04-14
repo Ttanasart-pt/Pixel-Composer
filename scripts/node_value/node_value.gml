@@ -1279,6 +1279,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		if(connect_type == JUNCTION_CONNECT.input)
 			node.onValueFromUpdate(index);
+		node.clearCacheForward();
 		
 		return false;
 	}

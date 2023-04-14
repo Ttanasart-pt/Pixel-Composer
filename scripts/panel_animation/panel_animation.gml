@@ -1663,7 +1663,7 @@ function Panel_Animation() : PanelContent() constructor {
 			case 2 : txt = get_text("panel_animation_name_only", "Show node name"); break;
 		}
 		
-		if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(24), [mx, my], pFOCUS, pHOVER, txt, THEME.node_name_type) == 2)
+		if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(24), [mx, my], pFOCUS, pHOVER, txt, THEME.node_name_type, node_name_type) == 2)
 			node_name_type = (node_name_type + 1) % 3;
 	}
 	

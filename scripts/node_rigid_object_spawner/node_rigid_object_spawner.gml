@@ -30,9 +30,11 @@ function Node_Rigid_Object_Spawner(_x, _y, _group = noone) : Node(_x, _y, _group
 	inputs[| 6] = nodeValue("Spawn", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true)
 		.rejectArray();
 	
+	inputs[| 7] = nodeValue("Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, irandom_range(10000, 99999))
+	
 	outputs[| 0] = nodeValue("Object", self, JUNCTION_CONNECT.output, VALUE_TYPE.rigid, self);
 	
-	input_display_list = [ 0,
+	input_display_list = [ 0, 7, 
 		["Spawn",	false],	6, 1, 2, 3, 5, 4,
 	];
 	
@@ -54,16 +56,16 @@ function Node_Rigid_Object_Spawner(_x, _y, _group = noone) : Node(_x, _y, _group
 		inputs[| 5].setVisible(_typ == 1);
 	}
 	
-	static spawn = function() {
+	static spawn = function(seed = 0) {
 		var _obj = inputs[| 0].getValue();
 		var _are = inputs[| 1].getValue();
 		var _amo = inputs[| 4].getValue();
 		
 		repeat(_amo) {
-			var pos = area_get_random_point(_are,,,,, irandom(9999));
+			var pos = area_get_random_point(_are,,,,, seed); seed += 10;
 			var _o = _obj;
 			if(is_array(_o))
-				_o = _o[irandom(array_length(_o) - 1)];
+				_o = _o[irandom_range_seed(0, array_length(_o) - 1, seed++)];
 				
 			array_push(object, _o.spawn(pos, spawn_index++));
 		}
@@ -75,17 +77,19 @@ function Node_Rigid_Object_Spawner(_x, _y, _group = noone) : Node(_x, _y, _group
 		var _obj = inputs[| 0].getValue();
 		if(_obj == noone) return;
 		
+		var _spw = inputs[| 6].getValue();
+		if(!_spw) return;
+		
 		var _typ = inputs[| 2].getValue();
 		var _del = inputs[| 3].getValue();
 		var _frm = inputs[| 5].getValue();
-		var _spw = inputs[| 6].getValue();
+		var _amo = inputs[| 4].getValue();
+		var _sed = inputs[| 7].getValue() + frame * _amo * 20;
 		
-		if(_spw) {
-			if(_typ == 0 && (safe_mod(ANIMATOR.current_frame, _del) == 0)) 
-				spawn();
-			if(_typ == 1 && ANIMATOR.current_frame == _frm) 
-				spawn();
-		}
+		if(_typ == 0 && (safe_mod(ANIMATOR.current_frame, _del) == 0)) 
+			spawn(_sed);
+		else if(_typ == 1 && ANIMATOR.current_frame == _frm) 
+			spawn(_sed);
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {

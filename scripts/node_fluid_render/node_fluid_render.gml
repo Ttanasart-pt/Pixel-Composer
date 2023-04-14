@@ -31,19 +31,19 @@ function Node_Fluid_Render(_x, _y, _group = noone) : Node_Fluid(_x, _y, _group) 
 	static onInspector2Update = function() { clearCache(); }
 	
 	static update = function(frame = ANIMATOR.current_frame) {
+		var _dim = inputs[| 1].getValue(frame);
+		var _outSurf = outputs[| 0].getValue();
+		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
+		outputs[| 0].setValue(_outSurf);
+		
 		if(recoverCache() || !ANIMATOR.is_playing)
 			return;
 			
 		var _dom = inputs[| 0].getValue(frame);
-		var _dim = inputs[| 1].getValue(frame);
 		var _int = inputs[| 2].getValue(frame);
 		var _drw = inputs[| 3].getValue(frame);
 		
 		if(_dom == noone || !instance_exists(_dom)) return;
-		
-		var _outSurf = outputs[| 0].getValue();
-		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
-		outputs[| 0].setValue(_outSurf);
 		
 		var fSurf = _dom.sf_material_0;
 		if(!is_surface(fSurf)) return;

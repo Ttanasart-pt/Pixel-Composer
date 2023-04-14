@@ -148,7 +148,7 @@ function Node_9Slice(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 				draw_surface_part_ext_safe(_inSurf,           0, sp_t, sp_l, ch,         0, sp_t, 1, sh, 0, c_white, 1);
 				draw_surface_part_ext_safe(_inSurf, in_w - sp_r, sp_t, sp_r, ch, ww - sp_r, sp_t, 1, sh, 0, c_white, 1);
     
-				draw_surface_part_ext_safe(_inSurf, sp_l, sp_t, cw, ch, sp_l, sp_t, sw, sh, c_white, 1);
+				draw_surface_part_ext_safe(_inSurf, sp_l, sp_t, cw, ch, sp_l, sp_t, sw, sh, 0, c_white, 1);
 			} else if(_fill == 1) {
 				var _cw_max = ww - sp_r;
 				var _ch_max = hh - sp_b;
