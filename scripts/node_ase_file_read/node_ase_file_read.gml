@@ -204,7 +204,7 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 				
 			lvs[i] = _node;
 			lvs[i].inputs[| 0].setFrom(outputs[| 1]);
-			lvs[i].display_name = _name;
+			lvs[i].setDisplayName(_name);
 		}
 	}
 	

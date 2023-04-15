@@ -15,7 +15,7 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover, _focus, _scr
 	var lb_y = yy + lb_h / 2;
 			
 	var butx = xx;
-	if(jun.connect_type == JUNCTION_CONNECT.input && jun.isAnimable() && !jun.global_use && !global_var) {
+	if(jun.connect_type == JUNCTION_CONNECT.input && jun.isAnimable() && !jun.expUse && !global_var) {
 		var index = jun.value_from == noone? jun.is_anim : 2;
 		draw_sprite_ui_uniform(THEME.animate_clock, index, butx, lb_y, 1, index == 2? COLORS._main_accent : c_white, 0.8);
 		if(_hover && point_in_circle(_m[0], _m[1], butx, lb_y, ui(10))) {
@@ -43,8 +43,8 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover, _focus, _scr
 		
 	butx += ui(20);
 	if(!global_var) {			
-		if(jun.global_use) {
-			draw_sprite_ui_uniform(THEME.node_use_global, GLOBAL.inputGetable(jun, jun.global_key)? 0 : 2, butx, lb_y, 1,, 0.8);
+		if(jun.expUse) {
+			draw_sprite_ui_uniform(THEME.node_use_expression, jun.expTree.validate()? 0 : 2, butx, lb_y, 1,, 0.8);
 		} else {
 			index = jun.visible;
 			draw_sprite_ui_uniform(THEME.junc_visible, index, butx, lb_y, 1,, 0.8);
@@ -62,15 +62,17 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover, _focus, _scr
 			}
 		}
 	} else
-		draw_sprite_ui_uniform(THEME.node_use_global, 0, butx, lb_y, 1,, 0.8);
+		draw_sprite_ui_uniform(THEME.node_use_expression, 0, butx, lb_y, 1,, 0.8);
 		
 	if(visi_hold != noone && mouse_release(mb_left))
 		visi_hold = noone;
 		
 	var cc = COLORS._main_text;
-	if(jun.global_use)
-		cc = GLOBAL.inputGetable(jun, jun.global_key)? COLORS._main_value_positive : COLORS._main_value_negative;
-		
+	if(jun.expUse) {
+		var expValid = jun.expTree != noone && jun.expTree.validate();
+		cc = expValid? COLORS._main_value_positive : COLORS._main_value_negative;
+	}
+	
 	draw_set_text(f_p0, fa_left, fa_center, cc);
 	draw_text_add(xx + ui(40), lb_y - ui(2), jun.name);
 	var lb_w = string_width(jun.name) + ui(32);
@@ -163,9 +165,9 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover, _focus, _scr
 		if(jun.connect_type == JUNCTION_CONNECT.input && lineBreak && !jun.is_anim && !global_var) {
 			var bx = xx + ww - ui(12);
 			var by = lb_y;
-			var ic_b = jun.global_use? c_white : COLORS._main_icon;
-			if(buttonInstant(THEME.button_hide, bx - ui(12), by - ui(12), ui(24), ui(24), _m, _focus, _hover, "Use global variable", THEME.node_use_global, jun.global_use, ic_b) == 2)
-				jun.global_use = !jun.global_use;
+			var ic_b = jun.expUse? c_white : COLORS._main_icon;
+			if(buttonInstant(THEME.button_hide, bx - ui(12), by - ui(12), ui(24), ui(24), _m, _focus, _hover, "Use expression", THEME.node_use_expression, jun.expUse, ic_b) == 2)
+				jun.expUse = !jun.expUse;
 		}
 	#endregion
 		
@@ -182,13 +184,15 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover, _focus, _scr
 	var widH	   = lineBreak? editBoxH : 0;
 	var mbRight	   = true;
 		
-	if(jun.global_use) {
-		jun.global_edit.boxColor = GLOBAL.inputGetable(jun, jun.global_key)? COLORS._main_value_positive : COLORS._main_value_negative;
+	if(jun.expUse) {
+		var expValid = jun.expTree != noone && jun.expTree.validate();
+		jun.global_edit.boxColor = expValid? COLORS._main_value_positive : COLORS._main_value_negative;
+		
 		jun.global_edit.setActiveFocus(_focus, _hover);
 		jun.global_edit.setInteract(jun.value_from == noone);
 		if(_focus) jun.global_edit.register(_scrollPane);
 			
-		var wd_h = jun.global_edit.draw(editBoxX, editBoxY, editBoxW, editBoxH, jun.global_key, _m);
+		var wd_h = jun.global_edit.draw(editBoxX, editBoxY, editBoxW, editBoxH, jun.expression, _m);
 		widH = lineBreak? wd_h : 0;
 	} else if(jun.editWidget) {
 		jun.editWidget.setActiveFocus(_focus, _hover);

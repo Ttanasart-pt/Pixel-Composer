@@ -335,6 +335,11 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	index = _connect == JUNCTION_CONNECT.input? ds_list_size(node.inputs) : ds_list_size(node.outputs);
 	type  = _type;
 	
+	if(struct_has(node, "inputMap")) {
+		if(_connect == JUNCTION_CONNECT.input)       node.inputMap[?  string_replace_all(name, " ", "_")] = self;
+		else if(_connect == JUNCTION_CONNECT.output) node.outputMap[? string_replace_all(name, " ", "_")] = self;
+	}
+	
 	tooltip = _tooltip;
 	editWidget = noone;
 	
@@ -391,12 +396,14 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	cache_value = [ false, undefined ];
 	cache_array = [ false, false ];
 	
-	global_use  = false;
-	global_key  = "";
+	expUse     = false;
+	expression = "";
+	expTree    = noone;
+	
 	global_edit = new textBox(TEXTBOX_INPUT.text, function(str) { 
-		global_key = str; 
-		node.triggerRender(); 
-		UPDATE |= RENDER_TYPE.partial;
+		expression = str;
+		expTree    = evaluateFunctionTree(expression); 
+		node.triggerRender();
 	});
 	global_edit.boxColor = COLORS._main_value_positive;
 	global_edit.align    = fa_left;
@@ -1047,13 +1054,12 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		if(value_from == noone) {
 			var _val = __getAnimValue(_time);
-			
-			if(global_use && GLOBAL.inputGetable(self, global_key)) 
-				return GLOBAL.getInput(global_key).getValueRecursive(_time);
-			else
-				val = [ _val, self ];
+			val = [ _val, self ];
 		} else if(value_from != self)
 			val = value_from.getValueRecursive(_time); 
+		
+		if(expUse)
+			val[0] = is_struct(expTree)? expTree.eval(val[0]) : 0;
 		
 		return val;
 	}
@@ -1541,8 +1547,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		_map[? "shift y"]	 = draw_line_shift_y;
 		_map[? "from node"]  = !preset && value_from? value_from.node.node_id	: -1;
 		_map[? "from index"] = !preset && value_from? value_from.index			: -1;
-		_map[? "global_use"] = global_use;
-		_map[? "global_key"] = global_key;
+		_map[? "global_use"] = expUse;
+		_map[? "global_key"] = expression;
 		_map[? "anim"]		 = is_anim;
 		
 		ds_map_add_list(_map, "raw value", animator.serialize(scale));
@@ -1571,8 +1577,10 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		//printIf(TESTING, "     |- Applying deserialize to junction " + name + " of node " + node.name);
 		on_end		= ds_map_try_get(_map, "on end", on_end);
 		unit.mode	= ds_map_try_get(_map, "unit", VALUE_UNIT.constant);
-		global_use	= ds_map_try_get(_map, "global_use");
-		global_key	= ds_map_try_get(_map, "global_key");
+		expUse    	= ds_map_try_get(_map, "global_use");
+		expression	= ds_map_try_get(_map, "global_key");
+		expTree     = evaluateFunctionTree(expression); 
+		
 		sep_axis	= ds_map_try_get(_map, "sep_axis");
 		is_anim		= ds_map_try_get(_map, "anim");
 		

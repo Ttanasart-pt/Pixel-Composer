@@ -142,6 +142,8 @@ function __APPEND_MAP(_map, context = PANEL_GRAPH.getCurrentContext()) {
 	}
 	
 	ds_map_destroy(_map);
+	refreshNodeMap();
+	
 	return node_create;
 }
 

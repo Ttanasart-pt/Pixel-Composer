@@ -33,17 +33,19 @@
 	globalvar VERSION, SAVEFILE_VERSION, VERSION_STRING;
 	globalvar COLLECTION_VERSION, THEME_VERSION;
 	
-	VERSION = 1140;
+	VERSION = 1141;
 	SAVEFILE_VERSION   = 1400;
 	COLLECTION_VERSION = 1140.090;
 	THEME_VERSION      = 1140.090;
-	VERSION_STRING     = "1.14.0pr9.4";
+	VERSION_STRING     = "1.14.1";
 	
-	globalvar NODES, NODE_MAP, APPEND_MAP, HOTKEYS, HOTKEY_CONTEXT, NODE_INSTANCES;
+	globalvar NODES, NODE_MAP, APPEND_MAP, NODE_NAME_MAP;
+	globalvar HOTKEYS, HOTKEY_CONTEXT, NODE_INSTANCES;
 	
 	NODES			= ds_list_create();
 	NODE_INSTANCES	= ds_list_create();
 	NODE_MAP	    = ds_map_create();
+	NODE_NAME_MAP     = ds_map_create();
 	APPEND_MAP      = ds_map_create();
 	
 	HOTKEYS			= ds_map_create();

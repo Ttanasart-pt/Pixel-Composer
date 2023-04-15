@@ -107,7 +107,7 @@ function Node_Image_Animated(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 			path_loaded[i] = paths[i];
 			var path = try_get_path(paths[i]);
 			if(path == -1) continue;
-			display_name  = string_replace(filename_name(path), filename_ext(path), "");
+			setDisplayName(string_replace(filename_name(path), filename_ext(path), ""));
 			
 			var ext = string_lower(filename_ext(path));
 			

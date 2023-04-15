@@ -195,5 +195,7 @@ function __LOAD_PATH(path, readonly = false, safe_mode = false) {
 	PANEL_MENU.setNotiIcon(THEME.noti_icon_file_load);
 	
 	ds_map_destroy(_map);
+	refreshNodeMap();
+	
 	return true;
 }

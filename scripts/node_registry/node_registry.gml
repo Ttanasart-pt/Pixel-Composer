@@ -612,6 +612,73 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 		PANEL_GRAPH.node_focus = node;
 		PANEL_GRAPH.fullView();
 	}
+	
+	function refreshNodeMap() {
+		ds_map_clear(NODE_NAME_MAP);
+		var key = ds_map_find_first(NODE_MAP);
+		var amo = ds_map_size(NODE_MAP);
+		
+		repeat(amo) {
+			var node = NODE_MAP[? key];
+			
+			if(node.internalName != "") 
+				NODE_NAME_MAP[? node.internalName] = node;
+			
+			key = ds_map_find_next(NODE_MAP, key);
+		}
+	}
+	
+	function nodeGetData(str) {
+		var strs = string_splice(str, ".");
+		var _val = 0;
+		var _ind = [];
+		
+		if(array_length(strs) == 0) return 0;
+		
+		if(array_length(strs) == 1) {
+			var splt = string_splice(strs[0], "[");
+			var inp = GLOBAL.getInput(splt[0]);
+			_val = inp == noone? 0 : inp.getValueRecursive()[0];
+			
+			for( var i = 1; i < array_length(splt); i++ ) 
+				array_push(_ind, toNumber(splt[i]));
+		} else if(strs[0] == "Project") {
+			switch(strs[1]) {
+				case "frame" :		return ANIMATOR.current_frame;
+				case "frameTotal" : return ANIMATOR.frames_total;
+				case "fps" :		return ANIMATOR.framerate;
+			}
+			return 0;
+		} else {
+			var key = strs[0];
+			if(!ds_map_exists(NODE_NAME_MAP, key)) return 0;
+		
+			var node = NODE_NAME_MAP[? key];
+			var splt = string_splice(strs[1], "[");
+			if(array_length(splt) < 2) return 0;
+		
+			var mmap = splt[0] == "inputs"? node.inputMap : node.outputMap;
+			var ind  = string_replace_all(string_replace(splt[1], "]", ""), "\"", "");
+			
+			//print("key: " + string(key));
+			//print("map: " + string(splt[0]));
+			//print("ind: " + string(ind));
+			//print("==========");
+			
+			if(!ds_map_exists(mmap, ind)) return 0;
+			_val = mmap[? ind].getValue();
+			
+			for( var i = 2; i < array_length(splt); i++ ) 
+				array_push(_ind, toNumber(splt[i]));
+		}
+		
+		for( var i = 0; i < array_length(_ind); i++ ) {
+			if(!is_array(_val)) break;
+			_val = array_safe_get(_val, _ind[i]);
+		}
+		
+		return _val;
+	}
 #endregion
 
 #region attribute

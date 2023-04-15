@@ -26,3 +26,8 @@ function toNumber(str) {
 	if(str == "-") return 0;
 	return real(str) * power(10, expo);
 }
+
+function isNumber(str) {
+	if(is_real(str)) return true;
+	return str == string_decimal(str);
+}

@@ -64,7 +64,7 @@ function Node_Image(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			case ".jpg":
 			case ".jpeg":
 			case ".gif":
-				display_name = _name;
+				setDisplayName(_name);
 				outputs[| 1].setValue(path);
 				
 				if(spr) sprite_delete(spr);

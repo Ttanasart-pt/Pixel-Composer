@@ -222,7 +222,10 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	static step = function() {
 		if(is_undefined(inParent)) return;
 		
-		inParent.name = display_name;
+		if(inParent.name != display_name) {
+			inParent.name = display_name;
+			group.inputMap[? string_replace_all(display_name, " ", "_")] = inParent;
+		}
 	}
 	
 	PATCH_STATIC

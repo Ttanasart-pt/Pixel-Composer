@@ -45,7 +45,7 @@ function variable_editor(nodeVal) constructor {
 	} );
 	sc_disp.update_hover = false;
 	
-	value_name  = "New value";
+	value_name  = "NewValue";
 	type_index  = 0;
 	_type_index = 0;
 	
@@ -193,7 +193,7 @@ function Node_Global(_x = 0, _y = 0) : __Node_Base(_x, _y) constructor {
 	}
 	
 	static createValue = function() {
-		var _in         = nodeValue("New value", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0);
+		var _in         = nodeValue("NewValue", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0);
 		_in.editor      = new variable_editor(_in);
 		ds_list_add(inputs, _in);
 		

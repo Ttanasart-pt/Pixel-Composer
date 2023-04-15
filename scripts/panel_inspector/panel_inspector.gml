@@ -37,7 +37,7 @@ function Panel_Inspector() : PanelContent() constructor {
 	min_w = ui(160);
 	
 	tb_node_name	= new textBox(TEXTBOX_INPUT.text, function(txt) {
-		if(inspecting) inspecting.display_name = txt;
+		if(inspecting) inspecting.setDisplayName(txt);
 	})
 	
 	tb_prop_filter	= new textBox(TEXTBOX_INPUT.text, function(txt) { filter_text = txt; })
@@ -483,8 +483,8 @@ function Panel_Inspector() : PanelContent() constructor {
 					}
 						
 					array_push(_menuItem, 
-						menuItem(get_text("use_global_var", "Use global variable"), function() {
-							__dialog_junction.global_use = !__dialog_junction.global_use;
+						menuItem(get_text("use_global_var", "Use expression"), function() {
+							__dialog_junction.expUse = !__dialog_junction.expUse;
 							}),
 						-1,
 						menuItem(get_text("copy", "Copy"), function() {
@@ -538,9 +538,14 @@ function Panel_Inspector() : PanelContent() constructor {
 		tb_node_name.draw(ui(64), ui(14), w - ui(128), ui(32), txt, [mx, my], VALUE_DISPLAY.node_title);
 		
 		draw_set_text(f_p1, fa_center, fa_center, COLORS._main_text_sub);
-		draw_text(w / 2, ui(56), inspecting.name);
+		draw_text(w / 2 + ui(8), ui(56), inspecting.name);
 		
-		var lx = w / 2 - string_width(inspecting.name) / 2 - ui(18);
+		draw_set_text(f_p3, fa_center, fa_center, COLORS._main_text_sub);
+		draw_set_alpha(0.65);
+		draw_text(w / 2, ui(74), inspecting.internalName);
+		draw_set_alpha(1);
+		
+		var lx = w / 2 - string_width(inspecting.name) / 2 - ui(16);
 		var ly = ui(56 - 8);
 		if(buttonInstant(THEME.button_hide, lx, ly, ui(16), ui(16), [mx, my], pFOCUS, pHOVER, "Lock", THEME.lock, !locked, locked? COLORS._main_icon_light : COLORS._main_icon,, 0.5) == 2)
 			locked = !locked;

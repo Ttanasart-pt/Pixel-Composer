@@ -23,6 +23,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	
 	name = "";
 	display_name = "";
+	internalName = "";
 	tooltip = "";
 	x = _x;
 	y = _y;
@@ -38,6 +39,8 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	
 	inputs  = ds_list_create();
 	outputs = ds_list_create();
+	inputMap  = ds_map_create();
+	outputMap = ds_map_create();
 	
 	input_display_list		= -1;
 	output_display_list		= -1;
@@ -169,6 +172,13 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		}
 		
 		h = max(min_h, (preview_surface && previewable)? 128 : 0, _hi, _ho);
+	}
+	
+	static setDisplayName = function(_name) {
+		display_name = _name;
+		internalName = string_replace_all(display_name, " ", "_");
+		
+		refreshNodeMap();
 	}
 	
 	static getOutput = function(junc = noone) {
@@ -1241,7 +1251,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 			NODE_MAP[? node_id] = self;
 			
 			if(ds_map_exists(load_map, "name"))
-				display_name = ds_map_try_get(load_map, "name", "");
+				setDisplayName(ds_map_try_get(load_map, "name", ""));
 			_group = ds_map_try_get(load_map, "group", noone);
 			if(_group == -1) _group = noone;
 			
@@ -1339,6 +1349,10 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		
 		ds_list_destroy(inputs);
 		ds_list_destroy(outputs);
+		
+		ds_map_destroy(inputMap);
+		ds_map_destroy(outputMap);
+		
 		ds_map_destroy(attributes);
 		
 		for( var i = 0; i < array_length(temp_surface); i++ )
