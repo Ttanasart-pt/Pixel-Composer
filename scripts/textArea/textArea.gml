@@ -8,6 +8,8 @@ function textArea(_input, _onModify, _extras = noone) : textInput(_input, _onMod
 	font   = f_p0;
 	hide   = false;
 	line_width = 1000;
+	color  = COLORS._main_text;
+	boxColor = c_white;
 	
 	auto_update = false;
 	
@@ -278,7 +280,7 @@ function textArea(_input, _onModify, _extras = noone) : textInput(_input, _onMod
 		var _xx = _x, _ch, _chw;
 		var target = -999;
 		
-		draw_set_text(font, fa_left, fa_top, COLORS._main_text);
+		draw_set_text(font, fa_left, fa_top, color);
 		draw_set_alpha(0.5 + 0.5 * interactable)
 		
 		var ch_x = _x;
@@ -389,10 +391,10 @@ function textArea(_input, _onModify, _extras = noone) : textInput(_input, _onMod
 		var line_count = max(min_lines, array_length(_input_text_line));
 		hh = max(_h, ui(14) + c_h * line_count);
 		
-		draw_sprite_stretched(THEME.textbox, 3, _x, _y, _w, hh);
+		draw_sprite_stretched_ext(THEME.textbox, 3, _x, _y, _w, hh, boxColor, 1);
 		
 		if(format == TEXT_AREA_FORMAT.code) {
-			draw_sprite_stretched(THEME.textbox_code, 0, _x, _y, ui(code_line_width), hh);
+			draw_sprite_stretched_ext(THEME.textbox_code, 0, _x, _y, ui(code_line_width), hh, boxColor, 1);
 			draw_set_text(f_p1, fa_right, fa_top, COLORS._main_text_sub);
 			
 			var lx = _x + ui(code_line_width - 8);
@@ -407,7 +409,7 @@ function textArea(_input, _onModify, _extras = noone) : textInput(_input, _onMod
 		
 		if(self == WIDGET_CURRENT) { 
 			draw_set_text(font, fa_left, fa_top, COLORS._main_text);
-			draw_sprite_stretched_ext(THEME.textbox, 2, _x, _y, _w, hh, COLORS._main_accent, 1);
+			draw_sprite_stretched_ext(THEME.textbox, 2, _x, _y, _w, hh, boxColor, 1);
 			editText();
 			
 			#region cursor
@@ -591,14 +593,13 @@ function textArea(_input, _onModify, _extras = noone) : textInput(_input, _onMod
 		} else {
 			if(hover && hoverRect) {
 				if(hide)
-					draw_sprite_stretched_ext(THEME.textbox, 1, _x, _y, _w, hh, c_white, 0.5);	
+					draw_sprite_stretched_ext(THEME.textbox, 1, _x, _y, _w, hh, boxColor, 0.5);	
 				else
-					draw_sprite_stretched_ext(THEME.textbox, 1, _x, _y, _w, hh, c_white, 0.5 + 0.5 * interactable);	
+					draw_sprite_stretched_ext(THEME.textbox, 1, _x, _y, _w, hh, boxColor, 0.5 + 0.5 * interactable);	
 				if(mouse_press(mb_left, active))
 					activate();
-			} else if(!hide) {
-				draw_sprite_stretched(THEME.textbox, 0, _x, _y, _w, hh);
-			}
+			} else if(!hide)
+				draw_sprite_stretched_ext(THEME.textbox, 0, _x, _y, _w, hh, boxColor, 0.5 + 0.5 * interactable);
 			
 			display_text(tx, _y + ui(7), _text, _w - ui(4));
 		}

@@ -526,7 +526,7 @@ function textBox(_input, _onModify, _extras = noone) : textInput(_input, _onModi
 				if(hide)
 					draw_sprite_stretched_ext(THEME.textbox, 1, _x, _y, _w, _h, boxColor, 0.5);	
 				else
-					draw_sprite_stretched_ext(THEME.textbox, 1, _x, _y, _w, _h, boxColor, 1.0);	
+					draw_sprite_stretched_ext(THEME.textbox, 1, _x, _y, _w, _h, boxColor, 0.5 + 0.5 * interactable);	
 				if(mouse_press(mb_left, active))
 					activate();
 				

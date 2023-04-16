@@ -140,6 +140,7 @@
     {"name":"sprites","order":12,"path":"folders/sprites.yy",},
     {"name":"gameframe","order":2,"path":"folders/sprites/gameframe.yy",},
     {"name":"widgets","order":5,"path":"folders/widgets.yy",},
+    {"name":"morph","order":54,"path":"folders/shader/morph.yy",},
   ],
   "ResourceOrderSettings": [
     {"name":"s_node_corner","order":16,"path":"sprites/s_node_corner/s_node_corner.yy",},
@@ -927,6 +928,7 @@
     {"name":"sh_shadow_cast_light_sep","order":1,"path":"shaders/sh_shadow_cast_light_sep/sh_shadow_cast_light_sep.yy",},
     {"name":"node_grid","order":16,"path":"scripts/node_grid/node_grid.yy",},
     {"name":"node_edge_detect","order":8,"path":"scripts/node_edge_detect/node_edge_detect.yy",},
+    {"name":"node_morph_surface","order":5,"path":"scripts/node_morph_surface/node_morph_surface.yy",},
     {"name":"node_tunnel_in","order":6,"path":"scripts/node_tunnel_in/node_tunnel_in.yy",},
     {"name":"node_anim_priority","order":2,"path":"scripts/node_anim_priority/node_anim_priority.yy",},
     {"name":"s_node_fluidSim_render","order":4,"path":"sprites/s_node_fluidSim_render/s_node_fluidSim_render.yy",},
@@ -1095,6 +1097,7 @@
     {"name":"sample_projects","order":6,"path":"scripts/sample_projects/sample_projects.yy",},
     {"name":"load_function","order":2,"path":"scripts/load_function/load_function.yy",},
     {"name":"draw_fit","order":12,"path":"scripts/draw_fit/draw_fit.yy",},
+    {"name":"s_node_morph_surface","order":56,"path":"sprites/s_node_morph_surface/s_node_morph_surface.yy",},
     {"name":"fd_rectangle_get_velocity_dissipation_type","order":20,"path":"scripts/fd_rectangle_get_velocity_dissipation_type/fd_rectangle_get_velocity_dissipation_type.yy",},
     {"name":"s_node_3d_transform","order":4,"path":"sprites/s_node_3d_transform/s_node_3d_transform.yy",},
     {"name":"s_node_output","order":7,"path":"sprites/s_node_output/s_node_output.yy",},

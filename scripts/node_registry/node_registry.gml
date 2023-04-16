@@ -276,6 +276,7 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 			addNodeObject(filter, "Displace",			s_node_displace,		"Node_Displace",		[1, Node_Displace], ["distort"], "Distort image using another image as a map.");
 			addNodeObject(filter, "Texture Remap",		s_node_texture_map,		"Node_Texture_Remap",	[1, Node_Texture_Remap],, "Remap image using texture map. Where red channel control x position and green channel control y position.");
 			addNodeObject(filter, "Time Remap",			s_node_time_map,		"Node_Time_Remap",		[1, Node_Time_Remap],, "Remap image using texture as time map. Where brighter pixel means using pixel from an older frame.");
+			addNodeObject(filter, "Morph Surface",		s_node_morph_surface,	"Node_Morph_Surface",	[1, Node_Morph_Surface],, "Morph pixel bewteen two surfaces.");
 		
 			ds_list_add(filter, "Effects");
 			addNodeObject(filter, "Outline",			s_node_border,			"Node_Outline",			[1, Node_Outline], ["border"], "Add border to the image.");
@@ -461,7 +462,7 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 			addNodeObject(values, "Path",			s_node_path,			"Node_Path",			[1, Node_Path]);
 			addNodeObject(values, "Path Anchor",	s_node_path_anchor,		"Node_Path_Anchor",		[1, Node_Path_Anchor]).setVersion(1140);
 			addNodeObject(values, "Path Array",		s_node_path_array,		"Node_Path_Array",		[1, Node_Path_Array]).setVersion(1137);
-			addNodeObject(values, "Sample Path",	s_node_path_sample,		"Node_Path_Sample",		[1, Node_Path_Sample],, "Sample a 2D position from a path");
+			addNodeObject(values, "Sample Path",	s_node_path_sample,		"Node_Path_Sample",		[1, Node_Path_Sample], ["path sample"], "Sample a 2D position from a path");
 			addNodeObject(values, "Blend Path",		s_node_path_blend,		"Node_Path_Blend",		[1, Node_Path_Blend],, "Blend between 2 paths.");
 			addNodeObject(values, "Remap Path",		s_node_path_map,		"Node_Path_Map_Area",	[1, Node_Path_Map_Area],, "Scale path to fit a given area.").setVersion(1130);
 			addNodeObject(values, "Transform Path",	s_node_path_transform,	"Node_Path_Transform",	[1, Node_Path_Transform]).setVersion(1130);

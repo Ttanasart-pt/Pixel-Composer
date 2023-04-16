@@ -9,16 +9,31 @@ function Node_Path_Sample(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	inputs[| 1] = nodeValue("Ratio", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0);
 	
+	inputs[| 2] = nodeValue("Type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+		.setDisplay(VALUE_DISPLAY.enum_button, [ "Loop", "Ping pong" ]);
+	
 	outputs[| 0] = nodeValue("Result", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, [ 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.vector);
 	
 	function process_data(_output, _data, _output_index, _array_index = 0) {  
 		var _path = _data[0];
 		var _rat  = _data[1];
-		if(_path == noone) 
-			return [ 0, 0 ];
-		if(!struct_has(_path, "getPointRatio")) 
-			return [ 0, 0 ];
+		var _mod  = _data[2];
+		
+		if(_path == noone)						 return [ 0, 0 ];
+		if(!struct_has(_path, "getPointRatio"))  return [ 0, 0 ];
+		
+		switch(_mod) {
+			case 0 : break;
+			case 1 : 
+				var fl = floor(_rat);
+				var fr = frac(_rat);
+				
+				if(fl % 2 == 1 && fr != 0)
+					fr = 1 - fr;
+				_rat = fr;
+				break;
+		}
 		
 		return _path.getPointRatio(_rat).toArray();
 	}

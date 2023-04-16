@@ -400,13 +400,13 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	expression = "";
 	expTree    = noone;
 	
-	global_edit = new textBox(TEXTBOX_INPUT.text, function(str) { 
+	express_edit = new textArea(TEXTBOX_INPUT.text, function(str) { 
 		expression = str;
 		expTree    = evaluateFunctionTree(expression); 
 		node.triggerRender();
 	});
-	global_edit.boxColor = COLORS._main_value_positive;
-	global_edit.align    = fa_left;
+	express_edit.boxColor = COLORS._main_value_positive;
+	express_edit.align    = fa_left;
 	
 	static setDefault = function(vals) {
 		if(LOADING || APPENDING) return self;
@@ -1058,8 +1058,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		} else if(value_from != self)
 			val = value_from.getValueRecursive(_time); 
 		
-		if(expUse)
-			val[0] = is_struct(expTree)? expTree.eval(val[0]) : 0;
+		if(expUse && is_struct(expTree) && expTree.validate())
+			val[0] = expTree.eval(val[0]);
 		
 		return val;
 	}

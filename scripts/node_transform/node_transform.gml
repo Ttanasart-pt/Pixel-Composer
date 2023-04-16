@@ -1,7 +1,8 @@
 enum OUTPUT_SCALING {
 	same_as_input,
 	constant,
-	relative
+	relative,
+	scale
 }
 
 function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
@@ -36,7 +37,7 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		.setDisplay(VALUE_DISPLAY.slider, [0, 1, 0.01]);
 	
 	inputs[| 9] = nodeValue("Output dimension type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, OUTPUT_SCALING.same_as_input)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Same as input", "Constant", "Relative to input" ]);
+		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Same as input", "Constant", "Relative to input", "Scale" ]);
 	
 	inputs[| 10] = nodeValue("Round position", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false, "Round position to the closest integer value to avoid jittering.");
 	
@@ -62,6 +63,7 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		var _surf		= getSingleValue(0, arr);
 		var _out_type	= getSingleValue(9, arr);
 		var _out		= getSingleValue(1, arr);
+		var _scale		= getSingleValue(6, arr);
 		var ww, hh;
 		
 		switch(_out_type) {
@@ -70,12 +72,16 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				hh  = surface_get_height(_surf);
 				break;
 			case OUTPUT_SCALING.relative : 
-				ww  = surface_get_width(_surf) * _out[0];
+				ww  = surface_get_width(_surf)  * _out[0];
 				hh  = surface_get_height(_surf) * _out[1];
 				break;
 			case OUTPUT_SCALING.constant :	
 				ww  = _out[0];
 				hh  = _out[1];
+				break;
+			case OUTPUT_SCALING.scale :	
+				ww  = surface_get_width(_surf)  * _scale[0];
+				hh  = surface_get_height(_surf) * _scale[1];
 				break;
 		}
 		
@@ -96,20 +102,6 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		if(is_array(_surf)) {
 			if(array_length(_surf) == 0) return;
 			_surf = _surf[preview_index];
-		}
-		
-		var ww, hh;
-		
-		switch(_out_type) {
-			case OUTPUT_SCALING.same_as_input :
-			case OUTPUT_SCALING.relative : 
-				ww  = surface_get_width(_surf)  * _sca[0];
-				hh  = surface_get_height(_surf) * _sca[1];
-				break;
-			case OUTPUT_SCALING.constant :	
-				ww  = _out[0] * _sca[0];
-				hh  = _out[1] * _sca[1];
-				break;
 		}
 		
 		inputs[| 3].setValue([ 0.5, 0.5]);
@@ -170,6 +162,11 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				inputs[| 1].setVisible(true);
 				_ww = ww * out[0];
 				_hh = hh * out[1];
+				break;
+			case OUTPUT_SCALING.scale : 
+				inputs[| 1].setVisible(false);
+				_ww = ww * sca[0];
+				_hh = hh * sca[1];
 				break;
 		}
 		if(_ww <= 0 || _hh <= 0) return;

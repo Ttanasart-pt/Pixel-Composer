@@ -53,6 +53,8 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	inspectInput1 = nodeValue("Toggle execution", self, JUNCTION_CONNECT.input, VALUE_TYPE.action, false).setVisible(true, true);
 	inspectInput2 = nodeValue("Toggle execution", self, JUNCTION_CONNECT.input, VALUE_TYPE.action, false).setVisible(true, true);
 	
+	updateAction = nodeValue("Update", self, JUNCTION_CONNECT.input, VALUE_TYPE.action, false).setVisible(true, true);
+	
 	show_input_name  = false;
 	show_output_name = false;
 	

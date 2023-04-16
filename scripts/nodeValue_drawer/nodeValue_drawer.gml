@@ -44,7 +44,8 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover, _focus, _scr
 	butx += ui(20);
 	if(!global_var) {			
 		if(jun.expUse) {
-			draw_sprite_ui_uniform(THEME.node_use_expression, jun.expTree.validate()? 0 : 2, butx, lb_y, 1,, 0.8);
+			var validated = is_struct(jun.expTree) && jun.expTree.validate();
+			draw_sprite_ui_uniform(THEME.node_use_expression, validated? 0 : 2, butx, lb_y, 1,, 0.8);
 		} else {
 			index = jun.visible;
 			draw_sprite_ui_uniform(THEME.junc_visible, index, butx, lb_y, 1,, 0.8);
@@ -186,13 +187,13 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover, _focus, _scr
 		
 	if(jun.expUse) {
 		var expValid = jun.expTree != noone && jun.expTree.validate();
-		jun.global_edit.boxColor = expValid? COLORS._main_value_positive : COLORS._main_value_negative;
+		jun.express_edit.boxColor = expValid? COLORS._main_value_positive : COLORS._main_value_negative;
 		
-		jun.global_edit.setActiveFocus(_focus, _hover);
-		jun.global_edit.setInteract(jun.value_from == noone);
-		if(_focus) jun.global_edit.register(_scrollPane);
+		jun.express_edit.setActiveFocus(_focus, _hover);
+		jun.express_edit.setInteract(jun.value_from == noone);
+		if(_focus) jun.express_edit.register(_scrollPane);
 			
-		var wd_h = jun.global_edit.draw(editBoxX, editBoxY, editBoxW, editBoxH, jun.expression, _m);
+		var wd_h = jun.express_edit.draw(editBoxX, editBoxY, editBoxW, editBoxH, jun.expression, _m);
 		widH = lineBreak? wd_h : 0;
 	} else if(jun.editWidget) {
 		jun.editWidget.setActiveFocus(_focus, _hover);
