@@ -21,8 +21,8 @@ enum ARRAY_OVERFLOW {
 	loop
 }
 
-gml_pragma("forceinline");
 function array_safe_get(arr, index, def = 0, overflow = ARRAY_OVERFLOW._default) {
+	gml_pragma("forceinline");
 	if(!is_array(arr)) return def;
 	
 	if(overflow == ARRAY_OVERFLOW.loop) {

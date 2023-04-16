@@ -88,8 +88,9 @@ function surface_save_safe(surface, path) {
 }
 
 //check
-gml_pragma("forceinline");
 function is_surface(s) {
+	gml_pragma("forceinline");
+	
 	if(is_undefined(s)) return false;
 	if(is_array(s)) return false;
 	if(!is_real(s)) return false;
@@ -102,8 +103,9 @@ function is_surface(s) {
 	return true;
 }
 
-gml_pragma("forceinline");
 function surface_verify(surf, w, h, format = surface_rgba8unorm) {
+	gml_pragma("forceinline");
+	
 	if(!is_surface(surf))
 		return surface_create_valid(w, h, format);
 	return surface_size_to(surf, w, h, format);
