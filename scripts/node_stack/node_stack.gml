@@ -24,6 +24,8 @@ function Node_Stack(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
+	outputs[| 1] = nodeValue("Atlas data", self, JUNCTION_CONNECT.output, VALUE_TYPE.atlas, []);
+	
 	attribute_surface_depth();
 	
 	static refreshDynamicInput = function() {
@@ -92,6 +94,8 @@ function Node_Stack(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		_outSurf = surface_verify(_outSurf, ww, hh, attrDepth());
 		outputs[| 0].setValue(_outSurf);
 		
+		var atlas = [];
+		
 		surface_set_target(_outSurf);
 			DRAW_CLEAR
 			BLEND_ALPHA;
@@ -122,9 +126,10 @@ function Node_Stack(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 						sx = ww / 2 - sw / 2;
 						sy = hh / 2 - sh / 2;
 					}
-				
+					
+					array_push(atlas, new SurfaceAtlas(_surf[j], [ sx, sy ]));
 					draw_surface_safe(_surf[j], sx, sy);
-				
+					
 					if(_axis == 0)
 						sx += sw + _spac;
 					else if(_axis == 1)
@@ -134,6 +139,8 @@ function Node_Stack(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			
 			BLEND_NORMAL;
 		surface_reset_target();
+		
+		outputs[| 1].setValue(atlas);
 	}
 	
 	static postDeserialize = function() {

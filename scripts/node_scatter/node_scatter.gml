@@ -19,7 +19,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		.setDisplay(VALUE_DISPLAY.area, function() { return inputs[| 1].getValue(); });
 	
 	inputs[| 6] = nodeValue("Distribution", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Area", "Border", "Map", "Direct Data" ]);
+		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Area", "Border", "Map", "Direct Data", "Path" ]);
 	
 	inputs[| 7] = nodeValue("Point at center", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false, "Rotate each copy to face the spawn center.");
 	
@@ -55,16 +55,22 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	inputs[| 18] = nodeValue("Blend mode", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Normal", "Add" ]);
 		
+	inputs[| 19] = nodeValue("Path", self, JUNCTION_CONNECT.input, VALUE_TYPE.pathnode, noone);
+		
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
+		
+	outputs[| 1] = nodeValue("Atlas data", self, JUNCTION_CONNECT.output, VALUE_TYPE.atlas, []);
 	
 	input_display_list = [ 
 		["Surface",		false], 0, 1, 15, 10, 
-		["Scatter",		false], 5, 6, 13, 14, 17, 9, 2,
+		["Scatter",		false], 5, 6, 13, 14, 19, 17, 9, 2,
 		["Transform",	false], 3, 8, 7, 4,
 		["Render",		false], 18, 11, 12, 16, 
 	];
 	
 	attribute_surface_depth();
+	
+	scatter_data = [];
 	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		if(process_amount > 1) return;
@@ -79,7 +85,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			var _arr = inputs[| 15].getValue();
 			inputs[| 0].array_depth = _arr;
 			
-			doUpdate();
+			update();
 		}
 	}
 	
@@ -92,9 +98,13 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		inputs[| 14].setVisible(_dis == 3, _dis == 3);
 		inputs[| 17].setVisible(_dis == 3);
 		inputs[|  9].setVisible(_dis != 2);
+		inputs[| 19].setVisible(_dis == 4, _dis == 4);
 	}
 	
 	static process_data = function(_outSurf, _data, _output_index, _array_index) {
+		if(_output_index == 1) return scatter_data;
+		scatter_data = [];
+		
 		var _inSurf = _data[0];
 		if(_inSurf == 0)
 			return;
@@ -121,6 +131,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		var mulpA	= _data[16];
 		var useV	= _data[17];
 		var blend   = _data[18];
+		var path    = _data[19];
 		
 		var _in_w, _in_h;
 		
@@ -167,9 +178,15 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 					_x = array_safe_get(sp, 0);
 					_y = array_safe_get(sp, 1);
 					_v = array_safe_get(sp, 2, noone);
+				} else if(_dist == 4) {
+					if(path != noone && struct_has(path, "getPointRatio")) {
+						var pp  = path.getPointRatio(i / max(1, _amount - 1) * 0.9999);
+						_x = pp.x;
+						_y = pp.y;
+					}
 				}
 				
-				var posS = seed + _y * _dim[0] + _x;
+				var posS = _dist < 4? seed + _y * _dim[0] + _x : seed + i * 100;
 				var _scx = random_range_seed(_scale[0], _scale[1], posS); posS++;
 				var _scy = random_range_seed(_scale[2], _scale[3], posS); posS++; 
 				if(_unis) _scy = _scx;
@@ -185,9 +202,15 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 					_r *= _v;
 				
 				var surf = _inSurf;
-				if(is_array(_inSurf)) 
-					surf = _inSurf[irandom_seed(array_length(_inSurf) - 1, posS)]; posS++;
-			
+				var ind  = 0;
+				if(is_array(_inSurf)) {
+					if(array_length(_inSurf) == 0) break;
+					
+					ind  = irandom_seed(array_length(_inSurf) - 1, posS);
+					surf = _inSurf[ind]; 
+					posS++;
+				}
+				
 				var sw = surface_get_width(surf);
 				var sh = surface_get_height(surf);
 			
@@ -204,6 +227,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 				var clr = color.eval(grSamp); 
 				var alp = random_range_seed(alpha[0], alpha[1], posS); posS++;
 				
+				array_push(scatter_data, new SurfaceAtlas(surf, [ _x, _y ], _r, [ _scx, _scy ], clr, alp));
 				draw_surface_ext_safe(surf, _x, _y, _scx, _scy, _r, clr, alp);
 			}
 			BLEND_NORMAL;

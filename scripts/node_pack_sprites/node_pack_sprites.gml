@@ -14,7 +14,7 @@ function Node_Pack_Sprites(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	outputs[| 0] = nodeValue("Packed image", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
-	outputs[| 1] = nodeValue("Atlas data", self, JUNCTION_CONNECT.output, VALUE_TYPE.struct, []);
+	outputs[| 1] = nodeValue("Atlas data", self, JUNCTION_CONNECT.output, VALUE_TYPE.atlas, []);
 	
 	input_display_list = [
 		0, 4, 1, 2, 3,
@@ -81,8 +81,9 @@ function Node_Pack_Sprites(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 				break;
 		}
 		
-		var area = pack[0];
-		var rect = pack[1];
+		var area  = pack[0];
+		var rect  = pack[1];
+		var atlas = [];
 		
 		if(array_length(rect) < array_length(_rects))
 			noti_warning("Not enought space, packed " + string(array_length(rect)) + " out of " + string(array_length(_rects)) + " images");
@@ -97,12 +98,14 @@ function Node_Pack_Sprites(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			
 			for( var i = 0; i < array_length(rect); i++ ) {
 				var r = rect[i];
+				
+				array_push(atlas, new SurfaceAtlas(r.surface, [ r.x + _spac, r.y + _spac ]));
 				draw_surface(r.surface, r.x + _spac, r.y + _spac);
 			}
 			
 			BLEND_NORMAL
 		surface_reset_target();
 		
-		outputs[| 1].setValue(rect);
+		outputs[| 1].setValue(atlas);
 	}
 }

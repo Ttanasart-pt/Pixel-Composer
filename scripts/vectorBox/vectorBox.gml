@@ -31,7 +31,7 @@ function vectorBox(_size, _type, _onModify, _unit = noone) : widget() constructo
 	
 	extras = -1;
 	
-	for(var i = 0; i < size; i++) {
+	for(var i = 0; i < 4; i++) {
 		tb[i] = new textBox(_type, onModifySingle[i]);
 		tb[i].slidable = true;
 	}

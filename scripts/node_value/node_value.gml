@@ -27,6 +27,7 @@ enum VALUE_TYPE {
 	strands   = 17,
 	mesh	  = 18,
 	trigger	  = 19,
+	atlas	  = 20,
 	
 	action	  = 99,
 }
@@ -99,6 +100,7 @@ function value_color(i) {
 		$6691ff, //strand
 		$d1c2c2, //mesh
 		$5dde8f, //trigger
+		$976bff, //atlas
 	];
 	
 	if(i == 99) return $5dde8f;
@@ -124,6 +126,7 @@ function value_bit(i) {
 		case VALUE_TYPE.struct   	: return 1 << 19;
 		case VALUE_TYPE.strands   	: return 1 << 20;
 		case VALUE_TYPE.mesh	  	: return 1 << 21;
+		case VALUE_TYPE.atlas	  	: return 1 << 23;
 		
 		case VALUE_TYPE.node		: return 1 << 32;
 		

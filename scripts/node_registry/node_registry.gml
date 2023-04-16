@@ -276,7 +276,7 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 			addNodeObject(filter, "Displace",			s_node_displace,		"Node_Displace",		[1, Node_Displace], ["distort"], "Distort image using another image as a map.");
 			addNodeObject(filter, "Texture Remap",		s_node_texture_map,		"Node_Texture_Remap",	[1, Node_Texture_Remap],, "Remap image using texture map. Where red channel control x position and green channel control y position.");
 			addNodeObject(filter, "Time Remap",			s_node_time_map,		"Node_Time_Remap",		[1, Node_Time_Remap],, "Remap image using texture as time map. Where brighter pixel means using pixel from an older frame.");
-			addNodeObject(filter, "Morph Surface",		s_node_morph_surface,	"Node_Morph_Surface",	[1, Node_Morph_Surface],, "Morph pixel bewteen two surfaces.");
+			addNodeObject(filter, "Morph Surface",		s_node_morph_surface,	"Node_Morph_Surface",	[1, Node_Morph_Surface],, "Morph pixel bewteen two surfaces.").setVersion(1141);
 		
 			ds_list_add(filter, "Effects");
 			addNodeObject(filter, "Outline",			s_node_border,			"Node_Outline",			[1, Node_Outline], ["border"], "Add border to the image.");
@@ -426,6 +426,10 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 			addNodeObject(values, "Vector4",		s_node_vec4,			"Node_Vector4",			[1, Node_Vector4]);
 			addNodeObject(values, "Vector Split",	s_node_vec_split,		"Node_Vector_Split",	[1, Node_Vector_Split]);
 			addNodeObject(values, "Scatter Points",	s_node_scatter_point,	"Node_Scatter_Points",	[1, Node_Scatter_Points],, "Generate array of vector 2 points for scattering.").setVersion(1120);
+			addNodeObject(values, "Translate Point",s_node_translate_point,	"Node_Move_Point",		[1, Node_Move_Point]).setVersion(1141);
+			addNodeObject(values, "Dot product",	s_node_dot_product,		"Node_Vector_Dot",		[1, Node_Vector_Dot]).setVersion(1141);
+			addNodeObject(values, "Cross product 3D",	s_node_cross_product_2d,	"Node_Vector_Cross_3D",	[1, Node_Vector_Cross_3D]).setVersion(1141);
+			addNodeObject(values, "Cross product 2D",	s_node_cross_product_3d,	"Node_Vector_Cross_2D",	[1, Node_Vector_Cross_2D]).setVersion(1141);
 			
 			ds_list_add(values, "Texts");
 			addNodeObject(values, "Text",			s_node_text,			"Node_String",					[1, Node_String]);
@@ -490,6 +494,11 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 			ds_list_add(values, "Mesh");
 			addNodeObject(values, "Path to Mesh",	s_node_mesh_path,		"Node_Mesh_Create_Path",	[1, Node_Mesh_Create_Path],, "Create mesh from path.").setVersion(1140);
 			addNodeObject(values, "Mesh Transform",	s_node_mesh_transform,	"Node_Mesh_Transform",		[1, Node_Mesh_Transform]).setVersion(1140);
+			
+			ds_list_add(values, "Atlas");
+			addNodeObject(values, "Draw Atlas",		s_node_draw_atlas,	"Node_Atlas_Draw",	[1, Node_Atlas_Draw],, "Render image atlas to a surface.").setVersion(1141);
+			addNodeObject(values, "Atlas Get",		s_node_atlas_get,	"Node_Atlas_Get",	[1, Node_Atlas_Get]).setVersion(1141);
+			addNodeObject(values, "Atlas Set",		s_node_atlas_set,	"Node_Atlas_Set",	[1, Node_Atlas_Set]).setVersion(1141);
 			
 		var color = ds_list_create();
 		addNodeCatagory("Color", color);

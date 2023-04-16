@@ -1,3 +1,20 @@
+function SurfaceAtlas(surface, position = [ 0, 0 ], rotation = 0, scale = [ 1, 1 ], blend = c_white, alpha = 1) constructor {
+	self.surface  = new Surface(surface);
+	self.position = position;
+	self.rotation = rotation;
+	self.scale = scale;
+	self.blend = blend;
+	self.alpha = alpha;
+	
+	static draw = function() {
+		draw_surface_ext_safe(surface.get(), position[0], position[1], scale[0], scale[1], rotation, blend, alpha);
+	}
+	
+	static clone = function() {
+		return new SurfaceAtlas(surface.get(), position, rotation, scale, blend, alpha);
+	}
+}
+
 function Surface(surface) constructor {
 	static set = function(surface) {
 		self.surface = surface;

@@ -244,6 +244,8 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
+	outputs[| 1] = nodeValue("Atlas data", self, JUNCTION_CONNECT.output, VALUE_TYPE.atlas, []);
+	
 	temp_surface = [ surface_create(1, 1), surface_create(1, 1) ];
 	
 	surf_dragging = -1;
@@ -259,6 +261,8 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	overlay_w = 0;
 	overlay_h = 0;
+	
+	atlas_data = [];
 	
 	static getInputAmount = function() {
 		return input_fix_len + (ds_list_size(inputs) - input_fix_len) / data_length;
@@ -712,6 +716,8 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	}
 	
 	static process_data = function(_outSurf, _data, _output_index, _array_index) {
+		if(_output_index == 1) return atlas_data;
+		
 		if(array_length(_data) < 4) return _outSurf;
 		var _pad	  = _data[0];
 		var _dim_type = _data[1];
@@ -760,6 +766,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		var res_index = 0, bg = 0;
 		var imageAmo = (ds_list_size(inputs) - input_fix_len) / data_length;
 		var _vis = attributes[? "layer_visible"];
+		atlas_data = [];
 		
 		surface_set_shader(_outSurf, sh_sample, true, BLEND.alphamulp);
 		
@@ -786,6 +793,8 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			var _d0 = point_rotate(cx - _sw / 2, cy - _sh / 2, cx, cy, _rot);
 			
 			shader_set_interpolation(_s);
+			
+			array_push(atlas_data, new SurfaceAtlas(_s, [ _d0[0], _d0[1] ], _rot, [ _sca[0], _sca[1] ]));
 			draw_surface_ext_safe(_s, _d0[0], _d0[1], _sca[0], _sca[1], _rot);
 		}
 		surface_reset_shader();
