@@ -33,6 +33,8 @@
 	PREF_MAP[? "default_surface_side"]	= 32;
 	
 	PREF_MAP[? "panel_layout_file"] = "Vertical";
+	PREF_MAP[? "panel_graph_dragging"]   = MOD_KEY.alt;
+	PREF_MAP[? "panel_preview_dragging"] = MOD_KEY.alt;
 	
 	PREF_MAP[? "inspector_line_break_width"] = 500;
 	

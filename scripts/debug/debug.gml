@@ -45,7 +45,7 @@ function log_crash(str) {
 
 function log_newline() {
 	var path = DIRECTORY + "log.txt";
-	var f = file_text_open_append(path);
+	var f = file_text_open_write(path);
 	file_text_writeln(f);
 	file_text_close(f);
 }

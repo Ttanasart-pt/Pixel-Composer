@@ -28,6 +28,16 @@
 	function key_mod_press(key) {
 		return key == KEYBOARD_STATUS.pressing;
 	}
+	
+	function key_mod_press_index(keyindex) {
+		switch(keyindex) {
+			case MOD_KEY.alt   : return ALT   == KEYBOARD_STATUS.pressing;
+			case MOD_KEY.shift : return SHIFT == KEYBOARD_STATUS.pressing;
+			case MOD_KEY.ctrl  : return CTRL  == KEYBOARD_STATUS.pressing;
+		}
+		
+		return false;
+	}
 #endregion
 
 #region widget

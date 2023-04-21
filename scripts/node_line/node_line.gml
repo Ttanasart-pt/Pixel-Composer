@@ -54,12 +54,22 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	inputs[| 20] = nodeValue("Segment length", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 4);
 	
+	inputs[| 21] = nodeValue("Texture position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ])
+		.setDisplay(VALUE_DISPLAY.vector);
+	
+	inputs[| 22] = nodeValue("Texture rotation", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
+		.setDisplay(VALUE_DISPLAY.rotation);
+	
+	inputs[| 23] = nodeValue("Texture scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 1 ])
+		.setDisplay(VALUE_DISPLAY.vector);
+	
 	input_display_list = [
 		["Output",			true],	0, 1, 
 		["Line data",		false], 6, 7, 19, 2, 20, 
 		["Line settings",	false], 17, 3, 11, 12, 8, 9, 13, 14, 
 		["Wiggle",			false], 4, 5, 
-		["Render",			false], 10, 15, 16, 18, 
+		["Render",			false], 10, 15, 16, 
+		["Texture",			false], 18, 21, 22, 23, 
 	];
 	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
@@ -67,6 +77,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	lines = [];
 	
 	attribute_surface_depth();
+	attribute_interpolation();
 	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		draw_set_color(COLORS._main_accent);
@@ -130,10 +141,14 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		var _colP  = _data[15];
 		var _colW  = _data[16];
 		var _1px   = _data[17];
-		var _tex   = _data[18];
 		
 		var _fixL  = _data[19];
 		var _segL  = _data[20];
+		
+		var _tex    = _data[18];
+		var _texPos = _data[21];
+		var _texRot = _data[22];
+		var _texSca = _data[23];
 		
 		inputs[| 14].setVisible(_cap);
 		
@@ -159,148 +174,160 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		var _sedIndex = 0;
 		
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
+			
+		var _ox, _nx, _nx1, _oy, _ny, _ny1;
+		var _ow, _nw, _oa, _na, _oc, _nc;
+		lines = [];
+			
+		if(_use_path) {
+			var lineLen = 1;
+			if(struct_has(_pat, "getLineCount"))
+				lineLen = _pat.getLineCount();
+				
+			if(_rtMax > 0) 
+			for( var i = 0; i < lineLen; i++ ) {
+				var _useDistance = _fixL && struct_has(_pat, "getLength");
+				var _pathLength  = _useDistance? _pat.getLength(i) : 1;
+				if(_pathLength == 0) continue;
+					
+				var _segLength   = struct_has(_pat, "getAccuLength")? _pat.getAccuLength(i) : [];
+				var _segIndex    = 0;
+					
+				var _pathStr = _rtStr;
+				var _pathEnd = _rtMax;
+					
+				var _stepLen = min(_pathEnd, 1 / _seg); //Distance to move per step
+				if(_stepLen <= 0.00001) continue;
+					
+				var _total		= _pathEnd;	//Length remaining
+				var _total_prev = _total;	//Use to prevent infinite loop
+				var _freeze		= 0;		//Use to prevent infinite loop
+					
+				var _prog_curr	= frac(_shift);		//Pointer to the current position
+				var _prog_next  = 0;
+				var _prog		= _prog_curr + 1;	//Record previous position to delete from _total
+				var _prog_total	= 0;				//Record how far the pointer have moved so far
+				var points		= [];
+				var p;
+					
+				if(_useDistance) {						
+					_pathStr   *= _pathLength;
+					_pathEnd   *= _pathLength;
+					_stepLen    = min(_segL, _pathEnd);	//TODO: Change this to node input
+						
+					_total	   *= _pathLength;
+					_total_prev = _total;
+						
+					_prog_curr *= _pathLength;
+				}
+						
+				while(_total >= 0) {
+					if(_useDistance) {
+						var segmentLength = array_safe_get(_segLength, _segIndex, 99999);
+							
+						_prog_next = _prog_curr % _pathLength; //Wrap overflow path
+						_prog_next = min(_prog_curr + _stepLen, _pathLength, segmentLength);
+							
+						if(_prog_next == segmentLength)
+							_segIndex = (_segIndex + 1) % array_length(_segLength);
+					} else {
+						if(_prog_curr >= 1) //Wrap overflow path
+							_prog_next = frac(_prog_curr);
+						else 
+							_prog_next = min(_prog_curr + _stepLen, 1); //Move forward _stepLen or _total (if less) stop at 1
+					}
+						
+					if(_useDistance) 
+						p = _pat.getPointDistance(_prog_curr, i);
+					else if(!_useDistance) 
+						p = _pat.getPointRatio(_prog_curr, i);
+						
+					_nx = p.x;
+					_ny = p.y;
+						
+					if(_total < _pathEnd) { //Do not wiggle the last point.
+						var _d = point_direction(_ox, _oy, _nx, _ny);
+						_nx   += lengthdir_x(random1D(_sed + _sedIndex, -_wig, _wig), _d + 90); _sedIndex++;
+						_ny   += lengthdir_y(random1D(_sed + _sedIndex, -_wig, _wig), _d + 90); _sedIndex++;
+					}
+						
+					if(_prog_total >= _pathStr) { //Do not add point before range start. Do this instead of starting at _rtStr to prevent wiggle. 
+						array_push(points, [ _nx, _ny, _prog_total / _pathEnd, _prog_curr / _pathLength ]);
+					}
+						
+					if(_prog_next > _prog_curr) {
+						_prog_total += _prog_next - _prog_curr;
+						_total      -= _prog_next - _prog_curr;
+					}
+					_stepLen = min(_stepLen, _total);
+						
+					_prog_curr = _prog_next;
+					_ox		   = _nx;
+					_oy		   = _ny;
+						
+					if(_total_prev == _total && ++_freeze > 16) break;
+					_total_prev = _total;
+				}
+					
+				array_push(lines, points);
+			}
+		} else {
+			var x0, y0, x1, y1;
+			var _0 = point_rectangle_overlap(_dim[0], _dim[1], (_ang + 180) % 360);
+			var _1 = point_rectangle_overlap(_dim[0], _dim[1], _ang);
+			x0 = _0[0]; y0 = _0[1];
+			x1 = _1[0]; y1 = _1[1];
+			
+			var _l = point_distance(x0, y0, x1, y1);
+			var _d = point_direction(x0, y0, x1, y1);
+			var _od = _d, _nd = _d;
+				
+			var ww          = _rtMax / _seg;
+			var _total		= _rtMax;
+			var _prog_curr	= frac(_shift) - ww;
+			var _prog		= _prog_curr + 1;
+			var _prog_total	= 0;
+			var points = [];
+				
+			while(_total > 0) {
+				if(_prog_curr >= 1) _prog_curr = 0;
+				else _prog_curr = min(_prog_curr + min(_total, ww), 1);
+				_prog_total += min(_total, ww);
+					
+				_nx = x0 + lengthdir_x(_l * _prog_curr, _d);
+				_ny = y0 + lengthdir_y(_l * _prog_curr, _d);
+					
+				var wgLen = random1D(_sed + _sedIndex, -_wig, _wig); _sedIndex++;
+				_nx += lengthdir_x(wgLen, _d + 90); 
+				_ny += lengthdir_y(wgLen, _d + 90);
+					
+				if(_prog_total > _rtStr) //prevent drawing point before range start.
+					array_push(points, [_nx, _ny, _prog_total / _rtMax, _prog_curr]);
+					
+				if(_prog_curr > _prog)
+					_total -= (_prog_curr - _prog);
+				_prog = _prog_curr;
+				_ox = _nx;
+				_oy = _ny;
+			}
+				
+			lines = [ points ];
+		}
 		
 		surface_set_target(_outSurf);
 			if(_bg) draw_clear_alpha(0, 1);
 			else	DRAW_CLEAR
 			
-			var _ox, _nx, _nx1, _oy, _ny, _ny1;
-			var _ow, _nw, _oa, _na, _oc, _nc;
-			lines = [];
-			
-			if(_use_path) {
-				var lineLen = 1;
-				if(struct_has(_pat, "getLineCount"))
-					lineLen = _pat.getLineCount();
+			if(_useTex) {
+				var tex = surface_get_texture(_tex);
 				
-				if(_rtMax > 0) 
-				for( var i = 0; i < lineLen; i++ ) {
-					var _useDistance = _fixL && struct_has(_pat, "getLength");
-					var _pathLength  = _useDistance? _pat.getLength(i) : 1;
-					if(_pathLength == 0) continue;
-					
-					var _segLength   = struct_has(_pat, "getAccuLength")? _pat.getAccuLength(i) : [];
-					var _segIndex    = 0;
-					
-					var _pathStr = _rtStr;
-					var _pathEnd = _rtMax;
-					
-					var _stepLen = min(_pathEnd, 1 / _seg); //Distance to move per step
-					if(_stepLen <= 0.00001) continue;
-					
-					var _total		= _pathEnd;	//Length remaining
-					var _total_prev = _total;	//Use to prevent infinite loop
-					var _freeze		= 0;		//Use to prevent infinite loop
-					
-					var _prog_curr	= frac(_shift);		//Pointer to the current position
-					var _prog_next  = 0;
-					var _prog		= _prog_curr + 1;	//Record previous position to delete from _total
-					var _prog_total	= 0;				//Record how far the pointer have moved so far
-					var points		= [];
-					var p;
-					
-					if(_useDistance) {						
-						_pathStr   *= _pathLength;
-						_pathEnd   *= _pathLength;
-						_stepLen    = min(_segL, _pathEnd);	//TODO: Change this to node input
-						
-						_total	   *= _pathLength;
-						_total_prev = _total;
-						
-						_prog_curr *= _pathLength;
-					}
-						
-					while(_total >= 0) {
-						if(_useDistance) {
-							var segmentLength = array_safe_get(_segLength, _segIndex, 99999);
-							
-							_prog_next = _prog_curr % _pathLength; //Wrap overflow path
-							_prog_next = min(_prog_curr + _stepLen, _pathLength, segmentLength);
-							
-							if(_prog_next == segmentLength)
-								_segIndex = (_segIndex + 1) % array_length(_segLength);
-						} else {
-							if(_prog_curr >= 1) //Wrap overflow path
-								_prog_next = frac(_prog_curr);
-							else 
-								_prog_next = min(_prog_curr + _stepLen, 1); //Move forward _stepLen or _total (if less) stop at 1
-						}
-						
-						if(_useDistance) 
-							p = _pat.getPointDistance(_prog_curr, i);
-						else if(!_useDistance) 
-							p = _pat.getPointRatio(_prog_curr, i);
-						
-						_nx = p.x;
-						_ny = p.y;
-						
-						if(_total < _pathEnd) { //Do not wiggle the last point.
-							var _d = point_direction(_ox, _oy, _nx, _ny);
-							_nx   += lengthdir_x(random1D(_sed + _sedIndex, -_wig, _wig), _d + 90); _sedIndex++;
-							_ny   += lengthdir_y(random1D(_sed + _sedIndex, -_wig, _wig), _d + 90); _sedIndex++;
-						}
-						
-						if(_prog_total >= _pathStr) { //Do not add point before range start. Do this instead of starting at _rtStr to prevent wiggle. 
-							array_push(points, [ _nx, _ny, _prog_total / _pathEnd, _prog_curr / _pathLength ]);
-						}
-						
-						if(_prog_next > _prog_curr) {
-							_prog_total += _prog_next - _prog_curr;
-							_total      -= _prog_next - _prog_curr;
-						}
-						_stepLen = min(_stepLen, _total);
-						
-						_prog_curr = _prog_next;
-						_ox		   = _nx;
-						_oy		   = _ny;
-						
-						if(_total_prev == _total && ++_freeze > 16) break;
-						_total_prev = _total;
-					}
-					
-					array_push(lines, points);
-				}
-			} else {
-				var x0, y0, x1, y1;
-				var _0 = point_rectangle_overlap(_dim[0], _dim[1], (_ang + 180) % 360);
-				var _1 = point_rectangle_overlap(_dim[0], _dim[1], _ang);
-				x0 = _0[0]; y0 = _0[1];
-				x1 = _1[0]; y1 = _1[1];
-			
-				var _l = point_distance(x0, y0, x1, y1);
-				var _d = point_direction(x0, y0, x1, y1);
-				var _od = _d, _nd = _d;
+				shader_set(sh_draw_mapping);
+				shader_set_f("position", _texPos);
+				shader_set_f("rotation", degtorad(_texRot));
+				shader_set_f("scale",    _texSca);
 				
-				var ww          = _rtMax / _seg;
-				var _total		= _rtMax;
-				var _prog_curr	= frac(_shift) - ww;
-				var _prog		= _prog_curr + 1;
-				var _prog_total	= 0;
-				var points = [];
-				
-				while(_total > 0) {
-					if(_prog_curr >= 1) _prog_curr = 0;
-					else _prog_curr = min(_prog_curr + min(_total, ww), 1);
-					_prog_total += min(_total, ww);
-					
-					_nx = x0 + lengthdir_x(_l * _prog_curr, _d);
-					_ny = y0 + lengthdir_y(_l * _prog_curr, _d);
-					
-					var wgLen = random1D(_sed + _sedIndex, -_wig, _wig); _sedIndex++;
-					_nx += lengthdir_x(wgLen, _d + 90); 
-					_ny += lengthdir_y(wgLen, _d + 90);
-					
-					if(_prog_total > _rtStr) //prevent drawing point before range start.
-						array_push(points, [_nx, _ny, _prog_total / _rtMax, _prog_curr]);
-					
-					if(_prog_curr > _prog)
-						_total -= (_prog_curr - _prog);
-					_prog = _prog_curr;
-					_ox = _nx;
-					_oy = _ny;
-				}
-				
-				lines = [ points ];
+				shader_set_interpolation(_tex);
+				draw_primitive_begin_texture(pr_trianglestrip, tex);
 			}
 			
 			for( var i = 0; i < array_length(lines); i++ ) {
@@ -308,11 +335,6 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 				if(array_length(points) < 2) continue;
 				
 				var pxs = [];
-				
-				if(_useTex) {
-					var tex = surface_get_texture(_tex);
-					draw_primitive_begin_texture(pr_trianglestrip, tex);
-				}
 				
 				for( var j = 0; j < array_length(points); j++ ) {
 					var p0   = points[j];
@@ -409,8 +431,10 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 					}
 				}
 				
-				if(_useTex)
+				if(_useTex) {
 					draw_primitive_end();
+					shader_reset();
+				}
 			}
 		surface_reset_target();
 		

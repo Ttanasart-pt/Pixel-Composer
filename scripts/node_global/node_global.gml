@@ -16,6 +16,9 @@ function variable_editor(nodeVal) constructor {
 	tb_name = new textArea(TEXTBOX_INPUT.text, function(str) { 
 		value_name = str;
 		value.name = str;
+		
+		if(string_pos(" ", value.name))
+			noti_warning("Global variable name can't have space.");
 		UPDATE |= RENDER_TYPE.full;
 	});
 	
@@ -223,8 +226,13 @@ function Node_Global(_x = 0, _y = 0) : __Node_Base(_x, _y) constructor {
 	
 	static step = function() {
 		for( var i = 0; i < ds_list_size(inputs); i++ ) {
-			var val = inputs[| i].getValue();
-			value[? inputs[| i].name] = inputs[| i];
+			var _inp = inputs[| i];
+			var val  = _inp.getValue();
+			value[? _inp.name] = _inp;
+			
+			var val   = true;
+			if(string_pos(" ", _inp.name)) val = false;
+			_inp.editor.tb_name.boxColor = val? c_white : COLORS._main_value_negative;
 		}
 	}
 	

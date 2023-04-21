@@ -40,7 +40,7 @@ function Node_Iterator_Output(_x, _y, _group = noone) : Node_Group_Output(_x, _y
 			if(!_to.node.renderActive) continue;
 				
 			if(_to.node.active && _to.value_from != noone && _to.value_from.node == group) {
-				if(_to.node.isRenderable()) 
+				if(_to.node.isRenderable())
 					array_push(nodes, _to.node);
 			}
 		}
@@ -91,7 +91,13 @@ function Node_Iterator_Output(_x, _y, _group = noone) : Node_Group_Output(_x, _y
 	}
 	
 	static update = function(frame = ANIMATOR.current_frame) {
-		if(inputs[| 0].value_from == noone) return;
+		if(!variable_struct_exists(group, "iterated")) 
+			return;
+			
+		if(inputs[| 0].value_from == noone) {
+			group.iterationUpdate();
+			return;
+		}
 		
 		var _val = inputs[| 0].getValue();
 		cache_value = cloneValue(cache_value, _val);

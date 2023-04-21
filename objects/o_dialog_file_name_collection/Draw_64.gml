@@ -57,7 +57,7 @@
 				meta.author_steam_id = STEAM_USER_ID;
 			
 			if(updating == noone) {
-				PANEL_COLLECTION.saveCollection(meta.name, true, meta);
+				saveCollection(node, data_path, meta.name, true, meta);
 			} else {
 				var path = updating.path;
 				var map  = json_load(path);
@@ -77,7 +77,7 @@
 				steam_ugc_create_collection(updating);
 				ugc_loading = true;
 			} else if(ugc == 2) {
-				PANEL_COLLECTION.saveCollection(updating.path, false, updating.meta);
+				saveCollection(node, data_path, updating.path, false, updating.meta);
 				steam_ugc_update_collection(updating);
 				ugc_loading = true;
 			} else 

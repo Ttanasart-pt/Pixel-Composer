@@ -352,6 +352,8 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		if(!active)	return false;
 		if(!renderActive) return false;
 		
+		if(group && struct_has(group, "iterationStatus") && group.iterationStatus() == ITERATION_STATUS.complete) return false;
+		
 		for(var j = 0; j < ds_list_size(inputs); j++) {
 			var _in = inputs[| j];
 			if( _in.type == VALUE_TYPE.node) continue;

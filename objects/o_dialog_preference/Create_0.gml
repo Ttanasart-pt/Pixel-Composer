@@ -2,8 +2,8 @@
 event_inherited();
 
 #region data
-	dialog_w = ui(640);
-	dialog_h = ui(480);
+	dialog_w = ui( 900);
+	dialog_h = ui( 640);
 	
 	page_width = 160;
 	destroy_on_click_out = true;
@@ -30,6 +30,21 @@ event_inherited();
 	page[3] = get_text("pref_pages_hotkeys",	"Hotkeys");
 	
 	pref_global = ds_list_create();
+	
+	ds_list_add(pref_global, [
+		get_text("panel_directory", "Directory path (restart required)"),
+		function() { return PRESIST_PREF.path; },
+		new textBox(TEXTBOX_INPUT.text, function(txt) { 
+				PRESIST_PREF.path = txt;
+				json_save_struct(APP_DIRECTORY + "persistPreference.json", PRESIST_PREF);
+			}, 
+			button(function() { 
+				PRESIST_PREF.path = get_directory(PRESIST_PREF.path);
+				json_save_struct(APP_DIRECTORY + "persistPreference.json", PRESIST_PREF);
+			}, THEME.button_path_icon)
+		).setFont(f_p2)
+		 .setEmpty()
+	]);
 	
 	ds_list_add(pref_global, [
 		get_text("pref_show_welcome_screen", "Show welcome screen"),
@@ -403,6 +418,11 @@ event_inherited();
 			}
 			
 			var name = _pref[0];
+			var txt  = _pref[1];
+			if(is_method(txt)) 
+				txt = txt();
+			else 
+				txt = PREF_MAP[? txt];
 			
 			if(search_text != "" && string_pos(string_lower(search_text), string_lower(name)) == 0)
 				continue;
@@ -416,23 +436,24 @@ event_inherited();
 				
 			switch(instanceof(_pref[2])) {
 				case "textBox" :
-					_pref[2].draw(x1 - ui(4), yy + th / 2, ui(88), th, PREF_MAP[? _pref[1]], _m,, fa_right, fa_center);
+					var widget_w = _pref[2].input == TEXTBOX_INPUT.text? ui(400) : ui(88);
+					_pref[2].draw(x1 - ui(4), yy + th / 2, widget_w, th, txt, _m,, fa_right, fa_center);
 					break;
 				case "vectorBox" :
-					_pref[2].draw(x1 - ui(4 + 200), yy, ui(200), th, PREF_MAP[? _pref[1]], _m);
+					_pref[2].draw(x1 - ui(4 + 200), yy, ui(200), th, txt, _m);
 					break;
 				case "checkBox" :
-					_pref[2].draw(x1 - ui(48), yy + th / 2, PREF_MAP[? _pref[1]], _m,, fa_center, fa_center);
+					_pref[2].draw(x1 - ui(48), yy + th / 2, txt, _m,, fa_center, fa_center);
 					break;
 				case "slider" :
-					_pref[2].draw(x1 - ui(4), yy + th / 2, ui(200), th, PREF_MAP[? _pref[1]], _m, ui(88), fa_right, fa_center);
+					_pref[2].draw(x1 - ui(4), yy + th / 2, ui(200), th, txt, _m, ui(88), fa_right, fa_center);
 					break;
 				case "scrollBox" :
 					var _w = ui(200);
 					var _h = th;
 						
 					_pref[2].align = fa_left;
-					_pref[2].draw(x1 - ui(4) - _w, yy + th / 2 - _h / 2, _w, _h, PREF_MAP[? _pref[1]], _m, _r[0], _r[1]);
+					_pref[2].draw(x1 - ui(4) - _w, yy + th / 2 - _h / 2, _w, _h, txt, _m, _r[0], _r[1]);
 					break;
 			}
 				
@@ -506,22 +527,24 @@ event_inherited();
 				draw_set_text(f_p0, fa_left, fa_top, COLORS._main_text);
 				draw_text(ui(16), _y + hh, name);
 				
-				var dk = key.key == -1? "None" : key_get_name(key.key, key.modi);
+				var dk = key_get_name(key.key, key.modi);
 				var kw = string_width(dk);
 			
 				if(hk_editing == key) {
 					var _mod_prs = 0;
 					
-					if(key_mod_press(CTRL))		_mod_prs |= MOD_KEY.ctrl;
-					if(key_mod_press(SHIFT))	_mod_prs |= MOD_KEY.shift;
-					if(key_mod_press(ALT))		_mod_prs |= MOD_KEY.alt;
+					if(keyboard_check(vk_control))	_mod_prs |= MOD_KEY.ctrl;
+					if(keyboard_check(vk_shift))	_mod_prs |= MOD_KEY.shift;
+					if(keyboard_check(vk_alt))		_mod_prs |= MOD_KEY.alt;
 					
 					if(keyboard_check_pressed(vk_escape)) {
-						key.key	 = -1;
+						key.key	 = 0;
 						key.modi = 0;
 						
 						PREF_SAVE();
 					} else if(keyboard_check_pressed(vk_anykey)) {
+						key.modi  = _mod_prs;
+						key.key   = 0;
 						var press = false;
 						
 						for(var a = 0; a < array_length(vk_list); a++) {
@@ -545,10 +568,11 @@ event_inherited();
 							}
 						}
 						
-						if(press) key.modi = _mod_prs;
 						PREF_SAVE();
 					}
 					
+					dk = key_get_name(key.key, key.modi);
+					kw = string_width(dk);
 					draw_sprite_stretched(THEME.button_hide, 2, key_x1 - ui(40) - kw, _y + hh - ui(6), kw + ui(32), th + ui(12));
 				} else {
 					var bx = key_x1 - ui(40) - kw;
@@ -559,7 +583,7 @@ event_inherited();
 					}
 				}
 				
-				var cc = key.key == -1? COLORS._main_text_sub : COLORS._main_text;
+				var cc = (key.key == 0 && key.modi == MOD_KEY.none)? COLORS._main_text_sub : COLORS._main_text;
 				if(hk_editing == key) cc = COLORS._main_text_accent;
 				
 				draw_set_text(f_p0, fa_right, fa_top, cc);

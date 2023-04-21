@@ -57,3 +57,17 @@ function searchCollection(_list, _search_str, _clear_list = true) {
 	
 	ds_stack_destroy(st);
 }
+
+function saveCollection(_node, _path, _name, save_surface = true, metadata = noone) {
+	if(_node == noone) return;
+		
+	var _pre_name = (_path == ""? "" : _path + "/") + _name;
+	var ext = filename_ext(_pre_name);
+	_path = ext == ".pxcc"? _pre_name : _pre_name + ".pxcc";
+		
+	SAVE_COLLECTION(_node, _path, save_surface, metadata, _node.group);
+		
+	PANEL_COLLECTION.updated_path = _path;
+	PANEL_COLLECTION.updated_prog = 1;
+	PANEL_COLLECTION.refreshContext();
+}

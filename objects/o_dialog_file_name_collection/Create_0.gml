@@ -16,6 +16,9 @@ event_inherited();
 	meta_expand = false;
 	updating = noone;
 	
+	node = noone;
+	data_path = "";
+	
 	ugc  = 0;
 	ugc_loading = false;
 	//name = get_text("new_collection_placeholder", "New collection");

@@ -1487,7 +1487,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 					var animTo = ext.inputs[| j].animator;
 					var animLs = animTo.values;
 					
-					ext.setAnim(is_anim);
+					ext.inputs[| j].setAnim(is_anim);
 					ds_list_clear(animLs);
 				}
 				
@@ -1506,7 +1506,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				var animTo = ext.inputs[| 0].animator;
 				var animLs = animTo.values;
 				
-				ext.setAnim(is_anim);
+				ext.inputs[| 0].setAnim(is_anim);
 				ds_list_clear(animLs);
 				
 				for( var i = 0; i < ds_list_size(animFrom); i++ )

@@ -4,7 +4,7 @@ enum TEXTBOX_INPUT {
 }
 
 function textBox(_input, _onModify, _extras = noone) : textInput(_input, _onModify, _extras) constructor {
-	align  = fa_right;
+	align  = _input == TEXTBOX_INPUT.number? fa_right : fa_left;
 	hide   = false;
 	font   = noone;
 	color  = COLORS._main_text;
@@ -40,6 +40,16 @@ function textBox(_input, _onModify, _extras = noone) : textInput(_input, _onModi
 	sprite_index = -1;
 	
 	text_surface = surface_create(1, 1);
+	
+	static setFont = function(font) {
+		self.font = font;
+		return self;
+	}
+	
+	static setEmpty = function() {
+		no_empty = false;
+		return self;
+	}
 	
 	static activate = function() { 
 		WIDGET_CURRENT = self;
@@ -304,6 +314,18 @@ function textBox(_input, _onModify, _extras = noone) : textInput(_input, _onModi
 		w = _w;
 		h = _h;
 		
+		switch(halign) {
+			case fa_left:   _x = _x;			break;	
+			case fa_center: _x = _x - _w / 2;	break;	
+			case fa_right:  _x = _x - _w;		break;	
+		}
+		
+		switch(valign) {
+			case fa_top:    _y = _y;			break;	
+			case fa_center: _y = _y - _h / 2;	break;	
+			case fa_bottom: _y = _y - _h;		break;	
+		}
+		
 		if(extras && instanceof(extras) == "buttonClass") {
 			extras.setActiveFocus(hover, active);
 			extras.draw(_x + _w - ui(32), _y + _h / 2 - ui(32 / 2), ui(32), ui(32), _m, THEME.button_hide);
@@ -358,18 +380,6 @@ function textBox(_input, _onModify, _extras = noone) : textInput(_input, _onModi
 				sliding = 0;
 				UNDO_HOLDING = false;
 			}
-		}
-		
-		switch(halign) {
-			case fa_left:   _x = _x;			break;	
-			case fa_center: _x = _x - _w / 2;	break;	
-			case fa_right:  _x = _x - _w;		break;	
-		}
-		
-		switch(valign) {
-			case fa_top:    _y = _y;			break;	
-			case fa_center: _y = _y - _h / 2;	break;	
-			case fa_bottom: _y = _y - _h;		break;	
 		}
 		
 		var tb_surf_x = _x + ui(8);

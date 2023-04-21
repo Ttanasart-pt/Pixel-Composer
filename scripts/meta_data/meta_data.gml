@@ -216,8 +216,8 @@ function MetaDataManager() constructor {
 	
 	function __getdefaultMetaData() {
 		var meta = new MetaDataManager();
-		
 		var path = DIRECTORY + "meta.json";
+		
 		if(!file_exists(path)) return meta;
 		var over = json_load(path);
 		return meta.deserialize(over);

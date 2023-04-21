@@ -2,19 +2,45 @@
 //print("===== Game Start Begin =====");
 
 #region directory
-	globalvar DIRECTORY;
+	globalvar DIRECTORY, APP_DIRECTORY, PRESIST_PREF;
 	DIRECTORY = "";
+	PRESIST_PREF = {};
 	
-	if(OS == os_windows)
-		DIRECTORY = environment_get_variable("userprofile") + "/AppData/Local/PixelComposer/";
-	else if(OS == os_macosx) {
+	if(OS == os_windows) {	
+		APP_DIRECTORY = environment_get_variable("userprofile") + "\\AppData\\Local\\PixelComposer\\";
+	} else if(OS == os_macosx) {
 		var home_dir = environment_get_variable("HOME");
 		if(string(home_dir) == "0")
 			log_message("DIRECTORY", "Directory not found.");
 		else 
-			DIRECTORY = string(home_dir) + "/PixelComposer/";
+			APP_DIRECTORY = string(home_dir) + "/PixelComposer/";
 	}
-	show_debug_message("Current working directory: " + string(DIRECTORY));
+	show_debug_message("App directory: " + string(APP_DIRECTORY));
+	
+	if(!directory_exists(APP_DIRECTORY)) directory_create(APP_DIRECTORY);
+	
+	var perstPath = APP_DIRECTORY + "persistPreference.json"; 
+	if(file_exists(perstPath)) {
+		PRESIST_PREF = json_load_struct(perstPath);
+		DIRECTORY    = struct_has(PRESIST_PREF, "path")? PRESIST_PREF.path : "";
+	}
+	
+	show_debug_message("Env directory: " + string(DIRECTORY));
+	var dir_valid = DIRECTORY != "" && directory_exists(DIRECTORY);
+	var tmp = file_text_open_write(DIRECTORY + "val_check.txt");
+	
+	if(tmp == -1) {
+		dir_valid = false;
+		print("WARNING: Inaccessible directory [" + DIRECTORY + "] this may be caused by non existing folder, or Pixel Composer has no permission to open the folder.");
+	} else {
+		file_text_close(tmp);
+		file_delete(DIRECTORY + "val_check.txt");
+	}
+	
+	if(!dir_valid) DIRECTORY = APP_DIRECTORY;
+	
+	PRESIST_PREF.path = DIRECTORY;
+	json_save_struct(perstPath, PRESIST_PREF);
 	
 	if(!directory_exists(DIRECTORY))
 		directory_create(DIRECTORY);
@@ -22,7 +48,9 @@
 		directory_create(DIRECTORY + "temp");
 	
 	METADATA = __getdefaultMetaData();
-	
+#endregion
+
+#region Set up
 	PREF_LOAD();
 	
 	log_clear();

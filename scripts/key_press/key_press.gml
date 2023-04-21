@@ -1,6 +1,7 @@
 #region key map
 	global.KEY_STRING_MAP = ds_map_create();
 	
+	global.KEY_STRING_MAP[?  0] = ""
 	global.KEY_STRING_MAP[? 48] = "0"
 	global.KEY_STRING_MAP[? 49] = "1"
 	global.KEY_STRING_MAP[? 50] = "2"
@@ -83,11 +84,14 @@
 
 #region get name
 	function key_get_name(_key, _mod) {
+		if(_key == 0 && _mod == MOD_KEY.none)
+			return "None";
+		
 		var dk = "";
 		if(_mod & MOD_KEY.ctrl)		dk += "Ctrl+";
 		if(_mod & MOD_KEY.shift)	dk += "Shift+";
 		if(_mod & MOD_KEY.alt)		dk += "Alt+";
-				
+		
 		switch(_key) {
 			case vk_space : dk += "Space";	break;	
 			case vk_left  : dk += "Left";	break;	
@@ -95,14 +99,14 @@
 			case vk_up    : dk += "Up";		break;	
 			case vk_down  : dk += "Down";	break;	
 			case vk_backspace :   dk += "Backspace"; break;
-			case vk_tab :         dk += "Tab"; break;
-			case vk_home :        dk += "Home"; break;
-			case vk_end :         dk += "End"; break;
-			case vk_delete :      dk += "Delete"; break;
-			case vk_insert :      dk += "Insert"; break; 
-			case vk_pageup :      dk += "Page Up"; break;
+			case vk_tab :         dk += "Tab";		 break;
+			case vk_home :        dk += "Home";		 break;
+			case vk_end :         dk += "End";		 break;
+			case vk_delete :      dk += "Delete";	 break;
+			case vk_insert :      dk += "Insert";	 break; 
+			case vk_pageup :      dk += "Page Up";	 break;
 			case vk_pagedown :    dk += "Page Down"; break;
-			case vk_pause :       dk += "Pause"; break;
+			case vk_pause :       dk += "Pause";	 break;
 			case vk_printscreen : dk += "Printscreen"; break;         
 			case vk_f1 :  dk += "F1"; break;
 			case vk_f2 :  dk += "F2"; break;
@@ -116,13 +120,17 @@
 			case vk_f10 : dk += "F10"; break;
 			case vk_f11 : dk += "F11"; break;
 			case vk_f12 : dk += "F12"; break;          
-			default     : 
+			case -1 : break;
+			default : 
 				if(ds_map_exists(global.KEY_STRING_MAP, _key))
 					dk += global.KEY_STRING_MAP[? _key];
 				else 
 					dk += ansi_char(_key);	
 				break;	
 		}
+		
+		if(string_char_at(dk, string_length(dk)) == "+")
+			dk = string_copy(dk, 1, string_length(dk) - 1);
 		
 		return dk;
 	}
@@ -137,7 +145,7 @@ enum MOD_KEY {
 
 function key_press(_key, _mod) {
 	if(WIDGET_CURRENT) return false;
-	if(_key < 0 || _key == "") return false;
+	if(_mod == MOD_KEY.none && _key == 0) return false;
 	
 	if(keyboard_check_pressed(_key) && HOTKEY_MOD == _mod)
 		return true;

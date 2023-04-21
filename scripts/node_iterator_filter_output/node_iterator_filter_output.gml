@@ -59,16 +59,22 @@ function Node_Iterator_Filter_Output(_x, _y, _group = noone) : Node(_x, _y, _gro
 	}
 	
 	static update = function(frame = ANIMATOR.current_frame) {
-		if(inputs[| 0].value_from == noone) 
+		if(!variable_struct_exists(group, "iterated")) 
 			return;
-		if(!variable_struct_exists(group, "iterated"))
+			
+		if(inputs[| 0].value_from == noone) {
+			group.iterationUpdate();
 			return;
+		}
 			
 		var val = inputs[| 0].getValue();
 		var res = inputs[| 1].getValue();
 			
 		var _val = group.outputs[| 0].getValue();
-		if(!is_array(_val)) return;
+		if(!is_array(_val)) {
+			group.iterationUpdate();
+			return;
+		}
 		
 		if(res) {
 			var is_surf	 = inputs[| 0].value_from.type == VALUE_TYPE.surface;

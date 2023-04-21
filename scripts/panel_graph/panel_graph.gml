@@ -11,6 +11,7 @@ function Panel_Graph() : PanelContent() constructor {
 	grid_color      = c_white;
 	grid_opacity	= 0.05;
 	
+	graph_dragging_key = false;
 	graph_draggable= true;
 	graph_dragging = false;
 	graph_drag_mx  = 0;
@@ -236,6 +237,8 @@ function Panel_Graph() : PanelContent() constructor {
 	addHotkey("Graph", "Copy",		"C", MOD_KEY.ctrl,	function() { PANEL_GRAPH.doCopy(); });
 	addHotkey("Graph", "Paste",		"V", MOD_KEY.ctrl,	function() { PANEL_GRAPH.doPaste(); });
 	
+	addHotkey("Graph", "Pan",		"", MOD_KEY.alt,	function() { PANEL_GRAPH.graph_dragging_key = true; });
+	
 	function onFocusBegin() { 
 		PANEL_GRAPH = self; 
 		PANEL_ANIMATION.updatePropertyList();
@@ -303,7 +306,7 @@ function Panel_Graph() : PanelContent() constructor {
 			if(mouse_press(mb_middle)) {
 				_doDragging = true;
 				drag_key = mb_middle;
-			} else if(mouse_press(mb_left) && key_mod_press(ALT)) {
+			} else if(mouse_press(mb_left) && graph_dragging_key) {
 				_doDragging = true;
 				drag_key = mb_left;
 			}
@@ -636,7 +639,7 @@ function Panel_Graph() : PanelContent() constructor {
 		var hoverable = !bool(node_dragging) && pHOVER;
 		for(var i = 0; i < ds_list_size(nodes_list); i++) {
 			var _hov = nodes_list[| i].drawConnections(gr_x, gr_y, graph_s, mx, my, hoverable, aa);
-			if(_hov != noone) hov = _hov;
+			if(_hov != noone && is_struct(hov)) hov = _hov;
 		}
 		//print("Draw connection: " + string(current_time - t)); t = current_time;
 		surface_reset_target();
@@ -646,7 +649,7 @@ function Panel_Graph() : PanelContent() constructor {
 		draw_surface(connection_surface, 0, 0);
 		shader_reset();
 		
-		junction_hovering = node_hovering == noone? hov : noone;
+		junction_hovering = (node_hovering == noone && is_struct(node_hovering))? hov : noone;
 		value_focus = noone;
 		
 		#region draw node
@@ -856,7 +859,7 @@ function Panel_Graph() : PanelContent() constructor {
 					nodes_junction_d = noone;
 			}
 		
-			if(mouse_on_graph && mouse_press(mb_left, pFOCUS) && !key_mod_press(ALT)) {
+			if(mouse_on_graph && mouse_press(mb_left, pFOCUS) && !graph_dragging_key) {
 				if(junction_hovering && junction_hovering.draw_line_shift_hover) {
 					nodes_select_mx		= mx;
 					nodes_select_my		= my;
@@ -1758,6 +1761,8 @@ function Panel_Graph() : PanelContent() constructor {
 					checkDropItem();
 			}
 		}
+		
+		graph_dragging_key = false;
 	}
 	
 	static checkDropItem = function() {

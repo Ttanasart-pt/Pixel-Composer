@@ -21,6 +21,7 @@ function Panel_Preview() : PanelContent() constructor {
 	do_fullView = false;
 	
 	canvas_hover = true;
+	canvas_dragging_key = false;
 	canvas_dragging = false;
 	canvas_drag_key = 0;
 	canvas_drag_mx  = 0;
@@ -147,6 +148,8 @@ function Panel_Preview() : PanelContent() constructor {
 	addHotkey("Preview", "Preview window",			"P", MOD_KEY.ctrl,	function() { PANEL_PREVIEW.previewWindow(PANEL_PREVIEW.getNodePreview()); });
 	addHotkey("Preview", "Toggle grid",				"G", MOD_KEY.ctrl,	function() { PANEL_PREVIEW.grid_show = !PANEL_PREVIEW.grid_show; });
 	
+	addHotkey("Preview", "Pan",		"", MOD_KEY.alt,	function() { PANEL_PREVIEW.canvas_dragging_key = true; });
+	
 	function setNodePreview(node) {
 		if(resetViewOnDoubleClick)
 			do_fullView = true;
@@ -221,7 +224,7 @@ function Panel_Preview() : PanelContent() constructor {
 			if(mouse_press(mb_middle)) {
 				hold = true;
 				canvas_drag_key = mb_middle;
-			} else if(mouse_press(mb_left) && key_mod_press(ALT)) {
+			} else if(mouse_press(mb_left) && canvas_dragging_key) {
 				hold = true;
 				canvas_drag_key = mb_left;
 			}
@@ -251,6 +254,7 @@ function Panel_Preview() : PanelContent() constructor {
 			}
 		}
 		
+		canvas_dragging_key = false;
 		canvas_hover = point_in_rectangle(mx, my, 0, toolbar_height, w, h - toolbar_height);
 	}
 	

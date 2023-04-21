@@ -46,7 +46,7 @@ function buttonClass(_onClick, _icon = noone) : widget() constructor {
 		var click = false;
 		if(hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + _h)) {
 			draw_sprite_stretched_ext(spr, 1, _x, _y, _w, _h, b, 1);	
-			if(mouse_press(mb_left, active)) {
+			if(mouse_release(mb_left, active)) {
 				trigger();
 				click = true;
 			}

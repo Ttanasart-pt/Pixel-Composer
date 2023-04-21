@@ -37,27 +37,30 @@ if(OS == os_windows && gameframe_is_minimized()) exit;
 	if(SHIFT == KEYBOARD_STATUS.pressing)	HOTKEY_MOD |= MOD_KEY.shift;
 	if(ALT   == KEYBOARD_STATUS.pressing)	HOTKEY_MOD |= MOD_KEY.alt;
 	
-	if(ds_map_exists(HOTKEYS, "")) {
-		var l = HOTKEYS[? ""];
-		for(var i = 0; i < ds_list_size(l); i++) {
-			var hotkey = l[| i];
-			var name = hotkey.name;
+	if(!instance_exists(o_dialog_preference)) {
+		if(ds_map_exists(HOTKEYS, "")) {
+			var l = HOTKEYS[? ""];
+			for(var i = 0; i < ds_list_size(l); i++) {
+				var hotkey = l[| i];
+				if(hotkey.key == 0 && hotkey.modi == MOD_KEY.none) continue;
 			
-			if(hotkey.key != -1 && key_press(hotkey.key, hotkey.modi)) {
-				hotkey.action();
-				break;
+				if(key_press(hotkey.key, hotkey.modi)) {
+					hotkey.action();
+					break;
+				}
 			}
 		}
-	}
 	
-	if(ds_map_exists(HOTKEYS, FOCUS_STR)) {
-		var list = HOTKEYS[? FOCUS_STR];
-		for(var i = 0; i < ds_list_size(list); i++) {
-			var hotkey	= list[| i];
+		if(ds_map_exists(HOTKEYS, FOCUS_STR)) {
+			var list = HOTKEYS[? FOCUS_STR];
+			for(var i = 0; i < ds_list_size(list); i++) {
+				var hotkey	= list[| i];
+				if(hotkey.key == 0 && hotkey.modi == MOD_KEY.none) continue;
 			
-			if(hotkey.key != -1 && key_press(hotkey.key, hotkey.modi)) {
-				hotkey.action();
-				break;
+				if(key_press(hotkey.key, hotkey.modi)) {
+					hotkey.action();
+					break;
+				}
 			}
 		}
 	}

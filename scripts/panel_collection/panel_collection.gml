@@ -39,14 +39,16 @@ function Panel_Collection() : PanelContent() constructor {
 		if(meta == noone || !meta.steam) {
 			contentMenu = [
 				menuItem(get_text("panel_collection_replace", "Replace with selected"), function() { 
-					saveCollection(_menu_node.path, false, _menu_node.meta);
+					saveCollection(PANEL_INSPECTOR.inspecting, _menu_node.data_path, _menu_node.path, false, _menu_node.meta);
 				}),
 				menuItem(get_text("panel_collection_edit_meta", "Edit metadata") + "...", function() { 
 					var dia = dialogCall(o_dialog_file_name_collection, mouse_mx + ui(8), mouse_my + ui(-320));
 					var meta = _menu_node.getMetadata();
 					if(meta != noone && meta != undefined) 
 						dia.meta = meta;
-			
+					
+					dia.node = PANEL_INSPECTOR.inspecting;
+					dia.data_path = data_path;
 					dia.updating	= _menu_node;
 					dia.doExpand();
 				}),
@@ -69,6 +71,8 @@ function Panel_Collection() : PanelContent() constructor {
 					if(meta != noone && meta != undefined) 
 						dia.meta = meta;
 				
+					dia.node		= PANEL_INSPECTOR.inspecting;
+					dia.data_path	= data_path;
 					dia.ugc			= 1;
 					dia.updating	= _menu_node;
 					dia.doExpand();
@@ -81,6 +85,8 @@ function Panel_Collection() : PanelContent() constructor {
 						if(meta != noone && meta != undefined) 
 							dia.meta = meta;
 						
+						dia.node		= PANEL_INSPECTOR.inspecting;
+						dia.data_path	= data_path;
 						dia.ugc			= 2;
 						dia.updating	= _menu_node;
 						dia.doExpand();
@@ -317,24 +323,6 @@ function Panel_Collection() : PanelContent() constructor {
 			steamUCGload();
 	}
 	
-	function saveCollection(_name, save_surface = true, metadata = noone) {
-		if(PANEL_INSPECTOR.inspecting == noone) return;
-		
-		var _pre_name = (data_path == ""? "" : data_path + "/") + _name;
-		var ext = filename_ext(_pre_name);
-		var _path = ext == ".pxcc"? _pre_name : _pre_name + ".pxcc";
-		
-		if(ds_list_empty(PANEL_GRAPH.nodes_select_list))
-			SAVE_COLLECTION(PANEL_INSPECTOR.inspecting, _path, save_surface, metadata, PANEL_INSPECTOR.inspecting.group);
-		else
-			SAVE_COLLECTIONS(PANEL_GRAPH.nodes_select_list, _path, save_surface, metadata);
-		
-		updated_path = _path;
-		updated_prog = 1;
-		
-		refreshContext();
-	}
-	
 	function drawContent(panel) {
 		draw_clear_alpha(COLORS.panel_bg_clear, 0);
 		
@@ -414,8 +402,11 @@ function Panel_Collection() : PanelContent() constructor {
 							if(PANEL_INSPECTOR.inspecting != noone) {
 								data_path = context.path;
 								var dia = dialogCall(o_dialog_file_name_collection, mouse_mx + ui(8), mouse_my + ui(8));
-								if(PANEL_INSPECTOR.inspecting)
+								if(PANEL_INSPECTOR.inspecting) {
 									dia.meta.name = PANEL_INSPECTOR.inspecting.display_name;
+									dia.node	  = PANEL_INSPECTOR.inspecting;
+									dia.data_path = data_path;
+								}
 							}
 						}
 					} else {
