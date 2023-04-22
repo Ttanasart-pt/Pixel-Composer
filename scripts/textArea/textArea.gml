@@ -409,7 +409,7 @@ function textArea(_input, _onModify, _extras = noone) : textInput(_input, _onMod
 		
 		if(self == WIDGET_CURRENT) { 
 			draw_set_text(font, fa_left, fa_top, COLORS._main_text);
-			draw_sprite_stretched_ext(THEME.textbox, 2, _x, _y, _w, hh, boxColor, 1);
+			draw_sprite_stretched_ext(THEME.textbox, 2, _x, _y, _w, hh, COLORS._main_accent, 1);
 			editText();
 			
 			#region cursor

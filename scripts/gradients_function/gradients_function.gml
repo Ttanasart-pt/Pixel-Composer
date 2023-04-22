@@ -136,11 +136,28 @@ function gradientObject(color = c_black) constructor {
 	}
 	
 	static serialize = function() {
-		return json_stringify(self);
+		return json_stringify(self, false);
 	}
 	
 	static deserialize = function(str) {
-		var s = json_try_parse(str);
+		var s;
+		
+		if(is_string(str))
+			s = json_try_parse(str);
+		else if(is_struct(str))
+			s = str;
+		else if(ds_exists(str, ds_type_list)) {
+			
+			keys = [];
+			for( var i = 0; i < ds_list_size(str); i++ ) {
+				if(!ds_exists(str[| i], ds_type_map)) continue;
+				
+				keys[i] = new gradientKey(str[| i][? "time"], str[| i][? "value"]); 
+			}
+			
+			return self;
+		}
+			
 		type = s.type;
 		keys = [];
 		for( var i = 0; i < array_length(s.keys); i++ )

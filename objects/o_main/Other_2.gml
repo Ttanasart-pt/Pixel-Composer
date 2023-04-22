@@ -71,6 +71,7 @@
 	__initNodeData();
 	__initNodes();
 	__initSteamUGC();
+	__initAddon();
 	
 	PREF_APPLY();
 	loadFonts();

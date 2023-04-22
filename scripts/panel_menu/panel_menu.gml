@@ -32,7 +32,7 @@ function Panel_Menu() : PanelContent() constructor {
 		menuItem(get_text("panel_menu_splash_screen", "Splash screen"), function() { dialogCall(o_dialog_splash); }),
 		-1,
 		menuItem(get_text("panel_menu_addons", "Addons"), function(_x, _y, _depth) { 
-			return submenuCall(_x, _y, _depth, [
+			var arr = [
 				menuItem(get_text("panel_menu_addons_key", "Key displayer"), function() { 
 					if(instance_exists(addon_key_displayer)) {
 						instance_destroy(addon_key_displayer);
@@ -41,7 +41,19 @@ function Panel_Menu() : PanelContent() constructor {
 						
 					instance_create_depth(0, 0, 0, addon_key_displayer);
 				}),
-			]);
+				-1
+			];
+			
+			for( var i = 0; i < array_length(ADDONS); i++ ) {
+				var _dir = ADDONS[i];
+				
+				array_push(arr, menuItem(_dir, function(_x, _y, _depth, _path) { 
+					var addonPath = DIRECTORY + "Addons\\" + _path;
+					dialogPanelCall(new addonPanel(addonPath));
+				} ));
+			}
+			
+			return submenuCall(_x, _y, _depth, arr);
 		}, THEME.addon ).setIsShelf(),
 		-1,
 		menuItem(get_text("fullscreen", "Toggle fullscreen"), function() { 

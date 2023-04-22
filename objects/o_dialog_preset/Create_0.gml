@@ -20,13 +20,13 @@ event_inherited();
 		if(!ds_map_exists(global.PRESETS_MAP, folder)) return 0;
 		
 		var pres = global.PRESETS_MAP[? folder];
-		var amo = array_length(pres);
-		var hh  = line_height() + ui(8);
-		var _h = amo * hh;
+		var amo  = array_length(pres);
+		var hh   = line_height() + ui(8);
+		var _h   = amo * (hh + ui(4)) + ui(32);
 		
 		for( var i = 0; i < amo; i++ ) {
 			var preset = pres[i];
-			var _yy = _y + hh * i;
+			var _yy = _y + (hh + ui(4)) * i;
 			
 			if(sHOVER && sc_presets.hover && point_in_rectangle(_m[0], _m[1], 0, _yy, sc_presets.w, _yy + hh)) {
 				draw_sprite_stretched(THEME.node_bg, 0, 0, _yy, sc_presets.w - ui(12), hh);

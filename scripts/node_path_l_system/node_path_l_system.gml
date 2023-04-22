@@ -1,10 +1,12 @@
-function L_Turtle(x = 0, y = 0, ang = 90) constructor {
+function L_Turtle(x = 0, y = 0, ang = 90, w = 1, color = c_white) constructor {
 	self.x   = x;
 	self.y   = y;
 	self.ang = ang;
+	self.w   = w;
+	self.color = color;
 	
 	static clone = function() {
-		return new L_Turtle(x, y, ang);
+		return new L_Turtle(x, y, ang, w, color);
 	}
 }
 
@@ -121,9 +123,9 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		inputs[| 2].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
 		
 		draw_set_color(COLORS._main_accent);
-		for( var i = 0; i < array_length(lines); i += 2 ) {
-			var p0 = lines[i + 0];
-			var p1 = lines[i + 1];
+		for( var i = 0; i < array_length(lines); i++ ) {
+			var p0 = lines[i][0];
+			var p1 = lines[i][1];
 			
 			var x0 = p0[0];
 			var y0 = p0[1];
@@ -141,18 +143,32 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	
 	static getBoundary	= function() { return boundary; }
 	
-	static getLineCount		= function() { return floor(array_length(lines) / 2); }
+	static getLineCount		= function() { return array_length(lines); }
 	static getSegmentCount	= function() { return 1; }
 	static getLength		= function() { return current_length; }
 	static getAccuLength	= function() { return [ 0, current_length ]; }
 	
-	static getPointDistance = function(_dist, ind = 0) {
-		return getPointRatio(_dist / current_length, ind); 
+	static getWeightDistance = function (_dist, _ind = 0) { 
+		return getWeightRatio(_dist / current_length, _ind); 
+	}
+	
+	static getWeightRatio = function (_rat, _ind = 0) { 
+		var _p0 = lines[_ind][0];
+		var _p1 = lines[_ind][1];
+		
+		if(!is_array(_p0) || array_length(_p0) < 2) return 1;
+		if(!is_array(_p1) || array_length(_p1) < 2) return 1;
+		
+		return lerp(_p0[2], _p1[2], _rat);
+	}
+	
+	static getPointDistance = function(_dist, _ind = 0) {
+		return getPointRatio(_dist / current_length, _ind); 
 	}
 	
 	static getPointRatio = function(_rat, _ind = 0) {
-		var _p0 = array_safe_get(lines, _ind * 2 + 0,, ARRAY_OVERFLOW._default);
-		var _p1 = array_safe_get(lines, _ind * 2 + 1,, ARRAY_OVERFLOW._default);
+		var _p0 = lines[_ind][0];
+		var _p1 = lines[_ind][1];
 		
 		if(!is_array(_p0) || array_length(_p0) < 2) return new Point();
 		if(!is_array(_p1) || array_length(_p1) < 2) return new Point();
@@ -226,7 +242,7 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node(_x, _y, _group) const
 					var nx = t.x + lengthdir_x(_len, t.ang);
 					var ny = t.y + lengthdir_y(_len, t.ang);
 					
-					array_push(lines, [t.x, t.y], [nx, ny]);
+					array_push(lines, [ [t.x, t.y, t.w], [nx, ny, t.w] ]);
 					
 					t.x = nx;
 					t.y = ny;
@@ -239,7 +255,7 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node(_x, _y, _group) const
 					var nx = t.x + lengthdir_x(_len * frac(_itr), t.ang);
 					var ny = t.y + lengthdir_y(_len * frac(_itr), t.ang);
 					
-					array_push(lines, [t.x, t.y], [nx, ny]);
+					array_push(lines, [ [t.x, t.y, t.w], [nx, ny, t.w] ]);
 					
 					t.x = nx;
 					t.y = ny;
@@ -249,6 +265,9 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node(_x, _y, _group) const
 				case "|": t.ang += 180;  break;
 				case "[": ds_stack_push(st, t.clone()); break;
 				case "]": t = ds_stack_pop(st);			break;
+				
+				case ">": t.w += 0.1; break;
+				case "<": t.w -= 0.1; break;
 			}
 		}
 		
@@ -256,7 +275,7 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		
 		boundary = new BoundingBox();
 		for( var i = 0; i < array_length(lines); i++ )
-			boundary.addPoint(lines[i][0], lines[i][1]);
+			boundary.addPoint(lines[i][0][0], lines[i][0][1], lines[i][1][0], lines[i][1][1]);
 		
 		outputs[| 0].setValue(self);
 	}

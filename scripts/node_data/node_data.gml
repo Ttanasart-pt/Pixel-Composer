@@ -1270,6 +1270,13 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		
 		doDeserialize();
 		processDeserialize();
+		
+		if(preset) {
+			postDeserialize();
+			applyDeserialize();
+			
+			triggerRender();
+		}
 	}
 	
 	static doDeserialize = function() {}

@@ -1,11 +1,11 @@
 {
   "resourceType": "GMScript",
   "resourceVersion": "1.0",
-  "name": "gameframe_macros",
+  "name": "__initAddon",
   "isCompatibility": false,
   "isDnD": false,
   "parent": {
-    "name": "Gameframe",
-    "path": "folders/_Extensions/Gameframe.yy",
+    "name": "custom",
+    "path": "folders/addons/custom.yy",
   },
 }

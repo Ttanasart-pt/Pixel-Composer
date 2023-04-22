@@ -184,7 +184,7 @@ function Node_Lua_Compute(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		lua_projectData(getState());
 		
 		var res = 0;
-		try      res = lua_call_w(getState(), _func, argument_val);
+		try res = lua_call_w(getState(), _func, argument_val);
 		catch(e) noti_warning(exception_print(e),, self);
 		
 		outputs[| 1].setValue(res);

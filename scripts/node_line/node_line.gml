@@ -86,10 +86,10 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			if(array_length(points) < 2) continue;
 				
 			for( var j = 1; j < array_length(points); j++ ) {
-				var x0 = points[j - 1][0];
-				var y0 = points[j - 1][1];
-				var x1 = points[j][0];
-				var y1 = points[j][1];
+				var x0 = points[j - 1].x;
+				var y0 = points[j - 1].y;
+				var x1 = points[j].x;
+				var y1 = points[j].y;
 				
 				x0 = _x + x0 * _s;
 				y0 = _y + y0 * _s;
@@ -176,7 +176,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
 			
 		var _ox, _nx, _nx1, _oy, _ny, _ny1;
-		var _ow, _nw, _oa, _na, _oc, _nc;
+		var _ow, _nw, _oa, _na, _oc, _nc, _owg, _nwg;
 		lines = [];
 			
 		if(_use_path) {
@@ -208,7 +208,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 				var _prog		= _prog_curr + 1;	//Record previous position to delete from _total
 				var _prog_total	= 0;				//Record how far the pointer have moved so far
 				var points		= [];
-				var p;
+				var p, wght;
 					
 				if(_useDistance) {						
 					_pathStr   *= _pathLength;
@@ -236,11 +236,19 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 						else 
 							_prog_next = min(_prog_curr + _stepLen, 1); //Move forward _stepLen or _total (if less) stop at 1
 					}
-						
-					if(_useDistance) 
+					
+					wght = 1;
+					if(_useDistance) {
 						p = _pat.getPointDistance(_prog_curr, i);
-					else if(!_useDistance) 
+						
+						if(struct_has(_pat, "getWeightRatio"))
+							wght = _pat.getWeightRatio(_prog_curr, i);
+					} else if(!_useDistance) {
 						p = _pat.getPointRatio(_prog_curr, i);
+						
+						if(struct_has(_pat, "getWeightDistance"))
+							wght = _pat.getWeightDistance(_prog_curr, i);
+					}
 						
 					_nx = p.x;
 					_ny = p.y;
@@ -251,10 +259,9 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 						_ny   += lengthdir_y(random1D(_sed + _sedIndex, -_wig, _wig), _d + 90); _sedIndex++;
 					}
 						
-					if(_prog_total >= _pathStr) { //Do not add point before range start. Do this instead of starting at _rtStr to prevent wiggle. 
-						array_push(points, [ _nx, _ny, _prog_total / _pathEnd, _prog_curr / _pathLength ]);
-					}
-						
+					if(_prog_total >= _pathStr) //Do not add point before range start. Do this instead of starting at _rtStr to prevent wiggle. 
+						array_push(points, { x: _nx, y: _ny, prog: _prog_total / _pathEnd, progCrop: _prog_curr / _pathLength, weight: wght });
+					
 					if(_prog_next > _prog_curr) {
 						_prog_total += _prog_next - _prog_curr;
 						_total      -= _prog_next - _prog_curr;
@@ -302,7 +309,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 				_ny += lengthdir_y(wgLen, _d + 90);
 					
 				if(_prog_total > _rtStr) //prevent drawing point before range start.
-					array_push(points, [_nx, _ny, _prog_total / _rtMax, _prog_curr]);
+					array_push(points, { x: _nx, y: _ny, prog: _prog_total / _rtMax, progCrop: _prog_curr, weight: 1 });
 					
 				if(_prog_curr > _prog)
 					_total -= (_prog_curr - _prog);
@@ -338,10 +345,10 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 				
 				for( var j = 0; j < array_length(points); j++ ) {
 					var p0   = points[j];
-					var _nx  = p0[0];
-					var _ny  = p0[1];
-					var prog = p0[2];
-					var prgc = p0[3];
+					var _nx  = p0.x;
+					var _ny  = p0.y;
+					var prog = p0.prog;
+					var prgc = p0.progCrop;
 					
 					if(_1px) {
 						_nx = _nx - 0.5;	
@@ -350,6 +357,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 					
 					_nw = random_range(_wid[0], _wid[1]);
 					_nw *= eval_curve_x(_widc, _widap? prog : prgc);
+					_nw *= p0.weight;
 					
 					_nc = _color.eval(_colP? prog : prgc);
 					
@@ -391,8 +399,8 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 					
 							if(j < array_length(points) - 1) {
 								var p2 = points[j + 1];
-								var _nnx = p2[0];
-								var _nny = p2[1];
+								var _nnx = p2.x;
+								var _nny = p2.y;
 						
 								_nd1 = point_direction(_nx, _ny, _nnx, _nny);
 								_nd = _nd0 + angle_difference(_nd1, _nd0) / 2;
@@ -420,7 +428,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 								draw_line_width2_angle(_ox, _oy, _nx, _ny, _ow, _nw, _od + 90, _nd + 90, _oc, _nc, _colW);
 						} else {
 							var p1   = points[j + 1];
-							_nd = point_direction(_nx, _ny, p1[0], p1[1]);
+							_nd = point_direction(_nx, _ny, p1.x, p1.y);
 						}
 					
 						_ox = _nx;

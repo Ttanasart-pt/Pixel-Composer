@@ -9,14 +9,14 @@ if !ready exit;
 	draw_sprite_stretched(THEME.dialog_bg, 0, dialog_x, dialog_y, dialog_w, dialog_h);
 #endregion
 
-#region content	
+#region content
 	if(!is_undefined(content) && content != noone) {
 		var cx = dialog_x + content.showHeader * padding;
 		var cy = dialog_y + content.showHeader * (padding + title_height);
 		content.x = cx;
 		content.y = cy;
 		content.onStepBegin();
-
+		
 		content.pFOCUS = sFOCUS && m_in;
 		content.pHOVER = sHOVER && m_in;
 		
@@ -33,6 +33,8 @@ if !ready exit;
 			draw_surface_safe(mask_surface, 0, 0);
 			gpu_set_blendmode(bm_normal);
 		surface_reset_target();
+		
+		content.drawGUI();
 		
 		draw_surface(panel, cx, cy);
 	}
