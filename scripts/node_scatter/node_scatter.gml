@@ -19,7 +19,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		.setDisplay(VALUE_DISPLAY.area, function() { return inputs[| 1].getValue(); });
 	
 	inputs[| 6] = nodeValue("Distribution", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Area", "Border", "Map", "Direct Data", "Path" ]);
+		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Area", "Border", "Map", "Direct Data", "Path", "Full image" ]);
 	
 	inputs[| 7] = nodeValue("Point at center", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false, "Rotate each copy to face the spawn center.");
 	
@@ -184,6 +184,11 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 						_x = pp.x;
 						_y = pp.y;
 					}
+				} else if(_dist == 5) {
+					_x = random_range_seed(0, _dim[0], _sed); _sed++;
+					_y = random_range_seed(0, _dim[1], _sed); _sed++;
+					
+					//print(string(_x) + ", " + string(_y));
 				}
 				
 				var posS = _dist < 4? seed + _y * _dim[0] + _x : seed + i * 100;
@@ -229,6 +234,25 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 				
 				array_push(scatter_data, new SurfaceAtlas(surf, [ _x, _y ], _r, [ _scx, _scy ], clr, alp));
 				draw_surface_ext_safe(surf, _x, _y, _scx, _scy, _r, clr, alp);
+				
+				if(_dist == 5) {
+					var _sw = surface_get_width(surf)  * _scx;
+					var _sh = surface_get_height(surf) * _scy;
+					
+					if(_x < _sw)
+						draw_surface_ext_safe(surf, _dim[0] + _x, _y, _scx, _scy, _r, clr, alp);
+					if(_y < _sh)
+						draw_surface_ext_safe(surf, _x, _dim[1] + _y, _scx, _scy, _r, clr, alp);
+					if(_x < _sw && _y < _sh)
+						draw_surface_ext_safe(surf, _dim[0] + _x, _dim[1] + _y, _scx, _scy, _r, clr, alp);
+					
+					if(_x > _dim[0] - _sw)
+						draw_surface_ext_safe(surf, _x - _dim[0], _y, _scx, _scy, _r, clr, alp);
+					if(_y > _dim[1] - _sh)
+						draw_surface_ext_safe(surf, _x, _y - _dim[1], _scx, _scy, _r, clr, alp);
+					if(_x > _dim[0] - _sw || _y > _dim[1] - _sh)
+						draw_surface_ext_safe(surf, _x - _dim[0], _y - _dim[1], _scx, _scy, _r, clr, alp);
+				}
 			}
 			BLEND_NORMAL;
 		surface_reset_target(); 
