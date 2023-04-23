@@ -776,6 +776,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 	function remove() {
 		var con = getContent();
 		array_remove(content, con);
+		if(con) con.onClose();
 		content_index = 0;
 		
 		refresh();
@@ -808,7 +809,7 @@ function PanelContent() constructor {
 	w = 640;
 	h = 480;
 	padding		 = ui(16);
-	title_height = ui(24);
+	title_height = ui(28);
 	
 	tab_x = 0;
 	
@@ -876,6 +877,8 @@ function PanelContent() constructor {
 	function drawContent(panel) {}
 	
 	function drawGUI() {}
+	
+	function onClose() {}
 }
 
 function setFocus(target, fstring = noone) {

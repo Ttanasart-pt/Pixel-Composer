@@ -56,4 +56,9 @@ event_inherited();
 			content.onResize();
 		}
 	}
+	
+	function onDestroy() {
+		if(!content) return;
+		content.onClose();
+	}
 #endregion

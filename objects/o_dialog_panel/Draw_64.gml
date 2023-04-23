@@ -47,8 +47,10 @@ if !ready exit;
 		draw_text_cut(dialog_x + ui(32), dialog_y + ui(8), content.title, dialog_w - ui(32 + 32));
 		
 		if(instanceof(content) != "Panel_Menu")
-		if(buttonInstant(THEME.button_hide, dialog_x + dialog_w - ui(28), dialog_y + ui(8), ui(20), ui(20), mouse_ui, sFOCUS, sHOVER, "", THEME.window_exit) == 2)
+		if(buttonInstant(THEME.button_hide, dialog_x + dialog_w - ui(28), dialog_y + ui(8), ui(20), ui(20), mouse_ui, sFOCUS, sHOVER, "", THEME.window_exit) == 2) {
+			onDestroy();
 			instance_destroy();
+		}
 	} 
 	
 	var bx  = content.showHeader? dialog_x + ui(8) : dialog_x + ui(24);

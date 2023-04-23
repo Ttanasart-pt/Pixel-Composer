@@ -28,14 +28,27 @@ function addonPanel(directory) : PanelContent() constructor {
 		return self;
 	}
 	
-	static init = function() {
+	function init() {
 		lua_add_file(thread, scriptPath);
 		var runResult = lua_call(thread, "init");
+		
+		array_push(ANIMATION_PRE,  animationPreStep);
+		array_push(ANIMATION_POST, animationPostStep);
 	}
 	init();
 	
 	function stepBegin() {
+		__addon_lua_panel_variable(thread, self);
+		
 		var runResult = lua_call(thread, "step");
+	}
+	
+	function animationPreStep() {
+		var runResult = lua_call(thread, "animationPreStep");
+	}
+	
+	function animationPostStep() {
+		var runResult = lua_call(thread, "animationPostStep");
 	}
 	
 	function drawGUI() {
@@ -54,7 +67,8 @@ function addonPanel(directory) : PanelContent() constructor {
 	
 	//
 	
-	static cleanUp = function() {
-		lua_state_destroy(thread);
+	function cleanUp() {
+		array_remove(ANIMATION_PRE,  animationPreStep);
+		array_remove(ANIMATION_POST, animationPostStep);
 	}
 }

@@ -3,3 +3,13 @@ datafiles/data/themes/default
 options
 options/extensions
 options/mac
+
+datafiles/data/BBMOD
+scripts/BBMOD*
+scripts/bbmod*
+scripts/__bbmod*
+
+shaders/BBMOD*
+shaders/__BBMOD*
+
+sprites/BBMOD*

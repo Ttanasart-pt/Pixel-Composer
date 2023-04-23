@@ -84,10 +84,13 @@
 	HOTKEY_MOD = 0;
 #endregion
 
-#region gif reader
-	globalvar GIF_READER;
+#region Loader
+	globalvar GIF_READER, _BBMOD_DLL;
+	
 	GIF_READER = ds_list_create();
 	gif_complete_st = ds_stack_create();
+	
+	_BBMOD_DLL = new BBMOD_DLL();
 #endregion
 
 #region tunnel
@@ -95,6 +98,23 @@
 	TUNNELS_IN     = ds_map_create();
 	TUNNELS_IN_MAP = ds_map_create();
 	TUNNELS_OUT    = ds_map_create();
+#endregion
+
+#region add on callback
+	globalvar ANIMATION_PRE, ANIMATION_POST;
+	
+	ANIMATION_PRE = [];
+	ANIMATION_POST = [];
+	
+	function __addon_preAnim() {
+		for( var i = 0; i < array_length(ANIMATION_PRE); i++ ) 
+			ANIMATION_PRE[i]();
+	}
+	
+	function __addon_postAnim() {
+		for( var i = 0; i < array_length(ANIMATION_POST); i++ ) 
+			ANIMATION_POST[i]();
+	}
 #endregion
 
 #region file drop

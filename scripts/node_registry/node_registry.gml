@@ -457,10 +457,11 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 			addNodeObject(values, "Array Reverse",	s_node_array_reverse,	"Node_Array_Reverse",	[1, Node_Array_Reverse], ["reverse array"]).setVersion(1120);
 			addNodeObject(values, "Array Shift",	s_node_array_shift,		"Node_Array_Shift",		[1, Node_Array_Shift]).setVersion(1137);
 			addNodeObject(values, "Array Zip",		s_node_array_zip,		"Node_Array_Zip",		[1, Node_Array_Zip]).setVersion(1138);
-			addNodeObject(values, "Sort Array",		s_node_array_sort,		"Node_Array_Sort",		[1, Node_Array_Sort], ["array sort"]).setVersion(1120);
+			addNodeObject(values, "Sort Number",	s_node_array_sort,		"Node_Array_Sort",		[1, Node_Array_Sort], ["array sort"]).setVersion(1120);
 			addNodeObject(values, "Shuffle Array",	s_node_array_shuffle,	"Node_Array_Shuffle",	[1, Node_Array_Shuffle], ["array shuffle"]).setVersion(1120);
 			addNodeObject(values, "Loop Array",		s_node_loop_array,		"Node_Iterate_Each",	[1, Node_Iterate_Each], ["iterate each", "for each", "array loop"], "Create group that iterate to each member in an array.");
 			addNodeObject(values, "Filter Array",	s_node_filter_array,	"Node_Iterate_Filter",	[1, Node_Iterate_Filter],, "Filter array using condition.").setVersion(1140);
+			addNodeObject(values, "Sort Array",		s_node_sort_array,		"Node_Iterate_Sort",	[1, Node_Iterate_Sort],, "Sort array using node graph.").setVersion(1143);
 			
 			ds_list_add(values, "Paths");
 			addNodeObject(values, "Path",			s_node_path,			"Node_Path",			[1, Node_Path]);
@@ -570,6 +571,8 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 			addNodeObject(hid, "Grid Noise",		s_node_grid_noise,		"Node_Grid_Noise",				[1, Node_Grid_Noise]);
 			addNodeObject(hid, "Triangular Noise",	s_node_grid_tri_noise,	"Node_Noise_Tri",				[1, Node_Noise_Tri]).setVersion(1090);
 			addNodeObject(hid, "Hexagonal Noise",	s_node_grid_hex_noise,	"Node_Noise_Hex",				[1, Node_Noise_Hex]).setVersion(1090);
+			addNodeObject(hid, "Sort Input",		s_node_grid_hex_noise,	"Node_Iterator_Sort_Input",		[1, Node_Iterator_Sort_Input]);
+			addNodeObject(hid, "Sort Output",		s_node_grid_hex_noise,	"Node_Iterator_Sort_Output",	[1, Node_Iterator_Sort_Output]);
 	}
 #endregion
 

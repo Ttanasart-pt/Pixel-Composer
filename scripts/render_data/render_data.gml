@@ -146,6 +146,60 @@ function __renderListReset(list) {
 	}
 }
 
+function RenderList(list) {
+	var log = false;
+	LOG_BLOCK_START();
+	LOG_IF(log, "=== RENDER LIST START ===");
+	var queue = ds_queue_create();
+	
+	try {
+		var rendering = noone;
+		var error	  = 0;
+		var t		  = current_time;
+		
+		__renderListReset(list);
+		
+		// get leaf node
+		for( var i = 0; i < ds_list_size(list); i++ ) {
+			var _node = list[| i];
+			
+			if(is_undefined(_node)) continue;
+			if(!is_struct(_node))	continue;
+			
+			if(!_node.active)		continue;
+			if(!_node.renderActive) continue;
+			if(_node.rendered)		continue;
+		
+			if(_node.isRenderable())
+				ds_queue_enqueue(queue, _node);
+		}
+		
+		LOG_IF(log, "Get leaf complete: found " + string(ds_queue_size(queue)) + " leaves.");
+		LOG_IF(log, "Start rendering...");
+		
+		// render forward
+		while(!ds_queue_empty(queue)) {
+			rendering = ds_queue_dequeue(queue);
+			if(!rendering.isRenderable()) continue;
+			
+			rendering.doUpdate();
+				
+			LOG_LINE_IF(log, "Rendering " + rendering.name + " (" + rendering.display_name + ") ");
+				
+			var nextNodes = rendering.getNextNodes();
+			for( var i = 0; i < array_length(nextNodes); i++ ) 
+				ds_queue_enqueue(queue, nextNodes[i]);
+		}
+	
+	} catch(e)
+		noti_warning(exception_print(e));
+		
+	LOG_IF(log, "=== RENDER COMPLETE ===\n");
+	LOG_END();
+	
+	ds_queue_destroy(queue);
+}
+
 function RenderListAction(list, context = PANEL_GRAPH.getCurrentContext()) {
 	printIf(global.RENDER_LOG, "=== RENDER LIST ACTION START [frame " + string(ANIMATOR.current_frame) + "] ===");
 	

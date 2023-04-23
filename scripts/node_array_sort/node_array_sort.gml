@@ -13,6 +13,11 @@ function Node_Array_Sort(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	
 	outputs[| 0] = nodeValue("Sorted array", self, JUNCTION_CONNECT.output, VALUE_TYPE.any, []);
 	
+	outputs[| 1] = nodeValue("Sorted index", self, JUNCTION_CONNECT.output, VALUE_TYPE.integer, []);
+	
+	static sortAcs = function(v1, v2) { return v1[1] < v2[1]; }
+	static sortDes = function(v1, v2) { return v1[1] > v2[1]; }
+	
 	static update = function(frame = ANIMATOR.current_frame) {
 		var arr = inputs[| 0].getValue();
 		var asc = inputs[| 1].getValue();
@@ -27,10 +32,20 @@ function Node_Array_Sort(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 			outputs[| 0].type = inputs[| 0].value_from.type;
 		}
 		
-		var _arr = array_clone(arr);
-		array_sort(_arr, bool(!asc));
+		var _arr = [];
+		for( var i = 0; i < array_length(arr); i++ )
+			_arr[i] = [ i, arr[i] ];
 		
-		outputs[| 0].setValue(_arr);
+		array_sort(_arr, asc? sortAcs : sortDes);
+		
+		var res = [ [], [] ];
+		for( var i = 0; i < array_length(_arr); i++ ) {
+			res[0][i] = _arr[i][0];
+			res[1][i] = _arr[i][1];
+		}
+		
+		outputs[| 0].setValue(res[1]);
+		outputs[| 1].setValue(res[0]);
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {

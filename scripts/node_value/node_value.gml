@@ -343,7 +343,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		else if(_connect == JUNCTION_CONNECT.output) node.outputMap[? string_replace_all(name, " ", "_")] = self;
 	}
 	
-	tooltip = _tooltip;
+	tooltip    = _tooltip;
 	editWidget = noone;
 	
 	connect_type = _connect;
@@ -638,6 +638,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						for( var i = 0; i < array_length(animators); i++ )
 							animators[i].suffix = " " + array_safe_get(global.displaySuffix_Area, i, "");
 						
+						extra_data[| 0] = AREA_MODE.area;
 						extract_node = "Node_Area";
 						break;
 					case VALUE_DISPLAY.padding :
@@ -652,7 +653,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						for( var i = 0; i < array_length(animators); i++ )
 							animators[i].suffix = " " + array_safe_get(global.displaySuffix_Padding, i);
 						
-						extra_data[| 0] = AREA_MODE.area;
 						extract_node = "Node_Vector4";
 						break;
 					case VALUE_DISPLAY.puppet_control :
@@ -728,8 +728,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 							MODIFIED = true;
 							return setValueDirect(gradient);
 						} );
-						
-						extra_data[| 0] = GRADIENT_INTER.smooth;
 						
 						extract_node = "Node_Gradient_Out";
 						break;
