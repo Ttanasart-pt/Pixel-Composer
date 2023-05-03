@@ -15,9 +15,9 @@ function Node_3D_Extrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	inputs[| 4] = nodeValue("Object scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 1, 0.1 ])
 		.setDisplay(VALUE_DISPLAY.vector);
 	
-	inputs[| 5] = nodeValue("Render position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ def_surf_size / 2, def_surf_size / 2 ])
+	inputs[| 5] = nodeValue("Render position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0.5, 0.5 ])
 		.setDisplay(VALUE_DISPLAY.vector)
-		.setUnitRef( function() { return inputs[| 1].getValue(); });
+		.setUnitRef( function() { return inputs[| 1].getValue(); }, VALUE_UNIT.reference);
 		
 	inputs[| 6] = nodeValue("Render rotation", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.vector);
@@ -52,12 +52,12 @@ function Node_3D_Extrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		.rejectArray();
 		
 	inputs[| 17] = nodeValue("Field of view", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 60)
-		.setDisplay(VALUE_DISPLAY.slider, [ 0, 90, 1 ]);
+		.setDisplay(VALUE_DISPLAY.slider, [ 1, 90, 1 ]);
 	
 	inputs[| 18] = nodeValue("Scale view with dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true)
 	
 	input_display_list = [
-		["Surface",			 false], 1, 18, 
+		["Output",			 false], 1, 18, 
 		["Geometry",		 false], 0, 8, 14,
 		["Object transform", false], 2, 3, 4,
 		["Camera",			 false], 16, 17, 5, 7, 15,
@@ -66,20 +66,19 @@ function Node_3D_Extrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
-	outputs[| 1] = nodeValue("3D object", self, JUNCTION_CONNECT.output, VALUE_TYPE.d3object, function(index) { return submit_vertex(index); });
+	outputs[| 1] = nodeValue("3D scene", self, JUNCTION_CONNECT.output, VALUE_TYPE.d3object, function(index) { return submit_vertex(index); });
 	
 	outputs[| 2] = nodeValue("Normal pass", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
+	outputs[| 3] = nodeValue("3D vertex", self, JUNCTION_CONNECT.output, VALUE_TYPE.d3vertex, []);
+	
 	output_display_list = [
-		0, 2, 1
+		0, 2, 1, 3
 	]
 	
-	_3d_node_init(1, /*Transform*/ 5, 3, 7);
+	_3d_node_init(1, /*Transform*/ 5, 7, 2, 3, 4);
 	
-	VB = [];
-	VB[0] = vertex_create_buffer();
-	vertex_begin(VB[0], FORMAT_PNT);
-	vertex_end(VB[0]);
+	vertexObjects = [];
 	
 	static onValueFromUpdate = function(index) {
 		if(index == 0 || index == 14) 
@@ -100,16 +99,24 @@ function Node_3D_Extrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		var _ins = inputs[| 0].getValue();
 		if(!is_array(_ins)) _ins = [ _ins ];
 		
+		for( var i = 0; i < array_length(vertexObjects); i++ ) {
+			if(vertexObjects[i] == noone) continue;
+			vertexObjects[i].destroy();
+		}
+		vertexObjects = [];
+		
 		for( var i = 0; i < array_length(_ins); i++ )
-			VB[i] = generateMeshIndex(i);
+			vertexObjects[i] = generateMeshIndex(i);
 		
 		UPDATE |= RENDER_TYPE.full;
+		
+		outputs[| 3].setValue(vertexObjects);
 	}
 		
 	static generateMeshIndex = function(index) {
 		var _ins = getSingleValue( 0, index);
 		var _hei = getSingleValue(14, index);
-		if(!is_surface(_ins)) return;
+		if(!is_surface(_ins)) return noone;
 		
 		var ww = surface_get_width(_ins);
 		var hh = surface_get_height(_ins);
@@ -145,8 +152,7 @@ function Node_3D_Extrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		buffer_get_surface(surface_buffer, _ins, 0);
 		buffer_seek(surface_buffer, buffer_seek_start, 0);
 		
-		var VB = vertex_create_buffer();
-		vertex_begin(VB, FORMAT_PNT);
+		var v  = new VertexObject();
 		var ap = array_create(ww, hh);
 		
 		for( var j = 0; j < hh; j++ )
@@ -169,64 +175,65 @@ function Node_3D_Extrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 			
 			var dep = (useH? getHeight(hei, hgtW, hgtH, i, j) : 1) * 0.5;
 			
-			vertex_add_pnt(VB, [i1, j0, -dep], [0, 0, -1], [tx1, ty0]);
-			vertex_add_pnt(VB, [i0, j0, -dep], [0, 0, -1], [tx0, ty0]);
-			vertex_add_pnt(VB, [i1, j1, -dep], [0, 0, -1], [tx1, ty1]);
+			v.addFace( [i1, j0, -dep], [0, 0, -1], [tx1, ty0], 
+			           [i0, j0, -dep], [0, 0, -1], [tx0, ty0], 
+			           [i1, j1, -dep], [0, 0, -1], [tx1, ty1], true);
 						    		
-			vertex_add_pnt(VB, [i1, j1, -dep], [0, 0, -1], [tx1, ty1]);
-			vertex_add_pnt(VB, [i0, j0, -dep], [0, 0, -1], [tx0, ty0]);
-			vertex_add_pnt(VB, [i0, j1, -dep], [0, 0, -1], [tx0, ty1]);
+			v.addFace( [i1, j1, -dep], [0, 0, -1], [tx1, ty1], 
+			           [i0, j0, -dep], [0, 0, -1], [tx0, ty0], 
+			           [i0, j1, -dep], [0, 0, -1], [tx0, ty1], true);
 			
-			vertex_add_pnt(VB, [i1, j0,  dep], [0, 0, 1], [tx1, ty0]);
-			vertex_add_pnt(VB, [i0, j0,  dep], [0, 0, 1], [tx0, ty0]);
-			vertex_add_pnt(VB, [i1, j1,  dep], [0, 0, 1], [tx1, ty1]);
+			v.addFace( [i1, j0,  dep], [0, 0, 1], [tx1, ty0], 
+			           [i0, j0,  dep], [0, 0, 1], [tx0, ty0], 
+			           [i1, j1,  dep], [0, 0, 1], [tx1, ty1], true);
 						    		    
-			vertex_add_pnt(VB, [i1, j1,  dep], [0, 0, 1], [tx1, ty1]);
-			vertex_add_pnt(VB, [i0, j0,  dep], [0, 0, 1], [tx0, ty0]);
-			vertex_add_pnt(VB, [i0, j1,  dep], [0, 0, 1], [tx0, ty1]);
+			v.addFace( [i1, j1,  dep], [0, 0, 1], [tx1, ty1], 
+			           [i0, j0,  dep], [0, 0, 1], [tx0, ty0], 
+			           [i0, j1,  dep], [0, 0, 1], [tx0, ty1], true);
 			
 			if((useH && dep * 2 > getHeight(hei, hgtW, hgtH, i, j - 1)) || (j == 0 || ap[i][j - 1] == 0)) {
-				vertex_add_pnt(VB, [i0, j0,  dep], [0, -1, 0], [tx1, ty0]);
-				vertex_add_pnt(VB, [i0, j0, -dep], [0, -1, 0], [tx0, ty0]);
-				vertex_add_pnt(VB, [i1, j0,  dep], [0, -1, 0], [tx1, ty1]);
+				v.addFace( [i0, j0,  dep], [0, -1, 0], [tx1, ty0], 
+				           [i0, j0, -dep], [0, -1, 0], [tx0, ty0], 
+				           [i1, j0,  dep], [0, -1, 0], [tx1, ty1], true);
 						    		    
-				vertex_add_pnt(VB, [i0, j0, -dep], [0, -1, 0], [tx1, ty1]);
-				vertex_add_pnt(VB, [i1, j0, -dep], [0, -1, 0], [tx0, ty0]);
-				vertex_add_pnt(VB, [i1, j0,  dep], [0, -1, 0], [tx0, ty1]);
+				v.addFace( [i0, j0, -dep], [0, -1, 0], [tx1, ty1], 
+				           [i1, j0, -dep], [0, -1, 0], [tx0, ty0], 
+				           [i1, j0,  dep], [0, -1, 0], [tx0, ty1], true);
 			}
 			
 			if((useH && dep * 2 > getHeight(hei, hgtW, hgtH, i, j + 1)) || (j == hh - 1 || ap[i][j + 1] == 0)) {
-				vertex_add_pnt(VB, [i0, j1,  dep], [0, 1, 0], [tx1, ty0]);
-				vertex_add_pnt(VB, [i0, j1, -dep], [0, 1, 0], [tx0, ty0]);
-				vertex_add_pnt(VB, [i1, j1,  dep], [0, 1, 0], [tx1, ty1]);
-						    		    
-				vertex_add_pnt(VB, [i0, j1, -dep], [0, 1, 0], [tx1, ty1]);
-				vertex_add_pnt(VB, [i1, j1, -dep], [0, 1, 0], [tx0, ty0]);
-				vertex_add_pnt(VB, [i1, j1,  dep], [0, 1, 0], [tx0, ty1]);
+				v.addFace( [i0, j1,  dep], [0, 1, 0], [tx1, ty0], 
+				           [i0, j1, -dep], [0, 1, 0], [tx0, ty0], 
+				           [i1, j1,  dep], [0, 1, 0], [tx1, ty1], true);
+						       
+				v.addFace( [i0, j1, -dep], [0, 1, 0], [tx1, ty1], 
+				           [i1, j1, -dep], [0, 1, 0], [tx0, ty0], 
+				           [i1, j1,  dep], [0, 1, 0], [tx0, ty1], true);
 			}
 			
 			if((useH && dep * 2 > getHeight(hei, hgtW, hgtH, i - 1, j)) || (i == 0 || ap[i - 1][j] == 0)) {
-				vertex_add_pnt(VB, [i0, j0,  dep], [1, 0, 0], [tx1, ty0]);
-				vertex_add_pnt(VB, [i0, j0, -dep], [1, 0, 0], [tx0, ty0]);
-				vertex_add_pnt(VB, [i0, j1,  dep], [1, 0, 0], [tx1, ty1]);
-						    		    
-				vertex_add_pnt(VB, [i0, j0, -dep], [1, 0, 0], [tx1, ty1]);
-				vertex_add_pnt(VB, [i0, j1, -dep], [1, 0, 0], [tx0, ty0]);
-				vertex_add_pnt(VB, [i0, j1,  dep], [1, 0, 0], [tx0, ty1]);
+				v.addFace( [i0, j0,  dep], [1, 0, 0], [tx1, ty0], 
+				           [i0, j0, -dep], [1, 0, 0], [tx0, ty0], 
+				           [i0, j1,  dep], [1, 0, 0], [tx1, ty1], true);
+						       
+				v.addFace( [i0, j0, -dep], [1, 0, 0], [tx1, ty1], 
+				           [i0, j1, -dep], [1, 0, 0], [tx0, ty0], 
+				           [i0, j1,  dep], [1, 0, 0], [tx0, ty1], true);
 			}
 			
 			if((useH && dep * 2 > getHeight(hei, hgtW, hgtH, i + 1, j)) || (i == ww - 1 || ap[i + 1][j] == 0)) {
-				vertex_add_pnt(VB, [i1, j0,  dep], [-1, 0, 0], [tx1, ty0]);
-				vertex_add_pnt(VB, [i1, j0, -dep], [-1, 0, 0], [tx0, ty0]);
-				vertex_add_pnt(VB, [i1, j1,  dep], [-1, 0, 0], [tx1, ty1]);
-						    		    
-				vertex_add_pnt(VB, [i1, j0, -dep], [-1, 0, 0], [tx1, ty1]);
-				vertex_add_pnt(VB, [i1, j1, -dep], [-1, 0, 0], [tx0, ty0]);
-				vertex_add_pnt(VB, [i1, j1,  dep], [-1, 0, 0], [tx0, ty1]);
+				v.addFace( [i1, j0,  dep], [-1, 0, 0], [tx1, ty0], 
+				           [i1, j0, -dep], [-1, 0, 0], [tx0, ty0], 
+				           [i1, j1,  dep], [-1, 0, 0], [tx1, ty1], true);
+						       
+				v.addFace( [i1, j0, -dep], [-1, 0, 0], [tx1, ty1], 
+				           [i1, j1, -dep], [-1, 0, 0], [tx0, ty0], 
+				           [i1, j1,  dep], [-1, 0, 0], [tx0, ty1], true);
 			}
 		}
-		vertex_end(VB);
-		return VB;
+		
+		v.createBuffer();
+		return v;
 	}
 	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
@@ -236,18 +243,20 @@ function Node_3D_Extrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	static submit_vertex = function(index = 0) {
 		var _ins  = getSingleValue(0, index);
 		if(!is_surface(_ins)) return;
-		if(index >= array_length(VB)) return;
+		if(index >= array_length(vertexObjects)) return;
 		
 		var _lpos = getSingleValue(2, index);
 		var _lrot = getSingleValue(3, index);
 		var _lsca = getSingleValue(4, index);
 		
 		_3d_local_transform(_lpos, _lrot, _lsca);
-		vertex_submit(VB[index], pr_trianglelist, surface_get_texture(_ins));
+		vertexObjects[index].submit(_ins);
 		_3d_clear_local_transform();
 	}
 	
 	static process_data = function(_outSurf, _data, _output_index, _array_index) {
+		if(_output_index == 3) return vertexObjects;
+		
 		var _ins  = _data[ 0];
 		var _dim  = _data[ 1];
 		var _lpos = _data[ 2];
@@ -286,7 +295,7 @@ function Node_3D_Extrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		var _cam   = { projection: _proj, fov: _fov };
 		var _scale = { local: false, dimension: _dimS };
 			
-		_3d_pre_setup(_outSurf, _dim, _pos, _sca, _ldir, _lhgt, _lint, _lclr, _aclr, _lpos, _lrot, _lsca, _cam, pass, _scale);
+		_outSurf = _3d_pre_setup(_outSurf, _dim, _pos, _sca, _ldir, _lhgt, _lint, _lclr, _aclr, _lpos, _lrot, _lsca, _cam, pass, _scale);
 			submit_vertex(_array_index);
 		_3d_post_setup();
 		

@@ -25,7 +25,7 @@ function Node_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [ 5,
-		["Surface",	 false], 0,
+		["Output",	 false], 0,
 		["Wrap",	 false], 1, 2, 3, 4
 	]
 	

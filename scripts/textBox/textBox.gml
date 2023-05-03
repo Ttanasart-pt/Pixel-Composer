@@ -24,6 +24,7 @@ function textBox(_input, _onModify, _extras = noone) : textInput(_input, _onModi
 	_current_text = "";
 	_input_text = "";
 	_last_text = "";
+	current_value = "";
 	
 	cursor			= 0;
 	cursor_pos		= 0;
@@ -85,6 +86,8 @@ function textBox(_input, _onModify, _extras = noone) : textInput(_input, _onModi
 		
 		if(no_empty && _input_text_current == "") 
 			_input_text_current = _last_text;
+		current_value = _input_text_current;
+		
 		if(onModify) 
 			return onModify(_input_text_current);
 		return false;
@@ -308,7 +311,7 @@ function textBox(_input, _onModify, _extras = noone) : textInput(_input, _onModi
 		}
 	}
 	
-	static draw = function(_x, _y, _w, _h, _text, _m = mouse_ui, _format = VALUE_DISPLAY._default, halign = fa_left, valign = fa_top) {
+	static draw = function(_x, _y, _w, _h, _text = "", _m = mouse_ui, _format = VALUE_DISPLAY._default, halign = fa_left, valign = fa_top) {
 		x = _x;
 		y = _y;
 		w = _w;
@@ -333,6 +336,7 @@ function textBox(_input, _onModify, _extras = noone) : textInput(_input, _onModi
 		}
 		
 		draw_set_font(font == noone? f_p0 : font);
+		var _raw_text = _text;
 		_text = string_real(_text);
 		_current_text = _text;
 		
@@ -518,7 +522,7 @@ function textBox(_input, _onModify, _extras = noone) : textInput(_input, _onModi
 				deactivate();
 		} else {
 			draw_set_text(font == noone? f_p0 : font, fa_left, fa_center);
-			var _display_text = _text;
+			var _display_text = _raw_text;
 			if(input == TEXTBOX_INPUT.number) {
 				var dig = floor(_w / string_width("0")) - 3;
 				_display_text = string_real(_display_text, dig);

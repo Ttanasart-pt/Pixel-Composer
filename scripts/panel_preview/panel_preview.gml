@@ -108,7 +108,7 @@ function Panel_Preview() : PanelContent() constructor {
 				return get_text("panel_preview_tile_mode", "Tile mode");
 			}, 
 			function(data) { 
-				menuCall(data.x + ui(28), data.y + ui(28), [
+				menuCall("preview_tile_menu", data.x + ui(28), data.y + ui(28), [
 					menuItem(get_text("panel_preview_tile_off", "Tile off"),				function() { tileMode = 0; }),
 					menuItem(get_text("panel_preview_tile_horizontal", "Tile horizontal"),	function() { tileMode = 1; }),
 					menuItem(get_text("panel_preview_tile_vertical", "Tile vertical"),		function() { tileMode = 2; }),
@@ -473,7 +473,7 @@ function Panel_Preview() : PanelContent() constructor {
 			}
 		
 			draw_set_color(COLORS.panel_preview_surface_outline);
-			draw_rectangle(psx, psy, psx + pswd, psy + pshd, true);
+			draw_rectangle(psx, psy, psx + pswd - 1, psy + pshd - 1, true);
 		}
 	}
 	
@@ -623,7 +623,7 @@ function Panel_Preview() : PanelContent() constructor {
 		if(_node.tools != -1)
 			overlayHover &= mx > ui(48);
 			
-		_node.drawOverlay(overlayHover && !key_mod_press(CTRL), cx, cy, canvas_s, _mx, _my, _snx, _sny);
+		_node.drawOverlay(overlayHover && !key_mod_press(CTRL), cx, cy, canvas_s, _mx, _my, _snx, _sny, { w: w, h: h });
 		
 		if(_node.tools != -1) {
 			var xx = ui(8);
@@ -877,12 +877,13 @@ function Panel_Preview() : PanelContent() constructor {
 		}
 		
 		if(mouse_on_preview && mouse_press(mb_right, pFOCUS)) {
-			menuCall(,, [ 
+			menuCall("preview_context_menu",,, [ 
 				menuItem(get_text("panel_graph_preview_window", "Send to preview window"), function() { previewWindow(getNodePreview()); }, noone, ["Preview", "Preview window"]), 
 				-1,
 				menuItem(get_text("panel_preview_save", "Save current preview as") + "...", function() { saveCurrentFrame(); }), 
 				menuItem(get_text("panel_preview_save_all", "Save all current previews as") + "...", function() { saveAllCurrentFrames(); }), 
 				-1,
+				menuItem(get_text("panel_preview_copy_color", "Copy image"), function() { copyCurrentFrame(); }, THEME.copy), 
 				menuItem(get_text("panel_preview_copy_color", "Copy color [") + string(sample_color) + "]", function() { clipboard_set_text(sample_color); }), 
 				menuItem(get_text("panel_preview_copy_color", "Copy hex [") + string(color_get_hex(sample_color)) + "]", function() { clipboard_set_text(color_get_hex(sample_color)); }), 
 			]);
@@ -890,6 +891,25 @@ function Panel_Preview() : PanelContent() constructor {
 		
 		drawSplitView();
 		drawToolBar(PANEL_GRAPH.node_focus);
+	}
+	
+	function copyCurrentFrame() {
+		var prevS = getNodePreviewSurface();
+		if(!is_surface(prevS)) return;
+		
+		var buff = buffer_create(surface_get_width(prevS) * surface_get_height(prevS) * 4, buffer_fixed, 1);
+		var s = surface_create(surface_get_width(prevS), surface_get_height(prevS));
+		
+		surface_set_target(s);
+			shader_set(sh_BGR);
+			draw_surface(prevS, 0, 0);
+			shader_reset();
+		surface_reset_target();
+		
+		buffer_get_surface(buff, s, 0);
+		surface_free(s);
+		
+		clipboard_set_bitmap(buffer_get_address(buff), surface_get_width(prevS), surface_get_height(prevS));
 	}
 	
 	function saveCurrentFrame() {

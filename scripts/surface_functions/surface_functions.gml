@@ -201,7 +201,7 @@ function surface_size_to(surface, width, height, format = noone) {
 	if(!is_surface(surface))	return surface;
 	if(width < 1 && height < 1) return surface;
 	
-	if(format != noone && surface_get_format(surface) != format) {
+	if(format != noone && format != surface_get_format(surface)) {
 		surface_free(surface);
 		return surface_create_valid(width, height, format);
 	}

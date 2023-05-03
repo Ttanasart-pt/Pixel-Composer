@@ -26,21 +26,21 @@ if !ready exit;
 	var toolt = error? get_text("noti_hide_error", "Hide error") : get_text("noti_show_error", "Show error");
 	var b = buttonInstant(THEME.button_hide, bx, by, ww, hh, mouse_ui, sFOCUS, sHOVER, toolt, THEME.noti_icon_error, error, c_white, 0.3 + error * 0.7);
 	if(b == 2) filter = filter ^ NOTI_TYPE.error;
-	if(b == 3) menuCall(,, rightClickMenu);
+	if(b == 3) menuCall("notification_error_menu",,, rightClickMenu);
 	bx -= ui(36);
 	
 	var warn = !!(filter & NOTI_TYPE.warning);
 	var toolt = warn? get_text("noti_hide_warning", "Hide warning") : get_text("noti_show_warning", "Show warning");
 	var b = buttonInstant(THEME.button_hide, bx, by, ww, hh, mouse_ui, sFOCUS, sHOVER, toolt, THEME.noti_icon_warning, warn, c_white, 0.3 + warn * 0.7);
 	if(b == 2) filter = filter ^ NOTI_TYPE.warning;
-	if(b == 3) menuCall(,, rightClickMenu);
+	if(b == 3) menuCall("notification_warning_menu",,, rightClickMenu);
 	bx -= ui(36);
 	
 	var log = !!(filter & NOTI_TYPE.log);
 	var toolt = log? get_text("noti_hide_log", "Hide log") : get_text("noti_show_log", "Show log");
 	var b = buttonInstant(THEME.button_hide, bx, by, ww, hh, mouse_ui, sFOCUS, sHOVER, toolt, THEME.noti_icon_log, log, c_white, 0.3 + log * 0.7);
 	if(b == 2) filter = filter ^ NOTI_TYPE.log;
-	if(b == 3) menuCall(,, rightClickMenu);
+	if(b == 3) menuCall("notification_log_menu",,, rightClickMenu);
 	
 	var px = dialog_x + ui(padding);
 	var py = dialog_y + ui(title_height);

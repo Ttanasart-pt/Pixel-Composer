@@ -95,7 +95,7 @@ if palette == 0 exit;
 		var by = dialog_y + ui(16);
 		
 		if(buttonInstant(THEME.button_hide, bx, by, ui(28), ui(28), mouse_ui, interactable && sFOCUS, sHOVER, get_text("palette_editor_sort", "Sort color"), THEME.sort) == 2) {
-			menuCall( bx + ui(32), by, [ 
+			menuCall("palette_window_sort_menu", bx + ui(32), by, [ 
 				menuItem(get_text("palette_editor_sort_brighter", "Brighter"), function() { sortPalette(__sortBright); }), 
 				menuItem(get_text("palette_editor_sort_darker", "Darker"),     function() { sortPalette(__sortDark); }),
 				-1,

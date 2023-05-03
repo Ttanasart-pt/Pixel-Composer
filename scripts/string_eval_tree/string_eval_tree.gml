@@ -1,28 +1,24 @@
 #region evaluator
+	enum EXPRESS_TREE_ANIM {
+		none,
+		base_value,
+		animated
+	}
+	
 	function __funcTree(symbol, l = noone, r = noone) constructor {
 		self.symbol = symbol;
 		self.l = l;
 		self.r = r;
 		isFunc = false;
 		
-		static getVal = function(val, inp = 0) {
+		static getVal = function(val, inp = 0, getStr = false) {
 			if(is_struct(val)) return val.eval();
 			if(is_real(val))   return val;
 			
-			var splt = string_splice(val, "[");
-			var key  = splt[0];
 			var _val = 0;
-			
-			if(key == "value") {
-				_val = inp;
-				for( var i = 1; i < array_length(splt); i++ ) {
-					if(!is_array(_val)) break;
-				
-					var _ind = toNumber(splt[i]);
-					_val = array_safe_get(_val, _ind, 0);
-				}
-			} else
-				_val = nodeGetData(val);
+			if(val == "value")  _val = inp;
+			else if(getStr)		_val = val;
+			else				_val = nodeGetData(val, getStr);
 			
 			return _val;
 		}
@@ -30,16 +26,12 @@
 		static _validate = function(val) {
 			if(is_real(val))   return true;
 			if(is_struct(val)) return val.validate();
-			
-			var splt = string_splice(val, "[");
-			if(splt[0] == "value") return true;
+
+			if(val == "value") return true;
+			if(GLOBAL.inputExist(val)) return true;
 			
 			var strs = string_splice(val, ".");
-			if(array_length(strs) == 0) return false;
-			if(array_length(strs) == 1) {
-				var splt = string_splice(val, "[");
-				return GLOBAL.inputExist(splt[0]);
-			}
+			if(array_length(strs) < 2) return false;
 			
 			if(strs[0] == "Project") {
 				switch(strs[1]) {
@@ -52,26 +44,42 @@
 			}
 			
 			var key = strs[0];
-			if(!ds_map_exists(NODE_NAME_MAP, key)) return false;
-		
-			var node = NODE_NAME_MAP[? key];
-			var splt = string_splice(strs[1], "[");
-			if(array_length(splt) < 2) return false;
-			
-			var mmap = splt[0] == "inputs"? node.inputMap : node.outputMap;
-			if(array_length(splt) < 2) return false;
-			
-			var mkey = string_replace_all(string_replace(splt[1], "]", ""), "\"", "");
-			return ds_map_exists(mmap, mkey);
+			return ds_map_exists(NODE_NAME_MAP, key);
 		}
 		
 		static validate = function() {
+			switch(symbol) {
+				case "|": return _validate(l);
+			}
+			
 			return _validate(l) && _validate(r);
+		}
+		
+		static _isAnimated = function(val) {
+			if(is_real(val))   return EXPRESS_TREE_ANIM.none;
+			if(is_struct(val)) return val._isAnimated();
+			
+			if(val == "value") return EXPRESS_TREE_ANIM.base_value;
+			if(GLOBAL.inputExist(val)) {
+				var _inp = GLOBAL.getInput(val);
+				if(_inp.is_anim) return EXPRESS_TREE_ANIM.animated;
+			}
+			
+			return EXPRESS_TREE_ANIM.none;
+		}
+		
+		static isAnimated = function() {
+			var anim = EXPRESS_TREE_ANIM.none;
+			anim = max(anim, _isAnimated(l));
+			if(symbol != "|")
+				anim = max(anim, _isAnimated(r));
+			
+			return anim;
 		}
 		
 		static eval = function(inp = 0) {
 			var v1 = getVal(l, inp);
-			var v2 = getVal(r, inp);
+			var v2 = getVal(r, inp, symbol == "|");
 			
 			//print("symbol " + string(symbol));
 			//print("l  : " + string(l));
@@ -86,6 +94,11 @@
 				case "*": return v1 * v2;
 				case "^": return power(v1, v2);
 				case "/": return v1 / v2;
+				case "|": 
+					var val = is_real(v2)? array_safe_get(v1, v2) : ds_map_try_get(v1, v2);
+					if(is_struct(val) && instanceof(val) == "NodeValue")
+						val = val.getValue();
+					return val;
 				
 				case "sin"   : return sin(v1);
 				case "cos"   : return cos(v1);
@@ -101,12 +114,15 @@
 	}
 
 	function evaluateFunctionTree(fx) {
+		static __BRACKETS = [ "(", ")", "[", "]" ];
+		
 		var pres = global.EQUATION_PRES;
 		var vl   = ds_stack_create();
 		var op   = ds_stack_create();
 		
 		fx = string_replace_all(fx,  " ", "");
 		fx = string_replace_all(fx, "\n", "");
+		fx = string_replace_all(fx, "[", "|["); //add array accessor symbol arr[i] = arr|[i] = arr | (i)
 		
 		var len = string_length(fx);
 		var l   = 1;
@@ -136,12 +152,21 @@
 				}
 				ds_stack_pop(op);
 				l++;
+			} else if (ch == "[") {
+				ds_stack_push(op, ch);
+				l++;
+			} else if (ch == "]") {
+				while(ds_stack_top(op) != "[" && !ds_stack_empty(op))
+					ds_stack_push(vl, buildFuncTree(ds_stack_pop(op), vl));
+				
+				ds_stack_pop(op);
+				l++;
 			} else {
 				var vsl = "";
 				
 				while(l <= len) {
 					cch = string_char_at(fx, l);
-					if(ds_map_exists(pres, cch) || cch == ")" || cch == "(") break;
+					if(ds_map_exists(pres, cch) || array_exists(__BRACKETS, cch)) break;
 					
 					vsl += cch;
 					l++;
@@ -178,17 +203,16 @@
 		if(ds_stack_empty(vl)) return noone;
 		
 		switch(operator) {
-			case "+": 
-				if(ds_stack_size(vl) >= 2) return new __funcTree("+", ds_stack_pop(vl), ds_stack_pop(vl));	
-			case "-": 
+			case "-": //deal with preceeding megative number -5
 				if(ds_stack_size(vl) >= 2) return new __funcTree("-", ds_stack_pop(vl), ds_stack_pop(vl));	
 				else					   return new __funcTree("-", ds_stack_pop(vl), 0);	
+				
+			case "+": //binary operators
 			case "*": 
-				if(ds_stack_size(vl) >= 2) return new __funcTree("*", ds_stack_pop(vl), ds_stack_pop(vl));
 			case "^": 
-				if(ds_stack_size(vl) >= 2) return new __funcTree("^", ds_stack_pop(vl), ds_stack_pop(vl));
 			case "/": 
-				if(ds_stack_size(vl) >= 2) return new __funcTree("/", ds_stack_pop(vl), ds_stack_pop(vl));
+			case "|": 
+				if(ds_stack_size(vl) >= 2) return new __funcTree(operator, ds_stack_pop(vl), ds_stack_pop(vl));	
 			
 			default: return new __funcTree(operator, ds_stack_pop(vl));
 		}

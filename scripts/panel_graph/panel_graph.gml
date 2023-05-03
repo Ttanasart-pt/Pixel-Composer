@@ -409,6 +409,9 @@ function Panel_Graph() : PanelContent() constructor {
 					node_hovering = n;	
 			}
 			
+			if(node_hovering != noone)
+				_HOVERING_ELEMENT = node_hovering;
+			
 			if(node_hovering != noone && pFOCUS && struct_has(node_hovering, "nodes") && DOUBLE_CLICK) {
 				addContext(node_hovering);
 				DOUBLE_CLICK = false;
@@ -596,7 +599,7 @@ function Panel_Graph() : PanelContent() constructor {
 							}, noone, ["Graph", "Frame"]));
 					}
 					
-					menuCall(,, menu );
+					menuCall("graph_node_selected_multiple_menu",,, menu );
 				} else {
 					var menu = [];
 					
@@ -613,7 +616,7 @@ function Panel_Graph() : PanelContent() constructor {
 					);
 					
 					callAddDialog();
-					menuCall(o_dialog_add_node.dialog_x - ui(8), o_dialog_add_node.dialog_y + ui(4), menu, fa_right );
+					menuCall("graph_node_selected_menu",o_dialog_add_node.dialog_x - ui(8), o_dialog_add_node.dialog_y + ui(4), menu, fa_right );
 					setFocus(o_dialog_add_node.id, "Dialog");
 				}
 			}
@@ -639,7 +642,7 @@ function Panel_Graph() : PanelContent() constructor {
 		var hoverable = !bool(node_dragging) && pHOVER;
 		for(var i = 0; i < ds_list_size(nodes_list); i++) {
 			var _hov = nodes_list[| i].drawConnections(gr_x, gr_y, graph_s, mx, my, hoverable, aa);
-			if(_hov != noone && is_struct(hov)) hov = _hov;
+			if(_hov != noone && is_struct(_hov)) hov = _hov;
 		}
 		//print("Draw connection: " + string(current_time - t)); t = current_time;
 		surface_reset_target();
@@ -649,7 +652,7 @@ function Panel_Graph() : PanelContent() constructor {
 		draw_surface(connection_surface, 0, 0);
 		shader_reset();
 		
-		junction_hovering = (node_hovering == noone && is_struct(node_hovering))? hov : noone;
+		junction_hovering = (node_hovering == noone && !is_struct(node_hovering))? hov : noone;
 		value_focus = noone;
 		
 		#region draw node

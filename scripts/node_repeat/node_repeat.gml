@@ -83,7 +83,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [
-		["Surface",		 true],	0, 1, 16, 17,
+		["Output",		 true],	0, 1, 16, 17,
 		["Pattern",		false],	3, 9, 2, 18, 7, 8, 
 		["Path",		 true],	11, 12, 13, 
 		["Transform",	false],	4, 26, 19, 5, 6, 10, 

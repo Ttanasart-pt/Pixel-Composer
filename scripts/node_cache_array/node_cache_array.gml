@@ -13,7 +13,7 @@ function Node_Cache_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	outputs[| 0] = nodeValue("Cache array", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, []);
 	
 	input_display_list = [
-		["Surface", true], 0, 
+		["Output",  true], 0, 
 		["Range",  false], 1, 2, 3,
 	];
 	

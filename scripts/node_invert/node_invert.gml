@@ -12,7 +12,7 @@ function Node_Invert(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		active_index = 3;
 	
 	input_display_list = [ 3, 
-		["Surface",	 true], 0, 1, 2, 
+		["Output",	 true], 0, 1, 2, 
 	]
 	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);

@@ -188,9 +188,9 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	});
 	
 	input_display_list = [
-		["Output",	true],	0, 1, 2,
+		["Output",	 true],	0, 1, 2,
 		["Layers",	false],	layer_renderer,
-		["Surface",	true],	
+		["Surfaces", true],	
 	];
 	input_display_list_len = array_length(input_display_list);
 	

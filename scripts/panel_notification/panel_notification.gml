@@ -72,7 +72,7 @@ function Panel_Notification() : PanelContent() constructor {
 						noti.onClick();
 				
 					if(mouse_press(mb_right, pFOCUS)) {
-						var dia = menuCall(,, [ 
+						var dia = menuCall("notification_menu",,, [ 
 							menuItem(get_text("noti_copy_message", "Copy notification message"), function() { 
 								clipboard_set_text(o_dialog_menubox.noti.txt);
 							}), 
@@ -150,21 +150,21 @@ function Panel_Notification() : PanelContent() constructor {
 		var toolt = error? get_text("noti_hide_error", "Hide error") : get_text("noti_show_error", "Show error");
 		var b = buttonInstant(THEME.button_hide, bx, by, ww, hh, [mx, my], pFOCUS, pHOVER, toolt, THEME.noti_icon_error, error, c_white, 0.75 + error * 0.25);
 		if(b == 2) filter = filter ^ NOTI_TYPE.error;
-		if(b == 3) menuCall(,, rightClickMenu);
+		if(b == 3) menuCall("notification_error_menu",,, rightClickMenu);
 		bx -= ui(36);
 	
 		var warn = !!(filter & NOTI_TYPE.warning);
 		var toolt = warn? get_text("noti_hide_warning", "Hide warning") : get_text("noti_show_warning", "Show warning");
 		var b = buttonInstant(THEME.button_hide, bx, by, ww, hh, [mx, my], pFOCUS, pHOVER, toolt, THEME.noti_icon_warning, warn, c_white, 0.75 + warn * 0.25);
 		if(b == 2) filter = filter ^ NOTI_TYPE.warning;
-		if(b == 3) menuCall(,, rightClickMenu);
+		if(b == 3) menuCall("notification_warning_menu",,, rightClickMenu);
 		bx -= ui(36);
 	
 		var log = !!(filter & NOTI_TYPE.log);
 		var toolt = log? get_text("noti_hide_log", "Hide log") : get_text("noti_show_log", "Show log");
 		var b = buttonInstant(THEME.button_hide, bx, by, ww, hh, [mx, my], pFOCUS, pHOVER, toolt, THEME.noti_icon_log, log, c_white, 0.75 + log * 0.25);
 		if(b == 2) filter = filter ^ NOTI_TYPE.log;
-		if(b == 3) menuCall(,, rightClickMenu);
+		if(b == 3) menuCall("notification_log_menu",,, rightClickMenu);
 	
 		var px = ui(padding);
 		var py = ui(title_height);

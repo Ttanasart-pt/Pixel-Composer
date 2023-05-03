@@ -43,7 +43,9 @@ function readObj(path, flipUV = false) {
 				var _fn = [];
 				
 				for( var i = 1; i < array_length(sep); i++ ) {
-					var _sp = string_splice(sep[i], "/");
+					var _sp    = string_splice(sep[i], "/");
+					if(array_length(_sp) < 2) continue;
+					
 					_f[i - 1]  = toNumber(array_safe_get(_sp, 0));
 					_ft[i - 1] = toNumber(array_safe_get(_sp, 1));
 					_fn[i - 1] = toNumber(array_safe_get(_sp, 2));

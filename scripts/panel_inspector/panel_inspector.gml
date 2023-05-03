@@ -358,7 +358,7 @@ function Panel_Inspector() : PanelContent() constructor {
 							if(mouse_press(mb_left, pFOCUS))
 								jun_disp[@ 1] = !coll;
 							if(mouse_press(mb_right, pFOCUS))
-								menuCall(, , group_menu);
+								menuCall("inspector_group_menu",,, group_menu);
 						} else
 							draw_sprite_stretched_ext(THEME.group_label, 0, 0, yy, con_w, ui(32), COLORS.panel_inspector_group_bg, 1);
 					
@@ -444,6 +444,8 @@ function Panel_Inspector() : PanelContent() constructor {
 			}
 			
 			if(_hover && point_in_rectangle(_m[0], _m[1], 4, _selY, contentPane.surface_w - ui(4), _selY + _selH)) {
+				_HOVERING_ELEMENT = jun;
+				
 				draw_sprite_stretched_ext(THEME.prop_selecting, 0, 4, _selY, contentPane.surface_w - ui(8), _selH, COLORS._main_accent, 1);
 				if(anim_toggling) {
 					jun.setAnim(!jun.is_anim);
@@ -501,7 +503,7 @@ function Panel_Inspector() : PanelContent() constructor {
 						}));
 					}
 					
-					var dia = menuCall(,, _menuItem);
+					var dia = menuCall("inspector_value_menu",,, _menuItem);
 					__dialog_junction = jun;
 				}
 			}

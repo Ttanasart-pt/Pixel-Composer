@@ -15,7 +15,7 @@ function Node_Alpha_Cutoff(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		active_index = 4;
 	
 	input_display_list = [ 4, 
-		["Surface",	 true], 0, 2, 3,
+		["Output", 	 true], 0, 2, 3,
 		["Cutoff",	false], 1, 
 	]
 	

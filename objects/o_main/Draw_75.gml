@@ -65,6 +65,11 @@ if(OS == os_windows && gameframe_is_minimized()) exit;
 						txt += " (triangles: " + string(array_length(content.triangles)) + ")";
 					draw_tooltip_text("[" + txt + "]");
 					break;
+				case VALUE_TYPE.d3vertex :
+					var txt = get_text("tooltip_mesh_vertex", "3D Vertex");
+					txt += " (groups: " + string(array_length(content)) + ")";
+					draw_tooltip_text("[" + txt + "]");
+					break;
 			}
 		} else 
 			draw_tooltip_text(TOOLTIP);

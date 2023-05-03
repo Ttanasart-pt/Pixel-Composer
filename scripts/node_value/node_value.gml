@@ -29,6 +29,8 @@ enum VALUE_TYPE {
 	trigger	  = 19,
 	atlas	  = 20,
 	
+	d3vertex = 21,
+	
 	action	  = 99,
 }
 
@@ -76,6 +78,9 @@ enum VALUE_DISPLAY {
 	path_save,
 	path_load,
 	path_font,
+	
+	//vertex
+	d3vertex,
 }
 
 function value_color(i) {
@@ -101,6 +106,7 @@ function value_color(i) {
 		$d1c2c2, //mesh
 		$5dde8f, //trigger
 		$976bff, //atlas
+		#c1007c, //d3vertex
 	];
 	
 	if(i == 99) return $5dde8f;
@@ -118,6 +124,7 @@ function value_bit(i) {
 		case VALUE_TYPE.text		: return 1 << 10;
 		case VALUE_TYPE.object		: return 1 << 13;
 		case VALUE_TYPE.d3object	: return 1 << 14;
+		case VALUE_TYPE.d3vertex	: return 1 << 24;
 		
 		case VALUE_TYPE.pathnode	: return 1 << 15;
 		case VALUE_TYPE.particle	: return 1 << 16;
@@ -177,6 +184,8 @@ function typeArray(_type) {
 		case VALUE_DISPLAY.path_array :
 		case VALUE_DISPLAY.palette :
 		case VALUE_DISPLAY.text_array :
+		
+		case VALUE_DISPLAY.d3vertex :
 			return 1;
 	}
 	return 0;
@@ -385,8 +394,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	show_in_inspector = true;
 	
 	display_type = VALUE_DISPLAY._default;
-	if(_type == VALUE_TYPE.curve)
-		display_type = VALUE_DISPLAY.curve;
+	if(_type == VALUE_TYPE.curve)			display_type = VALUE_DISPLAY.curve;
+	else if(_type == VALUE_TYPE.d3vertex)	display_type = VALUE_DISPLAY.d3vertex;
+	
 	display_data = -1;
 	display_attribute = noone;
 	
@@ -537,7 +547,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 					case VALUE_DISPLAY.vector :
 						var val = animator.getValue();
 						if(array_length(val) <= 4) {
-							editWidget = new vectorBox(array_length(animator.getValue()), _txt, function(index, val) { 
+							editWidget = new vectorBox(array_length(animator.getValue()), function(index, val) { 
 								MODIFIED = true;
 								//var _val = animator.getValue();
 								//_val[index] = val;
@@ -1071,7 +1081,18 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	}
 	
 	static __anim = function() {
-		return is_anim || node.update_on_frame;
+		if(node.update_on_frame) return true;
+		if(expUse) {
+			if(!is_struct(expTree)) return false;
+			var res = expTree.isAnimated();
+			switch(res) {
+				case EXPRESS_TREE_ANIM.none :		return false;
+				case EXPRESS_TREE_ANIM.base_value : return is_anim;
+				case EXPRESS_TREE_ANIM.animated :	return true;
+			}
+		}
+		
+		return is_anim;
 	}
 	
 	static isAnimated = function() {
@@ -1139,6 +1160,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	}
 	
 	static setValue = function(val = 0, record = true, time = ANIMATOR.current_frame, _update = true) {
+		//if(type == VALUE_TYPE.d3vertex && !is_array(val))
+		//	print(val);
+		
 		val = unit.invApply(val);
 		return setValueDirect(val, noone, record, time, _update);
 	}

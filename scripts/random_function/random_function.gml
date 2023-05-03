@@ -84,3 +84,10 @@ function generateUUID() {
 	} until(!ds_map_exists(NODE_MAP, uuid))
 	return uuid;
 }
+
+function UUID_generate() {
+	var _id = "";
+	repeat(16)
+		_id += chr(choose(irandom_range(48, 57), irandom_range(65, 90), irandom_range(97, 122)));
+	return _id;
+}

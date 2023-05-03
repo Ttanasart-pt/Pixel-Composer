@@ -24,7 +24,7 @@ function Node_Erode(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		active_index = 6;
 	
 	input_display_list = [ 6, 
-		["Surface",	 true], 0, 4, 5, 
+		["Output",	 true], 0, 4, 5, 
 		["Erode",	false], 1, 2, 3, 
 	]
 	

@@ -75,7 +75,7 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [
-		["Surface", false], 0, 6, 
+		["Output",  false], 0, 6, 
 		["Shape",	false], 2, 14, 3, 9, 4, 13, 5, 7, 8, 
 		["Render",	 true],	10, 1, 11, 12
 	];

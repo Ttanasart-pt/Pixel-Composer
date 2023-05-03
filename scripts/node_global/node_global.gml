@@ -22,7 +22,7 @@ function variable_editor(nodeVal) constructor {
 		UPDATE |= RENDER_TYPE.full;
 	});
 	
-	vb_range = new vectorBox(2, TEXTBOX_INPUT.number, function(index, val) { 
+	vb_range = new vectorBox(2, function(index, val) { 
 		slider_range[index] = val;
 	});
 	
@@ -185,19 +185,22 @@ function variable_editor(nodeVal) constructor {
 #endregion
 
 function Node_Global(_x = 0, _y = 0) : __Node_Base(_x, _y) constructor {
-	name	= "Global variable";
+	name = "GLOBAL";
+	display_name = "";
 	
+	group = noone;
 	use_cache = false;
-	value   = ds_map_create();
+	value = ds_map_create();
 	input_display_list = -1;
+	anim_priority = -999;
 	
 	static valueUpdate = function(index) {
 		UPDATE |= RENDER_TYPE.full;
 	}
 	
 	static createValue = function() {
-		var _in         = nodeValue("NewValue", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0);
-		_in.editor      = new variable_editor(_in);
+		var _in    = nodeValue("NewValue", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0);
+		_in.editor = new variable_editor(_in);
 		ds_list_add(inputs, _in);
 		
 		return _in;
@@ -227,7 +230,6 @@ function Node_Global(_x = 0, _y = 0) : __Node_Base(_x, _y) constructor {
 	static step = function() {
 		for( var i = 0; i < ds_list_size(inputs); i++ ) {
 			var _inp = inputs[| i];
-			var val  = _inp.getValue();
 			value[? _inp.name] = _inp;
 			
 			var val   = true;

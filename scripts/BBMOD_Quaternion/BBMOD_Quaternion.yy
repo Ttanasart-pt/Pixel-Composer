@@ -6,6 +6,6 @@
   "isDnD": false,
   "parent": {
     "name": "Math",
-    "path": "folders/_Extensions/BBMOD/Core/Math.yy",
+    "path": "folders/_Extensions/BBMOD/Math.yy",
   },
 }

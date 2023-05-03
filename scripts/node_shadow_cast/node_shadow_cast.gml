@@ -91,7 +91,7 @@ function Node_Shadow_Cast(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	outputs[| 1] = nodeValue("Light mask", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [ 17, 
-		["Surface",			 true], 0, 1, 
+		["Output",			 true], 0, 1, 
 		["Light",			false], 5, 12, 8, 2, 3, 4,
 		["Shadow caster",	false], 10, 11,
 		["Render",			false], 13, 14, 7, 6, 9, 15, 16,

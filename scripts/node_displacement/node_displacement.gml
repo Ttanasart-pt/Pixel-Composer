@@ -46,7 +46,7 @@ If set, then strength value control how many times the effect applies on itself.
 		active_index = 10;
 	
 	input_display_list = [ 10, 
-		["Surface",		 true],	0, 8, 9, 
+		["Output", 		 true],	0, 8, 9, 
 		["Displace",	false], 1, 3, 4, 
 		["Color",		false], 5, 2, 
 		["Algorithm",	 true],	6

@@ -31,7 +31,7 @@ function Node_3D_Plane(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		.rejectArray();
 		
 	inputs[| 9] = nodeValue("Field of view", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 60)
-		.setDisplay(VALUE_DISPLAY.slider, [ 0, 90, 1 ]);
+		.setDisplay(VALUE_DISPLAY.slider, [ 1, 90, 1 ]);
 	
 	inputs[| 10] = nodeValue("Texture scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 1 ])
 		.setDisplay(VALUE_DISPLAY.vector);
@@ -39,7 +39,13 @@ function Node_3D_Plane(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	inputs[| 11] = nodeValue("Texture shift", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.vector);
 		
+	inputs[| 12] = nodeValue("Subdiviion", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1)
+		
+	inputs[| 13] = nodeValue("Normal axis", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 2)
+		.setDisplay(VALUE_DISPLAY.enum_button, [ "X", "Y", "Z" ])
+	
 	input_display_list = [0, 
+		["Geometry",		  true], 13, 12, 
 		["Outputs",			  true], 4, 5, 
 		["Object transform", false], 6, 2, 7,
 		["Camera",			 false], 8, 9, 1, 3,
@@ -48,13 +54,68 @@ function Node_3D_Plane(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
-	outputs[| 1] = nodeValue("3D object", self, JUNCTION_CONNECT.output, VALUE_TYPE.d3object, function() { return submit_vertex(); });
+	outputs[| 1] = nodeValue("3D scene", self, JUNCTION_CONNECT.output, VALUE_TYPE.d3object, function() { return submit_vertex(); });
+	
+	outputs[| 2] = nodeValue("3D vertex", self, JUNCTION_CONNECT.output, VALUE_TYPE.d3vertex, []);
 	
 	output_display_list = [
-		0, 1
+		0, 1, 2
 	]
 	
-	_3d_node_init(0, /*Transform*/ 1, 2, 3);
+	vertexObjects = [ PRIMITIVES[? "plane"].clone() ];
+	vertexSide = 1;
+	axis = 0;
+	
+	_3d_node_init(0, /*Transform*/ 1, 3, 6, 2, 7);
+	
+	static generate_vb = function() {
+		for( var i = 0; i < array_length(vertexObjects); i++ ) 
+			vertexObjects[i].destroy();
+		vertexObjects = [];
+		
+		var pln = new VertexObject();
+		for(var i = 0; i < vertexSide; i++) 
+		for(var j = 0; j < vertexSide; j++) {
+			var _x0 = (i + 0) * (1 / vertexSide);
+			var _y0 = (j + 0) * (1 / vertexSide);
+			var _x1 = (i + 1) * (1 / vertexSide);
+			var _y1 = (j + 1) * (1 / vertexSide);
+			
+			_x0 -= 0.5;
+			_x1 -= 0.5;
+			_y0 -= 0.5;
+			_y1 -= 0.5;
+			
+			if(axis == 0) {
+				pln.addFace( [0, _x1, _y0], [0, 1, 0], [_x1 + .5, _y0 + .5], 
+				             [0, _x0, _y0], [0, 1, 0], [_x0 + .5, _y0 + .5], 
+				             [0, _x1, _y1], [0, 1, 0], [_x1 + .5, _y1 + .5], );
+			
+				pln.addFace( [0, _x1, _y1], [0, 1, 0], [_x1 + .5, _y1 + .5], 
+						     [0, _x0, _y0], [0, 1, 0], [_x0 + .5, _y0 + .5], 
+						     [0, _x0, _y1], [0, 1, 0], [_x0 + .5, _y1 + .5], );	
+			} else if(axis == 1) {
+				pln.addFace( [_x1, 0, _y0], [0, 1, 0], [_x1 + .5, _y0 + .5], 
+				             [_x0, 0, _y0], [0, 1, 0], [_x0 + .5, _y0 + .5], 
+				             [_x1, 0, _y1], [0, 1, 0], [_x1 + .5, _y1 + .5], );
+								 
+				pln.addFace( [_x1, 0, _y1], [0, 1, 0], [_x1 + .5, _y1 + .5], 
+						     [_x0, 0, _y0], [0, 1, 0], [_x0 + .5, _y0 + .5], 
+						     [_x0, 0, _y1], [0, 1, 0], [_x0 + .5, _y1 + .5], );	
+			} else if(axis == 2) {
+				pln.addFace( [_x1, _y0, 0], [0, 1, 0], [_x1 + .5, _y0 + .5], 
+				             [_x0, _y0, 0], [0, 1, 0], [_x0 + .5, _y0 + .5], 
+				             [_x1, _y1, 0], [0, 1, 0], [_x1 + .5, _y1 + .5], );
+			
+				pln.addFace( [_x1, _y1, 0], [0, 1, 0], [_x1 + .5, _y1 + .5], 
+						     [_x0, _y0, 0], [0, 1, 0], [_x0 + .5, _y0 + .5], 
+						     [_x0, _y1, 0], [0, 1, 0], [_x0 + .5, _y1 + .5], );	
+			} 
+		}
+		
+		pln.createBuffer();
+		vertexObjects[0] = pln;
+	}
 	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		if(inputs[| 1].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny)) 
@@ -74,13 +135,14 @@ function Node_3D_Plane(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		
 		_3d_local_transform(_lpos, _lrot, _lsca);
 
-		if(is_surface(_inSurf)) 
-			vertex_submit(PRIMITIVES[? "plane"], pr_trianglelist, surface_get_texture(_inSurf));
+		vertexObjects[0].submit(_inSurf);
 		
 		_3d_clear_local_transform();
 	}
 	
 	static process_data = function(_outSurf, _data, _output_index, _array_index) {
+		if(_output_index == 2) return vertexObjects;
+		
 		if(!is_surface(_data[0])) return _outSurf;
 		
 		var _out_type = _data[4];
@@ -121,6 +183,15 @@ function Node_3D_Plane(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		
 		var _uvSca = _data[10];
 		var _uvShf = _data[11];
+		
+		var _vertexSide = max(1, _data[12]);
+		var _axis = _data[13];
+		
+		if(vertexSide != _vertexSide || _axis != axis) {
+			vertexSide = _vertexSide;
+			axis = _axis;
+			generate_vb();
+		}
 		
 		inputs[| 9].setVisible(_proj);
 		
@@ -163,7 +234,7 @@ function Node_3D_Plane(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			matrix_stack_push(matrix_build(0, 0, 0, 0, 0, 0, _lsca[0], _lsca[1], _lsca[2]));
 			matrix_set(matrix_world, matrix_stack_top());
 			
-			vertex_submit(PRIMITIVES[? "plane"], pr_trianglelist, surface_get_texture(_data[0]));
+			vertexObjects[0].submit(_data[0]);
 			shader_reset();
 			
 			matrix_stack_clear();

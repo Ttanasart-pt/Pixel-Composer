@@ -297,6 +297,7 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 			addNodeObject(filter, "SDF",				s_node_sdf,				"Node_SDF",				[1, Node_SDF],, "Create signed distance field using jump flooding algorithm.").setVersion(1130);
 			addNodeObject(filter, "Replace Image",		s_node_image_replace,	"Node_Surface_Replace",	[1, Node_Surface_Replace], ["image replace"]).setVersion(1140);
 			addNodeObject(filter, "Chromatic Aberration",	s_node_chromatic_abarration,	"Node_Chromatic_Aberration",	[1, Node_Chromatic_Aberration],, "Apply chromatic aberration effect to the image.");
+			addNodeObject(filter, "FXAA",				s_node_FXAA,			"Node_FXAA",			[1, Node_FXAA]);
 			
 			ds_list_add(filter, "Colors");
 			addNodeObject(filter, "Replace Color",		s_node_color_replace,	"Node_Color_replace",	[1, Node_Color_replace], ["isolate color", "select color", "palette swap"], "Replace color that match one palette with another palette.");
@@ -345,7 +346,10 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 			addNodeObject(threeD, "3D Transform",		s_node_3d_transform,	"Node_3D_Transform",	[1, Node_3D_Transform]).setVersion(1080);
 			addNodeObject(threeD, "3D Combine",			s_node_3d_obj_combine,	"Node_3D_Combine",		[1, Node_3D_Combine],, "Combine multiple 3D object to a single scene,").setVersion(1080);
 			addNodeObject(threeD, "3D Repeat",			s_node_3d_array,		"Node_3D_Repeat",		[1, Node_3D_Repeat], ["3d array"], "Repeat 3D object multiple times.").setVersion(1080);
-		
+			addNodeObject(threeD, "3D Displace",		s_node_3d_displace,		"Node_3D_Displace",		[1, Node_3D_Displace]).setVersion(1143);
+			
+			addNodeObject(threeD, "3D Export",			s_node_3d_export,		"Node_3D_Export",		[1, Node_3D_Export]).setVersion(1143);
+			
 		var generator = ds_list_create();
 		addNodeCatagory("Generate", generator);
 			ds_list_add(generator, "Colors");
@@ -641,20 +645,16 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 		}
 	}
 	
-	function nodeGetData(str) {
+	function nodeGetData(str, getStr = false) {
 		var strs = string_splice(str, ".");
 		var _val = 0;
-		var _ind = [];
 		
 		if(array_length(strs) == 0) return 0;
 		
 		if(array_length(strs) == 1) {
 			var splt = string_splice(strs[0], "[");
-			var inp = GLOBAL.getInput(splt[0]);
+			var inp = GLOBAL.getInput(strs[0]);
 			_val = inp == noone? 0 : inp.getValueRecursive()[0];
-			
-			for( var i = 1; i < array_length(splt); i++ ) 
-				array_push(_ind, toNumber(splt[i]));
 		} else if(strs[0] == "Project") {
 			switch(strs[1]) {
 				case "frame" :		return ANIMATOR.current_frame;
@@ -667,27 +667,7 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 			if(!ds_map_exists(NODE_NAME_MAP, key)) return 0;
 		
 			var node = NODE_NAME_MAP[? key];
-			var splt = string_splice(strs[1], "[");
-			if(array_length(splt) < 2) return 0;
-		
-			var mmap = splt[0] == "inputs"? node.inputMap : node.outputMap;
-			var ind  = string_replace_all(string_replace(splt[1], "]", ""), "\"", "");
-			
-			//print("key: " + string(key));
-			//print("map: " + string(splt[0]));
-			//print("ind: " + string(ind));
-			//print("==========");
-			
-			if(!ds_map_exists(mmap, ind)) return 0;
-			_val = mmap[? ind].getValue();
-			
-			for( var i = 2; i < array_length(splt); i++ ) 
-				array_push(_ind, toNumber(splt[i]));
-		}
-		
-		for( var i = 0; i < array_length(_ind); i++ ) {
-			if(!is_array(_val)) break;
-			_val = array_safe_get(_val, _ind[i]);
+			_val = strs[1] == "inputs"? node.inputMap : node.outputMap;
 		}
 		
 		return _val;

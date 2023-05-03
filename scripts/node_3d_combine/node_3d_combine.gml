@@ -17,9 +17,9 @@ function Node_3D_Combine(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		.setDisplay(VALUE_DISPLAY.vector)
 		.rejectArray();
 	
-	inputs[| 4] = nodeValue("Render position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ def_surf_size / 2, def_surf_size / 2 ])
+	inputs[| 4] = nodeValue("Render position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0.5, 0.5 ])
 		.setDisplay(VALUE_DISPLAY.vector)
-		.setUnitRef( function() { return inputs[| 2].getValue(); })
+		.setUnitRef( function() { return inputs[| 2].getValue(); }, VALUE_UNIT.reference)
 		.rejectArray();
 	
 	inputs[| 5] = nodeValue("Render scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 1 ])
@@ -55,7 +55,7 @@ function Node_3D_Combine(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	inputs[| 13] = nodeValue("Scale view with dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true)
 	
 	input_display_list = [ 
-		["Surface",				false], 0, 13, 
+		["Output",				false], 0, 13, 
 		["Object transform",	false], 1, 2, 3,
 		["Camera",				false], 11, 12, 4, 5,
 		["Light",				false], 6, 7, 8, 9, 10,
@@ -76,7 +76,7 @@ function Node_3D_Combine(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		0, 2, 1
 	]
 	
-	_3d_node_init(1, /*Transform*/ 4, 2, 5);
+	_3d_node_init(1, /*Transform*/ 4, 5, 1, 2, 3);
 	
 	static createNewInput = function() {
 		var index = ds_list_size(inputs);
@@ -182,7 +182,7 @@ function Node_3D_Combine(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 			var _cam   = { projection: _proj, fov: _fov };
 			var _scale = { local: false, dimension: _dimS };
 			
-			_3d_pre_setup(_outSurf, _dim, _pos, _sca, _ldir, _lhgt, _lint, _lclr, _aclr, _lpos, _lrot, _lsca, _cam, pass, _scale);
+			_outSurf = _3d_pre_setup(_outSurf, _dim, _pos, _sca, _ldir, _lhgt, _lint, _lclr, _aclr, _lpos, _lrot, _lsca, _cam, pass, _scale);
 				submit_vertex();
 			_3d_post_setup();
 		}

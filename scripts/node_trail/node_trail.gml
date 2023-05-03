@@ -34,7 +34,7 @@ function Node_Trail(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	outputs[| 1] = nodeValue("Trail UV", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [
-		["Surface",			 true], 0, 
+		["Output", 			 true], 0, 
 		["Trail settings",	false], 1, 2,
 		["Tracking",		false], 3, 4, 5, 
 		["Modification",	false], 6, 

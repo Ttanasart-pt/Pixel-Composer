@@ -35,7 +35,7 @@ function Node_Bevel(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [ 7, 
-		["Surface",		 true], 0, 5, 6, 
+		["Output", 		 true], 0, 5, 6, 
 		["Bevel",		false], 4, 1, 
 		["Transform",	false], 2, 3, 
 	];

@@ -22,7 +22,7 @@ function Node_Greyscale(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		active_index = 5;
 	
 	input_display_list = [ 5, 
-		["Surface",		 true], 0, 3, 4, 
+		["Output",		 true], 0, 3, 4, 
 		["Greyscale",	false], 1, 2, 
 	]
 	

@@ -1,6 +1,8 @@
 function buttonColor(_onApply, dialog = noone) : widget() constructor {
 	onApply = _onApply;
 	parentDialog = dialog;
+	current_value = 0;
+	triggered = false;
 	
 	onColorPick = function() {
 		var dialog = dialogCall(o_dialog_color_selector, WIN_W / 2, WIN_H / 2);
@@ -17,7 +19,15 @@ function buttonColor(_onApply, dialog = noone) : widget() constructor {
 	
 	function apply(value) {
 		if(!interactable) return;
+		current_value = value();
+		triggered = true;
 		onApply(value);
+	}
+	
+	static isTriggered = function() {
+		var t = triggered;
+		triggered = false;
+		return t;
 	}
 	
 	static trigger = function() { 

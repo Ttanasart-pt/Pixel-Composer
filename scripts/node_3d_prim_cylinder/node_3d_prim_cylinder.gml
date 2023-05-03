@@ -9,9 +9,9 @@ function Node_3D_Cylinder(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	inputs[| 2] = nodeValue("Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, def_surf_size2)
 		.setDisplay(VALUE_DISPLAY.vector);
 	
-	inputs[| 3] = nodeValue("Render position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ def_surf_size / 2, def_surf_size / 2 ])
+	inputs[| 3] = nodeValue("Render position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0.5, 0.5 ])
 		.setDisplay(VALUE_DISPLAY.vector)
-		.setUnitRef(function(index) { return getDimension(index); });
+		.setUnitRef(function(index) { return getDimension(index); }, VALUE_UNIT.reference);
 	
 	inputs[| 4] = nodeValue("Render rotation", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.vector);
@@ -49,7 +49,7 @@ function Node_3D_Cylinder(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		.rejectArray();
 		
 	inputs[| 18] = nodeValue("Field of view", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 60)
-		.setDisplay(VALUE_DISPLAY.slider, [ 0, 90, 1 ]);
+		.setDisplay(VALUE_DISPLAY.slider, [ 1, 90, 1 ]);
 		
 	inputs[| 19] = nodeValue("Taper", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
 		.setDisplay(VALUE_DISPLAY.slider, [ 0, 1, 0.01 ]);
@@ -57,7 +57,7 @@ function Node_3D_Cylinder(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	inputs[| 20] = nodeValue("Scale view with dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true)
 	
 	input_display_list = [
-		["Surface",				false], 2, 20, 
+		["Output",				false], 2, 20, 
 		["Geometry",			false], 0, 1, 19,
 		["Object transform",	false], 16, 15, 9,
 		["Camera",				false], 17, 18, 3, 5, 
@@ -67,43 +67,49 @@ function Node_3D_Cylinder(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
-	outputs[| 1] = nodeValue("3D object", self, JUNCTION_CONNECT.output, VALUE_TYPE.d3object, function() { return submit_vertex(); });
+	outputs[| 1] = nodeValue("3D scene", self, JUNCTION_CONNECT.output, VALUE_TYPE.d3object, function() { return submit_vertex(); });
 	
 	outputs[| 2] = nodeValue("Normal pass", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
+	outputs[| 3] = nodeValue("3D vertex", self, JUNCTION_CONNECT.output, VALUE_TYPE.d3vertex, []);
+	
 	output_display_list = [
-		0, 2, 1
+		0, 2, 1, 3
 	]
 	
-	_3d_node_init(2, /*Transform*/ 3, 15, 5);
+	_3d_node_init(2, /*Transform*/ 3, 5, 16, 15, 9);
 	
 	sides = 16;
 	taper = 1;
 	thick =  0.5;
-	VB_top = vertex_create_buffer();
-	VB_sid = vertex_create_buffer();
+	vertexObjects = [];
 	
 	static generate_vb = function() {
 		var _ox, _oy, _nx, _ny, _ou, _nu;
 		
-		vertex_begin(VB_top, FORMAT_PNT);
+		for( var i = 0; i < array_length(vertexObjects); i++ ) 
+			vertexObjects[i].destroy();
+		vertexObjects = [];
+		
+		var top = new VertexObject();
 		for(var i = 0; i <= sides; i++)  {
 			_nx = lengthdir_x(0.5, i * 360 / sides);
 			_ny = lengthdir_y(0.5, i * 360 / sides);
 			
 			if(i) {
-				vertex_add_pnt(VB_top, [  0, thick / 2,   0], [0, 1, 0], [  0 + 0.5,   0 + 0.5]);
-				vertex_add_pnt(VB_top, [_ox, thick / 2, _oy], [0, 1, 0], [_ox + 0.5, _oy + 0.5]);
-				vertex_add_pnt(VB_top, [_nx, thick / 2, _ny], [0, 1, 0], [_nx + 0.5, _ny + 0.5]);
+				top.addFace( [  0, thick / 2,   0], [0, 1, 0], [  0 + 0.5,   0 + 0.5], 
+				             [_ox, thick / 2, _oy], [0, 1, 0], [_ox + 0.5, _oy + 0.5], 
+				             [_nx, thick / 2, _ny], [0, 1, 0], [_nx + 0.5, _ny + 0.5], );
 			}
 			
 			_ox = _nx;
 			_oy = _ny;
 		}
 		
-		vertex_end(VB_top);
+		top.createBuffer();
+		vertexObjects[0] = top;
 		
-		vertex_begin(VB_sid, FORMAT_PNT);
+		var sid = new VertexObject();
 		for(var i = 0; i <= sides; i++)  {
 			_nx = lengthdir_x(0.5, i * 360 / sides);
 			_ny = lengthdir_y(0.5, i * 360 / sides);
@@ -112,20 +118,22 @@ function Node_3D_Cylinder(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 			var nrm_y = 1 - taper;
 			
 			if(i) {
-				vertex_add_pnt(VB_sid, [_ox * taper, -thick / 2, _oy * taper], [_nx, nrm_y, _ny], [_ou, 0]);
-				vertex_add_pnt(VB_sid, [_ox,          thick / 2, _oy        ], [_nx, nrm_y, _ny], [_ou, 1]);
-				vertex_add_pnt(VB_sid, [_nx,          thick / 2, _ny        ], [_nx, nrm_y, _ny], [_nu, 1]);
+				sid.addFace( [_ox * taper, -thick / 2, _oy * taper], [_nx, nrm_y, _ny], [_ou, 0], 
+				             [_ox,          thick / 2, _oy        ], [_nx, nrm_y, _ny], [_ou, 1], 
+				             [_nx,          thick / 2, _ny        ], [_nx, nrm_y, _ny], [_nu, 1], );
 																	        
-				vertex_add_pnt(VB_sid, [_nx,          thick / 2, _ny        ], [_nx, nrm_y, _ny], [_nu, 1]);
-				vertex_add_pnt(VB_sid, [_nx * taper, -thick / 2, _ny * taper], [_nx, nrm_y, _ny], [_nu, 0]);
-				vertex_add_pnt(VB_sid, [_ox * taper, -thick / 2, _oy * taper], [_nx, nrm_y, _ny], [_ou, 0]);
+				sid.addFace( [_nx,          thick / 2, _ny        ], [_nx, nrm_y, _ny], [_nu, 1], 
+				             [_nx * taper, -thick / 2, _ny * taper], [_nx, nrm_y, _ny], [_nu, 0], 
+				             [_ox * taper, -thick / 2, _oy * taper], [_nx, nrm_y, _ny], [_ou, 0], );
 			}
 			
 			_ox = _nx;
 			_oy = _ny;
 			_ou = _nu;
 		}
-		vertex_end(VB_sid);
+		
+		sid.createBuffer();
+		vertexObjects[1] = sid;
 	}
 	generate_vb();
 	
@@ -145,20 +153,22 @@ function Node_3D_Cylinder(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		_3d_local_transform(_lpos, _lrot, _lsca);
 		
 		matrix_set(matrix_world, matrix_stack_top());
-		vertex_submit(VB_top, pr_trianglelist, surface_get_texture(face_top));
+		vertexObjects[0].submit(face_top);
 				
 		matrix_stack_push(matrix_build(0, -thick, 0, 0, 0, 0, taper, 1, taper));
 		matrix_set(matrix_world, matrix_stack_top());
-		vertex_submit(VB_top, pr_trianglelist, surface_get_texture(face_bot));
+		vertexObjects[0].submit(face_bot);
 		matrix_stack_pop();
 				
 		matrix_set(matrix_world, matrix_stack_top());
-		vertex_submit(VB_sid, pr_trianglelist, surface_get_texture(face_sid));
+		vertexObjects[1].submit(face_sid);
 		
 		_3d_clear_local_transform();
 	}
 	
 	static process_data = function(_outSurf, _data, _output_index, _array_index) {
+		if(_output_index == 3) return vertexObjects;
+		
 		var _sides = _data[0];
 		var _thick = _data[1];
 		var _taper = _data[19];
@@ -203,18 +213,18 @@ function Node_3D_Cylinder(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		var _cam   = { projection: _proj, fov: _fov };
 		var _scale = { local: true, dimension: _dimS };
 			
-		_3d_pre_setup(_outSurf, _dim, _pos, _sca, _ldir, _lhgt, _lint, _lclr, _aclr, _lpos, _lrot, _lsca, _cam, pass, _scale);
+		_outSurf = _3d_pre_setup(_outSurf, _dim, _pos, _sca, _ldir, _lhgt, _lint, _lclr, _aclr, _lpos, _lrot, _lsca, _cam, pass, _scale);
 		
 		matrix_set(matrix_world, matrix_stack_top());
-		vertex_submit(VB_top, pr_trianglelist, surface_get_texture(face_top));
+		vertexObjects[0].submit(face_top);
 				
 		matrix_stack_push(matrix_build(0, -thick, 0, 0, 0, 0, taper, 1, taper));
 		matrix_set(matrix_world, matrix_stack_top());
-		vertex_submit(VB_top, pr_trianglelist, surface_get_texture(face_bot));
+		vertexObjects[0].submit(face_bot);
 		matrix_stack_pop();
 				
 		matrix_set(matrix_world, matrix_stack_top());
-		vertex_submit(VB_sid, pr_trianglelist, surface_get_texture(face_sid));
+		vertexObjects[1].submit(face_sid);
 		
 		_3d_post_setup();
 		

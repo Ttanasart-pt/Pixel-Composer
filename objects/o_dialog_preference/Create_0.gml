@@ -140,24 +140,6 @@ event_inherited();
 	]);
 	
 	ds_list_add(pref_global, [
-		get_text("pref_show_node_render_time", "Show node render time"),
-		"node_show_time",
-		new checkBox(function() { 
-			PREF_MAP[? "node_show_time"] = !PREF_MAP[? "node_show_time"]; 
-			PREF_SAVE();
-		})
-	]);
-	
-	ds_list_add(pref_global, [
-		get_text("pref_show_node_render_status", "Show node render status"),
-		"node_show_render_status",
-		new checkBox(function() { 
-			PREF_MAP[? "node_show_render_status"] = !PREF_MAP[? "node_show_render_status"]; 
-			PREF_SAVE();
-		})
-	]);
-	
-	ds_list_add(pref_global, [
 		get_text("pref_collection_preview_speed", "Collection preview speed"),
 		"collection_preview_speed",
 		new textBox(TEXTBOX_INPUT.number, function(str) { 
@@ -199,6 +181,15 @@ event_inherited();
 		"notification_time",
 		new textBox(TEXTBOX_INPUT.number, function(str) { 
 			PREF_MAP[? "notification_time"] = max(0, round(real(str)));
+			PREF_SAVE();
+		})
+	]);
+	
+	ds_list_add(pref_global, [
+		get_text("pref_save_file_minify", "Minify save file"),
+		"save_file_minify",
+		new checkBox(function() { 
+			PREF_MAP[? "save_file_minify"] = !PREF_MAP[? "save_file_minify"];
 			PREF_SAVE();
 		})
 	]);

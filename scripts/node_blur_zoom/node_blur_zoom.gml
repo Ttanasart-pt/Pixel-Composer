@@ -37,7 +37,7 @@ function Node_Blur_Zoom(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [ 8,
-		["Surface",	 true],	0, 6, 7, 
+		["Output", 	 true],	0, 6, 7, 
 		["Blur",	false],	1, 2, 4, 5
 	];
 	

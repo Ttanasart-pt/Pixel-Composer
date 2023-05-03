@@ -98,7 +98,7 @@ if !ready exit;
 		var by = dialog_y + ui(16);
 		
 		if(buttonInstant(THEME.button_hide, bx, by, ui(28), ui(28), mouse_ui, interactable && sFOCUS, sHOVER, get_text("gradient_editor_key_blend", "Key blending"), THEME.grad_blend) == 2) {
-			menuCall( bx + ui(32), by, [ 
+			menuCall("gradient_window_blend_menu", bx + ui(32), by, [ 
 				menuItem(get_text("gradient_editor_blend_RGB",  "RGB blend"),  function() { gradient.type = 0; onApply(gradient); }), 
 				menuItem(get_text("gradient_editor_blend_HSV",  "HSV blend"),  function() { gradient.type = 2; onApply(gradient); }), 
 				menuItem(get_text("gradient_editor_blend_hard", "Hard blend"), function() { gradient.type = 1; onApply(gradient); }), 

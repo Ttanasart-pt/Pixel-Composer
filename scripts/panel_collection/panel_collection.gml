@@ -179,7 +179,7 @@ function Panel_Collection() : PanelContent() constructor {
 						if(!DEMO && mouse_press(mb_right, pFOCUS)) {
 							_menu_node = _node;
 							initMenu();
-							menuCall(,, contentMenu);	
+							menuCall("collection_menu",,, contentMenu);	
 						}
 						
 						if(!instance_exists(o_dialog_menubox) && meta != noone && meta != undefined) {
@@ -253,7 +253,7 @@ function Panel_Collection() : PanelContent() constructor {
 					if(!DEMO && mouse_press(mb_right, pFOCUS)) {
 						_menu_node = _node;
 						initMenu();
-						menuCall(,, contentMenu);
+						menuCall("collection_menu",,, contentMenu);
 					}
 				}
 				

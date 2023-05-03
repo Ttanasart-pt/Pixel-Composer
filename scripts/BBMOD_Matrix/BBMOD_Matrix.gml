@@ -227,6 +227,18 @@ function BBMOD_Matrix(_raw=undefined) constructor
 	/// @desc Changes the current world matrix to this one.
 	///
 	/// @return {Struct.BBMOD_Matrix} Returns `self`.
+	static PushMatrix = function () {
+		gml_pragma("forceinline");
+		matrix_stack_push(Raw);
+		return self;
+	};
+
+
+	/// @func ApplyWorld()
+	///
+	/// @desc Changes the current world matrix to this one.
+	///
+	/// @return {Struct.BBMOD_Matrix} Returns `self`.
 	static ApplyWorld = function () {
 		gml_pragma("forceinline");
 		matrix_set(matrix_world, Raw);

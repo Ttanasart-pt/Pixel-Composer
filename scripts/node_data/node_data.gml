@@ -1030,6 +1030,8 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		cached_output[ANIMATOR.current_frame] = surface_array_clone(_frame);
 		
 		array_safe_set(cache_result, ANIMATOR.current_frame, true);
+		
+		return cached_output[ANIMATOR.current_frame];
 	}
 	
 	static cacheExist = function(frame = ANIMATOR.current_frame) {
@@ -1038,7 +1040,9 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		if(frame >= array_length(cached_output)) return false;
 		if(frame >= array_length(cache_result)) return false;
 		if(!array_safe_get(cache_result, frame, false)) return false;
-		return true;
+		
+		var s = array_safe_get(cached_output, frame);
+		return is_array(s) || surface_exists(s);
 	}
 	
 	static getCacheFrame = function(frame = ANIMATOR.current_frame) {
@@ -1375,7 +1379,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	static onCleanUp = function() {}
 	
 	// helper function
-	static attrDepth = function() { 
+	static attrDepth = function() {
 		if(ds_map_exists(attributes, "color_depth")) {
 			var form = attributes[? "color_depth"];
 			if(inputs[| 0].type == VALUE_TYPE.surface) 

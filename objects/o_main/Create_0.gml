@@ -85,12 +85,10 @@
 #endregion
 
 #region Loader
-	globalvar GIF_READER, _BBMOD_DLL;
+	globalvar GIF_READER;
 	
 	GIF_READER = ds_list_create();
 	gif_complete_st = ds_stack_create();
-	
-	_BBMOD_DLL = new BBMOD_DLL();
 #endregion
 
 #region tunnel

@@ -30,7 +30,7 @@ function Node_Perlin(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		.setDisplay(VALUE_DISPLAY.slider_range, [0, 1, .01]);
 	
 	input_display_list = [
-		["Surface",	 true],	0, 5, 
+		["Output", 	 true],	0, 5, 
 		["Noise",	false],	1, 2, 3, 4, 
 		["Render",	false], 6, 7, 8, 9, 
 	];

@@ -38,7 +38,7 @@ function Node_Color_replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		active_index = 9;
 	
 	input_display_list = [ 9, 
-		["Surface",		 true], 0, 7, 8, 
+		["Output",		 true], 0, 7, 8, 
 		["Palette",		false], 1, 2, 
 		["Comparison",	false], 3, 5, 
 		["Render",		false], 4, 6

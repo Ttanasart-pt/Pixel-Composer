@@ -15,7 +15,7 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover, _focus, _scr
 	var lb_y = yy + lb_h / 2;
 			
 	var butx = xx;
-	if(jun.connect_type == JUNCTION_CONNECT.input && jun.isAnimable() && !jun.expUse && !global_var) {
+	if(jun.connect_type == JUNCTION_CONNECT.input && jun.isAnimable() && !jun.expUse) {
 		var index = jun.value_from == noone? jun.is_anim : 2;
 		draw_sprite_ui_uniform(THEME.animate_clock, index, butx, lb_y, 1, index == 2? COLORS._main_accent : c_white, 0.8);
 		if(_hover && point_in_circle(_m[0], _m[1], butx, lb_y, ui(10))) {
@@ -99,7 +99,7 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover, _focus, _scr
 	#endregion
 			
 	#region anim
-		if(jun.connect_type == JUNCTION_CONNECT.input && lineBreak && jun.is_anim && !global_var) {
+		if(jun.connect_type == JUNCTION_CONNECT.input && lineBreak && jun.is_anim) {
 			var bx = xx + ww - ui(12);
 			var by = lb_y;
 			if(buttonInstant(THEME.button_hide, bx - ui(12), by - ui(12), ui(24), ui(24), _m, _focus, _hover, "", THEME.prop_keyframe, 2) == 2) {
@@ -166,7 +166,7 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover, _focus, _scr
 		}
 	#endregion
 		
-	#region use global
+	#region use expression
 		if(jun.connect_type == JUNCTION_CONNECT.input && lineBreak && !jun.is_anim && !global_var) {
 			var bx = xx + ww - ui(12);
 			var by = lb_y;
@@ -194,7 +194,6 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover, _focus, _scr
 		jun.express_edit.boxColor = expValid? COLORS._main_value_positive : COLORS._main_value_negative;
 		
 		jun.express_edit.setActiveFocus(_focus, _hover);
-		jun.express_edit.setInteract(jun.value_from == noone);
 		if(_focus) jun.express_edit.register(_scrollPane);
 			
 		var wd_h = jun.express_edit.draw(editBoxX, editBoxY, editBoxW, editBoxH, jun.expression, _m);

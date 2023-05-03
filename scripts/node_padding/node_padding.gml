@@ -31,7 +31,7 @@ function Node_Padding(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [ 4, 
-		["Surface",  true], 0, 
+		["Output",   true], 0, 
 		["Padding", false], 5, 1, 6, 7, 8, 
 		["Filling", false], 2, 3, 
 	];

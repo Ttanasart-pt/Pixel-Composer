@@ -22,9 +22,9 @@ function Node_3D_Obj(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	inputs[| 2] = nodeValue("Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, def_surf_size2)
 		.setDisplay(VALUE_DISPLAY.vector);
 	
-	inputs[| 3] = nodeValue("Render position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ def_surf_size / 2, def_surf_size / 2 ])
+	inputs[| 3] = nodeValue("Render position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0.5, 0.5 ])
 		.setDisplay(VALUE_DISPLAY.vector)
-		.setUnitRef( function() { return inputs[| 2].getValue(); });
+		.setUnitRef( function() { return inputs[| 2].getValue(); }, VALUE_UNIT.reference);
 		
 	inputs[| 4] = nodeValue("Render rotation", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.vector);
@@ -73,7 +73,7 @@ function Node_3D_Obj(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	inputs[| 17] = nodeValue("Scale view with dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true)
 	
 	input_display_list = [ 
-		["Surface",				false], 2, 17, 
+		["Output", 				false], 2, 17, 
 		["Geometry",			false], 0, 1, 
 		["Object transform",	false], 14, 13, 11,
 		["Camera",				false], 15, 16, 3, 5, 
@@ -85,7 +85,7 @@ function Node_3D_Obj(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
-	outputs[| 1] = nodeValue("3D object", self, JUNCTION_CONNECT.output, VALUE_TYPE.d3object, function() { return submit_vertex(); });
+	outputs[| 1] = nodeValue("3D scene", self, JUNCTION_CONNECT.output, VALUE_TYPE.d3object, function() { return submit_vertex(); });
 	
 	outputs[| 2] = nodeValue("Normal pass", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
@@ -93,7 +93,7 @@ function Node_3D_Obj(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		0, 2, 1
 	]
 	
-	_3d_node_init(2, /*Transform*/ 3, 13, 5);
+	_3d_node_init(2, /*Transform*/ 3, 5, 14, 13, 11);
 	
 	tex_surface = surface_create(1, 1);
 	
@@ -177,7 +177,7 @@ function Node_3D_Obj(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	do_reset_material = false;
 	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
-		_3d_gizmo(active, _x, _y, _s, _mx, _my, _snx, _sny, true, false);
+		_3d_gizmo(active, _x, _y, _s, _mx, _my, _snx, _sny);
 	}
 	
 	static submit_vertex = function() {
@@ -235,10 +235,12 @@ function Node_3D_Obj(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		
 		inputs[| 16].setVisible(_proj == 1);
 		
+		var _cam   = { projection: _proj, fov: _fov };
+		var _scale = { local: true, dimension: _dimS };
+			
 		for( var i = 0; i < array_length(output_display_list) - 1; i++ ) {
 			var ind = output_display_list[i];
 			var _outSurf = outputs[| ind].getValue();
-			outputs[| ind].setValue(surface_verify(_outSurf, _dim[0], _dim[1]));
 			
 			var pass = "diff";
 			switch(ind) {
@@ -246,12 +248,19 @@ function Node_3D_Obj(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				case 2 : pass = "norm" break;
 			}
 			
-			var _cam   = { projection: _proj, fov: _fov };
-			var _scale = { local: false, dimension: _dimS };
-			
-			_3d_pre_setup(_outSurf, _dim, _pos, _sca, _ldir, _lhgt, _lint, _lclr, _aclr, _lpos, _lrot, _lsca, _cam, pass, _scale);
-				submit_vertex();
+			_outSurf = _3d_pre_setup(_outSurf, _dim, _pos, _sca, _ldir, _lhgt, _lint, _lclr, _aclr, _lpos, _lrot, _lsca, _cam, pass, _scale);
+				for(var i = 0; i < array_length(VB); i++) {
+					if(i >= array_length(materialIndex)) continue;
+				
+					var mIndex = materialIndex[i];
+					var tex = inputs[| input_length + mIndex].getValue();
+						
+					if(!is_surface(tex)) continue;
+					vertex_submit(VB[i], pr_trianglelist, surface_get_texture(tex));
+				}
 			_3d_post_setup();
+			
+			outputs[| ind].setValue(_outSurf);
 		}
 	}
 	

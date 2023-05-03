@@ -33,7 +33,7 @@ function Node_Blur_Simple(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		active_index = 8;
 	
 	input_display_list = [ 8, 
-		["Surface",	 true],	0, 6, 7, 
+		["Output", 	 true],	0, 6, 7, 
 		["Blur",	false],	1, 3, 4, 5, 
 	];
 	

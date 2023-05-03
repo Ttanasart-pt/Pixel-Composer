@@ -520,7 +520,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 						if(instanceof(content[i]) == "Panel_Menu")
 							array_remove(menu, 2, border_rb_close);
 						
-						menuCall(,, menu);
+						menuCall("panel_border_menu",,, menu);
 					}
 					
 					if(DRAGGING) {
@@ -650,7 +650,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 					if(instanceof(getContent()) == "Panel_Menu")
 						array_remove(menu, 2, border_rb_close);
 						
-					menuCall(,, menu);
+					menuCall("panel_border_menu",,, menu);
 				}
 			}
 		} 

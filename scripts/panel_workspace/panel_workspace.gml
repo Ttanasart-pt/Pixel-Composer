@@ -71,7 +71,7 @@ function Panel_Workspace() : PanelContent() constructor {
 				
 				if(mouse_press(mb_right, pFOCUS)) {
 					layout_selecting = str;
-					menuCall(,, [
+					menuCall("workspace_menu",,, [
 						menuItem("Select", function() { 
 							PREF_MAP[? "panel_layout_file"] = layout_selecting;
 							PREF_SAVE();

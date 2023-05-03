@@ -60,6 +60,9 @@ function globalvar_viewer_draw(xx, yy, ww, _m, focus, hover, _scrollPane, rx, ry
 			var widH    = widg[0];
 			var mbRight = widg[1];
 						
+			if(hover && point_in_rectangle(_m[0], _m[1], xx, yy, xx + ww, yy + widH))
+				_HOVERING_ELEMENT = GLOBAL.inputs[| j];
+						
 			yy += lb_h + widH + padd;
 			hh += lb_h + widH + padd;
 		}

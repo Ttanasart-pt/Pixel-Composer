@@ -129,7 +129,7 @@ event_inherited();
 				
 				if(mouse_press(mb_right, interactable && sFOCUS)) {
 					hovering_name = preset_name[| i];
-					menuCall(,, [
+					menuCall("gradient_window_preset_menu",,, [
 						menuItem("Delete gradient", function() { 
 							file_delete( DIRECTORY + "Gradients/" + hovering_name); 
 							presetCollect();

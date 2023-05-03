@@ -59,7 +59,7 @@ function Node_Shape_Polygon(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	outputs[| 2] = nodeValue("Path", self, JUNCTION_CONNECT.output, VALUE_TYPE.pathnode, noone);
 	
 	input_display_list = [ 16, 
-		["Surface",		false], 0, 
+		["Output", 		false], 0, 
 		["Transform",	false], 5, 6, 7, 
 		["Shape",		false], 4, 8, 9, 10, 11, 12, 13, 14, 15, 
 		["Render",		 true],	1, 2, 3, 

@@ -13,9 +13,9 @@ function Node_3D_Repeat(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	inputs[| 3] = nodeValue("Object scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 1, 1 ])
 		.setDisplay(VALUE_DISPLAY.vector);
 	
-	inputs[| 4] = nodeValue("Render position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ def_surf_size / 2, def_surf_size / 2 ])
+	inputs[| 4] = nodeValue("Render position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0.5, 0.5 ])
 		.setDisplay(VALUE_DISPLAY.vector)
-		.setUnitRef( function() { return inputs[| 0].getValue(); });
+		.setUnitRef( function() { return inputs[| 0].getValue(); }, VALUE_UNIT.reference);
 	
 	inputs[| 5] = nodeValue("Render scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 1 ])
 		.setDisplay(VALUE_DISPLAY.vector);
@@ -64,12 +64,12 @@ function Node_3D_Repeat(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		.rejectArray();
 		
 	inputs[| 21] = nodeValue("Field of view", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 60)
-		.setDisplay(VALUE_DISPLAY.slider, [ 0, 90, 1 ]);
+		.setDisplay(VALUE_DISPLAY.slider, [ 1, 90, 1 ]);
 	
 	inputs[| 22] = nodeValue("Scale view with dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true)
 	
 	input_display_list = [ 11,
-		["Surface",			false], 0, 22, 
+		["Output",			false], 0, 22, 
 		["Object transform", true], 1, 2, 3,
 		["Camera",			 true], 20, 21, 4, 5,
 		["Light",			 true], 6, 7, 8, 9, 10,
@@ -87,7 +87,7 @@ function Node_3D_Repeat(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		0, 2, 1
 	]
 	
-	_3d_node_init(1, /*Transform*/ 4, 2, 5);
+	_3d_node_init(1, /*Transform*/ 4, 5, 1, 2, 3);
 	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		_3d_gizmo(active, _x, _y, _s, _mx, _my, _snx, _sny);
@@ -116,31 +116,22 @@ function Node_3D_Repeat(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		_3d_local_transform(_lpos, _lrot, _lsca);
 			for( var i = 0; i < _samo; i++ ) {
 				if(_patt == 0) {
-					matrix_stack_push(matrix_build(	_spos[0] * i, _spos[1] * i, _spos[2] * i, 
-													_srot[0] * i, _srot[1] * i, _srot[2] * i, 
-													power(_ssca[0], i), power(_ssca[1], i), power(_ssca[2], i)));
+					matrix_stack_push(matrix_build(	_spos[0] * i, _spos[1] * i, _spos[2] * i, 0, 0, 0, 1, 1, 1 ));
+					matrix_stack_push(matrix_build( 0, 0, 0, _srot[0] * i, _srot[1] * i, _srot[2] * i, 1, 1, 1 ));
+					matrix_stack_push(matrix_build(	0, 0, 0, 0, 0, 0, power(_ssca[0], i), power(_ssca[1], i), power(_ssca[2], i)));
 				} else if(_patt == 1) {
 					var angle = _rrot[0] + i * (_rrot[1] - _rrot[0]) / _samo;
 					var ldx = lengthdir_x(_rrad, angle);
 					var ldy = lengthdir_y(_rrad, angle);
 					
 					switch(_raxs) {
-						case 0 :
-							matrix_stack_push(matrix_build(	0, ldx, ldy, 
-															_srot[0] * i, _srot[1] * i, _srot[2] * i, 
-															power(_ssca[0], i), power(_ssca[1], i), power(_ssca[2], i)));
-							break;
-						case 1 :
-							matrix_stack_push(matrix_build(	ldy, 0, ldx, 
-															_srot[0] * i, _srot[1] * i, _srot[2] * i, 
-															power(_ssca[0], i), power(_ssca[1], i), power(_ssca[2], i)));
-							break;
-						case 2 :
-							matrix_stack_push(matrix_build(	ldx, ldy, 0, 
-															_srot[0] * i, _srot[1] * i, _srot[2] * i, 
-															power(_ssca[0], i), power(_ssca[1], i), power(_ssca[2], i)));
-							break;
+						case 0 : matrix_stack_push(matrix_build( 0, ldx, ldy, 0, 0, 0, 1, 1, 1 )); break;
+						case 1 : matrix_stack_push(matrix_build( ldy, 0, ldx, 0, 0, 0, 1, 1, 1 )); break;
+						case 2 : matrix_stack_push(matrix_build( ldx, ldy, 0, 0, 0, 0, 1, 1, 1 )); break;
 					}
+					
+					matrix_stack_push(matrix_build(	0, 0, 0, _srot[0] * i, _srot[1] * i, _srot[2] * i, 1, 1, 1));
+					matrix_stack_push(matrix_build(	0, 0, 0, 0, 0, 0, power(_ssca[0], i), power(_ssca[1], i), power(_ssca[2], i)));
 				}
 				
 				matrix_set(matrix_world, matrix_stack_top());
@@ -152,6 +143,8 @@ function Node_3D_Repeat(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 				} else
 					sv();
 				
+				matrix_stack_pop();
+				matrix_stack_pop();
 				matrix_stack_pop();
 			}
 		_3d_clear_local_transform();
@@ -193,7 +186,6 @@ function Node_3D_Repeat(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		for( var i = 0; i < array_length(output_display_list) - 1; i++ ) {
 			var ind = output_display_list[i];
 			var _outSurf = outputs[| ind].getValue();
-			outputs[| ind].setValue(surface_verify(_outSurf, _dim[0], _dim[1]));
 			
 			var pass = "diff";
 			switch(ind) {
@@ -204,9 +196,11 @@ function Node_3D_Repeat(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 			var _cam   = { projection: _proj, fov: _fov };
 			var _scale = { local: false, dimension: _dimS };
 			
-			_3d_pre_setup(_outSurf, _dim, _pos, _sca, _ldir, _lhgt, _lint, _lclr, _aclr, _lpos, _lrot, _lsca, _cam, pass, _scale);
+			_outSurf = _3d_pre_setup(_outSurf, _dim, _pos, _sca, _ldir, _lhgt, _lint, _lclr, _aclr, _lpos, _lrot, _lsca, _cam, pass, _scale);
 				submit_vertex();
 			_3d_post_setup();
+			
+			outputs[| ind].setValue(_outSurf);
 		}
 	}
 }

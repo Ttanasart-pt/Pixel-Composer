@@ -21,7 +21,7 @@ function Node_Time_Remap(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [ 
-		["Surface",	 false], 0, 1, 
+		["Output", 	 false], 0, 1, 
 		["Remap",	 false], 2, 3,
 	]
 	

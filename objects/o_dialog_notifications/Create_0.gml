@@ -71,7 +71,7 @@ event_inherited();
 						noti.onClick();
 				
 					if(mouse_press(mb_right, sFOCUS)) {
-						var dia = menuCall(,, [ 
+						var dia = menuCall("notification_menu",,, [ 
 							menuItem(get_text("noti_copy_message", "Copy notification message"), function() { 
 								clipboard_set_text(o_dialog_menubox.noti.txt);
 							}), 

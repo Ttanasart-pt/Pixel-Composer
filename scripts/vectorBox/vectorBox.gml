@@ -3,24 +3,27 @@ enum DIMENSION {
 	height
 }
 
-function vectorBox(_size, _type, _onModify, _unit = noone) : widget() constructor {
+function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 	size     = _size;
 	onModify = _onModify;
 	unit	 = _unit;
+	current_value = [];
 	
 	linked = false;
 	b_link = button(function() { linked = !linked; });
 	b_link.icon = THEME.value_link;
 	
 	onModifyIndex = function(index, val) { 
+		var v = toNumber(val);
+		
 		if(linked) {
 			var modi = false;
 			for( var i = 0; i < size; i++ )
-				modi |= onModify(i, toNumber(val)); 
+				modi |= onModify(i, v); 
 			return modi;
 		}
 		
-		return onModify(index, toNumber(val)); 
+		return onModify(index, v); 
 	}
 	
 	axis = [ "x", "y", "z", "w" ];
@@ -32,7 +35,7 @@ function vectorBox(_size, _type, _onModify, _unit = noone) : widget() constructo
 	extras = -1;
 	
 	for(var i = 0; i < 4; i++) {
-		tb[i] = new textBox(_type, onModifySingle[i]);
+		tb[i] = new textBox(TEXTBOX_INPUT.number, onModifySingle[i]);
 		tb[i].slidable = true;
 	}
 	
@@ -72,6 +75,8 @@ function vectorBox(_size, _type, _onModify, _unit = noone) : widget() constructo
 		h = _h;
 		
 		if(!is_array(_data)) return;
+		current_value = _data;
+		
 		if(extras && instanceof(extras) == "buttonClass") {
 			extras.setActiveFocus(hover, active);
 			extras.draw(_x + _w - ui(32), _y + _h / 2 - ui(32 / 2), ui(32), ui(32), _m, THEME.button_hide);
@@ -111,5 +116,12 @@ function vectorBox(_size, _type, _onModify, _unit = noone) : widget() constructo
 		}
 		
 		resetFocus();
+	}
+	
+	static apply = function() {
+		for( var i = 0; i < size; i++ ) {
+			tb[i].apply();
+			current_value[i] = tb[i]._input_text;
+		}
 	}
 }

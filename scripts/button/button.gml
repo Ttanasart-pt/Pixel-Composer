@@ -12,10 +12,18 @@ function buttonClass(_onClick, _icon = noone) : widget() constructor {
 	blend   = c_white;
 	
 	onClick = _onClick;
-	
+	triggered = false;
+		
 	static trigger = function() { 
 		if(!onClick) return;
+		triggered = true;
 		onClick();
+	}
+	
+	static isTriggered = function() {
+		var t = triggered;
+		triggered = false;
+		return t;
 	}
 	
 	static setIcon = function(_icon, _index = 0, _blend = c_white) { 

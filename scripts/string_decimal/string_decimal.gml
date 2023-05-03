@@ -11,7 +11,8 @@ function string_decimal(str) {
 
 function toNumber(str) {
 	gml_pragma("forceinline");
-	if(is_real(str)) return str;
+	if(is_real(str))   return str;
+	if(!isNumber(str)) return 0;
 	
 	var expo = 0;
 	if(string_pos("e", str)) {

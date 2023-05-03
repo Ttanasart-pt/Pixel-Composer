@@ -23,114 +23,232 @@ enum CAMERA_PROJ {
 	FORMAT_PNT = vertex_format_end();
 #endregion
 
-#region plane
+#region 3d obj
+	function VertexObject() constructor {
+		positions = [];
+		textures  = [];
+		normals   = [];
+		
+		faces  = [];
+		buffer = noone;
+		renderSurface = noone;
+		renderTexture = noone;
+		
+		static addPosition = function(_pos, _merge = false) {
+			if(!_merge) {
+				array_push(positions, _pos);
+				return array_length(positions) - 1;
+			}
+				
+			var ind = array_find(positions, _pos);
+			
+			if(ind == -1) {
+				array_push(positions, _pos);
+				return array_length(positions) - 1;
+			}
+			
+			return ind;
+		}
+		
+		static addNormal = function(_nor, _merge = false) {
+			if(!_merge) {
+				array_push(normals, _nor);
+				return array_length(normals) - 1;
+			}
+				
+			var ind = array_find(normals, _nor);
+			
+			if(ind == -1) {
+				array_push(normals, _nor);
+				return array_length(normals) - 1;
+			}
+			
+			return ind;
+		}
+		
+		static addTexture = function(_tex, _merge = false) {
+			if(!_merge) {
+				array_push(textures, _tex);
+				return array_length(textures) - 1;
+			}
+				
+			var ind = array_find(textures, _tex);
+			
+			if(ind == -1) {
+				array_push(textures, _tex);
+				return array_length(textures) - 1;
+			}
+			
+			return ind;
+		}
+		
+		static addFace = function(v1, n1 = [0, 0, 0], t1 = [0, 0], 
+								  v2, n2 = [0, 0, 0], t2 = [0, 0], 
+								  v3, n3 = [0, 0, 0], t3 = [0, 0], _merge = false) {
+			var pi0 = addPosition(v1, _merge);
+			var pi1 = addPosition(v2, _merge);
+			var pi2 = addPosition(v3, _merge);
+			
+			var ni0 = addNormal(n1, _merge);
+			var ni1 = addNormal(n2, _merge);
+			var ni2 = addNormal(n3, _merge);
+			
+			var ti0 = addTexture(t1, _merge);
+			var ti1 = addTexture(t2, _merge);
+			var ti2 = addTexture(t3, _merge);
+			
+			array_append(faces, [
+				[pi0, ni0, ti0],
+				[pi1, ni1, ti1],
+				[pi2, ni2, ti2],
+			]);
+		}
+		
+		static createBuffer = function() {
+			if(buffer != noone) vertex_delete_buffer(buffer);
+			
+			var VB = vertex_create_buffer();
+			vertex_begin(VB, FORMAT_PNT);
+			
+			for( var i = 0; i < array_length(faces); i++ ) {
+				var face = faces[i];
+				var _pos = positions[face[0]];
+				var _nor = normals  [face[1]];
+				var _tex = textures [face[2]];
+				
+				vertex_add_pnt(VB, _pos, _nor, _tex);
+			}
+			
+			vertex_end(VB);
+			vertex_freeze(VB);
+			
+			buffer = VB;
+			return VB;
+		}
+		
+		static submit = function(surface = noone) {
+			if(!is_surface(surface)) {
+				__submit();
+				return;
+			}
+			
+			renderSurface = surface;
+			submitTexture(surface_get_texture(surface));
+		}
+		
+		static submitTexture = function(texture) {
+			renderTexture = texture;
+			__submit();
+		}
+		
+		static __submit = function() {
+			if(renderTexture == noone) return;
+			
+			vertex_submit(buffer, pr_trianglelist, renderTexture);
+		}
+		
+		static clone = function(_submit = true) {
+			var v = new VertexObject();
+			v.positions = array_clone(positions);
+			v.textures  = array_clone(textures);
+			v.normals   = array_clone(normals);
+			
+			v.faces = array_clone(faces);
+			v.renderTexture = renderTexture;
+			
+			if(_submit) v.createBuffer();
+			
+			return v;
+		}
+		
+		static destroy = function() {
+			vertex_delete_buffer(buffer);
+		}
+	}
+#endregion
+
+#region primitives
 	var _0 = -.5;
 	var _1 =  .5;
 	
-	var VB = vertex_create_buffer();
-	vertex_begin(VB, FORMAT_PT);
+	var v = new VertexObject();
+	v.addFace( [_1, _0, 0], [0, 0, 1], [1, 0], 
+			   [_0, _0, 0], [0, 0, 1], [0, 0], 
+			   [_1, _1, 0], [0, 0, 1], [1, 1], );
 	
-	vertex_add_pt(VB, [_1, _0, 0], [ 1,  0]);
-	vertex_add_pt(VB, [_0, _0, 0], [ 0,  0]);
-	vertex_add_pt(VB, [_1, _1, 0], [ 1,  1]);
-						    		 	 
-	vertex_add_pt(VB, [_1, _1, 0], [ 1,  1]);
-	vertex_add_pt(VB, [_0, _0, 0], [ 0,  0]);
-	vertex_add_pt(VB, [_0, _1, 0], [ 0,  1]);
-		
-	vertex_end(VB);
-	vertex_freeze(VB);
-	PRIMITIVES[? "plane"] = VB;
+	v.addFace( [_1, _1, 0], [0, 0, 1], [1, 1], 
+			   [_0, _0, 0], [0, 0, 1], [0, 0], 
+			   [_0, _1, 0],	[0, 0, 1], [0, 1], );
 	
-	var VB = vertex_create_buffer();
-	vertex_begin(VB, FORMAT_PNT);
-		
-	vertex_add_pnt(VB, [_1, _0, 0], [0, 0, 1], [1, 0]);
-	vertex_add_pnt(VB, [_0, _0, 0], [0, 0, 1], [0, 0]);
-	vertex_add_pnt(VB, [_1, _1, 0], [0, 0, 1], [1, 1]);
-						    		
-	vertex_add_pnt(VB, [_1, _1, 0], [0, 0, 1], [1, 1]);
-	vertex_add_pnt(VB, [_0, _0, 0], [0, 0, 1], [0, 0]);
-	vertex_add_pnt(VB, [_0, _1, 0], [0, 0, 1], [0, 1]);
-		
-	vertex_end(VB);
-	vertex_freeze(VB);
-	PRIMITIVES[? "plane_normal"] = VB;
-#endregion
+	PRIMITIVES[? "plane"] = v;
 
-#region cube
-	var VB = vertex_create_buffer();
-	vertex_begin(VB, FORMAT_PNT);
-		
-	vertex_add_pnt(VB, [_1, _0, _0], [0, 0, -1], [1, 0]);
-	vertex_add_pnt(VB, [_0, _0, _0], [0, 0, -1], [0, 0]);
-	vertex_add_pnt(VB, [_1, _1, _0], [0, 0, -1], [1, 1]);
-						    		
-	vertex_add_pnt(VB, [_1, _1, _0], [0, 0, -1], [1, 1]);
-	vertex_add_pnt(VB, [_0, _0, _0], [0, 0, -1], [0, 0]);
-	vertex_add_pnt(VB, [_0, _1, _0], [0, 0, -1], [0, 1]);
+	var v = [];
 	
-	vertex_add_pnt(VB, [_1, _0, _1], [0, 0, 1], [0, 0]);
-	vertex_add_pnt(VB, [_0, _0, _1], [0, 0, 1], [1, 0]);
-	vertex_add_pnt(VB, [_1, _1, _1], [0, 0, 1], [0, 1]);
-						    		
-	vertex_add_pnt(VB, [_1, _1, _1], [0, 0, 1], [0, 1]);
-	vertex_add_pnt(VB, [_0, _0, _1], [0, 0, 1], [1, 0]);
-	vertex_add_pnt(VB, [_0, _1, _1], [0, 0, 1], [1, 1]);
+	v[0] = new VertexObject();
+	v[0].addFace( [_1, _0, _0], [0, 0, -1], [1, 0],
+		   	      [_0, _0, _0], [0, 0, -1], [0, 0],
+		   	      [_1, _1, _0], [0, 0, -1], [1, 1], );
 	
+	v[0].addFace( [_1, _1, _0], [0, 0, -1], [1, 1], 
+			      [_0, _0, _0], [0, 0, -1], [0, 0], 
+			      [_0, _1, _0], [0, 0, -1], [0, 1], );
 	
-	vertex_add_pnt(VB, [_1, _0, _0], [0, 1, 0], [1, 0]);
-	vertex_add_pnt(VB, [_0, _0, _0], [0, 1, 0], [0, 0]);
-	vertex_add_pnt(VB, [_1, _0, _1], [0, 1, 0], [1, 1]);
-						   	   			 
-	vertex_add_pnt(VB, [_1, _0, _1], [0, 1, 0], [1, 1]);
-	vertex_add_pnt(VB, [_0, _0, _0], [0, 1, 0], [0, 0]);
-	vertex_add_pnt(VB, [_0, _0, _1], [0, 1, 0], [0, 1]);
-							  
-	vertex_add_pnt(VB, [_1, _1, _0], [0, -1, 0], [1, 0]);
-	vertex_add_pnt(VB, [_0, _1, _0], [0, -1, 0], [0, 0]);
-	vertex_add_pnt(VB, [_1, _1, _1], [0, -1, 0], [1, 1]);
-						   	 
-	vertex_add_pnt(VB, [_1, _1, _1], [0, -1, 0], [1, 1]);
-	vertex_add_pnt(VB, [_0, _1, _0], [0, -1, 0], [0, 0]);
-	vertex_add_pnt(VB, [_0, _1, _1], [0, -1, 0], [0, 1]);
+	v[1] = new VertexObject();
+	v[1].addFace( [_1, _0, _1], [0, 0, 1], [0, 0], 
+			      [_0, _0, _1], [0, 0, 1], [1, 0], 
+			      [_1, _1, _1], [0, 0, 1], [0, 1], );
 	
+	v[1].addFace( [_1, _1, _1], [0, 0, 1], [0, 1], 
+			      [_0, _0, _1], [0, 0, 1], [1, 0], 
+			      [_0, _1, _1], [0, 0, 1], [1, 1], );
 	
-	vertex_add_pnt(VB, [_0, _1, _0], [1, 0, 0], [1, 1]);
-	vertex_add_pnt(VB, [_0, _0, _0], [1, 0, 0], [1, 0]);
-	vertex_add_pnt(VB, [_0, _1, _1], [1, 0, 0], [0, 1]);
-							      	  			    
-	vertex_add_pnt(VB, [_0, _1, _1], [1, 0, 0], [0, 1]);
-	vertex_add_pnt(VB, [_0, _0, _0], [1, 0, 0], [1, 0]);
-	vertex_add_pnt(VB, [_0, _0, _1], [1, 0, 0], [0, 0]);
-						   			  
-	vertex_add_pnt(VB, [_1, _1, _0], [-1, 0, 0], [0, 1]);
-	vertex_add_pnt(VB, [_1, _0, _0], [-1, 0, 0], [0, 0]);
-	vertex_add_pnt(VB, [_1, _1, _1], [-1, 0, 0], [1, 1]);
-							    	  		 		 
-	vertex_add_pnt(VB, [_1, _1, _1], [-1, 0, 0], [1, 1]);
-	vertex_add_pnt(VB, [_1, _0, _0], [-1, 0, 0], [0, 0]);
-	vertex_add_pnt(VB, [_1, _0, _1], [-1, 0, 0], [1, 0]);
+	v[2] = new VertexObject();
+	v[2].addFace( [_1, _0, _0], [0, -1, 0], [1, 0], 
+			      [_0, _0, _0], [0, -1, 0], [0, 0], 
+			      [_1, _0, _1], [0, -1, 0], [1, 1], );
 	
-	vertex_end(VB);
-	vertex_freeze(VB);
-	PRIMITIVES[? "cube"] = VB;
-#endregion
-
-#region gixmo circle
-	var VB = vertex_create_buffer();
-	vertex_begin(VB, FORMAT_P);
+	v[2].addFace( [_1, _0, _1], [0, -1, 0], [1, 1], 
+			      [_0, _0, _0], [0, -1, 0], [0, 0], 
+			      [_0, _0, _1], [0, -1, 0], [0, 1], );
 	
-	for( var i = 0; i <= 360; i += 12 )
-		vertex_position_3d(VB, cos(i), sin(i), 0);
+	v[3] = new VertexObject();
+	v[3].addFace( [_1, _1, _0], [0, 1, 0], [1, 0], 
+			      [_0, _1, _0], [0, 1, 0], [0, 0], 
+			      [_1, _1, _1], [0, 1, 0], [1, 1], );
 	
-	vertex_end(VB);
-	vertex_freeze(VB);
-	PRIMITIVES[? "gixmo_rotate"] = VB;
+	v[3].addFace( [_1, _1, _1], [0, 1, 0], [1, 1], 
+			      [_0, _1, _0], [0, 1, 0], [0, 0], 
+			      [_0, _1, _1], [0, 1, 0], [0, 1], );
+	
+	v[4] = new VertexObject();
+	v[4].addFace( [_0, _1, _0], [-1, 0, 0], [1, 1], 
+			      [_0, _0, _0], [-1, 0, 0], [1, 0], 
+			      [_0, _1, _1], [-1, 0, 0], [0, 1], );
+	
+	v[4].addFace( [_0, _1, _1], [-1, 0, 0], [0, 1], 
+			      [_0, _0, _0], [-1, 0, 0], [1, 0], 
+			      [_0, _0, _1], [-1, 0, 0], [0, 0], );
+	
+	v[5] = new VertexObject();
+	v[5].addFace( [_1, _1, _0], [1, 0, 0], [0, 1], 
+			      [_1, _0, _0], [1, 0, 0], [0, 0], 
+			      [_1, _1, _1], [1, 0, 0], [1, 1], );
+			   	    	  		 		 
+	v[5].addFace( [_1, _1, _1], [1, 0, 0], [1, 1], 
+			      [_1, _0, _0], [1, 0, 0], [0, 0], 
+			      [_1, _0, _1], [1, 0, 0], [1, 0], );
+	
+	PRIMITIVES[? "cube"] = v;
 #endregion
 
 #region helper
-	function _3d_node_init(iDim, iPos, iRot, iSca) {
+	enum GIZMO_3D_TYPE {
+		move,
+		rotate,
+		scale
+	}
+
+	function _3d_node_init(iDim, gPos, gSca, iPos, iRot, iSca) {
 		VB = [];
 		use_normal = true;
 		
@@ -143,105 +261,234 @@ enum CAMERA_PROJ {
 		camera_set_view_mat(cam, cam_view);
 		camera_set_proj_mat(cam, cam_proj);
 		
-		drag_index = -1;
-		drag_sv = 0;
-		drag_mx = 0;
-		drag_my = 0;
+		drag_index = noone;
+		drag_sv    = 0;
+		drag_delta = 0;
+		drag_prev  = 0;
 		
-		input_dim = iDim;
-		input_pos = iPos;
-		input_rot = iRot;
-		input_sca = iSca;
+		drag_mx    = 0;
+		drag_my    = 0;
+		
+		input_dim  = iDim;
+		global_pos = gPos;
+		global_sca = gSca;
+		input_pos  = iPos;
+		input_rot  = iRot;
+		input_sca  = iSca;
+		
+		gizmo_hover = noone;
+		
+		tools = [
+			new NodeTool( "Transform", THEME.tools_3d_transform ),
+			new NodeTool( "Rotate", THEME.tools_3d_rotate ),
+			new NodeTool( "Scale", THEME.tools_3d_scale ),
+		];
 	}
 	
-	function _3d_gizmo(active, _x, _y, _s, _mx, _my, _snx, _sny, invx = false, invy = true) {
-		if(inputs[| input_pos].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny)) active = false;
+	function _3d_gizmo(active, _x, _y, _s, _mx, _my, _snx, _sny) {
+		var _gpos = inputs[| global_pos].getValue();
+		var _gsca = inputs[| global_sca].getValue();
 		
-		var _dim = inputs[| input_dim].getValue();
-		var _pos = inputs[| input_pos].getValue();
-		var _rot = inputs[| input_rot].getValue();
-		var cx = _x + _pos[0] * _s;
-		var cy = _y + _pos[1] * _s;
+		var _pos  = inputs[| input_pos].getValue();
+		var _rot  = inputs[| input_rot].getValue();
+		var _sca  = inputs[| input_sca].getValue();
 		
-		draw_set_color(COLORS.axis[0]);
-		draw_line(cx - 64, cy, cx + 64, cy);
+		var cx = _x + _gpos[0] * _s;
+		var cy = _y + _gpos[1] * _s;
+			
+		var _qrot  = new BBMOD_Quaternion().FromEuler(_rot[0], -_rot[1], -_rot[2]);
+		var _hover = noone;
+		var _hoverDist = 10;
 		
-		draw_set_color(COLORS.axis[1]);
-		draw_line(cx, cy - 64, cx, cy + 64);
-		
-		draw_set_color(COLORS.axis[2]);
-		draw_circle(cx, cy, 64, true);
-		
-		if(drag_index == 0) {
-			var dx  = (_mx - drag_mx) * -2;
-			_rot[1] = drag_sv - dx * (invx? -1 : 1);
+		if(isUsingTool(0)) {
+			var ga = [];
+			var dir = 0;
 			
-			if(inputs[| input_rot].setValue(_rot)) 
-				UNDO_HOLDING = true;
+			ga[0] = new BBMOD_Vec3(64,   0,  0);
+			ga[1] = new BBMOD_Vec3( 0, -64,  0);
+			ga[2] = new BBMOD_Vec3( 0,   0, 64);
 			
-			if(mouse_release(mb_left)) {
-				drag_index = -1;
-				UNDO_HOLDING = false;
-			}
-		} else if(drag_index == 1) {
-			var dy  = (_my - drag_my) * 2;
-			_rot[0] = drag_sv - dy * (invy? -1 : 1);
-			
-			if(inputs[| input_rot].setValue(_rot)) 
-				UNDO_HOLDING = true;
-			
-			if(mouse_release(mb_left)) {
-				drag_index = -1;
-				UNDO_HOLDING = false;
-			}
-		} else if(drag_index == 2) {
-			var dz  = point_direction(cx, cy, _mx, _my) - point_direction(cx, cy, drag_mx, drag_my);
-			_rot[2] = drag_sv + dz;
-			
-			if(inputs[| input_rot].setValue(_rot)) 
-				UNDO_HOLDING = true;
-			
-			if(mouse_release(mb_left)) {
-				drag_index = -1;
-				UNDO_HOLDING = false;
-			}
-		} else {
-			if(active && distance_to_line(_mx, _my, cx - 64, cy, cx + 64, cy) < 16) {
-				draw_set_color(COLORS.axis[0]);
-				draw_line_width(cx - 64, cy, cx + 64, cy, 3);
-				if(mouse_press(mb_left, active)) {
-					drag_index	= 0;
-					drag_sv		= _rot[1];
-					drag_mx		= _mx;
-					drag_my		= _my;
+			for( var i = 0; i < 3; i++ ) {
+				ga[i] = _qrot.Rotate(ga[i]);
+				
+				var th = 2 + (gizmo_hover == i);
+				if(drag_index == i) {
+					th = 3;
+					dir = point_direction(0, 0, ga[i].X, ga[i].Y);
+				} else if(drag_index != noone)
+					th = 1;
+							
+				draw_set_color(COLORS.axis[i]);
+				draw_line_round_arrow(cx, cy, cx + ga[i].X, cy + ga[i].Y, th);
+				
+				var _d = distance_to_line(_mx, _my, cx, cy, cx + ga[i].X, cy + ga[i].Y);
+				if(_d < _hoverDist) {
+					_hover = i;
+					_hoverDist = _d;
 				}
-			} else if(active && distance_to_line(_mx, _my, cx, cy - 64, cx, cy + 64) < 16) {
-				draw_set_color(COLORS.axis[1]);
-				draw_line_width(cx, cy - 64, cx, cy + 64, 3);
-				if(mouse_press(mb_left, active)) {
-					drag_index	= 1;
-					drag_sv		= _rot[0];
-					drag_mx		= _mx;
-					drag_my		= _my;
+			}
+			
+			gizmo_hover = _hover;
+			
+			if(drag_index != noone) {
+				var mAng = point_direction(cx, cy, _mx, _my);
+				var _n   = BBMOD_VEC3_FORWARD;
+				
+				var _mmx = _mx - cx;
+				var _mmy = _my - cy;
+				var _max = ga[drag_index].X;
+				var _may = ga[drag_index].Y;
+				
+				var mAdj = dot_product(_mmx, _mmy, _max, _may);
+				
+				if(drag_prev != undefined) {
+					_pos[drag_index] += (mAdj - drag_prev) / 8000;
+					
+					if(inputs[| input_pos].setValue(_pos)) 
+						UNDO_HOLDING = true;
 				}
-			} else if(active && abs(point_distance(_mx, _my, cx, cy) - 64) < 8) {
-				draw_set_color(COLORS.axis[2]);
-				draw_circle_border(cx, cy, 64, 3);
-				if(mouse_press(mb_left, active)) {
-					drag_index	= 2;
-					drag_sv		= _rot[2];
-					drag_mx		= _mx;
-					drag_my		= _my;
+				drag_prev = mAdj;
+			}
+		} else if(isUsingTool(1)) {
+			var _pa = [], pa = [];
+			var drx, dry, drz;
+			
+			var _sub = 64;
+			for( var i = 0; i <= _sub; i++ ) {
+				var ang = i * 360 / _sub;
+				
+				pa[0] = new BBMOD_Vec3(0, lengthdir_x(64, ang), lengthdir_y(64, ang));
+				pa[0] = _qrot.Rotate(pa[0]);
+			
+				pa[1] = new BBMOD_Vec3(lengthdir_x(64, ang), 0, lengthdir_y(64, ang));
+				pa[1] = _qrot.Rotate(pa[1]);
+			
+				pa[2] = new BBMOD_Vec3(lengthdir_x(64, ang), lengthdir_y(64, ang), 0);
+				pa[2] = _qrot.Rotate(pa[2]);
+				
+				if(i) {
+					for( var j = 0; j < 3; j++ ) {
+						draw_set_color(COLORS.axis[j]);
+						var th = (_pa[j].Z >= 0) + 1 + (gizmo_hover == j);
+						if(drag_index == j) 
+							th = 3;
+						else if(drag_index != noone)
+							th = 1;
+						
+						if(_pa[j].Z >= 0 || i % 2 || drag_index == j) {
+							draw_line_round(cx + _pa[j].X, cy + _pa[j].Y, cx + pa[j].X, cy + pa[j].Y, th);
+							drx = point_direction(cx + _pa[j].X, cy + _pa[j].Y, cx + pa[j].X, cy + pa[j].Y);
+						}
+				
+						var _d = distance_to_line(_mx, _my, cx + _pa[j].X, cy + _pa[j].Y, cx + pa[j].X, cy + pa[j].Y);
+						if(_d < _hoverDist) {
+							_hover = j;
+							_hoverDist = _d;
+						}
+					}
 				}
+			
+				for( var j = 0; j < 3; j++ )
+					_pa[j] = pa[j];
+			}
+		
+			gizmo_hover = _hover;
+		
+			if(drag_index != noone) {
+				var mAng = point_direction(cx, cy, _mx, _my);
+				var _n   = BBMOD_VEC3_FORWARD;
+			
+				switch(drag_index) {
+					case 0 : _n = new BBMOD_Vec3(1.0, 0.0, 0.0); break;
+					case 1 : _n = new BBMOD_Vec3(0.0, 1.0, 0.0); break;
+					case 2 : _n = new BBMOD_Vec3(0.0, 0.0, 1.0); break;
+				}
+				
+				var camVector = new BBMOD_Vec3(0.0, 0.0, 1.0); 
+				
+				if(drag_prev != undefined) {
+					var _currQ = new BBMOD_Quaternion().FromEuler(_rot[0], _rot[1], _rot[2]);
+					
+					var _currR = new BBMOD_Quaternion().FromAxisAngle(_n, (mAng - drag_prev) * (_currQ.Rotate(_n).Z > 0? -1 : 1));
+					var _mulp  = _currQ.Mul(_currR);
+					var _Nrot  = new BBMOD_Matrix(_mulp.ToMatrix()).ToEuler();
+				
+					if(inputs[| input_rot].setValue(_Nrot)) 
+						UNDO_HOLDING = true;
+				}
+				
+				draw_set_color(COLORS._main_accent);
+				draw_line_dashed(cx, cy, _mx, _my, 2, 8);
+				
+				drag_prev = mAng;
+			}
+		} else if(isUsingTool(2)) {
+			var ga = [];
+			
+			ga[0] = new BBMOD_Vec3(64,   0,  0);
+			ga[1] = new BBMOD_Vec3( 0, -64,  0);
+			ga[2] = new BBMOD_Vec3( 0,   0, 64);
+			
+			for( var i = 0; i < 3; i++ ) {
+				ga[i] = _qrot.Rotate(ga[i]);
+				
+				var th = 2 + (gizmo_hover == i);
+				if(drag_index == i) 
+					th = 3;
+				else if(drag_index != noone)
+					th = 1;
+							
+				draw_set_color(COLORS.axis[i]);
+				draw_line_round_arrow_scale(cx, cy, cx + ga[i].X, cy + ga[i].Y, th);
+				
+				var _d = distance_to_line(_mx, _my, cx, cy, cx + ga[i].X, cy + ga[i].Y);
+				if(_d < _hoverDist) {
+					_hover = i;
+					_hoverDist = _d;
+				}
+			}
+			
+			gizmo_hover = _hover;
+			
+			if(drag_index != noone) {
+				var mAng = point_direction(cx, cy, _mx, _my);
+				var _n   = BBMOD_VEC3_FORWARD;
+				
+				var _mmx = _mx - cx;
+				var _mmy = _my - cy;
+				var _max = ga[drag_index].X;
+				var _may = ga[drag_index].Y;
+				
+				var mAdj = dot_product(_mmx, _mmy, _max, _may);
+				
+				if(drag_prev != undefined) {
+					_sca[drag_index] += (mAdj - drag_prev) / 8000;
+					
+					if(inputs[| input_sca].setValue(_sca)) 
+						UNDO_HOLDING = true;
+				}
+				drag_prev = mAdj;
 			}
 		}
 		
-		inputs[| input_pos].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
+		if(drag_index != noone && mouse_release(mb_left)) {
+			drag_index = noone;
+			UNDO_HOLDING = false;
+		}
+		
+		if(_hover != noone && mouse_press(mb_left, active)) {
+			drag_index	= _hover;
+			drag_prev   = undefined;
+			drag_mx		= _mx;
+			drag_my		= _my;
+		}
+		
+		inputs[| global_pos].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
 	}
 	
 	function _3d_local_transform(_lpos, _lrot, _lsca) {
-		matrix_stack_push(matrix_build(_lpos[0], _lpos[1], _lpos[2], 0, 0, 0, 1, 1, 1));
 		matrix_stack_push(matrix_build(0, 0, 0, _lrot[0], _lrot[1], _lrot[2], 1, 1, 1));
+		matrix_stack_push(matrix_build(-_lpos[0], -_lpos[1], _lpos[2], 0, 0, 0, 1, 1, 1));
 		matrix_stack_push(matrix_build(0, 0, 0, 0, 0, 0, _lsca[0], _lsca[1], _lsca[2]));
 		
 		matrix_set(matrix_world, matrix_stack_top());
@@ -314,6 +561,8 @@ enum CAMERA_PROJ {
 		if(_applyLocal) _3d_local_transform(_lpos, _lrot, _lsca);
 		
 		matrix_set(matrix_world, matrix_stack_top());
+		
+		return _outSurf;
 	}
 	
 	function _3d_post_setup() {

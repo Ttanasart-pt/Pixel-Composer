@@ -15,7 +15,7 @@ function Node_Normal(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		active_index = 3;
 		
 	input_display_list = [ 3,
-		["Surface",	 false], 0,
+		["Output",	 false], 0,
 		["Normal",	 false], 1, 2, 
 	]
 	

@@ -26,7 +26,7 @@ function Node_Pixel_Sort(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		active_index = 6;
 	
 	input_display_list = [ 6, 
-		["Surface",		 true], 0, 4, 5, 
+		["Output", 		 true], 0, 4, 5, 
 		["Pixel sort",	false], 1, 2, 3, 
 	]
 	

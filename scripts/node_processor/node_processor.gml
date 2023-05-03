@@ -206,8 +206,11 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 			process_length[i][1] = amoMax;
 		}
 		
-		for(var i = 0; i < ds_list_size(outputs); i++)
-			outputs[| i].setValue(preProcess(i));
+		for(var i = 0; i < ds_list_size(outputs); i++) {
+			var val = preProcess(i);
+			if(val == undefined) continue;
+			outputs[| i].setValue(val);
+		}
 	}
 	
 	static processSerialize = function(_map) {

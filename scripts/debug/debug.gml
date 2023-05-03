@@ -57,6 +57,8 @@ function log_clear() {
 }
 
 function exception_print(e) {
+	if(!is_struct(e) || !struct_has(e, "longMessage")) return string(e);
+	
 	var str = "\n\n==========  Crash log  ==========\n\n" + e.longMessage;	
 	str += "\n\n========== Stack trace ==========\n\n";	
 	

@@ -1,4 +1,7 @@
 /// @description init
+HOVERING_ELEMENT = _HOVERING_ELEMENT;
+_HOVERING_ELEMENT = noone;
+
 #region minimize
 	if(OS == os_windows && gameframe_is_minimized()) {
 		if(!minimized)

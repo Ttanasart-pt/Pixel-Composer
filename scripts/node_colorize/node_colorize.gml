@@ -28,7 +28,7 @@ function Node_Colorize(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	inputs[| 6] = nodeValue("Multiply alpha", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
 	
 	input_display_list = [ 5, 
-		["Surface",		 true], 0, 3, 4, 
+		["Output", 		 true], 0, 3, 4, 
 		["Colorize",	false], 1, 2, 6, 
 	]
 	

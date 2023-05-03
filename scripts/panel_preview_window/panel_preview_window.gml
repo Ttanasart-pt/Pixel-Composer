@@ -136,7 +136,7 @@ function Panel_Preview_Window() : PanelContent() constructor {
 			
 				array_push(_menu, menuItem(o.name, function(_x, _y, _d, _n, index) { changeChannel(index); }));
 			}
-			menuCall(,, _menu);
+			menuCall("preview_window_menu",,, _menu);
 		}
 	}
 }

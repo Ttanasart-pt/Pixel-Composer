@@ -46,7 +46,7 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 	refreshSurface = false;
 	
 	input_display_list = [
-		["Surface",	 false], 0, 1, 2,
+		["Output",	 false], 0, 1, 2,
 		["Packing",	 false], 3, 4, 5, 6, 7, 
 	]
 	

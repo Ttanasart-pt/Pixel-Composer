@@ -8,9 +8,9 @@ function Node_3D_Sphere(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	inputs[| 1] = nodeValue("Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, def_surf_size2)
 		.setDisplay(VALUE_DISPLAY.vector);
 	
-	inputs[| 2] = nodeValue("Render position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ def_surf_size / 2, def_surf_size / 2 ])
+	inputs[| 2] = nodeValue("Render position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0.5, 0.5 ])
 		.setDisplay(VALUE_DISPLAY.vector)
-		.setUnitRef(function(index) { return getDimension(index); });
+		.setUnitRef(function(index) { return getDimension(index); }, VALUE_UNIT.reference);
 	
 	inputs[| 3] = nodeValue("Render rotation", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.vector);
@@ -46,12 +46,12 @@ function Node_3D_Sphere(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		.rejectArray();
 		
 	inputs[| 15] = nodeValue("Field of view", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 60)
-		.setDisplay(VALUE_DISPLAY.slider, [ 0, 90, 1 ]);
+		.setDisplay(VALUE_DISPLAY.slider, [ 1, 90, 1 ]);
 	
 	inputs[| 16] = nodeValue("Scale view with dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true)
 	
 	input_display_list = [
-		["Surface",				false], 1, 16, 
+		["Output",				false], 1, 16, 
 		["Geometry",			false], 0,
 		["Object transform",	false], 13, 12, 6,
 		["Camera",				false], 14, 15, 2, 4, 
@@ -61,23 +61,28 @@ function Node_3D_Sphere(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
-	outputs[| 1] = nodeValue("3D object", self, JUNCTION_CONNECT.output, VALUE_TYPE.d3object, function() { return submit_vertex(); });
+	outputs[| 1] = nodeValue("3D scene", self, JUNCTION_CONNECT.output, VALUE_TYPE.d3object, function() { return submit_vertex(); });
 	
 	outputs[| 2] = nodeValue("Normal pass", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
+	outputs[| 3] = nodeValue("3D vertex", self, JUNCTION_CONNECT.output, VALUE_TYPE.d3vertex, []);
 	output_display_list = [
-		0, 2, 1
+		0, 2, 1, 3
 	]
 	
-	_3d_node_init(1, /*Transform*/ 2, 12, 4);
+	_3d_node_init(1, /*Transform*/ 2, 4, 13, 12, 6);
 	
-	subd = [0, 0];
-	VB = vertex_create_buffer();
+	subd = [8, 4];
+	vertexObjects = [];
 	
 	static generate_vb = function() {
 		var _ox, _oy, _nx, _ny, _ou, _nu;
 		
-		vertex_begin(VB, FORMAT_PNT);
+		for( var i = 0; i < array_length(vertexObjects); i++ ) 
+			vertexObjects[i].destroy();
+		vertexObjects = [];
+		
+		var v = new VertexObject();
 		
 		for( var i = 0; i < subd[0]; i++ )
 		for( var j = 0; j < subd[1]; j++ ) {
@@ -119,16 +124,18 @@ function Node_3D_Sphere(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			var u3 = ha1 / 360;
 			var v3 = 0.5 + 0.5 * dsin(va1);
 			
-			vertex_add_pnt(VB, [hx0, hz0, hy0], d3_normalize([hx0, hz0, hy0]), [u0, v0]);
-			vertex_add_pnt(VB, [hx1, hz1, hy1], d3_normalize([hx1, hz1, hy1]), [u1, v1]);
-			vertex_add_pnt(VB, [hx2, hz2, hy2], d3_normalize([hx2, hz2, hy2]), [u2, v2]);
+			v.addFace( [hx0, hz0, hy0], d3_normalize([hx0, hz0, hy0]), [u0, v0], 
+			           [hx1, hz1, hy1], d3_normalize([hx1, hz1, hy1]), [u1, v1], 
+			           [hx2, hz2, hy2], d3_normalize([hx2, hz2, hy2]), [u2, v2], );
 			
-			vertex_add_pnt(VB, [hx1, hz1, hy1], d3_normalize([hx1, hz1, hy1]), [u1, v1]);
-			vertex_add_pnt(VB, [hx2, hz2, hy2], d3_normalize([hx2, hz2, hy2]), [u2, v2]);
-			vertex_add_pnt(VB, [hx3, hz3, hy3], d3_normalize([hx3, hz3, hy3]), [u3, v3]);
+			v.addFace( [hx1, hz1, hy1], d3_normalize([hx1, hz1, hy1]), [u1, v1], 
+			           [hx2, hz2, hy2], d3_normalize([hx2, hz2, hy2]), [u2, v2], 
+			           [hx3, hz3, hy3], d3_normalize([hx3, hz3, hy3]), [u3, v3], );
 		}
 		
-		vertex_end(VB);
+		v.createBuffer();
+		vertexObjects[0] = v;
+		
 	}
 	generate_vb();
 	
@@ -145,12 +152,14 @@ function Node_3D_Sphere(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		_3d_local_transform(_lpos, _lrot, _lsca);
 		
 		matrix_set(matrix_world, matrix_stack_top());
-		vertex_submit(VB, pr_trianglelist, surface_get_texture(texture));
+		vertexObjects[0].submit(texture);
 		
 		_3d_clear_local_transform();
 	}
 	
 	static process_data = function(_outSurf, _data, _output_index, _array_index) {
+		if(_output_index == 3) return vertexObjects;
+		
 		var _subd = _data[0];
 		
 		if(_subd[0] != subd[0] || _subd[1] != subd[1]) {
@@ -190,8 +199,8 @@ function Node_3D_Sphere(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		var _cam   = { projection: _proj, fov: _fov };
 		var _scale = { local: true, dimension: _dimS };
 			
-		_3d_pre_setup(_outSurf, _dim, _pos, _sca, _ldir, _lhgt, _lint, _lclr, _aclr, _lpos, _lrot, _lsca, _cam, pass, _scale);
-			vertex_submit(VB, pr_trianglelist, surface_get_texture(texture));
+		_outSurf = _3d_pre_setup(_outSurf, _dim, _pos, _sca, _ldir, _lhgt, _lint, _lclr, _aclr, _lpos, _lrot, _lsca, _cam, pass, _scale);
+			vertexObjects[0].submit(texture);
 		_3d_post_setup();
 		
 		return _outSurf;

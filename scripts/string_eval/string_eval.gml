@@ -5,6 +5,7 @@
 	global.EQUATION_PRES[? "*"]     = 2;
 	global.EQUATION_PRES[? "/"]     = 2;
 	global.EQUATION_PRES[? "^"]     = 3;
+	global.EQUATION_PRES[? "|"]     = 5; //array accerssor symbol
 	global.EQUATION_PRES[? "sin"]   = 5;
 	global.EQUATION_PRES[? "cos"]   = 5;
 	global.EQUATION_PRES[? "tan"]   = 5;

@@ -62,7 +62,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	outputs[| 1] = nodeValue("Atlas data", self, JUNCTION_CONNECT.output, VALUE_TYPE.atlas, []);
 	
 	input_display_list = [ 
-		["Surface",		false], 0, 1, 15, 10, 
+		["Output", 		false], 0, 1, 15, 10, 
 		["Scatter",		false], 5, 6, 13, 14, 19, 17, 9, 2,
 		["Transform",	false], 3, 8, 7, 4,
 		["Render",		false], 18, 11, 12, 16, 

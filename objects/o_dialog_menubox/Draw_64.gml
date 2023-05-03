@@ -32,16 +32,24 @@ if(!ready) exit;
 			var tips = array_safe_get(tooltips, i, noone);
 			if(tips != noone) TOOLTIP = tips;
 		}
-			
+		
+		var cc = c_white;
+		if(struct_has(_menuItem, "color"))
+			cc = _menuItem.color;
+		
 		if(selecting == i) {
-			draw_sprite_stretched_ext(THEME.textbox, 3, dialog_x, yy, dialog_w, _h, COLORS.dialog_menubox_highlight, 0.75);
+			if(cc == c_white)
+				draw_sprite_stretched_ext(THEME.textbox, 3, dialog_x, yy, dialog_w, _h, COLORS.dialog_menubox_highlight, 0.75);
+			else 
+				draw_sprite_stretched_ext(THEME.textbox, 3, dialog_x, yy, dialog_w, _h, cc, 0.8);
 			
 			if(instanceof(_menuItem) == "MenuItem" && sFOCUS && (mouse_release(mb_left) || keyboard_check_released(vk_enter))) {
 				var res = _menuItem.func(dialog_x + dialog_w, yy, depth, _menuItem.name, i);
 				if(_menuItem.isShelf) ds_list_add(children, res);
 				else				  instance_destroy(o_dialog_menubox);
 			}
-		}
+		} else if(cc != c_white)
+			draw_sprite_stretched_ext(THEME.textbox, 3, dialog_x, yy, dialog_w, _h, cc, 0.5);
 		
 		if(instanceof(_menuItem) == "MenuItemGroup") {
 			var _submenus = _menuItem.group;

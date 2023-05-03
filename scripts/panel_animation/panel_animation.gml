@@ -374,26 +374,31 @@ function Panel_Animation() : PanelContent() constructor {
 	}
 	resetTimelineMask();
 	
+	function updatePropertyNode(pr, _node) {
+		var is_anim = false;
+		for(var j = 0; j < ds_list_size(_node.inputs); j++) {
+			var jun = _node.inputs[| j];
+			is_anim |= jun.is_anim && jun.value_from == noone;
+		}
+			
+		if(!is_anim) return;
+		ds_priority_add(pr, _node, _node.anim_priority);
+	}
+	
 	function updatePropertyList() {
 		ds_list_destroy(anim_properties);
 		var amo = ds_map_size(NODE_MAP);
 		var k = ds_map_find_first(NODE_MAP);
 		var pr = ds_priority_create();
 		
+		updatePropertyNode(pr, GLOBAL);
+		
 		repeat(amo) {
 			var _node = NODE_MAP[? k];
 			k = ds_map_find_next(NODE_MAP, k);
 			
 			if(!_node.active) continue;
-			
-			var is_anim = false;
-			for(var j = 0; j < ds_list_size(_node.inputs); j++) {
-				var jun = _node.inputs[| j];
-				is_anim |= jun.is_anim && jun.value_from == noone;
-			}
-			
-			if(!is_anim) continue;
-			ds_priority_add(pr, _node, _node.anim_priority);
+			updatePropertyNode(pr, _node);
 		}
 		
 		anim_properties = ds_priority_to_list(pr);
@@ -918,10 +923,11 @@ function Panel_Animation() : PanelContent() constructor {
 		
 		for( var i = 0; i < ds_list_size(anim_properties); i++ ) {
 			_node = anim_properties[| i];
+			var _inContext = _node == GLOBAL || _node.group == PANEL_GRAPH.getCurrentContext();
 			
-			var aa = _node.group == PANEL_GRAPH.getCurrentContext()? 1 : 0.9;
+			var aa = _inContext? 1 : 0.9;
 			var _node_y = _node.dopesheet_y;
-			if(!show_node_outside_context && _node.group != PANEL_GRAPH.getCurrentContext()) continue;
+			if(!show_node_outside_context && !_inContext) continue;
 			
 			var _node_y_start = _node_y;
 			_node_y += dope_sheet_node_padding;
@@ -1513,9 +1519,9 @@ function Panel_Animation() : PanelContent() constructor {
 						
 		if(mouse_press(mb_right, pFOCUS)) {
 			if(ds_list_empty(keyframe_selecting))
-				menuCall(,, keyframe_menu_empty);
+				menuCall("animation_keyframe_empty_menu",,, keyframe_menu_empty);
 			else 
-				menuCall(,, keyframe_menu);
+				menuCall("animation_keyframe_menu",,, keyframe_menu);
 		}
 				
 		if(stagger_mode == 2) {

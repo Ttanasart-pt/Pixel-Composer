@@ -52,7 +52,7 @@ function save_serialize() {
 	if(!is_surface(prev)) _map[? "preview"] = "";
 	else				  _map[? "preview"] = surface_encode(surface_size_lim(prev, 128, 128));
 	
-	var val  = json_encode_minify(_map);
+	var val = PREF_MAP[? "save_file_minify"]? json_encode_minify(_map) : json_encode(_map, true);
 	ds_map_destroy(_map);
 	return val;
 }
@@ -152,7 +152,7 @@ function SAVE_COLLECTIONS(_list, _path, save_surface = true, metadata = noone, c
 		ds_map_add_map(_map, "metadata", metadata.serialize());
 	
 	var file = file_text_open_write(_path);
-	file_text_write_string(file, json_encode_minify(_map));
+	file_text_write_string(file, PREF_MAP[? "save_file_minify"]? json_encode_minify(_map) : json_encode(_map, true));
 	file_text_close(file);
 	
 	ds_map_destroy(_map);
@@ -183,7 +183,7 @@ function SAVE_COLLECTION(_node, _path, save_surface = true, metadata = noone, co
 		ds_map_add_map(_map, "metadata", metadata.serialize());
 	
 	var file = file_text_open_write(_path);
-	file_text_write_string(file, json_encode_minify(_map));
+	file_text_write_string(file, PREF_MAP[? "save_file_minify"]? json_encode_minify(_map) : json_encode(_map, true));
 	file_text_close(file);
 	
 	ds_map_destroy(_map);

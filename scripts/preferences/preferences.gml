@@ -65,6 +65,8 @@
 	PREF_MAP[? "panel_menu_right_control"] = os_type == os_windows;
 	
 	PREF_MAP[? "show_crash_dialog"] = false;
+	
+	PREF_MAP[? "save_file_minify"] = true;
 #endregion
 
 #region hotkeys	

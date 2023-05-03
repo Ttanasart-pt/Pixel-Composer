@@ -1,111 +1,134 @@
-function __addon_lua_setup(lua) {
-	for( var i = 0; i < array_length(global.__lua_functions); i++ ) {
-		var _func = global.__lua_functions[i];
-		lua_add_function(lua, _func[0], _func[1]);
+#region setup
+	function __addon_lua_setup(lua, context) {
+		__addon_lua_setup_functions(lua);
+		__addon_lua_setup_constants(lua, context);
+		__addon_lua_setup_widget(lua, context);
+		
+		context.ready = true;
+	}
+#endregion
+	
+#region constant
+	function __addon_lua_setup_constants(lua, context) {
+		lua_add_code(lua, "ID = '" + string(context.ID) + "'");
+	
+		lua_add_code(lua, "c_aqua = " + string(c_aqua));
+		lua_add_code(lua, "c_black = " + string(c_black));
+		lua_add_code(lua, "c_blue = " + string(c_blue));
+		lua_add_code(lua, "c_dkgray = " + string(c_dkgray));
+		lua_add_code(lua, "c_fuchsia = " + string(c_fuchsia));
+		lua_add_code(lua, "c_gray = " + string(c_gray));
+		lua_add_code(lua, "c_green = " + string(c_green));
+		lua_add_code(lua, "c_lime = " + string(c_lime));
+		lua_add_code(lua, "c_ltgray = " + string(c_ltgray));
+		lua_add_code(lua, "c_maroon = " + string(c_maroon));
+		lua_add_code(lua, "c_navy = " + string(c_navy));
+		lua_add_code(lua, "c_olive = " + string(c_olive));
+		lua_add_code(lua, "c_orange = " + string(c_orange));
+		lua_add_code(lua, "c_purple = " + string(c_purple));
+		lua_add_code(lua, "c_red = " + string(c_red));
+		lua_add_code(lua, "c_silver = " + string(c_silver));
+		lua_add_code(lua, "c_teal = " + string(c_teal));
+		lua_add_code(lua, "c_white = " + string(c_white));
+		lua_add_code(lua, "c_yellow = " + string(c_yellow));
+
+		lua_add_code(lua, "fa_left = " + string(fa_left));
+		lua_add_code(lua, "fa_middle = " + string(fa_middle));
+		lua_add_code(lua, "fa_right = " + string(fa_right));
+		//
+		lua_add_code(lua, "fa_top = " + string(fa_top));
+		lua_add_code(lua, "fa_center = " + string(fa_center));
+		lua_add_code(lua, "fa_bottom = " + string(fa_bottom));
+	
+		lua_add_code(lua, "mb_left = " + string(mb_left));
+		lua_add_code(lua, "mb_middle = " + string(mb_middle));
+		lua_add_code(lua, "mb_right = " + string(mb_right));
+
+		lua_add_code(lua, "vk_nokey = " + string(vk_nokey));
+		lua_add_code(lua, "vk_anykey = " + string(vk_anykey));
+		lua_add_code(lua, "vk_left = " + string(vk_left));
+		lua_add_code(lua, "vk_right = " + string(vk_right));
+		lua_add_code(lua, "vk_up = " + string(vk_up));
+		lua_add_code(lua, "vk_down = " + string(vk_down));
+		lua_add_code(lua, "vk_enter = " + string(vk_enter));
+		lua_add_code(lua, "vk_escape = " + string(vk_escape));
+		lua_add_code(lua, "vk_space = " + string(vk_space));
+		lua_add_code(lua, "vk_shift = " + string(vk_shift));
+		lua_add_code(lua, "vk_control = " + string(vk_control));
+		lua_add_code(lua, "vk_alt = " + string(vk_alt));
+		lua_add_code(lua, "vk_backspace = " + string(vk_backspace));
+		lua_add_code(lua, "vk_tab = " + string(vk_tab));
+		lua_add_code(lua, "vk_home = " + string(vk_home));
+		lua_add_code(lua, "vk_end = " + string(vk_end));
+		lua_add_code(lua, "vk_delete = " + string(vk_delete));
+		lua_add_code(lua, "vk_insert = " + string(vk_insert));
+		lua_add_code(lua, "vk_pageup = " + string(vk_pageup));
+		lua_add_code(lua, "vk_pagedown = " + string(vk_pagedown));
+		lua_add_code(lua, "vk_pause = " + string(vk_pause));
+		lua_add_code(lua, "vk_printscreen = " + string(vk_printscreen));
+		lua_add_code(lua, "vk_f1 = " + string(vk_f1));
+		lua_add_code(lua, "vk_f2 = " + string(vk_f2));
+		lua_add_code(lua, "vk_f3 = " + string(vk_f3));
+		lua_add_code(lua, "vk_f4 = " + string(vk_f4));
+		lua_add_code(lua, "vk_f5 = " + string(vk_f5));
+		lua_add_code(lua, "vk_f6 = " + string(vk_f6));
+		lua_add_code(lua, "vk_f7 = " + string(vk_f7));
+		lua_add_code(lua, "vk_f8 = " + string(vk_f8));
+		lua_add_code(lua, "vk_f9 = " + string(vk_f9));
+		lua_add_code(lua, "vk_f10 = " + string(vk_f10));
+		lua_add_code(lua, "vk_f11 = " + string(vk_f11));
+		lua_add_code(lua, "vk_f12 = " + string(vk_f12));
+		lua_add_code(lua, "vk_numpad0 = " + string(vk_numpad0));
+		lua_add_code(lua, "vk_numpad1 = " + string(vk_numpad1));
+		lua_add_code(lua, "vk_numpad2 = " + string(vk_numpad2));
+		lua_add_code(lua, "vk_numpad3 = " + string(vk_numpad3));
+		lua_add_code(lua, "vk_numpad4 = " + string(vk_numpad4));
+		lua_add_code(lua, "vk_numpad5 = " + string(vk_numpad5));
+		lua_add_code(lua, "vk_numpad6 = " + string(vk_numpad6));
+		lua_add_code(lua, "vk_numpad7 = " + string(vk_numpad7));
+		lua_add_code(lua, "vk_numpad8 = " + string(vk_numpad8));
+		lua_add_code(lua, "vk_numpad9 = " + string(vk_numpad9));
+		lua_add_code(lua, "vk_multiply = " + string(vk_multiply));
+		lua_add_code(lua, "vk_divide = " + string(vk_divide));
+		lua_add_code(lua, "vk_add = " + string(vk_add));
+		lua_add_code(lua, "vk_subtract = " + string(vk_subtract));
+		lua_add_code(lua, "vk_decimal = " + string(vk_decimal));
+	
+		lua_add_code(lua, "tb_text = " + string(TEXTBOX_INPUT.text));
+		lua_add_code(lua, "tb_number = " + string(TEXTBOX_INPUT.number));
+	
+		lua_add_code(lua, "Panel = {};");
+		lua_add_code(lua, "Animator = {};");
 	}
 	
-	lua_add_code(lua, "c_aqua = " + string(c_aqua));
-	lua_add_code(lua, "c_black = " + string(c_black));
-	lua_add_code(lua, "c_blue = " + string(c_blue));
-	lua_add_code(lua, "c_dkgray = " + string(c_dkgray));
-	lua_add_code(lua, "c_fuchsia = " + string(c_fuchsia));
-	lua_add_code(lua, "c_gray = " + string(c_gray));
-	lua_add_code(lua, "c_green = " + string(c_green));
-	lua_add_code(lua, "c_lime = " + string(c_lime));
-	lua_add_code(lua, "c_ltgray = " + string(c_ltgray));
-	lua_add_code(lua, "c_maroon = " + string(c_maroon));
-	lua_add_code(lua, "c_navy = " + string(c_navy));
-	lua_add_code(lua, "c_olive = " + string(c_olive));
-	lua_add_code(lua, "c_orange = " + string(c_orange));
-	lua_add_code(lua, "c_purple = " + string(c_purple));
-	lua_add_code(lua, "c_red = " + string(c_red));
-	lua_add_code(lua, "c_silver = " + string(c_silver));
-	lua_add_code(lua, "c_teal = " + string(c_teal));
-	lua_add_code(lua, "c_white = " + string(c_white));
-	lua_add_code(lua, "c_yellow = " + string(c_yellow));
-
-	lua_add_code(lua, "fa_left = " + string(fa_left));
-	lua_add_code(lua, "fa_middle = " + string(fa_middle));
-	lua_add_code(lua, "fa_right = " + string(fa_right));
-	lua_add_code(lua, "fa_top = " + string(fa_top));
-	lua_add_code(lua, "fa_bottom = " + string(fa_bottom));
+	function __addon_lua_panel_variable(lua, panel) {
+		lua_add_code(lua, 
+			"Panel.mouse = {" + string(panel.mx) + ", " + string(panel.my) + "}\n" + 
+			"Panel.x  = " + string(panel.x ) + "\n" + 
+			"Panel.y  = " + string(panel.y ) + "\n" + 
+			"Panel.w  = " + string(panel.w ) + "\n" + 
+			"Panel.h  = " + string(panel.h ) + "\n" +
+		
+			"Panel.hoverable = " + string(panel.pHOVER) + "\n" +
+			"Panel.clickable = " + string(panel.pFOCUS) + "\n" 
+		);
 	
-	lua_add_code(lua, "mb_left = " + string(mb_left));
-	lua_add_code(lua, "mb_middle = " + string(mb_middle));
-	lua_add_code(lua, "mb_right = " + string(mb_right));
-
-	lua_add_code(lua, "vk_nokey = " + string(vk_nokey));
-	lua_add_code(lua, "vk_anykey = " + string(vk_anykey));
-	lua_add_code(lua, "vk_left = " + string(vk_left));
-	lua_add_code(lua, "vk_right = " + string(vk_right));
-	lua_add_code(lua, "vk_up = " + string(vk_up));
-	lua_add_code(lua, "vk_down = " + string(vk_down));
-	lua_add_code(lua, "vk_enter = " + string(vk_enter));
-	lua_add_code(lua, "vk_escape = " + string(vk_escape));
-	lua_add_code(lua, "vk_space = " + string(vk_space));
-	lua_add_code(lua, "vk_shift = " + string(vk_shift));
-	lua_add_code(lua, "vk_control = " + string(vk_control));
-	lua_add_code(lua, "vk_alt = " + string(vk_alt));
-	lua_add_code(lua, "vk_backspace = " + string(vk_backspace));
-	lua_add_code(lua, "vk_tab = " + string(vk_tab));
-	lua_add_code(lua, "vk_home = " + string(vk_home));
-	lua_add_code(lua, "vk_end = " + string(vk_end));
-	lua_add_code(lua, "vk_delete = " + string(vk_delete));
-	lua_add_code(lua, "vk_insert = " + string(vk_insert));
-	lua_add_code(lua, "vk_pageup = " + string(vk_pageup));
-	lua_add_code(lua, "vk_pagedown = " + string(vk_pagedown));
-	lua_add_code(lua, "vk_pause = " + string(vk_pause));
-	lua_add_code(lua, "vk_printscreen = " + string(vk_printscreen));
-	lua_add_code(lua, "vk_f1 = " + string(vk_f1));
-	lua_add_code(lua, "vk_f2 = " + string(vk_f2));
-	lua_add_code(lua, "vk_f3 = " + string(vk_f3));
-	lua_add_code(lua, "vk_f4 = " + string(vk_f4));
-	lua_add_code(lua, "vk_f5 = " + string(vk_f5));
-	lua_add_code(lua, "vk_f6 = " + string(vk_f6));
-	lua_add_code(lua, "vk_f7 = " + string(vk_f7));
-	lua_add_code(lua, "vk_f8 = " + string(vk_f8));
-	lua_add_code(lua, "vk_f9 = " + string(vk_f9));
-	lua_add_code(lua, "vk_f10 = " + string(vk_f10));
-	lua_add_code(lua, "vk_f11 = " + string(vk_f11));
-	lua_add_code(lua, "vk_f12 = " + string(vk_f12));
-	lua_add_code(lua, "vk_numpad0 = " + string(vk_numpad0));
-	lua_add_code(lua, "vk_numpad1 = " + string(vk_numpad1));
-	lua_add_code(lua, "vk_numpad2 = " + string(vk_numpad2));
-	lua_add_code(lua, "vk_numpad3 = " + string(vk_numpad3));
-	lua_add_code(lua, "vk_numpad4 = " + string(vk_numpad4));
-	lua_add_code(lua, "vk_numpad5 = " + string(vk_numpad5));
-	lua_add_code(lua, "vk_numpad6 = " + string(vk_numpad6));
-	lua_add_code(lua, "vk_numpad7 = " + string(vk_numpad7));
-	lua_add_code(lua, "vk_numpad8 = " + string(vk_numpad8));
-	lua_add_code(lua, "vk_numpad9 = " + string(vk_numpad9));
-	lua_add_code(lua, "vk_multiply = " + string(vk_multiply));
-	lua_add_code(lua, "vk_divide = " + string(vk_divide));
-	lua_add_code(lua, "vk_add = " + string(vk_add));
-	lua_add_code(lua, "vk_subtract = " + string(vk_subtract));
-	lua_add_code(lua, "vk_decimal = " + string(vk_decimal));
-	
-	lua_add_code(lua, "Panel = {};");
-	lua_add_code(lua, "Animator = {};");
-}
-
-function __addon_lua_panel_variable(lua, panel) {
-	lua_add_code(lua, 
-		"Panel.mx = " + string(panel.mx) + "\n" + 
-		"Panel.my = " + string(panel.my) + "\n" + 
-		"Panel.x  = " + string(panel.x ) + "\n" + 
-		"Panel.y  = " + string(panel.y ) + "\n" + 
-		"Panel.w  = " + string(panel.w ) + "\n" + 
-		"Panel.h  = " + string(panel.h ) + "\n" 
-	);
-	
-	lua_add_code(lua, 
-		"Animator.frame_current = " + string(ANIMATOR.current_frame) + "\n" + 
-		"Animator.frame_total = " +   string(ANIMATOR.frames_total) + "\n" + 
-		"Animator.frame_rate  = " +   string(ANIMATOR.framerate) + "\n"
-	);
-}
+		lua_add_code(lua, 
+			"Animator.frame_current = " + string(ANIMATOR.current_frame) + "\n" + 
+			"Animator.frame_total = " +   string(ANIMATOR.frames_total) + "\n" + 
+			"Animator.frame_rate  = " +   string(ANIMATOR.framerate) + "\n"
+		);
+	}
+#endregion
 	
 #region API
+	function __addon_lua_setup_functions(lua) {
+		for( var i = 0; i < array_length(global.__lua_functions); i++ ) {
+			var _func = global.__lua_functions[i];
+			lua_add_function(lua, _func[0], _func[1]);
+		}
+	}
+	
 	global.__lua_functions = [
 		[ "print", print ], 
 		
@@ -464,14 +487,14 @@ function __addon_lua_panel_variable(lua, panel) {
 		[ "keyboard_set_numlock", keyboard_set_numlock ],
 		[ "keyboard_get_numlock", keyboard_get_numlock ],
 
-		[ "keyboard_key", function() { return keyboard_key; } ],
-		[ "keyboard_lastkey", function() { return keyboard_lastkey; } ],
-		[ "keyboard_lastchar", function() { return keyboard_lastchar; } ],
-		[ "keyboard_string", function() { return keyboard_string; } ],
+		[ "keyboard_key",		function() { return keyboard_key; } ],
+		[ "keyboard_lastkey",	function() { return keyboard_lastkey; } ],
+		[ "keyboard_lastchar",	function() { return keyboard_lastchar; } ],
+		[ "keyboard_string",	function() { return keyboard_string; } ],
 
-		[ "mouse_button", function() { return mouse_button; } ],
-		[ "mouse_x", function() { return mouse_x; } ],
-		[ "mouse_y", function() { return mouse_y; } ],
+		[ "mouse_button",	function() { return mouse_button; } ],
+		[ "mouse_x",		function() { return mouse_x; } ],
+		[ "mouse_y",		function() { return mouse_y; } ],
 		[ "mouse_check_button", mouse_check_button ],
 		[ "mouse_check_button_pressed", mouse_check_button_pressed ],
 		[ "mouse_check_button_released", mouse_check_button_released ],
@@ -843,5 +866,278 @@ function __addon_lua_panel_variable(lua, panel) {
 				case 4 : draw_set_font(f_p3);  draw_set_color(COLORS._main_text_sub); break;
 			}
 		}], 
+		
+		//nodes
+		[ "node_get",	function(nodeId) { 
+			if(!ds_map_exists(NODE_NAME_MAP, nodeId)) return 0;
+			return NODE_NAME_MAP[? nodeId];
+		}], 
+		
+		[ "node_get_input_value", function(nodeId, input) { 
+			if(!ds_map_exists(NODE_NAME_MAP, nodeId)) return 0;
+			var node = NODE_NAME_MAP[? nodeId];
+			
+			if(!ds_map_exists(node.inputMap, input)) return 0;
+			return node.inputMap[? input].getValue();
+		}], 
+		
+		[ "node_set_input_value", function(nodeId, input, value) { 
+			if(!ds_map_exists(NODE_NAME_MAP, nodeId)) return 0;
+			var node = NODE_NAME_MAP[? nodeId];
+			
+			if(!ds_map_exists(node.inputMap, input)) return 0;
+			return node.inputMap[? input].setValue(value);
+		}], 
+		
+		[ "node_get_output_value", function(nodeId, input) { 
+			if(!ds_map_exists(NODE_NAME_MAP, nodeId)) return 0;
+			var node = NODE_NAME_MAP[? nodeId];
+			
+			if(!ds_map_exists(node.outputMap, input)) return 0;
+			return node.outputMap[? input].getValue();
+		}],
+		
+		[ "get_hovering_element", function() { return HOVERING_ELEMENT; }],
 	];
+#endregion
+
+#region widget manager
+	global.__lua_widget_functions = [
+		[ "__widget_wake",   function(wd, hover, focus) { 
+			if(!ds_map_exists(global.ADDON_WIDGET, wd)) return;
+			
+			global.ADDON_WIDGET[? wd].setActiveFocus(focus, hover);
+		} ],
+		
+		[ "__textBox",   function(type, onModify) { 
+			var wd  = new textBox(type, onModify);
+			var key = UUID_generate();
+			global.ADDON_WIDGET[? key] = wd;
+			
+			return key;
+		} ],
+		
+		[ "__textBox_draw",   function(wd, _x, _y, _w, _h, _text, _m) { 
+			if(!ds_map_exists(global.ADDON_WIDGET, wd)) return;
+			
+			global.ADDON_WIDGET[? wd].draw(_x, _y, _w, _h, _text, _m);
+		} ],
+		
+		[ "__textBox_apply",   function(wd) { 
+			if(!ds_map_exists(global.ADDON_WIDGET, wd)) return;
+			
+			global.ADDON_WIDGET[? wd].apply();
+			return global.ADDON_WIDGET[? wd].current_value;
+		} ],
+		
+@"
+TextBox = {}
+TextBox.new = function(type, onModify) 
+	local self = {}
+	
+	self.id = __textBox(type, onModify)
+	
+	function self.draw(self, _x, _y, _w, _h, _text) 
+		__widget_wake(self.id, Panel.hoverable, Panel.clickable)
+		__textBox_draw(self.id, _x, _y, _w, _h, _text, Panel.mouse)
+		
+		if(keyboard_check_pressed(vk_enter) == 1) then
+			onModify(__textBox_apply(self.id))
+		end
+	end
+	
+	return self
+end",
+		
+		[ "__vectorBox",   function(size, onModify) { 
+			var wd  = new vectorBox(size, onModify);
+			var key = UUID_generate();
+			global.ADDON_WIDGET[? key] = wd;
+			
+			return key;
+		} ],
+		
+		[ "__vectorBox_draw",   function(wd, _x, _y, _w, _h, _vector, _m) { 
+			if(!ds_map_exists(global.ADDON_WIDGET, wd)) return;
+			
+			global.ADDON_WIDGET[? wd].draw(_x, _y, _w, _h, _vector, _m);
+		} ],
+		
+		[ "__vectorBox_apply",   function(wd) { 
+			if(!ds_map_exists(global.ADDON_WIDGET, wd)) return;
+			
+			global.ADDON_WIDGET[? wd].apply();
+			return global.ADDON_WIDGET[? wd].current_value;
+		} ],
+
+@"
+VectorBox = {}
+VectorBox.new = function(size, onModify) 
+	local self = {}
+	
+	self.id = __vectorBox(size, onModify)
+	
+	function self.draw(self, _x, _y, _w, _h, _vector) 
+		__widget_wake(self.id, Panel.hoverable, Panel.clickable)
+		__vectorBox_draw(self.id, _x, _y, _w, _h, _vector, Panel.mouse)
+		
+		if(keyboard_check_pressed(vk_enter) == 1) then
+			onModify(__vectorBox_apply(self.id))
+		end
+	end
+	
+	return self
+end",
+
+		[ "__checkBox",   function(onModify) { 
+			var wd  = new checkBox(onModify);
+			var key = UUID_generate();
+			global.ADDON_WIDGET[? key] = wd;
+			
+			return key;
+		} ],
+		
+		[ "__checkBox_draw",   function(wd, _x, _y, _value, _m) { 
+			if(!ds_map_exists(global.ADDON_WIDGET, wd)) return;
+			
+			global.ADDON_WIDGET[? wd].draw(_x, _y, _value);
+		} ],
+		
+		[ "__checkBox_apply",   function(wd) { 
+			if(!ds_map_exists(global.ADDON_WIDGET, wd)) return;
+			
+			global.ADDON_WIDGET[? wd].trigger();
+			return true;
+		} ],
+		
+		[ "__checkBox_trigger",   function(wd) { 
+			if(!ds_map_exists(global.ADDON_WIDGET, wd)) return;
+			
+			return global.ADDON_WIDGET[? wd].isTriggered();
+		} ],
+
+@"
+CheckBox = {}
+CheckBox.new = function(onModify) 
+	local self = {}
+	
+	self.id = __checkBox(onModify)
+	
+	function self.draw(self, _x, _y, _value) 
+		__widget_wake(self.id, Panel.hoverable, Panel.clickable)
+		__checkBox_draw(self.id, _x, _y, _value, Panel.mouse)
+		
+		if(__checkBox_trigger()) then
+			__checkBox_apply(self.id)
+			onModify()
+		end
+	end
+	
+	return self
+end",
+
+		[ "__button",   function(onModify, txt = "") { 
+			var wd  = new button(onModify).setText(txt);
+			var key = UUID_generate();
+			global.ADDON_WIDGET[? key] = wd;
+			
+			return key;
+		} ],
+
+		[ "__button_draw",   function(wd, _x, _y, _w, _h, _m) { 
+			if(!ds_map_exists(global.ADDON_WIDGET, wd)) return;
+			
+			global.ADDON_WIDGET[? wd].draw(_x, _y, _w, _h);
+		} ],
+		
+		[ "__button_apply",   function(wd) { 
+			if(!ds_map_exists(global.ADDON_WIDGET, wd)) return;
+			
+			global.ADDON_WIDGET[? wd].trigger();
+			return true;
+		} ],
+		
+		[ "__button_trigger",   function(wd) { 
+			if(!ds_map_exists(global.ADDON_WIDGET, wd)) return;
+			
+			return global.ADDON_WIDGET[? wd].isTriggered();
+		} ],
+
+@"
+Button = {}
+Button.new = function(onModify, txt) 
+	local self = {}
+	
+	self.id = __button(onModify, txt)
+	
+	function self.draw(self, _x, _y, _w, _h) 
+		__widget_wake(self.id, Panel.hoverable, Panel.clickable)
+		__button_draw(self.id, _x, _y, _w, _h, Panel.mouse)
+		
+		if(__button_trigger()) then
+			__button_apply(self.id)
+			onModify()
+		end
+	end
+	
+	return self
+end",
+
+		[ "__button_color",   function(onModify, txt = "") { 
+			var wd  = new button(onModify).setText(txt);
+			var key = UUID_generate();
+			global.ADDON_WIDGET[? key] = wd;
+			
+			return key;
+		} ],
+
+		[ "__button_color_draw",   function(wd, _x, _y, _w, _h, _value, _m) { 
+			if(!ds_map_exists(global.ADDON_WIDGET, wd)) return;
+			
+			global.ADDON_WIDGET[? wd].draw(_x, _y, _w, _h, _value);
+		} ],
+		
+		[ "__button_color_apply",   function(wd) { 
+			if(!ds_map_exists(global.ADDON_WIDGET, wd)) return;
+			
+			global.ADDON_WIDGET[? wd].trigger();
+			return global.ADDON_WIDGET[? wd].current_value;
+		} ],
+		
+		[ "__button_color_trigger",   function(wd) { 
+			if(!ds_map_exists(global.ADDON_WIDGET, wd)) return;
+			
+			return global.ADDON_WIDGET[? wd].isTriggered();
+		} ],
+
+@"
+ButtonColor = {}
+ButtonColor.new = function(onModify, txt) 
+	local self = {}
+	
+	self.id = __button_color(onModify, txt)
+	
+	function self.draw(self, _x, _y, _w, _h, _value) 
+		__widget_wake(self.id, Panel.hoverable, Panel.clickable)
+		__button_color_draw(self.id, _x, _y, _w, _h, _value, Panel.mouse)
+		
+		if(__button_color_trigger()) then
+			onModify(__button_color_apply(self.id))
+		end
+	end
+	
+	return self
+end",
+
+	];
+	
+	function __addon_lua_setup_widget(lua, context) {
+		for( var i = 0; i < array_length(global.__lua_widget_functions); i++ ) {
+			var _func = global.__lua_widget_functions[i];
+			if(is_string(_func)) {
+				lua_add_code(lua, _func);
+			} else if(is_array(_func))
+				lua_add_function(lua, _func[0], _func[1]);
+		}
+	}
 #endregion

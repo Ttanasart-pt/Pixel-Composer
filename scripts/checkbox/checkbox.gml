@@ -1,10 +1,18 @@
 function checkBox(_onClick) : widget() constructor {
 	onClick = _onClick;
 	spr = THEME.checkbox;
+	triggered = false;
 	
 	static trigger = function() { 
 		if(!onClick) return;
+		triggered = true;
 		onClick();
+	}
+	
+	static isTriggered = function() {
+		var t = triggered;
+		triggered = false;
+		return t;
 	}
 	
 	static draw = function(_x, _y, _value, _m, ss = ui(28), halign = fa_left, valign = fa_top) {

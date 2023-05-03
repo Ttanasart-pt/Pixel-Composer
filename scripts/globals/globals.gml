@@ -57,13 +57,17 @@
 #endregion
 
 #region inputs
-	globalvar FOCUS, FOCUS_STR, HOVER, DOUBLE_CLICK, CURRENT_PATH, DIALOG_CLICK;
+	globalvar FOCUS, FOCUS_STR, HOVER, HOVERING_ELEMENT, _HOVERING_ELEMENT;
+	globalvar DOUBLE_CLICK;
+	globalvar CURRENT_PATH, DIALOG_CLICK;
 	
 	CURRENT_PATH = "";
 	DOUBLE_CLICK = false;
 	FOCUS = noone;
 	FOCUS_STR = "";
 	HOVER = noone;
+	HOVERING_ELEMENT  = noone;
+	_HOVERING_ELEMENT = noone;
 	DIALOG_CLICK = true;
 	
 	globalvar ADD_NODE_PAGE;

@@ -22,7 +22,7 @@ function Node_Combine_RGB(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	input_display_list = [
 		["Sampling",	false], 4,
-		["Surface",		 true], 0, 1, 2, 3,
+		["Output", 		 true], 0, 1, 2, 3,
 	]
 	
 	attribute_surface_depth();
