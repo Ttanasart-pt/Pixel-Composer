@@ -102,7 +102,7 @@ if palette == 0 exit;
 				menuItem(get_text("palette_editor_sort_hue", "Hue"),           function() { sortPalette(__sortHue); }), 
 				menuItem(get_text("palette_editor_sort_sat", "Saturation"),    function() { sortPalette(__sortSat); }), 
 				menuItem(get_text("palette_editor_sort_val", "Value"),         function() { sortPalette(__sortVal); }), 
-			]);
+			],, palette);
 		}
 		bx -= ui(32);
 		

@@ -39,7 +39,7 @@ event_inherited();
 			}, THEME.star)
 		];
 		
-		menuCall("add_node_window_manu",,, menu);
+		menuCall("add_node_window_manu",,, menu,, node_menu_selecting);
 	}
 	
 	function filtered(node) {

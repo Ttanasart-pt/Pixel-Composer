@@ -58,20 +58,20 @@
 	log_message("SESSION", "Begin");
 	log_message("DIRECTORY", DIRECTORY);
 	
-	window_set_showborder(false);
+	//window_set_showborder(false);
 	
-	__initSurfaceFormat();
-	__initLocale();
-	__initTheme();
-	__initCollection();
-	__initAssets();
-	__initPresets();
-	__initFontFolder();
-	__initLua();
-	__initNodeData();
-	__initNodes();
-	__initSteamUGC();
-	__initAddon();
+	log_message("SESSION", "SurfaceFormat"); __initSurfaceFormat();
+	log_message("SESSION", "Locale");		 __initLocale();
+	log_message("SESSION", "Theme");		 __initTheme();
+	log_message("SESSION", "Collection");	 __initCollection();
+	log_message("SESSION", "Assets");		 __initAssets();
+	log_message("SESSION", "Presets");		 __initPresets();
+	log_message("SESSION", "FontFolder");	 __initFontFolder();
+	log_message("SESSION", "Lua");			 __initLua();
+	log_message("SESSION", "NodeData");		 __initNodeData();
+	log_message("SESSION", "Nodes");		 __initNodes();
+	log_message("SESSION", "SteamUGC");		 __initSteamUGC();
+	log_message("SESSION", "Addon");		 __initAddon();
 	
 	PREF_APPLY();
 	loadFonts();

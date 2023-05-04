@@ -78,7 +78,7 @@ event_inherited();
 							menuItem(get_text("noti_delete_message", "Delete notification"), function() { 
 								ds_list_remove(STATUSES, o_dialog_menubox.noti);
 							}), 
-						]);
+						],, noti);
 						dia.noti = noti;
 					}
 				}

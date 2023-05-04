@@ -14,6 +14,7 @@ event_inherited();
 	
 	tooltips = [];
 	show_icon = false;
+	context = noone;
 	
 	function setMenu(_menu, align = fa_left) {
 		menu = _menu;

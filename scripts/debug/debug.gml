@@ -12,16 +12,14 @@
 #endregion
 
 function _log_template() {
-	return string(current_year) + "/" + string(current_month) + "/" + string(current_day)
-		+ " " + string(current_hour) + ":" + string(current_minute) + ":" + string(current_second)
-		+ " > ";
+	return $"{string(current_year)}/{string(current_month)}/{string(current_day)} {string_lead_zero(current_hour, 2)}:{string_lead_zero(current_minute, 2)}:{string_lead_zero(current_second, 2)} > ";
 }
 
 function __log(title, str, fname = "log.txt") {
 	var path = DIRECTORY + fname;
 	var f = file_text_open_append(path);
 	var t = _log_template();
-	file_text_write_string(f, string(title) + t + string(str) + "\n");
+	file_text_write_string(f, $"{title}{t}{str}\n");
 	file_text_close(f);
 }
 

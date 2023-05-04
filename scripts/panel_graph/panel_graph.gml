@@ -561,8 +561,8 @@ function Panel_Graph() : PanelContent() constructor {
 					array_push(menu, -1);
 					array_push(menu, menuItem(get_text("panel_graph_add_transform", "Add transform"), addNodeTransform, noone, ["Graph", "Transform node"]));
 					array_push(menu, menuItem(get_text("panel_graph_canvas", "Canvas"),
-						function(_x, _y, _depth) { 
-							return submenuCall(_x, _y, _depth, [
+						function(_dat) { 
+							return submenuCall(_dat, [
 								menuItem(get_text("panel_graph_copy_to_canvas", "Copy to canvas"), function() {
 									setCurrentCanvas(node_hover);
 								}, noone, ["Graph", "Canvas"]),

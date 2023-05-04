@@ -134,7 +134,7 @@ event_inherited();
 							file_delete( DIRECTORY + "Gradients/" + hovering_name); 
 							presetCollect();
 						})
-					])
+					],, { name: hovering_name })
 				}
 			}
 			

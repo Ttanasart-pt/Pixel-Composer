@@ -1,0 +1,35 @@
+{
+    "panel": {
+        "content": [{
+            "content": "Panel_Menu"
+        }, {
+            "content": [{
+                "content": [{
+                    "content": [{
+                        "content": "Panel_Preview"
+                    }, {
+                        "content": "Panel_Graph"
+                    }],
+                    "split": "h",
+                    "width": 400
+                }, {
+                    "content": "Panel_Animation"
+                }],
+                "split": "v",
+                "width": -300
+            }, {
+                "content": [{
+                    "content": "Panel_Workspace"
+                }, {
+                    "content": "Panel_Inspector"
+                }],
+                "split": "v",
+                "width": 40
+            }],
+            "split": "h",
+            "width": -400
+        }],
+        "split": "v",
+        "width": 40
+    }
+}

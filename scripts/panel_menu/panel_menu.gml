@@ -17,21 +17,21 @@ function Panel_Menu() : PanelContent() constructor {
 		menuItem(get_text("panel_menu_open", "Open") + "...", function() { LOAD(); }, THEME.noti_icon_file_load, ["", "Open"]),
 		menuItem(get_text("panel_menu_save", "Save"), function() { SAVE(); }, THEME.save, ["", "Save"]),
 		menuItem(get_text("panel_menu_save_as", "Save as..."), function() { SAVE_AS(); }, THEME.save, ["", "Save as"]),
-		menuItem(get_text("panel_menu_recent_files", "Recent files"), function(_x, _y, _depth) { 
+		menuItem(get_text("panel_menu_recent_files", "Recent files"), function(_dat) { 
 				var arr = [];
 				for(var i = 0; i < min(10, ds_list_size(RECENT_FILES)); i++)  {
 					var _rec = RECENT_FILES[| i];
-					array_push(arr, menuItem(_rec, function(_x, _y, _depth, _path) { LOAD_PATH(_path); }));
+					array_push(arr, menuItem(_rec, function(_dat) { LOAD_PATH(_dat.name); }));
 				}
 				
-				return submenuCall(_x, _y, _depth, arr);
+				return submenuCall(_dat, arr);
 		}).setIsShelf(),
 		menuItem(get_text("panel_menu_auto_save_folder", "Open autosave folder"), function() { shellOpenExplorer(DIRECTORY + "autosave"); }, THEME.save_auto),
 		-1,
 		menuItem(get_text("preferences", "Preferences") + "...", function() { dialogCall(o_dialog_preference); }, THEME.gear),
 		menuItem(get_text("panel_menu_splash_screen", "Splash screen"), function() { dialogCall(o_dialog_splash); }),
 		-1,
-		menuItem(get_text("panel_menu_addons", "Addons"), function(_x, _y, _depth) { 
+		menuItem(get_text("panel_menu_addons", "Addons"), function(_dat) { 
 			var arr = [
 				menuItem(get_text("panel_menu_addons_menu", "Addons..."), function() { dialogPanelCall(new Panel_Addon()); }),
 				menuItem(get_text("panel_menu_addons_key", "Key displayer"), function() { 
@@ -47,10 +47,10 @@ function Panel_Menu() : PanelContent() constructor {
 			
 			for( var i = 0; i < array_length(ADDONS); i++ ) {
 				var _dir = ADDONS[i].name;
-				array_push(arr, menuItem(_dir, function(_x, _y, _depth, _path) { addonTrigger(_path); } ));
+				array_push(arr, menuItem(_dir, function(_dat) { addonTrigger(_dat.name); } ));
 			}
 			
-			return submenuCall(_x, _y, _depth, arr);
+			return submenuCall(_dat, arr);
 		}, THEME.addon ).setIsShelf(),
 		-1,
 		menuItem(get_text("fullscreen", "Toggle fullscreen"), function() { 
@@ -149,9 +149,9 @@ function Panel_Menu() : PanelContent() constructor {
 			}),
 		]],
 		[ get_text("panel_menu_panels", "Panels"), [
-			menuItem(get_text("panel_menu_workspace", "Workspace"), function(_x, _y, _depth) { 
+			menuItem(get_text("panel_menu_workspace", "Workspace"), function(_dat) { 
 				var arr = [], lays = [];
-				var f   = file_find_first(DIRECTORY + "Layouts/*", 0);
+				var f   = file_find_first(DIRECTORY + "layouts/*", 0);
 				while(f != "") {
 					array_push(lays, filename_name_only(f));
 					f = file_find_next();
@@ -162,21 +162,21 @@ function Panel_Menu() : PanelContent() constructor {
 					dia.name = PREF_MAP[? "panel_layout_file"];
 					dia.onModify = function(name) { 
 						var cont = panelSerialize();
-						json_save_struct(DIRECTORY + "Layouts/" + name + ".json", cont);
+						json_save_struct(DIRECTORY + "layouts/" + name + ".json", cont);
 					};
 				}));
 				array_push(arr, -1);
 				
 				for(var i = 0; i < array_length(lays); i++)  {
 					array_push(arr, menuItem(lays[i], 
-						function(_x, _y, _depth, _path) { 
-							PREF_MAP[? "panel_layout_file"] = _path;
+						function(_dat) { 
+							PREF_MAP[? "panel_layout_file"] = _dat.name;
 							PREF_SAVE();
 							setPanel();
 						},,, function(item) { return item.name == PREF_MAP[? "panel_layout_file"]; } ));
 				}
 				
-				return submenuCall(_x, _y, _depth, arr);
+				return submenuCall(_dat, arr);
 			}).setIsShelf(),
 			-1,
 			menuItem(get_text("panel_menu_collections", "Collections"),		function() { panelAdd("Panel_Collection", true) },,,	function() { return findPanel("Panel_Collection") != noone; } ),
@@ -188,15 +188,15 @@ function Panel_Menu() : PanelContent() constructor {
 			menuItem(get_text("panel_menu_notification", "Notification"),   function() { panelAdd("Panel_Notification", true) },,,	function() { return findPanel("Panel_Notification") != noone; } ),
 			menuItem(get_text("panel_menu_globalvar", "Global Variables"),	function() { panelAdd("Panel_Globalvar", true) },,,		function() { return findPanel("Panel_Globalvar") != noone; } ),
 			
-			menuItem(get_text("panel_menu_nodes", "Nodes"), function(_x, _y, _depth) { 
-				return submenuCall(_x, _y, _depth, [
+			menuItem(get_text("panel_menu_nodes", "Nodes"), function(_dat) { 
+				return submenuCall(_dat, [
 					menuItem(get_text("panel_menu_nodes", "Nodes"),					function() { panelAdd("Panel_Nodes", true) },,,			function() { return findPanel("Panel_Nodes") != noone; } ),
 					menuItem(get_text("tunnels", "Tunnels"),						function() { panelAdd("Panel_Tunnels", true) },,,		function() { return findPanel("Panel_Tunnels") != noone; } ),
 				]);
 			} ).setIsShelf(),
 			
-			menuItem(get_text("panel_menu_color", "Color"), function(_x, _y, _depth) { 
-				return submenuCall(_x, _y, _depth, [
+			menuItem(get_text("panel_menu_color", "Color"), function(_dat) { 
+				return submenuCall(_dat, [
 					menuItem(get_text("panel_menu_color", "Color"),		 function() { panelAdd("Panel_Color", true) },,,	function() { return findPanel("Panel_Color") != noone; } ),
 					menuItem(get_text("panel_menu_palette", "Palette"),	 function() { panelAdd("Panel_Palette", true) },,,	function() { return findPanel("Panel_Palette") != noone; } ),
 					menuItem(get_text("panel_menu_gradient", "Gradient"),function() { panelAdd("Panel_Gradient", true) },,,	function() { return findPanel("Panel_Gradient") != noone; } ),
@@ -656,7 +656,7 @@ function Panel_Menu() : PanelContent() constructor {
 				for(var i = 0; i < min(10, ds_list_size(RECENT_FILES)); i++)  {
 					var _rec = RECENT_FILES[| i];
 					var _dat = RECENT_FILE_DATA[| i];
-					array_push(arr, menuItem(_rec, function(_x, _y, _depth, _path) { LOAD_PATH(_path); }));
+					array_push(arr, menuItem(_rec, function(_dat) { LOAD_PATH(_dat.name); }));
 					array_push(tip, [ method(_dat, _dat.getThumbnail), VALUE_TYPE.surface ]);
 				}
 				

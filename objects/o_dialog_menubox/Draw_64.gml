@@ -44,8 +44,17 @@ if(!ready) exit;
 				draw_sprite_stretched_ext(THEME.textbox, 3, dialog_x, yy, dialog_w, _h, cc, 0.8);
 			
 			if(instanceof(_menuItem) == "MenuItem" && sFOCUS && (mouse_release(mb_left) || keyboard_check_released(vk_enter))) {
-				var res = _menuItem.func(dialog_x + dialog_w, yy, depth, _menuItem.name, i);
-				if(_menuItem.isShelf) ds_list_add(children, res);
+				var _dat = {
+					x: dialog_x + dialog_w,
+					y: yy,
+					depth: depth,
+					name: _menuItem.name,
+					index: i,
+					context: context,
+				};
+				
+				var _res = _menuItem.func(_dat);
+				if(_menuItem.isShelf) ds_list_add(children, _res);
 				else				  instance_destroy(o_dialog_menubox);
 			}
 		} else if(cc != c_white)

@@ -886,7 +886,7 @@ function Panel_Preview() : PanelContent() constructor {
 				menuItem(get_text("panel_preview_copy_color", "Copy image"), function() { copyCurrentFrame(); }, THEME.copy), 
 				menuItem(get_text("panel_preview_copy_color", "Copy color [") + string(sample_color) + "]", function() { clipboard_set_text(sample_color); }), 
 				menuItem(get_text("panel_preview_copy_color", "Copy hex [") + string(color_get_hex(sample_color)) + "]", function() { clipboard_set_text(color_get_hex(sample_color)); }), 
-			]);
+			],, getNodePreview());
 		}
 		
 		drawSplitView();

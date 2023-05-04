@@ -87,7 +87,7 @@ if !ready exit;
 					
 						instance_destroy();
 					}),
-				]);
+				],, content);
 			}
 			
 		}

@@ -41,7 +41,7 @@ event_inherited();
 							file_delete(o_dialog_menubox.path);
 							__initPresets();
 						}), 
-					]);
+					],, preset);
 					dia.path = preset.path;
 				}
 			}

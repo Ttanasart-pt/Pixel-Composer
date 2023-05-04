@@ -358,7 +358,7 @@ function Panel_Inspector() : PanelContent() constructor {
 							if(mouse_press(mb_left, pFOCUS))
 								jun_disp[@ 1] = !coll;
 							if(mouse_press(mb_right, pFOCUS))
-								menuCall("inspector_group_menu",,, group_menu);
+								menuCall("inspector_group_menu",,, group_menu,, inspecting);
 						} else
 							draw_sprite_stretched_ext(THEME.group_label, 0, 0, yy, con_w, ui(32), COLORS.panel_inspector_group_bg, 1);
 					
@@ -503,7 +503,7 @@ function Panel_Inspector() : PanelContent() constructor {
 						}));
 					}
 					
-					var dia = menuCall("inspector_value_menu",,, _menuItem);
+					var dia = menuCall("inspector_value_menu",,, _menuItem,, jun);
 					__dialog_junction = jun;
 				}
 			}

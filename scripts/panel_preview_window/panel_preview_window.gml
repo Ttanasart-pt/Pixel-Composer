@@ -134,9 +134,9 @@ function Panel_Preview_Window() : PanelContent() constructor {
 				var o = node_target.outputs[| i];
 				if(o.type != VALUE_TYPE.surface) continue;
 			
-				array_push(_menu, menuItem(o.name, function(_x, _y, _d, _n, index) { changeChannel(index); }));
+				array_push(_menu, menuItem(o.name, function(_dat) { changeChannel(_dat.index); }));
 			}
-			menuCall("preview_window_menu",,, _menu);
+			menuCall("preview_window_menu",,, _menu,, node_target);
 		}
 	}
 }

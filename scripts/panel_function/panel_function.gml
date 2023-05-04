@@ -126,9 +126,9 @@
 		//if(!directory_exists(DIRECTORY + "layouts")) 
 			zip_unzip("data/Layouts.zip", DIRECTORY);
 			
-		var file = DIRECTORY + "Layouts/" + PREF_MAP[? "panel_layout_file"] + ".json"; 
+		var file = DIRECTORY + "layouts/" + PREF_MAP[? "panel_layout_file"] + ".json"; 
 		if(!file_exists(file))
-			file = DIRECTORY + "Layouts/Horizontal.json"; 
+			file = DIRECTORY + "layouts/Horizontal.json"; 
 		loadPanel(file, PANEL_MAIN);
 		
 		PANEL_ANIMATION.updatePropertyList();

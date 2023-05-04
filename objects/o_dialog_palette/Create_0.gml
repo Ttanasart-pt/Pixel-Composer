@@ -106,7 +106,7 @@ event_inherited();
 							file_delete( DIRECTORY + "Palettes/" + hovering_name); 
 							presetCollect();
 						})
-					])
+					],, { name : hovering_name })
 				}
 			}
 			

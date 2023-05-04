@@ -88,6 +88,8 @@
 			//print("v2 : " + string(v2));
 			//print("====================");
 			
+			print($"{string(v1)} {symbol} {string(v2)}");
+			
 			switch(symbol) {
 				case "+": return v1 + v2;
 				case "-": return v1 - v2;

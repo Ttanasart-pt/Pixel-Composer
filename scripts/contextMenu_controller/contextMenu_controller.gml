@@ -2,7 +2,7 @@
 	globalvar CONTEXT_MENU_CALLBACK;
 	CONTEXT_MENU_CALLBACK = ds_map_create();
 	
-	function menuCall(menu_id = "", _x = mouse_mx + ui(4), _y = mouse_my + ui(4), menu = [], align = fa_left) {
+	function menuCall(menu_id = "", _x = mouse_mx + ui(4), _y = mouse_my + ui(4), menu = [], align = fa_left, context = noone) {
 		var dia = dialogCall(o_dialog_menubox, _x, _y);
 		if(menu_id != "" && ds_map_exists(CONTEXT_MENU_CALLBACK, menu_id)) {
 			var callbacks = CONTEXT_MENU_CALLBACK[? menu_id];
@@ -11,19 +11,21 @@
 				array_append(menu, callbacks[i].populate());
 		}
 		
+		dia.context = context;
 		dia.setMenu(menu, align);
 		return dia;
 	}
 
-	function submenuCall(_x, _y, _depth, menu = []) {
-		var dia = instance_create_depth(_x - ui(4), _y, _depth - 1, o_dialog_menubox);
+	function submenuCall(_data, menu = []) {
+		var dia = instance_create_depth(_data.x - ui(4), _data.y, _data.depth - 1, o_dialog_menubox);
 		dia.setMenu(menu);
 		return dia;
 	}
-
+	
 	function menuItem(name, func, spr = noone, hotkey = noone, toggle = noone) {
 		return new MenuItem(name, func, spr, hotkey, toggle);
 	}
+	
 	function MenuItem(name, func, spr = noone, hotkey = noone, toggle = noone) constructor {
 		active = true;
 		self.name	= name;

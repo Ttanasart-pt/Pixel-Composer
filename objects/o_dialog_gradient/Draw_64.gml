@@ -102,7 +102,7 @@ if !ready exit;
 				menuItem(get_text("gradient_editor_blend_RGB",  "RGB blend"),  function() { gradient.type = 0; onApply(gradient); }), 
 				menuItem(get_text("gradient_editor_blend_HSV",  "HSV blend"),  function() { gradient.type = 2; onApply(gradient); }), 
 				menuItem(get_text("gradient_editor_blend_hard", "Hard blend"), function() { gradient.type = 1; onApply(gradient); }), 
-			]);
+			],, gradient);
 		}
 		bx -= ui(32);
 	#endregion

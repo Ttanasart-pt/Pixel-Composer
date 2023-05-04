@@ -79,7 +79,7 @@ function Panel_Notification() : PanelContent() constructor {
 							menuItem(get_text("noti_delete_message", "Delete notification"), function() { 
 								ds_list_remove(STATUSES, o_dialog_menubox.noti);
 							}), 
-						]);
+						],, o_dialog_menubox.noti);
 						dia.noti = noti;
 					}
 				}

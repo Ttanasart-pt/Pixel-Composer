@@ -279,7 +279,6 @@
     {"name":"node_path_reverse","order":8,"path":"scripts/node_path_reverse/node_path_reverse.yy",},
     {"name":"fd_rectangle_get_acceleration_y","order":3,"path":"scripts/fd_rectangle_get_acceleration_y/fd_rectangle_get_acceleration_y.yy",},
     {"name":"sh_simplex","order":22,"path":"shaders/sh_simplex/sh_simplex.yy",},
-    {"name":"libborderless","order":2,"path":"extensions/libborderless/libborderless.yy",},
     {"name":"node_noise_grid_tri","order":25,"path":"scripts/node_noise_grid_tri/node_noise_grid_tri.yy",},
     {"name":"node_threshold","order":9,"path":"scripts/node_threshold/node_threshold.yy",},
     {"name":"sh_cell_noise_edge","order":5,"path":"shaders/sh_cell_noise_edge/sh_cell_noise_edge.yy",},

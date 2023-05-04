@@ -48,7 +48,7 @@ function __LOAD_PATH(path, readonly = false, safe_mode = false) {
 	//room_restart();
 	ds_list_clear(ERRORS);
 	
-	var temp_path = DIRECTORY + "\_temp";
+	var temp_path = DIRECTORY + "_temp";
 	if(file_exists(temp_path)) file_delete(temp_path);
 	file_copy(path, temp_path);
 	

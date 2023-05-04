@@ -116,7 +116,7 @@ event_inherited();
 					array_delete(arr, menuOn, 1);
 					target.inputs[| 0].setValue(arr);
 				})
-			] );	
+			],, target );
 		}
 		
 		return _h;
