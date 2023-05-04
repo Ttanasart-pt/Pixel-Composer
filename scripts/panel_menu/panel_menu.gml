@@ -151,7 +151,7 @@ function Panel_Menu() : PanelContent() constructor {
 		[ get_text("panel_menu_panels", "Panels"), [
 			menuItem(get_text("panel_menu_workspace", "Workspace"), function(_x, _y, _depth) { 
 				var arr = [], lays = [];
-				var f   = file_find_first(DIRECTORY + "layouts/*", 0);
+				var f   = file_find_first(DIRECTORY + "Layouts/*", 0);
 				while(f != "") {
 					array_push(lays, filename_name_only(f));
 					f = file_find_next();
@@ -162,7 +162,7 @@ function Panel_Menu() : PanelContent() constructor {
 					dia.name = PREF_MAP[? "panel_layout_file"];
 					dia.onModify = function(name) { 
 						var cont = panelSerialize();
-						json_save_struct(DIRECTORY + "layouts/" + name + ".json", cont);
+						json_save_struct(DIRECTORY + "Layouts/" + name + ".json", cont);
 					};
 				}));
 				array_push(arr, -1);

@@ -16,6 +16,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	
 	inputs[| 3] = nodeValue("Round anchor", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false)
 		.rejectArray();
+		
 	
 	input_display_list = [
 		["Path",	false], 0, 2, 1, 3, 

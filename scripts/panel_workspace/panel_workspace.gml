@@ -13,7 +13,7 @@ function Panel_Workspace() : PanelContent() constructor {
 	function refreshContent() {
 		workspaces = [];
 		
-		var f   = file_find_first(DIRECTORY + "layouts/*", 0);
+		var f   = file_find_first(DIRECTORY + "Layouts/*", 0);
 		while(f != "") {
 			array_push(workspaces, filename_name_only(f));
 			f = file_find_next();
@@ -56,7 +56,7 @@ function Panel_Workspace() : PanelContent() constructor {
 						dia.name = PREF_MAP[? "panel_layout_file"];
 						dia.onModify = function(name) { 
 							var cont = panelSerialize();
-							json_save_struct(DIRECTORY + "layouts/" + name + ".json", cont);
+							json_save_struct(DIRECTORY + "Layouts/" + name + ".json", cont);
 							
 							PREF_MAP[? "panel_layout_file"] = name;
 							PREF_SAVE();
@@ -79,11 +79,11 @@ function Panel_Workspace() : PanelContent() constructor {
 						}),
 						menuItem("Replace with current", function() { 
 							var cont = panelSerialize();
-							json_save_struct(DIRECTORY + "layouts/" + layout_selecting + ".json", cont);
+							json_save_struct(DIRECTORY + "Layouts/" + layout_selecting + ".json", cont);
 
 						}),
 						menuItem("Delete", function() { 
-							file_delete(DIRECTORY + "layouts/" + layout_selecting + ".json");
+							file_delete(DIRECTORY + "Layouts/" + layout_selecting + ".json");
 							refreshContent();
 						}, THEME.cross),
 					]);
