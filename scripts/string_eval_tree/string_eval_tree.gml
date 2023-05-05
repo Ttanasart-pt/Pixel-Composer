@@ -88,27 +88,28 @@
 			//print("v2 : " + string(v2));
 			//print("====================");
 			
-			print($"{string(v1)} {symbol} {string(v2)}");
+			//print($"{string(v1)} {symbol} {string(v2)}");
 			
 			switch(symbol) {
-				case "+": return v1 + v2;
-				case "-": return v1 - v2;
-				case "*": return v1 * v2;
-				case "^": return power(v1, v2);
-				case "/": return v1 / v2;
+				
+				case "+": return (is_real(v1) && is_real(v2))? v1 + v2		 : 0;
+				case "-": return (is_real(v1) && is_real(v2))? v1 - v2		 : 0;
+				case "*": return (is_real(v1) && is_real(v2))? v1 * v2		 : 0;
+				case "^": return (is_real(v1) && is_real(v2))? power(v1, v2) : 0;
+				case "/": return (is_real(v1) && is_real(v2))? v1 / v2       : 0;
 				case "|": 
 					var val = is_real(v2)? array_safe_get(v1, v2) : ds_map_try_get(v1, v2);
 					if(is_struct(val) && instanceof(val) == "NodeValue")
 						val = val.getValue();
 					return val;
 				
-				case "sin"   : return sin(v1);
-				case "cos"   : return cos(v1);
-				case "tan"   : return tan(v1);
-				case "abs"	 : return abs(v1);
-				case "round" : return round(v1);
-				case "ceil"	 : return ceil(v1);
-				case "floor" : return floor(v1);
+				case "sin"   : return is_real(v1)? sin(v1)    : 0;
+				case "cos"   : return is_real(v1)? cos(v1)    : 0;
+				case "tan"   : return is_real(v1)? tan(v1)    : 0;
+				case "abs"	 : return is_real(v1)? abs(v1)    : 0;
+				case "round" : return is_real(v1)? round(v1)  : 0;
+				case "ceil"	 : return is_real(v1)? ceil(v1)   : 0;
+				case "floor" : return is_real(v1)? floor(v1)  : 0;
 			}
 			
 			return v1;

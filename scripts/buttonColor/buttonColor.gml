@@ -19,7 +19,7 @@ function buttonColor(_onApply, dialog = noone) : widget() constructor {
 	
 	function apply(value) {
 		if(!interactable) return;
-		current_value = value();
+		current_value = value;
 		triggered = true;
 		onApply(value);
 	}

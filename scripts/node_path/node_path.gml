@@ -153,7 +153,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		} else if(drag_point > -1) {
 			var dx = value_snap(drag_point_sx + (_mx - drag_point_mx) / _s, _snx);
 			var dy = value_snap(drag_point_sy + (_my - drag_point_my) / _s, _sny);
-		
+			
 			if(drag_type < 2) {
 				var inp = inputs[| input_fix_len + drag_point];
 				var anc = inp.getValue();
@@ -397,8 +397,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 				}
 			}
 			
-			if(_edited)
-				UNDO_HOLDING = true;
+			if(_edited) UNDO_HOLDING = true;
 			
 			if(mouse_release(mb_left)) {
 				drag_point = -1;
@@ -407,43 +406,45 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			}
 		}
 		
-		var line_hover = -1;
-		var points = [];
-		var _a0, _a1;
+		#region draw control anchor
+			var line_hover = -1;
+			var points = [];
+			var _a0, _a1;
 		
-		var minx = 99999, miny = 99999;
-		var maxx = 0	, maxy = 0;
+			var minx = 99999, miny = 99999;
+			var maxx = 0	, maxy = 0;
 		
-		for(var i = loop? 0 : 1; i < ansize; i++) {
-			if(i) {
-				_a0 = inputs[| input_fix_len + i - 1].getValue();
-				_a1 = inputs[| input_fix_len + i].getValue();
-			} else {
-				_a0 = inputs[| input_fix_len + ansize - 1].getValue();
-				_a1 = inputs[| input_fix_len + 0].getValue();
+			for(var i = loop? 0 : 1; i < ansize; i++) {
+				if(i) {
+					_a0 = inputs[| input_fix_len + i - 1].getValue();
+					_a1 = inputs[| input_fix_len + i].getValue();
+				} else {
+					_a0 = inputs[| input_fix_len + ansize - 1].getValue();
+					_a1 = inputs[| input_fix_len + 0].getValue();
+				}
+			
+				var _ox = 0, _oy = 0, _nx = 0, _ny = 0, p = 0, pnt = [];
+				for(var j = 0; j < sample; j++) {
+					if(array_length(_a0) < 6) continue;
+			
+					p = eval_bezier(j / (sample - 1), _a0[0], _a0[1], _a1[0], _a1[1], _a0[0] + _a0[4], _a0[1] + _a0[5], _a1[0] + _a1[2], _a1[1] + _a1[3]);
+					_nx = _x + p[0] * _s;
+					_ny = _y + p[1] * _s;
+				
+					minx = min(minx, _nx); miny = min(miny, _ny);
+					maxx = max(maxx, _nx); maxy = max(maxy, _ny);
+					array_push(pnt, [ _nx, _ny ]);
+				
+					if(j && (key_mod_press(CTRL) || isUsingTool(1)) && distance_to_line(_mx, _my, _ox, _oy, _nx, _ny) < 4)
+						line_hover = i;
+				
+					_ox = _nx;
+					_oy = _ny;
+				}
+			
+				array_push(points, pnt);
 			}
-			
-			var _ox = 0, _oy = 0, _nx = 0, _ny = 0, p = 0, pnt = [];
-			for(var j = 0; j < sample; j++) {
-				if(array_length(_a0) < 6) continue;
-			
-				p = eval_bezier(j / (sample - 1), _a0[0], _a0[1], _a1[0], _a1[1], _a0[0] + _a0[4], _a0[1] + _a0[5], _a1[0] + _a1[2], _a1[1] + _a1[3]);
-				_nx = _x + p[0] * _s;
-				_ny = _y + p[1] * _s;
-				
-				minx = min(minx, _nx); miny = min(miny, _ny);
-				maxx = max(maxx, _nx); maxy = max(maxy, _ny);
-				array_push(pnt, [ _nx, _ny ]);
-				
-				if(j && (key_mod_press(CTRL) || isUsingTool(1)) && distance_to_line(_mx, _my, _ox, _oy, _nx, _ny) < 4)
-					line_hover = i;
-				
-				_ox = _nx;
-				_oy = _ny;
-			}
-			
-			array_push(points, pnt);
-		}
+		#endregion
 		
 		draw_set_color(isUsingTool(0)? c_white : COLORS._main_accent);
 		var ind = 0;
@@ -622,11 +623,12 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 					} 
 				}
 			}
-		} else if(key_mod_press(CTRL) || isUsingTool(1)) {
+		} else if(key_mod_press(CTRL) || isUsingTool(1)) { //anchor edit
 			draw_sprite_ui_uniform(THEME.cursor_path_add, 0, _mx + 16, _my + 16);
 			
 			if(mouse_press(mb_left, active)) {
 				var anc = createAnchor(value_snap((_mx - _x) / _s, _snx), value_snap((_my - _y) / _s, _sny));
+				UNDO_HOLDING = true;
 				
 				if(line_hover == -1) {
 					drag_point = ds_list_size(inputs) - input_fix_len - 1;
