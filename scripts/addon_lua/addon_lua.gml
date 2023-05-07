@@ -8,124 +8,15 @@
 	}
 #endregion
 	
-#region constant
-	function __addon_lua_setup_constants(lua, context) {
-		lua_add_code(lua, "ID = '" + string(context.ID) + "'");
-	
-		lua_add_code(lua, "c_aqua = " + string(c_aqua));
-		lua_add_code(lua, "c_black = " + string(c_black));
-		lua_add_code(lua, "c_blue = " + string(c_blue));
-		lua_add_code(lua, "c_dkgray = " + string(c_dkgray));
-		lua_add_code(lua, "c_fuchsia = " + string(c_fuchsia));
-		lua_add_code(lua, "c_gray = " + string(c_gray));
-		lua_add_code(lua, "c_green = " + string(c_green));
-		lua_add_code(lua, "c_lime = " + string(c_lime));
-		lua_add_code(lua, "c_ltgray = " + string(c_ltgray));
-		lua_add_code(lua, "c_maroon = " + string(c_maroon));
-		lua_add_code(lua, "c_navy = " + string(c_navy));
-		lua_add_code(lua, "c_olive = " + string(c_olive));
-		lua_add_code(lua, "c_orange = " + string(c_orange));
-		lua_add_code(lua, "c_purple = " + string(c_purple));
-		lua_add_code(lua, "c_red = " + string(c_red));
-		lua_add_code(lua, "c_silver = " + string(c_silver));
-		lua_add_code(lua, "c_teal = " + string(c_teal));
-		lua_add_code(lua, "c_white = " + string(c_white));
-		lua_add_code(lua, "c_yellow = " + string(c_yellow));
-
-		lua_add_code(lua, "fa_left = " + string(fa_left));
-		lua_add_code(lua, "fa_middle = " + string(fa_middle));
-		lua_add_code(lua, "fa_right = " + string(fa_right));
-		//
-		lua_add_code(lua, "fa_top = " + string(fa_top));
-		lua_add_code(lua, "fa_center = " + string(fa_center));
-		lua_add_code(lua, "fa_bottom = " + string(fa_bottom));
-	
-		lua_add_code(lua, "mb_left = " + string(mb_left));
-		lua_add_code(lua, "mb_middle = " + string(mb_middle));
-		lua_add_code(lua, "mb_right = " + string(mb_right));
-
-		lua_add_code(lua, "vk_nokey = " + string(vk_nokey));
-		lua_add_code(lua, "vk_anykey = " + string(vk_anykey));
-		lua_add_code(lua, "vk_left = " + string(vk_left));
-		lua_add_code(lua, "vk_right = " + string(vk_right));
-		lua_add_code(lua, "vk_up = " + string(vk_up));
-		lua_add_code(lua, "vk_down = " + string(vk_down));
-		lua_add_code(lua, "vk_enter = " + string(vk_enter));
-		lua_add_code(lua, "vk_escape = " + string(vk_escape));
-		lua_add_code(lua, "vk_space = " + string(vk_space));
-		lua_add_code(lua, "vk_shift = " + string(vk_shift));
-		lua_add_code(lua, "vk_control = " + string(vk_control));
-		lua_add_code(lua, "vk_alt = " + string(vk_alt));
-		lua_add_code(lua, "vk_backspace = " + string(vk_backspace));
-		lua_add_code(lua, "vk_tab = " + string(vk_tab));
-		lua_add_code(lua, "vk_home = " + string(vk_home));
-		lua_add_code(lua, "vk_end = " + string(vk_end));
-		lua_add_code(lua, "vk_delete = " + string(vk_delete));
-		lua_add_code(lua, "vk_insert = " + string(vk_insert));
-		lua_add_code(lua, "vk_pageup = " + string(vk_pageup));
-		lua_add_code(lua, "vk_pagedown = " + string(vk_pagedown));
-		lua_add_code(lua, "vk_pause = " + string(vk_pause));
-		lua_add_code(lua, "vk_printscreen = " + string(vk_printscreen));
-		lua_add_code(lua, "vk_f1 = " + string(vk_f1));
-		lua_add_code(lua, "vk_f2 = " + string(vk_f2));
-		lua_add_code(lua, "vk_f3 = " + string(vk_f3));
-		lua_add_code(lua, "vk_f4 = " + string(vk_f4));
-		lua_add_code(lua, "vk_f5 = " + string(vk_f5));
-		lua_add_code(lua, "vk_f6 = " + string(vk_f6));
-		lua_add_code(lua, "vk_f7 = " + string(vk_f7));
-		lua_add_code(lua, "vk_f8 = " + string(vk_f8));
-		lua_add_code(lua, "vk_f9 = " + string(vk_f9));
-		lua_add_code(lua, "vk_f10 = " + string(vk_f10));
-		lua_add_code(lua, "vk_f11 = " + string(vk_f11));
-		lua_add_code(lua, "vk_f12 = " + string(vk_f12));
-		lua_add_code(lua, "vk_numpad0 = " + string(vk_numpad0));
-		lua_add_code(lua, "vk_numpad1 = " + string(vk_numpad1));
-		lua_add_code(lua, "vk_numpad2 = " + string(vk_numpad2));
-		lua_add_code(lua, "vk_numpad3 = " + string(vk_numpad3));
-		lua_add_code(lua, "vk_numpad4 = " + string(vk_numpad4));
-		lua_add_code(lua, "vk_numpad5 = " + string(vk_numpad5));
-		lua_add_code(lua, "vk_numpad6 = " + string(vk_numpad6));
-		lua_add_code(lua, "vk_numpad7 = " + string(vk_numpad7));
-		lua_add_code(lua, "vk_numpad8 = " + string(vk_numpad8));
-		lua_add_code(lua, "vk_numpad9 = " + string(vk_numpad9));
-		lua_add_code(lua, "vk_multiply = " + string(vk_multiply));
-		lua_add_code(lua, "vk_divide = " + string(vk_divide));
-		lua_add_code(lua, "vk_add = " + string(vk_add));
-		lua_add_code(lua, "vk_subtract = " + string(vk_subtract));
-		lua_add_code(lua, "vk_decimal = " + string(vk_decimal));
-	
-		lua_add_code(lua, "tb_text = " + string(TEXTBOX_INPUT.text));
-		lua_add_code(lua, "tb_number = " + string(TEXTBOX_INPUT.number));
-	
-		lua_add_code(lua, "Panel = {};");
-		lua_add_code(lua, "Animator = {};");
-	}
-	
-	function __addon_lua_panel_variable(lua, panel) {
-		lua_add_code(lua, 
-			"Panel.mouse = {" + string(panel.mx) + ", " + string(panel.my) + "}\n" + 
-			"Panel.x  = " + string(panel.x ) + "\n" + 
-			"Panel.y  = " + string(panel.y ) + "\n" + 
-			"Panel.w  = " + string(panel.w ) + "\n" + 
-			"Panel.h  = " + string(panel.h ) + "\n" +
-		
-			"Panel.hoverable = " + string(panel.pHOVER) + "\n" +
-			"Panel.clickable = " + string(panel.pFOCUS) + "\n" 
-		);
-	
-		lua_add_code(lua, 
-			"Animator.frame_current = " + string(ANIMATOR.current_frame) + "\n" + 
-			"Animator.frame_total = " +   string(ANIMATOR.frames_total) + "\n" + 
-			"Animator.frame_rate  = " +   string(ANIMATOR.framerate) + "\n"
-		);
-	}
-#endregion
-	
 #region API
 	function __addon_lua_setup_functions(lua) {
 		for( var i = 0; i < array_length(global.__lua_functions); i++ ) {
 			var _func = global.__lua_functions[i];
-			lua_add_function(lua, _func[0], _func[1]);
+			
+			if(is_string(_func))
+				lua_add_code(lua, _func);
+			else if(is_array(_func))
+				lua_add_function(lua, _func[0], _func[1]);
 		}
 	}
 	
@@ -197,6 +88,11 @@
 		[ "gpu_set_state", gpu_set_state],
 
 		// basic form
+		[ "draw_set_color", draw_set_color ],
+		[ "draw_set_alpha", draw_set_alpha ],
+		[ "gpu_set_blendmode", gpu_set_blendmode ],
+		[ "gpu_set_blendmode_ext", gpu_set_blendmode_ext ],
+		
 		[ "draw_arrow", draw_arrow ],
 		[ "draw_circle", draw_circle ],
 		[ "draw_circle_colour", draw_circle_colour ],
@@ -206,6 +102,8 @@
 		[ "draw_line_colour", draw_line_colour ],
 		[ "draw_line_width", draw_line_width ],
 		[ "draw_line_width_colour", draw_line_width_colour ],
+		[ "draw_line_round", draw_line_round ],
+		[ "draw_line_round_color", draw_line_round_color ],
 		[ "draw_point", draw_point ],
 		[ "draw_point_colour", draw_point_colour ],
 		[ "draw_rectangle", draw_rectangle ],
@@ -333,8 +231,41 @@
 
 		[ "buffer_get_surface", buffer_get_surface ],
 		[ "buffer_set_surface", buffer_set_surface ],
+		
+		//sprite
+		[ "sprite_collision_mask", sprite_collision_mask ],
+		[ "sprite_set_offset", sprite_set_offset ],
+		[ "sprite_set_bbox_mode", sprite_set_bbox_mode ],
+		[ "sprite_set_bbox", sprite_set_bbox ],
+		[ "sprite_set_speed", sprite_set_speed ],
+		[ "sprite_set_nineslice", sprite_set_nineslice ],
 
-		    //variable
+		[ "__sprite_add", function(_ID, _path, _amo, rem = false, smt = false, xoff = 0, yoff = 0) {
+			var _addon = noone;
+			with(_addon_custom) if(self.ID == _ID) _addon = self;
+			if(_addon == noone) return 0;
+			
+			_path = string_replace(_path, "./", _addon.directory + "/");
+			return sprite_add(_path, _amo, rem, smt, xoff, yoff);
+		}],
+		@"function sprite_add(path, _amo, rem, smt, xoff, yoff)
+			rem = rem or false
+			smt = smt or false
+			xoff = xoff or 0
+			yoff = yoff or 0
+			return __sprite_add(ID, path, _amo, rem, smt, xoff, yoff)
+		end",
+		[ "sprite_delete", sprite_delete ],
+		[ "sprite_replace", sprite_replace ],
+		[ "sprite_duplicate", sprite_duplicate ],
+		[ "sprite_assign", sprite_assign ],
+		[ "sprite_merge", sprite_merge ],
+		[ "sprite_set_alpha_from_sprite", sprite_set_alpha_from_sprite ],
+		[ "sprite_nineslice_create", sprite_nineslice_create ],
+		[ "sprite_create_from_surface", sprite_create_from_surface ],
+		[ "sprite_add_from_surface", sprite_add_from_surface ],
+		
+		//variable
 		[ "variable_instance_exists", variable_instance_exists ],
 		[ "variable_instance_get_names", variable_instance_get_names ],
 		[ "variable_instance_names_count", variable_instance_names_count ],
@@ -897,7 +828,30 @@
 			return node.outputMap[? input].getValue();
 		}],
 		
-		[ "get_hovering_element", function() { return HOVERING_ELEMENT; }],
+		[ "element_get", function() { return HOVERING_ELEMENT; }],
+		
+		[ "__panel_create", function(ID, panel = "") { 
+			var _addon = noone;
+			with(_addon_custom) if(self.ID == ID) _addon = self;
+			if(_addon == noone) return noone;
+			
+			var arr = variable_struct_get_names(_addon.panels);
+			
+			for( var i = 0; i < array_length(arr); i++ ) {
+				if(arr[i] != panel) continue;
+				
+				var pane  = _addon.panels[$ arr[i]];
+				dialogPanelCall(new addonPanel(_addon, pane));
+			}
+			
+			return noone;
+		}],
+		
+		@"
+		function panel_create(panel)
+			__panel_create(ID, panel)
+		end
+		",
 	];
 #endregion
 
@@ -909,8 +863,16 @@
 			global.ADDON_WIDGET[? wd].setActiveFocus(focus, hover);
 		} ],
 		
-		[ "__textBox",   function(type, onModify) { 
-			var wd  = new textBox(type, onModify);
+		[ "__textBox",   function(ID, type, onModify) { 
+			var _addon = noone;
+			with(_addon_custom) if(self.ID == ID) _addon = self;
+			if(_addon == noone) return noone;
+			
+			var wd  = new textBox(type, noone);
+			wd.setLua(_addon.thread, onModify, function(txt) { 
+				return lua_call(lua_thread, lua_thread_key, txt); 
+			});
+			
 			var key = UUID_generate();
 			global.ADDON_WIDGET[? key] = wd;
 			
@@ -922,35 +884,31 @@
 			
 			global.ADDON_WIDGET[? wd].draw(_x, _y, _w, _h, _text, _m);
 		} ],
-		
-		[ "__textBox_apply",   function(wd) { 
-			if(!ds_map_exists(global.ADDON_WIDGET, wd)) return;
-			
-			global.ADDON_WIDGET[? wd].apply();
-			return global.ADDON_WIDGET[? wd].current_value;
-		} ],
-		
 @"
 TextBox = {}
 TextBox.new = function(type, onModify) 
 	local self = {}
 	
-	self.id = __textBox(type, onModify)
+	self.id = __textBox(ID, type, onModify)
 	
 	function self.draw(self, _x, _y, _w, _h, _text) 
 		__widget_wake(self.id, Panel.hoverable, Panel.clickable)
 		__textBox_draw(self.id, _x, _y, _w, _h, _text, Panel.mouse)
-		
-		if(keyboard_check_pressed(vk_enter) == 1) then
-			onModify(__textBox_apply(self.id))
-		end
 	end
 	
 	return self
 end",
 		
-		[ "__vectorBox",   function(size, onModify) { 
-			var wd  = new vectorBox(size, onModify);
+		[ "__vectorBox",   function(ID, size, onModify) { 
+			var _addon = noone;
+			with(_addon_custom) if(self.ID == ID) _addon = self;
+			if(_addon == noone) return noone;
+			
+			var wd  = new vectorBox(size, noone);
+			wd.setLua(_addon.thread, onModify, function(i, v) { 
+				return lua_call(lua_thread, lua_thread_key, i + 1, v); 
+			});
+			
 			var key = UUID_generate();
 			global.ADDON_WIDGET[? key] = wd;
 			
@@ -962,35 +920,32 @@ end",
 			
 			global.ADDON_WIDGET[? wd].draw(_x, _y, _w, _h, _vector, _m);
 		} ],
-		
-		[ "__vectorBox_apply",   function(wd) { 
-			if(!ds_map_exists(global.ADDON_WIDGET, wd)) return;
-			
-			global.ADDON_WIDGET[? wd].apply();
-			return global.ADDON_WIDGET[? wd].current_value;
-		} ],
 
 @"
 VectorBox = {}
 VectorBox.new = function(size, onModify) 
 	local self = {}
 	
-	self.id = __vectorBox(size, onModify)
+	self.id = __vectorBox(ID, size, onModify)
 	
 	function self.draw(self, _x, _y, _w, _h, _vector) 
 		__widget_wake(self.id, Panel.hoverable, Panel.clickable)
 		__vectorBox_draw(self.id, _x, _y, _w, _h, _vector, Panel.mouse)
-		
-		if(keyboard_check_pressed(vk_enter) == 1) then
-			onModify(__vectorBox_apply(self.id))
-		end
 	end
 	
 	return self
 end",
 
-		[ "__checkBox",   function(onModify) { 
+		[ "__checkBox",   function(ID, onModify) { 
+			var _addon = noone;
+			with(_addon_custom) if(self.ID == ID) _addon = self;
+			if(_addon == noone) return noone;
+			
 			var wd  = new checkBox(onModify);
+			wd.setLua(_addon.thread, onModify, function() { 
+				return lua_call(lua_thread, lua_thread_key); 
+			});
+			
 			var key = UUID_generate();
 			global.ADDON_WIDGET[? key] = wd;
 			
@@ -1002,42 +957,32 @@ end",
 			
 			global.ADDON_WIDGET[? wd].draw(_x, _y, _value);
 		} ],
-		
-		[ "__checkBox_apply",   function(wd) { 
-			if(!ds_map_exists(global.ADDON_WIDGET, wd)) return;
-			
-			global.ADDON_WIDGET[? wd].trigger();
-			return true;
-		} ],
-		
-		[ "__checkBox_trigger",   function(wd) { 
-			if(!ds_map_exists(global.ADDON_WIDGET, wd)) return;
-			
-			return global.ADDON_WIDGET[? wd].isTriggered();
-		} ],
 
 @"
 CheckBox = {}
 CheckBox.new = function(onModify) 
 	local self = {}
 	
-	self.id = __checkBox(onModify)
+	self.id = __checkBox(ID, onModify)
 	
 	function self.draw(self, _x, _y, _value) 
 		__widget_wake(self.id, Panel.hoverable, Panel.clickable)
 		__checkBox_draw(self.id, _x, _y, _value, Panel.mouse)
-		
-		if(__checkBox_trigger()) then
-			__checkBox_apply(self.id)
-			onModify()
-		end
 	end
 	
 	return self
 end",
 
-		[ "__button",   function(onModify, txt = "") { 
+		[ "__button",   function(ID, onModify, txt = "") { 
+			var _addon = noone;
+			with(_addon_custom) if(self.ID == ID) _addon = self;
+			if(_addon == noone) return noone;
+			
 			var wd  = new button(onModify).setText(txt);
+			wd.setLua(_addon.thread, onModify, function() { 
+				return lua_call(lua_thread, lua_thread_key); 
+			});
+			
 			var key = UUID_generate();
 			global.ADDON_WIDGET[? key] = wd;
 			
@@ -1049,94 +994,30 @@ end",
 			
 			global.ADDON_WIDGET[? wd].draw(_x, _y, _w, _h);
 		} ],
-		
-		[ "__button_apply",   function(wd) { 
-			if(!ds_map_exists(global.ADDON_WIDGET, wd)) return;
-			
-			global.ADDON_WIDGET[? wd].trigger();
-			return true;
-		} ],
-		
-		[ "__button_trigger",   function(wd) { 
-			if(!ds_map_exists(global.ADDON_WIDGET, wd)) return;
-			
-			return global.ADDON_WIDGET[? wd].isTriggered();
-		} ],
 
 @"
 Button = {}
 Button.new = function(onModify, txt) 
 	local self = {}
 	
-	self.id = __button(onModify, txt)
+	self.id = __button(ID, onModify, txt)
 	
 	function self.draw(self, _x, _y, _w, _h) 
 		__widget_wake(self.id, Panel.hoverable, Panel.clickable)
 		__button_draw(self.id, _x, _y, _w, _h, Panel.mouse)
-		
-		if(__button_trigger()) then
-			__button_apply(self.id)
-			onModify()
-		end
 	end
 	
 	return self
 end",
-
-		[ "__button_color",   function(onModify, txt = "") { 
-			var wd  = new button(onModify).setText(txt);
-			var key = UUID_generate();
-			global.ADDON_WIDGET[? key] = wd;
-			
-			return key;
-		} ],
-
-		[ "__button_color_draw",   function(wd, _x, _y, _w, _h, _value, _m) { 
-			if(!ds_map_exists(global.ADDON_WIDGET, wd)) return;
-			
-			global.ADDON_WIDGET[? wd].draw(_x, _y, _w, _h, _value);
-		} ],
-		
-		[ "__button_color_apply",   function(wd) { 
-			if(!ds_map_exists(global.ADDON_WIDGET, wd)) return;
-			
-			global.ADDON_WIDGET[? wd].trigger();
-			return global.ADDON_WIDGET[? wd].current_value;
-		} ],
-		
-		[ "__button_color_trigger",   function(wd) { 
-			if(!ds_map_exists(global.ADDON_WIDGET, wd)) return;
-			
-			return global.ADDON_WIDGET[? wd].isTriggered();
-		} ],
-
-@"
-ButtonColor = {}
-ButtonColor.new = function(onModify, txt) 
-	local self = {}
-	
-	self.id = __button_color(onModify, txt)
-	
-	function self.draw(self, _x, _y, _w, _h, _value) 
-		__widget_wake(self.id, Panel.hoverable, Panel.clickable)
-		__button_color_draw(self.id, _x, _y, _w, _h, _value, Panel.mouse)
-		
-		if(__button_color_trigger()) then
-			onModify(__button_color_apply(self.id))
-		end
-	end
-	
-	return self
-end",
-
 	];
 	
 	function __addon_lua_setup_widget(lua, context) {
 		for( var i = 0; i < array_length(global.__lua_widget_functions); i++ ) {
 			var _func = global.__lua_widget_functions[i];
-			if(is_string(_func)) {
+			
+			if(is_string(_func))
 				lua_add_code(lua, _func);
-			} else if(is_array(_func))
+			else if(is_array(_func))
 				lua_add_function(lua, _func[0], _func[1]);
 		}
 	}

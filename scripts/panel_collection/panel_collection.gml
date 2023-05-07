@@ -66,6 +66,12 @@ function Panel_Collection() : PanelContent() constructor {
 		if(STEAM_ENABLED) {
 			if(!meta.steam) {
 				array_push(contentMenu, menuItem(get_text("panel_collection_workshop_upload", "Upload to Steam Workshop") + "...", function() { 
+					var s = PANEL_PREVIEW.getNodePreviewSurface();
+					if(!is_surface(s)) {
+						noti_warning("Please send any node to preview panel to use as a thumbnail.")
+						return;
+					}
+					
 					var dia = dialogCall(o_dialog_file_name_collection, mouse_mx + ui(8), mouse_my + ui(-320));
 					var meta = _menu_node.getMetadata();
 					if(meta != noone && meta != undefined) 
@@ -162,7 +168,10 @@ function Panel_Collection() : PanelContent() constructor {
 					var _node = index < node_list? nodes[| index] : steamNode[index - node_list];
 					var _nx   = grid_space + (grid_width + grid_space) * j;
 					var _boxx = _nx + (grid_width - grid_size) / 2;
-						
+					
+					var gr_x1 = _boxx + grid_size;
+					var gr_y1 = yy + grid_size;
+					
 					BLEND_OVERRIDE;
 					draw_sprite_stretched(THEME.node_bg, 0, _boxx, yy, grid_size, grid_size);
 					BLEND_NORMAL;
@@ -210,8 +219,11 @@ function Panel_Collection() : PanelContent() constructor {
 					if(meta != noone && mode == 0) {
 						if(meta.steam) {
 							draw_sprite_ui_uniform(THEME.steam, 0, _boxx + ui(12), yy + ui(12), 1, COLORS._main_icon_dark, 1);
-							if(meta.author_steam_id == STEAM_USER_ID) 
+							if(meta.author_steam_id == STEAM_USER_ID) {
 								draw_sprite_ui_uniform(THEME.steam_creator, 0, _boxx + grid_size - ui(8), yy + ui(12), 1, COLORS._main_icon_dark, 1);
+								if(point_in_rectangle(_m[0], _m[1], gr_x1 - ui(24), yy, gr_x1, yy + ui(24)))
+									TOOLTIP = "You created this item";
+							}
 						}
 						
 						if(meta.version != SAVEFILE_VERSION) {

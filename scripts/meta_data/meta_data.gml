@@ -45,12 +45,12 @@ function MetaDataManager() constructor {
 	}
 	
 	static deserialize = function(m, readonly = false) {
-		description		= ds_map_try_get(m, "description", "");
-		author			= ds_map_try_get(m, "author", "");
-		contact			= ds_map_try_get(m, "contact", "");
-		alias			= ds_map_try_get(m, "alias", "");
-		author_steam_id = ds_map_try_get(m, "aut_id");
-		file_id			= ds_map_try_get(m, "file_id");
+		description		= ds_map_try_get(m, "description",	description);
+		author			= ds_map_try_get(m, "author",		author);
+		contact			= ds_map_try_get(m, "contact",		contact);
+		alias			= ds_map_try_get(m, "alias",		alias);
+		author_steam_id = ds_map_try_get(m, "aut_id",		author_steam_id);
+		file_id			= ds_map_try_get(m, "file_id",		file_id);
 		
 		if(ds_map_exists(m, "tags"))
 			tags = array_create_from_list(m[? "tags"]);

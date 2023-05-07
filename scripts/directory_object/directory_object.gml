@@ -70,9 +70,8 @@ function FileObject(_name, _path) constructor {
 		meta = new MetaDataManager();
 		if(ds_map_exists(m, "metadata"))
 			meta.deserialize(m[? "metadata"]);
-		if(ds_map_exists(m, "preview")) {
+		if(ds_map_exists(m, "preview"))
 			thumbnail_data = json_try_parse(m[? "preview"], -1);
-		}
 		
 		meta.version = m[? "version"];
 		meta.name = name;

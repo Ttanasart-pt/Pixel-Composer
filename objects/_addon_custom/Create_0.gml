@@ -2,7 +2,7 @@
 event_inherited();
 
 #region init
-	function init(directory) {
+	function init(directory, _openDialog = true) {
 		ID = UUID_generate();
 		global.ADDON_ID[? ID] = self;
 		ready = false;
@@ -22,15 +22,15 @@ event_inherited();
 			var meta = json_load_struct(propPath);
 			if(struct_has(meta, "panels")) {
 				panels = meta.panels;
-				var arr = variable_struct_get_names(meta.panels);
 				
-				for( var i = 0; i < array_length(arr); i++ ) {
-					var _key = arr[i];
-					var pane = meta.panels[$ _key];
+				if(_openDialog) {
+					var arr = variable_struct_get_names(panels);
+					for( var i = 0; i < array_length(arr); i++ ) {
+						var _key = arr[i];
+						var pane = panels[$ _key];
 					
-					if(pane.create) {
-						var panel = new addonPanel(self, pane, pane.drawFn, struct_has(pane, "drawFn")? pane.drawUIFn : "");
-						dialogPanelCall(panel);
+						if(struct_has(pane, "main") && pane.main)
+							dialogPanelCall(new addonPanel(self, pane));
 					}
 				}
 			}

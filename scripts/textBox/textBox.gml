@@ -88,7 +88,7 @@ function textBox(_input, _onModify, _extras = noone) : textInput(_input, _onModi
 			_input_text_current = _last_text;
 		current_value = _input_text_current;
 		
-		if(onModify) 
+		if(is_callable(onModify))
 			return onModify(_input_text_current);
 		return false;
 	}

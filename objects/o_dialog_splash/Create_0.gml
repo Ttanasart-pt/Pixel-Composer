@@ -137,20 +137,24 @@ event_inherited();
 					
 					draw_sprite_stretched(THEME.node_bg, 0, _boxx, yy, grid_width, grid_heigh);
 					if(sHOVER && sp_sample.hover && point_in_rectangle(_m[0], _m[1], _nx, yy, _nx + grid_width, yy + grid_heigh)) {
+						var _meta = _project.getMetadata();
+						if(project_page == 1)
+							TOOLTIP = _meta;
+						
 						draw_sprite_stretched_ext(THEME.node_active, 0, _boxx, yy, grid_width, grid_heigh, COLORS._main_accent, 1);
 						if(mouse_press(mb_left, sFOCUS)) {
 							LOAD_PATH(_project.path, true);
 							METADATA.steam = project_page;
 							if(project_page == 1)
-								METADATA.file_id = _project.getMetadata().file_id;
+								METADATA.file_id = _meta.file_id;
 							instance_destroy();
 						}
 					}
 					
 					var spr = _project.getSpr();
 					if(spr) {
-						var gw = grid_width - ui(4);
-						var gh = grid_heigh - ui(4);
+						var gw = grid_width - ui(16);
+						var gh = grid_heigh - ui(16);
 						
 						var sw = sprite_get_width(spr);
 						var sh = sprite_get_height(spr);

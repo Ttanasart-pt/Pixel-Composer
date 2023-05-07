@@ -9,14 +9,13 @@ function __initCollection() {
 		directory_create(root);
 	
 	var _l = root + "/version";
-	//if(file_exists(_l)) {
-	//	var res = json_load_struct(_l);
-	//	if(!is_struct(res) || !struct_has(res, "version") || res.version != COLLECTION_VERSION) 
-	//		zip_unzip("data/Collections.zip", root);
-	//} else 
+	if(file_exists(_l)) {
+		var res = json_load_struct(_l);
+		if(!is_struct(res) || !struct_has(res, "version") || res.version != BUILD_NUMBER) 
+			zip_unzip("data/Collections.zip", root);
+	} else 
 		zip_unzip("data/Collections.zip", root);
-	json_save_struct(_l, { version: COLLECTION_VERSION });
-	
+	json_save_struct(_l, { version: BUILD_NUMBER });
 	
 	refreshCollections();
 }

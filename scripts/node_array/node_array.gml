@@ -5,7 +5,7 @@ function Node_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	w = 96;
 	
 	inputs[| 0] = nodeValue("Type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0 )
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Any", "Surface", "Number", "Color", "Text" ])
+		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Any", "Surface", "Number", "Color", "Text" ], { update_hover: false })
 		.rejectArray();
 	
 	inputs[| 1] = nodeValue("Spread array", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false )
@@ -56,7 +56,7 @@ function Node_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		return _h;
 	});
 	
-	input_display_list = [ 0, 1, array_adjust_tool ];
+	input_display_list = [ 0, array_adjust_tool, 1 ];
 	
 	input_fix_len = ds_list_size(inputs);
 	input_display_list_len = array_length(input_display_list);
@@ -92,9 +92,9 @@ function Node_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	if(!LOADING && !APPENDING) createNewInput();
 	
 	static refreshDynamicInput = function() {
-		var _l = ds_list_create();
-		var amo = attributes[? "size"];
-		var extra = true;
+		var _l       = ds_list_create();
+		var amo      = attributes[? "size"];
+		var extra    = true;
 		var lastNode = noone;
 		
 		for( var i = 0; i < ds_list_size(inputs); i++ ) {
@@ -130,16 +130,25 @@ function Node_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	
 	static onValueUpdate = function(index = 0) {
 		if(index != 0) return;
-		var _typ = getType();
 		
-		for( var i = input_fix_len; i < ds_list_size(inputs); i++ ) {
-			if(_typ != VALUE_TYPE.any) 
-				inputs[| i].type = _typ;
-			inputs[| i].resetDisplay();
+		var ls = ds_list_create();
+		ls[| 0] = inputs[| 0];
+		ls[| 1] = inputs[| 1];
+		ds_list_destroy(inputs);
+		inputs = ls;
+		
+		input_display_list = [ 0, array_adjust_tool, 1 ];
+		
+		//var _typ = getType();
+		
+		//for( var i = input_fix_len; i < ds_list_size(inputs); i++ ) {
+		//	if(_typ != VALUE_TYPE.any) 
+		//		inputs[| i].type = _typ;
+		//	inputs[| i].resetDisplay();
 			
-			if(_typ && inputs[| i].value_from && (value_bit(inputs[| i].value_from.type) & value_bit(_typ) == 0))
-				inputs[| i].removeFrom();
-		}
+		//	if(_typ && inputs[| i].value_from && (value_bit(inputs[| i].value_from.type) & value_bit(_typ) == 0))
+		//		inputs[| i].removeFrom();
+		//}
 		
 		refreshDynamicInput();
 	}

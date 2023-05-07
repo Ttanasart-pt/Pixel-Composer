@@ -51,6 +51,7 @@
 #endregion
 
 #region Set up
+	var t = current_time;
 	PREF_LOAD();
 	
 	log_clear();
@@ -60,18 +61,18 @@
 	
 	//window_set_showborder(false);
 	
-	log_message("SESSION", "SurfaceFormat"); __initSurfaceFormat();
-	log_message("SESSION", "Locale");		 __initLocale();
-	log_message("SESSION", "Theme");		 __initTheme();
-	log_message("SESSION", "Collection");	 __initCollection();
-	log_message("SESSION", "Assets");		 __initAssets();
-	log_message("SESSION", "Presets");		 __initPresets();
-	log_message("SESSION", "FontFolder");	 __initFontFolder();
-	log_message("SESSION", "Lua");			 __initLua();
-	log_message("SESSION", "NodeData");		 __initNodeData();
-	log_message("SESSION", "Nodes");		 __initNodes();
-	log_message("SESSION", "SteamUGC");		 __initSteamUGC();
-	log_message("SESSION", "Addon");		 __initAddon();
+	log_message("SESSION", "> init SurfaceFormat");	__initSurfaceFormat();
+	log_message("SESSION", "> init Locale");		__initLocale();
+	log_message("SESSION", "> init Theme");			__initTheme();
+	log_message("SESSION", "> init Collection");	__initCollection();
+	log_message("SESSION", "> init Assets");		__initAssets();
+	log_message("SESSION", "> init Presets");		__initPresets();
+	log_message("SESSION", "> init FontFolder");	__initFontFolder();
+	log_message("SESSION", "> init Lua");			__initLua();
+	log_message("SESSION", "> init NodeData");		__initNodeData();
+	log_message("SESSION", "> init Nodes");			__initNodes();
+	log_message("SESSION", "> init SteamUGC");		__initSteamUGC();
+	log_message("SESSION", "> init Addon");			__initAddon();
 	
 	PREF_APPLY();
 	loadFonts();
@@ -79,6 +80,7 @@
 	loadColor(PREF_MAP[? "theme"]);
 	
 	setPanel();
+	loadAddon();
 	
 	if(file_exists("icon.png"))
 		file_copy("icon.png", DIRECTORY + "icon.png");
@@ -90,6 +92,8 @@
 	
 	var cmd = ".pxcc=\"" + string(program_directory) + "PixelComposer.exe\"";
 	execute_shell("assoc", cmd);
+	
+	print($"Setup time = {current_time - t}");
 #endregion
 
 #region parameter

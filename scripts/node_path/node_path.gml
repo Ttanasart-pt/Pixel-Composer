@@ -17,7 +17,6 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	inputs[| 3] = nodeValue("Round anchor", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false)
 		.rejectArray();
 		
-	
 	input_display_list = [
 		["Path",	false], 0, 2, 1, 3, 
 		["Anchors",	false], 
@@ -31,6 +30,9 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		
 		inputs[| index] = nodeValue("Anchor",  self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ _x, _y, _dxx, _dxy, _dyx, _dyy ])
 			.setDisplay(VALUE_DISPLAY.vector);
+		
+		recordAction(ACTION_TYPE.var_modify,  self, [ array_clone(input_display_list), "input_display_list" ]);
+		recordAction(ACTION_TYPE.list_insert, inputs, [ inputs[| index], index, "add path anchor point" ]);
 		array_push(input_display_list, index);
 		
 		return inputs[| index];
@@ -595,10 +597,13 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 						drag_point_sy = _a[1];
 					}
 				}
-			} else if(hover_type == 0 && key_mod_press(SHIFT)) {
+			} else if(hover_type == 0 && key_mod_press(SHIFT)) { //remove
 				draw_sprite_ui_uniform(THEME.cursor_path_remove, 0, _mx + 16, _my + 16);
 				
 				if(mouse_press(mb_left, active)) {
+					recordAction(ACTION_TYPE.var_modify,  self, [ array_clone(input_display_list), "input_display_list" ]);
+					recordAction(ACTION_TYPE.list_delete, inputs, [ inputs[| input_fix_len + anchor_hover], input_fix_len + anchor_hover, "remove path anchor point" ]);
+		
 					ds_list_delete(inputs, input_fix_len + anchor_hover);
 					array_remove(input_display_list, input_fix_len + anchor_hover);
 					doUpdate();

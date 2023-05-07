@@ -63,7 +63,7 @@ function __loadSteamUGC(file_id, item_map) {
 	}
 }
 
-function __loadSteamUGCCollection(file_id, f, path) {
+function __loadSteamUGCCollection(file_id, f, path) { 
 	var name = string_replace(filename_name(f), ".pxcc", "");
 	var file = new FileObject(name, path + "/" + f);
 	var icon_path = string_replace(path + "/" + f, ".pxcc", ".png");
@@ -83,7 +83,7 @@ function __loadSteamUGCCollection(file_id, f, path) {
 	meta.file_id = file_id;
 }
 
-function __loadSteamUGCProject(file_id, f, path) {
+function __loadSteamUGCProject(file_id, f, path) { 
 	var name = string_replace(filename_name(f), ".pxc", "");
 	var file = new FileObject(name, path + "/" + f);
 	var icon_path = path + "/thumbnail.png";

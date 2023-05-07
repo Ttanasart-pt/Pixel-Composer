@@ -11,8 +11,8 @@
   "managed": true,
   "overriddenProperties": [],
   "parent": {
-    "name": "addons",
-    "path": "folders/addons.yy",
+    "name": "custom",
+    "path": "folders/addons/custom.yy",
   },
   "parentObjectId": {
     "name": "addon",

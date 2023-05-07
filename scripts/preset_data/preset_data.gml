@@ -11,14 +11,14 @@
 		var _l = root + "/version";
 		var _preset_path = "data/Preset.zip";
 		if(file_exists(_preset_path)) {
-			//if(file_exists(_l)) {
-			//	var res = json_load_struct(_l);
-			//	if(!is_struct(res) || !struct_has(res, "version") || res.version != VERSION) 
-			//		zip_unzip(_preset_path, root);
-			//} else 
+			if(file_exists(_l)) {
+				var res = json_load_struct(_l);
+				if(!is_struct(res) || !struct_has(res, "version") || res.version != BUILD_NUMBER) 
+					zip_unzip(_preset_path, root);
+			} else 
 				zip_unzip(_preset_path, root);
 		}
-		json_save_struct(_l, { version: VERSION });
+		json_save_struct(_l, { version: BUILD_NUMBER });
 	
 		global.PRESETS = new DirectoryObject("Presets", root);
 		global.PRESETS.scan([".json"]);

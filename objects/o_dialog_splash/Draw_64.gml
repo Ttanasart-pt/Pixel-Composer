@@ -74,8 +74,10 @@ if !ready exit;
 	bx = x0;
 	
 	for( var i = 0; i < array_length(pages); i++ ) {
-		draw_set_text(f_p0, fa_left, fa_bottom, COLORS._main_text_sub);
-		var tw = string_width(pages[i]) + ui(16);
+		draw_set_text(f_p0, fa_left, fa_bottom, project_page == i? COLORS._main_text : COLORS._main_text_sub);
+		var list = i == 1? STEAM_PROJECTS : SAMPLE_PROJECTS;
+		var amo  = ds_list_size(list);
+		var tw   = ui(16) + string_width(pages[i]) + ui(8) + string_width(amo) + ui(8);
 		
 		if(project_page == i) 
 			draw_sprite_stretched(THEME.ui_panel_bg, 0, bx, y0 - ui(32), tw, ui(40));
@@ -86,7 +88,15 @@ if !ready exit;
 				project_page = i;
 		}
 			
-		draw_text(bx + ui(8), y0 - ui(4), pages[i]);
+		var _btx = bx + ui(8);
+		draw_text(_btx, y0 - ui(4), pages[i]);
+		
+		_btx += ui(8) + string_width(pages[i]);
+		draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, _btx, y0 - ui(26), string_width(amo) + ui(8), ui(24), COLORS._main_icon, 0.5);
+		
+		_btx += ui(4);
+		draw_set_color(COLORS._main_text_sub);
+		draw_text(_btx, y0 - ui(4), amo);
 		
 		bx += tw;
 	}

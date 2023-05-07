@@ -11,9 +11,20 @@ function addonContextGenerator(_addon, _function) constructor {
 			if(_item == -1) 
 				array_push(arr, -1);
 			else {
-				var _addonItem = new addonContextItem(_addon, _item.name, _item.callback);
-				array_push(arr, _addonItem.menu_item);
-			}
+				if(struct_has(_item, "callback")) {
+					var _addonItem = new addonContextItem(_addon, _item.name, _item.callback);
+					array_push(arr, _addonItem.menu_item);
+				} else if(struct_has(_item, "content")) {
+					var _subArr = []
+					for( var j = 0; j < array_length(_item.content); j++ ) {
+						var _addonItem = new addonContextItem(_addon, _item.content[j].name, _item.content[j].callback);
+						array_push(_subArr, _addonItem.menu_item);
+					}
+					
+					var _addonItem = new addonContextSubMenu(_item.name, _subArr);
+					array_push(arr, _addonItem.menu_item);
+				}
+			}			
 		}
 		
 		return arr;
@@ -25,11 +36,22 @@ function addonContextItem(_addon, _name, _function) constructor {
 	self._name  = _name;
 	self._function = _function;
 	
-	menu_item = menuItem(_name, function() { lua_call(_addon.thread, self._function); })
-		.setColor(COLORS._main_accent);
+	menu_item = menuItem(_name, function(_data) { 
+		lua_call(_addon.thread, self._function, lua_byref(_data.context, true)); 
+	}).setColor(COLORS._main_accent);
 }
 
-function addonTrigger(_addon) {
+function addonContextSubMenu(_name, _content) constructor {
+	self.name = _name;
+	self.content = _content;
+	
+	menu_item = menuItem(name, function(_dat) { 
+		return submenuCall(_dat, content);
+	}).setColor(COLORS._main_accent)
+	  .setIsShelf();
+}
+
+function addonTrigger(_addon, _openDialog = true) {
 	var _name = filename_name_only(_addon);
 	with(_addon_custom) {
 		if(name != _name) 
@@ -40,8 +62,10 @@ function addonTrigger(_addon) {
 	}
 	
 	var addonPath = DIRECTORY + "Addons\\" + _name;
+	if(!directory_exists(addonPath)) return;
+	
 	with(instance_create(0, 0, _addon_custom))
-		init(addonPath);
+		init(addonPath, _openDialog);
 }
 
 function addonActivated(_addon) {

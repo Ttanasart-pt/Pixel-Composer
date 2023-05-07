@@ -18,12 +18,18 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 		
 		if(linked) {
 			var modi = false;
-			for( var i = 0; i < size; i++ )
-				modi |= onModify(i, v); 
+			for( var i = 0; i < size; i++ ) {
+				tb[i]._input_text = v;
+				
+				if(is_callable(onModify))
+					modi |= onModify(i, v); 
+			}
 			return modi;
 		}
 		
-		return onModify(index, v); 
+		if(is_callable(onModify))
+			return onModify(index, v); 
+		return noone;
 	}
 	
 	axis = [ "x", "y", "z", "w" ];
@@ -121,7 +127,7 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 	static apply = function() {
 		for( var i = 0; i < size; i++ ) {
 			tb[i].apply();
-			current_value[i] = tb[i]._input_text;
+			current_value[i] = toNumber(tb[i]._input_text);
 		}
 	}
 }

@@ -3,21 +3,22 @@ function steam_ugc_create_project() {
 	
 	var file = new FileObject(string_replace(filename_name(CURRENT_PATH), filename_ext(CURRENT_PATH), ""), CURRENT_PATH);
 	file.getMetadata();
-	file.spr_path = "steamUGC/thumbnail.png";
+	file.spr_path = DIRECTORY + "steamUGC/thumbnail.png";
 	
 	STEAM_UGC_UPDATE = false;
 	STEAM_UGC_ITEM_UPLOADING = true;
 	STEAM_UGC_ITEM_FILE = file;
 	STEAM_UGC_TYPE = STEAM_UGC_FILE_TYPE.project;
 	
-	directory_destroy("steamUGC");
-	directory_create("steamUGC");
-	file_copy(file.path, "steamUGC/" + filename_name(file.path));
+	directory_destroy(DIRECTORY + "steamUGC");
+	directory_create(DIRECTORY + "steamUGC");
+	file_copy(file.path, DIRECTORY + "steamUGC/" + filename_name(file.path));
 	
 	steam_ugc_project_generate();
-	file_copy("steamUGCthumbnail.png", "steamUGC/thumbnail.png");
+	var preview_surface = PANEL_PREVIEW.getNodePreviewSurface();
+	surface_save_safe(preview_surface, DIRECTORY + "steamUGC/thumbnail.png");
 	
-	print(filename_dir("steamUGCthumbnail.png"))
+	print(filename_dir(DIRECTORY + "steamUGCthumbnail.png"))
 	
 	STEAM_UGC_ITEM_ID = steam_ugc_create_item(STEAM_APP_ID, ugc_filetype_community);
 }
@@ -27,17 +28,17 @@ function steam_ugc_update_project(update_preview = false) {
 	
 	var file = new FileObject(string_replace(filename_name(CURRENT_PATH), filename_ext(CURRENT_PATH), ""), CURRENT_PATH);
 	file.getMetadata();
-	file.spr_path = "steamUGC/thumbnail.png";
+	file.spr_path = DIRECTORY + "steamUGC/thumbnail.png";
 	
 	STEAM_UGC_UPDATE = true;
 	STEAM_UGC_ITEM_UPLOADING = true;
 	STEAM_UGC_ITEM_FILE = file;
 	STEAM_UGC_TYPE = STEAM_UGC_FILE_TYPE.project;
 	
-	directory_destroy("steamUGC");
-	directory_create("steamUGC");
-	file_copy(file.path, "steamUGC/" + filename_name(file.path));
-	file_copy(file.spr_path[0], "steamUGC/thumbnail.png");
+	directory_destroy(DIRECTORY + "steamUGC");
+	directory_create(DIRECTORY + "steamUGC");
+	file_copy(file.path, DIRECTORY + "steamUGC/" + filename_name(file.path));
+	file_copy(file.spr_path[0], DIRECTORY + "steamUGC/thumbnail.png");
 	
 	STEAM_UGC_PUBLISH_ID = file.meta.file_id;
 	STEAM_UGC_UPDATE_HANDLE = steam_ugc_start_item_update(STEAM_APP_ID, STEAM_UGC_PUBLISH_ID);
@@ -47,12 +48,12 @@ function steam_ugc_update_project(update_preview = false) {
 	
 	array_insert(STEAM_UGC_ITEM_FILE.meta.tags, 0, "Project");
 	steam_ugc_set_item_tags(STEAM_UGC_UPDATE_HANDLE, STEAM_UGC_ITEM_FILE.meta.tags);
-	steam_ugc_set_item_content(STEAM_UGC_UPDATE_HANDLE, "steamUGC");
+	steam_ugc_set_item_content(STEAM_UGC_UPDATE_HANDLE, DIRECTORY + "steamUGC");
 	
 	STEAM_UGC_SUBMIT_ID = steam_ugc_submit_item_update(STEAM_UGC_UPDATE_HANDLE, "Updated");
 }
 
-function steam_ugc_project_generate(dest_path = "steamUGCthumbnail.png") {
+function steam_ugc_project_generate(dest_path = DIRECTORY + "steamUGCthumbnail.png") {
 	file_delete(dest_path);
 	
 	var preview_surface = PANEL_PREVIEW.getNodePreviewSurface();

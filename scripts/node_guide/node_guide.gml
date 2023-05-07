@@ -75,9 +75,9 @@ function __initNodeData() {
 	
 	if(file_exists(_l)) {
 		var res = json_load_struct(_l);
-		if(res.version == VERSION) return;
+		if(res.version == BUILD_NUMBER) return;
 	}
-	json_save_struct(_l, { version: VERSION });
+	json_save_struct(_l, { version: BUILD_NUMBER });
 	
 	if(file_exists("data/tooltip.zip"))
 		zip_unzip("data/tooltip.zip", nodeDir);

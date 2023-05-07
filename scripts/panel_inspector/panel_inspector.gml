@@ -13,7 +13,7 @@ function Panel_Inspector() : PanelContent() constructor {
 	
 	locked		= false;
 	inspecting	= noone;
-	top_bar_h	= ui(96);
+	top_bar_h	= ui(100);
 	
 	prop_hover		= noone;
 	prop_selecting  = noone;
@@ -544,7 +544,7 @@ function Panel_Inspector() : PanelContent() constructor {
 		
 		draw_set_text(f_p3, fa_center, fa_center, COLORS._main_text_sub);
 		draw_set_alpha(0.65);
-		draw_text(w / 2, ui(74), inspecting.internalName);
+		draw_text(w / 2, ui(76), inspecting.internalName);
 		draw_set_alpha(1);
 		
 		var lx = w / 2 - string_width(inspecting.name) / 2 - ui(16);
@@ -615,12 +615,16 @@ function Panel_Inspector() : PanelContent() constructor {
 				if(CURRENT_PATH == "") {
 					buttonInstant(noone, bx, by, ui(32), ui(32), [mx, my], pFOCUS, pHOVER, get_text("panel_inspector_workshop_save", "Save file before upload"), THEME.workshop_upload, 0, COLORS._main_icon, 0.5);
 				} else {
-					if(!METADATA.steam) {
+					if(!METADATA.steam) { //project made locally
 						if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), [mx, my], pFOCUS, pHOVER, get_text("panel_inspector_workshop_upload", "Upload to Steam Workshop"), THEME.workshop_upload, 0, COLORS._main_icon) == 2) {
-							METADATA.author_steam_id = STEAM_USER_ID;
-							SAVE();
-							steam_ugc_create_project();
-							workshop_uploading = true;
+							var s = PANEL_PREVIEW.getNodePreviewSurface();
+							if(is_surface(s)) {
+								METADATA.author_steam_id = STEAM_USER_ID;
+								SAVE();
+								steam_ugc_create_project();
+								workshop_uploading = true;
+							} else 
+								noti_warning("Please send any node to preview panel to use as a thumbnail.")
 						}
 					}
 				

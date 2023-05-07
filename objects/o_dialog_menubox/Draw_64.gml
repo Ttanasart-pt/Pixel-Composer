@@ -45,6 +45,7 @@ if(!ready) exit;
 			
 			if(instanceof(_menuItem) == "MenuItem" && sFOCUS && (mouse_release(mb_left) || keyboard_check_released(vk_enter))) {
 				var _dat = {
+					_x: dialog_x,
 					x: dialog_x + dialog_w,
 					y: yy,
 					depth: depth,

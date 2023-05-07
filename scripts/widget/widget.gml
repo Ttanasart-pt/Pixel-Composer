@@ -6,10 +6,19 @@ function widget() constructor {
 	parent = noone;
 	interactable = true;
 	
+	lua_thread = noone;
+	lua_thread_key = "";
+	
 	x = 0; 
 	y = 0;
 	w = 0; 
 	h = 0;
+	
+	static setLua = function(_lua_thread, _lua_key, _lua_func) { 
+		lua_thread = _lua_thread;
+		lua_thread_key = _lua_key;
+		onModify = method(self, _lua_func);
+	}
 	
 	static setInteract = function(interactable = noone) { 
 		self.interactable = interactable;

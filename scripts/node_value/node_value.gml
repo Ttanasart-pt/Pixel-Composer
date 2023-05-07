@@ -341,6 +341,8 @@ function nodeValue(_name, _node, _connect, _type, _value, _tooltip = "") {
 
 function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constructor {
 	name  = _name;
+	internalName = string_replace_all(name, " ", "_");
+	
 	node  = _node;
 	x	  = node.x;
 	y     = node.y;
@@ -348,8 +350,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	type  = _type;
 	
 	if(struct_has(node, "inputMap")) {
-		if(_connect == JUNCTION_CONNECT.input)       node.inputMap[?  string_replace_all(name, " ", "_")] = self;
-		else if(_connect == JUNCTION_CONNECT.output) node.outputMap[? string_replace_all(name, " ", "_")] = self;
+		if(_connect == JUNCTION_CONNECT.input)       node.inputMap[?  internalName] = self;
+		else if(_connect == JUNCTION_CONNECT.output) node.outputMap[? internalName] = self;
 	}
 	
 	tooltip    = _tooltip;
@@ -1191,7 +1193,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(updated) {
 			if(connect_type == JUNCTION_CONNECT.input) {
 				node.triggerRender();
-				if(_update) node.valueUpdate(index);
+				if(_update) node.valueUpdate(self.index);
 				node.clearCacheForward();
 				
 				UPDATE |= RENDER_TYPE.partial;

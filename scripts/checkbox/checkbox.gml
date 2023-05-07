@@ -3,8 +3,15 @@ function checkBox(_onClick) : widget() constructor {
 	spr = THEME.checkbox;
 	triggered = false;
 	
+	static setLua = function(_lua_thread, _lua_key, _lua_func) { 
+		lua_thread = _lua_thread;
+		lua_thread_key = _lua_key;
+		onClick = method(self, _lua_func);
+	}
+	
 	static trigger = function() { 
-		if(!onClick) return;
+		if(!is_callable(onClick))
+			return noone;
 		triggered = true;
 		onClick();
 	}

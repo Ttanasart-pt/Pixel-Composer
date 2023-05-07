@@ -24,6 +24,11 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	name = "";
 	display_name = "";
 	internalName = "";
+	run_in(1, function() { 
+		internalName = string_replace_all(name, " ", "_") + string(irandom_range(10000, 99999)); 
+		NODE_NAME_MAP[? internalName] = self;
+	});
+	
 	tooltip = "";
 	x = _x;
 	y = _y;
