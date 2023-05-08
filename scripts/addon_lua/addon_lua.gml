@@ -643,6 +643,13 @@
 		[ "matrix_stack_push", matrix_stack_push ],
 		[ "matrix_stack_pop", matrix_stack_pop ],
 		[ "matrix_stack_top", matrix_stack_top ],
+		
+		[ "point_in_rectangle", point_in_rectangle ],
+		[ "point_in_triangle", point_in_triangle ],
+		[ "point_in_circle", point_in_circle ],
+		[ "rectangle_in_rectangle", rectangle_in_rectangle ],
+		[ "rectangle_in_triangle", rectangle_in_triangle ],
+		[ "rectangle_in_circle", rectangle_in_circle ],
 
 		//file
 		[ "file_exists", file_exists ],
@@ -828,7 +835,17 @@
 			return node.outputMap[? input].getValue();
 		}],
 		
-		[ "element_get", function() { return HOVERING_ELEMENT; }],
+		[ "element_get", function() {
+			if(HOVERING_ELEMENT == noone) 
+				return undefined;
+			
+			var ele = HOVERING_ELEMENT;
+			for( var i = 0; i < argument_count; i++ ) {
+				if(!struct_has(ele, argument[i])) return undefined;
+				ele = ele[$ argument[i]];
+			}
+			return ele;
+		}],
 		
 		[ "__panel_create", function(ID, panel = "") { 
 			var _addon = noone;

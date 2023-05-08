@@ -5,7 +5,7 @@ function mac_window_step() {
 	var _my = mouse_raw_y;
 	
 	if(__win_is_dragging) {
-		if(__win_is_dragging == WINDOW_DRAG_MODE.move)
+		if(__win_is_dragging == WINDOW_DRAG_MODE._move)
 			window_set_position(__win_drag_sx + (_mx - __win_drag_mx), __win_drag_sy + (_my - __win_drag_my));
 		else {
 			if((__win_is_dragging & WINDOW_DRAG_MODE.resize_n) != 0) {
@@ -30,7 +30,7 @@ function mac_window_step() {
 			
 		if(point_in_rectangle(mouse_mx, mouse_my, 6, 6, WIN_W - 6, ui(40))) {
 			if(mouse_press(mb_left)) {
-				__win_is_dragging = WINDOW_DRAG_MODE.move;
+				__win_is_dragging = WINDOW_DRAG_MODE._move;
 				__win_drag_mx = mouse_raw_x;
 				__win_drag_my = mouse_raw_y;
 				__win_drag_sx = window_get_x();

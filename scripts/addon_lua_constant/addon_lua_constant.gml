@@ -144,6 +144,7 @@ function __addon_lua_setup_constants(lua, context) {
 function __addon_lua_panel_variable(lua, panel) {
 	lua_add_code(lua, 
 		"Panel.mouse = {" + string(panel.mx) + ", " + string(panel.my) + "}\n" + 
+		"Panel.mouseUI = {" + string(mouse_mx) + ", " + string(mouse_my) + "}\n" + 
 		"Panel.x  = " + string(panel.x ) + "\n" + 
 		"Panel.y  = " + string(panel.y ) + "\n" + 
 		"Panel.w  = " + string(panel.w ) + "\n" + 

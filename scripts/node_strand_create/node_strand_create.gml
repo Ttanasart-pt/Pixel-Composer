@@ -240,7 +240,7 @@ function Node_Strand_Create(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			var rad  = tool_dragging.attribute.radius;
 			var fall = tool_dragging.attribute.fall;
 			var stn  = tool_dragging.attribute.strength;
-			stn = tool_dragging == tool_stretch? stn / room_speed : stn / 10;
+			stn = tool_dragging == tool_stretch? stn / game_get_speed(gamespeed_fps) : stn / 10;
 			
 			for( var i = 0; i < array_length(groomed.hairs); i++ ) {
 				var h = groomed.hairs[i];

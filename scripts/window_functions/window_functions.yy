@@ -5,7 +5,7 @@
   "isCompatibility": false,
   "isDnD": false,
   "parent": {
-    "name": "functions",
-    "path": "folders/functions.yy",
+    "name": "window",
+    "path": "folders/functions/window.yy",
   },
 }

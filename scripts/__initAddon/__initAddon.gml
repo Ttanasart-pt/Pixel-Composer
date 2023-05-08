@@ -1,3 +1,15 @@
+function __addonDefault(root) {
+	var _l = root + "/version";
+	if(file_exists(_l)) {
+		var res = json_load_struct(_l);
+		if(res.version == BUILD_NUMBER) return;
+	}
+	json_save_struct(_l, { version: BUILD_NUMBER });
+	
+	log_message("THEME", "unzipping default addon to DIRECTORY.");
+	zip_unzip("data/Addons.zip", root);
+}
+
 function __initAddon() { 
 	var dirPath = DIRECTORY + "Addons";
 	globalvar ADDONS, ADDONS_ON_START;
@@ -8,6 +20,8 @@ function __initAddon() {
 		directory_create(dirPath);
 		return;
 	}
+	
+	__addonDefault(dirPath);
 	
 	var f = file_find_first(dirPath + "\\*", fa_directory);
 	var _f = "";

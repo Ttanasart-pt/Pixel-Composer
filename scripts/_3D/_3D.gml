@@ -82,9 +82,9 @@ enum CAMERA_PROJ {
 			return ind;
 		}
 		
-		static addFace = function(v1, n1 = [0, 0, 0], t1 = [0, 0], 
-								  v2, n2 = [0, 0, 0], t2 = [0, 0], 
-								  v3, n3 = [0, 0, 0], t3 = [0, 0], _merge = false) {
+		static addFace = function(v1 = [0, 0, 0], n1 = [0, 0, 0], t1 = [0, 0], 
+								  v2 = [0, 0, 0], n2 = [0, 0, 0], t2 = [0, 0], 
+								  v3 = [0, 0, 0], n3 = [0, 0, 0], t3 = [0, 0], _merge = false) {
 			var pi0 = addPosition(v1, _merge);
 			var pi1 = addPosition(v2, _merge);
 			var pi2 = addPosition(v3, _merge);

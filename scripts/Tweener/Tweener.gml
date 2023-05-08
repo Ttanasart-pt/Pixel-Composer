@@ -27,7 +27,8 @@ function Tween(value, valType = TWEEN_VALUE.number, twType = TWEEN_TYPE.log, twS
 		
 		realVal = value; 
 	} 
-	static get = function(value) { 
+	
+	static get = function() { 
 		if(valType == TWEEN_VALUE.color)
 			return colTrans == 1? realVal : merge_color(showVal, realVal, colTrans); 
 		else 

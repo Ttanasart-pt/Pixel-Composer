@@ -182,8 +182,8 @@ function Node_Lua_Surface(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		_outSurf = surface_verify(_outSurf, _dimm[0], _dimm[1], attrDepth());
 		
 		surface_set_target(_outSurf);
-			try      lua_call_w(getState(), _func, argument_val);
-			catch(e) noti_warning(exception_print(e),, self);
+			try      { lua_call_w(getState(), _func, argument_val); }
+			catch(e) { noti_warning(exception_print(e),, self); }
 		surface_reset_target();
 		
 		outputs[| 1].setValue(_outSurf);

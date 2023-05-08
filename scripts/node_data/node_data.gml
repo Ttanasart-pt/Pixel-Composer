@@ -1030,6 +1030,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	static cacheCurrentFrame = function(_frame) {
 		cacheArrayCheck();
 		if(ANIMATOR.current_frame < 0) return;
+		if(ANIMATOR.current_frame >= array_length(cached_output)) return;
 		
 		surface_array_free(cached_output[ANIMATOR.current_frame]);
 		cached_output[ANIMATOR.current_frame] = surface_array_clone(_frame);

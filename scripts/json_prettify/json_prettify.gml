@@ -8,20 +8,17 @@ global.g_json_beautify_rb = buffer_create(1024, buffer_grow, 1);
 ");
 
 function buffer_write_slice(buffer, data_buffer, data_start, data_end) {
-	var start = argument2;
-	var next  = argument3 - start;
+	var next  = data_end - data_start;
 	if (next <= 0) exit;
-	var buf  = argument0;
-	var data = argument1;
-	var size = buffer_get_size(buf);
-	var pos  = buffer_tell(buf);
+	var size = buffer_get_size(buffer);
+	var pos  = buffer_tell(buffer);
 	var need = pos + next;
 	if (size < need) {
 	    do size *= 2 until (size >= need);
-	    buffer_resize(buf, size);
+	    buffer_resize(buffer, size);
 	}
-	buffer_copy(data, start, next, buf, pos);
-	buffer_seek(buf, buffer_seek_relative, next);
+	buffer_copy(data_buffer, data_start, next, buffer, pos);
+	buffer_seek(buffer, buffer_seek_relative, next);
 }
 	
 function json_beautify(src) {

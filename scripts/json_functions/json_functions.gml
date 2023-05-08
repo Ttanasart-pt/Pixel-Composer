@@ -1,8 +1,9 @@
 function json_try_parse(text, def = noone) {
-	try
+	try {
 		return json_parse(text);
-	catch(e)
+	} catch(e) {
 		return def;
+	}
 	
 	return def;
 }

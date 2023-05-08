@@ -27,9 +27,9 @@ if(OS == os_windows && gameframe_is_minimized()) {
 	if(PANEL_MAIN == 0) resetPanel();
 	
 	var surf = surface_get_target();
-	try
+	try {
 		PANEL_MAIN.draw();
-	catch(e) { 
+	} catch(e) { 
 		while(surface_get_target() != surf)
 			surface_reset_target();
 		

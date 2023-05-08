@@ -6,9 +6,9 @@ function __initTheme() {
 	var _l = root + "/version";
 	if(file_exists(_l)) {
 		var res = json_load_struct(_l);
-		if(res.version == BUILD_NUMBER) return;
+		//if(res.version == BUILD_NUMBER) return;
 	}
-	//json_save_struct(_l, { version: BUILD_NUMBER });
+	json_save_struct(_l, { version: BUILD_NUMBER });
 	
 	log_message("THEME", "unzipping default theme to DIRECTORY.");
 	zip_unzip("data/themes/default.zip", root);

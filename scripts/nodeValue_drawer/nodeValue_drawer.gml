@@ -7,7 +7,7 @@ function drawWidgetInit() {
 	lineBreak = true;
 }
 
-function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover, _focus, _scrollPane, rx, ry) {
+function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _focus = false, _scrollPane = noone, rx = 0, ry = 0) {
 	var con_w	= ww - ui(4);
 	var xc		= xx + ww / 2;
 		

@@ -130,8 +130,9 @@ function Render(partial = false, runAction = false) {
 			LOG_IF(global.RENDER_LOG, "Rendered " + rendering.name + " (" + rendering.display_name + ") [" + string(instanceof(rendering)) + "]" + (renderable? " [Update]" : " [Skip]"));
 			LOG_BLOCK_END();
 		}
-	} catch(e)
+	} catch(e) {
 		noti_warning(exception_print(e));
+	}
 	
 	LOG_IF(global.RENDER_LOG, "=== RENDER COMPLETE IN {" + string(current_time - t) + "ms} ===\n");
 	LOG_END();
@@ -191,8 +192,9 @@ function RenderList(list) {
 				ds_queue_enqueue(queue, nextNodes[i]);
 		}
 	
-	} catch(e)
+	} catch(e) {
 		noti_warning(exception_print(e));
+	}
 		
 	LOG_IF(log, "=== RENDER COMPLETE ===\n");
 	LOG_END();
@@ -251,6 +253,7 @@ function RenderListAction(list, context = PANEL_GRAPH.getCurrentContext()) {
 		}
 	
 		printIf(global.RENDER_LOG, "=== RENDER COMPLETE IN {" + string(current_time - t) + "ms} ===\n");
-	} catch(e)
-		noti_warning(exception_print(e));
+	} catch(e) {
+		noti_waning(exception_print(e));
+	}
 }

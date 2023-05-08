@@ -1,5 +1,5 @@
 enum WINDOW_DRAG_MODE {
-	move     = 1 << 0,
+	_move    = 1 << 0,
 	resize_n = 1 << 1,
 	resize_e = 1 << 2,
 	resize_s = 1 << 3,

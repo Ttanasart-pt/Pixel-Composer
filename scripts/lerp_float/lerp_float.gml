@@ -10,7 +10,7 @@ function lerp_float(from, to, speed) {
     if(abs(from - to) < pre)
         return to;
     else
-        return from + (to - from) * (1 - power(1 - 1 / speed, delta_time / 1000000 * room_speed));
+        return from + (to - from) * (1 - power(1 - 1 / speed, delta_time / 1000000 * game_get_speed(gamespeed_fps)));
 }
 
 function lerp_linear(from, to, speed) {
@@ -27,7 +27,7 @@ function lerp_angle_direct(from, to, speed) {
 
 function lerp_angle(from, to, speed) {
 	if(fps < 15) return to;
-	return from + angle_difference(to, from) * (1 - power(1 - 1 / speed, delta_time / 1000000 * room_speed));
+	return from + angle_difference(to, from) * (1 - power(1 - 1 / speed, delta_time / 1000000 * game_get_speed(gamespeed_fps)));
 }
 
 function lerp_angle_linear(from, to, speed) {

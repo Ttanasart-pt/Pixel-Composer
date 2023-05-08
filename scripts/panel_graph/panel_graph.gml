@@ -575,6 +575,23 @@ function Panel_Graph() : PanelContent() constructor {
 					
 					if(ds_list_size(nodes_select_list) >= 2) {
 						array_push(menu, -1);
+						array_push(menu, 
+							menuItem(get_text("panel_graph_align_nodes", "Align nodes"), function(_dat) { 
+								return submenuCall(_dat, [
+									menuItemGroup(get_text("horizontal", "Horizontal"), [ 
+										[ [THEME.inspector_surface_halign, 0], function() { node_halign(nodes_select_list, fa_left); } ],
+										[ [THEME.inspector_surface_halign, 1], function() { node_halign(nodes_select_list, fa_center); } ],
+										[ [THEME.inspector_surface_halign, 2], function() { node_halign(nodes_select_list, fa_right); } ],
+										[ [THEME.obj_distribute_h, 0],		   function() { node_hdistribute(nodes_select_list); } ],
+									]),
+									menuItemGroup(get_text("vertical", "Vertical"), [ 
+										[ [THEME.inspector_surface_valign, 0], function() { node_valign(nodes_select_list, fa_top); } ],
+										[ [THEME.inspector_surface_valign, 1], function() { node_valign(nodes_select_list, fa_middle); } ],
+										[ [THEME.inspector_surface_valign, 2], function() { node_valign(nodes_select_list, fa_bottom); } ],
+										[ [THEME.obj_distribute_v, 0],		   function() { node_vdistribute(nodes_select_list); } ],
+									]),
+								]);
+							}).setIsShelf());
 						array_push(menu,  
 							menuItem(get_text("panel_graph_blend_nodes", "Blend nodes"), function() { 
 								doBlend();
