@@ -11,6 +11,7 @@
 				array_append(menu, callbacks[i].populate());
 		}
 		
+		dia.menu_id = menu_id;
 		dia.context = context;
 		dia.setMenu(menu, align);
 		return dia;

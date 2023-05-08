@@ -5,7 +5,7 @@
   "isCompatibility": false,
   "isDnD": false,
   "parent": {
-    "name": "menu",
-    "path": "folders/panels/menu.yy",
+    "name": "_others",
+    "path": "folders/panels/_others.yy",
   },
 }

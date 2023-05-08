@@ -190,6 +190,7 @@ function Panel_Menu() : PanelContent() constructor {
 			
 			menuItem(get_text("panel_menu_nodes", "Nodes"), function(_dat) { 
 				return submenuCall(_dat, [
+					menuItem(get_text("panel_menu_node_align", "Align nodes"),		function() { panelAdd("Panel_Node_Align", true) },,,	function() { return findPanel("Panel_Node_Align") != noone; } ),
 					menuItem(get_text("panel_menu_nodes", "Nodes"),					function() { panelAdd("Panel_Nodes", true) },,,			function() { return findPanel("Panel_Nodes") != noone; } ),
 					menuItem(get_text("tunnels", "Tunnels"),						function() { panelAdd("Panel_Tunnels", true) },,,		function() { return findPanel("Panel_Tunnels") != noone; } ),
 				]);
@@ -208,6 +209,11 @@ function Panel_Menu() : PanelContent() constructor {
 	
 	if(TESTING) {
 		array_push(menus, [ get_text("panel_menu_test", "Test"), [
+			menuItem(get_text("panel_menu_toggle_terminal", "Debug console"), function() { 
+				panelAdd("Panel_Console", true)
+			}),
+			-1, 
+			
 			menuItem(get_text("panel_menu_test_load_all", "Load all current collections"), function() { 
 				__test_load_current_collections();
 			}),

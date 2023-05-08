@@ -37,7 +37,7 @@ if(OS == os_windows && gameframe_is_minimized()) exit;
 	if(SHIFT == KEYBOARD_STATUS.pressing)	HOTKEY_MOD |= MOD_KEY.shift;
 	if(ALT   == KEYBOARD_STATUS.pressing)	HOTKEY_MOD |= MOD_KEY.alt;
 	
-	if(!instance_exists(o_dialog_preference)) {
+	if(!instance_exists(o_dialog_preference) && !HOTKEY_BLOCK) {
 		if(ds_map_exists(HOTKEYS, "")) {
 			var l = HOTKEYS[? ""];
 			for(var i = 0; i < ds_list_size(l); i++) {
@@ -64,6 +64,8 @@ if(OS == os_windows && gameframe_is_minimized()) exit;
 			}
 		}
 	}
+	
+	HOTKEY_BLOCK = false;
 #endregion
 
 #region coroutine

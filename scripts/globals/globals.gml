@@ -172,3 +172,7 @@
 #region PATCH	
 	#macro PATCH_STATIC static _doUpdate = function() { doUpdate() };
 #endregion
+
+#region debug
+	global.DEBUG_FLAG = {};
+#endregion

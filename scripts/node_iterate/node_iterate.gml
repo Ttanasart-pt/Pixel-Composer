@@ -39,7 +39,7 @@ function Node_Iterate(_x, _y, _group = noone) : Node_Collection(_x, _y, _group) 
 				n.initLoop();
 		}
 		
-		LOG_LINE_IF(global.RENDER_LOG, "Loop begin");
+		LOG_LINE_IF(global.DEBUG_FLAG.render, "Loop begin");
 	}
 	
 	static getNextNodes = function() {
@@ -73,13 +73,13 @@ function Node_Iterate(_x, _y, _group = noone) : Node_Collection(_x, _y, _group) 
 		iterated++;
 		
 		LOG_BLOCK_START();
-		LOG_IF(global.RENDER_LOG, "Iteration update: " + string(iterated) + "/" + string(maxIter));
+		LOG_IF(global.DEBUG_FLAG.render, "Iteration update: " + string(iterated) + "/" + string(maxIter));
 		
 		if(iterated >= maxIter) {
-			LOG_IF(global.RENDER_LOG, "Iteration complete");
+			LOG_IF(global.DEBUG_FLAG.render, "Iteration complete");
 			render_time = get_timer() - loop_start_time;
 		} else {
-			LOG_IF(global.RENDER_LOG, "Iteration not completed, reset render status.");
+			LOG_IF(global.DEBUG_FLAG.render, "Iteration not completed, reset render status.");
 			resetRender();
 		}
 		

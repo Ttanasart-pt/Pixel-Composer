@@ -24,7 +24,7 @@ function Panel_Workspace() : PanelContent() constructor {
 	function onFocusBegin() { refreshContent(); }
 	
 	function drawContent(panel) {
-		draw_clear(COLORS.panel_bg_clear);
+		draw_clear_alpha(COLORS.panel_bg_clear, 0);
 		
 		var _hori = hori;
 		hori = w > h;

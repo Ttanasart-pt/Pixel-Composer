@@ -151,3 +151,13 @@ if(!ready) exit;
 	
 	draw_sprite_stretched(THEME.textbox, 1, dialog_x, dialog_y, dialog_w, dialog_h);
 #endregion
+
+#region debug
+	if(global.DEBUG_FLAG[$ "context_menu_id"]) {
+		draw_set_color(c_white);
+		draw_rectangle_border(dialog_x, dialog_y, dialog_x + dialog_w, dialog_y + dialog_h, 2);
+		
+		draw_set_text(f_p0, fa_left, fa_bottom);
+		draw_text(dialog_x, dialog_y - ui(2), menu_id);
+	}
+#endregion

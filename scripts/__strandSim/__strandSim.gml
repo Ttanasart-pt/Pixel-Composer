@@ -398,7 +398,7 @@ function StrandMesh() constructor {
 			hairs[i].draw(_x, _y, _s, drawAngle, baked);
 	}
 	
-	static store = function(_x, _y, _s, drawAngle = false, baked = false) {
+	static store = function() {
 		for( var i = 0; i < array_length(hairs); i++ )
 			hairs[i].store();
 	}

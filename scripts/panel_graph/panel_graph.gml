@@ -582,12 +582,14 @@ function Panel_Graph() : PanelContent() constructor {
 										[ [THEME.inspector_surface_halign, 0], function() { node_halign(nodes_select_list, fa_left); } ],
 										[ [THEME.inspector_surface_halign, 1], function() { node_halign(nodes_select_list, fa_center); } ],
 										[ [THEME.inspector_surface_halign, 2], function() { node_halign(nodes_select_list, fa_right); } ],
-										[ [THEME.obj_distribute_h, 0],		   function() { node_hdistribute(nodes_select_list); } ],
 									]),
 									menuItemGroup(get_text("vertical", "Vertical"), [ 
 										[ [THEME.inspector_surface_valign, 0], function() { node_valign(nodes_select_list, fa_top); } ],
 										[ [THEME.inspector_surface_valign, 1], function() { node_valign(nodes_select_list, fa_middle); } ],
 										[ [THEME.inspector_surface_valign, 2], function() { node_valign(nodes_select_list, fa_bottom); } ],
+									]),
+									menuItemGroup(get_text("distribute", "Distribute"), [ 
+										[ [THEME.obj_distribute_h, 0],		   function() { node_hdistribute(nodes_select_list); } ],
 										[ [THEME.obj_distribute_v, 0],		   function() { node_vdistribute(nodes_select_list); } ],
 									]),
 								]);

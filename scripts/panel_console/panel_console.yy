@@ -1,7 +1,7 @@
 {
   "resourceType": "GMScript",
   "resourceVersion": "1.0",
-  "name": "panel_history",
+  "name": "panel_console",
   "isCompatibility": false,
   "isDnD": false,
   "parent": {

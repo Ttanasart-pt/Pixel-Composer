@@ -45,7 +45,7 @@ enum _BIN_TYPE {
 //Subtract       = 17
 //Divide         = 18
 
-global.ASE_LOG = true;
+global.DEBUG_FLAG.ase_import = false;
 
 globalvar __ase_format_header;
 __ase_format_header = [
@@ -343,17 +343,17 @@ function read_format_array(bin, formatArr, outMap) {
 			continue;
 		var pos = file_bin_position(bin);
 		var val = read_format(bin, formatArr[i], outMap);
-		//printIf(global.ASE_LOG, "Pos " + dec_to_hex(pos) + " - " + dec_to_hex(file_bin_position(bin)));
+		//printIf(global.DEBUG_FLAG.ase_import, "Pos " + dec_to_hex(pos) + " - " + dec_to_hex(file_bin_position(bin)));
 		
 		if(formatArr[i][1] == "Type")
-			printIf(global.ASE_LOG, "\t" + formatArr[i][1] + ":\t 0x" + dec_to_hex(val, 4));
+			printIf(global.DEBUG_FLAG.ase_import, "\t" + formatArr[i][1] + ":\t 0x" + dec_to_hex(val, 4));
 		else
-			printIf(global.ASE_LOG, "\t" + formatArr[i][1] + ":\t " + string(val));
+			printIf(global.DEBUG_FLAG.ase_import, "\t" + formatArr[i][1] + ":\t " + string(val));
 	}
 }
 
 function read_ase(path, fileMap) {
-	printIf(global.ASE_LOG, "===== Reading: " + path + " =====");
+	printIf(global.DEBUG_FLAG.ase_import, "===== Reading: " + path + " =====");
 	var file = file_bin_open(path, 0);
 	file_bin_seek(file, 0);
 	
@@ -363,7 +363,7 @@ function read_ase(path, fileMap) {
 	var frames = [];
 	var frameAmo = ds_map_exists(fileMap, "Frame amount")? fileMap[? "Frame amount"] : 0;
 	for( var i = 0; i < frameAmo; i++ ) {
-		printIf(global.ASE_LOG, "\n=== Reading frame " + string(i) + " ===");
+		printIf(global.DEBUG_FLAG.ase_import, "\n=== Reading frame " + string(i) + " ===");
 		array_push(frames, read_ase_frame(file));
 	}
 	fileMap[? "Frames"] = frames; 
@@ -384,7 +384,7 @@ function read_ase_frame(file) {
 		chunkAmo = ds_map_exists(frame, "Chunk amount new")? frame[? "Chunk amount new"] : chunkAmo;
 	
 	for( var i = 0; i < chunkAmo; i++ ) {
-		printIf(global.ASE_LOG, "\n=== Reading chunk " + string(i) + " ===");
+		printIf(global.DEBUG_FLAG.ase_import, "\n=== Reading chunk " + string(i) + " ===");
 		array_push(chunks, read_ase_chunk(file));
 	}
 	frame[? "Chunks"] = chunks; 
@@ -403,7 +403,7 @@ function read_ase_chunk(file) {
 	switch(chunk[? "Type"]) {
 		case 0x0004: //old palette
 		case 0x0011: //old palette
-			printIf(global.ASE_LOG, "\n -- Reading chunk [Old palette] -- "); 
+			printIf(global.DEBUG_FLAG.ase_import, "\n -- Reading chunk [Old palette] -- "); 
 			read_format_array(file, __ase_format_chunk_old_palette, chunk);
 			var cc = [];
 			for( var i = 0; i < chunk[? "Packet amount"]; i++ ) {
@@ -413,11 +413,11 @@ function read_ase_chunk(file) {
 			chunk[? "Packets"] = cc;
 			break;
 		case 0x2004: //layer
-			printIf(global.ASE_LOG, "\n -- Reading chunk [Layer] -- "); 
+			printIf(global.DEBUG_FLAG.ase_import, "\n -- Reading chunk [Layer] -- "); 
 			read_format_array(file, __ase_format_chunk_layer, chunk);
 			break;
 		case 0x2005: //cel
-			printIf(global.ASE_LOG, "\n -- Reading chunk [Cel] -- "); 
+			printIf(global.DEBUG_FLAG.ase_import, "\n -- Reading chunk [Cel] -- "); 
 			read_format_array(file, __ase_format_chunk_cel, chunk);
 			
 			var type = chunk[? "Cel type"];
@@ -443,7 +443,7 @@ function read_ase_chunk(file) {
 					
 					var _rawBuff = buffer_decompress(_compBuff);
 					if(_rawBuff != -1) chunk[? "Buffer"] = _rawBuff;
-					printIf(global.ASE_LOG, "    Buffer size: " + string(compressLength));
+					printIf(global.DEBUG_FLAG.ase_import, "    Buffer size: " + string(compressLength));
 					
 					buffer_delete(_compBuff);
 					break;
@@ -456,7 +456,7 @@ function read_ase_chunk(file) {
 		case 0x2006: //cel extra
 			break;
 		case 0x2007: //color profile
-			printIf(global.ASE_LOG, "\n -- Reading chunk [Color profile] -- "); 
+			printIf(global.DEBUG_FLAG.ase_import, "\n -- Reading chunk [Color profile] -- "); 
 			read_format_array(file, __ase_format_chunk_color_profile, chunk);
 			break;
 		case 0x2008: //external file
@@ -466,7 +466,7 @@ function read_ase_chunk(file) {
 		case 0x2017: //path
 			break;
 		case 0x2018: //tag
-			printIf(global.ASE_LOG, "\n -- Reading chunk [Tag] -- "); 
+			printIf(global.DEBUG_FLAG.ase_import, "\n -- Reading chunk [Tag] -- "); 
 			read_format_array(file, __ase_format_chunk_tag, chunk);
 			var amo = chunk[? "Tag amount"]
 			var tags = [];
@@ -478,7 +478,7 @@ function read_ase_chunk(file) {
 			chunk[? "Tags"] = tags;
 			break;
 		case 0x2019: //palette
-			printIf(global.ASE_LOG, "\n -- Reading chunk [Palette] -- "); 
+			printIf(global.DEBUG_FLAG.ase_import, "\n -- Reading chunk [Palette] -- "); 
 			read_format_array(file, __ase_format_chunk_palette, chunk);
 			var cc = [];
 			for( var i = 0; i < chunk[? "Color amount"]; i++ ) {

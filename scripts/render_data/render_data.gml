@@ -5,8 +5,7 @@ enum RENDER_TYPE {
 }
 
 #region globalvar
-	global.RENDER_DEBUG = false;
-	global.RENDER_LOG	= false;
+	global.DEBUG_FLAG.render = false;
 	global.group_inputs = [ "Node_Group_Input", "Node_Feedback_Input", "Node_Iterator_Input", "Node_Iterator_Each_Input" ];
 #endregion
 
@@ -22,7 +21,7 @@ function __nodeLeafList(_list) {
 		var _startNode = _node.isRenderable();
 		if(_startNode) {
 			array_push(nodes, _node);
-			LOG_IF(global.RENDER_LOG, "Push node " + _node.name + " to stack");
+			LOG_IF(global.DEBUG_FLAG.render, "Push node " + _node.name + " to stack");
 		}
 	}
 	
@@ -53,7 +52,7 @@ function __nodeInLoop(_node) {
 function Render(partial = false, runAction = false) {
 	var t = current_time;
 	LOG_BLOCK_START();
-	LOG_IF(global.RENDER_LOG, "=== RENDER START [frame " + string(ANIMATOR.current_frame) + "] ===");
+	LOG_IF(global.DEBUG_FLAG.render, "=== RENDER START [frame " + string(ANIMATOR.current_frame) + "] ===");
 	
 	try {
 		var rendering = noone;
@@ -85,7 +84,7 @@ function Render(partial = false, runAction = false) {
 			if(!_node.active)		continue;
 			if(!_node.renderActive) continue;
 			if(_node.rendered) {
-				LOG_IF(global.RENDER_LOG, "Skip rendered " + _node.name + " (" + _node.display_name + ")");
+				LOG_IF(global.DEBUG_FLAG.render, "Skip rendered " + _node.name + " (" + _node.display_name + ")");
 				continue;
 			}
 			
@@ -93,20 +92,20 @@ function Render(partial = false, runAction = false) {
 			
 			LOG_BLOCK_START();
 			
-			var _startNode = _node.isRenderable(global.RENDER_LOG);
+			var _startNode = _node.isRenderable(global.DEBUG_FLAG.render);
 			if(_startNode) {
-				LOG_IF(global.RENDER_LOG, "Found leaf " + _node.name + " (" + _node.display_name + ")");
+				LOG_IF(global.DEBUG_FLAG.render, "Found leaf " + _node.name + " (" + _node.display_name + ")");
 				
 				_node.triggerRender();
 				ds_queue_enqueue(RENDER_QUEUE, _node);
 			} else 
-				LOG_IF(global.RENDER_LOG, "Skip non-leaf " + _node.name + " (" + _node.display_name + ")");
+				LOG_IF(global.DEBUG_FLAG.render, "Skip non-leaf " + _node.name + " (" + _node.display_name + ")");
 			
 			LOG_BLOCK_END();
 		}
 		
-		LOG_IF(global.RENDER_LOG, "Get leaf complete: found " + string(ds_queue_size(RENDER_QUEUE)) + " leaves.");
-		LOG_IF(global.RENDER_LOG, "Start rendering...");
+		LOG_IF(global.DEBUG_FLAG.render, "Get leaf complete: found " + string(ds_queue_size(RENDER_QUEUE)) + " leaves.");
+		LOG_IF(global.DEBUG_FLAG.render, "Start rendering...");
 	
 		// render forward
 		while(!ds_queue_empty(RENDER_QUEUE)) {
@@ -114,7 +113,7 @@ function Render(partial = false, runAction = false) {
 			var renderable = rendering.isRenderable();
 			
 			LOG_BLOCK_START();
-			LOG_IF(global.RENDER_LOG, "Rendering " + rendering.name + " (" + rendering.display_name + ") ");
+			LOG_IF(global.DEBUG_FLAG.render, "Rendering " + rendering.name + " (" + rendering.display_name + ") ");
 			
 			if(renderable) {
 				rendering.doUpdate();
@@ -127,14 +126,14 @@ function Render(partial = false, runAction = false) {
 					rendering.inspector1Update();
 			}
 			
-			LOG_IF(global.RENDER_LOG, "Rendered " + rendering.name + " (" + rendering.display_name + ") [" + string(instanceof(rendering)) + "]" + (renderable? " [Update]" : " [Skip]"));
+			LOG_IF(global.DEBUG_FLAG.render, "Rendered " + rendering.name + " (" + rendering.display_name + ") [" + string(instanceof(rendering)) + "]" + (renderable? " [Update]" : " [Skip]"));
 			LOG_BLOCK_END();
 		}
 	} catch(e) {
 		noti_warning(exception_print(e));
 	}
 	
-	LOG_IF(global.RENDER_LOG, "=== RENDER COMPLETE IN {" + string(current_time - t) + "ms} ===\n");
+	LOG_IF(global.DEBUG_FLAG.render, "=== RENDER COMPLETE IN {" + string(current_time - t) + "ms} ===\n");
 	LOG_END();
 }
 
@@ -148,9 +147,8 @@ function __renderListReset(list) {
 }
 
 function RenderList(list) {
-	var log = false;
 	LOG_BLOCK_START();
-	LOG_IF(log, "=== RENDER LIST START ===");
+	LOG_IF(global.DEBUG_FLAG.render, "=== RENDER LIST START ===");
 	var queue = ds_queue_create();
 	
 	try {
@@ -175,8 +173,8 @@ function RenderList(list) {
 				ds_queue_enqueue(queue, _node);
 		}
 		
-		LOG_IF(log, "Get leaf complete: found " + string(ds_queue_size(queue)) + " leaves.");
-		LOG_IF(log, "Start rendering...");
+		LOG_IF(global.DEBUG_FLAG.render, "Get leaf complete: found " + string(ds_queue_size(queue)) + " leaves.");
+		LOG_IF(global.DEBUG_FLAG.render, "Start rendering...");
 		
 		// render forward
 		while(!ds_queue_empty(queue)) {
@@ -185,7 +183,7 @@ function RenderList(list) {
 			
 			rendering.doUpdate();
 				
-			LOG_LINE_IF(log, "Rendering " + rendering.name + " (" + rendering.display_name + ") ");
+			LOG_LINE_IF(global.DEBUG_FLAG.render, "Rendering " + rendering.name + " (" + rendering.display_name + ") ");
 				
 			var nextNodes = rendering.getNextNodes();
 			for( var i = 0; i < array_length(nextNodes); i++ ) 
@@ -196,14 +194,14 @@ function RenderList(list) {
 		noti_warning(exception_print(e));
 	}
 		
-	LOG_IF(log, "=== RENDER COMPLETE ===\n");
+	LOG_IF(global.DEBUG_FLAG.render, "=== RENDER COMPLETE ===\n");
 	LOG_END();
 	
 	ds_queue_destroy(queue);
 }
 
 function RenderListAction(list, context = PANEL_GRAPH.getCurrentContext()) {
-	printIf(global.RENDER_LOG, "=== RENDER LIST ACTION START [frame " + string(ANIMATOR.current_frame) + "] ===");
+	printIf(global.DEBUG_FLAG.render, "=== RENDER LIST ACTION START [frame " + string(ANIMATOR.current_frame) + "] ===");
 	
 	try {
 		var rendering = noone;
@@ -226,7 +224,7 @@ function RenderListAction(list, context = PANEL_GRAPH.getCurrentContext()) {
 		
 			if(_node.isRenderable()) {
 				ds_queue_enqueue(RENDER_QUEUE, _node);
-				printIf(global.RENDER_LOG, "		> Push " + _node.name + " (" + _node.display_name + ") node to stack");
+				printIf(global.DEBUG_FLAG.render, "		> Push " + _node.name + " (" + _node.display_name + ") node to stack");
 			}
 		}
 		
@@ -241,7 +239,7 @@ function RenderListAction(list, context = PANEL_GRAPH.getCurrentContext()) {
 				rendering.doUpdate();
 				if(rendering.hasInspector1Update()) {
 					rendering.inspector1Update();
-					printIf(global.RENDER_LOG, " > Toggle manual execution " + rendering.name + " (" + rendering.display_name + ")");
+					printIf(global.DEBUG_FLAG.render, " > Toggle manual execution " + rendering.name + " (" + rendering.display_name + ")");
 				}
 				
 				var nextNodes = rendering.getNextNodes();
@@ -249,10 +247,10 @@ function RenderListAction(list, context = PANEL_GRAPH.getCurrentContext()) {
 					ds_queue_enqueue(RENDER_QUEUE, nextNodes[i]);
 			}
 			
-			printIf(global.RENDER_LOG, "Rendered " + rendering.name + " (" + rendering.display_name + ") [" + string(instanceof(rendering)) + "]" + txt);
+			printIf(global.DEBUG_FLAG.render, "Rendered " + rendering.name + " (" + rendering.display_name + ") [" + string(instanceof(rendering)) + "]" + txt);
 		}
 	
-		printIf(global.RENDER_LOG, "=== RENDER COMPLETE IN {" + string(current_time - t) + "ms} ===\n");
+		printIf(global.DEBUG_FLAG.render, "=== RENDER COMPLETE IN {" + string(current_time - t) + "ms} ===\n");
 	} catch(e) {
 		noti_waning(exception_print(e));
 	}

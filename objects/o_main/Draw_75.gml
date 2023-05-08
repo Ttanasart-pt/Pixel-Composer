@@ -133,6 +133,14 @@ if(OS == os_windows && gameframe_is_minimized()) exit;
 	PANEL_MAIN.drawGUI();
 #endregion
 
+#region debug
+	if(global.DEBUG_FLAG[$ "hover_element"]) {
+		draw_set_text(f_p0, fa_right, fa_bottom, COLORS._main_text);
+		if(HOVERING_ELEMENT)
+			draw_text(WIN_W, WIN_H, $"[{instanceof(HOVERING_ELEMENT)}]");
+	}
+#endregion
+
 #region frame
 	draw_set_color(merge_color(COLORS._main_icon, COLORS._main_icon_dark, 0.95));
 	draw_rectangle(1, 1, WIN_W - 2, WIN_H - 2, true);

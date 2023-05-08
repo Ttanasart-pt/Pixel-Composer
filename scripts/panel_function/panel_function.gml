@@ -58,10 +58,12 @@
 			case "Panel_Notification"   : return new Panel_Notification();
 			case "Panel_Nodes"			: return new Panel_Nodes();
 			case "Panel_Globalvar"		: return new Panel_Globalvar();
+			case "Panel_Node_Align"		: return new Panel_Node_Align();
 			
 			case "Panel_Color"		: return new Panel_Color();
 			case "Panel_Palette"	: return new Panel_Palette();
 			case "Panel_Gradient"	: return new Panel_Gradient();
+			case "Panel_Console"	: return new Panel_Console();
 		}
 		
 		return noone;

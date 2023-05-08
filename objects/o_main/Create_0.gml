@@ -80,8 +80,9 @@
 		UPDATE |= RENDER_TYPE.full; 
 	});
 	
-	globalvar HOTKEY_MOD;
+	globalvar HOTKEY_MOD, HOTKEY_BLOCK;
 	HOTKEY_MOD = 0;
+	HOTKEY_BLOCK = false;
 #endregion
 
 #region Loader

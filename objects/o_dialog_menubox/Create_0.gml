@@ -2,6 +2,8 @@
 event_inherited();
 
 #region data
+	menu_id = "";
+	
 	draggable = false;
 	destroy_on_click_out = false;
 	selecting = -1;
