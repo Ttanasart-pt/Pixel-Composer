@@ -247,8 +247,11 @@ enum VALUE_UNIT {
 }
 
 function isGraphable(prop) {
-	if(prop.type == VALUE_TYPE.integer || prop.type == VALUE_TYPE.float) 
+	if(prop.type == VALUE_TYPE.integer || prop.type == VALUE_TYPE.float) {
+		if(prop.display_type == VALUE_DISPLAY.puppet_control)
+			return false;
 		return true;
+	}
 	if(prop.type == VALUE_TYPE.color && prop.display_type == VALUE_DISPLAY._default) 
 		return true;
 		
@@ -408,7 +411,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	extract_node = "";
 	
 	is_changed  = true;
-	cache_value = [ false, undefined ];
+	cache_value = [ false, false, undefined ];
 	cache_array = [ false, false ];
 	
 	expUse     = false;
@@ -432,6 +435,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			
 		return self;
 	}
+	
+	static resetValue = function() { setValue(def_val); }
 	
 	static setUnitRef = function(ref, mode = VALUE_UNIT.constant) {
 		unit.reference  = ref;
@@ -984,19 +989,23 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		return value;
 	}
 	
-	static getValue = function(_time = ANIMATOR.current_frame, applyUnit = true, arrIndex = 0) {
-		//var cache_hit = cache_value[0];
-		//cache_hit &= cache_value[1] == _time;
-		//cache_hit &= cache_value[2] != undefined;
-		//cache_hit &= connect_type == JUNCTION_CONNECT.input;
-		//cache_hit &= unit.reference != VALUE_UNIT.reference;
-		//if(cache_hit) return cache_value[2];
+	static getValue = function(_time = ANIMATOR.current_frame, applyUnit = true, arrIndex = 0, useCache = true) {
+		if(useCache) {
+			var cache_hit = cache_value[0];
+			cache_hit &= cache_value[1] == _time;
+			cache_hit &= cache_value[2] != undefined;
+			cache_hit &= connect_type == JUNCTION_CONNECT.input;
+			cache_hit &= unit.reference == VALUE_UNIT.constant;
+			if(cache_hit) return cache_value[2];
+		}
 		
 		var val = _getValue(_time, applyUnit, arrIndex);
 		
-		//is_changed = !isEqual(cache_value[1], val);
-		//cache_value[0] = true;
-		//cache_value[1] = val;
+		if(useCache) {
+			is_changed = !isEqual(cache_value[1], val);
+			cache_value[0] = true;
+			cache_value[1] = val;
+		}
 		
 		return val;
 	}
@@ -1106,7 +1115,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		var val = getValue(, false); 
 		if(isArray()) {
 			if(array_length(val) == 0) return 0;
-			return val[safe_mod(node.preview_index, array_length(val))];
+			var v = val[safe_mod(node.preview_index, array_length(val))];
+			if(array_length(v) >= 100) return $"[{array_length(v)}]";
 		}
 		return val;
 	}
@@ -1629,6 +1639,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		if(ds_map_exists(_map, "data")) 
 			ds_list_copy(extra_data, _map[? "data"]);
+		
+		if(APPENDING) def_val = getValue(0);
 		
 		onValidate();
 	}

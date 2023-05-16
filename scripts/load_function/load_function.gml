@@ -59,9 +59,8 @@ function __LOAD_PATH(path, readonly = false, safe_mode = false) {
 	var file = file_text_open_read(temp_path);
 	var load_str = "";
 	
-	while(!file_text_eof(file)) {
+	while(!file_text_eof(file))
 		load_str += file_text_readln(file);
-	}
 	file_text_close(file);
 	
 	var _map = json_decode(load_str);
@@ -115,6 +114,21 @@ function __LOAD_PATH(path, readonly = false, safe_mode = false) {
 			GLOBAL.deserialize(_map[? "global"]);
 	} catch(e) {
 		log_warning("LOAD, global", exception_print(e));
+	}
+	
+	try {
+		if(ds_map_exists(_map, "addon")) {
+			var _addon = _map[? "addon"];
+			
+			with(addon) {
+				if(!ds_map_exists(_addon, name)) continue;
+				var _mp = json_parse(_addon[? name]);
+				
+				lua_call(thread, "deserialize", _mp);
+			}
+		}
+	} catch(e) {
+		log_warning("LOAD, addon", exception_print(e));
 	}
 	
 	ds_queue_clear(CONNECTION_CONFLICT);

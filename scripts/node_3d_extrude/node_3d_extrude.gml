@@ -80,6 +80,11 @@ function Node_3D_Extrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	
 	vertexObjects = [];
 	
+	mesh_generating = false;
+	mesh_genetated  = false;
+	mesh_generate_index  = 0;
+	mesh_generate_amount = 0;
+	
 	static onValueFromUpdate = function(index) {
 		if(index == 0 || index == 14) 
 			generateMesh();
@@ -105,12 +110,10 @@ function Node_3D_Extrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		}
 		vertexObjects = [];
 		
-		for( var i = 0; i < array_length(_ins); i++ )
-			vertexObjects[i] = generateMeshIndex(i);
-		
-		UPDATE |= RENDER_TYPE.full;
-		
-		outputs[| 3].setValue(vertexObjects);
+		mesh_generating		 = true;
+		mesh_genetated		 = false;
+		mesh_generate_index  = 0;
+		mesh_generate_amount = array_length(_ins);
 	}
 		
 	static generateMeshIndex = function(index) {
@@ -236,6 +239,21 @@ function Node_3D_Extrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		return v;
 	}
 	
+	static step = function() {
+		if(!mesh_generating) return;
+		
+		vertexObjects[mesh_generate_index] = generateMeshIndex(mesh_generate_index);
+		
+		mesh_generate_index++;
+		if(mesh_generate_index >= mesh_generate_amount) {
+			mesh_generating = false;
+			mesh_genetated  = true;
+			
+			UPDATE |= RENDER_TYPE.full;
+			outputs[| 3].setValue(vertexObjects);
+		}
+	}
+	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		_3d_gizmo(active, _x, _y, _s, _mx, _my, _snx, _sny);
 	}
@@ -249,12 +267,15 @@ function Node_3D_Extrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		var _lrot = getSingleValue(3, index);
 		var _lsca = getSingleValue(4, index);
 		
-		_3d_local_transform(_lpos, _lrot, _lsca);
-		vertexObjects[index].submit(_ins);
-		_3d_clear_local_transform();
+		if(is_struct(vertexObjects[index])) {
+			_3d_local_transform(_lpos, _lrot, _lsca);
+			vertexObjects[index].submit(_ins);
+			_3d_clear_local_transform();
+		}
 	}
 	
 	static process_data = function(_outSurf, _data, _output_index, _array_index) {
+		if(mesh_generating) return;
 		if(_output_index == 3) return vertexObjects;
 		
 		var _ins  = _data[ 0];
@@ -300,6 +321,17 @@ function Node_3D_Extrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		_3d_post_setup();
 		
 		return _outSurf;
+	}
+	
+	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
+		if(mesh_generating) {
+			var cx = xx + w * _s / 2;
+			var cy = yy + h * _s / 2;
+			var rr = min(w - 64, h - 64) * _s / 2;
+			
+			draw_set_color(COLORS._main_icon);
+			draw_arc(cx, cy, rr, 90, 90 - 360 * mesh_generate_index / mesh_generate_amount, 4 * _s, max(mesh_generate_amount, 32));
+		}
 	}
 	
 	static postConnect = function() {

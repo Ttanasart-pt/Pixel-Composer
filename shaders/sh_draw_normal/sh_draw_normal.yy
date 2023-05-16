@@ -3,8 +3,8 @@
   "resourceVersion": "1.0",
   "name": "sh_draw_normal",
   "parent": {
-    "name": "blend",
-    "path": "folders/shader/blend.yy",
+    "name": "draw",
+    "path": "folders/shader/draw.yy",
   },
   "type": 1,
 }

@@ -142,7 +142,8 @@ enum CAMERA_PROJ {
 		}
 		
 		static __submit = function() {
-			if(renderTexture == noone) return;
+			if(renderTexture == noone)	return;
+			if(buffer == noone)			return;
 			
 			vertex_submit(buffer, pr_trianglelist, renderTexture);
 		}

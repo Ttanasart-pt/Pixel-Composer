@@ -229,6 +229,7 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 			addNodeObject(input, "JSON File Out",		s_node_json_file_write,	"Node_Json_File_Write",		[1, Node_Json_File_Write],, "Save data to .json file.").setVersion(1090);
 			addNodeObject(input, "ASE File In",			s_node_ase_file,		"Node_ASE_File_Read",		[0, Node_create_ASE_File_Read],, "Load Aseprite file with support for layers, tags.").setVersion(1100);
 			addNodeObject(input, "ASE Layer",			s_node_ase_layer,		"Node_ASE_layer",			[1, Node_ASE_layer]).setVersion(1100);
+			addNodeObject(input, "WAV File In",			s_node_wav_file_read,	"Node_WAV_File_Read",		[0, Node_create_WAV_File_Read],, "Load wav audio file.").setVersion(1144);
 	
 		var transform = ds_list_create();
 		addNodeCatagory("Transform", transform);
@@ -393,6 +394,7 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 			ds_list_add(generator, "Others");
 			addNodeObject(generator, "Separate Shape",	s_node_sepearte_shape,	"Node_Seperate_Shape",	[1, Node_Seperate_Shape],, "Separate disconnected pixel each into an image in an image array.");
 			addNodeObject(generator, "Flood Fill",		s_node_flood_fill,		"Node_Flood_Fill",		[1, Node_Flood_Fill],, "Filled connected pixel given position and color.").setVersion(1133);
+			addNodeObject(generator, "Bar / Graph",		s_node_bar_graph,		"Node_Plot_Linear",		[1, Node_Plot_Linear], ["graph", "waveform", "bar chart"]).setVersion(1144);
 	
 		var compose = ds_list_create();
 		addNodeCatagory("Compose", compose);
@@ -434,6 +436,7 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 			addNodeObject(values, "Dot product",	s_node_dot_product,		"Node_Vector_Dot",		[1, Node_Vector_Dot]).setVersion(1141);
 			addNodeObject(values, "Cross product 3D",	s_node_cross_product_2d,	"Node_Vector_Cross_3D",	[1, Node_Vector_Cross_3D]).setVersion(1141);
 			addNodeObject(values, "Cross product 2D",	s_node_cross_product_3d,	"Node_Vector_Cross_2D",	[1, Node_Vector_Cross_2D]).setVersion(1141);
+			/**/ addNodeObject(values, "FFT",			s_node_cross_product_3d,	"Node_FFT",	[1, Node_FFT]).setVersion(1144);
 			
 			ds_list_add(values, "Texts");
 			addNodeObject(values, "Text",			s_node_text,			"Node_String",					[1, Node_String]);
@@ -461,6 +464,7 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 			addNodeObject(values, "Array Reverse",	s_node_array_reverse,	"Node_Array_Reverse",	[1, Node_Array_Reverse], ["reverse array"]).setVersion(1120);
 			addNodeObject(values, "Array Shift",	s_node_array_shift,		"Node_Array_Shift",		[1, Node_Array_Shift]).setVersion(1137);
 			addNodeObject(values, "Array Zip",		s_node_array_zip,		"Node_Array_Zip",		[1, Node_Array_Zip]).setVersion(1138);
+			/**/ addNodeObject(values, "Array Copy",		s_node_array_zip,		"Node_Array_Copy",		[1, Node_Array_Copy]).setVersion(1444);
 			addNodeObject(values, "Sort Number",	s_node_array_sort,		"Node_Array_Sort",		[1, Node_Array_Sort], ["array sort"]).setVersion(1120);
 			addNodeObject(values, "Shuffle Array",	s_node_array_shuffle,	"Node_Array_Shuffle",	[1, Node_Array_Shuffle], ["array shuffle"]).setVersion(1120);
 			addNodeObject(values, "Loop Array",		s_node_loop_array,		"Node_Iterate_Each",	[1, Node_Iterate_Each], ["iterate each", "for each", "array loop"], "Create group that iterate to each member in an array.");

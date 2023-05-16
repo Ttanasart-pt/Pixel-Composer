@@ -34,7 +34,10 @@ void main() {
 	
 	float lum = dot(_col1.rgb, vec3(0.2126, 0.7152, 0.0722));
 	vec4 blend = lum > 0.5? (vec4(1.) - (vec4(1.) - _col0) * (vec4(1.) - _col1) * 2.) : (_col0 * _col1 * 2.);
-	vec4 res = mix(_col0, blend, opacity);
+	
+	float po = preserveAlpha == 1? _col1.a : opacity;
+	vec4 res = mix(_col0, blend, po);
+	
 	if(preserveAlpha == 1) res.a = _col0.a;
 	
     gl_FragColor = res;

@@ -7,7 +7,7 @@ function drawWidgetInit() {
 	lineBreak = true;
 }
 
-function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _focus = false, _scrollPane = noone, rx = 0, ry = 0) {
+function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _focus = false, _scrollPane = noone, rx = 0, ry = 0) { 
 	var con_w	= ww - ui(4);
 	var xc		= xx + ww / 2;
 		
@@ -175,7 +175,7 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 				jun.expUse = !jun.expUse;
 		}
 	#endregion
-		
+	
 	var _hsy = yy + lb_h;
 	var padd = ui(8);
 			
@@ -207,7 +207,7 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 		} else {
 			jun.editWidget.setInteract(false);
 		}
-			
+		
 		switch(jun.display_type) {
 			case VALUE_DISPLAY.button :
 				jun.editWidget.draw(editBoxX, editBoxY, editBoxW, editBoxH, _m);

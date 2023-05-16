@@ -86,16 +86,13 @@ function Panel_Animation() : PanelContent() constructor {
 		[ function() { return get_text("stop", "Stop"); }, 
 		  function() { return 4; }, 
 		  function() { return ANIMATOR.is_playing? COLORS._main_accent : COLORS._main_icon; },
-		  function() {
-			ANIMATOR.is_playing = false;
-			ANIMATOR.setFrame(0);
-		} ],
+		  function() { ANIMATOR.stop(); } ],
 		[ function() { return ANIMATOR.is_playing? get_text("pause", "Pause") : get_text("play", "Play"); }, 
 		  function() { return !ANIMATOR.is_playing; }, 
 		  function() { return ANIMATOR.is_playing? COLORS._main_accent : COLORS._main_icon; },
-		  function() {
-			ANIMATOR.is_playing = !ANIMATOR.is_playing;
-			ANIMATOR.frame_progress = true;
+		  function() { 
+			if(ANIMATOR.is_playing) ANIMATOR.pause();
+			else					ANIMATOR.resume();
 		} ],
 		[ function() { return get_text("panel_animation_go_to_first_frame", "Go to first frame"); }, 
 		  function() { return 3; }, 

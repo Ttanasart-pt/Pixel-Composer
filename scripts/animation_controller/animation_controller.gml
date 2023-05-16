@@ -46,6 +46,28 @@
 				_key = ds_map_find_next(NODE_MAP, _key);	
 			}
 		}
+		
+		static render = function() {
+			setFrame(-1);
+			is_playing = true;
+			rendering  = true;
+			frame_progress = true;
+		}
+		
+		static pause = function() {
+			ANIMATOR.is_playing = false;
+			ANIMATOR.frame_progress = true;
+		}
+		
+		static resume = function() {
+			ANIMATOR.is_playing = true;
+			ANIMATOR.frame_progress = true;
+		}
+		
+		static stop = function() {
+			is_playing = false;
+			setFrame(0);
+		}
 	}
 #endregion
 

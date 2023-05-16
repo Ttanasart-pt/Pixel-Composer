@@ -34,7 +34,7 @@ function Node_ASE_layer(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		}
 	}
 	
-	static update = function(frame = ANIMATOR.current_frame) {
+	static update = function(frame = ANIMATOR.current_frame) { 
 		var data = inputs[| 0].getValue();
 		if(data == noone) return;
 		
@@ -52,7 +52,7 @@ function Node_ASE_layer(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		var cw = cel? cel.data[? "Width"] : 1;
 		var ch = cel? cel.data[? "Height"] : 1;
 		
-		var surf = outputs[| 0].getValue;
+		var surf = outputs[| 0].getValue();
 		if(celDim)	surf = surface_verify(surf, cw, ch);
 		else		surf = surface_verify(surf, ww, hh);
 		outputs[| 0].setValue(surf);

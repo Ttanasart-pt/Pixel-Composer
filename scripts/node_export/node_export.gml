@@ -1,12 +1,18 @@
 function Node_create_Export(_x, _y, _group = noone) {
 	var path = "";
 	if(!LOADING && !APPENDING && !CLONING) {
-		path = get_save_filename(".png", "export"); 
+		path = get_save_filename(@"Portable Network Graphics (.png)|*.png|
+Joint Photographic Experts Group (.jpg)|*.jpg|
+Graphics Interchange Format (.gif)|*.gif|
+Animated WebP (.webp)|*.webp", 
+			"export");
+			
 		key_release();
 	}
 	
 	var node = new Node_Export(_x, _y, _group);
 	node.inputs[| 1].setValue(path);
+	node.extensionCheck();
 	
 	//ds_list_add(PANEL_GRAPH.nodes_list, node);
 	return node;
@@ -25,10 +31,13 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	playing = false;
 	played  = 0;
 	
+	_format_still = ["Portable Network Graphics (.png)|*.png|Joint Photographic Experts Group (.jpg)|*.jpg", ""];
+	_format_anim  = ["Graphics Interchange Format (.gif)|*.gif|Animated WebP (.webp)|*.webp", ""];
+	
 	inputs[| 0] = nodeValue("Surface", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 	
 	inputs[| 1] = nodeValue("Paths",   self, JUNCTION_CONNECT.input, VALUE_TYPE.path, "")
-		.setDisplay(VALUE_DISPLAY.path_save, ["*.png", ""])
+		.setDisplay(VALUE_DISPLAY.path_save, _format_still)
 		.setVisible(true);
 	
 	inputs[| 2] = nodeValue("Template",  self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "%d%n")
@@ -97,11 +106,60 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	static onValueUpdate = function(_index) {
 		var form = inputs[| 3].getValue();
 		
-		if(_index == 3)
+		if(_index == 3) {
 			inputs[| 9].setValue(0);
+			
+			switch(form) {
+				case 0 : 
+				case 1 : 
+					inputs[| 1].display_data = _format_still;
+					break;
+				case 2 : 
+					inputs[| 1].display_data = _format_anim;
+					break;
+			}
+		}
 		
 		if(_index == 3 && form == 1)
 			inputs[| 2].setValue("%d%n%3f%i");
+		
+		if(_index == 1) {
+			var _path = inputs[| 1].getValue();
+			var _ext  = filename_ext(_path);
+			
+			switch(_ext) {
+				case ".png" :  inputs[| 9].setValue(0); break;
+				case ".jpg" :  inputs[| 9].setValue(1); break;
+			
+				case ".gif" :  inputs[| 9].setValue(0); break;
+				case ".webp" : inputs[| 9].setValue(1); break;
+			}
+		}
+	}
+	
+	static extensionCheck = function() {
+		var _path = inputs[| 1].getValue();
+		var _ext  = filename_ext(_path);
+			
+		switch(_ext) {
+			case ".png" : 
+				inputs[| 3].setValue(0);
+				inputs[| 9].setValue(0);
+				break;
+			case ".jpg" : 
+				inputs[| 3].setValue(0);
+				inputs[| 9].setValue(1);
+				break;
+			
+			case ".gif" : 
+				inputs[| 3].setValue(2);
+				inputs[| 9].setValue(0);
+				break;
+			case ".webp" : 
+				inputs[| 3].setValue(2);
+				inputs[| 9].setValue(1);
+				break;
+		}
 	}
 	
 	static renderWebp = function(temp_path, target_path) {
@@ -120,6 +178,8 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		}
 		
 		var rate = inputs[| 8].getValue();
+		if(rate == 0) rate = 1;
+		
 		var framerate = round(1 / rate * 1000);
 		
 		var cmd = "";
@@ -144,6 +204,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		var opti = inputs[| 6].getValue();
 		var fuzz = inputs[| 7].getValue();
 		var rate = inputs[| 8].getValue();
+		if(rate == 0) rate = 1;
 		
 		var framerate = 100 / rate;
 		var loop_str = loop? 0 : 1;
@@ -483,5 +544,9 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		}
 		
 		//directory_destroy(directory);
+	}
+	
+	static doApplyDeserialize = function() {
+		onValueUpdate(3);
 	}
 }

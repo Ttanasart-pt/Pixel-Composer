@@ -784,7 +784,17 @@
 		[ "noti_error", noti_error ],
 		[ "noti_warning", noti_warning ],
 		
+		//animation
+		[ "animation_playing",	 function() { return ANIMATOR.is_playing? lua_true : lua_false; }],
+		[ "animation_play",		 function() { ANIMATOR.resume(); }],
+		[ "animation_pause",	 function() { ANIMATOR.pause(); }],
+		[ "animation_stop",		 function() { ANIMATOR.stop(); }],
+		[ "animation_set_frame", function(frame) { ANIMATOR.setFrame(frame); }],
+		[ "animation_render",    function() { ANIMATOR.render(); }],
+		
 		//panel
+		[ "set_tooltip",    function(txt) { TOOLTIP = txt; }],
+		
 		[ "panel_get", function(type) {
 			switch(type) {
 				case "animation" :	return PANEL_ANIMATION; 

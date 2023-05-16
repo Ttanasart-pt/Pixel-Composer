@@ -295,7 +295,7 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		}
 	}
 	
-	static update = function(frame = ANIMATOR.current_frame) {
+	static update = function(frame = ANIMATOR.current_frame) { 
 		var path = inputs[| 0].getValue();
 		var current_tag = inputs[| 2].getValue();
 		if(path_current != path) updatePaths(path);
@@ -319,7 +319,8 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		var vis = attributes[? "layer_visible"];
 		var ww = content[? "Width"];
 		var hh = content[? "Height"];
-		var surf = outputs[| 0].getValue;
+		
+		var surf = outputs[| 0].getValue();
 		surf = surface_verify(surf, ww, hh);
 		outputs[| 0].setValue(surf);
 		

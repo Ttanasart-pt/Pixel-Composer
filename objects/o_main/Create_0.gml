@@ -193,6 +193,9 @@
 					case ".obj" :
 						node = Node_create_3D_Obj_path(PANEL_GRAPH.mouse_grid_x, PANEL_GRAPH.mouse_grid_y, p);
 						break;
+					case ".wav" :
+						node = Node_create_WAV_File_Read_path(PANEL_GRAPH.mouse_grid_x, PANEL_GRAPH.mouse_grid_y, p);
+						break;
 					case ".pxc" :
 						LOAD_PATH(p);
 						break;

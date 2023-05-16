@@ -246,12 +246,8 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 		
 		if(grup == SPRITE_ANIM_GROUP.animation) {
 			refreshSurface = false;
-			if(!LOADING && !APPENDING) {
-				ANIMATOR.setFrame(-1);
-				ANIMATOR.is_playing = true;
-				ANIMATOR.rendering = true;
-				ANIMATOR.frame_progress = true;
-			}
+			if(!LOADING && !APPENDING)
+				ANIMATOR.render();
 			
 			outputs[| 1].setValue([]);
 			return;

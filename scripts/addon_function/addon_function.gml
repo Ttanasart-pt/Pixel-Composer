@@ -17,8 +17,13 @@ function addonContextGenerator(_addon, _function) constructor {
 				} else if(struct_has(_item, "content")) {
 					var _subArr = []
 					for( var j = 0; j < array_length(_item.content); j++ ) {
-						var _addonItem = new addonContextItem(_addon, _item.content[j].name, _item.content[j].callback);
-						array_push(_subArr, _addonItem.menu_item);
+						var _it = _item.content[j];
+						if(_it == -1) 
+							array_push(_subArr, -1);
+						else if(struct_has(_it, "callback")) {
+							var _addonItem = new addonContextItem(_addon, _it.name, _it.callback);
+							array_push(_subArr, _addonItem.menu_item);
+						}
 					}
 					
 					var _addonItem = new addonContextSubMenu(_item.name, _subArr);
@@ -38,7 +43,7 @@ function addonContextItem(_addon, _name, _function) constructor {
 	
 	menu_item = menuItem(_name, function(_data) { 
 		lua_call(_addon.thread, self._function, lua_byref(_data.context, true)); 
-	}).setColor(COLORS._main_accent);
+	})//.setColor(COLORS._main_accent);
 }
 
 function addonContextSubMenu(_name, _content) constructor {
@@ -47,7 +52,7 @@ function addonContextSubMenu(_name, _content) constructor {
 	
 	menu_item = menuItem(name, function(_dat) { 
 		return submenuCall(_dat, content);
-	}).setColor(COLORS._main_accent)
+	})//.setColor(COLORS._main_accent)
 	  .setIsShelf();
 }
 

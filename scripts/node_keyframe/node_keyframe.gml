@@ -227,8 +227,10 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 		return processValue(_val);
 	}
 	
-	static processValue = function(_val) {
-		if(is_array(_val)) return _val;
+	static processValue = function(_val) { 
+		if(is_array(_val))     return _val;
+		if(is_struct(_val))    return _val;
+		if(is_undefined(_val)) return 0;
 		
 		if(prop.type == VALUE_TYPE.integer && prop.unit.mode == VALUE_UNIT.constant)
 			return round(toNumber(_val));

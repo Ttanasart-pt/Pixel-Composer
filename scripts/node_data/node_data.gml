@@ -19,15 +19,16 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		recordAction(ACTION_TYPE.node_added, self);
 		NODE_MAP[? node_id] = self;
 		MODIFIED = true;
+	} else {
+		run_in(1, function() { 
+			internalName = string_replace_all(name, " ", "_") + string(irandom_range(10000, 99999)); 
+			NODE_NAME_MAP[? internalName] = self;
+		});
 	}
 	
 	name = "";
 	display_name = "";
 	internalName = "";
-	run_in(1, function() { 
-		internalName = string_replace_all(name, " ", "_") + string(irandom_range(10000, 99999)); 
-		NODE_NAME_MAP[? internalName] = self;
-	});
 	
 	tooltip = "";
 	x = _x;
@@ -715,6 +716,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 			cx  *= aa;
 			cy  *= aa;
 			corner *= aa;
+			th = max(1, th);
 			
 			switch(PREF_MAP[? "curve_connection_line"]) {
 				case 0 : 
@@ -1213,6 +1215,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 			_map[? "id"]	 = node_id;
 			_map[? "render"] = renderActive;
 			_map[? "name"]	 = display_name;
+			_map[? "iname"]	 = internalName;
 			_map[? "x"]		 = x;
 			_map[? "y"]		 = y;
 			_map[? "type"]   = instanceof(self);
@@ -1266,6 +1269,8 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 			
 			if(ds_map_exists(load_map, "name"))
 				setDisplayName(ds_map_try_get(load_map, "name", ""));
+			
+			internalName = ds_map_try_get(load_map, "iname", internalName);
 			_group = ds_map_try_get(load_map, "group", noone);
 			if(_group == -1) _group = noone;
 			

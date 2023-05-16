@@ -464,7 +464,7 @@ function Panel_Inspector() : PanelContent() constructor {
 					if(i < amoIn) {
 						array_push(_menuItem, 
 							menuItem(get_text("panel_inspector_reset", "Reset value"), function() { 
-								__dialog_junction.setValue(__dialog_junction.def_val);
+								__dialog_junction.resetValue();
 								}),
 							menuItem(jun.is_anim? get_text("panel_inspector_remove", "Remove animation") : get_text("panel_inspector_add", "Add animation"), function() { 
 								__dialog_junction.setAnim(!__dialog_junction.is_anim); 

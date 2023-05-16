@@ -3,8 +3,8 @@
   "resourceVersion": "1.0",
   "name": "sh_2d_light",
   "parent": {
-    "name": "blend",
-    "path": "folders/shader/blend.yy",
+    "name": "generator",
+    "path": "folders/shader/generator.yy",
   },
   "type": 1,
 }

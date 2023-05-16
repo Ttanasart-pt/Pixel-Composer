@@ -32,7 +32,11 @@ void main() {
 	vec4 _col1 = texture2D( fore, fore_tex );
 	_col1.a *= opacity * sampleMask();
 	
-	vec4 res = (_col0 * (1. - opacity)) + (_col0 * _col1 * opacity);
+	vec4 blend = (_col0 * (1. - opacity)) + (_col0 * _col1 * opacity);
+	
+	float po = preserveAlpha == 1? _col1.a : opacity;
+	vec4 res = mix(_col0, blend, po);
+	
 	if(preserveAlpha == 1) res.a = _col0.a;
 	
     gl_FragColor = res;

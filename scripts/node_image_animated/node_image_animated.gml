@@ -46,7 +46,7 @@ function Node_Image_Animated(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		.setDisplay(VALUE_DISPLAY.padding)
 		.rejectArray();
 		
-	inputs[| 2] = nodeValue("Stretch frame", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false)
+	inputs[| 2] = nodeValue("Stretch frame", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false, "Stretch animation speed to match project length.")
 		.rejectArray();
 	
 	inputs[| 3] = nodeValue("Frame duration", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)

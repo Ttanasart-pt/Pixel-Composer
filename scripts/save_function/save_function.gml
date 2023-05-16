@@ -52,6 +52,13 @@ function save_serialize() {
 	if(!is_surface(prev)) _map[? "preview"] = "";
 	else				  _map[? "preview"] = surface_encode(surface_size_lim(prev, 128, 128));
 	
+	var _addon = ds_map_create();
+	with(_addon_custom) {
+		var _ser = lua_call(thread, "serialize");
+		_addon[? name] = PREF_MAP[? "save_file_minify"]? json_stringify_minify(_ser) : json_stringify(_ser);
+	}
+	ds_map_add_map(_map, "addon", _addon);
+	
 	var val = PREF_MAP[? "save_file_minify"]? json_encode_minify(_map) : json_encode(_map, true);
 	ds_map_destroy(_map);
 	return val;

@@ -81,8 +81,8 @@ function Panel_Addon() : PanelContent() constructor {
 				
 				var chx0 = ui(6);
 				var chy0 = by + ui(6);
-				var chx1 = chx0 + ui(20);
-				var chy1 = chy0 + ui(20);
+				var chx1 = chx0 + ui(28);
+				var chy1 = chy0 + ui(28);
 				var _onStart = array_exists(ADDONS_ON_START, _addon.name);
 				
 				if(pHOVER && point_in_rectangle(_m[0], _m[1], chx0, chy0, chx1, chy1)) {

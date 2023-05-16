@@ -469,6 +469,7 @@ function Panel_Menu() : PanelContent() constructor {
 				var ww = hori? string_width(name) + ui(40) : w - ui(16);
 				
 				if(pHOVER && point_in_rectangle(mx, my, nx0, ny0 - wh / 2, nx0 + ww, ny0 + wh / 2)) {
+					TOOLTIP = get_text("addons", "Addons");
 					draw_sprite_stretched(THEME.menu_button, 1, nx0, ny0 - wh / 2, ww, wh);
 					if(mouse_press(mb_left, pFOCUS))
 						dialogPanelCall(new Panel_Addon());

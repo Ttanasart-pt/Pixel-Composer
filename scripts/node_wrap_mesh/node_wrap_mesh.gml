@@ -452,8 +452,14 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		
 		surface_set_shader(_outSurf);
 		shader_set_interpolation(_outSurf);
-		for(var i = 0; i < array_length(data.tris); i++)
-			data.tris[i].drawSurface(_inSurf);
+		
+		if(array_length(data.tris) == 0) {
+			draw_surface_safe(_inSurf);
+		} else {
+			for(var i = 0; i < array_length(data.tris); i++)
+				data.tris[i].drawSurface(_inSurf);
+		}
+		
 		surface_reset_shader();	
 		
 		return _outSurf;
