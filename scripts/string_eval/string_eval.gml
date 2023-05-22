@@ -2,6 +2,7 @@
 	global.EQUATION_PRES    = ds_map_create();
 	global.EQUATION_PRES[? "+"]     = 1;
 	global.EQUATION_PRES[? "-"]     = 1;
+	global.EQUATION_PRES[? "_"]     = 9; //unary negative
 	global.EQUATION_PRES[? "*"]     = 2;
 	global.EQUATION_PRES[? "/"]     = 2;
 	global.EQUATION_PRES[? "^"]     = 3;
@@ -26,7 +27,7 @@
 		
 		var len = string_length(fx);
 		var l   = 1;
-		var ch, cch;
+		var ch, cch, _ch;
 		
 		while(l <= len) {
 			ch = string_char_at(fx, l);
@@ -36,9 +37,10 @@
 				else {
 					if(pres[? ch] > pres[? ds_stack_top(op)] || ds_stack_top(op) == "(") ds_stack_push(op, ch);
 					else {
-						while(pres[? ch] <= pres[? ds_stack_top(op)] && !ds_stack_empty(op)) {
+						if(ch == "-" && ds_map_exists(pres, _ch)) ch = "_"; //unary negative
+						
+						while(pres[? ch] <= pres[? ds_stack_top(op)] && !ds_stack_empty(op))
 							ds_stack_push(vl, evalToken(ds_stack_pop(op), vl));
-						}
 						ds_stack_push(op, ch);
 					}
 				}
@@ -48,9 +50,8 @@
 				ds_stack_push(op, ch);
 				l++;
 			} else if (ch == ")") {
-				while(ds_stack_top(op) != "(" && !ds_stack_empty(op)) {
+				while(ds_stack_top(op) != "(" && !ds_stack_empty(op))
 					ds_stack_push(vl, evalToken(ds_stack_pop(op), vl));
-				}
 				ds_stack_pop(op);
 				l++;
 			} else {
@@ -82,6 +83,8 @@
 					}
 				}
 			}
+			
+			_ch = ch;
 		}
 		
 		while(!ds_stack_empty(op)) {
@@ -103,6 +106,8 @@
 					return -ds_stack_pop(vl) + ds_stack_pop(vl);
 				else
 					return -ds_stack_pop(vl);
+			case "_": 
+				return -ds_stack_pop(vl); 
 			case "*": 
 				if(ds_stack_size(vl) >= 2) 
 					return ds_stack_pop(vl) * ds_stack_pop(vl);	

@@ -134,7 +134,7 @@ if(OS == os_windows && gameframe_is_minimized()) exit;
 #endregion
 
 #region debug
-	if(global.DEBUG_FLAG[$ "hover_element"]) {
+	if(global.FLAG[$ "hover_element"]) {
 		draw_set_text(f_p0, fa_right, fa_bottom, COLORS._main_text);
 		if(HOVERING_ELEMENT)
 			draw_text(WIN_W, WIN_H, $"[{instanceof(HOVERING_ELEMENT)}]");

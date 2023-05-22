@@ -25,7 +25,7 @@ enum NODE_EXPORT_FORMAT {
 }
 
 function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
-	name		= "Export";
+	name = "Export";
 	preview_channel = 1;
 	
 	playing = false;

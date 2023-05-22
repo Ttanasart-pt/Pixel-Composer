@@ -94,6 +94,7 @@
 				
 				case "+": return (is_real(v1) && is_real(v2))? v1 + v2		 : 0;
 				case "-": return (is_real(v1) && is_real(v2))? v1 - v2		 : 0;
+				case "_": return is_real(v1)? -v1 : 0;
 				case "*": return (is_real(v1) && is_real(v2))? v1 * v2		 : 0;
 				case "^": return (is_real(v1) && is_real(v2))? power(v1, v2) : 0;
 				case "/": return (is_real(v1) && is_real(v2))? v1 / v2       : 0;
@@ -129,7 +130,7 @@
 		
 		var len = string_length(fx);
 		var l   = 1;
-		var ch, cch;
+		var ch, cch, _ch;
 		
 		while(l <= len) {
 			ch = string_char_at(fx, l);
@@ -139,6 +140,8 @@
 				else {
 					if(pres[? ch] > pres[? ds_stack_top(op)] || ds_stack_top(op) == "(") ds_stack_push(op, ch);
 					else {
+						if(ch == "-" && ds_map_exists(pres, _ch)) ch = "_"; //unary negative
+						
 						while(pres[? ch] <= pres[? ds_stack_top(op)] && !ds_stack_empty(op))
 							ds_stack_push(vl, buildFuncTree(ds_stack_pop(op), vl));
 						ds_stack_push(op, ch);
@@ -187,6 +190,8 @@
 					}
 				}
 			}
+			
+			_ch = ch;
 		}
 		
 		while(!ds_stack_empty(op)) 

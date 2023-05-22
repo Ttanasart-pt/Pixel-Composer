@@ -12,20 +12,22 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	inputs[| 1] = nodeValue("Sample", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 8, "Amount of grid subdivision. Higher number means more grid, detail.")
 		.setDisplay(VALUE_DISPLAY.slider, [ 2, 32, 1 ] );
 	
-	inputs[| 2] = nodeValue("Spring force", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.5)
+	inputs[| 2] = nodeValue("Spring Force", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.5)
 		.setDisplay(VALUE_DISPLAY.slider, [ 0, 1, 0.01 ] );
 	
 	inputs[| 3] = nodeValue("Mesh", self, JUNCTION_CONNECT.input, VALUE_TYPE.trigger, 0)
 		.setDisplay(VALUE_DISPLAY.button, [ function() { setTriangle(); doUpdate(); }, "Generate"] );
 	
-	inputs[| 4] = nodeValue("Diagonal link", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false, "Include diagonal link to prevent drastic grid deformation.");
+	inputs[| 4] = nodeValue("Diagonal Link", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false, "Include diagonal link to prevent drastic grid deformation.");
 	
 	inputs[| 5] = nodeValue("Active", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
 		active_index = 5;
 	
-	inputs[| 6] = nodeValue("Link strength", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0, "Link length preservation, setting it to 1 will prevent any stretching, contraction.")
+	inputs[| 6] = nodeValue("Link Strength", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0, "Link length preservation, setting it to 1 will prevent any stretching, contraction.")
 		.setDisplay(VALUE_DISPLAY.slider, [ 0, 1, 0.01 ] );
 		
+	inputs[| 7] = nodeValue("Full Mesh", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	
 	control_index = ds_list_size(inputs);
 	
 	function createControl() {
@@ -42,7 +44,7 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	outputs[| 1] = nodeValue("Mesh data", self, JUNCTION_CONNECT.output, VALUE_TYPE.object, data);
 	
 	input_display_list = [ 5, 
-		["Mesh",			false],	0, 1, 3,
+		["Mesh",			false],	0, 1, 3, 7, 
 		["Link",			false],	4, 6,
 		["Control points",	false], 
 	];
@@ -281,10 +283,11 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		var ww = useArray? surface_get_width(surf[0]) : surface_get_width(surf);
 		var hh = useArray? surface_get_height(surf[0]) : surface_get_height(surf);
 		
+		var fullmh = inputs[| 7].getValue() || useArray;
 		var gw = ww / sample;
 		var gh = hh / sample;
 		
-		if(!useArray) {
+		if(!fullmh) {
 			var cont = surface_create_valid(ww, hh);
 			
 			surface_set_target(cont);
@@ -308,14 +311,23 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		for(var i = 0; i <= sample; i++) 
 		for(var j = 0; j <= sample; j++) {
 			var fill = false;
-			if(useArray) {
+			if(fullmh) {
 				fill = true;
 			} else {
-				var c0 = surface_get_pixel(cont, j * gw,     i * gh);
-				var c1 = surface_get_pixel(cont, j * gw - 1, i * gh);
-				var c2 = surface_get_pixel(cont, j * gw,     i * gh - 1);
-				var c3 = surface_get_pixel(cont, j * gw - 1, i * gh - 1);
-				fill = c0 + c1 + c2 + c3 > 0;
+				var _i = i * gh;
+				var _j = j * gw;
+				
+				fill |= surface_get_pixel(cont, _j - 1, _i - 1);
+				fill |= surface_get_pixel(cont, _j - 1, _i);
+				fill |= surface_get_pixel(cont, _j - 1, _i + 1);
+				
+				fill |= surface_get_pixel(cont, _j, _i - 1);
+				fill |= surface_get_pixel(cont, _j, _i);
+				fill |= surface_get_pixel(cont, _j, _i + 1);
+				
+				fill |= surface_get_pixel(cont, _j + 1, _i - 1);
+				fill |= surface_get_pixel(cont, _j + 1, _i);
+				fill |= surface_get_pixel(cont, _j + 1, _i + 1);
 			}
 			
 			if(fill) {

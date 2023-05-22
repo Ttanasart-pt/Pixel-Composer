@@ -153,7 +153,7 @@ if(!ready) exit;
 #endregion
 
 #region debug
-	if(global.DEBUG_FLAG[$ "context_menu_id"]) {
+	if(global.FLAG[$ "context_menu_id"]) {
 		draw_set_color(c_white);
 		draw_rectangle_border(dialog_x, dialog_y, dialog_x + dialog_w, dialog_y + dialog_h, 2);
 		

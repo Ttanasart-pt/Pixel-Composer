@@ -1272,10 +1272,8 @@ function Panel_Graph() : PanelContent() constructor {
 		var _canvas = nodeBuild("Node_Canvas", _node.x + _node.w + 64, _node.y);
 		
 		_canvas.inputs[| 0].setValue([surface_get_width(surf), surface_get_height(surf)]);
-		var _surf = surface_clone(surf);
-		_canvas.outputs[| 0].setValue(_surf);
-		
-		_canvas.surface_update();
+		_canvas.canvas_surface = surface_clone(surf);
+		_canvas.apply_surface();
 	}
 	
 	function setTriggerPreview() {
@@ -1324,7 +1322,6 @@ function Panel_Graph() : PanelContent() constructor {
 		
 		_canvas.inputs[| 0].setValue([surface_get_width(surf), surface_get_height(surf)]);
 		_canvas.inputs[| 5].setValue(true);
-		_canvas.surface_update();
 		
 		var _blend = new Node_Blend(_node.x + _node.w + 64, _node.y, getCurrentContext());
 		_blend.inputs[| 0].setFrom(_outp);

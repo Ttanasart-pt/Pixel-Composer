@@ -22,9 +22,9 @@ function Panel_Console() : PanelContent() constructor {
 			case "flag": 
 				if(array_length(cmd) < 2) break;
 				var flg = array_safe_get(cmd, 1, "");
-				global.DEBUG_FLAG[$ flg] = !global.DEBUG_FLAG[$ flg];
+				global.FLAG[$ flg] = !global.FLAG[$ flg];
 				
-				array_push(history, { txt: $"Toggled debug flag: {flg} = {global.DEBUG_FLAG[$ flg]? "True" : "False"}", color: COLORS._main_value_positive });
+				array_push(history, { txt: $"Toggled debug flag: {flg} = {global.FLAG[$ flg]? "True" : "False"}", color: COLORS._main_value_positive });
 				break;
 		}
 		

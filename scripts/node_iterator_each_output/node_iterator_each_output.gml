@@ -33,17 +33,17 @@ function Node_Iterator_Each_Output(_x, _y, _group = noone) : Node(_x, _y, _group
 		var nodes = [];
 		
 		LOG_BLOCK_START();
-		LOG_IF(global.DEBUG_FLAG.render, "Call get next node from loop output.");
+		LOG_IF(global.FLAG.render, "Call get next node from loop output.");
 		
 		if(_ren == ITERATION_STATUS.loop) { //Go back to the beginning of the loop, reset render status for leaf node inside?
-			LOG_IF(global.DEBUG_FLAG.render, "Loop restart: iteration " + string(group.iterated));
+			LOG_IF(global.FLAG.render, "Loop restart: iteration " + string(group.iterated));
 		 	nodes = array_append(nodes, __nodeLeafList(group.getNodeList()));
 		} else if(_ren == ITERATION_STATUS.complete) { //Go out of loop
-			LOG_IF(global.DEBUG_FLAG.render, "Loop completed");
+			LOG_IF(global.FLAG.render, "Loop completed");
 			group.setRenderStatus(true);
 			nodes = getNextNodesRaw();
 		} else 
-			LOG_IF(global.DEBUG_FLAG.render, "Loop not ready");
+			LOG_IF(global.FLAG.render, "Loop not ready");
 			
 		LOG_BLOCK_END();
 			

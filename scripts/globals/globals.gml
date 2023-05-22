@@ -174,5 +174,5 @@
 #endregion
 
 #region debug
-	global.DEBUG_FLAG = {};
+	global.FLAG = {};
 #endregion

@@ -57,35 +57,39 @@ vec4 texture2Dintp( sampler2D texture, vec2 uv ) {
 
 /////////////// SAMPLING ///////////////
 
+float unmix( float st, float ed, float val) {
+	return (val - st) / (ed - st);
+}
+
 void main() {
 	float px = v_vTexcoord.x;
 	float py = v_vTexcoord.y;
+	float u, v;
+	vec2 uv;
 	
-	vec2 A = (p3 - p0) - (p2 - p1);
-    vec2 B = (p0 - p1);
-    vec2 C = (p2 - p1);
-    vec2 D =  p1;
+	if (abs(p3.y - p0.y) < 0.001 && abs(p2.y - p1.y) < 0.001) { // trapezoid edge case
+        float t = (py - p2.y) / (p3.y - p2.y);
+		
+		u = unmix(mix(p3.x, p2.x, 1. - t), mix(p0.x, p1.x, 1. - t), px);
+		v = t;
+        uv = vec2(u, v);
+    } else {
+		vec2 A = (p3 - p0) - (p2 - p1);
+	    vec2 B = (p0 - p1);
+	    vec2 C = (p2 - p1);
+	    vec2 D =  p1;
 	
-	if(abs(A.x) < 0.001) A.x = 0.001;
-	if(abs(B.x) < 0.001) B.x = 0.001;
-	if(abs(C.x) < 0.001) C.x = 0.001;
-	
-	if(abs(A.y) < 0.001) A.y = 0.001;
-	if(abs(B.y) < 0.001) B.y = 0.001;
-	if(abs(C.y) < 0.001) C.y = 0.001;
-	
-	float c1 = (B.y * C.x) + (A.y * D.x) - (B.x * C.y) - (A.x * D.y);
-    float c2 = (B.y * D.x) - (B.x * D.y);
+		float c1 = (B.y * C.x) + (A.y * D.x) - (B.x * C.y) - (A.x * D.y);
+	    float c2 = (B.y * D.x) - (B.x * D.y);
 
-	float _A = (A.y * C.x) - (A.x * C.y);
-	
-	float _B = (A.x * py) + c1 - (A.y * px);
-	float _C = (B.x * py) + c2 - (B.y * px);
+		float _A = (A.y * C.x) - (A.x * C.y);
+		float _B = (A.x * py) + c1 - (A.y * px);
+		float _C = (B.x * py) + c2 - (B.y * px);
 
-	highp float u =  A == 0.?              0. : (-_B - sqrt(_B * _B - 4.0 * _A * _C)) / (_A * 2.0);
-	highp float v = (u * A.x + B.x) == 0.? 0. : (px - (u * C.x) - D.x) / (u * A.x + B.x);
-	
-	vec2 uv = vec2(1. - u, v);
+		u =  A == 0.?              0. : (-_B - sqrt(_B * _B - 4.0 * _A * _C)) / (_A * 2.0);
+		v = (u * A.x + B.x) == 0.? 0. : (px - (u * C.x) - D.x) / (u * A.x + B.x);
+		uv = vec2(1. - u, v);
+	}
 	
 	if(uv.x >= 0. && uv.y >= 0. && uv.x <= 1. && uv.y <= 1.)
 		gl_FragColor = texture2Dintp( gm_BaseTexture, uv );

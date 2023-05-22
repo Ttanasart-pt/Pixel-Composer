@@ -12,7 +12,7 @@ function Node_Array_Copy(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	
 	inputs[| 1] = nodeValue("Starting Index", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0);
 	
-	inputs[| 2] = nodeValue("Size", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0);
+	inputs[| 2] = nodeValue("Size", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1);
 	
 	outputs[| 0] = nodeValue("Array", self, JUNCTION_CONNECT.output, VALUE_TYPE.any, 0)
 		.setArrayDepth(1);
@@ -29,13 +29,6 @@ function Node_Array_Copy(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		var _arr = inputs[| 0].getValue();
 		var _ind = inputs[| 1].getValue();
 		var _siz = inputs[| 2].getValue();
-		
-		var _a = _arr, _res = [];
-		for( var i = 0; i < array_length(_a); i++ ) {
-			var _aa = _a[i];
-			
-			_res = _aa[_ind]
-		}
 		
 		if(!is_array(_arr)) return;
 		var res = [];

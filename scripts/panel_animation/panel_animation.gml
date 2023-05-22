@@ -127,6 +127,9 @@ function Panel_Animation() : PanelContent() constructor {
 		}
 		
 	});
+	
+	addHotkey("", "Resume/Pause",	vk_space, MOD_KEY.shift,	function() { if(ANIMATOR.is_playing) ANIMATOR.pause() else ANIMATOR.resume(); });
+	
 	addHotkey("", "First frame",	vk_home,  MOD_KEY.none,	function() { ANIMATOR.setFrame(0); });
 	addHotkey("", "Last frame",		vk_end,   MOD_KEY.none,	function() { ANIMATOR.setFrame(ANIMATOR.frames_total - 1); });
 	addHotkey("", "Next frame",		vk_right, MOD_KEY.none,	function() { 
@@ -407,6 +410,7 @@ function Panel_Animation() : PanelContent() constructor {
 		var bar_w = timeline_w;
 		var bar_h = timeline_h;
 		var bar_total_w = ANIMATOR.frames_total * ui(timeline_scale);
+		var inspecting = PANEL_INSPECTOR.inspecting;
 		
 		resetTimelineMask();
 		if(!is_surface(timeline_surface) || !surface_exists(timeline_surface)) 
@@ -418,6 +422,9 @@ function Panel_Animation() : PanelContent() constructor {
 		#region bg
 			draw_sprite_stretched(THEME.ui_panel_bg, 1, 0, 0, bar_w, bar_h);
 			draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, 0, 0, bar_total_w, bar_h, COLORS.panel_animation_timeline_blend, 1);
+			
+			if(inspecting)
+				inspecting.drawAnimationTimeline(timeline_shift, bar_w, bar_h, timeline_scale);
 			
 			for(var i = timeline_separate; i <= ANIMATOR.frames_total; i += timeline_separate) {
 				var bar_line_x = i * ui(timeline_scale) + timeline_shift;
@@ -438,8 +445,6 @@ function Panel_Animation() : PanelContent() constructor {
 		#endregion
 			
 		#region cache
-			var inspecting = PANEL_INSPECTOR.inspecting;
-				
 			if(inspecting && inspecting.use_cache) {
 				for(var i = 0; i < ANIMATOR.frames_total; i++) {
 					if(i >= array_length(inspecting.cache_result)) 
@@ -520,15 +525,9 @@ function Panel_Animation() : PanelContent() constructor {
 				timeline_separate = 5;
 				timeline_sep_line = 1;
 				
-				if(timeline_scale <= 10) {
-					timeline_separate = 10;
-					timeline_sep_line = 2;
-				}
-				
-				if(timeline_scale <= 3) {
-					timeline_separate = 20;
-					timeline_sep_line = 5;
-				}
+					 if(timeline_scale <=  1) { timeline_separate =  50; timeline_sep_line = 10; }
+				else if(timeline_scale <=  3) { timeline_separate =  20; timeline_sep_line =  5; }
+				else if(timeline_scale <= 10) { timeline_separate =  10; timeline_sep_line =  2; }
 				
 				if(sca != timeline_scale) {
 					var mfb = (mx - bar_x - timeline_shift) / ui(timeline_scale);
@@ -1665,6 +1664,11 @@ function Panel_Animation() : PanelContent() constructor {
 		
 		if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(24), [mx, my], pFOCUS, pHOVER, txt, THEME.node_name_type, node_name_type) == 2)
 			node_name_type = (node_name_type + 1) % 3;
+		
+		by += ui(28);
+		txt = get_text("panel_animation_keyframe_override", "Override Keyframe");
+		if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(24), [mx, my], pFOCUS, pHOVER, txt, THEME.keyframe_override, global.FLAG.keyframe_override) == 2)
+			global.FLAG.keyframe_override = !global.FLAG.keyframe_override;
 	}
 	
 	function drawContent(panel) {

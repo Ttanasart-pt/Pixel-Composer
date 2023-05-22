@@ -169,4 +169,8 @@ function Node_Equation(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		for(var i = input_fix_len; i < ds_list_size(_inputs); i += data_length)
 			createNewInput();
 	}
+	
+	static doApplyDeserialize = function() {
+		refreshDynamicInput();
+	}
 }

@@ -1,4 +1,8 @@
-#region anomation class
+#region global
+	global.FLAG.keyframe_override = true;
+#endregion
+
+#region animation class
 	function AnimationManager() constructor {
 		frames_total	= 30;
 		current_frame	= 0;
@@ -56,6 +60,11 @@
 		
 		static pause = function() {
 			ANIMATOR.is_playing = false;
+			ANIMATOR.frame_progress = true;
+		}
+		
+		static play = function() {
+			ANIMATOR.is_playing = true;
 			ANIMATOR.frame_progress = true;
 		}
 		

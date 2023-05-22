@@ -292,7 +292,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		if(SAFE_MODE) return;
 		var sBase = surface_get_target();
 		LOG_BLOCK_START();
-		LOG_IF(global.DEBUG_FLAG.render, "DoUpdate called from " + name);
+		LOG_IF(global.FLAG.render, "DoUpdate called from " + name);
 		
 		for( var i = 0; i < ds_list_size(inputs); i++ ) {
 			if(inputs[| i].type != VALUE_TYPE.trigger) continue;
@@ -343,7 +343,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	
 	static triggerRender = function() {
 		LOG_BLOCK_START();
-		LOG_IF(global.DEBUG_FLAG.render, "Trigger render for " + name + " (" + display_name + ")");
+		LOG_IF(global.FLAG.render, "Trigger render for " + name + " (" + display_name + ")");
 		
 		setRenderStatus(false);
 		UPDATE |= RENDER_TYPE.partial;
@@ -369,7 +369,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 			if(!val_from.node.active)		continue;
 			if(!val_from.node.renderActive) continue;
 			if(!val_from.node.rendered && !val_from.node.update_on_frame) {
-				//LOG_LINE_IF(global.DEBUG_FLAG.render && name == "Tunnel Out", "Non renderable because: " + string(val_from.node.name));
+				//LOG_LINE_IF(global.FLAG.render && name == "Tunnel Out", "Non renderable because: " + string(val_from.node.name));
 				return false;
 			}
 		}
@@ -383,7 +383,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		var nodes = [];
 		
 		LOG_BLOCK_START();
-		LOG_IF(global.DEBUG_FLAG.render, "Call get next node from: " + name);
+		LOG_IF(global.FLAG.render, "Call get next node from: " + name);
 		LOG_BLOCK_START();
 		
 		for(var i = 0; i < ds_list_size(outputs); i++) {
@@ -393,10 +393,10 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 				var _to = _ot.value_to[| j];
 				if(!_to.node.active || _to.value_from == noone) continue; 
 				
-				LOG_IF(global.DEBUG_FLAG.render, "Check render " + _to.node.name + " from " + _to.value_from.node.name);
+				LOG_IF(global.FLAG.render, "Check render " + _to.node.name + " from " + _to.value_from.node.name);
 				if(_to.value_from.node != self) continue;
 				
-				LOG_IF(global.DEBUG_FLAG.render, "Check complete, push " + _to.node.name + " to stack.");
+				LOG_IF(global.FLAG.render, "Check complete, push " + _to.node.name + " to stack.");
 				array_push(nodes, _to.node);
 			}
 		}	
@@ -409,7 +409,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	static onInspect = function() {}
 	
 	static setRenderStatus = function(result) {
-		LOG_LINE_IF(global.DEBUG_FLAG.render, "Set render status for " + name + " : " + string(result));
+		LOG_LINE_IF(global.FLAG.render, "Set render status for " + name + " : " + string(result));
 		
 		rendered = result;
 	}
@@ -947,6 +947,8 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	}
 	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {}
+	
+	static drawAnimationTimeline = function(_w, _h, _s) {}
 	
 	static getPreviewValue = function() {
 		if(preview_channel > ds_list_size(outputs)) return noone;

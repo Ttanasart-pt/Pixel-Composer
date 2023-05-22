@@ -29,7 +29,7 @@ enum VALUE_TYPE {
 	trigger	  = 19,
 	atlas	  = 20,
 	
-	d3vertex = 21,
+	d3vertex  = 21,
 	
 	action	  = 99,
 }
@@ -1062,7 +1062,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			}
 		}
 		
-		if(isArray(val)) { //Process data
+		if(isArray(val) && array_length(val) < 128) { //Process data
 			for( var i = 0; i < array_length(val); i++ )
 				val[i] = valueProcess(val[i], nod, applyUnit, arrIndex);
 		} else 

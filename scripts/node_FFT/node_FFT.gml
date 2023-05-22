@@ -3,7 +3,7 @@ function Node_FFT(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) const
 	previewable = false;
 	
 	w = 96;
-	h = 32 + 24;
+	h = 72;
 	min_h = h;
 	
 	inputs[| 0] = nodeValue("Data", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [])
@@ -24,13 +24,13 @@ function Node_FFT(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) const
 		var _r = [];
 		
 		for( var i = 0; i < array_length(_res); i++ )
-			_r[i] = _res[i].re;
+			_r[i] = sqrt(sqr(_res[i].re) + sqr(_res[i].im));
 		
 		return _r;
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		var bbox = drawGetBbox(xx, yy, _s);
-		draw_sprite_fit(s_node_array_reverse, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
+		draw_sprite_fit(s_node_FFT, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
 	}
 }

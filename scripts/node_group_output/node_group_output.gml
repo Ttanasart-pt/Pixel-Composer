@@ -19,7 +19,7 @@ function Node_Group_Output(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	output_index = -1;
 	
 	static setRenderStatus = function(result) {
-		LOG_LINE_IF(global.DEBUG_FLAG.render, "Set render status for " + name + " : " + string(result));
+		LOG_LINE_IF(global.FLAG.render, "Set render status for " + name + " : " + string(result));
 		
 		rendered = result;
 		if(group) group.setRenderStatus(result);
@@ -34,29 +34,29 @@ function Node_Group_Output(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	static getNextNodes = function() {
 		if(is_undefined(outParent)) return [];
 		//group.setRenderStatus(true);
-		//printIf(global.DEBUG_FLAG.render, "Value to amount " + string(ds_list_size(outParent.value_to)));
+		//printIf(global.FLAG.render, "Value to amount " + string(ds_list_size(outParent.value_to)));
 		
 		LOG_BLOCK_START();
 		var nodes = [];
 		for(var j = 0; j < ds_list_size(outParent.value_to); j++) {
 			var _to = outParent.value_to[| j];
 			if(!_to.node.renderActive) continue;
-			//printIf(global.DEBUG_FLAG.render, "Value to " + _to.name);
+			//printIf(global.FLAG.render, "Value to " + _to.name);
 			
 			if(!_to.node.active || _to.value_from == noone) {
-				//printIf(global.DEBUG_FLAG.render, "no value from");
+				//printIf(global.FLAG.render, "no value from");
 				continue; 
 			}
 			
 			if(_to.value_from.node != group) {
-				//printIf(global.DEBUG_FLAG.render, "value from not equal group");
+				//printIf(global.FLAG.render, "value from not equal group");
 				continue; 
 			}
 				
-			//printIf(global.DEBUG_FLAG.render, "Group output ready " + string(_to.node.isRenderable()));
+			//printIf(global.FLAG.render, "Group output ready " + string(_to.node.isRenderable()));
 			
 			array_push(nodes, _to.node);
-			LOG_IF(global.DEBUG_FLAG.render, "Check complete, push " + _to.node.name + " to stack.");
+			LOG_IF(global.FLAG.render, "Check complete, push " + _to.node.name + " to stack.");
 		}
 		LOG_BLOCK_END();
 		

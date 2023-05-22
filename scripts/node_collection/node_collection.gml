@@ -143,7 +143,7 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 			if(!_in.renderActive) continue;
 			
 			array_push(nodes, _in);
-			LOG_IF(global.DEBUG_FLAG.render, "Check complete, push " + _in.name + " to stack.");
+			LOG_IF(global.FLAG.render, "Check complete, push " + _in.name + " to stack.");
 		}
 		
 		LOG_BLOCK_END();
@@ -152,7 +152,7 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	
 	static setRenderStatus = function(result) {
 		LOG_BLOCK_START();
-		LOG_IF(global.DEBUG_FLAG.render, "Set render status for " + name + " : " + string(result));
+		LOG_IF(global.FLAG.render, "Set render status for " + name + " : " + string(result));
 		LOG_BLOCK_END();
 		rendered = result;
 		
@@ -376,10 +376,10 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	
 	static resetRender = function() {
 		LOG_BLOCK_START();
-		LOG_IF(global.DEBUG_FLAG.render, "Reset Render for collection " + name);
+		LOG_IF(global.FLAG.render, "Reset Render for collection " + name);
 		
 		for( var i = 0; i < ds_list_size(nodes); i++ ) {
-			LOG_IF(global.DEBUG_FLAG.render, "Reset Render for " + nodes[| i].name);
+			LOG_IF(global.FLAG.render, "Reset Render for " + nodes[| i].name);
 			nodes[| i].rendered = false;
 		}
 		

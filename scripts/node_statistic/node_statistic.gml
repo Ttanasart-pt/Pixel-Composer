@@ -158,6 +158,7 @@ function Node_Statistic(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 				break;
 			case STAT_OPERATOR._max : 
 				var _max = -9999999999;
+				
 				for( var i = input_fix_len; i < ds_list_size(inputs) - 1; i++ ) {
 					var val = inputs[| i].getValue();
 					if(is_array(val)) {

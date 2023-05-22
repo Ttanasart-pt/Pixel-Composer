@@ -281,6 +281,8 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 			for(var i = 0; i < ds_list_size(values); i++) { //Find trigger
 				var _key = values[| i];
 				if(_key.time == _time)  {
+					if(!global.FLAG.keyframe_override) return false;
+					
 					_key.value = _val;
 					return false;
 				} else if(_key.time > _time) {
@@ -312,6 +314,8 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 		for(var i = 0; i < ds_list_size(values); i++) {
 			var _key = values[| i];
 			if(_key.time == _time) {
+				if(!global.FLAG.keyframe_override) return false;
+				
 				if(_key.value != _val) {
 					if(_record) recordAction(ACTION_TYPE.var_modify, _key, [ _key.value, "value", prop.name ]);
 					_key.value = _val;
