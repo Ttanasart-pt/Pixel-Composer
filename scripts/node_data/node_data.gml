@@ -21,7 +21,11 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		MODIFIED = true;
 	} else {
 		run_in(1, function() { 
-			internalName = string_replace_all(name, " ", "_") + string(irandom_range(10000, 99999)); 
+			var str = string_replace_all(name, " ", "_");
+			    str = string_replace_all(str,  "/", "");
+			    str = string_replace_all(str,  "-", "");
+			
+			internalName = str + string(irandom_range(10000, 99999)); 
 			NODE_NAME_MAP[? internalName] = self;
 		});
 	}

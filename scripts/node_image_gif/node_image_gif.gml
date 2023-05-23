@@ -99,15 +99,13 @@ function Node_Image_gif(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	}
 	
 	static step = function() {
-		if(loading == 2 && spr_builder != noone) {
-			if(spr_builder.building()) {
-				spr = spr_builder._spr;
-				doUpdate();
-				loading = 0;
-				delete spr_builder;
+		if(loading == 2 && spr_builder != noone && spr_builder.building()) {
+			spr = spr_builder._spr;
+			doUpdate();
+			loading = 0;
+			delete spr_builder;
 				
-				gc_collect();
-			}
+			gc_collect();
 		}
 	}
 	

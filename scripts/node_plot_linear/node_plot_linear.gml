@@ -57,11 +57,14 @@ function Node_Plot_Linear(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	inputs[| 22] = nodeValue("Loop", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
 	
+	inputs[| 23] = nodeValue("Smooth", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
+		.setDisplay(VALUE_DISPLAY.slider, [ 0, 1, 0.01 ]);
+	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [ 0, 
 		["Data", 	 true], 1, 12, 21, 14, 2, 3, 15, 16, 
-		["Plot",	false], 11, 4, 10, 20, 5, 17, 22, 
+		["Plot",	false], 11, 4, 10, 20, 5, 17, 22, 23, 
 		["Render",	false], 6, 13, 7, 18, 19, 8, 9, 
 	];
 	
@@ -83,13 +86,17 @@ function Node_Plot_Linear(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		inputs[| 18].setVisible(_typ == 0);
 		inputs[| 19].setVisible(_typ == 0);
 		inputs[| 22].setVisible(_typ == 1);
+		inputs[| 23].setVisible(_typ == 1);
 		
 		inputs[|  4].setVisible(!_use_path);
 		inputs[| 10].setVisible(!_use_path);
 	}
 	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
-		inputs[| 4].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
+		var _use_path = getSingleValue(20) != noone;
+		
+		if(!_use_path)
+			inputs[| 4].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
 	}
 	
 	static process_data = function(_outSurf, _data, _output_index, _array_index) {
@@ -120,6 +127,7 @@ function Node_Plot_Linear(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		var _path = _data[20];
 		var _flip = _data[21];
 		var _loop = _data[22];
+		var _smt  = _data[23];
 		
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
 		
@@ -166,7 +174,6 @@ function Node_Plot_Linear(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 				if(_path == noone) {
 					_px = _ori[0] + lengthdir_x(i * _bar_spc, _ang);
 					_py = _ori[1] + lengthdir_y(i * _bar_spc, _ang);
-					_ang_nor = _ang + 90;
 				} else {
 					_pnt = _path.getPointRatio(i / amo);
 					if(_ppnt == undefined)
@@ -174,10 +181,12 @@ function Node_Plot_Linear(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 					
 					_px = _pnt.x;
 					_py = _pnt.y;
-					_ang_nor = point_direction(_ppnt.x, _ppnt.y, _pnt.x, _pnt.y) + 90;
+					_ang = point_direction(_ppnt.x, _ppnt.y, _pnt.x, _pnt.y)
 					
 					_ppnt = _pnt;
 				}
+				
+				_ang_nor = _ang + 90;
 				
 				_val = _smp_data[i] + _off;
 				
@@ -193,7 +202,36 @@ function Node_Plot_Linear(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 						else		 draw_line_width(_px, _py, nx, ny, _bar_wid);
 						break;
 					case 1 :
-						if(i > _st) draw_line_round(ox, oy, nx, ny, _lth);
+						if(i > _st) {
+							if(_smt > 0) {
+								var dist = dot_product(nx - ox, ny - oy, lengthdir_x(1, _ang), lengthdir_y(1, _ang));
+								var _b0x = ox + lengthdir_x(dist * _smt, _ang);
+								var _b0y = oy + lengthdir_y(dist * _smt, _ang);
+								var _b1x = nx + lengthdir_x(dist * _smt, _ang + 180);
+								var _b1y = ny + lengthdir_y(dist * _smt, _ang + 180);
+								
+								//draw_line(ox, oy, _b0x, _b0y);
+								//draw_line(_b0x, _b0y, _b1x, _b1y);
+								//draw_line(_b1x, _b1y, nx, ny);
+								
+								var _ox = ox, _oy = oy, _nx, _ny;
+								
+								for( var j = 1; j <= 8; j++ ) {
+									var _t  = 1 - j / 8;
+									_nx = ox * power(_t, 3) + 3 * _b0x * power(_t, 2) * (1 - _t) + 3 * _b1x * (_t) * power(1 - _t, 2) + nx * power(1 - _t, 3);
+									_ny = oy * power(_t, 3) + 3 * _b0y * power(_t, 2) * (1 - _t) + 3 * _b1y * (_t) * power(1 - _t, 2) + ny * power(1 - _t, 3);
+									
+									if(_lth > 1) draw_line_round(_ox, _oy, _nx, _ny, _lth);
+									else		 draw_line(_ox, _oy, _nx, _ny);
+									
+									_ox = _nx;
+									_oy = _ny;
+								}
+							} else {
+								if(_lth > 1) draw_line_round(ox, oy, nx, ny, _lth);
+								else		 draw_line(ox, oy, nx, ny);
+							}
+						}
 						break;
 				}
 				
@@ -206,7 +244,7 @@ function Node_Plot_Linear(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 				}
 			}
 			
-			if(_loop && _typ == 1) 
+			if(_loop && amo > 1 && _typ == 1)
 				draw_line_round(fx, fy, nx, ny, _lth);
 			
 			draw_set_circle_precision(64);

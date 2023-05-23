@@ -184,6 +184,8 @@ function Node_WAV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			print("Load audio complete");
 			readSoundComplete();
 			checkPreview(true);
+			
+			UPDATE |= RENDER_TYPE.full;
 		}
 		
 		insp2UpdateIcon[1] = attributes[? "play"];
