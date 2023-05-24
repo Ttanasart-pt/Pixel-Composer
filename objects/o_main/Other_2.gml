@@ -93,7 +93,7 @@
 	var cmd = ".pxcc=\"" + string(program_directory) + "PixelComposer.exe\"";
 	execute_shell("assoc", cmd);
 	
-	print($"Setup time = {current_time - t}");
+	//print($"Setup time: {(current_time - t)/1000}s");
 #endregion
 
 #region parameter

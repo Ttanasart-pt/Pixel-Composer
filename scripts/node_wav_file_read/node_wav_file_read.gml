@@ -74,6 +74,21 @@ function Node_WAV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	wav_file_prg = 0;
 	wav_file_lim = 1;
 	
+	attributes[? "preview_shift"] = 0;
+	attributes[? "preview_gain"] = 0.5;
+	
+	array_push(attributeEditors, "Audio Preview");
+	
+	array_push(attributeEditors, ["Gain", "preview_gain", 
+		new textBox(TEXTBOX_INPUT.number, function(val) { 
+			attributes[? "preview_gain"] = val; 
+		})]);
+		
+	array_push(attributeEditors, ["Shift", "preview_shift", 
+		new textBox(TEXTBOX_INPUT.number, function(val) { 
+			attributes[? "preview_shift"] = val; 
+		})]);
+		
 	on_dragdrop_file = function(path) {
 		if(updatePaths(path)) {
 			doUpdate();
@@ -200,9 +215,11 @@ function Node_WAV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			if(ANIMATOR.current_frame == 0)
 				audio_stop_sound(preview_audio);
 				
-			var dur = ANIMATOR.current_frame / ANIMATOR.framerate;
+			var dur = ANIMATOR.current_frame / ANIMATOR.framerate - attributes[? "preview_shift"];
 			if(!audio_is_playing(preview_audio))
-				audio_play_sound(preview_audio, 1, false, 0.5, dur);
+				audio_play_sound(preview_audio, 1, false, attributes[? "preview_gain"], dur);
+			else if(ANIMATOR.frame_progress)
+				audio_sound_set_track_position(preview_audio, dur);
 		}
 	}
 	
@@ -217,8 +234,8 @@ function Node_WAV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		var amp_ind = round(frame * content.sample / ANIMATOR.framerate);
 		var amp_win = content.sample / ANIMATOR.framerate;
 		
+		var amp_st = max(0, amp_ind - amp_win);
 		var amp_ed = min(len, amp_ind + amp_win);
-		var amp_st = max(0, amp_ed - amp_win);
 		
 		//print($"{amp_ind}: {amp_st} - {amp_ed}")
 		
@@ -226,7 +243,7 @@ function Node_WAV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		for( var i = amp_st; i < amp_ed; i++ )
 			dec += content.sound[0][i] == 0? 0 : 20 * log10(abs(content.sound[0][i]));
 			
-		dec /= amp_win;
+		dec /= amp_ed - amp_st;
 		outputs[| 5].setValue(dec);
 	}
 	
@@ -253,7 +270,7 @@ function Node_WAV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 				ss, ss,,, 0.50);
 				
 			var wd = (ANIMATOR.current_frame / ANIMATOR.framerate) / content.duration * sw;
-			draw_surface_part_ext_safe(audio_surface, 0, 0, wd, sh, 
+			draw_surface_part_ext_safe(audio_surface, 0, 0, min(wd, sw), sh, 
 				bbox.xc - sw * ss / 2, 
 				bbox.yc - sh * ss / 2, 
 				ss, ss,, attributes[? "play"]? COLORS._main_accent : c_white);
@@ -274,8 +291,8 @@ function Node_WAV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		var _am = content.packet / _st;
 		var ox, oy, nx, ny;
 		
-		for( var i = 0; i < _am; i++ ) {
-			var _dat = content.sound[0][i * _st];
+		for( var i = 0; i <= _am; i++ ) {
+			var _dat = content.sound[0][min(i * _st, content.packet - 1)];
 			nx = _shf + i * _s;
 			ny = _h / 2 + _dat * _h;
 			
