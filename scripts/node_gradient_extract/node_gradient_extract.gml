@@ -4,8 +4,7 @@ function Node_Gradient_Extract(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 	
 	w = 96;
 	
-	inputs[| 0] = nodeValue("Gradient", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, new gradientObject(c_white) )
-		.setDisplay(VALUE_DISPLAY.gradient)
+	inputs[| 0] = nodeValue("Gradient", self, JUNCTION_CONNECT.input, VALUE_TYPE.gradient, new gradientObject(c_white) )
 		.setVisible(true, true);
 	
 	outputs[| 0] = nodeValue("Colors", self, JUNCTION_CONNECT.output, VALUE_TYPE.color, [] )

@@ -206,9 +206,13 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 			process_length[i][1] = amoMax;
 		}
 		
+		var val;
 		for(var i = 0; i < ds_list_size(outputs); i++) {
-			var val = preProcess(i);
-			if(val == undefined) continue;
+			if(outputs[| i].process_array) {
+				val = preProcess(i);
+				if(val == undefined) continue;
+			} else
+				val = process_data(noone, noone, i);
 			outputs[| i].setValue(val);
 		}
 	}

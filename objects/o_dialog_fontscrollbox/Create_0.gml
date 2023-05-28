@@ -14,7 +14,7 @@ event_inherited();
 	
 	sc_content = new scrollPane(0, 0, function(_y, _m) {
 		draw_clear_alpha(COLORS.panel_bg_clear, 0);
-		var hght = line_height(f_p0, 8);
+		var hght = line_get_height(f_p0, 8);
 		var data = FONT_INTERNAL;
 		var _h   = array_length(data) * hght;
 		var _dw  = sc_content.surface_w;

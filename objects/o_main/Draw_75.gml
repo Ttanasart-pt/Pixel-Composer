@@ -28,6 +28,9 @@ if(OS == os_windows && gameframe_is_minimized()) exit;
 				case VALUE_TYPE.color :
 					draw_tooltip_color(content);
 					break;
+				case VALUE_TYPE.gradient :
+					draw_tooltip_gradient(content);
+					break;
 				case VALUE_TYPE.d3object :
 					draw_tooltip_text("[" + get_text("tooltip_3d_object", "3D Object") + "]");
 					break;
@@ -69,6 +72,9 @@ if(OS == os_windows && gameframe_is_minimized()) exit;
 					var txt = get_text("tooltip_mesh_vertex", "3D Vertex");
 					txt += " (groups: " + string(array_length(content)) + ")";
 					draw_tooltip_text("[" + txt + "]");
+					break;
+				case VALUE_TYPE.atlas :
+					draw_tooltip_atlas(content);
 					break;
 			}
 		} else 

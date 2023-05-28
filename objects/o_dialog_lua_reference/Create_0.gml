@@ -28,7 +28,7 @@ event_inherited();
 			if(is_string(_f)) {
 				draw_set_text(f_p0b, fa_left, fa_top, COLORS._main_text_accent);
 				yy += ui(8);
-				var hh = line_height() + pad + ui(8);
+				var hh = line_get_height() + pad + ui(8);
 				
 				draw_text_over(ui(24), yy, _f);
 				
@@ -42,12 +42,12 @@ event_inherited();
 			var _func = array_length(_f) > 2? _f[2] : _f[0];
 			var _desp = array_safe_get(_f, 3, "");
 			var _args = array_safe_get(_f, 4, []);
-			var hh = line_height();
+			var hh = line_get_height();
 			if(is_open[i]) {
 				draw_set_text(f_p0, fa_left, fa_top, COLORS._main_text);
 				hh += pad + string_height(_desp) + ui(8);
 				if(array_length(_args)) 
-					hh += (line_height() + ui(4)) * (array_length(_args) + 1) + ui(20);
+					hh += (line_get_height() + ui(4)) * (array_length(_args) + 1) + ui(20);
 			}
 			hh += pad * 2;
 			
@@ -63,12 +63,12 @@ event_inherited();
 					sp_note.surface_w, hh, COLORS.dialog_lua_ref_bg, 1);
 			BLEND_NORMAL;
 			
-			draw_sprite_ui(THEME.arrow, is_open[i]? 3 : 0, ui(16), yy + pad + line_height() / 2,,,, COLORS._main_icon);
+			draw_sprite_ui(THEME.arrow, is_open[i]? 3 : 0, ui(16), yy + pad + line_get_height() / 2,,,, COLORS._main_icon);
 			draw_set_text(f_code, fa_left, fa_top, COLORS._main_text);
 			draw_code(ui(28), yy + pad, _func);
 			
 			if(is_open[i]) {
-				var ty = yy + pad + line_height() + ui(4);
+				var ty = yy + pad + line_get_height() + ui(4);
 				draw_set_text(f_p0, fa_left, fa_top, COLORS._main_text_sub);
 				draw_text(ui(32), ty, _desp);
 				
@@ -76,9 +76,9 @@ event_inherited();
 					var ax0 = ui(64 + 16);
 					var ax1 = ui(200);
 					var ax2 = ui(320);
-					ty += line_height() + ui(12);
+					ty += line_get_height() + ui(12);
 					
-					var ah = (line_height() + ui(4)) * (array_length(_args) + 1) + ui(8);
+					var ah = (line_get_height() + ui(4)) * (array_length(_args) + 1) + ui(8);
 					draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, ui(64), ty, sp_note.surface_w - ui(96), ah, 
 						COLORS.dialog_lua_ref_bg_args, 1);
 					
@@ -88,13 +88,13 @@ event_inherited();
 					draw_text(ax2, ty, "Description");
 					
 					draw_set_text(f_p0, fa_left, fa_top, COLORS._main_text);
-					ty += line_height() + ui(4);
+					ty += line_get_height() + ui(4);
 					for( var j = 0; j < array_length(_args); j++ ) {
 						draw_text(ax0, ty, _args[j][0]);
 						draw_text(ax1, ty, _args[j][1]);
 						draw_text(ax2, ty, _args[j][2]);
 						
-						ty += line_height() + ui(4);
+						ty += line_get_height() + ui(4);
 					}
 				}
 			}

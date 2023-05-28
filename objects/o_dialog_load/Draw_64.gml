@@ -16,7 +16,7 @@ draw_set_alpha(1);
 	var py = dialog_y + ui(16);
 	draw_set_text(f_h5, fa_left, fa_top, COLORS._main_text_title);
 	draw_text(dialog_x + ui(24), py, "Project modified");
-	py += line_height(, 4);
+	py += line_get_height(, 4);
 	
 	draw_set_text(f_p0, fa_left, fa_top, COLORS._main_text);
 	draw_text(dialog_x + ui(24), py, "Do you want to save progress?");

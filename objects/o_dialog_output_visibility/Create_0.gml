@@ -17,7 +17,7 @@ event_inherited();
 		draw_clear_alpha(COLORS._main_text, 0);
 		if(node == noone) return 0;
 		
-		var hh = line_height() + ui(8);
+		var hh = line_get_height() + ui(8);
 		var _h = ds_list_size(node.outputs) * hh;
 		
 		for( var i = 0; i < ds_list_size(node.outputs); i++ ) {

@@ -39,10 +39,16 @@ function file_read_wav(path) {
 	printIf(global.FLAG.wav_import, "-- FORMAT --")
 	var b  = file_read_ASCII(wav_file_reader, 4);		printIf(global.FLAG.wav_import, b);
 	var l  = file_read_bytes(wav_file_reader, 4);		printIf(global.FLAG.wav_import, $"Length:   {l}");
+	
+	if(l != 16) {
+		noti_waning("File format not supported, the audio file need to be 8, 16 bit PCM wav with no extension.");
+		return;
+	}
+	
 	var l  = file_read_bytes(wav_file_reader, 2);		printIf(global.FLAG.wav_import, $"0x01:     {l}");
 	var ch = file_read_bytes(wav_file_reader, 2);		printIf(global.FLAG.wav_import, $"Channels: {ch}");
 	var sm = file_read_bytes(wav_file_reader, 4);		printIf(global.FLAG.wav_import, $"Sample:   {sm}");
-	var l  = file_read_bytes(wav_file_reader, 4);		printIf(global.FLAG.wav_import, $"BPS:	   {l}");
+	var l  = file_read_bytes(wav_file_reader, 4);		printIf(global.FLAG.wav_import, $"BPS:	    {l}");
 	var br = file_read_bytes(wav_file_reader, 2);		printIf(global.FLAG.wav_import, $"Bitrate:  {br}");
 	var l  = file_read_bytes(wav_file_reader, 2);		printIf(global.FLAG.wav_import, $"Bit/Sam:  {l}");
 	

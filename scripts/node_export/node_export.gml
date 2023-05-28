@@ -103,6 +103,8 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	magick    = working_directory + "ImageMagick/magick.exe";
 	webp      = working_directory + "webp/webpmux.exe";
 	
+	gifski = working_directory + "gifski\\win\\gifski.exe";
+	
 	static onValueUpdate = function(_index) {
 		var form = inputs[| 3].getValue();
 		
@@ -200,30 +202,32 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	}
 	
 	static renderGif = function(temp_path, target_path) {
-		var loop = inputs[| 5].getValue();
-		var opti = inputs[| 6].getValue();
-		var fuzz = inputs[| 7].getValue();
-		var rate = inputs[| 8].getValue();
+		var loop = inputs[|  5].getValue();
+		var opti = inputs[|  6].getValue();
+		var fuzz = inputs[|  7].getValue();
+		var rate = inputs[|  8].getValue();
+		var qual = inputs[| 10].getValue();
 		if(rate == 0) rate = 1;
 		
-		var framerate = 100 / rate;
-		var loop_str = loop? 0 : 1;
+		target_path = string_replace_all(target_path, "/", "\\");
+		var framerate  = 100 / rate;
+		var loop_str   = loop? 0 : 1;
+		var use_gifski = false;
 		
-		var shell_cmd = "-delay " + string(framerate) +
-			" -alpha set" + 
-			" -dispose previous" + 
-			" -loop " + string(loop_str);
-		
-		if(opti) {
-			shell_cmd += " -fuzz " + string(fuzz * 100) + "%" +
-				" -layers OptimizeFrame" +
-				" -layers OptimizeTransparency";
+		if(use_gifski) {
+			var	shell_cmd  = $"-o {target_path} -r {rate} --repeat {loop_str} -Q {qual} ";
+				shell_cmd += temp_path;
+			
+			//print($"{gifski} {shell_cmd}");
+			execute_shell(gifski, shell_cmd);
+		} else {
+			var		 shell_cmd  = $"-delay {string(framerate)} -alpha set -dispose previous -loop {string(loop_str)}";
+			if(opti) shell_cmd += $" -fuzz {string(fuzz * 100)}% -layers OptimizeFrame -layers OptimizeTransparency";
+					 shell_cmd += " " + temp_path + " " + target_path;
+			
+			//print($"{converter} {shell_cmd}");
+			execute_shell(converter, shell_cmd);
 		}
-		
-		shell_cmd += " " + temp_path + 
-					 " " + target_path;
-		
-		execute_shell(converter, shell_cmd);
 		
 		var noti = log_message("EXPORT", "Export gif as " + target_path, THEME.noti_icon_tick, COLORS._main_value_positive, false);
 		noti.path = filename_dir(target_path);
@@ -476,7 +480,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		if(anim == NODE_EXPORT_FORMAT.gif) {
 			inputs[|  9].display_data		  = format_animation;
 			inputs[|  9].editWidget.data_list = format_animation;
-			inputs[| 10].setVisible(extn == 1);
+			inputs[| 10].setVisible(true);
 		} else {
 			inputs[|  9].display_data		  = format_image;
 			inputs[|  9].editWidget.data_list = format_image;

@@ -30,8 +30,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	inputs[| 10] = nodeValue("Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, irandom(9999999));
 	
-	inputs[| 11] = nodeValue("Random blend", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, new gradientObject(c_white) )
-		.setDisplay(VALUE_DISPLAY.gradient);
+	inputs[| 11] = nodeValue("Random blend", self, JUNCTION_CONNECT.input, VALUE_TYPE.gradient, new gradientObject(c_white) );
 	
 	inputs[| 12] = nodeValue("Alpha", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 1 ])
 		.setDisplay(VALUE_DISPLAY.slider_range, [0, 1, 0.01]);
@@ -59,7 +58,8 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 		
-	outputs[| 1] = nodeValue("Atlas data", self, JUNCTION_CONNECT.output, VALUE_TYPE.atlas, []);
+	outputs[| 1] = nodeValue("Atlas data", self, JUNCTION_CONNECT.output, VALUE_TYPE.atlas, [])
+		.rejectArrayProcess();
 	
 	input_display_list = [ 
 		["Output", 		false], 0, 1, 15, 10, 
@@ -103,7 +103,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	static process_data = function(_outSurf, _data, _output_index, _array_index) {
 		if(_output_index == 1) return scatter_data;
-		scatter_data = [];
+		if(_output_index == 0 && _array_index == 0) scatter_data = [];
 		
 		var _inSurf = _data[0];
 		if(_inSurf == 0)

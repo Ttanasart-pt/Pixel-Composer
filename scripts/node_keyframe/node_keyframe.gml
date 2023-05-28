@@ -142,7 +142,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 		if(ds_list_size(values) == 1)
 			return processType(values[| 0].value);
 		
-		if(prop.display_type == VALUE_DISPLAY.gradient) 
+		if(prop.type == VALUE_TYPE.gradient) 
 			return values[| 0].value;
 		
 		if(prop.type == VALUE_TYPE.path)
@@ -389,7 +389,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 	static deserialize = function(_list, scale = false) {
 		ds_list_clear(values);
 		
-		if(prop.type == VALUE_TYPE.color && prop.display_type == VALUE_DISPLAY.gradient && LOADING_VERSION < 1340 && !CLONING) { //backward compat: Gradient
+		if(prop.type == VALUE_TYPE.gradient && LOADING_VERSION < 1340 && !CLONING) { //backward compat: Gradient
 			var _val = [];
 			var value = _list[| 0][| 1];
 			
@@ -430,7 +430,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 			else if(prop.type == VALUE_TYPE.path && prop.display_type == VALUE_DISPLAY.path_array) {
 				for(var j = 0; j < ds_list_size(value); j++)
 					_val[j] = value[| j];
-			} else if(prop.type == VALUE_TYPE.color && prop.display_type == VALUE_DISPLAY.gradient) {
+			} else if(prop.type == VALUE_TYPE.gradient) {
 				var grad = new gradientObject();
 				_val = grad.deserialize(value);
 			} else if(!sep_axis && typeArray(prop.display_type)) {

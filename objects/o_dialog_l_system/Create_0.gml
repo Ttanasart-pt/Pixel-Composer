@@ -76,7 +76,7 @@ event_inherited();
 			}
 			
 			if(is_array(_f)) {
-				var hh = (line_height(f_p0b) + pad) * array_length(_f) + ui(16);
+				var hh = (line_get_height(f_p0b) + pad) * array_length(_f) + ui(16);
 				BLEND_OVERRIDE
 				draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, ui(8), yy,
 					sp_note.surface_w - ui(16), hh, COLORS.dialog_lua_ref_bg, 1);
@@ -87,7 +87,7 @@ event_inherited();
 				for( var j = 0; j < array_length(_f); j++ ) {
 					var _t = _f[j][0];
 					var _c = _f[j][1];
-					hh = line_height(f_p0b);
+					hh = line_get_height(f_p0b);
 					
 					draw_set_text(f_p0b, fa_left, fa_top, COLORS._main_text_accent);
 					draw_text(ui(32), yy, _t);

@@ -89,7 +89,7 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		var current_tag = inputs[| 2].getValue();
 		var amo = array_length(tags);
 		var abx = ui(24);
-		var lb_h = line_height(f_p0);
+		var lb_h = line_get_height(f_p0);
 		var lb_y = _y + lb_h / 2 + ui(6);
 		
 		var by = _y;

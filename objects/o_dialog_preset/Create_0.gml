@@ -21,7 +21,7 @@ event_inherited();
 		
 		var pres = global.PRESETS_MAP[? folder];
 		var amo  = array_length(pres);
-		var hh   = line_height() + ui(8);
+		var hh   = line_get_height() + ui(8);
 		var _h   = amo * (hh + ui(4)) + ui(32);
 		
 		for( var i = 0; i < amo; i++ ) {

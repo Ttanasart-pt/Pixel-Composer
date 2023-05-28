@@ -1,4 +1,4 @@
-function line_height(font = noone, offset = 0) {
+function line_get_height(font = noone, offset = 0) {
 	var ff = draw_get_font();
 	
 	if(font != noone)
@@ -9,7 +9,7 @@ function line_height(font = noone, offset = 0) {
 	return hh;
 }
 
-function line_width(txt, font = noone, offset = 0) {
+function line_get_width(txt, font = noone, offset = 0) {
 	var ff = draw_get_font();
 	
 	if(font != noone)
@@ -21,7 +21,7 @@ function line_width(txt, font = noone, offset = 0) {
 }
 
 #region global
-	#macro TEXTBOX_HEIGHT line_height(f_p0, 12)
+	#macro TEXTBOX_HEIGHT line_get_height(f_p0, 12)
 
 	function ui(val) { 
 		gml_pragma("forceinline");

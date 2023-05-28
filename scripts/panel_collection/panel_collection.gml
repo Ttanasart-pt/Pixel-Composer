@@ -168,6 +168,7 @@ function Panel_Collection() : PanelContent() constructor {
 					var _node = index < node_list? nodes[| index] : steamNode[index - node_list];
 					var _nx   = grid_space + (grid_width + grid_space) * j;
 					var _boxx = _nx + (grid_width - grid_size) / 2;
+					_boxx = round(_boxx);
 					
 					var gr_x1 = _boxx + grid_size;
 					var gr_y1 = yy + grid_size;
@@ -373,7 +374,7 @@ function Panel_Collection() : PanelContent() constructor {
 		
 		var _x = ui(16);
 		var _y = ui(24);
-		var bh = line_height(f_p0b, 8);
+		var bh = line_get_height(f_p0b, 8);
 		var rootx = 0;
 		
 		for( var i = 0; i < array_length(roots); i++ ) {

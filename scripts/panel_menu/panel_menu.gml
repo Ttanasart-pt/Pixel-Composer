@@ -348,7 +348,7 @@ function Panel_Menu() : PanelContent() constructor {
 		for(var i = 0; i < array_length(menus); i++) {
 			draw_set_text(f_p1, fa_center, fa_center, COLORS._main_text);
 			var ww = string_width(menus[i][0]) + ui(16);
-			var hh = line_height() + ui(8);
+			var hh = line_get_height() + ui(8);
 			
 			if(hori) {
 				xc = xx + ww / 2;

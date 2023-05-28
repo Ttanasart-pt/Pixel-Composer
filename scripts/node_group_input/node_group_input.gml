@@ -107,7 +107,7 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		
 		_dtype = display_list[_val_type][_dtype];
 		
-		inParent.type = _val_type;
+		inParent.type     = _val_type;
 		outputs[| 0].type = _val_type;
 		var _val = inParent.getValue();
 		
@@ -177,8 +177,11 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 				break;
 				
 			case "Gradient":	
+				inParent.type     = VALUE_TYPE.gradient;
+				outputs[| 0].type = inParent.type;
+				
 				inParent.animator = new valueAnimator(new gradientObject(c_white), inParent);
-				inParent.setDisplay(VALUE_DISPLAY.gradient);	
+				inParent.setDisplay(VALUE_DISPLAY._default);
 				break;
 			default:			inParent.setDisplay(VALUE_DISPLAY._default);	break;
 		}

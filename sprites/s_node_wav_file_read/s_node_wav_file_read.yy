@@ -2,10 +2,10 @@
   "resourceType": "GMSprite",
   "resourceVersion": "1.0",
   "name": "s_node_wav_file_read",
-  "bbox_bottom": 62,
+  "bbox_bottom": 57,
   "bbox_left": 0,
   "bbox_right": 62,
-  "bbox_top": 0,
+  "bbox_top": 6,
   "bboxMode": 0,
   "collisionKind": 1,
   "collisionTolerance": 0,
@@ -13,20 +13,20 @@
   "edgeFiltering": false,
   "For3D": false,
   "frames": [
-    {"resourceType":"GMSpriteFrame","resourceVersion":"1.1","name":"ed7117f7-7897-476a-acf0-d7b1d10f562f",},
+    {"resourceType":"GMSpriteFrame","resourceVersion":"1.1","name":"2c9b305d-d36e-476b-a921-16c2f79031b8",},
   ],
   "gridX": 0,
   "gridY": 0,
   "height": 64,
   "HTile": false,
   "layers": [
-    {"resourceType":"GMImageLayer","resourceVersion":"1.0","name":"d0ffea8e-e51f-4415-b383-c42802705804","blendMode":0,"displayName":"default","isLocked":false,"opacity":100.0,"visible":true,},
+    {"resourceType":"GMImageLayer","resourceVersion":"1.0","name":"fa7c8971-1920-4811-911b-85dc4a0031ba","blendMode":0,"displayName":"default","isLocked":false,"opacity":100.0,"visible":true,},
   ],
   "nineSlice": null,
   "origin": 4,
   "parent": {
-    "name": "input",
-    "path": "folders/nodes/icons/input.yy",
+    "name": "IO",
+    "path": "folders/nodes/icons/IO.yy",
   },
   "preMultiplyAlpha": false,
   "sequence": {
@@ -54,7 +54,7 @@
     "timeUnits": 1,
     "tracks": [
       {"resourceType":"GMSpriteFramesTrack","resourceVersion":"1.0","name":"frames","builtinName":0,"events":[],"inheritsTrackColour":true,"interpolation":1,"isCreationTrack":false,"keyframes":{"resourceType":"KeyframeStore<SpriteFrameKeyframe>","resourceVersion":"1.0","Keyframes":[
-            {"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"1.0","Channels":{"0":{"resourceType":"SpriteFrameKeyframe","resourceVersion":"1.0","Id":{"name":"ed7117f7-7897-476a-acf0-d7b1d10f562f","path":"sprites/s_node_wav_file_read/s_node_wav_file_read.yy",},},},"Disabled":false,"id":"97d549db-4e6f-4505-b6dd-aacd000eaa4c","IsCreationKey":false,"Key":0.0,"Length":1.0,"Stretch":false,},
+            {"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"1.0","Channels":{"0":{"resourceType":"SpriteFrameKeyframe","resourceVersion":"1.0","Id":{"name":"2c9b305d-d36e-476b-a921-16c2f79031b8","path":"sprites/s_node_wav_file_read/s_node_wav_file_read.yy",},},},"Disabled":false,"id":"f1114075-0273-45bf-9df3-d4c534342938","IsCreationKey":false,"Key":0.0,"Length":1.0,"Stretch":false,},
           ],},"modifiers":[],"spriteId":null,"trackColour":0,"tracks":[],"traits":0,},
     ],
     "visibleRange": null,

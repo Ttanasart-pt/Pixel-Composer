@@ -1,6 +1,6 @@
 /// @description init
 #region pos
-	var hght = line_height(f_p0, 8);
+	var hght = line_get_height(f_p0, 8);
 	var hh = array_length(FONT_INTERNAL) * hght;
 	
 	dialog_h = min(max_h, hh);

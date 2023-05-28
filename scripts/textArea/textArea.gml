@@ -86,10 +86,11 @@ function textArea(_input, _onModify, _extras = noone) : textInput(_input, _onMod
 			var currW = 0;
 			var currL = "";
 			var cut = true;
+			var len = array_length(words);
 			
-			for( var j = 0; j < array_length(words); j++ ) {
+			for( var j = 0; j < len; j++ ) {
 				var word = words[j];
-				if(j) word = " " + word;
+				if(j < len - 1) word = word + " ";
 				
 				if(string_width(word) > line_width) { //the entire word is longer than a line
 					for( var k = 1; k <= string_length(word); k++ ) {
@@ -302,7 +303,7 @@ function textArea(_input, _onModify, _extras = noone) : textInput(_input, _onMod
 			else if(format == TEXT_AREA_FORMAT.delimiter)
 				draw_text_delimiter(ch_x, ch_y, _str);
 			
-			ch_y += line_height();
+			ch_y += line_get_height();
 		}
 		
 		draw_set_alpha(1);
@@ -318,7 +319,7 @@ function textArea(_input, _onModify, _extras = noone) : textInput(_input, _onMod
 			for( var i = 0; i < array_length(_input_text_line); i++ ) {
 				_str = string_trim_end(_input_text_line[i]);
 				_l = string_length(_str);
-				_ch_h = line_height();
+				_ch_h = line_get_height();
 				ch_cxo = sx;
 				ch_x = sx;
 				
@@ -387,7 +388,7 @@ function textArea(_input, _onModify, _extras = noone) : textInput(_input, _onMod
 		}
 		
 		draw_set_font(font);
-		var c_h = line_height();
+		var c_h = line_get_height();
 		var line_count = max(min_lines, array_length(_input_text_line));
 		hh = max(_h, ui(14) + c_h * line_count);
 		
@@ -565,7 +566,7 @@ function textArea(_input, _onModify, _extras = noone) : textInput(_input, _onMod
 							cursor_line = i;
 						}
 						char_run += _l;
-						ch_y += line_height();
+						ch_y += line_get_height();
 					}
 					
 					cursor_pos_x = cursor_pos_x == 0? cursor_pos_x_to : lerp_float(cursor_pos_x, cursor_pos_x_to, 4);

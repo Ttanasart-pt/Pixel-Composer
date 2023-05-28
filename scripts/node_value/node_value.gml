@@ -30,6 +30,7 @@ enum VALUE_TYPE {
 	atlas	  = 20,
 	
 	d3vertex  = 21,
+	gradient  = 22,
 	
 	action	  = 99,
 }
@@ -47,7 +48,6 @@ enum VALUE_DISPLAY {
 	slider_range,
 	
 	//Color
-	gradient,
 	palette,
 	
 	//Int array
@@ -107,6 +107,7 @@ function value_color(i) {
 		$5dde8f, //trigger
 		$976bff, //atlas
 		#c1007c, //d3vertex
+		$5dde8f, //gradient
 	];
 	
 	if(i == 99) return $5dde8f;
@@ -119,6 +120,7 @@ function value_bit(i) {
 		case VALUE_TYPE.float		: return 1 << 2 | 1 << 1;
 		case VALUE_TYPE.boolean		: return 1 << 3 | 1 << 1;
 		case VALUE_TYPE.color		: return 1 << 4;
+		case VALUE_TYPE.gradient	: return 1 << 25;
 		case VALUE_TYPE.surface		: return 1 << 5;
 		case VALUE_TYPE.path		: return 1 << 10;
 		case VALUE_TYPE.text		: return 1 << 10;
@@ -146,17 +148,18 @@ function value_bit(i) {
 }
 
 function value_type_directional(f, t) {
-	if(f == VALUE_TYPE.surface && t == VALUE_TYPE.integer) return true;
-	if(f == VALUE_TYPE.surface && t == VALUE_TYPE.float) return true;
+	if(f == VALUE_TYPE.surface && t == VALUE_TYPE.integer)	return true;
+	if(f == VALUE_TYPE.surface && t == VALUE_TYPE.float)	return true;
 	
 	if(f == VALUE_TYPE.integer && t == VALUE_TYPE.text) return true;
 	if(f == VALUE_TYPE.float   && t == VALUE_TYPE.text) return true;
 	if(f == VALUE_TYPE.boolean && t == VALUE_TYPE.text) return true;
 	
-	if(f == VALUE_TYPE.integer && t == VALUE_TYPE.color) return true;
-	if(f == VALUE_TYPE.float   && t == VALUE_TYPE.color) return true;
-	if(f == VALUE_TYPE.color   && t == VALUE_TYPE.integer) return true;
-	if(f == VALUE_TYPE.color   && t == VALUE_TYPE.float  ) return true;
+	if(f == VALUE_TYPE.integer && t == VALUE_TYPE.color)	return true;
+	if(f == VALUE_TYPE.float   && t == VALUE_TYPE.color)	return true;
+	if(f == VALUE_TYPE.color   && t == VALUE_TYPE.integer)	return true;
+	if(f == VALUE_TYPE.color   && t == VALUE_TYPE.float  )	return true;
+	if(f == VALUE_TYPE.color   && t == VALUE_TYPE.gradient) return true;
 	
 	if(f == VALUE_TYPE.strands && t == VALUE_TYPE.pathnode ) return true;
 	
@@ -195,7 +198,6 @@ function typeArrayDynamic(_type) {
 	switch(_type) {
 		case VALUE_DISPLAY.curve :
 		case VALUE_DISPLAY.palette :
-		case VALUE_DISPLAY.gradient :
 			return true;
 	}
 	return false;
@@ -426,6 +428,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	express_edit.boxColor = COLORS._main_value_positive;
 	express_edit.align    = fa_left;
 	
+	process_array = true;
+	
 	static setDefault = function(vals) {
 		if(LOADING || APPENDING) return self;
 		
@@ -480,8 +484,13 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		return self;
 	}
 	
+	static rejectArrayProcess = function() {
+		process_array = false;
+		return self;
+	}
+	
 	static isAnimable = function() {
-		if(display_type == VALUE_DISPLAY.gradient)	 return false;
+		if(type == VALUE_TYPE.gradient)				 return false;
 		if(display_type == VALUE_DISPLAY.text_array) return false;
 		return true;
 	}
@@ -494,10 +503,10 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			case VALUE_TYPE.color		: 
 				switch(display_type) {
 					case VALUE_DISPLAY.palette :  drop_key = "Palette";  break;
-					case VALUE_DISPLAY.gradient : drop_key = "Gradient"; break;
 					default : drop_key = "Color";
 				}
 				break;
+			case VALUE_TYPE.gradient    : drop_key = "Gradient"; break;
 			case VALUE_TYPE.path		: drop_key = "Asset";  break;
 			case VALUE_TYPE.text		: drop_key = "Text";   break;
 			case VALUE_TYPE.pathnode	: drop_key = "Path";   break;
@@ -740,14 +749,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						graph_h		 = ui(16);
 						extract_node = "Node_Color";
 						break;
-					case VALUE_DISPLAY.gradient :
-						editWidget = new buttonGradient(function(gradient) { 
-							MODIFIED = true;
-							return setValueDirect(gradient);
-						} );
-						
-						extract_node = "Node_Gradient_Out";
-						break;
 					case VALUE_DISPLAY.palette :
 						editWidget = new buttonPalette(function(color) { 
 							MODIFIED = true;
@@ -757,6 +758,14 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						extract_node = "Node_Palette";
 						break;
 				}
+				break;
+			case VALUE_TYPE.gradient :
+				editWidget = new buttonGradient(function(gradient) { 
+					MODIFIED = true;
+					return setValueDirect(gradient);
+				} );
+						
+				extract_node = "Node_Gradient_Out";
 				break;
 			case VALUE_TYPE.path :
 				switch(display_type) {
@@ -907,8 +916,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		var typeFrom = nodeFrom.type;
 		var display  = nodeFrom.display_type;
 		
-		if(display_type == VALUE_DISPLAY.gradient && typeFrom == VALUE_TYPE.color) { 
-			if(display == VALUE_DISPLAY.gradient || (is_struct(value) && instanceof(value) == "gradientObject")) 
+		if(type == VALUE_TYPE.gradient && typeFrom == VALUE_TYPE.color) { 
+			if(is_struct(value) && instanceof(value) == "gradientObject")
 				return value;
 			if(is_array(value)) {
 				var amo = array_length(value);
@@ -1197,7 +1206,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				updated = animator.setValue(val, connect_type == JUNCTION_CONNECT.input && record, time); 
 		}
 		
-		if(display_type == VALUE_DISPLAY.gradient) updated = true;
+		if(type == VALUE_TYPE.gradient) updated = true;
 		if(display_type == VALUE_DISPLAY.palette)  updated = true;
 		
 		if(updated) {
@@ -1478,7 +1487,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(type == VALUE_TYPE.action) {
 			var tx = x;
 			draw_set_text(f_p1, fa_center, fa_center, _draw_cc);
-			draw_text(tx, y - (line_height() + 16) / 2, name);
+			draw_text(tx, y - (line_get_height() + 16) / 2, name);
 		} else if(connect_type == JUNCTION_CONNECT.input) {
 			var tx = x - 12 * _s;
 			draw_set_halign(fa_right);

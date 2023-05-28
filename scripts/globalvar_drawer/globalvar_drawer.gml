@@ -4,7 +4,7 @@ function globalvar_viewer_init() {
 
 function globalvar_viewer_draw(xx, yy, ww, _m, focus, hover, _scrollPane, rx, ry) {
 	var hh   = 0;
-	var lb_h = line_height(f_p0) + ui(8);
+	var lb_h = line_get_height(f_p0) + ui(8);
 	var padd = ui(8);
 			
 	if(var_editing) {

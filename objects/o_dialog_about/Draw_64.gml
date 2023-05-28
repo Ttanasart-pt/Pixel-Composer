@@ -15,7 +15,7 @@ if !ready exit;
 	draw_set_text(f_h3, fa_center, fa_top, COLORS._main_text_accent);
 	draw_text(cx, ly, "Pixel Composer");
 	
-	ly += line_height();
+	ly += line_get_height();
 	draw_set_text(f_p0, fa_center, fa_top, COLORS._main_text_sub);
 	draw_text(cx, ly, "2021, MakhamDev");
 	

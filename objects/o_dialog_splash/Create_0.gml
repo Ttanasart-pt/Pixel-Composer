@@ -45,7 +45,7 @@ event_inherited();
 		var ww  = ui(264);
 		var hh	= 0;
 		var pad = ui(8);
-		var hgt	= ui(16) + line_height(f_p0b) + line_height(f_p1);
+		var hgt	= ui(16) + line_get_height(f_p0b) + line_get_height(f_p1);
 		_y += pad;
 		
 		var col = expand? 2 : 1;
@@ -92,11 +92,11 @@ event_inherited();
 					}
 				}
 			
-				var ly = recent_thumbnail? _y + hg - (line_height(f_p0b) + line_height(f_p1)) - ui(8) : _y + ui(8);
+				var ly = recent_thumbnail? _y + hg - (line_get_height(f_p0b) + line_get_height(f_p1)) - ui(8) : _y + ui(8);
 				draw_set_text(f_p0b, fa_left, fa_top, COLORS._main_text);
 				draw_text(fx + ui(12), ly, filename_name(_rec));
 			
-				ly += line_height();
+				ly += line_get_height();
 				draw_set_text(f_p1, fa_left, fa_top, COLORS._main_text_sub);
 				draw_text_cut(fx + ui(12), ly, _rec, ww - ui(24));
 			}
@@ -179,7 +179,7 @@ event_inherited();
 						draw_set_color(_project.tag == "Getting started"? COLORS._main_text_accent : COLORS._main_text_sub);
 						draw_text(tx, ty - ui(2), _project.tag);						
 						
-						ty += line_height();
+						ty += line_get_height();
 					} 
 					
 					draw_set_text(f_p1, fa_center, fa_top, COLORS._main_text);

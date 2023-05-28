@@ -15,11 +15,9 @@ function Node_Strand_Render(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	
 	inputs[| 3] = nodeValue("Thickness over length", self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_11);
 	
-	inputs[| 4] = nodeValue("Random color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, new gradientObject(c_white))
-		.setDisplay(VALUE_DISPLAY.gradient);
+	inputs[| 4] = nodeValue("Random color", self, JUNCTION_CONNECT.input, VALUE_TYPE.gradient, new gradientObject(c_white));
 	
-	inputs[| 5] = nodeValue("Color over length", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, new gradientObject(c_white))
-		.setDisplay(VALUE_DISPLAY.gradient);
+	inputs[| 5] = nodeValue("Color over length", self, JUNCTION_CONNECT.input, VALUE_TYPE.gradient, new gradientObject(c_white));
 	
 	inputs[| 6] = nodeValue("Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, irandom_range(10000, 99999));
 	

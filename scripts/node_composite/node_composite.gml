@@ -244,7 +244,8 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
-	outputs[| 1] = nodeValue("Atlas data", self, JUNCTION_CONNECT.output, VALUE_TYPE.atlas, []);
+	outputs[| 1] = nodeValue("Atlas data", self, JUNCTION_CONNECT.output, VALUE_TYPE.atlas, [])
+		.rejectArrayProcess();
 	
 	temp_surface = [ surface_create(1, 1), surface_create(1, 1) ];
 	
@@ -717,6 +718,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	static process_data = function(_outSurf, _data, _output_index, _array_index) {
 		if(_output_index == 1) return atlas_data;
+		if(_output_index == 0 && _array_index == 0) atlas_data = [];
 		
 		if(array_length(_data) < 4) return _outSurf;
 		var _pad	  = _data[0];
@@ -766,7 +768,6 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		var res_index = 0, bg = 0;
 		var imageAmo = (ds_list_size(inputs) - input_fix_len) / data_length;
 		var _vis = attributes[? "layer_visible"];
-		atlas_data = [];
 		
 		surface_set_shader(_outSurf, sh_sample, true, BLEND.alphamulp);
 		

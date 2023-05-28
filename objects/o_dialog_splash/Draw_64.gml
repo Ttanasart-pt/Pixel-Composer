@@ -17,7 +17,7 @@ if !ready exit;
 	var txt = "v. " + VERSION_STRING;
 	draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text_sub);
 	var ww = string_width(txt) + ui(16);
-	var hh = line_height(, 16);
+	var hh = line_get_height(, 16);
 	if(buttonInstant(THEME.button_hide, bx, by - hh / 2, ww, hh, mouse_ui, sFOCUS, sHOVER) == 2) {
 		dialogCall(o_dialog_release_note, WIN_W / 2, WIN_H / 2);
 	}

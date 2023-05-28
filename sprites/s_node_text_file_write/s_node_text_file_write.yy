@@ -25,8 +25,8 @@
   "nineSlice": null,
   "origin": 4,
   "parent": {
-    "name": "input",
-    "path": "folders/nodes/icons/input.yy",
+    "name": "IO",
+    "path": "folders/nodes/icons/IO.yy",
   },
   "preMultiplyAlpha": false,
   "sequence": {

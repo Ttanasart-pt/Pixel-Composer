@@ -23,11 +23,11 @@ function MetaDataManager() constructor {
 	steam		= false;
 	
 	static displays = [
-		[ get_text("description", "Description"),	 function(meta) { return meta.description; }	, line_height() * 5],
-		[ get_text("author", "Author"),				 function(meta) { return meta.author; }			, line_height() ],
-		[ get_text("contact_info", "Contact info"),	 function(meta) { return meta.contact; }		, line_height() ],
-		[ get_text("alias", "Alias"),				 function(meta) { return meta.alias; }			, line_height() ],
-		[ get_text("tags", "Tags"),					 function(meta) { return meta.tags; }			, line_height() ],
+		[ get_text("description", "Description"),	 function(meta) { return meta.description; }	, line_get_height() * 5],
+		[ get_text("author", "Author"),				 function(meta) { return meta.author; }			, line_get_height() ],
+		[ get_text("contact_info", "Contact info"),	 function(meta) { return meta.contact; }		, line_get_height() ],
+		[ get_text("alias", "Alias"),				 function(meta) { return meta.alias; }			, line_get_height() ],
+		[ get_text("tags", "Tags"),					 function(meta) { return meta.tags; }			, line_get_height() ],
 	];
 	
 	static serialize = function() {
@@ -130,7 +130,7 @@ function MetaDataManager() constructor {
 			draw_set_font(f_p0);
 			_h += ui(8);
 			var tx = 0;
-			var hh = line_height(f_p0, ui(4));
+			var hh = line_get_height(f_p0, ui(4));
 			var th = hh;
 			for( var i = 0; i < array_length(tags); i++ ) {
 				var ww = string_width(tags[i]) + ui(16);
@@ -191,7 +191,7 @@ function MetaDataManager() constructor {
 			draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text);
 			ty += ui(8);
 			var tx = 0;
-			var hh = line_height(f_p0, ui(4));
+			var hh = line_get_height(f_p0, ui(4));
 			
 			for( var i = 0; i < array_length(tags); i++ ) {
 				var ww = string_width(tags[i]) + ui(16);

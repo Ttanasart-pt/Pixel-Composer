@@ -19,7 +19,7 @@ if !ready exit;
 #region page
 	var yy = dialog_y + ui(title_height);
 	var yl = yy - ui(8);
-	var hg = line_height(f_p0, 16);
+	var hg = line_get_height(f_p0, 16);
 	
 	for(var i = 0; i < array_length(page); i++) {
 		draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text);

@@ -18,11 +18,6 @@ function draw_tooltip_color(clr) {
 		return;
 	}
 	
-	if(is_struct(clr)) {
-		draw_tooltip_gradient(clr);
-		return;
-	}
-	
 	var ww = ui(32);
 	var hh = ui(32);
 		
@@ -120,4 +115,49 @@ function draw_tooltip_surface(surf) {
 	draw_sprite_stretched(THEME.textbox, 0, mx, my, ww + ui(16), hh + ui(16));
 	
 	draw_surface_ext_safe(surf, mx + ui(8), my + ui(8), ss, ss);
+}
+
+function draw_tooltip_atlas(atlas) {
+	if(!is_array(atlas)) atlas = [ atlas ];
+	
+	var amo = array_length(atlas);
+	var ww  = ui(160);
+	var hh  = amo * ui(48 + 8) - ui(8);
+	
+	var mx = min(mouse_mx + ui(16), WIN_W - (ww + ui(16)));
+	var my = min(mouse_my + ui(16), WIN_H - (hh + ui(16)));
+		
+	draw_sprite_stretched(THEME.textbox, 3, mx, my, ww + ui(16), hh + ui(16));
+	draw_sprite_stretched(THEME.textbox, 0, mx, my, ww + ui(16), hh + ui(16));
+	
+	var sx = mx + ui(8);
+	var sy = my + ui(8);
+	
+	for( var i = 0; i < amo; i++ ) {
+		var _y = sy + i * ui(48 + 8);
+		
+		var atl = atlas[i];
+		var surf = atl.surface.get();
+		
+		if(!is_surface(surf)) continue;
+		
+		var sw = surface_get_width(surf);
+		var sh = surface_get_height(surf);
+	
+		var ss = min(ui(48) / sw, ui(48) / sh);
+		draw_surface_ext_safe(surf, sx, _y, ss, ss);
+		
+		draw_set_color(COLORS._main_icon);
+		draw_rectangle(sx, _y, sx + ui(48), _y + ui(48), 1);
+		
+		draw_set_text(f_p3, fa_left, fa_top, COLORS._main_text_sub);
+		draw_text_add(sx + ui( 56), _y + ui( 0), "Position");
+		draw_text_add(sx + ui( 56), _y + ui(16), "Rotation");
+		draw_text_add(sx + ui( 56), _y + ui(32), "Scale");
+		
+		draw_set_text(f_p3, fa_right, fa_top, COLORS._main_text);
+		draw_text_add(sx + ui(160), _y + ui( 0), atl.position);
+		draw_text_add(sx + ui(160), _y + ui(16), atl.rotation);
+		draw_text_add(sx + ui(160), _y + ui(32), atl.scale);
+	}
 }

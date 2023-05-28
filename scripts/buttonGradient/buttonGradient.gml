@@ -24,6 +24,8 @@ function buttonGradient(_onApply, dialog = noone) : widget() constructor {
 		y = _y;
 		w = _w;
 		h = _h;
+		if(!is_instanceof(_gradient, gradientObject)) return;
+		
 		current_gradient = _gradient;
 		
 		var click = false;

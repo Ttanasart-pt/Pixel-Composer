@@ -156,8 +156,8 @@ function Panel_Inspector() : PanelContent() constructor {
 					
 					draw_set_text(f_p0, fa_left, fa_top, COLORS._main_text);
 					draw_text_add(ui(16), yy, display[0]);
-					yy += line_height() + ui(6);
-					hh += line_height() + ui(6);
+					yy += line_get_height() + ui(6);
+					hh += line_get_height() + ui(6);
 				
 					meta_tb[j].setActiveFocus(pFOCUS, _hover);
 					if(pFOCUS) meta_tb[j].register(contentPane);
@@ -416,8 +416,8 @@ function Panel_Inspector() : PanelContent() constructor {
 				if(pos == 0) continue;
 			}
 			
-			var lb_h    = line_height(f_p0) + ui(8);
-			var lb_w    = line_width(jun.name, f_p0) + ui(16);
+			var lb_h    = line_get_height(f_p0) + ui(8);
+			var lb_w    = line_get_width(jun.name, f_p0) + ui(16);
 			var padd    = ui(8);
 			
 			var _selY	= yy - ui(0);

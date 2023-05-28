@@ -237,7 +237,7 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		draw_set_text(font, fa_left, fa_top, color);
 		for( var i = 0; i < array_length(_lines); i++ ) {
 			var _line = _lines[i];
-			var _h = line_height(font);
+			var _h = line_get_height(font);
 			var _w = draw_text_style(tx, ty, _line, _s);
 			
 			ww = max(ww, _w);

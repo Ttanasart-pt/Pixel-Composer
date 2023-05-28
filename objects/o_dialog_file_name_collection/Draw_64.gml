@@ -99,8 +99,8 @@
 	
 		draw_set_text(f_p0, fa_left, fa_top, COLORS._main_text_title);
 		draw_text(dialog_x + ui(16), yy, get_text("description", "Description"));
-		yy		 += line_height() + ui(4);
-		dialog_h += line_height() + ui(4);
+		yy		 += line_get_height() + ui(4);
+		dialog_h += line_get_height() + ui(4);
 		
 		t_desc.setActiveFocus(sFOCUS, sHOVER);
 		t_desc.register();
@@ -110,8 +110,8 @@
 		
 		draw_set_text(f_p0, fa_left, fa_top, COLORS._main_text_title);
 		draw_text(dialog_x + ui(16), yy, get_text("author", "Author"));
-		yy		 += line_height() + ui(4);
-		dialog_h += line_height() + ui(4);
+		yy		 += line_get_height() + ui(4);
+		dialog_h += line_get_height() + ui(4);
 		
 		t_auth.setActiveFocus(sFOCUS, sHOVER);
 		t_auth.register();
@@ -121,8 +121,8 @@
 		
 		draw_set_text(f_p0, fa_left, fa_top, COLORS._main_text_title);
 		draw_text(dialog_x + ui(16), yy, get_text("contact_info", "Contact info"));
-		yy		 += line_height() + ui(4);
-		dialog_h += line_height() + ui(4);
+		yy		 += line_get_height() + ui(4);
+		dialog_h += line_get_height() + ui(4);
 		
 		t_cont.setActiveFocus(sFOCUS, sHOVER);
 		t_cont.register();
@@ -132,8 +132,8 @@
 		
 		draw_set_text(f_p0, fa_left, fa_top, COLORS._main_text_title);
 		draw_text(dialog_x + ui(16), yy, get_text("alias", "Alias"));
-		yy		 += line_height() + ui(4);
-		dialog_h += line_height() + ui(4);
+		yy		 += line_get_height() + ui(4);
+		dialog_h += line_get_height() + ui(4);
 		
 		t_alias.setActiveFocus(sFOCUS, sHOVER);
 		t_alias.register();
@@ -143,8 +143,8 @@
 		
 		draw_set_text(f_p0, fa_left, fa_top, COLORS._main_text_title);
 		draw_text(dialog_x + ui(16), yy, get_text("tags", "Tags"));
-		yy		 += line_height() + ui(4);
-		dialog_h += line_height() + ui(4);
+		yy		 += line_get_height() + ui(4);
+		dialog_h += line_get_height() + ui(4);
 		
 		t_tags.setActiveFocus(sFOCUS, sHOVER);
 		t_tags.register();

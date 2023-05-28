@@ -52,7 +52,7 @@ event_inherited();
 		
 		draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text);
 		
-		var lh = line_height() + ui(8);
+		var lh = line_get_height() + ui(8);
 		var _h = 0, hh;
 		var yy = _y + ui(8);
 		

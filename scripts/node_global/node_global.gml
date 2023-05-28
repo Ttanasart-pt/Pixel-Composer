@@ -1,8 +1,8 @@
 function variable_editor(nodeVal) constructor {
 	value = nodeVal;
 	
-	val_type      = [ VALUE_TYPE.integer, VALUE_TYPE.float, VALUE_TYPE.boolean, VALUE_TYPE.color, VALUE_TYPE.path, VALUE_TYPE.curve, VALUE_TYPE.text ];
-	val_type_name = [ "Integer", "Float", "Boolean", "Color", "Path", "Curve", "Text" ];
+	val_type      = [ VALUE_TYPE.integer, VALUE_TYPE.float, VALUE_TYPE.boolean, VALUE_TYPE.color, VALUE_TYPE.gradient, VALUE_TYPE.path, VALUE_TYPE.curve, VALUE_TYPE.text ];
+	val_type_name = [ "Integer", "Float", "Boolean", "Color", "Gradient", "Path", "Curve", "Text" ];
 	display_list  = [
 		/*Integer*/	[ "Default", "Range", "Rotation", "Rotation range", "Slider", "Slider range", "Padding", "Vector2", "Vector3", "Vector4", "Vector range", "Vector2 range", "Area" ],
 		/*Float*/	[ "Default", "Range", "Rotation", "Rotation range", "Slider", "Slider range", "Padding", "Vector2", "Vector3", "Vector4", "Vector range", "Vector2 range", "Area" ],
@@ -93,9 +93,6 @@ function variable_editor(nodeVal) constructor {
 					break;
 				case VALUE_TYPE.color : 
 					switch(sc_disp.data_list[disp_index]) {
-						case "Gradient" :	
-							value.setValue(new gradientObject(c_black));		
-							break;
 						case "Palette" :	
 							value.setValue([0]);
 							break;
@@ -103,6 +100,9 @@ function variable_editor(nodeVal) constructor {
 							value.setValue(0);
 							break;
 					}
+					break;
+				case VALUE_TYPE.gradient :	
+					value.setValue(new gradientObject(c_black));		
 					break;
 				case VALUE_TYPE.boolean : 
 					value.setValue(false);
@@ -135,7 +135,6 @@ function variable_editor(nodeVal) constructor {
 			case "Vector range" :	value.setDisplay(VALUE_DISPLAY.vector_range);	break;
 			case "Vector2 range" :	value.setDisplay(VALUE_DISPLAY.vector_range);	break;
 			case "Area" :			value.setDisplay(VALUE_DISPLAY.area);			break;
-			case "Gradient" :		value.setDisplay(VALUE_DISPLAY.gradient);		break;
 			case "Palette" :		value.setDisplay(VALUE_DISPLAY.palette);		break;
 			
 			case "Import" :		value.setDisplay(VALUE_DISPLAY.path_load, ["", ""]);	break;

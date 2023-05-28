@@ -11,7 +11,7 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 	var con_w	= ww - ui(4);
 	var xc		= xx + ww / 2;
 		
-	var lb_h = line_height(f_p0) + ui(8);
+	var lb_h = line_get_height(f_p0) + ui(8);
 	var lb_y = yy + lb_h / 2;
 			
 	var butx = xx;
@@ -263,6 +263,9 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 						jun.editWidget.draw(editBoxX, editBoxY, jun.showValue(), _m, editBoxH);
 						break;
 					case VALUE_TYPE.color :
+						jun.editWidget.draw(editBoxX, editBoxY, editBoxW, editBoxH, jun.showValue(), _m);
+						break;
+					case VALUE_TYPE.gradient :
 						jun.editWidget.draw(editBoxX, editBoxY, editBoxW, editBoxH, jun.showValue(), _m);
 						break;
 					case VALUE_TYPE.path :
