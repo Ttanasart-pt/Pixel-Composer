@@ -10,3 +10,7 @@ function struct_override(original, override) {
 	
 	return original;
 }
+
+function struct_try_get(struct, key, def = 0) {
+	return struct_has(struct, key)? struct[$ key] : def;
+}

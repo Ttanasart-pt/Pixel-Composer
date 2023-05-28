@@ -544,7 +544,7 @@ function Panel_Inspector() : PanelContent() constructor {
 		
 		draw_set_text(f_p3, fa_center, fa_center, COLORS._main_text_sub);
 		draw_set_alpha(0.65);
-		draw_text(w / 2, ui(76), inspecting.internalName);
+		draw_text_add(w / 2, ui(76), inspecting.internalName);
 		draw_set_alpha(1);
 		
 		var lx = w / 2 - string_width(inspecting.name) / 2 - ui(16);

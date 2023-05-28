@@ -1,3 +1,85 @@
-function Script659(){
-
+function graph_export_image(nodeList, settings = {}) {
+	var amo = ds_list_size(nodeList);
+	if(amo < 1) return;
+	
+	var scale    = struct_try_get(settings, "scale", 1);
+	var padding  = struct_try_get(settings, "padding", 0);
+	var bgEnable = struct_try_get(settings, "bgEnable", false);
+	var bgColor  = struct_try_get(settings, "bgColor", c_black);
+	var gridEnable  = struct_try_get(settings, "gridEnable", false);
+	var gridColor   = struct_try_get(settings, "gridColor", c_black);
+	
+	var bbox_x0 = nodeList[| 0].x * scale;
+	var bbox_y0 = nodeList[| 0].y * scale;
+	var bbox_x1 = bbox_x0 + nodeList[| 0].w * scale;
+	var bbox_y1 = bbox_y0 + nodeList[| 0].h * scale;
+	
+	for( var i = 0; i < ds_list_size(nodeList); i++ ) {
+		var _node = nodeList[| i];
+		
+		var _x = _node.x * scale;
+		var _y = _node.y * scale;
+		var _w = _node.w * scale;
+		var _h = _node.h * scale;
+		
+		bbox_x0 = min(bbox_x0, _x - padding);
+		bbox_y0 = min(bbox_y0, _y - padding);
+		bbox_x1 = max(bbox_x1, _x + _w + padding);
+		bbox_y1 = max(bbox_y1, _y + _h + padding);
+	}
+	
+	var bbox_w = bbox_x1 - bbox_x0;
+	var bbox_h = bbox_y1 - bbox_y0;
+	
+	var aa = PREF_MAP[? "connection_line_aa"];
+	var s  = surface_create(bbox_w, bbox_h);
+	var cs = surface_create(bbox_w * aa, bbox_h * aa);
+	
+	surface_set_target(s); //draw nodes
+		if(bgEnable) draw_clear(bgColor);
+		else		 draw_clear_alpha(0, 0);
+		
+		var gr_x = -bbox_x0;
+		var gr_y = -bbox_y0;
+		var mx = gr_x, my = gr_y;
+		
+		for(var i = 0; i < ds_list_size(nodeList); i++)
+			nodeList[| i].preDraw(gr_x, gr_y, scale);
+		
+		#region draw frame
+			for(var i = 0; i < ds_list_size(nodeList); i++) {
+				if(instanceof(nodeList[| i]) != "Node_Frame") continue;
+				nodeList[| i].drawNode(gr_x, gr_y, mx, my, scale);
+			}
+		#endregion
+		
+		#region draw conneciton
+			surface_set_target(cs);
+				DRAW_CLEAR
+				for(var i = 0; i < ds_list_size(nodeList); i++)
+					nodeList[| i].drawConnections(gr_x, gr_y, scale, mx, my, true, aa);
+			surface_reset_target();
+		
+			shader_set(sh_downsample);
+			shader_set_f("down", aa);
+			shader_set_f("dimension", surface_get_width(cs), surface_get_height(cs));
+			draw_surface(cs, 0, 0);
+			shader_reset();
+			surface_free(cs);
+		#endregion
+		
+		#region draw node
+			for(var i = 0; i < ds_list_size(nodeList); i++)
+				nodeList[| i].onDrawNodeBehind(gr_x, gr_y, mx, my, scale);
+			
+			for(var i = 0; i < ds_list_size(nodeList); i++) {
+				var n = nodeList[| i];
+				if(instanceof(n) == "Node_Frame") continue;
+				var val = n.drawNode(gr_x, gr_y, mx, my, scale);
+			}
+		#endregion
+		
+	surface_reset_target();
+	
+	return s;
 }

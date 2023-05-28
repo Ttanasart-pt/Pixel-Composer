@@ -1738,13 +1738,13 @@ function Panel_Graph() : PanelContent() constructor {
 		var context = instanceof(getCurrentContext());
 		switch(context) {
 			case "Node_Group" :			bg = merge_color(COLORS.panel_bg_clear, COLORS.node_blend_collection, 0.05); break;
-			case "Node_Iterate" :		bg = merge_color(COLORS.panel_bg_clear, COLORS.node_blend_loop, 0.05); break;
-			case "Node_Iterate_Each" :	bg = merge_color(COLORS.panel_bg_clear, COLORS.node_blend_loop, 0.05); break;
-			case "Node_VFX_Group" :		bg = merge_color(COLORS.panel_bg_clear, COLORS.node_blend_vfx, 0.05); break;
-			case "Node_Feedback" :		bg = merge_color(COLORS.panel_bg_clear, COLORS.node_blend_feedback, 0.05); break;
+			case "Node_Iterate" :		bg = merge_color(COLORS.panel_bg_clear, COLORS.node_blend_loop, 0.05);		 break;
+			case "Node_Iterate_Each" :	bg = merge_color(COLORS.panel_bg_clear, COLORS.node_blend_loop, 0.05);		 break;
+			case "Node_VFX_Group" :		bg = merge_color(COLORS.panel_bg_clear, COLORS.node_blend_vfx, 0.05);		 break;
+			case "Node_Feedback" :		bg = merge_color(COLORS.panel_bg_clear, COLORS.node_blend_feedback, 0.05);	 break;
 			case "Node_Rigid_Group" :	bg = merge_color(COLORS.panel_bg_clear, COLORS.node_blend_simulation, 0.05); break;
-			case "Node_Fluid_Group" :	bg = merge_color(COLORS.panel_bg_clear, COLORS.node_blend_fluid, 0.05); break;
-			case "Node_Strand_Group" :	bg = merge_color(COLORS.panel_bg_clear, COLORS.node_blend_strand, 0.05); break;
+			case "Node_Fluid_Group" :	bg = merge_color(COLORS.panel_bg_clear, COLORS.node_blend_fluid, 0.05);		 break;
+			case "Node_Strand_Group" :	bg = merge_color(COLORS.panel_bg_clear, COLORS.node_blend_strand, 0.05);	 break;
 		}
 		draw_clear(bg);
 		
@@ -1874,5 +1874,9 @@ function Panel_Graph() : PanelContent() constructor {
 		
 		ds_list_remove(nodes_list, node);
 		ds_list_add(nodes_list, node);
+	}
+	
+	static exportNodeImage = function() {
+		var dia = dialogPanelCall(new Panel_Graph_Export_Image(self));
 	}
 }

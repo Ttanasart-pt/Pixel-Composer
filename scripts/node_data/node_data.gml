@@ -19,7 +19,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		recordAction(ACTION_TYPE.node_added, self);
 		NODE_MAP[? node_id] = self;
 		MODIFIED = true;
-	} else {
+	
 		run_in(1, function() { 
 			var str = string_replace_all(name, " ", "_");
 			    str = string_replace_all(str,  "/", "");
