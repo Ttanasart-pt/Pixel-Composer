@@ -5,6 +5,20 @@ function draw_sprite_ext_override(spr, ind, _x, _y, xscale = 1, yscale = 1, rot 
 	__draw_sprite_ext(spr, ind, round(_x), round(_y), xscale, yscale, rot, color, alpha);
 }
 
+#macro draw_sprite_stretched_ext draw_sprite_stretched_ext_override
+#macro __draw_sprite_stretched_ext draw_sprite_stretched_ext
+
+function draw_sprite_stretched_ext_override(spr, ind, _x, _y, w = 1, h = 1, color = c_white, alpha = 1) {
+	__draw_sprite_stretched_ext(spr, ind, round(_x), round(_y), round(w), round(h), color, alpha);
+}
+
+#macro draw_sprite_stretched draw_sprite_stretched_override
+#macro __draw_sprite_stretched draw_sprite_stretched
+
+function draw_sprite_stretched_override(spr, ind, _x, _y, w = 1, h = 1) {
+	__draw_sprite_stretched(spr, ind, round(_x), round(_y), round(w), round(h));
+}
+
 function draw_sprite_uniform(spr, ind, _x, _y, scale, color = c_white) {
 	draw_sprite_ext(spr, ind, round(_x), round(_y), scale, scale, 0, color, 1);
 }

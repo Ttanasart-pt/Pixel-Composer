@@ -129,15 +129,16 @@ function Panel_Preview() : PanelContent() constructor {
 	
 	actions = [
 		[ 
-			THEME.icon_center_canvas,
-			get_text("panel_preview_center_canvas", "Center canvas"), 
-			function() { fullView(); }
-		],
-		[ 
 			THEME.icon_preview_export,
 			get_text("panel_preview_export_canvas", "Export canvas"), 
 			function() { saveCurrentFrame(); }
 		],
+		[ 
+			THEME.icon_center_canvas,
+			get_text("panel_preview_center_canvas", "Center canvas"), 
+			function() { fullView(); }
+		],
+		
 	]
 	
 	tb_framerate = new textBox(TEXTBOX_INPUT.number, function(val) { preview_rate = real(val); });

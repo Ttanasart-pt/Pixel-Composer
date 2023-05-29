@@ -126,6 +126,12 @@ function Panel_Graph() : PanelContent() constructor {
 	
 	toolbars = [
 		[ 
+			THEME.icon_preview_export,
+			function() { return 0;  },
+			function() { return get_text("panel_graph_export_image", "Export graph as image"); }, 
+			function() { dialogPanelCall(new Panel_Graph_Export_Image(self)); }
+		],
+		[ 
 			THEME.icon_center_canvas,
 			function() { return 0;  },
 			function() { return get_text("panel_graph_center_to_nodes", "Center to nodes"); }, 
@@ -364,17 +370,15 @@ function Panel_Graph() : PanelContent() constructor {
 		draw_set_alpha(grid_opacity * (graph_s >= 1? 1 : 0.5));
 		while(xx < w + gr_ls) {
 			draw_line(xx + xs, 0, xx + xs, h);
-			if(xx + xs - gr_x == 0) {
+			if(xx + xs - gr_x == 0)
 				draw_line_width(xx + xs, 0, xx + xs, h, 3);
-			}
 			xx += gr_ls;
 		}
 		
 		while(yy < h + gr_ls) {
 			draw_line(0, yy + ys, w, yy + ys);
-			if(yy + ys - gr_y == 0) {
+			if(yy + ys - gr_y == 0)
 				draw_line_width(0, yy + ys, w, yy + ys, 3);
-			}
 			yy += gr_ls;
 		}
 		draw_set_alpha(1);
@@ -1874,9 +1878,5 @@ function Panel_Graph() : PanelContent() constructor {
 		
 		ds_list_remove(nodes_list, node);
 		ds_list_add(nodes_list, node);
-	}
-	
-	static exportNodeImage = function() {
-		var dia = dialogPanelCall(new Panel_Graph_Export_Image(self));
 	}
 }
