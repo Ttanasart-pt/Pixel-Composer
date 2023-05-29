@@ -237,10 +237,8 @@ function Node_WAV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		var amp_ind = round(frame * content.sample / ANIMATOR.framerate);
 		var amp_win = content.sample / ANIMATOR.framerate;
 		
-		var amp_st = max(0, amp_ind - amp_win);
-		var amp_ed = min(len, amp_ind + amp_win);
-		
-		//print($"{amp_ind}: {amp_st} - {amp_ed}")
+		var amp_st = clamp(amp_ind - amp_win, 0, len);
+		var amp_ed = clamp(amp_ind + amp_win, 0, len);
 		
 		if(!struct_has(content, "sound"))	return;
 		if(array_length(content.sound) < 1) return;

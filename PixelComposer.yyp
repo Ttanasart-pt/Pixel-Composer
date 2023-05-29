@@ -853,7 +853,6 @@
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"Tree sway.pxc","CopyToMask":-1,"filePath":"datafiles/Sample Projects",},
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"Steamworks_Extension_Documentation.html","CopyToMask":0,"filePath":"datafiles",},
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"ucrtbased.dll","ConfigValues":{},"CopyToMask":-1,"filePath":"datafiles",},
-    {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"Uninstall gifski.lnk","CopyToMask":-1,"filePath":"datafiles",},
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"webpmux.exe","CopyToMask":-1,"filePath":"datafiles/webp",},
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"Welcome files.zip","CopyToMask":-1,"filePath":"datafiles",},
   ],

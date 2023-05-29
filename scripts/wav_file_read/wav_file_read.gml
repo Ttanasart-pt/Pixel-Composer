@@ -27,9 +27,14 @@ function file_read_bytes(file, amo = 1, signed = false, little_endian = true) {
 global.FLAG.wav_import = true;
 
 function file_read_wav(path) {
-	wav_file_reader = buffer_load(path);
+	wav_file_reader  = buffer_load(path);
 	wav_file_reading = true;
 	wav_file_prg = 0;
+	
+	if(wav_file_reader == -1) {
+		noti_warning("File read error.");
+		return noone;
+	}
 	
 	wav_file_load_time = current_time;
 	

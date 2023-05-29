@@ -18,7 +18,7 @@
 			var _val = 0;
 			if(val == "value")  _val = inp;
 			else if(getStr)		_val = val;
-			else				_val = nodeGetData(val, getStr);
+			else				_val = nodeGetData(val);
 			
 			return _val;
 		}
@@ -96,9 +96,7 @@
 				case "^": return (is_real(v1) && is_real(v2))? power(v1, v2) : 0;
 				case "/": return (is_real(v1) && is_real(v2))? v1 / v2       : 0;
 				case "|": 
-					var val = is_real(v2)? array_safe_get(v1, v2) : ds_map_try_get(v1, v2);
-					if(is_struct(val) && instanceof(val) == "NodeValue")
-						val = val.getValue();
+					var val = is_real(v2)? array_safe_get(v1, v2) : 0;
 					return val;
 				
 				case "sin"   : return is_real(v1)? sin(v1)    : 0;

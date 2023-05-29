@@ -657,7 +657,7 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 		}
 	}
 	
-	function nodeGetData(str, getStr = false) {
+	function nodeGetData(str) {
 		var strs = string_splice(str, ".");
 		var _val = 0;
 		
@@ -674,12 +674,30 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 				case "fps" :		return ANIMATOR.framerate;
 			}
 			return 0;
-		} else {
+		} else if(array_length(strs) > 2) { 
 			var key = strs[0];
 			if(!ds_map_exists(NODE_NAME_MAP, key)) return 0;
 		
 			var node = NODE_NAME_MAP[? key];
-			_val = strs[1] == "inputs"? node.inputMap : node.outputMap;
+			var map  = noone;
+			switch(strs[1]) {
+				case "inputs" :	
+				case "input" :	
+					map  = node.inputMap;
+					break;
+				case "outputs" :	
+				case "output" :	
+					map  = node.outputMap;
+					break;
+				default : return 0;
+			}
+			
+			var _junc_key = strs[2];
+			var _junc     = ds_map_try_get(map, _junc_key, noone);
+			
+			if(_junc == noone) return 0;
+			
+			return _junc.getValue();
 		}
 		
 		return _val;

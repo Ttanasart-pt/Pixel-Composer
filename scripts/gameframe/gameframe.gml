@@ -1037,7 +1037,7 @@ function gameframe_tools_keyctl_reset() {
 	// gameframe_tools_keyctl_reset()
 	var _i = 0;
 	for (var __g1 = array_length(gameframe_tools_keyctl_keys); _i < __g1; _i++) {
-		gameframe_tools_keyctl_keys[_i][@1/* down */] = false;
+		//gameframe_tools_keyctl_keys[_i][@1/* down */] = false;
 	}
 }
 
