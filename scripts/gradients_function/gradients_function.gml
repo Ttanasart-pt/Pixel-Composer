@@ -83,10 +83,6 @@ function gradientObject(color = c_black) constructor {
 	}
 	
 	static draw = function(_x, _y, _w, _h, _a = 1) {
-		static RES = 48;
-		var _step  = _w / RES;
-		var _ox, _oc;
-	
 		var uniform_grad_blend	= shader_get_uniform(sh_gradient_display, "gradient_blend");
 		var uniform_grad		= shader_get_uniform(sh_gradient_display, "gradient_color");
 		var uniform_grad_time	= shader_get_uniform(sh_gradient_display, "gradient_time");

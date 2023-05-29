@@ -4,6 +4,8 @@
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
+#define GRADIENT_LIMIT 128
+
 uniform float seed;
 uniform float strength;
 uniform float dist;
@@ -11,8 +13,8 @@ uniform int useMap;
 uniform sampler2D strengthMap;
 
 uniform int gradient_blend;
-uniform vec4 gradient_color[16];
-uniform float gradient_time[16];
+uniform vec4 gradient_color[GRADIENT_LIMIT];
+uniform float gradient_time[GRADIENT_LIMIT];
 uniform int gradient_keys;
 
 uniform float alpha_curve[64];
@@ -139,7 +141,7 @@ vec3 hsvMix(vec3 c1, vec3 c2, float t) {
 vec4 gradientEval(in float prog) {
 	vec4 col = vec4(0.);
 	
-	for(int i = 0; i < 16; i++) {
+	for(int i = 0; i < GRADIENT_LIMIT; i++) {
 		if(gradient_time[i] == prog) {
 			col = gradient_color[i];
 			break;

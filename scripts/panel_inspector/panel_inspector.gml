@@ -547,7 +547,8 @@ function Panel_Inspector() : PanelContent() constructor {
 		draw_text_add(w / 2, ui(76), inspecting.internalName);
 		draw_set_alpha(1);
 		
-		var lx = w / 2 - string_width(inspecting.name) / 2 - ui(16);
+		draw_set_font(f_p1);
+		var lx = w / 2 - string_width(inspecting.name) / 2 - ui(10);
 		var ly = ui(56 - 8);
 		if(buttonInstant(THEME.button_hide, lx, ly, ui(16), ui(16), [mx, my], pFOCUS, pHOVER, "Lock", THEME.lock, !locked, locked? COLORS._main_icon_light : COLORS._main_icon,, 0.5) == 2)
 			locked = !locked;
