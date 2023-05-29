@@ -107,6 +107,9 @@ function Node_WAV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		var ch  = content.channels;
 		if(ch == 0) return;
 		
+		if(!struct_has(content, "sound"))	return;
+		if(array_length(content.sound) < 1) return;
+		
 		var len = array_length(content.sound[0]);
 		if(len == 0) return;
 		
@@ -179,7 +182,7 @@ function Node_WAV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	insp1UpdateTooltip  = get_text("panel_inspector_refresh", "Refresh");
 	insp1UpdateIcon     = [ THEME.refresh, 1, COLORS._main_value_positive ];
 	
-	insp2UpdateTooltip  = get_text("play", "Play");
+	insp2UpdateTooltip  = get_text("play_with_timeline", "Play with timeline");
 	insp2UpdateIcon     = [ THEME.play_sound, 1, COLORS._main_icon_light ];
 	attributes[? "play"] = true;
 	
@@ -239,6 +242,9 @@ function Node_WAV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		
 		//print($"{amp_ind}: {amp_st} - {amp_ed}")
 		
+		if(!struct_has(content, "sound"))	return;
+		if(array_length(content.sound) < 1) return;
+		
 		var dec = 0;
 		for( var i = amp_st; i < amp_ed; i++ )
 			dec += content.sound[0][i] == 0? 0 : 20 * log10(abs(content.sound[0][i]));
@@ -290,6 +296,9 @@ function Node_WAV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		var _st = round(content.sample / ANIMATOR.framerate); //sample per frame
 		var _am = content.packet / _st;
 		var ox, oy, nx, ny;
+		
+		if(!struct_has(content, "sound"))	return;
+		if(array_length(content.sound) < 1) return;
 		
 		for( var i = 0; i <= _am; i++ ) {
 			var _dat = content.sound[0][min(i * _st, content.packet - 1)];

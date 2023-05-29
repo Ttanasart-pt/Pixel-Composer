@@ -27,13 +27,13 @@ function Node_Color_RGB(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			var _nor = inputs[| 3].getValue();
 			
 			if(_nor) {
-				inputs[| 0].type = VALUE_TYPE.integer;
+				inputs[| 0].type = VALUE_TYPE.float;
 				inputs[| 0].setDisplay(VALUE_DISPLAY.slider, [0, 1, 0.01]);
 				
-				inputs[| 1].type = VALUE_TYPE.integer;
+				inputs[| 1].type = VALUE_TYPE.float;
 				inputs[| 1].setDisplay(VALUE_DISPLAY.slider, [0, 1, 0.01]);
 				
-				inputs[| 2].type = VALUE_TYPE.integer;
+				inputs[| 2].type = VALUE_TYPE.float;
 				inputs[| 2].setDisplay(VALUE_DISPLAY.slider, [0, 1, 0.01]);
 			} else {
 				inputs[| 0].type = VALUE_TYPE.integer;

@@ -81,14 +81,11 @@
 			var v1 = getVal(l, inp);
 			var v2 = getVal(r, inp, symbol == "|");
 			
-			//print("symbol " + string(symbol));
-			//print("l  : " + string(l));
-			//print("r  : " + string(r));
-			//print("v1 : " + string(v1));
-			//print("v2 : " + string(v2));
-			//print("====================");
-			
 			//print($"{string(v1)} {symbol} {string(v2)}");
+			//print($"symbol : {symbol}");
+			//print($"l      : {l}");
+			//print($"r      : {r}");
+			//print("====================");
 			
 			switch(symbol) {
 				
@@ -212,15 +209,22 @@
 		
 		switch(operator) {
 			case "-": //deal with preceeding megative number -5
-				if(ds_stack_size(vl) >= 2) return new __funcTree("-", ds_stack_pop(vl), ds_stack_pop(vl));	
-				else					   return new __funcTree("-", ds_stack_pop(vl), 0);	
+				if(ds_stack_size(vl) >= 2) {
+					var _v1 = ds_stack_pop(vl);
+					var _v2 = ds_stack_pop(vl);
+					return new __funcTree("-", _v2, _v1);	
+				} else					   return new __funcTree("-", ds_stack_pop(vl), 0);	
 				
 			case "+": //binary operators
 			case "*": 
 			case "^": 
 			case "/": 
 			case "|": 
-				if(ds_stack_size(vl) >= 2) return new __funcTree(operator, ds_stack_pop(vl), ds_stack_pop(vl));	
+				if(ds_stack_size(vl) >= 2) {
+					var _v1 = ds_stack_pop(vl);
+					var _v2 = ds_stack_pop(vl);
+					return new __funcTree(operator, _v2, _v1);	
+				}
 			
 			default: return new __funcTree(operator, ds_stack_pop(vl));
 		}

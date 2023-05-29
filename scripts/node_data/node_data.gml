@@ -859,7 +859,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		if(PANEL_GRAPH.show_dimension) {
 			var txt = string(getNodeDimension(_s > 0.65));
 			draw_text(round(tx), round(ty), txt);
-			ty += string_height(txt) - 4 * _s;
+			ty += string_height(txt) - 4;
 		}
 		
 		if(PANEL_GRAPH.show_compute) {

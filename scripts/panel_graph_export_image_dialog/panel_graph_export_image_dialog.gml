@@ -16,8 +16,8 @@ function Panel_Graph_Export_Image(targetPanel) : PanelContent() constructor {
 		bgColor		: COLORS.panel_bg_clear,
 		
 		gridEnable  : false,
-		gridColor   : c_white,
-		gridAlpha   : 0.05,
+		gridColor   : targetPanel.grid_color,
+		gridAlpha   : targetPanel.grid_opacity,
 		
 		borderPad	: 0,
 		borderColor	: c_white,
@@ -140,15 +140,16 @@ function Panel_Graph_Export_Image(targetPanel) : PanelContent() constructor {
 		sc_settings.draw(sx, sy, mx - sx, my - sy);
 		
 		if(is_surface(surface)) {
+			var txt = "Export...";
 			draw_set_text(f_p1, fa_left, fa_top, COLORS._main_text);
-			var _bw = string_width("Export") + ui(32);
-			var _bh = string_height("Export") + ui(12);
+			var _bw = string_width(txt) + ui(32);
+			var _bh = string_height(txt) + ui(12);
 			bx = w - padding - _bw;
 			by = h - padding - _bh;
 		
 			b_export.setActiveFocus(pFOCUS, pHOVER);
 			b_export.draw(bx, by, _bw, _bh, _m);
-			draw_text(bx + ui(16), by + ui(6), "Export");
+			draw_text(bx + ui(16), by + ui(6), txt);
 		}
 	}
 }
