@@ -37,6 +37,11 @@ function array_safe_get(arr, index, def = 0, overflow = ARRAY_OVERFLOW._default)
 	return arr[index];
 }
 
+function array_push_create(arr, val) {
+	if(!is_array(arr)) return [ val ];
+	array_push(arr, val);
+	return arr;
+}
 
 function array_exists(arr, val) {
 	for( var i = 0; i < array_length(arr); i++ ) {

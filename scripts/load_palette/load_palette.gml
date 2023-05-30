@@ -21,7 +21,7 @@ function loadPalette(path) {
 						if(string_char_at(_w, 1) == "#") break;
 						var _c = string_splice(_w, " ");
 						if(array_length(_c) >= 3)
-							pal[_index++] = make_color_rgb(toString(_c[0]), toString(_c[1]), toString(_c[2]));
+							pal[_index++] = make_color_rgb(toNumber(_c[0]), toNumber(_c[1]), toNumber(_c[2]));
 						break;
 				}
 			}

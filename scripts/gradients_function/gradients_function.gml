@@ -172,12 +172,12 @@ function loadGradient(path) {
 		
 	var _t = file_text_open_read(path);
 	while(!file_text_eof(_t)) {
-		var key = file_text_readln(_t);
+		var key = string_trim(file_text_readln(_t));
 		var _col = 0, _pos = 0;
 			
 		if(string_pos(",", key)) {
 			var keys = string_splice(key, ",");
-			if(array_length(keys) != 2) continue;
+			if(array_length(keys) < 2) continue;
 				
 			_col = toNumber(keys[0]);
 			_pos = toNumber(keys[1]);
@@ -190,5 +190,6 @@ function loadGradient(path) {
 		array_push(grad.keys, new gradientKey(_pos, _col));
 	}
 	file_text_close(_t);
+	
 	return grad;
 }
