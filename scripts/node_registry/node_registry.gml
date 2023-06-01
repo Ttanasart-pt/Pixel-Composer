@@ -577,6 +577,9 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 			ds_list_add(node, "Cache");
 			addNodeObject(node, "Cache",		s_node_cache,		"Node_Cache",		[1, Node_Cache],, "Store current animation. Cache persisted between save.").setVersion(1134);
 			addNodeObject(node, "Cache Array",	s_node_cache_array,	"Node_Cache_Array",	[1, Node_Cache_Array],, "Store current animation as array.  Cache persisted between save.").setVersion(1130);
+			
+			ds_list_add(node, "Debug");
+			addNodeObject(node, "Print",		s_node_print,		"Node_Print",		[1, Node_Print], ["debug log"], "Display text to notification.").setVersion(1145);
 		
 		var hid = ds_list_create();
 		addNodeCatagory("Hidden", hid, ["Hidden"]);
