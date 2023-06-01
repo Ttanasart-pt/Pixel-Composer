@@ -1034,6 +1034,7 @@
     {"id":{"name":"sh_polar","path":"shaders/sh_polar/sh_polar.yy",},},
     {"id":{"name":"s_node_warp_mesh","path":"sprites/s_node_warp_mesh/s_node_warp_mesh.yy",},},
     {"id":{"name":"sh_pixel_cloud","path":"shaders/sh_pixel_cloud/sh_pixel_cloud.yy",},},
+    {"id":{"name":"printer","path":"scripts/printer/printer.yy",},},
     {"id":{"name":"node_iterate","path":"scripts/node_iterate/node_iterate.yy",},},
     {"id":{"name":"sh_de_stray","path":"shaders/sh_de_stray/sh_de_stray.yy",},},
     {"id":{"name":"sh_chromatic_aberration","path":"shaders/sh_chromatic_aberration/sh_chromatic_aberration.yy",},},

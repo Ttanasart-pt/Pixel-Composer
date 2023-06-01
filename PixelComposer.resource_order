@@ -296,6 +296,7 @@
     {"name":"sh_polar","order":1,"path":"shaders/sh_polar/sh_polar.yy",},
     {"name":"s_node_warp_mesh","order":10,"path":"sprites/s_node_warp_mesh/s_node_warp_mesh.yy",},
     {"name":"sh_pixel_cloud","order":13,"path":"shaders/sh_pixel_cloud/sh_pixel_cloud.yy",},
+    {"name":"printer","order":2,"path":"scripts/printer/printer.yy",},
     {"name":"sh_de_stray","order":16,"path":"shaders/sh_de_stray/sh_de_stray.yy",},
     {"name":"sh_chromatic_aberration","order":31,"path":"shaders/sh_chromatic_aberration/sh_chromatic_aberration.yy",},
     {"name":"fd_rectangle_create_view","order":3,"path":"scripts/fd_rectangle_create_view/fd_rectangle_create_view.yy",},

@@ -20,7 +20,7 @@ if(OS == os_windows && gameframe_is_minimized()) exit;
 					draw_tooltip_text(string_real(content));
 					break;
 				case VALUE_TYPE.boolean :
-					draw_tooltip_text(content? get_text("true", "True") : get_text("false", "False"));
+					draw_tooltip_text(printBool(content));
 					break;
 				case VALUE_TYPE.curve :
 					draw_tooltip_text("[" + get_text("tooltip_curve_object", "Curve Object") + "]");

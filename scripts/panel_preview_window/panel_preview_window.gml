@@ -13,6 +13,7 @@ function Panel_Preview_Window() : PanelContent() constructor {
 	title_show = 0;
 	
 	scale = 0;
+	scale_levels = [ 1/32, 1/24, 1/16, 1/12, 1/8, 1/4, 1/3, 1/2, 2/3, 1, 1.5, 2, 3, 4, 6, 8, 12, 16, 24, 32];
 	panx  = 0;
 	pany  = 0;
 	
@@ -21,7 +22,7 @@ function Panel_Preview_Window() : PanelContent() constructor {
 	pan_my = 0;
 	pan_sx = 0;
 	pan_sy = 0;
-
+	
 	function surfaceCheck() {
 		content_surface = surface_verify(content_surface, w, h);
 	}
@@ -116,13 +117,32 @@ function Panel_Preview_Window() : PanelContent() constructor {
 		
 		if(pHOVER) {
 			var inc = 0.5;
-			if(scale > 16)		inc = 2;
-			else if(scale > 8)	inc = 1;
+			if(scale > 64)			inc = 4;
+			else if(scale > 16)		inc = 2;
+			else if(scale > 8)		inc = 1;
+			else if(scale > 2)		inc = 0.5;
+			else if(scale > 0.25)	inc = 0.25;
+			else					inc = 0.05;
 			
 			var s = scale;
-			if(mouse_wheel_down()) scale = max(round(scale / inc) * inc - inc, 0.25);
-			if(mouse_wheel_up())   scale = min(round(scale / inc) * inc + inc, 32);
-		
+			if(mouse_wheel_down()) {
+				for( var i = 0; i < array_length(scale_levels) - 1; i++ ) {
+					if(s > scale_levels[i] && s <= scale_levels[i + 1]) {
+						scale = scale_levels[i];
+						break;
+					}
+				}
+			}
+			
+			if(mouse_wheel_up()) {
+				for( var i = 0; i < array_length(scale_levels) - 1; i++ ) {
+					if(s >= scale_levels[i] && s < scale_levels[i + 1]) {
+						scale = scale_levels[i + 1];
+						break;
+					}
+				}
+			}
+			
 			var ds = scale - s;
 			panx = panx / s * scale;
 			pany = pany / s * scale;

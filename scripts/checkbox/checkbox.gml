@@ -52,7 +52,10 @@ function checkBox(_onClick) : widget() constructor {
 		} else
 			if(mouse_press(mb_left)) deactivate();
 		
-		if(_value) draw_sprite_stretched_ext(spr, 2, _dx, _dy, ss, ss, COLORS._main_accent, aa);
+		if(is_array(_value))
+			draw_sprite_stretched_ext(spr, 3, _dx, _dy + ss / 2 - 8, ss, 16, COLORS._main_accent, aa);
+		else if(_value) 
+			draw_sprite_stretched_ext(spr, 2, _dx, _dy, ss, ss, COLORS._main_accent, aa);
 		
 		if(WIDGET_CURRENT == self)
 			draw_sprite_stretched_ext(THEME.widget_selecting, 0, _dx - ui(3), _dy - ui(3), ss + ui(6), ss + ui(6), COLORS._main_accent, 1);	

@@ -143,5 +143,6 @@
 		win.node_target     = node;
 		win.preview_channel = node.preview_channel;
 		var dia = dialogPanelCall(win, mouse_mx, mouse_my);
+		dia.destroy_on_click_out = false;
 	}
 #endregion
