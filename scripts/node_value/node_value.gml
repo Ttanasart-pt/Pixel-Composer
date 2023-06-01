@@ -353,6 +353,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	y     = node.y;
 	index = _connect == JUNCTION_CONNECT.input? ds_list_size(node.inputs) : ds_list_size(node.outputs);
 	type  = _type;
+	forward = true;
 	
 	if(struct_has(node, "inputMap")) {
 		if(_connect == JUNCTION_CONNECT.input)       node.inputMap[?  internalName] = self;
@@ -486,6 +487,11 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	
 	static rejectArrayProcess = function() {
 		process_array = false;
+		return self;
+	}
+	
+	static nonForward = function() {
+		forward = false;
 		return self;
 	}
 	
@@ -1443,6 +1449,12 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		var is_hover = false;
 		
 		if(PANEL_GRAPH.pHOVER && point_in_circle(_mx, _my, x, y, 10 * _s * sca)) {
+			//var _to = getJunctionTo();
+			//var _ss = "";
+			//for( var i = 0; i < array_length(_to); i++ ) 
+			//	_ss += (i? ", " : "") + _to[i].internalName;
+			//TOOLTIP = _ss;
+			
 			is_hover = true;
 			if(type == VALUE_TYPE.action)
 				draw_sprite_ext(THEME.node_junction_inspector, 1, x, y, ss, ss, 0, c_white, 1);
@@ -1559,6 +1571,20 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		ext.doUpdate();
 		PANEL_ANIMATION.updatePropertyList();
+	}
+	
+	static getJunctionTo = function() {
+		var to =  [];
+		
+		for(var j = 0; j < ds_list_size(value_to); j++) {
+			var _to = value_to[| j];
+			if(!_to.node.active || _to.value_from == noone) continue; 
+			if(_to.value_from != self) continue;
+			
+			array_push(to, _to);
+		}
+				
+		return to;
 	}
 	
 	static dragValue = function() {

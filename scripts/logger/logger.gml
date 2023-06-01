@@ -9,7 +9,7 @@
 		var s = "";
 		repeat(global.LOG_LEVEL - 1)
 			s += "   ";
-		s += "|- ";
+		s += "├ ";
 		
 		print(s + string(text));
 	}

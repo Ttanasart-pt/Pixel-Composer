@@ -19,7 +19,7 @@ function Node_Group_Output(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	output_index = -1;
 	
 	static setRenderStatus = function(result) {
-		LOG_LINE_IF(global.FLAG.render, "Set render status for " + name + " : " + string(result));
+		LOG_LINE_IF(global.FLAG.render, $"Set render status for {internalName} : {result}");
 		
 		rendered = result;
 		if(group) group.setRenderStatus(result);
@@ -56,7 +56,7 @@ function Node_Group_Output(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			//printIf(global.FLAG.render, "Group output ready " + string(_to.node.isRenderable()));
 			
 			array_push(nodes, _to.node);
-			LOG_IF(global.FLAG.render, "Check complete, push " + _to.node.name + " to stack.");
+			LOG_IF(global.FLAG.render, $"Check complete, push {_to.node.internalName} to stack.");
 		}
 		LOG_BLOCK_END();
 		

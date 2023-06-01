@@ -3,6 +3,7 @@ function Node_Iterate_Sort(_x, _y, _group = noone) : Node_Collection(_x, _y, _gr
 	color = COLORS.node_blend_loop;
 	icon  = THEME.loop;
 	
+	reset_all_child = true;
 	combine_render_time = false;
 	
 	inputs[| 0] = nodeValue("Array", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, [] )
@@ -30,13 +31,16 @@ function Node_Iterate_Sort(_x, _y, _group = noone) : Node_Collection(_x, _y, _gr
 	}
 	
 	static getNextNodes = function() {
-		initLoop();
 		return __nodeLeafList(getNodeList());
 	}
 	
 	static onStep = function() {
 		var type = inputs[| 0].value_from == noone? VALUE_TYPE.any : inputs[| 0].value_from.type;
 		inputs[| 0].type = type;
+	}
+	
+	static update = function(frame = ANIMATOR.current_frame) {
+		initLoop();
 	}
 	
 	static swap = function(arr, a, b) {

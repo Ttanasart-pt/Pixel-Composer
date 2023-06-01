@@ -1,10 +1,11 @@
 //Make an iterator_* parent???
 
-function Node_Iterate_Filter(_x, _y, _group = noone) : Node_Collection(_x, _y, _group) constructor {
+function Node_Iterate_Filter(_x, _y, _group = noone) : Node_Iterator(_x, _y, _group) constructor {
 	name = "Filter Array";
 	color = COLORS.node_blend_loop;
 	icon  = THEME.loop;
 	
+	reset_all_child = true;
 	combine_render_time = false;
 	iterated = 0;
 	
@@ -25,30 +26,17 @@ function Node_Iterate_Filter(_x, _y, _group = noone) : Node_Collection(_x, _y, _
 		output.inputs[| 0].setFrom(input.outputs[| 0]);
 	}
 	
-	static getNextNodes = function() {
-		initLoop();
-		return __nodeLeafList(getNodeList());
-	}
-	
 	static onStep = function() {
 		var type = inputs[| 0].value_from == noone? VALUE_TYPE.any : inputs[| 0].value_from.type;
 		inputs[| 0].type = type;
 	}
 	
-	static initLoop = function() {
-		resetRender();
-		iterated = 0;
-		loop_start_time = get_timer();
-		
+	static doInitLoop = function() {
 		var arrIn  = inputs[| 0].getValue();
 		var arrOut = outputs[| 0].getValue();
 		
 		surface_array_free(arrOut);
 		outputs[| 0].setValue([])
-		
-		LOG_LINE_IF(global.FLAG.render, "Loop begin");
-		var _val = outputs[| 0].getValue();
-		LOG_LINE_IF(global.FLAG.render, "Output original value " + string(_val));
 	}
 	
 	static getIterationCount = function() {
@@ -57,28 +45,6 @@ function Node_Iterate_Filter(_x, _y, _group = noone) : Node_Collection(_x, _y, _
 		if(!is_real(maxIter)) maxIter = 1;
 		
 		return maxIter;
-	}
-	
-	static iterationUpdate = function() {
-		var siz = ds_list_size(outputs); // check if every output is updated
-		for( var i = custom_output_index; i < siz; i++ ) {
-			var _o = outputs[| i];
-			if(!_o.node.rendered) return;
-		}
-		
-		var maxIter = getIterationCount();
-		iterated++;
-		
-		if(iterated >= maxIter)
-			render_time = get_timer() - loop_start_time;
-		else 
-			resetRender();
-	}
-	
-	static iterationStatus = function() {
-		if(iterated >= getIterationCount())
-			return ITERATION_STATUS.complete;
-		return ITERATION_STATUS.loop;
 	}
 	
 	PATCH_STATIC

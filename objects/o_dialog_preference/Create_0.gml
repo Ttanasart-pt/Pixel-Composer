@@ -195,7 +195,7 @@ event_inherited();
 	]);
 
 	ds_list_add(pref_global, [
-		get_text("pref_enable_test_mode", "Enable test mode (require restart)"),
+		get_text("pref_enable_test_mode", "Enable developer mode (require restart)"),
 		"test_mode",
 		new checkBox(function() { 
 			PREF_MAP[? "test_mode"] = !PREF_MAP[? "test_mode"]; 

@@ -296,7 +296,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		if(SAFE_MODE) return;
 		var sBase = surface_get_target();
 		LOG_BLOCK_START();
-		LOG_IF(global.FLAG.render, "DoUpdate called from " + name);
+		LOG_IF(global.FLAG.render, $">>>>>>>>>> DoUpdate called from {internalName} <<<<<<<<<<");
 		
 		for( var i = 0; i < ds_list_size(inputs); i++ ) {
 			if(inputs[| i].type != VALUE_TYPE.trigger) continue;
@@ -308,11 +308,12 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		
 		try {
 			var t = get_timer();
+			
 			if(!is_instanceof(self, Node_Collection)) 
 				setRenderStatus(true);
 				
-			update();
-			
+			update();										///UPDATE
+				
 			if(!is_instanceof(self, Node_Collection))
 				render_time = get_timer() - t;
 		} catch(exception) {
@@ -347,22 +348,31 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	
 	static triggerRender = function() {
 		LOG_BLOCK_START();
-		LOG_IF(global.FLAG.render, "Trigger render for " + name + " (" + display_name + ")");
+		LOG_IF(global.FLAG.render, $"Trigger render for {internalName}");
 		
 		setRenderStatus(false);
 		UPDATE |= RENDER_TYPE.partial;
 		
-		var nodes = getNextNodesRaw();
-		for(var i = 0; i < array_length(nodes); i++)
-			nodes[i].triggerRender();
+		if(is_instanceof(group, Node_Collection) && group.reset_all_child) {
+			group.resetRender();
+		} else {
+			resetRender();
+			
+			var nodes = getNextNodesRaw();
+			for(var i = 0; i < array_length(nodes); i++)
+				nodes[i].triggerRender();
+		}
+		
 		LOG_BLOCK_END();
 	}
-
+	
+	static resetRender = function() { setRenderStatus(false); }
+	
 	static isRenderable = function(log = false) { //Check if every input is ready (updated)
 		if(!active)	return false;
 		if(!renderActive) return false;
 		
-		if(group && struct_has(group, "iterationStatus") && group.iterationStatus() == ITERATION_STATUS.complete) return false;
+		//if(group && struct_has(group, "iterationStatus") && group.iterationStatus() == ITERATION_STATUS.complete) return false;
 		
 		for(var j = 0; j < ds_list_size(inputs); j++) {
 			var _in = inputs[| j];
@@ -373,7 +383,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 			if(!val_from.node.active)		continue;
 			if(!val_from.node.renderActive) continue;
 			if(!val_from.node.rendered && !val_from.node.update_on_frame) {
-				//LOG_LINE_IF(global.FLAG.render && name == "Tunnel Out", "Non renderable because: " + string(val_from.node.name));
+				LOG_LINE_IF(global.FLAG.render, $"Node {internalName} is not renderable because input {val_from.node.internalName} is not rendered");
 				return false;
 			}
 		}
@@ -385,25 +395,29 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	
 	static getNextNodes = function() {
 		var nodes = [];
+		var nodeNames = [];
 		
 		LOG_BLOCK_START();
-		LOG_IF(global.FLAG.render, "Call get next node from: " + name);
+		LOG_IF(global.FLAG.render, $"→→→→→ Call get next node from: {internalName}");
 		LOG_BLOCK_START();
 		
 		for(var i = 0; i < ds_list_size(outputs); i++) {
 			var _ot = outputs[| i];
+			if(!_ot.forward) continue;
 			
-			for(var j = 0; j < ds_list_size(_ot.value_to); j++) {
-				var _to = _ot.value_to[| j];
-				if(!_to.node.active || _to.value_from == noone) continue; 
+			var _tos = _ot.getJunctionTo();
+			
+			for( var j = 0; j < array_length(_tos); j++ ) {
+				var _to = _tos[j];
 				
-				LOG_IF(global.FLAG.render, "Check render " + _to.node.name + " from " + _to.value_from.node.name);
-				if(_to.value_from.node != self) continue;
-				
-				LOG_IF(global.FLAG.render, "Check complete, push " + _to.node.name + " to stack.");
 				array_push(nodes, _to.node);
+				array_push(nodeNames, _to.node.internalName);
+				
+				//LOG_IF(global.FLAG.render, $"→→ Check output: {_ot.name} connect to node {_to.node.internalName}");
 			}
 		}	
+		
+		LOG_IF(global.FLAG.render, $"→→ Push {nodeNames} to stack.");
 		
 		LOG_BLOCK_END();
 		LOG_BLOCK_END();
@@ -413,7 +427,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	static onInspect = function() {}
 	
 	static setRenderStatus = function(result) {
-		LOG_LINE_IF(global.FLAG.render, "Set render status for " + name + " : " + string(result));
+		LOG_LINE_IF(global.FLAG.render, $"Set render status for {internalName} : {string(result)}");
 		
 		rendered = result;
 	}

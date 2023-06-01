@@ -1,8 +1,9 @@
-function Node_Iterate_Each(_x, _y, _group = noone) : Node_Collection(_x, _y, _group) constructor {
+function Node_Iterate_Each(_x, _y, _group = noone) : Node_Iterator(_x, _y, _group) constructor {
 	name = "Loop Array";
 	color = COLORS.node_blend_loop;
 	icon  = THEME.loop;
 	
+	reset_all_child = true;
 	combine_render_time = false;
 	iterated = 0;
 	
@@ -23,25 +24,12 @@ function Node_Iterate_Each(_x, _y, _group = noone) : Node_Collection(_x, _y, _gr
 		output.inputs[| 0].setFrom(input.outputs[| 0]);
 	}
 	
-	static getNextNodesRaw = function() {
-		return __nodeLeafList(getNodeList());
-	}
-	
-	static getNextNodes = function() {
-		initLoop();
-		return __nodeLeafList(getNodeList());
-	}
-	
 	static onStep = function() {
 		var type = inputs[| 0].value_from == noone? VALUE_TYPE.any : inputs[| 0].value_from.type;
 		inputs[| 0].type = type;
 	}
 	
-	static initLoop = function() {
-		resetRender();
-		iterated = 0;
-		loop_start_time = get_timer();
-		
+	static doInitLoop = function() {
 		var arrIn = inputs[| 0].getValue();
 		var arrOut = outputs[| 0].getValue();
 		
@@ -49,8 +37,6 @@ function Node_Iterate_Each(_x, _y, _group = noone) : Node_Collection(_x, _y, _gr
 			surface_array_free(arrOut);
 			outputs[| 0].setValue([])
 		}
-		
-		LOG_LINE_IF(global.FLAG.render, "Loop begin");
 	}
 	
 	static getIterationCount = function() {
@@ -59,36 +45,6 @@ function Node_Iterate_Each(_x, _y, _group = noone) : Node_Collection(_x, _y, _gr
 		if(!is_real(maxIter)) maxIter = 1;
 		
 		return maxIter;
-	}
-	
-	static iterationUpdate = function() {
-		var siz = ds_list_size(outputs); // check if every output is updated
-		for( var i = custom_output_index; i < siz; i++ ) {
-			var _o = outputs[| i];
-			if(!_o.node.rendered) return;
-		}
-		
-		var maxIter = getIterationCount();
-		iterated++;
-		
-		LOG_BLOCK_START();
-		LOG_IF(global.FLAG.render, "Iteration update: " + string(iterated) + "/" + string(maxIter));
-		
-		if(iterated >= maxIter) {
-			LOG_IF(global.FLAG.render, "Iteration complete");
-			render_time = get_timer() - loop_start_time;
-		} else {
-			LOG_IF(global.FLAG.render, "Iteration not completed, reset render status.");
-			resetRender();
-		}
-		
-		LOG_BLOCK_END();
-	}
-	
-	static iterationStatus = function() {
-		if(iterated >= getIterationCount())
-			return ITERATION_STATUS.complete;
-		return ITERATION_STATUS.loop;
 	}
 	
 	PATCH_STATIC

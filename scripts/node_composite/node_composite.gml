@@ -716,6 +716,12 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		}
 	}
 	
+	static step = function() {
+		var _dim_type = getSingleValue(1);
+		
+		inputs[| 2].setVisible(_dim_type == COMPOSE_OUTPUT_SCALING.constant);
+	}
+	
 	static process_data = function(_outSurf, _data, _output_index, _array_index) {
 		if(_output_index == 1) return atlas_data;
 		if(_output_index == 0 && _array_index == 0) atlas_data = [];
@@ -730,12 +736,10 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		
 		switch(_dim_type) {
 			case COMPOSE_OUTPUT_SCALING.first :
-				inputs[| 2].setVisible(false);
 				ww = surface_get_width(base);
 				hh = surface_get_height(base);
 				break;
 			case COMPOSE_OUTPUT_SCALING.largest :
-				inputs[| 2].setVisible(false);
 				for(var i = input_fix_len; i < array_length(_data) - data_length; i += data_length) {
 					var _s = _data[i];
 					ww = max(ww, surface_get_width(_s));
@@ -743,7 +747,6 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				}
 				break;
 			case COMPOSE_OUTPUT_SCALING.constant :	
-				inputs[| 2].setVisible(true);
 				ww = _dim[0];
 				hh = _dim[1];
 				break;

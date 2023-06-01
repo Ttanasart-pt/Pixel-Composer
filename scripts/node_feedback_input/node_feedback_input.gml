@@ -21,7 +21,7 @@ function Node_Feedback_Input(_x, _y, _group = noone) : Node_Group_Input(_x, _y, 
 		return outputs[| 0].getValueDefault();
 	}
 	
-	outputs[| 1] = nodeValue("Feedback loop", self, JUNCTION_CONNECT.output, VALUE_TYPE.node, 0);
+	outputs[| 1] = nodeValue("Feedback loop", self, JUNCTION_CONNECT.output, VALUE_TYPE.node, 0).nonForward();
 	
 	PATCH_STATIC
 }

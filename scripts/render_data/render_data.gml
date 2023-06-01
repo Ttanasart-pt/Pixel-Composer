@@ -5,13 +5,13 @@ enum RENDER_TYPE {
 }
 
 #region globalvar
-	global.FLAG.render = false;
+	global.FLAG.render  = false;
 	global.group_inputs = [ "Node_Group_Input", "Node_Feedback_Input", "Node_Iterator_Input", "Node_Iterator_Each_Input" ];
 #endregion
 
 function __nodeLeafList(_list) {
 	var nodes = [];
-	LOG_BLOCK_START();
+	var nodeNames = [];
 	
 	for( var i = 0; i < ds_list_size(_list); i++ ) {
 		var _node = _list[| i];
@@ -21,11 +21,11 @@ function __nodeLeafList(_list) {
 		var _startNode = _node.isRenderable();
 		if(_startNode) {
 			array_push(nodes, _node);
-			LOG_IF(global.FLAG.render, "Push node " + _node.name + " to stack");
+			array_push(nodeNames, _node.internalName);
 		}
 	}
 	
-	LOG_BLOCK_END();
+	LOG_LINE_IF(global.FLAG.render, $"Push node {nodeNames} to stack");
 	return nodes;
 }
 
@@ -52,13 +52,15 @@ function __nodeInLoop(_node) {
 function Render(partial = false, runAction = false) {
 	var t = current_time;
 	LOG_BLOCK_START();
-	LOG_IF(global.FLAG.render, "=== RENDER START [frame " + string(ANIMATOR.current_frame) + "] ===");
+	LOG_IF(global.FLAG.render, 
+$"============================== RENDER START [frame {string(ANIMATOR.current_frame)}] ==============================");
 	
 	try {
 		var rendering = noone;
-		var error = 0;
+		var error     = 0;
+		var reset_all = !partial || ALWAYS_FULL;
 		
-		if(!partial || ALWAYS_FULL) {
+		if(reset_all) {
 			var _key = ds_map_find_first(NODE_MAP);
 			var amo = ds_map_size(NODE_MAP);
 		
@@ -70,7 +72,7 @@ function Render(partial = false, runAction = false) {
 		}
 	
 		// get leaf node
-		ds_queue_clear(RENDER_QUEUE);
+		RENDER_QUEUE.clear();
 		var key = ds_map_find_first(NODE_MAP);
 		var amo = ds_map_size(NODE_MAP);
 		repeat(amo) {
@@ -84,49 +86,51 @@ function Render(partial = false, runAction = false) {
 			if(!_node.active)		continue;
 			if(!_node.renderActive) continue;
 			if(_node.rendered) {
-				LOG_IF(global.FLAG.render, "Skip rendered " + _node.name + " (" + _node.display_name + ")");
+				LOG_IF(global.FLAG.render, $"Skip rendered {_node.internalName}");
 				continue;
 			}
 			
-			if(__nodeInLoop(_node)) continue;
+			//if(__nodeInLoop(_node)) continue;
+			if(_node.group != noone) continue;
 			
 			LOG_BLOCK_START();
 			
 			var _startNode = _node.isRenderable(global.FLAG.render);
 			if(_startNode) {
-				LOG_IF(global.FLAG.render, "Found leaf " + _node.name + " (" + _node.display_name + ")");
+				LOG_IF(global.FLAG.render, $"Found leaf {_node.internalName}");
 				
-				_node.triggerRender();
-				ds_queue_enqueue(RENDER_QUEUE, _node);
+				if(!reset_all) _node.triggerRender();
+				RENDER_QUEUE.enqueue(_node);
 			} else 
-				LOG_IF(global.FLAG.render, "Skip non-leaf " + _node.name + " (" + _node.display_name + ")");
+				LOG_IF(global.FLAG.render, $"Skip non-leaf {_node.internalName}");
 			
 			LOG_BLOCK_END();
 		}
 		
-		LOG_IF(global.FLAG.render, "Get leaf complete: found " + string(ds_queue_size(RENDER_QUEUE)) + " leaves.");
-		LOG_IF(global.FLAG.render, "Start rendering...");
+		LOG_IF(global.FLAG.render, $"Get leaf complete: found {RENDER_QUEUE.size()} leaves.");
+		LOG_IF(global.FLAG.render,  "================== Start rendering ==================");
 	
 		// render forward
-		while(!ds_queue_empty(RENDER_QUEUE)) {
-			rendering = ds_queue_dequeue(RENDER_QUEUE);
+		while(!RENDER_QUEUE.empty()) {
+			LOG_BLOCK_START();
+			LOG_IF(global.FLAG.render, $"➤➤➤➤➤➤ CURRENT RENDER QUEUE {RENDER_QUEUE}");
+			rendering = RENDER_QUEUE.dequeue();
 			var renderable = rendering.isRenderable();
 			
-			LOG_BLOCK_START();
-			LOG_IF(global.FLAG.render, "Rendering " + rendering.name + " (" + rendering.display_name + ") ");
+			LOG_IF(global.FLAG.render, $"Rendering {rendering.internalName} ({rendering.display_name}) : {renderable? "Update" : "Pass"}");
 			
 			if(renderable) {
 				rendering.doUpdate();
 				
 				var nextNodes = rendering.getNextNodes();
 				for( var i = 0; i < array_length(nextNodes); i++ )
-					ds_queue_enqueue(RENDER_QUEUE, nextNodes[i]);
+					RENDER_QUEUE.enqueue(nextNodes[i]);
 				
 				if(runAction && rendering.hasInspector1Update())
 					rendering.inspector1Update();
-			}
+			} else 
+				RENDER_QUEUE.enqueue(rendering);
 			
-			LOG_IF(global.FLAG.render, "Rendered " + rendering.name + " (" + rendering.display_name + ") [" + string(instanceof(rendering)) + "]" + (renderable? " [Update]" : " [Skip]"));
 			LOG_BLOCK_END();
 		}
 	} catch(e) {
@@ -148,7 +152,7 @@ function __renderListReset(list) {
 
 function RenderList(list) {
 	LOG_BLOCK_START();
-	LOG_IF(global.FLAG.render, "=== RENDER LIST START ===");
+	LOG_IF(global.FLAG.render, "=============== RENDER LIST START ===============");
 	var queue = ds_queue_create();
 	
 	try {
@@ -174,7 +178,7 @@ function RenderList(list) {
 		}
 		
 		LOG_IF(global.FLAG.render, "Get leaf complete: found " + string(ds_queue_size(queue)) + " leaves.");
-		LOG_IF(global.FLAG.render, "Start rendering...");
+		LOG_IF(global.FLAG.render, "=== Start rendering ===");
 		
 		// render forward
 		while(!ds_queue_empty(queue)) {
@@ -183,7 +187,7 @@ function RenderList(list) {
 			
 			rendering.doUpdate();
 				
-			LOG_LINE_IF(global.FLAG.render, "Rendering " + rendering.name + " (" + rendering.display_name + ") ");
+			LOG_LINE_IF(global.FLAG.render, $"Rendering {rendering.internalName}");
 				
 			var nextNodes = rendering.getNextNodes();
 			for( var i = 0; i < array_length(nextNodes); i++ ) 
@@ -211,7 +215,7 @@ function RenderListAction(list, context = PANEL_GRAPH.getCurrentContext()) {
 		__renderListReset(list);
 		
 		// get leaf node
-		ds_queue_clear(RENDER_QUEUE);
+		RENDER_QUEUE.clear();
 		for( var i = 0; i < ds_list_size(list); i++ ) {
 			var _node = list[| i];
 			
@@ -223,14 +227,14 @@ function RenderListAction(list, context = PANEL_GRAPH.getCurrentContext()) {
 			if(_node.rendered)		continue;
 		
 			if(_node.isRenderable()) {
-				ds_queue_enqueue(RENDER_QUEUE, _node);
-				printIf(global.FLAG.render, "		> Push " + _node.name + " (" + _node.display_name + ") node to stack");
+				RENDER_QUEUE.enqueue(_node);
+				printIf(global.FLAG.render, $"		> Push {_node.internalName} node to stack");
 			}
 		}
 		
 		// render forward
-		while(!ds_queue_empty(RENDER_QUEUE)) {
-			rendering = ds_queue_dequeue(RENDER_QUEUE);
+		while(!RENDER_QUEUE.empty()) {
+			rendering = RENDER_QUEUE.dequeue();
 			if(rendering.group == context) break;
 			
 			var txt = rendering.isRenderable()? " [Skip]" : " [Update]";
@@ -239,15 +243,15 @@ function RenderListAction(list, context = PANEL_GRAPH.getCurrentContext()) {
 				rendering.doUpdate();
 				if(rendering.hasInspector1Update()) {
 					rendering.inspector1Update();
-					printIf(global.FLAG.render, " > Toggle manual execution " + rendering.name + " (" + rendering.display_name + ")");
+					printIf(global.FLAG.render, $" > Toggle manual execution {rendering.internalName}");
 				}
 				
 				var nextNodes = rendering.getNextNodes();
 				for( var i = 0; i < array_length(nextNodes); i++ ) 
-					ds_queue_enqueue(RENDER_QUEUE, nextNodes[i]);
+					RENDER_QUEUE.enqueue(nextNodes[i]);
 			}
 			
-			printIf(global.FLAG.render, "Rendered " + rendering.name + " (" + rendering.display_name + ") [" + string(instanceof(rendering)) + "]" + txt);
+			printIf(global.FLAG.render, $"Rendered {rendering.internalName} {txt}");
 		}
 	
 		printIf(global.FLAG.render, "=== RENDER COMPLETE IN {" + string(current_time - t) + "ms} ===\n");

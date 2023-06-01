@@ -206,7 +206,7 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		inParent = nodeValue("Value", group, JUNCTION_CONNECT.input, VALUE_TYPE.any, -1)
 			.setVisible(true, true);
 		inParent.from = self;
-			
+		
 		ds_list_add(group.inputs, inParent);
 		outputs[| 0].setFrom(inParent, false, false);
 		group.setHeight();

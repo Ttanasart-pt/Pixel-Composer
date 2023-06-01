@@ -2,6 +2,7 @@ function string_splice(str, delim) {
 	var st = [];
 	var ss = str;
 	var sp;
+	var wd = string_length(delim);
 	
 	do {
 		sp = string_pos(delim, ss);

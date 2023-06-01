@@ -63,9 +63,15 @@ if !ready exit;
 	
 	var expandAction = false;
 	var expand = PREF_MAP[? "splash_expand_recent"];
-	if(buttonInstant(THEME.button_hide_fill, x1, (y0 + y1) / 2 - ui(32), ui(16), ui(32), mouse_ui, sFOCUS, sHOVER,, THEME.arrow, expand? 2 : 0) == 2) {
-		PREF_MAP[? "splash_expand_recent"] = !PREF_MAP[? "splash_expand_recent"];
-		expandAction = true;
+	
+	switch(pages[project_page]) {
+		case "Sample projects" :
+		case "Workshop" :
+			if(buttonInstant(THEME.button_hide_fill, x1, (y0 + y1) / 2 - ui(32), ui(16), ui(32), mouse_ui, sFOCUS, sHOVER,, THEME.arrow, expand? 2 : 0) == 2) {
+				PREF_MAP[? "splash_expand_recent"] = !PREF_MAP[? "splash_expand_recent"];
+				expandAction = true;
+			}
+			break;
 	}
 	
 	x0 = x1 + ui(16);
@@ -75,52 +81,91 @@ if !ready exit;
 	
 	for( var i = 0; i < array_length(pages); i++ ) {
 		draw_set_text(f_p0, fa_left, fa_bottom, project_page == i? COLORS._main_text : COLORS._main_text_sub);
-		var list = i == 1? STEAM_PROJECTS : SAMPLE_PROJECTS;
-		var amo  = ds_list_size(list);
-		var tw   = ui(16) + string_width(pages[i]) + ui(8) + string_width(amo) + ui(8);
+		var txt = pages[i];
+		var amo = noone;
+		
+		switch(txt) {
+			case "Sample projects" : amo = ds_list_size(SAMPLE_PROJECTS); break;
+			case "Workshop" :		 amo = ds_list_size(STEAM_PROJECTS);  break;
+			case "Contests" :		 amo = array_length(contests);		  break;
+		}
+		
+		var tw = ui(16) + string_width(pages[i]);
+		if(amo) tw += ui(8) + string_width(amo) + ui(8);
+		
+		if(txt == "Contests") 
+			tw += ui(32);
 		
 		if(project_page == i) 
 			draw_sprite_stretched(THEME.ui_panel_bg, 0, bx, y0 - ui(32), tw, ui(40));
 		else if(point_in_rectangle(mouse_mx, mouse_my, bx, y0 - ui(32), bx + tw, y0)) {
 			draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, bx, y0 - ui(32), tw, ui(40), c_white, 0.5);
 			
-			if(mouse_click(mb_left, sFOCUS))
+			if(mouse_click(mb_left, sFOCUS)) {
 				project_page = i;
+				
+				if(txt == "Contests" && PREF_MAP[? "splash_expand_recent"]) {
+					PREF_MAP[? "splash_expand_recent"] = false;
+					expandAction = true;
+				}
+			}
 		}
 			
 		var _btx = bx + ui(8);
-		draw_text(_btx, y0 - ui(4), pages[i]);
+		if(txt == "Contests") {
+			draw_sprite_ui(THEME.trophy, 0, _btx + ui(16), y0 - ui(14),,,, CDEF.yellow);
+			_btx += ui(32);
+		}
 		
-		_btx += ui(8) + string_width(pages[i]);
-		draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, _btx, y0 - ui(26), string_width(amo) + ui(8), ui(24), COLORS._main_icon, 0.5);
+		if(txt == "Contests") draw_set_color(project_page == i? CDEF.yellow : COLORS._main_text_sub );
+		draw_text(_btx, y0 - ui(4), txt);
 		
-		_btx += ui(4);
-		draw_set_color(COLORS._main_text_sub);
-		draw_text(_btx, y0 - ui(4), amo);
+		_btx += ui(8) + string_width(txt);
+		
+		if(amo) {
+			draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, _btx, y0 - ui(26), string_width(amo) + ui(8), ui(24), COLORS._main_icon, 0.5);
+		
+			_btx += ui(4);
+			
+			if(txt == "Contests") draw_set_color(CDEF.yellow);
+			else				  draw_set_color(COLORS._main_text_sub);
+			draw_text(_btx, y0 - ui(4), amo);
+		}
 		
 		bx += tw;
 	}
 	
 	draw_sprite_stretched(THEME.ui_panel_bg, 0, x0, y0, x1 - x0, y1 - y0);
-	sp_sample.setActiveFocus(sFOCUS, sHOVER);
-	sp_sample.draw(x0 + ui(6), y0);
 	
-	if(project_page == 0) {
-		if(!expand) {
-			draw_set_text(f_p1, fa_right, fa_bottom, COLORS._main_text_sub);
-			draw_text(x1 - ui(82), y0 - ui(4), "Art by ");
-			draw_sprite_ui_uniform(s_kenney, 0, x1, y0 - ui(4), 2, c_white, 0.5);
-		}
-	} else if(project_page == 1) {
-		var bx = x1 - ui(32);
-		var by = y0 - ui(32);
+	switch(pages[project_page]) {
+		case "Sample projects" :
+			sp_sample.setActiveFocus(sFOCUS, sHOVER);
+			sp_sample.draw(x0 + ui(6), y0);
+	
+			if(!expand) {
+				draw_set_text(f_p1, fa_right, fa_bottom, COLORS._main_text_sub);
+				draw_text(x1 - ui(82), y0 - ui(4), "Art by ");
+				draw_sprite_ui_uniform(s_kenney, 0, x1, y0 - ui(4), 2, c_white, 0.5);
+			}
+			break;
+		case "Workshop" : 
+			sp_sample.setActiveFocus(sFOCUS, sHOVER);
+			sp_sample.draw(x0 + ui(6), y0);
+	
+			var bx = x1 - ui(32);
+			var by = y0 - ui(32);
 		
-		if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), mouse_ui, sFOCUS, sHOVER, "Open Steam Workshop", THEME.steam) == 2)
-			steam_activate_overlay_browser("https://steamcommunity.com/app/2299510/workshop/");
+			if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), mouse_ui, sFOCUS, sHOVER, "Open Steam Workshop", THEME.steam) == 2)
+				steam_activate_overlay_browser("https://steamcommunity.com/app/2299510/workshop/");
 		
-		bx -= ui(36);
-		if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), mouse_ui, sFOCUS, sHOVER, "Refresh content", THEME.refresh) == 2)
-			steamUCGload();
+			bx -= ui(36);
+			if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), mouse_ui, sFOCUS, sHOVER, "Refresh content", THEME.refresh) == 2)
+				steamUCGload();
+			break;
+		case "Contests" : 
+			sp_contest.setActiveFocus(sFOCUS, sHOVER);
+			sp_contest.draw(x0 + ui(6), y0);
+			break;
 	}
 	
 	if(expandAction) {

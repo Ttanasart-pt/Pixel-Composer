@@ -40,7 +40,7 @@
 	TOOLTIP  = "";
 	DRAGGING = noone;
 	KEYBOARD_STRING = "";
-	RENDER_QUEUE = ds_queue_create();
+	RENDER_QUEUE = new Queue();
 	
 	globalvar AUTO_SAVE_TIMER;
 	AUTO_SAVE_TIMER = 0;

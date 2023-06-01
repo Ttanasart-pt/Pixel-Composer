@@ -65,6 +65,7 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	auto_render_time = false;
 	combine_render_time = true;
 	
+	reset_all_child = false;
 	isInstancer  = false;
 	instanceBase = noone;
 	
@@ -135,24 +136,49 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		}
 	}
 	
-	static getNextNodes = function() {
+	static getNextNodes = function() { //get node inside the group
 		LOG_BLOCK_START();
-		var nodes = [];
+		LOG_IF(global.FLAG.render, $"→→→→→ Call get next node from group");
+		
+		var allReady = true;
 		for(var i = custom_input_index; i < ds_list_size(inputs); i++) {
 			var _in = inputs[| i].from;
 			if(!_in.renderActive) continue;
 			
-			array_push(nodes, _in);
-			LOG_IF(global.FLAG.render, "Check complete, push " + _in.name + " to stack.");
+			if(!_in.isRenderable()) {
+				LOG_IF(global.FLAG.render, $"Node {_in.internalName} not ready, loop skip.");
+				LOG_BLOCK_END();
+				return [];
+			}
 		}
 		
+		var nodes = __nodeLeafList(getNodeList());
 		LOG_BLOCK_END();
+		return nodes;
+	}
+	
+	static getNextNodesExternal = function() { //get node connected to the parent object
+		var nodes = [];
+		for( var i = 0; i < ds_list_size(outputs); i++ ) {
+			var _ot = outputs[| i];
+			
+			for(var j = 0; j < ds_list_size(_ot.value_to); j++) {
+				var _to   = _ot.value_to[| j];
+				var _node = _to.node;
+				
+				if(!_node.renderActive) continue;
+				
+				if(_node.active && _to.value_from != noone && _to.value_from.node == group && _node.isRenderable())
+					array_push(nodes, _to.node);
+			}
+		}
+		
 		return nodes;
 	}
 	
 	static setRenderStatus = function(result) {
 		LOG_BLOCK_START();
-		LOG_IF(global.FLAG.render, "Set render status for " + name + " : " + string(result));
+		LOG_IF(global.FLAG.render, $"Set render status for {internalName} : {result}");
 		LOG_BLOCK_END();
 		rendered = result;
 		
@@ -376,14 +402,14 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	
 	static resetRender = function() {
 		LOG_BLOCK_START();
-		LOG_IF(global.FLAG.render, "Reset Render for collection " + name);
+		LOG_IF(global.FLAG.render, $"Reset Render for {internalName}");
 		
 		for( var i = 0; i < ds_list_size(nodes); i++ ) {
-			LOG_IF(global.FLAG.render, "Reset Render for " + nodes[| i].name);
-			nodes[| i].rendered = false;
+			//LOG_IF(global.FLAG.render, $"Reset Render for {nodes[| i].internalName}");
+			nodes[| i].resetRender();
 		}
 		
-		rendered = false;
+		setRenderStatus(false);
 		
 		LOG_BLOCK_END();
 	}
