@@ -35,7 +35,7 @@ function Node_Websocket_Receiver(_x, _y, _group = noone) : Node(_x, _y, _group) 
 		if(s >= 0) NETWORK_SERVERS[? newPort] = s;
 	}
 	
-	insp1UpdateTooltip  = get_text("panel_inspector_refresh", "Refresh Server");
+	insp1UpdateTooltip  = __txtx("panel_inspector_refresh", "Refresh Server");
 	insp1UpdateIcon     = [ THEME.refresh, 1, COLORS._main_value_positive ];
 	
 	static onInspector1Update = function() {

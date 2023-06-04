@@ -41,7 +41,7 @@ if !ready exit;
 	var y1 = dialog_y + dialog_h - ui(16);
 	
 	draw_set_text(f_p0, fa_left, fa_bottom, COLORS._main_text_sub);
-	draw_text(x0, y0 - ui(4), "Recent files");
+	draw_text(x0, y0 - ui(4), __txt("Recent files"));
 	draw_sprite_stretched(THEME.ui_panel_bg, 0, x0, y0, x1 - x0, y1 - y0);
 	sp_recent.setActiveFocus(sFOCUS, sHOVER);
 	sp_recent.draw(x0 + ui(6), y0);
@@ -81,8 +81,9 @@ if !ready exit;
 	
 	for( var i = 0; i < array_length(pages); i++ ) {
 		draw_set_text(f_p0, fa_left, fa_bottom, project_page == i? COLORS._main_text : COLORS._main_text_sub);
-		var txt = pages[i];
-		var amo = noone;
+		var txt  = pages[i];
+		var dtxt = __txt(txt);
+		var amo  = noone;
 		
 		switch(txt) {
 			case "Sample projects" : amo = ds_list_size(SAMPLE_PROJECTS); break;
@@ -90,7 +91,7 @@ if !ready exit;
 			case "Contests" :		 amo = array_length(contests);		  break;
 		}
 		
-		var tw = ui(16) + string_width(pages[i]);
+		var tw = ui(16) + string_width(dtxt);
 		if(amo) tw += ui(8) + string_width(amo) + ui(8);
 		
 		if(txt == "Contests") 
@@ -118,9 +119,9 @@ if !ready exit;
 		}
 		
 		if(txt == "Contests") draw_set_color(project_page == i? CDEF.yellow : COLORS._main_text_sub );
-		draw_text(_btx, y0 - ui(4), txt);
+		draw_text(_btx, y0 - ui(4), dtxt);
 		
-		_btx += ui(8) + string_width(txt);
+		_btx += ui(8) + string_width(dtxt);
 		
 		if(amo) {
 			draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, _btx, y0 - ui(26), string_width(amo) + ui(8), ui(24), COLORS._main_icon, 0.5);
@@ -144,7 +145,7 @@ if !ready exit;
 	
 			if(!expand) {
 				draw_set_text(f_p1, fa_right, fa_bottom, COLORS._main_text_sub);
-				draw_text(x1 - ui(82), y0 - ui(4), "Art by ");
+				draw_text(x1 - ui(82), y0 - ui(4), __txtx("art_by", "Art by "));
 				draw_sprite_ui_uniform(s_kenney, 0, x1, y0 - ui(4), 2, c_white, 0.5);
 			}
 			break;

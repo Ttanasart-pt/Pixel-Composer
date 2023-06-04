@@ -55,7 +55,7 @@ if !ready exit;
 	
 	var bx  = content.showHeader? dialog_x + ui(8) : dialog_x + ui(24);
 	var by  = content.showHeader? dialog_y + ui(8) : dialog_y + ui(18);
-	var txt = destroy_on_click_out? get_text("pin", "Pin") : get_text("unpin", "Unpin");
+	var txt = destroy_on_click_out? __txtx("pin", "Pin") : __txtx("unpin", "Unpin");
 	var cc  = destroy_on_click_out? COLORS._main_icon : COLORS._main_icon_light;
 	var ind = !destroy_on_click_out;
 	var ss  = content.showHeader? ui(20) : ui(28);

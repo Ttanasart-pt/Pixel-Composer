@@ -139,7 +139,7 @@ function areaBox(_onModify, _unit = noone) : widget() constructor {
 		}
 		
 		if(onSurfaceSize != -1) {
-			if(buttonInstant(THEME.button_hide, _x - ui(76), _y + ui(28 - 12), ui(24), ui(24), _m, active, hover, "Fill surface", THEME.fill, 0, c_white) == 2) {
+			if(buttonInstant(THEME.button_hide, _x - ui(76), _y + ui(28 - 12), ui(24), ui(24), _m, active, hover, __txtx("widget_area_fill_surface", "Full surface"), THEME.fill, 0, c_white) == 2) {
 				switch(mode) {
 					case AREA_MODE.area :
 						var ss = onSurfaceSize();
@@ -167,9 +167,9 @@ function areaBox(_onModify, _unit = noone) : widget() constructor {
 			
 			var txt = "";
 			switch(mode) {
-				case AREA_MODE.area :	   txt = "Center + Span"; break;
-				case AREA_MODE.padding :   txt = "Padding"; break;
-				case AREA_MODE.two_point : txt = "Two points"; break;
+				case AREA_MODE.area :	   txt = __txtx("widget_area_center_Span", "Center + Span");	break;
+				case AREA_MODE.padding :   txt = __txtx("widget_area_padding",     "Padding");			break;
+				case AREA_MODE.two_point : txt = __txtx("widget_area_two_points",  "Two points");		break;
 			}
 			
 			if(buttonInstant(THEME.button_hide, _x + ui(76 - 24), _y + ui(28 - 12), ui(24), ui(24), _m, active, hover, txt, THEME.inspector_area_type, mode, c_white) == 2) {
@@ -219,7 +219,7 @@ function areaBox(_onModify, _unit = noone) : widget() constructor {
 		
 		if(mode == AREA_MODE.padding) {
 			var cc = link_value? COLORS._main_accent : COLORS._main_icon;
-			if(buttonInstant(THEME.button_hide, _x - ui(76), _y + ui(88), ui(24), ui(24), _m, active, hover, "Link value", THEME.value_link, link_value, cc) == 2)
+			if(buttonInstant(THEME.button_hide, _x - ui(76), _y + ui(88), ui(24), ui(24), _m, active, hover, __txt("Link values"), THEME.value_link, link_value, cc) == 2)
 				link_value = !link_value;
 		}
 		

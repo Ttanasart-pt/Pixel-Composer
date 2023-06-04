@@ -34,7 +34,7 @@ function Node_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		var bxc = bx + bw / 2 - (string_width("Add") + ui(64)) / 2;
 		var byc = by + bh / 2;
 		draw_sprite_ui(THEME.add, 0, bxc + ui(24), byc,,,, COLORS._main_icon_light);
-		draw_text(bxc + ui(48), byc, get_text("add", "Add"));
+		draw_text(bxc + ui(48), byc, __txtx("add", "Add"));
 		
 		var bx = _x + bw + ui(8);
 		var amo = attributes[? "size"];

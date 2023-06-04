@@ -23,11 +23,11 @@ function MetaDataManager() constructor {
 	steam		= false;
 	
 	static displays = [
-		[ get_text("description", "Description"),	 function(meta) { return meta.description; }	, line_get_height() * 5],
-		[ get_text("author", "Author"),				 function(meta) { return meta.author; }			, line_get_height() ],
-		[ get_text("contact_info", "Contact info"),	 function(meta) { return meta.contact; }		, line_get_height() ],
-		[ get_text("alias", "Alias"),				 function(meta) { return meta.alias; }			, line_get_height() ],
-		[ get_text("tags", "Tags"),					 function(meta) { return meta.tags; }			, line_get_height() ],
+		[ __txtx("description", "Description"),	 function(meta) { return meta.description; }	, line_get_height() * 5],
+		[ __txtx("author", "Author"),				 function(meta) { return meta.author; }			, line_get_height() ],
+		[ __txtx("contact_info", "Contact info"),	 function(meta) { return meta.contact; }		, line_get_height() ],
+		[ __txtx("alias", "Alias"),				 function(meta) { return meta.alias; }			, line_get_height() ],
+		[ __txtx("tags", "Tags"),					 function(meta) { return meta.tags; }			, line_get_height() ],
 	];
 	
 	static serialize = function() {
@@ -90,7 +90,7 @@ function MetaDataManager() constructor {
 		}
 		
 		var _aut = "By " + author;
-		var _ver = version < SAVEFILE_VERSION? get_text("meta_old_version", "Created on an older version") : get_text("meta_new_version", "Created on a newer version");
+		var _ver = version < SAVEFILE_VERSION? __txtx("meta_old_version", "Created on an older version") : __txtx("meta_new_version", "Created on a newer version");
 		
 		draw_set_font(f_h5);
 		_h += string_height_ext(name, -1, ww) - ui(4);

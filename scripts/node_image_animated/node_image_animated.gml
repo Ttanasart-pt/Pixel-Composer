@@ -123,7 +123,7 @@ function Node_Image_Animated(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		return true;
 	}
 	
-	insp1UpdateTooltip  = get_text("panel_inspector_refresh", "Refresh");
+	insp1UpdateTooltip  = __txtx("panel_inspector_refresh", "Refresh");
 	insp1UpdateIcon     = [ THEME.refresh, 1, COLORS._main_value_positive ];
 	
 	static onInspector1Update = function() {

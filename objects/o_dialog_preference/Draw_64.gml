@@ -7,11 +7,11 @@ if !ready exit;
 		draw_sprite_stretched_ext(THEME.dialog_active, 0, dialog_x, dialog_y, dialog_w, dialog_h, COLORS._main_accent, 1);
 	
 	draw_set_text(f_p0, fa_left, fa_top, COLORS._main_text_title);
-	draw_text(dialog_x + ui(56), dialog_y + ui(20), get_text("preferences", "Preferences"));
+	draw_text(dialog_x + ui(56), dialog_y + ui(20), __txtx("preferences", "Preferences"));
 	
 	var bx = dialog_x + ui(24);
 	var by = dialog_y + ui(18);
-	if(buttonInstant(THEME.button_hide, bx, by, ui(28), ui(28), mouse_ui, sFOCUS, sHOVER, destroy_on_click_out? get_text("pin", "Pin") : get_text("unpin", "Unpin"), 
+	if(buttonInstant(THEME.button_hide, bx, by, ui(28), ui(28), mouse_ui, sFOCUS, sHOVER, destroy_on_click_out? __txtx("pin", "Pin") : __txtx("unpin", "Unpin"), 
 		THEME.pin, !destroy_on_click_out, destroy_on_click_out? COLORS._main_icon : COLORS._main_icon_light) == 2)
 			destroy_on_click_out = !destroy_on_click_out;
 #endregion

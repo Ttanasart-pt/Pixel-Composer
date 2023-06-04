@@ -1,5 +1,5 @@
 function Panel_Addon() : PanelContent() constructor {
-	title = "Addons";
+	title = __txt("Addons");
 	icon  = THEME.addon;
 	
 	showHeader	 = false;
@@ -86,9 +86,9 @@ function Panel_Addon() : PanelContent() constructor {
 				var _onStart = array_exists(ADDONS_ON_START, _addon.name);
 				
 				if(pHOVER && point_in_rectangle(_m[0], _m[1], chx0, chy0, chx1, chy1)) {
-					if(!_act)			TOOLTIP = "Not activated";
-					else if(!_onStart)	TOOLTIP = "Activated";
-					else				TOOLTIP = "Run on start";
+					if(!_act)			TOOLTIP = __txtx("panel_addon_not_activated", "Not activated");
+					else if(!_onStart)	TOOLTIP = __txtx("panel_addon_activated", "Activated");
+					else				TOOLTIP = __txtx("panel_addon_run_on_start", "Run on start");
 					
 					draw_sprite_stretched_ext(THEME.checkbox, 1, chx0, chy0, ui(28), ui(28), c_white, 1);
 					hover = false;
@@ -116,12 +116,12 @@ function Panel_Addon() : PanelContent() constructor {
 				var _bx = bx - ui(4);
 				var _by = by + ui(4);
 				
-				var b = buttonInstant(THEME.button_hide, _bx, _by, ui(32), ui(32), _m, pFOCUS, pHOVER, "Open in explorer", THEME.folder_content);
+				var b = buttonInstant(THEME.button_hide, _bx, _by, ui(32), ui(32), _m, pFOCUS, pHOVER, __txt("Open in explorer"), THEME.folder_content);
 				if(b) hover = false;
 				if(b == 2) shellOpenExplorer(DIRECTORY + "Addons\\" + _addon.name);
 				
 				_bx -= ui(36)
-				if(_act && buttonInstant(THEME.button_hide, _bx, _by, ui(32), ui(32), _m, pFOCUS, pHOVER, "Addon settings", THEME.addon_setting) == 2) {
+				if(_act && buttonInstant(THEME.button_hide, _bx, _by, ui(32), ui(32), _m, pFOCUS, pHOVER, __txt("Addon settings"), THEME.addon_setting) == 2) {
 					var _addObj = noone;
 					with(_addon_custom) if(name == _addon.name) _addObj = self;
 						
@@ -142,7 +142,7 @@ function Panel_Addon() : PanelContent() constructor {
 					var _yy = by + hg + ui(8);
 					
 					draw_set_text(f_p1, fa_left, fa_top, COLORS._main_text_sub);
-					draw_text_add(ui(8), _yy, "Author");
+					draw_text_add(ui(8), _yy, __txt("Author"));
 					draw_set_text(f_p1, fa_right, fa_top, COLORS._main_text);
 					draw_text_add(ww - ui(8), _yy, _addon.meta.author);
 					

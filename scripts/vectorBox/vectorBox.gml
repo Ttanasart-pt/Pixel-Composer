@@ -100,7 +100,7 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 		b_link.setActiveFocus(hover, active);
 		b_link.icon_index = linked;
 		b_link.icon_blend = linked? COLORS._main_accent : COLORS._main_icon;
-		b_link.tooltip = linked? "Unlink axis" : "Link axis";
+		b_link.tooltip = linked? __txt("Unlink values") : __txt("Link values");
 		
 		var bx = _x;
 		var by = _y + _h / 2 - ui(32 / 2);

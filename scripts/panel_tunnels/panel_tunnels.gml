@@ -1,5 +1,5 @@
 function Panel_Tunnels() : PanelContent() constructor {
-	title = "Tunnels";
+	title = __txt("Tunnels");
 	showHeader	 = false;
 	title_height = 64;
 	padding		 = 24;
@@ -94,11 +94,11 @@ function Panel_Tunnels() : PanelContent() constructor {
 				var bx = ww - ui(4) - bw;
 				var by = _y + (hg - bh) / 2;
 			
-				if(buttonInstant(THEME.button_hide, bx, by, bw, bh, _m, sc_tunnel.active, sc_tunnel.hover, "Go to node", THEME.node_goto) == 2)
+				if(buttonInstant(THEME.button_hide, bx, by, bw, bh, _m, sc_tunnel.active, sc_tunnel.hover, __txtx("panel_node_goto", "Go to node"), THEME.node_goto) == 2)
 					graphFocusNode(node);
 				bx -= ui(32);
 			
-				if(buttonInstant(THEME.button_hide, bx, by, bw, bh, _m, sc_tunnel.active, sc_tunnel.hover, "Create tunnel out", THEME.tunnel) == 2) {
+				if(buttonInstant(THEME.button_hide, bx, by, bw, bh, _m, sc_tunnel.active, sc_tunnel.hover, __txtx("panel_tunnel_create_tunnel", "Create tunnel out"), THEME.tunnel) == 2) {
 					var n = nodeBuild("Node_Tunnel_Out", build_x, build_y);
 					n.inputs[| 0].setValue(key);
 					
@@ -108,7 +108,7 @@ function Panel_Tunnels() : PanelContent() constructor {
 			
 				draw_sprite_ui(THEME.tunnel, 1, ui(4 + 16), _y + hg / 2);
 				draw_set_text(f_p0, fa_left, fa_center, key == ""? COLORS._main_text_sub : COLORS._main_text);
-				draw_text(ui(4 + 32 + 4), _y + hg / 2, key == ""? "[no key]" : key);
+				draw_text(ui(4 + 32 + 4), _y + hg / 2, key == ""? $"[{__txtx("panel_tunnel_no_key", "No key")}]" : key);
 			
 				_y += hg + ui(4);
 				_h += hg + ui(4);

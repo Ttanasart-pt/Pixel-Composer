@@ -3,28 +3,40 @@
 	LOCALE = {}
 	
 	function __initLocale() {
-		var lfile = "data/locale/en.json";
-		var root = DIRECTORY + "Locale";
-		var path = root + "/en.json";
+		var lfile = $"data/locale/en.json";
+		var root  = $"{DIRECTORY}Locale";
+		var path  = $"{root}/en.json";
 		
 		if(!directory_exists(root))
 			directory_create(root);
+		if(file_exists(path))
+			file_delete(path);
+		file_copy(lfile, path);
 		
-		var _l = root + "/version";
-		if(file_exists(_l)) {
-			var res = json_load_struct(_l);
-			if(!is_struct(res) || !struct_has(res, "version") || res.version != BUILD_NUMBER) 
-				file_copy(lfile, path);
-		} else 
-			file_copy(lfile, path);
-		
-		LOCALE = json_load_struct(path);
-		
-		json_save_struct(_l, { version: BUILD_NUMBER });
+		loadLocale();
 	}
 	
-	function get_text(key, def = "") {
-		if(!struct_has(LOCALE, key)) return def;
-		return LOCALE[$ key];
+	function loadLocale() {
+		var path = $"{DIRECTORY}Locale/{PREF_MAP[? "local"]}.json";
+		if(!file_exists(path)) 
+			path = $"{DIRECTORY}Locale/en.json";
+		
+		LOCALE = json_load_struct(path);
+	}
+	
+	function __txtx(key, def = "") {
+		if(!struct_has(LOCALE, key)) {
+			print($"LOCAL \"{key}\": \"{def}\",");
+			return def;
+		}
+		
+		return ""//LOCALE[$ key];
+	}
+	
+	function __txt(txt, prefix = "") {
+		var key = string_lower(txt);
+		    key = string_replace_all(key, " ", "_");
+			
+		return __txtx(prefix + key, txt);
 	}
 #endregion

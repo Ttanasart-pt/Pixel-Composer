@@ -24,7 +24,7 @@ if palette == 0 exit;
 	if(sFOCUS) draw_sprite_stretched_ext(THEME.dialog_active, 0, content_x, dialog_y, content_w, dialog_h, COLORS._main_accent, 1);
 	
 	draw_set_text(f_p0, fa_left, fa_top, COLORS._main_text_title);
-	draw_text(presets_x + ui(24), dialog_y + ui(16), get_text("presets", "Presets"));
+	draw_text(presets_x + ui(24), dialog_y + ui(16), __txtx("presets", "Presets"));
 	draw_text(content_x + (!interactable * ui(32)) + ui(24), dialog_y + ui(16), name);
 	if(!interactable)
 		draw_sprite_ui(THEME.lock, 0, content_x + ui(24 + 12), dialog_y + ui(16 + 12),,,, COLORS._main_icon);
@@ -39,7 +39,7 @@ if palette == 0 exit;
 	var bx = presets_x + presets_w - ui(44);
 	var by = dialog_y + ui(12);
 	
-	if(buttonInstant(THEME.button_hide, bx, by, ui(28), ui(28), mouse_ui, sFOCUS, sHOVER, get_text("add_preset", "Add to preset"), THEME.add) == 2) {
+	if(buttonInstant(THEME.button_hide, bx, by, ui(28), ui(28), mouse_ui, sFOCUS, sHOVER, __txtx("add_preset", "Add to preset"), THEME.add) == 2) {
 		var dia = dialogCall(o_dialog_file_name, mouse_mx + ui(8), mouse_my + ui(8));
 		dia.onModify = function (txt) {
 			var file = file_text_open_write(txt + ".hex");
@@ -59,13 +59,13 @@ if palette == 0 exit;
 	}
 	bx -= ui(32);
 	
-	if(buttonInstant(THEME.button_hide, bx, by, ui(28), ui(28), mouse_ui, sFOCUS, sHOVER, get_text("refresh", "Refresh"), THEME.refresh) == 2) {
+	if(buttonInstant(THEME.button_hide, bx, by, ui(28), ui(28), mouse_ui, sFOCUS, sHOVER, __txtx("refresh", "Refresh"), THEME.refresh) == 2) {
 		presetCollect();
 	}
 	draw_sprite_ui_uniform(THEME.refresh, 0, bx + ui(14), by + ui(14), 1, COLORS._main_icon);
 	bx -= ui(32);
 	
-	if(buttonInstant(THEME.button_hide, bx, by, ui(28), ui(28), mouse_ui, sFOCUS, sHOVER, get_text("color_selector_open_palette", "Open palette folder"), THEME.folder) == 2) {
+	if(buttonInstant(THEME.button_hide, bx, by, ui(28), ui(28), mouse_ui, sFOCUS, sHOVER, __txtx("color_selector_open_palette", "Open palette folder"), THEME.folder) == 2) {
 		var _realpath = DIRECTORY + "Palettes";
 		shellOpenExplorer(_realpath)
 	}
@@ -93,19 +93,19 @@ if palette == 0 exit;
 		var bx = content_x + content_w - ui(50);
 		var by = dialog_y + ui(16);
 		
-		if(buttonInstant(THEME.button_hide, bx, by, ui(28), ui(28), mouse_ui, interactable && sFOCUS, sHOVER, get_text("palette_editor_sort", "Sort color"), THEME.sort) == 2) {
+		if(buttonInstant(THEME.button_hide, bx, by, ui(28), ui(28), mouse_ui, interactable && sFOCUS, sHOVER, __txtx("palette_editor_sort", "Sort color"), THEME.sort) == 2) {
 			menuCall("palette_window_sort_menu", bx + ui(32), by, [ 
-				menuItem(get_text("palette_editor_sort_brighter", "Brighter"), function() { sortPalette(__sortBright); }), 
-				menuItem(get_text("palette_editor_sort_darker", "Darker"),     function() { sortPalette(__sortDark); }),
+				menuItem(__txtx("palette_editor_sort_brighter", "Brighter"), function() { sortPalette(__sortBright); }), 
+				menuItem(__txtx("palette_editor_sort_darker", "Darker"),     function() { sortPalette(__sortDark); }),
 				-1,
-				menuItem(get_text("palette_editor_sort_hue", "Hue"),           function() { sortPalette(__sortHue); }), 
-				menuItem(get_text("palette_editor_sort_sat", "Saturation"),    function() { sortPalette(__sortSat); }), 
-				menuItem(get_text("palette_editor_sort_val", "Value"),         function() { sortPalette(__sortVal); }), 
+				menuItem(__txtx("palette_editor_sort_hue", "Hue"),           function() { sortPalette(__sortHue); }), 
+				menuItem(__txtx("palette_editor_sort_sat", "Saturation"),    function() { sortPalette(__sortSat); }), 
+				menuItem(__txtx("palette_editor_sort_val", "Value"),         function() { sortPalette(__sortVal); }), 
 			],, palette);
 		}
 		bx -= ui(32);
 		
-		if(buttonInstant(THEME.button_hide, bx, by, ui(28), ui(28), mouse_ui, interactable && sFOCUS, sHOVER, get_text("palette_editor_reverse", "Reverse palette"), THEME.reverse) == 2) {
+		if(buttonInstant(THEME.button_hide, bx, by, ui(28), ui(28), mouse_ui, interactable && sFOCUS, sHOVER, __txtx("palette_editor_reverse", "Reverse palette"), THEME.reverse) == 2) {
 			palette = array_reverse(palette);
 			onApply(palette);
 		}
@@ -181,7 +181,7 @@ if palette == 0 exit;
 	}
 	
 	bx = content_x + ui(18);
-	if(buttonInstant(THEME.button, bx, by, ui(28), ui(28), mouse_ui, interactable && sFOCUS, sHOVER, get_text("palette_editor_load", "Load palette file") + " (.hex)", THEME.file) == 2) {
+	if(buttonInstant(THEME.button, bx, by, ui(28), ui(28), mouse_ui, interactable && sFOCUS, sHOVER, __txtx("palette_editor_load", "Load palette file") + " (.hex)", THEME.file) == 2) {
 		var path = get_open_filename(".hex", "");
 		key_release();
 		if(path != "") {

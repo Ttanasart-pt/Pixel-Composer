@@ -56,11 +56,11 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 	}, THEME.cross);
 	
 	border_rb_menu = [
-		menuItem("Move",    function() { 
+		menuItem(__txt("Move"),    function() { 
 			extract(); 
 			panel_mouse = 1;
 		}),
-		menuItem("Pop out", function() { popWindow(); }, THEME.node_goto),
+		menuItem(__txtx("panel_pop_out", "Pop out"), function() { popWindow(); }, THEME.node_goto),
 		border_rb_close
 	];
 	

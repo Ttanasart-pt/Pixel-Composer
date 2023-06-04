@@ -1,5 +1,5 @@
 function Panel_Console() : PanelContent() constructor {
-	title = "Console";
+	title = __txtx("panel_debug_console", "Debug Console");
 	w = ui(640);
 	h = ui(320);
 	

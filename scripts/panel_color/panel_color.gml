@@ -4,7 +4,7 @@ enum COLOR_SELECTOR_MODE {
 }
 
 function Panel_Color() : PanelContent() constructor {
-	title = "Color";
+	title = __txt("Color");
 	showHeader	 = false;
 	title_height = 64;
 	padding		 = 24;

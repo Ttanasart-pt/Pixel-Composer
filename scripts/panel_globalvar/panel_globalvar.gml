@@ -1,5 +1,5 @@
 function Panel_Globalvar() : PanelContent() constructor {
-	title = "Global Variables";
+	title = __txtx("panel_globalvar", "Global Variables");
 	context_str = "Globalvar";
 	showHeader  = false;
 	
@@ -50,11 +50,11 @@ function Panel_Globalvar() : PanelContent() constructor {
 		var bx = w - ui(32 + 16);
 		var by = title_height / 2 - ui(16 + !in_dialog * 2);
 		
-		if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), [mx, my], pFOCUS, pHOVER, "Add variable", THEME.add, 1, COLORS._main_value_positive) == 2)
+		if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), [mx, my], pFOCUS, pHOVER, __txtx("panel_globalvar_add", "Add variable"), THEME.add, 1, COLORS._main_value_positive) == 2)
 			GLOBAL.createValue();
 		
 		bx -= ui(32 + 4);
-		if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), [mx, my], pFOCUS, pHOVER, "Edit", var_editing? THEME.accept : THEME.gear,,,, 0.9) == 2)
+		if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), [mx, my], pFOCUS, pHOVER, __txt("Edit"), var_editing? THEME.accept : THEME.gear,,,, 0.9) == 2)
 			var_editing = !var_editing;
 	}
 }

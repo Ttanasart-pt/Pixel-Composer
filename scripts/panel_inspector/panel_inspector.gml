@@ -4,7 +4,7 @@ function Inspector_Custom_Renderer(draw) : widget() constructor {
 }
 
 function Panel_Inspector() : PanelContent() constructor {
-	title = "Inspector";
+	title = __txt("Inspector");
 	context_str = "Inspector";
 	icon  = THEME.panel_inspector;
 	
@@ -203,7 +203,7 @@ function Panel_Inspector() : PanelContent() constructor {
 					if(buttonInstant(THEME.button_hide, bx, by, bw, bh, _m, pFOCUS, _hover) == 2)
 						var_editing = !var_editing;
 		
-					var txt  = get_text("apply", "Apply");
+					var txt  = __txt("Apply");
 					var icon = THEME.accept;
 					var colr = COLORS._main_value_positive;
 					
@@ -218,7 +218,7 @@ function Panel_Inspector() : PanelContent() constructor {
 					if(buttonInstant(THEME.button_hide, bx, by, bw, bh, _m, pFOCUS, _hover) == 2)
 						GLOBAL.createValue();
 					
-					var txt  = get_text("add", "Add");
+					var txt  = __txt("Add");
 					var icon = THEME.add;
 				
 					draw_set_text(f_p0b, fa_left, fa_center, COLORS._main_icon)
@@ -232,7 +232,7 @@ function Panel_Inspector() : PanelContent() constructor {
 					if(buttonInstant(THEME.button_hide, bx, by, bw, bh, _m, pFOCUS, _hover) == 2)
 						var_editing = !var_editing;
 		
-					var txt  = get_text("edit", "Edit");
+					var txt  = __txt("Edit");
 					var icon = THEME.gear;
 					var colr = COLORS._main_icon;
 					
@@ -400,7 +400,7 @@ function Panel_Inspector() : PanelContent() constructor {
 				
 				draw_sprite_stretched_ext(THEME.group_label, 0, 0, yy + ui(8), con_w, ui(32), COLORS._main_icon_dark, 0.85);
 				draw_set_text(f_p0b, fa_center, fa_center, COLORS._main_text_sub);
-				draw_text(xc, yy + ui(8 + 16), "Outputs");
+				draw_text(xc, yy + ui(8 + 16), __txt("Outputs"));
 				continue;
 			} else {
 				var outInd = i - amoIn - 1;
@@ -463,10 +463,10 @@ function Panel_Inspector() : PanelContent() constructor {
 					
 					if(i < amoIn) {
 						array_push(_menuItem, 
-							menuItem(get_text("panel_inspector_reset", "Reset value"), function() { 
+							menuItem(__txtx("panel_inspector_reset", "Reset value"), function() { 
 								__dialog_junction.resetValue();
 								}),
-							menuItem(jun.is_anim? get_text("panel_inspector_remove", "Remove animation") : get_text("panel_inspector_add", "Add animation"), function() { 
+							menuItem(jun.is_anim? __txtx("panel_inspector_remove", "Remove animation") : __txtx("panel_inspector_add", "Add animation"), function() { 
 								__dialog_junction.setAnim(!__dialog_junction.is_anim); 
 								PANEL_ANIMATION.updatePropertyList();
 								}),
@@ -474,7 +474,7 @@ function Panel_Inspector() : PanelContent() constructor {
 						
 						if(jun.sepable) {
 							array_push(_menuItem, 
-								menuItem(jun.sep_axis? get_text("panel_inspector_axis_combine", "Combine axis") : get_text("panel_inspector_axis_separate", "Separate axis"), function() { 
+								menuItem(jun.sep_axis? __txtx("panel_inspector_axis_combine", "Combine axis") : __txtx("panel_inspector_axis_separate", "Separate axis"), function() { 
 									__dialog_junction.sep_axis = !__dialog_junction.sep_axis; 
 									PANEL_ANIMATION.updatePropertyList();
 									}),
@@ -485,20 +485,20 @@ function Panel_Inspector() : PanelContent() constructor {
 					}
 						
 					array_push(_menuItem, 
-						menuItem(get_text("use_global_var", "Use expression"), function() {
+						menuItem(__txtx("panel_inspector_use_expression", "Use expression"), function() {
 							__dialog_junction.expUse = !__dialog_junction.expUse;
 							}),
 						-1,
-						menuItem(get_text("copy", "Copy"), function() {
+						menuItem(__txt("Copy"), function() {
 							clipboard_set_text(__dialog_junction.getShowString());
 							}, THEME.copy, ["Inspector", "Copy property"]),
-						menuItem(get_text("paste", "Paste"), function() {
+						menuItem(__txt("Paste"), function() {
 							__dialog_junction.setString(clipboard_get_text());
 							}, THEME.paste, ["Inspector", "Paste property"]),
 					);
 					
 					if(jun.extract_node != "") {
-						array_insert(_menuItem, 2, menuItem(get_text("panel_inspector_extract", "Extract to node"), function() { 
+						array_insert(_menuItem, 2, menuItem(__txtx("panel_inspector_extract", "Extract to node"), function() { 
 							__dialog_junction.extractNode();
 						}));
 					}
@@ -550,13 +550,13 @@ function Panel_Inspector() : PanelContent() constructor {
 		draw_set_font(f_p1);
 		var lx = w / 2 - string_width(inspecting.name) / 2 - ui(10);
 		var ly = ui(56 - 8);
-		if(buttonInstant(THEME.button_hide, lx, ly, ui(16), ui(16), [mx, my], pFOCUS, pHOVER, "Lock", THEME.lock, !locked, locked? COLORS._main_icon_light : COLORS._main_icon,, 0.5) == 2)
+		if(buttonInstant(THEME.button_hide, lx, ly, ui(16), ui(16), [mx, my], pFOCUS, pHOVER, __txt("Lock"), THEME.lock, !locked, locked? COLORS._main_icon_light : COLORS._main_icon,, 0.5) == 2)
 			locked = !locked;
 		
 		var bx = ui(8);
 		var by = ui(12);
 			
-		if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), [mx, my], pFOCUS, pHOVER, get_text("presets", "Presets"), THEME.preset, 1) == 2)
+		if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), [mx, my], pFOCUS, pHOVER, __txt("Presets"), THEME.preset, 1) == 2)
 			dialogCall(o_dialog_preset, x + bx, y + by + ui(36), { "node": inspecting });
 		
 		var bx = w - ui(44);
@@ -588,7 +588,7 @@ function Panel_Inspector() : PanelContent() constructor {
 			title = inspecting.display_name == ""? inspecting.name : inspecting.display_name;
 			drawInspectingNode();
 		} else {
-			title = "Inspector";
+			title = __txt("Inspector");
 			
 			var txt = "Untitled";
 			var context = PANEL_GRAPH.getCurrentContext();
@@ -604,7 +604,7 @@ function Panel_Inspector() : PanelContent() constructor {
 			var bx = w - ui(44);
 			var by = ui(12);
 			
-			if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), [mx, my], pFOCUS, pHOVER, get_text("panel_inspector_set_default", "Set as default"), THEME.save, 0, COLORS._main_icon) == 2) {
+			if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), [mx, my], pFOCUS, pHOVER, __txtx("panel_inspector_set_default", "Set as default"), THEME.save, 0, COLORS._main_icon) == 2) {
 				var path = DIRECTORY + "meta.json";
 				var f = file_text_open_write(path);
 				file_text_write_string(f, json_encode_minify(METADATA.serialize()));
@@ -614,10 +614,10 @@ function Panel_Inspector() : PanelContent() constructor {
 			by += ui(36);
 			if(STEAM_ENABLED && !workshop_uploading) {
 				if(CURRENT_PATH == "") {
-					buttonInstant(noone, bx, by, ui(32), ui(32), [mx, my], pFOCUS, pHOVER, get_text("panel_inspector_workshop_save", "Save file before upload"), THEME.workshop_upload, 0, COLORS._main_icon, 0.5);
+					buttonInstant(noone, bx, by, ui(32), ui(32), [mx, my], pFOCUS, pHOVER, __txtx("panel_inspector_workshop_save", "Save file before upload"), THEME.workshop_upload, 0, COLORS._main_icon, 0.5);
 				} else {
 					if(!METADATA.steam) { //project made locally
-						if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), [mx, my], pFOCUS, pHOVER, get_text("panel_inspector_workshop_upload", "Upload to Steam Workshop"), THEME.workshop_upload, 0, COLORS._main_icon) == 2) {
+						if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), [mx, my], pFOCUS, pHOVER, __txtx("panel_inspector_workshop_upload", "Upload to Steam Workshop"), THEME.workshop_upload, 0, COLORS._main_icon) == 2) {
 							var s = PANEL_PREVIEW.getNodePreviewSurface();
 							if(is_surface(s)) {
 								METADATA.author_steam_id = STEAM_USER_ID;
@@ -630,7 +630,7 @@ function Panel_Inspector() : PanelContent() constructor {
 					}
 				
 					if(METADATA.steam && METADATA.author_steam_id == STEAM_USER_ID && METADATA.file_id != 0) {
-						if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), [mx, my], pFOCUS, pHOVER, get_text("panel_inspector_workshop_update", "Update Steam Workshop"), THEME.workshop_update, 0, COLORS._main_icon) == 2) {
+						if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), [mx, my], pFOCUS, pHOVER, __txtx("panel_inspector_workshop_update", "Update Steam Workshop"), THEME.workshop_update, 0, COLORS._main_icon) == 2) {
 							SAVE();
 							steam_ugc_update_project();
 							workshop_uploading = true;

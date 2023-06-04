@@ -1,5 +1,5 @@
 function Panel_Node_Align() : PanelContent() constructor {
-	title = "Align";
+	title = __txt("Align");
 	w = ui(200);
 	h = ui(200);
 	
@@ -10,7 +10,7 @@ function Panel_Node_Align() : PanelContent() constructor {
 		var yy = 12;
 		
 		draw_set_text(f_p2, fa_center, fa_top, COLORS._main_text_sub);
-		draw_text(xc, yy, "Align");
+		draw_text(xc, yy, __txt("Align"));
 		
 		yy += ui(24);
 		if(buttonInstant(THEME.button_hide, xc - ui(16) - ui(40), yy, 32, 32, [mx, my], pFOCUS, pHOVER,, THEME.inspector_surface_halign, 0, c_white) == 2)
@@ -30,7 +30,7 @@ function Panel_Node_Align() : PanelContent() constructor {
 		
 		yy += ui(44);
 		draw_set_text(f_p2, fa_center, fa_top, COLORS._main_text_sub);
-		draw_text(xc, yy, "Distribute");
+		draw_text(xc, yy, __txt("Distribute"));
 		
 		yy += ui(24);
 		if(buttonInstant(THEME.button_hide, xc - ui(16) - ui(20), yy, 32, 32, [mx, my], pFOCUS, pHOVER,, THEME.obj_distribute_h, 0, c_white) == 2)

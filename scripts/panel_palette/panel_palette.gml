@@ -1,5 +1,5 @@
 function Panel_Palette() : PanelContent() constructor {
-	title = "Palette";
+	title = __txt("Palettes");
 	showHeader	 = false;
 	title_height = 64;
 	padding		 = 24;
@@ -111,11 +111,11 @@ function Panel_Palette() : PanelContent() constructor {
 		var bx = w - ui(32 + 16);
 		var by = title_height / 2 - ui(16 + !in_dialog * 2);
 		
-		if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), [mx, my], pFOCUS, pHOVER, "Refresh", THEME.refresh, 1, COLORS._main_icon) == 2) 
+		if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), [mx, my], pFOCUS, pHOVER, __txt("Refresh"), THEME.refresh, 1, COLORS._main_icon) == 2) 
 			presetCollect();
 		
 		bx -= ui(32)
-		if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), [mx, my], pFOCUS, pHOVER, "Change preview size", THEME.icon_visibility, 1, COLORS._main_icon) == 2) 
+		if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), [mx, my], pFOCUS, pHOVER, __txtx("palette_change_preview_size", "Change preview size"), THEME.icon_visibility, 1, COLORS._main_icon) == 2) 
 			view_mode = (view_mode + 1) % 3;
 	}
 }

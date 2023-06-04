@@ -24,8 +24,10 @@ if(OS == os_windows && gameframe_is_minimized()) exit;
 		if(PANEL_MAIN != 0)
 			PANEL_MAIN.step();
 	
-		for(var i = 0; i < ds_list_size(NODES); i++)
+		for(var i = 0; i < ds_list_size(NODES); i++) {
+			NODES[| i].triggerCheck();
 			NODES[| i].step();
+		}
 	} catch(e) {
 		noti_warning("Step error: " + exception_print(e));
 	}

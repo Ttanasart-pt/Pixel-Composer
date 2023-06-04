@@ -1,5 +1,5 @@
 function Panel_Collection() : PanelContent() constructor {
-	title = "Collection"
+	title = __txt("Collections");
 	expandable = false;
 	
 	group_w   = ui(180);
@@ -38,10 +38,10 @@ function Panel_Collection() : PanelContent() constructor {
 		
 		if(meta == noone || !meta.steam) {
 			contentMenu = [
-				menuItem(get_text("panel_collection_replace", "Replace with selected"), function() { 
+				menuItem(__txtx("panel_collection_replace", "Replace with selected"), function() { 
 					saveCollection(PANEL_INSPECTOR.inspecting, _menu_node.data_path, _menu_node.path, false, _menu_node.meta);
 				}),
-				menuItem(get_text("panel_collection_edit_meta", "Edit metadata") + "...", function() { 
+				menuItem(__txtx("panel_collection_edit_meta", "Edit metadata") + "...", function() { 
 					var dia = dialogCall(o_dialog_file_name_collection, mouse_mx + ui(8), mouse_my + ui(-320));
 					var meta = _menu_node.getMetadata();
 					if(meta != noone && meta != undefined) 
@@ -53,7 +53,7 @@ function Panel_Collection() : PanelContent() constructor {
 					dia.doExpand();
 				}),
 				-1,
-				menuItem(get_text("delete", "Delete"), function() { 
+				menuItem(__txt("Delete"), function() { 
 					file_delete(_menu_node.path);
 					refreshContext();
 				})
@@ -65,7 +65,7 @@ function Panel_Collection() : PanelContent() constructor {
 		
 		if(STEAM_ENABLED) {
 			if(!meta.steam) {
-				array_push(contentMenu, menuItem(get_text("panel_collection_workshop_upload", "Upload to Steam Workshop") + "...", function() { 
+				array_push(contentMenu, menuItem(__txtx("panel_collection_workshop_upload", "Upload to Steam Workshop") + "...", function() { 
 					var s = PANEL_PREVIEW.getNodePreviewSurface();
 					if(!is_surface(s)) {
 						noti_warning("Please send any node to preview panel to use as a thumbnail.")
@@ -85,7 +85,7 @@ function Panel_Collection() : PanelContent() constructor {
 				}));
 			} else {
 				if(meta.author_steam_id == STEAM_USER_ID && meta.file_id != 0) {
-					array_push(contentMenu, menuItem(get_text("panel_collection_workshop_update", "Update Steam Workshop content") + "...", function() { 
+					array_push(contentMenu, menuItem(__txtx("panel_collection_workshop_update", "Update Steam Workshop content") + "...", function() { 
 						var dia = dialogCall(o_dialog_file_name_collection, mouse_mx + ui(8), mouse_my + ui(-320));
 						var meta = _menu_node.getMetadata();
 						if(meta != noone && meta != undefined) 
@@ -99,7 +99,7 @@ function Panel_Collection() : PanelContent() constructor {
 					}));
 				}
 				
-				array_push(contentMenu, menuItem("Unsubscribe", function() {
+				array_push(contentMenu, menuItem(__txt("Unsubscribe"), function() {
 					var meta = _menu_node.getMetadata();
 					var del_id = meta.file_id;
 					
@@ -223,7 +223,7 @@ function Panel_Collection() : PanelContent() constructor {
 							if(meta.author_steam_id == STEAM_USER_ID) {
 								draw_sprite_ui_uniform(THEME.steam_creator, 0, _boxx + grid_size - ui(8), yy + ui(12), 1, COLORS._main_icon_dark, 1);
 								if(point_in_rectangle(_m[0], _m[1], gr_x1 - ui(24), yy, gr_x1, yy + ui(24)))
-									TOOLTIP = "You created this item";
+									TOOLTIP = __txtx("panel_collection_you_created", "You created this item");
 							}
 						}
 						
@@ -388,7 +388,7 @@ function Panel_Collection() : PanelContent() constructor {
 			
 			draw_set_text(f_p0b, fa_left, fa_center, i == mode? COLORS._main_text
 				: COLORS._main_text_sub);
-			draw_text(_x, _y, r[0]);
+			draw_text(_x, _y, __txt(r[0]));
 			
 			_x += string_width(r[0]) + ui(20);
 		}
@@ -400,7 +400,7 @@ function Panel_Collection() : PanelContent() constructor {
 		
 		if(search_string == "") {
 			if(bx > rootx) {
-				var txt = contentView? get_text("view_grid", "Grid view") : get_text("view_list", "List view");
+				var txt = contentView? __txtx("view_grid", "Grid view") : __txtx("view_list", "List view");
 				if(buttonInstant(THEME.button_hide, bx, by, ui(24), ui(24), [mx, my], pFOCUS, pHOVER, txt, THEME.view_mode, contentView) == 2) {
 					contentView = !contentView;
 				}
@@ -410,7 +410,7 @@ function Panel_Collection() : PanelContent() constructor {
 			if(mode == 0 && !DEMO) {
 				if(bx > rootx) {
 					if(context != root) {
-						var txt = get_text("panel_collection_add_node", "Add selecting node as collection");
+						var txt = __txtx("panel_collection_add_node", "Add selecting node as collection");
 						if(buttonInstant(THEME.button_hide, bx, by, ui(24), ui(24), [mx, my], pFOCUS, pHOVER, txt, THEME.add, 0, COLORS._main_value_positive) == 2) {
 							if(PANEL_INSPECTOR.inspecting != noone) {
 								data_path = context.path;
@@ -429,7 +429,7 @@ function Panel_Collection() : PanelContent() constructor {
 				bx -= ui(32);
 		
 				if(bx > rootx) {
-					var txt = get_text("panel_collection_add_folder", "Add folder");
+					var txt = __txtx("panel_collection_add_folder", "Add folder");
 					if(buttonInstant(THEME.button_hide, bx, by, ui(24), ui(24), [mx, my], pFOCUS, pHOVER, txt) == 2) {
 						var dia = dialogCall(o_dialog_file_name, mouse_mx + 8, mouse_my + 8);
 						dia.onModify = function (txt) {
@@ -445,14 +445,14 @@ function Panel_Collection() : PanelContent() constructor {
 			}
 		
 			if(bx > rootx) {
-				var txt = get_text("panel_collection_open_file", "Open in file explorer");
+				var txt = __txtx("panel_collection_open_file", "Open in file explorer");
 				if(buttonInstant(THEME.button_hide, bx, by, ui(24), ui(24), [mx, my], pFOCUS, pHOVER, txt, THEME.folder) == 2)
 					shellOpenExplorer(context.path);
 			}
 			bx -= ui(32);
 			
 			if(bx > rootx) {
-				var txt = get_text("refresh", "Refresh");
+				var txt = __txt("Refresh");
 				if(buttonInstant(THEME.button_hide, bx, by, ui(24), ui(24), [mx, my], pFOCUS, pHOVER, txt, THEME.refresh) == 2)
 					refreshContext();
 			}

@@ -21,7 +21,7 @@ event_inherited();
 	
 	ugc  = 0;
 	ugc_loading = false;
-	//name = get_text("new_collection_placeholder", "New collection");
+	//name = __txtx("new_collection_placeholder", "New collection");
 	
 	t_desc  = new textArea(TEXTBOX_INPUT.text, function(str) { meta.description = str; });
 	t_auth  = new textArea(TEXTBOX_INPUT.text, function(str) { meta.author	    = str; });

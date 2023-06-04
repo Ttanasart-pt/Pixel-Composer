@@ -8,7 +8,7 @@ event_inherited();
 	destroy_on_click_out = true;
 	interactable = true;
 	
-	name = get_text("color_selector_title", "Color selector");
+	name = __txtx("color_selector_title", "Color selector");
 	
 	previous_color = c_black;
 	selector = new colorSelector();

@@ -179,10 +179,10 @@ function Node_WAV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		preview_audio = audio_create_buffer_sound(bufferId, buffer_s16, content.sample, 0, content.packet * 2, audio_mono);
 	}
 	
-	insp1UpdateTooltip  = get_text("panel_inspector_refresh", "Refresh");
+	insp1UpdateTooltip  = __txtx("panel_inspector_refresh", "Refresh");
 	insp1UpdateIcon     = [ THEME.refresh, 1, COLORS._main_value_positive ];
 	
-	insp2UpdateTooltip  = get_text("play_with_timeline", "Play with timeline");
+	insp2UpdateTooltip  = __txtx("play_with_timeline", "Play with timeline");
 	insp2UpdateIcon     = [ THEME.play_sound, 1, COLORS._main_icon_light ];
 	attributes[? "play"] = true;
 	

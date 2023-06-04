@@ -37,20 +37,20 @@ if !ready exit;
 	var bx = dialog_x + dialog_w - ui(44);
 	var by = dialog_y + ui(16);
 	var b = buttonInstant(THEME.button_hide, bx, by, ui(28), ui(28), mouse_ui, sFOCUS, sHOVER, 
-		PREF_MAP[? "dialog_add_node_view"]? get_text("view_list", "List view") : get_text("view_grid", "Grid view"), 
+		PREF_MAP[? "dialog_add_node_view"]? __txtx("view_list", "List view") : __txtx("view_grid", "Grid view"), 
 		THEME.view_mode, PREF_MAP[? "dialog_add_node_view"], COLORS._main_icon);
 	if(b == 2) 
 		PREF_MAP[? "dialog_add_node_view"] = !PREF_MAP[? "dialog_add_node_view"];
 	
 	bx -= ui(32);
 	var b = buttonInstant(THEME.button_hide, bx, by, ui(28), ui(28), mouse_ui, sFOCUS, sHOVER, 
-		PREF_MAP[? "dialog_add_node_grouping"]? get_text("add_node_group_enabled", "Group enabled") : get_text("add_node_group_disabled", "Group disabled"), 
+		PREF_MAP[? "dialog_add_node_grouping"]? __txtx("add_node_group_enabled", "Group enabled") : __txtx("add_node_group_disabled", "Group disabled"), 
 		THEME.view_group, PREF_MAP[? "dialog_add_node_grouping"], COLORS._main_icon);
 	if(b == 2)
 		PREF_MAP[? "dialog_add_node_grouping"] = !PREF_MAP[? "dialog_add_node_grouping"];
 	
 	if(node_called != noone || junction_hovering != noone) {
-		var txt = node_show_connectable? get_text("add_node_show_connect", "Showing connectable") : get_text("add_node_show_all", "Showing all");
+		var txt = node_show_connectable? __txtx("add_node_show_connect", "Showing connectable") : __txtx("add_node_show_all", "Showing all");
 		var cc  = node_show_connectable? COLORS._main_accent : COLORS._main_icon;
 		bx -= ui(32);
 		var b = buttonInstant(THEME.button_hide, bx, by, ui(28), ui(28), mouse_ui, sFOCUS, sHOVER, txt, THEME.filter_type, node_show_connectable, cc);

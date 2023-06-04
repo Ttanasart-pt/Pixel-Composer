@@ -130,6 +130,7 @@
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"number","folderPath":"folders/nodes/data/value/number.yy",},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"path","folderPath":"folders/nodes/data/value/path.yy",},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"struct","folderPath":"folders/nodes/data/value/struct.yy",},
+    {"resourceType":"GMFolder","resourceVersion":"1.0","name":"surface","folderPath":"folders/nodes/data/value/surface.yy",},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"texts","folderPath":"folders/nodes/data/value/texts.yy",},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"trigger","folderPath":"folders/nodes/data/value/trigger.yy",},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"VFX","folderPath":"folders/nodes/data/VFX.yy",},
@@ -193,7 +194,6 @@
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"Steamworks","folderPath":"folders/Steamworks.yy",},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"UGC","folderPath":"folders/Steamworks/UGC.yy",},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"widgets","folderPath":"folders/widgets.yy",},
-    {"resourceType":"GMFolder","resourceVersion":"1.0","name":"surface","folderPath":"folders/nodes/data/value/surface.yy",},
   ],
   "IncludedFiles": [
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"ApolloHelp.html","ConfigValues":{"Itch":{"CopyToMask":"0",},},"CopyToMask":-1,"filePath":"datafiles",},

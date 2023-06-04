@@ -84,7 +84,7 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 			dia.node = self;
 		}) ]);
 	
-	insp1UpdateTooltip   = get_text("panel_inspector_execute", "Execute node contents");
+	insp1UpdateTooltip   = __txtx("panel_inspector_execute", "Execute node contents");
 	insp1UpdateIcon      = [ THEME.sequence_control, 1, COLORS._main_value_positive ];
 	
 	static inspector1Update   = function() { onInspector1Update(); }

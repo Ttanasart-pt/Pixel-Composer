@@ -1,5 +1,5 @@
 function Panel_Empty() : PanelContent() constructor {
-	title = "Title";
+	title = "";
 	w = ui(640);
 	h = ui(320);
 	

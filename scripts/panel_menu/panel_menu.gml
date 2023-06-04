@@ -1,5 +1,5 @@
 function Panel_Menu() : PanelContent() constructor {
-	title = "Menu";
+	title = __txt("Menu");
 	
 	noti_flash = 0;
 	noti_flash_color = COLORS._main_accent;
@@ -13,11 +13,11 @@ function Panel_Menu() : PanelContent() constructor {
 		action_buttons = ["exit", "minimize", "maximize", "fullscreen"];
 	
 	menu_file = [
-		menuItem(get_text("panel_menu_new", "New"), function() { NEW(); }, THEME.new_file, ["", "New file"]),
-		menuItem(get_text("panel_menu_open", "Open") + "...", function() { LOAD(); }, THEME.noti_icon_file_load, ["", "Open"]),
-		menuItem(get_text("panel_menu_save", "Save"), function() { SAVE(); }, THEME.save, ["", "Save"]),
-		menuItem(get_text("panel_menu_save_as", "Save as..."), function() { SAVE_AS(); }, THEME.save, ["", "Save as"]),
-		menuItem(get_text("panel_menu_recent_files", "Recent files"), function(_dat) { 
+		menuItem(__txtx("new", "New"), function() { NEW(); }, THEME.new_file, ["", "New file"]),
+		menuItem(__txtx("open", "Open") + "...", function() { LOAD(); }, THEME.noti_icon_file_load, ["", "Open"]),
+		menuItem(__txtx("save", "Save"), function() { SAVE(); }, THEME.save, ["", "Save"]),
+		menuItem(__txtx("save_as", "Save as..."), function() { SAVE_AS(); }, THEME.save, ["", "Save as"]),
+		menuItem(__txtx("panel_menu_recent_files", "Recent files"), function(_dat) { 
 				var arr = [];
 				for(var i = 0; i < min(10, ds_list_size(RECENT_FILES)); i++)  {
 					var _rec = RECENT_FILES[| i];
@@ -26,15 +26,15 @@ function Panel_Menu() : PanelContent() constructor {
 				
 				return submenuCall(_dat, arr);
 		}).setIsShelf(),
-		menuItem(get_text("panel_menu_auto_save_folder", "Open autosave folder"), function() { shellOpenExplorer(DIRECTORY + "autosave"); }, THEME.save_auto),
+		menuItem(__txtx("panel_menu_auto_save_folder", "Open autosave folder"), function() { shellOpenExplorer(DIRECTORY + "autosave"); }, THEME.save_auto),
 		-1,
-		menuItem(get_text("preferences", "Preferences") + "...", function() { dialogCall(o_dialog_preference); }, THEME.gear),
-		menuItem(get_text("panel_menu_splash_screen", "Splash screen"), function() { dialogCall(o_dialog_splash); }),
+		menuItem(__txtx("preferences", "Preferences") + "...", function() { dialogCall(o_dialog_preference); }, THEME.gear),
+		menuItem(__txtx("panel_menu_splash_screen", "Splash screen"), function() { dialogCall(o_dialog_splash); }),
 		-1,
-		menuItem(get_text("panel_menu_addons", "Addons"), function(_dat) { 
+		menuItem(__txt("Addons"), function(_dat) { 
 			var arr = [
-				menuItem(get_text("panel_menu_addons_menu", "Addons..."), function() { dialogPanelCall(new Panel_Addon()); }),
-				menuItem(get_text("panel_menu_addons_key", "Key displayer"), function() { 
+				menuItem(__txt("Addons") + "...", function() { dialogPanelCall(new Panel_Addon()); }),
+				menuItem(__txtx("panel_menu_addons_key", "Key displayer"), function() { 
 					if(instance_exists(addon_key_displayer)) {
 						instance_destroy(addon_key_displayer);
 						return;
@@ -53,39 +53,39 @@ function Panel_Menu() : PanelContent() constructor {
 			return submenuCall(_dat, arr);
 		}, THEME.addon ).setIsShelf(),
 		-1,
-		menuItem(get_text("fullscreen", "Toggle fullscreen"), function() { 
+		menuItem(__txtx("panel_menu_fullscreen", "Toggle fullscreen"), function() { 
 			if(gameframe_is_fullscreen_window())
 				gameframe_set_fullscreen(0);
 			else
 				gameframe_set_fullscreen(2);
 		},, ["", "Fullscreen"]),
-		menuItem(get_text("exit", "Close program"), function() { window_close(); }),
+		menuItem(__txtx("panel_menu_exit", "Close program"), function() { window_close(); }),
 	];
 	
 	if(DEMO) array_delete(menu_file, 1, 5);
 	
 	menu_help = [
-		menuItem(get_text("panel_menu_help_video", "Tutorial videos"), function() {
+		menuItem(__txtx("panel_menu_help_video", "Tutorial videos"), function() {
 			url_open("https://www.youtube.com/@makhamdev");
 		}, THEME.youtube),
-		menuItem(get_text("panel_menu_help_wiki", "Community Wiki"), function() {
+		menuItem(__txtx("panel_menu_help_wiki", "Community Wiki"), function() {
 			url_open("https://pixel-composer.fandom.com/wiki/Pixel_Composer_Wiki");
 		}, THEME.wiki),
 		//-1,
-		//menuItem(get_text("panel_menu_itch", "itch.io page"), function() {
+		//menuItem(__txtx("panel_menu_itch", "itch.io page"), function() {
 		//	url_open("https://makham.itch.io/pixel-composer");
 		//}, THEME.itch),
-		//menuItem(get_text("panel_menu_steam", "Steam page"), function() {
+		//menuItem(__txtx("panel_menu_steam", "Steam page"), function() {
 		//	url_open("https://store.steampowered.com/app/2299510/Pixel_Composer");
 		//}, THEME.steam),
 		-1, 
-		menuItem(get_text("panel_menu_directory", "Open local directory"), function() {
+		menuItem(__txtx("panel_menu_local_directory", "Open local directory"), function() {
 			shellOpenExplorer(DIRECTORY);
 		}, THEME.folder),
-		menuItem(get_text("panel_menu_directory", "Open autosave directory"), function() {
+		menuItem(__txtx("panel_menu_autosave_directory", "Open autosave directory"), function() {
 			shellOpenExplorer(DIRECTORY + "autosave/");
 		}, THEME.folder),
-		menuItem(get_text("panel_menu_reset_default", "Reset default collection, assets"), function() {
+		menuItem(__txtx("panel_menu_reset_default", "Reset default collection, assets"), function() {
 			zip_unzip("data/Collections.zip", DIRECTORY + "Collections");
 			zip_unzip("data/Assets.zip", DIRECTORY + "Assets");
 		}),
@@ -93,49 +93,49 @@ function Panel_Menu() : PanelContent() constructor {
 	
 	menu_help_steam = array_clone(menu_help);
 	array_push(menu_help_steam, -1, 
-		menuItem(get_text("panel_menu_steam_workshop", "Steam Workshop"), function() {
+		menuItem(__txtx("panel_menu_steam_workshop", "Steam Workshop"), function() {
 			steam_activate_overlay_browser("https://steamcommunity.com/app/2299510/workshop/");
 		}, THEME.steam) );
 	
 	menus = [
-		[ get_text("panel_menu_file", "File"), menu_file ],
-		[ get_text("panel_menu_edit", "Edit"), [
-			menuItem(get_text("undo", "Undo"), function() { UNDO(); }, THEME.undo, ["", "Undo"]),
-			menuItem(get_text("redo", "Redo"), function() { REDO(); }, THEME.redo, ["", "Redo"]),
-			menuItem(get_text("history_title", "Action history"), function() { dialogPanelCall(new Panel_History()); }),
+		[ __txtx("panel_menu_file", "File"), menu_file ],
+		[ __txtx("panel_menu_edit", "Edit"), [
+			menuItem(__txtx("undo", "Undo"), function() { UNDO(); }, THEME.undo, ["", "Undo"]),
+			menuItem(__txtx("redo", "Redo"), function() { REDO(); }, THEME.redo, ["", "Redo"]),
+			menuItem(__txt("History"), function() { dialogPanelCall(new Panel_History()); }),
 		]],
-		[ get_text("panel_menu_preview", "Preview"), [
-			menuItem(get_text("panel_menu_center_preview", "Center preview"), function() { PANEL_PREVIEW.do_fullView = true; }, THEME.icon_center_canvas, ["Preview", "Focus content"]), 
-			menuItem(get_text("panel_menu_save_current_preview_as", "Save current preview as..."), function() { PANEL_PREVIEW.saveCurrentFrame(); }, noone, ["Preview", "Save current frame"]), 
-			menuItemGroup(get_text("panel_menu_preview_background", "Preview background"), [
+		[ __txt("Preview"), [
+			menuItem(__txtx("panel_menu_center_preview", "Center preview"), function() { PANEL_PREVIEW.do_fullView = true; }, THEME.icon_center_canvas, ["Preview", "Focus content"]), 
+			menuItem(__txtx("panel_menu_save_current_preview_as", "Save current preview as..."), function() { PANEL_PREVIEW.saveCurrentFrame(); }, noone, ["Preview", "Save current frame"]), 
+			menuItemGroup(__txtx("panel_menu_preview_background", "Preview background"), [
 				[ s_menu_transparent,	function() { PANEL_PREVIEW.canvas_bg = -1; } ],
 				[ s_menu_white,			function() { PANEL_PREVIEW.canvas_bg = c_white; } ],
 				[ s_menu_black,			function() { PANEL_PREVIEW.canvas_bg = c_black; } ],
 			]), 
 			-1,
-			menuItem(get_text("panel_menu_show_grid", "Show Grid"), function() { PANEL_PREVIEW.grid_show = !PANEL_PREVIEW.grid_show; }, [ THEME.icon_grid, 1 ], ["Preview", "Toggle grid"]),
-			menuItem(get_text("panel_menu_grid_setting", "Grid setting..."), function() { 
+			menuItem(__txtx("panel_menu_show_grid", "Show Grid"), function() { PANEL_PREVIEW.grid_show = !PANEL_PREVIEW.grid_show; }, [ THEME.icon_grid, 1 ], ["Preview", "Toggle grid"]),
+			menuItem(__txtx("panel_menu_grid_setting", "Grid setting..."), function() { 
 				var dia = dialogCall(o_dialog_preview_grid); 
 				dia.anchor = ANCHOR.none;
 			}, THEME.icon_grid_setting),
 		]], 
-		[ get_text("panel_menu_animation", "Animation"), [
-			menuItem(get_text("panel_menu_animation_setting", "Animation setting..."), function() { 
+		[ __txtx("panel_menu_animation", "Animation"), [
+			menuItem(__txtx("panel_menu_animation_setting", "Animation setting..."), function() { 
 				var dia = dialogCall(o_dialog_animation); 
 				dia.anchor = ANCHOR.none;
 			}, THEME.animation_setting),
 			-1,
-			menuItem(get_text("panel_menu_animation_scaler", "Animation scaler..."), function() { 
+			menuItem(__txtx("panel_menu_animation_scaler", "Animation scaler..."), function() { 
 				dialogCall(o_dialog_anim_time_scaler); 
 			}, THEME.animation_timing),
 		]],
-		[ get_text("panel_menu_rendering", "Rendering"), [
-			menuItem(get_text("panel_menu_render_all_nodes", "Render all nodes"), function() { 
+		[ __txtx("panel_menu_rendering", "Rendering"), [
+			menuItem(__txtx("panel_menu_render_all_nodes", "Render all nodes"), function() { 
 				for(var i = 0; i < ds_list_size(NODES); i++) 
 					NODES[| i].triggerRender();
 				UPDATE |= RENDER_TYPE.full; 
 			}, [ THEME.sequence_control, 1 ], ["", "Render all"]),
-			menuItem(get_text("panel_menu_execute_exports", "Execute all export nodes"), function() { 
+			menuItem(__txtx("panel_menu_execute_exports", "Execute all export nodes"), function() { 
 				var key = ds_map_find_first(NODE_MAP);
 				repeat(ds_map_size(NODE_MAP)) {
 					var node = NODE_MAP[? key];
@@ -148,8 +148,8 @@ function Panel_Menu() : PanelContent() constructor {
 				}
 			}),
 		]],
-		[ get_text("panel_menu_panels", "Panels"), [
-			menuItem(get_text("panel_menu_workspace", "Workspace"), function(_dat) { 
+		[ __txtx("panel_menu_panels", "Panels"), [
+			menuItem(__txt("Workspace"), function(_dat) { 
 				var arr = [], lays = [];
 				var f   = file_find_first(DIRECTORY + "layouts/*", 0);
 				while(f != "") {
@@ -157,7 +157,7 @@ function Panel_Menu() : PanelContent() constructor {
 					f = file_find_next();
 				}
 				
-				array_push(arr, menuItem("Save layout", function() {
+				array_push(arr, menuItem(__txtx("panel_menu_save_layout", "Save layout"), function() {
 					var dia = dialogCall(o_dialog_file_name, mouse_mx + ui(8), mouse_my + ui(8));
 					dia.name = PREF_MAP[? "panel_layout_file"];
 					dia.onModify = function(name) { 
@@ -179,62 +179,62 @@ function Panel_Menu() : PanelContent() constructor {
 				return submenuCall(_dat, arr);
 			}).setIsShelf(),
 			-1,
-			menuItem(get_text("panel_menu_collections", "Collections"),		function() { panelAdd("Panel_Collection", true) },,,	function() { return findPanel("Panel_Collection") != noone; } ),
-			menuItem(get_text("panel_menu_graph", "Graph"),					function() { panelAdd("Panel_Graph", true) },,,			function() { return findPanel("Panel_Graph") != noone; } ),
-			menuItem(get_text("panel_menu_preview", "Preview"),				function() { panelAdd("Panel_Preview", true) },,,		function() { return findPanel("Panel_Preview") != noone; } ),
-			menuItem(get_text("panel_menu_inspector", "Inspector"),			function() { panelAdd("Panel_Inspector", true) },,,		function() { return findPanel("Panel_Inspector") != noone; } ),
-			menuItem(get_text("panel_menu_workspace", "Workspace"),			function() { panelAdd("Panel_Workspace", true) },,,		function() { return findPanel("Panel_Workspace") != noone; } ),
-			menuItem(get_text("panel_menu_animation", "Animation"),			function() { panelAdd("Panel_Animation", true) },,,		function() { return findPanel("Panel_Animation") != noone; } ),
-			menuItem(get_text("panel_menu_notification", "Notification"),   function() { panelAdd("Panel_Notification", true) },,,	function() { return findPanel("Panel_Notification") != noone; } ),
-			menuItem(get_text("panel_menu_globalvar", "Global Variables"),	function() { panelAdd("Panel_Globalvar", true) },,,		function() { return findPanel("Panel_Globalvar") != noone; } ),
+			menuItem(__txt("Collections"),		function() { panelAdd("Panel_Collection", true) },,,	function() { return findPanel("Panel_Collection") != noone; } ),
+			menuItem(__txt("Graph"),			function() { panelAdd("Panel_Graph", true) },,,			function() { return findPanel("Panel_Graph") != noone; } ),
+			menuItem(__txt("Preview"),			function() { panelAdd("Panel_Preview", true) },,,		function() { return findPanel("Panel_Preview") != noone; } ),
+			menuItem(__txt("Inspector"),		function() { panelAdd("Panel_Inspector", true) },,,		function() { return findPanel("Panel_Inspector") != noone; } ),
+			menuItem(__txt("Workspace"),		function() { panelAdd("Panel_Workspace", true) },,,		function() { return findPanel("Panel_Workspace") != noone; } ),
+			menuItem(__txt("Animation"),		function() { panelAdd("Panel_Animation", true) },,,		function() { return findPanel("Panel_Animation") != noone; } ),
+			menuItem(__txt("Notifications"),	function() { panelAdd("Panel_Notification", true) },,,	function() { return findPanel("Panel_Notification") != noone; } ),
+			menuItem(__txtx("panel_globalvar", "Global Variables"),	function() { panelAdd("Panel_Globalvar", true) },,,		function() { return findPanel("Panel_Globalvar") != noone; } ),
 			
-			menuItem(get_text("panel_menu_nodes", "Nodes"), function(_dat) { 
+			menuItem(__txt("Nodes"), function(_dat) { 
 				return submenuCall(_dat, [
-					menuItem(get_text("panel_menu_node_align", "Align nodes"),		function() { panelAdd("Panel_Node_Align", true) },,,	function() { return findPanel("Panel_Node_Align") != noone; } ),
-					menuItem(get_text("panel_menu_nodes", "Nodes"),					function() { panelAdd("Panel_Nodes", true) },,,			function() { return findPanel("Panel_Nodes") != noone; } ),
-					menuItem(get_text("tunnels", "Tunnels"),						function() { panelAdd("Panel_Tunnels", true) },,,		function() { return findPanel("Panel_Tunnels") != noone; } ),
+					menuItem(__txt("Align"),	function() { panelAdd("Panel_Node_Align", true) },,,	function() { return findPanel("Panel_Node_Align") != noone; } ),
+					menuItem(__txt("Nodes"),	function() { panelAdd("Panel_Nodes", true) },,,			function() { return findPanel("Panel_Nodes") != noone; } ),
+					menuItem(__txt("Tunnels"),	function() { panelAdd("Panel_Tunnels", true) },,,		function() { return findPanel("Panel_Tunnels") != noone; } ),
 				]);
 			} ).setIsShelf(),
 			
-			menuItem(get_text("panel_menu_color", "Color"), function(_dat) { 
+			menuItem(__txt("Color"), function(_dat) { 
 				return submenuCall(_dat, [
-					menuItem(get_text("panel_menu_color", "Color"),		 function() { panelAdd("Panel_Color", true) },,,	function() { return findPanel("Panel_Color") != noone; } ),
-					menuItem(get_text("panel_menu_palette", "Palette"),	 function() { panelAdd("Panel_Palette", true) },,,	function() { return findPanel("Panel_Palette") != noone; } ),
-					menuItem(get_text("panel_menu_gradient", "Gradient"),function() { panelAdd("Panel_Gradient", true) },,,	function() { return findPanel("Panel_Gradient") != noone; } ),
+					menuItem(__txt("Color"),		function() { panelAdd("Panel_Color", true) },,,		function() { return findPanel("Panel_Color") != noone; } ),
+					menuItem(__txt("Palettes"),		function() { panelAdd("Panel_Palette", true) },,,	function() { return findPanel("Panel_Palette") != noone; } ),
+					menuItem(__txt("Gradients"),	function() { panelAdd("Panel_Gradient", true) },,,	function() { return findPanel("Panel_Gradient") != noone; } ),
 				]);
 			} ).setIsShelf(),
 		]],
-		[ get_text("panel_menu_help", "Help"), menu_help ],
+		[ __txtx("help", "Help"), menu_help ],
 	]
 	
 	if(TESTING) {
-		array_push(menus, [ get_text("panel_menu_test", "Test"), [
-			menuItem(get_text("panel_menu_toggle_terminal", "Debug console"), function() { 
+		array_push(menus, [ __txtx("panel_menu_test", "Test"), [
+			menuItem(__txtx("panel_debug_console", "Debug console"), function() { 
 				panelAdd("Panel_Console", true)
 			}),
 			-1, 
 			
-			menuItem(get_text("panel_menu_test_load_all", "Load all current collections"), function() { 
+			menuItem(__txtx("panel_menu_test_load_all", "Load all current collections"), function() { 
 				__test_load_current_collections();
 			}),
-			menuItem(get_text("panel_menu_test_update_all", "Update all current collections"), function() { 
+			menuItem(__txtx("panel_menu_test_update_all", "Update all current collections"), function() { 
 				__test_update_current_collections();
 			}),
-			menuItem(get_text("panel_menu_test_add_meta", "Add metadata to current collections"), function() { 
+			menuItem(__txtx("panel_menu_test_add_meta", "Add metadata to current collections"), function() { 
 				__test_metadata_current_collections();
 			}),
-			menuItem(get_text("panel_menu_test_update_sam", "Update sample projects"), function() { 
+			menuItem(__txtx("panel_menu_test_update_sam", "Update sample projects"), function() { 
 				__test_update_sample_projects();
 			}),
 			-1,
-			menuItem(get_text("panel_menu_test_load_nodes", "Load all nodes"), function() { 
+			menuItem(__txtx("panel_menu_test_load_nodes", "Load all nodes"), function() { 
 				__test_load_all_nodes();
 			}),
-			menuItem(get_text("panel_menu_test_gen_guide", "Generate node guide"), function() { 
+			menuItem(__txtx("panel_menu_test_gen_guide", "Generate node guide"), function() { 
 				__generate_node_data();
 			}),
 			-1,
-			menuItem(get_text("panel_menu_test_crash", "Force crash"), function() { 
+			menuItem(__txtx("panel_menu_test_crash", "Force crash"), function() { 
 				print(1 + "a");
 			}),
 		]]);
@@ -251,26 +251,26 @@ function Panel_Menu() : PanelContent() constructor {
 		var txt;
 		
 		if(ds_stack_empty(UNDO_STACK)) {
-			txt = get_text("undo", "Undo");
+			txt = __txtx("undo", "Undo");
 		} else {
 			var act = ds_stack_top(UNDO_STACK);
 			if(array_length(act) > 1)
-				txt = get_text("undo", "Undo") + " " + string(array_length(act)) + " " + get_text("actions", "Actions");
+				txt = __txtx("undo", "Undo") + " " + string(array_length(act)) + " " + __txtx("actions", "Actions");
 			else 
-				txt = get_text("undo", "Undo") + " " + act[0].toString();
+				txt = __txtx("undo", "Undo") + " " + act[0].toString();
 		}
 		
 		menus[1][1][0].active = !ds_stack_empty(UNDO_STACK);
 		menus[1][1][0].name = txt;
 		
 		if(ds_stack_empty(REDO_STACK)) {
-			txt = get_text("redo", "Redo");
+			txt = __txtx("redo", "Redo");
 		} else {
 			var act = ds_stack_top(REDO_STACK);
 			if(array_length(act) > 1)
-				txt = get_text("redo", "Redo") + " " + string(array_length(act)) + " " + get_text("actions", "Actions");
+				txt = __txtx("redo", "Redo") + " " + string(array_length(act)) + " " + __txtx("actions", "Actions");
 			else 
-				txt = get_text("redo", "Redo") + " " + act[0].toString();
+				txt = __txtx("redo", "Redo") + " " + act[0].toString();
 		}
 		
 		menus[1][1][1].active = !ds_stack_empty(REDO_STACK);
@@ -435,7 +435,7 @@ function Panel_Menu() : PanelContent() constructor {
 					dia.anchor = ANCHOR.left | ANCHOR.top;
 				}
 				
-				TOOLTIP = string(warning_amo) + " " + get_text("warning", "Warnings") + " " + string(error_amo) + " " + get_text("errors", "Errors");
+				TOOLTIP = $"{warning_amo} {__txtx("warning", "Warnings")} {error_amo} {__txtx("errors", "Errors")}";
 			} else
 				draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, nx0, ny0 - nh / 2, nw, nh, cc, 1);
 			
@@ -469,7 +469,7 @@ function Panel_Menu() : PanelContent() constructor {
 				var ww = hori? string_width(name) + ui(40) : w - ui(16);
 				
 				if(pHOVER && point_in_rectangle(mx, my, nx0, ny0 - wh / 2, nx0 + ww, ny0 + wh / 2)) {
-					TOOLTIP = get_text("addons", "Addons");
+					TOOLTIP = __txt("Addons");
 					draw_sprite_stretched(THEME.menu_button, 1, nx0, ny0 - wh / 2, ww, wh);
 					if(mouse_press(mb_left, pFOCUS))
 						dialogPanelCall(new Panel_Addon());

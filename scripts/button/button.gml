@@ -103,8 +103,7 @@ function buttonInstant(spr, _x, _y, _w, _h, _m, _act, _hvr, _tip = "", _icon = n
 			
 		res = 1;
 		if(spr) draw_sprite_stretched(spr, 1, _x, _y, _w, _h);	
-		if(_tip != "") 
-			TOOLTIP = _tip;
+		if(_tip != "") TOOLTIP = _tip;
 			
 		if(mouse_press(mb_left, _act))
 			res = 2;

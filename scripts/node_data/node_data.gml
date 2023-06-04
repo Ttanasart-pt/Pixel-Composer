@@ -245,7 +245,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		if(!LOADING) MODIFIED = true;
 	}
 	
-	insp1UpdateTooltip  = get_text("panel_inspector_execute", "Execute node");
+	insp1UpdateTooltip  = __txtx("panel_inspector_execute", "Execute node");
 	insp1UpdateIcon     = [ THEME.sequence_control, 1, COLORS._main_value_positive ];
 	
 	static inspector1Update = function() {
@@ -258,7 +258,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	static onInspector1Update = noone;
 	static hasInspector1Update = function() { return onInspector1Update != noone; }
 	
-	insp2UpdateTooltip = get_text("panel_inspector_execute", "Execute node");
+	insp2UpdateTooltip = __txtx("panel_inspector_execute", "Execute node");
 	insp2UpdateIcon    = [ THEME.sequence_control, 1, COLORS._main_value_positive ];
 	
 	static inspector2Update = function() { onInspector2Update(); }
@@ -288,6 +288,16 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		if(hasInspector2Update()) inspectInput2.name = insp2UpdateTooltip;
 	}
 	static doStepBegin = function() {}
+	
+	static triggerCheck = function() {
+		for( var i = 0; i < ds_list_size(inputs); i++ ) {
+			if(inputs[| i].type != VALUE_TYPE.trigger) continue;
+			if(!is_instanceof(inputs[| i].editWidget, buttonClass)) continue;
+			
+			var trig = inputs[| i].getValue();
+			if(trig)   inputs[| i].editWidget.onClick();
+		}
+	}
 	
 	static step = function() {}
 	static focusStep = function() {}

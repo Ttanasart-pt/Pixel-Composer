@@ -1,5 +1,5 @@
 function Panel_Gradient() : PanelContent() constructor {
-	title = "Gradient";
+	title = __txt("Gradients");
 	showHeader	 = false;
 	title_height = 64;
 	padding		 = 24;

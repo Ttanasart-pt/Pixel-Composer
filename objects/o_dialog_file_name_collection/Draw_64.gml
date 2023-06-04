@@ -7,7 +7,7 @@
 
 #region draw TB
 	draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text_title);
-	draw_text(dialog_x + ui(16), dialog_y + ui(32), get_text("name", "Name"));
+	draw_text(dialog_x + ui(16), dialog_y + ui(32), __txtx("name", "Name"));
 	
 	//var is_author = !meta.steam || meta.author_steam_id == 0 || meta.author_steam_id == STEAM_USER_ID;
 	
@@ -27,19 +27,19 @@
 	var bw = ui(32);
 	var bh = ui(32);
 	
-	var txt  = get_text("new_collection_create", "Create collection");
+	var txt  = __txtx("new_collection_create", "Create collection");
 	var icon = THEME.accept;
 	var clr  = COLORS._main_value_positive;
 	if(updating != noone) { 
-		txt  = get_text("collection_update", "Update collection");
+		txt  = __txtx("collection_update", "Update collection");
 	}
 	
 	if(ugc == 1) {
-		txt  = get_text("workshop_upload", "Upload to Steam Workshop");
+		txt  = __txtx("workshop_upload", "Upload to Steam Workshop");
 		icon = THEME.workshop_upload;
 		clr  = c_white;
 	} else if(ugc == 2) {
-		txt  = get_text("workshop_update", "Update Steam Workshop");
+		txt  = __txtx("workshop_update", "Update Steam Workshop");
 		icon = THEME.workshop_update;
 		clr  = c_white;
 	}
@@ -86,7 +86,7 @@
 	}
 	
 	bx += bw + ui(4);
-	var txt = get_text("new_collection_meta_edit", "Edit metadata");
+	var txt = __txtx("new_collection_meta_edit", "Edit metadata");
 	if(buttonInstant(THEME.button_hide, bx, by, bw, bh, mouse_ui, sFOCUS, sHOVER, txt, THEME.hamburger) == 2)
 		doExpand();
 #endregion
@@ -98,7 +98,7 @@
 		var yy = dialog_y + ui(56);
 	
 		draw_set_text(f_p0, fa_left, fa_top, COLORS._main_text_title);
-		draw_text(dialog_x + ui(16), yy, get_text("description", "Description"));
+		draw_text(dialog_x + ui(16), yy, __txtx("description", "Description"));
 		yy		 += line_get_height() + ui(4);
 		dialog_h += line_get_height() + ui(4);
 		
@@ -109,7 +109,7 @@
 		dialog_h += ui(200) + ui(8);
 		
 		draw_set_text(f_p0, fa_left, fa_top, COLORS._main_text_title);
-		draw_text(dialog_x + ui(16), yy, get_text("author", "Author"));
+		draw_text(dialog_x + ui(16), yy, __txtx("author", "Author"));
 		yy		 += line_get_height() + ui(4);
 		dialog_h += line_get_height() + ui(4);
 		
@@ -120,7 +120,7 @@
 		dialog_h += TEXTBOX_HEIGHT + ui(8);
 		
 		draw_set_text(f_p0, fa_left, fa_top, COLORS._main_text_title);
-		draw_text(dialog_x + ui(16), yy, get_text("contact_info", "Contact info"));
+		draw_text(dialog_x + ui(16), yy, __txtx("contact_info", "Contact info"));
 		yy		 += line_get_height() + ui(4);
 		dialog_h += line_get_height() + ui(4);
 		
@@ -131,7 +131,7 @@
 		dialog_h += TEXTBOX_HEIGHT + ui(8);
 		
 		draw_set_text(f_p0, fa_left, fa_top, COLORS._main_text_title);
-		draw_text(dialog_x + ui(16), yy, get_text("alias", "Alias"));
+		draw_text(dialog_x + ui(16), yy, __txtx("alias", "Alias"));
 		yy		 += line_get_height() + ui(4);
 		dialog_h += line_get_height() + ui(4);
 		
@@ -142,7 +142,7 @@
 		dialog_h += TEXTBOX_HEIGHT + ui(8);
 		
 		draw_set_text(f_p0, fa_left, fa_top, COLORS._main_text_title);
-		draw_text(dialog_x + ui(16), yy, get_text("tags", "Tags"));
+		draw_text(dialog_x + ui(16), yy, __txtx("tags", "Tags"));
 		yy		 += line_get_height() + ui(4);
 		dialog_h += line_get_height() + ui(4);
 		

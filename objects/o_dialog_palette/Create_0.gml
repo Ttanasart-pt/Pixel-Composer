@@ -7,7 +7,7 @@ event_inherited();
 	title_height = 52;
 	destroy_on_click_out = true;
 	
-	name = get_text("palette_editor_title", "Palette editor");
+	name = __txtx("palette_editor_title", "Palette editor");
 	palette = 0;
 	
 	index_selecting = 0;

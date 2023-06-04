@@ -99,6 +99,7 @@
     {"name":"atlas","order":9,"path":"folders/nodes/data/value/atlas.yy",},
     {"name":"mesh","order":7,"path":"folders/nodes/data/value/mesh.yy",},
     {"name":"struct","order":6,"path":"folders/nodes/data/value/struct.yy",},
+    {"name":"surface","order":10,"path":"folders/nodes/data/value/surface.yy",},
     {"name":"trigger","order":8,"path":"folders/nodes/data/value/trigger.yy",},
     {"name":"VFX","order":13,"path":"folders/nodes/data/VFX.yy",},
     {"name":"icons","order":6,"path":"folders/nodes/icons.yy",},
@@ -157,7 +158,6 @@
     {"name":"gameframe","order":2,"path":"folders/sprites/gameframe.yy",},
     {"name":"misc","order":3,"path":"folders/sprites/misc.yy",},
     {"name":"widgets","order":5,"path":"folders/widgets.yy",},
-    {"name":"surface","order":10,"path":"folders/nodes/data/value/surface.yy",},
   ],
   "ResourceOrderSettings": [
     {"name":"s_node_corner","order":16,"path":"sprites/s_node_corner/s_node_corner.yy",},

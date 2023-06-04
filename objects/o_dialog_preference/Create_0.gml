@@ -24,15 +24,15 @@ event_inherited();
 
 #region pages
 	page_current = 0;
-	page[0] = get_text("pref_pages_general",	"General");
-	page[1] = get_text("pref_pages_appearance", "Appearances");
-	page[2] = get_text("pref_pages_theme",		"Theme");
-	page[3] = get_text("pref_pages_hotkeys",	"Hotkeys");
+	page[0] = __txtx("pref_pages_general", "General");
+	page[1] = __txtx("pref_pages_appearance", "Appearances");
+	page[2] = __txtx("theme", "Theme");
+	page[3] = __txtx("pref_pages_hotkeys", "Hotkeys");
 	
 	pref_global = ds_list_create();
 	
 	ds_list_add(pref_global, [
-		get_text("panel_directory", "Directory path (restart required)"),
+		__txtx("panel_directory", "Directory path (restart required)"),
 		function() { return PRESIST_PREF.path; },
 		new textBox(TEXTBOX_INPUT.text, function(txt) { 
 				PRESIST_PREF.path = txt;
@@ -47,7 +47,7 @@ event_inherited();
 	]);
 	
 	ds_list_add(pref_global, [
-		get_text("pref_show_welcome_screen", "Show welcome screen"),
+		__txtx("pref_show_welcome_screen", "Show welcome screen"),
 		"show_splash",
 		new checkBox(function() { 
 			PREF_MAP[? "show_splash"] = !PREF_MAP[? "show_splash"];
@@ -57,7 +57,7 @@ event_inherited();
 	
 	PREF_MAP[? "_display_scaling"] = PREF_MAP[? "display_scaling"];
 	ds_list_add(pref_global, [
-		get_text("pref_gui_scaling", "GUI scaling"),
+		__txtx("pref_gui_scaling", "GUI scaling"),
 		"_display_scaling",
 		new slider(0.5, 2, 0.01, function(val) { 
 			PREF_MAP[? "_display_scaling"] = val;
@@ -76,7 +76,7 @@ event_inherited();
 	]);
 	
 	ds_list_add(pref_global, [
-		get_text("auto_save_time", "Autosave delay (-1 to disable)"),
+		__txtx("auto_save_time", "Autosave delay (-1 to disable)"),
 		"auto_save_time",
 		new textBox(TEXTBOX_INPUT.number, function(val) { 
 			PREF_MAP[? "auto_save_time"] = val; 
@@ -85,7 +85,7 @@ event_inherited();
 	]);
 	
 	ds_list_add(pref_global, [
-		get_text("pref_double_click_delay", "Double click delay"),
+		__txtx("pref_double_click_delay", "Double click delay"),
 		"double_click_delay",
 		new slider(0, 1, 0.01, function(val) { 
 			PREF_MAP[? "double_click_delay"] = val; 
@@ -94,7 +94,7 @@ event_inherited();
 	]);
 	
 	ds_list_add(pref_global, [
-		get_text("pref_mouse_wheel_speed", "Scroll speed"),
+		__txtx("pref_mouse_wheel_speed", "Scroll speed"),
 		"mouse_wheel_speed",
 		new textBox(TEXTBOX_INPUT.number, function(val) { 
 			PREF_MAP[? "mouse_wheel_speed"] = val; 
@@ -103,7 +103,7 @@ event_inherited();
 	]);
 	
 	ds_list_add(pref_global, [
-		get_text("pref_keyboard_hold_start", "Keyboard hold start"),
+		__txtx("pref_keyboard_hold_start", "Keyboard hold start"),
 		"keyboard_repeat_start",
 		new slider(0, 1, 0.01, function(val) { 
 			PREF_MAP[? "keyboard_repeat_start"] = val; 
@@ -112,7 +112,7 @@ event_inherited();
 	]);
 	
 	ds_list_add(pref_global, [
-		get_text("pref_keyboard_repeat_delay", "Keyboard repeat delay"),
+		__txtx("pref_keyboard_repeat_delay", "Keyboard repeat delay"),
 		"keyboard_repeat_speed",
 		new slider(0, 1, 0.01, function(val) { 
 			PREF_MAP[? "keyboard_repeat_speed"] = val; 
@@ -121,7 +121,7 @@ event_inherited();
 	]);
 	
 	ds_list_add(pref_global, [
-		get_text("pref_ui_frame_rate", "UI frame rate"),
+		__txtx("pref_ui_frame_rate", "UI frame rate"),
 		"ui_framerate",
 		new textBox(TEXTBOX_INPUT.number, function(str) { 
 			PREF_MAP[? "ui_framerate"] = max(15, round(real(str)));
@@ -131,7 +131,7 @@ event_inherited();
 	]);
 	
 	ds_list_add(pref_global, [
-		get_text("pref_default_surface_size", "Default surface size"),
+		__txtx("pref_default_surface_size", "Default surface size"),
 		"default_surface_side",
 		new textBox(TEXTBOX_INPUT.number, function(str) { 
 			PREF_MAP[? "default_surface_side"] = max(1, round(real(str)));
@@ -140,7 +140,7 @@ event_inherited();
 	]);
 	
 	ds_list_add(pref_global, [
-		get_text("pref_collection_preview_speed", "Collection preview speed"),
+		__txtx("pref_collection_preview_speed", "Collection preview speed"),
 		"collection_preview_speed",
 		new textBox(TEXTBOX_INPUT.number, function(str) { 
 			PREF_MAP[? "collection_preview_speed"] = max(1, round(real(str)));
@@ -150,7 +150,7 @@ event_inherited();
 	
 	
 	ds_list_add(pref_global, [
-		get_text("pref_inspector_line_break_width", "Inspector line break width"),
+		__txtx("pref_inspector_line_break_width", "Inspector line break width"),
 		"inspector_line_break_width",
 		new textBox(TEXTBOX_INPUT.number, function(str) { 
 			PREF_MAP[? "inspector_line_break_width"] = max(1, round(real(str)));
@@ -159,7 +159,7 @@ event_inherited();
 	]);
 	
 	ds_list_add(pref_global, [
-		get_text("pref_expand_hovering_panel", "Expand hovering panel"),
+		__txtx("pref_expand_hovering_panel", "Expand hovering panel"),
 		"expand_hover",
 		new checkBox(function() { 
 			PREF_MAP[? "expand_hover"] = !PREF_MAP[? "expand_hover"]; 
@@ -168,7 +168,7 @@ event_inherited();
 	]);
 	
 	ds_list_add(pref_global, [
-		get_text("pref_graph_zoom_smoothing", "Graph zoom smoothing"),
+		__txtx("pref_graph_zoom_smoothing", "Graph zoom smoothing"),
 		"graph_zoom_smoooth",
 		new textBox(TEXTBOX_INPUT.number, function(str) { 
 			PREF_MAP[? "graph_zoom_smoooth"] = max(1, round(real(str)));
@@ -177,7 +177,7 @@ event_inherited();
 	]);
 	
 	ds_list_add(pref_global, [
-		get_text("pref_warning_notification_time", "Warning notification time"),
+		__txtx("pref_warning_notification_time", "Warning notification time"),
 		"notification_time",
 		new textBox(TEXTBOX_INPUT.number, function(str) { 
 			PREF_MAP[? "notification_time"] = max(0, round(real(str)));
@@ -186,7 +186,7 @@ event_inherited();
 	]);
 	
 	ds_list_add(pref_global, [
-		get_text("pref_save_file_minify", "Minify save file"),
+		__txtx("pref_save_file_minify", "Minify save file"),
 		"save_file_minify",
 		new checkBox(function() { 
 			PREF_MAP[? "save_file_minify"] = !PREF_MAP[? "save_file_minify"];
@@ -195,7 +195,7 @@ event_inherited();
 	]);
 
 	ds_list_add(pref_global, [
-		get_text("pref_enable_test_mode", "Enable developer mode (require restart)"),
+		__txtx("pref_enable_test_mode", "Enable developer mode (require restart)"),
 		"test_mode",
 		new checkBox(function() { 
 			PREF_MAP[? "test_mode"] = !PREF_MAP[? "test_mode"]; 
@@ -204,7 +204,7 @@ event_inherited();
 	]);
 
 	ds_list_add(pref_global, [
-		get_text("pref_legacy_exception", "Use legacy exception handler"),
+		__txtx("pref_legacy_exception", "Use legacy exception handler"),
 		"use_legacy_exception",
 		new checkBox(function() { 
 			PREF_MAP[? "use_legacy_exception"] = !PREF_MAP[? "use_legacy_exception"]; 
@@ -214,7 +214,7 @@ event_inherited();
 	]);
 	
 	ds_list_add(pref_global, [
-		get_text("pref_crash_dialog", "Show dialog after crash"),
+		__txtx("pref_crash_dialog", "Show dialog after crash"),
 		"show_crash_dialog",
 		new checkBox(function() { 
 			PREF_MAP[? "show_crash_dialog"] = !PREF_MAP[? "show_crash_dialog"]; 
@@ -228,9 +228,30 @@ event_inherited();
 #region appearance
 	pref_appr = ds_list_create();
 	
+	ds_list_add(pref_appr, "Interface");
+	locals = [];
+	var f = file_find_first(DIRECTORY + "Locale/*", fa_none);
+	while(f != "") {
+		if(filename_ext(f) == ".json")
+			array_push(locals, filename_name_only(f));
+		f = file_find_next();
+	}
+	file_find_close();
+	
+	ds_list_add(pref_appr, [
+		__txtx("pref_interface_language", "Interface Language (restart required)"),
+		"local",
+		new scrollBox(locals, function(str) { 
+			if(str < 0) return;
+			PREF_MAP[? "local"] = locals[str];
+			loadLocale();
+			PREF_SAVE();
+		})
+	]);
+	
 	ds_list_add(pref_appr, "Graph");
 	ds_list_add(pref_appr, [
-		get_text("pref_connection_thickness", "Connection thickness"),
+		__txtx("pref_connection_thickness", "Connection thickness"),
 		"connection_line_width",
 		new textBox(TEXTBOX_INPUT.number, function(str) { 
 			PREF_MAP[? "connection_line_width"] = real(str); 
@@ -239,7 +260,7 @@ event_inherited();
 	]);
 	
 	ds_list_add(pref_appr, [
-		get_text("pref_connection_curve_smoothness", "Connection curve smoothness"),
+		__txtx("pref_connection_curve_smoothness", "Connection curve smoothness"),
 		"connection_line_sample",
 		new textBox(TEXTBOX_INPUT.number, function(str) { 
 			PREF_MAP[? "connection_line_sample"] = real(str); 
@@ -248,7 +269,7 @@ event_inherited();
 	]);
 	
 	ds_list_add(pref_appr, [
-		get_text("pref_connection_aa", "Connection anti aliasing"),
+		__txtx("pref_connection_aa", "Connection anti aliasing"),
 		"connection_line_aa",
 		new textBox(TEXTBOX_INPUT.number, function(str) { 
 			PREF_MAP[? "connection_line_aa"] = max(1, real(str)); 
@@ -257,7 +278,7 @@ event_inherited();
 	])
 	
 	ds_list_add(pref_appr, [
-		get_text("pref_connection_anim", "Connection line animation"),
+		__txtx("pref_connection_anim", "Connection line animation"),
 		"connection_line_transition",
 		new checkBox(function() { 
 			PREF_MAP[? "connection_line_transition"] = 
@@ -267,7 +288,7 @@ event_inherited();
 	])
 	
 	ds_list_add(pref_appr, [
-		get_text("panel_menu_right_control", "Use Windows style window control."),
+		__txtx("panel_menu_right_control", "Use Windows style window control."),
 		"panel_menu_right_control",
 		new checkBox(function() { 
 			PREF_MAP[? "panel_menu_right_control"] = !PREF_MAP[? "panel_menu_right_control"]; 
@@ -489,7 +510,7 @@ event_inherited();
 			for(var i = 0; i < ds_list_size(ll); i++) {
 				var key = ll[| i];
 				var group = key.context;
-				var name  = key.name;
+				var name  = __txt(key.name);
 				var pkey  = key.key;
 				var modi  = key.modi;
 				
@@ -584,7 +605,7 @@ event_inherited();
 					modified = true;
 					var bx = x1 - ui(32);
 					var by = _y + hh;
-					if(buttonInstant(THEME.button_hide, bx, by, ui(24), ui(24), _m, sFOCUS, sHOVER && sp_hotkey.hover, get_text("reset", "Reset"), THEME.refresh_s) == 2) {
+					if(buttonInstant(THEME.button_hide, bx, by, ui(24), ui(24), _m, sFOCUS, sHOVER && sp_hotkey.hover, __txtx("reset", "Reset"), THEME.refresh_s) == 2) {
 						key.key = dkey;
 						key.modi = dmod;
 					}
@@ -597,7 +618,7 @@ event_inherited();
 		if(modified) {
 			var bx = x1 - ui(32);
 			var by = _y + ui(2);
-			if(buttonInstant(THEME.button_hide, bx, by, ui(24), ui(24), _m, sFOCUS, sHOVER && sp_hotkey.hover, get_text("reset_all", "Reset all"), THEME.refresh_s) == 2) {
+			if(buttonInstant(THEME.button_hide, bx, by, ui(24), ui(24), _m, sFOCUS, sHOVER && sp_hotkey.hover, __txtx("reset_all", "Reset all"), THEME.refresh_s) == 2) {
 				for(var j = 0; j < ds_list_size(HOTKEY_CONTEXT); j++) {
 					var ll = HOTKEYS[? HOTKEY_CONTEXT[| j]];
 					for(var i = 0; i < ds_list_size(ll); i++) {

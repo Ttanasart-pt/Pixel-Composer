@@ -1,5 +1,5 @@
 function Panel_Preview() : PanelContent() constructor {
-	title = "Preview";
+	title = __txt("Preview");
 	context_str = "Preview";
 	icon  = THEME.panel_preview;
 	
@@ -78,8 +78,8 @@ function Panel_Preview() : PanelContent() constructor {
 		[ 
 			THEME.icon_reset_when_preview,
 			function() { return resetViewOnDoubleClick;  },
-			function() { return resetViewOnDoubleClick? get_text("panel_preview_center_canvas_on_preview", "Center canvas on preview") :
-					get_text("panel_preview_keep_canvas_on_preview", "Keep canvas on preview"); }, 
+			function() { return resetViewOnDoubleClick? __txtx("panel_preview_center_canvas_on_preview", "Center canvas on preview") :
+					__txtx("panel_preview_keep_canvas_on_preview", "Keep canvas on preview"); }, 
 			function() { resetViewOnDoubleClick = !resetViewOnDoubleClick; } 
 		],
 		[ 
@@ -87,11 +87,11 @@ function Panel_Preview() : PanelContent() constructor {
 			function() { return splitView;  },
 			function() { 
 				switch(splitView) {
-					case 0 : return get_text("panel_preview_split_view_off", "Split view off");
-					case 1 : return get_text("panel_preview_horizontal_split_view", "Horizontal split view");
-					case 2 : return get_text("panel_preview_vertical_split_view", "Vertical split view");
+					case 0 : return __txtx("panel_preview_split_view_off", "Split view off");
+					case 1 : return __txtx("panel_preview_horizontal_split_view", "Horizontal split view");
+					case 2 : return __txtx("panel_preview_vertical_split_view", "Vertical split view");
 				}
-				return get_text("panel_preview_split_view", "Split view");
+				return __txtx("panel_preview_split_view", "Split view");
 			}, 
 			function() { splitView = (splitView + 1) % 3; } 
 		],
@@ -100,26 +100,26 @@ function Panel_Preview() : PanelContent() constructor {
 			function() { var t = [3, 0, 1, 2]; return array_safe_get(t, tileMode);  },
 			function() { 
 				switch(tileMode) {
-					case 0 : return get_text("panel_preview_tile_off", "Tile off");
-					case 1 : return get_text("panel_preview_tile_horizontal", "Tile horizontal");
-					case 2 : return get_text("panel_preview_tile_vertical", "Tile vertical");
-					case 3 : return get_text("panel_preview_tile_both", "Tile both");
+					case 0 : return __txtx("panel_preview_tile_off", "Tile off");
+					case 1 : return __txtx("panel_preview_tile_horizontal", "Tile horizontal");
+					case 2 : return __txtx("panel_preview_tile_vertical", "Tile vertical");
+					case 3 : return __txtx("panel_preview_tile_both", "Tile both");
 				}
-				return get_text("panel_preview_tile_mode", "Tile mode");
+				return __txtx("panel_preview_tile_mode", "Tile mode");
 			}, 
 			function(data) { 
 				menuCall("preview_tile_menu", data.x + ui(28), data.y + ui(28), [
-					menuItem(get_text("panel_preview_tile_off", "Tile off"),				function() { tileMode = 0; }),
-					menuItem(get_text("panel_preview_tile_horizontal", "Tile horizontal"),	function() { tileMode = 1; }),
-					menuItem(get_text("panel_preview_tile_vertical", "Tile vertical"),		function() { tileMode = 2; }),
-					menuItem(get_text("panel_preview_tile_both", "Tile both"),				function() { tileMode = 3; }),
+					menuItem(__txtx("panel_preview_tile_off", "Tile off"),				function() { tileMode = 0; }),
+					menuItem(__txtx("panel_preview_tile_horizontal", "Tile horizontal"),	function() { tileMode = 1; }),
+					menuItem(__txtx("panel_preview_tile_vertical", "Tile vertical"),		function() { tileMode = 2; }),
+					menuItem(__txtx("panel_preview_tile_both", "Tile both"),				function() { tileMode = 3; }),
 				]);
 			} 
 		],
 		[ 
 			THEME.icon_grid_setting,
 			function() { return 0; },
-			function() { return get_text("grid_title", "Grid setting") }, 
+			function() { return __txtx("grid_title", "Grid setting") }, 
 			function(param) { 
 				var gs = dialogCall(o_dialog_preview_grid, param.x, param.y); 
 				gs.anchor = ANCHOR.bottom | ANCHOR.left;
@@ -130,12 +130,12 @@ function Panel_Preview() : PanelContent() constructor {
 	actions = [
 		[ 
 			THEME.icon_preview_export,
-			get_text("panel_preview_export_canvas", "Export canvas"), 
+			__txtx("panel_preview_export_canvas", "Export canvas"), 
 			function() { saveCurrentFrame(); }
 		],
 		[ 
 			THEME.icon_center_canvas,
-			get_text("panel_preview_center_canvas", "Center canvas"), 
+			__txtx("panel_preview_center_canvas", "Center canvas"), 
 			function() { fullView(); }
 		],
 		
@@ -483,16 +483,16 @@ function Panel_Preview() : PanelContent() constructor {
 		
 		if(PANEL_PREVIEW == self) {
 			draw_set_text(f_p0, fa_right, fa_top, COLORS._main_text_accent);
-			draw_text(w - ui(8), right_menu_y, "Active");
+			draw_text(w - ui(8), right_menu_y, __txt("Active"));
 			right_menu_y += string_height("l");
 		}
 		
 		draw_set_text(f_p0, fa_right, fa_top, fps >= ANIMATOR.framerate? COLORS._main_text_sub : COLORS._main_value_negative);
-		draw_text(w - ui(8), right_menu_y, "fps " + string(fps));
+		draw_text(w - ui(8), right_menu_y, __txt("fps ") + string(fps));
 		right_menu_y += string_height("l");
 		
 		draw_set_text(f_p0, fa_right, fa_top, COLORS._main_text_sub);
-		draw_text(w - ui(8), right_menu_y, get_text("frame", "Frame") + " " + string(ANIMATOR.current_frame) + "/" + string(ANIMATOR.frames_total));
+		draw_text(w - ui(8), right_menu_y, __txt("Frame") + " " + string(ANIMATOR.current_frame) + "/" + string(ANIMATOR.frames_total));
 		
 		var _node = getNodePreview();
 		if(_node == noone) return;
@@ -855,7 +855,7 @@ function Panel_Preview() : PanelContent() constructor {
 		else
 			draw_clear(canvas_bg);
 		
-		title = "Preview";
+		title = __txt("Preview");
 		
 		dragCanvas();
 		getPreviewData();
@@ -879,14 +879,14 @@ function Panel_Preview() : PanelContent() constructor {
 		
 		if(mouse_on_preview && mouse_press(mb_right, pFOCUS)) {
 			menuCall("preview_context_menu",,, [ 
-				menuItem(get_text("panel_graph_preview_window", "Send to preview window"), function() { previewWindow(getNodePreview()); }, noone, ["Preview", "Preview window"]), 
+				menuItem(__txtx("panel_graph_preview_window", "Send to preview window"), function() { previewWindow(getNodePreview()); }, noone, ["Preview", "Preview window"]), 
 				-1,
-				menuItem(get_text("panel_preview_save", "Save current preview as") + "...", function() { saveCurrentFrame(); }), 
-				menuItem(get_text("panel_preview_save_all", "Save all current previews as") + "...", function() { saveAllCurrentFrames(); }), 
+				menuItem(__txtx("panel_preview_save", "Save current preview as") + "...", function() { saveCurrentFrame(); }), 
+				menuItem(__txtx("panel_preview_save_all", "Save all current previews as") + "...", function() { saveAllCurrentFrames(); }), 
 				-1,
-				menuItem(get_text("panel_preview_copy_color", "Copy image"), function() { copyCurrentFrame(); }, THEME.copy), 
-				menuItem(get_text("panel_preview_copy_color", "Copy color [") + string(sample_color) + "]", function() { clipboard_set_text(sample_color); }), 
-				menuItem(get_text("panel_preview_copy_color", "Copy hex [") + string(color_get_hex(sample_color)) + "]", function() { clipboard_set_text(color_get_hex(sample_color)); }), 
+				menuItem(__txtx("panel_preview_copy_color", "Copy image"), function() { copyCurrentFrame(); }, THEME.copy), 
+				menuItem(__txtx("panel_preview_copy_color", "Copy color [") + string(sample_color) + "]", function() { clipboard_set_text(sample_color); }), 
+				menuItem(__txtx("panel_preview_copy_color", "Copy hex [") + string(color_get_hex(sample_color)) + "]", function() { clipboard_set_text(color_get_hex(sample_color)); }), 
 			],, getNodePreview());
 		}
 		

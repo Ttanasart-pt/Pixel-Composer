@@ -1,5 +1,5 @@
 function Panel_Graph_Export_Image(targetPanel) : PanelContent() constructor {
-	title = "Export Graph";
+	title = __txtx("panel_export_graph", "Export Graph");
 	w = ui(360);
 	h = ui(524);
 	min_h = h;
@@ -73,7 +73,7 @@ function Panel_Graph_Export_Image(targetPanel) : PanelContent() constructor {
 		
 		for( var i = 0; i < array_length(widgets); i++ ) {
 			draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text);
-			draw_text_over(0, ty + wh * i, widgets[i][0]);
+			draw_text_over(0, ty + wh * i, __txt(widgets[i][0], "graph_export_"));
 			
 			var _wid = widgets[i][1];
 			var _dat = widgets[i][2]();
@@ -140,7 +140,7 @@ function Panel_Graph_Export_Image(targetPanel) : PanelContent() constructor {
 		sc_settings.draw(sx, sy, mx - sx, my - sy);
 		
 		if(is_surface(surface)) {
-			var txt = "Export...";
+			var txt = __txt("Export") + "...";
 			draw_set_text(f_p1, fa_left, fa_top, COLORS._main_text);
 			var _bw = string_width(txt) + ui(32);
 			var _bh = string_height(txt) + ui(12);

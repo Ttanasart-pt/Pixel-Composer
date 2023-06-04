@@ -6,7 +6,7 @@ event_inherited();
 	dialog_h = ui(476);
 	title_height = 52;
 	
-	name = get_text("gradient_editor_title", "Gradient editor");
+	name = __txtx("gradient_editor_title", "Gradient editor");
 	gradient = noone;
 	interactable = true;
 	

@@ -19,45 +19,68 @@ function Node_Color_adjust(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 	
 	inputs[| 1] = nodeValue("Brightness", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
-		.setDisplay(VALUE_DISPLAY.slider, [ -1, 1, 0.01]);
+		.setDisplay(VALUE_DISPLAY.slider, [ -1, 1, 0.01 ]);
 	
 	inputs[| 2] = nodeValue("Contrast",   self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.5)
-		.setDisplay(VALUE_DISPLAY.slider, [  0, 1, 0.01]);
+		.setDisplay(VALUE_DISPLAY.slider, [  0, 1, 0.01 ]);
 	
 	inputs[| 3] = nodeValue("Hue",        self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
-		.setDisplay(VALUE_DISPLAY.slider, [ -1, 1, 0.01]);
+		.setDisplay(VALUE_DISPLAY.slider, [ -1, 1, 0.01 ]);
 	
 	inputs[| 4] = nodeValue("Saturation", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
-		.setDisplay(VALUE_DISPLAY.slider, [ -1, 1, 0.01]);
+		.setDisplay(VALUE_DISPLAY.slider, [ -1, 1, 0.01 ]);
 	
 	inputs[| 5] = nodeValue("Value",      self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
-		.setDisplay(VALUE_DISPLAY.slider, [ -1, 1, 0.01]);
+		.setDisplay(VALUE_DISPLAY.slider, [ -1, 1, 0.01 ]);
 	
 	inputs[| 6] = nodeValue("Blend",   self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white);
 	
 	inputs[| 7] = nodeValue("Blend alpha",  self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
-		.setDisplay(VALUE_DISPLAY.slider, [ 0, 1, 0.01]);
+		.setDisplay(VALUE_DISPLAY.slider, [ 0, 1, 0.01 ]);
 	
 	inputs[| 8] = nodeValue("Mask", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 	
 	inputs[| 9] = nodeValue("Alpha", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
-		.setDisplay(VALUE_DISPLAY.slider, [ 0, 1, 0.01]);
+		.setDisplay(VALUE_DISPLAY.slider, [ 0, 1, 0.01 ]);
 	
 	inputs[| 10] = nodeValue("Exposure", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
-		.setDisplay(VALUE_DISPLAY.slider, [ 0, 4, 0.01]);
+		.setDisplay(VALUE_DISPLAY.slider, [ 0, 4, 0.01 ]);
 	
 	inputs[| 11] = nodeValue("Active", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
 		active_index = 11;
+		
+	inputs[| 12] = nodeValue("Input Type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+		.setDisplay(VALUE_DISPLAY.enum_button, [ "Surface", "Color" ]);
+	
+	inputs[| 13] = nodeValue("Color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, [ c_white ])
+		.setDisplay(VALUE_DISPLAY.palette)
+		.setVisible(true, true);
 	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
-	input_display_list = [11, 0, 8, 
+	outputs[| 1] = nodeValue("Color out", self, JUNCTION_CONNECT.output, VALUE_TYPE.color, [])
+		.setDisplay(VALUE_DISPLAY.palette);
+	
+	input_display_list = [11, 12, 0, 8, 13, 
 		["Brightness",	false], 1, 10, 2, 
 		["HSV",			false], 3, 4, 5, 
 		["Color blend", false], 6, 7, 9
 	];
 	
+	temp_surface = [ surface_create(1, 1) ];
+	
 	attribute_surface_depth();
+	
+	static step = function() {
+		var type = inputs[| 12].getValue();
+		
+		inputs[|  0].setVisible(type == 0, type == 0);
+		inputs[|  8].setVisible(type == 0, type == 0);
+		inputs[| 13].setVisible(type == 1, type == 1);
+		
+		outputs[| 0].setVisible(type == 0, type == 0);
+		outputs[| 1].setVisible(type == 1, type == 1);
+	}
 	
 	static process_data = function(_outSurf, _data, _output_index, _array_index) {
 		var _bri = _data[1];
@@ -72,7 +95,49 @@ function Node_Color_adjust(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		var _alp = _data[9];
 		var _exp = _data[10];
 		
-		surface_set_target(_outSurf);
+		var _type = _data[12];
+		var _col  = _data[13];
+		
+		if(_type == 0 && _output_index != 0) return [];
+		if(_type == 1 && _output_index != 1) return noone;
+		
+		var _surf     = _data[0];
+		var _baseSurf = _outSurf;
+		
+		if(_type == 1) {
+			if(!is_array(_col)) _col = [ _col ];
+			
+			for( var i = 0; i < array_length(_col); i++ ) {
+				var _c = _col[i];
+				
+				var r = color_get_red(_c)   / 255;
+				var g = color_get_green(_c) / 255;
+				var b = color_get_blue(_c)  / 255;
+				
+				_c = make_color_rgb(
+					clamp((.5 + _con * 2 * (r - .5) + _bri) * _exp, 0, 1) * 255,
+					clamp((.5 + _con * 2 * (g - .5) + _bri) * _exp, 0, 1) * 255,
+					clamp((.5 + _con * 2 * (b - .5) + _bri) * _exp, 0, 1) * 255,
+				);
+				
+				var h = color_get_hue(_c)        / 255;
+				var s = color_get_saturation(_c) / 255;
+				var v = color_get_value(_c)      / 255;
+				
+				h = clamp(frac(h + _hue), -1, 1);
+				if(h < 0) h = 1 + h;
+				v = clamp((v + _val) * (1 + _sat * s * 0.5), 0, 1);
+				s = clamp(s * (_sat + 1), 0, 1);
+				
+				_c = make_color_hsv(h * 255, s * 255, v * 255);
+				_c = merge_color(_c, _bl, _bla);
+				_col[i] = _c;
+			}
+			
+			return _col;
+		}
+		
+		surface_set_target(_baseSurf);
 		DRAW_CLEAR
 		BLEND_OVERRIDE;
 		
@@ -91,14 +156,27 @@ function Node_Color_adjust(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 			shader_set_uniform_f(uniform_bla, _bla);
 			
 			gpu_set_colorwriteenable(1, 1, 1, 0);
-			if(is_surface(_data[0])) draw_surface_safe(_data[0], 0, 0);
+			draw_surface_safe(_surf, 0, 0);
 			gpu_set_colorwriteenable(1, 1, 1, 1);
-			if(is_surface(_data[0])) draw_surface_ext_safe(_data[0], 0, 0, 1, 1, 0, c_white, _alp);
+			draw_surface_ext_safe(_surf, 0, 0, 1, 1, 0, c_white, _alp);
 		shader_reset();
 		
 		BLEND_NORMAL;
 		surface_reset_target();
 		
 		return _outSurf;
+	}
+	
+	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
+		var type = inputs[| 12].getValue();
+		if(type == 0) return;
+		
+		var bbox = drawGetBbox(xx, yy, _s);
+		if(bbox.h < 1) return;
+		
+		var pal = outputs[| 1].getValue();
+		if(array_length(pal) && is_array(pal[0])) return;
+		
+		drawPalette(pal, bbox.x0, bbox.y0, bbox.w, bbox.h);
 	}
 }

@@ -23,7 +23,7 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 				jun.setAnim(anim_hold);
 				
 			draw_sprite_ui_uniform(THEME.animate_clock, index, butx, lb_y, 1, index == 2? COLORS._main_accent : c_white, 1);
-			TOOLTIP = jun.value_from == noone? get_text("panel_inspector_toggle_anim", "Toggle animation") : get_text("panel_inspector_remove_link", "Remove link");
+			TOOLTIP = jun.value_from == noone? __txtx("panel_inspector_toggle_anim", "Toggle animation") : __txtx("panel_inspector_remove_link", "Remove link");
 					
 			if(mouse_press(mb_left, _focus)) {
 				if(jun.value_from != noone)
@@ -54,7 +54,7 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 					jun.visible = visi_hold;
 					
 				draw_sprite_ui_uniform(THEME.junc_visible, index, butx, lb_y, 1,, 1);
-				TOOLTIP = get_text("visibility", "Visibility");
+				TOOLTIP = __txt("Visibility");
 				
 				if(mouse_press(mb_left, _focus)) {
 					jun.visible = !jun.visible;
@@ -123,8 +123,8 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 				}
 			}
 						
-			if(buttonInstant(THEME.button_hide, bx - ui(12), by - ui(12), ui(24), ui(24), _m, _focus, _hover, kfFocus? get_text("panel_inspector_remove_key", "Remove keyframe") : 
-				get_text("panel_inspector_add_key", "Add keyframe"), THEME.prop_keyframe, 1, cc) == 2) {
+			if(buttonInstant(THEME.button_hide, bx - ui(12), by - ui(12), ui(24), ui(24), _m, _focus, _hover, kfFocus? __txtx("panel_inspector_remove_key", "Remove keyframe") : 
+				__txtx("panel_inspector_add_key", "Add keyframe"), THEME.prop_keyframe, 1, cc) == 2) {
 				var _add = false;
 				for(var j = 0; j < ds_list_size(jun.animator.values); j++) {
 					var _key = jun.animator.values[| j];
@@ -161,7 +161,7 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 			draw_line(bx - ui(20), by - lhf, bx - ui(20), by + lhf);
 					
 			bx -= ui(26 + 12);
-			if(buttonInstant(THEME.button_hide, bx - ui(12), by - ui(12), ui(24), ui(24), _m, _focus, _hover, get_text("panel_animation_looping_mode", "Looping mode") + " " + ON_END_NAME[jun.on_end], THEME.prop_on_end, jun.on_end) == 2)
+			if(buttonInstant(THEME.button_hide, bx - ui(12), by - ui(12), ui(24), ui(24), _m, _focus, _hover, __txtx("panel_animation_looping_mode", "Looping mode") + " " + ON_END_NAME[jun.on_end], THEME.prop_on_end, jun.on_end) == 2)
 				jun.on_end = safe_mod(jun.on_end + 1, sprite_get_number(THEME.prop_on_end));
 		}
 	#endregion
@@ -171,7 +171,7 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 			var bx = xx + ww - ui(12);
 			var by = lb_y;
 			var ic_b = jun.expUse? c_white : COLORS._main_icon;
-			if(buttonInstant(THEME.button_hide, bx - ui(12), by - ui(12), ui(24), ui(24), _m, _focus, _hover, "Use expression", THEME.node_use_expression, jun.expUse, ic_b) == 2)
+			if(buttonInstant(THEME.button_hide, bx - ui(12), by - ui(12), ui(24), ui(24), _m, _focus, _hover, __txtx("panel_inspector_use_expression", "Use expression"), THEME.node_use_expression, jun.expUse, ic_b) == 2)
 				jun.expUse = !jun.expUse;
 		}
 	#endregion

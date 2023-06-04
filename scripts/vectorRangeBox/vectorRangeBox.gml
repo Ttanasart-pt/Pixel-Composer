@@ -31,7 +31,7 @@ function vectorRangeBox(_size, _type, _onModify, _unit = noone) : widget() const
 		tb[i] = new textBox(_type, onModifySingle[i]);
 		tb[i].slidable = true;
 		
-		label[i] = (i % 2? "max " : "min ") + axis[floor(i / 2)];
+		label[i] = (i % 2? __txt("Max") : __txt("Min")) + " " + axis[floor(i / 2)];
 	}
 	
 	static setSlideSpeed = function(speed) {
@@ -66,7 +66,7 @@ function vectorRangeBox(_size, _type, _onModify, _unit = noone) : widget() const
 		b_link.setActiveFocus(hover, active);
 		b_link.icon_index = linked;
 		b_link.icon_blend = linked? COLORS._main_accent : COLORS._main_icon;
-		b_link.tooltip = linked? "Unlink axis" : "Link axis";
+		b_link.tooltip = linked? __txt("Unlink values") : __txt("Link values");
 		
 		var bx = _x;
 		var by = _y + _h / 2 - ui(32 / 2);

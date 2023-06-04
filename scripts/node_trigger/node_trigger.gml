@@ -18,14 +18,24 @@ function Node_Trigger(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 	insp2UpdateTooltip   = "Trigger";
 	insp2UpdateIcon      = [ THEME.sequence_control, 1, COLORS._main_value_positive ];
 	
+	doTrigger = false;
+	
 	static onInspector2Update = function() {
 		inputs[| 0].setAnim(true);
 		inputs[| 0].setValue(true);
 	}
 	
+	function step() {
+		if(doTrigger) {
+			outputs[| 0].setValue(true);
+			doTrigger = false;
+		} else
+			outputs[| 0].setValue(false);
+	}
+	
 	function update() {
 		var trg = inputs[| 0].getValue();
-		outputs[| 0].setValue(trg);
+		if(trg) doTrigger = true;
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
