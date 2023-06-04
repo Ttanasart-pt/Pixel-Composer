@@ -13,3 +13,5 @@ if(ds_map_exists(global.FILE_LOAD_ASYNC, async_load[? "id"])) {
 	
 	callback(arguments);
 }
+
+asyncLoad(async_load);

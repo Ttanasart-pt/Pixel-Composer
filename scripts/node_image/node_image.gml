@@ -114,12 +114,13 @@ function Node_Image(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		if(!first_update) return;
 		first_update = false;
 		
-		if(string_pos("strip", name) == 0) return;
+		if(LOADING || APPENDING) return;
+		if(string_pos("strip", display_name) == 0) return;
 		
-		var sep_pos = string_pos("strip", name) + 5;
-		var sep     = string_copy(name, sep_pos, string_length(name) - sep_pos + 1);
-		var amo		= toNumber(sep);
-			
+		var sep_pos = string_pos("strip", display_name) + 5;
+		var sep     = string_copy(display_name, sep_pos, string_length(display_name) - sep_pos + 1);
+		var amo		= toNumber(string_digits(sep));
+		
 		if(amo) {
 			var ww = sprite_get_width(spr) / amo;
 			var hh = sprite_get_height(spr);

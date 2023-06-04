@@ -231,6 +231,10 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 			addNodeObject(input, "ASE Layer",			s_node_ase_layer,		"Node_ASE_layer",			[1, Node_ASE_layer]).setVersion(1100);
 			addNodeObject(input, "WAV File In",			s_node_wav_file_read,	"Node_WAV_File_Read",		[0, Node_create_WAV_File_Read],, "Load wav audio file.").setVersion(1144);
 			addNodeObject(input, "WAV File Out",		s_node_wav_file_write,	"Node_WAV_File_Write",		[1, Node_WAV_File_Write],, "Save wav audio file.").setVersion(1145);
+			
+			ds_list_add(input, "Network");
+			addNodeObject(input, "Websocket Receiver",	s_node_websocket_receive,	"Node_Websocket_Receiver",	[1, Node_Websocket_Receiver],, "Create websocket server to receive data from the network.").setVersion(1145);
+			addNodeObject(input, "Websocket Sender",	s_node_websocket_send,		"Node_Websocket_Sender",	[1, Node_Websocket_Sender],, "Create websocket server to send data to the network.").setVersion(1145);
 	
 		var transform = ds_list_create();
 		addNodeCatagory("Transform", transform);
@@ -550,9 +554,10 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 		
 		var node = ds_list_create();
 		addNodeCatagory("Node", node);
-			ds_list_add(node, "Logic");
-			addNodeObject(node, "Condition",		s_node_condition,	"Node_Condition",	[1, Node_Condition],, "Given a condition, output one value if true, another value is false.");
-			addNodeObject(node, "Switch",			s_node_switch,		"Node_Switch",		[1, Node_Switch],, "Given an index, output value base on index matching.").setVersion(1090);
+			ds_list_add(node, "Control");
+			addNodeObject(node, "Condition",	s_node_condition,	"Node_Condition",	[1, Node_Condition],, "Given a condition, output one value if true, another value is false.");
+			addNodeObject(node, "Switch",		s_node_switch,		"Node_Switch",		[1, Node_Switch],, "Given an index, output value base on index matching.").setVersion(1090);
+			addNodeObject(node, "Animation Control",	s_node_animation_control,			"Node_Animation_Control",	[1, Node_Animation_Control],, "Control animation state with triggers.").setVersion(1145);
 			
 			ds_list_add(node, "Groups");
 			addNodeObject(node, "Group",			s_node_group,		"Node_Group",			[1, Node_Group]);

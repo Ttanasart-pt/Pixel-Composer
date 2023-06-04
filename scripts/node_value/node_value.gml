@@ -430,6 +430,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	express_edit.align    = fa_left;
 	
 	process_array = true;
+	validateValue = true;
 	
 	static setDefault = function(vals) {
 		if(LOADING || APPENDING) return self;
@@ -495,6 +496,11 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		return self;
 	}
 	
+	static nonValidate = function() {
+		validateValue = false;
+		return self;
+	}
+	
 	static isAnimable = function() {
 		if(type == VALUE_TYPE.gradient)				 return false;
 		if(display_type == VALUE_DISPLAY.text_array) return false;
@@ -542,7 +548,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				switch(display_type) {
 					case VALUE_DISPLAY._default :
 						editWidget = new textBox(_txt, function(val) { 
-							MODIFIED = true;
 							return setValueDirect(val);
 						} );
 						editWidget.slidable = true;
@@ -553,7 +558,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						break;
 					case VALUE_DISPLAY.range :
 						editWidget = new rangeBox(_txt, function(index, val) { 
-							MODIFIED = true;
 							//var _val = animator.getValue();
 							//_val[index] = val;
 							return setValueDirect(val, index);
@@ -570,7 +574,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						var val = animator.getValue();
 						if(array_length(val) <= 4) {
 							editWidget = new vectorBox(array_length(animator.getValue()), function(index, val) { 
-								MODIFIED = true;
 								//var _val = animator.getValue();
 								//_val[index] = val;
 								return setValueDirect(val, index);
@@ -594,7 +597,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						var val = animator.getValue();
 						
 						editWidget = new vectorRangeBox(array_length(val), _txt, function(index, val) { 
-							MODIFIED = true;
 							//var _val = animator.getValue();
 							//_val[index] = val;
 							return setValueDirect(val, index);
@@ -615,7 +617,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						break;
 					case VALUE_DISPLAY.rotation :
 						editWidget = new rotator(function(val) {
-							MODIFIED = true;
 							return setValueDirect(val);
 						}, display_data );
 						
@@ -623,7 +624,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						break;
 					case VALUE_DISPLAY.rotation_range :
 						editWidget = new rotatorRange(function(index, val) { 
-							MODIFIED = true;
 							//var _val = animator.getValue();
 							//_val[index] = round(val);
 							return setValueDirect(val, index);
@@ -636,7 +636,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						break;
 					case VALUE_DISPLAY.slider :
 						editWidget = new slider(display_data[0], display_data[1], display_data[2], function(val) { 
-							MODIFIED = true;
 							return setValueDirect(toNumber(val));
 						} );
 						if(type == VALUE_TYPE.integer) editWidget.setSlideSpeed(1);
@@ -645,7 +644,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						break;
 					case VALUE_DISPLAY.slider_range :
 						editWidget = new sliderRange(display_data[0], display_data[1], display_data[2], function(index, val) {
-							MODIFIED = true; 
 							//var _val = animator.getValue();
 							//_val[index] = val;
 							return setValueDirect(val, index);
@@ -659,7 +657,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						break;
 					case VALUE_DISPLAY.area :
 						editWidget = new areaBox(function(index, val) { 
-							MODIFIED = true;
 							//var _val = animator.getValue();
 							//_val[index] = val;
 							return setValueDirect(val, index);
@@ -675,7 +672,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						break;
 					case VALUE_DISPLAY.padding :
 						editWidget = new paddingBox(function(index, val) { 
-							MODIFIED = true;
 							//var _val = animator.getValue();
 							//_val[index] = val;
 							return setValueDirect(val, index);
@@ -689,7 +685,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						break;
 					case VALUE_DISPLAY.puppet_control :
 						editWidget = new controlPointBox(function(index, val) { 
-							MODIFIED = true;
 							//var _val = animator.getValue();
 							//_val[index] = val;
 							return setValueDirect(val, index);
@@ -699,7 +694,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						break;
 					case VALUE_DISPLAY.enum_scroll :
 						editWidget = new scrollBox(display_data, function(val) {
-							MODIFIED = true;
 							if(val == -1) return;
 							return setValueDirect(toNumber(val)); 
 						} );
@@ -712,7 +706,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						break;
 					case VALUE_DISPLAY.enum_button :
 						editWidget = buttonGroup(display_data, function(val) { 
-							MODIFIED = true;
 							return setValueDirect(val);
 						} );
 						
@@ -721,7 +714,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						break;
 					case VALUE_DISPLAY.kernel :
 						editWidget = new matrixGrid(_txt, function(index, val) {
-							MODIFIED = true; 
 							var _val = animator.getValue();
 							_val[index] = val;
 							return setValueDirect(_val);
@@ -738,7 +730,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				break;
 			case VALUE_TYPE.boolean :
 				editWidget = new checkBox(function() {
-					MODIFIED = true;
 					return setValueDirect(!animator.getValue()); 
 				} );
 				
@@ -748,7 +739,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				switch(display_type) {
 					case VALUE_DISPLAY._default :
 						editWidget = new buttonColor(function(color) { 
-							MODIFIED = true;
 							return setValueDirect(color);
 						} );
 						
@@ -757,7 +747,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						break;
 					case VALUE_DISPLAY.palette :
 						editWidget = new buttonPalette(function(color) { 
-							MODIFIED = true;
 							return setValueDirect(color);
 						} );
 						
@@ -767,7 +756,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				break;
 			case VALUE_TYPE.gradient :
 				editWidget = new buttonGradient(function(gradient) { 
-					MODIFIED = true;
 					return setValueDirect(gradient);
 				} );
 						
@@ -781,7 +769,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 					case VALUE_DISPLAY.path_load :
 						editWidget = new textBox(TEXTBOX_INPUT.text, function(str) { setValueDirect(str); }, 
 							button(function() { 
-								MODIFIED = true;
 								var path = get_open_filename(display_data[0], display_data[1]);
 								key_release();
 								if(path == "") return noone;
@@ -795,7 +782,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 					case VALUE_DISPLAY.path_save :
 						editWidget = new textBox(TEXTBOX_INPUT.text, function(str) { setValueDirect(str); }, 
 							button(function() { 
-								MODIFIED = true;
 								var path = get_save_filename(display_data[0], display_data[1]);
 								key_release();
 								if(path == "") return noone;
@@ -810,7 +796,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 					case VALUE_DISPLAY.path_font :
 						editWidget = new fontScrollBox(
 							function(val) {
-								MODIFIED = true;
 								return setValueDirect(DIRECTORY + "Fonts/" + FONT_INTERNAL[val]);
 							}
 						);
@@ -820,7 +805,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			case VALUE_TYPE.curve :
 				display_type = VALUE_DISPLAY.curve;
 				editWidget = new curveBox(function(_modified) { 
-					MODIFIED = true;
 					return setValueDirect(_modified); 
 				});
 				break;
@@ -828,7 +812,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				switch(display_type) {
 					case VALUE_DISPLAY._default :
 						editWidget = new textArea(TEXTBOX_INPUT.text, function(str) { 
-							MODIFIED = true;
 							return setValueDirect(str); 
 						});
 						extract_node = "Node_String";
@@ -836,7 +819,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 					
 					case VALUE_DISPLAY.code :
 						editWidget = new textArea(TEXTBOX_INPUT.text, function(str) { 
-							MODIFIED = true;
 							return setValueDirect(str); 
 						});
 						
@@ -848,7 +830,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 					
 					case VALUE_DISPLAY.text_array :
 						editWidget = new textArrayBox(function() { 
-							MODIFIED = true;
 							return animator.values[| 0].value; }, display_data, function() { node.doUpdate(); 
 						});
 						break;
@@ -856,7 +837,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				break;
 			case VALUE_TYPE.surface :
 				editWidget = new surfaceBox(function(ind) { 
-					MODIFIED = true;
 					return setValueDirect(ind); 
 				}, display_data );
 				show_in_inspector = true;
@@ -868,6 +848,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	resetDisplay();
 	
 	static onValidate = function() {
+		if(!validateValue) return;
 		var _val = value_validation, str = "";
 		value_validation = VALIDATION.pass; 
 		
@@ -1226,6 +1207,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			
 			cache_array[0] = false;
 			cache_value[0] = false;
+			
+			if(!LOADING) MODIFIED = true;
 		}
 		
 		onValidate();
@@ -1518,8 +1501,13 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(value_from) 
 			return true;
 		
-		if(connect_type == JUNCTION_CONNECT.input)
-			return visible && (is_array(node.input_display_list)? array_exists(node.input_display_list, index) : true);
+		if(connect_type == JUNCTION_CONNECT.input) {
+			if(!visible) 
+				return false;
+				
+			if(is_array(node.input_display_list))
+				return array_exists(node.input_display_list, index);
+		}
 		return visible;
 	}
 	

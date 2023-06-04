@@ -44,7 +44,7 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	outputs[| 1] = nodeValue("Mesh data", self, JUNCTION_CONNECT.output, VALUE_TYPE.object, data);
 	
 	input_display_list = [ 5, 
-		["Mesh",			false],	0, 1, 3, 7, 
+		["Mesh",			false],	0, 1, 7, 
 		["Link",			false],	4, 6,
 		["Control points",	false], 
 	];
@@ -54,6 +54,8 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 
 	input_display_index = array_length(input_display_list);
 	points = [];
+	
+	array_push(attributeEditors, "Warp");
 	
 	attributes[? "iteration"] = 4;
 	array_push(attributeEditors, ["Iteration", "iteration", 
@@ -66,6 +68,13 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		new NodeTool( "Add / Remove (+ Shift) control point",  THEME.control_add ),
 		new NodeTool( "Pin / unpin (+ Shift) mesh", THEME.control_pin )
 	];
+	
+	insp1UpdateTooltip   = "Generate";
+	insp1UpdateIcon      = [ THEME.refresh, 1, COLORS._main_value_positive ];
+	
+	static onInspector1Update = function() {		
+		setTriangle();
+	}
 	
 	static onValueFromUpdate = function(index) {
 		if(index == 0 && array_empty(data.tris))
@@ -286,9 +295,10 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		var fullmh = inputs[| 7].getValue() || useArray;
 		var gw = ww / sample;
 		var gh = hh / sample;
+		var cont = noone;
 		
 		if(!fullmh) {
-			var cont = surface_create_valid(ww, hh);
+			cont = surface_create_valid(ww, hh);
 			
 			surface_set_target(cont);
 				shader_set(sh_content_sampler);
@@ -367,8 +377,7 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			}
 		}
 		
-		if(!useArray)
-			surface_free(cont);
+		if(is_surface(cont)) surface_free(cont);
 	}
 	
 	static reset = function() {

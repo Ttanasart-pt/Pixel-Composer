@@ -57,8 +57,9 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		
 	inputs[| 11] = nodeValue("Sync animation", self, JUNCTION_CONNECT.input, VALUE_TYPE.trigger, 0)
 		.setDisplay(VALUE_DISPLAY.button, [ function() { 
-			var _amo	= inputs[| 3].getValue();
-			ANIMATOR.frames_total = max(1, _amo[0] * _amo[1]);
+			var _atl = outputs[| 1].getValue();
+			var _spd = inputs[| 8].getValue();
+			ANIMATOR.frames_total = max(1, _spd == 0? 1 : array_length(_atl) / _spd);
 		}, "Sync frames"] );
 		
 	inputs[| 12] = nodeValue("Filter empty output", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
@@ -382,7 +383,7 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		
 		if(array_length(surf_array)) {
 			var ind = safe_mod(ANIMATOR.current_frame * _spd, array_length(surf_array));
-			outputs[| 0].setValue(surf_array[ind]);
+			outputs[| 0].setValue(array_safe_get(surf_array, ind));
 		}
 	}
 }

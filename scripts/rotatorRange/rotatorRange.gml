@@ -31,6 +31,8 @@ function rotatorRange(_onModify) : widget() constructor {
 		w = 0;
 		h = ui(96);
 		
+		if(!is_real(_data[0])) return;
+		if(!is_real(_data[1])) return;
 		var knob_y = _y + ui(48);
 		
 		tb_min.setActiveFocus(hover, active);

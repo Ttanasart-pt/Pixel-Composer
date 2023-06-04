@@ -237,8 +237,15 @@
 	DIALOGS = ds_list_create();
 #endregion
 
-#region file loader
+#region async
+	globalvar PORT_MAP, NETWORK_SERVERS, NETWORK_CLIENTS;
+	
 	global.FILE_LOAD_ASYNC = ds_map_create();
+	PORT_MAP = ds_map_create();
+	NETWORK_SERVERS = ds_map_create();
+	NETWORK_CLIENTS = ds_map_create();
+	
+	asyncInit();
 #endregion
 
 #region steam

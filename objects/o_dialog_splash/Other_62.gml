@@ -72,7 +72,7 @@ for( var i = 0; i < array_length(contest_message_req); i++ ) {
 		var att = thr.title.attachments[0];
 		thr.title.attachments = att;
 		
-		var path = DIRECTORY + "temp/" + att.id + ".png";
+		var path = DIRECTORY + "temp/" + att.id + filename_ext(att.url);
 		attachment[? att.id] = [ http_get_file(att.url, path), path ];
 	} else 
 		thr.title.attachments = noone;
@@ -104,7 +104,6 @@ for( var i = 0; i < array_length(keys); i++ ) {
 	if(async_load[? "id"] != att[0]) continue;
 	
 	var path = att[1];
-	print(path);
 	
 	if(!file_exists(path)) {
 		attachment[? keys[i]] = noone;

@@ -25,10 +25,14 @@
 			current_frame = round(frame);
 			
 			if(current_frame == frames_total) {
-				if(playback == ANIMATOR_END.stop || rendering) {
+				if(rendering) {
 					is_playing = false;
 					rendering = false;
-				} else
+					
+					setFrame(0);
+				} else if(playback == ANIMATOR_END.stop)
+					is_playing = false;
+				else
 					setFrame(0);
 			}
 			
@@ -56,6 +60,11 @@
 			is_playing = true;
 			rendering  = true;
 			frame_progress = true;
+		}
+		
+		static toggle = function() {
+			ANIMATOR.is_playing = !ANIMATOR.is_playing;
+			ANIMATOR.frame_progress = true;
 		}
 		
 		static pause = function() {

@@ -39,6 +39,7 @@ function slider(_min, _max, _step, _onModify = noone, _onRelease = noone) : widg
 		y = _y;
 		w = _w;
 		h = _h;
+		if(!is_real(_data)) return;
 		
 		switch(halign) {
 			case fa_left:   _x = _x;			break;	

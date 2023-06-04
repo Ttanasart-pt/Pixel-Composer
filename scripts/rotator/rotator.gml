@@ -30,6 +30,7 @@ function rotator(_onModify, _step = -1) : widget() constructor {
 		w = 0;
 		h = ui(96);
 		
+		if(!is_real(_data)) return;
 		var knob_y = _y + ui(48) * scale;
 		
 		if(draw_tb) {

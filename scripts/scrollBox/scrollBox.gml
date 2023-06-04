@@ -33,6 +33,7 @@ function scrollBox(_data, _onModify, update_hover = true) : widget() constructor
 		open_rx = _rx;
 		open_ry = _ry;
 		h = _h;
+		if(is_array(_text)) return;
 		curr_text = _text;
 		
 		w = _w;

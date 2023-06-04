@@ -37,6 +37,8 @@ function sliderRange(_min, _max, _step, _onModify) : widget() constructor {
 		y = _y;
 		w = _w;
 		h = _h;
+		if(!is_real(_data[0])) return;
+		if(!is_real(_data[1])) return;
 		
 		var tb_w = ui(64);
 		var sw = _w - (tb_w + ui(16)) * 2;
