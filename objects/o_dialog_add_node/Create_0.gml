@@ -604,7 +604,7 @@ event_inherited();
 			var eq = string_replace(search_string, "=", "");
 			
 			draw_set_text(f_h5, fa_center, fa_bottom, COLORS._main_text_sub);
-			draw_text_ext(search_pane.w / 2, search_pane.h / 2 - ui(8), 
+			draw_text_line(search_pane.w / 2, search_pane.h / 2 - ui(8), 
 				__txtx("add_node_create_equation", "Create equation") + ": " + eq, -1, search_pane.w - ui(32));
 			
 			draw_set_text(f_p0, fa_center, fa_top, COLORS._main_text_sub);

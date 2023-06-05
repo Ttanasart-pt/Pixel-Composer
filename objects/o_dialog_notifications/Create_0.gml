@@ -109,10 +109,10 @@ event_inherited();
 				var tx = ui(48) + timeW + ui(12);
 			
 				draw_set_text(f_p3, fa_right, fa_center, COLORS._main_text_sub);
-				draw_text_ext(tx - ui(4), yy + _h / 2, noti.time, -1, txw);
+				draw_text_line(tx - ui(4), yy + _h / 2, noti.time, -1, txw);
 			
 				draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text);
-				draw_text_ext(tx + ui(4), yy + _h / 2, noti.txt, -1, txw);
+				draw_text_line(tx + ui(4), yy + _h / 2, noti.txt, -1, txw);
 				
 				if(noti.amount > 1) {
 					draw_set_text(f_p1, fa_center, fa_center, COLORS._main_text);

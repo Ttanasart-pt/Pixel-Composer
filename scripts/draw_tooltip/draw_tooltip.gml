@@ -9,7 +9,7 @@ function draw_tooltip_text(txt) {
 		
 	draw_sprite_stretched(THEME.textbox, 3, mx, my, tw + ui(16), th + ui(16));
 	draw_sprite_stretched(THEME.textbox, 0, mx, my, tw + ui(16), th + ui(16));
-	draw_text_ext(mx + ui(8), my + ui(8), txt, -1, tw);
+	draw_text_line(mx + ui(8), my + ui(8), txt, -1, tw);
 }
 
 function draw_tooltip_color(clr) {

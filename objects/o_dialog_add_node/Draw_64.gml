@@ -87,7 +87,7 @@ if !ready exit;
 		if(spr) draw_sprite(spr, 0, x0 + ui(4), y0 + ui(4));
 		
 		draw_set_text(f_p1, fa_left, fa_bottom, COLORS._main_text)
-		draw_text_ext(x0 + ui(8), y1 - ui(8), txt, -1, ww - ui(16));
+		draw_text_line(x0 + ui(8), y1 - ui(8), txt, -1, ww - ui(16));
 	}
 	
 	node_tooltip = noone;

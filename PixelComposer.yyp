@@ -207,6 +207,7 @@
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"Side menu.json","CopyToMask":-1,"filePath":"datafiles/data/layouts",},
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"Vertical.json","CopyToMask":-1,"filePath":"datafiles/data/layouts",},
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"en.zip","CopyToMask":-1,"filePath":"datafiles/data/locale",},
+    {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"config.json","CopyToMask":-1,"filePath":"datafiles/data/locale/en",},
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"nodes.json","CopyToMask":-1,"filePath":"datafiles/data/locale/en",},
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"UI.json","CopyToMask":-1,"filePath":"datafiles/data/locale/en",},
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"words.json","CopyToMask":-1,"filePath":"datafiles/data/locale/en",},

@@ -154,36 +154,36 @@ function MetaDataManager() constructor {
 		var ty = my + ui(8);
 		
 		draw_set_text(f_h5, fa_left, fa_top, COLORS._main_text);
-		draw_text_ext(mx + ui(8), ty, name, -1, _w);
+		draw_text_line(mx + ui(8), ty, name, -1, _w);
 		ty += string_height_ext(name, -1, _w) - ui(4);
 		
 		draw_set_text(f_p0b, fa_left, fa_top, COLORS._main_text_sub);
-		draw_text_ext(mx + ui(8), ty, _aut, -1, _w);
+		draw_text_line(mx + ui(8), ty, _aut, -1, _w);
 		ty += string_height_ext(_aut, -1, _w);
 		
 		if(contact != "") {
 			ty += ui(-4);
 			draw_set_text(f_p2, fa_left, fa_top, COLORS._main_text_sub);
-			draw_text_ext(mx + ui(8), ty, contact, -1, _w);
+			draw_text_line(mx + ui(8), ty, contact, -1, _w);
 			ty += string_height_ext(contact, -1, _w);
 		}
 		
 		ty += ui(8);
 		draw_set_text(f_p0, fa_left, fa_top, COLORS._main_text);
-		draw_text_ext(mx + ui(8), ty, description, -1, _w);
+		draw_text_line(mx + ui(8), ty, description, -1, _w);
 		ty += string_height_ext(description, -1, _w);
 		
 		if(alias != "") { 
 			ty += ui(16);
 			draw_set_text(f_p2, fa_left, fa_top, COLORS._main_text_sub);
-			draw_text_ext(mx + ui(8), ty, alias, -1, _w);
+			draw_text_line(mx + ui(8), ty, alias, -1, _w);
 			ty += string_height_ext(alias, -1, _w);
 		}
 		
 		if(version != SAVEFILE_VERSION) {
 			ty += ui(8);
 			draw_set_text(f_p2, fa_left, fa_top, COLORS._main_accent);
-			draw_text_ext(mx + ui(8), ty, _ver, -1, _w);
+			draw_text_line(mx + ui(8), ty, _ver, -1, _w);
 			ty += string_height_ext(_ver, -1, _w);
 		}
 		

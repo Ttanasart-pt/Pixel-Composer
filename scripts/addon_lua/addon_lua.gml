@@ -143,11 +143,11 @@
 		[ "draw_set_text", draw_set_text ],
 
 		[ "draw_text", draw_text_add ],
-		[ "draw_text_ext", draw_text_ext_add ],
+		[ "draw_text_line", draw_text_ext_add ],
 		[ "draw_text_colour", draw_text_colour ],
 		[ "draw_text_transformed", draw_text_transformed ],
 		[ "draw_text_ext_colour", draw_text_ext_colour ],
-		[ "draw_text_ext_transformed", draw_text_ext_transformed ],
+		[ "draw_text_ext_transformed", __draw_text_ext_transformed ],
 		[ "draw_text_transformed_colour", draw_text_transformed_colour ],
 		[ "draw_text_ext_transformed_colour", draw_text_ext_transformed_colour ],
 

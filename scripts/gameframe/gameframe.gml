@@ -839,7 +839,7 @@ function gameframe_caption_draw_caption_text_default(__x, __y, __width, __height
 	var __alpha = draw_get_alpha();
 	var __textWidth = __right - __x;
 	draw_set_alpha((gameframe_alpha * gameframe_caption_alpha));
-	draw_text_ext_transformed((__x + ((gameframe_caption_text_align * __textWidth) div 2)), __y + ((__height - string_height_ext(_text, -1, __textWidth) * _dpiScale) div 2), _text, -1, __textWidth, _dpiScale, _dpiScale, 0);
+	__draw_text_ext_transformed((__x + ((gameframe_caption_text_align * __textWidth) div 2)), __y + ((__height - string_height_ext(_text, -1, __textWidth) * _dpiScale) div 2), _text, -1, __textWidth, _dpiScale, _dpiScale, 0);
 	draw_set_alpha(__alpha);
 	if (__newFont != -1) draw_set_font(__oldFont);
 	draw_set_halign(__h);

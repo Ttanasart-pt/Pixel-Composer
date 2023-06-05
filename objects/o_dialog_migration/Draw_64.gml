@@ -18,7 +18,7 @@ draw_set_alpha(1);
 	py += line_get_height(, 4);
 	
 	draw_set_text(f_p0, fa_left, fa_top, COLORS._main_text);
-	draw_text_ext(dialog_x + ui(24), py, __txtx("dialog_migration_content", 
+	draw_text_line(dialog_x + ui(24), py, __txtx("dialog_migration_content", 
 		"You can press migrate files or manually move all custom collections, assets, palettes, gradients, fonts and presets."), -1, dialog_w - ui(48));
 	
 	var bw = ui(112), bh = TEXTBOX_HEIGHT;

@@ -41,7 +41,7 @@ event_inherited();
 					draw_set_text(f_h3, fa_left, fa_top, COLORS._main_text_title);
 					line = string_copy(line, sp + 1, string_length(line) - sp);
 					yy += ui(16);
-					draw_text_ext(xx, _y + yy, line, -1, ww);
+					draw_text_line(xx, _y + yy, line, -1, ww);
 					
 					yy += ui(4);
 					break;
@@ -49,31 +49,31 @@ event_inherited();
 					draw_set_text(f_h5, fa_left, fa_top, COLORS._main_text_title);
 					line = string_copy(line, sp + 1, string_length(line) - sp);
 					yy += ui(8);
-					draw_text_ext(xx + ui(16), _y + yy, line, -1, ww);
+					draw_text_line(xx + ui(16), _y + yy, line, -1, ww);
 					yy += ui(4);
 					break;
 				case "###" :
 					draw_set_text(f_p0b, fa_left, fa_top, COLORS._main_accent);
 					line = string_copy(line, sp + 1, string_length(line) - sp);
 					yy += ui(8);
-					draw_text_ext(xx + ui(16), _y + yy, line, -1, ww);
+					draw_text_line(xx + ui(16), _y + yy, line, -1, ww);
 					yy += ui(4);
 					break;
 				case "-" :
 					draw_set_text(f_p0, fa_left, fa_top, COLORS._main_text);
 					line = string_copy(line, sp + 1, string_length(line) - sp);
 					draw_sprite_ui_uniform(THEME.text_bullet, 0, xx + ui(16), _y + yy + ui(10), 1, COLORS._main_icon);
-					draw_text_ext(xx + ui(28), _y + yy, line, -1, ww);
+					draw_text_line(xx + ui(28), _y + yy, line, -1, ww);
 					break;
 				case "+" :
 					draw_set_text(f_p0, fa_left, fa_top, COLORS._main_text);
 					line = string_copy(line, sp + 1, string_length(line) - sp);
 					draw_sprite_ui_uniform(THEME.text_bullet, 1, xx + ui(16), _y + yy + ui(10), 1, COLORS._main_value_positive);
-					draw_text_ext(xx + ui(28), _y + yy, line, -1, ww);
+					draw_text_line(xx + ui(28), _y + yy, line, -1, ww);
 					break;
 				default :
 					draw_set_text(f_p0, fa_left, fa_top, COLORS._main_text);
-					draw_text_ext(xx + 0, _y + yy, line, -1, ww);
+					draw_text_line(xx + 0, _y + yy, line, -1, ww);
 					break;
 			}
 			

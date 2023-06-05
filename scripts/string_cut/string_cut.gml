@@ -1,7 +1,3 @@
-function draw_text_cut(x, y, str, w, scale = 1) {
-	draw_text_transformed(x, y, string_cut(str, w,, scale), scale, scale, 0);
-}
-
 function string_cut(str, w, tail = "...", scale = 1) {
 	var ww   = 0;
 	var ind  = 1;

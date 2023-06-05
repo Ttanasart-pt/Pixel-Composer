@@ -1,3 +1,7 @@
+function draw_text_line(_x, _y, _text, _sep, _w) {
+	__draw_text_ext_transformed(_x, _y, _text, _sep, _w, 1, 1, 0);
+}
+
 function draw_text_over(_x, _y, _text, scale = 1) {
 	BLEND_ALPHA_MULP;
 	draw_text_transformed(_x, _y, _text, scale, scale, 0);
@@ -6,7 +10,7 @@ function draw_text_over(_x, _y, _text, scale = 1) {
 
 function draw_text_ext_over(_x, _y, _text, _sep, _w, scale = 1) {
 	BLEND_ALPHA_MULP;
-	draw_text_ext_transformed(_x, _y, _text, _sep, _w, scale, scale, 0);
+	__draw_text_ext_transformed(_x, _y, _text, _sep, _w, scale, scale, 0);
 	BLEND_NORMAL;
 }
 
@@ -18,7 +22,7 @@ function draw_text_add(_x, _y, _text, scale = 1) {
 
 function draw_text_ext_add(_x, _y, _text, _sep, _w, scale = 1) {
 	BLEND_ALPHA_MULP;
-	draw_text_ext_transformed(_x, _y, _text, _sep, _w, scale, scale, 0);
+	__draw_text_ext_transformed(_x, _y, _text, _sep, _w, scale, scale, 0);
 	BLEND_NORMAL;
 }
 
@@ -27,4 +31,119 @@ function draw_text_bbox(bbox, text) {
 	    ss = max(0.5, ss);
 	
 	draw_text_cut(bbox.xc, bbox.yc, text, bbox.w, ss);
+}
+
+function draw_text_cut(x, y, str, w, scale = 1) {
+	draw_text_transformed(x, y, string_cut(str, w,, scale), scale, scale, 0);
+}
+
+function __draw_text_ext_transformed(_x, _y, _text, _sep, _w, sx, sy, rotation) {
+	if(!LOCALE.config.per_character_line_break) {
+		draw_text_ext_transformed(_x, _y, _text, _sep, _w, sx, sy, rotation);
+		return;
+	}
+	
+	var lines  = [];
+	var line   = "";
+	var line_w = 0;
+	var amo    = string_length(_text);
+	
+	for( var i = 1; i <= amo; i++ ) {
+		var ch = string_char_at(_text, i);
+		var ww = string_width(ch) * sx;
+		
+		if(line_w + ww > _w) {
+			array_push(lines, line);
+			line = ch;
+			line_w = ww;
+		} else {
+			line += ch;
+			line_w += ww;
+		}
+	}
+	
+	if(line != "") array_push(lines, line);
+	
+	var ha = draw_get_halign();
+	var va = draw_get_valign();
+	var xx = _x, yy = _y;
+	var hh = string_height("M") * array_length(lines) * sy;
+	
+	draw_set_halign(fa_left);
+	draw_set_valign(fa_top);
+	
+	switch(va) {
+		case fa_top :    yy = _y;			break;
+		case fa_middle : yy = _y - hh / 2;	break;
+		case fa_bottom : yy = _y - hh;		break;
+	}
+		
+	for( var i = 0; i < array_length(lines); i++ ) {
+		var lw = string_width(lines[i]) * sx;
+		
+		switch(ha) {
+			case fa_left :   xx = _x;			break;
+			case fa_center : xx = _x - lw / 2;	break;
+			case fa_right :  xx = _x - lw;		break;
+		}
+		
+		draw_text_transformed(xx, yy, lines[i], sx, sy, rotation);
+		yy += string_height("M") * sy;
+	}
+	
+	draw_set_halign(ha);
+	draw_set_valign(va);
+}
+
+#macro _string_width_ext string_width_ext
+#macro string_width_ext __string_width_ext
+
+function __string_width_ext(text, sep, w) {
+	if(!LOCALE.config.per_character_line_break)
+		return _string_width_ext(text, sep, w);
+	
+	var mxw = 0;
+	var lw  = 0;
+	var amo = string_length(text);
+	
+	for( var i = 1; i <= amo; i++ ) {
+		var ch = string_char_at(text, i);
+		var ww = string_width(ch);
+		
+		if(lw + ww > w) {
+			mxw = max(mxw, lw);
+			lw = ww;
+		} else 
+			lw += ww;
+	}
+	
+	mxw = max(mxw, lw);
+	return mxw;
+}
+
+#macro _string_height_ext string_height_ext
+#macro string_height_ext __string_height_ext
+
+function __string_height_ext(text, sep, w) {
+	if(!LOCALE.config.per_character_line_break)
+		return _string_height_ext(text, sep, w);
+	
+	var lw  = 0;
+	var amo = string_length(text);
+	if(amo == 0) return 0;
+	
+	var hh  = string_height("M");
+	
+	for( var i = 1; i <= amo; i++ ) {
+		var ch = string_char_at(text, i);
+		var ww = string_width(ch);
+		
+		if(lw + ww > w) {
+			hh += string_height("M");
+			lw = ww;
+		} else 
+			lw += ww;
+	}
+	
+	return hh;
 }

@@ -24,6 +24,7 @@
 		LOCALE.word = json_load_struct(__locale_file("/words.json"));
 		LOCALE.ui   = json_load_struct(__locale_file("/UI.json"));
 		LOCALE.node = json_load_struct(__locale_file("/nodes.json"));
+		LOCALE.config = json_load_struct(__locale_file("/config.json"));
 		
 		var fontDir = $"{DIRECTORY}Locale/{PREF_MAP[? "local"]}/fonts/";
 		LOCALE.fontDir = directory_exists(fontDir)? fontDir : noone;
@@ -37,7 +38,7 @@
 		if(struct_has(LOCALE.ui, key)) 
 			return LOCALE.ui[$ key]
 		
-		print($"LOCAL \"{key}\": \"{def}\",");
+		//print($"LOCAL \"{key}\": \"{def}\",");
 		return def;
 	}
 	

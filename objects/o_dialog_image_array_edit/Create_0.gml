@@ -90,7 +90,7 @@ event_inherited();
 				var name  = string_cut_line(string_replace(filename_name(path), filename_ext(path), ""), ww);
 				var txt_h = string_height_ext(name, -1, ww);
 				
-				draw_text_ext(xx + ww / 2, yy + hh + ui(16), name, -1, ww);
+				draw_text_line(xx + ww / 2, yy + hh + ui(16), name, -1, ww);
 				
 				ch = max(ch, hh + txt_h + ui(32));
 			}

@@ -54,7 +54,7 @@ function Panel_Console() : PanelContent() constructor {
 			var txt = his.txt;
 			
 			draw_set_color(his.color);
-			draw_text_ext(ui(8), hy, txt, -1, w - ui(16));
+			draw_text_line(ui(8), hy, txt, -1, w - ui(16));
 			hy -= string_height_ext(txt, -1, w - ui(16));
 			
 			if(hy <= 0) break;

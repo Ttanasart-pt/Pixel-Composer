@@ -67,7 +67,7 @@ event_inherited();
 				
 				draw_set_text(f_p0, fa_left, fa_top, COLORS._main_text);
 				var hh = string_height_ext(_f, -1, sp_note.surface_w - ui(8 + 8));
-				draw_text_ext(ui(8), yy, _f, -1, sp_note.surface_w - ui(8 + 8));
+				draw_text_line(ui(8), yy, _f, -1, sp_note.surface_w - ui(8 + 8));
 				
 				ind = 0;
 				yy += hh + pad * 2;
