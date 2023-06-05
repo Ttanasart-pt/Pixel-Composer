@@ -26,6 +26,9 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 		return self;
 	}
 	
+	static getName    = function() { return __txt_node_name(node); }
+	static getTooltip = function() { return __txt_node_tooltip(node, tooltip); }
+	
 	function build(_x, _y, _group = PANEL_GRAPH.getCurrentContext(), _param = "") {
 		var _node = createNode[0]? new createNode[1](_x, _y, _group, _param) : createNode[1](_x, _y, _group, _param);
 		if(!_node) return noone;

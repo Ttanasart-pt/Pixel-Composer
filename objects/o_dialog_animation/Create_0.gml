@@ -19,7 +19,7 @@ event_inherited();
 		ANIMATOR.framerate = real(str);	
 	})
 	
-	eb_playback = buttonGroup(["Loop", "Stop"], function(b) {
+	eb_playback = buttonGroup([__txt("Loop"), __txt("Stop")], function(b) {
 		ANIMATOR.playback = b;	
 	});
 #endregion

@@ -22,6 +22,22 @@ event_inherited();
 	node_tooltip_x = 0;
 	node_tooltip_y = 0;
 	
+	var context = PANEL_GRAPH.getCurrentContext();
+	context = context == noone? "" : instanceof(context);
+		
+	draw_set_font(f_p0);
+	var maxLen = 0;
+	for(var i = 0; i < ds_list_size(NODE_CATEGORY); i++) {
+		var cat  = NODE_CATEGORY[| i];
+		
+		if(array_length(cat.filter) && !array_exists(cat.filter, context))
+			continue;
+			
+		var name = __txt(cat.name);
+		maxLen   = max(maxLen, string_width(name));
+	}
+	category_width = maxLen + ui(44);
+	
 	anchor = ANCHOR.left | ANCHOR.top;
 	
 	node_menu_selecting = noone;
@@ -31,7 +47,8 @@ event_inherited();
 		var fav  = array_exists(global.FAV_NODES, node.node);
 		
 		var menu = [
-			menuItem(fav? "Remove from favorite" : "Add to favorite", function() {
+			menuItem(fav? __txtx("add_node_remove_favourite", "Remove from favourite") : __txtx("add_node_add_favourite", "Add to favourite"), 
+			function() {
 				if(array_exists(global.FAV_NODES, node_menu_selecting.node))
 					array_remove(global.FAV_NODES, node_menu_selecting.node);
 				else 
@@ -198,7 +215,7 @@ event_inherited();
 		instance_destroy();
 	}
 	
-	catagory_pane = new scrollPane(ui(132), dialog_h - ui(66), function(_y, _m) {
+	catagory_pane = new scrollPane(category_width, dialog_h - ui(66), function(_y, _m) {
 		draw_clear_alpha(COLORS._main_text, 0);
 		
 		var hh  = 0;
@@ -231,9 +248,9 @@ event_inherited();
 			
 			BLEND_OVERRIDE;
 			if(i == ADD_NODE_PAGE) {
-				draw_sprite_stretched(THEME.ui_panel_bg, 0, 0, _y + hh, ui(132), hg);
-			} else if(sHOVER && catagory_pane.hover && point_in_rectangle(_m[0], _m[1], 0, _y + hh, ui(100), _y + hh + hg - 1)) {
-				draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, 0, _y + hh, ui(132), hg, c_white, 0.75);
+				draw_sprite_stretched(THEME.ui_panel_bg, 0, 0, _y + hh, category_width, hg);
+			} else if(sHOVER && catagory_pane.hover && point_in_rectangle(_m[0], _m[1], 0, _y + hh, category_width - ui(32), _y + hh + hg - 1)) {
+				draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, 0, _y + hh, category_width, hg, c_white, 0.75);
 				if(mouse_click(mb_left, sFOCUS)) {
 					setPage(i);
 					content_pane.scroll_y		= 0;
@@ -243,6 +260,7 @@ event_inherited();
 			}
 			BLEND_NORMAL;
 			
+			name = __txt(name);
 			draw_text(ui(8), _y + hh + hg / 2, name);
 			hh += hg;
 		}
@@ -250,7 +268,7 @@ event_inherited();
 		return hh;
 	});
 	
-	content_pane = new scrollPane(dialog_w - ui(140), dialog_h - ui(66), function(_y, _m) {
+	content_pane = new scrollPane(dialog_w - category_width - ui(8), dialog_h - ui(66), function(_y, _m) {
 		draw_clear_alpha(c_white, 0);
 		var hh = 0;
 		var _hover = sHOVER && content_pane.hover;
@@ -335,7 +353,7 @@ event_inherited();
 					BLEND_NORMAL;
 					
 					draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text);
-					draw_text(ui(16 + 16), yy + ui(12), _node);
+					draw_text(ui(16 + 16), yy + ui(12), __txt(_node));
 					
 					hh += ui(24 + 12);
 					yy += ui(24 + 12);
@@ -365,7 +383,7 @@ event_inherited();
 				if(variable_struct_exists(_node, "getSpr")) _node.getSpr();
 				if(sprite_exists(_node.spr)) draw_sprite_ui_uniform(_node.spr, 0, spr_x, spr_y);
 					
-				if(_node.tooltip != "") {
+				if(_node.getTooltip() != "") {
 					if(point_in_rectangle(_m[0], _m[1], _boxx, yy, _boxx + ui(16), yy + ui(16))) {
 						draw_sprite_ui_uniform(THEME.info, 0, _boxx + ui(8), yy + ui(8), 0.7, COLORS._main_icon, 1.0);
 						node_tooltip   = _node;
@@ -385,9 +403,9 @@ event_inherited();
 					draw_sprite_ui_uniform(THEME.star, 0, _boxx + grid_size - ui(10), yy + grid_size - ui(10), 0.7, COLORS._main_accent, 1.);
 					
 				draw_set_text(f_p2, fa_center, fa_top, COLORS._main_text);
-				draw_text_ext_over(_boxx + grid_size / 2, yy + grid_size + 4, _node.name, -1, grid_width);
+				draw_text_ext_over(_boxx + grid_size / 2, yy + grid_size + 4, _node.getName(), -1, grid_width);
 				
-				var name_height = string_height_ext(_node.name, -1, grid_width) + 8;
+				var name_height = string_height_ext(_node.getName(), -1, grid_width) + 8;
 				curr_height = max(curr_height, grid_size + grid_space + name_height);
 				
 				if(++cProg >= col) {
@@ -423,7 +441,7 @@ event_inherited();
 					BLEND_NORMAL;
 					
 					draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text);
-					draw_text(ui(24), yy + ui(12), _node);
+					draw_text(ui(24), yy + ui(12), __txt(_node));
 					
 					hh += ui(32);
 					yy += ui(32);
@@ -439,7 +457,7 @@ event_inherited();
 				}
 				
 				if(_hover && point_in_rectangle(_m[0], _m[1], 0, yy, list_width, yy + list_height - 1)) {
-					if(_node.tooltip != "") {
+					if(_node.getTooltip() != "") {
 						node_tooltip   = _node;
 						node_tooltip_x = content_pane.x + 0;
 						node_tooltip_y = content_pane.y + yy
@@ -473,7 +491,7 @@ event_inherited();
 				}
 				
 				draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text);
-				draw_text_add(tx, yy + list_height / 2, _node.name);
+				draw_text_add(tx, yy + list_height / 2, _node.getName());
 				
 				yy += list_height;
 				hh += list_height;
@@ -495,8 +513,8 @@ event_inherited();
 	dialog_h_max = ui(800);
 	
 	onResize = function() {
-		catagory_pane.resize(ui(132), dialog_h - ui(66));
-		content_pane.resize(dialog_w - ui(140), dialog_h - ui(66));
+		catagory_pane.resize(category_width, dialog_h - ui(66));
+		content_pane.resize(dialog_w - category_width - ui(8), dialog_h - ui(66));
 		search_pane.resize(dialog_w - ui(36), dialog_h - ui(66));
 		
 		PREF_MAP[? "dialog_add_node_w"] = dialog_w;
@@ -543,7 +561,7 @@ event_inherited();
 				if(is_string(_node)) continue;
 				if(ds_map_exists(search_map, _node.node)) continue;
 				
-				var match = string_partial_match(string_lower(_node.name), search_lower);
+				var match = string_partial_match(string_lower(_node.getName()), search_lower);
 				var param = "";
 				for( var k = 0; k < array_length(_node.tags); k++ ) {
 					var mat = string_partial_match(_node.tags[k], search_lower) - 1000;
@@ -586,10 +604,11 @@ event_inherited();
 			var eq = string_replace(search_string, "=", "");
 			
 			draw_set_text(f_h5, fa_center, fa_bottom, COLORS._main_text_sub);
-			draw_text_ext(search_pane.w / 2, search_pane.h / 2 - ui(8), "Create equation: " + eq, -1, search_pane.w - ui(32));
+			draw_text_ext(search_pane.w / 2, search_pane.h / 2 - ui(8), 
+				__txtx("add_node_create_equation", "Create equation") + ": " + eq, -1, search_pane.w - ui(32));
 			
 			draw_set_text(f_p0, fa_center, fa_top, COLORS._main_text_sub);
-			draw_text(search_pane.w / 2, search_pane.h / 2 - ui(4), "Press Enter to create equation node.");
+			draw_text(search_pane.w / 2, search_pane.h / 2 - ui(4), __txtx("add_node_equation_enter", "Press Enter to create equation node."));
 			
 			if(keyboard_check_pressed(vk_enter))
 				buildNode(ALL_NODES[? "Node_Equation"], eq);
@@ -643,7 +662,7 @@ event_inherited();
 				}
 				
 				draw_set_text(f_p2, fa_center, fa_top, COLORS._main_text);
-				var txt = _node.name;
+				var txt = _node.getName();
 				name_height = max(name_height, string_height_ext(txt, -1, grid_width) + ui(8));
 				draw_text_ext_over(_boxx + grid_size / 2, yy + grid_size + 4, txt, -1, grid_width);
 				
@@ -661,7 +680,7 @@ event_inherited();
 						buildNode(_node, _param);
 				}
 				
-				if(struct_has(_node, "tooltip") && _node.tooltip != "") {
+				if(struct_has(_node, "tooltip") && _node.getTooltip() != "") {
 					if(point_in_rectangle(_m[0], _m[1], _boxx, yy, _boxx + ui(16), yy + ui(16))) {
 						draw_sprite_ui_uniform(THEME.info, 0, _boxx + ui(8), yy + ui(8), 0.7, COLORS._main_icon, 1.0);
 						node_tooltip   = _node;
@@ -729,10 +748,10 @@ event_inherited();
 				if(fav) draw_sprite_ui_uniform(THEME.star, 0, ui(20), yy + list_height / 2, 0.7, COLORS._main_accent, 1.);
 				
 				draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text);
-				draw_text_add(list_height + ui(40), yy + list_height / 2, _node.name);
+				draw_text_add(list_height + ui(40), yy + list_height / 2, _node.getName());
 				
 				if(_hover && point_in_rectangle(_m[0], _m[1], 0, yy, list_width, yy + list_height - 1)) {
-					if(struct_has(_node, "tooltip") && _node.tooltip != "") {
+					if(struct_has(_node, "tooltip") && _node.getTooltip() != "") {
 						node_tooltip   = _node;
 						node_tooltip_x = search_pane.x + 0;
 						node_tooltip_y = search_pane.y + yy

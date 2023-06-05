@@ -488,7 +488,7 @@ function Panel_Preview() : PanelContent() constructor {
 		}
 		
 		draw_set_text(f_p0, fa_right, fa_top, fps >= ANIMATOR.framerate? COLORS._main_text_sub : COLORS._main_value_negative);
-		draw_text(w - ui(8), right_menu_y, __txt("fps ") + string(fps));
+		draw_text(w - ui(8), right_menu_y, __txt("fps") + " " + string(fps));
 		right_menu_y += string_height("l");
 		
 		draw_set_text(f_p0, fa_right, fa_top, COLORS._main_text_sub);
@@ -884,9 +884,9 @@ function Panel_Preview() : PanelContent() constructor {
 				menuItem(__txtx("panel_preview_save", "Save current preview as") + "...", function() { saveCurrentFrame(); }), 
 				menuItem(__txtx("panel_preview_save_all", "Save all current previews as") + "...", function() { saveAllCurrentFrames(); }), 
 				-1,
-				menuItem(__txtx("panel_preview_copy_color", "Copy image"), function() { copyCurrentFrame(); }, THEME.copy), 
-				menuItem(__txtx("panel_preview_copy_color", "Copy color [") + string(sample_color) + "]", function() { clipboard_set_text(sample_color); }), 
-				menuItem(__txtx("panel_preview_copy_color", "Copy hex [") + string(color_get_hex(sample_color)) + "]", function() { clipboard_set_text(color_get_hex(sample_color)); }), 
+				menuItem(__txtx("panel_preview_copy_image", "Copy image"), function() { copyCurrentFrame(); }, THEME.copy), 
+				menuItem(__txtx("panel_preview_copy_color", "Copy color") + " [" + string(sample_color) + "]", function() { clipboard_set_text(sample_color); }), 
+				menuItem(__txtx("panel_preview_copy_hex", "Copy hex") + " [" + string(color_get_hex(sample_color)) + "]", function() { clipboard_set_text(color_get_hex(sample_color)); }), 
 			],, getNodePreview());
 		}
 		

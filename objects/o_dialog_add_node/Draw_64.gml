@@ -16,10 +16,11 @@ if !ready exit;
 		
 		catagory_pane.setActiveFocus(sFOCUS, sHOVER);
 		catagory_pane.draw(dialog_x + ui(14), dialog_y + ui(52));
-	
-		draw_sprite_stretched(THEME.ui_panel_bg, 0, dialog_x + ui(120), dialog_y + ui(52), dialog_w - ui(134), dialog_h - ui(66));
+		
+		var _x = dialog_x + category_width - ui(12);
+		draw_sprite_stretched(THEME.ui_panel_bg, 0, _x, dialog_y + ui(52), dialog_w - category_width - ui(2), dialog_h - ui(66));
 		content_pane.setActiveFocus(sFOCUS, sHOVER);
-		content_pane.draw(dialog_x + ui(120), dialog_y + ui(52));
+		content_pane.draw(_x, dialog_y + ui(52));
 		
 		node_selecting = 0;
 	} else {
@@ -64,7 +65,7 @@ if !ready exit;
 		var ww = ui(300 + 8);
 		var hh = ui(16);
 		
-		var txt = node_tooltip.tooltip;
+		var txt = node_tooltip.getTooltip();
 		var spr = node_tooltip.tooltip_spr;
 		
 		draw_set_font(f_p1);
@@ -83,8 +84,7 @@ if !ready exit;
 		draw_sprite_stretched_ext(THEME.textbox, 3, x0, y0, ww, hh, COLORS._main_icon, 1);
 		draw_sprite_stretched(THEME.textbox, 0, x0, y0, ww, hh);
 		
-		if(spr) 
-			draw_sprite(spr, 0, x0 + ui(4), y0 + ui(4));
+		if(spr) draw_sprite(spr, 0, x0 + ui(4), y0 + ui(4));
 		
 		draw_set_text(f_p1, fa_left, fa_bottom, COLORS._main_text)
 		draw_text_ext(x0 + ui(8), y1 - ui(8), txt, -1, ww - ui(16));

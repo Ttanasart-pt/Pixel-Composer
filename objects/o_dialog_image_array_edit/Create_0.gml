@@ -111,7 +111,7 @@ event_inherited();
 		
 		if(menu > -1) {
 			menuCall("image_array_edit_menu",,, [
-				menuItem("Remove", function() {
+				menuItem(__txt("Remove"), function() {
 					var arr = target.inputs[| 0].getValue();
 					array_delete(arr, menuOn, 1);
 					target.inputs[| 0].setValue(arr);

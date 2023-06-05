@@ -52,7 +52,7 @@ event_inherited();
 		DIALOG_CLICK = false;
 		instance_destroy();
 	}).setIcon(THEME.revert, 0, COLORS._main_icon)
-	  .setTooltip("Revert and exit");
+	  .setTooltip(__txtx("dialog_revert_and_exit", "Revert and exit"));
 	
 	b_apply = button(function() {
 		onApply(gradient);
@@ -130,7 +130,7 @@ event_inherited();
 				if(mouse_press(mb_right, interactable && sFOCUS)) {
 					hovering_name = preset_name[| i];
 					menuCall("gradient_window_preset_menu",,, [
-						menuItem("Delete gradient", function() { 
+						menuItem(__txtx("gradient_editor_delete", "Delete gradient"), function() { 
 							file_delete( DIRECTORY + "Gradients/" + hovering_name); 
 							presetCollect();
 						})

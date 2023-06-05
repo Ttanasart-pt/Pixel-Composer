@@ -26,13 +26,13 @@ event_inherited();
 	page_current = 0;
 	page[0] = __txtx("pref_pages_general", "General");
 	page[1] = __txtx("pref_pages_appearance", "Appearances");
-	page[2] = __txtx("theme", "Theme");
-	page[3] = __txtx("pref_pages_hotkeys", "Hotkeys");
+	page[2] = __txt("Theme");
+	page[3] = __txt("Hotkeys");
 	
 	pref_global = ds_list_create();
 	
 	ds_list_add(pref_global, [
-		__txtx("panel_directory", "Directory path (restart required)"),
+		__txtx("pref_directory", "Directory path (restart required)"),
 		function() { return PRESIST_PREF.path; },
 		new textBox(TEXTBOX_INPUT.text, function(txt) { 
 				PRESIST_PREF.path = txt;
@@ -76,7 +76,7 @@ event_inherited();
 	]);
 	
 	ds_list_add(pref_global, [
-		__txtx("auto_save_time", "Autosave delay (-1 to disable)"),
+		__txtx("pref_auto_save_time", "Autosave delay (-1 to disable)"),
 		"auto_save_time",
 		new textBox(TEXTBOX_INPUT.number, function(val) { 
 			PREF_MAP[? "auto_save_time"] = val; 
@@ -228,12 +228,12 @@ event_inherited();
 #region appearance
 	pref_appr = ds_list_create();
 	
-	ds_list_add(pref_appr, "Interface");
+	ds_list_add(pref_appr, __txt("Interface"));
 	locals = [];
-	var f = file_find_first(DIRECTORY + "Locale/*", fa_none);
+	var f = file_find_first(DIRECTORY + "Locale/*", fa_directory);
 	while(f != "") {
-		if(filename_ext(f) == ".json")
-			array_push(locals, filename_name_only(f));
+		if(directory_exists(DIRECTORY + "Locale/" + f))
+			array_push(locals, f);
 		f = file_find_next();
 	}
 	file_find_close();
@@ -244,12 +244,11 @@ event_inherited();
 		new scrollBox(locals, function(str) { 
 			if(str < 0) return;
 			PREF_MAP[? "local"] = locals[str];
-			loadLocale();
 			PREF_SAVE();
-		})
+		}, false)
 	]);
 	
-	ds_list_add(pref_appr, "Graph");
+	ds_list_add(pref_appr, __txt("Graph"));
 	ds_list_add(pref_appr, [
 		__txtx("pref_connection_thickness", "Connection thickness"),
 		"connection_line_width",
@@ -288,7 +287,7 @@ event_inherited();
 	])
 	
 	ds_list_add(pref_appr, [
-		__txtx("panel_menu_right_control", "Use Windows style window control."),
+		__txtx("pref_windows_control", "Use Windows style window control."),
 		"panel_menu_right_control",
 		new checkBox(function() { 
 			PREF_MAP[? "panel_menu_right_control"] = !PREF_MAP[? "panel_menu_right_control"]; 
@@ -523,7 +522,7 @@ event_inherited();
 				if(group != currGroup) {
 					if(group != "") hh += ui(12);
 					draw_set_text(f_p0b, fa_left, fa_top, COLORS._main_text_sub);
-					draw_text(ui(16), _y + hh, group == ""? "Global" : group);
+					draw_text(ui(16), _y + hh, group == ""? __txt("Global") : group);
 					
 					hh += string_height("l") + ui(16);
 					currGroup = group;
@@ -605,7 +604,7 @@ event_inherited();
 					modified = true;
 					var bx = x1 - ui(32);
 					var by = _y + hh;
-					if(buttonInstant(THEME.button_hide, bx, by, ui(24), ui(24), _m, sFOCUS, sHOVER && sp_hotkey.hover, __txtx("reset", "Reset"), THEME.refresh_s) == 2) {
+					if(buttonInstant(THEME.button_hide, bx, by, ui(24), ui(24), _m, sFOCUS, sHOVER && sp_hotkey.hover, __txt("Reset"), THEME.refresh_s) == 2) {
 						key.key = dkey;
 						key.modi = dmod;
 					}
@@ -618,7 +617,7 @@ event_inherited();
 		if(modified) {
 			var bx = x1 - ui(32);
 			var by = _y + ui(2);
-			if(buttonInstant(THEME.button_hide, bx, by, ui(24), ui(24), _m, sFOCUS, sHOVER && sp_hotkey.hover, __txtx("reset_all", "Reset all"), THEME.refresh_s) == 2) {
+			if(buttonInstant(THEME.button_hide, bx, by, ui(24), ui(24), _m, sFOCUS, sHOVER && sp_hotkey.hover, __txt("Reset all"), THEME.refresh_s) == 2) {
 				for(var j = 0; j < ds_list_size(HOTKEY_CONTEXT); j++) {
 					var ll = HOTKEYS[? HOTKEY_CONTEXT[| j]];
 					for(var i = 0; i < ds_list_size(ll); i++) {

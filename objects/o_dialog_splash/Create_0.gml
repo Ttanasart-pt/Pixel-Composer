@@ -325,20 +325,20 @@ event_inherited();
 				draw_text_add(tx + ui(8), ch_y + nm_h - ui(0), auth_nam);
 			
 				if(!struct_has(contest.title.meta, "theme")) continue;
-			
-				var txt = "Theme: " + contest.title.meta.theme;
-			
+				
+				var _thm = __txt("Theme") + ": ";
+				var txt  = _thm + contest.title.meta.theme;
+				
 				draw_set_text(f_p1, fa_left, fa_bottom, COLORS._main_text);
 				var ww = string_width(txt);
 				var thx = tx + grid_width - ui(12) - ww;
 				var thy = ty + grid_heigh - ui(8);
-			
+					
 				draw_set_color(COLORS._main_text_sub);
-				draw_text_ext_add(thx, thy, "Theme: ", -1, grid_width - ui(12 + 8));
-			
+				draw_text_ext_add(thx, thy, _thm, -1, grid_width - ui(12 + 8));
+				
 				draw_set_color(COLORS._main_text);
-				draw_text_ext_add(thx + string_width("Theme: "), thy, contest.title.meta.theme, -1, grid_width - ui(12 + 8));
-			
+				draw_text_ext_add(thx + string_width(_thm), thy, contest.title.meta.theme, -1, grid_width - ui(12 + 8));
 			}
 		} else {
 			var con_name   = contest_viewing.name;
@@ -389,8 +389,8 @@ event_inherited();
 			var _yy = txt_y + spr_h + pad * 2;
 			var cx  = sp_contest.surface_w / 2;
 			draw_set_text(f_p1, fa_center, fa_center, COLORS._main_text_sub);
-			draw_text(cx, _yy + ui(8), "Submissions");
-			var txt_w = string_width("Submissions");
+			draw_text(cx, _yy + ui(8), __txt("Submissions"));
+			var txt_w = string_width(__txt("Submissions"));
 			draw_line(cx - txt_w / 2 - ui(8), _yy + ui(8), cx - ui(200), _yy + ui(8));
 			draw_line(cx + txt_w / 2 + ui(8), _yy + ui(8), cx + ui(200), _yy + ui(8));
 			
@@ -465,13 +465,13 @@ event_inherited();
 			draw_text_add(ui(32 + 8), ui(8 + 4), con_name);
 			
 			draw_set_text(f_p2, fa_left, fa_top, COLORS._main_text_sub);
-			draw_text_add(ui(32 + 8), ui(8 + 30), "By " + con_author);
+			draw_text_add(ui(32 + 8), ui(8 + 30), __txt("By") + " " + con_author);
 			
 			draw_set_text(f_p0b, fa_right, fa_top, COLORS._main_text_accent);
 			draw_text_add(sp_contest.surface_w - ui(44), ui(8 + 8), amo);
 			
 			draw_set_text(f_p2, fa_right, fa_top, COLORS._main_text_sub);
-			draw_text_add(sp_contest.surface_w - ui(44), ui(8 + 28), "Submissions");
+			draw_text_add(sp_contest.surface_w - ui(44), ui(8 + 28), __txt("Submissions"));
 			
 			if(sHOVER && sp_contest.hover && point_in_rectangle(_m[0], _m[1], ui(20 - 16), ui(36 - 16), ui(20 + 16), ui(36 + 16))) {
 				draw_sprite_ui(THEME.arrow_back_32, 0, ui(20), ui(36),,,, c_white);
@@ -484,7 +484,7 @@ event_inherited();
 			var by = ui(36);
 			
 			if(sHOVER && sp_contest.hover && point_in_rectangle(_m[0], _m[1], bx - ui(16), by - ui(16), bx + ui(16), by + ui(16))) {
-				TOOLTIP = "Open in Discord";
+				TOOLTIP = __txtx("contest_open_discord", "Open in Discord");
 				
 				draw_sprite_ui(THEME.discord, 0, bx, by,,,, c_white);
 				if(mouse_press(mb_left, sFOCUS))

@@ -1,11 +1,11 @@
 function draw_text_over(_x, _y, _text, scale = 1) {
-	BLEND_OVERRIDE;
+	BLEND_ALPHA_MULP;
 	draw_text_transformed(_x, _y, _text, scale, scale, 0);
 	BLEND_NORMAL;
 }
 
 function draw_text_ext_over(_x, _y, _text, _sep, _w, scale = 1) {
-	BLEND_OVERRIDE;
+	BLEND_ALPHA_MULP;
 	draw_text_ext_transformed(_x, _y, _text, _sep, _w, scale, scale, 0);
 	BLEND_NORMAL;
 }

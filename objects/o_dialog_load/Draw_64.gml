@@ -15,11 +15,11 @@ draw_set_alpha(1);
 #region text
 	var py = dialog_y + ui(16);
 	draw_set_text(f_h5, fa_left, fa_top, COLORS._main_text_title);
-	draw_text(dialog_x + ui(24), py, "Project modified");
+	draw_text(dialog_x + ui(24), py, __txtx("dialog_exit_title", "Project modified"));
 	py += line_get_height(, 4);
 	
 	draw_set_text(f_p0, fa_left, fa_top, COLORS._main_text);
-	draw_text(dialog_x + ui(24), py, "Do you want to save progress?");
+	draw_text(dialog_x + ui(24), py, __txtx("dialog_exit_content", "Save progress before exit?"));
 	
 	var bw = ui(96), bh = TEXTBOX_HEIGHT;
 	var bx1 = dialog_x + dialog_w - ui(16);
@@ -29,13 +29,13 @@ draw_set_alpha(1);
 	
 	draw_set_text(f_p1, fa_center, fa_center, COLORS._main_text);
 	var b = buttonInstant(THEME.button, bx0, by0, bw, bh, mouse_ui, sFOCUS, sHOVER);
-	draw_text(bx0 + bw / 2, by0 + bh / 2, "Cancel");
+	draw_text(bx0 + bw / 2, by0 + bh / 2, __txt("Cancel"));
 	if(b == 2) 
 		instance_destroy();
 	
 	bx0 -= bw + ui(12);
 	var b = buttonInstant(THEME.button, bx0, by0, bw, bh, mouse_ui, sFOCUS, sHOVER);
-	draw_text(bx0 + bw / 2, by0 + bh / 2, "Don't save");
+	draw_text(bx0 + bw / 2, by0 + bh / 2,  __txtx("dont_save", "Don't save"));
 	if(b == 2) {
 		if(newFile) __NEW();
 		else		__LOAD_PATH(path, readonly, safe_mode);
@@ -44,7 +44,7 @@ draw_set_alpha(1);
 	
 	bx0 -= bw + ui(12);
 	var b = buttonInstant(THEME.button, bx0, by0, bw, bh, mouse_ui, sFOCUS, sHOVER);
-	draw_text(bx0 + bw / 2, by0 + bh / 2, "Save");
+	draw_text(bx0 + bw / 2, by0 + bh / 2, __txt("Save"));
 	if(b == 2) {
 		SAVE();
 		

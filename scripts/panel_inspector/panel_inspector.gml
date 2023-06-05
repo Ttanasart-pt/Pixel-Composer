@@ -65,8 +65,8 @@ function Panel_Inspector() : PanelContent() constructor {
 		meta_tb[i].hide = true;
 	
 	meta_display = [ 
-		[ "Metadata", false ], 
-		[ "Global variables", false, button(function() { panelAdd("Panel_Globalvar", true); }, THEME.node_goto).setIcon(THEME.node_goto, 0, COLORS._main_icon) ] 
+		[ __txt("Metadata"), false ], 
+		[ __txtx("panel_globalvar", "Global variables"), false, button(function() { panelAdd("Panel_Globalvar", true); }, THEME.node_goto).setIcon(THEME.node_goto, 0, COLORS._main_icon) ] 
 	];
 	
 	workshop_uploading = false;
@@ -76,7 +76,7 @@ function Panel_Inspector() : PanelContent() constructor {
 	addHotkey("Inspector", "Toggle animation",	"I",   MOD_KEY.none,	function() { PANEL_INSPECTOR.anim_toggling = true; });
 	
 	group_menu = [
-		menuItem("Expand all", function() {
+		menuItem(__txt("Expand all"), function() {
 			if(inspecting == noone) return;
 			if(inspecting.input_display_list == -1) return;
 			
@@ -86,7 +86,7 @@ function Panel_Inspector() : PanelContent() constructor {
 				dlist[i][@ 1] = false;
 			}
 		}),
-		menuItem("Collapse all", function() {
+		menuItem(__txt("Collapse all"), function() {
 			if(inspecting == noone) return;
 			if(inspecting.input_display_list == -1) return;
 			
@@ -155,7 +155,7 @@ function Panel_Inspector() : PanelContent() constructor {
 					var display = meta.displays[j];
 					
 					draw_set_text(f_p0, fa_left, fa_top, COLORS._main_text);
-					draw_text_add(ui(16), yy, display[0]);
+					draw_text_add(ui(16), yy, __txt(display[0]));
 					yy += line_get_height() + ui(6);
 					hh += line_get_height() + ui(6);
 				
@@ -349,7 +349,7 @@ function Panel_Inspector() : PanelContent() constructor {
 					if(i >= array_length(inspecting.input_display_list)) break;
 					var jun_disp = inspecting.input_display_list[i];
 					if(is_array(jun_disp)) {
-						var txt  = jun_disp[0];
+						var txt  = __txt(jun_disp[0]);
 						var coll = jun_disp[1] && filter_text == "";
 					
 						if(_hover && point_in_rectangle(_m[0], _m[1], 0, yy, con_w, yy + ui(32))) {
@@ -365,7 +365,7 @@ function Panel_Inspector() : PanelContent() constructor {
 						if(filter_text == "") {
 							draw_sprite_ui(THEME.arrow, 0, ui(16), yy + ui(32) / 2, 1, 1, -90 + coll * 90, COLORS.panel_inspector_group_bg, 1);	
 						}
-					
+						
 						draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text);
 						draw_text(ui(32), yy + ui(32) / 2, txt);
 					

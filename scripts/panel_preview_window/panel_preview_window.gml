@@ -51,7 +51,7 @@ function Panel_Preview_Window() : PanelContent() constructor {
 	menu = [
 		menuItem(__txtx("reset_view", "Reset view"), function() { reset(); }), 
 		-1,
-		menuItem(__txtx("preview_win_inspect", "Inspect"), function() { PANEL_GRAPH.node_focus = node_target; }), 
+		menuItem(__txt("Inspect"), function() { PANEL_GRAPH.node_focus = node_target; }), 
 		menuItem(__txtx("panel_graph_send_to_preview", "Send to preview"), function() { PANEL_PREVIEW.setNodePreview(node_target); }), 
 		-1,
 	]

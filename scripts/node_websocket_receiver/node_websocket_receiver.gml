@@ -35,7 +35,7 @@ function Node_Websocket_Receiver(_x, _y, _group = noone) : Node(_x, _y, _group) 
 		if(s >= 0) NETWORK_SERVERS[? newPort] = s;
 	}
 	
-	insp1UpdateTooltip  = __txtx("panel_inspector_refresh", "Refresh Server");
+	insp1UpdateTooltip  = __txt("Refresh Server");
 	insp1UpdateIcon     = [ THEME.refresh, 1, COLORS._main_value_positive ];
 	
 	static onInspector1Update = function() {
@@ -80,6 +80,7 @@ function Node_Websocket_Receiver(_x, _y, _group = noone) : Node(_x, _y, _group) 
 	}
 	
 	static update = function(frame = ANIMATOR.current_frame) { 
+		if(CLONING) return;
 		var _port = inputs[| 0].getValue();
 		
 		if(port != _port)

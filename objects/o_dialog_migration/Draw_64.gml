@@ -29,13 +29,13 @@ draw_set_alpha(1);
 	
 	draw_set_text(f_p1, fa_center, fa_center, COLORS._main_text);
 	var b = buttonInstant(THEME.button, bx0, by0, bw, bh, mouse_ui, sFOCUS, sHOVER);
-	draw_text(bx0 + bw / 2, by0 + bh / 2, __txtx("ignore", "Ignore"));
+	draw_text(bx0 + bw / 2, by0 + bh / 2, __txt("Ignore"));
 	if(b == 2) 
 		instance_destroy();
 	
 	bx0 -= bw + ui(12);
 	var b = buttonInstant(THEME.button, bx0, by0, bw, bh, mouse_ui, sFOCUS, sHOVER);
-	draw_text(bx0 + bw / 2, by0 + bh / 2, __txtx("migrate_files", "Migrate files"));
+	draw_text(bx0 + bw / 2, by0 + bh / 2, __txt("Migrate files"));
 	if(b == 2) {
 		var oldDir = environment_get_variable("userprofile") + "/AppData/Local/Pixels_Composer/";
 		var folders = [ "Assets", "Collections", "Fonts", "Gradients", "Palettes", "Presets", "Themes"];

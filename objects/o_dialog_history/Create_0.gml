@@ -121,7 +121,7 @@ event_inherited();
 				var _ty = yy + lh * (j + 0.5);
 				if(j == 3) {
 					draw_set_color(COLORS._main_text_sub);
-					draw_text_add(ui(32 + 12), _ty, string(array_length(item) - 3) + " more actions...");
+					draw_text_add(ui(32 + 12), _ty, string(array_length(item) - 3) + __txtx("more_actions", " more actions..."));
 				} else {
 					draw_set_color(COLORS._main_text);
 					draw_text_add(ui(32 + 12), _ty, item[j].toString());

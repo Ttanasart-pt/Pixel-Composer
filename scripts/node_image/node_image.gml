@@ -79,7 +79,7 @@ function Node_Image(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		return false;
 	}
 	
-	insp1UpdateTooltip  = __txtx("panel_inspector_refresh", "Refresh");
+	insp1UpdateTooltip  = __txt("Refresh");
 	insp1UpdateIcon     = [ THEME.refresh, 1, COLORS._main_value_positive ];
 	
 	static onInspector1Update = function() {

@@ -7,7 +7,7 @@ if !ready exit;
 		draw_sprite_stretched_ext(THEME.dialog_active, 0, dialog_x, dialog_y, dialog_w, dialog_h, COLORS._main_accent, 1);
 	
 	draw_set_text(f_p0, fa_left, fa_top, COLORS._main_text_title);
-	draw_text(dialog_x + ui(24), dialog_y + ui(16), "Import multiple images");
+	draw_text(dialog_x + ui(24), dialog_y + ui(16), __txtx("add_images_title_images", "Import multiple images"));
 #endregion
 
 #region nodes
@@ -65,13 +65,13 @@ if !ready exit;
 		cb_recursive.draw(dialog_x + dialog_w - ui(48), dir_y, dir_recursive, mouse_ui);
 		
 		draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text);
-		draw_text(dialog_x + ui(24), dir_y + ui(14), "Recursive");
+		draw_text(dialog_x + ui(24), dir_y + ui(14), __txtx("add_images_recursive", "Recursive"));
 		
 		dir_y += ui(40);
 		tb_filter.setActiveFocus(sFOCUS, sHOVER);
 		tb_filter.draw(dialog_x + ui(100), dir_y, dialog_w - ui(120), ui(36), dir_filter, mouse_ui);
 		
 		draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text);
-		draw_text(dialog_x + ui(24), dir_y + ui(18), "Filter");
+		draw_text(dialog_x + ui(24), dir_y + ui(18), __txtx("add_images_filter", "Filter"));
 	}
 #endregion

@@ -23,6 +23,8 @@ function FileObject(_name, _path) constructor {
 	thumbnail_data = -1;
 	thumbnail = noone;
 	
+	static getName = function() { return name; }
+	
 	static getSurface = function() {
 		if(is_surface(surface)) return surface;
 		var spr = getSpr();
@@ -96,9 +98,8 @@ function DirectoryObject(name, path) constructor {
 	content = ds_list_create();
 	open    = false;
 	
-	static destroy = function() {
-		ds_list_destroy(subDir);
-	}
+	static destroy = function() { ds_list_destroy(subDir); }
+	static getName = function() { return name; }
 	
 	static scan = function(file_type) {
 		var _temp_name = ds_list_create();

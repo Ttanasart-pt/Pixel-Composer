@@ -25,12 +25,12 @@ if !ready exit;
 	
 	var bx = dialog_x + dialog_w - ui(52);
 	var by = dialog_y + ui(16);
-	if(buttonInstant(THEME.button_hide, bx, by, ui(36), ui(36), mouse_ui, sFOCUS, sHOVER, "Preference", THEME.gear) == 2) {
+	if(buttonInstant(THEME.button_hide, bx, by, ui(36), ui(36), mouse_ui, sFOCUS, sHOVER, __txt("Preferences"), THEME.gear) == 2) {
 		dialogCall(o_dialog_preference, WIN_W / 2, WIN_H / 2);
 	}
 	
 	bx -= ui(40);
-	if(buttonInstant(THEME.button_hide, bx, by, ui(36), ui(36), mouse_ui, sFOCUS, sHOVER, "Show on startup", THEME.icon_splash_show_on_start, PREF_MAP[? "show_splash"]) == 2) {
+	if(buttonInstant(THEME.button_hide, bx, by, ui(36), ui(36), mouse_ui, sFOCUS, sHOVER, __txt("Show on startup"), THEME.icon_splash_show_on_start, PREF_MAP[? "show_splash"]) == 2) {
 		PREF_MAP[? "show_splash"] = !PREF_MAP[? "show_splash"];
 		PREF_SAVE();
 	}
@@ -46,18 +46,22 @@ if !ready exit;
 	sp_recent.setActiveFocus(sFOCUS, sHOVER);
 	sp_recent.draw(x0 + ui(6), y0);
 	
-	var bx = x1 - ui(28);
-	var by = y0 - ui(28 + 4);
-	if(buttonInstant(THEME.button_hide, bx, by, ui(28), ui(28), mouse_ui, sFOCUS, sHOVER, "Clear recent files", THEME.icon_delete,, COLORS._main_value_negative) == 2) {
+	var bx  = x1 - ui(28);
+	var by  = y0 - ui(28 + 4);
+	var txt = __txtx("splash_clear_recent", "Clear recent files");
+	if(buttonInstant(THEME.button_hide, bx, by, ui(28), ui(28), mouse_ui, sFOCUS, sHOVER, txt, THEME.icon_delete,, COLORS._main_value_negative) == 2) {
 		ds_list_clear(RECENT_FILES);
 		RECENT_SAVE();
 	}
+	
 	bx -= ui(28 + 4);
-	if(buttonInstant(THEME.button_hide, bx, by, ui(28), ui(28), mouse_ui, sFOCUS, sHOVER, recent_thumbnail? "Hide thumbnail" : "Show thumbnail", THEME.splash_thumbnail, recent_thumbnail) == 2) {
+	txt = recent_thumbnail? __txtx("splash_hide_thumbnail", "Hide thumbnail") : __txtx("splash_show_thumbnail", "Show thumbnail");
+	if(buttonInstant(THEME.button_hide, bx, by, ui(28), ui(28), mouse_ui, sFOCUS, sHOVER, txt, THEME.splash_thumbnail, recent_thumbnail) == 2) {
 		recent_thumbnail = !recent_thumbnail;
 	}
 	bx -= ui(28 + 4);
-	if(buttonInstant(THEME.button_hide, bx, by, ui(28), ui(28), mouse_ui, sFOCUS, sHOVER, "Open autosave folder", THEME.save_auto, 0) == 2) {
+	txt = __txtx("splash_open_autosave", "Open autosave folder");
+	if(buttonInstant(THEME.button_hide, bx, by, ui(28), ui(28), mouse_ui, sFOCUS, sHOVER, txt, THEME.save_auto, 0) == 2) {
 		shellOpenExplorer(DIRECTORY + "autosave");
 	}
 	
@@ -145,7 +149,7 @@ if !ready exit;
 	
 			if(!expand) {
 				draw_set_text(f_p1, fa_right, fa_bottom, COLORS._main_text_sub);
-				draw_text(x1 - ui(82), y0 - ui(4), __txtx("art_by", "Art by "));
+				draw_text(x1 - ui(82), y0 - ui(4), __txt("Art by") + " ");
 				draw_sprite_ui_uniform(s_kenney, 0, x1, y0 - ui(4), 2, c_white, 0.5);
 			}
 			break;
@@ -156,11 +160,11 @@ if !ready exit;
 			var bx = x1 - ui(32);
 			var by = y0 - ui(32);
 		
-			if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), mouse_ui, sFOCUS, sHOVER, "Open Steam Workshop", THEME.steam) == 2)
+			if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), mouse_ui, sFOCUS, sHOVER, __txtx("workshop_open", "Open Steam Workshop"), THEME.steam) == 2)
 				steam_activate_overlay_browser("https://steamcommunity.com/app/2299510/workshop/");
 		
 			bx -= ui(36);
-			if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), mouse_ui, sFOCUS, sHOVER, "Refresh content", THEME.refresh) == 2)
+			if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), mouse_ui, sFOCUS, sHOVER, __txt("Refresh"), THEME.refresh) == 2)
 				steamUCGload();
 			break;
 		case "Contests" : 

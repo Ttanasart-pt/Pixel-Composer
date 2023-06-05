@@ -28,7 +28,7 @@ if !target exit;
 	var bx = dialog_x + dialog_w - ui(padding - 8) - bw;
 	var by = dialog_y + ui(18);
 	
-	if(buttonInstant(THEME.button_hide, bx, by, bw, bh, mouse_ui, sFOCUS, sHOVER, __txtx("add", "Add") + "...", THEME.add,, COLORS._main_value_positive) == 2) {
+	if(buttonInstant(THEME.button_hide, bx, by, bw, bh, mouse_ui, sFOCUS, sHOVER, __txt("Add") + "...", THEME.add,, COLORS._main_value_positive) == 2) {
 		var path = get_open_filenames(".png", "");
 		key_release();
 		if(path != "") {

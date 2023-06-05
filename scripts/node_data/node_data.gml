@@ -27,6 +27,8 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 			
 			internalName = str + string(irandom_range(10000, 99999)); 
 			NODE_NAME_MAP[? internalName] = self;
+			
+			display_name = __txt_node_name(instanceof(self));
 		});
 	}
 	
@@ -304,6 +306,8 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	
 	static doUpdate = function() { 
 		if(SAFE_MODE) return;
+		if(NODE_EXTRACT) return;
+		
 		var sBase = surface_get_target();
 		LOG_BLOCK_START();
 		LOG_IF(global.FLAG.render, $">>>>>>>>>> DoUpdate called from {internalName} <<<<<<<<<<");

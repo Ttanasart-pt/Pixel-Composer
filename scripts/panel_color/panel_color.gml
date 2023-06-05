@@ -159,7 +159,7 @@ function Panel_Color() : PanelContent() constructor {
 		var bx = w - ui(32 + 16);
 		var by = title_height / 2 - ui(16 + !in_dialog * 2);
 		
-		if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), [mx, my], pFOCUS, pHOVER, "Mode", THEME.color_wheel,, c_white) == 2) 
+		if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), [mx, my], pFOCUS, pHOVER, __txt("Mode"), THEME.color_wheel,, c_white) == 2) 
 			mode = !mode;
 		
 		bx -= ui(32);

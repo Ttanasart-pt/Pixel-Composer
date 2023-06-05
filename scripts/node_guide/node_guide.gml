@@ -1,11 +1,17 @@
+globalvar NODE_EXTRACT;
+NODE_EXTRACT = false;
+
 function __generate_node_data() { 
 	var amo = ds_map_size(ALL_NODES);
 	var k = ds_map_find_first(ALL_NODES);
 	
 	CLONING = true;
+	NODE_EXTRACT = true;
 	
-	var dir  = DIRECTORY + "Nodes/Guides/";
+	var dir  = DIRECTORY + "Nodes/";
 	if(!directory_exists(dir)) directory_create(dir);
+	var data   = {};
+	var locale = {};
 	
 	repeat(amo) {
 		var _n = ALL_NODES[? k];
@@ -14,38 +20,51 @@ function __generate_node_data() {
 		
 		if(_b.name == "") continue;
 		
-		var data = {};
-		data.name	      = _n.name;
-		data.node	      = _n.node;
-		data.tooltip      = _b.tooltip;
+		var _data = {};
+		_data.node	   = _n.node;
 		
-		var _in = [];
-		var _ot = [];
+		var _loca = {};
+		_loca.name	   = _n.name;
+		_loca.tooltip  = _n.tooltip;
+		
+		var _din = [], _dot = [];
+		var _lin = [], _lot = [];
 		
 		for( var i = 0; i < ds_list_size(_b.inputs); i++ ) {
-			_in[i] = {
+			_din[i] = {
+				type:	 _b.inputs[| i].type,
+				visible: _b.inputs[| i].visible? 1 : 0,
+			};
+			
+			_lin[i] = {
 				name:	 _b.inputs[| i].name,
 				tooltip: _b.inputs[| i].tooltip,
-				type:	 _b.inputs[| i].type,
-				visible: _b.inputs[| i].visible,
 			};
 		}
 		
 		for( var i = 0; i < ds_list_size(_b.outputs); i++ ) {
-			_ot[i] = {
+			_dot[i] = {
+				type:	 _b.outputs[| i].type,
+				visible: _b.outputs[| i].visible? 1 : 0,
+			};
+			
+			_lot[i] = {
 				name:	 _b.outputs[| i].name,
 				tooltip: _b.outputs[| i].tooltip,
-				type:	 _b.outputs[| i].type,
-				visible: _b.outputs[| i].visible,
 			};
 		}
 			
-		data.inputs  = _in;
-		data.outputs = _ot;
-		
-		var path = dir + data.name + ".json";
-		json_save_struct(path, data, true);
+		_data.inputs  = _din;
+		_data.outputs = _dot;
+		data[$ _n.name] = _data;
+			
+		_loca.inputs  = _lin;
+		_loca.outputs = _lot;
+		locale[$ _n.node] = _loca;
 	}
+	
+	json_save_struct(dir + "nodes.json", data, false);
+	json_save_struct(dir + "lnodes.json", locale, true);
 	
 	CLONING = false;
 	game_end();
@@ -54,38 +73,22 @@ function __generate_node_data() {
 function __initNodeData() {
 	global.NODE_GUIDE = {};
 	
-	var dir  = DIRECTORY + "Nodes/Guides/";
-	if(!directory_exists(dir))
-		directory_create(dir);
-			
-	var f = file_find_first(dir + "*.json", 0);
-	while(f != "") {
-		var path  = dir + f;
-		
-		if(file_exists(path)) {
-			var _node = json_load_struct(path);
-			global.NODE_GUIDE[$ _node.node] = _node;
-		}
-		
-		f = file_find_next();
-	}
-	
 	var nodeDir = DIRECTORY + "Nodes/";
 	var _l = nodeDir + "/version";
 	
-	if(file_exists(_l)) {
-		var res = json_load_struct(_l);
-		if(res.version == BUILD_NUMBER) return;
-	}
-	json_save_struct(_l, { version: BUILD_NUMBER });
+	//if(file_exists(_l)) {
+	//	var res = json_load_struct(_l);
+	//	if(res.version == BUILD_NUMBER) return;
+	//}
+	//json_save_struct(_l, { version: BUILD_NUMBER });
 	
 	if(file_exists("data/tooltip.zip"))
 		zip_unzip("data/tooltip.zip", nodeDir);
 	else
 		noti_status("Tooltip image file not found.")
 	
-	if(file_exists("data/Guides.zip"))
-		zip_unzip("data/Guides.zip", nodeDir);
-	else
-		noti_status("Node data file not found.")
+	if(file_exists("data/nodes.json")) {
+		file_delete(nodeDir + "nodes.json");
+		file_copy("data/nodes.json", nodeDir + "nodes.json");
+	}
 }

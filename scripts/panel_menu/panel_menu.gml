@@ -13,11 +13,11 @@ function Panel_Menu() : PanelContent() constructor {
 		action_buttons = ["exit", "minimize", "maximize", "fullscreen"];
 	
 	menu_file = [
-		menuItem(__txtx("new", "New"), function() { NEW(); }, THEME.new_file, ["", "New file"]),
-		menuItem(__txtx("open", "Open") + "...", function() { LOAD(); }, THEME.noti_icon_file_load, ["", "Open"]),
-		menuItem(__txtx("save", "Save"), function() { SAVE(); }, THEME.save, ["", "Save"]),
-		menuItem(__txtx("save_as", "Save as..."), function() { SAVE_AS(); }, THEME.save, ["", "Save as"]),
-		menuItem(__txtx("panel_menu_recent_files", "Recent files"), function(_dat) { 
+		menuItem(__txt("New"),				function() { NEW(); }, THEME.new_file, ["", "New file"]),
+		menuItem(__txt("Open") + "...",		function() { LOAD(); }, THEME.noti_icon_file_load, ["", "Open"]),
+		menuItem(__txt("Save"),				function() { SAVE(); }, THEME.save, ["", "Save"]),
+		menuItem(__txt("Save as") + "...",	function() { SAVE_AS(); }, THEME.save, ["", "Save as"]),
+		menuItem(__txt("Recent files"),		function(_dat) { 
 				var arr = [];
 				for(var i = 0; i < min(10, ds_list_size(RECENT_FILES)); i++)  {
 					var _rec = RECENT_FILES[| i];
@@ -28,8 +28,8 @@ function Panel_Menu() : PanelContent() constructor {
 		}).setIsShelf(),
 		menuItem(__txtx("panel_menu_auto_save_folder", "Open autosave folder"), function() { shellOpenExplorer(DIRECTORY + "autosave"); }, THEME.save_auto),
 		-1,
-		menuItem(__txtx("preferences", "Preferences") + "...", function() { dialogCall(o_dialog_preference); }, THEME.gear),
-		menuItem(__txtx("panel_menu_splash_screen", "Splash screen"), function() { dialogCall(o_dialog_splash); }),
+		menuItem(__txt("Preferences") + "...", function() { dialogCall(o_dialog_preference); }, THEME.gear),
+		menuItem(__txt("Splash screen"), function() { dialogCall(o_dialog_splash); }),
 		-1,
 		menuItem(__txt("Addons"), function(_dat) { 
 			var arr = [
@@ -53,13 +53,13 @@ function Panel_Menu() : PanelContent() constructor {
 			return submenuCall(_dat, arr);
 		}, THEME.addon ).setIsShelf(),
 		-1,
-		menuItem(__txtx("panel_menu_fullscreen", "Toggle fullscreen"), function() { 
+		menuItem(__txt("Fullscreen"), function() { 
 			if(gameframe_is_fullscreen_window())
 				gameframe_set_fullscreen(0);
 			else
 				gameframe_set_fullscreen(2);
 		},, ["", "Fullscreen"]),
-		menuItem(__txtx("panel_menu_exit", "Close program"), function() { window_close(); }),
+		menuItem(__txt("Close program"), function() { window_close(); }),
 	];
 	
 	if(DEMO) array_delete(menu_file, 1, 5);
@@ -98,10 +98,10 @@ function Panel_Menu() : PanelContent() constructor {
 		}, THEME.steam) );
 	
 	menus = [
-		[ __txtx("panel_menu_file", "File"), menu_file ],
-		[ __txtx("panel_menu_edit", "Edit"), [
-			menuItem(__txtx("undo", "Undo"), function() { UNDO(); }, THEME.undo, ["", "Undo"]),
-			menuItem(__txtx("redo", "Redo"), function() { REDO(); }, THEME.redo, ["", "Redo"]),
+		[ __txt("File"), menu_file ],
+		[ __txt("Edit"), [
+			menuItem(__txt("Undo"), function() { UNDO(); }, THEME.undo, ["", "Undo"]),
+			menuItem(__txt("Redo"), function() { REDO(); }, THEME.redo, ["", "Redo"]),
 			menuItem(__txt("History"), function() { dialogPanelCall(new Panel_History()); }),
 		]],
 		[ __txt("Preview"), [
@@ -119,7 +119,7 @@ function Panel_Menu() : PanelContent() constructor {
 				dia.anchor = ANCHOR.none;
 			}, THEME.icon_grid_setting),
 		]], 
-		[ __txtx("panel_menu_animation", "Animation"), [
+		[ __txt("Animation"), [
 			menuItem(__txtx("panel_menu_animation_setting", "Animation setting..."), function() { 
 				var dia = dialogCall(o_dialog_animation); 
 				dia.anchor = ANCHOR.none;
@@ -129,7 +129,7 @@ function Panel_Menu() : PanelContent() constructor {
 				dialogCall(o_dialog_anim_time_scaler); 
 			}, THEME.animation_timing),
 		]],
-		[ __txtx("panel_menu_rendering", "Rendering"), [
+		[ __txt("Rendering"), [
 			menuItem(__txtx("panel_menu_render_all_nodes", "Render all nodes"), function() { 
 				for(var i = 0; i < ds_list_size(NODES); i++) 
 					NODES[| i].triggerRender();
@@ -148,7 +148,7 @@ function Panel_Menu() : PanelContent() constructor {
 				}
 			}),
 		]],
-		[ __txtx("panel_menu_panels", "Panels"), [
+		[ __txt("Panels"), [
 			menuItem(__txt("Workspace"), function(_dat) { 
 				var arr = [], lays = [];
 				var f   = file_find_first(DIRECTORY + "layouts/*", 0);
@@ -204,11 +204,11 @@ function Panel_Menu() : PanelContent() constructor {
 				]);
 			} ).setIsShelf(),
 		]],
-		[ __txtx("help", "Help"), menu_help ],
+		[ __txt("Help"), menu_help ],
 	]
 	
 	if(TESTING) {
-		array_push(menus, [ __txtx("panel_menu_test", "Test"), [
+		array_push(menus, [ __txt("Dev"), [
 			menuItem(__txtx("panel_debug_console", "Debug console"), function() { 
 				panelAdd("Panel_Console", true)
 			}),
@@ -251,26 +251,26 @@ function Panel_Menu() : PanelContent() constructor {
 		var txt;
 		
 		if(ds_stack_empty(UNDO_STACK)) {
-			txt = __txtx("undo", "Undo");
+			txt = __txt("Undo");
 		} else {
 			var act = ds_stack_top(UNDO_STACK);
 			if(array_length(act) > 1)
-				txt = __txtx("undo", "Undo") + " " + string(array_length(act)) + " " + __txtx("actions", "Actions");
+				txt = __txt("Undo") + " " + string(array_length(act)) + " " + __txt("Actions");
 			else 
-				txt = __txtx("undo", "Undo") + " " + act[0].toString();
+				txt = __txt("Undo") + " " + act[0].toString();
 		}
 		
 		menus[1][1][0].active = !ds_stack_empty(UNDO_STACK);
 		menus[1][1][0].name = txt;
 		
 		if(ds_stack_empty(REDO_STACK)) {
-			txt = __txtx("redo", "Redo");
+			txt = __txt("Redo");
 		} else {
 			var act = ds_stack_top(REDO_STACK);
 			if(array_length(act) > 1)
-				txt = __txtx("redo", "Redo") + " " + string(array_length(act)) + " " + __txtx("actions", "Actions");
+				txt = __txt("Redo") + " " + string(array_length(act)) + " " + __txt("Actions");
 			else 
-				txt = __txtx("redo", "Redo") + " " + act[0].toString();
+				txt = __txt("Redo") + " " + act[0].toString();
 		}
 		
 		menus[1][1][1].active = !ds_stack_empty(REDO_STACK);
@@ -435,7 +435,7 @@ function Panel_Menu() : PanelContent() constructor {
 					dia.anchor = ANCHOR.left | ANCHOR.top;
 				}
 				
-				TOOLTIP = $"{warning_amo} {__txtx("warning", "Warnings")} {error_amo} {__txtx("errors", "Errors")}";
+				TOOLTIP = $"{warning_amo} {__txt("Warnings")} {error_amo} {__txt("Errors")}";
 			} else
 				draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, nx0, ny0 - nh / 2, nw, nh, cc, 1);
 			

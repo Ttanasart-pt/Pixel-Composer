@@ -48,3 +48,13 @@ function string_cut_line(str, w) {
 	
 	return ss;
 }
+
+function string_reduce(str) { 
+	str = string_lower(str);
+	str = string_replace_all(str, " ", "_"); 
+	str = string_replace_all(str, "\\", ""); 
+	str = string_replace_all(str, "/", ""); 
+	str = string_replace_all(str, "'", ""); 
+	
+	return str;
+}

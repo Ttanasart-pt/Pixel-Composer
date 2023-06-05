@@ -28,11 +28,11 @@ if !ready exit;
 	if(sFOCUS) draw_sprite_stretched_ext(THEME.dialog_active, 0, palette_x, dialog_y, presets_w, dialog_h, COLORS._main_accent, 1);
 	
 	draw_set_text(f_p0, fa_left, fa_top, COLORS._main_text_title);
-	draw_text(presets_x + ui(24), dialog_y + ui(16), __txtx("presets", "Presets"));
+	draw_text(presets_x + ui(24), dialog_y + ui(16), __txt("Presets"));
 	draw_text(content_x + (!interactable * ui(32)) + ui(24), dialog_y + ui(16), name);
 	if(!interactable)
 		draw_sprite_ui(THEME.lock, 0, content_x + ui(24 + 12), dialog_y + ui(16 + 12),,,, COLORS._main_icon);
-	draw_text(palette_x + ui(24), dialog_y + ui(16), __txtx("palette", "Palettes"));
+	draw_text(palette_x + ui(24), dialog_y + ui(16), __txt("Palettes"));
 #endregion
 
 #region presets
@@ -68,11 +68,11 @@ if !ready exit;
 	draw_sprite_ui_uniform(THEME.add, 0, bx + ui(14), by + ui(14), 1, COLORS._main_icon);
 	bx -= ui(32);
 	
-	if(buttonInstant(THEME.button_hide, bx, by, ui(28), ui(28), mouse_ui, sFOCUS, sHOVER, __txtx("refresh", "Refresh"), THEME.refresh) == 2)
+	if(buttonInstant(THEME.button_hide, bx, by, ui(28), ui(28), mouse_ui, sFOCUS, sHOVER, __txt("Refresh"), THEME.refresh) == 2)
 		presetCollect();
 	bx -= ui(32);
 	
-	if(buttonInstant(THEME.button_hide, bx, by, ui(28), ui(28), mouse_ui, sFOCUS, sHOVER, "Open gradient folder", THEME.folder) == 2) {
+	if(buttonInstant(THEME.button_hide, bx, by, ui(28), ui(28), mouse_ui, sFOCUS, sHOVER, __txtx("graident_editor_open_folder", "Open gradient folder"), THEME.folder) == 2) {
 		var _realpath = DIRECTORY + "Gradients";
 		shellOpenExplorer(_realpath)
 	}
@@ -185,7 +185,7 @@ if !ready exit;
 	var op_y = gr_y + gr_h + ui(12);
 	
 	draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text_sub);
-	draw_text(op_x, op_y + TEXTBOX_HEIGHT / 2, __txtx("position", "Position"))
+	draw_text(op_x, op_y + TEXTBOX_HEIGHT / 2, __txt("Position"))
 	
 	var txt = key_selecting? key_selecting.time * 100 : 0;
 	sl_position.setActiveFocus(sFOCUS, sHOVER);

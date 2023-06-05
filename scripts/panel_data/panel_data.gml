@@ -50,7 +50,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 	tab_holding_sx = 0;
 	tab_holding_sy = 0;
 	
-	border_rb_close = menuItem("Close",   function() { 
+	border_rb_close = menuItem(__txt("Close"),   function() { 
 		extract();
 		o_main.panel_dragging = noone;
 	}, THEME.cross);

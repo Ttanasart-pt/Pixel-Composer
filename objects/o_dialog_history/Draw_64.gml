@@ -11,7 +11,7 @@ if !ready exit;
 	
 	var bx = dialog_x + ui(24);
 	var by = dialog_y + ui(18);
-	if(buttonInstant(THEME.button_hide, bx, by, ui(28), ui(28), mouse_ui, sFOCUS, sHOVER, destroy_on_click_out? __txtx("pin", "Pin") : __txtx("unpin", "Unpin"), 
+	if(buttonInstant(THEME.button_hide, bx, by, ui(28), ui(28), mouse_ui, sFOCUS, sHOVER, destroy_on_click_out? __txt("Pin") : __txt("Unpin"), 
 		THEME.pin, !destroy_on_click_out, destroy_on_click_out? COLORS._main_icon : COLORS._main_icon_light) == 2)
 			destroy_on_click_out = !destroy_on_click_out;
 #endregion

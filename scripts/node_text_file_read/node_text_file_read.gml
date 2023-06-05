@@ -52,7 +52,7 @@ function Node_Text_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		return false;
 	}
 	
-	insp1UpdateTooltip  = __txtx("panel_inspector_refresh", "Refresh");
+	insp1UpdateTooltip  = __txt("Refresh");
 	insp1UpdateIcon     = [ THEME.refresh, 1, COLORS._main_value_positive ];
 	
 	static onInspector1Update = function() {

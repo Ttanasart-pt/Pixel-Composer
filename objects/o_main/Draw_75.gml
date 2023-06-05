@@ -23,7 +23,7 @@ if(OS == os_windows && gameframe_is_minimized()) exit;
 					draw_tooltip_text(printBool(content));
 					break;
 				case VALUE_TYPE.curve :
-					draw_tooltip_text("[" + __txtx("tooltip_curve_object", "Curve Object") + "]");
+					draw_tooltip_text("[" + __txt("Curve Object") + "]");
 					break;
 				case VALUE_TYPE.color :
 					draw_tooltip_color(content);
@@ -32,44 +32,44 @@ if(OS == os_windows && gameframe_is_minimized()) exit;
 					draw_tooltip_gradient(content);
 					break;
 				case VALUE_TYPE.d3object :
-					draw_tooltip_text("[" + __txtx("tooltip_3d_object", "3D Object") + "]");
+					draw_tooltip_text("[" + __txt("3D Object") + "]");
 					break;
 				case VALUE_TYPE.object :
-					draw_tooltip_text("[" + __txtx("tooltip_object", "Object") + "]");
+					draw_tooltip_text("[" + __txt("Object") + "]");
 					break;
 				case VALUE_TYPE.surface :
 					draw_tooltip_surface(content);
 					break;
 				case VALUE_TYPE.rigid :
-					draw_tooltip_text("[" + __txtx("tooltip_rigid_object", "Rigidbody Object") + " (id: " + string(content[$ "object"]) + ")]");
+					draw_tooltip_text("[" + __txt("Rigidbody Object") + " (id: " + string(content[$ "object"]) + ")]");
 					break;
 				case VALUE_TYPE.particle :
 					var txt = "[" + 
-						__txtx("tooltip_particle_object", "Particle Object") + 
+						__txt("Particle Object") + 
 						" (size: " + string(array_length(content)) + ") " + 
 						"]";
 					draw_tooltip_text(txt);
 					break;
 				case VALUE_TYPE.pathnode :
-					draw_tooltip_text("[" + __txtx("tooltip_path_object", "Path Object") + "]");
+					draw_tooltip_text("[" + __txt("Path Object") + "]");
 					break;
 				case VALUE_TYPE.fdomain :
-					draw_tooltip_text("[" + __txtx("tooltip_fluid_object", "Fluid Domain Object") + " (id: " + string(content) + ")]");
+					draw_tooltip_text("[" + __txt("Fluid Domain") + " (id: " + string(content) + ")]");
 					break;
 				case VALUE_TYPE.strands :
-					var txt = __txtx("tooltip_strand_object", "Strands Object");
+					var txt = __txt("Strands Object");
 					if(is_struct(content))
 						txt += " (strands: " + string(array_length(content.hairs)) + ")";
 					draw_tooltip_text("[" + txt + "]");
 					break;
 				case VALUE_TYPE.mesh :
-					var txt = __txtx("tooltip_mesh_object", "Mesh Object");
+					var txt = __txt("Mesh Object");
 					if(is_struct(content))
 						txt += " (triangles: " + string(array_length(content.triangles)) + ")";
 					draw_tooltip_text("[" + txt + "]");
 					break;
 				case VALUE_TYPE.d3vertex :
-					var txt = __txtx("tooltip_mesh_vertex", "3D Vertex");
+					var txt = __txt("3D Vertex");
 					txt += " (groups: " + string(array_length(content)) + ")";
 					draw_tooltip_text("[" + txt + "]");
 					break;

@@ -7,7 +7,7 @@ if !ready exit;
 		draw_sprite_stretched_ext(THEME.dialog_active, 0, dialog_x, dialog_y, dialog_w, dialog_h, COLORS._main_accent, 1);
 	
 	draw_set_text(f_p0, fa_left, fa_top, COLORS._main_text_title);
-	draw_text(dialog_x + ui(24), dialog_y + ui(20), __txtx("tunnels", "Tunnels"));
+	draw_text(dialog_x + ui(24), dialog_y + ui(20), __txt("Tunnels"));
 #endregion
 
 #region preset
@@ -25,10 +25,11 @@ if !ready exit;
 	sc_tunnel.setActiveFocus(sFOCUS, sHOVER);
 	sc_tunnel.draw(px, py + ui(40));
 	
-	var bx = dialog_x + dialog_w - ui(32 + 16);
-	var by = dialog_y + ui(16);
-			
-	if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), mouse_ui, sFOCUS, sHOVER, "Create tunnel", THEME.tunnel, 1, c_white) == 2) {
+	var bx  = dialog_x + dialog_w - ui(32 + 16);
+	var by  = dialog_y + ui(16);
+	var txt = __txtx("panel_tunnel_create_tunnel", "Create tunnel");
+	
+	if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), mouse_ui, sFOCUS, sHOVER, txt, THEME.tunnel, 1, c_white) == 2) {
 		nodeBuild("Node_Tunnel_In", build_x, build_y);
 		instance_destroy();
 	}

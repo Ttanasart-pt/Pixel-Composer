@@ -1682,7 +1682,7 @@ function Panel_Animation() : PanelContent() constructor {
 		drawAnimationControl();
 		
 		if(timeline_show_time > -1) {
-			TOOLTIP = __txtx("frame", "Frame") + " " + string(timeline_show_time + 1) + "/" + string(ANIMATOR.frames_total);
+			TOOLTIP = __txt("Frame") + " " + string(timeline_show_time + 1) + "/" + string(ANIMATOR.frames_total);
 			timeline_show_time = -1;
 		}
 	}

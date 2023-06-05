@@ -7,7 +7,7 @@ if !ready exit;
 		draw_sprite_stretched_ext(THEME.dialog_active, 0, dialog_x, dialog_y, dialog_w, dialog_h, COLORS._main_accent, 1);
 	
 	draw_set_text(f_p0, fa_left, fa_top, COLORS._main_text_title);
-	draw_text(dialog_x + ui(24), dialog_y + ui(20), __txtx("input_order", "Input order"));
+	draw_text(dialog_x + ui(24), dialog_y + ui(20), __txtx("dialog_group_order_title", "Input order"));
 #endregion
 
 #region preset
@@ -22,8 +22,9 @@ if !ready exit;
 	
 	var bx = dialog_x + dialog_w - ui(32 + 16);
 	var by = dialog_y + ui(16);
-			
-	if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), mouse_ui, sFOCUS, sHOVER, "Add separator", THEME.add, 1, COLORS._main_value_positive) == 2) {
+	
+	var _txt = __txtx("dialog_group_order_add", "Add separator");
+	if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), mouse_ui, sFOCUS, sHOVER, _txt, THEME.add, 1, COLORS._main_value_positive) == 2) {
 		var sep = node.attributes[? "Separator"];
 		array_push(sep, [ds_list_size(node.inputs) - node.custom_input_index, ""]);
 		node.sortIO();

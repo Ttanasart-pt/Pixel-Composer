@@ -1,5 +1,5 @@
 function printBool(val) {
-	if(!is_array(val)) return val? __txtx("true", "True") : __txtx("false", "False");
+	if(!is_array(val)) return val? __txt("True") : __txt("False");
 		
 	var ss = "[";
 	for( var i = 0; i < array_length(val); i++ ) {

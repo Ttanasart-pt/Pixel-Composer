@@ -23,11 +23,11 @@ function MetaDataManager() constructor {
 	steam		= false;
 	
 	static displays = [
-		[ __txtx("description", "Description"),	 function(meta) { return meta.description; }	, line_get_height() * 5],
-		[ __txtx("author", "Author"),				 function(meta) { return meta.author; }			, line_get_height() ],
-		[ __txtx("contact_info", "Contact info"),	 function(meta) { return meta.contact; }		, line_get_height() ],
-		[ __txtx("alias", "Alias"),				 function(meta) { return meta.alias; }			, line_get_height() ],
-		[ __txtx("tags", "Tags"),					 function(meta) { return meta.tags; }			, line_get_height() ],
+		[ "Description",  function(meta) { return meta.description; }	, line_get_height() * 5],
+		[ "Author",		  function(meta) { return meta.author; }		, line_get_height() ],
+		[ "Contact info", function(meta) { return meta.contact; }		, line_get_height() ],
+		[ "Alias",		  function(meta) { return meta.alias; }			, line_get_height() ],
+		[ "Tags",		  function(meta) { return meta.tags; }			, line_get_height() ],
 	];
 	
 	static serialize = function() {
@@ -89,7 +89,7 @@ function MetaDataManager() constructor {
 			return;
 		}
 		
-		var _aut = "By " + author;
+		var _aut = __txt("By") + " " + author;
 		var _ver = version < SAVEFILE_VERSION? __txtx("meta_old_version", "Created on an older version") : __txtx("meta_new_version", "Created on a newer version");
 		
 		draw_set_font(f_h5);

@@ -168,10 +168,11 @@ function Panel_Tunnels() : PanelContent() constructor {
 		sc_tunnel.setActiveFocus(pFOCUS, pHOVER);
 		sc_tunnel.draw(px, py + ui(40), mx - px, my - (py + ui(40)));
 		
-		var bx = w - ui(32 + 16);
-		var by = title_height / 2 - ui(16 + !in_dialog * 2);
+		var bx  = w - ui(32 + 16);
+		var by  = title_height / 2 - ui(16 + !in_dialog * 2);
+		var txt = __txtx("panel_tunnel_create_tunnel", "Create tunnel");
 			
-		if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), [mx, my], pFOCUS, pHOVER, "Create tunnel", THEME.tunnel, 1, c_white) == 2) {
+		if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), [mx, my], pFOCUS, pHOVER, txt, THEME.tunnel, 1, c_white) == 2) {
 			nodeBuild("Node_Tunnel_In", build_x, build_y);
 			instance_destroy();
 		}

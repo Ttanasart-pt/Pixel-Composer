@@ -18,7 +18,7 @@
 	}
 	
 	draw_set_text(f_p0b, fa_left, fa_top, COLORS._main_text_title);
-	draw_text(dialog_x + ui(16), dialog_y + ui(16), __txtx("assets", "Assets"));
+	draw_text(dialog_x + ui(16), dialog_y + ui(16), __txt("Assets"));
 	
 	draw_sprite_stretched(THEME.ui_panel_bg, 0, dialog_x + ui(16), dialog_y + ui(48), folderW - ui(8), dialog_h - ui(64));
 	draw_sprite_stretched(THEME.ui_panel_bg, 0, dialog_x + ui(16) + folderW, dialog_y + ui(16), dialog_w - ui(32) - folderW, dialog_h - ui(32));

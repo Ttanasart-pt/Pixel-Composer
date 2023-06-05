@@ -7,11 +7,11 @@ if !ready exit;
 		draw_sprite_stretched_ext(THEME.dialog_active, 0, dialog_x, dialog_y, dialog_w, dialog_h, COLORS._main_accent, 1);
 	
 	draw_set_text(f_p0, fa_left, fa_top, COLORS._main_text_title);
-	draw_text(dialog_x + ui(56), dialog_y + ui(20), __txtx("preferences", "Preferences"));
+	draw_text(dialog_x + ui(56), dialog_y + ui(20), __txt("Preferences"));
 	
 	var bx = dialog_x + ui(24);
 	var by = dialog_y + ui(18);
-	if(buttonInstant(THEME.button_hide, bx, by, ui(28), ui(28), mouse_ui, sFOCUS, sHOVER, destroy_on_click_out? __txtx("pin", "Pin") : __txtx("unpin", "Unpin"), 
+	if(buttonInstant(THEME.button_hide, bx, by, ui(28), ui(28), mouse_ui, sFOCUS, sHOVER, destroy_on_click_out? __txt("Pin") : __txt("Unpin"), 
 		THEME.pin, !destroy_on_click_out, destroy_on_click_out? COLORS._main_icon : COLORS._main_icon_light) == 2)
 			destroy_on_click_out = !destroy_on_click_out;
 #endregion
@@ -64,9 +64,10 @@ if !ready exit;
 		var _w = ui(200);
 		var _h = TEXTBOX_HEIGHT;
 		
-		var _x = dialog_x + dialog_w - ui(8);
-		var bx = _x - ui(48);
-		var b = buttonInstant(THEME.button_hide, bx, yy, ui(32), ui(32), mouse_ui, sFOCUS, sHOVER, "Reset colors", THEME.refresh);
+		var _x   = dialog_x + dialog_w - ui(8);
+		var bx   = _x - ui(48);
+		var _txt = __txtx("pref_reset_color", "Reset colors");
+		var b = buttonInstant(THEME.button_hide, bx, yy, ui(32), ui(32), mouse_ui, sFOCUS, sHOVER, _txt, THEME.refresh);
 		if(b == 2) {
 			var path = DIRECTORY + "themes/" + PREF_MAP[? "theme"] + "/override.json";
 			if(file_exists(path)) file_delete(path);
@@ -77,7 +78,7 @@ if !ready exit;
 		var x2 = _x - ui(32);
 		
 		draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text);
-		draw_text(x1 + ui(8), yy + _h / 2, "Theme");
+		draw_text(x1 + ui(8), yy + _h / 2, __txt("Theme"));
 		sb_theme.setActiveFocus(sFOCUS, sHOVER);
 		sb_theme.draw(x2 - ui(24) - _w, yy, _w, _h, PREF_MAP[? "theme"]);
 		

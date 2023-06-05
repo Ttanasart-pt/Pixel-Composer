@@ -23,7 +23,7 @@ event_inherited();
 		DIALOG_CLICK = false;
 		instance_destroy();
 	}).setIcon(THEME.revert, 0, COLORS._main_icon)
-	  .setTooltip("Revert and exit");
+	  .setTooltip(__txtx("dialog_revert_and_exit", "Revert and exit"));
 	
 	b_apply = button(function() {
 		onApply(selector.current_color);

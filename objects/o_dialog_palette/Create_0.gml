@@ -38,7 +38,7 @@ event_inherited();
 		DIALOG_CLICK = false;
 		instance_destroy();
 	}).setIcon(THEME.revert, 0, COLORS._main_icon)
-	  .setTooltip("Revert and exit");
+	  .setTooltip(__txtx("dialog_revert_and_exit", "Revert and exit"));
 	
 	b_apply = button(function() {
 		onApply(palette);
@@ -102,7 +102,7 @@ event_inherited();
 				if(mouse_press(mb_right, interactable && sFOCUS)) {
 					hovering_name = preset_name[| i];
 					menuCall("palette_window_preset_menu",,, [
-						menuItem("Delete palette", function() { 
+						menuItem(__txtx("palette_editor_delete", "Delete palette"), function() { 
 							file_delete( DIRECTORY + "Palettes/" + hovering_name); 
 							presetCollect();
 						})

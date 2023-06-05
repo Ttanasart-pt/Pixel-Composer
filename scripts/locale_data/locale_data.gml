@@ -3,34 +3,42 @@
 	LOCALE = {}
 	
 	function __initLocale() {
-		var lfile = $"data/locale/en.json";
+		var lfile = $"data/locale/en.zip";
 		var root  = $"{DIRECTORY}Locale";
-		var path  = $"{root}/en.json";
 		
 		if(!directory_exists(root))
 			directory_create(root);
-		if(file_exists(path))
-			file_delete(path);
-		file_copy(lfile, path);
+		zip_unzip(lfile, root);
 		
 		loadLocale();
 	}
 	
+	function __locale_file(file) {
+		var dirr = $"{DIRECTORY}Locale/{PREF_MAP[? "local"]}";
+		if(!directory_exists(dirr) || !file_exists(dirr + file)) 
+			dirr = $"{DIRECTORY}Locale/en";
+		return dirr + file;
+	}
+	
 	function loadLocale() {
-		var path = $"{DIRECTORY}Locale/{PREF_MAP[? "local"]}.json";
-		if(!file_exists(path)) 
-			path = $"{DIRECTORY}Locale/en.json";
+		LOCALE.word = json_load_struct(__locale_file("/words.json"));
+		LOCALE.ui   = json_load_struct(__locale_file("/UI.json"));
+		LOCALE.node = json_load_struct(__locale_file("/nodes.json"));
 		
-		LOCALE = json_load_struct(path);
+		var fontDir = $"{DIRECTORY}Locale/{PREF_MAP[? "local"]}/fonts/";
+		LOCALE.fontDir = directory_exists(fontDir)? fontDir : noone;
+		
+		print("FONT DIR: " + fontDir);
 	}
 	
 	function __txtx(key, def = "") {
-		if(!struct_has(LOCALE, key)) {
-			print($"LOCAL \"{key}\": \"{def}\",");
-			return def;
-		}
+		if(struct_has(LOCALE.word, key))
+			return LOCALE.word[$ key]
+		if(struct_has(LOCALE.ui, key)) 
+			return LOCALE.ui[$ key]
 		
-		return ""//LOCALE[$ key];
+		print($"LOCAL \"{key}\": \"{def}\",");
+		return def;
 	}
 	
 	function __txt(txt, prefix = "") {
@@ -39,4 +47,39 @@
 			
 		return __txtx(prefix + key, txt);
 	}
+	
+	function __txt_node_name(node) {
+		if(struct_has(LOCALE.node, node))
+			return LOCALE.node[$ node].name;
+		return node;
+	}
+	
+	function __txt_node_tooltip(node, def = "") {
+		if(struct_has(LOCALE.node, node))
+			return LOCALE.node[$ node].tooltip;
+		return def;
+	}
+	
+	function __txt_junction_name(node, type, index, def = "") {
+		if(!struct_has(LOCALE.node, node))
+			return def;
+		
+		var nde = LOCALE.node[$ node];
+		var lst = type == JUNCTION_CONNECT.input? nde.inputs : nde.outputs;
+		if(index >= array_length(lst)) return def;
+		
+		return lst[index].name;
+	}
+	
+	function __txt_junction_tooltip(node, type, index, def = "") {
+		if(!struct_has(LOCALE.node, node))
+			return def;
+		
+		var nde = LOCALE.node[$ node];
+		var lst = type == JUNCTION_CONNECT.input? nde.inputs : nde.outputs;
+		if(index >= array_length(lst)) return def;
+		
+		return lst[index].tooltip;
+	}
+	
 #endregion

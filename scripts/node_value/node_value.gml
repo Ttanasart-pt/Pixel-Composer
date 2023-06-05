@@ -345,15 +345,15 @@ function nodeValue(_name, _node, _connect, _type, _value, _tooltip = "") {
 }
 
 function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constructor {
-	name  = _name;
-	internalName = string_replace_all(name, " ", "_");
-	
 	node  = _node;
 	x	  = node.x;
 	y     = node.y;
 	index = _connect == JUNCTION_CONNECT.input? ds_list_size(node.inputs) : ds_list_size(node.outputs);
 	type  = _type;
 	forward = true;
+	
+	name  = __txt_junction_name(instanceof(node), type, index, _name);
+	internalName = string_replace_all(_name, " ", "_");
 	
 	if(struct_has(node, "inputMap")) {
 		if(_connect == JUNCTION_CONNECT.input)       node.inputMap[?  internalName] = self;

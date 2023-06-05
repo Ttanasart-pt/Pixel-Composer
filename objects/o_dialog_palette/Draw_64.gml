@@ -24,7 +24,7 @@ if palette == 0 exit;
 	if(sFOCUS) draw_sprite_stretched_ext(THEME.dialog_active, 0, content_x, dialog_y, content_w, dialog_h, COLORS._main_accent, 1);
 	
 	draw_set_text(f_p0, fa_left, fa_top, COLORS._main_text_title);
-	draw_text(presets_x + ui(24), dialog_y + ui(16), __txtx("presets", "Presets"));
+	draw_text(presets_x + ui(24), dialog_y + ui(16), __txt("Presets"));
 	draw_text(content_x + (!interactable * ui(32)) + ui(24), dialog_y + ui(16), name);
 	if(!interactable)
 		draw_sprite_ui(THEME.lock, 0, content_x + ui(24 + 12), dialog_y + ui(16 + 12),,,, COLORS._main_icon);
@@ -59,7 +59,7 @@ if palette == 0 exit;
 	}
 	bx -= ui(32);
 	
-	if(buttonInstant(THEME.button_hide, bx, by, ui(28), ui(28), mouse_ui, sFOCUS, sHOVER, __txtx("refresh", "Refresh"), THEME.refresh) == 2) {
+	if(buttonInstant(THEME.button_hide, bx, by, ui(28), ui(28), mouse_ui, sFOCUS, sHOVER, __txt("Refresh"), THEME.refresh) == 2) {
 		presetCollect();
 	}
 	draw_sprite_ui_uniform(THEME.refresh, 0, bx + ui(14), by + ui(14), 1, COLORS._main_icon);

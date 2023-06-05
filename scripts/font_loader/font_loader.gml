@@ -3,17 +3,27 @@ globalvar FONT_ISLOADED, f_h1, f_h3, f_h5, f_p0, f_p0b, f_p1, f_p2, f_p3, f_code
 FONT_ISLOADED = false;
 
 function _font_path(rel) {
-	return DIRECTORY + "themes/" + PREF_MAP[? "theme"] + "/fonts/" + string_replace_all(rel, "./", "");
+	var defPath = DIRECTORY + "themes/" + PREF_MAP[? "theme"] + "/fonts/" + string_replace_all(rel, "./", "");
+	
+	if(LOCALE.fontDir == noone)
+		return defPath;
+	
+	var overridePath = LOCALE.fontDir + string_replace_all(rel, "./", "");
+	if(file_exists(overridePath))
+		return overridePath;
+		
+	return defPath;
 }
 
 function _font_load_from_struct(str, def) {
 	var path = _font_path(str.path);
+	
 	if(!file_exists(path)) {
 		noti_status("Font resource " + string(path), " not found. Rollback to default font.");
 		return def;
 	}
 	
-	return font_add(path, str.size * UI_SCALE, false, false, str.range[0], str.range[1]);
+	return font_add(path, str.size * UI_SCALE, false, false, 0, 0);
 }
 
 function font_clear(font) { if(font_exists(font)) font_delete(font); }
@@ -34,6 +44,7 @@ function loadFonts() {
 	}
 	
 	var path = _font_path("./fonts.json");
+	
 	if(!file_exists(path)) {
 		noti_status("Font not defined at " + path + ", rollback to default fonts.");
 		f_h1  = _f_h1;

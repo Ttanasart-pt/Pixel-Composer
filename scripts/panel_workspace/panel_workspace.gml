@@ -72,17 +72,17 @@ function Panel_Workspace() : PanelContent() constructor {
 				if(mouse_press(mb_right, pFOCUS)) {
 					layout_selecting = str;
 					menuCall("workspace_menu",,, [
-						menuItem("Select", function() { 
+						menuItem(__txt("Select"), function() { 
 							PREF_MAP[? "panel_layout_file"] = layout_selecting;
 							PREF_SAVE();
 							setPanel();
 						}),
-						menuItem("Replace with current", function() { 
+						menuItem(__txtx("workspace_replace_current", "Replace with current"), function() { 
 							var cont = panelSerialize();
 							json_save_struct(DIRECTORY + "layouts/" + layout_selecting + ".json", cont);
 
 						}),
-						menuItem("Delete", function() { 
+						menuItem(__txt("Delete"), function() { 
 							file_delete(DIRECTORY + "layouts/" + layout_selecting + ".json");
 							refreshContent();
 						}, THEME.cross),
