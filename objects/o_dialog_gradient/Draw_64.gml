@@ -27,7 +27,7 @@ if !ready exit;
 	draw_sprite_stretched(THEME.dialog_bg, 0, palette_x, dialog_y, presets_w, dialog_h);
 	if(sFOCUS) draw_sprite_stretched_ext(THEME.dialog_active, 0, palette_x, dialog_y, presets_w, dialog_h, COLORS._main_accent, 1);
 	
-	draw_set_text(f_p0, fa_left, fa_top, COLORS._main_text_title);
+	draw_set_text(f_p0, fa_left, fa_top, COLORS._main_text);
 	draw_text(presets_x + ui(24), dialog_y + ui(16), __txt("Presets"));
 	draw_text(content_x + (!interactable * ui(32)) + ui(24), dialog_y + ui(16), name);
 	if(!interactable)

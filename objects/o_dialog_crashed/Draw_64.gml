@@ -13,7 +13,7 @@ draw_set_alpha(1);
 
 #region text
 	var py = dialog_y + ui(16);
-	draw_set_text(f_h5, fa_left, fa_top, COLORS._main_text_title);
+	draw_set_text(f_h5, fa_left, fa_top, COLORS._main_text);
 	draw_text(dialog_x + ui(24), py, __txtx("crashed_title", "Restore project"));
 	py += line_get_height(, 4);
 	

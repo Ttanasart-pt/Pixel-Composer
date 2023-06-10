@@ -665,11 +665,7 @@ function Panel_Preview() : PanelContent() constructor {
 		
 		var scHeight = ui(32);
 		
-		draw_set_color(COLORS.panel_toolbar_fill);
-		draw_rectangle(0, 0, w, scHeight, false);
-		
-		draw_set_color(COLORS.panel_toolbar_outline);
-		draw_line(0, scHeight, w, scHeight);
+		draw_sprite_stretched(THEME.toolbar, 1, 0, 0, w, scHeight);
 		
 		if(tool_current != noone) { //tool settings
 			var settings = PANEL_GRAPH.node_focus.tool_settings;
@@ -746,11 +742,7 @@ function Panel_Preview() : PanelContent() constructor {
 			}
 		}
 		
-		draw_set_color(COLORS.panel_toolbar_fill);
-		draw_rectangle(0, ty, w, h, false);
-		
-		draw_set_color(COLORS.panel_toolbar_outline);
-		draw_line(0, ty, w, ty);
+		draw_sprite_stretched(THEME.toolbar, 0, 0, ty, w, h);
 		
 		var tbx = toolbar_height / 2;
 		var tby = ty + toolbar_height / 2;
@@ -851,7 +843,7 @@ function Panel_Preview() : PanelContent() constructor {
 		
 		draw_clear(COLORS.panel_bg_clear);
 		if(canvas_bg == -1 && canvas_s >= 0.1) 
-			draw_sprite_tiled_ext(s_transparent, 0, canvas_x, canvas_y, canvas_s, canvas_s, c_white, 0.5);
+			draw_sprite_tiled_ext(s_transparent, 0, canvas_x, canvas_y, canvas_s, canvas_s, COLORS.panel_preview_transparent, 1);
 		else
 			draw_clear(canvas_bg);
 		

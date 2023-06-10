@@ -312,9 +312,9 @@ event_inherited();
 			PREF_MAP[? "theme"] = thm;
 			PREF_SAVE();
 			
-			loadFonts();
 			loadGraphic(thm);
 			loadColor(thm);
+			loadFonts();
 		}, false);
 	sb_theme.align = fa_left;
 	

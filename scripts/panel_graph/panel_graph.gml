@@ -842,11 +842,7 @@ function Panel_Graph() : PanelContent() constructor {
 		#region draw selection frame
 			if(nodes_select_drag) {
 				if(point_distance(nodes_select_mx, nodes_select_my, mx, my) > 16) {
-					draw_set_color(COLORS._main_accent);
-					draw_roundrect_ext(nodes_select_mx, nodes_select_my, mx, my, THEME_VALUE.selection_corner_radius, THEME_VALUE.selection_corner_radius, true);
-					draw_set_alpha(0.05);
-					draw_roundrect_ext(nodes_select_mx, nodes_select_my, mx, my, THEME_VALUE.selection_corner_radius, THEME_VALUE.selection_corner_radius, false);
-					draw_set_alpha(1);
+					draw_sprite_stretched_points(THEME.ui_selection, 0, nodes_select_mx, nodes_select_my, mx, my);
 					
 					//ds_list_clear(nodes_select_list);
 					
@@ -1528,13 +1524,8 @@ function Panel_Graph() : PanelContent() constructor {
 		
 		if(pHOVER && point_in_rectangle(mx, my, 0, ty, w, h))
 			mouse_on_graph = false;
-			
-		draw_set_color(COLORS.panel_toolbar_fill);
-		draw_rectangle(0, ty, w, h, false);
 		
-		draw_set_color(COLORS.panel_toolbar_outline);
-		draw_line(0, ty, w, ty);
-		
+		draw_sprite_stretched(THEME.toolbar, 0, 0, ty, w, h);
 		drawContext();
 		
 		var tbx = w - toolbar_height / 2;

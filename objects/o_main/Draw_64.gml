@@ -1,4 +1,6 @@
 /// @description init
+draw_clear(COLORS.bg);
+
 if(OS == os_windows && gameframe_is_minimized()) {
 	//gameframe_update();
 	exit;

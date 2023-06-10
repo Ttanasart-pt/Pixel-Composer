@@ -445,7 +445,8 @@ function Panel_Menu() : PanelContent() constructor {
 			
 			if(noti_icon_show > 0)
 				draw_sprite_ui(noti_icon, 0, nx0 + nw - ui(16), ny0,,,,, noti_icon_show);
-				
+			
+			draw_set_color(COLORS._main_text_inner);
 			var wr_x = hori? nx0 + ui(8) : w / 2 - (wr_w + er_w + ui(16)) / 2;
 			draw_sprite_ui_uniform(THEME.noti_icon_warning, warning_amo? 1 : 0, wr_x + ui(10), ny0);
 			draw_text(wr_x + ui(28), ny0, warning_amo);

@@ -70,7 +70,9 @@ function buttonColor(_onApply, dialog = noone) : widget() constructor {
 			if(mouse_press(mb_left)) deactivate();
 		}
 		
-		draw_sprite_stretched_ext(THEME.color_picker_sample, 0, _x + ui(4), _y + ui(4), _cw - ui(8), _h - ui(8), current_color, 1);
+		draw_sprite_stretched_ext(THEME.button_color_overlay, 0, _x + ui(4), _y + ui(4), _cw - ui(8), _h - ui(8), current_color, 1);
+		//draw_set_color(c_white);
+		//draw_rectangle( _x + ui(4), _y + ui(4),  _x + _cw - ui(4), _y + _h - ui(4), 1);
 		
 		if(WIDGET_CURRENT == self)
 			draw_sprite_stretched_ext(THEME.widget_selecting, 0, _x - ui(3), _y - ui(3), _w + ui(6), _h + ui(6), COLORS._main_accent, 1);

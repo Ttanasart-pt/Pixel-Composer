@@ -4,7 +4,7 @@ if(!ready) exit;
 #region draw
 	var yy = dialog_y;
 	
-	draw_sprite_stretched(THEME.textbox, 3, dialog_x, dialog_y, dialog_w, dialog_h);
+	draw_sprite_stretched(THEME.menu_bg, 0, dialog_x, dialog_y, dialog_w, dialog_h);
 	//if(show_icon)
 	//	draw_sprite_stretched(THEME.textbox_code, 0, dialog_x, dialog_y, ui(36), dialog_h);
 	
@@ -149,7 +149,7 @@ if(!ready) exit;
 			instance_destroy();
 	}
 	
-	draw_sprite_stretched(THEME.textbox, 1, dialog_x, dialog_y, dialog_w, dialog_h);
+	draw_sprite_stretched(THEME.menu_bg, 1, dialog_x, dialog_y, dialog_w, dialog_h);
 #endregion
 
 #region debug

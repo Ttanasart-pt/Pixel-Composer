@@ -6,7 +6,7 @@
 #endregion
 
 #region draw TB
-	draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text_title);
+	draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text);
 	draw_text(dialog_x + ui(16), dialog_y + ui(32), __txtx("Name"));
 	
 	//var is_author = !meta.steam || meta.author_steam_id == 0 || meta.author_steam_id == STEAM_USER_ID;
@@ -97,7 +97,7 @@
 	if(meta_expand) {
 		var yy = dialog_y + ui(56);
 	
-		draw_set_text(f_p0, fa_left, fa_top, COLORS._main_text_title);
+		draw_set_text(f_p0, fa_left, fa_top, COLORS._main_text);
 		draw_text(dialog_x + ui(16), yy, __txt("Description"));
 		yy		 += line_get_height() + ui(4);
 		dialog_h += line_get_height() + ui(4);
@@ -108,7 +108,7 @@
 		yy		 += ui(200) + ui(8);
 		dialog_h += ui(200) + ui(8);
 		
-		draw_set_text(f_p0, fa_left, fa_top, COLORS._main_text_title);
+		draw_set_text(f_p0, fa_left, fa_top, COLORS._main_text);
 		draw_text(dialog_x + ui(16), yy, __txt("Author"));
 		yy		 += line_get_height() + ui(4);
 		dialog_h += line_get_height() + ui(4);
@@ -119,7 +119,7 @@
 		yy		 += TEXTBOX_HEIGHT + ui(8);
 		dialog_h += TEXTBOX_HEIGHT + ui(8);
 		
-		draw_set_text(f_p0, fa_left, fa_top, COLORS._main_text_title);
+		draw_set_text(f_p0, fa_left, fa_top, COLORS._main_text);
 		draw_text(dialog_x + ui(16), yy, __txt("Contact info"));
 		yy		 += line_get_height() + ui(4);
 		dialog_h += line_get_height() + ui(4);
@@ -130,7 +130,7 @@
 		yy		 += TEXTBOX_HEIGHT + ui(8);
 		dialog_h += TEXTBOX_HEIGHT + ui(8);
 		
-		draw_set_text(f_p0, fa_left, fa_top, COLORS._main_text_title);
+		draw_set_text(f_p0, fa_left, fa_top, COLORS._main_text);
 		draw_text(dialog_x + ui(16), yy, __txt("Alias"));
 		yy		 += line_get_height() + ui(4);
 		dialog_h += line_get_height() + ui(4);
@@ -141,7 +141,7 @@
 		yy		 += TEXTBOX_HEIGHT + ui(8);
 		dialog_h += TEXTBOX_HEIGHT + ui(8);
 		
-		draw_set_text(f_p0, fa_left, fa_top, COLORS._main_text_title);
+		draw_set_text(f_p0, fa_left, fa_top, COLORS._main_text);
 		draw_text(dialog_x + ui(16), yy, __txt("Tags"));
 		yy		 += line_get_height() + ui(4);
 		dialog_h += line_get_height() + ui(4);

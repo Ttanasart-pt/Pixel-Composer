@@ -30,7 +30,7 @@ event_inherited();
 				yy += ui(8);
 				var hh = line_get_height() + pad + ui(8);
 				
-				draw_text_over(ui(24), yy, _f);
+				draw_text_add(ui(24), yy, _f);
 				
 				ind = 0;
 				yy += hh;

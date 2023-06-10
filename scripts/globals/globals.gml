@@ -133,6 +133,8 @@
 	
 	#macro RETURN_ON_REST if(!ANIMATOR.is_playing || !ANIMATOR.frame_progress) return;
 	
+	#macro PANEL_PAD THEME_VALUE.panel_padding
+	
 	function print(str) {
 		//show_debug_message(string(str));
 		noti_status(string(str));

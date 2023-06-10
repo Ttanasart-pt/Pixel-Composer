@@ -90,7 +90,7 @@ if(node_target == noone) {
 	draw_sprite_stretched_ext(THEME.dialog_bg, 0, dialog_x, dialog_y, dialog_w, title_height, c_white, title_show);
 	
 	draw_set_alpha(0.5 + title_show * 0.5);
-	draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text_title);
+	draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text);
 	draw_text(dialog_x + ui(padding + 8), dialog_y + ui(title_height) / 2, node_target.getFullName());
 	draw_set_alpha(1);
 	

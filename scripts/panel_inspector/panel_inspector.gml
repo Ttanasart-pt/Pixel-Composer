@@ -138,7 +138,7 @@ function Panel_Inspector() : PanelContent() constructor {
 			
 			draw_sprite_ui(THEME.arrow, meta_display[i][1]? 0 : 3, ui(16), yy + ui(32) / 2, 1, 1, 0, COLORS.panel_inspector_group_bg, 1);	
 			
-			draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text);
+			draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text_inner);
 			draw_text(ui(32), yy + ui(32) / 2, _txt);
 			
 			yy += ui(32 + 8);
@@ -299,7 +299,7 @@ function Panel_Inspector() : PanelContent() constructor {
 					var lby = yy + ui(12);
 					draw_set_alpha(0.5);
 					draw_set_text(f_p1, fa_center, fa_center, COLORS._main_text_sub);
-					draw_text_over(xc, lby, edt);
+					draw_text_add(xc, lby, edt);
 					
 					var lbw = string_width(edt) / 2;
 					draw_set_color(COLORS._main_text_sub);
@@ -325,7 +325,7 @@ function Panel_Inspector() : PanelContent() constructor {
 				} 
 				
 				draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text);
-				draw_text_over(ui(8), yy + hg / 2, edt[0]);
+				draw_text_add(ui(8), yy + hg / 2, edt[0]);
 				
 				switch(instanceof(edt[2])) {
 					case "textBox" :	edt[2].draw(wx0, yy, ww, hg, val, _m); break;
@@ -398,7 +398,7 @@ function Panel_Inspector() : PanelContent() constructor {
 			} else if(i == amoIn) { 
 				hh += ui(8 + 32 + 8);
 				
-				draw_sprite_stretched_ext(THEME.group_label, 0, 0, yy + ui(8), con_w, ui(32), COLORS._main_icon_dark, 0.85);
+				draw_sprite_stretched_ext(THEME.group_label, 0, 0, yy + ui(8), con_w, ui(32), COLORS.panel_inspector_output_label, 0.85);
 				draw_set_text(f_p0b, fa_center, fa_center, COLORS._main_text_sub);
 				draw_text(xc, yy + ui(8 + 16), __txt("Outputs"));
 				continue;

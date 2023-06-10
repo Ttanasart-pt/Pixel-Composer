@@ -155,10 +155,11 @@ function Panel_History() : PanelContent() constructor {
 	})
 	
 	function drawContent(panel) {
+		draw_clear_alpha(COLORS.panel_bg_clear, 0);
 		PANEL_PADDING
 		
-		draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text_title);
-		draw_text_over(in_dialog? ui(56) : ui(24), title_height / 2, title);
+		draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text);
+		draw_text_add(in_dialog? ui(56) : ui(24), title_height / 2, title);
 		
 		var px = ui(padding);
 		var py = ui(title_height);

@@ -68,15 +68,14 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 	if(visi_hold != noone && mouse_release(mb_left))
 		visi_hold = noone;
 		
-	var cc = COLORS._main_text;
+	var cc = COLORS._main_text_inner;
 	if(jun.expUse) {
 		var expValid = jun.expTree != noone && jun.expTree.validate();
 		cc = expValid? COLORS._main_value_positive : COLORS._main_value_negative;
 	}
 	
-	if(global_var) {
+	if(global_var)
 		if(string_pos(" ", jun.name)) cc = COLORS._main_value_negative;
-	}
 	
 	draw_set_text(f_p0, fa_left, fa_center, cc);
 	draw_text_add(xx + ui(40), lb_y - ui(2), jun.name);
@@ -315,7 +314,7 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 		}
 	} else if(jun.display_type == VALUE_DISPLAY.label) {
 		draw_set_text(f_p1, fa_left, fa_top, COLORS._main_text_sub);
-		draw_text_over(xx + ui(16), _hsy, jun.display_data);
+		draw_text_add(xx + ui(16), _hsy, jun.display_data);
 				
 		widH = string_height(jun.display_data);
 	} else

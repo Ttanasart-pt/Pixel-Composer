@@ -75,10 +75,7 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 								_tw = string_width(_bch) * _s;
 								_th = string_height(_bch) * _s;
 									
-								draw_set_color(COLORS.node_display_text_frame_outline);
-								draw_roundrect_ext(_tx - 4, _y - 4, _tx + _tw + 4, _y + _th + 4, THEME_VALUE.selection_corner_radius, THEME_VALUE.selection_corner_radius, 0);
-								draw_set_color(COLORS.node_display_text_frame_fill);
-								draw_roundrect_ext(_tx - 4, _y - 4, _tx + _tw + 4, _y + _th + 4, THEME_VALUE.selection_corner_radius, THEME_VALUE.selection_corner_radius, 1);
+								draw_sprite_stretched_points(THEME.ui_selection, 0, _tx - 4, _y - 4, _tx + _tw + 4, _y + _th + 4);
 									
 								draw_set_color(_cc);
 								draw_text_transformed(_tx, _y, _bch, _s, _s, 0);

@@ -81,7 +81,7 @@ if !ready exit;
 		var y1 = node_tooltip_y - ui(8);
 		var y0 = y1 - hh;
 		
-		draw_sprite_stretched_ext(THEME.textbox, 3, x0, y0, ww, hh, COLORS._main_icon, 1);
+		draw_sprite_stretched(THEME.textbox, 3, x0, y0, ww, hh);
 		draw_sprite_stretched(THEME.textbox, 0, x0, y0, ww, hh);
 		
 		if(spr) draw_sprite(spr, 0, x0 + ui(4), y0 + ui(4));

@@ -5,7 +5,7 @@
 #endregion
 
 #region draw TB
-	draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text_title);
+	draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text);
 	draw_text(dialog_x + ui(8), dialog_y + dialog_h / 2, __txt("Name"));
 	
 	tb_name.setActiveFocus(sFOCUS, sHOVER);

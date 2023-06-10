@@ -26,7 +26,7 @@ function Node_Atlas_Draw(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		outSurf = surface_verify(outSurf, dim[0], dim[1]);
 		outputs[| 0].setValue(outSurf);
 		
-		surface_set_shader(outSurf);
+		surface_set_shader(outSurf,,, BLEND.alpha);
 			for( var i = 0; i < array_length(atl); i++ ) {
 				shader_set_interpolation(atl[i].surface.get())
 				atl[i].draw();

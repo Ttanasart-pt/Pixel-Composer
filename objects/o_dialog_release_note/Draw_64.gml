@@ -8,7 +8,7 @@ if !ready exit;
 #endregion
 
 #region text
-	draw_set_text(f_p0, fa_left, fa_top, COLORS._main_text_title);
+	draw_set_text(f_p0, fa_left, fa_top, COLORS._main_text);
 	draw_text(dialog_x + ui(24), dialog_y + ui(16), string(VERSION_STRING) + " Release note");
 	
 	draw_sprite_stretched(THEME.ui_panel_bg, 0, dialog_x + ui(24), dialog_y + ui(48), dialog_w - ui(48), dialog_h - ui(72));

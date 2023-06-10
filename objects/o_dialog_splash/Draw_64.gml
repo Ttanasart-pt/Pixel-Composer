@@ -101,10 +101,8 @@ if !ready exit;
 		if(txt == "Contests") 
 			tw += ui(32);
 		
-		if(project_page == i) 
-			draw_sprite_stretched(THEME.ui_panel_bg, 0, bx, y0 - ui(32), tw, ui(40));
-		else if(point_in_rectangle(mouse_mx, mouse_my, bx, y0 - ui(32), bx + tw, y0)) {
-			draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, bx, y0 - ui(32), tw, ui(40), c_white, 0.5);
+		if(project_page != i && point_in_rectangle(mouse_mx, mouse_my, bx, y0 - ui(32), bx + tw, y0)) {
+			draw_sprite_stretched_ext(THEME.ui_panel_tab, 0, bx, y0 - ui(32), tw, ui(40), COLORS.panel_tab_hover, 1);
 			
 			if(mouse_click(mb_left, sFOCUS)) {
 				project_page = i;
@@ -114,6 +112,10 @@ if !ready exit;
 					expandAction = true;
 				}
 			}
+		} else {
+			var foc = project_page == i;
+			draw_sprite_stretched_ext(THEME.ui_panel_tab, foc, bx, y0 - ui(32), tw, ui(40), 
+				foc? COLORS.panel_tab_active : COLORS.panel_tab_inactive, 1);
 		}
 			
 		var _btx = bx + ui(8);
@@ -122,18 +124,22 @@ if !ready exit;
 			_btx += ui(32);
 		}
 		
-		if(txt == "Contests") draw_set_color(project_page == i? CDEF.yellow : COLORS._main_text_sub );
+		var cc = COLORS._main_text;
+		if(txt == "Contests") cc = project_page == i? CDEF.yellow : COLORS._main_text_sub;
+		if(project_page == i) cc = COLORS._main_text_on_accent;
+		
+		draw_set_color(cc);
 		draw_text(_btx, y0 - ui(4), dtxt);
 		
 		_btx += ui(8) + string_width(dtxt);
 		
 		if(amo) {
-			draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, _btx, y0 - ui(26), string_width(amo) + ui(8), ui(24), COLORS._main_icon, 0.5);
+			draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, _btx, y0 - ui(26), string_width(amo) + ui(8), ui(24), COLORS._main_icon, 1);
 		
 			_btx += ui(4);
 			
 			if(txt == "Contests") draw_set_color(CDEF.yellow);
-			else				  draw_set_color(COLORS._main_text_sub);
+			else				  draw_set_color(COLORS._main_text);
 			draw_text(_btx, y0 - ui(4), amo);
 		}
 		

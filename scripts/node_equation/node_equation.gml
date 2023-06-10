@@ -66,7 +66,7 @@ function Node_Equation(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			_jName.editWidget.draw(tx, ty, ui(128), _th, _jName.showValue(), _m, _jName.display_type);
 			
 			draw_set_text(f_p1, fa_center, fa_top, COLORS._main_text_sub);
-			draw_text_over(tx + ui(128 + 12), ty + ui(6), "=");
+			draw_text_add(tx + ui(128 + 12), ty + ui(6), "=");
 			
 			var _jValue = inputs[| i + 1];
 			_jValue.editWidget.setActiveFocus(_focus, _hover);

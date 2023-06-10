@@ -22,8 +22,8 @@
 	#macro PANEL_PADDING padding      = in_dialog? ui(24) : ui(16); \
 						 title_height = in_dialog? ui(64) : ui(56);
 	
-	#macro PANEL_TITLE  draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text_title); \
-					    draw_text_over(in_dialog? ui(56) : ui(24), title_height / 2 - (!in_dialog) * ui(4), title);
+	#macro PANEL_TITLE  draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text); \
+					    draw_text_add(in_dialog? ui(56) : ui(24), title_height / 2 - (!in_dialog) * ui(4), title);
 #endregion
 
 #region functions 

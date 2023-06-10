@@ -41,6 +41,7 @@ function Panel_Color() : PanelContent() constructor {
 	setHSV();
 	
 	function drawContent(panel) {
+		draw_clear_alpha(COLORS.panel_bg_clear, 0);
 		PANEL_PADDING
 		PANEL_TITLE
 		
@@ -48,7 +49,7 @@ function Panel_Color() : PanelContent() constructor {
 		var py = ui(title_height);
 		var pw = w - ui(padding + padding);
 		var ph = h - ui(title_height + padding);
-	
+		
 		draw_sprite_stretched(THEME.ui_panel_bg, !in_dialog, px - ui(8), py - ui(8), pw + ui(16), ph + ui(16));
 		
 		var cont_x = ui(padding);

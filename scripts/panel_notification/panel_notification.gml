@@ -42,10 +42,11 @@ function Panel_Notification() : PanelContent() constructor {
 	sp_noti = new scrollPane(w - ui(padding + padding), h - ui(title_height + padding), function(_y, _m) {
 		draw_clear_alpha(COLORS.panel_bg_clear, 0);
 		
-		var hh = 32;
-		var yy = _y;
+		var hh  = 32;
+		var yy  = _y;
 		var txw = sp_noti.surface_w - ui(48 + 48 + 20);
 		var amo = ds_list_size(STATUSES);
+		var pad = THEME_VALUE.panel_notification_padding;
 		
 		draw_set_font(f_p3);
 		var timeW = string_width("00:00:00");
@@ -57,13 +58,14 @@ function Panel_Notification() : PanelContent() constructor {
 			
 			draw_set_font(f_p2);
 			var _w = sp_noti.surface_w;
-			var _h = ui(8) + string_height_ext(noti.txt, -1, txw) + ui(8);
+			var _h = ui(12) + string_height_ext(noti.txt, -1, txw);
+			_h += pad * 2;
 			
 			if(yy >= -_h && yy <= sp_noti.h) {
-				draw_sprite_stretched_ext(THEME.group_label, 0, 0, yy + ui(2), _w, _h - ui(4), COLORS.dialog_notification_bg, 1);
+				draw_sprite_stretched_ext(THEME.group_label, 0, 0, yy, _w, _h, COLORS.dialog_notification_bg, 1);
 			
-				if(pHOVER && pHOVER && point_in_rectangle(_m[0], _m[1], 0, yy, _w, yy + _h - ui(4))) {
-					draw_sprite_stretched_ext(THEME.group_label, 0, 0, yy + ui(2), _w, _h - ui(4), COLORS.dialog_notification_bg_hover, 1);
+				if(pHOVER && pHOVER && point_in_rectangle(_m[0], _m[1], 0, yy, _w, yy + _h)) {
+					draw_sprite_stretched_ext(THEME.group_label, 0, 0, yy, _w, _h, COLORS.dialog_notification_bg_hover, 1);
 					
 					if(noti.tooltip != "")
 						TOOLTIP = noti.tooltip;
@@ -88,10 +90,10 @@ function Panel_Notification() : PanelContent() constructor {
 					var _nwx = sp_noti.w - ui(12) - ui(40);
 					var _nw  = _nwx * noti.life / noti.life_max;
 				
-					draw_sprite_stretched_ext(THEME.group_label, 0, ui(40), yy + ui(2), _nw, _h - ui(4), COLORS.dialog_notification_icon_bg, 1);
+					draw_sprite_stretched_ext(THEME.group_label, 0, ui(40), yy, _nw, _h, COLORS.dialog_notification_icon_bg, 1);
 				}
 			
-				draw_sprite_stretched_ext(THEME.group_label, 0, 0, yy + ui(2), ui(48), _h - ui(4), noti.color, 1);
+				draw_sprite_stretched_ext(THEME.group_label, 0, 0, yy, ui(48), _h, noti.color, 1);
 			
 				if(noti.icon_end != noone)
 					draw_sprite_ui(noti.icon_end, 1, _w - ui(24), yy + _h / 2,,,, COLORS._main_icon);
@@ -109,10 +111,10 @@ function Panel_Notification() : PanelContent() constructor {
 			
 				var tx = ui(48) + timeW + ui(12);
 			
-				draw_set_text(f_p3, fa_right, fa_center, COLORS._main_text_sub);
+				draw_set_text(f_p3, fa_right, fa_center, COLORS._main_text_sub_inner);
 				draw_text_line(tx - ui(4), yy + _h / 2, noti.time, -1, txw);
-			
-				draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text);
+				
+				draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text_inner);
 				draw_text_line(tx + ui(4), yy + _h / 2, noti.txt, -1, txw);
 				
 				if(noti.amount > 1) {
@@ -130,14 +132,15 @@ function Panel_Notification() : PanelContent() constructor {
 				}
 			}
 			
-			yy += _h;
-			hh += _h;
+			yy += _h + ui(4);
+			hh += _h + ui(4);
 		}
 		
 		return hh;
 	});
 	
 	function drawContent(panel) { 
+		draw_clear_alpha(COLORS.panel_bg_clear, 0);
 		PANEL_PADDING
 		PANEL_TITLE
 		

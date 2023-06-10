@@ -10,7 +10,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 	parent = _parent;
 	if(parent) ds_list_add(parent.childs, self);
 	
-	padding = ui(2);
+	padding = THEME_VALUE.panel_margin;
 	content = [];
 	content_index = 0;
 	childs  = ds_list_create();
@@ -461,8 +461,9 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 		surface_set_target(tab_surface);
 			DRAW_CLEAR
 			
-			var tbx = tab_x;
+			var tbx = tab_x + ui(1);
 			var tby = 0;
+			var tbh = tab_height + ui(2);
 			var tabHov = msx < 0 ? 0 : array_length(content) - 1;
 			
 			tab_x = lerp_float(tab_x, tab_x_to, 5);
@@ -492,16 +493,13 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 				
 				if(i == content_index) {
 					foc = FOCUS == self;
-					draw_set_color(FOCUS == self? COLORS._main_accent : COLORS.panel_bg_clear);
-					draw_roundrect_ext(_tbx, tby, _tbx + tbw, tby + ui(32), THEME_VALUE.panel_corner_radius, THEME_VALUE.panel_corner_radius, false);
+					var cc = FOCUS == self? COLORS.panel_tab_active : COLORS.panel_tab;
+					draw_sprite_stretched_ext(THEME.ui_panel_tab, FOCUS == self, _tbx, tby, tbw, tbh, cc, 1);
 				} else {
-					draw_set_color(COLORS.panel_bg_clear_inner);
-					draw_roundrect_ext(_tbx, tby, _tbx + tbw, tby + ui(32), THEME_VALUE.panel_corner_radius, THEME_VALUE.panel_corner_radius, false);
+					draw_sprite_stretched_ext(THEME.ui_panel_tab, 0, _tbx, tby, tbw, tbh, COLORS.panel_tab_inactive, 1);
 					
-					if(HOVER == self && _hov) {
-						draw_set_color(COLORS.panel_bg_clear);
-						draw_roundrect_ext(_tbx, tby, _tbx + tbw, tby + ui(32), THEME_VALUE.panel_corner_radius, THEME_VALUE.panel_corner_radius, false);
-					}
+					if(HOVER == self && _hov)
+						draw_sprite_stretched_ext(THEME.ui_panel_tab, 0, _tbx, tby, tbw, tbh, COLORS.panel_tab_hover, 1);
 				}
 				
 				if(HOVER == self && _hov) {
@@ -535,7 +533,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 				}
 				
 				draw_set_text(f_p3, fa_left, fa_bottom, cc);
-				draw_text(_tbx + ui(8), tab_height - ui(2), txt);
+				draw_text_add(_tbx + ui(8), tab_height - ui(2), txt);
 				
 				tbx += tbw + ui(2);
 			}
@@ -555,8 +553,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 				var tbw  = string_width(txt) + ui(16);
 				if(icn != noone) tbw += ui(16 + 4);
 				
-				draw_set_color(COLORS._main_accent);
-				draw_roundrect_ext(_tbx, tby, _tbx + tbw, tby + ui(32), THEME_VALUE.panel_corner_radius, THEME_VALUE.panel_corner_radius, false);
+				draw_sprite_stretched_ext(THEME.ui_panel_tab, FOCUS == self, _tbx, tby, tbw, tbh, COLORS.panel_tab_active, 1);
 				
 				var cc = COLORS.panel_bg_clear_inner;
 				if(icn != noone) {
@@ -602,6 +599,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 		tw = w; th = h - tab * ui(tab_height);
 		if(th < ui(16)) return;
 		
+		var con = getContent();
 		if(tab) drawTab();
 		
 		var p = ui(6);
@@ -609,19 +607,19 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 		var m_ot = point_in_rectangle(mouse_mx, mouse_my, tx, ty, tx + tw, ty + th);
 		mouse_active = m_in;
 		
-		draw_sprite_stretched(THEME.ui_panel_bg, 0, tx + padding, ty + padding, tw - padding * 2, th - padding * 2);
+		var _tw = tw - padding * 2;
+		var _th = th - padding * 2;
+		draw_sprite_stretched(THEME.ui_panel_bg, 0, tx + padding, ty + padding, _tw, _th);
 		
 		if(!is_surface(mask_surface)) {
 			mask_surface = surface_create_valid(tw, th);
 			refresh();
 		}
 		
-		if(!is_surface(content_surface)) 
-			content_surface = surface_create_valid(tw, th);
+		content_surface = surface_verify(content_surface, tw, th);
 			
 		surface_set_target(content_surface);
 			draw_clear(COLORS.panel_bg_clear);
-			var con = getContent();
 			if(con) {
 				min_w = con.min_w;
 				min_h = con.min_h;
@@ -635,6 +633,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 		surface_reset_target();
 		
 		draw_surface_safe(content_surface, tx, ty);
+		draw_sprite_stretched(THEME.ui_panel_bg, 3, tx + padding, ty + padding, _tw, _th);
 			
 		if(FOCUS == self && parent != noone) {
 			draw_sprite_stretched_ext(THEME.ui_panel_active, 0, tx + padding, ty + padding, tw - padding * 2, th - padding * 2, COLORS._main_accent, 1);	

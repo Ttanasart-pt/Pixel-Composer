@@ -68,13 +68,21 @@ function slider(_min, _max, _step, _onModify = noone, _onRelease = noone) : widg
 			tb_value.draw(_x + sw + ui(16), _y, tb_w, _h, _data, _m);
 		}
 		
-		draw_sprite_stretched_ext(spr, 0, _x, _y + _h / 2 - ui(4), sw, ui(8), blend, 1);	
+		if(THEME_VALUE.slider_type == "full_height")
+			draw_sprite_stretched_ext(spr, 0, _x, _y, sw, _h, blend, 1);
+		else if(THEME_VALUE.slider_type == "stem")
+			draw_sprite_stretched_ext(spr, 0, _x, _y + _h / 2 - ui(4), sw, ui(8), blend, 1);	
 		
-		var _kx = _x + clamp((_data - curr_minn) / (curr_maxx - curr_minn), 0, 1) * sw;
-		draw_sprite_stretched_ext(spr, 1, _kx - handle_w / 2, _y, handle_w, _h, blend, 1);
+		var _pg = clamp((_data - curr_minn) / (curr_maxx - curr_minn), 0, 1) * sw;
+		var _kx = _x + _pg;
+		if(THEME_VALUE.slider_type == "full_height")
+			draw_sprite_stretched_ext(spr, 1, _x, _y, _pg, _h, blend, 1);
+		else if(THEME_VALUE.slider_type == "stem")
+			draw_sprite_stretched_ext(spr, 1, _kx - handle_w / 2, _y, handle_w, _h, blend, 1);
 		
 		if(dragging) {
-			draw_sprite_stretched_ext(spr, 3, _kx - handle_w / 2, _y, handle_w, _h, COLORS._main_accent, 1);
+			if(THEME_VALUE.slider_type == "stem")
+				draw_sprite_stretched_ext(spr, 3, _kx - handle_w / 2, _y, handle_w, _h, COLORS._main_accent, 1);
 			
 			var val = (_m[0] - _x) / sw * (curr_maxx - curr_minn) + curr_minn;
 			val = round(val / step) * step;
@@ -96,7 +104,8 @@ function slider(_min, _max, _step, _onModify = noone, _onRelease = noone) : widg
 			}
 		} else {
 			if(hover && (point_in_rectangle(_m[0], _m[1], _x, _y, _x + sw, _y + _h) || point_in_rectangle(_m[0], _m[1], _kx - handle_w / 2, _y, _kx + handle_w / 2, _y + _h))) {
-				draw_sprite_stretched_ext(spr, 2, _kx - handle_w / 2, _y, handle_w, _h, blend, 1);
+				if(THEME_VALUE.slider_type == "stem")
+					draw_sprite_stretched_ext(spr, 2, _kx - handle_w / 2, _y, handle_w, _h, blend, 1);
 				
 				if(mouse_press(mb_left, active)) {
 					dragging = true;

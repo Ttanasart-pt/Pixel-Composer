@@ -6,7 +6,7 @@ if !ready exit;
 	if(sFOCUS)
 		draw_sprite_stretched_ext(THEME.dialog_active, 0, dialog_x, dialog_y, dialog_w, dialog_h, COLORS._main_accent, 1);
 	
-	draw_set_text(f_p0, fa_left, fa_top, COLORS._main_text_title);
+	draw_set_text(f_p0, fa_left, fa_top, COLORS._main_text);
 	draw_text(dialog_x + ui(24), dialog_y + ui(16), __txtx("graph_visibility_title", "Visibility settings"));
 #endregion
 

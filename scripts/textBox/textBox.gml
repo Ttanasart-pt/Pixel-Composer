@@ -255,26 +255,7 @@ function textBox(_input, _onModify, _extras = noone) : textInput(_input, _onModi
 				break;
 			case VALUE_DISPLAY.node_title :
 				draw_set_text(font == noone? f_p0 : font, fa_left, fa_top, color);
-				var _x0 = _x + disp_x, ch = "", len = string_length(_text), i = 1;
-				var cc = draw_get_color();
-				var str = "", title = 0;
-				
-				while(i <= len) {
-					ch = string_char_at(_text, i);
-					
-					if(ch == "[")
-						draw_set_color(COLORS._main_text_sub);
-					
-					draw_text(_x0, 0, ch);
-					_x0 += string_width(ch);
-					
-					if(ch == "]")
-						draw_set_color(cc);
-					
-					i++;
-				}
-				
-				draw_text(_x0, _y, str);
+				draw_text(_x + disp_x, _y, _text);
 				break;
 		}
 		
@@ -568,7 +549,10 @@ function textBox(_input, _onModify, _extras = noone) : textInput(_input, _onModi
 			}
 			
 			surface_set_target(text_surface);
-			DRAW_CLEAR
+				DRAW_CLEAR
+				//draw_set_color(c_black);
+				//draw_line(0, _h / 2 - th / 2, 9999, _h / 2 - th / 2);
+				
 				display_text(tx - tb_surf_x, _h / 2 - th / 2, _display_text, _w - ui(4), _format);
 			surface_reset_target();
 			draw_surface(text_surface, tb_surf_x, tb_surf_y);

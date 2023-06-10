@@ -349,7 +349,7 @@ event_inherited();
 					curr_height = 0;
 					
 					BLEND_OVERRIDE;
-					draw_sprite_stretched_ext(THEME.node_bg, 0, ui(16), yy, content_pane.surface_w - ui(32), ui(24), COLORS._main_icon, 1);
+					draw_sprite_stretched(THEME.group_label, 0, ui(16), yy, content_pane.surface_w - ui(32), ui(24));
 					BLEND_NORMAL;
 					
 					draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text);
@@ -403,7 +403,7 @@ event_inherited();
 					draw_sprite_ui_uniform(THEME.star, 0, _boxx + grid_size - ui(10), yy + grid_size - ui(10), 0.7, COLORS._main_accent, 1.);
 					
 				draw_set_text(f_p2, fa_center, fa_top, COLORS._main_text);
-				draw_text_ext_over(_boxx + grid_size / 2, yy + grid_size + 4, _node.getName(), -1, grid_width);
+				draw_text_ext_add(_boxx + grid_size / 2, yy + grid_size + 4, _node.getName(), -1, grid_width);
 				
 				var name_height = string_height_ext(_node.getName(), -1, grid_width) + 8;
 				curr_height = max(curr_height, grid_size + grid_space + name_height);
@@ -437,7 +437,7 @@ event_inherited();
 					yy += ui(8);
 					
 					BLEND_OVERRIDE;
-					draw_sprite_stretched_ext(THEME.node_bg, 0, ui(8), yy, content_pane.surface_w - ui(24), ui(24), COLORS._main_icon, 1);
+					draw_sprite_stretched(THEME.group_label, 0, ui(8), yy, content_pane.surface_w - ui(24), ui(24));
 					BLEND_NORMAL;
 					
 					draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text);
@@ -664,7 +664,7 @@ event_inherited();
 				draw_set_text(f_p2, fa_center, fa_top, COLORS._main_text);
 				var txt = _node.getName();
 				name_height = max(name_height, string_height_ext(txt, -1, grid_width) + ui(8));
-				draw_text_ext_over(_boxx + grid_size / 2, yy + grid_size + 4, txt, -1, grid_width);
+				draw_text_ext_add(_boxx + grid_size / 2, yy + grid_size + 4, txt, -1, grid_width);
 				
 				if(_hover && point_in_rectangle(_m[0], _m[1], _nx, yy, _nx + grid_width, yy + grid_size)) {
 					node_selecting = i;

@@ -29,6 +29,9 @@ function _sprite_load_from_struct(str, theme, key) {
 		slice.top     = str.slice.top;
 		slice.bottom  = str.slice.bottom;
 		
+		if(struct_has(str.slice, "tilemode"))
+			slice.tilemode = str.slice.tilemode;
+		
 		sprite_set_nineslice(s, slice);
 	}
 	return s; 

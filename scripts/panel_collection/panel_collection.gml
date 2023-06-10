@@ -126,7 +126,7 @@ function Panel_Collection() : PanelContent() constructor {
 	
 	contentView = 0;
 	contentPane = new scrollPane(content_w - ui(6), content_h, function(_y, _m) {
-		draw_clear_alpha(c_white, 0);
+		draw_clear_alpha(COLORS._main_text_inner, 0);
 		
 		var nodes = search_string == ""? context.content : search_list;
 		if(mode == 0 && context == root) nodes = STEAM_COLLECTION;
@@ -233,9 +233,9 @@ function Panel_Collection() : PanelContent() constructor {
 						}
 					}
 					
-					draw_set_text(f_p2, fa_center, fa_top, COLORS._main_text);
+					draw_set_text(f_p2, fa_center, fa_top, COLORS._main_text_inner);
 					name_height = max(name_height, string_height_ext(_node.name, -1, grid_width) + 8);
-					draw_text_ext_over(_boxx + grid_size / 2, yy + grid_size + ui(4), _node.name, -1, grid_width);
+					draw_text_ext_add(_boxx + grid_size / 2, yy + grid_size + ui(4), _node.name, -1, grid_width);
 				}
 				
 				var hght = grid_size + name_height + ui(8);
@@ -288,8 +288,8 @@ function Panel_Collection() : PanelContent() constructor {
 				} else
 					draw_sprite_ui_uniform(THEME.group, 0, spr_x, spr_y, 0.75, c_white);
 				
-				draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text);
-				draw_text_over(list_height + ui(20), yy + list_height / 2, _node.name);
+				draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text_inner);
+				draw_text_add(list_height + ui(20), yy + list_height / 2, _node.name);
 				
 				yy += list_height;
 				hh += list_height;
@@ -301,7 +301,7 @@ function Panel_Collection() : PanelContent() constructor {
 	
 	folderPane = new scrollPane(group_w - ui(8), content_h, function(_y, _m) {
 		draw_clear_alpha(COLORS.panel_bg_clear, 0);
-		draw_sprite_stretched(THEME.ui_panel_bg, 0, ui(8), 0, folderPane.surface_w - ui(8), folderPane.surface_h);
+		draw_sprite_stretched(THEME.ui_panel_bg, 1, ui(8), 0, folderPane.surface_w - ui(8), folderPane.surface_h);
 		var hh = ui(8);
 		_y += ui(8);
 		
@@ -372,7 +372,7 @@ function Panel_Collection() : PanelContent() constructor {
 			}
 		#endregion
 		
-		var _x = ui(16);
+		var _x = ui(20);
 		var _y = ui(24);
 		var bh = line_get_height(f_p0b, 8);
 		var rootx = 0;
@@ -386,32 +386,32 @@ function Panel_Collection() : PanelContent() constructor {
 				context = root;
 			}
 			
-			draw_set_text(f_p0b, fa_left, fa_center, i == mode? COLORS._main_text
-				: COLORS._main_text_sub);
+			draw_set_text(f_p0b, fa_left, fa_center, i == mode? COLORS._main_text : COLORS._main_text_sub);
 			draw_text(_x, _y, __txt(r[0]));
 			
-			_x += string_width(r[0]) + ui(20);
+			_x += string_width(r[0]) + ui(24);
 		}
 		
 		rootx = _x;
 		
-		var bx = w - ui(40);
+		var bx = w - ui(44);
 		var by = ui(12);
+		var bs = ui(32);
 		
 		if(search_string == "") {
 			if(bx > rootx) {
 				var txt = contentView? __txtx("view_grid", "Grid view") : __txtx("view_list", "List view");
-				if(buttonInstant(THEME.button_hide, bx, by, ui(24), ui(24), [mx, my], pFOCUS, pHOVER, txt, THEME.view_mode, contentView) == 2) {
+				if(buttonInstant(THEME.button_hide, bx, by, bs, bs, [mx, my], pFOCUS, pHOVER, txt, THEME.view_mode, contentView) == 2) {
 					contentView = !contentView;
 				}
 			}
-			bx -= ui(32);
+			bx -= ui(36);
 			
 			if(mode == 0 && !DEMO) {
 				if(bx > rootx) {
 					if(context != root) {
 						var txt = __txtx("panel_collection_add_node", "Add selecting node as collection");
-						if(buttonInstant(THEME.button_hide, bx, by, ui(24), ui(24), [mx, my], pFOCUS, pHOVER, txt, THEME.add, 0, COLORS._main_value_positive) == 2) {
+						if(buttonInstant(THEME.button_hide, bx, by, bs, bs, [mx, my], pFOCUS, pHOVER, txt, THEME.add, 0, COLORS._main_value_positive) == 2) {
 							if(PANEL_INSPECTOR.inspecting != noone) {
 								data_path = context.path;
 								var dia = dialogCall(o_dialog_file_name_collection, mouse_mx + ui(8), mouse_my + ui(8));
@@ -422,15 +422,14 @@ function Panel_Collection() : PanelContent() constructor {
 								}
 							}
 						}
-					} else {
-						draw_sprite_ui_uniform(THEME.add, 0, bx + ui(12), by + ui(12), 1, COLORS._main_icon_dark);	
-					}
+					} else
+						draw_sprite_ui_uniform(THEME.add, 0, bx + bs / 2, by + bs / 2, 1, COLORS._main_icon_dark);	
 				}
-				bx -= ui(32);
+				bx -= ui(36);
 		
 				if(bx > rootx) {
 					var txt = __txtx("panel_collection_add_folder", "Add folder");
-					if(buttonInstant(THEME.button_hide, bx, by, ui(24), ui(24), [mx, my], pFOCUS, pHOVER, txt) == 2) {
+					if(buttonInstant(THEME.button_hide, bx, by, bs, bs, [mx, my], pFOCUS, pHOVER, txt) == 2) {
 						var dia = dialogCall(o_dialog_file_name, mouse_mx + 8, mouse_my + 8);
 						dia.onModify = function (txt) {
 							directory_create(txt);
@@ -438,25 +437,25 @@ function Panel_Collection() : PanelContent() constructor {
 						};
 						dia.path = context.path + "/";
 					}
-					draw_sprite_ui_uniform(THEME.folder_add, 0, bx + ui(12), by + ui(12), 1, COLORS._main_icon);
-					draw_sprite_ui_uniform(THEME.folder_add, 1, bx + ui(12), by + ui(12), 1, COLORS._main_value_positive);
+					draw_sprite_ui_uniform(THEME.folder_add, 0, bx + bs / 2, by + bs / 2, 1, COLORS._main_icon);
+					draw_sprite_ui_uniform(THEME.folder_add, 1, bx + bs / 2, by + bs / 2, 1, COLORS._main_value_positive);
 				}
-				bx -= ui(32);
+				bx -= ui(36);
 			}
 		
 			if(bx > rootx) {
 				var txt = __txtx("panel_collection_open_file", "Open in file explorer");
-				if(buttonInstant(THEME.button_hide, bx, by, ui(24), ui(24), [mx, my], pFOCUS, pHOVER, txt, THEME.folder) == 2)
+				if(buttonInstant(THEME.button_hide, bx, by, bs, bs, [mx, my], pFOCUS, pHOVER, txt, THEME.folder) == 2)
 					shellOpenExplorer(context.path);
 			}
-			bx -= ui(32);
+			bx -= ui(36);
 			
 			if(bx > rootx) {
 				var txt = __txt("Refresh");
-				if(buttonInstant(THEME.button_hide, bx, by, ui(24), ui(24), [mx, my], pFOCUS, pHOVER, txt, THEME.refresh) == 2)
+				if(buttonInstant(THEME.button_hide, bx, by, bs, bs, [mx, my], pFOCUS, pHOVER, txt, THEME.refresh) == 2)
 					refreshContext();
 			}
-			bx -= ui(32);
+			bx -= ui(36);
 		} else {
 			var tb_w = ui(200);
 			var tb_x = w - ui(10) - tb_w;

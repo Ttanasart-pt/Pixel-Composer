@@ -156,16 +156,16 @@ function DirectoryObject(name, path) constructor {
 		var hh = 0;
 		
 		if(path == parent.context.path)
-			draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, _x + ui(28), _y, _w - ui(28), hg, COLORS.collection_path_current_bg, 1); 
+			draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, _x + ui(28), _y, _w - ui(36), hg, COLORS.collection_path_current_bg, 1); 
 		
 		if(!ds_list_empty(subDir) && _hover && point_in_rectangle(_m[0], _m[1], _x, _y, ui(32), _y + hg - 1)) {
-			draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, _x, _y, ui(32), hg, COLORS.collection_path_current_bg, 0.75);
+			draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, _x, _y, ui(32), hg, COLORS.collection_path_current_bg, 1);
 			if(mouse_press(mb_left, _focus))
 				open = !open;
 		}
 		
 		if(_hover && point_in_rectangle(_m[0], _m[1], _x + ui(32), _y, _w, _y + hg - 1)) {
-			draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, _x + ui(28), _y, _w - ui(28), hg, COLORS.collection_path_current_bg, 0.75);
+			draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, _x + ui(28), _y, _w - ui(36), hg, COLORS.collection_path_current_bg, 1);
 			if(mouse_press(mb_left, _focus)) {
 				if(!ds_list_empty(subDir))
 					open = !open;
@@ -177,12 +177,13 @@ function DirectoryObject(name, path) constructor {
 			}
 		}
 		
-		draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text);
-		if(ds_list_empty(subDir)) {
+		draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text_inner);
+		
+		if(ds_list_empty(subDir))
 			draw_sprite_ui_uniform(THEME.folder_content, parent.context == self, _x + ui(16), _y + hg / 2 - 1, 1, COLORS.collection_folder_empty);
-		} else {
+		else
 			draw_sprite_ui_uniform(THEME.folder_content, open, _x + ui(16), _y + hg / 2 - 1, 1, COLORS.collection_folder_nonempty);
-		}
+		
 		draw_text(_x + ui(32), _y + hg / 2, name);
 		hh += hg;
 		_y += hg;

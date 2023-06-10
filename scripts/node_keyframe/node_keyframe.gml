@@ -442,6 +442,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 				}
 			} 
 			
+			//print($"Deserialize {prop.node.name}:{prop.name} = {_val} ");
 			var vk = new valueKey(_time, _val, self, ease_in, ease_out);
 			vk.ease_in_type  = ease_in_type;
 			vk.ease_out_type = ease_out_type;

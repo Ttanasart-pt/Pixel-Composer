@@ -95,6 +95,7 @@ function Panel_Palette() : PanelContent() constructor {
 	});
 	
 	function drawContent(panel) {
+		draw_clear_alpha(COLORS.panel_bg_clear, 0);
 		PANEL_PADDING
 		PANEL_TITLE
 		

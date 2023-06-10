@@ -23,6 +23,7 @@ function _font_load_from_struct(str, def) {
 		return def;
 	}
 	
+	font_add_enable_aa(THEME_VALUE.font_aa);
 	return font_add(path, str.size * UI_SCALE, false, false, 0, 0);
 }
 

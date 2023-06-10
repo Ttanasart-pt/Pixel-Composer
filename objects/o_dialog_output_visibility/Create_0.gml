@@ -41,7 +41,7 @@ event_inherited();
 			draw_sprite_ui(THEME.visible, output.visible, ui(16), _yy + hh / 2, 0.6, 0.6, 0, output.visible? COLORS._main_icon_light : COLORS._main_icon);
 			
 			draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text);
-			draw_text_over(ui(36), _yy + hh / 2, output.name);
+			draw_text_add(ui(36), _yy + hh / 2, output.name);
 		}
 		
 		return _h;

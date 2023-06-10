@@ -117,7 +117,7 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 			var bx  = _x + ww * i;
 			tb[i].draw(bx + ui(24), _y, ww - ui(24), _h, _data[i], _m);
 			
-			draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text_sub);
+			draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text_inner);
 			draw_text(bx + ui(8), _y + _h / 2, axis[i]);
 		}
 		

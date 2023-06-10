@@ -75,9 +75,9 @@
 	log_message("SESSION", "> init Addon");			__initAddon();
 	
 	PREF_APPLY();
-	loadFonts();
 	loadGraphic(PREF_MAP[? "theme"]);
 	loadColor(PREF_MAP[? "theme"]);
+	loadFonts();
 	
 	setPanel();
 	loadAddon();

@@ -29,3 +29,8 @@ function buffer_from_file(path) {
 	var _b = buffer_load(path);
 	return _b;
 }
+
+function buffer_read_at(buffer, position, type) {
+	buffer_seek(buffer, buffer_seek_start, position);
+	return buffer_read(buffer, type);
+}

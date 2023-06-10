@@ -73,7 +73,7 @@ function Panel_Graph_Export_Image(targetPanel) : PanelContent() constructor {
 		
 		for( var i = 0; i < array_length(widgets); i++ ) {
 			draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text);
-			draw_text_over(0, ty + wh * i, __txt(widgets[i][0], "graph_export_"));
+			draw_text_add(0, ty + wh * i, __txt(widgets[i][0], "graph_export_"));
 			
 			var _wid = widgets[i][1];
 			var _dat = widgets[i][2]();

@@ -38,7 +38,7 @@ event_inherited();
 			
 			switch(md) {
 				case "#" :
-					draw_set_text(f_h3, fa_left, fa_top, COLORS._main_text_title);
+					draw_set_text(f_h3, fa_left, fa_top, COLORS._main_text_on_accent);
 					line = string_copy(line, sp + 1, string_length(line) - sp);
 					yy += ui(16);
 					draw_text_line(xx, _y + yy, line, -1, ww);
@@ -46,7 +46,7 @@ event_inherited();
 					yy += ui(4);
 					break;
 				case "##" :
-					draw_set_text(f_h5, fa_left, fa_top, COLORS._main_text_title);
+					draw_set_text(f_h5, fa_left, fa_top, COLORS._main_text_on_accent);
 					line = string_copy(line, sp + 1, string_length(line) - sp);
 					yy += ui(8);
 					draw_text_line(xx + ui(16), _y + yy, line, -1, ww);

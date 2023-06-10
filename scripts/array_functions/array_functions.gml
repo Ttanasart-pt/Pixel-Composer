@@ -8,12 +8,31 @@ function array_create_from_list(list) {
 	return arr;
 }
 
-function array_safe_set(arr, index, value) {
-	if(!is_array(arr)) return def;
-	if(index < 0) return;
-	if(index >= array_length(arr)) return;
+function array_safe_set(arr, index, value, fill = 0) {
+	if(!is_array(arr)) return arr;
+	if(index < 0) return arr;
+	if(index >= array_length(arr)) {
+		var i = array_length(arr);
+		for(; i <= index; i++ )
+			arr[i] = fill;
+		arr[index] = value;
+		return arr;
+	}
 	
 	array_set(arr, index, value);
+	return arr;
+}
+
+function array_resize_fill(arr, size, fill = 0) {
+	if(size < array_length(arr)) {
+		array_resize(arr, size);
+		return arr;
+	}
+	
+	var i = array_length(arr);
+	for(; i < size; i++)
+		arr[i] = fill;
+	return arr;
 }
 
 enum ARRAY_OVERFLOW {

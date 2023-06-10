@@ -89,7 +89,7 @@ function vectorRangeBox(_size, _type, _onModify, _unit = noone) : widget() const
 			var by  = _y + i % 2 * (_h + ui(4));
 			tb[i].draw(bx + ui(56), by, ww - ui(56), _h, _data[i], _m);
 			
-			draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text_sub);
+			draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text_inner);
 			draw_text(bx + ui(8), by + _h / 2, label[i]);
 		}
 		
