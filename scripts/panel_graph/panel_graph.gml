@@ -422,6 +422,8 @@ function Panel_Graph() : PanelContent() constructor {
 				
 				node_hovering = noone;
 			}
+			
+			if(node_hovering) node_hovering.onDrawHover(gr_x, gr_y, mx, my, graph_s);
 		#endregion
 		//print("Hover time: " + string(current_time - t)); t = current_time;
 		

@@ -153,7 +153,7 @@ if(OS == os_windows && gameframe_is_minimized()) exit;
 #endregion
 
 #region tween
-	tweenStep();
+	//tweenStep();
 #endregion
 //print("===== Step end =====");
 

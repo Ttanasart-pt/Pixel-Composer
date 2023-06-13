@@ -56,7 +56,7 @@ function Panel_Graph_Export_Image(targetPanel) : PanelContent() constructor {
 		var path = get_save_filename("*.png", "Screenshot");
 		if(path == -1) return;
 		
-		if(!filename_ext(path) != ".png") path += ".png";
+		if(filename_ext(path) != ".png") path += ".png";
 		surface_save(surface, path);
 		noti_status($"Graph image exported at {path}");
 	});

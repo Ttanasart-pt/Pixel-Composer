@@ -22,6 +22,7 @@ function FileObject(_name, _path) constructor {
 	retrive_data = false;
 	thumbnail_data = -1;
 	thumbnail = noone;
+	size = file_size(path);
 	
 	static getName = function() { return name; }
 	
@@ -33,6 +34,7 @@ function FileObject(_name, _path) constructor {
 	}
 	
 	static getThumbnail = function() {
+		if(size > 100000) return noone;
 		if(!retrive_data) getMetadata();
 		
 		if(thumbnail_data == -1) return noone;

@@ -49,7 +49,7 @@
 		
 		static validate = function() {
 			switch(symbol) {
-				case "|": return _validate(l);
+				case "@": return _validate(l);
 			}
 			
 			return _validate(l) && _validate(r);
@@ -71,7 +71,7 @@
 		static isAnimated = function() {
 			var anim = EXPRESS_TREE_ANIM.none;
 			anim = max(anim, _isAnimated(l));
-			if(symbol != "|")
+			if(symbol != "@")
 				anim = max(anim, _isAnimated(r));
 			
 			return anim;
@@ -79,7 +79,7 @@
 		
 		static eval = function(inp = 0) {
 			var v1 = getVal(l, inp);
-			var v2 = getVal(r, inp, symbol == "|");
+			var v2 = getVal(r, inp, symbol == "@");
 			
 			//print($"{string(v1)} {symbol} {string(v2)}");
 			//print($"symbol : {symbol}");
@@ -88,14 +88,28 @@
 			//print("====================");
 			
 			switch(symbol) {
-				
 				case "+": return (is_real(v1) && is_real(v2))? v1 + v2		 : 0;
 				case "-": return (is_real(v1) && is_real(v2))? v1 - v2		 : 0;
 				case "_": return is_real(v1)? -v1 : 0;
 				case "*": return (is_real(v1) && is_real(v2))? v1 * v2		 : 0;
-				case "^": return (is_real(v1) && is_real(v2))? power(v1, v2) : 0;
+				case "$": return (is_real(v1) && is_real(v2))? power(v1, v2) : 0;
 				case "/": return (is_real(v1) && is_real(v2))? v1 / v2       : 0;
-				case "|": 
+				
+				case "&": return (is_real(v1) && is_real(v2))? v1 & v2       : 0;
+				case "|": return (is_real(v1) && is_real(v2))? v1 | v2       : 0;
+				case "^": return (is_real(v1) && is_real(v2))? v1 ^ v2       : 0;
+				case "«": return (is_real(v1) && is_real(v2))? v1 << v2      : 0;
+				case "»": return (is_real(v1) && is_real(v2))? v1 >> v2      : 0;
+				case "~": return  is_real(v1)? ~v1 : 0;
+				
+				case "=": return (is_real(v1) && is_real(v2))? v1 == v2      : 0;
+				case "≠": return (is_real(v1) && is_real(v2))? v1 != v2      : 0;
+				case "≤": return (is_real(v1) && is_real(v2))? v1 <= v2      : 0;
+				case "≥": return (is_real(v1) && is_real(v2))? v1 >= v2      : 0;
+				case ">": return (is_real(v1) && is_real(v2))? v1 > v2       : 0;
+				case "<": return (is_real(v1) && is_real(v2))? v1 < v2       : 0;
+				
+				case "@": 
 					var val = is_real(v2)? array_safe_get(v1, v2) : 0;
 					return val;
 				
@@ -119,9 +133,7 @@
 		var vl   = ds_stack_create();
 		var op   = ds_stack_create();
 		
-		fx = string_replace_all(fx,  " ", "");
-		fx = string_replace_all(fx, "\n", "");
-		fx = string_replace_all(fx, "[", "|["); //add array accessor symbol arr[i] = arr|[i] = arr | (i)
+		fx = functionStringClean(fx);
 		
 		var len = string_length(fx);
 		var l   = 1;
@@ -215,9 +227,23 @@
 				
 			case "+": //binary operators
 			case "*": 
-			case "^": 
+			case "$": 
 			case "/": 
+			case "@": 
+			
 			case "|": 
+			case "&": 
+			case "^": 
+			case "»": 
+			case "«": 
+			
+			case "=": 
+			case "≠": 
+			case "≤": 
+			case "≥": 
+			case "<": 
+			case ">": 
+			
 				if(ds_stack_size(vl) >= 2) {
 					var _v1 = ds_stack_pop(vl);
 					var _v2 = ds_stack_pop(vl);

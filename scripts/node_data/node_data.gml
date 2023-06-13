@@ -746,11 +746,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 			thicken |= _active && PANEL_GRAPH.junction_hovering == jun && PANEL_GRAPH._junction_hovering == noone;
 			thicken |= instance_exists(o_dialog_add_node) && o_dialog_add_node.junction_hovering == jun;
 			
-			if(PREF_MAP[? "connection_line_transition"]) {
-				jun.draw_line_thick.set(thicken? 2 : 1);
-				th *= jun.draw_line_thick.get();
-			} else 
-				th *= thicken? 2 : 1;
+			th *= thicken? 2 : 1;
 			
 			var corner = PREF_MAP[? "connection_line_corner"] * _s;
 			var ty = LINE_STYLE.solid;
@@ -966,6 +962,8 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	static onDrawNodeBehind = function(_x, _y, _mx, _my, _s) {}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover = false, _focus = false) {}
+	
+	static onDrawHover = function(_x, _y, _mx, _my, _s) {}
 	
 	badgePreview = 0;
 	badgeInspect = 0;

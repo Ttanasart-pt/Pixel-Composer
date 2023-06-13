@@ -1,12 +1,29 @@
 #region data
 	global.EQUATION_PRES    = ds_map_create();
-	global.EQUATION_PRES[? "+"]     = 1;
-	global.EQUATION_PRES[? "-"]     = 1;
-	global.EQUATION_PRES[? "_"]     = 9; //unary negative
-	global.EQUATION_PRES[? "*"]     = 2;
-	global.EQUATION_PRES[? "/"]     = 2;
-	global.EQUATION_PRES[? "^"]     = 3;
-	global.EQUATION_PRES[? "|"]     = 5; //array accerssor symbol
+	global.EQUATION_PRES[? "+"] = 1;
+	global.EQUATION_PRES[? "-"] = 1;
+	global.EQUATION_PRES[? "_"] = 9; //unary negative
+	global.EQUATION_PRES[? "*"] = 2;
+	global.EQUATION_PRES[? "/"] = 2;
+	global.EQUATION_PRES[? "$"] = 3;
+	
+	global.EQUATION_PRES[? "&"] = 5;
+	global.EQUATION_PRES[? "|"] = 4;
+	global.EQUATION_PRES[? "^"] = 3;
+	global.EQUATION_PRES[? "<"] = 3;
+	global.EQUATION_PRES[? "»"] = 6;
+	global.EQUATION_PRES[? "«"] = 6;
+	global.EQUATION_PRES[? "~"] = 9;
+	
+	global.EQUATION_PRES[? "="] = -1; //==
+	global.EQUATION_PRES[? "≠"] = -1; //!=
+	global.EQUATION_PRES[? "<"] =  0;
+	global.EQUATION_PRES[? ">"] =  0;
+	global.EQUATION_PRES[? "≤"] =  0;
+	global.EQUATION_PRES[? "≥"] =  0;
+	
+	global.EQUATION_PRES[? "@"] = 5; //array accerssor symbol
+	
 	global.EQUATION_PRES[? "sin"]   = 5;
 	global.EQUATION_PRES[? "cos"]   = 5;
 	global.EQUATION_PRES[? "tan"]   = 5;
@@ -16,14 +33,31 @@
 	global.EQUATION_PRES[? "floor"] = 5;
 #endregion
 
+function functionStringClean(fx) {
+	fx = string_replace_all(fx,  " ", "");
+	fx = string_replace_all(fx, "\n", "");
+	fx = string_replace_all(fx, "**", "$");
+	fx = string_replace_all(fx, "<<", "«");
+	fx = string_replace_all(fx, ">>", "»");
+	
+	fx = string_replace_all(fx, "==", "=");
+	fx = string_replace_all(fx, "!=", "≠");
+	fx = string_replace_all(fx, "<>", "≠");
+	fx = string_replace_all(fx, ">=", "≥");
+	fx = string_replace_all(fx, "<=", "≤");
+	
+	fx = string_replace_all(fx, "[", "@["); //add array accessor symbol arr[i] = arr@[i] = arr @ (i)
+	
+	return fx;
+}
+
 #region evaluator
 	function evaluateFunction(fx, params = {}) {
 		var pres = global.EQUATION_PRES;
 		var vl   = ds_stack_create();
 		var op   = ds_stack_create();
 		
-		fx = string_replace_all(fx,  " ", "");
-		fx = string_replace_all(fx, "\n", "");
+		fx = functionStringClean(fx);
 		
 		var len = string_length(fx);
 		var l   = 1;
@@ -97,30 +131,62 @@
 	
 	function evalToken(operator, vl) {
 		if(ds_stack_empty(vl)) return 0;
-		switch(operator) {
+		
+		var v1 = 0, v2 = 0;
+			
+		switch(operator) { //binary
 			case "+": 
-				if(ds_stack_size(vl) >= 2)
-					return ds_stack_pop(vl) + ds_stack_pop(vl);	
+			case "*": 
+			case "$": 
+			case "/": 
+			case "&": 
+			case "|": 
+			case "^": 
+			case "»": 
+			case "«": 
+			case "=": 
+			case "≠": 
+			case "<": 
+			case ">": 
+			case "≤": 
+			case "≥": 
+				if(ds_stack_size(vl) < 2) return 0;
+				
+				v1 = ds_stack_pop(vl);
+				v2 = ds_stack_pop(vl);
+				
+				//print($"{v2} {operator} {v1}");
+				//print($"symbol : {operator}");
+				//print("====================");
+		}
+		
+		switch(operator) {
+			case "+": return v2 + v1;
 			case "-": 
 				if(ds_stack_size(vl) >= 2)
 					return -ds_stack_pop(vl) + ds_stack_pop(vl);
-				else
-					return -ds_stack_pop(vl);
-			case "_": 
-				return -ds_stack_pop(vl); 
-			case "*": 
-				if(ds_stack_size(vl) >= 2) 
-					return ds_stack_pop(vl) * ds_stack_pop(vl);	
-			case "^": 
-				if(ds_stack_size(vl) < 2) return 1;
-				var ex = ds_stack_pop(vl);
-				var bs = ds_stack_pop(vl);
-				return power(bs, ex);
-			case "/": 
-				if(ds_stack_size(vl) < 2) return 0;
-				var _d = ds_stack_pop(vl);
-				if(_d == 0) return 0;
-				return ds_stack_pop(vl) / _d;
+				return -ds_stack_pop(vl);
+			case "_": return -ds_stack_pop(vl); 
+			case "*": return v2 * v1;
+			case "$": return power(v2, v1);
+			case "/": return v1 == 0? 0 : v2 / v1;
+				
+			case "&": return v2 & v1;
+			case "|": return v2 | v1;
+			case "^": return v2 ^ v1;
+			case "»": return v2 >> v1;
+			case "«": return v2 << v1;
+			case "~": 
+				if(ds_stack_size(vl) >= 1) 
+					return ~ds_stack_pop(vl);
+				return 0;
+			
+			case "=": return v2 == v1;
+			case "≠": return v2 != v1;
+			case "<": return v2 <  v1;
+			case ">": return v2 >  v1;
+			case "≤": return v2 <= v1;
+			case "≥": return v2 >= v1;
 			
 			case "sin"   : if(ds_stack_size(vl) >= 1) return sin(ds_stack_pop(vl));
 			case "cos"   : if(ds_stack_size(vl) >= 1) return cos(ds_stack_pop(vl));
