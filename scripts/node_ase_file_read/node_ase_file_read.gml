@@ -51,7 +51,7 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		var amo = array_length(layers);
 		var hh = 28;
 		var _h = hh * amo + 16;
-		var _vis = attributes[? "layer_visible"];
+		var _vis = attributes.layer_visible;
 		
 		draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, _x, _y, _w, _h, COLORS.node_composite_bg_blend, 1);
 		for( var i = 0; i < array_length(layers); i++ ) {
@@ -63,16 +63,16 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 				draw_line(_x + 16, _yy - 2, _x + _w - 16, _yy - 2);
 			}
 			
-			var vis = ds_list_get(_vis, i, true);
+			var vis = array_safe_get(_vis, i, true);
 			var _bx = _x + 24;
 			if(point_in_circle(_m[0], _m[1], _bx, _yy + hh / 2, 12)) {
 				draw_sprite_ui_uniform(THEME.junc_visible, vis, _bx, _yy + hh / 2, 1, c_white);
 				
 				if(mouse_press(mb_left, _focus))
-					hold_visibility = !_vis[| i];
+					hold_visibility = !_vis[i];
 					
-				if(mouse_click(mb_left, _focus) && _vis[| i] != hold_visibility) {
-					_vis[| i] = hold_visibility;
+				if(mouse_click(mb_left, _focus) && _vis[i] != hold_visibility) {
+					_vis[i] = hold_visibility;
 					update();
 				}
 			} else 
@@ -159,7 +159,7 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		["Tags",	false], 2, tag_renderer,
 	];
 	
-	attributes[? "layer_visible"] = ds_list_create();
+	attributes.layer_visible = [];
 	
 	content = ds_map_create();
 	layers = [];
@@ -224,7 +224,7 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		read_ase(path, content);
 		
 		layers = [];
-		var vis = attributes[? "layer_visible"];
+		var vis = attributes.layer_visible;
 		ds_list_clear(vis);
 		var frames = content[? "Frames"];
 		
@@ -316,7 +316,7 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			_tag_delay = kf.time;
 		}
 		
-		var vis = attributes[? "layer_visible"];
+		var vis = attributes.layer_visible;
 		var ww = content[? "Width"];
 		var hh = content[? "Height"];
 		
@@ -347,14 +347,14 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	}
 	
 	static attributeSerialize = function() {
-		var att = ds_map_create();
-		ds_map_add_list(att, "layer_visible", ds_list_clone(attributes[? "layer_visible"]));
+		var att = {};
+		att.layer_visible = attributes.layer_visible;
 		
 		return att;
 	}
 	
 	static attributeDeserialize = function(attr) {
-		if(ds_map_exists(attr, "layer_visible"))
-			attributes[? "layer_visible"] = ds_list_clone(attr[? "layer_visible"], true);
+		if(struct_has(attr, "layer_visible"))
+			attributes.layer_visible = attr.layer_visible;
 	}
 }

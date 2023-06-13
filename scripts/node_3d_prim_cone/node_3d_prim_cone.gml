@@ -184,10 +184,11 @@ function Node_3D_Cone(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			case 2 : pass = "norm" break;
 		}
 		
-		var _cam   = { projection: _proj, fov: _fov };
-		var _scale = { local: true, dimension: _dimS };
+		var _transform = new __3d_transform(_pos,, _sca, _lpos, _lrot, _lsca, true, _dimS );
+		var _light     = new __3d_light(_ldir, _lhgt, _lint, _lclr, _aclr);
+		var _cam	   = new __3d_camera(_proj, _fov);
 			
-		_outSurf = _3d_pre_setup(_outSurf, _dim, _pos, _sca, _ldir, _lhgt, _lint, _lclr, _aclr, _lpos, _lrot, _lsca, _cam, pass, _scale);
+		_outSurf = _3d_pre_setup(_outSurf, _dim, _transform, _light, _cam, pass);
 		
 		matrix_set(matrix_world, matrix_stack_top());
 		vertexObjects[0].submit(face_bas);

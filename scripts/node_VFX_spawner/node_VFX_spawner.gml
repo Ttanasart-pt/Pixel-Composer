@@ -3,7 +3,7 @@ function Node_VFX_Spawner(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y
 	color = COLORS.node_blend_vfx;
 	icon  = THEME.vfx;
 	
-	attributes[? "Output pool"] = false;
+	attributes.Output_pool = false;
 	
 	inputs[| input_len + 0] = nodeValue("Spawn trigger", self, JUNCTION_CONNECT.input, VALUE_TYPE.node, false)
 		.setVisible(true, true);
@@ -26,7 +26,7 @@ function Node_VFX_Spawner(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y
 			reset();
 		runVFX(ANIMATOR.current_frame);
 		
-		if(attributes[? "Output pool"]) {
+		if(attributes.Output_pool) {
 			outputs[| 0].setValue(parts);
 			return;
 		} else {

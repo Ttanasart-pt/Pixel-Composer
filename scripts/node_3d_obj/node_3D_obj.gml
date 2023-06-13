@@ -235,9 +235,6 @@ function Node_3D_Obj(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		
 		inputs[| 16].setVisible(_proj == 1);
 		
-		var _cam   = { projection: _proj, fov: _fov };
-		var _scale = { local: true, dimension: _dimS };
-			
 		for( var i = 0; i < array_length(output_display_list) - 1; i++ ) {
 			var ind = output_display_list[i];
 			var _outSurf = outputs[| ind].getValue();
@@ -248,7 +245,11 @@ function Node_3D_Obj(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				case 2 : pass = "norm" break;
 			}
 			
-			_outSurf = _3d_pre_setup(_outSurf, _dim, _pos, _sca, _ldir, _lhgt, _lint, _lclr, _aclr, _lpos, _lrot, _lsca, _cam, pass, _scale);
+			var _transform = new __3d_transform(_pos,, _sca, _lpos, _lrot, _lsca, true, _dimS );
+			var _light     = new __3d_light(_ldir, _lhgt, _lint, _lclr, _aclr);
+			var _cam	   = new __3d_camera(_proj, _fov);
+			
+			_outSurf = _3d_pre_setup(_outSurf, _dim, _transform, _light, _cam, pass);
 				for(var i = 0; i < array_length(VB); i++) {
 					if(i >= array_length(materialIndex)) continue;
 				

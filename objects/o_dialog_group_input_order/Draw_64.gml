@@ -25,7 +25,7 @@ if !ready exit;
 	
 	var _txt = __txtx("dialog_group_order_add", "Add separator");
 	if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), mouse_ui, sFOCUS, sHOVER, _txt, THEME.add, 1, COLORS._main_value_positive) == 2) {
-		var sep = node.attributes[? "Separator"];
+		var sep = node.attributes.separator;
 		array_push(sep, [ds_list_size(node.inputs) - node.custom_input_index, ""]);
 		node.sortIO();
 	}

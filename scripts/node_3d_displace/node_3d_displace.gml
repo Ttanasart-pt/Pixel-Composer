@@ -70,7 +70,7 @@ function Node_3D_Displace(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		0, 2, 1, 3, 
 	]
 	
-	attributes[? "auto_update"] = true;
+	attributes.auto_update = true;
 	
 	array_push(attributeEditors, ["Auto Update", "auto_update", new checkBox(function() { attribute[? "auto_update"] = !attribute[? "auto_update"]; }, false)]);
 	
@@ -124,7 +124,7 @@ function Node_3D_Displace(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		var _dspTex = _data[15];
 		var _dspStr = _data[16];
 		
-		if(_output_index == 0 && attributes[? "auto_update"]) {
+		if(_output_index == 0 && attributes.auto_update) {
 			var _vert = _data[11];
 			
 			for( var i = 0; i < array_length(vertexObjects); i++ )
@@ -167,10 +167,11 @@ function Node_3D_Displace(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 			case 2 : pass = "norm" break;
 		}
 		
-		var _cam   = { projection: _proj, fov: _fov };
-		var _scale = { local: true, dimension: _dimS };
+		var _transform = new __3d_transform(_pos,, _sca, _lpos, _lrot, _lsca, true, _dimS );
+		var _light     = new __3d_light(_ldir, _lhgt, _lint, _lclr, _aclr);
+		var _cam	   = new __3d_camera(_proj, _fov);
 			
-		_outSurf = _3d_pre_setup(_outSurf, _dim, _pos, _sca, _ldir, _lhgt, _lint, _lclr, _aclr, _lpos, _lrot, _lsca, _cam, pass, _scale);
+		_outSurf = _3d_pre_setup(_outSurf, _dim, _transform, _light, _cam, pass);
 			for( var i = 0; i < array_length(vertexObjects); i++ )
 				vertexObjects[i].submit();
 		_3d_post_setup();

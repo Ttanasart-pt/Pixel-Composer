@@ -307,7 +307,7 @@ function Node_Palette_Extract(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	static onValueFromUpdate = function() { extractPalettes(); }
 	
 	function update() {  
-		if(attributes[? "auto_exe"])
+		if(attributes.auto_exe)
 			extractPalettes();
 	}
 	

@@ -68,8 +68,9 @@ function Node_Struct(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		for(var i = input_fix_len; i < ds_list_size(inputs) - data_length; i += data_length) {
 			var key = inputs[| i + 0].getValue();
 			var val = inputs[| i + 1].getValue();
+			var frm = inputs[| i + 1].value_from;
 			
-			if(inputs[| i + 1].type == VALUE_TYPE.surface)
+			if(frm != noone && frm.type == VALUE_TYPE.surface)
 				str[$ key] = new Surface(val);
 			else
 				str[$ key] = val;
@@ -93,9 +94,9 @@ function Node_Struct(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	}
 	
 	static postDeserialize = function() {
-		var _inputs = load_map[? "inputs"];
+		var _inputs = load_map.inputs;
 		
-		for(var i = input_fix_len; i < ds_list_size(_inputs); i += data_length)
+		for(var i = input_fix_len; i < array_length(_inputs); i += data_length)
 			createNewInput();
 	}
 	

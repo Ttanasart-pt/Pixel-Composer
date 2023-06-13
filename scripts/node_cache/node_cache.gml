@@ -33,7 +33,7 @@ function Node_Cache(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	}
 	
 	static update = function() { 
-		if(recoverCache() || !ANIMATOR.is_playing) return;
+		if(recoverCache()) return;
 		if(!inputs[| 0].value_from) return;
 		
 		var _surf  = inputs[| 0].getValue();
@@ -50,9 +50,9 @@ function Node_Cache(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	}
 	
 	static postDeserialize = function() { 
-		if(!ds_map_exists(load_map, "cache")) return;
-		cache_content = load_map[? "cache"];
-		cache_loading_progress  = 0;
+		if(!struct_has(load_map, "cache")) return;
+		cache_content			= load_map.cache;
+		cache_loading_progress	= 0;
 		cache_loading			= true;
 	}
 }

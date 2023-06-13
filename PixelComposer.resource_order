@@ -722,6 +722,7 @@
     {"name":"s_node_stack","order":37,"path":"sprites/s_node_stack/s_node_stack.yy",},
     {"name":"s_fade_up","order":3,"path":"sprites/s_fade_up/s_fade_up.yy",},
     {"name":"panel_globalvar","order":2,"path":"scripts/panel_globalvar/panel_globalvar.yy",},
+    {"name":"node_3d_render","order":20,"path":"scripts/node_3d_render/node_3d_render.yy",},
     {"name":"node_guide","order":18,"path":"scripts/node_guide/node_guide.yy",},
     {"name":"fd_rectangle_get_velocity_surface","order":24,"path":"scripts/fd_rectangle_get_velocity_surface/fd_rectangle_get_velocity_surface.yy",},
     {"name":"s_node_text_char_get","order":2,"path":"sprites/s_node_text_char_get/s_node_text_char_get.yy",},

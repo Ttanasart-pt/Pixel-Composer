@@ -120,7 +120,7 @@ function Node_Camera(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		if(!is_surface(_data[0])) return;
 		var _area = _data[1];
 		var _zoom = _data[2];
-		var _samp = ds_map_try_get(attributes, "oversample");
+		var _samp = struct_try_get(attributes, "oversample");
 		var _fix  = _data[4];
 		var cDep  = attrDepth();
 		
@@ -208,9 +208,9 @@ function Node_Camera(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	}
 	
 	static postDeserialize = function() {
-		var _inputs = load_map[? "inputs"];
+		var _inputs = load_map.inputs;
 		
-		for(var i = input_fix_len; i < ds_list_size(_inputs); i += data_length)
+		for(var i = input_fix_len; i < array_length(_inputs); i += data_length)
 			createNewInput();
 	}
 }

@@ -83,7 +83,7 @@ If set, then strength value control how many times the effect applies on itself.
 			shader_set_uniform_f(uniform_mid, _data[4]);
 			shader_set_uniform_i(uniform_rg, _data[5]);
 			shader_set_uniform_i(uniform_it, _data[6]);
-			shader_set_uniform_i(uniform_sam, ds_map_try_get(attributes, "oversample"));
+			shader_set_uniform_i(uniform_sam, struct_try_get(attributes, "oversample"));
 			draw_surface_safe(_data[0], 0, 0);
 		surface_reset_shader();
 		

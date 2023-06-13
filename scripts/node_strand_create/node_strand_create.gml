@@ -46,8 +46,8 @@ function Node_Strand_Create(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	
 	inputs[| 15] = nodeValue("Bake hair", self, JUNCTION_CONNECT.input, VALUE_TYPE.trigger, 0, "Prevent strand reseting to apply manual modification. Unbaking will remove all changes.")
 		.setDisplay(VALUE_DISPLAY.button, [ function() { 
-			attributes[? "use_groom"] = !attributes[? "use_groom"]; 
-			if(attributes[? "use_groom"])
+			attributes.use_groom = !attributes.use_groom; 
+			if(attributes.use_groom)
 				groomed = strands.clone();
 			strandUpdate(true);
 		}, "Bake" ]);
@@ -66,7 +66,7 @@ function Node_Strand_Create(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		["Preview",		 true], 16, 
 	];
 	
-	attributes[? "use_groom"] = false;
+	attributes.use_groom = false;
 	groomed = new StrandMesh();
 	strands = new StrandMesh();
 	
@@ -118,10 +118,10 @@ function Node_Strand_Create(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var _typ = inputs[|  0].getValue();
 		var _pre = inputs[| 16].getValue();
-		if(!attributes[? "use_groom"]) 
+		if(!attributes.use_groom) 
 			strands.draw(_x, _y, _s, _pre);
 		
-		tools = attributes[? "use_groom"]? groomTools : -1;
+		tools = attributes.use_groom? groomTools : -1;
 		
 		if(_typ == 0) {
 			if(tool_dragging == noone)
@@ -154,7 +154,7 @@ function Node_Strand_Create(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			_msh.draw(_x, _y, _s);
 		}
 		
-		if(!attributes[? "use_groom"]) return;
+		if(!attributes.use_groom) return;
 		groomed.draw(_x, _y, _s, _pre, true);
 		
 		var __mx = (_mx - _x) / _s;
@@ -428,8 +428,8 @@ function Node_Strand_Create(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		inputs[| 13].setVisible(_typ == 2, _typ == 2);
 		inputs[| 14].setVisible(_typ != 2);
 		
-		inputs[| 15].editWidget.text  = attributes[? "use_groom"]? "Unbake" : "Bake";
-		inputs[| 15].editWidget.blend = attributes[? "use_groom"]? COLORS._main_value_negative : COLORS._main_value_positive;
+		inputs[| 15].editWidget.text  = attributes.use_groom? "Unbake" : "Bake";
+		inputs[| 15].editWidget.blend = attributes.use_groom? COLORS._main_value_negative : COLORS._main_value_positive;
 	}
 	
 	static strandUpdate = function(willReset = false) {
@@ -452,7 +452,7 @@ function Node_Strand_Create(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		var sx, sy, prog, dir;
 		
 		if(willReset) {
-			if(attributes[? "use_groom"]) {
+			if(attributes.use_groom) {
 				strands = groomed.clone();
 				outputs[| 0].setValue(strands);
 				return;
@@ -543,16 +543,16 @@ function Node_Strand_Create(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	}
 	
 	static attributeSerialize = function() {
-		var att = ds_map_create();
-		att[? "use_groom"] = attributes[? "use_groom"];
-		att[? "fixStrand"] = groomed.serialize();
+		var att = {};
+		att.use_groom = attributes.use_groom;
+		att.fixStrand = groomed.serialize();
 		return att;
 	}
 	
 	static attributeDeserialize = function(attr) {
-		if(ds_map_exists(attr, "fixStrand"))
-			groomed.deserialize(attr[? "fixStrand"]);
+		if(struct_has(attr, "fixStrand"))
+			groomed.deserialize(attr.fixStrand);
 			
-		attributes[? "use_groom"] = ds_map_try_get(attr, "use_groom", false);
+		attributes.use_groom = struct_try_get(attr, "use_groom", false);
 	}
 }

@@ -43,7 +43,7 @@ function Node_Websocket_Receiver(_x, _y, _group = noone) : Node(_x, _y, _group) 
 		setPort(_port);
 	}
 	
-	network_trigger = false;
+	network_trigger = 0;
 	function asyncPackets(_async_load) {
 		var _active = inputs[| 1].getValue();
 		if(!_active) return;
@@ -72,11 +72,13 @@ function Node_Websocket_Receiver(_x, _y, _group = noone) : Node(_x, _y, _group) 
 	}
 	
 	static step = function() {
-		if(network_trigger) {
+		if(network_trigger == 1) {
 			outputs[| 1].setValue(1);
-			network_trigger = false;
-		} else 
+			network_trigger = -1;
+		} else if(network_trigger == -1) {
 			outputs[| 1].setValue(0);
+			network_trigger = 0;
+		}
 	}
 	
 	static update = function(frame = ANIMATOR.current_frame) { 

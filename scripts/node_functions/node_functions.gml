@@ -137,7 +137,7 @@
 #endregion
 
 #region utilities
-	function previewWindow(node) {
+	function create_preview_window(node) {
 		if(node == noone) return;
 		var win = new Panel_Preview_Window();
 		win.node_target     = node;

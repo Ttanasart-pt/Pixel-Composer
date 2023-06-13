@@ -31,29 +31,26 @@ function MetaDataManager() constructor {
 	];
 	
 	static serialize = function() {
-		var m = ds_map_create();
-		m[? "description"]  = description;
-		m[? "author"]		= author;
-		m[? "contact"]		= contact;
-		m[? "alias"]		= alias;
-		m[? "aut_id"]		= author_steam_id;
-		m[? "file_id"]		= file_id;
-		
-		ds_map_add_list(m, "tags", ds_list_create_from_array(tags));
+		var m = {};
+		m.description  = description;
+		m.author	= author;
+		m.contact	= contact;
+		m.alias		= alias;
+		m.aut_id	= author_steam_id;
+		m.file_id	= file_id;
+		m.tags		= tags;
 		
 		return m;
 	}
 	
 	static deserialize = function(m, readonly = false) {
-		description		= ds_map_try_get(m, "description",	description);
-		author			= ds_map_try_get(m, "author",		author);
-		contact			= ds_map_try_get(m, "contact",		contact);
-		alias			= ds_map_try_get(m, "alias",		alias);
-		author_steam_id = ds_map_try_get(m, "aut_id",		author_steam_id);
-		file_id			= ds_map_try_get(m, "file_id",		file_id);
-		
-		if(ds_map_exists(m, "tags"))
-			tags = array_create_from_list(m[? "tags"]);
+		description		= struct_try_get(m, "description",	description);
+		author			= struct_try_get(m, "author",		author);
+		contact			= struct_try_get(m, "contact",		contact);
+		alias			= struct_try_get(m, "alias",		alias);
+		author_steam_id = struct_try_get(m, "aut_id",		author_steam_id);
+		file_id			= struct_try_get(m, "file_id",		file_id);
+		tags			= struct_try_get(m, "tags",			tags);
 		
 		return self;
 	}

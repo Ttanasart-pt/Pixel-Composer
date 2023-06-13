@@ -48,7 +48,7 @@ function Node_Noise_Hex(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		var _pos = _data[2];
 		var _sca = _data[3];
 		var _sam = _data[4];
-		var _samTyp = ds_map_try_get(attributes, "oversample");
+		var _samTyp = struct_try_get(attributes, "oversample");
 		
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
 		

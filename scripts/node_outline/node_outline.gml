@@ -66,7 +66,7 @@ function Node_Outline(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		var alpha = _data[4];
 		var side  = _data[5];
 		var aa    = _data[6];
-		var sam   = ds_map_try_get(attributes, "oversample");
+		var sam   = struct_try_get(attributes, "oversample");
 		var bst   = _data[8];
 		
 		surface_set_target(_outSurf);

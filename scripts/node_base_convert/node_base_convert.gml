@@ -28,8 +28,8 @@ function Node_Base_Convert(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		var baseTo   = current_data[2];
 		
 		var bbox = drawGetBbox(xx, yy, _s);
-		var b1   = new node_bbox(bbox.x0, bbox.y0, bbox.xc - _s * 8, bbox.y1);
-		var b2   = new node_bbox(bbox.xc + _s * 8, bbox.y0, bbox.x1, bbox.y1);
+		var b1   = BBOX().fromPoints(bbox.x0, bbox.y0, bbox.xc - _s * 8, bbox.y1);
+		var b2   = BBOX().fromPoints(bbox.xc + _s * 8, bbox.y0, bbox.x1, bbox.y1);
 		
 		draw_sprite_ext(THEME.arrow, 0, bbox.xc, bbox.yc + 1 * _s, .5 * _s, .5 * _s, 0, COLORS._main_icon, 1);
 		draw_text_bbox(b1, baseFrom);

@@ -23,44 +23,42 @@ function __NEW() {
 }
 
 function save_serialize() {
-	var _map  = ds_map_create();
-	_map[? "version"] = SAVEFILE_VERSION;
+	var _map  = {};
+	_map.version = SAVEFILE_VERSION;
 	
-	var _node_list = ds_list_create();
+	var _node_list = [];
 	var _key = ds_map_find_first(NODE_MAP);
 	
 	repeat(ds_map_size(NODE_MAP)) {
 		var _node = NODE_MAP[? _key];
 		
 		if(_node.active)
-			ds_list_add_map(_node_list, _node.serialize());
+			array_push(_node_list, _node.serialize());
 		
 		_key = ds_map_find_next(NODE_MAP, _key);	
 	}
-	ds_map_add_list(_map, "nodes", _node_list);
+	_map.nodes = _node_list;
 	
-	var _anim_map = ds_map_create();
-	_anim_map[? "frames_total"] = ANIMATOR.frames_total;
-	_anim_map[? "framerate"] = ANIMATOR.framerate;
-	ds_map_add_map(_map, "animator", _anim_map);
+	var _anim_map = {};
+	_anim_map.frames_total = ANIMATOR.frames_total;
+	_anim_map.framerate    = ANIMATOR.framerate;
+	_map.animator = _anim_map;
 	
-	ds_map_add_map(_map, "metadata", METADATA.serialize());
-	
-	ds_map_add_map(_map, "global", GLOBAL.serialize());
+	_map.metadata = METADATA.serialize();
+	_map.global   = GLOBAL.serialize();
 	
 	var prev = PANEL_PREVIEW.getNodePreviewSurface();
-	if(!is_surface(prev)) _map[? "preview"] = "";
-	else				  _map[? "preview"] = surface_encode(surface_size_lim(prev, 128, 128));
+	if(!is_surface(prev)) _map.preview = "";
+	else				  _map.preview = surface_encode(surface_size_lim(prev, 128, 128));
 	
-	var _addon = ds_map_create();
+	var _addon = {};
 	with(_addon_custom) {
 		var _ser = lua_call(thread, "serialize");
-		_addon[? name] = PREF_MAP[? "save_file_minify"]? json_stringify_minify(_ser) : json_stringify(_ser);
+		_addon[$ name] = PREF_MAP[? "save_file_minify"]? json_stringify_minify(_ser) : json_stringify(_ser);
 	}
-	ds_map_add_map(_map, "addon", _addon);
+	_map.addon = _addon;
 	
-	var val = PREF_MAP[? "save_file_minify"]? json_encode_minify(_map) : json_encode(_map, true);
-	ds_map_destroy(_map);
+	var val = PREF_MAP[? "save_file_minify"]? json_stringify_minify(_map) : json_stringify(_map, true);
 	return val;
 }
 
@@ -130,10 +128,10 @@ function SAVE_AT(path, log = "save at ") {
 }
 
 function SAVE_COLLECTIONS(_list, _path, save_surface = true, metadata = noone, context = PANEL_GRAPH.getCurrentContext()) {
-	var _map  = ds_map_create();
-	_map[? "version"] = SAVEFILE_VERSION;
+	var _content = {};
+	_content.version = SAVEFILE_VERSION;
 	
-	var _node_list = ds_list_create();
+	var _nodes = [];
 	var cx = 0;
 	var cy = 0;
 	for(var i = 0; i < ds_list_size(_list); i++) {
@@ -152,17 +150,16 @@ function SAVE_COLLECTIONS(_list, _path, save_surface = true, metadata = noone, c
 	}
 	
 	for(var i = 0; i < ds_list_size(_list); i++)
-		SAVE_NODE(_node_list, _list[| i], cx, cy, true, context);
-	ds_map_add_list(_map, "nodes", _node_list);
+		SAVE_NODE(_nodes, _list[| i], cx, cy, true, context);
+	_content.nodes = _nodes;
 	
 	if(metadata != noone)
-		ds_map_add_map(_map, "metadata", metadata.serialize());
+		_content.metadata = metadata.serialize();
 	
 	var file = file_text_open_write(_path);
-	file_text_write_string(file, PREF_MAP[? "save_file_minify"]? json_encode_minify(_map) : json_encode(_map, true));
+	file_text_write_string(file, PREF_MAP[? "save_file_minify"]? json_stringify_minify(_content) : json_stringify(_content, true));
 	file_text_close(file);
 	
-	ds_map_destroy(_map);
 	var pane = findPanel("Panel_Collection");
 	if(pane) pane.refreshContext();
 	
@@ -179,21 +176,20 @@ function SAVE_COLLECTION(_node, _path, save_surface = true, metadata = noone, co
 		}
 	}
 	
-	var _map  = ds_map_create();
-	_map[? "version"] = SAVEFILE_VERSION;
+	var _content = {};
+	_content.version = SAVEFILE_VERSION;
 	
-	var _node_list = ds_list_create();
-	SAVE_NODE(_node_list, _node, _node.x, _node.y, true, context);
-	ds_map_add_list(_map, "nodes", _node_list);
+	var _nodes = [];
+	SAVE_NODE(_nodes, _node, _node.x, _node.y, true, context);
+	_content.nodes = nodes;
 	
 	if(metadata != noone)
-		ds_map_add_map(_map, "metadata", metadata.serialize());
+		_content.metadata = metadata.serialize();
 	
 	var file = file_text_open_write(_path);
-	file_text_write_string(file, PREF_MAP[? "save_file_minify"]? json_encode_minify(_map) : json_encode(_map, true));
+	file_text_write_string(file, PREF_MAP[? "save_file_minify"]? json_stringify_minify(_content) : json_stringify(_content, true));
 	file_text_close(file);
 	
-	ds_map_destroy(_map);
 	var pane = findPanel("Panel_Collection");
 	if(pane) pane.refreshContext();
 	
@@ -201,20 +197,18 @@ function SAVE_COLLECTION(_node, _path, save_surface = true, metadata = noone, co
 	PANEL_MENU.setNotiIcon(THEME.noti_icon_file_save);
 }
 
-function SAVE_NODE(_list, _node, dx = 0, dy = 0, scale = false, context = PANEL_GRAPH.getCurrentContext()) {
-	if(variable_struct_exists(_node, "nodes")) {
+function SAVE_NODE(_arr, _node, dx = 0, dy = 0, scale = false, context = PANEL_GRAPH.getCurrentContext()) {
+	if(struct_has(_node, "nodes")) {
 		for(var i = 0; i < ds_list_size(_node.nodes); i++)
-			SAVE_NODE(_list, _node.nodes[| i], dx, dy, scale, context);
+			SAVE_NODE(_arr, _node.nodes[| i], dx, dy, scale, context);
 	}
 	
 	var m = _node.serialize(scale);
-	m[? "x"] -= dx;
-	m[? "y"] -= dy;
+	m.x -= dx;
+	m.y -= dy;
 	
 	var c = context == noone? noone : context.node_id;
-	if(m[? "group"] == c) 
-		m[? "group"] = noone;
+	if(m.group == c) m.group = noone;
 	
-	ds_list_add(_list, m);
-	ds_list_mark_as_map(_list, ds_list_size(_list) - 1);
+	array_push(_arr, m);
 }

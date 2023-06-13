@@ -27,7 +27,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 	split = "";
 	
 	tab_width   = 0;
-	tab_height  = ui(20);
+	tab_height  = ui(24);
 	tab_x       = 0;
 	tab_x_to    = 0;
 	tab_surface = noone;
@@ -450,13 +450,15 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 			checkHover();
 	}
 	
+	tab_cover = noone;
 	function drawTab() {
 		tab_surface = surface_verify(tab_surface, w - padding * 2 + 1, tab_height + ui(4));
 		
 		var tsx = x + padding - 1;
-		var tsy = y;
+		var tsy = y + ui(2);
 		var msx = mouse_x - tsx;
 		var msy = mouse_y - tsy;
+		tab_cover = noone;
 		
 		surface_set_target(tab_surface);
 			DRAW_CLEAR
@@ -490,22 +492,25 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 				content[i].tab_x = lerp_float(content[i].tab_x, tbx, 5);
 				var _tbx = content[i].tab_x;
 				var _hov = point_in_rectangle(msx, msy, _tbx, tby, _tbx + tbw, tab_height);
+				var _tdh = tbh + THEME_VALUE.panel_tab_extend;
 				
 				if(i == content_index) {
 					foc = FOCUS == self;
-					var cc = FOCUS == self? COLORS.panel_tab_active : COLORS.panel_tab;
-					draw_sprite_stretched_ext(THEME.ui_panel_tab, FOCUS == self, _tbx, tby, tbw, tbh, cc, 1);
+					var cc = FOCUS == self? COLORS._main_accent : COLORS.panel_tab;
+					draw_sprite_stretched_ext(THEME.ui_panel_tab, 1 + (FOCUS == self), _tbx, tby, tbw, _tdh, cc, 1);
+					if(!foc) tab_cover = BBOX().fromWH(tsx + _tbx, tsy + tby + tbh - ui(2), tbw, THEME_VALUE.panel_tab_extend);
 				} else {
-					draw_sprite_stretched_ext(THEME.ui_panel_tab, 0, _tbx, tby, tbw, tbh, COLORS.panel_tab_inactive, 1);
-					
+					var cc = COLORS.panel_tab_inactive;
 					if(HOVER == self && _hov)
-						draw_sprite_stretched_ext(THEME.ui_panel_tab, 0, _tbx, tby, tbw, tbh, COLORS.panel_tab_hover, 1);
+						var cc = COLORS.panel_tab_hover;
+						
+					draw_sprite_stretched_ext(THEME.ui_panel_tab, 0, _tbx, tby, tbw, _tdh, cc, 1);
 				}
 				
 				if(HOVER == self && _hov) {
 					if(mouse_press(mb_left, FOCUS == self)) {
 						content_index = i;
-							
+						
 						tab_holding = content[i];
 						tab_hold_state = 0;
 						tab_holding_mx = msx;
@@ -516,7 +521,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 					if(mouse_press(mb_right, FOCUS == self)) {
 						var menu = array_clone(border_rb_menu);
 						if(instanceof(content[i]) == "Panel_Menu")
-							array_remove(menu, 2, border_rb_close);
+							array_remove(menu, 2);
 						
 						menuCall("panel_border_menu",,, menu);
 					}
@@ -533,7 +538,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 				}
 				
 				draw_set_text(f_p3, fa_left, fa_bottom, cc);
-				draw_text_add(_tbx + ui(8), tab_height - ui(2), txt);
+				draw_text_add(_tbx + ui(8), tab_height - ui(4), txt);
 				
 				tbx += tbw + ui(2);
 			}
@@ -553,7 +558,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 				var tbw  = string_width(txt) + ui(16);
 				if(icn != noone) tbw += ui(16 + 4);
 				
-				draw_sprite_stretched_ext(THEME.ui_panel_tab, FOCUS == self, _tbx, tby, tbw, tbh, COLORS.panel_tab_active, 1);
+				draw_sprite_stretched_ext(THEME.ui_panel_tab, 2, _tbx, tby, tbw, tbh, COLORS._main_accent, 1);
 				
 				var cc = COLORS.panel_bg_clear_inner;
 				if(icn != noone) {
@@ -561,7 +566,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 					_tbx += ui(20);
 				}
 				draw_set_text(f_p3, fa_left, fa_bottom, COLORS.panel_bg_clear_inner);
-				draw_text(_tbx + ui(8), tab_height - ui(2), txt);
+				draw_text_add(_tbx + ui(8), tab_height - ui(4), txt);
 				
 				if(tab_hold_state == 0) {
 					if(point_distance(tab_holding_mx, tab_holding_my, msx, msy) > 8)
@@ -633,7 +638,8 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 		surface_reset_target();
 		
 		draw_surface_safe(content_surface, tx, ty);
-		draw_sprite_stretched(THEME.ui_panel_bg, 3, tx + padding, ty + padding, _tw, _th);
+		draw_sprite_stretched(THEME.ui_panel_fg, 0, tx + padding, ty + padding, _tw, _th);
+		draw_sprite_bbox(THEME.ui_panel_tab, 3, tab_cover);
 			
 		if(FOCUS == self && parent != noone) {
 			draw_sprite_stretched_ext(THEME.ui_panel_active, 0, tx + padding, ty + padding, tw - padding * 2, th - padding * 2, COLORS._main_accent, 1);	

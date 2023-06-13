@@ -45,6 +45,7 @@ if !ready exit;
 	draw_sprite_stretched(THEME.ui_panel_bg, 0, x0, y0, x1 - x0, y1 - y0);
 	sp_recent.setActiveFocus(sFOCUS, sHOVER);
 	sp_recent.draw(x0 + ui(6), y0);
+	draw_sprite_stretched(THEME.ui_panel_fg, 0, x0, y0, x1 - x0, y1 - y0);
 	
 	var bx  = x1 - ui(28);
 	var by  = y0 - ui(28 + 4);
@@ -80,8 +81,9 @@ if !ready exit;
 	
 	x0 = x1 + ui(16);
 	x1 = dialog_x + dialog_w - ui(16);
-	
 	bx = x0;
+	var tab_cover = noone;
+	var th = ui(36) + THEME_VALUE.panel_tab_extend;
 	
 	for( var i = 0; i < array_length(pages); i++ ) {
 		draw_set_text(f_p0, fa_left, fa_bottom, project_page == i? COLORS._main_text : COLORS._main_text_sub);
@@ -101,8 +103,11 @@ if !ready exit;
 		if(txt == "Contests") 
 			tw += ui(32);
 		
-		if(project_page != i && point_in_rectangle(mouse_mx, mouse_my, bx, y0 - ui(32), bx + tw, y0)) {
-			draw_sprite_stretched_ext(THEME.ui_panel_tab, 0, bx, y0 - ui(32), tw, ui(40), COLORS.panel_tab_hover, 1);
+		if(project_page == i) {
+			draw_sprite_stretched_ext(THEME.ui_panel_tab, 1, bx, y0 - ui(32), tw, th, COLORS.panel_tab, 1);
+			tab_cover = BBOX().fromWH(bx, y0, tw, THEME_VALUE.panel_tab_extend);
+		} else if(point_in_rectangle(mouse_mx, mouse_my, bx, y0 - ui(32), bx + tw, y0)) {
+			draw_sprite_stretched_ext(THEME.ui_panel_tab, 0, bx, y0 - ui(32), tw, th, COLORS.panel_tab_hover, 1);
 			
 			if(mouse_click(mb_left, sFOCUS)) {
 				project_page = i;
@@ -112,21 +117,17 @@ if !ready exit;
 					expandAction = true;
 				}
 			}
-		} else {
-			var foc = project_page == i;
-			draw_sprite_stretched_ext(THEME.ui_panel_tab, foc, bx, y0 - ui(32), tw, ui(40), 
-				foc? COLORS.panel_tab_active : COLORS.panel_tab_inactive, 1);
-		}
-			
+		} else
+			draw_sprite_stretched_ext(THEME.ui_panel_tab, 0, bx, y0 - ui(32), tw, th, COLORS.panel_tab_inactive, 1);
+		
 		var _btx = bx + ui(8);
 		if(txt == "Contests") {
 			draw_sprite_ui(THEME.trophy, 0, _btx + ui(16), y0 - ui(14),,,, CDEF.yellow);
 			_btx += ui(32);
 		}
 		
-		var cc = COLORS._main_text;
-		if(txt == "Contests") cc = project_page == i? CDEF.yellow : COLORS._main_text_sub;
-		if(project_page == i) cc = COLORS._main_text_on_accent;
+		var cc = COLORS._main_text_sub;
+		if(project_page == i) cc = txt == "Contests"? CDEF.yellow : COLORS._main_text;
 		
 		draw_set_color(cc);
 		draw_text(_btx, y0 - ui(4), dtxt);
@@ -147,6 +148,8 @@ if !ready exit;
 	}
 	
 	draw_sprite_stretched(THEME.ui_panel_bg, 0, x0, y0, x1 - x0, y1 - y0);
+	draw_sprite_stretched(THEME.ui_panel_fg, 0, x0, y0, x1 - x0, y1 - y0);
+	draw_sprite_bbox(THEME.ui_panel_tab, 3, tab_cover);
 	
 	switch(pages[project_page]) {
 		case "Sample projects" :

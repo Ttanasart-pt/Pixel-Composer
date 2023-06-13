@@ -56,16 +56,10 @@ function __LOAD_PATH(path, readonly = false, safe_mode = false) {
 	READONLY	= readonly;
 	SET_PATH(path);
 	
-	var file = file_text_open_read(temp_path);
-	var load_str = "";
+	var _load_content = json_load_struct(temp_path);
 	
-	while(!file_text_eof(file))
-		load_str += file_text_readln(file);
-	file_text_close(file);
-	
-	var _map = json_decode(load_str);
-	if(ds_map_exists(_map, "version")) {
-		var _v = _map[? "version"];
+	if(struct_has(_load_content, "version")) {
+		var _v = _load_content.version;
 		LOADING_VERSION = _v;
 		if(_v != SAVEFILE_VERSION) {
 			var warn = "File version mismatch : loading file verion " + string(_v) + " to Pixel Composer " + string(SAVEFILE_VERSION);
@@ -79,11 +73,11 @@ function __LOAD_PATH(path, readonly = false, safe_mode = false) {
 	nodeCleanUp();
 	
 	var create_list = ds_list_create();
-	if(ds_map_exists(_map, "nodes")) {
+	if(struct_has(_load_content, "nodes")) {
 		try {
-			var _node_list = _map[? "nodes"];
-			for(var i = 0; i < ds_list_size(_node_list); i++) {
-				var _node = nodeLoad(_node_list[| i]);
+			var _node_list = _load_content.nodes;
+			for(var i = 0; i < array_length(_node_list); i++) {
+				var _node = nodeLoad(_node_list[i]);
 				if(_node) ds_list_add(create_list, _node);
 			}
 		} catch(e) {
@@ -92,37 +86,37 @@ function __LOAD_PATH(path, readonly = false, safe_mode = false) {
 	}
 	
 	try {
-		if(ds_map_exists(_map, "animator")) {
-			var _anim_map			= _map[? "animator"];
-			ANIMATOR.frames_total	= ds_map_try_get(_anim_map, "frames_total");
-			ANIMATOR.framerate		= ds_map_try_get(_anim_map, "framerate");
+		if(struct_has(_load_content, "animator")) {
+			var _anim_map			= _load_content.animator;
+			ANIMATOR.frames_total	= _anim_map.frames_total;
+			ANIMATOR.framerate		= _anim_map.framerate;
 		}
 	} catch(e) {
 		log_warning("LOAD, animator", exception_print(e));
 	}
 	
 	try {
-		if(ds_map_exists(_map, "metadata"))
-			METADATA.deserialize(_map[? "metadata"]);
+		if(struct_has(_load_content, "metadata"))
+			METADATA.deserialize(_load_content.metadata);
 	} catch(e) {
 		log_warning("LOAD, metadata", exception_print(e));
 	}
 	
 	GLOBAL = new Node_Global();
 	try {
-		if(ds_map_exists(_map, "global"))
-			GLOBAL.deserialize(_map[? "global"]);
+		if(struct_has(_load_content, "global"))
+			GLOBAL.deserialize(_load_content.global);
 	} catch(e) {
 		log_warning("LOAD, global", exception_print(e));
 	}
 	
 	try {
-		if(ds_map_exists(_map, "addon")) {
-			var _addon = _map[? "addon"];
+		if(struct_has(_load_content, "addon")) {
+			var _addon = _load_content.addon;
 			
 			with(addon) {
-				if(!ds_map_exists(_addon, name)) continue;
-				var _mp = json_parse(_addon[? name]);
+				if(!struct_has(_addon, name)) continue;
+				var _mp = json_parse(_addon.name);
 				
 				lua_call(thread, "deserialize", _mp);
 			}
@@ -178,7 +172,7 @@ function __LOAD_PATH(path, readonly = false, safe_mode = false) {
 		try {
 			while(++pass < 4 && !ds_queue_empty(CONNECTION_CONFLICT)) {
 				var size = ds_queue_size(CONNECTION_CONFLICT);
-				log_message("LOAD", "[Connect] " + string(size) + " Connection conflict(s) detected ( pass: " + string(pass) + " )");
+				log_message("LOAD", $"[Connect] {size} Connection conflict(s) detected (pass: {pass})");
 				repeat(size)
 					ds_queue_dequeue(CONNECTION_CONFLICT).connect();
 				Render();
@@ -208,7 +202,6 @@ function __LOAD_PATH(path, readonly = false, safe_mode = false) {
 	log_message("FILE", "load " + path, THEME.noti_icon_file_load);
 	PANEL_MENU.setNotiIcon(THEME.noti_icon_file_load);
 	
-	ds_map_destroy(_map);
 	refreshNodeMap();
 	
 	return true;

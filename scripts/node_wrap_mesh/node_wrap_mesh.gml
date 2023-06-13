@@ -57,10 +57,10 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	array_push(attributeEditors, "Warp");
 	
-	attributes[? "iteration"] = 4;
+	attributes.iteration = 4;
 	array_push(attributeEditors, ["Iteration", "iteration", 
 		new textBox(TEXTBOX_INPUT.number, function(val) { 
-			attributes[? "iteration"] = val;
+			attributes.iteration = val;
 			triggerRender();
 		})]);
 	
@@ -438,7 +438,7 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			}
 		}
 		
-		var it    = attributes[? "iteration"];
+		var it    = attributes.iteration;
 		var _rat  = 1 / it;
 		
 		repeat(it) {
@@ -487,34 +487,33 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	}
 	
 	static postDeserialize = function() {
-		var _inputs = load_map[? "inputs"];
+		var _inputs = load_map.inputs;
 		
-		for(var i = control_index; i < ds_list_size(_inputs); i++) {
+		for(var i = control_index; i < array_length(_inputs); i++) {
 			var inp = createControl();
-			print(instanceof(inp))
-			inp.applyDeserialize(_inputs[| i]);
+			inp.applyDeserialize(_inputs[i]);
 		}
 	}
 	
 	static attributeSerialize = function() {
-		var att = ds_map_create();
+		var att = {};
 		
-		var pinList = ds_list_create();
+		var pinList = [];
 		for( var j = 0; j < array_length(data.points); j++ )
 		for( var k = 0; k < array_length(data.points[j]); k++ ) {
 			var p = data.points[j][k];
 			if(p == 0) continue;
-			if(p.pin) ds_list_add(pinList, p.index);
+			if(p.pin) array_push(pinList, p.index);
 		}
 			
-		ds_map_add_list(att, "pin", pinList);
+		att.pin = pinList;
 		return att;
 	}
 	
 	loadPin = noone;
 	static attributeDeserialize = function(attr) {
-		if(ds_map_exists(attr, "pin")) 
-			loadPin = attr[? "pin"];
+		if(struct_has(attr, "pin")) 
+			loadPin = attr.pin;
 	}
 	
 	static postConnect = function() {

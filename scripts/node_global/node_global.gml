@@ -238,41 +238,39 @@ function Node_Global(_x = 0, _y = 0) : __Node_Base(_x, _y) constructor {
 	}
 	
 	static serialize = function() {
-		var _map = ds_map_create();
+		var _map = {};
 		
-		var _inputs = ds_list_create();
+		var _inputs = [];
 		for(var i = 0; i < ds_list_size(inputs); i++) {
 			var _ser = inputs[| i].serialize();
 			
-			_ser[? "global_type"]	 = inputs[| i].editor.type_index;
-			_ser[? "global_disp"]	 = inputs[| i].editor.disp_index;
-			_ser[? "global_name"]	 = inputs[| i].editor.value_name;
-			_ser[? "global_s_range"] = ds_list_create_from_array(inputs[| i].editor.slider_range);
-			_ser[? "global_s_step "] = inputs[| i].editor.slider_step;
+			_ser.global_type    = inputs[| i].editor.type_index;
+			_ser.global_disp    = inputs[| i].editor.disp_index;
+			_ser.global_name    = inputs[| i].editor.value_name;
+			_ser.global_s_range = inputs[| i].editor.slider_range;
+			_ser.global_s_step  = inputs[| i].editor.slider_step;
 			
-			ds_list_add(_inputs, _ser);	
-			ds_list_mark_as_map(_inputs, i);
+			array_push(_inputs, _ser);
 		}
 		
-		ds_map_add_list(_map, "inputs", _inputs);
-		
+		_map.inputs = _inputs;
 		return _map;
 	}
 	
 	static deserialize = function(_map) {
-		var _inputs = _map[? "inputs"];
+		var _inputs = _map.inputs;
 		
-		for(var i = 0; i < ds_list_size(_inputs); i++) {
-			var _des = _inputs[| i];
+		for(var i = 0; i < array_length(_inputs); i++) {
+			var _des = _inputs[i];
 			var _in  = createValue();
 			
-			_in.editor.type_index = ds_map_try_get(_des, "global_type", 0);
-			_in.editor.disp_index = ds_map_try_get(_des, "global_disp", 0);
-			_in.editor.disp_index = ds_map_try_get(_des, "global_disp", 0);
-			_in.editor.value_name = ds_map_try_get(_des, "global_name", "");
+			_in.editor.type_index = struct_try_get(_des, "global_type", 0);
+			_in.editor.disp_index = struct_try_get(_des, "global_disp", 0);
+			_in.editor.disp_index = struct_try_get(_des, "global_disp", 0);
+			_in.editor.value_name = struct_try_get(_des, "global_name", "");
 			
-			_in.editor.slider_range = array_create_from_list(ds_map_try_get(_des, "global_s_range", [ 0, 0 ]));
-			_in.editor.slider_step  = ds_map_try_get(_des, "global_s_step",  0.01);
+			_in.editor.slider_range = _des.global_s_range;
+			_in.editor.slider_step  = struct_try_get(_des, "global_s_step",  0.01);
 			
 			_in.editor.refreshInput();
 			

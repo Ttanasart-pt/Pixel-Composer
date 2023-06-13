@@ -35,10 +35,10 @@ function Node_Seperate_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	surface_w = 1;
 	surface_h = 1;
 	
-	attributes[? "max_shape"] = 32;
+	attributes.max_shape = 32;
 	array_push(attributeEditors, ["Maximum shapes", "max_shape",
 		new textBox(TEXTBOX_INPUT.number, function(val) { 
-			attributes[? "max_shape"] = val;
+			attributes.max_shape = val;
 			triggerRender();
 		})]);
 	
@@ -53,7 +53,7 @@ function Node_Seperate_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	static onInspector1Update = function() { separateShape(); }
 	
 	static update = function() {
-		if(attributes[? "auto_exe"])
+		if(attributes.auto_exe)
 			separateShape();
 	}
 	
@@ -111,16 +111,16 @@ function Node_Seperate_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		
 		shader_reset();
 		
-		var _pixel_surface = surface_create_valid(attributes[? "max_shape"], 1);
+		var _pixel_surface = surface_create_valid(attributes.max_shape, 1);
 		surface_set_target(_pixel_surface);
 		DRAW_CLEAR
 		BLEND_OVERRIDE;
 			shader_set(sh_seperate_shape_counter);
 			texture_set_stage(shader_get_sampler_index(sh_seperate_shape_counter, "surface"), surface_get_texture(temp_surface[res_index]));
 			shader_set_uniform_f_array_safe(shader_get_uniform(sh_seperate_shape_counter, "dimension"), [ ww, hh ]);
-			shader_set_uniform_i(shader_get_uniform(sh_seperate_shape_counter, "maxShape"), attributes[? "max_shape"]);
+			shader_set_uniform_i(shader_get_uniform(sh_seperate_shape_counter, "maxShape"), attributes.max_shape);
 			shader_set_uniform_i(shader_get_uniform(sh_seperate_shape_counter, "ignore"), _ignore);
-				draw_sprite_ext(s_fx_pixel, 0, 0, 0, attributes[? "max_shape"], 1, 0, c_white, 1);
+				draw_sprite_ext(s_fx_pixel, 0, 0, 0, attributes.max_shape, 1, 0, c_white, 1);
 			shader_reset();
 		BLEND_NORMAL;
 		surface_reset_target();

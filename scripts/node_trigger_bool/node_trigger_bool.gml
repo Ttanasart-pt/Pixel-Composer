@@ -16,29 +16,30 @@ function Node_Trigger_Bool(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	prevVal = false;
 	preview = false;
 	
+	doTrigger = 0;
+	
+	function step() {
+		if(doTrigger == 1) {
+			outputs[| 0].setValue(true);
+			doTrigger = -1;
+		} else if(doTrigger == -1) {
+			outputs[| 0].setValue(false);
+			doTrigger = 0;
+		}
+	}
+	
 	function update() {  
 		var val = inputs[| 0].getValue();
 		var con = inputs[| 1].getValue();
 		
 		switch(con) {
-			case 0 : 
-				outputs[| 0].setValue(val);			  
-				preview = val;
-				break;
-			case 1 : 
-				outputs[| 0].setValue(!prevVal &&  val); 
-				preview = !prevVal && val;
-				break;
-			case 2 : 
-				outputs[| 0].setValue( prevVal && !val); 
-				preview = prevVal && !val;
-				break;
-			case 3 : 
-				outputs[| 0].setValue( prevVal !=  val); 
-				preview = prevVal != val;
-				break;
+			case 0 : doTrigger = val;				break;
+			case 1 : doTrigger = !prevVal &&  val;	break;
+			case 2 : doTrigger  = prevVal && !val;	break;
+			case 3 : doTrigger =  prevVal !=  val;	break;
 		}
 		
+		preview = doTrigger;
 		prevVal = val;
 	}
 	

@@ -605,19 +605,13 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 
 #region node function
 	function nodeLoad(_data, scale = false, _group = PANEL_GRAPH.getCurrentContext()) {
-		if(!ds_exists(_data, ds_type_map)) return noone;
-		
-		var _x    = ds_map_try_get(_data, "x", 0);
-		var _y    = ds_map_try_get(_data, "y", 0);
-		var _type = ds_map_try_get(_data, "type", 0);
+		var _x    = _data.x;
+		var _y    = _data.y;
+		var _type = _data.type;
 		
 		var _node = nodeBuild(_type, _x, _y, _group);
+		if(_node) _node.deserialize(_data, scale);
 		
-		if(_node) {
-			var map = ds_map_clone(_data);
-			_node.deserialize(map, scale);
-		}
-			
 		return _node;
 	}
 	
@@ -767,44 +761,44 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 	
 	function attribute_surface_depth(label = true) {
 		depth_array = inputs[| 0].type == VALUE_TYPE.surface? global.SURFACE_FORMAT_NAME_PROCESS : global.SURFACE_FORMAT_NAME;
-		attributes[? "color_depth"] = array_find(depth_array, "8 bit RGBA");
+		attributes.color_depth = array_find(depth_array, "8 bit RGBA");
 		
 		if(label) array_push(attributeEditors, "Surface");
 		array_push(attributeEditors, ["Color depth", "color_depth", 
 			new scrollBox(depth_array, function(val) { 
-				attributes[? "color_depth"] = val;
+				attributes.color_depth = val;
 				triggerRender();
 			}, false)]);
 	}
 	
 	function attribute_interpolation(label = false) {
-		attributes[? "interpolation"] = 0;
+		attributes.interpolation = 0;
 		
 		if(label) array_push(attributeEditors, "Surface");
 		array_push(attributeEditors, ["Texture interpolation", "interpolation", 
 			new scrollBox(global.SURFACE_INTERPOLATION, function(val) { 
-				attributes[? "interpolation"] = val;
+				attributes.interpolation = val;
 				triggerRender();
 			}, false)]);
 	}
 	
 	function attribute_oversample(label = false) {
-		attributes[? "oversample"] = 0;
+		attributes.oversample = 0;
 		
 		if(label) array_push(attributeEditors, "Surface");
 		array_push(attributeEditors, ["Oversample", "oversample", 
 			new scrollBox(global.SURFACE_OVERSAMPLE, function(val) { 
-				attributes[? "oversample"] = val;
+				attributes.oversample = val;
 				triggerRender();
 			}, false)]);
 	}
 	
 	function attribute_auto_execute(label = false) {
-		attributes[? "auto_exe"] = false;
+		attributes.auto_exe = false;
 		if(label) array_push(attributeEditors, "Node");
 		array_push(attributeEditors, ["Auto execute", "auto_exe", 
 		new checkBox(function() { 
-			attributes[? "auto_exe"] = !attributes[? "auto_exe"];
+			attributes.auto_exe = !attributes.auto_exe;
 		})]);
 	}
 #endregion

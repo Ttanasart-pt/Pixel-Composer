@@ -286,7 +286,7 @@ enum CAMERA_PROJ {
 		];
 	}
 	
-	function _3d_gizmo(active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	function _3d_gizmo(active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
 		var _gpos = inputs[| global_pos].getValue();
 		var _gsca = inputs[| global_sca].getValue();
 		
@@ -485,6 +485,7 @@ enum CAMERA_PROJ {
 		}
 		
 		inputs[| global_pos].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
+	#endregion
 	}
 	
 	function _3d_local_transform(_lpos, _lrot, _lsca) {
@@ -501,13 +502,52 @@ enum CAMERA_PROJ {
 		matrix_stack_pop();
 	}
 	
-	function _3d_pre_setup(_outSurf, _dim, _pos, _sca, _ldir, _lhgt, _lint, _lclr, _aclr, _lpos, _lrot, _lsca, _cam, _pass = "diff", _scale = noone) {
+	function __3d_transform(pos = 0, rot = 0, sca = 0, lpos = 0, lrot = 0, lsca = 0, apply_local = true, sdim = true) constructor {
+		self.pos = pos;
+		self.rot = rot;
+		self.sca = sca;
+		
+		self.local_pos = lpos;
+		self.local_rot = lrot;
+		self.local_sca = lsca;
+		
+		self.apply_local    = apply_local;
+		self.scaleDimension = sdim;
+	}
+	
+	function __3d_light(dir = 0, height = 0, intensity = 0, color = c_white, ambient = c_white) constructor {
+		self.dir		= dir;
+		self.height		= height;
+		self.intensity	= intensity;
+		self.color		= color;
+		self.ambient	= ambient;
+	}
+	
+	function __3d_camera(proj, fov) constructor {
+		self.projection = proj;
+		self.fov		= fov;
+	}
+	
+	function _3d_pre_setup(_outSurf, _dim, _transform, _light, _cam, _pass = "diff") {
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1]);
+		
+		var _pos  = _transform.pos;
+		var _sca  = _transform.sca;
+		var _lpos = _transform.local_pos;
+		var _lrot = _transform.local_rot;
+		var _lsca = _transform.local_sca;
+		
+		var _ldir = _light.dir;
+		var _lhgt = _light.height;
+		var _lint = _light.intensity;
+		var _lclr = _light.color;
+		var _aclr = _light.ambient;
 		
 		var _proj = _cam.projection;
 		var _fov  = _cam.fov;
-		var _applyLocal		= _scale == noone? true : _scale.local;
-		var scaleDimension  = _scale == noone? true : _scale.dimension;
+		
+		var _applyLocal		= _transform.apply_local;
+		var scaleDimension  = _transform.scaleDimension;
 		
 		var lightFor = [ -cos(degtorad(_ldir)), -_lhgt, -sin(degtorad(_ldir)) ];
 		

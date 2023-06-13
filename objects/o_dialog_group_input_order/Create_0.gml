@@ -14,9 +14,9 @@ event_inherited();
 	tb_edit = new textBox(TEXTBOX_INPUT.text, function(str) {
 		if(sep_editing == -1) return;
 		
-		var sep = node.attributes[? "Separator"];
+		var sep = node.attributes.separator;
 		sep[sep_editing][1] = str;
-		node.attributes[? "Separator"] = sep;
+		node.attributes.separator = sep;
 		
 		node.sortIO();
 	} );
@@ -59,7 +59,7 @@ event_inherited();
 				draw_sprite_ui(THEME.hamburger, 0, hg / 2, _y + hg / 2, 0.5, 0.5,, COLORS._main_icon_light);
 				
 				if(sep_editing == disp[2]) {
-					var sep = node.attributes[? "Separator"];
+					var sep = node.attributes.separator;
 					
 					WIDGET_CURRENT = tb_edit;
 					tb_edit.setActiveFocus(sFOCUS, sHOVER);
@@ -106,9 +106,9 @@ event_inherited();
 		}
 			
 		if(sep_dragging > -1 && mouse_release(mb_left)) {
-			var sep = node.attributes[? "Separator"];
+			var sep = node.attributes.separator;
 			sep[sep_dragging][0] = hovr;
-			node.attributes[? "Separator"] = sep;
+			node.attributes.separator = sep;
 			node.sortIO();
 				
 			sep_dragging = -1;

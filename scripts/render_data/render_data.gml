@@ -128,8 +128,9 @@ $"============================== RENDER START [frame {string(ANIMATOR.current_fr
 				
 				if(runAction && rendering.hasInspector1Update())
 					rendering.inspector1Update();
-			} else 
+			} else if(rendering.renderActive) {
 				RENDER_QUEUE.enqueue(rendering);
+			}
 			
 			LOG_BLOCK_END();
 		}
@@ -182,16 +183,28 @@ function RenderList(list) {
 		
 		// render forward
 		while(!ds_queue_empty(queue)) {
-			rendering = ds_queue_dequeue(queue);
-			if(!rendering.isRenderable()) continue;
+			LOG_BLOCK_START();
+			LOG_IF(global.FLAG.render, $"➤➤➤➤➤➤ CURRENT RENDER QUEUE {RENDER_QUEUE}");
+			rendering = RENDER_QUEUE.dequeue();
+			if(!ds_list_exist(list, rendering)) continue;
+			var renderable = rendering.isRenderable();
 			
-			rendering.doUpdate();
+			LOG_IF(global.FLAG.render, $"Rendering {rendering.internalName} ({rendering.display_name}) : {renderable? "Update" : "Pass"}");
+			
+			if(renderable) {
+				rendering.doUpdate();
 				
-			LOG_LINE_IF(global.FLAG.render, $"Rendering {rendering.internalName}");
+				var nextNodes = rendering.getNextNodes();
+				for( var i = 0; i < array_length(nextNodes); i++ )
+					RENDER_QUEUE.enqueue(nextNodes[i]);
 				
-			var nextNodes = rendering.getNextNodes();
-			for( var i = 0; i < array_length(nextNodes); i++ ) 
-				ds_queue_enqueue(queue, nextNodes[i]);
+				if(runAction && rendering.hasInspector1Update())
+					rendering.inspector1Update();
+			} else if(rendering.renderActive) {
+				RENDER_QUEUE.enqueue(rendering);
+			}
+			
+			LOG_BLOCK_END();
 		}
 	
 	} catch(e) {
@@ -234,24 +247,28 @@ function RenderListAction(list, context = PANEL_GRAPH.getCurrentContext()) {
 		
 		// render forward
 		while(!RENDER_QUEUE.empty()) {
+			LOG_BLOCK_START();
+			LOG_IF(global.FLAG.render, $"➤➤➤➤➤➤ CURRENT RENDER QUEUE {RENDER_QUEUE}");
 			rendering = RENDER_QUEUE.dequeue();
-			if(rendering.group == context) break;
+			if(!ds_list_exist(list, rendering)) continue;
+			var renderable = rendering.isRenderable();
 			
-			var txt = rendering.isRenderable()? " [Skip]" : " [Update]";
+			LOG_IF(global.FLAG.render, $"Rendering {rendering.internalName} ({rendering.display_name}) : {renderable? "Update" : "Pass"}");
 			
-			if(!rendering.isRenderable()) {
+			if(renderable) {
 				rendering.doUpdate();
-				if(rendering.hasInspector1Update()) {
-					rendering.inspector1Update();
-					printIf(global.FLAG.render, $" > Toggle manual execution {rendering.internalName}");
-				}
 				
 				var nextNodes = rendering.getNextNodes();
-				for( var i = 0; i < array_length(nextNodes); i++ ) 
+				for( var i = 0; i < array_length(nextNodes); i++ )
 					RENDER_QUEUE.enqueue(nextNodes[i]);
+				
+				if(runAction && rendering.hasInspector1Update())
+					rendering.inspector1Update();
+			} else if(rendering.renderActive) {
+				RENDER_QUEUE.enqueue(rendering);
 			}
 			
-			printIf(global.FLAG.render, $"Rendered {rendering.internalName} {txt}");
+			LOG_BLOCK_END();
 		}
 	
 		printIf(global.FLAG.render, "=== RENDER COMPLETE IN {" + string(current_time - t) + "ms} ===\n");

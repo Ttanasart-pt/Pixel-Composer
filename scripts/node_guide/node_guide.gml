@@ -37,7 +37,7 @@ function __generate_node_data() {
 			};
 			
 			_lin[i] = {
-				name:	 _b.inputs[| i].name,
+				name:	 _b.inputs[| i]._initName,
 				tooltip: _b.inputs[| i].tooltip,
 			};
 		}
@@ -49,7 +49,7 @@ function __generate_node_data() {
 			};
 			
 			_lot[i] = {
-				name:	 _b.outputs[| i].name,
+				name:	 _b.outputs[| i]._initName,
 				tooltip: _b.outputs[| i].tooltip,
 			};
 		}

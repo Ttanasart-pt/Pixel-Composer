@@ -146,7 +146,7 @@ function Panel_Preview() : PanelContent() constructor {
 	addHotkey("Preview", "Focus content",			"F", MOD_KEY.none,	function() { PANEL_PREVIEW.fullView(); });
 	addHotkey("Preview", "Save current frame",		"S", MOD_KEY.shift,	function() { PANEL_PREVIEW.saveCurrentFrame(); });
 	addHotkey("Preview", "Save all current frame",	-1, MOD_KEY.none,	function() { PANEL_PREVIEW.saveAllCurrentFrames(); });
-	addHotkey("Preview", "Preview window",			"P", MOD_KEY.ctrl,	function() { PANEL_PREVIEW.previewWindow(PANEL_PREVIEW.getNodePreview()); });
+	addHotkey("Preview", "Preview window",			"P", MOD_KEY.ctrl,	function() { create_preview_window(PANEL_PREVIEW.getNodePreview()); });
 	addHotkey("Preview", "Toggle grid",				"G", MOD_KEY.ctrl,	function() { PANEL_PREVIEW.grid_show = !PANEL_PREVIEW.grid_show; });
 	
 	addHotkey("Preview", "Pan",		"", MOD_KEY.alt,	function() { PANEL_PREVIEW.canvas_dragging_key = true; });
@@ -871,7 +871,7 @@ function Panel_Preview() : PanelContent() constructor {
 		
 		if(mouse_on_preview && mouse_press(mb_right, pFOCUS)) {
 			menuCall("preview_context_menu",,, [ 
-				menuItem(__txtx("panel_graph_preview_window", "Send to preview window"), function() { previewWindow(getNodePreview()); }, noone, ["Preview", "Preview window"]), 
+				menuItem(__txtx("panel_graph_preview_window", "Send to preview window"), function() { create_preview_window(getNodePreview()); }, noone, ["Preview", "Preview window"]), 
 				-1,
 				menuItem(__txtx("panel_preview_save", "Save current preview as") + "...", function() { saveCurrentFrame(); }), 
 				menuItem(__txtx("panel_preview_save_all", "Save all current previews as") + "...", function() { saveAllCurrentFrames(); }), 

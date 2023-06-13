@@ -623,8 +623,8 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	}
 	
 	static doApplyDeserialize = function() {
-		if(!ds_map_exists(load_map, "surface")) return;	
-		var buff = buffer_base64_decode(load_map[? "surface"]);
+		if(!struct_has(load_map, "surface")) return;	
+		var buff = buffer_base64_decode(load_map.surface);
 		surface_buffer = buffer_decompress(buff);
 		
 		var _dim     = inputs[|  0].getValue();

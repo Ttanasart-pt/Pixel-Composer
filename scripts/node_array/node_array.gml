@@ -25,7 +25,7 @@ function Node_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		var by = _y + ui(8);
 		if(buttonInstant(THEME.button_hide, bx, by, bw, bh, _m, _focus, _hover) == 2) {
 			var amo = ds_list_size(inputs) - input_fix_len;
-			attributes[? "size"] = amo + 1;
+			attributes.size = amo + 1;
 			refreshDynamicInput();
 			update();
 		}
@@ -37,10 +37,10 @@ function Node_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		draw_text(bxc + ui(48), byc, __txt("Add"));
 		
 		var bx = _x + bw + ui(8);
-		var amo = attributes[? "size"];
+		var amo = attributes.size;
 		if(amo > 1 && buttonInstant(THEME.button_hide, bx, by, bw, bh, _m, _focus, _hover) == 2) {
 			var amo = ds_list_size(inputs) - input_fix_len;
-			attributes[? "size"] = max(amo - 1, 1);
+			attributes.size = max(amo - 1, 1);
 			refreshDynamicInput();
 			update();
 		}
@@ -64,8 +64,8 @@ function Node_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	
 	outputs[| 0] = nodeValue("Array", self, JUNCTION_CONNECT.output, VALUE_TYPE.any, []);
 	
-	attributes[? "size"] = 1;
-	attributes[? "spread_value"] = false;
+	attributes.size = 1;
+	attributes.spread_value = false;
 	
 	static getType = function() {
 		var _type = inputs[| 0].getValue();
@@ -93,7 +93,7 @@ function Node_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	
 	static refreshDynamicInput = function() {
 		var _l       = ds_list_create();
-		var amo      = attributes[? "size"];
+		var amo      = attributes.size;
 		var extra    = true;
 		var lastNode = noone;
 		
@@ -185,9 +185,9 @@ function Node_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	}
 	
 	static postDeserialize = function() {
-		var _inputs = load_map[? "inputs"];
+		var _inputs = load_map.inputs;
 		
-		for(var i = input_fix_len; i < ds_list_size(_inputs); i += data_length)
+		for(var i = input_fix_len; i < array_length(_inputs); i += data_length)
 			createNewInput();
 	}
 	

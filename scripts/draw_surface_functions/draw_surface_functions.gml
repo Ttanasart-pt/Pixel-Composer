@@ -1,4 +1,6 @@
 function draw_surface_align(surface, _x, _y, _s, _halign = fa_left, _valign = fa_top) {
+	if(!is_surface(surface)) return;
+	
 	var w = surface_get_width(surface) * _s;
 	var h = surface_get_height(surface) * _s;
 	

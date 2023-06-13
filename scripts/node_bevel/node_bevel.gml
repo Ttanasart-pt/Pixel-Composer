@@ -60,7 +60,7 @@ function Node_Bevel(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		var _shf = _data[2];
 		var _sca = _data[3];
 		var _slp = _data[4];
-		var _sam = ds_map_try_get(attributes, "oversample");
+		var _sam = struct_try_get(attributes, "oversample");
 		
 		surface_set_shader(_outSurf, shader);
 			shader_set_uniform_f(uniform_hei, _hei);

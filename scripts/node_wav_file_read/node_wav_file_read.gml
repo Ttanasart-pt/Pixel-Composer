@@ -74,19 +74,19 @@ function Node_WAV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	wav_file_prg = 0;
 	wav_file_lim = 1;
 	
-	attributes[? "preview_shift"] = 0;
-	attributes[? "preview_gain"] = 0.5;
+	attributes.preview_shift = 0;
+	attributes.preview_gain = 0.5;
 	
 	array_push(attributeEditors, "Audio Preview");
 	
 	array_push(attributeEditors, ["Gain", "preview_gain", 
 		new textBox(TEXTBOX_INPUT.number, function(val) { 
-			attributes[? "preview_gain"] = val; 
+			attributes.preview_gain = val; 
 		})]);
 		
 	array_push(attributeEditors, ["Shift", "preview_shift", 
 		new textBox(TEXTBOX_INPUT.number, function(val) { 
-			attributes[? "preview_shift"] = val; 
+			attributes.preview_shift = val; 
 		})]);
 		
 	on_dragdrop_file = function(path) {
@@ -184,7 +184,7 @@ function Node_WAV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	
 	insp2UpdateTooltip  = __txtx("play_with_timeline", "Play with timeline");
 	insp2UpdateIcon     = [ THEME.play_sound, 1, COLORS._main_icon_light ];
-	attributes[? "play"] = true;
+	attributes.play = true;
 	
 	static onInspector1Update = function() {
 		var path = inputs[| 0].getValue();
@@ -194,7 +194,7 @@ function Node_WAV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	}
 	
 	static onInspector2Update = function() {
-		attributes[? "play"] = !attributes[? "play"];
+		attributes.play = !attributes.play;
 	}
 	
 	static step = function() {
@@ -206,21 +206,21 @@ function Node_WAV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			UPDATE |= RENDER_TYPE.full;
 		}
 		
-		insp2UpdateIcon[1] = attributes[? "play"];
-		insp2UpdateIcon[2] = attributes[? "play"]? COLORS._main_icon_light : COLORS._main_icon;
+		insp2UpdateIcon[1] = attributes.play;
+		insp2UpdateIcon[2] = attributes.play? COLORS._main_icon_light : COLORS._main_icon;
 		if(preview_audio == -1) return;
 		
 		if(audio_is_playing(preview_audio) && !ANIMATOR.is_playing)
 			audio_stop_sound(preview_audio);
 		
-		if(!attributes[? "play"]) return;
+		if(!attributes.play) return;
 		if(ANIMATOR.is_playing) {
 			if(ANIMATOR.current_frame == 0)
 				audio_stop_sound(preview_audio);
 				
-			var dur = ANIMATOR.current_frame / ANIMATOR.framerate - attributes[? "preview_shift"];
+			var dur = ANIMATOR.current_frame / ANIMATOR.framerate - attributes.preview_shift;
 			if(!audio_is_playing(preview_audio))
-				audio_play_sound(preview_audio, 1, false, attributes[? "preview_gain"], dur);
+				audio_play_sound(preview_audio, 1, false, attributes.preview_gain, dur);
 			else if(ANIMATOR.frame_progress)
 				audio_sound_set_track_position(preview_audio, dur);
 		}
@@ -277,7 +277,7 @@ function Node_WAV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			draw_surface_part_ext_safe(audio_surface, 0, 0, min(wd, sw), sh, 
 				bbox.xc - sw * ss / 2, 
 				bbox.yc - sh * ss / 2, 
-				ss, ss,, attributes[? "play"]? COLORS._main_accent : c_white);
+				ss, ss,, attributes.play? COLORS._main_accent : c_white);
 		}
 		
 		var str = filename_name(path_current);

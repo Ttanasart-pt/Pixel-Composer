@@ -40,6 +40,8 @@ function Node_Cache_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	}
 	
 	static update = function() {
+		if(recoverCache()) return;
+		
 		var ss  = [];
 		var str = inputs[| 1].getValue();
 		var lst = inputs[| 2].getValue();
@@ -72,8 +74,8 @@ function Node_Cache_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	}
 	
 	static postDeserialize = function() {
-		if(!ds_map_exists(load_map, "cache")) return;
-		cache_content = load_map[? "cache"];
+		if(!struct_has(load_map, "cache")) return;
+		cache_content			= load_map.cache;
 		cache_loading_progress  = 0;
 		cache_loading			= true;
 	}

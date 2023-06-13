@@ -74,11 +74,11 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	
 	metadata = new MetaDataManager();
 	
-	attributes[? "Separator"] = [];
-	attributes[? "w"] = 128;
-	attributes[? "h"] = 128;
+	attributes.separator = [];
+	attributes.w = 128;
+	attributes.h = 128;
 	
-	array_push(attributeEditors, ["Edit separator", "Separator",
+	array_push(attributeEditors, ["Edit separator", "separator",
 		button(function() {
 			var dia = dialogCall(o_dialog_group_input_order);
 			dia.node = self;
@@ -136,23 +136,41 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		}
 	}
 	
+	static getOutputNodes = function() {
+		var nodes = [];
+		for( var i = custom_output_index; i < ds_list_size(outputs); i++ ) {
+			var _junc = outputs[| i];
+			
+			for( var j = 0; j < ds_list_size(_junc.value_to); j++ ) {
+				var _to = _junc.value_to[| j];
+				if(_to.value_from != _junc) continue;
+				array_push_unique(nodes, _to.node);
+			}
+		}
+		return nodes;
+	}
+	
 	static getNextNodes = function() { //get node inside the group
 		LOG_BLOCK_START();
 		LOG_IF(global.FLAG.render, $"→→→→→ Call get next node from group");
 		
-		var allReady = true;
-		for(var i = custom_input_index; i < ds_list_size(inputs); i++) {
-			var _in = inputs[| i].from;
-			if(!_in.renderActive) continue;
+		var nodes = [];
+		if(renderActive) {
+			var allReady = true;
+			for(var i = custom_input_index; i < ds_list_size(inputs); i++) {
+				var _in = inputs[| i].from;
+				if(!_in.renderActive) continue;
 			
-			if(!_in.isRenderable()) {
-				LOG_IF(global.FLAG.render, $"Node {_in.internalName} not ready, loop skip.");
-				LOG_BLOCK_END();
-				return [];
+				if(!_in.isRenderable()) {
+					LOG_IF(global.FLAG.render, $"Node {_in.internalName} not ready, loop skip.");
+					LOG_BLOCK_END();
+					return [];
+				}
 			}
+		
+			nodes = __nodeLeafList(getNodeList());
 		}
 		
-		var nodes = __nodeLeafList(getNodeList());
 		LOG_BLOCK_END();
 		return nodes;
 	}
@@ -186,7 +204,7 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 			var siz = ds_list_size(outputs);
 			for( var i = custom_output_index; i < siz; i++ ) {
 				var _o = outputs[| i];
-				if(_o.node.rendered) continue;
+				if(_o.from.rendered) continue;
 				
 				rendered = false;
 				break;
@@ -282,9 +300,16 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 				render_time += node_list[| i].render_time;
 		}
 		
-		w = attributes[? "w"];
+		w = attributes.w;
 		
 		onStep();
+	}
+	
+	static triggerCheck = function() {
+		_triggerCheck();
+		var node_list = getNodeList();
+		for(var i = 0; i < ds_list_size(node_list); i++)
+			node_list[| i].triggerCheck();
 	}
 	
 	static onStep = function() {}
@@ -306,7 +331,7 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	static sortIO = function() {
 		input_display_list = [];
 		
-		var sep = attributes[? "Separator"];		
+		var sep = attributes.separator;		
 		array_sort(sep, function(a0, a1) { return a0[0] - a1[0]; });
 		var siz = ds_list_size(inputs);
 		var ar  = ds_priority_create();
@@ -427,25 +452,25 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	}
 	
 	static preConnect = function() {
-		instanceBase = GetAppendID(ds_map_try_get(load_map, "instance_base", noone));
+		instanceBase = GetAppendID(struct_try_get(load_map, "instance_base", noone));
 		
 		sortIO();
 		applyDeserialize();
 	}
 	
 	static attributeSerialize = function() {
-		var att = ds_map_create();
-		att[? "Separator"] = json_stringify(attributes[? "Separator"]);
-		att[? "w"] = attributes[? "w"];
-		att[? "h"] = attributes[? "h"];
+		var att = {};
+		att.separator = json_stringify(attributes.separator);
+		att.w = attributes.w;
+		att.h = attributes.h;
 		return att;
 	}
 	
 	static attributeDeserialize = function(attr) {
-		if(ds_map_exists(attr, "Separator"))
-			attributes[? "Separator"] = json_parse(attr[? "Separator"]);
-		attributes[? "w"] = ds_map_try_get(attr, "w", 128);
-		attributes[? "h"] = ds_map_try_get(attr, "h", 128);
+		if(struct_has(attr, "separator"))
+			attributes.separator = json_parse(attr.separator);
+		attributes.w = attr.w;
+		attributes.h = attr.h;
 	}
 	
 }

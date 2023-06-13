@@ -33,7 +33,7 @@ function Node_Blur(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	static process_data = function(_outSurf, _data, _output_index, _array_index) {		
 		var _size  = _data[1];
-		var _clamp = ds_map_try_get(attributes, "oversample");
+		var _clamp = struct_try_get(attributes, "oversample");
 		var _isovr = _data[3];
 		var _mask  = _data[5];
 		var _mix   = _data[6];

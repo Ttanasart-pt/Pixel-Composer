@@ -8,7 +8,7 @@ enum ARRAY_PROCESS {
 #macro PROCESSOR_OVERLAY_CHECK if(array_length(current_data) != ds_list_size(inputs)) return;
 
 function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
-	attributes[? "array_process"] = ARRAY_PROCESS.loop;
+	attributes.array_process = ARRAY_PROCESS.loop;
 	current_data	= [];
 	inputs_data		= [];
 	
@@ -23,7 +23,7 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	array_push(attributeEditors, [ "Array process type", "array_process", 
 		new scrollBox([ "Loop", "Hold", "Expand", "Expand inverse" ], 
 		function(val) { 
-			attributes[? "array_process"] = val; 
+			attributes.array_process = val; 
 			triggerRender();
 		}, false) ]);
 	
@@ -36,7 +36,7 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		
 		if(!_n.isArray()) return _in;
 		
-		switch(attributes[? "array_process"]) {
+		switch(attributes.array_process) {
 			case ARRAY_PROCESS.loop :		_index = safe_mod(_arr, array_length(_in)); break;
 			case ARRAY_PROCESS.hold :		_index = min(_arr, array_length(_in) - 1);  break;
 			case ARRAY_PROCESS.expand :		_index = floor(_arr / process_length[_index][1]) % process_length[_index][0]; break;
@@ -131,7 +131,7 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 					continue;
 				}
 				var _index = 0;
-				switch(attributes[? "array_process"]) {
+				switch(attributes.array_process) {
 					case ARRAY_PROCESS.loop :		_index = safe_mod(l, array_length(_in)); break;
 					case ARRAY_PROCESS.hold :		_index = min(l, array_length(_in) - 1);  break;
 					case ARRAY_PROCESS.expand :		_index = floor(l / process_length[i][1]) % process_length[i][0]; break;
@@ -184,7 +184,7 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 			
 			inputs_data[i] = val;
 			
-			switch(attributes[? "array_process"]) {
+			switch(attributes.array_process) {
 				case ARRAY_PROCESS.loop : 
 				case ARRAY_PROCESS.hold :   
 					process_amount = max(process_amount, amo);	
@@ -218,10 +218,10 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	}
 	
 	static processSerialize = function(_map) {
-		_map[? "array_process"] = attributes[? "array_process"];
+		_map.array_process = attributes.array_process;
 	}
 	
 	static processDeserialize = function() {
-		attributes[? "array_process"] = ds_map_try_get(load_map, "array_process", ARRAY_PROCESS.loop);
+		attributes.array_process = struct_try_get(load_map, "array_process", ARRAY_PROCESS.loop);
 	}
 }

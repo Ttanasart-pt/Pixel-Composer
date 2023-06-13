@@ -4,8 +4,8 @@ function BoundingBox(minx = noone, miny = noone, maxx = noone, maxy = noone) con
 	self.maxx = maxx;
 	self.maxy = maxy;
 	
-	self.width  = 0;
-	self.height = 0;
+	self.width  = maxx - minx;
+	self.height = maxy - miny;
 	
 	static addPoint = function(px, py) {
 		minx = minx == noone? px : min(minx, px);
@@ -30,16 +30,41 @@ function BoundingBox(minx = noone, miny = noone, maxx = noone, maxy = noone) con
 	static clone = function() { return new BoundingBox(minx, miny, maxx, maxy); }
 }
 
-function node_bbox(x0, y0, x1, y1) constructor {
-	self.x0 = x0; 
-	self.x1 = x1; 
-	self.y0 = y0; 
-	self.y1 = y1; 
+function BBOX() { return new __BBOX(); }
+function __BBOX() constructor {
+	x0 = 0; x1 = 0; 
+	y0 = 0; y1 = 0; 
 	
-	xc = (x0 + x1) / 2; 
-	yc = (y0 + y1) / 2;
-	w  = x1 - x0; 
-	h  = y1 - y0;
+	xc = 0; yc = 0;
+	w  = 0; h  = 0;
 	
-	static clone = function() { return node_bbox(x0, y0, x1, y1); };
+	static fromPoints = function(x0, y0, x1, y1) {
+		self.x0 = x0; 
+		self.x1 = x1; 
+		self.y0 = y0; 
+		self.y1 = y1; 
+	
+		xc = (x0 + x1) / 2; 
+		yc = (y0 + y1) / 2;
+		w  = x1 - x0; 
+		h  = y1 - y0;
+		
+		return self;
+	}
+	
+	static fromWH = function(x0, y0, w, h) {
+		self.x0 = x0; 
+		self.x1 = x0 + w; 
+		self.y0 = y0; 
+		self.y1 = y0 + h; 
+	
+		self.xc = (x0 + x1) / 2; 
+		self.yc = (y0 + y1) / 2;
+		self.w  = w; 
+		self.h  = h;
+		
+		return self;
+	}
+	
+	static clone = function() { return BBOX().fromPoints(x0, y0, x1, y1); };
 }

@@ -36,8 +36,8 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	input_fix_len	= ds_list_size(inputs);
 	data_length		= 4;
 	
-	attributes[? "layer_visible"] = ds_list_create();
-	attributes[? "layer_selectable"] = ds_list_create();
+	attributes.layer_visible = [];
+	attributes.layer_selectable = [];
 	
 	hold_visibility = true;
 	hold_select = true;
@@ -52,8 +52,8 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		layer_renderer.h = _h;
 		draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, _x, _y, _w, _h, COLORS.node_composite_bg_blend, 1);
 		
-		var _vis = attributes[? "layer_visible"];
-		var _sel = attributes[? "layer_selectable"];
+		var _vis = attributes.layer_visible;
+		var _sel = attributes.layer_selectable;
 		var ly   = _y + 8;
 		var ssh  = lh - 6;
 		var hoverIndex = noone;
@@ -81,8 +81,8 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			if(!is_surface(_surf)) continue;
 			
 			var aa = (ind != layer_dragging || layer_dragging == noone)? 1 : 0.5;
-			var vis = _vis[| ind];
-			var sel = _sel[| ind];
+			var vis = _vis[ind];
+			var sel = _sel[ind];
 			var hover = point_in_rectangle(_m[0], _m[1], _x, _cy, _x + _w, _cy + lh);
 			
 			draw_set_color(COLORS.node_composite_separator);
@@ -93,10 +93,10 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				draw_sprite_ui_uniform(THEME.junc_visible, vis, _bx, _cy + lh / 2, 1, c_white);
 				
 				if(mouse_press(mb_left, _focus))
-					hold_visibility = !_vis[| ind];
+					hold_visibility = !_vis[ind];
 					
-				if(mouse_click(mb_left, _focus) && _vis[| ind] != hold_visibility) {
-					_vis[| ind] = hold_visibility;
+				if(mouse_click(mb_left, _focus) && _vis[ind] != hold_visibility) {
+					_vis[@ ind] = hold_visibility;
 					doUpdate();
 				}
 			} else 
@@ -107,10 +107,10 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				draw_sprite_ui_uniform(THEME.cursor_select, sel, _bx, _cy + lh / 2, 1, c_white);
 				
 				if(mouse_press(mb_left, _focus))
-					hold_select = !_sel[| ind];
+					hold_select = !_sel[ind];
 					
-				if(mouse_click(mb_left, _focus) && _sel[| ind] != hold_select)
-					_sel[| ind] = hold_select;
+				if(mouse_click(mb_left, _focus) && _sel[ind] != hold_select)
+					_sel[@ ind] = hold_select;
 			} else 
 				draw_sprite_ui_uniform(THEME.cursor_select, sel, _bx, _cy + lh / 2, 1, COLORS._main_icon, 0.5 + 0.5 * sel);
 			
@@ -158,17 +158,17 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			if(layer_dragging != hoverIndex && hoverIndex != noone) {
 				var index = input_fix_len + layer_dragging * data_length;
 				var targt = input_fix_len + hoverIndex * data_length;
-				var _vis = attributes[? "layer_visible"];
-				var _sel = attributes[? "layer_selectable"];
+				var _vis = attributes.layer_visible;
+				var _sel = attributes.layer_selectable;
 				
 				var ext = [];
-				var vis = _vis[| layer_dragging];
-				ds_list_delete(_vis, layer_dragging);
-				ds_list_insert(_vis, hoverIndex, vis);
+				var vis = _vis[layer_dragging];
+				array_delete(_vis, layer_dragging, 1);
+				array_insert(_vis, hoverIndex, vis);
 				
-				var sel = _sel[| layer_dragging];
-				ds_list_delete(_sel, layer_dragging);
-				ds_list_insert(_sel, hoverIndex, sel);
+				var sel = _sel[layer_dragging];
+				array_delete(_sel, layer_dragging, 1);
+				array_insert(_sel, hoverIndex, sel);
 				
 				for( var i = 0; i < data_length; i++ ) {
 					ext[i] = inputs[| index];
@@ -181,6 +181,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				
 				doUpdate();
 			}
+			
 			layer_dragging = noone;
 		}
 		
@@ -233,10 +234,10 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		array_push(input_display_list, index + 2);
 		array_push(input_display_list, index + 3);
 		
-		while(_s >= ds_list_size(attributes[? "layer_visible"]))
-			ds_list_add(attributes[? "layer_visible"], true);
-		while(_s >= ds_list_size(attributes[? "layer_selectable"]))
-			ds_list_add(attributes[? "layer_selectable"], true);
+		while(_s >= array_length(attributes.layer_visible))
+			array_push(attributes.layer_visible, true);
+		while(_s >= array_length(attributes.layer_selectable))
+			array_push(attributes.layer_selectable, true);
 	}
 	if(!LOADING && !APPENDING) createNewSurface();
 	
@@ -572,16 +573,16 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		
 		var hovering = -1;
 		var hovering_type = 0;
-		var _vis = attributes[? "layer_visible"];
-		var _sel = attributes[? "layer_selectable"];
+		var _vis = attributes.layer_visible;
+		var _sel = attributes.layer_selectable;
 		
 		var amo = (ds_list_size(inputs) - input_fix_len) / data_length;
 		if(array_length(current_data) < input_fix_len + amo * data_length)
 			return;
 		
 		for(var i = 0; i < amo; i++) {
-			var vis = _vis[| i];
-			var sel = _sel[| i];
+			var vis = _vis[i];
+			var sel = _sel[i];
 			if(!vis) continue;
 			
 			var index = input_fix_len + i * data_length;
@@ -770,12 +771,12 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		
 		var res_index = 0, bg = 0;
 		var imageAmo = (ds_list_size(inputs) - input_fix_len) / data_length;
-		var _vis = attributes[? "layer_visible"];
+		var _vis = attributes.layer_visible;
 		
 		surface_set_shader(_outSurf, sh_sample, true, BLEND.alphamulp);
 		
 		for(var i = 0; i < imageAmo; i++) {
-			var vis  = _vis[| i];
+			var vis  = _vis[i];
 			if(!vis) continue;
 			
 			var startDataIndex = input_fix_len + i * data_length;
@@ -807,26 +808,26 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	}
 	
 	static postDeserialize = function() {
-		var _inputs = load_map[? "inputs"];
+		var _inputs = load_map.inputs;
 		
-		for(var i = input_fix_len; i < ds_list_size(_inputs); i += data_length)
+		for(var i = input_fix_len; i < array_length(_inputs); i += data_length)
 			createNewSurface();
 	}
 	
 	static attributeSerialize = function() {
-		var att = ds_map_create();
-		ds_map_add_list(att, "layer_visible", ds_list_clone(attributes[? "layer_visible"]));
-		ds_map_add_list(att, "layer_selectable", ds_list_clone(attributes[? "layer_selectable"]));
+		var att = {};
+		att.layer_visible    = attributes.layer_visible;
+		att.layer_selectable = attributes.layer_selectable;
 		
 		return att;
 	}
 	
 	static attributeDeserialize = function(attr) {
-		if(ds_map_exists(attr, "layer_visible"))
-			attributes[? "layer_visible"] = ds_list_clone(attr[? "layer_visible"], true);
+		if(struct_has(attr, "layer_visible"))
+			attributes.layer_visible = attr.layer_visible;
 			
-		if(ds_map_exists(attr, "layer_selectable"))
-			attributes[? "layer_selectable"] = ds_list_clone(attr[? "layer_selectable"], true);
+		if(struct_has(attr, "layer_selectable"))
+			attributes.layer_selectable = attr.layer_selectable;
 	}
 }
 

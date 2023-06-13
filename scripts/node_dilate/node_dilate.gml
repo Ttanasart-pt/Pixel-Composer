@@ -55,7 +55,7 @@ function Node_Dilate(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		var center = _data[1];
 		var stren = _data[2];
 		var rad   = _data[3];
-		var sam   = ds_map_try_get(attributes, "oversample");
+		var sam   = struct_try_get(attributes, "oversample");
 		
 		surface_set_shader(_outSurf, shader);
 		shader_set_interpolation(_data[0]);

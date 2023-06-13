@@ -179,19 +179,20 @@ function Node_3D_Combine(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 				case 2 : pass = "norm" break;
 			}
 		
-			var _cam   = { projection: _proj, fov: _fov };
-			var _scale = { local: false, dimension: _dimS };
+			var _transform = new __3d_transform(_pos,, _sca, _lpos, _lrot, _lsca, false, _dimS );
+			var _light     = new __3d_light(_ldir, _lhgt, _lint, _lclr, _aclr);
+			var _cam	   = new __3d_camera(_proj, _fov);
 			
-			_outSurf = _3d_pre_setup(_outSurf, _dim, _pos, _sca, _ldir, _lhgt, _lint, _lclr, _aclr, _lpos, _lrot, _lsca, _cam, pass, _scale);
+			_outSurf = _3d_pre_setup(_outSurf, _dim, _transform, _light, _cam, pass);
 				submit_vertex();
 			_3d_post_setup();
 		}
 	}
 	
 	static postDeserialize = function() {
-		var _inputs = load_map[? "inputs"];
+		var _inputs = load_map.inputs;
 		
-		for(var i = input_fix_len; i < ds_list_size(_inputs); i += data_length)
+		for(var i = input_fix_len; i < array_length(_inputs); i += data_length)
 			createNewInput();
 	}
 }

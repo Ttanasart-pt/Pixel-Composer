@@ -12,6 +12,18 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	h = 32 + 24;
 	min_h = h;
 	
+	data_type_list = [	"Integer",		"Float",	"Boolean",	"Color",	"Surface", 
+						"File Path",	"Curve",	"Text",		"Object",	"Node", 
+						"3D object",	"Any",		"Path",		"Particle", "Rigidbody Object", 
+						"Fluid Domain", "Struct",	"Strands",	"Mesh",		"Trigger"
+					 ];
+	
+	data_type_map  = [	VALUE_TYPE.integer,		VALUE_TYPE.float,	VALUE_TYPE.boolean,		VALUE_TYPE.color,		VALUE_TYPE.surface, 
+						VALUE_TYPE.path,		VALUE_TYPE.curve,	VALUE_TYPE.text,		VALUE_TYPE.object,		VALUE_TYPE.node, 
+						VALUE_TYPE.d3object,	VALUE_TYPE.any,		VALUE_TYPE.pathnode,	VALUE_TYPE.particle,	VALUE_TYPE.rigid, 
+						VALUE_TYPE.fdomain,		VALUE_TYPE.struct,	VALUE_TYPE.strands,		VALUE_TYPE.mesh,		VALUE_TYPE.trigger
+					 ];
+	
 	display_list = [
 		/*Integer*/	[ "Default", "Range", "Rotation", "Rotation range", "Slider", "Slider range", "Padding", "Vector", "Vector range", "Area", "Enum button", "Menu scroll" ],
 		/*Float*/	[ "Default", "Range", "Rotation", "Rotation range", "Slider", "Slider range", "Padding", "Vector", "Vector range", "Area" ],
@@ -32,6 +44,7 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		/*Struct*/	[ "Default", ],
 		/*Strand*/	[ "Default", ],
 		/*Mesh*/	[ "Default", ],
+		/*Trigger*/	[ "Default", ],
 	];
 	
 	inputs[| 0] = nodeValue("Display type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
@@ -45,8 +58,7 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		.rejectArray();
 	
 	inputs[| 2] = nodeValue("Input type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Integer", "Float", "Boolean", "Color", "Surface", "File Path", "Curve", "Text", "Object", "Node", 
-												 "3D object", "Any", "Path", "Particle", "Rigidbody Object", "Fluid Domain", "Struct", "Strands", "Mesh" ], { update_hover: false })
+		.setDisplay(VALUE_DISPLAY.enum_scroll, data_type_list, { update_hover: false })
 		.rejectArray();
 	inputs[| 2].editWidget.update_hover = false;
 	
@@ -68,13 +80,24 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	inputs[| 7] = nodeValue("Step", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.01)
 		.setVisible(false)
 		.rejectArray();
+	
+	inputs[| 8] = nodeValue("Button Label", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "Trigger")
+		.setVisible(false)
+		.rejectArray();
 		
 	input_display_list = [ 
 		["Display", false], 5, 6, 
-		["Data",	false], 2, 0, 4, 1, 7, 3,
+		["Data",	false], 2, 0, 4, 1, 7, 3, 8, 
 	];
 	
 	outputs[| 0] = nodeValue("Value", self, JUNCTION_CONNECT.output, VALUE_TYPE.any, 0);
+	
+	attributes.inherit_name = true;
+	doTrigger = 0;
+	
+	_onSetDisplayName = function() {
+		attributes.inherit_name = false;
+	}
 	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		if(inParent.isArray()) return;
@@ -86,7 +109,8 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		
 		var _dtype	    = inputs[| 0].getValue();
 		var _range	    = inputs[| 1].getValue();
-		var _val_type	= inputs[| 2].getValue();
+		var _type		= inputs[| 2].getValue();
+		var _val_type   = data_type_map[_type];
 		var _enum_label = inputs[| 3].getValue();
 		var _vec_size	= inputs[| 4].getValue();
 		var _step		= inputs[| 7].getValue();
@@ -176,14 +200,24 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 				inParent.setDisplay(VALUE_DISPLAY.palette);
 				break;
 				
-			case "Gradient":	
+			case "Gradient":
 				inParent.type     = VALUE_TYPE.gradient;
 				outputs[| 0].type = inParent.type;
 				
 				inParent.animator = new valueAnimator(new gradientObject(c_white), inParent);
 				inParent.setDisplay(VALUE_DISPLAY._default);
 				break;
-			default:			inParent.setDisplay(VALUE_DISPLAY._default);	break;
+				
+			default:
+				inParent.setDisplay(VALUE_DISPLAY._default);
+				break;
+		}
+		
+		switch(_val_type) {
+			case VALUE_TYPE.trigger : 
+				var bname = inputs[| 8].getValue();
+				inParent.setDisplay(VALUE_DISPLAY.button, [ function() { doTrigger = 1; }, bname]);
+				break;
 		}
 		
 		if(index == 5)
@@ -192,7 +226,7 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	static createInput = function(override_order = true) {
 		if(group == noone || !is_struct(group)) return noone;
-			
+		
 		if(override_order) {
 			input_fix_len = ds_list_size(group.inputs);
 			inputs[| 5].setValue(input_fix_len);
@@ -229,6 +263,27 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 			inParent.name = display_name;
 			group.inputMap[? string_replace_all(display_name, " ", "_")] = inParent;
 		}
+		
+		var _to_list = outputs[| 0].value_to;
+		onSetDisplayName = _onSetDisplayName;
+		if(attributes.inherit_name && !ds_list_empty(_to_list)) {
+			for( var i = 0; i < ds_list_size(_to_list); i++ ) {
+				if(_to_list[| i].value_from != outputs[| 0]) continue;
+				if(display_name == _to_list[| i].name) break;
+				onSetDisplayName = noone;
+				setDisplayName(_to_list[| i].name);
+			}
+		}
+		
+		if(inParent.type == VALUE_TYPE.trigger) {
+			if(doTrigger == 1) {
+				outputs[| 0].setValue(true);
+				doTrigger = -1;
+			} else if(doTrigger == -1) {
+				outputs[| 0].setValue(false);
+				doTrigger = 0;
+			}
+		}
 	}
 	
 	PATCH_STATIC
@@ -236,16 +291,19 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	static update = function(frame = ANIMATOR.current_frame) {
 		if(is_undefined(inParent)) return;
 		
-		var _dtype = inputs[| 0].getValue();
+		var _dstype = inputs[| 0].getValue();
 		var _data  = inputs[| 2].getValue();
-		_dtype = display_list[_data][_dtype];
+		_dstype = display_list[_data][_dstype];
+		
+		var _datype = data_type_map[_data];
 		
 		inputs[| 1].setVisible(false);
 		inputs[| 3].setVisible(false);
 		inputs[| 4].setVisible(false);
 		inputs[| 7].setVisible(false);
+		inputs[| 8].setVisible(_datype == VALUE_TYPE.trigger);
 		
-		switch(_dtype) {
+		switch(_dstype) {
 			case "Slider" :
 			case "Slider range" :
 				inputs[| 7].setVisible(true);
@@ -266,22 +324,21 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	static postDeserialize = function() {
 		createInput(false);
 		
-		var _inputs = load_map[? "inputs"];
-		inputs[| 5].applyDeserialize(_inputs[| 5], load_scale);
+		var _inputs = load_map.inputs;
+		inputs[| 5].applyDeserialize(_inputs[5], load_scale);
 		group.sortIO();
 		
-		inputs[| 2].applyDeserialize(_inputs[| 2], load_scale);
+		inputs[| 2].applyDeserialize(_inputs[2], load_scale);
 		onValueUpdate(2);
 	}
 	
 	static applyDeserialize = function() {
-		var _inputs = load_map[? "inputs"];
-		var amo = min(ds_list_size(_inputs), ds_list_size(inputs));
+		var _inputs = load_map.inputs;
+		var amo = min(array_length(_inputs), ds_list_size(inputs));
 		
 		for(var i = 0; i < amo; i++) {
 			if(i == 2 || i == 5) continue;
-			inputs[| i].applyDeserialize(_inputs[| i], load_scale);
-			var raw_val = _inputs[| i][? "raw value"];
+			inputs[| i].applyDeserialize(_inputs[i], load_scale);
 		}
 		
 		inParent.name = name;

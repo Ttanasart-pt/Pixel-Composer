@@ -1,6 +1,6 @@
 function Panel_Array_Sequence(node) : PanelContent() constructor {
 	self.node = node;
-	title = __txt("Array Sequence");
+	title = __txt("Frame Sequence Editor");
 	
 	w = ui(640);
 	h = ui(168);
@@ -105,11 +105,19 @@ function Panel_Array_Sequence(node) : PanelContent() constructor {
 				draw_set_alpha(1);
 				
 				draw_set_text(f_p2, fa_center, fa_top, COLORS._main_text_sub);
-				draw_text_add(_sx + _ns / 2, ui(0), i);
+				draw_text_add(_sx + _ns / 2, ui(0), i + 1);
 			}
 			
-			for( var i = 0; i < array_length(_ord); i++ ) {
-				var _i = _ord[i];
+			var __ord = _ord;
+			var _def = array_length(_ord) == 0;
+			if(_def) {
+				__ord = array_create(array_length(_seq));
+				for( var i = 0; i < array_length(_seq); i++ ) 
+					__ord[i] = i;
+			}
+		
+			for( var i = 0; i < array_length(__ord); i++ ) {
+				var _i = __ord[i];
 				if(_i == noone) continue;
 				var _s = _seq[_i];
 				if(!is_surface(_s)) continue;
@@ -122,9 +130,9 @@ function Panel_Array_Sequence(node) : PanelContent() constructor {
 				var _ssx = _sx + (_ns - _sw * _ss) / 2;
 				var _ssy = _sy + (_ns - _sh * _ss) / 2;
 				
-				draw_surface_ext_safe(_s, _ssx, _ssy, _ss, _ss);
+				draw_surface_ext_safe(_s, _ssx, _ssy, _ss, _ss,,, _def? 0.5 : 1);
 				
-				if(pHOVER && point_in_rectangle(msx, msy, _sx, _sy, _sx + _ns, _sy + _ns)) {
+				if(pHOVER && !_def && point_in_rectangle(msx, msy, _sx, _sy, _sx + _ns, _sy + _ns)) {
 					if(mouse_press(mb_left, pFOCUS)) {
 						_ord[i] = noone;
 						node.inputs[| 2].setValue(_ord);

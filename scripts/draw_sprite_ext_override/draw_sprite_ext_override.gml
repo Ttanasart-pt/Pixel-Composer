@@ -28,6 +28,11 @@ function draw_sprite_stretched_points(spr, ind, _x0, _y0, _x1, _y1) {
 	__draw_sprite_stretched(spr, ind, _xs, _ys, _w, _h);
 }
 
+function draw_sprite_bbox(spr, ind, _bbox) {
+	if(_bbox == noone) return;
+	__draw_sprite_stretched(spr, ind, _bbox.x0, _bbox.y0, _bbox.w, _bbox.h);
+}
+
 function draw_sprite_uniform(spr, ind, _x, _y, scale, color = c_white) {
 	draw_sprite_ext(spr, ind, round(_x), round(_y), scale, scale, 0, color, 1);
 }

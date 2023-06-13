@@ -59,7 +59,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	inspector_display_list	= -1;
 	is_dynamic_output		= false;
 	
-	attributes		 = ds_map_create();
+	attributes		 = {};
 	attributeEditors = [];
 	
 	inspectInput1 = nodeValue("Toggle execution", self, JUNCTION_CONNECT.input, VALUE_TYPE.action, false).setVisible(true, true);
@@ -188,11 +188,14 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		h = max(min_h, (preview_surface && previewable)? 128 : 0, _hi, _ho);
 	}
 	
+	onSetDisplayName = noone;
 	static setDisplayName = function(_name) {
 		display_name = _name;
 		internalName = string_replace_all(display_name, " ", "_");
-		
 		refreshNodeMap();
+		
+		if(onSetDisplayName != noone)
+			onSetDisplayName();
 	}
 	
 	static getOutput = function(junc = noone) {
@@ -292,12 +295,35 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	static doStepBegin = function() {}
 	
 	static triggerCheck = function() {
+		_triggerCheck();
+	}
+	
+	static _triggerCheck = function() {
 		for( var i = 0; i < ds_list_size(inputs); i++ ) {
 			if(inputs[| i].type != VALUE_TYPE.trigger) continue;
 			if(!is_instanceof(inputs[| i].editWidget, buttonClass)) continue;
 			
 			var trig = inputs[| i].getValue();
-			if(trig)   inputs[| i].editWidget.onClick();
+			if(trig) {
+				inputs[| i].editWidget.onClick();
+				inputs[| i].setValue(false);
+			}
+		}
+		
+		if(hasInspector1Update()) {
+			var trig = inspectInput1.getValue();
+			if(trig) {
+				inspectInput1.editWidget.onClick();
+				inspectInput1.setValue(false);
+			}
+		}
+		
+		if(hasInspector2Update()) {
+			var trig = inspectInput2.getValue();
+			if(trig) {
+				inspectInput2.editWidget.onClick();
+				inspectInput2.setValue(false);
+			}
 		}
 	}
 	
@@ -311,14 +337,6 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		var sBase = surface_get_target();
 		LOG_BLOCK_START();
 		LOG_IF(global.FLAG.render, $">>>>>>>>>> DoUpdate called from {internalName} <<<<<<<<<<");
-		
-		for( var i = 0; i < ds_list_size(inputs); i++ ) {
-			if(inputs[| i].type != VALUE_TYPE.trigger) continue;
-			if(inputs[| i].editWidget == noone) continue;
-			
-			var trg = inputs[| i].getValue();
-			if(trg) inputs[| i].editWidget.onClick();
-		}
 		
 		try {
 			var t = get_timer();
@@ -512,7 +530,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		var y0 = yy + 20 * draw_name + draw_padding * _s;
 		var y1 = yy + (h - draw_padding) * _s;
 		
-		return new node_bbox(x0, y0, x1, y1);
+		return BBOX().fromPoints(x0, y0, x1, y1);
 	}
 	
 	static drawNodeName = function(xx, yy, _s) {
@@ -1242,48 +1260,44 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	}
 	
 	static serialize = function(scale = false, preset = false) {
-		var _map = ds_map_create();
+		var _map = {};
 		//print(" > Serializing: " + name);
 		
 		if(!preset) {
-			_map[? "id"]	 = node_id;
-			_map[? "render"] = renderActive;
-			_map[? "name"]	 = display_name;
-			_map[? "iname"]	 = internalName;
-			_map[? "x"]		 = x;
-			_map[? "y"]		 = y;
-			_map[? "type"]   = instanceof(self);
-			_map[? "group"]  = group == noone? group : group.node_id;
-			_map[? "preview"] = previewable;
+			_map.id	     = node_id;
+			_map.render  = renderActive;
+			_map.name	 = display_name;
+			_map.iname	 = internalName;
+			_map.x		 = x;
+			_map.y		 = y;
+			_map.type    = instanceof(self);
+			_map.group   = group == noone? group : group.node_id;
+			_map.preview = previewable;
 		}
 		
-		ds_map_add_map(_map, "attri", attributeSerialize());
+		_map.attri = attributeSerialize();
 		
-		var _inputs = ds_list_create();
+		var _inputs = [];
 		for(var i = 0; i < ds_list_size(inputs); i++)
-			ds_list_add_map(_inputs, inputs[| i].serialize(scale, preset));
-		ds_map_add_list(_map, "inputs", _inputs);
+			array_push(_inputs, inputs[| i].serialize(scale, preset));
+		_map.inputs = _inputs;
 		
-		var _outputs = ds_list_create();
+		var _outputs = [];
 		for(var i = 0; i < ds_list_size(outputs); i++)
-			ds_list_add_map(_outputs, outputs[| i].serialize(scale, preset));
-		ds_map_add_list(_map, "outputs", _outputs);
+			array_push(_outputs, outputs[| i].serialize(scale, preset));
+		_map.outputs = _outputs;
 		
-		var _trigger = ds_list_create();
-		ds_list_add_map(_trigger, inspectInput1.serialize(scale, preset));
-		ds_list_add_map(_trigger, inspectInput2.serialize(scale, preset));
-		ds_map_add_list(_map, "inspectInputs", _trigger);
+		var _trigger = [];
+		array_push(_trigger, inspectInput1.serialize(scale, preset));
+		array_push(_trigger, inspectInput2.serialize(scale, preset));
+		_map.inspectInputs = _trigger;
 		
 		doSerialize(_map);
 		processSerialize(_map);
 		return _map;
 	}
 	
-	static attributeSerialize = function() {
-		var att = ds_map_create();
-		ds_map_override(att, attributes);
-		return att;
-	}
+	static attributeSerialize = function() { return attributes; }
 	static doSerialize = function(_map) {}
 	static processSerialize = function(_map) {}
 	
@@ -1294,28 +1308,26 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		load_scale = scale;
 		
 		if(!preset) {
-			if(APPENDING)
-				APPEND_MAP[? load_map[? "id"]] = node_id;
-			else
-				node_id = ds_map_try_get(load_map, "id");
-		
+			if(APPENDING) APPEND_MAP[? load_map.id] = node_id;
+			else		  node_id = load_map.id;
+			
 			NODE_MAP[? node_id] = self;
 			
-			if(ds_map_exists(load_map, "name"))
-				setDisplayName(ds_map_try_get(load_map, "name", ""));
+			if(struct_has(load_map, "name"))
+				setDisplayName(load_map.name);
 			
-			internalName = ds_map_try_get(load_map, "iname", internalName);
-			_group = ds_map_try_get(load_map, "group", noone);
+			internalName = struct_try_get(load_map, "iname", internalName);
+			_group = struct_try_get(load_map, "group", noone);
 			if(_group == -1) _group = noone;
 			
-			x = ds_map_try_get(load_map, "x");
-			y = ds_map_try_get(load_map, "y");
-			renderActive = ds_map_try_get(load_map, "render", true);
-			previewable  = ds_map_try_get(load_map, "preview", previewable);
+			x = struct_try_get(load_map, "x");
+			y = struct_try_get(load_map, "y");
+			renderActive = struct_try_get(load_map, "render", true);
+			previewable  = struct_try_get(load_map, "preview", previewable);
 		}
 		
-		if(ds_map_exists(load_map, "attri"))
-			attributeDeserialize(load_map[? "attri"]);
+		if(struct_has(load_map, "attri"))
+			attributeDeserialize(load_map.attri);
 		
 		doDeserialize();
 		processDeserialize();
@@ -1331,33 +1343,33 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	static doDeserialize = function() {}
 	
 	static attributeDeserialize = function(attr) {
-		ds_map_override(attributes, attr);
+		struct_override(attributes, attr);
 	}
 	
 	static postDeserialize = function() {}
 	static processDeserialize = function() {}
 		
 	static applyDeserialize = function(preset = false) {
-		var _inputs = load_map[? "inputs"];
-		var amo = min(ds_list_size(inputs), ds_list_size(_inputs));
+		var _inputs = load_map.inputs;
+		var amo = min(ds_list_size(inputs), array_length(_inputs));
 		
 		for(var i = 0; i < amo; i++) {
 			if(inputs[| i] == noone) continue;
-			inputs[| i].applyDeserialize(_inputs[| i], load_scale, preset);
+			inputs[| i].applyDeserialize(_inputs[i], load_scale, preset);
 		}
 		
-		if(ds_map_exists(load_map, "outputs")) {
-			var _outputs = load_map[? "outputs"];
+		if(struct_has(load_map, "outputs")) {
+			var _outputs = load_map.outputs;
 			for(var i = 0; i < ds_list_size(outputs); i++) {
 				if(outputs[| i] == noone) continue;
-				outputs[| i].applyDeserialize(_outputs[| i], load_scale, preset);
+				outputs[| i].applyDeserialize(_outputs[i], load_scale, preset);
 			}
 		}
 		
-		if(ds_map_exists(load_map, "inspectInputs")) {
-			var insInp = load_map[? "inspectInputs"];
-			inspectInput1.applyDeserialize(insInp[| 0], load_scale, preset);
-			inspectInput2.applyDeserialize(insInp[| 1], load_scale, preset);
+		if(struct_has(load_map, "inspectInputs")) {
+			var insInp = load_map.inspectInputs;
+			inspectInput1.applyDeserialize(insInp[0], load_scale, preset);
+			inspectInput2.applyDeserialize(insInp[1], load_scale, preset);
 		}
 		
 		doApplyDeserialize();
@@ -1386,7 +1398,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		for(var i = 0; i < ds_list_size(inputs); i++)
 			connected &= inputs[| i].connect(log);
 		
-		if(ds_map_exists(load_map, "inspectInputs")) {
+		if(struct_has(load_map, "inspectInputs")) {
 			inspectInput1.connect(log);
 			inspectInput2.connect(log);
 		}
@@ -1413,8 +1425,6 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		ds_map_destroy(inputMap);
 		ds_map_destroy(outputMap);
 		
-		ds_map_destroy(attributes);
-		
 		for( var i = 0; i < array_length(temp_surface); i++ )
 			surface_free(temp_surface[i]);
 		
@@ -1425,8 +1435,8 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	
 	// helper function
 	static attrDepth = function() {
-		if(ds_map_exists(attributes, "color_depth")) {
-			var form = attributes[? "color_depth"];
+		if(struct_has(attributes, "color_depth")) {
+			var form = attributes.color_depth;
 			if(inputs[| 0].type == VALUE_TYPE.surface) 
 				form--;
 			if(form >= 0)

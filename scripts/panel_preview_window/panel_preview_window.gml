@@ -63,7 +63,7 @@ function Panel_Preview_Window() : PanelContent() constructor {
 	
 		surface_set_target(content_surface);
 			draw_clear(COLORS.panel_bg_clear);
-			draw_sprite_tiled_ext(s_transparent, 0, 0, 0, 1, 1, c_white, 0.75);
+			draw_sprite_tiled_ext(s_transparent, 0, 0, 0, 1, 1, COLORS.panel_preview_transparent, 1);
 			
 			var surf = node_target.outputs[| preview_channel].getValue();
 			if(is_array(surf))

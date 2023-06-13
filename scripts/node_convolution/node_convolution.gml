@@ -34,7 +34,7 @@ function Node_Convolution(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	static process_data = function(_outSurf, _data, _output_index, _array_index) {
 		var _ker = _data[1];
-		var _sam = ds_map_try_get(attributes, "oversample");
+		var _sam = struct_try_get(attributes, "oversample");
 		
 		surface_set_target(_outSurf);
 		DRAW_CLEAR

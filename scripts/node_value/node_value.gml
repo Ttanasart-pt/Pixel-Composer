@@ -352,7 +352,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	type  = _type;
 	forward = true;
 	
-	name  = __txt_junction_name(instanceof(node), type, index, _name);
+	_initName = _name;
+	name = __txt_junction_name(instanceof(node), type, index, _name);
+	name = _name;
 	internalName = string_replace_all(_name, " ", "_");
 	
 	if(struct_has(node, "inputMap")) {
@@ -386,7 +388,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	def_val		= _value;
 	on_end		= KEYFRAME_END.hold;
 	unit		= new nodeValueUnit(self);
-	extra_data	= ds_list_create();
+	extra_data	= [];
 	dyna_depo   = ds_list_create();
 	
 	draw_line_shift_x	= 0;
@@ -667,7 +669,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						for( var i = 0; i < array_length(animators); i++ )
 							animators[i].suffix = " " + array_safe_get(global.displaySuffix_Area, i, "");
 						
-						extra_data[| 0] = AREA_MODE.area;
+						extra_data[0] = AREA_MODE.area;
 						extract_node = "Node_Area";
 						break;
 					case VALUE_DISPLAY.padding :
@@ -925,7 +927,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		}
 		
 		if(display_type == VALUE_DISPLAY.area) {
-			var dispType = ds_list_get(nodeFrom.extra_data, 0);
+			var dispType = nodeFrom.extra_data[0];
 			var surfGet = nodeFrom.display_data;
 			if(!applyUnit || surfGet == -1) return value;
 			
@@ -986,6 +988,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	}
 	
 	static getValue = function(_time = ANIMATOR.current_frame, applyUnit = true, arrIndex = 0, useCache = true) {
+		if(type == VALUE_TYPE.trigger)
+			useCache = false;
+			
 		if(useCache) {
 			var cache_hit = cache_value[0];
 			cache_hit &= cache_value[1] == _time;
@@ -1069,6 +1074,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	
 	static getValueRecursive = function(_time = ANIMATOR.current_frame) {
 		var val = [ -1, self ];
+		
+		if(type == VALUE_TYPE.trigger && connect_type == JUNCTION_CONNECT.output) //trigger even will not propagate from input to output, need to be done manually
+			return [ __getAnimValue(_time), self ];
 		
 		if(value_from == noone) {
 			var _val = __getAnimValue(_time);
@@ -1593,32 +1601,31 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	}
 	
 	static serialize = function(scale = false, preset = false) {
-		var _map = ds_map_create();
+		var _map = {};
 		
-		_map[? "visible"]	 = visible;
+		_map.visible = visible;
 		
 		if(connect_type == JUNCTION_CONNECT.output) 
 			return _map;
 		
-		_map[? "on end"]	 = on_end;
-		_map[? "unit"]		 = unit.mode;
-		_map[? "sep_axis"]	 = sep_axis;
-		_map[? "shift x"]	 = draw_line_shift_x;
-		_map[? "shift y"]	 = draw_line_shift_y;
-		_map[? "from node"]  = !preset && value_from? value_from.node.node_id	: -1;
-		_map[? "from index"] = !preset && value_from? value_from.index			: -1;
-		_map[? "global_use"] = expUse;
-		_map[? "global_key"] = expression;
-		_map[? "anim"]		 = is_anim;
+		_map.on_end		= on_end;
+		_map.unit		= unit.mode;
+		_map.sep_axis	= sep_axis;
+		_map.shift_x	= draw_line_shift_x;
+		_map.shift_y	= draw_line_shift_y;
+		_map.from_node  = !preset && value_from? value_from.node.node_id	: -1;
+		_map.from_index = !preset && value_from? value_from.index			: -1;
+		_map.global_use = expUse;
+		_map.global_key = expression;
+		_map.anim		= is_anim;
 		
-		ds_map_add_list(_map, "raw value", animator.serialize(scale));
+		_map.raw_value  = animator.serialize(scale);
 		
-		var _anims = ds_list_create();
+		var _anims = [];
 		for( var i = 0; i < array_length(animators); i++ )
-			ds_list_add_list(_anims, animators[i].serialize(scale));
-		ds_map_add_list(_map, "animators", _anims);
-		
-		ds_map_add_list(_map, "data", ds_list_clone(extra_data));
+			array_push(_anims, animators[i].serialize(scale));
+		_map.animators = _anims;
+		_map.data = extra_data;
 		
 		return _map;
 	}
@@ -1630,38 +1637,38 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(_map == undefined) return;
 		if(_map == noone) return;
 		
-		visible = ds_map_try_get(_map, "visible", visible);
+		visible = _map.visible;
 		if(connect_type == JUNCTION_CONNECT.output) 
 			return;
 		
 		//printIf(TESTING, "     |- Applying deserialize to junction " + name + " of node " + node.name);
-		on_end		= ds_map_try_get(_map, "on end", on_end);
-		unit.mode	= ds_map_try_get(_map, "unit", VALUE_UNIT.constant);
-		expUse    	= ds_map_try_get(_map, "global_use");
-		expression	= ds_map_try_get(_map, "global_key");
+		on_end		= struct_try_get(_map, "on_end");
+		unit.mode	= struct_try_get(_map, "unit");
+		expUse    	= struct_try_get(_map, "global_use");
+		expression	= struct_try_get(_map, "global_key");
 		expTree     = evaluateFunctionTree(expression); 
 		
-		sep_axis	= ds_map_try_get(_map, "sep_axis");
-		is_anim		= ds_map_try_get(_map, "anim");
+		sep_axis	= struct_try_get(_map, "sep_axis");
+		is_anim		= struct_try_get(_map, "anim");
 		
-		draw_line_shift_x = ds_map_try_get(_map, "shift x");
-		draw_line_shift_y = ds_map_try_get(_map, "shift y");
+		draw_line_shift_x = struct_try_get(_map, "shift_x");
+		draw_line_shift_y = struct_try_get(_map, "shift_y");
 		
-		animator.deserialize(_map[? "raw value"], scale);
+		animator.deserialize(struct_try_get(_map, "raw_value"), scale);
 		
-		if(ds_map_exists(_map, "animators")) {
-			var anims	 = _map[? "animators"];
-			for( var i = 0; i < ds_list_size(anims); i++ )
-				animators[i].deserialize(anims[| i], scale);
+		if(struct_has(_map, "animators")) {
+			var anims	 = _map.animators;
+			for( var i = 0; i < array_length(anims); i++ )
+				animators[i].deserialize(anims[i], scale);
 		}
 		
 		if(!preset) {
-			con_node = _map[? "from node"];
-			con_index = _map[? "from index"];
+			con_node  = struct_try_get(_map, "from_node",  -1);
+			con_index = struct_try_get(_map, "from_index", -1);
 		}
 		
-		if(ds_map_exists(_map, "data")) 
-			ds_list_copy(extra_data, _map[? "data"]);
+		if(struct_has(_map, "data")) 
+			extra_data = _map.data;
 		
 		if(APPENDING) def_val = getValue(0);
 		
@@ -1680,8 +1687,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		}
 			
 		if(!ds_map_exists(NODE_MAP, _node)) {
-			var txt = "Node connect error : Node ID " + string(_node) + " not found.";
-			log_warning("LOAD", "[Connect] " + txt, node);
+			var txt = $"Node connect error : Node ID {_node} not found.";
+			log_warning("LOAD", $"[Connect] {txt}", node);
 			return false;
 		}
 		
@@ -1689,17 +1696,17 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		var _ol = ds_list_size(_nd.outputs);
 		
 		if(log)
-			log_warning("LOAD", "[Connect] Reconnecting " + string(node.name) + " to " + _nd.name, node);
+			log_warning("LOAD", $"[Connect] Reconnecting {node.name} to {_nd.name}", node);
 			
 		if(con_index < _ol) {
 			if(setFrom(_nd.outputs[| con_index], false))
 				return true;
 			
-			log_warning("LOAD", "[Connect] Connection conflict " + string(node.name) + " to " + string(_nd.name) + " : Connection failed.", node);
+			log_warning("LOAD", $"[Connect] Connection conflict {node.name} to {_nd.name} : Connection failed.", node);
 			return false;
 		}
 		
-		log_warning("LOAD", "[Connect] Connection conflict " + string(node.name) + " to " + string(_nd.name) + " : Node not exist.", node);
+		log_warning("LOAD", $"[Connect] Connection conflict {node.name} to {_nd.name} : Node not exist.", node);
 		return false;
 	}
 	
@@ -1712,7 +1719,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	
 	static cleanUp = function() {
 		ds_list_destroy(value_to);
-		ds_list_destroy(extra_data);
 		animator.cleanUp();
 		delete animator;
 	}

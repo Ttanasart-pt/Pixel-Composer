@@ -15,8 +15,13 @@ function Node_Group_Output(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	inputs[| 1] = nodeValue("Order", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.rejectArray();
 	
+	attributes.inherit_name = true;
 	outParent = undefined;
 	output_index = -1;
+	
+	_onSetDisplayName = function() {
+		attributes.inherit_name = false;
+	}
 	
 	static setRenderStatus = function(result) {
 		LOG_LINE_IF(global.FLAG.render, $"Set render status for {internalName} : {result}");
@@ -104,6 +109,14 @@ function Node_Group_Output(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		
 		outParent.type = inputs[| 0].type;
 		outParent.display_type = inputs[| 0].display_type;
+		
+		onSetDisplayName = _onSetDisplayName;
+		if(attributes.inherit_name && inputs[| 0].value_from != noone) {
+			if(display_name != inputs[| 0].value_from.name) {
+				onSetDisplayName = noone;
+				setDisplayName(inputs[| 0].value_from.name);
+			}
+		}
 	}
 	
 	//static triggerRender = function() {
@@ -118,8 +131,8 @@ function Node_Group_Output(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	static postDeserialize = function() {
 		createOutput(false);
 		
-		var _inputs = load_map[? "inputs"];
-		inputs[| 1].applyDeserialize(_inputs[| 1], load_scale);
+		var _inputs = load_map.inputs;
+		inputs[| 1].applyDeserialize(_inputs[1], load_scale);
 		group.sortIO();
 	}
 	

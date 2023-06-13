@@ -50,9 +50,9 @@ function Node_Fluid_Domain_Queue(_x, _y, _group = noone) : Node_Fluid(_x, _y, _g
 	}
 	
 	static postDeserialize = function() {
-		var _inputs = load_map[? "inputs"];
+		var _inputs = load_map.inputs;
 		
-		for(var i = 0; i < ds_list_size(_inputs); i++)
+		for(var i = 0; i < array_length(_inputs); i++)
 			createNewInput();
 	}
 	

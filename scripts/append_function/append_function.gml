@@ -1,6 +1,6 @@
 function APPEND(_path, context = PANEL_GRAPH.getCurrentContext()) {
 	if(_path == "") return noone;
-	var _map = json_load(_path);
+	var _map = json_load_struct(_path);
 	
 	if(_map == -1) {
 		printlog("Decode error");
@@ -19,8 +19,8 @@ function __APPEND_MAP(_map, context = PANEL_GRAPH.getCurrentContext()) {
 	APPENDING	 = true;
 	UNDO_HOLDING = true;
 	
-	if(ds_map_exists(_map, "version")) {
-		var _v = _map[? "version"];
+	if(struct_has(_map, "version")) {
+		var _v = _map.version;
 		LOADING_VERSION = _v;
 		if(_v != SAVEFILE_VERSION) {
 			var warn = "File version mismatch : loading file verion " + string(_v) + " to Pixel Composer " + string(SAVEFILE_VERSION);
@@ -28,8 +28,8 @@ function __APPEND_MAP(_map, context = PANEL_GRAPH.getCurrentContext()) {
 		}
 	}
 	
-	if(!ds_map_exists(_map, "nodes")) return noone;
-	var _node_list	  = _map[? "nodes"];
+	if(!struct_has(_map, "nodes")) return noone;
+	var _node_list	  = _map.nodes;
 	var appended_list = ds_list_create();
 	var node_create   = ds_list_create();
 	
@@ -37,8 +37,8 @@ function __APPEND_MAP(_map, context = PANEL_GRAPH.getCurrentContext()) {
 	ds_map_clear(APPEND_MAP);
 	var t = current_time;
 	
-	for(var i = 0; i < ds_list_size(_node_list); i++) {
-		var _node = nodeLoad(_node_list[| i], true, context);
+	for(var i = 0; i < array_length(_node_list); i++) {
+		var _node = nodeLoad(_node_list[i], true, context);
 		if(_node) ds_list_add(appended_list, _node);
 	}
 	printlog("Load time: " + string(current_time - t)); t = current_time;
@@ -98,12 +98,12 @@ function __APPEND_MAP(_map, context = PANEL_GRAPH.getCurrentContext()) {
 		try {
 			while(++pass < 3 && !ds_queue_empty(CONNECTION_CONFLICT)) {
 				var size = ds_queue_size(CONNECTION_CONFLICT);
-				log_message("APPEND", "[Connect] " + string(size) + " Connection conflict(s) detected ( pass: " + string(pass) + " )");
+				log_message("APPEND", $"[Connect] {size} Connection conflict(s) detected (pass: {pass})");
 				repeat(size) {
 					var junc = ds_queue_dequeue(CONNECTION_CONFLICT);
 					var res = junc.connect(true);	
 					
-					log_message("APPEND", "[Connect] Reconnecting " + string(junc.name) + " " + (res? "SUCCESS" : "FAILED"));
+					log_message("APPEND", $"[Connect] Reconnecting {junc.name} {res? "SUCCESS" : "FAILED"}");
 				}
 				Render(true);
 			}
@@ -131,8 +131,8 @@ function __APPEND_MAP(_map, context = PANEL_GRAPH.getCurrentContext()) {
 	PANEL_ANIMATION.updatePropertyList();
 	UPDATE |= RENDER_TYPE.full;
 	
-	if(ds_map_exists(_map, "metadata")) {
-		var meta = _map[? "metadata"];
+	if(struct_has(_map, "metadata")) {
+		var meta = _map.metadata;
 		for( var i = 0; i < ds_list_size(node_create); i++ ) {
 			var _node = node_create[| i];
 			if(!struct_has(_node, "metadata")) continue;
@@ -141,7 +141,6 @@ function __APPEND_MAP(_map, context = PANEL_GRAPH.getCurrentContext()) {
 		}
 	}
 	
-	ds_map_destroy(_map);
 	refreshNodeMap();
 	
 	return node_create;

@@ -1,14 +1,14 @@
 function histogramInit() {
-	attributes[? "preview_resolution"] = 64;
+	attributes.preview_resolution = 64;
 	array_push(attributeEditors, ["Preview resolution", "preview_resolution", 
-		new textBox(TEXTBOX_INPUT.number, function(val) { attributes[? "preview_resolution"] = val; })]);
+		new textBox(TEXTBOX_INPUT.number, function(val) { attributes.preview_resolution = val; })]);
 	
-	attributes[? "preview_sample"] = 32;
+	attributes.preview_sample = 32;
 	array_push(attributeEditors, ["Preview sample", "preview_sample", 
-		new textBox(TEXTBOX_INPUT.number, function(val) { attributes[? "preview_sample"] = val; })]);
+		new textBox(TEXTBOX_INPUT.number, function(val) { attributes.preview_sample = val; })]);
 	
 	for( var i = 0; i < 4; i++ ) {
-		hist[i] = array_create(attributes[? "preview_resolution"] + 1);
+		hist[i] = array_create(attributes.preview_resolution + 1);
 		histShow[i] = true;
 	}
 	histMax = 0;
@@ -50,7 +50,7 @@ function histogramDraw(_x, _y, _w, _h) {
 }
 
 function histogramUpdate(surface) {
-	if(array_length(hist[0]) != attributes[? "preview_resolution"] + 1)
+	if(array_length(hist[0]) != attributes.preview_resolution + 1)
 		histogramInit();
 		
 	if(!is_surface(surface)) return;
@@ -58,8 +58,8 @@ function histogramUpdate(surface) {
 	histMax = 0;
 	var sw = surface_get_width(surface);
 	var sh = surface_get_height(surface);
-	var stw = max(1, sw / attributes[? "preview_sample"]);
-	var sth = max(1, sh / attributes[? "preview_sample"]);
+	var stw = max(1, sw / attributes.preview_sample);
+	var sth = max(1, sh / attributes.preview_sample);
 		
 	for( var j = 0; j < 4; j++ )
 	for( var i = 0; i < array_length(hist[0]); i++ ) {
@@ -73,9 +73,9 @@ function histogramUpdate(surface) {
 	for( var j = 0; j < sh; j += sth ) {
 		var col = buffer_get_color(surface_buffer, i, j, sw, sh);
 		var colA = [];
-		colA[0] = round(color_get_red(col)   / 256 * attributes[? "preview_resolution"]);
-		colA[1] = round(color_get_green(col) / 256 * attributes[? "preview_resolution"]);
-		colA[2] = round(color_get_blue(col)  / 256 * attributes[? "preview_resolution"]);
+		colA[0] = round(color_get_red(col)   / 256 * attributes.preview_resolution);
+		colA[1] = round(color_get_green(col) / 256 * attributes.preview_resolution);
+		colA[2] = round(color_get_blue(col)  / 256 * attributes.preview_resolution);
 		colA[3] = round((colA[0] + colA[1] + colA[2]) / 3);
 			
 		for( var k = 0; k < 4; k++ ) {

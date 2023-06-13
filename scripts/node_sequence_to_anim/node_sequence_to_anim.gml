@@ -2,16 +2,18 @@ function Node_Sequence_Anim(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	name = "Array to Anim";
 	update_on_frame = true;
 	
-	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
+	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0)
+		.setArrayDepth(1);
 	
 	inputs[| 1] = nodeValue("Speed", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
 		.rejectArray();
 		
 	inputs[| 2] = nodeValue("Sequence", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [])
+		.setVisible(true, true)
 		.setArrayDepth(1);
 		
 	inputs[| 3] = nodeValue("Overflow", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Hold", "Loop", "Empty" ]);
+		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Hold", "Loop", "Ping Pong", "Empty" ]);
 	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
@@ -21,7 +23,13 @@ function Node_Sequence_Anim(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		var _ord = inputs[| 2].getValue();
 		var _h = ui(64);
 		
-		if(_hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + _h)) {
+		if(array_length(_ord) == 0) {
+			_ord = array_create(array_length(_seq));
+			for( var i = 0; i < array_length(_seq); i++ ) 
+				_ord[i] = i;
+		}
+		
+		if(_hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + _h) && inputs[| 2].value_from == noone) {
 			draw_sprite_stretched(THEME.button, mouse_click(mb_left, _focus)? 2 : 1, _x, _y, _w, _h);
 			if(mouse_press(mb_left, _focus)) 
 				dialogPanelCall(new Panel_Array_Sequence(self));
@@ -71,41 +79,50 @@ function Node_Sequence_Anim(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	});
 	
 	input_display_list = [ 0,
-		["Frames",		false], sequence_renderer, 3, 
+		["Frames",		false], sequence_renderer, 2, 3, 
 		["Animation",	false], 1, 
 	];
 	
 	static update = function(frame = ANIMATOR.current_frame) {
-		var _seq = inputs[| 0].getValue();
-		var _spd = inputs[| 1].getValue();
-		var _ord = inputs[| 2].getValue();
-		var _ovf = inputs[| 3].getValue();
-		
-		if(!is_array(_seq)) {
-			outputs[| 0].setValue(_seq);
+		var _sur = inputs[| 0].getValue();
+		if(!is_array(_sur)) {
+			outputs[| 0].setValue(_sur);
 			return;
 		}
+		
+		var _spd = inputs[| 1].getValue();
+		var _seq = inputs[| 2].getValue();
+		var _ovf = inputs[| 3].getValue();
 		
 		var frm = floor(ANIMATOR.current_frame / _spd);
 		var ind = frm;
 		
-		if(array_length(_ord) > 0) {
-			if(_ovf == 0)
-				ind = clamp(ind, 0, array_length(_ord) - 1);
-			else if(_ovf == 2 && ind >= array_length(_ord)) {
-				outputs[| 0].setValue(noone);
-				return;
-			}
+		if(array_length(_seq) == 0) {
+			_seq = array_create(array_length(_sur));
+			for( var i = 0; i < array_length(_sur); i++ ) 
+				_seq[i] = i;
+		}
+		
+		if(_ovf == 0)
+			ind = clamp(ind, 0, array_length(_seq) - 1);
+		else if(_ovf == 2) {
+			var _slen = array_length(_seq);
+			var _slpp = _slen * 2 - 2;
+			ind = abs(ind % _slpp);
+			if(ind >= _slen)
+				ind = _slpp - ind;
+		} else if(_ovf == 3 && ind >= array_length(_seq)) {
+			outputs[| 0].setValue(noone);
+			return;
+		}
 			
-			ind = array_safe_get(_ord, ind,, ARRAY_OVERFLOW.loop);
-		} else 
-			ind = safe_mod(floor(ANIMATOR.current_frame / _spd), array_length(_seq));
+		ind = array_safe_get(_seq, ind,, ARRAY_OVERFLOW.loop);
 		
 		if(ind == noone) {
 			outputs[| 0].setValue(noone);
 			return;
 		}
 		
-		outputs[| 0].setValue(array_safe_get(_seq, ind));
+		outputs[| 0].setValue(array_safe_get(_sur, ind));
 	}
 }

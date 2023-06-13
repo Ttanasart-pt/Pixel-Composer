@@ -312,7 +312,7 @@ function Panel_Inspector() : PanelContent() constructor {
 					continue;
 				}
 				
-				var val = inspecting.attributes[? edt[1]];
+				var val = inspecting.attributes[$ edt[1]];
 				edt[2].setActiveFocus(pFOCUS, pHOVER);
 				
 				if(instanceof(edt[2]) == "buttonClass") {

@@ -127,7 +127,7 @@ function areaBox(_onModify, _unit = noone) : widget() constructor {
 		y = _y;
 		w = 0;
 		h = ui(204);
-		mode = ds_list_get(_extra_data, 0);
+		mode = _extra_data[0];
 		
 		if(buttonInstant(THEME.button_hide, _x - ui(48), _y + ui(64 - 48), ui(96), ui(96), _m, adjust_shape && active, adjust_shape && hover, 
 			"", THEME.inspector_area, array_safe_get(_data, 4), c_white) == 2) {
@@ -213,7 +213,7 @@ function areaBox(_onModify, _unit = noone) : widget() constructor {
 						break;
 				}
 				
-				_extra_data[| 0] = (mode + 1) % 3;
+				_extra_data[0] = (mode + 1) % 3;
 			}
 		}
 		

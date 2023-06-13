@@ -31,7 +31,8 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	inputs[| 6] = nodeValue("Scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 1 ])
 		.setDisplay(VALUE_DISPLAY.vector);
 	
-	inputs[| 7] = nodeValue("Tile", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false, "Repeat the surface to fill the screen.");
+	inputs[| 7] = nodeValue("Render Mode", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+		.setDisplay(VALUE_DISPLAY.enum_button, [ "Normal", "Tile", "Wrap" ]);
 	
 	inputs[| 8] = nodeValue("Rotate by velocity", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0, "Make the surface rotates to follow its movement.")
 		.setDisplay(VALUE_DISPLAY.slider, [0, 1, 0.01]);
@@ -43,9 +44,9 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	inputs[| 11] = nodeValue("Active", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
 		active_index = 11;
-		
+	
 	input_display_list = [ 11, 0, 
-		["Output",		true],	9, 1, 7, 
+		["Output",		true],	9, 1, 7,
 		["Position",	false], 2, 10, 
 		["Rotation",	false], 3, 5, 8, 
 		["Scale",		false], 6
@@ -139,8 +140,8 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		var rot_vel = vel * _data[8];
 		var rot = _data[5] + rot_vel;
 		
-		var sca = _data[6];
-		var wrp = _data[7];
+		var sca  = _data[6];
+		var mode = _data[7];
 		
 		var cDep = attrDepth();
 		
@@ -180,7 +181,7 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		
 		pos = point_rotate(pos[0], pos[1], pos[0] + anc[0], pos[1] + anc[1], rot);
 		
-		if(wrp) {
+		if(mode == 1) {
 			var _w = _ww * sqrt(2);
 			var _h = _hh * sqrt(2);
 			var _px = (_w - _ww) / 2;
@@ -223,9 +224,22 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				draw_y = round(draw_y);
 			}
 			
-			surface_set_shader(_outSurf);	
+			surface_set_shader(_outSurf);
 			shader_set_interpolation(ins);
 			draw_surface_ext_safe(ins, draw_x, draw_y, sca[0], sca[1], rot, c_white, 1);
+			
+			if(mode == 2) {
+				draw_surface_ext_safe(ins, draw_x - _ww, draw_y - _hh, sca[0], sca[1], rot, c_white, 1);
+				draw_surface_ext_safe(ins, draw_x,       draw_y - _hh, sca[0], sca[1], rot, c_white, 1);
+				draw_surface_ext_safe(ins, draw_x + _ww, draw_y - _hh, sca[0], sca[1], rot, c_white, 1);
+				
+				draw_surface_ext_safe(ins, draw_x - _ww, draw_y, sca[0], sca[1], rot, c_white, 1);
+				draw_surface_ext_safe(ins, draw_x + _ww, draw_y, sca[0], sca[1], rot, c_white, 1);
+				
+				draw_surface_ext_safe(ins, draw_x - _ww, draw_y + _hh, sca[0], sca[1], rot, c_white, 1);
+				draw_surface_ext_safe(ins, draw_x,       draw_y + _hh, sca[0], sca[1], rot, c_white, 1);
+				draw_surface_ext_safe(ins, draw_x + _ww, draw_y + _hh, sca[0], sca[1], rot, c_white, 1);
+			}
 			surface_reset_shader();
 		}
 		

@@ -380,7 +380,7 @@ function textBox(_input, _onModify, _extras = noone) : textInput(_input, _onModi
 		}
 		
 		text_surface = surface_verify(text_surface, _w - ui(16), _h);
-		draw_sprite_stretched_ext(THEME.textbox, 3, _x, _y, _w, _h, boxColor, 1);
+		if(!hide) draw_sprite_stretched_ext(THEME.textbox, 3, _x, _y, _w, _h, boxColor, 1);
 		disp_x = lerp_float(disp_x, disp_x_to, 5);
 		
 		var hoverRect = point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + _h);

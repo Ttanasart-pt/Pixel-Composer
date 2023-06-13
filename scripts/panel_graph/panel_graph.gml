@@ -175,7 +175,7 @@ function Panel_Graph() : PanelContent() constructor {
 	addHotkey("Graph", "Add node",			    "A", MOD_KEY.none,	function() { PANEL_GRAPH.callAddDialog(); });
 	addHotkey("Graph", "Focus content",			"F", MOD_KEY.none,	function() { PANEL_GRAPH.fullView(); });
 	addHotkey("Graph", "Preview focusing node",	"P", MOD_KEY.none,	function() { PANEL_GRAPH.setCurrentPreview(); });
-	addHotkey("Graph", "Preview window",		"P", MOD_KEY.ctrl,	function() { PANEL_GRAPH.previewWindow(PANEL_GRAPH.node_focus); });
+	addHotkey("Graph", "Preview window",		"P", MOD_KEY.ctrl,	function() { create_preview_window(PANEL_GRAPH.node_focus); });
 	addHotkey("Graph", "Import image",			"I", MOD_KEY.none,	function() { nodeBuild("Node_Image",			PANEL_GRAPH.mouse_grid_x, PANEL_GRAPH.mouse_grid_y); });
 	addHotkey("Graph", "Import image array",	"I", MOD_KEY.shift,	function() { nodeBuild("Node_Image_Sequence",	PANEL_GRAPH.mouse_grid_x, PANEL_GRAPH.mouse_grid_y); });
 	addHotkey("Graph", "Add number",			"1", MOD_KEY.none,	function() { nodeBuild("Node_Number",			PANEL_GRAPH.mouse_grid_x, PANEL_GRAPH.mouse_grid_y); });
@@ -493,7 +493,7 @@ function Panel_Graph() : PanelContent() constructor {
 						}));
 					array_push(menu,  
 						menuItem(__txtx("panel_graph_preview_window", "Send to preview window"), function() {
-							previewWindow(node_hover);
+							create_preview_window(node_hover);
 						}, noone, ["Graph", "Preview window"]));
 					array_push(menu,  
 						menuItem(__txtx("panel_graph_inspector_panel", "Send to new inspector"), function() {
@@ -910,11 +910,11 @@ function Panel_Graph() : PanelContent() constructor {
 				nodeArray[i] = nodes_select_list[| i];
 		}
 		
-		var _map  = ds_map_create();
-		var _node = ds_list_create();
+		var _map  = {};
+		var _node = [];
 		for(var i = 0; i < array_length(nodeArray); i++)
 			SAVE_NODE(_node, nodeArray[i],,,, getCurrentContext());
-		ds_map_add_list(_map, "nodes", _node);
+		_map.nodes = _node;
 		
 		APPENDING = true;
 		CLONING	  = true;
@@ -922,8 +922,6 @@ function Panel_Graph() : PanelContent() constructor {
 		APPENDING = false;
 		CLONING	  = false;
 		
-		ds_map_destroy(_map);
-			
 		if(ds_list_size(_app) == 0) {
 			ds_list_destroy(_app);
 			return;
@@ -984,20 +982,19 @@ function Panel_Graph() : PanelContent() constructor {
 			}
 		}
 		
-		var _map  = ds_map_create();
-		var _node = ds_list_create();
+		var _map  = {};
+		var _node = [];
 		for(var i = 0; i < array_length(nodeArray); i++)
 			SAVE_NODE(_node, nodeArray[i],,,, getCurrentContext());
-		ds_map_add_list(_map, "nodes", _node);
+		_map.nodes = _node;
 		
 		clipboard_set_text(json_encode_minify(_map));
-		ds_map_destroy(_map);
 	}
 	
 	function doPaste() {
 		var txt = clipboard_get_text();
-		var _map = json_decode(txt);
-		if(_map != -1) {
+		var _map = json_try_parse(txt);
+		if(_map != noone) {
 			ds_map_clear(APPEND_MAP);
 			APPENDING = true;
 			CLONING	  = true;
@@ -1005,7 +1002,6 @@ function Panel_Graph() : PanelContent() constructor {
 			APPENDING = false;
 			CLONING	  = false;
 			
-			ds_map_destroy(_map);
 			if(_app == noone) 
 				return;
 			

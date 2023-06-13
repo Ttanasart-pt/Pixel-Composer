@@ -128,6 +128,12 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 	
 	static getValue = function(_time = ANIMATOR.current_frame) {
 		if(prop.type == VALUE_TYPE.trigger) {
+			if(ds_list_size(values) == 0) 
+				return false;
+			
+			if(!prop.is_anim)
+				return values[| 0].value;
+			
 			for(var i = 0; i < ds_list_size(values); i++) { //Find trigger
 				var _key = values[| i];
 				if(_key.time == _time) 
@@ -278,6 +284,11 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 	
 	static setValue = function(_val = 0, _record = true, _time = ANIMATOR.current_frame, ease_in = 0, ease_out = 0) {
 		if(prop.type == VALUE_TYPE.trigger) {
+			if(!prop.is_anim) {
+				values[| 0] = new valueKey(0, _val, self);
+				return true;
+			}
+			
 			for(var i = 0; i < ds_list_size(values); i++) { //Find trigger
 				var _key = values[| i];
 				if(_key.time == _time)  {
@@ -344,60 +355,56 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 	}
 	
 	static serialize = function(scale = false) {
-		var _list = ds_list_create();
+		var _data = [];
 		
 		for(var i = 0; i < ds_list_size(values); i++) {
-			var _value_list = ds_list_create();
+			var _value_list = [];
 			if(scale)
-				_value_list[| 0] = values[| i].time / (ANIMATOR.frames_total - 1);
+				_value_list[0] = values[| i].time / (ANIMATOR.frames_total - 1);
 			else
-				_value_list[| 0] = values[| i].time;
+				_value_list[0] = values[| i].time;
 			
 			var val = values[| i].value;
 			
 			if(prop.type == VALUE_TYPE.struct)
-				_value_list[| 1] = json_stringify(val);
+				_value_list[1] = json_stringify(val);
 			else if(is_struct(val))
-				_value_list[| 1] = val.serialize();
+				_value_list[1] = val.serialize();
 			else if(!sep_axis && typeArray(prop.display_type) && is_array(val)) {
-				var __v = ds_list_create();
+				var __v = [];
 				for(var j = 0; j < array_length(val); j++) {
 					if(is_struct(val[j]) && struct_has(val[j], "serialize"))
-						ds_list_add_map(__v, val[j].serialize()); 
+						array_push(__v, val[j].serialize()); 
 					else 
-						ds_list_add(__v, val[j]); 
+						array_push(__v, val[j]); 
 				}
-				_value_list[| 1] = __v;
-				ds_list_mark_as_list(_value_list, 1);
+				_value_list[1] = __v;
 			} else
-				_value_list[| 1] = values[| i].value;
+				_value_list[1] = values[| i].value;
 			
-			_value_list[| 2] = ds_list_create_from_array(values[| i].ease_in);
-				ds_list_mark_as_list(_value_list, 2);
-			_value_list[| 3] = ds_list_create_from_array(values[| i].ease_out);
-				ds_list_mark_as_list(_value_list, 3);
-				
-			_value_list[| 4] = values[| i].ease_in_type;
-			_value_list[| 5] = values[| i].ease_out_type;
+			_value_list[2] = values[| i].ease_in;
+			_value_list[3] = values[| i].ease_out;
+			_value_list[4] = values[| i].ease_in_type;
+			_value_list[5] = values[| i].ease_out_type;
 			
-			ds_list_add_list(_list, _value_list);
+			array_push(_data, _value_list);
 		}
 		
-		return _list;
+		return _data;
 	}
 	
-	static deserialize = function(_list, scale = false) {
+	static deserialize = function(_data, scale = false) {
 		ds_list_clear(values);
 		
 		if(prop.type == VALUE_TYPE.gradient && LOADING_VERSION < 1340 && !CLONING) { //backward compat: Gradient
 			var _val = [];
-			var value = _list[| 0][| 1];
+			var value = _data[0][1];
 			
-			if(ds_exists(value, ds_type_list)) 
-			for(var i = 0; i < ds_list_size(value); i++) {
-				var _keyframe = value[| i];
-				var _t = ds_map_try_get(_keyframe, "time");
-				var _v = ds_map_try_get(_keyframe, "value");
+			if(is_array(value)) 
+			for(var i = 0; i < array_length(value); i++) {
+				var _keyframe = value[i];
+				var _t = struct_try_get(_keyframe, "time");
+				var _v = struct_try_get(_keyframe, "value");
 				
 				array_push(_val, new gradientKey(_t, _v));
 			}
@@ -410,36 +417,35 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 					
 		var base = getValue();
 		
-		for(var i = 0; i < ds_list_size(_list); i++) {
-			var _keyframe = _list[| i];
-			var _time = _keyframe[| 0];
+		for(var i = 0; i < array_length(_data); i++) {
+			var _keyframe = _data[i];
+			var _time = _keyframe[0];
 			
 			if(scale && _time <= 1)
 				_time = round(_time * (ANIMATOR.frames_total - 1));
 			
-			var value    = ds_list_get(_keyframe, 1);
-			var ease_in  = array_create_from_list(ds_list_get(_keyframe, 2));
-			var ease_out = array_create_from_list(ds_list_get(_keyframe, 3));
+			var value    = _keyframe[1];
+			var ease_in  = _keyframe[2];
+			var ease_out = _keyframe[3];
+			var ease_in_type  = _keyframe[4];
+			var ease_out_type = _keyframe[5];
 			
-			var ease_in_type  = ds_list_get(_keyframe, 4, CURVE_TYPE.bezier);
-			var ease_out_type = ds_list_get(_keyframe, 5, CURVE_TYPE.bezier);
 			var _val = value;
 			
 			if(prop.type == VALUE_TYPE.struct)
 				_val = json_parse(value);
 			else if(prop.type == VALUE_TYPE.path && prop.display_type == VALUE_DISPLAY.path_array) {
-				for(var j = 0; j < ds_list_size(value); j++)
-					_val[j] = value[| j];
+				for(var j = 0; j < array_length(value); j++)
+					_val[j] = value[j];
 			} else if(prop.type == VALUE_TYPE.gradient) {
 				var grad = new gradientObject();
 				_val = grad.deserialize(value);
 			} else if(!sep_axis && typeArray(prop.display_type)) {
 				_val = [];
 				
-				if(ds_exists(value, ds_type_list)) {
-					for(var j = 0; j < ds_list_size(value); j++)
-						_val[j] = processValue(value[| j]);
-				}
+				if(is_array(value))
+				for(var j = 0; j < array_length(value); j++)
+					_val[j] = processValue(value[j]);
 			} 
 			
 			//print($"Deserialize {prop.node.name}:{prop.name} = {_val} ");

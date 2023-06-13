@@ -10,12 +10,7 @@ function gradientKey(time, value) constructor {
 	
 	static clone = function() { return new gradientKey(time, value); }
 	
-	static serialize = function() {
-		var m = ds_map_create();
-		m[? "time"]  = time;
-		m[? "value"] = value;
-		return m;
-	}
+	static serialize = function() { return self; }
 }
 
 function gradientObject(color = c_black) constructor {
@@ -142,14 +137,10 @@ function gradientObject(color = c_black) constructor {
 			s = json_try_parse(str);
 		else if(is_struct(str))
 			s = str;
-		else if(ds_exists(str, ds_type_list)) {
-			
+		else if(is_array(str)) {			
 			keys = [];
-			for( var i = 0; i < ds_list_size(str); i++ ) {
-				if(!ds_exists(str[| i], ds_type_map)) continue;
-				
-				keys[i] = new gradientKey(str[| i][? "time"], str[| i][? "value"]); 
-			}
+			for( var i = 0; i < array_length(str); i++ )
+				keys[i] = new gradientKey(str[i].time, str[i].value); 
 			
 			return self;
 		}

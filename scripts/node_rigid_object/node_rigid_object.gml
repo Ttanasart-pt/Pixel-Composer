@@ -8,7 +8,7 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	min_h = 96;
 	
 	object     = [];
-	attributes[? "mesh"] = [];
+	attributes.mesh = [];
 	
 	inputs[| 0] = nodeValue("Affect by force", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true)
 		.rejectArray();
@@ -62,12 +62,12 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	];
 	
 	static newMesh = function(index) {
-		var mesh = ds_map_try_get(attributes, "mesh", []);
+		var mesh = struct_try_get(attributes, "mesh", []);
 		mesh[index] = [ [ 0,  0], 
 						[32,  0], 
 						[32, 32], 
 						[ 0, 32] ];
-		attributes[? "mesh"] = mesh;
+		attributes.mesh = mesh;
 	}
 	newMesh(0);
 	
@@ -90,7 +90,7 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		var _shp = inputs[| 5].getValue();
 		var _box = inputs[| 7].getValue();
 		
-		var meshes = attributes[? "mesh"];
+		var meshes = attributes.mesh;
 		if(preview_index >= array_length(meshes)) return;
 		
 		if(previewing == 0) {
@@ -260,7 +260,7 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		
 		if(!is_surface(_tex)) return;
 		
-		var meshes = attributes[? "mesh"];
+		var meshes = attributes.mesh;
 		var mesh   = [];
 		
 		var ww = surface_get_width(_tex);
@@ -368,7 +368,7 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		buffer_delete(surface_buffer);
 		
 		meshes[index] = mesh;
-		attributes[? "mesh"] = meshes;
+		attributes.mesh = meshes;
 	}
 	
 	static removeColinear = function(mesh) {
@@ -541,7 +541,7 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			physics_fixture_set_circle_shape(fixture, min(_spos[2], _spos[3]));
 			fixtureCreate(fixture, object);
 		} else if(_shp == 2) {
-			var meshes = attributes[? "mesh"];
+			var meshes = attributes.mesh;
 			if(array_safe_get(meshes, index, noone) == noone)
 				return noone;
 				
@@ -652,7 +652,7 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		var _tex  = inputs[| 6].getValue();
 		
 		if(is_array(_tex)) {
-			var meshes = attributes[? "mesh"];
+			var meshes = attributes.mesh;
 			
 			for( var i = array_length(meshes); i < array_length(_tex); i++ )
 				newMesh(i);
@@ -687,16 +687,16 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	}
 	
 	static attributeSerialize = function() {
-		var att = ds_map_create();
+		var att = {};
 		
-		var mesh = ds_map_try_get(attributes, "mesh", []);
-		att[? "mesh"]       = json_stringify(mesh);
+		var mesh = struct_try_get(attributes, "mesh", []);
+		att.mesh = json_stringify(mesh);
 		
 		return att;
 	}
 	
 	static attributeDeserialize = function(attr) {
-		if(ds_map_exists(attr, "mesh"))
-			attributes[? "mesh"] = json_parse(attr[? "mesh"]);
+		if(struct_has(attr, "mesh"))
+			attributes.mesh = json_parse(attr.mesh);
 	}
 }
