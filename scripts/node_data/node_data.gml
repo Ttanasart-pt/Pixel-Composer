@@ -15,19 +15,22 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	bg_sel_spr	  = THEME.node_active;
 	anim_priority = ds_map_size(NODE_MAP);
 	
+	static resetInternalName = function() {
+		var str = string_replace_all(name, " ", "_");
+			str = string_replace_all(str,  "/", "");
+			str = string_replace_all(str,  "-", "");
+			
+		internalName = str + string(irandom_range(10000, 99999)); 
+		NODE_NAME_MAP[? internalName] = self;
+	}
+	
 	if(!LOADING && !APPENDING) {
 		recordAction(ACTION_TYPE.node_added, self);
 		NODE_MAP[? node_id] = self;
 		MODIFIED = true;
 	
 		run_in(1, function() { 
-			var str = string_replace_all(name, " ", "_");
-			    str = string_replace_all(str,  "/", "");
-			    str = string_replace_all(str,  "-", "");
-			
-			internalName = str + string(irandom_range(10000, 99999)); 
-			NODE_NAME_MAP[? internalName] = self;
-			
+			resetInternalName();
 			display_name = __txt_node_name(instanceof(self), name);
 		});
 	}
@@ -1355,6 +1358,9 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 				setDisplayName(load_map.name);
 			
 			internalName = struct_try_get(load_map, "iname", internalName);
+			if(internalName == "")
+				resetInternalName();
+			
 			_group = struct_try_get(load_map, "group", noone);
 			if(_group == -1) _group = noone;
 			

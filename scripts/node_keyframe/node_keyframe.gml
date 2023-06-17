@@ -419,21 +419,21 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 		
 		for(var i = 0; i < array_length(_data); i++) {
 			var _keyframe = _data[i];
-			var _time = _keyframe[0];
+			var _time = array_safe_get(_keyframe, 0);
 			
 			if(scale && _time <= 1)
 				_time = round(_time * (ANIMATOR.frames_total - 1));
 			
-			var value    = _keyframe[1];
-			var ease_in  = _keyframe[2];
-			var ease_out = _keyframe[3];
-			var ease_in_type  = _keyframe[4];
-			var ease_out_type = _keyframe[5];
+			var value		  = array_safe_get(_keyframe, 1);
+			var ease_in		  = array_safe_get(_keyframe, 2);
+			var ease_out	  = array_safe_get(_keyframe, 3);
+			var ease_in_type  = array_safe_get(_keyframe, 4);
+			var ease_out_type = array_safe_get(_keyframe, 5);
 			
 			var _val = value;
 			
 			if(prop.type == VALUE_TYPE.struct)
-				_val = json_parse(value);
+				_val = json_try_parse(value);
 			else if(prop.type == VALUE_TYPE.path && prop.display_type == VALUE_DISPLAY.path_array) {
 				for(var j = 0; j < array_length(value); j++)
 					_val[j] = value[j];

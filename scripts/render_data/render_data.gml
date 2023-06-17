@@ -49,7 +49,7 @@ function __nodeInLoop(_node) {
 	return false;
 }
 
-function Render(partial = false, runAction = false) {
+function Render(partial = false, runAction = false) { 
 	var t = current_time;
 	LOG_BLOCK_START();
 	LOG_IF(global.FLAG.render, 
@@ -128,8 +128,6 @@ $"============================== RENDER START [frame {string(ANIMATOR.current_fr
 				
 				if(runAction && rendering.hasInspector1Update())
 					rendering.inspector1Update();
-			} else if(rendering.isRenderActive()) {
-				RENDER_QUEUE.enqueue(rendering);
 			}
 			
 			LOG_BLOCK_END();

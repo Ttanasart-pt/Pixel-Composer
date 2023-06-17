@@ -217,6 +217,7 @@ function Panel_Menu() : PanelContent() constructor {
 			}),
 			menuItem(__txtx("panel_menu_tester", "Tester"), function() { 
 				var dia = dialogPanelCall(new Panel_Test());
+				dia.destroy_on_click_out = false;
 			}),
 			-1, 
 			

@@ -42,6 +42,14 @@ function draw_surface_part_ext_safe(surface, _l, _t, _w, _h, _x, _y, _xs = 1, _y
 	__channel_pos(surface);
 }
 
+#macro surface_free surface_free_safe
+#macro __surface_free surface_free 
+
+function surface_free_safe(surface) {
+	if(!is_surface(surface)) return;
+	__surface_free(surface);
+}
+
 function surface_save_safe(surface, path) {
 	if(!is_surface(surface)) return;
 	var f = surface_get_format(surface);
@@ -150,6 +158,7 @@ function surface_create_valid(w, h, format = surface_rgba8unorm) {
 }
 
 function surface_create_from_buffer(w, h, buff, format = surface_rgba8unorm) {
+	if(buff < 0) return;
 	var s = surface_create_valid(surface_valid_size(w), surface_valid_size(h), format);
 	buffer_set_surface(buff, s, 0);
 	return s;
@@ -258,7 +267,8 @@ function surface_copy_size(dest, source, format = noone) {
 
 function surface_valid_size(s) {
 	if(is_infinity(s)) return 1;
-	return max(1, s);	
+	if(!is_real(s)) return 1;
+	return clamp(s, 1, 8196);
 }
 
 function surface_array_free(arr) {

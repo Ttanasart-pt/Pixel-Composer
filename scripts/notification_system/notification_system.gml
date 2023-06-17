@@ -40,6 +40,7 @@
 	}
 	
 	function noti_status(str, icon = noone, flash = false, ref = noone) {
+		if(TEST_ERROR) return;
 		show_debug_message("STATUS: " + str);
 		
 		if(flash && PANEL_MENU) {
@@ -65,6 +66,7 @@
 	}
 	
 	function noti_warning(str, icon = noone, ref = noone) {
+		if(TEST_ERROR) return;
 		show_debug_message("WARNING: " + str);
 		
 		if(PANEL_MENU) {
@@ -81,7 +83,7 @@
 		ds_list_add(STATUSES, noti);
 		ds_list_add(WARNING, noti);
 		
-		if(!instance_exists(o_dialog_warning))
+		if(!instance_exists(o_dialog_warning) && !TESTING)
 			dialogCall(o_dialog_warning, mouse_mx + ui(16), mouse_my + ui(16)).warning_text = str;
 		
 		if(ref) {
@@ -93,6 +95,7 @@
 	}
 	
 	function noti_error(str, icon = noone, ref = noone) {
+		if(TEST_ERROR) return;
 		show_debug_message("ERROR: " + str);
 		
 		var noti = new notification(NOTI_TYPE.error, str, icon, c_ui_red);

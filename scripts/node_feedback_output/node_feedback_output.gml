@@ -31,7 +31,7 @@ function Node_Feedback_Output(_x, _y, _group = noone) : Node_Group_Output(_x, _y
 			surface_free(cache_value);
 		
 		if(_arr) {
-			var amo  = array_length(_val_get);
+			var amo = is_array(_val_get)? array_length(_val_get) : 0;
 			cache_value = array_create(amo);
 			
 			if(is_surf) {

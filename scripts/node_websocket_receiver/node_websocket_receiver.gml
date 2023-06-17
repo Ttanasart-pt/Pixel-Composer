@@ -44,7 +44,9 @@ function Node_Websocket_Receiver(_x, _y, _group = noone) : Node(_x, _y, _group) 
 	}
 	
 	network_trigger = 0;
-	function asyncPackets(_async_load) {
+	static asyncPackets = function(_async_load) {
+		if(!active) return;
+		
 		var _active = inputs[| 1].getValue();
 		if(!_active) return;
 		

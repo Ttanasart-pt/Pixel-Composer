@@ -169,7 +169,7 @@ function Node_Lua_Compute(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		var _dimm = inputs[| 1].getValue();
 		var _exec = inputs[| 4].getValue();
 		
-		if(!_exec) return;
+		if(!is_real(_exec) || !_exec) return;
 		
 		argument_val = [];
 		for( var i = input_fix_len; i < ds_list_size(inputs) - data_length; i += data_length )

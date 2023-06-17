@@ -56,6 +56,8 @@ function Node_Trail(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		var _surf  = inputs[| 0].getValue();
 		var _life  = inputs[| 1].getValue();
 		var _loop  = inputs[| 2].getValue();
+		if(!is_real(_loop)) _loop = false;
+		
 		var _rang  = inputs[| 3].getValue();
 		var _colr  = inputs[| 4].getValue();
 		var _blend = inputs[| 5].getValue();

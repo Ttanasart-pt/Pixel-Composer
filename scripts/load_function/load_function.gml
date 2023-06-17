@@ -14,6 +14,12 @@ function LOAD() {
 	ds_list_clear(ERRORS);
 }
 
+function TEST_PATH(path) {
+	TESTING = true;
+	TEST_ERROR = true;
+	__LOAD_PATH(path, false, false);
+}
+
 function LOAD_PATH(path, readonly = false, safe_mode = false) {
 	if(MODIFIED && !READONLY) {
 		var dia = dialogCall(o_dialog_load);
@@ -44,8 +50,8 @@ function __LOAD_PATH(path, readonly = false, safe_mode = false) {
 	nodeCleanUp();
 	clearPanel();
 	setPanel();
-	instance_destroy(_p_dialog);
-	//room_restart();
+	if(!TESTING)
+		instance_destroy(_p_dialog);
 	ds_list_clear(ERRORS);
 	
 	var temp_path = DIRECTORY + "_temp";

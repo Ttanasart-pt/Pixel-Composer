@@ -1642,9 +1642,10 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	
 	static applyDeserialize = function(_map, scale = false, preset = false) {
 		if(_map == undefined) return;
-		if(_map == noone) return;
+		if(_map == noone)     return;
+		if(!is_struct(_map))  return;
 		
-		visible = _map.visible;
+		visible = struct_try_get(_map, "visible", visible);
 		if(connect_type == JUNCTION_CONNECT.output) 
 			return;
 		

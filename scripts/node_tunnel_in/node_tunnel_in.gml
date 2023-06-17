@@ -121,17 +121,28 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	static getNextNodes = function() {
 		var nodes = [];
-		var _key  = inputs[| 0].getValue();
-		var amo   = ds_map_size(TUNNELS_OUT);
+		var nodeNames = [];
+		var _key = inputs[| 0].getValue();
+		var amo = ds_map_size(TUNNELS_OUT);
 		var k = ds_map_find_first(TUNNELS_OUT);
 		
+		LOG_BLOCK_START();
+		LOG_IF(global.FLAG.render, $"→→→→→ Call get next node from: {internalName}");
+		LOG_BLOCK_START();
+		
 		repeat(amo) {
-			if(TUNNELS_OUT[? k] == _key)
+			if(TUNNELS_OUT[? k] == _key) {
 				array_push(nodes, NODE_MAP[? k]);
+				array_push(nodeNames, NODE_MAP[? k].internalName);
+			}
 			
 			k = ds_map_find_next(TUNNELS_OUT, k);
 		}
 		
+		LOG_IF(global.FLAG.render, $"→→ Push {nodeNames} to stack.");
+		
+		LOG_BLOCK_END();
+		LOG_BLOCK_END();
 		return nodes;
 	}
 	

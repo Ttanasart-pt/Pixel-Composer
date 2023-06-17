@@ -92,8 +92,9 @@
 	#macro DELTA_TIME delta_time / 1_000_000
 	
 	#macro CONF_TESTING false
-	globalvar TESTING;
+	globalvar TESTING, TEST_ERROR;
 	TESTING = CONF_TESTING;
+	TEST_ERROR = false;
 	
 	#macro DEMO	false
 	#macro ItchDemo:DEMO  true

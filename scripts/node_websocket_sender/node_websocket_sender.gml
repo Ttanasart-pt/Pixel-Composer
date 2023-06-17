@@ -55,7 +55,9 @@ function Node_Websocket_Sender(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		connectTo(_port, _url);
 	}
 	
-	function asyncPackets(_async_load) {
+	static asyncPackets = function(_async_load) {
+		if(!active) return;
+		
 		var type = async_load[? "type"];
 		
 		switch(type) {

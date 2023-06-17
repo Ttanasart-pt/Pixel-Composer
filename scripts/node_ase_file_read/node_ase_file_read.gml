@@ -225,7 +225,6 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		
 		layers = [];
 		var vis = attributes.layer_visible;
-		ds_list_clear(vis);
 		var frames = content[? "Frames"];
 		
 		for( var i = 0; i < array_length(frames); i++ ) {
@@ -256,7 +255,7 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 					case 0x2004: //layer
 						var name = chunk[? "Name"];
 						array_push(layers, new ase_layer(name));
-						ds_list_add(vis, true);
+						array_push(vis, true);
 						break;
 					case 0x2005: //cel
 						var _layer = chunk[? "Layer index"];
@@ -331,7 +330,7 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			layers[i].tag = tag;
 			var cel = layers[i].getCel(ANIMATOR.current_frame - _tag_delay);
 			if(!cel) continue;
-			if(!ds_list_get(vis, i, true)) continue;
+			if(!array_safe_get(vis, i, true)) continue;
 			
 			var _inSurf = cel.getSurface();
 			if(!is_surface(_inSurf)) 

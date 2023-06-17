@@ -608,6 +608,8 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 
 #region node function
 	function nodeLoad(_data, scale = false, _group = PANEL_GRAPH.getCurrentContext()) {
+		if(!is_struct(_data)) return;
+		
 		var _x    = _data.x;
 		var _y    = _data.y;
 		var _type = _data.type;
@@ -631,6 +633,7 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 		var key = ds_map_find_first(NODE_MAP);
 		repeat(ds_map_size(NODE_MAP)) {
 			if(NODE_MAP[? key]) {
+				NODE_MAP[? key].active = false;
 				NODE_MAP[? key].cleanUp();
 				delete NODE_MAP[? key];
 			}

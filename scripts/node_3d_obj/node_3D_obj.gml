@@ -220,7 +220,7 @@ function Node_3D_Obj(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		
 		if(do_reset_material) {
 			array_resize(input_display_list, input_display_len);
-		
+			
 			while(ds_list_size(inputs) > input_length)
 				ds_list_delete(inputs, input_length);
 		
@@ -265,14 +265,14 @@ function Node_3D_Obj(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			var _cam	   = new __3d_camera(_proj, _fov);
 			
 			_outSurf = _3d_pre_setup(_outSurf, _dim, _transform, _light, _cam, pass);
-				for(var i = 0; i < array_length(VB); i++) {
-					if(i >= array_length(materialIndex)) continue;
-				
-					var mIndex = materialIndex[i];
+				for(var j = 0; j < array_length(VB); j++) {
+					if(j >= array_length(materialIndex)) continue;
+					
+					var mIndex = materialIndex[j];
 					var tex = inputs[| input_length + mIndex].getValue();
 						
 					if(!is_surface(tex)) continue;
-					vertex_submit(VB[i], pr_trianglelist, surface_get_texture(tex));
+					vertex_submit(VB[j], pr_trianglelist, surface_get_texture(tex));
 				}
 			_3d_post_setup();
 			

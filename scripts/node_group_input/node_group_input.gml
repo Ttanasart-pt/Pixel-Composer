@@ -123,13 +123,13 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 					_to.removeFrom();
 			}
 			
-			inputs[| 0].display_data = display_list[_val_type];
-			inputs[| 0].editWidget.data_list = display_list[_val_type];
+			inputs[| 0].display_data = array_safe_get(display_list, _val_type);
+			inputs[| 0].editWidget.data_list = array_safe_get(display_list, _val_type);
 			inputs[| 0].setValue(0);
 			_dtype = 0;
 		}
 		
-		_dtype = display_list[_val_type][_dtype];
+		_dtype = array_safe_get(array_safe_get(display_list, _val_type, []), _dtype);
 		
 		inParent.type     = _val_type;
 		outputs[| 0].type = _val_type;
@@ -293,7 +293,7 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		
 		var _dstype = inputs[| 0].getValue();
 		var _data  = inputs[| 2].getValue();
-		_dstype = display_list[_data][_dstype];
+		_dstype = array_safe_get(array_safe_get(display_list, _data, []), _dstype);
 		
 		var _datype = data_type_map[_data];
 		

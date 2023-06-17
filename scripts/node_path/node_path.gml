@@ -797,6 +797,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		lengthTotal = 0;
 		var loop    = inputs[| 1].getValue();
 		var rond    = inputs[| 3].getValue();
+		if(!is_real(rond)) rond = false;
 		var ansize  = ds_list_size(inputs) - input_fix_len;
 		if(ansize < 2) {
 			lengths = [];
@@ -854,6 +855,8 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	static getPointDistance = function(_dist) {
 		var loop   = inputs[| 1].getValue();
 		var rond   = inputs[| 3].getValue();
+		if(!is_real(rond)) rond = false;
+		
 		var ansize = array_length(lengths);
 		var amo    = ds_list_size(inputs) - input_fix_len;
 		
@@ -895,6 +898,8 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	static getPointSegment = function(_rat) {
 		var loop   = inputs[| 1].getValue();
 		var rond   = inputs[| 3].getValue();
+		if(!is_real(rond)) rond = false;
+		
 		var ansize = array_length(lengths);
 		var amo    = ds_list_size(inputs) - input_fix_len;
 		

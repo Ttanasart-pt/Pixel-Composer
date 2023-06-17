@@ -24,18 +24,21 @@ function __log(title, str, fname = "log/log.txt") {
 }
 
 function log_message(title, str, icon = noone, flash = false, write = true) {
+	if(TEST_ERROR) return;
 	if(write) __log("[MESSAGE] ", string(title) + ": " + string(str));
 	
 	return noti_status(string(title) + ": " + string(str), icon, flash);
 }
 
-function log_warning(title, str, ref = noone) {
+function log_warning(title, str, ref = noone) { 
+	if(TEST_ERROR) return;
 	__log("[WARNING] ", string(title) + ": " + string(str));
 	
 	return noti_warning(string(title) + ": " + string(str),, ref);
 }
 
 function log_crash(str) {
+	if(TEST_ERROR) return;
 	__log("[ERROR] ", string(str));
 	
 	return noti_error(string(str));
@@ -71,7 +74,7 @@ function exception_print(e) {
 function setException() {
 	exception_unhandled_handler(function(ex) {
 		var path = string(DIRECTORY) + "prev_crash.pxc";
-		if(!SAVING) SAVE_AT(path);
+		if(!SAVING && !TESTING) SAVE_AT(path);
 	
 		var tt = "\n-------------------------- OH NO --------------------------\n\n";
 		tt += "\n" + ex.longMessage;
