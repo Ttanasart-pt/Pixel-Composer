@@ -229,7 +229,7 @@ function Panel_Collection() : PanelContent() constructor {
 						
 						if(meta.version != SAVEFILE_VERSION) {
 							draw_set_color(COLORS._main_accent);
-							draw_circle(_boxx + grid_size - ui(8), yy + grid_size - ui(8), 3, false);
+							draw_circle_prec(_boxx + grid_size - ui(8), yy + grid_size - ui(8), 3, false);
 						}
 					}
 					

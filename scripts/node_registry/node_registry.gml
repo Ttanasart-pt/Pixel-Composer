@@ -26,7 +26,7 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 		return self;
 	}
 	
-	static getName    = function() { return __txt_node_name(node); }
+	static getName    = function() { return __txt_node_name(node, name); }
 	static getTooltip = function() { return __txt_node_tooltip(node, tooltip); }
 	
 	function build(_x, _y, _group = PANEL_GRAPH.getCurrentContext(), _param = "") {
@@ -261,6 +261,9 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 			addNodeObject(transform, "Nine Slice",		s_node_9patch,			"Node_9Slice",			[1, Node_9Slice], ["9 slice", "splice"], "Cut image into 3x3 parts, and scale/repeat only the middle part.");
 			addNodeObject(transform, "Padding",			s_node_padding,			"Node_Padding",			[1, Node_Padding],, "Make image bigger by adding space in 4 directions.");
 		
+			//ds_list_add(transform, "Armature");
+			//addNodeObject(transform, "Armature Create",	s_node_compose,			"Node_Armature",		[1, Node_Armature], ["rigging", "bone"], "");
+			
 		var filter = ds_list_create();
 		addNodeCatagory("Filter", filter);
 			ds_list_add(filter, "Combines");
@@ -343,7 +346,7 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 			addNodeObject(threeD, "Sprite Stack",		s_node_stack,			"Node_Sprite_Stack",	[1, Node_Sprite_Stack],, "Create sprite stack either from repeating a single image or stacking different images using array.");
 		
 			ds_list_add(threeD, "3D generates");
-			addNodeObject(threeD, "3D Object",			s_node_3d_obj,			"Node_3D_Obj",			[1, Node_3D_Obj],, "Load .obj file from your computer as a 3D object.");
+			addNodeObject(threeD, "3D Object",			s_node_3d_obj,			"Node_3D_Obj",			[0, Node_create_3D_Obj],, "Load .obj file from your computer as a 3D object.");
 			addNodeObject(threeD, "3D Plane",			s_node_3d_plane,		"Node_3D_Plane",		[1, Node_3D_Plane],, "Put 2D image on a plane in 3D space.");
 			addNodeObject(threeD, "3D Cube",			s_node_3d_cube,			"Node_3D_Cube",			[1, Node_3D_Cube]);
 			addNodeObject(threeD, "3D Cylinder",		s_node_3d_cylinder,		"Node_3D_Cylinder",		[1, Node_3D_Cylinder]);
@@ -760,7 +763,7 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 	}
 	
 	function attribute_surface_depth(label = true) {
-		depth_array = inputs[| 0].type == VALUE_TYPE.surface? global.SURFACE_FORMAT_NAME_PROCESS : global.SURFACE_FORMAT_NAME;
+		var depth_array = inputs[| 0].type == VALUE_TYPE.surface? global.SURFACE_FORMAT_NAME_PROCESS : global.SURFACE_FORMAT_NAME;
 		attributes.color_depth = array_find(depth_array, "8 bit RGBA");
 		
 		if(label) array_push(attributeEditors, "Surface");

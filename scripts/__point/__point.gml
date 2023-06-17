@@ -12,6 +12,10 @@ function Point(x = 0, y = 0) constructor {
 	
 	static add      = function(x, y)	{ self.x += x;   self.y += y;   return self; }
 	static addPoint = function(p)		{ self.x += p.x; self.y += p.y; return self; }
+	
+	static _add      = function(x, y)	{ return new Point(self.x + x, self.y + y);     }
+	static _addPoint = function(p)		{ return new Point(self.x + p.x, self.y + p.y); }
+	
 	static lerpTo   = function(p, rat)	{ return new Point( lerp(x, p.x, rat), lerp(y, p.y, rat) ); }
 	static directionTo  = function(p)	{ return point_direction(x, y, p.x, p.y); }
 	static distanceTo   = function(p)	{ return point_distance(x, y, p.x, p.y); }

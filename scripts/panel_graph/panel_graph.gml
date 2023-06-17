@@ -391,10 +391,13 @@ function Panel_Graph() : PanelContent() constructor {
 		var gr_x = graph_x * graph_s;
 		var gr_y = graph_y * graph_s;
 		
-		//var t = current_time;
-		for(var i = 0; i < ds_list_size(nodes_list); i++)
-			nodes_list[| i].preDraw(gr_x, gr_y, graph_s);
-		//print("Predraw time: " + string(current_time - t)); t = current_time;
+		var log = false;
+		var t = current_time;
+		for(var i = 0; i < ds_list_size(nodes_list); i++) {
+			nodes_list[| i].cullCheck(gr_x, gr_y, graph_s, -32, -32, w + 32, h + 64);
+			nodes_list[| i].preDraw(gr_x, gr_y, graph_s, gr_x, gr_y);
+		}
+		printIf(log, "Predraw time: " + string(current_time - t)); t = current_time;
 		
 		#region draw frame
 			for(var i = 0; i < ds_list_size(nodes_list); i++) {
@@ -402,7 +405,7 @@ function Panel_Graph() : PanelContent() constructor {
 				nodes_list[| i].drawNode(gr_x, gr_y, mx, my, graph_s);
 			}
 		#endregion
-		//print("Frame draw time: " + string(current_time - t)); t = current_time;
+		printIf(log, "Frame draw time: " + string(current_time - t)); t = current_time;
 		
 		#region hover
 			node_hovering = noone;
@@ -425,10 +428,16 @@ function Panel_Graph() : PanelContent() constructor {
 			
 			if(node_hovering) node_hovering.onDrawHover(gr_x, gr_y, mx, my, graph_s);
 		#endregion
-		//print("Hover time: " + string(current_time - t)); t = current_time;
+		printIf(log, "Hover time: " + string(current_time - t)); t = current_time;
 		
-		if(mouse_on_graph && pFOCUS) {
-			if(mouse_press(mb_left) && !key_mod_press(ALT)) {
+		if(mouse_on_graph && pHOVER) {
+			if(NODE_DROPPER_TARGET != noone && node_hovering) {
+				node_hovering.draw_droppable = true;
+				if(mouse_press(mb_left, NODE_DROPPER_TARGET_CAN)) {
+					NODE_DROPPER_TARGET.expression += node_hovering.internalName;
+					NODE_DROPPER_TARGET.expressionUpdate(); 
+				}
+			} else if(mouse_press(mb_left, pFOCUS) && !key_mod_press(ALT)) {
 				if(key_mod_press(SHIFT)) {
 					if(ds_list_empty(nodes_select_list) && node_focus) 
 						ds_list_add(nodes_select_list, node_focus);
@@ -485,7 +494,7 @@ function Panel_Graph() : PanelContent() constructor {
 				}
 			}
 			
-			if(mouse_press(mb_right)) {
+			if(mouse_press(mb_right, pFOCUS)) {
 				node_hover = node_hovering;	
 				if(node_hover) {
 					var menu = [];
@@ -646,7 +655,7 @@ function Panel_Graph() : PanelContent() constructor {
 				}
 			}
 		}
-		//print("Node selection time: " + string(current_time - t)); t = current_time;
+		printIf(log, "Node selection time: " + string(current_time - t)); t = current_time;
 		
 		if(node_focus)
 			node_focus.drawActive(gr_x, gr_y, graph_s);
@@ -656,7 +665,7 @@ function Panel_Graph() : PanelContent() constructor {
 			if(!_node) continue;
 			_node.drawActive(gr_x, gr_y, graph_s);
 		}
-		//print("Draw active: " + string(current_time - t)); t = current_time;
+		printIf(log, "Draw active: " + string(current_time - t)); t = current_time;
 		
 		var aa = PREF_MAP[? "connection_line_aa"];
 		connection_surface = surface_verify(connection_surface, w * aa, h * aa);
@@ -666,10 +675,11 @@ function Panel_Graph() : PanelContent() constructor {
 		var hov = noone;
 		var hoverable = !bool(node_dragging) && pHOVER;
 		for(var i = 0; i < ds_list_size(nodes_list); i++) {
-			var _hov = nodes_list[| i].drawConnections(gr_x, gr_y, graph_s, mx, my, hoverable, aa);
+			var _hov = nodes_list[| i].drawConnections(gr_x, gr_y, graph_s, mx, my, hoverable, aa, -64, -64, w + 64, h + 64);
 			if(_hov != noone && is_struct(_hov)) hov = _hov;
 		}
-		//print("Draw connection: " + string(current_time - t)); t = current_time;
+		printIf(log, "Draw connection: " + string(current_time - t)); t = current_time;
+		
 		surface_reset_target();
 		shader_set(sh_downsample);
 		shader_set_f("down", aa);
@@ -681,7 +691,7 @@ function Panel_Graph() : PanelContent() constructor {
 		value_focus = noone;
 		
 		#region draw node
-			//var t = current_time;
+			var t = current_time;
 			for(var i = 0; i < ds_list_size(nodes_list); i++)
 				nodes_list[| i].onDrawNodeBehind(gr_x, gr_y, mx, my, graph_s);
 			
@@ -706,7 +716,8 @@ function Panel_Graph() : PanelContent() constructor {
 			
 			for(var i = 0; i < ds_list_size(nodes_list); i++)
 				nodes_list[| i].drawBadge(gr_x, gr_y, graph_s);	
-			//print("Draw node: " + string(current_time - t)); t = current_time;
+			
+			printIf(log, "Draw node: " + string(current_time - t)); t = current_time;
 		#endregion
 		
 		#region dragging
@@ -811,7 +822,7 @@ function Panel_Graph() : PanelContent() constructor {
 					}
 				}
 			}
-			//print("Drag node time : " + string(current_time - t)); t = current_time;
+			printIf(log, "Drag node time : " + string(current_time - t)); t = current_time;
 			
 			if(mouse_release(mb_left))
 				node_dragging = noone;
@@ -899,7 +910,7 @@ function Panel_Graph() : PanelContent() constructor {
 			}
 		#endregion
 		
-		//print("Draw selection frame : " + string(current_time - t)); t = current_time;
+		printIf(log, "Draw selection frame : " + string(current_time - t)); t = current_time;
 	}
 	
 	function doDuplicate() {

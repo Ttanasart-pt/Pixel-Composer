@@ -152,9 +152,6 @@ if(OS == os_windows && gameframe_is_minimized()) exit;
 	}
 #endregion
 
-#region tween
-	//tweenStep();
-#endregion
 //print("===== Step end =====");
 
 //if(keyboard_check_pressed(ord("Q"))) {

@@ -10,8 +10,9 @@ function draw_text_add(_x, _y, _text, scale = 1) {
 
 function draw_text_ext_add(_x, _y, _text, _sep, _w, scale = 1) {
 	BLEND_ALPHA_MULP;
-	__draw_text_ext_transformed(_x, _y, _text, _sep, _w, scale, scale, 0);
+	var h = __draw_text_ext_transformed(_x, _y, _text, _sep, _w, scale, scale, 0);
 	BLEND_NORMAL;
+	return h;
 }
 
 function draw_text_bbox(bbox, text) {
@@ -28,7 +29,7 @@ function draw_text_cut(x, y, str, w, scale = 1) {
 function __draw_text_ext_transformed(_x, _y, _text, _sep, _w, sx, sy, rotation) {
 	if(!LOCALE.config.per_character_line_break) {
 		draw_text_ext_transformed(_x, _y, _text, _sep, _w, sx, sy, rotation);
-		return;
+		return string_height_ext(_text, _sep, _w) * sy;
 	}
 	
 	var lines  = [];
@@ -40,11 +41,16 @@ function __draw_text_ext_transformed(_x, _y, _text, _sep, _w, sx, sy, rotation) 
 		var ch = string_char_at(_text, i);
 		var ww = string_width(ch) * sx;
 		
-		if(line_w + ww > _w) {
+		if(ch == "\n" || line_w + ww > _w) {
 			array_push(lines, line);
-			line = ch;
-			line_w = ww;
-		} else {
+			if(ch != "\n") {
+				line = ch;
+				line_w = ww;
+			} else {
+				line = "";
+				line_w = 0;
+			}
+		} else if(ch != "\n") {
 			line += ch;
 			line_w += ww;
 		}
@@ -81,6 +87,8 @@ function __draw_text_ext_transformed(_x, _y, _text, _sep, _w, sx, sy, rotation) 
 	
 	draw_set_halign(ha);
 	draw_set_valign(va);
+	
+	return hh;
 }
 
 #macro _string_width_ext string_width_ext

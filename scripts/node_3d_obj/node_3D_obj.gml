@@ -1,3 +1,16 @@
+function Node_create_3D_Obj(_x, _y, _group = noone) {
+	var path = "";
+	if(!LOADING && !APPENDING && !CLONING) {
+		path = get_open_filename(".obj", "");
+		key_release();
+		if(path == "") return noone;
+	}
+	
+	var node = new Node_3D_Obj(_x, _y, _group);
+	node.setPath(path);
+	return node;
+}
+
 function Node_create_3D_Obj_path(_x, _y, path) {
 	if(!file_exists(path)) return noone;
 	
@@ -146,6 +159,8 @@ function Node_3D_Obj(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		
 	static updateObj = function(updateMat = true) {
 		var _path = inputs[|  0].getValue();
+		if(!file_exists(_path)) return;
+		
 		var _flip = inputs[| 12].getValue();
 		var _dir  = filename_dir(_path);
 		var _pathMtl = string_copy(_path, 1, string_length(_path) - 4) + ".mtl";

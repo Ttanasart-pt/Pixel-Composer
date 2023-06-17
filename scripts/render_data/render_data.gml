@@ -16,7 +16,7 @@ function __nodeLeafList(_list) {
 	for( var i = 0; i < ds_list_size(_list); i++ ) {
 		var _node = _list[| i];
 		if(!_node.active) continue;
-		if(!_node.renderActive) continue;
+		if(!_node.isRenderActive()) continue;
 		
 		var _startNode = _node.isRenderable();
 		if(_startNode) {
@@ -80,11 +80,11 @@ $"============================== RENDER START [frame {string(ANIMATOR.current_fr
 			key = ds_map_find_next(NODE_MAP, key);
 		
 			if(is_undefined(_node)) continue;
-			if(!is_struct(_node))	continue;
+			if(!is_struct(_node)) continue;
 			if(array_exists(global.group_inputs, instanceof(_node))) continue;
 			
-			if(!_node.active)		continue;
-			if(!_node.renderActive) continue;
+			if(!_node.active) continue;
+			if(!_node.isRenderActive()) continue;
 			if(_node.rendered) {
 				LOG_IF(global.FLAG.render, $"Skip rendered {_node.internalName}");
 				continue;
@@ -128,7 +128,7 @@ $"============================== RENDER START [frame {string(ANIMATOR.current_fr
 				
 				if(runAction && rendering.hasInspector1Update())
 					rendering.inspector1Update();
-			} else if(rendering.renderActive) {
+			} else if(rendering.isRenderActive()) {
 				RENDER_QUEUE.enqueue(rendering);
 			}
 			
@@ -168,11 +168,11 @@ function RenderList(list) {
 			var _node = list[| i];
 			
 			if(is_undefined(_node)) continue;
-			if(!is_struct(_node))	continue;
+			if(!is_struct(_node)) continue;
 			
-			if(!_node.active)		continue;
-			if(!_node.renderActive) continue;
-			if(_node.rendered)		continue;
+			if(!_node.active) continue;
+			if(!_node.isRenderActive()) continue;
+			if(_node.rendered) continue;
 		
 			if(_node.isRenderable())
 				ds_queue_enqueue(queue, _node);
@@ -200,7 +200,7 @@ function RenderList(list) {
 				
 				if(runAction && rendering.hasInspector1Update())
 					rendering.inspector1Update();
-			} else if(rendering.renderActive) {
+			} else if(rendering.isRenderActive()) {
 				RENDER_QUEUE.enqueue(rendering);
 			}
 			
@@ -233,11 +233,11 @@ function RenderListAction(list, context = PANEL_GRAPH.getCurrentContext()) {
 			var _node = list[| i];
 			
 			if(is_undefined(_node)) continue;
-			if(!is_struct(_node))	continue;
+			if(!is_struct(_node)) continue;
 			
-			if(!_node.active)		continue;
-			if(!_node.renderActive) continue;
-			if(_node.rendered)		continue;
+			if(!_node.active) continue;
+			if(!_node.isRenderActive()) continue;
+			if(_node.rendered) continue;
 		
 			if(_node.isRenderable()) {
 				RENDER_QUEUE.enqueue(_node);
@@ -264,7 +264,7 @@ function RenderListAction(list, context = PANEL_GRAPH.getCurrentContext()) {
 				
 				if(runAction && rendering.hasInspector1Update())
 					rendering.inspector1Update();
-			} else if(rendering.renderActive) {
+			} else if(rendering.isRenderActive()) {
 				RENDER_QUEUE.enqueue(rendering);
 			}
 			

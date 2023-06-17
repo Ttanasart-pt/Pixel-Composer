@@ -113,14 +113,10 @@ function __LOAD_PATH(path, readonly = false, safe_mode = false) {
 	try {
 		if(struct_has(_load_content, "addon")) {
 			var _addon = _load_content.addon;
-			
-			with(addon) {
-				if(!struct_has(_addon, name)) continue;
-				var _mp = json_parse(_addon.name);
-				
-				lua_call(thread, "deserialize", _mp);
-			}
-		}
+			LOAD_ADDON = _addon;
+			struct_foreach(_addon, function(_name, _value) { addonLoad(_name, false); });
+		} else 
+			LOAD_ADDON = {};
 	} catch(e) {
 		log_warning("LOAD, addon", exception_print(e));
 	}
@@ -192,7 +188,7 @@ function __LOAD_PATH(path, readonly = false, safe_mode = false) {
 		log_warning("LOAD, connect", exception_print(e));
 	}
 	
-	UPDATE |= RENDER_TYPE.full;
+	Render();
 	
 	LOADING = false;
 	MODIFIED = false;

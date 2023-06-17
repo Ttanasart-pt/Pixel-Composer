@@ -68,6 +68,8 @@
 	PREF_MAP[? "show_crash_dialog"] = false;
 	
 	PREF_MAP[? "save_file_minify"] = true;
+	
+	PREF_MAP[? "render_all_export"] = true;
 #endregion
 
 #region hotkeys	

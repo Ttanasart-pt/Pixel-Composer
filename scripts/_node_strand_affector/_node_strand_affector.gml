@@ -81,7 +81,7 @@ function _Node_Strand_Affector(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		draw_set_color(COLORS._main_accent);
 		
 		if(_typ == 0) {
-			draw_circle(px, py, _ran, true);
+			draw_circle_prec(px, py, _ran, true);
 			
 			var x0 = px - (_ran + fal);
 			var y0 = py - (_ran + fal);

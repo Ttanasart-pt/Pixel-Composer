@@ -54,6 +54,10 @@
 	var t = current_time;
 	PREF_LOAD();
 	
+	var dir  = string(DIRECTORY) + "log";
+	if(!directory_exists(dir))
+		directory_create(dir);
+	
 	log_clear();
 	log_newline();
 	log_message("SESSION", "Begin");

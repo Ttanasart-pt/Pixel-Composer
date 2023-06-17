@@ -68,7 +68,7 @@ function Node_Rigid_Force_Apply(_x, _y, _group = noone) : Node(_x, _y, _group) c
 			
 			draw_set_color(COLORS._main_accent);
 			draw_set_alpha(0.5);
-			draw_circle(px, py, _rad * _s, 1);
+			draw_circle_prec(px, py, _rad * _s, 1);
 			draw_set_alpha(1);
 			
 			inputs[| 2].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);

@@ -109,7 +109,7 @@
     "pref_expand_hovering_panel":       "Expand hovering panel",
     "pref_graph_zoom_smoothing":        "Graph zoom smoothing",
     "pref_warning_notification_time":   "Warning notification time",
-    "pref_enable_test_mode":            "Enable test mode (require restart)",
+    "pref_enable_test_mode":            "Enable dev mode (require restart)",
     "pref_directory":                   "Directory path (restart required)",
     "pref_auto_save_time":              "Autosave delay (-1 to disable)",
     "pref_mouse_wheel_speed":           "Scroll speed",

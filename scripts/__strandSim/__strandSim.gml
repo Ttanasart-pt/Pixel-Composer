@@ -268,7 +268,7 @@ function Strand(sx = 0, sy = 0, amount = 5, length = 8, direct = 0, curlFreq = 4
 			nx = _x + nx * _s;
 			ny = _y + ny * _s;
 			
-			draw_circle(nx, ny, 3, false);
+			draw_circle_prec(nx, ny, 3, false);
 		}
 	}
 	

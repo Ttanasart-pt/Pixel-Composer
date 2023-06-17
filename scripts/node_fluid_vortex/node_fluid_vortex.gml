@@ -35,7 +35,7 @@ function Node_Fluid_Vortex(_x, _y, _group = noone) : Node_Fluid(_x, _y, _group) 
 		var py = _y + _pos[1] * _s;
 		
 		draw_set_color(COLORS._main_accent);
-		draw_circle(px, py, _rad * _s, true);
+		draw_circle_prec(px, py, _rad * _s, true);
 		
 		inputs[| 1].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
 		inputs[| 2].drawOverlay(active, px, py, _s, _mx, _my, _snx, _sny, 0, 1, THEME.anchor_scale_hori);

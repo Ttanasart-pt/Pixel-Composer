@@ -15,7 +15,7 @@ function _log_template() {
 	return $"{string(current_year)}/{string(current_month)}/{string(current_day)} {string_lead_zero(current_hour, 2)}:{string_lead_zero(current_minute, 2)}:{string_lead_zero(current_second, 2)} > ";
 }
 
-function __log(title, str, fname = "log.txt") {
+function __log(title, str, fname = "log/log.txt") {
 	var path = DIRECTORY + fname;
 	var f = file_text_open_append(path);
 	var t = _log_template();
@@ -42,14 +42,14 @@ function log_crash(str) {
 }
 
 function log_newline() {
-	var path = DIRECTORY + "log.txt";
+	var path = DIRECTORY + "log/log.txt";
 	var f = file_text_open_write(path);
 	file_text_writeln(f);
 	file_text_close(f);
 }
 
 function log_clear() {
-	var path = DIRECTORY + "log.txt";
+	var path = DIRECTORY + "log/log.txt";
 	if(file_exists(path))
 		file_delete(path);
 }
@@ -81,26 +81,14 @@ function setException() {
 			tt += ex.stacktrace[i] + "\n";
 		}
 		tt += "\n---------------------------- :( ----------------------------\n";
-	
-		var path = string(DIRECTORY) + "crash_log.txt";
+		
+		var path = DIRECTORY + "log/crash_log.txt";
 		file_text_write_all(path, tt);
 		clipboard_set_text(tt);
 		show_debug_message(tt);
-	
-		var tt = "\n-------------------------- OH NO --------------------------\n\n";
-		tt += ex.longMessage;
-		tt += "\n---------------------------- :( ----------------------------\n";
 		
-		tt += "\n\nCrash log stored in clipboard and saved at " + path;
-		tt += "\n\nRelaunch the program?";
-	
-		widget_set_caption("Pixel Composer crashed");
-		widget_set_icon(DIRECTORY + "icon.png");
-	
-		if(show_question(tt)) {
-			var path = executable_get_pathname();
-			execute_shell(path, "--crashed");
-		}
+		ExecProcessFromArgVAsync(GetArgVFromProcid(ProcIdFromSelf())); //create new dialog
+
 	    return 0;
 	});
 }

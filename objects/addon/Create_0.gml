@@ -1,3 +1,5 @@
 /// @description 
-name = "";
-menu = [];
+#region load
+	name = "";
+	menu = [];
+#endregion

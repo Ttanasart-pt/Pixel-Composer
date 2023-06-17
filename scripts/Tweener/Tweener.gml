@@ -53,13 +53,3 @@ function Tween(value, valType = TWEEN_VALUE.number, twType = TWEEN_TYPE.log, twS
 	
 	static destroy = function() { array_remove(TWEEN_VALUES, self); }
 }
-
-function tweenInit() {
-	globalvar TWEEN_VALUES;
-	TWEEN_VALUES = [];
-}
-
-function tweenStep() {
-	for( var i = 0; i < array_length(TWEEN_VALUES); i++ ) 
-		TWEEN_VALUES[i].step();
-}

@@ -45,10 +45,10 @@ function Node_Wiggler(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-		var ran  = current_data[0];
-		var fre  = current_data[1];
-		var sed  = current_data[2];
-		var disp = current_data[3];
+		var ran  = array_safe_get(current_data, 0);
+		var fre  = array_safe_get(current_data, 1);
+		var sed  = array_safe_get(current_data, 2);
+		var disp = array_safe_get(current_data, 3);
 		var time = ANIMATOR.current_frame;
 		var total_time = ANIMATOR.frames_total;
 		

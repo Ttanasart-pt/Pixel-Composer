@@ -18,6 +18,23 @@ Animated WebP (.webp)|*.webp",
 	return node;
 }
 
+function exportAll() {
+	ANIMATOR.rendering = true;
+	Render();
+	ANIMATOR.rendering = false;
+	
+	var key = ds_map_find_first(NODE_MAP);
+	repeat(ds_map_size(NODE_MAP)) {
+		var node = NODE_MAP[? key];
+		key = ds_map_find_next(NODE_MAP, key);
+			
+		if(!node.active) continue;
+		if(instanceof(node) != "Node_Export") continue;
+					
+		node.doInspectorAction();
+	}
+}
+
 enum NODE_EXPORT_FORMAT {
 	single,
 	sequence, 
@@ -412,25 +429,12 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	insp2UpdateTooltip = "Export All";
 	insp2UpdateIcon    = [ THEME.play_all, 0, COLORS._main_value_positive ];
 	
-	static onInspector1Update = function() {		
+	static onInspector1Update = function() {
 		if(isInLoop())	UPDATE |= RENDER_TYPE.full;
 		else			doInspectorAction();
 	}
 	
-	static onInspector2Update = function() {
-		var key = ds_map_find_first(NODE_MAP);
-		repeat(ds_map_size(NODE_MAP)) {
-			var node = NODE_MAP[? key];
-			key = ds_map_find_next(NODE_MAP, key);
-			
-			if(!node.active) continue;
-			if(instanceof(node) != "Node_Export") continue;
-					
-			node.doInspectorAction();
-		}
-		
-		if(isInLoop()) UPDATE |= RENDER_TYPE.full;
-	}
+	static onInspector2Update = function() { exportAll(); }
 	
 	static doInspectorAction = function() {
 		if(LOADING || APPENDING) return;
@@ -440,6 +444,10 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		var form = inputs[| 3].getValue();
 		
 		if(form == NODE_EXPORT_FORMAT.single) {
+			ANIMATOR.rendering = true;
+			Render();
+			ANIMATOR.rendering = false;
+			
 			export();
 			return;
 		}

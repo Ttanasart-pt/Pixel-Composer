@@ -139,7 +139,7 @@ function Panel_Inspector() : PanelContent() constructor {
 			draw_sprite_ui(THEME.arrow, meta_display[i][1]? 0 : 3, ui(16), yy + ui(32) / 2, 1, 1, 0, COLORS.panel_inspector_group_bg, 1);	
 			
 			draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text_inner);
-			draw_text(ui(32), yy + ui(32) / 2, _txt);
+			draw_text_add(ui(32), yy + ui(32) / 2, _txt);
 			
 			yy += ui(32 + 8);
 			hh += ui(32 + 8);
@@ -211,7 +211,7 @@ function Panel_Inspector() : PanelContent() constructor {
 					var bxc = bx + bw / 2 - (string_width(txt) + ui(48)) / 2;
 					var byc = by + bh / 2;
 					draw_sprite_ui(icon, 0, bxc + ui(24), byc,,,, colr);
-					draw_text(bxc + ui(48), byc, txt);
+					draw_text_add(bxc + ui(48), byc, txt);
 				
 					bx += bw + ui(4);
 				
@@ -225,7 +225,7 @@ function Panel_Inspector() : PanelContent() constructor {
 					var bxc = bx + bw / 2 - (string_width(txt) + ui(48)) / 2;
 					var byc = by + bh / 2;
 					draw_sprite_ui(icon, 0, bxc + ui(24), byc,,,, colr);
-					draw_text(bxc + ui(48), byc, txt);
+					draw_text_add(bxc + ui(48), byc, txt);
 				} else {
 					var bw = bbw;
 					
@@ -240,7 +240,7 @@ function Panel_Inspector() : PanelContent() constructor {
 					var bxc = bx + bw / 2 - (string_width(txt) + ui(48)) / 2;
 					var byc = by + bh / 2;
 					draw_sprite_ui(icon, 0, bxc + ui(24), byc,,,, colr);
-					draw_text(bxc + ui(48), byc, txt);
+					draw_text_add(bxc + ui(48), byc, txt);
 				}
 				
 				yy += bh + ui(16);
@@ -367,7 +367,7 @@ function Panel_Inspector() : PanelContent() constructor {
 						}
 						
 						draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text);
-						draw_text(ui(32), yy + ui(32) / 2, txt);
+						draw_text_add(ui(32), yy + ui(32) / 2, txt);
 					
 						hh += ui(32 + 8);
 					
@@ -400,7 +400,7 @@ function Panel_Inspector() : PanelContent() constructor {
 				
 				draw_sprite_stretched_ext(THEME.group_label, 0, 0, yy + ui(8), con_w, ui(32), COLORS.panel_inspector_output_label, 0.85);
 				draw_set_text(f_p0b, fa_center, fa_center, COLORS._main_text_sub);
-				draw_text(xc, yy + ui(8 + 16), __txt("Outputs"));
+				draw_text_add(xc, yy + ui(8 + 16), __txt("Outputs"));
 				continue;
 			} else {
 				var outInd = i - amoIn - 1;
@@ -443,10 +443,18 @@ function Panel_Inspector() : PanelContent() constructor {
 				}
 			}
 			
-			if(_hover && point_in_rectangle(_m[0], _m[1], 4, _selY, contentPane.surface_w - ui(4), _selY + _selH)) {
+			if(_hover && point_in_rectangle(_m[0], _m[1], ui(4), _selY, contentPane.surface_w - ui(4), _selY + _selH)) {
 				_HOVERING_ELEMENT = jun;
 				
-				draw_sprite_stretched_ext(THEME.prop_selecting, 0, 4, _selY, contentPane.surface_w - ui(8), _selH, COLORS._main_accent, 1);
+				if(NODE_DROPPER_TARGET != noone && NODE_DROPPER_TARGET != jun) {
+					draw_sprite_stretched_ext(THEME.ui_panel_active, 0, ui(4), _selY, contentPane.surface_w - ui(8), _selH, COLORS._main_value_positive, 1);
+					if(mouse_press(mb_left, NODE_DROPPER_TARGET_CAN)) {
+						NODE_DROPPER_TARGET.expression += $"{jun.node.internalName}.{jun.connect_type == JUNCTION_CONNECT.input? "inputs" : "outputs"}.{jun.internalName}";
+						NODE_DROPPER_TARGET.expressionUpdate(); 
+					}
+				} else 
+					draw_sprite_stretched_ext(THEME.prop_selecting, 0, 4, _selY, contentPane.surface_w - ui(8), _selH, COLORS._main_accent, 1);
+				
 				if(anim_toggling) {
 					jun.setAnim(!jun.is_anim);
 					PANEL_ANIMATION.updatePropertyList();
@@ -540,7 +548,7 @@ function Panel_Inspector() : PanelContent() constructor {
 		tb_node_name.draw(ui(64), ui(14), w - ui(128), ui(32), txt, [mx, my], VALUE_DISPLAY.node_title);
 		
 		draw_set_text(f_p1, fa_center, fa_center, COLORS._main_text_sub);
-		draw_text(w / 2 + ui(8), ui(56), inspecting.name);
+		draw_text_add(w / 2 + ui(8), ui(56), inspecting.name);
 		
 		draw_set_text(f_p3, fa_center, fa_center, COLORS._main_text_sub);
 		draw_set_alpha(0.65);

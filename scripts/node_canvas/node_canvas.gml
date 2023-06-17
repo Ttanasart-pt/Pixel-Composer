@@ -157,7 +157,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				draw_point(_x + 1, _y);	
 				draw_point(_x,     _y + 1);	
 			} else
-				draw_circle(_x, _y, _siz / 2, 0);
+				draw_circle_prec(_x, _y, _siz / 2, 0);
 		} else {
 			var _sw = surface_get_width(_brush);
 			var _sh = surface_get_height(_brush);

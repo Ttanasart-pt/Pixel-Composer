@@ -23,6 +23,7 @@ function graph_export_image(allList, nodeList, settings = {}) {
 	
 	for( var i = 0; i < ds_list_size(nodeList); i++ ) {
 		var _node = nodeList[| i];
+		_node.draw_graph_culled = false;
 		
 		var _x = _node.x * scale;
 		var _y = _node.y * scale;

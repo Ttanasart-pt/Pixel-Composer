@@ -122,7 +122,7 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			
 			draw_set_color(COLORS._main_accent);
 			var rad = 16;
-			draw_circle(_mx, _my, rad, true);
+			draw_circle_prec(_mx, _my, rad, true);
 			var _xx = (_mx - _x) / _s;
 			var _yy = (_my - _y) / _s;
 			
@@ -168,10 +168,10 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		static draw = function(_x, _y, _s) {
 			if(pin) {
 				draw_set_color(COLORS._main_accent);
-				draw_circle(_x + x * _s, _y + y * _s, 3, false);
+				draw_circle_prec(_x + x * _s, _y + y * _s, 3, false);
 			} else {
 				draw_set_color(COLORS.node_overlay_gizmo_inactive);
-				draw_circle(_x + x * _s, _y + y * _s, 2, false);
+				draw_circle_prec(_x + x * _s, _y + y * _s, 2, false);
 			}
 		}
 		
@@ -292,7 +292,10 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		var ww = useArray? surface_get_width(surf[0]) : surface_get_width(surf);
 		var hh = useArray? surface_get_height(surf[0]) : surface_get_height(surf);
 		
-		var fullmh = inputs[| 7].getValue() || useArray;
+		var fullmh = inputs[| 7].getValue();
+		if(is_array(fullmh)) fullmh = false;
+		fullmh |= useArray;
+		
 		var gw = ww / sample;
 		var gh = hh / sample;
 		var cont = noone;
@@ -519,13 +522,13 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	static postConnect = function() {
 		setTriangle();
 		
-		if(loadPin != noone) {
-			for( var i = 0; i < ds_list_size(loadPin); i++ ) {
-				var ind = loadPin[| i];
-				if(ind < array_length(points))
-					points[ind].pin = true;
-			}
-			loadPin = noone;
+		if(loadPin == noone) return;
+		
+		for( var i = 0; i < array_length(loadPin); i++ ) {
+			var ind = loadPin[i];
+			if(ind < array_length(points))
+				points[ind].pin = true;
 		}
+		loadPin = noone;
 	}
 }

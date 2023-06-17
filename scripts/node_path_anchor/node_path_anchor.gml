@@ -47,7 +47,7 @@ function Node_Path_Anchor(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		if(!_mir)
 			active &= !inputs[| 2].drawOverlay(active, px, py, _s, _mx, _my, _snx, _sny);
 		else
-			draw_circle(c2x, c2y, 4, false);
+			draw_circle_prec(c2x, c2y, 4, false);
 	}
 	
 	function process_data(_output, _data, _output_index, _array_index = 0) {  

@@ -43,23 +43,18 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 		
 	butx += ui(20);
 	if(!global_var) {			
-		if(jun.expUse) {
-			var validated = is_struct(jun.expTree) && jun.expTree.validate();
-			draw_sprite_ui_uniform(THEME.node_use_expression, validated? 0 : 2, butx, lb_y, 1,, 0.8);
-		} else {
-			index = jun.visible;
-			draw_sprite_ui_uniform(THEME.junc_visible, index, butx, lb_y, 1,, 0.8);
-			if(_hover && point_in_circle(_m[0], _m[1], butx, lb_y, ui(10))) {
-				if(visi_hold != noone)
-					jun.visible = visi_hold;
+		index = jun.visible;
+		draw_sprite_ui_uniform(THEME.junc_visible, index, butx, lb_y, 1,, 0.8);
+		if(_hover && point_in_circle(_m[0], _m[1], butx, lb_y, ui(10))) {
+			if(visi_hold != noone)
+				jun.visible = visi_hold;
 					
-				draw_sprite_ui_uniform(THEME.junc_visible, index, butx, lb_y, 1,, 1);
-				TOOLTIP = __txt("Visibility");
+			draw_sprite_ui_uniform(THEME.junc_visible, index, butx, lb_y, 1,, 1);
+			TOOLTIP = __txt("Visibility");
 				
-				if(mouse_press(mb_left, _focus)) {
-					jun.visible = !jun.visible;
-					visi_hold = jun.visible;
-				}
+			if(mouse_press(mb_left, _focus)) {
+				jun.visible = !jun.visible;
+				visi_hold = jun.visible;
 			}
 		}
 	} else
@@ -172,6 +167,13 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 			var ic_b = jun.expUse? c_white : COLORS._main_icon;
 			if(buttonInstant(THEME.button_hide, bx - ui(12), by - ui(12), ui(24), ui(24), _m, _focus, _hover, __txtx("panel_inspector_use_expression", "Use expression"), THEME.node_use_expression, jun.expUse, ic_b) == 2)
 				jun.expUse = !jun.expUse;
+				
+			if(jun.expUse) {
+				bx -= ui(28);
+				var cc = NODE_DROPPER_TARGET == jun? COLORS._main_value_positive : COLORS._main_icon;
+				if(buttonInstant(THEME.button_hide, bx - ui(12), by - ui(12), ui(24), ui(24), _m, _focus, _hover, __txtx("panel_inspector_dropper", "Node dropper"), THEME.node_dropper, 0, cc) == 2)
+					NODE_DROPPER_TARGET = NODE_DROPPER_TARGET == jun? noone : jun;
+			}
 		}
 	#endregion
 	

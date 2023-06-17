@@ -489,7 +489,7 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 					ny = _y + _pos[1] * _s;
 				
 					draw_set_alpha(1);
-					draw_circle(nx, ny, 4, false);
+					draw_circle_prec(nx, ny, 4, false);
 					if(i) {
 						draw_set_alpha(0.5);
 						draw_line_dashed(ox, oy, nx, ny);

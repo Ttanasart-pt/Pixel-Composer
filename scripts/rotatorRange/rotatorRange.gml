@@ -68,7 +68,7 @@ function rotatorRange(_onModify) : widget() constructor {
 				draw_line_width(sx, sy, ex, ey, ui(8));
 				draw_set_alpha(1);
 				
-				draw_circle(ex, ey, ui(4), 0);
+				draw_circle_prec(ex, ey, ui(4), 0);
 			}
 		#endregion
 		

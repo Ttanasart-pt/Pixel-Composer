@@ -421,7 +421,7 @@ function Panel_Animation() : PanelContent() constructor {
 				draw_line(bar_line_x, ui(12), bar_line_x, bar_h - PANEL_PAD);
 					
 				draw_set_text(f_p2, fa_center, fa_bottom, COLORS._main_text_sub);
-				draw_text(bar_line_x, ui(16), string(i));
+				draw_text_add(bar_line_x, ui(16), string(i));
 			}
 				
 			var bar_line_x = (ANIMATOR.current_frame + 1) * ui(timeline_scale) + timeline_shift;
@@ -430,7 +430,7 @@ function Panel_Animation() : PanelContent() constructor {
 			draw_line(bar_line_x, ui(12), bar_line_x, bar_h - PANEL_PAD);
 					
 			draw_set_text(f_p2, fa_center, fa_bottom, cc);
-			draw_text(bar_line_x, ui(16), string(ANIMATOR.current_frame + 1));
+			draw_text_add(bar_line_x, ui(16), string(ANIMATOR.current_frame + 1));
 		#endregion
 			
 		#region cache
@@ -883,7 +883,7 @@ function Panel_Animation() : PanelContent() constructor {
 		
 		draw_set_color(cc);
 		draw_set_alpha(aa);
-		draw_text(ui(32), ty - 2, animator.getName());
+		draw_text_add(ui(32), ty - 2, animator.getName());
 		draw_set_alpha(1);
 	}
 	
@@ -1522,7 +1522,7 @@ function Panel_Animation() : PanelContent() constructor {
 			for(var i = timeline_separate; i <= ANIMATOR.frames_total; i += timeline_separate) {
 				var bar_line_x = i * ui(timeline_scale) + timeline_shift;
 				draw_set_text(f_p2, fa_right, fa_top, COLORS._main_text_sub);
-				draw_text(bar_line_x - ui(2), PANEL_PAD, string(i));
+				draw_text_add(bar_line_x - ui(2), PANEL_PAD, string(i));
 			}
 				
 			var bar_line_x = (ANIMATOR.current_frame + 1) * ui(timeline_scale) + timeline_shift;
@@ -1537,7 +1537,7 @@ function Panel_Animation() : PanelContent() constructor {
 			draw_rectangle(bar_line_x - tx, PANEL_PAD, bar_line_x, hh, false);
 			
 			draw_set_text(f_p2, fa_right, fa_top, COLORS._main_text_on_accent);
-			draw_text(bar_line_x - ui(2), PANEL_PAD, cf);
+			draw_text_add(bar_line_x - ui(2), PANEL_PAD, cf);
 		#endregion
 				
 		gpu_set_blendmode(bm_subtract);
@@ -1616,15 +1616,15 @@ function Panel_Animation() : PanelContent() constructor {
 			
 			if(y1 - y0 < ui(40)) {
 				draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text_sub);
-				draw_text(ui(16), cy, __txt("Frame"));
+				draw_text_add(ui(16), cy, __txt("Frame"));
 				draw_set_text(f_p1, fa_right, fa_center, ANIMATOR.is_playing? COLORS._main_accent : COLORS._main_text_sub);
-				draw_text(w - ui(16), cy, txt);
+				draw_text_add(w - ui(16), cy, txt);
 			} else {
 				draw_set_text(f_p1, fa_center, fa_center, COLORS._main_text_sub);
-				draw_text(w / 2, cy - ui(12), __txt("Frame"));
+				draw_text_add(w / 2, cy - ui(12), __txt("Frame"));
 			
 				draw_set_text(f_h5, fa_center, fa_center, ANIMATOR.is_playing? COLORS._main_accent : COLORS._main_text_sub);
-				draw_text(w / 2, cy + ui(6), txt);
+				draw_text_add(w / 2, cy + ui(6), txt);
 			}
 			return;
 		}

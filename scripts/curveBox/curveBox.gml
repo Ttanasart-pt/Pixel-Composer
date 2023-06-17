@@ -132,9 +132,9 @@ function curveBox(_onModify) : widget() constructor {
 				if(i > 0) { //draw pre line
 					draw_line(bx0, by0, _x0, _y0);
 				
-					draw_circle(bx0, by0, 3, false);
+					draw_circle_prec(bx0, by0, 3, false);
 					if(hover && point_in_circle(msx, msy, bx0, by0, 10)) {
-						draw_circle(bx0, by0, 5, false);
+						draw_circle_prec(bx0, by0, 5, false);
 						node_hovering = ind + 2;
 						node_hover_typ = -1;
 					}
@@ -143,18 +143,18 @@ function curveBox(_onModify) : widget() constructor {
 				if(i < points - 1) { //draw post line
 					draw_line(ax0, ay0, _x0, _y0);
 				
-					draw_circle(ax0, ay0, 3, false);
+					draw_circle_prec(ax0, ay0, 3, false);
 					if(hover && point_in_circle(msx, msy, ax0, ay0, 10)) {
-						draw_circle(ax0, ay0, 5, false);
+						draw_circle_prec(ax0, ay0, 5, false);
 						node_hovering = ind + 2;
 						node_hover_typ = 1;
 					}
 				}
 			
 				draw_set_color(COLORS._main_accent);
-				draw_circle(_x0, _y0, 3, false);
+				draw_circle_prec(_x0, _y0, 3, false);
 				if(hover && point_in_circle(msx, msy, _x0, _y0, 10)) {
-					draw_circle(_x0, _y0, 5, false);
+					draw_circle_prec(_x0, _y0, 5, false);
 					node_hovering = ind + 2;
 					node_hover_typ = 0;
 				}

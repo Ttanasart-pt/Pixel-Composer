@@ -28,7 +28,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 			internalName = str + string(irandom_range(10000, 99999)); 
 			NODE_NAME_MAP[? internalName] = self;
 			
-			display_name = __txt_node_name(instanceof(self));
+			display_name = __txt_node_name(instanceof(self), name);
 		});
 	}
 	
@@ -399,10 +399,11 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	}
 	
 	static resetRender = function() { setRenderStatus(false); }
+	static isRenderActive = function() { return renderActive || (PREF_MAP[? "render_all_export"] && ANIMATOR.rendering); }
 	
 	static isRenderable = function(log = false) { //Check if every input is ready (updated)
 		if(!active)	return false;
-		if(!renderActive) return false;
+		if(!isRenderActive()) return false;
 		
 		//if(group && struct_has(group, "iterationStatus") && group.iterationStatus() == ITERATION_STATUS.complete) return false;
 		
@@ -411,9 +412,9 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 			if( _in.type == VALUE_TYPE.node) continue;
 			
 			var val_from = _in.value_from;
-			if( val_from == noone)			continue;
-			if(!val_from.node.active)		continue;
-			if(!val_from.node.renderActive) continue;
+			if( val_from == noone) continue;
+			if(!val_from.node.active) continue;
+			if(!val_from.node.isRenderActive()) continue;
 			if(!val_from.node.rendered && !val_from.node.update_on_frame) {
 				LOG_LINE_IF(global.FLAG.render, $"Node {internalName} is not renderable because input {val_from.node.internalName} is not rendered");
 				return false;
@@ -471,6 +472,16 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		return point_in_rectangle(_mx, _my, xx, yy, xx + w * _s, yy + h * _s);
 	}
 	
+	draw_graph_culled = false;
+	static cullCheck = function(_x, _y, _s, minx, miny, maxx, maxy) {
+		var x0 = x * _s + _x;
+		var y0 = y * _s + _y;
+		var x1 = (x + w) * _s + _x;
+		var y1 = (y + h) * _s + _y;
+		
+		draw_graph_culled = !rectangle_in_rectangle(minx, miny, maxx, maxy, x0, y0, x1, y1);
+	}
+	
 	static preDraw = function(_x, _y, _s) {
 		var xx = x * _s + _x;
 		var yy = y * _s + _y;
@@ -519,6 +530,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	}
 	
 	static drawNodeBase = function(xx, yy, _s) {
+		if(draw_graph_culled) return;
 		if(!active) return;
 		var aa = 0.25 + 0.5 * renderActive;
 		draw_sprite_stretched_ext(bg_spr, 0, xx, yy, w * _s, h * _s, color, aa);
@@ -534,6 +546,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	}
 	
 	static drawNodeName = function(xx, yy, _s) {
+		if(draw_graph_culled) return;
 		if(!active) return;
 		
 		draw_name = false;
@@ -599,6 +612,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	}
 	
 	static drawJunctionNames = function(_x, _y, _mx, _my, _s) {
+		if(draw_graph_culled) return;
 		if(!active) return;
 		var amo = input_display_list == -1? ds_list_size(inputs) : array_length(input_display_list);
 		var jun;
@@ -646,7 +660,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		}
 	}
 	
-	static drawConnections = function(_x, _y, _s, mx, my, _active, aa = 1) { 
+	static drawConnections = function(_x, _y, _s, mx, my, _active, aa = 1, minx = undefined, miny = undefined, maxx = undefined, maxy = undefined) { 
 		if(!active) return;
 		
 		var hovering = noone;
@@ -668,10 +682,29 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		}
 		
 		var st = 0;
-		if(hasInspector1Update())  st = -1;
+		if(hasInspector1Update()) st = -1;
 		if(hasInspector2Update()) st = -2;
 		
+		var _inputs = [];
 		var drawLineIndex = 1;
+		for(var i = st; i < ds_list_size(inputs); i++) {
+			var jun;
+			if(i == -1)			jun = inspectInput1;
+			else if(i == -2)	jun = inspectInput2;
+			else				jun = inputs[| i];
+			
+			if(jun.value_from == noone) continue;
+			if(!jun.value_from.node.active) continue;
+			if(!jun.isVisible()) continue;
+			
+			if(i >= 0)
+				array_push(_inputs, jun);
+		}
+		
+		var len = array_length(_inputs);
+		for( var i = 0; i < len; i++ )
+			_inputs[i].drawLineIndex = 1 + (i > len / 2? (len - 1 - i) : i) * 0.5;
+		
 		for(var i = st; i < ds_list_size(inputs); i++) {
 			var jun;
 			if(i == -1)			jun = inspectInput1;
@@ -684,10 +717,17 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 			if(jun.value_from == noone) continue;
 			if(!jun.value_from.node.active) continue;
 			if(!jun.isVisible()) continue;
-			jun.drawLineIndex = drawLineIndex;
 			
 			var frx = jun.value_from.x;
 			var fry = jun.value_from.y;
+			
+			if(!is_undefined(minx)) {
+				if(jx < minx && frx < minx) continue;
+				if(jx > maxx && frx > maxx) continue;
+				
+				if(jy < miny && fry < miny) continue;
+				if(jy > maxy && fry > maxy) continue;
+			}
 					
 			var c0  = value_color(jun.value_from.type);
 			var c1  = value_color(jun.type);
@@ -762,7 +802,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 			cx  *= aa;
 			cy  *= aa;
 			corner *= aa;
-			th = max(1, th);
+			th = max(1, round(th));
 			
 			switch(PREF_MAP[? "curve_connection_line"]) {
 				case 0 : 
@@ -790,14 +830,13 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 						draw_line_elbow_diag_color(frx, fry, jx, jy, cx, cy, ss, th, c0, c1, corner, jun.value_from.drawLineIndex, jun.drawLineIndex, ty); 
 					break;
 			}
-			
-			drawLineIndex += 0.5;
 		}
 		
 		return hovering;
 	}
 	
 	static drawPreview = function(xx, yy, _s) {
+		if(draw_graph_culled) return;
 		if(!active) return;
 		
 		var _node = outputs[| preview_channel];
@@ -891,6 +930,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	}
 	
 	static drawDimension = function(xx, yy, _s) {
+		if(draw_graph_culled) return;
 		if(!active) return;
 		if(_s * w < 64) return;
 		
@@ -923,9 +963,9 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		}
 	}
 	
-	static drawNode = function(_x, _y, _mx, _my, _s) {
+	static drawNode = function(_x, _y, _mx, _my, _s) { 
+		if(draw_graph_culled) return;
 		if(!active) return;
-		//if(group != PANEL_GRAPH.getCurrentContext()) return;
 		
 		var xx = x * _s + _x;
 		var yy = y * _s + _y;
@@ -1121,7 +1161,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	}
 	static clearCache = function() { 
 		if(!use_cache) return;
-		if(!renderActive) return;
+		if(!isRenderActive()) return;
 		
 		if(array_length(cached_output) != ANIMATOR.frames_total)
 			array_resize(cached_output, ANIMATOR.frames_total);
@@ -1134,7 +1174,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		}
 	}
 	static clearCacheForward = function() {
-		if(!renderActive) return;
+		if(!isRenderActive()) return;
 		
 		clearCache();
 		for( var i = 0; i < ds_list_size(outputs); i++ )
@@ -1358,7 +1398,9 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		
 		if(struct_has(load_map, "outputs")) {
 			var _outputs = load_map.outputs;
-			for(var i = 0; i < ds_list_size(outputs); i++) {
+			var amo = min(ds_list_size(outputs), array_length(_outputs));
+			
+			for(var i = 0; i < amo; i++) {
 				if(outputs[| i] == noone) continue;
 				outputs[| i].applyDeserialize(_outputs[i], load_scale, preset);
 			}

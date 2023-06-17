@@ -95,10 +95,10 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 	}
 	
 	static lerpValue = function(from, to, _lrp) {
-		if(prop.type == VALUE_TYPE.color) {
-			var _f = from.value;
-			var _t = to.value;
+		var _f = from.value;
+		var _t = to.value;
 			
+		if(prop.type == VALUE_TYPE.color) {
 			if(is_array(_f)) {
 				var amo = max(array_length(_f), array_length(_t));
 				var res = array_create(amo);
@@ -110,18 +110,18 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 			
 			return processType(merge_color(_f, _t, _lrp));
 		}
-			
-		if(typeArray(prop.display_type) && is_array(from.value)) {
-			var _vec = array_create(array_length(from.value));
+		
+		if(is_array(_f)) {
+			var _vec = array_create(array_length(_f));
 			for(var i = 0; i < array_length(_vec); i++) 
-				_vec[i] = processType(lerp(from.value[i], to.value[i], _lrp));
+				_vec[i] = processType(lerp(_f[i], _t[i], _lrp));
 			return _vec;
 		}
 			
 		if(prop.type == VALUE_TYPE.text)
-			return processType(from.value);
-			
-		return processType(lerp(from.value, to.value, _lrp));
+			return processType(_f);
+		
+		return processType(lerp(_f, _t, _lrp));
 	}
 	
 	static getName = function() { return prop.name + suffix; }

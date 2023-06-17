@@ -90,14 +90,14 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		var amo = ds_map_size(TUNNELS_IN_MAP);
 		var k   = ds_map_find_first(TUNNELS_IN_MAP);
 		repeat(amo) {
-			if(ds_map_exists(NODE_MAP, k)) 
+			if(ds_map_exists(NODE_MAP, k) && struct_has(NODE_MAP[? k], "resetMap")) 
 				NODE_MAP[? k].resetMap();
 			k = ds_map_find_next(TUNNELS_IN_MAP, k);	
 		}
 		
 		var k   = ds_map_find_first(TUNNELS_IN_MAP);
 		repeat(amo) {
-			if(ds_map_exists(NODE_MAP, k)) 
+			if(ds_map_exists(NODE_MAP, k) && struct_has(NODE_MAP[? k], "checkDuplicate")) 
 				NODE_MAP[? k].checkDuplicate();
 			k = ds_map_find_next(TUNNELS_IN_MAP, k);	
 		}

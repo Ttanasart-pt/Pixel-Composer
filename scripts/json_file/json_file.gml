@@ -34,7 +34,7 @@ function json_save_struct(path, struct, pretty = false) {
 	var s;
 	
 	if(pretty)
-		s = json_beautify(json_stringify(struct));
+		s = json_stringify(struct, true);
 	else 
 		s = json_stringify_minify(struct);
 	

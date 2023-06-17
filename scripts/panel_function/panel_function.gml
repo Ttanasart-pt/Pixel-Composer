@@ -313,7 +313,7 @@
 		
 		if(!ds_list_empty(panel.childs)) {
 			for( var i = 0; i < ds_list_size(panel.childs); i++ )
-				cont[i] = _panelSerializeArray(panel.childs[| i]);
+				cont[i] = _panelSerializeArray(panel.childs[| i] );
 		} else {
 			for( var i = 0; i < array_length(panel.content); i++ )
 				cont[i] = instanceof(panel.content[i]);
@@ -338,9 +338,9 @@
 		if(!is_struct(panel)) return;
 		if(instanceof(panel) != "Panel") return;
 		if(array_length(panel.content) == 0) return;
-		if(!panel.content.expandable) return;
+		if(!panel.getContent().expandable) return;
 		
-		PANEL_MAIN.childs[| 1].setContent(panel.content);
+		PANEL_MAIN.childs[| 1].setContent(panel.getContent());
 		FULL_SCREEN_CONTENT = panel;
 	}
 #endregion

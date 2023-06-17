@@ -2,6 +2,8 @@
 event_inherited();
 
 #region init
+	alarm[0] = 1;
+	
 	function init(directory, _openDialog = true) {
 		ID = UUID_generate();
 		global.ADDON_ID[? ID] = self;

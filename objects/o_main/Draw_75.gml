@@ -137,6 +137,14 @@ if(OS == os_windows && gameframe_is_minimized()) exit;
 
 #region draw gui top
 	PANEL_MAIN.drawGUI();
+	
+	if(NODE_DROPPER_TARGET != noone) {
+		draw_sprite_ui(THEME.node_dropper, 0, mouse_x + ui(20), mouse_y + ui(20));
+		if(mouse_press(mb_left, NODE_DROPPER_TARGET_CAN))
+			NODE_DROPPER_TARGET = noone;
+		NODE_DROPPER_TARGET_CAN = true;
+	} else	
+		NODE_DROPPER_TARGET_CAN = false;
 #endregion
 
 #region debug

@@ -49,10 +49,10 @@
 		return __txtx(prefix + key, txt);
 	}
 	
-	function __txt_node_name(node) {
+	function __txt_node_name(node, def = "") {
 		if(struct_has(LOCALE.node, node))
 			return LOCALE.node[$ node].name;
-		return node;
+		return def;
 	}
 	
 	function __txt_node_tooltip(node, def = "") {

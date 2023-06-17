@@ -147,6 +147,9 @@ function Panel_Menu() : PanelContent() constructor {
 					node.doInspectorAction();
 				}
 			}),
+			menuItem(__txtx("panel_menu_export_render_all", "Render disabled node when export"),		
+				function() { PREF_MAP[? "render_all_export"] = !PREF_MAP[? "render_all_export"]; },,,	
+				function() { return PREF_MAP[? "render_all_export"]; } ),
 		]],
 		[ __txt("Panels"), [
 			menuItem(__txt("Workspace"), function(_dat) { 
@@ -212,6 +215,9 @@ function Panel_Menu() : PanelContent() constructor {
 			menuItem(__txtx("panel_debug_console", "Debug console"), function() { 
 				panelAdd("Panel_Console", true)
 			}),
+			menuItem(__txtx("panel_menu_tester", "Tester"), function() { 
+				var dia = dialogPanelCall(new Panel_Test());
+			}),
 			-1, 
 			
 			menuItem(__txtx("panel_menu_test_load_all", "Load all current collections"), function() { 
@@ -231,7 +237,8 @@ function Panel_Menu() : PanelContent() constructor {
 				__test_load_all_nodes();
 			}),
 			menuItem(__txtx("panel_menu_test_gen_guide", "Generate node guide"), function() { 
-				__generate_node_data();
+				var dia = dialogPanelCall(new Panel_Node_Data_Gen());
+				dia.destroy_on_click_out = false;
 			}),
 			-1,
 			menuItem(__txtx("panel_menu_test_crash", "Force crash"), function() { 

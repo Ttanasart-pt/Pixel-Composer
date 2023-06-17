@@ -327,7 +327,7 @@ function Node_Strand_Create(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			var fall = tool_push.attribute.fall;
 			
 			draw_set_color(COLORS._main_accent);
-			draw_circle(_mx, _my, rad * _s, true);
+			draw_circle_prec(_mx, _my, rad * _s, true);
 			draw_circle_dash(_mx, _my, rad * _s * (1 - fall), true);
 			draw_circle_dash(_mx, _my, rad * _s * (1 + fall), true);
 			
@@ -378,7 +378,7 @@ function Node_Strand_Create(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			var fall = isUsingTool(2)? tool_stretch.attribute.fall   : tool_cut.attribute.fall;
 			
 			draw_set_color(COLORS._main_accent);
-			draw_circle(_mx, _my, rad * _s, true);
+			draw_circle_prec(_mx, _my, rad * _s, true);
 			draw_circle_dash(_mx, _my, rad * _s * (1 - fall), true);
 			draw_circle_dash(_mx, _my, rad * _s * (1 + fall), true);
 			
@@ -392,7 +392,7 @@ function Node_Strand_Create(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			var fall = tool_grab.attribute.fall;
 			
 			draw_set_color(COLORS._main_accent);
-			draw_circle(_mx, _my, rad * _s, true);
+			draw_circle_prec(_mx, _my, rad * _s, true);
 			draw_circle_dash(_mx, _my, rad * _s * (1 - fall), true);
 			draw_circle_dash(_mx, _my, rad * _s * (1 + fall), true);
 			

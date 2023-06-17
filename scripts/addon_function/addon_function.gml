@@ -57,24 +57,31 @@ function addonContextSubMenu(_name, _content) constructor {
 }
 
 function addonTrigger(_addon, _openDialog = true) {
-	var _name = filename_name_only(_addon);
-	with(_addon_custom) {
-		if(name != _name) 
-			continue;
-		
-		instance_destroy();
-		return;
-	}
-	
-	var addonPath = DIRECTORY + "Addons\\" + _name;
-	if(!directory_exists(addonPath)) return;
-	
-	with(instance_create(0, 0, _addon_custom))
-		init(addonPath, _openDialog);
+	if(addonActivated(_addon))	addonUnload(_addon);
+	else						addonLoad(_addon, _openDialog);
 }
 
 function addonActivated(_addon) {
 	var _name = filename_name_only(_addon);
 	with(_addon_custom) if(name == _name) return true;
 	return false;
+}
+
+function addonLoad(_addon, _openDialog = true) {
+	var _name = filename_name_only(_addon);
+	var addonPath = DIRECTORY + "Addons\\" + _name;
+	if(!directory_exists(addonPath)) return;
+	
+	with(_addon_custom) if(name == _name) return;
+	
+	with(instance_create(0, 0, _addon_custom))
+		init(addonPath, _openDialog);
+}
+
+function addonUnload(_addon) {
+	var _name = filename_name_only(_addon);
+	var addonPath = DIRECTORY + "Addons\\" + _name;
+	if(!directory_exists(addonPath)) return;
+	
+	with(_addon_custom) if(name == _name) instance_destroy();
 }

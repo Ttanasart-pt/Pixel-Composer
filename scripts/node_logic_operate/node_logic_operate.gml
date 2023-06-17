@@ -50,7 +50,6 @@ function Node_Logic(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	data_length = 1;
 	
 	function createNewInput() {
-		print("Create")
 		var index = ds_list_size(inputs);
 		
 		var jname = chr(ord("a") + index - 1);

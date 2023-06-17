@@ -10,7 +10,7 @@ function preview_overlay_rotation(interact, active, _x, _y, _s, _mx, _my, _snx, 
 	if(drag_type) {
 		draw_set_color(COLORS._main_accent);
 		draw_set_alpha(0.5);
-		draw_circle(_x, _y, _rad, true);
+		draw_circle_prec(_x, _y, _rad, true);
 		draw_set_alpha(1);
 							
 		draw_sprite_colored(THEME.anchor_rotate, 1, _ax, _ay, 1, _val - 90);
@@ -30,7 +30,7 @@ function preview_overlay_rotation(interact, active, _x, _y, _s, _mx, _my, _snx, 
 	if(interact && point_in_circle(_mx, _my, _ax, _ay, 8)) {
 		draw_set_color(COLORS._main_accent);
 		draw_set_alpha(0.5);
-		draw_circle(_x, _y, _rad, true);
+		draw_circle_prec(_x, _y, _rad, true);
 		draw_set_alpha(1);
 		hover = 1;
 							

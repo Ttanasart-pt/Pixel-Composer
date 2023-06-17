@@ -155,11 +155,11 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		LOG_IF(global.FLAG.render, $"→→→→→ Call get next node from group");
 		
 		var nodes = [];
-		if(renderActive) {
+		if(isRenderActive()) {
 			var allReady = true;
 			for(var i = custom_input_index; i < ds_list_size(inputs); i++) {
 				var _in = inputs[| i].from;
-				if(!_in.renderActive) continue;
+				if(!_in.isRenderActive()) continue;
 			
 				if(!_in.isRenderable()) {
 					LOG_IF(global.FLAG.render, $"Node {_in.internalName} not ready, loop skip.");
@@ -184,7 +184,7 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 				var _to   = _ot.value_to[| j];
 				var _node = _to.node;
 				
-				if(!_node.renderActive) continue;
+				if(!_node.isRenderActive()) continue;
 				
 				if(_node.active && _to.value_from != noone && _to.value_from.node == group && _node.isRenderable())
 					array_push(nodes, _to.node);
@@ -469,8 +469,8 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	static attributeDeserialize = function(attr) {
 		if(struct_has(attr, "separator"))
 			attributes.separator = json_parse(attr.separator);
-		attributes.w = attr.w;
-		attributes.h = attr.h;
+		attributes.w = struct_try_get(attr, "w", 128);
+		attributes.h = struct_try_get(attr, "h", 128);
 	}
 	
 }

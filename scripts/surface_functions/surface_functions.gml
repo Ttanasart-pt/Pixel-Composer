@@ -105,6 +105,8 @@ function is_surface(s) {
 
 function surface_verify(surf, w, h, format = surface_rgba8unorm) {
 	gml_pragma("forceinline");
+	w = round(w);
+	h = round(h);
 	
 	if(!is_surface(surf))
 		return surface_create_valid(w, h, format);

@@ -323,7 +323,8 @@ event_inherited();
 		//	draw_set_text(f_p0, fa_center, fa_top, COLORS._main_text_sub);
 		//	draw_text(content_pane.w / 2, content_pane.h / 2 - ui(4), "Right click on a node and select 'Add to favorite'\nto add node to favorite panel.");
 		//}
-		
+		var group_labels = [];
+			
 		if(PREF_MAP[? "dialog_add_node_view"] == 0) { //grid
 			var grid_size  = ui(64);
 			var grid_width = ui(80);
@@ -335,7 +336,7 @@ event_inherited();
 			var cProg = 0;
 			hh += grid_space;
 			
-			grid_width = round(content_pane.surface_w - grid_space) / col - grid_space;
+			grid_width   = round(content_pane.surface_w - grid_space) / col - grid_space;
 			
 			for(var index = 0; index < node_count; index++) {
 				var _node = _list[| index];
@@ -348,12 +349,10 @@ event_inherited();
 					cProg = 0;
 					curr_height = 0;
 					
-					BLEND_OVERRIDE;
-					draw_sprite_stretched(THEME.group_label, 0, ui(16), yy, content_pane.surface_w - ui(32), ui(24));
-					BLEND_NORMAL;
-					
-					draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text);
-					draw_text(ui(16 + 16), yy + ui(12), __txt(_node));
+					array_push(group_labels, {
+						y: yy,
+						text: __txt(_node)
+					});
 					
 					hh += ui(24 + 12);
 					yy += ui(24 + 12);
@@ -417,6 +416,19 @@ event_inherited();
 				}
 			}
 			
+			var len = array_length(group_labels);
+			for( var i = 0; i < len; i++ ) {
+				var lb = group_labels[i];
+				var _yy = max(lb.y, i == len - 1? ui(8) : min(ui(8), group_labels[i + 1].y - ui(32)));
+				
+				BLEND_OVERRIDE;
+				draw_sprite_stretched(THEME.group_label, 0, ui(16), _yy, content_pane.surface_w - ui(32), ui(24));
+				BLEND_NORMAL;
+					
+				draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text);
+				draw_text(ui(16 + 16), _yy + ui(12), lb.text);
+			}
+			
 			hh += curr_height;
 			yy += curr_height;
 		} else if(PREF_MAP[? "dialog_add_node_view"] == 1) { //list
@@ -436,12 +448,10 @@ event_inherited();
 					hh += ui(8);
 					yy += ui(8);
 					
-					BLEND_OVERRIDE;
-					draw_sprite_stretched(THEME.group_label, 0, ui(8), yy, content_pane.surface_w - ui(24), ui(24));
-					BLEND_NORMAL;
-					
-					draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text);
-					draw_text(ui(24), yy + ui(12), __txt(_node));
+					array_push(group_labels, {
+						y: yy,
+						text: __txt(_node)
+					});
 					
 					hh += ui(32);
 					yy += ui(32);
@@ -495,6 +505,19 @@ event_inherited();
 				
 				yy += list_height;
 				hh += list_height;
+			}
+			
+			var len = array_length(group_labels);
+			for( var i = 0; i < len; i++ ) {
+				var lb = group_labels[i];
+				var _yy = max(lb.y, i == len - 1? ui(8) : min(ui(8), group_labels[i + 1].y - ui(32)));
+				
+				BLEND_OVERRIDE;
+				draw_sprite_stretched(THEME.group_label, 0, ui(16), _yy, content_pane.surface_w - ui(32), ui(24));
+				BLEND_NORMAL;
+					
+				draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text);
+				draw_text(ui(16 + 16), _yy + ui(12), lb.text);
 			}
 		}
 		

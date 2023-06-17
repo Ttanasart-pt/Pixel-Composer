@@ -29,7 +29,7 @@ function Panel_Notification() : PanelContent() constructor {
 		}),
 		-1,
 		menuItem(__txtx("noti_open_log", "Open log file"), function() { 
-			shellOpenExplorer(DIRECTORY + "log.txt");
+			shellOpenExplorer(DIRECTORY + "log/log.txt");
 		}),
 	];
 	

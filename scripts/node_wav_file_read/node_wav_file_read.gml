@@ -66,7 +66,7 @@ function Node_WAV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	
 	first_update = false;
 	
-	output_display_list = [ 0, 2, 3, 4, 1, 5 ];
+	output_display_list = [ 0, 1, 2, 3, 4, 5 ];
 	audio_surface = -1;
 	preview_audio = -1;
 	

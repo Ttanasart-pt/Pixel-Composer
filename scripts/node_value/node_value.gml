@@ -393,7 +393,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	
 	draw_line_shift_x	= 0;
 	draw_line_shift_y	= 0;
-	draw_line_thick		= new Tween(1,,, 1.5);
+	draw_line_thick		= 1;
 	draw_line_shift_hover	= false;
 	drawLineIndex			= 1;
 	
@@ -425,8 +425,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	
 	express_edit = new textArea(TEXTBOX_INPUT.text, function(str) { 
 		expression = str;
-		expTree    = evaluateFunctionTree(expression); 
-		node.triggerRender();
+		expressionUpdate();
 	});
 	express_edit.boxColor = COLORS._main_value_positive;
 	express_edit.align    = fa_left;
@@ -849,6 +848,11 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	}
 	resetDisplay();
 	
+	static expressionUpdate = function() {
+		expTree    = evaluateFunctionTree(expression);
+		node.triggerRender();
+	}
+	
 	static onValidate = function() {
 		if(!validateValue) return;
 		var _val = value_validation, str = "";
@@ -927,7 +931,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		}
 		
 		if(display_type == VALUE_DISPLAY.area) {
-			var dispType = nodeFrom.extra_data[0];
+			var dispType = array_safe_get(nodeFrom.extra_data, 0, AREA_MODE.area);
 			var surfGet = nodeFrom.display_data;
 			if(!applyUnit || surfGet == -1) return value;
 			
@@ -1216,7 +1220,10 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			cache_array[0] = false;
 			cache_value[0] = false;
 			
-			if(!LOADING) MODIFIED = true;
+			if(!LOADING) { 
+				//print("setValueDirect"); 
+				MODIFIED = true; 
+			}
 		}
 		
 		onValidate();
@@ -1657,8 +1664,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		animator.deserialize(struct_try_get(_map, "raw_value"), scale);
 		
 		if(struct_has(_map, "animators")) {
-			var anims	 = _map.animators;
-			for( var i = 0; i < array_length(anims); i++ )
+			var anims = _map.animators;
+			var amo = min(array_length(anims), array_length(animators));
+			for( var i = 0; i < amo; i++ )
 				animators[i].deserialize(anims[i], scale);
 		}
 		

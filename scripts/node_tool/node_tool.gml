@@ -43,5 +43,10 @@ function NodeTool(name, spr) constructor {
 			} else 
 				PANEL_PREVIEW.tool_current = self;
 		}
+		
+		if(PANEL_PREVIEW.tool_current == self)
+			onToggle();
 	}
+	
+	static onToggle = function() {}
 }
