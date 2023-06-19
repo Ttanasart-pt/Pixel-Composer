@@ -12,6 +12,7 @@ event_inherited();
 	
 	previous_color = c_black;
 	selector = new colorSelector();
+	drop_target = noone;
 	
 	function setDefault(color) {
 		selector.setColor(color);

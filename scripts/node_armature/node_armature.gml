@@ -23,6 +23,7 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 	tools = [
 		new NodeTool( "Add bones", THEME.path_tools_transform ),
 		new NodeTool( "Remove bones", THEME.path_tools_transform ),
+		new NodeTool( "Detach bones", THEME.path_tools_transform ),
 	];
 	
 	anchor_selecting = noone;
@@ -35,15 +36,27 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		anchor_selecting = attributes.bones.draw(active, _x, _y, _s, _mx, _my, true, anchor_selecting);
+		//if(is_array(anchor_selecting)) print(anchor_selecting[1])
 		
 		var mx = (_mx - _x) / _s;
 		var my = (_my - _y) / _s;
 		
 		if(builder_bone != noone) {
+			//draw_set_color(COLORS._main_accent);
+			//draw_circle(_x + builder_sx * _s, _y + builder_sy * _s, 8, false);
+		
 			var dir = point_direction(builder_sx, builder_sy, mx, my);
 			var dis = point_distance(builder_sx, builder_sy, mx, my);
 			
-			if(!key_mod_press(ALT)) {
+			if(builder_type == 2) {
+				var bx = builder_sx + (mx - builder_mx) / _s;
+				var by = builder_sy + (my - builder_my) / _s;
+				
+				if(!builder_bone.parent_anchor) {
+					builder_bone.direction = point_direction(0, 0, bx, by);
+					builder_bone.distance  = point_distance( 0, 0, bx, by);
+				}
+			} else if(key_mod_press(ALT)) {
 				if(builder_type == 0) {
 					var bo = builder_bone.getPoint(builder_bone.length, builder_bone.angle);
 					
@@ -52,8 +65,8 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 					
 					var bn = builder_bone.getPoint(0, 0);
 					
-					builder_bone.angle  = point_direction(bo.x, bo.y, bn.x, bn.y);
-					builder_bone.length = point_distance( bo.x, bo.y, bn.x, bn.y);
+					builder_bone.angle  = point_direction(bn.x, bn.y, bo.x, bo.y);
+					builder_bone.length = point_distance( bn.x, bn.y, bo.x, bo.y);
 				} else if(builder_type == 1) {
 					var chs = [];
 					for( var i = 0; i < array_length(builder_bone.childs); i++ ) {
@@ -79,17 +92,6 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 				} else if(builder_type == 1) {
 					builder_bone.angle  = dir;
 					builder_bone.length = dis;
-				} else if(builder_type == 2) {
-					var bo = builder_bone.getPoint(0, 0);
-					var bx = bo.x + (mx - builder_mx) / _s;
-					var by = bo.y + (my - builder_my) / _s;
-					
-					if(builder_bone.parent_anchor) {
-						
-					} else {
-						builder_bone.direction = point_direction(builder_sx, builder_sy, bx, by);
-						builder_bone.distance  = point_distance( builder_sx, builder_sy, bx, by);
-					}
 				}
 			}
 			
@@ -109,7 +111,46 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 					builder_type = 1;
 					builder_sx = mx;
 					builder_sy = my;
+				} else if(anchor_selecting[1] == 2) {
+					var _pr = anchor_selecting[0];
+					var _md = new __Bone(noone, 0, 0, _pr.angle, _pr.length / 2);
+					_pr.length = _md.length;
+					
+					for( var i = 0; i < array_length(_pr.childs); i++ )
+						_md.addChild(_pr.childs[i]);
+					
+					_pr.childs = [];
+					_pr.addChild(_md);
 				}
+			}
+		} else if(isUsingTool(1)) { //remover
+			if(anchor_selecting != noone && anchor_selecting[0].parent != noone && mouse_press(mb_left, active)) {
+				var _bone = anchor_selecting[0];
+				var _par  = _bone.parent;
+				
+				if(anchor_selecting[1] == 2) {
+					array_remove(_par.childs, _bone);
+				
+					for( var i = 0; i < array_length(_bone.childs); i++ ) {
+						var _ch = _bone.childs[i];
+						_par.addChild(_ch);
+					}
+				}
+			}
+		} else if(isUsingTool(2)) { //detach
+			if(anchor_selecting != noone && anchor_selecting[0].parent_anchor && anchor_selecting[1] == 2 && mouse_press(mb_left, active)) {
+				builder_bone = anchor_selecting[0];
+				builder_type = anchor_selecting[1];
+				
+				var par = builder_bone.parent;
+				builder_bone.parent_anchor = false;
+				builder_bone.distance  = par.length;
+				builder_bone.direction = par.angle;
+				
+				builder_sx = lengthdir_x(par.length, par.angle);
+				builder_sy = lengthdir_y(par.length, par.angle);
+				builder_mx = mx;
+				builder_my = my;
 			}
 		} else { //mover
 			if(anchor_selecting != noone && mouse_press(mb_left, active)) {
@@ -125,12 +166,15 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 					builder_sx = orig.x;
 					builder_sy = orig.y;
 				} else if(builder_type == 2) {
-					var _par = builder_bone.parent;
-					var orig = _par.getPoint(_par.length, _par.angle);
-					builder_sx = orig.x;
-					builder_sy = orig.y;
-					builder_mx = mx;
-					builder_my = my;
+					if(builder_bone.parent_anchor) {
+						builder_bone = noone;
+					} else {
+						var par = builder_bone.parent;
+						builder_sx = lengthdir_x(builder_bone.distance, builder_bone.direction);
+						builder_sy = lengthdir_y(builder_bone.distance, builder_bone.direction);
+						builder_mx = mx;
+						builder_my = my;
+					}
 				}
 			}
 		}

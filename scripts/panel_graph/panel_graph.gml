@@ -510,7 +510,7 @@ function Panel_Graph() : PanelContent() constructor {
 						menuItem(__txtx("panel_graph_inspector_panel", "Send to new inspector"), function() {
 							var pan = panelAdd("Panel_Inspector", true);
 							pan.destroy_on_click_out = false;
-							pan.content.inspecting = node_hover;
+							pan.content.setInspecting(node_hover);
 							pan.content.locked     = true;
 						}));
 						

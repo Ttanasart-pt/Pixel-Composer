@@ -261,8 +261,8 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 			addNodeObject(transform, "Nine Slice",		s_node_9patch,			"Node_9Slice",			[1, Node_9Slice], ["9 slice", "splice"], "Cut image into 3x3 parts, and scale/repeat only the middle part.");
 			addNodeObject(transform, "Padding",			s_node_padding,			"Node_Padding",			[1, Node_Padding],, "Make image bigger by adding space in 4 directions.");
 		
-			//ds_list_add(transform, "Armature");
-			//addNodeObject(transform, "Armature Create",	s_node_compose,			"Node_Armature",		[1, Node_Armature], ["rigging", "bone"], "");
+			ds_list_add(transform, "Armature");
+			addNodeObject(transform, "Armature Create",	s_node_compose,			"Node_Armature",		[1, Node_Armature], ["rigging", "bone"], "");
 			
 		var filter = ds_list_create();
 		addNodeCatagory("Filter", filter);
@@ -646,8 +646,7 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 	}
 	
 	function graphFocusNode(node) {
-		if(!PANEL_INSPECTOR.locked)
-			PANEL_INSPECTOR.inspecting = node;
+		PANEL_INSPECTOR.setInspecting(node);
 		ds_list_clear(PANEL_GRAPH.nodes_select_list);
 		PANEL_GRAPH.node_focus = node;
 		PANEL_GRAPH.fullView();
@@ -670,7 +669,6 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 	
 	function nodeGetData(str) {
 		var strs = string_splice(str, ".");
-		var _val = 0;
 		
 		if(array_length(strs) == 0) return 0;
 		
@@ -691,7 +689,7 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 		
 			var node = NODE_NAME_MAP[? key];
 			var map  = noone;
-			switch(strs[1]) {
+			switch(string_lower(strs[1])) {
 				case "inputs" :	
 				case "input" :	
 					map  = node.inputMap;
@@ -703,7 +701,7 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 				default : return 0;
 			}
 			
-			var _junc_key = strs[2];
+			var _junc_key = string_lower(strs[2]);
 			var _junc     = ds_map_try_get(map, _junc_key, noone);
 			
 			if(_junc == noone) return 0;

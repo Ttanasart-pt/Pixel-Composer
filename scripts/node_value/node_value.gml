@@ -355,7 +355,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	_initName = _name;
 	name = __txt_junction_name(instanceof(node), type, index, _name);
 	name = _name;
-	internalName = string_replace_all(_name, " ", "_");
+	internalName = string_lower(string_replace_all(_name, " ", "_"));
 	
 	if(struct_has(node, "inputMap")) {
 		if(_connect == JUNCTION_CONNECT.input)       node.inputMap[?  internalName] = self;
@@ -1239,7 +1239,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		}
 		
 		if(_valueFrom == value_from) {
-			print("whaT")
+			print("whaT");
 			return false;
 		}
 		

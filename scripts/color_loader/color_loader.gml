@@ -7,6 +7,15 @@
 #endregion
 
 function loadColor(theme = "default") {
+	CDEF   = {};
+	COLORS = {};
+	THEME_VALUE = {};
+	
+	_loadColor("default", true);
+	_loadColor(theme);
+}
+
+function _loadColor(theme = "default", replace = false) {
 	var dirr = DIRECTORY + "themes/" + theme;
 	var path  = dirr + "/values.json";
 	var pathO = dirr + "/override.json";
@@ -26,7 +35,8 @@ function loadColor(theme = "default") {
 	var clrs = json_try_parse(s);
 	
 	var valkeys = variable_struct_get_names(clrs.values);
-	THEME_VALUE = clrs.values;
+	if(replace)	THEME_VALUE = clrs.values;
+	else		struct_override(THEME_VALUE, clrs.values);
 	
 	var defkeys = variable_struct_get_names(clrs.define);
 	COLOR_KEYS = defkeys;

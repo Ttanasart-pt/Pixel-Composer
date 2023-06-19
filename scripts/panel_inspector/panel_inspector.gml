@@ -55,6 +55,9 @@ function Panel_Inspector() : PanelContent() constructor {
 	prop_page_button.fColor		= COLORS._main_text_sub;
 	prop_page = 0;
 	
+	picker_index = 0;
+	picker_change = false;
+	
 	current_meta = -1;
 	meta_tb[0] = new textArea(TEXTBOX_INPUT.text, function(str) { current_meta.description	= str; });	
 	meta_tb[1] = new textArea(TEXTBOX_INPUT.text, function(str) { current_meta.author		= str; });
@@ -97,6 +100,19 @@ function Panel_Inspector() : PanelContent() constructor {
 			}
 		}),
 	]
+	
+	function setInspecting(inspecting) { 
+		if(locked) return;
+		
+		self.inspecting = inspecting;
+		
+		if(inspecting != noone)
+			inspecting.onInspect();
+		contentPane.scroll_y    = 0;
+		contentPane.scroll_y_to = 0;
+			
+		picker_index = 0;
+	}
 	
 	function onFocusBegin() { PANEL_INSPECTOR = self; }
 	
@@ -154,7 +170,7 @@ function Panel_Inspector() : PanelContent() constructor {
 				for( var j = 0; j < array_length(meta.displays); j++ ) {
 					var display = meta.displays[j];
 					
-					draw_set_text(f_p0, fa_left, fa_top, COLORS._main_text);
+					draw_set_text(f_p0, fa_left, fa_top, COLORS._main_text_inner);
 					draw_text_add(ui(16), yy, __txt(display[0]));
 					yy += line_get_height() + ui(6);
 					hh += line_get_height() + ui(6);
@@ -339,6 +355,10 @@ function Panel_Inspector() : PanelContent() constructor {
 			return hh;
 		}
 		
+		var color_picker_selecting = noone;
+		var color_picker_index = 0;
+		var pickers = [];
+		
 		for(var i = 0; i < amo; i++) {
 			var yy = hh + _y;
 			
@@ -443,6 +463,17 @@ function Panel_Inspector() : PanelContent() constructor {
 				}
 			}
 			
+			if(jun.connect_type == JUNCTION_CONNECT.input && jun.type == VALUE_TYPE.color && jun.display_type == VALUE_DISPLAY._default) {
+				pickers[color_picker_index] = jun;
+				if(color_picker_index == picker_index) {
+					if(ALT == KEYBOARD_STATUS.down)
+						jun.editWidget.onColorPick();
+					color_picker_selecting = jun;
+				}
+				
+				color_picker_index++;
+			}
+			
 			if(_hover && point_in_rectangle(_m[0], _m[1], ui(4), _selY, contentPane.surface_w - ui(4), _selY + _selH)) {
 				_HOVERING_ELEMENT = jun;
 				
@@ -514,6 +545,21 @@ function Panel_Inspector() : PanelContent() constructor {
 					var dia = menuCall("inspector_value_menu",,, _menuItem,, jun);
 					__dialog_junction = jun;
 				}
+			}
+		}
+		
+		if(color_picker_selecting == noone)
+			picker_selecting = 0;
+		
+		if(key_mod_press(ALT) && color_picker_index) {
+			var _p = picker_index;
+			
+			if(mouse_wheel_down()) picker_index = safe_mod(picker_index + 1 + color_picker_index, color_picker_index);
+			if(mouse_wheel_up())   picker_index = safe_mod(picker_index - 1 + color_picker_index, color_picker_index);
+			
+			if(_p != picker_index) {
+				instance_destroy(o_dialog_color_selector);
+				pickers[picker_index].editWidget.onColorPick();
 			}
 		}
 		
@@ -657,12 +703,7 @@ function Panel_Inspector() : PanelContent() constructor {
 		contentPane.setActiveFocus(pFOCUS, pHOVER);
 		contentPane.draw(ui(16), top_bar_h, mx - ui(16), my - top_bar_h);
 		
-		if(!locked && PANEL_GRAPH.node_focus && inspecting != PANEL_GRAPH.node_focus) {
-			inspecting = PANEL_GRAPH.node_focus;
-			if(inspecting != noone)
-				inspecting.onInspect();
-			contentPane.scroll_y    = 0;
-			contentPane.scroll_y_to = 0;
-		}
+		if(!locked && PANEL_GRAPH.node_focus && inspecting != PANEL_GRAPH.node_focus)
+			setInspecting(PANEL_GRAPH.node_focus);
 	}
 }

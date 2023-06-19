@@ -16,6 +16,7 @@ function __Bone(parent = noone, distance = 0, direction = 0, angle = 0, length =
 	
 	static addChild = function(bone) {
 		array_push(childs, bone);
+		bone.parent = self;
 		return self;
 	}
 	
@@ -47,22 +48,29 @@ function __Bone(parent = noone, distance = 0, direction = 0, angle = 0, length =
 		if(parent != noone) {
 			var aa = (hovering != noone && hovering[0] == self && hovering[1] == 2)? 1 : 0.75;
 			draw_set_color(COLORS._main_accent);
+			if(!parent_anchor && parent.parent != noone) {
+				var _p = parent.getPoint(0, 0);
+				_p.x = _x + _p.x * _s;
+				_p.y = _y + _p.y * _s;
+				draw_line_dashed(_p.x, _p.y, p0.x, p0.y, 1);
+			}
+			
 			draw_set_alpha(aa);
 			draw_line_width2(p0.x, p0.y, p1.x, p1.y, 6, 2);
 			draw_set_alpha(1.00);
 			
-			if(edit && distance_to_line(_mx, _my, p0.x, p0.y, p1.x, p1.y) <= 6)
+			if(edit && distance_to_line(_mx, _my, p0.x, p0.y, p1.x, p1.y) <= 6) //drag bone
 				hover = [ self, 2 ];
 			
 			if(!parent_anchor) {
-				if(edit && point_in_circle(_mx, _my, p0.x, p0.y, ui(12))) {
-					draw_sprite_colored(THEME.anchor_selector, 0, p0.x, p0.y);
+				if(edit && point_in_circle(_mx, _my, p0.x, p0.y, ui(12))) { //drag head
+					draw_sprite_colored(THEME.anchor_selector, 0, p0.x, p0.y); 
 					hover = [ self, 0 ];
 				} else	
 					draw_sprite_colored(THEME.anchor_selector, 2, p0.x, p0.y);
 			}
 			
-			if(edit && point_in_circle(_mx, _my, p1.x, p1.y, ui(12))) {
+			if(edit && point_in_circle(_mx, _my, p1.x, p1.y, ui(12))) { //drag tail
 				draw_sprite_colored(THEME.anchor_selector, 0, p1.x, p1.y);
 				hover = [ self, 1 ];
 			} else	

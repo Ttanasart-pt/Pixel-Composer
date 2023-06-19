@@ -619,7 +619,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		var comp = buffer_compress(surface_buffer, 0, buffer_get_size(surface_buffer));
 		var enc  = buffer_base64_encode(comp, 0, buffer_get_size(comp));
 			
-		_map[? "surface"] = enc;
+		_map.surface = enc;
 	}
 	
 	static doApplyDeserialize = function() {

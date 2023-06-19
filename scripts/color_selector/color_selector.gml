@@ -112,13 +112,15 @@ function colorSelector(onApply = noone) constructor {
 	static drawDropper = function(instance) {
 		if(mouse_press(mb_left)) {
 			setColor(dropper_color);
-			if(dropper_active == true && dropper_close)
+			if(dropper_close)
 				instance_destroy(instance);
 			dropper_active = false;
 		}
 		
-		if(mouse_press(mb_right))
-			if(dropper_active == true) instance_destroy(instance);
+		if(dropper_active == true && mouse_press(mb_right))
+			instance_destroy(instance);
+		if(keyboard_check_released(vk_alt))
+			instance_destroy(instance);
 		
 		var dx = mouse_mx + ui(36);
 		var dy = mouse_my + ui(36);

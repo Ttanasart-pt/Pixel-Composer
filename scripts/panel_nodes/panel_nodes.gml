@@ -52,8 +52,7 @@ function Panel_Nodes() : PanelContent() constructor {
 					else if(mouse_press(mb_left)) {
 						if(isGroup)
 							node_collapse[? node.node_id] = !node_collapse[? node.node_id];
-						if(!PANEL_INSPECTOR.locked)
-							PANEL_INSPECTOR.inspecting = node;
+						PANEL_INSPECTOR.setInspecting(node);
 						ds_list_clear(PANEL_GRAPH.nodes_select_list);
 						PANEL_GRAPH.node_focus = node;
 					} 

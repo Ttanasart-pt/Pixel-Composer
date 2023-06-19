@@ -7,6 +7,9 @@ function buttonColor(_onApply, dialog = noone) : widget() constructor {
 	onColorPick = function() {
 		var dialog = dialogCall(o_dialog_color_selector, WIN_W / 2, WIN_H / 2);
 		dialog.selector.dropper_active = true;
+		dialog.selector.dropper_close  = true;
+		dialog.drop_target = self;
+		
 		dialog.selector.onApply = onApply;
 		dialog.onApply = onApply;
 	}
@@ -36,6 +39,7 @@ function buttonColor(_onApply, dialog = noone) : widget() constructor {
 		dialog.selector.onApply = apply;
 		dialog.onApply = apply;
 		dialog.interactable = interactable;
+		dialog.drop_target = self;
 		
 		if(parentDialog)
 			parentDialog.addChildren(dialog);
@@ -48,8 +52,19 @@ function buttonColor(_onApply, dialog = noone) : widget() constructor {
 		h = _h;
 		current_color = toNumber(_color);
 		
-		b_picker.setActiveFocus(hover, active);
-		b_picker.draw(_x + _w - ui(32), _y + _h / 2 - ui(16), ui(32), ui(32), _m, THEME.button_hide);
+		if(interactable) {
+			b_picker.setActiveFocus(hover, active);
+			b_picker.draw(_x + _w - ui(32), _y + _h / 2 - ui(16), ui(32), ui(32), _m, THEME.button_hide);
+			b_picker.icon_blend = c_white;
+			b_picker.icon_index = 0;
+			if(instance_exists(o_dialog_color_selector) && o_dialog_color_selector.selector.dropper_active && o_dialog_color_selector.drop_target != noone) {
+				if(o_dialog_color_selector.drop_target == self) {
+					b_picker.icon_blend = COLORS._main_accent;
+					b_picker.icon_index = 1;
+				} else
+					b_picker.icon_blend = COLORS._main_icon;
+			}
+		}
 		
 		var _cw = _w - ui(40);
 		var hoverRect = point_in_rectangle(_m[0], _m[1], _x, _y, _x + _cw, _y + _h);

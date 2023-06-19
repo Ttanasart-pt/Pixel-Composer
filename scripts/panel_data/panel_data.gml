@@ -498,7 +498,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 					foc = FOCUS == self;
 					var cc = FOCUS == self? COLORS._main_accent : COLORS.panel_tab;
 					draw_sprite_stretched_ext(THEME.ui_panel_tab, 1 + (FOCUS == self), _tbx, tby, tbw, _tdh, cc, 1);
-					if(!foc) tab_cover = BBOX().fromWH(tsx + _tbx, tsy + tby + tbh - ui(2), tbw, THEME_VALUE.panel_tab_extend);
+					tab_cover = BBOX().fromWH(tsx + _tbx, tsy + tby + tbh - ui(3), tbw, THEME_VALUE.panel_tab_extend);
 				} else {
 					var cc = COLORS.panel_tab_inactive;
 					if(HOVER == self && _hov)
@@ -531,13 +531,12 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 					}
 				}
 				
-				var cc = foc? COLORS.panel_bg_clear_inner : COLORS._main_text_sub;
 				if(icn != noone) {
-					draw_sprite_ui(icn, 0, _tbx + ui(8 + 8), tab_height / 2 + ui(1),,,, cc);
+					draw_sprite_ui(icn, 0, _tbx + ui(8 + 8), tab_height / 2 + ui(1),,,, foc? COLORS.panel_tab_icon : COLORS._main_text_sub);
 					_tbx += ui(20);
 				}
 				
-				draw_set_text(f_p3, fa_left, fa_bottom, cc);
+				draw_set_text(f_p3, fa_left, fa_bottom, foc? COLORS.panel_tab_text : COLORS._main_text_sub);
 				draw_text_add(_tbx + ui(8), tab_height - ui(4), txt);
 				
 				tbx += tbw + ui(2);
@@ -560,12 +559,11 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 				
 				draw_sprite_stretched_ext(THEME.ui_panel_tab, 2, _tbx, tby, tbw, tbh, COLORS._main_accent, 1);
 				
-				var cc = COLORS.panel_bg_clear_inner;
 				if(icn != noone) {
-					draw_sprite_ui(icn, 0, _tbx + ui(8 + 8), tab_height / 2 + ui(1),,,, cc);
+					draw_sprite_ui(icn, 0, _tbx + ui(8 + 8), tab_height / 2 + ui(1),,,, COLORS.panel_tab_icon);
 					_tbx += ui(20);
 				}
-				draw_set_text(f_p3, fa_left, fa_bottom, COLORS.panel_bg_clear_inner);
+				draw_set_text(f_p3, fa_left, fa_bottom, COLORS.panel_tab_text);
 				draw_text_add(_tbx + ui(8), tab_height - ui(4), txt);
 				
 				if(tab_hold_state == 0) {
@@ -640,7 +638,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 		draw_surface_safe(content_surface, tx, ty);
 		draw_sprite_stretched(THEME.ui_panel_fg, 0, tx + padding, ty + padding, _tw, _th);
 		draw_sprite_bbox(THEME.ui_panel_tab, 3, tab_cover);
-			
+		
 		if(FOCUS == self && parent != noone) {
 			draw_sprite_stretched_ext(THEME.ui_panel_active, 0, tx + padding, ty + padding, tw - padding * 2, th - padding * 2, COLORS._main_accent, 1);	
 			
