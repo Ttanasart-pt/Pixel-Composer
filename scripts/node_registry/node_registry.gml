@@ -262,7 +262,9 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 			addNodeObject(transform, "Padding",			s_node_padding,			"Node_Padding",			[1, Node_Padding],, "Make image bigger by adding space in 4 directions.");
 		
 			ds_list_add(transform, "Armature");
-			addNodeObject(transform, "Armature Create",	s_node_compose,			"Node_Armature",		[1, Node_Armature], ["rigging", "bone"], "");
+			addNodeObject(transform, "Armature Create",	s_node_armature_create,	"Node_Armature",		[1, Node_Armature], ["rigging", "bone"]).setVersion(1145);
+			addNodeObject(transform, "Armature Pose",	s_node_armature_pose,	"Node_Armature_Pose",	[1, Node_Armature_Pose], ["rigging", "bone"]).setVersion(1145);
+			addNodeObject(transform, "Armature Bind",	s_node_armature_bind,	"Node_Armature_Bind",	[1, Node_Armature_Bind], ["rigging", "bone"]).setVersion(1145);
 			
 		var filter = ds_list_create();
 		addNodeCatagory("Filter", filter);
@@ -417,6 +419,11 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 			addNodeObject(compose, "Render Spritesheet",	s_node_sprite_sheet,	"Node_Render_Sprite_Sheet",	[1, Node_Render_Sprite_Sheet],, "Create spritesheet from image array or animation.");
 			addNodeObject(compose, "Pack Sprites",			s_node_pack_sprite,		"Node_Pack_Sprites",		[1, Node_Pack_Sprites],, "Combine array of images with different dimension using different algorithms.").setVersion(1140);
 			
+			ds_list_add(compose, "Armature");
+			addNodeObject(compose, "Armature Create",	s_node_armature_create,	"Node_Armature",		[1, Node_Armature], ["rigging", "bone"]).setVersion(1145);
+			addNodeObject(compose, "Armature Pose",		s_node_armature_pose,	"Node_Armature_Pose",	[1, Node_Armature_Pose], ["rigging", "bone"]).setVersion(1145);
+			addNodeObject(compose, "Armature Bind",		s_node_armature_bind,	"Node_Armature_Bind",	[1, Node_Armature_Bind], ["rigging", "bone"]).setVersion(1145);
+			
 			if(!DEMO) {
 				ds_list_add(compose, "Export");
 				addNodeObject(compose, "Export",	s_node_export,		"Node_Export",			[0, Node_create_Export]);
@@ -433,6 +440,7 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 		
 			ds_list_add(values, "Numbers");
 			addNodeObject(values, "Number",			s_node_number,			"Node_Number",			[1, Node_Number]);
+			addNodeObject(values, "To Number",		s_node_to_number,		"Node_To_Number",		[1, Node_To_Number]).setVersion(1145);
 			addNodeObject(values, "Math",			s_node_math,			"Node_Math",			[0, Node_create_Math], [ "add", "subtract", "multiply", "divide", "power", "modulo", "round", "ceiling", "floor", "sin", "cos", "tan", "abs" ]);
 			addNodeObject(values, "Equation",		s_node_equation,		"Node_Equation",		[0, Node_create_Equation],, "Evaluate string of equation. With an option for setting variables.");
 			addNodeObject(values, "Random",			s_node_random,			"Node_Random",			[1, Node_Random]);
@@ -450,17 +458,19 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 			addNodeObject(values, "FFT",			s_node_FFT,				"Node_FFT",				[1, Node_FFT], ["frequency analysis"], "Perform fourier transform on number array.").setVersion(1144);
 			
 			ds_list_add(values, "Texts");
-			addNodeObject(values, "Text",			s_node_text,			"Node_String",					[1, Node_String]);
-			addNodeObject(values, "Unicode",		s_node_unicode,			"Node_Unicode",					[1, Node_Unicode]);
-			addNodeObject(values, "Text Length",	s_node_text_length,		"Node_String_Length",			[1, Node_String_Length]).setVersion(1138);
-			addNodeObject(values, "Combine Text",	s_node_text_combine,	"Node_String_Merge",			[1, Node_String_Merge]);
-			addNodeObject(values, "Join Text",		s_node_text_join,		"Node_String_Join",				[1, Node_String_Join]).setVersion(1120);
-			addNodeObject(values, "Split Text",		s_node_text_splice,		"Node_String_Split",			[1, Node_String_Split]);
-			addNodeObject(values, "Trim Text",		s_node_text_trim,		"Node_String_Trim",				[1, Node_String_Trim]).setVersion(1080);
-			addNodeObject(values, "Get Character",	s_node_text_char_get,	"Node_String_Get_Char",			[1, Node_String_Get_Char]).setVersion(1100);
-			addNodeObject(values, "RegEx Match",	s_node_regex_match,		"Node_String_Regex_Match",		[1, Node_String_Regex_Match]).setVersion(1140);
-			addNodeObject(values, "RegEx Search",	s_node_regex_search,	"Node_String_Regex_Search",		[1, Node_String_Regex_Search]).setVersion(1140);
-			addNodeObject(values, "RegEx Replace",	s_node_regex_replace,	"Node_String_Regex_Replace",	[1, Node_String_Regex_Replace]).setVersion(1140);
+			addNodeObject(values, "Text",				s_node_text,				"Node_String",					[1, Node_String]);
+			addNodeObject(values, "To Text",			s_node_to_text,				"Node_To_Text",					[1, Node_To_Text]).setVersion(1145);
+			addNodeObject(values, "Unicode",			s_node_unicode,				"Node_Unicode",					[1, Node_Unicode]);
+			addNodeObject(values, "Text Length",		s_node_text_length,			"Node_String_Length",			[1, Node_String_Length]).setVersion(1138);
+			addNodeObject(values, "Combine Text",		s_node_text_combine,		"Node_String_Merge",			[1, Node_String_Merge]);
+			addNodeObject(values, "Join Text",			s_node_text_join,			"Node_String_Join",				[1, Node_String_Join]).setVersion(1120);
+			addNodeObject(values, "Split Text",			s_node_text_splice,			"Node_String_Split",			[1, Node_String_Split]);
+			addNodeObject(values, "Trim Text",			s_node_text_trim,			"Node_String_Trim",				[1, Node_String_Trim]).setVersion(1080);
+			addNodeObject(values, "Get Character",		s_node_text_char_get,		"Node_String_Get_Char",			[1, Node_String_Get_Char]).setVersion(1100);
+			addNodeObject(values, "RegEx Match",		s_node_regex_match,			"Node_String_Regex_Match",		[1, Node_String_Regex_Match]).setVersion(1140);
+			addNodeObject(values, "RegEx Search",		s_node_regex_search,		"Node_String_Regex_Search",		[1, Node_String_Regex_Search]).setVersion(1140);
+			addNodeObject(values, "RegEx Replace",		s_node_regex_replace,		"Node_String_Regex_Replace",	[1, Node_String_Regex_Replace]).setVersion(1140);
+			addNodeObject(values, "Separate File Path",	s_node_separate_file_path,	"Node_Path_Separate_Folder",	[1, Node_Path_Separate_Folder]).setVersion(1145);
 			
 			ds_list_add(values, "Arrays");
 			addNodeObject(values, "Array",			s_node_array,			"Node_Array",			[1, Node_Array]);
@@ -481,6 +491,7 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 			addNodeObject(values, "Loop Array",		s_node_loop_array,		"Node_Iterate_Each",	[1, Node_Iterate_Each], ["iterate each", "for each", "array loop"], "Create group that iterate to each member in an array.");
 			addNodeObject(values, "Filter Array",	s_node_filter_array,	"Node_Iterate_Filter",	[1, Node_Iterate_Filter],, "Filter array using condition.").setVersion(1140);
 			addNodeObject(values, "Sort Array",		s_node_sort_array,		"Node_Iterate_Sort",	[1, Node_Iterate_Sort],, "Sort array using node graph.").setVersion(1143);
+			addNodeObject(values, "Parse CSV",		s_node_csv_parse,		"Node_Array_CSV_Parse",	[1, Node_Array_CSV_Parse]).setVersion(1145);
 			
 			ds_list_add(values, "Paths");
 			addNodeObject(values, "Path",			s_node_path,			"Node_Path",			[1, Node_Path]);
@@ -508,8 +519,9 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 			addNodeObject(values, "Boolean Trigger",	s_node_trigger_bool,	"Node_Trigger_Bool",	[1, Node_Trigger_Bool], ["trigger boolean"]).setVersion(1140);
 			
 			ds_list_add(values, "Struct");
-			addNodeObject(values, "Struct",			s_node_struct,		"Node_Struct",		[1, Node_Struct]);
-			addNodeObject(values, "Struct Get",		s_node_struct_get,	"Node_Struct_Get",	[1, Node_Struct_Get]);
+			addNodeObject(values, "Struct",			s_node_struct,		"Node_Struct",				[1, Node_Struct]);
+			addNodeObject(values, "Struct Get",		s_node_struct_get,	"Node_Struct_Get",			[1, Node_Struct_Get]);
+			addNodeObject(values, "Parse JSON",		s_node_json_parse,	"Node_Struct_JSON_Parse",	[1, Node_Struct_JSON_Parse]).setVersion(1145);
 			
 			ds_list_add(values, "Mesh");
 			addNodeObject(values, "Path to Mesh",	s_node_mesh_path,		"Node_Mesh_Create_Path",	[1, Node_Mesh_Create_Path],, "Create mesh from path.").setVersion(1140);

@@ -34,7 +34,7 @@
 #endregion
 
 function functionStringClean(fx) {
-	fx = string_replace_all(fx,  " ", "");
+	//fx = string_replace_all(fx,  " ", "");
 	fx = string_replace_all(fx, "\n", "");
 	fx = string_replace_all(fx, "**", "$");
 	fx = string_replace_all(fx, "<<", "«");
@@ -52,7 +52,155 @@ function functionStringClean(fx) {
 }
 
 #region evaluator
-	function evaluateFunction(fx, params = {}) {
+	enum EXPRESS_TREE_ANIM {
+		none,
+		base_value,
+		animated
+	}
+	
+	function __funcTree(symbol, l = noone, r = noone) constructor {
+		self.symbol = symbol;
+		self.l = l;
+		self.r = r;
+		isFunc = false;
+		
+		static _string = function(str) {
+			return string_char_at(str, 1) == "\"" && 
+				string_char_at(str, string_length(str)) == "\"";
+		}
+		
+		static _string_trim = function(str) {
+			return _string(str)? string_copy(str, 2, string_length(str) - 2) : string(str);
+		}
+		
+		static getVal = function(val, params = {}, getStr = false) {
+			if(is_struct(val)) return val.eval();
+			if(is_real(val))   return val;
+			
+			if(struct_has(params, val))
+				return struct_try_get(params, val);
+			
+			if(getStr)
+				return val;
+			
+			if(_string(string_trim(val)))
+				return string_trim(val);
+			
+			return nodeGetData(val);
+		}
+		
+		static _validate = function(val) {
+			if(is_real(val))   return true;
+			if(is_string(val)) return true;
+			if(is_struct(val)) return val.validate();
+
+			if(val == "value") return true;
+			if(GLOBAL.inputExist(val)) return true;
+			
+			var strs = string_splice(val, ".");
+			if(array_length(strs) < 2) return false;
+			
+			if(strs[0] == "Project") {
+				switch(strs[1]) {
+					case "frame" :		
+					case "frameTotal" : 
+					case "fps" :		
+						return true;
+				}
+				return false;
+			}
+			
+			var key = strs[0];
+			return ds_map_exists(NODE_NAME_MAP, key);
+		}
+		
+		static validate = function() {
+			switch(symbol) {
+				case "@": return _validate(l);
+			}
+			
+			return _validate(l) && _validate(r);
+		}
+		
+		static _isAnimated = function(val) {
+			if(is_real(val))   return EXPRESS_TREE_ANIM.none;
+			if(is_struct(val)) return val._isAnimated();
+			
+			if(val == "value") return EXPRESS_TREE_ANIM.base_value;
+			if(GLOBAL.inputExist(val)) {
+				var _inp = GLOBAL.getInput(val);
+				if(_inp.is_anim) return EXPRESS_TREE_ANIM.animated;
+			}
+			
+			return EXPRESS_TREE_ANIM.none;
+		}
+		
+		static isAnimated = function() {
+			var anim = EXPRESS_TREE_ANIM.none;
+			anim = max(anim, _isAnimated(l));
+			if(symbol != "@")
+				anim = max(anim, _isAnimated(r));
+			
+			return anim;
+		}
+		
+		static eval = function(params = {}) {
+			var v1 = getVal(l, params);
+			var v2 = getVal(r, params, symbol == "@");
+			
+			//print($"|{v1}|{symbol}|{v2}|");
+			//print($"symbol : {symbol}");
+			//print($"l      : {l}");
+			//print($"r      : {r}");
+			//print("====================");
+			
+			switch(symbol) {
+				case "+": 
+					if(_string(v1) || _string(v2))
+						return _string_trim(v1) + _string_trim(v2);
+					if(is_real(v1) && is_real(v2))
+						return v1 + v2;
+					return 0;
+				case "-": return (is_real(v1) && is_real(v2))? v1 - v2		 : 0;
+				case "_": return is_real(v1)? -v1 : 0;
+				case "*": return (is_real(v1) && is_real(v2))? v1 * v2		 : 0;
+				case "$": return (is_real(v1) && is_real(v2))? power(v1, v2) : 0;
+				case "/": return (is_real(v1) && is_real(v2))? v1 / v2       : 0;
+				
+				case "&": return (is_real(v1) && is_real(v2))? v1 & v2       : 0;
+				case "|": return (is_real(v1) && is_real(v2))? v1 | v2       : 0;
+				case "^": return (is_real(v1) && is_real(v2))? v1 ^ v2       : 0;
+				case "«": return (is_real(v1) && is_real(v2))? v1 << v2      : 0;
+				case "»": return (is_real(v1) && is_real(v2))? v1 >> v2      : 0;
+				case "~": return  is_real(v1)? ~v1 : 0;
+				
+				case "=": return (is_real(v1) && is_real(v2))? v1 == v2      : 0;
+				case "≠": return (is_real(v1) && is_real(v2))? v1 != v2      : 0;
+				case "≤": return (is_real(v1) && is_real(v2))? v1 <= v2      : 0;
+				case "≥": return (is_real(v1) && is_real(v2))? v1 >= v2      : 0;
+				case ">": return (is_real(v1) && is_real(v2))? v1 > v2       : 0;
+				case "<": return (is_real(v1) && is_real(v2))? v1 < v2       : 0;
+				
+				case "@": 
+					var val = is_real(v2)? array_safe_get(v1, v2) : 0;
+					return val;
+				
+				case "sin"   : return is_real(v1)? sin(v1)    : 0;
+				case "cos"   : return is_real(v1)? cos(v1)    : 0;
+				case "tan"   : return is_real(v1)? tan(v1)    : 0;
+				case "abs"	 : return is_real(v1)? abs(v1)    : 0;
+				case "round" : return is_real(v1)? round(v1)  : 0;
+				case "ceil"	 : return is_real(v1)? ceil(v1)   : 0;
+				case "floor" : return is_real(v1)? floor(v1)  : 0;
+			}
+			
+			return v1;
+		}
+	}
+
+	function evaluateFunctionTree(fx) {
+		static __BRACKETS = [ "(", ")", "[", "]" ];
+		
 		var pres = global.EQUATION_PRES;
 		var vl   = ds_stack_create();
 		var op   = ds_stack_create();
@@ -61,12 +209,19 @@ function functionStringClean(fx) {
 		
 		var len = string_length(fx);
 		var l   = 1;
-		var ch, cch, _ch;
+		var ch  = "";
+		var cch = "";
+		var _ch = "";
+		var in_str = false;
 		
 		while(l <= len) {
 			ch = string_char_at(fx, l);
+			if(ch == " ") {
+				l++;
+				continue;
+			}
 			
-			if(ds_map_exists(pres, ch)) {
+			if(ds_map_exists(pres, ch)) { //symbol is operator
 				if(ds_stack_empty(op)) ds_stack_push(op, ch);
 				else {
 					if(pres[? ch] > pres[? ds_stack_top(op)] || ds_stack_top(op) == "(") ds_stack_push(op, ch);
@@ -74,7 +229,7 @@ function functionStringClean(fx) {
 						if(ch == "-" && ds_map_exists(pres, _ch)) ch = "_"; //unary negative
 						
 						while(pres[? ch] <= pres[? ds_stack_top(op)] && !ds_stack_empty(op))
-							ds_stack_push(vl, evalToken(ds_stack_pop(op), vl));
+							ds_stack_push(vl, buildFuncTree(ds_stack_pop(op), vl));
 						ds_stack_push(op, ch);
 					}
 				}
@@ -84,8 +239,29 @@ function functionStringClean(fx) {
 				ds_stack_push(op, ch);
 				l++;
 			} else if (ch == ")") {
-				while(ds_stack_top(op) != "(" && !ds_stack_empty(op))
-					ds_stack_push(vl, evalToken(ds_stack_pop(op), vl));
+				while(ds_stack_top(op) != "(" && !ds_stack_empty(op)) {
+					ds_stack_push(vl, buildFuncTree(ds_stack_pop(op), vl));
+				}
+				ds_stack_pop(op);
+				l++;
+			//} else if (ch == "\"") {
+			//	l++;
+			//	var str = "";
+			//	while(l <= len) {
+			//		cch = string_char_at(fx, l);
+			//		if(cch == "\"") break;
+					
+			//		str += cch;
+			//		l++;
+			//	}
+			//	ds_stack_push(vl, str);
+			} else if (ch == "[") {
+				ds_stack_push(op, ch);
+				l++;
+			} else if (ch == "]") {
+				while(ds_stack_top(op) != "[" && !ds_stack_empty(op))
+					ds_stack_push(vl, buildFuncTree(ds_stack_pop(op), vl));
+				
 				ds_stack_pop(op);
 				l++;
 			} else {
@@ -93,7 +269,7 @@ function functionStringClean(fx) {
 				
 				while(l <= len) {
 					cch = string_char_at(fx, l);
-					if(ds_map_exists(pres, cch) || cch == ")" || cch == "(") break;
+					if(ds_map_exists(pres, cch) || array_exists(__BRACKETS, cch)) break;
 					
 					vsl += cch;
 					l++;
@@ -105,15 +281,9 @@ function functionStringClean(fx) {
 					ds_stack_push(op, vsl);
 				} else {
 					switch(vsl) {
-						case "e":  ds_stack_push(vl, 2.71828); break;
-						case "pi": ds_stack_push(vl, pi); break;
-						
-						default :  
-							if(variable_struct_exists(params, vsl)) 
-								ds_stack_push(vl, variable_struct_get(params, vsl));
-							else 
-								ds_stack_push(vl, toNumber(vsl));
-						break;
+						case "e" : ds_stack_push(vl, 2.71828);	break;
+						case "pi": ds_stack_push(vl, pi);		break;
+						default  : ds_stack_push(vl, isNumber(vsl)? toNumber(vsl) : vsl); break;
 					}
 				}
 			}
@@ -121,82 +291,63 @@ function functionStringClean(fx) {
 			_ch = ch;
 		}
 		
-		while(!ds_stack_empty(op)) {
-			ds_stack_push(vl, evalToken(ds_stack_pop(op), vl));
-		}
+		while(!ds_stack_empty(op)) 
+			ds_stack_push(vl, buildFuncTree(ds_stack_pop(op), vl));
 		ds_stack_destroy(op);
 		
-		return ds_stack_empty(vl)? 0 : ds_stack_pop(vl);
+		var tree = ds_stack_empty(vl)? noone : ds_stack_pop(vl)
+		ds_stack_destroy(vl);
+		
+		if(is_string(tree))
+			tree = new __funcTree("", tree);
+		
+		return tree;
 	}
 	
-	function evalToken(operator, vl) {
-		if(ds_stack_empty(vl)) return 0;
+	function buildFuncTree(operator, vl) {
+		if(ds_stack_empty(vl)) return noone;
 		
-		var v1 = 0, v2 = 0;
-			
-		switch(operator) { //binary
-			case "+": 
+		switch(operator) {
+			case "-": //deal with preceeding megative number -5
+				if(ds_stack_size(vl) >= 2) {
+					var _v1 = ds_stack_pop(vl);
+					var _v2 = ds_stack_pop(vl);
+					return new __funcTree("-", _v2, _v1);	
+				} else
+					return new __funcTree("-", ds_stack_pop(vl), 0);	
+				
+			case "+": //binary operators
 			case "*": 
 			case "$": 
 			case "/": 
-			case "&": 
+			case "@": 
+			
 			case "|": 
+			case "&": 
 			case "^": 
 			case "»": 
 			case "«": 
+			
 			case "=": 
 			case "≠": 
-			case "<": 
-			case ">": 
 			case "≤": 
 			case "≥": 
-				if(ds_stack_size(vl) < 2) return 0;
-				
-				v1 = ds_stack_pop(vl);
-				v2 = ds_stack_pop(vl);
-				
-				//print($"{v2} {operator} {v1}");
-				//print($"symbol : {operator}");
-				//print("====================");
+			case "<": 
+			case ">": 
+			
+				if(ds_stack_size(vl) >= 2) {
+					var _v1 = ds_stack_pop(vl);
+					var _v2 = ds_stack_pop(vl);
+					return new __funcTree(operator, _v2, _v1);	
+				}
+			
+			default: return new __funcTree(operator, ds_stack_pop(vl));
 		}
 		
-		switch(operator) {
-			case "+": return v2 + v1;
-			case "-": 
-				if(ds_stack_size(vl) >= 2)
-					return -ds_stack_pop(vl) + ds_stack_pop(vl);
-				return -ds_stack_pop(vl);
-			case "_": return -ds_stack_pop(vl); 
-			case "*": return v2 * v1;
-			case "$": return power(v2, v1);
-			case "/": return v1 == 0? 0 : v2 / v1;
-				
-			case "&": return v2 & v1;
-			case "|": return v2 | v1;
-			case "^": return v2 ^ v1;
-			case "»": return v2 >> v1;
-			case "«": return v2 << v1;
-			case "~": 
-				if(ds_stack_size(vl) >= 1) 
-					return ~ds_stack_pop(vl);
-				return 0;
-			
-			case "=": return v2 == v1;
-			case "≠": return v2 != v1;
-			case "<": return v2 <  v1;
-			case ">": return v2 >  v1;
-			case "≤": return v2 <= v1;
-			case "≥": return v2 >= v1;
-			
-			case "sin"   : if(ds_stack_size(vl) >= 1) return sin(ds_stack_pop(vl));
-			case "cos"   : if(ds_stack_size(vl) >= 1) return cos(ds_stack_pop(vl));
-			case "tan"   : if(ds_stack_size(vl) >= 1) return tan(ds_stack_pop(vl));
-			case "abs"	 : if(ds_stack_size(vl) >= 1) return abs(ds_stack_pop(vl));
-			case "round" : if(ds_stack_size(vl) >= 1) return round(ds_stack_pop(vl));
-			case "ceil"	 : if(ds_stack_size(vl) >= 1) return ceil(ds_stack_pop(vl));
-			case "floor" : if(ds_stack_size(vl) >= 1) return floor(ds_stack_pop(vl));
-		}
-		
-		return 0;
+		return noone;
+	}
+	
+	function evaluateFunction(fx, params = {}) {
+		return evaluateFunctionTree(fx).eval(params);
 	}
 #endregion

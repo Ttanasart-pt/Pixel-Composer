@@ -15,7 +15,7 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 		return bone;
 	}
 	
-	outputs[| 0] = nodeValue("Armature", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
+	outputs[| 0] = nodeValue("Armature", self, JUNCTION_CONNECT.output, VALUE_TYPE.armature, noone);
 	
 	attributes.bones = new __Bone();
 	attributes.bones.is_main = true;
@@ -184,11 +184,13 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 		outputs[| 0].setValue(attributes.bones);
 	}
 	
+	static doSerialize = function(_map) {
+		_map.bone = attributes.bones.serialize();
+	}
+	
 	static postDeserialize = function() {
-		var _inputs = load_map.inputs;
-		
-		for(var i = input_fix_len; i < array_length(_inputs); i += data_length)
-			createBone();
+		if(!struct_has(load_map, "bone")) return;
+		attributes.bones.deserialize(load_map.bone);
 	}
 }
 

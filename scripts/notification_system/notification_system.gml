@@ -41,6 +41,7 @@
 	
 	function noti_status(str, icon = noone, flash = false, ref = noone) {
 		if(TEST_ERROR) return;
+		str = string(str);
 		show_debug_message("STATUS: " + str);
 		
 		if(flash && PANEL_MENU) {

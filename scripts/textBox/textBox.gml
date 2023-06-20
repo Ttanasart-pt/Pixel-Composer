@@ -74,6 +74,28 @@ function textBox(_input, _onModify, _extras = noone) : textInput(_input, _onModi
 		UNDO_HOLDING = false;
 	}
 	
+	static onKey = function(key) {
+		if(KEYBOARD_PRESSED == vk_left) {
+			if(key_mod_press(SHIFT)) {
+				if(cursor_select == -1)
+					cursor_select = cursor;
+			} else if(cursor_select != -1)
+				cursor_select = -1;
+			else 
+				move_cursor(-1);
+		}
+				
+		if(KEYBOARD_PRESSED == vk_right) {
+			if(key_mod_press(SHIFT)) {
+				if(cursor_select == -1)
+					cursor_select = cursor;
+			} else if(cursor_select != -1)
+				cursor_select = -1;
+			else 
+				move_cursor(1);
+		}
+	}
+	
 	static apply = function() {
 		var _input_text_current = _input_text;
 		disp_x_to = 0;
@@ -392,28 +414,6 @@ function textBox(_input, _onModify, _extras = noone) : textInput(_input, _onModi
 				draw_sprite_stretched(THEME.textbox, sprite_index, _x, _y, _w, _h);
 			editText();
 			
-			#region cursor position
-				if(KEYBOARD_PRESSED == vk_left) {
-					if(key_mod_press(SHIFT)) {
-						if(cursor_select == -1)
-							cursor_select = cursor;
-					} else if(cursor_select != -1)
-						cursor_select = -1;
-					else 
-						move_cursor(-1);
-				}
-				
-				if(KEYBOARD_PRESSED == vk_right) {
-					if(key_mod_press(SHIFT)) {
-						if(cursor_select == -1)
-							cursor_select = cursor;
-					} else if(cursor_select != -1)
-						cursor_select	= -1;
-					else 
-						move_cursor(1);
-				}
-			#endregion
-			
 			#region multiplier
 				if(_w > ui(80) && input == TEXTBOX_INPUT.number) {
 					draw_set_text(f_p0b, fa_left, fa_center, COLORS._main_text_sub);
@@ -471,7 +471,7 @@ function textBox(_input, _onModify, _extras = noone) : textInput(_input, _onModi
 				if(cursor_pos_to > _x + _w - ui(16))  
 					disp_x_to -= _w - ui(16);
 				
-				cursor_pos		= cursor_pos == 0? cursor_pos_to : lerp_float(cursor_pos, cursor_pos_to, 4);
+				cursor_pos		= cursor_pos == 0? cursor_pos_to : lerp_float(cursor_pos, cursor_pos_to, 2);
 				
 				if(cursor_select > -1) { //draw highlight
 					draw_set_color(COLORS.widget_text_highlight);

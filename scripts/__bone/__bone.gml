@@ -1,4 +1,5 @@
 function __Bone(parent = noone, distance = 0, direction = 0, angle = 0, length = 0) constructor {
+	self.name = "New bone";
 	self.distance	= distance;
 	self.direction	= direction;
 	self.angle		= angle;
@@ -85,5 +86,43 @@ function __Bone(parent = noone, distance = 0, direction = 0, angle = 0, length =
 		}
 		
 		return hover;
+	}
+	
+	static serialize = function() {
+		var bone = {};
+		
+		bone.name		= name;
+		bone.distance	= distance;
+		bone.direction	= direction;
+		bone.angle		= angle;
+		bone.length		= length;
+	
+		bone.is_main		= is_main;
+		bone.parent_anchor	= parent_anchor;
+		
+		bone.childs = [];
+		for( var i = 0; i < array_length(childs); i++ )
+			bone.childs[i] = childs[i].serialize();
+			
+		return bone;
+	}
+	
+	static deserialize = function(bone) {
+		name		= bone.name;
+		distance	= bone.distance;
+		direction	= bone.direction;
+		angle		= bone.angle;
+		length		= bone.length;
+	
+		is_main			= bone.is_main;
+		parent_anchor	= bone.parent_anchor;
+		
+		childs = [];
+		for( var i = 0; i < array_length(bone.childs); i++ ) {
+			var _b = new __Bone().deserialize(bone.childs[i]);
+			addChild(_b);
+		}
+		
+		return self;
 	}
 }

@@ -416,6 +416,11 @@ event_inherited();
 				}
 			}
 			
+			gpu_set_blendmode(bm_subtract);
+			draw_set_color(c_white);
+			draw_rectangle(0, 0, content_pane.surface_w, ui(16 + 24 / 2), false);
+			gpu_set_blendmode(bm_normal);
+			
 			var len = array_length(group_labels);
 			for( var i = 0; i < len; i++ ) {
 				var lb = group_labels[i];
@@ -506,6 +511,11 @@ event_inherited();
 				yy += list_height;
 				hh += list_height;
 			}
+			
+			gpu_set_blendmode(bm_subtract);
+			draw_set_color(c_white);
+			draw_rectangle(0, 0, content_pane.surface_w, ui(16 + 24 / 2), false);
+			gpu_set_blendmode(bm_normal);
 			
 			var len = array_length(group_labels);
 			for( var i = 0; i < len; i++ ) {

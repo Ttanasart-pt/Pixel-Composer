@@ -23,7 +23,7 @@ function textArea(_input, _onModify, _extras = noone) : textInput(_input, _onMod
 	min_lines = 0;
 	
 	cursor			= 0;
-	
+	cursor_tx		= 0;
 	cursor_pos_x	= 0;
 	cursor_pos_x_to	= 0;
 	cursor_pos_y	= 0;
@@ -61,6 +61,108 @@ function textArea(_input, _onModify, _extras = noone) : textInput(_input, _onMod
 		apply();
 		WIDGET_CURRENT = noone;
 		UNDO_HOLDING = false;
+	}
+	
+	static onKey = function(key) {
+		if(key == vk_left) {
+			if(key_mod_press(SHIFT)) {
+				if(cursor_select == -1)
+					cursor_select = cursor;
+			} else 
+				cursor_select	= -1;
+						
+			move_cursor(-1);
+			if(key_mod_press(CTRL)) {
+				while(cursor > 0) {
+					var ch = string_char_at(_input_text, cursor);
+					if(ch == " " || ch == "\n") break;
+					cursor--;
+				}
+			} 
+		}
+		if(key == vk_right) {
+			if(key_mod_press(SHIFT)) {
+				if(cursor_select == -1)
+					cursor_select = cursor;
+			} else 
+				cursor_select	= -1;
+					
+			move_cursor(1);
+			if(key_mod_press(CTRL)) {
+				while(cursor < string_length(_input_text)) {
+					var ch = string_char_at(_input_text, cursor);
+					if(ch == " " || ch == "\n") break;
+					cursor++;
+				}
+			} 
+		}
+				
+		if(key == vk_up) {
+			var _target;
+					
+			if(cursor_line == 0) 
+				_target = 0;
+			else {
+				var _l = cursor_line - 1;
+				var _str = _input_text_line[_l];
+				var _run = cursor_tx;
+				var _char = 0;
+						
+				for( var i = 0; i < _l; i++ )
+					_char += string_length(_input_text_line[i]);
+						
+				for( var i = 1; i < string_length(_str); i++ ) {
+					var _chr = string_char_at(_str, i);
+					_run += string_width(_chr);
+					if(_run > cursor_pos_x_to)
+						break;
+					_char++;
+				}
+						
+				_target = _char;
+			}
+					
+			if(key_mod_press(SHIFT)) {
+				if(cursor_select == -1)
+					cursor_select = cursor;
+			} else 
+				cursor_select	= -1;
+					
+			cursor = _target;
+		}
+				
+		if(key == vk_down) {
+			var _target;
+					
+			if(cursor_line == array_length(_input_text_line) - 1) 
+				_target = string_length(_input_text);
+			else {
+				var _l = cursor_line + 1;
+				var _str = _input_text_line[_l];
+				var _run = cursor_tx;
+				var _char = 0;
+						
+				for( var i = 0; i < _l; i++ )
+					_char += string_length(_input_text_line[i]);
+						
+				for( var i = 1; i < string_length(_str); i++ ) {
+					var _chr = string_char_at(_str, i);
+					_run += string_width(_chr);
+					if(_run > cursor_pos_x_to) break;
+					_char++;
+				}
+						
+				_target = _char;
+			}
+					
+			if(key_mod_press(SHIFT)) {
+				if(cursor_select == -1)
+					cursor_select = cursor;
+			} else 
+				cursor_select	= -1;
+					
+			cursor = _target;
+		}
 	}
 	
 	static apply = function() {
@@ -387,6 +489,8 @@ function textArea(_input, _onModify, _extras = noone) : textInput(_input, _onMod
 			tx += ui(code_line_width);
 		}
 		
+		cursor_tx = tx;
+		
 		draw_set_font(font);
 		var c_h = line_get_height();
 		var line_count = max(min_lines, array_length(_input_text_line));
@@ -412,110 +516,6 @@ function textArea(_input, _onModify, _extras = noone) : textInput(_input, _onMod
 			draw_set_text(font, fa_left, fa_top, COLORS._main_text);
 			draw_sprite_stretched_ext(THEME.textbox, 2, _x, _y, _w, hh, COLORS._main_accent, 1);
 			editText();
-			
-			#region cursor
-				if(KEYBOARD_PRESSED == vk_left) {
-					if(key_mod_press(SHIFT)) {
-						if(cursor_select == -1)
-							cursor_select = cursor;
-					} else 
-						cursor_select	= -1;
-						
-					move_cursor(-1);
-					if(key_mod_press(CTRL)) {
-						while(cursor > 0) {
-							var ch = string_char_at(_input_text, cursor);
-							if(ch == " " || ch == "\n") break;
-							cursor--;
-						}
-					} 
-				}
-				if(KEYBOARD_PRESSED == vk_right) {
-					if(key_mod_press(SHIFT)) {
-						if(cursor_select == -1)
-							cursor_select = cursor;
-					} else 
-						cursor_select	= -1;
-					
-					move_cursor(1);
-					if(key_mod_press(CTRL)) {
-						while(cursor < string_length(_input_text)) {
-							var ch = string_char_at(_input_text, cursor);
-							if(ch == " " || ch == "\n") break;
-							cursor++;
-						}
-					} 
-				}
-				
-				if(KEYBOARD_PRESSED == vk_up) {
-					var _target;
-					
-					if(cursor_line == 0) 
-						_target = 0;
-					else {
-						var _l = cursor_line - 1;
-						var _str = _input_text_line[_l];
-						var _run = tx;
-						var _char = 0;
-						
-						for( var i = 0; i < _l; i++ ) {
-							_char += string_length(_input_text_line[i]);
-						}
-						
-						for( var i = 1; i <= string_length(_str); i++ ) {
-							var _chr = string_char_at(_str, i);
-							_run += string_width(_chr);
-							if(_run > cursor_pos_x_to)
-								break;
-							_char++;
-						}
-						
-						_target = _char;
-					}
-					
-					if(key_mod_press(SHIFT)) {
-						if(cursor_select == -1)
-							cursor_select = cursor;
-					} else 
-						cursor_select	= -1;
-					
-					cursor = _target;
-				}
-				
-				if(KEYBOARD_PRESSED == vk_down) {
-					var _target;
-					
-					if(cursor_line == array_length(_input_text_line) - 1) 
-						_target = string_length(_input_text);
-					else {
-						var _l = cursor_line + 1;
-						var _str = _input_text_line[_l];
-						var _run = tx;
-						var _char = 0;
-						
-						for( var i = 0; i < _l; i++ ) {
-							_char += string_length(_input_text_line[i]);
-						}
-						
-						for( var i = 1; i <= string_length(_str); i++ ) {
-							var _chr = string_char_at(_str, i);
-							_run += string_width(_chr);
-							if(_run > cursor_pos_x_to) break;
-							_char++;
-						}
-						
-						_target = _char;
-					}
-					
-					if(key_mod_press(SHIFT)) {
-						if(cursor_select == -1)
-							cursor_select = cursor;
-					} else 
-						cursor_select	= -1;
-					
-					cursor = _target;
-				}
-			#endregion
 			
 			#region draw
 				draw_set_text(font, fa_left, fa_top, COLORS._main_text);
@@ -569,8 +569,8 @@ function textArea(_input, _onModify, _extras = noone) : textInput(_input, _onMod
 						ch_y += line_get_height();
 					}
 					
-					cursor_pos_x = cursor_pos_x == 0? cursor_pos_x_to : lerp_float(cursor_pos_x, cursor_pos_x_to, 4);
-					cursor_pos_y = cursor_pos_y == 0? cursor_pos_y_to : lerp_float(cursor_pos_y, cursor_pos_y_to, 4);
+					cursor_pos_x = cursor_pos_x == 0? cursor_pos_x_to : lerp_float(cursor_pos_x, cursor_pos_x_to, 2);
+					cursor_pos_y = cursor_pos_y == 0? cursor_pos_y_to : lerp_float(cursor_pos_y, cursor_pos_y_to, 2);
 				#endregion
 				
 				var _mx = -1;

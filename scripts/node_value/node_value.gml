@@ -31,6 +31,7 @@ enum VALUE_TYPE {
 	
 	d3vertex  = 21,
 	gradient  = 22,
+	armature  = 23,
 	
 	action	  = 99,
 }
@@ -108,6 +109,7 @@ function value_color(i) {
 		$976bff, //atlas
 		#c1007c, //d3vertex
 		$5dde8f, //gradient
+		$5dde8f, //armature //////////////////////
 	];
 	
 	if(i == 99) return $5dde8f;
@@ -136,6 +138,7 @@ function value_bit(i) {
 		case VALUE_TYPE.strands   	: return 1 << 20;
 		case VALUE_TYPE.mesh	  	: return 1 << 21;
 		case VALUE_TYPE.atlas	  	: return 1 << 23;
+		case VALUE_TYPE.armature  	: return 1 << 24 | 1 << 19;
 		
 		case VALUE_TYPE.node		: return 1 << 32;
 		
@@ -1089,7 +1092,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			val = value_from.getValueRecursive(_time); 
 		
 		if(expUse && is_struct(expTree) && expTree.validate())
-			val[0] = expTree.eval(val[0]);
+			val[0] = expTree.eval({ value: val[0] });
 		
 		return val;
 	}

@@ -4,4 +4,6 @@ function textInput(_input, _onModify, _extras = noone) : widget() constructor {
 	extras = _extras;
 	
 	static _resetFocus = function() { resetFocus();	}
+	
+	static onKey = function(key) {}
 }

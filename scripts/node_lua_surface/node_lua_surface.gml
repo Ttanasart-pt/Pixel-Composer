@@ -163,7 +163,7 @@ function Node_Lua_Surface(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		var _dimm = inputs[| 1].getValue();
 		var _exec = inputs[| 4].getValue();
 		
-		if(!is_real(_exec) || !_exec) return;
+		if(!_exec) return;
 		
 		argument_val  = [];
 		for( var i = input_fix_len; i < ds_list_size(inputs) - data_length; i += data_length ) {
@@ -209,6 +209,9 @@ function Node_Lua_Surface(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		
 		lua_add_code(getState(), lua_code);
 	}
+	
+	insp1UpdateTooltip  = __txt("Compile");
+	insp1UpdateIcon     = [ THEME.refresh, 1, COLORS._main_value_positive ];
 	
 	static onInspector1Update = function() { //compile
 		var thrd = inputs[| 3].value_from;

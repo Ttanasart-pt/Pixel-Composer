@@ -1,7 +1,7 @@
 {
   "resourceType": "GMScript",
   "resourceVersion": "1.0",
-  "name": "node_vector",
+  "name": "node_to_number",
   "isCompatibility": false,
   "isDnD": false,
   "parent": {

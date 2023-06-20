@@ -498,7 +498,8 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 					foc = FOCUS == self;
 					var cc = FOCUS == self? COLORS._main_accent : COLORS.panel_tab;
 					draw_sprite_stretched_ext(THEME.ui_panel_tab, 1 + (FOCUS == self), _tbx, tby, tbw, _tdh, cc, 1);
-					tab_cover = BBOX().fromWH(tsx + _tbx, tsy + tby + tbh - ui(3), tbw, THEME_VALUE.panel_tab_extend);
+					if(!foc)
+						tab_cover = BBOX().fromWH(tsx + _tbx, tsy + tby + tbh - ui(3), tbw, THEME_VALUE.panel_tab_extend);
 				} else {
 					var cc = COLORS.panel_tab_inactive;
 					if(HOVER == self && _hov)
