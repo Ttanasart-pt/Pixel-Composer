@@ -13,21 +13,21 @@ if !ready exit;
 #region draw
 	var yy = dialog_y + ui(44);
 	
-	tb_length.setActiveFocus(sFOCUS, sHOVER);
+	tb_length.setFocusHover(sFOCUS, sHOVER);
 	tb_length.register();
 	draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text);
 	draw_text(dialog_x + ui(32), yy + ui(17), __txtx("anim_length", "Animation length"));
 	tb_length.draw(dialog_x + dialog_w - ui(120), yy, ui(96), TEXTBOX_HEIGHT, ANIMATOR.frames_total, mouse_ui);
 	
 	yy += ui(44);
-	tb_framerate.setActiveFocus(sFOCUS, sHOVER);
+	tb_framerate.setFocusHover(sFOCUS, sHOVER);
 	tb_framerate.register();
 	draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text);
 	draw_text(dialog_x + ui(32), yy + ui(17), __txtx("anim_frame_rate", "Preview frame rate"));
 	tb_framerate.draw(dialog_x + dialog_w - ui(120), yy, ui(96), TEXTBOX_HEIGHT, ANIMATOR.framerate, mouse_ui);
 	
 	yy += ui(44);
-	eb_playback.setActiveFocus(sFOCUS, sHOVER);
+	eb_playback.setFocusHover(sFOCUS, sHOVER);
 	eb_playback.register();
 	draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text);
 	draw_text(dialog_x + ui(32), yy + ui(17), __txtx("anim_on_end", "On end"));

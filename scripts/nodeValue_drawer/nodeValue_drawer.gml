@@ -194,19 +194,31 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 		var expValid = jun.expTree != noone && jun.expTree.validate();
 		jun.express_edit.boxColor = expValid? COLORS._main_value_positive : COLORS._main_value_negative;
 		
-		jun.express_edit.setActiveFocus(_focus, _hover);
+		jun.express_edit.setFocusHover(_focus, _hover);
 		if(_focus) jun.express_edit.register(_scrollPane);
 			
 		var wd_h = jun.express_edit.draw(editBoxX, editBoxY, editBoxW, editBoxH, jun.expression, _m);
 		widH = lineBreak? wd_h : 0;
 	} else if(jun.editWidget) {
-		jun.editWidget.setActiveFocus(_focus, _hover);
+		jun.editWidget.setFocusHover(_focus, _hover);
 			
 		if(jun.connect_type == JUNCTION_CONNECT.input) {
 			jun.editWidget.setInteract(jun.value_from == noone);
 			if(_focus) jun.editWidget.register(_scrollPane);
 		} else {
 			jun.editWidget.setInteract(false);
+		}
+		
+		var param = {
+			x: editBoxX,
+			y: editBoxY,
+			real_x: rx,
+			real_y: ry,
+			w: editBoxW,
+			h: editBoxH,
+			
+			data: jun.showValue(),
+			mouse: _m,
 		}
 		
 		switch(jun.display_type) {
@@ -256,6 +268,9 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 							case VALUE_DISPLAY.kernel :
 								var ebH = jun.editWidget.draw(editBoxX, editBoxY, editBoxW, editBoxH, jun.showValue(), _m);
 								widH = lineBreak? ebH : ebH - lb_h;
+								break;
+							case VALUE_DISPLAY.transform :
+								widH = jun.editWidget.drawParam(param);
 								break;
 						}
 						break;

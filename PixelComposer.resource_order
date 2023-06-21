@@ -546,6 +546,7 @@
     {"name":"fd_rectangle_get_collision_mask_sprite_image","order":5,"path":"scripts/fd_rectangle_get_collision_mask_sprite_image/fd_rectangle_get_collision_mask_sprite_image.yy",},
     {"name":"s_node_stripe","order":16,"path":"sprites/s_node_stripe/s_node_stripe.yy",},
     {"name":"s_node_lua_global","order":19,"path":"sprites/s_node_lua_global/s_node_lua_global.yy",},
+    {"name":"transformBox","order":29,"path":"scripts/transformBox/transformBox.yy",},
     {"name":"sh_grey_alpha","order":14,"path":"shaders/sh_grey_alpha/sh_grey_alpha.yy",},
     {"name":"sh_normal","order":1,"path":"shaders/sh_normal/sh_normal.yy",},
     {"name":"s_node_time_map","order":39,"path":"sprites/s_node_time_map/s_node_time_map.yy",},

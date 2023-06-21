@@ -13,21 +13,21 @@ if !ready exit;
 #region draw
 	var yy = dialog_y + ui(64);
 	
-	cb_grid.setActiveFocus(sFOCUS, sHOVER);
+	cb_grid.setFocusHover(sFOCUS, sHOVER);
 	cb_grid.register();
 	draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text);
 	draw_text(dialog_x + ui(32), yy, __txt("Grid"));
 	cb_grid.draw(dialog_x + dialog_w - ui(48), yy, PANEL_GRAPH.show_grid, mouse_ui,, fa_center, fa_center);
 	
 	yy += ui(40);
-	cb_dim.setActiveFocus(sFOCUS, sHOVER);
+	cb_dim.setFocusHover(sFOCUS, sHOVER);
 	cb_dim.register();
 	draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text);
 	draw_text(dialog_x + ui(32), yy, __txtx("graph_visibility_dim", "Dimension"));
 	cb_dim.draw(dialog_x + dialog_w - ui(48), yy, PANEL_GRAPH.show_dimension, mouse_ui,, fa_center, fa_center);
 	
 	yy += ui(40);
-	cb_com.setActiveFocus(sFOCUS, sHOVER);
+	cb_com.setFocusHover(sFOCUS, sHOVER);
 	cb_com.register();
 	draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text);
 	draw_text(dialog_x + ui(32), yy, __txtx("graph_visibility_compute", "Compute time"));

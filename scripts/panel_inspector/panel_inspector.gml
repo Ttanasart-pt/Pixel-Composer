@@ -148,7 +148,7 @@ function Panel_Inspector() : PanelContent() constructor {
 				draw_sprite_stretched_ext(THEME.group_label, 0, 0, yy, con_w, ui(32), COLORS.panel_inspector_group_bg, 1);
 			
 			if(_b != noone) {
-				_b.setActiveFocus(pFOCUS, _hover);
+				_b.setFocusHover(pFOCUS, _hover);
 				_b.draw(_x1, yy + ui(2), ui(28), ui(28), _m, THEME.button_hide_fill);
 			}
 			
@@ -175,7 +175,7 @@ function Panel_Inspector() : PanelContent() constructor {
 					yy += line_get_height() + ui(6);
 					hh += line_get_height() + ui(6);
 				
-					meta_tb[j].setActiveFocus(pFOCUS, _hover);
+					meta_tb[j].setFocusHover(pFOCUS, _hover);
 					if(pFOCUS) meta_tb[j].register(contentPane);
 					
 					var wh = 0;
@@ -291,11 +291,11 @@ function Panel_Inspector() : PanelContent() constructor {
 		var hh		= ui(40);
 		
 		//tb_prop_filter.register(contentPane);
-		//tb_prop_filter.setActiveFocus(pHOVER, pFOCUS);
+		//tb_prop_filter.setFocusHover(pHOVER, pFOCUS);
 		//tb_prop_filter.draw(ui(32), _y + ui(4), con_w - ui(64), ui(28), filter_text, _m);
 		//draw_sprite_ui(THEME.search, 0, ui(32 + 16), _y + ui(4 + 14), 1, 1, 0, COLORS._main_icon, 1);
 		
-		prop_page_button.setActiveFocus(pFOCUS, pHOVER);
+		prop_page_button.setFocusHover(pFOCUS, pHOVER);
 		prop_page_button.draw(ui(32), _y + ui(4), contentPane.w - ui(76), ui(28), prop_page, _m);
 		
 		var xc = con_w / 2;
@@ -329,7 +329,7 @@ function Panel_Inspector() : PanelContent() constructor {
 				}
 				
 				var val = inspecting.attributes[$ edt[1]];
-				edt[2].setActiveFocus(pFOCUS, pHOVER);
+				edt[2].setFocusHover(pFOCUS, pHOVER);
 				
 				if(instanceof(edt[2]) == "buttonClass") {
 					edt[2].text = edt[0];
@@ -588,7 +588,7 @@ function Panel_Inspector() : PanelContent() constructor {
 	function drawInspectingNode() {
 		tb_node_name.font = f_h5;
 		tb_node_name.hide = true;
-		tb_node_name.setActiveFocus(pFOCUS, pHOVER);
+		tb_node_name.setFocusHover(pFOCUS, pHOVER);
 		tb_node_name.align = fa_center;
 		var txt = inspecting.display_name == ""? inspecting.name : inspecting.display_name;
 		tb_node_name.draw(ui(64), ui(14), w - ui(128), ui(32), txt, [mx, my], VALUE_DISPLAY.node_title);
@@ -700,7 +700,7 @@ function Panel_Inspector() : PanelContent() constructor {
 			}
 		}
 		
-		contentPane.setActiveFocus(pFOCUS, pHOVER);
+		contentPane.setFocusHover(pFOCUS, pHOVER);
 		contentPane.draw(ui(16), top_bar_h, mx - ui(16), my - top_bar_h);
 		
 		if(!locked && PANEL_GRAPH.node_focus && inspecting != PANEL_GRAPH.node_focus)

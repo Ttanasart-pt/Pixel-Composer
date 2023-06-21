@@ -312,7 +312,7 @@ function Panel_Preview() : PanelContent() constructor {
 			ww = max(ww, string_width(_node.outputs[| i].name) + ui(40));
 		}
 		sbChannel.data_list = chName;
-		sbChannel.setActiveFocus(pFOCUS, pHOVER);
+		sbChannel.setFocusHover(pFOCUS, pHOVER);
 		
 		sbChannel.draw(_x - ww, _y - hh / 2, ww, hh, currName, [mx, my], x, y);
 		right_menu_y += ui(40);
@@ -692,7 +692,7 @@ function Panel_Preview() : PanelContent() constructor {
 				tolx      += string_width(nme) + ui(8);
 				tol_max_w += string_width(nme) + ui(8);
 				
-				wdg.setActiveFocus(pFOCUS, pHOVER);
+				wdg.setFocusHover(pFOCUS, pHOVER);
 				switch(instanceof(wdg)) {
 					case "textBox" :
 						wdg.draw(tolx, toly, tolw, tolh, atr[$ key], [ mx, my ]);

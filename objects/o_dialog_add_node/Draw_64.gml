@@ -11,22 +11,22 @@ if !ready exit;
 	WIDGET_CURRENT = tb_search;
 	
 	if(search_string == "") {
-		tb_search.setActiveFocus(false, false);
+		tb_search.setFocusHover(false, false);
 		tb_search.sprite_index = 1;
 		
-		catagory_pane.setActiveFocus(sFOCUS, sHOVER);
+		catagory_pane.setFocusHover(sFOCUS, sHOVER);
 		catagory_pane.draw(dialog_x + ui(14), dialog_y + ui(52));
 		
 		var _x = dialog_x + category_width - ui(12);
 		draw_sprite_stretched(THEME.ui_panel_bg, 0, _x, dialog_y + ui(52), dialog_w - category_width - ui(2), dialog_h - ui(66));
-		content_pane.setActiveFocus(sFOCUS, sHOVER);
+		content_pane.setFocusHover(sFOCUS, sHOVER);
 		content_pane.draw(_x, dialog_y + ui(52));
 		
 		node_selecting = 0;
 	} else {
-		tb_search.setActiveFocus(true, true);
+		tb_search.setFocusHover(true, true);
 		draw_sprite_stretched(THEME.ui_panel_bg, 0, dialog_x + ui(14), dialog_y + ui(52), dialog_w - ui(28), dialog_h - ui(66));
-		search_pane.setActiveFocus(sFOCUS, sHOVER);
+		search_pane.setFocusHover(sFOCUS, sHOVER);
 		search_pane.draw(dialog_x + ui(16), dialog_y + ui(52));
 	}
 	

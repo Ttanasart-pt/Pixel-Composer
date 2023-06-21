@@ -111,14 +111,14 @@ function Node_Number(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 				wd_slider.handle_w  = 24 * _s;
 				
 				if(sl_h > 8) {
-					wd_slider.setActiveFocus(_focus, _hover);
+					wd_slider.setFocusHover(_focus, _hover);
 					wd_slider.draw(sl_x, sl_y, sl_w, sl_h, val, [_mx, _my], 0);
 					draggable = !wd_slider.dragging;
 				}
 				break;
 			case 2 : 
 				wd_rotator.scale = _s;
-				wd_rotator.setActiveFocus(_focus, _hover);
+				wd_rotator.setFocusHover(_focus, _hover);
 				wd_rotator.draw(bbox.xc, bbox.yc - 48 * _s, val, [_mx, _my], false);
 				
 				draggable = !wd_rotator.dragging;

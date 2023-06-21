@@ -53,7 +53,7 @@ function buttonColor(_onApply, dialog = noone) : widget() constructor {
 		current_color = toNumber(_color);
 		
 		if(interactable) {
-			b_picker.setActiveFocus(hover, active);
+			b_picker.setFocusHover(active, hover);
 			b_picker.draw(_x + _w - ui(32), _y + _h / 2 - ui(16), ui(32), ui(32), _m, THEME.button_hide);
 			b_picker.icon_blend = c_white;
 			b_picker.icon_index = 0;

@@ -174,7 +174,7 @@ function Panel_Addon() : PanelContent() constructor {
 		tb_search.draw(px, py, pw, ui(32), search_string, [mx, my]);
 		if(search_string == "") tb_search.sprite_index = 1;
 		
-		sc_addon.setActiveFocus(pFOCUS, pHOVER);
+		sc_addon.setFocusHover(pFOCUS, pHOVER);
 		sc_addon.draw(px, py + ui(40), mx - px, my - (py + ui(40)));
 	}
 }

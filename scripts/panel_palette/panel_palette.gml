@@ -106,7 +106,7 @@ function Panel_Palette() : PanelContent() constructor {
 	
 		draw_sprite_stretched(THEME.ui_panel_bg, !in_dialog, px - ui(8), py - ui(8), pw + ui(16), ph + ui(16));
 		
-		sp_palettes.setActiveFocus(pFOCUS, pHOVER);
+		sp_palettes.setFocusHover(pFOCUS, pHOVER);
 		sp_palettes.draw(px, py, mx - px, my - py);
 		
 		var bx = w - ui(32 + 16);

@@ -54,7 +54,7 @@ function rangeBox(_type, _onModify) : widget() constructor {
 		w = _w;
 		h = _h;
 		
-		b_link.setActiveFocus(hover, active);
+		b_link.setFocusHover(active, hover);
 		b_link.icon_index = linked;
 		b_link.icon_blend = linked? COLORS._main_accent : COLORS._main_icon;
 		b_link.tooltip = linked? __txt("Unlink values") : __txt("Link values");
@@ -67,7 +67,7 @@ function rangeBox(_type, _onModify) : widget() constructor {
 		_w -= ui(28);
 		
 		if(extras != -1 && is_struct(extras) && instanceof(extras) == "buttonClass") {
-			extras.setActiveFocus(hover, active);
+			extras.setFocusHover(active, hover);
 			extras.draw(_x + _w - ui(32), _y + _h / 2 - ui(32 / 2), ui(32), ui(32), _m, THEME.button_hide);
 			_w -= ui(40);
 		}
@@ -75,7 +75,7 @@ function rangeBox(_type, _onModify) : widget() constructor {
 		if(is_array(_data) && array_length(_data) >= 2) {
 			var ww  = _w / 2;
 			for(var i = 0; i < 2; i++) {
-				tb[i].setActiveFocus(hover, active);
+				tb[i].setFocusHover(active, hover);
 				
 				var bx  = _x + ww * i;
 				tb[i].draw(bx + ui(44), _y, ww - ui(44), _h, _data[i], _m);

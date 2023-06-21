@@ -56,7 +56,7 @@ function widget() constructor {
 		WIDGET_CURRENT_SCROLL = noone;
 	}
 	
-	static setActiveFocus = function(active = false, hover = false) {
+	static setFocusHover = function(active = false, hover = false) {
 		self.active  = interactable && active;
 		self.hover   = interactable && hover;
 		self.iactive = active;
@@ -67,4 +67,7 @@ function widget() constructor {
 		active = false;
 		hover  = false;
 	}
+	
+	static draw_param = function(param) {}
+	static draw = function() {}
 }

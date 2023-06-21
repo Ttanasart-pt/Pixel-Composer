@@ -38,7 +38,7 @@ if !ready exit;
 #region presets
 	draw_sprite_stretched(THEME.ui_panel_bg, 0, presets_x + ui(16), dialog_y + ui(44), ui(240 - 32), dialog_h - ui(60));
 	
-	sp_presets.setActiveFocus(sFOCUS, sHOVER);
+	sp_presets.setFocusHover(sFOCUS, sHOVER);
 	sp_presets.draw(presets_x + ui(16 + 8), dialog_y + ui(44));
 	
 	var bx = presets_x + presets_w - ui(44);
@@ -82,7 +82,7 @@ if !ready exit;
 #region palette
 	draw_sprite_stretched(THEME.ui_panel_bg, 0, palette_x + ui(16), dialog_y + ui(44), ui(240 - 32), dialog_h - ui(60));
 	
-	sp_palettes.setActiveFocus(sFOCUS, sHOVER);
+	sp_palettes.setFocusHover(sFOCUS, sHOVER);
 	sp_palettes.draw(palette_x + ui(16 + 8), dialog_y + ui(44));
 #endregion
 
@@ -188,7 +188,7 @@ if !ready exit;
 	draw_text(op_x, op_y + TEXTBOX_HEIGHT / 2, __txt("Position"))
 	
 	var txt = key_selecting? key_selecting.time * 100 : 0;
-	sl_position.setActiveFocus(sFOCUS, sHOVER);
+	sl_position.setFocusHover(sFOCUS, sHOVER);
 	sl_position.register();
 	sl_position.draw(op_x + ui(100), op_y, ui(content_w - 140), TEXTBOX_HEIGHT, txt, mouse_ui);
 #endregion
@@ -205,11 +205,11 @@ if !ready exit;
 	var by = dialog_y + dialog_h - ui(36);
 	
 	b_apply.register();
-	b_apply.setActiveFocus(sFOCUS, sHOVER);
+	b_apply.setFocusHover(sFOCUS, sHOVER);
 	b_apply.draw(bx - ui(18), by - ui(18), ui(36), ui(36), mouse_ui, THEME.button_lime);
 	
 	bx -= ui(48);
 	b_cancel.register();
-	b_cancel.setActiveFocus(sFOCUS, sHOVER);
+	b_cancel.setFocusHover(sFOCUS, sHOVER);
 	b_cancel.draw(bx - ui(18), by - ui(18), ui(36), ui(36), mouse_ui, THEME.button_hide);
 #endregion

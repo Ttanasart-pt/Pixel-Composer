@@ -18,7 +18,7 @@
 	t_alias.interactable = !STEAM_UGC_ITEM_UPLOADING;
 	tb_name.interactable = !STEAM_UGC_ITEM_UPLOADING;
 	
-	tb_name.setActiveFocus(sFOCUS, sHOVER);
+	tb_name.setFocusHover(sFOCUS, sHOVER);
 	tb_name.register();
 	tb_name.draw(dialog_x + ui(72), dialog_y + ui(16), dialog_w - ui(164), ui(32), meta.name, mouse_ui);
 	
@@ -102,7 +102,7 @@
 		yy		 += line_get_height() + ui(4);
 		dialog_h += line_get_height() + ui(4);
 		
-		t_desc.setActiveFocus(sFOCUS, sHOVER);
+		t_desc.setFocusHover(sFOCUS, sHOVER);
 		t_desc.register();
 		t_desc.draw(dialog_x + ui(16), yy, dialog_w - ui(32), ui(200), meta.description, mouse_ui);
 		yy		 += ui(200) + ui(8);
@@ -113,7 +113,7 @@
 		yy		 += line_get_height() + ui(4);
 		dialog_h += line_get_height() + ui(4);
 		
-		t_auth.setActiveFocus(sFOCUS, sHOVER);
+		t_auth.setFocusHover(sFOCUS, sHOVER);
 		t_auth.register();
 		t_auth.draw(dialog_x + ui(16), yy, dialog_w - ui(32), TEXTBOX_HEIGHT, meta.author, mouse_ui);
 		yy		 += TEXTBOX_HEIGHT + ui(8);
@@ -124,7 +124,7 @@
 		yy		 += line_get_height() + ui(4);
 		dialog_h += line_get_height() + ui(4);
 		
-		t_cont.setActiveFocus(sFOCUS, sHOVER);
+		t_cont.setFocusHover(sFOCUS, sHOVER);
 		t_cont.register();
 		t_cont.draw(dialog_x + ui(16), yy, dialog_w - ui(32), TEXTBOX_HEIGHT, meta.contact, mouse_ui);
 		yy		 += TEXTBOX_HEIGHT + ui(8);
@@ -135,7 +135,7 @@
 		yy		 += line_get_height() + ui(4);
 		dialog_h += line_get_height() + ui(4);
 		
-		t_alias.setActiveFocus(sFOCUS, sHOVER);
+		t_alias.setFocusHover(sFOCUS, sHOVER);
 		t_alias.register();
 		t_alias.draw(dialog_x + ui(16), yy, dialog_w - ui(32), TEXTBOX_HEIGHT, meta.alias, mouse_ui);
 		yy		 += TEXTBOX_HEIGHT + ui(8);
@@ -146,7 +146,7 @@
 		yy		 += line_get_height() + ui(4);
 		dialog_h += line_get_height() + ui(4);
 		
-		t_tags.setActiveFocus(sFOCUS, sHOVER);
+		t_tags.setFocusHover(sFOCUS, sHOVER);
 		t_tags.register();
 		var hh = t_tags.draw(dialog_x + ui(16), yy, dialog_w - ui(32), TEXTBOX_HEIGHT, mouse_ui);
 		yy		 += hh + ui(8);

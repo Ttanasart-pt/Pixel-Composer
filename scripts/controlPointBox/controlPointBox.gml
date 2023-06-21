@@ -56,7 +56,7 @@ function controlPointBox(_onModify) : widget() constructor {
 		y = _y;
 		
 		for( var i = 0; i < array_length(widgets); i++ )
-			widgets[i].setActiveFocus(hover, active);
+			widgets[i].setFocusHover(active, hover);
 		
 		var yy = _y;
 		

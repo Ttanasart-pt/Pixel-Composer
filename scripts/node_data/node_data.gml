@@ -4,7 +4,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	active  = true;
 	renderActive = true;
 	
-	node_id = generateUUID();
+	node_id = UUID_generate();
 	group   = _group;
 	destroy_when_upgroup = false;
 	ds_list_add(PANEL_GRAPH.getNodeList(_group), self);

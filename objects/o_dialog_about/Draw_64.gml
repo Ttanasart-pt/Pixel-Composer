@@ -21,6 +21,6 @@ if !ready exit;
 	
 	var thank_y = dialog_y + ui(188);
 	draw_sprite_stretched(THEME.ui_panel_bg, 0, dialog_x + ui(24), thank_y - ui(8), dialog_w - ui(48), thank_h + ui(16));
-	sc_thank.setActiveFocus(sFOCUS, sHOVER);
+	sc_thank.setFocusHover(sFOCUS, sHOVER);
 	sc_thank.draw(dialog_x + ui(32), thank_y);
 #endregion

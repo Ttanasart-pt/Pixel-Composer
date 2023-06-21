@@ -54,11 +54,11 @@ if !ready exit;
 	
 	if(page_current == 0) {
 		current_list = pref_global;
-		sp_pref.setActiveFocus(sHOVER, sFOCUS);
+		sp_pref.setFocusHover(sFOCUS, sHOVER);
 		sp_pref.draw(px, py);
 	}  else if(page_current == 1) {
 		current_list = pref_appr;
-		sp_pref.setActiveFocus(sHOVER, sFOCUS);
+		sp_pref.setFocusHover(sFOCUS, sHOVER);
 		sp_pref.draw(px, py);
 	} else if(page_current == 2) {
 		var _w = ui(200);
@@ -79,16 +79,16 @@ if !ready exit;
 		
 		draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text);
 		draw_text(x1 + ui(8), yy + _h / 2, __txt("Theme"));
-		sb_theme.setActiveFocus(sFOCUS, sHOVER);
+		sb_theme.setFocusHover(sFOCUS, sHOVER);
 		sb_theme.draw(x2 - ui(24) - _w, yy, _w, _h, PREF_MAP[? "theme"]);
 		
-		sp_colors.setActiveFocus(sHOVER, sFOCUS);
+		sp_colors.setFocusHover(sFOCUS, sHOVER);
 		sp_colors.draw(px, py + ui(40));
 	} else if(page_current == 3) {
 		if(mouse_press(mb_left, sFOCUS)) 
 			hk_editing = noone;
 		
-		sp_hotkey.setActiveFocus(sHOVER, sFOCUS);
+		sp_hotkey.setFocusHover(sFOCUS, sHOVER);
 		sp_hotkey.draw(px, py);
 	}
 #endregion

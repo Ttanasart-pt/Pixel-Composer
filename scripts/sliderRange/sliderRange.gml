@@ -43,10 +43,10 @@ function sliderRange(_min, _max, _step, _onModify) : widget() constructor {
 		var tb_w = ui(64);
 		var sw = _w - (tb_w + ui(16)) * 2;
 		
-		tb_value_min.setActiveFocus(hover, active);
+		tb_value_min.setFocusHover(active, hover);
 		tb_value_min.draw(_x, _y, tb_w, TEXTBOX_HEIGHT, _data[0], _m);
 		
-		tb_value_max.setActiveFocus(hover, active);
+		tb_value_max.setFocusHover(active, hover);
 		tb_value_max.draw(_x + _w - tb_w, _y, tb_w, TEXTBOX_HEIGHT, _data[1], _m);
 		
 		var _x0 = _x + tb_w + ui(16);

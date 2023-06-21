@@ -474,7 +474,7 @@ function textArea(_input, _onModify, _extras = noone) : textInput(_input, _onMod
 		//}
 		
 		if(extras && instanceof(extras) == "buttonClass") {
-			extras.setActiveFocus(hover, active);
+			extras.setFocusHover(active, hover);
 			extras.draw(_x + _w - ui(32), _y + _h / 2 - ui(32 / 2), ui(32), ui(32), _m, THEME.button_hide);
 			_w -= ui(40);
 		}

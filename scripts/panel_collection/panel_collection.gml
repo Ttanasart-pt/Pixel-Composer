@@ -341,10 +341,10 @@ function Panel_Collection() : PanelContent() constructor {
 		
 		var content_y = ui(48);
 		draw_sprite_stretched(THEME.ui_panel_bg, 1, group_w, content_y, content_w, content_h);
-		contentPane.setActiveFocus(pFOCUS, pHOVER);
+		contentPane.setFocusHover(pFOCUS, pHOVER);
 		contentPane.draw(group_w, content_y, mx - group_w, my - content_y);
 		
-		folderPane.setActiveFocus(pFOCUS, pHOVER);
+		folderPane.setFocusHover(pFOCUS, pHOVER);
 		folderPane.draw(0, content_y, mx, my - content_y);
 		
 		#region resize width

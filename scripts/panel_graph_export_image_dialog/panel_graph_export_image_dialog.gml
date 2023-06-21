@@ -77,7 +77,7 @@ function Panel_Graph_Export_Image(targetPanel) : PanelContent() constructor {
 			
 			var _wid = widgets[i][1];
 			var _dat = widgets[i][2]();
-			_wid.setActiveFocus(pFOCUS, pHOVER);
+			_wid.setFocusHover(pFOCUS, pHOVER);
 			
 			switch(instanceof(widgets[i][1])) {
 				case "textBox" :	 _wid.draw(_tx - _ww, ty + wh * i - _hh / 2, _ww, _hh,		_dat, _m); break;
@@ -136,7 +136,7 @@ function Panel_Graph_Export_Image(targetPanel) : PanelContent() constructor {
 		var sx = tx;
 		var sy = ty + sh + ui(16);
 		
-		sc_settings.setActiveFocus(pFOCUS, pHOVER);
+		sc_settings.setFocusHover(pFOCUS, pHOVER);
 		sc_settings.draw(sx, sy, mx - sx, my - sy);
 		
 		if(is_surface(surface)) {
@@ -147,7 +147,7 @@ function Panel_Graph_Export_Image(targetPanel) : PanelContent() constructor {
 			bx = w - padding - _bw;
 			by = h - padding - _bh;
 		
-			b_export.setActiveFocus(pFOCUS, pHOVER);
+			b_export.setFocusHover(pFOCUS, pHOVER);
 			b_export.draw(bx, by, _bw, _bh, _m);
 			draw_text(bx + ui(16), by + ui(6), txt);
 		}

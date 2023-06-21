@@ -30,9 +30,9 @@ function globalvar_viewer_draw(xx, yy, ww, _m, focus, hover, _scrollPane, rx, ry
 				hh += ui(10);
 			}
 						
-			_edit.tb_name.setActiveFocus(focus, hover);
-			_edit.sc_type.setActiveFocus(focus, hover);
-			_edit.sc_disp.setActiveFocus(focus, hover);
+			_edit.tb_name.setFocusHover(focus, hover);
+			_edit.sc_type.setFocusHover(focus, hover);
+			_edit.sc_disp.setFocusHover(focus, hover);
 						
 			_edit.tb_name.draw(wd_x, yy, wd_w - wd_h - ui(4), wd_h, _inpu.name, _m, TEXTBOX_INPUT.text);
 			if(buttonInstant(THEME.button_hide, wd_x + wd_w - wd_h, yy + ui(2), wd_h, wd_h, _m, focus, hover,, THEME.icon_delete,, COLORS._main_value_negative) == 2) 

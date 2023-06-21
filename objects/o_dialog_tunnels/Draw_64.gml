@@ -22,7 +22,7 @@ if !ready exit;
 	if(search_string == "")
 		tb_search.sprite_index = 1;
 	
-	sc_tunnel.setActiveFocus(sFOCUS, sHOVER);
+	sc_tunnel.setFocusHover(sFOCUS, sHOVER);
 	sc_tunnel.draw(px, py + ui(40));
 	
 	var bx  = dialog_x + dialog_w - ui(32 + 16);

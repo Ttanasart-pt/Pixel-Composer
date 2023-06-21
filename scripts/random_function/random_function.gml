@@ -76,18 +76,10 @@ function getWiggle(_min, _max, _freq, _time, seed_shift = 0, startTime = noone, 
 	return lerp(_min, _max, _lrp);
 }
 
-function generateUUID() {
-	randomize();
-	var uuid;
-	do {
-		uuid = irandom(1000000000);
-	} until(!ds_map_exists(NODE_MAP, uuid))
-	return uuid;
-}
-
-function UUID_generate() {
+function UUID_generate(length = 16) {
+	static str = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+	
 	var _id = "";
-	repeat(16)
-		_id += chr(choose(irandom_range(48, 57), irandom_range(65, 90), irandom_range(97, 122)));
+	repeat(length) _id += string_char_at(str, irandom_range(1, string_length(str)));
 	return _id;
 }

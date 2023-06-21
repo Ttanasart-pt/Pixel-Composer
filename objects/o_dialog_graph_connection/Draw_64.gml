@@ -14,21 +14,21 @@ if !ready exit;
 	var yy = dialog_y + ui(64);
 	var ww = ui(128);
 	
-	bs_type.setActiveFocus(sFOCUS, sHOVER);
+	bs_type.setFocusHover(sFOCUS, sHOVER);
 	bs_type.register();
 	draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text);
 	draw_text(dialog_x + ui(32), yy, __txt("Type"));
 	bs_type.draw(dialog_x + dialog_w - ui(24) - ww, yy - TEXTBOX_HEIGHT / 2, ww, TEXTBOX_HEIGHT, PREF_MAP[? "curve_connection_line"], mouse_ui);
 	
 	yy += ui(40);
-	tb_width.setActiveFocus(sFOCUS, sHOVER);
+	tb_width.setFocusHover(sFOCUS, sHOVER);
 	tb_width.register();
 	draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text);
 	draw_text(dialog_x + ui(32), yy, __txtx("dialog_connection_thickness", "Line thickness"));
 	tb_width.draw(dialog_x + dialog_w - ui(24), yy, ww, TEXTBOX_HEIGHT, PREF_MAP[? "connection_line_width"], mouse_ui,, fa_right, fa_center);
 	
 	yy += ui(40);
-	tb_corner.setActiveFocus(sFOCUS, sHOVER);
+	tb_corner.setFocusHover(sFOCUS, sHOVER);
 	tb_corner.register();
 	draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text);
 	draw_text(dialog_x + ui(32), yy, __txtx("dialog_connection_radius", "Corner radius"));

@@ -57,6 +57,7 @@ enum VALUE_DISPLAY {
 	vector_range,
 	area,
 	kernel,
+	transform,
 	
 	//Curve
 	curve,
@@ -358,7 +359,10 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	_initName = _name;
 	name = __txt_junction_name(instanceof(node), type, index, _name);
 	name = _name;
-	internalName = string_lower(string_replace_all(_name, " ", "_"));
+	
+	static updateName = function() {
+		internalName = string_lower(string_replace_all(name, " ", "_"));
+	} updateName();
 	
 	if(struct_has(node, "inputMap")) {
 		if(_connect == JUNCTION_CONNECT.input)       node.inputMap[?  internalName] = self;
@@ -727,6 +731,15 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						
 						for( var i = 0; i < array_length(animators); i++ )
 							animators[i].suffix = " " + string(i);
+						
+						extract_node = "";
+						break;
+					case VALUE_DISPLAY.transform :
+						editWidget = new transformBox(function(index, _val) {
+							var _val = animator.getValue();
+							_val[index] = val;
+							return setValueDirect(_val);
+						});
 						
 						extract_node = "";
 						break;

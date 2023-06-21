@@ -63,12 +63,12 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			draw_set_text(f_p1, fa_left, fa_top, COLORS._main_text_sub);
 			draw_text_add(_x + ui(8), ty + ui(8), string((i - input_fix_len) / data_length));
 			
-			_name.editWidget.setActiveFocus(_focus, _hover);
+			_name.editWidget.setFocusHover(_focus, _hover);
 			_name.editWidget.draw(tx, ty, _tw, _th, _name.showValue(), _m, _name.display_type);
 			
 			draw_sprite_ui(THEME.arrow, 0, tx + _tw + ui(16), ty + _th / 2,,,, COLORS._main_icon);
 			
-			_rule.editWidget.setActiveFocus(_focus, _hover);
+			_rule.editWidget.setFocusHover(_focus, _hover);
 			_rule.editWidget.draw(tx + _tw + ui(32), ty, _w - (_tw + ui(8 + 24 + 32)), _th, _rule.showValue(), _m, _rule.display_type);
 			
 			ty += _th + ui(6);

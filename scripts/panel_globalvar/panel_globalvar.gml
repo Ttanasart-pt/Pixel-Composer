@@ -45,7 +45,7 @@ function Panel_Globalvar() : PanelContent() constructor {
 		
 		draw_sprite_stretched(THEME.ui_panel_bg, !in_dialog, px - ui(8), py - ui(8), pw + ui(16), ph + ui(16));
 		
-		contentPane.setActiveFocus(pFOCUS, pHOVER);
+		contentPane.setFocusHover(pFOCUS, pHOVER);
 		contentPane.draw(px, py, mx - px, my - py);
 		
 		var bx = w - ui(32 + 16);

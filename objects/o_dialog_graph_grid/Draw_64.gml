@@ -14,28 +14,28 @@ if !ready exit;
 	var yy = dialog_y + ui(64);
 	var ww = ui(128);
 	
-	cb_enable.setActiveFocus(sFOCUS, sHOVER);
+	cb_enable.setFocusHover(sFOCUS, sHOVER);
 	cb_enable.register();
 	draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text);
 	draw_text(dialog_x + ui(32), yy, __txtx("grid_snap", "Snap to grid"));
 	cb_enable.draw(dialog_x + dialog_w - ui(24) - ww / 2, yy, PANEL_GRAPH.node_drag_snap, mouse_ui,, fa_center, fa_center);
 	
 	yy += ui(40);
-	tb_size.setActiveFocus(sFOCUS, sHOVER);
+	tb_size.setFocusHover(sFOCUS, sHOVER);
 	tb_size.register();
 	draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text);
 	draw_text(dialog_x + ui(32), yy, __txtx("grid_size", "Grid size"));
 	tb_size.draw(dialog_x + dialog_w - ui(24), yy, ww, TEXTBOX_HEIGHT, PANEL_GRAPH.graph_line_s, mouse_ui,, fa_right, fa_center);
 	
 	yy += ui(40);
-	sl_opacity.setActiveFocus(sFOCUS, sHOVER);
+	sl_opacity.setFocusHover(sFOCUS, sHOVER);
 	sl_opacity.register();
 	draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text);
 	draw_text(dialog_x + ui(32), yy, __txtx("grid_opacity", "Grid opacity"));
 	sl_opacity.draw(dialog_x + dialog_w - ui(24), yy, ww, TEXTBOX_HEIGHT, PANEL_GRAPH.grid_opacity, mouse_ui, ui(52), fa_right, fa_center);
 	
 	yy += ui(40);
-	cl_color.setActiveFocus(sFOCUS, sHOVER);
+	cl_color.setFocusHover(sFOCUS, sHOVER);
 	cl_color.register();
 	draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text);
 	draw_text(dialog_x + ui(32), yy, __txtx("grid_color", "Grid color"));

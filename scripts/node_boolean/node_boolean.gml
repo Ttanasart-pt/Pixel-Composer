@@ -82,7 +82,7 @@ function Node_Boolean(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		var val	 = inputs[| 0].getValue();
 		var bbox = drawGetBbox(xx, yy, _s);
 		
-		wd_checkBox.setActiveFocus(_focus, _hover);
+		wd_checkBox.setFocusHover(_focus, _hover);
 		wd_checkBox.draw(bbox.xc, bbox.yc, val, [ _mx, _my ], bbox.h - 8 * _s, fa_center, fa_center);
 	}
 }

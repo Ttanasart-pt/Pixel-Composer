@@ -18,7 +18,7 @@ if !target exit;
 	var ph = dialog_h - ui(title_height + padding);
 	
 	draw_sprite_stretched(THEME.ui_panel_bg, 0, px - ui(8), py - ui(8), pw + ui(16), ph + ui(16));
-	sp_content.setActiveFocus(sFOCUS, sHOVER);
+	sp_content.setFocusHover(sFOCUS, sHOVER);
 	sp_content.draw(px, py);
 #endregion
 

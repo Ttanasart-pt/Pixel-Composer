@@ -62,7 +62,7 @@ event_inherited();
 					var sep = node.attributes.separator;
 					
 					WIDGET_CURRENT = tb_edit;
-					tb_edit.setActiveFocus(sFOCUS, sHOVER);
+					tb_edit.setFocusHover(sFOCUS, sHOVER);
 					tb_edit.draw(ed_x + ui(4), _y + ui(4), con_w - (ed_x + ui(8)), hg - ui(8), sep[sep_editing][1], mouse_ui);
 					
 					if(keyboard_check_pressed(vk_enter))

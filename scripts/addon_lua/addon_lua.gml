@@ -887,7 +887,7 @@
 		[ "__widget_wake",   function(wd, hover, focus) { 
 			if(!ds_map_exists(global.ADDON_WIDGET, wd)) return;
 			
-			global.ADDON_WIDGET[? wd].setActiveFocus(focus, hover);
+			global.ADDON_WIDGET[? wd].setFocusHover(focus, hover);
 		} ],
 		
 		[ "__textBox",   function(ID, type, onModify) { 

@@ -62,14 +62,14 @@ function Node_Equation(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			var _h = 0;
 			
 			var _jName = inputs[| i + 0];
-			_jName.editWidget.setActiveFocus(_focus, _hover);
+			_jName.editWidget.setFocusHover(_focus, _hover);
 			_jName.editWidget.draw(tx, ty, ui(128), _th, _jName.showValue(), _m, _jName.display_type);
 			
 			draw_set_text(f_p1, fa_center, fa_top, COLORS._main_text_sub);
 			draw_text_add(tx + ui(128 + 12), ty + ui(6), "=");
 			
 			var _jValue = inputs[| i + 1];
-			_jValue.editWidget.setActiveFocus(_focus, _hover);
+			_jValue.editWidget.setFocusHover(_focus, _hover);
 			_jValue.editWidget.draw(tx + ui(128 + 24), ty, _w - ui(128 + 24 + 16), _th, _jValue.showValue(), _m);
 			
 			_h += _th + ui(6);

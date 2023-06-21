@@ -1,4 +1,5 @@
-function __Bone(parent = noone, distance = 0, direction = 0, angle = 0, length = 0) constructor {
+function __Bone(parent = noone, distance = 0, direction = 0, angle = 0, length = 0, attributes = {}) constructor {
+	id = UUID_generate();
 	self.name = "New bone";
 	self.distance	= distance;
 	self.direction	= direction;
@@ -8,6 +9,13 @@ function __Bone(parent = noone, distance = 0, direction = 0, angle = 0, length =
 	self.is_main = false;
 	self.parent_anchor = true;
 	self.childs = [];
+	
+	tb_name = new textBox(TEXTBOX_INPUT.text, function(_name) { name = _name; });
+	tb_name.font = f_p2;
+	tb_name.hide = true;
+	
+	self.attributes = attributes;
+	updated = false;
 	
 	self.parent = parent;
 	if(parent != noone) {
@@ -19,6 +27,13 @@ function __Bone(parent = noone, distance = 0, direction = 0, angle = 0, length =
 		array_push(childs, bone);
 		bone.parent = self;
 		return self;
+	}
+	
+	static childCount = function() {
+		var amo = array_length(childs);
+		for( var i = 0; i < array_length(childs); i++ )
+			amo += childs[i].childCount();
+		return amo;
 	}
 	
 	static getPoint = function(distance, direction) {
@@ -60,18 +75,23 @@ function __Bone(parent = noone, distance = 0, direction = 0, angle = 0, length =
 			draw_line_width2(p0.x, p0.y, p1.x, p1.y, 6, 2);
 			draw_set_alpha(1.00);
 			
-			if(edit && distance_to_line(_mx, _my, p0.x, p0.y, p1.x, p1.y) <= 6) //drag bone
+			if(attributes.display_name) {
+				draw_set_text(f_p2, fa_left, fa_center, COLORS._main_accent);
+				draw_text((p0.x + p1.x) / 2 + 4, (p0.y + p1.y) / 2, name);
+			}
+			
+			if(edit && distance_to_line(_mx, _my, p0.x, p0.y, p1.x, p1.y) <= 12) //drag bone
 				hover = [ self, 2 ];
 			
 			if(!parent_anchor) {
-				if(edit && point_in_circle(_mx, _my, p0.x, p0.y, ui(12))) { //drag head
+				if(edit && point_in_circle(_mx, _my, p0.x, p0.y, ui(20))) { //drag head
 					draw_sprite_colored(THEME.anchor_selector, 0, p0.x, p0.y); 
 					hover = [ self, 0 ];
 				} else	
 					draw_sprite_colored(THEME.anchor_selector, 2, p0.x, p0.y);
 			}
 			
-			if(edit && point_in_circle(_mx, _my, p1.x, p1.y, ui(12))) { //drag tail
+			if(edit && point_in_circle(_mx, _my, p1.x, p1.y, ui(20))) { //drag tail
 				draw_sprite_colored(THEME.anchor_selector, 0, p1.x, p1.y);
 				hover = [ self, 1 ];
 			} else	
@@ -80,7 +100,7 @@ function __Bone(parent = noone, distance = 0, direction = 0, angle = 0, length =
 		
 		if(child)
 		for( var i = 0; i < array_length(childs); i++ ) {
-			var h = childs[i].draw(edit, _x, _y, _s, _mx, _my, true, hovering)
+			var h = childs[i].draw(edit, _x, _y, _s, _mx, _my, true, hovering);
 			if(hover == noone && h != noone)
 				hover = h;
 		}
@@ -88,9 +108,30 @@ function __Bone(parent = noone, distance = 0, direction = 0, angle = 0, length =
 		return hover;
 	}
 	
+	static drawInspector = function(_x, _y, _w, _m, _hover, _focus) {
+		var _h = ui(28);
+		
+		//draw_sprite_stretched(THEME.node_bg, 0, _x, _y, _w, _h);
+		draw_sprite_ui(THEME.bone, 0, _x + 12, _y + 12,,,, COLORS._main_icon);
+		tb_name.setFocusHover(_focus, _hover);
+		tb_name.draw(_x + 24, _y + 2, _w - 24 - 8, _h - 4, name, _m);
+		
+		_y += _h;
+		
+		draw_set_color(COLORS.node_composite_separator);
+		draw_line(_x + 16, _y, _x + _w - 16, _y);
+		
+		for( var i = 0; i < array_length(childs); i++ ) {
+			_y = childs[i].drawInspector(_x + ui(16), _y, _w - ui(16), _m, _hover, _focus);
+		}
+		
+		return _y;
+	}
+	
 	static serialize = function() {
 		var bone = {};
 		
+		bone.id			= id;
 		bone.name		= name;
 		bone.distance	= distance;
 		bone.direction	= direction;
@@ -107,7 +148,8 @@ function __Bone(parent = noone, distance = 0, direction = 0, angle = 0, length =
 		return bone;
 	}
 	
-	static deserialize = function(bone) {
+	static deserialize = function(bone, attributes) {
+		id			= bone.id;
 		name		= bone.name;
 		distance	= bone.distance;
 		direction	= bone.direction;
@@ -117,12 +159,25 @@ function __Bone(parent = noone, distance = 0, direction = 0, angle = 0, length =
 		is_main			= bone.is_main;
 		parent_anchor	= bone.parent_anchor;
 		
+		self.attributes = attributes;
+		
 		childs = [];
 		for( var i = 0; i < array_length(bone.childs); i++ ) {
-			var _b = new __Bone().deserialize(bone.childs[i]);
+			var _b = new __Bone().deserialize(bone.childs[i], attributes);
 			addChild(_b);
 		}
 		
 		return self;
+	}
+	
+	static clone = function(attributes) {
+		var _b = new __Bone(parent, distance, direction, angle, length, attributes);
+		_b.is_main = is_main;
+		_b.parent_anchor = parent_anchor;
+		
+		for( var i = 0; i < array_length(childs); i++ )
+			_b.addChild(childs[i].clone(attributes));
+		
+		return _b;
 	}
 }

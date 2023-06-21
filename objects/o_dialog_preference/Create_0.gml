@@ -443,7 +443,7 @@ event_inherited();
 				
 			draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text);
 			draw_text(ui(8), yy + th / 2, _pref[0]);
-			_pref[2].setActiveFocus(sFOCUS, sHOVER && sp_pref.hover); 
+			_pref[2].setFocusHover(sFOCUS, sHOVER && sp_pref.hover); 
 				
 			switch(instanceof(_pref[2])) {
 				case "textBox" :

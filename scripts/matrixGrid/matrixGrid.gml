@@ -74,7 +74,7 @@ function matrixGrid(_type, _onModify, _unit = noone) : widget() constructor {
 		h = _h;
 		
 		if(extras && instanceof(extras) == "buttonClass") {
-			extras.setActiveFocus(hover, active);			
+			extras.setFocusHover(active, hover);			
 			extras.draw(_x + _w - ui(32), _y + _h / 2 - ui(32 / 2), ui(32), ui(32), _m, THEME.button_hide);
 			_w -= ui(40);
 		}
@@ -82,12 +82,12 @@ function matrixGrid(_type, _onModify, _unit = noone) : widget() constructor {
 		if(unit != noone && unit.reference != noone) {
 			_w += ui(4);
 			
-			unit.triggerButton.setActiveFocus(ihover, iactive);
+			unit.triggerButton.setFocusHover(iactive, ihover);
 			unit.draw(_x + _w - ui(32), _y + _h / 2 - ui(32 / 2), ui(32), ui(32), _m);
 			_w -= ui(40);
 		}
 		
-		b_link.setActiveFocus(hover, active);
+		b_link.setFocusHover(active, hover);
 		b_link.icon_index = linked;
 		b_link.icon_blend = linked? COLORS._main_accent : COLORS._main_icon;
 		b_link.tooltip = linked? __txt("Unlink values") : __txt("Link values");
@@ -107,7 +107,7 @@ function matrixGrid(_type, _onModify, _unit = noone) : widget() constructor {
 		for(var i = 0; i < 3; i++)
 		for(var j = 0; j < 3; j++) {
 			var ind = i * 3 + j;
-			tb[ind].setActiveFocus(hover, active);
+			tb[ind].setFocusHover(active, hover);
 			
 			var bx  = _x + ww * j;
 			var by  = _y + hh * i;

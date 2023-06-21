@@ -13,14 +13,14 @@ if !ready exit;
 #region directory option
 	var dir_y = dialog_y + ui(44);
 	
-	cb_recursive.setActiveFocus(sFOCUS, sHOVER);
+	cb_recursive.setFocusHover(sFOCUS, sHOVER);
 	cb_recursive.draw(dialog_x + dialog_w - ui(48), dir_y, dir_recursive, mouse_ui);
 		
 	draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text);
 	draw_text(dialog_x + ui(20), dir_y + ui(14), __txt("Recursive"));
 	
 	dir_y += ui(40);
-	tb_filter.setActiveFocus(sFOCUS, sHOVER);
+	tb_filter.setFocusHover(sFOCUS, sHOVER);
 	tb_filter.draw(dialog_x + ui(100), dir_y, dialog_w - ui(120), ui(36), dir_filter, mouse_ui);
 		
 	draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text);

@@ -37,9 +37,9 @@
 		}
 	}
 	
-	folderPane.setActiveFocus(sHOVER, sFOCUS);
+	folderPane.setFocusHover(sFOCUS, sHOVER);
 	folderPane.draw(dialog_x + ui(16), dialog_y + ui(48));
 	
-	contentPane.setActiveFocus(sHOVER, sFOCUS);
+	contentPane.setFocusHover(sFOCUS, sHOVER);
 	contentPane.draw(dialog_x + ui(20) + folderW, dialog_y + ui(16));
 #endregion

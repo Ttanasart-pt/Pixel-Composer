@@ -110,10 +110,10 @@ function Panel_Nodes() : PanelContent() constructor {
 		var ph = h - ui(title_height + padding);
 		
 		draw_sprite_stretched(THEME.ui_panel_bg, !in_dialog, px - ui(8), py - ui(8), pw + ui(16), ph + ui(16));
-		tb_search.setActiveFocus(pFOCUS, pHOVER);
+		tb_search.setFocusHover(pFOCUS, pHOVER);
 		tb_search.draw(px, py, pw, ui(32), search_string, [mx, my]);
 		
-		sc_nodes.setActiveFocus(pFOCUS, pHOVER);
+		sc_nodes.setFocusHover(pFOCUS, pHOVER);
 		sc_nodes.draw(px, py + ui(40), mx - px, my - (py + ui(40)));
 	}
 }

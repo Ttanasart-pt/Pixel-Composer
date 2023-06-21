@@ -12,7 +12,7 @@ if !ready exit;
 
 #region draw
 	if(value_target != noone) {
-		editWidget.setActiveFocus(sFOCUS, sHOVER);
+		editWidget.setFocusHover(sFOCUS, sHOVER);
 		editWidget.draw(dialog_x + ui(16), dialog_y + ui(48), dialog_w - ui(32), dialog_h - ui(64), 
 			value_target.inter_curve, mouse_ui);
 	}

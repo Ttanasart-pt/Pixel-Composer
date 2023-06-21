@@ -43,7 +43,7 @@ if !ready exit;
 	draw_set_text(f_p0, fa_left, fa_bottom, COLORS._main_text_sub);
 	draw_text(x0, y0 - ui(4), __txt("Recent files"));
 	draw_sprite_stretched(THEME.ui_panel_bg, 0, x0, y0, x1 - x0, y1 - y0);
-	sp_recent.setActiveFocus(sFOCUS, sHOVER);
+	sp_recent.setFocusHover(sFOCUS, sHOVER);
 	sp_recent.draw(x0 + ui(6), y0);
 	draw_sprite_stretched(THEME.ui_panel_fg, 0, x0, y0, x1 - x0, y1 - y0);
 	
@@ -153,7 +153,7 @@ if !ready exit;
 	
 	switch(pages[project_page]) {
 		case "Sample projects" :
-			sp_sample.setActiveFocus(sFOCUS, sHOVER);
+			sp_sample.setFocusHover(sFOCUS, sHOVER);
 			sp_sample.draw(x0 + ui(6), y0);
 	
 			if(!expand) {
@@ -163,7 +163,7 @@ if !ready exit;
 			}
 			break;
 		case "Workshop" : 
-			sp_sample.setActiveFocus(sFOCUS, sHOVER);
+			sp_sample.setFocusHover(sFOCUS, sHOVER);
 			sp_sample.draw(x0 + ui(6), y0);
 	
 			var bx = x1 - ui(32);
@@ -177,7 +177,7 @@ if !ready exit;
 				steamUCGload();
 			break;
 		case "Contests" : 
-			sp_contest.setActiveFocus(sFOCUS, sHOVER);
+			sp_contest.setFocusHover(sFOCUS, sHOVER);
 			sp_contest.draw(x0 + ui(6), y0);
 			break;
 	}

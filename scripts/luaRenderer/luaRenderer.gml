@@ -14,11 +14,11 @@ function luaArgumentRenderer() {
 			var _typ   = _jType.getValue();
 			var _h = 0;
 			
-			_jType.editWidget.setActiveFocus(_focus, _hover);
+			_jType.editWidget.setFocusHover(_focus, _hover);
 			_jType.editWidget.draw(tx, ty, ui(128), _th, _jType.display_data[_jType.showValue()], _m, argument_renderer.rx, argument_renderer.ry);
 			
 			var _jName = inputs[| i + 0];
-			_jName.editWidget.setActiveFocus(_focus, _hover);
+			_jName.editWidget.setFocusHover(_focus, _hover);
 			_jName.editWidget.draw(tx + ui(128 + 8), ty, _w - ui(128 + 8), _th, _jName.showValue(), _m, _jName.display_type);
 			
 			_h += _th + ui(6);
@@ -28,7 +28,7 @@ function luaArgumentRenderer() {
 			
 			var _jValue = inputs[| i + 2];
 			if(_jValue.editWidget != noone) {
-				_jValue.editWidget.setActiveFocus(_focus, _hover);
+				_jValue.editWidget.setFocusHover(_focus, _hover);
 				if(_typ == 2) {
 					_jValue.editWidget.draw(tx + ui(64), ty + _th + ui(6), _w - ui(64), ui(96), _jValue.showValue(), _m, argument_renderer.rx, argument_renderer.ry);
 					_h += ui(96 + 8);

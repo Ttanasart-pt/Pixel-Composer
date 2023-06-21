@@ -175,7 +175,7 @@ function Panel_Notification() : PanelContent() constructor {
 		var ph = h - ui(title_height + padding);
 	
 		draw_sprite_stretched(THEME.ui_panel_bg, !in_dialog, px - ui(8), py - ui(8), pw + ui(16), ph + ui(16));
-		sp_noti.setActiveFocus(pHOVER, pHOVER);
+		sp_noti.setFocusHover(pHOVER, pHOVER);
 		sp_noti.draw(px, py, mx - px, my - py);
 	}
 }

@@ -166,7 +166,7 @@ function Panel_Tunnels() : PanelContent() constructor {
 		if(search_string == "")
 			tb_search.sprite_index = 1;
 	
-		sc_tunnel.setActiveFocus(pFOCUS, pHOVER);
+		sc_tunnel.setFocusHover(pFOCUS, pHOVER);
 		sc_tunnel.draw(px, py + ui(40), mx - px, my - (py + ui(40)));
 		
 		var bx  = w - ui(32 + 16);

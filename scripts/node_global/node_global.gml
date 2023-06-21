@@ -153,8 +153,8 @@ function variable_editor(nodeVal) constructor {
 				var wd_h = ui(32);
 				var lb_w = ui(72);
 				
-				vb_range.setActiveFocus(_focus, _hover);
-				 tb_step.setActiveFocus(_focus, _hover);
+				vb_range.setFocusHover(_focus, _hover);
+				 tb_step.setFocusHover(_focus, _hover);
 				
 				draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text_sub);
 				draw_text(_x + ui(8), _y + wd_h / 2, "Range");
