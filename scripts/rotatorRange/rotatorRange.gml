@@ -29,11 +29,12 @@ function rotatorRange(_onModify) : widget() constructor {
 		x = _x;
 		y = _y;
 		w = 0;
-		h = ui(96);
+		h = ui(64);
 		
 		if(!is_real(_data[0])) return;
 		if(!is_real(_data[1])) return;
-		var knob_y = _y + ui(48);
+		var knob_y = _y + h / 2;
+		var _r = ui(28);
 		
 		tb_min.setFocusHover(active, hover);
 		tb_max.setFocusHover(active, hover);
@@ -41,45 +42,34 @@ function rotatorRange(_onModify) : widget() constructor {
 		tb_min.draw(_x - ui(40 + 16 + 80), knob_y - TEXTBOX_HEIGHT / 2, ui(80), TEXTBOX_HEIGHT, array_safe_get(_data, 0), _m);
 		tb_max.draw(_x + ui(40 + 16),      knob_y - TEXTBOX_HEIGHT / 2, ui(80), TEXTBOX_HEIGHT, array_safe_get(_data, 1), _m);
 		
-		draw_sprite_ui_uniform(THEME.rotator_bg, 0, _x, knob_y);
+		var px, py;
+		for(var i = 0; i < 2; i++) {
+			px[i] = _x + lengthdir_x(_r, _data[i]);
+			py[i] = knob_y + lengthdir_y(_r, _data[i]);
+		}
+		
+		draw_sprite(THEME.rotator_bg, 0, _x, knob_y);
+		
+		draw_set_color(COLORS.widget_rotator_guide);
+		draw_line(_x, knob_y, _x + lengthdir_x(ui(20), _data[0]) - 1, knob_y + lengthdir_y(ui(20), _data[0]) - 1);
+		draw_line(_x, knob_y, _x + lengthdir_x(ui(20), _data[1]) - 1, knob_y + lengthdir_y(ui(20), _data[1]) - 1);
 		
 		#region draw arc
 			var hover_arc = false;
 			var diss = point_distance(_m[0], _m[1], _x, knob_y);
-			if(diss >= ui(32) && diss <= ui(40) || dragging == 2)
+			if(abs(diss - _r) < 6 || dragging == 2)
 				hover_arc = true;
-			
-			var ans = _data[0] % 360;
-			var ane = _data[1] % 360;
-			
-			var diff = ane >= ans? ane - ans : ane + 360 - ans;
-			
-			draw_set_color(COLORS.widget_rotator_range);
-			for(var i = 0; i < abs(diff); i += 4) {
-				var as = ans + i * sign(diff);
-				var ae = ans + (i + 4) * sign(diff);
-				
-				var sx = _x     + lengthdir_x(ui(36), as);
-				var sy = knob_y + lengthdir_y(ui(36), as);
-				var ex = _x     + lengthdir_x(ui(36), ae);
-				var ey = knob_y + lengthdir_y(ui(36), ae);
-				
-				draw_set_alpha(0.5 + 0.5 * hover_arc);
-				draw_line_width(sx, sy, ex, ey, ui(8));
-				draw_set_alpha(1);
-				
-				draw_circle_prec(ex, ey, ui(4), 0);
+			for(var i = 0; i < 2; i++) {
+				if(point_in_circle(_m[0], _m[1], px[i], py[i], ui(20))) 
+					hover_arc = false;
 			}
+					
+			draw_set_color(hover_arc? COLORS.widget_rotator_range_hover : COLORS.widget_rotator_range);
+			draw_arc_th(_x, knob_y, _r, 3, _data[0], _data[1]);
 		#endregion
 		
-		var px, py;
-		
-		for(var i = 0; i < 2; i++) {
-			px[i] = _x + lengthdir_x(ui(36), _data[i]);
-			py[i] = knob_y + lengthdir_y(ui(36), _data[i]);
-			
-			draw_sprite_ui_uniform(THEME.rotator_knob, 0, px[i], py[i]);
-		}
+		for(var i = 0; i < 2; i++)
+			draw_sprite(THEME.rotator_knob, 0, px[i], py[i]);
 			
 		if(dragging > -1) {
 			var val = point_direction(_x, knob_y, _m[0], _m[1]);
@@ -105,7 +95,7 @@ function rotatorRange(_onModify) : widget() constructor {
 				real_val   = round(delta + drag_sv);
 				val = key_mod_press(CTRL)? round(real_val / 15) * 15 : real_val;
 				
-				draw_sprite_ui_uniform(THEME.rotator_knob, 1, px[dragging], py[dragging]);
+				draw_sprite(THEME.rotator_knob, 1, px[dragging], py[dragging]);
 				
 				if(_data[dragging] != val) {
 					var modi = false;
@@ -132,8 +122,8 @@ function rotatorRange(_onModify) : widget() constructor {
 			}
 		} else if(hover) {
 			for(var i = 0; i < 2; i++) {
-				if(point_in_circle(_m[0], _m[1], px[i], py[i], ui(10))) {
-					draw_sprite_ui_uniform(THEME.rotator_knob, 1, px[i], py[i]);
+				if(point_in_circle(_m[0], _m[1], px[i], py[i], ui(20))) {
+					draw_sprite(THEME.rotator_knob, 1, px[i], py[i]);
 						
 					if(mouse_press(mb_left, active)) {
 						dragging = i;
@@ -150,9 +140,9 @@ function rotatorRange(_onModify) : widget() constructor {
 			}
 		}
 		
-		draw_set_text(f_p0, fa_center, fa_center, COLORS._main_text);
-		draw_text(_x, knob_y - ui(12), string(_data[0]));
-		draw_text(_x, knob_y + ui(12), string(_data[1]));
+		//draw_set_text(f_p1, fa_center, fa_center, COLORS._main_text);
+		//draw_text(_x, knob_y - ui(8), string(_data[0]));
+		//draw_text(_x, knob_y + ui(8), string(_data[1]));
 		
 		resetFocus();
 	}

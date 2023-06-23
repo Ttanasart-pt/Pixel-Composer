@@ -348,6 +348,7 @@ function functionStringClean(fx) {
 	}
 	
 	function evaluateFunction(fx, params = {}) {
+		if(isNumber(fx)) return toNumber(fx);
 		return evaluateFunctionTree(fx).eval(params);
 	}
 #endregion

@@ -121,7 +121,7 @@ function Panel_Graph() : PanelContent() constructor {
 		//print(title + ": Center " + string(graph_x) + ", " + string(graph_y));
 	}
 	
-	function initSize() { toCenterNode(); }
+	static initSize = function() { toCenterNode(); }
 	initSize();
 	
 	toolbars = [

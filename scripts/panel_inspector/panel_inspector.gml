@@ -22,7 +22,7 @@ function Panel_Inspector() : PanelContent() constructor {
 	prop_sel_drag_x = 0;
 	prop_sel_drag_y = 0;
 	
-	function initSize() {
+	static initSize = function() {
 		content_w = w - ui(32);
 		content_h = h - top_bar_h - ui(12);
 	}

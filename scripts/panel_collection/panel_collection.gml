@@ -7,7 +7,7 @@ function Panel_Collection() : PanelContent() constructor {
 	group_w_sx = false;
 	group_w_mx = false;
 	
-	function initSize() {
+	static initSize = function() {
 		content_w = w - ui(8) - group_w;
 		content_h = h - ui(40) - ui(16);
 	}

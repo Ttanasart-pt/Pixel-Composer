@@ -6,6 +6,10 @@ function __Bone(parent = noone, distance = 0, direction = 0, angle = 0, length =
 	self.angle		= angle;
 	self.length		= length;
 	
+	pose_angle = 0;
+	pose_scale = 1;
+	pose_posit = [ 0, 0 ];
+	
 	self.is_main = false;
 	self.parent_anchor = true;
 	self.childs = [];
@@ -16,6 +20,8 @@ function __Bone(parent = noone, distance = 0, direction = 0, angle = 0, length =
 	
 	self.attributes = attributes;
 	updated = false;
+	
+	freeze_data = {};
 	
 	self.parent = parent;
 	if(parent != noone) {
@@ -34,6 +40,18 @@ function __Bone(parent = noone, distance = 0, direction = 0, angle = 0, length =
 		for( var i = 0; i < array_length(childs); i++ )
 			amo += childs[i].childCount();
 		return amo;
+	}
+	
+	static freeze = function() {
+		freeze_data = {
+			angle: angle,
+			length: length,
+			distance: distance,
+			direction: direction
+		}
+		
+		for( var i = 0; i < array_length(childs); i++ )
+			childs[i].freeze();
 	}
 	
 	static getPoint = function(distance, direction) {
@@ -76,8 +94,13 @@ function __Bone(parent = noone, distance = 0, direction = 0, angle = 0, length =
 			draw_set_alpha(1.00);
 			
 			if(attributes.display_name) {
-				draw_set_text(f_p2, fa_left, fa_center, COLORS._main_accent);
-				draw_text((p0.x + p1.x) / 2 + 4, (p0.y + p1.y) / 2, name);
+				if(abs(p0.y - p1.y) < abs(p0.x - p1.x)) {
+					draw_set_text(f_p2, fa_center, fa_bottom, COLORS._main_accent);
+					draw_text((p0.x + p1.x) / 2, (p0.y + p1.y) / 2 - 4, name);
+				} else {
+					draw_set_text(f_p2, fa_left, fa_center, COLORS._main_accent);
+					draw_text((p0.x + p1.x) / 2 + 4, (p0.y + p1.y) / 2, name);
+				}
 			}
 			
 			if(edit && distance_to_line(_mx, _my, p0.x, p0.y, p1.x, p1.y) <= 12) //drag bone
@@ -121,11 +144,44 @@ function __Bone(parent = noone, distance = 0, direction = 0, angle = 0, length =
 		draw_set_color(COLORS.node_composite_separator);
 		draw_line(_x + 16, _y, _x + _w - 16, _y);
 		
-		for( var i = 0; i < array_length(childs); i++ ) {
+		for( var i = 0; i < array_length(childs); i++ ) 
 			_y = childs[i].drawInspector(_x + ui(16), _y, _w - ui(16), _m, _hover, _focus);
-		}
 		
 		return _y;
+	}
+	
+	static resetPose = function() {
+		pose_angle = 0;
+		pose_scale = 1;
+		pose_posit = [ 0, 0 ];
+		
+		for( var i = 0; i < array_length(childs); i++ )
+			childs[i].resetPose();
+	}
+	
+	static setPose = function(_position = [ 0, 0 ], _angle = 0, _scale = 1) {
+		if(is_main) {
+			for( var i = 0; i < array_length(childs); i++ )
+				childs[i].setPose(_position, _angle, _scale);
+			return;
+		}
+		
+		pose_posit[0] += _position[0];
+		pose_posit[1] += _position[1];
+		pose_angle += _angle;
+		//pose_scale = _scale;
+		
+		var _x = lengthdir_x(distance, direction) + pose_posit[0];
+		var _y = lengthdir_y(distance, direction) + pose_posit[1];
+		
+		direction = point_direction(0, 0, _x, _y);
+		distance  = point_distance(0, 0, _x, _y);
+		
+		angle  += pose_angle;
+		length *= pose_scale;
+		
+		for( var i = 0; i < array_length(childs); i++ )
+			childs[i].setPose(_position, _angle, _scale);
 	}
 	
 	static serialize = function() {
@@ -137,7 +193,7 @@ function __Bone(parent = noone, distance = 0, direction = 0, angle = 0, length =
 		bone.direction	= direction;
 		bone.angle		= angle;
 		bone.length		= length;
-	
+		
 		bone.is_main		= is_main;
 		bone.parent_anchor	= parent_anchor;
 		
@@ -172,6 +228,8 @@ function __Bone(parent = noone, distance = 0, direction = 0, angle = 0, length =
 	
 	static clone = function(attributes) {
 		var _b = new __Bone(parent, distance, direction, angle, length, attributes);
+		_b.id = id;
+		_b.name = name;
 		_b.is_main = is_main;
 		_b.parent_anchor = parent_anchor;
 		

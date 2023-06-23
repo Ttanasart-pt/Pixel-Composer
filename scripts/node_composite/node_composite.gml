@@ -550,7 +550,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				var _surf = inputs[| surf_dragging + 0].getValue();
 				var _rot  = inputs[| surf_dragging + 2].getValue();
 				var _sw = surface_get_width(_surf);
-				var _sh = surface_get_width(_surf);
+				var _sh = surface_get_height(_surf);
 				
 				var _p = point_rotate(_mx - dragging_mx, _my - dragging_my, 0, 0, -_rot);
 				var sca_x = _p[0] / _s / _sw * 2;
@@ -758,8 +758,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		overlay_w = ww;
 		overlay_h = hh;
 	
-		if(is_surface(base)) 
-			_outSurf = surface_size_to(_outSurf, ww, hh, cDep);
+		_outSurf = surface_verify(_outSurf, ww, hh, cDep);
 		
 		for(var i = 0; i < 2; i++) {
 			temp_surface[i] = surface_verify(temp_surface[i], surface_get_width(_outSurf), surface_get_height(_outSurf), cDep);

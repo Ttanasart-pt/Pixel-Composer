@@ -252,7 +252,7 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 							case VALUE_DISPLAY.rotation :
 							case VALUE_DISPLAY.rotation_range :
 								jun.editWidget.draw(xc, _hsy, jun.showValue(), _m);
-								widH = ui(96);
+								widH = jun.editWidget.h;
 								break;
 							case VALUE_DISPLAY.slider :
 							case VALUE_DISPLAY.slider_range :

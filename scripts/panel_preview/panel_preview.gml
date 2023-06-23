@@ -5,12 +5,14 @@ function Panel_Preview() : PanelContent() constructor {
 	
 	last_focus = noone;
 	
-	function initSize() {
-		canvas_x = w / 2 - ui(64);
-		canvas_y = h / 2 - ui(64);
+	static initSize = function() {
+		canvas_x = w / 2;
+		canvas_y = h / 2;
 	}
-	initSize();
+	run_in(1, function() { initSize() });
 	
+	canvas_x = 0;
+	canvas_y = 0;
 	canvas_s = ui(1);
 	canvas_w = ui(128);
 	canvas_h = ui(128);
@@ -846,6 +848,10 @@ function Panel_Preview() : PanelContent() constructor {
 			draw_sprite_tiled_ext(s_transparent, 0, canvas_x, canvas_y, canvas_s, canvas_s, COLORS.panel_preview_transparent, 1);
 		else
 			draw_clear(canvas_bg);
+		
+		draw_set_color(COLORS._main_icon_dark);
+		draw_line_width(canvas_x, 0, canvas_x, h, 1);
+		draw_line_width(0, canvas_y, w, canvas_y, 1);
 		
 		title = __txt("Preview");
 		

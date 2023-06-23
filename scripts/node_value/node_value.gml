@@ -110,7 +110,7 @@ function value_color(i) {
 		$976bff, //atlas
 		#c1007c, //d3vertex
 		$5dde8f, //gradient
-		$5dde8f, //armature //////////////////////
+		$6691ff, //armature
 	];
 	
 	if(i == 99) return $5dde8f;
@@ -185,6 +185,7 @@ function typeArray(_type) {
 		case VALUE_DISPLAY.area :
 		case VALUE_DISPLAY.puppet_control :
 		case VALUE_DISPLAY.kernel :
+		case VALUE_DISPLAY.transform :
 			
 		case VALUE_DISPLAY.curve :
 			
@@ -735,7 +736,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						extract_node = "";
 						break;
 					case VALUE_DISPLAY.transform :
-						editWidget = new transformBox(function(index, _val) {
+						editWidget = new transformBox(function(index, val) {
 							var _val = animator.getValue();
 							_val[index] = val;
 							return setValueDirect(_val);
@@ -1221,8 +1222,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				updated = animator.setValue(val, connect_type == JUNCTION_CONNECT.input && record, time); 
 		}
 		
-		if(type == VALUE_TYPE.gradient) updated = true;
-		if(display_type == VALUE_DISPLAY.palette)  updated = true;
+		if(type == VALUE_TYPE.gradient)				updated = true;
+		if(display_type == VALUE_DISPLAY.palette)   updated = true;
+		if(display_type == VALUE_DISPLAY.transform) updated = true;
 		
 		if(updated) {
 			if(connect_type == JUNCTION_CONNECT.input) {

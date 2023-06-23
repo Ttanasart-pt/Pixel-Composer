@@ -7,13 +7,14 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 		var _b  = attributes.bones;
 		var amo = _b.childCount();
 		var _h  = ui(32 + 16) + amo * ui(28);
+		var __y = _y;
 		
 		draw_set_text(f_p0, fa_left, fa_top, COLORS._main_text);
 		draw_text_add(_x + ui(16), _y + ui(4), "Bones");
 		
 		_y += ui(32);
 		
-		draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, _x, _y, _w, _h, COLORS.node_composite_bg_blend, 1);
+		draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, _x, _y, _w, _h - ui(32), COLORS.node_composite_bg_blend, 1);
 		draw_set_color(COLORS.node_composite_separator);
 		draw_line(_x + 16, _y + ui(8), _x + _w - 16, _y + ui(8));
 		
@@ -56,9 +57,10 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 		})]);
 	
 	tools = [
-		new NodeTool( "Add bones", THEME.path_tools_transform ),
-		new NodeTool( "Remove bones", THEME.path_tools_transform ),
-		new NodeTool( "Detach bones", THEME.path_tools_transform ),
+		new NodeTool( "Transform", THEME.bone_tool_transform ),
+		new NodeTool( "Add bones", THEME.bone_tool_add ),
+		new NodeTool( "Remove bones", THEME.bone_tool_remove ),
+		new NodeTool( "Detach bones", THEME.bone_tool_detach ),
 	];
 	
 	anchor_selecting = noone;
@@ -69,12 +71,127 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 	builder_mx = 0;
 	builder_my = 0;
 	
+	moving = false;
+	scaling = false;
+	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
-		anchor_selecting = attributes.bones.draw(active, _x, _y, _s, _mx, _my, true, anchor_selecting);
-		//if(is_array(anchor_selecting)) print(anchor_selecting[1])
-		
 		var mx = (_mx - _x) / _s;
 		var my = (_my - _y) / _s;
+		
+		var _b =  attributes.bones;
+		
+		if(isUsingTool(0)) { //transform
+			attributes.bones.draw(active, _x, _y, _s, _mx, _my);
+			
+			var _bst = ds_stack_create();
+			ds_stack_push(_bst, _b);
+			
+			var minx =  999999;
+			var miny =  999999;
+			var maxx = -999999;
+			var maxy = -999999;
+			
+			while(!ds_stack_empty(_bst)) {
+				var __b = ds_stack_pop(_bst);
+				
+				if(!__b.is_main) {
+					var p0 = __b.getPoint(0, 0);
+					var p1 = __b.getPoint(__b.length, __b.angle);
+					
+					minx = min(minx, p0.x);
+					miny = min(miny, p0.y);
+					maxx = max(maxx, p0.x);
+					maxy = max(maxy, p0.y);
+					
+					minx = min(minx, p1.x);
+					miny = min(miny, p1.y);
+					maxx = max(maxx, p1.x);
+					maxy = max(maxy, p1.y);
+				}
+				
+				for( var i = 0; i < array_length(__b.childs); i++ )
+					ds_stack_push(_bst, __b.childs[i]);
+			}
+		
+			ds_stack_destroy(_bst);
+			
+			
+			var hvSc = false;
+			var hvMv = false;
+			
+			if(moving) {
+				var dx = mx - builder_mx;
+				var dy = my - builder_my;
+				
+				builder_mx = mx;
+				builder_my = my;
+				
+				for( var i = 0; i < array_length(_b.childs); i++ ) {
+					var bone = _b.childs[i];
+					
+					var _x = lengthdir_x(bone.distance, bone.direction) + dx;
+					var _y = lengthdir_y(bone.distance, bone.direction) + dy;
+					
+					bone.distance  = point_distance(0, 0, _x, _y);
+					bone.direction = point_direction(0, 0, _x, _y);
+				}
+				
+				if(mouse_release(mb_left))
+					moving = false;
+			} else if(scaling) {
+				var dir = point_direction(minx, miny, maxx, maxy);
+				var ss  = 1 + dot_product(lengthdir_x(1, dir), lengthdir_y(1, dir), mx - builder_mx, my - builder_my);
+				
+				var _bst = ds_stack_create();
+				ds_stack_push(_bst, _b);
+			
+				while(!ds_stack_empty(_bst)) {
+					var __b = ds_stack_pop(_bst);
+				
+					if(!__b.is_main) {
+						__b.distance = __b.freeze_data.distance * ss;
+						__b.length   = __b.freeze_data.length * ss;
+					}
+				
+					for( var i = 0; i < array_length(__b.childs); i++ )
+						ds_stack_push(_bst, __b.childs[i]);
+				}
+		
+				ds_stack_destroy(_bst);
+				
+				if(mouse_release(mb_left))
+					scaling = false;
+			} else {
+				if(point_in_circle(_mx, _my, maxx, maxy, 16)) {
+					hvSc = true;
+					
+					if(mouse_press(mb_left)) {
+						attributes.bones.freeze();
+						
+						builder_mx = mx;
+						builder_my = my;
+						scaling = true;
+					}
+				} else if(point_in_circle(_mx, _my, maxx, maxy, 16)) {
+					hvMv = true;
+					
+					if(mouse_press(mb_left)) {
+						builder_mx = mx;
+						builder_my = my;
+						moving = true;
+					}
+				}
+			}
+			
+			draw_sprite_colored(THEME.anchor_scale, hvSc, maxx, maxy);
+			
+			draw_set_color(COLORS._main_accent);
+			draw_rectangle_border(minx, miny, maxx, maxy, hvMv);
+			return;
+		}
+		
+		anchor_selecting = attributes.bones.draw(active, _x, _y, _s, _mx, _my, true, anchor_selecting);
+		//if(is_array(anchor_selecting)) print(anchor_selecting[1])
 		
 		if(builder_bone != noone) {
 			//draw_set_color(COLORS._main_accent);
@@ -136,7 +253,7 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 			}
 		}
 			
-		if(isUsingTool(0)) { // builder
+		if(isUsingTool(1)) { // builder
 			if(mouse_press(mb_left, active)) {
 				if(anchor_selecting == noone) {
 					builder_bone = createBone(attributes.bones, point_distance(0, 0, mx, my), point_direction(0, 0, mx, my));
@@ -165,7 +282,7 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 					UNDO_HOLDING = true;
 				}
 			}
-		} else if(isUsingTool(1)) { //remover
+		} else if(isUsingTool(2)) { //remover
 			if(anchor_selecting != noone && anchor_selecting[0].parent != noone && mouse_press(mb_left, active)) {
 				var _bone = anchor_selecting[0];
 				var _par  = _bone.parent;
@@ -197,7 +314,7 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 				builder_my = my;
 				UNDO_HOLDING = true;
 			}
-		} else { //mover
+		} else if(isUsingTool(3) || isNotUsingTool()) { //mover
 			if(anchor_selecting != noone && mouse_press(mb_left, active)) {
 				builder_bone = anchor_selecting[0];
 				builder_type = anchor_selecting[1];
@@ -228,12 +345,7 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 	}
 	
 	static step = function() {
-		if(bone_update) {
-			attributes.bone.updated = true;
-			bone_update = false;
-		} else {
-			attributes.bone.updated = false;
-		}
+		
 	}
 	
 	static update = function(frame = ANIMATOR.current_frame) {
@@ -241,12 +353,13 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 	}
 	
 	static doSerialize = function(_map) {
-		_map.bone = attributes.bones.serialize();
+		_map.bones = attributes.bones.serialize();
 	}
 	
 	static postDeserialize = function() {
-		if(!struct_has(load_map, "bone")) return;
-		attributes.bones.deserialize(load_map.bone, attributes);
+		if(!struct_has(load_map, "bones")) return;
+		attributes.bones = new __Bone(,,,,, attributes);
+		attributes.bones.deserialize(load_map.bones, attributes);
 	}
 }
 

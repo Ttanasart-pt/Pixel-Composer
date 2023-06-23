@@ -838,7 +838,7 @@ function PanelContent() constructor {
 	function onFocusBegin() {}
 	function onFocusEnd() {}
 	
-	function initSize() {}
+	static initSize = function() {}
 	
 	function setPanelSize(panel) {
 		x = panel.tx;

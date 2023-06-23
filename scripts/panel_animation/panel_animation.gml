@@ -15,7 +15,7 @@ function Panel_Animation() : PanelContent() constructor {
 	min_h		= ui(48);
 	tool_width	= ui(224);
 	
-	function initSize() {
+	static initSize = function() {
 		timeline_w = w - tool_width - ui(80);
 		timeline_surface = surface_create_valid(timeline_w, timeline_h);
 		timeline_mask = surface_create_valid(timeline_w, timeline_h);

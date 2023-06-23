@@ -1,7 +1,8 @@
 function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Armature Pose";
 	
-	inputs[| 0] = nodeValue("Armature", self, JUNCTION_CONNECT.input, VALUE_TYPE.armature, noone);
+	inputs[| 0] = nodeValue("Armature", self, JUNCTION_CONNECT.input, VALUE_TYPE.armature, noone)
+		.setVisible(true, true);
 	
 	input_display_list = [ 0,
 		["Bones", false]
@@ -31,9 +32,12 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			boneMap[? bone.id] = inputs[| index];
 		
 		array_push(input_display_list, index);
+		
+		return inputs[| index];
 	}
 	
-	function setBone() {
+	static setBone = function() { #region
+		//print("Setting dem bones...");
 		var _b = inputs[| 0].getValue();
 		if(_b == noone) return;
 		
@@ -51,6 +55,7 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		}
 		
 		ds_stack_destroy(_bst);
+		//print($"Bone counts: {array_length(_bones)}");
 		
 		var _inputs = ds_list_create();
 		_inputs[| 0] = inputs[| 0];
@@ -62,20 +67,27 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		
 		for( var i = 0; i < array_length(_bones); i++ ) {
 			var bone = _bones[i];
+			var _idx = ds_list_size(_inputs);
+			array_push(_input_display_list, _idx);
+			//print($"  > Adding bone id: {bone.id}");
+			
 			if(ds_map_exists(boneMap, bone.id)) {
 				var _inp = boneMap[? bone.id];
-				var _idx = ds_list_size(_inputs);
 				
 				_inp.index = _idx;
-				array_append(_input_display_list, _idx);
 				ds_list_add(_inputs, _inp);
-			} else
-				createNewControl(bone);
+			} else {
+				var _inp = createNewControl(bone);
+				ds_list_add(_inputs, _inp);
+			}
 		}
 		
 		ds_list_destroy(inputs);
 		inputs = _inputs;
 		input_display_list = _input_display_list;
+		
+		//print(_input_display_list);
+	#endregion
 	}
 	
 	tools = [
@@ -101,7 +113,7 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		var my = (_my - _y) / _s;
 		
 		if(posing_bone) {
-			if(posing_bone == 0) { //move
+			if(posing_type == 0) { //move
 				var bx = posing_sx + (mx - posing_mx);
 				var by = posing_sy + (my - posing_my);
 				
@@ -111,20 +123,25 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 				if(posing_input.setValue(val))
 					UNDO_HOLDING = true;
 				
-			} else if(posing_bone == 1) { //scale
-				var ss = point_distance(posing_mx, posing_my, mx, my) / posing_sx;
+			} else if(posing_type == 1) { //scale
+				var ss  = point_distance(posing_mx, posing_my, mx, my) / posing_sx;
+				var rot = point_direction(posing_mx, posing_my, mx, my) - posing_sy;
 				
 				var val = posing_input.getValue();
 				val[TRANSFORM.sca_x] = ss;
+				val[TRANSFORM.rot]   = rot;
 				if(posing_input.setValue(val))
 					UNDO_HOLDING = true;
 				
-			} else if(posing_bone == 2) { //rotate
+			} else if(posing_type == 2) { //rotate
 				var ori = posing_bone.getPoint(0, 0);
-				var rot = angle_difference(point_direction(ori.x, ori.y, mx, my), posing_bone.angle);
+				var ang = point_direction(ori.x, ori.y, mx, my);
+				var rot = angle_difference(ang, posing_sy);
+				posing_sy = ang;
+				posing_sx += rot;
 				
 				var val = posing_input.getValue();
-				val[TRANSFORM.rot] = rot;
+				val[TRANSFORM.rot] = posing_sx;
 				if(posing_input.setValue(val))
 					UNDO_HOLDING = true;
 				
@@ -132,11 +149,12 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			
 			if(mouse_release(mb_left)) {
 				posing_bone = noone;
+				posing_type = noone;
 				UNDO_HOLDING = false;
 			}
 		}
 		
-		if(anchor_selecting != noone && mouse_click(mb_left, active)) {
+		if(anchor_selecting != noone && mouse_press(mb_left, active)) {
 			if(anchor_selecting[1] == 0) { // move
 				posing_bone = anchor_selecting[0];
 				if(!ds_map_exists(boneMap, posing_bone.id))
@@ -159,10 +177,12 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 				posing_type = 1;
 				
 				var val = posing_input.getValue();
-				posing_sx = val[TRANSFORM.sca_x];
+				posing_sx = posing_bone.length / posing_bone.pose_scale;
+				posing_sy = posing_bone.angle - posing_bone.pose_angle;
 				
-				posing_mx = mx;
-				posing_my = my;
+				var pnt = posing_bone.getPoint(0, 0);
+				posing_mx = pnt.x;
+				posing_my = pnt.y;
 				
 			} else if(anchor_selecting[1] == 2) { // rotate
 				posing_bone = anchor_selecting[0];
@@ -171,8 +191,10 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 				posing_input = boneMap[? posing_bone.id];
 				posing_type = 2;
 				
+				var ori = posing_bone.getPoint(0, 0);
 				var val = posing_input.getValue();
-				posing_sx = posing_bone.angle;
+				posing_sx = val[TRANSFORM.rot];
+				posing_sy = point_direction(ori.x, ori.y, mx, my);
 				
 				posing_mx = mx;
 				posing_my = my;
@@ -181,9 +203,15 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		}
 	}
 	
+	bone_prev = noone;
 	static step = function() {
 		var _b = inputs[| 0].getValue();
 		if(_b == noone) return;
+		if(bone_prev != _b) {
+			setBone();
+			bone_prev = _b;
+			return;
+		}
 		
 		var _boneCount = ds_list_size(inputs) - input_fix_len;
 		if(_boneCount != _b.childCount()) setBone();
@@ -193,8 +221,8 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		var _b = inputs[| 0].getValue();
 		if(_b == noone) return;
 		
-		var _bone_pose = _b.clone();
-		
+		var _bone_pose = _b.clone(attributes);
+		_bone_pose.resetPose();
 		var _bst = ds_stack_create();
 		ds_stack_push(_bst, _bone_pose);
 		
@@ -209,30 +237,17 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 				
 				var _trn  = _inp.getValue();
 				
-				var px  = _trn[0];
-				var py  = _trn[1];
-				var rot = _trn[2];
-				var sca = _trn[3];
-				
-				var _x = lengthdir_x(bone.distance, bone.direction);
-				var _y = lengthdir_y(bone.distance, bone.direction);
-				
-				_x += px;
-				_y += py;
-				
-				bone.distance  = point_distance(0, 0, _x, _y);
-				bone.direction = point_direction(0, 0, _x, _y);
-				
-				bone.angle  += rot;
-				bone.length *= sca;
+				bone.pose_posit = [ _trn[TRANSFORM.pos_x], _trn[TRANSFORM.pos_y] ];
+				bone.pose_angle = _trn[TRANSFORM.rot];
+				bone.pose_scale = _trn[TRANSFORM.sca_x];
 			}
 			
-			for( var i = 0; i < array_length(bone.childs); i++ ) {
+			for( var i = 0; i < array_length(bone.childs); i++ )
 				ds_stack_push(_bst, bone.childs[i]);
-			}
 		}
 		
 		ds_stack_destroy(_bst);
+		_bone_pose.setPose();
 		
 		outputs[| 0].setValue(_bone_pose);
 	}
