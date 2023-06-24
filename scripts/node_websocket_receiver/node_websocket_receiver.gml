@@ -66,8 +66,11 @@ function Node_Websocket_Receiver(_x, _y, _group = noone) : Node(_x, _y, _group) 
 				var socket = async_load[? "id"];
 				var data = buffer_get_string(buffer);
 				
-				data = json_parse(data);
-				outputs[| 0].setValue(data);
+				var _data = json_try_parse(data, noone);
+				if(_data == noone)	_data = { rawData: new Buffer(buffer) }
+				else				buffer_delete(buffer);
+					
+				outputs[| 0].setValue(_data);
 				network_trigger = true;
 				break;
 		}

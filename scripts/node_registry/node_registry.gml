@@ -532,6 +532,12 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 			addNodeObject(values, "Atlas Get",		s_node_atlas_get,	"Node_Atlas_Get",	[1, Node_Atlas_Get]).setVersion(1141);
 			addNodeObject(values, "Atlas Set",		s_node_atlas_set,	"Node_Atlas_Set",	[1, Node_Atlas_Set]).setVersion(1141);
 			
+			ds_list_add(values, "Surface");
+			addNodeObject(values, "Surface from Buffer",	s_node_surface_from_buffer,	"Node_Surface_From_Buffer",	[1, Node_Surface_From_Buffer], ["buffer to surface"], "Create surface from buffer.").setVersion(1146);
+			
+			ds_list_add(values, "Buffer");
+			addNodeObject(values, "Buffer from Surface",	s_node_surface_to_buffer,	"Node_Surface_To_Buffer",	[1, Node_Surface_To_Buffer], ["surface to buffer"], "Create buffer from surface.").setVersion(1146);
+			
 		var color = ds_list_create();
 		addNodeCatagory("Color", color);
 			ds_list_add(color, "Colors");

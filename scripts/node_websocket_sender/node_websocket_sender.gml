@@ -8,7 +8,7 @@ function Node_Websocket_Sender(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	inputs[| 0] = nodeValue("Port", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 22800);
 	
 	inputs[| 1] = nodeValue("Data type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Struct", "Surface", "File" ]);
+		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Struct", "Surface", "File", "Buffer" ]);
 	
 	inputs[| 2] = nodeValue("Struct", self, JUNCTION_CONNECT.input, VALUE_TYPE.struct, {});
 	
@@ -19,8 +19,10 @@ function Node_Websocket_Sender(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		.nonValidate();
 	
 	inputs[| 5] = nodeValue("Target", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "127.0.0.1");
-		
-	input_display_list = [ 5, 0, 1, 2, 3, 4 ];
+	
+	inputs[| 6] = nodeValue("Buffer", self, JUNCTION_CONNECT.input, VALUE_TYPE.buffer, noone);
+	
+	input_display_list = [ 5, 0, 1, 2, 3, 4, 6 ];
 	
 	port = 0;
 	url  = "";
@@ -74,6 +76,7 @@ function Node_Websocket_Sender(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		inputs[| 2].setVisible(_type == 0, _type == 0);
 		inputs[| 3].setVisible(_type == 1, _type == 1);
 		inputs[| 4].setVisible(_type == 2, _type == 2);
+		inputs[| 6].setVisible(_type == 3, _type == 3);
 	}
 	
 	static update = function(frame = ANIMATOR.current_frame) { 
@@ -87,25 +90,31 @@ function Node_Websocket_Sender(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		if(network < 0) return;
 		
 		var _type = inputs[| 1].getValue();
+		var _buff, res;
 		
 		switch(_type) {
 			case 0 :
 				var _stru = inputs[| 2].getValue();
 				var _str  = json_stringify(_stru);
-				var _buff = buffer_from_string(_str);
-				var res   = network_send_raw(network, _buff, buffer_get_size(_buff), network_send_text);
+				_buff = buffer_from_string(_str);
+				res   = network_send_raw(network, _buff, buffer_get_size(_buff), network_send_text);
 				break;
 			case 1 :
 				var _surf = inputs[| 3].getValue();
 				if(!is_surface(_surf)) return;
-				var _buff = buffer_from_surface(_surf);
-				var res   = network_send_raw(network, _buff, buffer_get_size(_buff), network_send_binary);
+				_buff = buffer_from_surface(_surf);
+				res   = network_send_raw(network, _buff, buffer_get_size(_buff), network_send_text);
 				break;
 			case 2 :
 				var _path = inputs[| 4].getValue();
 				if(!file_exists(_path)) return;
-				var _buff = buffer_from_file(_path);
-				var res   = network_send_raw(network, _buff, buffer_get_size(_buff), network_send_binary);
+				_buff = buffer_from_file(_path);
+				res   = network_send_raw(network, _buff, buffer_get_size(_buff), network_send_text);
+				break;
+			case 3 :
+				_buff = inputs[| 6].getValue();
+				if(!buffer_exists(_buff)) return;
+				res   = network_send_raw(network, _buff, buffer_get_size(_buff), network_send_text);
 				break;
 		}
 	}

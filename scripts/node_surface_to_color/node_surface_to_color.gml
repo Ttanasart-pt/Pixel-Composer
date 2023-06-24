@@ -10,7 +10,7 @@ function Node_Surface_To_Color(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 		var _surf = _data[0];
 		var _pal  = [];
 		
-		var buff = buffer_from_surface(_surf);
+		var buff = buffer_from_surface(_surf, false);
 		var size = buffer_get_size(buff);
 		buffer_seek(buff, buffer_seek_start, 0);
 		

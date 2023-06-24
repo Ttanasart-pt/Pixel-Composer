@@ -164,6 +164,26 @@ function surface_create_from_buffer(w, h, buff, format = surface_rgba8unorm) {
 	return s;
 }
 
+function surface_from_buffer(buff) {
+	static header_length = 24;
+	if(!buffer_exists(buff)) return noone;
+	
+	buffer_seek(buff, buffer_seek_start, 0);
+	var text = "";
+	repeat(4) text += chr(buffer_read(buff, buffer_u8));
+	if(text != "PXCS") return noone;
+	
+	var w = buffer_read(buff, buffer_u16);
+	var h = buffer_read(buff, buffer_u16);
+	var format = buffer_read(buff, buffer_u8);
+	//print($"Creating surface from buffer {buff}: size {buffer_get_size(buff) - 4}: w = {w}, h = {h}");
+	if(w < 1 || h < 1) return noone;
+	
+	var s = surface_create(w, h, format);
+	buffer_set_surface(buff, s, header_length);
+	return s;
+}
+
 function surface_create_from_sprite(spr) {
 	if(!sprite_exists(spr)) return noone;
 	
@@ -361,7 +381,7 @@ function surface_decode(struct) {
 	return surface_create_from_buffer(struct.width, struct.height, buff);
 }
 
-function surface_bit_size(format) {
+function surface_format_get_bytes(format) {
 	switch(format) {
 		case surface_rgba4unorm :  return 4 * 0.5; break;
 		case surface_rgba8unorm :  return 4 * 1; break;
@@ -378,6 +398,6 @@ function surface_bit_size(format) {
 function surface_get_size(surface) {
 	var sw = surface_get_width(surface);
 	var sh = surface_get_height(surface);
-	var sz = sw * sh * surface_bit_size(surface_get_format(surface));
+	var sz = sw * sh * surface_format_get_bytes(surface_get_format(surface));
 	return sz;
 }

@@ -129,11 +129,11 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 				for( var i = 0; i < array_length(_b.childs); i++ ) {
 					var bone = _b.childs[i];
 					
-					var _x = lengthdir_x(bone.distance, bone.direction) + dx;
-					var _y = lengthdir_y(bone.distance, bone.direction) + dy;
+					var _bx = lengthdir_x(bone.distance, bone.direction) + dx;
+					var _by = lengthdir_y(bone.distance, bone.direction) + dy;
 					
-					bone.distance  = point_distance(0, 0, _x, _y);
-					bone.direction = point_direction(0, 0, _x, _y);
+					bone.distance  = point_distance(0, 0, _bx, _by);
+					bone.direction = point_direction(0, 0, _bx, _by);
 				}
 				
 				if(mouse_release(mb_left))

@@ -161,3 +161,8 @@ function draw_tooltip_atlas(atlas) {
 		draw_text_add(sx + ui(160), _y + ui(32), atl.scale);
 	}
 }
+
+function draw_tooltip_buffer(buff) {
+	var txt = buffer_get_string(buff, false);
+	draw_tooltip_text(txt);
+}

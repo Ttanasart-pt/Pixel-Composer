@@ -76,6 +76,9 @@ if(OS == os_windows && gameframe_is_minimized()) exit;
 				case VALUE_TYPE.atlas :
 					draw_tooltip_atlas(content);
 					break;
+				case VALUE_TYPE.buffer :
+					draw_tooltip_buffer(content);
+					break;
 			}
 		} else 
 			draw_tooltip_text(TOOLTIP);

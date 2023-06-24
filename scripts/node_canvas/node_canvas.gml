@@ -29,12 +29,15 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		
 	inputs[| 10] = nodeValue("Render background", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
 	
+	inputs[| 11] = nodeValue("Alpha", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1 )
+		.setDisplay(VALUE_DISPLAY.slider, [0, 1, 0.01]);
+	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	outputs[| 1] = nodeValue("Preview", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [ 
 		["Output",	false],	0, 
-		["Brush",	false], 6, 1, 2, 
+		["Brush",	false], 6, 2, 1, 11,
 		["Fill",	false], 3, 4, 
 		["Display", false], 5, 8, 9, 10,
 	];
@@ -49,10 +52,8 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	
 	tool_channel_edit      = new checkBoxGroup(THEME.tools_canvas_channel, function(ind, val) { tool_attribute.channel[ind] = val; });
 	tool_attribute.channel = [ true, true, true, true ];
-	tool_attribute.alpha   = 1;
 	tool_settings = [
 		[ "Channel", tool_channel_edit, "channel", tool_attribute ],
-		[ "Alpha", new textBox(TEXTBOX_INPUT.number, function(alp) { tool_attribute.alpha = alp; }), "alpha", tool_attribute ],
 	];
 	
 	tools = [
@@ -78,10 +79,12 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	}
 	
 	function apply_draw_surface() {
+		var _alp = inputs[| 11].getValue();
+		
 		BLEND_ALPHA;
 		if(isUsingTool(1))
 			gpu_set_blendmode(bm_subtract);
-		draw_surface_ext_safe(drawing_surface, 0, 0, 1, 1, 0, c_white, tool_attribute.alpha);
+		draw_surface_ext_safe(drawing_surface, 0, 0, 1, 1, 0, c_white, _alp);
 				
 		surface_set_target(drawing_surface);
 			DRAW_CLEAR
@@ -279,6 +282,8 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	}
 	
 	function flood_fill_scanline(_x, _y, _surf, _thres, _corner = false) {
+		var _alp = inputs[| 11].getValue();
+		
 		var colorFill = draw_get_color() + (255 << 24);
 		var colorBase = get_color_buffer(_x, _y);
 		
@@ -311,7 +316,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			spanBelow = false;
 			
 			while(x1 < surface_w && ff_fillable(colorBase, colorFill, x1, y1, thr)) {
-				draw_set_alpha(tool_attribute.alpha);
+				draw_set_alpha(_alp);
 				draw_point(x1, y1);
 				draw_set_alpha(1);
 				
@@ -367,13 +372,15 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	}
 	
 	function canvas_fill(_x, _y, _surf, _thres) {
+		var _alp = inputs[| 11].getValue();
+		
 		var w = surface_get_width(_surf);
 		var h = surface_get_height(_surf);
 		
 		var _c1 = get_color_buffer(_x, _y);
 		var thr = _thres * _thres;
 		
-		draw_set_alpha(tool_attribute.alpha);
+		draw_set_alpha(_alp);
 		for( var i = 0; i < w; i++ ) {
 			for( var j = 0; j < h; j++ ) {
 				if(i == _x && j == _y) {
@@ -541,8 +548,9 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		surface_reset_target();
 		
 		#region preview
-			var _bg    = inputs[|  8].getValue();
-			var _bga   = inputs[|  9].getValue();
+			var _bg  = inputs[|  8].getValue();
+			var _bga = inputs[|  9].getValue();
+			var _alp = inputs[| 11].getValue();
 		
 			var _surf_prev = outputs[| 1].getValue();
 			_surf_prev = surface_verify(_surf_prev, _dim[0], _dim[1], attrDepth());
@@ -558,7 +566,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			BLEND_ALPHA;
 			if(isUsingTool(1))
 				gpu_set_blendmode(bm_subtract);
-			draw_surface_ext_safe(drawing_surface, 0, 0, 1, 1, 0, c_white, tool_attribute.alpha);
+			draw_surface_ext_safe(drawing_surface, 0, 0, 1, 1, 0, c_white, _alp);
 			BLEND_NORMAL;
 			
 			draw_set_color(_col);

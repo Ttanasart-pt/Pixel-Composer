@@ -32,6 +32,7 @@ enum VALUE_TYPE {
 	d3vertex  = 21,
 	gradient  = 22,
 	armature  = 23,
+	buffer    = 24,
 	
 	action	  = 99,
 }
@@ -111,6 +112,7 @@ function value_color(i) {
 		#c1007c, //d3vertex
 		$5dde8f, //gradient
 		$6691ff, //armature
+		$808080, //buffer
 	];
 	
 	if(i == 99) return $5dde8f;
@@ -139,9 +141,11 @@ function value_bit(i) {
 		case VALUE_TYPE.strands   	: return 1 << 20;
 		case VALUE_TYPE.mesh	  	: return 1 << 21;
 		case VALUE_TYPE.atlas	  	: return 1 << 23;
-		case VALUE_TYPE.armature  	: return 1 << 24 | 1 << 19;
+		case VALUE_TYPE.armature  	: return 1 << 26 | 1 << 19;
 		
 		case VALUE_TYPE.node		: return 1 << 32;
+		
+		case VALUE_TYPE.buffer		: return 1 << 27;
 		
 		case VALUE_TYPE.trigger		: return 1 << 22;
 		case VALUE_TYPE.action		: return 1 << 22 | 1 << 3;

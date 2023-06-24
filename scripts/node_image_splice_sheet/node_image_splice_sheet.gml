@@ -305,7 +305,7 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		
 		var filSize = 4;
 		var _empS = surface_create_valid(filSize, filSize, cDep);
-		var _buff = buffer_create(filSize * filSize * surface_bit_size(cDep), buffer_fixed, 2);
+		var _buff = buffer_create(filSize * filSize * surface_format_get_bytes(cDep), buffer_fixed, 2);
 		
 		surf_array = [];
 		for( var i = 0; i < array_length(surf_array); i++ ) {
