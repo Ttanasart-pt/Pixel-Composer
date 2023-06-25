@@ -32,7 +32,7 @@ event_inherited();
 		x1 = dialog_x + dialog_w - ui(16);
 	
 		sp_sample.resize(x1 - x0 - ui(12), y1 - y0);
-		sp_contest.resize(x1 - x0 - ui(12), y1 - y0);
+		sp_contest.resize(x1 - x0 - ui(12), y1 - y0 - 2);
 	}
 	
 	var x0 = dialog_x + ui(16);
@@ -167,7 +167,7 @@ event_inherited();
 						var sw = sprite_get_width(spr);
 						var sh = sprite_get_height(spr);
 						
-						var s = min(gw / sw, gh / sh) * 2;
+						var s = min(gw / sw, gh / sh);
 						
 						var ox = (sprite_get_xoffset(spr) - sw / 2) * s / 2;
 						var oy = (sprite_get_yoffset(spr) - sh / 2) * s / 2;
@@ -224,7 +224,7 @@ event_inherited();
 	
 	contest_viewing = noone;
 	
-	sp_contest = new scrollPane(x1 - x0 - ui(12), y1 - y0, function(_y, _m) {
+	sp_contest = new scrollPane(x1 - x0 - ui(12), y1 - y0 - 2, function(_y, _m) {
 		draw_clear_alpha(COLORS.panel_bg_clear_inner, 0);
 		var hh = 0;
 		

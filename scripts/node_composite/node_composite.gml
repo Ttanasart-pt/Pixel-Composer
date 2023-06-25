@@ -201,10 +201,14 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			ds_list_delete(inputs, idx);
 			array_remove(input_display_list, idx + i);
 		}
+		
 		for( var i = input_display_list_len; i < array_length(input_display_list); i++ ) {
 			if(input_display_list[i] > idx)
 				input_display_list[i] = input_display_list[i] - data_length;
 		}
+		
+		if(ds_list_size(inputs) == input_fix_len)
+			createNewSurface();
 		doUpdate();
 	}
 	

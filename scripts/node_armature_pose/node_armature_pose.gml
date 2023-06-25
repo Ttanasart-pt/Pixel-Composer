@@ -1,6 +1,10 @@
 function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Armature Pose";
 	
+	w = 96;
+	h = 72;
+	min_h = h;
+	
 	inputs[| 0] = nodeValue("Armature", self, JUNCTION_CONNECT.input, VALUE_TYPE.armature, noone)
 		.setVisible(true, true);
 	
@@ -134,7 +138,7 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 					UNDO_HOLDING = true;
 				
 			} else if(posing_type == 2) { //rotate
-				var ori = posing_bone.getPoint(0, 0);
+				var ori = posing_bone.getPoint(0);
 				var ang = point_direction(ori.x, ori.y, mx, my);
 				var rot = angle_difference(ang, posing_sy);
 				posing_sy = ang;
@@ -180,7 +184,7 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 				posing_sx = posing_bone.length / posing_bone.pose_scale;
 				posing_sy = posing_bone.angle - posing_bone.pose_angle;
 				
-				var pnt = posing_bone.getPoint(0, 0);
+				var pnt = posing_bone.getPoint(0);
 				posing_mx = pnt.x;
 				posing_my = pnt.y;
 				
@@ -191,7 +195,7 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 				posing_input = boneMap[? posing_bone.id];
 				posing_type = 2;
 				
-				var ori = posing_bone.getPoint(0, 0);
+				var ori = posing_bone.getPoint(0);
 				var val = posing_input.getValue();
 				posing_sx = val[TRANSFORM.rot];
 				posing_sy = point_direction(ori.x, ori.y, mx, my);
@@ -266,6 +270,13 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			
 			boneMap[? idx] = inp;
 		}
+		
+		setBone();
+	}
+	
+	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
+		var bbox = drawGetBbox(xx, yy, _s);
+		draw_sprite_fit(s_node_armature_pose, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
 	}
 }
 

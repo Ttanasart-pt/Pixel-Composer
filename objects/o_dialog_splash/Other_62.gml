@@ -1,5 +1,5 @@
 /// @description 
-if(async_load[? "id"] == contest_req) {
+if(async_load[? "id"] == contest_req) { //get contests
 	var r_str = async_load[? "result"];
 	if(is_undefined(r_str)) return;
 	
@@ -10,8 +10,10 @@ if(async_load[? "id"] == contest_req) {
 		
 		for( var i = 0; i < array_length(thrs); i++ ) {
 			var thr = thrs[i];
-			if(thr.parent_id != "1113080578351312906") continue;
-			if(struct_has(thr, "applied_tags") && array_exists(thr.applied_tags, "1113145223938326658")) continue;
+			if(thr.parent_id != "1113080578351312906") continue; //not in contest channel
+			
+			if(struct_has(thr, "flags") && thr.flags & 2) continue;
+			if(struct_has(thr, "applied_tags") && array_exists(thr.applied_tags, "1113145223938326658")) continue; //has announcement tag
 			thr.messages = [];
 			
 			array_push(contests, thr);

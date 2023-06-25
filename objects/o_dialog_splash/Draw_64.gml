@@ -159,13 +159,13 @@ if !ready exit;
 			if(!expand) {
 				draw_set_text(f_p1, fa_right, fa_bottom, COLORS._main_text_sub);
 				draw_text(x1 - ui(82), y0 - ui(4), __txt("Art by") + " ");
-				draw_sprite_ui_uniform(s_kenney, 0, x1, y0 - ui(4), 2, c_white, 0.5);
+				draw_sprite_ui_uniform(s_kenney, 0, x1, y0 - ui(4),, c_white, 0.5);
 			}
 			break;
 		case "Workshop" : 
 			sp_sample.setFocusHover(sFOCUS, sHOVER);
 			sp_sample.draw(x0 + ui(6), y0);
-	
+			
 			var bx = x1 - ui(32);
 			var by = y0 - ui(32);
 		
@@ -178,7 +178,7 @@ if !ready exit;
 			break;
 		case "Contests" : 
 			sp_contest.setFocusHover(sFOCUS, sHOVER);
-			sp_contest.draw(x0 + ui(6), y0);
+			sp_contest.draw(x0 + ui(6), y0 + 1);
 			break;
 	}
 	

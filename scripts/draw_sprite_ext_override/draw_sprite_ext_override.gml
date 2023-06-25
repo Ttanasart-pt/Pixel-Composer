@@ -38,7 +38,7 @@ function draw_sprite_uniform(spr, ind, _x, _y, scale, color = c_white) {
 }
 
 function draw_sprite_ui(spr, ind, _x, _y, xscale = 1, yscale = 1, rot = 0, color = c_white, alpha = 1) {
-	var UI_SPRITE_SCALE = 2;
+	static UI_SPRITE_SCALE = 1;
 	
 	var xscale_ui = ui(xscale) / UI_SPRITE_SCALE;
 	var yscale_ui = ui(yscale) / UI_SPRITE_SCALE;

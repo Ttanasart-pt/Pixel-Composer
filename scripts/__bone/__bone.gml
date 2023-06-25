@@ -1,10 +1,11 @@
-function __Bone(parent = noone, distance = 0, direction = 0, angle = 0, length = 0, attributes = {}) constructor {
+function __Bone(parent = noone, distance = 0, direction = 0, angle = 0, length = 0, attributes = {}, node = noone) constructor {
 	id = UUID_generate();
 	self.name = "New bone";
 	self.distance	= distance;
 	self.direction	= direction;
 	self.angle		= angle;
 	self.length		= length;
+	self.node		= node;
 	
 	pose_angle = 0;
 	pose_scale = 1;
@@ -14,12 +15,18 @@ function __Bone(parent = noone, distance = 0, direction = 0, angle = 0, length =
 	self.parent_anchor = true;
 	self.childs = [];
 	
-	tb_name = new textBox(TEXTBOX_INPUT.text, function(_name) { name = _name; });
+	tb_name = new textBox(TEXTBOX_INPUT.text, 
+		function(_name) { 
+			name = _name; 
+			if(node) node.triggerRender();
+		});
 	tb_name.font = f_p2;
 	tb_name.hide = true;
 	
 	self.attributes = attributes;
 	updated = false;
+	
+	IKlength = 0;
 	
 	freeze_data = {};
 	
@@ -54,25 +61,30 @@ function __Bone(parent = noone, distance = 0, direction = 0, angle = 0, length =
 			childs[i].freeze();
 	}
 	
-	static getPoint = function(distance, direction) {
+	static getPoint = function(progress) {
+		var len = length * progress;
+		
 		if(parent == noone)
-			return new Point(lengthdir_x(self.distance, self.direction), lengthdir_y(self.distance, self.direction))
-						.add(lengthdir_x(     distance,      direction), lengthdir_y(     distance,      direction));
+			return new Point(lengthdir_x(distance, direction), lengthdir_y(distance, direction))
+						.add(lengthdir_x(len, angle), lengthdir_y(len, angle));
 		
 		if(parent_anchor) {
-			var p = parent.getPoint(parent.length, parent.angle);
-			return p.add(lengthdir_x(distance, direction), lengthdir_y(distance, direction));
+			var p = parent.getPoint(1)
+						  .add(lengthdir_x(len, angle), lengthdir_y(len, angle))
+			return p;
 		}
 		
-		var p = parent.getPoint(self.distance, self.direction);
-		return p.add(lengthdir_x(distance, direction), lengthdir_y(distance, direction));
+		var p = parent.getPoint(0)
+					  .add(lengthdir_x(distance, direction), lengthdir_y(distance, direction))
+					  .add(lengthdir_x(len, angle), lengthdir_y(len, angle))
+		return p;
 	}
 	
 	static draw = function(edit = false, _x = 0, _y = 0, _s = 1, _mx = 0, _my = 0, child = true, hovering = noone) {
 		var hover = noone;
 		
-		var p0 = getPoint(0, 0);
-		var p1 = getPoint(length, angle);
+		var p0 = getPoint(0);
+		var p1 = getPoint(1);
 		
 		p0.x = _x + p0.x * _s;
 		p0.y = _y + p0.y * _s;
@@ -80,26 +92,30 @@ function __Bone(parent = noone, distance = 0, direction = 0, angle = 0, length =
 		p1.y = _y + p1.y * _s;
 		
 		if(parent != noone) {
-			var aa = (hovering != noone && hovering[0] == self && hovering[1] == 2)? 1 : 0.75;
-			draw_set_color(COLORS._main_accent);
+			var _boneHover = hovering != noone && hovering[0] == self && hovering[1] == 2;
+			var aa = _boneHover? 1 : 0.75;
+			draw_set_color(_boneHover? c_white : COLORS._main_accent);
 			if(!parent_anchor && parent.parent != noone) {
-				var _p = parent.getPoint(0, 0);
+				var _p = parent.getPoint(0);
 				_p.x = _x + _p.x * _s;
 				_p.y = _y + _p.y * _s;
 				draw_line_dashed(_p.x, _p.y, p0.x, p0.y, 1);
 			}
 			
 			draw_set_alpha(aa);
-			draw_line_width2(p0.x, p0.y, p1.x, p1.y, 6, 2);
+			var _ppx = lerp(p0.x, p1.x, 0.2);
+			var _ppy = lerp(p0.y, p1.y, 0.2);
+			draw_line_width2(p0.x, p0.y, _ppx, _ppy,  2, 12);
+			draw_line_width2(_ppx, _ppy, p1.x, p1.y, 12,  2);
 			draw_set_alpha(1.00);
 			
 			if(attributes.display_name) {
 				if(abs(p0.y - p1.y) < abs(p0.x - p1.x)) {
 					draw_set_text(f_p2, fa_center, fa_bottom, COLORS._main_accent);
-					draw_text((p0.x + p1.x) / 2, (p0.y + p1.y) / 2 - 4, name);
+					draw_text_add((p0.x + p1.x) / 2, (p0.y + p1.y) / 2 - 4, name);
 				} else {
 					draw_set_text(f_p2, fa_left, fa_center, COLORS._main_accent);
-					draw_text((p0.x + p1.x) / 2 + 4, (p0.y + p1.y) / 2, name);
+					draw_text_add((p0.x + p1.x) / 2 + 4, (p0.y + p1.y) / 2, name);
 				}
 			}
 			
@@ -107,19 +123,25 @@ function __Bone(parent = noone, distance = 0, direction = 0, angle = 0, length =
 				hover = [ self, 2 ];
 			
 			if(!parent_anchor) {
-				if(edit && point_in_circle(_mx, _my, p0.x, p0.y, ui(20))) { //drag head
+				if(edit && point_in_circle(_mx, _my, p0.x, p0.y, ui(16))) { //drag head
 					draw_sprite_colored(THEME.anchor_selector, 0, p0.x, p0.y); 
 					hover = [ self, 0 ];
 				} else	
 					draw_sprite_colored(THEME.anchor_selector, 2, p0.x, p0.y);
 			}
 			
-			if(edit && point_in_circle(_mx, _my, p1.x, p1.y, ui(20))) { //drag tail
+			if(edit && point_in_circle(_mx, _my, p1.x, p1.y, ui(16))) { //drag tail
 				draw_sprite_colored(THEME.anchor_selector, 0, p1.x, p1.y);
 				hover = [ self, 1 ];
 			} else	
 				draw_sprite_colored(THEME.anchor_selector, 2, p1.x, p1.y);
 		}
+		
+		//var ph = getPoint(0.5);
+		//ph.x = _x + ph.x * _s;
+		//ph.y = _y + ph.y * _s;
+		//draw_set_color(COLORS._main_accent);
+		//draw_circle(ph.x, ph.y, 4, false);
 		
 		if(child)
 		for( var i = 0; i < array_length(childs); i++ ) {
@@ -129,25 +151,6 @@ function __Bone(parent = noone, distance = 0, direction = 0, angle = 0, length =
 		}
 		
 		return hover;
-	}
-	
-	static drawInspector = function(_x, _y, _w, _m, _hover, _focus) {
-		var _h = ui(28);
-		
-		//draw_sprite_stretched(THEME.node_bg, 0, _x, _y, _w, _h);
-		draw_sprite_ui(THEME.bone, 0, _x + 12, _y + 12,,,, COLORS._main_icon);
-		tb_name.setFocusHover(_focus, _hover);
-		tb_name.draw(_x + 24, _y + 2, _w - 24 - 8, _h - 4, name, _m);
-		
-		_y += _h;
-		
-		draw_set_color(COLORS.node_composite_separator);
-		draw_line(_x + 16, _y, _x + _w - 16, _y);
-		
-		for( var i = 0; i < array_length(childs); i++ ) 
-			_y = childs[i].drawInspector(_x + ui(16), _y, _w - ui(16), _m, _hover, _focus);
-		
-		return _y;
 	}
 	
 	static resetPose = function() {
@@ -160,16 +163,21 @@ function __Bone(parent = noone, distance = 0, direction = 0, angle = 0, length =
 	}
 	
 	static setPose = function(_position = [ 0, 0 ], _angle = 0, _scale = 1) {
+		setPoseTransform(_position, _angle, _scale);
+		setIKconstrain();
+	}
+	
+	static setPoseTransform = function(_position = [ 0, 0 ], _angle = 0, _scale = 1) {
 		if(is_main) {
 			for( var i = 0; i < array_length(childs); i++ )
-				childs[i].setPose(_position, _angle, _scale);
+				childs[i].setPoseTransform(_position, _angle, _scale);
 			return;
 		}
 		
 		pose_posit[0] += _position[0];
 		pose_posit[1] += _position[1];
 		pose_angle += _angle;
-		//pose_scale = _scale;
+		pose_scale *= _scale;
 		
 		var _x = lengthdir_x(distance, direction) + pose_posit[0];
 		var _y = lengthdir_y(distance, direction) + pose_posit[1];
@@ -180,8 +188,16 @@ function __Bone(parent = noone, distance = 0, direction = 0, angle = 0, length =
 		angle  += pose_angle;
 		length *= pose_scale;
 		
-		for( var i = 0; i < array_length(childs); i++ )
-			childs[i].setPose(_position, _angle, _scale);
+		for( var i = 0; i < array_length(childs); i++ ) {
+			if(childs[i].parent_anchor)
+				childs[i].setPoseTransform(_position, pose_angle, pose_scale);
+			else
+				childs[i].setPoseTransform(_position, pose_angle, pose_scale);
+		}
+	}
+	
+	static setIKconstrain = function() {
+		
 	}
 	
 	static serialize = function() {
@@ -204,22 +220,23 @@ function __Bone(parent = noone, distance = 0, direction = 0, angle = 0, length =
 		return bone;
 	}
 	
-	static deserialize = function(bone, attributes) {
+	static deserialize = function(bone, attributes, node) {
 		id			= bone.id;
 		name		= bone.name;
 		distance	= bone.distance;
 		direction	= bone.direction;
 		angle		= bone.angle;
 		length		= bone.length;
-	
+		
 		is_main			= bone.is_main;
 		parent_anchor	= bone.parent_anchor;
 		
 		self.attributes = attributes;
+		self.node		= node;
 		
 		childs = [];
 		for( var i = 0; i < array_length(bone.childs); i++ ) {
-			var _b = new __Bone().deserialize(bone.childs[i], attributes);
+			var _b = new __Bone().deserialize(bone.childs[i], attributes, node);
 			addChild(_b);
 		}
 		
@@ -232,6 +249,7 @@ function __Bone(parent = noone, distance = 0, direction = 0, angle = 0, length =
 		_b.name = name;
 		_b.is_main = is_main;
 		_b.parent_anchor = parent_anchor;
+		_b.IKlength = IKlength;
 		
 		for( var i = 0; i < array_length(childs); i++ )
 			_b.addChild(childs[i].clone(attributes));

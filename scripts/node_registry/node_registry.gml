@@ -260,11 +260,6 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 			addNodeObject(transform, "Composite",		s_node_compose,			"Node_Composite",		[1, Node_Composite], ["merge"], "Combine multiple images with controllable position, rotation, scale.");
 			addNodeObject(transform, "Nine Slice",		s_node_9patch,			"Node_9Slice",			[1, Node_9Slice], ["9 slice", "splice"], "Cut image into 3x3 parts, and scale/repeat only the middle part.");
 			addNodeObject(transform, "Padding",			s_node_padding,			"Node_Padding",			[1, Node_Padding],, "Make image bigger by adding space in 4 directions.");
-		
-			ds_list_add(transform, "Armature");
-			addNodeObject(transform, "Armature Create",	s_node_armature_create,	"Node_Armature",		[1, Node_Armature], ["rigging", "bone"]).setVersion(1145);
-			addNodeObject(transform, "Armature Pose",	s_node_armature_pose,	"Node_Armature_Pose",	[1, Node_Armature_Pose], ["rigging", "bone"]).setVersion(1145);
-			addNodeObject(transform, "Armature Bind",	s_node_armature_bind,	"Node_Armature_Bind",	[1, Node_Armature_Bind], ["rigging", "bone"]).setVersion(1145);
 			
 		var filter = ds_list_create();
 		addNodeCatagory("Filter", filter);
@@ -420,9 +415,9 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 			addNodeObject(compose, "Pack Sprites",			s_node_pack_sprite,		"Node_Pack_Sprites",		[1, Node_Pack_Sprites],, "Combine array of images with different dimension using different algorithms.").setVersion(1140);
 			
 			ds_list_add(compose, "Armature");
-			addNodeObject(compose, "Armature Create",	s_node_armature_create,	"Node_Armature",		[1, Node_Armature], ["rigging", "bone"]).setVersion(1145);
-			addNodeObject(compose, "Armature Pose",		s_node_armature_pose,	"Node_Armature_Pose",	[1, Node_Armature_Pose], ["rigging", "bone"]).setVersion(1145);
-			addNodeObject(compose, "Armature Bind",		s_node_armature_bind,	"Node_Armature_Bind",	[1, Node_Armature_Bind], ["rigging", "bone"]).setVersion(1145);
+			addNodeObject(compose, "Armature Create",	s_node_armature_create,	"Node_Armature",		[1, Node_Armature], ["rigging", "bone"]).setVersion(1146);
+			addNodeObject(compose, "Armature Pose",		s_node_armature_pose,	"Node_Armature_Pose",	[1, Node_Armature_Pose], ["rigging", "bone"]).setVersion(1146);
+			addNodeObject(compose, "Armature Bind",		s_node_armature_bind,	"Node_Armature_Bind",	[1, Node_Armature_Bind], ["rigging", "bone"]).setVersion(1146);
 			
 			if(!DEMO) {
 				ds_list_add(compose, "Export");

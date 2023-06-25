@@ -380,7 +380,7 @@ event_inherited();
 				var spr_y = yy + grid_size / 2;
 				
 				if(variable_struct_exists(_node, "getSpr")) _node.getSpr();
-				if(sprite_exists(_node.spr)) draw_sprite_ui_uniform(_node.spr, 0, spr_x, spr_y);
+				if(sprite_exists(_node.spr)) draw_sprite_ui_uniform(_node.spr, 0, spr_x, spr_y, 0.5);
 					
 				if(_node.getTooltip() != "") {
 					if(point_in_rectangle(_m[0], _m[1], _boxx, yy, _boxx + ui(16), yy + ui(16))) {
