@@ -14,7 +14,6 @@ function lerp_float(from, to, speed) {
 }
 
 function lerp_linear(from, to, speed) {
-	if(fps < 15) return to;
     if(abs(from - to) < speed)
         return to;
     else
@@ -31,8 +30,11 @@ function lerp_angle(from, to, speed) {
 }
 
 function lerp_angle_linear(from, to, speed) {
-	if(fps < 15) return to;
 	if(abs(angle_difference(to, from)) < speed) return to;
 	
 	return from + sign(angle_difference(to, from)) * speed;
+}
+
+function lerp_float_angle(from, to, ratio) {
+	return from + angle_difference(to, from) * ratio;
 }

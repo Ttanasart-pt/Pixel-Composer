@@ -1,7 +1,7 @@
 {
   "resourceType": "GMScript",
   "resourceVersion": "1.0",
-  "name": "draw_circle_angle",
+  "name": "draw_circle_functions",
   "isCompatibility": false,
   "isDnD": false,
   "parent": {

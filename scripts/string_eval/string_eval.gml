@@ -2,7 +2,7 @@
 	global.EQUATION_PRES    = ds_map_create();
 	global.EQUATION_PRES[? "+"] = 1;
 	global.EQUATION_PRES[? "-"] = 1;
-	global.EQUATION_PRES[? "_"] = 9; //unary negative
+	global.EQUATION_PRES[? "∸"] = 9; //unary negative
 	global.EQUATION_PRES[? "*"] = 2;
 	global.EQUATION_PRES[? "/"] = 2;
 	global.EQUATION_PRES[? "$"] = 3;
@@ -162,7 +162,7 @@ function functionStringClean(fx) {
 						return v1 + v2;
 					return 0;
 				case "-": return (is_real(v1) && is_real(v2))? v1 - v2		 : 0;
-				case "_": return is_real(v1)? -v1 : 0;
+				case "∸": return is_real(v1)? -v1 : 0;
 				case "*": return (is_real(v1) && is_real(v2))? v1 * v2		 : 0;
 				case "$": return (is_real(v1) && is_real(v2))? power(v1, v2) : 0;
 				case "/": return (is_real(v1) && is_real(v2))? v1 / v2       : 0;
@@ -226,7 +226,7 @@ function functionStringClean(fx) {
 				else {
 					if(pres[? ch] > pres[? ds_stack_top(op)] || ds_stack_top(op) == "(") ds_stack_push(op, ch);
 					else {
-						if(ch == "-" && ds_map_exists(pres, _ch)) ch = "_"; //unary negative
+						if(ch == "-" && ds_map_exists(pres, _ch)) ch = "∸"; //unary negative
 						
 						while(pres[? ch] <= pres[? ds_stack_top(op)] && !ds_stack_empty(op))
 							ds_stack_push(vl, buildFuncTree(ds_stack_pop(op), vl));
@@ -308,7 +308,7 @@ function functionStringClean(fx) {
 		if(ds_stack_empty(vl)) return noone;
 		
 		switch(operator) {
-			case "-": //deal with preceeding megative number -5
+			case "-": //deal with preceeding negative number -5
 				if(ds_stack_size(vl) >= 2) {
 					var _v1 = ds_stack_pop(vl);
 					var _v2 = ds_stack_pop(vl);

@@ -1,9 +1,15 @@
 function draw_line_round(x1, y1, x2, y2, w) {
 	draw_line_width(x1, y1, x2, y2, w);
 	
-	draw_set_circle_precision(8);
-	draw_circle(x1, y1, w/2, false);
-	draw_circle(x2, y2, w/2, false);
+	//draw_set_circle_precision(8);
+	//draw_circle(x1, y1, w/2, false);
+	//draw_circle(x2, y2, w/2, false);
+	
+	var dir = point_direction(x1, y1, x2, y2) + 90;
+	draw_circle_angle(x1 + 1, y1 + 1, w / 2, dir, dir + 90);
+	draw_circle_angle(x1 + 1, y1 + 1, w / 2, dir + 90, dir + 180);
+	draw_circle_angle(x2 + 1, y2 + 1, w / 2, dir, dir - 90);
+	draw_circle_angle(x2 + 1, y2 + 1, w / 2, dir - 90, dir - 180);
 }
 
 function draw_line_round_color(x1, y1, x2, y2, w, c1, c2) {
