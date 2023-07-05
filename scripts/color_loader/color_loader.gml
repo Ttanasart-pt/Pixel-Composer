@@ -1,15 +1,15 @@
 #region colors
 	globalvar CDEF, COLORS, THEME_VALUE;
 	
-	CDEF   = {};
-	COLORS = {};
-	THEME_VALUE = {};
+	CDEF		= {};
+	COLORS		= new ThemeColor();
+	THEME_VALUE = new ThemeValue();
 #endregion
 
 function loadColor(theme = "default") {
-	CDEF   = {};
-	COLORS = {};
-	THEME_VALUE = {};
+	CDEF		= {};
+	COLORS		= new ThemeColor();
+	THEME_VALUE = new ThemeValue();
 	
 	_loadColor("default", true);
 	_loadColor(theme);

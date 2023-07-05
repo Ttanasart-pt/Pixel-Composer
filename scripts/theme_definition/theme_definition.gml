@@ -280,3 +280,153 @@ function Theme() constructor {
     textbox_code = noone;
     progress_bar = noone;
 }
+
+function ThemeColor() constructor {
+	bg = noone;
+
+    _main_accent = noone;
+    _main_text = noone;
+    _main_text_inner = noone;
+    _main_text_accent = noone;
+    _main_text_accent_inner = noone;
+    _main_text_on_accent = noone;
+    _main_text_sub = noone;
+    _main_text_sub_inner = noone;
+    _main_icon = noone;
+    _main_icon_on_inner = noone;
+    _main_icon_light = noone;
+    _main_icon_dark = noone;
+    _main_value_positive = noone;
+    _main_value_negative = noone;
+
+    lua_highlight_keyword = noone;
+    lua_highlight_bracklet = noone;
+    lua_highlight_function = noone;
+    lua_highlight_number = noone;
+    lua_highlight_string = noone;
+        
+    collection_folder_empty = noone;
+    collection_folder_nonempty = noone;
+    collection_tree_line = noone;
+    collection_path_current_bg = noone;
+        
+    dialog_array_edit_divider = noone;
+    dialog_array_edit_bg = noone;
+    dialog_splash_badge = noone;
+    dialog_about_bg = noone;
+    dialog_preference_prop_bg = noone;
+    dialog_add_node_collection = noone;
+    dialog_palette_divider = noone;
+    dialog_notification_bg_hover = noone;
+    dialog_notification_bg = noone;
+    dialog_notification_icon_bg = noone;
+    dialog_menubox_highlight = noone;
+    dialog_lua_ref_bg_args = noone;
+    dialog_lua_ref_bg_hover = noone;
+    dialog_lua_ref_bg = noone;
+
+    node_composite_bg = noone;
+    node_composite_bg_blend = noone;
+    node_composite_separator = noone;
+    node_composite_overlay_border = noone;
+    node_display_text_frame_fill = noone;
+    node_display_text_frame_outline = noone;
+    node_level_outline = noone;
+    node_level_shade = noone;
+    node_overlay_gizmo_inactive = noone;
+    node_blend_default = noone;
+    node_blend_tunnel = noone;
+    node_blend_number = noone;
+    node_blend_input = noone;
+    node_blend_loop = noone;
+    node_blend_vfx = noone;
+    node_blend_feedback = noone;
+    node_blend_collection = noone;
+    node_blend_simulation = noone;
+    node_blend_fluid = noone;
+    node_blend_canvas = noone;
+    node_blend_strand = noone;
+    node_path_overlay_control_line = noone;
+    node_wiggler_frame = noone;
+    node_border_file_drop = noone;
+
+    scrollbar_bg = noone;
+    scrollbar_hover = noone;
+    scrollbar_idle = noone;
+
+    panel_animation_frame_divider = noone;
+    panel_animation_keyframe_ease_line = noone;
+    panel_animation_loop_line = noone;
+    panel_animation_key_tool_unselected = noone;
+    panel_animation_keyframe_selected = noone;
+    panel_animation_keyframe_unselected = noone;
+    panel_animation_keyframe_hide = noone;
+    panel_animation_node_bg = noone;
+    panel_animation_dope_bg_hover = noone;
+    panel_animation_dope_bg = noone;
+    panel_animation_graph_bg = noone;
+    panel_animation_graph_select = noone;
+    panel_animation_graph_line = noone;
+    panel_animation_preview_frame = noone;
+    panel_animation_timeline_blend = noone;
+    panel_animation_timeline_top = noone;
+
+    panel_bg_clear_inner = noone;
+    panel_bg_clear = noone;
+    panel_tab = noone;
+    panel_tab_hover = noone;
+    panel_tab_inactive = noone;
+    panel_tab_text = noone;
+    panel_tab_icon = noone;
+
+    panel_graph_minimap_outline = noone;
+    panel_graph_node_dimension = noone;
+    panel_graph_minimap_focus = noone;
+
+    panel_inspector_key_separator = noone;
+    panel_inspector_group_hover = noone;
+    panel_inspector_group_bg = noone;
+    panel_inspector_output_label = noone;
+        
+    panel_preview_grid = noone;
+    panel_preview_surface_outline = noone;
+    panel_preview_split_line = noone;
+    panel_preview_transparent = noone;
+
+    panel_toolbar_outline = noone;
+    panel_toolbar_separator = noone;
+        
+    widget_curve_line = noone;
+    widget_curve_outline = noone;
+    widget_rotator_range = noone;
+    widget_rotator_range_hover = noone;
+    widget_rotator_guide = noone;
+    widget_surface_frame = noone;
+    widget_text_highlight = noone;
+
+    widget_text_dec_d = noone;
+    widget_text_dec_n = noone;
+    widget_text_dec_e = noone;
+    widget_text_dec_f = noone;
+    widget_text_dec_i = noone;
+	
+	axis = noone;
+    histogram = noone;
+    heat = noone;
+    speed = noone;
+}
+
+function ThemeValue() constructor {
+	highlight_corner_radius = noone;
+    selection_corner_radius = noone;
+        
+    panel_padding = noone;
+    panel_margin = noone;
+    panel_corner_radius = noone;
+    panel_notification_padding = noone;
+    panel_tab_extend = noone;
+
+    minimap_corner_radius = noone;
+    slider_type = noone;
+    font_aa = noone;
+}
