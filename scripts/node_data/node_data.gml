@@ -30,6 +30,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		MODIFIED = true;
 	
 		run_in(1, function() { 
+			if(display_name != "") return;
 			resetInternalName();
 			display_name = __txt_node_name(instanceof(self), name);
 		});

@@ -20,9 +20,16 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	boneMap = ds_map_create();
 	
 	attributes.display_name = true;
+	attributes.display_bone = 0;
+	
+	array_push(attributeEditors, "Display");
 	array_push(attributeEditors, ["Display name", "display_name", 
 		new checkBox(function() { 
 			attributes.display_name = !attributes.display_name;
+		})]);
+	array_push(attributeEditors, ["Display bone", "display_bone", 
+		new scrollBox(["Octahedral", "Stick"], function(ind) { 
+			attributes.display_bone = ind;
 		})]);
 	
 	function createNewControl(bone = noone) {
@@ -30,10 +37,10 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		
 		inputs[| index] = nodeValue(bone != noone? bone.name : "bone", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 0, 1 ] )
 			.setDisplay(VALUE_DISPLAY.transform);
-		inputs[| index].extra_data[0] = bone != noone? bone.id : noone;
+		inputs[| index].extra_data[0] = bone != noone? bone.ID : noone;
 		
 		if(bone != noone)
-			boneMap[? bone.id] = inputs[| index];
+			boneMap[? bone.ID] = inputs[| index];
 		
 		array_push(input_display_list, index);
 		
@@ -73,10 +80,10 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			var bone = _bones[i];
 			var _idx = ds_list_size(_inputs);
 			array_push(_input_display_list, _idx);
-			//print($"  > Adding bone id: {bone.id}");
+			//print($"  > Adding bone ID: {bone.ID}");
 			
-			if(ds_map_exists(boneMap, bone.id)) {
-				var _inp = boneMap[? bone.id];
+			if(ds_map_exists(boneMap, bone.ID)) {
+				var _inp = boneMap[? bone.ID];
 				
 				_inp.index = _idx;
 				ds_list_add(_inputs, _inp);
@@ -112,7 +119,7 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		var _b = outputs[| 0].getValue();
 		if(_b == noone) return;
 		
-		anchor_selecting = _b.draw(active * 0b111, _x, _y, _s, _mx, _my, anchor_selecting);
+		anchor_selecting = _b.draw(attributes, active * 0b111, _x, _y, _s, _mx, _my, anchor_selecting);
 		
 		var mx = (_mx - _x) / _s;
 		var my = (_my - _y) / _s;
@@ -168,9 +175,9 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		if(anchor_selecting != noone && mouse_press(mb_left, active)) {
 			if(anchor_selecting[1] == 0 || anchor_selecting[0].IKlength) { // move
 				posing_bone = anchor_selecting[0];
-				if(!ds_map_exists(boneMap, posing_bone.id))
+				if(!ds_map_exists(boneMap, posing_bone.ID))
 					setBone();
-				posing_input = boneMap[? posing_bone.id];
+				posing_input = boneMap[? posing_bone.ID];
 				posing_type = 0;
 				
 				var val = posing_input.getValue();
@@ -182,9 +189,9 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 				
 			} else if(anchor_selecting[1] == 1) { // scale
 				posing_bone = anchor_selecting[0];
-				if(!ds_map_exists(boneMap, posing_bone.id))
+				if(!ds_map_exists(boneMap, posing_bone.ID))
 					setBone();
-				posing_input = boneMap[? posing_bone.id];
+				posing_input = boneMap[? posing_bone.ID];
 				posing_type = 1;
 				
 				var ori = posing_bone.getPoint(0);
@@ -199,9 +206,9 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 				
 			} else if(anchor_selecting[1] == 2) { // rotate
 				posing_bone = anchor_selecting[0];
-				if(!ds_map_exists(boneMap, posing_bone.id))
+				if(!ds_map_exists(boneMap, posing_bone.ID))
 					setBone();
-				posing_input = boneMap[? posing_bone.id];
+				posing_input = boneMap[? posing_bone.ID];
 				posing_type = 2;
 				
 				var ori = posing_bone.getPoint(0);
@@ -234,7 +241,7 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		var _b = inputs[| 0].getValue();
 		if(_b == noone) return;
 		
-		var _bone_pose = _b.clone(attributes);
+		var _bone_pose = _b.clone();
 		_bone_pose.connect();
 		
 		_bone_pose.resetPose();
@@ -243,7 +250,7 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		
 		while(!ds_stack_empty(_bst)) {
 			var bone = ds_stack_pop(_bst);
-			var _id  = bone.id;
+			var _id  = bone.ID;
 			
 			if(ds_map_exists(boneMap, _id)) {
 				var _inp  = boneMap[? _id];

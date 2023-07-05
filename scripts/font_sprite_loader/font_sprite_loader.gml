@@ -19,6 +19,7 @@ FONT_SPRITES = ds_map_create();
 		
 		var spr = sprite_create_from_surface(s, 0, 0, ww, hh, false, false, 0, 0);
 		surface_free(s);
+		font_delete(f);
 		
 		FONT_SPRITES[? path] = spr;
 	}
@@ -28,6 +29,7 @@ FONT_SPRITES = ds_map_create();
 		var root = DIRECTORY + "Fonts/*";
 		var f = file_find_first(root, -1);
 		var filter = [ ".ttf", ".otf" ];
+		
 		while(f != "") {
 			var fullname = DIRECTORY + "Fonts/" + f;
 			var ext = filename_ext(fullname);
@@ -37,6 +39,7 @@ FONT_SPRITES = ds_map_create();
 			}
 			f = file_find_next();
 		}
+		
 		file_find_close();
 	}
 #endregion

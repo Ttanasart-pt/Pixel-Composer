@@ -1006,7 +1006,8 @@ function Panel_Graph() : PanelContent() constructor {
 	
 	function doPaste() {
 		var txt = clipboard_get_text();
-		var _map = json_try_parse(txt);
+		var _map = json_try_parse(txt, noone);
+		
 		if(_map != noone) {
 			ds_map_clear(APPEND_MAP);
 			APPENDING = true;
@@ -1043,7 +1044,11 @@ function Panel_Graph() : PanelContent() constructor {
 			return;
 		}
 		
-		if(filename_ext(txt) == ".png") {
+		if(filename_ext(txt) == ".pxc")
+			APPEND(txt);
+		else if(filename_ext(txt) == ".pxcc")
+			APPEND(txt);
+		else if(filename_ext(txt) == ".png") {
 			if(file_exists(txt)) {
 				Node_create_Image_path(0, 0, txt);
 				return;
@@ -1869,7 +1874,7 @@ function Panel_Graph() : PanelContent() constructor {
 				break;
 		}
 			
-		if(key_mod_press(SHIFT) && node && struct_has(DRAGGING, "from") && DRAGGING.from.value_from == noone)
+		if(!key_mod_press(SHIFT) && node && struct_has(DRAGGING, "from") && DRAGGING.from.value_from == noone)
 			DRAGGING.from.setFrom(node.outputs[| 0]);
 	}
 	

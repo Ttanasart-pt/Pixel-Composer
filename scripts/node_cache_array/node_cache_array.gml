@@ -40,8 +40,6 @@ function Node_Cache_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	}
 	
 	static update = function() {
-		if(recoverCache()) return;
-		
 		var ss  = [];
 		var str = inputs[| 1].getValue();
 		var lst = inputs[| 2].getValue();

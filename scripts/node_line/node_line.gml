@@ -259,7 +259,13 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 					}
 						
 					if(_prog_total >= _pathStr) //Do not add point before range start. Do this instead of starting at _rtStr to prevent wiggle. 
-						array_push(points, { x: _nx, y: _ny, prog: _prog_total / _pathEnd, progCrop: _prog_curr / _pathLength, weight: wght });
+						array_push(points, { 
+							x: _nx, 
+							y: _ny, 
+							prog: _prog_total / _pathEnd, 
+							progCrop: _prog_curr / _pathLength, 
+							weight: wght 
+						});
 					
 					if(_prog_next > _prog_curr) {
 						_prog_total += _prog_next - _prog_curr;
@@ -361,19 +367,20 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 					_nc = _color.eval(_colP? prog : prgc);
 					
 					if(_cap) {
-						if(j == 1){
+						if(j == 1) {
 							draw_set_color(_oc);
-							draw_set_color(c_white);
 							
-							_d = point_direction(_ox, _oy, _nx, _ny);
-							draw_circle_angle(_ox, _oy, _ow / 2, _d - 90, _d + 90, _capP);
+							_d = point_direction(_ox, _oy, _nx, _ny) + 180;
+							draw_circle_angle(_ox, _oy, _ow / 2, _d - 90, _d, _capP);
+							draw_circle_angle(_ox, _oy, _ow / 2, _d, _d + 90, _capP);
 						}
+						
 						if(j == array_length(points) - 1) {
 							draw_set_color(_nc);
-							draw_set_color(c_black);
 							
 							_d = point_direction(_ox, _oy, _nx, _ny);
-							draw_circle_angle(_nx, _ny, _nw / 2, _d - 90, _d + 90, _capP);
+							draw_circle_angle(_nx, _ny, _nw / 2, _d - 90, _d, _capP);
+							draw_circle_angle(_nx, _ny, _nw / 2, _d, _d + 90, _capP);
 						}
 					}
 					

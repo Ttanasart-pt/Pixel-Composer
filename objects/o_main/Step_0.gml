@@ -18,7 +18,7 @@ if(OS == os_windows && gameframe_is_minimized()) exit;
 #endregion
 
 #region step
-	GLOBAL.step();
+	GLOBAL_NODE.step();
 	
 	try {
 		if(PANEL_MAIN != 0)

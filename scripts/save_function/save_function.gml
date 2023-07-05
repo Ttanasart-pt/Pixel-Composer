@@ -42,10 +42,10 @@ function save_serialize() {
 	var _anim_map = {};
 	_anim_map.frames_total = ANIMATOR.frames_total;
 	_anim_map.framerate    = ANIMATOR.framerate;
-	_map.animator = _anim_map;
+	_map.animator		   = _anim_map;
 	
-	_map.metadata = METADATA.serialize();
-	_map.global   = GLOBAL.serialize();
+	_map.metadata    = METADATA.serialize();
+	_map.global_node = GLOBAL_NODE.serialize();
 	
 	var prev = PANEL_PREVIEW.getNodePreviewSurface();
 	if(!is_surface(prev)) _map.preview = "";
@@ -181,7 +181,7 @@ function SAVE_COLLECTION(_node, _path, save_surface = true, metadata = noone, co
 	
 	var _nodes = [];
 	SAVE_NODE(_nodes, _node, _node.x, _node.y, true, context);
-	_content.nodes = nodes;
+	_content.nodes = _nodes;
 	
 	if(metadata != noone)
 		_content.metadata = metadata.serialize();

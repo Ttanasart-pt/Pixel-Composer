@@ -1,5 +1,5 @@
-function __Bone(parent = noone, distance = 0, direction = 0, angle = 0, length = 0, attributes = {}, node = noone) constructor {
-	id = UUID_generate();
+function __Bone(parent = noone, distance = 0, direction = 0, angle = 0, length = 0, node = noone) constructor {
+	ID = UUID_generate();
 	self.name = "New bone";
 	self.distance	= distance;
 	self.direction	= direction;
@@ -26,7 +26,6 @@ function __Bone(parent = noone, distance = 0, direction = 0, angle = 0, length =
 	tb_name.font = f_p2;
 	tb_name.hide = true;
 	
-	self.attributes = attributes;
 	updated = false;
 	
 	IKlength = 0;
@@ -66,7 +65,7 @@ function __Bone(parent = noone, distance = 0, direction = 0, angle = 0, length =
 	}
 	
 	static findBone = function(_id) {
-		if(id == _id) 
+		if(ID == _id) 
 			return self;
 		
 		for( var i = 0; i < array_length(childs); i++ ) {
@@ -97,16 +96,16 @@ function __Bone(parent = noone, distance = 0, direction = 0, angle = 0, length =
 		return p;
 	}
 	
-	static draw = function(edit = false, _x = 0, _y = 0, _s = 1, _mx = 0, _my = 0, hovering = noone, selecting = noone) {
-		var hover = _drawBone(edit, _x, _y, _s, _mx, _my, hovering, selecting);
-		drawControl();
+	static draw = function(attributes, edit = false, _x = 0, _y = 0, _s = 1, _mx = 0, _my = 0, hovering = noone, selecting = noone) {
+		var hover = _drawBone(attributes, edit, _x, _y, _s, _mx, _my, hovering, selecting);
+		drawControl(attributes);
 		return hover;
 	}
 	
 	control_x0 = 0; control_y0 = 0; control_i0 = 0;
 	control_x1 = 0; control_y1 = 0; control_i1 = 0;
 	
-	static _drawBone = function(edit = false, _x = 0, _y = 0, _s = 1, _mx = 0, _my = 0, hovering = noone, selecting = noone) {
+	static _drawBone = function(attributes, edit = false, _x = 0, _y = 0, _s = 1, _mx = 0, _my = 0, hovering = noone, selecting = noone) {
 		var hover = noone;
 		
 		var p0 = getPoint(0);
@@ -140,14 +139,21 @@ function __Bone(parent = noone, distance = 0, direction = 0, angle = 0, length =
 					_p.y = _y + _p.y * _s;
 					draw_line_dashed(_p.x, _p.y, p0.x, p0.y, 1);
 				}
-			
-				var _ppx = lerp(p0.x, p1.x, 0.2);
-				var _ppy = lerp(p0.y, p1.y, 0.2);
-				draw_line_width2(p0.x, p0.y, _ppx, _ppy,  2, 12);
-				draw_line_width2(_ppx, _ppy, p1.x, p1.y, 12,  2);
 				
-				if((edit & 0b100) && distance_to_line(_mx, _my, p0.x, p0.y, p1.x, p1.y) <= 12) //drag bone
-					hover = [ self, 2 ];
+				if(attributes.display_bone == 0) {
+					var _ppx = lerp(p0.x, p1.x, 0.2);
+					var _ppy = lerp(p0.y, p1.y, 0.2);
+					draw_line_width2(p0.x, p0.y, _ppx, _ppy,  2, 12);
+					draw_line_width2(_ppx, _ppy, p1.x, p1.y, 12,  2);
+					
+					if((edit & 0b100) && distance_to_line(_mx, _my, p0.x, p0.y, p1.x, p1.y) <= 12) //drag bone
+						hover = [ self, 2 ];
+				} else if(attributes.display_bone == 1) {
+					draw_line_width(p0.x, p0.y, p1.x, p1.y, 3);
+					
+					if((edit & 0b100) && distance_to_line(_mx, _my, p0.x, p0.y, p1.x, p1.y) <= 6) //drag bone
+						hover = [ self, 2 ];
+				} 
 			} else {
 				draw_set_color(c_white);
 				if(!parent_anchor && parent.parent != noone) {
@@ -166,10 +172,10 @@ function __Bone(parent = noone, distance = 0, direction = 0, angle = 0, length =
 			
 			if(attributes.display_name && IKlength == 0) {
 				if(abs(p0.y - p1.y) < abs(p0.x - p1.x)) {
-					draw_set_text(f_p2, fa_center, fa_bottom, COLORS._main_accent);
+					draw_set_text(f_p3, fa_center, fa_bottom, COLORS._main_accent);
 					draw_text_add((p0.x + p1.x) / 2, (p0.y + p1.y) / 2 - 4, name);
 				} else {
-					draw_set_text(f_p2, fa_left, fa_center, COLORS._main_accent);
+					draw_set_text(f_p3, fa_left, fa_center, COLORS._main_accent);
 					draw_text_add((p0.x + p1.x) / 2 + 4, (p0.y + p1.y) / 2, name);
 				}
 			}
@@ -196,7 +202,7 @@ function __Bone(parent = noone, distance = 0, direction = 0, angle = 0, length =
 		//}
 		
 		for( var i = 0; i < array_length(childs); i++ ) {
-			var h = childs[i]._drawBone(edit, _x, _y, _s, _mx, _my, hovering, selecting);
+			var h = childs[i]._drawBone(attributes, edit, _x, _y, _s, _mx, _my, hovering, selecting);
 			if(hover == noone && h != noone)
 				hover = h;
 		}
@@ -204,15 +210,22 @@ function __Bone(parent = noone, distance = 0, direction = 0, angle = 0, length =
 		return hover;
 	}
 	
-	static drawControl = function() {
+	static drawControl = function(attributes) {
 		if(parent != noone && IKlength == 0) {
-			if(!parent_anchor) 
-				draw_sprite_colored(THEME.anchor_selector, control_i0, control_x0, control_y0); 
-			draw_sprite_colored(THEME.anchor_selector, control_i1, control_x1, control_y1); 
+			var spr, ind0, ind1;
+			if(attributes.display_bone == 0) {
+				if(!parent_anchor) 
+					draw_sprite_colored(THEME.anchor_selector, control_i0, control_x0, control_y0); 
+				draw_sprite_colored(THEME.anchor_selector, control_i1, control_x1, control_y1); 
+			} else {
+				if(!parent_anchor) 
+					draw_sprite_ext(THEME.anchor_bone_stick, control_i0 / 2, control_x0, control_y0, 1, 1, 0, COLORS._main_accent, 1); 
+				draw_sprite_ext(THEME.anchor_bone_stick, control_i1 / 2, control_x1, control_y1, 1, 1, 0, COLORS._main_accent, 1); 
+			}
 		}
 		
 		for( var i = 0; i < array_length(childs); i++ )
-			childs[i].drawControl();
+			childs[i].drawControl(attributes);
 	}
 	
 	static resetPose = function() {
@@ -387,7 +400,7 @@ function __Bone(parent = noone, distance = 0, direction = 0, angle = 0, length =
 	static serialize = function() {
 		var bone = {};
 		
-		bone.id			= id;
+		bone.ID			= ID;
 		bone.name		= name;
 		bone.distance	= distance;
 		bone.direction	= direction;
@@ -398,7 +411,7 @@ function __Bone(parent = noone, distance = 0, direction = 0, angle = 0, length =
 		bone.parent_anchor	= parent_anchor;
 		
 		bone.IKlength	= IKlength;
-		bone.IKTarget	= IKTarget == noone? "" : IKTarget.id;
+		bone.IKTarget	= IKTarget == noone? "" : IKTarget.ID;
 		
 		bone.childs = [];
 		for( var i = 0; i < array_length(childs); i++ )
@@ -407,8 +420,8 @@ function __Bone(parent = noone, distance = 0, direction = 0, angle = 0, length =
 		return bone;
 	}
 	
-	static deserialize = function(bone, attributes, node) {
-		id			= bone.id;
+	static deserialize = function(bone, node) {
+		ID			= bone.ID;
 		name		= bone.name;
 		distance	= bone.distance;
 		direction	= bone.direction;
@@ -418,7 +431,6 @@ function __Bone(parent = noone, distance = 0, direction = 0, angle = 0, length =
 		is_main			= bone.is_main;
 		parent_anchor	= bone.parent_anchor;
 		
-		self.attributes = attributes;
 		self.node		= node;
 		
 		IKlength	= bone.IKlength;
@@ -426,7 +438,7 @@ function __Bone(parent = noone, distance = 0, direction = 0, angle = 0, length =
 		
 		childs = [];
 		for( var i = 0; i < array_length(bone.childs); i++ ) {
-			var _b = new __Bone().deserialize(bone.childs[i], attributes, node);
+			var _b = new __Bone().deserialize(bone.childs[i], node);
 			addChild(_b);
 		}
 		
@@ -443,22 +455,22 @@ function __Bone(parent = noone, distance = 0, direction = 0, angle = 0, length =
 			childs[i].connect();
 	}
 	
-	static clone = function(attributes) {
-		var _b = new __Bone(parent, distance, direction, angle, length, attributes);
-		_b.id = id;
+	static clone = function() {
+		var _b = new __Bone(parent, distance, direction, angle, length);
+		_b.ID = ID;
 		_b.name = name;
 		_b.is_main = is_main;
 		_b.parent_anchor = parent_anchor;
 		_b.IKlength = IKlength;
-		_b.IKTarget	= IKTarget == noone? "" : IKTarget.id;
+		_b.IKTarget	= IKTarget == noone? "" : IKTarget.ID;
 		
 		for( var i = 0; i < array_length(childs); i++ )
-			_b.addChild(childs[i].clone(attributes));
+			_b.addChild(childs[i].clone());
 		
 		return _b;
 	}
 	
 	static toString = function() {
-		return $"Bone {name} [{id}]";
+		return $"Bone {name} [{ID}]";
 	}
 }

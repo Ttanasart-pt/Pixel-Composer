@@ -330,7 +330,8 @@ function Panel_Collection() : PanelContent() constructor {
 	}
 	
 	function refreshContext() {
-		context.scan([ ".json", ".pxcc", ".png", ".jpg", ".gif" ]);	
+		if(mode == 0)		context.scan([ ".json", ".pxcc" ]);	
+		else if(mode == 1)	context.scan([ ".png", ".jpg", ".gif" ]);	
 		
 		if(STEAM_ENABLED)
 			steamUCGload();

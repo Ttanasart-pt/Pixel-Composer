@@ -16,7 +16,8 @@ function Node_Websocket_Receiver(_x, _y, _group = noone) : Node(_x, _y, _group) 
 	input_display_list = [ 1, 0 ];
 	
 	connected_device = 0;
-	port = 0;
+	port   = 0;
+	socket = noone;
 	
 	function setPort(newPort) {
 		if(ds_map_exists(PORT_MAP, port))
@@ -29,10 +30,12 @@ function Node_Websocket_Receiver(_x, _y, _group = noone) : Node(_x, _y, _group) 
 		
 		if(ds_map_exists(NETWORK_SERVERS, newPort))
 			return;
-			
-		var s = network_create_server_raw(network_socket_ws, newPort, 16)
-		//print($"SERVER CREATED: {s}")
-		if(s >= 0) NETWORK_SERVERS[? newPort] = s;
+		
+		if(socket >= 0) network_destroy(socket);
+		socket = network_create_server_raw(network_socket_ws, newPort, 16)
+		if(socket < 0) return;
+		
+		NETWORK_SERVERS[? newPort] = socket;
 	}
 	
 	insp1UpdateTooltip  = __txt("Refresh Server");
@@ -40,6 +43,7 @@ function Node_Websocket_Receiver(_x, _y, _group = noone) : Node(_x, _y, _group) 
 	
 	static onInspector1Update = function() {
 		var _port = inputs[| 0].getValue();
+		
 		setPort(_port);
 	}
 	

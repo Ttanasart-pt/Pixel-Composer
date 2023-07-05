@@ -27,6 +27,7 @@ function Node_Websocket_Sender(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	port = 0;
 	url  = "";
 	connected = false;
+	socket = noone;
 	
 	function connectTo(newPort, newUrl) {
 		if(ds_map_exists(PORT_MAP, port))
@@ -41,11 +42,14 @@ function Node_Websocket_Sender(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		
 		if(ds_map_exists(NETWORK_CLIENTS, newPort))
 			return;
-			
-		var s = network_create_socket(network_socket_ws);
-		network_connect_raw_async(s, newUrl, newPort);
+		
+		if(socket >= 0) network_destroy(socket);
+		socket = network_create_socket(network_socket_ws);
+		if(socket < 0) return;
+		
+		network_connect_raw_async(socket, newUrl, newPort);
 		connected = false;
-		if(s >= 0) NETWORK_CLIENTS[? newPort] = s;
+		NETWORK_CLIENTS[? newPort] = socket;
 	}
 	
 	insp1UpdateTooltip  = __txt("Reconnect");

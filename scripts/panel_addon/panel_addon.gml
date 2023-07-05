@@ -1,6 +1,6 @@
 function Panel_Addon() : PanelContent() constructor {
 	title = __txt("Addons");
-	icon  = THEME.addon;
+	icon  = THEME.addon_icon;
 	
 	showHeader	 = false;
 	title_height = 64;

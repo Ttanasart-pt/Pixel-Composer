@@ -7,7 +7,7 @@
 
 #region draw TB
 	draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text);
-	draw_text(dialog_x + ui(16), dialog_y + ui(32), __txtx("Name"));
+	draw_text_add(dialog_x + ui(16), dialog_y + ui(32), __txt("Name"));
 	
 	//var is_author = !meta.steam || meta.author_steam_id == 0 || meta.author_steam_id == STEAM_USER_ID;
 	

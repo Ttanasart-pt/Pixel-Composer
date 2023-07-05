@@ -72,7 +72,7 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 					hold_visibility = !_vis[i];
 					
 				if(mouse_click(mb_left, _focus) && _vis[i] != hold_visibility) {
-					_vis[i] = hold_visibility;
+					_vis[@ i] = hold_visibility;
 					update();
 				}
 			} else 

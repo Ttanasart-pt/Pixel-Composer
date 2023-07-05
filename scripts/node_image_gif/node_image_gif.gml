@@ -78,24 +78,23 @@ function Node_Image_gif(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		var ext   = string_lower(filename_ext(path));
 		var _name = string_replace(filename_name(path), filename_ext(path), "");
 		
-		switch(ext) {
-			case ".gif":
-				outputs[| 1].setValue(path);
+		if(ext != ".gif")
+			return false;
+			
+		outputs[| 1].setValue(path);
 				
-				if(spr) sprite_delete(spr);
-				sprite_add_gif(path, function(_spr) { 
-						spr_builder = _spr; 
-						loading = 2;
-					});
-				loading = 1;
+		if(spr) sprite_delete(spr);
+		sprite_add_gif(path, function(_spr) { 
+			spr_builder = _spr; 
+			loading = 2;
+		});
+		loading = 1;
 				
-				if(path_current == "") 
-					first_update = true;
-				path_current	= path;
+		if(path_current == "") 
+			first_update = true;
+		path_current	= path;
 				
-				return true;
-		}
-		return false;
+		return true;
 	}
 	
 	static step = function() {

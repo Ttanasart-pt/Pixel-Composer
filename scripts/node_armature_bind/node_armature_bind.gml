@@ -10,7 +10,7 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		
 	inputs[| 2] = nodeValue("Bind data", self, JUNCTION_CONNECT.input, VALUE_TYPE.struct, noone)
 		.setVisible(true, true)
-		.setArrayDepth(1);
+		.setArrayDepth(1); 
 	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
@@ -29,9 +29,16 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	attributes.layer_visible = [];
 	attributes.layer_selectable = [];
 	
+	attributes.display_name = true;
 	attributes.display_bone = 0;
+	
+	array_push(attributeEditors, "Display");
+	array_push(attributeEditors, ["Display name", "display_name", 
+		new checkBox(function() { 
+			attributes.display_name = !attributes.display_name;
+		})]);
 	array_push(attributeEditors, ["Display bone", "display_bone", 
-		new scrollBox(["Above", "Below", "Hide"], function(ind) { 
+		new scrollBox(["Octahedral", "Stick"], function(ind) { 
 			attributes.display_bone = ind;
 		})]);
 	
@@ -101,8 +108,8 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 					draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text);
 					draw_text(__x + 24, ty + 12, bone.name);
 					
-					if(ds_map_exists(surfMap, bone.id)) {
-						var _sdata = surfMap[? bone.id];
+					if(ds_map_exists(surfMap, bone.ID)) {
+						var _sdata = surfMap[? bone.ID];
 						
 						var _sx = __x + 24 + string_width(bone.name) + 8;
 						var _sy = ty + 4;
@@ -150,9 +157,10 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		
 			if(layer_dragging != noone && hovering && mouse_release(mb_left)) {
 				var _lind = input_fix_len + layer_dragging * data_length;
-				inputs[| _lind].extra_data[0] = hovering.id;
+				inputs[| _lind].extra_data[0] = hovering.ID;
 				
 				layer_dragging = noone;
+				triggerRender();
 			}
 		#endregion
 		
@@ -266,12 +274,12 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 				if(layer_dragging == noone || layer_dragging == index) {
 					var _bx = _x + 24;
 					if(point_in_circle(_m[0], _m[1], _bx, _cy + lh / 2, 16)) {
-						draw_sprite_ui_uniform(THEME.hamburger, 3, _bx, _cy + lh / 2, .75, c_white);
+						draw_sprite_ui_uniform(THEME.hamburger, 3, _bx, _cy + lh / 2, 1, c_white);
 				
 						if(mouse_press(mb_left, _focus))
 							layer_dragging = index;
 					} else 
-						draw_sprite_ui_uniform(THEME.hamburger, 3, _bx, _cy + lh / 2, .75, COLORS._main_icon);
+						draw_sprite_ui_uniform(THEME.hamburger, 3, _bx, _cy + lh / 2, 1, COLORS._main_icon);
 				}
 			}
 		#endregion
@@ -379,6 +387,8 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	atlas_data = [];
 	bind_data  = [];
 	
+	surface_selecting = noone;
+	
 	static getInputAmount = function() {
 		return input_fix_len + (ds_list_size(inputs) - input_fix_len) / data_length;
 	}
@@ -425,7 +435,7 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			
 			for( var i = 0; i < array_length(bone.childs); i++ ) {
 				var child_bone = bone.childs[i];
-				boneMap[? child_bone.id] = child_bone;
+				boneMap[? child_bone.ID] = child_bone;
 				ds_stack_push(_bst, child_bone);
 			}
 		}
@@ -442,12 +452,11 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		if(_b == noone) return;
 		
 		if(_bind != noone) {
-			_b.draw(false, _x, _y, _s, _mx, _my);
+			_b.draw(attributes, false, _x, _y, _s, _mx, _my);
 			return;
 		}
 		
-		if(attributes.display_bone == 1)
-			_b.draw(false, _x, _y, _s, _mx, _my);
+		_b.draw(attributes, false, _x, _y, _s, _mx, _my);
 			
 		var ww  = dim[0];
 		var hh  = dim[1];
@@ -514,18 +523,15 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			}
 		}
 		
-		var hovering = -1;
-		var hovering_type = 0;
+		var hovering = noone;
+		var hovering_type = noone;
 		var _vis = attributes.layer_visible;
 		var _sel = attributes.layer_selectable;
 		
 		var amo = (ds_list_size(inputs) - input_fix_len) / data_length;
+		var anchors = array_create(ds_list_size(inputs));
 		
 		for(var i = 0; i < amo; i++) {
-			var vis = array_safe_get(_vis, i);
-			var sel = array_safe_get(_sel, i);
-			if(!vis) continue;
-			
 			var index = input_fix_len + i * data_length;
 			var _surf = array_safe_get(current_data, index);
 			if(!_surf || is_array(_surf)) continue;
@@ -548,14 +554,14 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			var _sw = _ww * _sca[0];
 			var _sh = _hh * _sca[1];
 			
-			var cx = _anc.x + _mov[0];
-			var cy = _anc.y + _mov[1];
+			var _cx = _anc.x + _mov[0];
+			var _cy = _anc.y + _mov[1];
 			
-			var _d0 = point_rotate(cx - _sw / 2, cy - _sh / 2, cx, cy, _rot);
-			var _d1 = point_rotate(cx - _sw / 2, cy + _sh / 2, cx, cy, _rot);
-			var _d2 = point_rotate(cx + _sw / 2, cy - _sh / 2, cx, cy, _rot);
-			var _d3 = point_rotate(cx + _sw / 2, cy + _sh / 2, cx, cy, _rot);
-			var _rr = point_rotate(cx,  cy - _sh / 2 - 4,      cx, cy, _rot);
+			var _d0 = point_rotate(_cx - _sw / 2, _cy - _sh / 2, _cx, _cy, _rot);
+			var _d1 = point_rotate(_cx - _sw / 2, _cy + _sh / 2, _cx, _cy, _rot);
+			var _d2 = point_rotate(_cx + _sw / 2, _cy - _sh / 2, _cx, _cy, _rot);
+			var _d3 = point_rotate(_cx + _sw / 2, _cy + _sh / 2, _cx, _cy, _rot);
+			var _rr = point_rotate(_cx,  _cy - _sh / 2 - 4,      _cx, _cy, _rot);
 			
 			_d0[0] = overlay_x(_d0[0], _x, _s); _d0[1] = overlay_y(_d0[1], _y, _s);
 			_d1[0] = overlay_x(_d1[0], _x, _s); _d1[1] = overlay_y(_d1[1], _y, _s);
@@ -563,105 +569,105 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			_d3[0] = overlay_x(_d3[0], _x, _s); _d3[1] = overlay_y(_d3[1], _y, _s);
 			_rr[0] = overlay_x(_rr[0], _x, _s); _rr[1] = overlay_y(_rr[1], _y, _s);
 			
-			var _borcol = COLORS.node_composite_overlay_border;
-			
-			var _ri = 0;
-			var _si = 0;
-			
-			if(!sel) continue;
-			
-			if(point_in_circle(_mx, _my, _d3[0], _d3[1], 12)) {
-				hovering = index;
-				hovering_type = NODE_COMPOSE_DRAG.scale;
-				_si = 1;
-			} else if(point_in_rectangle_points(_mx, _my, _d0[0], _d0[1], _d1[0], _d1[1], _d2[0], _d2[1], _d3[0], _d3[1])) {
-				hovering = index;
-				hovering_type = NODE_COMPOSE_DRAG.move;
-			} else if(point_in_circle(_mx, _my, _rr[0], _rr[1], 12)) {
-				hovering = index;
-				hovering_type = NODE_COMPOSE_DRAG.rotate;
-				_ri = 1;
+			anchors[index] = {
+				cx: _cx,
+				cy: _cy,
+				d0: _d0,
+				d1: _d1,
+				d2: _d2,
+				d3: _d3,
+				rr: _rr,
+				
+				rot: _rot,
 			}
-			
-			draw_sprite_colored(THEME.anchor_rotate, _ri, _rr[0], _rr[1],, _rot);
-			draw_sprite_colored(THEME.anchor_scale,  _si, _d3[0], _d3[1],, _rot);
-			
-			draw_set_color(_borcol);
-			draw_line(_d0[0], _d0[1], _d1[0], _d1[1]);
-			draw_line(_d0[0], _d0[1], _d2[0], _d2[1]);
-			draw_line(_d3[0], _d3[1], _d1[0], _d1[1]);
-			draw_line(_d3[0], _d3[1], _d2[0], _d2[1]);
 		}
 		
-		if(hovering != -1) {
-			var _surf = current_data[hovering];
-			var _bone = inputs[| hovering].extra_data[0];			
-			_bone = boneMap[? _bone];
+		for(var i = 0; i < amo; i++) {
+			var vis = array_safe_get(_vis, i);
+			var sel = array_safe_get(_sel, i);
+			if(!vis) continue;
+			if(!sel) continue;
 			
-			var _tran = current_data[hovering + 1];
-			var _rot  = _bone.angle + _tran[TRANSFORM.rot];
-			var _anc  = _bone.getPoint(0.5);
-			var _mov  = point_rotate(_tran[TRANSFORM.pos_x], _tran[TRANSFORM.pos_y], 0, 0, _bone.angle);
-			var _sca  = [ _tran[TRANSFORM.sca_x], _tran[TRANSFORM.sca_y] ];
+			var index = input_fix_len + i * data_length;
+			var _surf = array_safe_get(current_data, index);
+			if(!_surf || is_array(_surf)) continue;
 			
-			var _ww = surface_get_width(_surf);
-			var _hh = surface_get_height(_surf);
-			var _sw = _ww * _sca[0];
-			var _sh = _hh * _sca[1];
+			var _bone = inputs[| index].extra_data[0];
+			if(!ds_map_exists(boneMap, _bone))
+				continue;
 			
-			var _cen = point_rotate(-_sw / 2, -_sh / 2, 0, 0, _bone.angle);
-			var _pos  = [ 
-				_anc.x + _cen[0] + _mov[0], 
-				_anc.y + _cen[1] + _mov[1]
-			];
+			var a = anchors[index];
 			
-			var _dx0 = _x + _pos[0] * _s;
-			var _dy0 = _y + _pos[1] * _s;
-			
-			var cx = _anc.x + _mov[0];
-			var cy = _anc.y + _mov[1];
-			
-			var _d0 = point_rotate(cx - _sw / 2, cy - _sh / 2, cx, cy, _rot);
-			var _d1 = point_rotate(cx - _sw / 2, cy + _sh / 2, cx, cy, _rot);
-			var _d2 = point_rotate(cx + _sw / 2, cy - _sh / 2, cx, cy, _rot);
-			var _d3 = point_rotate(cx + _sw / 2, cy + _sh / 2, cx, cy, _rot);
-			
-			_d0[0] = overlay_x(_d0[0], _x, _s); _d0[1] = overlay_y(_d0[1], _y, _s);
-			_d1[0] = overlay_x(_d1[0], _x, _s); _d1[1] = overlay_y(_d1[1], _y, _s);
-			_d2[0] = overlay_x(_d2[0], _x, _s); _d2[1] = overlay_y(_d2[1], _y, _s);
-			_d3[0] = overlay_x(_d3[0], _x, _s); _d3[1] = overlay_y(_d3[1], _y, _s);
-			
-			if(hovering_type == NODE_COMPOSE_DRAG.move) {
-				draw_set_color(COLORS._main_accent);
-				draw_line_round(_d0[0], _d0[1], _d1[0], _d1[1], 2);
-				draw_line_round(_d0[0], _d0[1], _d2[0], _d2[1], 2);
-				draw_line_round(_d3[0], _d3[1], _d1[0], _d1[1], 2);
-				draw_line_round(_d3[0], _d3[1], _d2[0], _d2[1], 2);
+			if(surface_selecting == index) {
+				var _ri = 0;
+				var _si = 0;
 				
-				if(mouse_press(mb_left, active)) {
-					surf_dragging	= hovering;
-					drag_type	= hovering_type;
-					dragging_sx = _tran[TRANSFORM.pos_x];
-					dragging_sy = _tran[TRANSFORM.pos_y];
-					dragging_mx = _mx;
-					dragging_my = _my;
+				if(point_in_circle(_mx, _my, a.d3[0], a.d3[1], 12)) {
+					hovering = index;
+					hovering_type = NODE_COMPOSE_DRAG.scale;
+					_si = 1;
+				} else if(point_in_rectangle_points(_mx, _my, a.d0[0], a.d0[1], a.d1[0], a.d1[1], a.d2[0], a.d2[1], a.d3[0], a.d3[1])) {
+					hovering = index;
+					hovering_type = NODE_COMPOSE_DRAG.move;
+				} else if(point_in_circle(_mx, _my, a.rr[0], a.rr[1], 12)) {
+					hovering = index;
+					hovering_type = NODE_COMPOSE_DRAG.rotate;
+					_ri = 1;
 				}
+				
+				draw_sprite_colored(THEME.anchor_rotate, _ri, a.rr[0], a.rr[1],, a.rot);
+				draw_sprite_colored(THEME.anchor_scale,  _si, a.d3[0], a.d3[1],, a.rot);
+			} else if(point_in_rectangle_points(_mx, _my, a.d0[0], a.d0[1], a.d1[0], a.d1[1], a.d2[0], a.d2[1], a.d3[0], a.d3[1])) {
+				hovering = index;
+				hovering_type = NODE_COMPOSE_DRAG.move;
+			}
+		}
+		
+		if(mouse_press(mb_left, active))
+			surface_selecting = hovering;
+				
+		if(hovering != noone) {
+			var a = anchors[hovering];
+			
+			draw_set_color(COLORS.node_composite_overlay_border);
+			draw_line(a.d0[0], a.d0[1], a.d1[0], a.d1[1]);
+			draw_line(a.d0[0], a.d0[1], a.d2[0], a.d2[1]);
+			draw_line(a.d3[0], a.d3[1], a.d1[0], a.d1[1]);
+			draw_line(a.d3[0], a.d3[1], a.d2[0], a.d2[1]);
+		}
+				
+		if(surface_selecting != noone) {
+			var a = anchors[surface_selecting];
+			
+			draw_set_color(COLORS._main_accent);
+			draw_line(a.d0[0], a.d0[1], a.d1[0], a.d1[1]);
+			draw_line(a.d0[0], a.d0[1], a.d2[0], a.d2[1]);
+			draw_line(a.d3[0], a.d3[1], a.d1[0], a.d1[1]);
+			draw_line(a.d3[0], a.d3[1], a.d2[0], a.d2[1]);
+		}
+		
+		if(hovering != noone && hovering_type != noone && mouse_press(mb_left, active)) {
+			var a = anchors[hovering];
+			
+			if(hovering_type == NODE_COMPOSE_DRAG.move) { //move
+				surf_dragging	= hovering;
+				drag_type		= hovering_type;
+				dragging_sx		= _tran[TRANSFORM.pos_x];
+				dragging_sy		= _tran[TRANSFORM.pos_y];
+				dragging_mx		= _mx;
+				dragging_my		= _my;
 			} else if(hovering_type == NODE_COMPOSE_DRAG.rotate) { //rot
-				if(mouse_press(mb_left, active)) {
-					surf_dragging	= hovering;
-					drag_type	= hovering_type;
-					dragging_sx = _tran[TRANSFORM.rot];
-					rot_anc_x	= overlay_x(cx, _x, _s);
-					rot_anc_y	= overlay_y(cy, _y, _s);
-					dragging_mx = point_direction(rot_anc_x, rot_anc_y, _mx, _my);
-				}
+				surf_dragging	= hovering;
+				drag_type		= hovering_type;
+				dragging_sx		= _tran[TRANSFORM.rot];
+				rot_anc_x		= overlay_x(a.cx, _x, _s);
+				rot_anc_y		= overlay_y(a.cy, _y, _s);
+				dragging_mx		= point_direction(rot_anc_x, rot_anc_y, _mx, _my);
 			} else if(hovering_type == NODE_COMPOSE_DRAG.scale) { //sca
-				if(mouse_press(mb_left, active)) {
-					surf_dragging	= hovering;
-					drag_type	= hovering_type;
-					dragging_mx = (_d0[0] + _d3[0]) / 2;
-					dragging_my = (_d0[1] + _d3[1]) / 2;
-				}
+				surf_dragging	= hovering;
+				drag_type		= hovering_type;
+				dragging_mx		= (a.d0[0] + a.d3[0]) / 2;
+				dragging_my		= (a.d0[1] + a.d3[1]) / 2;
 			}
 		}
 		
@@ -669,9 +675,6 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			deleteLayer(layer_remove);
 			layer_remove = -1;
 		}
-		
-		if(attributes.display_bone == 0)
-			_b.draw(false, _x, _y, _s, _mx, _my);
 	#endregion
 	}
 	
@@ -764,7 +767,7 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			array_push(atlas_data, new SurfaceAtlas(_s, _pos, _rot, _sca));
 			array_push(bind_data, {
 				surface: new Surface(_s),
-				bone: _bone.id,
+				bone: _bone.ID,
 				transform: _tran
 			});
 			draw_surface_ext_safe(_s, _pos[0], _pos[1], _sca[0], _sca[1], _rot);

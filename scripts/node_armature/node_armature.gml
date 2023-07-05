@@ -50,11 +50,14 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 						draw_sprite_ui(THEME.bone, 0, __x + 12, ty + 14,,,, COLORS._main_icon);
 				}
 				
+				if(point_in_rectangle(_m[0], _m[1], __x + 24, ty + 3, __x + __w, ty + _hh - 3))
+					anchor_selecting = [ bone, 2 ];
+				
 				bone.tb_name.setFocusHover(_focus, _hover);
 				bone.tb_name.draw(__x + 24, ty + 3, __w - 24 - 32, _hh - 6, bone.name, _m);
-					
+				
 				ty += _hh;
-		
+				
 				draw_set_color(COLORS.node_composite_separator);
 				draw_line(_x + 16, ty, _x + _w - 16, ty);
 			}
@@ -79,7 +82,7 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 	data_length = 1;
 	
 	static createBone = function(parent, distance, direction) {
-		var bone  = new __Bone(parent, distance, direction,,, attributes, self);
+		var bone  = new __Bone(parent, distance, direction,,, self);
 		parent.addChild(bone);
 		
 		if(parent == attributes.bones) 
@@ -89,15 +92,22 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 	
 	outputs[| 0] = nodeValue("Armature", self, JUNCTION_CONNECT.output, VALUE_TYPE.armature, noone);
 	
-	attributes.bones = new __Bone(,,,,, attributes, self);
+	attributes.bones = new __Bone(,,,,, self);
 	attributes.bones.name = "Main";
 	attributes.bones.is_main = true;
 	attributes.bones.node = self;
 	
 	attributes.display_name = true;
+	attributes.display_bone = 0;
+	
+	array_push(attributeEditors, "Display");
 	array_push(attributeEditors, ["Display name", "display_name", 
 		new checkBox(function() { 
 			attributes.display_name = !attributes.display_name;
+		})]);
+	array_push(attributeEditors, ["Display bone", "display_bone", 
+		new scrollBox(["Octahedral", "Stick"], function(ind) { 
+			attributes.display_bone = ind;
 		})]);
 	
 	tools = [
@@ -128,7 +138,7 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 		var _b = attributes.bones;
 		
 		if(builder_bone != noone) {
-			anchor_selecting = _b.draw(false, _x, _y, _s, _mx, _my, anchor_selecting);
+			anchor_selecting = _b.draw(attributes, false, _x, _y, _s, _mx, _my, anchor_selecting);
 			
 			var dir = point_direction(builder_sx, builder_sy, mx, my);
 			var dis = point_distance(builder_sx, builder_sy, mx, my);
@@ -197,7 +207,7 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 			
 			triggerRender();
 		} else if(ik_dragging != noone) {
-			anchor_selecting = _b.draw(active * 0b100, _x, _y, _s, _mx, _my, anchor_selecting, ik_dragging);
+			anchor_selecting = _b.draw(attributes, active * 0b100, _x, _y, _s, _mx, _my, anchor_selecting, ik_dragging);
 			
 			if(anchor_selecting != noone && anchor_selecting[1] == 2) {
 				var anc = anchor_selecting[0];
@@ -207,7 +217,7 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 				var len = 1;
 				
 				while(_bone != noone) {
-					if(_bone == anc) {
+					if(_bone == anc.parent) {
 						reachable = true;
 						break;
 					}
@@ -223,7 +233,7 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 					var _len = point_distance(p0.x, p0.y, p1.x, p1.y);
 					var _ang = point_direction(p0.x, p0.y, p1.x, p1.y);
 					
-					var IKbone = new __Bone(anc, _len, _ang, ik_dragging.angle + 90, 0, attributes, self);
+					var IKbone = new __Bone(anc, _len, _ang, ik_dragging.angle + 90, 0, self);
 					anc.addChild(IKbone);
 					IKbone.IKlength = len;
 					IKbone.IKTarget = ik_dragging;
@@ -240,7 +250,7 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 			
 			triggerRender();
 		} else if(isUsingTool(0)) { // builder
-			anchor_selecting = _b.draw(active * 0b111, _x, _y, _s, _mx, _my, anchor_selecting);
+			anchor_selecting = _b.draw(attributes, active * 0b111, _x, _y, _s, _mx, _my, anchor_selecting);
 			
 			if(mouse_press(mb_left, active)) {
 				if(anchor_selecting == noone) {
@@ -257,7 +267,7 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 					UNDO_HOLDING = true;
 				} else if(anchor_selecting[1] == 2) {
 					var _pr = anchor_selecting[0];
-					var _md = new __Bone(noone, 0, 0, _pr.angle, _pr.length / 2, attributes, self);
+					var _md = new __Bone(noone, 0, 0, _pr.angle, _pr.length / 2, self);
 					_pr.length = _md.length;
 					
 					for( var i = 0; i < array_length(_pr.childs); i++ )
@@ -278,7 +288,7 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 			} else if(anchor_selecting[1] == 2)
 				draw_sprite_ext(THEME.bone_tool_add, 0, _mx + 24, _my + 24, 1, 1, 0, c_white, 1);
 		} else if(isUsingTool(1)) { //remover
-			anchor_selecting = _b.draw(active * 0b100, _x, _y, _s, _mx, _my, anchor_selecting);
+			anchor_selecting = _b.draw(attributes, active * 0b100, _x, _y, _s, _mx, _my, anchor_selecting);
 			
 			if(anchor_selecting != noone && anchor_selecting[1] == 2 && anchor_selecting[0].parent != noone && mouse_press(mb_left, active)) {
 				var _bone = anchor_selecting[0];
@@ -299,7 +309,7 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 			if(anchor_selecting != noone)
 				draw_sprite_ext(THEME.bone_tool_remove, 1, _mx + 24, _my + 24, 1, 1, 0, c_white, 1);
 		} else if(isUsingTool(2)) { //detach
-			anchor_selecting = _b.draw(active * 0b100, _x, _y, _s, _mx, _my, anchor_selecting);
+			anchor_selecting = _b.draw(attributes, active * 0b100, _x, _y, _s, _mx, _my, anchor_selecting);
 			
 			if(anchor_selecting != noone && anchor_selecting[1] == 2 && mouse_press(mb_left, active)) {
 				builder_bone = anchor_selecting[0];
@@ -319,13 +329,13 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 				UNDO_HOLDING = true;
 			}
 		} else if(isUsingTool(3)) { //IK
-			anchor_selecting = _b.draw(active * 0b100, _x, _y, _s, _mx, _my, anchor_selecting);
+			anchor_selecting = _b.draw(attributes, active * 0b100, _x, _y, _s, _mx, _my, anchor_selecting);
 			
 			if(anchor_selecting != noone && anchor_selecting[1] == 2 && mouse_press(mb_left, active)) {
 				ik_dragging = anchor_selecting[0];
 			}
 		} else { //mover
-			anchor_selecting = _b.draw(active * 0b111, _x, _y, _s, _mx, _my, anchor_selecting);
+			anchor_selecting = _b.draw(attributes, active * 0b111, _x, _y, _s, _mx, _my, anchor_selecting);
 			
 			if(anchor_selecting != noone && mouse_press(mb_left, active)) {
 				builder_bone = anchor_selecting[0];
@@ -373,8 +383,8 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 	
 	static postDeserialize = function() {
 		if(!struct_has(load_map, "bones")) return;
-		attributes.bones = new __Bone(,,,,, attributes, self);
-		attributes.bones.deserialize(load_map.bones, attributes, self);
+		attributes.bones = new __Bone(,,,,, self);
+		attributes.bones.deserialize(load_map.bones, self);
 		attributes.bones.connect();
 	}
 	

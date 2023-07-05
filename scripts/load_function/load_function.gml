@@ -108,10 +108,12 @@ function __LOAD_PATH(path, readonly = false, safe_mode = false) {
 		log_warning("LOAD, metadata", exception_print(e));
 	}
 	
-	GLOBAL = new Node_Global();
+	GLOBAL_NODE = new Node_Global();
 	try {
 		if(struct_has(_load_content, "global"))
-			GLOBAL.deserialize(_load_content.global);
+			GLOBAL_NODE.deserialize(_load_content.global);
+		else if(struct_has(_load_content, "global_node"))
+			GLOBAL_NODE.deserialize(_load_content.global_node);
 	} catch(e) {
 		log_warning("LOAD, global", exception_print(e));
 	}

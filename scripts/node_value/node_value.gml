@@ -746,7 +746,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 							return setValueDirect(_val);
 						});
 						
-						extract_node = "";
+						extract_node = "Node_Transform_Array";
 						break;
 				}
 				break;

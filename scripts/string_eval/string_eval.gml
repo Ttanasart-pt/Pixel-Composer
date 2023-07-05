@@ -95,7 +95,7 @@ function functionStringClean(fx) {
 			if(is_struct(val)) return val.validate();
 
 			if(val == "value") return true;
-			if(GLOBAL.inputExist(val)) return true;
+			if(GLOBAL_NODE.inputExist(val)) return true;
 			
 			var strs = string_splice(val, ".");
 			if(array_length(strs) < 2) return false;
@@ -127,8 +127,8 @@ function functionStringClean(fx) {
 			if(is_struct(val)) return val._isAnimated();
 			
 			if(val == "value") return EXPRESS_TREE_ANIM.base_value;
-			if(GLOBAL.inputExist(val)) {
-				var _inp = GLOBAL.getInput(val);
+			if(GLOBAL_NODE.inputExist(val)) {
+				var _inp = GLOBAL_NODE.getInput(val);
 				if(_inp.is_anim) return EXPRESS_TREE_ANIM.animated;
 			}
 			

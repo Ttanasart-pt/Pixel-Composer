@@ -1019,7 +1019,8 @@ end",
 		[ "__button_draw",   function(wd, _x, _y, _w, _h, _m) { 
 			if(!ds_map_exists(global.ADDON_WIDGET, wd)) return;
 			
-			global.ADDON_WIDGET[? wd].draw(_x, _y, _w, _h);
+			var _button = global.ADDON_WIDGET[? wd];
+			_button.draw(_x, _y, _w, _h);
 		} ],
 
 @"

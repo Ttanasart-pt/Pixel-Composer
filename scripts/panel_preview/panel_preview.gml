@@ -496,6 +496,14 @@ function Panel_Preview() : PanelContent() constructor {
 		draw_set_text(f_p0, fa_right, fa_top, COLORS._main_text_sub);
 		draw_text(w - ui(8), right_menu_y, __txt("Frame") + " " + string(ANIMATOR.current_frame) + "/" + string(ANIMATOR.frames_total));
 		
+		right_menu_y += string_height("l");
+		draw_text(w - ui(8), right_menu_y, "x" + string(canvas_s));
+		
+		right_menu_y += string_height("l");
+		var mpx = floor((mx - canvas_x) / canvas_s);
+		var mpy = floor((my - canvas_y) / canvas_s);
+		draw_text(w - ui(8), right_menu_y, "[" + string(mpx) + ", " + string(mpy) + "]");
+		
 		var _node = getNodePreview();
 		if(_node == noone) return;
 		
@@ -503,16 +511,6 @@ function Panel_Preview() : PanelContent() constructor {
 		var txt = string(canvas_w) + "x" + string(canvas_h) + "px";
 		if(canvas_a) txt = string(canvas_a) + " x " + txt;
 		draw_text(w - ui(8), right_menu_y, txt);
-		
-		right_menu_y += string_height("l");
-		draw_text(w - ui(8), right_menu_y, "x" + string(canvas_s));
-		
-		if(pHOVER) {
-			right_menu_y += string_height("l");
-			var mpx = floor((mx - canvas_x) / canvas_s);
-			var mpy = floor((my - canvas_y) / canvas_s);
-			draw_text(w - ui(8), right_menu_y, "[" + string(mpx) + ", " + string(mpy) + "]");
-		}
 		
 		right_menu_y += string_height("l");
 		

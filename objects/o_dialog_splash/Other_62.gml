@@ -54,8 +54,8 @@ for( var i = 0; i < array_length(contest_message_req); i++ ) {
 	thr.title.meta = {};
 	
 	var content = thr.title.content;
-	var _metaSp = string_split(content, "```",, 2);
-		
+	var _metaSp = string_split(content, "```", false, 2);
+	
 	if(array_length(_metaSp) == 3 && _metaSp[0] == "") {
 		var _meta = _metaSp[1];
 		var _mtS  = string_splice(_meta, "\n");

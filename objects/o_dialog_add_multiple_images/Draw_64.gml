@@ -50,7 +50,7 @@ if !ready exit;
 			}
 		}
 					
-		draw_sprite_ui_uniform(_node.spr, 0, xx + grid_size / 2, yy + grid_size / 2);
+		draw_sprite_ui_uniform(_node.spr, 0, xx + grid_size / 2, yy + grid_size / 2, 0.5);
 				
 		draw_set_text(f_p2, fa_center, fa_top, COLORS._main_text);
 		draw_text(xx + grid_size / 2, yy + grid_size + 4, _node.name);	

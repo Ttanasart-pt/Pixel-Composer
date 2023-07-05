@@ -4,6 +4,6 @@
 	var hh = array_length(FONT_INTERNAL) * hght;
 	
 	dialog_h = min(max_h, hh);
-	sc_content.resize(dialog_w, dialog_h);
+	sc_content.resize(dialog_w - ui(6), dialog_h);
 #endregion
 event_inherited();

@@ -232,7 +232,7 @@ function Panel_Inspector() : PanelContent() constructor {
 					bx += bw + ui(4);
 				
 					if(buttonInstant(THEME.button_hide, bx, by, bw, bh, _m, pFOCUS, _hover) == 2)
-						GLOBAL.createValue();
+						GLOBAL_NODE.createValue();
 					
 					var txt  = __txt("Add");
 					var icon = THEME.add;
@@ -329,6 +329,7 @@ function Panel_Inspector() : PanelContent() constructor {
 				}
 				
 				var val = inspecting.attributes[$ edt[1]];
+				if(is_undefined(val)) continue;
 				edt[2].setFocusHover(pFOCUS, pHOVER);
 				
 				if(instanceof(edt[2]) == "buttonClass") {
@@ -346,7 +347,10 @@ function Panel_Inspector() : PanelContent() constructor {
 				switch(instanceof(edt[2])) {
 					case "textBox" :	edt[2].draw(wx0, yy, ww, hg, val, _m); break;
 					case "checkBox" :	edt[2].draw(wx0 + ww / 2 - ui(28) / 2, yy + ui(2), val, _m, ui(28)); break;
-					case "scrollBox" :	edt[2].draw(wx0, yy, ww, hg, edt[2].data_list[val], _m, x + contentPane.x, y + contentPane.y); break;
+					case "scrollBox" :	
+						var scBox = edt[2];
+						scBox.draw(wx0, yy, ww, hg, scBox.data_list[val], _m, x + contentPane.x, y + contentPane.y); 
+						break;
 				}
 				
 				yy += hg + ui(8);

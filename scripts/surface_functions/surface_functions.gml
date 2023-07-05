@@ -287,6 +287,7 @@ function surface_copy_size(dest, source, format = noone) {
 
 function surface_valid_size(s) {
 	if(is_infinity(s)) return 1;
+	s = toNumber(s);
 	if(!is_real(s)) return 1;
 	return clamp(s, 1, 8196);
 }

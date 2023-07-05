@@ -50,7 +50,7 @@ function draw_circle_angle(_x, _y, _r, _angSt, _angEd, precision = 32) {
 	draw_primitive_begin(pr_trianglelist);
 	
 	for( var i = 0; i <= precision; i++ ) {
-		na = lerp_float_angle(_angSt, _angEd, i / precision);
+		na = lerp(_angSt, _angEd, i / precision);
 		nx = _x + lengthdir_x(_r, na);
 		ny = _y + lengthdir_y(_r, na);
 		

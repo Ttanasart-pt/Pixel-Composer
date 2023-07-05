@@ -418,6 +418,7 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 			addNodeObject(compose, "Armature Create",	s_node_armature_create,	"Node_Armature",		[1, Node_Armature], ["rigging", "bone"]).setVersion(1146);
 			addNodeObject(compose, "Armature Pose",		s_node_armature_pose,	"Node_Armature_Pose",	[1, Node_Armature_Pose], ["rigging", "bone"]).setVersion(1146);
 			addNodeObject(compose, "Armature Bind",		s_node_armature_bind,	"Node_Armature_Bind",	[1, Node_Armature_Bind], ["rigging", "bone"]).setVersion(1146);
+			addNodeObject(compose, "Armature Path",		s_node_armature_path,	"Node_Armature_Path",	[1, Node_Armature_Path], ["rigging", "bone"]).setVersion(1146);
 			
 			if(!DEMO) {
 				ds_list_add(compose, "Export");
@@ -451,6 +452,7 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 			addNodeObject(values, "Cross product 3D",	s_node_cross_product_2d,	"Node_Vector_Cross_3D",	[1, Node_Vector_Cross_3D]).setVersion(1141);
 			addNodeObject(values, "Cross product 2D",	s_node_cross_product_3d,	"Node_Vector_Cross_2D",	[1, Node_Vector_Cross_2D]).setVersion(1141);
 			addNodeObject(values, "FFT",			s_node_FFT,				"Node_FFT",				[1, Node_FFT], ["frequency analysis"], "Perform fourier transform on number array.").setVersion(1144);
+			addNodeObject(values, "Transform Array",s_node_transform_array,	"Node_Transform_Array",	[1, Node_Transform_Array]).setVersion(1146);
 			
 			ds_list_add(values, "Texts");
 			addNodeObject(values, "Text",				s_node_text,				"Node_String",					[1, Node_String]);
@@ -687,7 +689,7 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 		
 		if(array_length(strs) == 1) {
 			var splt = string_splice(strs[0], "[");
-			var inp = GLOBAL.getInput(strs[0]);
+			var inp = GLOBAL_NODE.getInput(strs[0]);
 			_val = inp == noone? 0 : inp.getValueRecursive()[0];
 		} else if(strs[0] == "Project") {
 			switch(strs[1]) {

@@ -379,7 +379,7 @@ function Panel_Animation() : PanelContent() constructor {
 		var k = ds_map_find_first(NODE_MAP);
 		var pr = ds_priority_create();
 		
-		updatePropertyNode(pr, GLOBAL);
+		updatePropertyNode(pr, GLOBAL_NODE);
 		
 		repeat(amo) {
 			var _node = NODE_MAP[? k];
@@ -907,7 +907,7 @@ function Panel_Animation() : PanelContent() constructor {
 		
 		for( var i = 0; i < ds_list_size(anim_properties); i++ ) {
 			_node = anim_properties[| i];
-			var _inContext = _node == GLOBAL || _node.group == PANEL_GRAPH.getCurrentContext();
+			var _inContext = _node == GLOBAL_NODE || _node.group == PANEL_GRAPH.getCurrentContext();
 			
 			var aa = _inContext? 1 : 0.9;
 			var _node_y = _node.dopesheet_y;

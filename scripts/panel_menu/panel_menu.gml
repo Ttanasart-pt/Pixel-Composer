@@ -51,7 +51,7 @@ function Panel_Menu() : PanelContent() constructor {
 			}
 			
 			return submenuCall(_dat, arr);
-		}, THEME.addon ).setIsShelf(),
+		}, THEME.addon_icon ).setIsShelf(),
 		-1,
 		menuItem(__txt("Fullscreen"), function() { 
 			if(gameframe_is_fullscreen_window())
@@ -214,6 +214,9 @@ function Panel_Menu() : PanelContent() constructor {
 		array_push(menus, [ __txt("Dev"), [
 			menuItem(__txtx("panel_debug_console", "Debug console"), function() { 
 				panelAdd("Panel_Console", true)
+			}),
+			menuItem(__txtx("panel_debug_overlay", "Debug overlay"), function() { 
+				show_debug_overlay(true);
 			}),
 			menuItem(__txtx("panel_menu_tester", "Tester"), function() { 
 				var dia = dialogPanelCall(new Panel_Test());
@@ -485,7 +488,7 @@ function Panel_Menu() : PanelContent() constructor {
 				} else 
 					draw_sprite_stretched(THEME.ui_panel_bg, 1, nx0, ny0 - wh / 2, ww, wh);
 				draw_text(nx0 + ui(8), ny0, name);
-				draw_sprite_ui(THEME.addon, 0, nx0 + ui(20) + string_width(name), ny0 + ui(1),,,, COLORS._main_icon);
+				draw_sprite_ui(THEME.addon_icon, 0, nx0 + ui(20) + string_width(name), ny0 + ui(1),,,, COLORS._main_icon);
 				
 				if(hori) nx0 += ww + ui(4);
 				else     ny0 += hh + ui(4);
