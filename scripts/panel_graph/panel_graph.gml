@@ -1,7 +1,15 @@
-function Panel_Graph() : PanelContent() constructor {
+/// @desc Panel for displaying node graph
+/// @param {Struct.Project}
+function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 	title = __txt("Graph");
 	context_str = "Graph";
 	icon  = THEME.panel_graph;
+	
+	static setProject = function(project) {
+		self.project = project;
+		nodes_list   = project.nodes;
+	}
+	setProject(project);
 	
 	scale			= [ 0.01, 0.02, 0.05, 0.10, 0.15, 0.20, 0.25, 0.33, 0.5, 0.65, 0.8, 1, 1.2, 1.35, 1.5, 2.0];
 	graph_s_index	= array_find(scale, 1);
@@ -27,7 +35,6 @@ function Panel_Graph() : PanelContent() constructor {
 	mouse_grid_y = 0;
 	mouse_on_graph = false;
 	
-	nodes_list = NODES;
 	node_context = ds_list_create();
 	
 	node_dragging = noone;
@@ -247,6 +254,7 @@ function Panel_Graph() : PanelContent() constructor {
 	
 	function onFocusBegin() { 
 		PANEL_GRAPH = self; 
+		PROJECT = project;
 		PANEL_ANIMATION.updatePropertyList();
 	}
 	
@@ -393,6 +401,7 @@ function Panel_Graph() : PanelContent() constructor {
 		
 		var log = false;
 		var t = current_time;
+		
 		for(var i = 0; i < ds_list_size(nodes_list); i++) {
 			nodes_list[| i].cullCheck(gr_x, gr_y, graph_s, -32, -32, w + 32, h + 64);
 			nodes_list[| i].preDraw(gr_x, gr_y, graph_s, gr_x, gr_y);
@@ -539,7 +548,7 @@ function Panel_Graph() : PanelContent() constructor {
 							}, THEME.group));
 						array_push(menu,  
 							menuItem(__txtx("panel_graph_enter_group_new_tab", "Open group in new tab"), function() {
-								var graph = new Panel_Graph();
+								var graph = new Panel_Graph(project);
 								panel.setContent(graph, true);
 								
 								for( var i = 0; i < ds_list_size(node_context); i++ ) 
@@ -1504,7 +1513,7 @@ function Panel_Graph() : PanelContent() constructor {
 					if(i == -1) {
 						ds_list_clear(node_context);
 						title = __txt("Graph");
-						nodes_list = NODES;
+						nodes_list = project.nodes;
 						toCenterNode();
 						PANEL_ANIMATION.updatePropertyList();
 					} else {
@@ -1731,7 +1740,7 @@ function Panel_Graph() : PanelContent() constructor {
 	}
 	
 	function getNodeList(cont = getCurrentContext()) {
-		return cont == noone? NODES : cont.getNodeList();
+		return cont == noone? project.nodes : cont.getNodeList();
 	}
 	
 	function dropFile(path) {
@@ -1743,6 +1752,10 @@ function Panel_Graph() : PanelContent() constructor {
 	function drawContent(panel) { 
 		dragGraph();
 		
+		if(project.path == "")	title = "New project";
+		else					title = filename_name_only(project.path);
+		title += project.modified? "*" : "";
+			
 		var bg = COLORS.panel_bg_clear;
 		var context = instanceof(getCurrentContext());
 		switch(context) {
@@ -1883,5 +1896,16 @@ function Panel_Graph() : PanelContent() constructor {
 		
 		ds_list_remove(nodes_list, node);
 		ds_list_add(nodes_list, node);
+	}
+	
+	function close() { 
+		if(nodes_list != project.nodes) return;
+		if(!project.modified || project.readonly) {
+			closeProject(project);
+			return;
+		}
+		
+		var dia = dialogCall(o_dialog_save);
+		dia.project = project;
 	}
 }

@@ -27,7 +27,7 @@ function Node_Atlas_Set(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	outputs[| 0] = nodeValue("Atlas", self, JUNCTION_CONNECT.output, VALUE_TYPE.atlas, noone);
 	
-	static update = function(frame = ANIMATOR.current_frame) {
+	static update = function(frame = PROJECT.animator.current_frame) {
 		var atl = inputs[| 0].getValue();
 		
 		if(atl == noone) return;

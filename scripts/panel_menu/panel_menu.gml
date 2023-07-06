@@ -17,6 +17,7 @@ function Panel_Menu() : PanelContent() constructor {
 		menuItem(__txt("Open") + "...",		function() { LOAD(); }, THEME.noti_icon_file_load, ["", "Open"]),
 		menuItem(__txt("Save"),				function() { SAVE(); }, THEME.save, ["", "Save"]),
 		menuItem(__txt("Save as") + "...",	function() { SAVE_AS(); }, THEME.save, ["", "Save as"]),
+		menuItem(__txt("Save all"),			function() { SAVE_ALL(); }, THEME.icon_save_all, ["", "Save all"]),
 		menuItem(__txt("Recent files"),		function(_dat) { 
 				var arr = [];
 				for(var i = 0; i < min(10, ds_list_size(RECENT_FILES)); i++)  {
@@ -59,7 +60,8 @@ function Panel_Menu() : PanelContent() constructor {
 			else
 				gameframe_set_fullscreen(2);
 		},, ["", "Fullscreen"]),
-		menuItem(__txt("Close program"), function() { window_close(); }),
+		menuItem(__txt("Close current file"), function() { PANEL_GRAPH.close(); },, [ "", "Close file" ]),
+		menuItem(__txt("Close program"), function() { window_close(); },, [ "", "Close program" ]),
 	];
 	
 	if(DEMO) array_delete(menu_file, 1, 5);
@@ -131,15 +133,15 @@ function Panel_Menu() : PanelContent() constructor {
 		]],
 		[ __txt("Rendering"), [
 			menuItem(__txtx("panel_menu_render_all_nodes", "Render all nodes"), function() { 
-				for(var i = 0; i < ds_list_size(NODES); i++) 
-					NODES[| i].triggerRender();
+				for(var i = 0; i < ds_list_size(PROJECT.nodes); i++) 
+					PROJECT.nodes[| i].triggerRender();
 				UPDATE |= RENDER_TYPE.full; 
 			}, [ THEME.sequence_control, 1 ], ["", "Render all"]),
 			menuItem(__txtx("panel_menu_execute_exports", "Execute all export nodes"), function() { 
-				var key = ds_map_find_first(NODE_MAP);
-				repeat(ds_map_size(NODE_MAP)) {
-					var node = NODE_MAP[? key];
-					key = ds_map_find_next(NODE_MAP, key);
+				var key = ds_map_find_first(PROJECT.nodeMap);
+				repeat(ds_map_size(PROJECT.nodeMap)) {
+					var node = PROJECT.nodeMap[? key];
+					key = ds_map_find_next(PROJECT.nodeMap, key);
 					
 					if(!node.active) continue;
 					if(instanceof(node) != "Node_Export") continue;
@@ -618,11 +620,11 @@ function Panel_Menu() : PanelContent() constructor {
 		
 		#region title
 			var txt = "";
-			if(CURRENT_PATH == "") 
+			if(PROJECT.path == "") 
 				txt = "Untitled";
 			else 
-				txt = filename_name(CURRENT_PATH);
-			if(MODIFIED)
+				txt = filename_name(PROJECT.path);
+			if(PROJECT.modified)
 				txt += "*";
 			txt += " - Pixel Composer";
 			if(ALPHA)		txt += " ALPHA";

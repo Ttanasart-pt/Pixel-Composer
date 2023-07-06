@@ -22,7 +22,7 @@ if !ready exit;
 	
 	var sx1 = tb_x + ui(96);
 	draw_set_text(f_p1, fa_right, fa_top, COLORS._main_text_sub);
-	draw_text(sx1, yy + ui(38), __txtx("anim_scale_scale_factor", "Scaling factor: ") + string(scale_to / ANIMATOR.frames_total));
+	draw_text(sx1, yy + ui(38), __txtx("anim_scale_scale_factor", "Scaling factor: ") + string(scale_to / PROJECT.animator.frames_total));
 	
 	var bx = sx1 + ui(16);
 	var by = yy;

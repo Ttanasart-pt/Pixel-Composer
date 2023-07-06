@@ -60,6 +60,7 @@
 	if(!DEMO) {
 		addHotkey("", "Save", "S",		MOD_KEY.ctrl, SAVE );
 		addHotkey("", "Save as", "S",	MOD_KEY.ctrl | MOD_KEY.shift, SAVE_AS );
+		addHotkey("", "Save all", "S",	MOD_KEY.ctrl | MOD_KEY.alt, SAVE_ALL );
 		addHotkey("", "Open", "O",		MOD_KEY.ctrl, function() { LOAD(); });
 	}
 	
@@ -79,6 +80,9 @@
 	addHotkey("", "Render all", vk_f5,	MOD_KEY.none, function() { 
 		UPDATE |= RENDER_TYPE.full; 
 	});
+	
+	addHotkey("", "Close file", "Q",		MOD_KEY.ctrl, function() { PANEL_GRAPH.close(); });
+	addHotkey("", "Close program", vk_f4,	MOD_KEY.alt, window_close);
 	
 	globalvar HOTKEY_MOD, HOTKEY_BLOCK;
 	HOTKEY_MOD = 0;

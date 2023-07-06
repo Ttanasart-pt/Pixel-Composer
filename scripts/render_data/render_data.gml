@@ -53,7 +53,7 @@ function Render(partial = false, runAction = false) {
 	var t = current_time;
 	LOG_BLOCK_START();
 	LOG_IF(global.FLAG.render, 
-$"============================== RENDER START [frame {string(ANIMATOR.current_frame)}] ==============================");
+$"============================== RENDER START [frame {string(PROJECT.animator.current_frame)}] ==============================");
 	
 	try {
 		var rendering = noone;
@@ -61,23 +61,23 @@ $"============================== RENDER START [frame {string(ANIMATOR.current_fr
 		var reset_all = !partial || ALWAYS_FULL;
 		
 		if(reset_all) {
-			var _key = ds_map_find_first(NODE_MAP);
-			var amo = ds_map_size(NODE_MAP);
+			var _key = ds_map_find_first(PROJECT.nodeMap);
+			var amo = ds_map_size(PROJECT.nodeMap);
 		
 			repeat(amo) {
-				var _node = NODE_MAP[? _key];
+				var _node = PROJECT.nodeMap[? _key];
 				_node.setRenderStatus(false);
-				_key = ds_map_find_next(NODE_MAP, _key);	
+				_key = ds_map_find_next(PROJECT.nodeMap, _key);	
 			}
 		}
 	
 		// get leaf node
 		RENDER_QUEUE.clear();
-		var key = ds_map_find_first(NODE_MAP);
-		var amo = ds_map_size(NODE_MAP);
+		var key = ds_map_find_first(PROJECT.nodeMap);
+		var amo = ds_map_size(PROJECT.nodeMap);
 		repeat(amo) {
-			var _node = NODE_MAP[? key];
-			key = ds_map_find_next(NODE_MAP, key);
+			var _node = PROJECT.nodeMap[? key];
+			key = ds_map_find_next(PROJECT.nodeMap, key);
 		
 			if(is_undefined(_node)) continue;
 			if(!is_struct(_node)) continue;
@@ -216,7 +216,7 @@ function RenderList(list) {
 }
 
 function RenderListAction(list, context = PANEL_GRAPH.getCurrentContext()) {
-	printIf(global.FLAG.render, "=== RENDER LIST ACTION START [frame " + string(ANIMATOR.current_frame) + "] ===");
+	printIf(global.FLAG.render, "=== RENDER LIST ACTION START [frame " + string(PROJECT.animator.current_frame) + "] ===");
 	
 	try {
 		var rendering = noone;

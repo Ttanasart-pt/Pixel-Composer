@@ -31,7 +31,7 @@ function Node_Rigid_Group(_x, _y, _group = noone) : Node_Collection(_x, _y, _gro
 	}
 	
 	static update = function() {
-		if(ANIMATOR.current_frame == 0)
+		if(PROJECT.animator.current_frame == 0)
 			reset();
 	}
 	

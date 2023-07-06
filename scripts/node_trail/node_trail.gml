@@ -81,7 +81,7 @@ function Node_Trail(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		_outUV = surface_verify(_outUV, surface_get_width(_surf), surface_get_height(_surf), cDep);
 		outputs[| 1].setValue(_outUV);
 		
-		var curf = ANIMATOR.current_frame;
+		var curf = PROJECT.animator.current_frame;
 		var frame_amo = _loop? _life : min(_life, curf);
 		var st_frame  = curf - frame_amo;
 		
@@ -89,9 +89,9 @@ function Node_Trail(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			var frame_idx = st_frame + i;
 			var prog = (frame_idx - (curf - _life)) / _life;
 			
-			if(_loop && frame_idx < 0) frame_idx = ANIMATOR.frames_total + frame_idx;
+			if(_loop && frame_idx < 0) frame_idx = PROJECT.animator.frames_total + frame_idx;
 			
-			var prev = _loop? safe_mod(frame_idx - 1 + ANIMATOR.frames_total, ANIMATOR.frames_total) : frame_idx - 1;
+			var prev = _loop? safe_mod(frame_idx - 1 + PROJECT.animator.frames_total, PROJECT.animator.frames_total) : frame_idx - 1;
 			var _prevFrame = getCacheFrame(prev);
 			var _currFrame = getCacheFrame(frame_idx);
 			

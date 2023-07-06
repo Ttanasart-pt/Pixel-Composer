@@ -39,7 +39,7 @@ function Node_Iterate_Sort(_x, _y, _group = noone) : Node_Collection(_x, _y, _gr
 		inputs[| 0].type = type;
 	}
 	
-	static update = function(frame = ANIMATOR.current_frame) {
+	static update = function(frame = PROJECT.animator.current_frame) {
 		initLoop();
 	}
 	

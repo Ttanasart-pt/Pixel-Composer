@@ -88,7 +88,7 @@ function Node_Rigid_Force_Apply(_x, _y, _group = noone) : Node(_x, _y, _group) c
 		inputs[| 8].setVisible(_typ == 3);
 	}
 	
-	static update = function(frame = ANIMATOR.current_frame) {
+	static update = function(frame = PROJECT.animator.current_frame) {
 		var _obj = inputs[| 0].getValue();
 		outputs[| 0].setValue(_obj);
 		
@@ -104,7 +104,7 @@ function Node_Rigid_Force_Apply(_x, _y, _group = noone) : Node(_x, _y, _group) c
 		var _str = inputs[| 7].getValue();
 		var _rad = inputs[| 8].getValue();
 		
-		if((_typ > 0) && ANIMATOR.current_frame != _frm)
+		if((_typ > 0) && PROJECT.animator.current_frame != _frm)
 			return;
 		
 		if(!is_array(_obj)) _obj = [ _obj ];

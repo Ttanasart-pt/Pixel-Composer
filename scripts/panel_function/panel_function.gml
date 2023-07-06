@@ -170,6 +170,30 @@
 		return _res;
 	}
 	
+	function findPanels(_type, _pane = PANEL_MAIN) {
+		return _findPanels(_type, _pane, []);
+	}
+	
+	function _findPanels(_type, _pane, _arr = []) {
+		if(instanceof(_pane) != "Panel")
+			return _res;
+		if(!ds_exists(_pane.childs, ds_type_list))
+			return _res;
+		
+		if(ds_list_size(_pane.childs) == 0) {
+			for( var i = 0; i < array_length(_pane.content); i++ ) 
+				if(instanceof(_pane.content[i]) == _type) {
+					array_append(_arr, _pane.content[i]);
+					return _arr;
+				}
+		}
+		
+		for(var i = 0; i < ds_list_size(_pane.childs); i++)
+			_arr = _findPanels(_type, _pane.childs[| i], _arr);
+		
+		return _arr;
+	}
+	
 	function panelInit() {
 		panel_dragging = noone;
 		panel_hovering = noone;

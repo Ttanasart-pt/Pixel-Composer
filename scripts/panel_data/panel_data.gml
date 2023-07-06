@@ -51,8 +51,9 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 	tab_holding_sy = 0;
 	
 	border_rb_close = menuItem(__txt("Close"),   function() { 
-		extract();
-		o_main.panel_dragging = noone;
+		var con = getContent();
+		if(con == noone) return;
+		con.close();
 	}, THEME.cross);
 	
 	border_rb_menu = [
@@ -212,7 +213,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 		for( var i = 0; i < array_length(content); i++ ) 
 			content[i].onSetPanel(self);
 			
-		if(_switch) content_index = array_find(content, _content);
+		if(_switch) setTab(array_find(content, _content));
 			
 		refresh();
 	}
@@ -471,12 +472,14 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 			tab_x = lerp_float(tab_x, tab_x_to, 5);
 			tab_width = 0;
 			
+			var rem = -1;
+			
 			draw_set_text(f_p3, fa_left, fa_bottom, COLORS._main_text_sub);
 			for( var i = 0; i < array_length(content); i++ ) {
 				var txt = content[i].title;
 				var icn = content[i].icon;
 				
-				var tbw = string_width(txt) + ui(16);
+				var tbw = string_width(txt) + ui(16 + 16);
 				if(icn != noone) tbw += ui(16 + 4);
 				var foc = false;
 				
@@ -510,7 +513,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 				
 				if(HOVER == self && _hov) {
 					if(mouse_press(mb_left, FOCUS == self)) {
-						content_index = i;
+						setTab(i);
 						
 						tab_holding = content[i];
 						tab_hold_state = 0;
@@ -527,13 +530,23 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 						menuCall("panel_border_menu",,, menu);
 					}
 					
-					if(DRAGGING) {
-						content_index = i;
-					}
+					if(mouse_press(mb_middle, FOCUS == self))
+						rem = i;
+					
+					if(DRAGGING)
+						setTab(i);
 				}
 				
+				var aa = 0.5;
+				if(point_in_rectangle(msx, msy, _tbx + tbw - ui(16), tby, _tbx + tbw, tab_height)) {
+					aa = 1;
+					if(mouse_press(mb_left, FOCUS == self)) 
+						rem = i;
+				}
+				draw_sprite_ui(THEME.tab_exit, 0, _tbx + tbw - ui(12), tab_height / 2 + 1,,,, foc? COLORS.panel_tab_icon : COLORS._main_text_sub, aa);
+				
 				if(icn != noone) {
-					draw_sprite_ui(icn, 0, _tbx + ui(8 + 8), tab_height / 2 + ui(1),,,, foc? COLORS.panel_tab_icon : COLORS._main_text_sub);
+					draw_sprite_ui(icn, 0, _tbx + ui(8 + 8), tab_height / 2 + 1,,,, foc? COLORS.panel_tab_icon : COLORS._main_text_sub);
 					_tbx += ui(20);
 				}
 				
@@ -542,6 +555,8 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 				
 				tbx += tbw + ui(2);
 			}
+			
+			if(rem > -1) content[rem].close();
 			
 			tab_width = max(0, tab_width - w + ui(32));
 			if(point_in_rectangle(msx, msy, 0, 0, w, tab_height)) {
@@ -555,13 +570,14 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 				var _tbx = tab_holding.tab_x;
 				var txt  = tab_holding.title;
 				var icn  = tab_holding.icon;
-				var tbw  = string_width(txt) + ui(16);
+				var tbw  = string_width(txt) + ui(16 + 16);
 				if(icn != noone) tbw += ui(16 + 4);
 				
 				draw_sprite_stretched_ext(THEME.ui_panel_tab, 2, _tbx, tby, tbw, tbh, COLORS._main_accent, 1);
+				draw_sprite_ui(THEME.tab_exit, 0, _tbx + tbw - ui(12), tab_height / 2 + 1,,,, COLORS.panel_tab_icon);
 				
 				if(icn != noone) {
-					draw_sprite_ui(icn, 0, _tbx + ui(8 + 8), tab_height / 2 + ui(1),,,, COLORS.panel_tab_icon);
+					draw_sprite_ui(icn, 0, _tbx + ui(8 + 8), tab_height / 2 + 1,,,, COLORS.panel_tab_icon);
 					_tbx += ui(20);
 				}
 				draw_set_text(f_p3, fa_left, fa_bottom, COLORS.panel_tab_text);
@@ -580,7 +596,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 					
 					array_remove(content, tab_holding);
 					array_insert(content, tabHov, tab_holding);
-					content_index = array_find(content, tab_holding);
+					setTab(array_find(content, tab_holding));
 					
 					if(abs(msy - tab_holding_my) > ui(32)) {
 						extract();
@@ -594,6 +610,19 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 		surface_reset_target();
 		
 		draw_surface(tab_surface, tsx, tsy);
+	}
+	
+	function setTab(tabIndex) {
+		if(tabIndex < 0) return;
+		if(tabIndex >= array_length(content)) return;
+		
+		var prec = array_safe_get(content, content_index);
+		if(prec) prec.onFocusEnd();
+		
+		content_index = tabIndex;
+		
+		var prec = array_safe_get(content, content_index);
+		if(prec) prec.onFocusBegin();
 	}
 	
 	function drawPanel() {
@@ -679,7 +708,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 				
 		array_remove(content, con);
 		refresh();
-		content_index = 0;
+		setTab(0);
 		
 		HOVER = noone;
 		FOCUS = noone;
@@ -777,16 +806,15 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 		}
 	}
 	
-	function remove() {
-		var con = getContent();
+	function remove(con = getContent()) {
 		array_remove(content, con);
 		if(con) con.onClose();
-		content_index = 0;
+		setTab(0);
 		
 		refresh();
 		if(hasContent()) return;
 		if(parent == noone) {
-			show_message("What are you trying to do!");
+			show_message("Can't close main panel.");
 			return;
 		}
 		
@@ -881,6 +909,10 @@ function PanelContent() constructor {
 	function drawContent(panel) {}
 	
 	function drawGUI() {}
+	
+	function close() {
+		panel.remove(self);
+	}
 	
 	function onClose() {}
 }

@@ -18,7 +18,7 @@ function Node_Pin(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	
 	outputs[| 0] = nodeValue("Out", self, JUNCTION_CONNECT.output, VALUE_TYPE.any, 0);
 	
-	static update = function(frame = ANIMATOR.current_frame) {
+	static update = function(frame = PROJECT.animator.current_frame) {
 		inputs[| 0].type = inputs[| 0].value_from == noone? VALUE_TYPE.any : inputs[| 0].value_from.type;
 		outputs[| 0].type = inputs[| 0].type;
 		outputs[| 0].value_from = inputs[| 0].value_from;

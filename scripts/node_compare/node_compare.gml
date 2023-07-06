@@ -54,7 +54,7 @@ function Node_Compare(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 		return 0;
 	}
 	
-	function update(frame = ANIMATOR.current_frame) { 
+	function update(frame = PROJECT.animator.current_frame) { 
 		var mode = inputs[| 0].getValue();
 		var a = inputs[| 1].getValue();
 		var b = inputs[| 2].getValue();

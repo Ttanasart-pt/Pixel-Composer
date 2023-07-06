@@ -15,7 +15,7 @@ function Node_Array_Range(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	outputs[| 0] = nodeValue("Array", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, []);
 	
-	static update = function(frame = ANIMATOR.current_frame) {
+	static update = function(frame = PROJECT.animator.current_frame) {
 		var st   = inputs[| 0].getValue();
 		var ed   = inputs[| 1].getValue();
 		var step = inputs[| 2].getValue();

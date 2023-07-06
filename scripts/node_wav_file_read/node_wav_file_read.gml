@@ -39,8 +39,8 @@ function Node_WAV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	inputs[| 1]  = nodeValue("Sync lenght", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.button, [ function() { 
 			if(content == noone) return;
-			var frm = max(1, floor(content.duration * ANIMATOR.framerate));
-			ANIMATOR.frames_total = frm;
+			var frm = max(1, floor(content.duration * PROJECT.animator.framerate));
+			PROJECT.animator.frames_total = frm;
 		}, "Sync"])
 		.rejectArray();
 		
@@ -165,7 +165,7 @@ function Node_WAV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		
 		printIf(global.FLAG.wav_import, "-- Creating preview buffer...");
 		
-		var frm = floor(content.duration * ANIMATOR.framerate);
+		var frm = floor(content.duration * PROJECT.animator.framerate);
 		inputs[| 1].editWidget.text = $"Sync ({frm} frames)";
 		
 		var bufferId = buffer_create(content.packet * 2, buffer_fixed, 1);
@@ -210,23 +210,23 @@ function Node_WAV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		insp2UpdateIcon[2] = attributes.play? COLORS._main_icon_light : COLORS._main_icon;
 		if(preview_audio == -1) return;
 		
-		if(audio_is_playing(preview_audio) && !ANIMATOR.is_playing)
+		if(audio_is_playing(preview_audio) && !PROJECT.animator.is_playing)
 			audio_stop_sound(preview_audio);
 		
 		if(!attributes.play) return;
-		if(ANIMATOR.is_playing) {
-			if(ANIMATOR.current_frame == 0)
+		if(PROJECT.animator.is_playing) {
+			if(PROJECT.animator.current_frame == 0)
 				audio_stop_sound(preview_audio);
 				
-			var dur = ANIMATOR.current_frame / ANIMATOR.framerate - attributes.preview_shift;
+			var dur = PROJECT.animator.current_frame / PROJECT.animator.framerate - attributes.preview_shift;
 			if(!audio_is_playing(preview_audio))
 				audio_play_sound(preview_audio, 1, false, attributes.preview_gain, dur);
-			else if(ANIMATOR.frame_progress)
+			else if(PROJECT.animator.frame_progress)
 				audio_sound_set_track_position(preview_audio, dur);
 		}
 	}
 	
-	static update = function(frame = ANIMATOR.current_frame) {
+	static update = function(frame = PROJECT.animator.current_frame) {
 		var path = inputs[| 0].getValue();
 		if(path == "") return;
 		
@@ -234,8 +234,8 @@ function Node_WAV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		checkPreview();
 		
 		var len = content.packet;
-		var amp_ind = round(frame * content.sample / ANIMATOR.framerate);
-		var amp_win = content.sample / ANIMATOR.framerate;
+		var amp_ind = round(frame * content.sample / PROJECT.animator.framerate);
+		var amp_win = content.sample / PROJECT.animator.framerate;
 		
 		var amp_st = clamp(amp_ind - amp_win, 0, len);
 		var amp_ed = clamp(amp_ind + amp_win, 0, len);
@@ -273,7 +273,7 @@ function Node_WAV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 				bbox.yc - sh * ss / 2, 
 				ss, ss,,, 0.50);
 				
-			var wd = (ANIMATOR.current_frame / ANIMATOR.framerate) / content.duration * sw;
+			var wd = (PROJECT.animator.current_frame / PROJECT.animator.framerate) / content.duration * sw;
 			draw_surface_part_ext_safe(audio_surface, 0, 0, min(wd, sw), sh, 
 				bbox.xc - sw * ss / 2, 
 				bbox.yc - sh * ss / 2, 
@@ -291,7 +291,7 @@ function Node_WAV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		draw_set_color(COLORS._main_icon_dark);
 		draw_set_alpha(1);
 		
-		var _st = round(content.sample / ANIMATOR.framerate); //sample per frame
+		var _st = round(content.sample / PROJECT.animator.framerate); //sample per frame
 		var _am = content.packet / _st;
 		var ox, oy, nx, ny;
 		

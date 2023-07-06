@@ -11,7 +11,7 @@ function Node_Struct_JSON_Parse(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	
 	outputs[| 0] = nodeValue("Struct", self, JUNCTION_CONNECT.output, VALUE_TYPE.struct, {} );
 	
-	static update = function(frame = ANIMATOR.current_frame) {
+	static update = function(frame = PROJECT.animator.current_frame) {
 		var _str = inputs[| 0].getValue();
 		var str  = json_parse(_str);
 		outputs[| 0].setValue(str);

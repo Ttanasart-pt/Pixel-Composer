@@ -1,5 +1,10 @@
 #region global
 	global.FLAG.keyframe_override = true;
+	
+	enum ANIMATOR_END {
+		loop,
+		stop
+	}
 #endregion
 
 #region animation class
@@ -45,13 +50,13 @@
 		}
 		
 		static resetAnimation = function() {
-			var _key = ds_map_find_first(NODE_MAP);
-			var amo = ds_map_size(NODE_MAP);
+			var _key = ds_map_find_first(PROJECT.nodeMap);
+			var amo = ds_map_size(PROJECT.nodeMap);
 		
 			repeat(amo) {
-				var _node = NODE_MAP[? _key];
+				var _node = PROJECT.nodeMap[? _key];
 				_node.resetAnimation();
-				_key = ds_map_find_next(NODE_MAP, _key);	
+				_key = ds_map_find_next(PROJECT.nodeMap, _key);	
 			}
 		}
 		
@@ -63,23 +68,23 @@
 		}
 		
 		static toggle = function() {
-			ANIMATOR.is_playing = !ANIMATOR.is_playing;
-			ANIMATOR.frame_progress = true;
+			is_playing = !is_playing;
+			frame_progress = true;
 		}
 		
 		static pause = function() {
-			ANIMATOR.is_playing = false;
-			ANIMATOR.frame_progress = true;
+			is_playing = false;
+			frame_progress = true;
 		}
 		
 		static play = function() {
-			ANIMATOR.is_playing = true;
-			ANIMATOR.frame_progress = true;
+			is_playing = true;
+			frame_progress = true;
 		}
 		
 		static resume = function() {
-			ANIMATOR.is_playing = true;
-			ANIMATOR.frame_progress = true;
+			is_playing = true;
+			frame_progress = true;
 		}
 		
 		static stop = function() {
@@ -87,14 +92,4 @@
 			setFrame(0);
 		}
 	}
-#endregion
-
-#region object
-	enum ANIMATOR_END {
-		loop,
-		stop
-	}
-	
-	globalvar ANIMATOR;
-	ANIMATOR = new AnimationManager();
 #endregion

@@ -34,7 +34,7 @@ function Node_ASE_layer(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		}
 	}
 	
-	static update = function(frame = ANIMATOR.current_frame) { 
+	static update = function(frame = PROJECT.animator.current_frame) { 
 		var data = inputs[| 0].getValue();
 		if(data == noone) return;
 		
@@ -44,7 +44,7 @@ function Node_ASE_layer(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		}
 		
 		if(layer_object == noone) return;
-		var cel = layer_object.getCel(ANIMATOR.current_frame - data._tag_delay);
+		var cel = layer_object.getCel(PROJECT.animator.current_frame - data._tag_delay);
 		
 		var celDim = inputs[| 1].getValue();
 		var ww = data.content[? "Width"];

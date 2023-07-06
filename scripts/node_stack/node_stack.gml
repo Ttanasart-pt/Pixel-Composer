@@ -60,7 +60,7 @@ function Node_Stack(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		inputs[| 2].setVisible(_axis != 2);
 	}
 	
-	static update = function(frame = ANIMATOR.current_frame) {
+	static update = function(frame = PROJECT.animator.current_frame) {
 		var _axis = inputs[| 0].getValue();
 		var _alig = inputs[| 1].getValue();
 		var _spac = inputs[| 2].getValue();

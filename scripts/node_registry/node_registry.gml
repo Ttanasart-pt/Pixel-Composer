@@ -636,7 +636,7 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 	}
 	
 	function nodeDelete(node, _merge = false) {
-		var list = node.group == noone? NODES : node.group.getNodeList();
+		var list = node.group == noone? PROJECT.nodes : node.group.getNodeList();
 		ds_list_remove(list, node);
 		node.destroy(_merge);
 		
@@ -645,19 +645,17 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 	}
 	
 	function nodeCleanUp() {
-		var key = ds_map_find_first(NODE_MAP);
-		repeat(ds_map_size(NODE_MAP)) {
-			if(NODE_MAP[? key]) {
-				NODE_MAP[? key].active = false;
-				NODE_MAP[? key].cleanUp();
-				delete NODE_MAP[? key];
+		var key = ds_map_find_first(PROJECT.nodeMap);
+		repeat(ds_map_size(PROJECT.nodeMap)) {
+			if(PROJECT.nodeMap[? key]) {
+				PROJECT.nodeMap[? key].active = false;
+				PROJECT.nodeMap[? key].cleanUp();
+				delete PROJECT.nodeMap[? key];
 			}
-			key = ds_map_find_next(NODE_MAP, key);
+			key = ds_map_find_next(PROJECT.nodeMap, key);
 		}
 		
 		ds_map_clear(APPEND_MAP);
-		ds_map_clear(NODE_MAP);
-		ds_list_clear(NODES);	
 	}
 	
 	function graphFocusNode(node) {
@@ -668,17 +666,17 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 	}
 	
 	function refreshNodeMap() {
-		ds_map_clear(NODE_NAME_MAP);
-		var key = ds_map_find_first(NODE_MAP);
-		var amo = ds_map_size(NODE_MAP);
+		ds_map_clear(PROJECT.nodeNameMap);
+		var key = ds_map_find_first(PROJECT.nodeMap);
+		var amo = ds_map_size(PROJECT.nodeMap);
 		
 		repeat(amo) {
-			var node = NODE_MAP[? key];
+			var node = PROJECT.nodeMap[? key];
 			
 			if(node.internalName != "") 
-				NODE_NAME_MAP[? node.internalName] = node;
+				PROJECT.nodeNameMap[? node.internalName] = node;
 			
-			key = ds_map_find_next(NODE_MAP, key);
+			key = ds_map_find_next(PROJECT.nodeMap, key);
 		}
 	}
 	
@@ -689,20 +687,20 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 		
 		if(array_length(strs) == 1) {
 			var splt = string_splice(strs[0], "[");
-			var inp = GLOBAL_NODE.getInput(strs[0]);
+			var inp = PROJECT.globalNode.getInput(strs[0]);
 			_val = inp == noone? 0 : inp.getValueRecursive()[0];
 		} else if(strs[0] == "Project") {
 			switch(strs[1]) {
-				case "frame" :		return ANIMATOR.current_frame;
-				case "frameTotal" : return ANIMATOR.frames_total;
-				case "fps" :		return ANIMATOR.framerate;
+				case "frame" :		return PROJECT.animator.current_frame;
+				case "frameTotal" : return PROJECT.animator.frames_total;
+				case "fps" :		return PROJECT.animator.framerate;
 			}
 			return 0;
 		} else if(array_length(strs) > 2) { 
 			var key = strs[0];
-			if(!ds_map_exists(NODE_NAME_MAP, key)) return 0;
+			if(!ds_map_exists(PROJECT.nodeNameMap, key)) return 0;
 		
-			var node = NODE_NAME_MAP[? key];
+			var node = PROJECT.nodeNameMap[? key];
 			var map  = noone;
 			switch(string_lower(strs[1])) {
 				case "inputs" :	

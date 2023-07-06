@@ -20,7 +20,7 @@ function Node_Strand_Collision(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		_msh.draw(_x, _y, _s);
 	}
 	
-	static update = function(frame = ANIMATOR.current_frame) {
+	static update = function(frame = PROJECT.animator.current_frame) {
 		var _str = inputs[| 0].getValue();
 		var _msh = inputs[| 1].getValue();
 		

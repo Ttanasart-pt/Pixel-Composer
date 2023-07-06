@@ -2,6 +2,7 @@
 event_inherited();
 
 #region data
-	dialog_w = ui(400);
+	project = PROJECT;
+	dialog_w = ui(440);
 	dialog_h = ui(140);
 #endregion

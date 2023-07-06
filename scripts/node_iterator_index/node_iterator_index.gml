@@ -9,7 +9,7 @@ function Node_Iterator_Index(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	
 	outputs[| 0] = nodeValue("Loop index", self, JUNCTION_CONNECT.output, VALUE_TYPE.integer, 0);
 	
-	static update = function(frame = ANIMATOR.current_frame) { 
+	static update = function(frame = PROJECT.animator.current_frame) { 
 		if(!variable_struct_exists(group, "iterated")) return;
 		outputs[| 0].setValue(group.iterated);
 	}

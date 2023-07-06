@@ -12,14 +12,14 @@ event_inherited();
 
 #region data
 	tb_length = new textBox(TEXTBOX_INPUT.number, function(str) {
-		ANIMATOR.frames_total = real(str);	
+		PROJECT.animator.frames_total = real(str);	
 	})
 	
 	tb_framerate = new textBox(TEXTBOX_INPUT.number, function(str) {
-		ANIMATOR.framerate = real(str);	
+		PROJECT.animator.framerate = real(str);	
 	})
 	
 	eb_playback = buttonGroup([__txt("Loop"), __txt("Stop")], function(b) {
-		ANIMATOR.playback = b;	
+		PROJECT.animator.playback = b;	
 	});
 #endregion

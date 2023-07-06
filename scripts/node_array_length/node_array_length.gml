@@ -11,7 +11,7 @@ function Node_Array_Length(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	outputs[| 0] = nodeValue("Size", self, JUNCTION_CONNECT.output, VALUE_TYPE.integer, 0);
 	
-	function update(frame = ANIMATOR.current_frame) { 
+	function update(frame = PROJECT.animator.current_frame) { 
 		var _arr = inputs[| 0].getValue();
 		inputs[| 0].type = inputs[| 0].value_from == noone? VALUE_TYPE.any : inputs[| 0].value_from.type;
 		

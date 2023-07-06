@@ -13,7 +13,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	icon    = noone;
 	bg_spr  = THEME.node_bg;
 	bg_sel_spr	  = THEME.node_active;
-	anim_priority = ds_map_size(NODE_MAP);
+	anim_priority = ds_map_size(PROJECT.nodeMap);
 	
 	static resetInternalName = function() {
 		var str = string_replace_all(name, " ", "_");
@@ -21,13 +21,13 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 			str = string_replace_all(str,  "-", "");
 			
 		internalName = str + string(irandom_range(10000, 99999)); 
-		NODE_NAME_MAP[? internalName] = self;
+		PROJECT.nodeNameMap[? internalName] = self;
 	}
 	
 	if(!LOADING && !APPENDING) {
 		recordAction(ACTION_TYPE.node_added, self);
-		NODE_MAP[? node_id] = self;
-		MODIFIED = true;
+		PROJECT.nodeMap[? node_id] = self;
+		PROJECT.modified = true;
 	
 		run_in(1, function() { 
 			if(display_name != "") return;
@@ -251,7 +251,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		
 		x = _x;
 		y = _y;
-		if(!LOADING) MODIFIED = true;
+		if(!LOADING) PROJECT.modified = true;
 	}
 	
 	insp1UpdateTooltip  = __txtx("panel_inspector_execute", "Execute node");
@@ -278,7 +278,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		if(use_cache) cacheArrayCheck();
 		var willUpdate = false;
 		
-		if(ANIMATOR.frame_progress) {
+		if(PROJECT.animator.frame_progress) {
 			if(update_on_frame) willUpdate = true;
 			if(isAnimated()) willUpdate = true;
 				
@@ -403,7 +403,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	}
 	
 	static resetRender = function() { setRenderStatus(false); }
-	static isRenderActive = function() { return renderActive || (PREF_MAP[? "render_all_export"] && ANIMATOR.rendering); }
+	static isRenderActive = function() { return renderActive || (PREF_MAP[? "render_all_export"] && PROJECT.animator.rendering); }
 	
 	static isRenderable = function(log = false) { //Check if every input is ready (updated)
 		if(!active)	return false;
@@ -1094,7 +1094,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	static restore = function() { 
 		if(active) return;
 		enable();
-		ds_list_add(group == noone? NODES : group.getNodeList(), self);
+		ds_list_add(group == noone? PROJECT.nodes : group.getNodeList(), self);
 	}
 	
 	static onValidate = function() {
@@ -1117,26 +1117,26 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	}
 	
 	static cacheArrayCheck = function() {
-		if(array_length(cached_output) != ANIMATOR.frames_total)
-			array_resize(cached_output, ANIMATOR.frames_total);
-		if(array_length(cache_result) != ANIMATOR.frames_total)
-			array_resize(cache_result, ANIMATOR.frames_total);
+		if(array_length(cached_output) != PROJECT.animator.frames_total)
+			array_resize(cached_output, PROJECT.animator.frames_total);
+		if(array_length(cache_result) != PROJECT.animator.frames_total)
+			array_resize(cache_result, PROJECT.animator.frames_total);
 	}
 	
 	static cacheCurrentFrame = function(_frame) {
 		cacheArrayCheck();
-		if(ANIMATOR.current_frame < 0) return;
-		if(ANIMATOR.current_frame >= array_length(cached_output)) return;
+		if(PROJECT.animator.current_frame < 0) return;
+		if(PROJECT.animator.current_frame >= array_length(cached_output)) return;
 		
-		surface_array_free(cached_output[ANIMATOR.current_frame]);
-		cached_output[ANIMATOR.current_frame] = surface_array_clone(_frame);
+		surface_array_free(cached_output[PROJECT.animator.current_frame]);
+		cached_output[PROJECT.animator.current_frame] = surface_array_clone(_frame);
 		
-		array_safe_set(cache_result, ANIMATOR.current_frame, true);
+		array_safe_set(cache_result, PROJECT.animator.current_frame, true);
 		
-		return cached_output[ANIMATOR.current_frame];
+		return cached_output[PROJECT.animator.current_frame];
 	}
 	
-	static cacheExist = function(frame = ANIMATOR.current_frame) {
+	static cacheExist = function(frame = PROJECT.animator.current_frame) {
 		if(frame < 0) return false;
 		
 		if(frame >= array_length(cached_output)) return false;
@@ -1147,7 +1147,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		return is_array(s) || surface_exists(s);
 	}
 	
-	static getCacheFrame = function(frame = ANIMATOR.current_frame) {
+	static getCacheFrame = function(frame = PROJECT.animator.current_frame) {
 		if(frame < 0) return false;
 		
 		if(!cacheExist(frame)) return noone;
@@ -1155,10 +1155,10 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		return surf;
 	}
 	
-	static recoverCache = function(frame = ANIMATOR.current_frame) {
+	static recoverCache = function(frame = PROJECT.animator.current_frame) {
 		if(!cacheExist(frame)) return false;
 		
-		var _s = cached_output[ANIMATOR.current_frame];
+		var _s = cached_output[PROJECT.animator.current_frame];
 		outputs[| 0].setValue(_s);
 			
 		return true;
@@ -1167,8 +1167,8 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		if(!use_cache) return;
 		if(!isRenderActive()) return;
 		
-		if(array_length(cached_output) != ANIMATOR.frames_total)
-			array_resize(cached_output, ANIMATOR.frames_total);
+		if(array_length(cached_output) != PROJECT.animator.frames_total)
+			array_resize(cached_output, PROJECT.animator.frames_total);
 		for(var i = 0; i < array_length(cached_output); i++) {
 			var _s = cached_output[i];
 			if(is_surface(_s))
@@ -1259,7 +1259,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		var _node = nodeBuild(_type, x, y, target);
 		CLONING = false;
 		
-		LOADING_VERSION = SAVEFILE_VERSION;
+		PROJECT.version = SAVE_VERSION;
 		
 		if(!_node) return;
 		
@@ -1270,8 +1270,8 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		_node.applyDeserialize();
 		_node.node_id = _nid;
 		
-		NODE_MAP[? node_id] = self;
-		NODE_MAP[? _nid] = _node;
+		PROJECT.nodeMap[? node_id] = self;
+		PROJECT.nodeMap[? _nid] = _node;
 		PANEL_ANIMATION.updatePropertyList();
 		CLONING = false;
 		
@@ -1353,7 +1353,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 			if(APPENDING) APPEND_MAP[? load_map.id] = node_id;
 			else		  node_id = load_map.id;
 			
-			NODE_MAP[? node_id] = self;
+			PROJECT.nodeMap[? node_id] = self;
 			
 			if(struct_has(load_map, "name"))
 				setDisplayName(load_map.name);
@@ -1431,8 +1431,8 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		} else {
 			if(APPENDING) _group = GetAppendID(_group);
 			
-			if(ds_map_exists(NODE_MAP, _group)) {
-				NODE_MAP[? _group].add(self);
+			if(ds_map_exists(PROJECT.nodeMap, _group)) {
+				PROJECT.nodeMap[? _group].add(self);
 			} else {
 				var txt = "Group load failed. Can't find node ID " + string(_group);
 				log_warning("LOAD", txt);

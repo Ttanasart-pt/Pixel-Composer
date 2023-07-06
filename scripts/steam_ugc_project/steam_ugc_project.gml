@@ -1,7 +1,7 @@
 function steam_ugc_create_project() {
 	if(STEAM_UGC_ITEM_UPLOADING) return;
 	
-	var file = new FileObject(string_replace(filename_name(CURRENT_PATH), filename_ext(CURRENT_PATH), ""), CURRENT_PATH);
+	var file = new FileObject(string_replace(filename_name(PROJECT.path), filename_ext(PROJECT.path), ""), PROJECT.path);
 	file.getMetadata();
 	file.spr_path = DIRECTORY + "steamUGC/thumbnail.png";
 	
@@ -26,7 +26,7 @@ function steam_ugc_create_project() {
 function steam_ugc_update_project(update_preview = false) {
 	if(STEAM_UGC_ITEM_UPLOADING) return;
 	
-	var file = new FileObject(string_replace(filename_name(CURRENT_PATH), filename_ext(CURRENT_PATH), ""), CURRENT_PATH);
+	var file = new FileObject(string_replace(filename_name(PROJECT.path), filename_ext(PROJECT.path), ""), PROJECT.path);
 	file.getMetadata();
 	file.spr_path = DIRECTORY + "steamUGC/thumbnail.png";
 	

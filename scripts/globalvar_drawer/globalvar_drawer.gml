@@ -9,7 +9,7 @@ function globalvar_viewer_draw(xx, yy, ww, _m, focus, hover, _scrollPane, rx, ry
 			
 	if(var_editing) {
 		var del = noone;
-		if(ds_list_size(GLOBAL_NODE.inputs)) {
+		if(ds_list_size(PROJECT.globalNode.inputs)) {
 			yy += ui(8);
 			hh += ui(8);
 		}
@@ -17,8 +17,8 @@ function globalvar_viewer_draw(xx, yy, ww, _m, focus, hover, _scrollPane, rx, ry
 		var wd_x  = xx;
 		var wd_w  = ww;
 		
-		for( var j = 0; j < ds_list_size(GLOBAL_NODE.inputs); j++ ) {
-			var _inpu = GLOBAL_NODE.inputs[| j];
+		for( var j = 0; j < ds_list_size(PROJECT.globalNode.inputs); j++ ) {
+			var _inpu = PROJECT.globalNode.inputs[| j];
 			var _edit = _inpu.editor;
 			var wd_h  = ui(32);
 						
@@ -53,15 +53,15 @@ function globalvar_viewer_draw(xx, yy, ww, _m, focus, hover, _scrollPane, rx, ry
 		}
 					
 		if(del != noone)
-			ds_list_delete(GLOBAL_NODE.inputs, del);
+			ds_list_delete(PROJECT.globalNode.inputs, del);
 	} else {
-		for( var j = 0; j < ds_list_size(GLOBAL_NODE.inputs); j++ ) {
-			var widg    = drawWidget(xx, yy, ww, _m, GLOBAL_NODE.inputs[| j], true, focus, hover, _scrollPane, rx, ry);
+		for( var j = 0; j < ds_list_size(PROJECT.globalNode.inputs); j++ ) {
+			var widg    = drawWidget(xx, yy, ww, _m, PROJECT.globalNode.inputs[| j], true, focus, hover, _scrollPane, rx, ry);
 			var widH    = widg[0];
 			var mbRight = widg[1];
 						
 			if(hover && point_in_rectangle(_m[0], _m[1], xx, yy, xx + ww, yy + widH))
-				_HOVERING_ELEMENT = GLOBAL_NODE.inputs[| j];
+				_HOVERING_ELEMENT = PROJECT.globalNode.inputs[| j];
 						
 			yy += lb_h + widH + padd;
 			hh += lb_h + widH + padd;

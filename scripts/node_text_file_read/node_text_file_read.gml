@@ -84,7 +84,7 @@ function Node_Text_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		return false;
 	}
 	
-	static update = function(frame = ANIMATOR.current_frame) {
+	static update = function(frame = PROJECT.animator.current_frame) {
 		var path = inputs[| 0].getValue();
 		if(path == "") return;
 		if(path_current != path) updatePaths(path);

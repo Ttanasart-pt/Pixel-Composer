@@ -33,14 +33,14 @@ function random1D(seed, startRange = 0, endRange = 1) {
 	
 	var _f = frac(seed);
 	if(_f == 0) {
-		random_set_seed(GLOBAL_SEED + seed);
+		random_set_seed(PROJECT.seed + seed);
 		return random_range(startRange, endRange);
 	}
 	
-	random_set_seed(GLOBAL_SEED + floor(seed));
+	random_set_seed(PROJECT.seed + floor(seed));
 	var f1 = random_range(startRange, endRange);
 	
-	random_set_seed(GLOBAL_SEED + floor(seed) + 1);
+	random_set_seed(PROJECT.seed + floor(seed) + 1);
 	var f2 = random_range(startRange, endRange);
 	
 	return lerp(f1, f2, _f);
@@ -67,8 +67,8 @@ function getWiggle(_min, _max, _freq, _time, seed_shift = 0, startTime = noone, 
 	if(endTime) //Clip at ending
 		sdMax = min(endTime, sdMax);
 	
-	var _x0 = (startTime != noone && sdMin <= startTime)?   0.5 : random1D(GLOBAL_SEED + seed_shift + sdMin);
-	var _x1 = (endTime != noone && sdMax >= endTime)?		0.5 : random1D(GLOBAL_SEED + seed_shift + sdMax);
+	var _x0 = (startTime != noone && sdMin <= startTime)?   0.5 : random1D(PROJECT.seed + seed_shift + sdMin);
+	var _x1 = (endTime != noone && sdMax >= endTime)?		0.5 : random1D(PROJECT.seed + seed_shift + sdMax);
 	
 	var t = (_time - sdMin) / (sdMax - sdMin);
 	t = -(cos(pi * t) - 1) / 2;

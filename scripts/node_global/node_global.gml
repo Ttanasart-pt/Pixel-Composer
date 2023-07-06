@@ -176,16 +176,8 @@ function variable_editor(nodeVal) constructor {
 	}
 }
 
-#region define
-	globalvar GLOBAL_NODE;
-	gml_pragma("global", @"
-		globalvar GLOBAL_NODE;
-		GLOBAL_NODE = new Node_Global();
-	");
-#endregion
-
 function Node_Global(_x = 0, _y = 0) : __Node_Base(_x, _y) constructor {
-	name = "GLOBAL_NODE";
+	name = "GLOBAL";
 	display_name = "";
 	
 	group = noone;

@@ -141,6 +141,8 @@ function Theme() constructor {
     websocket = noone;
     node_dropper = noone;
     bone = noone;
+    tab_exit = noone;
+    icon_save_all = noone;
 
     inspector_area = noone;
     inspector_area_type = noone;

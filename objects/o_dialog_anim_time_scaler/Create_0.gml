@@ -8,18 +8,18 @@ event_inherited();
 #endregion
 
 #region scaler
-	scale_to = ANIMATOR.frames_total;
+	scale_to = PROJECT.animator.frames_total;
 	tb_scale_frame = new textBox(TEXTBOX_INPUT.number, function(to) {
 		to = toNumber(to);
 		scale_to = to;
 	});
 	
 	b_apply = button(function() {
-		var fac = scale_to / ANIMATOR.frames_total;
-		var key = ds_map_find_first(NODE_MAP);
-		repeat(ds_map_size(NODE_MAP)) {
-			var n = NODE_MAP[? key];
-			key = ds_map_find_next(NODE_MAP, key);
+		var fac = scale_to / PROJECT.animator.frames_total;
+		var key = ds_map_find_first(PROJECT.nodeMap);
+		repeat(ds_map_size(PROJECT.nodeMap)) {
+			var n = PROJECT.nodeMap[? key];
+			key = ds_map_find_next(PROJECT.nodeMap, key);
 			if(!n || !n.active) continue;
 			
 			for(var i = 0; i < ds_list_size(n.inputs); i++) {
@@ -31,7 +31,7 @@ event_inherited();
 				}
 			}
 		}
-		ANIMATOR.frames_total = scale_to;
+		PROJECT.animator.frames_total = scale_to;
 		instance_destroy();
 	}).setIcon(THEME.accept, 0, COLORS._main_icon_dark);
 #endregion

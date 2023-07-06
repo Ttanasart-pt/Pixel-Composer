@@ -22,9 +22,9 @@ function Node_VFX_Spawner(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y
 	static onUpdate = function() {
 		RETURN_ON_REST
 		
-		if(ANIMATOR.current_frame == 0)
+		if(PROJECT.animator.current_frame == 0)
 			reset();
-		runVFX(ANIMATOR.current_frame);
+		runVFX(PROJECT.animator.current_frame);
 		
 		if(attributes.Output_pool) {
 			outputs[| 0].setValue(parts);

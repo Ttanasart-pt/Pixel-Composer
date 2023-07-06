@@ -11,7 +11,7 @@ enum SPRITE_ANIM_GROUP {
 
 function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name		= "Render Spritesheet";
-	anim_drawn	= array_create(ANIMATOR.frames_total + 1, false);
+	anim_drawn	= array_create(PROJECT.animator.frames_total + 1, false);
 	
 	inputs[| 0] = nodeValue("Sprites", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
 	
@@ -68,7 +68,7 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 		inputs[| 5].setVisible(pack != SPRITE_STACK.grid);
 	}
 	
-	static update = function(frame = ANIMATOR.current_frame) { 
+	static update = function(frame = PROJECT.animator.current_frame) { 
 		var inpt = inputs[| 0].getValue();
 		var grup = inputs[| 1].getValue();
 		var skip = inputs[| 2].getValue();
@@ -85,7 +85,7 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 		if(grup != SPRITE_ANIM_GROUP.animation) {
 			initRender();
 			return;
-		} else if(ANIMATOR.rendering && ANIMATOR.frame_progress && ANIMATOR.current_frame == 0 && !refreshSurface) {
+		} else if(PROJECT.animator.rendering && PROJECT.animator.frame_progress && PROJECT.animator.current_frame == 0 && !refreshSurface) {
 			var skip = inputs[| 2].getValue();
 			
 			if(is_array(inpt) && array_length(inpt) == 0) return;
@@ -93,7 +93,7 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 			if(!arr) 
 				inpt  = [ inpt ];
 			var _surf = [];
-			var amo   = floor(ANIMATOR.frames_total / skip);
+			var amo   = floor(PROJECT.animator.frames_total / skip);
 			var _st   = clamp(rang[0], 0, amo);
 			var _ed   = rang[1];
 			if(rang[1] == 0)     _ed = amo;
@@ -116,7 +116,7 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 						hh = sh * amo + spac * (amo - 1);
 						break;
 					case SPRITE_STACK.grid :
-						var amo = floor(ANIMATOR.frames_total / skip);
+						var amo = floor(PROJECT.animator.frames_total / skip);
 						var col = inputs[| 4].getValue();
 						var row = ceil(amo / col);
 						
@@ -142,15 +142,15 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 			outputs[| 1].setValue(_atl);
 		}
 		
-		if(safe_mod(ANIMATOR.current_frame, skip) != 0) return;
+		if(safe_mod(PROJECT.animator.current_frame, skip) != 0) return;
 		
-		if(array_length(anim_drawn) != ANIMATOR.frames_total)
-			array_resize(anim_drawn, ANIMATOR.frames_total);
+		if(array_length(anim_drawn) != PROJECT.animator.frames_total)
+			array_resize(anim_drawn, PROJECT.animator.frames_total);
 			
-		if(ANIMATOR.current_frame >= 0 && ANIMATOR.current_frame < ANIMATOR.frames_total) {
-			if(anim_drawn[ANIMATOR.current_frame]) return;
+		if(PROJECT.animator.current_frame >= 0 && PROJECT.animator.current_frame < PROJECT.animator.frames_total) {
+			if(anim_drawn[PROJECT.animator.current_frame]) return;
 			
-			if(ANIMATOR.is_playing && ANIMATOR.frame_progress) {
+			if(PROJECT.animator.is_playing && PROJECT.animator.frame_progress) {
 				if(is_array(inpt) && array_length(inpt) == 0) return;
 				if(!is_array(inpt)) inpt = [ inpt ];
 			}
@@ -158,9 +158,9 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 		
 		var oupt = outputs[| 0].getValue();
 		if(is_array(oupt) && (array_length(inpt) != array_length(oupt))) return;
-		if(ANIMATOR.current_frame % skip != 0) return;
+		if(PROJECT.animator.current_frame % skip != 0) return;
 		
-		var amo    = floor(ANIMATOR.frames_total / skip);
+		var amo    = floor(PROJECT.animator.frames_total / skip);
 		var _st    = clamp(rang[0], 0, amo);
 		var _ed = rang[1];
 		if(rang[1] == 0)     _ed = amo;
@@ -168,7 +168,7 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 		_ed = clamp(_ed, 0, amo);
 		if(_ed <= _st) return;
 		
-		var _frame = floor(ANIMATOR.current_frame / skip);
+		var _frame = floor(PROJECT.animator.current_frame / skip);
 		
 		if(_frame < _st || _frame > _ed) return;
 		_frame -= _st;
@@ -240,16 +240,16 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 			surface_reset_target();
 		}
 		
-		if(drawn) array_safe_set(anim_drawn, ANIMATOR.current_frame, true);
+		if(drawn) array_safe_set(anim_drawn, PROJECT.animator.current_frame, true);
 		outputs[| 1].setValue(_atl);
 	}
 	
 	static onInspector1Update = function(updateAll = true) {
-		var key = ds_map_find_first(NODE_MAP);
+		var key = ds_map_find_first(PROJECT.nodeMap);
 		
-		repeat(ds_map_size(NODE_MAP)) {
-			var node = NODE_MAP[? key];
-			key = ds_map_find_next(NODE_MAP, key);
+		repeat(ds_map_size(PROJECT.nodeMap)) {
+			var node = PROJECT.nodeMap[? key];
+			key = ds_map_find_next(PROJECT.nodeMap, key);
 			
 			if(!node.active) continue;
 			if(instanceof(node) != "Node_Render_Sprite_Sheet") continue;
@@ -274,7 +274,7 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 		if(grup == SPRITE_ANIM_GROUP.animation) {
 			refreshSurface = false;
 			if(!LOADING && !APPENDING)
-				ANIMATOR.render();
+				PROJECT.animator.render();
 			
 			outputs[| 1].setValue([]);
 			return;

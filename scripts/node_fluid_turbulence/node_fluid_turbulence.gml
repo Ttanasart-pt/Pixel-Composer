@@ -31,7 +31,7 @@ function Node_Fluid_Turbulence(_x, _y, _group = noone) : Node_Fluid(_x, _y, _gro
 		inputs[| 1].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
 	}
 	
-	static update = function(frame = ANIMATOR.current_frame) {
+	static update = function(frame = PROJECT.animator.current_frame) {
 		var _dom = inputs[| 0].getValue(frame);
 		var _are = inputs[| 1].getValue(frame);
 		var _str = inputs[| 2].getValue(frame);

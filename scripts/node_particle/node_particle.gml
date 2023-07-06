@@ -36,8 +36,8 @@ function Node_Particle(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y, _
 			outputs[| 0].setValue(_outSurf);
 		}
 		
-		if(ANIMATOR.is_playing)
-			ANIMATOR.setFrame(-1);
+		if(PROJECT.animator.is_playing)
+			PROJECT.animator.setFrame(-1);
 	}
 	
 	static step = function() {
@@ -49,7 +49,7 @@ function Node_Particle(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y, _
 	}
 	
 	static onUpdate = function() {
-		if(!ANIMATOR.is_playing && !ANIMATOR.frame_progress) {
+		if(!PROJECT.animator.is_playing && !PROJECT.animator.frame_progress) {
 			if(!recoverCache()) {
 				var _dim		= inputs[| input_len + 0].getValue();
 				var _outSurf	= outputs[| 0].getValue();
@@ -60,13 +60,13 @@ function Node_Particle(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y, _
 			return;
 		}
 		
-		if(ANIMATOR.current_frame == 0)
+		if(PROJECT.animator.current_frame == 0)
 			reset();
 		
-		runVFX(ANIMATOR.current_frame);
+		runVFX(PROJECT.animator.current_frame);
 	}
 	
-	function render(_time = ANIMATOR.current_frame) {
+	function render(_time = PROJECT.animator.current_frame) {
 		var _dim		= inputs[| input_len + 0].getValue(_time);
 		var _exact 		= inputs[| input_len + 1].getValue(_time);
 		var _blend 		= inputs[| input_len + 2].getValue(_time);
@@ -93,7 +93,7 @@ function Node_Particle(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y, _
 			BLEND_NORMAL;
 		surface_reset_shader();
 		
-		if(ANIMATOR.is_playing)
+		if(PROJECT.animator.is_playing)
 			cacheCurrentFrame(_outSurf);
 	}
 }

@@ -112,9 +112,9 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	static step = function() {
 		var pos = inputs[| 2].getValue();
 		
-		if(!ANIMATOR.frame_progress) return;
+		if(!PROJECT.animator.frame_progress) return;
 		
-		if(ANIMATOR.current_frame == 0) {
+		if(PROJECT.animator.current_frame == 0) {
 			vel = 0;
 			prev_pos[0] = pos[0];
 			prev_pos[1] = pos[1];

@@ -71,7 +71,7 @@ function Node_Rigid_Object_Spawner(_x, _y, _group = noone) : Node(_x, _y, _group
 		}
 	}
 	
-	static update = function(frame = ANIMATOR.current_frame) {
+	static update = function(frame = PROJECT.animator.current_frame) {
 		RETURN_ON_REST
 			
 		var _obj = inputs[| 0].getValue();
@@ -86,9 +86,9 @@ function Node_Rigid_Object_Spawner(_x, _y, _group = noone) : Node(_x, _y, _group
 		var _amo = inputs[| 4].getValue();
 		var _sed = inputs[| 7].getValue() + frame * _amo * 20;
 		
-		if(_typ == 0 && (safe_mod(ANIMATOR.current_frame, _del) == 0)) 
+		if(_typ == 0 && (safe_mod(PROJECT.animator.current_frame, _del) == 0)) 
 			spawn(_sed);
-		else if(_typ == 1 && ANIMATOR.current_frame == _frm) 
+		else if(_typ == 1 && PROJECT.animator.current_frame == _frm) 
 			spawn(_sed);
 	}
 	

@@ -14,7 +14,7 @@ function __test_update_current_collections() {
 			
 			print("  > Updating " + _node.path);
 			var _map = json_load(_node.path);
-			_map[? "version"] = SAVEFILE_VERSION;
+			_map[? "version"] = SAVE_VERSION;
 			json_save(_node.path, _map);
 		}
 		
@@ -35,7 +35,7 @@ function __test_update_sample_projects() {
 			
 		print("  > Updating " + _proj.path);
 		var _map = json_load(_proj.path);
-		_map[? "version"] = SAVEFILE_VERSION;
+		_map[? "version"] = SAVE_VERSION;
 		json_save(_proj.path, _map);
 	}
 	

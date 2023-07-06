@@ -21,25 +21,25 @@ function Node_Animation_Control(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	
 	static step = function() { 
 		if(inputs[| 0].getValue())
-			ANIMATOR.toggle();
+			PROJECT.animator.toggle();
 		
 		if(inputs[| 1].getValue())
-			ANIMATOR.pause();
+			PROJECT.animator.pause();
 		
 		if(inputs[| 2].getValue())
-			ANIMATOR.resume();
+			PROJECT.animator.resume();
 		
 		if(inputs[| 3].getValue()) {
-			ANIMATOR.stop();
-			ANIMATOR.play();
+			PROJECT.animator.stop();
+			PROJECT.animator.play();
 		} 
 		
 		if(inputs[| 4].getValue())
-			ANIMATOR.render();
+			PROJECT.animator.render();
 		
 		if(inputs[| 5].getValue()) { 
 			var fr = inputs[| 6].getValue();
-			ANIMATOR.setFrame(ANIMATOR.current_frame + fr);
+			PROJECT.animator.setFrame(PROJECT.animator.current_frame + fr);
 		}
 	}
 	
@@ -47,7 +47,7 @@ function Node_Animation_Control(_x, _y, _group = noone) : Node(_x, _y, _group) c
 		var bbox = drawGetBbox(xx, yy, _s);
 		var ind  = 0;
 		
-		if(ANIMATOR.is_playing) ind = 1;
+		if(PROJECT.animator.is_playing) ind = 1;
 		
 		draw_sprite_fit(THEME.sequence_control, ind, bbox.xc, bbox.yc, bbox.w, bbox.h);
 	}

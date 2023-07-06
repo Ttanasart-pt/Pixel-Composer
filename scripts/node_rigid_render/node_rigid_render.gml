@@ -60,8 +60,8 @@ function Node_Rigid_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		outputs[| 0].setValue(_outSurf);
 	}
 	
-	static update = function(frame = ANIMATOR.current_frame) {
-		if(recoverCache() || !ANIMATOR.is_playing)
+	static update = function(frame = PROJECT.animator.current_frame) {
+		if(recoverCache() || !PROJECT.animator.is_playing)
 			return;
 			
 		var _dim = inputs[| 0].getValue();

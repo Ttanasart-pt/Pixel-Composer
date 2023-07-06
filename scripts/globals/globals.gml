@@ -1,23 +1,45 @@
 #region save
-	globalvar LOADING, LOADING_VERSION, APPENDING, CLONING, SAFE_MODE;
-	globalvar LOAD_ADDON;
-	globalvar MODIFIED, CURRENT_PATH, READONLY, CONNECTION_CONFLICT, GLOBAL_SEED, ALWAYS_FULL;
+	globalvar LOADING, APPENDING, CLONING, SAFE_MODE;
+	globalvar CONNECTION_CONFLICT, ALWAYS_FULL;
 	
-	LOADING = false;
-	LOAD_ADDON = {};
-	CLONING = false;
-	LOADING_VERSION = 0;
-	APPENDING = false;
-	READONLY  = false;
-	SAFE_MODE = false;
+	LOADING		= false;
+	CLONING		= false;
+	APPENDING	= false;
+	SAFE_MODE	= false;
 	
-	CURRENT_PATH = "";
-	MODIFIED  = false;
 	CONNECTION_CONFLICT = ds_queue_create();
 	
 	randomize();
-	GLOBAL_SEED = irandom(9999999999);
 	ALWAYS_FULL = false;
+#endregion
+
+#region project
+	function Project() constructor {
+		path	= "";
+		version = 1440;
+		seed    = irandom_range(100000, 999999);
+		
+		modified = false;
+		readonly = false;
+		
+		nodes	    = ds_list_create();
+		nodeMap	    = ds_map_create();
+		nodeNameMap = ds_map_create();
+		
+		animator	= new AnimationManager();
+		
+		globalNode	= new Node_Global();
+		
+		addons = {};
+	}
+	
+	globalvar PROJECTS, PROJECT;
+	
+	gml_pragma("global", "__init()");
+	function __init() {
+		PROJECTS = [];
+		PROJECT  = new Project();
+	}
 #endregion
 
 #region main
@@ -29,22 +51,17 @@
 	THEME = new Theme();
 	COLOR_KEYS = [];
 	
-	globalvar VERSION, SAVEFILE_VERSION, VERSION_STRING, BUILD_NUMBER;
+	globalvar VERSION, SAVE_VERSION, VERSION_STRING, BUILD_NUMBER;
 	
-	VERSION = 1146;
-	SAVEFILE_VERSION = 1440;
-	VERSION_STRING   = "1.14.6";
-	BUILD_NUMBER = 114600;
+	VERSION			= 1146;
+	SAVE_VERSION	= 1440;
+	VERSION_STRING  = "1.14.6n1";
+	BUILD_NUMBER	= 114600;
 	
-	globalvar NODES, NODE_MAP, APPEND_MAP, NODE_NAME_MAP;
-	globalvar HOTKEYS, HOTKEY_CONTEXT, NODE_INSTANCES;
-	
-	NODES			= ds_list_create();
-	NODE_INSTANCES	= ds_list_create();
-	NODE_MAP	    = ds_map_create();
-	NODE_NAME_MAP     = ds_map_create();
+	globalvar APPEND_MAP;
 	APPEND_MAP      = ds_map_create();
 	
+	globalvar HOTKEYS, HOTKEY_CONTEXT;
 	HOTKEYS			= ds_map_create();
 	HOTKEY_CONTEXT	= ds_list_create();
 	HOTKEY_CONTEXT[| 0] = "";
@@ -56,9 +73,8 @@
 #region inputs
 	globalvar FOCUS, FOCUS_STR, HOVER, HOVERING_ELEMENT, _HOVERING_ELEMENT;
 	globalvar DOUBLE_CLICK;
-	globalvar CURRENT_PATH, DIALOG_CLICK;
+	globalvar DIALOG_CLICK;
 	
-	CURRENT_PATH = "";
 	DOUBLE_CLICK = false;
 	FOCUS = noone;
 	FOCUS_STR = "";
@@ -131,7 +147,7 @@
 	
 	#macro printlog if(log) show_debug_message
 	
-	#macro RETURN_ON_REST if(!ANIMATOR.is_playing || !ANIMATOR.frame_progress) return;
+	#macro RETURN_ON_REST if(!PROJECT.animator.is_playing || !PROJECT.animator.frame_progress) return;
 	
 	#macro PANEL_PAD THEME_VALUE.panel_padding
 	

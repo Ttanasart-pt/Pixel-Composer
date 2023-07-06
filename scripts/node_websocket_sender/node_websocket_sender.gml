@@ -83,7 +83,7 @@ function Node_Websocket_Sender(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		inputs[| 6].setVisible(_type == 3, _type == 3);
 	}
 	
-	static update = function(frame = ANIMATOR.current_frame) { 
+	static update = function(frame = PROJECT.animator.current_frame) { 
 		var _port   = inputs[| 0].getValue();
 		var _target = inputs[| 5].getValue();
 		

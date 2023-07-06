@@ -232,7 +232,7 @@ function Panel_Inspector() : PanelContent() constructor {
 					bx += bw + ui(4);
 				
 					if(buttonInstant(THEME.button_hide, bx, by, bw, bh, _m, pFOCUS, _hover) == 2)
-						GLOBAL_NODE.createValue();
+						PROJECT.globalNode.createValue();
 					
 					var txt  = __txt("Add");
 					var icon = THEME.add;
@@ -651,8 +651,8 @@ function Panel_Inspector() : PanelContent() constructor {
 			var txt = "Untitled";
 			var context = PANEL_GRAPH.getCurrentContext();
 			
-			if(context == noone && file_exists(CURRENT_PATH))
-				txt = string_replace(filename_name(CURRENT_PATH), filename_ext(CURRENT_PATH), "");
+			if(context == noone && file_exists(PROJECT.path))
+				txt = string_replace(filename_name(PROJECT.path), filename_ext(PROJECT.path), "");
 			else if(context != noone)
 				txt = context.name;
 			
@@ -671,7 +671,7 @@ function Panel_Inspector() : PanelContent() constructor {
 			
 			by += ui(36);
 			if(STEAM_ENABLED && !workshop_uploading) {
-				if(CURRENT_PATH == "") {
+				if(PROJECT.path == "") {
 					buttonInstant(noone, bx, by, ui(32), ui(32), [mx, my], pFOCUS, pHOVER, __txtx("panel_inspector_workshop_save", "Save file before upload"), THEME.workshop_upload, 0, COLORS._main_icon, 0.5);
 				} else {
 					if(!METADATA.steam) { //project made locally

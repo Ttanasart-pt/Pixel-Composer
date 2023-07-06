@@ -94,7 +94,7 @@ function Panel_Nodes() : PanelContent() constructor {
 	#region content
 		sc_nodes = new scrollPane(w - ui(padding + padding), h - ui(title_height + padding + 40), function(_y, _m) {
 			draw_clear_alpha(COLORS.panel_bg_clear, 0);
-			var _h = drawNodeList(NODES, 0, sc_nodes.surface_w, _y, _m);
+			var _h = drawNodeList(PROJECT.nodes, 0, sc_nodes.surface_w, _y, _m);
 			return _h;
 		})
 	#endregion

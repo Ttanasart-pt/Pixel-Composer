@@ -25,7 +25,7 @@ function Node_Cache(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			cache_result[cache_loading_progress] = true;
 			cache_loading_progress++;
 			
-			if(cache_loading_progress == ANIMATOR.frames_total) {
+			if(cache_loading_progress == PROJECT.animator.frames_total) {
 				cache_loading = false;
 				update();
 			}

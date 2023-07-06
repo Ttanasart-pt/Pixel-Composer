@@ -2,7 +2,7 @@ function Node_Fluid(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	color = COLORS.node_blend_fluid;
 	icon  = THEME.fluid_sim;
 	
-	static updateForward = function(frame = ANIMATOR.current_frame, _update = true) {
+	static updateForward = function(frame = PROJECT.animator.current_frame, _update = true) {
 		if(_update) update(frame);
 		print("Update " + string(frame) + ": " + name);
 		

@@ -51,13 +51,13 @@ _HOVERING_ELEMENT = noone;
 #region auto save
 	AUTO_SAVE_TIMER += delta_time / 1_000_000;
 	
-	if(MODIFIED && PREF_MAP[? "auto_save_time"] > 0 && AUTO_SAVE_TIMER > PREF_MAP[? "auto_save_time"]) {
+	if(PROJECT.modified && PREF_MAP[? "auto_save_time"] > 0 && AUTO_SAVE_TIMER > PREF_MAP[? "auto_save_time"]) {
 		AUTO_SAVE_TIMER = 0;
 		var loc = DIRECTORY + "Autosave/";
 		if(!directory_exists(loc))
 			directory_create(loc);
 		
-		var fname = string_replace(filename_name(CURRENT_PATH), filename_ext(CURRENT_PATH), "") + 
+		var fname = string_replace(filename_name(PROJECT.path), filename_ext(PROJECT.path), "") + 
 			"_autosave" + string(current_year) + "-" + 
 			string_lead_zero(current_month, 2) + "-" + 
 			string_lead_zero(current_day, 2) + "T" + 
@@ -65,7 +65,7 @@ _HOVERING_ELEMENT = noone;
 			string_lead_zero(current_minute, 2) + 
 			string_lead_zero(current_second, 2) + ".pxc";
 		
-		try		 { SAVE_AT(loc + fname, "Autosaved "); }
+		try		 { SAVE_AT(PROJECT, loc + fname, "Autosaved "); }
 		catch(e) { print(exception_print(e)); }
 	}
 #endregion
@@ -74,20 +74,20 @@ _HOVERING_ELEMENT = noone;
 	//physics_pause_enable(true);
 	DEF_SURFACE_RESET();
 	
-	var _k = ds_map_find_first(NODE_MAP);
-	var _a = ds_map_size(NODE_MAP);
+	var _k = ds_map_find_first(PROJECT.nodeMap);
+	var _a = ds_map_size(PROJECT.nodeMap);
 	repeat(_a) {
-		NODE_MAP[? _k].stepBegin();
-		_k = ds_map_find_next(NODE_MAP, _k);
+		PROJECT.nodeMap[? _k].stepBegin();
+		_k = ds_map_find_next(PROJECT.nodeMap, _k);
 	}
 	
-	if(ANIMATOR.is_playing || ANIMATOR.rendering) {
-		if(ANIMATOR.frame_progress) {
+	if(PROJECT.animator.is_playing || PROJECT.animator.rendering) {
+		if(PROJECT.animator.frame_progress) {
 			__addon_preAnim();
 			Render();
 			__addon_postAnim();
 		}
-		ANIMATOR.frame_progress = false;
+		PROJECT.animator.frame_progress = false;
 	} else {
 		if(UPDATE & RENDER_TYPE.full)
 			Render();

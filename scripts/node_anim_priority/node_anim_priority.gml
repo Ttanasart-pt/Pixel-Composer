@@ -5,12 +5,12 @@ function rearrange_priority(node, newpri) {
 	var down = prev > newpri;
 	node.anim_priority = newpri;
 	
-	var amo = ds_map_size(NODE_MAP);
-	var k = ds_map_find_first(NODE_MAP);
+	var amo = ds_map_size(PROJECT.nodeMap);
+	var k = ds_map_find_first(PROJECT.nodeMap);
 	
 	repeat(amo) {
-		var _node = NODE_MAP[? k];
-		k = ds_map_find_next(NODE_MAP, k);
+		var _node = PROJECT.nodeMap[? k];
+		k = ds_map_find_next(PROJECT.nodeMap, k);
 		
 		if(!_node.active) continue;
 		if(_node == node) continue;

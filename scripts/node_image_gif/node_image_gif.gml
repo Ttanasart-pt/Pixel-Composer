@@ -37,8 +37,8 @@ function Node_Image_gif(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		.setDisplay(VALUE_DISPLAY.button, [ function() { 
 				if(!spr) return;
 				if(!sprite_exists(spr)) return;
-				ANIMATOR.frames_total = sprite_get_number(spr);
-				ANIMATOR.framerate = 12;
+				PROJECT.animator.frames_total = sprite_get_number(spr);
+				PROJECT.animator.framerate = 12;
 			}, "Match length"] );
 	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
@@ -108,7 +108,7 @@ function Node_Image_gif(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		}
 	}
 	
-	static update = function(frame = ANIMATOR.current_frame) {
+	static update = function(frame = PROJECT.animator.current_frame) {
 		var path = inputs[| 0].getValue();
 		if(path == "") return;
 		if(path_current != path) updatePaths(path);
@@ -125,7 +125,7 @@ function Node_Image_gif(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		surface_set_target(_outsurf);
 		DRAW_CLEAR
 		BLEND_OVERRIDE;
-		draw_sprite(spr, ANIMATOR.current_frame, 0, 0);
+		draw_sprite(spr, PROJECT.animator.current_frame, 0, 0);
 		BLEND_NORMAL;
 		surface_reset_target();
 	}

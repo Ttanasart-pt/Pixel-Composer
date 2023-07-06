@@ -310,7 +310,7 @@
     "dialog_group_order_add":      "Add separator",
 
     "dialog_exit_title":           "Project modified",
-    "dialog_exit_content":         "Save progress before exit?",
+    "dialog_exit_content":         "Save progress before close?",
 
     "contest_open_discord":        "Open in Discord",
 

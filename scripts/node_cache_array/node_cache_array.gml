@@ -32,7 +32,7 @@ function Node_Cache_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 			cache_result[cache_loading_progress] = true;
 			cache_loading_progress++;
 			
-			if(cache_loading_progress == ANIMATOR.frames_total) {
+			if(cache_loading_progress == PROJECT.animator.frames_total) {
 				cache_loading = false;
 				update();
 			}
@@ -46,7 +46,7 @@ function Node_Cache_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		var stp = inputs[| 3].getValue();
 		
 		if(str == -1) str = 0;
-		if(lst == -1) lst = ANIMATOR.frames_total;
+		if(lst == -1) lst = PROJECT.animator.frames_total;
 		
 		if(lst > str && stp > 0) 
 		for( var i = str; i <= lst; i += stp ) {
@@ -55,7 +55,7 @@ function Node_Cache_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		}
 		outputs[| 0].setValue(ss);
 		
-		if(!ANIMATOR.is_playing) return;
+		if(!PROJECT.animator.is_playing) return;
 		if(!inputs[| 0].value_from) return;
 		
 		var _surf  = inputs[| 0].getValue();

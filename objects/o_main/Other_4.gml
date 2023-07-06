@@ -1,5 +1,5 @@
 /// @description init
-MODIFIED = false;
+PROJECT.modified = false;
 PREF_LOAD();
 
 #region reset data

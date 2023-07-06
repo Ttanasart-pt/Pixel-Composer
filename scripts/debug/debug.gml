@@ -74,7 +74,7 @@ function exception_print(e) {
 function setException() {
 	exception_unhandled_handler(function(ex) {
 		var path = string(DIRECTORY) + "prev_crash.pxc";
-		if(!SAVING && !TESTING) SAVE_AT(path);
+		if(!SAVING && !TESTING) SAVE_AT(PROJECT, path);
 	
 		var tt = "\n-------------------------- OH NO --------------------------\n\n";
 		tt += "\n" + ex.longMessage;

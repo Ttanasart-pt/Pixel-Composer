@@ -11,9 +11,9 @@ function Node_Feedback_Output(_x, _y, _group = noone) : Node_Group_Output(_x, _y
 	
 	cache_value = -1;
 	
-	static update = function(frame = ANIMATOR.current_frame) {
+	static update = function(frame = PROJECT.animator.current_frame) {
 		if(inputs[| 0].value_from == noone) return;
-		if(ANIMATOR.current_frame == ANIMATOR.frames_total - 1) {
+		if(PROJECT.animator.current_frame == PROJECT.animator.frames_total - 1) {
 			cache_value = noone;
 			return;
 		}

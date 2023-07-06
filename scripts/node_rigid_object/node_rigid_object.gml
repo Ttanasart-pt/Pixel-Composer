@@ -638,7 +638,7 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		return object;
 	}
 	
-	static update = function(frame = ANIMATOR.current_frame) {
+	static update = function(frame = PROJECT.animator.current_frame) {
 		if(!isAnimated()) return;
 		
 		//for( var i = 0; i < array_length(object); i++ )

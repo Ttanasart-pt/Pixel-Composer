@@ -68,8 +68,8 @@ function Node_VFX_Renderer(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		outputs[| 0].setValue(_outSurf);
 	}
 	
-	function update(_time = ANIMATOR.current_frame) {
-		if(!ANIMATOR.is_playing) {
+	function update(_time = PROJECT.animator.current_frame) {
+		if(!PROJECT.animator.is_playing) {
 			recoverCache();
 			return;
 		}

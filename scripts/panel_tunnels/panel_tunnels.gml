@@ -16,14 +16,14 @@ function Panel_Tunnels() : PanelContent() constructor {
 		tunnel_hover  = noone;
 		
 		function scanNodes() {
-			var amo = ds_map_size(NODE_MAP);
-			var k   = ds_map_find_first(NODE_MAP);
+			var amo = ds_map_size(PROJECT.nodeMap);
+			var k   = ds_map_find_first(PROJECT.nodeMap);
 		
 			tunnel_ins = [];
 			
 			repeat(amo) {
-				var node = NODE_MAP[? k];
-				k = ds_map_find_next(NODE_MAP, k);
+				var node = PROJECT.nodeMap[? k];
+				k = ds_map_find_next(PROJECT.nodeMap, k);
 			
 				if(instanceof(node) == "Node_Tunnel_In") 
 					array_push(tunnel_ins, node);
@@ -122,10 +122,10 @@ function Panel_Tunnels() : PanelContent() constructor {
 						k = ds_map_find_next(TUNNELS_OUT, k);
 					
 						var out = TUNNELS_OUT[? _k];
-						if(out != key || !ds_map_exists(NODE_MAP, _k)) 
+						if(out != key || !ds_map_exists(PROJECT.nodeMap, _k)) 
 							continue;
 				
-						var _node = NODE_MAP[? _k];
+						var _node = PROJECT.nodeMap[? _k];
 					
 						draw_sprite_ui(THEME.tunnel, 0, ui(32), _y + ui(10), 0.75, 0.75, 0, COLORS._main_icon);
 						draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text_sub);

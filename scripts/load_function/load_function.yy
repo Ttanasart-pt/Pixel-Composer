@@ -5,7 +5,7 @@
   "isCompatibility": false,
   "isDnD": false,
   "parent": {
-    "name": "files",
-    "path": "folders/functions/files.yy",
+    "name": "project",
+    "path": "folders/functions/project.yy",
   },
 }

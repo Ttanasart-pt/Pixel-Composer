@@ -54,7 +54,7 @@ function Node_Fluid_Domain(_x, _y, _group = noone) : Node_Fluid(_x, _y, _group) 
 	domain = fd_rectangle_create(256, 256);
 	_dim_old = [0, 0];
 	
-	static update = function(frame = ANIMATOR.current_frame) {
+	static update = function(frame = PROJECT.animator.current_frame) {
 		RETURN_ON_REST
 		
 		var _dim	= inputs[|  0].getValue(frame);
@@ -71,7 +71,7 @@ function Node_Fluid_Domain(_x, _y, _group = noone) : Node_Fluid(_x, _y, _group) 
 		var wrap	= inputs[| 11].getValue(frame);
 		//var loop	= inputs[| 12].getValue(frame);
 		
-		if(ANIMATOR.current_frame == 0 || !is_surface(domain.sf_world)) {
+		if(PROJECT.animator.current_frame == 0 || !is_surface(domain.sf_world)) {
 			fd_rectangle_clear(domain);
 			fd_rectangle_destroy(domain);
 			domain = fd_rectangle_create(_dim[0], _dim[1]);
@@ -116,9 +116,9 @@ function Node_Fluid_Domain(_x, _y, _group = noone) : Node_Fluid(_x, _y, _group) 
 		outputs[| 0].setValue(domain);
 		
 		//if(!loop) return;
-		//if(ANIMATOR.current_frame != 0) return;
+		//if(PROJECT.animator.current_frame != 0) return;
 			
-		//for( var i = 0; i < ANIMATOR.frames_total; i++ )
+		//for( var i = 0; i < PROJECT.animator.frames_total; i++ )
 		//	updateForward(i, false);
 	}
 	

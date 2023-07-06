@@ -90,7 +90,7 @@ function Node_Websocket_Receiver(_x, _y, _group = noone) : Node(_x, _y, _group) 
 		}
 	}
 	
-	static update = function(frame = ANIMATOR.current_frame) { 
+	static update = function(frame = PROJECT.animator.current_frame) { 
 		if(CLONING) return;
 		var _port = inputs[| 0].getValue();
 		

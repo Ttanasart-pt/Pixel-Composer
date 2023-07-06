@@ -237,7 +237,7 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		if(_boneCount != _b.childCount()) setBone();
 	}
 	
-	static update = function(frame = ANIMATOR.current_frame) {
+	static update = function(frame = PROJECT.animator.current_frame) {
 		var _b = inputs[| 0].getValue();
 		if(_b == noone) return;
 		

@@ -310,7 +310,7 @@ function Node_3D_Extrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 			case 2 : pass = "norm" break;
 		}
 		
-		if(_upda && ANIMATOR.frame_progress)
+		if(_upda && PROJECT.animator.frame_progress)
 			generateMesh();
 		
 		var _transform = new __3d_transform(_pos,, _sca, _lpos, _lrot, _lsca, false, _dimS );

@@ -25,7 +25,7 @@ function Node_Atlas_Get(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	outputs[| 5] = nodeValue("Alpha", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, [])
 		.setArrayDepth(1);
 	
-	static update = function(frame = ANIMATOR.current_frame) {
+	static update = function(frame = PROJECT.animator.current_frame) {
 		var atl = inputs[| 0].getValue();
 		
 		if(atl == noone) return;

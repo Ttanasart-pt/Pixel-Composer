@@ -251,7 +251,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		surface_reset_target();
 	}
 	
-	function update(frame = ANIMATOR.current_frame) {
+	function update(frame = PROJECT.animator.current_frame) {
 		var _inSurf = inputs[| 0].getValue();
 		if(is_array(_inSurf) && array_length(_inSurf) == 0) return;
 		if(!is_array(_inSurf) && !is_surface(_inSurf)) return;

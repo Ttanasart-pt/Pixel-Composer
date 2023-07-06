@@ -141,7 +141,7 @@ function Node_VFX_effector(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		onAffect(part, str);
 	}
 	
-	static update = function(frame = ANIMATOR.current_frame) {
+	static update = function(frame = PROJECT.animator.current_frame) {
 		var val = inputs[| 0].getValue();
 		outputs[| 0].setValue(val);
 		if(val == -1) return;

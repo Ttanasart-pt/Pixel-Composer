@@ -19,7 +19,7 @@ function Node_Strand_Force_Apply(_x, _y, _group = noone) : _Node_Strand_Affector
 		["Force",	false], input_fix_len + 0, input_fix_len + 2, input_fix_len + 1, input_fix_len + 3, input_fix_len + 4
 	);
 	
-	static update = function(frame = ANIMATOR.current_frame) {
+	static update = function(frame = PROJECT.animator.current_frame) {
 		var _pos = inputs[|  2].getValue();
 		var _dir = inputs[|  4].getValue();
 	
@@ -31,7 +31,7 @@ function Node_Strand_Force_Apply(_x, _y, _group = noone) : _Node_Strand_Affector
 		
 		inputs[| 4].setVisible(true);
 		
-		var _strTur = _tur == 0? _stn : perlin1D(_sed + ANIMATOR.current_frame, _tfr, _toc, _stn - _tur, _stn + _tur);
+		var _strTur = _tur == 0? _stn : perlin1D(_sed + PROJECT.animator.current_frame, _tfr, _toc, _stn - _tur, _stn + _tur);
 		var gx = lengthdir_x(_strTur, _dir);
 		var gy = lengthdir_y(_strTur, _dir);
 		

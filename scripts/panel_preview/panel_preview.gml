@@ -489,12 +489,12 @@ function Panel_Preview() : PanelContent() constructor {
 			right_menu_y += string_height("l");
 		}
 		
-		draw_set_text(f_p0, fa_right, fa_top, fps >= ANIMATOR.framerate? COLORS._main_text_sub : COLORS._main_value_negative);
+		draw_set_text(f_p0, fa_right, fa_top, fps >= PROJECT.animator.framerate? COLORS._main_text_sub : COLORS._main_value_negative);
 		draw_text(w - ui(8), right_menu_y, __txt("fps") + " " + string(fps));
 		right_menu_y += string_height("l");
 		
 		draw_set_text(f_p0, fa_right, fa_top, COLORS._main_text_sub);
-		draw_text(w - ui(8), right_menu_y, __txt("Frame") + " " + string(ANIMATOR.current_frame) + "/" + string(ANIMATOR.frames_total));
+		draw_text(w - ui(8), right_menu_y, __txt("Frame") + " " + string(PROJECT.animator.current_frame) + "/" + string(PROJECT.animator.frames_total));
 		
 		right_menu_y += string_height("l");
 		draw_text(w - ui(8), right_menu_y, "x" + string(canvas_s));

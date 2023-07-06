@@ -1,10 +1,20 @@
 /// @description init
 if !ready exit;
 
-draw_set_color(c_black);
-draw_set_alpha(0.5);
-draw_rectangle(0, 0, WIN_W, WIN_H, false);
-draw_set_alpha(1);
+#region dim BG
+	var lowest = true;
+	with(o_dialog_exit) {
+		if(id == other.id) continue;
+		if(depth > other.depth) lowest = false;
+	}
+
+	if(lowest) {
+		draw_set_color(c_black);
+		draw_set_alpha(0.5);
+		draw_rectangle(0, 0, WIN_W, WIN_H, false);
+		draw_set_alpha(1);
+	}
+#endregion
 
 #region base UI
 	draw_sprite_stretched(THEME.dialog_bg, 0, dialog_x, dialog_y, dialog_w, dialog_h);
@@ -13,13 +23,15 @@ draw_set_alpha(1);
 #endregion
 
 #region text
-	var py = dialog_y + ui(16);
+	var py  = dialog_y + ui(16);
+	var txt = $"Project modified";
 	draw_set_text(f_h5, fa_left, fa_top, COLORS._main_text);
-	draw_text(dialog_x + ui(24), py, __txtx("dialog_exit_title", "Project modified"));
+	draw_text(dialog_x + ui(24), py, txt);
 	py += line_get_height(, 4);
 	
 	draw_set_text(f_p0, fa_left, fa_top, COLORS._main_text);
-	draw_text(dialog_x + ui(24), py, __txtx("dialog_exit_content", "Save progress before exit?"));
+	var txt = $"Save project '{filename_name(project.path)}' before exit?";
+	draw_text(dialog_x + ui(24), py, txt);
 	
 	var bw = ui(96), bh = TEXTBOX_HEIGHT;
 	var bx1 = dialog_x + dialog_w - ui(16);
@@ -38,14 +50,19 @@ draw_set_alpha(1);
 	draw_text(bx0 + bw / 2, by0 + bh / 2, __txtx("dont_save", "Don't save"));
 	if(b == 2) {
 		PREF_SAVE();
-		game_end();
+		
+		if(instance_number(o_dialog_exit) == 1)
+			game_end();
+		instance_destroy();
 	}
 	
 	bx0 -= bw + ui(12);
 	var b = buttonInstant(THEME.button, bx0, by0, bw, bh, mouse_ui, sFOCUS, sHOVER);
 	draw_text(bx0 + bw / 2, by0 + bh / 2, __txt("Save"));
-	if(b == 2 && SAVE()) {
+	if(b == 2 && SAVE(project)) {
 		PREF_SAVE();
-		game_end();
+		if(instance_number(o_dialog_exit) == 1)
+			game_end();
+		instance_destroy();
 	}
 #endregion

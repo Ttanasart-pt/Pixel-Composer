@@ -87,7 +87,7 @@ function MetaDataManager() constructor {
 		}
 		
 		var _aut = __txt("By") + " " + author;
-		var _ver = version < SAVEFILE_VERSION? __txtx("meta_old_version", "Created on an older version") : __txtx("meta_new_version", "Created on a newer version");
+		var _ver = version < SAVE_VERSION? __txtx("meta_old_version", "Created on an older version") : __txtx("meta_new_version", "Created on a newer version");
 		
 		draw_set_font(f_h5);
 		_h += string_height_ext(name, -1, ww) - ui(4);
@@ -116,7 +116,7 @@ function MetaDataManager() constructor {
 			_w = max(_w, string_width_ext(alias, -1, ww));
 		}
 		
-		if(version != SAVEFILE_VERSION) {
+		if(version != SAVE_VERSION) {
 			draw_set_font(f_p2);
 			_h += ui(8);
 			_h += string_height_ext(_ver, -1, ww);
@@ -177,7 +177,7 @@ function MetaDataManager() constructor {
 			ty += string_height_ext(alias, -1, _w);
 		}
 		
-		if(version != SAVEFILE_VERSION) {
+		if(version != SAVE_VERSION) {
 			ty += ui(8);
 			draw_set_text(f_p2, fa_left, fa_top, COLORS._main_accent);
 			draw_text_line(mx + ui(8), ty, _ver, -1, _w);

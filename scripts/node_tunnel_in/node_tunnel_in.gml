@@ -34,8 +34,8 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		var amo  = ds_map_size(TUNNELS_OUT);
 		var k    = ds_map_find_first(TUNNELS_OUT);
 		repeat(amo) {
-			if(TUNNELS_OUT[? k] == _key && ds_map_exists(NODE_MAP, k)) {
-				var node = NODE_MAP[? k];
+			if(TUNNELS_OUT[? k] == _key && ds_map_exists(PROJECT.nodeMap, k)) {
+				var node = PROJECT.nodeMap[? k];
 				if(node.group != group) continue;
 				
 				draw_set_color(COLORS.node_blend_tunnel);
@@ -53,7 +53,7 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	}
 	
 	static onClone = function() { onValueUpdate(); }
-	static update = function(frame = ANIMATOR.current_frame) { onValueUpdate(); }
+	static update = function(frame = PROJECT.animator.current_frame) { onValueUpdate(); }
 	
 	static resetMap = function() {
 		var _key = inputs[| 0].getValue();
@@ -90,15 +90,15 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		var amo = ds_map_size(TUNNELS_IN_MAP);
 		var k   = ds_map_find_first(TUNNELS_IN_MAP);
 		repeat(amo) {
-			if(ds_map_exists(NODE_MAP, k) && struct_has(NODE_MAP[? k], "resetMap")) 
-				NODE_MAP[? k].resetMap();
+			if(ds_map_exists(PROJECT.nodeMap, k) && struct_has(PROJECT.nodeMap[? k], "resetMap")) 
+				PROJECT.nodeMap[? k].resetMap();
 			k = ds_map_find_next(TUNNELS_IN_MAP, k);	
 		}
 		
 		var k   = ds_map_find_first(TUNNELS_IN_MAP);
 		repeat(amo) {
-			if(ds_map_exists(NODE_MAP, k) && struct_has(NODE_MAP[? k], "checkDuplicate")) 
-				NODE_MAP[? k].checkDuplicate();
+			if(ds_map_exists(PROJECT.nodeMap, k) && struct_has(PROJECT.nodeMap[? k], "checkDuplicate")) 
+				PROJECT.nodeMap[? k].checkDuplicate();
 			k = ds_map_find_next(TUNNELS_IN_MAP, k);	
 		}
 		
@@ -132,8 +132,8 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		
 		repeat(amo) {
 			if(TUNNELS_OUT[? k] == _key) {
-				array_push(nodes, NODE_MAP[? k]);
-				array_push(nodeNames, NODE_MAP[? k].internalName);
+				array_push(nodes, PROJECT.nodeMap[? k]);
+				array_push(nodeNames, PROJECT.nodeMap[? k].internalName);
 			}
 			
 			k = ds_map_find_next(TUNNELS_OUT, k);

@@ -6,7 +6,7 @@ enum CURVE_TYPE {
 
 function valueKey(_time, _value, _anim = noone, _in = 0, _ot = 0) constructor {
 	time	= _time;
-	ratio	= time / (ANIMATOR.frames_total - 1);
+	ratio	= time / (PROJECT.animator.frames_total - 1);
 	value	= _value;
 	anim	= _anim;
 	
@@ -20,7 +20,7 @@ function valueKey(_time, _value, _anim = noone, _in = 0, _ot = 0) constructor {
 	
 	static setTime = function(time) {
 		self.time = time;	
-		ratio	= time / (ANIMATOR.frames_total - 1);
+		ratio	= time / (PROJECT.animator.frames_total - 1);
 	}
 	
 	static clone = function(target = noone) {
@@ -126,7 +126,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 	
 	static getName = function() { return prop.name + suffix; }
 	
-	static getValue = function(_time = ANIMATOR.current_frame) {
+	static getValue = function(_time = PROJECT.animator.current_frame) {
 		if(prop.type == VALUE_TYPE.trigger) {
 			if(ds_list_size(values) == 0) 
 				return false;
@@ -180,8 +180,8 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 			if(prop.on_end == KEYFRAME_END.wrap) {
 				var from = values[| ds_list_size(values) - 1];
 				var to   = values[| 0];
-				var prog = ANIMATOR.frames_total - from.time + _time;
-				var totl = ANIMATOR.frames_total - from.time + to.time;
+				var prog = PROJECT.animator.frames_total - from.time + _time;
+				var totl = PROJECT.animator.frames_total - from.time + to.time;
 				
 				var rat  = prog / totl;
 				var _lrp = interpolate(from, to, rat);
@@ -208,7 +208,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 			var from = values[| ds_list_size(values) - 1];
 			var to   = values[| 0];
 			var prog = _time - from.time;
-			var totl = ANIMATOR.frames_total - from.time + to.time;
+			var totl = PROJECT.animator.frames_total - from.time + to.time;
 				
 			var rat  = prog / totl;
 			var _lrp = interpolate(from, to, rat);
@@ -256,7 +256,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 	
 	static setKeyTime = function(_key, _time, _replace = true) {
 		if(!ds_list_exist(values, _key)) return 0;
-		if(!LOADING) MODIFIED = true;
+		if(!LOADING) PROJECT.modified = true;
 		
 		_time = max(_time, 0);
 		_key.setTime(_time);
@@ -282,7 +282,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 		return 1;
 	}
 	
-	static setValue = function(_val = 0, _record = true, _time = ANIMATOR.current_frame, ease_in = 0, ease_out = 0) {
+	static setValue = function(_val = 0, _record = true, _time = PROJECT.animator.current_frame, ease_in = 0, ease_out = 0) {
 		if(prop.type == VALUE_TYPE.trigger) {
 			if(!prop.is_anim) {
 				values[| 0] = new valueKey(0, _val, self);
@@ -360,7 +360,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 		for(var i = 0; i < ds_list_size(values); i++) {
 			var _value_list = [];
 			if(scale)
-				_value_list[0] = values[| i].time / (ANIMATOR.frames_total - 1);
+				_value_list[0] = values[| i].time / (PROJECT.animator.frames_total - 1);
 			else
 				_value_list[0] = values[| i].time;
 			
@@ -396,7 +396,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 	static deserialize = function(_data, scale = false) {
 		ds_list_clear(values);
 		
-		if(prop.type == VALUE_TYPE.gradient && LOADING_VERSION < 1340 && !CLONING) { //backward compat: Gradient
+		if(prop.type == VALUE_TYPE.gradient && PROJECT.version < 1340 && !CLONING) { //backward compat: Gradient
 			var _val = [];
 			var value = _data[0][1];
 			
@@ -422,7 +422,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 			var _time = array_safe_get(_keyframe, 0);
 			
 			if(scale && _time <= 1)
-				_time = round(_time * (ANIMATOR.frames_total - 1));
+				_time = round(_time * (PROJECT.animator.frames_total - 1));
 			
 			var value		  = array_safe_get(_keyframe, 1);
 			var ease_in		  = array_safe_get(_keyframe, 2);

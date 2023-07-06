@@ -173,7 +173,7 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		return _out;
 	}
 	
-	static update = function(frame = ANIMATOR.current_frame) {
+	static update = function(frame = PROJECT.animator.current_frame) {
 		process_amount	= 0;
 		inputs_data		= array_create(ds_list_size(inputs));
 		process_length  = array_create(ds_list_size(inputs));

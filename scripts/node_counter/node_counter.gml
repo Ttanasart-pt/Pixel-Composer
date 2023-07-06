@@ -27,13 +27,13 @@ function Node_Counter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	}
 	
 	function process_data(_output, _data, _output_index, _array_index = 0) {  
-		var time = ANIMATOR.current_frame;
+		var time = PROJECT.animator.current_frame;
 		var mode = _data[2];
 		var val = 0;
 		
 		switch(mode) {
 			case 0 : val = _data[0] + time * _data[1]; break;
-			case 1 : val = time / (ANIMATOR.frames_total - 1) * _data[1]; break;
+			case 1 : val = time / (PROJECT.animator.frames_total - 1) * _data[1]; break;
 		}
 		
 		return val;

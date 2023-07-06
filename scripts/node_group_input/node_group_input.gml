@@ -288,7 +288,7 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	PATCH_STATIC
 	
-	static update = function(frame = ANIMATOR.current_frame) {
+	static update = function(frame = PROJECT.animator.current_frame) {
 		if(is_undefined(inParent)) return;
 		
 		var _dstype = inputs[| 0].getValue();

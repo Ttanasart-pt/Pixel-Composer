@@ -49,7 +49,7 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	_rang_current = [0, 0];
 	
 	static generateFont = function(_path, _size, _aa, _range) {
-		if(ANIMATOR.is_playing) return;
+		if(PROJECT.animator.is_playing) return;
 		
 		if(_path == _font_current && 
 		   _size == _size_current && 

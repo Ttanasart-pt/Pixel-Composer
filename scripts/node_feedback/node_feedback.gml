@@ -15,7 +15,7 @@ function Node_Feedback(_x, _y, _group = noone) : Node_Collection(_x, _y, _group)
 	}
 	
 	static doStepBegin = function() {
-		if(!ANIMATOR.frame_progress) return;
+		if(!PROJECT.animator.frame_progress) return;
 		setRenderStatus(false);
 		UPDATE |= RENDER_TYPE.full; //force full render
 	}

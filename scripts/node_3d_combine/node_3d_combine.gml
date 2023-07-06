@@ -147,7 +147,7 @@ function Node_3D_Combine(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		_3d_clear_local_transform();
 	}
 	
-	static update = function(frame = ANIMATOR.current_frame) {
+	static update = function(frame = PROJECT.animator.current_frame) {
 		var _dim  = inputs[| 0].getValue();
 		var _lpos = inputs[| 1].getValue();
 		var _lrot = inputs[| 2].getValue();

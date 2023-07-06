@@ -128,7 +128,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	for(var i = 0; i < attributes.part_amount; i++)
 		parts[i] = new __part(self);
 		
-	static spawn = function(_time = ANIMATOR.current_frame, _pos = -1) {
+	static spawn = function(_time = PROJECT.animator.current_frame, _pos = -1) {
 		var _inSurf = current_data[0];
 		
 		if(_inSurf == 0) {
@@ -295,7 +295,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		var _loop	= inputs[| 21].getValue();
 		if(!_loop) return;
 		
-		for(var i = 0; i < ANIMATOR.frames_total; i++) {
+		for(var i = 0; i < PROJECT.animator.frames_total; i++) {
 			runVFX(i, false);
 			updateParticleForward();
 		}
@@ -315,7 +315,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		}
 	}
 	
-	static runVFX = function(_time = ANIMATOR.current_frame, _render = true) {
+	static runVFX = function(_time = PROJECT.animator.current_frame, _render = true) {
 		var _spawn_delay  = inputs[| 1].getValue(_time);
 		var _spawn_type   = inputs[| 16].getValue(_time);
 		var _spawn_active = inputs[| 27].getValue(_time);
@@ -357,7 +357,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	
 	static onDrawOverlay = -1;
 	
-	static update = function(frame = ANIMATOR.current_frame) {
+	static update = function(frame = PROJECT.animator.current_frame) {
 		var _inSurf = inputs[|  0].getValue();
 		var _dist   = inputs[|  4].getValue();
 		var _scatt  = inputs[| 24].getValue();

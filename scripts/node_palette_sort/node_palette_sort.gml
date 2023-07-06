@@ -17,7 +17,7 @@ function Node_Palette_Sort(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	outputs[| 0] = nodeValue("Sorted palette", self, JUNCTION_CONNECT.output, VALUE_TYPE.color, [])
 		.setDisplay(VALUE_DISPLAY.palette);
 	
-	static update = function(frame = ANIMATOR.current_frame) {
+	static update = function(frame = PROJECT.animator.current_frame) {
 		var _arr = inputs[| 0].getValue();
 		var _ord = inputs[| 1].getValue();
 		var _rev = inputs[| 2].getValue();

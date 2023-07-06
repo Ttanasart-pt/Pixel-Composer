@@ -111,7 +111,7 @@ function Node_Json_File_Write(_x, _y, _group = noone) : Node(_x, _y, _group) con
 		}
 	}
 	
-	static update = function(frame = ANIMATOR.current_frame) { writeFile(); }
+	static update = function(frame = PROJECT.animator.current_frame) { writeFile(); }
 	static onInspector1Update = function() { writeFile(); }
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {

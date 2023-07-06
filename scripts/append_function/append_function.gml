@@ -21,9 +21,9 @@ function __APPEND_MAP(_map, context = PANEL_GRAPH.getCurrentContext()) {
 	
 	if(struct_has(_map, "version")) {
 		var _v = _map.version;
-		LOADING_VERSION = _v;
-		if(_v != SAVEFILE_VERSION) {
-			var warn = "File version mismatch : loading file verion " + string(_v) + " to Pixel Composer " + string(SAVEFILE_VERSION);
+		PROJECT.version = _v;
+		if(_v != SAVE_VERSION) {
+			var warn = "File version mismatch : loading file verion " + string(_v) + " to Pixel Composer " + string(SAVE_VERSION);
 			log_warning("FILE", warn)
 		}
 	}

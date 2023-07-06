@@ -69,7 +69,7 @@ function ase_layer(name) constructor {
 		cels[index] = cel;
 	}
 	
-	static getCel = function(index = ANIMATOR.current_frame) {
+	static getCel = function(index = PROJECT.animator.current_frame) {
 		var ind;
 		
 		if(tag != noone) {

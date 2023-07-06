@@ -12,7 +12,7 @@ function Node_Surface_data(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	w = 96;
 	
-	static update = function(frame = ANIMATOR.current_frame) {
+	static update = function(frame = PROJECT.animator.current_frame) {
 		var _insurf	= inputs[| 0].getValue();
 		if(is_array(_insurf)) {
 			var len = array_length(_insurf);

@@ -18,7 +18,7 @@ function Node_Array_Sort(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	static sortAcs = function(v1, v2) { return v1[1] < v2[1]; }
 	static sortDes = function(v1, v2) { return v1[1] > v2[1]; }
 	
-	static update = function(frame = ANIMATOR.current_frame) {
+	static update = function(frame = PROJECT.animator.current_frame) {
 		var arr = inputs[| 0].getValue();
 		var asc = inputs[| 1].getValue();
 		

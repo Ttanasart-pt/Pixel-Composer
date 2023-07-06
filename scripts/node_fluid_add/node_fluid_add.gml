@@ -46,7 +46,7 @@ function Node_Fluid_Add(_x, _y, _group = noone) : Node_Fluid(_x, _y, _group) con
 	
 	_prevPos = noone;
 	
-	static update = function(frame = ANIMATOR.current_frame) {
+	static update = function(frame = PROJECT.animator.current_frame) {
 		var _dom = inputs[| 0].getValue(frame);
 		var _mat = inputs[| 1].getValue(frame);
 		var _pos = inputs[| 2].getValue(frame);

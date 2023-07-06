@@ -3,30 +3,30 @@ if(OS == os_windows && gameframe_is_minimized()) exit;
 
 //print("===== Step start =====");
 #region animation
-	if(ANIMATOR.is_playing && ANIMATOR.play_freeze == 0) {
-		ANIMATOR.time_since_last_frame += ANIMATOR.framerate * (delta_time / 1000000);
+	if(PROJECT.animator.is_playing && PROJECT.animator.play_freeze == 0) {
+		PROJECT.animator.time_since_last_frame += PROJECT.animator.framerate * (delta_time / 1000000);
 		
-		if(ANIMATOR.time_since_last_frame >= 1)
-			ANIMATOR.setFrame(ANIMATOR.real_frame + 1);
+		if(PROJECT.animator.time_since_last_frame >= 1)
+			PROJECT.animator.setFrame(PROJECT.animator.real_frame + 1);
 	} else {
-		ANIMATOR.frame_progress = false;
-		ANIMATOR.setFrame(ANIMATOR.real_frame);
-		ANIMATOR.time_since_last_frame = 0;
+		PROJECT.animator.frame_progress = false;
+		PROJECT.animator.setFrame(PROJECT.animator.real_frame);
+		PROJECT.animator.time_since_last_frame = 0;
 	}
 	
-	ANIMATOR.play_freeze = max(0, ANIMATOR.play_freeze - 1);
+	PROJECT.animator.play_freeze = max(0, PROJECT.animator.play_freeze - 1);
 #endregion
 
 #region step
-	GLOBAL_NODE.step();
+	PROJECT.globalNode.step();
 	
 	try {
 		if(PANEL_MAIN != 0)
 			PANEL_MAIN.step();
 		
-		for(var i = 0; i < ds_list_size(NODES); i++) {
-			NODES[| i].triggerCheck();
-			NODES[| i].step();
+		for(var i = 0; i < ds_list_size(PROJECT.nodes); i++) {
+			PROJECT.nodes[| i].triggerCheck();
+			PROJECT.nodes[| i].step();
 		}
 	} catch(e) {
 		noti_warning("Step error: " + exception_print(e));
@@ -110,13 +110,13 @@ if(OS == os_windows && gameframe_is_minimized()) exit;
 #endregion
 
 #region window
-	if(_modified != MODIFIED) {
-		_modified = MODIFIED;
+	if(_modified != PROJECT.modified) {
+		_modified = PROJECT.modified;
 		
 		var cap = "";
 		if(SAFE_MODE)	cap += "[SAFE MODE] ";
-		if(READONLY)	cap += "[READ ONLY] ";
-		cap += CURRENT_PATH + (MODIFIED? "*" : "") + " - Pixel Composer";
+		if(PROJECT.readonly)	cap += "[READ ONLY] ";
+		cap += PROJECT.path + (PROJECT.modified? "*" : "") + " - Pixel Composer";
 		
 		window_set_caption(cap);
 	}

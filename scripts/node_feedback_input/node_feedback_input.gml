@@ -15,7 +15,7 @@ function Node_Feedback_Input(_x, _y, _group = noone) : Node_Group_Input(_x, _y, 
 				_node_output = vt;
 		}
 		
-		if(ANIMATOR.current_frame > 0 && _node_output != noone && _node_output.node.cache_value != noone) //use cache from output 
+		if(PROJECT.animator.current_frame > 0 && _node_output != noone && _node_output.node.cache_value != noone) //use cache from output 
 			return [ _node_output.node.cache_value, inParent ];
 		
 		return outputs[| 0].getValueDefault();

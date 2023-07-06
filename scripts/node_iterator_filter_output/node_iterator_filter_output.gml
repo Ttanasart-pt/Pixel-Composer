@@ -23,7 +23,7 @@ function Node_Iterator_Filter_Output(_x, _y, _group = noone) : Node(_x, _y, _gro
 		group.outputs[| 0].type = type;
 	}
 	
-	static update = function(frame = ANIMATOR.current_frame) {
+	static update = function(frame = PROJECT.animator.current_frame) {
 		if(!variable_struct_exists(group, "iterated")) 
 			return;
 			

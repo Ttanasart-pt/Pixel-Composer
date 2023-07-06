@@ -96,7 +96,7 @@ function Panel_Array_Sequence(node) : PanelContent() constructor {
 			} else 
 				draw_sprite_ui(THEME.animation_stretch, 0, ax, ay,,,,, 0.75);
 			
-			for( var i = 0; i < ANIMATOR.frames_total; i++ ) {
+			for( var i = 0; i < PROJECT.animator.frames_total; i++ ) {
 				var _sx = sequence_x + i * _ns;
 				
 				draw_set_color(COLORS._main_text_sub);

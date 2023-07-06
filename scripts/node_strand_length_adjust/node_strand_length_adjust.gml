@@ -14,7 +14,7 @@ function Node_Strand_Length_Adjust(_x, _y, _group = noone) : _Node_Strand_Affect
 		["Length adjust",	false], input_fix_len + 0, input_fix_len + 1,
 	);
 	
-	static update = function(frame = ANIMATOR.current_frame) {
+	static update = function(frame = PROJECT.animator.current_frame) {
 		var _sTyp = inputs[| input_fix_len + 0].getValue();
 		var _sStr = inputs[| input_fix_len + 1].getValue();
 		

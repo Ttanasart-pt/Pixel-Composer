@@ -1012,7 +1012,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		return value;
 	}
 	
-	static getValue = function(_time = ANIMATOR.current_frame, applyUnit = true, arrIndex = 0, useCache = true) {
+	static getValue = function(_time = PROJECT.animator.current_frame, applyUnit = true, arrIndex = 0, useCache = true) {
 		if(type == VALUE_TYPE.trigger)
 			useCache = false;
 			
@@ -1036,7 +1036,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		return val;
 	}
 	
-	static __getAnimValue = function(_time = ANIMATOR.current_frame) {
+	static __getAnimValue = function(_time = PROJECT.animator.current_frame) {
 		if(sep_axis) {
 			var val = [];
 			for( var i = 0; i < array_length(animators); i++ )
@@ -1046,7 +1046,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			return animator.getValue(_time);
 	}
 	
-	static _getValue = function(_time = ANIMATOR.current_frame, applyUnit = true, arrIndex = 0) {
+	static _getValue = function(_time = PROJECT.animator.current_frame, applyUnit = true, arrIndex = 0) {
 		var _val = getValueRecursive(_time);
 		var val = _val[0];
 		var nod = _val[1];
@@ -1097,7 +1097,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		return val;
 	}
 	
-	static getValueRecursive = function(_time = ANIMATOR.current_frame) {
+	static getValueRecursive = function(_time = PROJECT.animator.current_frame) {
 		var val = [ -1, self ];
 		
 		if(type == VALUE_TYPE.trigger && connect_type == JUNCTION_CONNECT.output) //trigger even will not propagate from input to output, need to be done manually
@@ -1200,7 +1200,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		return array_length(ar);
 	}
 	
-	static setValue = function(val = 0, record = true, time = ANIMATOR.current_frame, _update = true) {
+	static setValue = function(val = 0, record = true, time = PROJECT.animator.current_frame, _update = true) {
 		//if(type == VALUE_TYPE.d3vertex && !is_array(val))
 		//	print(val);
 		
@@ -1208,7 +1208,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		return setValueDirect(val, noone, record, time, _update);
 	}
 	
-	static setValueDirect = function(val = 0, index = noone, record = true, time = ANIMATOR.current_frame, _update = true) {
+	static setValueDirect = function(val = 0, index = noone, record = true, time = PROJECT.animator.current_frame, _update = true) {
 		var updated = false;
 		
 		if(sep_axis) {
@@ -1244,7 +1244,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			
 			if(!LOADING) { 
 				//print("setValueDirect"); 
-				MODIFIED = true; 
+				PROJECT.modified = true; 
 			}
 		}
 		
@@ -1344,7 +1344,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		draw_line_shift_x	= 0;
 		draw_line_shift_y	= 0;
 		
-		if(!LOADING) MODIFIED = true;
+		if(!LOADING) PROJECT.modified = true;
 		
 		return true;
 	}
@@ -1717,13 +1717,13 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				return true;
 		}
 			
-		if(!ds_map_exists(NODE_MAP, _node)) {
+		if(!ds_map_exists(PROJECT.nodeMap, _node)) {
 			var txt = $"Node connect error : Node ID {_node} not found.";
 			log_warning("LOAD", $"[Connect] {txt}", node);
 			return false;
 		}
 		
-		var _nd = NODE_MAP[? _node];
+		var _nd = PROJECT.nodeMap[? _node];
 		var _ol = ds_list_size(_nd.outputs);
 		
 		if(log)

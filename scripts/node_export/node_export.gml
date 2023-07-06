@@ -19,14 +19,14 @@ Animated WebP (.webp)|*.webp",
 }
 
 function exportAll() {
-	ANIMATOR.rendering = true;
+	PROJECT.animator.rendering = true;
 	Render();
-	ANIMATOR.rendering = false;
+	PROJECT.animator.rendering = false;
 	
-	var key = ds_map_find_first(NODE_MAP);
-	repeat(ds_map_size(NODE_MAP)) {
-		var node = NODE_MAP[? key];
-		key = ds_map_find_next(NODE_MAP, key);
+	var key = ds_map_find_first(PROJECT.nodeMap);
+	repeat(ds_map_size(PROJECT.nodeMap)) {
+		var node = PROJECT.nodeMap[? key];
+		key = ds_map_find_next(PROJECT.nodeMap, key);
 			
 		if(!node.active) continue;
 		if(instanceof(node) != "Node_Export") continue;
@@ -273,12 +273,12 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 							var float_str = string_digits(str);
 							if(float_str != "") {
 								var float_val = string_digits(float_str);
-								var str_val = max(float_val - string_length(string(ANIMATOR.current_frame + strt)), 0);
+								var str_val = max(float_val - string_length(string(PROJECT.animator.current_frame + strt)), 0);
 								repeat(str_val)
 									s += "0";
 							}
 								
-							s += string(ANIMATOR.current_frame + strt);
+							s += string(PROJECT.animator.current_frame + strt);
 							res = true;
 							break;
 						case "i" :
@@ -383,7 +383,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				if(!is_surface(_surf)) continue;
 				
 				if(form == NODE_EXPORT_FORMAT.gif) {
-					p = directory + "/" + string(i) + "/" + string_lead_zero(ANIMATOR.current_frame, 5) + ".png";
+					p = directory + "/" + string(i) + "/" + string_lead_zero(PROJECT.animator.current_frame, 5) + ".png";
 				} else {
 					if(is_array(path) && array_length(path) == array_length(surf))
 						p = pathString(path[ safe_mod(i, array_length(path)) ], suff, i);
@@ -406,7 +406,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			if(is_array(path)) p = path[0];
 				
 			if(form == NODE_EXPORT_FORMAT.gif)
-				p = directory + "/" + string_lead_zero(ANIMATOR.current_frame, 5) + ".png";
+				p = directory + "/" + string_lead_zero(PROJECT.animator.current_frame, 5) + ".png";
 			else
 				p = pathString(p, suff);
 			
@@ -444,9 +444,9 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		var form = inputs[| 3].getValue();
 		
 		if(form == NODE_EXPORT_FORMAT.single) {
-			ANIMATOR.rendering = true;
+			PROJECT.animator.rendering = true;
 			Render();
-			ANIMATOR.rendering = false;
+			PROJECT.animator.rendering = false;
 			
 			export();
 			return;
@@ -454,10 +454,10 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		
 		playing					= true;
 		played					= 0;
-		ANIMATOR.real_frame		= -1;
-		ANIMATOR.current_frame	= -1;
-		ANIMATOR.is_playing		= true;
-		ANIMATOR.rendering		= true;
+		PROJECT.animator.real_frame		= -1;
+		PROJECT.animator.current_frame	= -1;
+		PROJECT.animator.is_playing		= true;
+		PROJECT.animator.rendering		= true;
 		
 		if(directory_exists(directory))
 			directory_destroy(directory);
@@ -498,24 +498,24 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		outputs[| 0].visible = isInLoop();
 	}
 	
-	static update = function(frame = ANIMATOR.current_frame) {
+	static update = function(frame = PROJECT.animator.current_frame) {
 		var anim = inputs[| 3].getValue();
 		if(anim == NODE_EXPORT_FORMAT.single) {
 			if(isInLoop()) export();
 			return;
 		}
 		
-		if(!ANIMATOR.is_playing) {
+		if(!PROJECT.animator.is_playing) {
 			playing = false;
 			return;
 		}
 		
-		if(!ANIMATOR.frame_progress || !playing || ANIMATOR.current_frame <= -1)
+		if(!PROJECT.animator.frame_progress || !playing || PROJECT.animator.current_frame <= -1)
 			return;
 		
 		export();
 		
-		if(ANIMATOR.current_frame < ANIMATOR.frames_total - 1) 
+		if(PROJECT.animator.current_frame < PROJECT.animator.frames_total - 1) 
 			return;
 		
 		if(anim != NODE_EXPORT_FORMAT.gif)

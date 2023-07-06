@@ -74,7 +74,7 @@ function Node_Tunnel_Out(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		}
 	}
 	
-	static update = function(frame = ANIMATOR.current_frame) {
+	static update = function(frame = PROJECT.animator.current_frame) {
 		var _key = inputs[| 0].getValue();
 		
 		if(ds_map_exists(TUNNELS_IN, _key))

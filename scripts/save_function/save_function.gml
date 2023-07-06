@@ -2,50 +2,38 @@ globalvar SAVING;
 SAVING = false;
 
 function NEW() {
-	if(MODIFIED && !READONLY) {
-		var dia = dialogCall(o_dialog_load);
-		dia.newFile		= true;
-	} else
-		__NEW();
+	PROJECT = new Project();
+	array_append(PROJECTS, PROJECT);
+	
+	var graph = new Panel_Graph(PROJECT);
+	PANEL_GRAPH.panel.setContent(graph, true);
+	PANEL_GRAPH = graph;
 }
 
-function __NEW() {
-	nodeCleanUp();
-	setPanel();
-	instance_destroy(_p_dialog);
-	//room_restart();
-	
-	gc_collect();
-	SET_PATH("");
-	
-	MODIFIED = false;
-	SAFE_MODE = false;
-}
-
-function save_serialize() {
+function save_serialize(project = PROJECT) {
 	var _map  = {};
-	_map.version = SAVEFILE_VERSION;
+	_map.version = SAVE_VERSION;
 	
 	var _node_list = [];
-	var _key = ds_map_find_first(NODE_MAP);
+	var _key = ds_map_find_first(project.nodeMap);
 	
-	repeat(ds_map_size(NODE_MAP)) {
-		var _node = NODE_MAP[? _key];
+	repeat(ds_map_size(project.nodeMap)) {
+		var _node = project.nodeMap[? _key];
 		
 		if(_node.active)
 			array_push(_node_list, _node.serialize());
 		
-		_key = ds_map_find_next(NODE_MAP, _key);	
+		_key = ds_map_find_next(project.nodeMap, _key);	
 	}
 	_map.nodes = _node_list;
 	
 	var _anim_map = {};
-	_anim_map.frames_total = ANIMATOR.frames_total;
-	_anim_map.framerate    = ANIMATOR.framerate;
+	_anim_map.frames_total = project.animator.frames_total;
+	_anim_map.framerate    = project.animator.framerate;
 	_map.animator		   = _anim_map;
 	
 	_map.metadata    = METADATA.serialize();
-	_map.global_node = GLOBAL_NODE.serialize();
+	_map.global_node = project.globalNode.serialize();
 	
 	var prev = PANEL_PREVIEW.getNodePreviewSurface();
 	if(!is_surface(prev)) _map.preview = "";
@@ -62,33 +50,35 @@ function save_serialize() {
 	return val;
 }
 
-function SET_PATH(path) {
+function SET_PATH(project, path) {
 	if(path == "") {
-		READONLY = false;
-	} else if(!READONLY) {
-		var index = ds_list_find_index(RECENT_FILES, path);
-		if(CURRENT_PATH != path) {
-			if(index != -1)
-				ds_list_delete(RECENT_FILES, index);
-			ds_list_insert(RECENT_FILES, 0, path);
-			RECENT_SAVE();
-			RECENT_REFRESH();
-		}
-		CURRENT_PATH = filename_name(path);
+		project.readonly = false;
+	} else if(!project.readonly) {
+		ds_list_remove(RECENT_FILES, path);
+		ds_list_insert(RECENT_FILES, 0, path);
+		RECENT_SAVE();
+		RECENT_REFRESH();
+		//project.path = filename_name(path);
 	}
 	
-	CURRENT_PATH = path;
+	project.path = path;
 }
 
-function SAVE() {
+function SAVE_ALL() {
+	for( var i = 0; i < array_length(PROJECTS); i++ ) {
+		SAVE(PROJECTS[i]);
+	}
+}
+
+function SAVE(project = PROJECT) {
 	if(DEMO) return false;
 	
-	if(CURRENT_PATH == "" || READONLY)
-		return SAVE_AS();
-	return SAVE_AT(CURRENT_PATH);
+	if(project.path == "" || project.readonly)
+		return SAVE_AS(project);
+	return SAVE_AT(project, project.path);
 }
 
-function SAVE_AS() {
+function SAVE_AS(project = PROJECT) {
 	if(DEMO) return false;
 	
 	var path = get_save_filename("Pixel Composer project (.pxc)|*.pxc", ""); 
@@ -100,13 +90,13 @@ function SAVE_AS() {
 	
 	if(file_exists(path))
 		log_warning("SAVE", "Overrided file : " + path);
-	SAVE_AT(path);
-	SET_PATH(path);
+	SAVE_AT(project, path);
+	SET_PATH(project, path);
 	
 	return true;
 }
 
-function SAVE_AT(path, log = "save at ") {
+function SAVE_AT(project = PROJECT, path = "", log = "save at ") {
 	if(DEMO) return false;
 	
 	SAVING = true;
@@ -118,8 +108,8 @@ function SAVE_AT(path, log = "save at ") {
 	file_text_close(file);
 	
 	SAVING    = false;
-	READONLY  = false;
-	MODIFIED  = false;
+	project.readonly  = false;
+	project.modified  = false;
 	
 	log_message("FILE", log + path, THEME.noti_icon_file_save);
 	PANEL_MENU.setNotiIcon(THEME.noti_icon_file_save);
@@ -129,7 +119,7 @@ function SAVE_AT(path, log = "save at ") {
 
 function SAVE_COLLECTIONS(_list, _path, save_surface = true, metadata = noone, context = PANEL_GRAPH.getCurrentContext()) {
 	var _content = {};
-	_content.version = SAVEFILE_VERSION;
+	_content.version = SAVE_VERSION;
 	
 	var _nodes = [];
 	var cx = 0;
@@ -177,7 +167,7 @@ function SAVE_COLLECTION(_node, _path, save_surface = true, metadata = noone, co
 	}
 	
 	var _content = {};
-	_content.version = SAVEFILE_VERSION;
+	_content.version = SAVE_VERSION;
 	
 	var _nodes = [];
 	SAVE_NODE(_nodes, _node, _node.x, _node.y, true, context);

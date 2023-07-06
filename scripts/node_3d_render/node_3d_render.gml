@@ -170,7 +170,7 @@
 //		_3d_clear_local_transform();
 //	}
 	
-//	static update = function(frame = ANIMATOR.current_frame) {
+//	static update = function(frame = PROJECT.animator.current_frame) {
 //		if(!surface_exists(tex_surface)) reset_tex();
 		
 //		if(do_reset_material) {

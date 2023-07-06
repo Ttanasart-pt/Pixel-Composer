@@ -17,7 +17,7 @@ function Node_Audio_Window(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	outputs[| 0] = nodeValue("Windowed Array", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, [])
 		.setArrayDepth(1);
 	
-	static update = function(frame = ANIMATOR.current_frame) {
+	static update = function(frame = PROJECT.animator.current_frame) {
 		var _arr = inputs[| 0].getValue();
 		
 		if(!is_array(_arr) || array_length(_arr) < 1) return;
@@ -26,7 +26,7 @@ function Node_Audio_Window(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		var sam = inputs[| 1].getValue();
 		var siz = inputs[| 2].getValue();
 		var res = [];
-		var off = frame / ANIMATOR.framerate * sam;
+		var off = frame / PROJECT.animator.framerate * sam;
 		
 		for( var i = 0; i < array_length(_arr); i++ ) {
 			var _dat = _arr[i];

@@ -15,7 +15,7 @@ function Node_Array_Find(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	
 	outputs[| 0] = nodeValue("Index", self, JUNCTION_CONNECT.output, VALUE_TYPE.integer, 0);
 	
-	static update = function(frame = ANIMATOR.current_frame) {
+	static update = function(frame = PROJECT.animator.current_frame) {
 		var _arr = inputs[| 0].getValue();
 		
 		inputs[| 0].type  = VALUE_TYPE.any;

@@ -258,7 +258,7 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	static stepBegin = function() {
 		use_cache = false;
 		
-		array_safe_set(cache_result, ANIMATOR.current_frame, true);
+		array_safe_set(cache_result, PROJECT.animator.current_frame, true);
 		
 		var node_list = getNodeList();
 		for(var i = 0; i < ds_list_size(node_list); i++) {
@@ -267,8 +267,8 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 			if(!n.use_cache) continue;
 			
 			use_cache = true;
-			if(!array_safe_get(n.cache_result, ANIMATOR.current_frame))
-				array_safe_set(cache_result, ANIMATOR.current_frame, false);
+			if(!array_safe_get(n.cache_result, PROJECT.animator.current_frame))
+				array_safe_set(cache_result, PROJECT.animator.current_frame, false);
 		}
 		
 		var out_surf = false;

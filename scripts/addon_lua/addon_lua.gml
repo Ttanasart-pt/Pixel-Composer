@@ -785,12 +785,12 @@
 		[ "noti_warning", noti_warning ],
 		
 		//animation
-		[ "animation_playing",	 function() { return ANIMATOR.is_playing? lua_true : lua_false; }],
-		[ "animation_play",		 function() { ANIMATOR.resume(); }],
-		[ "animation_pause",	 function() { ANIMATOR.pause(); }],
-		[ "animation_stop",		 function() { ANIMATOR.stop(); }],
-		[ "animation_set_frame", function(frame) { ANIMATOR.setFrame(frame); }],
-		[ "animation_render",    function() { ANIMATOR.render(); }],
+		[ "animation_playing",	 function() { return PROJECT.animator.is_playing? lua_true : lua_false; }],
+		[ "animation_play",		 function() { PROJECT.animator.resume(); }],
+		[ "animation_pause",	 function() { PROJECT.animator.pause(); }],
+		[ "animation_stop",		 function() { PROJECT.animator.stop(); }],
+		[ "animation_set_frame", function(frame) { PROJECT.animator.setFrame(frame); }],
+		[ "animation_render",    function() { PROJECT.animator.render(); }],
 		
 		//panel
 		[ "set_tooltip",    function(txt) { TOOLTIP = txt; }],
@@ -817,29 +817,29 @@
 		
 		//nodes
 		[ "node_get",	function(nodeId) { 
-			if(!ds_map_exists(NODE_NAME_MAP, nodeId)) return 0;
-			return NODE_NAME_MAP[? nodeId];
+			if(!ds_map_exists(PROJECT.nodeNameMap, nodeId)) return 0;
+			return PROJECT.nodeNameMap[? nodeId];
 		}], 
 		
 		[ "node_get_input_value", function(nodeId, input) { 
-			if(!ds_map_exists(NODE_NAME_MAP, nodeId)) return 0;
-			var node = NODE_NAME_MAP[? nodeId];
+			if(!ds_map_exists(PROJECT.nodeNameMap, nodeId)) return 0;
+			var node = PROJECT.nodeNameMap[? nodeId];
 			
 			if(!ds_map_exists(node.inputMap, input)) return 0;
 			return node.inputMap[? input].getValue();
 		}], 
 		
 		[ "node_set_input_value", function(nodeId, input, value) { 
-			if(!ds_map_exists(NODE_NAME_MAP, nodeId)) return 0;
-			var node = NODE_NAME_MAP[? nodeId];
+			if(!ds_map_exists(PROJECT.nodeNameMap, nodeId)) return 0;
+			var node = PROJECT.nodeNameMap[? nodeId];
 			
 			if(!ds_map_exists(node.inputMap, input)) return 0;
 			return node.inputMap[? input].setValue(value);
 		}], 
 		
 		[ "node_get_output_value", function(nodeId, input) { 
-			if(!ds_map_exists(NODE_NAME_MAP, nodeId)) return 0;
-			var node = NODE_NAME_MAP[? nodeId];
+			if(!ds_map_exists(PROJECT.nodeNameMap, nodeId)) return 0;
+			var node = PROJECT.nodeNameMap[? nodeId];
 			
 			if(!ds_map_exists(node.outputMap, input)) return 0;
 			return node.outputMap[? input].getValue();

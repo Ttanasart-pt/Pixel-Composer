@@ -1,17 +1,13 @@
-function LOAD() {	
+function LOAD() {
 	if(DEMO) return false;
 	
-	var path = get_open_filename("Pixel Composer project (.pxc)|*.pxc", "");
+	var path = get_open_filename("Pixel Composer PROJECT (.pxc)|*.pxc", "");
 	key_release();
 	if(path == "") return;
 	if(filename_ext(path) != ".json" && filename_ext(path) != ".pxc") return;
 				
 	gc_collect();
 	LOAD_PATH(path);
-	
-	ds_list_clear(STATUSES);
-	ds_list_clear(WARNING);
-	ds_list_clear(ERRORS);
 }
 
 function TEST_PATH(path) {
@@ -21,16 +17,25 @@ function TEST_PATH(path) {
 }
 
 function LOAD_PATH(path, readonly = false, safe_mode = false) {
-	if(MODIFIED && !READONLY) {
-		var dia = dialogCall(o_dialog_load);
-		dia.path		= path;
-		dia.readonly	= readonly;
-		dia.safe_mode	= safe_mode;
-	} else
-		__LOAD_PATH(path, readonly, safe_mode);
+	var _PROJECT = PROJECT;
+	PROJECT = new Project();
+	if(PANEL_GRAPH.project.path == "" && !PANEL_GRAPH.project.modified) {
+		PANEL_GRAPH.setProject(PROJECT);
+	} else {
+		var graph = new Panel_Graph(PROJECT);
+		PANEL_GRAPH.panel.setContent(graph, true);
+		PANEL_GRAPH = graph;
+	}
+	
+	var res = __LOAD_PATH(path, readonly, safe_mode);
+	if(!res) return;
+	
+	array_push(PROJECTS, PROJECT);
+	PANEL_ANIMATION.updatePropertyList();
+	setFocus(PANEL_GRAPH.panel);
 }
 
-function __LOAD_PATH(path, readonly = false, safe_mode = false) {
+function __LOAD_PATH(path, readonly = false, safe_mode = false, override = false) {
 	SAFE_MODE = safe_mode;
 	
 	if(DEMO) return false;
@@ -41,42 +46,46 @@ function __LOAD_PATH(path, readonly = false, safe_mode = false) {
 	}
 	
 	if(filename_ext(path) != ".json" && filename_ext(path) != ".pxc") {
-		log_warning("LOAD", "File not a valid project");
+		log_warning("LOAD", "File not a valid PROJECT");
 		return false;
 	}
 	
 	LOADING = true;
-		
-	nodeCleanUp();
-	clearPanel();
-	setPanel();
-	if(!TESTING)
-		instance_destroy(_p_dialog);
-	ds_list_clear(ERRORS);
 	
-	var temp_path = DIRECTORY + "_temp";
-	if(file_exists(temp_path)) file_delete(temp_path);
-	file_copy(path, temp_path);
+	if(override) {
+		nodeCleanUp();
+		clearPanel();
+		setPanel();
+		if(!TESTING)
+			instance_destroy(_p_dialog);
+		ds_list_clear(ERRORS);
+	}
 	
-	ALWAYS_FULL = false;
-	READONLY	= readonly;
-	SET_PATH(path);
+	var temp_path = DIRECTORY + "temp";
+	if(!directory_exists(temp_path))
+		directory_create(temp_path);
 	
-	var _load_content = json_load_struct(temp_path);
+	var temp_file_path = temp_path + "/" + string(UUID_generate(6));
+	if(file_exists(temp_file_path)) file_delete(temp_file_path);
+	file_copy(path, temp_file_path);
+	
+	//ALWAYS_FULL = false;
+	PROJECT.readonly = readonly;
+	SET_PATH(PROJECT, path);
+	
+	var _load_content = json_load_struct(temp_file_path);
 	
 	if(struct_has(_load_content, "version")) {
 		var _v = _load_content.version;
-		LOADING_VERSION = _v;
-		if(_v != SAVEFILE_VERSION) {
-			var warn = "File version mismatch : loading file verion " + string(_v) + " to Pixel Composer " + string(SAVEFILE_VERSION);
+		PROJECT.version = _v;
+		if(_v != SAVE_VERSION) {
+			var warn = $"File version mismatch : loading file verion {_v} to Pixel Composer {SAVE_VERSION}";
 			log_warning("LOAD", warn);
 		}
 	} else {
-		var warn = "File version mismatch : loading old format to Pixel Composer " + string(SAVEFILE_VERSION);
+		var warn = $"File version mismatch : loading old format to Pixel Composer {string(SAVE_VERSION)}";
 		log_warning("LOAD", warn);
 	}
-	
-	nodeCleanUp();
 	
 	var create_list = ds_list_create();
 	if(struct_has(_load_content, "nodes")) {
@@ -93,9 +102,9 @@ function __LOAD_PATH(path, readonly = false, safe_mode = false) {
 	
 	try {
 		if(struct_has(_load_content, "animator")) {
-			var _anim_map			= _load_content.animator;
-			ANIMATOR.frames_total	= _anim_map.frames_total;
-			ANIMATOR.framerate		= _anim_map.framerate;
+			var _anim_map = _load_content.animator;
+			PROJECT.animator.frames_total	= _anim_map.frames_total;
+			PROJECT.animator.framerate		= _anim_map.framerate;
 		}
 	} catch(e) {
 		log_warning("LOAD, animator", exception_print(e));
@@ -108,12 +117,12 @@ function __LOAD_PATH(path, readonly = false, safe_mode = false) {
 		log_warning("LOAD, metadata", exception_print(e));
 	}
 	
-	GLOBAL_NODE = new Node_Global();
+	PROJECT.globalNode = new Node_Global();
 	try {
 		if(struct_has(_load_content, "global"))
-			GLOBAL_NODE.deserialize(_load_content.global);
+			PROJECT.globalNode.deserialize(_load_content.global);
 		else if(struct_has(_load_content, "global_node"))
-			GLOBAL_NODE.deserialize(_load_content.global_node);
+			PROJECT.globalNode.deserialize(_load_content.global_node);
 	} catch(e) {
 		log_warning("LOAD, global", exception_print(e));
 	}
@@ -121,10 +130,10 @@ function __LOAD_PATH(path, readonly = false, safe_mode = false) {
 	try {
 		if(struct_has(_load_content, "addon")) {
 			var _addon = _load_content.addon;
-			LOAD_ADDON = _addon;
+			PROJECT.addons = _addon;
 			struct_foreach(_addon, function(_name, _value) { addonLoad(_name, false); });
 		} else 
-			LOAD_ADDON = {};
+			PROJECT.addons = {};
 	} catch(e) {
 		log_warning("LOAD, addon", exception_print(e));
 	}
@@ -199,9 +208,7 @@ function __LOAD_PATH(path, readonly = false, safe_mode = false) {
 	Render();
 	
 	LOADING = false;
-	MODIFIED = false;
-	
-	PANEL_ANIMATION.updatePropertyList();
+	PROJECT.modified = false;
 	
 	log_message("FILE", "load " + path, THEME.noti_icon_file_load);
 	PANEL_MENU.setNotiIcon(THEME.noti_icon_file_load);

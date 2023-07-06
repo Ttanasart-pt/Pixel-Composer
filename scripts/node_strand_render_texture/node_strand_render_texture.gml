@@ -39,8 +39,8 @@ function Node_Strand_Render_Texture(_x, _y, _group = noone) : Node(_x, _y, _grou
 		_str.draw(_x, _y, _s);
 	}
 	
-	static update = function(frame = ANIMATOR.current_frame) {
-		if(!ANIMATOR.is_playing && recoverCache()) return;
+	static update = function(frame = PROJECT.animator.current_frame) {
+		if(!PROJECT.animator.is_playing && recoverCache()) return;
 			
 		var _dim = inputs[| 0].getValue();
 		var _str = inputs[| 1].getValue();

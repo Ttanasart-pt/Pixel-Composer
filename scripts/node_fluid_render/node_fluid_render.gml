@@ -30,8 +30,8 @@ function Node_Fluid_Render(_x, _y, _group = noone) : Node_Fluid(_x, _y, _group) 
 	
 	static onInspector2Update = function() { clearCache(); }
 	
-	static update = function(frame = ANIMATOR.current_frame) {
-		if(recoverCache() || !ANIMATOR.is_playing)
+	static update = function(frame = PROJECT.animator.current_frame) {
+		if(recoverCache() || !PROJECT.animator.is_playing)
 			return;
 		
 		var _dim = inputs[| 1].getValue(frame);

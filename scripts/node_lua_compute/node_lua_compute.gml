@@ -57,7 +57,7 @@ function Node_Lua_Compute(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	if(!LOADING && !APPENDING) createNewInput();
 	
 	static stepBegin = function() {
-		if(ANIMATOR.frame_progress)
+		if(PROJECT.animator.frame_progress)
 			setRenderStatus(false);
 		
 		setHeight();
@@ -161,9 +161,9 @@ function Node_Lua_Compute(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		}
 	}
 	
-	static update = function(frame = ANIMATOR.current_frame) {
+	static update = function(frame = PROJECT.animator.current_frame) {
 		if(!compiled) return;
-		//if(!ANIMATOR.is_playing || !ANIMATOR.frame_progress) return;
+		//if(!PROJECT.animator.is_playing || !PROJECT.animator.frame_progress) return;
 		
 		var _func = inputs[| 0].getValue();
 		var _dimm = inputs[| 1].getValue();
@@ -175,7 +175,7 @@ function Node_Lua_Compute(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		for( var i = input_fix_len; i < ds_list_size(inputs) - data_length; i += data_length )
 			array_push(argument_val,  inputs[| i + 2].getValue());
 		
-		//if(ANIMATOR.current_frame == 0) { //refresh state on the first frame
+		//if(PROJECT.animator.current_frame == 0) { //refresh state on the first frame
 		//	lua_state_destroy(lua_state);
 		//	lua_state = lua_create();
 		//	addCode();

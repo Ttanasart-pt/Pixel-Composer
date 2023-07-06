@@ -162,7 +162,7 @@ function Node_3D_Repeat(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		inputs[| 21].setVisible(_proj);
 	}
 	
-	function update(frame = ANIMATOR.current_frame) {
+	function update(frame = PROJECT.animator.current_frame) {
 		var _dim  = inputs[| 0].getValue();
 		var _lpos = inputs[| 1].getValue();
 		var _lrot = inputs[| 2].getValue();

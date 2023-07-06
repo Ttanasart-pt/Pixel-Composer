@@ -28,7 +28,7 @@ function Node_Lua_Global(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	static stepBegin = function() {
 		var _type = inputs[| 1].getValue();
 		
-		if(ANIMATOR.is_playing && ANIMATOR.frame_progress && (ANIMATOR.current_frame == 0 || _type == 1))
+		if(PROJECT.animator.is_playing && PROJECT.animator.frame_progress && (PROJECT.animator.current_frame == 0 || _type == 1))
 			setRenderStatus(false);
 		
 		setHeight();
@@ -59,14 +59,14 @@ function Node_Lua_Global(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		if(index == 0 || index == 2) compiled = false;
 	}
 	
-	static update = function(frame = ANIMATOR.current_frame) {
+	static update = function(frame = PROJECT.animator.current_frame) {
 		if(!compiled) return;
-		//if(!ANIMATOR.is_playing || !ANIMATOR.frame_progress) return;
+		//if(!PROJECT.animator.is_playing || !PROJECT.animator.frame_progress) return;
 		
 		var _code = inputs[| 0].getValue();
 		var _type = inputs[| 1].getValue();
 		
-		//if(ANIMATOR.current_frame == 0) { //rerfesh state on the first frame
+		//if(PROJECT.animator.current_frame == 0) { //rerfesh state on the first frame
 		//	lua_state_destroy(lua_state);
 		//	lua_state = lua_create();
 		//	addCode();
@@ -74,7 +74,7 @@ function Node_Lua_Global(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		
 		lua_projectData(getState());
 		
-		if(ANIMATOR.current_frame == 0 || _type == 1) {
+		if(PROJECT.animator.current_frame == 0 || _type == 1) {
 			try		 { lua_add_code(getState(), _code); }
 			catch(e) { noti_warning(exception_print(e),, self); }
 		}

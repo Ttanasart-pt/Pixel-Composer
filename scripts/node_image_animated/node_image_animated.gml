@@ -59,7 +59,7 @@ function Node_Image_Animated(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	inputs[| 5] = nodeValue("Set animation length to match", self, JUNCTION_CONNECT.input, VALUE_TYPE.trigger, 0)
 		.setDisplay(VALUE_DISPLAY.button, [ function() { 
 				if(array_length(spr) == 0) return;
-				ANIMATOR.frames_total = array_length(spr);
+				PROJECT.animator.frames_total = array_length(spr);
 			}, "Match length"] );
 	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
@@ -133,7 +133,7 @@ function Node_Image_Animated(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		update();
 	}
 	
-	static update = function(frame = ANIMATOR.current_frame) {
+	static update = function(frame = PROJECT.animator.current_frame) {
 		var path = inputs[| 0].getValue();
 		if(path == "") return;
 		if(is_array(path) && !array_equals(path, path_loaded)) 
@@ -145,7 +145,7 @@ function Node_Image_Animated(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		inputs[| 3].setVisible(!str);
 		inputs[| 4].setVisible(!str);
 		
-		var spd  = str? (ANIMATOR.frames_total + 1) / array_length(spr) : inputs[| 3].getValue();
+		var spd  = str? (PROJECT.animator.frames_total + 1) / array_length(spr) : inputs[| 3].getValue();
 		var _end = inputs[| 4].getValue();
 		if(spd == 0) spd = 1;
 		
@@ -158,7 +158,7 @@ function Node_Image_Animated(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		surfs = surface_verify(surfs, ww, hh, attrDepth());
 		outputs[| 0].setValue(surfs);
 		
-		var _frame = floor(ANIMATOR.current_frame / spd);
+		var _frame = floor(PROJECT.animator.current_frame / spd);
 		
 		switch(_end) {
 			case ANIMATION_END.loop : 
