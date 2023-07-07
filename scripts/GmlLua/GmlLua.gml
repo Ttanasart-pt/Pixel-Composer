@@ -56,7 +56,7 @@ function __lua_blendmode_reset() {
 function __lua_set_color(color = c_white) {
 	draw_set_color(color);
 }
-function __lua_set_alpha(alpha = 1) {;
+function __lua_set_alpha(alpha = 1) {
 	draw_set_alpha(alpha);
 }
 function __lua_set_color_alpha(color = c_white, alpha = 1) {

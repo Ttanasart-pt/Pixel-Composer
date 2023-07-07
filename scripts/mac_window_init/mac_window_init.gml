@@ -23,8 +23,6 @@ function mac_window_init() {
 	__win_min_y = 0;
 	__win_min_w = 0;
 	__win_min_h = 0;
-	
-	window_set_showborder(false);
 }
 
 function mac_window_maximize() {
