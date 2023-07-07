@@ -857,6 +857,7 @@
     {"id":{"name":"panel_inspector","path":"scripts/panel_inspector/panel_inspector.yy",},},
     {"id":{"name":"node_padding","path":"scripts/node_padding/node_padding.yy",},},
     {"id":{"name":"node_VFX_group","path":"scripts/node_VFX_group/node_VFX_group.yy",},},
+    {"id":{"name":"libborderless","path":"extensions/libborderless/libborderless.yy",},},
     {"id":{"name":"s_node_vfx_attract","path":"sprites/s_node_vfx_attract/s_node_vfx_attract.yy",},},
     {"id":{"name":"s_node_pixel_cloud","path":"sprites/s_node_pixel_cloud/s_node_pixel_cloud.yy",},},
     {"id":{"name":"node_noise_grid","path":"scripts/node_noise_grid/node_noise_grid.yy",},},
