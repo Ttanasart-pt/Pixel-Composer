@@ -78,6 +78,7 @@
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"nodes","folderPath":"folders/functions/nodes.yy",},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"packing","folderPath":"folders/functions/packing.yy",},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"physics","folderPath":"folders/functions/physics.yy",},
+    {"resourceType":"GMFolder","resourceVersion":"1.0","name":"project","folderPath":"folders/functions/project.yy",},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"shader","folderPath":"folders/functions/shader.yy",},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"string","folderPath":"folders/functions/string.yy",},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"surface","folderPath":"folders/functions/surface.yy",},
@@ -199,7 +200,6 @@
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"Steamworks","folderPath":"folders/Steamworks.yy",},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"UGC","folderPath":"folders/Steamworks/UGC.yy",},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"widgets","folderPath":"folders/widgets.yy",},
-    {"resourceType":"GMFolder","resourceVersion":"1.0","name":"project","folderPath":"folders/functions/project.yy",},
   ],
   "IncludedFiles": [
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"ApolloHelp.html","ConfigValues":{"Itch":{"CopyToMask":"0",},},"CopyToMask":-1,"filePath":"datafiles",},

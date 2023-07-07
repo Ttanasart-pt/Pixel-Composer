@@ -55,6 +55,7 @@
     {"name":"nodes","order":34,"path":"folders/functions/nodes.yy",},
     {"name":"packing","order":32,"path":"folders/functions/packing.yy",},
     {"name":"physics","order":21,"path":"folders/functions/physics.yy",},
+    {"name":"project","order":39,"path":"folders/functions/project.yy",},
     {"name":"shader","order":16,"path":"folders/functions/shader.yy",},
     {"name":"string","order":4,"path":"folders/functions/string.yy",},
     {"name":"surface","order":8,"path":"folders/functions/surface.yy",},
@@ -163,7 +164,6 @@
     {"name":"gameframe","order":2,"path":"folders/sprites/gameframe.yy",},
     {"name":"misc","order":3,"path":"folders/sprites/misc.yy",},
     {"name":"widgets","order":5,"path":"folders/widgets.yy",},
-    {"name":"project","order":39,"path":"folders/functions/project.yy",},
   ],
   "ResourceOrderSettings": [
     {"name":"s_node_corner","order":16,"path":"sprites/s_node_corner/s_node_corner.yy",},

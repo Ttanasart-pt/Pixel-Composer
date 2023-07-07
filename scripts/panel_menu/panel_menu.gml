@@ -40,7 +40,7 @@ function Panel_Menu() : PanelContent() constructor {
 						instance_destroy(addon_key_displayer);
 						return;
 					}
-						
+					
 					instance_create_depth(0, 0, 0, addon_key_displayer);
 				}),
 				-1
