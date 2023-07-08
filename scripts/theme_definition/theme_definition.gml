@@ -12,6 +12,7 @@ function Theme() constructor {
     add = noone;
     animate_clock = noone;
     animate_node_go = noone;
+    animate_onion_skin = noone;
     animation_setting = noone;
     animation_timing = noone;
     animation_stretch = noone;
@@ -143,6 +144,7 @@ function Theme() constructor {
     bone = noone;
     tab_exit = noone;
     icon_save_all = noone;
+    onion_skin = noone;
 
     inspector_area = noone;
     inspector_area_type = noone;
@@ -204,6 +206,7 @@ function Theme() constructor {
     ui_label_bg = noone;
     toolbar = noone;
     ui_selection = noone;
+    timeline_dopesheet_bg = noone;
     
     cursor_path_add = noone;
     cursor_path_anchor = noone;
@@ -226,6 +229,8 @@ function Theme() constructor {
     timeline_keyframe_selecting = noone;
     timeline_key_halign = noone;
     timeline_key_valign = noone;
+	timeline_onion_skin = noone;
+	
     obj_distribute_h = noone;
     obj_distribute_v = noone;
     

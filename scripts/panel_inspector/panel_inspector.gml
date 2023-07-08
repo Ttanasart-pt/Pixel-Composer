@@ -541,7 +541,7 @@ function Panel_Inspector() : PanelContent() constructor {
 					);
 					
 					if(jun.extract_node != "") {
-						array_insert(_menuItem, 2, menuItem(__txtx("panel_inspector_extract", "Extract to node"), function() { 
+						array_insert(_menuItem, 2, menuItem(__txtx("panel_inspector_extract", "Extract..."), function() { 
 							__dialog_junction.extractNode();
 						}));
 					}

@@ -34,6 +34,7 @@ function save_serialize(project = PROJECT) {
 	
 	_map.metadata    = METADATA.serialize();
 	_map.global_node = project.globalNode.serialize();
+	_map.onion_skin  = project.onion_skin;
 	
 	var prev = PANEL_PREVIEW.getNodePreviewSurface();
 	if(!is_surface(prev)) _map.preview = "";

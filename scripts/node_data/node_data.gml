@@ -9,6 +9,9 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	destroy_when_upgroup = false;
 	ds_list_add(PANEL_GRAPH.getNodeList(_group), self);
 	
+	active_index = -1;
+	active_range = [ 0, PROJECT.animator.frames_total - 1 ];
+	
 	color   = c_white;
 	icon    = noone;
 	bg_spr  = THEME.node_bg;
@@ -101,7 +104,8 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	auto_render_time = true;
 	updated			= false;
 	
-	use_cache		= false;
+	use_cache			= false;
+	clearCacheOnChange	= true;
 	cached_output	= [];
 	cache_result	= [];
 	temp_surface    = [];
@@ -111,7 +115,8 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	on_dragdrop_file = -1;
 	
 	anim_show = true;
-	dopesheet_y = 0;
+	dopesheet_color = COLORS.panel_animation_dope_blend_default;
+	dopesheet_y		= 0;
 	
 	value_validation = array_create(3);
 	
@@ -348,7 +353,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 			if(!is_instanceof(self, Node_Collection)) 
 				setRenderStatus(true);
 				
-			update();										///UPDATE
+			update();																						///UPDATE
 				
 			if(!is_instanceof(self, Node_Collection))
 				render_time = get_timer() - t;
@@ -358,6 +363,14 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 				surface_reset_target();
 			
 			log_warning("RENDER", exception_print(exception), self);
+		}
+		
+		if(!use_cache && PROJECT.onion_skin) {
+			for( var i = 0; i < ds_list_size(outputs); i++ ) {
+				if(outputs[| i].type != VALUE_TYPE.surface) continue;
+				cacheCurrentFrame(outputs[| i].getValue());
+				break;
+			}
 		}
 		
 		if(hasInspector1Update()) {
@@ -1049,7 +1062,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	
 	static enable = function() { active = true; }
 	static disable = function() { active = false; }
-			
+	
 	static destroy = function(_merge = false) {
 		if(!active) return;
 		disable();
@@ -1177,13 +1190,19 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 			cache_result[i] = false;
 		}
 	}
+	
 	static clearCacheForward = function() {
+		if(!clearCacheOnChange) return;
+		_clearCacheForward();
+	}
+	
+	static _clearCacheForward = function() {
 		if(!isRenderActive()) return;
 		
 		clearCache();
 		for( var i = 0; i < ds_list_size(outputs); i++ )
 		for( var j = 0; j < ds_list_size(outputs[| i].value_to); j++ )
-			outputs[| i].value_to[| j].node.clearCacheForward();
+			outputs[| i].value_to[| j].node._clearCacheForward();
 	}
 	
 	static checkConnectGroup = function(_type = "group") {
@@ -1317,7 +1336,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 			_map.preview = previewable;
 		}
 		
-		_map.attri = attributeSerialize();
+		_map.attri		= attributeSerialize();
 		
 		var _inputs = [];
 		for(var i = 0; i < ds_list_size(inputs); i++)

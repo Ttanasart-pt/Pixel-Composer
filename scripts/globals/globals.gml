@@ -16,7 +16,7 @@
 #region project
 	function Project() constructor {
 		path	= "";
-		version = 1440;
+		version = 0;
 		seed    = irandom_range(100000, 999999);
 		
 		modified = false;
@@ -31,6 +31,15 @@
 		globalNode	= new Node_Global();
 		
 		addons = {};
+		
+		onion_skin = {
+			enabled: false,
+			range: [ -1, 1 ],
+			step: 1,
+			color: [ c_red, c_blue ],
+			alpha: 0.5,
+			on_top: true,
+		};
 	}
 	
 	globalvar PROJECTS, PROJECT;
@@ -53,9 +62,9 @@
 	
 	globalvar VERSION, SAVE_VERSION, VERSION_STRING, BUILD_NUMBER;
 	
-	VERSION			= 1146;
+	VERSION			= 1147;
 	SAVE_VERSION	= 1440;
-	VERSION_STRING  = "1.14.6n1";
+	VERSION_STRING  = "1.14.6n2";
 	BUILD_NUMBER	= 114600;
 	
 	globalvar APPEND_MAP;

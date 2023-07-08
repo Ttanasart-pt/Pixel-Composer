@@ -14,8 +14,7 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	process_amount	= 0;
 	process_length  = [];
-	dimension_index = 0;
-	active_index = -1;
+	dimension_index = 0;	
 	
 	icon    = THEME.node_processor;
 	
@@ -223,5 +222,29 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	static processDeserialize = function() {
 		attributes.array_process = struct_try_get(load_map, "array_process", ARRAY_PROCESS.loop);
+	}
+	
+	///////////////////// CACHE /////////////////////
+	
+	static cacheCurrentFrameIndex = function(_frame, index) {
+		cacheArrayCheck();
+		if(PROJECT.animator.current_frame < 0) return;
+		if(PROJECT.animator.current_frame >= array_length(cached_output)) return;
+		
+		var prev = cached_output[PROJECT.animator.current_frame];
+		surface_array_free(array_safe_get(prev, index));
+		cached_output[PROJECT.animator.current_frame][index] = surface_array_clone(_frame);
+		
+		array_safe_set(cache_result, PROJECT.animator.current_frame, true);
+		
+		return cached_output[PROJECT.animator.current_frame];
+	}
+	
+	static getCacheFrameIndex = function(frame = PROJECT.animator.current_frame, index = 0) {
+		if(frame < 0) return false;
+		if(!cacheExist(frame)) return noone;
+		
+		var surf = array_safe_get(cached_output, frame);
+		return array_safe_get(surf, index);
 	}
 }

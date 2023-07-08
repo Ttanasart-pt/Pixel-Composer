@@ -127,6 +127,15 @@ function Panel_Preview() : PanelContent() constructor {
 				gs.anchor = ANCHOR.bottom | ANCHOR.left;
 			} 
 		],
+		[ 
+			THEME.onion_skin,
+			function() { return 0; },
+			function() { return __txt("Onion Skin") }, 
+			function(param) { 
+				var gs = dialogCall(o_dialog_preview_onion_skin, param.x, param.y); 
+				gs.anchor = ANCHOR.bottom | ANCHOR.left;
+			} 
+		],
 	];
 	
 	actions = [
@@ -320,6 +329,48 @@ function Panel_Preview() : PanelContent() constructor {
 		right_menu_y += ui(40);
 	}
 	
+	/**
+	 * Function Description
+	 * @param {Struct.Node} node Description
+	 * @param {any*} psx Description
+	 * @param {any*} psy Description
+	 * @param {any*} ss Description
+	 */
+	function drawOnionSkin(node, psx, psy, ss) {
+		var _surf = preview_surface[0];
+		var _rang = PROJECT.onion_skin.range;
+		
+		var _alph = PROJECT.onion_skin.alpha;
+		var _colr = PROJECT.onion_skin.color;
+		
+		var _step = PROJECT.onion_skin.step;
+		var _top  = PROJECT.onion_skin.on_top;
+		
+		var fr = PROJECT.animator.current_frame;
+		var st = min(_rang[0], _rang[1]);
+		var ed = max(_rang[0], _rang[1]);
+			
+		st = sign(st) * floor(abs(st) / _step) * _step;
+		ed = sign(ed) * floor(abs(ed) / _step) * _step;
+			
+		st += fr;
+		ed += fr;
+			
+		for( var i = st; i <= ed; i += _step ) {
+			var surf = node.getCacheFrame(i);
+			if(!is_surface(surf)) continue;
+				
+			var aa = power(_alph, abs((i - fr) / _step));
+			var cc = c_white;
+			if(i < fr)		cc = _colr[0];
+			else if(i > fr) cc = _colr[1];
+				
+			draw_surface_ext_safe(surf, psx, psy, ss, ss, 0, cc, aa);
+		}
+			
+		if(_top) draw_surface_ext_safe(_surf, psx, psy, ss, ss);
+	}
+	
 	function drawNodePreview() {
 		var ss  = canvas_s;
 		var psx = 0, psy = 0;
@@ -355,16 +406,23 @@ function Panel_Preview() : PanelContent() constructor {
 		if(_node)
 			title = _node.display_name == ""? _node.name : _node.display_name;
 		
+		if(splitView == 0 && tileMode == 0 && is_surface(preview_surface[0])) {
+			var node = preview_node[0];
+			node.previewing = 1;
+			var aa = node.preview_alpha;
+			
+			if(PROJECT.onion_skin.enabled) {
+				drawOnionSkin(node, psx, psy, ss); 
+			} else
+				draw_surface_ext_safe(preview_surface[0], psx, psy, ss, ss, 0, c_white, aa); 
+		}
+		
 		switch(splitView) {
 			case 0 :
 				if(is_surface(preview_surface[0])) {
 					preview_node[0].previewing = 1;
 					
 					switch(tileMode) {
-						case 0 : 
-							var aa = preview_node[0].preview_alpha;
-							draw_surface_ext_safe(preview_surface[0], psx, psy, ss, ss, 0, c_white, aa); 
-							break;
 						case 1 : 
 							tile_surface = surface_verify(tile_surface, w, surface_get_height(preview_surface[0]) * ss);
 							surface_set_target(tile_surface);

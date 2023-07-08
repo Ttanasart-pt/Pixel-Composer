@@ -110,6 +110,10 @@ function __LOAD_PATH(path, readonly = false, safe_mode = false, override = false
 		log_warning("LOAD, animator", exception_print(e));
 	}
 	
+	if(struct_has(_load_content, "onion_skin")) {
+		PROJECT.onion_skin = _load_content.onion_skin;
+	}
+	
 	try {
 		if(struct_has(_load_content, "metadata"))
 			METADATA.deserialize(_load_content.metadata);

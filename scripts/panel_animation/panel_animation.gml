@@ -32,6 +32,9 @@ function Panel_Animation() : PanelContent() constructor {
 	dope_sheet_y_max = 0;
 	is_scrolling	 = false;
 	
+	dopesheet_dragging = noone;
+	dopesheet_drag_mx  = 0;
+	
 	dope_sheet_node_padding = ui(2);
 	
 	ds_name_surface = surface_create_valid(tool_width - ui(16), 1);
@@ -50,6 +53,7 @@ function Panel_Animation() : PanelContent() constructor {
 	timeline_drag_sy  = 0;
 	timeline_drag_mx  = 0;
 	timeline_drag_my  = 0;
+	timeline_draggable	= true;
 	
 	timeline_stretch	= 0;
 	timeline_stretch_sx = 0;
@@ -64,9 +68,11 @@ function Panel_Animation() : PanelContent() constructor {
 	keyframe_drag_mx	= 0;
 	keyframe_drag_my	= 0;
 	keyframe_selecting	= [];
-	keyframe_boxing		= false;
-	keyframe_box_sx		= -1;
-	keyframe_box_sy		= -1;
+	
+	keyframe_boxable = true;
+	keyframe_boxing	 = false;
+	keyframe_box_sx	 = -1;
+	keyframe_box_sy	 = -1;
 	
 	value_hovering = noone;
 	value_focusing = noone;
@@ -79,6 +85,12 @@ function Panel_Animation() : PanelContent() constructor {
 	stagger_index = 0;
 	
 	anim_properties = ds_list_create();
+	
+	tool_width_drag  = false;
+	tool_width_start = 0;
+	tool_width_mx    = 0;
+	
+	onion_dragging = noone;
 	
 	prev_cache = array_create(PROJECT.animator.frames_total);
 	
@@ -455,6 +467,7 @@ function Panel_Animation() : PanelContent() constructor {
 					
 			for( var i = 0; i < ds_list_size(anim_properties); i++ ) {
 				var node = anim_properties[| i];
+				
 				if(!show_node_outside_context && node.group != PANEL_GRAPH.getCurrentContext()) continue;
 				
 				for( var j = 0; j < ds_list_size(node.inputs); j++ ) {
@@ -465,6 +478,7 @@ function Panel_Animation() : PanelContent() constructor {
 						for(var k = 0; k < ds_list_size(prop.animators[a].values); k++) {
 							var t = (prop.animators[a].values[| k].time + 1) * ui(timeline_scale) + timeline_shift;
 							prop.animators[a].values[| k].dopesheet_x = t;
+							
 							var ind = prop.animators[a].values[| k].ease_in_type == CURVE_TYPE.cut? 4 : 1;
 							draw_sprite_ui_uniform(THEME.timeline_keyframe, ind, t, key_y, 1, COLORS.panel_animation_keyframe_hide);
 						}
@@ -472,6 +486,7 @@ function Panel_Animation() : PanelContent() constructor {
 						for(var k = 0; k < ds_list_size(prop.animator.values); k++) {
 							var t = (prop.animator.values[| k].time + 1) * ui(timeline_scale) + timeline_shift;
 							prop.animator.values[| k].dopesheet_x = t;
+							
 							var ind = prop.animator.values[| k].ease_in_type == CURVE_TYPE.cut? 4 : 1;
 							draw_sprite_ui_uniform(THEME.timeline_keyframe, ind, t, key_y, 1, COLORS.panel_animation_keyframe_hide);
 						}
@@ -549,12 +564,14 @@ function Panel_Animation() : PanelContent() constructor {
 			}
 					
 			if(pHOVER && point_in_rectangle(mx, my, bar_x, 8, bar_x + min(timeline_w, timeline_shift + bar_total_w), 8 + 16)) { //top bar
-				if(mouse_press(mb_left, pFOCUS)) {
+				if(mouse_press(mb_left, pFOCUS) && timeline_draggable) {
 					timeline_scubbing = true;
 					timeline_scub_st  = PROJECT.animator.current_frame;
 					_scrub_frame = timeline_scub_st;
 				}
 			}
+			
+			timeline_draggable	= true;
 		#endregion
 			
 		gpu_set_blendmode(bm_subtract);
@@ -565,7 +582,7 @@ function Panel_Animation() : PanelContent() constructor {
 		draw_surface_safe(timeline_surface, bar_x, bar_y);
 	}
 	
-	function drawDopesheetLine(animator, key_y, msx, msy, _gy_val_min = 999999, _gy_val_max = -999999) { 
+	function drawDopesheetLine(animator, key_y, msx, msy, _gy_val_min = 999999, _gy_val_max = -999999) {
 		var bar_total_w = PROJECT.animator.frames_total * ui(timeline_scale);
 		var bar_show_w  = timeline_shift + bar_total_w;
 		var hovering	= noone;
@@ -775,235 +792,6 @@ function Panel_Animation() : PanelContent() constructor {
 			drawDopesheetLine(prop.animator, key_y, msx, msy);
 	}
 	
-	function drawDopesheetAnimator(_node, animator, msx, msy) {
-		var aa = _node.group == PANEL_GRAPH.getCurrentContext()? 1 : 0.9;
-		var tx = tool_width - ui(16 + 16 * 3);
-		var ty = animator.dopesheet_y - 1;
-				
-		#region keyframe control
-			if(pHOVER && point_in_circle(msx, msy, tx, ty, ui(6))) {
-				draw_sprite_ui_uniform(THEME.prop_keyframe, 0, tx, ty, 1, COLORS._main_icon_on_inner, 1);
-							
-				if(mouse_press(mb_left, pFOCUS)) {
-					var _t = -1;
-					for(var k = 0; k < ds_list_size(animator.values); k++) {
-						var _key = animator.values[| k];
-						if(_key.time < PROJECT.animator.current_frame)
-							_t = _key.time;
-					}
-					if(_t > -1) PROJECT.animator.setFrame(_t);
-				}
-			} else
-				draw_sprite_ui_uniform(THEME.prop_keyframe, 0, tx, ty, 1, COLORS._main_icon_on_inner, 1);
-						
-			tx = tool_width - ui(16 + 16 * 1);
-			if(pHOVER && point_in_circle(msx, msy, tx, ty, ui(6))) {
-				draw_sprite_ui_uniform(THEME.prop_keyframe, 2, tx, ty, 1, COLORS._main_icon_on_inner, 1);
-					
-				if(mouse_press(mb_left, pFOCUS)) {
-					for(var k = 0; k < ds_list_size(animator.values); k++) {
-						var _key = animator.values[| k];
-						if(_key.time > PROJECT.animator.current_frame) {
-							PROJECT.animator.setFrame(_key.time);
-							break;
-						}
-					}
-				}
-			} else
-				draw_sprite_ui_uniform(THEME.prop_keyframe, 2, tx, ty, 1, COLORS._main_icon_on_inner);
-		#endregion
-				
-		#region add keyframe
-			tx = tool_width - ui(16 + 16 * 2);
-			if(pHOVER && point_in_circle(msx, msy, tx, ty, ui(6))) {
-				draw_sprite_ui_uniform(THEME.prop_keyframe, 1, tx, ty, 1, COLORS._main_accent, 1);
-							
-				if(mouse_press(mb_left, pFOCUS)) {
-					var _add = false;
-					for(var k = 0; k < ds_list_size(animator.values); k++) {
-						var _key = animator.values[| k];
-						if(_key.time == PROJECT.animator.current_frame) {
-							if(ds_list_size(animator.values) > 1)
-								ds_list_delete(animator.values, k);
-							_add = true;
-							break;
-						} else if(_key.time > PROJECT.animator.current_frame) {
-							ds_list_insert(animator.values, k, new valueKey(PROJECT.animator.current_frame, animator.getValue(), animator));
-							_add = true;
-							break;	
-						}
-					}
-					if(!_add) ds_list_add(animator.values, new valueKey(PROJECT.animator.current_frame, animator.getValue(, false), animator));	
-				}
-			} else
-				draw_sprite_ui_uniform(THEME.prop_keyframe, 1, tx, ty, 1, COLORS._main_accent);		
-		#endregion
-				
-		if(isGraphable(animator.prop)) {
-			tx = tool_width - ui(16);
-			if(pHOVER && point_in_circle(msx, msy, tx, ty, ui(8))) {
-				draw_sprite_ui_uniform(THEME.timeline_graph, 1, tx, ty, 1, COLORS._main_icon_on_inner, 1);
-				TOOLTIP = __txtx("panel_animation_show_graph", "Show graph");
-				
-				if(mouse_press(mb_left, pFOCUS))
-					animator.prop.show_graph = !animator.prop.show_graph;
-			} else
-				draw_sprite_ui_uniform(THEME.timeline_graph, 1, tx, ty, 1, animator.prop.show_graph? COLORS._main_accent : COLORS._main_icon_on_inner);
-		}
-						
-		tx = tool_width - ui(16 + 16 * 4.5);
-		if(pHOVER && point_in_circle(msx, msy, tx, ty, ui(6))) {
-			draw_sprite_ui_uniform(THEME.prop_on_end, animator.prop.on_end, tx, ty, 1, COLORS._main_icon_on_inner, 1);
-			TOOLTIP = __txtx("panel_animation_looping_mode", "Looping mode") + ": " + ON_END_NAME[animator.prop.on_end];
-							
-			if(mouse_press(mb_left, pFOCUS))
-				animator.prop.on_end = safe_mod(animator.prop.on_end + 1, sprite_get_number(THEME.prop_on_end));
-		} else
-			draw_sprite_ui_uniform(THEME.prop_on_end, animator.prop.on_end, tx, ty, 1, COLORS._main_icon_on_inner);
-						
-		if(pHOVER && point_in_circle(msx, msy, ui(22), ty - 1, ui(10))) {
-			draw_sprite_ui_uniform(THEME.timeline_clock, 1, ui(22), ty - 1, 1, COLORS._main_icon_on_inner, 1);
-							
-			if(mouse_press(mb_left, pFOCUS)) {
-				animator.prop.setAnim(!animator.prop.is_anim);
-				updatePropertyList();
-			}
-		} else
-			draw_sprite_ui_uniform(THEME.timeline_clock, 1, ui(22), ty - 1, 1, COLORS._main_icon_on_inner);
-				
-		var hov = pHOVER && point_in_rectangle(msx, msy, 0, ty - ui(8), w, ty + ui(8));
-		if(hov) {
-			value_hovering = animator.prop;
-			if(mouse_click(mb_left, pFOCUS))
-				value_focusing = animator.prop;
-		}
-		
-		var cc = animator.prop.sep_axis? COLORS.axis[animator.index] : COLORS._main_text_inner;
-		if(hov) cc = COLORS._main_text_accent;
-		
-		draw_set_color(cc);
-		draw_set_alpha(aa);
-		draw_text_add(ui(32), ty - 2, animator.getName());
-		draw_set_alpha(1);
-	}
-	
-	function drawDopesheetName() {
-		surface_set_target(ds_name_surface);	
-		draw_clear_alpha(COLORS.panel_bg_clear, 0);
-		var msx = mx - ui(8);
-		var msy = my - ui(8);
-		
-		var lable_w = tool_width;
-		var _node = noone;
-		var _node_y = 0;
-		draw_set_text(f_p2, fa_left, fa_center);
-		
-		var hovering = noone;
-		var hoverIndex = 0;
-		
-		value_hovering = noone;
-		if(mouse_click(mb_left, pFOCUS))
-			value_focusing = noone;
-		
-		for( var i = 0; i < ds_list_size(anim_properties); i++ ) {
-			_node = anim_properties[| i];
-			var _inContext = _node == PROJECT.globalNode || _node.group == PANEL_GRAPH.getCurrentContext();
-			
-			var aa = _inContext? 1 : 0.9;
-			var _node_y = _node.dopesheet_y;
-			if(!show_node_outside_context && !_inContext) continue;
-			
-			var _node_y_start = _node_y;
-			_node_y += dope_sheet_node_padding;
-			
-			if(pHOVER && point_in_rectangle(msx, msy, ui(20), _node_y - ui(10), lable_w, _node_y + ui(10))) {
-				draw_sprite_stretched_ext(THEME.ui_label_bg, 0, 0, _node_y - ui(10), lable_w, ui(20), COLORS.panel_animation_dope_bg_hover, aa);
-				if(mouse_press(mb_left, pFOCUS))
-					node_ordering = _node;
-			} else 
-				draw_sprite_stretched_ext(THEME.ui_label_bg, 0, 0, _node_y - ui(10), lable_w, ui(20), COLORS.panel_animation_dope_bg, aa);
-			
-			if(_node == PANEL_INSPECTOR.inspecting)
-				draw_sprite_stretched_ext(THEME.node_active, 0, 0, _node_y - ui(10), lable_w, ui(20), COLORS._main_accent, 1);
-							
-			var tx = tool_width - ui(16);
-			if(pHOVER && point_in_circle(msx, msy, tx, _node_y - 1, ui(10))) {
-				draw_sprite_ui_uniform(THEME.animate_node_go, 0, tx, _node_y - 1, 1, COLORS._main_icon_light, 1);
-				TOOLTIP = __txtx("panel_animation_goto", "Go to node");
-								
-				if(mouse_press(mb_left, pFOCUS))
-					graphFocusNode(_node);
-			} else
-				draw_sprite_ui_uniform(THEME.animate_node_go, 0, tx, _node_y - 1, 1, COLORS._main_icon, 0.75);
-				
-			if(pHOVER && point_in_rectangle(msx, msy, 0, _node_y - ui(10), ui(20), _node_y + ui(10))) {
-				draw_sprite_ui_uniform(THEME.arrow, _node.anim_show? 3 : 0, ui(10), _node_y, 1, COLORS._main_icon_light, 1);
-				if(mouse_press(mb_left, pFOCUS))
-					_node.anim_show = !_node.anim_show;
-			} else
-				draw_sprite_ui_uniform(THEME.arrow, _node.anim_show? 3 : 0, ui(10), _node_y, 1, COLORS._main_icon, 0.75);
-			
-			var nodeName = "[" + _node.name + "] ";
-			var tw = string_width(nodeName);
-			
-			draw_set_color(node_ordering == _node? COLORS._main_text_accent : COLORS._main_text);
-			var txx = ui(20);
-			
-			if(node_name_type == 0 || node_name_type == 1 || _node.display_name == "") {
-				draw_set_alpha(0.4);
-				draw_text_add(txx, _node_y - ui(2), nodeName);
-				txx += tw;
-			}
-			
-			if(node_name_type == 0 || node_name_type == 2) {
-				draw_set_alpha(0.9);
-				draw_text_add(txx, _node_y - ui(2), _node.display_name);
-			}
-			
-			draw_set_alpha(1);
-			
-			if(!_node.anim_show) {
-				if(pHOVER && point_in_rectangle(msx, msy, 0, _node_y_start, lable_w, _node_y + ui(22)))
-					hovering = _node;
-				continue;
-			}
-			
-			var ty = 0;
-			
-			for( var j = 0; j < ds_list_size(_node.inputs); j++ ) {
-				var prop = _node.inputs[| j];
-				if(!prop.is_anim) continue;
-				
-				if(prop.sep_axis) {
-					for( var i = 0; i < array_length(prop.animators); i++ ) {
-						drawDopesheetAnimator(_node, prop.animators[i], msx, msy);
-						ty = prop.animators[i].dopesheet_y - 1;
-					}
-				} else {
-					drawDopesheetAnimator(_node, prop.animator, msx, msy);
-					ty = prop.animator.dopesheet_y - 1;
-				}
-			} //end prop loop
-			
-			if(pHOVER && point_in_rectangle(msx, msy, 0, _node_y_start, lable_w, ty))
-				hovering = _node;
-			
-		} //end node loop
-		
-		if(hovering == noone && _node != noone)
-			hovering = _node;
-		
-		if(hovering != noone && node_ordering != noone) {
-			hoverIndex = hovering.anim_priority;
-			rearrange_priority(node_ordering, hoverIndex);
-				
-			if(mouse_release(mb_left))
-				node_ordering = noone;
-		}
-		
-		surface_reset_target();
-	}
-	
 	function drawDopesheetAnimatorKeysBG(animator, msx, msy) { 
 		var prop_dope_y = animator.dopesheet_y;
 		var key_hover   = noone;
@@ -1125,6 +913,221 @@ function Panel_Animation() : PanelContent() constructor {
 		return key_hover;
 	}
 	
+#region label
+	function drawDopesheetLabelAnimator(_node, animator, msx, msy) {
+		var aa = _node.group == PANEL_GRAPH.getCurrentContext()? 1 : 0.9;
+		var tx = tool_width;
+		var ty = animator.dopesheet_y - 1;
+				
+		#region keyframe control
+			tx = tool_width - ui(20 + 16 * 3);
+			if(buttonInstant(noone, tx - ui(6), ty - ui(6), ui(12), ui(12), [msx, msy], pFOCUS, pHOVER, "", THEME.prop_keyframe, 0, [COLORS._main_icon, COLORS._main_icon_on_inner]) == 2) {
+				var _t = -1;
+				for(var k = 0; k < ds_list_size(animator.values); k++) {
+					var _key = animator.values[| k];
+					if(_key.time < PROJECT.animator.current_frame)
+						_t = _key.time;
+				}
+				if(_t > -1) PROJECT.animator.setFrame(_t);
+			}
+				
+			tx = tool_width - ui(20 + 16 * 1);
+			if(buttonInstant(noone, tx - ui(6), ty - ui(6), ui(12), ui(12), [msx, msy], pFOCUS, pHOVER, "", THEME.prop_keyframe, 2, [COLORS._main_icon, COLORS._main_icon_on_inner]) == 2) {
+				for(var k = 0; k < ds_list_size(animator.values); k++) {
+					var _key = animator.values[| k];
+					if(_key.time > PROJECT.animator.current_frame) {
+						PROJECT.animator.setFrame(_key.time);
+						break;
+					}
+				}
+			}
+		#endregion
+				
+		#region add keyframe
+			tx = tool_width - ui(20 + 16 * 2);
+			if(buttonInstant(noone, tx - ui(6), ty - ui(6), ui(12), ui(12), [msx, msy], pFOCUS, pHOVER, "", THEME.prop_keyframe, 1, [COLORS._main_accent, COLORS._main_icon_on_inner]) == 2) {
+				var _add = false;
+				for(var k = 0; k < ds_list_size(animator.values); k++) {
+					var _key = animator.values[| k];
+					if(_key.time == PROJECT.animator.current_frame) {
+						if(ds_list_size(animator.values) > 1)
+							ds_list_delete(animator.values, k);
+						_add = true;
+						break;
+					} else if(_key.time > PROJECT.animator.current_frame) {
+						ds_list_insert(animator.values, k, new valueKey(PROJECT.animator.current_frame, animator.getValue(), animator));
+						_add = true;
+						break;	
+					}
+				}
+				if(!_add) ds_list_add(animator.values, new valueKey(PROJECT.animator.current_frame, animator.getValue(, false), animator));	
+			}
+		#endregion
+				
+		if(isGraphable(animator.prop)) {
+			tx = tool_width - ui(16);
+			if(pHOVER && point_in_circle(msx, msy, tx, ty, ui(8))) {
+				draw_sprite_ui_uniform(THEME.timeline_graph, 1, tx, ty, 1, COLORS._main_icon_on_inner, 1);
+				TOOLTIP = __txtx("panel_animation_show_graph", "Show graph");
+				
+				if(mouse_press(mb_left, pFOCUS))
+					animator.prop.show_graph = !animator.prop.show_graph;
+			} else
+				draw_sprite_ui_uniform(THEME.timeline_graph, 1, tx, ty, 1, animator.prop.show_graph? COLORS._main_accent : COLORS._main_icon);
+		}
+						
+		tx = tool_width - ui(20 + 16 * 4.5);
+		if(pHOVER && point_in_circle(msx, msy, tx, ty, ui(6))) {
+			draw_sprite_ui_uniform(THEME.prop_on_end, animator.prop.on_end, tx, ty, 1, COLORS._main_icon_on_inner, 1);
+			TOOLTIP = __txtx("panel_animation_looping_mode", "Looping mode") + ": " + ON_END_NAME[animator.prop.on_end];
+							
+			if(mouse_press(mb_left, pFOCUS))
+				animator.prop.on_end = safe_mod(animator.prop.on_end + 1, sprite_get_number(THEME.prop_on_end));
+		} else
+			draw_sprite_ui_uniform(THEME.prop_on_end, animator.prop.on_end, tx, ty, 1, COLORS._main_icon);
+						
+		if(pHOVER && point_in_circle(msx, msy, ui(22), ty - 1, ui(10))) {
+			draw_sprite_ui_uniform(THEME.timeline_clock, 1, ui(22), ty - 1, 1, COLORS._main_icon_on_inner, 1);
+							
+			if(mouse_press(mb_left, pFOCUS)) {
+				animator.prop.setAnim(!animator.prop.is_anim);
+				updatePropertyList();
+			}
+		} else
+			draw_sprite_ui_uniform(THEME.timeline_clock, 1, ui(22), ty - 1, 1, COLORS._main_icon);
+				
+		var hov = pHOVER && point_in_rectangle(msx, msy, 0, ty - ui(8), w, ty + ui(8));
+		if(hov) {
+			value_hovering = animator.prop;
+			if(mouse_click(mb_left, pFOCUS))
+				value_focusing = animator.prop;
+		}
+		
+		var cc = animator.prop.sep_axis? COLORS.axis[animator.index] : COLORS._main_text_inner;
+		if(hov) cc = COLORS._main_text_accent;
+		
+		draw_set_color(cc);
+		draw_set_alpha(aa);
+		draw_text_add(ui(32), ty - 2, animator.getName());
+		draw_set_alpha(1);
+	}
+	
+	function drawDopesheetLabel() {
+		surface_set_target(ds_name_surface);	
+		draw_clear_alpha(COLORS.panel_bg_clear, 0);
+		var msx = mx - ui(8);
+		var msy = my - ui(8);
+		
+		var lable_w = tool_width;
+		var _node = noone;
+		var _node_y = 0;
+		draw_set_text(f_p2, fa_left, fa_center);
+		
+		var hovering = noone;
+		var hoverIndex = 0;
+		
+		value_hovering = noone;
+		if(mouse_click(mb_left, pFOCUS))
+			value_focusing = noone;
+		
+		for( var i = 0; i < ds_list_size(anim_properties); i++ ) {
+			_node = anim_properties[| i];
+			var _inContext = _node == PROJECT.globalNode || _node.group == PANEL_GRAPH.getCurrentContext();
+			
+			var aa = _inContext? 1 : 0.9;
+			var _node_y = _node.dopesheet_y;
+			if(!show_node_outside_context && !_inContext) continue;
+			
+			var _node_y_start = _node_y;
+			_node_y += dope_sheet_node_padding;
+			
+			if(pHOVER && point_in_rectangle(msx, msy, ui(20), _node_y - ui(10), lable_w, _node_y + ui(10))) {
+				draw_sprite_stretched_ext(THEME.ui_label_bg, 0, 0, _node_y - ui(10), lable_w, ui(20), COLORS.panel_animation_dope_bg_hover, aa);
+				if(mouse_press(mb_left, pFOCUS))
+					node_ordering = _node;
+			} else 
+				draw_sprite_stretched_ext(THEME.ui_label_bg, 0, 0, _node_y - ui(10), lable_w, ui(20), COLORS.panel_animation_dope_bg, aa);
+			
+			if(_node == PANEL_INSPECTOR.inspecting)
+				draw_sprite_stretched_ext(THEME.node_active, 0, 0, _node_y - ui(10), lable_w, ui(20), COLORS._main_accent, 1);
+							
+			var tx = tool_width - ui(10);
+			if(buttonInstant(THEME.button_hide, tx - ui(8), _node_y - ui(8), ui(16), ui(16), [msx, msy], pFOCUS, pHOVER, 
+				__txtx("panel_animation_goto", "Go to node"), THEME.animate_node_go, 0, COLORS._main_icon) == 2) {
+					graphFocusNode(_node);
+				}
+			
+			if(pHOVER && point_in_rectangle(msx, msy, 0, _node_y - ui(10), ui(20), _node_y + ui(10))) {
+				draw_sprite_ui_uniform(THEME.arrow, _node.anim_show? 3 : 0, ui(10), _node_y, 1, COLORS._main_icon_light, 1);
+				if(mouse_press(mb_left, pFOCUS))
+					_node.anim_show = !_node.anim_show;
+			} else
+				draw_sprite_ui_uniform(THEME.arrow, _node.anim_show? 3 : 0, ui(10), _node_y, 1, COLORS._main_icon, 0.75);
+		
+			draw_set_font(f_p3);
+			var nodeName = "[" + _node.name + "] ";
+			var tw = string_width(nodeName);
+			
+			draw_set_color(node_ordering == _node? COLORS._main_text_accent : COLORS._main_text);
+			var txx = ui(20);
+			
+			if(node_name_type == 0 || node_name_type == 1 || _node.display_name == "") {
+				draw_set_alpha(0.4);
+				draw_text_add(txx, _node_y - ui(2), nodeName);
+				txx += tw;
+			}
+			
+			draw_set_font(f_p2);
+			if(node_name_type == 0 || node_name_type == 2) {
+				draw_set_alpha(0.9);
+				draw_text_add(txx, _node_y - ui(2), _node.display_name);
+			}
+			
+			draw_set_alpha(1);
+			
+			if(!_node.anim_show) {
+				if(pHOVER && point_in_rectangle(msx, msy, 0, _node_y_start, lable_w, _node_y + ui(22)))
+					hovering = _node;
+				continue;
+			}
+			
+			var ty = 0;
+			
+			for( var j = 0; j < ds_list_size(_node.inputs); j++ ) {
+				var prop = _node.inputs[| j];
+				if(!prop.is_anim) continue;
+				
+				if(prop.sep_axis) {
+					for( var i = 0; i < array_length(prop.animators); i++ ) {
+						drawDopesheetLabelAnimator(_node, prop.animators[i], msx, msy);
+						ty = prop.animators[i].dopesheet_y - 1;
+					}
+				} else {
+					drawDopesheetLabelAnimator(_node, prop.animator, msx, msy);
+					ty = prop.animator.dopesheet_y - 1;
+				}
+			} //end prop loop
+			
+			if(pHOVER && point_in_rectangle(msx, msy, 0, _node_y_start, lable_w, ty))
+				hovering = _node;
+			
+		} //end node loop
+		
+		if(hovering == noone && _node != noone)
+			hovering = _node;
+		
+		if(hovering != noone && node_ordering != noone) {
+			hoverIndex = hovering.anim_priority;
+			rearrange_priority(node_ordering, hoverIndex);
+				
+			if(mouse_release(mb_left))
+				node_ordering = noone;
+		}
+		
+		surface_reset_target();
+	}
+#endregion
+	
 	function drawDopesheet() { 
 		var bar_x = tool_width + ui(16);
 		var bar_y = h - timeline_h - ui(10);
@@ -1189,7 +1192,7 @@ function Panel_Animation() : PanelContent() constructor {
 			draw_sprite_stretched_ext(THEME.ui_panel_bg, 2, 0, 0, _bg_w, dope_sheet_h, COLORS.panel_animation_timeline_blend, 1);
 			
 			dope_sheet_y_max = 0;
-			var key_y = ui(24) + dope_sheet_y;
+			var key_y = ui(32) + dope_sheet_y;
 			
 			for( var i = 0; i < ds_list_size(anim_properties); i++ ) {
 				var _node = anim_properties[| i];
@@ -1397,11 +1400,68 @@ function Panel_Animation() : PanelContent() constructor {
 			}
 		#endregion
 		
-		var key_hover = noone;
+		#region drag dopesheet
+			//if(dopesheet_dragging != noone) {
+			//	var dx = floor((msx - dopesheet_drag_mx) / timeline_scale);
+			//	if(abs(dx) >= 1) {
+			//		switch(dopesheet_dragging[1]) {
+			//			case 0 : //move both
+			//				break;
+			//			case 1 : //move start
+			//				break;
+			//			case 2 : //move end
+			//				break;
+			//		}
+					
+			//		dopesheet_drag_mx = msx;
+			//	}
+				
+			//	if(mouse_release(mb_left)) 
+			//		dopesheet_dragging = noone;
+			//}
+		#endregion
+		
 		#region draw graph, easing line
+			var key_hover = noone;
+			
 			for( var i = 0; i < ds_list_size(anim_properties); i++ ) {
 				var _node = anim_properties[| i];
 				if(!show_node_outside_context && _node.group != PANEL_GRAPH.getCurrentContext()) continue;
+				
+				if(_node.active_index > -1) {
+					var active_inp = _node.inputs[| _node.active_index];
+					var node_y = _node.dopesheet_y + ui(2);
+					
+					var ot = 0, ov = true;
+					var x0 = 0, x1 = 0;
+					
+					for( var i = 0; i < ds_list_size(active_inp.animator.values); i++ ) {
+						var k = active_inp.animator.values[| i];
+						
+						var t = k.time;
+						var v = k.value;
+						
+						if(t > ot && ov) {
+							x0 = (ot + 1) * ui(timeline_scale) + timeline_shift;
+							x1 = ( t + 1) * ui(timeline_scale) + timeline_shift;
+							var aa = 0.25;
+							
+							draw_sprite_stretched_ext(THEME.timeline_dopesheet_bg, 0, x0, node_y - ui(4), x1 - x0, ui(8), _node.dopesheet_color, aa);
+						}
+						
+						ot = t;
+						ov = v;
+					}
+					
+					t = PROJECT.animator.frames_total - 1;
+					if(t > ot && ov) {
+						x0 = (ot + 1) * ui(timeline_scale) + timeline_shift;
+						x1 = ( t + 1) * ui(timeline_scale) + timeline_shift;
+						var aa = 0.25;
+						
+						draw_sprite_stretched_ext(THEME.timeline_dopesheet_bg, 0, x0, node_y - ui(4), x1 - x0, ui(8), _node.dopesheet_color, aa);
+					}
+				}
 				
 				if(!_node.anim_show) continue;
 				for( var j = 0; j < ds_list_size(_node.inputs); j++ ) {
@@ -1459,7 +1519,7 @@ function Panel_Animation() : PanelContent() constructor {
 				}
 			}
 		#endregion
-						
+		
 		if(pHOVER && point_in_rectangle(msx, msy, 0, ui(18), dope_sheet_w, dope_sheet_h)) {
 			if(mouse_press(mb_left, pFOCUS) || mouse_press(mb_right, pFOCUS)) {
 				if(key_hover == noone) {
@@ -1488,12 +1548,14 @@ function Panel_Animation() : PanelContent() constructor {
 					}
 				} else if(stagger_mode == 2) {
 					stagger_mode = 0;
-				} else if(key_hover == noone) {
+				} else if(key_hover == noone && keyframe_boxable) {
 					keyframe_boxing = true;
 					keyframe_box_sx = msx;
 					keyframe_box_sy = msy;
 				}
 			}
+			
+			keyframe_boxable = true;
 		}
 						
 		if(mouse_press(mb_right, pFOCUS)) {
@@ -1524,10 +1586,68 @@ function Panel_Animation() : PanelContent() constructor {
 				draw_set_text(f_p2, fa_right, fa_top, COLORS._main_text_sub);
 				draw_text_add(bar_line_x - ui(2), PANEL_PAD, string(i));
 			}
+			
+			if(PROJECT.onion_skin.enabled) { //ONION SKIN
+				var rang = PROJECT.onion_skin.range;
+				var colr = PROJECT.onion_skin.color;
+			
+				var fr = PROJECT.animator.current_frame + 1;
+				var tx = fr * ui(timeline_scale) + timeline_shift;
+				var sx = (fr + rang[0]) * ui(timeline_scale) + timeline_shift;
+				var ex = (fr + rang[1]) * ui(timeline_scale) + timeline_shift;
+				var y0 = PANEL_PAD;
+				var y1 = hh;
+				var yc = (y0 + y1) / 2;
+			
+				draw_sprite_stretched_ext(THEME.timeline_onion_skin, 0, sx, y0, tx - sx, y1 - y0, colr[0], 1);
+				draw_sprite_stretched_ext(THEME.timeline_onion_skin, 1, tx, y0, ex - tx, y1 - y0, colr[1], 1);
+			
+				var _sx = (fr + rang[0]) * ui(timeline_scale) + timeline_shift - ui(8);
+				var _ex = (fr + rang[1]) * ui(timeline_scale) + timeline_shift + ui(8);
+			
+				if(point_in_circle(msx, msy, _sx, yc, ui(8))) {
+					draw_sprite_ext(THEME.arrow, 2, _sx, yc, 1, 1, 0, colr[0], 1);
 				
+					if(mouse_press(mb_left, pFOCUS))
+						onion_dragging = 0;
+					timeline_draggable = false;
+				} else
+					draw_sprite_ext(THEME.arrow, 2, _sx, yc, 1, 1, 0, colr[0], 0.5);
+			
+				if(point_in_circle(msx, msy, _ex, yc, ui(8))) {
+					draw_sprite_ext(THEME.arrow, 0, _ex, yc, 1, 1, 0, colr[1], 1);
+				
+					if(mouse_press(mb_left, pFOCUS))
+						onion_dragging = 1;
+					timeline_draggable = false;
+				} else 
+					draw_sprite_ext(THEME.arrow, 0, _ex, yc, 1, 1, 0, colr[1], 0.5);
+				
+				if(onion_dragging != noone) {
+					if(onion_dragging == 0) {
+						var mf = round((msx - timeline_shift + ui(8)) / ui(timeline_scale)) - fr;
+						    mf = min(mf, 0);
+					
+						if(PROJECT.onion_skin.range[0] != mf) {
+							PROJECT.onion_skin.range[0] = mf;
+						}
+					} else if(onion_dragging == 1) {
+						var mf = round((msx - timeline_shift - ui(8)) / ui(timeline_scale)) - fr;
+						    mf = max(mf, 0);
+					
+						if(PROJECT.onion_skin.range[1] != mf) {
+							PROJECT.onion_skin.range[1] = mf;
+						}
+					}
+					
+					if(mouse_release(mb_left))
+						onion_dragging = noone;
+				}
+			}
+			
 			var bar_line_x = (PROJECT.animator.current_frame + 1) * ui(timeline_scale) + timeline_shift;
 			var cc = PROJECT.animator.is_playing? COLORS._main_value_positive : COLORS._main_accent;
-		
+			
 			draw_set_color(cc);
 			draw_set_font(f_p2);
 			draw_line(bar_line_x, PANEL_PAD, bar_line_x, dope_sheet_h);
@@ -1545,7 +1665,7 @@ function Panel_Animation() : PanelContent() constructor {
 		gpu_set_blendmode(bm_normal);
 		surface_reset_target();
 			
-		drawDopesheetName();
+		drawDopesheetLabel();
 			
 		draw_sprite_stretched(THEME.ui_panel_bg, 1, ui(8), ui(8), tool_width, dope_sheet_h);
 		draw_surface_safe(ds_name_surface, ui(8), ui(8));
@@ -1661,15 +1781,42 @@ function Panel_Animation() : PanelContent() constructor {
 		txt = __txtx("panel_animation_keyframe_override", "Override Keyframe");
 		if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(24), [mx, my], pFOCUS, pHOVER, txt, THEME.keyframe_override, global.FLAG.keyframe_override) == 2)
 			global.FLAG.keyframe_override = !global.FLAG.keyframe_override;
+		
+		by += ui(28);
+		txt = __txt("Onion skin");
+		if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(24), [mx, my], pFOCUS, pHOVER, txt, THEME.onion_skin,, PROJECT.onion_skin.enabled? c_white : COLORS._main_icon) == 2)
+			PROJECT.onion_skin.enabled = !PROJECT.onion_skin.enabled;
 	}
 	
 	function drawContent(panel) {
 		draw_clear_alpha(COLORS.panel_bg_clear, 0);
 		
+		if(tool_width_drag) {
+			CURSOR = cr_size_we;
+			
+			tool_width = tool_width_start + (mx - tool_width_mx);
+			tool_width = clamp(tool_width, ui(224), w - ui(128));
+			onResize();
+			
+			if(mouse_release(mb_left))
+				tool_width_drag = false;
+		}
+		
 		if(w >= ui(348)) {
 			drawTimeline();
-			if(dope_sheet_h > 8)
+			
+			if(dope_sheet_h > 8) {
 				drawDopesheet();
+				
+				if(pHOVER && point_in_rectangle(mx, my, tool_width + ui(10), ui(8), tool_width + ui(12), ui(8) + dope_sheet_h)) {
+					CURSOR = cr_size_we;
+					if(mouse_press(mb_left, pFOCUS)) {
+						tool_width_drag  = true;
+						tool_width_start = tool_width;
+						tool_width_mx    = mx;
+					}
+				}
+			}
 		}
 		drawAnimationControl();
 		
