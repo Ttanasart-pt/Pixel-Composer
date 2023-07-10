@@ -1,3 +1,5 @@
+/// @desc Function Description
+/// @param {Struct.Project} project Description
 function closeProject(project) {
 	array_remove(PROJECTS, project);
 	if(array_length(PROJECTS) == 0)
@@ -15,4 +17,6 @@ function closeProject(project) {
 	
 	if(array_length(panels) == 0)
 		setPanel();
+		
+	project.cleanup();
 }

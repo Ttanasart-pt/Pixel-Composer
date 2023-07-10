@@ -511,7 +511,12 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 					draw_sprite_stretched_ext(THEME.ui_panel_tab, 0, _tbx, tby, tbw, _tdh, cc, 1);
 				}
 				
-				if(HOVER == self && _hov) {
+				var aa = 0.5;
+				if(point_in_rectangle(msx, msy, _tbx + tbw - ui(16), tby, _tbx + tbw, tab_height)) {
+					aa = 1;
+					if(mouse_press(mb_left, FOCUS == self)) 
+						rem = i;
+				} else if(HOVER == self && _hov) {
 					if(mouse_press(mb_left, FOCUS == self)) {
 						setTab(i);
 						
@@ -537,12 +542,6 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 						setTab(i);
 				}
 				
-				var aa = 0.5;
-				if(point_in_rectangle(msx, msy, _tbx + tbw - ui(16), tby, _tbx + tbw, tab_height)) {
-					aa = 1;
-					if(mouse_press(mb_left, FOCUS == self)) 
-						rem = i;
-				}
 				draw_sprite_ui(THEME.tab_exit, 0, _tbx + tbw - ui(12), tab_height / 2 + 1,,,, foc? COLORS.panel_tab_icon : COLORS._main_text_sub, aa);
 				
 				if(icn != noone) {

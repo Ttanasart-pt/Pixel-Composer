@@ -26,7 +26,7 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	input_fix_len	= ds_list_size(inputs);
 	data_length		= 2;
 	
-	attributes.layer_visible = [];
+	attributes.layer_visible	= [];
 	attributes.layer_selectable = [];
 	
 	attributes.display_name = true;

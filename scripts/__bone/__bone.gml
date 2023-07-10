@@ -143,8 +143,8 @@ function __Bone(parent = noone, distance = 0, direction = 0, angle = 0, length =
 				if(attributes.display_bone == 0) {
 					var _ppx = lerp(p0.x, p1.x, 0.2);
 					var _ppy = lerp(p0.y, p1.y, 0.2);
-					draw_line_width2(p0.x, p0.y, _ppx, _ppy,  2, 12);
-					draw_line_width2(_ppx, _ppy, p1.x, p1.y, 12,  2);
+					draw_line_width2(p0.x, p0.y, _ppx, _ppy,  2 * pose_scale, 12 * pose_scale);
+					draw_line_width2(_ppx, _ppy, p1.x, p1.y, 12 * pose_scale,  2 * pose_scale);
 					
 					if((edit & 0b100) && distance_to_line(_mx, _my, p0.x, p0.y, p1.x, p1.y) <= 12) //drag bone
 						hover = [ self, 2 ];

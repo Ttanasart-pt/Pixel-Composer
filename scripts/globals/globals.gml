@@ -40,6 +40,12 @@
 			alpha: 0.5,
 			on_top: true,
 		};
+		
+		static cleanup = function() {
+			ds_list_destroy(nodes);
+			ds_map_destroy(nodeMap);
+			ds_map_destroy(nodeNameMap);
+		}
 	}
 	
 	globalvar PROJECTS, PROJECT;
@@ -64,7 +70,7 @@
 	
 	VERSION			= 1147;
 	SAVE_VERSION	= 1440;
-	VERSION_STRING  = "1.14.6n2";
+	VERSION_STRING  = "1.14.6n3";
 	BUILD_NUMBER	= 114600;
 	
 	globalvar APPEND_MAP;

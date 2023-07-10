@@ -1320,6 +1320,18 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		}
 	}
 	
+	static getPreviewBoundingBox = function() {
+		var _node = outputs[| preview_channel];
+		if(_node.type != VALUE_TYPE.surface) return noone;
+		
+		var _surf = _node.getValue();
+		if(is_array(_surf)) 
+			_surf = array_safe_get(_surf, preview_index, noone);
+		if(!is_surface(_surf)) return noone;
+		
+		return BBOX().fromWH(preview_x, preview_y, surface_get_width(_surf), surface_get_height(_surf));
+	}
+	
 	static serialize = function(scale = false, preset = false) {
 		var _map = {};
 		//print(" > Serializing: " + name);

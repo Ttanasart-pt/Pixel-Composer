@@ -374,6 +374,39 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 		outputs[| 0].setValue(attributes.bones);
 	}
 	
+	static getPreviewBoundingBox = function() {
+		var minx =  9999999;
+		var miny =  9999999;
+		var maxx = -9999999;
+		var maxy = -9999999;
+		
+		var _b = attributes.bones;
+		var _bst = ds_stack_create();
+		ds_stack_push(_bst, _b);
+		
+		while(!ds_stack_empty(_bst)) {
+			var __b = ds_stack_pop(_bst);
+			
+			for( var i = 0; i < array_length(__b.childs); i++ ) {
+				var p0 = __b.childs[i].getPoint(0);
+				var p1 = __b.childs[i].getPoint(1);
+				
+				minx = min(minx, p0.x); miny = min(miny, p0.y);
+				maxx = max(maxx, p0.x); maxy = max(maxy, p0.y);
+				
+				minx = min(minx, p1.x); miny = min(miny, p1.y);
+				maxx = max(maxx, p1.x); maxy = max(maxy, p1.y);
+				
+				ds_stack_push(_bst, __b.childs[i]);
+			}
+		}
+		
+		ds_stack_destroy(_bst);
+		
+		if(minx == 9999999) return noone;
+		return BBOX().fromPoints(minx, miny, maxx, maxy);
+	}
+	
 	static attributeSerialize = function() { return {}; }
 	static attributeDeserialize = function(attr) {}
 	
