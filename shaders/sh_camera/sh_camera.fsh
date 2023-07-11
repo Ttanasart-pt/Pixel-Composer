@@ -21,8 +21,6 @@ vec4 sampleTexture(sampler2D samp, vec2 pos) {
 	if(sampleMode == 0) 
 		return vec4(0.);
 	if(sampleMode == 1) 
-		return texture2D(samp, clamp(pos, 0., 1.));
-	if(sampleMode == 2) 
 		return texture2D(samp, fract(pos));
 	
 	return vec4(0.);

@@ -10,7 +10,7 @@ function gradientKey(time, value) constructor {
 	
 	static clone = function() { return new gradientKey(time, value); }
 	
-	static serialize = function() { return self; }
+	static serialize = function() { return {time, value}; }
 }
 
 function gradientObject(color = c_black) constructor {
@@ -126,8 +126,46 @@ function gradientObject(color = c_black) constructor {
 		return [ _grad_color, _grad_time ];
 	}
 	
+	static lerpTo = function(target, amount) {
+		var grad = new gradientObject();
+		grad.keys = [];
+		grad.type = type;
+		
+		var key_count = ceil(lerp(array_length(keys), array_length(target.keys), amount));
+		
+		for( var i = 0; i < key_count; i++ ) {
+			var rat = i / (key_count - 1);
+			
+			var kf = keys[rat * (array_length(keys) - 1)];
+			var kt = target.keys[rat * (array_length(target.keys) - 1)];
+			
+			var time  = lerp(kf.time, kt.time, amount);
+			var value = merge_color(eval(time), target.eval(time), amount);
+			
+			grad.keys[i] = new gradientKey(time, value);
+		}
+		
+		return grad;
+	}
+	
+	static clone = function() {
+		var g = new gradientObject();
+		g.keys = [];
+		g.type = type;
+		
+		for( var i = 0; i < array_length(keys); i++ )
+			g.keys[i] = keys[i].clone();
+			
+		return g;
+	}
+	
 	static serialize = function() {
-		return json_stringify(self, false);
+		var s = {type};
+		s.keys = [];
+		for( var i = 0; i < array_length(keys); i++ )
+			s.keys[i] = keys[i].serialize();
+			
+		return json_stringify(s, false);
 	}
 	
 	static deserialize = function(str) {

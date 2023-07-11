@@ -47,7 +47,7 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 	
 	function nodeBuild(_name, _x, _y, _group = PANEL_GRAPH.getCurrentContext()) {
 		if(!ds_map_exists(ALL_NODES, _name)) {
-			log_warning("LOAD", "Node type " + _name + " not found");
+			log_warning("LOAD", $"Node type {_name} not found");
 			return noone;
 		}
 		
@@ -553,7 +553,7 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 			addNodeObject(color, "Palette Replace",	s_node_palette_replace,	"Node_Palette_Replace",	[1, Node_Palette_Replace]).setVersion(1120);
 			
 			ds_list_add(color, "Gradient");
-			addNodeObject(color, "Gradient",			s_node_gradient_out,		"Node_6radient_Out",			[1, Node_Gradient_Out]);
+			addNodeObject(color, "Gradient",			s_node_gradient_out,		"Node_Gradient_Out",			[1, Node_Gradient_Out]);
 			addNodeObject(color, "Palette to Gradient",	s_node_gradient_palette,	"Node_Gradient_Palette",		[1, Node_Gradient_Palette],, "Create gradient from palette.").setVersion(1135);
 			addNodeObject(color, "Gradient Shift",		s_node_gradient_shift,		"Node_Gradient_Shift",			[1, Node_Gradient_Shift],, "Move gradients keys.");
 			addNodeObject(color, "Gradient Replace",	s_node_gradient_replace,	"Node_Gradient_Replace_Color",	[1, Node_Gradient_Replace_Color]).setVersion(1135);
@@ -619,8 +619,44 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 			addNodeObject(hid, "Hexagonal Noise",	s_node_grid_hex_noise,	"Node_Noise_Hex",				[1, Node_Noise_Hex]).setVersion(1090);
 			addNodeObject(hid, "Sort Input",		s_node_grid_hex_noise,	"Node_Iterator_Sort_Input",		[1, Node_Iterator_Sort_Input]);
 			addNodeObject(hid, "Sort Output",		s_node_grid_hex_noise,	"Node_Iterator_Sort_Output",	[1, Node_Iterator_Sort_Output]);
-			addNodeObject(node, "Onion Skin",		s_node_cache,		"Node_Onion_Skin",	[1, Node_Onion_Skin]).setVersion(1147);
+			addNodeObject(hid, "Onion Skin",		s_node_cache,			"Node_Onion_Skin",				[1, Node_Onion_Skin]).setVersion(1147);
 	}
+#endregion
+
+#region node suggestion
+	global.VALUE_SUGGESTION = ds_map_create();
+	
+	global.VALUE_SUGGESTION[? VALUE_TYPE.integer]    = [ "Node_Math", "Node_Equation", "Node_To_Text" ];
+	global.VALUE_SUGGESTION[? VALUE_TYPE.float]      = [ "Node_Math", "Node_Equation", "Node_To_Text" ];
+	global.VALUE_SUGGESTION[? VALUE_TYPE.boolean]    = [  ];
+	global.VALUE_SUGGESTION[? VALUE_TYPE.color]      = [ "Node_Solid", "Node_Color_Data", "Node_Color_Mix" ];
+	global.VALUE_SUGGESTION[? VALUE_TYPE.surface]    = [ "Node_Transform", "Node_Blend", "Node_Composite", "Node_Export" ];
+	
+	global.VALUE_SUGGESTION[? VALUE_TYPE.path]       = [  ];
+	global.VALUE_SUGGESTION[? VALUE_TYPE.curve]      = [  ];
+	global.VALUE_SUGGESTION[? VALUE_TYPE.text]       = [ "Node_Text", "Node_To_Number" ];
+	global.VALUE_SUGGESTION[? VALUE_TYPE.object]     = [  ];
+	global.VALUE_SUGGESTION[? VALUE_TYPE.node]       = [  ];
+	global.VALUE_SUGGESTION[? VALUE_TYPE.d3object]   = [  ];
+	
+	global.VALUE_SUGGESTION[? VALUE_TYPE.any]        = [  ];
+														  
+	global.VALUE_SUGGESTION[? VALUE_TYPE.pathnode]   = [ "Node_Line", "Node_Mesh_Create_Path" ];
+	global.VALUE_SUGGESTION[? VALUE_TYPE.particle]   = [  ];
+	global.VALUE_SUGGESTION[? VALUE_TYPE.rigid]      = [  ];
+	global.VALUE_SUGGESTION[? VALUE_TYPE.fdomain]    = [  ];
+	global.VALUE_SUGGESTION[? VALUE_TYPE.struct]     = [ "Node_Struct_Get" ];
+	global.VALUE_SUGGESTION[? VALUE_TYPE.strands]    = [  ];
+	global.VALUE_SUGGESTION[? VALUE_TYPE.mesh]       = [  ];
+	global.VALUE_SUGGESTION[? VALUE_TYPE.trigger]    = [  ];
+	global.VALUE_SUGGESTION[? VALUE_TYPE.atlas]      = [ "Node_Atlas_Draw", "Node_Atlas_Get", "Node_Atlas_Set" ];
+														  
+	global.VALUE_SUGGESTION[? VALUE_TYPE.d3vertex]   = [  ];
+	global.VALUE_SUGGESTION[? VALUE_TYPE.gradient]   = [ "Node_Gradient", "Node_Gradient_Extract" ];
+	global.VALUE_SUGGESTION[? VALUE_TYPE.armature]   = [ "Node_Armature_Pose", "Node_Armature_Bind" ];
+	global.VALUE_SUGGESTION[? VALUE_TYPE.buffer]     = [  ];
+														  
+	global.VALUE_SUGGESTION[? VALUE_TYPE.action]     = [  ];
 #endregion
 
 #region node function
@@ -691,8 +727,8 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 			var splt = string_splice(strs[0], "[");
 			var inp = PROJECT.globalNode.getInput(strs[0]);
 			_val = inp == noone? 0 : inp.getValueRecursive()[0];
-		} else if(strs[0] == "Project") {
-			switch(strs[1]) {
+		} else if(string_lower(strs[0]) == "project") {
+			switch(string_lower(strs[1])) {
 				case "frame" :		return PROJECT.animator.current_frame;
 				case "frameTotal" : return PROJECT.animator.frames_total;
 				case "fps" :		return PROJECT.animator.framerate;

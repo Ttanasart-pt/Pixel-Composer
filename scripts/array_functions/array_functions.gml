@@ -62,6 +62,17 @@ function array_push_create(arr, val) {
 	return arr;
 }
 
+function array_get_decimal(arr, index, color = false) {
+	if(frac(index) == 0) return array_safe_get(arr, index);
+	
+	var v0 = array_safe_get(arr, floor(index));
+	var v1 = array_safe_get(arr, floor(index) + 1);
+	
+	return color? 
+		merge_color(v0, v1, frac(index)) : 
+		lerp(v0, v1, frac(index));
+}
+
 function array_exists(arr, val) {
 	for( var i = 0; i < array_length(arr); i++ ) {
 		if(isEqual(arr[i], val)) return true;

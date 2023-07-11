@@ -104,6 +104,9 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	
 	inputs[| 11] = nodeValue("Sequence begin", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 	
+	inputs[| 12] = nodeValue("Frame range", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [0, -1])
+		.setDisplay(VALUE_DISPLAY.slider_range, [0, PROJECT.animator.frames_total, 1])
+	
 	outputs[| 0] = nodeValue("Loop exit", self, JUNCTION_CONNECT.output, VALUE_TYPE.any, 0);
 	
 	outputs[| 1] = nodeValue("Preview", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone)
@@ -112,7 +115,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	input_display_list = [
 		["Export",		false], 0, 1, 2, 4, 
 		["Format ",		false], 3, 9, 
-		["Settings",	false], 8, 5, 6, 7, 10, 11, 
+		["Settings",	false], 12, 8, 5, 6, 7, 10, 11, 
 	];
 	
 	directory = DIRECTORY + "temp/" + string(irandom_range(100000, 999999));
@@ -369,12 +372,21 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	}
 	
 	static export = function() { 
-		var surf = inputs[| 0].getValue();
-		var path = inputs[| 1].getValue();
-		var suff = inputs[| 2].getValue();
-		var form = inputs[| 3].getValue();
+		var surf = inputs[|  0].getValue();
+		var path = inputs[|  1].getValue();
+		var suff = inputs[|  2].getValue();
+		var form = inputs[|  3].getValue();
+		var rang = inputs[| 12].getValue();
 		
 		var _ts = current_time;
+		
+		if(form >= 1) {
+			var rng_s = rang[0];
+			var rng_e = rang[1] == -1? PROJECT.animator.frames_total : rang[1];
+			
+			if(PROJECT.animator.current_frame < rng_s) return;
+			if(PROJECT.animator.current_frame > rng_e) return;
+		}
 		
 		if(is_array(surf)) {
 			var p = "";
@@ -484,6 +496,8 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		inputs[|  7].setVisible(anim == 2);
 		inputs[|  8].setVisible(anim == 2);
 		inputs[| 11].setVisible(anim == 1);
+		inputs[| 12].setVisible(anim >= 1);
+		inputs[| 12].editWidget.maxx = PROJECT.animator.frames_total;
 		
 		if(anim == NODE_EXPORT_FORMAT.gif) {
 			inputs[|  9].display_data		  = format_animation;
@@ -521,12 +535,13 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		if(anim != NODE_EXPORT_FORMAT.gif)
 			return;
 				
-		var surf = inputs[| 0].getValue();
-		var path = inputs[| 1].getValue();
-		var suff = inputs[| 2].getValue();
-		var extd = inputs[| 9].getValue();
+		var surf = inputs[|  0].getValue();
+		var path = inputs[|  1].getValue();
+		var suff = inputs[|  2].getValue();
+		var extd = inputs[|  9].getValue();
+		var rang = inputs[| 12].getValue();
 		var temp_path, target_path;
-						
+		
 		if(is_array(surf)) {
 			for(var i = 0; i < array_length(surf); i++) {
 				temp_path = directory + "/" + string(i) + "/" + "*.png";

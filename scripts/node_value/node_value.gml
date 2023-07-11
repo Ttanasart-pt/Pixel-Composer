@@ -515,7 +515,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	}
 	
 	static isAnimable = function() {
-		if(type == VALUE_TYPE.gradient)				 return false;
+		//if(type == VALUE_TYPE.gradient)				 return false;
 		if(display_type == VALUE_DISPLAY.text_array) return false;
 		return true;
 	}

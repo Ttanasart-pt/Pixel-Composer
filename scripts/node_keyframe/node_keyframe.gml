@@ -97,13 +97,28 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 	static lerpValue = function(from, to, _lrp) {
 		var _f = from.value;
 		var _t = to.value;
+		
+		if(is_struct(_f)) {
+			if(!struct_has(_f, "lerpTo")) return _f;
+			return _f.lerpTo(_t, _lrp);
+		}
 			
 		if(prop.type == VALUE_TYPE.color) {
-			if(is_array(_f)) {
-				var amo = max(array_length(_f), array_length(_t));
-				var res = array_create(amo);
-				for( var i = 0; i < amo; i++ )
-					res[i] = merge_color(array_safe_get(_f, i, 0), array_safe_get(_t, i, 0), _lrp);
+			if(is_array(_f) && is_array(_t)) {
+				var _len = ceil(lerp(array_length(_f), array_length(_t), _lrp));
+				var res  = array_create(_len);
+				
+				for( var i = 0; i < _len; i++ ) {
+					var rat = i / (_len - 1);
+			
+					var rf = rat * (array_length(_f) - 1);
+					var rt = rat * (array_length(_t) - 1);
+					
+					var cf = array_get_decimal(_f, rf, true);
+					var ct = array_get_decimal(_t, rt, true);
+					
+					res[i] = merge_color(cf, ct, _lrp);
+				}
 				
 				return res;
 			}
@@ -147,9 +162,6 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 		
 		if(ds_list_size(values) == 1)
 			return processType(values[| 0].value);
-		
-		if(prop.type == VALUE_TYPE.gradient) 
-			return values[| 0].value;
 		
 		if(prop.type == VALUE_TYPE.path)
 			return processType(values[| 0].value);

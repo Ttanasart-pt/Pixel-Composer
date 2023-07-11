@@ -167,7 +167,7 @@ event_inherited();
 						var sw = sprite_get_width(spr);
 						var sh = sprite_get_height(spr);
 						
-						var s = min(gw / sw, gh / sh);
+						var s = 1;
 						
 						var ox = (sprite_get_xoffset(spr) - sw / 2) * s / 2;
 						var oy = (sprite_get_yoffset(spr) - sh / 2) * s / 2;

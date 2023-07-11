@@ -14,44 +14,47 @@ function Node_Camera(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	uni_fix_bg  = shader_get_uniform(shader, "fixBG");
 	
 	inputs[| 0] = nodeValue("Background", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
-	inputs[| 1] = nodeValue("Focus area", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 16, 16, 4, 4, AREA_SHAPE.rectangle ])
+	inputs[| 1] = nodeValue("Focus area", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 0, 0, 16, 16, AREA_SHAPE.rectangle ])
 		.setDisplay(VALUE_DISPLAY.area, function() { return getDimension(0); });
 	
 	inputs[| 2] = nodeValue("Zoom", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
 		.setDisplay(VALUE_DISPLAY.slider, [ 0.01, 4, 0.01 ]);
 	
 	inputs[| 3] = nodeValue("Oversample mode", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0, "How to deal with pixel outside the surface.\n    - Empty: Use empty pixel\n    - Clamp: Repeat edge pixel\n    - Repeat: Repeat texture.")
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Empty", "Clamp", "Repeat" ]);
+		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Empty", "Repeat" ]);
 	
 	inputs[| 4] = nodeValue("Fix background", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
 	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [
-		["Output",	  true], 0, 4, 
-		["Camera",	 false], 1, 2,
-		["Elements",  true], 
+		["Background",   true], 0, 4, 3, 
+		["Camera",		false], 1, 2,
+		["Elements",	 true], 
 	];
 	
 	attribute_surface_depth();
-	attribute_oversample();
-
+	
 	input_display_len = array_length(input_display_list);
-	input_fix_len	= ds_list_size(inputs);
-	data_length		= 2;
+	input_fix_len	  = ds_list_size(inputs);
+	data_length		  = 3;
+	
+	temp_surface = [ noone, noone ];
 	
 	function createNewInput() {
 		var index = ds_list_size(inputs);
 		var _s    = floor((index - input_fix_len) / data_length);
 		
-		inputs[| index + 0] = nodeValue("Element " + string(_s), self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
+		inputs[| index + 0] = nodeValue($"Element {_s}", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 		
-		inputs[| index + 1] = nodeValue("Parallax " + string(_s), self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 0 ] )
+		inputs[| index + 1] = nodeValue($"Parallax {_s}", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 0 ] )
 			.setDisplay(VALUE_DISPLAY.vector)
 			.setUnitRef(function(index) { return getDimension(index); });
 		
-		array_push(input_display_list, index + 0);
-		array_push(input_display_list, index + 1);
+		inputs[| index + 2] = nodeValue($"Oversample {_s}", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+			.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Empty", "Repeat" ]);
+		
+		array_append(input_display_list, [ index + 0, index + 1, index + 2 ]);
 	}
 	if(!LOADING && !APPENDING) createNewInput();
 	
@@ -67,12 +70,15 @@ function Node_Camera(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			if(inputs[| i].value_from) {
 				ds_list_add(_in, inputs[| i + 0]);
 				ds_list_add(_in, inputs[| i + 1]);
+				ds_list_add(_in, inputs[| i + 2]);
 				
 				array_push(input_display_list, i + 0);
 				array_push(input_display_list, i + 1);
+				array_push(input_display_list, i + 2);
 			} else {
 				delete inputs[| i + 0];
 				delete inputs[| i + 1];
+				delete inputs[| i + 2];
 			}
 		}
 		
@@ -101,15 +107,15 @@ function Node_Camera(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		var _area = current_data[1];
 		var _zoom = current_data[2];
 		
-		var _px = _x + (_area[0] - _area[2] * _zoom) * _s;
-		var _py = _y + (_area[1] - _area[3] * _zoom) * _s;
+		var _cam_x = _x + (_area[0] - _area[2] * _zoom) * _s;
+		var _cam_y = _y + (_area[1] - _area[3] * _zoom) * _s;
 		
-		draw_surface_ext_safe(_out, _px, _py, _s * _zoom, _s * _zoom);
+		draw_surface_ext_safe(_out, _cam_x, _cam_y, _s * _zoom, _s * _zoom);
 		inputs[| 1].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
 		
 		draw_set_color(COLORS._main_accent);
-		var x0 = _px;
-		var y0 = _py;
+		var x0 = _cam_x;
+		var y0 = _cam_y;
 		var x1 = x0 + _area[2] * 2 * _zoom * _s;
 		var y1 = y0 + _area[3] * 2 * _zoom * _s;
 		
@@ -120,23 +126,26 @@ function Node_Camera(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		if(!is_surface(_data[0])) return;
 		var _area = _data[1];
 		var _zoom = _data[2];
-		var _samp = struct_try_get(attributes, "oversample");
+		var _samp = _data[3];
 		var _fix  = _data[4];
 		var cDep  = attrDepth();
 		
-		var _dw = round(surface_valid_size(_area[2]) * 2);
-		var _dh = round(surface_valid_size(_area[3]) * 2);
-		_outSurf = surface_verify(_outSurf, _dw, _dh, cDep);
-		var pingpong = [ surface_create_valid(_dw, _dh, cDep), surface_create_valid(_dw, _dh, cDep) ];
-		var ppInd = 0;
+		var _cam_x = round(_area[0]);
+		var _cam_y = round(_area[1]);
+		var _cam_w = round(_area[2]);
+		var _cam_h = round(_area[3]);
 		
-		var _px = round(_area[0]);
-		var _py = round(_area[1]);
-		var _pw = round(_area[2]);
-		var _ph = round(_area[3]);
+		var _surf_w = round(surface_valid_size(_cam_w * 2));
+		var _surf_h = round(surface_valid_size(_cam_h * 2));
+		var ppInd   = 0;
+		
+		_outSurf = surface_verify(_outSurf, _surf_w, _surf_h, cDep);
+		temp_surface[0] = surface_verify(temp_surface[0], _surf_w, _surf_h, cDep);
+		temp_surface[1] = surface_verify(temp_surface[1], _surf_w, _surf_h, cDep);
+		
 		var amo = (ds_list_size(inputs) - input_fix_len) / data_length - 1;
 		
-		surface_set_target(pingpong[0]);
+		surface_set_target(temp_surface[0]);
 		DRAW_CLEAR
 		BLEND_OVERRIDE;
 		if(amo <= 0) {
@@ -144,14 +153,14 @@ function Node_Camera(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 				if(_samp)	draw_surface_tiled_safe(_data[0], 0, 0);
 				else		draw_surface_safe(_data[0], 0, 0);
 			} else {
-				var sx = _px / _zoom - _pw;
-				var sy = _py / _zoom - _ph;
+				var sx = _cam_x / _zoom - _cam_w;
+				var sy = _cam_y / _zoom - _cam_h;
 				if(_samp)	draw_surface_tiled_ext_safe(_data[0], -sx, -sy, 1 / _zoom, 1 / _zoom, c_white, 1);
 				else		draw_surface_ext_safe(_data[0], -sx, -sy, 1 / _zoom, 1 / _zoom, 0, c_white, 1);
 			}
 		} else {
-			var sx = _px / _zoom - _pw;
-			var sy = _py / _zoom - _ph;
+			var sx = _cam_x / _zoom - _cam_w;
+			var sy = _cam_y / _zoom - _cam_h;
 				
 			if(_fix)	draw_surface_safe(_data[0], 0, 0);
 			else		draw_surface_tiled_ext_safe(_data[0], sx, sy, 1 / _zoom, 1 / _zoom, c_white, 1);
@@ -159,36 +168,38 @@ function Node_Camera(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		BLEND_NORMAL;
 		surface_reset_target();
 		
-		surface_set_target(pingpong[1]);
+		surface_set_target(temp_surface[1]);
 		DRAW_CLEAR
 		surface_reset_target();
 		
 		shader_set(shader);
-		shader_set_uniform_f(uni_dim_cam, _dw, _dh);
+		shader_set_uniform_f(uni_dim_cam, _surf_w, _surf_h);
 		shader_set_uniform_f(uni_zom, _zoom);
-		shader_set_uniform_i(uni_sam_mod, _samp);
 		
 		for( var i = 0; i < amo; i++ ) {
 			ppInd = !ppInd;
 			
-			surface_set_target(pingpong[ppInd]);
+			surface_set_target(temp_surface[ppInd]);
 			var ind = input_fix_len + i * data_length;
 			
-			var sz = _data[ind + 1][2];
-			var sx = _data[ind + 1][0] * sz * _px;
-			var sy = _data[ind + 1][1] * sz * _py;
-			
 			var _surface = _data[ind];
+			var sz       = _data[ind + 1][2];
+			var sx       = _data[ind + 1][0] * sz * _cam_x;
+			var sy       = _data[ind + 1][1] * sz * _cam_y;
+			var _samp    = _data[ind + 2];
+			
 			var _scnW = surface_get_width(_surface);
 			var _scnH = surface_get_height(_surface);
 			
+			shader_set_uniform_i(uni_sam_mod, _samp);
 			shader_set_uniform_f(uni_dim_scn, _scnW, _scnH);
 			shader_set_uniform_f(uni_blur, sz);
-			shader_set_uniform_f(uni_pos, (_px + sx) / _scnW, (_py + sy) / _scnH);
+			shader_set_uniform_f(uni_pos, (_cam_x + sx) / _scnW, (_cam_y + sy) / _scnH);
 			shader_set_uniform_i(uni_fix_bg, !i && _fix);
-			texture_set_stage(uni_backg, surface_get_texture(pingpong[!ppInd])); //prev surface
+			
+			texture_set_stage(uni_backg, surface_get_texture(temp_surface[!ppInd])); //prev surface
 			texture_set_stage(uni_scene, surface_get_texture(_surface)); //surface to draw
-			draw_sprite_ext(s_fx_pixel, 0, 0, 0, _dw, _dh, 0, c_white, 1);
+			draw_sprite_ext(s_fx_pixel, 0, 0, 0, _surf_w, _surf_h, 0, c_white, 1);
 			surface_reset_target();
 		}
 		
@@ -197,12 +208,9 @@ function Node_Camera(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		surface_set_target(_outSurf);
 		DRAW_CLEAR
 		BLEND_OVERRIDE;
-		draw_surface_safe(pingpong[ppInd], 0, 0);
+		draw_surface_safe(temp_surface[ppInd], 0, 0);
 		BLEND_NORMAL;
 		surface_reset_target();
-		
-		surface_free(pingpong[0]);
-		surface_free(pingpong[1]);
 		
 		return _outSurf;
 	}

@@ -292,6 +292,15 @@ event_inherited();
 		} else if(ADD_NODE_PAGE == NODE_PAGE_DEFAULT) {
 			_list = ds_list_create();
 			
+			if(node_called != noone) {
+				var sug = ds_map_try_get(global.VALUE_SUGGESTION, node_called.type, []);
+				if(array_length(sug)) {
+					ds_list_add(_list, "Related");
+					for( var i = 0; i < array_length(sug); i++ )
+						ds_list_add(_list, ALL_NODES[? sug[i]]);
+				}
+			}
+			
 			ds_list_add(_list, "Favourites");
 			for( var i = 0; i < array_length(global.FAV_NODES); i++ ) {
 				var _nodeIndex = global.FAV_NODES[i];
