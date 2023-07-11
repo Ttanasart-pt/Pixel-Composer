@@ -544,6 +544,7 @@
     {"name":"sh_skew","order":6,"path":"shaders/sh_skew/sh_skew.yy",},
     {"name":"libxprocess","order":4,"path":"extensions/libxprocess/libxprocess.yy",},
     {"name":"fd_rectangle_get_pressure_height","order":16,"path":"scripts/fd_rectangle_get_pressure_height/fd_rectangle_get_pressure_height.yy",},
+    {"name":"hyperbolic_function","order":16,"path":"scripts/hyperbolic_function/hyperbolic_function.yy",},
     {"name":"node_VFX_effect_destroy","order":12,"path":"scripts/node_VFX_effect_destroy/node_VFX_effect_destroy.yy",},
     {"name":"node_cache","order":9,"path":"scripts/node_cache/node_cache.yy",},
     {"name":"sh_bw","order":5,"path":"shaders/sh_bw/sh_bw.yy",},

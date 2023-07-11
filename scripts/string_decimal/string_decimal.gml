@@ -3,10 +3,12 @@ function string_decimal(str) {
 	if(neg) str = string_copy(str, 2, string_length(str) - 1);
 	
 	var dec = string_pos(".", str);
+	if(dec == 0)  return (neg? "-" : "") + string_digits(str);
+		
 	var pre = string_copy(str, 1, dec - 1);
 	var pos = string_copy(str, dec + 1, string_length(str) - dec);
 	
-	return (neg? "-" : "") + (dec? string_digits(pre) + "." + string_digits(pos) : string_digits(str));
+	return (neg? "-" : "") + string_digits(pre) + "." + string_digits(pos);
 }
 
 function toNumber(str) {
@@ -30,5 +32,6 @@ function toNumber(str) {
 
 function isNumber(str) {
 	if(is_real(str)) return true;
+	str = string_trim(str);
 	return str == string_decimal(str);
 }

@@ -51,7 +51,7 @@ function perlin1D(seed, scale = 1, octave = 1, startRange = 0, endRange = 1) {
 	var val = 0;
 	
 	repeat(octave) {
-		val = sin(seed * scale) * amp;
+		val = random1D(seed * scale) * amp;
 		scale *= 2;
 		amp /= 2;
 	}
@@ -59,7 +59,22 @@ function perlin1D(seed, scale = 1, octave = 1, startRange = 0, endRange = 1) {
 	return lerp(startRange, endRange, val);
 }
 
-function getWiggle(_min, _max, _freq, _time, seed_shift = 0, startTime = noone, endTime = noone) {
+function wiggle(_min = 0, _max = 1, _freq = 1, _time = 0, _seed = 0, _octave = 1) {
+	_freq = max(1, _freq);
+	
+	var sdMin = floor(_time / _freq) * _freq;
+	var sdMax = sdMin + _freq;
+	
+	var _x0 = perlin1D(PROJECT.seed + _seed + sdMin, 1, _octave);
+	var _x1 = perlin1D(PROJECT.seed + _seed + sdMax, 1, _octave);
+	
+	var t = (_time - sdMin) / (sdMax - sdMin);
+	t = -(cos(pi * t) - 1) / 2;
+	var _lrp = lerp(_x0, _x1, t);
+	return lerp(_min, _max, _lrp);
+}
+
+function getWiggle(_min = 0, _max = 1, _freq = 1, _time = 0, _seed = 0, startTime = noone, endTime = noone) {
 	_freq = max(1, _freq);
 	
 	var sdMin = floor(_time / _freq) * _freq;
@@ -67,8 +82,8 @@ function getWiggle(_min, _max, _freq, _time, seed_shift = 0, startTime = noone, 
 	if(endTime) //Clip at ending
 		sdMax = min(endTime, sdMax);
 	
-	var _x0 = (startTime != noone && sdMin <= startTime)?   0.5 : random1D(PROJECT.seed + seed_shift + sdMin);
-	var _x1 = (endTime != noone && sdMax >= endTime)?		0.5 : random1D(PROJECT.seed + seed_shift + sdMax);
+	var _x0 = (startTime != noone && sdMin <= startTime)?   0.5 : random1D(PROJECT.seed + _seed + sdMin);
+	var _x1 = (endTime != noone && sdMax >= endTime)?		0.5 : random1D(PROJECT.seed + _seed + sdMax);
 	
 	var t = (_time - sdMin) / (sdMax - sdMin);
 	t = -(cos(pi * t) - 1) / 2;

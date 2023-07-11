@@ -1109,8 +1109,10 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		} else if(value_from != self)
 			val = value_from.getValueRecursive(_time); 
 		
-		if(expUse && is_struct(expTree) && expTree.validate())
+		if(expUse && is_struct(expTree) && expTree.validate()) {
+			//print("========== Expression eval ==========")
 			val[0] = expTree.eval({ value: val[0] });
+		}
 		
 		return val;
 	}

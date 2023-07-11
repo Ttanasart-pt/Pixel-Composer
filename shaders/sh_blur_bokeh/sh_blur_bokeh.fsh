@@ -14,8 +14,9 @@ const float ContrastAmount = 150.0;
 const vec3 ContrastFactor = vec3(9.0);
 const float Smooth = 2.0;
 
-vec3 bokeh(sampler2D tex, vec2 uv, float radius) {
+vec4 bokeh(sampler2D tex, vec2 uv, float radius) {
 	vec3 num, weight;
+	float alpha = 0.;
     float rec = 1.0; // reciprocal 
     vec2 horizontalAngle = vec2(0.0, radius * 0.01 / sqrt(Iterations));
     vec2 aspect = vec2(dimension.y / dimension.x, 1.0);
@@ -29,19 +30,22 @@ vec3 bokeh(sampler2D tex, vec2 uv, float radius) {
         rec += 1.0 / rec;
 	    horizontalAngle = horizontalAngle * Rotation;
         
-        vec2 offset = (rec - 1.0) * horizontalAngle;
+        vec2 offset	  = (rec - 1.0) * horizontalAngle;
         vec2 sampleUV = uv + aspect * offset;
-        vec3 col = texture2D(tex, sampleUV).rgb;
+		vec4 sam = texture2D(tex, sampleUV);
+        vec3 col = sam.rgb * sam.a;
         
         // increase contrast and smooth
 		vec3 bokeh = Smooth + pow(col, ContrastFactor) * ContrastAmount;
-        
-		num += col * bokeh;
-		weight += bokeh;
+		
+		num		+= col * bokeh;
+		alpha	+= sam.a * (bokeh.r + bokeh.g + bokeh.b) / 3.;
+		weight	+= bokeh;
 	}
-	return num / weight;
+	
+	return vec4(num / weight, alpha / ((weight.r + weight.g + weight.b) / 3.));
 }
 
 void main() {
-	gl_FragColor = vec4(bokeh(gm_BaseTexture, v_vTexcoord, strength), 1.0);
+	gl_FragColor = bokeh(gm_BaseTexture, v_vTexcoord, strength);
 }

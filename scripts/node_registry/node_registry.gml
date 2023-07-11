@@ -719,6 +719,7 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 	}
 	
 	function nodeGetData(str) {
+		str = string_trim(str);
 		var strs = string_splice(str, ".");
 		
 		if(array_length(strs) == 0) return 0;
@@ -726,7 +727,7 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 		if(array_length(strs) == 1) {
 			var splt = string_splice(strs[0], "[");
 			var inp = PROJECT.globalNode.getInput(strs[0]);
-			_val = inp == noone? 0 : inp.getValueRecursive()[0];
+			return inp == noone? 0 : inp.getValueRecursive()[0];
 		} else if(string_lower(strs[0]) == "project") {
 			switch(string_lower(strs[1])) {
 				case "frame" :		return PROJECT.animator.current_frame;
@@ -760,7 +761,7 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 			return _junc.getValue();
 		}
 		
-		return _val;
+		return 0;
 	}
 #endregion
 
