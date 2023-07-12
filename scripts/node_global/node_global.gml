@@ -14,7 +14,7 @@ function variable_editor(nodeVal) constructor {
 		/*Text*/	[ "Default", ],
 	]
 	
-	tb_name = new textArea(TEXTBOX_INPUT.text, function(str) { 
+	tb_name = new textBox(TEXTBOX_INPUT.text, function(str) { 
 		value_name = str;
 		value.name = str;
 		

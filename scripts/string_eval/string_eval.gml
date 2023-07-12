@@ -1,10 +1,11 @@
 #region data
-	global.EQUATION_PRES    = ds_map_create();
+	global.EQUATION_PRES = ds_map_create();
 	global.EQUATION_PRES[? "+"] = 1;
 	global.EQUATION_PRES[? "-"] = 1;
 	global.EQUATION_PRES[? "∸"] = 9; //unary negative
 	global.EQUATION_PRES[? "*"] = 2;
 	global.EQUATION_PRES[? "/"] = 2;
+	global.EQUATION_PRES[? "%"] = 2;
 	global.EQUATION_PRES[? "$"] = 3;
 	
 	global.EQUATION_PRES[? "&"] = 5;
@@ -15,12 +16,13 @@
 	global.EQUATION_PRES[? "«"] = 6;
 	global.EQUATION_PRES[? "~"] = 9;
 	
-	global.EQUATION_PRES[? "="] = -1; //==
-	global.EQUATION_PRES[? "≠"] = -1; //!=
-	global.EQUATION_PRES[? "<"] =  0;
-	global.EQUATION_PRES[? ">"] =  0;
-	global.EQUATION_PRES[? "≤"] =  0;
-	global.EQUATION_PRES[? "≥"] =  0;
+	global.EQUATION_PRES[? "="]  = -99;
+	global.EQUATION_PRES[? "⩵"] = -1; //==
+	global.EQUATION_PRES[? "≠"]  = -1; //!=
+	global.EQUATION_PRES[? "<"]  =  0;
+	global.EQUATION_PRES[? ">"]  =  0;
+	global.EQUATION_PRES[? "≤"]  =  0;
+	global.EQUATION_PRES[? "≥"]  =  0;
 	
 	global.EQUATION_PRES[? "@"] = 5; //array accerssor symbol
 	
@@ -32,6 +34,8 @@
 	global.FUNCTIONS[? "round"]  = [ ["number"], function(val) { return round(val[0]); } ];
 	global.FUNCTIONS[? "ceil"]   = [ ["number"], function(val) { return ceil(val[0]);  } ];
 	global.FUNCTIONS[? "floor"]  = [ ["number"], function(val) { return floor(val[0]); } ];
+	
+	global.FUNCTIONS[? "lerp"]   = [ ["number_0", "number_1", "amount"], function(val) { return lerp(array_safe_get(val, 0), array_safe_get(val, 1), array_safe_get(val, 2)); } ];
 	
 	global.FUNCTIONS[? "wiggle"] = [ ["time", "frequency", "octave", "seed"],	function(val) { 
 																					return wiggle(0, 1, array_safe_get(val, 1), 
@@ -65,13 +69,14 @@ function functionStringClean(fx) {
 	fx = string_replace_all(fx, "<<", "«");
 	fx = string_replace_all(fx, ">>", "»");
 	
-	fx = string_replace_all(fx, "==", "=");
+	fx = string_replace_all(fx, "==", "⩵");
 	fx = string_replace_all(fx, "!=", "≠");
 	fx = string_replace_all(fx, "<>", "≠");
 	fx = string_replace_all(fx, ">=", "≥");
 	fx = string_replace_all(fx, "<=", "≤");
 	
 	fx = string_replace_all(fx, "[", "@["); //add array accessor symbol arr[i] = arr@[i] = arr @ (i)
+	fx = string_trim(fx);
 	
 	return fx;
 }
@@ -81,6 +86,131 @@ function functionStringClean(fx) {
 		none,
 		base_value,
 		animated
+	}
+	
+	function __funcList() constructor {
+		funcTrees = [];
+		
+		static addFunction = function(fn) {
+			array_push(funcTrees, fn);
+		}
+		
+		static validate = function() {
+			for( var i = 0; i < array_length(funcTrees); i++ )
+				if(!funcTrees[i].validate())
+					return false;
+				
+			return true;
+		}
+		
+		static isAnimated = function() {
+			for( var i = 0; i < array_length(funcTrees); i++ )
+				if(!funcTrees[i].isAnimated())
+					return false;
+				
+			return true;
+		}
+		
+		static eval = function(params = {}) {
+			//var _params = variable_clone(params);
+			var val = 0;
+			
+			for( var i = 0; i < array_length(funcTrees); i++ )
+				val = funcTrees[i].eval(params);
+				
+			return val;
+		}
+	}
+	
+	function __funcIf() constructor {
+		condition = noone;
+		if_true   = new __funcList();
+		if_false  = new __funcList();
+		
+		static validate = function() {
+			if(condition != noone && !condition.validate())	return false;
+			if(if_true != noone && !if_true.validate())		return false;
+			if(if_false != noone && !if_false.validate())	return false;
+			return true;
+		}
+		
+		static isAnimated = function() {
+			if(condition != noone && !condition.isAnimated())	return false;
+			if(if_true != noone && !if_true.isAnimated())		return false;
+			if(if_false != noone && !if_false.isAnimated())		return false;
+			return true;
+		}
+		
+		static eval = function(params = {}) {
+			if(condition == noone) return 0;
+			
+			var res = condition.eval(params);
+			printIf(global.FLAG.expression_debug, $"<<<<<< IF {res} >>>>>>");
+			
+			if(res) return if_true == noone? 0  : if_true.eval(params);
+			else    return if_false == noone? 0 : if_false.eval(params);
+		}
+	}
+	
+	function __funcFor() constructor {
+		itr_array = false;
+		
+		cond_init = noone;
+		cond_iter = noone;
+		cond_term = noone;
+		
+		cond_arr  = noone;
+		
+		cond_step = 1;
+		action    = new __funcList();
+		
+		static validate = function() {
+			if(itr_array) {
+				if(cond_arr == noone || !cond_arr.validate()) return false;
+			} else {
+				if(cond_init == noone || !cond_init.validate()) return false;
+				if(cond_term == noone || !cond_term.validate())	return false;
+			}
+			
+			if(action != noone && !action.validate())		return false;
+			
+			return true;
+		}
+		
+		static isAnimated = function() {
+			if(itr_array) {
+				if(cond_arr == noone || !cond_arr.isAnimated())	return false;
+			} else {
+				if(cond_init == noone || !cond_init.isAnimated())	return false;
+				if(cond_term == noone || !cond_term.isAnimated())	return false;
+			}
+			
+			if(action != noone && !action.isAnimated())			return false;
+			
+			return true;
+		}
+		
+		static eval = function(params = {}) {
+			if(itr_array) {
+				var _arr = cond_arr.eval(params);
+				printIf(global.FLAG.expression_debug, $"<<<<<< FOR EACH {_arr} >>>>>>");
+				for( var i = 0; i < array_length(_arr); i++ ) {
+					var val = _arr[i];
+					params[$ cond_iter] = val;
+					
+					printIf(global.FLAG.expression_debug, $"<< ITER {i}: {cond_iter} = {val} >>");
+					action.eval(params);
+				}
+			} else {
+				printIf(global.FLAG.expression_debug, "<< FOR >>");
+				cond_init.eval(params);
+				
+				while(cond_term.eval(params)) {
+					action.eval(params);
+					cond_iter.eval(params);
+				}
+			}
+		}
 	}
 	
 	function __funcTree(symbol, l = noone, r = noone) constructor {
@@ -101,12 +231,14 @@ function functionStringClean(fx) {
 		static getVal = function(val, params = {}, getRaw = false) {
 			if(is_struct(val)) return val.eval(params);
 			if(is_real(val))   return val;
+			if(getRaw) return val;
+			
 			if(is_string(val)) val = string_trim(val);
+			
+			//printIf(global.FLAG.expression_debug, $"    [ get struct {params}[{val}] ]");
 			
 			if(struct_has(params, val))
 				return struct_try_get(params, val);
-			
-			if(getRaw) return val;
 			
 			if(_string(string_trim(val)))
 				return string_trim(val);
@@ -188,13 +320,13 @@ function functionStringClean(fx) {
 					_l[i] = getVal(l[i], params);
 					
 				var res = _ev(_l);
-				//print($"Function {symbol}{_l} = {res}");
-				//print("====================");
+				printIf(global.FLAG.expression_debug, $"Function {symbol}{_l} = {res}");
+				printIf(global.FLAG.expression_debug, "====================");
 				
 				return res;
 			}
 			
-			var v1 = getVal(l, params, symbol == "【");
+			var v1 = getVal(l, params, symbol == "=" || symbol == "【");
 			var v2 = getVal(r, params);
 			
 			var res = 0;
@@ -207,6 +339,9 @@ function functionStringClean(fx) {
 					res[i] = getVal(v1[i], params);
 			} else if(symbol == "@") {
 				res = is_real(v2)? array_safe_get(v1, v2) : 0;
+			} else if(symbol == "=") {
+				params[$ v1] = v2;
+				res = v2;
 			} else if(is_array(v1) && !is_array(v2)) {
 				res = array_create(array_length(v1));
 				for( var i = 0; i < array_length(res); i++ )
@@ -222,11 +357,11 @@ function functionStringClean(fx) {
 			} else 
 				res = eval_real(v1, v2);
 			
-			//print($"|{v1}|{symbol}|{v2}| = {res}");
-			//print($"symbol : {symbol}");
-			//print($"l      : | {typeof(l)} |{l}|");
-			//print($"r      : | {typeof(r)} |{r}|");
-			//print("====================");
+			printIf(global.FLAG.expression_debug, $"|{v1}|{symbol}|{v2}| = {res}");
+			printIf(global.FLAG.expression_debug, $"symbol : {symbol}");
+			printIf(global.FLAG.expression_debug, $"l      : | {typeof(l)} |{l}|");
+			printIf(global.FLAG.expression_debug, $"r      : | {typeof(r)} |{r}|");
+			printIf(global.FLAG.expression_debug, "====================");
 			
 			return res;
 		}
@@ -244,6 +379,7 @@ function functionStringClean(fx) {
 				case "*": return (is_real(v1) && is_real(v2))? v1 * v2		 : 0;
 				case "$": return (is_real(v1) && is_real(v2))? power(v1, v2) : 0;
 				case "/": return (is_real(v1) && is_real(v2) && v2 != 0)? v1 / v2 : 0;
+				case "%": return (is_real(v1) && is_real(v2) && v2 != 0)? v1 % v2 : 0;
 				
 				case "&": return (is_real(v1) && is_real(v2))? v1 & v2       : 0;
 				case "|": return (is_real(v1) && is_real(v2))? v1 | v2       : 0;
@@ -252,7 +388,7 @@ function functionStringClean(fx) {
 				case "»": return (is_real(v1) && is_real(v2))? v1 >> v2      : 0;
 				case "~": return  is_real(v1)? ~v1 : 0;
 				
-				case "=": return (is_real(v1) && is_real(v2))? v1 == v2      : 0;
+				case "⩵": return (is_real(v1) && is_real(v2))? v1 == v2     : 0;
 				case "≠": return (is_real(v1) && is_real(v2))? v1 != v2      : 0;
 				case "≤": return (is_real(v1) && is_real(v2))? v1 <= v2      : 0;
 				case "≥": return (is_real(v1) && is_real(v2))? v1 >= v2      : 0;
@@ -271,7 +407,94 @@ function functionStringClean(fx) {
 			return v1;
 		}
 	}
-
+	
+	function functionStrip(fx) {
+		var el_st = 1;
+		var el_ed = 1;
+		
+		for( var i = 1; i <= string_length(fx); i++ ) {
+			var cch = string_char_at(fx, i);
+			if(cch == "(") {
+				el_st = i + 1;
+				break;
+			}
+		}
+		
+		for( var i = string_length(fx); i >= 1; i-- ) {
+			var cch = string_char_at(fx, i);
+			if(cch == ")") {
+				el_ed = i;
+				break;
+			}
+		}
+		
+		return string_copy(fx, el_st, el_ed - el_st)
+	}
+	
+	function evaluateFunctionList(fx) {
+		var fxs = string_split(fx, "\n");
+		var flist = new __funcList();
+		
+		var call_st = ds_stack_create();
+		ds_stack_push(call_st, flist);
+		
+		for( var i = 0; i < array_length(fxs); i++ ) {
+			var _fx = functionStringClean(fxs[i]);
+			if(_fx == "") continue;
+			
+			var _fx_sp = string_split(_fx, "(");
+			if(string_char_at(_fx, 1) == "}") {
+				ds_stack_pop(call_st);
+				_fx = string_replace(_fx, "}", "");
+			}
+			
+			if(array_length(_fx_sp) > 1) {
+				var _cond = functionStrip(_fx);
+				
+				switch(_fx_sp[0]) {
+					case "if":
+						var con_if = new __funcIf();
+						con_if.condition = evaluateFunctionTree(_cond);
+						ds_stack_top(call_st).addFunction(con_if);
+						ds_stack_push(call_st, con_if.if_true);
+						continue;
+					case "else if":
+						var con_if = new __funcIf();
+						con_if.condition = evaluateFunctionTree(_cond);
+						ds_stack_top(call_st).addFunction(con_if);
+						ds_stack_push(call_st, con_if.if_true);
+						continue;
+					case "else":
+						ds_stack_push(call_st, con_if.if_false);
+						continue;
+					case "for":
+						var con_for = new __funcFor();
+						var cond    = string_splice(_cond, ":");
+						if(array_length(cond) == 2) {
+							con_for.itr_array = true;
+							con_for.cond_iter = cond[0];
+							con_for.cond_arr  = evaluateFunctionTree(cond[1]);
+						} else if(array_length(cond) == 3) {
+							con_for.itr_array = false;
+							con_for.cond_init = evaluateFunctionTree(cond[0]);
+							con_for.cond_iter = evaluateFunctionTree(cond[1]);
+							con_for.cond_term = evaluateFunctionTree(cond[2]);
+						}
+						ds_stack_top(call_st).addFunction(con_for);
+						ds_stack_push(call_st, con_for.action);
+						continue;
+				}
+			} 
+			
+			ds_stack_top(call_st).addFunction(evaluateFunctionTree(_fx));
+		}
+		
+		var val = ds_stack_pop(call_st);
+		ds_stack_destroy(call_st);
+		
+		return val;
+	}
+	
 	function evaluateFunctionTree(fx) {
 		static __BRACKETS = [ "(", ")", "[", "]" ];
 		
@@ -279,8 +502,6 @@ function functionStringClean(fx) {
 		var vl   = ds_stack_create();
 		var op   = ds_stack_create();
 		var last_push = "";
-		
-		fx = functionStringClean(fx);
 		
 		var len = string_length(fx);
 		var l   = 1;
@@ -293,6 +514,8 @@ function functionStringClean(fx) {
 		
 		while(l <= len) {
 			ch = string_char_at(fx, l);
+			
+			//print($"Analyzing {ch}");
 			
 			if(ds_map_exists(pres, ch)) { //symbol is operator
 				if(ds_stack_empty(op)) ds_stack_push(op, ch);
@@ -348,10 +571,12 @@ function functionStringClean(fx) {
 						var arr = [];
 						while(ds_stack_size(vl) > _top[1])
 							array_insert(arr, 0, ds_stack_pop(vl));
-						ds_stack_push(vl, arr);
+						ds_stack_pop(op);
+						ds_stack_push(vl, new __funcTree("【", arr));
 						break;
 					}
 					
+					print($"Build tree {_top}");
 					ds_stack_push(vl, buildFuncTree(_top, vl));
 				}
 				
@@ -399,14 +624,17 @@ function functionStringClean(fx) {
 				}
 			}
 			
+			//print($"op: {ds_stack_size(op)}; vl: {ds_stack_size(vl)}");
+			
 			_ch = ch;
 		}
 		
 		while(!ds_stack_empty(op)) 
 			ds_stack_push(vl, buildFuncTree(ds_stack_pop(op), vl));
-		ds_stack_destroy(op);
 		
-		var tree = ds_stack_empty(vl)? noone : ds_stack_pop(vl)
+		var tree = ds_stack_empty(vl)? noone : ds_stack_pop(vl);
+		
+		ds_stack_destroy(op);
 		ds_stack_destroy(vl);
 		
 		if(!is_struct(tree))
@@ -440,17 +668,14 @@ function functionStringClean(fx) {
 				
 			case "@": 
 				var _v1 = ds_stack_pop(vl);
-				if(is_array(_v1))
-					return new __funcTree("【", _v1);	
-				else {
-					var _v2 = ds_stack_pop(vl);
-					return new __funcTree(operator, _v2, _v1);	
-				}
+				var _v2 = ds_stack_pop(vl);
+				return new __funcTree(operator, _v2, _v1);	
 				
 			case "+": //binary operators
 			case "*": 
 			case "$": 
 			case "/": 
+			case "%": 
 			
 			case "|": 
 			case "&": 
@@ -459,6 +684,7 @@ function functionStringClean(fx) {
 			case "«": 
 			
 			case "=": 
+			case "⩵": 
 			case "≠": 
 			case "≤": 
 			case "≥": 
@@ -479,6 +705,6 @@ function functionStringClean(fx) {
 	
 	function evaluateFunction(fx, params = {}) {
 		if(isNumber(fx)) return toNumber(fx);
-		return evaluateFunctionTree(fx).eval(params);
+		return evaluateFunctionList(fx).eval(params);
 	}
 #endregion

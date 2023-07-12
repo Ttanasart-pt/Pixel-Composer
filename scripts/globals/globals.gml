@@ -76,7 +76,7 @@
 	
 	VERSION			= 1147;
 	SAVE_VERSION	= 1447;
-	VERSION_STRING  = "1.14.6n4";
+	VERSION_STRING  = "1.14.6n5";
 	BUILD_NUMBER	= 114600;
 	
 	globalvar APPEND_MAP;
@@ -214,4 +214,6 @@
 
 #region debug
 	global.FLAG = {};
+	
+	global.FLAG.expression_debug = false;
 #endregion

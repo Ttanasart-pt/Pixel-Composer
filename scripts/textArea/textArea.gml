@@ -39,6 +39,8 @@ function textArea(_input, _onModify, _extras = noone) : textInput(_input, _onMod
 	
 	code_line_width = 48;
 	
+	parser_server = noone;
+	
 	autocomplete_box = instance_create(0, 0, o_dialog_textbox_autocomplete);
 	autocomplete_box.textbox = self;
 	autocomplete_server = noone;
@@ -71,6 +73,67 @@ function textArea(_input, _onModify, _extras = noone) : textInput(_input, _onMod
 		apply();
 		WIDGET_CURRENT = noone;
 		UNDO_HOLDING = false;
+	}
+	
+	static onModified = function() { 
+		if(format == TEXT_AREA_FORMAT.code && autocomplete_server != noone) {
+			var crop = string_copy(_input_text, 1, cursor);
+			var slp  = string_splice(crop, [" ", "(", ",", "\n"]);
+			var pmt  = array_safe_get(slp, -1,, ARRAY_OVERFLOW.loop);
+					
+			var params = [];
+			if(parser_server != noone)
+				params = parser_server(crop);
+					
+			var data = autocomplete_server(pmt, params);
+					
+			if(array_length(data)) {
+				autocomplete_box.data   = data;
+						
+				autocomplete_box.active   = true;
+				autocomplete_box.dialog_x = rx + cursor_pos_x + 1;
+				autocomplete_box.dialog_y = ry + cursor_pos_y + line_get_height() + 1;
+				autocomplete_box.prompt   = pmt;
+				autocomplete_box.selecting= 0;
+			} else 
+				autocomplete_box.active   = false;
+					
+			var _c  = cursor;
+			var _v  = false;
+			var _fn = "";
+			var _el = 0;
+			var amo = 0;
+					
+			while(_c > 1) {
+				var cch0 = string_char_at(_input_text, _c - 1);
+				var cch1 = string_char_at(_input_text, _c);
+						
+				if(_el == 0 && cch1 == ",") amo++;
+						
+				if(_el == 0 && cch1 == "(" && string_variable_valid(cch0))
+					_v = true;
+				else if(cch1 == ")") _el++;
+				else if(cch1 == "(") _el--;
+						
+				if(_v) {
+					if(!string_variable_valid(cch0)) 
+						break;
+					_fn = cch0 + _fn;
+				}
+						
+				_c--;
+			}
+			var guide = function_guide_server(_fn);
+					
+			if(guide != "") {
+				function_guide_box.active   = true;
+				function_guide_box.dialog_x = rx + cursor_pos_x + 1;
+				function_guide_box.dialog_y = ry + cursor_pos_y - 12;
+				function_guide_box.prompt   = guide;
+				function_guide_box.index    = amo;
+			} else 
+				function_guide_box.active   = false;
+		}
 	}
 	
 	static onKey = function(key) {
@@ -140,6 +203,7 @@ function textArea(_input, _onModify, _extras = noone) : textInput(_input, _onMod
 				cursor_select	= -1;
 					
 			cursor = _target;
+			onModified();
 		}
 		
 		if(format != TEXT_AREA_FORMAT.code || !autocomplete_box.active)
@@ -174,6 +238,7 @@ function textArea(_input, _onModify, _extras = noone) : textInput(_input, _onMod
 				cursor_select	= -1;
 					
 			cursor = _target;
+			onModified();
 		}
 	}
 	
@@ -185,6 +250,8 @@ function textArea(_input, _onModify, _extras = noone) : textInput(_input, _onMod
 	static move_cursor = function(delta) {
 		var ll = string_length(_input_text);
 		cursor = clamp(cursor + delta, 0, ll);
+		
+		onModified();
 	}
 	
 	static cut_line = function() {
@@ -238,6 +305,10 @@ function textArea(_input, _onModify, _extras = noone) : textInput(_input, _onMod
 	}
 	
 	static editText = function() {
+		//print("==========");
+		//print(_input_text);
+		//print($"cursor: {cursor}");
+		
 		var modified = false;
 		
 		#region text editor
@@ -256,7 +327,7 @@ function textArea(_input, _onModify, _extras = noone) : textInput(_input, _onMod
 					
 				if(keyboard_check_pressed(vk_escape)) {
 				} else if(keyboard_check_pressed(vk_tab)) {
-				} else if(keyboard_check_pressed(vk_enter) && !key_mod_press(SHIFT)) {
+				} else if(keyboard_check_pressed(vk_enter) && key_mod_press(SHIFT)) {
 					var ch = "\n";
 					if(cursor_select == -1) {
 						var str_before	= string_copy(_input_text, 1, cursor);
@@ -350,64 +421,7 @@ function textArea(_input, _onModify, _extras = noone) : textInput(_input, _onMod
 			keyboard_lastkey = -1;
 		#endregion
 		
-		if(modified) {
-			#region autocomplete
-				if(format == TEXT_AREA_FORMAT.code && autocomplete_server != noone) {
-					var crop = string_copy(_input_text, 1, cursor);
-					var slp  = string_splice(crop, [" ", "(", ","]);
-					var pmt  = array_safe_get(slp, -1,, ARRAY_OVERFLOW.loop);
-					
-					var data = autocomplete_server(pmt);
-					
-					if(array_length(data)) {
-						autocomplete_box.data   = data;
-						
-						autocomplete_box.active   = true;
-						autocomplete_box.dialog_x = rx + cursor_pos_x + 1;
-						autocomplete_box.dialog_y = ry + cursor_pos_y + line_get_height() + 1;
-						autocomplete_box.prompt   = pmt;
-						autocomplete_box.selecting= 0;
-					} else 
-						autocomplete_box.active   = false;
-					
-					var _c  = cursor;
-					var _v  = false;
-					var _fn = "";
-					var _el = 0;
-					var amo = 0;
-					
-					while(_c > 1) {
-						var cch0 = string_char_at(_input_text, _c - 1);
-						var cch1 = string_char_at(_input_text, _c);
-						
-						if(_el == 0 && cch1 == ",") amo++;
-						
-						if(_el == 0 && cch1 == "(" && string_variable_valid(cch0))
-							_v = true;
-						else if(cch1 == ")") _el++;
-						else if(cch1 == "(") _el--;
-						
-						if(_v) {
-							if(!string_variable_valid(cch0)) 
-								break;
-							_fn = cch0 + _fn;
-						}
-						
-						_c--;
-					}
-					var guide = function_guide_server(_fn);
-					
-					if(guide != "") {
-						function_guide_box.active   = true;
-						function_guide_box.dialog_x = rx + cursor_pos_x + 1;
-						function_guide_box.dialog_y = ry + cursor_pos_y - 12;
-						function_guide_box.prompt   = guide;
-						function_guide_box.index    = amo;
-					} else 
-						function_guide_box.active   = false;
-				}
-			#endregion
-		}
+		if(modified) onModified();
 		
 		if(auto_update && keyboard_check_pressed(vk_anykey))
 			apply();
@@ -440,11 +454,11 @@ function textArea(_input, _onModify, _extras = noone) : textInput(_input, _onMod
 			while(string_char_at(_input_text, cursor + 1) != "\n" && cursor < string_length(_input_text)) {
 				cursor++;
 			}
-		} else if(keyboard_check_pressed(vk_escape)) {
+		} else if(keyboard_check_pressed(vk_escape) && !autocomplete_box.active) {
 			_input_text = _last_value;
 			cut_line();
 			deactivate();
-		} else if(keyboard_check_pressed(vk_enter) && key_mod_press(SHIFT)) {
+		} else if(keyboard_check_pressed(vk_enter) && !key_mod_press(SHIFT)) {
 			deactivate();
 		}
 	}
@@ -465,6 +479,14 @@ function textArea(_input, _onModify, _extras = noone) : textInput(_input, _onMod
 		var ch_x = _x;
 		var ch_y = _y;
 		var _str;
+		
+		//print("==========");
+		//print(_text);
+		//print(">>>>");
+		//print(_input_text);
+		//print("----");
+		//print(_input_text_line);
+		//print($"cursor: {cursor}");
 		
 		if(_input_text != _text) {
 			_input_text = _text;

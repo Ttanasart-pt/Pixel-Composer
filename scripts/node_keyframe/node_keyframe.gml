@@ -169,7 +169,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 		if(!prop.is_anim) 
 			return processType(values[| 0].value);
 		
-		var _time_first = values[| 0].time;
+		var _time_first = prop.loop_range == -1? values[| 0].time : values[| ds_list_size(values) - 1 - prop.loop_range].time;
 		var _time_last  = values[| ds_list_size(values) - 1].time;
 		var _time_dura  = _time_last - _time_first;
 			

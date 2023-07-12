@@ -90,6 +90,8 @@ function Panel_Animation() : PanelContent() constructor {
 	tool_width_start = 0;
 	tool_width_mx    = 0;
 	
+	on_end_dragging_anim = noone;
+	
 	onion_dragging = noone;
 	
 	prev_cache = array_create(PROJECT.animator.frames_total);
@@ -798,7 +800,7 @@ function Panel_Animation() : PanelContent() constructor {
 		var key_list    = animator.values;
 		
 		if((animator.prop.on_end == KEYFRAME_END.loop || animator.prop.on_end == KEYFRAME_END.ping) && ds_list_size(key_list) > 1) {
-			var keyframe_s = key_list[| 0].time;
+			var keyframe_s = animator.prop.loop_range == -1? key_list[| 0].time : key_list[| ds_list_size(key_list) - 1 - animator.prop.loop_range].time;
 			var keyframe_e = key_list[| ds_list_size(key_list) - 1].time;
 								
 			var ks_x = (keyframe_s + 1) * ui(timeline_scale) + timeline_shift;
@@ -854,6 +856,7 @@ function Panel_Animation() : PanelContent() constructor {
 		var prop_y	  = animator.dopesheet_y;
 		var key_hover = noone;
 		var node_y	  = _node.dopesheet_y + dope_sheet_node_padding;
+		var anim_set  = true;
 		
 		for(var k = 0; k < ds_list_size(animator.values); k++) {
 			var keyframe = animator.values[| k];
@@ -863,6 +866,14 @@ function Panel_Animation() : PanelContent() constructor {
 						
 			if(!_node.anim_show) continue;
 			var cc = COLORS.panel_animation_keyframe_unselected;
+			if(on_end_dragging_anim == animator.prop && msx < t && anim_set) {
+				if(k == 0)
+					animator.prop.loop_range = -1;
+				else
+					animator.prop.loop_range = ds_list_size(animator.values) - k;
+				anim_set = false;
+			}
+			
 			if(pHOVER && point_in_circle(msx, msy, t, prop_y, ui(8))) {
 				cc = COLORS.panel_animation_keyframe_selected;
 				key_hover = keyframe;
@@ -981,10 +992,12 @@ function Panel_Animation() : PanelContent() constructor {
 			draw_sprite_ui_uniform(THEME.prop_on_end, animator.prop.on_end, tx, ty, 1, COLORS._main_icon_on_inner, 1);
 			TOOLTIP = __txtx("panel_animation_looping_mode", "Looping mode") + ": " + ON_END_NAME[animator.prop.on_end];
 							
-			if(mouse_press(mb_left, pFOCUS))
+			if(mouse_release(mb_left, pFOCUS)) 
 				animator.prop.on_end = safe_mod(animator.prop.on_end + 1, sprite_get_number(THEME.prop_on_end));
+			if(mouse_press(mb_left, pFOCUS)) 
+				on_end_dragging_anim = animator.prop;
 		} else
-			draw_sprite_ui_uniform(THEME.prop_on_end, animator.prop.on_end, tx, ty, 1, COLORS._main_icon);
+			draw_sprite_ui_uniform(THEME.prop_on_end, animator.prop.on_end, tx, ty, 1, on_end_dragging_anim == animator.prop? COLORS._main_accent : COLORS._main_icon);
 						
 		if(pHOVER && point_in_circle(msx, msy, ui(22), ty - 1, ui(10))) {
 			draw_sprite_ui_uniform(THEME.timeline_clock, 1, ui(22), ty - 1, 1, COLORS._main_icon_on_inner, 1);
@@ -1419,6 +1432,13 @@ function Panel_Animation() : PanelContent() constructor {
 			//	if(mouse_release(mb_left)) 
 			//		dopesheet_dragging = noone;
 			//}
+		#endregion
+		
+		#region on end dragging
+			if(on_end_dragging_anim != noone) {
+				if(mouse_release(mb_left))
+					on_end_dragging_anim = false;
+			}
 		#endregion
 		
 		#region draw graph, easing line

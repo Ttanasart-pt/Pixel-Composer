@@ -1,9 +1,44 @@
 global.GLOBAL_VAR = [ "project" ];
 global.NODE_SUB_CATAG = [ "input", "output" ];
 
-function pxl_autocomplete_server(prompt) { 
+function pxl_document_parser(prompt) {
+	var params = [];
+	
+	var lines = string_split(prompt, "\n");
+	
+	for( var i = 0; i < array_length(lines); i++ ) {
+		var line = lines[i];
+		line = functionStringClean(line);
+		
+		var eq = string_split(line, "=");
+		
+		if(array_length(eq) > 1) {
+			for( var j = 0; j < array_length(eq) - 1; j++ )
+				array_push(params, string_trim(eq[j]));
+		}
+	}
+	
+	return params;
+}
+
+function pxl_autocomplete_server(prompt, params = []) { 
 	var res = [];
 	var pr_list = ds_priority_create();
+	
+	//////////////////////////////////
+	ds_priority_clear(pr_list);
+	
+	for( var i = 0; i < array_length(params); i++ ) {
+		var gl = params[i];
+		
+		var match = string_partial_match(string_lower(gl), string_lower(prompt));
+		if(match == -9999) continue;
+		
+		ds_priority_add(pr_list, [[THEME.ac_constant, 2], gl, "local", gl], match);
+	}
+	
+	repeat(ds_priority_size(pr_list))
+		array_push(res, ds_priority_delete_max(pr_list));
 	
 	//////////////////////////////////
 	ds_priority_clear(pr_list);
@@ -15,6 +50,27 @@ function pxl_autocomplete_server(prompt) {
 		if(match == -9999) continue;
 		
 		ds_priority_add(pr_list, [[THEME.ac_constant, 0], gl, "global", gl], match);
+	}
+	
+	repeat(ds_priority_size(pr_list))
+		array_push(res, ds_priority_delete_max(pr_list));
+		
+	//////////////////////////////////
+	ds_priority_clear(pr_list);
+	
+	var F = PROJECT.globalNode.value;
+	var k = ds_map_find_first(F);
+	var a = ds_map_size(F);
+	repeat(a) {
+		var match = string_partial_match(string_lower(k), string_lower(prompt));
+		if(match == -9999) {
+			k = ds_map_find_next(F, k);
+			continue;
+		}
+		
+		var fn = F[? prompt];
+		ds_priority_add(pr_list, [[THEME.ac_constant, 0], k, "global", k], match);
+		k = ds_map_find_next(F, k);
 	}
 	
 	repeat(ds_priority_size(pr_list))
@@ -102,7 +158,7 @@ function pxl_autocomplete_server(prompt) {
 		}
 		
 		var fn = F[? prompt];
-		ds_priority_add(pr_list, [[THEME.ac_constant, 0], k, "node", k], match);
+		ds_priority_add(pr_list, [[THEME.ac_constant, 1], k, "node", k], match);
 		k = ds_map_find_next(F, k);
 	}
 	

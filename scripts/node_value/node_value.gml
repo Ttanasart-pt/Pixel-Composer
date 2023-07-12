@@ -399,6 +399,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	
 	def_val		= _value;
 	on_end		= KEYFRAME_END.hold;
+	loop_range  = -1;
+	
 	unit		= new nodeValueUnit(self);
 	extra_data	= [];
 	dyna_depo   = ds_list_create();
@@ -439,8 +441,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		expression = str;
 		expressionUpdate();
 	});
-	express_edit.autocomplete_server   = pxl_autocomplete_server;
-	express_edit.function_guide_server = pxl_function_guide_server;
+	express_edit.autocomplete_server	= pxl_autocomplete_server;
+	express_edit.function_guide_server	= pxl_function_guide_server;
+	express_edit.parser_server			= pxl_document_parser;
 	express_edit.format   = TEXT_AREA_FORMAT.code;
 	express_edit.font     = f_code;
 	express_edit.boxColor = COLORS._main_value_positive;
@@ -874,7 +877,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	resetDisplay();
 	
 	static expressionUpdate = function() {
-		expTree    = evaluateFunctionTree(expression);
+		expTree    = evaluateFunctionList(expression);
 		node.triggerRender();
 	}
 	
@@ -1114,8 +1117,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			val = value_from.getValueRecursive(_time); 
 		
 		if(expUse && is_struct(expTree) && expTree.validate()) {
-			//print("========== Expression eval ==========")
-			val[0] = expTree.eval({ value: val[0] });
+			printIf(global.FLAG.expression_debug, "==================== EVAL BEGIN ====================");
+			var params = { value: val[0] };
+			val[0] = expTree.eval(variable_clone(params));
 		}
 		
 		return val;
@@ -1647,6 +1651,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			return _map;
 		
 		_map.on_end		= on_end;
+		_map.loop_range	= loop_range;
 		_map.unit		= unit.mode;
 		_map.sep_axis	= sep_axis;
 		_map.shift_x	= draw_line_shift_x;
@@ -1682,10 +1687,11 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		//printIf(TESTING, "     |- Applying deserialize to junction " + name + " of node " + node.name);
 		on_end		= struct_try_get(_map, "on_end");
+		loop_range	= struct_try_get(_map, "loop_range", -1);
 		unit.mode	= struct_try_get(_map, "unit");
 		expUse    	= struct_try_get(_map, "global_use");
 		expression	= struct_try_get(_map, "global_key");
-		expTree     = evaluateFunctionTree(expression); 
+		expTree     = evaluateFunctionList(expression); 
 		
 		sep_axis	= struct_try_get(_map, "sep_axis");
 		is_anim		= struct_try_get(_map, "anim");
