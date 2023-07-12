@@ -25,19 +25,41 @@
 	global.EQUATION_PRES[? "@"] = 5; //array accerssor symbol
 	
 	global.FUNCTIONS    = ds_map_create();
-	global.FUNCTIONS[? "sin"]   = [ 1, function(val) { return sin(val[0]); } ];
-	global.FUNCTIONS[? "cos"]   = [ 1, function(val) { return cos(val[0]); } ];
-	global.FUNCTIONS[? "tan"]   = [ 1, function(val) { return tan(val[0]); } ];
-	global.FUNCTIONS[? "abs"]   = [ 1, function(val) { return abs(val[0]); } ];
-	global.FUNCTIONS[? "round"] = [ 1, function(val) { return round(val[0]); } ];
-	global.FUNCTIONS[? "ceil"]  = [ 1, function(val) { return ceil(val[0]);  } ];
-	global.FUNCTIONS[? "floor"] = [ 1, function(val) { return floor(val[0]); } ];
+	global.FUNCTIONS[? "sin"]    = [ ["radian"], function(val) { return sin(val[0]); } ];
+	global.FUNCTIONS[? "cos"]    = [ ["radian"], function(val) { return cos(val[0]); } ];
+	global.FUNCTIONS[? "tan"]    = [ ["radian"], function(val) { return tan(val[0]); } ];
+	global.FUNCTIONS[? "abs"]    = [ ["number"], function(val) { return abs(val[0]); } ];
+	global.FUNCTIONS[? "round"]  = [ ["number"], function(val) { return round(val[0]); } ];
+	global.FUNCTIONS[? "ceil"]   = [ ["number"], function(val) { return ceil(val[0]);  } ];
+	global.FUNCTIONS[? "floor"]  = [ ["number"], function(val) { return floor(val[0]); } ];
 	
-	global.FUNCTIONS[? "wiggle"] = [ 2, function(val) { return wiggle(0, 1, val[1], val[0]); } ];
+	global.FUNCTIONS[? "wiggle"] = [ ["time", "frequency", "octave", "seed"],	function(val) { 
+																					return wiggle(0, 1, array_safe_get(val, 1), 
+																										array_safe_get(val, 0), 
+																										array_safe_get(val, 3, 0), 
+																										array_safe_get(val, 2, 1)); 
+																				} ];
 #endregion
 
 function functionStringClean(fx) {
-	//fx = string_replace_all(fx,  " ", "");
+	var ch = "", ind = 0, len = string_length(fx);
+	var _fx = "", str = false;
+	while(ind++ <= len) {
+		ch = string_char_at(fx, ind);
+		
+		if(ch == " ") {
+			if(str)
+				_fx += ch;
+		} else
+			_fx += ch;
+			
+		if(ch == "\"")
+			str = !str;
+	}
+	
+	fx = _fx;
+	
+	
 	fx = string_replace_all(fx, "\n", "");
 	fx = string_replace_all(fx, "**", "$");
 	fx = string_replace_all(fx, "<<", "«");
@@ -65,6 +87,7 @@ function functionStringClean(fx) {
 		self.symbol = symbol;
 		self.l = l;
 		self.r = r;
+		dependency = [];
 		
 		static _string = function(str) {
 			return string_char_at(str, 1) == "\"" && 
@@ -102,21 +125,19 @@ function functionStringClean(fx) {
 			var strs = string_splice(val, ".");
 			if(array_length(strs) < 2) return false;
 			
-			if(strs[0] == "Project") {
-				switch(strs[1]) {
-					case "frame" :		
-					case "frameTotal" : 
-					case "fps" :		
-						return true;
-				}
-				return false;
-			}
+			if(strs[0] == "Project")
+				return ds_map_exists(PROJECT_VARIABLES, strs[1]);
 			
-			var key = strs[0];
-			return ds_map_exists(PROJECT.nodeNameMap, key);
+			if(!ds_map_exists(PROJECT.nodeNameMap, strs[0]))
+				return false;
+			
+			array_push_unique(dependency, strs[0])	
+			return true;
 		}
 		
 		static validate = function() {
+			dependency = [];
+			
 			if(ds_map_exists(global.FUNCTIONS, symbol)) {
 				if(!is_array(l)) return false;
 				for( var i = 0; i < array_length(l); i++ )
@@ -268,12 +289,10 @@ function functionStringClean(fx) {
 		var _ch = "";
 		var in_str = false;
 		
+		//print($"===== Function: {fx} =====");
+		
 		while(l <= len) {
 			ch = string_char_at(fx, l);
-			if(ch == " ") {
-				l++;
-				continue;
-			}
 			
 			if(ds_map_exists(pres, ch)) { //symbol is operator
 				if(ds_stack_empty(op)) ds_stack_push(op, ch);
@@ -299,9 +318,6 @@ function functionStringClean(fx) {
 				last_push = "op";
 				l++;
 			} else if (ch == ")") {
-				while(ds_stack_top(op) != "(" && !ds_stack_empty(op))
-					ds_stack_push(vl, buildFuncTree(ds_stack_pop(op), vl));
-				
 				while(!ds_stack_empty(op)) {
 					var _top = ds_stack_pop(op);
 					if(_top == "(") break;
@@ -347,7 +363,6 @@ function functionStringClean(fx) {
 					if(_top == "[" || _top == "(" || (is_array(_top) && _top[0] == "{")) break;
 					
 					ds_stack_push(vl, buildFuncTree(_top, vl));
-					ds_stack_pop(op);
 				}
 				
 				last_push = "vl";
@@ -357,7 +372,11 @@ function functionStringClean(fx) {
 				
 				while(l <= len) {
 					cch = string_char_at(fx, l);
-					if(ds_map_exists(pres, cch) || array_exists(__BRACKETS, cch) || cch == ",") break;
+					if(ds_map_exists(pres, cch) || array_exists(__BRACKETS, cch)) break;
+					if(cch == ",") {
+						l++;
+						break;
+					}
 					
 					vsl += cch;
 					l++;
@@ -393,16 +412,22 @@ function functionStringClean(fx) {
 		if(!is_struct(tree))
 			tree = new __funcTree("", tree);
 		
-		print("=====");
-		print(fx);
-		print(tree);
-		print("");
+		//print(tree);
+		//print("");
 		
 		return tree;
 	}
 	
 	function buildFuncTree(operator, vl) {
 		if(ds_stack_empty(vl)) return noone;
+		
+		if(ds_map_exists(global.FUNCTIONS, operator)) {
+			if(ds_stack_empty(vl)) 
+				return noone;
+				
+			var _v1 = ds_stack_pop(vl);
+			return new __funcTree(operator, _v1);
+		}
 		
 		switch(operator) {
 			case "-": //deal with preceeding negative number -5

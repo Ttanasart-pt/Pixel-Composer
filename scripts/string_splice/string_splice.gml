@@ -1,21 +1,30 @@
-function string_splice(str, delim) {
+function string_splice(str, delim = " ", keep = false) {
 	var st = [];
 	var ss = str;
 	var sp;
-	var wd = string_length(delim);
+	if(!is_array(delim)) delim = [ delim ];
 	
-	do {
-		sp = string_pos(delim, ss);
+	while(1) {
+		sp = 99999;
+		var found = false;
+		for( var i = 0; i < array_length(delim); i++ ) {
+			var pos = string_pos(delim[i], ss);
+			if(pos) {
+				sp = min(sp, pos);
+				found = true;
+			}
+		}
 		
-		if(sp == 0) { //no delim left
+		if(!found) { //no delim left
 			array_push(st, ss);
 			break;
 		} else {
-			var _ss = string_copy(ss, 1, sp - 1);
+			var _ss = string_copy(ss, 1, keep? sp : sp - 1);
 			array_push(st, _ss);
 		}
+		
 		ss = string_copy(ss, sp + 1, string_length(ss) - sp);
-	} until(sp == 0);
+	} 
 	
 	return st;
 }

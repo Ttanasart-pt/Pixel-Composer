@@ -9,16 +9,20 @@ if(OS == os_windows && gameframe_is_minimized()) {
 }
 
 #region widget scroll
-	if(keyboard_check_pressed(vk_tab) && key_mod_press(SHIFT))
-		widget_previous();
-	else if(keyboard_check_pressed(vk_tab))
-		widget_next();
+	if(!WIDGET_TAB_BLOCK) {
+		if(keyboard_check_pressed(vk_tab) && key_mod_press(SHIFT))
+			widget_previous();
+		else if(keyboard_check_pressed(vk_tab))
+			widget_next();
 	
-	if(keyboard_check_pressed(vk_enter))
-		widget_trigger();
+		if(keyboard_check_pressed(vk_enter))
+			widget_trigger();
 		
-	if(keyboard_check_pressed(vk_escape))
-		widget_clear();
+		if(keyboard_check_pressed(vk_escape))
+			widget_clear();
+	}
+	
+	WIDGET_TAB_BLOCK = false;
 #endregion
 
 #region register UI element

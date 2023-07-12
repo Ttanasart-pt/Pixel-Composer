@@ -439,6 +439,10 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		expression = str;
 		expressionUpdate();
 	});
+	express_edit.autocomplete_server   = pxl_autocomplete_server;
+	express_edit.function_guide_server = pxl_function_guide_server;
+	express_edit.format   = TEXT_AREA_FORMAT.code;
+	express_edit.font     = f_code;
 	express_edit.boxColor = COLORS._main_value_positive;
 	express_edit.align    = fa_left;
 	
@@ -1464,6 +1468,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		return -1;
 	}
 	
+	junction_drawing = [ THEME.node_junctions_single, type ];
 	static drawJunction = function(_s, _mx, _my, sca = 1) {
 		if(!isVisible()) return false;
 		
@@ -1479,15 +1484,17 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			
 			is_hover = true;
 			if(type == VALUE_TYPE.action)
-				draw_sprite_ext(THEME.node_junction_inspector, 1, x, y, ss, ss, 0, c_white, 1);
-			else 
-				draw_sprite_ext(isArray()? THEME.node_junctions_array_hover : THEME.node_junctions_single_hover, type, x, y, ss, ss, 0, c_white, 1);
+				junction_drawing = [THEME.node_junction_inspector, 1];
+			else
+				junction_drawing = [isArray()? THEME.node_junctions_array_hover : THEME.node_junctions_single_hover, type];
 		} else {
 			if(type == VALUE_TYPE.action)
-				draw_sprite_ext(THEME.node_junction_inspector, 0, x, y, ss, ss, 0, c_white, 1);
-			else 
-				draw_sprite_ext(isArray()? THEME.node_junctions_array : THEME.node_junctions_single, type, x, y, ss, ss, 0, c_white, 1);
+				junction_drawing = [THEME.node_junction_inspector, 0];
+			else
+				junction_drawing = [isArray()? THEME.node_junctions_array : THEME.node_junctions_single, type];
 		}
+		
+		draw_sprite_ext(junction_drawing[0], junction_drawing[1], x, y, ss, ss, 0, c_white, 1);
 		
 		return is_hover;
 	}

@@ -729,12 +729,8 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 			var inp = PROJECT.globalNode.getInput(strs[0]);
 			return inp == noone? 0 : inp.getValueRecursive()[0];
 		} else if(string_lower(strs[0]) == "project") {
-			switch(string_lower(strs[1])) {
-				case "frame" :		return PROJECT.animator.current_frame;
-				case "frameTotal" : return PROJECT.animator.frames_total;
-				case "fps" :		return PROJECT.animator.framerate;
-			}
-			return 0;
+			if(!ds_map_exists(PROJECT_VARIABLES, strs[1])) return 0;
+			return PROJECT_VARIABLES[? strs[1]]();
 		} else if(array_length(strs) > 2) { 
 			var key = strs[0];
 			if(!ds_map_exists(PROJECT.nodeNameMap, key)) return 0;

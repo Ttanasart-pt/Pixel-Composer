@@ -55,6 +55,12 @@
 		PROJECTS = [];
 		PROJECT  = new Project();
 	}
+	
+	globalvar PROJECT_VARIABLES;
+	PROJECT_VARIABLES = ds_map_create();
+	PROJECT_VARIABLES[? "frame"]		= [ function() { return PROJECT.animator.current_frame; }];
+	PROJECT_VARIABLES[? "frameTotal"]	= [ function() { return PROJECT.animator.frames_total; }];
+	PROJECT_VARIABLES[? "fps"]			= [ function() { return PROJECT.animator.framerate; }];
 #endregion
 
 #region main
@@ -70,7 +76,7 @@
 	
 	VERSION			= 1147;
 	SAVE_VERSION	= 1447;
-	VERSION_STRING  = "1.14.6n3";
+	VERSION_STRING  = "1.14.6n4";
 	BUILD_NUMBER	= 114600;
 	
 	globalvar APPEND_MAP;

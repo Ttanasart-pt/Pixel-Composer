@@ -193,6 +193,8 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 	if(jun.expUse) {
 		var expValid = jun.expTree != noone && jun.expTree.validate();
 		jun.express_edit.boxColor = expValid? COLORS._main_value_positive : COLORS._main_value_negative;
+		jun.express_edit.rx = rx;
+		jun.express_edit.ry = ry;
 		
 		jun.express_edit.setFocusHover(_focus, _hover);
 		if(_focus) jun.express_edit.register(_scrollPane);
@@ -220,6 +222,9 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 			data: jun.showValue(),
 			mouse: _m,
 		}
+		
+		jun.editWidget.rx = rx;
+		jun.editWidget.ry = ry;
 		
 		switch(jun.display_type) {
 			case VALUE_DISPLAY.button :

@@ -237,8 +237,9 @@
 #endregion
 
 #region dialog
-	globalvar DIALOGS;
+	globalvar DIALOGS, WIDGET_TAB_BLOCK;
 	DIALOGS = ds_list_create();
+	WIDGET_TAB_BLOCK = false;
 #endregion
 
 #region async

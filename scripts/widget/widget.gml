@@ -14,6 +14,9 @@ function widget() constructor {
 	w = 0; 
 	h = 0;
 	
+	rx = 0;
+	ry = 0;
+	
 	static setLua = function(_lua_thread, _lua_key, _lua_func) { 
 		lua_thread = _lua_thread;
 		lua_thread_key = _lua_key;

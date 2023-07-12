@@ -53,7 +53,7 @@ function array_safe_get(arr, index, def = 0, overflow = ARRAY_OVERFLOW._default)
 	
 	if(index < 0) return def;
 	if(index >= array_length(arr)) return def;
-	return arr[index];
+	return arr[index] == undefined? def : arr[index];
 }
 
 function array_push_create(arr, val) {
