@@ -11,6 +11,12 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	inputs[| 2] = nodeValue("Bind data", self, JUNCTION_CONNECT.input, VALUE_TYPE.struct, noone)
 		.setVisible(true, true)
 		.setArrayDepth(1); 
+		
+	inputs[| 3] = nodeValue("Bone transform", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ])
+		.setDisplay(VALUE_DISPLAY.vector);
+		
+	inputs[| 4] = nodeValue("Bone scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
+		.setDisplay(VALUE_DISPLAY.slider, [ 0.1, 2, 0.01 ]);
 	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
@@ -32,12 +38,14 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	attributes.display_name = true;
 	attributes.display_bone = 0;
 	
+	anchor_selecting = noone;
+	
 	array_push(attributeEditors, "Display");
-	array_push(attributeEditors, ["Display name", "display_name", 
+	array_push(attributeEditors, ["Display name", function() { return attributes.display_name; }, 
 		new checkBox(function() { 
 			attributes.display_name = !attributes.display_name;
 		})]);
-	array_push(attributeEditors, ["Display bone", "display_bone", 
+	array_push(attributeEditors, ["Display bone", function() { return attributes.display_bone; }, 
 		new scrollBox(["Octahedral", "Stick"], function(ind) { 
 			attributes.display_bone = ind;
 		})]);
@@ -69,7 +77,7 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		}
 		
 		#region draw bones
-			var _b  = inputs[| 1].getValue();
+			var _b  = bone;
 			if(_b == noone) return 0;
 			var amo = _b.childCount();
 			var _hh = ui(28);
@@ -81,7 +89,9 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			
 			ty += ui(32);
 		
+			var _ty = ty;
 			draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, _x, ty, _w, bh - ui(32), COLORS.node_composite_bg_blend, 1);
+						
 			draw_set_color(COLORS.node_composite_separator);
 			draw_line(_x + 16, ty + ui(8), _x + _w - 16, ty + ui(8));
 		
@@ -91,66 +101,72 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			var _bst = ds_stack_create();
 			ds_stack_push(_bst, [ _b, _x, _w ]);
 			
+			anchor_selecting = noone;
+			
 			while(!ds_stack_empty(_bst)) {
-				var _st  = ds_stack_pop(_bst);
-				var bone = _st[0];
-				var __x  = _st[1];
-				var __w  = _st[2];
+				var _st   = ds_stack_pop(_bst);
+				var _bone = _st[0];
+				var __x   = _st[1];
+				var __w   = _st[2];
 				
-				if(!bone.is_main) {
-					if(bone.parent_anchor) 
-						draw_sprite_ui(THEME.bone, 1, __x + 12, ty + 14,,,, COLORS._main_icon);
-					else if(bone.IKlength) 
-						draw_sprite_ui(THEME.bone, 2, __x + 12, ty + 14,,,, COLORS._main_icon);
-					else
-						draw_sprite_ui(THEME.bone, 0, __x + 12, ty + 14,,,, COLORS._main_icon);
-						
-					draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text);
-					draw_text(__x + 24, ty + 12, bone.name);
+				for( var i = 0; i < array_length(_bone.childs); i++ )
+					ds_stack_push(_bst, [ _bone.childs[i], __x + 16, __w - 16 ]);
 					
-					if(ds_map_exists(surfMap, bone.ID)) {
-						var _sdata = surfMap[? bone.ID];
+				if(_bone.is_main) continue;
+				
+				if(_bone.parent_anchor) 
+					draw_sprite_ui(THEME.bone, 1, __x + 12, ty + 14,,,, COLORS._main_icon);
+				else if(_bone.IKlength) 
+					draw_sprite_ui(THEME.bone, 2, __x + 12, ty + 14,,,, COLORS._main_icon);
+				else
+					draw_sprite_ui(THEME.bone, 0, __x + 12, ty + 14,,,, COLORS._main_icon);
 						
-						var _sx = __x + 24 + string_width(bone.name) + 8;
-						var _sy = ty + 4;
+				draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text);
+				draw_text(__x + 24, ty + 12, _bone.name);
+					
+				if(ds_map_exists(surfMap, _bone.ID)) {
+					var _sdata = surfMap[? _bone.ID];
 						
-						for( var i = 0; i < array_length(_sdata); i++ ) {
-							var _sid  = _sdata[i][0];
-							var _surf = _sdata[i][1];
-							var _sw = surface_get_width(_surf);
-							var _sh = surface_get_height(_surf);
-							var _ss = (_hh - 8) / _sh;
+					var _sx = __x + 24 + string_width(_bone.name) + 8;
+					var _sy = ty + 4;
+						
+					for( var i = 0; i < array_length(_sdata); i++ ) {
+						var _sid  = _sdata[i][0];
+						var _surf = _sdata[i][1];
+						var _sw = surface_get_width(_surf);
+						var _sh = surface_get_height(_surf);
+						var _ss = (_hh - 8) / _sh;
 							
-							draw_surface_ext_safe(_surf, _sx, _sy, _ss, _ss, 0, c_white, 1);
+						draw_surface_ext_safe(_surf, _sx, _sy, _ss, _ss, 0, c_white, 1);
 							
-							if(_hover && point_in_rectangle(_m[0], _m[1], _sx, _sy, _sx + _sw * _ss, _sy + _sh * _ss)) {
-								if(mouse_press(mb_left, _focus)) {
-									layer_dragging = _sid;
-									inputs[| input_fix_len + _sid * data_length].extra_data[0] = "";
-								}
+						if(_hover && point_in_rectangle(_m[0], _m[1], _sx, _sy, _sx + _sw * _ss, _sy + _sh * _ss)) {
+							if(mouse_press(mb_left, _focus)) {
+								layer_dragging = _sid;
+								inputs[| input_fix_len + _sid * data_length].extra_data[0] = "";
+							}
 								
-								draw_set_color(COLORS._main_accent);
-							} else 
-								draw_set_color(COLORS.node_composite_bg);
-							draw_rectangle(_sx, _sy, _sx + _sw * _ss, _sy + _sh * _ss, true);
+							draw_set_color(COLORS._main_accent);
+						} else 
+							draw_set_color(COLORS.node_composite_bg);
+						draw_rectangle(_sx, _sy, _sx + _sw * _ss, _sy + _sh * _ss, true);
 							
-							_sy += _sh * _ss + 4;
-						}
+						_sy += _sh * _ss + 4;
 					}
-					
-					if(layer_dragging != noone && point_in_rectangle(_m[0], _m[1], _x, ty, _x + _w, ty + _hh - 1)) {
-						draw_sprite_stretched_ext(THEME.ui_panel_active, 0, _x, ty, _w, _hh, COLORS._main_accent, 1);
-						hovering = bone;
-					}
-					
-					ty += _hh;
-		
-					draw_set_color(COLORS.node_composite_separator);
-					draw_line(_x + 16, ty, _x + _w - 16, ty);
 				}
+					
+				if(point_in_rectangle(_m[0], _m[1], _x, ty, _x + _w, ty + _hh - 1)) {
+					if(layer_dragging != noone) {
+						draw_sprite_stretched_ext(THEME.ui_panel_active, 0, _x, ty, _w, _hh, COLORS._main_accent, 1);
+						hovering = _bone;
+					}
+						
+					anchor_selecting = [_bone, 2];
+				}
+					
+				ty += _hh;
 				
-				for( var i = 0; i < array_length(bone.childs); i++ )
-					ds_stack_push(_bst, [ bone.childs[i], __x + 16, __w - 16 ]);
+				draw_set_color(COLORS.node_composite_separator);
+				draw_line(_x + 16, ty, _x + _w - 16, ty);
 			}
 		
 			ds_stack_destroy(_bst);
@@ -162,6 +178,9 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 				layer_dragging = noone;
 				triggerRender();
 			}
+			
+			if(layer_dragging != noone && !hovering)
+				draw_sprite_stretched_ext(THEME.ui_panel_active, 0, _x, _ty, _w, bh - ui(32), COLORS._main_accent, 1);
 		#endregion
 		
 		var amo = (ds_list_size(inputs) - input_fix_len) / data_length - 1;
@@ -270,16 +289,23 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 							draw_line_width(_x + 16, _cy - 2, _x + _w - 16, _cy - 2, 2);
 					}
 				}
-			
+				
+				var binded = inputs[| i].extra_data[0] != "";
+				
 				if(layer_dragging == noone || layer_dragging == index) {
 					var _bx = _x + 24;
 					if(point_in_circle(_m[0], _m[1], _bx, _cy + lh / 2, 16)) {
-						draw_sprite_ui_uniform(THEME.hamburger, 3, _bx, _cy + lh / 2, 1, c_white);
+						draw_sprite_ui_uniform(THEME.hamburger_s, 3, _bx, _cy + lh / 2, 1, c_white);
 				
 						if(mouse_press(mb_left, _focus))
 							layer_dragging = index;
-					} else 
-						draw_sprite_ui_uniform(THEME.hamburger, 3, _bx, _cy + lh / 2, 1, COLORS._main_icon);
+					} else {
+						if(!binded) {
+							var cc = merge_color(COLORS._main_icon, COLORS._main_accent, 0.5 + 0.5 * (sin(current_time / 100) * 0.5 + 0.5));
+							draw_sprite_ui_uniform(THEME.hamburger_s, 3, _bx, _cy + lh / 2, 1, cc);
+						} else
+							draw_sprite_ui_uniform(THEME.hamburger_s, 3, _bx, _cy + lh / 2, 1, COLORS._main_icon);
+					}
 				}
 			}
 		#endregion
@@ -322,7 +348,7 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	
 	input_display_list = [ 1, 2, 
 		["Output",	  true], 0,
-		["Armature", false], layer_renderer,
+		["Armature", false], 3, 4, layer_renderer,
 		["Surfaces",  true], 
 	];
 	input_display_list_len = array_length(input_display_list);
@@ -387,6 +413,7 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	atlas_data = [];
 	bind_data  = [];
 	
+	bone = noone;
 	surface_selecting = noone;
 	
 	static getInputAmount = function() {
@@ -426,15 +453,16 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		
 		var _b = inputs[| 1].getValue();
 		if(_b == noone) return;
+		bone = _b.clone();
 		
 		var _bst = ds_stack_create();
-		ds_stack_push(_bst, _b);
+		ds_stack_push(_bst, bone);
 		
 		while(!ds_stack_empty(_bst)) {
-			var bone = ds_stack_pop(_bst);
+			var _bone = ds_stack_pop(_bst);
 			
-			for( var i = 0; i < array_length(bone.childs); i++ ) {
-				var child_bone = bone.childs[i];
+			for( var i = 0; i < array_length(_bone.childs); i++ ) {
+				var child_bone = _bone.childs[i];
 				boneMap[? child_bone.ID] = child_bone;
 				ds_stack_push(_bst, child_bone);
 			}
@@ -446,17 +474,19 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
 		var dim   = inputs[| 0].getValue();
-		var _b	  = inputs[| 1].getValue();
 		var _bind = inputs[| 2].getValue();
 		
-		if(_b == noone) return;
+		var _dpos = inputs[| 3].getValue();
+		var _dsca = inputs[| 4].getValue();
 		
-		if(_bind != noone) {
-			_b.draw(attributes, false, _x, _y, _s, _mx, _my);
+		if(bone == noone) return;
+		
+		bone.draw(attributes, false, _x + _dpos[0] * _s, _y + _dpos[1] * _s, _s * _dsca, _mx, _my, anchor_selecting);
+		inputs[| 3].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
+		//inputs[| 4].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
+		
+		if(_bind != noone)
 			return;
-		}
-		
-		_b.draw(attributes, false, _x, _y, _s, _mx, _my);
 			
 		var ww  = dim[0];
 		var hh  = dim[1];
@@ -554,8 +584,8 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			var _sw = _ww * _sca[0];
 			var _sh = _hh * _sca[1];
 			
-			var _cx = _anc.x + _mov[0];
-			var _cy = _anc.y + _mov[1];
+			var _cx = (_anc.x * _dsca) + _mov[0] + _dpos[0];
+			var _cy = (_anc.y * _dsca) + _mov[1] + _dpos[1];
 			
 			var _d0 = point_rotate(_cx - _sw / 2, _cy - _sh / 2, _cx, _cy, _rot);
 			var _d1 = point_rotate(_cx - _sw / 2, _cy + _sh / 2, _cx, _cy, _rot);
@@ -701,9 +731,15 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		var _dim  = _data[0];
 		var _bone = _data[1];
 		var _bind = _data[2];
+		
+		var _dpos = _data[3];
+		var _dsca = _data[4];
 		var cDep  = attrDepth();
 		
-		if(_bone == noone) return _outSurf;
+		if(bone == noone && _bone != noone) setBone();
+		if(bone == noone) return _outSurf;
+		
+		//////////////////////////////////////////
 		
 		if(ds_map_size(boneMap) == 0)
 			setBone();
@@ -737,18 +773,18 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			var _s     = use_data? _bind[i].surface.get() : _data[datInd];
 			if(!is_surface(_s)) continue;
 			
-			var _bone = use_data? _bind[i].bone : inputs[| datInd].extra_data[0];
+			var _b = use_data? _bind[i].bone : inputs[| datInd].extra_data[0];
 			
-			if(!ds_map_exists(boneMap, _bone)) {
+			if(!ds_map_exists(boneMap, _b)) {
 				//print($"Bone not exist {_bone} from map {ds_map_size(boneMap)}")
 				continue;
 			}
-			_bone = boneMap[? _bone];
+			_b = boneMap[? _b];
 			
 			var _tran = use_data? _bind[i].transform : _data[datInd + 1];
-			var _rot  = _bone.angle + _tran[TRANSFORM.rot];
-			var _anc  = _bone.getPoint(0.5);
-			var _mov  = point_rotate(_tran[TRANSFORM.pos_x], _tran[TRANSFORM.pos_y], 0, 0, _bone.angle);
+			var _rot  = _b.angle + _tran[TRANSFORM.rot];
+			var _anc  = _b.getPoint(0.5);
+			var _mov  = point_rotate(_tran[TRANSFORM.pos_x], _tran[TRANSFORM.pos_y], 0, 0, _b.angle);
 			var _sca  = [ _tran[TRANSFORM.sca_x], _tran[TRANSFORM.sca_y] ];
 			
 			var _ww = surface_get_width(_s);
@@ -758,8 +794,8 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			
 			var _cen = point_rotate(-_sw / 2, -_sh / 2, 0, 0, _rot);
 			var _pos  = [ 
-				_anc.x + _cen[0] + _mov[0], 
-				_anc.y + _cen[1] + _mov[1]
+				(_anc.x * _dsca) + _cen[0] + _mov[0] + _dpos[0], 
+				(_anc.y * _dsca) + _cen[1] + _mov[1] + _dpos[1]
 			];
 			
 			shader_set_interpolation(_s);
@@ -767,7 +803,7 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			array_push(atlas_data, new SurfaceAtlas(_s, _pos, _rot, _sca));
 			array_push(bind_data, {
 				surface: new Surface(_s),
-				bone: _bone.ID,
+				bone: _b.ID,
 				transform: _tran
 			});
 			draw_surface_ext_safe(_s, _pos[0], _pos[1], _sca[0], _sca[1], _rot);
@@ -781,7 +817,14 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	static postDeserialize = function() {
 		var _inputs = load_map.inputs;
 		
-		for(var i = input_fix_len; i < array_length(_inputs); i += data_length)
+		var load_fix_len = input_fix_len;
+		if(PROJECT.version < SAVE_VERSION) {
+			array_insert(load_map.inputs, 3, noone);
+			array_insert(load_map.inputs, 4, noone);
+			load_fix_len = 3;
+		}
+		
+		for(var i = load_fix_len; i < array_length(_inputs); i += data_length)
 			createNewSurface();
 	}
 	

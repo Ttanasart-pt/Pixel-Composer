@@ -1,4 +1,6 @@
 #region data
+	global.EVALUATE_HEAD = noone;
+
 	global.EQUATION_PRES = ds_map_create();
 	global.EQUATION_PRES[? "+"] = 1;
 	global.EQUATION_PRES[? "-"] = 1;
@@ -30,6 +32,7 @@
 	global.FUNCTIONS[? "sin"]    = [ ["radian"], function(val) { return sin(val[0]); } ];
 	global.FUNCTIONS[? "cos"]    = [ ["radian"], function(val) { return cos(val[0]); } ];
 	global.FUNCTIONS[? "tan"]    = [ ["radian"], function(val) { return tan(val[0]); } ];
+	
 	global.FUNCTIONS[? "abs"]    = [ ["number"], function(val) { return abs(val[0]); } ];
 	global.FUNCTIONS[? "round"]  = [ ["number"], function(val) { return round(val[0]); } ];
 	global.FUNCTIONS[? "ceil"]   = [ ["number"], function(val) { return ceil(val[0]);  } ];
@@ -37,12 +40,20 @@
 	
 	global.FUNCTIONS[? "lerp"]   = [ ["number_0", "number_1", "amount"], function(val) { return lerp(array_safe_get(val, 0), array_safe_get(val, 1), array_safe_get(val, 2)); } ];
 	
-	global.FUNCTIONS[? "wiggle"] = [ ["time", "frequency", "octave", "seed"],	function(val) { 
-																					return wiggle(0, 1, array_safe_get(val, 1), 
-																										array_safe_get(val, 0), 
-																										array_safe_get(val, 3, 0), 
-																										array_safe_get(val, 2, 1)); 
-																				} ];
+	global.FUNCTIONS[? "wiggle"] = [ ["time", "frequency", "octave = 1", "seed = 0"],	function(val) { 
+																								return wiggle(0, 1, array_safe_get(val, 1), 
+																												array_safe_get(val, 0), 
+																												array_safe_get(val, 3, 0), 
+																												array_safe_get(val, 2, 1)); 
+																						} ];
+	global.FUNCTIONS[? "random"] = [ ["min = 0", "max = 1"],	function(val) { 
+																	return random_range(array_safe_get(val, 0, 0), 
+																					    array_safe_get(val, 1, 1)); 
+																} ];
+	global.FUNCTIONS[? "irandom"] = [ ["min = 0", "max = 1"],	function(val) { 
+																	return irandom_range(array_safe_get(val, 0, 0), 
+																					     array_safe_get(val, 1, 1)); 
+																} ];
 #endregion
 
 function functionStringClean(fx) {
@@ -263,7 +274,7 @@ function functionStringClean(fx) {
 			if(!ds_map_exists(PROJECT.nodeNameMap, strs[0]))
 				return false;
 			
-			array_push_unique(dependency, strs[0])	
+			array_push_unique(dependency, strs[0]);
 			return true;
 		}
 		

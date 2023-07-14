@@ -58,7 +58,7 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	array_push(attributeEditors, "Warp");
 	
 	attributes.iteration = 4;
-	array_push(attributeEditors, ["Iteration", "iteration", 
+	array_push(attributeEditors, ["Iteration", function() { return attributes.iteration; }, 
 		new textBox(TEXTBOX_INPUT.number, function(val) { 
 			attributes.iteration = val;
 			triggerRender();

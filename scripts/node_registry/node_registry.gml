@@ -341,6 +341,7 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 			addNodeObject(threeD, "Normal Light",		s_node_normal_light,	"Node_Normal_Light",	[1, Node_Normal_Light],, "Light up the image using normal mapping.");
 			addNodeObject(threeD, "Bevel",				s_node_bevel,			"Node_Bevel",			[1, Node_Bevel], ["shade", "auto shade"], "Apply 2D bevel on the image.");
 			addNodeObject(threeD, "Sprite Stack",		s_node_stack,			"Node_Sprite_Stack",	[1, Node_Sprite_Stack],, "Create sprite stack either from repeating a single image or stacking different images using array.");
+			///**/ addNodeObject(threeD, "Depth 3D",			s_node_stack,			"Node_3D_Depth",		[1, Node_3D_Depth],, "Create 3D looking image from depth map.").setVersion(1447);
 		
 			ds_list_add(threeD, "3D generates");
 			addNodeObject(threeD, "3D Object",			s_node_3d_obj,			"Node_3D_Obj",			[0, Node_create_3D_Obj],, "Load .obj file from your computer as a 3D object.");
@@ -419,6 +420,7 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 			addNodeObject(compose, "Armature Pose",		s_node_armature_pose,	"Node_Armature_Pose",	[1, Node_Armature_Pose], ["rigging", "bone"]).setVersion(1146);
 			addNodeObject(compose, "Armature Bind",		s_node_armature_bind,	"Node_Armature_Bind",	[1, Node_Armature_Bind], ["rigging", "bone"]).setVersion(1146);
 			addNodeObject(compose, "Armature Path",		s_node_armature_path,	"Node_Armature_Path",	[1, Node_Armature_Path], ["rigging", "bone"]).setVersion(1146);
+			addNodeObject(compose, "Armature Sample",	s_node_armature_sample,	"Node_Armature_Sample",	[1, Node_Armature_Sample], ["rigging", "bone"]).setVersion(1147);
 			
 			if(!DEMO) {
 				ds_list_add(compose, "Export");
@@ -653,8 +655,8 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 														  
 	global.VALUE_SUGGESTION[? VALUE_TYPE.d3vertex]   = [  ];
 	global.VALUE_SUGGESTION[? VALUE_TYPE.gradient]   = [ "Node_Gradient", "Node_Gradient_Extract" ];
-	global.VALUE_SUGGESTION[? VALUE_TYPE.armature]   = [ "Node_Armature_Pose", "Node_Armature_Bind" ];
-	global.VALUE_SUGGESTION[? VALUE_TYPE.buffer]     = [  ];
+	global.VALUE_SUGGESTION[? VALUE_TYPE.armature]   = [ "Node_Armature_Pose", "Node_Armature_Bind", "Node_Armature_Path", "Node_Armature_Sample" ];
+	global.VALUE_SUGGESTION[? VALUE_TYPE.buffer]     = [ "Node_Surface_From_Buffer" ];
 														  
 	global.VALUE_SUGGESTION[? VALUE_TYPE.action]     = [  ];
 #endregion
@@ -816,7 +818,7 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 		attributes.color_depth = array_find(depth_array, "8 bit RGBA");
 		
 		if(label) array_push(attributeEditors, "Surface");
-		array_push(attributeEditors, ["Color depth", "color_depth", 
+		array_push(attributeEditors, ["Color depth", function() { return attributes.color_depth; }, 
 			new scrollBox(depth_array, function(val) { 
 				attributes.color_depth = val;
 				triggerRender();
@@ -827,7 +829,7 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 		attributes.interpolation = 0;
 		
 		if(label) array_push(attributeEditors, "Surface");
-		array_push(attributeEditors, ["Texture interpolation", "interpolation", 
+		array_push(attributeEditors, ["Texture interpolation", function() { return attributes.interpolation; }, 
 			new scrollBox(global.SURFACE_INTERPOLATION, function(val) { 
 				attributes.interpolation = val;
 				triggerRender();
@@ -838,7 +840,7 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 		attributes.oversample = 0;
 		
 		if(label) array_push(attributeEditors, "Surface");
-		array_push(attributeEditors, ["Oversample", "oversample", 
+		array_push(attributeEditors, ["Oversample", function() { return attributes.oversample; }, 
 			new scrollBox(global.SURFACE_OVERSAMPLE, function(val) { 
 				attributes.oversample = val;
 				triggerRender();
@@ -848,7 +850,7 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 	function attribute_auto_execute(label = false) {
 		attributes.auto_exe = false;
 		if(label) array_push(attributeEditors, "Node");
-		array_push(attributeEditors, ["Auto execute", "auto_exe", 
+		array_push(attributeEditors, ["Auto execute", function() { return attributes.auto_exe; }, 
 		new checkBox(function() { 
 			attributes.auto_exe = !attributes.auto_exe;
 		})]);

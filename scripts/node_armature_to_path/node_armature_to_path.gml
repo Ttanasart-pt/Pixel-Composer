@@ -2,6 +2,8 @@ function Node_Armature_Path(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	name		= "Armature Path";
 	previewable = false;
 	w = 96;
+	h = 72;
+	min_h = h;
 	
 	inputs[| 0] = nodeValue("Armature", self, JUNCTION_CONNECT.input, VALUE_TYPE.armature, noone)
 		.setVisible(true, true)
@@ -18,11 +20,11 @@ function Node_Armature_Path(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	attributes.display_bone = 0;
 	
 	array_push(attributeEditors, "Display");
-	array_push(attributeEditors, ["Display name", "display_name", 
+	array_push(attributeEditors, ["Display name", function() { return attributes.display_name; }, 
 		new checkBox(function() { 
 			attributes.display_name = !attributes.display_name;
 		})]);
-	array_push(attributeEditors, ["Display bone", "display_bone", 
+	array_push(attributeEditors, ["Display bone", function() { return attributes.display_bone; }, 
 		new scrollBox(["Octahedral", "Stick"], function(ind) { 
 			attributes.display_bone = ind;
 		})]);

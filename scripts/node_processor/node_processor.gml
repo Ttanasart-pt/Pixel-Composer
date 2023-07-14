@@ -19,7 +19,7 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	icon    = THEME.node_processor;
 	
 	array_push(attributeEditors, "Array processor");
-	array_push(attributeEditors, [ "Array process type", "array_process", 
+	array_push(attributeEditors, [ "Array process type", function() { return attributes.array_process; }, 
 		new scrollBox([ "Loop", "Hold", "Expand", "Expand inverse" ], 
 		function(val) { 
 			attributes.array_process = val; 

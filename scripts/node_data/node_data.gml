@@ -1430,7 +1430,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		var amo = min(ds_list_size(inputs), array_length(_inputs));
 		
 		for(var i = 0; i < amo; i++) {
-			if(inputs[| i] == noone) continue;
+			if(inputs[| i] == noone || _inputs[i] == noone) continue;
 			inputs[| i].applyDeserialize(_inputs[i], load_scale, preset);
 		}
 		

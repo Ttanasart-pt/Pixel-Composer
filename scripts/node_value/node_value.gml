@@ -1023,13 +1023,17 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(type == VALUE_TYPE.trigger)
 			useCache = false;
 			
+		global.cache_call++;
 		if(useCache) {
 			var cache_hit = cache_value[0];
 			cache_hit &= cache_value[1] == _time;
 			cache_hit &= cache_value[2] != undefined;
 			cache_hit &= connect_type == JUNCTION_CONNECT.input;
 			cache_hit &= unit.reference == VALUE_UNIT.constant;
-			if(cache_hit) return cache_value[2];
+			if(cache_hit) {
+				global.cache_hit++;
+				return cache_value[2];
+			}
 		}
 		
 		var val = _getValue(_time, applyUnit, arrIndex);
@@ -1117,9 +1121,22 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			val = value_from.getValueRecursive(_time); 
 		
 		if(expUse && is_struct(expTree) && expTree.validate()) {
+			//print($"========== EXPRESSION CALLED ==========");
+			//print(debug_get_callstack(8));
+			
 			printIf(global.FLAG.expression_debug, "==================== EVAL BEGIN ====================");
-			var params = { value: val[0] };
-			val[0] = expTree.eval(variable_clone(params));
+			if(global.EVALUATE_HEAD != noone && global.EVALUATE_HEAD == self)  {
+				//noti_warning($"Expression evaluation error : recursive call detected.");
+			} else {
+				global.EVALUATE_HEAD = self;
+				var params = { 
+					name: name,
+					node_name: node.display_name,
+					value: val[0] 
+				};
+				val[0] = expTree.eval(variable_clone(params));
+				global.EVALUATE_HEAD = noone;
+			}
 		}
 		
 		return val;

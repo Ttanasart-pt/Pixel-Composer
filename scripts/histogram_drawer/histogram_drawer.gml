@@ -1,10 +1,10 @@
 function histogramInit() {
 	attributes.preview_resolution = 64;
-	array_push(attributeEditors, ["Preview resolution", "preview_resolution", 
+	array_push(attributeEditors, ["Preview resolution", function() { return attributes.preview_resolution; }, 
 		new textBox(TEXTBOX_INPUT.number, function(val) { attributes.preview_resolution = val; })]);
 	
 	attributes.preview_sample = 32;
-	array_push(attributeEditors, ["Preview sample", "preview_sample", 
+	array_push(attributeEditors, ["Preview sample", function() { return attributes.preview_sample; }, 
 		new textBox(TEXTBOX_INPUT.number, function(val) { attributes.preview_sample = val; })]);
 	
 	for( var i = 0; i < 4; i++ ) {

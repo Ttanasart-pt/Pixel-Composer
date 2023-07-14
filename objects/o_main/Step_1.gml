@@ -1,4 +1,7 @@
 /// @description init
+global.cache_call = 0;
+global.cache_hit  = 0;
+
 HOVERING_ELEMENT = _HOVERING_ELEMENT;
 _HOVERING_ELEMENT = noone;
 
@@ -188,3 +191,5 @@ _HOVERING_ELEMENT = noone;
 	}
 	MOUSE_WRAP = false;
 #endregion
+
+//print($"CACHE called: {global.cache_call} | hit: {global.cache_hit} ({global.cache_hit / global.cache_call}%)");

@@ -57,7 +57,7 @@ function color_diff(c1, c2, fast = false) {
 	_c2_g = _c2_g / 255 * _c2_a;
 	_c2_b = _c2_b / 255 * _c2_a;
 	
-	if(fast) return sqr(_c1_r - _c2_r) + sqr(_c1_g - _c2_g) + sqr(_c1_b - _c2_b) + sqr(_c1_a - _c2_a);
+	if(fast) return abs(_c1_r - _c2_r) + abs(_c1_g - _c2_g) + abs(_c1_b - _c2_b) + abs(_c1_a - _c2_a);
 	return sqrt(sqr(_c1_r - _c2_r) + sqr(_c1_g - _c2_g) + sqr(_c1_b - _c2_b) + sqr(_c1_a - _c2_a));
 }
 

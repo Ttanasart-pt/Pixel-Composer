@@ -29,47 +29,72 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 		var hovering = noone;
 		var _bst = ds_stack_create();
 		ds_stack_push(_bst, [ _b, _x, _w ]);
-			
+		
+		var bone_remove = noone;
+		
 		while(!ds_stack_empty(_bst)) {
 			var _st  = ds_stack_pop(_bst);
 			var bone = _st[0];
 			var __x  = _st[1];
 			var __w  = _st[2];
-				
-			if(!bone.is_main) {
-				if(bone.parent_anchor) 
-					draw_sprite_ui(THEME.bone, 1, __x + 12, ty + 14,,,, COLORS._main_icon);
-				else if(bone.IKlength) 
-					draw_sprite_ui(THEME.bone, 2, __x + 12, ty + 14,,,, COLORS._main_icon);
-				else {
-					if(_hover && point_in_circle(_m[0], _m[1], __x + 12, ty + 12, 12)) {
-						draw_sprite_ui(THEME.bone, 0, __x + 12, ty + 14,,,, COLORS._main_icon_light);
-						if(mouse_press(mb_left, _focus))
-							bone_dragging = bone;
-					} else 
-						draw_sprite_ui(THEME.bone, 0, __x + 12, ty + 14,,,, COLORS._main_icon);
-				}
-				
-				if(point_in_rectangle(_m[0], _m[1], __x + 24, ty + 3, __x + __w, ty + _hh - 3))
-					anchor_selecting = [ bone, 2 ];
-				
-				bone.tb_name.setFocusHover(_focus, _hover);
-				bone.tb_name.draw(__x + 24, ty + 3, __w - 24 - 32, _hh - 6, bone.name, _m);
-				
-				ty += _hh;
-				
-				draw_set_color(COLORS.node_composite_separator);
-				draw_line(_x + 16, ty, _x + _w - 16, ty);
-			}
-				
+			
 			for( var i = 0; i < array_length(bone.childs); i++ )
 				ds_stack_push(_bst, [ bone.childs[i], __x + 16, __w - 16 ]);
+				
+			if(bone.is_main) continue;
+			
+			if(bone.parent_anchor) 
+				draw_sprite_ui(THEME.bone, 1, __x + 12, ty + 14,,,, COLORS._main_icon);
+			else if(bone.IKlength) 
+				draw_sprite_ui(THEME.bone, 2, __x + 12, ty + 14,,,, COLORS._main_icon);
+			else {
+				if(_hover && point_in_circle(_m[0], _m[1], __x + 12, ty + 12, 12)) {
+					draw_sprite_ui(THEME.bone, 0, __x + 12, ty + 14,,,, COLORS._main_icon_light);
+					if(mouse_press(mb_left, _focus))
+						bone_dragging = bone;
+				} else 
+					draw_sprite_ui(THEME.bone, 0, __x + 12, ty + 14,,,, COLORS._main_icon);
+			}
+				
+			if(point_in_rectangle(_m[0], _m[1], __x + 24, ty + 3, __x + __w, ty + _hh - 3))
+				anchor_selecting = [ bone, 2 ];
+			
+			var bx = __x + __w - 24;
+			var by = ty + _hh / 2;
+			
+			if(point_in_circle(_m[0], _m[1], bx, by, 16)) {
+				draw_sprite_ui_uniform(THEME.icon_delete, 3, bx, by, 1, COLORS._main_value_negative);
+				
+				if(mouse_press(mb_left, _focus))
+					bone_remove = bone;
+			} else 
+				draw_sprite_ui_uniform(THEME.icon_delete, 3, bx, by, 1, COLORS._main_icon);
+				
+			bone.tb_name.setFocusHover(_focus, _hover);
+			bone.tb_name.draw(__x + 24, ty + 3, __w - 24 - 40, _hh - 6, bone.name, _m);
+				
+			ty += _hh;
+				
+			draw_set_color(COLORS.node_composite_separator);
+			draw_line(_x + 16, ty, _x + _w - 16, ty);
 		}
 		
 		ds_stack_destroy(_bst);
 		
 		if(bone_dragging && mouse_release(mb_left))
 			bone_dragging = noone;
+			
+		if(bone_remove != noone) {
+			var _par = bone_remove.parent;
+			array_remove(_par.childs, bone_remove);
+				
+			for( var i = 0; i < array_length(bone_remove.childs); i++ ) {
+				var _ch = bone_remove.childs[i];
+				_par.addChild(_ch);
+						
+				_ch.parent_anchor = bone_remove.parent_anchor;
+			}
+		}
 		
 		return bh;
 	})
@@ -101,11 +126,11 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 	attributes.display_bone = 0;
 	
 	array_push(attributeEditors, "Display");
-	array_push(attributeEditors, ["Display name", "display_name", 
+	array_push(attributeEditors, ["Display name", function() { return attributes.display_name; }, 
 		new checkBox(function() { 
 			attributes.display_name = !attributes.display_name;
 		})]);
-	array_push(attributeEditors, ["Display bone", "display_bone", 
+	array_push(attributeEditors, ["Display bone", function() { return attributes.display_bone; }, 
 		new scrollBox(["Octahedral", "Stick"], function(ind) { 
 			attributes.display_bone = ind;
 		})]);

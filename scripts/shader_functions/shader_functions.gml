@@ -57,6 +57,20 @@ function shader_set_surface(sampler, surface) {
 	texture_set_stage(t, surface_get_texture(surface));
 }
 
+function shader_set_surface_dimension(uniform, surface) {
+	var shader = shader_current();
+	if(!is_surface(surface)) return;
+	
+	var texture = surface_get_texture(surface);
+	var tw = texture_get_texel_width(texture);
+	var th = texture_get_texel_height(texture);
+	
+	tw = 2048;
+	th = 2048;
+	
+	shader_set_uniform_f(shader_get_uniform(shader, uniform), tw, th);
+}
+
 #region prebuild
 	enum BLEND {
 		normal,
@@ -91,7 +105,12 @@ function shader_set_surface(sampler, surface) {
 			case BLEND.alphamulp:	BLEND_ALPHA_MULP;	break;
 		}
 		
-		shader_set(shader);
+		if(shader == noone)
+			__shader_set = false;
+		else {
+			__shader_set = true;
+			shader_set(shader);
+		}
 	}
 	
 	function surface_reset_shader() {
@@ -100,6 +119,8 @@ function shader_set_surface(sampler, surface) {
 		gpu_set_tex_filter(false);
 		BLEND_NORMAL;
 		surface_reset_target();
-		shader_reset();
+		
+		if(__shader_set)
+			shader_reset();
 	}
 #endregion

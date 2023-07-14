@@ -10,6 +10,7 @@ function valueKey(_time, _value, _anim = noone, _in = 0, _ot = 0) constructor {
 	value	= _value;
 	anim	= _anim;
 	
+	ease_y_lock = true;
 	ease_in	 = is_array(_in)? _in : [_in, 1];
 	ease_out = is_array(_ot)? _ot : [_ot, 0];
 	
@@ -398,6 +399,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 			_value_list[3] = values[| i].ease_out;
 			_value_list[4] = values[| i].ease_in_type;
 			_value_list[5] = values[| i].ease_out_type;
+			_value_list[6] = values[| i].ease_y_lock;
 			
 			array_push(_data, _value_list);
 		}
@@ -441,6 +443,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 			var ease_out	  = array_safe_get(_keyframe, 3);
 			var ease_in_type  = array_safe_get(_keyframe, 4);
 			var ease_out_type = array_safe_get(_keyframe, 5);
+			var ease_y_lock   = array_safe_get(_keyframe, 6, true);
 			
 			var _val = value;
 			
@@ -464,6 +467,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 			var vk = new valueKey(_time, _val, self, ease_in, ease_out);
 			vk.ease_in_type  = ease_in_type;
 			vk.ease_out_type = ease_out_type;
+			vk.ease_y_lock   = ease_y_lock;
 			ds_list_add(values, vk);
 		}
 	}

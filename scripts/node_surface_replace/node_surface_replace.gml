@@ -38,8 +38,12 @@ function Node_Surface_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 	static matchTemplate = function(_index, _surf, _base, _target, _cthr, _pthr, _fst) {
 		surface_set_shader(_surf, _fst? sh_surface_replace_fast_find : sh_surface_replace_find, false);
 			shader_set_f("dimension", surface_get_width(_base), surface_get_height(_base));
+			
 			shader_set_surface("target", _target);
-			shader_set_f("target_dim", surface_get_width(_target), surface_get_height(_target));
+			shader_set_f("targetDimension", surface_get_width(_target), surface_get_height(_target));
+			
+			//print($"{surface_get_width(_base)}, {surface_get_height(_base)} | {surface_get_width(_target)}, {surface_get_height(_target)}");
+			
 			shader_set_f("colorThreshold", _cthr);
 			shader_set_f("pixelThreshold", _pthr);
 			shader_set_f("index", _index);

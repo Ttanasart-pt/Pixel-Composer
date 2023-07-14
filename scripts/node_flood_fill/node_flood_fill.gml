@@ -35,7 +35,7 @@ function Node_Flood_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	
 	attributes.fill_iteration = -1;
 	array_push(attributeEditors, "Algorithm");
-	array_push(attributeEditors, ["Fill iteration", "fill_iteration", 
+	array_push(attributeEditors, ["Fill iteration", function() { return attributes.fill_iteration; }, 
 		new textBox(TEXTBOX_INPUT.number, function(val) { 
 			attributes.fill_iteration = val; 
 			triggerRender();

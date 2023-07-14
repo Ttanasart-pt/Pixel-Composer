@@ -78,7 +78,7 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	attributes.w = 128;
 	attributes.h = 128;
 	
-	array_push(attributeEditors, ["Edit separator", "separator",
+	array_push(attributeEditors, ["Edit separator", function() { return attributes.separator; },
 		button(function() {
 			var dia = dialogCall(o_dialog_group_input_order);
 			dia.node = self;

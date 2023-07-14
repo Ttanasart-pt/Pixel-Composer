@@ -21,13 +21,20 @@ if(textbox == noone) exit;
 	var cch = "";
 	var fname = true;
 	var var_ind = 0;
+	var def_val = false;
 	
 	repeat(amo) {
 		cch = string_char_at(prompt, ind);
 		ind++;
 		
 		if(cch == "(") fname = false;
-		if(cch == ",") var_ind++;
+		if(cch == ",") {
+			def_val = false;
+			var_ind++;
+		}
+		
+		if(cch == "=")
+			def_val = true;
 		
 		if(cch == "(" || cch == ")" || cch == "[" || cch == "]" || cch == "{" || cch == "}") 
 			draw_set_color(COLORS.lua_highlight_bracklet);
@@ -35,8 +42,12 @@ if(textbox == noone) exit;
 			draw_set_color(COLORS._main_text);
 		else if(fname)
 			draw_set_color(COLORS.lua_highlight_function);
-		else 
-			draw_set_color(var_ind == index? COLORS._main_text : COLORS._main_text_sub);
+		else {
+			if(var_ind == index) {
+				draw_set_color(def_val? COLORS._main_text : COLORS.lua_highlight_number);
+			} else
+				draw_set_color(COLORS._main_text_sub);
+		}
 		
 		draw_text(cx, cy, cch);
 		cx += string_width(cch);

@@ -77,6 +77,20 @@ function __Bone(parent = noone, distance = 0, direction = 0, angle = 0, length =
 		return noone;
 	}
 	
+	static findBoneByName = function(_name) {
+		//print($"Print {string_length(string_trim(name))} : {string_length(string_trim(_name))}");
+		if(string_trim(name) == string_trim(_name)) 
+			return self;
+		
+		for( var i = 0; i < array_length(childs); i++ ) {
+			var b = childs[i].findBoneByName(_name);
+			if(b != noone)
+				return b;
+		}
+		
+		return noone;
+	}
+	
 	static getPoint = function(progress) {
 		var len = length * progress;
 		
@@ -395,6 +409,35 @@ function __Bone(parent = noone, distance = 0, direction = 0, angle = 0, length =
 			tx = p1.x;
 			ty = p1.y;
 		}
+	}
+	
+	static __getBBOX = function() {
+		var p0 = getPoint(0);
+		var p1 = getPoint(1);
+		
+		var x0 = min(p0.x, p1.x);
+		var y0 = min(p0.y, p1.y);
+		var x1 = max(p0.x, p1.x);
+		var y1 = max(p0.y, p1.y);
+		
+		return [ x0, y0, x1, y1 ];
+	}
+	
+	static bbox = function() {
+		var _bbox = __getBBOX();
+		//print($"BBOX: {_bbox}")
+		
+		for( var i = 0; i < array_length(childs); i++ ) {
+			var _bbox_ch = childs[i].bbox();
+			//print($"BBOX ch: {_bbox_ch}")
+			
+			_bbox[0] = min(_bbox[0], _bbox_ch[0]);
+			_bbox[1] = min(_bbox[1], _bbox_ch[1]);
+			_bbox[2] = max(_bbox[2], _bbox_ch[2]);
+			_bbox[3] = max(_bbox[3], _bbox_ch[3]);
+		}
+		
+		return _bbox;
 	}
 	
 	static serialize = function() {

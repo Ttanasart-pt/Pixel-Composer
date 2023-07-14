@@ -23,11 +23,11 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	attributes.display_bone = 0;
 	
 	array_push(attributeEditors, "Display");
-	array_push(attributeEditors, ["Display name", "display_name", 
+	array_push(attributeEditors, ["Display name", function() { return attributes.display_name; }, 
 		new checkBox(function() { 
 			attributes.display_name = !attributes.display_name;
 		})]);
-	array_push(attributeEditors, ["Display bone", "display_bone", 
+	array_push(attributeEditors, ["Display bone", function() { return attributes.display_bone; }, 
 		new scrollBox(["Octahedral", "Stick"], function(ind) { 
 			attributes.display_bone = ind;
 		})]);

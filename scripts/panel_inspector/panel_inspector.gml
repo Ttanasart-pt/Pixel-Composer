@@ -328,8 +328,7 @@ function Panel_Inspector() : PanelContent() constructor {
 					continue;
 				}
 				
-				var val = inspecting.attributes[$ edt[1]];
-				if(is_undefined(val)) continue;
+				var val = edt[1]();
 				edt[2].setFocusHover(pFOCUS, pHOVER);
 				
 				if(instanceof(edt[2]) == "buttonClass") {
@@ -470,7 +469,7 @@ function Panel_Inspector() : PanelContent() constructor {
 			if(jun.connect_type == JUNCTION_CONNECT.input && jun.type == VALUE_TYPE.color && jun.display_type == VALUE_DISPLAY._default) {
 				pickers[color_picker_index] = jun;
 				if(color_picker_index == picker_index) {
-					if(ALT == KEYBOARD_STATUS.down)
+					if(ALT == KEYBOARD_STATUS.down && WIDGET_CURRENT == noone)
 						jun.editWidget.onColorPick();
 					color_picker_selecting = jun;
 				}

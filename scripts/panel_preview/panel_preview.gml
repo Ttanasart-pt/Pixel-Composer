@@ -287,9 +287,9 @@ function Panel_Preview() : PanelContent() constructor {
 			return;
 		}
 		
-		var ss = min((w - 32) / bbox.w, (h - 32 - toolbar_height * 2) / bbox.h);
+		var ss = min((w - 32 - tool_side_drawing * 40) / bbox.w, (h - 32 - toolbar_height * 2) / bbox.h);
 		canvas_s = ss;
-		canvas_x = w / 2 - bbox.w * canvas_s / 2 - bbox.x0 * canvas_s;
+		canvas_x = w / 2 - bbox.w * canvas_s / 2 - bbox.x0 * canvas_s + (tool_side_drawing * 40 / 2);
 		canvas_y = h / 2 - bbox.h * canvas_s / 2 - bbox.y0 * canvas_s;
 	}
 	
@@ -652,25 +652,26 @@ function Panel_Preview() : PanelContent() constructor {
 		}
 	}
 	
+	tool_hovering = false;
+	tool_side_drawing = false;
+	
 	function drawNodeTools(active, _node) {
 		var _mx = mx;
 		var _my = my;
 		var isHover = pHOVER && mouse_on_preview;
-		
-		if(_node.tools != -1) {
-			var xx = ui(8);
-			var yy = ui(40);
-			
-			for(var i = 0; i < array_length(_node.tools); i++) {
-				var b = buttonInstant(THEME.button, xx, yy, ui(40), ui(40), [_mx, _my], pFOCUS, isHover);
-				if(b > 0) active = false;
-				yy += ui(48);
-			}
-		}
+		var tool_width = ui(40);
+		var tool_size  = ui(32);
 		
 		var cx = canvas_x + _node.preview_x * canvas_s;
 		var cy = canvas_y + _node.preview_y * canvas_s;
 		var _snx = 0, _sny = 0;
+		
+		tool_side_drawing = _node.tools != -1;
+		
+		if(_node.tools != -1 && point_in_rectangle(_mx, _my, 0, 0, tool_width, h)) {
+			isHover = false;
+			mouse_on_preview = false;
+		}
 		
 		if(key_mod_press(CTRL)) {
 			_snx = grid_show? grid_width : 1;
@@ -680,39 +681,91 @@ function Panel_Preview() : PanelContent() constructor {
 			_sny = grid_height;
 		}
 		
-		var overlayHover = active && isHover && point_in_rectangle(mx, my, 0, toolbar_height, w, h - toolbar_height);
-		if(_node.tools != -1)
-			overlayHover &= mx > ui(48);
-			
-		_node.drawOverlay(overlayHover && !key_mod_press(CTRL), cx, cy, canvas_s, _mx, _my, _snx, _sny, { w: w, h: h });
+		var overlayHover =  tool_hovering == noone;
+			overlayHover &= active && isHover;
+			overlayHover &= point_in_rectangle(mx, my, 0, toolbar_height, w, h - toolbar_height);
+			overlayHover &= !key_mod_press(CTRL);
+		
+		_node.drawOverlay(overlayHover, cx, cy, canvas_s, _mx, _my, _snx, _sny, { w: w, h: h });
+		
+		draw_sprite_stretched(THEME.tool_side, 1, 0, 0, tool_width, h);
+		
+		var _tool = tool_hovering;
+		tool_hovering = noone;
 		
 		if(_node.tools != -1) {
-			var xx = ui(8);
-			var yy = ui(40);
+			var xx = ui(1)  + tool_width / 2;
+			var yy = ui(34) + tool_size / 2;
+			var pd = 2;
 			
 			for(var i = 0; i < array_length(_node.tools); i++) {
-				var b = buttonInstant(THEME.button, xx, yy, ui(40), ui(40), [_mx, _my], pFOCUS, isHover);
 				var tool = _node.tools[i];
+				var _x0  = xx - tool_size / 2;
+				var _y0  = yy - tool_size / 2;
+				var _x1  = xx + tool_size / 2;
+				var _y1  = yy + tool_size / 2;
 				
-				if(b == 1) {
-					TOOLTIP = tool.name;
-					mouse_on_preview = false;
-				} if(b == 2)
-					tool.toggle();
+				if(point_in_rectangle(_mx, _my, _x0, _y0 + 1, _x1, _y1 - 1)) {
+					tool_hovering = tool;
+				} 
 				
-				if(pFOCUS && WIDGET_CURRENT == noone && keyboard_check_pressed(ord(string(i + 1))))
-					tool.toggle();
+				if(tool.subtools > 0 && _tool == tool) {
+					var s_ww = tool_size * tool.subtools;
+					var s_hh = tool_size;
+					draw_sprite_stretched(THEME.menu_bg, 0, _x0 - pd, _y0 - pd, s_ww + pd * 2, s_hh + pd * 2);
+					
+					var stool = tool.spr;
+						
+					for( var j = 0; j < array_length(stool); j++ ) {
+						var _sxx = xx + j * tool_size;
+						var _syy = yy;
+							
+						var _sx0  = _sxx - tool_size / 2;
+						var _sy0  = _syy - tool_size / 2;
+						var _sx1  = _sxx + tool_size / 2;
+						var _sy1  = _syy + tool_size / 2;
 				
-				if(tool_current == tool) {
-					draw_sprite_stretched(THEME.button, 2, xx, yy, ui(40), ui(40));
-					draw_sprite_stretched_ext(THEME.button, 3, xx, yy, ui(40), ui(40), COLORS._main_accent, 1);	
+						if(point_in_rectangle(_mx, _my, _sx0, _sy0 + 1, _sx1, _sy1 - 1)) {
+							draw_sprite_stretched(THEME.button_hide, 1, _sx0 + pd, _sy0 + pd, tool_size - pd * 2, tool_size - pd * 2);
+								
+							if(mouse_press(mb_left, pFOCUS))
+								tool.toggle(j);
+						} 
+							
+						if(tool_current == tool && tool.selecting == j) {
+							draw_sprite_stretched_ext(THEME.button_hide, 2, _sx0 + pd, _sy0 + pd, tool_size - pd * 2, tool_size - pd * 2, COLORS.panel_preview_grid, 1);
+							draw_sprite_stretched_ext(THEME.button_hide, 3, _sx0 + pd, _sy0 + pd, tool_size - pd * 2, tool_size - pd * 2, COLORS._main_accent, 1);
+						}
+					
+						draw_sprite_colored(stool[j], 0, _sxx, _syy);
+					}
+					
+					if(point_in_rectangle(_mx, _my, _x0, _y0 + 1, _x0 + s_ww, _y1 - 1)) {
+						tool_hovering = tool;
+						TOOLTIP = tool.name;
+					}
+				} else {
+					if(tool_hovering == tool) {
+						draw_sprite_stretched(THEME.button_hide, 1, _x0 + pd, _y0 + pd, tool_size - pd * 2, tool_size - pd * 2);
+						TOOLTIP = tool.name;
+					
+						if(mouse_press(mb_left, pFOCUS))
+							tool.toggle();
+					}
+					
+					if(pFOCUS && WIDGET_CURRENT == noone && keyboard_check_pressed(ord(string(i + 1))))
+						tool.toggle();
+				
+					if(tool_current == tool) {
+						draw_sprite_stretched_ext(THEME.button_hide, 2, _x0 + pd, _y0 + pd, tool_size - pd * 2, tool_size - pd * 2, COLORS.panel_preview_grid, 1);
+						draw_sprite_stretched_ext(THEME.button_hide, 3, _x0 + pd, _y0 + pd, tool_size - pd * 2, tool_size - pd * 2, COLORS._main_accent, 1);
+					}
+				
+					if(tool.subtools > 0)	draw_sprite_colored(tool.spr[tool.selecting], 0, xx, yy);
+					else					draw_sprite_colored(tool.spr, 0, xx, yy);
 				}
 				
-				if(tool.subtools > 0)
-					draw_sprite_colored(tool.spr[tool.selecting], 0, xx + ui(20), yy + ui(20));
-				else
-					draw_sprite_colored(tool.spr, 0, xx + ui(20), yy + ui(20));
-				yy += ui(48);
+				yy += tool_size;
 			}
 		} else 
 			tool_current = noone;

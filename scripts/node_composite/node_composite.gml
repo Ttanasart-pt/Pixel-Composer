@@ -145,12 +145,12 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			if(layer_dragging == noone || layer_dragging == ind) {
 				var _bx = _x + 24;
 				if(point_in_circle(_m[0], _m[1], _bx, _cy + lh / 2, 16)) {
-					draw_sprite_ui_uniform(THEME.hamburger, 3, _bx, _cy + lh / 2, 1, c_white);
+					draw_sprite_ui_uniform(THEME.hamburger_s, 3, _bx, _cy + lh / 2, 1, c_white);
 				
 					if(mouse_press(mb_left, _focus))
 						layer_dragging = ind;
 				} else 
-					draw_sprite_ui_uniform(THEME.hamburger, 3, _bx, _cy + lh / 2, 1, COLORS._main_icon);
+					draw_sprite_ui_uniform(THEME.hamburger_s, 3, _bx, _cy + lh / 2, 1, COLORS._main_icon);
 			}
 		}
 		

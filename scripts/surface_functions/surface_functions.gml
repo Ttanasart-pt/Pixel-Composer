@@ -141,6 +141,12 @@ function surface_get_pixel_ext(surface, _x, _y) {
 }
 
 //create
+function surface_create_empty(w, h) {
+	var s = surface_create(w, h);
+	surface_clear(s);
+	return s;
+}
+
 function surface_create_size(surface, format = surface_rgba8unorm) {
 	var s = surface_create_valid(surface_get_width(surface), surface_get_height(surface), format);
 	surface_set_target(s);
@@ -247,6 +253,13 @@ function surface_size_to(surface, width, height, format = noone) {
 	
 	surface_resize(surface, width, height);
 	return surface;
+}
+
+function surface_clear(surface) {
+	if(!is_surface(surface)) return;
+	surface_set_target(surface);
+		DRAW_CLEAR
+	surface_reset_target();
 }
 
 function surface_copy_from(dst, src, format = noone) {

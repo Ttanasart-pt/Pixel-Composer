@@ -239,6 +239,11 @@ function Panel_Animation() : PanelContent() constructor {
 	}
 	
 	keyframe_menu = [
+		menuItem(__txtx("panel_animation_lock_y", "Lock/Unlock Y easing"), function() { 
+				for( var i = 0; i < array_length(keyframe_selecting); i++ ) {
+					var k = keyframe_selecting[i];
+					k.ease_y_lock = !k.ease_y_lock;
+				} }),
 		menuItemGroup(__txtx("panel_animation_ease_in", "Ease in"),  [ 
 			[ [THEME.timeline_ease, 0], function() { 
 				for( var i = 0; i < array_length(keyframe_selecting); i++ ) {
@@ -823,13 +828,13 @@ function Panel_Animation() : PanelContent() constructor {
 											
 				if(pHOVER && point_in_circle(msx, msy, _tx, prop_dope_y, ui(6))) {
 					key_hover = key;
-					draw_sprite_ui_uniform(THEME.timeline_keyframe, 2, _tx, prop_dope_y, 1, COLORS.panel_animation_keyframe_selected);
+					draw_sprite_ui_uniform(THEME.timeline_keyframe, key.ease_y_lock? 2 : 5, _tx, prop_dope_y, 1, COLORS.panel_animation_keyframe_selected);
 					if(mouse_press(mb_left, pFOCUS)) {
 						keyframe_dragging  = animator.values[| k];
 						keyframe_drag_type = KEYFRAME_DRAG_TYPE.ease_in;
 					}
 				} else 
-					draw_sprite_ui_uniform(THEME.timeline_keyframe, 2, _tx, prop_dope_y, 1, COLORS.panel_animation_keyframe_unselected);
+					draw_sprite_ui_uniform(THEME.timeline_keyframe, key.ease_y_lock? 2 : 5, _tx, prop_dope_y, 1, COLORS.panel_animation_keyframe_unselected);
 			} 
 						
 			if(key.ease_out_type == CURVE_TYPE.bezier) {
@@ -839,13 +844,13 @@ function Panel_Animation() : PanelContent() constructor {
 										
 				if(pHOVER && point_in_circle(msx, msy, _tx, prop_dope_y, ui(6))) {
 					key_hover = key;
-					draw_sprite_ui_uniform(THEME.timeline_keyframe, 3, _tx, prop_dope_y, 1, COLORS.panel_animation_keyframe_selected);
+					draw_sprite_ui_uniform(THEME.timeline_keyframe, key.ease_y_lock? 3 : 5, _tx, prop_dope_y, 1, COLORS.panel_animation_keyframe_selected);
 					if(mouse_press(mb_left, pFOCUS)) {
 						keyframe_dragging  = animator.values[| k];
 						keyframe_drag_type = KEYFRAME_DRAG_TYPE.ease_out;
 					}
 				} else
-					draw_sprite_ui_uniform(THEME.timeline_keyframe, 3, _tx, prop_dope_y, 1, COLORS.panel_animation_keyframe_unselected);
+					draw_sprite_ui_uniform(THEME.timeline_keyframe, key.ease_y_lock? 3 : 5, _tx, prop_dope_y, 1, COLORS.panel_animation_keyframe_unselected);
 			}
 		}
 		
@@ -1370,7 +1375,7 @@ function Panel_Animation() : PanelContent() constructor {
 					dx = clamp(dx, 0, 1);
 					if(dx > 0.2) keyframe_dragout = true;
 				
-					var dy = (my - keyframe_drag_my) / 32;
+					var dy = -(my - keyframe_drag_my) / 32;
 				
 					var _in = keyframe_dragging.ease_in;
 					var _ot = keyframe_dragging.ease_out;
@@ -1380,7 +1385,10 @@ function Panel_Animation() : PanelContent() constructor {
 							for( var i = 0; i < array_length(keyframe_selecting); i++ ) {
 								var k = keyframe_selecting[i];
 								k.ease_in_type  = keyframe_dragout? CURVE_TYPE.bezier : CURVE_TYPE.none;
+								
 								k.ease_in[0] = dx;
+								if(!k.ease_y_lock) 
+									k.ease_in[1] = dy;
 							}
 						
 							break;
@@ -1388,7 +1396,10 @@ function Panel_Animation() : PanelContent() constructor {
 							for( var i = 0; i < array_length(keyframe_selecting); i++ ) {
 								var k = keyframe_selecting[i];
 								k.ease_out_type = keyframe_dragout? CURVE_TYPE.bezier : CURVE_TYPE.none;
+								
 								k.ease_out[0] =  dx;
+								if(!k.ease_y_lock) 
+									k.ease_out[1] =  dy;
 							}
 							break;
 						case KEYFRAME_DRAG_TYPE.ease_both :
@@ -1398,7 +1409,12 @@ function Panel_Animation() : PanelContent() constructor {
 								k.ease_out_type = keyframe_dragout? CURVE_TYPE.bezier : CURVE_TYPE.none;
 							
 								k.ease_in[0] = dx;
+								if(!k.ease_y_lock) 
+									k.ease_in[1] = dy;
+								
 								k.ease_out[0] = dx;
+								if(!k.ease_y_lock) 
+									k.ease_out[1] = dy;
 							}
 							break;
 					}

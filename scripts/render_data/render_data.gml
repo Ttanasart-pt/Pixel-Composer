@@ -271,6 +271,6 @@ function RenderListAction(list, context = PANEL_GRAPH.getCurrentContext()) {
 	
 		printIf(global.FLAG.render, "=== RENDER COMPLETE IN {" + string(current_time - t) + "ms} ===\n");
 	} catch(e) {
-		noti_waning(exception_print(e));
+		noti_warning(exception_print(e));
 	}
 }

@@ -56,9 +56,11 @@ function Node_3D_Extrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	
 	inputs[| 18] = nodeValue("Scale view with dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true)
 	
+	inputs[| 19] = nodeValue("Smooth", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false)
+	
 	input_display_list = [
 		["Output",			 false], 1, 18, 
-		["Geometry",		 false], 0, 8, 14,
+		["Geometry",		 false], 0, 8, 14, 19, 
 		["Object transform", false], 2, 3, 4,
 		["Camera",			 false], 16, 17, 5, 7, 15,
 		["Light",			 false], 9, 10, 11, 12, 13,
@@ -84,6 +86,11 @@ function Node_3D_Extrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	mesh_genetated  = false;
 	mesh_generate_index  = 0;
 	mesh_generate_amount = 0;
+	
+	static onValueUpdate = function(index) {
+		if(index == 19) 
+			generateMesh();
+	}
 	
 	static onValueFromUpdate = function(index) {
 		if(index == 0 || index == 14) 
@@ -119,15 +126,37 @@ function Node_3D_Extrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	static generateMeshIndex = function(index) {
 		var _ins = getSingleValue( 0, index);
 		var _hei = getSingleValue(14, index);
-		if(!is_surface(_ins)) return noone;
+		var _smt = getSingleValue(19, index);
 		
+		if(!is_surface(_ins)) return noone;
 		var ww = surface_get_width(_ins);
 		var hh = surface_get_height(_ins);
+		
 		var tw = 1 / ww;
 		var th = 1 / hh;
 		var sw = -ww / 2 * tw;
 		var sh = -hh / 2 * th;
 		var useH = is_surface(_hei);
+		
+		if(_smt) {
+			var ts = surface_create(ww, hh);
+			surface_set_shader(ts, sh_3d_extrude_filler);
+				DRAW_CLEAR
+				shader_set_f("dimension", ww, hh);
+				draw_surface(_ins, 0, 0);
+			surface_reset_shader();
+			_ins = ts;
+			
+			if(useH) {
+				var ds = surface_create(ww, hh);
+				surface_set_shader(ds, sh_3d_extrude_filler_depth);
+					DRAW_CLEAR
+					shader_set_f("dimension", ww, hh);
+					draw_surface(_hei, 0, 0);
+				surface_reset_shader();
+				_hei = ds;
+			}
+		}
 		
 		if(useH) {
 			var hgw = surface_get_width(_hei);
@@ -169,70 +198,198 @@ function Node_3D_Extrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		
 		for( var i = 0; i < ww; i++ )
 		for( var j = 0; j < hh; j++ ) {
-			if(ap[i][j] == 0) continue;
+			if(!_smt && ap[i][j] == 0) continue;
 			
-			var i0 = sw + i * tw, i1 = i0 + tw;
-			var j0 = sh + j * th, j1 = j0 + th;
+			var i0 = sw + i * tw;
+			var i1 = i0 + tw;
+			var j0 = sh + j * th;
+			var j1 = j0 + th;
 			var tx0 = tw * i, tx1 = tx0 + tw;
 			var ty0 = th * j, ty1 = ty0 + th;
 			
 			var dep = (useH? getHeight(hei, hgtW, hgtH, i, j) : 1) * 0.5;
 			
-			v.addFace( [i1, j0, -dep], [0, 0, -1], [tx1, ty0], 
-			           [i0, j0, -dep], [0, 0, -1], [tx0, ty0], 
-			           [i1, j1, -dep], [0, 0, -1], [tx1, ty1], true);
+			if(_smt) {
+				var d0, d1, d2, d3;
+				var d00, d10, d01, d11;
+				var a, a0, a1, a2, a3;
+				
+				// d00 | a0 | d10
+				// a1  | a  | a2
+				// d01 | a3 | d11
+				
+				if(useH) {
+					d00 = (i > 0 && j > 0)?			  getHeight(hei, hgtW, hgtH, i - 1, j - 1) * 0.5 : 0;
+					d10 = (i < ww - 1 && j > 0)?	  getHeight(hei, hgtW, hgtH, i + 1, j - 1) * 0.5 : 0;
+					d01 = (i > 0 && j < hh - 1)?	  getHeight(hei, hgtW, hgtH, i - 1, j + 1) * 0.5 : 0;
+					d11 = (i < ww - 1 && j < hh - 1)? getHeight(hei, hgtW, hgtH, i + 1, j + 1) * 0.5 : 0;
+					
+					d0  = (j > 0)?		getHeight(hei, hgtW, hgtH, i, j - 1) * 0.5 : 0;
+					d1  = (i > 0)?		getHeight(hei, hgtW, hgtH, i - 1, j) * 0.5 : 0;
+					d2  = (i < ww - 1)?	getHeight(hei, hgtW, hgtH, i + 1, j) * 0.5 : 0;
+					d3  = (j < hh - 1)?	getHeight(hei, hgtW, hgtH, i, j + 1) * 0.5 : 0;
+				} else {
+					d00 = (i > 0 && j > 0)?			  bool(ap[i - 1][j - 1]) * 0.5 : 0;
+					d10 = (i < ww - 1 && j > 0)?	  bool(ap[i + 1][j - 1]) * 0.5 : 0;
+					d01 = (i > 0 && j < hh - 1)?	  bool(ap[i - 1][j + 1]) * 0.5 : 0;
+					d11 = (i < ww - 1 && j < hh - 1)? bool(ap[i + 1][j + 1]) * 0.5 : 0;
+					
+					d0 = (j > 0)?		bool(ap[i][j - 1]) * 0.5 : 0;
+					d1 = (i > 0)?		bool(ap[i - 1][j]) * 0.5 : 0;
+					d2 = (i < ww - 1)?	bool(ap[i + 1][j]) * 0.5 : 0;
+					d3 = (j < hh - 1)?	bool(ap[i][j + 1]) * 0.5 : 0;
+				}
+				
+				a  = ap[i][j];
+				a0 = (j > 0)?		ap[i][j - 1] : 0;
+				a1 = (i > 0)?		ap[i - 1][j] : 0;
+				a2 = (i < ww - 1)?	ap[i + 1][j] : 0;
+				a3 = (j < hh - 1)?	ap[i][j + 1] : 0;
+				
+				if(a1 && a0) d00 = (d1 + d0) / 2;
+				if(a0 && a2) d10 = (d0 + d2) / 2;
+				if(a2 && a3) d11 = (d2 + d3) / 2;
+				if(a3 && a1) d01 = (d3 + d1) / 2;
+				
+				if(a) {
+					v.addFace( [i1, j0, -d10], [0, 0, -1], [tx1, ty0], 
+					           [i0, j0, -d00], [0, 0, -1], [tx0, ty0], 
+					           [i1, j1, -d11], [0, 0, -1], [tx1, ty1], false);
 						    		
-			v.addFace( [i1, j1, -dep], [0, 0, -1], [tx1, ty1], 
-			           [i0, j0, -dep], [0, 0, -1], [tx0, ty0], 
-			           [i0, j1, -dep], [0, 0, -1], [tx0, ty1], true);
+					v.addFace( [i1, j1, -d11], [0, 0, -1], [tx1, ty1], 
+					           [i0, j0, -d00], [0, 0, -1], [tx0, ty0], 
+					           [i0, j1, -d01], [0, 0, -1], [tx0, ty1], false);
 			
-			v.addFace( [i1, j0,  dep], [0, 0, 1], [tx1, ty0], 
-			           [i0, j0,  dep], [0, 0, 1], [tx0, ty0], 
-			           [i1, j1,  dep], [0, 0, 1], [tx1, ty1], true);
+					v.addFace( [i1, j0,  d10], [0, 0, 1], [tx1, ty0], 
+					           [i0, j0,  d00], [0, 0, 1], [tx0, ty0], 
+					           [i1, j1,  d11], [0, 0, 1], [tx1, ty1], false);
 						    		    
-			v.addFace( [i1, j1,  dep], [0, 0, 1], [tx1, ty1], 
-			           [i0, j0,  dep], [0, 0, 1], [tx0, ty0], 
-			           [i0, j1,  dep], [0, 0, 1], [tx0, ty1], true);
+					v.addFace( [i1, j1,  d11], [0, 0, 1], [tx1, ty1], 
+					           [i0, j0,  d00], [0, 0, 1], [tx0, ty0], 
+					           [i0, j1,  d01], [0, 0, 1], [tx0, ty1], false);
+				} else if(!a0 && !a1 && a2 && a3) {
+					//var _tx0 = tw * (i + 1), _tx1 = _tx0 + tw;
+					//var _ty0 = th * (j + 0), _ty1 = _ty0 + th;
+					
+					d00 *= d0 * d1;
+					d10 *= d1 * d2;
+					d01 *= d1 * d3;
+					
+					v.addFace( [i1, j0, -d10], [0, 0, -1], [tx1, ty0], 
+					           [i0, j1, -d01], [0, 0, -1], [tx0, ty1], 
+					           [i1, j1, -d11], [0, 0, -1], [tx1, ty1], false);
+					
+					v.addFace( [i1, j0,  d10], [0, 0,  1], [tx1, ty0], 
+					           [i0, j1,  d01], [0, 0,  1], [tx0, ty1], 
+					           [i1, j1,  d11], [0, 0,  1], [tx1, ty1], false);
+				} else if(!a0 && a1 && !a2 && a3) {
+					//var _tx0 = tw * (i - 1), _tx1 = _tx0 + tw;
+					//var _ty0 = th * (j + 0), _ty1 = _ty0 + th;
+					
+					d00 *= d0 * d1;
+					d10 *= d1 * d2;
+					d11 *= d2 * d3;
+					
+					v.addFace( [i1, j1, -d11], [0, 0, -1], [tx1, ty1], 
+					           [i0, j0, -d00], [0, 0, -1], [tx0, ty0], 
+					           [i0, j1, -d01], [0, 0, -1], [tx0, ty1], false);
+					
+					v.addFace( [i1, j1,  d11], [0, 0,  1], [tx1, ty1], 
+					           [i0, j0,  d00], [0, 0,  1], [tx0, ty0], 
+					           [i0, j1,  d01], [0, 0,  1], [tx0, ty1], false);
+				} else if(a0 && a1 && !a2 && !a3) {
+					//var _tx0 = tw * (i - 1), _tx1 = _tx0 + tw;
+					//var _ty0 = th * (j + 0), _ty1 = _ty0 + th;
+					
+					d10 *= d1 * d2;
+					d01 *= d1 * d3;
+					d11 *= d2 * d3;
+					
+					v.addFace( [i0, j0, -d00], [0, 0, -1], [tx0, ty0],                // d00 | a0 | d10
+					           [i0, j1, -d01], [0, 0, -1], [tx0, ty1],				  // a1  | a  | a2
+					           [i1, j0, -d10], [0, 0, -1], [tx1, ty0], false);		  // d01 | a3 | d11
+					
+					v.addFace( [i0, j0,  d00], [0, 0,  1], [tx0, ty0], 
+					           [i0, j1,  d01], [0, 0,  1], [tx0, ty1], 
+					           [i1, j0,  d10], [0, 0,  1], [tx1, ty0], false);
+				} else if(a0 && !a1 && a2 && !a3) {
+					//var _tx0 = tw * (i + 1), _tx1 = _tx0 + tw;
+					//var _ty0 = th * (j + 0), _ty1 = _ty0 + th;
+					
+					d00 *= d0 * d1;
+					d01 *= d1 * d3;
+					d11 *= d2 * d3;
+					
+					v.addFace( [i1, j0, -d10], [0, 0, -1], [tx1, ty0], 
+					           [i0, j0, -d00], [0, 0, -1], [tx0, ty0], 
+					           [i1, j1, -d11], [0, 0, -1], [tx1, ty1], false);
+
+					v.addFace( [i1, j0,  d10], [0, 0,  1], [tx1, ty0], 
+					           [i0, j0,  d00], [0, 0,  1], [tx0, ty0], 
+					           [i1, j1,  d11], [0, 0,  1], [tx1, ty1], false);
+				} 
+			} else {
+				v.addFace( [i1, j0, -dep], [0, 0, -1], [tx1, ty0], 
+				           [i0, j0, -dep], [0, 0, -1], [tx0, ty0], 
+				           [i1, j1, -dep], [0, 0, -1], [tx1, ty1], false);
+						    		
+				v.addFace( [i1, j1, -dep], [0, 0, -1], [tx1, ty1], 
+				           [i0, j0, -dep], [0, 0, -1], [tx0, ty0], 
+				           [i0, j1, -dep], [0, 0, -1], [tx0, ty1], false);
 			
-			if((useH && dep * 2 > getHeight(hei, hgtW, hgtH, i, j - 1)) || (j == 0 || ap[i][j - 1] == 0)) {
-				v.addFace( [i0, j0,  dep], [0, -1, 0], [tx1, ty0], 
-				           [i0, j0, -dep], [0, -1, 0], [tx0, ty0], 
-				           [i1, j0,  dep], [0, -1, 0], [tx1, ty1], true);
+				v.addFace( [i1, j0,  dep], [0, 0, 1], [tx1, ty0], 
+				           [i0, j0,  dep], [0, 0, 1], [tx0, ty0], 
+				           [i1, j1,  dep], [0, 0, 1], [tx1, ty1], false);
 						    		    
-				v.addFace( [i0, j0, -dep], [0, -1, 0], [tx1, ty1], 
-				           [i1, j0, -dep], [0, -1, 0], [tx0, ty0], 
-				           [i1, j0,  dep], [0, -1, 0], [tx0, ty1], true);
-			}
+				v.addFace( [i1, j1,  dep], [0, 0, 1], [tx1, ty1], 
+				           [i0, j0,  dep], [0, 0, 1], [tx0, ty0], 
+				           [i0, j1,  dep], [0, 0, 1], [tx0, ty1], false);
+						   
+				if((useH && dep * 2 > getHeight(hei, hgtW, hgtH, i, j - 1)) || (j == 0 || ap[i][j - 1] == 0)) { //y side 
+					v.addFace( [i0, j0,  dep], [0, -1, 0], [tx1, ty0], 
+					           [i0, j0, -dep], [0, -1, 0], [tx0, ty0], 
+					           [i1, j0,  dep], [0, -1, 0], [tx1, ty1], false);
+						    		    
+					v.addFace( [i0, j0, -dep], [0, -1, 0], [tx1, ty1], 
+					           [i1, j0, -dep], [0, -1, 0], [tx0, ty0], 
+					           [i1, j0,  dep], [0, -1, 0], [tx0, ty1], false);
+				}
 			
-			if((useH && dep * 2 > getHeight(hei, hgtW, hgtH, i, j + 1)) || (j == hh - 1 || ap[i][j + 1] == 0)) {
-				v.addFace( [i0, j1,  dep], [0, 1, 0], [tx1, ty0], 
-				           [i0, j1, -dep], [0, 1, 0], [tx0, ty0], 
-				           [i1, j1,  dep], [0, 1, 0], [tx1, ty1], true);
+				if((useH && dep * 2 > getHeight(hei, hgtW, hgtH, i, j + 1)) || (j == hh - 1 || ap[i][j + 1] == 0)) { //y side 
+					v.addFace( [i0, j1,  dep], [0, 1, 0], [tx1, ty0], 
+					           [i0, j1, -dep], [0, 1, 0], [tx0, ty0], 
+					           [i1, j1,  dep], [0, 1, 0], [tx1, ty1], false);
 						       
-				v.addFace( [i0, j1, -dep], [0, 1, 0], [tx1, ty1], 
-				           [i1, j1, -dep], [0, 1, 0], [tx0, ty0], 
-				           [i1, j1,  dep], [0, 1, 0], [tx0, ty1], true);
-			}
+					v.addFace( [i0, j1, -dep], [0, 1, 0], [tx1, ty1], 
+					           [i1, j1, -dep], [0, 1, 0], [tx0, ty0], 
+					           [i1, j1,  dep], [0, 1, 0], [tx0, ty1], false);
+				}
 			
-			if((useH && dep * 2 > getHeight(hei, hgtW, hgtH, i - 1, j)) || (i == 0 || ap[i - 1][j] == 0)) {
-				v.addFace( [i0, j0,  dep], [1, 0, 0], [tx1, ty0], 
-				           [i0, j0, -dep], [1, 0, 0], [tx0, ty0], 
-				           [i0, j1,  dep], [1, 0, 0], [tx1, ty1], true);
+				if((useH && dep * 2 > getHeight(hei, hgtW, hgtH, i - 1, j)) || (i == 0 || ap[i - 1][j] == 0)) { //x side 
+					v.addFace( [i0, j0,  dep], [1, 0, 0], [tx1, ty0], 
+					           [i0, j0, -dep], [1, 0, 0], [tx0, ty0], 
+					           [i0, j1,  dep], [1, 0, 0], [tx1, ty1], false);
 						       
-				v.addFace( [i0, j0, -dep], [1, 0, 0], [tx1, ty1], 
-				           [i0, j1, -dep], [1, 0, 0], [tx0, ty0], 
-				           [i0, j1,  dep], [1, 0, 0], [tx0, ty1], true);
-			}
+					v.addFace( [i0, j0, -dep], [1, 0, 0], [tx1, ty1], 
+					           [i0, j1, -dep], [1, 0, 0], [tx0, ty0], 
+					           [i0, j1,  dep], [1, 0, 0], [tx0, ty1], false);
+				}
 			
-			if((useH && dep * 2 > getHeight(hei, hgtW, hgtH, i + 1, j)) || (i == ww - 1 || ap[i + 1][j] == 0)) {
-				v.addFace( [i1, j0,  dep], [-1, 0, 0], [tx1, ty0], 
-				           [i1, j0, -dep], [-1, 0, 0], [tx0, ty0], 
-				           [i1, j1,  dep], [-1, 0, 0], [tx1, ty1], true);
+				if((useH && dep * 2 > getHeight(hei, hgtW, hgtH, i + 1, j)) || (i == ww - 1 || ap[i + 1][j] == 0)) { //x side
+					v.addFace( [i1, j0,  dep], [-1, 0, 0], [tx1, ty0], 
+					           [i1, j0, -dep], [-1, 0, 0], [tx0, ty0], 
+					           [i1, j1,  dep], [-1, 0, 0], [tx1, ty1], false);
 						       
-				v.addFace( [i1, j0, -dep], [-1, 0, 0], [tx1, ty1], 
-				           [i1, j1, -dep], [-1, 0, 0], [tx0, ty0], 
-				           [i1, j1,  dep], [-1, 0, 0], [tx0, ty1], true);
+					v.addFace( [i1, j0, -dep], [-1, 0, 0], [tx1, ty1], 
+					           [i1, j1, -dep], [-1, 0, 0], [tx0, ty0], 
+					           [i1, j1,  dep], [-1, 0, 0], [tx0, ty1], false);
+				}
 			}
+		}
+		
+		if(_smt) {
+			surface_free(_ins);
+			if(useH) surface_free(_hei);
 		}
 		
 		v.createBuffer();
@@ -259,13 +416,14 @@ function Node_3D_Extrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	}
 	
 	static submit_vertex = function(index = 0) {
-		var _ins  = getSingleValue(0, index);
+		var _ins  = array_safe_get(textures, index);
 		if(!is_surface(_ins)) return;
 		if(index >= array_length(vertexObjects)) return;
 		
-		var _lpos = getSingleValue(2, index);
-		var _lrot = getSingleValue(3, index);
-		var _lsca = getSingleValue(4, index);
+		var _lpos = getSingleValue( 2, index);
+		var _lrot = getSingleValue( 3, index);
+		var _lsca = getSingleValue( 4, index);
+		var _smt  = getSingleValue(19, index);
 		
 		if(is_struct(vertexObjects[index])) {
 			_3d_local_transform(_lpos, _lrot, _lsca);
@@ -273,6 +431,8 @@ function Node_3D_Extrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 			_3d_clear_local_transform();
 		}
 	}
+	
+	textures = [];
 	
 	static process_data = function(_outSurf, _data, _output_index, _array_index) {
 		if(mesh_generating) return;
@@ -298,6 +458,7 @@ function Node_3D_Extrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		var _proj = _data[16];
 		var _fov  = _data[17];
 		var _dimS = _data[18];
+		var _smt  = _data[19];
 		
 		inputs[| 17].setVisible(_proj);
 		
@@ -316,6 +477,19 @@ function Node_3D_Extrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		var _transform = new __3d_transform(_pos,, _sca, _lpos, _lrot, _lsca, false, _dimS );
 		var _light     = new __3d_light(_ldir, _lhgt, _lint, _lclr, _aclr);
 		var _cam	   = new __3d_camera(_proj, _fov);
+			
+		if(_smt) {
+			var ww = surface_get_width(_ins);
+			var hh = surface_get_height(_ins);
+			
+			var ts = surface_create(ww, hh);
+			surface_set_shader(ts, sh_3d_extrude_corner);
+				shader_set_f("dimension", ww, hh);
+				draw_surface(_ins, 0, 0);
+			surface_reset_shader();
+			textures[_array_index] = ts;
+		} else 
+			textures[_array_index] = _ins;
 			
 		_outSurf = _3d_pre_setup(_outSurf, _dim, _transform, _light, _cam, pass);
 			submit_vertex(_array_index);

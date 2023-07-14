@@ -79,12 +79,12 @@ function Node_WAV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	
 	array_push(attributeEditors, "Audio Preview");
 	
-	array_push(attributeEditors, ["Gain", "preview_gain", 
+	array_push(attributeEditors, ["Gain", function() { return attributes.preview_gain; }, 
 		new textBox(TEXTBOX_INPUT.number, function(val) { 
 			attributes.preview_gain = val; 
 		})]);
 		
-	array_push(attributeEditors, ["Shift", "preview_shift", 
+	array_push(attributeEditors, ["Shift", function() { return attributes.preview_shift; }, 
 		new textBox(TEXTBOX_INPUT.number, function(val) { 
 			attributes.preview_shift = val; 
 		})]);

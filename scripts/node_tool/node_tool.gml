@@ -26,22 +26,17 @@ function NodeTool(name, spr) constructor {
 		return self;
 	}
 	
-	static toggle = function() {
+	static toggle = function(index = 0) {
 		if(subtools == 0) {
 			PANEL_PREVIEW.tool_current = PANEL_PREVIEW.tool_current == self? noone : self;
 		} else {
-			if(PANEL_PREVIEW.tool_current != self) {
-				PANEL_PREVIEW.tool_current = self;
-				selecting = 0;
-				return;
-			}
-			
-			selecting++;
-			if(selecting == subtools) {
-				selecting = 0;
+			if(PANEL_PREVIEW.tool_current == self && index == selecting) {
 				PANEL_PREVIEW.tool_current = noone;
-			} else 
+				selecting = 0;
+			} else {
 				PANEL_PREVIEW.tool_current = self;
+				selecting = index;
+			}
 		}
 		
 		if(PANEL_PREVIEW.tool_current == self)

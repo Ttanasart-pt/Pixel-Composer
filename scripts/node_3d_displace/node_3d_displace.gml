@@ -72,7 +72,10 @@ function Node_3D_Displace(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	attributes.auto_update = true;
 	
-	array_push(attributeEditors, ["Auto Update", "auto_update", new checkBox(function() { attribute[? "auto_update"] = !attribute[? "auto_update"]; }, false)]);
+	array_push(attributeEditors, ["Auto Update", function() { return attributes.auto_update; }, 
+		new checkBox(function() { 
+			attribute[? "auto_update"] = !attribute[? "auto_update"]; 
+		}, false)]);
 	
 	vertexObjects = [];
 	_3d_node_init(1, /*Transform*/ 4, 5, 1, 2, 3);

@@ -36,7 +36,7 @@ function Node_Seperate_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	surface_h = 1;
 	
 	attributes.max_shape = 32;
-	array_push(attributeEditors, ["Maximum shapes", "max_shape",
+	array_push(attributeEditors, ["Maximum shapes", function() { return attributes.max_shape; },
 		new textBox(TEXTBOX_INPUT.number, function(val) { 
 			attributes.max_shape = val;
 			triggerRender();
