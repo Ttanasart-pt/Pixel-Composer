@@ -136,6 +136,7 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 		})]);
 	
 	tools = [
+		new NodeTool( [ "Move", "Scale" ], [ THEME.bone_tool_move, THEME.bone_tool_scale ] ),
 		new NodeTool( "Add bones", THEME.bone_tool_add ),
 		new NodeTool( "Remove bones", THEME.bone_tool_remove ),
 		new NodeTool( "Detach bones", THEME.bone_tool_detach ),
@@ -149,6 +150,9 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 	builder_sy = 0;
 	builder_mx = 0;
 	builder_my = 0;
+	
+	builder_moving  = false;
+	builder_scaling = false;
 	
 	bone_dragging = noone;
 	ik_dragging = noone;
@@ -274,7 +278,114 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 			}
 			
 			triggerRender();
-		} else if(isUsingTool(0)) { // builder
+		} 
+		
+		if(isUsingTool("Move")) { 
+			_b.draw(attributes, false, _x, _y, _s, _mx, _my);
+			
+			var bbox = _b.bbox();
+			var x0 = _x + bbox[0] * _s;
+			var y0 = _y + bbox[1] * _s;
+			var x1 = _x + bbox[2] * _s;
+			var y1 = _y + bbox[3] * _s;
+			
+			if(builder_moving) {
+				var dx = (mx - builder_mx) / _s;
+				var dy = (my - builder_my) / _s;
+				
+				builder_mx = mx;
+				builder_my = my;
+				
+				var _bx = lengthdir_x(_b.distance, _b.direction) + dx;
+				var _by = lengthdir_y(_b.distance, _b.direction) + dy;
+				
+				_b.distance  = point_distance(0, 0, _bx, _by);
+				_b.direction = point_direction(0, 0, _bx, _by);
+				
+				if(mouse_release(mb_left)) 
+					builder_moving = false;
+					
+				draw_set_color(COLORS._main_accent);
+				draw_rectangle(x0, y0, x1, y1, true);
+			} else {
+				if(point_in_rectangle(_mx, _my, x0, y0, x1, y1)) {
+					draw_set_color(COLORS._main_accent);
+					if(mouse_press(mb_left, active)) {
+						builder_moving = true;
+						builder_mx = mx;
+						builder_my = my;
+					}
+				} else
+					draw_set_color(c_white);
+				
+				draw_set_alpha(0.5);
+				draw_rectangle(x0, y0, x1, y1, true);
+				draw_set_alpha(1);
+			}
+		} else if(isUsingTool("Scale")) { 
+			_b.draw(attributes, false, _x, _y, _s, _mx, _my);
+			
+			var bbox = _b.bbox();
+			var x0 = _x + bbox[0] * _s;
+			var y0 = _y + bbox[1] * _s;
+			var x1 = _x + bbox[2] * _s;
+			var y1 = _y + bbox[3] * _s;
+			
+			draw_set_color(c_white);
+			draw_set_alpha(0.5);
+			draw_rectangle(x0, y0, x1, y1, true);
+			draw_set_alpha(1);
+			
+			var cx  = (x0 + x1) / 2;
+			var cy  = (y0 + y1) / 2;
+			
+			draw_set_color(COLORS._main_accent);
+			draw_set_alpha(0.5 + builder_scaling * 0.5);
+			draw_line(cx, cy, _mx, _my);
+			draw_set_alpha(1);
+			
+			if(builder_scaling) {
+				var _so = point_distance(cx, cy, builder_mx, builder_my);
+				var _sn = point_distance(cx, cy, _mx, _my);
+				var _ss = 1 + (_sn - _so) / max(_so, 8);
+					
+				builder_mx = _mx;
+				builder_my = _my;
+				
+				var _bst = ds_stack_create();
+				ds_stack_push(_bst, _b);
+		
+				while(!ds_stack_empty(_bst)) {
+					var __b = ds_stack_pop(_bst);			
+					for( var i = 0; i < array_length(__b.childs); i++ )
+						ds_stack_push(_bst, __b.childs[i]);
+						
+					__b.distance *= _ss;
+					__b.length   *= _ss;
+				}
+		
+				ds_stack_destroy(_bst);
+				
+				var bbox_n	= _b.bbox();
+				var _ox	= (bbox[0] + bbox[2]) / 2 - (bbox_n[0] + bbox_n[2]) / 2;
+				var _oy	= (bbox[1] + bbox[3]) / 2 - (bbox_n[1] + bbox_n[3]) / 2;
+				
+				var _bx = lengthdir_x(_b.distance, _b.direction) + _ox;
+				var _by = lengthdir_y(_b.distance, _b.direction) + _oy;
+				
+				_b.distance  = point_distance(0, 0, _bx, _by);
+				_b.direction = point_direction(0, 0, _bx, _by);
+					
+				if(mouse_release(mb_left)) 
+					builder_scaling = false;
+			} else {
+				if(mouse_press(mb_left, active)) {
+					builder_scaling = true;
+					builder_mx = _mx;
+					builder_my = _my;
+				}
+			}
+		} else if(isUsingTool("Add bones")) { // builder
 			anchor_selecting = _b.draw(attributes, active * 0b111, _x, _y, _s, _mx, _my, anchor_selecting);
 			
 			if(mouse_press(mb_left, active)) {
@@ -312,7 +423,7 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 				draw_sprite_ext(THEME.bone_tool_add, 1, _mx + 24, _my + 24, 1, 1, 0, c_white, 1);
 			} else if(anchor_selecting[1] == 2)
 				draw_sprite_ext(THEME.bone_tool_add, 0, _mx + 24, _my + 24, 1, 1, 0, c_white, 1);
-		} else if(isUsingTool(1)) { //remover
+		} else if(isUsingTool("Remove bones")) { //remover
 			anchor_selecting = _b.draw(attributes, active * 0b100, _x, _y, _s, _mx, _my, anchor_selecting);
 			
 			if(anchor_selecting != noone && anchor_selecting[1] == 2 && anchor_selecting[0].parent != noone && mouse_press(mb_left, active)) {
@@ -333,7 +444,7 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 			
 			if(anchor_selecting != noone)
 				draw_sprite_ext(THEME.bone_tool_remove, 1, _mx + 24, _my + 24, 1, 1, 0, c_white, 1);
-		} else if(isUsingTool(2)) { //detach
+		} else if(isUsingTool("Detach bones")) { //detach
 			anchor_selecting = _b.draw(attributes, active * 0b100, _x, _y, _s, _mx, _my, anchor_selecting);
 			
 			if(anchor_selecting != noone && anchor_selecting[1] == 2 && mouse_press(mb_left, active)) {
@@ -353,7 +464,7 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 				builder_my = my;
 				UNDO_HOLDING = true;
 			}
-		} else if(isUsingTool(3)) { //IK
+		} else if(isUsingTool("IK")) { //IK
 			anchor_selecting = _b.draw(attributes, active * 0b100, _x, _y, _s, _mx, _my, anchor_selecting);
 			
 			if(anchor_selecting != noone && anchor_selecting[1] == 2 && mouse_press(mb_left, active)) {

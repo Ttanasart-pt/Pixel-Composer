@@ -447,6 +447,10 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		instanceBase = noone;
 	}
 	
+	static onDoubleClick = function(panel) {
+		panel.addContext(self);
+	}
+	
 	static processSerialize = function(_map) {
 		_map[? "instance_base"]	= instanceBase? instanceBase.node_id : noone;
 	}

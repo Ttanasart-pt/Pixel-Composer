@@ -7,6 +7,11 @@ function NodeTool(name, spr) constructor {
 	settings  = [];
 	attribute = {};
 	
+	static getName = function(index = 0) {
+		if(is_array(name)) return array_safe_get(name, index, "");
+		return name;
+	}
+	
 	static addSetting = function(name, type, onEdit, keyAttr, val) {
 		var w;
 		

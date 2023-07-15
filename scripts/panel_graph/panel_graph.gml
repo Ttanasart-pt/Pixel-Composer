@@ -428,10 +428,9 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 			if(node_hovering != noone)
 				_HOVERING_ELEMENT = node_hovering;
 			
-			if(node_hovering != noone && pFOCUS && struct_has(node_hovering, "nodes") && DOUBLE_CLICK) {
-				addContext(node_hovering);
+			if(node_hovering != noone && pFOCUS && struct_has(node_hovering, "onDoubleClick") && DOUBLE_CLICK) {
+				node_hovering.onDoubleClick(self);
 				DOUBLE_CLICK = false;
-				
 				node_hovering = noone;
 			}
 			
@@ -1887,8 +1886,10 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 				break;
 		}
 			
-		if(!key_mod_press(SHIFT) && node && struct_has(DRAGGING, "from") && DRAGGING.from.value_from == noone)
-			DRAGGING.from.setFrom(node.outputs[| 0]);
+		if(!key_mod_press(SHIFT) && node && struct_has(DRAGGING, "from") && DRAGGING.from.value_from == noone) {
+			for( var i = 0; i < ds_list_size(node.outputs); i++ )
+				if(DRAGGING.from.setFrom(node.outputs[| i])) break;
+		}
 	}
 	
 	static bringNodeToFront = function(node) {

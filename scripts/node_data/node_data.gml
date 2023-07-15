@@ -1265,11 +1265,21 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	static isUsingTool = function(index, subtool = noone) {
 		if(tools == -1) 
 			return false;
-		if(PANEL_PREVIEW.tool_current != tools[index])
+		
+		var _tool = PANEL_PREVIEW.tool_current;
+		if(_tool == noone)
 			return false;
+		
+		if(is_real(index) && _tool != tools[index])
+			return false;
+			
+		if(is_string(index) && _tool.getName(_tool.selecting) != index)
+			return false;
+			
 		if(subtool == noone)
 			return true;
-		return tools[index].selecting == subtool;
+			
+		return _tool.selecting == subtool;
 	}
 	
 	static clone = function(target = PANEL_GRAPH.getCurrentContext()) {

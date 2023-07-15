@@ -830,6 +830,7 @@ function PanelContent() constructor {
 	context_str = "";
 	draggable   = true;
 	expandable  = true;
+	resizable   = true;
 	
 	panel = noone;
 	mx = 0;

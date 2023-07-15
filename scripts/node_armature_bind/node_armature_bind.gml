@@ -65,7 +65,7 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		for(var i = input_fix_len; i < ds_list_size(inputs) - data_length; i += data_length) {
 			index++;
 			var _surf = current_data[i];
-			var _id = inputs[| i].extra_data[0];
+			var _id = inputs[| i].extra_data.bone_id;
 			if(_id == "") continue;
 			
 			if(ds_map_exists(surfMap, _id))
@@ -142,7 +142,7 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 						if(_hover && point_in_rectangle(_m[0], _m[1], _sx, _sy, _sx + _sw * _ss, _sy + _sh * _ss)) {
 							if(mouse_press(mb_left, _focus)) {
 								layer_dragging = _sid;
-								inputs[| input_fix_len + _sid * data_length].extra_data[0] = "";
+								inputs[| input_fix_len + _sid * data_length].extra_data.bone_id = "";
 							}
 								
 							draw_set_color(COLORS._main_accent);
@@ -173,7 +173,7 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		
 			if(layer_dragging != noone && hovering && mouse_release(mb_left)) {
 				var _lind = input_fix_len + layer_dragging * data_length;
-				inputs[| _lind].extra_data[0] = hovering.ID;
+				inputs[| _lind].extra_data.bone_id = hovering.ID;
 				
 				layer_dragging = noone;
 				triggerRender();
@@ -290,7 +290,7 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 					}
 				}
 				
-				var binded = inputs[| i].extra_data[0] != "";
+				var binded = inputs[| i].extra_data.bone_id != "";
 				
 				if(layer_dragging == noone || layer_dragging == index) {
 					var _bx = _x + 24;
@@ -378,7 +378,7 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		inputs[| index + 0] = nodeValue("Surface", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 		inputs[| index + 0].surface_index = index;
 		inputs[| index + 0].hover_effect  = 0;
-		inputs[| index + 0].extra_data[0] = "";
+		inputs[| index + 0].extra_data.bone_id = "";
 		
 		inputs[| index + 1] = nodeValue("Transform", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 0, 1, 1 ] )
 			.setDisplay(VALUE_DISPLAY.transform);
@@ -501,7 +501,7 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			var _surf = current_data[surf_dragging];
 			var _tran = current_data[input_dragging];
 			
-			var _bone = inputs[| surf_dragging].extra_data[0];
+			var _bone = inputs[| surf_dragging].extra_data.bone_id;
 			_bone = boneMap[? _bone];
 			
 			if(drag_type == NODE_COMPOSE_DRAG.move) {
@@ -566,7 +566,7 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			var _surf = array_safe_get(current_data, index);
 			if(!_surf || is_array(_surf)) continue;
 			
-			var _bone = inputs[| index].extra_data[0];
+			var _bone = inputs[| index].extra_data.bone_id;
 			if(!ds_map_exists(boneMap, _bone)) {
 				//print($"Bone not found {_bone}");
 				continue;
@@ -622,7 +622,7 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			var _surf = array_safe_get(current_data, index);
 			if(!_surf || is_array(_surf)) continue;
 			
-			var _bone = inputs[| index].extra_data[0];
+			var _bone = inputs[| index].extra_data.bone_id;
 			if(!ds_map_exists(boneMap, _bone))
 				continue;
 			
@@ -773,7 +773,7 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			var _s     = use_data? _bind[i].surface.get() : _data[datInd];
 			if(!is_surface(_s)) continue;
 			
-			var _b = use_data? _bind[i].bone : inputs[| datInd].extra_data[0];
+			var _b = use_data? _bind[i].bone : inputs[| datInd].extra_data.bone_id;
 			
 			if(!ds_map_exists(boneMap, _b)) {
 				//print($"Bone not exist {_bone} from map {ds_map_size(boneMap)}")

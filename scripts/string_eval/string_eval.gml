@@ -86,7 +86,6 @@ function functionStringClean(fx) {
 	fx = string_replace_all(fx, ">=", "≥");
 	fx = string_replace_all(fx, "<=", "≤");
 	
-	fx = string_replace_all(fx, "[", "@["); //add array accessor symbol arr[i] = arr@[i] = arr @ (i)
 	fx = string_trim(fx);
 	
 	return fx;
@@ -529,19 +528,19 @@ function functionStringClean(fx) {
 			//print($"Analyzing {ch}");
 			
 			if(ds_map_exists(pres, ch)) { //symbol is operator
+				last_push = "op";
+				
 				if(ds_stack_empty(op)) ds_stack_push(op, ch);
 				else {
 					var _top = ds_stack_top(op);
 					if(_top == "(" || ds_map_exists(global.FUNCTIONS, _top) || pres[? ch] > pres[? _top]) {
 						ds_stack_push(op, ch);
-						last_push = "op";
 					} else {
 						if(ch == "-" && ds_map_exists(pres, _ch)) ch = "∸"; //unary negative
 						
 						while(pres[? ch] <= pres[? ds_stack_top(op)] && !ds_stack_empty(op))
 							ds_stack_push(vl, buildFuncTree(ds_stack_pop(op), vl));
 						ds_stack_push(op, ch);
-						last_push = "op";
 					}
 				}
 				
@@ -570,8 +569,12 @@ function functionStringClean(fx) {
 				last_push = "vl";
 				l++;
 			} else if (ch == "[") {
-				if(last_push == "vl")	ds_stack_push(op, ch);
-				else					ds_stack_push(op, [ "{", ds_stack_size(vl) ]);
+				if(last_push == "vl") {
+					ds_stack_push(op, "@");
+					ds_stack_push(op, ch);
+				} else
+					ds_stack_push(op, [ "{", ds_stack_size(vl) ]);
+				
 				last_push = "op";
 				l++;
 			} else if (ch == "]") {
@@ -582,12 +585,10 @@ function functionStringClean(fx) {
 						var arr = [];
 						while(ds_stack_size(vl) > _top[1])
 							array_insert(arr, 0, ds_stack_pop(vl));
-						ds_stack_pop(op);
 						ds_stack_push(vl, new __funcTree("【", arr));
 						break;
 					}
 					
-					print($"Build tree {_top}");
 					ds_stack_push(vl, buildFuncTree(_top, vl));
 				}
 				
@@ -625,6 +626,7 @@ function functionStringClean(fx) {
 					last_push = "fn";
 				} else {
 					vsl = string_trim(vsl);
+					
 					switch(vsl) {
 						case "e" : ds_stack_push(vl, 2.71828);	break;
 						case "pi": ds_stack_push(vl, pi);		break;

@@ -161,18 +161,21 @@ event_inherited();
 					
 					var spr = _project.getSpr();
 					if(spr) {
-						var gw = grid_width - ui(16);
-						var gh = grid_heigh - ui(16);
+						var gw = grid_width - ui(8);
+						var gh = grid_heigh - ui(8);
 						
 						var sw = sprite_get_width(spr);
 						var sh = sprite_get_height(spr);
 						
-						var s = 1;
+						var s = min(1, gw / sw, gh / sh);
 						
-						var ox = (sprite_get_xoffset(spr) - sw / 2) * s / 2;
-						var oy = (sprite_get_yoffset(spr) - sh / 2) * s / 2;
+						var ox = (sprite_get_xoffset(spr) - sw / 2) * s;
+						var oy = (sprite_get_yoffset(spr) - sh / 2) * s;
 						
-						draw_sprite_ui_uniform(spr, 0, _boxx + grid_width / 2 + ox, yy + grid_heigh / 2 + ox, s);
+						var _sx = _boxx + grid_width / 2 + ox;
+						var _sy = yy + grid_heigh / 2 + ox;
+						
+						draw_sprite_ui_uniform(spr, 0, _sx, _sy, s);
 					}
 					
 					var tx = _boxx + grid_width / 2;

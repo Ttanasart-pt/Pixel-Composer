@@ -209,7 +209,7 @@ function Node_Camera(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			shader_set_surface("backg", temp_surface[!ppInd]); //prev surface
 			shader_set_surface("scene", _surface); //surface to draw
 			
-			draw_sprite_ext(s_fx_pixel, 0, 0, 0, _surf_w, _surf_h, 0, c_white, 1);
+			draw_sprite_stretched(s_fx_pixel, 0, 0, 0, _surf_w, _surf_h);
 			surface_reset_target();
 		}
 		

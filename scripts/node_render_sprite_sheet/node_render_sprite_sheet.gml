@@ -88,11 +88,11 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 		} else if(PROJECT.animator.rendering && PROJECT.animator.frame_progress && PROJECT.animator.current_frame == 0 && !refreshSurface) {
 			var skip = inputs[| 2].getValue();
 			
-			if(is_array(inpt) && array_length(inpt) == 0) return;
-			var arr   = is_array(inpt);
-			if(!arr) 
-				inpt  = [ inpt ];
+			var arr = is_array(inpt);
+			if(arr && array_length(inpt) == 0) return;
+			if(!arr) inpt  = [ inpt ];
 			var _surf = [];
+			
 			var amo   = floor(PROJECT.animator.frames_total / skip);
 			var _st   = clamp(rang[0], 0, amo);
 			var _ed   = rang[1];
@@ -195,7 +195,7 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 			
 			switch(pack) {
 				case SPRITE_STACK.horizontal :
-					var px  = padd[2] + _frame * _w + max(0, _frame - 1) * spac;
+					var px  = padd[2] + _frame * _w + max(0, _frame) * spac;
 					var _sx = px;
 					var _sy = py;
 					
@@ -209,7 +209,7 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 					
 					break;
 				case SPRITE_STACK.vertical :
-					var py = padd[1] + _frame * _h + max(0, _frame - 1) * spac;
+					var py = padd[1] + _frame * _h + max(0, _frame) * spac;
 					var _sx = px;
 					var _sy = py;
 					
@@ -227,8 +227,8 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 					var _row = floor(_frame / col);
 					var _col = safe_mod(_frame, col);
 					
-					px = padd[2] + _col * _w + max(0, _col - 1) * spac;
-					py = padd[1] + _row * _h + max(0, _row - 1) * spac;
+					px = padd[2] + _col * _w + max(0, _col) * spac;
+					py = padd[1] + _row * _h + max(0, _row) * spac;
 					
 					_atl[i] = array_push_create(_atl[i], new spriteAtlasData(px, py, _w, _h, inpt[i], _frame));
 					draw_surface_safe(inpt[i], px, py);

@@ -610,6 +610,10 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 			ds_list_add(node, "Debug");
 			addNodeObject(node, "Print",		s_node_print,		"Node_Print",		[1, Node_Print], ["debug log"], "Display text to notification.").setVersion(1145);
 		
+		var vct = ds_list_create();
+		addNodeCatagory("VCT", vct);
+			addNodeObject(vct, "Biterator",		s_node_condition,	"Node_Biterator",	[1, Node_Biterator]);
+			
 		var hid = ds_list_create();
 		addNodeCatagory("Hidden", hid, ["Hidden"]);
 			addNodeObject(hid, "Input",				s_node_loop_input,		"Node_Iterator_Each_Input",		[1, Node_Iterator_Each_Input]);

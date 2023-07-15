@@ -54,6 +54,17 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	preview_draw_surface  = surface_create_empty(1, 1);
 	_preview_draw_surface = surface_create_empty(1, 1);
 	
+	is_selecting	= false;
+	is_selected		= false;
+	is_select_drag  = false;
+	selection_surface	= surface_create_empty(1, 1);
+	selection_mask		= surface_create_empty(1, 1);
+	selection_position	= [ 0, 0 ];
+	selection_sx = 0;
+	selection_sy = 0;
+	selection_mx = 0;
+	selection_my = 0;
+	
 	tool_channel_edit      = new checkBoxGroup(THEME.tools_canvas_channel, function(ind, val) { tool_attribute.channel[ind] = val; });
 	tool_attribute.channel = [ true, true, true, true ];
 	tool_settings = [
@@ -61,6 +72,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	];
 	
 	tools = [
+		new NodeTool( "Selection",	[ THEME.canvas_tools_selection_rectangle, THEME.canvas_tools_selection_circle ] ),
 		new NodeTool( "Pencil",		THEME.canvas_tools_pencil ),
 		new NodeTool( "Eraser",		THEME.canvas_tools_eraser ),
 		new NodeTool( "Rectangle",	[ THEME.canvas_tools_rect, THEME.canvas_tools_rect_fill ]),
@@ -74,7 +86,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		var _alp = inputs[| 11].getValue();
 		
 		BLEND_ALPHA;
-		if(isUsingTool(1))
+		if(isUsingTool("Eraser"))
 			gpu_set_blendmode(bm_subtract);
 		draw_surface_ext_safe(drawing_surface, 0, 0, 1, 1, 0, c_white, _alp);
 				
@@ -395,12 +407,129 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		var _surf_w		= surface_get_width(canvas_surface);
 		var _surf_h		= surface_get_height(canvas_surface);
 		
+		if(!isUsingTool("Selection") && is_surface(selection_surface)) {
+			var pos_x = selection_position[0];
+			var pos_y = selection_position[1];
+						
+			surface_set_target(canvas_surface);
+				BLEND_ALPHA
+				draw_surface(selection_surface, pos_x, pos_y);
+				BLEND_NORMAL
+			surface_reset_target();
+							
+			surface_store_buffer();
+			surface_free(selection_surface);
+		}
+		
 		surface_set_target(canvas_surface);
 		draw_set_color(_col);
 		
-		gpu_set_colorwriteenable(tool_attribute.channel[0], tool_attribute.channel[1], tool_attribute.channel[2], tool_attribute.channel[3]);
+		if(!isUsingTool("Selection"))
+			gpu_set_colorwriteenable(tool_attribute.channel[0], tool_attribute.channel[1], tool_attribute.channel[2], tool_attribute.channel[3]);
 		
-		if(isUsingTool(0) || isUsingTool(1)) {
+		if(isUsingTool("Selection")) {
+			if(is_selected) {
+				if(!is_surface(selection_surface)) {
+					is_selected = false;
+				} else {
+					if(is_select_drag) {
+						var px = selection_sx + (mouse_cur_x - selection_mx);
+						var py = selection_sy + (mouse_cur_y - selection_my);
+						
+						selection_position[0] = px;
+						selection_position[1] = py;
+						
+						if(mouse_release(mb_left))
+							is_select_drag = false;
+					}
+					
+					if(mouse_press(mb_left, active)) {
+						var pos_x = selection_position[0];
+						var pos_y = selection_position[1];
+						var sel_w = surface_get_width(selection_surface);
+						var sel_h = surface_get_height(selection_surface);
+						
+						if(point_in_rectangle(mouse_cur_x, mouse_cur_y, pos_x, pos_y, pos_x + sel_w, pos_y + sel_h)) {
+							is_select_drag = true;
+							selection_sx = pos_x;
+							selection_sy = pos_y;
+							selection_mx = mouse_cur_x;
+							selection_my = mouse_cur_y;
+						} else {
+							is_selected = false;
+						
+							surface_set_target(canvas_surface);
+								BLEND_ALPHA
+								draw_surface(selection_surface, pos_x, pos_y);
+								BLEND_NORMAL
+							surface_reset_target();
+							
+							surface_store_buffer();
+							surface_free(selection_surface);
+						}
+					}
+				}
+			}
+			
+			if(!is_selected) {
+				if(is_selecting) {
+					var sel_x0 = min(selection_sx, mouse_cur_x);
+					var sel_y0 = min(selection_sy, mouse_cur_y);
+					var sel_x1 = max(selection_sx, mouse_cur_x);
+					var sel_y1 = max(selection_sy, mouse_cur_y);
+				
+					var sel_w = sel_x1 - sel_x0 + 1;
+					var sel_h = sel_y1 - sel_y0 + 1;
+				
+					selection_mask = surface_verify(selection_mask, sel_w, sel_h);
+					surface_set_target(selection_mask);
+						DRAW_CLEAR
+						draw_set_color(c_white);
+						if(isUsingTool("Selection", 0))
+							draw_rectangle(0, 0, sel_w, sel_h, false);
+						else if(isUsingTool("Selection", 1))
+							draw_ellipse(0, 0, sel_w - 1, sel_h - 1, false);
+					surface_reset_target();
+				
+					if(mouse_release(mb_left)) {
+						is_selecting = false;
+					
+						if(sel_x0 != sel_x1 && sel_y0 != sel_y1) {
+							is_selected = true;
+						
+							selection_surface = surface_create(sel_w, sel_h);
+						
+							surface_set_target(selection_surface);
+								DRAW_CLEAR
+								draw_surface(canvas_surface, -sel_x0, -sel_y0);
+							
+								BLEND_MULTIPLY
+									draw_surface(selection_mask, 0, 0);
+								BLEND_NORMAL
+							surface_reset_target();
+						
+							surface_set_target(canvas_surface);
+								gpu_set_blendmode(bm_subtract);
+								draw_surface(selection_surface, sel_x0, sel_y0);
+								gpu_set_blendmode(bm_normal);
+							surface_reset_target();
+						
+							surface_store_buffer();
+						
+							selection_position = [ sel_x0, sel_y0 ];
+						}
+					}
+				} else {
+					if(mouse_press(mb_left, active)) {
+						is_selecting = true;
+						selection_sx = mouse_cur_x;
+						selection_sy = mouse_cur_y;
+					
+						surface_free_safe(selection_mask);
+					}
+				}
+			}
+		} else if(isUsingTool("Pencil") || isUsingTool("Eraser")) {
 			if(key_mod_press(SHIFT) && key_mod_press(CTRL)) {
 				var aa = point_direction(mouse_pre_draw_x, mouse_pre_draw_y, mouse_cur_x, mouse_cur_y);
 				var dd = point_distance(mouse_pre_draw_x, mouse_pre_draw_y, mouse_cur_x, mouse_cur_y);
@@ -456,7 +585,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			mouse_pre_x = mouse_cur_x;
 			mouse_pre_y = mouse_cur_y;
 			
-		} else if(isUsingTool(2) || isUsingTool(3)) {
+		} else if(isUsingTool("Rectangle") || isUsingTool("Ellipse")) {
 			if(mouse_holding && key_mod_press(SHIFT)) {
 				var ww = mouse_cur_x - mouse_pre_x;
 				var hh = mouse_cur_y - mouse_pre_y;
@@ -477,10 +606,10 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				drawing_surface = surface_verify(drawing_surface, _dim[0], _dim[1], attrDepth());
 				
 				surface_set_shader(drawing_surface, noone);
-					if(isUsingTool(2))
-						draw_rect_size(mouse_pre_x, mouse_pre_y, mouse_cur_x, mouse_cur_y, _siz, isUsingTool(2, 1), _brush);
-					else if(isUsingTool(3))
-						draw_ellp_size(mouse_pre_x, mouse_pre_y, mouse_cur_x, mouse_cur_y, _siz, isUsingTool(3, 1), _brush);
+					if(isUsingTool("Rectangle"))
+						draw_rect_size(mouse_pre_x, mouse_pre_y, mouse_cur_x, mouse_cur_y, _siz, isUsingTool("Rectangle", 1), _brush);
+					else if(isUsingTool("Ellipse"))
+						draw_ellp_size(mouse_pre_x, mouse_pre_y, mouse_cur_x, mouse_cur_y, _siz, isUsingTool("Ellipse", 1), _brush);
 				surface_reset_shader();
 				
 				if(mouse_release(mb_left)) {
@@ -488,7 +617,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 					mouse_holding = false;
 				}
 			}
-		} else if(isUsingTool(4) || (DRAGGING && DRAGGING.type == "Color")) {
+		} else if(isUsingTool("Fill") || (DRAGGING && DRAGGING.type == "Color")) {
 			if(point_in_rectangle(mouse_cur_x, mouse_cur_y, 0, 0, _surf_w - 1, _surf_h - 1)) {
 				var fill = DRAGGING? mouse_release(mb_left) : mouse_press(mb_left);
 				
@@ -532,36 +661,48 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				draw_surface_safe(drawing_surface, 0, 0);
 				
 				draw_set_color(_col);
-				if(isUsingTool(0) || isUsingTool(1)) {
-					if(isUsingTool(1)) draw_set_color(c_white);
+				if(isUsingTool("Selection")) {
+					if(is_selected)
+						draw_surface(selection_surface, selection_position[0], selection_position[1]);
+					else if(is_selecting) {
+						var sel_x0 = min(selection_sx, mouse_cur_x);
+						var sel_y0 = min(selection_sy, mouse_cur_y);
+						draw_surface_safe(selection_mask, sel_x0, sel_y0);
+					}
+				} else if(isUsingTool("Pencil") || isUsingTool("Eraser")) {
+					if(isUsingTool("Eraser")) draw_set_color(c_white);
 					
 					if(key_mod_press(SHIFT))	draw_line_size(mouse_pre_draw_x, mouse_pre_draw_y, mouse_cur_x, mouse_cur_y, _siz, _brush);
 					else						draw_point_size(mouse_cur_x, mouse_cur_y, _siz, _brush);
-				} else if (mouse_holding) {
-					if(isUsingTool(2))			draw_rect_size(mouse_pre_x, mouse_pre_y, mouse_cur_x, mouse_cur_y, _siz, isUsingTool(2, 1), _brush);
-					else if(isUsingTool(3))		draw_ellp_size(mouse_pre_x, mouse_pre_y, mouse_cur_x, mouse_cur_y, _siz, isUsingTool(3, 1), _brush); 
+				} else if(isUsingTool("Rectangle"))	{
+					draw_rect_size(mouse_pre_x, mouse_pre_y, mouse_cur_x, mouse_cur_y, _siz, isUsingTool("Rectangle", 1), _brush);
+				} else if(isUsingTool("Ellipse")) {
+					draw_ellp_size(mouse_pre_x, mouse_pre_y, mouse_cur_x, mouse_cur_y, _siz, isUsingTool("Ellipse", 1), _brush); 
 				}
-			surface_reset_shader();
-			
-			surface_set_shader(prev_surface, noone,, BLEND.alpha);
-				draw_surface_safe(canvas_surface, 0, 0);
-				
-				gpu_set_colorwriteenable(tool_attribute.channel[0], tool_attribute.channel[1], tool_attribute.channel[2], tool_attribute.channel[3]);
-				draw_surface_ext_safe(preview_draw_surface, 0, 0, 1, 1, 0, isUsingTool(1)? c_red : c_white, isUsingTool(1)? 0.2 : _alp);
-				gpu_set_colorwriteenable(true, true, true, true);
 			surface_reset_shader();
 			
 			if(_bgr && is_surface(_bg))
 				draw_surface_ext(_bg, _x, _y, _s, _s, 0, c_white, _bga);
 			
-			draw_surface_ext(prev_surface, _x, _y, _s, _s, 0, c_white, 1);
-			//if(isUsingTool(1)) {
-			//	gpu_set_blendmode(bm_subtract);
-			//	draw_surface_ext(preview_draw_surface, _x, _y, _s, _s, 0, c_white, 1);
-			//	gpu_set_blendmode(bm_normal);
-			//}
-			
-			if(!isNotUsingTool()) {
+			if(!isNotUsingTool()) { 
+				if(isUsingTool("Selection")) {
+					if(is_selected) {
+						var pos_x = _x + selection_position[0] * _s;
+						var pos_y = _y + selection_position[1] * _s;
+						var sel_w = surface_get_width(selection_surface)  * _s;
+						var sel_h = surface_get_height(selection_surface) * _s;
+						
+						draw_set_color(c_white);
+						draw_rectangle_dashed(pos_x, pos_y, pos_x + sel_w, pos_y + sel_h, true, 4);
+						
+						draw_surface_ext(selection_surface, pos_x, pos_y, _s, _s, 0, c_white, 1);
+					}
+				} else {
+					gpu_set_colorwriteenable(tool_attribute.channel[0], tool_attribute.channel[1], tool_attribute.channel[2], tool_attribute.channel[3]);
+					draw_surface_ext_safe(preview_draw_surface, _x, _y, _s, _s, 0, isUsingTool("Eraser")? c_red : c_white, isUsingTool("Eraser")? 0.2 : _alp);
+					gpu_set_colorwriteenable(true, true, true, true);
+				}
+				
 				surface_set_target(_preview_draw_surface);
 					DRAW_CLEAR
 					draw_surface_ext(preview_draw_surface, _x, _y, _s, _s, 0, c_white, 1);
@@ -572,8 +713,6 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 					draw_surface_ext(_preview_draw_surface, 0, 0, 1, 1, 0, c_white, 1);
 				shader_reset();
 			}
-			
-			surface_clear(prev_surface);
 		#endregion
 		
 		var _x0 = _x;

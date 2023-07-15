@@ -402,7 +402,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	loop_range  = -1;
 	
 	unit		= new nodeValueUnit(self);
-	extra_data	= [];
+	extra_data	= {};
 	dyna_depo   = ds_list_create();
 	
 	draw_line_shift_x	= 0;
@@ -601,9 +601,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 							if(type == VALUE_TYPE.integer) editWidget.setSlideSpeed(1);
 							if(display_data != -1) editWidget.extras = display_data;
 							
-							if(array_length(val) == 2)
-								extract_node = "Node_Vector2";
-							else if(array_length(val) == 3)
+							if(array_length(val) == 2) {
+								extract_node = [ "Node_Vector2", "Node_Path" ];
+							} else if(array_length(val) == 3)
 								extract_node = "Node_Vector3";
 							else if(array_length(val) == 4)
 								extract_node = "Node_Vector4";
@@ -687,7 +687,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						for( var i = 0; i < array_length(animators); i++ )
 							animators[i].suffix = " " + array_safe_get(global.displaySuffix_Area, i, "");
 						
-						extra_data[0] = AREA_MODE.area;
+						extra_data.area_type = AREA_MODE.area;
 						extract_node = "Node_Area";
 						break;
 					case VALUE_DISPLAY.padding :
@@ -870,6 +870,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				}, display_data );
 				show_in_inspector = true;
 				break;
+			case VALUE_TYPE.pathnode :
+				extract_node = "Node_Path";
+				break;
 		}
 		
 		setDropKey();
@@ -959,7 +962,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		}
 		
 		if(display_type == VALUE_DISPLAY.area) {
-			var dispType = array_safe_get(nodeFrom.extra_data, 0, AREA_MODE.area);
+			var dispType = struct_try_get(nodeFrom.extra_data, "area_type", AREA_MODE.area);
 			var surfGet = nodeFrom.display_data;
 			if(!applyUnit || surfGet == -1) return value;
 			
@@ -1341,7 +1344,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(_valueFrom == noone)
 			return removeFrom();
 		
-		if(!isConnectable(_valueFrom, checkRecur, true)) 
+		if(!isConnectable(_valueFrom, checkRecur, false)) 
 			return false;
 		
 		if(setFrom_condition != -1 && !setFrom_condition(_valueFrom)) 
@@ -1578,18 +1581,20 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		return visible;
 	}
 	
-	static extractNode = function() {
-		if(extract_node == "") return noone;
+	static extractNode = function(_type = extract_node) {
+		if(_type == "") return noone;
 		
-		var ext = nodeBuild(extract_node, node.x, node.y);
+		var ext = nodeBuild(_type, node.x, node.y);
 		ext.x -= ext.w + 32;
 		
-		setFrom(ext.outputs[| 0]);
+		for( var i = 0; i < ds_list_size(ext.outputs); i++ ) {
+			if(setFrom(ext.outputs[| i])) break;
+		}
 		
 		var animFrom = animator.values;
 		var len = 2;
 		
-		switch(extract_node) {
+		switch(_type) {
 			case "Node_Vector4": len++;
 			case "Node_Vector3": len++;
 			case "Node_Vector2": 
@@ -1611,6 +1616,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						ds_list_add(animLs, a);
 					}
 				}
+				break;
+			case "Node_Path": 
 				break;
 			default:
 				var animTo = ext.inputs[| 0].animator;
@@ -1667,6 +1674,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(connect_type == JUNCTION_CONNECT.output) 
 			return _map;
 		
+		_map.name		= name;
 		_map.on_end		= on_end;
 		_map.loop_range	= loop_range;
 		_map.unit		= unit.mode;
@@ -1703,6 +1711,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			return;
 		
 		//printIf(TESTING, "     |- Applying deserialize to junction " + name + " of node " + node.name);
+		name 		= struct_try_get(_map, "name", name);
 		on_end		= struct_try_get(_map, "on_end");
 		loop_range	= struct_try_get(_map, "loop_range", -1);
 		unit.mode	= struct_try_get(_map, "unit");
@@ -1730,7 +1739,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			con_index = struct_try_get(_map, "from_index", -1);
 		}
 		
-		if(struct_has(_map, "data")) 
+		if(struct_has(_map, "data") && is_struct(_map.data))
 			extra_data = _map.data;
 		
 		if(APPENDING) def_val = getValue(0);

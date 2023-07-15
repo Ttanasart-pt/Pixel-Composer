@@ -37,7 +37,7 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		
 		inputs[| index] = nodeValue(bone != noone? bone.name : "bone", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 0, 1 ] )
 			.setDisplay(VALUE_DISPLAY.transform);
-		inputs[| index].extra_data[0] = bone != noone? bone.ID : noone;
+		inputs[| index].extra_data.bone_id = bone != noone? bone.ID : noone;
 		
 		if(bone != noone)
 			boneMap[? bone.ID] = inputs[| index];
@@ -317,7 +317,7 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	static doApplyDeserialize = function() {
 		for( var i = input_fix_len; i < ds_list_size(inputs); i += data_length ) {
 			var inp = inputs[| i];
-			var idx = array_safe_get(inp.extra_data, 0);
+			var idx = struct_try_get(inp.extra_data, bone_id);
 			
 			boneMap[? idx] = inp;
 		}

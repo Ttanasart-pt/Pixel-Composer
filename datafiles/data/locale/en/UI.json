@@ -254,7 +254,7 @@
     "panel_inspector_reset":            "Reset value",
     "panel_inspector_remove":           "Remove animation",
     "panel_inspector_add":              "Add animation",
-    "panel_inspector_extract":          "Extract to node",
+    "panel_inspector_extract":          "Extract...",
     "panel_inspector_out_visible":      "Outputs visibility",
     "panel_inspector_execute":          "Execute node",
     "panel_inspector_cache_desp":       "This node cache output for performance.\nClick to clear all cached frames in this node.",

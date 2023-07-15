@@ -23,6 +23,7 @@ event_inherited();
 		dialog_h = content.h + content.showHeader * (padding * 2 + title_height);
 		dialog_w_min = content.min_w;
 		dialog_h_min = content.min_h;
+		dialog_resizable = content.resizable;
 		
 		content.in_dialog = true;
 		

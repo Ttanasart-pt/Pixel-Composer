@@ -8,6 +8,7 @@ uniform sampler2D backg;
 uniform sampler2D scene;
 uniform vec2 scnDimension;
 uniform vec2 camDimension;
+
 uniform vec2 position;
 uniform float zoom;
 uniform int sampleMode;
@@ -71,7 +72,7 @@ vec4 bokeh(sampler2D tex, vec2 uv, float radius) { //ref. sh_blur_bokeh
 
 void main() {
 	vec2 pos = position + (v_vTexcoord - vec2(.5)) * (camDimension / scnDimension) * zoom;
-	if(bg == 1) pos = position + v_vTexcoord - vec2(.5);
+	//if(bg == 1) pos = position + (v_vTexcoord - vec2(.5)) * (camDimension / scnDimension);
     vec4 _col0 = sampleTexture( backg, v_vTexcoord );
 	vec4 _col1 = bokeh( scene, pos, bokehStrength );
     

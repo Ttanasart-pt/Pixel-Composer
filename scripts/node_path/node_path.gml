@@ -106,6 +106,11 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		var ansize = ds_list_size(inputs) - input_fix_len;
 		var _edited = false;
 		
+		var pos = outputs[| 0].getValue();
+		
+		draw_set_color(COLORS._main_accent);
+		draw_circle(_x + pos[0] * _s, _y + pos[1] * _s, 4, false);
+		
 		if(transform_type > 0) { 
 			var _transform_minx = transform_minx;
 			var _transform_miny = transform_miny;

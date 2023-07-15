@@ -19,6 +19,12 @@ function draw_sprite_stretched_override(spr, ind, _x, _y, w = 1, h = 1) {
 	__draw_sprite_stretched(spr, ind, round(_x), round(_y), round(w), round(h));
 }
 
+function draw_sprite_ext_add(spr, ind, _x, _y, xscale = 1, yscale = 1, rot = 0, color = c_white, alpha = 1) {
+	BLEND_ADD
+	__draw_sprite_ext(spr, ind, round(_x), round(_y), xscale, yscale, rot, color, alpha);
+	BLEND_NORMAL
+}
+
 function draw_sprite_stretched_points(spr, ind, _x0, _y0, _x1, _y1) {
 	var _xs = round(min(_x0, _x1));
 	var _ys = round(min(_y0, _y1));

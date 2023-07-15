@@ -540,9 +540,22 @@ function Panel_Inspector() : PanelContent() constructor {
 					);
 					
 					if(jun.extract_node != "") {
-						array_insert(_menuItem, 2, menuItem(__txtx("panel_inspector_extract", "Extract..."), function() { 
-							__dialog_junction.extractNode();
-						}));
+						if(is_array(jun.extract_node)) {
+							var ext = menuItem(__txtx("panel_inspector_extract_multiple", "Extract to..."),	function(_dat) { 
+								var arr = [];
+								for(var i = 0; i < array_length(__dialog_junction.extract_node); i++)  {
+									var _rec = __dialog_junction.extract_node[i];
+									array_push(arr, menuItem(_rec, function(_dat) { __dialog_junction.extractNode(_dat.name); }));
+								}
+									
+								return submenuCall(_dat, arr);
+							}).setIsShelf();
+							array_insert(_menuItem, 2, ext);
+						} else {
+							array_insert(_menuItem, 2, menuItem(__txtx("panel_inspector_extract_single", "Extract to node"), function() { 
+								__dialog_junction.extractNode();
+							}));
+						}
 					}
 					
 					var dia = menuCall("inspector_value_menu",,, _menuItem,, jun);

@@ -127,7 +127,7 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 				
 				var points = [];
 				var segCount = _path.getSegmentCount();
-				if(segCount > 1) {
+				if(segCount) {
 					var quality = 8;
 					var sample = quality * segCount;
 					
