@@ -562,6 +562,13 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 							}, THEME.group, ["Graph", "Ungroup"]));		
 					}
 					
+					if(node_hover.group != noone) {
+						array_push(menu,  
+							menuItem(__txt("Set as group tool"), function() { 
+								node_hover.setTool(!node_hover.isTool);
+							}));		
+					}
+					
 					array_push(menu, -1);
 						
 					array_push(menu,  
@@ -1505,8 +1512,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 				if(buttonInstant(THEME.button_hide_fill, xx - ui(6), tbh - bh / 2, tw + ui(12), bh, [mx, my], pFOCUS, pHOVER) == 2) {
 					node_hover		= noone;
 					node_focus		= noone;
-					PANEL_PREVIEW.preview_node[0] = noone;
-					PANEL_PREVIEW.preview_node[1] = noone;
+					PANEL_PREVIEW.resetNodePreview();
 					setContextFrame(true, node_context[| i + 1]);
 					
 					if(i == -1) {

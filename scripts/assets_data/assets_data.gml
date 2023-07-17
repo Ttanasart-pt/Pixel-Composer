@@ -42,6 +42,7 @@
 	
 	function get_asset(key) {
 		if(!ds_map_exists(global.ASSET_MAP, key)) return noone;
+		
 		if(ds_map_exists(global.ASSET_CACHE, key)) {
 			var s = global.ASSET_CACHE[? key];
 			var valid = true;

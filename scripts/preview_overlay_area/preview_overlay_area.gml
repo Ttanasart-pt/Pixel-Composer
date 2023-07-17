@@ -21,6 +21,7 @@ function preview_overlay_area_padding(interact, active, _x, _y, _s, _mx, _my, _s
 	var yc = (y0 + y1) / 2;
 	
 	draw_set_color(COLORS._main_accent);
+	draw_set_circle_precision(32);
 	switch(__at) {
 		case AREA_SHAPE.rectangle :	draw_rectangle(x0, y0, x1, y1, true); break;
 		case AREA_SHAPE.elipse :	draw_ellipse(x0, y0, x1, y1, true); break;
@@ -151,6 +152,7 @@ function preview_overlay_area_two_point(interact, active, _x, _y, _s, _mx, _my, 
 	var yc = (y0 + y1) / 2;
 	
 	draw_set_color(COLORS._main_accent);
+	draw_set_circle_precision(32);
 	switch(__at) {
 		case AREA_SHAPE.rectangle :	draw_rectangle(x0, y0, x1, y1, true); break;
 		case AREA_SHAPE.elipse :	draw_ellipse(x0, y0, x1, y1, true); break;
@@ -256,6 +258,7 @@ function preview_overlay_area_span(interact, active, _x, _y, _s, _mx, _my, _snx,
 	var _ah = __ah * _s;
 						
 	draw_set_color(COLORS._main_accent);
+	draw_set_circle_precision(32);
 	switch(__at) {
 		case AREA_SHAPE.rectangle :	draw_rectangle(_ax - _aw, _ay - _ah, _ax + _aw, _ay + _ah, true); break;
 		case AREA_SHAPE.elipse :	draw_ellipse(_ax - _aw, _ay - _ah, _ax + _aw, _ay + _ah, true); break;

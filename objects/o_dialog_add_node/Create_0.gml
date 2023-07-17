@@ -129,8 +129,7 @@ event_inherited();
 				return;
 			}
 			
-			if(array_exists(global.RECENT_NODES, _node.node)) 
-				array_remove(global.RECENT_NODES, _node.node);
+			array_remove(global.RECENT_NODES, _node.node);
 			array_insert(global.RECENT_NODES, 0, _node.node);
 			if(array_length(global.RECENT_NODES) > 20)
 				array_pop(global.RECENT_NODES);

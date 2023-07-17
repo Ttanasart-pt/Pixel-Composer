@@ -4,7 +4,7 @@ function window_close() {
 	for( var i = 0; i < array_length(PROJECTS); i++ ) {
 		var project = PROJECTS[i];
 		
-		print($"Project {filename_name_only(project)} modified: {project.modified} readonly: {project.readonly}");
+		//print($"Project {filename_name_only(project)} modified: {project.modified} readonly: {project.readonly}");
 		if(project.modified && !project.readonly) {
 			var dia = dialogCall(o_dialog_exit,,,, true);
 			dia.project = project;

@@ -39,8 +39,6 @@ function Panel_Preview() : PanelContent() constructor {
 	preview_surface = [ 0, 0 ];
 	tile_surface    = surface_create(1, 1);
 	
-	inspect_node = noone;
-	
 	preview_x		= 0;
 	preview_x_to	= 0;
 	preview_x_max	= 0;
@@ -169,9 +167,18 @@ function Panel_Preview() : PanelContent() constructor {
 		preview_node[splitView? splitSelection : 0] = node;
 	}
 	
-	function getNodePreview() { return preview_node[splitView? splitSelection : 0]; }
-	function getNodePreviewSurface() { return preview_surface[splitView? splitSelection : 0]; }
-	function getNodePreviewSequence() { return preview_sequence[splitView? splitSelection : 0]; }
+	function removeNodePreview(node) {
+		if(preview_node[0] == node) preview_node[0] = noone;
+		if(preview_node[1] == node) preview_node[1] = noone;
+	}
+	
+	function resetNodePreview() {
+		preview_node = [ noone, noone ];
+	}
+	
+	function getNodePreview()			{ return preview_node[splitView? splitSelection : 0]; }
+	function getNodePreviewSurface()	{ return preview_surface[splitView? splitSelection : 0]; }
+	function getNodePreviewSequence()	{ return preview_sequence[splitView? splitSelection : 0]; }
 	
 	function getPreviewData() {
 		preview_surface  = [ 0, 0 ];
@@ -780,7 +787,7 @@ function Panel_Preview() : PanelContent() constructor {
 		draw_sprite_stretched(THEME.toolbar, 1, 0, 0, w, scHeight);
 		
 		if(tool_current != noone) { //tool settings
-			var settings = PANEL_GRAPH.node_focus.tool_settings;
+			var settings = _node.tool_settings;
 			var len      = array_length(settings);
 			for( var i = 0; i < array_length(tool_current.settings); i++ ) 
 				settings[len + i] = tool_current.settings[i];
@@ -970,15 +977,14 @@ function Panel_Preview() : PanelContent() constructor {
 		drawNodePreview();
 		drawPreviewOverlay();
 		
-		if(PANEL_PREVIEW == self)
-			inspect_node = PANEL_GRAPH.node_focus;
+		var inspect_node = PANEL_INSPECTOR.inspecting;
 		
-		if(inspect_node)
-			drawNodeTools(pFOCUS, inspect_node);
-		if(last_focus != inspect_node) {
-			last_focus   = inspect_node;
+		var tool = noone;
+		if(inspect_node) {
+			tool = inspect_node.getTool();
+			if(tool) drawNodeTools(pFOCUS, tool);
+		} else	
 			tool_current = noone;
-		}
 		
 		if(do_fullView) {
 			do_fullView = false;
@@ -999,7 +1005,7 @@ function Panel_Preview() : PanelContent() constructor {
 		}
 		
 		drawSplitView();
-		drawToolBar(PANEL_GRAPH.node_focus);
+		if(tool) drawToolBar(tool);
 	}
 	
 	function copyCurrentFrame() {

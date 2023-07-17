@@ -199,6 +199,9 @@ function textBox(_input, _onModify, _extras = noone) : textInput(_input, _onModi
 			KEYBOARD_STRING = "";
 			keyboard_lastkey = -1;
 		#endregion
+		
+		if(keyboard_check_pressed(vk_left))	 onKey(vk_left);
+		if(keyboard_check_pressed(vk_right)) onKey(vk_right);
 			
 		if(keyboard_check_pressed(vk_home)) {
 			if(key_mod_press(SHIFT)) {

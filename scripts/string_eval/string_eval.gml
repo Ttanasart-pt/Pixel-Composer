@@ -54,6 +54,13 @@
 																	return irandom_range(array_safe_get(val, 0, 0), 
 																					     array_safe_get(val, 1, 1)); 
 																} ];
+	
+	global.FUNCTIONS[? "range"] = [ ["length"],	function(val) { 
+													var arr = array_create(array_safe_get(val, 0, 0));
+													for( var i = 0; i < array_length(arr); i++ ) 
+														arr[i] = i;
+													return arr;
+												} ];
 #endregion
 
 function functionStringClean(fx) {

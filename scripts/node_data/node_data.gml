@@ -125,6 +125,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	manual_updated		 = false;
 	manual_deletable	 = true;
 	
+	isTool			= false;
 	tool_settings	= [];
 	tool_attribute	= {};
 	
@@ -1042,6 +1043,11 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 			xx -= 28 * badgeInspect;
 		}
 		
+		if(isTool) {
+			draw_sprite_ext(THEME.node_state, 2, xx, yy, 1, 1, 0, c_white, 1);
+			xx -= 28 * 2;
+		}
+		
 		inspecting = false;
 		previewing = 0;
 	}
@@ -1069,9 +1075,9 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		
 		if(PANEL_GRAPH.node_hover         == self) PANEL_GRAPH.node_hover        = noone;
 		if(PANEL_GRAPH.node_focus         == self) PANEL_GRAPH.node_focus        = noone;
-		if(PANEL_PREVIEW.preview_node[0]  == self) PANEL_PREVIEW.preview_node[0] = noone;
-		if(PANEL_PREVIEW.preview_node[1]  == self) PANEL_PREVIEW.preview_node[1] = noone;
 		if(PANEL_INSPECTOR.inspecting     == self) PANEL_INSPECTOR.inspecting    = noone;
+		
+		PANEL_PREVIEW.removeNodePreview(self);
 		PANEL_ANIMATION.updatePropertyList();
 		
 		for(var i = 0; i < ds_list_size(outputs); i++) {
@@ -1342,6 +1348,22 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		return BBOX().fromWH(preview_x, preview_y, surface_get_width(_surf), surface_get_height(_surf));
 	}
 	
+	static getTool = function() {
+		return self;
+	}
+	
+	static setTool = function(tool) {
+		if(!tool) {
+			isTool = false;
+			return;
+		}
+		
+		for( var i = 0; i < ds_list_size(group.nodes); i++ )
+			group.nodes[| i].isTool = false;
+		
+		isTool = true;
+	}
+	
 	static serialize = function(scale = false, preset = false) {
 		var _map = {};
 		//print(" > Serializing: " + name);
@@ -1356,6 +1378,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 			_map.type    = instanceof(self);
 			_map.group   = group == noone? group : group.node_id;
 			_map.preview = previewable;
+			_map.tool    = isTool;
 		}
 		
 		_map.attri		= attributeSerialize();
@@ -1410,6 +1433,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 			y = struct_try_get(load_map, "y");
 			renderActive = struct_try_get(load_map, "render", true);
 			previewable  = struct_try_get(load_map, "preview", previewable);
+			isTool       = struct_try_get(load_map, "tool");
 		}
 		
 		if(struct_has(load_map, "attri"))

@@ -159,8 +159,8 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 						draw_sprite_stretched_ext(THEME.ui_panel_active, 0, _x, ty, _w, _hh, COLORS._main_accent, 1);
 						hovering = _bone;
 					}
-						
-					anchor_selecting = [_bone, 2];
+						                                         
+					anchor_selecting = [ _bone, 2 ];
 				}
 					
 				ty += _hh;
@@ -168,9 +168,9 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 				draw_set_color(COLORS.node_composite_separator);
 				draw_line(_x + 16, ty, _x + _w - 16, ty);
 			}
-		
+			
 			ds_stack_destroy(_bst);
-		
+			
 			if(layer_dragging != noone && hovering && mouse_release(mb_left)) {
 				var _lind = input_fix_len + layer_dragging * data_length;
 				inputs[| _lind].extra_data.bone_id = hovering.ID;

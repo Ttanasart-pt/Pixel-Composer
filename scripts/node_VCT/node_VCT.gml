@@ -12,7 +12,7 @@ function Node_VCT(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) const
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 		
 	input_display_list = [ 0, 
-		["Output", 		false], 
+		["Automations", false], 
 	];
 	
 	input_display_len = array_length(input_display_list);
@@ -35,7 +35,7 @@ function Node_VCT(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) const
 	
 	static process_data = function(_outSurf, _data, _output_index, _array_index) {
 		for( var i = 1; i < array_length(_data); i++ )
-			vct[$ inputs[| i].extra_data.key].set(_data[i]);
+			vct[$ inputs[| i].extra_data.key].setDirect(_data[i]);
 		return vct.process();
 	}
 	

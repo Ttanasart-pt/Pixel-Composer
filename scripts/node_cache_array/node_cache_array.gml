@@ -28,11 +28,11 @@ function Node_Cache_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	static step = function() { 
 		if(cache_loading) {
-			cached_output[cache_loading_progress] = surface_array_deserialize(cache_content, cache_loading_progress);
-			cache_result[cache_loading_progress] = true;
+			cached_output[cache_loading_progress] = __surface_array_deserialize(cache_content[cache_loading_progress]);
+			cache_result[cache_loading_progress]  = true;
 			cache_loading_progress++;
 			
-			if(cache_loading_progress == PROJECT.animator.frames_total) {
+			if(cache_loading_progress == array_length(cache_content) || !is_struct(cache_content[cache_loading_progress])) {
 				cache_loading = false;
 				update();
 			}
@@ -41,12 +41,15 @@ function Node_Cache_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	static update = function() {
 		var ss  = [];
-		var str = inputs[| 1].getValue();
-		var lst = inputs[| 2].getValue();
+		var str = inputs[| 1].getValue() - 1;
+		var lst = inputs[| 2].getValue() - 1;
 		var stp = inputs[| 3].getValue();
 		
 		if(str == -1) str = 0;
 		if(lst == -1) lst = PROJECT.animator.frames_total;
+		
+		if(PROJECT.animator.current_frame < str) return;
+		if(PROJECT.animator.current_frame > lst) return;
 		
 		if(lst > str && stp > 0) 
 		for( var i = str; i <= lst; i += stp ) {
@@ -68,12 +71,12 @@ function Node_Cache_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	}
 	
 	static doSerialize = function(_map) {
-		_map[? "cache"] = surface_array_serialize(cached_output);
+		_map.cache = surface_array_serialize(cached_output);
 	}
 	
 	static postDeserialize = function() {
 		if(!struct_has(load_map, "cache")) return;
-		cache_content			= load_map.cache;
+		cache_content			= json_try_parse(load_map.cache);
 		cache_loading_progress  = 0;
 		cache_loading			= true;
 	}

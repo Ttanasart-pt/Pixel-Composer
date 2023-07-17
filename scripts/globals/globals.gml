@@ -52,8 +52,8 @@
 	
 	gml_pragma("global", "__init()");
 	function __init() {
-		PROJECTS = [];
 		PROJECT  = new Project();
+		PROJECTS = [ PROJECT ];
 	}
 	
 	globalvar PROJECT_VARIABLES;
@@ -79,7 +79,7 @@
 	
 	VERSION			= 1147;
 	SAVE_VERSION	= 1448;
-	VERSION_STRING  = "1.14.6n7";
+	VERSION_STRING  = "1.14.6n9";
 	BUILD_NUMBER	= 114600;
 	
 	globalvar APPEND_MAP;
@@ -96,9 +96,10 @@
 
 #region inputs
 	globalvar FOCUS, FOCUS_STR, HOVER, HOVERING_ELEMENT, _HOVERING_ELEMENT;
-	globalvar DOUBLE_CLICK;
+	globalvar DOUBLE_CLICK, DOUBLE_CLICK_POS;
 	globalvar DIALOG_CLICK;
 	
+	DOUBLE_CLICK_POS = [ 0, 0 ];
 	DOUBLE_CLICK = false;
 	FOCUS = noone;
 	FOCUS_STR = "";

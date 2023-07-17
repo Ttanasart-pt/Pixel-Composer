@@ -372,6 +372,7 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 			addNodeObject(generator, "Draw Text",		s_node_text_render,		"Node_Text",			[1, Node_Text],, "Draw text on an image.");
 			addNodeObject(generator, "Shape",			s_node_shape,			"Node_Shape",			[1, Node_Shape],, "Draw simple shapes using signed distance field.");
 			addNodeObject(generator, "Polygon Shape",	s_node_shape_polygon,	"Node_Shape_Polygon",	[1, Node_Shape_Polygon],, "Draw simple shapes using triangles.").setVersion(1130);
+			addNodeObject(generator, "Random Shape",	s_node_random_shape,	"Node_Random_Shape",	[1, Node_Random_Shape]).setVersion(1147);
 		
 			ds_list_add(generator, "Noises");
 			addNodeObject(generator, "Noise",				s_node_noise,				"Node_Noise",				[1, Node_Noise],, "Generate white noise.");
@@ -610,9 +611,9 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 			ds_list_add(node, "Debug");
 			addNodeObject(node, "Print",		s_node_print,		"Node_Print",		[1, Node_Print], ["debug log"], "Display text to notification.").setVersion(1145);
 		
-		var vct = ds_list_create();
-		addNodeCatagory("VCT", vct);
-			addNodeObject(vct, "Biterator",		s_node_condition,	"Node_Biterator",	[1, Node_Biterator]);
+		//var vct = ds_list_create();
+		//addNodeCatagory("VCT", vct);
+		//	addNodeObject(vct, "Biterator",		s_node_condition,	"Node_Biterator",	[1, Node_Biterator]);
 			
 		var hid = ds_list_create();
 		addNodeCatagory("Hidden", hid, ["Hidden"]);

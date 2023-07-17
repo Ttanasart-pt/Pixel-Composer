@@ -104,10 +104,13 @@ _HOVERING_ELEMENT = noone;
 	DOUBLE_CLICK = false;
 	if(mouse_press(mb_left)) {
 		if(dc_check > 0) {
-			DOUBLE_CLICK = true;
+			if(point_distance(mouse_mx, mouse_my, DOUBLE_CLICK_POS[0], DOUBLE_CLICK_POS[1]) < 8)
+				DOUBLE_CLICK = true;
 			dc_check = 0;
-		} else
+		} else {
 			dc_check = PREF_MAP[? "double_click_delay"];
+			DOUBLE_CLICK_POS = [ mouse_mx, mouse_my ];
+		}
 	}
 	
 	dc_check -= DELTA_TIME;

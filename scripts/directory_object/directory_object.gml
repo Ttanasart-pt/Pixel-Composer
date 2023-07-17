@@ -132,8 +132,11 @@ function DirectoryObject(name, path) constructor {
 					var icon_path = path + "/" + file;
 					var amo = 1;
 					var p = string_pos("strip", icon_path);
-					if(p) amo = toNumber(string_copy(icon_path, p, string_length(icon_path) - p + 1));
-					
+					if(p) {
+						var _amo = string_copy(icon_path, p, string_length(icon_path) - p + 1);
+							_amo = string_digits(_amo);
+						amo = toNumber(_amo);
+					}
 					f.spr_path = [icon_path, amo, false];
 				} else {
 					var icon_path = path + "/" + filename_change_ext(file, ".png");

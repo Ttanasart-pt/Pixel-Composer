@@ -10,5 +10,5 @@ if(keyboard_check(vk_backspace))
 else
 	KEYBOARD_STRING += keyboard_lastchar;
 	
-if(WIDGET_CURRENT && is_instanceof(WIDGET_CURRENT, textInput))
-	WIDGET_CURRENT.onKey(KEYBOARD_PRESSED);
+//if(WIDGET_CURRENT && is_instanceof(WIDGET_CURRENT, textInput))
+//	WIDGET_CURRENT.onKey(KEYBOARD_PRESSED);

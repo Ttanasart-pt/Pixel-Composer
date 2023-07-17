@@ -390,8 +390,8 @@ function textArea(_input, _onModify, _extras = noone) : textInput(_input, _onMod
 					}
 					cursor_select	= -1;
 					modified = true;
-				} else if(KEYBOARD_STRING != "") {
-					var ch			= KEYBOARD_STRING;
+				} else if(KEYBOARD_STRING != "" && KEYBOARD_STRING != "\b" && KEYBOARD_STRING != "\r") {
+					var ch = KEYBOARD_STRING;
 					
 					if(cursor_select == -1) {
 						var str_before	= string_copy(_input_text, 1, cursor);
@@ -425,6 +425,12 @@ function textArea(_input, _onModify, _extras = noone) : textInput(_input, _onMod
 		
 		if(auto_update && keyboard_check_pressed(vk_anykey))
 			apply();
+			
+		if(keyboard_check_pressed(vk_left))	 onKey(vk_left);
+		if(keyboard_check_pressed(vk_right)) onKey(vk_right);
+		if(keyboard_check_pressed(vk_up))	 onKey(vk_up);
+		if(keyboard_check_pressed(vk_down))  onKey(vk_down);
+			
 			
 		if(keyboard_check_pressed(vk_home)) {
 			if(key_mod_press(SHIFT)) {

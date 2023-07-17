@@ -21,8 +21,8 @@ function Node_Cache(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	
 	static step = function() {
 		if(cache_loading) {
-			cached_output[cache_loading_progress] = surface_array_deserialize(cache_content, cache_loading_progress);
-			cache_result[cache_loading_progress] = true;
+			cached_output[cache_loading_progress] = __surface_array_deserialize(cache_content[cache_loading_progress]);
+			cache_result[cache_loading_progress]  = true;
 			cache_loading_progress++;
 			
 			if(cache_loading_progress == PROJECT.animator.frames_total) {
@@ -46,12 +46,12 @@ function Node_Cache(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	}
 	
 	static doSerialize = function(_map) {
-		_map[? "cache"] = surface_array_serialize(cached_output);
+		_map.cache = surface_array_serialize(cached_output);
 	}
 	
 	static postDeserialize = function() { 
 		if(!struct_has(load_map, "cache")) return;
-		cache_content			= load_map.cache;
+		cache_content			= json_try_parse(load_map.cache);
 		cache_loading_progress	= 0;
 		cache_loading			= true;
 	}

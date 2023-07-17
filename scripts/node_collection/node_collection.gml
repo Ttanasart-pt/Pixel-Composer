@@ -61,15 +61,15 @@ function upgroupNode(collection, record = true) {
 
 function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	nodes = ds_list_create();
-	ungroupable = true;
-	auto_render_time = false;
+	ungroupable			= true;
+	auto_render_time	= false;
 	combine_render_time = true;
 	
 	reset_all_child = false;
-	isInstancer  = false;
-	instanceBase = noone;
+	isInstancer		= false;
+	instanceBase	= noone;
 	
-	custom_input_index = 0;
+	custom_input_index  = 0;
 	custom_output_index = 0;
 	
 	metadata = new MetaDataManager();
@@ -77,6 +77,8 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	attributes.separator = [];
 	attributes.w = 128;
 	attributes.h = 128;
+	
+	tool_node = noone;
 	
 	array_push(attributeEditors, ["Edit separator", function() { return attributes.separator; },
 		button(function() {
@@ -383,6 +385,15 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		}
 		
 		ds_priority_destroy(ar);
+	}
+	
+	static getTool = function() {
+		for(var i = 0; i < ds_list_size(nodes); i++) {
+			var _node = nodes[| i];
+			if(_node.isTool) return _node.getTool();
+		}
+		
+		return self;
 	}
 	
 	static onClone = function(_newNode, target = PANEL_GRAPH.getCurrentContext()) {

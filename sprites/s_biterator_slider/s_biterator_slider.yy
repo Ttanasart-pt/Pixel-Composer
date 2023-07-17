@@ -24,7 +24,7 @@
     {"resourceType":"GMImageLayer","resourceVersion":"1.0","name":"bd1d7064-9e20-454d-b6b6-b02168a7abf9","blendMode":0,"displayName":"default","isLocked":false,"opacity":100.0,"visible":true,},
   ],
   "nineSlice": null,
-  "origin": 4,
+  "origin": 7,
   "parent": {
     "name": "biterator",
     "path": "folders/VCT/biterator.yy",
@@ -62,7 +62,7 @@
     "visibleRange": null,
     "volume": 1.0,
     "xorigin": 5,
-    "yorigin": 4,
+    "yorigin": 8,
   },
   "swatchColours": null,
   "swfPrecision": 2.525,
