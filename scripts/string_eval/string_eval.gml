@@ -55,12 +55,12 @@
 																					     array_safe_get(val, 1, 1)); 
 																} ];
 	
-	global.FUNCTIONS[? "range"] = [ ["length"],	function(val) { 
-													var arr = array_create(array_safe_get(val, 0, 0));
-													for( var i = 0; i < array_length(arr); i++ ) 
-														arr[i] = i;
-													return arr;
-												} ];
+	global.FUNCTIONS[? "range"] = [ ["length", "start = 0", "step = 1"],	function(val) { 
+																				var arr = array_create(array_safe_get(val, 0, 0));
+																				for( var i = 0; i < array_length(arr); i++ ) 
+																					arr[i] = array_safe_get(val, 1, 0) + i * array_safe_get(val, 2, 1);
+																				return arr;
+																			} ];
 #endregion
 
 function functionStringClean(fx) {

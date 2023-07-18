@@ -3,8 +3,8 @@
   "resourceVersion": "1.0",
   "name": "sh_grid_tri",
   "parent": {
-    "name": "generator",
-    "path": "folders/shader/generator.yy",
+    "name": "grid",
+    "path": "folders/shader/generator/grid.yy",
   },
   "type": 1,
 }

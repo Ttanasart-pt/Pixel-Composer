@@ -40,13 +40,9 @@ function Node_Color_Remove(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		var thr = _data[2];
 		var inv = _data[6];
 		
-		var _colors = array_create(array_length(frm) * 4);
-		for(var i = 0; i < array_length(frm); i++) {
-			_colors[i * 4 + 0] = color_get_red(frm[i]) / 255;
-			_colors[i * 4 + 1] = color_get_green(frm[i]) / 255;
-			_colors[i * 4 + 2] = color_get_blue(frm[i]) / 255;
-			_colors[i * 4 + 3] = 1;
-		}
+		var _colors = [];
+		for(var i = 0; i < array_length(frm); i++)
+			array_append(_colors, colToVec4(frm[i]));
 		
 		surface_set_target(_outSurf);
 		DRAW_CLEAR

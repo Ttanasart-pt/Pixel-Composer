@@ -49,12 +49,13 @@ function Node_Color_replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	attribute_surface_depth();
 	
 	static process_data = function(_outSurf, _data, _output_index, _array_index) { 		
-		var fr = _data[1];
-		var to = _data[2];
-		var tr = _data[3];
-		var in = _data[4];
+		var fr  = _data[1];
+		var to  = _data[2];
+		var tr  = _data[3];
+		var in  = _data[4];
 		var alp = _data[5];
 		var hrd = _data[6];
+		var msk = _data[7];
 		
 		var _colorFrom = array_create(array_length(fr) * 4);
 		for(var i = 0; i < array_length(fr); i++) {
@@ -87,13 +88,16 @@ function Node_Color_replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			shader_set_uniform_f(uniform_ter, tr);
 			shader_set_uniform_i(uniform_inv, in);
 			
+			shader_set_i("useMask", is_surface(msk));
+			shader_set_surface("mask", msk);
+			
 			draw_surface_safe(_data[0], 0, 0);
 		shader_reset();
 		
 		BLEND_NORMAL
 		surface_reset_target();
 		
-		_outSurf = mask_apply(_data[0], _outSurf, _data[7], _data[8]);
+		if(!in) _outSurf = mask_apply(_data[0], _outSurf, _data[7], _data[8]);
 		
 		return _outSurf;
 	}

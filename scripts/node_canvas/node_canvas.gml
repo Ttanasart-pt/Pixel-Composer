@@ -6,7 +6,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	inputs[|  0] = nodeValue("Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, def_surf_size2 )
 		.setDisplay(VALUE_DISPLAY.vector);
 	
-	inputs[|  1] = nodeValue("Color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_black );
+	inputs[|  1] = nodeValue("Color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white );
 	inputs[|  2] = nodeValue("Brush size", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1 )
 		.setDisplay(VALUE_DISPLAY.slider, [1, 32, 1]);
 	
@@ -653,7 +653,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			
 			var __s = surface_get_target();
 			
-			prev_surface 		  = surface_verify(prev_surface,       _dim[0], _dim[1]);
+			prev_surface 		  = surface_verify(prev_surface,		  _dim[0], _dim[1]);
 			preview_draw_surface  = surface_verify(preview_draw_surface,  _dim[0], _dim[1]);
 			_preview_draw_surface = surface_verify(_preview_draw_surface, surface_get_width(__s), surface_get_height(__s));
 			
@@ -670,14 +670,16 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 						draw_surface_safe(selection_mask, sel_x0, sel_y0);
 					}
 				} else if(isUsingTool("Pencil") || isUsingTool("Eraser")) {
-					if(isUsingTool("Eraser")) draw_set_color(c_white);
+					if(mouse_holding) {
+						if(isUsingTool("Eraser")) draw_set_color(c_white);
 					
-					if(key_mod_press(SHIFT))	draw_line_size(mouse_pre_draw_x, mouse_pre_draw_y, mouse_cur_x, mouse_cur_y, _siz, _brush);
-					else						draw_point_size(mouse_cur_x, mouse_cur_y, _siz, _brush);
+						if(key_mod_press(SHIFT))	draw_line_size(mouse_pre_draw_x, mouse_pre_draw_y, mouse_cur_x, mouse_cur_y, _siz, _brush);
+						else						draw_point_size(mouse_cur_x, mouse_cur_y, _siz, _brush);
+					}
 				} else if(isUsingTool("Rectangle"))	{
-					draw_rect_size(mouse_pre_x, mouse_pre_y, mouse_cur_x, mouse_cur_y, _siz, isUsingTool("Rectangle", 1), _brush);
+					if(mouse_holding) draw_rect_size(mouse_pre_x, mouse_pre_y, mouse_cur_x, mouse_cur_y, _siz, isUsingTool("Rectangle", 1), _brush);
 				} else if(isUsingTool("Ellipse")) {
-					draw_ellp_size(mouse_pre_x, mouse_pre_y, mouse_cur_x, mouse_cur_y, _siz, isUsingTool("Ellipse", 1), _brush); 
+					if(mouse_holding) draw_ellp_size(mouse_pre_x, mouse_pre_y, mouse_cur_x, mouse_cur_y, _siz, isUsingTool("Ellipse", 1), _brush); 
 				}
 			surface_reset_shader();
 			

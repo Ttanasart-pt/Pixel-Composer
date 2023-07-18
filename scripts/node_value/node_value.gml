@@ -869,6 +869,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 					return setValueDirect(ind); 
 				}, display_data );
 				show_in_inspector = true;
+				extract_node = "Node_Canvas";
 				break;
 			case VALUE_TYPE.pathnode :
 				extract_node = "Node_Path";

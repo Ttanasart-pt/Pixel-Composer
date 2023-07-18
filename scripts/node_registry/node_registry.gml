@@ -315,6 +315,7 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 			addNodeObject(filter, "Posterize",			s_node_posterize,		"Node_Posterize",		[1, Node_Posterize],, "Reduce and remap color to match a palette.");
 			addNodeObject(filter, "Dither",				s_node_dithering,		"Node_Dither",			[1, Node_Dither],, "Reduce color and use dithering to preserve original color.");
 			addNodeObject(filter, "Color Adjust",		s_node_color_adjust,	"Node_Color_adjust",	[1, Node_Color_adjust], ["brightness", "contrast", "hue", "saturation", "value", "color blend", "alpha"], "Adjust brightness, contrast, hue, saturation, value, alpha, and blend image with color.");
+			addNodeObject(filter, "Palette Shift",		s_node_palette_shift,	"Node_Palette_Shift",	[1, Node_Palette_Shift]).setVersion(1147);
 			addNodeObject(filter, "BW",					s_node_BW,				"Node_BW",				[1, Node_BW], ["black and white"], "Convert color image to black and white.");
 			addNodeObject(filter, "Greyscale",			s_node_greyscale,		"Node_Greyscale",		[1, Node_Greyscale],, "Convert color image to greyscale.");
 			addNodeObject(filter, "Invert",				s_node_invert,			"Node_Invert",			[1, Node_Invert], ["negate"], "Invert color.");
@@ -394,6 +395,7 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 			addNodeObject(generator, "Scatter",				s_node_scatter,				"Node_Scatter",				[1, Node_Scatter],, "Scatter image randomly multiple times.");
 		
 			ds_list_add(generator, "Simulation");
+			//addNodeObject(generator, "Dust",				s_node_particle,			"Node_Dust",				[1, Node_Dust]).setVersion(1147);
 			addNodeObject(generator, "Particle",			s_node_particle,			"Node_Particle",			[1, Node_Particle],, "Generate particle effect.");
 			addNodeObject(generator, "VFX",					s_node_vfx,					"Node_VFX_Group",			[1, Node_VFX_Group],, "Create VFX group, which generate particles that can be manipulated using different force nodes.");
 			addNodeObject(generator, "RigidSim",			s_node_rigidSim,			"Node_Rigid_Group",			[1, Node_Rigid_Group],, "Create group for rigidbody simulation.").setVersion(1110);
@@ -401,8 +403,11 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 			addNodeObject(generator, "FluidSim",			s_node_fluidSim_group,		"Node_Fluid_Group",			[1, Node_Fluid_Group],, "Create group for fluid simulation.").setVersion(1120);
 			addNodeObject(generator, "StrandSim",			s_node_strandSim,			"Node_Strand_Group",		[1, Node_Strand_Group], ["Hair"], "Create group for hair simulation.").setVersion(1140);
 		
+			ds_list_add(generator, "Region");
+			addNodeObject(generator, "Separate Shape",		s_node_sepearte_shape,		"Node_Seperate_Shape",		[1, Node_Seperate_Shape],, "Separate disconnected pixel each into an image in an image array.");
+			addNodeObject(generator, "Region Fill",			s_node_region_fill,			"Node_Region_Fill",			[1, Node_Region_Fill]).setVersion(1147);		
+			
 			ds_list_add(generator, "Others");
-			addNodeObject(generator, "Separate Shape",	s_node_sepearte_shape,	"Node_Seperate_Shape",	[1, Node_Seperate_Shape],, "Separate disconnected pixel each into an image in an image array.");
 			addNodeObject(generator, "Flood Fill",		s_node_flood_fill,		"Node_Flood_Fill",		[1, Node_Flood_Fill],, "Filled connected pixel given position and color.").setVersion(1133);
 			addNodeObject(generator, "Bar / Graph",		s_node_bar_graph,		"Node_Plot_Linear",		[1, Node_Plot_Linear], ["graph", "waveform", "bar chart", "plot"], "Plot graph or bar chart from array of number.").setVersion(1144);
 	
@@ -613,7 +618,8 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 		
 		//var vct = ds_list_create();
 		//addNodeCatagory("VCT", vct);
-		//	addNodeObject(vct, "Biterator",		s_node_condition,	"Node_Biterator",	[1, Node_Biterator]);
+		//	addNodeObject(vct, "Biterator",		s_node_condition,	"Node_Biterator",		[1, Node_Biterator]);
+			//addNodeObject(vct, "Blinker",		s_node_condition,	"Node_VCT_Blinker",		[1, Node_VCT_Blinker]);
 			
 		var hid = ds_list_create();
 		addNodeCatagory("Hidden", hid, ["Hidden"]);

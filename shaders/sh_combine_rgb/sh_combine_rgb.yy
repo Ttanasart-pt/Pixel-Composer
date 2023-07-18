@@ -3,8 +3,8 @@
   "resourceVersion": "1.0",
   "name": "sh_combine_rgb",
   "parent": {
-    "name": "filter",
-    "path": "folders/shader/filter.yy",
+    "name": "color",
+    "path": "folders/shader/filter/color.yy",
   },
   "type": 1,
 }

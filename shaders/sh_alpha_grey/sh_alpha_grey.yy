@@ -3,8 +3,8 @@
   "resourceVersion": "1.0",
   "name": "sh_alpha_grey",
   "parent": {
-    "name": "filter",
-    "path": "folders/shader/filter.yy",
+    "name": "color",
+    "path": "folders/shader/filter/color.yy",
   },
   "type": 1,
 }

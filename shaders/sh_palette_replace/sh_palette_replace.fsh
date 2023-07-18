@@ -4,6 +4,9 @@
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
+uniform int		  useMask;
+uniform sampler2D mask;
+
 uniform vec4	colorFrom[32];
 uniform int		colorFrom_amo;
 uniform vec4	colorTo[32];
@@ -60,12 +63,21 @@ float round(float val) {
 }
 
 void main() {
-    vec4 col = v_vColour * texture2D( gm_BaseTexture, v_vTexcoord );
+    vec4 col = texture2D( gm_BaseTexture, v_vTexcoord );
 	vec4 baseColor;
 	if(inverted == 0)
 		baseColor = col;
-	else if(inverted == 1)
+	else if(inverted == 1) {
 		baseColor = vec4(vec3(0.), 1.);
+		
+		if(useMask == 1) {
+			vec4 m = texture2D( mask, v_vTexcoord );
+			if((m.r + m.g + m.b) * m.a < .5) {
+				gl_FragColor = baseColor;
+				return;
+			}
+		}
+	}
 
 	vec3 hsv = rgb2hsv(col.rgb);
 	if(alphacmp == 1) hsv *= col.a;

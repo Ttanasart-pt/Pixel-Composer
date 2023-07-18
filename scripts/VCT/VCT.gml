@@ -16,17 +16,28 @@ function VCT(node) constructor {
 	static process = function(params) {}
 	
 	static serialize = function() { 
-		var s = [];
+		var s = {};
+		
+		s.variables = [];
 		for( var i = 0; i < array_length(vars); i++ )
-			s[i] = vars[i].get();
+			s.variables[i] = vars[i].get();
+			
+		doSerialize(s);
 		return s; 
 	}
 	
+	static doSerialize = function(s) {}
+	
 	static deserialize = function(load_arr) {
-		var amo = min(array_length(load_arr), array_length(vars));
+		var variables = load_arr.variables;
+		var amo = min(array_length(variables), array_length(vars));
 		for( var i = 0; i < amo; i++ ) 
-			vars[i].set(load_arr[i]);
+			vars[i].set(variables[i]);
+			
+		doDeserialize(load_arr);
 	}
+	
+	static doDeserialize = function(load_arr) {}
 }
 
 function PanelVCT(vct) : PanelContent() constructor {

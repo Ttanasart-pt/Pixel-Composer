@@ -3,8 +3,8 @@
   "resourceVersion": "1.0",
   "name": "sh_cell_noise_edge",
   "parent": {
-    "name": "generator",
-    "path": "folders/shader/generator.yy",
+    "name": "cell",
+    "path": "folders/shader/generator/cell.yy",
   },
   "type": 1,
 }
