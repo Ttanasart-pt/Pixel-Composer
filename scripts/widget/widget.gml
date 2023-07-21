@@ -71,6 +71,6 @@ function widget() constructor {
 		hover  = false;
 	}
 	
-	static draw_param = function(param) {}
+	static drawParam = function(param) {}
 	static draw = function() {}
 }

@@ -14,10 +14,10 @@ function Node_Color_replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	uniform_hrd  = shader_get_uniform(shader, "hardReplace");
 	
 	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
-	inputs[| 1] = nodeValue("Palette from", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, [ c_black ], "Color to be replaced.")
+	inputs[| 1] = nodeValue("Palette from", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, DEF_PALETTE, "Color to be replaced.")
 		.setDisplay(VALUE_DISPLAY.palette);
 	
-	inputs[| 2] = nodeValue("Palette to", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, [ c_white ], "Palette to be replaced to.")
+	inputs[| 2] = nodeValue("Palette to", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, DEF_PALETTE, "Palette to be replaced to.")
 		.setDisplay(VALUE_DISPLAY.palette);
 	
 	inputs[| 3] = nodeValue("Threshold", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.1)

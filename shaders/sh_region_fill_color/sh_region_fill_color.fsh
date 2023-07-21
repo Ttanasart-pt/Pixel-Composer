@@ -8,9 +8,7 @@ uniform vec4  colors[32];
 uniform float colorAmount;
 uniform float seed;
 
-float random (in vec2 st) {
-    return fract(sin(dot(st.xy + seed / 100., vec2(12.9898, 78.233))) * 43758.5453123);
-}
+float random (in vec2 st) { return fract(sin(dot(st.xy + seed / 100., vec2(12.9898, 78.233))) * 43758.5453123); }
 
 void main() {
     vec4 c = texture2D( gm_BaseTexture, v_vTexcoord );

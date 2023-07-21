@@ -34,6 +34,8 @@ enum VALUE_TYPE {
 	armature  = 23,
 	buffer    = 24,
 	
+	pbBox     = 25,
+	
 	action	  = 99,
 }
 
@@ -59,6 +61,7 @@ enum VALUE_DISPLAY {
 	area,
 	kernel,
 	transform,
+	corner,
 	
 	//Curve
 	curve,
@@ -113,6 +116,7 @@ function value_color(i) {
 		$5dde8f, //gradient
 		$6691ff, //armature
 		$808080, //buffer
+		$976bff, //pbBox
 	];
 	
 	if(i == 99) return $5dde8f;
@@ -146,6 +150,8 @@ function value_bit(i) {
 		case VALUE_TYPE.node		: return 1 << 32;
 		
 		case VALUE_TYPE.buffer		: return 1 << 27;
+		
+		case VALUE_TYPE.pbBox		: return 1 << 28;
 		
 		case VALUE_TYPE.trigger		: return 1 << 22;
 		case VALUE_TYPE.action		: return 1 << 22 | 1 << 3;
@@ -452,6 +458,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	process_array = true;
 	validateValue = true;
 	
+	fullUpdate = false;
+	
 	static setDefault = function(vals) {
 		if(LOADING || APPENDING) return self;
 		
@@ -694,6 +702,17 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						editWidget = new paddingBox(function(index, val) { 
 							//var _val = animator.getValue();
 							//_val[index] = val;
+							return setValueDirect(val, index);
+						}, unit);
+						if(type == VALUE_TYPE.integer) editWidget.setSlideSpeed(1);
+						
+						for( var i = 0; i < array_length(animators); i++ )
+							animators[i].suffix = " " + array_safe_get(global.displaySuffix_Padding, i);
+						
+						extract_node = "Node_Vector4";
+						break;
+					case VALUE_DISPLAY.corner :
+						editWidget = new cornerBox(function(index, val) { 
 							return setValueDirect(val, index);
 						}, unit);
 						if(type == VALUE_TYPE.integer) editWidget.setSlideSpeed(1);
@@ -1250,7 +1269,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				updated = animators[index].setValue(val, connect_type == JUNCTION_CONNECT.input && record, time); 
 		} else {
 			if(index != noone) {
-				var _val = animator.getValue(time);
+				var _val = variable_clone(animator.getValue(time));
 				_val[index] = val;
 				updated = animator.setValue(_val, connect_type == JUNCTION_CONNECT.input && record, time); 
 			} else 
@@ -1267,7 +1286,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				if(_update) node.valueUpdate(self.index);
 				node.clearCacheForward();
 				
-				UPDATE |= RENDER_TYPE.partial;
+				if(fullUpdate)	UPDATE |= RENDER_TYPE.full;
+				else			UPDATE |= RENDER_TYPE.partial;
 			}
 			
 			cache_array[0] = false;

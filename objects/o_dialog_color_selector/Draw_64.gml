@@ -49,12 +49,18 @@ if !ready exit;
 		execute_shell(_windir, _realpath);
 	}
 	bx -= ui(32);
+	
+	if(buttonInstant(THEME.button_hide, bx, by, ui(28), ui(28), mouse_ui, sFOCUS, sHOVER, __txt("Show on Selector"), THEME.display_palette, selector.palette_display, c_white) == 2)
+		selector.palette_display = !selector.palette_display;
+	bx -= ui(32);
 #endregion
 
 #region selector
 	var col_x = content_x + ui(20);
 	var col_y = dialog_y + ui(52);
 	
+	if(preset_selecting > -1)
+		selector.palette = presets[| preset_selecting];
 	selector.draw(col_x, col_y, sFOCUS, sHOVER);
 #endregion
 

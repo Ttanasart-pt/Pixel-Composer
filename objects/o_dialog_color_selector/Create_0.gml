@@ -36,11 +36,14 @@ event_inherited();
 #region presets
 	presets		= ds_list_create();
 	preset_name = ds_list_create();
-	preset_selecting = -1;
+	preset_selecting = 0;
 	
 	function presetCollect() {
 		ds_list_clear(presets);
 		ds_list_clear(preset_name);
+		
+		ds_list_add(presets,		DEF_PALETTE);
+		ds_list_add(preset_name,	"Project");
 		
 		var path = DIRECTORY + "Palettes/"
 		var file = file_find_first(path + "*", 0);

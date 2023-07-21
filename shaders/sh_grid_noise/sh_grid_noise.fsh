@@ -23,13 +23,9 @@ vec3 hsv2rgb(vec3 c) {
     return c.z * mix(K.xxx, clamp(p - K.xxx, 0.0, 1.0), c.y);
 }
 
-float randomSeed (in vec2 st, float _seed) {
-    return fract(sin(dot(st.xy + vec2(5.0654, 9.684), vec2(12.9898, 78.233))) * (43758.5453123 + _seed));
-}
+float randomSeed (in vec2 st, float _seed) { return fract(sin(dot(st.xy + vec2(5.0654, 9.684), vec2(12.9898, 78.233))) * (43758.5453123 + _seed)); }
 
-float random (in vec2 st) {
-    return mix(randomSeed(st, floor(seed)), randomSeed(st, floor(seed) + 1.), fract(seed));
-}
+float random (in vec2 st) { return mix(randomSeed(st, floor(seed)), randomSeed(st, floor(seed) + 1.), fract(seed)); }
 
 void main() {
 	vec2 st = v_vTexcoord - position / dimension;

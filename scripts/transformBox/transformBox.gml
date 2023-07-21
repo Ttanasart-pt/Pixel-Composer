@@ -38,8 +38,8 @@ function transformBox(_onModify) : widget() constructor {
 		tb[TRANSFORM.sca_y].register(parent);
 	}
 	
-	static drawParam = function(param) {
-		return draw(param.x, param.y, param.w, param.data, param.mouse);
+	static drawParam = function(params) {
+		return draw(params.x, params.y, params.w, params.data, params.m);
 	}
 	
 	static draw = function(_x, _y, _w, _data, _m) {

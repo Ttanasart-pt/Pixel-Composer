@@ -212,15 +212,15 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 		}
 		
 		var param = {
-			x: editBoxX,
-			y: editBoxY,
-			real_x: rx,
-			real_y: ry,
-			w: editBoxW,
-			h: editBoxH,
+			x:  editBoxX,
+			y:  editBoxY,
+			rx: rx,
+			rx: ry,
+			w:  editBoxW,
+			h:  editBoxH,
 			
 			data: jun.showValue(),
-			mouse: _m,
+			m: _m,
 		}
 		
 		jun.editWidget.rx = rx;
@@ -251,6 +251,10 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 								jun.editWidget.draw(editBoxX, editBoxY, editBoxW, editBoxH, jun.showValue(), _m, rx, ry);
 								break;
 							case VALUE_DISPLAY.padding :
+								jun.editWidget.draw(xc, _hsy + ui(32), jun.showValue(), _m);
+								widH = ui(192);
+								break;
+							case VALUE_DISPLAY.corner :
 								jun.editWidget.draw(xc, _hsy + ui(32), jun.showValue(), _m);
 								widH = ui(192);
 								break;

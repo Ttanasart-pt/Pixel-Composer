@@ -1,7 +1,7 @@
 function Node_Surface_From_Color(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name	= "Surface from Color";
 	
-	inputs[| 0] = nodeValue("Color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, [])
+	inputs[| 0] = nodeValue("Color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, DEF_PALETTE )
 		.setDisplay(VALUE_DISPLAY.palette);
 	
 	outputs[| 0] = nodeValue("Surface", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);

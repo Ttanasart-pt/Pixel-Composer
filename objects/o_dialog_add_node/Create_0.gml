@@ -22,13 +22,17 @@ event_inherited();
 	node_tooltip_x = 0;
 	node_tooltip_y = 0;
 	
-	var context = PANEL_GRAPH.getCurrentContext();
-	context = context == noone? "" : instanceof(context);
+	var _con    = PANEL_GRAPH.getCurrentContext();
+	var context = _con == noone? "" : instanceof(_con);
 		
+	category = NODE_CATEGORY;
+	if(context == "Node_Pixel_Builder")
+		category = NODE_PB_CATEGORY;
+	
 	draw_set_font(f_p0);
 	var maxLen = 0;
-	for(var i = 0; i < ds_list_size(NODE_CATEGORY); i++) {
-		var cat  = NODE_CATEGORY[| i];
+	for(var i = 0; i < ds_list_size(category); i++) {
+		var cat  = category[| i];
 		
 		if(array_length(cat.filter) && !array_exists(cat.filter, context))
 			continue;
@@ -107,8 +111,8 @@ event_inherited();
 	}
 	
 	function setPage(pageIndex) {
-		ADD_NODE_PAGE	= pageIndex;
-		node_list		= pageIndex == -1? noone : NODE_CATEGORY[| ADD_NODE_PAGE].list;
+		ADD_NODE_PAGE	= min(pageIndex, ds_list_size(category) - 1);
+		node_list		= pageIndex == -1? noone : category[| ADD_NODE_PAGE].list;
 	}
 	ADD_NODE_PAGE = 0;
 	setPage(NODE_PAGE_DEFAULT);
@@ -129,10 +133,12 @@ event_inherited();
 				return;
 			}
 			
-			array_remove(global.RECENT_NODES, _node.node);
-			array_insert(global.RECENT_NODES, 0, _node.node);
-			if(array_length(global.RECENT_NODES) > 20)
-				array_pop(global.RECENT_NODES);
+			if(category == NODE_CATEGORY) {
+				array_remove(global.RECENT_NODES, _node.node);
+				array_insert(global.RECENT_NODES, 0, _node.node);
+				if(array_length(global.RECENT_NODES) > 20)
+					array_pop(global.RECENT_NODES);
+			}
 			
 			_inputs  = _new_node.inputs;
 			_outputs = _new_node.outputs;
@@ -223,15 +229,17 @@ event_inherited();
 		context = context == noone? "" : instanceof(context);
 		
 		var start = -1;
+		if(category == NODE_PB_CATEGORY)
+			start = 0;
 		
-		for(var i = start; i < ds_list_size(NODE_CATEGORY); i++) {
+		for(var i = start; i < ds_list_size(category); i++) {
 			var name = "";
 			
 			if(i == -1) {
 				draw_set_text(f_p0b, fa_left, fa_center, COLORS._main_text_accent);
 				name = "All";
 			} else {
-				var cat = NODE_CATEGORY[| i];
+				var cat = category[| i];
 				name = cat.name;
 				draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text);
 			
@@ -278,8 +286,8 @@ event_inherited();
 			context = context == noone? "" : instanceof(context);
 		
 			_list = ds_list_create();
-			for(var i = 0; i < ds_list_size(NODE_CATEGORY); i++) {
-				var cat = NODE_CATEGORY[| i];			
+			for(var i = 0; i < ds_list_size(category); i++) {
+				var cat = category[| i];			
 				if(array_length(cat.filter) && !array_exists(cat.filter, context))
 					continue;
 				
@@ -589,8 +597,8 @@ event_inherited();
 		var search_lower = string_lower(search_string);
 		var search_map	 = ds_map_create();
 		
-		for(var i = 0; i < ds_list_size(NODE_CATEGORY); i++) {
-			var cat = NODE_CATEGORY[| i];
+		for(var i = 0; i < ds_list_size(category); i++) {
+			var cat = category[| i];
 			
 			if(!struct_has(cat, "list"))
 				continue;

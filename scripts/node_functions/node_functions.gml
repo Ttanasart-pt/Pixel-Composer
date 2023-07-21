@@ -1,5 +1,8 @@
-#macro def_surf_size PREF_MAP[? "default_surface_side"]
-#macro def_surf_size2 [PREF_MAP[? "default_surface_side"], PREF_MAP[? "default_surface_side"]]
+#macro DEF_SURF_W		PROJECT.attributes.surface_dimension[0]
+#macro DEF_SURF_H		PROJECT.attributes.surface_dimension[1]
+#macro DEF_SURF			PROJECT.attributes.surface_dimension
+
+#macro DEF_PALETTE		PROJECT.attributes.palette
 
 #region 
 	function node_draw_transform_init() {
@@ -136,7 +139,107 @@
 	}
 #endregion
 
-#region utilities
+#region node function
+	function nodeLoad(_data, scale = false, _group = PANEL_GRAPH.getCurrentContext()) {
+		if(!is_struct(_data)) return;
+		
+		var _x    = _data.x;
+		var _y    = _data.y;
+		var _type = _data.type;
+		
+		var _node = nodeBuild(_type, _x, _y, _group);
+		if(_node) _node.deserialize(_data, scale);
+		
+		return _node;
+	}
+	
+	function nodeDelete(node, _merge = false) {
+		var list = node.group == noone? PROJECT.nodes : node.group.getNodeList();
+		ds_list_remove(list, node);
+		node.destroy(_merge);
+		
+		recordAction(ACTION_TYPE.node_delete, node);
+		PANEL_ANIMATION.updatePropertyList();
+	}
+	
+	function nodeCleanUp() {
+		var key = ds_map_find_first(PROJECT.nodeMap);
+		repeat(ds_map_size(PROJECT.nodeMap)) {
+			if(PROJECT.nodeMap[? key]) {
+				PROJECT.nodeMap[? key].active = false;
+				PROJECT.nodeMap[? key].cleanUp();
+				delete PROJECT.nodeMap[? key];
+			}
+			key = ds_map_find_next(PROJECT.nodeMap, key);
+		}
+		
+		ds_map_clear(APPEND_MAP);
+	}
+	
+	function graphFocusNode(node) {
+		PANEL_INSPECTOR.setInspecting(node);
+		ds_list_clear(PANEL_GRAPH.nodes_select_list);
+		PANEL_GRAPH.node_focus = node;
+		PANEL_GRAPH.fullView();
+	}
+	
+	function refreshNodeMap() {
+		ds_map_clear(PROJECT.nodeNameMap);
+		var key = ds_map_find_first(PROJECT.nodeMap);
+		var amo = ds_map_size(PROJECT.nodeMap);
+		
+		repeat(amo) {
+			var node = PROJECT.nodeMap[? key];
+			
+			if(node.internalName != "") 
+				PROJECT.nodeNameMap[? node.internalName] = node;
+			
+			key = ds_map_find_next(PROJECT.nodeMap, key);
+		}
+	}
+	
+	function nodeGetData(str) {
+		str = string_trim(str);
+		var strs = string_splice(str, ".");
+		
+		if(array_length(strs) == 0) return 0;
+		
+		if(array_length(strs) == 1) {
+			var splt = string_splice(strs[0], "[");
+			var inp = PROJECT.globalNode.getInput(strs[0]);
+			return inp == noone? 0 : inp.getValueRecursive()[0];
+		} else if(string_lower(strs[0]) == "project") {
+			if(!ds_map_exists(PROJECT_VARIABLES, strs[1])) return 0;
+			return PROJECT_VARIABLES[? strs[1]]();
+		} else if(array_length(strs) > 2) { 
+			var key = strs[0];
+			if(!ds_map_exists(PROJECT.nodeNameMap, key)) return 0;
+		
+			var node = PROJECT.nodeNameMap[? key];
+			var map  = noone;
+			switch(string_lower(strs[1])) {
+				case "inputs" :	
+				case "input" :	
+					map  = node.inputMap;
+					break;
+				case "outputs" :	
+				case "output" :	
+					map  = node.outputMap;
+					break;
+				default : return 0;
+			}
+			
+			var _junc_key = string_lower(strs[2]);
+			var _junc     = ds_map_try_get(map, _junc_key, noone);
+			
+			if(_junc == noone) return 0;
+			
+			return _junc.getValue();
+		}
+		
+		return 0;
+	}
+
 	function create_preview_window(node) {
 		if(node == noone) return;
 		var win = new Panel_Preview_Window();

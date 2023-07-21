@@ -149,11 +149,14 @@ event_inherited();
 #region palette
 	palettes = ds_list_create();
 	palette_name = ds_list_create();
-	palette_selecting = -1;
+	palette_selecting = 0;
 	
 	function paletteCollect() {
 		ds_list_clear(palettes);
 		ds_list_clear(palette_name);
+		
+		ds_list_add(palettes,		DEF_PALETTE);
+		ds_list_add(palette_name,	"Project");
 		
 		var path = DIRECTORY + "Palettes/"
 		var file = file_find_first(path + "*", 0);
@@ -168,7 +171,7 @@ event_inherited();
 	
 	sp_palette_w = ui(240 - 32 - 16);
 	sp_palette_size = ui(24);
-	click_block = false;
+	click_block = true;
 	
 	sp_palettes = new scrollPane(sp_palette_w, dialog_h - ui(62), function(_y, _m) {
 		var ww  = sp_palette_w - ui(40);

@@ -149,6 +149,7 @@ function __LOAD_PATH(path, readonly = false, safe_mode = false, override = false
 			create_list[| i].loadGroup();
 	} catch(e) {
 		log_warning("LOAD, group", exception_print(e));
+		return false;
 	}
 	
 	try {

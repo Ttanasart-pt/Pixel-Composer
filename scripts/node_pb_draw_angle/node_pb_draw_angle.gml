@@ -1,0 +1,141 @@
+function Node_PB_Draw_Angle(_x, _y, _group = noone) : Node_PB_Draw(_x, _y, _group) constructor {
+	name = "Angle";
+	
+	inputs[| 3] = nodeValue("Side", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0 )
+		.setDisplay(VALUE_DISPLAY.enum_button, array_create(4, THEME.obj_angle) );
+	
+	inputs[| 4] = nodeValue("Round", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false )
+	
+	input_display_list = [
+		["Draw",	false], 0, 1, 2, 
+		["Shape",	false], 3, 4, 
+	];
+	
+	static process_data = function(_outSurf, _data, _output_index, _array_index) {
+		var _pbox = _data[0];
+		var _fcol = _data[1];
+		var _mask = _data[2];
+		var _side = _data[3];
+		var _roun = _data[4];
+		
+		if(_output_index == 1)	return _pbox;
+		if(_pbox == noone)		return noone;
+		
+		_outSurf = surface_verify(_outSurf, _pbox.layer_w, _pbox.layer_h);
+		
+		switch(_side) {
+			case 0 : 
+				if( _pbox.mirror_h &&  _pbox.mirror_v) _side = 2; 
+				if( _pbox.mirror_h && !_pbox.mirror_v) _side = 1; 
+				if(!_pbox.mirror_h &&  _pbox.mirror_v) _side = 3; 
+				break;				   
+			case 1 : 				   
+				if( _pbox.mirror_h &&  _pbox.mirror_v) _side = 3; 
+				if( _pbox.mirror_h && !_pbox.mirror_v) _side = 0; 
+				if(!_pbox.mirror_h &&  _pbox.mirror_v) _side = 2; 
+				break;				   
+			case 2 : 				   
+				if( _pbox.mirror_h &&  _pbox.mirror_v) _side = 0; 
+				if( _pbox.mirror_h && !_pbox.mirror_v) _side = 3; 
+				if(!_pbox.mirror_h &&  _pbox.mirror_v) _side = 1; 
+				break;				   
+			case 3 : 				   
+				if( _pbox.mirror_h &&  _pbox.mirror_v) _side = 1; 
+				if( _pbox.mirror_h && !_pbox.mirror_v) _side = 2; 
+				if(!_pbox.mirror_h &&  _pbox.mirror_v) _side = 0; 
+				break;
+		}
+		
+		surface_set_target(_outSurf);
+			DRAW_CLEAR
+			
+			draw_set_color(_fcol);
+			draw_primitive_begin(pr_trianglelist);
+			
+			var as, ae, rx, ry;
+			
+			switch(_side) {
+				case 0 :
+					if(_roun) {
+						as = 0;
+						ae = -90;
+						
+						rx = _pbox.x;
+						ry = _pbox.y;
+					} else {
+						draw_vertex(_pbox.x, _pbox.y);
+						draw_vertex(_pbox.x + _pbox.w, _pbox.y);
+						draw_vertex(_pbox.x, _pbox.y + _pbox.h);
+					}
+					break;
+				case 1 :
+					if(_roun) {
+						as = 180;
+						ae = 270;
+						
+						rx = _pbox.x + _pbox.w;
+						ry = _pbox.y;
+					} else {
+						draw_vertex(_pbox.x, _pbox.y);
+						draw_vertex(_pbox.x + _pbox.w, _pbox.y);
+						draw_vertex(_pbox.x + _pbox.w, _pbox.y + _pbox.h);
+					}
+					break;
+				case 2 :
+					if(_roun) {
+						as = 90;
+						ae = 180;
+						
+						rx = _pbox.x + _pbox.w;
+						ry = _pbox.y + _pbox.h;
+					} else {
+						draw_vertex(_pbox.x + _pbox.w, _pbox.y);
+						draw_vertex(_pbox.x + _pbox.w, _pbox.y + _pbox.h);
+						draw_vertex(_pbox.x, _pbox.y + _pbox.h);
+					}
+					break;
+				case 3 :
+					if(_roun) {
+						as = 0;
+						ae = 90;
+						
+						rx = _pbox.x;
+						ry = _pbox.y + _pbox.h;
+					} else {
+						draw_vertex(_pbox.x, _pbox.y);
+						draw_vertex(_pbox.x + _pbox.w, _pbox.y + _pbox.h);
+						draw_vertex(_pbox.x, _pbox.y + _pbox.h);	
+					}
+					break;
+			}
+			
+			if(_roun) {
+				var ox, oy, nx, ny;
+						
+				for( var i = 0; i <= 64; i++ ) {
+					var a = lerp(as, ae, i / 64);
+					nx = rx + lengthdir_x(_pbox.w, a);
+					ny = ry + lengthdir_y(_pbox.h, a);
+					
+					if(i) {
+						draw_vertex(rx, ry);
+						draw_vertex(ox, oy);
+						draw_vertex(nx, ny);
+					}
+							
+					ox = nx;
+					oy = ny;
+				}
+			}
+			draw_primitive_end();
+			
+			if(_mask && is_surface(_pbox.mask)) {
+				BLEND_MULTIPLY
+					draw_surface(_pbox.mask, _pbox.x, _pbox.y);
+				BLEND_NORMAL
+			}
+		surface_reset_target();
+		
+		return _outSurf;
+	}
+}

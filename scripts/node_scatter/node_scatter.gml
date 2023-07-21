@@ -4,7 +4,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
 	
-	inputs[| 1] = nodeValue("Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, def_surf_size2 )
+	inputs[| 1] = nodeValue("Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, DEF_SURF )
 		.setDisplay(VALUE_DISPLAY.vector);
 	
 	inputs[| 2] = nodeValue("Amount", self,  JUNCTION_CONNECT.input, VALUE_TYPE.integer, 8);
@@ -15,7 +15,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	inputs[| 4] = nodeValue("Angle", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [0, 0])
 		.setDisplay(VALUE_DISPLAY.rotation_range);
 	
-	inputs[| 5] = nodeValue("Area", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ def_surf_size / 2, def_surf_size / 2, def_surf_size / 2, def_surf_size / 2, AREA_SHAPE.rectangle ])
+	inputs[| 5] = nodeValue("Area", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ DEF_SURF_W / 2, DEF_SURF_H / 2, DEF_SURF_W / 2, DEF_SURF_H / 2, AREA_SHAPE.rectangle ])
 		.setDisplay(VALUE_DISPLAY.area, function() { return inputs[| 1].getValue(); });
 	
 	inputs[| 6] = nodeValue("Distribution", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
@@ -56,14 +56,16 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		
 	inputs[| 19] = nodeValue("Path", self, JUNCTION_CONNECT.input, VALUE_TYPE.pathnode, noone);
 		
+	inputs[| 20] = nodeValue("Rotate along path", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
+		
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 		
 	outputs[| 1] = nodeValue("Atlas data", self, JUNCTION_CONNECT.output, VALUE_TYPE.atlas, [])
 		.rejectArrayProcess();
 	
 	input_display_list = [ 
-		["Output", 		false], 0, 1, 15, 10, 
-		["Scatter",		false], 5, 6, 13, 14, 19, 17, 9, 2,
+		["Output", 		 true], 0, 1, 15, 10, 
+		["Scatter",		false], 5, 6, 13, 14, 19, 20, 17, 9, 2,
 		["Transform",	false], 3, 8, 7, 4,
 		["Render",		false], 18, 11, 12, 16, 
 	];
@@ -99,6 +101,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		inputs[| 17].setVisible(_dis == 3);
 		inputs[|  9].setVisible(_dis != 2);
 		inputs[| 19].setVisible(_dis == 4, _dis == 4);
+		inputs[| 20].setVisible(_dis == 4);
 	}
 	
 	static process_data = function(_outSurf, _data, _output_index, _array_index) {
@@ -131,7 +134,9 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		var mulpA	= _data[16];
 		var useV	= _data[17];
 		var blend   = _data[18];
+		
 		var path    = _data[19];
+		var pathRot = _data[20];
 		
 		var _in_w, _in_h;
 		
@@ -205,6 +210,15 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 				
 				if(vRot && _v != noone)
 					_r *= _v;
+					
+				if(_dist == 4 && path != noone && pathRot) {
+					var rat = i / max(1, _amount - 1) * 0.9999;
+					var p0  = path.getPointRatio(clamp(rat - 0.001, 0, 0.9999));
+					var p1  = path.getPointRatio(clamp(rat + 0.001, 0, 0.9999));
+					
+					var dirr = point_direction(p0.x, p0.y, p1.x, p1.y);
+					_r += dirr;
+				}
 				
 				var surf = _inSurf;
 				var ind  = 0;

@@ -10,9 +10,7 @@ uniform float scale;
 uniform float bright;
 uniform int   iteration;
 
-float random (in vec2 st) {
-    return fract(sin(dot(st.xy, vec2(12.9898, 78.233))) * 43758.5453123);
-}
+float random (in vec2 st) { return fract(sin(dot(st.xy, vec2(12.9898, 78.233))) * 43758.5453123); }
 
 float noise (in vec2 st) {
     vec2 i = floor(st);

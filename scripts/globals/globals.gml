@@ -41,6 +41,16 @@
 			on_top: true,
 		};
 		
+		attributes = {
+			surface_dimension: [ 32, 32 ],
+			palette: [ c_black, c_white ]
+		}
+		
+		attributeEditor = [
+			[ "Default Surface",	"surface_dimension", new vectorBox(2, function(ind, val) { attributes.surface_dimension[ind] = val; }) ],
+			[ "Palette",			"palette",			 new buttonPalette(function(pal) { attributes.palette = pal; }) ],
+		]
+		
 		static cleanup = function() {
 			ds_list_destroy(nodes);
 			ds_map_destroy(nodeMap);
@@ -79,7 +89,7 @@
 	
 	VERSION			= 1147;
 	SAVE_VERSION	= 1448;
-	VERSION_STRING  = "1.14.6n9";
+	VERSION_STRING  = "1.14.7";
 	BUILD_NUMBER	= 114600;
 	
 	globalvar APPEND_MAP;

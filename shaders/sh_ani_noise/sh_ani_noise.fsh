@@ -9,13 +9,9 @@ uniform vec2 position;
 uniform float angle;
 uniform float seed;
 
-float random1D (in vec2 st, float _seed) {
-    return fract(sin(dot(st.xy, vec2(12.9898, 78.233)) * mod(_seed, 32.156) * 12.588) * 43758.5453123);
-}
+float random1D (in vec2 st, float _seed) { return fract(sin(dot(st.xy, vec2(12.9898, 78.233)) * mod(_seed, 32.156) * 12.588) * 43758.5453123); }
 
-float random (in vec2 st) {
-    return mix(random1D(st, floor(seed)), random1D(st, floor(seed) + 1.), fract(seed));
-}
+float random (in vec2 st) { return mix(random1D(st, floor(seed)), random1D(st, floor(seed) + 1.), fract(seed)); }
 
 void main() {
 	vec2 pos = v_vTexcoord - position, _pos;

@@ -164,5 +164,26 @@ function draw_tooltip_atlas(atlas) {
 
 function draw_tooltip_buffer(buff) {
 	var txt = buffer_get_string(buff, false);
-	draw_tooltip_text(txt);
+	var len = string_length(txt);
+	
+	if(len > 400) txt = string_copy(txt, 1, 400);
+	
+	draw_set_text(f_code, fa_left, fa_top, COLORS._main_text);
+	
+	var tw = min(string_width(" ") * 40, string_width(txt));
+	var th = string_height_ext(txt, -1, tw);
+	if(len > 400)
+		th += string_height(" ");
+		
+	var mx = min(mouse_mx + ui(16), WIN_W - (tw + ui(16)));
+	var my = min(mouse_my + ui(16), WIN_H - (th + ui(16)));
+		
+	draw_sprite_stretched(THEME.textbox, 3, mx, my, tw + ui(16), th + ui(16));
+	draw_sprite_stretched(THEME.textbox, 0, mx, my, tw + ui(16), th + ui(16));
+	draw_text_line(mx + ui(8), my + ui(8), txt, -1, tw);
+	
+	if(len > 400) {
+		draw_set_text(f_code, fa_left, fa_bottom, COLORS._main_text_sub);
+		draw_text(mx + ui(8), my + th + ui(8), $"...({buffer_get_size(buff)} bytes)");
+	}
 }

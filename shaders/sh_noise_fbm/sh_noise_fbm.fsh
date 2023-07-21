@@ -22,9 +22,7 @@ vec3 hsv2rgb(vec3 c) {
     return c.z * mix(K.xxx, clamp(p - K.xxx, 0.0, 1.0), c.y);
 }
 
-float random (in vec2 st) {
-    return fract(sin(dot(st.xy + mod(seed, 1000.), vec2(1892.9898, 78.23453))) * 437.54123);
-}
+float random (in vec2 st) { return fract(sin(dot(st.xy + mod(seed, 1000.), vec2(1892.9898, 78.23453))) * 437.54123); }
 
 float noise (in vec2 st) {
     vec2 i = floor(st);

@@ -32,7 +32,7 @@ function Node_Cache_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 			cache_result[cache_loading_progress]  = true;
 			cache_loading_progress++;
 			
-			if(cache_loading_progress == array_length(cache_content) || !is_struct(cache_content[cache_loading_progress])) {
+			if(cache_loading_progress == array_length(cache_content)) {
 				cache_loading = false;
 				update();
 			}
@@ -41,12 +41,15 @@ function Node_Cache_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	static update = function() {
 		var ss  = [];
-		var str = inputs[| 1].getValue() - 1;
-		var lst = inputs[| 2].getValue() - 1;
+		var str = inputs[| 1].getValue();
+		var lst = inputs[| 2].getValue();
 		var stp = inputs[| 3].getValue();
 		
-		if(str == -1) str = 0;
-		if(lst == -1) lst = PROJECT.animator.frames_total;
+		if(str < 0) str = 1;
+		if(lst < 0) lst = PROJECT.animator.frames_total;
+		
+		str -= 1;
+		lst -= 1;
 		
 		if(PROJECT.animator.current_frame < str) return;
 		if(PROJECT.animator.current_frame > lst) return;

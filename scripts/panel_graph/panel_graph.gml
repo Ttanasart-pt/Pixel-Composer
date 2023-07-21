@@ -1772,6 +1772,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 			case "Node_Rigid_Group" :	bg = merge_color(COLORS.panel_bg_clear, COLORS.node_blend_simulation, 0.05); break;
 			case "Node_Fluid_Group" :	bg = merge_color(COLORS.panel_bg_clear, COLORS.node_blend_fluid, 0.05);		 break;
 			case "Node_Strand_Group" :	bg = merge_color(COLORS.panel_bg_clear, COLORS.node_blend_strand, 0.05);	 break;
+			case "Node_Pixel_Builder" :	bg = merge_color(COLORS.panel_bg_clear, COLORS.node_blend_feedback, 0.05);	 break;
 		}
 		draw_clear(bg);
 		

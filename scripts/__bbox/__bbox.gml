@@ -66,5 +66,25 @@ function __BBOX() constructor {
 		return self;
 	}
 	
+	static toSquare = function() {
+		var _span = min(w, h) / 2;
+		
+		x0 = xc - _span;
+		x1 = xc + _span;
+		y0 = yc - _span;
+		y1 = yc + _span;
+		
+		return self;
+	}
+	
+	static pad = function(padding) {
+		x0 += padding;
+		x1 -= padding;
+		y0 += padding;
+		y1 -= padding;
+		
+		return self;
+	}
+	
 	static clone = function() { return BBOX().fromPoints(x0, y0, x1, y1); };
 }

@@ -475,6 +475,15 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		return nodes;
 	}
 	
+	static isTerminal = function() {
+		for( var i = 0; i < ds_list_size(outputs); i++ ) {
+			var _to = outputs[| i].getJunctionTo();
+			if(array_length(_to)) return false;
+		}
+		
+		return true;
+	}
+	
 	static onInspect = function() {}
 	
 	static setRenderStatus = function(result) {
@@ -1061,11 +1070,6 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	
 	static drawAnimationTimeline = function(_w, _h, _s) {}
 	
-	static getPreviewValue = function() {
-		if(preview_channel > ds_list_size(outputs)) return noone;
-		return outputs[| preview_channel];
-	}
-	
 	static enable = function() { active = true; }
 	static disable = function() { active = false; }
 	
@@ -1336,8 +1340,13 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		}
 	}
 	
+	static getPreviewValue = function() {
+		if(preview_channel > ds_list_size(outputs)) return noone;
+		return outputs[| preview_channel];
+	}
+	
 	static getPreviewBoundingBox = function() {
-		var _node = outputs[| preview_channel];
+		var _node = getPreviewValue();
 		if(_node.type != VALUE_TYPE.surface) return noone;
 		
 		var _surf = _node.getValue();
@@ -1497,10 +1506,15 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 			if(APPENDING) _group = GetAppendID(_group);
 			
 			if(ds_map_exists(PROJECT.nodeMap, _group)) {
-				PROJECT.nodeMap[? _group].add(self);
+				if(struct_has(PROJECT.nodeMap[? _group], "add"))
+					PROJECT.nodeMap[? _group].add(self);
+				else {
+					var txt = $"Group load failed. Node ID {_group} is not a group.";
+					throw(txt);
+				}
 			} else {
-				var txt = "Group load failed. Can't find node ID " + string(_group);
-				log_warning("LOAD", txt);
+				var txt = $"Group load failed. Can't find node ID {_group}";
+				throw(txt);
 			}
 		}
 	}

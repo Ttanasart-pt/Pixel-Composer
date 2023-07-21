@@ -5,7 +5,7 @@
   "isCompatibility": false,
   "isDnD": false,
   "parent": {
-    "name": "scritps",
-    "path": "folders/main/scritps.yy",
+    "name": "startup scripts",
+    "path": "folders/main/startup scripts.yy",
   },
 }

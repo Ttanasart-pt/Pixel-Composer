@@ -17,6 +17,7 @@ if !ready exit;
 	var content_w = ui(556);
 	
 	var palette_x  = content_x + content_w + ui(16);
+	var palette_w  = ui(240);
 	
 	draw_sprite_stretched(THEME.dialog_bg, 0, presets_x, dialog_y, presets_w, dialog_h);
 	if(sFOCUS) draw_sprite_stretched_ext(THEME.dialog_active, 0, presets_x, dialog_y, presets_w, dialog_h, COLORS._main_accent, 1);
@@ -84,6 +85,13 @@ if !ready exit;
 	
 	sp_palettes.setFocusHover(sFOCUS, sHOVER);
 	sp_palettes.draw(palette_x + ui(16 + 8), dialog_y + ui(44));
+	
+	var bx = palette_x + palette_w - ui(44);
+	var by = dialog_y + ui(12);
+	
+	if(buttonInstant(THEME.button_hide, bx, by, ui(28), ui(28), mouse_ui, sFOCUS, sHOVER, __txt("Show on Selector"), THEME.display_palette, selector.palette_display, c_white) == 2)
+		selector.palette_display = !selector.palette_display;
+	bx -= ui(32);
 #endregion
 
 #region gradient
@@ -197,6 +205,8 @@ if !ready exit;
 	var col_x = content_x + ui(20);
 	var col_y = dialog_y + ui(136);
 	
+	if(palette_selecting > -1)
+		selector.palette = palettes[| palette_selecting];
 	selector.draw(col_x, col_y, sFOCUS, sHOVER);
 #endregion
 

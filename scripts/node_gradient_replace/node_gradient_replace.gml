@@ -7,10 +7,10 @@ function Node_Gradient_Replace_Color(_x, _y, _group = noone) : Node_Processor(_x
 	inputs[| 0] = nodeValue("Gradient", self, JUNCTION_CONNECT.input, VALUE_TYPE.gradient, new gradientObject(c_white) )
 		.setVisible(true, true);
 	
-	inputs[| 1] = nodeValue("Color from", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, [ c_black ])
+	inputs[| 1] = nodeValue("Color from", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, DEF_PALETTE )
 		.setDisplay(VALUE_DISPLAY.palette);
 	
-	inputs[| 2] = nodeValue("Color to", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, [ c_black ])
+	inputs[| 2] = nodeValue("Color to", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, DEF_PALETTE )
 		.setDisplay(VALUE_DISPLAY.palette);
 	
 	inputs[| 3] = nodeValue("Threshold", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.1)

@@ -71,6 +71,27 @@ function shader_set_surface_dimension(uniform, surface) {
 	shader_set_uniform_f(shader_get_uniform(shader, uniform), tw, th);
 }
 
+function shader_set_dim(uniform = "dimension", surf = noone) {
+	if(!is_surface(surf)) return;
+	
+	shader_set_f(uniform, surface_get_width(surf), surface_get_height(surf));
+}
+
+function shader_set_color(uniform, col, alpha = 1) {
+	shader_set_f(uniform, colToVec4(col, alpha));
+}
+
+function shader_set_palette(pal, pal_uni = "palette", amo_uni = "paletteAmount") {
+	shader_set_i(amo_uni, array_length(pal));
+	
+	var _pal = [];
+	for( var i = 0; i < array_length(pal); i++ )
+		array_append(_pal, colToVec4(pal[i]));
+	
+	if(array_length(_pal))
+		shader_set_f(pal_uni, _pal);
+}
+
 #region prebuild
 	enum BLEND {
 		normal,

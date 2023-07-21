@@ -40,10 +40,11 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 }
 
 #region nodes
-	globalvar ALL_NODES, ALL_NODE_LIST, NODE_CATEGORY, NODE_PAGE_DEFAULT;
-	ALL_NODES		= ds_map_create();
-	ALL_NODE_LIST	= ds_list_create();
-	NODE_CATEGORY	= ds_list_create();
+	globalvar ALL_NODES, ALL_NODE_LIST, NODE_CATEGORY, NODE_PAGE_DEFAULT, NODE_PB_CATEGORY;
+	ALL_NODES		 = ds_map_create();
+	ALL_NODE_LIST	 = ds_list_create();
+	NODE_CATEGORY	 = ds_list_create();
+	NODE_PB_CATEGORY = ds_list_create();
 	
 	function nodeBuild(_name, _x, _y, _group = PANEL_GRAPH.getCurrentContext()) {
 		if(!ds_map_exists(ALL_NODES, _name)) {
@@ -75,6 +76,10 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 	
 	function addNodeCatagory(name, list, filter = []) {
 		ds_list_add(NODE_CATEGORY, { name: name, list: list, filter: filter });
+	}
+	
+	function addNodePBCatagory(name, list, filter = []) {
+		ds_list_add(NODE_PB_CATEGORY, { name: name, list: list, filter: filter });
 	}
 	
 	function __initNodes() {
@@ -369,6 +374,7 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 			addNodeObject(generator, "4 Points Gradient",	s_node_gradient_4points,	"Node_Gradient_Points",		[1, Node_Gradient_Points],, "Create image from 4 color points.");
 		
 			ds_list_add(generator, "Drawer");
+			addNodeObject(generator, "Pixel Builder",	s_node_pixel_builder,	"Node_Pixel_Builder",	[1, Node_Pixel_Builder]).setVersion(1147);
 			addNodeObject(generator, "Line",			s_node_line,			"Node_Line",			[1, Node_Line],, "Draw line on an image. Connect path data to it to draw line from path.");
 			addNodeObject(generator, "Draw Text",		s_node_text_render,		"Node_Text",			[1, Node_Text],, "Draw text on an image.");
 			addNodeObject(generator, "Shape",			s_node_shape,			"Node_Shape",			[1, Node_Shape],, "Draw simple shapes using signed distance field.");
@@ -616,10 +622,62 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 			ds_list_add(node, "Debug");
 			addNodeObject(node, "Print",		s_node_print,		"Node_Print",		[1, Node_Print], ["debug log"], "Display text to notification.").setVersion(1145);
 		
-		//var vct = ds_list_create();
-		//addNodeCatagory("VCT", vct);
-		//	addNodeObject(vct, "Biterator",		s_node_condition,	"Node_Biterator",		[1, Node_Biterator]);
-			//addNodeObject(vct, "Blinker",		s_node_condition,	"Node_VCT_Blinker",		[1, Node_VCT_Blinker]);
+		//////////////////////////////////////////////////////////////// PIXEL BUILDER ////////////////////////////////////////////////////////////////
+		
+		var pb_draw = ds_list_create();
+		addNodePBCatagory("Draw", pb_draw);
+			ds_list_add(pb_draw, "Fill");
+			addNodeObject(pb_draw, "Fill",				s_node_pb_draw_fill,	"Node_PB_Draw_Fill",			[1, Node_PB_Draw_Fill]);
+			
+			ds_list_add(pb_draw, "Shape");
+			addNodeObject(pb_draw, "Rectangle",			s_node_pb_draw_rectangle,		"Node_PB_Draw_Rectangle",		[1, Node_PB_Draw_Rectangle]);
+			addNodeObject(pb_draw, "Round Rectangle",	s_node_pb_draw_roundrectangle,	"Node_PB_Draw_Round_Rectangle",	[1, Node_PB_Draw_Round_Rectangle]);
+			addNodeObject(pb_draw, "Trapezoid",			s_node_pb_draw_trapezoid,		"Node_PB_Draw_Trapezoid",		[1, Node_PB_Draw_Trapezoid]);
+			addNodeObject(pb_draw, "Ellipse",			s_node_pb_draw_ellipse,			"Node_PB_Draw_Ellipse",			[1, Node_PB_Draw_Ellipse]);
+			addNodeObject(pb_draw, "Semi-Ellipse",		s_node_pb_draw_semi_ellipse,	"Node_PB_Draw_Semi_Ellipse",	[1, Node_PB_Draw_Semi_Ellipse]);
+			addNodeObject(pb_draw, "Angle",				s_node_pb_draw_angle,			"Node_PB_Draw_Angle",			[1, Node_PB_Draw_Angle]);
+			addNodeObject(pb_draw, "Blob",				s_node_pb_draw_blob,			"Node_PB_Draw_Blob",			[1, Node_PB_Draw_Blob]);
+		
+		var pb_box = ds_list_create();
+		addNodePBCatagory("Box", pb_box);
+			ds_list_add(pb_box, "Layer");
+			addNodeObject(pb_box, "Layer",		s_node_pb_layer,	"Node_PB_Layer",		[1, Node_PB_Layer]);
+			
+			ds_list_add(pb_box, "Box");
+			addNodeObject(pb_box, "Transform",		s_node_pb_box_transform,	"Node_PB_Box_Transform",	[1, Node_PB_Box_Transform]);
+			addNodeObject(pb_box, "Mirror",			s_node_pb_box_mirror,		"Node_PB_Box_Mirror",		[1, Node_PB_Box_Mirror]);
+			addNodeObject(pb_box, "Inset",			s_node_pb_box_inset,		"Node_PB_Box_Inset",		[1, Node_PB_Box_Inset]);
+			addNodeObject(pb_box, "Split",			s_node_pb_box_split,		"Node_PB_Box_Split",		[1, Node_PB_Box_Split]);
+			addNodeObject(pb_box, "Divide",			s_node_pb_box_divide,		"Node_PB_Box_Divide",		[1, Node_PB_Box_Divide]);
+			addNodeObject(pb_box, "Divide Grid",	s_node_pb_box_divide_grid,	"Node_PB_Box_Divide_Grid",	[1, Node_PB_Box_Divide_Grid]);
+			addNodeObject(pb_box, "Contract",		s_node_pb_box_contract,		"Node_PB_Box_Contract",		[1, Node_PB_Box_Contract]);
+		
+		var pb_fx = ds_list_create();
+		addNodePBCatagory("Effects", pb_fx);
+			ds_list_add(pb_fx, "Effect");
+			addNodeObject(pb_fx, "Outline",			s_node_pb_fx_outline,	"Node_PB_Fx_Outline",		[1, Node_PB_Fx_Outline]);
+			addNodeObject(pb_fx, "Stack",			s_node_pb_fx_stack,		"Node_PB_Fx_Stack",			[1, Node_PB_Fx_Stack]);
+			addNodeObject(pb_fx, "Radial",			s_node_pb_fx_radial,	"Node_PB_Fx_Radial",		[1, Node_PB_Fx_Radial]);
+			
+			ds_list_add(pb_fx, "Lighting");
+			addNodeObject(pb_fx, "Highlight",		s_node_pb_fx_highlight,	"Node_PB_Fx_Highlight",		[1, Node_PB_Fx_Highlight]);
+			addNodeObject(pb_fx, "Shading",			s_node_pb_fx_shading,	"Node_PB_Fx_Shading",		[1, Node_PB_Fx_Shading]);
+			
+			ds_list_add(pb_fx, "Texture");
+			addNodeObject(pb_fx, "Hashing",			s_node_pb_fx_hash,		"Node_PB_Fx_Hash",			[1, Node_PB_Fx_Hash]);
+			
+			ds_list_add(pb_fx, "Blend");
+			addNodeObject(pb_fx, "Add",				s_node_pb_fx_add,		"Node_PB_Fx_Add",			[1, Node_PB_Fx_Add]);
+			addNodeObject(pb_fx, "Subtract",		s_node_pb_fx_subtract,	"Node_PB_Fx_Subtract",		[1, Node_PB_Fx_Subtract]);
+			addNodeObject(pb_fx, "Intersect",		s_node_pb_fx_interesct,	"Node_PB_Fx_Intersect",		[1, Node_PB_Fx_Intersect]);
+			
+		var pb_arr = ds_list_create();
+		addNodePBCatagory("Array", pb_arr);
+			addNodeObject(pb_arr, "Array",			s_node_array,			"Node_Array",			[1, Node_Array]);
+			addNodeObject(pb_arr, "Array Get",		s_node_array_get,		"Node_Array_Get",		[1, Node_Array_Get], ["get array"]);
+			addNodeObject(pb_arr, "Array Set",		s_node_array_set,		"Node_Array_Set",		[1, Node_Array_Set], ["set array"]).setVersion(1120);
+			addNodeObject(pb_arr, "Array Insert",	s_node_array_insert,	"Node_Array_Insert",	[1, Node_Array_Insert], ["insert array"]).setVersion(1120);
+			addNodeObject(pb_arr, "Array Remove",	s_node_array_remove,	"Node_Array_Remove",	[1, Node_Array_Remove], ["remove array", "delete array", "array delete"]).setVersion(1120);
 			
 		var hid = ds_list_create();
 		addNodeCatagory("Hidden", hid, ["Hidden"]);
@@ -670,200 +728,4 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 	global.VALUE_SUGGESTION[? VALUE_TYPE.buffer]     = [ "Node_Surface_From_Buffer" ];
 														  
 	global.VALUE_SUGGESTION[? VALUE_TYPE.action]     = [  ];
-#endregion
-
-#region node function
-	function nodeLoad(_data, scale = false, _group = PANEL_GRAPH.getCurrentContext()) {
-		if(!is_struct(_data)) return;
-		
-		var _x    = _data.x;
-		var _y    = _data.y;
-		var _type = _data.type;
-		
-		var _node = nodeBuild(_type, _x, _y, _group);
-		if(_node) _node.deserialize(_data, scale);
-		
-		return _node;
-	}
-	
-	function nodeDelete(node, _merge = false) {
-		var list = node.group == noone? PROJECT.nodes : node.group.getNodeList();
-		ds_list_remove(list, node);
-		node.destroy(_merge);
-		
-		recordAction(ACTION_TYPE.node_delete, node);
-		PANEL_ANIMATION.updatePropertyList();
-	}
-	
-	function nodeCleanUp() {
-		var key = ds_map_find_first(PROJECT.nodeMap);
-		repeat(ds_map_size(PROJECT.nodeMap)) {
-			if(PROJECT.nodeMap[? key]) {
-				PROJECT.nodeMap[? key].active = false;
-				PROJECT.nodeMap[? key].cleanUp();
-				delete PROJECT.nodeMap[? key];
-			}
-			key = ds_map_find_next(PROJECT.nodeMap, key);
-		}
-		
-		ds_map_clear(APPEND_MAP);
-	}
-	
-	function graphFocusNode(node) {
-		PANEL_INSPECTOR.setInspecting(node);
-		ds_list_clear(PANEL_GRAPH.nodes_select_list);
-		PANEL_GRAPH.node_focus = node;
-		PANEL_GRAPH.fullView();
-	}
-	
-	function refreshNodeMap() {
-		ds_map_clear(PROJECT.nodeNameMap);
-		var key = ds_map_find_first(PROJECT.nodeMap);
-		var amo = ds_map_size(PROJECT.nodeMap);
-		
-		repeat(amo) {
-			var node = PROJECT.nodeMap[? key];
-			
-			if(node.internalName != "") 
-				PROJECT.nodeNameMap[? node.internalName] = node;
-			
-			key = ds_map_find_next(PROJECT.nodeMap, key);
-		}
-	}
-	
-	function nodeGetData(str) {
-		str = string_trim(str);
-		var strs = string_splice(str, ".");
-		
-		if(array_length(strs) == 0) return 0;
-		
-		if(array_length(strs) == 1) {
-			var splt = string_splice(strs[0], "[");
-			var inp = PROJECT.globalNode.getInput(strs[0]);
-			return inp == noone? 0 : inp.getValueRecursive()[0];
-		} else if(string_lower(strs[0]) == "project") {
-			if(!ds_map_exists(PROJECT_VARIABLES, strs[1])) return 0;
-			return PROJECT_VARIABLES[? strs[1]]();
-		} else if(array_length(strs) > 2) { 
-			var key = strs[0];
-			if(!ds_map_exists(PROJECT.nodeNameMap, key)) return 0;
-		
-			var node = PROJECT.nodeNameMap[? key];
-			var map  = noone;
-			switch(string_lower(strs[1])) {
-				case "inputs" :	
-				case "input" :	
-					map  = node.inputMap;
-					break;
-				case "outputs" :	
-				case "output" :	
-					map  = node.outputMap;
-					break;
-				default : return 0;
-			}
-			
-			var _junc_key = string_lower(strs[2]);
-			var _junc     = ds_map_try_get(map, _junc_key, noone);
-			
-			if(_junc == noone) return 0;
-			
-			return _junc.getValue();
-		}
-		
-		return 0;
-	}
-#endregion
-
-#region attribute
-	global.SURFACE_INTERPOLATION = [
-		"No aliasing", 
-		"Bilinear", 
-		"Bicubic", 
-		"radSin"
-	];
-	
-	global.SURFACE_OVERSAMPLE = [
-		"Empty", 
-		"Clamp", 
-		"Repeat"
-	];
-	
-	function __initSurfaceFormat() {
-		var surface_format = [
-			surface_rgba4unorm,
-			surface_rgba8unorm,
-			surface_rgba16float,
-			surface_rgba32float,
-			surface_r8unorm,
-			surface_r16float,
-			surface_r32float
-		];
-	
-		var surface_format_name = [
-			"4 bit RGBA", 
-			"8 bit RGBA", 
-			"16 bit RGBA", 
-			"32 bit RGBA", 
-			"8 bit Greyscale", 
-			"16 bit Greyscale", 
-			"32 bit Greyscale"
-		];
-	
-		global.SURFACE_FORMAT		= [];
-		global.SURFACE_FORMAT_NAME  = []; 
-	
-		for( var i = 0; i < array_length(surface_format); i++ ) {
-			var sup = surface_format_is_supported(surface_format[i]);
-			array_push(global.SURFACE_FORMAT, surface_format[i]);
-			array_push(global.SURFACE_FORMAT_NAME, (sup? "" : "-") + surface_format_name[i]);
-			
-			if(!sup) log_message("WARNING", "Surface format [" + surface_format_name[i] + "] not supported in this device.");
-		}
-		
-		global.SURFACE_FORMAT_NAME_PROCESS = [ "Input" ];
-		global.SURFACE_FORMAT_NAME_PROCESS = array_append(global.SURFACE_FORMAT_NAME_PROCESS, global.SURFACE_FORMAT_NAME);
-	}
-	
-	function attribute_surface_depth(label = true) {
-		var depth_array = inputs[| 0].type == VALUE_TYPE.surface? global.SURFACE_FORMAT_NAME_PROCESS : global.SURFACE_FORMAT_NAME;
-		attributes.color_depth = array_find(depth_array, "8 bit RGBA");
-		
-		if(label) array_push(attributeEditors, "Surface");
-		array_push(attributeEditors, ["Color depth", function() { return attributes.color_depth; }, 
-			new scrollBox(depth_array, function(val) { 
-				attributes.color_depth = val;
-				triggerRender();
-			}, false)]);
-	}
-	
-	function attribute_interpolation(label = false) {
-		attributes.interpolation = 0;
-		
-		if(label) array_push(attributeEditors, "Surface");
-		array_push(attributeEditors, ["Texture interpolation", function() { return attributes.interpolation; }, 
-			new scrollBox(global.SURFACE_INTERPOLATION, function(val) { 
-				attributes.interpolation = val;
-				triggerRender();
-			}, false)]);
-	}
-	
-	function attribute_oversample(label = false) {
-		attributes.oversample = 0;
-		
-		if(label) array_push(attributeEditors, "Surface");
-		array_push(attributeEditors, ["Oversample", function() { return attributes.oversample; }, 
-			new scrollBox(global.SURFACE_OVERSAMPLE, function(val) { 
-				attributes.oversample = val;
-				triggerRender();
-			}, false)]);
-	}
-	
-	function attribute_auto_execute(label = false) {
-		attributes.auto_exe = false;
-		if(label) array_push(attributeEditors, "Node");
-		array_push(attributeEditors, ["Auto execute", function() { return attributes.auto_exe; }, 
-		new checkBox(function() { 
-			attributes.auto_exe = !attributes.auto_exe;
-		})]);
-	}
 #endregion

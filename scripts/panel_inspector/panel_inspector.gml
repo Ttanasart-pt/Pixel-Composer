@@ -1,6 +1,6 @@
-function Inspector_Custom_Renderer(draw) : widget() constructor {
+function Inspector_Custom_Renderer(drawFn) : widget() constructor {
 	h = 64;
-	self.draw = draw;
+	self.draw = drawFn;
 }
 
 function Panel_Inspector() : PanelContent() constructor {
@@ -68,8 +68,9 @@ function Panel_Inspector() : PanelContent() constructor {
 		meta_tb[i].hide = true;
 	
 	meta_display = [ 
-		[ __txt("Metadata"), false ], 
-		[ __txtx("panel_globalvar", "Global variables"), false, button(function() { panelAdd("Panel_Globalvar", true); }, THEME.node_goto).setIcon(THEME.node_goto, 0, COLORS._main_icon) ] 
+		[ __txt("Project Settings"), false ], 
+		[ __txt("Metadata"), true ], 
+		[ __txtx("panel_globalvar", "Global variables"), true, button(function() { panelAdd("Panel_Globalvar", true); }, THEME.node_goto).setIcon(THEME.node_goto, 0, COLORS._main_icon) ] 
 	];
 	
 	workshop_uploading = false;
@@ -133,7 +134,10 @@ function Panel_Inspector() : PanelContent() constructor {
 		var hh = ui(8);
 		var yy = _y + ui(8);
 		
-		for( var i = 0; i < 2; i++ ) {
+		var rx = x + ui(16);
+		var ry = y + top_bar_h;
+		
+		for( var i = 0; i < array_length(meta_display); i++ ) {
 			var _meta = meta_display[i];
 			var _txt  = array_safe_get(_meta, 0);
 			var _b	  = array_safe_get(_meta, 2, noone);
@@ -166,12 +170,44 @@ function Panel_Inspector() : PanelContent() constructor {
 				continue;
 			}
 			
-			if(i == 0) {				
+			if(i == 0) {
+				var _edt = PROJECT.attributeEditor;
+				for( var j = 0; j < array_length(_edt); j++ ) {
+					var title = _edt[j][0];
+					var param = _edt[j][1];
+					var editW = _edt[j][2];
+					
+					draw_set_text(f_p0, fa_left, fa_top, COLORS._main_text_inner);
+					draw_text_add(ui(32), yy, __txt(title));
+					yy += line_get_height() + ui(6);
+					hh += line_get_height() + ui(6);
+					
+					editW.setFocusHover(pFOCUS, _hover);
+					if(pFOCUS) editW.register(contentPane);
+					
+					var wh = 0;
+					var _data = PROJECT.attributes[$ param];
+					
+					wh = editW.drawParam({
+						x: ui(16),
+						y: yy,
+						w: w - ui(16 + 48),
+						h: TEXTBOX_HEIGHT, 
+						data: _data,
+						m: _m,
+						rx: rx,
+						ry: ry,
+					});
+					
+					yy += wh + ui(8);
+					hh += wh + ui(8);
+				}
+			} else if(i == 1) {				
 				for( var j = 0; j < array_length(meta.displays); j++ ) {
 					var display = meta.displays[j];
 					
 					draw_set_text(f_p0, fa_left, fa_top, COLORS._main_text_inner);
-					draw_text_add(ui(16), yy, __txt(display[0]));
+					draw_text_add(ui(32), yy, __txt(display[0]));
 					yy += line_get_height() + ui(6);
 					hh += line_get_height() + ui(6);
 				
@@ -188,8 +224,6 @@ function Panel_Inspector() : PanelContent() constructor {
 							break;
 						case "textArrayBox" :	
 							meta_tb[j].arraySet = current_meta.tags;
-							var rx = x + ui(16);
-							var ry = y + top_bar_h;
 							wh = meta_tb[j].draw(ui(16), yy, w - ui(16 + 48), display[2], _m, rx, ry);
 							break;
 					}
@@ -197,7 +231,7 @@ function Panel_Inspector() : PanelContent() constructor {
 					yy += wh + ui(8);
 					hh += wh + ui(8);
 				}
-			} else if (i == 1) {
+			} else if (i == 2) {
 				if(findPanel("Panel_Globalvar")) {
 					yy += ui(4);
 					hh += ui(4);

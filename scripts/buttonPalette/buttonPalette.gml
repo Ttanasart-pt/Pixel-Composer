@@ -18,6 +18,10 @@ function buttonPalette(_onApply, dialog = noone) : widget() constructor {
 			parentDialog.addChildren(dialog);
 	}
 	
+	static drawParam = function(params) {
+		return draw(params.x, params.y, params.w, params.h, params.data, params.m);
+	}
+	
 	static draw = function(_x, _y, _w, _h, _color, _m) {
 		x = _x;
 		y = _y;
@@ -25,14 +29,12 @@ function buttonPalette(_onApply, dialog = noone) : widget() constructor {
 		h = _h;
 		current_palette = _color;
 		
-		var click	  = false;
 		var hoverRect = point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + _h);
 		if(ihover && hoverRect) {
 			draw_sprite_stretched(THEME.button, 1, _x, _y, _w, _h);	
-			if(mouse_press(mb_left, iactive)) {
+			if(mouse_press(mb_left, iactive))
 				trigger();
-				click = true;
-			}
+			
 			if(mouse_click(mb_left, iactive)) {
 				draw_sprite_stretched(THEME.button, 2, _x, _y, _w, _h);	
 				draw_sprite_stretched_ext(THEME.button, 3, _x, _y, _w, _h, COLORS._main_accent, 1);	
@@ -54,7 +56,7 @@ function buttonPalette(_onApply, dialog = noone) : widget() constructor {
 		}
 		
 		resetFocus();
-		return click;
+		return _h;
 	}
 }
 
