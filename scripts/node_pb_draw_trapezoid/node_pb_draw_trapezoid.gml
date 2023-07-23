@@ -42,15 +42,13 @@ function Node_PB_Draw_Trapezoid(_x, _y, _group = noone) : Node_PB_Draw(_x, _y, _
 		var _bev2 = _data[7];
 		var _invt = _data[8];
 		
-		if(_output_index == 1)	return _pbox;
-		if(_pbox == noone)		return noone;
+		var _nbox = _pbox.clone();
+		_nbox.content = surface_verify(_nbox.content, _pbox.w, _pbox.h);
 		
-		_outSurf = surface_verify(_outSurf, _pbox.layer_w, _pbox.layer_h);
-		
-		var p0x = _pbox.x,			 p0y = _pbox.y;
-		var p1x = _pbox.x + _pbox.w, p1y = _pbox.y;
-		var p2x = _pbox.x,			 p2y = _pbox.y + _pbox.h;
-		var p3x = _pbox.x + _pbox.w, p3y = _pbox.y + _pbox.h;
+		var p0x = 0,	   p0y = 0;
+		var p1x = _pbox.w, p1y = 0;
+		var p2x = 0,	   p2y = _pbox.h;
+		var p3x = _pbox.w, p3y = _pbox.h;
 		
 		if(_type == 0) {
 			if(_axis == 0) {
@@ -112,7 +110,7 @@ function Node_PB_Draw_Trapezoid(_x, _y, _group = noone) : Node_PB_Draw(_x, _y, _
 			}
 		}
 		
-		surface_set_target(_outSurf);
+		surface_set_target(_nbox.content);
 			DRAW_CLEAR
 			
 			draw_set_color(_fcol);
@@ -126,13 +124,11 @@ function Node_PB_Draw_Trapezoid(_x, _y, _group = noone) : Node_PB_Draw(_x, _y, _
 				draw_vertex(p3x, p3y);
 			draw_primitive_end();
 			
-			if(_mask && is_surface(_pbox.mask)) {
-				BLEND_MULTIPLY
-					draw_surface(_pbox.mask, _pbox.x, _pbox.y);
-				BLEND_NORMAL
-			}
+			PB_DRAW_APPLY_MASK
 		surface_reset_target();
 		
-		return _outSurf;
+		PB_DRAW_CREATE_MASK
+		
+		return _nbox;
 	}
 }

@@ -13,10 +13,18 @@ function LOAD() {
 function TEST_PATH(path) {
 	TESTING = true;
 	TEST_ERROR = true;
+	
+	PROJECT.cleanup();
+	PROJECT = new Project();
+	PANEL_GRAPH.setProject(PROJECT);
+	
 	__LOAD_PATH(path, false, false);
 }
 
 function LOAD_PATH(path, readonly = false, safe_mode = false) {
+	for( var i = 0; i < array_length(PROJECTS); i++ )
+		if(PROJECTS[i].path == path) return;
+	
 	var _PROJECT = PROJECT;
 	PROJECT = new Project();
 	if(PANEL_GRAPH.project.path == "" && !PANEL_GRAPH.project.modified) {
@@ -28,11 +36,13 @@ function LOAD_PATH(path, readonly = false, safe_mode = false) {
 	}
 	
 	var res = __LOAD_PATH(path, readonly, safe_mode);
-	if(!res) return;
+	if(!res) return false;
 	
 	array_push(PROJECTS, PROJECT);
 	PANEL_ANIMATION.updatePropertyList();
 	setFocus(PANEL_GRAPH.panel);
+	
+	return PROJECT;
 }
 
 function __LOAD_PATH(path, readonly = false, safe_mode = false, override = false) {

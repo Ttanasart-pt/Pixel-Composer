@@ -291,8 +291,9 @@
 	physics_world_update_iterations(100);
 #endregion
 
-#region dropper
-	globalvar NODE_DROPPER_TARGET, NODE_DROPPER_TARGET_CAN;
-	NODE_DROPPER_TARGET = noone;
+#region color selector
+	globalvar NODE_DROPPER_TARGET, NODE_DROPPER_TARGET_CAN, NODE_COLOR_SHOW_PALETTE;
+	NODE_DROPPER_TARGET		= noone;
 	NODE_DROPPER_TARGET_CAN = false;
+	NODE_COLOR_SHOW_PALETTE = false;
 #endregion

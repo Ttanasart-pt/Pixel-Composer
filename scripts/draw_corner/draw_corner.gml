@@ -32,7 +32,7 @@ function draw_corner(x1, y1, xc, yc, x3, y3, thick = 1, col = c_white, sample = 
 		nx = px + lengthdir_x(r, a);
 		ny = py + lengthdir_y(r, a);
 		
-		if(i > 0) draw_line_round(ox, oy, nx, ny, thick);
+		if(i > 0) draw_line_round(ox, oy, nx, ny, thick, i == st, i == 1, sample);
 		
 		ox = nx;
 		oy = ny;

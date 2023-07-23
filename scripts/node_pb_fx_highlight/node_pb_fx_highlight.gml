@@ -80,7 +80,9 @@ function Node_PB_Fx_Highlight(_x, _y, _group = noone) : Node_PB_Fx(_x, _y, _grou
 	];
 	
 	static process_data = function(_outSurf, _data, _output_index, _array_index) {
-		var _surf = _data[0];
+		var _pbox = _data[0];
+		var _nbox = _pbox.clone();
+		
 		var _high = _data[1];
 		var _chig = _data[2];
 		var _csha = _data[3];
@@ -88,8 +90,8 @@ function Node_PB_Fx_Highlight(_x, _y, _group = noone) : Node_PB_Fx(_x, _y, _grou
 		var _rSca = _data[5];
 		var _seed = _data[6];
 		
-		surface_set_shader(_outSurf, sh_pb_highlight);
-			shader_set_dim(, _surf);
+		surface_set_shader(_nbox.content, sh_pb_highlight);
+			shader_set_dim(, _pbox.content);
 			shader_set_i("sides", _high);
 			
 			shader_set_color("highlightColor", _chig);
@@ -99,9 +101,9 @@ function Node_PB_Fx_Highlight(_x, _y, _group = noone) : Node_PB_Fx(_x, _y, _grou
 			shader_set_f("seed", _seed);
 			DRAW_CLEAR
 			
-			draw_surface_safe(_surf, 0, 0);
+			draw_surface_safe(_pbox.content, 0, 0);
 		surface_reset_shader();
 		
-		return _outSurf;
+		return _nbox;
 	}
 }

@@ -68,9 +68,11 @@ function buttonGroupClass(_data, _onClick) : widget() constructor {
 				if(_selecting == i) {
 					draw_sprite_stretched(spr, 2, bx, _y, ww, _h);	
 					draw_sprite_stretched_ext(spr, 3, bx, _y, ww, _h, COLORS._main_accent, 1);	
-				} else if(buttons[i].draw(bx, _y, ww, _h, _m, spr))
-					onClick(i);
-			
+				} else {
+					buttons[i].draw(bx, _y, ww, _h, _m, spr);
+					if(buttons[i].clicked) onClick(i);
+				}
+				
 				if(is_string(data[i])) {
 					draw_set_text(font, fa_center, fa_center, fColor);
 					draw_text(bx + ww / 2, _y + _h / 2, data[i]);

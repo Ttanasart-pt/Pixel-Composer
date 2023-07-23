@@ -178,7 +178,7 @@ function Panel_Inspector() : PanelContent() constructor {
 					var editW = _edt[j][2];
 					
 					draw_set_text(f_p0, fa_left, fa_top, COLORS._main_text_inner);
-					draw_text_add(ui(32), yy, __txt(title));
+					draw_text_add(ui(16), yy, __txt(title));
 					yy += line_get_height() + ui(6);
 					hh += line_get_height() + ui(6);
 					
@@ -207,7 +207,7 @@ function Panel_Inspector() : PanelContent() constructor {
 					var display = meta.displays[j];
 					
 					draw_set_text(f_p0, fa_left, fa_top, COLORS._main_text_inner);
-					draw_text_add(ui(32), yy, __txt(display[0]));
+					draw_text_add(ui(16), yy, __txt(display[0]));
 					yy += line_get_height() + ui(6);
 					hh += line_get_height() + ui(6);
 				

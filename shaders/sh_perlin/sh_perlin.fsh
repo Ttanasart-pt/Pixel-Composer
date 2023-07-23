@@ -10,6 +10,8 @@ uniform float scale;
 uniform float bright;
 uniform int   iteration;
 
+///////////////////// PERLIN START /////////////////////
+
 float random (in vec2 st) { return fract(sin(dot(st.xy, vec2(12.9898, 78.233))) * 43758.5453123); }
 
 float noise (in vec2 st) {
@@ -29,8 +31,7 @@ float noise (in vec2 st) {
     return mix(mix(a, b, u.x), mix(c, d, u.x), u.y);
 }
 
-void main() {
-    vec2 pos = position + v_vTexcoord * scale;
+float perlin ( vec2 pos, int iteration ) {
 	float amp = pow(2., float(iteration) - 1.)  / (pow(2., float(iteration)) - 1.);
     float n = 0.;
 	
@@ -40,6 +41,15 @@ void main() {
 		amp *= .5;
 		pos *= 2.;
 	}
+	
+	return n;
+}
+
+///////////////////// PERLIN END /////////////////////
+
+void main() {
+    vec2 pos = position + v_vTexcoord * scale;
+	float n  = perlin(pos, iteration);
 	
     gl_FragColor = vec4(vec3(n), 1.0);
 }

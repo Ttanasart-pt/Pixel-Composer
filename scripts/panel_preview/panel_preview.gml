@@ -547,6 +547,7 @@ function Panel_Preview() : PanelContent() constructor {
 	
 	function drawPreviewOverlay() {
 		right_menu_y = toolbar_height - ui(4);
+		toolbar_draw = false;
 		
 		if(PANEL_PREVIEW == self) {
 			draw_set_text(f_p0, fa_right, fa_top, COLORS._main_text_accent);
@@ -785,6 +786,9 @@ function Panel_Preview() : PanelContent() constructor {
 		var scHeight = ui(32);
 		
 		draw_sprite_stretched(THEME.toolbar, 1, 0, 0, w, scHeight);
+		draw_sprite_stretched(THEME.toolbar, 0, 0, ty, w, h);
+		
+		if(!_node) return;
 		
 		if(tool_current != noone) { //tool settings
 			var settings = _node.tool_settings;
@@ -860,8 +864,6 @@ function Panel_Preview() : PanelContent() constructor {
 				draw_text(tx, cy + ch / 2, "(" + string(color_get_alpha(sample_color)) + ")");
 			}
 		}
-		
-		draw_sprite_stretched(THEME.toolbar, 0, 0, ty, w, h);
 		
 		var tbx = toolbar_height / 2;
 		var tby = ty + toolbar_height / 2;
@@ -1005,7 +1007,7 @@ function Panel_Preview() : PanelContent() constructor {
 		}
 		
 		drawSplitView();
-		if(tool) drawToolBar(tool);
+		drawToolBar(tool);
 	}
 	
 	function copyCurrentFrame() {

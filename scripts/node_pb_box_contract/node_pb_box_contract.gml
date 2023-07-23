@@ -34,29 +34,6 @@ function Node_PB_Box_Contract(_x, _y, _group = noone) : Node_PB_Box(_x, _y, _gro
 		else			inputs[| 4].name = "Fix Height";
 	}
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
-		var _b0 = outputs[| 0].getValue();
-		var _b1 = outputs[| 1].getValue();
-		
-		for( var i = 0; i < array_length(_b1); i++ ) {
-			var _b1x0 = _x    + _b1[i].x * _s;
-			var _b1y0 = _y    + _b1[i].y * _s;
-			var _b1x1 = _b1x0 + _b1[i].w * _s;
-			var _b1y1 = _b1y0 + _b1[i].h * _s;
-		
-			draw_set_color(c_red);
-			draw_rectangle(_b1x0, _b1y0, _b1x1, _b1y1, true);
-		}
-		
-		var _b0x0 = _x    + _b0.x * _s;
-		var _b0y0 = _y    + _b0.y * _s;
-		var _b0x1 = _b0x0 + _b0.w * _s;
-		var _b0y1 = _b0y0 + _b0.h * _s;
-		
-		draw_set_color(c_blue);
-		draw_rectangle(_b0x0, _b0y0, _b0x1, _b0y1, true);
-	}
-	
 	static process_data = function(_outSurf, _data, _output_index, _array_index) {
 		var _layr = _data[0];
 		var _pbox = _data[1];
@@ -76,13 +53,19 @@ function Node_PB_Box_Contract(_x, _y, _group = noone) : Node_PB_Box(_x, _y, _gro
 			}
 				
 			if(_output_index == 0) {
-				_pbox = _pbox.clone();
-				_pbox.layer += _layr;
+				var _nbox = _pbox.clone();
+				_nbox.layer += _layr;
 				
-				_pbox.x += (_pbox.w - _w) / 2;
-				_pbox.w  = _w;
+				_nbox.x += (_nbox.w - _w) / 2;
+				_nbox.w  = _w;
+				
+				_nbox.content = surface_stretch(_nbox.content, _nbox.w, _nbox.h);
 			} else if(_output_index == 1) {
 				_pbox = [ _pbox.clone(), _pbox.clone() ];
+				
+				_pbox[0].content = noone;
+				_pbox[1].content = noone;
+				
 				_pbox[0].layer += _layr;
 				_pbox[1].layer += _layr;
 				
@@ -102,13 +85,19 @@ function Node_PB_Box_Contract(_x, _y, _group = noone) : Node_PB_Box(_x, _y, _gro
 			}
 			
 			if(_output_index == 0) {
-				_pbox = _pbox.clone();
-				_pbox.layer += _layr;
+				var _nbox = _pbox.clone();
+				_nbox.layer += _layr;
 			
-				_pbox.y += (_pbox.h - _h) / 2;
-				_pbox.h = _h;
+				_nbox.y += (_nbox.h - _h) / 2;
+				_nbox.h = _h;
+				
+				_nbox.content = surface_stretch(_nbox.content, _nbox.w, _nbox.h);
 			} else if(_output_index == 1) {
 				_pbox = [ _pbox.clone(), _pbox.clone() ];
+				
+				_pbox[0].content = noone;
+				_pbox[1].content = noone;
+				
 				_pbox[0].layer += _layr;
 				_pbox[1].layer += _layr;
 				

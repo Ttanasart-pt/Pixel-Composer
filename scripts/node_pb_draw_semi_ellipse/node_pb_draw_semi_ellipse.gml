@@ -15,12 +15,8 @@ function Node_PB_Draw_Semi_Ellipse(_x, _y, _group = noone) : Node_PB_Draw(_x, _y
 		var _mask = _data[2];
 		var _side = _data[3];
 		
-		if(_output_index == 1)	return _pbox;
-		if(_pbox == noone)		return noone;
-		
-		_outSurf = surface_verify(_outSurf, _pbox.layer_w, _pbox.layer_h);
-		
-		var s = surface_create_valid(_pbox.w, _pbox.h);
+		var _nbox = _pbox.clone();
+		_nbox.content = surface_verify(_nbox.content, _pbox.w, _pbox.h);
 		
 		switch(_side) {
 			case 0 : if(_pbox.mirror_h) _side = 2; break;
@@ -29,7 +25,7 @@ function Node_PB_Draw_Semi_Ellipse(_x, _y, _group = noone) : Node_PB_Draw(_x, _y
 			case 3 : if(_pbox.mirror_v) _side = 1; break;
 		}
 		
-		surface_set_target(s);
+		surface_set_target(_nbox.content);
 			DRAW_CLEAR
 			
 			var x1 = _pbox.w;
@@ -43,21 +39,12 @@ function Node_PB_Draw_Semi_Ellipse(_x, _y, _group = noone) : Node_PB_Draw(_x, _y
 				case 2 : draw_ellipse(-_pbox.w, -1, x1 - 1, y1 - 1, false);		break;
 				case 3 : draw_ellipse(-1, -_pbox.h, x1 - 1, y1 - 1, false);		break;
 			}
+			
+			PB_DRAW_APPLY_MASK
 		surface_reset_target();
 		
-		surface_set_target(_outSurf);
-			DRAW_CLEAR
-			
-			draw_surface(s, ceil(_pbox.x), ceil(_pbox.y));
-			surface_free(s);
-			
-			if(_mask && is_surface(_pbox.mask)) {
-				BLEND_MULTIPLY
-					draw_surface(_pbox.mask, ceil(_pbox.x), ceil(_pbox.y));
-				BLEND_NORMAL
-			}
-		surface_reset_target();
+		PB_DRAW_CREATE_MASK
 		
-		return _outSurf;
+		return _nbox;
 	}
 }

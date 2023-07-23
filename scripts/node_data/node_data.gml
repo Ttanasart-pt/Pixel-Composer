@@ -35,7 +35,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		run_in(1, function() { 
 			if(display_name != "") return;
 			resetInternalName();
-			display_name = __txt_node_name(instanceof(self), name);
+			display_name = name; //__txt_node_name(instanceof(self), name);
 		});
 	}
 	
@@ -769,7 +769,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 			var th = max(1, PREF_MAP[? "connection_line_width"] * _s);
 			jun.draw_line_shift_hover = false;
 			
-			var drawCorner = jun.type == VALUE_TYPE.action || jun.value_from.type == VALUE_TYPE.action;
+			var downDirection = jun.type == VALUE_TYPE.action || jun.value_from.type == VALUE_TYPE.action;
 			
 			if(PANEL_GRAPH.pHOVER)
 			switch(PREF_MAP[? "curve_connection_line"]) {
@@ -777,7 +777,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 					hover = distance_to_line(mx, my, jx, jy, frx, fry) < max(th * 2, 6);
 					break;
 				case 1 : 
-					if(drawCorner) 
+					if(downDirection) 
 						hover = distance_to_curve_corner(mx, my, jx, jy, frx, fry, _s) < max(th * 2, 6);
 					else 
 						hover = distance_to_curve(mx, my, jx, jy, frx, fry, cx, cy, _s) < max(th * 2, 6);
@@ -786,7 +786,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 						jun.draw_line_shift_hover = hover;
 					break;
 				case 2 : 
-					if(drawCorner) 
+					if(downDirection) 
 						hover = distance_to_elbow_corner(mx, my, frx, fry, jx, jy) < max(th * 2, 6);
 					else
 						hover = distance_to_elbow(mx, my, frx, fry, jx, jy, cx, cy, _s, jun.value_from.drawLineIndex, jun.drawLineIndex) < max(th * 2, 6);
@@ -795,7 +795,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 						jun.draw_line_shift_hover = hover;
 					break;
 				case 3 :
-					if(drawCorner) 
+					if(downDirection) 
 						hover  = distance_to_elbow_diag_corner(mx, my, frx, fry, jx, jy) < max(th * 2, 6);
 					else
 						hover  = distance_to_elbow_diag(mx, my, frx, fry, jx, jy, cx, cy, _s, jun.value_from.drawLineIndex, jun.drawLineIndex) < max(th * 2, 6);
@@ -831,30 +831,35 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 			corner *= aa;
 			th = max(1, round(th));
 			
+			draw_set_color(c0);
+			
+			var fromIndex = jun.value_from.drawLineIndex;
+			var toIndex   = jun.drawLineIndex;
+			
 			switch(PREF_MAP[? "curve_connection_line"]) {
 				case 0 : 
 					if(ty == LINE_STYLE.solid)
-						draw_line_width_color(jx, jy, frx, fry, th, c1, c0);
-					else 
+						draw_line_width_vertex(jx, jy, frx, fry, th, c1, c0);
+					else
 						draw_line_dashed_color(jx, jy, frx, fry, th, c1, c0, 12 * ss);
 					break;
 				case 1 : 
-					if(drawCorner) 
+					if(downDirection)
 						draw_line_curve_corner(jx, jy, frx, fry, ss, th, c0, c1); 
-					else 
+					else
 						draw_line_curve_color(jx, jy, frx, fry, cx, cy, ss, th, c0, c1, ty); 
 					break;
 				case 2 : 
-					if(drawCorner) 
-						draw_line_elbow_corner(frx, fry, jx, jy, ss, th, c0, c1, corner, jun.value_from.drawLineIndex, jun.drawLineIndex, ty); 
-					else 
-						draw_line_elbow_color(frx, fry, jx, jy, cx, cy, ss, th, c0, c1, corner, jun.value_from.drawLineIndex, jun.drawLineIndex, ty); 
+					if(downDirection)
+						draw_line_elbow_corner(frx, fry, jx, jy, ss, th, c0, c1, corner, fromIndex, toIndex, ty); 
+					else
+						draw_line_elbow_color(frx, fry, jx, jy, cx, cy, ss, th, c0, c1, corner, fromIndex, toIndex, ty); 
 					break;
 				case 3 : 
-					if(drawCorner) 
-						draw_line_elbow_diag_corner(frx, fry, jx, jy, ss, th, c0, c1, corner, jun.value_from.drawLineIndex, jun.drawLineIndex, ty); 
-					else 
-						draw_line_elbow_diag_color(frx, fry, jx, jy, cx, cy, ss, th, c0, c1, corner, jun.value_from.drawLineIndex, jun.drawLineIndex, ty); 
+					if(downDirection)
+						draw_line_elbow_diag_corner(frx, fry, jx, jy, ss, th, c0, c1, corner, fromIndex, toIndex, ty); 
+					else
+						draw_line_elbow_diag_color(frx, fry, jx, jy, cx, cy, ss, th, c0, c1, corner, fromIndex, toIndex, ty); 
 					break;
 			}
 		}
@@ -961,15 +966,17 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		if(!active) return;
 		if(_s * w < 64) return;
 		
-		draw_set_text(_s >= 1? f_p1 : f_p2, fa_center, fa_top, COLORS.panel_graph_node_dimension);
+		draw_set_text(f_p2, fa_center, fa_top, COLORS.panel_graph_node_dimension);
 		var tx = xx + w * _s / 2;
-		var ty = yy + (h + 4) * _s;
+		var ty = yy + (h + 4) * _s - 2;
 		
 		if(PANEL_GRAPH.show_dimension) {
 			var txt = string(getNodeDimension(_s > 0.65));
 			draw_text(round(tx), round(ty), txt);
-			ty += string_height(txt) - 4;
+			ty += string_height(txt) - 2;
 		}
+		
+		draw_set_font(f_p3);
 		
 		if(PANEL_GRAPH.show_compute) {
 			var rt, unit;

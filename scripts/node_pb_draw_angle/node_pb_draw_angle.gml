@@ -18,10 +18,8 @@ function Node_PB_Draw_Angle(_x, _y, _group = noone) : Node_PB_Draw(_x, _y, _grou
 		var _side = _data[3];
 		var _roun = _data[4];
 		
-		if(_output_index == 1)	return _pbox;
-		if(_pbox == noone)		return noone;
-		
-		_outSurf = surface_verify(_outSurf, _pbox.layer_w, _pbox.layer_h);
+		var _nbox = _pbox.clone();
+		_nbox.content = surface_verify(_nbox.content, _pbox.w, _pbox.h);
 		
 		switch(_side) {
 			case 0 : 
@@ -34,7 +32,7 @@ function Node_PB_Draw_Angle(_x, _y, _group = noone) : Node_PB_Draw(_x, _y, _grou
 				if( _pbox.mirror_h && !_pbox.mirror_v) _side = 0; 
 				if(!_pbox.mirror_h &&  _pbox.mirror_v) _side = 2; 
 				break;				   
-			case 2 : 				   
+			case 2 : 
 				if( _pbox.mirror_h &&  _pbox.mirror_v) _side = 0; 
 				if( _pbox.mirror_h && !_pbox.mirror_v) _side = 3; 
 				if(!_pbox.mirror_h &&  _pbox.mirror_v) _side = 1; 
@@ -46,7 +44,7 @@ function Node_PB_Draw_Angle(_x, _y, _group = noone) : Node_PB_Draw(_x, _y, _grou
 				break;
 		}
 		
-		surface_set_target(_outSurf);
+		surface_set_target(_nbox.content);
 			DRAW_CLEAR
 			
 			draw_set_color(_fcol);
@@ -60,12 +58,12 @@ function Node_PB_Draw_Angle(_x, _y, _group = noone) : Node_PB_Draw(_x, _y, _grou
 						as = 0;
 						ae = -90;
 						
-						rx = _pbox.x;
-						ry = _pbox.y;
+						rx = 0;
+						ry = 0;
 					} else {
-						draw_vertex(_pbox.x, _pbox.y);
-						draw_vertex(_pbox.x + _pbox.w, _pbox.y);
-						draw_vertex(_pbox.x, _pbox.y + _pbox.h);
+						draw_vertex(0, 0);
+						draw_vertex(_pbox.w, 0);
+						draw_vertex(0, _pbox.h);
 					}
 					break;
 				case 1 :
@@ -73,12 +71,12 @@ function Node_PB_Draw_Angle(_x, _y, _group = noone) : Node_PB_Draw(_x, _y, _grou
 						as = 180;
 						ae = 270;
 						
-						rx = _pbox.x + _pbox.w;
-						ry = _pbox.y;
+						rx = _pbox.w;
+						ry = 0;
 					} else {
-						draw_vertex(_pbox.x, _pbox.y);
-						draw_vertex(_pbox.x + _pbox.w, _pbox.y);
-						draw_vertex(_pbox.x + _pbox.w, _pbox.y + _pbox.h);
+						draw_vertex(0, 0);
+						draw_vertex(_pbox.w, 0);
+						draw_vertex(_pbox.w, _pbox.h);
 					}
 					break;
 				case 2 :
@@ -86,12 +84,12 @@ function Node_PB_Draw_Angle(_x, _y, _group = noone) : Node_PB_Draw(_x, _y, _grou
 						as = 90;
 						ae = 180;
 						
-						rx = _pbox.x + _pbox.w;
-						ry = _pbox.y + _pbox.h;
+						rx = _pbox.w;
+						ry = _pbox.h;
 					} else {
-						draw_vertex(_pbox.x + _pbox.w, _pbox.y);
-						draw_vertex(_pbox.x + _pbox.w, _pbox.y + _pbox.h);
-						draw_vertex(_pbox.x, _pbox.y + _pbox.h);
+						draw_vertex(_pbox.w, 0);
+						draw_vertex(_pbox.w, _pbox.h);
+						draw_vertex(0, _pbox.h);
 					}
 					break;
 				case 3 :
@@ -99,12 +97,12 @@ function Node_PB_Draw_Angle(_x, _y, _group = noone) : Node_PB_Draw(_x, _y, _grou
 						as = 0;
 						ae = 90;
 						
-						rx = _pbox.x;
-						ry = _pbox.y + _pbox.h;
+						rx = 0;
+						ry = _pbox.h;
 					} else {
-						draw_vertex(_pbox.x, _pbox.y);
-						draw_vertex(_pbox.x + _pbox.w, _pbox.y + _pbox.h);
-						draw_vertex(_pbox.x, _pbox.y + _pbox.h);	
+						draw_vertex(0, 0);
+						draw_vertex(_pbox.w, _pbox.h);
+						draw_vertex(0, _pbox.h);	
 					}
 					break;
 			}
@@ -129,13 +127,11 @@ function Node_PB_Draw_Angle(_x, _y, _group = noone) : Node_PB_Draw(_x, _y, _grou
 			}
 			draw_primitive_end();
 			
-			if(_mask && is_surface(_pbox.mask)) {
-				BLEND_MULTIPLY
-					draw_surface(_pbox.mask, _pbox.x, _pbox.y);
-				BLEND_NORMAL
-			}
+			PB_DRAW_APPLY_MASK
 		surface_reset_target();
 		
-		return _outSurf;
+		PB_DRAW_CREATE_MASK
+		
+		return _nbox;
 	}
 }

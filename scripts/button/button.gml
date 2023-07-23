@@ -13,6 +13,9 @@ function buttonClass(_onClick, _icon = noone) : widget() constructor {
 	
 	onClick = _onClick;
 	triggered = false;
+	
+	activate_on_press = false;
+	clicked = false;
 		
 	static setLua = function(_lua_thread, _lua_key, _lua_func) { 
 		lua_thread = _lua_thread;
@@ -21,6 +24,8 @@ function buttonClass(_onClick, _icon = noone) : widget() constructor {
 	}
 	
 	static trigger = function() { 
+		clicked = true;
+		
 		if(!is_callable(onClick))
 			return noone;
 		triggered = true;
@@ -56,15 +61,17 @@ function buttonClass(_onClick, _icon = noone) : widget() constructor {
 		w = _w;
 		h = _h;
 		
+		clicked = false;
+		
 		var b = colorMultiply(self.blend, blend);
 		
-		var click = false;
 		if(hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + _h)) {
 			draw_sprite_stretched_ext(spr, 1, _x, _y, _w, _h, b, 1);	
-			if(mouse_release(mb_left, active)) {
+			if(!activate_on_press && mouse_release(mb_left, active))
 				trigger();
-				click = true;
-			}
+			if(activate_on_press && mouse_press(mb_left, active))
+				trigger();
+				
 			if(mouse_click(mb_left, active)) {
 				draw_sprite_stretched_ext(spr, 2, _x, _y, _w, _h, b, 1);
 				draw_sprite_stretched_ext(spr, 3, _x, _y, _w, _h, COLORS._main_accent, 1);
@@ -89,7 +96,7 @@ function buttonClass(_onClick, _icon = noone) : widget() constructor {
 		
 		resetFocus();
 		
-		return click;
+		return _h;
 	}
 }
 

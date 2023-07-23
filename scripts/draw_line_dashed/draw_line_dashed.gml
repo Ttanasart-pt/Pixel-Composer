@@ -40,9 +40,7 @@ function draw_line_dashed_color(x0, y0, x1, y1, th, c0, c1, dash_distance = 8) {
 		ny = y0 + dy * dd;
 		nc = merge_color(c0, c1, i / part);
 		
-		if(i && i % 2) {
-			draw_line_round_color(ox, oy, nx, ny, th, oc, nc);
-		}
+		if(i % 2) draw_line_width_color(ox, oy, nx, ny, th, oc, nc);
 		
 		oc = nc;
 		ox = nx;

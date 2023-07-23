@@ -1053,6 +1053,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			cache_hit &= cache_value[2] != undefined;
 			cache_hit &= connect_type == JUNCTION_CONNECT.input;
 			cache_hit &= unit.reference == VALUE_UNIT.constant;
+			
 			if(cache_hit) {
 				global.cache_hit++;
 				return cache_value[2];
@@ -1062,10 +1063,12 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		var val = _getValue(_time, applyUnit, arrIndex);
 		
 		if(useCache) {
-			is_changed = !isEqual(cache_value[1], val);
+			is_changed = !isEqual(cache_value[2], val);
 			cache_value[0] = true;
-			cache_value[1] = val;
+			cache_value[1] = _time;
 		}
+		
+		cache_value[2] = val;
 		
 		return val;
 	}

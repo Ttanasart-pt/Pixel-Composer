@@ -3,8 +3,8 @@
   "resourceVersion": "1.0",
   "name": "s_node_pb_box_contract",
   "bbox_bottom": 61,
-  "bbox_left": 3,
-  "bbox_right": 60,
+  "bbox_left": 2,
+  "bbox_right": 61,
   "bbox_top": 2,
   "bboxMode": 0,
   "collisionKind": 1,
@@ -13,14 +13,14 @@
   "edgeFiltering": false,
   "For3D": false,
   "frames": [
-    {"resourceType":"GMSpriteFrame","resourceVersion":"1.1","name":"65342bfd-1697-461b-925a-796ad0c481a8",},
+    {"resourceType":"GMSpriteFrame","resourceVersion":"1.1","name":"f84917c1-415e-4614-b898-eea3751bcd05",},
   ],
   "gridX": 0,
   "gridY": 0,
   "height": 64,
   "HTile": false,
   "layers": [
-    {"resourceType":"GMImageLayer","resourceVersion":"1.0","name":"8a0d5d07-5845-47f7-9908-efc37cd11d3f","blendMode":0,"displayName":"default","isLocked":false,"opacity":100.0,"visible":true,},
+    {"resourceType":"GMImageLayer","resourceVersion":"1.0","name":"db75a0b5-b900-4b63-88d1-27a58141a37f","blendMode":0,"displayName":"default","isLocked":false,"opacity":100.0,"visible":true,},
   ],
   "nineSlice": null,
   "origin": 4,
@@ -54,7 +54,7 @@
     "timeUnits": 1,
     "tracks": [
       {"resourceType":"GMSpriteFramesTrack","resourceVersion":"1.0","name":"frames","builtinName":0,"events":[],"inheritsTrackColour":true,"interpolation":1,"isCreationTrack":false,"keyframes":{"resourceType":"KeyframeStore<SpriteFrameKeyframe>","resourceVersion":"1.0","Keyframes":[
-            {"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"1.0","Channels":{"0":{"resourceType":"SpriteFrameKeyframe","resourceVersion":"1.0","Id":{"name":"65342bfd-1697-461b-925a-796ad0c481a8","path":"sprites/s_node_pb_box_contract/s_node_pb_box_contract.yy",},},},"Disabled":false,"id":"bb8d03d6-b788-4e8d-821b-651ccd4c86b1","IsCreationKey":false,"Key":0.0,"Length":1.0,"Stretch":false,},
+            {"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"1.0","Channels":{"0":{"resourceType":"SpriteFrameKeyframe","resourceVersion":"1.0","Id":{"name":"f84917c1-415e-4614-b898-eea3751bcd05","path":"sprites/s_node_pb_box_contract/s_node_pb_box_contract.yy",},},},"Disabled":false,"id":"df43465b-e8aa-4493-ba83-26cbd6d5ac8b","IsCreationKey":false,"Key":0.0,"Length":1.0,"Stretch":false,},
           ],},"modifiers":[],"spriteId":null,"trackColour":0,"tracks":[],"traits":0,},
     ],
     "visibleRange": null,

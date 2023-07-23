@@ -17,24 +17,6 @@ function Node_PB_Box_Divide_Grid(_x, _y, _group = noone) : Node_PB_Box(_x, _y, _
 		["Divide",	false], 2, 3, 4, 
 	]
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
-		var _bs = outputs[| 0].getValue();
-		if(_bs == noone)   return;
-		if(!is_array(_bs)) return;
-		
-		for( var i = 0; i < array_length(_bs); i++ ) {
-			var _b   = _bs[i];
-			if(_b == noone) continue;
-			var _bx0 = _x   + _b.x * _s;
-			var _by0 = _y   + _b.y * _s;
-			var _bx1 = _bx0 + _b.w * _s;
-			var _by1 = _by0 + _b.h * _s;
-		
-			draw_set_color(c_red);
-			draw_rectangle(_bx0, _by0, _bx1, _by1, true);
-		}
-	}
-	
 	static process_data = function(_outSurf, _data, _output_index, _array_index) {
 		var _layr = _data[0];
 		var _pbox = _data[1];
@@ -64,8 +46,19 @@ function Node_PB_Box_Divide_Grid(_x, _y, _group = noone) : Node_PB_Box(_x, _y, _
 			_res[_ind].y = _pbox.y + i * (_hh + _spac);
 			_res[_ind].h = _hh;
 			
-			if(_mirr && j % 2) _res[_ind].mirror_h = !_res[_ind].mirror_h;
-			if(_mirr && i % 2) _res[_ind].mirror_v = !_res[_ind].mirror_v;
+			_res[_ind].mask = surface_stretch(_res[_ind].mask, _res[_ind].w, _res[_ind].h);
+			
+			if(_mirr && j % 2) {
+				_res[_ind].mirror_h = !_res[_ind].mirror_h;
+				_res[_ind].mask		= surface_mirror(_res[_ind].mask, true, false);
+				_res[_ind].content	= surface_mirror(_res[_ind].content, true, false);
+			}
+			
+			if(_mirr && i % 2) {
+				_res[_ind].mirror_v = !_res[_ind].mirror_v;
+				_res[_ind].mask		= surface_mirror(_res[_ind].mask, false, true);
+				_res[_ind].content	= surface_mirror(_res[_ind].content, false, true);
+			}
 		}
 		
 		return _res;

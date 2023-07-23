@@ -41,34 +41,6 @@ function Node_PB_Box_Split(_x, _y, _group = noone) : Node_PB_Box(_x, _y, _group)
 		}
 	}
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
-		var _b0 = outputs[| 0].getValue();
-		var _b1 = outputs[| 1].getValue();
-		
-		if(!is_array(_b0)) _b0 = [ _b0 ];
-		if(!is_array(_b1)) _b1 = [ _b1 ];
-		
-		for( var i = 0; i < array_length(_b0); i++ ) {
-			var _b0x0 = _x    + _b0[i].x * _s;
-			var _b0y0 = _y    + _b0[i].y * _s;
-			var _b0x1 = _b0x0 + _b0[i].w * _s;
-			var _b0y1 = _b0y0 + _b0[i].h * _s;
-		
-			draw_set_color(c_red);
-			draw_rectangle(_b0x0, _b0y0, _b0x1, _b0y1, true);
-		}
-		
-		for( var i = 0; i < array_length(_b1); i++ ) {
-			var _b1x0 = _x    + _b1[i].x * _s;
-			var _b1y0 = _y    + _b1[i].y * _s;
-			var _b1x1 = _b1x0 + _b1[i].w * _s;
-			var _b1y1 = _b1y0 + _b1[i].h * _s;
-		
-			draw_set_color(c_blue);
-			draw_rectangle(_b1x0, _b1y0, _b1x1, _b1y1, true);
-		}
-	}
-	
 	static process_data = function(_outSurf, _data, _output_index, _array_index) {
 		var _layr = _data[0];
 		var _pbox = _data[1];
@@ -80,60 +52,138 @@ function Node_PB_Box_Split(_x, _y, _group = noone) : Node_PB_Box(_x, _y, _group)
 		
 		if(_pbox == noone) return noone;
 		
-		_pbox = _pbox.clone();
-		_pbox.layer += _layr;
+		var _nbox    = _pbox.clone();
+		_nbox.layer += _layr;
 		
 		if(_axis == 0) {
 			var _w;
 			
 			switch(_type) {
-				case 0 : _w = _pbox.w * _rati;	break;
+				case 0 : _w = _nbox.w * _rati;	break;
 				case 1 : _w = _fixx;			break;
-				case 2 : _w = _pbox.w - _fixx;	break;
+				case 2 : _w = _nbox.w - _fixx;	break;
 			}
 			
-			if(_pbox.mirror_h) {
+			if(_nbox.mirror_h) {
 				_output_index = !_output_index;
-				_w = _pbox.w - _w;
+				_w = _nbox.w - _w;
 			}
 			
 			if(_output_index == 0) {
-				_pbox.w = round(_w);
+				_nbox.w = round(_w);
+				
+				if(is_surface(_pbox.mask)) {
+					_nbox.mask = surface_verify(_nbox.mask, _nbox.w, _nbox.h);
+					surface_set_target(_nbox.mask);
+						DRAW_CLEAR
+						draw_surface(_pbox.mask, 0, 0);
+					surface_reset_target();
+				}
+				
+				if(is_surface(_pbox.content)) {
+					_nbox.content = surface_verify(_nbox.content, _nbox.w, _nbox.h);
+					surface_set_target(_nbox.content);
+						DRAW_CLEAR
+						draw_surface(_pbox.content, 0, 0);
+					surface_reset_target();
+				}
 			} else if(_output_index == 1) {
-				_w = _pbox.w - _w;
+				_w = _nbox.w - _w;
 				
-				_pbox.x += _pbox.w - round(_w);
-				_pbox.w  = round(_w);
+				var shf  = _nbox.w - round(_w);
+				_nbox.x += shf;
+				_nbox.w  = round(_w);
 				
-				if(_mirr) _pbox.mirror_h = !_pbox.mirror_h;
+				if(_mirr) _nbox.mirror_h = !_nbox.mirror_h;
+				
+				if(is_surface(_pbox.mask)) {
+					_nbox.mask = surface_verify(_nbox.mask, _nbox.w, _nbox.h);
+					surface_set_target(_nbox.mask);
+						DRAW_CLEAR
+						if(_mirr) 
+							draw_surface_ext(_pbox.mask, _nbox.w + shf, 0, -1, 1, 0, c_white, 1);
+						else 
+							draw_surface(_pbox.mask, -shf, 0);
+					surface_reset_target();
+				}
+				
+				if(is_surface(_pbox.content)) {
+					_nbox.content = surface_verify(_nbox.content, _nbox.w, _nbox.h);
+					surface_set_target(_nbox.content);
+						DRAW_CLEAR
+						if(_mirr) 
+							draw_surface_ext(_pbox.content, _nbox.w + shf, 0, -1, 1, 0, c_white, 1);
+						else 
+							draw_surface(_pbox.content, -shf, 0);
+					surface_reset_target();
+				}
 			}
 		} else {
 			var _h;
 			
 			switch(_type) {
-				case 0 : _h = _pbox.h * _rati;	break;
+				case 0 : _h = _nbox.h * _rati;	break;
 				case 1 : _h = _fixx;			break;
-				case 2 : _h = _pbox.h - _fixx;	break;
+				case 2 : _h = _nbox.h - _fixx;	break;
 			}
-			
-			if(_pbox.mirror_v) {
+		
+			if(_nbox.mirror_v) {
 				_output_index = !_output_index;
-				_h = _pbox.h - _h;
+				_h = _nbox.h - _h;
 			}
 			
 			if(_output_index == 0) {
-				_pbox.h = round(_h);
-			} else if(_output_index == 1) {
-				_h = _pbox.h - _h;
-			
-				_pbox.y += _pbox.h - round(_h);
-				_pbox.h  = round(_h);
+				_nbox.h = round(_h);
 				
-				if(_mirr) _pbox.mirror_v = !_pbox.mirror_v;
+				if(is_surface(_pbox.mask)) {
+					_nbox.mask = surface_verify(_nbox.mask, _nbox.w, _nbox.h);
+					surface_set_target(_nbox.mask);
+						DRAW_CLEAR
+						draw_surface(_pbox.mask, 0, 0);
+					surface_reset_target();
+				}
+				
+				if(is_surface(_pbox.content)) {
+					_nbox.content = surface_verify(_nbox.content, _nbox.w, _nbox.h);
+					surface_set_target(_nbox.content);
+						DRAW_CLEAR
+						draw_surface(_pbox.content, 0, 0);
+					surface_reset_target();
+				}
+			} else if(_output_index == 1) {
+				_h = _nbox.h - _h;
+			
+				var shf  = _nbox.h - round(_h);
+				_nbox.y += shf;
+				_nbox.h  = round(_h);
+				
+				if(_mirr) _nbox.mirror_v = !_nbox.mirror_v;
+				
+				if(is_surface(_pbox.mask)) {
+					_nbox.mask = surface_verify(_nbox.mask, _nbox.w, _nbox.h);
+					surface_set_target(_nbox.mask);
+						DRAW_CLEAR
+						if(_mirr) 
+							draw_surface_ext(_pbox.mask, 0, _nbox.h + shf, 1, -1, 0, c_white, 1);
+						else 
+							draw_surface(_pbox.mask, -shf, 0);
+					surface_reset_target();
+				}
+				
+				if(is_surface(_pbox.content)) {
+					_nbox.content = surface_verify(_nbox.content, _nbox.w, _nbox.h);
+					surface_set_target(_nbox.content);
+						DRAW_CLEAR
+						if(_mirr) 
+							draw_surface_ext(_pbox.content, 0, _nbox.h + shf, 1, -1, 0, c_white, 1);
+						else 
+							draw_surface(_pbox.content, -shf, 0);
+					surface_reset_target();
+				}
 			}
 		}
 		
-		return _pbox;
+		return _nbox;
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {

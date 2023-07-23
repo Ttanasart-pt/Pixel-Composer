@@ -67,17 +67,15 @@ function Node_PB_Draw_Round_Rectangle(_x, _y, _group = noone) : Node_PB_Draw(_x,
 		var _rela = _data[6];
 		var _cut  = _data[7];
 		
-		if(_output_index == 1)	return _pbox;
-		if(_pbox == noone)		return noone;
+		var _nbox = _pbox.clone();
+		_nbox.content = surface_verify(_nbox.content, _pbox.w, _pbox.h);
 		
-		_outSurf = surface_verify(_outSurf, _pbox.layer_w, _pbox.layer_h);
+		var _x0 = 0;
+		var _y0 = 0;
+		var _x1 = _pbox.w - 1;
+		var _y1 = _pbox.h - 1;
 		
-		var _x0 = _pbox.x;
-		var _y0 = _pbox.y;
-		var _x1 = _pbox.x + _pbox.w - 1;
-		var _y1 = _pbox.y + _pbox.h - 1;
-		
-		surface_set_target(_outSurf);
+		surface_set_target(_nbox.content);
 			DRAW_CLEAR
 			
 			draw_set_color(_fcol);
@@ -112,7 +110,7 @@ function Node_PB_Draw_Round_Rectangle(_x, _y, _group = noone) : Node_PB_Draw(_x,
 					if(_rela) _corn = max(0, round(_corn * min(_pbox.w, _pbox.h)));
 				
 					if(_corn > array_length(corner_pixels)) 
-						draw_roundrect_ext(_pbox.x - 1, _pbox.y - 1, _pbox.x + _pbox.w - 1, _pbox.y + _pbox.h - 1, 6 + _corn, 6 + _corn, false);
+						draw_roundrect_ext(_x0, _y0, _x1, _y1, 6 + _corn, 6 + _corn, false);
 					else {
 						draw_rectangle(_x0, _y0, _x1, _y1, false);
 						BLEND_SUBTRACT
@@ -191,13 +189,11 @@ function Node_PB_Draw_Round_Rectangle(_x, _y, _group = noone) : Node_PB_Draw(_x,
 				}
 			}
 			
-			if(_mask && is_surface(_pbox.mask)) {
-				BLEND_MULTIPLY
-					draw_surface(_pbox.mask, _pbox.x, _pbox.y);
-				BLEND_NORMAL
-			}
+			PB_DRAW_APPLY_MASK
 		surface_reset_target();
 		
-		return _outSurf;
+		PB_DRAW_CREATE_MASK
+		
+		return _nbox;
 	}
 }

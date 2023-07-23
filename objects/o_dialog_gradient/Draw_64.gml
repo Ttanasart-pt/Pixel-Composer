@@ -89,8 +89,8 @@ if !ready exit;
 	var bx = palette_x + palette_w - ui(44);
 	var by = dialog_y + ui(12);
 	
-	if(buttonInstant(THEME.button_hide, bx, by, ui(28), ui(28), mouse_ui, sFOCUS, sHOVER, __txt("Show on Selector"), THEME.display_palette, selector.palette_display, c_white) == 2)
-		selector.palette_display = !selector.palette_display;
+	if(buttonInstant(THEME.button_hide, bx, by, ui(28), ui(28), mouse_ui, sFOCUS, sHOVER, __txt("Show on Selector"), THEME.display_palette, NODE_COLOR_SHOW_PALETTE, c_white) == 2)
+		NODE_COLOR_SHOW_PALETTE = !NODE_COLOR_SHOW_PALETTE;
 	bx -= ui(32);
 #endregion
 

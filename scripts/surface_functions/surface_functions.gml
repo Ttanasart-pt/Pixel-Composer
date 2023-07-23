@@ -286,6 +286,41 @@ function surface_clone(surface, source = noone, format = noone) {
 	return source;
 }
 
+//in-place modification
+function surface_stretch(surf, _w, _h) {
+	if(!is_surface(surf)) return noone;
+	
+	_w = surface_valid_size(_w);
+	_h = surface_valid_size(_h);
+	
+	var _surf = surface_create(_w, _h);
+	surface_set_target(_surf);
+		DRAW_CLEAR
+		draw_surface_stretched(surf, 0, 0, _w, _h);
+	surface_reset_target();
+	
+	surface_free(surf);
+	return _surf;
+}
+
+function surface_mirror(surf, _h, _v) {
+	if(!is_surface(surf)) return noone;
+	var _surf = surface_create_size(surf);
+	
+	surface_set_target(_surf);
+		DRAW_CLEAR
+		
+		var x0 = _h * surface_get_width(_surf);
+		var y0 = _v * surface_get_height(_surf);
+		
+		draw_surface_ext(surf, x0, y0, _h * 2 - 1, _v * 2 - 1, 0, c_white, 1);
+	surface_reset_target();
+	surface_free(surf);
+	
+	return _surf;
+}
+
+//others
 function surface_copy_size(dest, source, format = noone) {
 	if(!is_surface(dest)) return;
 	if(!is_surface(source)) return;
@@ -364,6 +399,9 @@ function surface_array_deserialize(arr, index = -1) {
 	
 function __surface_array_deserialize(arr) {
 	if(!is_array(arr)) {
+		if(!is_struct(arr) || !struct_has(arr, "buffer")) 
+			return noone;
+			
 		var buff = buffer_base64_decode(arr.buffer);
 		    buff = buffer_decompress(buff);
 		return surface_create_from_buffer(arr.width, arr.height, buff);

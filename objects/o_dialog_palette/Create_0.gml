@@ -25,6 +25,7 @@ event_inherited();
 	onApply = noone;
 	selector = new colorSelector(setColor);
 	selector.dropper_close = false;
+	selector.discretize_pal = false;
 	
 	previous_palette = c_black;
 	

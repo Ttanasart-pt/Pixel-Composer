@@ -25,8 +25,17 @@ function Node_PB_Box_Mirror(_x, _y, _group = noone) : Node_PB_Box(_x, _y, _group
 		_pbox = _pbox.clone();
 		_pbox.layer += _layr;
 		
-		if(_hori) _pbox.mirror_h = !_pbox.mirror_h;
-		if(_vert) _pbox.mirror_v = !_pbox.mirror_v;
+		if(_hori) {
+			_pbox.mirror_h = !_pbox.mirror_h;
+			_pbox.mask	  = surface_mirror(_pbox.mask, true, false);
+			_pbox.content = surface_mirror(_pbox.content, true, false);
+		}
+		
+		if(_vert) {
+			_pbox.mirror_v = !_pbox.mirror_v;
+			_pbox.mask	  = surface_mirror(_pbox.mask, false, true);
+			_pbox.content = surface_mirror(_pbox.content, false, true);
+		}
 		
 		return _pbox;
 	}

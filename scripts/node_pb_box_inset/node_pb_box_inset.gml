@@ -29,18 +29,6 @@ function Node_PB_Box_Inset(_x, _y, _group = noone) : Node_PB_Box(_x, _y, _group)
 	input_display_list = [ 0, 1,
 		["Inset",	false], 3, 2, 4, 5, 6, 7, 
 	]
-		
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
-		var _b0 = outputs[| 0].getValue();
-		
-		var _b0x0 = _x    + _b0.x * _s;
-		var _b0y0 = _y    + _b0.y * _s;
-		var _b0x1 = _b0x0 + _b0.w * _s;
-		var _b0y1 = _b0y0 + _b0.h * _s;
-		
-		draw_set_color(c_red);
-		draw_rectangle(_b0x0, _b0y0, _b0x1, _b0y1, true);
-	}
 	
 	static step = function() {
 		var _type = current_data[3];
@@ -64,52 +52,90 @@ function Node_PB_Box_Inset(_x, _y, _group = noone) : Node_PB_Box(_x, _y, _group)
 		
 		if(_pbox == noone) return noone;
 		
-		_pbox = _pbox.clone();
+		var _nbox = _pbox.clone();
 		
 		var x0, y0, w, h;
 		
 		if(_type == 0) {
-			if(_pbox.mirror_h)	x0 = _pbox.x + _inst[0];
-			else				x0 = _pbox.x + _inst[2];
+			if(_nbox.mirror_h)	x0 = _nbox.x + _inst[0];
+			else				x0 = _nbox.x + _inst[2];
 			
-			if(_pbox.mirror_v)	y0 = _pbox.y + _inst[3];
-			else				y0 = _pbox.y + _inst[1];
+			if(_nbox.mirror_v)	y0 = _nbox.y + _inst[3];
+			else				y0 = _nbox.y + _inst[1];
 			
-			w  = _pbox.w - (_inst[0] + _inst[2]);
-			h  = _pbox.h - (_inst[1] + _inst[3]);
+			w  = _nbox.w - (_inst[0] + _inst[2]);
+			h  = _nbox.h - (_inst[1] + _inst[3]);
 		} else if(_type == 1) {
-			w  = round(_pbox.w * _widt);
-			h  = round(_pbox.h * _high);
+			w  = round(_nbox.w * _widt);
+			h  = round(_nbox.h * _high);
 			
-			x0 = _pbox.x + (_pbox.w - w) * (_pbox.mirror_h? 1. - _hali : _hali);
-			y0 = _pbox.y + (_pbox.h - h) * (_pbox.mirror_v? 1. - _vali : _vali);
+			x0 = _nbox.x + (_nbox.w - w) * (_nbox.mirror_h? 1. - _hali : _hali);
+			y0 = _nbox.y + (_nbox.h - h) * (_nbox.mirror_v? 1. - _vali : _vali);
 		}
 		
 		if(_output_index == 0) {
-			_pbox.layer += _layr;
-			_pbox.x = x0;
-			_pbox.y = y0;
-			_pbox.w = w; 
-			_pbox.h = h; 
-		} else if(_output_index == 1) { 
-			_pbox.mask = surface_create_valid(_pbox.w, _pbox.h);
+			_nbox.layer += _layr;
+			_nbox.x = x0;
+			_nbox.y = y0;
+			_nbox.w = w; 
+			_nbox.h = h; 
 			
-			var _x = x0 - _pbox.x;
-			var _y = y0 - _pbox.y;
+			if(is_surface(_pbox.mask)) {
+				if(_type == 0) {
+					_nbox.mask = surface_verify(_nbox.mask, _nbox.w, _nbox.h);
+					surface_set_shader(_nbox.mask, sh_pb_mask_inset);
+						shader_set_dim(, _pbox.mask);
+						shader_set_f("inset", _inst);
+					
+						draw_surface(_pbox.mask, -_inst[2], -_inst[1]);
+					surface_reset_shader();
+				} else if(_type == 1)
+					_nbox.mask = surface_stretch(_pbox.mask, _nbox.w, _nbox.h);
+			}
+			
+			if(is_surface(_pbox.content)) {
+				if(_type == 0) {
+					_nbox.content = surface_verify(_nbox.content, _nbox.w, _nbox.h);
+					surface_set_shader(_nbox.content, sh_pb_mask_inset);
+						shader_set_dim(, _pbox.content);
+						shader_set_f("inset", _inst);
+					
+						draw_surface(_pbox.content, -_inst[2], -_inst[1]);
+					surface_reset_shader();
+				} else if(_type == 1)
+					_nbox.content = surface_stretch(_pbox.content, _nbox.w, _nbox.h);
+			}
+		} else if(_output_index == 1) { 
+			_nbox.mask    = surface_create_valid(_nbox.w, _nbox.h);
+			_nbox.content = surface_create_valid(_nbox.w, _nbox.h);
+			
+			var _x = x0 - _nbox.x;
+			var _y = y0 - _nbox.y;
 			var _w = w;
 			var _h = h;
 			
-			surface_set_target(_pbox.mask);
-				draw_clear(c_white);
+			surface_set_target(_nbox.mask);
+				if(is_surface(_pbox.mask)) {
+					draw_clear_alpha(0, 0);
+					draw_surface(_pbox.mask, 0, 0);
+				} else 
+					draw_clear(c_white);
 				
-				draw_set_color(c_white);
+				var _msk = outputs[| 0].getValue();
+				if(is_array(_msk)) _msk = array_safe_get(_msk, _array_index);
+				
 				BLEND_SUBTRACT
-					draw_rectangle(_x, _y, _x + _w - 1, _y + _h - 1, false);
+					if(is_surface(_msk.mask))
+						draw_surface(_msk.mask, _x, _y);
+					else {
+						draw_set_color(c_white);
+						draw_rectangle(_x, _y, _x + _w - 1, _y + _h - 1, false);
+					}
 				BLEND_NORMAL
 			surface_reset_target();
 		}
 		
-		return _pbox;
+		return _nbox;
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {

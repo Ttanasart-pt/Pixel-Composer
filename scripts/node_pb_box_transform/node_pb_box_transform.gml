@@ -13,7 +13,7 @@ function Node_PB_Box_Transform(_x, _y, _group = noone) : Node_PB_Box(_x, _y, _gr
 		["Translate",	false], 2, 
 	]
 		
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawOverlayPB = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		inputs[| 2].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
 	}
 	

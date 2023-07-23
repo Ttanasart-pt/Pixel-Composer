@@ -195,4 +195,4 @@ _HOVERING_ELEMENT = noone;
 	MOUSE_WRAP = false;
 #endregion
 
-//print($"CACHE called: {global.cache_call} | hit: {global.cache_hit} ({global.cache_hit / global.cache_call}%)");
+//if(global.cache_call) print($"CACHE called: {global.cache_call} | hit: {global.cache_hit} ({global.cache_hit / global.cache_call}%)");

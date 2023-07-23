@@ -246,9 +246,9 @@ function functionStringClean(fx) {
 		}
 		
 		static getVal = function(val, params = {}, getRaw = false) {
-			if(is_struct(val)) return val.eval(params);
-			if(is_real(val))   return val;
-			if(getRaw) return val;
+			if(is_struct(val))	return val.eval(params, getRaw);
+			if(is_real(val))	return val;
+			if(getRaw)			return val;
 			
 			if(is_string(val)) val = string_trim(val);
 			
@@ -325,7 +325,7 @@ function functionStringClean(fx) {
 			return anim;
 		}
 		
-		static eval = function(params = {}) {
+		static eval = function(params = {}, isLeft = false) {
 			if(ds_map_exists(global.FUNCTIONS, symbol)) {
 				if(!is_array(l)) return 0;
 				
@@ -343,7 +343,7 @@ function functionStringClean(fx) {
 				return res;
 			}
 			
-			var v1 = getVal(l, params, symbol == "=" || symbol == "【");
+			var v1 = getVal(l, params, symbol == "=" || symbol == "【" || isLeft);
 			var v2 = getVal(r, params);
 			
 			var res = 0;
@@ -355,10 +355,18 @@ function functionStringClean(fx) {
 				for( var i = 0; i < array_length(res); i++ )
 					res[i] = getVal(v1[i], params);
 			} else if(symbol == "@") {
-				res = is_real(v2)? array_safe_get(v1, v2) : 0;
+				if(isLeft)	res = [ v1, v2 ];
+				else		res = is_real(v2)? array_safe_get(v1, v2) : 0;
 			} else if(symbol == "=") {
-				params[$ v1] = v2;
-				res = v2;
+				if(is_array(v1)) { 
+					var val = params[$ v1[0]];
+					array_safe_set(val, v1[1], v2);
+					params[$ v1[0]] = val;
+					res = val;
+				} else {
+					params[$ v1] = v2;
+					res = v2;
+				}
 			} else if(is_array(v1) && !is_array(v2)) {
 				res = array_create(array_length(v1));
 				for( var i = 0; i < array_length(res); i++ )

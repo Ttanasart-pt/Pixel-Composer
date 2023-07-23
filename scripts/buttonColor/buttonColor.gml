@@ -20,6 +20,13 @@ function buttonColor(_onApply, dialog = noone) : widget() constructor {
 	b_picker = button(onColorPick);
 	b_picker.icon = THEME.color_picker_dropper;
 	
+	b_quick_pick = button(function() {
+		var pick = instance_create(mouse_mx, mouse_my, o_dialog_color_quick_pick);
+		pick.onApply = onApply;
+	});
+	b_quick_pick.activate_on_press = true;
+	b_quick_pick.icon = THEME.color_wheel;
+	
 	function apply(value) {
 		if(!interactable) return;
 		current_value = value;
@@ -52,9 +59,14 @@ function buttonColor(_onApply, dialog = noone) : widget() constructor {
 		h = _h;
 		current_color = toNumber(_color);
 		
+		var _cw = _w;
+		
 		if(interactable) {
-			b_picker.setFocusHover(active, hover);
-			b_picker.draw(_x + _w - ui(32), _y + _h / 2 - ui(16), ui(32), ui(32), _m, THEME.button_hide);
+			var bx = _x + _cw - ui(32);
+			_cw -= ui(32);
+			
+			b_picker.setFocusHover(active && !instance_exists(o_dialog_color_quick_pick), hover);
+			b_picker.draw(bx, _y + _h / 2 - ui(16), ui(32), ui(32), _m, THEME.button_hide);
 			b_picker.icon_blend = c_white;
 			b_picker.icon_index = 0;
 			if(instance_exists(o_dialog_color_selector) && o_dialog_color_selector.selector.dropper_active && o_dialog_color_selector.drop_target != noone) {
@@ -64,9 +76,18 @@ function buttonColor(_onApply, dialog = noone) : widget() constructor {
 				} else
 					b_picker.icon_blend = COLORS._main_icon;
 			}
+			
+			if(_cw > ui(64)) {
+				bx  -= ui(32 + 4)
+				_cw -= ui(32 + 4);
+			
+				b_quick_pick.setFocusHover(active, hover);
+				b_quick_pick.draw(bx, _y + _h / 2 - ui(16), ui(32), ui(32), _m, THEME.button_hide);
+			}
+			
+			_cw -= ui(8);
 		}
 		
-		var _cw = _w - ui(40);
 		var hoverRect = point_in_rectangle(_m[0], _m[1], _x, _y, _x + _cw, _y + _h);
 		
 		var click = false;
@@ -86,8 +107,6 @@ function buttonColor(_onApply, dialog = noone) : widget() constructor {
 		}
 		
 		draw_sprite_stretched_ext(THEME.button_color_overlay, 0, _x + ui(4), _y + ui(4), _cw - ui(8), _h - ui(8), current_color, 1);
-		//draw_set_color(c_white);
-		//draw_rectangle( _x + ui(4), _y + ui(4),  _x + _cw - ui(4), _y + _h - ui(4), 1);
 		
 		if(WIDGET_CURRENT == self)
 			draw_sprite_stretched_ext(THEME.widget_selecting, 0, _x - ui(3), _y - ui(3), _w + ui(6), _h + ui(6), COLORS._main_accent, 1);

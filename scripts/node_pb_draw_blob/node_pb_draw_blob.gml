@@ -12,7 +12,7 @@ function Node_PB_Draw_Blob(_x, _y, _group = noone) : Node_PB_Draw(_x, _y, _group
 		["Shape",	false], 3, 4, 
 	];
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawOverlayPB = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var _pbox = inputs[| 0].getValue();
 		if(_pbox == noone) return;
 		
@@ -41,21 +41,19 @@ function Node_PB_Draw_Blob(_x, _y, _group = noone) : Node_PB_Draw(_x, _y, _group
 		var _btop = _data[3];
 		var _bbot = _data[4];
 		
-		if(_output_index == 1)	return _pbox;
-		if(_pbox == noone)		return noone;
-		
 		_btop *= _pbox.w / 2;
 		_bbot *= _pbox.w / 2;
 		
-		_outSurf = surface_verify(_outSurf, _pbox.layer_w, _pbox.layer_h);
+		var _nbox = _pbox.clone();
+		_nbox.content = surface_verify(_nbox.content, _pbox.w, _pbox.h);
 		
-		surface_set_target(_outSurf);
+		surface_set_target(_nbox.content);
 			DRAW_CLEAR
 			
 			draw_set_color(_fcol);
 			draw_primitive_begin(pr_trianglelist);
 			
-			var xc = _pbox.x + _pbox.w / 2;
+			var xc = _pbox.w / 2;
 			
 			var _samp = 64;
 			var _ox, _oy, _nx, _ny;
@@ -67,14 +65,14 @@ function Node_PB_Draw_Blob(_x, _y, _group = noone) : Node_PB_Draw(_x, _y, _group
 				_ny = 3 * t * t - 2 * t * t * t;
 				if(_pbox.mirror_v) 
 					_ny = 1 - _ny;
-				_ny = _pbox.y + _ny * _pbox.h;
+				_ny = _ny * _pbox.h;
 				
 				if(i) {
-					draw_vertex(xc, _pbox.y);
+					draw_vertex(xc, 0);
 					draw_vertex(xc + _ox, _oy);
 					draw_vertex(xc + _nx, _ny);
 					
-					draw_vertex(xc, _pbox.y);
+					draw_vertex(xc, 0);
 					draw_vertex(xc - _ox, _oy);
 					draw_vertex(xc - _nx, _ny);
 				}
@@ -85,13 +83,11 @@ function Node_PB_Draw_Blob(_x, _y, _group = noone) : Node_PB_Draw(_x, _y, _group
 			
 			draw_primitive_end();
 			
-			if(_mask && is_surface(_pbox.mask)) {
-				BLEND_MULTIPLY
-					draw_surface(_pbox.mask, _pbox.x, _pbox.y);
-				BLEND_NORMAL
-			}
+			PB_DRAW_APPLY_MASK
 		surface_reset_target();
-		
-		return _outSurf;
+
+		PB_DRAW_CREATE_MASK
+				
+		return _nbox;
 	}
 }

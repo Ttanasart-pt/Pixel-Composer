@@ -44,8 +44,8 @@ function draw_line_elbow_diag_color(x0, y0, x1, y1, cx = noone, cy = noone, _s =
 			var bot = abs(y1 - cy) < rrx / 2;
 			
 			if(top) {			
-				draw_line_round_color(x0, y0, xx0, y0, thick, c1, c1);
-				draw_line_round_color(xx1 + cS, y1, x1, y1, thick, c2, c2);
+				draw_line_width_color(x0, y0, xx0, y0, thick, c1, c1);
+				draw_line_width_color(xx1 + cS, y1, x1, y1, thick, c2, c2);
 				
 				var cor = (cy - y0) * 2;
 				var x1s = xx1 - cor * iy;
@@ -56,17 +56,17 @@ function draw_line_elbow_diag_color(x0, y0, x1, y1, cx = noone, cy = noone, _s =
 				var _xcr = xcr / sqrt(2);
 				var _ycr = ycr / sqrt(2);
 				
-				draw_line_round_color(xx0, y0, x1s - xcr, y0, thick, c1, cm);
-				draw_line_round_color(xx1, y1s + ycr * iy, xx1, y1 - cS * iy, thick, cm, c2);
+				draw_line_width_color(xx0, y0, x1s - xcr, y0, thick, c1, cm);
+				draw_line_width_color(xx1, y1s + ycr * iy, xx1, y1 - cS * iy, thick, cm, c2);
 				
-				draw_line_round_color(x1s + _xcr, y0 + _xcr * iy, xx1 - _ycr, y1s - _ycr * iy, thick, cm, cm);
+				draw_line_width_color(x1s + _xcr, y0 + _xcr * iy, xx1 - _ycr, y1s - _ycr * iy, thick, cm, cm);
 				
 				if(cS)  draw_corner(xx1, y1 - cS * iy, xx1, y1, xx1 + cS, y1, thick, c2, sample);
 				if(xcr) draw_corner(x1s - xcr, y0, x1s, y0, x1s + _xcr, y0 + _xcr * iy, thick, cm, sample);
 				if(ycr) draw_corner(xx1 - _ycr, y1s - _ycr * iy, xx1, y1s, xx1, y1s + ycr * iy, thick, cm, sample);
 			} else if(bot) {
-				draw_line_round_color(x0, y0, xx0 - cS, y0, thick, c1, c1);
-				draw_line_round_color(xx1, y1, x1, y1, thick, c2, c2);
+				draw_line_width_color(x0, y0, xx0 - cS, y0, thick, c1, c1);
+				draw_line_width_color(xx1, y1, x1, y1, thick, c2, c2);
 				
 				var cor = (y1 - cy) * 2;
 				var x1s = xx0 + cor * iy;
@@ -77,17 +77,17 @@ function draw_line_elbow_diag_color(x0, y0, x1, y1, cx = noone, cy = noone, _s =
 				var _xcr = xcr / sqrt(2);
 				var _ycr = ycr / sqrt(2);
 				
-				draw_line_round_color(xx0, y0 + cS * iy, xx0, y1s - ycr * iy, thick, c1, cm);
-				draw_line_round_color(x1s + xcr, y1, xx1, y1, thick, cm, c2);
+				draw_line_width_color(xx0, y0 + cS * iy, xx0, y1s - ycr * iy, thick, c1, cm);
+				draw_line_width_color(x1s + xcr, y1, xx1, y1, thick, cm, c2);
 				
-				draw_line_round_color(xx0 + _ycr, y1s + _ycr * iy, x1s - _xcr, y1 - _xcr * iy, thick, cm, cm);
+				draw_line_width_color(xx0 + _ycr, y1s + _ycr * iy, x1s - _xcr, y1 - _xcr * iy, thick, cm, cm);
 				
 				if(cS)  draw_corner(xx0 - cS, y0, xx0, y0, xx0, y0 + cS * iy, thick, c1, sample);
 				if(xcr) draw_corner(x1s - _xcr, y1 - _xcr * iy, x1s, y1, x1s + xcr, y1, thick, cm, sample);
 				if(ycr) draw_corner(xx0, y1s - ycr * iy, xx0, y1s, xx0 + _ycr, y1s + _ycr * iy, thick, cm, sample);
 			} else {
-				draw_line_round_color(x0, y0, xx0 - cS0, y0, thick, c1, c1);
-				draw_line_round_color(xx1 + cS1, y1, x1, y1, thick, c2, c2);
+				draw_line_width_color(x0, y0, xx0 - cS0, y0, thick, c1, c1);
+				draw_line_width_color(xx1 + cS1, y1, x1, y1, thick, c2, c2);
 			
 				var cor = rrx / 2;
 				var yC0 = cy - cor * iy0;
@@ -99,10 +99,10 @@ function draw_line_elbow_diag_color(x0, y0, x1, y1, cx = noone, cy = noone, _s =
 				var _corY0 = corY0 / sqrt(2);
 				var _corY1 = corY1 / sqrt(2);
 				
-				draw_line_round_color(xx0, y0 + cS0 * iy, xx0, yC0 - corY0 * iy, thick, c1, cm);
-				draw_line_round_color(xx1, yC1 + corY1 * iy, xx1, y1 - cS1 * iy, thick, cm, c2);
+				draw_line_width_color(xx0, y0 + cS0 * iy, xx0, yC0 - corY0 * iy, thick, c1, cm);
+				draw_line_width_color(xx1, yC1 + corY1 * iy, xx1, y1 - cS1 * iy, thick, cm, c2);
 				
-				draw_line_round_color(xx0 + _corY0, yC0 + _corY0 * iy, xx1 - _corY1, yC1 - _corY1 * iy, thick, cm, cm);
+				draw_line_width_color(xx0 + _corY0, yC0 + _corY0 * iy, xx1 - _corY1, yC1 - _corY1 * iy, thick, cm, cm);
 				
 				if(cS0) draw_corner(xx0 - cS0, y0, xx0, y0, xx0, y0 + cS0 * iy0, thick, c1, sample);
 				if(cS1) draw_corner(xx1, y1 - cS1 * iy1, xx1, y1, xx1 + cS1, y1, thick, c2, sample);
@@ -132,8 +132,8 @@ function draw_line_elbow_diag_color(x0, y0, x1, y1, cx = noone, cy = noone, _s =
 			var _crn0 = crn0 / sqrt(2);
 			var _crn1 = crn1 / sqrt(2);
 			
-			draw_line_round_color(x0, y0, xx0 - cR0, y0, thick, c1, c1);
-			draw_line_round_color(xx1 + cR1, y1, x1, y1, thick, c2, c2);
+			draw_line_width_color(x0, y0, xx0 - cR0, y0, thick, c1, c1);
+			draw_line_width_color(xx1 + cR1, y1, x1, y1, thick, c2, c2);
 		
 			if(cS) draw_corner(xx0 - cR0, y0, xx0, y0, xx0, y0 + cR0 * iy0, thick, c1);
 			if(cS) draw_corner(xx1, y1 - cR1 * iy1, xx1, y1, xx1 + cR1, y1, thick, c2);
@@ -142,21 +142,21 @@ function draw_line_elbow_diag_color(x0, y0, x1, y1, cx = noone, cy = noone, _s =
 				var cR = min(cS, abs(xx1 - xx0) / 2);
 				var _cR = cR / sqrt(2);
 				
-				draw_line_round_color(       crX0,   y0 + cR0 * iy0,       crX0, crY0 -  cR * iy0, thick, c1, cm);
-				draw_line_round_color(       crX3,   y1 - cR1 * iy1,       crX3, crY3 +  cR * iy1, thick, c2, cm);
-				draw_line_round_color( crX0 - _cR, crY0 + _cR * iy0, crX3 + _cR, crY3 - _cR * iy1, thick, cm, cm);
+				draw_line_width_color(       crX0,   y0 + cR0 * iy0,       crX0, crY0 -  cR * iy0, thick, c1, cm);
+				draw_line_width_color(       crX3,   y1 - cR1 * iy1,       crX3, crY3 +  cR * iy1, thick, c2, cm);
+				draw_line_width_color( crX0 - _cR, crY0 + _cR * iy0, crX3 + _cR, crY3 - _cR * iy1, thick, cm, cm);
 				
 				if(cR)  {
 					draw_corner(      crX0, crY0 -  cR * iy0, crX0, crY0, crX0 - _cR, crY0 + _cR * iy0, thick, cm, sample);
 					draw_corner(crX3 + _cR, crY3 - _cR * iy1, crX3, crY3,       crX3, crY3 +  cR * iy1, thick, cm, sample);
 				}
 			} else {
-				draw_line_round_color(            crX0,    y0 + cR0 * iy0,             crX0, crY0 - crn0 * iy0, thick, c1, cm);
-				draw_line_round_color(crX1 - crn0 * ix,              crY1, crX2 + crn1 * ix,              crY2, thick, cm, cm);
-				draw_line_round_color(            crX3, crY3 + crn1 * iy1,             crX3,    y1 - cR1 * iy1, thick, cm, c2);
+				draw_line_width_color(            crX0,    y0 + cR0 * iy0,             crX0, crY0 - crn0 * iy0, thick, c1, cm);
+				draw_line_width_color(crX1 - crn0 * ix,              crY1, crX2 + crn1 * ix,              crY2, thick, cm, cm);
+				draw_line_width_color(            crX3, crY3 + crn1 * iy1,             crX3,    y1 - cR1 * iy1, thick, cm, c2);
 			
-				draw_line_round_color(crX0 - _crn0 * ix, crY0 + _crn0 * iy0, crX1 + _crn0 * ix, crY1 - _crn0 * iy0, thick, cm, cm);
-				draw_line_round_color(crX2 - _crn1 * ix, crY2 + _crn1 * iy1, crX3 + _crn1 * ix, crY3 - _crn1 * iy1, thick, cm, cm);
+				draw_line_width_color(crX0 - _crn0 * ix, crY0 + _crn0 * iy0, crX1 + _crn0 * ix, crY1 - _crn0 * iy0, thick, cm, cm);
+				draw_line_width_color(crX2 - _crn1 * ix, crY2 + _crn1 * iy1, crX3 + _crn1 * ix, crY3 - _crn1 * iy1, thick, cm, cm);
 				
 				if(crn0) {
 					draw_corner(             crX0,  crY0 - crn0 * iy0, crX0, crY0, crX0 - _crn0 * ix, crY0 + _crn0 * iy0, thick, cm, sample);
@@ -185,9 +185,9 @@ function draw_line_elbow_diag_color(x0, y0, x1, y1, cx = noone, cy = noone, _s =
 			var corn = min(corner, abs(x0 - _xc0), abs(x1 - _xc1), abs(y1 - y0) / 2);
 			var cor2 = corn / sqrt(2);
 			
-			draw_line_round_color(  x0,   y0, _xc0 - corn,   y0, thick, c1, cm);
-			draw_line_round_color(_xc0 + cor2,   y0 + cor2 * iy, _xc1 - cor2,   y1 - cor2 * iy, thick, cm, cm);
-			draw_line_round_color(_xc1 + corn,   y1,   x1,   y1, thick, cm, c2);
+			draw_line_width_color(  x0,   y0, _xc0 - corn,   y0, thick, c1, cm);
+			draw_line_width_color(_xc0 + cor2,   y0 + cor2 * iy, _xc1 - cor2,   y1 - cor2 * iy, thick, cm, cm);
+			draw_line_width_color(_xc1 + corn,   y1,   x1,   y1, thick, cm, c2);
 			
 			if(corn) {
 				draw_corner(_xc0 - corn, y0, _xc0, y0, _xc0 + cor2, y0 + cor2 * iy, thick, cm, sample);
@@ -214,9 +214,9 @@ function draw_line_elbow_diag_corner(x0, y0, x1, y1, _s = 1, thick = 1, col1 = c
 	corner   = min(corner, abs(x0 - x1 - diag), abs(y0 - y1 - diag));
 	var cor2 = corner / sqrt(2);
 	
-	draw_line_round_color(                     x0,                        y0, x1 - (diag + corner) * sx,                      y0, thick, col1, colc);
-	draw_line_round_color(x1 - (diag - cor2) * sx,            y0 + cor2 * sy,            x1 - cor2 * sx, y0 + (diag - cor2) * sy, thick, colc, colc);
-	draw_line_round_color(                     x1, y0 + (diag + corner) * sy,                        x1,                      y1, thick, colc, col2);
+	draw_line_width_color(                     x0,                        y0, x1 - (diag + corner) * sx,                      y0, thick, col1, colc);
+	draw_line_width_color(x1 - (diag - cor2) * sx,            y0 + cor2 * sy,            x1 - cor2 * sx, y0 + (diag - cor2) * sy, thick, colc, colc);
+	draw_line_width_color(                     x1, y0 + (diag + corner) * sy,                        x1,                      y1, thick, colc, col2);
 	
 	draw_corner(x1 - (diag + corner) * sx, y0, x1 - diag * sx, y0, x1 - (diag - cor2) * sx, y0 + cor2 * sy, thick, colc, sample);
 	draw_corner(x1 - cor2 * sx, y0 + (diag - cor2) * sy, x1, y0 + diag * sy, x1, y0 + (diag + corner) * sy, thick, colc, sample);

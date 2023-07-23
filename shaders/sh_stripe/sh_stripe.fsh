@@ -91,7 +91,7 @@ vec4 gradientEval(in float prog) {
 }
 
 void main() {
-	vec2 pos = v_vTexcoord - position;
+	vec2  pos = v_vTexcoord - position;
 	float ratio = dimension.x / dimension.y;
 	float prog = pos.x * ratio * cos(angle) - pos.y * sin(angle);
     float _a   = 1. / amount;

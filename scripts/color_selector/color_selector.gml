@@ -17,8 +17,8 @@ function colorSelector(onApply = noone) constructor {
 	
 	disp_mode = 0;
 	
-	palette_display = false;
 	palette = [];
+	discretize_pal = true;
 	
 	color_surface = surface_create_valid(ui(256), ui(256));
 	
@@ -142,12 +142,12 @@ function colorSelector(onApply = noone) constructor {
 			if(disp_mode == 0) {
 				shader_set(sh_color_picker_hue);
 				shader_set_f("hue", hue / 256);
-				shader_set_i("usePalette", palette_display);
+				shader_set_i("usePalette", NODE_COLOR_SHOW_PALETTE && discretize_pal);
 				shader_set_palette(palette);
 			} else if(disp_mode == 1) {
 				shader_set(sh_color_picker_value);
 				shader_set_f("value", val / 256);
-				shader_set_i("usePalette", palette_display);
+				shader_set_i("usePalette", NODE_COLOR_SHOW_PALETTE && discretize_pal);
 				shader_set_palette(palette);
 			}
 			
@@ -165,7 +165,7 @@ function colorSelector(onApply = noone) constructor {
 			
 			if(disp_mode == 0) {
 				shader_set(sh_color_picker_side_hue);
-					shader_set_i("usePalette", palette_display);
+					shader_set_i("usePalette", NODE_COLOR_SHOW_PALETTE && discretize_pal);
 					shader_set_palette(palette);
 					shader_set_f("sat", sat / 256);
 					shader_set_f("value", val / 256);
@@ -174,7 +174,7 @@ function colorSelector(onApply = noone) constructor {
 				shader_reset();
 			} else if(disp_mode == 1) {
 				shader_set(sh_color_picker_side_value);
-					shader_set_i("usePalette", palette_display);
+					shader_set_i("usePalette", NODE_COLOR_SHOW_PALETTE && discretize_pal);
 					shader_set_palette(palette);
 					shader_set_f("hue", hue / 256);
 					shader_set_f("sat", sat / 256);
@@ -185,7 +185,7 @@ function colorSelector(onApply = noone) constructor {
 			
 			var _sy = disp_mode == 0? hue_y + ui(hue) : hue_y + ui(256 - val);
 			
-			if(palette_display) {
+			if(NODE_COLOR_SHOW_PALETTE) {
 				draw_sprite_stretched_ext(s_ui_base_white, 0, hue_x - ui(3), _sy - ui(6), ui(24), ui(10), current_color, 1);
 				
 				if(disp_mode == 0)
@@ -218,9 +218,9 @@ function colorSelector(onApply = noone) constructor {
 				
 				setHSV();
 				
-				if(palette_display) {
+				if(NODE_COLOR_SHOW_PALETTE) {
 					current_color = disp_mode == 0? surface_getpixel(color_surface, sat, 256 - val) : 
-													surface_getpixel(color_surface, hue, sat);
+													surface_getpixel(color_surface, hue, 256 - sat);
 					if(onApply != noone) onApply(current_color);
 				}
 				
@@ -236,12 +236,12 @@ function colorSelector(onApply = noone) constructor {
 					hue = clamp((mouse_mx - col_x) / UI_SCALE, 0, 256);
 					sat = 256 - clamp((mouse_my - col_y) / UI_SCALE, 0, 256);	
 				}
-		
+				
 				setHSV();
 				
-				if(palette_display) {
+				if(NODE_COLOR_SHOW_PALETTE) {
 					current_color = disp_mode == 0? surface_getpixel(color_surface, sat, 256 - val) : 
-													surface_getpixel(color_surface, hue, sat);
+													surface_getpixel(color_surface, hue, 256 - sat);
 					if(onApply != noone) onApply(current_color);
 				}
 				

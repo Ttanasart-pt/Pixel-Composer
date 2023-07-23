@@ -3,8 +3,8 @@
   "resourceVersion": "1.0",
   "name": "s_node_pb_box_split",
   "bbox_bottom": 61,
-  "bbox_left": 3,
-  "bbox_right": 60,
+  "bbox_left": 2,
+  "bbox_right": 61,
   "bbox_top": 2,
   "bboxMode": 0,
   "collisionKind": 1,
@@ -13,14 +13,14 @@
   "edgeFiltering": false,
   "For3D": false,
   "frames": [
-    {"resourceType":"GMSpriteFrame","resourceVersion":"1.1","name":"d166c3d8-c027-4f6d-904d-84663b63d995",},
+    {"resourceType":"GMSpriteFrame","resourceVersion":"1.1","name":"75e88de5-cd3b-4325-8c97-168100ce3db6",},
   ],
   "gridX": 0,
   "gridY": 0,
   "height": 64,
   "HTile": false,
   "layers": [
-    {"resourceType":"GMImageLayer","resourceVersion":"1.0","name":"c8057d8c-39ca-4ba5-ad00-19192aaa0c20","blendMode":0,"displayName":"default","isLocked":false,"opacity":100.0,"visible":true,},
+    {"resourceType":"GMImageLayer","resourceVersion":"1.0","name":"b1d6fefb-24bb-41ea-be0d-ceae7841b822","blendMode":0,"displayName":"default","isLocked":false,"opacity":100.0,"visible":true,},
   ],
   "nineSlice": null,
   "origin": 4,
@@ -54,7 +54,7 @@
     "timeUnits": 1,
     "tracks": [
       {"resourceType":"GMSpriteFramesTrack","resourceVersion":"1.0","name":"frames","builtinName":0,"events":[],"inheritsTrackColour":true,"interpolation":1,"isCreationTrack":false,"keyframes":{"resourceType":"KeyframeStore<SpriteFrameKeyframe>","resourceVersion":"1.0","Keyframes":[
-            {"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"1.0","Channels":{"0":{"resourceType":"SpriteFrameKeyframe","resourceVersion":"1.0","Id":{"name":"d166c3d8-c027-4f6d-904d-84663b63d995","path":"sprites/s_node_pb_box_split/s_node_pb_box_split.yy",},},},"Disabled":false,"id":"0aeb5b23-ed43-4cd4-b02e-1e84bfa26773","IsCreationKey":false,"Key":0.0,"Length":1.0,"Stretch":false,},
+            {"resourceType":"Keyframe<SpriteFrameKeyframe>","resourceVersion":"1.0","Channels":{"0":{"resourceType":"SpriteFrameKeyframe","resourceVersion":"1.0","Id":{"name":"75e88de5-cd3b-4325-8c97-168100ce3db6","path":"sprites/s_node_pb_box_split/s_node_pb_box_split.yy",},},},"Disabled":false,"id":"4df00da8-9ff8-48d3-b122-862d250e849e","IsCreationKey":false,"Key":0.0,"Length":1.0,"Stretch":false,},
           ],},"modifiers":[],"spriteId":null,"trackColour":0,"tracks":[],"traits":0,},
     ],
     "visibleRange": null,

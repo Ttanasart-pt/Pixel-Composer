@@ -83,36 +83,30 @@ function Node_Pixel_Builder(_x, _y, _group = noone) : Node_Collection(_x, _y, _g
 		
 		for( var i = 0; i < ds_list_size(nodes); i++ ) {
 			var _n = nodes[| i];
-			if(!_n.isTerminal()) continue;
 			
-			var _surf, _pbox = noone;
-			
-			_surf = _n.outputs[| 0].getValue();
-			
-			if(is_instanceof(_n, Node_PB_Draw))
-				_pbox = _n.outputs[| 1].getValue();
-			else if(is_instanceof(_n, Node_PB_Fx))
-				_pbox = _n.getpBox();
-			else 
-				continue;
-			
-			if(_pbox == noone)
-				continue;
-			
-			if(!is_array(_surf)) 
-				_surf = [ _surf ];
-			if(!is_array(_pbox)) 
-				_pbox = [ _pbox ];
-			
-			for( var j = 0; j < array_length(_surf); j++ ) {
-				var _box = array_safe_get(_pbox, j)
-				if(!is_instanceof(_box, __pbBox)) continue;
+			for( var j = 0; j < ds_list_size(_n.outputs); j++ ) {
+				var _out = _n.outputs[| j];
 				
-				var _layer = _box.layer;
-				if(!ds_map_exists(_surfs, _layer))
-					_surfs[? _layer] = [];
-				array_push(_surfs[? _layer], _surf[j]);
-			} 
+				if(_out.type != VALUE_TYPE.pbBox) continue;
+				var _to  = _out.getJunctionTo();
+				if(array_length(_to)) continue;
+				
+				var _pbox = _n.outputs[| j].getValue();
+				
+				if(!is_array(_pbox)) 
+					_pbox = [ _pbox ];
+			
+				for( var k = 0; k < array_length(_pbox); k++ ) {
+					var _box = _pbox[k];
+					if(!is_instanceof(_box, __pbBox)) continue;
+					if(!is_surface(_box.content)) continue;
+					
+					var _layer = _box.layer;
+					if(!ds_map_exists(_surfs, _layer))
+						_surfs[? _layer] = [];
+					array_push(_surfs[? _layer], _box);
+				} 
+			}
 		}
 		
 		var _outSurf = outputs[| 0].getValue();
@@ -130,13 +124,14 @@ function Node_Pixel_Builder(_x, _y, _group = noone) : Node_Collection(_x, _y, _g
 		
 		_outSurf = surface_create(_dim[0], _dim[1]);
 		surface_set_target(_outSurf);
+		DRAW_CLEAR
 			
 		for( var k = 0; k < array_length(_layers); k++ ) {
 			var _s = _surfs[? _layers[k]];
 				
 			for( var j = 0; j < array_length(_s); j++ ) {
-				var _drawSurf = _s[j];
-				draw_surface_safe(_drawSurf, 0, 0);
+				var _box = _s[j];
+				draw_surface_safe(_box.content, _box.x, _box.y);
 			}
 		}
 			

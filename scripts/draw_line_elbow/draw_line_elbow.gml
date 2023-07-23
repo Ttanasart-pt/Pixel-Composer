@@ -29,9 +29,9 @@ function draw_line_elbow_color(x0, y0, x1, y1, cx = noone, cy = noone, _s = 1, t
 			draw_set_color(col1);	draw_line_width(x0, y0, xx0 - corns, y0, thick);
 			draw_set_color(col2);	draw_line_width(xx1 + corns, y1, x1, y1, thick);
 		
-			draw_line_round_color(xx0, y0 + corns * iy0, xx0, cy - corner * iy0, thick, col1,   cm);
-			draw_line_round_color(xx0 - corner * sign(xx0 - xx1), cy, xx1 + corner * sign(xx0 - xx1), cy, thick,   cm,   cm);
-			draw_line_round_color(xx1, cy + corner * iy1, xx1, y1 - corns * iy1, thick,   cm, col2);
+			draw_line_width_color(xx0, y0 + corns * iy0, xx0, cy - corner * iy0, thick, col1,   cm);
+			draw_line_width_color(xx0 - corner * sign(xx0 - xx1), cy, xx1 + corner * sign(xx0 - xx1), cy, thick,   cm,   cm);
+			draw_line_width_color(xx1, cy + corner * iy1, xx1, y1 - corns * iy1, thick,   cm, col2);
 			
 			if(corns) {
 				draw_corner(xx0 - corns, y0, xx0, y0, xx0, y0 + corns * iy0, thick, col1, sample);
@@ -54,9 +54,9 @@ function draw_line_elbow_color(x0, y0, x1, y1, cx = noone, cy = noone, _s = 1, t
 		if(type == LINE_STYLE.solid) {
 			corner = min(corner, abs(y1 - y0) / 2, abs(x0 - cx), abs(x1 - cx), abs(x1 - x0) / 2);
 			
-			draw_line_round_color(x0, y0, cx - corner * sign(cx - x0), y0, thick, col1,   cm);
-			draw_line_round_color(cx, y0 + corner * iy, cx, y1 - corner * iy, thick,   cm,   cm);
-			draw_line_round_color(cx + corner * sign(x1 - cx), y1, x1, y1, thick,   cm, col2);
+			draw_line_width_color(x0, y0, cx - corner * sign(cx - x0), y0, thick, col1,   cm);
+			draw_line_width_color(cx, y0 + corner * iy, cx, y1 - corner * iy, thick,   cm,   cm);
+			draw_line_width_color(cx + corner * sign(x1 - cx), y1, x1, y1, thick,   cm, col2);
 			
 			if(corner) {
 				draw_corner(cx - corner * sign(cx - x0), y0, cx, y0, cx, y0 + corner * iy, thick, cm, sample);

@@ -51,6 +51,8 @@ function draw_line_curve_color(x0, y0, x1, y1, xc = noone, yc = noone, _s = 1, t
 	var ox, oy, nx, ny, t, it, oc, nc;
 	var dash_distance = 2;
 	
+	var line = new LineDrawer(thick);
+	
 	for( var i = 0; i <= sample; i++ )  {
 		t = i / sample;
 		it = 1 - t;
@@ -72,7 +74,7 @@ function draw_line_curve_color(x0, y0, x1, y1, xc = noone, yc = noone, _s = 1, t
 		if(i) {
 			switch(type) {
 				case LINE_STYLE.solid :
-					draw_line_round_color(ox, oy, nx, ny, thick, oc, nc);
+					draw_line_round_color(ox, oy, nx, ny, thick, oc, nc, i == 1, i == sample);
 					break;
 				case LINE_STYLE.dashed :
 					if(floor(i / dash_distance) % 2)
@@ -85,6 +87,8 @@ function draw_line_curve_color(x0, y0, x1, y1, xc = noone, yc = noone, _s = 1, t
 		oy = ny;
 		oc = nc;
 	}
+	
+	line.finish();
 }
 
 function draw_line_curve_corner(x0, y0, x1, y1, _s = 1, thick = 1, col1 = c_white, col2 = c_white) {
@@ -115,8 +119,7 @@ function draw_line_curve_corner(x0, y0, x1, y1, _s = 1, thick = 1, col1 = c_whit
 			
 		nc = merge_color(col1, col2, t);
 		
-		if(i)
-			draw_line_round_color(ox, oy, nx, ny, thick, oc, nc);
+		if(i) draw_line_round_color(ox, oy, nx, ny, thick, oc, nc, i == 1, i == sample);
 		
 		ox = nx;
 		oy = ny;

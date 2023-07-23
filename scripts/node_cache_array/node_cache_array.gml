@@ -28,7 +28,9 @@ function Node_Cache_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	static step = function() { 
 		if(cache_loading) {
-			cached_output[cache_loading_progress] = __surface_array_deserialize(cache_content[cache_loading_progress]);
+			var _content = cache_content[cache_loading_progress];
+			
+			cached_output[cache_loading_progress] = __surface_array_deserialize(_content);
 			cache_result[cache_loading_progress]  = true;
 			cache_loading_progress++;
 			

@@ -25,7 +25,9 @@ function Node_PB_Fx_Stack(_x, _y, _group = noone) : Node_PB_Fx(_x, _y, _group) c
 	}
 	
 	static process_data = function(_outSurf, _data, _output_index, _array_index) {
-		var _surf = _data[0];
+		var _pbox = _data[0];
+		var _nbox = _pbox.clone();
+		
 		var _amou = _data[1];
 		var _dirr = _data[2];
 		var _colr = _data[3];
@@ -33,7 +35,7 @@ function Node_PB_Fx_Stack(_x, _y, _group = noone) : Node_PB_Fx(_x, _y, _group) c
 		var _hclr = _data[5];
 		var _invr = _data[6];
 		
-		surface_set_target(_outSurf);
+		surface_set_target(_nbox.content);
 			DRAW_CLEAR
 			var px = 0;
 			var py = 0;
@@ -52,7 +54,7 @@ function Node_PB_Fx_Stack(_x, _y, _group = noone) : Node_PB_Fx(_x, _y, _group) c
 				var cc = _colr;
 				if(_high && i == _amou - 1)
 					cc = _hclr;
-				draw_surface_ext_safe(_surf, px, py,,,, cc);
+				draw_surface_ext_safe(_pbox.content, px, py,,,, cc);
 				
 				switch(_dirr) {
 					case 0 : px++; break;
@@ -63,9 +65,9 @@ function Node_PB_Fx_Stack(_x, _y, _group = noone) : Node_PB_Fx(_x, _y, _group) c
 			}
 			shader_reset();
 			
-			draw_surface_safe(_surf, px, py);
+			draw_surface_safe(_pbox.content, px, py);
 		surface_reset_target();
 		
-		return _outSurf;
+		return _nbox;
 	}
 }

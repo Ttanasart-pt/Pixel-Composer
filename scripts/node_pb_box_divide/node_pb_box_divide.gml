@@ -24,24 +24,6 @@ function Node_PB_Box_Divide(_x, _y, _group = noone) : Node_PB_Box(_x, _y, _group
 		["Divide",	false], 4, 2, 3, 6, 5, 
 	]
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
-		var _bs = outputs[| 0].getValue();
-		if(_bs == noone)   return;
-		if(!is_array(_bs)) return;
-		
-		for( var i = 0; i < array_length(_bs); i++ ) {
-			var _b   = _bs[i];
-			if(_b == noone) continue;
-			var _bx0 = _x   + _b.x * _s;
-			var _by0 = _y   + _b.y * _s;
-			var _bx1 = _bx0 + _b.w * _s;
-			var _by1 = _by0 + _b.h * _s;
-		
-			draw_set_color(c_red);
-			draw_rectangle(_bx0, _by0, _bx1, _by1, true);
-		}
-	}
-	
 	static process_data = function(_outSurf, _data, _output_index, _array_index) {
 		var _layr = _data[0];
 		var _pbox = _data[1];
@@ -84,12 +66,20 @@ function Node_PB_Box_Divide(_x, _y, _group = noone) : Node_PB_Box(_x, _y, _group
 				_res[i].x = _sx + i * (_ww + _spac);
 				_res[i].w = _ww;
 				
-				if(_mirr && i % 2) _res[i].mirror_h = !_res[i].mirror_h;
+				_res[i].mask	= surface_stretch(_res[i].mask, _res[i].w, _res[i].h);
+				_res[i].content = surface_stretch(_res[i].content, _res[i].w, _res[i].h);
+				
+				if(_mirr && i % 2) {
+					_res[i].mirror_h = !_res[i].mirror_h;
+					_res[i].mask	= surface_mirror(_res[i].mask, true, false);
+					_res[i].content = surface_mirror(_res[i].content, true, false);
+				}
 			}
 			
 			if(_output_index == 1)
 			for( var i = 0; i < _spAmo; i++ ) {
 				_res[i] = _pbox.clone();
+				_res[i].mask   = noone;
 				_res[i].layer += _layr;
 				
 				var _sx = 0;
@@ -114,12 +104,20 @@ function Node_PB_Box_Divide(_x, _y, _group = noone) : Node_PB_Box(_x, _y, _group
 				_res[i].y = _sy + i * (_hh + _spac);
 				_res[i].h = _hh;
 				
-				if(_mirr && i % 2) _res[i].mirror_v = !_res[i].mirror_v;
+				_res[i].mask	= surface_stretch(_res[i].mask, _res[i].w, _res[i].h);
+				_res[i].content = surface_stretch(_res[i].content, _res[i].w, _res[i].h);
+				
+				if(_mirr && i % 2) {
+					_res[i].mirror_v = !_res[i].mirror_v;
+					_res[i].mask	= surface_mirror(_res[i].mask, false, true);
+					_res[i].content = surface_mirror(_res[i].content, false, true);
+				}
 			}
 		
 			if(_output_index == 1)
 			for( var i = 0; i < _spAmo; i++ ) {
 				_res[i] = _pbox.clone();
+				_res[i].mask   = noone;
 				_res[i].layer += _layr;
 				
 				var _sy = 0;
