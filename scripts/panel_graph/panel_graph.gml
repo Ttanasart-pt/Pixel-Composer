@@ -256,6 +256,8 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		PANEL_GRAPH = self; 
 		PROJECT = project;
 		PANEL_ANIMATION.updatePropertyList();
+		
+		//print($"Focus {PROJECT.path}");
 	}
 	
 	function stepBegin() {
@@ -1755,6 +1757,8 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 	}
 	
 	function drawContent(panel) { 
+		if(!project.active) return;
+		
 		dragGraph();
 		
 		if(project.path == "")	title = "New project";
@@ -1907,7 +1911,11 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 	}
 	
 	function close() { 
-		if(nodes_list != project.nodes) return;
+		if(nodes_list != project.nodes) {
+			panel.remove(self);
+			return;
+		}
+		
 		if(!project.modified || project.readonly) {
 			closeProject(project);
 			return;

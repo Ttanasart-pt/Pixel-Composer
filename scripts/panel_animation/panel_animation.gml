@@ -1826,6 +1826,7 @@ function Panel_Animation() : PanelContent() constructor {
 	
 	function drawContent(panel) {
 		draw_clear_alpha(COLORS.panel_bg_clear, 0);
+		if(!PROJECT.active) return;
 		
 		if(tool_width_drag) {
 			CURSOR = cr_size_we;

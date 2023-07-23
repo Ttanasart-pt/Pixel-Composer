@@ -910,9 +910,7 @@ function PanelContent() constructor {
 	
 	function drawGUI() {}
 	
-	function close() {
-		panel.remove(self);
-	}
+	function close() { panel.remove(self); }
 	
 	function onClose() {}
 }

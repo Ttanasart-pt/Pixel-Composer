@@ -15,6 +15,8 @@
 
 #region project
 	function Project() constructor {
+		active	= true;
+		
 		path	= "";
 		version = 0;
 		seed    = irandom_range(100000, 999999);

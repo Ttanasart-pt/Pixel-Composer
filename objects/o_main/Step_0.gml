@@ -2,36 +2,37 @@
 if(OS == os_windows && gameframe_is_minimized()) exit;
 
 //print("===== Step start =====");
-#region animation
-	if(PROJECT.animator.is_playing && PROJECT.animator.play_freeze == 0) {
-		PROJECT.animator.time_since_last_frame += PROJECT.animator.framerate * (delta_time / 1000000);
+if(PROJECT.active) {
+	#region animation
+		if(PROJECT.animator.is_playing && PROJECT.animator.play_freeze == 0) {
+			PROJECT.animator.time_since_last_frame += PROJECT.animator.framerate * (delta_time / 1000000);
 		
-		if(PROJECT.animator.time_since_last_frame >= 1)
-			PROJECT.animator.setFrame(PROJECT.animator.real_frame + 1);
-	} else {
-		PROJECT.animator.frame_progress = false;
-		PROJECT.animator.setFrame(PROJECT.animator.real_frame);
-		PROJECT.animator.time_since_last_frame = 0;
-	}
-	
-	PROJECT.animator.play_freeze = max(0, PROJECT.animator.play_freeze - 1);
-#endregion
-
-#region step
-	PROJECT.globalNode.step();
-	
-	try {
-		if(PANEL_MAIN != 0)
-			PANEL_MAIN.step();
-		
-		for(var i = 0; i < ds_list_size(PROJECT.nodes); i++) {
-			PROJECT.nodes[| i].triggerCheck();
-			PROJECT.nodes[| i].step();
+			if(PROJECT.animator.time_since_last_frame >= 1)
+				PROJECT.animator.setFrame(PROJECT.animator.real_frame + 1);
+		} else {
+			PROJECT.animator.frame_progress = false;
+			PROJECT.animator.setFrame(PROJECT.animator.real_frame);
+			PROJECT.animator.time_since_last_frame = 0;
 		}
-	} catch(e) {
-		noti_warning("Step error: " + exception_print(e));
-	}
-#endregion
+	
+		PROJECT.animator.play_freeze = max(0, PROJECT.animator.play_freeze - 1);
+	#endregion
+
+	#region step
+		PROJECT.globalNode.step();
+	
+		try {
+			if(PANEL_MAIN != 0)
+				PANEL_MAIN.step();
+		
+			for(var i = 0; i < ds_list_size(PROJECT.nodes); i++) {
+				PROJECT.nodes[| i].triggerCheck();
+				PROJECT.nodes[| i].step();
+			}
+		} catch(e)
+			noti_warning("Step error: " + exception_print(e));
+	#endregion
+}
 
 #region hotkey
 	HOTKEY_MOD = 0;

@@ -175,17 +175,16 @@
 	}
 	
 	function _findPanels(_type, _pane, _arr = []) {
-		if(instanceof(_pane) != "Panel")
-			return _res;
+		if(!is_instanceof(_pane, Panel))
+			return _arr;
 		if(!ds_exists(_pane.childs, ds_type_list))
-			return _res;
+			return _arr;
 		
-		if(ds_list_size(_pane.childs) == 0) {
-			for( var i = 0; i < array_length(_pane.content); i++ ) 
-				if(instanceof(_pane.content[i]) == _type) {
-					array_append(_arr, _pane.content[i]);
-					return _arr;
-				}
+		for( var i = 0; i < array_length(_pane.content); i++ ) {
+			var _cnt = instanceof(_pane.content[i]);
+			//print($" - content {_cnt} \ {_cnt == _type}");
+			if(_cnt == _type)
+				array_push(_arr, _pane.content[i]);
 		}
 		
 		for(var i = 0; i < ds_list_size(_pane.childs); i++)

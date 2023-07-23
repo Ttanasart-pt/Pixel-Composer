@@ -1,4 +1,5 @@
 /// @description init
+//print(PROJECT.path);
 global.cache_call = 0;
 global.cache_hit  = 0;
 
@@ -77,26 +78,29 @@ _HOVERING_ELEMENT = noone;
 	//physics_pause_enable(true);
 	DEF_SURFACE_RESET();
 	
-	var _k = ds_map_find_first(PROJECT.nodeMap);
-	var _a = ds_map_size(PROJECT.nodeMap);
-	repeat(_a) {
-		PROJECT.nodeMap[? _k].stepBegin();
-		_k = ds_map_find_next(PROJECT.nodeMap, _k);
+	if(PROJECT.active) {
+		var _k = ds_map_find_first(PROJECT.nodeMap);
+		var _a = ds_map_size(PROJECT.nodeMap);
+		repeat(_a) {
+			PROJECT.nodeMap[? _k].stepBegin();
+			_k = ds_map_find_next(PROJECT.nodeMap, _k);
+		}
+	
+		if(PROJECT.animator.is_playing || PROJECT.animator.rendering) {
+			if(PROJECT.animator.frame_progress) {
+				__addon_preAnim();
+				Render();
+				__addon_postAnim();
+			}
+			PROJECT.animator.frame_progress = false;
+		} else {
+			if(UPDATE & RENDER_TYPE.full)
+				Render();
+			else if(UPDATE & RENDER_TYPE.partial)
+				Render(true);
+		}
 	}
 	
-	if(PROJECT.animator.is_playing || PROJECT.animator.rendering) {
-		if(PROJECT.animator.frame_progress) {
-			__addon_preAnim();
-			Render();
-			__addon_postAnim();
-		}
-		PROJECT.animator.frame_progress = false;
-	} else {
-		if(UPDATE & RENDER_TYPE.full)
-			Render();
-		else if(UPDATE & RENDER_TYPE.partial)
-			Render(true);
-	}
 	UPDATE = RENDER_TYPE.none;
 #endregion
 
