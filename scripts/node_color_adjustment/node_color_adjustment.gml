@@ -107,7 +107,7 @@ function Node_Color_adjust(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		if(_type == 1) {
 			if(!is_array(_col)) _col = [ _col ];
 			
-			for( var i = 0; i < array_length(_col); i++ ) {
+			for( var i = 0, n = array_length(_col); i < n; i++ ) {
 				var _c = _col[i];
 				
 				var r = color_get_red(_c)   / 255;

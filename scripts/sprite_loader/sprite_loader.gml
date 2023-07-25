@@ -56,7 +56,7 @@ function loadGraphic(theme = "default") {
 	var graphics = variable_struct_get_names(sprDef);
 	var sprStr = json_try_parse(s);
 	
-	for( var i = 0; i < array_length(graphics); i++ ) {
+	for( var i = 0, n = array_length(graphics); i < n; i++ ) {
 		var key = graphics[i];
 		
 		if(variable_struct_exists(sprStr, key)) {

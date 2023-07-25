@@ -1,6 +1,6 @@
 function ds_list_create_from_array(array) {
 	var l = ds_list_create();
-	for( var i = 0; i < array_length(array); i++ )  {
+	for( var i = 0, n = array_length(array); i < n; i++ )  {
 		l[| i] = array[i];
 	}	
 	return l;

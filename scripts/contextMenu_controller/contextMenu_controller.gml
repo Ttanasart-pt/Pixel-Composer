@@ -7,7 +7,7 @@
 		if(menu_id != "" && ds_map_exists(CONTEXT_MENU_CALLBACK, menu_id)) {
 			var callbacks = CONTEXT_MENU_CALLBACK[? menu_id];
 			
-			for( var i = 0; i < array_length(callbacks); i++ ) 
+			for( var i = 0, n = array_length(callbacks); i < n; i++ ) 
 				array_append(menu, callbacks[i].populate());
 		}
 		

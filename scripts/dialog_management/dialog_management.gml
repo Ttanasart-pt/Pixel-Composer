@@ -11,7 +11,7 @@ function dialogCall(_dia, _x = noone, _y = noone, param = {}, create = false) {
 	dia.resetPosition();
 	
 	var args = variable_struct_get_names(param);
-	for( var i = 0; i < array_length(args); i++ )
+	for( var i = 0, n = array_length(args); i < n; i++ )
 		variable_instance_set(dia, args[i], variable_struct_get(param, args[i]));
 	
 	setFocus(dia.id, "Dialog");

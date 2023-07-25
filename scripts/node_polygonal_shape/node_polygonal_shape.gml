@@ -174,7 +174,7 @@ function Node_Shape_Polygon(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 				var points  = shapeData[0];
 				var segment = shapeData[1];
 				
-				for( var i = 0; i < array_length(segment); i++ ) {
+				for( var i = 0, n = array_length(segment); i < n; i++ ) {
 					var _p = segment[i];
 					var p = point_rotate(_p.x, _p.y, 0, 0, _rot);
 					_p.x = _pos[0] + p[0];
@@ -183,7 +183,7 @@ function Node_Shape_Polygon(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 				path.setSegment(segment);
 				
 				var shapes = [];
-				for( var i = 0; i < array_length(points); i++ ) {
+				for( var i = 0, n = array_length(points); i < n; i++ ) {
 					if(points[i].type == SHAPE_TYPE.points)
 						shapes[i] = polygon_triangulate(points[i].points);
 					else if(points[i].type == SHAPE_TYPE.triangles)
@@ -191,7 +191,7 @@ function Node_Shape_Polygon(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 				}
 				
 				mesh.triangles = [];
-				for( var i = 0; i < array_length(shapes); i++ ) {
+				for( var i = 0, n = array_length(shapes); i < n; i++ ) {
 					var triangles = shapes[i];
 				
 					for( var j = 0; j < array_length(triangles); j++ ) {

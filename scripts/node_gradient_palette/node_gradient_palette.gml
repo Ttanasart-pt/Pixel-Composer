@@ -35,7 +35,7 @@ function Node_Gradient_Palette(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 		var grad    = new gradientObject();
 		grad.keys   = [];
 		
-		for( var i = 0; i < array_length(pal); i++ ) {
+		for( var i = 0, n = array_length(pal); i < n; i++ ) {
 			var clr = pal[i];
 			var pos = pos_use? array_safe_get(_pos, i, 0) : i / array_length(pal);
 			

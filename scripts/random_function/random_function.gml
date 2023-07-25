@@ -91,10 +91,20 @@ function getWiggle(_min = 0, _max = 1, _freq = 1, _time = 0, _seed = 0, startTim
 	return lerp(_min, _max, _lrp);
 }
 
-function UUID_generate(length = 16) {
-	static str = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+function UUID_generate(length = 32) {
+	randomize();
+	static str =   "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+	static month = "JFRAMJYASOND" 
 	
 	var _id = "";
-	repeat(length) _id += string_char_at(str, irandom_range(1, string_length(str)));
+	_id += string_char_at(str, current_year % string_length(str) + 1);	//1
+	_id += string_char_at(month, current_month);						//1
+	_id += string_char_at(str, current_day);							//1
+	_id += string_char_at(str, current_hour);							//1
+	_id += string_char_at(str, current_minute);							//1
+	_id += string_char_at(str, current_second);							//1
+	_id += string_lead_zero(current_time, 6);							//6
+	
+	repeat(length - string_length(_id)) _id += string_char_at(str, irandom_range(1, string_length(str)));
 	return _id;
 }

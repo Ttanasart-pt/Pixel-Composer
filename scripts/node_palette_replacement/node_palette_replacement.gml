@@ -30,7 +30,7 @@ function Node_Palette_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 		var thr = _data[3];
 		var palo = [];
 		
-		for( var i = 0; i < array_length(pal); i++ ) {
+		for( var i = 0, n = array_length(pal); i < n; i++ ) {
 			var c = pal[i];
 			
 			var fromValue = 999;

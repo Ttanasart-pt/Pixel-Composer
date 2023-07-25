@@ -49,40 +49,49 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	inputs[| 0] = nodeValue("Display type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.enum_scroll, display_list[0])
+		.uncache()
 		.rejectArray();
 	inputs[| 0].editWidget.update_hover = false;
 	
 	inputs[| 1] = nodeValue("Range", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [0, 1])
 		.setDisplay(VALUE_DISPLAY.vector_range)
+		.uncache()
 		.setVisible(false)
 		.rejectArray();
 	
 	inputs[| 2] = nodeValue("Input type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.enum_scroll, data_type_list, { update_hover: false })
+		.uncache()
 		.rejectArray();
 	inputs[| 2].editWidget.update_hover = false;
 	
 	inputs[| 3] = nodeValue("Enum label", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "")
 		.setVisible(false)
+		.uncache()
 		.rejectArray();
 	
 	inputs[| 4] = nodeValue("Vector size", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.enum_button, [ "2", "3", "4" ], { update_hover: false })
 		.setVisible(false)
+		.uncache()
 		.rejectArray();
 	
 	inputs[| 5] = nodeValue("Order", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+		.uncache()
 		.rejectArray();
 	
 	inputs[| 6] = nodeValue("Display preview gizmo", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true)
+		.uncache()
 		.rejectArray();
 	
 	inputs[| 7] = nodeValue("Step", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.01)
 		.setVisible(false)
+		.uncache()
 		.rejectArray();
 	
 	inputs[| 8] = nodeValue("Button Label", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "Trigger")
 		.setVisible(false)
+		.uncache()
 		.rejectArray();
 		
 	input_display_list = [ 
@@ -90,7 +99,8 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		["Data",	false], 2, 0, 4, 1, 7, 3, 8, 
 	];
 	
-	outputs[| 0] = nodeValue("Value", self, JUNCTION_CONNECT.output, VALUE_TYPE.any, 0);
+	outputs[| 0] = nodeValue("Value", self, JUNCTION_CONNECT.output, VALUE_TYPE.any, 0)
+		.uncache();
 	
 	attributes.inherit_name = true;
 	doTrigger = 0;
@@ -238,6 +248,7 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 			ds_list_remove(group.inputs, inParent);
 		
 		inParent = nodeValue("Value", group, JUNCTION_CONNECT.input, VALUE_TYPE.any, -1)
+			.uncache()
 			.setVisible(true, true);
 		inParent.from = self;
 		

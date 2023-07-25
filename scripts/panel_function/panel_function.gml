@@ -85,7 +85,7 @@
 			}
 		} else {
 			if(!is_array(cont)) cont = [ cont ];
-			for( var i = 0; i < array_length(cont); i++ ) {
+			for( var i = 0, n = array_length(cont); i < n; i++ ) {
 				var _cont = getPanelFromName(cont[i])
 				if(_cont != noone) panel.setContent(_cont);
 			}
@@ -157,7 +157,7 @@
 			return _res;
 		
 		if(ds_list_size(_pane.childs) == 0) {
-			for( var i = 0; i < array_length(_pane.content); i++ ) 
+			for( var i = 0, n = array_length(_pane.content); i < n; i++ ) 
 				if(instanceof(_pane.content[i]) == _type)
 					return _pane.content[i];
 		}
@@ -180,7 +180,7 @@
 		if(!ds_exists(_pane.childs, ds_type_list))
 			return _arr;
 		
-		for( var i = 0; i < array_length(_pane.content); i++ ) {
+		for( var i = 0, n = array_length(_pane.content); i < n; i++ ) {
 			var _cnt = instanceof(_pane.content[i]);
 			//print($" - content {_cnt} \ {_cnt == _type}");
 			if(_cnt == _type)
@@ -320,7 +320,7 @@
 			for( var i = 0; i < ds_list_size(panel.childs); i++ )
 				cont.content[i] = _panelSerialize(panel.childs[| (ind + i) % 2]);
 		} else {
-			for( var i = 0; i < array_length(panel.content); i++ )
+			for( var i = 0, n = array_length(panel.content); i < n; i++ )
 				cont.content[i] = instanceof(panel.content[i]);
 		}
 		
@@ -338,7 +338,7 @@
 			for( var i = 0; i < ds_list_size(panel.childs); i++ )
 				cont[i] = _panelSerializeArray(panel.childs[| i] );
 		} else {
-			for( var i = 0; i < array_length(panel.content); i++ )
+			for( var i = 0, n = array_length(panel.content); i < n; i++ )
 				cont[i] = instanceof(panel.content[i]);
 		}
 		

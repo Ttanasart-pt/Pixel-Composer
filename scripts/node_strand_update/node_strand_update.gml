@@ -19,7 +19,7 @@ function Node_Strand_Update(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		var __str = _str;
 		if(!is_array(_str)) __str = [ _str ];
 		
-		for( var i = 0; i < array_length(__str); i++ ) 
+		for( var i = 0, n = array_length(__str); i < n; i++ ) 
 			__str[i].step(_itr);
 		outputs[| 0].setValue(_str);
 	}

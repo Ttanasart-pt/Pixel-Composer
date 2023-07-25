@@ -22,9 +22,9 @@ function Node_Rigid_Group(_x, _y, _group = noone) : Node_Collection(_x, _y, _gro
 		
 		var node_list = getNodeList();
 		for( var i = 0; i < ds_list_size(node_list); i++ ) {
-			var n = node_list[| i];
-			if(variable_struct_exists(n, "reset"))
-				n.reset();
+			var _node = node_list[| i];
+			if(variable_struct_exists(_node, "reset"))
+				_node.reset();
 		}
 		
 		physics_pause_enable(false);

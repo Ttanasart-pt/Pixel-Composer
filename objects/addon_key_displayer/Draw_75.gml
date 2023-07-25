@@ -2,7 +2,7 @@
 #region draw 
 	var key = "";
 	
-	for( var i = 0; i < array_length(extra_keys); i++ ) {
+	for( var i = 0, n = array_length(extra_keys); i < n; i++ ) {
 		if(keyboard_check(extra_keys[i][0]))
 			key += key == ""? extra_keys[i][1] : (" + " + extra_keys[i][1]);
 	}
@@ -39,7 +39,7 @@
 			var mlx = WIN_W - array_length(mouse_left);
 			var ox, oy, nx, ny;
 			
-			for( var i = 0; i < array_length(mouse_left); i++ ) {
+			for( var i = 0, n = array_length(mouse_left); i < n; i++ ) {
 				nx = mlx + i;
 				ny = WIN_H - 4 - mouse_left[i] * 24;
 				

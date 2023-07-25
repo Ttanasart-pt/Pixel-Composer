@@ -28,7 +28,7 @@ function Node_Audio_Window(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		var res = [];
 		var off = frame / PROJECT.animator.framerate * sam;
 		
-		for( var i = 0; i < array_length(_arr); i++ ) {
+		for( var i = 0, n = array_length(_arr); i < n; i++ ) {
 			var _dat = _arr[i];
 			res[i] = [];
 			array_copy(res[i], 0, _dat, off, siz);

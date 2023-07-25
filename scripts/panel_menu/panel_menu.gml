@@ -46,7 +46,7 @@ function Panel_Menu() : PanelContent() constructor {
 				-1
 			];
 			
-			for( var i = 0; i < array_length(ADDONS); i++ ) {
+			for( var i = 0, n = array_length(ADDONS); i < n; i++ ) {
 				var _dir = ADDONS[i].name;
 				array_push(arr, menuItem(_dir, function(_dat) { addonTrigger(_dat.name); } ));
 			}
@@ -506,7 +506,7 @@ function Panel_Menu() : PanelContent() constructor {
 		#region actions
 			var bs = ui(28);
 			
-			for( var i = 0; i < array_length(action_buttons); i++ ) {
+			for( var i = 0, n = array_length(action_buttons); i < n; i++ ) {
 				var action = action_buttons[i];
 				
 				switch(action) {

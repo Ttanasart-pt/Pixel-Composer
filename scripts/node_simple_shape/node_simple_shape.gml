@@ -142,7 +142,7 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 					
 					draw_set_color(_color);
 					draw_primitive_begin(pr_trianglelist);
-					for( var i = 0; i < array_length(triangles); i++ ) {
+					for( var i = 0, n = array_length(triangles); i < n; i++ ) {
 						var tri = triangles[i];
 						var p0  = tri[0];
 						var p1  = tri[1];

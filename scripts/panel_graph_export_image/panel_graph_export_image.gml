@@ -106,9 +106,9 @@ function graph_export_image(allList, nodeList, settings = {}) {
 				nodeList[| i].onDrawNodeBehind(gr_x, gr_y, mx, my, scale);
 			
 			for(var i = 0; i < ds_list_size(nodeList); i++) {
-				var n = nodeList[| i];
-				if(instanceof(n) == "Node_Frame") continue;
-				var val = n.drawNode(gr_x, gr_y, mx, my, scale);
+				var _node = nodeList[| i];
+				if(instanceof(_node) == "Node_Frame") continue;
+				var val = _node.drawNode(gr_x, gr_y, mx, my, scale);
 			}
 		#endregion
 		

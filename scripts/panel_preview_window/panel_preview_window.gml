@@ -76,7 +76,7 @@ function Panel_Preview_Window() : PanelContent() constructor {
 			var ind = 0;
 			var col = round(sqrt(array_length(surf)));
 		
-			for( var i = 0; i < array_length(surf); i++ ) {
+			for( var i = 0, n = array_length(surf); i < n; i++ ) {
 				var s  = surf[i];
 				var sw = surface_get_width(s);
 				var sh = surface_get_height(s);
@@ -126,7 +126,7 @@ function Panel_Preview_Window() : PanelContent() constructor {
 			
 			var s = scale;
 			if(mouse_wheel_down()) {
-				for( var i = 0; i < array_length(scale_levels) - 1; i++ ) {
+				for( var i = 0, n = array_length(scale_levels) - 1; i < n; i++ ) {
 					if(s > scale_levels[i] && s <= scale_levels[i + 1]) {
 						scale = scale_levels[i];
 						break;
@@ -135,7 +135,7 @@ function Panel_Preview_Window() : PanelContent() constructor {
 			}
 			
 			if(mouse_wheel_up()) {
-				for( var i = 0; i < array_length(scale_levels) - 1; i++ ) {
+				for( var i = 0, n = array_length(scale_levels) - 1; i < n; i++ ) {
 					if(s >= scale_levels[i] && s < scale_levels[i + 1]) {
 						scale = scale_levels[i + 1];
 						break;

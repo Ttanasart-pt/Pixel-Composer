@@ -85,7 +85,7 @@ if !ready exit;
 	var tab_cover = noone;
 	var th = ui(36) + THEME_VALUE.panel_tab_extend;
 	
-	for( var i = 0; i < array_length(pages); i++ ) {
+	for( var i = 0, n = array_length(pages); i < n; i++ ) {
 		draw_set_text(f_p0, fa_left, fa_bottom, project_page == i? COLORS._main_text : COLORS._main_text_sub);
 		var txt  = pages[i];
 		var dtxt = __txt(txt);

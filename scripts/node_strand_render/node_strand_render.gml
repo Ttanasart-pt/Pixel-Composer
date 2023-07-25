@@ -41,7 +41,7 @@ function Node_Strand_Render(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		if(_str == noone) return;
 		if(!is_array(_str)) _str = [ _str ];
 		
-		for( var i = 0; i < array_length(_str); i++ )
+		for( var i = 0, n = array_length(_str); i < n; i++ )
 			_str[i].draw(_x, _y, _s);
 	}
 	
@@ -76,7 +76,7 @@ function Node_Strand_Render(_x, _y, _group = noone) : Node(_x, _y, _group) const
 				var _strand = _str[h];
 				var hairs   = _strand.hairs;
 				
-				for( var i = 0; i < array_length(hairs); i++ ) {
+				for( var i = 0, n = array_length(hairs); i < n; i++ ) {
 					var hair = hairs[i];
 					var os, ns, ot, nt;
 				

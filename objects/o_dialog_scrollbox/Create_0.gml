@@ -42,7 +42,7 @@ event_inherited();
 		}
 		
 		data = [];
-		for( var i = 0; i < array_length(scrollbox.data); i++ ) {
+		for( var i = 0, n = array_length(scrollbox.data); i < n; i++ ) {
 			var val = scrollbox.data[i];
 			
 			if(val == -1) continue;
@@ -57,7 +57,7 @@ event_inherited();
 		var hght = line_get_height(f_p0, 8);
 		var hh	 = ui(16 + 24);
 		
-		for( var i = 0; i < array_length(data); i++ )
+		for( var i = 0, n = array_length(data); i < n; i++ )
 			hh += data[i] == -1? ui(8) : hght;
 		
 		dialog_h = min(max_h, hh);

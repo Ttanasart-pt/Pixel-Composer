@@ -28,7 +28,7 @@ function Node_Rigid_Activate(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		
 		if(!is_array(_obj)) _obj = [ _obj ];
 			
-		for( var i = 0; i < array_length(_obj); i++ ) {
+		for( var i = 0, n = array_length(_obj); i < n; i++ ) {
 			var _o = _obj[i].object;
 			if(!is_array(_o)) _o = [ _o ];
 			

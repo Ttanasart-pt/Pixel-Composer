@@ -26,7 +26,7 @@ function Node_ASE_layer(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		var layer_index = 0;
 		layer_object = noone;
 		
-		for( var i = 0; i < array_length(data.layers); i++ ) {
+		for( var i = 0, n = array_length(data.layers); i < n; i++ ) {
 			if(data.layers[i].name != display_name) continue;
 			
 			layer_object = data.layers[i];

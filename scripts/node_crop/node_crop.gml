@@ -31,7 +31,7 @@ function Node_Crop(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		
 		var _inSurf	= current_data[0];
 		var _splice	= current_data[1];
-		for( var i = 0; i < array_length(_splice); i++ )
+		for( var i = 0, n = array_length(_splice); i < n; i++ )
 			_splice[i] = round(_splice[i]);
 		
 		var dim = [ surface_get_width(_inSurf), surface_get_height(_inSurf) ]

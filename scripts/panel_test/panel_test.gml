@@ -32,7 +32,7 @@ function Panel_Test() : PanelContent() constructor {
 		}
 		file_find_close();
 		
-		for( var i = 0; i < array_length(_dir); i++ )
+		for( var i = 0, n = array_length(_dir); i < n; i++ )
 			scanDir(_dir[i]);
 	}
 	
@@ -45,7 +45,7 @@ function Panel_Test() : PanelContent() constructor {
 		test_files = [];
 		scanDir(test_dir);
 		
-		for( var i = 0; i < array_length(test_files); i++ ) {
+		for( var i = 0, n = array_length(test_files); i < n; i++ ) {
 			run_in(i * 3, function(i) { 
 				print($"TESTING: {test_files[i]}");
 				TEST_PATH(test_files[i]); 

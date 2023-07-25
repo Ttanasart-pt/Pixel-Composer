@@ -36,7 +36,7 @@
 		global.SURFACE_FORMAT		= [];
 		global.SURFACE_FORMAT_NAME  = []; 
 	
-		for( var i = 0; i < array_length(surface_format); i++ ) {
+		for( var i = 0, n = array_length(surface_format); i < n; i++ ) {
 			var sup = surface_format_is_supported(surface_format[i]);
 			array_push(global.SURFACE_FORMAT, surface_format[i]);
 			array_push(global.SURFACE_FORMAT_NAME, (sup? "" : "-") + surface_format_name[i]);

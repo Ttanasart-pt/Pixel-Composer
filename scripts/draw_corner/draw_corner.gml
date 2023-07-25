@@ -1,6 +1,13 @@
-function draw_corner(x1, y1, xc, yc, x3, y3, thick = 1, col = c_white, sample = 10) {
+function draw_corner(x1, y1, xc, yc, x3, y3, thick = 1, col = c_white, sample = 10) { 
 	var dir0 = point_direction(x1, y1, xc, yc);
 	var dir1 = point_direction(x3, y3, xc, yc);
+	
+	var dis  = point_distance(x1, y1, x3, y3);
+	if(dis < 8) {
+		draw_set_color(col);
+		draw_line_width(x1, y1, x3, y3, thick);
+		return;
+	}
 	
 	var p2 = point_rotate(xc, yc, x1, y1, -90);
 	var x2 = p2[0];
@@ -25,16 +32,22 @@ function draw_corner(x1, y1, xc, yc, x3, y3, thick = 1, col = c_white, sample = 
 	var d1 = point_direction(px, py, x3, y3);
 		
 	draw_set_color(col);
+	draw_primitive_begin(pr_trianglestrip);
+	
 	var ox, oy, nx, ny;
-	var st = 1 / round(sample);
-	for( var i = 0; i <= 1; i += st ) {
-		var a = d0 + angle_difference(d1, d0) * i;
-		nx = px + lengthdir_x(r, a);
-		ny = py + lengthdir_y(r, a);
+	var aa = angle_difference(d1, d0);
+	sample = round(sample);
+	
+	for( var i = 0; i <= sample; i++ ) {
+		var a = d0 + aa * (i / sample);
+		nx = px + lengthdir_x(r - thick / 2, a) + 1;
+		ny = py + lengthdir_y(r - thick / 2, a) + 1;
+		ox = px + lengthdir_x(r + thick / 2, a) + 1;
+		oy = py + lengthdir_y(r + thick / 2, a) + 1;
 		
-		if(i > 0) draw_line_round(ox, oy, nx, ny, thick, i == st, i == 1, sample);
-		
-		ox = nx;
-		oy = ny;
+		draw_vertex(nx, ny);
+		draw_vertex(ox, oy);
 	}
+	
+	draw_primitive_end();
 }

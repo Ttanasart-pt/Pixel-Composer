@@ -116,7 +116,7 @@ function readObj(path, flipUV = false) {
 		cv[1] /= vertex;
 		cv[2] /= vertex;
 		
-		for( var i = 0; i < array_length(v); i++ ) {
+		for( var i = 0, n = array_length(v); i < n; i++ ) {
 			v[i][0] -= cv[0];
 			v[i][1] -= cv[1];
 			v[i][2] -= cv[2];

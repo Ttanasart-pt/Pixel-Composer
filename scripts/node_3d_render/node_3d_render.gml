@@ -205,7 +205,7 @@
 		
 //		inputs[| 16].setVisible(_proj == 1);
 		
-//		for( var i = 0; i < array_length(output_display_list) - 1; i++ ) {
+//		for( var i = 0, n = array_length(output_display_list) - 1; i < n; i++ ) {
 //			var ind = output_display_list[i];
 //			var _outSurf = outputs[| ind].getValue();
 			

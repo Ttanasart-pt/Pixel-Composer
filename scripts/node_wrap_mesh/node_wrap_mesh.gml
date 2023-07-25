@@ -524,7 +524,7 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		
 		if(loadPin == noone) return;
 		
-		for( var i = 0; i < array_length(loadPin); i++ ) {
+		for( var i = 0, n = array_length(loadPin); i < n; i++ ) {
 			var ind = loadPin[i];
 			if(ind < array_length(points))
 				points[ind].pin = true;

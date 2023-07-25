@@ -793,7 +793,7 @@ function Panel_Preview() : PanelContent() constructor {
 		if(tool_current != noone) { //tool settings
 			var settings = _node.tool_settings;
 			var len      = array_length(settings);
-			for( var i = 0; i < array_length(tool_current.settings); i++ ) 
+			for( var i = 0, n = array_length(tool_current.settings); i < n; i++ ) 
 				settings[len + i] = tool_current.settings[i];
 			
 			tool_x = lerp_float(tool_x, tool_x_to, 5);
@@ -803,7 +803,7 @@ function Panel_Preview() : PanelContent() constructor {
 			var tolh  = toolbar_height - ui(20);
 			var tol_max_w = ui(32);
 			
-			for( var i = 0; i < array_length(settings); i++ ) {
+			for( var i = 0, n = array_length(settings); i < n; i++ ) {
 				var sett = settings[i];
 				var nme  = sett[0];
 				var wdg  = sett[1];
@@ -868,7 +868,7 @@ function Panel_Preview() : PanelContent() constructor {
 		var tbx = toolbar_height / 2;
 		var tby = ty + toolbar_height / 2;
 		
-		for( var i = 0; i < array_length(toolbars); i++ ) {
+		for( var i = 0, n = array_length(toolbars); i < n; i++ ) {
 			var tb = toolbars[i];
 			var tbSpr = tb[0];
 			var tbInd = tb[1]();
@@ -881,7 +881,7 @@ function Panel_Preview() : PanelContent() constructor {
 		}
 		
 		tbx = w - toolbar_height / 2;
-		for( var i = 0; i < array_length(actions); i++ ) {
+		for( var i = 0, n = array_length(actions); i < n; i++ ) {
 			var tb = actions[i];
 			var tbSpr = tb[0];
 			var tbTooltip = tb[1];

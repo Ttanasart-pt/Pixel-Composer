@@ -3,7 +3,7 @@
 function struct_override(original, override) {
 	var args = variable_struct_get_names(override);
 	
-	for( var i = 0; i < array_length(args); i++ ) {
+	for( var i = 0, n = array_length(args); i < n; i++ ) {
 		if(!struct_has(original, args[i])) continue;
 		original[$ args[i]] = override[$ args[i]];
 	}

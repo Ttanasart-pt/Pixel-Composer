@@ -32,7 +32,7 @@ if(node_target == noone) {
 		var ind = 0;
 		var col = round(sqrt(array_length(surf)));
 		
-		for( var i = 0; i < array_length(surf); i++ ) {
+		for( var i = 0, n = array_length(surf); i < n; i++ ) {
 			var s  = surf[i];
 			var sw = surface_get_width(s);
 			var sh = surface_get_height(s);

@@ -72,7 +72,7 @@ function Node_CSV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		var convert = inputs[| 1].getValue();
 		outputs[| 0].type = convert? VALUE_TYPE.float : VALUE_TYPE.text;
 		if(convert) {
-			for( var i = 0; i < array_length(content); i++ ) {
+			for( var i = 0, n = array_length(content); i < n; i++ ) {
 				var c = content[i];
 				
 				if(is_array(c)) {

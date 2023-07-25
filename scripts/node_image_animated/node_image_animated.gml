@@ -103,7 +103,7 @@ function Node_Image_Animated(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		
 		path_loaded = array_create(array_length(paths));
 		
-		for( var i = 0; i < array_length(paths); i++ )  {
+		for( var i = 0, n = array_length(paths); i < n; i++ )  {
 			path_loaded[i] = paths[i];
 			var path = try_get_path(paths[i]);
 			if(path == -1) continue;

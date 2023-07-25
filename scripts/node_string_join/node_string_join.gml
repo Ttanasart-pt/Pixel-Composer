@@ -18,7 +18,7 @@ function Node_String_Join(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		var _div = inputs[| 1].getValue();
 		var str = "";
 		
-		for( var i = 0; i < array_length(_arr); i++ ) 
+		for( var i = 0, n = array_length(_arr); i < n; i++ ) 
 			str += (i? _div : "")  + string(_arr[i]);
 		
 		outputs[| 0].setValue(str);

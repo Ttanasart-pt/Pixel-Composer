@@ -59,7 +59,7 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		while(!ds_stack_empty(_bst)) {
 			var __b = ds_stack_pop(_bst);
 			
-			for( var i = 0; i < array_length(__b.childs); i++ ) {
+			for( var i = 0, n = array_length(__b.childs); i < n; i++ ) {
 				array_push(_bones, __b.childs[i]);
 				ds_stack_push(_bst, __b.childs[i]);
 			}
@@ -76,7 +76,7 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			input_display_list[1]
 		];
 		
-		for( var i = 0; i < array_length(_bones); i++ ) {
+		for( var i = 0, n = array_length(_bones); i < n; i++ ) {
 			var bone = _bones[i];
 			var _idx = ds_list_size(_inputs);
 			array_push(_input_display_list, _idx);
@@ -264,7 +264,7 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 				bone.pose_scale = _trn[TRANSFORM.sca_x];
 			}
 			
-			for( var i = 0; i < array_length(bone.childs); i++ )
+			for( var i = 0, n = array_length(bone.childs); i < n; i++ )
 				ds_stack_push(_bst, bone.childs[i]);
 		}
 		
@@ -287,7 +287,7 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		while(!ds_stack_empty(_bst)) {
 			var __b = ds_stack_pop(_bst);
 			
-			for( var i = 0; i < array_length(__b.childs); i++ ) {
+			for( var i = 0, n = array_length(__b.childs); i < n; i++ ) {
 				var p0 = __b.childs[i].getPoint(0);
 				var p1 = __b.childs[i].getPoint(1);
 				

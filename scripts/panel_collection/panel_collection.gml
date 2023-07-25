@@ -378,7 +378,7 @@ function Panel_Collection() : PanelContent() constructor {
 		var bh = line_get_height(f_p0b, 8);
 		var rootx = 0;
 		
-		for( var i = 0; i < array_length(roots); i++ ) {
+		for( var i = 0, n = array_length(roots); i < n; i++ ) {
 			var r = roots[i];
 			var b = buttonInstant(THEME.button_hide_fill, _x - ui(8), _y - bh / 2, string_width(r[0]) + ui(20), bh, [mx, my], pFOCUS, pHOVER);
 			if(b == 2) {

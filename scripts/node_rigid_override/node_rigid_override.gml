@@ -42,7 +42,7 @@ function Node_Rigid_Override(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		var _alp = inputs[| 5].getValue();
 		var _vel = inputs[| 6].getValue();
 		
-		for( var i = 0; i < array_length(objs); i++ ) {
+		for( var i = 0, n = array_length(objs); i < n; i++ ) {
 			var obj = objs[i];
 			if(obj == noone || !instance_exists(obj)) continue;
 			if(is_undefined(obj.phy_active)) continue;

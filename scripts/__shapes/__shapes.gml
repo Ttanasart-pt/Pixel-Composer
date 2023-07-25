@@ -134,7 +134,7 @@
 			oy = ny;
 		}
 		
-		for( var i = 0; i < array_length(_seg); i++ )
+		for( var i = 0, n = array_length(_seg); i < n; i++ )
 			array_push(segment, _seg[array_length(_seg) - i - 1]);
 		
 		shapes[2] = { type: SHAPE_TYPE.triangles, triangles: triangles };

@@ -53,7 +53,7 @@ function Node_VFX_Variable(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		for( var i = 0; i < ds_list_size(outputs); i++ )
 			_val[i] = array_create(array_length(parts));
 		
-		for( var i = 0; i < array_length(parts); i++ ) {
+		for( var i = 0, n = array_length(parts); i < n; i++ ) {
 			var part = parts[i];
 			
 			if(outputs[| 0].visible) _val[0][i] = [part.x,   part.y];

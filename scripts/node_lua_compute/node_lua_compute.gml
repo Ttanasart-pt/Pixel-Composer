@@ -203,7 +203,7 @@ function Node_Lua_Compute(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		}
 		
 		var lua_code = "function " + _func + "(";
-		for( var i = 0; i < array_length(argument_name); i++ ) {
+		for( var i = 0, n = array_length(argument_name); i < n; i++ ) {
 			if(i) lua_code += ", "
 			lua_code += argument_name[i];
 		}

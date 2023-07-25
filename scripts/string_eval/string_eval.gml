@@ -57,7 +57,7 @@
 	
 	global.FUNCTIONS[? "range"] = [ ["length", "start = 0", "step = 1"],	function(val) { 
 																				var arr = array_create(array_safe_get(val, 0, 0));
-																				for( var i = 0; i < array_length(arr); i++ ) 
+																				for( var i = 0, n = array_length(arr); i < n; i++ ) 
 																					arr[i] = array_safe_get(val, 1, 0) + i * array_safe_get(val, 2, 1);
 																				return arr;
 																			} ];
@@ -113,7 +113,7 @@ function functionStringClean(fx) {
 		}
 		
 		static validate = function() {
-			for( var i = 0; i < array_length(funcTrees); i++ )
+			for( var i = 0, n = array_length(funcTrees); i < n; i++ )
 				if(!funcTrees[i].validate())
 					return false;
 				
@@ -121,7 +121,7 @@ function functionStringClean(fx) {
 		}
 		
 		static isAnimated = function() {
-			for( var i = 0; i < array_length(funcTrees); i++ )
+			for( var i = 0, n = array_length(funcTrees); i < n; i++ )
 				if(!funcTrees[i].isAnimated())
 					return false;
 				
@@ -132,7 +132,7 @@ function functionStringClean(fx) {
 			//var _params = variable_clone(params);
 			var val = 0;
 			
-			for( var i = 0; i < array_length(funcTrees); i++ )
+			for( var i = 0, n = array_length(funcTrees); i < n; i++ )
 				val = funcTrees[i].eval(params);
 				
 			return val;
@@ -211,7 +211,7 @@ function functionStringClean(fx) {
 			if(itr_array) {
 				var _arr = cond_arr.eval(params);
 				printIf(global.FLAG.expression_debug, $"<<<<<< FOR EACH {_arr} >>>>>>");
-				for( var i = 0; i < array_length(_arr); i++ ) {
+				for( var i = 0, n = array_length(_arr); i < n; i++ ) {
 					var val = _arr[i];
 					params[$ cond_iter] = val;
 					
@@ -289,7 +289,7 @@ function functionStringClean(fx) {
 			
 			if(ds_map_exists(global.FUNCTIONS, symbol)) {
 				if(!is_array(l)) return false;
-				for( var i = 0; i < array_length(l); i++ )
+				for( var i = 0, n = array_length(l); i < n; i++ )
 					if(!_validate(l[i])) return false;
 				return true;
 			}
@@ -333,7 +333,7 @@ function functionStringClean(fx) {
 				var _ev = _fn[1];
 				var _l  = array_create(array_length(l));
 				
-				for( var i = 0; i < array_length(l); i++ )
+				for( var i = 0, n = array_length(l); i < n; i++ )
 					_l[i] = getVal(l[i], params);
 					
 				var res = _ev(_l);
@@ -352,7 +352,7 @@ function functionStringClean(fx) {
 				res = v1;
 			} else if(symbol == "【") { //array builder
 				res = array_create(array_length(v1));
-				for( var i = 0; i < array_length(res); i++ )
+				for( var i = 0, n = array_length(res); i < n; i++ )
 					res[i] = getVal(v1[i], params);
 			} else if(symbol == "@") {
 				if(isLeft)	res = [ v1, v2 ];
@@ -369,15 +369,15 @@ function functionStringClean(fx) {
 				}
 			} else if(is_array(v1) && !is_array(v2)) {
 				res = array_create(array_length(v1));
-				for( var i = 0; i < array_length(res); i++ )
+				for( var i = 0, n = array_length(res); i < n; i++ )
 					res[i] = eval_real(array_safe_get(v1, i), v2);
 			} else if(!is_array(v1) && is_array(v2)) {
 				res = array_create(array_length(v2));
-				for( var i = 0; i < array_length(res); i++ )
+				for( var i = 0, n = array_length(res); i < n; i++ )
 					res[i] = eval_real(v1, array_safe_get(v2, i));
 			} else if(is_array(v1) && is_array(v2)) {
 				res = array_create(max(array_length(v1), array_length(v2)));
-				for( var i = 0; i < array_length(res); i++ )
+				for( var i = 0, n = array_length(res); i < n; i++ )
 					res[i] = eval_real(array_safe_get(v1, i), array_safe_get(v2, i));
 			} else 
 				res = eval_real(v1, v2);
@@ -463,7 +463,7 @@ function functionStringClean(fx) {
 		var call_st = ds_stack_create();
 		ds_stack_push(call_st, flist);
 		
-		for( var i = 0; i < array_length(fxs); i++ ) {
+		for( var i = 0, n = array_length(fxs); i < n; i++ ) {
 			var _fx = functionStringClean(fxs[i]);
 			if(_fx == "") continue;
 			

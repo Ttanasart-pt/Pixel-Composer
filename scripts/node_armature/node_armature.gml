@@ -38,7 +38,7 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 			var __x  = _st[1];
 			var __w  = _st[2];
 			
-			for( var i = 0; i < array_length(bone.childs); i++ )
+			for( var i = 0, n = array_length(bone.childs); i < n; i++ )
 				ds_stack_push(_bst, [ bone.childs[i], __x + 16, __w - 16 ]);
 				
 			if(bone.is_main) continue;
@@ -88,7 +88,7 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 			var _par = bone_remove.parent;
 			array_remove(_par.childs, bone_remove);
 				
-			for( var i = 0; i < array_length(bone_remove.childs); i++ ) {
+			for( var i = 0, n = array_length(bone_remove.childs); i < n; i++ ) {
 				var _ch = bone_remove.childs[i];
 				_par.addChild(_ch);
 						
@@ -193,7 +193,7 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 					builder_bone.length = point_distance( bn.x, bn.y, bo.x, bo.y);
 				} else if(builder_type == 1) {
 					var chs = [];
-					for( var i = 0; i < array_length(builder_bone.childs); i++ ) {
+					for( var i = 0, n = array_length(builder_bone.childs); i < n; i++ ) {
 						var ch = builder_bone.childs[i];
 						chs[i] = ch.getPoint(1);
 					}
@@ -201,7 +201,7 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 					builder_bone.angle  = dir;
 					builder_bone.length = dis;
 					
-					for( var i = 0; i < array_length(builder_bone.childs); i++ ) {
+					for( var i = 0, n = array_length(builder_bone.childs); i < n; i++ ) {
 						var ch = builder_bone.childs[i];
 						var c0 = ch.getPoint(0);
 					
@@ -357,7 +357,7 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 		
 				while(!ds_stack_empty(_bst)) {
 					var __b = ds_stack_pop(_bst);			
-					for( var i = 0; i < array_length(__b.childs); i++ )
+					for( var i = 0, n = array_length(__b.childs); i < n; i++ )
 						ds_stack_push(_bst, __b.childs[i]);
 						
 					__b.distance *= _ss;
@@ -406,7 +406,7 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 					var _md = new __Bone(noone, 0, 0, _pr.angle, _pr.length / 2, self);
 					_pr.length = _md.length;
 					
-					for( var i = 0; i < array_length(_pr.childs); i++ )
+					for( var i = 0, n = array_length(_pr.childs); i < n; i++ )
 						_md.addChild(_pr.childs[i]);
 					
 					_pr.childs = [];
@@ -432,7 +432,7 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 				
 				array_remove(_par.childs, _bone);
 				
-				for( var i = 0; i < array_length(_bone.childs); i++ ) {
+				for( var i = 0, n = array_length(_bone.childs); i < n; i++ ) {
 					var _ch = _bone.childs[i];
 					_par.addChild(_ch);
 						
@@ -523,7 +523,7 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 		while(!ds_stack_empty(_bst)) {
 			var __b = ds_stack_pop(_bst);
 			
-			for( var i = 0; i < array_length(__b.childs); i++ ) {
+			for( var i = 0, n = array_length(__b.childs); i < n; i++ ) {
 				var p0 = __b.childs[i].getPoint(0);
 				var p1 = __b.childs[i].getPoint(1);
 				

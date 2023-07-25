@@ -36,7 +36,7 @@ event_inherited();
 		draw_set_color(COLORS._main_text_sub);
 		draw_text(cx, yy, "Special Thanks");
 		
-		for( var i = 0; i < array_length(credits); i++ ) {
+		for( var i = 0, n = array_length(credits); i < n; i++ ) {
 			yy += line_get_height(, 8); 
 			draw_set_font(f_p2);
 			draw_set_color(COLORS._main_text_sub);

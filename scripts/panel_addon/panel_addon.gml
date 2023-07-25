@@ -29,7 +29,7 @@ function Panel_Addon() : PanelContent() constructor {
 		function searchAddons() {
 			search_res = [];
 			
-			for( var i = 0; i < array_length(ADDONS); i++ ) {
+			for( var i = 0, n = array_length(ADDONS); i < n; i++ ) {
 				if(string_pos(search_string, ADDONS[i].name))
 					array_push(search_res, ADDONS[i]);
 			}
@@ -51,7 +51,7 @@ function Panel_Addon() : PanelContent() constructor {
 		
 			var arr = search_string == ""? ADDONS : search_res;
 			
-			for( var i = 0; i < array_length(arr); i++ ) {
+			for( var i = 0, n = array_length(arr); i < n; i++ ) {
 				var _addon = arr[i];
 				
 				var bw = ui(28);
@@ -127,7 +127,7 @@ function Panel_Addon() : PanelContent() constructor {
 						
 					if(_addObj) {
 						var arr = variable_struct_get_names(_addObj.panels);
-						for( var i = 0; i < array_length(arr); i++ ) {
+						for( var i = 0, n = array_length(arr); i < n; i++ ) {
 							var pane  = _addObj.panels[$ arr[i]];
 							if(struct_has(pane, "main") && pane.main)
 								dialogPanelCall(new addonPanel(_addObj, pane));

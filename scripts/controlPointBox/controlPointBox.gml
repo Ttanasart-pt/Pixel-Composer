@@ -42,12 +42,12 @@ function controlPointBox(_onModify) : widget() constructor {
 	static setInteract = function(interactable = noone) { 
 		self.interactable = interactable;
 		
-		for( var i = 0; i < array_length(widgets); i++ ) 
+		for( var i = 0, n = array_length(widgets); i < n; i++ ) 
 			widgets[i].setInteract(interactable);
 	}
 	
 	static register = function(parent = noone) {
-		for( var i = 0; i < array_length(widgets); i++ ) 
+		for( var i = 0, n = array_length(widgets); i < n; i++ ) 
 			widgets[i].register(parent); 
 	}
 	
@@ -55,7 +55,7 @@ function controlPointBox(_onModify) : widget() constructor {
 		x = _x;
 		y = _y;
 		
-		for( var i = 0; i < array_length(widgets); i++ )
+		for( var i = 0, n = array_length(widgets); i < n; i++ )
 			widgets[i].setFocusHover(active, hover);
 		
 		var yy = _y;

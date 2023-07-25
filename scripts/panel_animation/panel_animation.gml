@@ -130,17 +130,7 @@ function Panel_Animation() : PanelContent() constructor {
 		],
 	];
 	
-	addHotkey("", "Play/Pause",		vk_space, MOD_KEY.none,	function() { 
-		PROJECT.animator.is_playing = !PROJECT.animator.is_playing; 
-		PROJECT.animator.current_frame = -1;
-		PROJECT.animator.time_since_last_frame = 0;
-		
-		if(PROJECT.animator.is_playing && PROJECT.animator.frames_total) {
-			PROJECT.animator.setFrame(0);
-			PROJECT.animator.frame_progress = true;
-		}
-		
-	});
+	addHotkey("", "Play/Pause",		vk_space, MOD_KEY.none,	function() { if(PROJECT.animator.is_playing) PROJECT.animator.pause() else PROJECT.animator.play(); });
 	
 	addHotkey("", "Resume/Pause",	vk_space, MOD_KEY.shift,	function() { if(PROJECT.animator.is_playing) PROJECT.animator.pause() else PROJECT.animator.resume(); });
 	
@@ -158,7 +148,7 @@ function Panel_Animation() : PanelContent() constructor {
 	addHotkey("Animation", "Paste",			"V",		MOD_KEY.ctrl, function() { PANEL_ANIMATION.doPaste(PANEL_ANIMATION.value_focusing); });
 	
 	function deleteKeys() {
-		for( var i = 0; i < array_length(keyframe_selecting); i++ ) {
+		for( var i = 0, n = array_length(keyframe_selecting); i < n; i++ ) {
 			var k  = keyframe_selecting[i];
 			k.anim.removeKey(k);
 		}
@@ -174,23 +164,23 @@ function Panel_Animation() : PanelContent() constructor {
 		switch(halign) {
 			case fa_left :	
 				tt = 9999;
-				for( var i = 0; i < array_length(keyframe_selecting); i++ )
+				for( var i = 0, n = array_length(keyframe_selecting); i < n; i++ )
 					tt = min(tt, keyframe_selecting[i].time);
 				break;
 			case fa_center :	
 				tt = 0;
-				for( var i = 0; i < array_length(keyframe_selecting); i++ )
+				for( var i = 0, n = array_length(keyframe_selecting); i < n; i++ )
 					tt += keyframe_selecting[i].time;
 				tt = round(tt / array_length(keyframe_selecting));
 				break;
 			case fa_right :	
 				tt = -9999;
-				for( var i = 0; i < array_length(keyframe_selecting); i++ )
+				for( var i = 0, n = array_length(keyframe_selecting); i < n; i++ )
 					tt = max(tt, keyframe_selecting[i].time);
 				break;
 		}
 		
-		for( var i = 0; i < array_length(keyframe_selecting); i++ ) {
+		for( var i = 0, n = array_length(keyframe_selecting); i < n; i++ ) {
 			var k = keyframe_selecting[i];
 			k.anim.setKeyTime(k, tt);
 		}
@@ -230,7 +220,7 @@ function Panel_Animation() : PanelContent() constructor {
 	
 	function staggerKeys(_index, _stag) {
 		var t = keyframe_selecting[_index].time;
-		for( var i = 0; i < array_length(keyframe_selecting); i++ ) {
+		for( var i = 0, n = array_length(keyframe_selecting); i < n; i++ ) {
 			var k = keyframe_selecting[i];
 			var _t = t + abs(i -  _index) * _stag;
 			
@@ -240,41 +230,41 @@ function Panel_Animation() : PanelContent() constructor {
 	
 	keyframe_menu = [
 		menuItem(__txtx("panel_animation_lock_y", "Lock/Unlock Y easing"), function() { 
-				for( var i = 0; i < array_length(keyframe_selecting); i++ ) {
+				for( var i = 0, n = array_length(keyframe_selecting); i < n; i++ ) {
 					var k = keyframe_selecting[i];
 					k.ease_y_lock = !k.ease_y_lock;
 				} }),
 		menuItemGroup(__txtx("panel_animation_ease_in", "Ease in"),  [ 
 			[ [THEME.timeline_ease, 0], function() { 
-				for( var i = 0; i < array_length(keyframe_selecting); i++ ) {
+				for( var i = 0, n = array_length(keyframe_selecting); i < n; i++ ) {
 					var k = keyframe_selecting[i];
 					k.ease_in_type = CURVE_TYPE.none;
 					k.ease_in = [0, 1];
 				}
 			}, __txtx("panel_animation_ease_linear", "Linear") ],
 			[ [THEME.timeline_ease, 1], function() { 
-				for( var i = 0; i < array_length(keyframe_selecting); i++ ) {
+				for( var i = 0, n = array_length(keyframe_selecting); i < n; i++ ) {
 					var k = keyframe_selecting[i];
 					k.ease_in_type = CURVE_TYPE.bezier;
 					k.ease_in = [1, 1];
 				}
 			}, __txtx("panel_animation_ease_smooth", "Smooth") ],
 			[ [THEME.timeline_ease, 2], function() { 
-				for( var i = 0; i < array_length(keyframe_selecting); i++ ) {
+				for( var i = 0, n = array_length(keyframe_selecting); i < n; i++ ) {
 					var k = keyframe_selecting[i];
 					k.ease_in_type = CURVE_TYPE.bezier;
 					k.ease_in = [1, 2];
 				}
 			}, __txtx("panel_animation_ease_overshoot", "Overshoot") ],
 			[ [THEME.timeline_ease, 3], function() { 
-				for( var i = 0; i < array_length(keyframe_selecting); i++ ) {
+				for( var i = 0, n = array_length(keyframe_selecting); i < n; i++ ) {
 					var k = keyframe_selecting[i];
 					k.ease_in_type = CURVE_TYPE.bezier;
 					k.ease_in = [0, 0];
 				}
 			}, __txtx("panel_animation_ease_sharp", "Sharp") ],
 			[ [THEME.timeline_ease, 4], function() { 
-				for( var i = 0; i < array_length(keyframe_selecting); i++ ) {
+				for( var i = 0, n = array_length(keyframe_selecting); i < n; i++ ) {
 					var k = keyframe_selecting[i];
 					k.ease_in_type = CURVE_TYPE.cut;
 					k.ease_in = [0, 0];
@@ -283,28 +273,28 @@ function Panel_Animation() : PanelContent() constructor {
 		]),
 		menuItemGroup(__txtx("panel_animation_ease_out", "Ease out"),  [ 
 			[ [THEME.timeline_ease, 0], function() { 
-				for( var i = 0; i < array_length(keyframe_selecting); i++ ) {
+				for( var i = 0, n = array_length(keyframe_selecting); i < n; i++ ) {
 					var k = keyframe_selecting[i];
 					k.ease_out_type = CURVE_TYPE.none;
 					k.ease_out = [0, 0];
 				}
 			}, __txtx("panel_animation_ease_linear", "Linear") ],
 			[ [THEME.timeline_ease, 1], function() { 
-				for( var i = 0; i < array_length(keyframe_selecting); i++ ) {
+				for( var i = 0, n = array_length(keyframe_selecting); i < n; i++ ) {
 					var k = keyframe_selecting[i];
 					k.ease_out_type = CURVE_TYPE.bezier;
 					k.ease_out = [1, 0];
 				}
 			}, __txtx("panel_animation_ease_smooth", "Smooth") ],
 			[ [THEME.timeline_ease, 2], function() { 
-				for( var i = 0; i < array_length(keyframe_selecting); i++ ) {
+				for( var i = 0, n = array_length(keyframe_selecting); i < n; i++ ) {
 					var k = keyframe_selecting[i];
 					k.ease_out_type = CURVE_TYPE.bezier;
 					k.ease_out = [1, -1];
 				}
 			}, __txtx("panel_animation_ease_overshoot", "Overshoot") ],
 			[ [THEME.timeline_ease, 3], function() { 
-				for( var i = 0; i < array_length(keyframe_selecting); i++ ) {
+				for( var i = 0, n = array_length(keyframe_selecting); i < n; i++ ) {
 					var k = keyframe_selecting[i];
 					k.ease_out_type = CURVE_TYPE.bezier;
 					k.ease_out = [0, 1];
@@ -777,7 +767,7 @@ function Panel_Animation() : PanelContent() constructor {
 			var _min =  999999;
 			var _max = -999999;
 			
-			for( var i = 0; i < array_length(prop.animators); i++ ) {
+			for( var i = 0, n = array_length(prop.animators); i < n; i++ ) {
 				var animator = prop.animators[i];
 				for(var k = 0; k < ds_list_size(animator.values); k++) {
 					var key_val = animator.values[| k].value;
@@ -793,7 +783,7 @@ function Panel_Animation() : PanelContent() constructor {
 				}
 			}
 			
-			for( var i = 0; i < array_length(prop.animators); i++ )
+			for( var i = 0, n = array_length(prop.animators); i < n; i++ )
 				drawDopesheetLine(prop.animators[i], key_y, msx, msy, _min, _max);
 		} else
 			drawDopesheetLine(prop.animator, key_y, msx, msy);
@@ -1116,7 +1106,7 @@ function Panel_Animation() : PanelContent() constructor {
 				if(!prop.is_anim) continue;
 				
 				if(prop.sep_axis) {
-					for( var i = 0; i < array_length(prop.animators); i++ ) {
+					for( var i = 0, n = array_length(prop.animators); i < n; i++ ) {
 						drawDopesheetLabelAnimator(_node, prop.animators[i], msx, msy);
 						ty = prop.animators[i].dopesheet_y - 1;
 					}
@@ -1294,12 +1284,12 @@ function Panel_Animation() : PanelContent() constructor {
 				if(_len != len) {
 					var key = ds_map_find_first(PROJECT.nodeMap);
 					repeat(ds_map_size(PROJECT.nodeMap)) {
-						var n = PROJECT.nodeMap[? key];
+						var _node = PROJECT.nodeMap[? key];
 						key = ds_map_find_next(PROJECT.nodeMap, key);
-						if(!n || !n.active) continue;
+						if(!_node || !_node.active) continue;
 						
 						for(var i = 0; i < ds_list_size(n.inputs); i++) {
-							var in = n.inputs[| i];
+							var in = _node.inputs[| i];
 							if(!in.is_anim) continue;
 							
 							for(var j = 0; j < ds_list_size(in.animator.values); j++) {
@@ -1353,7 +1343,7 @@ function Panel_Animation() : PanelContent() constructor {
 					tt = max(tt, 0);
 					var sh = tt - keyframe_dragging.time;
 								
-					for( var i = 0; i < array_length(keyframe_selecting); i++ ) {
+					for( var i = 0, n = array_length(keyframe_selecting); i < n; i++ ) {
 						var k  = keyframe_selecting[i];
 						var kt = k.time + sh;
 						
@@ -1365,7 +1355,7 @@ function Panel_Animation() : PanelContent() constructor {
 					if(mouse_release(mb_left) || mouse_press(mb_left)) {
 						keyframe_dragging = noone;
 									
-						for( var i = 0; i < array_length(keyframe_selecting); i++ ) {
+						for( var i = 0, n = array_length(keyframe_selecting); i < n; i++ ) {
 							var k  = keyframe_selecting[i];
 							k.anim.setKeyTime(k, k.time);
 						}
@@ -1382,7 +1372,7 @@ function Panel_Animation() : PanelContent() constructor {
 				
 					switch(keyframe_drag_type) {
 						case KEYFRAME_DRAG_TYPE.ease_in :
-							for( var i = 0; i < array_length(keyframe_selecting); i++ ) {
+							for( var i = 0, n = array_length(keyframe_selecting); i < n; i++ ) {
 								var k = keyframe_selecting[i];
 								k.ease_in_type  = keyframe_dragout? CURVE_TYPE.bezier : CURVE_TYPE.none;
 								
@@ -1393,7 +1383,7 @@ function Panel_Animation() : PanelContent() constructor {
 						
 							break;
 						case KEYFRAME_DRAG_TYPE.ease_out :
-							for( var i = 0; i < array_length(keyframe_selecting); i++ ) {
+							for( var i = 0, n = array_length(keyframe_selecting); i < n; i++ ) {
 								var k = keyframe_selecting[i];
 								k.ease_out_type = keyframe_dragout? CURVE_TYPE.bezier : CURVE_TYPE.none;
 								
@@ -1403,7 +1393,7 @@ function Panel_Animation() : PanelContent() constructor {
 							}
 							break;
 						case KEYFRAME_DRAG_TYPE.ease_both :
-							for( var i = 0; i < array_length(keyframe_selecting); i++ ) {
+							for( var i = 0, n = array_length(keyframe_selecting); i < n; i++ ) {
 								var k  = keyframe_selecting[i];
 								k.ease_in_type  = keyframe_dragout? CURVE_TYPE.bezier : CURVE_TYPE.none;
 								k.ease_out_type = keyframe_dragout? CURVE_TYPE.bezier : CURVE_TYPE.none;
@@ -1867,7 +1857,7 @@ function Panel_Animation() : PanelContent() constructor {
 		if(array_empty(keyframe_selecting)) return;
 		
 		var clones = [];
-		for( var i = 0; i < array_length(keyframe_selecting); i++ ) {
+		for( var i = 0, n = array_length(keyframe_selecting); i < n; i++ ) {
 			var cl = keyframe_selecting[i].cloneAnimator(,, false);
 			if(cl == noone) continue;
 			array_append(clones, cl);
@@ -1883,7 +1873,7 @@ function Panel_Animation() : PanelContent() constructor {
 	copy_clipboard = ds_list_create();
 	function doCopy() {
 		ds_list_clear(copy_clipboard);
-		for( var i = 0; i < array_length(keyframe_selecting); i++ )
+		for( var i = 0, n = array_length(keyframe_selecting); i < n; i++ )
 			ds_list_add(copy_clipboard, keyframe_selecting[i]);
 	}
 	

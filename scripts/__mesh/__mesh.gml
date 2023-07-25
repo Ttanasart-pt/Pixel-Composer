@@ -20,7 +20,7 @@ function Mesh() constructor {
 	}
 	
 	static draw = function(_x, _y, _s) {
-		for( var i = 0; i < array_length(triangles); i++ ) {
+		for( var i = 0, n = array_length(triangles); i < n; i++ ) {
 			var t = triangles[i];
 			
 			draw_line(_x + t[0].x * _s, _y + t[0].y * _s, _x + t[1].x * _s, _y + t[1].y * _s);
@@ -30,7 +30,7 @@ function Mesh() constructor {
 	}
 	
 	static pointIn = function(_x, _y) {
-		for( var i = 0; i < array_length(triangles); i++ ) {
+		for( var i = 0, n = array_length(triangles); i < n; i++ ) {
 			var t = triangles[i];
 			
 			if(point_in_triangle(_x, _y, t[0].x, t[0].y, t[1].x, t[1].y, t[2].x, t[2].y))
@@ -46,7 +46,7 @@ function Mesh() constructor {
 		var segments	= [];
 		var pointsPairs = ds_map_create();
 		
-		for( var i = 0; i < array_length(triangles); i++ ) {
+		for( var i = 0, n = array_length(triangles); i < n; i++ ) {
 			var t = triangles[i];
 			
 			for( var j = 0; j < 3; j++ ) {
@@ -72,7 +72,7 @@ function Mesh() constructor {
 			}
 		}
 		
-		for( var i = 0; i < array_length(segments); i++ ) {
+		for( var i = 0, n = array_length(segments); i < n; i++ ) {
 			var s0 = string(segments[i][0]);
 			var s1 = string(segments[i][1]);
 			
@@ -85,7 +85,7 @@ function Mesh() constructor {
 		
 		var path = [ segments[0][0], segments[0][1] ];
 		
-		for( var i = 0; i < array_length(segments); i++ ) {
+		for( var i = 0, n = array_length(segments); i < n; i++ ) {
 			var end_point  = path[array_length(path) - 1];
 	        var next_point = array_pop(pointsPairs[? string(end_point) ]);
 			
@@ -100,7 +100,7 @@ function Mesh() constructor {
 	static clone = function() {
 		var msh = new Mesh();
 		
-		for( var i = 0; i < array_length(triangles); i++ ) {
+		for( var i = 0, n = array_length(triangles); i < n; i++ ) {
 			msh.triangles[i] = [
 				triangles[i][0].clone(),
 				triangles[i][1].clone(),

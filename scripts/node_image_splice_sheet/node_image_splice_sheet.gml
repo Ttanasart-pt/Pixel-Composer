@@ -308,7 +308,7 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		var _buff = buffer_create(filSize * filSize * surface_format_get_bytes(cDep), buffer_fixed, 2);
 		
 		surf_array = [];
-		for( var i = 0; i < array_length(surf_array); i++ ) {
+		for( var i = 0, n = array_length(surf_array); i < n; i++ ) {
 			if(is_surface(surf_array[i]))
 				surface_free(surf_array[i]);
 		}

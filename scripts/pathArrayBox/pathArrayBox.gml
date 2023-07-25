@@ -49,7 +49,7 @@ function pathArrayBox(_target, _data, _onClick) : widget() constructor {
 		if(!is_array(_files)) _files = [ _files ];
 		var len = array_length(_files);
 		var txt = "(" + string(len) + ") " + "[";
-		for( var i = 0; i < array_length(_files); i++ )
+		for( var i = 0, n = array_length(_files); i < n; i++ )
 			txt += (i? ", " : "") + filename_name_only(_files[i]);
 		txt += "]";
 		

@@ -25,7 +25,7 @@ function Node_Gradient_Replace_Color(_x, _y, _group = noone) : Node_Processor(_x
 		var thr  = _data[3];
 		var graO = new gradientObject();
 		
-		for( var i = 0; i < array_length(gra.keys); i++ ) {
+		for( var i = 0, n = array_length(gra.keys); i < n; i++ ) {
 			var k = gra.keys[i];
 			
 			var fromValue = 999;

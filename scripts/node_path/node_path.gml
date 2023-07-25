@@ -338,7 +338,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 				var pxy = (_my - _y) / _s;
 				
 				draw_set_color(COLORS._main_accent);
-				for( var i = 0; i < array_length(drag_points); i++ ) {
+				for( var i = 0, n = array_length(drag_points); i < n; i++ ) {
 					var _p  = drag_points[i];
 					nx = _x + _p[_ANCHOR.x] * _s;
 					ny = _y + _p[_ANCHOR.y] * _s;
@@ -444,9 +444,9 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 				maxy = value_snap(maxy, _sny);
 				
 				if(key_mod_press(SHIFT)) {
-					var n = max(maxx - minx, maxy - miny);
-					maxx = minx + n;
-					maxy = miny + n;
+					var _n = max(maxx - minx, maxy - miny);
+					maxx = minx + _n;
+					maxy = miny + _n;
 				}
 				
 				var a = [];
@@ -482,9 +482,9 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 				maxy = value_snap(maxy, _sny);
 				
 				if(key_mod_press(SHIFT)) {
-					var n = max(maxx - minx, maxy - miny);
-					maxx = minx + n;
-					maxy = miny + n;
+					var _n = max(maxx - minx, maxy - miny);
+					maxx = minx + _n;
+					maxy = miny + _n;
 				}
 				
 				var a = [];
@@ -966,7 +966,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		if(is_array(_rat)) {
 			var _out = array_create(array_length(_rat));
 			
-			for( var i = 0; i < array_length(_rat); i++ ) {
+			for( var i = 0, n = array_length(_rat); i < n; i++ ) {
 				if(_typ == 0)		_out[i] = getPointRatio(_rat[i]);
 				else if(_typ == 1)	_out[i] = getPointSegment(_rat[i]);
 			}

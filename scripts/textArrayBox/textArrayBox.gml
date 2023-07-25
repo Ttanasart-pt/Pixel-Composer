@@ -21,7 +21,7 @@ function textArrayBox(arraySet, data, onModify = noone) : widget() constructor {
 		var th = hh + ui(8);
 		
 		draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text);
-		for( var i = 0; i < array_length(arraySet); i++ ) {
+		for( var i = 0, n = array_length(arraySet); i < n; i++ ) {
 			var ww = string_width(arraySet[i]) + ui(16);
 			if(tx + ww + ui(2) > _x + _w - ui(8)) {
 				tx = _x + ui(4);
@@ -55,7 +55,7 @@ function textArrayBox(arraySet, data, onModify = noone) : widget() constructor {
 		var hh = line_get_height(f_p0, ui(4));
 		
 		draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text);
-		for( var i = 0; i < array_length(arraySet); i++ ) {
+		for( var i = 0, n = array_length(arraySet); i < n; i++ ) {
 			var ww = string_width(arraySet[i]) + ui(16);
 			if(tx + ww + ui(2) > _x + _w - ui(8)) {
 				tx = _x + ui(4);

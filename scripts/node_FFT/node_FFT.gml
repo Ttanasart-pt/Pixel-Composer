@@ -34,7 +34,7 @@ function Node_FFT(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) const
 		var _res = FFT(_cmp);
 		var _r = array_create(array_length(_res));
 		
-		for( var i = 0; i < array_length(_res); i++ )
+		for( var i = 0, n = array_length(_res); i < n; i++ )
 			_r[i] = sqrt(sqr(_res[i].re) + sqr(_res[i].im));
 		
 		return _r;

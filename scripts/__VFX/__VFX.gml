@@ -60,6 +60,10 @@ function __part(_node) constructor {
 	anim_speed = 1;
 	anim_end   = ANIM_END_ACTION.loop;
 	
+	ground			= false;
+	ground_y		= 0;
+	ground_bounce	= 0;
+	
 	static create = function(_surf, _x, _y, _life) {
 		active	= true;
 		surf	= _surf;
@@ -67,6 +71,9 @@ function __part(_node) constructor {
 		y	= _y;
 		gx	= 0;
 		gy	= 0;
+		
+		prevx  = undefined;
+		prevy  = undefined;
 		
 		life = _life;
 		life_total = life;
@@ -86,6 +93,15 @@ function __part(_node) constructor {
 		turnSpd = _turnSpd;
 	
 		wig = _wig;
+		
+		spVec[0] = point_distance(0, 0, speedx, speedy);
+		spVec[1] = point_direction(0, 0, speedx, speedy);
+	}
+	
+	static setGround = function(_ground, _ground_offset, _ground_bounce) {
+		ground			= _ground;
+		ground_y		= y + _ground_offset;
+		ground_bounce	= _ground_bounce;
 	}
 	
 	static setTransform = function(_scx, _scy, _sct, _rot, _rots, _follow) {
@@ -114,7 +130,12 @@ function __part(_node) constructor {
 	static step = function() { 
 		if(!active) return;
 		x += speedx;
-		y += speedy;
+		
+		if(ground && y + speedy > ground_y) {
+			y = ground_y;
+			speedy = -speedy * ground_bounce;
+		} else
+			y += speedy;
 		
 		var dirr = point_direction(0, 0, speedx, speedy);
 		var diss = point_distance(0, 0, speedx, speedy);
@@ -130,15 +151,15 @@ function __part(_node) constructor {
 			}
 		}
 		
-		speedx = lengthdir_x(diss, dirr);
-		speedy = lengthdir_y(diss, dirr);
+		speedx = lengthdir_x(diss, dirr) + _gx;
+		speedy = lengthdir_y(diss, dirr) + _gy;
 		
-		if(_gx != 0 || _gy != 0) {
-			gx += _gx;
-			gy += _gy;
-			x += gx;
-			y += gy;
-		}
+		//if(_gx != 0 || _gy != 0) {
+		//	gx += _gx;
+		//	gy += _gy;
+		//	x += gx;
+		//	y += gy;
+		//}
 		
 		if(follow)  rot = spVec[1];
 		else        rot += rot_s;
@@ -147,8 +168,10 @@ function __part(_node) constructor {
 			node.onPartStep(self);
 		if(life-- < 0) kill();
 		
-		spVec[0] = point_distance(prevx, prevy, x, y);
-		spVec[1] = point_direction(prevx, prevy, x, y);
+		if(prevx != undefined) {
+			spVec[0] = point_distance(prevx, prevy, x, y);
+			spVec[1] = point_direction(prevx, prevy, x, y);
+		}
 		
 		prevx = x;
 		prevy = y;

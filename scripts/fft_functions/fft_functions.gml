@@ -14,11 +14,11 @@ function FFT(array_in) {
 }
 	
 function _FFT(array_in) {
-	var n  = array_length(array_in);
-	var nh = n div 2;
-	var theta = (2 * pi) / n;
+	var _n = array_length(array_in);
+	var nh = _n div 2;
+	var theta = (2 * pi) / _n;
 
-	if (n == 1)
+	if (_n == 1)
 	    return array_in;
 
 	var even = array_create(nh, 0);
@@ -34,7 +34,7 @@ function _FFT(array_in) {
 		
 	//print($"> {evenFFT}, {oddFFT}");
 	
-	var array_out = array_create(n);
+	var array_out = array_create(_n);
 		
 	for (var i = 0; i < nh; i++) {
 		var t = new Complex(

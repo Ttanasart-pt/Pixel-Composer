@@ -5,6 +5,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	renderActive = true;
 	
 	node_id = UUID_generate();
+	
 	group   = _group;
 	destroy_when_upgroup = false;
 	ds_list_add(PANEL_GRAPH.getNodeList(_group), self);
@@ -31,13 +32,15 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		recordAction(ACTION_TYPE.node_added, self);
 		PROJECT.nodeMap[? node_id] = self;
 		PROJECT.modified = true;
-	
+		
+		//print($"Adding node {node_id} to {PROJECT.path} [{ds_map_size(PROJECT.nodeMap)}]");
+		
 		run_in(1, function() { 
 			if(display_name != "") return;
 			resetInternalName();
 			display_name = name; //__txt_node_name(instanceof(self), name);
 		});
-	}
+	} 
 	
 	name = "";
 	display_name = "";
@@ -155,7 +158,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		if(!ds_map_exists(global.PRESETS_MAP, folder)) return;
 		
 		var pres = global.PRESETS_MAP[? folder];
-		for( var i = 0; i < array_length(pres); i++ ) {
+		for( var i = 0, n = array_length(pres); i < n; i++ ) {
 			var preset = pres[i];
 			if(preset.name != "_default") continue;
 			
@@ -339,6 +342,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	
 	static step = function() {}
 	static focusStep = function() {}
+	static inspectorStep = function() {}
 	
 	static doUpdate = function() { 
 		if(SAFE_MODE) return;
@@ -487,7 +491,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	static onInspect = function() {}
 	
 	static setRenderStatus = function(result) {
-		LOG_LINE_IF(global.FLAG.render, $"Set render status for {internalName} : {string(result)}");
+		LOG_LINE_IF(global.FLAG.render, $"Set render status for {internalName} : {result}");
 		
 		rendered = result;
 	}
@@ -738,130 +742,8 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 			else if(i == -2)	jun = inspectInput2;
 			else				jun = inputs[| i];
 			
-			var jx  = jun.x;
-			var jy  = jun.y;	
-			
-			if(jun.value_from == noone) continue;
-			if(!jun.value_from.node.active) continue;
-			if(!jun.isVisible()) continue;
-			
-			var frx = jun.value_from.x;
-			var fry = jun.value_from.y;
-			
-			if(!is_undefined(minx)) {
-				if(jx < minx && frx < minx) continue;
-				if(jx > maxx && frx > maxx) continue;
-				
-				if(jy < miny && fry < miny) continue;
-				if(jy > maxy && fry > maxy) continue;
-			}
-					
-			var c0  = value_color(jun.value_from.type);
-			var c1  = value_color(jun.type);
-			
-			var shx = jun.draw_line_shift_x * _s;
-			var shy = jun.draw_line_shift_y * _s;
-			
-			var cx  = round((frx + jx) / 2 + shx);
-			var cy  = round((fry + jy) / 2 + shy);
-			
-			var hover = false;
-			var th = max(1, PREF_MAP[? "connection_line_width"] * _s);
-			jun.draw_line_shift_hover = false;
-			
-			var downDirection = jun.type == VALUE_TYPE.action || jun.value_from.type == VALUE_TYPE.action;
-			
-			if(PANEL_GRAPH.pHOVER)
-			switch(PREF_MAP[? "curve_connection_line"]) {
-				case 0 : 
-					hover = distance_to_line(mx, my, jx, jy, frx, fry) < max(th * 2, 6);
-					break;
-				case 1 : 
-					if(downDirection) 
-						hover = distance_to_curve_corner(mx, my, jx, jy, frx, fry, _s) < max(th * 2, 6);
-					else 
-						hover = distance_to_curve(mx, my, jx, jy, frx, fry, cx, cy, _s) < max(th * 2, 6);
-						
-					if(PANEL_GRAPH._junction_hovering == noone)
-						jun.draw_line_shift_hover = hover;
-					break;
-				case 2 : 
-					if(downDirection) 
-						hover = distance_to_elbow_corner(mx, my, frx, fry, jx, jy) < max(th * 2, 6);
-					else
-						hover = distance_to_elbow(mx, my, frx, fry, jx, jy, cx, cy, _s, jun.value_from.drawLineIndex, jun.drawLineIndex) < max(th * 2, 6);
-					
-					if(PANEL_GRAPH._junction_hovering == noone)
-						jun.draw_line_shift_hover = hover;
-					break;
-				case 3 :
-					if(downDirection) 
-						hover  = distance_to_elbow_diag_corner(mx, my, frx, fry, jx, jy) < max(th * 2, 6);
-					else
-						hover  = distance_to_elbow_diag(mx, my, frx, fry, jx, jy, cx, cy, _s, jun.value_from.drawLineIndex, jun.drawLineIndex) < max(th * 2, 6);
-					
-					if(PANEL_GRAPH._junction_hovering == noone)
-						jun.draw_line_shift_hover = hover;
-					break;
-			}
-			
-			if(_active && hover)
-				hovering = jun;
-			
-			var thicken = false;
-			thicken |= PANEL_GRAPH.nodes_junction_d == jun;
-			thicken |= _active && PANEL_GRAPH.junction_hovering == jun && PANEL_GRAPH._junction_hovering == noone;
-			thicken |= instance_exists(o_dialog_add_node) && o_dialog_add_node.junction_hovering == jun;
-			
-			th *= thicken? 2 : 1;
-			
-			var corner = PREF_MAP[? "connection_line_corner"] * _s;
-			var ty = LINE_STYLE.solid;
-			if(jun.type == VALUE_TYPE.node)
-				ty = LINE_STYLE.dashed;
-			
-			var ss  = _s * aa;
-			jx  *= aa;
-			jy  *= aa;
-			frx *= aa;
-			fry *= aa;
-			th  *= aa;
-			cx  *= aa;
-			cy  *= aa;
-			corner *= aa;
-			th = max(1, round(th));
-			
-			draw_set_color(c0);
-			
-			var fromIndex = jun.value_from.drawLineIndex;
-			var toIndex   = jun.drawLineIndex;
-			
-			switch(PREF_MAP[? "curve_connection_line"]) {
-				case 0 : 
-					if(ty == LINE_STYLE.solid)
-						draw_line_width_vertex(jx, jy, frx, fry, th, c1, c0);
-					else
-						draw_line_dashed_color(jx, jy, frx, fry, th, c1, c0, 12 * ss);
-					break;
-				case 1 : 
-					if(downDirection)
-						draw_line_curve_corner(jx, jy, frx, fry, ss, th, c0, c1); 
-					else
-						draw_line_curve_color(jx, jy, frx, fry, cx, cy, ss, th, c0, c1, ty); 
-					break;
-				case 2 : 
-					if(downDirection)
-						draw_line_elbow_corner(frx, fry, jx, jy, ss, th, c0, c1, corner, fromIndex, toIndex, ty); 
-					else
-						draw_line_elbow_color(frx, fry, jx, jy, cx, cy, ss, th, c0, c1, corner, fromIndex, toIndex, ty); 
-					break;
-				case 3 : 
-					if(downDirection)
-						draw_line_elbow_diag_corner(frx, fry, jx, jy, ss, th, c0, c1, corner, fromIndex, toIndex, ty); 
-					else
-						draw_line_elbow_diag_color(frx, fry, jx, jy, cx, cy, ss, th, c0, c1, corner, fromIndex, toIndex, ty); 
-					break;
-			}
+			var hov = jun.drawConnections(_x, _y, _s, mx, my, _active, aa, minx, miny, maxx, maxy);
+			if(hov) hovering = hov;
 		}
 		
 		return hovering;
@@ -1194,6 +1076,8 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		return true;
 	}
 	static clearCache = function() { 
+		clearInputCache();
+		
 		if(!use_cache) return;
 		if(!isRenderActive()) return;
 		
@@ -1217,9 +1101,18 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		if(!isRenderActive()) return;
 		
 		clearCache();
-		for( var i = 0; i < ds_list_size(outputs); i++ )
-		for( var j = 0; j < ds_list_size(outputs[| i].value_to); j++ )
-			outputs[| i].value_to[| j].node._clearCacheForward();
+		var arr = getNextNodesRaw();
+		for( var i = 0, n = array_length(arr); i < n; i++ )
+			arr[i]._clearCacheForward();
+		
+		//for( var i = 0; i < ds_list_size(outputs); i++ )
+		//for( var j = 0; j < ds_list_size(outputs[| i].value_to); j++ )
+		//	outputs[| i].value_to[| j].node._clearCacheForward();
+	}
+	
+	static clearInputCache = function() { 
+		for( var i = 0; i < ds_list_size(inputs); i++ )
+			inputs[| i].resetCache();
 	}
 	
 	static checkConnectGroup = function(_type = "group") {
@@ -1434,6 +1327,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 			else		  node_id = load_map.id;
 			
 			PROJECT.nodeMap[? node_id] = self;
+			//print($"D Adding node {node_id} to {PROJECT.path} [{ds_map_size(PROJECT.nodeMap)}]");
 			
 			if(struct_has(load_map, "name"))
 				setDisplayName(load_map.name);
@@ -1558,7 +1452,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		ds_map_destroy(inputMap);
 		ds_map_destroy(outputMap);
 		
-		for( var i = 0; i < array_length(temp_surface); i++ )
+		for( var i = 0, n = array_length(temp_surface); i < n; i++ )
 			surface_free(temp_surface[i]);
 		
 		onCleanUp();

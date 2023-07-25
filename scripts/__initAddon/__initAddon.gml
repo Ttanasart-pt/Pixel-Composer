@@ -57,6 +57,6 @@ function loadAddon() {
 	if(!file_exists(_path)) return;
 	
 	ADDONS_ON_START = json_load_struct(_path);
-	for( var i = 0; i < array_length(ADDONS_ON_START); i++ ) 
+	for( var i = 0, n = array_length(ADDONS_ON_START); i < n; i++ ) 
 		addonTrigger(ADDONS_ON_START[i], false);
 }

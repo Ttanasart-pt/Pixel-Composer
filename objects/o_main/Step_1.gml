@@ -1,5 +1,4 @@
 /// @description init
-//print(PROJECT.path);
 global.cache_call = 0;
 global.cache_hit  = 0;
 
@@ -199,4 +198,4 @@ _HOVERING_ELEMENT = noone;
 	MOUSE_WRAP = false;
 #endregion
 
-//if(global.cache_call) print($"CACHE called: {global.cache_call} | hit: {global.cache_hit} ({global.cache_hit / global.cache_call}%)");
+//if(global.cache_call) print($"CACHE called: {global.cache_call} | hit: {global.cache_hit} ({global.cache_hit / global.cache_call * 100}%)");

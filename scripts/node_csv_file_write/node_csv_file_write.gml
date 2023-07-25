@@ -32,7 +32,7 @@ function Node_CSV_File_Write(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		var str = "";
 		
 		if(is_array(_val)) {
-			for( var i = 0; i < array_length(_val); i++ ) {
+			for( var i = 0, n = array_length(_val); i < n; i++ ) {
 				if(is_array(_val[i])) {
 					for( var j = 0; j < array_length(_val[i]); j++ )
 						str += (j? ", " : "") + string(_val[i][j])

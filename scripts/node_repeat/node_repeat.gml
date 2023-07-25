@@ -275,11 +275,11 @@ function Node_Repeat(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		if(is_array(_inSurf) && _arr == 2) {
 			if(!is_array(_outSurf)) surface_free(_outSurf);
 			else {
-				for( var i = 0; i < array_length(_outSurf); i++ )
+				for( var i = 0, n = array_length(_outSurf); i < n; i++ )
 					surface_free(_outSurf[i]);
 			}
 			
-			for( var i = 0; i < array_length(_inSurf); i++ ) {
+			for( var i = 0, n = array_length(_inSurf); i < n; i++ ) {
 				var _out = surface_create(_dim[0], _dim[1], cDep);
 				_outSurf[i] = _out;
 				doRepeat(_out, _inSurf[i]);

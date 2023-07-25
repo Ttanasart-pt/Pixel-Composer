@@ -48,7 +48,7 @@ function Node_Atlas_Set(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		
 		var natl = [];
 		
-		for( var i = 0; i < array_length(atl); i++ ) {
+		for( var i = 0, n = array_length(atl); i < n; i++ ) {
 			natl[i] = atl[i].clone();
 			
 			if(use[1]) natl[i].surface.set(array_safe_get(surf, i));

@@ -39,12 +39,12 @@ draw_set_alpha(1);
 	if(b == 2) {
 		var oldDir = environment_get_variable("userprofile") + "/AppData/Local/Pixels_Composer/";
 		var folders = [ "Assets", "Collections", "Fonts", "Gradients", "Palettes", "Presets", "Themes"];
-		for( var i = 0; i < array_length(folders); i++ ) {
-			var o = oldDir + folders[i] + "/";
-			var n = DIRECTORY + folders[i] + "/";
+		for( var i = 0, n = array_length(folders); i < n; i++ ) {
+			var _o = oldDir + folders[i] + "/";
+			var _n = DIRECTORY + folders[i] + "/";
 			
-			if(directory_exists(o)) {
-				var shell = "/E /I " + o + " " + n;
+			if(directory_exists(_o)) {
+				var shell = "/E /I " + _o + " " + _n;
 				execute_shell("Xcopy", shell);
 			}
 		}

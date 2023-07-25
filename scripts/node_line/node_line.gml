@@ -80,7 +80,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		draw_set_color(COLORS._main_accent);
-		for( var i = 0; i < array_length(lines); i++ ) {
+		for( var i = 0, n = array_length(lines); i < n; i++ ) {
 			var points = lines[i];
 			if(array_length(points) < 2) continue;
 				
@@ -342,7 +342,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 				draw_primitive_begin_texture(pr_trianglestrip, tex);
 			}
 			
-			for( var i = 0; i < array_length(lines); i++ ) {
+			for( var i = 0, n = array_length(lines); i < n; i++ ) {
 				var points = lines[i];
 				if(array_length(points) < 2) continue;
 				

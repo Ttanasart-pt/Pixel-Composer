@@ -28,7 +28,7 @@ function Node_Gradient_Shift(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 		_outSurf = new gradientObject();
 		_outSurf.keys = [];
 		
-		for( var i = 0; i < array_length(pal.keys); i++ ) {
+		for( var i = 0, n = array_length(pal.keys); i < n; i++ ) {
 			var k = pal.keys[i];
 			var key = new gradientKey((0.5 + (k.time - 0.5) * sca) + sft, k.value);
 			

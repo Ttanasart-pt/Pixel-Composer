@@ -97,6 +97,13 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	inputs[| 35] = nodeValue("Turn both directions", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false, "Apply randomized 1, -1 multiplier to the turning speed." );
 	
 	inputs[| 36] = nodeValue("Turn scale with speed", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false );
+	
+	inputs[| 37] = nodeValue("Collide ground", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false );
+	
+	inputs[| 38] = nodeValue("Ground offset", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0 );
+	
+	inputs[| 39] = nodeValue("Bounce amount", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.5 )
+		.setDisplay(VALUE_DISPLAY.slider, [ 0, 1, 0.01 ]);
 		
 	input_len = ds_list_size(inputs);
 	
@@ -105,6 +112,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		["Spawn",		true],	27, 16, 1, 2, 3, 4, 30, 31, 24, 25, 5,
 		["Movement",	true],	29, 6, 18,
 		["Physics",		true],	7, 19, 33, 20, 34, 35, 36, 
+		["Ground",		true],	37, 38, 39, 
 		["Rotation",	true],	15, 8, 9, 
 		["Scale",		true],	10, 17, 11, 
 		["Color",		true],	12, 28, 13, 14, 
@@ -174,6 +182,10 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		var _arr_type	= current_data[22];
 		var _anim_speed	= current_data[23];
 		var _anim_end	= current_data[26];
+		
+		var _ground			= current_data[37];
+		var _ground_offset	= current_data[38];
+		var _ground_bounce	= current_data[39];
 		
 		if(_rotation[1] < _rotation[0]) _rotation[1] += 360;
 		
@@ -266,8 +278,9 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 				
 			var _trn = random_range(_turn[0], _turn[1]);
 			if(_turnBi) _trn *= choose(-1, 1);
-				
+			
 			part.setPhysic(_vx, _vy, _acc, _grav, _gvDir, _wigg, _trn, _turnSc);
+			part.setGround(_ground, _ground_offset, _ground_bounce);
 			part.setTransform(_scx, _scy, _scale_time, _rot, _rot_spd, _follow);
 			part.setDraw(_color, _bld, _alp, _fade);
 			spawn_index = safe_mod(spawn_index + 1, attributes.part_amount);
@@ -349,15 +362,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	
 	static step = function() {}
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
-		inputs[| 3].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
-		if(onDrawOverlay != -1)
-			onDrawOverlay(active, _x, _y, _s, _mx, _my);
-	}
-	
-	static onDrawOverlay = -1;
-	
-	static update = function(frame = PROJECT.animator.current_frame) {
+	static inspectorStep = function() {
 		var _inSurf = inputs[|  0].getValue();
 		var _dist   = inputs[|  4].getValue();
 		var _scatt  = inputs[| 24].getValue();
@@ -379,7 +384,17 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 				inputs[| 26].setVisible(true);
 			}
 		}
-		
+	}
+	
+	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
+		inputs[| 3].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
+		if(onDrawOverlay != -1)
+			onDrawOverlay(active, _x, _y, _s, _mx, _my);
+	}
+	
+	static onDrawOverlay = -1;
+	
+	static update = function(frame = PROJECT.animator.current_frame) {
 		checkPartPool();
 		var _spawn_type = inputs[| 16].getValue();
 		if(_spawn_type == 0)	inputs[| 1].name = "Spawn delay";
@@ -395,4 +410,11 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	static onPartCreate = function(part) {}
 	static onPartStep = function(part) {}
 	static onPartDestroy = function(part) {}
+	
+	static postDeserialize = function() {
+		if(PROJECT.version < SAVE_VERSION) {
+			for( var i = 37; i <= 39; i++ )
+				array_insert(load_map.inputs, i, noone);
+		}
+	}
 }

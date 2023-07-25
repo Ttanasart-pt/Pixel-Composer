@@ -110,12 +110,12 @@
 	ANIMATION_POST = [];
 	
 	function __addon_preAnim() {
-		for( var i = 0; i < array_length(ANIMATION_PRE); i++ ) 
+		for( var i = 0, n = array_length(ANIMATION_PRE); i < n; i++ ) 
 			ANIMATION_PRE[i]();
 	}
 	
 	function __addon_postAnim() {
-		for( var i = 0; i < array_length(ANIMATION_POST); i++ ) 
+		for( var i = 0, n = array_length(ANIMATION_POST); i < n; i++ ) 
 			ANIMATION_POST[i]();
 	}
 #endregion
@@ -146,7 +146,7 @@
 		if(array_length(path) == 1 && directory_exists(path[0]))
 			type = "image";
 			
-		for( var i = 0; i < array_length(path); i++ ) {
+		for( var i = 0, n = array_length(path); i < n; i++ ) {
 			var p = path[i];
 			var ext = string_lower(filename_ext(p));
 			
@@ -168,7 +168,7 @@
 			PANEL_GRAPH.onStepBegin();
 			
 			var node = noone;
-			for( var i = 0; i < array_length(path); i++ ) {
+			for( var i = 0, n = array_length(path); i < n; i++ ) {
 				var p = path[i];
 				var ext = string_lower(filename_ext(p));
 				

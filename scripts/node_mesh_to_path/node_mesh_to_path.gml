@@ -23,7 +23,7 @@ function Node_Mesh_To_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		draw_set_color(COLORS._main_accent);
 		var op, np;
 		
-		for( var i = 0; i < array_length(segments); i += 1 ) {
+		for( var i = 0, n = array_length(segments); i < n; i += 1 ) {
 			np = segments[i];
 			if(i) draw_line_round(_x + op.x * _s, _y + op.y * _s, _x + np.x * _s, _y + np.y * _s, 2);
 			op = np;
@@ -58,7 +58,7 @@ function Node_Mesh_To_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		lengths  = [];
 		
 		var op, np;
-		for( var i = 0; i < array_length(segments); i += 1 ) {
+		for( var i = 0, n = array_length(segments); i < n; i += 1 ) {
 			np = segments[i];
 			if(i) {
 				lengths[i] = point_distance(op.x, op.y, np.x, np.y);

@@ -174,7 +174,7 @@ function Node_Strand_Create(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			var dy   = __my - tool_my;
 			
 			if(dx != 0 || dy != 0)
-			for( var i = 0; i < array_length(groomed.hairs); i++ ) {
+			for( var i = 0, n = array_length(groomed.hairs); i < n; i++ ) {
 				var h = groomed.hairs[i];
 				for( var j = 1; j < array_length(h.points); j++ ) {
 					var p = h.points[j];
@@ -208,7 +208,7 @@ function Node_Strand_Create(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			var p1y = __my + lengthdir_y(wid, tool_dir_fix - 90);
 			
 			if(tool_dmx != __mx || tool_dmy != __my)
-			for( var i = 0; i < array_length(groomed.hairs); i++ ) {
+			for( var i = 0, n = array_length(groomed.hairs); i < n; i++ ) {
 				var h = groomed.hairs[i];
 				var op, np;
 				
@@ -242,7 +242,7 @@ function Node_Strand_Create(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			var stn  = tool_dragging.attribute.strength;
 			stn = tool_dragging == tool_stretch? stn / game_get_speed(gamespeed_fps) : stn / 10;
 			
-			for( var i = 0; i < array_length(groomed.hairs); i++ ) {
+			for( var i = 0, n = array_length(groomed.hairs); i < n; i++ ) {
 				var h = groomed.hairs[i];
 				var op, np;
 				var amo = array_length(h.points);
@@ -302,7 +302,7 @@ function Node_Strand_Create(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			var dy   = __my - tool_my;
 			
 			if(dx != 0 || dy != 0)
-			for( var i = 0; i < array_length(tool_grabbing); i++ ) {
+			for( var i = 0, n = array_length(tool_grabbing); i < n; i++ ) {
 				var h   = tool_grabbing[i][0];
 				var p   = tool_grabbing[i][1];
 				var inf = tool_grabbing[i][2];
@@ -402,7 +402,7 @@ function Node_Strand_Create(_x, _y, _group = noone) : Node(_x, _y, _group) const
 				tool_my = (_my - _y) / _s;
 				
 				tool_grabbing = [];
-				for( var i = 0; i < array_length(groomed.hairs); i++ ) {
+				for( var i = 0, n = array_length(groomed.hairs); i < n; i++ ) {
 					var h = groomed.hairs[i];
 					var p = h.points[array_length(h.points) - 1];
 						

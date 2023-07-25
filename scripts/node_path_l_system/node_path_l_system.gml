@@ -123,7 +123,7 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		inputs[| 2].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
 		
 		draw_set_color(COLORS._main_accent);
-		for( var i = 0; i < array_length(lines); i++ ) {
+		for( var i = 0, n = array_length(lines); i < n; i++ ) {
 			var p0 = lines[i][0];
 			var p1 = lines[i][1];
 			
@@ -226,7 +226,7 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		
 		var _end = inputs[| 5].getValue();
 		var _es  = string_splice(_end, ",");
-		for( var i = 0; i < array_length(_es); i++ ) {
+		for( var i = 0, n = array_length(_es); i < n; i++ ) {
 			var _sp = string_splice(_es[i], "=");
 			if(array_length(_sp) == 2)
 				l = string_replace_all(l, _sp[0], _sp[1]);
@@ -274,7 +274,7 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		ds_stack_destroy(st);
 		
 		boundary = new BoundingBox();
-		for( var i = 0; i < array_length(lines); i++ )
+		for( var i = 0, n = array_length(lines); i < n; i++ )
 			boundary.addPoint(lines[i][0][0], lines[i][0][1], lines[i][1][0], lines[i][1][1]);
 		
 		outputs[| 0].setValue(self);

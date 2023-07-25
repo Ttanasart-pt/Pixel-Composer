@@ -55,7 +55,7 @@ function __Dust(x, y, size = 8) constructor {
 	static draw = function() {
 		draw_set_color(c_grey);
 		
-		for( var i = 0; i < array_length(px) - 1; i++ ) {
+		for( var i = 0, n = array_length(px) - 1; i < n; i++ ) {
 			var dist = ceil(point_distance(px[i], py[i], px[i + 1], px[i + 1]));
 			for( var j = 0; j < dist; j++ ) {
 				var _x = lerp(px[i], px[i + 1], j / dist);
@@ -103,14 +103,14 @@ function Node_Dust(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		if(PROJECT.animator.current_frame == 0) {
 			dusts = [ new __Dust( 0, _dim[1] / 2 ) ];
 		} else {
-			for( var i = 0; i < array_length(dusts); i++ ) 
+			for( var i = 0, n = array_length(dusts); i < n; i++ ) 
 				dusts[i].step();
 		}
 		
 		surface_set_target(_outSurf);
 			DRAW_CLEAR
 			
-			for( var i = 0; i < array_length(dusts); i++ ) 
+			for( var i = 0, n = array_length(dusts); i < n; i++ ) 
 				dusts[i].draw();
 		surface_reset_target();
 	}

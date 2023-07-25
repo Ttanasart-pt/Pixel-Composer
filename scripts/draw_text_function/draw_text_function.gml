@@ -72,7 +72,7 @@ function __draw_text_ext_transformed(_x, _y, _text, _sep, _w, sx, sy, rotation) 
 		case fa_bottom : yy = _y - hh;		break;
 	}
 		
-	for( var i = 0; i < array_length(lines); i++ ) {
+	for( var i = 0, n = array_length(lines); i < n; i++ ) {
 		var lw = string_width(lines[i]) * sx;
 		
 		switch(ha) {

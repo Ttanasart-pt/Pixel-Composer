@@ -36,7 +36,7 @@ function Panel_Array_Sequence(node) : PanelContent() constructor {
 		surface_set_target(content_surface);
 			DRAW_CLEAR
 			
-			for( var i = 0; i < array_length(_seq); i++ ) {
+			for( var i = 0, n = array_length(_seq); i < n; i++ ) {
 				var _s  = _seq[i];
 				if(!is_surface(_s)) continue;
 				
@@ -112,11 +112,11 @@ function Panel_Array_Sequence(node) : PanelContent() constructor {
 			var _def = array_length(_ord) == 0;
 			if(_def) {
 				__ord = array_create(array_length(_seq));
-				for( var i = 0; i < array_length(_seq); i++ ) 
+				for( var i = 0, n = array_length(_seq); i < n; i++ ) 
 					__ord[i] = i;
 			}
 		
-			for( var i = 0; i < array_length(__ord); i++ ) {
+			for( var i = 0, n = array_length(__ord); i < n; i++ ) {
 				var _i = __ord[i];
 				if(_i == noone) continue;
 				var _s = _seq[_i];

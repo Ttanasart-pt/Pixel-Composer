@@ -11,7 +11,7 @@
 	if(!is_array(_str)) __str = [ _str ];																						\
 																																\
 	for( var k = 0; k < array_length(__str); k++ )																				\
-	for( var i = 0; i < array_length(__str[k].hairs); i++ ) {																	\
+	for( var i = 0, n = array_length(__str[k].hairs); i < n; i++ ) {																	\
 		var h = __str[k].hairs[i];																								\
 																																\
 		for( var j = 1; j < array_length(h.points); j++ ) {																		\

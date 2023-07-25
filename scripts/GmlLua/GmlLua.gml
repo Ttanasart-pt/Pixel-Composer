@@ -284,7 +284,7 @@ function __initLua() {
 	globalvar LUA_API;
 	LUA_API = ds_map_create();
 	
-	for( var i = 0; i < array_length(global.lua_functions); i++ ) {
+	for( var i = 0, n = array_length(global.lua_functions); i < n; i++ ) {
 		if(is_string(global.lua_functions[i])) continue;
 		if(global.lua_functions[i][1] == noone) continue;
 		LUA_API[? global.lua_functions[i][0]] = global.lua_functions[i][1];

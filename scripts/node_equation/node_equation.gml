@@ -22,7 +22,7 @@ function Node_create_Equation(_x, _y, _group = noone, _param = "") {
 	if(str != "" && str != toNumber(str)) 
 		array_push_unique(vars, str);
 	
-	for( var i = 0; i < array_length(vars); i++ )
+	for( var i = 0, n = array_length(vars); i < n; i++ )
 		node.inputs[| 1 + i * 2].setValue(vars[i]);
 	
 	return node;

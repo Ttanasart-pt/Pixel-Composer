@@ -25,7 +25,7 @@ function transformBox(_onModify) : widget() constructor {
 	static setInteract = function(interactable = noone) { 
 		self.interactable = interactable;
 		
-		for( var i = 0; i < array_length(tb); i++ ) 
+		for( var i = 0, n = array_length(tb); i < n; i++ ) 
 			tb[i].setInteract(interactable);
 		rot.setInteract(interactable);
 	}

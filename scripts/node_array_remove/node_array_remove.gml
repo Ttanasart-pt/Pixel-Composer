@@ -58,14 +58,14 @@ function Node_Array_Remove(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			if(!is_array(index)) index = [ index ];
 			array_sort(index, false);
 			
-			for( var i = 0; i < array_length(index); i++ ) {
+			for( var i = 0, n = array_length(index); i < n; i++ ) {
 				if(index[i] < 0) index[i] = array_length(arr) + index[i];
 				array_delete(arr, index[i], 1);
 			}
 		} else {
 			if(!spred || !is_array(value)) value = [ value ];
 			
-			for( var i = 0; i < array_length(value); i++ )
+			for( var i = 0, n = array_length(value); i < n; i++ )
 				array_remove(arr, value[i]);
 		}
 		

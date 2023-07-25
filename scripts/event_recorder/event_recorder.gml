@@ -94,7 +94,7 @@ function Action(_type, _object, _data) constructor {
 				groupNodes(data.content, obj, false);
 				break;
 			case ACTION_TYPE.collection_loaded :
-				for( var i = 0; i < array_length(obj); i++ ) 
+				for( var i = 0, n = array_length(obj); i < n; i++ ) 
 					nodeDelete(obj[i]);
 				break;
 		}
@@ -156,7 +156,7 @@ function Action(_type, _object, _data) constructor {
 				upgroupNode(obj, false);
 				break;
 			case ACTION_TYPE.collection_loaded :
-				for( var i = 0; i < array_length(obj); i++ )
+				for( var i = 0, n = array_length(obj); i < n; i++ )
 					obj[i].restore();
 				break;
 		}

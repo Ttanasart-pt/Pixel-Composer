@@ -25,7 +25,7 @@ function Node_Sequence_Anim(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		
 		if(array_length(_ord) == 0) {
 			_ord = array_create(array_length(_seq));
-			for( var i = 0; i < array_length(_seq); i++ ) 
+			for( var i = 0, n = array_length(_seq); i < n; i++ ) 
 				_ord[i] = i;
 		}
 		
@@ -49,7 +49,7 @@ function Node_Sequence_Anim(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		sequence_surface = surface_verify(sequence_surface, sw, sh - ui(8));
 		surface_set_target(sequence_surface);
 			DRAW_CLEAR
-			for( var i = 0; i < array_length(_ord); i++ ) {
+			for( var i = 0, n = array_length(_ord); i < n; i++ ) {
 				var o = _ord[i];
 				if(o == noone) continue;
 				var s = array_safe_get(_seq, o);
@@ -99,7 +99,7 @@ function Node_Sequence_Anim(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		
 		if(array_length(_seq) == 0) {
 			_seq = array_create(array_length(_sur));
-			for( var i = 0; i < array_length(_sur); i++ ) 
+			for( var i = 0, n = array_length(_sur); i < n; i++ ) 
 				_seq[i] = i;
 		}
 		

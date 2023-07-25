@@ -195,7 +195,7 @@ function Strand(sx = 0, sy = 0, amount = 5, length = 8, direct = 0, curlFreq = 4
 	static store = function() {
 		var op, np;
 		
-		for( var i = 0; i < array_length(points); i++ ) {
+		for( var i = 0, n = array_length(points); i < n; i++ ) {
 			np = points[i];
 			
 			if(i) {
@@ -213,7 +213,7 @@ function Strand(sx = 0, sy = 0, amount = 5, length = 8, direct = 0, curlFreq = 4
 			var aa = 0;
 			var ox, oy, nx, ny;
 		
-			for( var i = 0; i < array_length(points); i++ ) {
+			for( var i = 0, n = array_length(points); i < n; i++ ) {
 				aa += restAngle[i];
 				
 				if(i) {
@@ -233,7 +233,7 @@ function Strand(sx = 0, sy = 0, amount = 5, length = 8, direct = 0, curlFreq = 4
 		
 		//draw_set_color(c_lime);
 		//var ox, oy, nx, ny;
-		//for( var i = 0; i < array_length(points); i++ ) {
+		//for( var i = 0, n = array_length(points); i < n; i++ ) {
 		//	nx = points[i].px;
 		//	ny = points[i].py;
 			
@@ -248,7 +248,7 @@ function Strand(sx = 0, sy = 0, amount = 5, length = 8, direct = 0, curlFreq = 4
 		
 		draw_set_color(baked? c_aqua : c_blue);
 		var ox, oy, nx, ny;
-		for( var i = 0; i < array_length(points); i++ ) {
+		for( var i = 0, n = array_length(points); i < n; i++ ) {
 			nx = points[i].x;
 			ny = points[i].y;
 			
@@ -261,7 +261,7 @@ function Strand(sx = 0, sy = 0, amount = 5, length = 8, direct = 0, curlFreq = 4
 			oy = ny;
 		}
 		
-		for( var i = 0; i < array_length(points); i++ ) {
+		for( var i = 0, n = array_length(points); i < n; i++ ) {
 			nx = points[i].x;
 			ny = points[i].y;
 			
@@ -275,7 +275,7 @@ function Strand(sx = 0, sy = 0, amount = 5, length = 8, direct = 0, curlFreq = 4
 	static set = function(sx = points[0].x, sy = points[0].y) {
 		var ox, oy, aa = 0;
 		
-		for( var i = 0; i < array_length(points); i++ ) {
+		for( var i = 0, n = array_length(points); i < n; i++ ) {
 			aa += restAngle[i];
 			
 			if(i) {
@@ -290,7 +290,7 @@ function Strand(sx = 0, sy = 0, amount = 5, length = 8, direct = 0, curlFreq = 4
 			oy = points[i].y;
 		}
 		
-		for( var i = 0; i < array_length(points); i++ ) {
+		for( var i = 0, n = array_length(points); i < n; i++ ) {
 			points[i].px = points[i].x;
 			points[i].py = points[i].y;
 		}
@@ -359,7 +359,7 @@ function Strand(sx = 0, sy = 0, amount = 5, length = 8, direct = 0, curlFreq = 4
 		set();
 		
 		var s = new Strand(points[0].x, points[0].y, array_length(points), length[0], direct, curl_freq, curl_size);
-		for( var i = 0; i < array_length(points); i++ )
+		for( var i = 0, n = array_length(points); i < n; i++ )
 			s.points[i] = points[i].clone();
 		s.restAngle = array_clone(restAngle);
 		s.length    = array_clone(length);
@@ -389,22 +389,22 @@ function StrandMesh() constructor {
 	mesh  = noone;
 	
 	static step = function(iteration = 4) {
-		for( var i = 0; i < array_length(hairs); i++ )
+		for( var i = 0, n = array_length(hairs); i < n; i++ )
 			hairs[i].step(iteration);
 	}
 	
 	static draw = function(_x, _y, _s, drawAngle = false, baked = false) {
-		for( var i = 0; i < array_length(hairs); i++ )
+		for( var i = 0, n = array_length(hairs); i < n; i++ )
 			hairs[i].draw(_x, _y, _s, drawAngle, baked);
 	}
 	
 	static store = function() {
-		for( var i = 0; i < array_length(hairs); i++ )
+		for( var i = 0, n = array_length(hairs); i < n; i++ )
 			hairs[i].store();
 	}
 	
 	static freeze = function(fixLength = false) {
-		for( var i = 0; i < array_length(hairs); i++ )
+		for( var i = 0, n = array_length(hairs); i < n; i++ )
 			hairs[i].freeze(fixLength);
 	}
 	
@@ -426,7 +426,7 @@ function StrandMesh() constructor {
 	}
 	
 	static set = function() {
-		for( var i = 0; i < array_length(hairs); i++ )
+		for( var i = 0, n = array_length(hairs); i < n; i++ )
 			hairs[i].set();
 		
 		return self;
@@ -437,7 +437,7 @@ function StrandMesh() constructor {
 		
 		s.loop = loop;
 		s.mesh = mesh;
-		for( var i = 0; i < array_length(hairs); i++ )
+		for( var i = 0, n = array_length(hairs); i < n; i++ )
 			s.hairs[i] = hairs[i].clone();
 		
 		return s;
@@ -445,7 +445,7 @@ function StrandMesh() constructor {
 	
 	static serialize = function()  { 
 		var _h = [];
-		for( var i = 0; i < array_length(hairs); i++ )
+		for( var i = 0, n = array_length(hairs); i < n; i++ )
 			_h[i] = hairs[i].serialize();
 		return json_stringify(_h); 
 	}
@@ -453,7 +453,7 @@ function StrandMesh() constructor {
 	static deserialize = function(s) { 
 		var j = json_parse(s);
 		
-		for( var i = 0; i < array_length(j); i++ )
+		for( var i = 0, n = array_length(j); i < n; i++ )
 			hairs[i] = new Strand().deserialize(j[i]);
 		return self;
 	}

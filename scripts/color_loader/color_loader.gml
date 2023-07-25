@@ -44,7 +44,7 @@ function _loadColor(theme = "default", replace = false) {
 	
 	var clrkeys = variable_struct_get_names(clrs.colors);
 	
-	for( var i = 0; i < array_length(clrkeys); i++ ) {
+	for( var i = 0, n = array_length(clrkeys); i < n; i++ ) {
 		var key = clrkeys[i];
 		var str = variable_struct_get(clrs.colors, key);
 		
@@ -52,7 +52,7 @@ function _loadColor(theme = "default", replace = false) {
 		variable_struct_set(CDEF, key, c);
 	}
 	
-	for( var i = 0; i < array_length(defkeys); i++ ) {
+	for( var i = 0, n = array_length(defkeys); i < n; i++ ) {
 		var key = defkeys[i];
 		var c   = c_white;
 		
@@ -75,7 +75,7 @@ function _loadColor(theme = "default", replace = false) {
 		variable_struct_set(COLORS, key, c);
 	}
 	
-	for( var i = 0; i < array_length(valkeys); i++ ) {
+	for( var i = 0, n = array_length(valkeys); i < n; i++ ) {
 		var key = valkeys[i];
 		if(variable_struct_exists(oclr, key)) {
 			var c = variable_struct_get(oclr, key);
@@ -84,7 +84,7 @@ function _loadColor(theme = "default", replace = false) {
 	}
 	
 	var arrkeys = variable_struct_get_names(clrs.array);
-	for( var i = 0; i < array_length(arrkeys); i++ ) {
+	for( var i = 0, n = array_length(arrkeys); i < n; i++ ) {
 		var key = arrkeys[i];
 		var def = variable_struct_get(clrs.array, key);
 		

@@ -21,12 +21,12 @@ function Node_Gradient_Extract(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 		switch(_output_index) {
 			case 0 :
 				var pal = [];
-				for( var i = 0; i < array_length(gra.keys); i++ )
+				for( var i = 0, n = array_length(gra.keys); i < n; i++ )
 					pal[i] = gra.keys[i].value;
 				return pal;
 			case 1 :
 				var pos = [];
-				for( var i = 0; i < array_length(gra.keys); i++ )
+				for( var i = 0, n = array_length(gra.keys); i < n; i++ )
 					pos[i] = gra.keys[i].time;
 				return pos;
 			case 2 :

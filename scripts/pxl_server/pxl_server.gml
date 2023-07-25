@@ -6,7 +6,7 @@ function pxl_document_parser(prompt) {
 	
 	var lines = string_split(prompt, "\n");
 	
-	for( var i = 0; i < array_length(lines); i++ ) {
+	for( var i = 0, n = array_length(lines); i < n; i++ ) {
 		var line = lines[i];
 		line = functionStringClean(line);
 		
@@ -28,7 +28,7 @@ function pxl_autocomplete_server(prompt, params = []) {
 	//////////////////////////////////
 	ds_priority_clear(pr_list);
 	
-	for( var i = 0; i < array_length(params); i++ ) {
+	for( var i = 0, n = array_length(params); i < n; i++ ) {
 		var gl = params[i];
 		
 		var match = string_partial_match(string_lower(gl), string_lower(prompt));
@@ -43,7 +43,7 @@ function pxl_autocomplete_server(prompt, params = []) {
 	//////////////////////////////////
 	ds_priority_clear(pr_list);
 	
-	for( var i = 0; i < array_length(global.GLOBAL_VAR); i++ ) {
+	for( var i = 0, n = array_length(global.GLOBAL_VAR); i < n; i++ ) {
 		var gl = global.GLOBAL_VAR[i];
 		
 		var match = string_partial_match(string_lower(gl), string_lower(prompt));
@@ -98,7 +98,7 @@ function pxl_autocomplete_server(prompt, params = []) {
 			}
 		} else if(ds_map_exists(PROJECT.nodeNameMap, sp[0])) {
 			if(array_length(sp) == 2) {
-				for( var i = 0; i < array_length(global.NODE_SUB_CATAG); i++ ) {
+				for( var i = 0, n = array_length(global.NODE_SUB_CATAG); i < n; i++ ) {
 					var gl = global.NODE_SUB_CATAG[i];
 					
 					var match = string_partial_match(string_lower(gl), string_lower(sp[1]));
@@ -196,7 +196,7 @@ function pxl_function_guide_server(prompt) {
 	
 	var fn = global.FUNCTIONS[? prompt];
 	var guide = prompt + "(";
-	for( var i = 0; i < array_length(fn[0]); i++ ) 
+	for( var i = 0, n = array_length(fn[0]); i < n; i++ ) 
 		guide += (i? ", " : "") + string(fn[0][i]);
 	guide += ")";
 	

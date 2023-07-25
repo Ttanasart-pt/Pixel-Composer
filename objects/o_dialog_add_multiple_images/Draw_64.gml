@@ -32,7 +32,7 @@ if !ready exit;
 				var path_arr = path_search(paths, dir_recursive, dir_filter);
 				switch(i) {
 					case 0 :
-						for( var i = 0; i < array_length(path_arr); i++ )  {
+						for( var i = 0, n = array_length(path_arr); i < n; i++ )  {
 							var path = path_arr[i];
 							Node_create_Image_path(nx, ny, path);
 							ny += 160;

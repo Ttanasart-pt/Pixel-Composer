@@ -111,12 +111,12 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		var maxy = -99999;
 			
 		for(var i = 0; i < ds_list_size(nodes_list); i++) {
-			var n = nodes_list[| i];
-			minx = min(n.x - 32, minx);
-			maxx = max(n.x + n.w + 32, maxx);
+			var _node = nodes_list[| i];
+			minx = min(_node.x - 32, minx);
+			maxx = max(_node.x + _node.w + 32, maxx);
 				
-			miny = min(n.y - 32, miny);
-			maxy = max(n.y + n.h + 32, maxy);
+			miny = min(_node.y - 32, miny);
+			maxy = max(_node.y + _node.h + 32, maxy);
 		}
 		
 		graph_x = w / 2 / graph_s - (minx + maxx) / 2;
@@ -256,8 +256,6 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		PANEL_GRAPH = self; 
 		PROJECT = project;
 		PANEL_ANIMATION.updatePropertyList();
-		
-		//print($"Focus {PROJECT.path}");
 	}
 	
 	function stepBegin() {
@@ -422,9 +420,9 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 			node_hovering = noone;
 			if(pHOVER)
 			for(var i = 0; i < ds_list_size(nodes_list); i++) {
-				var n = nodes_list[| i];
-				if(n.pointIn(gr_x, gr_y, mx, my, graph_s))
-					node_hovering = n;	
+				var _node = nodes_list[| i];
+				if(_node.pointIn(gr_x, gr_y, mx, my, graph_s))
+					node_hovering = _node;
 			}
 			
 			if(node_hovering != noone)
@@ -713,9 +711,9 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 				nodes_list[| i].onDrawNodeBehind(gr_x, gr_y, mx, my, graph_s);
 			
 			for(var i = 0; i < ds_list_size(nodes_list); i++) {
-				var n = nodes_list[| i];
-				if(instanceof(n) == "Node_Frame") continue;
-				var val = n.drawNode(gr_x, gr_y, mx, my, graph_s);
+				var _node = nodes_list[| i];
+				if(instanceof(_node) == "Node_Frame") continue;
+				var val = _node.drawNode(gr_x, gr_y, mx, my, graph_s);
 				
 				if(val) {
 					if(key_mod_press(SHIFT))
@@ -990,12 +988,12 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 			_node.setInstance(node_focus);
 		}
 		
-		var n = _node.clone();
+		var _nodeNew  = _node.clone();
 		
-		node_dragging = n;
-		node_drag_mx  = n.x; node_drag_my  = n.y;
-		node_drag_sx  = n.x; node_drag_sy  = n.y;
-		node_drag_ox  = n.x; node_drag_oy  = n.y;
+		node_dragging = _nodeNew;
+		node_drag_mx  = _nodeNew.x; node_drag_my  = _nodeNew.y;
+		node_drag_sx  = _nodeNew.x; node_drag_sy  = _nodeNew.y;
+		node_drag_ox  = _nodeNew.x; node_drag_oy  = _nodeNew.y;
 	}
 	
 	function doCopy() {
@@ -1049,7 +1047,6 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 				x0 = min(x0, _node.x);
 				y0 = min(y0, _node.y);
 			}
-			APPENDING = false;
 		
 			node_dragging = _app[| 0];
 			node_drag_mx  = x0; node_drag_my  = y0;
@@ -1223,11 +1220,11 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 				return;	
 		} else {
 			for( var i = 0; i < ds_list_size(nodes_select_list); i++ )  {
-				var n = nodes_select_list[| i];
-				x0 = min(x0, n.x);
-				y0 = min(y0, n.y);
-				x1 = max(x1, n.x + n.w);
-				y1 = max(y1, n.y + n.h);
+				var _node = nodes_select_list[| i];
+				x0 = min(x0, _node.x);
+				y0 = min(y0, _node.y);
+				x1 = max(x1, _node.x + _node.w);
+				y1 = max(y1, _node.y + _node.h);
 			}
 		}
 		
@@ -1561,7 +1558,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		var tbx = w - toolbar_height / 2;
 		var tby = ty + toolbar_height / 2;
 		
-		for( var i = 0; i < array_length(toolbars); i++ ) {
+		for( var i = 0, n = array_length(toolbars); i < n; i++ ) {
 			var tb = toolbars[i];
 			var tbSpr = tb[0];
 			var tbInd = tb[1]();
@@ -1607,12 +1604,12 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 			var maxy = -99999;
 			
 			for(var i = 0; i < ds_list_size(nodes_list); i++) {
-				var n = nodes_list[| i];
-				minx = min(n.x - 32, minx);
-				maxx = max(n.x + n.w + 32, maxx);
+				var _node = nodes_list[| i];
+				minx = min(_node.x - 32, minx);
+				maxx = max(_node.x + _node.w + 32, maxx);
 				
-				miny = min(n.y - 32, miny);
-				maxy = max(n.y + n.h + 32, maxy);
+				miny = min(_node.y - 32, miny);
+				maxy = max(_node.y + _node.h + 32, maxy);
 			}
 			
 			var cx  = (minx + maxx) / 2;
@@ -1623,12 +1620,12 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 			
 			draw_set_alpha(0.4);
 			for(var i = 0; i < ds_list_size(nodes_list); i++) {
-				var n = nodes_list[| i];
+				var _node = nodes_list[| i];
 				
-				var nx = minimap_w / 2 + (n.x - cx) * ss;
-				var ny = minimap_h / 2 + (n.y - cy) * ss;
-				var nw = n.w * ss;
-				var nh = n.h * ss;
+				var nx = minimap_w / 2 + (_node.x - cx) * ss;
+				var ny = minimap_h / 2 + (_node.y - cy) * ss;
+				var nw = _node.w * ss;
+				var nh = _node.h * ss;
 				
 				draw_set_color(n.color);
 				draw_roundrect_ext(nx, ny, nx + nw, ny + nh, THEME_VALUE.minimap_corner_radius, THEME_VALUE.minimap_corner_radius, false);
@@ -1841,7 +1838,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 						case 4 : node = nodeBuild("Node_Vector4", mouse_grid_x, mouse_grid_y, getCurrentContext()); break;
 					}
 					
-					for( var i = 0; i < array_length(DRAGGING.data); i++ )
+					for( var i = 0, n = array_length(DRAGGING.data); i < n; i++ )
 						node.inputs[| i].setValue(DRAGGING.data[i]);
 				} else {
 					node = nodeBuild("Node_Number", mouse_grid_x, mouse_grid_y, getCurrentContext());

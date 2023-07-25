@@ -16,7 +16,7 @@
 	
 	draw_sprite_stretched(THEME.dialog_bg, 0, x0, y0, ww, hh);
 	
-	for( var i = 0; i < array_length(pal); i++ ) {
+	for( var i = 0, n = array_length(pal); i < n; i++ ) {
 		var r = floor(i / col);
 		var c = i % col;
 		

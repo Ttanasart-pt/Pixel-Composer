@@ -72,7 +72,7 @@ function Node_Strand_Render_Texture(_x, _y, _group = noone) : Node(_x, _y, _grou
 			for( var k = 0; k < array_length(_str); k++ ) {
 				var hairs = _str[k].hairs;
 				
-				for( var i = 0; i < array_length(hairs); i++ ) {
+				for( var i = 0, n = array_length(hairs); i < n; i++ ) {
 					var hair = hairs[i];
 					var ox0, oy0, ox1, oy1;
 					var nx0, ny0, nx1, ny1;

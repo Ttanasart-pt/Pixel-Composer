@@ -346,7 +346,7 @@ function surface_array_free(arr) {
 		return;
 	}
 	
-	for( var i = 0; i < array_length(arr); i++ ) 
+	for( var i = 0, n = array_length(arr); i < n; i++ ) 
 		surface_array_free(arr[i]);
 }
 
@@ -360,7 +360,7 @@ function surface_array_clone(arr) {
 	
 	var _arr = [];
 	
-	for( var i = 0; i < array_length(arr); i++ ) 
+	for( var i = 0, n = array_length(arr); i < n; i++ ) 
 		_arr[i] = surface_array_clone(arr[i]);
 	
 	return _arr;
@@ -386,7 +386,7 @@ function __surface_array_serialize(arr) {
 	
 	var _arr = [];
 	
-	for( var i = 0; i < array_length(arr); i++ ) 
+	for( var i = 0, n = array_length(arr); i < n; i++ ) 
 		_arr[i] = __surface_array_serialize(arr[i]);
 	
 	return _arr;
@@ -409,7 +409,7 @@ function __surface_array_deserialize(arr) {
 	
 	var _arr = [];
 	
-	for( var i = 0; i < array_length(arr); i++ ) 
+	for( var i = 0, n = array_length(arr); i < n; i++ ) 
 		_arr[i] = __surface_array_deserialize(arr[i]);
 	
 	return _arr;

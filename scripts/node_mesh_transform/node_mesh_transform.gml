@@ -58,7 +58,7 @@ function Node_Mesh_Transform(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		if(_msh == noone) return;
 		var mesh = _msh.clone();
 		
-		for( var i = 0; i < array_length(mesh.triangles); i++ ) {
+		for( var i = 0, n = array_length(mesh.triangles); i < n; i++ ) {
 			var t = mesh.triangles[i];
 			
 			pointTransform(t[0], _pos, _rot, _sca, _anc);

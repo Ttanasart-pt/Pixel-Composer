@@ -264,12 +264,12 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		
 		var node_list = getNodeList();
 		for(var i = 0; i < ds_list_size(node_list); i++) {
-			var n = node_list[| i];
-			n.stepBegin();
-			if(!n.use_cache) continue;
+			var _node = node_list[| i];
+			_node.stepBegin();
+			if(!_node.use_cache) continue;
 			
 			use_cache = true;
-			if(!array_safe_get(n.cache_result, PROJECT.animator.current_frame))
+			if(!array_safe_get(_node.cache_result, PROJECT.animator.current_frame))
 				array_safe_set(cache_result, PROJECT.animator.current_frame, false);
 		}
 		

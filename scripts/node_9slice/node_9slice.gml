@@ -36,7 +36,7 @@ function Node_9Slice(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		
 		var _dim		= current_data[1];
 		var _splice		= current_data[2];
-		for( var i = 0; i < array_length(_splice); i++ )
+		for( var i = 0, n = array_length(_splice); i < n; i++ )
 			_splice[i] = round(_splice[i]);
 			
 		var sp_r = _x + (_dim[0] - _splice[0]) * _s;

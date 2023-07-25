@@ -92,7 +92,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 	function refresh() {
 		resetMask();
 		
-		for( var i = 0; i < array_length(content); i++ )
+		for( var i = 0, n = array_length(content); i < n; i++ )
 			content[i].refresh();
 			
 		for( var i = 0; i < ds_list_size(childs); i++ )
@@ -108,7 +108,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 			_panel.move(dx, dy);
 		}
 		
-		for( var i = 0; i < array_length(content); i++ ) {
+		for( var i = 0, n = array_length(content); i < n; i++ ) {
 			content[i].x = x;
 			content[i].y = y;
 		}
@@ -123,7 +123,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 		
 		if(hasContent()) {
 			var res = true;
-			for( var i = 0; i < array_length(content); i++ )
+			for( var i = 0, n = array_length(content); i < n; i++ )
 				res &= hori? tw + dw > content[i].min_w : th + dh > content[i].min_h;
 			return res;
 		}
@@ -138,7 +138,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 		tx = x; ty = y + tab * ui(tab_height);
 		tw = w; th = h - tab * ui(tab_height);
 		
-		for( var i = 0; i < array_length(content); i++ ) {
+		for( var i = 0, n = array_length(content); i < n; i++ ) {
 			content[i].w = max(tw, content[i].min_w);
 			content[i].h = max(th, content[i].min_h);
 			content[i].onResize();
@@ -210,7 +210,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 		else 
 			array_push(content, _content);
 		
-		for( var i = 0; i < array_length(content); i++ ) 
+		for( var i = 0, n = array_length(content); i < n; i++ ) 
 			content[i].onSetPanel(self);
 			
 		if(_switch) setTab(array_find(content, _content));
@@ -237,7 +237,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 		
 		var prev_w = w;
 		w = _w;
-		for( var i = 0; i < array_length(content); i++ ) {
+		for( var i = 0, n = array_length(content); i < n; i++ ) {
 			content[i].w = w;
 			content[i].onResize();
 		}
@@ -272,7 +272,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 		
 		var prev_h = h;
 		h = _h;
-		for( var i = 0; i < array_length(content); i++ ) {
+		for( var i = 0, n = array_length(content); i < n; i++ ) {
 			content[i].h = h;
 			content[i].onResize();
 		}
@@ -475,7 +475,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 			var rem = -1;
 			
 			draw_set_text(f_p3, fa_left, fa_bottom, COLORS._main_text_sub);
-			for( var i = 0; i < array_length(content); i++ ) {
+			for( var i = 0, n = array_length(content); i < n; i++ ) {
 				var txt = content[i].title;
 				var icn = content[i].icon;
 				
@@ -614,6 +614,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 	function setTab(tabIndex) {
 		if(tabIndex < 0) return;
 		if(tabIndex >= array_length(content)) return;
+		if(content_index == tabIndex) return;
 		
 		var prec = array_safe_get(content, content_index);
 		if(prec) prec.onFocusEnd();
@@ -666,7 +667,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 		
 		draw_surface_safe(content_surface, tx, ty);
 		draw_sprite_stretched(THEME.ui_panel_fg, 0, tx + padding, ty + padding, _tw, _th);
-		draw_sprite_bbox(THEME.ui_panel_tab, 3, tab_cover);
+		if(tab) draw_sprite_bbox(THEME.ui_panel_tab, 3, tab_cover);
 		
 		if(FOCUS == self && parent != noone) {
 			draw_sprite_stretched_ext(THEME.ui_panel_active, 0, tx + padding, ty + padding, tw - padding * 2, th - padding * 2, COLORS._main_accent, 1);	
@@ -806,9 +807,12 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 	}
 	
 	function remove(con = getContent()) {
+		var curr = getContent();
+		
 		array_remove(content, con);
 		if(con) con.onClose();
-		setTab(0);
+		if(con == curr) setTab(0);
+		else			setTab(array_find(content, curr));
 		
 		refresh();
 		if(hasContent()) return;

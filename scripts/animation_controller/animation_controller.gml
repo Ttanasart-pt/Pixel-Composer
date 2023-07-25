@@ -5,6 +5,8 @@
 		loop,
 		stop
 	}
+	
+	#macro ANIMATION_STATIC !(PROJECT.animator.is_playing || PROJECT.animator.frame_progress)
 #endregion
 
 #region animation class
@@ -61,35 +63,57 @@
 		}
 		
 		static render = function() {
-			setFrame(-1);
+			setFrame(0);
 			is_playing = true;
 			rendering  = true;
 			frame_progress = true;
+			time_since_last_frame = 0;
 		}
 		
 		static toggle = function() {
 			is_playing = !is_playing;
 			frame_progress = true;
+			time_since_last_frame = 0;
 		}
 		
 		static pause = function() {
 			is_playing = false;
 			frame_progress = true;
+			time_since_last_frame = 0;
 		}
 		
 		static play = function() {
+			setFrame(0);
 			is_playing = true;
 			frame_progress = true;
+			time_since_last_frame = 0;
 		}
 		
 		static resume = function() {
 			is_playing = true;
 			frame_progress = true;
+			time_since_last_frame = 0;
 		}
 		
 		static stop = function() {
-			is_playing = false;
 			setFrame(0);
+			is_playing = false;
+			time_since_last_frame = 0;
+		}
+		
+		static step = function() {
+			if(is_playing && play_freeze == 0) {
+				time_since_last_frame += framerate * (delta_time / 1000000);
+				
+				if(time_since_last_frame >= 1)
+					setFrame(real_frame + 1);
+			} else {
+				frame_progress = false;
+				//setFrame(real_frame);
+				time_since_last_frame = 0;
+			}
+	
+			play_freeze = max(0, play_freeze - 1);
 		}
 	}
 #endregion

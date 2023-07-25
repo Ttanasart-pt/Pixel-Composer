@@ -15,9 +15,9 @@ function Node_Iterator(_x, _y, _group = noone) : Node_Collection(_x, _y, _group)
 		var node_list   = getNodeList();
 		
 		for( var i = 0; i < ds_list_size(node_list); i++ ) {
-			var n = node_list[| i];
-			if(variable_struct_exists(n, "initLoop"))
-				n.initLoop();
+			var _node = node_list[| i];
+			if(variable_struct_exists(_node, "initLoop"))
+				_node.initLoop();
 		}
 		
 		doInitLoop();
@@ -78,6 +78,9 @@ function Node_Iterator(_x, _y, _group = noone) : Node_Collection(_x, _y, _group)
 		willRestart = true;
 		var maxIter = getIterationCount();
 		iterated++;
+		
+		for( var i = 0; i < ds_list_size(nodes); i++ )
+			nodes[| i].clearInputCache();
 		
 		if(iterated == maxIter) {
 			LOG_LINE_IF(global.FLAG.render, $"------------------< Iteration update: {iterated} / {maxIter} [COMPLETE] >------------------");

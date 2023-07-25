@@ -74,21 +74,26 @@ function array_get_decimal(arr, index, color = false) {
 }
 
 function array_exists(arr, val) {
-	for( var i = 0; i < array_length(arr); i++ ) {
-		if(isEqual(arr[i], val)) return true;
-	}
-	return false;
+	gml_pragma("forceinline");
+	self.__temp_val = val;
+	
+	return array_any(arr, function(_val, _ind) {
+		return isEqual(_val, self.__temp_val);
+	});
 }
 
 function array_empty(arr) {
+	gml_pragma("forceinline");
 	return array_length(arr) == 0;
 }
 
 function array_find(arr, val) {
-	for( var i = 0; i < array_length(arr); i++ ) {
-		if(isEqual(arr[i], val)) return i;
-	}
-	return -1;
+	gml_pragma("forceinline");
+	self.__temp_val = val;
+	
+	return array_find_index(arr, function(_val, _ind) {
+		return isEqual(_val, self.__temp_val);
+	});
 }
 
 function array_remove(arr, val) {
@@ -109,20 +114,8 @@ function array_insert_unique(arr, ind, val) {
 }
 
 function array_append(arr, arr0) {
-	for( var i = 0; i < array_length(arr0); i++ )
+	for( var i = 0, n = array_length(arr0); i < n; i++ )
 		array_push(arr, arr0[i]);
-	return arr;
-}
-
-function array_shuffle(arr) {
-	var r = array_length(arr) - 1;
-	for(var i = 0; i < r; i += 1) {
-	    var j = irandom_range(i,r);
-	    temp = arr[i];
-	    arr[i] = arr[j];
-	    arr[j] = temp;
-	}
-	
 	return arr;
 }
 
@@ -140,7 +133,7 @@ function array_clone(arr) {
 		return arr;
 	
 	var _res = [];
-	 for( var i = 0; i < array_length(arr); i++ )
+	 for( var i = 0, n = array_length(arr); i < n; i++ )
 		 _res[i] = array_clone(arr[i]);
 	 return _res;
 }
@@ -149,7 +142,7 @@ function array_min(arr) {
 	if(array_length(arr) == 0) return 0;
 	
 	var mn = arr[0];
-	 for( var i = 0; i < array_length(arr); i++ )
+	 for( var i = 0, n = array_length(arr); i < n; i++ )
 		 mn = min(mn, arr[i]);
 	 return mn;
 }
@@ -158,7 +151,7 @@ function array_max(arr) {
 	if(array_length(arr) == 0) return 0;
 	
 	var mx = arr[0];
-	 for( var i = 0; i < array_length(arr); i++ )
+	 for( var i = 0, n = array_length(arr); i < n; i++ )
 		 mx = max(mx, arr[i]);
 	 return mx;
 }
@@ -188,7 +181,7 @@ function array_spread(arr, _arr = []) {
 		return _arr;
 	}
 	
-	for( var i = 0; i < array_length(arr); i++ ) 
+	for( var i = 0, n = array_length(arr); i < n; i++ ) 
 		array_spread(arr[i], _arr);
 		
 	return _arr;

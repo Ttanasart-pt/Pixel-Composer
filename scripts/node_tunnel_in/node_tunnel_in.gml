@@ -17,8 +17,8 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	insp2UpdateIcon    = [ THEME.tunnel, 0, c_white ];
 	
 	static onInspector2Update = function() {		
-		var n = nodeBuild("Node_Tunnel_Out", x + 128, y);
-		n.inputs[| 0].setValue(inputs[| 0].getValue());
+		var _node = nodeBuild("Node_Tunnel_Out", x + 128, y);
+		_node.inputs[| 0].setValue(inputs[| 0].getValue());
 	}
 	
 	static onDrawNodeBehind = function(_x, _y, _mx, _my, _s) {

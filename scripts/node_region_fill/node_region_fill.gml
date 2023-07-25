@@ -65,7 +65,7 @@ function Node_Region_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		
 		if(_fill) {
 			var _pal = [];
-			for( var i = 0; i < array_length(_colr); i++ )
+			for( var i = 0, n = array_length(_colr); i < n; i++ )
 				array_append(_pal, colToVec4(_colr[i]));
 				
 			surface_set_shader(_outSurf, sh_region_fill_color);

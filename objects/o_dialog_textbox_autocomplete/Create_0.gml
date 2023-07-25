@@ -75,7 +75,7 @@
 		slp[array_length(slp) - 1] = rep;
 		
 		var txt = "";
-		for( var i = 0; i < array_length(textbox._input_text_line); i++ ) {
+		for( var i = 0, n = array_length(textbox._input_text_line); i < n; i++ ) {
 			if(i == textbox.cursor_line) {
 				for( var j = 0; j < array_length(slp); j++ )
 					txt += slp[j];

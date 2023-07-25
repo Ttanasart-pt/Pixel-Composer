@@ -8,7 +8,7 @@ function sprite_pack_corner(rectangles) {
 	var maxW = 0;
     var maxH = 0;
 		
-	for( var i = 0; i < array_length(rectangles); i++ ) {
+	for( var i = 0, n = array_length(rectangles); i < n; i++ ) {
 		var rect = rectangles[i];
 		
 		var minScore = 99999;

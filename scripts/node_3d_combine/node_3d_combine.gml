@@ -103,7 +103,7 @@ function Node_3D_Combine(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		inputs = _l;
 		
 		var _d = [];
-		for( var i = 0; i < array_length(input_display_list); i++ ) {
+		for( var i = 0, n = array_length(input_display_list); i < n; i++ ) {
 			var ind = input_display_list[i];
 			
 			if(i < input_display_len || ind < ds_list_size(inputs))
@@ -168,7 +168,7 @@ function Node_3D_Combine(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		
 		inputs[| 12].setVisible(_proj);
 		
-		for( var i = 0; i < array_length(output_display_list) - 1; i++ ) {
+		for( var i = 0, n = array_length(output_display_list) - 1; i < n; i++ ) {
 			var ind = output_display_list[i];
 			var _outSurf = outputs[| ind].getValue();
 			outputs[| ind].setValue(surface_verify(_outSurf, _dim[0], _dim[1]));

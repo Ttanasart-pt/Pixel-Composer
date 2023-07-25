@@ -37,7 +37,7 @@ function string_real(val, digMax = 999) {
 	
 	if(is_array(val)) {
 		var s = "[";
-		for( var i = 0; i < array_length(val); i++ ) 
+		for( var i = 0, n = array_length(val); i < n; i++ ) 
 			s += (i? ", " : "") + string_real(val[i]);
 		return s + "]";
 	}

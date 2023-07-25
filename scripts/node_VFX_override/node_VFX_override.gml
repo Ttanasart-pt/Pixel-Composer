@@ -40,7 +40,7 @@ function Node_VFX_Override(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		var _alp = inputs[| 5].getValue();
 		var _srf = inputs[| 6].getValue();
 		
-		for( var i = 0; i < array_length(parts); i++ ) {
+		for( var i = 0, n = array_length(parts); i < n; i++ ) {
 			var part = parts[i];
 			
 			if(is_array(_pos) && array_length(_pos) > i && is_array(_pos[i])) {

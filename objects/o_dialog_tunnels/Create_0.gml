@@ -42,7 +42,7 @@ event_inherited();
 	
 	function searchNodes() {
 		search_res = [];
-		for( var i = 0; i < array_length(tunnel_ins); i++ ) {
+		for( var i = 0, n = array_length(tunnel_ins); i < n; i++ ) {
 			var node = tunnel_ins[i];
 			var key = node.inputs[| 0].getValue(0);
 			
@@ -63,7 +63,7 @@ event_inherited();
 		var arr = search_string == ""? tunnel_ins : search_res;
 		tunnel_hover  = noone;
 		
-		for( var i = 0; i < array_length(arr); i++ ) {
+		for( var i = 0, n = array_length(arr); i < n; i++ ) {
 			var node = arr[i];
 
 			if(point_in_rectangle(_m[0], _m[1], 0, _y, ww, _y + hg)) {
@@ -89,8 +89,8 @@ event_inherited();
 			txt = __txtx("panel_tunnel_create_tunnel", "Create tunnel");
 			
 			if(buttonInstant(THEME.button_hide, bx, by, bw, bh, _m, sc_tunnel.active, sc_tunnel.hover, txt, THEME.tunnel) == 2) {
-				var n = nodeBuild("Node_Tunnel_Out", build_x, build_y);
-				n.inputs[| 0].setValue(key);
+				var _node = nodeBuild("Node_Tunnel_Out", build_x, build_y);
+				_node.inputs[| 0].setValue(key);
 				
 				instance_destroy();
 			}

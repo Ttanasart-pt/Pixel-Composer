@@ -111,7 +111,7 @@ function Node_3D_Extrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		var _ins = inputs[| 0].getValue();
 		if(!is_array(_ins)) _ins = [ _ins ];
 		
-		for( var i = 0; i < array_length(vertexObjects); i++ ) {
+		for( var i = 0, n = array_length(vertexObjects); i < n; i++ ) {
 			if(vertexObjects[i] == noone) continue;
 			vertexObjects[i].destroy();
 		}

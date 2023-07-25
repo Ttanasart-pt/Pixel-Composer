@@ -401,7 +401,7 @@ event_inherited();
 			
 			var grid_ys = [ _yy, _yy ];
 			
-			for( var i = 0; i < array_length(submissions) - 1; i++ ) {
+			for( var i = 0, n = array_length(submissions) - 1; i < n; i++ ) {
 				var _sub = submissions[i];
 				var _att = _sub.attachments;
 				

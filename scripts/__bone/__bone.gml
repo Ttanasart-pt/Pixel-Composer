@@ -47,7 +47,7 @@ function __Bone(parent = noone, distance = 0, direction = 0, angle = 0, length =
 	
 	static childCount = function() {
 		var amo = array_length(childs);
-		for( var i = 0; i < array_length(childs); i++ )
+		for( var i = 0, n = array_length(childs); i < n; i++ )
 			amo += childs[i].childCount();
 		return amo;
 	}
@@ -60,7 +60,7 @@ function __Bone(parent = noone, distance = 0, direction = 0, angle = 0, length =
 			direction: direction
 		}
 		
-		for( var i = 0; i < array_length(childs); i++ )
+		for( var i = 0, n = array_length(childs); i < n; i++ )
 			childs[i].freeze();
 	}
 	
@@ -68,7 +68,7 @@ function __Bone(parent = noone, distance = 0, direction = 0, angle = 0, length =
 		if(ID == _id) 
 			return self;
 		
-		for( var i = 0; i < array_length(childs); i++ ) {
+		for( var i = 0, n = array_length(childs); i < n; i++ ) {
 			var b = childs[i].findBone(_id);
 			if(b != noone)
 				return b;
@@ -82,7 +82,7 @@ function __Bone(parent = noone, distance = 0, direction = 0, angle = 0, length =
 		if(string_trim(name) == string_trim(_name)) 
 			return self;
 		
-		for( var i = 0; i < array_length(childs); i++ ) {
+		for( var i = 0, n = array_length(childs); i < n; i++ ) {
 			var b = childs[i].findBoneByName(_name);
 			if(b != noone)
 				return b;
@@ -209,13 +209,7 @@ function __Bone(parent = noone, distance = 0, direction = 0, angle = 0, length =
 			}
 		}
 		
-		//draw_set_color(c_red);
-		//for( var i = 0; i < array_length(FABRIK_result); i++ ) {
-		//	var pt = FABRIK_result[i];
-		//	draw_circle(_x + pt.x * _s, _y + pt.y * _s, 16, false);
-		//}
-		
-		for( var i = 0; i < array_length(childs); i++ ) {
+		for( var i = 0, n = array_length(childs); i < n; i++ ) {
 			var h = childs[i]._drawBone(attributes, edit, _x, _y, _s, _mx, _my, hovering, selecting);
 			if(hover == noone && h != noone)
 				hover = h;
@@ -238,7 +232,7 @@ function __Bone(parent = noone, distance = 0, direction = 0, angle = 0, length =
 			}
 		}
 		
-		for( var i = 0; i < array_length(childs); i++ )
+		for( var i = 0, n = array_length(childs); i < n; i++ )
 			childs[i].drawControl(attributes);
 	}
 	
@@ -247,7 +241,7 @@ function __Bone(parent = noone, distance = 0, direction = 0, angle = 0, length =
 		pose_scale = 1;
 		pose_posit = [ 0, 0 ];
 		
-		for( var i = 0; i < array_length(childs); i++ )
+		for( var i = 0, n = array_length(childs); i < n; i++ )
 			childs[i].resetPose();
 	}
 	
@@ -258,7 +252,7 @@ function __Bone(parent = noone, distance = 0, direction = 0, angle = 0, length =
 	
 	static setPoseTransform = function(_position = [ 0, 0 ], _angle = 0, _scale = 1) {
 		if(is_main) {
-			for( var i = 0; i < array_length(childs); i++ )
+			for( var i = 0, n = array_length(childs); i < n; i++ )
 				childs[i].setPoseTransform(_position, _angle, _scale);
 			return;
 		}
@@ -281,7 +275,7 @@ function __Bone(parent = noone, distance = 0, direction = 0, angle = 0, length =
 		angle  += pose_angle;
 		length *= pose_scale;
 		
-		for( var i = 0; i < array_length(childs); i++ ) {
+		for( var i = 0, n = array_length(childs); i < n; i++ ) {
 			if(childs[i].parent_anchor)
 				childs[i].setPoseTransform(_position, pose_angle, pose_scale);
 			else
@@ -326,7 +320,7 @@ function __Bone(parent = noone, distance = 0, direction = 0, angle = 0, length =
 			FABRIK(bones, points, lengths, p.x, p.y);
 		}
 		
-		for( var i = 0; i < array_length(childs); i++ )
+		for( var i = 0, n = array_length(childs); i < n; i++ )
 			childs[i].setIKconstrain();
 	}
 	
@@ -334,7 +328,7 @@ function __Bone(parent = noone, distance = 0, direction = 0, angle = 0, length =
 	static FABRIK = function(bones, points, lengths, dx, dy) {
 		var threshold = 0.1;
 		var _bo = array_create(array_length(points));
-		for( var i = 0; i < array_length(points); i++ )
+		for( var i = 0, n = array_length(points); i < n; i++ )
 			_bo[i] = { x: points[i].x, y: points[i].y };
 		var sx = points[0].x;
 		var sy = points[0].y;
@@ -346,7 +340,7 @@ function __Bone(parent = noone, distance = 0, direction = 0, angle = 0, length =
 			
 			var delta = 0;
 			var _bn = array_create(array_length(points));
-			for( var i = 0; i < array_length(points); i++ ) {
+			for( var i = 0, n = array_length(points); i < n; i++ ) {
 				_bn[i] = { x: points[i].x, y: points[i].y };
 				delta += point_distance(_bo[i].x, _bo[i].y, _bn[i].x, _bn[i].y);
 			}
@@ -355,7 +349,7 @@ function __Bone(parent = noone, distance = 0, direction = 0, angle = 0, length =
 			if(++itr >= 32) break;
 		} until(delta <= threshold);
 		
-		for( var i = 0; i < array_length(points) - 1; i++ ) {
+		for( var i = 0, n = array_length(points) - 1; i < n; i++ ) {
 			var bone = bones[i];
 			var p0  = points[i];
 			var p1  = points[i + 1];
@@ -394,7 +388,7 @@ function __Bone(parent = noone, distance = 0, direction = 0, angle = 0, length =
 		var tx = sx;
 		var ty = sy;
 		
-		for( var i = 0; i < array_length(points) - 1; i++ ) {
+		for( var i = 0, n = array_length(points) - 1; i < n; i++ ) {
 			var p0  = points[i];
 			var p1  = points[i + 1];
 			var len = lengths[i];
@@ -427,7 +421,7 @@ function __Bone(parent = noone, distance = 0, direction = 0, angle = 0, length =
 		var _bbox = __getBBOX();
 		//print($"BBOX: {_bbox}")
 		
-		for( var i = 0; i < array_length(childs); i++ ) {
+		for( var i = 0, n = array_length(childs); i < n; i++ ) {
 			var _bbox_ch = childs[i].bbox();
 			//print($"BBOX ch: {_bbox_ch}")
 			
@@ -457,7 +451,7 @@ function __Bone(parent = noone, distance = 0, direction = 0, angle = 0, length =
 		bone.IKTarget	= IKTarget == noone? "" : IKTarget.ID;
 		
 		bone.childs = [];
-		for( var i = 0; i < array_length(childs); i++ )
+		for( var i = 0, n = array_length(childs); i < n; i++ )
 			bone.childs[i] = childs[i].serialize();
 			
 		return bone;
@@ -480,7 +474,7 @@ function __Bone(parent = noone, distance = 0, direction = 0, angle = 0, length =
 		IKTarget	= bone.IKTarget;
 		
 		childs = [];
-		for( var i = 0; i < array_length(bone.childs); i++ ) {
+		for( var i = 0, n = array_length(bone.childs); i < n; i++ ) {
 			var _b = new __Bone().deserialize(bone.childs[i], node);
 			addChild(_b);
 		}
@@ -494,7 +488,7 @@ function __Bone(parent = noone, distance = 0, direction = 0, angle = 0, length =
 		else if(is_string(IKTarget))
 			IKTarget = parent.findBone(IKTarget);
 		
-		for( var i = 0; i < array_length(childs); i++ )
+		for( var i = 0, n = array_length(childs); i < n; i++ )
 			childs[i].connect();
 	}
 	
@@ -507,7 +501,7 @@ function __Bone(parent = noone, distance = 0, direction = 0, angle = 0, length =
 		_b.IKlength = IKlength;
 		_b.IKTarget	= IKTarget == noone? "" : IKTarget.ID;
 		
-		for( var i = 0; i < array_length(childs); i++ )
+		for( var i = 0, n = array_length(childs); i < n; i++ )
 			_b.addChild(childs[i].clone());
 		
 		return _b;

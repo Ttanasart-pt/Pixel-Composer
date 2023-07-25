@@ -2,7 +2,7 @@ function Queue() constructor {
 	data = [];
 	
 	static enqueue = function(val) {
-		if(array_exists(data, val)) return self;
+		if(array_contains(data, val)) return self;
 		//array_remove(data, val);
 		array_push(data, val);
 		
@@ -25,10 +25,10 @@ function Queue() constructor {
 	static size  = function() { return array_length(data); }
 	static empty = function() { return size() == 0; }
 	
-	static toString = function() {
+	static toString = function() { return "";
 		var ss = "[";
-		for( var i = 0; i < array_length(data); i++ ) 
-			ss += (i? ", " : "") + string(data[i].internalName);
+		for( var i = 0, n = array_length(data); i < n; i++ ) 
+			ss += (i? ", " : "") + data[i].internalName;
 		ss += "]"
 		return ss;
 	}

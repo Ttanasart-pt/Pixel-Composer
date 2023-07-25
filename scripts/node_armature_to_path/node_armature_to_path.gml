@@ -100,7 +100,7 @@ function Node_Armature_Path(_x, _y, _group = noone) : Node(_x, _y, _group) const
 				current_length += point_distance(_p0.x, _p0.y, _p1.x, _p1.y);
 			}
 			
-			for( var i = 0; i < array_length(bone.childs); i++ ) {
+			for( var i = 0, n = array_length(bone.childs); i < n; i++ ) {
 				var child_bone = bone.childs[i];
 				ds_stack_push(_bst, child_bone);
 			}

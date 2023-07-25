@@ -1,6 +1,6 @@
 function path_search(paths, recur = false, _filter = "") {
 	var _paths = [];
-	for( var i = 0; i < array_length(paths); i++ ) {
+	for( var i = 0, n = array_length(paths); i < n; i++ ) {
 		array_append(_paths, paths_to_array(paths[i], recur, _filter));
 	}
 	return _paths;

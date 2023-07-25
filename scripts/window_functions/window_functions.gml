@@ -1,7 +1,7 @@
 function window_close() {
 	var noSave = true;
 	
-	for( var i = 0; i < array_length(PROJECTS); i++ ) {
+	for( var i = 0, n = array_length(PROJECTS); i < n; i++ ) {
 		var project = PROJECTS[i];
 		
 		//print($"Project {filename_name_only(project)} modified: {project.modified} readonly: {project.readonly}");

@@ -258,7 +258,7 @@
     "panel_inspector_out_visible":      "Outputs visibility",
     "panel_inspector_execute":          "Execute node",
     "panel_inspector_cache_desp":       "This node cache output for performance.\nClick to clear all cached frames in this node.",
-    "panel_inspector_set_default":      "Set as default",
+    "panel_inspector_set_default":      "Set Metadata as default",
     "panel_inspector_workshop_save":    "Save file before upload",
     "panel_inspector_workshop_upload":  "Upload to Steam Workshop",
     "panel_inspector_workshop_update":  "Update Steam Workshop",

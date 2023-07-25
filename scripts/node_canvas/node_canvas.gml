@@ -675,11 +675,18 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 					
 						if(key_mod_press(SHIFT))	draw_line_size(mouse_pre_draw_x, mouse_pre_draw_y, mouse_cur_x, mouse_cur_y, _siz, _brush);
 						else						draw_point_size(mouse_cur_x, mouse_cur_y, _siz, _brush);
-					}
+					} else 
+						draw_point_size(mouse_cur_x, mouse_cur_y, _siz, _brush);
 				} else if(isUsingTool("Rectangle"))	{
-					if(mouse_holding) draw_rect_size(mouse_pre_x, mouse_pre_y, mouse_cur_x, mouse_cur_y, _siz, isUsingTool("Rectangle", 1), _brush);
+					if(mouse_holding) 
+						draw_rect_size(mouse_pre_x, mouse_pre_y, mouse_cur_x, mouse_cur_y, _siz, isUsingTool("Rectangle", 1), _brush);
+					else 
+						draw_point_size(mouse_cur_x, mouse_cur_y, _siz, _brush);
 				} else if(isUsingTool("Ellipse")) {
-					if(mouse_holding) draw_ellp_size(mouse_pre_x, mouse_pre_y, mouse_cur_x, mouse_cur_y, _siz, isUsingTool("Ellipse", 1), _brush); 
+					if(mouse_holding) 
+						draw_ellp_size(mouse_pre_x, mouse_pre_y, mouse_cur_x, mouse_cur_y, _siz, isUsingTool("Ellipse", 1), _brush); 
+					else 
+						draw_point_size(mouse_cur_x, mouse_cur_y, _siz, _brush);
 				}
 			surface_reset_shader();
 			

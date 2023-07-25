@@ -79,8 +79,8 @@ function node_hdistribute(nodeList) {
 	var sp = (x1 - x0) / (amo - 1);
 	
 	for( var i = 0; i < amo; i++ ) {
-		var n = ds_priority_delete_min(nodes);
-		n.x = x0 + sp * i - n.w / 2;
+		var _node = ds_priority_delete_min(nodes);
+		_node.x = x0 + sp * i - _node.w / 2;
 	}
 	
 	ds_priority_destroy(nodes);
@@ -103,8 +103,8 @@ function node_vdistribute(nodeList) {
 	var sp = (y1 - y0) / (amo - 1);
 	
 	for( var i = 0; i < amo; i++ ) {
-		var n = ds_priority_delete_min(nodes);
-		n.y = y0 + sp * i - n.h / 2;
+		var _node = ds_priority_delete_min(nodes);
+		_node.y = y0 + sp * i - _node.h / 2;
 	}
 	
 	ds_priority_destroy(nodes);

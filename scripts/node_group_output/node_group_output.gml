@@ -10,9 +10,11 @@ function Node_Group_Output(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	min_h = h;
 	
 	inputs[| 0] = nodeValue("Value", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, -1)
+		.uncache()
 		.setVisible(true, true);
 	
 	inputs[| 1] = nodeValue("Order", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+		.uncache()
 		.rejectArray();
 	
 	attributes.inherit_name = true;
@@ -83,6 +85,7 @@ function Node_Group_Output(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			ds_list_remove(group.outputs, outParent);
 			
 		outParent = nodeValue("Value", group, JUNCTION_CONNECT.output, VALUE_TYPE.any, -1)
+			.uncache()
 			.setVisible(true, true);
 		outParent.from = self;
 			

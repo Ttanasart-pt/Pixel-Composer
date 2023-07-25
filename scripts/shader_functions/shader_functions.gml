@@ -85,7 +85,7 @@ function shader_set_palette(pal, pal_uni = "palette", amo_uni = "paletteAmount")
 	shader_set_i(amo_uni, array_length(pal));
 	
 	var _pal = [];
-	for( var i = 0; i < array_length(pal); i++ )
+	for( var i = 0, n = array_length(pal); i < n; i++ )
 		array_append(_pal, colToVec4(pal[i]));
 	
 	if(array_length(_pal))

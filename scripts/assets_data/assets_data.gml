@@ -47,7 +47,7 @@
 			var s = global.ASSET_CACHE[? key];
 			var valid = true;
 			if(is_array(s)) {
-				for( var i = 0; i < array_length(s); i++ )
+				for( var i = 0, n = array_length(s); i < n; i++ )
 					valid &= is_surface(s[i]);
 			} else 
 				valid = is_surface(s);

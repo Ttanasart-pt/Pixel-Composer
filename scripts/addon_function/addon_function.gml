@@ -6,7 +6,7 @@ function addonContextGenerator(_addon, _function) constructor {
 		var _items = lua_call(_addon.thread, _function); 
 		var arr = [];
 		
-		for( var i = 0; i < array_length(_items); i++ ) {
+		for( var i = 0, n = array_length(_items); i < n; i++ ) {
 			var _item = _items[i];
 			if(_item == -1) 
 				array_push(arr, -1);

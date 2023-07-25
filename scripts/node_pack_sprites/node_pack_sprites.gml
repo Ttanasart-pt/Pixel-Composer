@@ -26,7 +26,7 @@ function Node_Pack_Sprites(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		
 		draw_set_color(COLORS._main_accent);
 		
-		for( var i = 0; i < array_length(rect); i++ ) {
+		for( var i = 0, n = array_length(rect); i < n; i++ ) {
 			var r = rect[i];
 			draw_rectangle(
 				_x + _s * (r.x + spac), 
@@ -52,7 +52,7 @@ function Node_Pack_Sprites(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		
 		var _rects = [];
 		
-		for( var i = 0; i < array_length(_inpt); i++ ) {
+		for( var i = 0, n = array_length(_inpt); i < n; i++ ) {
 			var s = _inpt[i];
 			if(!is_surface(s)) continue;
 			
@@ -96,7 +96,7 @@ function Node_Pack_Sprites(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			DRAW_CLEAR
 			BLEND_OVERRIDE
 			
-			for( var i = 0; i < array_length(rect); i++ ) {
+			for( var i = 0, n = array_length(rect); i < n; i++ ) {
 				var r = rect[i];
 				
 				array_push(atlas, new SurfaceAtlas(r.surface, [ r.x + _spac, r.y + _spac ]));

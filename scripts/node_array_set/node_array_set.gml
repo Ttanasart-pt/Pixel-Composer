@@ -39,7 +39,7 @@ function Node_Array_Set(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		var arr = array_clone(_arr);
 		if(is_array(index)) {
 			if(!is_array(value)) value = [ value ];
-			for( var i = 0; i < array_length(index); i++ ) {
+			for( var i = 0, n = array_length(index); i < n; i++ ) {
 				if(index[i] < 0) index[i] = array_length(arr) + index[i];
 				array_safe_set(arr, index[i], array_safe_get(value, i,, ARRAY_OVERFLOW.loop));
 			}

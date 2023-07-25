@@ -59,7 +59,7 @@ function Node_Flood_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		var sw = surface_get_width(inSurf);
 		var sh = surface_get_height(inSurf);
 		
-		for( var i = 0; i < array_length(temp_surface); i++ )
+		for( var i = 0, n = array_length(temp_surface); i < n; i++ )
 			temp_surface[i] = surface_verify(temp_surface[i], sw, sh, attrDepth());
 		
 		surface_set_target(temp_surface[0]);

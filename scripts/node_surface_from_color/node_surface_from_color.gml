@@ -16,7 +16,7 @@ function Node_Surface_From_Color(_x, _y, _group = noone) : Node_Processor(_x, _y
 		_outSurf = surface_verify(_outSurf, w, 1);
 		
 		surface_set_target(_outSurf);
-		for( var i = 0; i < array_length(_col); i++ )
+		for( var i = 0, n = array_length(_col); i < n; i++ )
 			draw_point_color(i, 0, _col[i]);
 		surface_reset_target();
 		

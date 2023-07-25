@@ -62,7 +62,7 @@ function histogramUpdate(surface) {
 	var sth = max(1, sh / attributes.preview_sample);
 		
 	for( var j = 0; j < 4; j++ )
-	for( var i = 0; i < array_length(hist[0]); i++ ) {
+	for( var i = 0, n = array_length(hist[0]); i < n; i++ ) {
 		hist[j][i] = 0;
 	}
 	

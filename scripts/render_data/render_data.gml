@@ -52,8 +52,7 @@ function __nodeInLoop(_node) {
 function Render(partial = false, runAction = false) { 
 	var t = current_time;
 	LOG_BLOCK_START();
-	LOG_IF(global.FLAG.render, 
-$"============================== RENDER START [frame {string(PROJECT.animator.current_frame)}] ==============================");
+	LOG_IF(global.FLAG.render, $"============================== RENDER START [frame {PROJECT.animator.current_frame}] ==============================");
 	
 	try {
 		var rendering = noone;
@@ -123,7 +122,7 @@ $"============================== RENDER START [frame {string(PROJECT.animator.cu
 				rendering.doUpdate();
 				
 				var nextNodes = rendering.getNextNodes();
-				for( var i = 0; i < array_length(nextNodes); i++ )
+				for( var i = 0, n = array_length(nextNodes); i < n; i++ )
 					RENDER_QUEUE.enqueue(nextNodes[i]);
 				
 				if(runAction && rendering.hasInspector1Update())
@@ -193,7 +192,7 @@ function RenderList(list) {
 				rendering.doUpdate();
 				
 				var nextNodes = rendering.getNextNodes();
-				for( var i = 0; i < array_length(nextNodes); i++ )
+				for( var i = 0, n = array_length(nextNodes); i < n; i++ )
 					RENDER_QUEUE.enqueue(nextNodes[i]);
 				
 				if(runAction && rendering.hasInspector1Update())
@@ -257,7 +256,7 @@ function RenderListAction(list, context = PANEL_GRAPH.getCurrentContext()) {
 				rendering.doUpdate();
 				
 				var nextNodes = rendering.getNextNodes();
-				for( var i = 0; i < array_length(nextNodes); i++ )
+				for( var i = 0, n = array_length(nextNodes); i < n; i++ )
 					RENDER_QUEUE.enqueue(nextNodes[i]);
 				
 				if(runAction && rendering.hasInspector1Update())

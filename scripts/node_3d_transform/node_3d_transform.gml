@@ -78,7 +78,7 @@ function Node_3D_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		
 		_3d_local_transform(_lpos, _lrot, _lsca);
 		if(is_array(sv)) {
-			for( var i = 0; i < array_length(sv); i++ )
+			for( var i = 0, n = array_length(sv); i < n; i++ )
 				sv[i](i);
 		} else
 			sv();

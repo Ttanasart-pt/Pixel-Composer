@@ -16,7 +16,6 @@ function APPEND(_path, context = PANEL_GRAPH.getCurrentContext()) {
 
 function __APPEND_MAP(_map, context = PANEL_GRAPH.getCurrentContext()) {
 	static log   = false;
-	APPENDING	 = true;
 	UNDO_HOLDING = true;
 	
 	if(struct_has(_map, "version")) {
@@ -32,6 +31,8 @@ function __APPEND_MAP(_map, context = PANEL_GRAPH.getCurrentContext()) {
 	var _node_list	  = _map.nodes;
 	var appended_list = ds_list_create();
 	var node_create   = ds_list_create();
+	
+	APPENDING	 = true;
 	
 	ds_queue_clear(CONNECTION_CONFLICT);
 	ds_map_clear(APPEND_MAP);

@@ -77,7 +77,7 @@ function Node_Gradient(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		var _grad_color = _grad[0];
 		var _grad_time	= _grad[1];
 		
-		for( var i = 0; i < array_length(_grad_time); i++ )
+		for( var i = 0, n = array_length(_grad_time); i < n; i++ )
 			_grad_time[i] = 0.5 + (_grad_time[i] - 0.5) * _sca;
 		
 		if(_typ == 0 || _typ == 2) {

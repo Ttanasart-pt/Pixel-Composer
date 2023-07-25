@@ -64,7 +64,7 @@ function Panel_Inspector() : PanelContent() constructor {
 	meta_tb[2] = new textArea(TEXTBOX_INPUT.text, function(str) { current_meta.contact		= str; });
 	meta_tb[3] = new textArea(TEXTBOX_INPUT.text, function(str) { current_meta.alias		= str; });
 	meta_tb[4] = new textArrayBox(noone, META_TAGS);
-	for( var i = 0; i < array_length(meta_tb); i++ )
+	for( var i = 0, n = array_length(meta_tb); i < n; i++ )
 		meta_tb[i].hide = true;
 	
 	meta_display = [ 
@@ -85,7 +85,7 @@ function Panel_Inspector() : PanelContent() constructor {
 			if(inspecting.input_display_list == -1) return;
 			
 			var dlist = inspecting.input_display_list;
-			for( var i = 0; i < array_length(dlist); i++ ) {
+			for( var i = 0, n = array_length(dlist); i < n; i++ ) {
 				if(!is_array(dlist[i])) continue;
 				dlist[i][@ 1] = false;
 			}
@@ -95,7 +95,7 @@ function Panel_Inspector() : PanelContent() constructor {
 			if(inspecting.input_display_list == -1) return;
 			
 			var dlist = inspecting.input_display_list;
-			for( var i = 0; i < array_length(dlist); i++ ) {
+			for( var i = 0, n = array_length(dlist); i < n; i++ ) {
 				if(!is_array(dlist[i])) continue;
 				dlist[i][@ 1] = true;
 			}
@@ -137,7 +137,7 @@ function Panel_Inspector() : PanelContent() constructor {
 		var rx = x + ui(16);
 		var ry = y + top_bar_h;
 		
-		for( var i = 0; i < array_length(meta_display); i++ ) {
+		for( var i = 0, n = array_length(meta_display); i < n; i++ ) {
 			var _meta = meta_display[i];
 			var _txt  = array_safe_get(_meta, 0);
 			var _b	  = array_safe_get(_meta, 2, noone);
@@ -342,7 +342,7 @@ function Panel_Inspector() : PanelContent() constructor {
 			var ww  = max(ui(180), con_w / 3);
 			var wx0 = wx1 - ww;
 			
-			for( var i = 0; i < array_length(inspecting.attributeEditors); i++ ) {
+			for( var i = 0, n = array_length(inspecting.attributeEditors); i < n; i++ ) {
 				var edt = inspecting.attributeEditors[i];
 				
 				if(is_string(edt)) {
@@ -690,6 +690,7 @@ function Panel_Inspector() : PanelContent() constructor {
 		
 		if(inspecting) {
 			title = inspecting.display_name == ""? inspecting.name : inspecting.display_name;
+			inspecting.inspectorStep();
 			drawInspectingNode();
 		} else {
 			title = __txt("Inspector");
@@ -708,7 +709,7 @@ function Panel_Inspector() : PanelContent() constructor {
 			var bx = w - ui(44);
 			var by = ui(12);
 			
-			if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), [mx, my], pFOCUS, pHOVER, __txtx("panel_inspector_set_default", "Set as default"), THEME.save, 0, COLORS._main_icon) == 2) {
+			if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), [mx, my], pFOCUS, pHOVER, __txtx("panel_inspector_set_default", "Set Metadata as default"), THEME.save, 0, COLORS._main_icon) == 2) {
 				var path = DIRECTORY + "meta.json";
 				var f = file_text_open_write(path);
 				file_text_write_string(f, json_encode_minify(METADATA.serialize()));

@@ -41,7 +41,7 @@ function Node_Atlas_Get(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		var blns = [];
 		var alph = [];
 		
-		for( var i = 0; i < array_length(atl); i++ ) {
+		for( var i = 0, n = array_length(atl); i < n; i++ ) {
 			surf[i] = atl[i].surface.get();
 			posi[i] = atl[i].position;
 			rota[i] = atl[i].rotation;

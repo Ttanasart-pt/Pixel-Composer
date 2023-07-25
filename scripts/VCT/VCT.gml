@@ -4,7 +4,7 @@ function VCT(node) constructor {
 	vars	  = [];
 	
 	static reset = function() {
-		for( var i = 0; i < array_length(vars); i++ )
+		for( var i = 0, n = array_length(vars); i < n; i++ )
 			vars[i].set(vars[i].def_val);
 	}
 	
@@ -19,7 +19,7 @@ function VCT(node) constructor {
 		var s = {};
 		
 		s.variables = [];
-		for( var i = 0; i < array_length(vars); i++ )
+		for( var i = 0, n = array_length(vars); i < n; i++ )
 			s.variables[i] = vars[i].get();
 			
 		doSerialize(s);

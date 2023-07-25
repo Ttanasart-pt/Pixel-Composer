@@ -200,7 +200,7 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		}
 		
 		var amoMax = process_amount;
-		for( var i = 0; i < array_length(process_length); i++ ) {
+		for( var i = 0, n = array_length(process_length); i < n; i++ ) {
 			amoMax /= process_length[i][0];
 			process_length[i][1] = amoMax;
 		}

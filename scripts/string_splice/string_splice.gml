@@ -7,7 +7,7 @@ function string_splice(str, delim = " ", keep = false) {
 	while(1) {
 		sp = 99999;
 		var found = false;
-		for( var i = 0; i < array_length(delim); i++ ) {
+		for( var i = 0, n = array_length(delim); i < n; i++ ) {
 			var pos = string_pos(delim[i], ss);
 			if(pos) {
 				sp = min(sp, pos);

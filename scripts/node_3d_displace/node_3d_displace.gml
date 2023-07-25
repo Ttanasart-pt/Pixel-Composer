@@ -91,7 +91,7 @@ function Node_3D_Displace(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		
 		_3d_local_transform(_lpos, _lrot, _lsca);
 		
-		for( var i = 0; i < array_length(vertexObjects); i++ )
+		for( var i = 0, n = array_length(vertexObjects); i < n; i++ )
 			vertexObjects[i].submit();
 		
 		_3d_clear_local_transform();
@@ -130,11 +130,11 @@ function Node_3D_Displace(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		if(_output_index == 0 && attributes.auto_update) {
 			var _vert = _data[11];
 			
-			for( var i = 0; i < array_length(vertexObjects); i++ )
+			for( var i = 0, n = array_length(vertexObjects); i < n; i++ )
 				vertexObjects[i].destroy();
 			vertexObjects = [];
 			
-			for( var i = 0; i < array_length(_vert); i++ ) {
+			for( var i = 0, n = array_length(_vert); i < n; i++ ) {
 				var v = _vert[i].clone(false);
 				
 				for( var j = 0; j < array_length(v.faces); j++ ) {
@@ -175,7 +175,7 @@ function Node_3D_Displace(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		var _cam	   = new __3d_camera(_proj, _fov);
 			
 		_outSurf = _3d_pre_setup(_outSurf, _dim, _transform, _light, _cam, pass);
-			for( var i = 0; i < array_length(vertexObjects); i++ )
+			for( var i = 0, n = array_length(vertexObjects); i < n; i++ )
 				vertexObjects[i].submit();
 		_3d_post_setup();
 		

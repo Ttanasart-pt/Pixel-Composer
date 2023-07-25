@@ -37,7 +37,7 @@ function Node_3D_Export(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		
 		file_text_write_string(fObj, "mtllib " + filename_name(mPath) + "\n");
 		
-		for( var i = 0; i < array_length(vert); i++ ) {
+		for( var i = 0, n = array_length(vert); i < n; i++ ) {
 			file_text_write_string(fObj, "\n");
 			
 			var v = vert[i];

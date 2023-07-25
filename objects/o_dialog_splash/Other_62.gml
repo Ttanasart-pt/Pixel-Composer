@@ -8,7 +8,7 @@ if(async_load[? "id"] == contest_req) { //get contests
 	if(struct_has(thr_str, "threads")) {
 		var thrs = thr_str.threads;
 		
-		for( var i = 0; i < array_length(thrs); i++ ) {
+		for( var i = 0, n = array_length(thrs); i < n; i++ ) {
 			var thr = thrs[i];
 			if(thr.parent_id != "1113080578351312906") continue; //not in contest channel
 			
@@ -29,7 +29,7 @@ if(async_load[? "id"] == contest_req) { //get contests
 	return;
 }
 
-for( var i = 0; i < array_length(contest_message_req); i++ ) {
+for( var i = 0, n = array_length(contest_message_req); i < n; i++ ) {
 	if(async_load[? "id"] != contest_message_req[i][0]) continue;
 	
 	var r_str = async_load[? "result"];
@@ -83,7 +83,7 @@ for( var i = 0; i < array_length(contest_message_req); i++ ) {
 }
 
 var keys = ds_map_keys_to_array(nicknames);
-for( var i = 0; i < array_length(keys); i++ ) {
+for( var i = 0, n = array_length(keys); i < n; i++ ) {
 	var nick = nicknames[? keys[i]];
 	
 	if(!is_array(nick)) continue;
@@ -99,7 +99,7 @@ for( var i = 0; i < array_length(keys); i++ ) {
 }
 
 var keys = ds_map_keys_to_array(attachment);
-for( var i = 0; i < array_length(keys); i++ ) {
+for( var i = 0, n = array_length(keys); i < n; i++ ) {
 	var att = attachment[? keys[i]];
 	
 	if(!is_array(att)) continue;

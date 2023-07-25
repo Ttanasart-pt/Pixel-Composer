@@ -151,7 +151,7 @@ function Node_VFX_effector(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		
 		if(!is_array(val) || array_length(val) == 0) return;
 		if(!is_array(val[0])) val = [ val ];
-		for( var i = 0; i < array_length(val); i++ )
+		for( var i = 0, n = array_length(val); i < n; i++ )
 		for( var j = 0; j < array_length(val[i]); j++ ) {
 			affect(val[i][j]);
 		}

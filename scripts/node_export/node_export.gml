@@ -206,7 +206,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		
 		var cmd = "";
 		
-		for( var i = 0; i < array_length(frames); i++ )
+		for( var i = 0, n = array_length(frames); i < n; i++ )
 			cmd += "-frame " + frames[i] + " +" + string(framerate) + "+0+0+1 ";
 		
 		cmd += "-bgcolor 0,0,0,0 ";
@@ -241,8 +241,8 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			//print($"{gifski} {shell_cmd}");
 			execute_shell(gifski, shell_cmd);
 		} else {
-			var		 shell_cmd  = $"-delay {string(framerate)} -alpha set -dispose previous -loop {string(loop_str)}";
-			if(opti) shell_cmd += $" -fuzz {string(fuzz * 100)}% -layers OptimizeFrame -layers OptimizeTransparency";
+			var		 shell_cmd  = $"-delay {framerate} -alpha set -dispose previous -loop {loop_str}";
+			if(opti) shell_cmd += $" -fuzz {fuzz * 100}% -layers OptimizeFrame -layers OptimizeTransparency";
 					 shell_cmd += " " + temp_path + " " + target_path;
 			
 			//print($"{converter} {shell_cmd}");

@@ -55,7 +55,7 @@ function Node_Rigid_Variable(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 			if(_get[i]) _val[i] = array_create(array_length(objs));
 		}
 		
-		for( var i = 0; i < array_length(objs); i++ ) {
+		for( var i = 0, n = array_length(objs); i < n; i++ ) {
 			var obj = objs[i];
 			if(obj == noone || !instance_exists(obj)) continue;
 			if(is_undefined(obj.phy_active)) continue;

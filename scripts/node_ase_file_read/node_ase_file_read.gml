@@ -54,7 +54,7 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		var _vis = attributes.layer_visible;
 		
 		draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, _x, _y, _w, _h, COLORS.node_composite_bg_blend, 1);
-		for( var i = 0; i < array_length(layers); i++ ) {
+		for( var i = 0, n = array_length(layers); i < n; i++ ) {
 			var _yy = _y + 8 + i * hh;
 			var _layer = layers[i];
 			
@@ -113,7 +113,7 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			}
 		}
 		
-		for( var i = 0; i < array_length(tags); i++ ) {
+		for( var i = 0, n = array_length(tags); i < n; i++ ) {
 			var _yy = by + lb_h + 8 + i * hh;
 			var tag = tags[i];
 			
@@ -184,7 +184,7 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		var ny = y - nh;
 		
 		var lvs = [];
-		for( var i = 0; i < array_length(layers); i++ ) {
+		for( var i = 0, n = array_length(layers); i < n; i++ ) {
 			var _layer = layers[i];
 			var _name  = _layer.name;
 			var _node  = noone;
@@ -227,7 +227,7 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		var vis = attributes.layer_visible;
 		var frames = content[? "Frames"];
 		
-		for( var i = 0; i < array_length(frames); i++ ) {
+		for( var i = 0, n = array_length(frames); i < n; i++ ) {
 			var frame = frames[i];
 			var chunks = frame[? "Chunks"];
 			
@@ -301,7 +301,7 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		if(ds_map_empty(content)) return;
 		
 		var tag = noone;
-		for( var i = 0; i < array_length(tags); i++ ) {
+		for( var i = 0, n = array_length(tags); i < n; i++ ) {
 			if(tags[i][? "Name"] == current_tag) {
 				tag = tags[i];
 				break;
@@ -326,7 +326,7 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		surface_set_target(surf);
 		DRAW_CLEAR
 		
-		for( var i = 0; i < array_length(layers); i++ ) {
+		for( var i = 0, n = array_length(layers); i < n; i++ ) {
 			layers[i].tag = tag;
 			var cel = layers[i].getCel(PROJECT.animator.current_frame - _tag_delay);
 			if(!cel) continue;

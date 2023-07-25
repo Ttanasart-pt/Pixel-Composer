@@ -4,7 +4,7 @@ enum CAMERA_PROJ {
 }
 
 #region setup
-	globalvar PRIMITIVES, FORMAT_P, FORMAT_PT, FORMAT_PNT;
+	globalvar PRIMITIVES, FORMAT_P, FORMAT_PT, FORMAT_PNT, FORMAT_2PC;
 	PRIMITIVES = ds_map_create();
 
 	vertex_format_begin();
@@ -21,6 +21,11 @@ enum CAMERA_PROJ {
 	vertex_format_add_normal();
 	vertex_format_add_texcoord();
 	FORMAT_PNT = vertex_format_end();
+	
+	vertex_format_begin();
+	vertex_format_add_position();
+	vertex_format_add_color();
+	FORMAT_2PC = vertex_format_end();
 #endregion
 
 #region 3d obj
@@ -110,7 +115,7 @@ enum CAMERA_PROJ {
 			var VB = vertex_create_buffer();
 			vertex_begin(VB, FORMAT_PNT);
 			
-			for( var i = 0; i < array_length(faces); i++ ) {
+			for( var i = 0, n = array_length(faces); i < n; i++ ) {
 				var face = faces[i];
 				var _pos = positions[face[0]];
 				var _nor = normals  [face[1]];

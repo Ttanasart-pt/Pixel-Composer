@@ -4,14 +4,14 @@ var _filter = ["x", "y", "updated", "rendered", "show_output_name", "insp2Update
 	"cache_value", "show_graph", "preview_x", "preview_y", "badgePreview", "data_list", "open_rx", "open_ry", "parent", "active", "cached_output", "current_data", "cache_result",
 	"draw_graph_culled", "dopesheet_y", "render_time", "renderActive", "preview_speed", "preview_drop_x", "preview_drop_y", "inspecting", "value_to_arr", "draw_name" ];
 global.node_data_filter = ds_map_create();
-for( var i = 0; i < array_length(_filter); i++ ) 
+for( var i = 0, n = array_length(_filter); i < n; i++ ) 
 	global.node_data_filter[? _filter[i]] = 1;
 
 function __node_data_clone(struct) {
 	var _var = variable_struct_get_names(struct);
 	var _str = {};
 	
-	for( var i = 0; i < array_length(_var); i++ ) {
+	for( var i = 0, n = array_length(_var); i < n; i++ ) {
 		if(ds_map_exists(global.node_data_filter, _var[i])) continue;
 		
 		var val = struct[$ _var[i]];

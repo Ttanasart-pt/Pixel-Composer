@@ -113,7 +113,7 @@ function Node_Palette_Extract(_x, _y, _group = noone) : Node(_x, _y, _group) con
 				_cnt[i][2] = cnt[i][2];
 			}
 			
-			for( var i = 0; i < array_length(colors); i++ ) {
+			for( var i = 0, n = array_length(colors); i < n; i++ ) {
 				var ind = 0;
 				var dist = 999;
 				var _cl = colors[i];
@@ -133,7 +133,7 @@ function Node_Palette_Extract(_x, _y, _group = noone) : Node(_x, _y, _group) con
 			for( var i = 0; i < _size; i++ )
 				cnt[i] = [ 0, 0, 0, 0 ];
 				
-			for( var i = 0; i < array_length(colors); i++ ) {
+			for( var i = 0, n = array_length(colors); i < n; i++ ) {
 				var _cl = colors[i];
 				cnt[_cl[3]][0] += _cl[0];
 				cnt[_cl[3]][1] += _cl[1];
@@ -295,7 +295,7 @@ function Node_Palette_Extract(_x, _y, _group = noone) : Node(_x, _y, _group) con
 			res = extractPalette(_surf, _algo, _size, _seed);
 		} else if(is_array(_surf)) {
 			res = array_create(array_length(_surf));
-			for( var i = 0; i < array_length(_surf); i++ )
+			for( var i = 0, n = array_length(_surf); i < n; i++ )
 				res[i] = extractPalette(_surf[i], _algo, _size, _seed);
 		}
 		

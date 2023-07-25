@@ -66,7 +66,7 @@ function Node_Trail(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		if(!is_surface(_surf)) return;
 		cacheCurrentFrame(_surf);
 		
-		for( var i = 0; i < array_length(temp_surface); i++ ) {
+		for( var i = 0, n = array_length(temp_surface); i < n; i++ ) {
 			temp_surface[i] = surface_verify(temp_surface[i], surface_get_width(_surf), surface_get_height(_surf), cDep);
 			surface_set_target(temp_surface[i]);
 			DRAW_CLEAR

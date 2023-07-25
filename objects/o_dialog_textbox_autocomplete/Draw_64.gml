@@ -9,7 +9,7 @@ if(textbox == noone) exit;
 	var _w   = 300;
 	var _h   = array_length(data) * line_get_height(f_p0, 8);
 	
-	for( var i = 0; i < array_length(data); i++ ) {
+	for( var i = 0, n = array_length(data); i < n; i++ ) {
 		var _dat = data[i];
 		var __w  = ui(40 + 32);
 		

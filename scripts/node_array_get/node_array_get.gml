@@ -64,7 +64,7 @@ function Node_Array_Get(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		var res   = is_array(index)? array_create(array_length(index)) : 0;
 		
 		if(is_array(index)) {
-			for( var i = 0; i < array_length(index); i++ )
+			for( var i = 0, n = array_length(index); i < n; i++ )
 				res[i] = getArray(_arr, index[i], _ovf);
 		} else 
 			res = getArray(_arr, index, _ovf);

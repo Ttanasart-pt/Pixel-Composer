@@ -332,7 +332,7 @@ event_inherited();
 		var cx = x1 - cw - ui(8);
 		var category = "";
 		
-		for( var i = 0; i < array_length(COLOR_KEYS); i++ ) {
+		for( var i = 0, n = array_length(COLOR_KEYS); i < n; i++ ) {
 			var key = COLOR_KEYS[i];
 			var val = variable_struct_get(COLORS, key);
 			

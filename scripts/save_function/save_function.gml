@@ -66,9 +66,8 @@ function SET_PATH(project, path) {
 }
 
 function SAVE_ALL() {
-	for( var i = 0; i < array_length(PROJECTS); i++ ) {
+	for( var i = 0, n = array_length(PROJECTS); i < n; i++ )
 		SAVE(PROJECTS[i]);
-	}
 }
 
 function SAVE(project = PROJECT) {

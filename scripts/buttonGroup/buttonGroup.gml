@@ -66,8 +66,8 @@ function buttonGroupClass(_data, _onClick) : widget() constructor {
 				var spr = i == 0 ? buttonSpr[0] : (i == amo - 1? buttonSpr[2] : buttonSpr[1]);
 			
 				if(_selecting == i) {
-					draw_sprite_stretched(spr, 2, bx, _y, ww, _h);	
-					draw_sprite_stretched_ext(spr, 3, bx, _y, ww, _h, COLORS._main_accent, 1);	
+					draw_sprite_stretched(spr, 2, bx, _y, ww - !!i, _h);
+					draw_sprite_stretched_ext(spr, 3, bx, _y, ww - !!i, _h, COLORS._main_accent, 1);	
 				} else {
 					buttons[i].draw(bx, _y, ww, _h, _m, spr);
 					if(buttons[i].clicked) onClick(i);

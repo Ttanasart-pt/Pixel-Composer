@@ -75,7 +75,7 @@ event_inherited();
 			var ar = call_in? io.outputs : io.inputs;
 			var typ = node_called.type;
 			
-			for( var i = 0; i < array_length(ar); i++ ) {
+			for( var i = 0, n = array_length(ar); i < n; i++ ) {
 				if(!ar[i].visible) continue;
 				
 				var _in = call_in? node_called.type : ar[i].type;
@@ -89,7 +89,7 @@ event_inherited();
 			var to = junction_hovering.type;
 			var fr = junction_hovering.value_from.type;
 			
-			for( var i = 0; i < array_length(io.inputs); i++ ) {
+			for( var i = 0, n = array_length(io.inputs); i < n; i++ ) {
 				var _in = fr;
 				var _ot = io.inputs[i].type;
 				if(!io.inputs[i].visible) continue;
@@ -97,7 +97,7 @@ event_inherited();
 				if(typeCompatible(_in, _ot, false)) return true;
 			}
 			
-			for( var i = 0; i < array_length(io.outputs); i++ ) {
+			for( var i = 0, n = array_length(io.outputs); i < n; i++ ) {
 				var _in = io.outputs[i].type;
 				var _ot = to;
 				
@@ -303,13 +303,13 @@ event_inherited();
 				var sug = ds_map_try_get(global.VALUE_SUGGESTION, node_called.type, []);
 				if(array_length(sug)) {
 					ds_list_add(_list, "Related");
-					for( var i = 0; i < array_length(sug); i++ )
+					for( var i = 0, n = array_length(sug); i < n; i++ )
 						ds_list_add(_list, ALL_NODES[? sug[i]]);
 				}
 			}
 			
 			ds_list_add(_list, "Favourites");
-			for( var i = 0; i < array_length(global.FAV_NODES); i++ ) {
+			for( var i = 0, n = array_length(global.FAV_NODES); i < n; i++ ) {
 				var _nodeIndex = global.FAV_NODES[i];
 				if(!ds_map_exists(ALL_NODES, _nodeIndex)) continue;
 				
@@ -317,7 +317,7 @@ event_inherited();
 			}
 			
 			ds_list_add(_list, "Recents");
-			for( var i = 0; i < array_length(global.RECENT_NODES); i++ ) {
+			for( var i = 0, n = array_length(global.RECENT_NODES); i < n; i++ ) {
 				var _nodeIndex = global.RECENT_NODES[i];
 				if(!ds_map_exists(ALL_NODES, _nodeIndex)) continue;
 				

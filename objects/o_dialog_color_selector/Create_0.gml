@@ -85,8 +85,15 @@ event_inherited();
 			if(isHover) 
 				draw_sprite_stretched_ext(THEME.node_active, 1, ui(4), yy, sp_preset_w - ui(16), _height, COLORS._main_accent, 1);
 			
-			draw_set_text(f_p2, fa_left, fa_top, COLORS._main_text_sub);
-			draw_text(ui(16), yy + ui(8), preset_name[| i]);
+			var x0 = ui(16) + (i == 0) * ui(8 + 6);
+			var cc = i == preset_selecting? COLORS._main_accent : COLORS._main_text_sub;
+			draw_set_text(f_p2, fa_left, fa_top, cc);
+			draw_text(x0, yy + ui(8), preset_name[| i]);
+			if(i == 0) {
+				draw_set_color(cc);
+				draw_circle_prec(ui(16) + ui(4), yy + ui(16), ui(4), false);
+			}
+			
 			if(preset_selecting == i)
 				drawPaletteGrid(presets[| i], ui(16), yy + ui(28), ww, _gs, selector.current_color);
 			else

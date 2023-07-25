@@ -129,7 +129,7 @@ function MetaDataManager() constructor {
 			var tx = 0;
 			var hh = line_get_height(f_p0, ui(4));
 			var th = hh;
-			for( var i = 0; i < array_length(tags); i++ ) {
+			for( var i = 0, n = array_length(tags); i < n; i++ ) {
 				var ww = string_width(tags[i]) + ui(16);
 				if(tx + ww + ui(2) > _w - ui(16)) {
 					tx = 0;
@@ -190,7 +190,7 @@ function MetaDataManager() constructor {
 			var tx = 0;
 			var hh = line_get_height(f_p0, ui(4));
 			
-			for( var i = 0; i < array_length(tags); i++ ) {
+			for( var i = 0, n = array_length(tags); i < n; i++ ) {
 				var ww = string_width(tags[i]) + ui(16);
 				if(tx + ww + ui(2) > _w - ui(16)) {
 					tx = 0;

@@ -36,11 +36,11 @@ function Node_SDF(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) const
 		var _dist  = _data[3];
 		var sw	   = surface_get_width(inSurf);
 		var sh	   = surface_get_height(inSurf);
-		var n	   = max(sw, sh);
+		var _n	   = max(sw, sh);
 		var cDep   = attrDepth();
 		
-		temp_surface[0]  = surface_verify(temp_surface[0], n, n, cDep);
-		temp_surface[1]  = surface_verify(temp_surface[1], n, n, cDep);
+		temp_surface[0]  = surface_verify(temp_surface[0], _n, _n, cDep);
+		temp_surface[1]  = surface_verify(temp_surface[1], _n, _n, cDep);
 		_outSurf = surface_verify(_outSurf, sw, sh, cDep);
 		
 		surface_set_target(temp_surface[0]);
@@ -54,7 +54,7 @@ function Node_SDF(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) const
 		BLEND_NORMAL;
 		surface_reset_target();
 		
-		var step = ceil(log2(n));
+		var step = ceil(log2(_n));
 		var stepSize = power(2, step);
 		var bg = 0;
 		//step = 2;
@@ -68,7 +68,7 @@ function Node_SDF(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) const
 			BLEND_OVERRIDE;
 			
 			shader_set(sh_sdf);
-				shader_set_uniform_f(uniform_sdf_dim, n, n );
+				shader_set_uniform_f(uniform_sdf_dim, _n, _n );
 				shader_set_uniform_f(uniform_sdf_stp, stepSize);
 				shader_set_uniform_i(uniform_sdf_sid, _side);
 				draw_surface_safe(temp_surface[!bg], 0, 0);

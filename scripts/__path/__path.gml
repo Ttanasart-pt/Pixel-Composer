@@ -26,7 +26,7 @@ function PathSegment() : Path() constructor {
 		var minx = segments[0].x, maxx = segments[0].x;
 		var miny = segments[0].y, maxy = segments[0].y;
 		
-		for( var i = 0; i < array_length(segments); i++ ) {
+		for( var i = 0, n = array_length(segments); i < n; i++ ) {
 			var s = segments[i];
 			
 			minx = min(minx, s.x);
@@ -46,7 +46,7 @@ function PathSegment() : Path() constructor {
 		lengthTotal = 0;
 		
 		var op, np;
-		for( var i = 0; i < array_length(segment); i++ ) {
+		for( var i = 0, n = array_length(segment); i < n; i++ ) {
 			np = segment[i];
 			
 			if(i) {

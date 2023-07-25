@@ -35,7 +35,7 @@ if !target exit;
 			var paths = paths_to_array(path);
 			var arr = target.inputs[| 0].getValue();
 			
-			for( var i = 0; i < array_length(paths); i++ ) 
+			for( var i = 0, n = array_length(paths); i < n; i++ ) 
 				array_push(arr, paths[i]);
 			
 			target.inputs[| 0].setValue(arr);

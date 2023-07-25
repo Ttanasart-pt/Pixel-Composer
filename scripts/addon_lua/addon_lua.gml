@@ -10,7 +10,7 @@
 	
 #region API
 	function __addon_lua_setup_functions(lua) {
-		for( var i = 0; i < array_length(global.__lua_functions); i++ ) {
+		for( var i = 0, n = array_length(global.__lua_functions); i < n; i++ ) {
 			var _func = global.__lua_functions[i];
 			
 			if(is_string(_func))
@@ -864,7 +864,7 @@
 			
 			var arr = variable_struct_get_names(_addon.panels);
 			
-			for( var i = 0; i < array_length(arr); i++ ) {
+			for( var i = 0, n = array_length(arr); i < n; i++ ) {
 				if(arr[i] != panel) continue;
 				
 				var pane  = _addon.panels[$ arr[i]];
@@ -1040,7 +1040,7 @@ end",
 	];
 	
 	function __addon_lua_setup_widget(lua, context) {
-		for( var i = 0; i < array_length(global.__lua_widget_functions); i++ ) {
+		for( var i = 0, n = array_length(global.__lua_widget_functions); i < n; i++ ) {
 			var _func = global.__lua_widget_functions[i];
 			
 			if(is_string(_func))

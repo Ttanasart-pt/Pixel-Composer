@@ -27,7 +27,7 @@ event_inherited();
 				
 				if(_openDialog) {
 					var arr = variable_struct_get_names(panels);
-					for( var i = 0; i < array_length(arr); i++ ) {
+					for( var i = 0, n = array_length(arr); i < n; i++ ) {
 						var _key = arr[i];
 						var pane = panels[$ _key];
 					
@@ -41,7 +41,7 @@ event_inherited();
 				context_menus =  meta.context_menu_callbacks;
 				
 				var arr = variable_struct_get_names(context_menus);
-				for( var i = 0; i < array_length(arr); i++ ) {
+				for( var i = 0, n = array_length(arr); i < n; i++ ) {
 					var _call = ds_map_try_get(CONTEXT_MENU_CALLBACK, arr[i], []);
 					var _fnk  = context_menus[$ arr[i]];
 					var _generator = new addonContextGenerator(self, _fnk);

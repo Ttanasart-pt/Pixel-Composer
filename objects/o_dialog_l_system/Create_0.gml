@@ -57,7 +57,7 @@ event_inherited();
 		var _h = 0;
 		var ind = 0;
 		
-		for( var i = 0; i < array_length(ref); i++ ) {
+		for( var i = 0, n = array_length(ref); i < n; i++ ) {
 			var _f = ref[i];
 			if(is_string(_f)) {
 				if(i) {

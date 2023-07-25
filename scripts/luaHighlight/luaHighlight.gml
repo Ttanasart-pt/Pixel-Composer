@@ -3,7 +3,7 @@ var reserved = ["and", "break", "do", "else", "elseif", "end", "false",
 				"for", "function", "if", "in", "local", "nil", "not", 
 				"or", "repeat", "return", "then", "true", "until", "while"];
 					   
-for( var i = 0; i < array_length(reserved); i++ )
+for( var i = 0, n = array_length(reserved); i < n; i++ )
 	global.lua_reserved[? reserved[i]] = 1;
 
 function token_splice(str) {
@@ -15,7 +15,7 @@ function token_splice(str) {
 	
 	do {
 		sp = 999999;
-		for( var i = 0; i < array_length(tk); i++ ) {
+		for( var i = 0, n = array_length(tk); i < n; i++ ) {
 			var _pos = string_pos(tk[i], ss);
 			if(_pos != 0) sp = min(sp, _pos);
 		}

@@ -323,7 +323,7 @@ function nodeValueUnit(value) constructor {
 			return inv? value / base : value * base;
 		
 		if(!is_array(base) && is_array(value)) {
-			for( var i = 0; i < array_length(value); i++ )
+			for( var i = 0, n = array_length(value); i < n; i++ )
 				value[i] = inv? value[i] / base : value[i] * base;
 			return value;
 		}
@@ -336,7 +336,7 @@ function nodeValueUnit(value) constructor {
 			case VALUE_DISPLAY.padding :
 			case VALUE_DISPLAY.vector :
 			case VALUE_DISPLAY.vector_range :
-				for( var i = 0; i < array_length(value); i++ )
+				for( var i = 0, n = array_length(value); i < n; i++ )
 					value[i] = inv? value[i] / base[i % 2] : value[i] * base[i % 2];
 				return value;
 			case VALUE_DISPLAY.area :
@@ -398,7 +398,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	animator	= new valueAnimator(_value, self, false);
 	animators	= [];
 	if(is_array(_value))
-	for( var i = 0; i < array_length(_value); i++ ) {
+	for( var i = 0, n = array_length(_value); i < n; i++ ) {
 		animators[i] = new valueAnimator(_value[i], self, true);
 		animators[i].index = i;
 	}
@@ -416,6 +416,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	draw_line_thick		= 1;
 	draw_line_shift_hover	= false;
 	drawLineIndex			= 1;
+	draw_line_vb		= noone;
 	
 	show_graph	= false;
 	graph_h		= ui(64);
@@ -438,6 +439,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	is_changed  = true;
 	cache_value = [ false, false, undefined ];
 	cache_array = [ false, false ];
+	use_cache   = true;
 	
 	expUse     = false;
 	expression = "";
@@ -464,7 +466,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(LOADING || APPENDING) return self;
 		
 		ds_list_clear(animator.values);
-		for( var i = 0; i < array_length(vals); i++ )
+		for( var i = 0, n = array_length(vals); i < n; i++ )
 			ds_list_add(animator.values, new valueKey(vals[i][0], vals[i][1], animator));
 			
 		return self;
@@ -501,6 +503,11 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	
 	static rejectArray = function() {
 		accept_array = false;
+		return self;
+	}
+	
+	static uncache = function() {
+		use_cache = false;
 		return self;
 	}
 	
@@ -593,7 +600,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						if(type == VALUE_TYPE.integer) editWidget.setSlideSpeed(1);
 						if(display_data != -1) editWidget.extras = display_data;
 						
-						for( var i = 0; i < array_length(animators); i++ )
+						for( var i = 0, n = array_length(animators); i < n; i++ )
 							animators[i].suffix = " " + array_safe_get(global.displaySuffix_Range, i);
 						
 						extract_node = "Node_Number";
@@ -617,7 +624,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 								extract_node = "Node_Vector4";
 						}
 						
-						for( var i = 0; i < array_length(animators); i++ )
+						for( var i = 0, n = array_length(animators); i < n; i++ )
 							animators[i].suffix = " " + string(array_safe_get(global.displaySuffix_Axis, i));
 						
 						break;
@@ -639,7 +646,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						else if(array_length(val) == 4)
 							extract_node = "Node_Vector4";
 							
-						for( var i = 0; i < array_length(animators); i++ )
+						for( var i = 0, n = array_length(animators); i < n; i++ )
 							animators[i].suffix = " " + string(array_safe_get(global.displaySuffix_VecRange, i));
 						
 						break;
@@ -657,7 +664,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 							return setValueDirect(val, index);
 						} );
 						
-						for( var i = 0; i < array_length(animators); i++ )
+						for( var i = 0, n = array_length(animators); i < n; i++ )
 							animators[i].suffix = " " + array_safe_get(global.displaySuffix_Range, i);
 						
 						extract_node = "Node_Vector2";
@@ -678,7 +685,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						} );
 						if(type == VALUE_TYPE.integer) editWidget.setSlideSpeed(1);
 						
-						for( var i = 0; i < array_length(animators); i++ )
+						for( var i = 0, n = array_length(animators); i < n; i++ )
 							animators[i].suffix = " " + array_safe_get(global.displaySuffix_Range, i);
 						
 						extract_node = "Node_Vector2";
@@ -692,7 +699,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						if(type == VALUE_TYPE.integer) editWidget.setSlideSpeed(1);
 						if(display_data != -1) editWidget.onSurfaceSize = display_data;
 						
-						for( var i = 0; i < array_length(animators); i++ )
+						for( var i = 0, n = array_length(animators); i < n; i++ )
 							animators[i].suffix = " " + array_safe_get(global.displaySuffix_Area, i, "");
 						
 						extra_data.area_type = AREA_MODE.area;
@@ -706,7 +713,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						}, unit);
 						if(type == VALUE_TYPE.integer) editWidget.setSlideSpeed(1);
 						
-						for( var i = 0; i < array_length(animators); i++ )
+						for( var i = 0, n = array_length(animators); i < n; i++ )
 							animators[i].suffix = " " + array_safe_get(global.displaySuffix_Padding, i);
 						
 						extract_node = "Node_Vector4";
@@ -717,7 +724,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						}, unit);
 						if(type == VALUE_TYPE.integer) editWidget.setSlideSpeed(1);
 						
-						for( var i = 0; i < array_length(animators); i++ )
+						for( var i = 0, n = array_length(animators); i < n; i++ )
 							animators[i].suffix = " " + array_safe_get(global.displaySuffix_Padding, i);
 						
 						extract_node = "Node_Vector4";
@@ -760,7 +767,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						if(type == VALUE_TYPE.integer) editWidget.setSlideSpeed(1);
 						if(display_data != -1) editWidget.extras = display_data;
 						
-						for( var i = 0; i < array_length(animators); i++ )
+						for( var i = 0, n = array_length(animators); i < n; i++ )
 							animators[i].suffix = " " + string(i);
 						
 						extract_node = "";
@@ -923,7 +930,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 					case VALUE_DISPLAY.path_array: 
 						var paths = animator.getValue();
 						if(is_array(paths)) {
-							for( var i = 0; i < array_length(paths); i++ ) {
+							for( var i = 0, n = array_length(paths); i < n; i++ ) {
 								if(try_get_path(paths[i]) != -1) continue;
 								value_validation = VALIDATION.error;	
 								str = "File not exist: " + string(paths[i]);
@@ -1042,17 +1049,20 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		return value;
 	}
 	
+	static resetCache = function() {
+		cache_value[0] = false;
+	}
+	
 	static getValue = function(_time = PROJECT.animator.current_frame, applyUnit = true, arrIndex = 0, useCache = true) {
 		if(type == VALUE_TYPE.trigger)
 			useCache = false;
 			
 		global.cache_call++;
-		if(useCache) {
+		if(useCache && use_cache) {
 			var cache_hit = cache_value[0];
-			cache_hit &= cache_value[1] == _time;
+			cache_hit &= (!is_anim && value_from == noone) || cache_value[1] == _time;
 			cache_hit &= cache_value[2] != undefined;
 			cache_hit &= connect_type == JUNCTION_CONNECT.input;
-			cache_hit &= unit.reference == VALUE_UNIT.constant;
 			
 			if(cache_hit) {
 				global.cache_hit++;
@@ -1076,7 +1086,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	static __getAnimValue = function(_time = PROJECT.animator.current_frame) {
 		if(sep_axis) {
 			var val = [];
-			for( var i = 0; i < array_length(animators); i++ )
+			for( var i = 0, n = array_length(animators); i < n; i++ )
 				val[i] = animators[i].getValue(_time);
 			return val;
 		} else	
@@ -1096,7 +1106,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				var sArr = [];
 				var _osZ = 0;
 				
-				for( var i = 0; i < array_length(val); i++ ) {
+				for( var i = 0, n = array_length(val); i < n; i++ ) {
 					if(!is_surface(val[i])) continue;
 					
 					var surfSz = [ surface_get_width(val[i]), surface_get_height(val[i]) ];
@@ -1126,7 +1136,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		}
 		
 		if(isArray(val) && array_length(val) < 128) { //Process data
-			for( var i = 0; i < array_length(val); i++ )
+			for( var i = 0, n = array_length(val); i < n; i++ )
 				val[i] = valueProcess(val[i], nod, applyUnit, arrIndex);
 		} else 
 			val = valueProcess(val, nod, applyUnit, arrIndex);
@@ -1193,8 +1203,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		else					return value_from.isAnimated() || value_from.__anim();
 	}
 	
-	static showValue = function() {
-		var val = getValue(, false); 
+	static showValue = function() { 
+		var val = getValue(, false,, false); 
 		if(isArray()) {
 			if(array_length(val) == 0) return 0;
 			var v = val[safe_mod(node.preview_index, array_length(val))];
@@ -1266,7 +1276,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		if(sep_axis) {
 			if(index == noone) {
-				for( var i = 0; i < array_length(animators); i++ )
+				for( var i = 0, n = array_length(animators); i < n; i++ )
 					updated |= animators[i].setValue(val[i], connect_type == JUNCTION_CONNECT.input && record, time); 
 			} else
 				updated = animators[index].setValue(val, connect_type == JUNCTION_CONNECT.input && record, time); 
@@ -1292,9 +1302,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				if(fullUpdate)	UPDATE |= RENDER_TYPE.full;
 				else			UPDATE |= RENDER_TYPE.partial;
 			}
-			
-			cache_array[0] = false;
-			cache_value[0] = false;
 			
 			if(!LOADING) { 
 				//print("setValueDirect"); 
@@ -1327,7 +1334,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		if(!typeCompatible(_valueFrom.type, type)) { 
 			if(log) 
-				noti_warning("setFrom: Type mismatch",, node);
+				noti_warning($"setFrom: Type mismatch {_valueFrom.type} to {type}",, node);
 			return false;
 		}
 		
@@ -1364,15 +1371,15 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		return true;
 	}
 	
-	static setFrom = function(_valueFrom, _update = true, checkRecur = true) {
+	static setFrom = function(_valueFrom, _update = true, checkRecur = true, log = false) {
 		if(_valueFrom == noone)
 			return removeFrom();
 		
-		if(!isConnectable(_valueFrom, checkRecur, false)) 
-			return false;
+		if(!isConnectable(_valueFrom, checkRecur, log)) 
+			return -1;
 		
 		if(setFrom_condition != -1 && !setFrom_condition(_valueFrom)) 
-			return false;
+			return -2;
 		
 		if(value_from != noone)
 			ds_list_remove(value_from.value_to, self);
@@ -1526,7 +1533,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(PANEL_GRAPH.pHOVER && point_in_circle(_mx, _my, x, y, 10 * _s * sca)) {
 			//var _to = getJunctionTo();
 			//var _ss = "";
-			//for( var i = 0; i < array_length(_to); i++ ) 
+			//for( var i = 0, n = array_length(_to); i < n; i++ ) 
 			//	_ss += (i? ", " : "") + _to[i].internalName;
 			//TOOLTIP = _ss;
 			
@@ -1586,6 +1593,136 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			draw_set_halign(fa_left);
 			draw_text(tx, y, name);
 		}
+	}
+	
+	static drawConnections = function(_x, _y, _s, mx, my, _active, aa = 1, minx = undefined, miny = undefined, maxx = undefined, maxy = undefined) {
+		if(value_from == noone)		return noone;
+		if(!value_from.node.active) return noone;
+		if(!isVisible())			return noone;
+		
+		var hovering = noone;
+		var jx  = x;
+		var jy  = y;	
+			
+		var frx = value_from.x;
+		var fry = value_from.y;
+			
+		if(!is_undefined(minx)) {
+			if(jx < minx && frx < minx) return noone;
+			if(jx > maxx && frx > maxx) return noone;
+				
+			if(jy < miny && fry < miny) return noone;
+			if(jy > maxy && fry > maxy) return noone;
+		}
+					
+		var c0  = value_color(value_from.type);
+		var c1  = value_color(type);
+			
+		var shx = draw_line_shift_x * _s;
+		var shy = draw_line_shift_y * _s;
+			
+		var cx  = round((frx + jx) / 2 + shx);
+		var cy  = round((fry + jy) / 2 + shy);
+			
+		var hover = false;
+		var th = max(1, PREF_MAP[? "connection_line_width"] * _s);
+		draw_line_shift_hover = false;
+			
+		var downDirection = type == VALUE_TYPE.action || value_from.type == VALUE_TYPE.action;
+			
+		if(PANEL_GRAPH.pHOVER)
+		switch(PREF_MAP[? "curve_connection_line"]) {
+			case 0 : 
+				hover = distance_to_line(mx, my, jx, jy, frx, fry) < max(th * 2, 6);
+				break;
+			case 1 : 
+				if(downDirection) 
+					hover = distance_to_curve_corner(mx, my, jx, jy, frx, fry, _s) < max(th * 2, 6);
+				else 
+					hover = distance_to_curve(mx, my, jx, jy, frx, fry, cx, cy, _s) < max(th * 2, 6);
+						
+				if(PANEL_GRAPH._junction_hovering == noone)
+					draw_line_shift_hover = hover;
+				break;
+			case 2 : 
+				if(downDirection) 
+					hover = distance_to_elbow_corner(mx, my, frx, fry, jx, jy) < max(th * 2, 6);
+				else
+					hover = distance_to_elbow(mx, my, frx, fry, jx, jy, cx, cy, _s, value_from.drawLineIndex, drawLineIndex) < max(th * 2, 6);
+					
+				if(PANEL_GRAPH._junction_hovering == noone)
+					draw_line_shift_hover = hover;
+				break;
+			case 3 :
+				if(downDirection) 
+					hover  = distance_to_elbow_diag_corner(mx, my, frx, fry, jx, jy) < max(th * 2, 6);
+				else
+					hover  = distance_to_elbow_diag(mx, my, frx, fry, jx, jy, cx, cy, _s, value_from.drawLineIndex, drawLineIndex) < max(th * 2, 6);
+					
+				if(PANEL_GRAPH._junction_hovering == noone)
+					draw_line_shift_hover = hover;
+				break;
+		}
+			
+		if(_active && hover)
+			hovering = self;
+			
+		var thicken = false;
+		thicken |= PANEL_GRAPH.nodes_junction_d == self;
+		thicken |= _active && PANEL_GRAPH.junction_hovering == self && PANEL_GRAPH._junction_hovering == noone;
+		thicken |= instance_exists(o_dialog_add_node) && o_dialog_add_node.junction_hovering == self;
+			
+		th *= thicken? 2 : 1;
+			
+		var corner = PREF_MAP[? "connection_line_corner"] * _s;
+		var ty = LINE_STYLE.solid;
+		if(type == VALUE_TYPE.node)
+			ty = LINE_STYLE.dashed;
+			
+		var ss  = _s * aa;
+		jx  *= aa;
+		jy  *= aa;
+		frx *= aa;
+		fry *= aa;
+		th  *= aa;
+		cx  *= aa;
+		cy  *= aa;
+		corner *= aa;
+		th = max(1, round(th));
+			
+		draw_set_color(c0);
+			
+		var fromIndex = value_from.drawLineIndex;
+		var toIndex   = drawLineIndex;
+		
+		switch(PREF_MAP[? "curve_connection_line"]) {
+			case 0 : 
+				if(ty == LINE_STYLE.solid)
+					draw_line_width_color(jx, jy, frx, fry, th, c1, c0);
+				else
+					draw_line_dashed_color(jx, jy, frx, fry, th, c1, c0, 12 * ss);
+				break;
+			case 1 : 
+				if(downDirection)
+					draw_line_curve_corner(jx, jy, frx, fry, ss, th, c0, c1); 
+				else
+					draw_line_curve_color(jx, jy, frx, fry, cx, cy, ss, th, c0, c1, ty); 
+				break;
+			case 2 : 
+				if(downDirection)
+					draw_line_elbow_corner(frx, fry, jx, jy, ss, th, c0, c1, corner, fromIndex, toIndex, ty); 
+				else
+					draw_line_elbow_color(frx, fry, jx, jy, cx, cy, ss, th, c0, c1, corner, fromIndex, toIndex, ty); 
+				break;
+			case 3 : 
+				if(downDirection)
+					draw_line_elbow_diag_corner(frx, fry, jx, jy, ss, th, c0, c1, corner, fromIndex, toIndex, ty); 
+				else
+					draw_line_elbow_diag_color(frx, fry, jx, jy, cx, cy, ss, th, c0, c1, corner, fromIndex, toIndex, ty); 
+				break;
+		}
+		
+		return hovering;
 	}
 	
 	static isVisible = function() {
@@ -1714,7 +1851,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		_map.raw_value  = animator.serialize(scale);
 		
 		var _anims = [];
-		for( var i = 0; i < array_length(animators); i++ )
+		for( var i = 0, n = array_length(animators); i < n; i++ )
 			array_push(_anims, animators[i].serialize(scale));
 		_map.animators = _anims;
 		_map.data = extra_data;
@@ -1791,18 +1928,19 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		var _nd = PROJECT.nodeMap[? _node];
 		var _ol = ds_list_size(_nd.outputs);
 		
-		if(log)
-			log_warning("LOAD", $"[Connect] Reconnecting {node.name} to {_nd.name}", node);
-			
+		if(log) log_warning("LOAD", $"[Connect] Reconnecting {node.name} to {_nd.name}", node);
+		
 		if(con_index < _ol) {
-			if(setFrom(_nd.outputs[| con_index], false))
-				return true;
+			var _set = setFrom(_nd.outputs[| con_index], false, true);
+			if(_set) return true;
 			
-			log_warning("LOAD", $"[Connect] Connection conflict {node.name} to {_nd.name} : Connection failed.", node);
+				 if(_set == -1) log_warning("LOAD", $"[Connect] Connection conflict {node.name} to {_nd.name} : Not connectable.", node);
+			else if(_set == -2) log_warning("LOAD", $"[Connect] Connection conflict {node.name} to {_nd.name} : Condition not met.", node); 
+			
 			return false;
 		}
 		
-		log_warning("LOAD", $"[Connect] Connection conflict {node.name} to {_nd.name} : Node not exist.", node);
+		log_warning("LOAD", $"[Connect] Connection conflict {node.name} to {_nd.name} : Output not exist.", node);
 		return false;
 	}
 	

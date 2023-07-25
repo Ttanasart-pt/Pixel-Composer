@@ -69,7 +69,7 @@ function Node_3D_Plane(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	_3d_node_init(0, /*Transform*/ 1, 3, 6, 2, 7);
 	
 	static generate_vb = function() {
-		for( var i = 0; i < array_length(vertexObjects); i++ ) 
+		for( var i = 0, n = array_length(vertexObjects); i < n; i++ ) 
 			vertexObjects[i].destroy();
 		vertexObjects = [];
 		

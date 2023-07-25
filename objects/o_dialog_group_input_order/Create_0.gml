@@ -33,7 +33,7 @@ event_inherited();
 		var inpt  = 0;
 		var hovr  = -1;
 		
-		for( var i = 0; i < array_length(node.input_display_list); i++ ) {
+		for( var i = 0, n = array_length(node.input_display_list); i < n; i++ ) {
 			var disp = node.input_display_list[i];
 			if(is_array(disp)) {
 				if(sHOVER && point_in_rectangle(_m[0], _m[1], 0, _y, hg, _y + hg)) {

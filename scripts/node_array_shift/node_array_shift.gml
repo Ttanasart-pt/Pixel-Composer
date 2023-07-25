@@ -29,7 +29,7 @@ function Node_Array_Shift(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		}
 		
 		var arr = [];
-		for( var i = 0; i < array_length(_arr); i++ )
+		for( var i = 0, n = array_length(_arr); i < n; i++ )
 			arr[i] = array_safe_get(_arr, i - _shf,, ARRAY_OVERFLOW.loop);
 		
 		outputs[| 0].setValue(arr);

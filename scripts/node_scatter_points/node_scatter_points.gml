@@ -87,7 +87,7 @@ function Node_Scatter_Points(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		} else {
 			pos = [];
 			var p = get_points_from_dist(_distMap, _amo, _seed, 8);
-			for( var i = 0; i < array_length(p); i++ ) {
+			for( var i = 0, n = array_length(p); i < n; i++ ) {
 				if(p[i] == 0) continue;
 				if(_fix) {
 					p[i][0] *= _fixRef[0];

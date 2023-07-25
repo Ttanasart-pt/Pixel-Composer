@@ -248,7 +248,7 @@ function Node_Vector2(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	function process_data(_output, _data, _output_index, _array_index = 0) {  
 		var vec = [ _data[0], _data[1] ];
-		for( var i = 0; i < array_length(vec); i++ ) 
+		for( var i = 0, n = array_length(vec); i < n; i++ ) 
 			vec[i] = _data[2]? round(vec[i]) : vec[i];
 			
 		return vec;
@@ -421,7 +421,7 @@ function Node_Vector3(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	function process_data(_output, _data, _output_index, _array_index = 0) {  
 		var vec = [ _data[0], _data[1], _data[2] ];
-		for( var i = 0; i < array_length(vec); i++ ) 
+		for( var i = 0, n = array_length(vec); i < n; i++ ) 
 			vec[i] = _data[3]? round(vec[i]) : vec[i];
 			
 		return vec; 
@@ -476,7 +476,7 @@ function Node_Vector4(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	function process_data(_output, _data, _output_index, _array_index = 0) {  
 		var vec = [ _data[0], _data[1], _data[2], _data[3] ];
-		for( var i = 0; i < array_length(vec); i++ ) 
+		for( var i = 0, n = array_length(vec); i < n; i++ ) 
 			vec[i] = _data[4]? round(vec[i]) : vec[i];
 			
 		return vec; 

@@ -261,7 +261,7 @@ function textArea(_input, _onModify, _extras = noone) : textInput(_input, _onMod
 		var _txtLines = string_splice(_input_text, "\n");
 		var ss = "";
 		
-		for( var i = 0; i < array_length(_txtLines); i++ ) {
+		for( var i = 0, n = array_length(_txtLines); i < n; i++ ) {
 			var _txt = _txtLines[i] + (i < array_length(_txtLines)? "\n" : "");
 			var words = string_splice(_txt, " ");
 			var currW = 0;
@@ -499,7 +499,7 @@ function textArea(_input, _onModify, _extras = noone) : textInput(_input, _onMod
 			cut_line();
 		}
 		
-		for( var i = 0; i < array_length(_input_text_line); i++ ) {
+		for( var i = 0, n = array_length(_input_text_line); i < n; i++ ) {
 			_str = _input_text_line[i];
 			
 			if(format == TEXT_AREA_FORMAT._default)
@@ -522,7 +522,7 @@ function textArea(_input, _onModify, _extras = noone) : textInput(_input, _onMod
 			var ch_cxn = sx;
 			var ch_y = _y;
 					
-			for( var i = 0; i < array_length(_input_text_line); i++ ) {
+			for( var i = 0, n = array_length(_input_text_line); i < n; i++ ) {
 				_str = string_trim_end(_input_text_line[i]);
 				_l = string_length(_str);
 				_ch_h = line_get_height();
@@ -641,7 +641,7 @@ function textArea(_input, _onModify, _extras = noone) : textInput(_input, _onMod
 						ch_sel_max = max(cursor_select, cursor);
 					}
 					
-					for( var i = 0; i < array_length(_input_text_line); i++ ) {
+					for( var i = 0, n = array_length(_input_text_line); i < n; i++ ) {
 						_str = _input_text_line[i];
 						_l = string_length(_str);
 						

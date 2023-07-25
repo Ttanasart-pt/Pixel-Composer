@@ -49,7 +49,7 @@ function Panel_Console() : PanelContent() constructor {
 		draw_text(ui(8) + string_width(command), h - ui(4), "_");
 		
 		var hy = h - ui(32);
-		for( var i = 0; i < array_length(history); i++ ) {
+		for( var i = 0, n = array_length(history); i < n; i++ ) {
 			var his = history[array_length(history) - i - 1];
 			var txt = his.txt;
 			

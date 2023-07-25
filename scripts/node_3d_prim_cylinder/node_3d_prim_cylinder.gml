@@ -87,7 +87,7 @@ function Node_3D_Cylinder(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	static generate_vb = function() {
 		var _ox, _oy, _nx, _ny, _ou, _nu;
 		
-		for( var i = 0; i < array_length(vertexObjects); i++ ) 
+		for( var i = 0, n = array_length(vertexObjects); i < n; i++ ) 
 			vertexObjects[i].destroy();
 		vertexObjects = [];
 		

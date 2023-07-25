@@ -23,7 +23,7 @@ function Node_Feedback_Output(_x, _y, _group = noone) : Node_Group_Output(_x, _y
 		var is_surf	 = inputs[| 0].type == VALUE_TYPE.surface;
 		
 		if(is_array(cache_value)) {
-			for( var i = 0; i < array_length(cache_value); i++ ) {
+			for( var i = 0, n = array_length(cache_value); i < n; i++ ) {
 				if(is_surface(cache_value[i])) 
 					surface_free(cache_value[i]);
 			}

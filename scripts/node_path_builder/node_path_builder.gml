@@ -22,7 +22,7 @@ function Node_Path_Builder(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	static getBoundary		= function() { 
 		var boundary = new BoundingBox();
 		var _lines = inputs[| 0].getValue();
-		for( var i = 0; i < array_length(_lines); i++ )
+		for( var i = 0, n = array_length(_lines); i < n; i++ )
 			boundary.addPoint(_lines[i][0], _lines[i][1]);
 		
 		return boundary; 

@@ -170,7 +170,7 @@ function Node_Crop_Content(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		
 		var res		= [];
 		
-		for( var i = 0; i < array_length(_inSurf); i++ ) {
+		for( var i = 0, n = array_length(_inSurf); i < n; i++ ) {
 			var _surf = _inSurf[i];
 			
 			if(_array == 0) {

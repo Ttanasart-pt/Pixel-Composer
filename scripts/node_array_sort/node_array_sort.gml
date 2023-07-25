@@ -33,13 +33,13 @@ function Node_Array_Sort(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		}
 		
 		var _arr = [];
-		for( var i = 0; i < array_length(arr); i++ )
+		for( var i = 0, n = array_length(arr); i < n; i++ )
 			_arr[i] = [ i, arr[i] ];
 		
 		array_sort(_arr, asc? sortAcs : sortDes);
 		
 		var res = [ [], [] ];
-		for( var i = 0; i < array_length(_arr); i++ ) {
+		for( var i = 0, n = array_length(_arr); i < n; i++ ) {
 			res[0][i] = _arr[i][0];
 			res[1][i] = _arr[i][1];
 		}

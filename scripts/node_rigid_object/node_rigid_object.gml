@@ -43,7 +43,7 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		.setDisplay(VALUE_DISPLAY.button, [ function() {
 			var _tex  = inputs[| 6].getValue();
 			if(is_array(_tex)) {
-				for( var i = 0; i < array_length(_tex); i++ ) 
+				for( var i = 0, n = array_length(_tex); i < n; i++ ) 
 					generateMesh(i);
 			} else 
 				generateMesh();
@@ -322,7 +322,7 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			var keys = ds_map_keys_to_array(_pm);
 			array_sort(keys, false);
 		
-			for( var i = 0; i < array_length(keys); i++ ) {
+			for( var i = 0, n = array_length(keys); i < n; i++ ) {
 				var px = _pm[? keys[i]][0];
 				var py = _pm[? keys[i]][1];
 				
@@ -345,7 +345,7 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			
 			var _sm = ds_map_create();
 			
-			for( var i = 0; i < array_length(mesh); i++ )
+			for( var i = 0, n = array_length(mesh); i < n; i++ )
 				_sm[? point_direction_positive(cmX, cmY, mesh[i][0], mesh[i][1])] = [ mesh[i][0], mesh[i][1] ];
 			
 			var keys = ds_map_keys_to_array(_sm);
@@ -354,7 +354,7 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			if(array_length(keys)) {
 				array_sort(keys, false);
 				
-				for( var i = 0; i < array_length(keys); i++ ) {
+				for( var i = 0, n = array_length(keys); i < n; i++ ) {
 					var k = keys[i];
 					array_push( mesh, [_sm[? k][0], _sm[? k][1]] );
 				}
@@ -392,7 +392,7 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		}
 		
 		array_sort(remSt, false);
-		for( var i = 0; i < array_length(remSt); i++ ) {
+		for( var i = 0, n = array_length(remSt); i < n; i++ ) {
 			var ind = remSt[i];
 			array_delete(mesh, ind, 1);
 		}
@@ -459,7 +459,7 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		
 		array_sort(remSt, false);
 		
-		for( var i = 0; i < array_length(remSt); i++ ) {
+		for( var i = 0, n = array_length(remSt); i < n; i++ ) {
 			var ind = remSt[i];
 			array_delete(mesh, ind, 1);
 		}
@@ -526,7 +526,7 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			object.yscale = _spos[3] / hh * 2;
 			object.surface = _tex;
 		} else if(instance_exists(object)) {
-			for( var i = 0; i < array_length(object.fixture); i++ )
+			for( var i = 0, n = array_length(object.fixture); i < n; i++ )
 				physics_remove_fixture(object, object.fixture[i]);
 			object.fixture = [];
 		} else 
@@ -641,7 +641,7 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	static update = function(frame = PROJECT.animator.current_frame) {
 		if(!isAnimated()) return;
 		
-		//for( var i = 0; i < array_length(object); i++ )
+		//for( var i = 0, n = array_length(object); i < n; i++ )
 		//	spawn(noone, i, object[i]);
 	}
 	
@@ -661,7 +661,7 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	static reset = function() {
 		var _tex  = inputs[| 6].getValue();
-		for( var i = 0; i < array_length(object); i++ ) {
+		for( var i = 0, n = array_length(object); i < n; i++ ) {
 			if(instance_exists(object[i]))
 				instance_destroy(object[i]);
 		}
@@ -671,7 +671,7 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		if(!_spwn) return;
 		
 		if(is_array(_tex)) {
-			for( var i = 0; i < array_length(_tex); i++ )
+			for( var i = 0, n = array_length(_tex); i < n; i++ )
 				object[i] = spawn(noone, i);
 		} else 
 			object = [ spawn() ];

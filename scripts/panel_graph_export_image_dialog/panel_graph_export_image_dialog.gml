@@ -71,7 +71,7 @@ function Panel_Graph_Export_Image(targetPanel) : PanelContent() constructor {
 		var _tx = sc_settings.surface_w;
 		var wh = ui(36);
 		
-		for( var i = 0; i < array_length(widgets); i++ ) {
+		for( var i = 0, n = array_length(widgets); i < n; i++ ) {
 			draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text);
 			draw_text_add(0, ty + wh * i, __txt(widgets[i][0], "graph_export_"));
 			

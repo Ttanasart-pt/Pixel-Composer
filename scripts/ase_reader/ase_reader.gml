@@ -338,7 +338,7 @@ function read_format(bin, format, outMap) {
 }
 
 function read_format_array(bin, formatArr, outMap) {
-	for( var i = 0; i < array_length(formatArr); i++ ) {
+	for( var i = 0, n = array_length(formatArr); i < n; i++ ) {
 		if(array_length(formatArr[i]) >= 4 && !formatArr[i][3](outMap)) 
 			continue;
 		var pos = file_bin_position(bin);

@@ -22,7 +22,7 @@ function gradientObject(color = c_black) constructor {
 	
 	static clone = function() {
 		var g = new gradientObject();
-		for( var i = 0; i < array_length(keys); i++ ) {
+		for( var i = 0, n = array_length(keys); i < n; i++ ) {
 			g.keys[i] = keys[i].clone();
 		}
 		g.type = type;
@@ -153,7 +153,7 @@ function gradientObject(color = c_black) constructor {
 		g.keys = [];
 		g.type = type;
 		
-		for( var i = 0; i < array_length(keys); i++ )
+		for( var i = 0, n = array_length(keys); i < n; i++ )
 			g.keys[i] = keys[i].clone();
 			
 		return g;
@@ -162,7 +162,7 @@ function gradientObject(color = c_black) constructor {
 	static serialize = function() {
 		var s = {type};
 		s.keys = [];
-		for( var i = 0; i < array_length(keys); i++ )
+		for( var i = 0, n = array_length(keys); i < n; i++ )
 			s.keys[i] = keys[i].serialize();
 			
 		return json_stringify(s, false);
@@ -177,7 +177,7 @@ function gradientObject(color = c_black) constructor {
 			s = str;
 		else if(is_array(str)) {			
 			keys = [];
-			for( var i = 0; i < array_length(str); i++ )
+			for( var i = 0, n = array_length(str); i < n; i++ )
 				keys[i] = new gradientKey(str[i].time, str[i].value); 
 			
 			return self;
@@ -185,7 +185,7 @@ function gradientObject(color = c_black) constructor {
 			
 		type = s.type;
 		keys = [];
-		for( var i = 0; i < array_length(s.keys); i++ )
+		for( var i = 0, n = array_length(s.keys); i < n; i++ )
 			keys[i] = new gradientKey(s.keys[i].time, s.keys[i].value); 
 		
 		return self;

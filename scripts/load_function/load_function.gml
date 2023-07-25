@@ -22,23 +22,26 @@ function TEST_PATH(path) {
 }
 
 function LOAD_PATH(path, readonly = false, safe_mode = false) {
-	for( var i = 0; i < array_length(PROJECTS); i++ )
+	for( var i = 0, n = array_length(PROJECTS); i < n; i++ )
 		if(PROJECTS[i].path == path) return;
 	
 	var _PROJECT = PROJECT;
 	PROJECT = new Project();
 	if(PANEL_GRAPH.project.path == "" && !PANEL_GRAPH.project.modified) {
+		var ind = array_find(PROJECTS, PANEL_GRAPH.project);
+		PROJECTS[ind] = PROJECT;
+		
 		PANEL_GRAPH.setProject(PROJECT);
 	} else {
 		var graph = new Panel_Graph(PROJECT);
 		PANEL_GRAPH.panel.setContent(graph, true);
 		PANEL_GRAPH = graph;
+		array_push(PROJECTS, PROJECT);
 	}
 	
 	var res = __LOAD_PATH(path, readonly, safe_mode);
 	if(!res) return false;
 	
-	array_push(PROJECTS, PROJECT);
 	PANEL_ANIMATION.updatePropertyList();
 	setFocus(PANEL_GRAPH.panel);
 	
@@ -93,7 +96,7 @@ function __LOAD_PATH(path, readonly = false, safe_mode = false, override = false
 			log_warning("LOAD", warn);
 		}
 	} else {
-		var warn = $"File version mismatch : loading old format to Pixel Composer {string(SAVE_VERSION)}";
+		var warn = $"File version mismatch : loading old format to Pixel Composer {SAVE_VERSION}";
 		log_warning("LOAD", warn);
 	}
 	
@@ -216,6 +219,13 @@ function __LOAD_PATH(path, readonly = false, safe_mode = false, override = false
 	try {
 		for(var i = 0; i < ds_list_size(create_list); i++)
 			create_list[| i].postConnect();
+	} catch(e) {
+		log_warning("LOAD, connect", exception_print(e));
+	}
+	
+	try {
+		for(var i = 0; i < ds_list_size(create_list); i++)
+			create_list[| i].clearInputCache();
 	} catch(e) {
 		log_warning("LOAD, connect", exception_print(e));
 	}

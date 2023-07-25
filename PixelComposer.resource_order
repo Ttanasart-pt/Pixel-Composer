@@ -75,7 +75,7 @@
     {"name":"audio","order":19,"path":"folders/nodes/data/audio.yy",},
     {"name":"compose","order":14,"path":"folders/nodes/data/compose.yy",},
     {"name":"armature","order":5,"path":"folders/nodes/data/compose/armature.yy",},
-    {"name":"feedback","order":13,"path":"folders/nodes/data/feedback.yy",},
+    {"name":"feedback","order":7,"path":"folders/nodes/data/iterate/feedback.yy",},
     {"name":"filter","order":1,"path":"folders/nodes/data/filter.yy",},
     {"name":"colors","order":4,"path":"folders/nodes/data/filter/colors.yy",},
     {"name":"combine","order":1,"path":"folders/nodes/data/filter/combine.yy",},

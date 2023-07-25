@@ -12,7 +12,7 @@
 #endregion
 
 function _log_template() {
-	return $"{string(current_year)}/{string(current_month)}/{string(current_day)} {string_lead_zero(current_hour, 2)}:{string_lead_zero(current_minute, 2)}:{string_lead_zero(current_second, 2)} > ";
+	return $"{current_year}/{current_month}/{current_day} {string_lead_zero(current_hour, 2)}:{string_lead_zero(current_minute, 2)}:{string_lead_zero(current_second, 2)} > ";
 }
 
 function __log(title, str, fname = "log/log.txt") {
@@ -63,7 +63,7 @@ function exception_print(e) {
 	var str = "\n\n==========  Crash log  ==========\n\n" + e.longMessage;	
 	str += "\n\n========== Stack trace ==========\n\n";	
 	
-	for( var i = 0; i < array_length(e.stacktrace); i++ )
+	for( var i = 0, n = array_length(e.stacktrace); i < n; i++ )
 		str += e.stacktrace[i] + "\n"
 	
 	str += "\n\n========= Crash log end =========\n";	
@@ -80,7 +80,7 @@ function setException() {
 		tt += "\n" + ex.longMessage;
 		tt += "\n" + ex.script;
 		tt += "\n-------------------------- STACK TRACE --------------------------\n\n";
-		for( var i = 0; i < array_length(ex.stacktrace); i++ ) {
+		for( var i = 0, n = array_length(ex.stacktrace); i < n; i++ ) {
 			tt += ex.stacktrace[i] + "\n";
 		}
 		tt += "\n---------------------------- :( ----------------------------\n";

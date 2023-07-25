@@ -94,7 +94,7 @@ function polygon_triangulate(points, tolerance = 4) {
 	if(array_length(reflected) == 0) 
 		return polygon_triangulate_convex(points);
 	
-	for( var i = 0; i < array_length(points); i++ )
+	for( var i = 0, n = array_length(points); i < n; i++ )
 		pointInd[i] = i;
 	
 	var triangles = [];

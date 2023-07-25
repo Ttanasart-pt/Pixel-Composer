@@ -109,7 +109,7 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 				var __x   = _st[1];
 				var __w   = _st[2];
 				
-				for( var i = 0; i < array_length(_bone.childs); i++ )
+				for( var i = 0, n = array_length(_bone.childs); i < n; i++ )
 					ds_stack_push(_bst, [ _bone.childs[i], __x + 16, __w - 16 ]);
 					
 				if(_bone.is_main) continue;
@@ -130,7 +130,7 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 					var _sx = __x + 24 + string_width(_bone.name) + 8;
 					var _sy = ty + 4;
 						
-					for( var i = 0; i < array_length(_sdata); i++ ) {
+					for( var i = 0, n = array_length(_sdata); i < n; i++ ) {
 						var _sid  = _sdata[i][0];
 						var _surf = _sdata[i][1];
 						var _sw = surface_get_width(_surf);
@@ -461,7 +461,7 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		while(!ds_stack_empty(_bst)) {
 			var _bone = ds_stack_pop(_bst);
 			
-			for( var i = 0; i < array_length(_bone.childs); i++ ) {
+			for( var i = 0, n = array_length(_bone.childs); i < n; i++ ) {
 				var child_bone = _bone.childs[i];
 				boneMap[? child_bone.ID] = child_bone;
 				ds_stack_push(_bst, child_bone);

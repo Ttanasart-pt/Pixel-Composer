@@ -31,7 +31,7 @@ function Node_VFX_Spawner(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y
 			return;
 		} else {
 			var _parts = [];
-			for( var i = 0; i < array_length(parts); i++ ) {
+			for( var i = 0, n = array_length(parts); i < n; i++ ) {
 				if(!parts[i].active) continue;
 				array_push(_parts, parts[i]);
 			}

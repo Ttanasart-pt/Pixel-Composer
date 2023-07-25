@@ -162,7 +162,7 @@
 	function checkMouse() {
 		if(!DIALOG_CLICK) return;
 		
-		for( var i = 0; i < array_length(children); i++ )
+		for( var i = 0, n = array_length(children); i < n; i++ )
 			if(instance_exists(children[i])) return;
 		
 		var x0 = dialog_x - dialog_resizable * 6;

@@ -1,6 +1,7 @@
 function draw_line_width_vertex(xs, ys, xe, ye, thick, c0, c1) {
-	draw_primitive_begin(pr_trianglestrip);
-
+	var vb = vertex_create_buffer();
+	vertex_begin(vb, FORMAT_2PC);
+	
 	// Calculate the direction and perpendicular vector of the line
 	var dx = xe - xs;
 	var dy = ye - ys;
@@ -19,10 +20,13 @@ function draw_line_width_vertex(xs, ys, xe, ye, thick, c0, c1) {
 	var y3 = ye - py;
 
 	// Draw vertices
-	draw_vertex_color(x0, y0, c0, 1);
-	draw_vertex_color(x1, y1, c0, 1);
-	draw_vertex_color(x2, y2, c1, 1);
-	draw_vertex_color(x3, y3, c1, 1);
+	vertex_add_2pc(vb, x0, y0, c0);
+	vertex_add_2pc(vb, x1, y1, c0);
+	vertex_add_2pc(vb, x2, y2, c1);
+	vertex_add_2pc(vb, x3, y3, c1);
 
-	draw_primitive_end();
+	vertex_end(vb);
+	vertex_freeze(vb);
+	
+	return vb;
 }
