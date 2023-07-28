@@ -67,10 +67,9 @@ vec3 gradientEval(in float prog) {
 			}
 			break;
 		}
-		if(i >= gradient_keys - 1) {
-			col = gradient_color[gradient_keys - 1];
-			break;
-		}
+		
+		if(i >= gradient_keys - 1)
+			return gradient_color[gradient_keys - 1].rgb;
 	}
 	
 	return col.rgb;

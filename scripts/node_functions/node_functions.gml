@@ -210,7 +210,11 @@
 			return inp == noone? 0 : inp.getValueRecursive()[0];
 		} else if(string_lower(strs[0]) == "project") {
 			if(!ds_map_exists(PROJECT_VARIABLES, strs[1])) return 0;
-			return PROJECT_VARIABLES[? strs[1]]();
+			
+			var val = PROJECT_VARIABLES[? strs[1]];
+			if(is_callable(val))
+				return val();
+			return val;
 		} else if(array_length(strs) > 2) { 
 			var key = strs[0];
 			if(!ds_map_exists(PROJECT.nodeNameMap, key)) return 0;

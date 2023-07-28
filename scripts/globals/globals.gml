@@ -54,6 +54,9 @@
 		]
 		
 		static cleanup = function() {
+			if(!ds_map_empty(nodeMap))
+				array_map(ds_map_keys_to_array(nodeMap), function(_key, _ind) { nodeMap[? _key].active = false; });
+			
 			ds_list_destroy(nodes);
 			ds_map_destroy(nodeMap);
 			ds_map_destroy(nodeNameMap);
@@ -70,12 +73,12 @@
 	
 	globalvar PROJECT_VARIABLES;
 	PROJECT_VARIABLES = ds_map_create();
-	PROJECT_VARIABLES[? "frame"]		= [ function() { return PROJECT.animator.current_frame; }];
-	PROJECT_VARIABLES[? "progress"]		= [ function() { return PROJECT.animator.current_frame / PROJECT.animator.frames_total; }];
-	PROJECT_VARIABLES[? "frameTotal"]	= [ function() { return PROJECT.animator.frames_total; }];
-	PROJECT_VARIABLES[? "fps"]			= [ function() { return PROJECT.animator.framerate; }];
-	PROJECT_VARIABLES[? "time"]			= [ function() { return PROJECT.animator.current_frame / PROJECT.animator.framerate; }];
-	PROJECT_VARIABLES[? "name"]			= [ function() { return filename_name_only(PROJECT.path); }];
+	PROJECT_VARIABLES[? "frame"]		= function() { return PROJECT.animator.current_frame; };
+	PROJECT_VARIABLES[? "progress"]		= function() { return PROJECT.animator.current_frame / PROJECT.animator.frames_total; };
+	PROJECT_VARIABLES[? "frameTotal"]	= function() { return PROJECT.animator.frames_total; };
+	PROJECT_VARIABLES[? "fps"]			= function() { return PROJECT.animator.framerate; };
+	PROJECT_VARIABLES[? "time"]			= function() { return PROJECT.animator.current_frame / PROJECT.animator.framerate; };
+	PROJECT_VARIABLES[? "name"]			= function() { return filename_name_only(PROJECT.path); };
 #endregion
 
 #region main
@@ -89,10 +92,10 @@
 	
 	globalvar VERSION, SAVE_VERSION, VERSION_STRING, BUILD_NUMBER;
 	
-	VERSION			= 1147;
-	SAVE_VERSION	= 1448.1;
+	VERSION			= 11470;
+	SAVE_VERSION	= 11470;
 	VERSION_STRING  = "1.14.7";
-	BUILD_NUMBER	= 114600;
+	BUILD_NUMBER	= 11470;
 	
 	globalvar APPEND_MAP;
 	APPEND_MAP      = ds_map_create();

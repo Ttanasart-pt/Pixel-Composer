@@ -188,6 +188,10 @@ function Panel_Preview() : PanelContent() constructor {
 			var node = preview_node[i];
 			
 			if(node == noone) continue;
+			if(!node.active) {
+				preview_node[i] = noone;
+				continue;
+			}
 			
 			var _prev_val = node.getPreviewValue();
 			

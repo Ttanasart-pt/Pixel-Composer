@@ -688,6 +688,9 @@ function Panel_Inspector() : PanelContent() constructor {
 		
 		draw_sprite_stretched(THEME.ui_panel_bg, 1, ui(8), top_bar_h - ui(8), w - ui(16), h - top_bar_h);
 		
+		if(inspecting && !inspecting.active)
+			inspecting = noone;
+		
 		if(inspecting) {
 			title = inspecting.display_name == ""? inspecting.name : inspecting.display_name;
 			inspecting.inspectorStep();

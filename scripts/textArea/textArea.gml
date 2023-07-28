@@ -14,6 +14,7 @@ function textArea(_input, _onModify, _extras = noone) : textInput(_input, _onMod
 	auto_update = false;
 	
 	_input_text_line = [];
+	_input_text_line_index = [];
 	_current_text = "";
 	_input_text = "";
 	_prev_text = "";
@@ -256,6 +257,7 @@ function textArea(_input, _onModify, _extras = noone) : textInput(_input, _onMod
 	
 	static cut_line = function() {
 		_input_text_line = [];
+		_input_text_line_index = [];
 		draw_set_font(font);
 		
 		var _txtLines = string_splice(_input_text, "\n");
@@ -268,6 +270,7 @@ function textArea(_input, _onModify, _extras = noone) : textInput(_input, _onMod
 			var currL = "";
 			var cut = true;
 			var len = array_length(words);
+			var _iIndex = i + 1;
 			
 			for( var j = 0; j < len; j++ ) {
 				var word = words[j];
@@ -279,6 +282,8 @@ function textArea(_input, _onModify, _extras = noone) : textInput(_input, _onMod
 						
 						if(currW + string_width(ch) > line_width) {
 							array_push(_input_text_line, currL);
+							array_push(_input_text_line_index, _iIndex); _iIndex = "";
+								
 							currW = 0;
 							currL = "";
 						}
@@ -291,6 +296,8 @@ function textArea(_input, _onModify, _extras = noone) : textInput(_input, _onMod
 				
 				if(currW + string_width(word) > line_width) {
 					array_push(_input_text_line, currL);
+					array_push(_input_text_line_index, _iIndex); _iIndex = "";
+								
 					currW = 0;
 					currL = "";
 				}
@@ -300,7 +307,10 @@ function textArea(_input, _onModify, _extras = noone) : textInput(_input, _onMod
 				currL += word;
 			}
 			
-			if(cut) array_push(_input_text_line, currL);
+			if(cut) {
+				array_push(_input_text_line, currL);
+				array_push(_input_text_line_index, _iIndex); _iIndex = "";	
+			}
 		}
 	}
 	
@@ -611,7 +621,7 @@ function textArea(_input, _onModify, _extras = noone) : textInput(_input, _onMod
 			for( var i = 0; i < line_count; i++ ) {
 				var ly = _y + ui(7) + i * c_h;
 				
-				draw_text(lx, ly, string(i + 1));
+				draw_text(lx, ly, _input_text_line_index[i]);
 			}
 		}
 		

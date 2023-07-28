@@ -200,7 +200,7 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 		if(_focus) jun.express_edit.register(_scrollPane);
 			
 		var wd_h = jun.express_edit.draw(editBoxX, editBoxY, editBoxW, editBoxH, jun.expression, _m);
-		widH = lineBreak? wd_h : 0;
+		widH = wd_h - (TEXTBOX_HEIGHT * !lineBreak);
 	} else if(jun.editWidget) {
 		jun.editWidget.setFocusHover(_focus, _hover);
 			

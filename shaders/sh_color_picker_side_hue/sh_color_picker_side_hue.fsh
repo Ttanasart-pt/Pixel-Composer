@@ -3,11 +3,14 @@
 //
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
+
+#define PALETTE_LIMIT 128
+
 uniform float sat;
 uniform float value;
 
 uniform int usePalette;
-uniform vec4 palette[64];
+uniform vec4 palette[PALETTE_LIMIT];
 uniform int paletteAmount;
 
 vec3 hsv2rgb(vec3 c) {

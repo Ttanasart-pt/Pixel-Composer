@@ -26,7 +26,7 @@ function shader_set_f(uniform, value) {
 		shader_set_f_array(shader, uniform, value);
 		return;
 	}
-		
+	
 	if(argument_count > 2) {
 		var array = [];
 		for( var i = 1; i < argument_count; i++ )
@@ -38,13 +38,15 @@ function shader_set_f(uniform, value) {
 	shader_set_uniform_f(shader_get_uniform(shader, uniform), value);
 }
 
-function shader_set_f_array(shader, uniform, array) {
-	shader_set_uniform_f_array(shader_get_uniform(shader, uniform), array);
+function shader_set_f_array(shader, uniform, array, max_length = 128) {
+	shader_set_uniform_f_array_safe(shader_get_uniform(shader, uniform), array, max_length);
 }
 
-function shader_set_uniform_f_array_safe(uniform, array) {
+function shader_set_uniform_f_array_safe(uniform, array, max_length = 128) {
 	if(!is_array(array)) return;
 	if(array_length(array) == 0) return;
+	if(array_length(array) > max_length)
+		array_resize(array, max_length)
 	
 	shader_set_uniform_f_array(uniform, array);
 }
@@ -81,11 +83,11 @@ function shader_set_color(uniform, col, alpha = 1) {
 	shader_set_f(uniform, colToVec4(col, alpha));
 }
 
-function shader_set_palette(pal, pal_uni = "palette", amo_uni = "paletteAmount") {
-	shader_set_i(amo_uni, array_length(pal));
+function shader_set_palette(pal, pal_uni = "palette", amo_uni = "paletteAmount", max_length = 128) {
+	shader_set_i(amo_uni, min(max_length, array_length(pal)));
 	
 	var _pal = [];
-	for( var i = 0, n = array_length(pal); i < n; i++ )
+	for( var i = 0, n = min(max_length, array_length(pal)); i < n; i++ )
 		array_append(_pal, colToVec4(pal[i]));
 	
 	if(array_length(_pal))

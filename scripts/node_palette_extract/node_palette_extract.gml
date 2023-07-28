@@ -300,6 +300,8 @@ function Node_Palette_Extract(_x, _y, _group = noone) : Node(_x, _y, _group) con
 		}
 		
 		outputs[| 0].setValue(res);
+		
+		triggerRender();
 	}
 	
 	static onInspector1Update = function() { extractPalettes(); }

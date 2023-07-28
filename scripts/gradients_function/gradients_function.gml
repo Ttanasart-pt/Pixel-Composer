@@ -14,6 +14,8 @@ function gradientKey(time, value) constructor {
 }
 
 function gradientObject(color = c_black) constructor {
+	static GRADIENT_LIMIT = 128;
+	
 	if(is_array(color))
 		keys = [ new gradientKey(0, color[0]), new gradientKey(1, color[1]) ];
 	else
@@ -22,15 +24,15 @@ function gradientObject(color = c_black) constructor {
 	
 	static clone = function() {
 		var g = new gradientObject();
-		for( var i = 0, n = array_length(keys); i < n; i++ ) {
+		for( var i = 0, n = array_length(keys); i < n; i++ )
 			g.keys[i] = keys[i].clone();
-		}
 		g.type = type;
 		
 		return g;
 	}
 	
 	static add = function(_addkey, _deleteDup = true) {
+		if(array_length(keys) > GRADIENT_LIMIT) return;
 		if(array_length(keys) == 0) {
 			array_push(keys, _addkey);
 			return;
@@ -85,8 +87,10 @@ function gradientObject(color = c_black) constructor {
 	
 		var _grad_color = [];
 		var _grad_time  = [];
-	
-		for(var i = 0; i < array_length(keys); i++) {
+		
+		var len = min(128, array_length(keys));
+		
+		for(var i = 0; i < len; i++) {
 			if(keys[i].value == undefined) return;
 		
 			_grad_color[i * 4 + 0] = color_get_red(keys[i].value) / 255;
@@ -96,14 +100,14 @@ function gradientObject(color = c_black) constructor {
 			_grad_time[i]  = keys[i].time;
 		}
 	
-		if(array_length(keys) == 0) {
+		if(len == 0) {
 			draw_sprite_stretched_ext(s_fx_pixel, 0, _x, _y, _w, _h, c_white, _a)
 		} else {
 			shader_set(sh_gradient_display);
 			shader_set_uniform_i(uniform_grad_blend, type);
-			shader_set_uniform_f_array_safe(uniform_grad, _grad_color);
+			shader_set_uniform_f_array_safe(uniform_grad, _grad_color, GRADIENT_LIMIT * 4);
 			shader_set_uniform_f_array_safe(uniform_grad_time, _grad_time);
-			shader_set_uniform_i(uniform_grad_key, array_length(keys));
+			shader_set_uniform_i(uniform_grad_key, len);
 			
 			draw_sprite_stretched_ext(s_fx_pixel, 0, _x, _y, _w, _h, c_white, _a)
 			shader_reset();

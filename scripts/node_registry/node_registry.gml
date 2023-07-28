@@ -100,7 +100,7 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 			ds_list_add(iter, "Groups");
 			addNodeObject(iter, "Input",	s_node_loop_input,		"Node_Iterator_Input",	[1, Node_Iterator_Input]);
 			addNodeObject(iter, "Output",	s_node_loop_output,		"Node_Iterator_Output",	[1, Node_Iterator_Output]);
-		
+			
 			ds_list_add(iter, "Loops");
 			addNodeObject(iter, "Index",		s_node_iterator_index,	"Node_Iterator_Index",	[1, Node_Iterator_Index]);
 			addNodeObject(iter, "Loop amount",	s_node_iterator_amount,	"Node_Iterator_Length",	[1, Node_Iterator_Length]);

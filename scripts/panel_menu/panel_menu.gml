@@ -61,6 +61,7 @@ function Panel_Menu() : PanelContent() constructor {
 				gameframe_set_fullscreen(2);
 		},, ["", "Fullscreen"]),
 		menuItem(__txt("Close current file"), function() { PANEL_GRAPH.close(); },, [ "", "Close file" ]),
+		menuItem(__txt("Close all projects"), function() { for( var i = array_length(PROJECTS) - 1; i >= 0; i-- ) closeProject(PROJECTS[i]); },, [ "", "Close all" ]),
 		menuItem(__txt("Close program"), function() { window_close(); },, [ "", "Close program" ]),
 	];
 	

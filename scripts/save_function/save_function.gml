@@ -57,6 +57,8 @@ function SET_PATH(project, path) {
 	} else if(!project.readonly) {
 		ds_list_remove(RECENT_FILES, path);
 		ds_list_insert(RECENT_FILES, 0, path);
+		while(ds_list_size(RECENT_FILES) > 64)
+			ds_list_delete(RECENT_FILES, ds_list_size(RECENT_FILES) - 1);
 		RECENT_SAVE();
 		RECENT_REFRESH();
 		//project.path = filename_name(path);

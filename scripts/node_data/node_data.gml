@@ -437,8 +437,8 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 			if( val_from == noone) continue;
 			if(!val_from.node.active) continue;
 			if(!val_from.node.isRenderActive()) continue;
-			if(!val_from.node.rendered && !val_from.node.update_on_frame) {
-				LOG_LINE_IF(global.FLAG.render, $"Node {internalName} is not renderable because input {val_from.node.internalName} is not rendered");
+			if!(val_from.node.rendered || val_from.node.update_on_frame) {
+				LOG_LINE_IF(global.FLAG.render, $"Node {internalName} is not renderable because input {val_from.node.internalName} is not rendered ({val_from.node.rendered})");
 				return false;
 			}
 		}

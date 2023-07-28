@@ -112,7 +112,7 @@ function Render(partial = false, runAction = false) {
 		// render forward
 		while(!RENDER_QUEUE.empty()) {
 			LOG_BLOCK_START();
-			LOG_IF(global.FLAG.render, $"➤➤➤➤➤➤ CURRENT RENDER QUEUE {RENDER_QUEUE}");
+			LOG_IF(global.FLAG.render, $"➤➤➤➤➤➤ CURRENT RENDER QUEUE {RENDER_QUEUE} [{RENDER_QUEUE.size()}] ");
 			rendering = RENDER_QUEUE.dequeue();
 			var renderable = rendering.isRenderable();
 			

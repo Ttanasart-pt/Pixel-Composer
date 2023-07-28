@@ -33,6 +33,8 @@
 	}
 	
 	function __txtx(key, def = "") {
+		gml_pragma("forceinline");
+		
 		if(struct_has(LOCALE.word, key))
 			return LOCALE.word[$ key]
 		if(struct_has(LOCALE.ui, key)) 
@@ -43,6 +45,8 @@
 	}
 	
 	function __txt(txt, prefix = "") {
+		gml_pragma("forceinline");
+		
 		var key = string_lower(txt);
 		    key = string_replace_all(key, " ", "_");
 			
@@ -50,18 +54,24 @@
 	}
 	
 	function __txt_node_name(node, def = "") {
+		gml_pragma("forceinline");
+		
 		if(struct_has(LOCALE.node, node))
 			return LOCALE.node[$ node].name;
 		return def;
 	}
 	
 	function __txt_node_tooltip(node, def = "") {
+		gml_pragma("forceinline");
+		
 		if(struct_has(LOCALE.node, node))
 			return LOCALE.node[$ node].tooltip;
 		return def;
 	}
 	
 	function __txt_junction_name(node, type, index, def = "") {
+		gml_pragma("forceinline");
+		
 		if(!struct_has(LOCALE.node, node))
 			return def;
 		
@@ -73,6 +83,8 @@
 	}
 	
 	function __txt_junction_tooltip(node, type, index, def = "") {
+		gml_pragma("forceinline");
+		
 		if(!struct_has(LOCALE.node, node))
 			return def;
 		

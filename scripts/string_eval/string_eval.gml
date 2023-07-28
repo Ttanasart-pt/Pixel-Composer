@@ -535,7 +535,7 @@ function functionStringClean(fx) {
 		var _ch = "";
 		var in_str = false;
 		
-		//print($"===== Function: {fx} =====");
+		printIf(global.FLAG.expression_debug, $"===== Evaluating function: {fx} =====");
 		
 		while(l <= len) {
 			ch = string_char_at(fx, l);

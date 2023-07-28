@@ -1063,6 +1063,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			cache_hit &= (!is_anim && value_from == noone) || cache_value[1] == _time;
 			cache_hit &= cache_value[2] != undefined;
 			cache_hit &= connect_type == JUNCTION_CONNECT.input;
+			cache_hit &= unit.reference == noone || unit.mode == VALUE_UNIT.constant;
 			
 			if(cache_hit) {
 				global.cache_hit++;
@@ -1160,7 +1161,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			//print($"========== EXPRESSION CALLED ==========");
 			//print(debug_get_callstack(8));
 			
-			printIf(global.FLAG.expression_debug, "==================== EVAL BEGIN ====================");
+			//printIf(global.FLAG.expression_debug, "==================== EVAL BEGIN ====================");
 			if(global.EVALUATE_HEAD != noone && global.EVALUATE_HEAD == self)  {
 				//noti_warning($"Expression evaluation error : recursive call detected.");
 			} else {
@@ -1204,7 +1205,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	}
 	
 	static showValue = function() { 
-		var val = getValue(, false,, false); 
+		var val = getValue(, false,, true); 
 		if(isArray()) {
 			if(array_length(val) == 0) return 0;
 			var v = val[safe_mod(node.preview_index, array_length(val))];

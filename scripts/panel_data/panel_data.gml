@@ -614,7 +614,6 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 	function setTab(tabIndex) {
 		if(tabIndex < 0) return;
 		if(tabIndex >= array_length(content)) return;
-		if(content_index == tabIndex) return;
 		
 		var prec = array_safe_get(content, content_index);
 		if(prec) prec.onFocusEnd();

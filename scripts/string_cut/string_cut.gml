@@ -7,17 +7,13 @@ function string_cut(str, w, tail = "...", scale = 1) {
 	if(string_width(str) <= w) return str;
 	
 	var amo = string_length(str);
-	for( var i = 1; i <= amo; i++ ) {
-		var ch = string_char_at(str, 1);
-		   str = string_copy(str, 2, string_length(str) - 1);
+	
+	for( var i = 1, n = string_length(str); i <= n; i++ ) {
+		var ch = string_char_at(str, i);
 		
-		var _w  = string_width(ch) * scale;
-		ww += _w;
-		
-		var _tl = string_width(str) * scale;
-		
-		if(ww + tw > w)
-			return ww + _tl <= w? _str : ss + tail;
+		if(string_width(ss + ch) + tw > w)
+			return ss + tail;
+			
 		ss += ch;
 	}
 	

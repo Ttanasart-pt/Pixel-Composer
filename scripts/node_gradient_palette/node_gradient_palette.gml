@@ -33,14 +33,18 @@ function Node_Gradient_Palette(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 		var type    = _data[3];
 		
 		var grad    = new gradientObject();
-		grad.keys   = [];
+		var len		= min(128, array_length(pal));
+		grad.keys   = array_create(len);
 		
-		for( var i = 0, n = array_length(pal); i < n; i++ ) {
+		//print("Process gradient");
+		for( var i = 0; i < len; i++ ) {
 			var clr = pal[i];
-			var pos = pos_use? array_safe_get(_pos, i, 0) : i / array_length(pal);
+			var pos = pos_use? array_safe_get(_pos, i, 0) : i / len;
 			
 			grad.keys[i] = new gradientKey(pos, clr);
+			//print($"   {i} = {pos} : {clr}");
 		}
+		
 		switch(type) {
 			case 0 : grad.type = GRADIENT_INTER.smooth; break;
 			case 1 : grad.type = GRADIENT_INTER.hue;	break;
