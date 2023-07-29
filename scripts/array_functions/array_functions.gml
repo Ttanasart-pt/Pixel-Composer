@@ -57,12 +57,17 @@ function array_safe_get(arr, index, def = 0, overflow = ARRAY_OVERFLOW._default)
 }
 
 function array_push_create(arr, val) {
+	gml_pragma("forceinline");
+	
 	if(!is_array(arr)) return [ val ];
 	array_push(arr, val);
 	return arr;
 }
 
 function array_get_decimal(arr, index, color = false) {
+	gml_pragma("forceinline");
+	
+	if(!is_array(arr)) return 0;
 	if(frac(index) == 0) return array_safe_get(arr, index);
 	
 	var v0 = array_safe_get(arr, floor(index));
@@ -77,6 +82,7 @@ function array_exists(arr, val) {
 	gml_pragma("forceinline");
 	self.__temp_val = val;
 	
+	if(!is_array(arr)) return false;
 	return array_any(arr, function(_val, _ind) {
 		return isEqual(_val, self.__temp_val);
 	});
@@ -84,53 +90,70 @@ function array_exists(arr, val) {
 
 function array_empty(arr) {
 	gml_pragma("forceinline");
-	return array_length(arr) == 0;
+	return is_array(arr) && array_length(arr) == 0;
 }
 
 function array_find(arr, val) {
 	gml_pragma("forceinline");
 	self.__temp_val = val;
 	
+	if(!is_array(arr)) return -1;
 	return array_find_index(arr, function(_val, _ind) {
 		return isEqual(_val, self.__temp_val);
 	});
 }
 
 function array_remove(arr, val) {
+	gml_pragma("forceinline");
+	
+	if(!is_array(arr)) return;
 	if(!array_exists(arr, val)) return;
 	var ind = array_find(arr, val);
 	array_delete(arr, ind, 1);
 }
 
 function array_push_unique(arr, val) {
+	gml_pragma("forceinline");
+	
+	if(!is_array(arr)) return;
 	if(array_exists(arr, val)) return;
 	array_push(arr, val);
 }
 
 
 function array_insert_unique(arr, ind, val) {
+	gml_pragma("forceinline");
+	
+	if(!is_array(arr)) return;
 	if(array_exists(arr, val)) return;
 	array_insert(arr, ind, val);
 }
 
 function array_append(arr, arr0) {
+	gml_pragma("forceinline");
+	
+	if(!is_array(arr))  return arr;
+	if(!is_array(arr0)) return arr;
+	
 	for( var i = 0, n = array_length(arr0); i < n; i++ )
 		array_push(arr, arr0[i]);
 	return arr;
 }
 
 function array_merge() {
+	gml_pragma("forceinline");
+	
 	var arr = [];
-	for( var i = 0; i < argument_count; i++ ) {
+	for( var i = 0; i < argument_count; i++ )
 		array_append(arr, argument[i]);
-	}
 	
 	return arr;
 }
 
 function array_clone(arr) {
-	if(!is_array(arr))
-		return arr;
+	gml_pragma("forceinline");
+	
+	if(!is_array(arr)) return arr;
 	
 	var _res = [];
 	 for( var i = 0, n = array_length(arr); i < n; i++ )
@@ -139,24 +162,30 @@ function array_clone(arr) {
 }
 
 function array_min(arr) {
-	if(array_length(arr) == 0) return 0;
+	gml_pragma("forceinline");
+	
+	if(!is_array(arr) || array_length(arr) == 0) return 0;
 	
 	var mn = arr[0];
-	 for( var i = 0, n = array_length(arr); i < n; i++ )
-		 mn = min(mn, arr[i]);
-	 return mn;
+	for( var i = 0, n = array_length(arr); i < n; i++ )
+		mn = min(mn, arr[i]);
+	return mn;
 }
 
 function array_max(arr) {
-	if(array_length(arr) == 0) return 0;
+	gml_pragma("forceinline");
+	
+	if(!is_array(arr) || array_length(arr) == 0) return 0;
 	
 	var mx = arr[0];
-	 for( var i = 0, n = array_length(arr); i < n; i++ )
-		 mx = max(mx, arr[i]);
-	 return mx;
+	for( var i = 0, n = array_length(arr); i < n; i++ )
+		mx = max(mx, arr[i]);
+	return mx;
 }
 
 function array_get_dimension(arr) {
+	gml_pragma("forceinline");
+	
 	return is_array(arr)? array_length(arr) : 1;
 }
 

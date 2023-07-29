@@ -92,10 +92,10 @@
 	
 	globalvar VERSION, SAVE_VERSION, VERSION_STRING, BUILD_NUMBER;
 	
-	VERSION			= 11470;
+	VERSION			= 11471;
 	SAVE_VERSION	= 11470;
-	VERSION_STRING  = "1.14.7";
-	BUILD_NUMBER	= 11470;
+	VERSION_STRING  = "1.14.7.1";
+	BUILD_NUMBER	= 11471;
 	
 	globalvar APPEND_MAP;
 	APPEND_MAP      = ds_map_create();
@@ -233,6 +233,4 @@
 
 #region debug
 	global.FLAG = {};
-	
-	global.FLAG.expression_debug = false;
 #endregion

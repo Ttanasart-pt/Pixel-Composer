@@ -112,11 +112,11 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		var _dim = inputs[|  0].getValue();
 		var cDep = attrDepth();
 		
-		if(!is_surface(canvas_surface))
+		if(!is_surface(canvas_surface)) {
 			canvas_surface = surface_create_from_buffer(_dim[0], _dim[1], canvas_buffer);
-		else if(surface_get_width(canvas_surface) != _dim[0] || surface_get_height(canvas_surface) != _dim[1]) {
+		} else if(surface_get_width(canvas_surface) != _dim[0] || surface_get_height(canvas_surface) != _dim[1]) {
 			buffer_delete(canvas_buffer);
-			canvas_buffer = buffer_create(_dim[0] * _dim[1] * 4, buffer_fixed, 4);
+			canvas_buffer  = buffer_create(_dim[0] * _dim[1] * 4, buffer_fixed, 4);
 			canvas_surface = surface_size_to(canvas_surface, _dim[0], _dim[1]);
 		}
 		

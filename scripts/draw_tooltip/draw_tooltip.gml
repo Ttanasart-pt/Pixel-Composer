@@ -163,7 +163,7 @@ function draw_tooltip_atlas(atlas) {
 }
 
 function draw_tooltip_buffer(buff) {
-	var txt = buffer_get_string(buff, false);
+	var txt = buffer_get_string(buff, false, 400);
 	var len = string_length(txt);
 	
 	if(len > 400) txt = string_copy(txt, 1, 400);

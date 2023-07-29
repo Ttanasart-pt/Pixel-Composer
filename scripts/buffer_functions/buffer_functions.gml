@@ -5,10 +5,10 @@ function buffer_get_color(buffer, _x, _y, w, h) {
 	return c;
 }
 
-function buffer_get_string(buffer, text = true) {
+function buffer_get_string(buffer, text = true, limit = 400) {
 	buffer_seek(buffer, buffer_seek_start, 0);
-	var len = buffer_get_size(buffer);
-    var ss = "";
+	var len = min(limit, buffer_get_size(buffer));
+    var ss  = "";
     
     for (var i = 0; i < len; i++) {
 		var _r = buffer_read(buffer, buffer_u8);

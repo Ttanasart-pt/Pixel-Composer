@@ -1,4 +1,6 @@
 #region data
+	global.LOG_EXPRESSION = false;
+	
 	global.EVALUATE_HEAD = noone;
 
 	global.EQUATION_PRES = ds_map_create();
@@ -162,7 +164,7 @@ function functionStringClean(fx) {
 			if(condition == noone) return 0;
 			
 			var res = condition.eval(params);
-			printIf(global.FLAG.expression_debug, $"<<<<<< IF {res} >>>>>>");
+			printIf(global.LOG_EXPRESSION, $"<<<<<< IF {res} >>>>>>");
 			
 			if(res) return if_true == noone? 0  : if_true.eval(params);
 			else    return if_false == noone? 0 : if_false.eval(params);
@@ -210,16 +212,16 @@ function functionStringClean(fx) {
 		static eval = function(params = {}) {
 			if(itr_array) {
 				var _arr = cond_arr.eval(params);
-				printIf(global.FLAG.expression_debug, $"<<<<<< FOR EACH {_arr} >>>>>>");
+				printIf(global.LOG_EXPRESSION, $"<<<<<< FOR EACH {_arr} >>>>>>");
 				for( var i = 0, n = array_length(_arr); i < n; i++ ) {
 					var val = _arr[i];
 					params[$ cond_iter] = val;
 					
-					printIf(global.FLAG.expression_debug, $"<< ITER {i}: {cond_iter} = {val} >>");
+					printIf(global.LOG_EXPRESSION, $"<< ITER {i}: {cond_iter} = {val} >>");
 					action.eval(params);
 				}
 			} else {
-				printIf(global.FLAG.expression_debug, "<< FOR >>");
+				printIf(global.LOG_EXPRESSION, "<< FOR >>");
 				cond_init.eval(params);
 				
 				while(cond_term.eval(params)) {
@@ -252,7 +254,7 @@ function functionStringClean(fx) {
 			
 			if(is_string(val)) val = string_trim(val);
 			
-			//printIf(global.FLAG.expression_debug, $"    [ get struct {params}[{val}] ]");
+			//printIf(global.LOG_EXPRESSION, $"    [ get struct {params}[{val}] ]");
 			
 			if(struct_has(params, val))
 				return struct_try_get(params, val);
@@ -337,8 +339,8 @@ function functionStringClean(fx) {
 					_l[i] = getVal(l[i], params);
 					
 				var res = _ev(_l);
-				printIf(global.FLAG.expression_debug, $"Function {symbol}{_l} = {res}");
-				printIf(global.FLAG.expression_debug, "====================");
+				printIf(global.LOG_EXPRESSION, $"Function {symbol}{_l} = {res}");
+				printIf(global.LOG_EXPRESSION, "====================");
 				
 				return res;
 			}
@@ -382,11 +384,11 @@ function functionStringClean(fx) {
 			} else 
 				res = eval_real(v1, v2);
 			
-			printIf(global.FLAG.expression_debug, $"|{v1}|{symbol}|{v2}| = {res}");
-			printIf(global.FLAG.expression_debug, $"symbol : {symbol}");
-			printIf(global.FLAG.expression_debug, $"l      : | {typeof(l)} |{l}|");
-			printIf(global.FLAG.expression_debug, $"r      : | {typeof(r)} |{r}|");
-			printIf(global.FLAG.expression_debug, "====================");
+			printIf(global.LOG_EXPRESSION, $"|{v1}|{symbol}|{v2}| = {res}");
+			printIf(global.LOG_EXPRESSION, $"symbol : {symbol}");
+			printIf(global.LOG_EXPRESSION, $"l      : | {typeof(l)} |{l}|");
+			printIf(global.LOG_EXPRESSION, $"r      : | {typeof(r)} |{r}|");
+			printIf(global.LOG_EXPRESSION, "====================");
 			
 			return res;
 		}
@@ -535,7 +537,7 @@ function functionStringClean(fx) {
 		var _ch = "";
 		var in_str = false;
 		
-		printIf(global.FLAG.expression_debug, $"===== Evaluating function: {fx} =====");
+		printIf(global.LOG_EXPRESSION, $"===== Evaluating function: {fx} =====");
 		
 		while(l <= len) {
 			ch = string_char_at(fx, l);
@@ -668,8 +670,8 @@ function functionStringClean(fx) {
 		if(!is_struct(tree))
 			tree = new __funcTree("", tree);
 		
-		//print(tree);
-		//print("");
+		printIf(global.LOG_EXPRESSION, tree);
+		printIf(global.LOG_EXPRESSION, "");
 		
 		return tree;
 	}

@@ -1,5 +1,7 @@
 //draw
 function draw_surface_safe(surface, _x = 0, _y = 0) {
+	gml_pragma("forceinline");
+	
 	if(!is_surface(surface)) return;
 	
 	__channel_pre(surface);
@@ -7,6 +9,8 @@ function draw_surface_safe(surface, _x = 0, _y = 0) {
 	__channel_pos(surface);
 }
 function draw_surface_stretched_safe(surface, _x, _y, _w, _h) {
+	gml_pragma("forceinline");
+	
 	if(!is_surface(surface)) return;
 	
 	__channel_pre(surface);
@@ -14,6 +18,8 @@ function draw_surface_stretched_safe(surface, _x, _y, _w, _h) {
 	__channel_pos(surface);
 }
 function draw_surface_ext_safe(surface, _x, _y, _xs = 1, _ys = 1, _rot = 0, _col = c_white, _alpha = 1) {
+	gml_pragma("forceinline");
+	
 	if(!is_surface(surface)) return;
 	
 	__channel_pre(surface);
@@ -21,6 +27,8 @@ function draw_surface_ext_safe(surface, _x, _y, _xs = 1, _ys = 1, _rot = 0, _col
 	__channel_pos(surface);
 }
 function draw_surface_tiled_safe(surface, _x, _y) {
+	gml_pragma("forceinline");
+	
 	if(!is_surface(surface)) return;
 	
 	__channel_pre(surface);
@@ -28,6 +36,8 @@ function draw_surface_tiled_safe(surface, _x, _y) {
 	__channel_pos(surface);
 }
 function draw_surface_tiled_ext_safe(surface, _x, _y, _xs = 1, _ys = 1, _col = c_white, _alpha = 1) {
+	gml_pragma("forceinline");
+	
 	if(!is_surface(surface)) return;
 	
 	__channel_pre(surface);
@@ -35,6 +45,8 @@ function draw_surface_tiled_ext_safe(surface, _x, _y, _xs = 1, _ys = 1, _col = c
 	__channel_pos(surface);
 }
 function draw_surface_part_ext_safe(surface, _l, _t, _w, _h, _x, _y, _xs = 1, _ys = 1, _rot = 0, _col = c_white, _alpha = 1) {
+	gml_pragma("forceinline");
+	
 	if(!is_surface(surface)) return;
 	
 	__channel_pre(surface);
@@ -46,6 +58,8 @@ function draw_surface_part_ext_safe(surface, _l, _t, _w, _h, _x, _y, _xs = 1, _y
 #macro __surface_free surface_free 
 
 function surface_free_safe(surface) {
+	gml_pragma("forceinline");
+	
 	if(!is_surface(surface)) return;
 	__surface_free(surface);
 }
@@ -123,6 +137,8 @@ function surface_verify(surf, w, h, format = surface_rgba8unorm) {
 
 //get
 function surface_get_pixel(surface, _x, _y) {
+	gml_pragma("forceinline");
+	
 	if(!is_surface(surface)) return;
 	var f  = surface_get_format(surface);
 	var px = surface_getpixel(surface, _x, _y);
@@ -132,6 +148,8 @@ function surface_get_pixel(surface, _x, _y) {
 }
 
 function surface_get_pixel_ext(surface, _x, _y) {
+	gml_pragma("forceinline");
+	
 	if(!is_surface(surface)) return;
 	var f  = surface_get_format(surface);
 	var px = surface_getpixel_ext(surface, _x, _y);
@@ -141,29 +159,29 @@ function surface_get_pixel_ext(surface, _x, _y) {
 }
 
 //create
-function surface_create_empty(w, h) {
-	var s = surface_create(w, h);
+function surface_create_empty(w, h, format = surface_rgba8unorm) {
+	gml_pragma("forceinline");
+	
+	var s = surface_create(w, h, format);
 	surface_clear(s);
 	return s;
 }
 
 function surface_create_size(surface, format = surface_rgba8unorm) {
-	var s = surface_create_valid(surface_get_width(surface), surface_get_height(surface), format);
-	surface_set_target(s);
-	DRAW_CLEAR
-	surface_reset_target();
-	return s;
+	gml_pragma("forceinline");
+	
+	return surface_create_valid(surface_get_width(surface), surface_get_height(surface), format);
 }
 
 function surface_create_valid(w, h, format = surface_rgba8unorm) {
-	var s = surface_create(surface_valid_size(w), surface_valid_size(h), format);
-	surface_set_target(s);
-	DRAW_CLEAR
-	surface_reset_target();
-	return s;
+	gml_pragma("forceinline");
+	
+	return surface_create_empty(surface_valid_size(w), surface_valid_size(h), format);
 }
 
 function surface_create_from_buffer(w, h, buff, format = surface_rgba8unorm) {
+	gml_pragma("forceinline");
+	
 	if(buff < 0) return;
 	var s = surface_create_valid(surface_valid_size(w), surface_valid_size(h), format);
 	buffer_set_surface(buff, s, 0);
@@ -252,10 +270,14 @@ function surface_size_to(surface, width, height, format = noone) {
 	if(ww == width && hh == height) return surface;
 	
 	surface_resize(surface, width, height);
+	surface_clear(surface);
+	
 	return surface;
 }
 
 function surface_clear(surface) {
+	gml_pragma("forceinline");
+	
 	if(!is_surface(surface)) return;
 	surface_set_target(surface);
 		DRAW_CLEAR
@@ -263,6 +285,8 @@ function surface_clear(surface) {
 }
 
 function surface_copy_from(dst, src, format = noone) {
+	gml_pragma("forceinline");
+	
 	surface_set_target(dst);
 	DRAW_CLEAR
 	BLEND_OVERRIDE;
@@ -272,6 +296,8 @@ function surface_copy_from(dst, src, format = noone) {
 }
 
 function surface_clone(surface, source = noone, format = noone) {
+	gml_pragma("forceinline");
+	
 	if(!is_surface(surface)) return noone;
 	
 	source = surface_verify(source, surface_get_width(surface), surface_get_height(surface), format == noone? surface_get_format(surface) : format);
@@ -288,6 +314,8 @@ function surface_clone(surface, source = noone, format = noone) {
 
 //in-place modification
 function surface_stretch(surf, _w, _h) {
+	gml_pragma("forceinline");
+	
 	if(!is_surface(surf)) return noone;
 	
 	_w = surface_valid_size(_w);
@@ -304,6 +332,8 @@ function surface_stretch(surf, _w, _h) {
 }
 
 function surface_mirror(surf, _h, _v) {
+	gml_pragma("forceinline");
+	
 	if(!is_surface(surf)) return noone;
 	var _surf = surface_create_size(surf);
 	
@@ -322,6 +352,8 @@ function surface_mirror(surf, _h, _v) {
 
 //others
 function surface_copy_size(dest, source, format = noone) {
+	gml_pragma("forceinline");
+	
 	if(!is_surface(dest)) return;
 	if(!is_surface(source)) return;
 	
@@ -334,6 +366,8 @@ function surface_copy_size(dest, source, format = noone) {
 }
 
 function surface_valid_size(s) {
+	gml_pragma("forceinline");
+	
 	if(is_infinity(s)) return 1;
 	s = toNumber(s);
 	if(!is_real(s)) return 1;
@@ -341,6 +375,8 @@ function surface_valid_size(s) {
 }
 
 function surface_array_free(arr) {
+	gml_pragma("forceinline");
+	
 	if(!is_array(arr)) {
 		if(is_surface(arr)) surface_free(arr);
 		return;
@@ -367,6 +403,8 @@ function surface_array_clone(arr) {
 }
 
 function surface_array_serialize(arr) {
+	gml_pragma("forceinline");
+	
 	var _arr = __surface_array_serialize(arr);
 	return json_stringify(_arr);
 }
@@ -393,6 +431,8 @@ function __surface_array_serialize(arr) {
 }
 
 function surface_array_deserialize(arr, index = -1) {
+	gml_pragma("forceinline");
+	
 	var _arr = json_try_parse(arr);
 	return index == -1? __surface_array_deserialize(_arr) : __surface_array_deserialize(_arr[index]);
 }
@@ -448,6 +488,8 @@ function surface_format_get_bytes(format) {
 }
 
 function surface_get_size(surface) {
+	gml_pragma("forceinline");
+	
 	var sw = surface_get_width(surface);
 	var sh = surface_get_height(surface);
 	var sz = sw * sh * surface_format_get_bytes(surface_get_format(surface));

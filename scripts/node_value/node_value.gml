@@ -1053,7 +1053,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		cache_value[0] = false;
 	}
 	
-	static getValue = function(_time = PROJECT.animator.current_frame, applyUnit = true, arrIndex = 0, useCache = true) {
+	static getValue = function(_time = PROJECT.animator.current_frame, applyUnit = true, arrIndex = 0, useCache = false) {
 		if(type == VALUE_TYPE.trigger)
 			useCache = false;
 			
@@ -1064,6 +1064,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			cache_hit &= cache_value[2] != undefined;
 			cache_hit &= connect_type == JUNCTION_CONNECT.input;
 			cache_hit &= unit.reference == noone || unit.mode == VALUE_UNIT.constant;
+			cache_hit &= !expUse;
 			
 			if(cache_hit) {
 				global.cache_hit++;
@@ -1161,10 +1162,11 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			//print($"========== EXPRESSION CALLED ==========");
 			//print(debug_get_callstack(8));
 			
-			//printIf(global.FLAG.expression_debug, "==================== EVAL BEGIN ====================");
 			if(global.EVALUATE_HEAD != noone && global.EVALUATE_HEAD == self)  {
 				//noti_warning($"Expression evaluation error : recursive call detected.");
 			} else {
+				printIf(global.LOG_EXPRESSION, "==================== EVAL BEGIN {expTree} ====================");
+				
 				global.EVALUATE_HEAD = self;
 				var params = { 
 					name: name,
