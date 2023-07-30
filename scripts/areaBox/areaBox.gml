@@ -122,6 +122,10 @@ function areaBox(_onModify, _unit = noone) : widget() constructor {
 			unit.triggerButton.register(parent);
 	}
 	
+	static drawParam = function(params) {
+		return draw(params.x + params.w / 2, params.y + ui(40), params.data, params.extra_data, params.m);
+	}
+	
 	static draw = function(_x, _y, _data, _extra_data, _m) {
 		x = _x;
 		y = _y;
@@ -294,5 +298,7 @@ function areaBox(_onModify, _unit = noone) : widget() constructor {
 		}
 		
 		resetFocus();
+		
+		return h;
 	}
 }

@@ -24,11 +24,17 @@ function rotator(_onModify, _step = -1) : widget() constructor {
 		tb_value.register(parent);
 	}
 	
-	static draw = function(_x, _y, _data, _m, draw_tb = true) {
+	static drawParam = function(params) {
+		return draw(params.x, params.y, params.w, params.data, params.m);
+	}
+	
+	static draw = function(_x, _y, _w, _data, _m, draw_tb = true) {
 		x = _x;
 		y = _y;
-		w = 0;
+		w = _w;
 		h = ui(64);
+		
+		_x += _w / 2;
 		
 		if(!is_real(_data)) return;
 		var knob_y = _y + h / 2;
@@ -91,5 +97,7 @@ function rotator(_onModify, _step = -1) : widget() constructor {
 		//draw_text(_x, knob_y, string(_data));
 		
 		resetFocus();
+		
+		return h;
 	}
 }

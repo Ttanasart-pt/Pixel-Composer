@@ -35,6 +35,10 @@ function buttonGroup(_data, _onClick) : widget() constructor {
 			sb_small.register(parent);
 	}
 	
+	static drawParam = function(params) {
+		return draw(params.x, params.y, params.w, params.h, params.data, params.m, params.rx, params.ry);
+	}
+	
 	static draw = function(_x, _y, _w, _h, _selecting, _m, _rx = 0, _ry = 0) {
 		x = _x;
 		y = _y;
@@ -95,5 +99,7 @@ function buttonGroup(_data, _onClick) : widget() constructor {
 			draw_sprite_stretched_ext(THEME.widget_selecting, 0, x - ui(3), y - ui(3), w + ui(6), h + ui(6), COLORS._main_accent, 1);	
 		
 		resetFocus();
+		
+		return h;
 	}
 }

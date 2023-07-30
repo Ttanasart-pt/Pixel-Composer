@@ -112,6 +112,14 @@ if !ready exit;
 			],, gradient);
 		}
 		bx -= ui(32);
+		
+		if(buttonInstant(THEME.button_hide, bx, by, ui(28), ui(28), mouse_ui, interactable && sFOCUS, sHOVER, __txtx("gradient_editor_reverse", "Reverse"), THEME.reverse) == 2) {
+			for( var i = 0, n = array_length(gradient.keys); i < n; i++ )
+				gradient.keys[i].time = 1 - gradient.keys[i].time;
+			gradient.keys = array_reverse(gradient.keys);
+			onApply(gradient);
+		}
+		bx -= ui(32);
 	#endregion
 	
 	draw_sprite_stretched(THEME.textbox, 3, gr_x - ui(6), gr_y - ui(6), gr_w + ui(12), gr_h + ui(12));

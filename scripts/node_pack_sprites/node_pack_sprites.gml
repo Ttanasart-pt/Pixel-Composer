@@ -1,5 +1,5 @@
 function Node_Pack_Sprites(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
-	name		= "Pack Sprties";
+	name		= "Pack Sprites";
 	
 	inputs[| 0] = nodeValue("Sprites", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
 	
@@ -28,11 +28,21 @@ function Node_Pack_Sprites(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		
 		for( var i = 0, n = array_length(rect); i < n; i++ ) {
 			var r = rect[i];
+			
+			var _surf = r.surface.get();
+			var _sx   = r.position[0];
+			var _sy   = r.position[1];
+			
+			if(!is_surface(_surf)) continue;
+			
+			var _sw = surface_get_width(_surf);
+			var _sh = surface_get_height(_surf);
+			
 			draw_rectangle(
-				_x + _s * (r.x + spac), 
-				_y + _s * (r.y + spac), 
-				_x + _s * (r.x + r.w - spac), 
-				_y + _s * (r.y + r.h - spac), true);
+				_x + _s * (_sx + spac), 
+				_y + _s * (_sy + spac), 
+				_x + _s * (_sx + _sw - spac), 
+				_y + _s * (_sy + _sh - spac), true);
 		}
 	}
 	

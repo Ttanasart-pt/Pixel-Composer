@@ -124,6 +124,8 @@ function draw_tooltip_atlas(atlas) {
 	var ww  = ui(160);
 	var hh  = amo * ui(48 + 8) - ui(8);
 	
+	if(amo && is_array(atlas[0])) return;
+	
 	var mx = min(mouse_mx + ui(16), WIN_W - (ww + ui(16)));
 	var my = min(mouse_my + ui(16), WIN_H - (hh + ui(16)));
 		

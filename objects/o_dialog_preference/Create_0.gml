@@ -249,6 +249,17 @@ event_inherited();
 	]);
 	
 	ds_list_add(pref_appr, __txt("Graph"));
+	
+	ds_list_add(pref_appr, [
+		__txtx("pref_connection_type", "Connection type"),
+		"curve_connection_line",
+		new buttonGroup([ THEME.icon_curve_connection, THEME.icon_curve_connection, THEME.icon_curve_connection, THEME.icon_curve_connection ], 
+		function(val) {
+			PREF_MAP[? "curve_connection_line"] = val;
+			PREF_SAVE();
+		})
+	]);
+	
 	ds_list_add(pref_appr, [
 		__txtx("pref_connection_thickness", "Connection thickness"),
 		"connection_line_width",
@@ -418,6 +429,7 @@ event_inherited();
 		
 		for(var i = 0; i < ds_list_size(current_list); i++) {
 			var _pref = current_list[| i];
+			var th    = TEXTBOX_HEIGHT;
 			
 			if(is_string(_pref)) {
 				draw_set_text(f_p0b, fa_left, fa_top, COLORS._main_text_sub);
@@ -444,30 +456,22 @@ event_inherited();
 			draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text);
 			draw_text(ui(8), yy + th / 2, _pref[0]);
 			_pref[2].setFocusHover(sFOCUS, sHOVER && sp_pref.hover); 
+			
+			var widget_w = ui(240);
+			var widget_h = th;
+			
+			if(instanceof(_pref[2]) == "textBox") 
+				widget_w = _pref[2].input == TEXTBOX_INPUT.text? ui(400) : widget_w;
+			
+			var widget_x = x1 - ui(4) - widget_w;
+			var widget_y = yy;
+			
+			var params = new widgetParam(widget_x, widget_y, widget_w, widget_h, txt, {}, _m, _r[0], _r[1]);
+			if(instanceof(_pref[2]) == "checkBox")
+				params.halign = fa_center;
 				
-			switch(instanceof(_pref[2])) {
-				case "textBox" :
-					var widget_w = _pref[2].input == TEXTBOX_INPUT.text? ui(400) : ui(88);
-					_pref[2].draw(x1 - ui(4), yy + th / 2, widget_w, th, txt, _m,, fa_right, fa_center);
-					break;
-				case "vectorBox" :
-					_pref[2].draw(x1 - ui(4 + 200), yy, ui(200), th, txt, _m);
-					break;
-				case "checkBox" :
-					_pref[2].draw(x1 - ui(48), yy + th / 2, txt, _m,, fa_center, fa_center);
-					break;
-				case "slider" :
-					_pref[2].draw(x1 - ui(4), yy + th / 2, ui(200), th, txt, _m, ui(88), fa_right, fa_center);
-					break;
-				case "scrollBox" :
-					var _w = ui(200);
-					var _h = th;
-						
-					_pref[2].align = fa_left;
-					_pref[2].draw(x1 - ui(4) - _w, yy + th / 2 - _h / 2, _w, _h, txt, _m, _r[0], _r[1]);
-					break;
-			}
-				
+			var th     = _pref[2].drawParam(params);
+			
 			yy += th + padd + ui(8);
 			hh += th + padd + ui(8);
 			ind++;
@@ -514,13 +518,13 @@ event_inherited();
 		var modified = false;
 		
 		draw_set_text(f_p0, fa_left, fa_top);
-		var th = string_height("l");
 		
 		var yy  = _y + ui(8);
 		var ind = 0;
 		
 		for( var i = 0, n = ds_list_size(pref_hot); i < n; i++ ) {
 			var _pref = pref_hot[| i];
+			var th = line_get_height();
 			
 			var name = _pref[0];
 			var val  = _pref[1];
@@ -537,18 +541,20 @@ event_inherited();
 			draw_text(ui(16), yy + hh, _pref[0]);
 			
 			_pref[2].setFocusHover(sFOCUS, sHOVER && sp_hotkey.hover); 
+			
+			var widget_w = ui(240);
+			var widget_h = th + (padd - ui(4)) * 2;
+			
+			var widget_x = x1 - ui(4) - widget_w;
+			var widget_y = yy + hh - ui(4);
+			
+			var params = new widgetParam(widget_x, widget_y, widget_w, widget_h, val, {}, _m, sp_hotkey.x, sp_hotkey.y);
+			var th = _pref[2].drawParam(params);
 				
-			switch(instanceof(_pref[2])) {
-				case "buttonGroup" :
-					_pref[2].draw(x1 - ui(4 + 240), yy + ui(4), ui(240), th + (padd - ui(4)) * 2, val, _m, sp_hotkey.x, sp_hotkey.y);
-					break;
-			}
-				
-			yy += th + padd + ui(8);
 			hh += th + padd + ui(8);
 			ind++;
 		}
-				
+			
 		for(var j = 0; j < ds_list_size(HOTKEY_CONTEXT); j++) {
 			var ll = HOTKEYS[? HOTKEY_CONTEXT[| j]];
 			

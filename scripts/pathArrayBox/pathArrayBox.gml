@@ -17,6 +17,10 @@ function pathArrayBox(_target, _data, _onClick) : widget() constructor {
 			target = other.target;
 	}
 	
+	static drawParam = function(params) {
+		return draw(params.x, params.y, params.w, params.h, params.data, params.m);
+	}
+	
 	static draw = function(_x, _y, _w, _h, _files, _m) {
 		x = _x;
 		y = _y;
@@ -63,6 +67,6 @@ function pathArrayBox(_target, _data, _onClick) : widget() constructor {
 		
 		resetFocus();
 		
-		return click;
+		return h;
 	}
 }

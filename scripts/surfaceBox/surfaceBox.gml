@@ -16,6 +16,10 @@ function surfaceBox(_onModify, def_path = "") : widget() constructor {
 		}
 	}
 	
+	static drawParam = function(params) {
+		return draw(params.x, params.y, params.w, params.h, params.data, params.m, params.rx, params.ry);
+	}
+	
 	static draw = function(_x, _y, _w, _h, _surface, _m, _rx, _ry) {
 		x = _x;
 		y = _y;
@@ -79,5 +83,7 @@ function surfaceBox(_onModify, def_path = "") : widget() constructor {
 		}
 		
 		resetFocus();
+		
+		return h;
 	}
 }

@@ -24,6 +24,10 @@ function fontScrollBox(_onModify) : widget() constructor {
 		extra_button.interactable = interactable;
 	}
 	
+	static drawParam = function(params) {
+		return draw(params.x, params.y, params.w, params.h, params.data, params.m, params.rx, params.ry);
+	}
+	
 	static draw = function(_x, _y, _w, _h, _text, _m = mouse_ui, _rx = 0, _ry = 0) {
 		x = _x;
 		y = _y;
@@ -70,5 +74,7 @@ function fontScrollBox(_onModify) : widget() constructor {
 			draw_sprite_stretched_ext(THEME.widget_selecting, 0, _x - ui(3), _y - ui(3), _w + ui(6), _h + ui(6), COLORS._main_accent, 1);	
 		
 		resetFocus();
+		
+		return h;
 	}
 }

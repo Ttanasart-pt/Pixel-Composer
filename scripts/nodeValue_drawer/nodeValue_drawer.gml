@@ -72,7 +72,7 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 	if(global_var)
 		if(string_pos(" ", jun.name)) cc = COLORS._main_value_negative;
 	
-	draw_set_text(f_p0, fa_left, fa_center, cc);
+	draw_set_text(lineBreak? f_p0 : f_p1, fa_left, fa_center, cc);
 	draw_text_add(xx + ui(40), lb_y - ui(2), jun.name);
 	var lb_w = string_width(jun.name) + ui(32);
 			
@@ -89,6 +89,8 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 				draw_sprite_ui(THEME.info, 0, tx, ty,,,, COLORS._main_icon_light, 1);
 			} else 
 				draw_sprite_ui(THEME.info, 0, tx, ty,,,, COLORS._main_icon_light, 0.75);
+			
+			lb_w += ui(56);
 		}
 	#endregion
 			
@@ -211,133 +213,27 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 			jun.editWidget.setInteract(false);
 		}
 		
-		var param = {
-			x:  editBoxX,
-			y:  editBoxY,
-			rx: rx,
-			rx: ry,
-			w:  editBoxW,
-			h:  editBoxH,
-			
-			data: jun.showValue(),
-			m: _m,
-		}
+		var param = new widgetParam(editBoxX, editBoxY, editBoxW, editBoxH, jun.showValue(), jun.extra_data, _m, rx, ry);
 		
-		jun.editWidget.rx = rx;
-		jun.editWidget.ry = ry;
-		
-		switch(jun.display_type) {
-			case VALUE_DISPLAY.button :
-				jun.editWidget.draw(editBoxX, editBoxY, editBoxW, editBoxH, _m);
-				break;
-			default :
-				switch(jun.type) {
-					case VALUE_TYPE.integer :
-					case VALUE_TYPE.float :
-						switch(jun.display_type) {
-							case VALUE_DISPLAY._default :
-							case VALUE_DISPLAY.range :
-							case VALUE_DISPLAY.vector :
-								jun.editWidget.draw(editBoxX, editBoxY, editBoxW, editBoxH, jun.showValue(), _m);
-								break;
-							case VALUE_DISPLAY.vector_range :
-								var ebH = jun.editWidget.draw(editBoxX, editBoxY, editBoxW, editBoxH, jun.showValue(), _m);
-								widH = lineBreak? ebH : ebH - lb_h;
-								break;
-							case VALUE_DISPLAY.enum_scroll :
-								jun.editWidget.draw(editBoxX, editBoxY, editBoxW, editBoxH, array_safe_get(jun.display_data, jun.showValue()), _m, rx, ry);
-								break;
-							case VALUE_DISPLAY.enum_button :
-								jun.editWidget.draw(editBoxX, editBoxY, editBoxW, editBoxH, jun.showValue(), _m, rx, ry);
-								break;
-							case VALUE_DISPLAY.padding :
-								jun.editWidget.draw(xc, _hsy + ui(32), jun.showValue(), _m);
-								widH = ui(192);
-								break;
-							case VALUE_DISPLAY.corner :
-								jun.editWidget.draw(xc, _hsy + ui(32), jun.showValue(), _m);
-								widH = ui(192);
-								break;
-							case VALUE_DISPLAY.rotation :
-							case VALUE_DISPLAY.rotation_range :
-								jun.editWidget.draw(xc, _hsy, jun.showValue(), _m);
-								widH = jun.editWidget.h;
-								break;
-							case VALUE_DISPLAY.slider :
-							case VALUE_DISPLAY.slider_range :
-								jun.editWidget.draw(editBoxX, editBoxY, editBoxW, editBoxH, jun.showValue(), _m);
-								break;
-							case VALUE_DISPLAY.area :
-								jun.editWidget.draw(xc, _hsy + ui(40), jun.showValue(), jun.extra_data, _m);
-								widH = ui(204);
-								break;
-							case VALUE_DISPLAY.puppet_control :
-								widH = jun.editWidget.draw(editBoxX, editBoxY, editBoxW, jun.showValue(), _m, rx, ry);
-								break;
-							case VALUE_DISPLAY.kernel :
-								var ebH = jun.editWidget.draw(editBoxX, editBoxY, editBoxW, editBoxH, jun.showValue(), _m);
-								widH = lineBreak? ebH : ebH - lb_h;
-								break;
-							case VALUE_DISPLAY.transform :
-								widH = jun.editWidget.drawParam(param);
-								break;
-						}
-						break;
-					case VALUE_TYPE.boolean :
-						editBoxX = lineBreak? editBoxX : (labelWidth + con_w) / 2;
-						jun.editWidget.draw(editBoxX, editBoxY, jun.showValue(), _m, editBoxH);
-						break;
-					case VALUE_TYPE.color :
-						jun.editWidget.draw(editBoxX, editBoxY, editBoxW, editBoxH, jun.showValue(), _m);
-						break;
-					case VALUE_TYPE.gradient :
-						jun.editWidget.draw(editBoxX, editBoxY, editBoxW, editBoxH, jun.showValue(), _m);
-						break;
-					case VALUE_TYPE.path :
-						switch(jun.display_type) {
-							case VALUE_DISPLAY.path_load :
-							case VALUE_DISPLAY.path_save :
-							case VALUE_DISPLAY.path_array :
-								jun.editWidget.draw(editBoxX, editBoxY, editBoxW, editBoxH, jun.showValue(), _m);
-								break;
-							case VALUE_DISPLAY.path_font :
-								var val = jun.showValue();
-								if(file_exists(val))
-									val = filename_name(val);
-								jun.editWidget.draw(editBoxX, editBoxY, editBoxW, editBoxH, val, _m, rx, ry);
-								break;
-						}
-						break;
-					case VALUE_TYPE.surface :
-						editBoxH = ui(96);
-						jun.editWidget.draw(editBoxX, editBoxY, editBoxW, editBoxH, jun.showValue(), _m, rx, ry);
-						widH = lineBreak? editBoxH : editBoxH - lb_h;
-						break;
-					case VALUE_TYPE.curve :
-						editBoxH = ui(160);
-						jun.editWidget.draw(ui(32), _hsy, ww - ui(16), editBoxH, jun.showValue(), _m);
-						if(point_in_rectangle(_m[0], _m[1], ui(32), _hsy, ui(32) + ww - ui(16), _hsy + editBoxH))
-							mbRight = false;
-						widH = editBoxH;
-						break;
-					case VALUE_TYPE.text : 
-						var _hh = 0;
-						switch(instanceof(jun.editWidget)) {
-							case "textBox":
-								_hh = jun.editWidget.draw(editBoxX, editBoxY, editBoxW, editBoxH, jun.showValue(), _m, jun.display_type);
-								break;
-							case "textArea":
-								_hh = jun.editWidget.draw(ui(16), _hsy, ww, editBoxH, jun.showValue(), _m, jun.display_type);
-								break;
-							case "textArrayBox":
-								_hh = jun.editWidget.draw(ui(16), editBoxY, editBoxW, editBoxH, _m, rx, ry);
-								break;
-						}
-							
-						widH = _hh;
-						break;
+		switch(jun.type) {
+			case VALUE_TYPE.integer :
+			case VALUE_TYPE.float :
+				switch(jun.display_type) {
+					case VALUE_DISPLAY.padding : param.h = ui(192); break;
+					case VALUE_DISPLAY.corner :  param.h = ui(192); break;
+					case VALUE_DISPLAY.area :	 param.h = ui(204); break;
 				}
+				break;
+			case VALUE_TYPE.boolean : param.halign = lineBreak? fa_left : fa_center;
+			case VALUE_TYPE.surface : param.h = ui(96); break;
+			case VALUE_TYPE.curve :   param.h = ui(160);
+				if(point_in_rectangle(_m[0], _m[1], ui(32), _hsy, ui(32) + ww - ui(16), _hsy + editBoxH))
+					mbRight = false;
+				break;
 		}
+		
+		widH = jun.editWidget.drawParam(param) - (TEXTBOX_HEIGHT * !lineBreak);
+		
 	} else if(jun.display_type == VALUE_DISPLAY.label) {
 		draw_set_text(f_p1, fa_left, fa_top, COLORS._main_text_sub);
 		draw_text_add(xx + ui(16), _hsy, jun.display_data);

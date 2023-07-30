@@ -25,11 +25,17 @@ function rotatorRange(_onModify) : widget() constructor {
 		tb_max.register(parent);
 	}
 	
-	static draw = function(_x, _y, _data, _m) {
+	static drawParam = function(params) {
+		return draw(params.x, params.y, params.w, params.data, params.m);
+	}
+	
+	static draw = function(_x, _y, _w, _data, _m) {
 		x = _x;
 		y = _y;
-		w = 0;
+		w = _w;
 		h = ui(64);
+		
+		_x += _w / 2;
 		
 		if(!is_real(_data[0])) return;
 		if(!is_real(_data[1])) return;
@@ -145,5 +151,7 @@ function rotatorRange(_onModify) : widget() constructor {
 		//draw_text(_x, knob_y + ui(8), string(_data[1]));
 		
 		resetFocus();
+		
+		return h;
 	}
 }

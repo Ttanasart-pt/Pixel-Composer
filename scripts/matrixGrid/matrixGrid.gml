@@ -67,6 +67,10 @@ function matrixGrid(_type, _onModify, _unit = noone) : widget() constructor {
 			tb[i].slide_speed = speed;
 	}
 	
+	static drawParam = function(params) {
+		return draw(params.x, params.y, params.w, params.h, params.data, params.m);
+	}
+	
 	static draw = function(_x, _y, _w, _h, _data, _m) {
 		x = _x;
 		y = _y;

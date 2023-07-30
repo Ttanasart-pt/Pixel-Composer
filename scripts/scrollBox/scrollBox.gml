@@ -27,13 +27,21 @@ function scrollBox(_data, _onModify, update_hover = true) : widget() constructor
 		}
 	}
 	
-	static draw = function(_x, _y, _w, _h, _text, _m = mouse_ui, _rx = 0, _ry = 0) {
+	static drawParam = function(params) {
+		return draw(params.x, params.y, params.w, params.h, params.data, params.m, params.rx, params.ry);
+	}
+	
+	static draw = function(_x, _y, _w, _h, _val, _m = mouse_ui, _rx = 0, _ry = 0) {
 		x = _x;
 		y = _y;
 		open_rx = _rx;
 		open_ry = _ry;
 		h = _h;
-		if(is_array(_text)) return;
+		
+		if(is_method(data_list)) data = data_list();
+		else					 data = data_list;
+		
+		var _text = is_string(_val)? _val : array_safe_get(data, _val);
 		curr_text = _text;
 		
 		w = _w;
@@ -45,7 +53,7 @@ function scrollBox(_data, _onModify, update_hover = true) : widget() constructor
 		
 		if(open) {
 			resetFocus();
-			return;
+			return h;
 		}
 		
 		draw_sprite_stretched(THEME.textbox, 3, _x, _y, w, _h);
@@ -84,5 +92,7 @@ function scrollBox(_data, _onModify, update_hover = true) : widget() constructor
 			draw_sprite_stretched_ext(THEME.widget_selecting, 0, _x - ui(3), _y - ui(3), _w + ui(6), _h + ui(6), COLORS._main_accent, 1);	
 		
 		resetFocus();
+		
+		return h;
 	}
 }

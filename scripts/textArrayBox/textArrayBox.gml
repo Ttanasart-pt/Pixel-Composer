@@ -8,6 +8,10 @@ function textArrayBox(arraySet, data, onModify = noone) : widget() constructor {
 	hide = false;
 	open = false;
 	
+	static drawParam = function(params) {
+		return draw(params.x, params.y, params.w, params.h, params.data, params.m, params.rx, params.ry);
+	}
+	
 	static draw = function(_x, _y, _w, _h, _m, _rx = 0, _ry = 0) {
 		x = _x;
 		y = _y;

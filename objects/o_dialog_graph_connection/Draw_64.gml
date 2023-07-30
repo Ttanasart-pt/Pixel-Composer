@@ -33,4 +33,11 @@ if !ready exit;
 	draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text);
 	draw_text(dialog_x + ui(32), yy, __txtx("dialog_connection_radius", "Corner radius"));
 	tb_corner.draw(dialog_x + dialog_w - ui(24), yy, ww, TEXTBOX_HEIGHT, PREF_MAP[? "connection_line_corner"], mouse_ui,, fa_right, fa_center);
+	
+	yy += ui(40);
+	tb_aa.setFocusHover(sFOCUS, sHOVER);
+	tb_aa.register();
+	draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text);
+	draw_text(dialog_x + ui(32), yy, __txtx("pref_connection_aa", "Connection anti aliasing"));
+	tb_aa.draw(dialog_x + dialog_w - ui(24), yy, ww, TEXTBOX_HEIGHT, PREF_MAP[? "connection_line_aa"], mouse_ui,, fa_right, fa_center);
 #endregion

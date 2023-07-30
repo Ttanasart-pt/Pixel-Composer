@@ -317,6 +317,10 @@ function textBox(_input, _onModify, _extras = noone) : textInput(_input, _onModi
 		}
 	}
 	
+	static drawParam = function(params) {
+		return draw(params.x, params.y, params.w, params.h, params.data, params.m,, params.halign, params.valign);
+	}
+	
 	static draw = function(_x, _y, _w, _h, _text = "", _m = mouse_ui, _format = VALUE_DISPLAY._default, halign = fa_left, valign = fa_top) {
 		x = _x;
 		y = _y;

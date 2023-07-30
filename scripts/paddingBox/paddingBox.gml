@@ -59,6 +59,10 @@ function paddingBox(_onModify, _unit = noone) : widget() constructor {
 		tb[3].register(parent);
 	}
 	
+	static drawParam = function(params) {
+		return draw(params.x + params.w / 2, params.y + ui(32), params.data, params.m);
+	}
+	
 	static draw = function(_x, _y, _data, _m) {
 		x = _x;
 		y = _y;
@@ -92,5 +96,7 @@ function paddingBox(_onModify, _unit = noone) : widget() constructor {
 		}
 		
 		resetFocus();
+		
+		return h;
 	}
 }

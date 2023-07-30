@@ -51,6 +51,10 @@ function controlPointBox(_onModify) : widget() constructor {
 			widgets[i].register(parent); 
 	}
 	
+	static drawParam = function(params) {
+		return draw(params.x, params.y, params.w, params.data, params.m, params.rx, params.ry);
+	}
+	
 	static draw = function(_x, _y, _w, _data, _m, _rx, _ry) {
 		x = _x;
 		y = _y;

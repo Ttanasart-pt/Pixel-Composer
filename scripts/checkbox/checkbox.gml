@@ -22,6 +22,19 @@ function checkBox(_onClick) : widget() constructor {
 		return t;
 	}
 	
+	static drawParam = function(params) {
+		var ss = params.s;
+		var x0;
+		
+		switch(params.halign) {
+			case fa_left :	 x0 = params.x; break;
+			case fa_center : x0 = params.x + (params.w - ss) / 2; break;
+			case fa_right :  x0 = params.x + params.w - ss; break;
+		}
+		
+		return draw(x0, params.y, params.data, params.m, params.s);
+	}
+	
 	static draw = function(_x, _y, _value, _m, ss = ui(28), halign = fa_left, valign = fa_top) {
 		x = _x;
 		y = _y;
@@ -61,5 +74,7 @@ function checkBox(_onClick) : widget() constructor {
 			draw_sprite_stretched_ext(THEME.widget_selecting, 0, _dx - ui(3), _dy - ui(3), ss + ui(6), ss + ui(6), COLORS._main_accent, 1);	
 		
 		resetFocus();
+		
+		return h;
 	}
 }

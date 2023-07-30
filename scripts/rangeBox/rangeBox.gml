@@ -48,6 +48,10 @@ function rangeBox(_type, _onModify) : widget() constructor {
 			tb[i].register(parent);
 	}
 	
+	static drawParam = function(params) {
+		return draw(params.x, params.y, params.w, params.h, params.data, params.m);
+	}
+	
 	static draw = function(_x, _y, _w, _h, _data, _m) {
 		x = _x;
 		y = _y;
@@ -86,5 +90,7 @@ function rangeBox(_type, _onModify) : widget() constructor {
 		}
 		
 		resetFocus();
+		
+		return h;
 	}
 }

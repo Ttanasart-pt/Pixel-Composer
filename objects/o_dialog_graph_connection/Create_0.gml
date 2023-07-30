@@ -2,8 +2,8 @@
 event_inherited();
 
 #region data
-	dialog_w = ui(320);
-	dialog_h = ui(180);
+	dialog_w = ui(400);
+	dialog_h = ui(220);
 	
 	destroy_on_click_out = true;
 #endregion
@@ -23,4 +23,8 @@ event_inherited();
 		PREF_MAP[? "connection_line_corner"] = max(0, real(str));
 	})
 	tb_corner.slidable = true;
+	
+	tb_aa = new textBox(TEXTBOX_INPUT.number, function(str) {
+		PREF_MAP[? "connection_line_aa"] = max(1, real(str));
+	})
 #endregion

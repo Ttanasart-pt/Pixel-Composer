@@ -74,3 +74,20 @@ function widget() constructor {
 	static drawParam = function(params) {}
 	static draw = function() {}
 }
+
+function widgetParam(x, y, w, h, data, extra_data, m, rx = 0, ry = 0) constructor {
+	self.x = x;
+	self.y = y;
+	
+	self.w			= w;
+	self.h			= h;
+	self.s			= ui(28);
+	self.data		= data;
+	self.extra_data = extra_data;
+	self.m			= m;
+	self.rx			= rx;
+	self.ry			= ry;
+	
+	self.halign		= fa_left;
+	self.valign		= fa_top;
+}

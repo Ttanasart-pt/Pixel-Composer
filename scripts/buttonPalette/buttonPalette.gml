@@ -56,6 +56,7 @@ function buttonPalette(_onApply, dialog = noone) : widget() constructor {
 		}
 		
 		resetFocus();
+		
 		return _h;
 	}
 }

@@ -195,16 +195,17 @@ function Panel_Inspector() : PanelContent() constructor {
 					var wh = 0;
 					var _data = PROJECT.attributes[$ param];
 					
-					wh = editW.drawParam({
-						x: ui(16),
-						y: yy,
-						w: w - ui(16 + 48),
-						h: TEXTBOX_HEIGHT, 
-						data: _data,
-						m: _m,
-						rx: rx,
-						ry: ry,
-					});
+					wh = editW.drawParam(new widgetParam(
+						ui(16),
+						yy,
+						w - ui(16 + 48),
+						TEXTBOX_HEIGHT, 
+						_data,
+						{},
+						_m,
+						rx,
+						ry,
+					));
 					
 					yy += wh + ui(8);
 					hh += wh + ui(8);
@@ -384,14 +385,7 @@ function Panel_Inspector() : PanelContent() constructor {
 				draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text);
 				draw_text_add(ui(8), yy + hg / 2, edt[0]);
 				
-				switch(instanceof(edt[2])) {
-					case "textBox" :	edt[2].draw(wx0, yy, ww, hg, val, _m); break;
-					case "checkBox" :	edt[2].draw(wx0 + ww / 2 - ui(28) / 2, yy + ui(2), val, _m, ui(28)); break;
-					case "scrollBox" :	
-						var scBox = edt[2];
-						scBox.draw(wx0, yy, ww, hg, scBox.data_list[val], _m, x + contentPane.x, y + contentPane.y); 
-						break;
-				}
+				edt[2].drawParam(new widgetParam(wx0, yy, ww, hg, val, {}, _m, x + contentPane.x, y + contentPane.y));
 				
 				yy += hg + ui(8);
 				hh += hg + ui(8);
