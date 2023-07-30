@@ -70,6 +70,8 @@
 	PREF_MAP[? "save_file_minify"] = true;
 	
 	PREF_MAP[? "render_all_export"] = true;
+	
+	PREF_MAP[? "alt_picker"] = true;
 #endregion
 
 #region hotkeys	

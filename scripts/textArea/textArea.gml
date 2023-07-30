@@ -15,11 +15,12 @@ function textArea(_input, _onModify, _extras = noone) : textInput(_input, _onMod
 	
 	_input_text_line = [];
 	_input_text_line_index = [];
-	_current_text = "";
-	_input_text = "";
-	_prev_text = "";
-	_last_value = "";
-	_prev_width = 0;
+	_current_text	= "";
+	_input_text		= "";
+	_prev_text		= "";
+	_last_value		= "";
+	_prev_width		= 0;
+	_stretch_width  = false;
 	
 	min_lines = 0;
 	
@@ -579,14 +580,15 @@ function textArea(_input, _onModify, _extras = noone) : textInput(_input, _onMod
 		w = _w;
 		h = _h;
 		
+		_stretch_width = _w < 0;
 		_text = string_real(_text);
 		_current_text = _text;
 		
-		//if(format == TEXT_AREA_FORMAT.code) {
-		//	print("=== TEXT BOX ===");
-		//	print(_text);
-		//	print(_current_text);
-		//}
+		draw_set_font(font);
+		if(_stretch_width) {
+			_w = string_width(self == WIDGET_CURRENT? _input_text : _text) + ui(16);
+			w  = _w;
+		}
 		
 		if(extras && instanceof(extras) == "buttonClass") {
 			extras.setFocusHover(active, hover);
@@ -604,9 +606,10 @@ function textArea(_input, _onModify, _extras = noone) : textInput(_input, _onMod
 			tx += ui(code_line_width);
 		}
 		
+		if(_stretch_width) line_width = 9999999;
+		
 		cursor_tx = tx;
 		
-		draw_set_font(font);
 		var c_h = line_get_height();
 		var line_count = max(min_lines, array_length(_input_text_line));
 		hh = max(_h, ui(14) + c_h * line_count);

@@ -487,6 +487,16 @@ event_inherited();
 #endregion
 
 #region hotkey
+	pref_hot = ds_list_create();
+	ds_list_add(pref_hot, [
+		__txtx("pref_use_alt", "Use ALT for"),
+		"alt_picker",
+		new buttonGroup([ "Pan", "Color Picker" ], function(val) { 
+			PREF_MAP[? "alt_picker"] = val; 
+			PREF_SAVE();
+		})
+	])
+	
 	vk_list = [ 
 		vk_left, vk_right, vk_up, vk_down, vk_space, vk_backspace, vk_tab, vk_home, vk_end, vk_delete, vk_insert, 
 		vk_pageup, vk_pagedown, vk_pause, vk_printscreen, 
@@ -497,11 +507,47 @@ event_inherited();
 	sp_hotkey = new scrollPane(dialog_w - ui(padding + padding + page_width), dialog_h - ui(title_height + padding), function(_y, _m) {
 		draw_clear_alpha(COLORS.panel_bg_clear, 1);
 		var padd		= ui(8);
-		var hh			= 0;
+		var hh			= ui(8);
 		var currGroup	= noone;
-		var x1		= sp_hotkey.surface_w;
-		var key_x1  = x1 - ui(32);
+		var x1		 = sp_hotkey.surface_w;
+		var key_x1   = x1 - ui(32);
 		var modified = false;
+		
+		draw_set_text(f_p0, fa_left, fa_top);
+		var th = string_height("l");
+		
+		var yy  = _y + ui(8);
+		var ind = 0;
+		
+		for( var i = 0, n = ds_list_size(pref_hot); i < n; i++ ) {
+			var _pref = pref_hot[| i];
+			
+			var name = _pref[0];
+			var val  = _pref[1];
+			    val  = is_method(val)? val() : PREF_MAP[? val];
+			
+			if(search_text != "" && string_pos(string_lower(search_text), string_lower(name)) == 0)
+				continue;
+			
+			if(ind % 2 == 0)
+				draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, 0, yy + hh - padd, 
+						sp_hotkey.surface_w, th + padd * 2, COLORS.dialog_preference_prop_bg, 1);
+			
+			draw_set_text(f_p0, fa_left, fa_top, COLORS._main_text);
+			draw_text(ui(16), yy + hh, _pref[0]);
+			
+			_pref[2].setFocusHover(sFOCUS, sHOVER && sp_hotkey.hover); 
+				
+			switch(instanceof(_pref[2])) {
+				case "buttonGroup" :
+					_pref[2].draw(x1 - ui(4 + 240), yy + ui(4), ui(240), th + (padd - ui(4)) * 2, val, _m, sp_hotkey.x, sp_hotkey.y);
+					break;
+			}
+				
+			yy += th + padd + ui(8);
+			hh += th + padd + ui(8);
+			ind++;
+		}
 				
 		for(var j = 0; j < ds_list_size(HOTKEY_CONTEXT); j++) {
 			var ll = HOTKEYS[? HOTKEY_CONTEXT[| j]];
@@ -522,21 +568,19 @@ event_inherited();
 				if(group != currGroup) {
 					if(group != "") hh += ui(12);
 					draw_set_text(f_p0b, fa_left, fa_top, COLORS._main_text_sub);
-					draw_text(ui(16), _y + hh, group == ""? __txt("Global") : group);
+					draw_text(ui(16), yy + hh, group == ""? __txt("Global") : group);
 					
 					hh += string_height("l") + ui(16);
 					currGroup = group;
 				}
-				draw_set_text(f_p0, fa_left, fa_top);
-				var th = string_height("l");
-			
+				
 				if(i % 2 == 0) {
-					draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, 0, _y + hh - padd, 
+					draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, 0, yy + hh - padd, 
 						sp_hotkey.surface_w, th + padd * 2, COLORS.dialog_preference_prop_bg, 1);
 				}
-			
+				
 				draw_set_text(f_p0, fa_left, fa_top, COLORS._main_text);
-				draw_text(ui(16), _y + hh, name);
+				draw_text(ui(16), yy + hh, name);
 				
 				var dk = key_get_name(key.key, key.modi);
 				var kw = string_width(dk);
@@ -584,10 +628,10 @@ event_inherited();
 					
 					dk = key_get_name(key.key, key.modi);
 					kw = string_width(dk);
-					draw_sprite_stretched(THEME.button_hide, 2, key_x1 - ui(40) - kw, _y + hh - ui(6), kw + ui(32), th + ui(12));
+					draw_sprite_stretched(THEME.button_hide, 2, key_x1 - ui(40) - kw, yy + hh - ui(6), kw + ui(32), th + ui(12));
 				} else {
 					var bx = key_x1 - ui(40) - kw;
-					var by = _y + hh - ui(6);
+					var by = yy + hh - ui(6);
 					if(buttonInstant(THEME.button_hide, bx, by, kw + ui(32), th + ui(12), _m, sFOCUS, sHOVER && sp_hotkey.hover) == 2) {
 						hk_editing = key;
 						keyboard_lastchar = pkey;
@@ -598,12 +642,12 @@ event_inherited();
 				if(hk_editing == key) cc = COLORS._main_text_accent;
 				
 				draw_set_text(f_p0, fa_right, fa_top, cc);
-				draw_text(key_x1 - ui(24), _y + hh, dk);
+				draw_text(key_x1 - ui(24), yy + hh, dk);
 				
 				if(key.key != dkey || key.modi != dmod) {
 					modified = true;
 					var bx = x1 - ui(32);
-					var by = _y + hh;
+					var by = yy + hh;
 					if(buttonInstant(THEME.button_hide, bx, by, ui(24), ui(24), _m, sFOCUS, sHOVER && sp_hotkey.hover, __txt("Reset"), THEME.refresh_s) == 2) {
 						key.key = dkey;
 						key.modi = dmod;
@@ -616,7 +660,7 @@ event_inherited();
 		
 		if(modified) {
 			var bx = x1 - ui(32);
-			var by = _y + ui(2);
+			var by = yy + ui(2);
 			if(buttonInstant(THEME.button_hide, bx, by, ui(24), ui(24), _m, sFOCUS, sHOVER && sp_hotkey.hover, __txt("Reset all"), THEME.refresh_s) == 2) {
 				for(var j = 0; j < ds_list_size(HOTKEY_CONTEXT); j++) {
 					var ll = HOTKEYS[? HOTKEY_CONTEXT[| j]];

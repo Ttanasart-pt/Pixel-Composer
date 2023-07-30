@@ -297,3 +297,7 @@
 	NODE_DROPPER_TARGET_CAN = false;
 	NODE_COLOR_SHOW_PALETTE = false;
 #endregion
+
+#region debug
+	instance_create_depth(0, 0, 0, addon_key_displayer);
+#endregion

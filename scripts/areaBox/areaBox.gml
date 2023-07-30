@@ -174,7 +174,7 @@ function areaBox(_onModify, _unit = noone) : widget() constructor {
 			
 			if(buttonInstant(THEME.button_hide, _x + ui(76 - 24), _y + ui(28 - 12), ui(24), ui(24), _m, active, hover, txt, THEME.inspector_area_type, mode, c_white) == 2) {
 				switch(mode) {
-					case AREA_MODE.area : 
+					case AREA_MODE.area : //area to padding
 						var cx = array_safe_get(_data, 0);
 						var cy = array_safe_get(_data, 1);
 						var sw = array_safe_get(_data, 2);
@@ -187,7 +187,7 @@ function areaBox(_onModify, _unit = noone) : widget() constructor {
 						onModify(3, ss[1] - (cy + sh));
 						break;
 						
-					case AREA_MODE.padding :
+					case AREA_MODE.padding : //padding to two points
 						var r = array_safe_get(_data, 0);
 						var t = array_safe_get(_data, 1);
 						var l = array_safe_get(_data, 2);
@@ -200,7 +200,7 @@ function areaBox(_onModify, _unit = noone) : widget() constructor {
 						onModify(3, ss[1] - b);
 						break;
 						
-					case AREA_MODE.two_point :
+					case AREA_MODE.two_point : //twp points to area
 						var x0 = array_safe_get(_data, 0);
 						var y0 = array_safe_get(_data, 1);
 						var x1 = array_safe_get(_data, 2);

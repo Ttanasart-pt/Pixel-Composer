@@ -16,6 +16,8 @@
 	SHIFT = KEYBOARD_STATUS.idle;
 	
 	function key_release() {
+		gml_pragma("forceinline");
+		
 		CTRL  = KEYBOARD_STATUS.up;	
 		ALT   = KEYBOARD_STATUS.up;	
 		SHIFT = KEYBOARD_STATUS.up;	
@@ -26,10 +28,14 @@
 	}
 	
 	function key_mod_press(key) {
+		gml_pragma("forceinline");
+		
 		return key == KEYBOARD_STATUS.pressing;
 	}
 	
 	function key_mod_press_index(keyindex) {
+		gml_pragma("forceinline");
+		
 		switch(keyindex) {
 			case MOD_KEY.alt   : return ALT   == KEYBOARD_STATUS.pressing;
 			case MOD_KEY.shift : return SHIFT == KEYBOARD_STATUS.pressing;
@@ -46,11 +52,15 @@
 	WIDGET_CURRENT_SCROLL = noone;
 	
 	function widget_start() {
+		gml_pragma("forceinline");
+		
 		if(array_length(WIDGET_ACTIVE) == 0) return;
 		WIDGET_ACTIVE[0].activate();
 	}
 	
 	function widget_next() {
+		gml_pragma("forceinline");
+		
 		if(array_length(WIDGET_ACTIVE) == 0) return;
 		if(WIDGET_CURRENT == noone) {
 			widget_start()

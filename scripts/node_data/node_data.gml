@@ -1078,6 +1078,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	static clearCache = function() { 
 		clearInputCache();
 		
+		if(!clearCacheOnChange) return;
 		if(!use_cache) return;
 		if(!isRenderActive()) return;
 		
@@ -1093,7 +1094,6 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	}
 	
 	static clearCacheForward = function() {
-		if(!clearCacheOnChange) return;
 		_clearCacheForward();
 	}
 	
@@ -1247,6 +1247,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	
 	static getPreviewBoundingBox = function() {
 		var _node = getPreviewValue();
+		if(_node == undefined) return noone;
 		if(_node.type != VALUE_TYPE.surface) return noone;
 		
 		var _surf = _node.getValue();

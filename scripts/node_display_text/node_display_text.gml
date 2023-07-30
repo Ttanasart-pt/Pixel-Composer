@@ -12,8 +12,10 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	size_dragging_my = h;
 	
 	auto_height = false;
-	name_hover = false;
-	draw_scale = 1;
+	name_hover  = false;
+	draw_scale  = 1;
+	
+	ta_editor   = new textArea(TEXTBOX_INPUT.text, function(val) { inputs[| 1].setValue(val); })
 	
 	inputs[| 0] = nodeValue("Color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white )
 		.rejectArray();
@@ -29,7 +31,7 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		.setDisplay(VALUE_DISPLAY.slider, [0, 1, 0.01])
 		.rejectArray();
 	
-	inputs[| 4] = nodeValue("Line width", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1000000)
+	inputs[| 4] = nodeValue("Line width", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, -1)
 		.rejectArray();
 	
 	input_display_list = [1, 
@@ -172,34 +174,42 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		return ss;
 	}
 	
-	static line_update = function(txt, line_width = 999999) {
+	static line_update = function(txt, line_width = -1) {
 		_prev_text = txt;
 		_lines = [];
 		
 		var ch, i = 1, ss = "", _txt = _prev_text;
 		var len = string_length(_prev_text);
 		
+		var _line_man = string_splice(_txt, "\n");
+		
 		draw_set_font(font);
-		while(string_length(_txt) > 0) {
-			var sp = string_pos(" ", _txt);
-			if(sp == 0) sp = string_length(_txt);
+		
+		for( var i = 0, n = array_length(_line_man); i < n; i++ ) {
+			var _tx = _line_man[i];
 			
-			var _ps = string_copy(_txt, 1, sp);
-			_txt = string_copy(_txt, sp + 1, string_length(_txt) - sp);
+			while(string_length(_tx) > 0) {
+				var sp = min(string_pos("\n", _tx), string_pos(" ", _tx));
+				if(sp == 0) sp = string_length(_tx);
 			
-			if(string_width(string_raw(ss + _ps)) >= line_width) {
-				array_push(_lines, ss);
-				ss = _ps;
-			} else if(string_length(_txt) <= 0) {
-				array_push(_lines, ss + _ps);
-				ss = "";
-			} else {
-				ss += _ps;	
+				var _ps = string_copy(_tx, 1, sp);
+				_tx = string_copy(_tx, sp + 1, string_length(_tx) - sp);
+			
+				if(line_width > 0 && string_width(string_raw(ss + _ps)) >= line_width) {
+					array_push(_lines, ss);
+					ss = _ps;
+				} else if(string_length(_tx) <= 0) {
+					array_push(_lines, ss + _ps);
+					ss = "";
+				} else if(string_char_at(_ps, string_length(_ps)) == "\n") {
+					array_push(_lines, ss + _ps);
+					ss = "";
+				} else 
+					ss += _ps;	
 			}
 		}
 		
-		if(ss != "") 
-			array_push(_lines, ss);
+		if(ss != "") array_push(_lines, ss);
 	}
 	
 	static onValueUpdate = function(index = 0) {
@@ -207,7 +217,7 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			line_update(inputs[| 1].getValue(), inputs[| 4].getValue());
 	}
 	
-	static drawNodeBase = function(xx, yy, _s) {
+	static drawNodeBase = function(xx, yy, mx, my, _s) {
 		var color  = inputs[| 0].getValue();
 		var txt = inputs[| 1].getValue();
 		if(txt == "") txt = "..."
@@ -224,24 +234,37 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		
 		var ww = 0;
 		var hh = 0;
+			
 		var tx = xx + 4;
 		var ty = yy + 4;
-		
-		if(_prev_text != txt)
-			line_update(txt, wid);
-		
-		draw_set_alpha(alp);
-		draw_set_text(font, fa_left, fa_top, color);
-		for( var i = 0, n = array_length(_lines); i < n; i++ ) {
-			var _line = _lines[i];
-			var _h = line_get_height(font);
-			var _w = draw_text_style(tx, ty, _line, _s);
 			
-			ww = max(ww, _w);
-			hh += _h;
-			ty += _h * _s;
+		if(WIDGET_CURRENT == ta_editor) {
+			ta_editor.font = font;
+			ta_editor.draw(tx, ty, wid * _s, 0, txt, [ mx, my ] );
+		} else {
+			if(_prev_text != txt)
+				line_update(txt, wid);
+			
+			draw_set_alpha(alp);
+			draw_set_text(font, fa_left, fa_top, color);
+			for( var i = 0, n = array_length(_lines); i < n; i++ ) {
+				var _line = _lines[i];
+				var _h = line_get_height(font);
+				var _w = draw_text_style(tx, ty, _line, _s);
+			
+				ww = max(ww, _w);
+				hh += _h;
+				ty += _h * _s;
+			}
+			draw_set_alpha(1);
+			
+			if(PANEL_GRAPH.node_hovering == self && PANEL_GRAPH.node_focus == self) {
+				if(point_in_rectangle(mx, my, xx, yy, xx + ww + 8, yy + hh + 8) && DOUBLE_CLICK) {
+					ta_editor._current_text = txt;
+					ta_editor.activate();
+				}
+			}
 		}
-		draw_set_alpha(1);
 		
 		draw_scale = _s;
 		w = ww + 8;
@@ -257,7 +280,7 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			active_draw_index = -1;
 		}
 		
-		drawNodeBase(xx, yy, _s);
+		drawNodeBase(xx, yy, _mx, _my, _s);
 		return noone;
 	}
 }

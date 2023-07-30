@@ -9,7 +9,7 @@ event_inherited();
 #endregion
 
 #region data
-	bs_type = buttonGroup([ THEME.icon_curve_connection, THEME.icon_curve_connection, THEME.icon_curve_connection, THEME.icon_curve_connection ], 
+	bs_type = new buttonGroup([ THEME.icon_curve_connection, THEME.icon_curve_connection, THEME.icon_curve_connection, THEME.icon_curve_connection ], 
 		function(val) {
 			PREF_MAP[? "curve_connection_line"] = val;
 		}

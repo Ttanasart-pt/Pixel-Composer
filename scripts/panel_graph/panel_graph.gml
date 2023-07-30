@@ -12,7 +12,6 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 	setProject(project);
 	
 	scale			= [ 0.01, 0.02, 0.05, 0.10, 0.15, 0.20, 0.25, 0.33, 0.5, 0.65, 0.8, 1, 1.2, 1.35, 1.5, 2.0];
-	graph_s_index	= array_find(scale, 1);
 	graph_s			= 1;
 	graph_s_to		= graph_s;
 	graph_line_s	= 32;
@@ -20,12 +19,21 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 	grid_opacity	= 0.05;
 	
 	graph_dragging_key = false;
+	graph_zooming_key  = false;
+	
 	graph_draggable= true;
 	graph_dragging = false;
 	graph_drag_mx  = 0;
 	graph_drag_my  = 0;
 	graph_drag_sx  = 0;
 	graph_drag_sy  = 0;
+	
+	graph_zooming  = false;
+	graph_zoom_mx  = 0;
+	graph_zoom_my  = 0;
+	graph_zoom_m   = 0;
+	graph_zoom_s   = 0;
+	
 	drag_key	   = mb_middle;
 	drag_locking   = false;
 	
@@ -250,7 +258,14 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 	addHotkey("Graph", "Copy",		"C", MOD_KEY.ctrl,	function() { PANEL_GRAPH.doCopy(); });
 	addHotkey("Graph", "Paste",		"V", MOD_KEY.ctrl,	function() { PANEL_GRAPH.doPaste(); });
 	
-	addHotkey("Graph", "Pan",		"", MOD_KEY.alt,	function() { PANEL_GRAPH.graph_dragging_key = true; });
+	addHotkey("Graph", "Pan",		"", MOD_KEY.alt,				function() { 
+																		if(PREF_MAP[? "alt_picker"]) return; 
+																		PANEL_GRAPH.graph_dragging_key = true; 
+																	});
+	addHotkey("Graph", "Zoom",		"", MOD_KEY.alt | MOD_KEY.ctrl,	function() { 
+																		if(PREF_MAP[? "alt_picker"]) return; 
+																		PANEL_GRAPH.graph_zooming_key = true; 
+																	});
 	
 	function onFocusBegin() { 
 		PANEL_GRAPH = self; 
@@ -315,13 +330,47 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 				graph_dragging = false;
 		}
 		
+		if(graph_zooming) {
+			if(!MOUSE_WRAPPING) {
+				var dy = -(my - graph_zoom_m) / 200;
+				
+				var _s = graph_s;
+				
+				graph_s_to = clamp(graph_s_to * (1 + dy), scale[0], scale[array_length(scale) - 1]);
+				graph_s    = graph_s_to;
+				
+				if(_s != graph_s) {
+					var mb_x = (graph_zoom_mx - graph_x * _s) / _s;
+					var ma_x = (graph_zoom_mx - graph_x * graph_s) / graph_s;
+					var md_x = ma_x - mb_x;
+					graph_x += md_x;
+				
+					var mb_y = (graph_zoom_my - graph_y * _s) / _s;
+					var ma_y = (graph_zoom_my - graph_y * graph_s) / graph_s;
+					var md_y = ma_y - mb_y;
+					graph_y += md_y;
+				}
+			}
+				
+			graph_zoom_m = my;
+			setMouseWrap();
+			
+			if(mouse_release(drag_key)) 
+				graph_zooming = false;
+		}
+		
 		if(mouse_on_graph && pFOCUS && graph_draggable) {
 			var _doDragging = false;
+			var _doZooming  = false;
+			
 			if(mouse_press(mb_middle)) {
 				_doDragging = true;
 				drag_key = mb_middle;
 			} else if(mouse_press(mb_left) && graph_dragging_key) {
 				_doDragging = true;
+				drag_key = mb_left;
+			} else if(mouse_press(mb_left) && graph_zooming_key) {
+				_doZooming = true;
 				drag_key = mb_left;
 			}
 			
@@ -332,18 +381,35 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 				graph_drag_sx  = graph_x;
 				graph_drag_sy  = graph_y;
 			}
+			
+			if(_doZooming) {
+				graph_zooming  = true;	
+				graph_zoom_mx  = mx;
+				graph_zoom_my  = my;
+				graph_zoom_m   = my;
+				graph_zoom_s   = graph_s;
+			}
 		}
 		
 		if(mouse_on_graph && pHOVER && graph_draggable) {
 			var _s = graph_s;
-			if(mouse_wheel_down()) {
-				graph_s_index = max(0, graph_s_index - 1);
-				graph_s_to = ui(scale[graph_s_index]);
+			if(mouse_wheel_down()) { //zoom out
+				for( var i = 1, n = array_length(scale); i < n; i++ ) {
+					if(scale[i - 1] < graph_s_to && graph_s_to <= scale[i]) {
+						graph_s_to = scale[i - 1];
+						break;
+					}
+				}
 			}
-			if(mouse_wheel_up()) {
-				graph_s_index = min(array_length(scale) - 1, graph_s_index + 1);
-				graph_s_to = ui(scale[graph_s_index]);
+			if(mouse_wheel_up()) { // zoom in
+				for( var i = 1, n = array_length(scale); i < n; i++ ) {
+					if(scale[i - 1] <= graph_s_to && graph_s_to < scale[i]) {
+						graph_s_to = scale[i];
+						break;
+					}
+				}
 			}
+			
 			graph_s = lerp_float(graph_s, graph_s_to, PREF_MAP[? "graph_zoom_smoooth"]);
 			
 			if(_s != graph_s) {
@@ -909,7 +975,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 					nodes_junction_d = noone;
 			}
 		
-			if(mouse_on_graph && mouse_press(mb_left, pFOCUS) && !graph_dragging_key) {
+			if(mouse_on_graph && mouse_press(mb_left, pFOCUS) && !graph_dragging_key && !graph_zooming_key) {
 				if(junction_hovering && junction_hovering.draw_line_shift_hover) {
 					nodes_select_mx		= mx;
 					nodes_select_my		= my;
@@ -1811,6 +1877,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		}
 		
 		graph_dragging_key = false;
+		graph_zooming_key  = false;
 	}
 	
 	static checkDropItem = function() {

@@ -787,7 +787,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		var imageAmo = (ds_list_size(inputs) - input_fix_len) / data_length;
 		var _vis = attributes.layer_visible;
 		
-		surface_set_shader(_outSurf, sh_sample, true, BLEND.alphamulp);
+		surface_set_shader(_outSurf, sh_sample, true, BLEND.alpha);
 		
 		for(var i = 0; i < imageAmo; i++) {
 			var vis  = _vis[i];

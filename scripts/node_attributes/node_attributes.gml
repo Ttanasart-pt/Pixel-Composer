@@ -1,6 +1,6 @@
 #region attribute
 	global.SURFACE_INTERPOLATION = [
-		"No aliasing", 
+		"Pixel", 
 		"Bilinear", 
 		"Bicubic", 
 		"radSin"

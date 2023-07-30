@@ -12,7 +12,8 @@ function struct_override(original, override) {
 }
 
 function struct_try_get(struct, key, def = 0) {
-	if(struct_has(struct, key)) return struct[$ key];
+	if(struct[$ key] != undefined) return struct[$ key];
+	
 	key = string_replace_all(key, "_", " ");
-	return struct_has(struct, key)? struct[$ key] : def;
+	return struct[$ key] ?? def;
 }

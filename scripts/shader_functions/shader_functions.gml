@@ -104,7 +104,7 @@ function shader_set_palette(pal, pal_uni = "palette", amo_uni = "paletteAmount",
 	}
 
 	function shader_set_interpolation(surface) {
-		var intp   = struct_try_get(attributes, "interpolation", 0);
+		var intp   = attributes.interpolation;
 		
 		gpu_set_tex_filter(intp);
 		shader_set_i("interpolation", intp);

@@ -1288,7 +1288,7 @@ function Panel_Animation() : PanelContent() constructor {
 						key = ds_map_find_next(PROJECT.nodeMap, key);
 						if(!_node || !_node.active) continue;
 						
-						for(var i = 0; i < ds_list_size(n.inputs); i++) {
+						for(var i = 0; i < ds_list_size(_node.inputs); i++) {
 							var in = _node.inputs[| i];
 							if(!in.is_anim) continue;
 							

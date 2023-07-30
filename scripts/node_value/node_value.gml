@@ -692,8 +692,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						break;
 					case VALUE_DISPLAY.area :
 						editWidget = new areaBox(function(index, val) { 
-							//var _val = animator.getValue();
-							//_val[index] = val;
 							return setValueDirect(val, index);
 						}, unit);
 						if(type == VALUE_TYPE.integer) editWidget.setSlideSpeed(1);
@@ -751,7 +749,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						extract_node = "";
 						break;
 					case VALUE_DISPLAY.enum_button :
-						editWidget = buttonGroup(display_data, function(val) { 
+						editWidget = new buttonGroup(display_data, function(val) { 
 							return setValueDirect(val);
 						} );
 						
@@ -986,35 +984,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		if(display_type == VALUE_DISPLAY.palette && !is_array(value)) {
 			return [ value ];
-		}
-		
-		if(display_type == VALUE_DISPLAY.area) {
-			var dispType = struct_try_get(nodeFrom.extra_data, "area_type", AREA_MODE.area);
-			var surfGet = nodeFrom.display_data;
-			if(!applyUnit || surfGet == -1) return value;
-			
-			var surf = surfGet();
-			var ww = surf[0];
-			var hh = surf[1];
-			
-			switch(dispType) {
-				case AREA_MODE.area : 
-					return value;	
-					
-				case AREA_MODE.padding : 
-					var cx = (ww - value[0] + value[2]) / 2
-					var cy = (value[1] + hh - value[3]) / 2;
-					var sw = abs((ww - value[0]) - value[2]) / 2;
-					var sh = abs(value[1] - (hh - value[3])) / 2;
-					return [cx, cy, sw, sh, value[4]];
-					
-				case AREA_MODE.two_point : 
-					var cx = (value[0] + value[2]) / 2
-					var cy = (value[1] + value[3]) / 2;
-					var sw = abs(value[0] - value[2]) / 2;
-					var sh = abs(value[1] - value[3]) / 2;
-					return [cx, cy, sw, sh, value[4]];
-			}
 		}
 		
 		if(type == VALUE_TYPE.text) {
@@ -1306,10 +1275,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				else			UPDATE |= RENDER_TYPE.partial;
 			}
 			
-			if(!LOADING) { 
-				//print("setValueDirect"); 
-				PROJECT.modified = true; 
-			}
+			if(!LOADING) PROJECT.modified = true; 
+			cache_value[0] = false;
 		}
 		
 		onValidate();

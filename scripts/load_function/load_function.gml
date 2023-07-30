@@ -29,6 +29,7 @@ function LOAD_PATH(path, readonly = false, safe_mode = false) {
 	PROJECT = new Project();
 	if(PANEL_GRAPH.project.path == "" && !PANEL_GRAPH.project.modified) {
 		var ind = array_find(PROJECTS, PANEL_GRAPH.project);
+		if(ind == -1) ind = 0;
 		PROJECTS[ind] = PROJECT;
 		
 		PANEL_GRAPH.setProject(PROJECT);

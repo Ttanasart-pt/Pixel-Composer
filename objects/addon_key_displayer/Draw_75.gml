@@ -77,42 +77,43 @@
 			draw_sprite_stretched_ext(THEME.menu_button_mask, 0, dcx, dcy, _dcw, dch, COLORS._main_icon_light, 1.0);
 		}
 		
-		draw_sprite(s_key_display_mouse, 0, mxs, mys);
+		draw_sprite_ext(s_key_display_mouse, 0, mxs, mys, 1, 1, 0, c_white, 0.5);
 		if(DOUBLE_CLICK)
 			draw_sprite_ext(s_key_display_mouse, 1, mxs, mys, 1, 1, 0, COLORS._main_value_positive, 1);
-		else if(mouse_press(mb_left))
-			draw_sprite_ext(s_key_display_mouse, 1, mxs, mys, 1, 1, 0, COLORS._main_accent, 1);
-		else if(mouse_release(mb_left))
-			draw_sprite_ext(s_key_display_mouse, 1, mxs, mys, 1, 1, 0, COLORS._main_value_negative, 1);
+		//else if(mouse_press(mb_left))
+		//	draw_sprite_ext(s_key_display_mouse, 1, mxs, mys, 1, 1, 0, COLORS._main_accent, 1);
+		//else if(mouse_release(mb_left))
+		//	draw_sprite_ext(s_key_display_mouse, 1, mxs, mys, 1, 1, 0, COLORS._main_value_negative, 1);
 		else if(mouse_click(mb_left))
 			draw_sprite_ext(s_key_display_mouse, 1, mxs, mys, 1, 1, 0, COLORS._main_icon_light, 1);
 	
-		if(mouse_press(mb_right))
-			draw_sprite_ext(s_key_display_mouse, 2, mxs, mys, 1, 1, 0, COLORS._main_accent, 1);
-		else if(mouse_release(mb_right))
-			draw_sprite_ext(s_key_display_mouse, 2, mxs, mys, 1, 1, 0, COLORS._main_value_negative, 1);
-		else if(mouse_click(mb_right))
+		//if(mouse_press(mb_right))
+		//	draw_sprite_ext(s_key_display_mouse, 2, mxs, mys, 1, 1, 0, COLORS._main_accent, 1);
+		//else if(mouse_release(mb_right))
+		//	draw_sprite_ext(s_key_display_mouse, 2, mxs, mys, 1, 1, 0, COLORS._main_value_negative, 1);
+		if(mouse_click(mb_right))
 			draw_sprite_ext(s_key_display_mouse, 2, mxs, mys, 1, 1, 0, COLORS._main_icon_light, 1);
 	
-		if(mouse_press(mb_middle))
-			draw_sprite_ext(s_key_display_mouse, 3, mxs, mys, 1, 1, 0, COLORS._main_accent, 1);
-		else if(mouse_release(mb_middle))
-			draw_sprite_ext(s_key_display_mouse, 3, mxs, mys, 1, 1, 0, COLORS._main_value_negative, 1);
-		else if(mouse_click(mb_middle))
+		//if(mouse_press(mb_middle))
+		//	draw_sprite_ext(s_key_display_mouse, 3, mxs, mys, 1, 1, 0, COLORS._main_accent, 1);
+		//else if(mouse_release(mb_middle))
+		//	draw_sprite_ext(s_key_display_mouse, 3, mxs, mys, 1, 1, 0, COLORS._main_value_negative, 1);
+		if(mouse_click(mb_middle))
 			draw_sprite_ext(s_key_display_mouse, 3, mxs, mys, 1, 1, 0, COLORS._main_icon_light, 1);
 			
 		if(mouse_wheel_up())
-			draw_sprite_ext(s_key_display_mouse, 4, mxs, mys, 1, 1, 0, COLORS._main_accent, 1);
+			draw_sprite_ext(s_key_display_mouse, 3, mxs, mys, 1, 1, 0, COLORS._main_accent, 1);
 		if(mouse_wheel_down())
-			draw_sprite_ext(s_key_display_mouse, 5, mxs, mys, 1, 1, 0, COLORS._main_accent, 1);
+			draw_sprite_ext(s_key_display_mouse, 3, mxs, mys, 1, 1, 0, COLORS._main_accent, 1);
 	#endregion
 	
 	if(alpha > 0) {
-		draw_set_text(_f_h2, fa_right, fa_bottom, COLORS._main_icon_dark);
-		var ww = string_width(disp_text) + ui(16);
-		var hh = string_height(disp_text) + ui(16);
+		draw_set_text(_f_h5, fa_right, fa_bottom, COLORS._main_icon_dark);
+		var pd = ui(4);
+		var ww = string_width(disp_text)  + pd * 3;
+		var hh = string_height(disp_text) + pd * 2;
 		
-		var x1 = WIN_W - ui(32 + 72);
+		var x1 = WIN_W - ui(40 + string_width(s_key_display_mouse));
 		var y1 = win_y - ui(8);
 		var x0 = x1 - ww;
 		var y0 = y1 - hh;
@@ -120,7 +121,7 @@
 		draw_sprite_stretched_ext(THEME.key_display, 0, x0, y0, ww, hh, 
 			pressing? COLORS._main_accent : COLORS._main_icon, alpha);
 		draw_set_alpha(alpha);
-		draw_text(x1 - ui(8), y1 - ui(8), disp_text);
+		draw_text(x1 - pd * 1.5, y1 - pd, disp_text);
 		draw_set_alpha(1);
 	}
 #endregion

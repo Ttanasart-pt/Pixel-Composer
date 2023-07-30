@@ -22,6 +22,8 @@ function Panel_Inspector() : PanelContent() constructor {
 	prop_sel_drag_x = 0;
 	prop_sel_drag_y = 0;
 	
+	color_picking	= false;
+	
 	static initSize = function() {
 		content_w = w - ui(32);
 		content_h = h - top_bar_h - ui(12);
@@ -49,7 +51,7 @@ function Panel_Inspector() : PanelContent() constructor {
 	tb_prop_filter.hide			= true;
 	filter_text = "";
 	
-	prop_page_button = buttonGroup([ "Properties", "Settings" ], function(val) { prop_page = val; });
+	prop_page_button = new buttonGroup([ "Properties", "Settings" ], function(val) { prop_page = val; });
 	prop_page_button.buttonSpr	= [ THEME.button_hide_left, THEME.button_hide_middle, THEME.button_hide_right ];
 	prop_page_button.font		= f_p1;
 	prop_page_button.fColor		= COLORS._main_text_sub;
@@ -78,6 +80,11 @@ function Panel_Inspector() : PanelContent() constructor {
 	addHotkey("Inspector", "Copy property",		"C",   MOD_KEY.ctrl,	function() { PANEL_INSPECTOR.propSelectCopy(); });
 	addHotkey("Inspector", "Paste property",	"V",   MOD_KEY.ctrl,	function() { PANEL_INSPECTOR.propSelectPaste(); });
 	addHotkey("Inspector", "Toggle animation",	"I",   MOD_KEY.none,	function() { PANEL_INSPECTOR.anim_toggling = true; });
+	
+	addHotkey("", "Color picker",		"",   MOD_KEY.alt,		function() { 
+																	if(!PREF_MAP[? "alt_picker"]) return; 
+																	PANEL_INSPECTOR.color_picking = true; 
+																});
 	
 	group_menu = [
 		menuItem(__txt("Expand all"), function() {
@@ -503,7 +510,7 @@ function Panel_Inspector() : PanelContent() constructor {
 			if(jun.connect_type == JUNCTION_CONNECT.input && jun.type == VALUE_TYPE.color && jun.display_type == VALUE_DISPLAY._default) {
 				pickers[color_picker_index] = jun;
 				if(color_picker_index == picker_index) {
-					if(ALT == KEYBOARD_STATUS.down && WIDGET_CURRENT == noone)
+					if(color_picking && WIDGET_CURRENT == noone && !instance_exists(_p_dialog))
 						jun.editWidget.onColorPick();
 					color_picker_selecting = jun;
 				}
@@ -622,6 +629,8 @@ function Panel_Inspector() : PanelContent() constructor {
 			if(mouse_release(mb_left))
 				prop_dragging = noone;
 		}
+		
+		color_picking = false;
 		
 		return hh;
 	});

@@ -1,8 +1,4 @@
-function buttonGroup(_data, _onClick) {
-	return new buttonGroupClass(_data, _onClick);
-}
-
-function buttonGroupClass(_data, _onClick) : widget() constructor {
+function buttonGroup(_data, _onClick) : widget() constructor {
 	data    = _data;
 	onClick = _onClick;
 	display_button = false;

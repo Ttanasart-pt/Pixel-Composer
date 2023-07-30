@@ -3,7 +3,7 @@ SAVING = false;
 
 function NEW() {
 	PROJECT = new Project();
-	array_append(PROJECTS, PROJECT);
+	array_push(PROJECTS, PROJECT);
 	
 	var graph = new Panel_Graph(PROJECT);
 	PANEL_GRAPH.panel.setContent(graph, true);

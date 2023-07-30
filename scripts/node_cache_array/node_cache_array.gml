@@ -1,6 +1,7 @@
 function Node_Cache_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name		= "Cache Array";
 	use_cache   = true;
+	clearCacheOnChange = false;
 	
 	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 	
@@ -27,17 +28,17 @@ function Node_Cache_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	static onInspector2Update = function() { clearCache(); }
 	
 	static step = function() { 
-		if(cache_loading) {
-			var _content = cache_content[cache_loading_progress];
+		if(!cache_loading) return;
+		
+		var _content = cache_content[cache_loading_progress];
 			
-			cached_output[cache_loading_progress] = __surface_array_deserialize(_content);
-			cache_result[cache_loading_progress]  = true;
-			cache_loading_progress++;
+		cached_output[cache_loading_progress] = __surface_array_deserialize(_content);
+		cache_result[cache_loading_progress]  = true;
+		cache_loading_progress++;
 			
-			if(cache_loading_progress == array_length(cache_content)) {
-				cache_loading = false;
-				update();
-			}
+		if(cache_loading_progress == array_length(cache_content)) {
+			cache_loading = false;
+			update();
 		}
 	}
 	

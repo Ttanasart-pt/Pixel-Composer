@@ -31,6 +31,13 @@ function Panel_Preview() : PanelContent() constructor {
 	canvas_drag_sx  = 0;
 	canvas_drag_sy  = 0;
 	
+	canvas_zooming_key = false;
+	canvas_zooming  = false;
+	canvas_zoom_mx  = 0;
+	canvas_zoom_my  = 0;
+	canvas_zoom_m   = 0;
+	canvas_zoom_s   = 0;
+	
 	sample_color = noone;
 	sample_x = noone;
 	sample_y = noone;
@@ -158,7 +165,14 @@ function Panel_Preview() : PanelContent() constructor {
 	addHotkey("Preview", "Preview window",			"P", MOD_KEY.ctrl,	function() { create_preview_window(PANEL_PREVIEW.getNodePreview()); });
 	addHotkey("Preview", "Toggle grid",				"G", MOD_KEY.ctrl,	function() { PANEL_PREVIEW.grid_show = !PANEL_PREVIEW.grid_show; });
 	
-	addHotkey("Preview", "Pan",		"", MOD_KEY.alt,	function() { PANEL_PREVIEW.canvas_dragging_key = true; });
+	addHotkey("Preview", "Pan",		"", MOD_KEY.alt,				function() { 
+																		if(PREF_MAP[? "alt_picker"]) return; 
+																		PANEL_PREVIEW.canvas_dragging_key = true; 
+																	});
+	addHotkey("Preview", "Zoom",	"", MOD_KEY.alt | MOD_KEY.ctrl,	function() { 
+																		if(PREF_MAP[? "alt_picker"]) return; 
+																		PANEL_PREVIEW.canvas_zooming_key  = true; 
+																	});
 	
 	function setNodePreview(node) {
 		if(resetViewOnDoubleClick)
@@ -242,22 +256,57 @@ function Panel_Preview() : PanelContent() constructor {
 				canvas_dragging = false;
 		}
 		
+		if(canvas_zooming) {
+			if(!MOUSE_WRAPPING) {
+				var dy = -(my - canvas_zoom_m) / 200;
+				
+				var _s = canvas_s;
+				canvas_s = clamp(canvas_s * (1 + dy), 0.10, 64);
+				
+				if(_s != canvas_s) {
+					var dx = (canvas_s - _s) * ((canvas_zoom_mx - canvas_x) / _s);
+					var dy = (canvas_s - _s) * ((canvas_zoom_my - canvas_y) / _s);
+					canvas_x -= dx;
+					canvas_y -= dy;
+				}
+			}
+				
+			canvas_zoom_m = my;
+			setMouseWrap();
+			
+			if(mouse_release(canvas_drag_key)) 
+				canvas_zooming = false;
+		}
+		
 		if(pFOCUS && pHOVER && canvas_hover) {
-			var hold = false;
+			var _doDragging = false;
+			var _doZooming  = false;
+			
 			if(mouse_press(mb_middle)) {
-				hold = true;
+				_doDragging = true;
 				canvas_drag_key = mb_middle;
 			} else if(mouse_press(mb_left) && canvas_dragging_key) {
-				hold = true;
+				_doDragging = true;
+				canvas_drag_key = mb_left;
+			} else if(mouse_press(mb_left) && canvas_zooming_key) {
+				_doZooming = true;
 				canvas_drag_key = mb_left;
 			}
 			
-			if(hold) {
+			if(_doDragging) {
 				canvas_dragging = true;	
 				canvas_drag_mx  = mx;
 				canvas_drag_my  = my;
 				canvas_drag_sx  = canvas_x;
 				canvas_drag_sy  = canvas_y;
+			}
+			
+			if(_doZooming) {
+				canvas_zooming  = true;	
+				canvas_zoom_mx  = mx;
+				canvas_zoom_my  = my;
+				canvas_zoom_m   = my;
+				canvas_zoom_s   = canvas_s;
 			}
 			
 			var _canvas_s = canvas_s;
@@ -278,6 +327,7 @@ function Panel_Preview() : PanelContent() constructor {
 		}
 		
 		canvas_dragging_key = false;
+		canvas_zooming_key  = false;
 		canvas_hover = point_in_rectangle(mx, my, 0, toolbar_height, w, h - toolbar_height);
 	}
 	
