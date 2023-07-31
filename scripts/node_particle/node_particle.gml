@@ -42,7 +42,7 @@ function Node_Particle(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y, _
 			PROJECT.animator.setFrame(-1);
 	}
 	
-	static step = function() {
+	static onStep = function() {
 		var _dim		= inputs[| input_len + 0].getValue();
 		var _outSurf	= outputs[| 0].getValue();
 			

@@ -1,6 +1,7 @@
 /// @description 
 if(!active) exit;
 if(textbox == noone) exit;
+if(textbox != WIDGET_CURRENT) exit;
 
 #region
 	dialog_x = clamp(dialog_x, 0, WIN_W - dialog_w - 1);

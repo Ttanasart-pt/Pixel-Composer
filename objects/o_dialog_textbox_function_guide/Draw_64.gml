@@ -1,6 +1,7 @@
 /// @description 
 if(!active) exit;
 if(textbox == noone) exit;
+if(textbox != WIDGET_CURRENT) exit;
 
 #region
 	draw_set_text(f_code, fa_left, fa_top, COLORS._main_text);

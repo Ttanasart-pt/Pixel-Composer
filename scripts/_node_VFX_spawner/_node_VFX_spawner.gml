@@ -380,9 +380,9 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		render(_time);
 	}
 	
-	static step = function() {}
+	static onStep = function() {}
 	
-	static inspectorStep = function() {
+	static step = function() {
 		var _inSurf = inputs[|  0].getValue();
 		var _dist   = inputs[|  4].getValue();
 		var _scatt  = inputs[| 24].getValue();
@@ -404,6 +404,8 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 				inputs[| 26].setVisible(true);
 			}
 		}
+		
+		onStep();
 	}
 	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {

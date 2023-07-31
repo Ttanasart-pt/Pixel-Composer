@@ -61,7 +61,7 @@ function Node_Path_Shift(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	}
 	
 	static getPointDistance = function(_dist, ind = 0) {
-		return getPointRatio(_rat * getLength());
+		return getPointRatio(_dist / getLength(), ind);
 	}
 	
 	function update() { 

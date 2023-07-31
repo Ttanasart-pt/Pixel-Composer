@@ -594,7 +594,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			
 				ind++;
 			}
-		
+			
 			var anchor_hover = -1;
 			var hover_type = 0;
 		
@@ -957,10 +957,17 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		
 		var _rat = inputs[| 0].getValue();
 		var _typ = inputs[| 2].getValue();
+		var _rnd = inputs[| 3].getValue();
 		
 		var anchors = [];
-		for(var i = input_fix_len; i < ds_list_size(inputs); i++)
-			array_push(anchors, inputs[| i].getValue());
+		for(var i = input_fix_len; i < ds_list_size(inputs); i++) {
+			var _anc = inputs[| i].getValue();
+			if(_rnd) {
+				_anc[0] = round(_anc[0]);
+				_anc[1] = round(_anc[2]);
+			}
+			array_push(anchors, _anc);
+		}
 		outputs[| 2].setValue(anchors);
 		
 		if(is_array(_rat)) {
