@@ -610,6 +610,7 @@
     {"name":"s_node_stripe","order":16,"path":"sprites/s_node_stripe/s_node_stripe.yy",},
     {"name":"s_node_lua_global","order":19,"path":"sprites/s_node_lua_global/s_node_lua_global.yy",},
     {"name":"node_pb_draw_diamond","order":10,"path":"scripts/node_pb_draw_diamond/node_pb_draw_diamond.yy",},
+    {"name":"polygon_points","order":2,"path":"scripts/polygon_points/polygon_points.yy",},
     {"name":"transformBox","order":29,"path":"scripts/transformBox/transformBox.yy",},
     {"name":"sh_grey_alpha","order":12,"path":"shaders/sh_grey_alpha/sh_grey_alpha.yy",},
     {"name":"sh_normal","order":1,"path":"shaders/sh_normal/sh_normal.yy",},

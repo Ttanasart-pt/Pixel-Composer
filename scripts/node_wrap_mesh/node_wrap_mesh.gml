@@ -1,11 +1,22 @@
 function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Mesh Warp";
 	
+	attributes.mesh_bound  = [];
+	
+	points = [];
 	data = {
-		points : [[]],
+		points : [],
 		tris   : [],
 		links  : []
 	}
+	
+	is_convex = true;
+	hover = -1;
+	anchor_dragging = -1;
+	anchor_drag_sx  = -1;
+	anchor_drag_sy  = -1;
+	anchor_drag_mx  = -1;
+	anchor_drag_my  = -1;
 	
 	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 	
@@ -27,6 +38,11 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		.setDisplay(VALUE_DISPLAY.slider, [ 0, 1, 0.01 ] );
 		
 	inputs[| 7] = nodeValue("Full Mesh", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+		
+	inputs[| 8] = nodeValue("Mesh Type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Grid", "Custom" ] );
+	
+	inputs[| 9] = nodeValue("Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, irandom_range(100000, 999999));
 	
 	control_index = ds_list_size(inputs);
 	
@@ -44,7 +60,7 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	outputs[| 1] = nodeValue("Mesh data", self, JUNCTION_CONNECT.output, VALUE_TYPE.object, data);
 	
 	input_display_list = [ 5, 
-		["Mesh",			false],	0, 1, 7, 
+		["Mesh",			false],	0, 8, 9, 1, 7, 3, 
 		["Link",			false],	4, 6,
 		["Control points",	false], 
 	];
@@ -53,7 +69,6 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	attribute_interpolation();
 
 	input_display_index = array_length(input_display_list);
-	points = [];
 	
 	array_push(attributeEditors, "Warp");
 	
@@ -64,9 +79,18 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			triggerRender();
 		})]);
 	
-	tools = [
-		new NodeTool( "Add / Remove (+ Shift) control point",  THEME.control_add ),
-		new NodeTool( "Pin / unpin (+ Shift) mesh", THEME.control_pin )
+	tools = [];
+	
+	tools_edit = [
+		new NodeTool( "Edit control point", THEME.control_add ),
+		new NodeTool( "Pin mesh",			THEME.control_pin ),
+	];
+	
+	tools_mesh = [
+		tools_edit[0],
+		tools_edit[1],
+		new NodeTool( "Mesh edit",		THEME.mesh_tool_edit ),
+		new NodeTool( "Anchor remove",  THEME.mesh_tool_delete ),
 	];
 	
 	insp1UpdateTooltip   = "Generate";
@@ -82,26 +106,120 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	}
 	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) { 
+		var mx = (_mx - _x) / _s;
+		var my = (_my - _y) / _s;
+		
+		var _type = inputs[| 8].getValue();
+		if(_type == 1 && (isUsingTool("Mesh edit") || isUsingTool("Anchor remove"))) {
+			var mesh = attributes.mesh_bound;
+			var len  = array_length(mesh);
+			var _hover = -0.5, _side = 0;
+			
+			draw_set_color(is_convex? COLORS._main_accent : COLORS._main_value_negative);
+			is_convex = true;
+		
+			for( var i = 0; i < len; i++ ) {
+				var _px0 = mesh[safe_mod(i + 0, len)][0];
+				var _py0 = mesh[safe_mod(i + 0, len)][1];
+				var _px1 = mesh[safe_mod(i + 1, len)][0];
+				var _py1 = mesh[safe_mod(i + 1, len)][1];
+				var _px2 = mesh[safe_mod(i + 2, len)][0];
+				var _py2 = mesh[safe_mod(i + 2, len)][1];
+			
+				var side = cross_product(_px0, _py0, _px1, _py1, _px2, _py2);
+				if(_side != 0 && sign(_side) != sign(side)) 
+					is_convex = false;
+				_side = side;
+			
+				var _dx0 = _x + _px0 * _s;
+				var _dy0 = _y + _py0 * _s;
+				var _dx1 = _x + _px1 * _s;
+				var _dy1 = _y + _py1 * _s;
+			
+				draw_line_width(_dx0, _dy0, _dx1, _dy1, hover == i + 0.5? 4 : 2);
+			
+				if(isUsingTool("Mesh edit") && distance_to_line(_mx, _my, _dx0, _dy0, _dx1, _dy1) < 6)
+					_hover = i + 0.5;
+			}
+		
+			draw_set_color(COLORS._main_accent);
+		
+			for( var i = 0; i < len; i++ ) {
+				var _px = mesh[i][0];
+				var _py = mesh[i][1];
+			
+				var _dx = _x + _px * _s;
+				var _dy = _y + _py * _s;
+			
+				draw_circle_prec(_dx, _dy, hover == i? 6 : 4, false);
+			
+				if((isUsingTool("Mesh edit") || isUsingTool("Anchor remove")) && point_distance(_dx, _dy, _mx, _my) < 6)
+					_hover = i;
+			}
+		
+			hover = _hover;
+		
+			if(anchor_dragging > -1) {
+				var dx = anchor_drag_sx + (_mx - anchor_drag_mx) / _s;
+				var dy = anchor_drag_sy + (_my - anchor_drag_my) / _s;
+			
+				dx = value_snap(dx, _snx);
+				dy = value_snap(dy, _sny);
+			
+				attributes.mesh_bound[anchor_dragging][0] = dx;
+				attributes.mesh_bound[anchor_dragging][1] = dy;
+				setTriangle();
+			
+				if(mouse_release(mb_left))
+					anchor_dragging = -1;
+			}
+		
+			if(mouse_press(mb_left, active)) {
+				if(frac(hover) == 0) {
+					if(isUsingTool("Mesh edit")) {
+						anchor_dragging = hover;
+						anchor_drag_sx  = mesh[hover][0];
+						anchor_drag_sy  = mesh[hover][1];
+						anchor_drag_mx  = _mx;
+						anchor_drag_my  = _my;
+					} else if(isUsingTool("Anchor remove")) {
+						if(array_length(mesh) > 3) {
+							array_delete(mesh, hover, 1);
+							setTriangle();
+						}
+					}
+				} else if(isUsingTool("Mesh edit")) {
+					var ind = hover == -0.5? len : ceil(hover);
+					array_insert(attributes.mesh_bound, ind, [ mx, my ]);
+				
+					anchor_dragging = ind;
+					anchor_drag_sx  =  mx;
+					anchor_drag_sy  =  my;
+					anchor_drag_mx  = _mx;
+					anchor_drag_my  = _my;
+				}
+			}
+		}
+		
 		for(var i = 0; i < array_length(data.links); i++)
 			data.links[i].draw(_x, _y, _s);
 		for(var i = 0; i < array_length(data.tris); i++)
 			data.tris[i].drawPoints(_x, _y, _s);
 		
-		var hover = -1;
+		var _hover = -1;
 		for(var i = control_index; i < ds_list_size(inputs); i++) {
 			if(inputs[| i].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny))
-				hover = i;
+				_hover = i;
 		}
 		
-		if(!active) return;
-		if(isUsingTool(0)) {
+		if(isUsingTool("Edit control point")) {
 			if(key_mod_press(SHIFT))
 				draw_sprite_ui_uniform(THEME.cursor_path_remove, 0, _mx + 16, _my + 16);
 			else
 				draw_sprite_ui_uniform(THEME.cursor_path_add, 0, _mx + 16, _my + 16);
 			
-			if(mouse_press(mb_left)) {
-				if(hover == -1) {
+			if(mouse_press(mb_left, active)) {
+				if(_hover == -1) {
 					var i = createControl();
 					i.setValue( [ PUPPET_FORCE_MODE.move, value_snap(_mx - _x, _snx) / _s, value_snap(_my - _y, _sny) / _s, 0, 0, 8, 8 ] );
 					i.drag_type = 2;
@@ -110,14 +228,14 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 					i.drag_mx   = _mx;
 					i.drag_my   = _my;
 				} else if(key_mod_press(SHIFT)) {
-					ds_list_delete(inputs, hover);	
-					array_delete(input_display_list, input_display_index + hover - control_index, 1);
+					ds_list_delete(inputs, _hover);	
+					array_delete(input_display_list, input_display_index + _hover - control_index, 1);
 				}
 				
 				reset();
 				control(input_display_list);
 			}
-		} else if(isUsingTool(1)) {
+		} else if(isUsingTool("Pin mesh")) {
 			draw_sprite_ui_uniform(key_mod_press(SHIFT)? THEME.cursor_path_remove : THEME.cursor_path_add, 0, _mx + 16, _my + 16);
 			
 			draw_set_color(COLORS._main_accent);
@@ -126,7 +244,7 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			var _xx = (_mx - _x) / _s;
 			var _yy = (_my - _y) / _s;
 			
-			if(mouse_click(mb_left)) {
+			if(mouse_click(mb_left, active)) {
 				for(var j = 0; j < array_length(data.tris); j++) {
 					var t = data.tris[j];
 					
@@ -138,7 +256,7 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 						t.p2.setPin(!key_mod_press(SHIFT));
 				}
 			}
-		}
+		} 
 	}
 	
 	function _Point(node, index, _x, _y) constructor {
@@ -211,6 +329,10 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		
 		static setPin = function(pin) {
 			self.pin = pin;	
+		}
+		
+		static equal = function(point) {
+			return x == point.x && y == point.y;
 		}
 	}
 	
@@ -315,14 +437,16 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			surface_reset_target();
 		}
 		
+		var _sam = sample + 1;
+		
 		points	    = [];
-		data.points = [[]];
+		data.points = array_create(_sam * _sam);
 		data.tris	= [];
 		data.links	= [];
 		
 		var ind = 0;
-		for(var i = 0; i <= sample; i++) 
-		for(var j = 0; j <= sample; j++) {
+		for(var i = 0; i < _sam; i++) 
+		for(var j = 0; j < _sam; j++) {
 			var fill = false;
 			if(fullmh) {
 				fill = true;
@@ -344,36 +468,35 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			}
 			
 			if(fill) {
-				data.points[i][j] = new _Point(self, ind++, min(j * gw, ww), min(i * gh, hh));
+				data.points[i * _sam + j] = new _Point(self, ind++, min(j * gw, ww), min(i * gh, hh));
 				if(i == 0) continue;
 				
-				if(j && data.points[i - 1][j] != 0 && data.points[i][j - 1] != 0) 
-					array_push(data.tris, new _Triangle(data.points[i - 1][j], data.points[i][j - 1], data.points[i][j]));
-				if(j < sample && data.points[i - 1][j] != 0 && data.points[i - 1][j + 1] != 0)
-					array_push(data.tris, new _Triangle(data.points[i - 1][j], data.points[i - 1][j + 1], data.points[i][j]));
+				if(j && data.points[(i - 1) * _sam + j] != 0 && data.points[i * _sam + j - 1] != 0) 
+					array_push(data.tris, new _Triangle(data.points[(i - 1) * _sam + j], data.points[i * _sam + j - 1], data.points[i * _sam + j]));
+				if(j < sample && data.points[(i - 1) * _sam + j] != 0 && data.points[(i - 1) * _sam + j + 1] != 0)
+					array_push(data.tris, new _Triangle(data.points[(i - 1) * _sam + j], data.points[(i - 1) * _sam + j + 1], data.points[i * _sam + j]));
 			} else
-				data.points[i][j] = 0;
+				data.points[i * _sam + j] = 0;
 		}
 		
-		for(var i = 0; i <= sample; i++)
-		for(var j = 0; j <= sample; j++) {
-			if(data.points[i][j] == 0) continue;
+		for(var i = 0; i < _sam; i++)
+		for(var j = 0; j < _sam; j++) {
+			if(data.points[i * _sam + j] == 0) continue;
 			
-			if(i && data.points[i - 1][j] != 0) {
-				array_push(data.links, new link(data.points[i][j], data.points[i - 1][j]));
-			}
-			if(j && data.points[i][j - 1] != 0) {
-				array_push(data.links, new link(data.points[i][j], data.points[i][j - 1]));
-			}
+			if(i && data.points[(i - 1) * _sam + j] != 0)
+				array_push(data.links, new link(data.points[i * _sam + j], data.points[(i - 1) * _sam + j]));
+			if(j && data.points[i * _sam + j - 1] != 0) 
+				array_push(data.links, new link(data.points[i * _sam + j], data.points[i * _sam + j - 1]));
 			
 			if(diagon) {
-				if(i && j && data.points[i - 1][j - 1] != 0) {
-					var l = new link(data.points[i][j], data.points[i - 1][j - 1]);
+				if(i && j && data.points[(i - 1) * _sam + j - 1] != 0) {
+					var l = new link(data.points[i * _sam + j], data.points[(i - 1) * _sam + j - 1]);
 					l.k = spring;
 					array_push(data.links, l);
 				}
-				if(i && j < sample && data.points[i - 1][j + 1] != 0) {
-					var l = new link(data.points[i][j], data.points[i - 1][j + 1]);
+				
+				if(i && j < sample && data.points[(i - 1) * _sam + j + 1] != 0) {
+					var l = new link(data.points[i * _sam + j], data.points[(i - 1) * _sam + j + 1]);
 					l.k = spring;
 					array_push(data.links, l);
 				}
@@ -383,6 +506,79 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		if(is_surface(cont)) surface_free(cont);
 	}
 	
+	static triangulate = function(surf) {
+		var sample = inputs[| 1].getValue();
+		var seed   = inputs[| 9].getValue();
+		
+		if(!inputs[| 0].value_from) return;
+		var useArray = is_array(surf);
+		var ww = useArray? surface_get_width(surf[0]) : surface_get_width(surf);
+		var hh = useArray? surface_get_height(surf[0]) : surface_get_height(surf);
+		
+		data.points = [];
+		data.tris	= [];
+		data.links	= [];
+		
+		var _m = attributes.mesh_bound;
+		if(array_length(_m) < 3) return;
+		
+		var _mb		= array_length(_m);
+		var ind		= 0;
+		
+		var minX, maxX, minY, maxY;
+    
+	    for (var i = 0; i < array_length(_m); i++) {
+	        var point = _m[i];
+	        var _x = point[0];
+	        var _y = point[1];
+			
+	        if (i == 0) {
+	            minX = _x; maxX = _x;
+	            minY = _y; maxY = _y; 
+	        } else {
+	            minX = min(minX, _x);
+	            maxX = max(maxX, _x);
+	            minY = min(minY, _y);
+	            maxY = max(maxY, _y);
+	        }
+	    }
+		
+		var gw = ww / sample / 3;
+		var gh = hh / sample / 3;
+		
+		random_set_seed(seed);
+		var _p = [];
+		for( var i = 0; i <= sample; i++ )
+		for( var j = 0; j <= sample; j++ ) {
+			var px = lerp(minX, maxX, i / sample);
+			var py = lerp(minY, maxY, j / sample);
+			
+			px += random_range(-gw, gw);
+			py += random_range(-gh, gh);
+			
+			if(point_in_polygon(px, py, _m))
+				array_push(_p, [ px, py ]);
+		}
+		
+		data.points = array_create(_mb + array_length(_p));
+		
+		for( var i = 0, n = _mb; i < n; i++ )
+			data.points[i] = new _Point(self, ind++, _m[i][0], _m[i][1]);
+		for( var i = 0, n = array_length(_p); i < n; i++ )
+			data.points[_mb + i] = new _Point(self, ind++, _p[i][0], _p[i][1]);
+		
+		var _t = delaunay_triangulation(data.points);
+		
+		for( var i = 0, n = array_length(_t); i < n; i++ ) {
+			var t = _t[i];
+			array_push(data.tris,  new _Triangle(t[0], t[1], t[2]));
+			
+			array_push(data.links, new link(t[0], t[1]));
+			array_push(data.links, new link(t[1], t[2]));
+			array_push(data.links, new link(t[2], t[0]));
+		}
+	}
+	
 	static reset = function() {
 		for(var i = 0; i < array_length(data.tris); i++)
 			data.tris[i].reset();
@@ -390,7 +586,12 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	static setTriangle = function() {
 		var _inSurf = inputs[| 0].getValue();
-		regularTri(_inSurf);
+		var _type   = inputs[| 8].getValue();
+		
+		switch(_type) {
+			case 0 : regularTri(_inSurf);   break;
+			case 1 : triangulate(_inSurf);	break;
+		}
 		
 		for(var i = 0; i < array_length(data.tris); i++)
 			data.tris[i].initSurface(is_array(_inSurf)? _inSurf[0] : _inSurf);
@@ -434,10 +635,9 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		for(var i = control_index; i < ds_list_size(inputs); i++) {
 			var c = inputs[| i].getValue();
 			
-			for( var j = 0; j < array_length(data.points); j++ )
-			for( var k = 0; k < array_length(data.points[j]); k++ ) {
-				if(data.points[j][k] == 0) continue;
-				affectPoint(c, data.points[j][k]);
+			for( var j = 0; j < array_length(data.points); j++ ) {
+				if(data.points[j] == 0) continue;
+				affectPoint(c, data.points[j]);
 			}
 		}
 		
@@ -445,10 +645,9 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		var _rat  = 1 / it;
 		
 		repeat(it) {
-			for( var j = 0; j < array_length(data.points); j++ )
-			for( var k = 0; k < array_length(data.points[j]); k++ ) {
-				if(data.points[j][k] == 0) continue;
-				data.points[j][k].stepMove(_rat);
+			for( var j = 0; j < array_length(data.points); j++ ) {
+				if(data.points[j] == 0) continue;
+				data.points[j].stepMove(_rat);
 			}
 			
 			if(lStr > 0)
@@ -458,11 +657,21 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			}
 		}
 		
-		for( var j = 0; j < array_length(data.points); j++ )
-		for( var k = 0; k < array_length(data.points[j]); k++ ) {
-			if(data.points[j][k] == 0) continue;
-			data.points[j][k].clearMove();
+		for( var j = 0; j < array_length(data.points); j++ ) {
+			if(data.points[j] == 0) continue;
+			data.points[j].clearMove();
 		}
+	}
+	
+	static step = function() {
+		var _type = inputs[| 8].getValue();
+		
+		inputs[| 2].setVisible(_type == 0);
+		inputs[| 4].setVisible(_type == 0);
+		inputs[| 7].setVisible(_type == 0);
+		
+		if(_type == 0)		 tools = tools_edit;
+		else if (_type == 1) tools = tools_mesh;
 	}
 	
 	static process_data = function(_outSurf, _data, _output_index, _array_index) {
@@ -502,21 +711,22 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		var att = {};
 		
 		var pinList = [];
-		for( var j = 0; j < array_length(data.points); j++ )
-		for( var k = 0; k < array_length(data.points[j]); k++ ) {
-			var p = data.points[j][k];
+		for( var j = 0; j < array_length(data.points); j++ ) {
+			var p = data.points[j];
 			if(p == 0) continue;
 			if(p.pin) array_push(pinList, p.index);
 		}
 			
 		att.pin = pinList;
+		att.mesh_bound = attributes.mesh_bound;
+		
 		return att;
 	}
 	
 	loadPin = noone;
 	static attributeDeserialize = function(attr) {
-		if(struct_has(attr, "pin")) 
-			loadPin = attr.pin;
+		if(struct_has(attr, "pin"))			loadPin = attr.pin;
+		if(struct_has(attr, "mesh_bound"))  attributes.mesh_bound = attr.mesh_bound;;
 	}
 	
 	static postConnect = function() {

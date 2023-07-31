@@ -42,10 +42,6 @@ function transformBox(_onModify) : widget() constructor {
 		return draw(params.x, params.y, params.w, params.data, params.m);
 	}
 	
-	static drawParam = function(params) {
-		return draw(params.x, params.y, params.w, params.data, params.m);
-	}
-	
 	static draw = function(_x, _y, _w, _data, _m) {
 		x = _x;
 		y = _y;
@@ -68,7 +64,7 @@ function transformBox(_onModify) : widget() constructor {
 		
 		_y += ui(40);
 		
-		rot.draw(_x + _w / 2, _y, _data[TRANSFORM.rot], _m);
+		rot.draw(_x, _y, _w, _data[TRANSFORM.rot], _m);
 		
 		//draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text_inner);
 		//draw_text_add(_x + ui(8), _y + tbh / 2, "Rotation");

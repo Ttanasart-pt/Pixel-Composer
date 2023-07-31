@@ -74,6 +74,12 @@ function _triangle_is_ccw(triangle) {
     return ((b.x - a.x) * (c.y - a.y) - (c.x - a.x) * (b.y - a.y)) > 0;
 }
 
+function _triangle_is_equal(tri0, tri1) {
+	return (tri0[0] == tri1[0] || tri0[0] == tri1[1] || tri0[0] == tri1[2]) && 
+		   (tri0[1] == tri1[0] || tri0[1] == tri1[1] || tri0[1] == tri1[2]) && 
+		   (tri0[2] == tri1[0] || tri0[2] == tri1[1] || tri0[2] == tri1[2]);
+}
+
 function _point_in_circumcircle(point, triangle) {
     var a = triangle[0], b = triangle[1], c = triangle[2];
 	if(!_triangle_is_ccw(triangle)) {
@@ -95,18 +101,7 @@ function _point_in_circumcircle(point, triangle) {
 
 function array_remove_triangles(arr, target) {
     for (var i = array_length(arr) - 1; i >= 0; i--) {
-        var triangle = arr[i];
-        var match_count = 0;
-		
-        for (var j = 0; j < 3; j++)
-        for (var k = 0; k < 3; k++) {
-            if (triangle[j].equal(target[k])) {
-                match_count += 1;
-                break;
-            }
-        }
-		
-        if (match_count == 3) 
+        if (_triangle_is_equal(arr[i], target)) 
             array_delete(arr, i, 1);
     }
 }

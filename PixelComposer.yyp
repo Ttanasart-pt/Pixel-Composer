@@ -1177,6 +1177,7 @@
     {"id":{"name":"s_node_stripe","path":"sprites/s_node_stripe/s_node_stripe.yy",},},
     {"id":{"name":"s_node_lua_global","path":"sprites/s_node_lua_global/s_node_lua_global.yy",},},
     {"id":{"name":"node_pb_draw_diamond","path":"scripts/node_pb_draw_diamond/node_pb_draw_diamond.yy",},},
+    {"id":{"name":"polygon_points","path":"scripts/polygon_points/polygon_points.yy",},},
     {"id":{"name":"transformBox","path":"scripts/transformBox/transformBox.yy",},},
     {"id":{"name":"s_node_fluidSim_group","path":"sprites/s_node_fluidSim_group/s_node_fluidSim_group.yy",},},
     {"id":{"name":"sh_grey_alpha","path":"shaders/sh_grey_alpha/sh_grey_alpha.yy",},},
