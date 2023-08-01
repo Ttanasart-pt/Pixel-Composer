@@ -14,9 +14,6 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 	scale			= [ 0.01, 0.02, 0.05, 0.10, 0.15, 0.20, 0.25, 0.33, 0.5, 0.65, 0.8, 1, 1.2, 1.35, 1.5, 2.0];
 	graph_s			= 1;
 	graph_s_to		= graph_s;
-	graph_line_s	= 32;
-	grid_color      = c_white;
-	grid_opacity	= 0.05;
 	
 	graph_dragging_key = false;
 	graph_zooming_key  = false;
@@ -52,7 +49,6 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 	node_drag_sy  = 0;
 	node_drag_ox  = 0;
 	node_drag_oy  = 0;
-	node_drag_snap = true;
 	
 	selection_block		= 0;
 	nodes_select_list	= ds_list_create();
@@ -286,8 +282,8 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		mouse_graph_x = m_x;
 		mouse_graph_y = m_y;
 		
-		mouse_grid_x = round(m_x / graph_line_s) * graph_line_s;
-		mouse_grid_y = round(m_y / graph_line_s) * graph_line_s;
+		mouse_grid_x = round(m_x / project.graphGrid.size) * project.graphGrid.size;
+		mouse_grid_y = round(m_y / project.graphGrid.size) * project.graphGrid.size;
 	}
 	
 	function focusNode(_node) {
@@ -436,7 +432,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 	}
 	
 	function drawGrid() {
-		var gls = graph_line_s;
+		var gls = project.graphGrid.size;
 		if(graph_s <= 0.15) gls *= 10;
 		
 		var gr_x  = graph_x * graph_s;
@@ -445,8 +441,8 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		var xx = -gr_ls, xs = safe_mod(gr_x, gr_ls);
 		var yy = -gr_ls, ys = safe_mod(gr_y, gr_ls);
 		
-		draw_set_color(grid_color);
-		draw_set_alpha(grid_opacity * (graph_s >= 1? 1 : 0.5));
+		draw_set_color(project.graphGrid.color);
+		draw_set_alpha(project.graphGrid.opacity * (graph_s >= 1? 1 : 0.5));
 		while(xx < w + gr_ls) {
 			draw_line(xx + xs, 0, xx + xs, h);
 			if(xx + xs - gr_x == 0)
@@ -851,9 +847,9 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 					var nx = node_drag_sx + (mouse_graph_x - node_drag_mx);
 					var ny = node_drag_sy + (mouse_graph_y - node_drag_my);
 					
-					if(!key_mod_press(CTRL) && node_drag_snap) {
-						nx = round(nx / graph_line_s) * graph_line_s;
-						ny = round(ny / graph_line_s) * graph_line_s;
+					if(!key_mod_press(CTRL) && project.graphGrid.snap) {
+						nx = round(nx / project.graphGrid.size) * project.graphGrid.size;
+						ny = round(ny / project.graphGrid.size) * project.graphGrid.size;
 					}
 					
 					node_dragging.move(nx, ny);
@@ -866,9 +862,9 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 					var nx = node_drag_sx + (mouse_graph_x - node_drag_mx);
 					var ny = node_drag_sy + (mouse_graph_y - node_drag_my);
 					
-					if(!key_mod_press(CTRL) && node_drag_snap) {
-						nx = round(nx / graph_line_s) * graph_line_s;
-						ny = round(ny / graph_line_s) * graph_line_s;
+					if(!key_mod_press(CTRL) && project.graphGrid.snap) {
+						nx = round(nx / project.graphGrid.size) * project.graphGrid.size;
+						ny = round(ny / project.graphGrid.size) * project.graphGrid.size;
 					}
 					
 					if(node_drag_ox == -1 || node_drag_oy == -1) {
@@ -883,9 +879,9 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 							var _nx = _node.x + dx;
 							var _ny = _node.y + dy;
 							
-							if(!key_mod_press(CTRL) && node_drag_snap) {
-								_nx = round(_nx / graph_line_s) * graph_line_s;
-								_ny = round(_ny / graph_line_s) * graph_line_s;
+							if(!key_mod_press(CTRL) && project.graphGrid.snap) {
+								_nx = round(_nx / project.graphGrid.size) * project.graphGrid.size;
+								_ny = round(_ny / project.graphGrid.size) * project.graphGrid.size;
 							}
 							
 							_node.move(_nx, _ny);
@@ -929,8 +925,8 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 			}
 			
 			if(DOUBLE_CLICK && junction_hovering != noone) {
-				var _mx = round(mouse_graph_x / graph_line_s) * graph_line_s;
-				var _my = round(mouse_graph_y / graph_line_s) * graph_line_s;
+				var _mx = round(mouse_graph_x / project.graphGrid.size) * project.graphGrid.size;
+				var _my = round(mouse_graph_y / project.graphGrid.size) * project.graphGrid.size;
 						
 				var _pin = nodeBuild("Node_Pin", _mx, _my);
 				_pin.inputs[| 0].setFrom(junction_hovering.value_from);

@@ -114,13 +114,7 @@ function Panel_Menu() : PanelContent() constructor {
 				[ s_menu_transparent,	function() { PANEL_PREVIEW.canvas_bg = -1; } ],
 				[ s_menu_white,			function() { PANEL_PREVIEW.canvas_bg = c_white; } ],
 				[ s_menu_black,			function() { PANEL_PREVIEW.canvas_bg = c_black; } ],
-			]), 
-			-1,
-			menuItem(__txtx("panel_menu_show_grid", "Show Grid"), function() { PANEL_PREVIEW.grid_show = !PANEL_PREVIEW.grid_show; }, [ THEME.icon_grid, 1 ], ["Preview", "Toggle grid"]),
-			menuItem(__txtx("panel_menu_grid_setting", "Grid setting..."), function() { 
-				var dia = dialogCall(o_dialog_preview_grid); 
-				dia.anchor = ANCHOR.none;
-			}, THEME.icon_grid_setting),
+			]),
 		]], 
 		[ __txt("Animation"), [
 			menuItem(__txtx("panel_menu_animation_setting", "Animation setting..."), function() { 

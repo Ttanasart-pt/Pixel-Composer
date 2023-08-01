@@ -69,10 +69,19 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 					bone_remove = bone;
 			} else 
 				draw_sprite_ui_uniform(THEME.icon_delete, 3, bx, by, 1, COLORS._main_icon);
-				
+			
+			draw_set_font(f_p2);
+			var ww = string_width(bone.name);
+			
 			bone.tb_name.setFocusHover(_focus, _hover);
-			bone.tb_name.draw(__x + 24, ty + 3, __w - 24 - 40, _hh - 6, bone.name, _m);
-				
+			bone.tb_name.draw(__x + 24, ty + 3, ww + 16, _hh - 6, bone.name, _m);
+			
+			var _x0 = __x + 24 + ww + 32;
+			draw_sprite_ui(THEME.bone, 3, _x0, ty + 14,,,, COLORS._main_icon, 0.5);
+			
+			_x0 += 20;
+			draw_sprite_ui(THEME.bone, 4, _x0, ty + 14,,,, COLORS._main_icon, 0.5);
+			
 			ty += _hh;
 				
 			draw_set_color(COLORS.node_composite_separator);
@@ -164,17 +173,20 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 		var mx = (_mx - _x) / _s;
 		var my = (_my - _y) / _s;
 		
+		var smx = value_snap(mx, _snx);
+		var smy = value_snap(my, _sny);
+		
 		var _b = attributes.bones;
 		
 		if(builder_bone != noone) {
 			anchor_selecting = _b.draw(attributes, false, _x, _y, _s, _mx, _my, anchor_selecting);
 			
-			var dir = point_direction(builder_sx, builder_sy, mx, my);
-			var dis = point_distance(builder_sx, builder_sy, mx, my);
+			var dir = point_direction(builder_sx, builder_sy, smx, smy);
+			var dis = point_distance(builder_sx, builder_sy, smx, smy);
 			
 			if(builder_type == 2) {
-				var bx = builder_sx + (mx - builder_mx);
-				var by = builder_sy + (my - builder_my);
+				var bx = builder_sx + (smx - builder_mx);
+				var by = builder_sy + (smy - builder_my);
 				
 				if(!builder_bone.parent_anchor) {
 					builder_bone.direction = point_direction(0, 0, bx, by);
@@ -390,16 +402,16 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 			
 			if(mouse_press(mb_left, active)) {
 				if(anchor_selecting == noone) {
-					builder_bone = createBone(attributes.bones, point_distance(0, 0, mx, my), point_direction(0, 0, mx, my));
+					builder_bone = createBone(attributes.bones, point_distance(0, 0, smx, smy), point_direction(0, 0, smx, smy));
 					builder_type = 1;
-					builder_sx = mx;
-					builder_sy = my;
+					builder_sx = smx;
+					builder_sy = smy;
 					UNDO_HOLDING = true;
 				} else if(anchor_selecting[1] == 1) {
 					builder_bone = createBone(anchor_selecting[0], 0, 0);
 					builder_type = 1;
-					builder_sx = mx;
-					builder_sy = my;
+					builder_sx = smx;
+					builder_sy = smy;
 					UNDO_HOLDING = true;
 				} else if(anchor_selecting[1] == 2) {
 					var _pr = anchor_selecting[0];

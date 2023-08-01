@@ -51,14 +51,7 @@ function Panel_Preview() : PanelContent() constructor {
 	preview_x_max	= 0;
 	preview_sequence  = [ 0, 0 ];
 	_preview_sequence = preview_sequence;
-	preview_rate     = 10;
-	
-	grid_show	 = false;
-	grid_snap	 = false;
-	grid_width	 = 16;
-	grid_height	 = 16;
-	grid_opacity = 0.5;
-	grid_color   = COLORS.panel_preview_grid;
+	preview_rate      = 10;
 	
 	tool_x       = 0;
 	tool_x_to    = 0;
@@ -116,7 +109,7 @@ function Panel_Preview() : PanelContent() constructor {
 			}, 
 			function(data) { 
 				menuCall("preview_tile_menu", data.x + ui(28), data.y + ui(28), [
-					menuItem(__txtx("panel_preview_tile_off", "Tile off"),				function() { tileMode = 0; }),
+					menuItem(__txtx("panel_preview_tile_off", "Tile off"),					function() { tileMode = 0; }),
 					menuItem(__txtx("panel_preview_tile_horizontal", "Tile horizontal"),	function() { tileMode = 1; }),
 					menuItem(__txtx("panel_preview_tile_vertical", "Tile vertical"),		function() { tileMode = 2; }),
 					menuItem(__txtx("panel_preview_tile_both", "Tile both"),				function() { tileMode = 3; }),
@@ -163,7 +156,7 @@ function Panel_Preview() : PanelContent() constructor {
 	addHotkey("Preview", "Save current frame",		"S", MOD_KEY.shift,	function() { PANEL_PREVIEW.saveCurrentFrame(); });
 	addHotkey("Preview", "Save all current frame",	-1, MOD_KEY.none,	function() { PANEL_PREVIEW.saveAllCurrentFrames(); });
 	addHotkey("Preview", "Preview window",			"P", MOD_KEY.ctrl,	function() { create_preview_window(PANEL_PREVIEW.getNodePreview()); });
-	addHotkey("Preview", "Toggle grid",				"G", MOD_KEY.ctrl,	function() { PANEL_PREVIEW.grid_show = !PANEL_PREVIEW.grid_show; });
+	addHotkey("Preview", "Toggle grid",				"G", MOD_KEY.ctrl,	function() { PROJECT.previewGrid.show = !PROJECT.previewGrid.show; });
 	
 	addHotkey("Preview", "Pan",		"", MOD_KEY.alt,				function() { 
 																		if(PREF_MAP[? "alt_picker"]) return; 
@@ -203,8 +196,8 @@ function Panel_Preview() : PanelContent() constructor {
 			
 			if(node == noone) continue;
 			if(!node.active) {
-				preview_node[i] = noone;
-				continue;
+				resetNodePreview();
+				return;
 			}
 			
 			var _prev_val = node.getPreviewValue();
@@ -568,9 +561,9 @@ function Panel_Preview() : PanelContent() constructor {
 		}
 		
 		if(is_surface(preview_surface[0])) {
-			if(grid_show) {
-				var _gw = grid_width  * canvas_s;
-				var _gh = grid_height * canvas_s;
+			if(PROJECT.previewGrid.show) {
+				var _gw = PROJECT.previewGrid.width  * canvas_s;
+				var _gh = PROJECT.previewGrid.height * canvas_s;
 			
 				var gw = floor(pswd / _gw);
 				var gh = floor(pshd / _gh);
@@ -578,8 +571,8 @@ function Panel_Preview() : PanelContent() constructor {
 				var cx = canvas_x;
 				var cy = canvas_y;
 			
-				draw_set_color(grid_color);
-				draw_set_alpha(grid_opacity);
+				draw_set_color(PROJECT.previewGrid.color);
+				draw_set_alpha(PROJECT.previewGrid.opacity);
 				
 				for( var i = 1; i < gw; i++ ) {
 					var _xx = cx + i * _gw;
@@ -736,11 +729,11 @@ function Panel_Preview() : PanelContent() constructor {
 		}
 		
 		if(key_mod_press(CTRL)) {
-			_snx = grid_show? grid_width : 1;
-			_sny = grid_show? grid_height : 1;
-		} else if(grid_snap) {
-			_snx = grid_width;
-			_sny = grid_height;
+			_snx = PROJECT.previewGrid.show? PROJECT.previewGrid.width  : 1;
+			_sny = PROJECT.previewGrid.show? PROJECT.previewGrid.height : 1;
+		} else if(PROJECT.previewGrid.snap) {
+			_snx = PROJECT.previewGrid.width;
+			_sny = PROJECT.previewGrid.height;
 		}
 		
 		var overlayHover =  tool_hovering == noone;
@@ -1039,8 +1032,9 @@ function Panel_Preview() : PanelContent() constructor {
 		if(inspect_node) {
 			tool = inspect_node.getTool();
 			if(tool) drawNodeTools(pFOCUS, tool);
-		} else	
+		} else {
 			tool_current = noone;
+		}
 		
 		if(do_fullView) {
 			do_fullView = false;

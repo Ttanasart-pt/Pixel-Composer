@@ -10,18 +10,22 @@ event_inherited();
 
 #region data
 	cb_enable = new checkBox(function(str) {
-		PANEL_GRAPH.node_drag_snap = !PANEL_GRAPH.node_drag_snap;
+		if(PANEL_GRAPH.project == noone || !PANEL_GRAPH.project.active) return;
+		PANEL_GRAPH.project.graphGrid.snap = !PANEL_GRAPH.project.graphGrid.snap;
 	})
 	
 	tb_size = new textBox(TEXTBOX_INPUT.number, function(str) {
-		PANEL_GRAPH.graph_line_s = max(1, real(str));	
+		if(PANEL_GRAPH.project == noone || !PANEL_GRAPH.project.active) return;
+		PANEL_GRAPH.project.graphGrid.size = max(1, real(str));	
 	})
 	
 	sl_opacity = new slider(0, 1, .05, function(str) {
-		PANEL_GRAPH.grid_opacity = clamp(real(str), 0, 1);	
+		if(PANEL_GRAPH.project == noone || !PANEL_GRAPH.project.active) return;
+		PANEL_GRAPH.project.graphGrid.opacity = clamp(real(str), 0, 1);	
 	})
 	
 	cl_color = new buttonColor(function(color) {
-		PANEL_GRAPH.grid_color = color;
+		if(PANEL_GRAPH.project == noone || !PANEL_GRAPH.project.active) return;
+		PANEL_GRAPH.project.graphGrid.color = color;
 	}, self);
 #endregion

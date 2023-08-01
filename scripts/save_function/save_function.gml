@@ -36,6 +36,9 @@ function save_serialize(project = PROJECT) {
 	_map.global_node = project.globalNode.serialize();
 	_map.onion_skin  = project.onion_skin;
 	
+	_map.previewGrid = project.previewGrid;
+	_map.graphGrid   = project.graphGrid;
+	
 	var prev = PANEL_PREVIEW.getNodePreviewSurface();
 	if(!is_surface(prev)) _map.preview = "";
 	else				  _map.preview = surface_encode(surface_size_lim(prev, 128, 128));

@@ -14,6 +14,9 @@ function __Bone(parent = noone, distance = 0, direction = 0, angle = 0, length =
 	pose_local_scale = 1;
 	pose_local_posit = [ 0, 0 ];
 	
+	apply_scale    = true;
+	apply_rotation = true;
+	
 	self.is_main = false;
 	self.parent_anchor = true;
 	self.childs = [];
@@ -161,12 +164,12 @@ function __Bone(parent = noone, distance = 0, direction = 0, angle = 0, length =
 					draw_line_width2(_ppx, _ppy, p1.x, p1.y, 12 * pose_scale,  2 * pose_scale);
 					
 					if((edit & 0b100) && distance_to_line(_mx, _my, p0.x, p0.y, p1.x, p1.y) <= 12) //drag bone
-						hover = [ self, 2 ];
+						hover = [ self, 2, p0 ];
 				} else if(attributes.display_bone == 1) {
 					draw_line_width(p0.x, p0.y, p1.x, p1.y, 3);
 					
 					if((edit & 0b100) && distance_to_line(_mx, _my, p0.x, p0.y, p1.x, p1.y) <= 6) //drag bone
-						hover = [ self, 2 ];
+						hover = [ self, 2, p0 ];
 				} 
 			} else {
 				draw_set_color(c_white);
@@ -180,7 +183,7 @@ function __Bone(parent = noone, distance = 0, direction = 0, angle = 0, length =
 				draw_sprite_ui(THEME.preview_bone_IK, 0, p0.x, p0.y,,,, c_white, draw_get_alpha());
 				
 				if((edit & 0b100) && point_in_circle(_mx, _my, p0.x, p0.y, 24))
-					hover = [ self, 2 ];
+					hover = [ self, 2, p0 ];
 			}
 			draw_set_alpha(1.00);
 			
@@ -199,13 +202,13 @@ function __Bone(parent = noone, distance = 0, direction = 0, angle = 0, length =
 					control_i0 = (hovering != noone && hovering[0] == self && hovering[1] == 0)? 0 : 2;
 					
 					if((edit & 0b001) && point_in_circle(_mx, _my, p0.x, p0.y, ui(16))) //drag head
-						hover = [ self, 0 ];
+						hover = [ self, 0, p0 ];
 				}
 			
 				control_i1 = (hovering != noone && hovering[0] == self && hovering[1] == 1)? 0 : 2;
 				
 				if((edit & 0b010) && point_in_circle(_mx, _my, p1.x, p1.y, ui(16))) //drag tail
-					hover = [ self, 1 ];
+					hover = [ self, 1, p1 ];
 			}
 		}
 		
@@ -263,8 +266,8 @@ function __Bone(parent = noone, distance = 0, direction = 0, angle = 0, length =
 		
 		pose_posit[0] += _position[0];
 		pose_posit[1] += _position[1];
-		pose_angle += _angle;
-		pose_scale *= _scale;
+		if(apply_rotation)	pose_angle += _angle;
+		if(apply_scale)		pose_scale *= _scale;
 		
 		var _x = lengthdir_x(distance, direction) + pose_posit[0];
 		var _y = lengthdir_y(distance, direction) + pose_posit[1];
@@ -450,6 +453,9 @@ function __Bone(parent = noone, distance = 0, direction = 0, angle = 0, length =
 		bone.IKlength	= IKlength;
 		bone.IKTarget	= IKTarget == noone? "" : IKTarget.ID;
 		
+		bone.apply_rotation	= apply_rotation;
+		bone.apply_scale	= apply_scale;
+		
 		bone.childs = [];
 		for( var i = 0, n = array_length(childs); i < n; i++ )
 			bone.childs[i] = childs[i].serialize();
@@ -473,6 +479,9 @@ function __Bone(parent = noone, distance = 0, direction = 0, angle = 0, length =
 		IKlength	= bone.IKlength;
 		IKTarget	= bone.IKTarget;
 		
+		apply_rotation	= bone.apply_rotation;
+		apply_scale		= bone.apply_scale;
+		
 		childs = [];
 		for( var i = 0, n = array_length(bone.childs); i < n; i++ ) {
 			var _b = new __Bone().deserialize(bone.childs[i], node);
@@ -494,12 +503,16 @@ function __Bone(parent = noone, distance = 0, direction = 0, angle = 0, length =
 	
 	static clone = function() {
 		var _b = new __Bone(parent, distance, direction, angle, length);
-		_b.ID = ID;
-		_b.name = name;
-		_b.is_main = is_main;
+		_b.ID		= ID;
+		_b.name		= name;
+		_b.is_main	= is_main;
 		_b.parent_anchor = parent_anchor;
+		
 		_b.IKlength = IKlength;
 		_b.IKTarget	= IKTarget == noone? "" : IKTarget.ID;
+		
+		_b.apply_rotation	= apply_rotation;
+		_b.apply_scale		= apply_scale;
 		
 		for( var i = 0, n = array_length(childs); i < n; i++ )
 			_b.addChild(childs[i].clone());

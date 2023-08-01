@@ -30,6 +30,15 @@ function Node_Fluid_Render(_x, _y, _group = noone) : Node_Fluid(_x, _y, _group) 
 	
 	static onInspector2Update = function() { clearCache(); }
 	
+	static step = function() {
+		var _dim = inputs[| 1].getValue();
+		var _outSurf = outputs[| 0].getValue();
+		if(!is_surface(_outSurf)) {
+			_outSurf = surface_create_valid(_dim[0], _dim[1], attrDepth());
+			outputs[| 0].setValue(_outSurf);
+		}
+	}
+	
 	static update = function(frame = PROJECT.animator.current_frame) {
 		if(recoverCache() || !PROJECT.animator.is_playing)
 			return;
@@ -49,20 +58,14 @@ function Node_Fluid_Render(_x, _y, _group = noone) : Node_Fluid(_x, _y, _group) 
 		if(!is_surface(fSurf)) return;
 		outputs[| 1].setValue(_dom.sf_world);
 		
-		surface_set_target(_outSurf);
-			DRAW_CLEAR
-			
-			BLEND_OVERRIDE;
-			shader_set(sh_fd_visualize_colorize_glsl);
+		surface_set_shader(_outSurf, sh_fd_visualize_colorize_glsl);
 			gpu_set_texfilter(_int);
 			draw_surface_stretched_safe(fSurf, 0, 0, _dim[0], _dim[1]);
 			gpu_set_texfilter(false);
-			shader_reset();
-			BLEND_NORMAL;
 			
 			if(_drw && is_surface(_dom.sf_world)) 
 				draw_surface_stretched_safe(_dom.sf_world, 0, 0, _dim[0], _dim[1]);
-		surface_reset_target();
+		surface_reset_shader();
 		
 		var frm = cacheCurrentFrame(_outSurf);
 	}

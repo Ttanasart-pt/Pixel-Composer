@@ -10,26 +10,26 @@ event_inherited();
 
 #region data
 	cb_enable = new checkBox(function() {
-		PANEL_PREVIEW.grid_show = !PANEL_PREVIEW.grid_show;
+		PROJECT.previewGrid.show = !PROJECT.previewGrid.show;
 	});
 	
 	cb_snap = new checkBox(function() {
-		PANEL_PREVIEW.grid_snap = !PANEL_PREVIEW.grid_snap;
+		PROJECT.previewGrid.snap = !PROJECT.previewGrid.snap;
 	});
 	
 	tb_width = new textBox(TEXTBOX_INPUT.number, function(str) {
-		PANEL_PREVIEW.grid_width = max(1, real(str));	
+		PROJECT.previewGrid.width = max(1, real(str));	
 	});
 	
 	tb_height = new textBox(TEXTBOX_INPUT.number, function(str) {
-		PANEL_PREVIEW.grid_height = max(1, real(str));	
+		PROJECT.previewGrid.height = max(1, real(str));	
 	});
 	
 	sl_opacity = new slider(0, 1, .05, function(str) {
-		PANEL_PREVIEW.grid_opacity = clamp(real(str), 0, 1);	
+		PROJECT.previewGrid.opacity = clamp(real(str), 0, 1);	
 	});
 	
 	cl_color = new buttonColor(function(color) {
-		PANEL_PREVIEW.grid_color = color;
+		PROJECT.previewGrid.color = color;
 	}, self);
 #endregion

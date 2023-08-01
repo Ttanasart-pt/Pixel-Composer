@@ -111,7 +111,7 @@ function shader_set_palette(pal, pal_uni = "palette", amo_uni = "paletteAmount",
 		shader_set_f("sampleDimension", surface_get_width(surface), surface_get_height(surface));
 	}
 	
-	function surface_set_shader(surface, shader = sh_sample, clear = true, blend = BLEND.over) {
+	function surface_set_shader(surface, shader = sh_sample, clear = true, blend = BLEND.alpha) {
 		if(!is_surface(surface)) {
 			__surface_set = false;
 			return;

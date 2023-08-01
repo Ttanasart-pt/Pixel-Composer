@@ -1,12 +1,6 @@
 function Node_Posterize(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Posterize";
 	
-	uniform_colors = shader_get_uniform(sh_posterize, "colors");
-	uniform_gamma = shader_get_uniform(sh_posterize, "gamma");
-	
-	uniform_color = shader_get_uniform(sh_posterize_palette, "palette");
-	uniform_key = shader_get_uniform(sh_posterize_palette, "keys");
-	
 	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 	
 	inputs[| 1] = nodeValue("Palette", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, DEF_PALETTE )
@@ -22,9 +16,11 @@ function Node_Posterize(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	inputs[| 5] = nodeValue("Active", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
 		active_index = 5;
+		
+	inputs[| 6] = nodeValue("Posterize alpha", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
 	
 	input_display_list = [ 5, 
-		["Effect settings", false], 0, 2, 1, 
+		["Effect settings", false], 0, 2, 1, 6, 
 		["Auto color",		false], 3, 4 
 	];
 	
@@ -43,6 +39,7 @@ function Node_Posterize(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	static process_data = function(_outSurf, _data, _output_index, _array_index) {
 		var _gra     = _data[1];
 		var _use_gra = _data[2];
+		var _alp     = _data[6];
 		
 		if(_use_gra) {
 			var _colors = array_create(array_length(_gra) * 4);
@@ -53,36 +50,24 @@ function Node_Posterize(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				_colors[i * 4 + 3] = 1;
 			}
 		
-			surface_set_target(_outSurf);
-				DRAW_CLEAR
-				BLEND_OVERRIDE;
-				
-				shader_set(sh_posterize_palette);
-				shader_set_uniform_f_array_safe(uniform_color, _colors);
-				shader_set_uniform_i(uniform_key, array_length(_gra));
+			surface_set_shader(_outSurf, sh_posterize_palette);
+				shader_set_f("palette", _colors);
+				shader_set_i("keys", array_length(_gra));
+				shader_set_i("alpha", _alp);
 				
 				draw_surface_safe(_data[0], 0, 0);
-				shader_reset();
-				
-				BLEND_NORMAL;
-			surface_reset_target();
+			surface_reset_shader();
 		} else {
 			var _colors = _data[3];
 			var _gamma = _data[4];
 			
-			surface_set_target(_outSurf);
-				DRAW_CLEAR
-				BLEND_OVERRIDE;
-				
-				shader_set(sh_posterize);
-				shader_set_uniform_i(uniform_colors, _colors);
-				shader_set_uniform_f(uniform_gamma, _gamma);
+			surface_set_shader(_outSurf, sh_posterize);
+				shader_set_i("colors", _colors);
+				shader_set_f("gamma", _gamma);
+				shader_set_i("alpha", _alp);
 			
 				draw_surface_safe(_data[0], 0, 0);
-				shader_reset();
-				
-				BLEND_NORMAL;
-			surface_reset_target();
+			surface_reset_shader();
 		}
 		
 		return _outSurf;

@@ -16,8 +16,8 @@ function Panel_Graph_Export_Image(targetPanel) : PanelContent() constructor {
 		bgColor		: COLORS.panel_bg_clear,
 		
 		gridEnable  : false,
-		gridColor   : targetPanel.grid_color,
-		gridAlpha   : targetPanel.grid_opacity,
+		gridColor   : targetPanel.project.graphGrid.color,
+		gridAlpha   : targetPanel.project.graphGrid.opacity,
 		
 		borderPad	: 0,
 		borderColor	: c_white,

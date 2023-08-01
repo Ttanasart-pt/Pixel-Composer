@@ -8,6 +8,7 @@ varying vec4 v_vColour;
 
 uniform vec4 palette[PALETTE_LIMIT];
 uniform int keys;
+uniform int alpha;
 
 vec3 rgb2xyz( vec3 c ) {
     vec3 tmp;
@@ -43,13 +44,14 @@ float colorDifferent(in vec4 c1, in vec4 c2) {
 
 void main() {
 	vec4 _col = v_vColour * texture2D( gm_BaseTexture, v_vTexcoord );
+	vec4  col = alpha == 1? _col * _col.a : _col;
 	
 	int closet_index = 0;
 	float closet_value = 99.;
 	
 	for(int i = 0; i < keys; i++) {
 		vec4 p_col = palette[i];
-		float dif = colorDifferent(p_col, _col);
+		float dif = colorDifferent(p_col, col);
 		
 		if(dif < closet_value) {
 			closet_value = dif;
@@ -58,5 +60,5 @@ void main() {
 	}
 	
     gl_FragColor = palette[closet_index];
-	gl_FragColor.a = _col.a;
+	if(alpha == 0) gl_FragColor.a = _col.a;
 }

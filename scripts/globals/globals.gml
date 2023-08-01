@@ -32,6 +32,23 @@
 		
 		globalNode	= new Node_Global();
 		
+		previewGrid = {
+			show	: false,
+			snap	: false,
+			width	: 16,
+			height	: 16,
+			opacity : 0.5,
+			color   : COLORS.panel_preview_grid,
+		}
+		
+		graphGrid = {
+			show	: true,
+			snap	: true,
+			size	: 32,
+			opacity : 0.05,
+			color   : c_white,
+		}
+		
 		addons = {};
 		
 		onion_skin = {
@@ -93,7 +110,7 @@
 	globalvar VERSION, SAVE_VERSION, VERSION_STRING, BUILD_NUMBER;
 	
 	VERSION			= 11482;
-	SAVE_VERSION	= 11480;
+	SAVE_VERSION	= 11481;
 	VERSION_STRING  = "1.15rc2";
 	BUILD_NUMBER	= 11482;
 	

@@ -13,7 +13,7 @@ function __nodeLeafList(_list) {
 	var nodes = [];
 	var nodeNames = [];
 	
-	for( var i = 0; i < ds_list_size(_list); i++ ) {
+	for( var i = 0, n = ds_list_size(_list); i < n; i++ ) {
 		var _node = _list[| i];
 		if(!_node.active) continue;
 		if(!_node.isRenderActive()) continue;
