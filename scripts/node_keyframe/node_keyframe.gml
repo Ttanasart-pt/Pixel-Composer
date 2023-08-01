@@ -241,6 +241,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 		if(!sep_axis && typeArray(prop.display_type) && is_array(_val)) {
 			for(var i = 0; i < array_length(_val); i++) 
 				_val[i] = processValue(_val[i]);			
+			
 			return _val;
 		}
 		return processValue(_val);

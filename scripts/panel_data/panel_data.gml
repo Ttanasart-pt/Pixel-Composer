@@ -492,7 +492,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 					continue;
 				}
 				
-				content[i].tab_x = lerp_float(content[i].tab_x, tbx, 5);
+				content[i].tab_x = content[i].tab_x == 0? tbx : lerp_float(content[i].tab_x, tbx, 5);
 				var _tbx = content[i].tab_x;
 				var _hov = point_in_rectangle(msx, msy, _tbx, tby, _tbx + tbw, tab_height);
 				var _tdh = tbh + THEME_VALUE.panel_tab_extend;

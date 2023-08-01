@@ -107,6 +107,8 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 	toolbar_height = ui(40);
 	
 	function toCenterNode() {
+		if(!project.active) return; 
+		
 		if(ds_list_empty(nodes_list)) {
 			graph_x = round(w / 2 / graph_s);
 			graph_y = round(h / 2 / graph_s);
@@ -120,6 +122,9 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 			
 		for(var i = 0; i < ds_list_size(nodes_list); i++) {
 			var _node = nodes_list[| i];
+			if(!is_struct(_node) || !is_instanceof(_node, Node) || !_node.active)
+				continue;
+			
 			minx = min(_node.x - 32, minx);
 			maxx = max(_node.x + _node.w + 32, maxx);
 				
@@ -1975,9 +1980,13 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 	}
 	
 	function close() { 
-		if(nodes_list != project.nodes) {
-			panel.remove(self);
-			return;
+		var panels = findPanels("Panel_Graph");
+		for( var i = 0, n = array_length(panels); i < n; i++ ) {
+			if(panels[i] == self) continue;
+			if(panels[i].project == project) {
+				panel.remove(self);
+				return;
+			}
 		}
 		
 		if(!project.modified || project.readonly) {

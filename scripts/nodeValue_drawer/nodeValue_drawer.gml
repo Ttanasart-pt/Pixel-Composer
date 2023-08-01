@@ -213,6 +213,11 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 			jun.editWidget.setInteract(false);
 		}
 		
+		//if(jun.display_type == VALUE_DISPLAY.area) {
+		//	print("======= Show value widget =====");
+		//	print(jun.animator.values[| 0].value);
+		//	print(jun.showValue());
+		//}
 		var param = new widgetParam(editBoxX, editBoxY, editBoxW, editBoxH, jun.showValue(), jun.extra_data, _m, rx, ry);
 		
 		switch(jun.type) {
@@ -221,7 +226,9 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 				switch(jun.display_type) {
 					case VALUE_DISPLAY.padding : param.h = ui(192); break;
 					case VALUE_DISPLAY.corner :  param.h = ui(192); break;
-					case VALUE_DISPLAY.area :	 param.h = ui(204); break;
+					case VALUE_DISPLAY.area :	 
+						param.h = ui(204); 
+						break;
 				}
 				break;
 			case VALUE_TYPE.boolean : param.halign = lineBreak? fa_left : fa_center;

@@ -986,6 +986,39 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			return [ value ];
 		}
 		
+		if(display_type == VALUE_DISPLAY.area) {
+			var dispType = struct_try_get(nodeFrom.extra_data, "area_type", AREA_MODE.area);
+			var surfGet = nodeFrom.display_data;
+			if(!applyUnit || surfGet == -1) {
+				//print($"     {value}");
+				return value;
+			}
+			
+			var surf = surfGet();
+			var ww = surf[0];
+			var hh = surf[1];
+			
+			switch(dispType) {
+				case AREA_MODE.area : 
+					return value;	
+					
+				case AREA_MODE.padding : 
+					var cx = (ww - value[0] + value[2]) / 2
+					var cy = (value[1] + hh - value[3]) / 2;
+					var sw = abs((ww - value[0]) - value[2]) / 2;
+					var sh = abs(value[1] - (hh - value[3])) / 2;
+					return [cx, cy, sw, sh, value[4]];
+					
+				case AREA_MODE.two_point : 
+					var cx = (value[0] + value[2]) / 2
+					var cy = (value[1] + value[3]) / 2;
+					var sw = abs(value[0] - value[2]) / 2;
+					var sh = abs(value[1] - value[3]) / 2;
+					return [cx, cy, sw, sh, value[4]];
+			}
+		}
+		
+		
 		if(type == VALUE_TYPE.text) {
 			switch(display_type) {
 				case VALUE_DISPLAY.text_array : 
@@ -1176,7 +1209,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	}
 	
 	static showValue = function() { 
-		var val = getValue(, false,, true); 
+		var val = _getValue(, false);
+		
 		if(isArray()) {
 			if(array_length(val) == 0) return 0;
 			var v = val[safe_mod(node.preview_index, array_length(val))];
@@ -1245,6 +1279,12 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	
 	static setValueDirect = function(val = 0, index = noone, record = true, time = PROJECT.animator.current_frame, _update = true) {
 		var updated = false;
+		
+		//if(display_type == VALUE_DISPLAY.area) {
+		//	print($"===== Set: {index} = {val} =====");
+		//	printCallStack();
+		//	print("");
+		//}
 		
 		if(sep_axis) {
 			if(index == noone) {

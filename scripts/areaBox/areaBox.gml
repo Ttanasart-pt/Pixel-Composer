@@ -27,54 +27,54 @@ function areaBox(_onModify, _unit = noone) : widget() constructor {
 	mode = AREA_MODE.area;
 	
 	onModifySingle[0] = function(val) { 
+		var v = toNumber(val);
+		
 		if(mode == AREA_MODE.area) {
-			return onModify(0, toNumber(val)); 
+			return onModify(0, v); 
 		} else if(mode == AREA_MODE.padding) {
-			var v = toNumber(val);
-			if(link_value)	current_data = [ v, v, v, v ];
-			else			current_data[0] = v;
-			return setAllData(current_data);
+			if(link_value)	return onModify(0, v) || onModify(1, v) || onModify(2, v) || onModify(3, v);
+			else			return onModify(0, v); 
 		} else if(mode == AREA_MODE.two_point) {
-			return onModify(0, val);
+			return onModify(0, v);
 		}
 	}
 	
 	onModifySingle[1] = function(val) { 
+		var v = toNumber(val);
+		
 		if(mode == AREA_MODE.area) {
-			return onModify(1, toNumber(val)); 
+			return onModify(1, v); 
 		} else if(mode == AREA_MODE.padding) {
-			var v = toNumber(val);
-			if(link_value)	current_data = [ v, v, v, v ];
-			else			current_data[1] = v;
-			return setAllData(current_data);
+			if(link_value)	return onModify(0, v) || onModify(1, v) || onModify(2, v) || onModify(3, v);
+			else			return onModify(1, v); 
 		} else if(mode == AREA_MODE.two_point) {
-			return onModify(1, val);
+			return onModify(1, v);
 		}
 	}
 	
 	onModifySingle[2] = function(val) { 
+		var v = toNumber(val);
+		
 		if(mode == AREA_MODE.area) {
-			return onModify(2, toNumber(val)); 
+			return onModify(2, v); 
 		} else if(mode == AREA_MODE.padding) {
-			var v = toNumber(val);
-			if(link_value)	current_data = [ v, v, v, v ];
-			else			current_data[2] = v;
-			return setAllData(current_data);
+			if(link_value)	return onModify(0, v) || onModify(1, v) || onModify(2, v) || onModify(3, v);
+			else			return onModify(2, v); 
 		} else if(mode == AREA_MODE.two_point) {
-			return onModify(2, val);
+			return onModify(2, v);
 		}
 	}
 	
 	onModifySingle[3] = function(val) { 
+		var v = toNumber(val);
+		
 		if(mode == AREA_MODE.area) {
-			return onModify(3, toNumber(val)); 
+			return onModify(3, v); 
 		} else if(mode == AREA_MODE.padding) {
-			var v = toNumber(val);
-			if(link_value)	current_data = [ v, v, v, v ];
-			else			current_data[3] = v;
-			return setAllData(current_data);
+			if(link_value)	return onModify(0, v) || onModify(1, v) || onModify(2, v) || onModify(3, v);
+			else			return onModify(3, v); 
 		} else if(mode == AREA_MODE.two_point) {
-			return onModify(3, val);
+			return onModify(3, v);
 		}
 	}
 	
@@ -86,15 +86,6 @@ function areaBox(_onModify, _unit = noone) : widget() constructor {
 	static setSlideSpeed = function(speed) {
 		for(var i = 0; i < 4; i++)
 			tb[i].slide_speed = speed;
-	}
-	
-	static setAllData = function(data) {
-		var mod0 = onModify(0, data[0]);
-		var mod1 = onModify(1, data[1]);
-		var mod2 = onModify(2, data[2]);
-		var mod3 = onModify(3, data[3]);
-		
-		return mod0 || mod1 || mod2 || mod3;
 	}
 	
 	static setInteract = function(interactable = noone) { 

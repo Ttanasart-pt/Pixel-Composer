@@ -100,3 +100,34 @@ function setException() {
 function resetException() {
 	exception_unhandled_handler(undefined);
 }
+
+function printCallStack(maxDepth = 32) {
+	var stack = debug_get_callstack(maxDepth);
+	
+	print($"Call Stack:");
+	for( var i = 2, n = array_length(stack) - 1; i < n; i++ ) {
+		var call = stack[i];
+		var sp   = string_splice(call, ":");
+		if(array_length(sp) < 2) continue;
+		
+		sp[0] = string_replace_all(sp[0], "anon_", "");
+		sp[0] = string_split(sp[0], "gml_", true);
+		
+		for( var j = 0, m = array_length(sp[0]); j < m; j++ ) {
+			sp[0][j] = string_replace(sp[0][j], "GlobalScript_", "Global: ");
+			sp[0][j] = string_replace(sp[0][j], "Script_", "Script: ");
+			sp[0][j] = string_replace(sp[0][j], "Object_", "Object: ");
+			
+			sp[0][j] = string_trim(sp[0][j], ["_"]);
+			
+			var _txt = "";
+			repeat(j * 4) _txt += " ";
+			
+			_txt += $"     > {sp[0][j]}";
+			if(j == m - 1) 
+				_txt += $" line: {sp[1]}";
+			print(_txt);
+		}
+	}
+	print("")
+}
