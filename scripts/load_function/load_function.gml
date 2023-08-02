@@ -93,7 +93,7 @@ function __LOAD_PATH(path, readonly = false, safe_mode = false, override = false
 		var _v = _load_content.version;
 		PROJECT.version = _v;
 		if(_v != SAVE_VERSION) {
-			var warn = $"File version mismatch : loading file verion {_v} to Pixel Composer {SAVE_VERSION}";
+			var warn = $"File version mismatch : loading file version {_v} to Pixel Composer {SAVE_VERSION}";
 			log_warning("LOAD", warn);
 		}
 	} else {

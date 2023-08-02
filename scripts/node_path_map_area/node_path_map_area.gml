@@ -22,19 +22,19 @@ function Node_Path_Map_Area(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		return struct_has(_path, "getLineCount")? _path.getLineCount() : 1; 
 	}
 	
-	static getSegmentCount = function() { 
+	static getSegmentCount = function(ind = 0) { 
 		var _path = inputs[| 0].getValue();
-		return struct_has(_path, "getSegmentCount")? _path.getSegmentCount() : 0; 
+		return struct_has(_path, "getSegmentCount")? _path.getSegmentCount(ind) : 0; 
 	}
 	
-	static getLength = function() { 
+	static getLength = function(ind = 0) { 
 		var _path = inputs[| 0].getValue();
-		return struct_has(_path, "getLength")? _path.getLength() : 0; 
+		return struct_has(_path, "getLength")? _path.getLength(ind) : 0; 
 	}
 	
-	static getAccuLength = function() { 
+	static getAccuLength = function(ind = 0) { 
 		var _path = inputs[| 0].getValue();
-		return struct_has(_path, "getAccuLength")? _path.getAccuLength() : []; 
+		return struct_has(_path, "getAccuLength")? _path.getAccuLength(ind) : []; 
 	}
 		
 	static getPointRatio = function(_rat, ind = 0) {

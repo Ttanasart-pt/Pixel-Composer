@@ -14,7 +14,7 @@ function pxl_document_parser(prompt) {
 		
 		if(array_length(eq) > 1) {
 			for( var j = 0; j < array_length(eq) - 1; j++ )
-				array_push(params, string_trim(eq[j]));
+				array_push_unique(params, string_trim(eq[j]));
 		}
 	}
 	

@@ -91,7 +91,7 @@
 	globalvar PROJECT_VARIABLES;
 	PROJECT_VARIABLES = ds_map_create();
 	PROJECT_VARIABLES[? "frame"]		= function() { return PROJECT.animator.current_frame; };
-	PROJECT_VARIABLES[? "progress"]		= function() { return PROJECT.animator.current_frame / PROJECT.animator.frames_total; };
+	PROJECT_VARIABLES[? "progress"]		= function() { return PROJECT.animator.current_frame / (PROJECT.animator.frames_total - 1); };
 	PROJECT_VARIABLES[? "frameTotal"]	= function() { return PROJECT.animator.frames_total; };
 	PROJECT_VARIABLES[? "fps"]			= function() { return PROJECT.animator.framerate; };
 	PROJECT_VARIABLES[? "time"]			= function() { return PROJECT.animator.current_frame / PROJECT.animator.framerate; };

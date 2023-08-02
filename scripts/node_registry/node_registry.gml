@@ -68,8 +68,7 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 			ALL_NODES[? _node] = _n;
 		}
 		
-		if(tooltip != "")
-			_n.tooltip = tooltip;
+		if(tooltip != "") _n.tooltip = tooltip;
 		ds_list_add(_list, _n);
 		return _n;
 	}
@@ -381,14 +380,14 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 			addNodeObject(generator, "Shape",			s_node_shape,			"Node_Shape",			[1, Node_Shape],, "Draw simple shapes using signed distance field.");
 			addNodeObject(generator, "Polygon Shape",	s_node_shape_polygon,	"Node_Shape_Polygon",	[1, Node_Shape_Polygon],, "Draw simple shapes using triangles.").setVersion(1130);
 			addNodeObject(generator, "Random Shape",	s_node_random_shape,	"Node_Random_Shape",	[1, Node_Random_Shape]).setVersion(1147);
-		
+			
 			ds_list_add(generator, "Noises");
 			addNodeObject(generator, "Noise",				s_node_noise,				"Node_Noise",				[1, Node_Noise],, "Generate white noise.");
 			addNodeObject(generator, "Perlin Noise",		s_node_noise_perlin,		"Node_Perlin",				[1, Node_Perlin],, "Generate perlin noise.");
 			addNodeObject(generator, "Simplex Noise",		s_node_noise_simplex,		"Node_Noise_Simplex",		[1, Node_Noise_Simplex], ["perlin"], "Generate simplex noise, similiar to perlin noise with better fidelity but non-tilable.").setVersion(1080);
 			addNodeObject(generator, "Cellular Noise",		s_node_noise_cell,			"Node_Cellular",			[1, Node_Cellular], ["voronoi", "worley"], "Generate voronoi pattern.");
 			addNodeObject(generator, "Anisotropic Noise",	s_node_noise_aniso,			"Node_Noise_Aniso",			[1, Node_Noise_Aniso],, "Generate anisotropic noise.");
-		
+			
 			ds_list_add(generator, "Patterns");
 			addNodeObject(generator, "Stripe",				s_node_stripe,				"Node_Stripe",				[1, Node_Stripe],, "Generate stripe pattern.");
 			addNodeObject(generator, "Zigzag",				s_node_zigzag,				"Node_Zigzag",				[1, Node_Zigzag],, "Generate zigzag pattern.");
@@ -396,11 +395,11 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 			addNodeObject(generator, "Grid",				s_node_grid,				"Node_Grid",				[1, Node_Grid], ["tile"], "Generate grid pattern.");
 			addNodeObject(generator, "Triangular Grid",		s_node_grid_tri,			"Node_Grid_Tri",			[1, Node_Grid_Tri],, "Generate triangular grid pattern.");
 			addNodeObject(generator, "Hexagonal Grid",		s_node_grid_hex,			"Node_Grid_Hex",			[1, Node_Grid_Hex],, "Generate hexagonal grid pattern.");
-		
+			
 			ds_list_add(generator, "Populate");
 			addNodeObject(generator, "Repeat",				s_node_repeat,				"Node_Repeat",				[1, Node_Repeat],, "Repeat image multiple times linearly, or in grid pattern.").setVersion(1100);
 			addNodeObject(generator, "Scatter",				s_node_scatter,				"Node_Scatter",				[1, Node_Scatter],, "Scatter image randomly multiple times.");
-		
+			
 			ds_list_add(generator, "Simulation");
 			//addNodeObject(generator, "Dust",				s_node_particle,			"Node_Dust",				[1, Node_Dust]).setVersion(1147);
 			addNodeObject(generator, "Particle",			s_node_particle,			"Node_Particle",			[1, Node_Particle],, "Generate particle effect.");
@@ -623,6 +622,10 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 			ds_list_add(node, "Debug");
 			addNodeObject(node, "Print",		s_node_print,		"Node_Print",		[1, Node_Print], ["debug log"], "Display text to notification.").setVersion(1145);
 		
+		var actions = ds_list_create();
+		addNodeCatagory("Actions", actions);
+			__initNodeActions(actions);
+		
 		//////////////////////////////////////////////////////////////// PIXEL BUILDER ////////////////////////////////////////////////////////////////
 		
 		var pb_draw = ds_list_create();
@@ -708,7 +711,7 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 	global.VALUE_SUGGESTION[? VALUE_TYPE.color]      = [ "Node_Solid", "Node_Color_Data", "Node_Color_Mix" ];
 	global.VALUE_SUGGESTION[? VALUE_TYPE.surface]    = [ "Node_Transform", "Node_Blend", "Node_Composite", "Node_Export" ];
 	
-	global.VALUE_SUGGESTION[? VALUE_TYPE.path]       = [  ];
+	global.VALUE_SUGGESTION[? VALUE_TYPE.path]       = [ "Node_Line" ];
 	global.VALUE_SUGGESTION[? VALUE_TYPE.curve]      = [  ];
 	global.VALUE_SUGGESTION[? VALUE_TYPE.text]       = [ "Node_Text", "Node_To_Number" ];
 	global.VALUE_SUGGESTION[? VALUE_TYPE.object]     = [  ];

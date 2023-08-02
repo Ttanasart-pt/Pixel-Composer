@@ -16,24 +16,19 @@ function Node_Path_Shift(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		return struct_has(_path, "getLineCount")? _path.getLineCount() : 1; 
 	}
 	
-	static getSegmentCount = function() { 
+	static getSegmentCount = function(ind = 0) { 
 		var _path = inputs[| 0].getValue();
-		return struct_has(_path, "getSegmentCount")? _path.getSegmentCount() : 0; 
+		return struct_has(_path, "getSegmentCount")? _path.getSegmentCount(ind) : 0; 
 	}
 	
-	static getLength = function() { 
-		var _path = inputs[| 0].getValue();
-		return struct_has(_path, "getLength")? _path.getLength() : 0; 
+	static getLength = function(ind = 0) { 
+		var _path = inputs[| 0].getValue(ind = 0);
+		return struct_has(_path, "getLength")? _path.getLength(ind) : 0; 
 	}
 	
-	static getAccuLength = function() { 
-		var _path = inputs[| 0].getValue();
-		return struct_has(_path, "getAccuLength")? _path.getAccuLength() : []; 
-	}
-	
-	static getBoundary = function() { 
-		var _path = inputs[| 0].getValue();
-		return struct_has(_path, "getBoundary")? _path.getBoundary() : new BoundingBox( 0, 0, 1, 1 ); 
+	static getAccuLength = function(ind = 0) { 
+		var _path = inputs[| 0].getValue(ind = 0);
+		return struct_has(_path, "getAccuLength")? _path.getAccuLength(ind) : []; 
 	}
 	
 	static getPointRatio = function(_rat, ind = 0) {
@@ -62,6 +57,11 @@ function Node_Path_Shift(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	
 	static getPointDistance = function(_dist, ind = 0) {
 		return getPointRatio(_dist / getLength(), ind);
+	}
+	
+	static getBoundary = function(ind = 0) { 
+		var _path = inputs[| 0].getValue();
+		return struct_has(_path, "getBoundary")? _path.getBoundary(ind) : new BoundingBox( 0, 0, 1, 1 ); 
 	}
 	
 	function update() { 

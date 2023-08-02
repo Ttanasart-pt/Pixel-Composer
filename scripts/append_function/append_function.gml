@@ -22,7 +22,7 @@ function __APPEND_MAP(_map, context = PANEL_GRAPH.getCurrentContext()) {
 		var _v = _map.version;
 		PROJECT.version = _v;
 		if(_v != SAVE_VERSION) {
-			var warn = "File version mismatch : loading file verion " + string(_v) + " to Pixel Composer " + string(SAVE_VERSION);
+			var warn = "File version mismatch : loading file version " + string(_v) + " to Pixel Composer " + string(SAVE_VERSION);
 			log_warning("FILE", warn)
 		}
 	}

@@ -71,7 +71,6 @@
 		var line = array_safe_get(textbox._input_text_line, textbox.cursor_line, "");
 		var crop = string_copy(line, 1, textbox.cursor - textbox.char_run);
 		var slp  = string_splice(crop, [" ", "(", ","], true);
-		print(slp)
 		slp[array_length(slp) - 1] = rep;
 		
 		var txt = "";

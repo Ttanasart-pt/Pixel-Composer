@@ -63,6 +63,7 @@
 	log_message("SESSION", "Begin");
 	log_message("DIRECTORY", DIRECTORY);
 	
+	log_message("SESSION", "> init Action");		__initAction();
 	log_message("SESSION", "> init SurfaceFormat");	__initSurfaceFormat();
 	log_message("SESSION", "> init Locale");		__initLocale();
 	log_message("SESSION", "> init Theme");			__initTheme();

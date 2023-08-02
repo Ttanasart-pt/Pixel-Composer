@@ -84,7 +84,7 @@
 		ds_list_add(STATUSES, noti);
 		ds_list_add(WARNING, noti);
 		
-		if(!instance_exists(o_dialog_warning) && !TESTING)
+		if(!instance_exists(o_dialog_warning))
 			dialogCall(o_dialog_warning, mouse_mx + ui(16), mouse_my + ui(16)).warning_text = str;
 		
 		if(ref) {

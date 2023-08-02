@@ -142,6 +142,14 @@ event_inherited();
 			
 			_inputs  = _new_node.inputs;
 			_outputs = _new_node.outputs;
+		} else if(instanceof(_node) == "NodeAction") {
+			var res = _node.build(node_target_x, node_target_y,, _param);
+			
+			if(_node.inputNode != noone)
+				_inputs  = res[_node.inputNode].inputs;
+			
+			if(_node.outputNode != noone)
+				_outputs = res[_node.outputNode].outputs;
 		} else {
 			var _new_list = APPEND(_node.path);
 			_inputs  = ds_list_create();
@@ -381,7 +389,12 @@ event_inherited();
 				var _boxx = _nx + (grid_width - grid_size) / 2;
 				
 				BLEND_OVERRIDE;
-				draw_sprite_stretched(THEME.node_bg, 0, _boxx, yy, grid_size, grid_size);
+				if(instanceof(_node) == "NodeObject")
+					draw_sprite_stretched(THEME.node_bg, 0, _boxx, yy, grid_size, grid_size);
+				else if(instanceof(_node) == "NodeAction")
+					draw_sprite_stretched_ext(THEME.node_bg, 0, _boxx, yy, grid_size, grid_size, COLORS._main_value_positive, 1);
+				else
+					draw_sprite_stretched_ext(THEME.node_bg, 0, _boxx, yy, grid_size, grid_size, COLORS.dialog_add_node_collection, 1);
 				BLEND_NORMAL;
 						
 				if(_hover && point_in_rectangle(_m[0], _m[1], _nx, yy, _nx + grid_width, yy + grid_size)) {
@@ -396,7 +409,11 @@ event_inherited();
 				var spr_y = yy + grid_size / 2;
 				
 				if(variable_struct_exists(_node, "getSpr")) _node.getSpr();
-				if(sprite_exists(_node.spr)) draw_sprite_ui_uniform(_node.spr, 0, spr_x, spr_y, 0.5);
+				if(sprite_exists(_node.spr)) 
+					draw_sprite_ui_uniform(_node.spr, 0, spr_x, spr_y, 0.5);
+				
+				if(instanceof(_node) == "NodeAction")
+					draw_sprite_ui_uniform(THEME.play_action, 0, _boxx + grid_size - 16, yy + grid_size - 16, 1, COLORS._main_value_positive);
 					
 				if(_node.getTooltip() != "") {
 					if(point_in_rectangle(_m[0], _m[1], _boxx, yy, _boxx + ui(16), yy + ui(16))) {
@@ -515,6 +532,9 @@ event_inherited();
 					draw_sprite_ext(_node.spr, 0, spr_x, spr_y, ss, ss, 0, c_white, 1);
 				}
 				
+				if(instanceof(_node) == "NodeAction")
+					draw_sprite_ui_uniform(THEME.play_action, 0, spr_x + list_height / 2 - 8, spr_y + list_height / 2 - 8, 0.5, COLORS._main_value_positive);
+					
 				var tx = list_height + ui(40);
 				
 				if(_node.new_node) {
@@ -688,8 +708,10 @@ event_inherited();
 				var _boxx = _nx + (grid_width - grid_size) / 2;
 				
 				BLEND_OVERRIDE;
-				if(is_array(s_res))
+				if(instanceof(_node) == "NodeObject")
 					draw_sprite_stretched(THEME.node_bg, 0, _boxx, yy, grid_size, grid_size);
+				else if(instanceof(_node) == "NodeAction")
+					draw_sprite_stretched_ext(THEME.node_bg, 0, _boxx, yy, grid_size, grid_size, COLORS._main_value_positive, 1);
 				else
 					draw_sprite_stretched_ext(THEME.node_bg, 0, _boxx, yy, grid_size, grid_size, COLORS.dialog_add_node_collection, 1);
 				BLEND_NORMAL;
@@ -712,6 +734,9 @@ event_inherited();
 					draw_sprite_ext(_node.spr, _si, _sx, _sy, _ss, _ss, 0, c_white, 1);
 				}
 				
+				if(instanceof(_node) == "NodeAction")
+					draw_sprite_ui_uniform(THEME.play_action, 0, _boxx + grid_size - 16, yy + grid_size - 16, 1, COLORS._main_value_positive);
+					
 				draw_set_text(f_p2, fa_center, fa_top, COLORS._main_text);
 				var txt = _node.getName();
 				name_height = max(name_height, string_height_ext(txt, -1, grid_width) + ui(8));
@@ -792,9 +817,11 @@ event_inherited();
 					_sy += _sh * _ss / 2 - _soy * _ss;
 				
 					draw_sprite_ext(_node.spr, _si, _sx, _sy, _ss, _ss, 0, c_white, 1);
+					
+					if(instanceof(_node) == "NodeAction")
+						draw_sprite_ui_uniform(THEME.play_action, 0, _sx + list_height / 2 - 8, _sy + list_height / 2 - 8, 0.5, COLORS._main_value_positive);
 				}
-				
-				
+					
 				var fav = struct_has(_node, "node") && array_exists(global.FAV_NODES, _node.node);
 				if(fav) draw_sprite_ui_uniform(THEME.star, 0, ui(20), yy + list_height / 2, 0.7, COLORS._main_accent, 1.);
 				

@@ -2,6 +2,7 @@ function Node_Path_Plot(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	name		= "Plot Path";
 	previewable = false;
 	
+	length = 0;
 	w = 96;
 	
 	inputs[| 0] = nodeValue("Output scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 8, 8 ])
@@ -39,13 +40,15 @@ function Node_Path_Plot(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	boundary = new BoundingBox( 0, 0, 1, 1 );
 	
-	static getLineCount		= function() { return 1; }
-	static getSegmentCount	= function() { return 0; }
-	static getBoundary		= function() { return boundary; }
-	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		inputs[| 5].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
 	}
+	
+	static getLineCount		= function() { return 1; }
+	static getSegmentCount	= function() { return 1; }
+	
+	static getLength		= function(ind = 0) { return length; }
+	static getAccuLength	= function(ind = 0) { return [ length ]; }
 	
 	static getPointRatio = function(_rat, ind = 0) {
 		var _sca  = inputs[| 0].getValue();
@@ -107,6 +110,12 @@ function Node_Path_Plot(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		return _p;
 	}
 	
+	static getPointDistance = function(_dist, ind = 0) {
+		return getPointRatio(_dist / getLength(ind), ind);
+	}
+	
+	static getBoundary		= function() { return boundary; }
+	
 	function step() { 
 		var _coor = inputs[| 1].getValue();
 		var _eqa  = inputs[| 2].getValue();
@@ -160,11 +169,18 @@ function Node_Path_Plot(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	function updateBoundary() {
 		boundary = new BoundingBox( 0, 0, 1, 1 );
+		length   = 0;
+		
 		var sample = 64;
+		var op, np;
 		
 		for( var i = 0; i <= sample; i++ ) {
-			var p = getPointRatio(i / sample);
-			boundary.addPoint(p.x, p.y);
+			np = getPointRatio(i / sample);
+			boundary.addPoint(np.x, np.y);
+			
+			if(i) length += point_distance(op.x, op.y, np.x, np.y);
+			
+			op = np;
 		}
 	}
 	

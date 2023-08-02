@@ -22,37 +22,49 @@ function Node_Path_Wave(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		["Wave",	false], 1, 2, 3, 4, 
 	]
 	
+	current_data = [];
+	
 	static getLineCount = function() { 
-		var _path = inputs[| 0].getValue();
+		var _path = current_data[0];
 		return struct_has(_path, "getLineCount")? _path.getLineCount() : 1; 
 	}
 	
-	static getSegmentCount = function() { 
-		var _path = inputs[| 0].getValue();
-		return struct_has(_path, "getSegmentCount")? _path.getSegmentCount() : 0; 
+	static getSegmentCount = function(ind = 0) { 
+		var _path = current_data[0];
+		return struct_has(_path, "getSegmentCount")? _path.getSegmentCount(ind) : 0; 
 	}
 	
-	static getLength = function() { 
-		var _path = inputs[| 0].getValue();
-		return struct_has(_path, "getLength")? _path.getLength() : 0; 
+	static getLength = function(ind = 0) { 
+		var _path = current_data[0];
+		var _fre  = current_data[1];
+		var _amo  = current_data[2];
+		
+		var _len  = struct_has(_path, "getLength")? _path.getLength(ind) : 0;
+		_len *= _fre * sqrt(_amo + 1 / _fre);
+		
+		return _len; 
 	}
 	
-	static getAccuLength = function() { 
-		var _path = inputs[| 0].getValue();
-		return struct_has(_path, "getAccuLength")? _path.getAccuLength() : []; 
+	static getAccuLength = function(ind = 0) { 
+		var _path = current_data[0];
+		var _fre  = current_data[1];
+		var _amo  = current_data[2];
+		
+		var _len  = struct_has(_path, "getAccuLength")? _path.getAccuLength(ind) : [];
+		var _mul  = _fre * sqrt(_amo + 1 / _fre);
+		
+		for( var i = 0, n = array_length(_len); i < n; i++ ) 
+			_len[i] *= _mul;
+		
+		return _len; 
 	}
 		
-	static getBoundary = function() { 
-		var _path = inputs[| 0].getValue();
-		return struct_has(_path, "getBoundary")? _path.getBoundary() : new BoundingBox( 0, 0, 1, 1 ); 
-	}
-	
 	static getPointRatio = function(_rat, ind = 0) {
-		var _path = inputs[| 0].getValue();
-		var _fre  = inputs[| 1].getValue();
-		var _amo  = inputs[| 2].getValue();
-		var _shf  = inputs[| 3].getValue();
-		var _smt  = inputs[| 4].getValue();
+		var _path = current_data[0];
+		var _fre  = current_data[1];
+		var _amo  = current_data[2];
+		var _shf  = current_data[3];
+		var _smt  = current_data[4];
 		
 		if(is_array(_path)) {
 			_path = array_safe_get(_path, ind);
@@ -82,7 +94,15 @@ function Node_Path_Wave(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		return getPointRatio(_dist / getLength(), ind);
 	}
 	
+	static getBoundary = function(ind = 0) { 
+		var _path = current_data[0];
+		return struct_has(_path, "getBoundary")? _path.getBoundary(ind) : new BoundingBox( 0, 0, 1, 1 ); 
+	}
+	
 	function update() { 
+		for( var i = 0, n = ds_list_size(inputs); i < n; i++ )
+			current_data[i] = inputs[| i].getValue();
+		
 		outputs[| 0].setValue(self);
 	}
 	

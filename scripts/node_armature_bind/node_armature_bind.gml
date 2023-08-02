@@ -222,9 +222,19 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 						layer_remove = index;
 				} else 
 					draw_sprite_ui_uniform(THEME.icon_delete, 3, _bx, _cy + lh / 2, 1, COLORS._main_icon);
-			
+				
+				_bx -= 32;
+				
+				//if(point_in_circle(_m[0], _m[1], _bx, _cy + lh / 2, 16)) {
+				//	draw_sprite_ui_uniform(THEME.reset_16, 3, _bx, _cy + lh / 2, 1, COLORS._main_value_negative);
+				
+				//	if(mouse_press(mb_left, _focus))
+				//		resetTransform(i);
+				//} else 
+				//	draw_sprite_ui_uniform(THEME.reset_16, 3, _bx, _cy + lh / 2, 1, COLORS._main_icon);
+				
 				if(!is_surface(_surf)) continue;
-			
+				
 				var aa = (index != layer_dragging || layer_dragging == noone)? 1 : 0.5;
 				var vis = _vis[index];
 				var sel = _sel[index];
@@ -311,8 +321,8 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			if(layer_dragging != hoverIndex && hoverIndex != noone) {
 				var index = input_fix_len + layer_dragging * data_length;
 				var targt = input_fix_len + hoverIndex * data_length;
-				var _vis = attributes.layer_visible;
-				var _sel = attributes.layer_selectable;
+				var _vis  = attributes.layer_visible;
+				var _sel  = attributes.layer_selectable;
 				
 				var ext = [];
 				var vis = _vis[layer_dragging];
@@ -382,6 +392,8 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		
 		inputs[| index + 2] = nodeValue("Inherit Rotation", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true );
 		
+		inputs[| index + 3] = nodeValue("Inherit Scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false );
+		
 		for( var i = 0; i < data_length; i++ )
 			array_push(input_display_list, index + i);
 		
@@ -393,7 +405,7 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	}
 	
 	input_fix_len	= ds_list_size(inputs);
-	data_length		= 3;
+	data_length		= 4;
 	
 	if(!LOADING && !APPENDING) createNewSurface();
 	
@@ -507,7 +519,9 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		if(surf_dragging > -1) {
 			var input_dragging = surf_dragging + 1;
 			var _surf = current_data[surf_dragging];
-			var _tran = current_data[input_dragging];
+			var _tran = current_data[input_dragging + 0];
+			var _aang = current_data[input_dragging + 1];
+			var _asca = current_data[input_dragging + 2];
 			
 			var _bone = inputs[| surf_dragging].extra_data.bone_id;
 			_bone = boneMap[? _bone];
@@ -535,7 +549,7 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 				
 				_tran[TRANSFORM.rot] = sa;
 			} else if(drag_type == NODE_COMPOSE_DRAG.scale) {
-				var _rot = _ang * _bone.angle + _tran[TRANSFORM.rot];
+				var _rot = _aang * _bone.angle + _tran[TRANSFORM.rot];
 				var _sw = surface_get_width(_surf);
 				var _sh = surface_get_height(_surf);
 				
@@ -546,6 +560,11 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 				if(key_mod_press(SHIFT)) {
 					sca_x = min(sca_x, sca_y);
 					sca_y = sca_x;
+				}
+				
+				if(_asca) {
+					sca_x /= _bone.pose_scale;
+					sca_y /= _bone.pose_scale;
 				}
 				
 				_tran[TRANSFORM.sca_x] = sca_x;
@@ -589,6 +608,10 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			var _anc  = _bone.getPoint(0.5);
 			var _mov  = point_rotate(_tran[TRANSFORM.pos_x], _tran[TRANSFORM.pos_y], 0, 0, _bone.angle);
 			var _sca  = [ _tran[TRANSFORM.sca_x], _tran[TRANSFORM.sca_y] ];
+			if(_asca) {
+				_sca[0] *= _bone.pose_scale;
+				_sca[1] *= _bone.pose_scale;
+			}
 			
 			var _ww = surface_get_width(_surf);
 			var _hh = surface_get_height(_surf);
@@ -658,7 +681,9 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 				
 				draw_sprite_colored(THEME.anchor_rotate, _ri, a.rr[0], a.rr[1],, a.rot);
 				draw_sprite_colored(THEME.anchor_scale,  _si, a.d3[0], a.d3[1],, a.rot);
-			} else if(point_in_rectangle_points(_mx, _my, a.d0[0], a.d0[1], a.d1[0], a.d1[1], a.d2[0], a.d2[1], a.d3[0], a.d3[1])) {
+			} else if(point_in_rectangle_points(_mx, _my, a.d0[0], a.d0[1], a.d1[0], a.d1[1], a.d2[0], a.d2[1], a.d3[0], a.d3[1]) && 
+				(surface_selecting != hovering || surface_selecting == noone)) {
+				
 				hovering = index;
 				hovering_type = NODE_COMPOSE_DRAG.move;
 			}
@@ -688,6 +713,10 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		}
 		
 		if(hovering != noone && hovering_type != noone && mouse_press(mb_left, active)) {
+			var _tran = current_data[hovering + 1];
+			var _aang = current_data[hovering + 2];
+			var _asca = current_data[hovering + 3];
+			
 			var a = anchors[hovering];
 			
 			if(hovering_type == NODE_COMPOSE_DRAG.move) { //move
@@ -783,10 +812,16 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			
 			var _tran = use_data? _bind[i].transform : _data[datInd + 1];
 			var _aang = _data[datInd + 2];
+			var _asca = _data[datInd + 3];
+			
 			var _rot  = _aang * _b.angle + _tran[TRANSFORM.rot];
 			var _anc  = _b.getPoint(0.5);
 			var _mov  = point_rotate(_tran[TRANSFORM.pos_x], _tran[TRANSFORM.pos_y], 0, 0, _b.angle);
 			var _sca  = [ _tran[TRANSFORM.sca_x], _tran[TRANSFORM.sca_y] ];
+			if(_asca) {
+				_sca[0] *= _b.pose_scale;
+				_sca[1] *= _b.pose_scale;
+			}
 			
 			var _ww = surface_get_width(_s);
 			var _hh = surface_get_height(_s);
@@ -815,6 +850,29 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		return _outSurf;
 	}
 	
+	static resetTransform = function(surfIndex) {
+		var _bind = inputs[| 2].getValue();
+		var use_data = _bind != noone;
+		
+		var _surf = inputs[| surfIndex + 0].getValue();
+		var _tran = inputs[| surfIndex + 1].getValue();
+		var _arot = inputs[| surfIndex + 2].getValue();
+		
+		var _b = use_data? _bind[i].bone : inputs[| surfIndex].extra_data.bone_id;
+		if(!ds_map_exists(boneMap, _b)) return;
+		
+		_b = boneMap[? _b];
+		
+		var _cx  = surface_get_width(_surf)  / 2;
+		var _cy  = surface_get_height(_surf) / 2;
+		
+		var _anc = _b.getPoint(0.5);
+		var _rot = _arot? -_b.angle : 0;
+		
+		var _tr  = [ _cx - _anc.x, _cy - _anc.y, _rot, 1, 1 ];
+		inputs[| surfIndex + 1].setValue(_tr);
+	}
+	
 	static postDeserialize = function() {
 		var _inputs = load_map.inputs;
 		
@@ -823,8 +881,10 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		
 		if(PROJECT.version < 11481) {
 			var _idx = [];
-			for( var i = load_fix_len, n = array_length(_inputs); i < n; i += 2 )
+			for( var i = load_fix_len, n = array_length(_inputs); i < n; i += 2 ) {
 				array_append(_idx, i + 3);
+				array_append(_idx, i + 4);
+			}
 			
 			for( var i = array_length(_idx) - 1; i >= 0; i++ ) 
 				array_insert(load_map.inputs, _idx[i], noone);

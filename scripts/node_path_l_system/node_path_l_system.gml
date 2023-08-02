@@ -141,10 +141,9 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		}
 	}
 	
-	static getBoundary	= function() { return boundary; }
-	
 	static getLineCount		= function() { return array_length(lines); }
 	static getSegmentCount	= function() { return 1; }
+	
 	static getLength		= function() { return current_length; }
 	static getAccuLength	= function() { return [ 0, current_length ]; }
 	
@@ -162,10 +161,6 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		return lerp(_p0[2], _p1[2], _rat);
 	}
 	
-	static getPointDistance = function(_dist, _ind = 0) {
-		return getPointRatio(_dist / current_length, _ind); 
-	}
-	
 	static getPointRatio = function(_rat, _ind = 0) {
 		var _p0 = lines[_ind][0];
 		var _p1 = lines[_ind][1];
@@ -178,6 +173,12 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		
 		return new Point( _x, _y );
 	}
+	
+	static getPointDistance = function(_dist, _ind = 0) {
+		return getPointRatio(_dist / current_length, _ind); 
+	}
+	
+	static getBoundary	= function() { return boundary; }
 	
 	function update() { 
 		var _len = inputs[| 0].getValue();

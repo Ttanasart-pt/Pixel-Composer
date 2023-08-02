@@ -94,13 +94,13 @@ function readObj(path, flipUV = false) {
 	}
 	file_text_close(file);
 	
-	var txt = "OBJ summary";
-	txt += "\n\tVerticies : " + string(array_length(v));
-	txt += "\n\tTexture Verticies : " + string(array_length(vt));
-	txt += "\n\tNormal Verticies : " + string(array_length(vn));
-	txt += "\n\tFaces : " + string(face);
-	txt += "\n\tVertex groups : " + string(array_length(_VB));
-	print(txt);
+	//var txt = "OBJ summary";
+	//txt += "\n\tVerticies : " + string(array_length(v));
+	//txt += "\n\tTexture Verticies : " + string(array_length(vt));
+	//txt += "\n\tNormal Verticies : " + string(array_length(vn));
+	//txt += "\n\tFaces : " + string(face);
+	//txt += "\n\tVertex groups : " + string(array_length(_VB));
+	//print(txt);
 	
 	#region centralize vertex
 		var cv = [0, 0, 0];

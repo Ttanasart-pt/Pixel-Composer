@@ -14,24 +14,24 @@ function Node_Path_Reverse(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		return struct_has(_path, "getLineCount")? _path.getLineCount() : 1; 
 	}
 	
-	static getSegmentCount = function() { 
+	static getSegmentCount = function(ind = 0) { 
 		var _path = inputs[| 0].getValue();
-		return struct_has(_path, "getSegmentCount")? _path.getSegmentCount() : 0; 
+		return struct_has(_path, "getSegmentCount")? _path.getSegmentCount(ind) : 0; 
 	}
 	
-	static getLength = function() { 
+	static getLength = function(ind = 0) { 
 		var _path = inputs[| 0].getValue();
-		return struct_has(_path, "getLength")? _path.getLength() : 0; 
+		return struct_has(_path, "getLength")? _path.getLength(ind) : 0; 
 	}
 		
-	static getAccuLength = function() { 
+	static getAccuLength = function(ind = 0) { 
 		var _path = inputs[| 0].getValue();
-		return struct_has(_path, "getAccuLength")? _path.getAccuLength() : []; 
+		return struct_has(_path, "getAccuLength")? array_reverse(_path.getAccuLength(ind)) : []; 
 	}
 	
-	static getBoundary = function() { 
+	static getBoundary = function(ind = 0) { 
 		var _path = inputs[| 0].getValue();
-		return struct_has(_path, "getBoundary")? _path.getBoundary() : new BoundingBox(0, 0, 1, 1); 
+		return struct_has(_path, "getBoundary")? _path.getBoundary(ind) : new BoundingBox(0, 0, 1, 1); 
 	}
 		
 	static getPointRatio = function(_rat, ind = 0) {

@@ -59,15 +59,6 @@ function Node_Path_Builder(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	static getAccuLength = function(index) { return array_safe_get(lengthAcc, index, []); }
 	
-	static getBoundary		= function() { 
-		var boundary = new BoundingBox();
-		var _lines = inputs[| 0].getValue();
-		for( var i = 0, n = array_length(_lines); i < n; i++ )
-			boundary.addPoint(_lines[i][0], _lines[i][1]);
-		
-		return boundary; 
-	}
-	
 	static getPointRatio = function(_rat, _ind = 0) {
 		var _lines = inputs[| 0].getValue();
 		var _conn  = inputs[| 1].getValue();
@@ -105,6 +96,15 @@ function Node_Path_Builder(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		
 		if(_conn) return getPointRatio(_dist / length);
 		else      return getPointRatio(_dist / length[ind], ind);
+	}
+	
+	static getBoundary		= function() { 
+		var boundary = new BoundingBox();
+		var _lines = inputs[| 0].getValue();
+		for( var i = 0, n = array_length(_lines); i < n; i++ )
+			boundary.addPoint(_lines[i][0], _lines[i][1]);
+		
+		return boundary; 
 	}
 	
 	function update() { 

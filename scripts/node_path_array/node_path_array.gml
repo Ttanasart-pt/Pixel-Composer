@@ -56,6 +56,18 @@ function Node_Path_Array(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		return l; 
 	}
 	
+	static getSegmentCount = function(ind = 0) { 
+		for( var i = input_fix_len; i < ds_list_size(inputs) - 1; i += data_length ) {
+			var _path = inputs[| i].getValue();
+			var lc    = struct_has(_path, "getLineCount")? _path.getLineCount() : 1; 
+			
+			if(ind < lc) return _path.getSegmentCount(ind);
+			ind -= lc;
+		}
+		
+		return 0;
+	}
+	
 	static getLength = function(ind = 0) { 
 		for( var i = input_fix_len; i < ds_list_size(inputs) - 1; i += data_length ) {
 			var _path = inputs[| i].getValue();
@@ -68,36 +80,12 @@ function Node_Path_Array(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		return 0;
 	}
 	
-	static getBoundary = function(ind = 0) { 
-		for( var i = input_fix_len; i < ds_list_size(inputs) - 1; i += data_length ) {
-			var _path = inputs[| i].getValue();
-			var lc    = struct_has(_path, "getLineCount")? _path.getLineCount() : 1; 
-			
-			if(ind < lc) return _path.getBoundary(ind);
-			ind -= lc;
-		}
-		
-		return 0;
-	}
-	
 	static getAccuLength = function(ind = 0) { 
 		for( var i = input_fix_len; i < ds_list_size(inputs) - 1; i += data_length ) {
 			var _path = inputs[| i].getValue();
 			var lc    = struct_has(_path, "getLineCount")? _path.getLineCount() : 1; 
 			
 			if(ind < lc) return _path.getAccuLength(ind);
-			ind -= lc;
-		}
-		
-		return 0;
-	}
-	
-	static getSegmentCount = function(ind = 0) { 
-		for( var i = input_fix_len; i < ds_list_size(inputs) - 1; i += data_length ) {
-			var _path = inputs[| i].getValue();
-			var lc    = struct_has(_path, "getLineCount")? _path.getLineCount() : 1; 
-			
-			if(ind < lc) return _path.getSegmentCount(ind);
 			ind -= lc;
 		}
 		
@@ -126,6 +114,18 @@ function Node_Path_Array(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		}
 		
 		return new Point();
+	}
+	
+	static getBoundary = function(ind = 0) { 
+		for( var i = input_fix_len; i < ds_list_size(inputs) - 1; i += data_length ) {
+			var _path = inputs[| i].getValue();
+			var lc    = struct_has(_path, "getLineCount")? _path.getLineCount() : 1; 
+			
+			if(ind < lc) return _path.getBoundary(ind);
+			ind -= lc;
+		}
+		
+		return 0;
 	}
 	
 	static update = function(frame = PROJECT.animator.current_frame) {

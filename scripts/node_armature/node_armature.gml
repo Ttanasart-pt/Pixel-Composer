@@ -77,10 +77,25 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 			bone.tb_name.draw(__x + 24, ty + 3, ww + 16, _hh - 6, bone.name, _m);
 			
 			var _x0 = __x + 24 + ww + 32;
-			draw_sprite_ui(THEME.bone, 3, _x0, ty + 14,,,, COLORS._main_icon, 0.5);
+			var _y0 = ty + 14;
+			var cc  = bone.apply_scale? COLORS._main_icon : COLORS._main_value_negative;
+			if(point_in_circle(_m[0], _m[1], _x0, _y0, 16)) {
+				draw_sprite_ui(THEME.bone, 3, _x0, _y0,,,, cc, 0.75);
+				
+				if(mouse_press(mb_left, _focus))
+					bone.apply_scale = !bone.apply_scale;
+			} else 
+				draw_sprite_ui(THEME.bone, 3, _x0, _y0,,,, cc, 0.5);
 			
 			_x0 += 20;
-			draw_sprite_ui(THEME.bone, 4, _x0, ty + 14,,,, COLORS._main_icon, 0.5);
+			var cc  = bone.apply_rotation? COLORS._main_icon : COLORS._main_value_negative;
+			if(point_in_circle(_m[0], _m[1], _x0, _y0, 16)) {
+				draw_sprite_ui(THEME.bone, 4, _x0, _y0,,,, cc, 0.75);
+				
+				if(mouse_press(mb_left, _focus))
+					bone.apply_rotation = !bone.apply_rotation;
+			} else 
+				draw_sprite_ui(THEME.bone, 4, _x0, _y0,,,, cc, 0.5);
 			
 			ty += _hh;
 				

@@ -21,6 +21,11 @@
 	global.EQUATION_PRES[? "~"] = 9;
 	
 	global.EQUATION_PRES[? "="]  = -99;
+	global.EQUATION_PRES[? "⊕"]  = -99; //+=
+	global.EQUATION_PRES[? "⊖"]  = -99; //-=
+	global.EQUATION_PRES[? "⊗"]  = -99; //*=
+	global.EQUATION_PRES[? "⊘"]  = -99; ///=
+	
 	global.EQUATION_PRES[? "⩵"] = -1; //==
 	global.EQUATION_PRES[? "≠"]  = -1; //!=
 	global.EQUATION_PRES[? "<"]  =  0;
@@ -94,6 +99,14 @@ function functionStringClean(fx) {
 	fx = string_replace_all(fx, "<>", "≠");
 	fx = string_replace_all(fx, ">=", "≥");
 	fx = string_replace_all(fx, "<=", "≤");
+	
+	fx = string_replace_all(fx, "++", "⊕1");
+	fx = string_replace_all(fx, "--", "⊖1");
+	
+	fx = string_replace_all(fx, "+=", "⊕");
+	fx = string_replace_all(fx, "-=", "⊖");
+	fx = string_replace_all(fx, "*=", "⊗");
+	fx = string_replace_all(fx, "/=", "⊘");
 	
 	fx = string_trim(fx);
 	
@@ -175,6 +188,7 @@ function functionStringClean(fx) {
 		itr_array = false;
 		
 		cond_init = noone;
+		cond_indx = noone;
 		cond_iter = noone;
 		cond_term = noone;
 		
@@ -215,6 +229,8 @@ function functionStringClean(fx) {
 				printIf(global.LOG_EXPRESSION, $"<<<<<< FOR EACH {_arr} >>>>>>");
 				for( var i = 0, n = array_length(_arr); i < n; i++ ) {
 					var val = _arr[i];
+					if(cond_indx != noone)
+						params[$ cond_indx] = i;
 					params[$ cond_iter] = val;
 					
 					printIf(global.LOG_EXPRESSION, $"<< ITER {i}: {cond_iter} = {val} >>");
@@ -345,7 +361,14 @@ function functionStringClean(fx) {
 				return res;
 			}
 			
-			var v1 = getVal(l, params, symbol == "=" || symbol == "【" || isLeft);
+			var getRaw = false;
+			switch(symbol) {
+				case "=":	
+				case "【":	
+					getRaw = true;
+			}
+			
+			var v1 = getVal(l, params, getRaw || isLeft);
 			var v2 = getVal(r, params);
 			
 			var res = 0;
@@ -362,7 +385,7 @@ function functionStringClean(fx) {
 			} else if(symbol == "=") {
 				if(is_array(v1)) { 
 					var val = params[$ v1[0]];
-					array_safe_set(val, v1[1], v2);
+					val = array_safe_set(val, v1[1], v2);
 					params[$ v1[0]] = val;
 					res = val;
 				} else {
@@ -384,28 +407,54 @@ function functionStringClean(fx) {
 			} else 
 				res = eval_real(v1, v2);
 			
-			printIf(global.LOG_EXPRESSION, $"|{v1}|{symbol}|{v2}| = {res}");
-			printIf(global.LOG_EXPRESSION, $"symbol : {symbol}");
-			printIf(global.LOG_EXPRESSION, $"l      : | {typeof(l)} |{l}|");
-			printIf(global.LOG_EXPRESSION, $"r      : | {typeof(r)} |{r}|");
-			printIf(global.LOG_EXPRESSION, "====================");
+			var _v1_var = getVal(l, params, true);
+			switch(symbol) {
+				case "⊕": 
+				case "⊖": 
+				case "⊗": 
+				case "⊘": 
+					if(is_array(_v1_var)) { 
+						var val = params[$ _v1_var[0]];
+						val = array_safe_set(val, _v1_var[1], res);
+						params[$ _v1_var[0]] = val;
+					} else
+						params[$ _v1_var] = res;
+				
+					printIf(global.LOG_EXPRESSION, $"|{_v1_var}| = {v1}|{symbol}|{v2}| = {res}");
+					printIf(global.LOG_EXPRESSION, $"symbol : {symbol}");
+					printIf(global.LOG_EXPRESSION, $"l      : | {typeof(l)} |{l}|");
+					printIf(global.LOG_EXPRESSION, $"r      : | {typeof(r)} |{r}|");
+					printIf(global.LOG_EXPRESSION, "====================");
+					break;
+				default:
+					printIf(global.LOG_EXPRESSION, $"|{v1}|{symbol}|{v2}| = {res}");
+					printIf(global.LOG_EXPRESSION, $"symbol : {symbol}");
+					printIf(global.LOG_EXPRESSION, $"l      : | {typeof(l)} |{l}|");
+					printIf(global.LOG_EXPRESSION, $"r      : | {typeof(r)} |{r}|");
+					printIf(global.LOG_EXPRESSION, "====================");
+					break;
+			}
 			
 			return res;
 		}
 		
-		static eval_real = function(v1, v2) {
-			switch(symbol) {
+		static eval_real = function(v1, v2, _symbol = symbol) {
+			switch(_symbol) {
 				case "+": 
+				case "⊕": 
 					if(_string(v1) || _string(v2))
 						return _string_trim(v1) + _string_trim(v2);
 					if(is_real(v1) && is_real(v2))
 						return v1 + v2;
 					return 0;
-				case "-": return (is_real(v1) && is_real(v2))? v1 - v2		 : 0;
+				case "-": 
+				case "⊖": return (is_real(v1) && is_real(v2))? v1 - v2		 : 0;
 				case "∸": return is_real(v1)? -v1 : 0;
-				case "*": return (is_real(v1) && is_real(v2))? v1 * v2		 : 0;
+				case "*": 
+				case "⊗": return (is_real(v1) && is_real(v2))? v1 * v2		 : 0;
 				case "$": return (is_real(v1) && is_real(v2))? power(v1, v2) : 0;
-				case "/": return (is_real(v1) && is_real(v2) && v2 != 0)? v1 / v2 : 0;
+				case "/": 
+				case "⊘": return (is_real(v1) && is_real(v2) && v2 != 0)? v1 / v2 : 0;
 				case "%": return (is_real(v1) && is_real(v2) && v2 != 0)? v1 % v2 : 0;
 				
 				case "&": return (is_real(v1) && is_real(v2))? v1 & v2       : 0;
@@ -459,67 +508,91 @@ function functionStringClean(fx) {
 	}
 	
 	function evaluateFunctionList(fx) {
-		var fxs = string_split(fx, "\n");
+		fx = string_replace_all(fx, "{", "\n{\n");
+		fx = string_replace_all(fx, "}", "\n}\n");
+		
+		var fxs = string_split(fx, "\n", true);
+		
 		var flist = new __funcList();
 		
 		var call_st = ds_stack_create();
+		var blok_st = ds_stack_create();
 		ds_stack_push(call_st, flist);
 		
 		for( var i = 0, n = array_length(fxs); i < n; i++ ) {
 			var _fx = functionStringClean(fxs[i]);
-			if(_fx == "") continue;
+			//print($"Eval line {i}: {_fx} [stack size = {ds_stack_size(call_st)}]");
 			
-			var _fx_sp = string_split(_fx, "(");
-			if(string_char_at(_fx, 1) == "}") {
+			if(_fx == "" || _fx == "{") continue;
+			if(_fx == "}") {
 				ds_stack_pop(call_st);
-				_fx = string_replace(_fx, "}", "");
+				continue;
 			}
 			
-			if(array_length(_fx_sp) > 1) {
-				var _cond = functionStrip(_fx);
-				
-				switch(_fx_sp[0]) {
-					case "if":
-						var con_if = new __funcIf();
-						con_if.condition = evaluateFunctionTree(_cond);
-						ds_stack_top(call_st).addFunction(con_if);
-						ds_stack_push(call_st, con_if.if_true);
-						continue;
-					case "else if":
-						var con_if = new __funcIf();
-						con_if.condition = evaluateFunctionTree(_cond);
-						ds_stack_top(call_st).addFunction(con_if);
-						ds_stack_push(call_st, con_if.if_true);
-						continue;
-					case "else":
-						ds_stack_push(call_st, con_if.if_false);
-						continue;
-					case "for":
-						var con_for = new __funcFor();
-						var cond    = string_splice(_cond, ":");
-						if(array_length(cond) == 2) {
-							con_for.itr_array = true;
-							con_for.cond_iter = cond[0];
-							con_for.cond_arr  = evaluateFunctionTree(cond[1]);
-						} else if(array_length(cond) == 3) {
-							con_for.itr_array = false;
-							con_for.cond_init = evaluateFunctionTree(cond[0]);
-							con_for.cond_iter = evaluateFunctionTree(cond[1]);
-							con_for.cond_term = evaluateFunctionTree(cond[2]);
-						}
-						ds_stack_top(call_st).addFunction(con_for);
-						ds_stack_push(call_st, con_for.action);
-						continue;
-				}
-			} 
+			var _fx_sp = string_split(_fx, "(");
+			var _cmd   = string_trim(_fx_sp[0]);
+			var _cond  = functionStrip(_fx);
 			
-			ds_stack_top(call_st).addFunction(evaluateFunctionTree(_fx));
+			switch(_cmd) {
+				case "if":
+					var con_if = new __funcIf();
+					con_if.condition = evaluateFunctionTree(_cond);
+					ds_stack_top(call_st).addFunction(con_if);
+					ds_stack_push(call_st, con_if.if_true);
+					ds_stack_push(blok_st, con_if);
+					continue;
+				case "elseif":
+					var con_if = ds_stack_pop(blok_st);
+					var con_elif = new __funcIf();
+					con_elif.condition = evaluateFunctionTree(_cond);
+					
+					con_if.if_false.addFunction(con_elif);
+					ds_stack_push(call_st, con_elif.if_true);
+					ds_stack_push(blok_st, con_elif);
+					continue;
+				case "else":
+					var con_if = ds_stack_pop(blok_st);
+					
+					ds_stack_push(call_st, con_if.if_false);
+					continue;
+				case "for":
+					var con_for = new __funcFor();
+					var cond    = string_splice(_cond, ":");
+					if(array_length(cond) == 2) {
+						con_for.itr_array = true;
+						con_for.cond_arr  = evaluateFunctionTree(cond[1]);
+						
+						cond[0]  = string_trim(cond[0]);
+						var _itr = string_split(cond[0], ",");
+						if(array_length(_itr) == 1)
+							con_for.cond_iter = cond[0];
+						else if(array_length(_itr) == 2) {
+							con_for.cond_indx = string_trim(_itr[0]);
+							con_for.cond_iter = string_trim(_itr[1]);
+						}
+					} else if(array_length(cond) == 3) {
+						con_for.itr_array = false;
+						con_for.cond_init = evaluateFunctionTree(cond[0]);
+						con_for.cond_iter = evaluateFunctionTree(cond[1]);
+						con_for.cond_term = evaluateFunctionTree(cond[2]);
+					}
+					ds_stack_top(call_st).addFunction(con_for);
+					ds_stack_push(call_st, con_for.action);
+					continue;
+			}
+			
+			if(ds_stack_empty(call_st)) {
+				print("Block stack empty, how?");
+			} else {
+				var _top = ds_stack_top(call_st);
+				_top.addFunction(evaluateFunctionTree(_fx));
+			}
 		}
 		
-		var val = ds_stack_pop(call_st);
 		ds_stack_destroy(call_st);
+		ds_stack_destroy(blok_st);
 		
-		return val;
+		return flist;
 	}
 	
 	function evaluateFunctionTree(fx) {
@@ -721,6 +794,11 @@ function functionStringClean(fx) {
 			case "<": 
 			case ">": 
 			
+			case "⊕": 
+			case "⊖": 
+			case "⊗": 
+			case "⊘": 
+				
 				if(ds_stack_size(vl) >= 2) {
 					var _v1 = ds_stack_pop(vl);
 					var _v2 = ds_stack_pop(vl);

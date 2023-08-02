@@ -353,7 +353,6 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				_pathTemp = "\"" + _pathTemp + "\"";
 				var shell_cmd = _pathTemp + " -quality " + string(qual) + " " + _pathOut;
 				
-				print(shell_cmd)
 				execute_shell(magick, shell_cmd);
 				break;
 				

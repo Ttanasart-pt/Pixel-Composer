@@ -289,6 +289,16 @@ function nodeValueUnit(value) constructor {
 	triggerButton.icon_blend = COLORS._main_icon_light;
 	triggerButton.icon = THEME.unit_ref;
 	
+	static setMode = function(type) {
+		if(type == "constant" && mode == VALUE_UNIT.constant) return;
+		if(type == "relative" && mode == VALUE_UNIT.reference) return;
+		
+		mode = type == "constant"? VALUE_UNIT.constant : VALUE_UNIT.reference;
+		value.cache_value[0] = false;
+		value.unitConvert(mode);
+		value.node.doUpdate();
+	}
+	
 	static draw = function(_x, _y, _w, _h, _m) {
 		triggerButton.icon_index = mode;
 		triggerButton.tooltip = (mode? "Fraction" : "Pixel") + " unit";
@@ -1167,7 +1177,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			if(global.EVALUATE_HEAD != noone && global.EVALUATE_HEAD == self)  {
 				//noti_warning($"Expression evaluation error : recursive call detected.");
 			} else {
-				printIf(global.LOG_EXPRESSION, "==================== EVAL BEGIN {expTree} ====================");
+				printIf(global.LOG_EXPRESSION, $"==================== EVAL BEGIN {expTree} ====================");
+				//print(json_beautify(json_stringify(expTree)));
+				//printCallStack();
 				
 				global.EVALUATE_HEAD = self;
 				var params = { 
@@ -1175,7 +1187,13 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 					node_name: node.display_name,
 					value: val[0] 
 				};
-				val[0] = expTree.eval(variable_clone(params));
+				
+				var _exp_res = expTree.eval(variable_clone(params));
+				if(is_undefined(_exp_res)) {
+					val[0] = 0;
+					noti_warning("Expression not returning any values.");
+				} else 
+					val[0] = _exp_res;
 				global.EVALUATE_HEAD = noone;
 			}
 		}
@@ -1209,7 +1227,11 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	}
 	
 	static showValue = function() { 
-		var val = _getValue(, false);
+		var useCache = true;
+		if(display_type == VALUE_DISPLAY.area)
+			useCache = false;
+		
+		var val = getValue(, false, 0, useCache);
 		
 		if(isArray()) {
 			if(array_length(val) == 0) return 0;
@@ -1506,6 +1528,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	drag_sy   = 0;
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		if(type != VALUE_TYPE.integer && type != VALUE_TYPE.float) return -1;
+		if(value_from != noone) return -1;
+		if(expUse) return -1;
 		
 		switch(display_type) {
 			case VALUE_DISPLAY._default :
