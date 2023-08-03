@@ -77,7 +77,7 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 								_tw = string_width(_bch) * _s;
 								_th = string_height(_bch) * _s;
 									
-								draw_sprite_stretched_points(THEME.ui_selection, 0, _tx - 4, _y - 4, _tx + _tw + 4, _y + _th + 4);
+								draw_sprite_stretched_points(THEME.node_bg, 0, _tx - 4, _y - 4, _tx + _tw + 4, _y + _th + 4);
 									
 								draw_set_color(_cc);
 								draw_text_transformed(_tx, _y, _bch, _s, _s, 0);
@@ -189,7 +189,7 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			var _tx = _line_man[i];
 			
 			while(string_length(_tx) > 0) {
-				var sp = min(string_pos("\n", _tx), string_pos(" ", _tx));
+				var sp = min(string_pos(" ", _tx));
 				if(sp == 0) sp = string_length(_tx);
 			
 				var _ps = string_copy(_tx, 1, sp);
@@ -199,9 +199,6 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 					array_push(_lines, ss);
 					ss = _ps;
 				} else if(string_length(_tx) <= 0) {
-					array_push(_lines, ss + _ps);
-					ss = "";
-				} else if(string_char_at(_ps, string_length(_ps)) == "\n") {
 					array_push(_lines, ss + _ps);
 					ss = "";
 				} else 

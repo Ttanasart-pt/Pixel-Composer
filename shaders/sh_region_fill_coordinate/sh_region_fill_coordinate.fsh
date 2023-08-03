@@ -4,7 +4,10 @@
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
+#define ITERATION 8.
+
 uniform vec2  dimension;
+uniform float step;
 
 vec4 less ( vec4 a, vec4 b ) {
 	if(b.xy == vec2(0.)) return a;
@@ -29,19 +32,29 @@ void main() {
     vec4 c = texture2D( gm_BaseTexture, v_vTexcoord );
 	gl_FragColor = c;
 	
-	if(c.rgb == vec3(0.)) return;
-	if(c.rgb == vec3(1.)) {
-		gl_FragColor = vec4( v_vTexcoord, 0., 1. );
-		return;
+	if(c.a == 0.) return;
+	
+	for( float i = 1.; i < ITERATION; i++ ) {
+		vec4 s = sample( v_vTexcoord + vec2(tx.x * i, 0) );
+		if(s.a == 0.) break;
+		gl_FragColor = less( gl_FragColor, s );
 	}
 	
-	vec4 l = sample( v_vTexcoord - vec2(tx.x, 0.) );
-	vec4 r = sample( v_vTexcoord + vec2(tx.x, 0.) );
-	vec4 u = sample( v_vTexcoord - vec2(0., tx.y) );
-	vec4 d = sample( v_vTexcoord + vec2(0., tx.y) );
+	for( float i = 1.; i < ITERATION; i++ ) {
+		vec4 s = sample( v_vTexcoord - vec2(tx.x * i, 0) );
+		if(s.a == 0.) break;
+		gl_FragColor = less( gl_FragColor, s );
+	}
 	
-	gl_FragColor = less( gl_FragColor, l );
-	gl_FragColor = less( gl_FragColor, r );
-	gl_FragColor = less( gl_FragColor, u );
-	gl_FragColor = less( gl_FragColor, d );
+	for( float i = 1.; i < ITERATION; i++ ) {
+		vec4 s = sample( v_vTexcoord + vec2(0, tx.y * i) );
+		if(s.a == 0.) break;
+		gl_FragColor = less( gl_FragColor, s );
+	}
+	
+	for( float i = 1.; i < ITERATION; i++ ) {
+		vec4 s = sample( v_vTexcoord - vec2(0, tx.y * i) );
+		if(s.a == 0.) break;
+		gl_FragColor = less( gl_FragColor, s );
+	}
 }

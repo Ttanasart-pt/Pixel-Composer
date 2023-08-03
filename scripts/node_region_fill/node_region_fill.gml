@@ -22,7 +22,7 @@ function Node_Region_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	temp_surface = [ surface_create(1, 1), surface_create(1, 1) ];
 		
 	static step = function() {
-		var _fill = current_data[3];
+		var _fill = inputs[| 3].getValue();
 		
 		inputs[| 2].setVisible(_fill);
 		inputs[| 4].setVisible(_fill);
@@ -42,22 +42,20 @@ function Node_Region_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		temp_surface[0] = surface_verify(temp_surface[0], _sw, _sh); 
 		temp_surface[1] = surface_verify(temp_surface[1], _sw, _sh);
 		
-		surface_set_target(temp_surface[0])
-			DRAW_CLEAR
-		surface_reset_target();
+		surface_clear(temp_surface[0]);
 		
-		surface_set_target(temp_surface[1])
-			DRAW_CLEAR
+		surface_set_shader(temp_surface[1], sh_region_fill_init);
 			draw_surface(_surf, 0, 0);
-		surface_reset_target();
+		surface_reset_shader();
 		
 		var base = 0;
-		var amo  = ceil(log2(max(_sw, _sh))) + 1;
+		var amo  = _sw + _sh;
 		
-		repeat(amo) {
+		for( var i = 0; i < amo; i++ ) {
 			surface_set_shader(temp_surface[base], sh_region_fill_coordinate);
 				shader_set_f("dimension", _sw, _sh);
 				draw_surface(temp_surface[!base], 0, 0);
+				
 			surface_reset_shader();
 			
 			base = !base;

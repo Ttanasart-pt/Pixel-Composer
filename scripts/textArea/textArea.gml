@@ -622,7 +622,7 @@ function textArea(_input, _onModify, _extras = noone) : textInput(_input, _onMod
 		
 		if(format == TEXT_AREA_FORMAT.code) {
 			draw_sprite_stretched_ext(THEME.textbox_code, 0, _x, _y, ui(code_line_width), hh, boxColor, 1);
-			draw_set_text(f_p1, fa_right, fa_top, COLORS._main_text_sub);
+			draw_set_text(f_code, fa_right, fa_top, COLORS._main_text_sub);
 			
 			var lx = _x + ui(code_line_width - 8);
 			for( var i = 0; i < line_count; i++ ) {

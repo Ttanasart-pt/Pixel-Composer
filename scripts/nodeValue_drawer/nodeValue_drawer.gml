@@ -74,7 +74,7 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 	
 	draw_set_text(lineBreak? f_p0 : f_p1, fa_left, fa_center, cc);
 	draw_text_add(xx + ui(40), lb_y - ui(2), jun.name);
-	var lb_w = string_width(jun.name) + ui(32);
+	var lb_w = string_width(jun.name) + ui(48);
 			
 	#region tooltip
 		if(jun.tooltip != "") {

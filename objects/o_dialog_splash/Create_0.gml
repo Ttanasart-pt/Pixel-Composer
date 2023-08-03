@@ -210,19 +210,21 @@ event_inherited();
 #region contest
 	discord_map = ds_map_create();
 	discord_map[? "Authorization"] = "Bot " + get_discord_bot_token();
-		
+	
+	contest_req = noone;
+	contest_message_req = [];
+	
 	if(os_is_network_connected()) {
 		var url = "https://discord.com/api/v10/guilds/953634069646835773/threads/active";
 		contest_req = http_request(url, "GET", discord_map, "");
-		contest_message_req = [];
 	}
 	
 	nicknames  = ds_map_create();
 	attachment = ds_map_create();
-	contests = [];
+	contests   = [];
 	
 	grid_surface = surface_create(1, 1);
-	banner = noone;
+	banner       = noone;
 	banner_alpha = 0;
 	
 	contest_viewing = noone;

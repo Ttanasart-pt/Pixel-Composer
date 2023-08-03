@@ -398,9 +398,7 @@ event_inherited();
 	
 	function overrideColor() {
 		var path = DIRECTORY + "themes/" + PREF_MAP[? "theme"] + "/override.json";
-		var f = file_text_open_write(path);
-		file_text_write_string(f, json_stringify(COLORS));
-		file_text_close(f);
+		json_save_struct(path, COLORS, true);
 	}
 #endregion
 

@@ -1,9 +1,10 @@
 /// @description 
 if(async_load[? "id"] == contest_req) { //get contests
 	var r_str = async_load[? "result"];
-	if(is_undefined(r_str)) return;
+	if(is_undefined(r_str)) exit;
 	
-	var thr_str = json_parse(r_str);
+	var thr_str = json_try_parse(r_str, noone);
+	if(thr_str == noone) exit;
 	
 	if(struct_has(thr_str, "threads")) {
 		var thrs = thr_str.threads;
@@ -26,16 +27,18 @@ if(async_load[? "id"] == contest_req) { //get contests
 		project_page++;
 	}
 	
-	return;
+	exit;
 }
 
 for( var i = 0, n = array_length(contest_message_req); i < n; i++ ) {
 	if(async_load[? "id"] != contest_message_req[i][0]) continue;
 	
 	var r_str = async_load[? "result"];
-	if(is_undefined(r_str)) return;
+	if(is_undefined(r_str)) exit;
 	
-	var msgs = json_parse(r_str);
+	var msgs = json_try_parse(r_str, noone);
+	if(msgs == noone) exit;
+	
 	var ind  = contest_message_req[i][1];
 	var thr  = contests[ind];
 	thr.messages = msgs;
@@ -79,7 +82,7 @@ for( var i = 0, n = array_length(contest_message_req); i < n; i++ ) {
 	} else 
 		thr.title.attachments = noone;
 	
-	return;
+	exit;
 }
 
 var keys = ds_map_keys_to_array(nicknames);
@@ -90,12 +93,14 @@ for( var i = 0, n = array_length(keys); i < n; i++ ) {
 	if(async_load[? "id"] != nick[0]) continue;
 	
 	var r_str = async_load[? "result"];
-	if(is_undefined(r_str)) return;
+	if(is_undefined(r_str)) exit;
 	
-	var auth = json_parse(r_str);
+	var auth = json_try_parse(r_str, noone);
+	if(auth == noone) exit;
+	
 	nicknames[? keys[i]] = struct_try_get(auth, "nick", nick[1]);
 	
-	return;
+	exit;
 }
 
 var keys = ds_map_keys_to_array(attachment);
@@ -109,7 +114,7 @@ for( var i = 0, n = array_length(keys); i < n; i++ ) {
 	
 	if(!file_exists(path)) {
 		attachment[? keys[i]] = noone;
-		return;
+		exit;
 	}
 	
 	var spr = sprite_add(path, 0, false, 0, 0, 0);
@@ -118,5 +123,5 @@ for( var i = 0, n = array_length(keys); i < n; i++ ) {
 	var _sh = sprite_get_height(spr);
 	sprite_set_offset(spr, _sw / 2, _sh / 2);
 	
-	return;
+	exit;
 }

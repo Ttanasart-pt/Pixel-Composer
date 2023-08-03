@@ -3,12 +3,14 @@ globalvar FONT_ISLOADED, f_h1, f_h3, f_h5, f_p0, f_p0b, f_p1, f_p2, f_p3, f_code
 FONT_ISLOADED = false;
 
 function _font_path(rel) {
-	var defPath = DIRECTORY + "themes/" + PREF_MAP[? "theme"] + "/fonts/" + string_replace_all(rel, "./", "");
+	rel = string_replace_all(rel, "./", "");
+	
+	var defPath = $"{DIRECTORY}themes/{PREF_MAP[? "theme"]}/fonts/{rel}";
 	
 	if(LOCALE.fontDir == noone)
 		return defPath;
 	
-	var overridePath = LOCALE.fontDir + string_replace_all(rel, "./", "");
+	var overridePath = $"{LOCALE.fontDir}{rel}";
 	if(file_exists(overridePath))
 		return overridePath;
 		
@@ -24,7 +26,10 @@ function _font_load_from_struct(str, def) {
 	}
 	
 	font_add_enable_aa(THEME_VALUE.font_aa);
-	return font_add(path, str.size * UI_SCALE, false, false, 0, 0);
+	var _font = font_add(path, str.size * UI_SCALE, false, false, 0, 0);
+	//font_enable_sdf(_font, true);
+	
+	return _font;
 }
 
 function font_clear(font) { if(font_exists(font)) font_delete(font); }

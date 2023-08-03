@@ -742,6 +742,7 @@
     {"name":"node_surface_replace","order":12,"path":"scripts/node_surface_replace/node_surface_replace.yy",},
     {"name":"node_strand_create","order":1,"path":"scripts/node_strand_create/node_strand_create.yy",},
     {"name":"sh_gradient","order":17,"path":"shaders/sh_gradient/sh_gradient.yy",},
+    {"name":"sh_region_fill_init","order":2,"path":"shaders/sh_region_fill_init/sh_region_fill_init.yy",},
     {"name":"node_json_file_read","order":8,"path":"scripts/node_json_file_read/node_json_file_read.yy",},
     {"name":"s_node_array_remove","order":7,"path":"sprites/s_node_array_remove/s_node_array_remove.yy",},
     {"name":"s_node_zigzag","order":18,"path":"sprites/s_node_zigzag/s_node_zigzag.yy",},

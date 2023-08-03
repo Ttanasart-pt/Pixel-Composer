@@ -25,14 +25,8 @@ function _loadColor(theme = "default", replace = false) {
 		return;
 	}
 	
-	var oclr = {};
-	if(file_exists(pathO)) {
-		var s = file_text_read_all(pathO);
-		oclr  = json_try_parse(s);
-	}
-	
-	var s    = file_text_read_all(path);
-	var clrs = json_try_parse(s);
+	var clrs = json_load_struct(path);
+	var oclr = file_exists(pathO)? json_load_struct(pathO) : {};
 	
 	var valkeys = variable_struct_get_names(clrs.values);
 	if(replace)	THEME_VALUE = clrs.values;

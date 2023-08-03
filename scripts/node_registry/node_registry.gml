@@ -123,23 +123,23 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 			ds_list_add(filter, "Loops");
 			addNodeObject(filter, "Index",			s_node_iterator_index,	"Node_Iterator_Index",			[1, Node_Iterator_Index]);
 			addNodeObject(filter, "Array Length",	s_node_iterator_length,	"Node_Iterator_Each_Length",	[1, Node_Iterator_Each_Length]);
-	
+		
 		var feed = ds_list_create();
 		addNodeCatagory("Feedback", feed, ["Node_Feedback"]);
 			ds_list_add(feed, "Groups");
 			addNodeObject(feed, "Input",	s_node_feedback_input,	"Node_Feedback_Input",	[1, Node_Feedback_Input]);
 			addNodeObject(feed, "Output",	s_node_feedback_output,	"Node_Feedback_Output",	[1, Node_Feedback_Output]);
-	
+		
 		var vfx = ds_list_create();
 		addNodeCatagory("VFX", vfx, ["Node_VFX_Group"]);
 			ds_list_add(vfx, "Groups");
 			addNodeObject(vfx, "Input",			s_node_vfx_input,	"Node_Group_Input",		[1, Node_Group_Input]);
 			addNodeObject(vfx, "Output",		s_node_vfx_output,	"Node_Group_Output",	[1, Node_Group_Output]);
-		
+			
 			ds_list_add(vfx, "VFXs");
 			addNodeObject(vfx, "Spawner",		s_node_vfx_spawn,	"Node_VFX_Spawner",		[1, Node_VFX_Spawner]);
 			addNodeObject(vfx, "Renderer",		s_node_vfx_render,	"Node_VFX_Renderer",	[1, Node_VFX_Renderer]);
-		
+			
 			ds_list_add(vfx, "Affectors");
 			addNodeObject(vfx, "Accelerate",	s_node_vfx_accel,	"Node_VFX_Accelerate",	[1, Node_VFX_Accelerate]);
 			addNodeObject(vfx, "Destroy",		s_node_vfx_destroy,	"Node_VFX_Destroy",		[1, Node_VFX_Destroy]);
@@ -148,7 +148,7 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 			addNodeObject(vfx, "Vortex",		s_node_vfx_vortex,	"Node_VFX_Vortex",		[1, Node_VFX_Vortex]);
 			addNodeObject(vfx, "Turbulence",	s_node_vfx_turb,	"Node_VFX_Turbulence",	[1, Node_VFX_Turbulence]);
 			addNodeObject(vfx, "Repel",			s_node_vfx_repel,	"Node_VFX_Repel",		[1, Node_VFX_Repel]);
-		
+			
 			ds_list_add(vfx, "Instance control");
 			addNodeObject(vfx, "VFX Variable",	s_node_vfx_variable,	"Node_VFX_Variable",	[1, Node_VFX_Variable]).setVersion(1120);
 			addNodeObject(vfx, "VFX Override",	s_node_vfx_override,	"Node_VFX_Override",	[1, Node_VFX_Override]).setVersion(1120);
@@ -242,7 +242,7 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 			ds_list_add(input, "Network");
 			addNodeObject(input, "Websocket Receiver",	s_node_websocket_receive,	"Node_Websocket_Receiver",	[1, Node_Websocket_Receiver],, "Create websocket server to receive data from the network.").setVersion(1145);
 			addNodeObject(input, "Websocket Sender",	s_node_websocket_send,		"Node_Websocket_Sender",	[1, Node_Websocket_Sender],, "Create websocket server to send data to the network.").setVersion(1145);
-	
+			
 		var transform = ds_list_create();
 		addNodeCatagory("Transform", transform);
 			ds_list_add(transform, "Transformations");
@@ -250,7 +250,7 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 			addNodeObject(transform, "Scale",			s_node_scale,			"Node_Scale",			[1, Node_Scale], ["resize"], "Simple node for scaling image.");
 			addNodeObject(transform, "Scale Algorithm",	s_node_scale_algo,		"Node_Scale_Algo",		[0, Node_create_Scale_Algo], ["scale2x", "scale3x"], "Scale image using scale2x, scale3x algorithm.");
 			addNodeObject(transform, "Flip",			s_node_flip,			"Node_Flip",			[1, Node_Flip], ["mirror"], "Flip image horizontally or vertically.");
-		
+			
 			ds_list_add(transform, "Warps");
 			addNodeObject(transform, "Crop",			 s_node_crop,			"Node_Crop",			 [1, Node_Crop],, "Crop out image to create smaller ones.");
 			addNodeObject(transform, "Crop Content",	 s_node_crop_content,	"Node_Crop_Content",	 [1, Node_Crop_Content],, "Crop out empty pixel pixel from the image.");
@@ -259,7 +259,7 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 			addNodeObject(transform, "Mesh Warp",		 s_node_warp_mesh,		"Node_Mesh_Warp",		 [1, Node_Mesh_Warp], ["mesh wrap"], "Wrap image by converting it to mesh, and using control points.");
 			addNodeObject(transform, "Polar",			 s_node_polar,			"Node_Polar",			 [1, Node_Polar],, "Convert image to polar coordinate.");
 			addNodeObject(transform, "Area Warp",		 s_node_padding,		"Node_Wrap_Area",		 [1, Node_Wrap_Area],, "Wrap image to fit area value (x, y, w, h).");
-		
+			
 			ds_list_add(transform, "Others");
 			addNodeObject(transform, "Composite",		s_node_compose,			"Node_Composite",		[1, Node_Composite], ["merge"], "Combine multiple images with controllable position, rotation, scale.");
 			addNodeObject(transform, "Nine Slice",		s_node_9patch,			"Node_9Slice",			[1, Node_9Slice], ["9 slice", "splice"], "Cut image into 3x3 parts, and scale/repeat only the middle part.");
@@ -290,7 +290,7 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 			addNodeObject(filter, "Texture Remap",		s_node_texture_map,		"Node_Texture_Remap",	[1, Node_Texture_Remap],, "Remap image using texture map. Where red channel control x position and green channel control y position.");
 			addNodeObject(filter, "Time Remap",			s_node_time_map,		"Node_Time_Remap",		[1, Node_Time_Remap],, "Remap image using texture as time map. Where brighter pixel means using pixel from an older frame.");
 			addNodeObject(filter, "Morph Surface",		s_node_morph_surface,	"Node_Morph_Surface",	[1, Node_Morph_Surface],, "Morph pixel bewteen two surfaces.").setVersion(1141);
-		
+			
 			ds_list_add(filter, "Effects");
 			addNodeObject(filter, "Outline",			s_node_border,			"Node_Outline",			[1, Node_Outline], ["border"], "Add border to the image.");
 			addNodeObject(filter, "Glow",				s_node_glow,			"Node_Glow",			[1, Node_Glow],, "Apply glow to the border of the image.");
@@ -329,17 +329,17 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 			addNodeObject(filter, "Curve",				s_node_curve_edit,		"Node_Curve",			[1, Node_Curve],, "Adjust brightness of an image using curves.").setVersion(1120);
 			addNodeObject(filter, "Threshold",			s_node_threshold,		"Node_Threshold",		[1, Node_Threshold],, "Set a threshold where pixel darker will becomes black, and brighter to white. Also works with alpha.").setVersion(1080);
 			addNodeObject(filter, "Alpha Cutoff",		s_node_alpha_cut,		"Node_Alpha_Cutoff",	[1, Node_Alpha_Cutoff], ["remove alpha"], "Remove pixel with low alpha value.");
-		
+			
 			ds_list_add(filter, "Conversions");
 			addNodeObject(filter, "RGBA Extract",		s_node_RGB,				"Node_RGB_Channel",		[1, Node_RGB_Channel], ["channel extract"], "Extract RGBA channel on an image, each channel becomes its own image.");
 			addNodeObject(filter, "HSV Extract",		s_node_HSV,				"Node_HSV_Channel",		[1, Node_HSV_Channel],, "Extract HSVA channel on an image, each channel becomes its own image.").setVersion(1070);
 			addNodeObject(filter, "Alpha to Grey",		s_node_alpha_grey,		"Node_Alpha_Grey",		[1, Node_Alpha_Grey],, "Convert alpha value into solid greyscale.");
 			addNodeObject(filter, "Grey to Alpha",		s_node_grey_alpha,		"Node_Grey_Alpha",		[1, Node_Grey_Alpha],, "Convert greyscale to alpha value.");
-		
+			
 			ds_list_add(filter, "Fixes");
 			addNodeObject(filter, "De-Corner",			s_node_decorner,		"Node_De_Corner",		[1, Node_De_Corner], ["decorner"], "Attempt to remove single pixel corner from the image.");
 			addNodeObject(filter, "De-Stray",			s_node_destray,			"Node_De_Stray",		[1, Node_De_Stray], ["destray"], "Attempt to remove orphan pixel.");
-	
+			
 		var threeD = ds_list_create();
 		addNodeCatagory("3D", threeD);
 			ds_list_add(threeD, "2D operations");
@@ -348,7 +348,7 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 			addNodeObject(threeD, "Bevel",				s_node_bevel,			"Node_Bevel",			[1, Node_Bevel], ["shade", "auto shade"], "Apply 2D bevel on the image.");
 			addNodeObject(threeD, "Sprite Stack",		s_node_stack,			"Node_Sprite_Stack",	[1, Node_Sprite_Stack],, "Create sprite stack either from repeating a single image or stacking different images using array.");
 			///**/ addNodeObject(threeD, "Depth 3D",			s_node_stack,			"Node_3D_Depth",		[1, Node_3D_Depth],, "Create 3D looking image from depth map.").setVersion(1447);
-		
+			
 			ds_list_add(threeD, "3D generates");
 			addNodeObject(threeD, "3D Object",			s_node_3d_obj,			"Node_3D_Obj",			[0, Node_create_3D_Obj],, "Load .obj file from your computer as a 3D object.");
 			addNodeObject(threeD, "3D Plane",			s_node_3d_plane,		"Node_3D_Plane",		[1, Node_3D_Plane],, "Put 2D image on a plane in 3D space.");
@@ -357,7 +357,7 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 			addNodeObject(threeD, "3D Sphere",			s_node_3d_sphere,		"Node_3D_Sphere",		[1, Node_3D_Sphere]).setVersion(1090);
 			addNodeObject(threeD, "3D Cone",			s_node_3d_cone,			"Node_3D_Cone",			[1, Node_3D_Cone]).setVersion(1090);
 			addNodeObject(threeD, "3D Extrude",			s_node_3d_extrude,		"Node_3D_Extrude",		[1, Node_3D_Extrude],, "Extrude 2D image into 3D object.");
-		
+			
 			ds_list_add(threeD, "3D operations");
 			addNodeObject(threeD, "3D Transform",		s_node_3d_transform,	"Node_3D_Transform",	[1, Node_3D_Transform]).setVersion(1080);
 			addNodeObject(threeD, "3D Combine",			s_node_3d_obj_combine,	"Node_3D_Combine",		[1, Node_3D_Combine],, "Combine multiple 3D object to a single scene,").setVersion(1080);
@@ -372,7 +372,7 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 			addNodeObject(generator, "Solid",				s_node_solid,				"Node_Solid",				[1, Node_Solid],, "Create image of a single color.");
 			addNodeObject(generator, "Draw Gradient",		s_node_gradient,			"Node_Gradient",			[1, Node_Gradient],, "Create image from gradient.");
 			addNodeObject(generator, "4 Points Gradient",	s_node_gradient_4points,	"Node_Gradient_Points",		[1, Node_Gradient_Points],, "Create image from 4 color points.");
-		
+			
 			ds_list_add(generator, "Drawer");
 			//addNodeObject(generator, "Pixel Builder",	s_node_pixel_builder,	"Node_Pixel_Builder",	[1, Node_Pixel_Builder]).setVersion(1147);
 			addNodeObject(generator, "Line",			s_node_line,			"Node_Line",			[1, Node_Line],, "Draw line on an image. Connect path data to it to draw line from path.");
@@ -408,15 +408,15 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 			addNodeObject(generator, "RigidSim Global",		s_node_rigidSim_global,		"Node_Rigid_Global",		[1, Node_Rigid_Global]).setVersion(1110);
 			addNodeObject(generator, "FluidSim",			s_node_fluidSim_group,		"Node_Fluid_Group",			[1, Node_Fluid_Group],, "Create group for fluid simulation.").setVersion(1120);
 			addNodeObject(generator, "StrandSim",			s_node_strandSim,			"Node_Strand_Group",		[1, Node_Strand_Group], ["Hair"], "Create group for hair simulation.").setVersion(1140);
-		
+			
 			ds_list_add(generator, "Region");
 			addNodeObject(generator, "Separate Shape",		s_node_sepearte_shape,		"Node_Seperate_Shape",		[1, Node_Seperate_Shape],, "Separate disconnected pixel each into an image in an image array.");
-			addNodeObject(generator, "Region Fill",			s_node_region_fill,			"Node_Region_Fill",			[1, Node_Region_Fill]).setVersion(1147);		
+			addNodeObject(generator, "Region Fill",			s_node_region_fill,			"Node_Region_Fill",			[1, Node_Region_Fill],, "Fill connected pixel with the same color.").setVersion(1147);		
 			
 			ds_list_add(generator, "Others");
 			addNodeObject(generator, "Flood Fill",		s_node_flood_fill,		"Node_Flood_Fill",		[1, Node_Flood_Fill],, "Filled connected pixel given position and color.").setVersion(1133);
 			addNodeObject(generator, "Bar / Graph",		s_node_bar_graph,		"Node_Plot_Linear",		[1, Node_Plot_Linear], ["graph", "waveform", "bar chart", "plot"], "Plot graph or bar chart from array of number.").setVersion(1144);
-	
+			
 		var compose = ds_list_create();
 		addNodeCatagory("Compose", compose);
 			ds_list_add(compose, "Composes");
@@ -438,7 +438,7 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 				ds_list_add(compose, "Export");
 				addNodeObject(compose, "Export",	s_node_export,		"Node_Export",			[0, Node_create_Export]);
 			}
-	
+			
 		var values = ds_list_create();
 		addNodeCatagory("Values", values);
 			ds_list_add(values, "Raw data");
@@ -447,7 +447,7 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 			addNodeObject(values, "Path",			s_node_path,		"Node_Path",			[1, Node_Path]);
 			addNodeObject(values, "Area",			s_node_area,		"Node_Area",			[1, Node_Area]);
 			addNodeObject(values, "Boolean",		s_node_boolean,		"Node_Boolean",			[1, Node_Boolean]).setVersion(1090);
-		
+			
 			ds_list_add(values, "Numbers");
 			addNodeObject(values, "Number",			s_node_number,			"Node_Number",			[1, Node_Number]);
 			addNodeObject(values, "To Number",		s_node_to_number,		"Node_To_Number",		[1, Node_To_Number]).setVersion(1145);
@@ -572,7 +572,7 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 			addNodeObject(color, "Gradient Shift",		s_node_gradient_shift,		"Node_Gradient_Shift",			[1, Node_Gradient_Shift],, "Move gradients keys.");
 			addNodeObject(color, "Gradient Replace",	s_node_gradient_replace,	"Node_Gradient_Replace_Color",	[1, Node_Gradient_Replace_Color]).setVersion(1135);
 			addNodeObject(color, "Gradient Data",		s_node_gradient_data,		"Node_Gradient_Extract",		[1, Node_Gradient_Extract],, "Get palatte and array of key positions from gradient.").setVersion(1135);
-		
+			
 		var animation = ds_list_create();
 		addNodeCatagory("Animation", animation);
 			ds_list_add(animation, "Animations");
@@ -587,7 +587,7 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 			addNodeObject(animation, "FFT",			 s_node_FFT,			"Node_FFT",				[1, Node_FFT], ["frequency analysis"], "Perform fourier transform on number array.").setVersion(1144);
 			addNodeObject(animation, "Bar / Graph",	 s_node_bar_graph,		"Node_Plot_Linear",		[1, Node_Plot_Linear], ["graph", "waveform", "bar chart", "plot"], "Plot graph or bar chart from array of number.").setVersion(1144);
 			addNodeObject(animation, "Audio Window", s_node_audio_trim,		"Node_Audio_Window",	[1, Node_Audio_Window],, "Take a slice of an audio array based on the current frame.").setVersion(1144);
-		
+			
 		var node = ds_list_create();
 		addNodeCatagory("Node", node);
 			ds_list_add(node, "Control");
@@ -621,71 +621,71 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 			
 			ds_list_add(node, "Debug");
 			addNodeObject(node, "Print",		s_node_print,		"Node_Print",		[1, Node_Print], ["debug log"], "Display text to notification.").setVersion(1145);
-		
+			
 		var actions = ds_list_create();
 		addNodeCatagory("Actions", actions);
 			__initNodeActions(actions);
-		
+			
 		//////////////////////////////////////////////////////////////// PIXEL BUILDER ////////////////////////////////////////////////////////////////
-		
-		var pb_draw = ds_list_create();
-		addNodePBCatagory("Draw", pb_draw);
-			ds_list_add(pb_draw, "Fill");
-			addNodeObject(pb_draw, "Fill",				s_node_pb_draw_fill,	"Node_PB_Draw_Fill",			[1, Node_PB_Draw_Fill]);
 			
-			ds_list_add(pb_draw, "Shape");
-			addNodeObject(pb_draw, "Rectangle",			s_node_pb_draw_rectangle,		"Node_PB_Draw_Rectangle",		[1, Node_PB_Draw_Rectangle]);
-			addNodeObject(pb_draw, "Round Rectangle",	s_node_pb_draw_roundrectangle,	"Node_PB_Draw_Round_Rectangle",	[1, Node_PB_Draw_Round_Rectangle]);
-			addNodeObject(pb_draw, "Trapezoid",			s_node_pb_draw_trapezoid,		"Node_PB_Draw_Trapezoid",		[1, Node_PB_Draw_Trapezoid]);
-			addNodeObject(pb_draw, "Diamond",			s_node_pb_draw_diamond,			"Node_PB_Draw_Diamond",		[1, Node_PB_Draw_Diamond]);
-			addNodeObject(pb_draw, "Ellipse",			s_node_pb_draw_ellipse,			"Node_PB_Draw_Ellipse",			[1, Node_PB_Draw_Ellipse]);
-			addNodeObject(pb_draw, "Semi-Ellipse",		s_node_pb_draw_semi_ellipse,	"Node_PB_Draw_Semi_Ellipse",	[1, Node_PB_Draw_Semi_Ellipse]);
-			addNodeObject(pb_draw, "Line",				s_node_pb_draw_line,			"Node_PB_Draw_Line",			[1, Node_PB_Draw_Line]);
-			addNodeObject(pb_draw, "Angle",				s_node_pb_draw_angle,			"Node_PB_Draw_Angle",			[1, Node_PB_Draw_Angle]);
-			addNodeObject(pb_draw, "Blob",				s_node_pb_draw_blob,			"Node_PB_Draw_Blob",			[1, Node_PB_Draw_Blob]);
-		
-		var pb_box = ds_list_create();
-		addNodePBCatagory("Box", pb_box);
-			ds_list_add(pb_box, "Layer");
-			addNodeObject(pb_box, "Layer",		s_node_pb_layer,	"Node_PB_Layer",		[1, Node_PB_Layer]);
+		//var pb_draw = ds_list_create();
+		//addNodePBCatagory("Draw", pb_draw);
+		//	ds_list_add(pb_draw, "Fill");
+		//	addNodeObject(pb_draw, "Fill",				s_node_pb_draw_fill,	"Node_PB_Draw_Fill",			[1, Node_PB_Draw_Fill]);
 			
-			ds_list_add(pb_box, "Box");
-			addNodeObject(pb_box, "Transform",		s_node_pb_box_transform,	"Node_PB_Box_Transform",	[1, Node_PB_Box_Transform]);
-			addNodeObject(pb_box, "Mirror",			s_node_pb_box_mirror,		"Node_PB_Box_Mirror",		[1, Node_PB_Box_Mirror]);
-			addNodeObject(pb_box, "Inset",			s_node_pb_box_inset,		"Node_PB_Box_Inset",		[1, Node_PB_Box_Inset]);
-			addNodeObject(pb_box, "Split",			s_node_pb_box_split,		"Node_PB_Box_Split",		[1, Node_PB_Box_Split]);
-			addNodeObject(pb_box, "Divide",			s_node_pb_box_divide,		"Node_PB_Box_Divide",		[1, Node_PB_Box_Divide]);
-			addNodeObject(pb_box, "Divide Grid",	s_node_pb_box_divide_grid,	"Node_PB_Box_Divide_Grid",	[1, Node_PB_Box_Divide_Grid]);
-			addNodeObject(pb_box, "Contract",		s_node_pb_box_contract,		"Node_PB_Box_Contract",		[1, Node_PB_Box_Contract]);
-		
-		var pb_fx = ds_list_create();
-		addNodePBCatagory("Effects", pb_fx);
-			ds_list_add(pb_fx, "Effect");
-			addNodeObject(pb_fx, "Outline",			s_node_pb_fx_outline,	"Node_PB_Fx_Outline",		[1, Node_PB_Fx_Outline]);
-			addNodeObject(pb_fx, "Stack",			s_node_pb_fx_stack,		"Node_PB_Fx_Stack",			[1, Node_PB_Fx_Stack]);
-			addNodeObject(pb_fx, "Radial",			s_node_pb_fx_radial,	"Node_PB_Fx_Radial",		[1, Node_PB_Fx_Radial]);
+		//	ds_list_add(pb_draw, "Shape");
+		//	addNodeObject(pb_draw, "Rectangle",			s_node_pb_draw_rectangle,		"Node_PB_Draw_Rectangle",		[1, Node_PB_Draw_Rectangle]);
+		//	addNodeObject(pb_draw, "Round Rectangle",	s_node_pb_draw_roundrectangle,	"Node_PB_Draw_Round_Rectangle",	[1, Node_PB_Draw_Round_Rectangle]);
+		//	addNodeObject(pb_draw, "Trapezoid",			s_node_pb_draw_trapezoid,		"Node_PB_Draw_Trapezoid",		[1, Node_PB_Draw_Trapezoid]);
+		//	addNodeObject(pb_draw, "Diamond",			s_node_pb_draw_diamond,			"Node_PB_Draw_Diamond",		[1, Node_PB_Draw_Diamond]);
+		//	addNodeObject(pb_draw, "Ellipse",			s_node_pb_draw_ellipse,			"Node_PB_Draw_Ellipse",			[1, Node_PB_Draw_Ellipse]);
+		//	addNodeObject(pb_draw, "Semi-Ellipse",		s_node_pb_draw_semi_ellipse,	"Node_PB_Draw_Semi_Ellipse",	[1, Node_PB_Draw_Semi_Ellipse]);
+		//	addNodeObject(pb_draw, "Line",				s_node_pb_draw_line,			"Node_PB_Draw_Line",			[1, Node_PB_Draw_Line]);
+		//	addNodeObject(pb_draw, "Angle",				s_node_pb_draw_angle,			"Node_PB_Draw_Angle",			[1, Node_PB_Draw_Angle]);
+		//	addNodeObject(pb_draw, "Blob",				s_node_pb_draw_blob,			"Node_PB_Draw_Blob",			[1, Node_PB_Draw_Blob]);
 			
-			ds_list_add(pb_fx, "Lighting");
-			addNodeObject(pb_fx, "Highlight",		s_node_pb_fx_highlight,	"Node_PB_Fx_Highlight",		[1, Node_PB_Fx_Highlight]);
-			addNodeObject(pb_fx, "Shading",			s_node_pb_fx_shading,	"Node_PB_Fx_Shading",		[1, Node_PB_Fx_Shading]);
+		//var pb_box = ds_list_create();
+		//addNodePBCatagory("Box", pb_box);
+		//	ds_list_add(pb_box, "Layer");
+		//	addNodeObject(pb_box, "Layer",		s_node_pb_layer,	"Node_PB_Layer",		[1, Node_PB_Layer]);
 			
-			ds_list_add(pb_fx, "Texture");
-			addNodeObject(pb_fx, "Hashing",			s_node_pb_fx_hash,		"Node_PB_Fx_Hash",			[1, Node_PB_Fx_Hash]);
-			addNodeObject(pb_fx, "Strip",			s_node_pb_fx_strip,		"Node_PB_Fx_Strip",			[1, Node_PB_Fx_Strip]);
-			addNodeObject(pb_fx, "Brick",			s_node_pb_fx_brick,		"Node_PB_Fx_Brick",			[1, Node_PB_Fx_Brick]);
+		//	ds_list_add(pb_box, "Box");
+		//	addNodeObject(pb_box, "Transform",		s_node_pb_box_transform,	"Node_PB_Box_Transform",	[1, Node_PB_Box_Transform]);
+		//	addNodeObject(pb_box, "Mirror",			s_node_pb_box_mirror,		"Node_PB_Box_Mirror",		[1, Node_PB_Box_Mirror]);
+		//	addNodeObject(pb_box, "Inset",			s_node_pb_box_inset,		"Node_PB_Box_Inset",		[1, Node_PB_Box_Inset]);
+		//	addNodeObject(pb_box, "Split",			s_node_pb_box_split,		"Node_PB_Box_Split",		[1, Node_PB_Box_Split]);
+		//	addNodeObject(pb_box, "Divide",			s_node_pb_box_divide,		"Node_PB_Box_Divide",		[1, Node_PB_Box_Divide]);
+		//	addNodeObject(pb_box, "Divide Grid",	s_node_pb_box_divide_grid,	"Node_PB_Box_Divide_Grid",	[1, Node_PB_Box_Divide_Grid]);
+		//	addNodeObject(pb_box, "Contract",		s_node_pb_box_contract,		"Node_PB_Box_Contract",		[1, Node_PB_Box_Contract]);
 			
-			ds_list_add(pb_fx, "Blend");
-			addNodeObject(pb_fx, "Add",				s_node_pb_fx_add,		"Node_PB_Fx_Add",			[1, Node_PB_Fx_Add]);
-			addNodeObject(pb_fx, "Subtract",		s_node_pb_fx_subtract,	"Node_PB_Fx_Subtract",		[1, Node_PB_Fx_Subtract]);
-			addNodeObject(pb_fx, "Intersect",		s_node_pb_fx_interesct,	"Node_PB_Fx_Intersect",		[1, Node_PB_Fx_Intersect]);
+		//var pb_fx = ds_list_create();
+		//addNodePBCatagory("Effects", pb_fx);
+		//	ds_list_add(pb_fx, "Effect");
+		//	addNodeObject(pb_fx, "Outline",			s_node_pb_fx_outline,	"Node_PB_Fx_Outline",		[1, Node_PB_Fx_Outline]);
+		//	addNodeObject(pb_fx, "Stack",			s_node_pb_fx_stack,		"Node_PB_Fx_Stack",			[1, Node_PB_Fx_Stack]);
+		//	addNodeObject(pb_fx, "Radial",			s_node_pb_fx_radial,	"Node_PB_Fx_Radial",		[1, Node_PB_Fx_Radial]);
 			
-		var pb_arr = ds_list_create();
-		addNodePBCatagory("Array", pb_arr);
-			addNodeObject(pb_arr, "Array",			s_node_array,			"Node_Array",			[1, Node_Array]);
-			addNodeObject(pb_arr, "Array Get",		s_node_array_get,		"Node_Array_Get",		[1, Node_Array_Get], ["get array"]);
-			addNodeObject(pb_arr, "Array Set",		s_node_array_set,		"Node_Array_Set",		[1, Node_Array_Set], ["set array"]).setVersion(1120);
-			addNodeObject(pb_arr, "Array Insert",	s_node_array_insert,	"Node_Array_Insert",	[1, Node_Array_Insert], ["insert array"]).setVersion(1120);
-			addNodeObject(pb_arr, "Array Remove",	s_node_array_remove,	"Node_Array_Remove",	[1, Node_Array_Remove], ["remove array", "delete array", "array delete"]).setVersion(1120);
+		//	ds_list_add(pb_fx, "Lighting");
+		//	addNodeObject(pb_fx, "Highlight",		s_node_pb_fx_highlight,	"Node_PB_Fx_Highlight",		[1, Node_PB_Fx_Highlight]);
+		//	addNodeObject(pb_fx, "Shading",			s_node_pb_fx_shading,	"Node_PB_Fx_Shading",		[1, Node_PB_Fx_Shading]);
+			
+		//	ds_list_add(pb_fx, "Texture");
+		//	addNodeObject(pb_fx, "Hashing",			s_node_pb_fx_hash,		"Node_PB_Fx_Hash",			[1, Node_PB_Fx_Hash]);
+		//	addNodeObject(pb_fx, "Strip",			s_node_pb_fx_strip,		"Node_PB_Fx_Strip",			[1, Node_PB_Fx_Strip]);
+		//	addNodeObject(pb_fx, "Brick",			s_node_pb_fx_brick,		"Node_PB_Fx_Brick",			[1, Node_PB_Fx_Brick]);
+			
+		//	ds_list_add(pb_fx, "Blend");
+		//	addNodeObject(pb_fx, "Add",				s_node_pb_fx_add,		"Node_PB_Fx_Add",			[1, Node_PB_Fx_Add]);
+		//	addNodeObject(pb_fx, "Subtract",		s_node_pb_fx_subtract,	"Node_PB_Fx_Subtract",		[1, Node_PB_Fx_Subtract]);
+		//	addNodeObject(pb_fx, "Intersect",		s_node_pb_fx_interesct,	"Node_PB_Fx_Intersect",		[1, Node_PB_Fx_Intersect]);
+			
+		//var pb_arr = ds_list_create();
+		//addNodePBCatagory("Array", pb_arr);
+		//	addNodeObject(pb_arr, "Array",			s_node_array,			"Node_Array",			[1, Node_Array]);
+		//	addNodeObject(pb_arr, "Array Get",		s_node_array_get,		"Node_Array_Get",		[1, Node_Array_Get], ["get array"]);
+		//	addNodeObject(pb_arr, "Array Set",		s_node_array_set,		"Node_Array_Set",		[1, Node_Array_Set], ["set array"]).setVersion(1120);
+		//	addNodeObject(pb_arr, "Array Insert",	s_node_array_insert,	"Node_Array_Insert",	[1, Node_Array_Insert], ["insert array"]).setVersion(1120);
+		//	addNodeObject(pb_arr, "Array Remove",	s_node_array_remove,	"Node_Array_Remove",	[1, Node_Array_Remove], ["remove array", "delete array", "array delete"]).setVersion(1120);
 			
 		var hid = ds_list_create();
 		addNodeCatagory("Hidden", hid, ["Hidden"]);
