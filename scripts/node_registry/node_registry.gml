@@ -93,7 +93,7 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 			ds_list_add(group, "Groups");
 			addNodeObject(group, "Input",	s_node_group_input,	"Node_Group_Input",		[1, Node_Group_Input]);
 			addNodeObject(group, "Output",	s_node_group_output,"Node_Group_Output",	[1, Node_Group_Output]);
-		
+			
 		var iter = ds_list_create();
 		addNodeCatagory("Loop", iter, ["Node_Iterate"]);
 			ds_list_add(iter, "Groups");
@@ -103,33 +103,33 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 			ds_list_add(iter, "Loops");
 			addNodeObject(iter, "Index",		s_node_iterator_index,	"Node_Iterator_Index",	[1, Node_Iterator_Index]);
 			addNodeObject(iter, "Loop amount",	s_node_iterator_amount,	"Node_Iterator_Length",	[1, Node_Iterator_Length]);
-	
+			
 		var itere = ds_list_create();
 		addNodeCatagory("Loop", itere, ["Node_Iterate_Each"]);
 			ds_list_add(itere, "Groups");
 			addNodeObject(itere, "Input",	s_node_group_input,		"Node_Group_Input",		[1, Node_Group_Input]);
 			addNodeObject(itere, "Output",	s_node_group_output,	"Node_Group_Output",	[1, Node_Group_Output]);
-		
+			
 			ds_list_add(itere, "Loops");
 			addNodeObject(itere, "Index",			s_node_iterator_index,	"Node_Iterator_Index",	[1, Node_Iterator_Index]);
 			addNodeObject(itere, "Array Length",	s_node_iterator_length,	"Node_Iterator_Each_Length",	[1, Node_Iterator_Each_Length]);
-	
+			
 		var filter = ds_list_create();
 		addNodeCatagory("Filter", filter, ["Node_Iterate_Filter"]);
 			ds_list_add(filter, "Groups");
 			addNodeObject(filter, "Input",	s_node_group_input,		"Node_Group_Input",		[1, Node_Group_Input]);
 			addNodeObject(filter, "Output",	s_node_group_output,	"Node_Group_Output",	[1, Node_Group_Output]);
-		
+			
 			ds_list_add(filter, "Loops");
 			addNodeObject(filter, "Index",			s_node_iterator_index,	"Node_Iterator_Index",			[1, Node_Iterator_Index]);
 			addNodeObject(filter, "Array Length",	s_node_iterator_length,	"Node_Iterator_Each_Length",	[1, Node_Iterator_Each_Length]);
-		
+			
 		var feed = ds_list_create();
 		addNodeCatagory("Feedback", feed, ["Node_Feedback"]);
 			ds_list_add(feed, "Groups");
 			addNodeObject(feed, "Input",	s_node_feedback_input,	"Node_Feedback_Input",	[1, Node_Feedback_Input]);
 			addNodeObject(feed, "Output",	s_node_feedback_output,	"Node_Feedback_Output",	[1, Node_Feedback_Output]);
-		
+			
 		var vfx = ds_list_create();
 		addNodeCatagory("VFX", vfx, ["Node_VFX_Group"]);
 			ds_list_add(vfx, "Groups");
@@ -152,36 +152,36 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 			ds_list_add(vfx, "Instance control");
 			addNodeObject(vfx, "VFX Variable",	s_node_vfx_variable,	"Node_VFX_Variable",	[1, Node_VFX_Variable]).setVersion(1120);
 			addNodeObject(vfx, "VFX Override",	s_node_vfx_override,	"Node_VFX_Override",	[1, Node_VFX_Override]).setVersion(1120);
-	
+			
 		var rigidSim = ds_list_create();
 		addNodeCatagory("RigidSim", rigidSim, ["Node_Rigid_Group"]);
 			ds_list_add(rigidSim, "Group");
 			addNodeObject(rigidSim, "Input",	s_node_group_input,	"Node_Group_Input",		[1, Node_Group_Input]);
 			addNodeObject(rigidSim, "Output",	s_node_group_output,"Node_Group_Output",	[1, Node_Group_Output]);
-		
+			
 			ds_list_add(rigidSim, "RigidSim");
 			addNodeObject(rigidSim, "Object",			s_node_rigidSim_object,		"Node_Rigid_Object",		[1, Node_Rigid_Object]).setVersion(1110);
 			addNodeObject(rigidSim, "Object Spawner",	s_node_rigidSim_object_spawner,		"Node_Rigid_Object_Spawner",		[1, Node_Rigid_Object_Spawner]).setVersion(1110);
 			addNodeObject(rigidSim, "Render",			s_node_rigidSim_renderer,	"Node_Rigid_Render",		[1, Node_Rigid_Render]).setVersion(1110);
 			addNodeObject(rigidSim, "Apply Force",		s_node_rigidSim_force,		"Node_Rigid_Force_Apply",	[1, Node_Rigid_Force_Apply]).setVersion(1110);
-		
+			
 			ds_list_add(rigidSim, "Instance control");
 			addNodeObject(rigidSim, "Activate Physics",	s_node_rigidSim_activate,	"Node_Rigid_Activate",		[1, Node_Rigid_Activate]).setVersion(1110);
 			addNodeObject(rigidSim, "Rigidbody Variable",	s_node_rigid_variable,	"Node_Rigid_Variable",		[1, Node_Rigid_Variable]).setVersion(1120);
 			addNodeObject(rigidSim, "Rigidbody Override",	s_node_rigid_override,	"Node_Rigid_Override",		[1, Node_Rigid_Override]).setVersion(1120);
-		
+			
 		var fluidSim = ds_list_create();
 		addNodeCatagory("FluidSim", fluidSim, ["Node_Fluid_Group"]);
 			ds_list_add(fluidSim, "Group");
 			addNodeObject(fluidSim, "Input",	s_node_group_input,		"Node_Group_Input",		[1, Node_Group_Input]);
 			addNodeObject(fluidSim, "Output",	s_node_group_output,	"Node_Group_Output",	[1, Node_Group_Output]);
-		
+			
 			ds_list_add(fluidSim, "Domain");
 			addNodeObject(fluidSim, "Fluid Domain",		s_node_fluidSim_domain,			"Node_Fluid_Domain",		[1, Node_Fluid_Domain]).setVersion(1120);
 			addNodeObject(fluidSim, "Update Domain",	s_node_fluidSim_update,			"Node_Fluid_Update",		[1, Node_Fluid_Update]).setVersion(1120);
 			addNodeObject(fluidSim, "Render Domain",	s_node_fluidSim_render,			"Node_Fluid_Render",		[1, Node_Fluid_Render]).setVersion(1120);
 			addNodeObject(fluidSim, "Queue Domain",		s_node_fluidSim_domain_queue,	"Node_Fluid_Domain_Queue",	[1, Node_Fluid_Domain_Queue]).setVersion(1120);
-		
+			
 			ds_list_add(fluidSim, "Fluid");
 			addNodeObject(fluidSim, "Add Fluid",		s_node_fluidSim_add_fluid,		"Node_Fluid_Add",				[1, Node_Fluid_Add]).setVersion(1120);
 			addNodeObject(fluidSim, "Apply Velocity",	s_node_fluidSim_apply_velocity,	"Node_Fluid_Apply_Velocity",	[1, Node_Fluid_Apply_Velocity]).setVersion(1120);
@@ -189,7 +189,7 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 			addNodeObject(fluidSim, "Vortex",			s_node_fluidSim_vortex,			"Node_Fluid_Vortex",			[1, Node_Fluid_Vortex]).setVersion(1120);
 			addNodeObject(fluidSim, "Repulse",			s_node_fluidSim_repulse,		"Node_Fluid_Repulse",			[1, Node_Fluid_Repulse]).setVersion(1120);
 			addNodeObject(fluidSim, "Turbulence",		s_node_fluidSim_turbulence,		"Node_Fluid_Turbulence",		[1, Node_Fluid_Turbulence]).setVersion(1120);
-		
+			
 		var strandSim = ds_list_create();
 		addNodeCatagory("StrandSim", strandSim, ["Node_Strand_Group"]);
 			ds_list_add(strandSim, "Group");
@@ -208,13 +208,13 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 			addNodeObject(strandSim, "Strand Break",		 s_node_strandSim_break,	"Node_Strand_Break",		 [1, Node_Strand_Break]).setVersion(1140);
 			addNodeObject(strandSim, "Strand Length Adjust", s_node_strandSim_length,	"Node_Strand_Length_Adjust", [1, Node_Strand_Length_Adjust]).setVersion(1140);
 			addNodeObject(strandSim, "Strand Collision",	s_node_strandSim_collide,		"Node_Strand_Collision",	[1, Node_Strand_Collision]).setVersion(1140);
-		
+			
 		NODE_PAGE_DEFAULT = ds_list_size(NODE_CATEGORY);
 		ADD_NODE_PAGE = NODE_PAGE_DEFAULT;
-		
+			
 		var fav = ds_list_create();
 		addNodeCatagory("Favourites", fav);
-		
+			
 		var input = ds_list_create();
 		addNodeCatagory("IO", input);
 			ds_list_add(input, "Images");

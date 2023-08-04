@@ -434,7 +434,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	static onPartDestroy = function(part) {}
 	
 	static postDeserialize = function() {
-		if(PROJECT.version < SAVE_VERSION) {
+		if(PROJECT.version < 11480) {
 			for( var i = 37; i <= 39; i++ )
 				array_insert(load_map.inputs, i, noone);
 		}

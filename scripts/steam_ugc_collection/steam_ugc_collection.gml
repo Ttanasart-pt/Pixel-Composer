@@ -9,6 +9,8 @@ function steam_ugc_create_collection(file) {
 	directory_destroy(DIRECTORY + "steamUGC");
 	directory_create(DIRECTORY + "steamUGC");
 	file_copy(file.path, DIRECTORY + "steamUGC/" + filename_name(file.path));
+	file_copy(file.meta_path, DIRECTORY + "steamUGC/" + filename_name(file.meta_path));
+	
 	if(array_safe_get(file.spr_path, 0, 0) != 0)
 		file_copy(file.spr_path[0], DIRECTORY + "steamUGC/" + filename_name(file.spr_path[0]));
 	steam_ugc_collection_generate(file);
@@ -27,6 +29,7 @@ function steam_ugc_update_collection(file, update_preview = false) {
 	directory_destroy(DIRECTORY + "steamUGC");
 	directory_create(DIRECTORY + "steamUGC");
 	file_copy(file.path, DIRECTORY + "steamUGC/" + filename_name(file.path));
+	file_copy(file.meta_path, DIRECTORY + "steamUGC/" + filename_name(file.meta_path));
 	if(array_safe_get(file.spr_path, 0, 0) != 0)
 		file_copy(file.spr_path[0], DIRECTORY + "steamUGC/" + filename_name(file.spr_path[0]));
 	

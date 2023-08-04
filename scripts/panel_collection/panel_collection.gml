@@ -39,17 +39,20 @@ function Panel_Collection() : PanelContent() constructor {
 		if(meta == noone || !meta.steam) {
 			contentMenu = [
 				menuItem(__txtx("panel_collection_replace", "Replace with selected"), function() { 
-					saveCollection(PANEL_INSPECTOR.inspecting, _menu_node.data_path, _menu_node.path, false, _menu_node.meta);
+					var _path = filename_dir(_menu_node.path);
+					var _name = filename_name(_menu_node.path);
+					
+					saveCollection(PANEL_INSPECTOR.inspecting, _path, _name, false, _menu_node.meta);
 				}),
 				menuItem(__txtx("panel_collection_edit_meta", "Edit metadata") + "...", function() { 
-					var dia = dialogCall(o_dialog_file_name_collection, mouse_mx + ui(8), mouse_my + ui(-320));
+					var dia  = dialogCall(o_dialog_file_name_collection, mouse_mx + ui(8), mouse_my + ui(-320));
 					var meta = _menu_node.getMetadata();
 					if(meta != noone && meta != undefined) 
 						dia.meta = meta;
 					
 					dia.node = PANEL_INSPECTOR.inspecting;
 					dia.data_path = data_path;
-					dia.updating	= _menu_node;
+					dia.updating  = _menu_node;
 					dia.doExpand();
 				}),
 				-1,

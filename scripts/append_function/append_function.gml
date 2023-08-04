@@ -3,7 +3,7 @@ function APPEND(_path, context = PANEL_GRAPH.getCurrentContext()) {
 	var _map = json_load_struct(_path);
 	
 	if(_map == -1) {
-		printlog("Decode error");
+		printIf(log, "Decode error");
 		return noone;
 	}
 	
@@ -42,7 +42,7 @@ function __APPEND_MAP(_map, context = PANEL_GRAPH.getCurrentContext()) {
 		var _node = nodeLoad(_node_list[i], true, context);
 		if(_node) ds_list_add(appended_list, _node);
 	}
-	printlog("Load time: " + string(current_time - t)); t = current_time;
+	printIf(log, "Load time: " + string(current_time - t)); t = current_time;
 	
 	try {
 		for(var i = 0; i < ds_list_size(appended_list); i++) {
@@ -55,7 +55,7 @@ function __APPEND_MAP(_map, context = PANEL_GRAPH.getCurrentContext()) {
 	} catch(e) {
 		log_warning("APPEND, node", exception_print(e));
 	}
-	printlog("Load group time: " + string(current_time - t)); t = current_time;
+	printIf(log, "Load group time: " + string(current_time - t)); t = current_time;
 	
 	try {
 		for(var i = 0; i < ds_list_size(appended_list); i++)
@@ -63,7 +63,7 @@ function __APPEND_MAP(_map, context = PANEL_GRAPH.getCurrentContext()) {
 	} catch(e) {
 		log_warning("APPEND, deserialize", exception_print(e));
 	}
-	printlog("Deserialize time: " + string(current_time - t)); t = current_time;
+	printIf(log, "Deserialize time: " + string(current_time - t)); t = current_time;
 	
 	try {
 		for(var i = 0; i < ds_list_size(appended_list); i++)
@@ -71,7 +71,7 @@ function __APPEND_MAP(_map, context = PANEL_GRAPH.getCurrentContext()) {
 	} catch(e) {
 		log_warning("LOAD, apply deserialize", exception_print(e));
 	}
-	printlog("Apply deserialize time: " + string(current_time - t)); t = current_time;
+	printIf(log, "Apply deserialize time: " + string(current_time - t)); t = current_time;
 	
 	try {
 		for(var i = 0; i < ds_list_size(appended_list); i++)
@@ -81,7 +81,7 @@ function __APPEND_MAP(_map, context = PANEL_GRAPH.getCurrentContext()) {
 	} catch(e) {
 		log_warning("APPEND, connect", exception_print(e));
 	}
-	printlog("Connect time: " + string(current_time - t)); t = current_time;
+	printIf(log, "Connect time: " + string(current_time - t)); t = current_time;
 	
 	try {
 		for(var i = 0; i < ds_list_size(appended_list); i++)
@@ -89,7 +89,7 @@ function __APPEND_MAP(_map, context = PANEL_GRAPH.getCurrentContext()) {
 	} catch(e) {
 		log_warning("APPEND, update", exception_print(e));
 	}
-	printlog("Update time: " + string(current_time - t)); t = current_time;
+	printIf(log, "Update time: " + string(current_time - t)); t = current_time;
 	
 	Render(true);
 	
@@ -115,7 +115,7 @@ function __APPEND_MAP(_map, context = PANEL_GRAPH.getCurrentContext()) {
 			log_warning("APPEND, Conflict solver error : ", exception_print(e));
 		}
 	}
-	printlog("Conflict time: " + string(current_time - t)); t = current_time;
+	printIf(log, "Conflict time: " + string(current_time - t)); t = current_time;
 	
 	try {
 		for(var i = 0; i < ds_list_size(appended_list); i++)

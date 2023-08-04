@@ -122,6 +122,8 @@ function SAVE_AT(project = PROJECT, path = "", log = "save at ") {
 	return true;
 }
 
+/////////////////////////////////////////////////////// COLLECTION ///////////////////////////////////////////////////////
+
 function SAVE_COLLECTIONS(_list, _path, save_surface = true, metadata = noone, context = PANEL_GRAPH.getCurrentContext()) {
 	var _content = {};
 	_content.version = SAVE_VERSION;
@@ -148,12 +150,16 @@ function SAVE_COLLECTIONS(_list, _path, save_surface = true, metadata = noone, c
 		SAVE_NODE(_nodes, _list[| i], cx, cy, true, context);
 	_content.nodes = _nodes;
 	
-	if(metadata != noone)
-		_content.metadata = metadata.serialize();
+	json_save_struct(_path, _content, !PREF_MAP[? "save_file_minify"]);
 	
-	var file = file_text_open_write(_path);
-	file_text_write_string(file, PREF_MAP[? "save_file_minify"]? json_stringify_minify(_content) : json_stringify(_content, true));
-	file_text_close(file);
+	if(metadata != noone) {
+		var _meta  = metadata.serialize();
+		var _dir   = filename_dir(_path);
+		var _name  = filename_name_only(_path);
+		var _mpath = $"{_dir}/{_name}.meta";
+		
+		json_save_struct(_mpath, _meta, true);
+	}
 	
 	var pane = findPanel("Panel_Collection");
 	if(pane) pane.refreshContext();
@@ -178,12 +184,16 @@ function SAVE_COLLECTION(_node, _path, save_surface = true, metadata = noone, co
 	SAVE_NODE(_nodes, _node, _node.x, _node.y, true, context);
 	_content.nodes = _nodes;
 	
-	if(metadata != noone)
-		_content.metadata = metadata.serialize();
+	json_save_struct(_path, _content, !PREF_MAP[? "save_file_minify"]);
 	
-	var file = file_text_open_write(_path);
-	file_text_write_string(file, PREF_MAP[? "save_file_minify"]? json_stringify_minify(_content) : json_stringify(_content, true));
-	file_text_close(file);
+	if(metadata != noone) {
+		var _meta  = metadata.serialize();
+		var _dir   = filename_dir(_path);
+		var _name  = filename_name_only(_path);
+		var _mpath = $"{_dir}/{_name}.meta";
+		
+		json_save_struct(_mpath, _meta, true);
+	}
 	
 	var pane = findPanel("Panel_Collection");
 	if(pane) pane.refreshContext();

@@ -15,7 +15,7 @@ function __test_update_current_collections() {
 			print("  > Updating " + _node.path);
 			var _map = json_load(_node.path);
 			_map[? "version"] = SAVE_VERSION;
-			json_save(_node.path, _map);
+			json_save(_node.meta_path, _map);
 		}
 		
 		for( var i = 0; i < ds_list_size(_st.subDir); i++ )
@@ -36,7 +36,7 @@ function __test_update_sample_projects() {
 		print("  > Updating " + _proj.path);
 		var _map = json_load(_proj.path);
 		_map[? "version"] = SAVE_VERSION;
-		json_save(_proj.path, _map);
+		json_save(_proj.meta_path, _map);
 	}
 	
 	print("---------- PROJECT UPDATING ENDED ----------");
@@ -125,7 +125,7 @@ function __test_load_all_nodes() {
 		if(index > inded) break;
 		if(index > indst) {
 			var node = ALL_NODES[? k];
-			print("==== Building " + node.node);
+			print($"==== Building {node.node} ====");
 			var b = node.build(xx, yy);
 			
 			if(++ind > col) {
@@ -156,7 +156,8 @@ function __test_metadata_current_collections() {
 	
 	print("---------- COLLECTION UPDATING STARTED ----------");
 	
-	var sel = PANEL_GRAPH.node_focus, outj = noone;
+	var sel   = PANEL_GRAPH.node_focus, outj = noone;
+	var _meta = METADATA.serialize();
 	if(sel != noone) outj = sel.outputs[| 0];
 	
 	while(!ds_stack_empty(st)) {
@@ -165,9 +166,7 @@ function __test_metadata_current_collections() {
 			var _node = _st.content[| i];
 			
 			print("  > Updating " + _node.path);
-			var _map = json_load(_node.path);
-			ds_map_add_map(_map, "metadata", METADATA.serialize());
-			json_save(_node.path, _map);
+			json_save_struct(_node.meta_path, _meta, true);
 		}
 		
 		for( var i = 0; i < ds_list_size(_st.subDir); i++ )

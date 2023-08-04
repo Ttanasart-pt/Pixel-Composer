@@ -2,11 +2,17 @@ function FileObject(_name, _path) constructor {
 	name = _name;
 	path = _path;
 	spr_path = [];
-	spr      = -1;
-	content  = -1;
-	surface  = noone;
-	meta	 = noone;
-	type = FILE_TYPE.collection;
+	spr        = -1;
+	sprFetchID = noone;
+	
+	content   = -1;
+	surface   = noone;
+	
+	var _mdir  = filename_dir(path);
+	var _mname = filename_name_only(path);
+	meta_path  = $"{_mdir}/{_mname}.meta";	
+	meta	   = noone;
+	type	   = FILE_TYPE.collection;
 	
 	switch(string_lower(filename_ext(path))) {
 		case ".png" :	
@@ -33,7 +39,7 @@ function FileObject(_name, _path) constructor {
 		return surface;
 	}
 	
-	static getThumbnail = function() {
+	static getThumbnail = function() { 
 		if(size > 100000) return noone;
 		if(!retrive_data) getMetadata();
 		
@@ -44,40 +50,55 @@ function FileObject(_name, _path) constructor {
 	}
 	
 	static getSpr = function() {
-		if(sprite_exists(spr)) return spr;
+		if(sprite_exists(spr))  return spr;
+		if(sprFetchID != noone) return -1;
+		
 		if(array_length(spr_path) == 0) {
-			spr = sprite_add(self.path, 0, false, false, 0, 0);
-			sprite_set_offset(spr, sprite_get_width(spr) / 2, sprite_get_height(spr) / 2);
+			sprFetchID = sprite_add_ext(self.path, 0, 0, 0, false);
+			IMAGE_FETCH_MAP[? sprFetchID] = function(load_result) {
+				spr = load_result[? "id"];
+				sprite_set_offset(spr, sprite_get_width(spr) / 2, sprite_get_height(spr) / 2);
+			};
 			return spr;
 		}
 		
 		var path = array_safe_get(spr_path, 0);
 		var amo  = array_safe_get(spr_path, 1);
-		var cent = array_safe_get(spr_path, 2);
 		
 		if(path == 0) return -1;
-		spr = sprite_add(path, amo, false, false, 0, 0);
-		if(cent)
-			sprite_set_offset(spr, sprite_get_width(spr) / 2, sprite_get_height(spr) / 2);
+		
+		sprFetchID = sprite_add_ext(path, amo, 0, 0, false);
+		IMAGE_FETCH_MAP[? sprFetchID] = function(load_result) {
+			spr = load_result[? "id"];
+			if(array_safe_get(spr_path, 2))
+				sprite_set_offset(spr, sprite_get_width(spr) / 2, sprite_get_height(spr) / 2);
+		};
+		
 		return spr;
 	}
 	
-	static getMetadata = function() {
+	static getMetadata = function() { 
 		retrive_data = true;
-		if(!file_exists(path)) return noone;
-		if(meta != noone) return meta;
-		if(meta == undefined) return noone;
 		
-		var _f = file_text_read_all(path);
-		var m = json_decode(_f);
+		if(!file_exists(path))	return noone;
+		if(meta != noone)		return meta;
+		if(meta == undefined)	return noone;
 		
 		meta = new MetaDataManager();
-		if(ds_map_exists(m, "metadata"))
-			meta.deserialize(m[? "metadata"]);
-		if(ds_map_exists(m, "preview"))
-			thumbnail_data = json_try_parse(m[? "preview"], -1);
 		
-		meta.version = m[? "version"];
+		if(file_exists(meta_path)) {
+			var m  = json_load(meta_path);
+			meta.deserialize(m);
+		} else {
+			var m  = json_load(path);
+			
+			if(ds_map_exists(m, "metadata"))
+				meta.deserialize(m[? "metadata"]);
+			if(ds_map_exists(m, "preview"))
+				thumbnail_data = json_try_parse(m[? "preview"], -1);
+			meta.version = m[? "version"];
+		}
+		
 		meta.name = name;
 		
 		switch(filename_ext(path)) {

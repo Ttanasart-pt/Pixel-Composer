@@ -18,7 +18,7 @@
 		active	= true;
 		
 		path	= "";
-		version = 0;
+		version = SAVE_VERSION;
 		seed    = irandom_range(100000, 999999);
 		
 		modified = false;

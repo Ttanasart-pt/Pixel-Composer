@@ -19,7 +19,7 @@ function MetaDataManager() constructor {
 	author_steam_id = 0;
 	file_id		= 0;
 	tags		= [];
-	version		= 0;
+	version		= SAVE_VERSION;
 	steam		= false;
 	
 	static displays = [
@@ -32,13 +32,14 @@ function MetaDataManager() constructor {
 	
 	static serialize = function() {
 		var m = {};
-		m.description  = description;
-		m.author	= author;
-		m.contact	= contact;
-		m.alias		= alias;
-		m.aut_id	= author_steam_id;
-		m.file_id	= file_id;
-		m.tags		= tags;
+		m.description	= description;
+		m.author		= author;
+		m.contact		= contact;
+		m.alias			= alias;
+		m.aut_id		= author_steam_id;
+		m.file_id		= file_id;
+		m.tags			= tags;
+		m.version		= version;
 		
 		return m;
 	}
@@ -51,6 +52,7 @@ function MetaDataManager() constructor {
 		author_steam_id = struct_try_get(m, "aut_id",		author_steam_id);
 		file_id			= struct_try_get(m, "file_id",		file_id);
 		tags			= struct_try_get(m, "tags",			tags);
+		version			= struct_try_get(m, "version",		version);
 		
 		return self;
 	}

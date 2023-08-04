@@ -1461,8 +1461,8 @@ function Panel_Animation() : PanelContent() constructor {
 					var ot = 0, ov = true;
 					var x0 = 0, x1 = 0;
 					
-					for( var i = 0; i < ds_list_size(active_inp.animator.values); i++ ) {
-						var k = active_inp.animator.values[| i];
+					for( var j = 0; j < ds_list_size(active_inp.animator.values); j++ ) {
+						var k = active_inp.animator.values[| j];
 						
 						var t = k.time;
 						var v = k.value;
