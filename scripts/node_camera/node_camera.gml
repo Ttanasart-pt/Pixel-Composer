@@ -31,14 +31,12 @@ function Node_Camera(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	];
 	
 	attribute_surface_depth();
-	
-	input_display_len = array_length(input_display_list);
-	input_fix_len	  = ds_list_size(inputs);
-	data_length		  = 3;
+
+	setIsDynamicInput(3);
 	
 	temp_surface = [ noone, noone ];
 	
-	function createNewInput() {
+	static createNewInput = function()  {
 		var index = ds_list_size(inputs);
 		var _s    = floor((index - input_fix_len) / data_length);
 		
@@ -225,10 +223,10 @@ function Node_Camera(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		return _outSurf;
 	}
 	
-	static postDeserialize = function() {
-		var _inputs = load_map.inputs;
+	//static postDeserialize = function() {
+	//	var _inputs = load_map.inputs;
 		
-		for(var i = input_fix_len; i < array_length(_inputs); i += data_length)
-			createNewInput();
-	}
+	//	for(var i = input_fix_len; i < array_length(_inputs); i += data_length)
+	//		createNewInput();
+	//}
 }

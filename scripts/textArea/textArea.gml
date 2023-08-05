@@ -625,9 +625,8 @@ function textArea(_input, _onModify, _extras = noone) : textInput(_input, _onMod
 			draw_set_text(f_code, fa_right, fa_top, COLORS._main_text_sub);
 			
 			var lx = _x + ui(code_line_width - 8);
-			for( var i = 0; i < line_count; i++ ) {
-				var ly = _y + ui(7) + i * c_h;
-				
+			for( var i = 0; i < array_length(_input_text_line_index); i++ ) {
+				var ly  = _y + ui(7) + i * c_h;
 				draw_text(lx, ly, _input_text_line_index[i]);
 			}
 		}

@@ -127,9 +127,6 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 		bone_renderer,
 	];
 	
-	input_fix_len = ds_list_size(inputs);
-	data_length = 1;
-	
 	static createBone = function(parent, distance, direction) {
 		var bone  = new __Bone(parent, distance, direction,,, self);
 		parent.addChild(bone);

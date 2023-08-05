@@ -17,7 +17,7 @@ function Node_Find_Pixel(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	
 	temp_surface = [ surface_create(1, 1) ];
 	
-	function process_data(_output, _data, _output_index, _array_index = 0) {  
+	static process_data = function(_output, _data, _output_index, _array_index = 0) {  
 		var _surf = _data[0];
 		var _col  = _data[1];
 		

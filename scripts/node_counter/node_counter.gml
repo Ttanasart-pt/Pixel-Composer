@@ -26,7 +26,7 @@ function Node_Counter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		inputs[| 0].setVisible(mode == 0);
 	}
 	
-	function process_data(_output, _data, _output_index, _array_index = 0) {  
+	static process_data = function(_output, _data, _output_index, _array_index = 0) {  
 		var time = PROJECT.animator.current_frame;
 		var mode = _data[2];
 		var val = 0;

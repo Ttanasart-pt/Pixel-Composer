@@ -31,7 +31,7 @@ function Node_Move_Point(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		inputs[| 4].setVisible(_mode == 1);
 	}
 	
-	function process_data(_output, _data, _output_index, _array_index = 0) {  
+	static process_data = function(_output, _data, _output_index, _array_index = 0) {  
 		var _pnt  = _data[0];
 		var _mode = _data[1];
 		var _shf  = _data[2];

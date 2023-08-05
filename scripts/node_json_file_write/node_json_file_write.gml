@@ -26,10 +26,8 @@ function Node_Json_File_Write(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	input_display_list = [ 0, 1, 
 		["Inputs", false],
 	]
-	
-	input_fix_len	  = ds_list_size(inputs);
-	input_display_len = array_length(input_display_list);
-	data_length		  = 2;
+
+	setIsDynamicInput(3);
 	
 	if(!LOADING && !APPENDING) createNewInput();
 	
@@ -126,12 +124,12 @@ function Node_Json_File_Write(_x, _y, _group = noone) : Node(_x, _y, _group) con
 		draw_text_transformed(bbox.xc, bbox.yc, str, ss, ss, 0);
 	}
 	
-	static postDeserialize = function() {
-		var _inputs = load_map.inputs;
+	//static postDeserialize = function() {
+	//	var _inputs = load_map.inputs;
 		
-		for(var i = input_fix_len; i < array_length(_inputs); i += data_length)
-			createNewInput();
-	}
+	//	for(var i = input_fix_len; i < array_length(_inputs); i += data_length)
+	//		createNewInput();
+	//}
 	
 	static doApplyDeserialize = function() {
 		refreshDynamicInput();

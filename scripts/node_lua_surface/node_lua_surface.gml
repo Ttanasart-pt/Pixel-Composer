@@ -41,10 +41,8 @@ function Node_Lua_Surface(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		["Script",		false], 2,
 		["Inputs",		 true], 
 	];
-	
-	input_fix_len	  = ds_list_size(inputs);
-	input_display_len = array_length(input_display_list);
-	data_length		  = 3;
+
+	setIsDynamicInput(3);
 	
 	argument_name = [];
 	argument_val  = [];
@@ -236,12 +234,12 @@ function Node_Lua_Surface(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		doUpdate();
 	}
 	
-	static postDeserialize = function() {
-		var _inputs = load_map.inputs;
+	//static postDeserialize = function() {
+	//	var _inputs = load_map.inputs;
 		
-		for(var i = input_fix_len; i < array_length(_inputs); i += data_length)
-			createNewInput();
-	}
+	//	for(var i = input_fix_len; i < array_length(_inputs); i += data_length)
+	//		createNewInput();
+	//}
 	
 	static doApplyDeserialize = function() {
 		refreshDynamicInput();

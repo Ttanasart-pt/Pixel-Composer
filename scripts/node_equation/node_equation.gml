@@ -91,10 +91,8 @@ function Node_Equation(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		["Arguments",	false], argument_renderer,
 		["Inputs",		 true], 
 	]
-	
-	input_fix_len	  = ds_list_size(inputs);
-	input_display_len = array_length(input_display_list);
-	data_length		  = 2;
+
+	setIsDynamicInput(2);
 	
 	if(!LOADING && !APPENDING) createNewInput();
 	
@@ -140,7 +138,7 @@ function Node_Equation(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		refreshDynamicInput();
 	}
 	
-	function process_data(_output, _data, _output_index, _array_index = 0) {  
+	static process_data = function(_output, _data, _output_index, _array_index = 0) {  
 		var eq = _data[0];
 		var params = {};
 		
@@ -163,12 +161,12 @@ function Node_Equation(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		draw_text_transformed(bbox.xc, bbox.yc, str, ss, ss, 0);
 	}
 	
-	static postDeserialize = function() {
-		var _inputs = load_map.inputs;
+	//static postDeserialize = function() {
+	//	var _inputs = load_map.inputs;
 		
-		for(var i = input_fix_len; i < array_length(_inputs); i += data_length)
-			createNewInput();
-	}
+	//	for(var i = input_fix_len; i < array_length(_inputs); i += data_length)
+	//		createNewInput();
+	//}
 	
 	static doApplyDeserialize = function() {
 		refreshDynamicInput();

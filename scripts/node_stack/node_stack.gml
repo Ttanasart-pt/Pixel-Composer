@@ -12,8 +12,7 @@ function Node_Stack(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	inputs[| 2] = nodeValue("Spacing", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.rejectArray();
 	
-	input_fix_len = ds_list_size(inputs);
-	data_length = 1;
+	setIsDynamicInput(1);
 	
 	static createNewInput = function() {
 		var index = ds_list_size(inputs);
@@ -143,11 +142,11 @@ function Node_Stack(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		outputs[| 1].setValue(atlas);
 	}
 	
-	static postDeserialize = function() {
-		var _inputs = load_map.inputs;
+	//static postDeserialize = function() {
+	//	var _inputs = load_map.inputs;
 		
-		for(var i = input_fix_len; i < array_length(_inputs); i += data_length)
-			createNewInput();
-	}
+	//	for(var i = input_fix_len; i < array_length(_inputs); i += data_length)
+	//		createNewInput();
+	//}
 }
 

@@ -62,9 +62,7 @@ function Node_3D_Combine(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		["Objects",				 true], 
 	];
 	
-	data_length = 1;
-	input_fix_len = ds_list_size(inputs);
-	input_display_len = array_length(input_display_list);
+	setIsDynamicInput(1);
 	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
@@ -189,10 +187,10 @@ function Node_3D_Combine(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		}
 	}
 	
-	static postDeserialize = function() {
-		var _inputs = load_map.inputs;
+	//static postDeserialize = function() {
+	//	var _inputs = load_map.inputs;
 		
-		for(var i = input_fix_len; i < array_length(_inputs); i += data_length)
-			createNewInput();
-	}
+	//	for(var i = input_fix_len; i < array_length(_inputs); i += data_length)
+	//		createNewInput();
+	//}
 }

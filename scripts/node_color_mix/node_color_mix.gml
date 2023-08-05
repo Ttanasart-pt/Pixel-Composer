@@ -18,7 +18,7 @@ function Node_Color_Mix(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	input_display_list = [ 3, 0, 1, 2 ];
 	
-	function process_data(_output, _data, _output_index, _array_index = 0) {  
+	static process_data = function(_output, _data, _output_index, _array_index = 0) {  
 		switch(_data[3]) {
 			case 0 : return merge_color(_data[0], _data[1], _data[2]);
 			case 1 :

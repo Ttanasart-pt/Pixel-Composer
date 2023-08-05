@@ -32,8 +32,7 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	inputs[| 6] = nodeValue("Starting angle", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 90)
 		.setDisplay(VALUE_DISPLAY.rotation);
 		
-	input_fix_len = ds_list_size(inputs);
-	data_length = 2;
+	setIsDynamicInput(2);
 	
 	static createNewInput = function() {
 		var index = ds_list_size(inputs);
@@ -286,10 +285,10 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		draw_sprite_fit(s_node_path_l_system, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
 	}
 	
-	static postDeserialize = function() {
-		var _inputs = load_map.inputs;
+	//static postDeserialize = function() {
+	//	var _inputs = load_map.inputs;
 		
-		for(var i = input_fix_len; i < array_length(_inputs); i += data_length)
-			createNewInput();
-	}
+	//	for(var i = input_fix_len; i < array_length(_inputs); i += data_length)
+	//		createNewInput();
+	//}
 }

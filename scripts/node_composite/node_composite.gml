@@ -33,8 +33,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	attribute_surface_depth();
 	attribute_interpolation();
 	
-	input_fix_len	= ds_list_size(inputs);
-	data_length		= 4;
+	setIsDynamicInput(4);
 	
 	attributes.layer_visible = [];
 	attributes.layer_selectable = [];
@@ -208,11 +207,11 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		}
 		
 		if(ds_list_size(inputs) == input_fix_len)
-			createNewSurface();
+			createNewInput();
 		doUpdate();
 	}
 	
-	function createNewSurface() {
+	static createNewInput = function()  {
 		var index = ds_list_size(inputs);
 		var _s    = floor((index - input_fix_len) / data_length);
 		
@@ -243,7 +242,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		while(_s >= array_length(attributes.layer_selectable))
 			array_push(attributes.layer_selectable, true);
 	}
-	if(!LOADING && !APPENDING) createNewSurface();
+	if(!LOADING && !APPENDING) createNewInput();
 	
 	//function getInput() { return inputs[| ds_list_size(inputs) - data_length]; }
 	
@@ -463,7 +462,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		if(LOADING || APPENDING) return;
 		
 		if(index + data_length >= ds_list_size(inputs))
-			createNewSurface();
+			createNewInput();
 	}
 	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
@@ -774,22 +773,19 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		
 		overlay_w = ww;
 		overlay_h = hh;
-	
+		
 		_outSurf = surface_verify(_outSurf, ww, hh, cDep);
 		
 		for(var i = 0; i < 2; i++) {
-			temp_surface[i] = surface_verify(temp_surface[i], surface_get_width(_outSurf), surface_get_height(_outSurf), cDep);
-			
-			surface_set_target(temp_surface[i]);
-			DRAW_CLEAR
-			surface_reset_target();
+			temp_surface[i] = surface_verify(temp_surface[i], ww, hh, cDep);
+			surface_clear(temp_surface[i]);
 		}
 		
 		var res_index = 0, bg = 0;
 		var imageAmo = (ds_list_size(inputs) - input_fix_len) / data_length;
 		var _vis = attributes.layer_visible;
 		
-		surface_set_shader(_outSurf, sh_sample, true, BLEND.alpha);
+		surface_set_shader(_outSurf, sh_sample, true, BLEND.alphamulp);
 		
 		for(var i = 0; i < imageAmo; i++) {
 			var vis  = _vis[i];
@@ -823,12 +819,12 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		return _outSurf;
 	}
 	
-	static postDeserialize = function() {
-		var _inputs = load_map.inputs;
+	//static postDeserialize = function() {
+	//	var _inputs = load_map.inputs;
 		
-		for(var i = input_fix_len; i < array_length(_inputs); i += data_length)
-			createNewSurface();
-	}
+	//	for(var i = input_fix_len; i < array_length(_inputs); i += data_length)
+	//		createNewInput();
+	//}
 	
 	static attributeSerialize = function() {
 		var att = {};

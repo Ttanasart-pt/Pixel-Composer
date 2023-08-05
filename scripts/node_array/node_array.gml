@@ -58,9 +58,7 @@ function Node_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	
 	input_display_list = [ 0, array_adjust_tool, 1 ];
 	
-	input_fix_len = ds_list_size(inputs);
-	input_display_list_len = array_length(input_display_list);
-	data_length = 1;
+	setIsDynamicInput(1);
 	
 	outputs[| 0] = nodeValue("Array", self, JUNCTION_CONNECT.output, VALUE_TYPE.any, []);
 	
@@ -184,12 +182,12 @@ function Node_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		outputs[| 0].setValue(res);
 	}
 	
-	static postDeserialize = function() {
-		var _inputs = load_map.inputs;
+	//static postDeserialize = function() {
+	//	var _inputs = load_map.inputs;
 		
-		for(var i = input_fix_len; i < array_length(_inputs); i += data_length)
-			createNewInput();
-	}
+	//	for(var i = input_fix_len; i < array_length(_inputs); i += data_length)
+	//		createNewInput();
+	//}
 	
 	static doApplyDeserialize = function() {
 		var _typ = getType();

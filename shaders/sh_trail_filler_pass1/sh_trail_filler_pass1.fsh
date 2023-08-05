@@ -12,6 +12,9 @@ uniform float range;
 uniform float segmentStart;
 uniform float segmentSize;
 
+uniform float alphaPrev;
+uniform float alphaCurr;
+
 uniform int mode;
 uniform int matchColor;
 uniform int blendColor;
@@ -20,6 +23,8 @@ void main() {
 	gl_FragColor = vec4(0.);
 	
     vec4 colCur = texture2D( gm_BaseTexture, v_vTexcoord );
+	colCur.a *= alphaCurr;
+	
 	if(colCur.a > 0.5) {
 		if(mode == 0) gl_FragColor = colCur;
 		return;
@@ -44,6 +49,8 @@ void main() {
 		
 			if(pos0.x < 0. || pos0.y < 0. || pos0.x > 1. || pos0.y > 1.) continue;
 			vec4 col0 = texture2D( gm_BaseTexture, pos0 );
+			col0.a *= alphaCurr;
+			
 			if(col0.a <= 0.5) continue;
 		
 			vec2 norm = normalize(shift) * texel;
@@ -55,6 +62,8 @@ void main() {
 				if(searchStage == 0 && (posS.x < 0. || posS.y < 0. || posS.x > 1. || posS.y > 1.)) continue;
 			
 				vec4 colS = texture2D( prevFrame, posS );
+				colS.a *= alphaPrev;
+				
 				if(mode == 0 && matchColor == 1) {
 					if(matchColor == 1 && distance(colS, col0) >= colThres) continue;
 					gl_FragColor = col0;

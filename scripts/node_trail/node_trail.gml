@@ -1,19 +1,7 @@
 function Node_Trail(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name		= "Trail";
 	use_cache   = true;
-	
-	shader1 = sh_trail_filler_pass1;
-	uni_dimension	= shader_get_uniform(shader1, "dimension");
-	uni_mode		= shader_get_uniform(shader1, "mode");
-	uni_range		= shader_get_uniform(shader1, "range");
-	uni_colr		= shader_get_uniform(shader1, "matchColor");
-	uni_blend		= shader_get_uniform(shader1, "blendColor");
-	uni_seg_st		= shader_get_uniform(shader1, "segmentStart");
-	uni_seg_sz		= shader_get_uniform(shader1, "segmentSize");	
-	uni_sam_prev	= shader_get_sampler_index(shader1, "prevFrame");
-	
-	shader2 = sh_trail_filler_pass2;
-	uni2_dimension	= shader_get_uniform(shader2, "dimension");
+	clearCacheOnChange = false;
 	
 	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 	
@@ -85,9 +73,13 @@ function Node_Trail(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		var frame_amo = _loop? _life : min(_life, curf);
 		var st_frame  = curf - frame_amo;
 		
+		BLEND_NORMAL
 		for(var i = 0; i <= frame_amo; i++) {
 			var frame_idx = st_frame + i;
-			var prog = (frame_idx - (curf - _life)) / _life;
+			var prog  = (frame_idx - (curf - _life)) / _life;
+			
+			var a0 = eval_curve_x(_alpha, 1 -       i / (frame_amo + 1));
+			var a1 = eval_curve_x(_alpha, 1 - (i + 1) / (frame_amo + 1));
 			
 			if(_loop && frame_idx < 0) frame_idx = PROJECT.animator.frames_total + frame_idx;
 			
@@ -99,57 +91,54 @@ function Node_Trail(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			
 			if(!is_surface(_prevFrame)) {
 				surface_set_target(temp_surface[0]);
-				draw_surface_safe(_currFrame, 0, 0);
+				draw_surface_ext_safe(_currFrame, 0, 0, 1, 1, 0, c_white, a0);
 				surface_reset_target();
 				
 				surface_set_target(temp_surface[2]);
-				draw_surface_safe(_currFrame, 0, 0);
+				draw_surface_ext_safe(_currFrame, 0, 0, 1, 1, 0, c_white, a1);
 				surface_reset_target();
 				continue;
 			}
 			
-			shader_set(shader1);
-			shader_set_uniform_f(uni_dimension, surface_get_width(_surf), surface_get_height(_surf));
-			shader_set_uniform_f(uni_range, _rang? _rang : surface_get_width(_surf) / 2);
-			shader_set_uniform_i(uni_colr, _colr);
-			shader_set_uniform_i(uni_blend, _blend);
-			shader_set_uniform_f(uni_seg_st, (frame_amo - i) / frame_amo);
-			shader_set_uniform_f(uni_seg_sz, 1 / frame_amo);
-			texture_set_stage(uni_sam_prev, surface_get_texture(_prevFrame));
+			shader_set(sh_trail_filler_pass1);
+			shader_set_dim("dimension",  _surf);
+			shader_set_f("range",		 _rang? _rang : surface_get_width(_surf) / 2);
+			shader_set_i("matchColor",	 _colr);
+			shader_set_i("blendColor",	 _blend);
+			shader_set_f("segmentStart", (frame_amo - i) / frame_amo);
+			shader_set_f("segmentSize",  1 / frame_amo);
+			shader_set_surface("prevFrame", _prevFrame);
+			shader_set_f("alphaPrev",	 a0);
+			shader_set_f("alphaCurr",	 a1);
 			
-				shader_set_uniform_i(uni_mode, 1);
+				shader_set_i("mode", 1);
 				surface_set_target(temp_surface[0]);
-				draw_surface_safe(_currFrame, 0, 0);
+				draw_surface_safe(_currFrame);
 				surface_reset_target();
 			
-				shader_set_uniform_i(uni_mode, 0);
+				shader_set_i("mode", 0);
 				surface_set_target(temp_surface[2]);
-				draw_surface_safe(_currFrame, 0, 0);
+				draw_surface_safe(_currFrame);
 				surface_reset_target();
 			
 			shader_reset();
 		}
+		BLEND_NORMAL
 		
 		surface_set_target(temp_surface[1]);
-		shader_set(shader2);
-		shader_set_uniform_f(uni2_dimension, surface_get_width(_surf), surface_get_height(_surf));
-		draw_surface_safe(temp_surface[0], 0, 0);
-		shader_reset();
+			shader_set(sh_trail_filler_pass2);
+			shader_set_dim("dimension", _surf);
+			draw_surface_safe(temp_surface[0], 0, 0);
+			shader_reset();
 		surface_reset_target();
 		
-		surface_set_target(_outUV);
-		DRAW_CLEAR
-		BLEND_ALPHA;
+		surface_set_shader(_outUV);
 			draw_surface_safe(temp_surface[1], 0, 0);
-		BLEND_NORMAL;
-		surface_reset_target();
+		surface_reset_shader();
 		
-		surface_set_target(_outSurf);
-		DRAW_CLEAR
-		BLEND_ALPHA;
+		surface_set_shader(_outSurf);
 			draw_surface_safe(temp_surface[2], 0, 0);
-		BLEND_NORMAL;
-		surface_reset_target();
+		surface_reset_shader();
 	}
 	
 }

@@ -373,12 +373,12 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		}
 		
 		if(ds_list_size(inputs) == input_fix_len)
-			createNewSurface();
+			createNewInput();
 		doUpdate();
 	#endregion
 	}
 	
-	function createNewSurface() { #region 
+	static createNewInput = function() { #region 
 		var index = ds_list_size(inputs);
 		var _s    = floor((index - input_fix_len) / data_length);
 		
@@ -404,10 +404,9 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	#endregion
 	}
 	
-	input_fix_len	= ds_list_size(inputs);
-	data_length		= 4;
+	setIsDynamicInput(4);
 	
-	if(!LOADING && !APPENDING) createNewSurface();
+	if(!LOADING && !APPENDING) createNewInput();
 	
 	temp_surface = [ surface_create(1, 1), surface_create(1, 1) ];
 	
@@ -458,7 +457,7 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		if(LOADING || APPENDING) return;
 		
 		if(index + data_length >= ds_list_size(inputs))
-			createNewSurface();
+			createNewInput();
 	#endregion
 	}
 	
@@ -873,31 +872,31 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		inputs[| surfIndex + 1].setValue(_tr);
 	}
 	
-	static postDeserialize = function() {
-		var _inputs = load_map.inputs;
+	//static postDeserialize = function() {
+	//	var _inputs = load_map.inputs;
 		
-		var load_fix_len = input_fix_len;
-		var amo = (array_length(_inputs) - load_fix_len) / data_length;
+	//	var load_fix_len = input_fix_len;
+	//	var amo = (array_length(_inputs) - load_fix_len) / data_length;
 		
-		if(PROJECT.version < 11481) {
-			var _idx = [];
-			for( var i = load_fix_len, n = array_length(_inputs); i < n; i += 2 ) {
-				array_append(_idx, i + 3);
-				array_append(_idx, i + 4);
-			}
+	//	if(PROJECT.version < 11481) {
+	//		var _idx = [];
+	//		for( var i = load_fix_len, n = array_length(_inputs); i < n; i += 2 ) {
+	//			array_append(_idx, i + 3);
+	//			array_append(_idx, i + 4);
+	//		}
 			
-			for( var i = array_length(_idx) - 1; i >= 0; i++ ) 
-				array_insert(load_map.inputs, _idx[i], noone);
-		}
+	//		for( var i = array_length(_idx) - 1; i >= 0; i++ ) 
+	//			array_insert(load_map.inputs, _idx[i], noone);
+	//	}
 		
-		if(PROJECT.version < 11470) {
-			array_insert(load_map.inputs, 3, noone);
-			array_insert(load_map.inputs, 4, noone);
-			load_fix_len = 3;
-		}
+	//	if(PROJECT.version < 11470) {
+	//		array_insert(load_map.inputs, 3, noone);
+	//		array_insert(load_map.inputs, 4, noone);
+	//		load_fix_len = 3;
+	//	}
 		
-		repeat(amo) createNewSurface();
-	}
+	//	repeat(amo) createNewInput();
+	//}
 	
 	static attributeSerialize = function() {
 		var att = {};

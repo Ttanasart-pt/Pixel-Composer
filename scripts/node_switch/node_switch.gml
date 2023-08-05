@@ -29,9 +29,7 @@ function Node_Switch(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		["Inputs", false], 1
 	]
 	
-	input_fix_len	  = ds_list_size(inputs);
-	input_display_len = array_length(input_display_list);
-	data_length		  = 2;
+	setIsDynamicInput(2);
 	
 	if(!LOADING && !APPENDING) createNewInput();
 	
@@ -126,12 +124,12 @@ function Node_Switch(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		draw_set_alpha(1);
 	}
 	
-	static postDeserialize = function() {
-		var _inputs = load_map.inputs;
+	//static postDeserialize = function() {
+	//	var _inputs = load_map.inputs;
 		
-		for(var i = input_fix_len; i < array_length(_inputs); i += data_length)
-			createNewInput();
-	}
+	//	for(var i = input_fix_len; i < array_length(_inputs); i += data_length)
+	//		createNewInput();
+	//}
 	
 	static doApplyDeserialize = function() {
 		refreshDynamicInput();

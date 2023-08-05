@@ -14,12 +14,10 @@ function Node_VCT(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) const
 	input_display_list = [ 0, 
 		["Automations", false], 
 	];
+
+	setIsDynamicInput(1);
 	
-	input_display_len = array_length(input_display_list);
-	input_fix_len	  = ds_list_size(inputs);
-	data_length		  = 1;
-	
-	function createNewInput(key = "") {
+	static createNewInput = function(key = "") {
 		var index = ds_list_size(inputs);
 		var _s    = floor((index - input_fix_len) / data_length);
 		var name  = string_title(string_replace_all(key, "_", " "));
@@ -53,10 +51,9 @@ function Node_VCT(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) const
 	}
 	
 	static postDeserialize = function() {
-		var _inputs = load_map.inputs;
 		vct.deserialize(load_map.vct);
 		
-		for(var i = input_fix_len; i < array_length(_inputs); i += data_length)
-			createNewInput(_inputs[i].extra_data.key);
+		//for(var i = input_fix_len; i < array_length(_inputs); i += data_length)
+		//	createNewInput(_inputs[i].extra_data.key);
 	}
 }

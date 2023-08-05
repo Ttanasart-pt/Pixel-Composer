@@ -32,7 +32,7 @@ function Node_String_Trim(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		inputs[| 2].type = mode? VALUE_TYPE.float : VALUE_TYPE.integer;
 	}
 	
-	function process_data(_output, _data, _index = 0) { 
+	static process_data = function(_output, _data, _index = 0) { 
 		var str = _data[0];
 		var hed = max(0, _data[1]);
 		var tal = max(0, _data[2]);

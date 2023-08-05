@@ -68,6 +68,29 @@
 																					arr[i] = array_safe_get(val, 1, 0) + i * array_safe_get(val, 2, 1);
 																				return arr;
 																			} ];
+																			
+	globalvar PROJECT_VARIABLES;
+	PROJECT_VARIABLES = {};
+	
+	PROJECT_VARIABLES.Project = {};
+	PROJECT_VARIABLES.Project.frame			= function() { return PROJECT.animator.current_frame; };
+	PROJECT_VARIABLES.Project.progress		= function() { return PROJECT.animator.current_frame / (PROJECT.animator.frames_total - 1); };
+	PROJECT_VARIABLES.Project.frameTotal	= function() { return PROJECT.animator.frames_total; };
+	PROJECT_VARIABLES.Project.fps			= function() { return PROJECT.animator.framerate; };
+	PROJECT_VARIABLES.Project.time			= function() { return PROJECT.animator.current_frame / PROJECT.animator.framerate; };
+	PROJECT_VARIABLES.Project.name			= function() { return filename_name_only(PROJECT.path); };
+	
+	PROJECT_VARIABLES.Program = {};
+	PROJECT_VARIABLES.Program.time			= function() { return current_time / 1000; };
+	
+	PROJECT_VARIABLES.Device = {};
+	PROJECT_VARIABLES.Device.timeSecond			= function() { return current_second; };
+	PROJECT_VARIABLES.Device.timeMinute			= function() { return current_minute; };
+	PROJECT_VARIABLES.Device.timeHour			= function() { return current_hour; };
+	PROJECT_VARIABLES.Device.timeDay			= function() { return current_day; };
+	PROJECT_VARIABLES.Device.timeDayInWeek		= function() { return current_weekday; };
+	PROJECT_VARIABLES.Device.timeMonth			= function() { return current_month; };
+	PROJECT_VARIABLES.Device.timeYear			= function() { return current_year; };
 #endregion
 
 function functionStringClean(fx) {
@@ -292,8 +315,8 @@ function functionStringClean(fx) {
 			var strs = string_splice(val, ".");
 			if(array_length(strs) < 2) return false;
 			
-			if(strs[0] == "Project")
-				return ds_map_exists(PROJECT_VARIABLES, strs[1]);
+			if(struct_has(PROJECT_VARIABLES, strs[0]))
+				return struct_has(PROJECT_VARIABLES[$ strs[0]], strs[1]);
 			
 			if(!ds_map_exists(PROJECT.nodeNameMap, strs[0]))
 				return false;

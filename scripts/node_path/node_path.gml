@@ -33,10 +33,9 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		["Anchors",	false], 
 	];
 	
-	input_fix_len = ds_list_size(inputs);
-	input_display_list_len = array_length(input_display_list);
+	setIsDynamicInput(1);
 	
-	function createAnchor(_x, _y, _dxx = 0, _dxy = 0, _dyx = 0, _dyy = 0) {
+	function createAnchor(_x = 0, _y = 0, _dxx = 0, _dxy = 0, _dyx = 0, _dyy = 0) {
 		var index = ds_list_size(inputs);
 		
 		inputs[| index] = nodeValue("Anchor",  self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ _x, _y, _dxx, _dxy, _dyx, _dyy, false ])
@@ -48,6 +47,8 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		
 		return inputs[| index];
 	}
+	
+	static createNewInput = function() { createAnchor(0, 0); }
 	
 	outputs[| 0] = nodeValue("Position out", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, [ 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.vector);
@@ -679,7 +680,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 				if(replace) {
 					while(ds_list_size(inputs) > input_fix_len)
 						ds_list_delete(inputs, input_fix_len);
-					array_resize(input_display_list, input_display_list_len);
+					array_resize(input_display_list, input_display_len);
 				}
 				
 				drag_point    = 0;
@@ -695,7 +696,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			if(mouse_press(mb_left, active)) {
 				while(ds_list_size(inputs) > input_fix_len)
 					ds_list_delete(inputs, input_fix_len);
-				array_resize(input_display_list, input_display_list_len);
+				array_resize(input_display_list, input_display_len);
 				
 				drag_point    = 0;
 				drag_type     = isUsingTool(4)? 3 : 4;
@@ -994,10 +995,10 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		draw_sprite_fit(THEME.node_draw_path, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
 	}
 	
-	static postDeserialize = function() {
-		var _inputs = load_map.inputs;
+	//static postDeserialize = function() {
+	//	var _inputs = load_map.inputs;
 		
-		for(var i = input_fix_len; i < array_length(_inputs); i++)
-			createAnchor(0, 0);
-	}
+	//	for(var i = input_fix_len; i < array_length(_inputs); i++)
+	//		createAnchor(0, 0);
+	//}
 }

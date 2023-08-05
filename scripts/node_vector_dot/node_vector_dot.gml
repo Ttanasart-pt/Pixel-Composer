@@ -15,7 +15,7 @@ function Node_Vector_Dot(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		
 	outputs[| 0] = nodeValue("Result", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, 0 );
 	
-	function process_data(_output, _data, _output_index, _array_index = 0) {  
+	static process_data = function(_output, _data, _output_index, _array_index = 0) {  
 		var _pnt1 = _data[0];
 		var _pnt2 = _data[1];
 		

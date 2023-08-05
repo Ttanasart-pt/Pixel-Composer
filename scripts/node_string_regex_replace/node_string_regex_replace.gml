@@ -17,7 +17,7 @@ function Node_String_Regex_Replace(_x, _y, _group = noone) : Node_Processor(_x, 
 		0, 1, 2, 
 	];
 	
-	function process_data(_output, _data, _index = 0) { 
+	static process_data = function(_output, _data, _index = 0) { 
 		var str = _data[0];
 		var reg = _data[1];
 		var rep = _data[2];

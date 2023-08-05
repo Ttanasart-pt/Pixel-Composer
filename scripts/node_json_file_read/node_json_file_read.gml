@@ -40,8 +40,7 @@ function Node_Json_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	
 	outputs[| 1] = nodeValue("Struct", self, JUNCTION_CONNECT.output, VALUE_TYPE.struct, {});
 	
-	data_length = 1;
-	input_fix_len  = ds_list_size(inputs);
+	setIsDynamicInput(1);
 	output_fix_len = ds_list_size(outputs);
 	
 	static createNewInput = function() {
@@ -190,12 +189,12 @@ function Node_Json_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		draw_text_transformed(bbox.xc, bbox.yc, str, ss, ss, 0);
 	}
 	
-	static postDeserialize = function() {
-		var _inputs = load_map.inputs;
+	//static postDeserialize = function() {
+	//	var _inputs = load_map.inputs;
 		
-		for(var i = input_fix_len; i < array_length(_inputs); i += data_length)
-			createNewInput();
-	}
+	//	for(var i = input_fix_len; i < array_length(_inputs); i += data_length)
+	//		createNewInput();
+	//}
 	
 	static doApplyDeserialize = function() {
 		refreshDynamicInput();

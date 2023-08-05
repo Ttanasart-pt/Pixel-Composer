@@ -10,7 +10,7 @@ function Node_Unicode(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	outputs[| 0] = nodeValue("Character", self, JUNCTION_CONNECT.output, VALUE_TYPE.text, 0);
 	
-	function process_data(_output, _data, index = 0) { 
+	static process_data = function(_output, _data, index = 0) { 
 		return chr(_data[0]);
 	}
 	

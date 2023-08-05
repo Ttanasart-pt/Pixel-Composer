@@ -4,7 +4,7 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	process_amount = 0;
 	inputs_data    = [];
 	
-	function process_data(_output, _data, _index) { return noone; }
+	static process_data = function(_output, _data, _index) { return noone; }
 	
 	function preProcess(_outindex) {
 		var _out = outputs[| _outindex].getValue();

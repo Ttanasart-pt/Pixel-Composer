@@ -12,8 +12,7 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		["Bones", false]
 	]
 	
-	input_fix_len = ds_list_size(inputs);
-	data_length = 1;
+	setIsDynamicInput(1);
 	
 	outputs[| 0] = nodeValue("Armature", self, JUNCTION_CONNECT.output, VALUE_TYPE.armature, noone);
 	
@@ -32,7 +31,7 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			attributes.display_bone = ind;
 		})]);
 	
-	function createNewControl(bone = noone) {
+	static createNewInput = function(bone = noone) {
 		var index = ds_list_size(inputs);
 		
 		inputs[| index] = nodeValue(bone != noone? bone.name : "bone", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 0, 1 ] )
@@ -88,7 +87,7 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 				_inp.index = _idx;
 				ds_list_add(_inputs, _inp);
 			} else {
-				var _inp = createNewControl(bone);
+				var _inp = createNewInput(bone);
 				ds_list_add(_inputs, _inp);
 			}
 		}
@@ -311,12 +310,12 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		return BBOX().fromPoints(minx, miny, maxx, maxy);
 	}
 	
-	static postDeserialize = function() {
-		var _inputs = load_map.inputs;
+	//static postDeserialize = function() {
+	//	var _inputs = load_map.inputs;
 		
-		for( var i = input_fix_len; i < array_length(_inputs); i += data_length )
-			createNewControl();
-	}
+	//	for( var i = input_fix_len; i < array_length(_inputs); i += data_length )
+	//		createNewInput();
+	//}
 	
 	static doApplyDeserialize = function() {
 		for( var i = input_fix_len; i < ds_list_size(inputs); i += data_length ) {

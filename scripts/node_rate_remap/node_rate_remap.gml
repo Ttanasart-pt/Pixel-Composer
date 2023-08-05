@@ -19,7 +19,7 @@ function Node_Rate_Remap(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		
 	}
 	
-	function process_data(_output, _data, _output_index, _array_index = 0) {  
+	static process_data = function(_output, _data, _output_index, _array_index = 0) {  
 		var _surf = _data[0];
 		var _rate = _data[1];
 		var _time = PROJECT.animator.current_frame;
