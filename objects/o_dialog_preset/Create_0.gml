@@ -60,13 +60,13 @@ event_inherited();
 #region new preset
 	function newPresetFromNode(name) {
 		if(node == noone) return;
-		var dir = DIRECTORY + "Presets/" + instanceof(node) + "/";
+		var dir = $"{DIRECTORY}Presets/{instanceof(node)}/";
 		if(!directory_exists(dir))
 			directory_create(dir);
 		
 		var pth = dir + name + ".json";
 		var map = node.serialize(true, true);
-		json_save(pth, map);
+		json_save_struct(pth, map);
 		__initPresets();
 	}
 #endregion

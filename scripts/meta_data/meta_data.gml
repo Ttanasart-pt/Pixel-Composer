@@ -218,7 +218,7 @@ function MetaDataManager() constructor {
 		var path = DIRECTORY + "meta.json";
 		
 		if(!file_exists(path)) return meta;
-		var over = json_load(path);
+		var over = json_load_struct(path);
 		return meta.deserialize(over);
 	}
 #endregion

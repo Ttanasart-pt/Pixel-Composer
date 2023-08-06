@@ -11,7 +11,6 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 	
 	linked = false;
 	b_link = button(function() { linked = !linked; });
-	b_link.icon = THEME.value_link;
 	
 	onModifyIndex = function(index, val) { 
 		var v = toNumber(val);
@@ -106,9 +105,10 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 		}
 		
 		b_link.setFocusHover(active, hover);
-		b_link.icon_index = linked;
-		b_link.icon_blend = linked? COLORS._main_accent : COLORS._main_icon;
-		b_link.tooltip = linked? __txt("Unlink values") : __txt("Link values");
+		b_link.icon			= THEME.value_link;
+		b_link.icon_index	= linked;
+		b_link.icon_blend	= linked? COLORS._main_accent : COLORS._main_icon;
+		b_link.tooltip		= linked? __txt("Unlink values") : __txt("Link values");
 		
 		var bx = _x;
 		var by = _y + _h / 2 - ui(32 / 2);

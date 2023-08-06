@@ -102,7 +102,7 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	outputs[| 0] = nodeValue("Value", self, JUNCTION_CONNECT.output, VALUE_TYPE.any, 0)
 		.uncache();
 	
-	attributes.inherit_name = true;
+	attributes.inherit_name = !LOADING && !APPENDING;
 	doTrigger = 0;
 	
 	_onSetDisplayName = function() {

@@ -175,7 +175,8 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		
 		doUpdate();
 	}
-	run_in(1, method(self, resetDefault));
+	if(!APPENDING && !LOADING)
+		run_in(1, method(self, resetDefault));
 	
 	static getInputJunctionIndex = function(index) {
 		if(input_display_list == -1)

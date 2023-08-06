@@ -17,7 +17,7 @@ function Node_Group_Output(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		.uncache()
 		.rejectArray();
 	
-	attributes.inherit_name = true;
+	attributes.inherit_name = !LOADING && !APPENDING;
 	outParent = undefined;
 	output_index = -1;
 	

@@ -303,9 +303,9 @@ function Panel_Animation() : PanelContent() constructor {
 		]),
 		-1,
 		menuItemGroup(__txt("Align"),  [ 
-			[ [THEME.timeline_key_halign, 0], function() { alignKeys(fa_left); } ],
-			[ [THEME.timeline_key_halign, 1], function() { alignKeys(fa_center); } ],
-			[ [THEME.timeline_key_halign, 2], function() { alignKeys(fa_right); } ],
+			[ [THEME.object_halign, 0], function() { alignKeys(fa_left); } ],
+			[ [THEME.object_halign, 1], function() { alignKeys(fa_center); } ],
+			[ [THEME.object_halign, 2], function() { alignKeys(fa_right); } ],
 		]),
 		menuItem(__txtx("panel_animation_stagger", "Stagger"), function() { stagger_mode = 1; }),
 		-1,

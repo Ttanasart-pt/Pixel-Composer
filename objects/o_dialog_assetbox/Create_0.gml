@@ -53,10 +53,10 @@ event_inherited();
 		content_w = dialog_w - ui(36) - folderW;
 		content_h = dialog_h - ui(32);
 		contentPane.resize(content_w, content_h);
-		folderPane.resize(folderW - ui(8), content_h - ui(32));
+		folderPane.resize(folderW - ui(12), content_h - ui(32));
 	}
 	
-	folderPane = new scrollPane(folderW - ui(8), content_h - ui(32), function(_y, _m) {
+	folderPane = new scrollPane(folderW - ui(12), content_h - ui(32), function(_y, _m) {
 		draw_clear_alpha(COLORS.panel_bg_clear, 0);
 		var hh = 8;
 		

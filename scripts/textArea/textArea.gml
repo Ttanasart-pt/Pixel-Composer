@@ -265,7 +265,7 @@ function textArea(_input, _onModify, _extras = noone) : textInput(_input, _onMod
 		var ss = "";
 		
 		for( var i = 0, n = array_length(_txtLines); i < n; i++ ) {
-			var _txt = _txtLines[i] + (i < array_length(_txtLines)? "\n" : "");
+			var _txt  = _txtLines[i] + (i < array_length(_txtLines)? "\n" : "");
 			var words = string_splice(_txt, " ");
 			var currW = 0;
 			var currL = "";

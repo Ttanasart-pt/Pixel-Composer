@@ -29,7 +29,7 @@
 			for( var j = 0; j < ds_list_size(grp.content); j++ ) {
 				var pth = grp.content[| j].path;
 				var f = new FileObject(grp.content[| j].name, pth);
-				f.content = json_load(pth); 
+				f.content = json_load_struct(pth); 
 				array_push(l, f);
 			}
 			global.PRESETS_MAP[? grp.name] = l;

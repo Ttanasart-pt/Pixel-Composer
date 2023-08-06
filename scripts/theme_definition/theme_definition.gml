@@ -227,8 +227,8 @@ function Theme() constructor {
     timeline_elastic = noone;
     timeline_keyframe = noone;
     timeline_keyframe_selecting = noone;
-    timeline_key_halign = noone;
-    timeline_key_valign = noone;
+    object_halign = noone;
+    object_valign = noone;
 	timeline_onion_skin = noone;
 	
     obj_distribute_h = noone;

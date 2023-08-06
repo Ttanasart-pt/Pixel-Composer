@@ -278,12 +278,11 @@ function functionStringClean(fx) {
 		dependency = [];
 		
 		static _string = function(str) {
-			return string_char_at(str, 1) == "\"" && 
-				string_char_at(str, string_length(str)) == "\"";
+			return string_char_at(str, 1) == "\"" &&  string_char_at(str, string_length(str)) == "\"";
 		}
 		
 		static _string_trim = function(str) {
-			return _string(str)? string_copy(str, 2, string_length(str) - 2) : string(str);
+			return string_trim(str, [ "\"" ]);
 		}
 		
 		static getVal = function(val, params = {}, getRaw = false) {
@@ -298,8 +297,10 @@ function functionStringClean(fx) {
 			if(struct_has(params, val))
 				return struct_try_get(params, val);
 			
-			if(_string(string_trim(val)))
-				return string_trim(val);
+			val = string_trim(val);
+			
+			if(_string(val))
+				return _string_trim(val);
 			
 			return nodeGetData(val);
 		}
@@ -465,10 +466,8 @@ function functionStringClean(fx) {
 			switch(_symbol) {
 				case "+": 
 				case "⊕": 
-					if(_string(v1) || _string(v2))
-						return _string_trim(v1) + _string_trim(v2);
-					if(is_real(v1) && is_real(v2))
-						return v1 + v2;
+					if(is_string(v1) || is_string(v2))	return string(v1) + string(v2);
+					if(is_real(v1) && is_real(v2))		return v1 + v2;
 					return 0;
 				case "-": 
 				case "⊖": return (is_real(v1) && is_real(v2))? v1 - v2		 : 0;

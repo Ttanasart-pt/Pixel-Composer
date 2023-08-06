@@ -70,6 +70,7 @@
 	function applyAutoComplete(rep) {
 		var line = array_safe_get(textbox._input_text_line, textbox.cursor_line, "");
 		var crop = string_copy(line, 1, textbox.cursor - textbox.char_run);
+		var rest = string_copy(line, textbox.cursor + 1, string_length(line) - textbox.cursor);
 		var slp  = string_splice(crop, [" ", "(", ","], true);
 		slp[array_length(slp) - 1] = rep;
 		
@@ -78,12 +79,14 @@
 			if(i == textbox.cursor_line) {
 				for( var j = 0; j < array_length(slp); j++ )
 					txt += slp[j];
+				txt += rest;
 				continue;
 			}
 			
 			txt += textbox._input_text_line[i];
 		}
 		
+		txt = string_trim(txt, [ "\n" ]);
 		var shf = string_length(rep) - string_length(prompt);
 		
 		textbox.cursor += shf;

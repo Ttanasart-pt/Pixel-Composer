@@ -236,7 +236,7 @@ function Panel_Collection() : PanelContent() constructor {
 						}
 					}
 					
-					draw_set_text(f_p2, fa_center, fa_top, COLORS._main_text_inner);
+					draw_set_text(f_p3, fa_center, fa_top, COLORS._main_text_inner);
 					name_height = max(name_height, string_height_ext(_node.name, -1, grid_width) + 8);
 					draw_text_ext_add(_boxx + grid_size / 2, yy + grid_size + ui(4), _node.name, -1, grid_width);
 				}
@@ -291,7 +291,7 @@ function Panel_Collection() : PanelContent() constructor {
 				} else
 					draw_sprite_ui_uniform(THEME.group, 0, spr_x, spr_y, 0.75, c_white);
 				
-				draw_set_text(f_p2, fa_left, fa_center, COLORS._main_text_inner);
+				draw_set_text(f_p3, fa_left, fa_center, COLORS._main_text_inner);
 				draw_text_add(list_height + ui(20), yy + list_height / 2, _node.name);
 				
 				yy += list_height;

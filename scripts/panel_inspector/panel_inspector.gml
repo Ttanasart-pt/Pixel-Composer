@@ -717,9 +717,7 @@ function Panel_Inspector() : PanelContent() constructor {
 			
 			if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), [mx, my], pFOCUS, pHOVER, __txtx("panel_inspector_set_default", "Set Metadata as default"), THEME.save, 0, COLORS._main_icon) == 2) {
 				var path = DIRECTORY + "meta.json";
-				var f = file_text_open_write(path);
-				file_text_write_string(f, json_encode_minify(METADATA.serialize()));
-				file_text_close(f);
+				json_save_struct(path, METADATA.serialize());
 			}
 			
 			by += ui(36);
