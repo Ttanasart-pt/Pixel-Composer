@@ -208,13 +208,13 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			draw_line(_x + 16, ly, _x + _w - 16, ly);
 		
 			layer_remove = -1;
-			var index = -1;
+			var index = amo;
 			
 			for(var i = 0; i < amo; i++) {
 				var _inp  = input_fix_len + (amo - i - 1) * data_length;
 				var _surf = current_data[_inp];
 				
-				index++;
+				index--;
 				var _bx = _x + _w - 24;
 				var _cy = ly + index * (lh + 4);
 			
@@ -286,7 +286,7 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			
 				draw_set_text(f_p1, fa_left, fa_center, hover? COLORS._main_text : COLORS._main_text);
 				draw_set_alpha(aa);
-				draw_text(_sx1 + 12, _cy + lh / 2, inputs[| i].name);
+				draw_text(_sx1 + 12, _cy + lh / 2, inputs[| _inp].name);
 				draw_set_alpha(1);
 			
 				if(_hover && point_in_rectangle(_m[0], _m[1], _x, _cy, _x + _w, _cy + lh)) {
@@ -757,6 +757,11 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	static step = function() {
 		var _dim_type = getSingleValue(1);
 		inputs[| 2].setVisible(_dim_type == COMPOSE_OUTPUT_SCALING.constant);
+		
+		for( var i = input_fix_len, n = ds_list_size(inputs); i < n; i += data_length ) {
+			inputs[| i + 3].setVisible(current_data[i + 2]);
+			inputs[| i + 5].setVisible(current_data[i + 4]);
+		}
 	}
 	
 	static process_data = function(_outSurf, _data, _output_index, _array_index) {

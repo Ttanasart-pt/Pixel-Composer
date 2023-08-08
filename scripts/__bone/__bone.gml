@@ -7,6 +7,9 @@ function __Bone(parent = noone, distance = 0, direction = 0, angle = 0, length =
 	self.length		= length;
 	self.node		= node;
 	
+	init_length = length;
+	init_angle  = angle;
+	
 	pose_angle = 0;
 	pose_scale = 1;
 	pose_posit = [ 0, 0 ];
@@ -95,22 +98,25 @@ function __Bone(parent = noone, distance = 0, direction = 0, angle = 0, length =
 		return noone;
 	}
 	
-	static getPoint = function(progress) {
-		var len = length * progress;
+	static getPoint = function(progress, pose = true) {
+		var _len = pose? length : init_length;
+		var _ang = pose? angle  : init_angle;
+		
+		var len = _len * progress;
 		
 		if(parent == noone)
 			return new Point(lengthdir_x(distance, direction), lengthdir_y(distance, direction))
-						.add(lengthdir_x(len, angle), lengthdir_y(len, angle));
+						.add(lengthdir_x(len, _ang), lengthdir_y(len, _ang));
 		
 		if(parent_anchor) {
-			var p = parent.getPoint(1)
-						  .add(lengthdir_x(len, angle), lengthdir_y(len, angle))
+			var p = parent.getPoint(1, pose)
+						  .add(lengthdir_x(len, _ang), lengthdir_y(len, _ang))
 			return p;
 		}
 		
-		var p = parent.getPoint(0)
+		var p = parent.getPoint(0, pose)
 					  .add(lengthdir_x(distance, direction), lengthdir_y(distance, direction))
-					  .add(lengthdir_x(len, angle), lengthdir_y(len, angle))
+					  .add(lengthdir_x(len, _ang), lengthdir_y(len, _ang))
 		return p;
 	}
 	
@@ -261,14 +267,14 @@ function __Bone(parent = noone, distance = 0, direction = 0, angle = 0, length =
 			return;
 		}
 		
-		pose_local_angle = pose_angle;
-		pose_local_scale = pose_scale;
-		pose_local_posit = pose_posit;
-		
 		pose_posit[0] += _position[0];
 		pose_posit[1] += _position[1];
 		if(apply_rotation)	pose_angle += _angle;
 		if(apply_scale)		pose_scale *= _scale;
+		
+		pose_local_angle = pose_angle;
+		pose_local_scale = pose_scale;
+		pose_local_posit = pose_posit;
 		
 		var _x = lengthdir_x(distance, direction) + pose_posit[0];
 		var _y = lengthdir_y(distance, direction) + pose_posit[1];
@@ -276,15 +282,13 @@ function __Bone(parent = noone, distance = 0, direction = 0, angle = 0, length =
 		direction = point_direction(0, 0, _x, _y) + _angle;
 		distance  = point_distance(0, 0, _x, _y)  * _scale;
 		
+		init_length = length;
+		init_angle  = angle;
 		angle  += pose_angle;
 		length *= pose_scale;
 		
-		for( var i = 0, n = array_length(childs); i < n; i++ ) {
-			if(childs[i].parent_anchor)
-				childs[i].setPoseTransform(_position, pose_angle, pose_scale);
-			else
-				childs[i].setPoseTransform(_position, pose_angle, pose_scale);
-		}
+		for( var i = 0, n = array_length(childs); i < n; i++ )
+			childs[i].setPoseTransform(_position, pose_angle, pose_scale);
 	}
 	
 	static setIKconstrain = function() {		

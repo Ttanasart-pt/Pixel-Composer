@@ -16,7 +16,9 @@ function buttonClass(_onClick, _icon = noone) : widget() constructor {
 	
 	activate_on_press = false;
 	clicked = false;
-		
+	
+	toggled = false;
+	
 	static setLua = function(_lua_thread, _lua_key, _lua_func) { 
 		lua_thread = _lua_thread;
 		lua_thread_key = _lua_key;
@@ -70,7 +72,7 @@ function buttonClass(_onClick, _icon = noone) : widget() constructor {
 		var b = colorMultiply(self.blend, blend);
 		
 		if(hover && point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + _h)) {
-			draw_sprite_stretched_ext(spr, 1, _x, _y, _w, _h, b, 1);	
+			draw_sprite_stretched_ext(spr, toggled? 2 : 1, _x, _y, _w, _h, b, 1);
 			if(!activate_on_press && mouse_release(mb_left, active))
 				trigger();
 			if(activate_on_press && mouse_press(mb_left, active))
@@ -82,7 +84,7 @@ function buttonClass(_onClick, _icon = noone) : widget() constructor {
 			}
 			if(tooltip != "") TOOLTIP = tooltip;
 		} else {
-			draw_sprite_stretched_ext(spr, 0, _x, _y, _w, _h, b, 1);	
+			draw_sprite_stretched_ext(spr, toggled? 2 : 0, _x, _y, _w, _h, b, 1);
 			if(mouse_press(mb_left)) deactivate();
 		}
 		

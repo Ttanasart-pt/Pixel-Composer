@@ -62,6 +62,7 @@ enum VALUE_DISPLAY {
 	kernel,
 	transform,
 	corner,
+	toggle,
 	
 	//Curve
 	curve,
@@ -789,6 +790,14 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						
 						extract_node = "Node_Transform_Array";
 						break;
+					case VALUE_DISPLAY.toggle :
+						editWidget = new toggleGroup(display_data, function(val) { 
+							return setValueDirect(val);
+						} );
+						
+						rejectConnect();
+						extract_node = "";
+						break;
 				}
 				break;
 			case VALUE_TYPE.boolean :
@@ -1304,12 +1313,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	
 	static setValueDirect = function(val = 0, index = noone, record = true, time = PROJECT.animator.current_frame, _update = true) {
 		var updated = false;
-		
-		//if(display_type == VALUE_DISPLAY.area) {
-		//	print($"===== Set: {index} = {val} =====");
-		//	printCallStack();
-		//	print("");
-		//}
 		
 		if(sep_axis) {
 			if(index == noone) {

@@ -219,7 +219,6 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 				
 				posing_mx = mx;
 				posing_my = my;
-				
 			}
 		}
 	}

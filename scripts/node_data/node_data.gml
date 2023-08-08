@@ -1412,8 +1412,10 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		
 		for( var i = _dynamic_inputs; i >= 1; i-- ) {
 			var _ind = _input_fix_len + i * _data_length;
-			repeat(_pad_dyna)
-				array_insert(load_map.inputs, _ind, noone);
+			if(_pad_dyna > 0)
+				repeat(_pad_dyna) array_insert(load_map.inputs, _ind, noone);
+			else
+				array_delete(load_map.inputs, _ind + _pad_dyna, -_pad_dyna);
 		}
 		
 		var _pad_fix = input_fix_len - _input_fix_len;

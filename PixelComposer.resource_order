@@ -1135,6 +1135,7 @@
     {"name":"node_scale_algo","order":12,"path":"scripts/node_scale_algo/node_scale_algo.yy",},
     {"name":"s_node_image_replace","order":55,"path":"sprites/s_node_image_replace/s_node_image_replace.yy",},
     {"name":"node_alpha_hash","order":11,"path":"scripts/node_alpha_hash/node_alpha_hash.yy",},
+    {"name":"toggleGroup","order":31,"path":"scripts/toggleGroup/toggleGroup.yy",},
     {"name":"mouse_input","order":1,"path":"scripts/mouse_input/mouse_input.yy",},
     {"name":"string_cut","order":2,"path":"scripts/string_cut/string_cut.yy",},
     {"name":"node_3d_prim_cylinder","order":2,"path":"scripts/node_3d_prim_cylinder/node_3d_prim_cylinder.yy",},

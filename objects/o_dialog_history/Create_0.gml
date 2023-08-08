@@ -111,7 +111,7 @@ event_inherited();
 			if(i < red)	_yc = yy + ui(6);
 			else		_yc = yy + hh;
 			
-			draw_sprite_ui(THEME.arrow, i < red? 3 : 1, ui(16), _yc, 1.5, 1.5, 0, cc, 1);
+			draw_sprite_ui(THEME.scroll_box_arrow, 0, ui(16), _yc, 1, 1 - (i > red) * 2, 0, cc, 1);
 			BLEND_NORMAL;
 			
 			if(i == hovering)
