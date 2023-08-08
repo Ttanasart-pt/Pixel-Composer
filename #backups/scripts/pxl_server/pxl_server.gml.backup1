@@ -1,3 +1,4 @@
+// 2023-08-07 09:44:07
 global.NODE_SUB_CATAG = [ "input", "output" ];
 
 function pxl_document_parser(prompt) {
@@ -189,7 +190,7 @@ function pxl_autocomplete_server(prompt, params = []) {
 function pxl_function_guide_server(prompt) { 
 	if(!ds_map_exists(global.FUNCTIONS, prompt)) return "";
 	
-	var fn = global.FUNCTIONS[? prompt];
+	var fn = global.FUNCTIONS[$ prompt];
 	var guide = prompt + "(";
 	for( var i = 0, n = array_length(fn[0]); i < n; i++ ) 
 		guide += (i? ", " : "") + string(fn[0][i]);

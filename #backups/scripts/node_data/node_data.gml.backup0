@@ -1,3 +1,4 @@
+// 2023-08-08 10:31:45
 global.loop_nodes = [ "Node_Iterate", "Node_Iterate_Each" ];
 
 function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x, _y) constructor {
@@ -140,7 +141,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	static createNewInput = noone;
 	
 	static initTooltip = function() {
-		var type_self/*:string*/ = instanceof(self);
+		var type_self:string = instanceof(self);
 		if(!struct_has(global.NODE_GUIDE, type_self)) return;
 		
 		var _n = global.NODE_GUIDE[$ type_self];
