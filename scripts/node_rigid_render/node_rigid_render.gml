@@ -116,11 +116,4 @@ function Node_Rigid_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		surface_reset_target();
 		cacheCurrentFrame(_outSurf);
 	}
-	
-	//static postDeserialize = function() {
-	//	var _inputs = load_map.inputs;
-		
-	//	for(var i = input_fix_len; i < array_length(_inputs); i += data_length)
-	//		createNewInput();
-	//}
 }

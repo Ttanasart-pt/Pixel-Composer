@@ -6,7 +6,8 @@ function Node_Colors_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 		.setDisplay(VALUE_DISPLAY.palette);
 	
 	inputs[| 2] = nodeValue("Palette to", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, [])
-		.setDisplay(VALUE_DISPLAY.palette);
+		.setDisplay(VALUE_DISPLAY.palette)
+		.setVisible(false, false);
 	
 	inputs[| 3] = nodeValue("Threshold", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.1)
 		.setDisplay(VALUE_DISPLAY.slider, [0, 1, 0.01]);
@@ -43,9 +44,9 @@ function Node_Colors_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 			jun.setAnim(!jun.is_anim);
 		
 		bx += bs + ui(4);
-		index = jun.visible;
-		if(buttonInstant(THEME.button_hide, bx, by, bs, bs, _m, _focus, _hover,, THEME.junc_visible, index) == 2) 
-			jun.visible = !jun.visible;
+		var vis = jun.visible;
+		if(buttonInstant(THEME.button_hide, bx, by, bs, bs, _m, _focus, _hover,, THEME.junc_visible, vis) == 2)
+			jun.visible = !vis;
 			
 		var _from = inputs[| 1].getValue();
 		var _to   = inputs[| 2].getValue();
@@ -118,7 +119,7 @@ function Node_Colors_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	
 	input_display_list = [ 6, 
 		["Output",		 true], 0, 4, 5, 
-		["Replace",		false], render_palette, 
+		["Replace",		false], render_palette, 2, 
 		["Comparison",	false], 3, 
 	];
 	

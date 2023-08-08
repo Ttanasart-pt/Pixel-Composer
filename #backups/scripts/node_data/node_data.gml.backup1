@@ -1,4 +1,4 @@
-// 2023-08-08 10:28:44
+// 2023-08-08 14:41:40
 global.loop_nodes = [ "Node_Iterate", "Node_Iterate_Each" ];
 
 function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x, _y) constructor {
@@ -276,7 +276,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		if(x == _x && y == _y) return;
 		
 		x = _x;
-		y = _y;
+		y = _y; 
 		if(!LOADING) PROJECT.modified = true;
 	}
 	
@@ -1291,6 +1291,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		isTool = true;
 	}
 	
+	#region[#88ffe916] === Save Load ===
 	static serialize = function(scale = false, preset = false) {
 		var _map = {};
 		//print(" > Serializing: " + name);
@@ -1394,12 +1395,15 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		var _input_fix_len  = load_map.input_fix_len;
 		var _data_length    = load_map.data_length;
 		
+		print($"Balancing IO: {input_fix_len} => {load_map.input_fix_len} : {data_length} => {load_map.data_length}");
+		print($"IO size before: {array_length(load_map.inputs)}");
+		
 		var _dynamic_inputs = (array_length(load_map.inputs) - _input_fix_len) / _data_length;
 		if(frac(_dynamic_inputs) != 0) {
 			noti_warning("LOAD: Uneven dynamic input.");
 			_dynamic_inputs = ceil(_dynamic_inputs);
 		}
-			
+		
 		if(_input_fix_len == input_fix_len && _data_length == data_length) 
 			return;
 		
@@ -1414,6 +1418,8 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		var _pad_fix = input_fix_len - _input_fix_len;
 		repeat(_pad_fix) 
 			array_insert(load_map.inputs, _input_fix_len, noone);
+			
+		print($"IO size after: {array_length(load_map.inputs)}");
 	}
 	
 	static inputGenerate = function() { //Generate input for dynamic input nodes
@@ -1421,7 +1427,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 			return;
 		
 		var _dynamic_inputs = (array_length(load_map.inputs) - input_fix_len) / data_length;
-		print($"Node {name} create {_dynamic_inputs} inputs for data length {data_length}");
+		//print($"Node {name} create {_dynamic_inputs} inputs for data length {data_length}");
 		repeat(_dynamic_inputs)
 			createNewInput();
 	}
@@ -1439,6 +1445,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		
 		for(var i = 0; i < amo; i++) {
 			if(inputs[| i] == noone || _inputs[i] == noone) continue;
+			print($"Apply deserialize {_inputs[| i].name} to {inputs[| i].name}");
 			inputs[| i].applyDeserialize(_inputs[i], load_scale, preset);
 		}
 		
@@ -1501,6 +1508,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	
 	static preConnect = function() {}
 	static postConnect = function() {}
+	#endregion
 	
 	static resetAnimation = function() {}
 	

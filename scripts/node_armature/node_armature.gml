@@ -110,6 +110,7 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 			
 		if(bone_remove != noone) {
 			var _par = bone_remove.parent;
+			recordAction(ACTION_TYPE.struct_modify, attributes.bones, attributes.bones.serialize());
 			array_remove(_par.childs, bone_remove);
 				
 			for( var i = 0, n = array_length(bone_remove.childs); i < n; i++ ) {
@@ -128,6 +129,8 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 	];
 	
 	static createBone = function(parent, distance, direction) {
+		recordAction(ACTION_TYPE.struct_modify, attributes.bones, attributes.bones.serialize());
+		
 		var bone  = new __Bone(parent, distance, direction,,, self);
 		parent.addChild(bone);
 		
@@ -286,10 +289,12 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 					var _len = point_distance(p0.x, p0.y, p1.x, p1.y);
 					var _ang = point_direction(p0.x, p0.y, p1.x, p1.y);
 					
+					recordAction(ACTION_TYPE.struct_modify, attributes.bones, attributes.bones.serialize());
+					
 					var IKbone = new __Bone(anc, _len, _ang, ik_dragging.angle + 90, 0, self);
 					anc.addChild(IKbone);
 					IKbone.IKlength = len;
-					IKbone.IKTarget = ik_dragging;
+					IKbone.IKTargetID = ik_dragging;
 					
 					IKbone.name = "IK handle";
 					IKbone.parent_anchor = false;
@@ -326,8 +331,10 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 				_b.distance  = point_distance(0, 0, _bx, _by);
 				_b.direction = point_direction(0, 0, _bx, _by);
 				
-				if(mouse_release(mb_left)) 
+				if(mouse_release(mb_left)) {
 					builder_moving = false;
+					UNDO_HOLDING = false;
+				}
 					
 				draw_set_color(COLORS._main_accent);
 				draw_rectangle(x0, y0, x1, y1, true);
@@ -338,6 +345,8 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 						builder_moving = true;
 						builder_mx = mx;
 						builder_my = my;
+						
+						recordAction(ACTION_TYPE.struct_modify, attributes.bones, attributes.bones.serialize());
 					}
 				} else
 					draw_set_color(c_white);
@@ -400,13 +409,16 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 				_b.distance  = point_distance(0, 0, _bx, _by);
 				_b.direction = point_direction(0, 0, _bx, _by);
 					
-				if(mouse_release(mb_left)) 
+				if(mouse_release(mb_left)) {
 					builder_scaling = false;
+				}
 			} else {
 				if(mouse_press(mb_left, active)) {
 					builder_scaling = true;
 					builder_mx = _mx;
 					builder_my = _my;
+					
+					recordAction(ACTION_TYPE.struct_modify, attributes.bones, attributes.bones.serialize());
 				}
 			}
 		} else if(isUsingTool("Add bones")) { // builder
@@ -427,6 +439,8 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 					UNDO_HOLDING = true;
 				} else if(anchor_selecting[1] == 2) {
 					var _pr = anchor_selecting[0];
+					recordAction(ACTION_TYPE.struct_modify, attributes.bones, attributes.bones.serialize());
+					
 					var _md = new __Bone(noone, 0, 0, _pr.angle, _pr.length / 2, self);
 					_pr.length = _md.length;
 					
@@ -500,6 +514,8 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 			if(anchor_selecting != noone && mouse_press(mb_left, active)) {
 				builder_bone = anchor_selecting[0];
 				builder_type = anchor_selecting[1];
+				
+				recordAction(ACTION_TYPE.struct_modify, attributes.bones, attributes.bones.serialize());
 				
 				if(builder_type == 0) {
 					var orig = builder_bone.parent.getPoint(0);

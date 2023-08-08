@@ -275,7 +275,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		if(x == _x && y == _y) return;
 		
 		x = _x;
-		y = _y;
+		y = _y; 
 		if(!LOADING) PROJECT.modified = true;
 	}
 	
@@ -1290,6 +1290,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		isTool = true;
 	}
 	
+	#region[#88ffe916] === Save Load ===
 	static serialize = function(scale = false, preset = false) {
 		var _map = {};
 		//print(" > Serializing: " + name);
@@ -1393,18 +1394,23 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		var _input_fix_len  = load_map.input_fix_len;
 		var _data_length    = load_map.data_length;
 		
+		//print($"Balancing IO: {input_fix_len} => {load_map.input_fix_len} : {data_length} => {load_map.data_length}");
+		//print($"IO size before: {array_length(load_map.inputs)}");
+		//for( var i = 0, n = array_length(load_map.inputs); i < n; i++ ) 
+		//	print($"{i}: {load_map.inputs[i].name}");
+		
 		var _dynamic_inputs = (array_length(load_map.inputs) - _input_fix_len) / _data_length;
 		if(frac(_dynamic_inputs) != 0) {
 			noti_warning("LOAD: Uneven dynamic input.");
 			_dynamic_inputs = ceil(_dynamic_inputs);
 		}
-			
+		
 		if(_input_fix_len == input_fix_len && _data_length == data_length) 
 			return;
 		
 		var _pad_dyna = data_length - _data_length;
 		
-		for( var i = _dynamic_inputs - 1; i >= 0; i-- ) {
+		for( var i = _dynamic_inputs; i >= 1; i-- ) {
 			var _ind = _input_fix_len + i * _data_length;
 			repeat(_pad_dyna)
 				array_insert(load_map.inputs, _ind, noone);
@@ -1413,6 +1419,10 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		var _pad_fix = input_fix_len - _input_fix_len;
 		repeat(_pad_fix) 
 			array_insert(load_map.inputs, _input_fix_len, noone);
+			
+		//print($"IO size after: {array_length(load_map.inputs)}");
+		//for( var i = 0, n = array_length(load_map.inputs); i < n; i++ ) 
+		//	print($"{i}: {load_map.inputs[i] == noone? "noone" : load_map.inputs[i].name}");
 	}
 	
 	static inputGenerate = function() { //Generate input for dynamic input nodes
@@ -1420,7 +1430,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 			return;
 		
 		var _dynamic_inputs = (array_length(load_map.inputs) - input_fix_len) / data_length;
-		print($"Node {name} create {_dynamic_inputs} inputs for data length {data_length}");
+		//print($"Node {name} create {_dynamic_inputs} inputs for data length {data_length}");
 		repeat(_dynamic_inputs)
 			createNewInput();
 	}
@@ -1500,6 +1510,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	
 	static preConnect = function() {}
 	static postConnect = function() {}
+	#endregion
 	
 	static resetAnimation = function() {}
 	

@@ -161,13 +161,6 @@ function Node_Equation(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		draw_text_transformed(bbox.xc, bbox.yc, str, ss, ss, 0);
 	}
 	
-	//static postDeserialize = function() {
-	//	var _inputs = load_map.inputs;
-		
-	//	for(var i = input_fix_len; i < array_length(_inputs); i += data_length)
-	//		createNewInput();
-	//}
-	
 	static doApplyDeserialize = function() {
 		refreshDynamicInput();
 	}

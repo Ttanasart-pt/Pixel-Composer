@@ -284,11 +284,4 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		var bbox = drawGetBbox(xx, yy, _s);
 		draw_sprite_fit(s_node_path_l_system, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
 	}
-	
-	//static postDeserialize = function() {
-	//	var _inputs = load_map.inputs;
-		
-	//	for(var i = input_fix_len; i < array_length(_inputs); i += data_length)
-	//		createNewInput();
-	//}
 }

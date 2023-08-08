@@ -160,9 +160,9 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 				
 				var val = posing_input.getValue();
 				val[TRANSFORM.rot] = posing_sx;
+				
 				if(posing_input.setValue(val))
 					UNDO_HOLDING = true;
-				
 			}
 			
 			if(mouse_release(mb_left)) {
@@ -309,13 +309,6 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		if(minx == 9999999) return noone;
 		return BBOX().fromPoints(minx, miny, maxx, maxy);
 	}
-	
-	//static postDeserialize = function() {
-	//	var _inputs = load_map.inputs;
-		
-	//	for( var i = input_fix_len; i < array_length(_inputs); i += data_length )
-	//		createNewInput();
-	//}
 	
 	static doApplyDeserialize = function() {
 		for( var i = input_fix_len; i < ds_list_size(inputs); i += data_length ) {

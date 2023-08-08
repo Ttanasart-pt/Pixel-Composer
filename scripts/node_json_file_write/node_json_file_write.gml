@@ -124,13 +124,6 @@ function Node_Json_File_Write(_x, _y, _group = noone) : Node(_x, _y, _group) con
 		draw_text_transformed(bbox.xc, bbox.yc, str, ss, ss, 0);
 	}
 	
-	//static postDeserialize = function() {
-	//	var _inputs = load_map.inputs;
-		
-	//	for(var i = input_fix_len; i < array_length(_inputs); i += data_length)
-	//		createNewInput();
-	//}
-	
 	static doApplyDeserialize = function() {
 		refreshDynamicInput();
 	}

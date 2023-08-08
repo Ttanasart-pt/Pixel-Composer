@@ -131,13 +131,6 @@ function Node_Path_Array(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		outputs[| 0].setValue(self);
 	}
 	
-	//static postDeserialize = function() {
-	//	var _inputs = load_map.inputs;
-		
-	//	for(var i = input_fix_len; i < array_length(_inputs); i += data_length)
-	//		createNewInput();
-	//}
-	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		
 	}

@@ -173,13 +173,6 @@ function Node_Statistic(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		outputs[| 0].setValue(res);
 	}
 	
-	//static postDeserialize = function() {
-	//	var _inputs = load_map.inputs;
-		
-	//	for(var i = input_fix_len; i < array_length(_inputs); i += data_length)
-	//		createNewInput();
-	//}
-	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		draw_set_text(f_h3, fa_center, fa_center, COLORS._main_text);
 		var str = "";

@@ -819,13 +819,6 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		return _outSurf;
 	}
 	
-	//static postDeserialize = function() {
-	//	var _inputs = load_map.inputs;
-		
-	//	for(var i = input_fix_len; i < array_length(_inputs); i += data_length)
-	//		createNewInput();
-	//}
-	
 	static attributeSerialize = function() {
 		var att = {};
 		att.layer_visible    = attributes.layer_visible;

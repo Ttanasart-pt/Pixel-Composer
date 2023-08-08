@@ -31,8 +31,9 @@ function __Bone(parent = noone, distance = 0, direction = 0, angle = 0, length =
 	
 	updated = false;
 	
-	IKlength = 0;
-	IKTarget = noone;
+	IKlength   = 0;
+	IKTargetID = "";
+	IKTarget   = noone;
 	
 	freeze_data = {};
 	
@@ -291,7 +292,7 @@ function __Bone(parent = noone, distance = 0, direction = 0, angle = 0, length =
 			var points  = array_create(IKlength + 1);
 			var lengths = array_create(IKlength);
 			var bones   = array_create(IKlength);
-			var bn = IKTarget;
+			var bn      = IKTarget;
 			
 			for( var i = IKlength; i > 0; i-- ) {
 				var _p = bn.getPoint(1);
@@ -451,7 +452,7 @@ function __Bone(parent = noone, distance = 0, direction = 0, angle = 0, length =
 		bone.parent_anchor	= parent_anchor;
 		
 		bone.IKlength	= IKlength;
-		bone.IKTarget	= IKTarget == noone? "" : IKTarget.ID;
+		bone.IKTargetID	= IKTargetID;
 		
 		bone.apply_rotation	= apply_rotation;
 		bone.apply_scale	= apply_scale;
@@ -477,7 +478,7 @@ function __Bone(parent = noone, distance = 0, direction = 0, angle = 0, length =
 		self.node		= node;
 		
 		IKlength	= bone.IKlength;
-		IKTarget	= bone.IKTarget;
+		IKTargetID	= struct_try_get(bone, "IKTargetID", "");
 		
 		apply_rotation	= bone.apply_rotation;
 		apply_scale		= bone.apply_scale;
@@ -492,10 +493,9 @@ function __Bone(parent = noone, distance = 0, direction = 0, angle = 0, length =
 	}
 	
 	static connect = function() {
-		if(parent == noone || IKTarget == "") 
-			IKTarget = noone;
-		else if(is_string(IKTarget))
-			IKTarget = parent.findBone(IKTarget);
+		IKTarget = noone;
+		if(parent != noone && IKTargetID != "") 
+			IKTarget = parent.findBone(IKTargetID);
 		
 		for( var i = 0, n = array_length(childs); i < n; i++ )
 			childs[i].connect();
@@ -508,8 +508,8 @@ function __Bone(parent = noone, distance = 0, direction = 0, angle = 0, length =
 		_b.is_main	= is_main;
 		_b.parent_anchor = parent_anchor;
 		
-		_b.IKlength = IKlength;
-		_b.IKTarget	= IKTarget == noone? "" : IKTarget.ID;
+		_b.IKlength		= IKlength;
+		_b.IKTargetID	= IKTargetID;
 		
 		_b.apply_rotation	= apply_rotation;
 		_b.apply_scale		= apply_scale;

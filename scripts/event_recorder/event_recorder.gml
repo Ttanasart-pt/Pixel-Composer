@@ -24,6 +24,8 @@ enum ACTION_TYPE {
 	ungroup,
 	
 	collection_loaded,
+	
+	struct_modify,
 }
 
 enum DS_TYPE {
@@ -97,6 +99,11 @@ function Action(_type, _object, _data) constructor {
 				for( var i = 0, n = array_length(obj); i < n; i++ ) 
 					nodeDelete(obj[i]);
 				break;
+			case ACTION_TYPE.struct_modify : 
+				var _data = obj.serialize();
+				obj.deserialize(data);
+				data = _data;
+				break;
 		}
 	}
 	
@@ -159,6 +166,11 @@ function Action(_type, _object, _data) constructor {
 				for( var i = 0, n = array_length(obj); i < n; i++ )
 					obj[i].restore();
 				break;
+			case ACTION_TYPE.struct_modify : 
+				var _data = obj.serialize();
+				obj.deserialize(data);
+				data = _data;
+				break;
 		}
 	}
 	
@@ -167,48 +179,51 @@ function Action(_type, _object, _data) constructor {
 		switch(type) {
 			case ACTION_TYPE.var_modify :
 				if(array_length(data) > 2)
-					ss = "modify " + string(data[2]);
+					ss = $"modify {data[2]}";
 				else 
-					ss = "modify " + string(data[1]);
+					ss = $"modify {data[1]}";
 				break;
 			case ACTION_TYPE.list_insert :
 				if(array_length(data) > 2)
 					ss = data[2];
 				else 
-					ss = "insert " + string(data[1]) + " to list " + string(obj);
+					ss = $"insert {data[1]} to list {obj}";
 				break;
 			case ACTION_TYPE.list_modify :
-				ss = "modify " + string(data[1]) + " of list " + string(obj);
+				ss = $"modify {data[1]} of list {obj}";
 				break;
 			case ACTION_TYPE.list_delete :
-				ss = "delete " + string(data[1]) + " from list " + string(obj);
+				ss = $"delete {data[1]} from list {obj}";
 				break;
 			case ACTION_TYPE.node_added :
-				ss = "add " + string(obj.name) + " node";
+				ss = $"add {obj.name} node";
 				break;
 			case ACTION_TYPE.node_delete :
-				ss = "deleted " + string(obj.name) + " node";
+				ss = $"deleted {obj.name} node";
 				break;
 			case ACTION_TYPE.junction_connect :
-				ss = "connect " + string(obj.name);
+				ss = $"connect {obj.name}";
 				break;
 			case ACTION_TYPE.junction_disconnect :
-				ss = "disconnect " + string(obj.name);
+				ss = $"disconnect {obj.name}";
 				break;
 			case ACTION_TYPE.group_added :
-				ss = "add " + string(obj.name) + " to group";
+				ss = $"add {obj.name} to group";
 				break;
 			case ACTION_TYPE.group_removed :
-				ss = "remove " + string(obj.name) + " from group";
+				ss = $"remove {obj.name} from group";
 				break;
 			case ACTION_TYPE.group :
-				ss = "group " + string(array_length(data.content)) + " nodes";
+				ss = $"group {array_length(data.content)} nodes";
 				break;
 			case ACTION_TYPE.ungroup :
-				ss = "ungroup " + string(obj.name) + " node";
+				ss = $"ungroup {obj.name} node";
 				break;
 			case ACTION_TYPE.collection_loaded :
-				ss = "load " + string(filename_name(data));
+				ss = $"load {filename_name(data)}";
+				break;
+			case ACTION_TYPE.struct_modify : 
+				ss = $"modify {struct_try_get(obj, "name", "value")}";
 				break;
 		}
 		return ss;

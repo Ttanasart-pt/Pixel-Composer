@@ -1,3 +1,4 @@
+// 2023-08-08 14:23:48
 function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Armature Bind";
 	
@@ -181,7 +182,7 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 				draw_sprite_stretched_ext(THEME.ui_panel_active, 0, _x, _ty, _w, bh - ui(32), COLORS._main_accent, 1);
 		#endregion
 		
-		var amo = floor((ds_list_size(inputs) - input_fix_len) / data_length) - 1;
+		var amo = (ds_list_size(inputs) - input_fix_len) / data_length - 1;
 		if(array_length(current_data) != ds_list_size(inputs)) return 0;
 		
 		var ty = _y + bh + ui(8);
@@ -209,11 +210,9 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		
 			layer_remove = -1;
 			var index = -1;
+			for(var i = input_fix_len; i < ds_list_size(inputs) - data_length; i += data_length) {
+				var _surf = current_data[i];
 			
-			for(var i = 0; i < amo; i++) {
-				var _inp  = input_fix_len + (amo - i - 1) * data_length;
-				var _surf = current_data[_inp];
-				
 				index++;
 				var _bx = _x + _w - 24;
 				var _cy = ly + index * (lh + 4);
@@ -300,7 +299,7 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 					}
 				}
 				
-				var binded = inputs[| _inp].extra_data.bone_id != "";
+				var binded = inputs[| i].extra_data.bone_id != "";
 				
 				if(layer_dragging == noone || layer_dragging == index) {
 					var _bx = _x + 24;
@@ -393,10 +392,8 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		inputs[| index + 1] = nodeValue("Transform", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 0, 1, 1 ] )
 			.setDisplay(VALUE_DISPLAY.transform);
 		inputs[| index + 2] = nodeValue("Inherit Rotation", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true );
-		inputs[| index + 3] = nodeValue("Apply Bone Rotation", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false );
-		
+		inputs[| index + 3] = nodeValue("Apply Rotation", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true );
 		inputs[| index + 4] = nodeValue("Inherit Scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false );
-		inputs[| index + 5] = nodeValue("Apply Bone Scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false );
 		
 		for( var i = 0; i < data_length; i++ )
 			array_push(input_display_list, index + i);
@@ -408,7 +405,7 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	#endregion
 	}
 	
-	setIsDynamicInput(6);
+	setIsDynamicInput(5);
 	
 	if(!LOADING && !APPENDING) createNewInput();
 	
@@ -520,12 +517,11 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		var y1  = _y + hh * _s;
 		
 		if(surf_dragging > -1) {
-			var _surf = current_data[surf_dragging + 0];
+			var _surf = current_data[surf_dragging];
 			var _tran = current_data[surf_dragging + 1];
 			var _aang = current_data[surf_dragging + 2];
 			var _pang = current_data[surf_dragging + 3];
 			var _asca = current_data[surf_dragging + 4];
-			var _psca = current_data[surf_dragging + 5];
 			
 			var _bone = inputs[| surf_dragging].extra_data.bone_id;
 			_bone = boneMap[? _bone];
@@ -567,8 +563,8 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 				}
 				
 				if(_asca) {
-					sca_x /= _psca? _bone.pose_scale : _bone.pose_local_scale;
-					sca_y /= _psca? _bone.pose_scale : _bone.pose_local_scale;
+					sca_x /= _bone.pose_scale;
+					sca_y /= _bone.pose_scale;
 				}
 				
 				_tran[TRANSFORM.sca_x] = sca_x;
@@ -608,15 +604,14 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			var _aang = current_data[index + 2];
 			var _pang = current_data[index + 3];
 			var _asca = current_data[index + 4];
-			var _psca = current_data[index + 5];
 			
 			var _rot  = _aang * (_pang? _bone.angle : _bone.pose_local_angle) + _tran[TRANSFORM.rot];
 			var _anc  = _bone.getPoint(0.5);
 			var _mov  = point_rotate(_tran[TRANSFORM.pos_x], _tran[TRANSFORM.pos_y], 0, 0, _bone.angle);
 			var _sca  = [ _tran[TRANSFORM.sca_x], _tran[TRANSFORM.sca_y] ];
 			if(_asca) {
-				_sca[0] *= _psca? _bone.pose_scale : _bone.pose_local_scale;
-				_sca[1] *= _psca? _bone.pose_scale : _bone.pose_local_scale;
+				_sca[0] *= _bone.pose_scale;
+				_sca[1] *= _bone.pose_scale;
 			}
 			
 			var _ww = surface_get_width(_surf);
@@ -820,15 +815,14 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			var _aang = _data[datInd + 2];
 			var _pang = _data[datInd + 3];
 			var _asca = _data[datInd + 4];
-			var _psca = _data[datInd + 5];
 			
 			var _rot  = _aang * (_pang? _b.angle : _b.pose_local_angle) + _tran[TRANSFORM.rot];
 			var _anc  = _b.getPoint(0.5);
 			var _mov  = point_rotate(_tran[TRANSFORM.pos_x], _tran[TRANSFORM.pos_y], 0, 0, _b.angle);
 			var _sca  = [ _tran[TRANSFORM.sca_x], _tran[TRANSFORM.sca_y] ];
 			if(_asca) {
-				_sca[0] *= _psca? _b.pose_scale : _b.pose_local_scale;
-				_sca[1] *= _psca? _b.pose_scale : _b.pose_local_scale;
+				_sca[0] *= _b.pose_scale;
+				_sca[1] *= _b.pose_scale;
 			}
 			
 			var _ww = surface_get_width(_s);
@@ -880,6 +874,32 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		var _tr  = [ _cx - _anc.x, _cy - _anc.y, _rot, 1, 1 ];
 		inputs[| surfIndex + 1].setValue(_tr);
 	}
+	
+	//static postDeserialize = function() {
+	//	var _inputs = load_map.inputs;
+		
+	//	var load_fix_len = input_fix_len;
+	//	var amo = (array_length(_inputs) - load_fix_len) / data_length;
+		
+	//	if(PROJECT.version < 11481) {
+	//		var _idx = [];
+	//		for( var i = load_fix_len, n = array_length(_inputs); i < n; i += 2 ) {
+	//			array_append(_idx, i + 3);
+	//			array_append(_idx, i + 4);
+	//		}
+			
+	//		for( var i = array_length(_idx) - 1; i >= 0; i++ ) 
+	//			array_insert(load_map.inputs, _idx[i], noone);
+	//	}
+		
+	//	if(PROJECT.version < 11470) {
+	//		array_insert(load_map.inputs, 3, noone);
+	//		array_insert(load_map.inputs, 4, noone);
+	//		load_fix_len = 3;
+	//	}
+		
+	//	repeat(amo) createNewInput();
+	//}
 	
 	static attributeSerialize = function() {
 		var att = {};

@@ -324,7 +324,9 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 			if(isEqual(values[| 0].value, _val)) 
 				return false;
 			
-			if(_record) recordAction(ACTION_TYPE.var_modify, values[| 0], [ values[| 0].value, "value", prop.name ]);
+			if(_record)
+				recordAction(ACTION_TYPE.var_modify, values[| 0], [ values[| 0].value, "value", prop.name ]);
+			
 			values[| 0].value = _val;
 			return true;
 		}

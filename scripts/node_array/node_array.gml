@@ -182,13 +182,6 @@ function Node_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		outputs[| 0].setValue(res);
 	}
 	
-	//static postDeserialize = function() {
-	//	var _inputs = load_map.inputs;
-		
-	//	for(var i = input_fix_len; i < array_length(_inputs); i += data_length)
-	//		createNewInput();
-	//}
-	
 	static doApplyDeserialize = function() {
 		var _typ = getType();
 		if(_typ == VALUE_TYPE.any) return;

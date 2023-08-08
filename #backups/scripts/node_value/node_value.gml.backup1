@@ -1,3 +1,4 @@
+// 2023-08-08 14:41:45
 enum JUNCTION_CONNECT {
 	input,
 	output
@@ -1322,12 +1323,13 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				var _val = variable_clone(animator.getValue(time));
 				_val[index] = val;
 				updated = animator.setValue(_val, connect_type == JUNCTION_CONNECT.input && record, time); 
-			} else
+			} else 
 				updated = animator.setValue(val, connect_type == JUNCTION_CONNECT.input && record, time); 
 		}
 		
 		if(type == VALUE_TYPE.gradient)				updated = true;
 		if(display_type == VALUE_DISPLAY.palette)   updated = true;
+		if(display_type == VALUE_DISPLAY.transform) updated = true;
 		
 		if(updated) {
 			if(connect_type == JUNCTION_CONNECT.input) {
