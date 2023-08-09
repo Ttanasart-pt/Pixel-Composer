@@ -2,6 +2,7 @@
     "name": "Follow Path",
     "tags": [],
     "tooltip": "",
+    "location": ["Transform", "Transformations"],
     "sprPath": "./Follow Path.png",
     "nodes": [
         { "node": "Node_Path", "y": 64 }, 

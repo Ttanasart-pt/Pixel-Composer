@@ -104,7 +104,7 @@
 	VERSION			= 11484;
 	SAVE_VERSION	= 11482;
 	VERSION_STRING  = "1.15rc4";
-	BUILD_NUMBER	= 11484;
+	BUILD_NUMBER	= 11485;
 	
 	globalvar APPEND_MAP;
 	APPEND_MAP      = ds_map_create();

@@ -14,6 +14,8 @@
 		
 		inputNode   = noone;
 		outputNode  = noone;
+		
+		location = noone;
 	
 		static getName    = function() { return name;		/*__txt_node_name(node, name);		 */ }
 		static getTooltip = function() { return tooltip;	/*__txt_node_tooltip(node, tooltip); */ }
@@ -67,6 +69,8 @@
 			inputNode	= struct_try_get(map, "inputNode", noone);
 			outputNode	= struct_try_get(map, "outputNode", noone);
 			
+			location	= struct_try_get(map, "location", noone);
+			
 			if(struct_has(map, "sprPath")) {
 				var _path = string_replace(map.sprPath, "./", filename_dir(path) + "/");
 				
@@ -93,6 +97,23 @@
 			if(filename_ext(f) == ".json") {
 				var _c   = new NodeAction().deserialize($"{root}/{f}");
 				ds_list_add(list, _c);
+				
+				if(_c.location != noone) {
+					var _cat = _c.location[0];
+					var _grp = _c.location[1];
+					
+					for( var i = 0, n = ds_list_size(NODE_CATEGORY); i < n; i++ ) {
+						if(NODE_CATEGORY[| i].name != _cat) continue;
+						var _list  = NODE_CATEGORY[| i].list;
+						var j = 0;
+						
+						for( var m = ds_list_size(_list); j < m; j++ )
+							if(_list[| j] == _grp) break;
+						
+						ds_list_insert(_list, j + 1, _c);
+						break;
+					}
+				}
 			}
 			
 			f = file_find_next();

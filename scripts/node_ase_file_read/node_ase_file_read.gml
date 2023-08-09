@@ -37,6 +37,8 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	
 	inputs[| 2]  = nodeValue("Current tag", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "");
 	
+	inputs[| 3]  = nodeValue("Use cel dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	
 	outputs[| 0] = nodeValue("Output", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	outputs[| 1] = nodeValue("Content", self, JUNCTION_CONNECT.output, VALUE_TYPE.object, self);
@@ -155,7 +157,7 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 
 	input_display_list = [
 		["File",	 true], 0,
-		["Layers",	false], 1, layer_renderer, 
+		["Layers",	false], 1, 3, layer_renderer, 
 		["Tags",	false], 2, tag_renderer,
 	];
 	
@@ -183,6 +185,8 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		var nh = (array_length(layers) - 1) / 2 * _nh;
 		var ny = y - nh;
 		
+		var use_cel = inputs[| 3].getValue();
+		
 		var lvs = [];
 		for( var i = 0, n = array_length(layers); i < n; i++ ) {
 			var _layer = layers[i];
@@ -201,9 +205,10 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			
 			if(_node == noone)
 				_node = nodeBuild("Node_ASE_layer", nx, ny + i * _nh);
-				
+			
 			lvs[i] = _node;
 			lvs[i].inputs[| 0].setFrom(outputs[| 1]);
+			lvs[i].inputs[| 1].setValue(use_cel);
 			lvs[i].setDisplayName(_name);
 		}
 	}

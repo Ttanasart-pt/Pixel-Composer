@@ -120,6 +120,7 @@ event_inherited();
 	function buildNode(_node, _param = "") {
 		if(!_node) {
 			instance_destroy();
+			instance_destroy(o_dialog_menubox);
 			return;
 		}
 		
@@ -130,6 +131,7 @@ event_inherited();
 			_new_node = _node.build(node_target_x, node_target_y,, _param);
 			if(!_new_node) {
 				instance_destroy();
+				instance_destroy(o_dialog_menubox);
 				return;
 			}
 			
@@ -226,6 +228,7 @@ event_inherited();
 		}
 		
 		instance_destroy();
+		instance_destroy(o_dialog_menubox);
 	}
 	
 	catagory_pane = new scrollPane(category_width, dialog_h - ui(66), function(_y, _m) {

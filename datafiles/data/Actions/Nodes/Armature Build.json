@@ -2,6 +2,7 @@
     "name": "Armature Build",
     "tags": ["bone", "rigging"],
     "tooltip": "",
+    "location": ["Compose", "Armature"],
     "sprPath": "./Armature Build.png",
     "nodes": [
         { "node": "Node_Armature" }, 

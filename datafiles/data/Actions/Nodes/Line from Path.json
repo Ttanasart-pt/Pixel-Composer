@@ -2,6 +2,7 @@
     "name": "Line from Path",
     "tags": [],
     "tooltip": "",
+    "location": ["Generate", "Drawer"],
     "sprPath": "./Line from Path.png",
     "nodes": [
         { "node": "Node_Path" }, 

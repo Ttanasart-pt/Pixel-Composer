@@ -732,7 +732,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 					);
 					
 					callAddDialog();
-					menuCall("graph_node_selected_menu",o_dialog_add_node.dialog_x - ui(8), o_dialog_add_node.dialog_y + ui(4), menu, fa_right );
+					menuCall("graph_node_selected_menu", o_dialog_add_node.dialog_x - ui(8), o_dialog_add_node.dialog_y + ui(4), menu, fa_right );
 					setFocus(o_dialog_add_node.id, "Dialog");
 				}
 			}
@@ -1083,18 +1083,18 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 			SAVE_NODE(_node, nodeArray[i],,,, getCurrentContext());
 		_map.nodes = _node;
 		
-		clipboard_set_text(json_encode_minify(_map));
+		clipboard_set_text(json_stringify_minify(_map));
 	}
 	
 	function doPaste() {
-		var txt = clipboard_get_text();
+		var txt  = clipboard_get_text();
 		var _map = json_try_parse(txt, noone);
 		
 		if(_map != noone) {
 			ds_map_clear(APPEND_MAP);
 			APPENDING = true;
 			CLONING	  = true;
-			var _app = __APPEND_MAP(_map);
+			var _app  = __APPEND_MAP(_map);
 			APPENDING = false;
 			CLONING	  = false;
 			
