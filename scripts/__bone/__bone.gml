@@ -291,7 +291,7 @@ function __Bone(parent = noone, distance = 0, direction = 0, angle = 0, length =
 			childs[i].setPoseTransform(_position, pose_angle, pose_scale);
 	}
 	
-	static setIKconstrain = function() {		
+	static setIKconstrain = function() {
 		if(IKlength > 0 && IKTarget != noone) {
 			var points  = array_create(IKlength + 1);
 			var lengths = array_create(IKlength);
@@ -321,7 +321,7 @@ function __Bone(parent = noone, distance = 0, direction = 0, angle = 0, length =
 				lengths[i] = point_distance(p0.x, p0.y, p1.x, p1.y);
 			}
 			
-			var p = parent.getPoint(0, 0);
+			var p = parent.getPoint(0);
 			p.x += lengthdir_x(distance, direction);
 			p.y += lengthdir_y(distance, direction);
 			
@@ -334,7 +334,7 @@ function __Bone(parent = noone, distance = 0, direction = 0, angle = 0, length =
 	
 	FABRIK_result = [];
 	static FABRIK = function(bones, points, lengths, dx, dy) {
-		var threshold = 0.1;
+		var threshold = 0.01;
 		var _bo = array_create(array_length(points));
 		for( var i = 0, n = array_length(points); i < n; i++ )
 			_bo[i] = { x: points[i].x, y: points[i].y };
@@ -354,7 +354,7 @@ function __Bone(parent = noone, distance = 0, direction = 0, angle = 0, length =
 			}
 			
 			_bo = _bn;
-			if(++itr >= 32) break;
+			if(++itr >= 64) break;
 		} until(delta <= threshold);
 		
 		for( var i = 0, n = array_length(points) - 1; i < n; i++ ) {
@@ -379,7 +379,7 @@ function __Bone(parent = noone, distance = 0, direction = 0, angle = 0, length =
 			var p1  = points[i];
 			var p0  = points[i - 1];
 			var len = lengths[i - 1];
-			var dir = point_direction(p0.x, p0.y, tx, ty);
+			var dir = point_direction(tx, ty, p0.x, p0.y);
 			
 			p1.x = tx;
 			p1.y = ty;

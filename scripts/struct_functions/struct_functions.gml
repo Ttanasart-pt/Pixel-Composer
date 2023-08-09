@@ -12,6 +12,7 @@ function struct_override(original, override) {
 }
 
 function struct_try_get(struct, key, def = 0) {
+	gml_pragma("forceinline");
 	if(struct[$ key] != undefined) return struct[$ key];
 	
 	key = string_replace_all(key, "_", " ");

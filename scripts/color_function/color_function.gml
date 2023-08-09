@@ -13,10 +13,10 @@ function colorArrayFromReal(clr) {
 	return [color_get_red(clr) / 255, color_get_green(clr) / 255, color_get_blue(clr) / 255 ];	
 }
 
-function colorBrightness(clr) {
-	var r2 = color_get_red(clr) / 255;
-	var g2 = color_get_green(clr) / 255;
-	var b2 = color_get_blue(clr) / 255;
+function colorBrightness(clr, normalize = true) {
+	var r2 = color_get_red(clr) /	(normalize? 255 : 1);
+	var g2 = color_get_green(clr) / (normalize? 255 : 1);
+	var b2 = color_get_blue(clr) /	(normalize? 255 : 1);
 	return 0.299 * r2 + 0.587 * g2 + 0.224 * b2;
 }
 
@@ -64,7 +64,7 @@ function color_diff(c1, c2, fast = false) {
 #region sorting functions
 	function __valHSV(c, h, s, v) { return color_get_hue(c) * h + color_get_saturation(c) * s + color_get_value(c) * v; }
 	function __valRGB(c, r, g, b) { return color_get_red(c) * r + color_get_green(c) * g + color_get_blue(c) * b; }
-
+	
 	function __sortBright(c1, c2) {
 		var l1 = 0.299 * color_get_red(c1) + 0.587 * color_get_green(c1) + 0.114 * color_get_blue(c1);
 		var l2 = 0.299 * color_get_red(c2) + 0.587 * color_get_green(c2) + 0.114 * color_get_blue(c2);

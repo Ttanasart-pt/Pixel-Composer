@@ -822,10 +822,10 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			_b = boneMap[? _b];
 			
 			var _tran = use_data? _bind[i].transform : _data[datInd + 1];
-			var _aang = _data[datInd + 2];
-			var _pang = _data[datInd + 3];
-			var _asca = _data[datInd + 4];
-			var _psca = _data[datInd + 5];
+			var _aang = use_data? _bind[i].applyRot  : _data[datInd + 2];
+			var _pang = use_data? _bind[i].applyRotl : _data[datInd + 3];
+			var _asca = use_data? _bind[i].applySca  : _data[datInd + 4];
+			var _psca = use_data? _bind[i].applyScal : _data[datInd + 5];
 			
 			var _rot  = _aang * (_pang? _b.angle : _b.pose_local_angle) + _tran[TRANSFORM.rot];
 			var _anc  = _b.getPoint(0.5);
@@ -851,9 +851,13 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			
 			array_push(atlas_data, new SurfaceAtlas(_s, _pos, _rot, _sca));
 			array_push(bind_data, {
-				surface: new Surface(_s),
-				bone: _b.ID,
-				transform: _tran
+				surface:	new Surface(_s),
+				bone:		_b.ID,
+				transform:	_tran,
+				applyRot:	_aang,
+				applyRotl:	_pang,
+				applySca:	_asca,
+				applyScal:	_psca,
 			});
 			draw_surface_ext_safe(_s, _pos[0], _pos[1], _sca[0], _sca[1], _rot);
 		}
