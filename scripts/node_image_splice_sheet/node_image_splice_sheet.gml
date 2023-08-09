@@ -59,7 +59,7 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		.setDisplay(VALUE_DISPLAY.button, [ function() { 
 			var _atl = outputs[| 1].getValue();
 			var _spd = inputs[| 8].getValue();
-			PROJECT.animator.frames_total = max(1, _spd == 0? 1 : array_length(_atl) / _spd);
+			PROJECT.animator.frames_total = max(1, _spd == 0? 1 : ceil(array_length(_atl) / _spd));
 		}, "Sync frames"] );
 		
 	inputs[| 12] = nodeValue("Filter empty output", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
