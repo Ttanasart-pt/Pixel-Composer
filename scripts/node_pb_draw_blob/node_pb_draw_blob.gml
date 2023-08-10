@@ -41,6 +41,8 @@ function Node_PB_Draw_Blob(_x, _y, _group = noone) : Node_PB_Draw(_x, _y, _group
 		var _btop = _data[3];
 		var _bbot = _data[4];
 		
+		if(_pbox == noone) return _pbox;
+		
 		_btop *= _pbox.w / 2;
 		_bbot *= _pbox.w / 2;
 		

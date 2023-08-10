@@ -56,14 +56,14 @@ function steam_ugc_collection_generate(file, dest_path = DIRECTORY + "steamUGCth
 		draw_sprite_tiled(s_workshop_bg, 0, -64, -64);
 		draw_sprite_stretched(s_workshop_frame, 0, 0, 0, prev_size, prev_size);
 		
-		if(spr == -1) spr = THEME.group;
+		if(spr == -1) spr = THEME.workshop_collection;
 		var ss = (prev_size - 160) / max(sprite_get_width(spr), sprite_get_height(spr));
 		var ox = (sprite_get_xoffset(spr) - sprite_get_width(spr) / 2) * ss;
 		var oy = (sprite_get_yoffset(spr) - sprite_get_height(spr) / 2) * ss;
 		draw_sprite_ext(spr, 0, prev_size / 2 + ox, prev_size / 2 + oy, ss, ss, 0, c_white, 1);
 		
 		draw_sprite_stretched(s_workshop_badge, 0, 8, 8, 88, 88);
-		draw_sprite_ext(THEME.group, 0, 40, 40, 1, 1, 0, COLORS._main_icon_dark, 1);
+		draw_sprite_ext(THEME.workshop_collection, 0, 40, 40, 1, 1, 0, COLORS._main_icon_dark, 1);
 	surface_reset_target();
 	surface_save_safe(_s, dest_path);
 	surface_free(_s);

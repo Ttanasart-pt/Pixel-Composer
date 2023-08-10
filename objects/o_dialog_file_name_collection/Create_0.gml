@@ -10,7 +10,7 @@ event_inherited();
 			
 	draggable = false;
 	
-	destroy_on_click_out = true;
+	destroy_on_click_out = false;
 	
 	meta = METADATA.clone();
 	meta_expand = false;

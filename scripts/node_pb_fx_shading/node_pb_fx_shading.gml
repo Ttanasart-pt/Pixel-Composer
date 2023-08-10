@@ -12,6 +12,8 @@ function Node_PB_Fx_Shading(_x, _y, _group = noone) : Node_PB_Fx(_x, _y, _group)
 	
 	static process_data = function(_outSurf, _data, _output_index, _array_index) {
 		var _pbox = _data[0];
+		if(_pbox == noone) return _pbox;
+		
 		var _nbox = _pbox.clone();
 		
 		var _padd = _data[1];

@@ -45,10 +45,7 @@ function Node_Palette_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 				}
 			}
 			
-			if(fromIndex == -1)
-				palo[i] = c;
-			else 
-				palo[i] = array_safe_get(pto, fromIndex, c, ARRAY_OVERFLOW.loop);
+			palo[i] = fromIndex == -1? c : array_safe_get(pto, fromIndex, c, ARRAY_OVERFLOW.loop);
 		}
 		
 		return palo;

@@ -765,14 +765,19 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		return hovering;
 	}
 	
+	static getGraphPreviewSurface = function() {
+		var _node = outputs[| preview_channel];
+		if(_node.type != VALUE_TYPE.surface) return noone;
+		return _node.getValue();
+	}
+	
 	static drawPreview = function(xx, yy, _s) {
 		if(draw_graph_culled) return;
 		if(!active) return;
 		
-		var _node = outputs[| preview_channel];
-		if(_node.type != VALUE_TYPE.surface) return;
+		var surf = getGraphPreviewSurface();
+		if(surf == noone) return;
 		
-		var surf = _node.getValue();
 		preview_amount = 0;
 		if(is_array(surf)) {
 			if(array_length(surf) == 0) return;

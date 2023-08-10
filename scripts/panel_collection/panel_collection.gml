@@ -195,10 +195,8 @@ function Panel_Collection() : PanelContent() constructor {
 							menuCall("collection_menu",,, contentMenu,, _menu_node);	
 						}
 						
-						if(!instance_exists(o_dialog_menubox) && meta != noone && meta != undefined) {
-							meta.name = _node.name;
+						if(!instance_exists(o_dialog_menubox) && meta != noone && meta != undefined)
 							TOOLTIP = meta;
-						}
 					}
 						
 					if(_node.path == updated_path && updated_prog > 0) 

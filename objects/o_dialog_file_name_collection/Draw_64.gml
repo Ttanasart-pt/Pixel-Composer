@@ -59,17 +59,13 @@
 			if(updating == noone) {
 				saveCollection(node, data_path, meta.name, true, meta);
 			} else {
-				var path = updating.path;
-				var map  = json_load(path);
-				var _meta = meta.serialize();
-				if(ds_map_exists(map, "metadata"))
-					ds_map_replace_map(map, "metadata", _meta);
-				else 
-					ds_map_add_map(map, "metadata", _meta);
-				json_save(path, map);
-				ds_map_destroy(map);
+				var _map     = json_load_struct(updating.path);
+				var _meta    = meta.serialize();
+				_map.metadata = _meta;
+				json_save_struct(updating.path,		 _map);
+				json_save_struct(updating.meta_path, _meta);
 				
-				updating.meta = meta;
+				updating.meta = _meta;
 				PANEL_COLLECTION.refreshContext();
 			}
 			

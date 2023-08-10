@@ -9,6 +9,13 @@ function Node_PB_Draw(_x, _y, _group = noone) : Node_PB(_x, _y, _group) construc
 	inputs[| 2] = nodeValue("Apply Mask", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true );
 	
 	outputs[| 0] = nodeValue("pBox", self, JUNCTION_CONNECT.output, VALUE_TYPE.pbBox, noone);
+	
+	static getGraphPreviewSurface = function() {
+		var _nbox = outputs[| 0].getValue();
+		if(_nbox == noone) return noone;
+		
+		return _nbox.content;
+	}
 }
 
 #macro PB_DRAW_CREATE_MASK _nbox.mask = surface_verify(_nbox.mask, _nbox.w, _nbox.h);								\

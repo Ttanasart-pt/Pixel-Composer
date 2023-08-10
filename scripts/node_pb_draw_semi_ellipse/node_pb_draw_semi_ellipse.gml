@@ -15,6 +15,8 @@ function Node_PB_Draw_Semi_Ellipse(_x, _y, _group = noone) : Node_PB_Draw(_x, _y
 		var _mask = _data[2];
 		var _side = _data[3];
 		
+		if(_pbox == noone) return _pbox;
+		
 		var _nbox = _pbox.clone();
 		_nbox.content = surface_verify(_nbox.content, _pbox.w, _pbox.h);
 		

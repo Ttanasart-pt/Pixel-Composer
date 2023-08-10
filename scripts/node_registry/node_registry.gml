@@ -632,64 +632,64 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 			
 		//////////////////////////////////////////////////////////////// PIXEL BUILDER ////////////////////////////////////////////////////////////////
 			
-		//var pb_draw = ds_list_create();
-		//addNodePBCatagory("Draw", pb_draw);
-		//	ds_list_add(pb_draw, "Fill");
-		//	addNodeObject(pb_draw, "Fill",				s_node_pb_draw_fill,	"Node_PB_Draw_Fill",			[1, Node_PB_Draw_Fill]);
+		var pb_draw = ds_list_create();
+		addNodePBCatagory("Draw", pb_draw);
+			ds_list_add(pb_draw, "Fill");
+			addNodeObject(pb_draw, "Fill",				s_node_pb_draw_fill,	"Node_PB_Draw_Fill",			[1, Node_PB_Draw_Fill]);
 			
-		//	ds_list_add(pb_draw, "Shape");
-		//	addNodeObject(pb_draw, "Rectangle",			s_node_pb_draw_rectangle,		"Node_PB_Draw_Rectangle",		[1, Node_PB_Draw_Rectangle]);
-		//	addNodeObject(pb_draw, "Round Rectangle",	s_node_pb_draw_roundrectangle,	"Node_PB_Draw_Round_Rectangle",	[1, Node_PB_Draw_Round_Rectangle]);
-		//	addNodeObject(pb_draw, "Trapezoid",			s_node_pb_draw_trapezoid,		"Node_PB_Draw_Trapezoid",		[1, Node_PB_Draw_Trapezoid]);
-		//	addNodeObject(pb_draw, "Diamond",			s_node_pb_draw_diamond,			"Node_PB_Draw_Diamond",		[1, Node_PB_Draw_Diamond]);
-		//	addNodeObject(pb_draw, "Ellipse",			s_node_pb_draw_ellipse,			"Node_PB_Draw_Ellipse",			[1, Node_PB_Draw_Ellipse]);
-		//	addNodeObject(pb_draw, "Semi-Ellipse",		s_node_pb_draw_semi_ellipse,	"Node_PB_Draw_Semi_Ellipse",	[1, Node_PB_Draw_Semi_Ellipse]);
-		//	addNodeObject(pb_draw, "Line",				s_node_pb_draw_line,			"Node_PB_Draw_Line",			[1, Node_PB_Draw_Line]);
-		//	addNodeObject(pb_draw, "Angle",				s_node_pb_draw_angle,			"Node_PB_Draw_Angle",			[1, Node_PB_Draw_Angle]);
-		//	addNodeObject(pb_draw, "Blob",				s_node_pb_draw_blob,			"Node_PB_Draw_Blob",			[1, Node_PB_Draw_Blob]);
+			ds_list_add(pb_draw, "Shape");
+			addNodeObject(pb_draw, "Rectangle",			s_node_pb_draw_rectangle,		"Node_PB_Draw_Rectangle",		[1, Node_PB_Draw_Rectangle]);
+			addNodeObject(pb_draw, "Round Rectangle",	s_node_pb_draw_roundrectangle,	"Node_PB_Draw_Round_Rectangle",	[1, Node_PB_Draw_Round_Rectangle]);
+			addNodeObject(pb_draw, "Trapezoid",			s_node_pb_draw_trapezoid,		"Node_PB_Draw_Trapezoid",		[1, Node_PB_Draw_Trapezoid]);
+			addNodeObject(pb_draw, "Diamond",			s_node_pb_draw_diamond,			"Node_PB_Draw_Diamond",			[1, Node_PB_Draw_Diamond]);
+			addNodeObject(pb_draw, "Ellipse",			s_node_pb_draw_ellipse,			"Node_PB_Draw_Ellipse",			[1, Node_PB_Draw_Ellipse]);
+			addNodeObject(pb_draw, "Semi-Ellipse",		s_node_pb_draw_semi_ellipse,	"Node_PB_Draw_Semi_Ellipse",	[1, Node_PB_Draw_Semi_Ellipse]);
+			addNodeObject(pb_draw, "Line",				s_node_pb_draw_line,			"Node_PB_Draw_Line",			[1, Node_PB_Draw_Line]);
+			addNodeObject(pb_draw, "Angle",				s_node_pb_draw_angle,			"Node_PB_Draw_Angle",			[1, Node_PB_Draw_Angle]);
+			addNodeObject(pb_draw, "Blob",				s_node_pb_draw_blob,			"Node_PB_Draw_Blob",			[1, Node_PB_Draw_Blob]);
 			
-		//var pb_box = ds_list_create();
-		//addNodePBCatagory("Box", pb_box);
-		//	ds_list_add(pb_box, "Layer");
-		//	addNodeObject(pb_box, "Layer",		s_node_pb_layer,	"Node_PB_Layer",		[1, Node_PB_Layer]);
+		var pb_box = ds_list_create();
+		addNodePBCatagory("Box", pb_box);
+			ds_list_add(pb_box, "Layer");
+			addNodeObject(pb_box, "Layer",		s_node_pb_layer,	"Node_PB_Layer",		[1, Node_PB_Layer]);
 			
-		//	ds_list_add(pb_box, "Box");
-		//	addNodeObject(pb_box, "Transform",		s_node_pb_box_transform,	"Node_PB_Box_Transform",	[1, Node_PB_Box_Transform]);
-		//	addNodeObject(pb_box, "Mirror",			s_node_pb_box_mirror,		"Node_PB_Box_Mirror",		[1, Node_PB_Box_Mirror]);
-		//	addNodeObject(pb_box, "Inset",			s_node_pb_box_inset,		"Node_PB_Box_Inset",		[1, Node_PB_Box_Inset]);
-		//	addNodeObject(pb_box, "Split",			s_node_pb_box_split,		"Node_PB_Box_Split",		[1, Node_PB_Box_Split]);
-		//	addNodeObject(pb_box, "Divide",			s_node_pb_box_divide,		"Node_PB_Box_Divide",		[1, Node_PB_Box_Divide]);
-		//	addNodeObject(pb_box, "Divide Grid",	s_node_pb_box_divide_grid,	"Node_PB_Box_Divide_Grid",	[1, Node_PB_Box_Divide_Grid]);
-		//	addNodeObject(pb_box, "Contract",		s_node_pb_box_contract,		"Node_PB_Box_Contract",		[1, Node_PB_Box_Contract]);
+			ds_list_add(pb_box, "Box");
+			addNodeObject(pb_box, "Transform",		s_node_pb_box_transform,	"Node_PB_Box_Transform",	[1, Node_PB_Box_Transform]);
+			addNodeObject(pb_box, "Mirror",			s_node_pb_box_mirror,		"Node_PB_Box_Mirror",		[1, Node_PB_Box_Mirror]);
+			addNodeObject(pb_box, "Inset",			s_node_pb_box_inset,		"Node_PB_Box_Inset",		[1, Node_PB_Box_Inset]);
+			addNodeObject(pb_box, "Split",			s_node_pb_box_split,		"Node_PB_Box_Split",		[1, Node_PB_Box_Split]);
+			addNodeObject(pb_box, "Divide",			s_node_pb_box_divide,		"Node_PB_Box_Divide",		[1, Node_PB_Box_Divide]);
+			addNodeObject(pb_box, "Divide Grid",	s_node_pb_box_divide_grid,	"Node_PB_Box_Divide_Grid",	[1, Node_PB_Box_Divide_Grid]);
+			addNodeObject(pb_box, "Contract",		s_node_pb_box_contract,		"Node_PB_Box_Contract",		[1, Node_PB_Box_Contract]);
 			
-		//var pb_fx = ds_list_create();
-		//addNodePBCatagory("Effects", pb_fx);
-		//	ds_list_add(pb_fx, "Effect");
-		//	addNodeObject(pb_fx, "Outline",			s_node_pb_fx_outline,	"Node_PB_Fx_Outline",		[1, Node_PB_Fx_Outline]);
-		//	addNodeObject(pb_fx, "Stack",			s_node_pb_fx_stack,		"Node_PB_Fx_Stack",			[1, Node_PB_Fx_Stack]);
-		//	addNodeObject(pb_fx, "Radial",			s_node_pb_fx_radial,	"Node_PB_Fx_Radial",		[1, Node_PB_Fx_Radial]);
+		var pb_fx = ds_list_create();
+		addNodePBCatagory("Effects", pb_fx);
+			ds_list_add(pb_fx, "Effect");
+			addNodeObject(pb_fx, "Outline",			s_node_pb_fx_outline,	"Node_PB_Fx_Outline",		[1, Node_PB_Fx_Outline]);
+			addNodeObject(pb_fx, "Stack",			s_node_pb_fx_stack,		"Node_PB_Fx_Stack",			[1, Node_PB_Fx_Stack]);
+			addNodeObject(pb_fx, "Radial",			s_node_pb_fx_radial,	"Node_PB_Fx_Radial",		[1, Node_PB_Fx_Radial]);
 			
-		//	ds_list_add(pb_fx, "Lighting");
-		//	addNodeObject(pb_fx, "Highlight",		s_node_pb_fx_highlight,	"Node_PB_Fx_Highlight",		[1, Node_PB_Fx_Highlight]);
-		//	addNodeObject(pb_fx, "Shading",			s_node_pb_fx_shading,	"Node_PB_Fx_Shading",		[1, Node_PB_Fx_Shading]);
+			ds_list_add(pb_fx, "Lighting");
+			addNodeObject(pb_fx, "Highlight",		s_node_pb_fx_highlight,	"Node_PB_Fx_Highlight",		[1, Node_PB_Fx_Highlight]);
+			addNodeObject(pb_fx, "Shading",			s_node_pb_fx_shading,	"Node_PB_Fx_Shading",		[1, Node_PB_Fx_Shading]);
 			
-		//	ds_list_add(pb_fx, "Texture");
-		//	addNodeObject(pb_fx, "Hashing",			s_node_pb_fx_hash,		"Node_PB_Fx_Hash",			[1, Node_PB_Fx_Hash]);
-		//	addNodeObject(pb_fx, "Strip",			s_node_pb_fx_strip,		"Node_PB_Fx_Strip",			[1, Node_PB_Fx_Strip]);
-		//	addNodeObject(pb_fx, "Brick",			s_node_pb_fx_brick,		"Node_PB_Fx_Brick",			[1, Node_PB_Fx_Brick]);
+			ds_list_add(pb_fx, "Texture");
+			addNodeObject(pb_fx, "Hashing",			s_node_pb_fx_hash,		"Node_PB_Fx_Hash",			[1, Node_PB_Fx_Hash]);
+			addNodeObject(pb_fx, "Strip",			s_node_pb_fx_strip,		"Node_PB_Fx_Strip",			[1, Node_PB_Fx_Strip]);
+			addNodeObject(pb_fx, "Brick",			s_node_pb_fx_brick,		"Node_PB_Fx_Brick",			[1, Node_PB_Fx_Brick]);
 			
-		//	ds_list_add(pb_fx, "Blend");
-		//	addNodeObject(pb_fx, "Add",				s_node_pb_fx_add,		"Node_PB_Fx_Add",			[1, Node_PB_Fx_Add]);
-		//	addNodeObject(pb_fx, "Subtract",		s_node_pb_fx_subtract,	"Node_PB_Fx_Subtract",		[1, Node_PB_Fx_Subtract]);
-		//	addNodeObject(pb_fx, "Intersect",		s_node_pb_fx_interesct,	"Node_PB_Fx_Intersect",		[1, Node_PB_Fx_Intersect]);
+			ds_list_add(pb_fx, "Blend");
+			addNodeObject(pb_fx, "Add",				s_node_pb_fx_add,		"Node_PB_Fx_Add",			[1, Node_PB_Fx_Add]);
+			addNodeObject(pb_fx, "Subtract",		s_node_pb_fx_subtract,	"Node_PB_Fx_Subtract",		[1, Node_PB_Fx_Subtract]);
+			addNodeObject(pb_fx, "Intersect",		s_node_pb_fx_interesct,	"Node_PB_Fx_Intersect",		[1, Node_PB_Fx_Intersect]);
 			
-		//var pb_arr = ds_list_create();
-		//addNodePBCatagory("Array", pb_arr);
-		//	addNodeObject(pb_arr, "Array",			s_node_array,			"Node_Array",			[1, Node_Array]);
-		//	addNodeObject(pb_arr, "Array Get",		s_node_array_get,		"Node_Array_Get",		[1, Node_Array_Get], ["get array"]);
-		//	addNodeObject(pb_arr, "Array Set",		s_node_array_set,		"Node_Array_Set",		[1, Node_Array_Set], ["set array"]).setVersion(1120);
-		//	addNodeObject(pb_arr, "Array Insert",	s_node_array_insert,	"Node_Array_Insert",	[1, Node_Array_Insert], ["insert array"]).setVersion(1120);
-		//	addNodeObject(pb_arr, "Array Remove",	s_node_array_remove,	"Node_Array_Remove",	[1, Node_Array_Remove], ["remove array", "delete array", "array delete"]).setVersion(1120);
+		var pb_arr = ds_list_create();
+		addNodePBCatagory("Array", pb_arr);
+			addNodeObject(pb_arr, "Array",			s_node_array,			"Node_Array",			[1, Node_Array]);
+			addNodeObject(pb_arr, "Array Get",		s_node_array_get,		"Node_Array_Get",		[1, Node_Array_Get], ["get array"]);
+			addNodeObject(pb_arr, "Array Set",		s_node_array_set,		"Node_Array_Set",		[1, Node_Array_Set], ["set array"]).setVersion(1120);
+			addNodeObject(pb_arr, "Array Insert",	s_node_array_insert,	"Node_Array_Insert",	[1, Node_Array_Insert], ["insert array"]).setVersion(1120);
+			addNodeObject(pb_arr, "Array Remove",	s_node_array_remove,	"Node_Array_Remove",	[1, Node_Array_Remove], ["remove array", "delete array", "array delete"]).setVersion(1120);
 			
 		var hid = ds_list_create();
 		addNodeCatagory("Hidden", hid, ["Hidden"]);
@@ -703,6 +703,7 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 			addNodeObject(hid, "Sort Input",		s_node_grid_hex_noise,	"Node_Iterator_Sort_Input",		[1, Node_Iterator_Sort_Input]);
 			addNodeObject(hid, "Sort Output",		s_node_grid_hex_noise,	"Node_Iterator_Sort_Output",	[1, Node_Iterator_Sort_Output]);
 			addNodeObject(hid, "Onion Skin",		s_node_cache,			"Node_Onion_Skin",				[1, Node_Onion_Skin]).setVersion(1147);
+			addNodeObject(hid, "Pixel Builder",		s_node_pixel_builder,	"Node_Pixel_Builder",			[1, Node_Pixel_Builder]).setVersion(1150);
 	}
 #endregion
 

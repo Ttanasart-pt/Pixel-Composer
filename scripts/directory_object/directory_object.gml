@@ -93,23 +93,22 @@ function FileObject(_name, _path) constructor {
 	static getMetadata = function() { 
 		retrive_data = true;
 		
-		if(!file_exists(path))	return noone;
-		if(meta != noone)		return meta;
-		if(meta == undefined)	return noone;
+		if(!file_exists(path))	return noone; 
+		if(meta != noone)		return meta;  
+		if(meta == undefined)	return noone; 
 		
 		meta = new MetaDataManager();
 		
 		if(file_exists(meta_path)) {
-			var m  = json_load(meta_path);
-			meta.deserialize(m);
+			meta.deserialize(json_load_struct(meta_path));
 		} else {
-			var m  = json_load(path);
+			var m  = json_load_struct(path);
 			
-			if(ds_map_exists(m, "metadata"))
-				meta.deserialize(m[? "metadata"]);
-			if(ds_map_exists(m, "preview"))
-				thumbnail_data = json_try_parse(m[? "preview"], -1);
-			meta.version = m[? "version"];
+			if(struct_has(m, "metadata"))
+				meta.deserialize(m.metadata);
+			if(struct_has(m, "preview"))
+				thumbnail_data = json_try_parse(m.preview, -1);
+			meta.version = m.version;
 		}
 		
 		meta.name = name;
@@ -119,8 +118,6 @@ function FileObject(_name, _path) constructor {
 			case ".pxcc" : meta.type = FILE_TYPE.collection;	break;
 			default :	   meta.type = FILE_TYPE.assets;		break;
 		}
-		
-		ds_map_destroy(m);
 		
 		return meta;
 	}

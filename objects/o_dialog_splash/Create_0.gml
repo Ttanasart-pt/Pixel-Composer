@@ -451,7 +451,7 @@ event_inherited();
 					draw_text_add(ch_x, ch_y, hearts);
 			
 					var _w = string_width(hearts);
-					draw_sprite_ui(THEME.heart, 0, ch_x - _w - ui(16), ch_y + ui(10), 0.75, 0.75,, COLORS._main_icon);
+					draw_sprite_ui(THEME.heart, 0, ch_x - _w - ui(16), ch_y + ui(10), 1, 1,, CDEF.red);
 					
 					grid_ys[_col] += grid_h + label_h + ui(8);
 				}

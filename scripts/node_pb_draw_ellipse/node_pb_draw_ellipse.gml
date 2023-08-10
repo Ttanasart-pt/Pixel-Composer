@@ -10,6 +10,8 @@ function Node_PB_Draw_Ellipse(_x, _y, _group = noone) : Node_PB_Draw(_x, _y, _gr
 		var _fcol = _data[1];
 		var _mask = _data[2];
 		
+		if(_pbox == noone) return _pbox;
+		
 		var _nbox = _pbox.clone();
 		_nbox.content = surface_verify(_nbox.content, _pbox.w, _pbox.h);
 		

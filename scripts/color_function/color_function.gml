@@ -36,21 +36,21 @@ function colorMultiply(c1, c2) {
 	return make_color_rgb((r1 * r2) / 255, (g1 * g2) / 255, (b1 * b2) / 255);
 }
 
-function color_diff(c1, c2, fast = false) {
-	var _c1_r =  c1 & 255;
-	var _c1_g = (c1 >>  8) & 255;
-	var _c1_b = (c1 >> 16) & 255;
-	var _c1_a = (c1 >> 24) & 255;
+function color_diff(c1, c2, fast = false, alpha = false) {
+	var _c1_r = color_get_red(c1);
+	var _c1_g = color_get_green(c1);
+	var _c1_b = color_get_blue(c1);
+	var _c1_a = alpha? color_get_alpha(c1) : 255;
 	
 	_c1_a = _c1_a / 255;
 	_c1_r = _c1_r / 255 * _c1_a;
 	_c1_g = _c1_g / 255 * _c1_a;
 	_c1_b = _c1_b / 255 * _c1_a;
 	
-	var _c2_r =  c2 & 255;
-	var _c2_g = (c2 >>  8) & 255;
-	var _c2_b = (c2 >> 16) & 255;
-	var _c2_a = (c2 >> 24) & 255;
+	var _c2_r = color_get_red(c2);
+	var _c2_g = color_get_green(c2);
+	var _c2_b = color_get_blue(c2);
+	var _c2_a = alpha? color_get_alpha(c2) : 255;
 	
 	_c2_a = _c2_a / 255;
 	_c2_r = _c2_r / 255 * _c2_a;

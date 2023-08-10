@@ -67,6 +67,8 @@ function Node_PB_Draw_Round_Rectangle(_x, _y, _group = noone) : Node_PB_Draw(_x,
 		var _rela = _data[6];
 		var _cut  = _data[7];
 		
+		if(_pbox == noone) return _pbox;
+		
 		var _nbox = _pbox.clone();
 		_nbox.content = surface_verify(_nbox.content, _pbox.w, _pbox.h);
 		
