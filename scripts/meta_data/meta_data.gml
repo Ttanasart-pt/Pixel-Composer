@@ -73,7 +73,7 @@ function MetaDataManager() constructor {
 		var _h = 0;
 		
 		if(type == FILE_TYPE.assets) {
-			draw_set_font(f_p0);
+			draw_set_font(f_p1);
 			_h = string_height(name);
 			_w = string_width(name);
 			
@@ -83,7 +83,7 @@ function MetaDataManager() constructor {
 			draw_sprite_stretched(THEME.textbox, 3, mx, my, _w + ui(16), _h + ui(16));
 			draw_sprite_stretched(THEME.textbox, 0, mx, my, _w + ui(16), _h + ui(16));
 			
-			draw_set_text(f_p0, fa_left, fa_top, COLORS._main_text);
+			draw_set_text(f_p1, fa_left, fa_top, COLORS._main_text);
 			draw_text(mx + ui(8), my + ui(8), name);
 			return;
 		}
@@ -95,18 +95,17 @@ function MetaDataManager() constructor {
 		_h += string_height_ext(name, -1, ww) - ui(4);
 		_w = max(_w, string_width_ext(name, -1, ww));
 		
-		draw_set_font(f_p0b);
+		draw_set_font(f_p1);
 		_h += string_height_ext(_aut, -1, ww);
 		_w = max(_w, string_width_ext(_aut, -1, ww));
 		
 		if(contact != "") { 
 			draw_set_font(f_p2);
-			_h += ui(-4);
-			_h += string_height_ext(contact, -1, ww);
+			_h += string_height_ext(contact, -1, ww) + ui(-2);
 			_w = max(_w, string_width_ext(contact, -1, ww));
 		}
 		
-		draw_set_font(f_p0);
+		draw_set_font(f_p1);
 		_h += ui(8);
 		_h += string_height_ext(description, -1, ww);
 		_w = max(_w, string_width_ext(description, -1, ww));
@@ -126,10 +125,10 @@ function MetaDataManager() constructor {
 		}
 		
 		if(array_length(tags)) {
-			draw_set_font(f_p0);
+			draw_set_font(f_p1);
 			_h += ui(8);
 			var tx = 0;
-			var hh = line_get_height(f_p0, ui(4));
+			var hh = line_get_height(f_p1, ui(4));
 			var th = hh;
 			for( var i = 0, n = array_length(tags); i < n; i++ ) {
 				var ww = string_width(tags[i]) + ui(16);
@@ -156,19 +155,19 @@ function MetaDataManager() constructor {
 		draw_text_line(mx + ui(8), ty, name, -1, _w);
 		ty += string_height_ext(name, -1, _w) - ui(4);
 		
-		draw_set_text(f_p0b, fa_left, fa_top, COLORS._main_text_sub);
+		draw_set_text(f_p1, fa_left, fa_top, COLORS._main_text_sub);
 		draw_text_line(mx + ui(8), ty, _aut, -1, _w);
 		ty += string_height_ext(_aut, -1, _w);
 		
 		if(contact != "") {
-			ty += ui(-4);
+			ty += ui(-2);
 			draw_set_text(f_p2, fa_left, fa_top, COLORS._main_text_sub);
 			draw_text_line(mx + ui(8), ty, contact, -1, _w);
 			ty += string_height_ext(contact, -1, _w);
 		}
 		
 		ty += ui(8);
-		draw_set_text(f_p0, fa_left, fa_top, COLORS._main_text);
+		draw_set_text(f_p1, fa_left, fa_top, COLORS._main_text);
 		draw_text_line(mx + ui(8), ty, description, -1, _w);
 		ty += string_height_ext(description, -1, _w);
 		
@@ -187,10 +186,10 @@ function MetaDataManager() constructor {
 		}
 		
 		if(array_length(tags)) {
-			draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text);
+			draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text);
 			ty += ui(8);
 			var tx = 0;
-			var hh = line_get_height(f_p0, ui(4));
+			var hh = line_get_height(f_p1, ui(4));
 			
 			for( var i = 0, n = array_length(tags); i < n; i++ ) {
 				var ww = string_width(tags[i]) + ui(16);

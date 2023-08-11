@@ -23,7 +23,7 @@
 		rendering = false;
 		playback = ANIMATOR_END.loop;
 		
-		static setFrame = function(frame) {
+		static setFrame = function(frame, resetTime = true) {
 			//if(frame == 0) resetAnimation();
 			
 			var _c = current_frame;
@@ -45,7 +45,8 @@
 			
 			if(_c != current_frame) {
 				frame_progress = true;
-				time_since_last_frame = 0;
+				if(resetTime)
+					time_since_last_frame = 0;
 				UPDATE |= RENDER_TYPE.full;
 			} else 
 				frame_progress = false;
@@ -105,8 +106,10 @@
 			if(is_playing && play_freeze == 0) {
 				time_since_last_frame += framerate * (delta_time / 1000000);
 				
-				if(time_since_last_frame >= 1)
-					setFrame(real_frame + 1);
+				if(time_since_last_frame >= 1) {
+					setFrame(real_frame + 1, false);
+					time_since_last_frame -= 1;
+				}
 			} else {
 				frame_progress = false;
 				//setFrame(real_frame);

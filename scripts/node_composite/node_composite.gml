@@ -676,7 +676,11 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		
 		if(mouse_press(mb_left, active))
 			surface_selecting = hovering;
-				
+		if(surface_selecting != noone) {
+			var a = array_safe_get(anchors, surface_selecting, noone);
+			if(!is_struct(a)) surface_selecting = noone;
+		}
+		
 		if(hovering != noone) {
 			var a = anchors[hovering];
 			
@@ -774,8 +778,6 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		overlay_w = ww;
 		overlay_h = hh;
 		
-		_outSurf = surface_verify(_outSurf, ww, hh, cDep);
-		
 		for(var i = 0; i < 2; i++) {
 			temp_surface[i] = surface_verify(temp_surface[i], ww, hh, cDep);
 			surface_clear(temp_surface[i]);
@@ -784,8 +786,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		var res_index = 0, bg = 0;
 		var imageAmo = (ds_list_size(inputs) - input_fix_len) / data_length;
 		var _vis = attributes.layer_visible;
-		
-		surface_set_shader(_outSurf, sh_sample, true, BLEND.alphamulp);
+		var _bg  = 0;
 		
 		for(var i = 0; i < imageAmo; i++) {
 			var vis  = _vis[i];
@@ -809,11 +810,19 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			
 			var _d0 = point_rotate(cx - _sw / 2, cy - _sh / 2, cx, cy, _rot);
 			
-			shader_set_interpolation(_s);
-			
 			array_push(atlas_data, new SurfaceAtlas(_s, [ _d0[0], _d0[1] ], _rot, [ _sca[0], _sca[1] ]));
-			draw_surface_ext_safe(_s, _d0[0], _d0[1], _sca[0], _sca[1], _rot);
+			
+			surface_set_shader(temp_surface[_bg], sh_sample, true, BLEND.over);
+				draw_surface_blend_ext(temp_surface[!_bg], _s, _d0[0], _d0[1], _sca[0], _sca[1], _rot);
+			surface_reset_shader();
+			
+			_bg = !_bg;
 		}
+		
+		_outSurf = surface_verify(_outSurf, ww, hh, cDep);
+		
+		surface_set_shader(_outSurf);
+			draw_surface_safe(temp_surface[!_bg]);
 		surface_reset_shader();
 		
 		return _outSurf;

@@ -44,7 +44,7 @@ function fontScrollBox(_onModify) : widget() constructor {
 		
 		if(open) {
 			resetFocus();
-			return;
+			return h;
 		}
 		
 		draw_sprite_stretched(THEME.textbox, 3, _x, _y, w, _h);
@@ -59,6 +59,8 @@ function fontScrollBox(_onModify) : widget() constructor {
 			draw_sprite_stretched_ext(THEME.textbox, 0, _x, _y, w, _h, c_white, 0.5 + 0.5 * interactable);
 			if(mouse_press(mb_left)) deactivate();
 		}
+		
+		_text = filename_name_only(_text);
 		
 		draw_set_text(f_p0, align, fa_center, COLORS._main_text);
 		draw_set_alpha(0.5 + 0.5 * interactable);

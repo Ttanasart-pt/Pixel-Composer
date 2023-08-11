@@ -39,7 +39,7 @@ function Node_WAV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	inputs[| 1]  = nodeValue("Sync lenght", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.button, [ function() { 
 			if(content == noone) return;
-			var frm = max(1, floor(content.duration * PROJECT.animator.framerate));
+			var frm = max(1, ceil(content.duration * PROJECT.animator.framerate));
 			PROJECT.animator.frames_total = frm;
 		}, "Sync"])
 		.rejectArray();
@@ -69,6 +69,7 @@ function Node_WAV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	output_display_list = [ 0, 1, 2, 3, 4, 5 ];
 	audio_surface = -1;
 	preview_audio = -1;
+	preview_id = noone;
 	
 	wav_file_reading = false;
 	wav_file_prg = 0;
@@ -165,7 +166,7 @@ function Node_WAV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		
 		printIf(global.FLAG.wav_import, "-- Creating preview buffer...");
 		
-		var frm = floor(content.duration * PROJECT.animator.framerate);
+		var frm = ceil(content.duration * PROJECT.animator.framerate);
 		inputs[| 1].editWidget.text = $"Sync ({frm} frames)";
 		
 		var bufferId = buffer_create(content.packet * 2, buffer_fixed, 1);
@@ -214,15 +215,17 @@ function Node_WAV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			audio_stop_sound(preview_audio);
 		
 		if(!attributes.play) return;
+		
 		if(PROJECT.animator.is_playing) {
 			if(PROJECT.animator.current_frame == 0)
 				audio_stop_sound(preview_audio);
 				
 			var dur = PROJECT.animator.current_frame / PROJECT.animator.framerate - attributes.preview_shift;
+			//if(preview_id && PROJECT.animator.frame_progress)
+			//	audio_sound_set_track_position(preview_id, dur);
+			
 			if(!audio_is_playing(preview_audio))
-				audio_play_sound(preview_audio, 1, false, attributes.preview_gain, dur);
-			else if(PROJECT.animator.frame_progress)
-				audio_sound_set_track_position(preview_audio, dur);
+				preview_id = audio_play_sound(preview_audio, 1, false, attributes.preview_gain, dur);
 		}
 	}
 	
@@ -233,21 +236,23 @@ function Node_WAV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		if(path_current != path) updatePaths(path);
 		checkPreview();
 		
+		if(!struct_has(content, "sound"))	return;
+		if(array_length(content.sound) < 1) return;
+		
 		var len = content.packet;
 		var amp_ind = round(frame * content.sample / PROJECT.animator.framerate);
-		var amp_win = content.sample / PROJECT.animator.framerate;
+		var amp_win = content.sample / PROJECT.animator.framerate * 3;
 		
 		var amp_st = clamp(amp_ind - amp_win, 0, len);
 		var amp_ed = clamp(amp_ind + amp_win, 0, len);
 		
-		if(!struct_has(content, "sound"))	return;
-		if(array_length(content.sound) < 1) return;
-		
-		var dec = 0;
+		var val = 0;
 		for( var i = amp_st; i < amp_ed; i++ )
-			dec += content.sound[0][i] == 0? 0 : 20 * log10(abs(content.sound[0][i]));
-			
-		dec /= amp_ed - amp_st;
+			val += content.sound[0][i] * content.sound[0][i];
+		val /= amp_ed - amp_st;
+		val  = sqrt(val);
+		
+		var dec = 10 * log10(val);
 		outputs[| 5].setValue(dec);
 	}
 	

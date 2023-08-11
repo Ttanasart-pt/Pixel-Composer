@@ -1,7 +1,7 @@
 globalvar BLEND_TYPES;
 BLEND_TYPES = [ "Normal", "Add", "Subtract", "Multiply", "Screen", "Overlay", "Hue", "Saturation", "Luminosity", "Maximum", "Minimum", "Replace", "Difference" ];
 
-function draw_surface_blend(background, foreground, blend, alpha, _pre_alp = true, _mask = 0, tile = 0) {
+function draw_surface_blend(background, foreground, blend = 0, alpha = 1, _pre_alp = true, _mask = 0, tile = 0) {
 	if(!is_surface(background)) return;
 	
 	var sh = sh_blend_normal
@@ -50,4 +50,17 @@ function draw_surface_blend(background, foreground, blend, alpha, _pre_alp = tru
 	draw_surface_stretched_safe(background, 0, 0, surf_w, surf_h);
 	BLEND_NORMAL
 	shader_reset();
+}
+
+function draw_surface_blend_ext(bg, fg, _x, _y, _sx = 1, _sy = 1, _rot = 0, _col = c_white, _alpha = 1, _blend = 0) {
+	var _tmpS = surface_create_size(bg);
+	
+	surface_set_shader(_tmpS);
+		shader_set_interpolation(fg);
+		draw_surface_ext(fg, _x, _y, _sx, _sy, _rot, _col, 1);
+	surface_reset_shader();
+	
+	draw_surface_blend(bg, _tmpS, _blend, _alpha, false);
+	
+	surface_free(_tmpS);
 }

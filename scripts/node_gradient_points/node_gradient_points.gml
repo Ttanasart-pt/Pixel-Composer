@@ -1,11 +1,6 @@
 function Node_Gradient_Points(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "4 Points Gradient";
 	
-	shader = sh_gradient_points;
-	uniform_dim = shader_get_uniform(shader, "dimension");
-	uniform_cen = shader_get_uniform(shader, "center");
-	uniform_col = shader_get_uniform(shader, "color");
-	
 	inputs[| 0] = nodeValue("Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, DEF_SURF )
 		.setDisplay(VALUE_DISPLAY.vector);
 	
@@ -34,11 +29,24 @@ function Node_Gradient_Points(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 	inputs[| 10] = nodeValue("Palette", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, DEF_PALETTE )
 		.setDisplay(VALUE_DISPLAY.palette);
 	
+	inputs[| 11] = nodeValue("Falloff 1", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 6 )
+		.setDisplay(VALUE_DISPLAY.slider, [ 0, 32, 1 ]);
+	
+	inputs[| 12] = nodeValue("Falloff 2", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 6 )
+		.setDisplay(VALUE_DISPLAY.slider, [ 0, 32, 1 ]);
+	
+	inputs[| 13] = nodeValue("Falloff 3", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 6 )
+		.setDisplay(VALUE_DISPLAY.slider, [ 0, 32, 1 ]);
+	
+	inputs[| 14] = nodeValue("Falloff 4", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 6 )
+		.setDisplay(VALUE_DISPLAY.slider, [ 0, 32, 1 ]);
+	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [
 		["Output",		 true],	0,
 		["Positions",	false],	1, 3, 5, 7,
+		["Falloff",		 true],	11, 12, 13, 14, 
 		["Colors",		false],	9, 10, 2, 4, 6, 8,
 	];
 	
@@ -79,6 +87,11 @@ function Node_Gradient_Points(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 		var _4cen = _data[7];
 		var _4col = _data[8];
 		
+		var _1str = _data[11];
+		var _2str = _data[12];
+		var _3str = _data[13];
+		var _4str = _data[14];
+		
 		var colArr = [];
 		
 		if(_usePal) {
@@ -89,10 +102,11 @@ function Node_Gradient_Points(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 		
 		surface_set_target(_outSurf);
 		DRAW_CLEAR
-		shader_set(shader);
-			shader_set_uniform_f_array_safe(uniform_dim, [_dim[0], _dim[1]]);
-			shader_set_uniform_f_array_safe(uniform_cen, array_merge(_1cen, _2cen, _3cen, _4cen));
-			shader_set_uniform_f_array_safe(uniform_col, colArr);
+		shader_set(sh_gradient_points);
+			shader_set_f("dimension", _dim[0], _dim[1]);
+			shader_set_f("center", array_merge(_1cen, _2cen, _3cen, _4cen));
+			shader_set_f("color", colArr);
+			shader_set_f("strength", _1str, _2str, _3str, _4str);
 			
 			draw_sprite_stretched_ext(s_fx_pixel, 0, 0, 0, _dim[0], _dim[1], c_white, 1);
 		shader_reset();

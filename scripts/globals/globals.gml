@@ -66,8 +66,8 @@
 		}
 		
 		attributeEditor = [
-			[ "Default Surface",	"surface_dimension", new vectorBox(2, function(ind, val) { attributes.surface_dimension[ind] = val; }) ],
-			[ "Palette",			"palette",			 new buttonPalette(function(pal) { attributes.palette = pal; }) ],
+			[ "Default Surface",	"surface_dimension", new vectorBox(2, function(ind, val) { attributes.surface_dimension[ind] = val; return true; }) ],
+			[ "Palette",			"palette",			 new buttonPalette(function(pal) { attributes.palette = pal; return true; }) ],
 		]
 		
 		static cleanup = function() {
@@ -104,7 +104,7 @@
 	VERSION			= 11485;
 	SAVE_VERSION	= 11482;
 	VERSION_STRING  = "1.15rc5";
-	BUILD_NUMBER	= 11485;
+	BUILD_NUMBER	= 11486;
 	
 	globalvar APPEND_MAP;
 	APPEND_MAP      = ds_map_create();

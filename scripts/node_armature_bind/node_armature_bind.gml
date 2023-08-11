@@ -697,7 +697,11 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		
 		if(mouse_press(mb_left, active))
 			surface_selecting = hovering;
-				
+		if(surface_selecting != noone) {
+			var a = array_safe_get(anchors, surface_selecting, noone);
+			if(!is_struct(a)) surface_selecting = noone;
+		}
+		
 		if(hovering != noone) {
 			var a = anchors[hovering];
 			
@@ -787,14 +791,9 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		overlay_w = _dim[0];
 		overlay_h = _dim[1];
 		
-		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], cDep);
-		
 		for(var i = 0; i < 2; i++) {
-			temp_surface[i] = surface_verify(temp_surface[i], surface_get_width(_outSurf), surface_get_height(_outSurf), cDep);
-			
-			surface_set_target(temp_surface[i]);
-			DRAW_CLEAR
-			surface_reset_target();
+			temp_surface[i] = surface_verify(temp_surface[i], _dim[0], _dim[1], cDep);
+			surface_clear(temp_surface[i]);
 		}
 		
 		var use_data  = _bind != noone;
@@ -802,8 +801,7 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		var bg		  = 0;
 		var imageAmo  = use_data? array_length(_bind) : (ds_list_size(inputs) - input_fix_len) / data_length;
 		var _vis	  = attributes.layer_visible;
-		
-		surface_set_shader(_outSurf, sh_sample, true, BLEND.alphamulp);
+		var _bg  = 0;
 		
 		for(var i = 0; i < imageAmo; i++) {
 			var vis  = array_safe_get(_vis, i, true);
@@ -847,8 +845,6 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 				(_anc.y * _dsca) + _cen[1] + _mov[1] + _dpos[1]
 			];
 			
-			shader_set_interpolation(_s);
-			
 			array_push(atlas_data, new SurfaceAtlas(_s, _pos, _rot, _sca));
 			array_push(bind_data, {
 				surface:	new Surface(_s),
@@ -859,9 +855,18 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 				applySca:	_asca,
 				applyScal:	_psca,
 			});
-			draw_surface_ext_safe(_s, _pos[0], _pos[1], _sca[0], _sca[1], _rot);
+			
+			surface_set_shader(temp_surface[_bg], sh_sample, true, BLEND.over);
+				draw_surface_blend_ext(temp_surface[!_bg], _s, _pos[0], _pos[1], _sca[0], _sca[1], _rot);
+			surface_reset_shader();
+			
+			_bg = !_bg;
 		}
 		
+		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], cDep);
+		
+		surface_set_shader(_outSurf);
+			draw_surface_safe(temp_surface[!_bg]);
 		surface_reset_shader();
 		
 		return _outSurf;

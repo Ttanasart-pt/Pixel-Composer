@@ -355,8 +355,8 @@ event_inherited();
 				con_thumb = attachment[? con_thumb.id];
 			
 			var tx = ui(8);
-			var ty = _y + ui(64);
-			hh = ui(64);
+			var ty = _y + ui(68);
+			hh = ui(68);
 			
 			var tw = sp_contest.surface_w - ui(16);
 			var th = 0;
@@ -451,7 +451,7 @@ event_inherited();
 					draw_text_add(ch_x, ch_y, hearts);
 			
 					var _w = string_width(hearts);
-					draw_sprite_ui(THEME.heart, 0, ch_x - _w - ui(16), ch_y + ui(10), 1, 1,, CDEF.red);
+					draw_sprite_ui(THEME.heart, 0, ch_x - _w - ui(16), ch_y + ui(10),,,, COLORS._main_icon_light);
 					
 					grid_ys[_col] += grid_h + label_h + ui(8);
 				}
@@ -461,7 +461,7 @@ event_inherited();
 			
 			//banner
 			
-			banner_alpha = lerp_float(banner_alpha, _y < 0, 5);
+			banner_alpha = lerp_float(banner_alpha, _y < 0, 3);
 			draw_sprite_stretched_ext(THEME.shadow_drop_down_24, 0, 0, ui(56), sp_contest.surface_w, ui(20), c_white, banner_alpha);
 			draw_set_color(COLORS.panel_bg_clear);
 			draw_rectangle(0, 0, sp_contest.surface_w, ui(64), false);

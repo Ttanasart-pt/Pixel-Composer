@@ -9,7 +9,7 @@ function FFT(array_in) {
 	
 	var fq = _FFT(array_in);
 	array_resize(fq, array_length(fq) / 2 + 1);
-	//fq = array_reverse(fq)
+	fq = array_reverse(fq)
 	return fq;
 }
 	

@@ -1,4 +1,7 @@
 function draw_tooltip_text(txt) {
+	if(string_length(txt) > 1024)
+		txt = string_copy(txt, 1, 1024) + "...";
+	
 	draw_set_text(f_p0, fa_left, fa_top, COLORS._main_text);
 	
 	var tw = min(WIN_W - ui(32), string_width(txt));

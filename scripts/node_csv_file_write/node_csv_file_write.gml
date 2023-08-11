@@ -20,7 +20,7 @@ function Node_CSV_File_Write(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		.rejectArray();
 	
 	inputs[| 1]  = nodeValue("Content", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, "")
-		.setDisplay(true);
+		.setDisplay(true, true);
 	
 	static writeFile = function() {
 		var path = inputs[| 0].getValue();

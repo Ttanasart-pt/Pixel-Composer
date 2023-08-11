@@ -20,20 +20,19 @@ float sampleMask() {
 }
 
 void main() {
-	vec4 _col1 = texture2D( gm_BaseTexture, v_vTexcoord );
+	vec4 _cBg = texture2D( gm_BaseTexture, v_vTexcoord );
 	
 	vec2 fore_tex = v_vTexcoord;
-	if(tile_type == 0) {
+	if(tile_type == 0)
 		fore_tex = v_vTexcoord;
-	} else if(tile_type == 1) {
+	else if(tile_type == 1)
 		fore_tex = fract(v_vTexcoord * dimension);
-	}
 	
-	vec4 _col0 = texture2D( fore, fore_tex );
-	_col0.a *= opacity * sampleMask();
+	vec4 _cFg = texture2D( fore, fore_tex );
+	_cFg.a *= opacity * sampleMask();
 	
-	float al = _col0.a + _col1.a * (1. - _col0.a);
-	vec4 res = ((_col0 * _col0.a) + (_col1 * _col1.a * (1. - _col0.a))) / al;
+	float al = _cFg.a + _cBg.a * (1. - _cFg.a);
+	vec4 res = ((_cFg * _cFg.a) + (_cBg * _cBg.a * (1. - _cFg.a))) / al;
 	res.a = al;
 	
     gl_FragColor = res;
