@@ -1075,6 +1075,10 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	}
 	
 	#region[#eb004b20] === GetValue ===
+	static getValueCached = function(_time = PROJECT.animator.current_frame, applyUnit = true, arrIndex = 0) {
+		return getValue(_time, applyUnit, arrIndex, true);
+	}
+	
 	static getValue = function(_time = PROJECT.animator.current_frame, applyUnit = true, arrIndex = 0, useCache = false) {
 		if(type == VALUE_TYPE.trigger)
 			useCache = false;
@@ -1086,7 +1090,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			cache_hit &= cache_value[2] != undefined;
 			cache_hit &= connect_type == JUNCTION_CONNECT.input;
 			cache_hit &= unit.reference == noone || unit.mode == VALUE_UNIT.constant;
-			cache_hit &= !expUse;
+			//cache_hit &= !expUse;
 			
 			if(cache_hit) {
 				global.cache_hit++;

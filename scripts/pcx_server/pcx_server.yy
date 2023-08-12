@@ -1,7 +1,7 @@
 {
   "resourceType": "GMScript",
   "resourceVersion": "1.0",
-  "name": "string_eval",
+  "name": "pcx_server",
   "isCompatibility": false,
   "isDnD": false,
   "parent": {

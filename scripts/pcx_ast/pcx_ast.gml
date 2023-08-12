@@ -1,40 +1,6 @@
 #region data
-	global.LOG_EXPRESSION = false;
-	
 	global.EVALUATE_HEAD = noone;
 
-	global.EQUATION_PRES = ds_map_create();
-	global.EQUATION_PRES[? "+"] = 1;
-	global.EQUATION_PRES[? "-"] = 1;
-	global.EQUATION_PRES[? "∸"] = 9; //unary negative
-	global.EQUATION_PRES[? "*"] = 2;
-	global.EQUATION_PRES[? "/"] = 2;
-	global.EQUATION_PRES[? "%"] = 2;
-	global.EQUATION_PRES[? "$"] = 3;
-	
-	global.EQUATION_PRES[? "&"] = 5;
-	global.EQUATION_PRES[? "|"] = 4;
-	global.EQUATION_PRES[? "^"] = 3;
-	global.EQUATION_PRES[? "<"] = 3;
-	global.EQUATION_PRES[? "»"] = 6;
-	global.EQUATION_PRES[? "«"] = 6;
-	global.EQUATION_PRES[? "~"] = 9;
-	
-	global.EQUATION_PRES[? "="]  = -99;
-	global.EQUATION_PRES[? "⊕"]  = -99; //+=
-	global.EQUATION_PRES[? "⊖"]  = -99; //-=
-	global.EQUATION_PRES[? "⊗"]  = -99; //*=
-	global.EQUATION_PRES[? "⊘"]  = -99; ///=
-	
-	global.EQUATION_PRES[? "⩵"] = -1; //==
-	global.EQUATION_PRES[? "≠"]  = -1; //!=
-	global.EQUATION_PRES[? "<"]  =  0;
-	global.EQUATION_PRES[? ">"]  =  0;
-	global.EQUATION_PRES[? "≤"]  =  0;
-	global.EQUATION_PRES[? "≥"]  =  0;
-	
-	global.EQUATION_PRES[? "@"] = 5; //array accerssor symbol
-	
 	global.FUNCTIONS    = ds_map_create();
 	global.FUNCTIONS[? "sin"]    = [ ["radian"], function(val) { return sin(val[0]); } ];
 	global.FUNCTIONS[? "cos"]    = [ ["radian"], function(val) { return cos(val[0]); } ];
@@ -69,6 +35,12 @@
 																				return arr;
 																			} ];
 	
+	global.FUNCTIONS[? "length"] = [ ["value"],	function(val) { 
+													if(is_array(val))	return array_length(val);
+													if(is_string(val))	return string_length(val);
+													return 0;
+												} ];
+	
 	globalvar PROJECT_VARIABLES;
 	PROJECT_VARIABLES = {};
 	
@@ -92,49 +64,6 @@
 	PROJECT_VARIABLES.Device.timeMonth			= function() /*=>*/ {return current_month};
 	PROJECT_VARIABLES.Device.timeYear			= function() /*=>*/ {return current_year};
 #endregion
-
-function functionStringClean(fx) {
-	var ch = "", ind = 0, len = string_length(fx);
-	var _fx = "", str = false;
-	while(ind++ <= len) {
-		ch = string_char_at(fx, ind);
-		
-		if(ch == " ") {
-			if(str)
-				_fx += ch;
-		} else
-			_fx += ch;
-			
-		if(ch == "\"")
-			str = !str;
-	}
-	
-	fx = _fx;
-	
-	
-	fx = string_replace_all(fx, "\n", "");
-	fx = string_replace_all(fx, "**", "$");
-	fx = string_replace_all(fx, "<<", "«");
-	fx = string_replace_all(fx, ">>", "»");
-	
-	fx = string_replace_all(fx, "==", "⩵");
-	fx = string_replace_all(fx, "!=", "≠");
-	fx = string_replace_all(fx, "<>", "≠");
-	fx = string_replace_all(fx, ">=", "≥");
-	fx = string_replace_all(fx, "<=", "≤");
-	
-	fx = string_replace_all(fx, "++", "⊕1");
-	fx = string_replace_all(fx, "--", "⊖1");
-	
-	fx = string_replace_all(fx, "+=", "⊕");
-	fx = string_replace_all(fx, "-=", "⊖");
-	fx = string_replace_all(fx, "*=", "⊗");
-	fx = string_replace_all(fx, "/=", "⊘");
-	
-	fx = string_trim(fx);
-	
-	return fx;
-}
 
 #region evaluator
 	enum EXPRESS_TREE_ANIM {
@@ -399,14 +328,23 @@ function functionStringClean(fx) {
 			
 			if(symbol == "") {
 				res = v1;
-			} else if(symbol == "【") { //array builder
+			} else if(symbol == "【") {													// array builder
 				res = array_create(array_length(v1));
 				for( var i = 0, n = array_length(res); i < n; i++ )
 					res[i] = getVal(v1[i], params);
-			} else if(symbol == "@") {
-				if(isLeft)	res = [ v1, v2 ];
-				else		res = is_real(v2)? array_safe_get(v1, v2) : 0;
-			} else if(symbol == "=") {
+			} else if(symbol == "@") {													// array getter
+				if(isLeft)	
+					res = [ v1, v2 ];
+				else if(is_real(v2)) {
+					if(is_array(v1)) {
+						if(v2 < 0) v2 = array_length(v1) + v2;
+						res = array_safe_get(v1, v2);
+					} else if(is_string(v1)) {
+						if(v2 < 0) v2 = string_length(v1) + v2;
+						res = string_char_at(v1, v2 + 1);
+					}
+				}
+			} else if(symbol == "=") {													// value assignment
 				if(is_array(v1)) { 
 					var val = params[$ v1[0]];
 					val = array_safe_set(val, v1[1], v2);
@@ -416,7 +354,7 @@ function functionStringClean(fx) {
 					params[$ v1] = v2;
 					res = v2;
 				}
-			} else if(is_array(v1) && !is_array(v2)) {
+			} else if(is_array(v1) && !is_array(v2)) {									// evaluate value
 				res = array_create(array_length(v1));
 				for( var i = 0, n = array_length(res); i < n; i++ )
 					res[i] = eval_real(array_safe_get(v1, i), v2);
@@ -470,8 +408,8 @@ function functionStringClean(fx) {
 					if(is_real(v1) && is_real(v2))		return v1 + v2;
 					return 0;
 				case "-": 
+				case "∸": 
 				case "⊖": return (is_real(v1) && is_real(v2))? v1 - v2		 : 0;
-				case "∸": return is_real(v1)? -v1 : 0;
 				case "*": 
 				case "⊗": return (is_real(v1) && is_real(v2))? v1 * v2		 : 0;
 				case "$": return (is_real(v1) && is_real(v2))? power(v1, v2) : 0;
@@ -504,333 +442,6 @@ function functionStringClean(fx) {
 			
 			return v1;
 		}
-	}
-	
-	function functionStrip(fx) {
-		var el_st = 1;
-		var el_ed = 1;
-		
-		for( var i = 1; i <= string_length(fx); i++ ) {
-			var cch = string_char_at(fx, i);
-			if(cch == "(") {
-				el_st = i + 1;
-				break;
-			}
-		}
-		
-		for( var i = string_length(fx); i >= 1; i-- ) {
-			var cch = string_char_at(fx, i);
-			if(cch == ")") {
-				el_ed = i;
-				break;
-			}
-		}
-		
-		return string_copy(fx, el_st, el_ed - el_st)
-	}
-	
-	function evaluateFunctionList(fx) {
-		fx = string_replace_all(fx, "{", "\n{\n");
-		fx = string_replace_all(fx, "}", "\n}\n");
-		
-		var fxs = string_split(fx, "\n", true);
-		
-		var flist = new __funcList();
-		
-		var call_st = ds_stack_create();
-		var blok_st = ds_stack_create();
-		ds_stack_push(call_st, flist);
-		
-		for( var i = 0, n = array_length(fxs); i < n; i++ ) {
-			var _fx = functionStringClean(fxs[i]);
-			//print($"Eval line {i}: {_fx} [stack size = {ds_stack_size(call_st)}]");
-			
-			if(_fx == "" || _fx == "{") continue;
-			if(_fx == "}") {
-				ds_stack_pop(call_st);
-				continue;
-			}
-			
-			var _fx_sp = string_split(_fx, "(");
-			var _cmd   = string_trim(_fx_sp[0]);
-			var _cond  = functionStrip(_fx);
-			
-			switch(_cmd) {
-				case "if":
-					var con_if = new __funcIf();
-					con_if.condition = evaluateFunctionTree(_cond);
-					ds_stack_top(call_st).addFunction(con_if);
-					ds_stack_push(call_st, con_if.if_true);
-					ds_stack_push(blok_st, con_if);
-					continue;
-				case "elseif":
-					var con_if = ds_stack_pop(blok_st);
-					var con_elif = new __funcIf();
-					con_elif.condition = evaluateFunctionTree(_cond);
-					
-					con_if.if_false.addFunction(con_elif);
-					ds_stack_push(call_st, con_elif.if_true);
-					ds_stack_push(blok_st, con_elif);
-					continue;
-				case "else":
-					var con_if = ds_stack_pop(blok_st);
-					
-					ds_stack_push(call_st, con_if.if_false);
-					continue;
-				case "for":
-					var con_for = new __funcFor();
-					var cond    = string_splice(_cond, ":");
-					if(array_length(cond) == 2) {
-						con_for.itr_array = true;
-						con_for.cond_arr  = evaluateFunctionTree(cond[1]);
-						
-						cond[0]  = string_trim(cond[0]);
-						var _itr = string_split(cond[0], ",");
-						if(array_length(_itr) == 1)
-							con_for.cond_iter = cond[0];
-						else if(array_length(_itr) == 2) {
-							con_for.cond_indx = string_trim(_itr[0]);
-							con_for.cond_iter = string_trim(_itr[1]);
-						}
-					} else if(array_length(cond) == 3) {
-						con_for.itr_array = false;
-						con_for.cond_init = evaluateFunctionTree(cond[0]);
-						con_for.cond_iter = evaluateFunctionTree(cond[1]);
-						con_for.cond_term = evaluateFunctionTree(cond[2]);
-					}
-					ds_stack_top(call_st).addFunction(con_for);
-					ds_stack_push(call_st, con_for.action);
-					continue;
-			}
-			
-			if(ds_stack_empty(call_st)) {
-				print("Block stack empty, how?");
-			} else {
-				var _top = ds_stack_top(call_st);
-				_top.addFunction(evaluateFunctionTree(_fx));
-			}
-		}
-		
-		ds_stack_destroy(call_st);
-		ds_stack_destroy(blok_st);
-		
-		return flist;
-	}
-	
-	function evaluateFunctionTree(fx) {
-		static __BRACKETS = [ "(", ")", "[", "]" ];
-		
-		var pres = global.EQUATION_PRES;
-		var vl   = ds_stack_create();
-		var op   = ds_stack_create();
-		var last_push = "";
-		
-		var len = string_length(fx);
-		var l   = 1;
-		var ch  = "";
-		var cch = "";
-		var _ch = "";
-		var in_str = false;
-		
-		printIf(global.LOG_EXPRESSION, $"===== Evaluating function: {fx} =====");
-		
-		while(l <= len) {
-			ch = string_char_at(fx, l);
-			
-			//print($"Analyzing {ch}");
-			
-			if(ds_map_exists(pres, ch)) { //symbol is operator
-				last_push = "op";
-				
-				if(ds_stack_empty(op)) ds_stack_push(op, ch);
-				else {
-					var _top = ds_stack_top(op);
-					if(_top == "(" || ds_map_exists(global.FUNCTIONS, _top) || pres[? ch] > pres[? _top]) {
-						ds_stack_push(op, ch);
-					} else {
-						if(ch == "-" && ds_map_exists(pres, _ch)) ch = "∸"; //unary negative
-						
-						while(pres[? ch] <= pres[? ds_stack_top(op)] && !ds_stack_empty(op))
-							ds_stack_push(vl, buildFuncTree(ds_stack_pop(op), vl));
-						ds_stack_push(op, ch);
-					}
-				}
-				
-				l++;
-			} else if (ch == "(") {
-				if(last_push == "fn")	ds_stack_push(op, [ "〚", ds_stack_size(vl) ]);
-				else					ds_stack_push(op, ch);
-				last_push = "op";
-				l++;
-			} else if (ch == ")") {
-				while(!ds_stack_empty(op)) {
-					var _top = ds_stack_pop(op);
-					if(_top == "(") break;
-					if(is_array(_top) && _top[0] == "〚") {
-						var arr = [];
-						while(ds_stack_size(vl) > _top[1])
-							array_insert(arr, 0, ds_stack_pop(vl));
-						
-						ds_stack_push(vl, new __funcTree(ds_stack_pop(op), arr));
-						break;
-					}
-					
-					ds_stack_push(vl, buildFuncTree(_top, vl));
-				}
-				
-				last_push = "vl";
-				l++;
-			} else if (ch == "[") {
-				if(last_push == "vl") {
-					ds_stack_push(op, "@");
-					ds_stack_push(op, ch);
-				} else
-					ds_stack_push(op, [ "{", ds_stack_size(vl) ]);
-				
-				last_push = "op";
-				l++;
-			} else if (ch == "]") {
-				while(!ds_stack_empty(op)) {
-					var _top = ds_stack_pop(op);
-					if(_top == "[") break;
-					if(is_array(_top) && _top[0] == "{") {
-						var arr = [];
-						while(ds_stack_size(vl) > _top[1])
-							array_insert(arr, 0, ds_stack_pop(vl));
-						ds_stack_push(vl, new __funcTree("【", arr));
-						break;
-					}
-					
-					ds_stack_push(vl, buildFuncTree(_top, vl));
-				}
-				
-				last_push = "vl";
-				l++;
-			} else if (ch == ",") {
-				while(!ds_stack_empty(op)) {
-					var _top = ds_stack_top(op);
-					if(_top == "[" || _top == "(" || (is_array(_top) && _top[0] == "{")) break;
-					
-					ds_stack_push(vl, buildFuncTree(_top, vl));
-				}
-				
-				last_push = "vl";
-				l++;
-			} else {
-				var vsl = "";
-				
-				while(l <= len) {
-					cch = string_char_at(fx, l);
-					if(ds_map_exists(pres, cch) || array_exists(__BRACKETS, cch)) break;
-					if(cch == ",") {
-						l++;
-						break;
-					}
-					
-					vsl += cch;
-					l++;
-				}
-				
-				if(vsl == "") continue;
-				
-				if(ds_map_exists(global.FUNCTIONS, vsl)) { //function
-					ds_stack_push(op, vsl);
-					last_push = "fn";
-				} else {
-					vsl = string_trim(vsl);
-					
-					switch(vsl) {
-						case "e" : ds_stack_push(vl, 2.71828);	break;
-						case "pi": ds_stack_push(vl, pi);		break;
-						default  : ds_stack_push(vl, isNumber(vsl)? toNumber(vsl) : vsl); break;
-					}
-					
-					last_push = "vl";
-				}
-			}
-			
-			//print($"op: {ds_stack_size(op)}; vl: {ds_stack_size(vl)}");
-			
-			_ch = ch;
-		}
-		
-		while(!ds_stack_empty(op)) 
-			ds_stack_push(vl, buildFuncTree(ds_stack_pop(op), vl));
-		
-		var tree = ds_stack_empty(vl)? noone : ds_stack_pop(vl);
-		
-		ds_stack_destroy(op);
-		ds_stack_destroy(vl);
-		
-		if(!is_struct(tree))
-			tree = new __funcTree("", tree);
-		
-		printIf(global.LOG_EXPRESSION, tree);
-		printIf(global.LOG_EXPRESSION, "");
-		
-		return tree;
-	}
-	
-	function buildFuncTree(operator, vl) {
-		if(ds_stack_empty(vl)) return noone;
-		
-		if(ds_map_exists(global.FUNCTIONS, operator)) {
-			if(ds_stack_empty(vl)) 
-				return noone;
-				
-			var _v1 = ds_stack_pop(vl);
-			return new __funcTree(operator, _v1);
-		}
-		
-		switch(operator) {
-			case "-": //deal with preceeding negative number -5
-				if(ds_stack_size(vl) >= 2) {
-					var _v1 = ds_stack_pop(vl);
-					var _v2 = ds_stack_pop(vl);
-					return new __funcTree("-", _v2, _v1);	
-				} else
-					return new __funcTree("-", ds_stack_pop(vl), 0);	
-				
-			case "@": 
-				var _v1 = ds_stack_pop(vl);
-				var _v2 = ds_stack_pop(vl);
-				return new __funcTree(operator, _v2, _v1);	
-				
-			case "+": //binary operators
-			case "*": 
-			case "$": 
-			case "/": 
-			case "%": 
-			
-			case "|": 
-			case "&": 
-			case "^": 
-			case "»": 
-			case "«": 
-			
-			case "=": 
-			case "⩵": 
-			case "≠": 
-			case "≤": 
-			case "≥": 
-			case "<": 
-			case ">": 
-			
-			case "⊕": 
-			case "⊖": 
-			case "⊗": 
-			case "⊘": 
-				
-				if(ds_stack_size(vl) >= 2) {
-					var _v1 = ds_stack_pop(vl);
-					var _v2 = ds_stack_pop(vl);
-					return new __funcTree(operator, _v2, _v1);	
-				}
-			
-			default: return new __funcTree(operator, ds_stack_pop(vl));
-		}
-		
-		return noone;
 	}
 	
 	function evaluateFunction(fx, params = {}) {

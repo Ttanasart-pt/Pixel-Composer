@@ -1,7 +1,7 @@
 {
   "resourceType": "GMScript",
   "resourceVersion": "1.0",
-  "name": "pxl_server",
+  "name": "pcx_ast",
   "isCompatibility": false,
   "isDnD": false,
   "parent": {

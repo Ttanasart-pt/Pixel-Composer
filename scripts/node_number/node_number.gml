@@ -30,15 +30,15 @@ function Node_Number(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	outputs[| 0] = nodeValue("Number", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, 0);
 	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
-		var __ax = inputs[| 0].getValue();
+		var __ax = inputs[| 0].getValueCached();
 		if(is_array(__ax)) return;
 		
 		inputs[| 0].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
 	}
 	
 	function step() {
-		var int  = inputs[| 1].getValue();
-		var disp = inputs[| 2].getValue();
+		var int  = inputs[| 1].getValueCached();
+		var disp = inputs[| 2].getValueCached();
 		
 		w	  = 96;	
 		min_h = 56; 
@@ -75,15 +75,17 @@ function Node_Number(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	}
 	
 	static process_data = function(_output, _data, _output_index, _array_index = 0) {  
-		return _data[1]? round(_data[0]) : _data[0]; 
+		var _res = _data[1]? round(_data[0]) : _data[0];
+		display_output = _res;
+		return _res; 
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		var bbox = drawGetBbox(xx, yy, _s);
-		var val  = getSingleValue(0,, true);
-		var disp = inputs[| 2].getValue();
-		var rang = inputs[| 3].getValue();
-		var stp  = inputs[| 4].getValue();
+		var val  = display_output;
+		var disp = inputs[| 2].getValueCached();
+		var rang = inputs[| 3].getValueCached();
+		var stp  = inputs[| 4].getValueCached();
 		
 		if(inputs[| 0].value_from != noone || disp == 0) {
 			draw_set_text(f_h1, fa_center, fa_center, COLORS._main_text);
@@ -96,7 +98,7 @@ function Node_Number(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		switch(disp) {
 			case 1 : 
 				draw_set_text(f_p0, fa_center, fa_center, COLORS._main_text);
-				var str	= string(getSingleValue(0,, true));
+				var str	= string(val);
 				var ss	= min(1, string_scale(str, bbox.w, 20));
 				draw_text_transformed(bbox.xc, bbox.y0 + 20 / 2, str, ss, ss, 0);
 				
@@ -177,8 +179,8 @@ function Node_Vector2(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	wd_pan_my	= 0;
 	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
-		var __ax = inputs[| 0].getValue();
-		var __ay = inputs[| 1].getValue();
+		var __ax = inputs[| 0].getValueCached();
+		var __ay = inputs[| 1].getValueCached();
 		
 		if(is_array(__ax) || is_array(__ay)) return;
 						
@@ -226,8 +228,8 @@ function Node_Vector2(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	}
 	
 	function step() {
-		var int  = inputs[| 2].getValue();
-		var disp = inputs[| 3].getValue();
+		var int  = inputs[| 2].getValueCached();
+		var disp = inputs[| 3].getValueCached();
 		
 		for( var i = 0; i < 2; i++ ) {
 			inputs[| i].type  = int? VALUE_TYPE.integer : VALUE_TYPE.float;
@@ -255,7 +257,7 @@ function Node_Vector2(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-		var disp = inputs[| 3].getValue();
+		var disp = inputs[| 3].getValueCached();
 		var vec  = getSingleValue(0,, true);
 		var bbox = drawGetBbox(xx, yy, _s);
 		
@@ -410,7 +412,7 @@ function Node_Vector3(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		.setDisplay(VALUE_DISPLAY.vector);
 	
 	function step() {
-		var int = inputs[| 3].getValue();
+		var int = inputs[| 3].getValueCached();
 		for( var i = 0; i < 3; i++ ) {
 			inputs[| i].type  = int? VALUE_TYPE.integer : VALUE_TYPE.float;
 			inputs[| i].editWidget.slide_speed = int? 1 : 0.1;
@@ -465,7 +467,7 @@ function Node_Vector4(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		.setDisplay(VALUE_DISPLAY.vector);
 		
 	function step() {
-		var int = inputs[| 4].getValue();
+		var int = inputs[| 4].getValueCached();
 		for( var i = 0; i < 4; i++ ) {
 			inputs[| i].type  = int? VALUE_TYPE.integer : VALUE_TYPE.float;
 			inputs[| i].editWidget.slide_speed = int? 1 : 0.1;
@@ -528,11 +530,9 @@ function Node_Vector_Split(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		draw_set_text(f_h1, fa_center, fa_center, COLORS._main_text);
-		var str	= string(outputs[| 0].getValue()) + "\n" + string(outputs[| 1].getValue()) 
-			+ "\n" + string(outputs[| 2].getValue()) + "\n" + string(outputs[| 3].getValue());
-		
+		var str	 = $"{outputs[| 0].getValueCached()}\n{outputs[| 1].getValueCached()}\n{outputs[| 2].getValueCached()}\n{outputs[| 3].getValueCached()}";
 		var bbox = drawGetBbox(xx, yy, _s);
-		var ss	= string_scale(str, bbox.w, bbox.h);
+		var ss	 = string_scale(str, bbox.w, bbox.h);
 		draw_text_transformed(bbox.xc, bbox.yc, str, ss, ss, 0);
 	}
 }
