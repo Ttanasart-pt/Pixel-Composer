@@ -37,18 +37,21 @@ _HOVERING_ELEMENT = noone;
 #endregion
 
 #region focus
+	if(mouse_release(mb_any)) DIALOG_CLICK = true;
+	
 	HOVER = noone;
+	with(_p_dialog) checkMouse();
 	
 	if(PANEL_MAIN != 0)
 		PANEL_MAIN.stepBegin();
 	
 	DIALOG_DEPTH_HOVER = 0;
+	
 	with(_p_dialog) checkFocus();
 	with(_p_dialog) checkDepth();
 	
 	with(_p_dialog) doDrag();
 	with(_p_dialog) doResize();
-	with(_p_dialog) checkMouse();
 #endregion
 
 #region auto save
@@ -125,11 +128,6 @@ _HOVERING_ELEMENT = noone;
 		ds_stack_clear(REDO_STACK);
 	}
 	action_last_frame = [];
-#endregion
-
-#region dialog
-	if(mouse_release(mb_any))
-		DIALOG_CLICK = true;
 #endregion
 
 #region modifiers

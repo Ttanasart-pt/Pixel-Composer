@@ -104,11 +104,8 @@ function FileObject(_name, _path) constructor {
 		} else {
 			var m  = json_load_struct(path);
 			
-			if(struct_has(m, "metadata"))
-				meta.deserialize(m.metadata);
-			if(struct_has(m, "preview"))
-				thumbnail_data = json_try_parse(m.preview, -1);
-			meta.version = m.version;
+			if(struct_has(m, "metadata")) meta.deserialize(m.metadata);
+			if(struct_has(m, "preview"))  thumbnail_data = json_try_parse(m.preview, -1);
 		}
 		
 		meta.name = name;

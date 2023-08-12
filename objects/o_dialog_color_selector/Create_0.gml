@@ -21,14 +21,12 @@ event_inherited();
 	
 	b_cancel = button(function() {
 		onApply(previous_color);
-		DIALOG_CLICK = false;
 		instance_destroy();
 	}).setIcon(THEME.undo, 0, COLORS._main_icon)
 	  .setTooltip(__txtx("dialog_revert_and_exit", "Revert and exit"));
 	
 	b_apply = button(function() {
 		onApply(selector.current_color);
-		DIALOG_CLICK = false;
 		instance_destroy();
 	}).setIcon(THEME.accept, 0, COLORS._main_icon_dark);
 #endregion

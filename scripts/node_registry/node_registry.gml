@@ -15,7 +15,7 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 	new_node     = false;
 	
 	if(struct_has(global.NODE_GUIDE, node)) {
-		var _n = global.NODE_GUIDE[$ node];
+		var _n = global.NODE_GUIDEarn[$ node];
 		name   = _n.name;
 		if(_n.tooltip != "")
 			tooltip = _n.tooltip;

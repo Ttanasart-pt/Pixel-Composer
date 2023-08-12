@@ -160,10 +160,21 @@
 	}
 
 	function checkMouse() {
-		if(!DIALOG_CLICK) return;
+		if(!DIALOG_CLICK) {
+			//printIf(mouse_press(mb_any), $"Check {object_get_name(object_index)} : Click"); 
+			return;
+		}
+		
+		with(_p_dialog) if(depth < other.depth) {
+			//printIf(mouse_press(mb_any), $"Check {object_get_name(object_index)} : Top"); 
+			return;
+		}
 		
 		for( var i = 0, n = array_length(children); i < n; i++ )
-			if(instance_exists(children[i])) return;
+			if(instance_exists(children[i])) { 
+				//printIf(mouse_press(mb_any), $"Check {object_get_name(object_index)} : Children"); 
+				return; 
+			}
 		
 		var x0 = dialog_x - dialog_resizable * 6;
 		var x1 = dialog_x + dialog_w + dialog_resizable * 6;

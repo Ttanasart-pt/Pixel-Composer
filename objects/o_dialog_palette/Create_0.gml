@@ -36,7 +36,6 @@ event_inherited();
 	
 	b_cancel = button(function() {
 		onApply(previous_palette);
-		DIALOG_CLICK = false;
 		instance_destroy();
 	}).setIcon(THEME.undo, 0, COLORS._main_icon)
 	  .setTooltip(__txtx("dialog_revert_and_exit", "Revert and exit"));
