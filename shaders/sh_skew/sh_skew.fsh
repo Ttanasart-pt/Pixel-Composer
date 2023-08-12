@@ -8,13 +8,13 @@ uniform vec2 dimension;
 uniform vec2 center;
 uniform int axis;
 uniform float amount;
-uniform int sampleMode;
 
 /////////////// SAMPLING ///////////////
 
 const float PI = 3.14159265358979323846;
 uniform int interpolation;
 uniform vec2 sampleDimension;
+uniform int sampleMode;
 
 const int RSIN_RADIUS = 1;
 

@@ -42,10 +42,10 @@ function Node_Blur(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		inputs[| 4].setVisible(_isovr);
 		
 		surface_set_target(_outSurf);
-		draw_clear_alpha(_isovr? _overc : 0, 0);
-		BLEND_OVERRIDE;
-		draw_surface_safe(surface_apply_gaussian(_data[0], _size, false, c_white, _clamp, _overc), 0, 0);
-		BLEND_NORMAL;
+			draw_clear_alpha(_isovr? _overc : 0, 0);
+			BLEND_OVERRIDE;
+			draw_surface_safe(surface_apply_gaussian(_data[0], _size, false, c_white, _clamp, _overc), 0, 0);
+			BLEND_NORMAL;
 		surface_reset_target();
 		
 		_outSurf = mask_apply(_data[0], _outSurf, _mask, _mix);

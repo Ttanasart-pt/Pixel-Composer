@@ -44,18 +44,16 @@ function Node_Blur_Radial(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	static process_data = function(_outSurf, _data, _output_index, _array_index) {		
 		var _str = _data[1];
 		var _cen = _data[2];
-		var _sam = struct_try_get(attributes, "oversample");
 		var _mask = _data[4];
 		var _mix  = _data[5];
 		_cen[0] /= surface_get_width(_outSurf);
 		_cen[1] /= surface_get_height(_outSurf);
 		
 		surface_set_shader(_outSurf, sh_blur_radial);
-		shader_set_interpolation(_data[0]);
-		shader_set_f("dimension", surface_get_width(_outSurf), surface_get_height(_outSurf));
-		shader_set_f("strength", abs(_str));
-		shader_set_f("center", _cen);
-		shader_set_i("sampleMode", _sam);
+			shader_set_interpolation(_data[0]);
+			shader_set_f("dimension", surface_get_width(_outSurf), surface_get_height(_outSurf));
+			shader_set_f("strength", abs(_str));
+			shader_set_f("center", _cen);
 			
 			draw_surface_safe(_data[0], 0, 0);
 		surface_reset_shader();

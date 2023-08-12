@@ -1,11 +1,6 @@
 function Node_Blur_Directional(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Directional Blur";
 	
-	shader = sh_blur_directional;
-	uniform_dim = shader_get_uniform(shader, "size");
-	uniform_str = shader_get_uniform(shader, "strength");
-	uniform_dir = shader_get_uniform(shader, "direction");
-	
 	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 	
 	inputs[| 1] = nodeValue("Strength", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.2)
@@ -30,6 +25,7 @@ function Node_Blur_Directional(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	attribute_surface_depth();
+	attribute_oversample();
 	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var _surf = outputs[| 0].getValue();
@@ -45,23 +41,18 @@ function Node_Blur_Directional(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 	}
 	
 	static process_data = function(_outSurf, _data, _output_index, _array_index) {		
-		var _str = _data[1];
-		var _dir = _data[2];
+		var _str  = _data[1];
+		var _dir  = _data[2];
 		var _mask = _data[3];
 		var _mix  = _data[4];
-		surface_set_target(_outSurf);
-			DRAW_CLEAR
-			BLEND_OVERRIDE;
 		
-			shader_set(shader);
-			shader_set_uniform_f(uniform_dim, max(surface_get_width(_data[0]), surface_get_height( _data[1])));
-			shader_set_uniform_f(uniform_str, _str);
-			shader_set_uniform_f(uniform_dir, _dir + 90);
+		surface_set_shader(_outSurf, sh_blur_directional);
+			shader_set_f("size", max(surface_get_width(_data[0]), surface_get_height( _data[1])));
+			shader_set_f("strength", _str);
+			shader_set_f("direction", _dir + 90);
+			shader_set_i("sampleMode",	struct_try_get(attributes, "oversample"));
 			draw_surface_safe(_data[0], 0, 0);
-			shader_reset();
-			
-			BLEND_NORMAL;
-		surface_reset_target();
+		surface_reset_shader();
 		
 		_outSurf = mask_apply(_data[0], _outSurf, _mask, _mix);
 		

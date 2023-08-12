@@ -1,13 +1,6 @@
 function Node_Skew(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Skew";
 	
-	shader = sh_skew;
-	uniform_dim = shader_get_uniform(shader, "dimension");
-	uniform_cen = shader_get_uniform(shader, "center");
-	uniform_axs = shader_get_uniform(shader, "axis");
-	uniform_amo = shader_get_uniform(shader, "amount");
-	uniform_sam = shader_get_uniform(shader, "sampleMode");
-	
 	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 	inputs[| 1] = nodeValue("Axis", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.enum_button, ["x", "y"]);
@@ -59,17 +52,17 @@ function Node_Skew(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	static process_data = function(_outSurf, _data, _output_index, _array_index) {
 		var _axis = _data[1];
 		var _amou = _data[2];
-		//var _wrap = _data[3];
+		var _wrap = _data[3];
 		var _cent = _data[4];
 		var _samp = struct_try_get(attributes, "oversample");
 		
-		surface_set_shader(_outSurf, shader);
+		surface_set_shader(_outSurf, sh_skew);
 		shader_set_interpolation(_data[0]);
-			shader_set_uniform_f(uniform_dim, surface_get_width(_data[0]), surface_get_height(_data[0]));
-			shader_set_uniform_f(uniform_cen, _cent[0], _cent[1]);
-			shader_set_uniform_i(uniform_axs, _axis);
-			shader_set_uniform_f(uniform_amo, _amou);
-			shader_set_uniform_i(uniform_sam, _samp);
+			shader_set_dim("dimension",	_data[0]);
+			shader_set_f("center",		_cent);
+			shader_set_i("axis",		_axis);
+			shader_set_f("amount",		_amou);
+			shader_set_i("sampleMode",	_samp);
 			draw_surface_safe(_data[0], 0, 0);
 		surface_reset_shader();
 		

@@ -58,6 +58,11 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		
 	inputs[| 20] = nodeValue("Rotate along path", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
 		
+	inputs[| 21] = nodeValue("Path Shift", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
+		.setDisplay(VALUE_DISPLAY.slider, [ 0, 1, 0.01 ]);
+	
+	inputs[| 22] = nodeValue("Scatter Distance", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0);
+		
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 		
 	outputs[| 1] = nodeValue("Atlas data", self, JUNCTION_CONNECT.output, VALUE_TYPE.atlas, [])
@@ -65,7 +70,8 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	input_display_list = [ 
 		["Output", 		 true], 0, 1, 15, 10, 
-		["Scatter",		false], 5, 6, 13, 14, 19, 20, 17, 9, 2,
+		["Scatter",		false], 5, 6, 13, 14, 17, 9, 2,
+		["Path",		false], 19, 20, 21, 22, 
 		["Transform",	false], 3, 8, 7, 4,
 		["Render",		false], 18, 11, 12, 16, 
 	];
@@ -102,6 +108,8 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		inputs[|  9].setVisible(_dis != 2);
 		inputs[| 19].setVisible(_dis == 4, _dis == 4);
 		inputs[| 20].setVisible(_dis == 4);
+		inputs[| 21].setVisible(_dis == 4);
+		inputs[| 22].setVisible(_dis == 4);
 	}
 	
 	static process_data = function(_outSurf, _data, _output_index, _array_index) {
@@ -137,6 +145,8 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		
 		var path    = _data[19];
 		var pathRot = _data[20];
+		var pathShf = _data[21];
+		var pathDis = _data[22];
 		
 		var _in_w, _in_h;
 		
@@ -160,8 +170,10 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 					break;
 			}
 			
+			var _pathProgress = 0;
 			var _sed = seed;
 			var res_index = 0, bg = 0;
+			
 			for(var i = 0; i < _amount; i++) {
 				var sp = noone, _x = 0, _y = 0;
 				var _v = noone;
@@ -185,9 +197,12 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 					_v = array_safe_get(sp, 2, noone);
 				} else if(_dist == 4) {
 					if(path != noone && struct_has(path, "getPointRatio")) {
-						var pp  = path.getPointRatio(i / max(1, _amount - 1) * 0.9999);
-						_x = pp.x;
-						_y = pp.y;
+						_pathProgress = _scat? random_seed(1, _sed) : i / max(1, _amount); _sed++;
+						_pathProgress = frac((_pathProgress + pathShf) * 0.9999);
+						
+						var pp = path.getPointRatio(_pathProgress);
+						_x = pp.x + random_range_seed(-pathDis, pathDis, _sed); _sed++;
+						_y = pp.y + random_range_seed(-pathDis, pathDis, _sed); _sed++;
 					}
 				} else if(_dist == 5) {
 					_x = random_range_seed(0, _dim[0], _sed); _sed++;
@@ -212,9 +227,8 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 					_r *= _v;
 					
 				if(_dist == 4 && path != noone && pathRot) {
-					var rat = i / max(1, _amount - 1) * 0.9999;
-					var p0  = path.getPointRatio(clamp(rat - 0.001, 0, 0.9999));
-					var p1  = path.getPointRatio(clamp(rat + 0.001, 0, 0.9999));
+					var p0  = path.getPointRatio(clamp(_pathProgress - 0.001, 0, 0.9999));
+					var p1  = path.getPointRatio(clamp(_pathProgress + 0.001, 0, 0.9999));
 					
 					var dirr = point_direction(p0.x, p0.y, p1.x, p1.y);
 					_r += dirr;

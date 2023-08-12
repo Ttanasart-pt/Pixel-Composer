@@ -107,8 +107,9 @@ function shader_set_palette(pal, pal_uni = "palette", amo_uni = "paletteAmount",
 		var intp   = attributes.interpolation;
 		
 		gpu_set_tex_filter(intp);
-		shader_set_i("interpolation", intp);
+		shader_set_i("interpolation",	intp);
 		shader_set_f("sampleDimension", surface_get_width(surface), surface_get_height(surface));
+		shader_set_i("sampleMode",		struct_try_get(attributes, "oversample"));
 	}
 	
 	function surface_set_shader(surface, shader = sh_sample, clear = true, blend = BLEND.alpha) {

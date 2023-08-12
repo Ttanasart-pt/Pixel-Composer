@@ -1,15 +1,6 @@
 function Node_Blur_Zoom(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Zoom Blur";
 	
-	shader = sh_blur_zoom;
-	uniform_str = shader_get_uniform(shader, "strength");
-	uniform_cen = shader_get_uniform(shader, "center");
-	uniform_blr = shader_get_uniform(shader, "blurMode");
-	uniform_sam = shader_get_uniform(shader, "sampleMode");
-	
-	uniform_umk = shader_get_uniform(shader, "useMask");
-	uniform_msk = shader_get_sampler_index(shader, "mask");
-	
 	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 	
 	inputs[| 1] = nodeValue("Strength", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.2);
@@ -64,25 +55,17 @@ function Node_Blur_Zoom(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		_cen[0] /= surface_get_width(_outSurf);
 		_cen[1] /= surface_get_height(_outSurf);
 		
-		surface_set_target(_outSurf);
-			DRAW_CLEAR
-			BLEND_OVERRIDE;
-		
-			shader_set(shader);
-			shader_set_uniform_f(uniform_str, _str);
-			shader_set_uniform_f_array_safe(uniform_cen, _cen);
-			shader_set_uniform_i(uniform_blr, _blr);
-			shader_set_uniform_i(uniform_sam, _sam);
+		surface_set_shader(_outSurf, sh_blur_zoom);
+			shader_set_f("strength", _str);
+			shader_set_f("center", _cen);
+			shader_set_i("blurMode", _blr);
+			shader_set_i("sampleMode", _sam);
 			
-			shader_set_uniform_i(uniform_umk, is_surface(_msk));
-			if(is_surface(_msk)) 
-				texture_set_stage(uniform_msk, surface_get_texture(_msk));
+			shader_set_i("useMask", is_surface(_msk));
+			shader_set_surface("mask", _msk);
 				
 			draw_surface_safe(_data[0], 0, 0);
-			shader_reset();
-		
-			BLEND_NORMAL;
-		surface_reset_target();
+		surface_reset_shader();
 		
 		_outSurf = mask_apply(_data[0], _outSurf, _mask, _mix);
 		
