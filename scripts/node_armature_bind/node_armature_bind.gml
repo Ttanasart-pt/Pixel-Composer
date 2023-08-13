@@ -59,10 +59,12 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		ds_map_clear(surfMap);
 		
 		var index = -1;
-		for(var i = input_fix_len; i < ds_list_size(inputs) - data_length; i += data_length) {
+		var amo   = min(ds_list_size(inputs) - data_length, array_length(current_data));
+		
+		for(var i = input_fix_len; i < amo; i += data_length) {
 			index++;
 			var _surf = current_data[i];
-			var _id = inputs[| i].extra_data.bone_id;
+			var _id   = inputs[| i].extra_data.bone_id;
 			if(_id == "") continue;
 			
 			if(ds_map_exists(surfMap, _id))

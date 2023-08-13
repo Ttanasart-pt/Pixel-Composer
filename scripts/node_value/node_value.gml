@@ -1771,12 +1771,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	
 	static drawConnectionMouse = function(_mx, _my, ss, target) {
 		var drawCorner = type == VALUE_TYPE.action;
-		if(target != noone) {
-			_mx = target.x;
-			_my = target.y;
-				
+		if(target != noone)
 			drawCorner |= target.type == VALUE_TYPE.action;
-		}
 		
 		var corner = PREF_MAP[? "connection_line_corner"] * ss;
 		var th     = PREF_MAP[? "connection_line_width"]  * ss;
