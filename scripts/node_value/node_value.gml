@@ -1685,7 +1685,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				else 
 					hover = distance_to_curve(mx, my, jx, jy, frx, fry, cx, cy, _s) < max(th * 2, 6);
 						
-				if(PANEL_GRAPH._junction_hovering == noone)
+				if(PANEL_GRAPH.value_focus == noone)
 					draw_line_shift_hover = hover;
 				break;
 			case 2 : 
@@ -1694,7 +1694,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				else
 					hover = distance_to_elbow(mx, my, frx, fry, jx, jy, cx, cy, _s, value_from.drawLineIndex, drawLineIndex) < max(th * 2, 6);
 					
-				if(PANEL_GRAPH._junction_hovering == noone)
+				if(PANEL_GRAPH.value_focus == noone)
 					draw_line_shift_hover = hover;
 				break;
 			case 3 :
@@ -1703,7 +1703,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				else
 					hover  = distance_to_elbow_diag(mx, my, frx, fry, jx, jy, cx, cy, _s, value_from.drawLineIndex, drawLineIndex) < max(th * 2, 6);
 					
-				if(PANEL_GRAPH._junction_hovering == noone)
+				if(PANEL_GRAPH.value_focus == noone)
 					draw_line_shift_hover = hover;
 				break;
 		}
@@ -1713,7 +1713,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			
 		var thicken = false;
 		thicken |= PANEL_GRAPH.nodes_junction_d == self;
-		thicken |= _active && PANEL_GRAPH.junction_hovering == self && PANEL_GRAPH._junction_hovering == noone;
+		thicken |= _active && PANEL_GRAPH.junction_hovering == self && PANEL_GRAPH.value_focus == noone;
 		thicken |= instance_exists(o_dialog_add_node) && o_dialog_add_node.junction_hovering == self;
 			
 		th *= thicken? 2 : 1;
@@ -1767,6 +1767,67 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		}
 		
 		return hovering;
+	}
+	
+	static drawConnectionMouse = function(_mx, _my, ss, target) {
+		var drawCorner = type == VALUE_TYPE.action;
+		if(target != noone) {
+			_mx = target.x;
+			_my = target.y;
+				
+			drawCorner |= target.type == VALUE_TYPE.action;
+		}
+		
+		var corner = PREF_MAP[? "connection_line_corner"] * ss;
+		var th     = PREF_MAP[? "connection_line_width"]  * ss;
+		
+		var col = value_color(type);
+		draw_set_color(col);
+		
+		switch(PREF_MAP[? "curve_connection_line"]) {
+			case 0 : 
+				draw_line_width(x, y, _mx, _my, th); 
+				break;
+			case 1 : 
+				if(drawCorner) {
+					if(type == VALUE_TYPE.action)
+						draw_line_curve_corner(_mx, _my, x, y, ss, th, col, col);
+					else
+						draw_line_curve_corner(x, y, _mx, _my, ss, th, col, col);
+				} else {
+					if(connect_type == JUNCTION_CONNECT.output)
+						draw_line_curve_color(_mx, _my, x, y,,, ss, th, col, col);
+					else 
+						draw_line_curve_color(x, y, _mx, _my,,, ss, th, col, col);
+				}
+				break;
+			case 2 : 
+				if(drawCorner) {
+					if(type == VALUE_TYPE.action)
+						draw_line_elbow_corner(_mx, _my, x, y, ss, th, col, col, corner);
+					else
+						draw_line_elbow_corner(x, y, _mx, _my, ss, th, col, col, corner);
+				} else {
+					if(connect_type == JUNCTION_CONNECT.output)
+						draw_line_elbow_color(x, y, _mx, _my,,, ss, th, col, col, corner);
+					else 
+						draw_line_elbow_color(_mx, _my, x, y,,, ss, th, col, col, corner);
+				}
+				break;
+			case 3 : 
+				if(drawCorner) {
+					if(type == VALUE_TYPE.action)
+						draw_line_elbow_diag_corner(_mx, _my, x, y, ss, th, col, col, corner);
+					else
+						draw_line_elbow_diag_corner(x, y, _mx, _my, ss, th, col, col, corner);
+				} else {
+					if(connect_type == JUNCTION_CONNECT.output)
+						draw_line_elbow_diag_color(x, y, _mx, _my,,, ss, th, col, col, corner);
+					else 													
+						draw_line_elbow_diag_color(_mx, _my, x, y,,, ss, th, col, col, corner);
+				}
+				break;
+		}
 	}
 	
 	static isVisible = function() {

@@ -239,7 +239,8 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 				break;
 		}
 		
-		widH = jun.editWidget.drawParam(param) - (TEXTBOX_HEIGHT * !lineBreak);
+		var _widH = jun.editWidget.drawParam(param) ?? 0;
+		widH = _widH - (TEXTBOX_HEIGHT * !lineBreak);
 		
 	} else if(jun.display_type == VALUE_DISPLAY.label) {
 		draw_set_text(f_p1, fa_left, fa_top, COLORS._main_text_sub);

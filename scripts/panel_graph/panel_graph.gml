@@ -65,15 +65,15 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 	node_focus			= noone;
 	
 	junction_hovering	= noone;
-	_junction_hovering	= noone;
 	add_node_draw_junc	= false;
 	add_node_draw_x_fix = 0;
 	add_node_draw_y_fix = 0;
 	add_node_draw_x = 0;
 	add_node_draw_y = 0;
 	
-	value_focus    = noone;
-	value_dragging = noone;
+	value_focus     = noone;
+	value_dragging  = noone;
+	value_draggings = [];
 	
 	minimap_show = false;
 	minimap_w = ui(160);
@@ -520,7 +520,8 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 						ds_list_add(nodes_select_list, node_hovering);
 				} else {
 					var _prevFocus = node_focus;
-					node_focus = node_hovering;
+					if(node_hovering != noone || value_focus == noone)
+						node_focus = node_hovering;
 					
 					if(node_focus) {
 						if(instanceof(node_focus) == "Node_Frame") {
@@ -561,7 +562,8 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 								ds_list_clear(nodes_select_list);
 						}
 					} else {
-						ds_list_clear(nodes_select_list);
+						if(value_focus == noone)
+							ds_list_clear(nodes_select_list);
 						
 						if(DOUBLE_CLICK && !PANEL_INSPECTOR.locked)
 							PANEL_INSPECTOR.inspecting = noone;
@@ -794,7 +796,6 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 						value_focus = val;
 				}
 			}
-			_junction_hovering = value_focus;
 			
 			for(var i = 0; i < ds_list_size(nodes_list); i++)
 				nodes_list[| i].drawBadge(gr_x, gr_y, graph_s);	
@@ -808,40 +809,6 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 				
 			if(node_dragging) {
 				node_focus = node_dragging;
-				
-				// TODO: Mode node(s) into group.
-				//for(var i = 0; i < ds_list_size(nodes_list); i++) { //drag node to group
-				//	var _node = nodes_list[| i];
-					
-				//	if(!_node.pointIn(gr_x, gr_y, mx, my, graph_s) || !variable_struct_exists(_node, "nodes"))
-				//		continue;
-					
-				//	var _recur = false;
-				//	if(ds_list_size(nodes_select_list) == 0) {
-				//		if(_node == node_dragging) _recur = true;	
-				//	} else {
-				//		for(var j = 0; j < ds_list_size(nodes_select_list); j++) {
-				//			var _n = nodes_select_list[| j];
-				//			if(_node == _n) _recur = true;
-				//		}
-				//	}
-					
-				//	if(_recur) 
-				//		continue;
-						
-				//	_node.drawActive(gr_x, gr_y, graph_s, 1);
-				//	if(mouse_release(mb_left) && key_mod_press(ALT)) {
-				//		if(ds_list_size(nodes_select_list) == 0) {
-				//			_node.add(node_dragging);
-				//			node_dragging.checkConnectGroup();
-				//		} else {
-				//			for(var j = 0; j < ds_list_size(nodes_select_list); j++) 
-				//				_node.add(nodes_select_list[| j]);
-				//			for(var j = 0; j < ds_list_size(nodes_select_list); j++) 
-				//				nodes_select_list[| j].checkConnectGroup();
-				//		}
-				//	}
-				//}
 				
 				if(ds_list_size(nodes_select_list) == 0) { // move single node
 					var nx = node_drag_sx + (mouse_graph_x - node_drag_mx);
@@ -938,8 +905,6 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 			if(nodes_select_drag) {
 				if(point_distance(nodes_select_mx, nodes_select_my, mx, my) > 16) {
 					draw_sprite_stretched_points(THEME.ui_selection, 0, nodes_select_mx, nodes_select_my, mx, my);
-					
-					//ds_list_clear(nodes_select_list);
 					
 					for(var i = 0; i < ds_list_size(nodes_list); i++) {
 						var _node = nodes_list[| i];
@@ -1445,63 +1410,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 				}
 			}
 			
-			var drawCorner = value_dragging.type == VALUE_TYPE.action;
-			if(target != noone) {
-				_mx = target.x;
-				_my = target.y;
-				
-				drawCorner |= target.type == VALUE_TYPE.action;
-			}
-			
-			var col = value_color(value_dragging.type);
-			var corner = PREF_MAP[? "connection_line_corner"] * graph_s;
-			draw_set_color(col);
-			var th = PREF_MAP[? "connection_line_width"] * graph_s;
-			switch(PREF_MAP[? "curve_connection_line"]) {
-				case 0 : 
-					draw_line_width(xx, yy, _mx, _my, th); 
-					break;
-				case 1 : 
-					if(drawCorner) {
-						if(value_dragging.type == VALUE_TYPE.action)
-							draw_line_curve_corner(_mx, _my, xx, yy, graph_s, th, col, col);
-						else
-							draw_line_curve_corner(xx, yy, _mx, _my, graph_s, th, col, col);
-					} else {
-						if(value_dragging.connect_type == JUNCTION_CONNECT.output)
-							draw_line_curve_color(_mx, _my, xx, yy,,, graph_s, th, col, col);
-						else 
-							draw_line_curve_color(xx, yy, _mx, _my,,, graph_s, th, col, col);
-					}
-					break;
-				case 2 : 
-					if(drawCorner) {
-						if(value_dragging.type == VALUE_TYPE.action)
-							draw_line_elbow_corner(_mx, _my, xx, yy, graph_s, th, col, col, corner);
-						else
-							draw_line_elbow_corner(xx, yy, _mx, _my, graph_s, th, col, col, corner);
-					} else {
-						if(value_dragging.connect_type == JUNCTION_CONNECT.output)
-							draw_line_elbow_color(xx, yy, _mx, _my,,, graph_s, th, col, col, corner);
-						else 
-							draw_line_elbow_color(_mx, _my, xx, yy,,, graph_s, th, col, col, corner);
-					}
-					break;
-				case 3 : 
-					if(drawCorner) {
-						if(value_dragging.type == VALUE_TYPE.action)
-							draw_line_elbow_diag_corner(_mx, _my, xx, yy, graph_s, th, col, col, corner);
-						else
-							draw_line_elbow_diag_corner(xx, yy, _mx, _my, graph_s, th, col, col, corner);
-					} else {
-						if(value_dragging.connect_type == JUNCTION_CONNECT.output)
-							draw_line_elbow_diag_color(xx, yy, _mx, _my,,, graph_s, th, col, col, corner);
-						else 													
-							draw_line_elbow_diag_color(_mx, _my, xx, yy,,, graph_s, th, col, col, corner);
-					}
-					break;
-			}
-			
+			value_dragging.drawConnectionMouse(_mx, _my, graph_s, target);
 			value_dragging.drawJunction(graph_s, value_dragging.x, value_dragging.y);
 			if(target) 
 				target.drawJunction(graph_s, target.x, target.y);
@@ -1534,15 +1443,18 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 				
 				value_dragging = noone;
 			}
-		} else if(!value_dragging && value_focus && mouse_press(mb_left, pFOCUS) && !key_mod_press(ALT))
-			value_dragging = value_focus;
+		} else if(!value_dragging && value_focus && mouse_press(mb_left, pFOCUS) && !key_mod_press(ALT)) {
+			value_dragging  = value_focus;
+			value_draggings = [];
+			
+			if(ds_list_empty(nodes_select_list)) {}
+		}
 		
 		#region draw junction name
 			var gr_x = graph_x * graph_s;
 			var gr_y = graph_y * graph_s;
-			for(var i = 0; i < ds_list_size(nodes_list); i++) {
+			for(var i = 0; i < ds_list_size(nodes_list); i++)
 				nodes_list[| i].drawJunctionNames(gr_x, gr_y, mx, my, graph_s);	
-			}
 		#endregion
 	}
 	

@@ -300,7 +300,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		var hover = noone;
 		var amo = array_length(input_display_list);
 		
-		var hov = PANEL_GRAPH._junction_hovering;
+		var hov = PANEL_GRAPH.value_focus;
 		var ind = -1;
 		if(hov != noone && struct_has(hov, "surface_index"))
 			ind = hov.surface_index;
@@ -365,7 +365,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		show_input_name  = PANEL_GRAPH.pHOVER && point_in_rectangle(_mx, _my, xx - 8 * _s, yy + 20 * _s, xx + 8 * _s, yy + h * _s);
 		show_output_name = PANEL_GRAPH.pHOVER && point_in_rectangle(_mx, _my, xx + (w - 8) * _s, yy + 20 * _s, xx + (w + 8) * _s, yy + h * _s);
 		
-		var hov = PANEL_GRAPH._junction_hovering;
+		var hov = PANEL_GRAPH.value_focus;
 		var ind = -1;
 		if(hov != noone && struct_has(hov, "surface_index"))
 			ind = hov.surface_index;
@@ -414,7 +414,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		var inamo = input_display_list == -1? ds_list_size(inputs) : array_length(input_display_list);
 		var _in = yy + ui(32) * _s;
 		
-		var hov = PANEL_GRAPH._junction_hovering;
+		var hov = PANEL_GRAPH.value_focus;
 		var ind = -1;
 		if(hov != noone && struct_has(hov, "surface_index"))
 			ind = hov.surface_index;

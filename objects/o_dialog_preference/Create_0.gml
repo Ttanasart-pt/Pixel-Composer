@@ -468,7 +468,7 @@ event_inherited();
 			if(instanceof(_pref[2]) == "checkBox")
 				params.halign = fa_center;
 				
-			var th     = _pref[2].drawParam(params);
+			var th     = _pref[2].drawParam(params) ?? 0;
 			
 			yy += th + padd + ui(8);
 			hh += th + padd + ui(8);
@@ -547,7 +547,7 @@ event_inherited();
 			var widget_y = yy + hh - ui(4);
 			
 			var params = new widgetParam(widget_x, widget_y, widget_w, widget_h, val, {}, _m, sp_hotkey.x, sp_hotkey.y);
-			var th = _pref[2].drawParam(params);
+			var th = _pref[2].drawParam(params) ?? 0;
 				
 			hh += th + padd + ui(8);
 			ind++;

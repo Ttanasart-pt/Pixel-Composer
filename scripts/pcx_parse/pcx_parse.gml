@@ -1,5 +1,5 @@
 #region symbols
-	global.LOG_EXPRESSION = true;
+	global.LOG_EXPRESSION = false;
 	
 	global.EQUATION_PRES = ds_map_create();
 	global.EQUATION_PRES[? "+"] = 1;

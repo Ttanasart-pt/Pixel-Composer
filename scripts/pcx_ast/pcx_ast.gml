@@ -6,10 +6,20 @@
 	global.FUNCTIONS[? "cos"]    = [ ["radian"], function(val) { return cos(val[0]); } ];
 	global.FUNCTIONS[? "tan"]    = [ ["radian"], function(val) { return tan(val[0]); } ];
 	
+	global.FUNCTIONS[? "arcsin"] = [ ["number"], function(val) { return arcsin(val[0]); } ];
+	global.FUNCTIONS[? "arccos"] = [ ["number"], function(val) { return arccos(val[0]); } ];
+	global.FUNCTIONS[? "arctan"] = [ ["number"], function(val) { return arctan(val[0]); } ];
+	
 	global.FUNCTIONS[? "abs"]    = [ ["number"], function(val) { return abs(val[0]); } ];
 	global.FUNCTIONS[? "round"]  = [ ["number"], function(val) { return round(val[0]); } ];
 	global.FUNCTIONS[? "ceil"]   = [ ["number"], function(val) { return ceil(val[0]);  } ];
 	global.FUNCTIONS[? "floor"]  = [ ["number"], function(val) { return floor(val[0]); } ];
+	global.FUNCTIONS[? "fract"]  = [ ["number"], function(val) { return frac(val[0]); } ];
+	global.FUNCTIONS[? "sign"]   = [ ["number"], function(val) { return sign(val[0]); } ];
+	
+	global.FUNCTIONS[? "min"]   = [ ["number", "number"], function(val) { return min(array_safe_get(val, 0), array_safe_get(val, 1)); } ];
+	global.FUNCTIONS[? "max"]   = [ ["number", "number"], function(val) { return max(array_safe_get(val, 0), array_safe_get(val, 1)); } ];
+	global.FUNCTIONS[? "clamp"] = [ ["number", "min = 0", "max = 1"], function(val) { return clamp(array_safe_get(val, 0), array_safe_get(val, 1, 0), array_safe_get(val, 2, 1)); } ];
 	
 	global.FUNCTIONS[? "lerp"]   = [ ["number_0", "number_1", "amount"], function(val) { return lerp(array_safe_get(val, 0), array_safe_get(val, 1), array_safe_get(val, 2)); } ];
 	
@@ -40,6 +50,11 @@
 													if(is_string(val))	return string_length(val);
 													return 0;
 												} ];
+	
+	global.FUNCTIONS[? "string"] = [ ["value"],  function(val) { return string(val[0]); } ];
+	global.FUNCTIONS[? "number"] = [ ["value"],  function(val) { return toNumber(val[0]); } ];
+	global.FUNCTIONS[? "chr"]    = [ ["number"], function(val) { return chr(val[0]); } ];
+	global.FUNCTIONS[? "ord"]    = [ ["char"],   function(val) { return ord(val[0]); } ];
 	
 	globalvar PROJECT_VARIABLES;
 	PROJECT_VARIABLES = {};
