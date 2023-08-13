@@ -76,9 +76,7 @@ enum VALUE_DISPLAY {
 	path_array,
 	
 	//Text
-	export_format,
 	code,
-	node_title,
 	text_array,
 	
 	//path

@@ -718,6 +718,7 @@
     {"id":{"name":"sh_noise_grid_hex","path":"shaders/sh_noise_grid_hex/sh_noise_grid_hex.yy",},},
     {"id":{"name":"node_3d_obj","path":"scripts/node_3d_obj/node_3d_obj.yy",},},
     {"id":{"name":"__path","path":"scripts/__path/__path.yy",},},
+    {"id":{"name":"draw_text_path","path":"scripts/draw_text_path/draw_text_path.yy",},},
     {"id":{"name":"sh_brush_outline","path":"shaders/sh_brush_outline/sh_brush_outline.yy",},},
     {"id":{"name":"s_node_grid_tri_noise","path":"sprites/s_node_grid_tri_noise/s_node_grid_tri_noise.yy",},},
     {"id":{"name":"o_dialog_menubox","path":"objects/o_dialog_menubox/o_dialog_menubox.yy",},},

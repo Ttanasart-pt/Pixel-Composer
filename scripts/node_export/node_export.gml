@@ -59,6 +59,8 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	
 	inputs[| 2] = nodeValue("Template",  self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "%d%n")
 		.rejectArray();
+	inputs[| 2].editWidget.format		= TEXT_AREA_FORMAT.path_template;
+	inputs[| 2].editWidget.auto_update	= true;
 	
 	format_single = ["Single image", "Image sequence", "Animation"];
 	format_array  = ["Multiple images", "Image sequences", "Animation"];
@@ -112,8 +114,86 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	outputs[| 1] = nodeValue("Preview", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone)
 		.setVisible(false);
 	
+	template_guide = [
+		["%d",  "Directory"],
+		["%1d", "Goes up 1 level"],
+		["%n",  "File name"],
+		["%f",  "Frame"],
+		["%i",  "Array index"],
+	];
+	export_template = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) {
+		var _tx = _x + ui(10);
+		var _ty = _y;
+		var _tw = _w - ui(8);
+		
+		var rawpath = inputs[| 1].getValue(,,, true);
+		if(is_array(rawpath)) rawpath = array_safe_get(rawpath, 0, "");
+		
+		var _ext    = inputs[| 9].getValue(,,, true);
+		var path    = pathString(rawpath);
+		var pathA   = pathString(rawpath,, true);
+		path = string_replace(path, ".png", array_safe_get(inputs[|  9].display_data, _ext, ""));
+		
+		draw_set_text(f_p1, fa_left, fa_top, COLORS._main_text);
+		var _th = ui(12) + string_height_ext(path, -1, _tw - ui(16), true);
+		draw_sprite_stretched_ext(THEME.ui_panel_bg, 1, _tx, _ty, _tw, _th, COLORS.node_composite_bg_blend, 1);
+		
+		var lw  = 0;
+		var lx  = _tx + ui(8);
+		var ly  = _ty + ui(6);
+		
+		draw_set_alpha(0.9);
+		for( var i = 0, n = array_length(pathA); i < n; i++ ) {
+			var _txt = pathA[i];
+			
+			if(is_array(_txt)) {
+				switch(_txt[0]) {
+					case "d" :   draw_set_color(COLORS.widget_text_dec_d); break;	
+					case "n" :   draw_set_color(COLORS.widget_text_dec_n); break;	
+					case "f" :   draw_set_color(COLORS.widget_text_dec_f); break;	
+					case "i" :   draw_set_color(COLORS.widget_text_dec_i); break;
+					case "ext" : draw_set_color(COLORS._main_text_sub); break;
+				}
+				
+				_txt = _txt[1];
+			} else 
+				draw_set_color(COLORS._main_text);
+			
+			for( var j = 1; j <= string_length(_txt); j++ ) {
+				var ch = string_char_at(_txt, j);
+				var ww = string_width(ch);
+			
+				if(lw + ww > _tw - ui(16)) {
+					lw = 0;
+					lx = _tx + ui(8);
+					ly += string_height("M");
+				}
+			
+				draw_text(lx, ly, ch);
+			
+				lw += ww;
+				lx += ww;
+			}
+		}
+		draw_set_alpha(1);
+		
+		var hh  = _th + ui(116);
+		var _cy = _y + _th + ui(8);
+		for( var i = 0, n = array_length(template_guide); i < n; i++ ) {
+			var _yy = _cy + ui(20) * i;
+			
+			draw_set_text(f_p1, fa_left, fa_top, COLORS._main_text_sub);
+			draw_text_add(_x + ui(16 + 16), _yy, template_guide[i][0]);
+			
+			draw_set_text(f_p1, fa_right, fa_top, COLORS._main_text_sub);
+			draw_text_add(_x + _w - ui(4 + 16), _yy, template_guide[i][1]);
+		}
+		
+		return hh;
+	});
+	
 	input_display_list = [
-		["Export",		false], 0, 1, 2, 4, 
+		["Export",		false], 0, 1, 2, export_template, 
 		["Format ",		false], 3, 9, 
 		["Settings",	false], 12, 8, 5, 6, 7, 10, 11, 
 	];
@@ -256,12 +336,18 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		PANEL_MENU.setNotiIcon(THEME.noti_icon_tick);
 	}
 	
-	static pathString = function(path, suff, index = 0) {
+	static pathString = function(path, index = 0, _array = false) {
+		var suff = inputs[|  2].getValue();
 		var form = inputs[|  3].getValue();
 		var strt = inputs[| 11].getValue();
 		
-		var s = "", i = 1, ch, ch_s;
+		path = string_replace_all(path, "\\", "/");
+		
+		var s = _array? [] : "";
+		var i = 1;
+		var ch, ch_s;
 		var len = string_length(suff);
+		
 		while(i <= len) {
 			ch = string_char_at(suff, i);
 				
@@ -273,40 +359,51 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 					ch_s = string_char_at(suff, i);
 					switch(ch_s) {
 						case "f" :
+							var _txt = "";
 							var float_str = string_digits(str);
 							if(float_str != "") {
 								var float_val = string_digits(float_str);
 								var str_val = max(float_val - string_length(string(PROJECT.animator.current_frame + strt)), 0);
 								repeat(str_val)
-									s += "0";
+									_txt += "0";
 							}
-								
-							s += string(PROJECT.animator.current_frame + strt);
+							
+							_txt += string(PROJECT.animator.current_frame + strt);
+							if(_array)	array_push(s, [ "f", _txt ]);
+							else		s += _txt;
 							res = true;
 							break;
 						case "i" :
-							s += string(index);
+							if(_array)	array_push(s, [ "i", string(index) ]);
+							else		s += string(index);
 							res = true;
 							break;
 						case "d" : 
-							var dir = filename_dir(path) + "/";
+							var dir  = filename_dir(path) + "/";
+							var _txt = "";
 							
 							var float_str = string_digits(str);
 							if(float_str != "") {
-								var float_val = string_digits(float_str);
+								var float_val = toNumber(string_digits(float_str)) + 1;
 								var dir_s = "";
-								var sep = string_splice(dir, "/");
-								for(var j = 0; j < array_length(sep) - float_val; j++) {
+								var sep   = string_splice(dir, "/");
+								
+								for(var j = 0; j < array_length(sep) - float_val; j++)
 									dir_s += sep[j] + "/";
-								}
-								s += dir_s;
+								_txt += dir_s;
 							} else 
-								s += dir;
+								_txt += dir;
+							
+							if(_array)	array_push(s, [ "d", _txt ]);
+							else		s += _txt;
 							res = true;
 							break;
 						case "n" : 
-							var ext = filename_ext(path);
-							s += string_replace(filename_name(path), ext, "");
+							var ext  = filename_ext(path);
+							var _txt = string_replace(filename_name(path), ext, "");
+							
+							if(_array)	array_push(s, [ "n", _txt ]);
+							else		s += _txt;
 							res = true;
 							break;
 						default :
@@ -316,12 +413,14 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 					i++;
 				} until(i > string_length(suff) || res);
 			} else {
-				s += ch;
+				if(_array)	array_push(s, ch);
+				else		s += ch;
 				i++;
 			}
 		}
 		
-		s += ".png";
+		if(_array)	array_push(s, ["ext", ".png"]);
+		else		s += ".png";
 		
 		return s;
 	}
@@ -397,9 +496,9 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 					p = directory + "/" + string(i) + "/" + string_lead_zero(PROJECT.animator.current_frame, 5) + ".png";
 				} else {
 					if(is_array(path) && array_length(path) == array_length(surf))
-						p = pathString(path[ safe_mod(i, array_length(path)) ], suff, i);
+						p = pathString(path[ safe_mod(i, array_length(path)) ], i);
 					else
-						p = pathString(path, suff, i);
+						p = pathString(path, i);
 				}
 					
 				p = save_surface(_surf, p);
@@ -419,7 +518,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			if(form == NODE_EXPORT_FORMAT.gif)
 				p = directory + "/" + string_lead_zero(PROJECT.animator.current_frame, 5) + ".png";
 			else
-				p = pathString(p, suff);
+				p = pathString(p);
 			
 			//print("Exporting " + p);
 			p = save_surface(surf, p);
@@ -545,9 +644,9 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			for(var i = 0; i < array_length(surf); i++) {
 				temp_path = directory + "/" + string(i) + "/" + "*.png";
 				if(is_array(path))
-					target_path = pathString(path[ safe_mod(i, array_length(path)) ], suff, i);
+					target_path = pathString(path[ safe_mod(i, array_length(path)) ], i);
 				else
-					target_path = pathString(path, suff, i);
+					target_path = pathString(path, i);
 				
 				if(extd == 0) {
 					target_path = string_replace(target_path, ".png", ".gif");
@@ -558,7 +657,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				}
 			}
 		} else {
-			target_path = pathString(path, suff);
+			target_path = pathString(path);
 			
 			if(extd == 0) {
 				target_path = string_replace(target_path, ".png", ".gif");

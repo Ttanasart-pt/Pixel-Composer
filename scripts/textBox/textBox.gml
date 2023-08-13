@@ -9,6 +9,7 @@ function textBox(_input, _onModify, _extras = noone) : textInput(_input, _onModi
 	font   = noone;
 	color  = COLORS._main_text;
 	boxColor = c_white;
+	format = TEXT_AREA_FORMAT._default;
 	
 	no_empty    = true;
 	auto_update = false;
@@ -22,8 +23,8 @@ function textBox(_input, _onModify, _extras = noone) : textInput(_input, _onModi
 	starting_char = 1;
 	
 	_current_text = "";
-	_input_text = "";
-	_last_text = "";
+	_input_text   = "";
+	_last_text    = "";
 	current_value = "";
 	
 	cursor			= 0;
@@ -226,61 +227,19 @@ function textBox(_input, _onModify, _extras = noone) : textInput(_input, _onModi
 			apply();
 	}
 	
-	static display_text = function(_x, _y, _text, _w, _format, _m = -1) {
+	static display_text = function(_x, _y, _text, _w, _m = -1) {
 		_text = string_real(_text);
 		BLEND_OVERRIDE;
 		if(!interactable) draw_set_alpha(0.5);
 		
-		switch(_format) {
-			case VALUE_DISPLAY._default :
+		switch(format) {
+			case TEXT_AREA_FORMAT._default :
 				draw_set_text(font == noone? f_p0 : font, fa_left, fa_top, color);
-				draw_text(_x + disp_x, _y, _text);
+				draw_text_add(_x + disp_x, _y, _text);
 				break;
-			case VALUE_DISPLAY.export_format :
+			case TEXT_AREA_FORMAT.node_title :
 				draw_set_text(font == noone? f_p0 : font, fa_left, fa_top, color);
-				var _x0 = _x + disp_x, ch = "", len = string_length(_text), i = 1;
-				var cc = draw_get_color();
-				var str = "", _comm = false;
-				
-				while(i <= len) {
-					ch = string_char_at(_text, i);
-					
-					if(ch == "%")
-						_comm = true;
-					
-					if(!_comm) {
-						draw_text(_x0, 0, ch);
-						_x0 += string_width(ch);
-					} else {
-						str += ch;
-						switch(ch) {
-							case "d" : draw_set_color(COLORS.widget_text_dec_d); break;	
-							case "n" : draw_set_color(COLORS.widget_text_dec_n); break;	
-							case "e" : draw_set_color(COLORS.widget_text_dec_e); break;	
-							case "f" : draw_set_color(COLORS.widget_text_dec_f); break;	
-							case "i" : draw_set_color(COLORS.widget_text_dec_i); break;
-						}
-						
-						switch(ch) {
-							case "d" :	case "n" :	case "e" :	case "f" :	case "i" : 
-								draw_text(_x0, 0, str);
-								_x0 += string_width(str);
-								_comm = false; 
-								str = "";
-								
-								draw_set_color(cc);
-								break;
-						}
-					}
-					
-					i++;
-				}
-				
-				draw_text(_x0, _y, str);
-				break;
-			case VALUE_DISPLAY.node_title :
-				draw_set_text(font == noone? f_p0 : font, fa_left, fa_top, color);
-				draw_text(_x + disp_x, _y, _text);
+				draw_text_add(_x + disp_x, _y, _text);
 				break;
 		}
 		
@@ -318,10 +277,10 @@ function textBox(_input, _onModify, _extras = noone) : textInput(_input, _onModi
 	}
 	
 	static drawParam = function(params) {
-		return draw(params.x, params.y, params.w, params.h, params.data, params.m,, params.halign, params.valign);
+		return draw(params.x, params.y, params.w, params.h, params.data, params.m, params.halign, params.valign);
 	}
 	
-	static draw = function(_x, _y, _w, _h, _text = "", _m = mouse_ui, _format = VALUE_DISPLAY._default, halign = fa_left, valign = fa_top) {
+	static draw = function(_x, _y, _w, _h, _text = "", _m = mouse_ui, halign = fa_left, valign = fa_top) {
 		x = _x;
 		y = _y;
 		w = _w;
@@ -496,7 +455,7 @@ function textBox(_input, _onModify, _extras = noone) : textInput(_input, _onModi
 				
 				surface_set_target(text_surface);
 				DRAW_CLEAR
-					display_text(tx - tb_surf_x, _h / 2 - th / 2, txt, _w - ui(4), _format, _mx);
+					display_text(tx - tb_surf_x, _h / 2 - th / 2, txt, _w - ui(4), _mx);
 				surface_reset_target();
 				draw_surface(text_surface, tb_surf_x, tb_surf_y);
 		
@@ -560,7 +519,7 @@ function textBox(_input, _onModify, _extras = noone) : textInput(_input, _onModi
 				//draw_set_color(c_black);
 				//draw_line(0, _h / 2 - th / 2, 9999, _h / 2 - th / 2);
 				
-				display_text(tx - tb_surf_x, _h / 2 - th / 2, _display_text, _w - ui(4), _format);
+				display_text(tx - tb_surf_x, _h / 2 - th / 2, _display_text, _w - ui(4));
 			surface_reset_target();
 			draw_surface(text_surface, tb_surf_x, tb_surf_y);
 		}

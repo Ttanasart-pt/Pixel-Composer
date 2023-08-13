@@ -642,9 +642,10 @@ function Panel_Inspector() : PanelContent() constructor {
 		tb_node_name.font = f_h5;
 		tb_node_name.hide = true;
 		tb_node_name.setFocusHover(pFOCUS, pHOVER);
-		tb_node_name.align = fa_center;
+		tb_node_name.align  = fa_center;
+		tb_node_name.format = TEXT_AREA_FORMAT.node_title;
 		var txt = inspecting.display_name == ""? inspecting.name : inspecting.display_name;
-		tb_node_name.draw(ui(64), ui(14), w - ui(128), ui(32), txt, [mx, my], VALUE_DISPLAY.node_title);
+		tb_node_name.draw(ui(64), ui(14), w - ui(128), ui(32), txt, [mx, my]);
 		
 		draw_set_text(f_p1, fa_center, fa_center, COLORS._main_text_sub);
 		draw_text_add(w / 2 + ui(8), ui(56), inspecting.name);

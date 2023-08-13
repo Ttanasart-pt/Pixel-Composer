@@ -1,7 +1,9 @@
 enum TEXT_AREA_FORMAT {
 	_default,
 	code,
-	delimiter
+	delimiter,
+	path_template,
+	node_title,
 }
 
 function textArea(_input, _onModify, _extras = noone) : textInput(_input, _onModify, _extras) constructor {
@@ -514,11 +516,13 @@ function textArea(_input, _onModify, _extras = noone) : textInput(_input, _onMod
 			_str = _input_text_line[i];
 			
 			if(format == TEXT_AREA_FORMAT._default)
-				draw_text(ch_x, ch_y, _str);
+				draw_text_add(ch_x, ch_y, _str);
 			else if(format == TEXT_AREA_FORMAT.code)
 				draw_code(ch_x, ch_y, _str);
 			else if(format == TEXT_AREA_FORMAT.delimiter)
 				draw_text_delimiter(ch_x, ch_y, _str);
+			else if(format == TEXT_AREA_FORMAT.path_template)
+				draw_text_path(ch_x, ch_y, _str);
 			
 			ch_y += line_get_height();
 		}

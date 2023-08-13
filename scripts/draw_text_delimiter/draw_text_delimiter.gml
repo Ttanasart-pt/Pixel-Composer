@@ -12,7 +12,7 @@ function draw_text_delimiter(ch_x, ch_y, _str) {
 		} else
 			draw_set_color(cc);
 		
-		draw_text(_x, _y, ch);
+		draw_text_add(_x, _y, ch);
 		_x += string_width(ch);
 	}
 }

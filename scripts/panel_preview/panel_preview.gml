@@ -5,7 +5,7 @@ function Panel_Preview() : PanelContent() constructor {
 	
 	last_focus = noone;
 	
-	static initSize = function() {
+	function initSize() {
 		canvas_x = w / 2;
 		canvas_y = h / 2;
 	}
@@ -73,6 +73,9 @@ function Panel_Preview() : PanelContent() constructor {
 	
 	tileMode = 0;
 	
+	tb_framerate = new textBox(TEXTBOX_INPUT.number, function(val) { preview_rate = real(val); });
+	
+	#region ++++ toolbars & actions ++++
 	toolbar_height = ui(40);
 	toolbars = [
 		[ 
@@ -149,9 +152,9 @@ function Panel_Preview() : PanelContent() constructor {
 		],
 		
 	]
+	#endregion
 	
-	tb_framerate = new textBox(TEXTBOX_INPUT.number, function(val) { preview_rate = real(val); });
-	
+	#region ++++ hotkey ++++
 	addHotkey("Preview", "Focus content",			"F", MOD_KEY.none,	function() { PANEL_PREVIEW.fullView(); });
 	addHotkey("Preview", "Save current frame",		"S", MOD_KEY.shift,	function() { PANEL_PREVIEW.saveCurrentFrame(); });
 	addHotkey("Preview", "Save all current frame",	-1, MOD_KEY.none,	function() { PANEL_PREVIEW.saveAllCurrentFrames(); });
@@ -166,28 +169,29 @@ function Panel_Preview() : PanelContent() constructor {
 																		if(PREF_MAP[? "alt_picker"]) return; 
 																		PANEL_PREVIEW.canvas_zooming_key  = true; 
 																	});
+	#endregion
 	
-	function setNodePreview(node) {
+	function setNodePreview(node) { #region
 		if(resetViewOnDoubleClick)
 			do_fullView = true;
 		
 		preview_node[splitView? splitSelection : 0] = node;
-	}
+	} #endregion
 	
-	function removeNodePreview(node) {
+	function removeNodePreview(node) { #region
 		if(preview_node[0] == node) preview_node[0] = noone;
 		if(preview_node[1] == node) preview_node[1] = noone;
-	}
+	} #endregion
 	
-	function resetNodePreview() {
+	function resetNodePreview() { #region
 		preview_node = [ noone, noone ];
-	}
+	} #endregion
 	
 	function getNodePreview()			{ return preview_node[splitView? splitSelection : 0]; }
 	function getNodePreviewSurface()	{ return preview_surface[splitView? splitSelection : 0]; }
 	function getNodePreviewSequence()	{ return preview_sequence[splitView? splitSelection : 0]; }
 	
-	function getPreviewData() {
+	function getPreviewData() { #region
 		preview_surface  = [ 0, 0 ];
 		preview_sequence = [ 0, 0 ];
 		
@@ -227,11 +231,11 @@ function Panel_Preview() : PanelContent() constructor {
 			canvas_w = surface_get_width(prevS);
 			canvas_h = surface_get_height(prevS);	
 		}
-	}
+	} #endregion
 	
 	function onFocusBegin() { PANEL_PREVIEW = self; }
 	
-	function dragCanvas() {
+	function dragCanvas() { #region
 		if(canvas_dragging) {
 			if(!MOUSE_WRAPPING) {
 				var dx = mx - canvas_drag_mx;
@@ -322,9 +326,9 @@ function Panel_Preview() : PanelContent() constructor {
 		canvas_dragging_key = false;
 		canvas_zooming_key  = false;
 		canvas_hover = point_in_rectangle(mx, my, 0, toolbar_height, w, h - toolbar_height);
-	}
+	} #endregion
 	
-	function fullView() {
+	function fullView() { #region
 		var node  = getNodePreview();
 		if(node == noone) { 
 			canvas_s = 1;
@@ -345,18 +349,18 @@ function Panel_Preview() : PanelContent() constructor {
 		canvas_s = ss;
 		canvas_x = w / 2 - bbox.w * canvas_s / 2 - bbox.x0 * canvas_s + (tool_side_drawing * 40 / 2);
 		canvas_y = h / 2 - bbox.h * canvas_s / 2 - bbox.y0 * canvas_s;
-	}
+	} #endregion
 	
-	sbChannel = new scrollBox([], function(index) { 
+	sbChannel = new scrollBox([], function(index) { #region
 		var node = getNodePreview();
 		if(node == noone) return;
 		
 		node.preview_channel = array_safe_get(sbChannelIndex, index); 
-	});
+	}); #endregion
 	
 	sbChannelIndex = [];
 	sbChannel.align = fa_left;
-	function drawNodeChannel(_x, _y) {
+	function drawNodeChannel(_x, _y) { #region
 		var _node = getNodePreview();
 		if(_node == noone) return;
 		if(ds_list_size(_node.outputs) < 2) return;
@@ -381,16 +385,9 @@ function Panel_Preview() : PanelContent() constructor {
 		
 		sbChannel.draw(_x - ww, _y - hh / 2, ww, hh, currName, [mx, my], x, y);
 		right_menu_y += ui(40);
-	}
+	} #endregion
 	
-	/**
-	 * Function Description
-	 * @param {Struct.Node} node Description
-	 * @param {any*} psx Description
-	 * @param {any*} psy Description
-	 * @param {any*} ss Description
-	 */
-	function drawOnionSkin(node, psx, psy, ss) {
+	function drawOnionSkin(node, psx, psy, ss) { #region
 		var _surf = preview_surface[0];
 		var _rang = PROJECT.onion_skin.range;
 		
@@ -423,9 +420,9 @@ function Panel_Preview() : PanelContent() constructor {
 		}
 			
 		if(_top) draw_surface_ext_safe(_surf, psx, psy, ss, ss);
-	}
+	} #endregion
 	
-	function drawNodePreview() {
+	function drawNodePreview() { #region
 		var ss  = canvas_s;
 		var psx = 0, psy = 0;
 		var psw = 0, psh = 0;
@@ -590,9 +587,9 @@ function Panel_Preview() : PanelContent() constructor {
 			draw_set_color(COLORS.panel_preview_surface_outline);
 			draw_rectangle(psx, psy, psx + pswd - 1, psy + pshd - 1, true);
 		}
-	}
+	} #endregion
 	
-	function drawPreviewOverlay() {
+	function drawPreviewOverlay() { #region
 		right_menu_y = toolbar_height - ui(4);
 		toolbar_draw = false;
 		
@@ -705,12 +702,12 @@ function Panel_Preview() : PanelContent() constructor {
 			}
 			draw_sprite_ui_uniform(THEME.sequence_control, 0, bx + ui(20), by + ui(20), 1, COLORS._main_accent, .75);
 		}
-	}
+	} #endregion
 	
 	tool_hovering = false;
 	tool_side_drawing = false;
 	
-	function drawNodeTools(active, _node) {
+	function drawNodeTools(active, _node) { #region
 		var _mx = mx;
 		var _my = my;
 		var isHover = pHOVER && mouse_on_preview;
@@ -823,9 +820,9 @@ function Panel_Preview() : PanelContent() constructor {
 			}
 		} else 
 			tool_current = noone;
-	}
+	} #endregion
 	
-	function drawToolBar(_node) {
+	function drawToolBar(_node) { #region
 		toolbar_height = ui(40);
 		var ty = h - toolbar_height;
 		//draw_sprite_stretched_ext(THEME.toolbar_shadow, 0, 0, ty - 12 + 4, w, 12, c_white, 0.5);
@@ -942,9 +939,9 @@ function Panel_Preview() : PanelContent() constructor {
 		draw_set_color(COLORS.panel_toolbar_separator);
 		draw_line_width(tbx + ui(12), tby - toolbar_height / 2 + ui(8), tbx + ui(12), tby + toolbar_height / 2 - ui(8), 2);
 		drawNodeChannel(tbx, tby);
-	}
+	} #endregion
 	
-	function drawSplitView() {
+	function drawSplitView() { #region
 		if(splitView == 0) return;
 		
 		draw_set_color(COLORS.panel_preview_split_line);
@@ -1004,9 +1001,9 @@ function Panel_Preview() : PanelContent() constructor {
 					splitSelection = 1;
 			}
 		}
-	}
+	} #endregion
 	
-	function drawContent(panel) { 
+	function drawContent(panel) { #region					>>>>>>>>>>>>>>>>>>>> MAIN DRAW <<<<<<<<<<<<<<<<<<<<
 		mouse_on_preview = pHOVER && point_in_rectangle(mx, my, 0, toolbar_height, w, h - toolbar_height);
 		
 		draw_clear(COLORS.panel_bg_clear);
@@ -1056,9 +1053,9 @@ function Panel_Preview() : PanelContent() constructor {
 		
 		drawSplitView();
 		drawToolBar(tool);
-	}
+	} #endregion
 	
-	function copyCurrentFrame() {
+	function copyCurrentFrame() { #region
 		var prevS = getNodePreviewSurface();
 		if(!is_surface(prevS)) return;
 		
@@ -1075,9 +1072,9 @@ function Panel_Preview() : PanelContent() constructor {
 		surface_free(s);
 		
 		clipboard_set_bitmap(buffer_get_address(buff), surface_get_width(prevS), surface_get_height(prevS));
-	}
+	} #endregion
 	
-	function saveCurrentFrame() {
+	function saveCurrentFrame() { #region
 		var prevS = getNodePreviewSurface();
 		if(!is_surface(prevS)) return;
 		
@@ -1087,9 +1084,9 @@ function Panel_Preview() : PanelContent() constructor {
 		if(filename_ext(path) != ".png") path += ".png";
 		
 		surface_save_safe(prevS, path);
-	}
+	} #endregion
 	
-	function saveAllCurrentFrames() {
+	function saveAllCurrentFrames() { #region
 		var path = get_save_filename(".png", "export"); 
 		key_release();
 		if(path == "") return;
@@ -1106,5 +1103,5 @@ function Panel_Preview() : PanelContent() constructor {
 			surface_save_safe(prev, _name);
 			ind++;
 		}
-	}
+	} #endregion
 }

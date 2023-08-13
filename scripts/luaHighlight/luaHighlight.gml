@@ -58,7 +58,7 @@ function draw_code(_x, _y, str) {
 			if(i < amo - 1) word += "\"";
 			
 			draw_set_color(COLORS.lua_highlight_string);
-			draw_text(tx, ty, word);
+			draw_text_add(tx, ty, word);
 			tx += string_width(word);
 			continue;
 		}
@@ -81,7 +81,7 @@ function draw_code(_x, _y, str) {
 					draw_set_color(COLORS.lua_highlight_function);
 			}
 			
-			draw_text(tx, ty, word);
+			draw_text_add(tx, ty, word);
 			tx += string_width(word);
 		}
 	}

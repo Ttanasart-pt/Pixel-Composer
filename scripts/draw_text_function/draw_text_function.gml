@@ -120,8 +120,8 @@ function __string_width_ext(text, sep, w) {
 #macro _string_height_ext string_height_ext
 #macro string_height_ext __string_height_ext
 
-function __string_height_ext(text, sep, w) {
-	if(!LOCALE.config.per_character_line_break)
+function __string_height_ext(text, sep, w, _break = LOCALE.config.per_character_line_break) {
+	if(!_break)
 		return _string_height_ext(text, sep, w);
 	
 	var lw  = 0;
