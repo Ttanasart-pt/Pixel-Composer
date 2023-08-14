@@ -342,29 +342,38 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 			
 		var threeD = ds_list_create();
 		addNodeCatagory("3D", threeD);
-			ds_list_add(threeD, "2D operations");
+			ds_list_add(threeD, "2D Operations");
 			addNodeObject(threeD, "Normal",				s_node_normal,			"Node_Normal",			[1, Node_Normal],, "Create normal map using greyscale value as height.");
 			addNodeObject(threeD, "Normal Light",		s_node_normal_light,	"Node_Normal_Light",	[1, Node_Normal_Light],, "Light up the image using normal mapping.");
 			addNodeObject(threeD, "Bevel",				s_node_bevel,			"Node_Bevel",			[1, Node_Bevel], ["shade", "auto shade"], "Apply 2D bevel on the image.");
 			addNodeObject(threeD, "Sprite Stack",		s_node_stack,			"Node_Sprite_Stack",	[1, Node_Sprite_Stack],, "Create sprite stack either from repeating a single image or stacking different images using array.");
 			///**/ addNodeObject(threeD, "Depth 3D",			s_node_stack,			"Node_3D_Depth",		[1, Node_3D_Depth],, "Create 3D looking image from depth map.").setVersion(1447);
 			
-			ds_list_add(threeD, "3D generates");
-			addNodeObject(threeD, "3D Object",			s_node_3d_obj,			"Node_3D_Obj",			[0, Node_create_3D_Obj],, "Load .obj file from your computer as a 3D object.");
-			addNodeObject(threeD, "3D Plane",			s_node_3d_plane,		"Node_3D_Plane",		[1, Node_3D_Plane],, "Put 2D image on a plane in 3D space.");
-			addNodeObject(threeD, "3D Cube",			s_node_3d_cube,			"Node_3D_Cube",			[1, Node_3D_Cube]);
-			addNodeObject(threeD, "3D Cylinder",		s_node_3d_cylinder,		"Node_3D_Cylinder",		[1, Node_3D_Cylinder]);
-			addNodeObject(threeD, "3D Sphere",			s_node_3d_sphere,		"Node_3D_Sphere",		[1, Node_3D_Sphere]).setVersion(1090);
-			addNodeObject(threeD, "3D Cone",			s_node_3d_cone,			"Node_3D_Cone",			[1, Node_3D_Cone]).setVersion(1090);
-			addNodeObject(threeD, "3D Extrude",			s_node_3d_extrude,		"Node_3D_Extrude",		[1, Node_3D_Extrude],, "Extrude 2D image into 3D object.");
+			ds_list_add(threeD, "3D");
+			addNodeObject(threeD, "3D Scene",			s_node_3d_cube,		"Node_3D_Scene",				[1, Node_3D_Scene]);
 			
-			ds_list_add(threeD, "3D operations");
-			addNodeObject(threeD, "3D Transform",		s_node_3d_transform,	"Node_3D_Transform",	[1, Node_3D_Transform]).setVersion(1080);
-			addNodeObject(threeD, "3D Combine",			s_node_3d_obj_combine,	"Node_3D_Combine",		[1, Node_3D_Combine],, "Combine multiple 3D object to a single scene,").setVersion(1080);
-			addNodeObject(threeD, "3D Repeat",			s_node_3d_array,		"Node_3D_Repeat",		[1, Node_3D_Repeat], ["3d array"], "Repeat 3D object multiple times.").setVersion(1080);
-			addNodeObject(threeD, "3D Displace",		s_node_3d_displace,		"Node_3D_Displace",		[1, Node_3D_Displace]).setVersion(1143);
+			ds_list_add(threeD, "Mesh");
+			addNodeObject(threeD, "3D Cube",			s_node_3d_cube,		"Node_3D_Mesh_Cube",			[1, Node_3D_Mesh_Cube]);
 			
-			addNodeObject(threeD, "3D Export",			s_node_3d_export,		"Node_3D_Export",		[1, Node_3D_Export]).setVersion(1143);
+			ds_list_add(threeD, "Light");
+			addNodeObject(threeD, "Directional Light",	s_node_3d_cube,		"Node_3D_Light_Directional",	[1, Node_3D_Light_Directional]);
+			
+			//ds_list_add(threeD, "3D generates");
+			//addNodeObject(threeD, "3D Object",			s_node_3d_obj,			"Node_3D_Obj",			[0, Node_create_3D_Obj],, "Load .obj file from your computer as a 3D object.");
+			//addNodeObject(threeD, "3D Plane",			s_node_3d_plane,		"Node_3D_Plane",		[1, Node_3D_Plane],, "Put 2D image on a plane in 3D space.");
+			//addNodeObject(threeD, "3D Cube",			s_node_3d_cube,			"Node_3D_Cube",			[1, Node_3D_Cube]);
+			//addNodeObject(threeD, "3D Cylinder",		s_node_3d_cylinder,		"Node_3D_Cylinder",		[1, Node_3D_Cylinder]);
+			//addNodeObject(threeD, "3D Sphere",			s_node_3d_sphere,		"Node_3D_Sphere",		[1, Node_3D_Sphere]).setVersion(1090);
+			//addNodeObject(threeD, "3D Cone",			s_node_3d_cone,			"Node_3D_Cone",			[1, Node_3D_Cone]).setVersion(1090);
+			//addNodeObject(threeD, "3D Extrude",			s_node_3d_extrude,		"Node_3D_Extrude",		[1, Node_3D_Extrude],, "Extrude 2D image into 3D object.");
+			
+			//ds_list_add(threeD, "3D operations");
+			//addNodeObject(threeD, "3D Transform",		s_node_3d_transform,	"Node_3D_Transform",	[1, Node_3D_Transform]).setVersion(1080);
+			//addNodeObject(threeD, "3D Combine",			s_node_3d_obj_combine,	"Node_3D_Combine",		[1, Node_3D_Combine],, "Combine multiple 3D object to a single scene,").setVersion(1080);
+			//addNodeObject(threeD, "3D Repeat",			s_node_3d_array,		"Node_3D_Repeat",		[1, Node_3D_Repeat], ["3d array"], "Repeat 3D object multiple times.").setVersion(1080);
+			//addNodeObject(threeD, "3D Displace",		s_node_3d_displace,		"Node_3D_Displace",		[1, Node_3D_Displace]).setVersion(1143);
+			
+			//addNodeObject(threeD, "3D Export",			s_node_3d_export,		"Node_3D_Export",		[1, Node_3D_Export]).setVersion(1143);
 			
 		var generator = ds_list_create();
 		addNodeCatagory("Generate", generator);

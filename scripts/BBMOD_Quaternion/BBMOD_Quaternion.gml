@@ -245,7 +245,7 @@ function BBMOD_Quaternion(_x=0.0, _y=0.0, _z=0.0, _w=1.0) constructor
 		}
 
 		var _right = _up.Cross(_forward);
-		var _w = sqrt(1.0 + _right.X + _up.Y + _forward.Z) * 0.5;
+		var _w = sqrt(abs(1.0 + _right.X + _up.Y + _forward.Z)) * 0.5;
 		var _w4Recip = 1.0 / (4.0 * _w);
 
 		X = (_up.Z - _forward.Y) * _w4Recip;

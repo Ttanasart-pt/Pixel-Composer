@@ -137,6 +137,8 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	input_fix_len	  = 0;
 	data_length       = 1;
 	
+	is_3D = false;
+	
 	static createNewInput = noone;
 	
 	static initTooltip = function() {

@@ -5,7 +5,7 @@
   "isCompatibility": false,
   "isDnD": false,
   "parent": {
-    "name": "3D",
-    "path": "folders/nodes/data/3D.yy",
+    "name": "2d effects",
+    "path": "folders/nodes/data/3D/2d effects.yy",
   },
 }

@@ -1150,7 +1150,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 					for( var j = 0, m = ds_list_size(_node.outputs); j < m; j++ ) {
 						var _junction = _node.outputs[| j];
 						if(!_junction.visible) continue;
-						if(_junction.type != value_dragging.type) continue;
+						if(value_bit(_junction.type) & value_bit(value_dragging.type) == 0) continue;
 					
 						ds_priority_add(_jlist, _junction, _junction.y);
 					}

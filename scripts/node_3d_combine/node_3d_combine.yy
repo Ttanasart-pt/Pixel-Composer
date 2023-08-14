@@ -5,7 +5,7 @@
   "isCompatibility": false,
   "isDnD": false,
   "parent": {
-    "name": "3D",
-    "path": "folders/nodes/data/3D.yy",
+    "name": "__legacy",
+    "path": "folders/nodes/data/3D/__legacy.yy",
   },
 }

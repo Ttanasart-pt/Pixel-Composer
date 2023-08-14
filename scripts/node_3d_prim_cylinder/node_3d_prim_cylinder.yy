@@ -6,6 +6,6 @@
   "isDnD": false,
   "parent": {
     "name": "primitive",
-    "path": "folders/nodes/data/3D/primitive.yy",
+    "path": "folders/nodes/data/3D/__legacy/primitive.yy",
   },
 }

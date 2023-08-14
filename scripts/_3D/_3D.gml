@@ -258,7 +258,7 @@ enum CAMERA_PROJ {
 		VB = [];
 		use_normal = true;
 		
-		TM = matrix_build(0, 0, 0, 0, 0, 0, 1, 1, 1);
+		TM  = matrix_build(0, 0, 0, 0, 0, 0, 1, 1, 1);
 		cam = camera_create();
 		
 		cam_view = matrix_build_lookat(0, 0, 1, 0, 0, 0, 0, 1, 0);
@@ -301,7 +301,7 @@ enum CAMERA_PROJ {
 		
 		var cx = _x + _gpos[0] * _s;
 		var cy = _y + _gpos[1] * _s;
-			
+		
 		var _qrot  = new BBMOD_Quaternion().FromEuler(_rot[0], -_rot[1], -_rot[2]);
 		var _hover = noone;
 		var _hoverDist = 10;

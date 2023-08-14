@@ -5,73 +5,111 @@ function Panel_Preview() : PanelContent() constructor {
 	
 	last_focus = noone;
 	
-	function initSize() {
-		canvas_x = w / 2;
-		canvas_y = h / 2;
-	}
-	run_in(1, function() { initSize() });
+	#region ---- canvas control & sample ----
+		function initSize() {
+			canvas_x = w / 2;
+			canvas_y = h / 2;
+		}
+		run_in(1, function() { initSize() });
 	
-	canvas_x = 0;
-	canvas_y = 0;
-	canvas_s = ui(1);
-	canvas_w = ui(128);
-	canvas_h = ui(128);
-	canvas_a = 0;
+		canvas_x = 0;
+		canvas_y = 0;
+		canvas_s = ui(1);
+		canvas_w = ui(128);
+		canvas_h = ui(128);
+		canvas_a = 0;
 	
-	canvas_bg = -1;
+		canvas_bg = -1;
 	
-	do_fullView = false;
+		do_fullView = false;
 	
-	canvas_hover = true;
-	canvas_dragging_key = false;
-	canvas_dragging = false;
-	canvas_drag_key = 0;
-	canvas_drag_mx  = 0;
-	canvas_drag_my  = 0;
-	canvas_drag_sx  = 0;
-	canvas_drag_sy  = 0;
+		canvas_hover = true;
+		canvas_dragging_key = false;
+		canvas_dragging = false;
+		canvas_drag_key = 0;
+		canvas_drag_mx  = 0;
+		canvas_drag_my  = 0;
+		canvas_drag_sx  = 0;
+		canvas_drag_sy  = 0;
 	
-	canvas_zooming_key = false;
-	canvas_zooming  = false;
-	canvas_zoom_mx  = 0;
-	canvas_zoom_my  = 0;
-	canvas_zoom_m   = 0;
-	canvas_zoom_s   = 0;
+		canvas_zooming_key = false;
+		canvas_zooming  = false;
+		canvas_zoom_mx  = 0;
+		canvas_zoom_my  = 0;
+		canvas_zoom_m   = 0;
+		canvas_zoom_s   = 0;
+		
+		sample_color = noone;
+		sample_x = noone;
+		sample_y = noone;
 	
-	sample_color = noone;
-	sample_x = noone;
-	sample_y = noone;
+	#endregion
 	
-	preview_node	= [ noone, noone ];
-	preview_surface = [ 0, 0 ];
-	tile_surface    = surface_create(1, 1);
+	#region ---- preview ----
+		preview_node	= [ noone, noone ];
+		preview_surface = [ 0, 0 ];
+		tile_surface    = surface_create(1, 1);
 	
-	preview_x		= 0;
-	preview_x_to	= 0;
-	preview_x_max	= 0;
-	preview_sequence  = [ 0, 0 ];
-	_preview_sequence = preview_sequence;
-	preview_rate      = 10;
+		preview_x		= 0;
+		preview_x_to	= 0;
+		preview_x_max	= 0;
+		preview_sequence  = [ 0, 0 ];
+		_preview_sequence = preview_sequence;
+		preview_rate      = 10;
+		
+		right_menu_y     = 8;
+		mouse_on_preview = false;
+		
+		resetViewOnDoubleClick = true;
 	
-	tool_x       = 0;
-	tool_x_to    = 0;
-	tool_x_max   = 0;
-	tool_current = noone;
+		splitView		= 0;
+		splitPosition	= 0.5;
+		splitSelection	= 0;
 	
-	right_menu_y     = 8;
-	mouse_on_preview = false;
+		splitViewDragging = false;
+		splitViewStart  = 0;
+		splitViewMouse  = 0;
 	
-	resetViewOnDoubleClick = true;
+		tileMode = 0;
+	#endregion
 	
-	splitView = 0;
-	splitPosition = 0.5;
-	splitSelection = 0;
+	#region ---- tool ----
+		tool_x       = 0;
+		tool_x_to    = 0;
+		tool_x_max   = 0;
+		tool_current = noone;
+	#endregion
 	
-	splitViewDragging = false;
-	splitViewStart = 0;
-	splitViewMouse = 0;
+	#region ---- 3d ----
+		d3_active  = false;
+		d3_surface = noone;
+		d3_outline_surface = noone;
+		
+		d3_camW = 1;
+		d3_camH = 1;
+		
+		d3_camLerp = false;
+		d3_camPos = new __vec3();
+		d3_camTar = new __vec3();
 	
-	tileMode = 0;
+		d3_camAx = 135;
+		d3_camAy = 45;
+		d3_camDist = 16;
+	
+		d3_camTarget = new __vec3();
+		
+		d3_camPanning = false;
+		d3_camPan_mx  = 0;
+		d3_camPan_my  = 0;
+		
+		d3_zoom_speed = 0.2;
+		d3_pan_speed  = 2;
+	
+		d3_camera = new __3dCamera();
+		d3_preview_params = new __3dObjectParameters(d3_camPos, d3_camTar);
+		
+		d3_light_ambient = $303030;
+	#endregion
 	
 	tb_framerate = new textBox(TEXTBOX_INPUT.number, function(val) { preview_rate = real(val); });
 	
@@ -589,6 +627,143 @@ function Panel_Preview() : PanelContent() constructor {
 		}
 	} #endregion
 	
+	function draw3D() { #region
+		var _prev_node = getNodePreview();
+		_prev_node.previewing = 1;
+		
+		#region draw
+			d3_surface = surface_verify(d3_surface, w, h);
+			d3_outline_surface = surface_verify(d3_outline_surface, w, h);
+			
+			d3_camW = w;
+			d3_camH = h;
+		
+			var cam = camera_get_active();
+			var _pos, targ;
+	
+			if(keyboard_check(vk_tab)) {
+				_pos = d3_camera.position;
+				var _camDir = d3_camera.rotation.toDirection();
+				_camDir._multiply(_pos.z / _camDir.z);
+				targ = _pos.subtract(_camDir);
+				d3_camLerp = true;
+			} else {
+				_pos = calculate_3d_position(d3_camTarget.x, d3_camTarget.y, d3_camTarget.z, d3_camAx, d3_camAy, d3_camDist);
+				targ = d3_camTarget;
+			}
+			
+			if(d3_camLerp) {
+				d3_camPos._lerp(_pos, 0.2);
+				d3_camTar._lerp(targ, 0.2);
+				
+				if(d3_camPos.equal(_pos) && d3_camTar.equal(targ))
+					d3_camLerp = false;
+			} else {
+				d3_camPos.set(_pos);
+				d3_camTar.set(targ);
+			}
+			
+			d3_preview_params.cameraPosition = d3_camPos;
+			d3_preview_params.cameraFocus    = d3_camTar;
+			d3_preview_params.camera_Ax   = d3_camAx;
+			d3_preview_params.camera_Ay   = d3_camAy;
+			d3_preview_params.camera_Dist = d3_camDist;
+			
+			d3_preview_params.camera_w = d3_camW;
+			d3_preview_params.camera_h = d3_camH;
+			
+			d3_preview_params.camera_projMat.setRaw(matrix_build_projection_perspective_fov(60, w / h, 1, 32000));
+			d3_preview_params.camera_viewMat.setRaw(matrix_build_lookat(d3_camPos.x, d3_camPos.y, d3_camPos.z, d3_camTar.x, d3_camTar.y, d3_camTar.z, 0, 0, -1));
+			
+			surface_set_target(d3_surface);
+			draw_clear(COLORS.panel_3d_bg);
+			
+			camera_set_proj_mat(cam, d3_preview_params.camera_projMat.raw);
+			camera_set_view_mat(cam, d3_preview_params.camera_viewMat.raw);
+			
+			camera_apply(cam);
+			
+			gpu_set_ztestenable(true);
+			gpu_set_zwriteenable(false);
+			shader_set(sh_d3d_grid_view);
+				var _dist = round(d3_camTar.distance(d3_camPos));
+				var _tx   = round(d3_camTar.x);
+				var _ty   = round(d3_camTar.y);
+				
+				var _scale = _dist;
+				while(_scale > 32) _scale /= 2;
+				
+				shader_set_f("scale", _scale);
+				shader_set_f("shift", _tx / _dist / 2, _ty / _dist / 2);
+				draw_sprite_stretched(s_fx_pixel, 0, _tx - _dist, _ty - _dist, _dist * 2, _dist * 2);
+			shader_reset();
+			gpu_set_zwriteenable(true);
+			
+			shader_set(sh_d3d_default);
+				shader_set_f("light_ambient", colToVec4(d3_light_ambient));
+				
+				//shader_set_f("light_dir_direction", 0, 0, 0);
+				//shader_set_f("light_dir_color", 0);
+				//shader_set_f("light_dir_intensity", 0);
+			shader_reset();
+			
+			_prev_node.submitUI(d3_preview_params);
+			
+			surface_reset_target();
+			draw_surface(d3_surface, 0, 0);
+			
+			#region outline
+				var inspect_node = PANEL_INSPECTOR.inspecting;
+				if(inspect_node) {
+					surface_set_target(d3_outline_surface);
+					draw_clear(c_black);
+					
+					camera_set_proj_mat(cam, d3_preview_params.camera_projMat.raw);
+					camera_set_view_mat(cam, d3_preview_params.camera_viewMat.raw);
+					camera_apply(cam);
+					
+					gpu_set_ztestenable(false);
+						inspect_node.submitSel(d3_preview_params);
+					surface_reset_target();
+					
+					shader_set(sh_d3d_outline);
+						shader_set_dim("dimension", d3_outline_surface);
+						shader_set_color("outlineColor", COLORS._main_accent);
+						draw_surface(d3_outline_surface, 0, 0);
+					shader_reset();
+				}
+			#endregion
+		#endregion
+
+		#region camera
+			if(pHOVER) {
+				if(mouse_wheel_up())   d3_camDist = max(   1, d3_camDist * (1 - d3_zoom_speed));
+				if(mouse_wheel_down()) d3_camDist = min(1000, d3_camDist * (1 + d3_zoom_speed));
+			}
+			
+			if(d3_camPanning) {
+				if(!MOUSE_WRAPPING) {
+					var dx = mx - d3_camPan_mx;
+					var dy = my - d3_camPan_my;
+				
+					d3_camAx += dx * 0.2 * d3_pan_speed;
+					d3_camAy += dy * 0.1 * d3_pan_speed;
+				}
+			
+				d3_camPan_mx = mx;
+				d3_camPan_my = my;
+				setMouseWrap();
+				
+				if(mouse_release(mb_middle))
+					d3_camPanning = false;
+			} else if(mouse_press(mb_middle, pFOCUS)) {
+				d3_camPanning = true;
+				d3_camPan_mx  = mx;
+				d3_camPan_my  = my;
+			}
+		#endregion
+	} #endregion
+	
 	function drawPreviewOverlay() { #region
 		right_menu_y = toolbar_height - ui(4);
 		toolbar_draw = false;
@@ -738,13 +913,15 @@ function Panel_Preview() : PanelContent() constructor {
 			overlayHover &= point_in_rectangle(mx, my, 0, toolbar_height, w, h - toolbar_height);
 			overlayHover &= !key_mod_press(CTRL);
 		
-		_node.drawOverlay(overlayHover, cx, cy, canvas_s, _mx, _my, _snx, _sny, { w: w, h: h });
+		if(d3_active)	_node.drawOverlay3D(overlayHover, d3_preview_params, _mx, _my, _snx, _sny, { w, h });
+		else			_node.drawOverlay(overlayHover, cx, cy, canvas_s, _mx, _my, _snx, _sny, { w, h });
 		
 		var _tool = tool_hovering;
 		tool_hovering = noone;
 		
 		if(_node.tools != -1) {
-			draw_sprite_stretched(THEME.tool_side, 1, 0, 0, tool_width, h);
+			var aa = d3_active? 0.5 : 1;
+			draw_sprite_stretched_ext(THEME.tool_side, 1, 0, ui(32), tool_width, h - toolbar_height - ui(32), c_white, aa);
 			
 			var xx = ui(1)  + tool_width / 2;
 			var yy = ui(34) + tool_size / 2;
@@ -828,9 +1005,10 @@ function Panel_Preview() : PanelContent() constructor {
 		//draw_sprite_stretched_ext(THEME.toolbar_shadow, 0, 0, ty - 12 + 4, w, 12, c_white, 0.5);
 		
 		var scHeight = ui(32);
+		var aa = d3_active? 0.5 : 1;
 		
-		draw_sprite_stretched(THEME.toolbar, 1, 0, 0, w, scHeight);
-		draw_sprite_stretched(THEME.toolbar, 0, 0, ty, w, h);
+		draw_sprite_stretched_ext(THEME.toolbar, 1, 0, 0, w, scHeight, c_white, aa);
+		draw_sprite_stretched_ext(THEME.toolbar, 0, 0, ty, w, toolbar_height, c_white, aa);
 		
 		if(!_node) return;
 		
@@ -1005,6 +1183,8 @@ function Panel_Preview() : PanelContent() constructor {
 	
 	function drawContent(panel) { #region					>>>>>>>>>>>>>>>>>>>> MAIN DRAW <<<<<<<<<<<<<<<<<<<<
 		mouse_on_preview = pHOVER && point_in_rectangle(mx, my, 0, toolbar_height, w, h - toolbar_height);
+		var _prev_node   = getNodePreview();
+		d3_active = _prev_node != noone && _prev_node.is_3D;
 		
 		draw_clear(COLORS.panel_bg_clear);
 		if(canvas_bg == -1 && canvas_s >= 0.1) 
@@ -1012,15 +1192,21 @@ function Panel_Preview() : PanelContent() constructor {
 		else
 			draw_clear(canvas_bg);
 		
-		draw_set_color(COLORS._main_icon_dark);
-		draw_line_width(canvas_x, 0, canvas_x, h, 1);
-		draw_line_width(0, canvas_y, w, canvas_y, 1);
+		if(d3_active) {
+			draw3D();
+		} else {
 		
-		title = __txt("Preview");
+			draw_set_color(COLORS._main_icon_dark);
+			draw_line_width(canvas_x, 0, canvas_x, h, 1);
+			draw_line_width(0, canvas_y, w, canvas_y, 1);
 		
-		dragCanvas();
-		getPreviewData();
-		drawNodePreview();
+			title = __txt("Preview");
+		
+			dragCanvas();
+			getPreviewData();
+			drawNodePreview();
+		}
+		
 		drawPreviewOverlay();
 		
 		var inspect_node = PANEL_INSPECTOR.inspecting;
@@ -1051,7 +1237,7 @@ function Panel_Preview() : PanelContent() constructor {
 			],, getNodePreview());
 		}
 		
-		drawSplitView();
+		if(!d3_active) drawSplitView();
 		drawToolBar(tool);
 	} #endregion
 	

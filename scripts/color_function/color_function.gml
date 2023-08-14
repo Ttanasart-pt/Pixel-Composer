@@ -36,6 +36,21 @@ function colorMultiply(c1, c2) {
 	return make_color_rgb((r1 * r2) / 255, (g1 * g2) / 255, (b1 * b2) / 255);
 }
 
+function colorAdd(c1, c2) {
+	if(c1 == 0) return c2;
+	if(c2 == 0) return c1;
+	
+	var r1 = color_get_red(c1);
+	var g1 = color_get_green(c1);
+	var b1 = color_get_blue(c1);
+	
+	var r2 = color_get_red(c2);
+	var g2 = color_get_green(c2);
+	var b2 = color_get_blue(c2);
+	
+	return make_color_rgb(min(r1 + r2, 255), min(g1 + g2, 255), min(b1 + b2, 255));
+}
+
 function color_diff(c1, c2, fast = false, alpha = false) {
 	var _c1_r = color_get_red(c1);
 	var _c1_g = color_get_green(c1);

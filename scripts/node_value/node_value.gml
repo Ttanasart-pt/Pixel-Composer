@@ -36,6 +36,11 @@ enum VALUE_TYPE {
 	
 	pbBox     = 25,
 	
+	d3Mesh	  = 26,
+	d3Light	  = 27,
+	d3Camera  = 28,
+	d3Scene	  = 29,
+	
 	action	  = 99,
 }
 
@@ -155,6 +160,11 @@ function value_bit(i) {
 		case VALUE_TYPE.trigger		: return 1 << 22;
 		case VALUE_TYPE.action		: return 1 << 22 | 1 << 3;
 		
+		case VALUE_TYPE.d3Mesh		: return 1 << 29;
+		case VALUE_TYPE.d3Light		: return 1 << 29;
+		case VALUE_TYPE.d3Camera	: return 1 << 29;
+		case VALUE_TYPE.d3Scene		: return 1 << 29 | 1 << 30;
+	
 		case VALUE_TYPE.any			: return ~0 & ~(1 << 32);
 	}
 	return 0;
