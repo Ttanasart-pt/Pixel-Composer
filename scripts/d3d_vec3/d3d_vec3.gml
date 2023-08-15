@@ -3,11 +3,6 @@
 #macro __vec3_up      new __vec3(0.0, 0.0, 1.0)
 
 function __vec3(_x = 0, _y = 0, _z = 0) constructor {
-	x = _x;
-	y = _y;
-	z = _z;
-
-	// Static methods
 	static set = function(_x = 0, _y = _x, _z = _x) {
 		if(is_struct(_x) && is_instanceof(_x, __vec3)) {
 			x = _x.x;
@@ -16,11 +11,18 @@ function __vec3(_x = 0, _y = 0, _z = 0) constructor {
 			return;
 		}
 		
+		if(is_array(_x)) {
+			x = _x[0];
+			y = _x[1];
+			z = _x[2];
+			return;
+		}
+		
 		x = _x;
 		y = _y;
 		z = _z;
 		return self;
-	}
+	} set(_x, _y, _z);
 
 	static setIndex = function(index, value) {
 		gml_pragma("forceinline");
@@ -116,6 +118,11 @@ function __vec3(_x = 0, _y = 0, _z = 0) constructor {
 		return sqrt(x * x + y * y + z * z);
 	}
 
+	static normalize = function() {
+		gml_pragma("forceinline");
+		return clone()._normalize();
+	}
+	
 	static _normalize = function() {
 		gml_pragma("forceinline");
 		var _length = length();

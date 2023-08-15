@@ -35,6 +35,8 @@ function Node_3DObject(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constru
 		drag_c2x = 0;
 		drag_c2y = 0;
 		
+		drag_original = 0;
+		
 		axis_hover = noone;
 		
 		tools = [
@@ -49,11 +51,12 @@ function Node_3DObject(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constru
 		var _rot = inputs[| 1].getValue(,,, true);
 		var _sca = inputs[| 2].getValue(,,, true);
 		
-		var _camPos = params.cameraPosition;
-		var _camTar = params.cameraFocus;
-		var _camDis = params.camera_Dist;
-		var _camAx = params.camera_Ax;
-		var _camAy = params.camera_Ay;
+		var _camera = params.camera;
+		var _camPos = _camera.position;
+		var _camTar = _camera.focus;
+		var _camDis = _camera.focus_dist;
+		var _camAx  = _camera.focus_angle_x;
+		var _camAy  = _camera.focus_angle_y;
 		
 		var _qrot  = new BBMOD_Quaternion().FromEuler(_rot[0], -_rot[1], -_rot[2]);
 		var _qview = new BBMOD_Quaternion().FromEuler(_camAy, -_camAx, 0);
@@ -65,7 +68,7 @@ function Node_3DObject(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constru
 		var sq = 8;
 		
 		var _vpos    = new __vec3( _pos[0], _pos[1], _pos[2] );
-		var _posView = params.applyCamera(_vpos);
+		var _posView = _camera.worldPointToViewPoint(_vpos);
 		
 		var cx = _posView.x;
 		var cy = _posView.y;
@@ -92,6 +95,26 @@ function Node_3DObject(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constru
 					  new BBMOD_Vec3(-hs - sq, -hs + sq,        0), 
 					  new BBMOD_Vec3(-hs + sq, -hs + sq,        0), ];
 			
+			for( var i = 0; i < 3; i++ ) {
+				ga[i] = _qview.Rotate(_qrot.Rotate(ga[i]));
+			
+				th = 2 + (axis_hover == i || drag_axis == i);
+				if(drag_axis != noone && drag_axis != i)
+					continue;
+				
+				draw_set_color(COLORS.axis[i]);
+				if(point_distance(cx, cy, cx + ga[i].X, cy + ga[i].Y) < 5)
+					draw_line_round(cx, cy, cx + ga[i].X, cy + ga[i].Y, th);
+				else 
+					draw_line_round_arrow(cx, cy, cx + ga[i].X, cy + ga[i].Y, th, 2);
+				
+				var _d = distance_to_line(_mx, _my, cx, cy, cx + ga[i].X, cy + ga[i].Y);
+				if(_d < _hoverDist) {
+					_hover = i;
+					_hoverDist = _d;
+				}
+			}
+			
 			for( var i = 3; i < 6; i++ ) {
 				for( var j = 0; j < 4; j++ )
 					ga[i][j] = _qview.Rotate(_qrot.Rotate(ga[i][j]));
@@ -102,6 +125,14 @@ function Node_3DObject(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constru
 				var p1x = cx + ga[i][1].X, p1y = cy + ga[i][1].Y;
 				var p2x = cx + ga[i][2].X, p2y = cy + ga[i][2].Y;
 				var p3x = cx + ga[i][3].X, p3y = cy + ga[i][3].Y;
+				
+				var _pax = (p0x + p1x + p2x + p3x) / 4;
+				var _pay = (p0y + p1y + p2y + p3y) / 4;
+				
+				if((abs(p0x - _pax) + abs(p1x - _pax) + abs(p2x - _pax) + abs(p3x - _pax)) / 4 < 1)
+					continue;
+				if((abs(p0y - _pay) + abs(p1y - _pay) + abs(p2y - _pay) + abs(p3y - _pay)) / 4 < 1)
+					continue;
 				
 				draw_set_color(COLORS.axis[(i - 3 - 1 + 3) % 3]);
 				if(axis_hover == i || drag_axis == i) {
@@ -123,27 +154,8 @@ function Node_3DObject(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constru
 					_hover = i;
 			}
 			
-			for( var i = 0; i < 3; i++ ) {
-				ga[i] = _qview.Rotate(_qrot.Rotate(ga[i]));
-			
-				th = 2 + (axis_hover == i || drag_axis == i);
-				if(drag_axis != noone && drag_axis != i)
-					continue;
-				
-				draw_set_color(COLORS.axis[i]);
-				if(point_distance(cx, cy, cx + ga[i].X, cy + ga[i].Y) < 5)
-					draw_line_round(cx, cy, cx + ga[i].X, cy + ga[i].Y, th);
-				else 
-					draw_line_round_arrow(cx, cy, cx + ga[i].X, cy + ga[i].Y, th, 2);
-				
-				var _d = distance_to_line(_mx, _my, cx, cy, cx + ga[i].X, cy + ga[i].Y);
-				if(_d < _hoverDist) {
-					_hover = i;
-					_hoverDist = _d;
-				}
-			}
-			
 			axis_hover = _hover;
+			print(_camera.viewPointToWorldRay(_mx, _my))
 			
 			if(drag_axis != noone) {
 				if(!MOUSE_WRAPPING) {
@@ -160,21 +172,29 @@ function Node_3DObject(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constru
 						mAdj = dot_product(_mmx, _mmy, _max, _may);
 						
 						if(drag_prev != undefined) {
-							_pos[drag_axis] += (mAdj - drag_prev) * params.camera_Dist / 20000;
+							_pos[drag_axis] += (mAdj - drag_prev) * _camDis / 20000;
 							
 							if(inputs[| 0].setValue(_pos)) 
 								UNDO_HOLDING = true;
 						}
 					} else {
-						var _max1 = drag_c1x, _may1 = drag_c1y;
-						var _max2 = drag_c2x, _may2 = drag_c2y;
+						var ray = _camera.viewPointToWorldRay(_mx, _my);
+						var nor;
 						
-						mAdj = [ dot_product(_mmx, _mmy, _max1, _may1),
-								 dot_product(_mmx, _mmy, _max2, _may2) ];
+						switch(drag_axis) {
+							case 3 : nor = new __vec3(0, 0, 1); break;
+							case 4 : nor = new __vec3(1, 0, 0); break;
+							case 5 : nor = new __vec3(0, 1, 0); break;
+						}
+						
+						var pln = new __plane(drag_original, nor);
+						mAdj = d3d_intersect_ray_plane(ray, pln);
 						
 						if(drag_prev != undefined) {
-							_pos[(drag_axis - 3)]         += (mAdj[0] - drag_prev[0]) * params.camera_Dist / 20000;
-							_pos[(drag_axis - 3 + 1) % 3] += (mAdj[1] - drag_prev[1]) * params.camera_Dist / 20000;
+							var _diff = mAdj.subtract(drag_prev);
+							_pos[0] += _diff.x;
+							_pos[1] += _diff.y;
+							_pos[2] += _diff.z;
 							
 							if(inputs[| 0].setValue(_pos)) 
 								UNDO_HOLDING = true;
@@ -188,6 +208,25 @@ function Node_3DObject(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constru
 				drag_px = _mx;
 				drag_py = _my;
 			}
+			
+			if(_hover != noone && mouse_press(mb_left, active)) {
+				drag_axis = _hover;
+				drag_prev = undefined;
+				drag_mx	= _mx;
+				drag_my	= _my;
+				drag_px = _mx;
+				drag_py = _my;
+			
+				drag_c0x = cx;
+				drag_c0y = cy;
+				
+				drag_original = new __vec3(_pos);
+				
+				if(drag_axis < 3) {
+					drag_c1x = ga[drag_axis].X;
+					drag_c1y = ga[drag_axis].Y;
+				}
+			}
 		#endregion 
 		} else if(isUsingTool(1)) { #region rotate
 			
@@ -200,28 +239,6 @@ function Node_3DObject(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constru
 		if(drag_axis != noone && mouse_release(mb_left)) {
 			drag_axis = noone;
 			UNDO_HOLDING = false;
-		}
-		
-		if(_hover != noone && mouse_press(mb_left, active)) {
-			drag_axis = _hover;
-			drag_prev = undefined;
-			drag_mx	= _mx;
-			drag_my	= _my;
-			drag_px = _mx;
-			drag_py = _my;
-			
-			drag_c0x = cx;
-			drag_c0y = cy;
-				
-			if(drag_axis < 3) {
-				drag_c1x = ga[drag_axis].X;
-				drag_c1y = ga[drag_axis].Y;
-			} else {
-				drag_c1x = ga[(drag_axis - 3)].X;
-				drag_c1y = ga[(drag_axis - 3)].Y;
-				drag_c2x = ga[(drag_axis - 3 + 1) % 3].X;
-				drag_c2y = ga[(drag_axis - 3 + 1) % 3].Y;
-			}
 		}
 	} #endregion
 	

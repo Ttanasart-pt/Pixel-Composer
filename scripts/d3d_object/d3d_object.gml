@@ -109,30 +109,6 @@ function __3dObject() constructor {
 	}
 }
 
-function __3dObjectParameters(camPos, camFoc) constructor {
-	self.cameraPosition = camPos;
-	self.cameraFocus    = camFoc;
-	
-	camera_Ax = 0;
-	camera_Ay = 0;
-	camera_Dist = 0;
-	
-	camera_w = 1;
-	camera_h = 1;
-	
-	camera_viewMat = new __mat4();
-	camera_projMat = new __mat4();
-	
-	static applyCamera = function(vec3) {
-		var _cam  = vec3;
-		var _vec4 = new __vec4().set(_cam, 1);
-		
-		var _view = camera_viewMat.transpose().multiplyVector(_vec4);
-		var _proj = camera_projMat.transpose().multiplyVector(_view);
-		_proj._divide(_proj.w);
-		_proj.x = camera_w / 2 + _proj.x * camera_w / 2;
-		_proj.y = camera_h / 2 + _proj.y * camera_h / 2;
-		
-		return _proj;
-	}
+function __3dObjectParameters(camera) constructor {
+	self.camera = camera;
 }

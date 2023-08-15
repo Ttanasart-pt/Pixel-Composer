@@ -85,16 +85,12 @@ function Panel_Preview() : PanelContent() constructor {
 		d3_surface = noone;
 		d3_outline_surface = noone;
 		
+		d3_view_camera = new __3dCamera();
 		d3_camW = 1;
 		d3_camH = 1;
 		
+		d3_view_camera.setFocusAngle(135, 45, 16);
 		d3_camLerp = false;
-		d3_camPos = new __vec3();
-		d3_camTar = new __vec3();
-	
-		d3_camAx = 135;
-		d3_camAy = 45;
-		d3_camDist = 16;
 	
 		d3_camTarget = new __vec3();
 		
@@ -104,11 +100,9 @@ function Panel_Preview() : PanelContent() constructor {
 		
 		d3_zoom_speed = 0.2;
 		d3_pan_speed  = 2;
-	
-		d3_camera = new __3dCamera();
-		d3_preview_params = new __3dObjectParameters(d3_camPos, d3_camTar);
 		
-		d3_light_ambient = $303030;
+		d3_preview_params = new __3dObjectParameters(d3_view_camera);
+		d3_light_ambient  = $303030;
 	#endregion
 	
 	tb_framerate = new textBox(TEXTBOX_INPUT.number, function(val) { preview_rate = real(val); });
@@ -632,63 +626,40 @@ function Panel_Preview() : PanelContent() constructor {
 		_prev_node.previewing = 1;
 		
 		#region draw
+			d3_view_camera.setViewSize(w, h);
 			d3_surface = surface_verify(d3_surface, w, h);
 			d3_outline_surface = surface_verify(d3_outline_surface, w, h);
 			
-			d3_camW = w;
-			d3_camH = h;
-		
 			var cam = camera_get_active();
 			var _pos, targ;
 	
-			if(keyboard_check(vk_tab)) {
-				_pos = d3_camera.position;
-				var _camDir = d3_camera.rotation.toDirection();
-				_camDir._multiply(_pos.z / _camDir.z);
-				targ = _pos.subtract(_camDir);
-				d3_camLerp = true;
-			} else {
-				_pos = calculate_3d_position(d3_camTarget.x, d3_camTarget.y, d3_camTarget.z, d3_camAx, d3_camAy, d3_camDist);
-				targ = d3_camTarget;
-			}
+			targ = d3_camTarget;
+			_pos = calculate_3d_position(targ.x, targ.y, targ.z, d3_view_camera.focus_angle_x, d3_view_camera.focus_angle_y, d3_view_camera.focus_dist);
 			
 			if(d3_camLerp) {
-				d3_camPos._lerp(_pos, 0.2);
-				d3_camTar._lerp(targ, 0.2);
+				d3_view_camera.position._lerp(_pos, 0.2);
+				d3_view_camera.focus._lerp(targ, 0.2);
 				
-				if(d3_camPos.equal(_pos) && d3_camTar.equal(targ))
+				if(d3_view_camera.position.equal(_pos) && d3_view_camera.focus.equal(targ))
 					d3_camLerp = false;
 			} else {
-				d3_camPos.set(_pos);
-				d3_camTar.set(targ);
+				d3_view_camera.position.set(_pos);
+				d3_view_camera.focus.set(targ);
 			}
 			
-			d3_preview_params.cameraPosition = d3_camPos;
-			d3_preview_params.cameraFocus    = d3_camTar;
-			d3_preview_params.camera_Ax   = d3_camAx;
-			d3_preview_params.camera_Ay   = d3_camAy;
-			d3_preview_params.camera_Dist = d3_camDist;
-			
-			d3_preview_params.camera_w = d3_camW;
-			d3_preview_params.camera_h = d3_camH;
-			
-			d3_preview_params.camera_projMat.setRaw(matrix_build_projection_perspective_fov(60, w / h, 1, 32000));
-			d3_preview_params.camera_viewMat.setRaw(matrix_build_lookat(d3_camPos.x, d3_camPos.y, d3_camPos.z, d3_camTar.x, d3_camTar.y, d3_camTar.z, 0, 0, -1));
+			d3_view_camera.setMatrix();
 			
 			surface_set_target(d3_surface);
 			draw_clear(COLORS.panel_3d_bg);
 			
-			camera_set_proj_mat(cam, d3_preview_params.camera_projMat.raw);
-			camera_set_view_mat(cam, d3_preview_params.camera_viewMat.raw);
-			
-			camera_apply(cam);
+			d3_view_camera.applyCamera(cam);
 			
 			gpu_set_ztestenable(true);
 			gpu_set_zwriteenable(false);
 			shader_set(sh_d3d_grid_view);
-				var _dist = round(d3_camTar.distance(d3_camPos));
-				var _tx   = round(d3_camTar.x);
-				var _ty   = round(d3_camTar.y);
+				var _dist = round(d3_view_camera.focus.distance(d3_view_camera.position));
+				var _tx   = round(d3_view_camera.focus.x);
+				var _ty   = round(d3_view_camera.focus.y);
 				
 				var _scale = _dist;
 				while(_scale > 32) _scale /= 2;
@@ -718,9 +689,7 @@ function Panel_Preview() : PanelContent() constructor {
 					surface_set_target(d3_outline_surface);
 					draw_clear(c_black);
 					
-					camera_set_proj_mat(cam, d3_preview_params.camera_projMat.raw);
-					camera_set_view_mat(cam, d3_preview_params.camera_viewMat.raw);
-					camera_apply(cam);
+					d3_view_camera.applyCamera(cam);
 					
 					gpu_set_ztestenable(false);
 						inspect_node.submitSel(d3_preview_params);
@@ -737,8 +706,8 @@ function Panel_Preview() : PanelContent() constructor {
 
 		#region camera
 			if(pHOVER) {
-				if(mouse_wheel_up())   d3_camDist = max(   1, d3_camDist * (1 - d3_zoom_speed));
-				if(mouse_wheel_down()) d3_camDist = min(1000, d3_camDist * (1 + d3_zoom_speed));
+				if(mouse_wheel_up())   d3_view_camera.focus_dist = max(   1, d3_view_camera.focus_dist * (1 - d3_zoom_speed));
+				if(mouse_wheel_down()) d3_view_camera.focus_dist = min(1000, d3_view_camera.focus_dist * (1 + d3_zoom_speed));
 			}
 			
 			if(d3_camPanning) {
@@ -746,8 +715,8 @@ function Panel_Preview() : PanelContent() constructor {
 					var dx = mx - d3_camPan_mx;
 					var dy = my - d3_camPan_my;
 				
-					d3_camAx += dx * 0.2 * d3_pan_speed;
-					d3_camAy += dy * 0.1 * d3_pan_speed;
+					d3_view_camera.focus_angle_x += dx * 0.2 * d3_pan_speed;
+					d3_view_camera.focus_angle_y += dy * 0.1 * d3_pan_speed;
 				}
 			
 				d3_camPan_mx = mx;

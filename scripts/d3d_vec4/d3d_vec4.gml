@@ -1,10 +1,4 @@
 function __vec4(_x = 0, _y = 0, _z = 0, _w = 0) constructor {
-    x = _x;
-    y = _y;
-    z = _z;
-    w = _w;
-
-    // Static methods
     static set = function(_x = 0, _y = _x, _z = _x, _w = _x) {
         if (is_struct(_x)) {
 			if(is_instanceof(_x, __vec4)) {
@@ -21,13 +15,20 @@ function __vec4(_x = 0, _y = 0, _z = 0, _w = 0) constructor {
             return self;
         }
 
+		if(is_array(_x)) {
+			x = _x[0];
+			y = _x[1];
+			z = _x[2];
+			return;
+		}
+		
         x = _x;
         y = _y;
         z = _z;
         w = _w;
 		
-		return self;
-    }
+		return  self;
+    } set(_x, _y, _z, _w);
 	
 	static setIndex = function(index, value) {
 		gml_pragma("forceinline");

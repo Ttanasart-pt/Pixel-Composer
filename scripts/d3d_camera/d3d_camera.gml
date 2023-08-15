@@ -1,49 +1,101 @@
-function __3dCamera() : __3dObject() constructor {
-	ivw = 0.2; //innerViewWidth
-	ivh = 0.2; //innerViewHeight
-	ovw = 0.5; //outerViewWidth
-	ovh = 0.5; //outerViewHeight
-	len = 0.5; //cameraLength
+function __3dCamera() constructor {
+	position = new __vec3();
+	focus    = new __vec3();
+	up       = new __vec3(0, 0, -1);
 	
-	vertex = [
-		[  len, -ivw,  ivh ], [  len,  ivw,  ivh ],
-		[  len,  ivw,  ivh ], [  len,  ivw, -ivh ],
-		[  len,  ivw, -ivh ], [  len, -ivw, -ivh ],
-		[  len, -ivw, -ivh ], [  len, -ivw,  ivh ],
-									 
-		[ -len, -ovw,  ovh ], [ -len,  ovw,  ovh ],
-		[ -len,  ovw,  ovh ], [ -len,  ovw, -ovh ],
-		[ -len,  ovw, -ovh ], [ -len, -ovw, -ovh ],
-		[ -len, -ovw, -ovh ], [ -len, -ovw,  ovh ],
-									 
-		[  len, -ivw,  ivh ], [ -len, -ovw,  ovh ],  
-		[  len,  ivw,  ivh ], [ -len,  ovw,  ovh ],  
-		[  len,  ivw, -ivh ], [ -len,  ovw, -ovh ],  
-		[  len, -ivw, -ivh ], [ -len, -ovw, -ovh ],  
+	focus_angle_x = 0;
+	focus_angle_y = 0;
+	focus_dist    = 1;
+	
+	fov = 60;
+	view_near = 1;
+	view_far  = 32000;
+	
+	view_w = 1;
+	view_h = 1;
+	view_aspect = 1;
+	
+	viewMat = new __mat4();
+	projMat = new __mat4();
+	
+	static getUp = function() {
+		var upVector = new __vec3(0, 0, 0);
+    
+	    var hRad = degtorad(focus_angle_x);
+	    var vRad = degtorad(focus_angle_y);
 		
-		[ -len, -ovw * 0.5, ovh + 0.2 ], [ -len,  ovw * 0.5, ovh + 0.2 ],  
-		[ -len, 0, ovh + 0.6 ],			 [ -len,  ovw * 0.5, ovh + 0.2 ],  
-		[ -len, -ovw * 0.5, ovh + 0.2 ], [ -len,  0, ovh + 0.6 ],  
-	];
+	    upVector.x = -sin(hRad) *  sin(vRad);
+	    upVector.y =  cos(hRad) * -sin(vRad);
+	    upVector.z =  cos(vRad);
+		
+	    return upVector._normalize();
+	}
 	
-	VF = global.VF_POS_COL;
-	render_type = pr_linelist;
-	VB = build();
+	static applyCamera = function(cam) {
+		camera_set_proj_mat(cam, projMat.raw);
+		camera_set_view_mat(cam, viewMat.raw);
+		
+		camera_apply(cam);
+	}
 	
-	position.set(-5, -5, 5);
-	rotation.set(0, 30, 135);
-	scale.set(1, room_width / room_height, 1);
-}
-
-function calculate_3d_position(camFx, camFy, camFz, camAx, camAy, camDist) {
-    var pos = new __vec3();
+	static setMatrix = function() {
+		projMat.setRaw(matrix_build_projection_perspective_fov(fov, view_aspect, view_near, view_far));
+		viewMat.setRaw(matrix_build_lookat(position.x, position.y, position.z, focus.x, focus.y, focus.z, up.x, up.y, up.z));
+		
+		return self;
+	}
+	
+	static setFocusAngle = function(ax, ay, dist) {
+		focus_angle_x = ax;
+		focus_angle_y = ay;
+		focus_dist    = dist;
+		
+		return self;
+	}
+	
+	static setViewFov = function(fov, near = view_near, far = view_far) {
+		self.fov = fov;
+		self.view_near = near;
+		self.view_far  = far;
+		
+		return self;
+	}
+	
+	static setViewSize = function(w, h) {
+		view_w = w;
+		view_h = h;
+		view_aspect = w / h;
+		
+		return self;
+	}
+	
+	static worldPointToViewPoint = function(vec3) {
+		var _vec4 = new __vec4().set(vec3, 1);
+		var _view = viewMat.transpose().multiplyVector(_vec4);
+		var _proj = projMat.transpose().multiplyVector(_view);
+		
+		_proj._divide(_proj.w);
+		_proj.x = view_w / 2 + _proj.x * view_w / 2;
+		_proj.y = view_h / 2 + _proj.y * view_h / 2;
+		
+		return _proj;
+	}
+	
+	static viewPointToWorldRay = function(_x, _y) {
+		var rayOrigin = position;
+		
+	    var normalizedX = (2 * _x / view_w) - 1;
+	    var normalizedY = 1 - (2 * _y / view_h);
+		
+	    var tanFOV  = tan(degtorad(fov) * 0.5);
+		var _up     = getUp();
+		var forward = focus.subtract(position)._normalize();
+		var right   = forward.cross(_up)._normalize();
+		
+	    var rayDirection = forward.add(right.multiply(normalizedX * tanFOV * view_aspect))
+								  .add(_up.multiply(normalizedY * tanFOV))
+								  ._normalize();
     
-    var radAx = degtorad(camAx);
-    var radAy = degtorad(camAy);
-    
-    pos.x = camFx + (cos(radAy) * sin(radAx)) * camDist;
-    pos.y = camFy + (cos(radAy) * cos(radAx)) * camDist;
-	pos.z = camFz + (sin(radAy)) * camDist;
-    
-    return pos;
+	    return new __ray(rayOrigin, rayDirection);
+	}
 }
