@@ -247,7 +247,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	
 	function get_color_buffer(_x, _y) { #region 
 		var pos = (surface_w * _y + _x) * 4;
-		if(pos > buffer_get_size(canvas_buffer)) {
+		if(pos >= buffer_get_size(canvas_buffer)) {
 			print("Error buffer overflow " + string(pos) + "/" + string(buffer_get_size(canvas_buffer)));
 			return 0;
 		}

@@ -11,6 +11,13 @@ function __vec3(_x = 0, _y = 0, _z = 0) constructor {
 			return;
 		}
 		
+		if(is_struct(_x) && is_instanceof(_x, BBMOD_Vec3)) {
+			x = _x.X;
+			y = _x.Y;
+			z = _x.Z;
+			return;
+		}
+		
 		if(is_array(_x)) {
 			x = _x[0];
 			y = _x[1];
@@ -32,6 +39,15 @@ function __vec3(_x = 0, _y = 0, _z = 0) constructor {
 			case 2 : z = value; break;
 		}
 		return self;
+	}
+	
+	static getIndex = function(index) {
+		switch(index) {
+			case 0 : return x;
+			case 1 : return y;
+			case 2 : return z;
+		}
+		return 0;
 	}
 
 	static add = function(_vec3) {
@@ -154,4 +170,6 @@ function __vec3(_x = 0, _y = 0, _z = 0) constructor {
 	static toString = function() { return $"[{x}, {y}, {z}]"; }
 	
 	static toBBMOD = function() { return new BBMOD_Vec3(x, y, z); }
+	
+	static toArray = function() { return [ x, y, z ]; }
 }

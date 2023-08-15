@@ -72,4 +72,6 @@ function __rot3(_x = 0, _y = 0, _z = 0) constructor {
 	}
 	
 	static toString = function() { return $"[{x}, {y}, {z}]"; }
+	
+	static toArray = function() { return [ x, y, z ]; }
 }

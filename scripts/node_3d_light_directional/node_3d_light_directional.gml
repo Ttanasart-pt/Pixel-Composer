@@ -11,6 +11,7 @@ function Node_3D_Light_Directional(_x, _y, _group = noone) : Node_3D_Light(_x, _
 		setTransform();
 		setLight();
 		
-		object.rotation.lookAt(object.position, new __vec3());
+		var _rot = new __rot3().lookAt(object.position, new __vec3());
+		object.rotation.FromEuler(_rot.x, _rot.y, _rot.z);
 	}
 }

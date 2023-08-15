@@ -8,7 +8,7 @@ function __3dLight() : __3dObject() constructor {
 	intensity = 1;
 	
 	static presubmit = function(params = {}) {
-		var _rot = new __rot3(0, 0, 0).lookAt(position, params.cameraPosition);
+		var _rot = new __rot3(0, 0, 0).lookAt(position, params.camera.position);
 		
 		var rot = matrix_build(0, 0, 0, 
 							   _rot.x, _rot.y, _rot.z, 

@@ -151,7 +151,6 @@ function surface_get_pixel_ext(surface, _x, _y) {
 	gml_pragma("forceinline");
 	
 	if(!is_surface(surface)) return;
-	var f  = surface_get_format(surface);
 	var px = surface_getpixel_ext(surface, _x, _y);
 	
 	if(is_real(px)) return px;

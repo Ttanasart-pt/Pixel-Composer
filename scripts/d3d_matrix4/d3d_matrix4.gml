@@ -98,6 +98,20 @@ function __mat4() constructor {
         
         return result;
     };
+    
+    static multiplyBBMODVector = function(vector) {
+        var result = new BBMOD_Vec4();
+        
+        // Perform matrix-vector multiplication
+        for (var i = 0; i < 4; i++) {
+            result.SetIndex(i,  raw[i * 4 + 0] * vector.X +
+				                raw[i * 4 + 1] * vector.Y +
+				                raw[i * 4 + 2] * vector.Z +
+				                raw[i * 4 + 3] * vector.W);
+        }
+        
+        return result;
+    };
 	
 	static clone = function() {
 	    var result = new __mat4();

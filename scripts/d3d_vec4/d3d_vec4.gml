@@ -42,6 +42,16 @@ function __vec4(_x = 0, _y = 0, _z = 0, _w = 0) constructor {
 		return self;
 	}
 
+	static getIndex = function(index) {
+		switch(index) {
+			case 0 : return x;
+			case 1 : return y;
+			case 2 : return z;
+			case 3 : return w;
+		}
+		return 0;
+	}
+	
     static add = function(_vec4) {
         gml_pragma("forceinline");
         return new __vec4(x + _vec4.x, y + _vec4.y, z + _vec4.z, w + _vec4.w);
@@ -153,7 +163,7 @@ function __vec4(_x = 0, _y = 0, _z = 0, _w = 0) constructor {
         return new __vec4(x, y, z, w);
     }
 
-    static toString = function() {
-        return $"[{x}, {y}, {z}, {w}]";
-    }
+    static toString = function() { return $"[{x}, {y}, {z}, {w}]"; }
+	
+	static toArray = function() { return [ x, y, z, w ]; }
 }

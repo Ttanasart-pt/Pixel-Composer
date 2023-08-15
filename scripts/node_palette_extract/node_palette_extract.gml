@@ -28,7 +28,6 @@ function Node_Palette_Extract(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	current_color = 0;
 	
 	attribute_surface_depth();
-	attribute_auto_execute(true);
 	
 	function sortPalette(pal) {
 		array_sort(pal, function(c0, c1) {
@@ -300,17 +299,14 @@ function Node_Palette_Extract(_x, _y, _group = noone) : Node(_x, _y, _group) con
 		}
 		
 		outputs[| 0].setValue(res);
-		
-		triggerRender();
 	}
 	
-	static onInspector1Update = function() { extractPalettes(); }
+	static onInspector1Update = function() { extractPalettes(); triggerRender(); }
 	static onValueUpdate	 = function() { extractPalettes(); }
 	static onValueFromUpdate = function() { extractPalettes(); }
 	
 	function update() {  
-		if(attributes.auto_exe)
-			extractPalettes();
+		extractPalettes();
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {

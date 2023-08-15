@@ -673,9 +673,9 @@ function Panel_Preview() : PanelContent() constructor {
 			shader_set(sh_d3d_default);
 				shader_set_f("light_ambient", colToVec4(d3_light_ambient));
 				
-				//shader_set_f("light_dir_direction", 0, 0, 0);
-				//shader_set_f("light_dir_color", 0);
-				//shader_set_f("light_dir_intensity", 0);
+				shader_set_f("light_dir_direction", 1, 2, 3);
+				shader_set_f("light_dir_color", colToVec4(c_white));
+				shader_set_f("light_dir_intensity", 0.5);
 			shader_reset();
 			
 			_prev_node.submitUI(d3_preview_params);

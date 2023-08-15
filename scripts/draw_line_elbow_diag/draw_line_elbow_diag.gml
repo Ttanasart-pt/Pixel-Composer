@@ -1,4 +1,12 @@
 function draw_line_elbow_diag_color(x0, y0, x1, y1, cx = noone, cy = noone, _s = 1, thick = 1, c1 = c_white, c2 = c_white, corner = 0, indexIn = 1, indexOut = 1, type = LINE_STYLE.solid) {
+	if(y0 == y1) {
+		if(type == LINE_STYLE.solid)
+			draw_line_width_color(x0, y0, x1, y1, thick, c1, c2);
+		else
+			draw_line_dashed_color(x0, y0, x1, y1, thick, c1, c2);
+		return;
+	}
+	
 	var sample = corner / 4;
 	sample = clamp(sample, 1, 8);
 	

@@ -23,7 +23,7 @@ function __3dObject() constructor {
 	custom_shader = noone;
 	
 	position = new __vec3(0, 0, 0);
-	rotation = new __rot3(0, 0, 0);
+	rotation = new BBMOD_Quaternion();
 	scale    = new __vec3(1, 1, 1);
 	
 	static build = function(_buffer = VB, _vertex = vertex, _normal = normals) {
@@ -81,15 +81,13 @@ function __3dObject() constructor {
 		presubmit(params);
 		
 		if(VB != noone) {
-			var rot = matrix_build(0, 0, 0, 
-								   rotation.x, rotation.y, rotation.z, 
-								   1, 1, 1);
-			var sca = matrix_build(0, 0, 0, 
-								   0, 0, 0, 
-								   scale.x,    scale.y,    scale.z);
 			var pos = matrix_build(position.x, position.y, position.z, 
 								   0, 0, 0, 
 								   1, 1, 1);
+			var rot = rotation.ToMatrix();
+			var sca = matrix_build(0, 0, 0, 
+								   0, 0, 0, 
+								   scale.x,    scale.y,    scale.z);
 		
 			matrix_stack_clear();
 			matrix_stack_push(pos);

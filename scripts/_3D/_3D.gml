@@ -410,11 +410,8 @@ enum CAMERA_PROJ {
 					case 2 : _n = new BBMOD_Vec3(0.0, 0.0, 1.0); break;
 				}
 				
-				var camVector = new BBMOD_Vec3(0.0, 0.0, 1.0); 
-				
 				if(drag_prev != undefined) {
 					var _currQ = new BBMOD_Quaternion().FromEuler(_rot[0], _rot[1], _rot[2]);
-					
 					var _currR = new BBMOD_Quaternion().FromAxisAngle(_n, (mAng - drag_prev) * (_currQ.Rotate(_n).Z > 0? -1 : 1));
 					var _mulp  = _currQ.Mul(_currR);
 					var _Nrot  = new BBMOD_Matrix(_mulp.ToMatrix()).ToEuler();

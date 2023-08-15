@@ -35,7 +35,7 @@ void main() {
 			}
 		}
 	} else if(mode == 2) { //maxx
-		for( i = _w; i > bbox.x; i-- )
+		for( i = _w; i >= bbox.x; i-- )
 		for( j = bbox.y; j < _h; j++ ) {
 			col = texture2D( texture, vec2(i, j) / dimension);
 			if(col.r > 0.) {
@@ -44,8 +44,8 @@ void main() {
 			}
 		}
 	} else if(mode == 3) { //maxy
-		for( i = _h; i > bbox.y; i-- )
-		for( j = bbox.x; j < bbox.z; j++ ) {
+		for( i = _h; i >= bbox.y; i-- )
+		for( j = bbox.x; j <= bbox.z; j++ ) {
 			col = texture2D( texture, vec2(j, i) / dimension);
 			if(col.r > 0.) {
 				gl_FragColor = vec4(i);

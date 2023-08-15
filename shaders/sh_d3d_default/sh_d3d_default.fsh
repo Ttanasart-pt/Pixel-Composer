@@ -7,9 +7,9 @@ varying vec3 v_vNormal;
 
 varying vec3 v_worldPosition;
 
-uniform vec4 light_ambient;
-uniform vec3 light_dir_direction;
-uniform vec4 light_dir_color;
+uniform vec4  light_ambient;
+uniform vec3  light_dir_direction;
+uniform vec4  light_dir_color;
 uniform float light_dir_intensity;
 
 void main() {

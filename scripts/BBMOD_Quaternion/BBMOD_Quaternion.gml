@@ -22,6 +22,15 @@ function BBMOD_Quaternion(_x=0.0, _y=0.0, _z=0.0, _w=1.0) constructor
 
 	/// @var {Real} The fourth component of the quaternion.
 	W = _w;
+	
+	static set = function(x, y, z, w) {
+		gml_pragma("forceinline");
+		X = x;
+		Y = y;
+		Z = z;
+		W = w;
+		return self;
+	}
 
 	/// @func Add(_q)
 	///
@@ -254,6 +263,16 @@ function BBMOD_Quaternion(_x=0.0, _y=0.0, _z=0.0, _w=1.0) constructor
 		W = _w;
 		return self;
 	};
+	
+	static FromMatrix = function(rotMatrix) {
+		gml_pragma("forceinline");
+
+		W = sqrt(1 + rotMatrix[0] + rotMatrix[5] + rotMatrix[10]) / 2;
+		X = (rotMatrix[9] - rotMatrix[6]) / (4 * W);
+		Y = (rotMatrix[2] - rotMatrix[8]) / (4 * W);
+		Z = (rotMatrix[4] - rotMatrix[1]) / (4 * W);
+		return self;
+	}
 
 	/// @func GetAngle()
 	///
@@ -555,6 +574,32 @@ function BBMOD_Quaternion(_x=0.0, _y=0.0, _z=0.0, _w=1.0) constructor
 		buffer_write(_buffer, _type, W);
 		return self;
 	};
+	
+	static ToEuler = function() {
+		var ysqr = Y * Y;
+
+	    // roll (x-axis rotation)
+	    var t0 = +2.0 * (W * X + Y * Z);
+	    var t1 = +1.0 - 2.0 * (X * X + ysqr);
+	    var roll = arctan2(t0, t1);
+
+	    // pitch (y-axis rotation)
+	    var t2 = +2.0 * (W * Y - Z * X);
+	    t2 = clamp(t2, -1.0, 1.0);  // Prevent numerical instability
+	    var pitch = arcsin(t2);
+
+	    // yaw (z-axis rotation)
+	    var t3 = +2.0 * (W * Z + X * Y);
+	    var t4 = +1.0 - 2.0 * (ysqr + Z * Z);
+	    var yaw = arctan2(t3, t4);
+
+	    // Convert radians to degrees
+	    var _dx = roll * 180.0 / pi;
+	    var _dy = pitch * 180.0 / pi;
+	    var _dz = yaw * 180.0 / pi;
+
+	    return new __rot3(_dx, _dy, _dz);
+	}
 
 	/// @func ToMatrix([_dest[, _index]])
 	///
@@ -570,12 +615,14 @@ function BBMOD_Quaternion(_x=0.0, _y=0.0, _z=0.0, _w=1.0) constructor
 		gml_pragma("forceinline");
 
 		_dest ??= matrix_build_identity();
-
+		
+		var _norm = Normalize();
+		
 		var _temp0, _temp1, _temp2;
-		var _q0 = X;
-		var _q1 = Y;
-		var _q2 = Z;
-		var _q3 = W;
+		var _q0 = _norm.X;
+		var _q1 = _norm.Y;
+		var _q2 = _norm.Z;
+		var _q3 = _norm.W;
 
 		_temp0 = _q0 * _q0;
 		_temp1 = _q1 * _q1;

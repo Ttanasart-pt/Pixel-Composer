@@ -5,7 +5,7 @@ function Node_Crop_Content(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	inputs[| 1] = nodeValue("Active", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
 	
-	inputs[| 2] = nodeValue("Array", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0, "Cropping mode for dealing with image array.")
+	inputs[| 2] = nodeValue("Array", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1, "Cropping mode for dealing with image array.")
 		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Largest, same size", "Independent" ]);
 	
 	inputs[| 3] = nodeValue("Padding", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 0, 0, 0, 0 ], "Add padding back after crop.")
@@ -26,68 +26,6 @@ function Node_Crop_Content(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	drag_sv   = 0;
 	
 	temp_surface = [ surface_create(1, 1, surface_r32float) ];
-	
-	//static findBoundary = function(surface) {
-	//	if(!is_surface(surface)) return [ 0, 0, 0, 0 ];
-		
-	//	var _w = surface_get_width(surface);
-	//	var _h = surface_get_height(surface);
-		
-	//	var s  = surface_create(_w, _h, surface_r8unorm);
-	//	surface_set_target(s);
-	//		DRAW_CLEAR
-	//		draw_surface_safe(surface, 0, 0);
-	//	surface_reset_target();
-		
-	//	var buff = buffer_create(_w * _h, buffer_fast, 1);
-	//	buffer_get_surface(buff, s, 0);
-		
-	//	var top = 0;
-	//	for( var i = top; i < _h; i++ )
-	//	for( var j = 0; j < _w; j++ ) {
-	//		var col = buffer_read_at(buff, i * _w + j, buffer_u8);
-	//		if(col > 0) {
-	//			top = i;
-	//			i = _h;
-	//			break;
-	//		}
-	//	}
-		
-	//	var bottom = _h;
-	//	for( var i = bottom; i >= top; i-- )
-	//	for( var j = 0; j < _w; j++ ) {
-	//		var col = buffer_read_at(buff, i * _w + j, buffer_u8);
-	//		if(col > 0) {
-	//			bottom = i;
-	//			i = 0;
-	//			break;
-	//		}
-	//	}
-		
-	//	var left = 0;
-	//	for( var j = 0; j < _w; j++ ) 
-	//	for( var i = top; i < bottom; i++ ) {
-	//		var col = buffer_read_at(buff, i * _w + j, buffer_u8);
-	//		if(col > 0) {
-	//			left = j;
-	//			j = _w;
-	//			break;
-	//		}
-	//	}
-		
-	//	var right = 0;
-	//	for( var j = _w; j >= left; j-- ) 
-	//	for( var i = top; i < bottom; i++ ) {
-	//		var col = buffer_read_at(buff, i * _w + j, buffer_u8);
-	//		if(col > 0) {
-	//			right = j;
-	//			j = 0;
-	//			break;
-	//		}
-	//	}
-		
-	//	return [ left, top, right + 1, bottom + 1 ];
-	//}
 	
 	static update = function() {
 		var _inSurf	= inputs[| 0].getValue();
@@ -143,10 +81,10 @@ function Node_Crop_Content(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 				surface_reset_target();
 				
 				switch(i) {
-					case 0 : _minx = round(surface_get_pixel_ext(temp_surface[0], 0, 0) / 255); break;
-					case 1 : _miny = round(surface_get_pixel_ext(temp_surface[0], 0, 0) / 255); break;
-					case 2 : _maxx = round(surface_get_pixel_ext(temp_surface[0], 0, 0) / 255) + 1; break;
-					case 3 : _maxy = round(surface_get_pixel_ext(temp_surface[0], 0, 0) / 255) + 1; break;
+					case 0 : _minx = surface_getpixel(temp_surface[0], 0, 0)[0]; break;
+					case 1 : _miny = surface_getpixel(temp_surface[0], 0, 0)[0]; break;
+					case 2 : _maxx = surface_getpixel(temp_surface[0], 0, 0)[0]; break;
+					case 3 : _maxy = surface_getpixel(temp_surface[0], 0, 0)[0]; break;
 				}
 			}
 			
@@ -174,7 +112,7 @@ function Node_Crop_Content(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			var _surf = _inSurf[i];
 			
 			if(_array == 0) {
-				var resDim  = [maxx - minx, maxy - miny];
+				var resDim  = [maxx - minx + 1, maxy - miny + 1];
 				resDim[DIMENSION.width]  += _padd[PADDING.left] + _padd[PADDING.right];
 				resDim[DIMENSION.height] += _padd[PADDING.top] + _padd[PADDING.bottom];
 				
@@ -187,7 +125,7 @@ function Node_Crop_Content(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 					BLEND_NORMAL
 				surface_reset_target();
 			} else if(_array == 1) {
-				var resDim  = [maxx[i] - minx[i], maxy[i] - miny[i]];
+				var resDim  = [maxx[i] - minx[i] + 1, maxy[i] - miny[i] + 1];
 				resDim[DIMENSION.width]  += _padd[PADDING.left] + _padd[PADDING.right];
 				resDim[DIMENSION.height] += _padd[PADDING.top] + _padd[PADDING.bottom];
 				
