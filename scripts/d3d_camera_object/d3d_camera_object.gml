@@ -6,24 +6,24 @@ function __3dCamera_object() : __3dObject() constructor {
 	len = 0.5; //cameraLength
 	
 	vertex = [
-		[  len, -ivw,  ivh ], [  len,  ivw,  ivh ],
-		[  len,  ivw,  ivh ], [  len,  ivw, -ivh ],
-		[  len,  ivw, -ivh ], [  len, -ivw, -ivh ],
-		[  len, -ivw, -ivh ], [  len, -ivw,  ivh ],
+		[ -len, -ivw,  ivh ], [ -len,  ivw,  ivh ],
+		[ -len,  ivw,  ivh ], [ -len,  ivw, -ivh ],
+		[ -len,  ivw, -ivh ], [ -len, -ivw, -ivh ],
+		[ -len, -ivw, -ivh ], [ -len, -ivw,  ivh ],
 									 
-		[ -len, -ovw,  ovh ], [ -len,  ovw,  ovh ],
-		[ -len,  ovw,  ovh ], [ -len,  ovw, -ovh ],
-		[ -len,  ovw, -ovh ], [ -len, -ovw, -ovh ],
-		[ -len, -ovw, -ovh ], [ -len, -ovw,  ovh ],
-									 
-		[  len, -ivw,  ivh ], [ -len, -ovw,  ovh ],  
-		[  len,  ivw,  ivh ], [ -len,  ovw,  ovh ],  
-		[  len,  ivw, -ivh ], [ -len,  ovw, -ovh ],  
-		[  len, -ivw, -ivh ], [ -len, -ovw, -ovh ],  
+		[  len, -ovw,  ovh ], [  len,  ovw,  ovh ],
+		[  len,  ovw,  ovh ], [  len,  ovw, -ovh ],
+		[  len,  ovw, -ovh ], [  len, -ovw, -ovh ],
+		[  len, -ovw, -ovh ], [  len, -ovw,  ovh ],
+								 	 
+		[ -len, -ivw,  ivh ], [  len, -ovw,  ovh ],  
+		[ -len,  ivw,  ivh ], [  len,  ovw,  ovh ],  
+		[ -len,  ivw, -ivh ], [  len,  ovw, -ovh ],  
+		[ -len, -ivw, -ivh ], [  len, -ovw, -ovh ],  
 		
-		[ -len, -ovw * 0.5, ovh + 0.2 ], [ -len,  ovw * 0.5, ovh + 0.2 ],  
-		[ -len, 0, ovh + 0.6 ],			 [ -len,  ovw * 0.5, ovh + 0.2 ],  
-		[ -len, -ovw * 0.5, ovh + 0.2 ], [ -len,  0, ovh + 0.6 ],  
+		[  len, -ovw * 0.5, ovh + 0.2 ], [  len,  ovw * 0.5, ovh + 0.2 ],  
+		[  len, 0, ovh + 0.6 ],			 [  len,  ovw * 0.5, ovh + 0.2 ],  
+		[  len, -ovw * 0.5, ovh + 0.2 ], [  len,  0, ovh + 0.6 ],  
 	];
 	
 	VF = global.VF_POS_COL;
@@ -33,6 +33,12 @@ function __3dCamera_object() : __3dObject() constructor {
 	position.set(-5, -5, 5);
 	rotation.set(0, 30, 135);
 	scale.set(1, room_width / room_height, 1);
+	
+	static submitSel = function(params = {}) { 
+		shader_set(sh_d3d_wireframe);
+		submitVertex(params); 
+		shader_reset();
+	}
 }
 
 function calculate_3d_position(camFx, camFy, camFz, camAx, camAy, camDist) {

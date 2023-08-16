@@ -26,6 +26,7 @@ enum ACTION_TYPE {
 	collection_loaded,
 	
 	struct_modify,
+	custom,
 }
 
 enum DS_TYPE {
@@ -38,6 +39,8 @@ function Action(_type, _object, _data) constructor {
 	obj  = _object;
 	data = _data;
 	extra_data = 0;
+	
+	clear_action = noone;
 	
 	static undo = function() {
 		var _n;
@@ -103,6 +106,9 @@ function Action(_type, _object, _data) constructor {
 				var _data = obj.serialize();
 				obj.deserialize(data);
 				data = _data;
+				break;
+			case ACTION_TYPE.custom : 
+				data = obj(data);
 				break;
 		}
 	}
@@ -171,6 +177,9 @@ function Action(_type, _object, _data) constructor {
 				obj.deserialize(data);
 				data = _data;
 				break;
+			case ACTION_TYPE.custom : 
+				data = obj(data);
+				break;
 		}
 	}
 	
@@ -225,8 +234,16 @@ function Action(_type, _object, _data) constructor {
 			case ACTION_TYPE.struct_modify : 
 				ss = $"modify {struct_try_get(obj, "name", "value")}";
 				break;
+			case ACTION_TYPE.custom : 
+				ss = struct_try_get(data, "tooltip", "action");
+				break;
 		}
 		return ss;
+	}
+	
+	static destroy = function() {
+		if(clear_action == noone) return;
+		clear_action(data);
 	}
 }
 
@@ -237,7 +254,12 @@ function recordAction(_type, _object, _data = -1) {
 	
 	var act = new Action(_type, _object, _data);
 	array_push(o_main.action_last_frame, act);
-	ds_stack_clear(REDO_STACK);
+	
+	while(!ds_stack_empty(REDO_STACK)) {
+		var actions = ds_stack_pop(REDO_STACK);
+		for( var i = 0, n = array_length(actions); i < n; i++ )
+			actions[i].destroy();
+	}
 	
 	return act;
 }

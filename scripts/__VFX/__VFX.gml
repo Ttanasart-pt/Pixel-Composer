@@ -24,18 +24,16 @@ function __part(_node) constructor {
 	turning = 0;
 	turnSpd = 0
 	
-	ac  = 0;
-	wig = 0;
-	spVec = [ 0, 0 ];
+	accel  = 0;
+	wig    = 0;
+	spVec  = [ 0, 0 ];
 	
 	boundary_data = -1;
 	
-	g    = 0;
-	gDir = -90;
-	_gx  = 0;
-	_gy  = 0;
-	gx   = 0;
-	gy   = 0;
+	grav    = 0;
+	gravDir = -90;
+	gravX   = 0;
+	gravY   = 0;
 	
 	scx   = 1;
 	scy   = 1;
@@ -69,8 +67,6 @@ function __part(_node) constructor {
 		surf	= _surf;
 		x	= _x;
 		y	= _y;
-		gx	= 0;
-		gy	= 0;
 		
 		prevx  = undefined;
 		prevy  = undefined;
@@ -81,13 +77,13 @@ function __part(_node) constructor {
 	}
 	
 	static setPhysic = function(_sx, _sy, _ac, _g, _gDir, _wig, _turn, _turnSpd) {
-		speedx = _sx;
-		speedy = _sy;
-		ac   = _ac;
-		g    = _g;
-		gDir = _gDir;
-		_gx  = lengthdir_x(g, gDir);
-		_gy  = lengthdir_y(g, gDir);
+		speedx  = _sx;
+		speedy  = _sy;
+		accel   = _ac;
+		grav    = _g;
+		gravDir = _gDir;
+		gravX   = lengthdir_x(grav, gravDir);
+		gravY   = lengthdir_y(grav, gravDir);
 		
 		turning = _turn;
 		turnSpd = _turnSpd;
@@ -139,7 +135,7 @@ function __part(_node) constructor {
 		
 		var dirr = point_direction(0, 0, speedx, speedy);
 		var diss = point_distance(0, 0, speedx, speedy);
-		diss += ac;
+		diss = max(0, diss + accel);
 			
 		if(speedx != 0 || speedy != 0) {
 			if(wig != 0)
@@ -151,15 +147,8 @@ function __part(_node) constructor {
 			}
 		}
 		
-		speedx = lengthdir_x(diss, dirr) + _gx;
-		speedy = lengthdir_y(diss, dirr) + _gy;
-		
-		//if(_gx != 0 || _gy != 0) {
-		//	gx += _gx;
-		//	gy += _gy;
-		//	x += gx;
-		//	y += gy;
-		//}
+		speedx = lengthdir_x(diss, dirr) + gravX;
+		speedy = lengthdir_y(diss, dirr) + gravY;
 		
 		if(follow)  rot = spVec[1];
 		else        rot += rot_s;

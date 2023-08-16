@@ -193,8 +193,17 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 			if(prop.on_end == KEYFRAME_END.wrap) {
 				var from = values[| ds_list_size(values) - 1];
 				var to   = values[| 0];
-				var prog = PROJECT.animator.frames_total - from.time + _time;
-				var totl = PROJECT.animator.frames_total - from.time + to.time;
+				
+				var fTime = from.time;
+				var tTime = to.time;
+				
+				//if(from > PROJECT.animator.frames_total) {
+				//	fTime = fTime % PROJECT.animator.frames_total;
+				//	tTime = tTime - PROJECT.animator.frames_total;
+				//}
+				
+				var prog = PROJECT.animator.frames_total - fTime + _time;
+				var totl = PROJECT.animator.frames_total - fTime + tTime;
 				
 				var rat  = prog / totl;
 				var _lrp = interpolate(from, to, rat);

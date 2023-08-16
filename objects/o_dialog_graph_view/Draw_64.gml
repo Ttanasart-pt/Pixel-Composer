@@ -12,24 +12,28 @@ if !ready exit;
 
 #region draw
 	var yy = dialog_y + ui(64);
+	var ww = ui(128);
+	var wh = TEXTBOX_HEIGHT;
 	
-	cb_grid.setFocusHover(sFOCUS, sHOVER);
-	cb_grid.register();
-	draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text);
-	draw_text(dialog_x + ui(32), yy, __txt("Grid"));
-	cb_grid.draw(dialog_x + dialog_w - ui(48), yy, PANEL_GRAPH.show_grid, mouse_ui,, fa_center, fa_center);
-	
-	yy += ui(40);
-	cb_dim.setFocusHover(sFOCUS, sHOVER);
-	cb_dim.register();
-	draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text);
-	draw_text(dialog_x + ui(32), yy, __txtx("graph_visibility_dim", "Dimension"));
-	cb_dim.draw(dialog_x + dialog_w - ui(48), yy, PANEL_GRAPH.show_dimension, mouse_ui,, fa_center, fa_center);
-	
-	yy += ui(40);
-	cb_com.setFocusHover(sFOCUS, sHOVER);
-	cb_com.register();
-	draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text);
-	draw_text(dialog_x + ui(32), yy, __txtx("graph_visibility_compute", "Compute time"));
-	cb_com.draw(dialog_x + dialog_w - ui(48), yy, PANEL_GRAPH.show_compute, mouse_ui,, fa_center, fa_center);
+	for( var i = 0, n = array_length(properties); i < n; i++ ) {
+		var _prop = properties[i];
+		
+		var _widg = _prop[0];
+		var _text = _prop[1];
+		var _data = _prop[2]();
+		
+		_widg.setFocusHover(sFOCUS, sHOVER);
+		_widg.register();
+		
+		draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text);
+		draw_text(dialog_x + ui(32), yy, _text);
+		
+		var params = new widgetParam(dialog_x + dialog_w - ui(16) - ww, yy - wh / 2, ww, wh, _data);
+		if(is_instanceof(_widg, checkBox))
+			params.halign = fa_center;
+		
+		_widg.drawParam(params);
+		
+		yy += ui(40);
+	}
 #endregion

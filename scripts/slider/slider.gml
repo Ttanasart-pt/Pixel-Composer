@@ -38,7 +38,7 @@ function slider(_min, _max, _step, _onModify = noone, _onRelease = noone) : widg
 		return draw(params.x, params.y, params.w, params.h, params.data, params.m);
 	}
 	
-	static draw = function(_x, _y, _w, _h, _data, _m, tb_w = 64, halign = fa_left, valign = fa_top) {
+	static draw = function(_x, _y, _w, _h, _data, _m, tb_w = 50, halign = fa_left, valign = fa_top) {
 		x = _x;
 		y = _y;
 		w = _w;

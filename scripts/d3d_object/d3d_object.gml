@@ -26,7 +26,7 @@ function __3dObject() constructor {
 	rotation = new BBMOD_Quaternion();
 	scale    = new __vec3(1, 1, 1);
 	
-	static build = function(_buffer = VB, _vertex = vertex, _normal = normals) {
+	static build = function(_buffer = VB, _vertex = vertex, _normal = normals) { #region
 		if(_buffer != noone) vertex_delete_buffer(_buffer);
 		
 		_buffer = vertex_create_buffer();
@@ -57,16 +57,18 @@ function __3dObject() constructor {
 		vertex_end(_buffer);
 		
 		return _buffer;
-	}
+	} #endregion
 	
-	static presubmit = function(params = {}) {}
-	static postsubmit = function(params = {}) {}
+	static preSubmitVertex  = function(params = {}) {}
+	static postSubmitVertex = function(params = {}) {}
+	
+	static submitShader = function(params = {}, shader = noone) {}
 	
 	static submit    = function(params = {}, shader = noone) { submitVertex(params, shader); }
 	static submitUI  = function(params = {}, shader = noone) { submitVertex(params, shader); }
 	static submitSel = function(params = {}) { submitVertex(params, sh_d3d_silhouette); }
 	
-	static submitVertex = function(params = {}, shader = noone) {
+	static submitVertex = function(params = {}, shader = noone) { #region
 		if(shader != noone)
 			shader_set(shader);
 		else if(custom_shader != noone)
@@ -78,7 +80,7 @@ function __3dObject() constructor {
 			}
 		}
 		
-		presubmit(params);
+		preSubmitVertex(params);
 		
 		if(VB != noone) {
 			var pos = matrix_build(position.x, position.y, position.z, 
@@ -101,12 +103,8 @@ function __3dObject() constructor {
 			matrix_set(matrix_world, matrix_build_identity());
 		}
 		
-		postsubmit(params);
+		postSubmitVertex(params);
 		
 		shader_reset();
-	}
-}
-
-function __3dObjectParameters(camera) constructor {
-	self.camera = camera;
+	} #endregion
 }

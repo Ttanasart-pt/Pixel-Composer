@@ -10,12 +10,14 @@ function Panel_Animation() : PanelContent() constructor {
 	context_str = "Animation";
 	icon		= THEME.panel_animation;
 	
-	timeline_h	= ui(28);
-	min_w		= ui(40);
-	min_h		= ui(48);
-	tool_width	= ui(224);
+	#region ---- dimension ----
+		timeline_h	= ui(28);
+		min_w		= ui(40);
+		min_h		= ui(48);
+		tool_width	= ui(224);
+	#endregion
 	
-	static initSize = function() {
+	static initSize = function() { #region
 		timeline_w = w - tool_width - ui(80);
 		timeline_surface = surface_create_valid(timeline_w, timeline_h);
 		timeline_mask = surface_create_valid(timeline_w, timeline_h);
@@ -24,71 +26,88 @@ function Panel_Animation() : PanelContent() constructor {
 		dope_sheet_h = h - timeline_h - ui(20);
 		dope_sheet_surface = surface_create_valid(dope_sheet_w, 1);
 		dope_sheet_mask = surface_create_valid(dope_sheet_w, 1);
-	}
+	} #endregion
 	initSize();
 	
-	dope_sheet_y	 = 0;
-	dope_sheet_y_to  = 0;
-	dope_sheet_y_max = 0;
-	is_scrolling	 = false;
+	#region ---- position ----
+		dope_sheet_y	 = 0;
+		dope_sheet_y_to  = 0;
+		dope_sheet_y_max = 0;
+		is_scrolling	 = false;
 	
-	dopesheet_dragging = noone;
-	dopesheet_drag_mx  = 0;
+		dopesheet_dragging = noone;
+		dopesheet_drag_mx  = 0;
 	
-	dope_sheet_node_padding = ui(2);
+		dope_sheet_node_padding = ui(2);
+	#endregion
 	
 	ds_name_surface = surface_create_valid(tool_width - ui(16), 1);
 	
-	timeline_scubbing = false;
-	timeline_scub_st  = 0;
-	timeline_scale    = 20;
-	timeline_separate = 5;
-	timeline_sep_line = 1;
-	_scrub_frame	  = -1;
+	#region ---- timeline ----
+		timeline_scubbing = false;
+		timeline_scub_st  = 0;
+		timeline_scale    = 20;
+		timeline_separate = 5;
+		timeline_sep_line = 1;
+		_scrub_frame	  = -1;
 	
-	timeline_shift	  = 0;
-	timeline_shift_to = 0;
-	timeline_dragging = false;
-	timeline_drag_sx  = 0;
-	timeline_drag_sy  = 0;
-	timeline_drag_mx  = 0;
-	timeline_drag_my  = 0;
-	timeline_draggable	= true;
+		timeline_shift	  = 0;
+		timeline_shift_to = 0;
+		timeline_dragging = false;
+		timeline_drag_sx  = 0;
+		timeline_drag_sy  = 0;
+		timeline_drag_mx  = 0;
+		timeline_drag_my  = 0;
+		timeline_draggable	= true;
 	
-	timeline_stretch	= 0;
-	timeline_stretch_sx = 0;
-	timeline_stretch_mx = 0;
+		timeline_stretch	= 0;
+		timeline_stretch_sx = 0;
+		timeline_stretch_mx = 0;
 	
-	timeline_show_time	= -1;
-	timeline_preview	= noone;
+		timeline_show_time	= -1;
+		timeline_preview	= noone;
+	#endregion
 	
-	keyframe_dragging	= noone;
-	keyframe_drag_type	= -1;
-	keyframe_dragout	= false;
-	keyframe_drag_mx	= 0;
-	keyframe_drag_my	= 0;
-	keyframe_selecting	= [];
+	#region ---- keyframes ----
+		keyframe_dragging	= noone;
+		keyframe_drag_type	= -1;
+		keyframe_dragout	= false;
+		keyframe_drag_mx	= 0;
+		keyframe_drag_my	= 0;
+		keyframe_selecting	= [];
 	
-	keyframe_boxable = true;
-	keyframe_boxing	 = false;
-	keyframe_box_sx	 = -1;
-	keyframe_box_sy	 = -1;
+		keyframe_boxable = true;
+		keyframe_boxing	 = false;
+		keyframe_box_sx	 = -1;
+		keyframe_box_sy	 = -1;
+	#endregion
 	
-	value_hovering = noone;
-	value_focusing = noone;
+	#region ---- values ----
+		value_hovering = noone;
+		value_focusing = noone;
+	#endregion
 	
-	show_node_outside_context = true;
-	node_ordering	= noone;
-	node_name_type	= 0;
+	#region ---- display ----
+		show_node_outside_context = true;
+	#endregion
 	
-	stagger_mode  = 0;
-	stagger_index = 0;
+	#region ---- nodes ----
+		node_ordering	= noone;
+		node_name_type	= 0;
+	#endregion
+	
+	#region ---- stagger ----
+		stagger_mode  = 0;
+		stagger_index = 0;
+	#endregion
+	
+	#region ---- tools ----
+		tool_width_drag  = false;
+		tool_width_start = 0;
+		tool_width_mx    = 0;
+	#endregion
 	
 	anim_properties = ds_list_create();
-	
-	tool_width_drag  = false;
-	tool_width_start = 0;
-	tool_width_mx    = 0;
 	
 	on_end_dragging_anim = noone;
 	
@@ -96,7 +115,10 @@ function Panel_Animation() : PanelContent() constructor {
 	
 	prev_cache = array_create(PROJECT.animator.frames_total);
 	
-	control_buttons = [
+	copy_clipboard = ds_list_create();
+	
+	#region ++++ control_buttons ++++
+	control_buttons = [ 
 		[ function() { return __txt("Stop"); }, 
 		  function() { return 4; }, 
 		  function() { return PROJECT.animator.is_playing? COLORS._main_accent : COLORS._main_icon; },
@@ -129,7 +151,9 @@ function Panel_Animation() : PanelContent() constructor {
 		  function() { PROJECT.animator.setFrame(PROJECT.animator.real_frame + 1); } 
 		],
 	];
+	#endregion
 	
+	#region ++++ hotkeys ++++
 	addHotkey("", "Play/Pause",		vk_space, MOD_KEY.none,	function() { if(PROJECT.animator.is_playing) PROJECT.animator.pause() else PROJECT.animator.play(); });
 	
 	addHotkey("", "Resume/Pause",	vk_space, MOD_KEY.shift,	function() { if(PROJECT.animator.is_playing) PROJECT.animator.pause() else PROJECT.animator.resume(); });
@@ -146,17 +170,18 @@ function Panel_Animation() : PanelContent() constructor {
 	addHotkey("Animation", "Duplicate",		"D",		MOD_KEY.ctrl, function() { PANEL_ANIMATION.doDuplicate(); });
 	addHotkey("Animation", "Copy",			"C",		MOD_KEY.ctrl, function() { PANEL_ANIMATION.doCopy(); });
 	addHotkey("Animation", "Paste",			"V",		MOD_KEY.ctrl, function() { PANEL_ANIMATION.doPaste(PANEL_ANIMATION.value_focusing); });
+	#endregion
 	
-	function deleteKeys() {
+	function deleteKeys() { #region
 		for( var i = 0, n = array_length(keyframe_selecting); i < n; i++ ) {
 			var k  = keyframe_selecting[i];
 			k.anim.removeKey(k);
 		}
 		keyframe_selecting = [];
 		updatePropertyList();
-	}
+	} #endregion
 	
-	function alignKeys(halign = fa_left) {
+	function alignKeys(halign = fa_left) { #region
 		if(array_empty(keyframe_selecting)) return;
 		
 		var tt = 0;
@@ -184,9 +209,9 @@ function Panel_Animation() : PanelContent() constructor {
 			var k = keyframe_selecting[i];
 			k.anim.setKeyTime(k, tt);
 		}
-	}
+	} #endregion
 	
-	function arrangeKeys() {
+	function arrangeKeys() { #region
 		var l = [];
 		for( var i = 0; i < ds_list_size(anim_properties); i++ ) {
 			var node = anim_properties[| i];
@@ -216,9 +241,9 @@ function Panel_Animation() : PanelContent() constructor {
 		}
 		
 		keyframe_selecting = l;
-	}
+	} #endregion
 	
-	function staggerKeys(_index, _stag) {
+	function staggerKeys(_index, _stag) { #region
 		var t = keyframe_selecting[_index].time;
 		for( var i = 0, n = array_length(keyframe_selecting); i < n; i++ ) {
 			var k = keyframe_selecting[i];
@@ -226,8 +251,9 @@ function Panel_Animation() : PanelContent() constructor {
 			
 			k.anim.setKeyTime(k, _t);
 		}
-	}
+	} #endregion
 	
+	#region ++++ keyframe_menu ++++
 	keyframe_menu = [
 		menuItem(__txtx("panel_animation_lock_y", "Lock/Unlock Y easing"), function() { 
 				for( var i = 0, n = array_length(keyframe_selecting); i < n; i++ ) {
@@ -318,10 +344,11 @@ function Panel_Animation() : PanelContent() constructor {
 	keyframe_menu_empty = [
 		menuItem(__txt("Paste"),	 function() { doPaste(value_focusing); },	THEME.paste,	 [ "Animation", "Paste" ]),
 	];
+	#endregion
 	
 	function onFocusBegin() { PANEL_ANIMATION = self; }
 	
-	function onResize() {
+	function onResize() { #region
 		initSize();
 		
 		if(w - tool_width > 1) {
@@ -344,9 +371,9 @@ function Panel_Animation() : PanelContent() constructor {
 			ds_name_surface    = surface_verify(ds_name_surface, tool_width - ui(0), dope_sheet_h);
 		}
 		resetTimelineMask();
-	}
+	} #endregion
 	
-	function resetTimelineMask() {
+	function resetTimelineMask() { #region
 		if(!surface_exists(timeline_mask))
 			timeline_mask = surface_create_valid(timeline_w, timeline_h);
 			
@@ -368,10 +395,10 @@ function Panel_Animation() : PanelContent() constructor {
 			gpu_set_blendmode(bm_normal);
 			surface_reset_target();
 		}
-	}
+	} #endregion
 	resetTimelineMask();
 	
-	function updatePropertyNode(pr, _node) {
+	function updatePropertyNode(pr, _node) { #region
 		var is_anim = false;
 		for(var j = 0; j < ds_list_size(_node.inputs); j++) {
 			var jun = _node.inputs[| j];
@@ -380,9 +407,9 @@ function Panel_Animation() : PanelContent() constructor {
 			
 		if(!is_anim) return;
 		ds_priority_add(pr, _node, _node.anim_priority);
-	}
+	} #endregion
 	
-	function updatePropertyList() {
+	function updatePropertyList() { #region
 		ds_list_destroy(anim_properties);
 		var amo = ds_map_size(PROJECT.nodeMap);
 		var k = ds_map_find_first(PROJECT.nodeMap);
@@ -400,9 +427,9 @@ function Panel_Animation() : PanelContent() constructor {
 		
 		anim_properties = ds_priority_to_list(pr);
 		ds_priority_destroy(pr);
-	}
+	} #endregion
 	
-	function drawTimeline() { //draw summary
+	function drawTimeline() { #region //draw summary
 		var bar_x = tool_width + ui(16);
 		var bar_y = h - timeline_h - ui(10);
 		var bar_w = timeline_w;
@@ -577,9 +604,9 @@ function Panel_Animation() : PanelContent() constructor {
 		surface_reset_target();
 		
 		draw_surface_safe(timeline_surface, bar_x, bar_y);
-	}
+	} #endregion
 	
-	function drawDopesheetLine(animator, key_y, msx, msy, _gy_val_min = 999999, _gy_val_max = -999999) {
+	function drawDopesheetLine(animator, key_y, msx, msy, _gy_val_min = 999999, _gy_val_max = -999999) { #region
 		var bar_total_w = PROJECT.animator.frames_total * ui(timeline_scale);
 		var bar_show_w  = timeline_shift + bar_total_w;
 		var hovering	= noone;
@@ -719,9 +746,9 @@ function Panel_Animation() : PanelContent() constructor {
 				}
 			}
 		}
-	}
+	} #endregion
 	
-	function drawDopesheetGraph(prop, key_y, msx, msy) { 
+	function drawDopesheetGraph(prop, key_y, msx, msy) { #region
 		var bar_total_w = PROJECT.animator.frames_total * ui(timeline_scale);
 		var bar_show_w  = timeline_shift + bar_total_w;
 		var _gy_top		= key_y + ui(16);
@@ -787,9 +814,9 @@ function Panel_Animation() : PanelContent() constructor {
 				drawDopesheetLine(prop.animators[i], key_y, msx, msy, _min, _max);
 		} else
 			drawDopesheetLine(prop.animator, key_y, msx, msy);
-	}
+	} #endregion
 	
-	function drawDopesheetAnimatorKeysBG(animator, msx, msy) { 
+	function drawDopesheetAnimatorKeysBG(animator, msx, msy) { #region
 		var prop_dope_y = animator.dopesheet_y;
 		var key_hover   = noone;
 		var key_list    = animator.values;
@@ -845,9 +872,9 @@ function Panel_Animation() : PanelContent() constructor {
 		}
 		
 		return key_hover;
-	}
+	} #endregion
 	
-	function drawDopesheetAnimatorKeys(_node, animator, msx, msy) { 
+	function drawDopesheetAnimatorKeys(_node, animator, msx, msy) { #region
 		var prop_y	  = animator.dopesheet_y;
 		var key_hover = noone;
 		var node_y	  = _node.dopesheet_y + dope_sheet_node_padding;
@@ -917,10 +944,9 @@ function Panel_Animation() : PanelContent() constructor {
 		}
 		
 		return key_hover;
-	}
+	} #endregion
 	
-#region label
-	function drawDopesheetLabelAnimator(_node, animator, msx, msy) {
+	function drawDopesheetLabelAnimator(_node, animator, msx, msy) { #region
 		var aa = _node.group == PANEL_GRAPH.getCurrentContext()? 1 : 0.9;
 		var tx = tool_width;
 		var ty = animator.dopesheet_y - 1;
@@ -1018,9 +1044,9 @@ function Panel_Animation() : PanelContent() constructor {
 		draw_set_alpha(aa);
 		draw_text_add(ui(32), ty - 2, animator.getName());
 		draw_set_alpha(1);
-	}
+	} #endregion
 	
-	function drawDopesheetLabel() {
+	function drawDopesheetLabel() { #region
 		surface_set_target(ds_name_surface);	
 		draw_clear_alpha(COLORS.panel_bg_clear, 0);
 		var msx = mx - ui(8);
@@ -1133,10 +1159,9 @@ function Panel_Animation() : PanelContent() constructor {
 		}
 		
 		surface_reset_target();
-	}
-#endregion
+	} #endregion
 	
-	function drawDopesheet() { 
+	function drawDopesheet() { #region
 		var bar_x = tool_width + ui(16);
 		var bar_y = h - timeline_h - ui(10);
 		var bar_w = timeline_w;
@@ -1700,9 +1725,9 @@ function Panel_Animation() : PanelContent() constructor {
 		draw_surface_safe(dope_sheet_surface, bar_x, ui(8));
 		
 		draw_sprite_stretched(THEME.ui_panel_bg_cover, 1, bar_x, ui(8), bar_w, dope_sheet_h);
-	}
+	} #endregion
 	
-	function drawAnimationControl() {
+	function drawAnimationControl() { #region
 		var bx = ui(8);
 		var by = h - ui(40);
 		var mini = w < ui(348);
@@ -1812,9 +1837,9 @@ function Panel_Animation() : PanelContent() constructor {
 		txt = __txt("Onion skin");
 		if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(24), [mx, my], pFOCUS, pHOVER, txt, THEME.onion_skin,, PROJECT.onion_skin.enabled? c_white : COLORS._main_icon) == 2)
 			PROJECT.onion_skin.enabled = !PROJECT.onion_skin.enabled;
-	}
+	} #endregion
 	
-	function drawContent(panel) {
+	function drawContent(panel) { #region
 		draw_clear_alpha(COLORS.panel_bg_clear, 0);
 		if(!PROJECT.active) return;
 		
@@ -1851,9 +1876,9 @@ function Panel_Animation() : PanelContent() constructor {
 			TOOLTIP = __txt("Frame") + " " + string(timeline_show_time + 1) + "/" + string(PROJECT.animator.frames_total);
 			timeline_show_time = -1;
 		}
-	}
+	} #endregion
 	
-	function doDuplicate() {
+	function doDuplicate() { #region
 		if(array_empty(keyframe_selecting)) return;
 		
 		var clones = [];
@@ -1868,16 +1893,15 @@ function Panel_Animation() : PanelContent() constructor {
 		keyframe_drag_type = KEYFRAME_DRAG_TYPE.move;
 		keyframe_drag_mx   = mx;
 		keyframe_drag_my   = my;
-	}
+	} #endregion
 	
-	copy_clipboard = ds_list_create();
-	function doCopy() {
+	function doCopy() { #region
 		ds_list_clear(copy_clipboard);
 		for( var i = 0, n = array_length(keyframe_selecting); i < n; i++ )
 			ds_list_add(copy_clipboard, keyframe_selecting[i]);
-	}
+	} #endregion
 	
-	function doPaste(val = noone) {
+	function doPaste(val = noone) { #region
 		if(ds_list_empty(copy_clipboard)) return;
 		
 		var shf  = 0;
@@ -1915,5 +1939,5 @@ function Panel_Animation() : PanelContent() constructor {
 			for( var i = 0; i < ds_list_size(copy_clipboard); i++ )
 				copy_clipboard[| i].cloneAnimator(shf, (multiVal || val == noone)? noone : val.animator);
 		}
-	}
+	} #endregion
 }

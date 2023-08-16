@@ -1,11 +1,20 @@
+enum CAMERA_PROJECTION {
+	perspective,
+	orthograph
+}
+
 function __3dCamera() constructor {
 	position = new __vec3();
+	rotation = new BBMOD_Quaternion();
 	focus    = new __vec3();
 	up       = new __vec3(0, 0, -1);
 	
+	useFocus = true;
 	focus_angle_x = 0;
 	focus_angle_y = 0;
 	focus_dist    = 1;
+	
+	projection = CAMERA_PROJECTION.perspective;
 	
 	fov = 60;
 	view_near = 1;
@@ -39,8 +48,21 @@ function __3dCamera() constructor {
 	}
 	
 	static setMatrix = function() {
-		projMat.setRaw(matrix_build_projection_perspective_fov(fov, view_aspect, view_near, view_far));
-		viewMat.setRaw(matrix_build_lookat(position.x, position.y, position.z, focus.x, focus.y, focus.z, up.x, up.y, up.z));
+		if(projection == CAMERA_PROJECTION.perspective)
+			projMat.setRaw(matrix_build_projection_perspective_fov(fov, view_aspect, view_near, view_far));
+		else 
+			projMat.setRaw(matrix_build_projection_ortho(view_w, view_h, view_near, view_far));
+		
+		if(useFocus)
+			viewMat.setRaw(matrix_build_lookat(position.x, position.y, position.z, focus.x, focus.y, focus.z, up.x, up.y, up.z));
+		else {
+			var _for = rotation.Rotate(new BBMOD_Vec3( 1.0,  0.0,  0.0));
+			var _up  = rotation.Rotate(new BBMOD_Vec3( 0.0,  0.0, -1.0));
+			
+			viewMat.setRaw(matrix_build_lookat(position.x, position.y, position.z, 
+											   position.x + _for.X, position.y + _for.Y, position.z + _for.Z, 
+											   _up.X, _up.Y, _up.Z));
+		}
 		
 		return self;
 	}

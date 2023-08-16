@@ -15,7 +15,7 @@ function __plane(origin, normal) constructor {
 
 #region functions
 	function d3d_intersect_ray_plane(ray, plane) {
-		print($"Intersect {ray}\n\tto {plane}");
+		//print($"Intersect {ray}\n\tto {plane}");
 		
 		var det = plane.normal.dot(ray.direction);
 		if(det == 0) return new __vec3();

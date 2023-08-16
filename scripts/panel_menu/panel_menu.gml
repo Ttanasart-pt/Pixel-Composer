@@ -7,6 +7,8 @@ function Panel_Menu() : PanelContent() constructor {
 	noti_icon_show = 0;
 	noti_icon_time = 0;
 	
+	version_name_copy = 0;
+	
 	if(PREF_MAP[? "panel_menu_right_control"])
 		action_buttons = ["exit", "maximize", "minimize", "fullscreen"];
 	else
@@ -572,8 +574,12 @@ function Panel_Menu() : PanelContent() constructor {
 			var txt = "v. " + string(VERSION_STRING);
 			if(STEAM_ENABLED) txt += " Steam";
 			
+			version_name_copy = lerp_float(version_name_copy, 0, 10);
+			var tc = merge_color(COLORS._main_text_sub, COLORS._main_value_positive, min(1, version_name_copy));
+			var sc = merge_color(c_white, COLORS._main_value_positive, min(1, version_name_copy));
+			
 			if(hori) {
-				draw_set_text(f_p0, fa_center, fa_center, COLORS._main_text_sub);
+				draw_set_text(f_p0, fa_center, fa_center, tc);
 				var ww = string_width(txt) + ui(12);
 				
 				if(h > ui(76)) {
@@ -590,25 +596,34 @@ function Panel_Menu() : PanelContent() constructor {
 				}
 				
 				if(pHOVER && point_in_rectangle(mx, my, _x0, _y0, _x1, _y1)) {
-					draw_sprite_stretched(THEME.button_hide_fill, 1, _x0, _y0, _x1 - _x0, _y1 - _y0);
+					draw_sprite_stretched_ext(THEME.button_hide_fill, 1, _x0, _y0, _x1 - _x0, _y1 - _y0, sc, 1);
 			
-					if(mouse_press(mb_left, pFOCUS)) {
+					if(mouse_press(mb_left, pFOCUS))
 						dialogCall(o_dialog_release_note); 
+					if(mouse_press(mb_right, pFOCUS)) {
+						clipboard_set_text(VERSION_STRING);
+						version_name_copy = 3;
 					}
 				}
+				
 				draw_text((_x0 + _x1) / 2, (_y0 + _y1) / 2, txt);
 			} else {
 				var x1 = ui(40);
 				var y1 = h - ui(20);
 				
-				draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text_sub);
+				draw_set_text(f_p0, fa_left, fa_center, tc);
 				var ww = string_width(txt) + ui(12);
 				if(pHOVER && point_in_rectangle(mx, my, x1, y1 - ui(16), x1 + ww, y1 + ui(16))) {
-					draw_sprite_stretched(THEME.button_hide_fill, 1, x1, y1 - ui(16), ww, ui(32));
+					draw_sprite_stretched_ext(THEME.button_hide_fill, 1, x1, y1 - ui(16), ww, ui(32), sc, 1);
 					
 					if(mouse_press(mb_left, pFOCUS))
 						dialogCall(o_dialog_release_note); 
+					if(mouse_press(mb_right, pFOCUS)) {
+						clipboard_set_text(VERSION_STRING);
+						version_name_copy = 3;
+					}
 				}
+				
 				draw_text(x1 + ui(6), y1, txt);
 			}
 		#endregion

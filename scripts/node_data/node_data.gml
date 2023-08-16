@@ -1,34 +1,30 @@
 global.loop_nodes = [ "Node_Iterate", "Node_Iterate_Each" ];
 
 function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x, _y) constructor {
-	active  = true;
-	renderActive = true;
+	#region ---- main & active ----
+		active  = true;
+		renderActive = true;
 	
-	node_id = UUID_generate();
+		node_id = UUID_generate();
 	
-	group   = _group;
-	destroy_when_upgroup = false;
-	ds_list_add(PANEL_GRAPH.getNodeList(_group), self);
+		group   = _group;
+		destroy_when_upgroup = false;
+		ds_list_add(PANEL_GRAPH.getNodeList(_group), self);
 	
-	active_index = -1;
-	active_range = [ 0, PROJECT.animator.frames_total - 1 ];
+		active_index = -1;
+		active_range = [ 0, PROJECT.animator.frames_total - 1 ];
+	#endregion
 	
-	color   = c_white;
-	icon    = noone;
-	bg_spr  = THEME.node_bg;
-	bg_sel_spr	  = THEME.node_active;
-	anim_priority = ds_map_size(PROJECT.nodeMap);
-	
-	static resetInternalName = function() {
+	static resetInternalName = function() { #region
 		var str = string_replace_all(name, " ", "_");
 			str = string_replace_all(str,  "/", "");
 			str = string_replace_all(str,  "-", "");
 			
 		internalName = str + string(irandom_range(10000, 99999)); 
 		PROJECT.nodeNameMap[? internalName] = self;
-	}
+	} #endregion
 	
-	if(!LOADING && !APPENDING) {
+	if(!LOADING && !APPENDING) { #region
 		recordAction(ACTION_TYPE.node_added, self);
 		PROJECT.nodeMap[? node_id] = self;
 		PROJECT.modified = true;
@@ -40,108 +36,144 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 			resetInternalName();
 			display_name = name; //__txt_node_name(instanceof(self), name);
 		});
-	} 
+	} #endregion
 	
-	name = "";
-	display_name = "";
-	internalName = "";
+	#region ---- display ----
+		color   = c_white;
+		icon    = noone;
+		bg_spr  = THEME.node_bg;
+		bg_sel_spr	  = THEME.node_active;
 	
-	tooltip = "";
-	x = _x;
-	y = _y;
+		name = "";
+		display_name = "";
+		internalName = "";
 	
-	w = 128;
-	h = 128;
-	min_h = 0;
-	draw_padding = 8;
-	auto_height  = true;
+		tooltip = "";
+		x = _x;
+		y = _y;
 	
-	draw_name = true;
-	draggable = true;
+		w = 128;
+		h = 128;
+		min_h = 0;
+		draw_padding = 4;
+		auto_height  = true;
+		
+		display_parameter = {};
+		
+		draw_name = true;
+		draggable = true;
+		
+		draw_graph_culled = false;
+		
+		badgePreview = 0;
+		badgeInspect = 0;
+		
+		active_draw_index = -1;
+		
+		draw_droppable = false;
+	#endregion
 	
-	inputs  = ds_list_create();
-	outputs = ds_list_create();
-	inputMap  = ds_map_create();
-	outputMap = ds_map_create();
+	#region ---- junctions ----
+		inputs  = ds_list_create();
+		outputs = ds_list_create();
+		inputMap  = ds_map_create();
+		outputMap = ds_map_create();
 	
-	input_display_list		= -1;
-	output_display_list		= -1;
-	inspector_display_list	= -1;
-	is_dynamic_output		= false;
+		input_display_list		= -1;
+		output_display_list		= -1;
+		inspector_display_list	= -1;
+		is_dynamic_output		= false;
+		
+		inspectInput1 = nodeValue("Toggle execution", self, JUNCTION_CONNECT.input, VALUE_TYPE.action, false).setVisible(true, true);
+		inspectInput2 = nodeValue("Toggle execution", self, JUNCTION_CONNECT.input, VALUE_TYPE.action, false).setVisible(true, true);
+		
+		insp1UpdateTooltip  = __txtx("panel_inspector_execute", "Execute node");
+		insp1UpdateIcon     = [ THEME.sequence_control, 1, COLORS._main_value_positive ];
 	
-	attributes		 = {};
-	attributeEditors = [];
+		insp2UpdateTooltip = __txtx("panel_inspector_execute", "Execute node");
+		insp2UpdateIcon    = [ THEME.sequence_control, 1, COLORS._main_value_positive ];
 	
-	inspectInput1 = nodeValue("Toggle execution", self, JUNCTION_CONNECT.input, VALUE_TYPE.action, false).setVisible(true, true);
-	inspectInput2 = nodeValue("Toggle execution", self, JUNCTION_CONNECT.input, VALUE_TYPE.action, false).setVisible(true, true);
+		updateAction = nodeValue("Update", self, JUNCTION_CONNECT.input, VALUE_TYPE.action, false).setVisible(true, true);
+		
+		is_dynamic_input  = false;
+		input_display_len = 0;
+		input_fix_len	  = 0;
+		data_length       = 1;
+	#endregion
 	
-	updateAction = nodeValue("Update", self, JUNCTION_CONNECT.input, VALUE_TYPE.action, false).setVisible(true, true);
+	#region --- attributes ----
+		attributes		 = {};
+		attributeEditors = [];
+	#endregion
 	
-	show_input_name  = false;
-	show_output_name = false;
+	#region ---- preview ----
+		show_input_name  = false;
+		show_output_name = false;
 	
-	inspecting	  = false;
-	previewing	  = 0;
+		inspecting	  = false;
+		previewing	  = 0;
 	
-	preview_surface	= noone;
-	preview_amount  = 0;
-	previewable		= true;
-	preview_speed	= 0;
-	preview_index	= 0;
-	preview_channel = 0;
-	preview_alpha	= 1;
-	preview_x		= 0;
-	preview_y		= 0;
+		preview_surface	= noone;
+		preview_amount  = 0;
+		previewable		= true;
+		preview_speed	= 0;
+		preview_index	= 0;
+		preview_channel = 0;
+		preview_alpha	= 1;
+		preview_x		= 0;
+		preview_y		= 0;
 	
-	preview_surface_prev = noone;
-	preview_trans  = 1;
-	preview_drop_x = 0;
-	preview_drop_y = 0;
+		preview_mx = 0;
+		preview_my = 0;
+	#endregion
 	
-	preview_mx = 0;
-	preview_my = 0;
+	#region ---- rendering ----
+		rendered         = false;
+		update_on_frame  = false;
+		render_time		 = 0;
+		auto_render_time = true;
+		updated			 = false;
 	
-	rendered        = false;
-	update_on_frame = false;
-	render_time		= 0;
-	auto_render_time = true;
-	updated			= false;
+		use_cache			= false;
+		clearCacheOnChange	= true;
+		cached_output	= [];
+		cache_result	= [];
+		temp_surface    = [];
+	#endregion
 	
-	use_cache			= false;
-	clearCacheOnChange	= true;
-	cached_output	= [];
-	cache_result	= [];
-	temp_surface    = [];
+	#region ---- timeline ----
+		anim_priority = ds_map_size(PROJECT.nodeMap);
+		
+		anim_show		= true;
+		dopesheet_color = COLORS.panel_animation_dope_blend_default;
+		dopesheet_y		= 0;
+	#endregion
 	
-	tools			= -1;
+	#region ---- notification ----
+		value_validation = array_create(3);
+	
+		error_noti_update	 = noone;
+		error_update_enabled = false;
+		manual_updated		 = false;
+		manual_deletable	 = true;
+	#endregion
+	
+	#region ---- tools ----
+		tools			= -1;
+		isTool			= false;
+		tool_settings	= [];
+		tool_attribute	= {};
+	#endregion
+	
+	#region ---- 3d ----
+		is_3D = false;
+	#endregion
 	
 	on_dragdrop_file = -1;
 	
-	anim_show = true;
-	dopesheet_color = COLORS.panel_animation_dope_blend_default;
-	dopesheet_y		= 0;
-	
-	value_validation = array_create(3);
-	
-	error_noti_update	 = noone;
-	error_update_enabled = false;
-	manual_updated		 = false;
-	manual_deletable	 = true;
-	
-	isTool			= false;
-	tool_settings	= [];
-	tool_attribute	= {};
-	
-	is_dynamic_input  = false;
-	input_display_len = 0;
-	input_fix_len	  = 0;
-	data_length       = 1;
-	
-	is_3D = false;
-	
 	static createNewInput = noone;
 	
-	static initTooltip = function() {
+	static initTooltip = function() { #region
 		var type_self/*:string*/ = instanceof(self);
 		if(!struct_has(global.NODE_GUIDE, type_self)) return;
 		
@@ -160,10 +192,10 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 			outputs[| i].name    = _ots[i].name;
 			outputs[| i].tooltip = _ots[i].tooltip;
 		}
-	}
+	} #endregion
 	run_in(1, initTooltip);
 	
-	static resetDefault = function() {
+	static resetDefault = function() { #region
 		var folder = instanceof(self);
 		if(!ds_map_exists(global.PRESETS_MAP, folder)) return;
 		
@@ -177,11 +209,11 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		}
 		
 		doUpdate();
-	}
+	} #endregion
 	if(!APPENDING && !LOADING)
 		run_in(1, method(self, resetDefault));
 	
-	static getInputJunctionIndex = function(index) {
+	static getInputJunctionIndex = function(index) { #region
 		if(input_display_list == -1)
 			return index;
 		
@@ -189,15 +221,15 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		if(is_array(jun_list_arr)) return noone;
 		if(is_struct(jun_list_arr)) return noone;
 		return jun_list_arr;
-	}
+	} #endregion
 	
-	static getOutputJunctionIndex = function(index) {
+	static getOutputJunctionIndex = function(index) { #region
 		if(output_display_list == -1)
 			return index;
 		return output_display_list[index];
-	}
+	} #endregion
 	
-	static setHeight = function() {
+	static setHeight = function() { #region
 		var _hi = ui(32);
 		var _ho = ui(32);
 		
@@ -210,26 +242,26 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		}
 		
 		h = max(min_h, (preview_surface && previewable)? 128 : 0, _hi, _ho);
-	}
+	} #endregion
 	
 	onSetDisplayName = noone;
-	static setDisplayName = function(_name) {
+	static setDisplayName = function(_name) { #region
 		display_name = _name;
 		internalName = string_replace_all(display_name, " ", "_");
 		refreshNodeMap();
 		
 		if(onSetDisplayName != noone)
 			onSetDisplayName();
-	}
+	} #endregion
 	
-	static setIsDynamicInput = function(_data_length = 1) {
+	static setIsDynamicInput = function(_data_length = 1) { #region
 		is_dynamic_input	= true;							
 		input_display_len	= input_display_list == -1? 0 : array_length(input_display_list);
 		input_fix_len		= ds_list_size(inputs);
 		data_length			= _data_length;
-	}
+	} #endregion
 	
-	static getOutput = function(junc = noone) {
+	static getOutput = function(junc = noone) { #region
 		for( var i = 0; i < ds_list_size(outputs); i++ ) {
 			if(!outputs[| i].visible) continue;
 			if(junc != noone && !junc.isConnectable(outputs[| i], true)) continue;
@@ -237,9 +269,9 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 			return outputs[| i];
 		}
 		return noone;
-	}
+	} #endregion
 	
-	static getInput = function(junc = noone) {
+	static getInput = function(junc = noone) { #region
 		for( var i = 0; i < ds_list_size(inputs); i++ ) {
 			if(!inputs[| i].visible) continue;
 			if(inputs[| i].value_from != noone) continue;
@@ -248,42 +280,40 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 			return inputs[| i];
 		}
 		return noone;
-	}
+	} #endregion
 	
-	static getFullName = function() {
+	static getFullName = function() { #region
 		return display_name == ""? name : "[" + name + "] " + display_name;
-	}
+	} #endregion
 	
-	static addInput = function(junctionFrom) {
+	static addInput = function(junctionFrom) { #region
 		var targ = getInput(junctionFrom);
 		if(targ == noone) return;
 		
 		targ.setFrom(junctionFrom);
-	}
+	} #endregion
 	
-	static isAnimated = function() {
+	static isAnimated = function() { #region
 		for(var i = 0; i < ds_list_size(inputs); i++) {
 			if(inputs[| i].isAnimated())
 				return true;
 		}
 		return false;
-	}
+	} #endregion
 	
-	static isInLoop = function() {
+	static isInLoop = function() { #region
 		return array_exists(global.loop_nodes, instanceof(group));
-	}
+	} #endregion
 	
-	static move = function(_x, _y) {
+	static move = function(_x, _y) { #region
 		if(x == _x && y == _y) return;
 		
 		x = _x;
 		y = _y; 
 		if(!LOADING) PROJECT.modified = true;
-	}
+	} #endregion
 	
-	insp1UpdateTooltip  = __txtx("panel_inspector_execute", "Execute node");
-	insp1UpdateIcon     = [ THEME.sequence_control, 1, COLORS._main_value_positive ];
-	
+	#region ++++ inspector update ++++
 	static inspector1Update = function() {
 		if(error_update_enabled && error_noti_update != noone)
 			noti_remove(error_noti_update);
@@ -294,14 +324,12 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	static onInspector1Update = noone;
 	static hasInspector1Update = function() { return onInspector1Update != noone; }
 	
-	insp2UpdateTooltip = __txtx("panel_inspector_execute", "Execute node");
-	insp2UpdateIcon    = [ THEME.sequence_control, 1, COLORS._main_value_positive ];
-	
 	static inspector2Update = function() { onInspector2Update(); }
 	static onInspector2Update = noone;
 	static hasInspector2Update = function() { return onInspector2Update != noone; }
+	#endregion
 	
-	static stepBegin = function() {
+	static stepBegin = function() { #region
 		if(use_cache) cacheArrayCheck();
 		var willUpdate = false;
 		
@@ -322,14 +350,13 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		
 		if(hasInspector1Update()) inspectInput1.name = insp1UpdateTooltip;
 		if(hasInspector2Update()) inspectInput2.name = insp2UpdateTooltip;
-	}
+	} #endregion
+	
 	static doStepBegin = function() {}
 	
-	static triggerCheck = function() {
-		_triggerCheck();
-	}
+	static triggerCheck = function() { _triggerCheck(); }
 	
-	static _triggerCheck = function() {
+	static _triggerCheck = function() { #region
 		for( var i = 0; i < ds_list_size(inputs); i++ ) {
 			if(inputs[| i].type != VALUE_TYPE.trigger) continue;
 			if(!is_instanceof(inputs[| i].editWidget, buttonClass)) continue;
@@ -356,13 +383,13 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 				inspectInput2.setValue(false);
 			}
 		}
-	}
+	} #endregion
 	
 	static step = function() {}
 	static focusStep = function() {}
 	static inspectorStep = function() {}
 	
-	static doUpdate = function() { 
+	static doUpdate = function() { #region
 		if(SAFE_MODE) return;
 		if(NODE_EXTRACT) return;
 		
@@ -406,19 +433,19 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 			if(trigger) onInspector2Update();
 		}
 		LOG_BLOCK_END();
-	}
+	} #endregion
 	
-	static valueUpdate = function(index) {
+	static valueUpdate = function(index) { #region
 		if(error_update_enabled && error_noti_update == noone)
 			error_noti_update = noti_error(getFullName() + " node require manual execution.",, self);
 		
 		onValueUpdate(index);
-	}
+	} #endregion
 	
 	static onValueUpdate = function(index = 0) {}
 	static onValueFromUpdate = function(index) {}
 	
-	static triggerRender = function() {
+	static triggerRender = function() { #region
 		LOG_BLOCK_START();
 		LOG_IF(global.FLAG.render, $"Trigger render for {internalName}");
 		
@@ -436,12 +463,12 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		}
 		
 		LOG_BLOCK_END();
-	}
+	} #endregion
 	
 	static resetRender = function() { setRenderStatus(false); }
 	static isRenderActive = function() { return renderActive || (PREF_MAP[? "render_all_export"] && PROJECT.animator.rendering); }
 	
-	static isRenderable = function(log = false) { //Check if every input is ready (updated)
+	static isRenderable = function(log = false) { #region //Check if every input is ready (updated)
 		if(!active)	return false;
 		if(!isRenderActive()) return false;
 		
@@ -462,11 +489,11 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		}
 		
 		return true;
-	}
+	} #endregion
 	
 	static getNextNodesRaw = function() { return getNextNodes(); }
 	
-	static getNextNodes = function() {
+	static getNextNodes = function() { #region
 		var nodes = [];
 		var nodeNames = [];
 		
@@ -495,43 +522,42 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		LOG_BLOCK_END();
 		LOG_BLOCK_END();
 		return nodes;
-	}
+	} #endregion
 	
-	static isTerminal = function() {
+	static isTerminal = function() { #region
 		for( var i = 0; i < ds_list_size(outputs); i++ ) {
 			var _to = outputs[| i].getJunctionTo();
 			if(array_length(_to)) return false;
 		}
 		
 		return true;
-	}
+	} #endregion
 	
 	static onInspect = function() {}
 	
-	static setRenderStatus = function(result) {
+	static setRenderStatus = function(result) { #region
 		LOG_LINE_IF(global.FLAG.render, $"Set render status for {internalName} : {result}");
 		
 		rendered = result;
-	}
+	} #endregion
 	
-	static pointIn = function(_x, _y, _mx, _my, _s) {
+	static pointIn = function(_x, _y, _mx, _my, _s) { #region
 		var xx = x * _s + _x;
 		var yy = y * _s + _y;
 		
 		return point_in_rectangle(_mx, _my, xx, yy, xx + w * _s, yy + h * _s);
-	}
+	} #endregion
 	
-	draw_graph_culled = false;
-	static cullCheck = function(_x, _y, _s, minx, miny, maxx, maxy) {
+	static cullCheck = function(_x, _y, _s, minx, miny, maxx, maxy) { #region
 		var x0 = x * _s + _x;
 		var y0 = y * _s + _y;
 		var x1 = (x + w) * _s + _x;
 		var y1 = (y + h) * _s + _y;
 		
 		draw_graph_culled = !rectangle_in_rectangle(minx, miny, maxx, maxy, x0, y0, x1, y1);
-	}
+	} #endregion
 	
-	static preDraw = function(_x, _y, _s) {
+	static preDraw = function(_x, _y, _s) { #region
 		var xx = x * _s + _x;
 		var yy = y * _s + _y;
 		var jun;
@@ -576,25 +602,36 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 			jun.y = _in;
 			_in += 24 * _s * jun.isVisible();
 		}
-	}
+	} #endregion
 	
-	static drawNodeBase = function(xx, yy, _s) {
+	static drawNodeBase = function(xx, yy, _s) { #region
 		if(draw_graph_culled) return;
 		if(!active) return;
 		var aa = 0.25 + 0.5 * renderActive;
 		draw_sprite_stretched_ext(bg_spr, 0, xx, yy, w * _s, h * _s, color, aa);
-	}
+	} #endregion 
 	
-	static drawGetBbox = function(xx, yy, _s) {
-		var x0 = xx + draw_padding * _s;
-		var x1 = xx + (w - draw_padding) * _s;
-		var y0 = yy + 20 * draw_name + draw_padding * _s;
-		var y1 = yy + (h - draw_padding) * _s;
+	static drawGetBbox = function(xx, yy, _s) { #region
+		var pad_label = draw_name && display_parameter.avoid_label;
+		
+		var _w = w - draw_padding * 2;
+		var _h = h - draw_padding * 2 - 20 * pad_label;
+		
+		_w *= display_parameter.preview_scale / 100 * _s;
+		_h *= display_parameter.preview_scale / 100 * _s;
+		
+		var _xc = xx +  w * _s / 2;
+		var _yc = yy + (h * _s + 20 * pad_label) / 2;
+		
+		var x0 = _xc - _w / 2;
+		var x1 = _xc + _w / 2;
+		var y0 = _yc - _h / 2;
+		var y1 = _yc + _h / 2;
 		
 		return BBOX().fromPoints(x0, y0, x1, y1);
-	}
+	} #endregion
 	
-	static drawNodeName = function(xx, yy, _s) {
+	static drawNodeName = function(xx, yy, _s) { #region
 		if(draw_graph_culled) return;
 		if(!active) return;
 		
@@ -626,9 +663,9 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 			draw_text_cut(xx + ui(8), yy + ui(10), _name, w * _s - ui(8), ts);
 			
 		draw_set_alpha(1);
-	}
+	} #endregion
 	
-	static drawJunctions = function(_x, _y, _mx, _my, _s) {
+	static drawJunctions = function(_x, _y, _mx, _my, _s) { #region
 		if(!active) return;
 		var hover = noone;
 		var amo = input_display_list == -1? ds_list_size(inputs) : array_length(input_display_list);
@@ -658,9 +695,9 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 			hover = inspectInput2;
 		
 		return hover;
-	}
+	} #endregion
 	
-	static drawJunctionNames = function(_x, _y, _mx, _my, _s) {
+	static drawJunctionNames = function(_x, _y, _mx, _my, _s) { #region
 		if(draw_graph_culled) return;
 		if(!active) return;
 		var amo = input_display_list == -1? ds_list_size(inputs) : array_length(input_display_list);
@@ -707,9 +744,9 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 			inspectInput2.drawNameBG(_s);
 			inspectInput2.drawName(_s, _mx, _my);
 		}
-	}
+	} #endregion
 	
-	static drawConnections = function(_x, _y, _s, mx, my, _active, aa = 1, minx = undefined, miny = undefined, maxx = undefined, maxy = undefined) { 
+	static drawConnections = function(_x, _y, _s, mx, my, _active, aa = 1, minx = undefined, miny = undefined, maxx = undefined, maxy = undefined) { #region
 		if(!active) return;
 		
 		var hovering = noone;
@@ -765,15 +802,15 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		}
 		
 		return hovering;
-	}
+	} #endregion
 	
-	static getGraphPreviewSurface = function() {
+	static getGraphPreviewSurface = function() { #region
 		var _node = outputs[| preview_channel];
 		if(_node.type != VALUE_TYPE.surface) return noone;
 		return _node.getValue();
-	}
+	} #endregion
 	
-	static drawPreview = function(xx, yy, _s) {
+	static drawPreview = function(xx, yy, _s) { #region
 		if(draw_graph_culled) return;
 		if(!active) return;
 		
@@ -798,46 +835,13 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		preview_surface = is_surface(surf)? surf : noone;
 		if(preview_surface == noone) return;
 		
-		var pw = surface_get_width(preview_surface);
-		var ph = surface_get_height(preview_surface);
-		var ps = min((w * _s - 8) / pw, (h * _s - 8) / ph);
-		var px = xx + w * _s / 2 - pw * ps / 2;
-		var py = yy + h * _s / 2 - ph * ps / 2;
-		var aa = 0.5 + 0.5 * renderActive;
+		var bbox = drawGetBbox(xx, yy, _s);
+		var aa   = 0.5 + 0.5 * renderActive;
 		
-		if(preview_trans == 1) {
-			draw_surface_ext_safe(preview_surface, px, py, ps, ps, 0, c_white, aa);
-			return;
-		}
-		
-		if(preview_trans < 1 && is_surface(preview_surface_prev)) {
-			preview_trans = lerp_float(preview_trans, 1, 8);
-			var _pw = surface_get_width(preview_surface_prev);
-			var _ph = surface_get_height(preview_surface_prev);
-			var _ps = min((w * _s - 8) / _pw, (h * _s - 8) / _ph);
-			var _px = xx + w * _s / 2 - _pw * _ps / 2;
-			var _py = yy + h * _s / 2 - _ph * _ps / 2;
-			
-			draw_surface_ext_safe(preview_surface_prev, _px, _py, _ps, _ps, 0, c_white, aa);
-			
-			shader_set(sh_trans_node_prev_drop);
-			shader_set_f("dimension", _pw, _ph);
-			shader_set_f("position", (preview_drop_x - px) / (_pw * _ps), (preview_drop_y - py) / (_ph * _ps));
-			shader_set_f("prog", preview_trans);
-			draw_surface_ext_safe(preview_surface, px, py, ps, ps, 0, c_white, aa);
-			shader_reset();
-		} else if(is_surface(preview_surface_prev))
-			surface_free(preview_surface_prev);
-	}
+		draw_surface_bbox(preview_surface, bbox, c_white, aa);
+	} #endregion
 	
-	static previewDropAnimation = function() {
-		preview_surface_prev = surface_clone(preview_surface);
-		preview_trans  = 0;
-		preview_drop_x = preview_mx;
-		preview_drop_y = preview_my;
-	}
-	
-	static getNodeDimension = function(showFormat = true) {
+	static getNodeDimension = function(showFormat = true) { #region
 		if(!is_surface(preview_surface)) {	
 			if(ds_list_size(outputs))
 				return "[" + array_shape(outputs[| 0].getValue()) + "]";
@@ -864,9 +868,9 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		txt += "]";
 		
 		return txt;
-	}
+	} #endregion
 	
-	static drawDimension = function(xx, yy, _s) {
+	static drawDimension = function(xx, yy, _s) { #region
 		if(draw_graph_culled) return;
 		if(!active) return;
 		if(_s * w < 64) return;
@@ -875,7 +879,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		var tx = xx + w * _s / 2;
 		var ty = yy + (h + 4) * _s - 2;
 		
-		if(PANEL_GRAPH.show_dimension) {
+		if(display_parameter.show_dimension) {
 			var txt = string(getNodeDimension(_s > 0.65));
 			draw_text(round(tx), round(ty), txt);
 			ty += string_height(txt) - 2;
@@ -883,7 +887,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		
 		draw_set_font(f_p3);
 		
-		if(PANEL_GRAPH.show_compute) {
+		if(display_parameter.show_compute) {
 			var rt, unit;
 			if(render_time < 1000) {
 				rt = round(render_time / 10) * 10;
@@ -900,11 +904,12 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 			}
 			draw_text(round(tx), round(ty), string(rt) + " " + unit);
 		}
-	}
+	} #endregion
 	
-	static drawNode = function(_x, _y, _mx, _my, _s) { 
+	static drawNode = function(_x, _y, _mx, _my, _s, display_parameter) { #region
 		if(draw_graph_culled) return;
 		if(!active) return;
+		self.display_parameter = display_parameter;
 		
 		var xx = x * _s + _x;
 		var yy = y * _s + _y;
@@ -936,7 +941,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		draw_droppable = false;
 		
 		return drawJunctions(xx, yy, _mx, _my, _s);
-	}
+	} #endregion
 	
 	static onDrawNodeBehind = function(_x, _y, _mx, _my, _s) {}
 	
@@ -944,9 +949,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	
 	static onDrawHover = function(_x, _y, _mx, _my, _s) {}
 	
-	badgePreview = 0;
-	badgeInspect = 0;
-	static drawBadge = function(_x, _y, _s) {
+	static drawBadge = function(_x, _y, _s) { #region
 		if(!active) return;
 		var xx = x * _s + _x + w * _s;
 		var yy = y * _s + _y;
@@ -971,12 +974,9 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		
 		inspecting = false;
 		previewing = 0;
-	}
+	} #endregion
 	
-	active_draw_index = -1;
-	static drawActive = function(_x, _y, _s, ind = 0) {
-		active_draw_index = ind;
-	}
+	static drawActive = function(_x, _y, _s, ind = 0) { active_draw_index = ind; }
 	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {}
 	
@@ -985,7 +985,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	static enable = function() { active = true; }
 	static disable = function() { active = false; }
 	
-	static destroy = function(_merge = false) {
+	static destroy = function(_merge = false) { #region
 		if(!active) return;
 		disable();
 		
@@ -1024,15 +1024,15 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 			outputs[| i].destroy();
 		
 		onDestroy();
-	}
+	} #endregion
 	
-	static restore = function() { 
+	static restore = function() { #region
 		if(active) return;
 		enable();
 		ds_list_add(group == noone? PROJECT.nodes : group.getNodeList(), self);
-	}
+	} #endregion
 	
-	static onValidate = function() {
+	static onValidate = function() { #region
 		value_validation[VALIDATION.pass]	 = 0;
 		value_validation[VALIDATION.warning] = 0;
 		value_validation[VALIDATION.error]   = 0;
@@ -1042,23 +1042,23 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 			if(jun.value_validation)
 				value_validation[jun.value_validation]++;
 		}
-	}
+	} #endregion
 	
 	static onDestroy = function() {}
 	
-	static clearInputCache = function() {
+	static clearInputCache = function() { #region
 		for( var i = 0; i < ds_list_size(inputs); i++ )
 			inputs[| i].cache_value[0] = false;
-	}
+	} #endregion
 	
-	static cacheArrayCheck = function() {
+	static cacheArrayCheck = function() { #region
 		if(array_length(cached_output) != PROJECT.animator.frames_total)
 			array_resize(cached_output, PROJECT.animator.frames_total);
 		if(array_length(cache_result) != PROJECT.animator.frames_total)
 			array_resize(cache_result, PROJECT.animator.frames_total);
-	}
+	} #endregion
 	
-	static cacheCurrentFrame = function(_frame) {
+	static cacheCurrentFrame = function(_frame) { #region
 		cacheArrayCheck();
 		if(PROJECT.animator.current_frame < 0) return;
 		if(PROJECT.animator.current_frame >= array_length(cached_output)) return;
@@ -1069,9 +1069,9 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		array_safe_set(cache_result, PROJECT.animator.current_frame, true);
 		
 		return cached_output[PROJECT.animator.current_frame];
-	}
+	} #endregion
 	
-	static cacheExist = function(frame = PROJECT.animator.current_frame) {
+	static cacheExist = function(frame = PROJECT.animator.current_frame) { #region
 		if(frame < 0) return false;
 		
 		if(frame >= array_length(cached_output)) return false;
@@ -1080,25 +1080,26 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		
 		var s = array_safe_get(cached_output, frame);
 		return is_array(s) || surface_exists(s);
-	}
+	} #endregion
 	
-	static getCacheFrame = function(frame = PROJECT.animator.current_frame) {
+	static getCacheFrame = function(frame = PROJECT.animator.current_frame) { #region
 		if(frame < 0) return false;
 		
 		if(!cacheExist(frame)) return noone;
 		var surf = array_safe_get(cached_output, frame);
 		return surf;
-	}
+	} #endregion
 	
-	static recoverCache = function(frame = PROJECT.animator.current_frame) {
+	static recoverCache = function(frame = PROJECT.animator.current_frame) { #region
 		if(!cacheExist(frame)) return false;
 		
 		var _s = cached_output[PROJECT.animator.current_frame];
 		outputs[| 0].setValue(_s);
 			
 		return true;
-	}
-	static clearCache = function() { 
+	} #endregion
+	
+	static clearCache = function() { #region
 		clearInputCache();
 		
 		if(!clearCacheOnChange) return;
@@ -1114,13 +1115,11 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 			cached_output[i] = 0;
 			cache_result[i] = false;
 		}
-	}
+	} #endregion
 	
-	static clearCacheForward = function() {
-		_clearCacheForward();
-	}
+	static clearCacheForward = function() { _clearCacheForward(); }
 	
-	static _clearCacheForward = function() {
+	static _clearCacheForward = function() { #region
 		if(!isRenderActive()) return;
 		
 		clearCache();
@@ -1131,14 +1130,14 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		//for( var i = 0; i < ds_list_size(outputs); i++ )
 		//for( var j = 0; j < ds_list_size(outputs[| i].value_to); j++ )
 		//	outputs[| i].value_to[| j].node._clearCacheForward();
-	}
+	} #endregion
 	
-	static clearInputCache = function() { 
+	static clearInputCache = function() { #region
 		for( var i = 0; i < ds_list_size(inputs); i++ )
 			inputs[| i].resetCache();
-	}
+	} #endregion
 	
-	static checkConnectGroup = function(_type = "group") {
+	static checkConnectGroup = function(_type = "group") { #region
 		var _y = y;
 		var nodes = [];
 				
@@ -1189,19 +1188,20 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		}
 		
 		return nodes;
-	}
+	} #endregion
 	
-	static isNotUsingTool = function() {
-		return PANEL_PREVIEW.tool_current == noone;
-	}
+	static isNotUsingTool = function() { return PANEL_PREVIEW.tool_current == noone; }
 	
-	static isUsingTool = function(index, subtool = noone) {
+	static isUsingTool = function(index = undefined, subtool = noone) { #region
 		if(tools == -1) 
 			return false;
 		
 		var _tool = PANEL_PREVIEW.tool_current;
 		if(_tool == noone)
 			return false;
+		
+		if(index == undefined) 
+			return true;
 		
 		if(is_real(index) && _tool != tools[index])
 			return false;
@@ -1213,9 +1213,9 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 			return true;
 			
 		return _tool.selecting == subtool;
-	}
+	} #endregion
 	
-	static clone = function(target = PANEL_GRAPH.getCurrentContext()) {
+	static clone = function(target = PANEL_GRAPH.getCurrentContext()) { #region
 		CLONING = true;
 		var _type = instanceof(self);
 		var _node = nodeBuild(_type, x, y, target);
@@ -1240,35 +1240,33 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		onClone(_node, target);
 		
 		return _node;
-	}
+	} #endregion
 	
 	static onClone = function(_NewNode, target = PANEL_GRAPH.getCurrentContext()) {}
 	
-	draw_droppable = false;
-	static droppable = function(dragObj) {
+	static droppable = function(dragObj) { #region
 		for( var i = 0; i < ds_list_size(inputs); i++ ) {
 			if(dragObj.type == inputs[| i].drop_key)
 				return true;
 		}
 		return false;
-	}
+	} #endregion
 	
-	static onDrop = function(dragObj) {
+	static onDrop = function(dragObj) { #region
 		for( var i = 0; i < ds_list_size(inputs); i++ ) {
 			if(dragObj.type == inputs[| i].drop_key) {
 				inputs[| i].setValue(dragObj.data);
-				previewDropAnimation();
 				return;
 			}
 		}
-	}
+	} #endregion
 	
-	static getPreviewValue = function() {
+	static getPreviewValue = function() { #region
 		if(preview_channel > ds_list_size(outputs)) return noone;
 		return outputs[| preview_channel];
-	}
+	} #endregion
 	
-	static getPreviewBoundingBox = function() {
+	static getPreviewBoundingBox = function() { #region
 		var _node = getPreviewValue();
 		if(_node == undefined) return noone;
 		if(_node.type != VALUE_TYPE.surface) return noone;
@@ -1279,13 +1277,11 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		if(!is_surface(_surf)) return noone;
 		
 		return BBOX().fromWH(preview_x, preview_y, surface_get_width(_surf), surface_get_height(_surf));
-	}
+	} #endregion
 	
-	static getTool = function() {
-		return self;
-	}
+	static getTool = function() { return self; }
 	
-	static setTool = function(tool) {
+	static setTool = function(tool) { #region
 		if(!tool) {
 			isTool = false;
 			return;
@@ -1295,7 +1291,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 			group.nodes[| i].isTool = false;
 		
 		isTool = true;
-	}
+	} #endregion
 	
 	#region[#88ffe916] === Save Load ===
 	static serialize = function(scale = false, preset = false) {
@@ -1523,7 +1519,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	
 	static resetAnimation = function() {}
 	
-	static cleanUp = function() {
+	static cleanUp = function() { #region
 		for( var i = 0; i < ds_list_size(inputs); i++ )
 			inputs[| i].cleanUp();
 		for( var i = 0; i < ds_list_size(outputs); i++ )
@@ -1539,12 +1535,12 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 			surface_free(temp_surface[i]);
 		
 		onCleanUp();
-	}
+	} #endregion
 	
 	static onCleanUp = function() {}
 	
 	// helper function
-	static attrDepth = function() {
+	static attrDepth = function() { #region
 		if(struct_has(attributes, "color_depth")) {
 			var form = attributes.color_depth;
 			if(inputs[| 0].type == VALUE_TYPE.surface) 
@@ -1558,5 +1554,5 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		if(!is_surface(_s)) 
 			return surface_rgba8unorm;
 		return surface_get_format(_s);
-	}
+	} #endregion
 }

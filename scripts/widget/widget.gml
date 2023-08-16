@@ -75,7 +75,7 @@ function widget() constructor {
 	static draw = function() {}
 }
 
-function widgetParam(x, y, w, h, data, extra_data, m, rx = 0, ry = 0) constructor {
+function widgetParam(x, y, w, h, data, extra_data = 0, m = mouse_ui, rx = 0, ry = 0) constructor {
 	self.x = x;
 	self.y = y;
 	

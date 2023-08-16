@@ -350,13 +350,15 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 			///**/ addNodeObject(threeD, "Depth 3D",			s_node_stack,			"Node_3D_Depth",		[1, Node_3D_Depth],, "Create 3D looking image from depth map.").setVersion(1447);
 			
 			ds_list_add(threeD, "3D");
-			addNodeObject(threeD, "3D Scene",			s_node_3d_cube,		"Node_3D_Scene",				[1, Node_3D_Scene]);
+			addNodeObject(threeD, "3D Scene",	s_node_3d_cube,		"Node_3D_Scene",		[1, Node_3D_Scene]);
+			addNodeObject(threeD, "3D Camera",	s_node_3d_cube,		"Node_3D_Camera",		[1, Node_3D_Camera]);
 			
 			ds_list_add(threeD, "Mesh");
-			addNodeObject(threeD, "3D Cube",			s_node_3d_cube,		"Node_3D_Mesh_Cube",			[1, Node_3D_Mesh_Cube]);
+			addNodeObject(threeD, "3D Cube",	s_node_3d_cube,		"Node_3D_Mesh_Cube",	[1, Node_3D_Mesh_Cube]);
 			
 			ds_list_add(threeD, "Light");
 			addNodeObject(threeD, "Directional Light",	s_node_3d_cube,		"Node_3D_Light_Directional",	[1, Node_3D_Light_Directional]);
+			addNodeObject(threeD, "Point Light",		s_node_3d_cube,		"Node_3D_Light_Point",			[1, Node_3D_Light_Point]);
 			
 			ds_list_add(threeD, "Legacy");
 			addNodeObject(threeD, "3D Object",			s_node_3d_obj,			"Node_3D_Obj",			[0, Node_create_3D_Obj],, "Load .obj file from your computer as a 3D object.");

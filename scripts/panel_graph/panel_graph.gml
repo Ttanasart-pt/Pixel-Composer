@@ -11,94 +11,111 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 	}
 	setProject(project);
 	
-	scale			= [ 0.01, 0.02, 0.05, 0.10, 0.15, 0.20, 0.25, 0.33, 0.5, 0.65, 0.8, 1, 1.2, 1.35, 1.5, 2.0];
-	graph_s			= 1;
-	graph_s_to		= graph_s;
+	#region ---- display ----
+		display_parameter = {
+			show_grid	    : true,
+			show_dimension  : true,
+			show_compute    : true,
+		
+			avoid_label   : false,
+			preview_scale : 100,
+		}
+	#endregion
 	
-	graph_dragging_key = false;
-	graph_zooming_key  = false;
+	#region ---- position ----
+		scale			= [ 0.01, 0.02, 0.05, 0.10, 0.15, 0.20, 0.25, 0.33, 0.5, 0.65, 0.8, 1, 1.2, 1.35, 1.5, 2.0];
+		graph_s			= 1;
+		graph_s_to		= graph_s;
+		
+		graph_dragging_key = false;
+		graph_zooming_key  = false;
+		
+		graph_draggable= true;
+		graph_dragging = false;
+		graph_drag_mx  = 0;
+		graph_drag_my  = 0;
+		graph_drag_sx  = 0;
+		graph_drag_sy  = 0;
+		
+		graph_zooming  = false;
+		graph_zoom_mx  = 0;
+		graph_zoom_my  = 0;
+		graph_zoom_m   = 0;
+		graph_zoom_s   = 0;
+		
+		drag_key	   = mb_middle;
+		drag_locking   = false;
+	#endregion
 	
-	graph_draggable= true;
-	graph_dragging = false;
-	graph_drag_mx  = 0;
-	graph_drag_my  = 0;
-	graph_drag_sx  = 0;
-	graph_drag_sy  = 0;
+	#region ---- mouse ----
+		mouse_graph_x = 0;
+		mouse_graph_y = 0;
+		mouse_grid_x = 0;
+		mouse_grid_y = 0;
+		mouse_on_graph = false;
+	#endregion
 	
-	graph_zooming  = false;
-	graph_zoom_mx  = 0;
-	graph_zoom_my  = 0;
-	graph_zoom_m   = 0;
-	graph_zoom_s   = 0;
+	#region ---- nodes ----
+		node_context = ds_list_create();
 	
-	drag_key	   = mb_middle;
-	drag_locking   = false;
+		node_dragging = noone;
+		node_drag_mx  = 0;
+		node_drag_my  = 0;
+		node_drag_sx  = 0;
+		node_drag_sy  = 0;
+		node_drag_ox  = 0;
+		node_drag_oy  = 0;
 	
-	mouse_graph_x = 0;
-	mouse_graph_y = 0;
-	mouse_grid_x = 0;
-	mouse_grid_y = 0;
-	mouse_on_graph = false;
+		selection_block		= 0;
+		nodes_select_list	= ds_list_create();
+		nodes_select_drag   = false;
+		nodes_select_mx     = 0;
+		nodes_select_my     = 0;
 	
-	node_context = ds_list_create();
+		nodes_junction_d    = noone;
+		nodes_junction_dx   = 0;
+		nodes_junction_dy   = 0;
 	
-	node_dragging = noone;
-	node_drag_mx  = 0;
-	node_drag_my  = 0;
-	node_drag_sx  = 0;
-	node_drag_sy  = 0;
-	node_drag_ox  = 0;
-	node_drag_oy  = 0;
+		node_hovering		= noone;
+		node_hover			= noone;
+		node_focus			= noone;
+		
+		junction_hovering	= noone;
+		add_node_draw_junc	= false;
+		add_node_draw_x_fix = 0;
+		add_node_draw_y_fix = 0;
+		add_node_draw_x = 0;
+		add_node_draw_y = 0;
+		
+		connection_aa = 2;
+		connection_surface = surface_create(1, 1);
 	
-	selection_block		= 0;
-	nodes_select_list	= ds_list_create();
-	nodes_select_drag   = false;
-	nodes_select_mx     = 0;
-	nodes_select_my     = 0;
+		value_focus     = noone;
+		value_dragging  = noone;
+		value_draggings = [];
+	#endregion
 	
-	nodes_junction_d    = noone;
-	nodes_junction_dx   = 0;
-	nodes_junction_dy   = 0;
+	#region ---- minimap ----
+		minimap_show = false;
+		minimap_w = ui(160);
+		minimap_h = ui(160);
+		minimap_surface = -1;
 	
-	node_hovering		= noone;
-	node_hover			= noone;
-	node_focus			= noone;
+		minimap_panning  = false;
+		minimap_dragging = false;
+		minimap_drag_sx = 0;
+		minimap_drag_sy = 0;
+		minimap_drag_mx = 0;
+		minimap_drag_my = 0;
+	#endregion
 	
-	junction_hovering	= noone;
-	add_node_draw_junc	= false;
-	add_node_draw_x_fix = 0;
-	add_node_draw_y_fix = 0;
-	add_node_draw_x = 0;
-	add_node_draw_y = 0;
-	
-	value_focus     = noone;
-	value_dragging  = noone;
-	value_draggings = [];
-	
-	minimap_show = false;
-	minimap_w = ui(160);
-	minimap_h = ui(160);
-	minimap_surface = -1;
-	
-	minimap_panning  = false;
-	minimap_dragging = false;
-	minimap_drag_sx = 0;
-	minimap_drag_sy = 0;
-	minimap_drag_mx = 0;
-	minimap_drag_my = 0;
-	
-	context_framing = false;
-	context_frame_progress = 0;
-	context_frame_direct   = 0;
-	context_frame_sx = 0; context_frame_ex = 0;
-	context_frame_sy = 0; context_frame_ey = 0;
-	
-	show_grid	    = true;
-	show_dimension  = true;
-	show_compute    = true;
-	
-	connection_aa = 2;
-	connection_surface = surface_create(1, 1);
+	#region ---- context frame ----
+		context_framing = false;
+		context_frame_progress = 0;
+		context_frame_direct   = 0;
+		context_frame_sx = 0; context_frame_ex = 0;
+		context_frame_sy = 0; context_frame_ey = 0;
+	#endregion
 	
 	toolbar_height = ui(40);
 	
@@ -182,7 +199,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 			function() { return 0; },
 			function() { return __txtx("graph_visibility_title", "Visibility settings"); }, 
 			function(param) { 
-				var gs = dialogCall(o_dialog_graph_view, param.x, param.y); 
+				var gs = dialogCall(o_dialog_graph_view, param.x, param.y, { display_parameter }); 
 				gs.anchor = ANCHOR.bottom | ANCHOR.left;
 			} 
 		],
@@ -209,7 +226,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		}
 	});
 	
-	addHotkey("Graph", "Toggle grid",	 "G", MOD_KEY.none,		function() { PANEL_GRAPH.show_grid = !PANEL_GRAPH.show_grid; });
+	addHotkey("Graph", "Toggle grid",	 "G", MOD_KEY.none,		function() { display_parameter.show_grid = !display_parameter.show_grid; });
 	addHotkey("Graph", "Toggle preview", "H", MOD_KEY.none,		function() { PANEL_GRAPH.setTriggerPreview(); });
 	addHotkey("Graph", "Toggle render",  "R", MOD_KEY.none,		function() { PANEL_GRAPH.setTriggerRender(); });
 	
@@ -530,7 +547,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 	} #endregion
 	
 	function drawGrid() { #region
-		if(!show_grid) return;
+		if(!display_parameter.show_grid) return;
 		var gls = project.graphGrid.size;
 		if(graph_s <= 0.15) gls *= 10;
 		
@@ -577,7 +594,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		#region draw frame
 			for(var i = 0; i < ds_list_size(nodes_list); i++) {
 				if(instanceof(nodes_list[| i]) != "Node_Frame") continue;
-				nodes_list[| i].drawNode(gr_x, gr_y, mx, my, graph_s);
+				nodes_list[| i].drawNode(gr_x, gr_y, mx, my, graph_s, display_parameter);
 			}
 		#endregion
 		printIf(log, "Frame draw time: " + string(current_time - t)); t = current_time;
@@ -881,7 +898,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 			for(var i = 0; i < ds_list_size(nodes_list); i++) {
 				var _node = nodes_list[| i];
 				if(instanceof(_node) == "Node_Frame") continue;
-				var val = _node.drawNode(gr_x, gr_y, mx, my, graph_s);
+				var val = _node.drawNode(gr_x, gr_y, mx, my, graph_s, display_parameter);
 				
 				if(val) {
 					if(key_mod_press(SHIFT))

@@ -1,4 +1,4 @@
-function Node_3DObject(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constructor {
+function Node_3D_Object(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constructor {
 	name  = "3D Object";
 	h	  = 64;
 	min_h = h;
@@ -472,9 +472,9 @@ function Node_3DObject(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constru
 		outputs[| 0].setValue(object);
 	}
 	
+	static submitShader = function(params = {}, shader = noone) { object.submitShader(params, shader); }
+	
 	static submitUI  = function(params = {}, shader = noone) { object.submitUI(params, shader); }
 	static submit    = function(params = {}, shader = noone) { object.submit(params, shader); }
 	static submitSel = function(params = {}, shader = noone) { object.submitSel(params, shader); }
-	
-	static update = function(frame = PROJECT.animator.current_frame) {}
 }

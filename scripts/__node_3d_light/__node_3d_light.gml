@@ -1,4 +1,4 @@
-function Node_3D_Light(_x, _y, _group = noone) : Node_3DObject(_x, _y, _group) constructor {
+function Node_3D_Light(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group) constructor {
 	name   = "3D Light";
 	object = new __3dLight();
 	
@@ -21,8 +21,8 @@ function Node_3D_Light(_x, _y, _group = noone) : Node_3DObject(_x, _y, _group) c
 		var _col = inputs[| input_d3d_index + 0].getValue();
 		var _int = inputs[| input_d3d_index + 1].getValue();
 		
-		object.color		= _col;
-		object.intensity	= _int;
+		object.color	 = _col;
+		object.intensity = _int;
 		
 		outputs[| 0].setValue(object);
 	}

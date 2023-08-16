@@ -1,4 +1,4 @@
-function Node_3D_Mesh(_x, _y, _group = noone) : Node_3DObject(_x, _y, _group) constructor {
+function Node_3D_Mesh(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group) constructor {
 	name = "3D Mesh";
 	
 	input_mesh_index = ds_list_size(inputs);
