@@ -35,7 +35,7 @@ function Node_Wiggler(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			random_value[i] = getWiggle(ran[0], ran[1], PROJECT.animator.frames_total / fre, step * i, sed, 0, PROJECT.animator.frames_total);
 	}
 	
-	static process_data = function(_output, _data, _output_index, _array_index = 0) {  
+	static processData = function(_output, _data, _output_index, _array_index = 0) {  
 		var ran = _data[0];
 		var fre = _data[1];
 		var sed = _data[2];

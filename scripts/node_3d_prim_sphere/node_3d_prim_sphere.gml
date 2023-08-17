@@ -157,7 +157,7 @@ function Node_3D_Sphere(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		_3d_clear_local_transform();
 	}
 	
-	static process_data = function(_outSurf, _data, _output_index, _array_index) {
+	static processData = function(_outSurf, _data, _output_index, _array_index) {
 		if(_output_index == 3) return vertexObjects;
 		
 		var _subd = _data[0];

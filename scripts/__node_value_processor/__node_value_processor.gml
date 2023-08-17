@@ -4,13 +4,13 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	process_amount = 0;
 	inputs_data    = [];
 	
-	static process_data = function(_output, _data, _index) { return noone; }
+	static processData = function(_output, _data, _index) { return noone; }
 	
 	function preProcess(_outindex) {
 		var _out = outputs[| _outindex].getValue();
 		
 		if(process_amount == 0) //render single data
-			return process_data(_out, inputs_data, _outindex);
+			return processData(_out, inputs_data, _outindex);
 			
 		if(!is_array(_out))
 			_out = array_create(process_amount);
@@ -39,7 +39,7 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 				_data[i] = _in[_index];
 			}
 				
-			_out[l] = process_data(_out[l], _data, _outindex);
+			_out[l] = processData(_out[l], _data, _outindex);
 		}
 		
 		return _out;

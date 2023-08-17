@@ -33,7 +33,7 @@ function Node_PB_Draw_Blob(_x, _y, _group = noone) : Node_PB_Draw(_x, _y, _group
 		//inputs[| 3].drawOverlay(active, x0, y0, _s, _mx, _my, _snx, _sny);
 	}
 	
-	static process_data = function(_outSurf, _data, _output_index, _array_index) {
+	static processData = function(_outSurf, _data, _output_index, _array_index) {
 		var _pbox = _data[0];
 		var _fcol = _data[1];
 		var _mask = _data[2];

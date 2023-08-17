@@ -166,7 +166,7 @@ function Node_Colors_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 		inputs[| 2].setValue(palette);
 	}
 	
-	static process_data = function(_outSurf, _data, _output_index, _array_index) { 		
+	static processData = function(_outSurf, _data, _output_index, _array_index) { 		
 		var fr  = _data[1];
 		var to  = _data[2];
 		var tr  = _data[3];

@@ -13,7 +13,7 @@ function Node_HSV_Channel(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	attribute_surface_depth();
 	
-	static process_data = function(_outSurf, _data, output_index) {
+	static processData = function(_outSurf, _data, output_index) {
 		surface_set_target(_outSurf);
 		DRAW_CLEAR
 		BLEND_OVERRIDE;

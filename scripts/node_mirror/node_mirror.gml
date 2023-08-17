@@ -42,7 +42,7 @@ function Node_Mirror(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		inputs[| 2].drawOverlay(active, _posx, _posy, _s, _mx, _my, _snx, _sny);
 	}
 	
-	static process_data = function(_outSurf, _data, _output_index, _array_index) {
+	static processData = function(_outSurf, _data, _output_index, _array_index) {
 		var _dim = [ surface_get_width(_data[0]), surface_get_height(_data[0]) ];
 		var _pos = _data[1];
 		var _ang = _data[2];

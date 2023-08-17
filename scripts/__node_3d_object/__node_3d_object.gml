@@ -3,7 +3,7 @@ function Node_3D_Object(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 	h	  = 64;
 	min_h = h;
 	
-	object = new __3dObject();
+	preview_channel = 0;
 	
 	inputs[| 0] = nodeValue("Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.vector);
@@ -460,21 +460,14 @@ function Node_3D_Object(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 		}
 	} #endregion
 	
-	static setTransform = function() {
-		var _pos = inputs[| 0].getValue();
-		var _rot = inputs[| 1].getValue();
-		var _sca = inputs[| 2].getValue();
+	static setTransform = function(object, _data) { #region
+		var _pos = _data[0];
+		var _rot = _data[1];
+		var _sca = _data[2];
 		
 		object.position.set(_pos[0], _pos[1], _pos[2]);
 		object.rotation.set(_rot[0], _rot[1], _rot[2], _rot[3]);
 		object.scale.set(_sca[0], _sca[1], _sca[2]);
-		
-		outputs[| 0].setValue(object);
-	}
-	
-	static submitShader = function(params = {}, shader = noone) { object.submitShader(params, shader); }
-	
-	static submitUI  = function(params = {}, shader = noone) { object.submitUI(params, shader); }
-	static submit    = function(params = {}, shader = noone) { object.submit(params, shader); }
-	static submitSel = function(params = {}, shader = noone) { object.submitSel(params, shader); }
+		return object;
+	} #endregion
 }

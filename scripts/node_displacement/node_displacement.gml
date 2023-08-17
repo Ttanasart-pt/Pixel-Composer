@@ -58,7 +58,7 @@ If set, then strength value control how many times the effect applies on itself.
 	attribute_oversample();
 	attribute_interpolation();
 	
-	static process_data = function(_outSurf, _data, _output_index, _array_index) {		
+	static processData = function(_outSurf, _data, _output_index, _array_index) {		
 		switch(_data[5]) {
 			case 0 :
 				inputs[| 2].setVisible(true);

@@ -32,7 +32,7 @@ function Node_Edge_Detect(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	attribute_surface_depth();
 	attribute_oversample();
 	
-	static process_data = function(_outSurf, _data, _output_index, _array_index) {
+	static processData = function(_outSurf, _data, _output_index, _array_index) {
 		var ft = _data[1];
 		var ov = struct_try_get(attributes, "oversample");
 		

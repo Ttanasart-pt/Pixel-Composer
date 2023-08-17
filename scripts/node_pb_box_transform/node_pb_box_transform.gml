@@ -17,7 +17,7 @@ function Node_PB_Box_Transform(_x, _y, _group = noone) : Node_PB_Box(_x, _y, _gr
 		inputs[| 2].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
 	}
 	
-	static process_data = function(_outSurf, _data, _output_index, _array_index) {
+	static processData = function(_outSurf, _data, _output_index, _array_index) {
 		var _layr = _data[0];
 		var _pbox = _data[1];
 		var _tran = _data[2];

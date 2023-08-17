@@ -17,7 +17,7 @@ function Node_De_Corner(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	attribute_surface_depth();
 	
-	static process_data = function(_outSurf, _data, _output_index, _array_index) {
+	static processData = function(_outSurf, _data, _output_index, _array_index) {
 		surface_set_shader(_outSurf, sh_de_corner);
 		shader_set_f("dimension", [ surface_get_width(_data[0]), surface_get_height(_data[0]) ]);
 		shader_set_f("tolerance", _data[2]);

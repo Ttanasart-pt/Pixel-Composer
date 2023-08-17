@@ -31,7 +31,7 @@ function Node_Blur(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	attribute_oversample();
 	surface_blur_init();
 	
-	static process_data = function(_outSurf, _data, _output_index, _array_index) {		
+	static processData = function(_outSurf, _data, _output_index, _array_index) {		
 		var _size  = _data[1];
 		var _clamp = struct_try_get(attributes, "oversample");
 		var _isovr = _data[3];

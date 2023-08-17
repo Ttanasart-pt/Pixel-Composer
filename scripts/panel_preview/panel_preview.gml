@@ -71,6 +71,8 @@ function Panel_Preview() : PanelContent() constructor {
 		splitViewMouse  = 0;
 	
 		tileMode = 0;
+		
+		bg_color = COLORS.panel_3d_bg;
 	#endregion
 	
 	#region ---- tool ----
@@ -82,6 +84,8 @@ function Panel_Preview() : PanelContent() constructor {
 	
 	#region ---- 3d ----
 		d3_active  = false;
+		_d3_active = false;
+		d3_active_transition = 0;
 		d3_surface = noone;
 		d3_outline_surface = noone;
 		
@@ -102,15 +106,15 @@ function Panel_Preview() : PanelContent() constructor {
 		d3_pan_speed  = 2;
 		
 		d3_scene  = new __3dScene(d3_view_camera);
-		d3_scene.lightAmbient = $202020;
+		d3_scene.lightAmbient = $404040;
 		
 		d3_scene_light0 = new __3dLightDirectional();
 		d3_scene_light0.position.set(-1, -2, 3);
-		d3_scene_light0.color  = $303030;
+		d3_scene_light0.color  = $AAAAAA;
 		
 		d3_scene_light1 = new __3dLightDirectional();
 		d3_scene_light1.position.set(1, 2, 3);
-		d3_scene_light1.color  = $404040;
+		d3_scene_light1.color  = $FFFFFF;
 	#endregion
 	
 	tb_framerate = new textBox(TEXTBOX_INPUT.number, function(val) { preview_rate = real(val); });
@@ -237,6 +241,7 @@ function Panel_Preview() : PanelContent() constructor {
 		
 		for( var i = 0; i < 2; i++ ) {
 			var node = preview_node[i];
+			preview_sequence[i] = 0;
 			
 			if(node == noone) continue;
 			if(!node.active) {
@@ -244,13 +249,7 @@ function Panel_Preview() : PanelContent() constructor {
 				return;
 			}
 			
-			var _prev_val = node.getPreviewValue();
-			
-			if(_prev_val == undefined) continue;
-			if(_prev_val == noone) continue;
-			if(_prev_val.type != VALUE_TYPE.surface) continue;
-			
-			var value = _prev_val.getValue();
+			var value = node.getPreviewValues();
 			
 			if(is_array(value)) {
 				preview_sequence[i] = value;
@@ -701,17 +700,34 @@ function Panel_Preview() : PanelContent() constructor {
 		
 		#region view
 			var cam = camera_get_active();
-			var _pos, targ;
+			var _pos, targ, _blend = 1;
 	
 			targ = d3_camTarget;
 			_pos = calculate_3d_position(targ.x, targ.y, targ.z, d3_view_camera.focus_angle_x, d3_view_camera.focus_angle_y, d3_view_camera.focus_dist);
 			
-			if(d3_camLerp) {
-				d3_view_camera.position._lerp(_pos, 0.2);
-				d3_view_camera.focus._lerp(targ, 0.2);
+			if(d3_active_transition == 1) {
+				var _up  = new __vec3(0, 0, -1);
+				
+				d3_view_camera.position._lerp_float(_pos, 5, 0.1);
+				d3_view_camera.focus._lerp_float(   targ, 5, 0.1);
+				d3_view_camera.up._lerp_float(       _up, 5, 0.1);
 				
 				if(d3_view_camera.position.equal(_pos) && d3_view_camera.focus.equal(targ))
-					d3_camLerp = false;
+					d3_active_transition = 0;
+			} else if(d3_active_transition == -1) {
+				var _pos = new __vec3(0, 0, 8);
+				var targ = new __vec3(0, 0, 0);
+				var _up  = new __vec3(0, 1, 0);
+				
+				d3_view_camera.position._lerp_float(_pos, 5, 0.1);
+				d3_view_camera.focus._lerp_float(   targ, 5, 0.1);
+				d3_view_camera.up._lerp_float(       _up, 5, 0.1);
+				
+				_blend = d3_view_camera.position.distance(_pos) / 2;
+				_blend = clamp(_blend, 0, 1);
+				
+				if(d3_view_camera.position.equal(_pos) && d3_view_camera.focus.equal(targ))
+					d3_active_transition = 0;
 			} else {
 				d3_view_camera.position.set(_pos);
 				d3_view_camera.focus.set(targ);
@@ -726,7 +742,7 @@ function Panel_Preview() : PanelContent() constructor {
 			d3_outline_surface = surface_verify(d3_outline_surface, w, h);
 			
 			surface_set_target(d3_surface);
-			draw_clear(COLORS.panel_3d_bg);
+			draw_clear(bg_color);
 			
 			d3_view_camera.applyCamera(cam);
 			
@@ -740,6 +756,7 @@ function Panel_Preview() : PanelContent() constructor {
 				var _scale = _dist * 2;
 				while(_scale > 32) _scale /= 2;
 				
+				shader_set_f("axisBlend", _blend);
 				shader_set_f("scale", _scale);
 				shader_set_f("shift", _tx / _dist / 2, _ty / _dist / 2);
 				draw_sprite_stretched(s_fx_pixel, 0, _tx - _dist, _ty - _dist, _dist * 2, _dist * 2);
@@ -747,27 +764,48 @@ function Panel_Preview() : PanelContent() constructor {
 			gpu_set_zwriteenable(true);
 			
 			d3_scene.reset();
-			d3_scene.addLightDirectional(d3_scene_light0);
-			d3_scene.addLightDirectional(d3_scene_light1);
-			_prev_node.submitShader(d3_scene);
-			d3_scene.apply();
-			
-			_prev_node.submitUI(d3_scene);						//////////////// SUBMIT ////////////////
+			if(_prev_node.is_3D) {
+				var _prev_obj = _prev_node.getPreviewObject();
+				
+				d3_scene.addLightDirectional(d3_scene_light0);
+				d3_scene.addLightDirectional(d3_scene_light1);
+					
+				for( var i = 0, n = array_length(_prev_obj); i < n; i++ ) {
+					var _prev = _prev_obj[i];
+					if(_prev == noone) continue;
+					
+					_prev.submitShader(d3_scene);
+				}
+				
+				d3_scene.apply();
+				
+				for( var i = 0, n = array_length(_prev_obj); i < n; i++ ) {
+					var _prev = _prev_obj[i];
+					if(_prev == noone) continue;
+					_prev.submitUI(d3_scene);							//////////////// SUBMIT ////////////////
+				}
+			}
 			
 			surface_reset_target();
-			draw_surface(d3_surface, 0, 0);
+			draw_surface_safe(d3_surface);
 		#endregion
 		
 		#region outline
 			var inspect_node = PANEL_INSPECTOR.inspecting;
+			
 			if(inspect_node && inspect_node.is_3D) {
+				var _inspect_obj = inspect_node.getPreviewObjectOutline();
+				
 				surface_set_target(d3_outline_surface);
 				draw_clear(c_black);
 					
 				d3_view_camera.applyCamera(cam);
 					
 				gpu_set_ztestenable(false);
-					inspect_node.submitSel(d3_scene);
+					for( var i = 0, n = array_length(_inspect_obj); i < n; i++ ) {
+						if(_inspect_obj[i] == noone) continue;
+						_inspect_obj[i].submitSel(d3_scene);
+					}
 				surface_reset_target();
 					
 				shader_set(sh_d3d_outline);
@@ -783,38 +821,41 @@ function Panel_Preview() : PanelContent() constructor {
 		right_menu_y = toolbar_height - ui(4);
 		toolbar_draw = false;
 		
-		if(PANEL_PREVIEW == self) {
-			draw_set_text(f_p0, fa_right, fa_top, COLORS._main_text_accent);
-			draw_text(w - ui(8), right_menu_y, __txt("Active"));
-			right_menu_y += string_height("l");
-		}
-		
-		draw_set_text(f_p0, fa_right, fa_top, fps >= PROJECT.animator.framerate? COLORS._main_text_sub : COLORS._main_value_negative);
-		draw_text(w - ui(8), right_menu_y, __txt("fps") + " " + string(fps));
-		right_menu_y += string_height("l");
-		
-		draw_set_text(f_p0, fa_right, fa_top, COLORS._main_text_sub);
-		draw_text(w - ui(8), right_menu_y, __txt("Frame") + " " + string(PROJECT.animator.current_frame) + "/" + string(PROJECT.animator.frames_total));
-		
-		right_menu_y += string_height("l");
-		draw_text(w - ui(8), right_menu_y, "x" + string(canvas_s));
-		
-		if(pHOVER) {
-			right_menu_y += string_height("l");
-			var mpx = floor((mx - canvas_x) / canvas_s);
-			var mpy = floor((my - canvas_y) / canvas_s);
-			draw_text(w - ui(8), right_menu_y, "[" + string(mpx) + ", " + string(mpy) + "]");
-		}
-		
 		var _node = getNodePreview();
-		if(_node == noone) return;
 		
-		right_menu_y += string_height("l");
-		var txt = string(canvas_w) + "x" + string(canvas_h) + "px";
-		if(canvas_a) txt = string(canvas_a) + " x " + txt;
-		draw_text(w - ui(8), right_menu_y, txt);
+		#region status texts (top right)
+			if(PANEL_PREVIEW == self) {
+				draw_set_text(f_p0, fa_right, fa_top, COLORS._main_text_accent);
+				draw_text(w - ui(8), right_menu_y, __txt("Active"));
+				right_menu_y += string_height("l");
+			}
 		
-		right_menu_y += string_height("l");
+			draw_set_text(f_p0, fa_right, fa_top, fps >= PROJECT.animator.framerate? COLORS._main_text_sub : COLORS._main_value_negative);
+			draw_text(w - ui(8), right_menu_y, __txt("fps") + " " + string(fps));
+			right_menu_y += string_height("l");
+		
+			draw_set_text(f_p0, fa_right, fa_top, COLORS._main_text_sub);
+			draw_text(w - ui(8), right_menu_y, __txt("Frame") + " " + string(PROJECT.animator.current_frame) + "/" + string(PROJECT.animator.frames_total));
+		
+			right_menu_y += string_height("l");
+			draw_text(w - ui(8), right_menu_y, "x" + string(canvas_s));
+		
+			if(pHOVER) {
+				right_menu_y += string_height("l");
+				var mpx = floor((mx - canvas_x) / canvas_s);
+				var mpy = floor((my - canvas_y) / canvas_s);
+				draw_text(w - ui(8), right_menu_y, "[" + string(mpx) + ", " + string(mpy) + "]");
+			}
+		
+			if(_node == noone) return;
+		
+			right_menu_y += string_height("l");
+			var txt = string(canvas_w) + "x" + string(canvas_h) + "px";
+			if(canvas_a) txt = string(canvas_a) + " x " + txt;
+			draw_text(w - ui(8), right_menu_y, txt);
+		
+			right_menu_y += string_height("l");
+		#endregion
 		
 		var pseq = getNodePreviewSequence();
 		if(pseq == 0) return;
@@ -836,9 +877,11 @@ function Panel_Preview() : PanelContent() constructor {
 		}
 			
 		preview_x_max = 0;
-		var xx = preview_x + ui(8);
-		var yy = h - toolbar_height - prev_size - ui(8);
+		var _xx = (_node.tools != -1) * ui(40);
+		var xx  = _xx + preview_x + ui(8);
+		var yy  = h - toolbar_height - prev_size - ui(8);
 		if(my > yy) mouse_on_preview = false;
+		var hoverable = pHOVER && point_in_rectangle(mx, my, _xx, ui(32), w, h - toolbar_height);
 		
 		for(var i = 0; i < array_length(pseq); i++) {
 			var prev   = pseq[i];
@@ -852,7 +895,7 @@ function Panel_Preview() : PanelContent() constructor {
 			draw_set_color(COLORS.panel_preview_surface_outline);
 			draw_rectangle(xx, yy, xx + prev_w * ss, yy + prev_h * ss, true);
 				
-			if(pHOVER && point_in_rectangle(mx, my, xx, yy, xx + prev_sw, yy + prev_h * ss)) {
+			if(hoverable && point_in_rectangle(mx, my, xx, yy, xx + prev_sw, yy + prev_h * ss)) {
 				if(mouse_press(mb_left, pFOCUS)) {
 					_node.preview_index = i;
 					_node.onValueUpdate(0);
@@ -873,25 +916,27 @@ function Panel_Preview() : PanelContent() constructor {
 			preview_x_max += prev_sw + ui(8);
 		}
 		preview_x_max = max(preview_x_max - ui(100), 0);
+		
+		#region ++++ sequence control ++++
+			//var by = h - toolbar_height - prev_size - ui(56);
+			//var bx = ui(10);
 			
-		var by = h - toolbar_height - prev_size - ui(56);
-		var bx = ui(10);
+			//var b = buttonInstant(THEME.button_hide, bx, by, ui(40), ui(40), [mx, my], pFOCUS, pHOVER);
 			
-		var b = buttonInstant(THEME.button_hide, bx, by, ui(40), ui(40), [mx, my], pFOCUS, pHOVER);
-			
-		if(_node.preview_speed == 0) {
-			if(b) {
-				draw_sprite_ui_uniform(THEME.sequence_control, 1, bx + ui(20), by + ui(20), 1, COLORS._main_icon, 1);
-				if(b == 2) _node.preview_speed = preview_rate / game_get_speed(gamespeed_fps);
-			}
-			draw_sprite_ui_uniform(THEME.sequence_control, 1, bx + ui(20), by + ui(20), 1, COLORS._main_icon, 0.5);
-		} else {
-			if(b) {
-				draw_sprite_ui_uniform(THEME.sequence_control, 0, bx + ui(20), by + ui(20), 1, COLORS._main_accent, 1);
-				if(b == 2) _node.preview_speed = 0;
-			}
-			draw_sprite_ui_uniform(THEME.sequence_control, 0, bx + ui(20), by + ui(20), 1, COLORS._main_accent, .75);
-		}
+			//if(_node.preview_speed == 0) {
+			//	if(b) {
+			//		draw_sprite_ui_uniform(THEME.sequence_control, 1, bx + ui(20), by + ui(20), 1, COLORS._main_icon, 1);
+			//		if(b == 2) _node.preview_speed = preview_rate / game_get_speed(gamespeed_fps);
+			//	}
+			//	draw_sprite_ui_uniform(THEME.sequence_control, 1, bx + ui(20), by + ui(20), 1, COLORS._main_icon, 0.5);
+			//} else {
+			//	if(b) {
+			//		draw_sprite_ui_uniform(THEME.sequence_control, 0, bx + ui(20), by + ui(20), 1, COLORS._main_accent, 1);
+			//		if(b == 2) _node.preview_speed = 0;
+			//	}
+			//	draw_sprite_ui_uniform(THEME.sequence_control, 0, bx + ui(20), by + ui(20), 1, COLORS._main_accent, .75);
+			//}
+		#endregion
 	} #endregion
 	
 	tool_hovering = false;
@@ -1199,30 +1244,30 @@ function Panel_Preview() : PanelContent() constructor {
 	function drawContent(panel) { #region					>>>>>>>>>>>>>>>>>>>> MAIN DRAW <<<<<<<<<<<<<<<<<<<<
 		mouse_on_preview = pHOVER && point_in_rectangle(mx, my, 0, toolbar_height, w, h - toolbar_height);
 		var _prev_node   = getNodePreview();
+		
 		d3_active = _prev_node != noone && _prev_node.is_3D;
 		
-		draw_clear(COLORS.panel_bg_clear);
+		draw_clear(bg_color);
 		if(canvas_bg == -1 && canvas_s >= 0.1) 
 			draw_sprite_tiled_ext(s_transparent, 0, canvas_x, canvas_y, canvas_s, canvas_s, COLORS.panel_preview_transparent, 1);
 		else
 			draw_clear(canvas_bg);
+		draw_set_color(COLORS._main_icon_dark);
+		draw_line_width(canvas_x, 0, canvas_x, h, 1);
+		draw_line_width(0, canvas_y, w, canvas_y, 1);
+		
+		bg_color = lerp_color(bg_color, d3_active? COLORS.panel_3d_bg : COLORS.panel_bg_clear, 0.3);
+		title = __txt("Preview");
 		
 		if(d3_active) {
 			dragCanvas3D();
 			draw3D();
 		} else {
-		
-			draw_set_color(COLORS._main_icon_dark);
-			draw_line_width(canvas_x, 0, canvas_x, h, 1);
-			draw_line_width(0, canvas_y, w, canvas_y, 1);
-		
-			title = __txt("Preview");
-		
 			dragCanvas();
-			getPreviewData();
 			drawNodePreview();
 		}
 		
+		getPreviewData();
 		drawPreviewOverlay();
 		
 		var inspect_node = PANEL_INSPECTOR.inspecting;
@@ -1231,9 +1276,8 @@ function Panel_Preview() : PanelContent() constructor {
 		if(inspect_node) {
 			tool = inspect_node.getTool();
 			if(tool) drawNodeTools(pFOCUS, tool);
-		} else {
+		} else 
 			tool_current = noone;
-		}
 		
 		if(do_fullView) {
 			do_fullView = false;

@@ -121,6 +121,10 @@ function value_color(i) {
 		$6691ff, //armature
 		$808080, //buffer
 		$976bff, //pbBox
+		$ffa64d, //d3Mesh	
+		$ffa64d, //d3Light	
+		$ffa64d, //d3Camera
+		$ffa64d, //d3Scene	
 	];
 	
 	if(i == 99) return $5dde8f;

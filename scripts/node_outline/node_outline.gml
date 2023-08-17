@@ -56,7 +56,7 @@ function Node_Outline(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	attribute_surface_depth();
 	attribute_oversample();
 	
-	static process_data = function(_outSurf, _data, _output_index, _array_index) { 
+	static processData = function(_outSurf, _data, _output_index, _array_index) { 
 		var ww = surface_get_width(_data[0]);
 		var hh = surface_get_height(_data[0]);
 		var wd = _data[1];

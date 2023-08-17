@@ -89,7 +89,7 @@ function Node_Random_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		return _surf;
 	}
 	
-	static process_data = function(_outSurf, _data, _output_index, _array_index) {
+	static processData = function(_outSurf, _data, _output_index, _array_index) {
 		var _dim  = _data[0];
 		var _seed = _data[1];
 		

@@ -494,3 +494,10 @@ function surface_get_size(surface) {
 	var sz = sw * sh * surface_format_get_bytes(surface_get_format(surface));
 	return sz;
 }
+
+function surface_texture(surface) {
+	gml_pragma("forceinline");
+	
+	if(!is_surface(surface)) return -1;
+	return surface_get_texture(surface);
+}

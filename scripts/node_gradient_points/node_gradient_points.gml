@@ -70,7 +70,7 @@ function Node_Gradient_Points(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 		inputs[|  8].setVisible(!_usePal, !_usePal);
 	}
 	
-	static process_data = function(_outSurf, _data, _output_index, _array_index) {
+	static processData = function(_outSurf, _data, _output_index, _array_index) {
 		var _dim = _data[0];
 		
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());

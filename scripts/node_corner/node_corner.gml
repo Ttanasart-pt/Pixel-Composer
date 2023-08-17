@@ -29,7 +29,7 @@ function Node_Corner(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	attribute_surface_depth();
 	
-	static process_data = function(_outSurf, _data, _output_index, _array_index) {
+	static processData = function(_outSurf, _data, _output_index, _array_index) {
 		var wd = _data[1];
 		
 		var temp = surface_create_valid(surface_get_width(_data[0]), surface_get_height(_data[0]), attrDepth());

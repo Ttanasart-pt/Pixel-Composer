@@ -11,6 +11,7 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	attributes.array_process = ARRAY_PROCESS.loop;
 	current_data	= [];
 	inputs_data		= [];
+	all_inputs      = [];
 	
 	process_amount	= 0;
 	process_length  = [];
@@ -26,7 +27,7 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 			triggerRender();
 		}, false) ]);
 	
-	static process_data = function(_outSurf, _data, _output_index, _array_index = 0) { return _outSurf; }
+	static processData = function(_outSurf, _data, _output_index, _array_index = 0) { return _outSurf; }
 	
 	static getSingleValue = function(_index, _arr = 0, output = false) {
 		var _l  = output? outputs : inputs;
@@ -65,7 +66,7 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	static preProcess = function(outIndex) {
 		var _out = outputs[| outIndex].getValue();
 		
-		if(process_amount == 0) { //render single data
+		if(process_amount == 0) { #region render single data
 			if(outputs[| outIndex].type == VALUE_TYPE.d3object) //passing 3D vertex call
 				return _out;
 			
@@ -100,24 +101,30 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 					return inputs_data[0]
 			}
 			
-			var data = process_data(_out, inputs_data, outIndex, 0);						/// Process data
+			var data = processData(_out, inputs_data, outIndex, 0);						/// Process data
 			return data;
-		}
+		} #endregion
 		
-		if(outputs[| outIndex].type == VALUE_TYPE.d3object) { //passing 3D vertex call
+		if(outputs[| outIndex].type == VALUE_TYPE.d3object) { #region passing 3D vertex call
 			if(is_array(_out)) _out = _out[0];
 			return array_create(process_amount, _out);
-		}
+		} #endregion
 		
-		if(!is_array(_out))
-			_out = array_create(process_amount);
-		else if(array_length(_out) != process_amount) 
-			array_resize(_out, process_amount);
+		#region ++++ array preparation ++++
+			if(!is_array(_out))
+				_out = array_create(process_amount);
+			else if(array_length(_out) != process_amount) 
+				array_resize(_out, process_amount);
 		
-		var _data    = array_create(ds_list_size(inputs));
+			var _data  = array_create(ds_list_size(inputs));
+			all_inputs = array_create(ds_list_size(inputs));
+			
+			for(var i = 0; i < ds_list_size(inputs); i++)
+				all_inputs[i] = array_create(process_amount);
+		#endregion
 		
 		for(var l = 0; l < process_amount; l++) {
-			for(var i = 0; i < ds_list_size(inputs); i++) { //input prepare
+			for(var i = 0; i < ds_list_size(inputs); i++) { #region input preparation
 				var _in = inputs_data[i];
 				
 				if(!inputs[| i].isArray(_in)) {
@@ -136,10 +143,12 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 					case ARRAY_PROCESS.expand :		_index = floor(l / process_length[i][1]) % process_length[i][0]; break;
 					case ARRAY_PROCESS.expand_inv : _index = floor(l / process_length[ds_list_size(inputs) - 1 - i][1]) % process_length[i][0]; break;
 				}
+				
 				_data[i] = _in[_index];
-			}
+				all_inputs[i][l] = _data[i];
+			} #endregion
 			
-			if(outputs[| outIndex].type == VALUE_TYPE.surface && dimension_index > -1) {
+			if(outputs[| outIndex].type == VALUE_TYPE.surface && dimension_index > -1) { #region output surface verification
 				var surf = _data[dimension_index];
 				var _sw = 1, _sh = 1;
 				if(inputs[| dimension_index].type == VALUE_TYPE.surface) {
@@ -154,7 +163,7 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 				}
 				
 				_out[l] = surface_verify(_out[l], _sw, _sh, attrDepth());
-			}
+			} #endregion
 			
 			if(l == 0 || l == preview_index) 
 				current_data = _data;
@@ -165,14 +174,14 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 				else 
 					_out[l] = _data[0];
 			} else {
-				_out[l] = process_data(_out[l], _data, outIndex, l);						/// Process data
+				_out[l] = processData(_out[l], _data, outIndex, l);						/// Process data
 			}
 		}
 		
 		return _out;
 	}
 	
-	static update = function(frame = PROJECT.animator.current_frame) {
+	static update = function(frame = PROJECT.animator.current_frame) { #region
 		process_amount	= 0;
 		inputs_data		= array_create(ds_list_size(inputs));
 		process_length  = array_create(ds_list_size(inputs));
@@ -211,22 +220,22 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 				val = preProcess(i);
 				if(val == undefined) continue;
 			} else
-				val = process_data(noone, noone, i);
+				val = processData(noone, noone, i);
 			outputs[| i].setValue(val);
 		}
-	}
+	} #endregion
 	
-	static processSerialize = function(_map) {
+	static processSerialize = function(_map) { #region
 		_map.array_process = attributes.array_process;
-	}
+	} #endregion
 	
-	static processDeserialize = function() {
+	static processDeserialize = function() { #region
 		attributes.array_process = struct_try_get(load_map, "array_process", ARRAY_PROCESS.loop);
-	}
+	} #endregion
 	
 	///////////////////// CACHE /////////////////////
 	
-	static cacheCurrentFrameIndex = function(_frame, index) {
+	static cacheCurrentFrameIndex = function(_frame, index) { #region
 		cacheArrayCheck();
 		if(PROJECT.animator.current_frame < 0) return;
 		if(PROJECT.animator.current_frame >= array_length(cached_output)) return;
@@ -238,13 +247,13 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		array_safe_set(cache_result, PROJECT.animator.current_frame, true);
 		
 		return cached_output[PROJECT.animator.current_frame];
-	}
+	} #endregion
 	
-	static getCacheFrameIndex = function(frame = PROJECT.animator.current_frame, index = 0) {
+	static getCacheFrameIndex = function(frame = PROJECT.animator.current_frame, index = 0) { #region
 		if(frame < 0) return false;
 		if(!cacheExist(frame)) return noone;
 		
 		var surf = array_safe_get(cached_output, frame);
 		return array_safe_get(surf, index);
-	}
+	} #endregion
 }

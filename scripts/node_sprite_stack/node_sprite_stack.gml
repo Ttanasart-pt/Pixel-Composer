@@ -60,7 +60,7 @@ function Node_Sprite_Stack(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		inputs[| 11].setVisible(_high);
 	}
 	
-	static process_data = function(_outSurf, _data, _output_index, _array_index) {
+	static processData = function(_outSurf, _data, _output_index, _array_index) {
 		var _in  = _data[0];
 		var _dim = _data[1];
 		var _amo = _data[2];

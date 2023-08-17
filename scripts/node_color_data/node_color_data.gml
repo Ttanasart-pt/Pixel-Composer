@@ -19,7 +19,7 @@ function Node_Color_Data(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	
 	outputs[| 6] = nodeValue("Brightness", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, 0);
 	
-	static process_data = function(_output, _data, _output_index, _array_index = 0) {  
+	static processData = function(_output, _data, _output_index, _array_index = 0) {  
 		var _c = _data[0];
 		var _n = _data[1];
 		

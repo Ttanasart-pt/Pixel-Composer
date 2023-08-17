@@ -11,6 +11,8 @@ varying vec3 v_worldPosition;
 uniform float scale;
 uniform vec2  shift;
 
+uniform float axisBlend;
+
 vec4 grid(vec2 pos, float scale) {
     vec2 coord = pos * scale; // use the scale variable to set the distance between the lines
     vec2 derivative = fwidth(coord);
@@ -21,10 +23,10 @@ vec4 grid(vec2 pos, float scale) {
     vec4 color = vec4(.3, .3, .3, 1. - min(line, 1.));
     // y axis
     if(pos.x > -1. * minimumx / scale && pos.x < 1. * minimumx / scale)
-        color.y = 1.;
+        color.y = 0.3 + axisBlend * 0.7;
     // x axis
     if(pos.y > -1. * minimumy / scale && pos.y < 1. * minimumy / scale)
-        color.x = 1.;
+        color.x = 0.3 + axisBlend * 0.7;
     return color;
 }
 

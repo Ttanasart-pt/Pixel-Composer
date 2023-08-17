@@ -14,7 +14,7 @@ function Node_PB_Fx_Strip(_x, _y, _group = noone) : Node_PB_Fx(_x, _y, _group) c
 		["Effect",	false], 1, 4, 2, 3, 
 	];
 	
-	static process_data = function(_outSurf, _data, _output_index, _array_index) {
+	static processData = function(_outSurf, _data, _output_index, _array_index) {
 		var _pbox = _data[0];
 		if(_pbox == noone) return _pbox;
 		

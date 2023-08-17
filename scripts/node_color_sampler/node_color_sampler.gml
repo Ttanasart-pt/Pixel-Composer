@@ -13,7 +13,7 @@ function Node_Sampler(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	outputs[| 0] = nodeValue("Color", self, JUNCTION_CONNECT.output, VALUE_TYPE.color, c_white);
 	
-	static getPreviewValue = function() { return inputs[| 0]; }
+	static getPreviewValues = function() { return inputs[| 0].getValue(); }
 	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		inputs[| 1].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
@@ -45,7 +45,7 @@ function Node_Sampler(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		draw_rectangle(x0, y0, x1, y1, true);
 	}
 	
-	static process_data = function(_output, _data, _output_index, _array_index = 0) {  
+	static processData = function(_output, _data, _output_index, _array_index = 0) {  
 		var _surf = _data[0];
 		var _pos = _data[1];
 		var _sam = _data[2];

@@ -89,7 +89,7 @@ function Node_Shape_Polygon(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	mesh = new Mesh();
 	path = new PathSegment();
 	
-	static process_data = function(_outSurf, _data, _output_index, _array_index) {
+	static processData = function(_outSurf, _data, _output_index, _array_index) {
 		if(_output_index == 1)
 			return mesh;
 		if(_output_index == 2)

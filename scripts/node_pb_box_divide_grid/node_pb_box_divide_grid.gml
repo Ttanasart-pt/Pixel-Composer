@@ -17,7 +17,7 @@ function Node_PB_Box_Divide_Grid(_x, _y, _group = noone) : Node_PB_Box(_x, _y, _
 		["Divide",	false], 2, 3, 4, 
 	]
 	
-	static process_data = function(_outSurf, _data, _output_index, _array_index) {
+	static processData = function(_outSurf, _data, _output_index, _array_index) {
 		var _layr = _data[0];
 		var _pbox = _data[1];
 		var _amou = _data[2];

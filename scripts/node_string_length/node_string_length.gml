@@ -12,7 +12,7 @@ function Node_String_Length(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	
 	outputs[| 0] = nodeValue("Text", self, JUNCTION_CONNECT.output, VALUE_TYPE.text, "");
 	
-	static process_data = function(_output, _data, _index = 0) { 
+	static processData = function(_output, _data, _index = 0) { 
 		if(_data[1] == 0)
 			return string_length(_data[0]);
 		else 

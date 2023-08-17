@@ -15,7 +15,7 @@ function Node_RGB_Channel(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	attribute_surface_depth();
 	
-	static process_data = function(_outSurf, _data, output_index) {
+	static processData = function(_outSurf, _data, output_index) {
 		var _out = _data[1];
 		var _alp = _data[2];
 		

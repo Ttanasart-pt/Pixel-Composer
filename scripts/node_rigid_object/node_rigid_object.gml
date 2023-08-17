@@ -76,7 +76,7 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		new NodeTool( "Anchor remove",  THEME.mesh_tool_delete ),
 	];
 	
-	static getPreviewValue = function() { return inputs[| 6]; }
+	static getPreviewValues = function() { return inputs[| 6].getValue(); }
 	
 	is_convex = true;
 	hover = -1;

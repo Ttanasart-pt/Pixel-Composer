@@ -14,7 +14,7 @@ function Node_Base_Convert(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	
 	outputs[| 0] = nodeValue("Result", self, JUNCTION_CONNECT.output, VALUE_TYPE.text, "");
 	
-	static process_data = function(_output, _data, _output_index, _array_index = 0) { 
+	static processData = function(_output, _data, _output_index, _array_index = 0) { 
 		var val   = _data[0];
 		var bFrom = max(2, _data[1]);
 		var bTo   = max(2, _data[2]);

@@ -24,7 +24,7 @@ function Node_PB_Box_Divide(_x, _y, _group = noone) : Node_PB_Box(_x, _y, _group
 		["Divide",	false], 4, 2, 3, 6, 5, 
 	]
 	
-	static process_data = function(_outSurf, _data, _output_index, _array_index) {
+	static processData = function(_outSurf, _data, _output_index, _array_index) {
 		var _layr = _data[0];
 		var _pbox = _data[1];
 		var _amou = _data[2];

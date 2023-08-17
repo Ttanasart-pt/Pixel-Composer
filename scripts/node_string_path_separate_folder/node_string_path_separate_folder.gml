@@ -13,7 +13,7 @@ function Node_Path_Separate_Folder(_x, _y, _group = noone) : Node_Processor(_x, 
 	
 	outputs[| 1] = nodeValue("File Name", self, JUNCTION_CONNECT.output, VALUE_TYPE.path, "");
 	
-	static process_data = function(_output, _data, _index = 0) { 
+	static processData = function(_output, _data, _index = 0) { 
 		if(_index == 0)
 			return filename_dir(_data[0]);
 		else if(_index == 1)

@@ -44,25 +44,25 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 	static step = function() {
 		var _proj = inputs[| input_d3d_index + 3].getValue();
 		
+		inputs[| input_d3d_index + 0].setVisible(_proj == 0);
 		inputs[| input_d3d_index + 8].setVisible(_proj == 1);
 	}
 	
-	static update = function(frame = PROJECT.animator.current_frame) {
-		setTransform();
+	static processData = function(_output, _data, _output_index, _array_index = 0) { #region
+		var _pos = _data[0];
+		var _rot = _data[1];
 		
-		var _pos = inputs[| 0].getValue();
-		var _rot = inputs[| 1].getValue();
+		var _fov  = _data[input_d3d_index + 0];
+		var _clip = _data[input_d3d_index + 1];
+		var _dim  = _data[input_d3d_index + 2];
+		var _proj = _data[input_d3d_index + 3];
+		var _scne = _data[input_d3d_index + 4];
+		var _ambt = _data[input_d3d_index + 5];
+		var _dbg  = _data[input_d3d_index + 6];
+		var _back = _data[input_d3d_index + 7];
+		var _orts = _data[input_d3d_index + 8];
 		
-		var _fov  = inputs[| input_d3d_index + 0].getValue();
-		var _clip = inputs[| input_d3d_index + 1].getValue();
-		var _dim  = inputs[| input_d3d_index + 2].getValue();
-		var _proj = inputs[| input_d3d_index + 3].getValue();
-		var _scne = inputs[| input_d3d_index + 4].getValue();
-		var _ambt = inputs[| input_d3d_index + 5].getValue();
-		var _dbg  = inputs[| input_d3d_index + 6].getValue();
-		var _back = inputs[| input_d3d_index + 7].getValue();
-		var _orts = inputs[| input_d3d_index + 8].getValue();
-		
+		setTransform(object, _data);
 		if(_scne == noone) return;
 		
 		camera.position.set(_pos[0], _pos[1], _pos[2]);
@@ -71,17 +71,15 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 		
 		camera.setViewFov(_fov, _clip[0], _clip[1]);
 		if(_proj == 0)		camera.setViewSize(_dim[0], _dim[1]);
-		else if(_proj == 1) camera.setViewSize(_dim[0] / _orts, _dim[1] / _orts);
+		else if(_proj == 1) camera.setViewSize(1 / _orts, _dim[0] / _dim[1] / _orts);
 		
 		scene.lightAmbient = _ambt;
 		
-		var _outSurf = outputs[| 0].getValue();
-		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1]);
-		outputs[| 0].setValue(_outSurf);
+		_output = surface_verify(_output, _dim[0], _dim[1]);
 		
 		camera.setMatrix();
 		
-		surface_set_target(_outSurf);
+		surface_set_target(_output);
 		if(_dbg) draw_clear(_ambt);
 		else	 DRAW_CLEAR
 		
@@ -99,40 +97,21 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 		_scne.submit(scene);						//////////////// SUBMIT ////////////////
 			
 		surface_reset_target();
-		
 		gpu_set_cullmode(cull_noculling); 
-	}
+		
+		return _output;
+	} #endregion
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		
 	}
 	
-	static submitShader = function(params = {}, shader = noone) { 
-		object.submitShader(params, shader);
+	static getPreviewObject = function() { 
+		var _scene = array_safe_get(all_inputs, input_d3d_index + 4, []);
+		    _scene = array_safe_get(_scene, preview_index);
 		
-		var _scne = inputs[| input_d3d_index + 4].getValue(); 
-		if(_scne == noone) return; 
-		_scne.submitShader(params, shader); 
+		return [ object, _scene ]; 
 	}
 	
-	static submitUI  = function(params = {}, shader = noone) {
-		object.submitUI(params, shader);
-		
-		var _scne = inputs[| input_d3d_index + 4].getValue(); 
-		if(_scne == noone) return; 
-		_scne.submitUI(params, shader);
-	}
-		
-	static submit    = function(params = {}, shader = noone) {
-		object.submit(params, shader);
-		
-		var _scne = inputs[| input_d3d_index + 4].getValue(); 
-		if(_scne == noone) return; 
-		_scne.submit(params, shader); 
-	}
-		
-	static submitSel = function(params = {}, shader = noone) { 
-		object.submitSel(params, shader); 
-	}
-		
+	static getPreviewObjectOutline = function() { return [ object ]; }
 }

@@ -48,7 +48,7 @@ function Node_Noise_FBM(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		inputs[| 8].name = _col == 1? "Color B range" : "Color V range";
 	}
 	
-	static process_data = function(_outSurf, _data, _output_index, _array_index) {
+	static processData = function(_outSurf, _data, _output_index, _array_index) {
 		var _dim = _data[0];
 		var _sed = _data[1];
 		var _pos = _data[2];

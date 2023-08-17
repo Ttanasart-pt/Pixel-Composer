@@ -51,7 +51,7 @@ function Node_Scatter_Points(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		inputs[| 0].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
 	}
 	
-	static getPreviewValue = function() { return refVal; }
+	static getPreviewValues = function() { return refVal.getValue(); }
 	
 	function update(frame = PROJECT.animator.current_frame) { 
 		var _area	 = inputs[| 0].getValue();

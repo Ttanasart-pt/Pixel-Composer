@@ -27,7 +27,6 @@ varying vec3 v_worldPosition;
 void main() {
 	vec4 final_color = texture2D( gm_BaseTexture, v_vTexcoord );
 	final_color *= v_vColour;
-	gl_FragColor = vec4(0.);
 	
 	#region ++++ light ++++
 		vec3 light_effect = light_ambient.rgb;

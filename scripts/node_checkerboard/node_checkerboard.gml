@@ -45,7 +45,7 @@ function Node_Checker(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		inputs[| 2].drawOverlay(active, px, py, _s, _mx, _my, _snx, _sny);
 	}
 	
-	static process_data = function(_outSurf, _data, _output_index, _array_index) {
+	static processData = function(_outSurf, _data, _output_index, _array_index) {
 		var _dim = _data[0];
 		var _amo = _data[1];
 		var _ang = _data[2];

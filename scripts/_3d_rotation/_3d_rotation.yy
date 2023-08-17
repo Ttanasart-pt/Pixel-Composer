@@ -5,7 +5,7 @@
   "isCompatibility": false,
   "isDnD": false,
   "parent": {
-    "name": "misc",
-    "path": "folders/functions/3d/misc.yy",
+    "name": "util",
+    "path": "folders/functions/3d/util.yy",
   },
 }

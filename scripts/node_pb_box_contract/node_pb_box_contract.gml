@@ -34,7 +34,7 @@ function Node_PB_Box_Contract(_x, _y, _group = noone) : Node_PB_Box(_x, _y, _gro
 		else			inputs[| 4].name = "Fix Height";
 	}
 	
-	static process_data = function(_outSurf, _data, _output_index, _array_index) {
+	static processData = function(_outSurf, _data, _output_index, _array_index) {
 		var _layr = _data[0];
 		var _pbox = _data[1];
 		var _type = _data[2];

@@ -24,7 +24,7 @@ function Node_PB_Fx_Brick(_x, _y, _group = noone) : Node_PB_Fx(_x, _y, _group) c
 		["Dissolve", false], 5, 7, 6, 
 	];
 	
-	static process_data = function(_outSurf, _data, _output_index, _array_index) {
+	static processData = function(_outSurf, _data, _output_index, _array_index) {
 		var _pbox = _data[0];
 		if(_pbox == noone) return _pbox;
 		

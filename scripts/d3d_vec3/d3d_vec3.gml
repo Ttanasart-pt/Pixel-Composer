@@ -157,6 +157,13 @@ function __vec3(_x = 0, _y = 0, _z = 0) constructor {
 		z = lerp(z, to.z, speed);
 	}
 	
+    static _lerp_float = function(to, speed = 5, pre = 0.01) {
+        gml_pragma("forceinline");
+        x = lerp_float(x, to.x, speed, pre);
+        y = lerp_float(y, to.y, speed, pre);
+        z = lerp_float(z, to.z, speed, pre);
+    }
+
 	static equal = function(to) {
 		gml_pragma("forceinline");
 		return x == to.x && y == to.y && z == to.z;

@@ -93,7 +93,7 @@ function Node_Camera(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		refreshDynamicInput();
 	}
 	
-	static getPreviewValue = function() { return inputs[| 0]; }
+	static getPreviewValues = function() { return inputs[| 0].getValue(); }
 	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		if(array_length(current_data) == 0) return;
@@ -117,7 +117,7 @@ function Node_Camera(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		draw_rectangle_dashed(x0, y0, x1, y1);
 	}
 	
-	static process_data = function(_outSurf, _data, _output_index, _array_index) {
+	static processData = function(_outSurf, _data, _output_index, _array_index) {
 		if(!is_surface(_data[0])) return;
 		var _area = _data[1];
 		var _zoom = _data[2];

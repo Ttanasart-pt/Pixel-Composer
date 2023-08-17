@@ -5,7 +5,7 @@
   "isCompatibility": false,
   "isDnD": false,
   "parent": {
-    "name": "3d",
-    "path": "folders/functions/3d.yy",
+    "name": "camera",
+    "path": "folders/functions/3d/camera.yy",
   },
 }

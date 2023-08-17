@@ -7,7 +7,7 @@ function Node_Color(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	
 	outputs[| 0] = nodeValue("Color", self, JUNCTION_CONNECT.output, VALUE_TYPE.color, c_white);
 	
-	static process_data = function(_output, _data, _output_index, _array_index = 0) {  
+	static processData = function(_output, _data, _output_index, _array_index = 0) {  
 		return _data[0];
 	}
 	

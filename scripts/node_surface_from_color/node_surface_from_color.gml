@@ -6,7 +6,7 @@ function Node_Surface_From_Color(_x, _y, _group = noone) : Node_Processor(_x, _y
 	
 	outputs[| 0] = nodeValue("Surface", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
-	static process_data = function(_outSurf, _data, _output_index, _array_index) {
+	static processData = function(_outSurf, _data, _output_index, _array_index) {
 		var _col = _data[0];
 		
 		if(!is_array(_col)) _col = [ _col ];

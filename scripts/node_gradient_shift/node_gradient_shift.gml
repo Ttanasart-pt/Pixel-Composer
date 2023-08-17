@@ -19,7 +19,7 @@ function Node_Gradient_Shift(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	
 	_pal = -1;
 	
-	static process_data = function(_outSurf, _data, _output_index, _array_index) {
+	static processData = function(_outSurf, _data, _output_index, _array_index) {
 		var pal = _data[0];
 		var sft = _data[1];
 		var lop = _data[2];

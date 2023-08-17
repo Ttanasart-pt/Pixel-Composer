@@ -1099,7 +1099,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 				}
 			}
 			
-			if(target != noone && struct_has(target.node, "addInput"))
+			if(target != noone && target.connect_type == JUNCTION_CONNECT.input && target.node.is_dynamic_input)
 				_addInput = true;
 			
 			var _mmx = target != noone? target.x : _mx;

@@ -5,7 +5,7 @@ function Node_Surface_To_Buffer(_x, _y, _group = noone) : Node_Processor(_x, _y,
 	
 	outputs[| 0] = nodeValue("Buffer", self, JUNCTION_CONNECT.output, VALUE_TYPE.buffer, noone);
 	
-	static process_data = function(_outSurf, _data, _output_index, _array_index) {
+	static processData = function(_outSurf, _data, _output_index, _array_index) {
 		var _surf = _data[0];
 		return buffer_from_surface(_surf);
 	}

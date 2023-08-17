@@ -17,7 +17,7 @@ function Node_Palette_Extract(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	outputs[| 0] = nodeValue("Palette", self, JUNCTION_CONNECT.output, VALUE_TYPE.color, [ ])
 		.setDisplay(VALUE_DISPLAY.palette);
 	
-	static getPreviewValue = function() { return inputs[| 0]; }
+	static getPreviewValues = function() { return inputs[| 0].getValue(); }
 	
 	input_display_list = [
 		["Output", 	 true],	0,

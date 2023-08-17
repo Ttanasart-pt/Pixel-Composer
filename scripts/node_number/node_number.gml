@@ -74,7 +74,7 @@ function Node_Number(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		outputs[| 0].type = int? VALUE_TYPE.integer : VALUE_TYPE.float;
 	}
 	
-	static process_data = function(_output, _data, _output_index, _array_index = 0) {  
+	static processData = function(_output, _data, _output_index, _array_index = 0) {  
 		var _res = _data[1]? round(_data[0]) : _data[0];
 		display_output = _res;
 		return _res; 
@@ -248,7 +248,7 @@ function Node_Vector2(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		}
 	}
 	
-	static process_data = function(_output, _data, _output_index, _array_index = 0) {  
+	static processData = function(_output, _data, _output_index, _array_index = 0) {  
 		var vec = [ _data[0], _data[1] ];
 		for( var i = 0, n = array_length(vec); i < n; i++ ) 
 			vec[i] = _data[2]? round(vec[i]) : vec[i];
@@ -421,7 +421,7 @@ function Node_Vector3(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		outputs[| 0].type = int? VALUE_TYPE.integer : VALUE_TYPE.float;
 	}
 	
-	static process_data = function(_output, _data, _output_index, _array_index = 0) {  
+	static processData = function(_output, _data, _output_index, _array_index = 0) {  
 		var vec = [ _data[0], _data[1], _data[2] ];
 		for( var i = 0, n = array_length(vec); i < n; i++ ) 
 			vec[i] = _data[3]? round(vec[i]) : vec[i];
@@ -476,7 +476,7 @@ function Node_Vector4(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		outputs[| 0].type = int? VALUE_TYPE.integer : VALUE_TYPE.float;
 	}
 	
-	static process_data = function(_output, _data, _output_index, _array_index = 0) {  
+	static processData = function(_output, _data, _output_index, _array_index = 0) {  
 		var vec = [ _data[0], _data[1], _data[2], _data[3] ];
 		for( var i = 0, n = array_length(vec); i < n; i++ ) 
 			vec[i] = _data[4]? round(vec[i]) : vec[i];
@@ -524,7 +524,7 @@ function Node_Vector_Split(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 			outputs[| i].type = type;
 	}
 	
-	static process_data = function(_output, _data, _output_index, _array_index = 0) { 
+	static processData = function(_output, _data, _output_index, _array_index = 0) { 
 		return array_safe_get(_data[0], _output_index);
 	}
 	

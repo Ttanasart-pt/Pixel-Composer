@@ -112,7 +112,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		inputs[| 22].setVisible(_dis == 4);
 	}
 	
-	static process_data = function(_outSurf, _data, _output_index, _array_index) {
+	static processData = function(_outSurf, _data, _output_index, _array_index) {
 		if(_output_index == 1) return scatter_data;
 		if(_output_index == 0 && _array_index == 0) scatter_data = [];
 		

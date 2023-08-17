@@ -26,7 +26,7 @@ function Node_Average(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 
 	colors = [];
 	
-	static process_data = function(_outSurf, _data, _output_index, _array_index) {
+	static processData = function(_outSurf, _data, _output_index, _array_index) {
 		var inSurf = _data[0];
 		if(!is_surface(inSurf)) return _outSurf;
 		

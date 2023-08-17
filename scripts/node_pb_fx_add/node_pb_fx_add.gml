@@ -8,7 +8,7 @@ function Node_PB_Fx_Add(_x, _y, _group = noone) : Node_PB_Fx(_x, _y, _group) con
 		["Effect",	false], 1,
 	];
 	
-	static process_data = function(_outSurf, _data, _output_index, _array_index) {
+	static processData = function(_outSurf, _data, _output_index, _array_index) {
 		var _box1 = _data[0];
 		var _box2 = _data[1];
 		

@@ -16,7 +16,7 @@ function Node_Vector_Cross_3D(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 	outputs[| 0] = nodeValue("Result", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, [ 0, 0, 0 ] )
 		.setDisplay(VALUE_DISPLAY.vector);
 	
-	static process_data = function(_output, _data, _output_index, _array_index = 0) {  
+	static processData = function(_output, _data, _output_index, _array_index = 0) {  
 		var vec1 = _data[0];
 		var vec2 = _data[1];
 		

@@ -102,7 +102,7 @@ function Node_3D_Displace(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		inputs[| 13].setVisible(_proj);
 	}
 	
-	static process_data = function(_outSurf, _data, _output_index, _array_index) {
+	static processData = function(_outSurf, _data, _output_index, _array_index) {
 		if(_output_index == 1) return undefined;
 		if(_output_index == 3) return vertexObjects;
 		

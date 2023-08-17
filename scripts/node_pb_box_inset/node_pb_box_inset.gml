@@ -40,7 +40,7 @@ function Node_PB_Box_Inset(_x, _y, _group = noone) : Node_PB_Box(_x, _y, _group)
 		inputs[| 7].setVisible(_type == 1);
 	}
 	
-	static process_data = function(_outSurf, _data, _output_index, _array_index) {
+	static processData = function(_outSurf, _data, _output_index, _array_index) {
 		var _layr = _data[0];
 		var _pbox = _data[1];
 		var _inst = _data[2];

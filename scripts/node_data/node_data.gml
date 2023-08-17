@@ -1261,17 +1261,13 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		}
 	} #endregion
 	
-	static getPreviewValue = function() { #region
+	static getPreviewValues = function() { #region
 		if(preview_channel > ds_list_size(outputs)) return noone;
-		return outputs[| preview_channel];
+		return outputs[| preview_channel].getValue();
 	} #endregion
 	
 	static getPreviewBoundingBox = function() { #region
-		var _node = getPreviewValue();
-		if(_node == undefined) return noone;
-		if(_node.type != VALUE_TYPE.surface) return noone;
-		
-		var _surf = _node.getValue();
+		var _surf = getPreviewValues();
 		if(is_array(_surf)) 
 			_surf = array_safe_get(_surf, preview_index, noone);
 		if(!is_surface(_surf)) return noone;

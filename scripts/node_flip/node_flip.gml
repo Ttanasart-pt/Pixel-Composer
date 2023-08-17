@@ -21,7 +21,7 @@ function Node_Flip(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	attribute_surface_depth();
 	
-	static process_data = function(_outSurf, _data, _output_index, _array_index) {
+	static processData = function(_outSurf, _data, _output_index, _array_index) {
 		var _axis = _data[1];
 		surface_set_target(_outSurf);
 			DRAW_CLEAR

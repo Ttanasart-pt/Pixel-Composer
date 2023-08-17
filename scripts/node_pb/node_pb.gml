@@ -42,7 +42,5 @@ function Node_PB(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constr
 		return group.checkComplete();
 	}
 	
-	static getPreviewValue = function() {
-		return group.outputs[| 0];
-	}
+	static getPreviewValues = function() { return group.outputs[| 0].getValue(); }
 }

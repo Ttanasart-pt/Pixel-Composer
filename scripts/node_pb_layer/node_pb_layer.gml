@@ -12,9 +12,7 @@ function Node_PB_Layer(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 	
 	static update = function() {}
 	
-	static getPreviewValue = function() {
-		return group.outputs[| 0];
-	}
+	static getPreviewValues = function() { return group.outputs[| 0].getValue(); }
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		var bbox = drawGetBbox(xx, yy, _s)

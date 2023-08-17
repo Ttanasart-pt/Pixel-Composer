@@ -24,7 +24,7 @@ function Node_Crop(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	drag_my   = 0;
 	drag_sv   = 0;
 	
-	static getPreviewValue = function() { return inputs[| 0]; }
+	static getPreviewValues = function() { return inputs[| 0].getValue(); }
 	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		if(array_length(current_data) < 2) return;
@@ -107,7 +107,7 @@ function Node_Crop(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		}
 	}
 	
-	static process_data = function(_outSurf, _data, _output_index, _array_index) {
+	static processData = function(_outSurf, _data, _output_index, _array_index) {
 		var _inSurf		= _data[0];
 		var _crop		= _data[1];
 		var _dim		= [ surface_get_width(_inSurf) - _crop[0] - _crop[2], surface_get_height(_inSurf) - _crop[1] - _crop[3] ];

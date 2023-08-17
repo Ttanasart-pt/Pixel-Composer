@@ -15,7 +15,7 @@ function Node_Gradient_Extract(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 	
 	outputs[| 2] = nodeValue("Type", self, JUNCTION_CONNECT.output, VALUE_TYPE.integer, 0 );
 	
-	static process_data = function(_outSurf, _data, _output_index, _array_index) {
+	static processData = function(_outSurf, _data, _output_index, _array_index) {
 		var gra  = _data[0];
 		
 		switch(_output_index) {

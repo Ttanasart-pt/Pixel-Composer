@@ -93,7 +93,7 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	sprite_valid = [];
 	
-	static getPreviewValue = function() { return inputs[| 0]; }
+	static getPreviewValues = function() { return inputs[| 0].getValue(); }
 	
 	function getSpritePosition(index) {
 		var _dim = curr_dim;
