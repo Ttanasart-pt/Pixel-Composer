@@ -66,7 +66,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	selection_mx = 0;
 	selection_my = 0;
 	
-	tool_channel_edit      = new checkBoxGroup(THEME.tools_canvas_channel, function(ind, val) { tool_attribute.channel[ind] = val; });
+	tool_channel_edit = new checkBoxGroup(THEME.tools_canvas_channel, function(ind, val) { tool_attribute.channel[ind] = val; });
 	tool_attribute.channel = [ true, true, true, true ];
 	tool_settings = [
 		[ "Channel", tool_channel_edit, "channel", tool_attribute ],

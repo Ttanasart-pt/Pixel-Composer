@@ -7,7 +7,7 @@ function Node_3D(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constr
 	static processData = function(_outSurf, _data, _output_index, _array_index) {}
 	static onDrawNode  = function(xx, yy, _mx, _my, _s, _hover, _focus) {}
 	
-	static getPreviewObject = function() {
+	static getPreviewObject = function() { #region
 		if(ds_list_empty(outputs)) return [];
 		switch(outputs[| preview_channel].type) {
 			case VALUE_TYPE.d3Mesh		: 
@@ -23,7 +23,7 @@ function Node_3D(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constr
 			_obj = array_safe_get(_obj, preview_index, noone);
 		
 		return [ _obj ];
-	}
+	} #endregion
 	
 	static getPreviewObjectOutline = function() { return getPreviewObject() }
 }

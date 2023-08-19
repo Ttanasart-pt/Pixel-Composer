@@ -30,7 +30,12 @@ function __vec3(_x = 0, _y = 0, _z = 0) constructor {
 		z = _z;
 		return self;
 	} set(_x, _y, _z);
-
+	
+	static isZero = function() {
+		gml_pragma("forceinline");
+		return x == 0 && y == 0 && z == 0;
+	}
+	
 	static setIndex = function(index, value) {
 		gml_pragma("forceinline");
 		switch(index) {

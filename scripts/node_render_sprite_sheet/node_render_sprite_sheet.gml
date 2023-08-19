@@ -103,6 +103,8 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 			amo = _ed - _st;
 			
 			for(var i = 0; i < array_length(inpt); i++) { 
+				_atl[i] = [];
+				
 				if(!is_surface(inpt[i])) continue;
 				var sw = surface_get_width(inpt[i]);
 				var sh = surface_get_height(inpt[i]);
@@ -133,8 +135,6 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 				surface_reset_target();
 				
 				refreshSurface = true;
-				
-				_atl[i] = [];
 			}
 			
 			if(!arr) _surf = array_safe_get(_surf, 0);

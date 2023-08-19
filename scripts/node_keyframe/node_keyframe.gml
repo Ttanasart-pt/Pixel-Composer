@@ -1,30 +1,33 @@
 enum CURVE_TYPE {
-	none,
+	linear,
 	bezier,
 	cut,
 }
 
 function valueKey(_time, _value, _anim = noone, _in = 0, _ot = 0) constructor {
-	time	= _time;
-	ratio	= time / (PROJECT.animator.frames_total - 1);
-	value	= _value;
-	anim	= _anim;
+	#region ---- main ----
+		time	= _time;
+		ratio	= time / (PROJECT.animator.frames_total - 1);
+		value	= _value;
+		anim	= _anim;
 	
-	ease_y_lock = true;
-	ease_in	 = is_array(_in)? _in : [_in, 1];
-	ease_out = is_array(_ot)? _ot : [_ot, 0];
+		ease_y_lock = true;
+		ease_in	 = is_array(_in)? _in : [_in, 1];
+		ease_out = is_array(_ot)? _ot : [_ot, 0];
+		
+		var _int = anim? anim.prop.key_inter : CURVE_TYPE.linear;
+		ease_in_type  = _int;
+		ease_out_type = _int;
 	
-	ease_in_type  = CURVE_TYPE.none;
-	ease_out_type = CURVE_TYPE.none;
+		dopesheet_x = 0;
+	#endregion
 	
-	dopesheet_x = 0;
-	
-	static setTime = function(time) {
+	static setTime = function(time) { #region
 		self.time = time;	
 		ratio	= time / (PROJECT.animator.frames_total - 1);
-	}
+	} #endregion
 	
-	static clone = function(target = noone) {
+	static clone = function(target = noone) { #region
 		var key = new valueKey(time, value, target);
 		key.ease_in			= ease_in;
 		key.ease_out		= ease_out;
@@ -32,9 +35,9 @@ function valueKey(_time, _value, _anim = noone, _in = 0, _ot = 0) constructor {
 		key.ease_out_type	= ease_out_type;
 		
 		return key;
-	}
+	} #endregion
 	
-	static cloneAnimator = function(shift = 0, anim = noone, removeDup = true) {
+	static cloneAnimator = function(shift = 0, anim = noone, removeDup = true) { #region
 		if(anim != noone) { //check value compat between animator
 			if(value_bit(self.anim.prop.type) & value_bit(anim.prop.type) == 0) {
 				noti_warning("Type incompatible");
@@ -58,26 +61,28 @@ function valueKey(_time, _value, _anim = noone, _in = 0, _ot = 0) constructor {
 		anim.setKeyTime(key, time + shift, removeDup);
 		
 		return key;
-	}
+	} #endregion
 }
 
 function valueAnimator(_val, _prop, _sep_axis = false) constructor {
-	suffix   = "";
-	values	 = ds_list_create();
-	sep_axis = _sep_axis;
-	if(_prop.type != VALUE_TYPE.trigger)
-		ds_list_add(values, new valueKey(0, _val, self));
-	//print(_prop.name + ": " + string(_val));
+	#region ---- main ----
+		suffix   = "";
+		values	 = ds_list_create();
+		sep_axis = _sep_axis;
+		
+		index	 = 0;
+		prop     = _prop;
+		dopesheet_y = 0;
+		
+		if(_prop.type != VALUE_TYPE.trigger)
+			ds_list_add(values, new valueKey(0, _val, self));
+	#endregion
 	
-	index	 = 0;
-	prop     = _prop;
-	dopesheet_y = 0;
-	
-	static interpolate = function(from, to, rat) {
+	static interpolate = function(from, to, rat) { #region
 		if(prop.type == VALUE_TYPE.boolean)
 			return 0;
 			
-		if(to.ease_in_type == CURVE_TYPE.none && from.ease_out_type == CURVE_TYPE.none) 
+		if(to.ease_in_type == CURVE_TYPE.linear && from.ease_out_type == CURVE_TYPE.linear) 
 			return rat;
 		if(to.ease_in_type == CURVE_TYPE.cut) 
 			return 0;
@@ -93,9 +98,9 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 		
 		var bz = [0, eox, eoy, 1. - eix, eiy, 1];
 		return eval_curve_segment_x(bz, rat);
-	}
+	} #endregion
 	
-	static lerpValue = function(from, to, _lrp) {
+	static lerpValue = function(from, to, _lrp) { #region
 		var _f = from.value;
 		var _t = to.value;
 		
@@ -138,11 +143,11 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 			return processType(_f);
 		
 		return processType(lerp(_f, _t, _lrp));
-	}
+	} #endregion
 	
 	static getName = function() { return prop.name + suffix; }
 	
-	static getValue = function(_time = PROJECT.animator.current_frame) {
+	static getValue = function(_time = PROJECT.animator.current_frame) { #region
 		if(prop.type == VALUE_TYPE.trigger) {
 			if(ds_list_size(values) == 0) 
 				return false;
@@ -239,14 +244,14 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 		}
 		
 		return processType(values[| ds_list_size(values) - 1].value); //Last frame
-	}
+	} #endregion
 	
-	static processTypeDefault = function() {
+	static processTypeDefault = function() { #region
 		if(!sep_axis && typeArray(prop.display_type)) return [];
 		return 0;
-	}
-	
-	static processType = function(_val) {
+	} #endregion
+	 
+	static processType = function(_val) { #region
 		if(!sep_axis && typeArray(prop.display_type) && is_array(_val)) {
 			for(var i = 0; i < array_length(_val); i++) 
 				_val[i] = processValue(_val[i]);			
@@ -254,9 +259,9 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 			return _val;
 		}
 		return processValue(_val);
-	}
+	} #endregion
 	
-	static processValue = function(_val) { 
+	static processValue = function(_val) { #region
 		if(is_array(_val))     return _val;
 		if(is_struct(_val))    return _val;
 		if(is_undefined(_val)) return 0;
@@ -275,9 +280,9 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 		}
 		
 		return _val;
-	}
+	} #endregion
 	
-	static setKeyTime = function(_key, _time, _replace = true) {
+	static setKeyTime = function(_key, _time, _replace = true) { #region
 		if(!ds_list_exist(values, _key)) return 0;
 		if(!LOADING) PROJECT.modified = true;
 		
@@ -303,9 +308,9 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 		
 		ds_list_add(values, _key);
 		return 1;
-	}
+	} #endregion
 	
-	static setValue = function(_val = 0, _record = true, _time = PROJECT.animator.current_frame, ease_in = 0, ease_out = 0) {
+	static setValue = function(_val = 0, _record = true, _time = PROJECT.animator.current_frame, ease_in = 0, ease_out = 0) { #region
 		if(prop.type == VALUE_TYPE.trigger) {
 			if(!prop.is_anim) {
 				values[| 0] = new valueKey(0, _val, self);
@@ -370,16 +375,16 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 		if(_record) recordAction(ACTION_TYPE.list_insert, values, [ k, ds_list_size(values), "add " + string(prop.name) + " keyframe" ]);
 		ds_list_add(values, k);
 		return true;
-	}
+	} #endregion
 	
-	static removeKey = function(key) {
+	static removeKey = function(key) { #region
 		if(ds_list_size(values) > 1)
 			ds_list_remove(values, key);
 		else
 			prop.is_anim = false;
-	}
+	} #endregion
 	
-	static serialize = function(scale = false) {
+	static serialize = function(scale = false) { #region
 		var _data = [];
 		
 		for(var i = 0; i < ds_list_size(values); i++) {
@@ -417,9 +422,9 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 		}
 		
 		return _data;
-	}
+	} #endregion
 	
-	static deserialize = function(_data, scale = false) {
+	static deserialize = function(_data, scale = false) { #region
 		ds_list_clear(values);
 		
 		if(prop.type == VALUE_TYPE.gradient && PROJECT.version < 1340 && !CLONING) { //backward compat: Gradient
@@ -482,9 +487,9 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 			vk.ease_y_lock   = ease_y_lock;
 			ds_list_add(values, vk);
 		}
-	}
+	} #endregion
 	
-	static cleanUp = function() {
+	static cleanUp = function() { #region
 		ds_list_destroy(values);
-	}
+	} #endregion
 }

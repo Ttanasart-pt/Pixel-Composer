@@ -64,7 +64,8 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	}
 	
 	static preProcess = function(outIndex) {
-		var _out = outputs[| outIndex].getValue();
+		var _out   = outputs[| outIndex].getValue();
+		all_inputs = array_create(ds_list_size(inputs));
 		
 		if(process_amount == 0) { #region render single data
 			if(outputs[| outIndex].type == VALUE_TYPE.d3object) //passing 3D vertex call
@@ -101,6 +102,7 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 					return inputs_data[0]
 			}
 			
+			all_inputs = inputs_data;
 			var data = processData(_out, inputs_data, outIndex, 0);						/// Process data
 			return data;
 		} #endregion
@@ -117,7 +119,6 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 				array_resize(_out, process_amount);
 		
 			var _data  = array_create(ds_list_size(inputs));
-			all_inputs = array_create(ds_list_size(inputs));
 			
 			for(var i = 0; i < ds_list_size(inputs); i++)
 				all_inputs[i] = array_create(process_amount);

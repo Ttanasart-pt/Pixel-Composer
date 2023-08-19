@@ -17,7 +17,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 			show_dimension  : true,
 			show_compute    : true,
 		
-			avoid_label   : false,
+			avoid_label   : true,
 			preview_scale : 100,
 		}
 	#endregion

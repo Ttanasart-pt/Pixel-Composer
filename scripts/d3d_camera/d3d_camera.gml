@@ -27,15 +27,15 @@ function __3dCamera() constructor {
 	viewMat = new __mat4();
 	projMat = new __mat4();
 	
-	static getUp = function() {
-		var upVector = new __vec3(0, 0, 0);
+	static getUp = function(_x = 1, _y = 1, _z = 1) {
+		var upVector = new __vec3(0, 0, -1);
     
 	    var hRad = degtorad(focus_angle_x);
 	    var vRad = degtorad(focus_angle_y);
 		
-	    upVector.x = -sin(hRad) *  sin(vRad);
-	    upVector.y =  cos(hRad) * -sin(vRad);
-	    upVector.z =  cos(vRad);
+	    upVector.x = -sin(hRad) *  sin(vRad) * _x;
+	    upVector.y =  cos(hRad) * -sin(vRad) * _y;
+	    upVector.z =  cos(vRad) * _z;
 		
 	    return upVector._normalize();
 	}
@@ -89,6 +89,11 @@ function __3dCamera() constructor {
 		view_aspect = w / h;
 		
 		return self;
+	}
+	
+	static setCameraLookRotate = function() {
+		var _fPos = calculate_3d_position(focus.x, focus.y, focus.z, focus_angle_x, focus_angle_y, focus_dist);
+		position.set(_fPos);
 	}
 	
 	static worldPointToViewPoint = function(vec3) {

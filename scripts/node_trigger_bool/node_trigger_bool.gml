@@ -35,7 +35,7 @@ function Node_Trigger_Bool(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		switch(con) {
 			case 0 : doTrigger = val;				break;
 			case 1 : doTrigger = !prevVal &&  val;	break;
-			case 2 : doTrigger  = prevVal && !val;	break;
+			case 2 : doTrigger =  prevVal && !val;	break;
 			case 3 : doTrigger =  prevVal !=  val;	break;
 		}
 		

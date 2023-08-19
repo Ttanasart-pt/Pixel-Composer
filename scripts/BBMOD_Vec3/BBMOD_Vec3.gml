@@ -26,16 +26,24 @@
 ///
 /// @see BBMOD_Vec2
 /// @see BBMOD_Vec4
-function BBMOD_Vec3(_x=0.0, _y=_x, _z=_x) constructor
-{
-	/// @var {Real} The first component of the vector.
-	X = _x;
-
-	/// @var {Real} The second component of the vector.
-	Y = _y;
-
-	/// @var {Real} The third component of the vector.
-	Z = _z;
+function BBMOD_Vec3(_x=0.0, _y=_x, _z=_x) constructor {
+	if(is_instanceof(_x, __vec3)) {
+		X = _x.x;
+		Y = _x.y;
+		Z = _x.z;
+	} else if(is_instanceof(_x, BBMOD_Vec3)) {
+		X = _x.X;
+		Y = _x.Y;
+		Z = _x.Z;
+	} else if(is_array(_x)) {
+		X = _x[0];
+		Y = _x[1];
+		Z = _x[2];
+	} else {
+		X = _x;
+		Y = _y;
+		Z = _z;
+	}
 
 	/// @func Abs()
 	///

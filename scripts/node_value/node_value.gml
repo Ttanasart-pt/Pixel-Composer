@@ -1,3 +1,13 @@
+#region ---- global names ----
+	global.junctionEndName = [ "Hold", "Loop", "Ping pong", "Wrap" ];
+
+	global.displaySuffix_Range		= [ "min", "max" ];
+	global.displaySuffix_Area		= [ "x", "y", "w", "h" ];
+	global.displaySuffix_Padding	= [ "right", "top", "left", "bottom" ];
+	global.displaySuffix_VecRange	= [ "x min", "x max", "y min", "y max" ];
+	global.displaySuffix_Axis		= [ "x", "y", "z", "w"];
+#endregion
+
 enum JUNCTION_CONNECT {
 	input,
 	output
@@ -93,7 +103,25 @@ enum VALUE_DISPLAY {
 	d3vertex,
 }
 
-function value_color(i) {
+enum KEYFRAME_END {
+	hold,
+	loop,
+	ping,
+	wrap,
+}
+
+enum VALIDATION {
+	pass,
+	warning,
+	error
+}
+
+enum VALUE_UNIT {
+	constant,
+	reference
+}
+
+function value_color(i) { #region
 	static JUNCTION_COLORS = [ 
 		$6691ff, //int 
 		$78e4ff, //float
@@ -129,9 +157,9 @@ function value_color(i) {
 	
 	if(i == 99) return $5dde8f;
 	return JUNCTION_COLORS[safe_mod(max(0, i), array_length(JUNCTION_COLORS))];
-}
+} #endregion
 
-function value_bit(i) {
+function value_bit(i) { #region
 	switch(i) {
 		case VALUE_TYPE.integer		: return 1 << 0 | 1 << 1;
 		case VALUE_TYPE.float		: return 1 << 2 | 1 << 1;
@@ -172,9 +200,9 @@ function value_bit(i) {
 		case VALUE_TYPE.any			: return ~0 & ~(1 << 32);
 	}
 	return 0;
-}
+} #endregion
 
-function value_type_directional(f, t) {
+function value_type_directional(f, t) { #region
 	if(f == VALUE_TYPE.surface && t == VALUE_TYPE.integer)	return true;
 	if(f == VALUE_TYPE.surface && t == VALUE_TYPE.float)	return true;
 	
@@ -194,9 +222,9 @@ function value_type_directional(f, t) {
 	if(f == VALUE_TYPE.mesh  && t == VALUE_TYPE.struct ) return true;
 	
 	return false;
-}
+} #endregion
 
-function typeArray(_type) {
+function typeArray(_type) { #region
 	switch(_type) {
 		case VALUE_DISPLAY.range :
 		case VALUE_DISPLAY.vector_range :
@@ -220,26 +248,26 @@ function typeArray(_type) {
 			return 1;
 	}
 	return 0;
-}
+} #endregion
 
-function typeArrayDynamic(_type) {
+function typeArrayDynamic(_type) { #region
 	switch(_type) {
 		case VALUE_DISPLAY.curve :
 		case VALUE_DISPLAY.palette :
 			return true;
 	}
 	return false;
-}
+} #endregion
 
-function typeCompatible(fromType, toType, directional_cast = true) {
+function typeCompatible(fromType, toType, directional_cast = true) { #region
 	if(value_bit(fromType) & value_bit(toType) != 0)
 		return true;
 	if(!directional_cast) 
 		return false;
 	return value_type_directional(fromType, toType);
-}
+} #endregion
 
-function typeIncompatible(from, to) {
+function typeIncompatible(from, to) { #region
 	if(from.type == VALUE_TYPE.surface && (to.type == VALUE_TYPE.integer || to.type == VALUE_TYPE.float)) {
 		switch(to.display_type) {
 			case VALUE_DISPLAY.area : 
@@ -253,30 +281,9 @@ function typeIncompatible(from, to) {
 	}
 	
 	return false;
-}
+} #endregion
 
-enum KEYFRAME_END {
-	hold,
-	loop,
-	ping,
-	wrap,
-}
-
-globalvar ON_END_NAME;
-ON_END_NAME = [ "Hold", "Loop", "Ping pong", "Wrap" ];
-
-enum VALIDATION {
-	pass,
-	warning,
-	error
-}
-
-enum VALUE_UNIT {
-	constant,
-	reference
-}
-
-function isGraphable(prop) {
+function isGraphable(prop) { #region
 	if(prop.type == VALUE_TYPE.integer || prop.type == VALUE_TYPE.float) {
 		if(prop.display_type == VALUE_DISPLAY.puppet_control)
 			return false;
@@ -286,9 +293,9 @@ function isGraphable(prop) {
 		return true;
 		
 	return false;
-}
+} #endregion
 
-function nodeValueUnit(value) constructor {
+function nodeValueUnit(value) constructor { #region
 	self.value = value;
 	
 	mode = VALUE_UNIT.constant;
@@ -302,7 +309,7 @@ function nodeValueUnit(value) constructor {
 	triggerButton.icon_blend = COLORS._main_icon_light;
 	triggerButton.icon = THEME.unit_ref;
 	
-	static setMode = function(type) {
+	static setMode = function(type) { #region
 		if(type == "constant" && mode == VALUE_UNIT.constant) return;
 		if(type == "relative" && mode == VALUE_UNIT.reference) return;
 		
@@ -310,34 +317,34 @@ function nodeValueUnit(value) constructor {
 		value.cache_value[0] = false;
 		value.unitConvert(mode);
 		value.node.doUpdate();
-	}
+	} #endregion
 	
-	static draw = function(_x, _y, _w, _h, _m) {
+	static draw = function(_x, _y, _w, _h, _m) { #region
 		triggerButton.icon_index = mode;
 		triggerButton.tooltip = (mode? "Fraction" : "Pixel") + " unit";
 		
 		triggerButton.draw(_x, _y, _w, _h, _m, THEME.button_hide);
-	}
+	} #endregion
 	
-	static invApply = function(value, index = 0) {
+	static invApply = function(value, index = 0) { #region
 		if(mode == VALUE_UNIT.constant) 
 			return value;
 		if(reference == noone)
 			return value;
 		
 		return convertUnit(value, VALUE_UNIT.reference, index);
-	}
+	} #endregion
 	
-	static apply = function(value, index = 0) {
+	static apply = function(value, index = 0) { #region
 		if(mode == VALUE_UNIT.constant) 
 			return value;
 		if(reference == noone)
 			return value;
 		
 		return convertUnit(value, VALUE_UNIT.constant, index);
-	}
+	} #endregion
 	
-	static convertUnit = function(value, unitTo, index = 0) {
+	static convertUnit = function(value, unitTo, index = 0) { #region
 		var disp = self.value.display_type;
 		var base = reference(index);
 		var inv = unitTo == VALUE_UNIT.reference;
@@ -369,123 +376,148 @@ function nodeValueUnit(value) constructor {
 		}
 		
 		return value;
-	}
-}
+	} #endregion
+} #endregion
 
-global.displaySuffix_Range		= [ "min", "max" ];
-global.displaySuffix_Area		= [ "x", "y", "w", "h" ];
-global.displaySuffix_Padding	= [ "right", "top", "left", "bottom" ];
-global.displaySuffix_VecRange	= [ "x min", "x max", "y min", "y max" ];
-global.displaySuffix_Axis		= [ "x", "y", "z", "w"];
-
-function nodeValue(_name, _node, _connect, _type, _value, _tooltip = "") {
-	return new NodeValue(_name, _node, _connect, _type, _value, _tooltip);
-}
+function nodeValue(_name, _node, _connect, _type, _value, _tooltip = "") { return new NodeValue(_name, _node, _connect, _type, _value, _tooltip); }
 
 function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constructor {
-	node  = _node;
-	x	  = node.x;
-	y     = node.y;
-	index = _connect == JUNCTION_CONNECT.input? ds_list_size(node.inputs) : ds_list_size(node.outputs);
-	type  = _type;
-	forward = true;
+	#region ---- main ----
+		node  = _node;
+		x	  = node.x;
+		y     = node.y;
+		index = _connect == JUNCTION_CONNECT.input? ds_list_size(node.inputs) : ds_list_size(node.outputs);
+		type  = _type;
+		forward = true;
+		
+		_initName = _name;
+		name = __txt_junction_name(instanceof(node), type, index, _name);
+		name = _name;
 	
-	_initName = _name;
-	name = __txt_junction_name(instanceof(node), type, index, _name);
-	name = _name;
+		static updateName = function() {
+			internalName = string_lower(string_replace_all(name, " ", "_"));
+		} updateName();
+		
+		if(struct_has(node, "inputMap")) {
+			if(_connect == JUNCTION_CONNECT.input)       node.inputMap[?  internalName] = self;
+			else if(_connect == JUNCTION_CONNECT.output) node.outputMap[? internalName] = self;
+		}
+		
+		tooltip    = _tooltip;
+		editWidget = noone;
+	#endregion
 	
-	static updateName = function() {
-		internalName = string_lower(string_replace_all(name, " ", "_"));
-	} updateName();
+	#region ---- connection ----
+		connect_type = _connect;
+		value_from   = noone;
+		value_to     = ds_list_create();
+		value_to_arr = [];
+		accept_array = true;
+		array_depth  = 0;
+		auto_connect = true;
+		setFrom_condition = -1;
+	#endregion
 	
-	if(struct_has(node, "inputMap")) {
-		if(_connect == JUNCTION_CONNECT.input)       node.inputMap[?  internalName] = self;
-		else if(_connect == JUNCTION_CONNECT.output) node.outputMap[? internalName] = self;
-	}
+	#region ---- animation ----
+		key_inter   = CURVE_TYPE.linear;
+		
+		is_anim		= false;
+		sep_axis	= false;
+		sepable		= is_array(_value) && array_length(_value) > 1;
+		animator	= new valueAnimator(_value, self, false);
+		animators	= [];
+		if(is_array(_value))
+		for( var i = 0, n = array_length(_value); i < n; i++ ) {
+			animators[i] = new valueAnimator(_value[i], self, true);
+			animators[i].index = i;
+		}
+		
+		on_end		= KEYFRAME_END.hold;
+		loop_range  = -1;
+	#endregion
 	
-	tooltip    = _tooltip;
-	editWidget = noone;
+	#region ---- value ----
+		def_val	    = _value;
+		unit		= new nodeValueUnit(self);
+		extra_data	= {};
+		dyna_depo   = ds_list_create();
+		
+		is_changed  = true;
+		cache_value = [ false, false, undefined ];
+		cache_array = [ false, false ];
+		use_cache   = true;
+		
+		process_array = true;
+		validateValue = true;
+		
+		fullUpdate = false;
+	#endregion
 	
-	connect_type = _connect;
-	value_from   = noone;
-	value_to     = ds_list_create();
-	value_to_arr = [];
-	accept_array = true;
-	array_depth  = 0;
-	auto_connect = true;
-	setFrom_condition = -1;
+	#region ---- draw ----
+		draw_line_shift_x	= 0;
+		draw_line_shift_y	= 0;
+		draw_line_thick		= 1;
+		draw_line_shift_hover	= false;
+		drawLineIndex		= 1;
+		draw_line_vb		= noone;
+		
+		junction_drawing = [ THEME.node_junctions_single, type ];
+		
+		drag_type = 0;
+		drag_mx   = 0;
+		drag_my   = 0;
+		drag_sx   = 0;
+		drag_sy   = 0;
+	#endregion
 	
-	is_anim		= false;
-	sep_axis	= false;
-	sepable		= is_array(_value) && array_length(_value) > 1;
-	animator	= new valueAnimator(_value, self, false);
-	animators	= [];
-	if(is_array(_value))
-	for( var i = 0, n = array_length(_value); i < n; i++ ) {
-		animators[i] = new valueAnimator(_value[i], self, true);
-		animators[i].index = i;
-	}
+	#region ---- timeline ----
+		show_graph	= false;
+		graph_h		= ui(64);
+	#endregion
 	
-	def_val		= _value;
-	on_end		= KEYFRAME_END.hold;
-	loop_range  = -1;
+	#region ---- inspector ----
+		visible = _connect == JUNCTION_CONNECT.output || _type == VALUE_TYPE.surface || _type == VALUE_TYPE.path;
+		show_in_inspector = true;
 	
-	unit		= new nodeValueUnit(self);
-	extra_data	= {};
-	dyna_depo   = ds_list_create();
+		display_type = VALUE_DISPLAY._default;
+		if(_type == VALUE_TYPE.curve)			display_type = VALUE_DISPLAY.curve;
+		else if(_type == VALUE_TYPE.d3vertex)	display_type = VALUE_DISPLAY.d3vertex;
 	
-	draw_line_shift_x	= 0;
-	draw_line_shift_y	= 0;
-	draw_line_thick		= 1;
-	draw_line_shift_hover	= false;
-	drawLineIndex			= 1;
-	draw_line_vb		= noone;
+		display_data = -1;
+		display_attribute = noone;
+	#endregion
 	
-	show_graph	= false;
-	graph_h		= ui(64);
+	#region ---- graph ----
+		value_validation = VALIDATION.pass;
+		error_notification = noone;
+		
+		extract_node = "";
+	#endregion
 	
-	visible = _connect == JUNCTION_CONNECT.output || _type == VALUE_TYPE.surface || _type == VALUE_TYPE.path;
-	show_in_inspector = true;
+	#region ---- expression ----
+		expUse     = false;
+		expression = "";
+		expTree    = noone;
 	
-	display_type = VALUE_DISPLAY._default;
-	if(_type == VALUE_TYPE.curve)			display_type = VALUE_DISPLAY.curve;
-	else if(_type == VALUE_TYPE.d3vertex)	display_type = VALUE_DISPLAY.d3vertex;
+		express_edit = new textArea(TEXTBOX_INPUT.text, function(str) { 
+			expression = str;
+			expressionUpdate();
+		});
+		express_edit.autocomplete_server	= pxl_autocomplete_server;
+		express_edit.function_guide_server	= pxl_function_guide_server;
+		express_edit.parser_server			= pxl_document_parser;
+		express_edit.format   = TEXT_AREA_FORMAT.code;
+		express_edit.font     = f_code;
+		express_edit.boxColor = COLORS._main_value_positive;
+		express_edit.align    = fa_left;
+	#endregion
 	
-	display_data = -1;
-	display_attribute = noone;
+	#region ---- serialization ----
+		con_node  = -1;
+		con_index = -1;
+	#endregion
 	
-	value_validation = VALIDATION.pass;
-	error_notification = noone;
-	
-	extract_node = "";
-	
-	is_changed  = true;
-	cache_value = [ false, false, undefined ];
-	cache_array = [ false, false ];
-	use_cache   = true;
-	
-	expUse     = false;
-	expression = "";
-	expTree    = noone;
-	
-	express_edit = new textArea(TEXTBOX_INPUT.text, function(str) { 
-		expression = str;
-		expressionUpdate();
-	});
-	express_edit.autocomplete_server	= pxl_autocomplete_server;
-	express_edit.function_guide_server	= pxl_function_guide_server;
-	express_edit.parser_server			= pxl_document_parser;
-	express_edit.format   = TEXT_AREA_FORMAT.code;
-	express_edit.font     = f_code;
-	express_edit.boxColor = COLORS._main_value_positive;
-	express_edit.align    = fa_left;
-	
-	process_array = true;
-	validateValue = true;
-	
-	fullUpdate = false;
-	
-	static setDefault = function(vals) {
+	static setDefault = function(vals) { #region
 		if(LOADING || APPENDING) return self;
 		
 		ds_list_clear(animator.values);
@@ -493,19 +525,19 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			ds_list_add(animator.values, new valueKey(vals[i][0], vals[i][1], animator));
 			
 		return self;
-	}
+	} #endregion
 	
 	static resetValue = function() { setValue(def_val); }
 	
-	static setUnitRef = function(ref, mode = VALUE_UNIT.constant) {
+	static setUnitRef = function(ref, mode = VALUE_UNIT.constant) { #region
 		unit.reference  = ref;
 		unit.mode		= mode;
 		cache_value[0]  = false;
 		
 		return self;
-	}
+	} #endregion
 	
-	static setVisible = function(inspector) {
+	static setVisible = function(inspector) { #region
 		if(connect_type == JUNCTION_CONNECT.input) {
 			show_in_inspector = inspector;
 			visible = argument_count > 1? argument[1] : visible;
@@ -513,59 +545,59 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			visible = inspector;
 			
 		return self;
-	}
+	} #endregion
 	
-	static setDisplay = function(_type = VALUE_DISPLAY._default, _data = -1, _attr = noone) {
+	static setDisplay = function(_type = VALUE_DISPLAY._default, _data = -1, _attr = noone) { #region
 		display_type	  = _type;
 		display_data	  = _data;
 		display_attribute = _attr;
 		resetDisplay();
 		
 		return self;
-	}
+	} #endregion
 	
-	static rejectArray = function() {
+	static rejectArray = function() { #region
 		accept_array = false;
 		return self;
-	}
+	} #endregion
 	
-	static uncache = function() {
+	static uncache = function() { #region
 		use_cache = false;
 		return self;
-	}
+	} #endregion
 	
-	static setArrayDepth = function(aDepth) {
+	static setArrayDepth = function(aDepth) { #region
 		array_depth = aDepth;
 		return self;
-	}
+	} #endregion
 	
-	static rejectConnect = function() {
+	static rejectConnect = function() { #region
 		auto_connect = false;
 		return self;
-	}
+	} #endregion
 	
-	static rejectArrayProcess = function() {
+	static rejectArrayProcess = function() { #region
 		process_array = false;
 		return self;
-	}
+	} #endregion
 	
-	static nonForward = function() {
+	static nonForward = function() { #region
 		forward = false;
 		return self;
-	}
+	} #endregion
 	
-	static nonValidate = function() {
+	static nonValidate = function() { #region
 		validateValue = false;
 		return self;
-	}
+	} #endregion
 	
-	static isAnimable = function() {
+	static isAnimable = function() { #region
 		//if(type == VALUE_TYPE.gradient)				 return false;
 		if(display_type == VALUE_DISPLAY.text_array) return false;
 		return true;
-	}
+	} #endregion
 	
-	static setDropKey = function() {
+	static setDropKey = function() { #region
 		switch(type) {
 			case VALUE_TYPE.integer		: drop_key = "Number"; break;
 			case VALUE_TYPE.float		: drop_key = "Number"; break;
@@ -585,17 +617,17 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			default: 
 				drop_key = "None";
 		}
-	}
+	} #endregion
 	setDropKey();
 	
-	static resetDisplay = function() {
+	static resetDisplay = function() { #region
 		editWidget = noone;
 		switch(display_type) {
-			case VALUE_DISPLAY.button :
+			case VALUE_DISPLAY.button : #region
 				editWidget = button(display_data[0]);
 				editWidget.text = display_data[1];
 				visible = false;
-				return;
+				return; #endregion
 		}
 		
 		switch(type) {
@@ -603,8 +635,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			case VALUE_TYPE.integer :
 				var _txt = TEXTBOX_INPUT.number;
 				
-				switch(display_type) {
-					case VALUE_DISPLAY._default :
+				switch(display_type) { 
+					case VALUE_DISPLAY._default :		#region
 						editWidget = new textBox(_txt, function(val) { 
 							return setValueDirect(val);
 						} );
@@ -613,8 +645,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						if(display_data != -1) editWidget.slide_speed = display_data;
 						
 						extract_node = "Node_Number";
-						break;
-					case VALUE_DISPLAY.range :
+						break; #endregion
+					case VALUE_DISPLAY.range :			#region
 						editWidget = new rangeBox(_txt, function(index, val) { 
 							//var _val = animator.getValue();
 							//_val[index] = val;
@@ -627,8 +659,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 							animators[i].suffix = " " + array_safe_get(global.displaySuffix_Range, i);
 						
 						extract_node = "Node_Number";
-						break;
-					case VALUE_DISPLAY.vector :
+						break; #endregion
+					case VALUE_DISPLAY.vector :			#region
 						var val = animator.getValue();
 						if(array_length(val) <= 4) {
 							editWidget = new vectorBox(array_length(animator.getValue()), function(index, val) { 
@@ -650,8 +682,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						for( var i = 0, n = array_length(animators); i < n; i++ )
 							animators[i].suffix = " " + string(array_safe_get(global.displaySuffix_Axis, i));
 						
-						break;
-					case VALUE_DISPLAY.vector_range :
+						break; #endregion
+					case VALUE_DISPLAY.vector_range :	#region
 						var val = animator.getValue();
 						
 						editWidget = new vectorRangeBox(array_length(val), _txt, function(index, val) { 
@@ -672,15 +704,15 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						for( var i = 0, n = array_length(animators); i < n; i++ )
 							animators[i].suffix = " " + string(array_safe_get(global.displaySuffix_VecRange, i));
 						
-						break;
-					case VALUE_DISPLAY.rotation :
+						break; #endregion
+					case VALUE_DISPLAY.rotation :		#region
 						editWidget = new rotator(function(val) {
 							return setValueDirect(val);
 						}, display_data );
 						
 						extract_node = "Node_Number";
-						break;
-					case VALUE_DISPLAY.rotation_range :
+						break; #endregion
+					case VALUE_DISPLAY.rotation_range : #region
 						editWidget = new rotatorRange(function(index, val) { 
 							//var _val = animator.getValue();
 							//_val[index] = round(val);
@@ -691,16 +723,16 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 							animators[i].suffix = " " + array_safe_get(global.displaySuffix_Range, i);
 						
 						extract_node = "Node_Vector2";
-						break;
-					case VALUE_DISPLAY.slider :
+						break; #endregion
+					case VALUE_DISPLAY.slider :			#region
 						editWidget = new slider(display_data[0], display_data[1], display_data[2], function(val) { 
 							return setValueDirect(toNumber(val));
 						} );
 						if(type == VALUE_TYPE.integer) editWidget.setSlideSpeed(1);
 						
 						extract_node = "Node_Number";
-						break;
-					case VALUE_DISPLAY.slider_range :
+						break; #endregion
+					case VALUE_DISPLAY.slider_range :	#region
 						editWidget = new sliderRange(display_data[0], display_data[1], display_data[2], function(index, val) {
 							//var _val = animator.getValue();
 							//_val[index] = val;
@@ -712,8 +744,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 							animators[i].suffix = " " + array_safe_get(global.displaySuffix_Range, i);
 						
 						extract_node = "Node_Vector2";
-						break;
-					case VALUE_DISPLAY.area :
+						break; #endregion
+					case VALUE_DISPLAY.area :			#region
 						editWidget = new areaBox(function(index, val) { 
 							return setValueDirect(val, index);
 						}, unit);
@@ -725,8 +757,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						
 						extra_data.area_type = AREA_MODE.area;
 						extract_node = "Node_Area";
-						break;
-					case VALUE_DISPLAY.padding :
+						break; #endregion
+					case VALUE_DISPLAY.padding :		#region
 						editWidget = new paddingBox(function(index, val) { 
 							//var _val = animator.getValue();
 							//_val[index] = val;
@@ -738,8 +770,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 							animators[i].suffix = " " + array_safe_get(global.displaySuffix_Padding, i);
 						
 						extract_node = "Node_Vector4";
-						break;
-					case VALUE_DISPLAY.corner :
+						break; #endregion
+					case VALUE_DISPLAY.corner :			#region
 						editWidget = new cornerBox(function(index, val) { 
 							return setValueDirect(val, index);
 						}, unit);
@@ -749,8 +781,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 							animators[i].suffix = " " + array_safe_get(global.displaySuffix_Padding, i);
 						
 						extract_node = "Node_Vector4";
-						break;
-					case VALUE_DISPLAY.puppet_control :
+						break; #endregion
+					case VALUE_DISPLAY.puppet_control : #region
 						editWidget = new controlPointBox(function(index, val) { 
 							//var _val = animator.getValue();
 							//_val[index] = val;
@@ -758,8 +790,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						});
 						
 						extract_node = "";
-						break;
-					case VALUE_DISPLAY.enum_scroll :
+						break; #endregion
+					case VALUE_DISPLAY.enum_scroll :	#region
 						editWidget = new scrollBox(display_data, function(val) {
 							if(val == -1) return;
 							return setValueDirect(toNumber(val)); 
@@ -769,17 +801,19 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						}
 						
 						rejectConnect();
+						key_inter    = CURVE_TYPE.cut;
 						extract_node = "";
-						break;
-					case VALUE_DISPLAY.enum_button :
+						break; #endregion
+					case VALUE_DISPLAY.enum_button :	#region
 						editWidget = new buttonGroup(display_data, function(val) { 
 							return setValueDirect(val);
 						} );
 						
 						rejectConnect();
+						key_inter    = CURVE_TYPE.cut;
 						extract_node = "";
-						break;
-					case VALUE_DISPLAY.kernel :
+						break; #endregion
+					case VALUE_DISPLAY.kernel :			#region
 						editWidget = new matrixGrid(_txt, function(index, val) {
 							var _val = animator.getValue();
 							_val[index] = val;
@@ -792,8 +826,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 							animators[i].suffix = " " + string(i);
 						
 						extract_node = "";
-						break;
-					case VALUE_DISPLAY.transform :
+						break; #endregion
+					case VALUE_DISPLAY.transform :		#region
 						editWidget = new transformBox(function(index, val) {
 							var _val = animator.getValue();
 							_val[index] = val;
@@ -801,25 +835,27 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						});
 						
 						extract_node = "Node_Transform_Array";
-						break;
-					case VALUE_DISPLAY.toggle :
+						break; #endregion
+					case VALUE_DISPLAY.toggle :			#region
 						editWidget = new toggleGroup(display_data, function(val) { 
 							return setValueDirect(val);
 						} );
 						
 						rejectConnect();
+						key_inter    = CURVE_TYPE.cut;
 						extract_node = "";
-						break;
+						break; #endregion
 				}
 				break;
-			case VALUE_TYPE.boolean :
+			case VALUE_TYPE.boolean :	#region
 				editWidget = new checkBox(function() {
 					return setValueDirect(!animator.getValue()); 
 				} );
 				
+				key_inter    = CURVE_TYPE.cut;
 				extract_node = "Node_Boolean";
-				break;
-			case VALUE_TYPE.color :
+				break; #endregion
+			case VALUE_TYPE.color :		#region
 				switch(display_type) {
 					case VALUE_DISPLAY._default :
 						editWidget = new buttonColor(function(color) { 
@@ -837,15 +873,15 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						extract_node = "Node_Palette";
 						break;
 				}
-				break;
-			case VALUE_TYPE.gradient :
+				break; #endregion
+			case VALUE_TYPE.gradient :	#region
 				editWidget = new buttonGradient(function(gradient) { 
 					return setValueDirect(gradient);
 				} );
 						
 				extract_node = "Node_Gradient_Out";
-				break;
-			case VALUE_TYPE.path :
+				break; #endregion
+			case VALUE_TYPE.path :		#region
 				switch(display_type) {
 					case VALUE_DISPLAY.path_array :
 						editWidget = new pathArrayBox(node, display_data, function(path) { setValueDirect(path); } );
@@ -885,14 +921,14 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						);
 						break;
 				}
-				break;
-			case VALUE_TYPE.curve :
+				break; #endregion
+			case VALUE_TYPE.curve :		#region
 				display_type = VALUE_DISPLAY.curve;
 				editWidget = new curveBox(function(_modified) { 
 					return setValueDirect(_modified); 
 				});
-				break;
-			case VALUE_TYPE.text :
+				break; #endregion
+			case VALUE_TYPE.text :		#region
 				switch(display_type) {
 					case VALUE_DISPLAY._default :
 						editWidget = new textArea(TEXTBOX_INPUT.text, function(str) { 
@@ -918,29 +954,34 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						});
 						break;
 				}
-				break;
-			case VALUE_TYPE.surface :
+				break; #endregion
+			case VALUE_TYPE.surface :	#region
 				editWidget = new surfaceBox(function(ind) { 
 					return setValueDirect(ind); 
 				}, display_data );
 				show_in_inspector = true;
 				extract_node = "Node_Canvas";
-				break;
-			case VALUE_TYPE.pathnode :
+				break; #endregion
+			case VALUE_TYPE.pathnode :	#region
 				extract_node = "Node_Path";
-				break;
+				break; #endregion
+		}
+		
+		for( var i = 0, n = ds_list_size(animator.values); i < n; i++ ) {
+			animator.values[| i].ease_in_type   = key_inter;
+			animator.values[| i].ease_out_type  = key_inter;
 		}
 		
 		setDropKey();
-	}
+	} #endregion
 	resetDisplay();
 	
-	static expressionUpdate = function() {
+	static expressionUpdate = function() { #region
 		expTree    = evaluateFunctionList(expression);
 		node.triggerRender();
-	}
+	} #endregion
 	
-	static onValidate = function() {
+	static onValidate = function() { #region
 		if(!validateValue) return;
 		var _val = value_validation, str = "";
 		value_validation = VALIDATION.pass; 
@@ -990,9 +1031,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		#endregion
 		
 		return self;
-	}
+	} #endregion
 	
-	static valueProcess = function(value, nodeFrom, applyUnit = true, arrIndex = 0) {
+	static valueProcess = function(value, nodeFrom, applyUnit = true, arrIndex = 0) { #region
 		var typeFrom = nodeFrom.type;
 		var display  = nodeFrom.display_type;
 		
@@ -1080,18 +1121,15 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			return DEF_SURFACE;
 		
 		return value;
-	}
+	} #endregion
 	
-	static resetCache = function() {
-		cache_value[0] = false;
-	}
+	static resetCache = function() { cache_value[0] = false; }
 	
-	#region[#eb004b20] === GetValue ===
-	static getValueCached = function(_time = PROJECT.animator.current_frame, applyUnit = true, arrIndex = 0) {
+	static getValueCached = function(_time = PROJECT.animator.current_frame, applyUnit = true, arrIndex = 0) { #region
 		return getValue(_time, applyUnit, arrIndex, true);
-	}
+	} #endregion
 	
-	static getValue = function(_time = PROJECT.animator.current_frame, applyUnit = true, arrIndex = 0, useCache = false) {
+	static getValue = function(_time = PROJECT.animator.current_frame, applyUnit = true, arrIndex = 0, useCache = false) { #region
 		if(type == VALUE_TYPE.trigger)
 			useCache = false;
 			
@@ -1121,9 +1159,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		cache_value[2] = val;
 		
 		return val;
-	}
+	} #endregion
 	
-	static __getAnimValue = function(_time = PROJECT.animator.current_frame) {
+	static __getAnimValue = function(_time = PROJECT.animator.current_frame) { #region
 		if(sep_axis) {
 			var val = [];
 			for( var i = 0, n = array_length(animators); i < n; i++ )
@@ -1131,9 +1169,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			return val;
 		} else	
 			return animator.getValue(_time);
-	}
+	} #endregion
 	
-	static _getValue = function(_time = PROJECT.animator.current_frame, applyUnit = true, arrIndex = 0) {
+	static _getValue = function(_time = PROJECT.animator.current_frame, applyUnit = true, arrIndex = 0) { #region
 		var _val = getValueRecursive(_time);
 		var val = _val[0];
 		var nod = _val[1];
@@ -1182,9 +1220,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			val = valueProcess(val, nod, applyUnit, arrIndex);
 		
 		return val;
-	}
+	} #endregion
 	
-	static getValueRecursive = function(_time = PROJECT.animator.current_frame) {
+	static getValueRecursive = function(_time = PROJECT.animator.current_frame) { #region
 		var val = [ -1, self ];
 		
 		if(type == VALUE_TYPE.trigger && connect_type == JUNCTION_CONNECT.output) //trigger even will not propagate from input to output, need to be done manually
@@ -1225,15 +1263,14 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		}
 		
 		return val;
-	}
-	#endregion
+	} #endregion
 	
-	static setAnim = function(anim) {
+	static setAnim = function(anim) { #region
 		is_anim = anim;
 		PANEL_ANIMATION.updatePropertyList();
-	}
+	} #endregion
 	
-	static __anim = function() {
+	static __anim = function() { #region
 		if(node.update_on_frame) return true;
 		if(expUse) {
 			if(!is_struct(expTree)) return false;
@@ -1246,14 +1283,14 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		}
 		
 		return is_anim;
-	}
+	} #endregion
 	
-	static isAnimated = function() {
+	static isAnimated = function() { #region
 		if(value_from == noone) return __anim();
 		else					return value_from.isAnimated() || value_from.__anim();
-	}
+	} #endregion
 	
-	static showValue = function() { 
+	static showValue = function() { #region
 		var useCache = true;
 		if(display_type == VALUE_DISPLAY.area)
 			useCache = false;
@@ -1266,9 +1303,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			if(array_length(v) >= 100) return $"[{array_length(v)}]";
 		}
 		return val;
-	}
+	} #endregion
 	
-	static isArray = function(val = undefined) {
+	static isArray = function(val = undefined) { #region
 		if(val == undefined) {
 			if(cache_array[0])
 				return cache_array[1];
@@ -1299,9 +1336,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		cache_array[1] = is_array(ar);
 		return cache_array[1];
-	}
+	} #endregion
 	
-	static arrayLength = function(val = undefined) {
+	static arrayLength = function(val = undefined) { #region
 		if(val == undefined)
 			val = getValue();
 		
@@ -1316,18 +1353,17 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			ar = ar[0];
 		
 		return array_length(ar);
-	}
+	} #endregion
 	
-	#region[#8fde5d16] === SetValue ===
-	static setValue = function(val = 0, record = true, time = PROJECT.animator.current_frame, _update = true) {
+	static setValue = function(val = 0, record = true, time = PROJECT.animator.current_frame, _update = true) { #region
 		//if(type == VALUE_TYPE.d3vertex && !is_array(val))
 		//	print(val);
 		
 		val = unit.invApply(val);
 		return setValueDirect(val, noone, record, time, _update);
-	}
+	} #endregion
 	
-	static setValueDirect = function(val = 0, index = noone, record = true, time = PROJECT.animator.current_frame, _update = true) {
+	static setValueDirect = function(val = 0, index = noone, record = true, time = PROJECT.animator.current_frame, _update = true) { #region
 		var updated = false;
 		
 		if(sep_axis) {
@@ -1365,10 +1401,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		onValidate();
 		
 		return updated;
-	}
-	#endregion
+	} #endregion
 	
-	static isConnectable = function(_valueFrom, checkRecur = true, log = false) {		
+	static isConnectable = function(_valueFrom, checkRecur = true, log = false) { #region
 		if(_valueFrom == -1 || _valueFrom == undefined || _valueFrom == noone) {
 			if(log)
 				noti_warning("LOAD: Cannot set node connection from " + string(_valueFrom) + " to " + string(name) + " of node " + string(node.name) + ".",, node);
@@ -1423,9 +1458,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		}
 		
 		return true;
-	}
+	} #endregion
 	
-	static setFrom = function(_valueFrom, _update = true, checkRecur = true, log = false) {
+	static setFrom = function(_valueFrom, _update = true, checkRecur = true, log = false) { #region
 		if(_valueFrom == noone)
 			return removeFrom();
 		
@@ -1462,9 +1497,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(!LOADING) PROJECT.modified = true;
 		
 		return true;
-	}
+	} #endregion
 	
-	static removeFrom = function(_remove_list = true) {
+	static removeFrom = function(_remove_list = true) { #region
 		recordAction(ACTION_TYPE.junction_disconnect, self, value_from);
 		if(_remove_list && value_from != noone)
 			ds_list_remove(value_from.value_to, self);	
@@ -1475,14 +1510,14 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		node.clearCacheForward();
 		
 		return false;
-	}
+	} #endregion
 	
-	static getShowString = function() {
+	static getShowString = function() { #region
 		var val = showValue();
 		return string_real(val);
-	}
+	} #endregion
 	
-	static setString = function(str) {
+	static setString = function(str) { #region
 		var _o = animator.getValue();
 		
 		if(string_pos(",", str) > 0) {
@@ -1517,16 +1552,16 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				setValue(toNumber(str));
 			}
 		}
-	}
+	} #endregion
 	
-	static checkConnection = function(_remove_list = true) {
+	static checkConnection = function(_remove_list = true) { #region
 		if(value_from == noone) return;
 		if(value_from.node.active) return;
 		
 		removeFrom(_remove_list);
-	}
+	} #endregion
 	
-	static searchNodeBackward = function(_node) {
+	static searchNodeBackward = function(_node) { #region
 		if(node == _node) return true;
 		for(var i = 0; i < ds_list_size(node.inputs); i++) {
 			var _in = node.inputs[| i].value_from;
@@ -1534,21 +1569,16 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				return true;
 		}
 		return false;
-	}
+	} #endregion
 	
-	static unitConvert = function(mode) {
+	static unitConvert = function(mode) { #region
 		var _v = animator.values;
 		
 		for( var i = 0; i < ds_list_size(_v); i++ )
 			_v[| i].value = unit.convertUnit(_v[| i].value, mode);
-	}
+	} #endregion
 	
-	drag_type = 0;
-	drag_mx   = 0;
-	drag_my   = 0;
-	drag_sx   = 0;
-	drag_sy   = 0;
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
 		if(type != VALUE_TYPE.integer && type != VALUE_TYPE.float) return -1;
 		if(value_from != noone) return -1;
 		if(expUse) return -1;
@@ -1577,10 +1607,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		}
 		
 		return -1;
-	}
+	} #endregion
 	
-	junction_drawing = [ THEME.node_junctions_single, type ];
-	static drawJunction = function(_s, _mx, _my, sca = 1) {
+	static drawJunction = function(_s, _mx, _my, sca = 1) { #region
 		if(!isVisible()) return false;
 		
 		var ss = max(0.25, _s / 2);
@@ -1608,9 +1637,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		draw_sprite_ext(junction_drawing[0], junction_drawing[1], x, y, ss, ss, 0, c_white, 1);
 		
 		return is_hover;
-	}
+	} #endregion
 	
-	static drawNameBG = function(_s) {
+	static drawNameBG = function(_s) { #region
 		if(!isVisible()) return false;
 		
 		draw_set_text(f_p1, fa_left, fa_center);
@@ -1628,8 +1657,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			var tx = x + 12 * _s;
 			draw_sprite_stretched_ext(THEME.node_junction_name_bg, 0, tx - 16, y - th / 2, tw, th, c_white, 0.5);
 		}
-	}
-	static drawName = function(_s, _mx, _my) {
+	} #endregion
+	
+	static drawName = function(_s, _mx, _my) { #region
 		if(!isVisible()) return false;
 		
 		var _hover = PANEL_GRAPH.pHOVER && point_in_circle(_mx, _my, x, y, 10 * _s);
@@ -1649,9 +1679,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			draw_set_halign(fa_left);
 			draw_text(tx, y, name);
 		}
-	}
+	} #endregion
 	
-	static drawConnections = function(_x, _y, _s, mx, my, _active, aa = 1, minx = undefined, miny = undefined, maxx = undefined, maxy = undefined) {
+	static drawConnections = function(_x, _y, _s, mx, my, _active, aa = 1, minx = undefined, miny = undefined, maxx = undefined, maxy = undefined) { #region
 		if(value_from == noone)		return noone;
 		if(!value_from.node.active) return noone;
 		if(!isVisible())			return noone;
@@ -1779,9 +1809,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		}
 		
 		return hovering;
-	}
+	} #endregion
 	
-	static drawConnectionMouse = function(_mx, _my, ss, target) {
+	static drawConnectionMouse = function(_mx, _my, ss, target) { #region
 		var drawCorner = type == VALUE_TYPE.action;
 		if(target != noone)
 			drawCorner |= target.type == VALUE_TYPE.action;
@@ -1836,9 +1866,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				}
 				break;
 		}
-	}
-	
-	static isVisible = function() {
+	} #endregion
+	 
+	static isVisible = function() { #region
 		if(!node.active) 
 			return false;
 			
@@ -1853,9 +1883,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				return array_exists(node.input_display_list, index);
 		}
 		return visible;
-	}
+	} #endregion
 	
-	static extractNode = function(_type = extract_node) {
+	static extractNode = function(_type = extract_node) { #region
 		if(_type == "") return noone;
 		
 		var ext = nodeBuild(_type, node.x, node.y);
@@ -1907,9 +1937,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		ext.doUpdate();
 		PANEL_ANIMATION.updatePropertyList();
-	}
+	} #endregion
 	
-	static getJunctionTo = function() {
+	static getJunctionTo = function() { #region
 		var to =  [];
 		
 		for(var j = 0; j < ds_list_size(value_to); j++) {
@@ -1921,9 +1951,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		}
 				
 		return to;
-	}
+	} #endregion
 	
-	static dragValue = function() {
+	static dragValue = function() { #region
 		if(drop_key == "None") return;
 		
 		DRAGGING = { 
@@ -1938,10 +1968,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		if(connect_type == JUNCTION_CONNECT.input)
 			DRAGGING.from = self;
-	}
+	} #endregion
 	
-	#region[#88ffe916] === Save Load ===
-	static serialize = function(scale = false, preset = false) {
+	static serialize = function(scale = false, preset = false) { #region
 		var _map = {};
 		
 		_map.visible = visible;
@@ -1971,12 +2000,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		_map.data = extra_data;
 		
 		return _map;
-	}
+	} #endregion
 	
-	con_node  = -1;
-	con_index = -1;
-	
-	static applyDeserialize = function(_map, scale = false, preset = false) {
+	static applyDeserialize = function(_map, scale = false, preset = false) { #region
 		if(_map == undefined) return;
 		if(_map == noone)     return;
 		if(!is_struct(_map))  return;
@@ -2020,9 +2046,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(APPENDING) def_val = getValue(0);
 		
 		onValidate();
-	}
+	} #endregion
 	
-	static connect = function(log = false) {
+	static connect = function(log = false) { #region
 		if(con_node == -1 || con_index == -1)
 			return true;
 		
@@ -2056,19 +2082,18 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		log_warning("LOAD", $"[Connect] Connection conflict {node.name} to {_nd.name} : Output not exist.", node);
 		return false;
-	}
-	#endregion
+	} #endregion
 	
-	static destroy = function() {
+	static destroy = function() { #region
 		if(error_notification != noone) {
 			noti_remove(error_notification);
 			error_notification = noone;
 		}	
-	}
+	} #endregion
 	
-	static cleanUp = function() {
+	static cleanUp = function() { #region
 		ds_list_destroy(value_to);
 		animator.cleanUp();
 		delete animator;
-	}
+	} #endregion
 }

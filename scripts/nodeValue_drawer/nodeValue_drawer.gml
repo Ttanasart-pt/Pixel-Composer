@@ -157,7 +157,7 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 			draw_line(bx - ui(20), by - lhf, bx - ui(20), by + lhf);
 					
 			bx -= ui(26 + 12);
-			if(buttonInstant(THEME.button_hide, bx - ui(12), by - ui(12), ui(24), ui(24), _m, _focus, _hover, __txtx("panel_animation_looping_mode", "Looping mode") + " " + ON_END_NAME[jun.on_end], THEME.prop_on_end, jun.on_end) == 2)
+			if(buttonInstant(THEME.button_hide, bx - ui(12), by - ui(12), ui(24), ui(24), _m, _focus, _hover, __txtx("panel_animation_looping_mode", "Looping mode") + " " + global.junctionEndName[jun.on_end], THEME.prop_on_end, jun.on_end) == 2)
 				jun.on_end = safe_mod(jun.on_end + 1, sprite_get_number(THEME.prop_on_end));
 		}
 	#endregion

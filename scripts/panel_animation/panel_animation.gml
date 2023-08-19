@@ -264,7 +264,7 @@ function Panel_Animation() : PanelContent() constructor {
 			[ [THEME.timeline_ease, 0], function() { 
 				for( var i = 0, n = array_length(keyframe_selecting); i < n; i++ ) {
 					var k = keyframe_selecting[i];
-					k.ease_in_type = CURVE_TYPE.none;
+					k.ease_in_type = CURVE_TYPE.linear;
 					k.ease_in = [0, 1];
 				}
 			}, __txtx("panel_animation_ease_linear", "Linear") ],
@@ -301,7 +301,7 @@ function Panel_Animation() : PanelContent() constructor {
 			[ [THEME.timeline_ease, 0], function() { 
 				for( var i = 0, n = array_length(keyframe_selecting); i < n; i++ ) {
 					var k = keyframe_selecting[i];
-					k.ease_out_type = CURVE_TYPE.none;
+					k.ease_out_type = CURVE_TYPE.linear;
 					k.ease_out = [0, 0];
 				}
 			}, __txtx("panel_animation_ease_linear", "Linear") ],
@@ -637,7 +637,7 @@ function Panel_Animation() : PanelContent() constructor {
 			var key_next = animator.values[| k + 1];
 			var dx = key_next.time - key.time;
 			
-			if(key.ease_out_type == CURVE_TYPE.none && key_next.ease_in_type == CURVE_TYPE.none) { //linear draw
+			if(key.ease_out_type == CURVE_TYPE.linear && key_next.ease_in_type == CURVE_TYPE.linear) { //linear draw
 				nx = (key_next.time + 1) * ui(timeline_scale) + timeline_shift;
 				if(valArray) {
 					for( var ki = 0; ki < array_length(key.value); ki++ ) {
@@ -1011,7 +1011,7 @@ function Panel_Animation() : PanelContent() constructor {
 		tx = tool_width - ui(20 + 16 * 4.5);
 		if(pHOVER && point_in_circle(msx, msy, tx, ty, ui(6))) {
 			draw_sprite_ui_uniform(THEME.prop_on_end, animator.prop.on_end, tx, ty, 1, COLORS._main_icon_on_inner, 1);
-			TOOLTIP = __txtx("panel_animation_looping_mode", "Looping mode") + ": " + ON_END_NAME[animator.prop.on_end];
+			TOOLTIP = __txtx("panel_animation_looping_mode", "Looping mode") + ": " + global.junctionEndName[animator.prop.on_end];
 							
 			if(mouse_release(mb_left, pFOCUS)) 
 				animator.prop.on_end = safe_mod(animator.prop.on_end + 1, sprite_get_number(THEME.prop_on_end));
@@ -1099,7 +1099,7 @@ function Panel_Animation() : PanelContent() constructor {
 				draw_sprite_ui_uniform(THEME.arrow, _node.anim_show? 3 : 0, ui(10), _node_y, 1, COLORS._main_icon, 0.75);
 		
 			draw_set_font(f_p3);
-			var nodeName = "[" + _node.name + "] ";
+			var nodeName = $"[{_node.name}] ";
 			var tw = string_width(nodeName);
 			
 			draw_set_color(node_ordering == _node? COLORS._main_text_accent : COLORS._main_text);
@@ -1199,7 +1199,8 @@ function Panel_Animation() : PanelContent() constructor {
 			var s_bar_y	= scr_y + scr_prog_s;
 				
 			if(is_scrolling) {
-				dope_sheet_y_to = clamp((my - scr_y - scr_scale_s / 2) / (scr_s - scr_scale_s), 0, 1) * -dope_sheet_y_max;
+				if(scr_s - scr_scale_s != 0)
+					dope_sheet_y_to = clamp((my - scr_y - scr_scale_s / 2) / (scr_s - scr_scale_s), 0, 1) * -dope_sheet_y_max;
 					
 				if(mouse_release(mb_left)) is_scrolling = false;
 			}
@@ -1399,7 +1400,7 @@ function Panel_Animation() : PanelContent() constructor {
 						case KEYFRAME_DRAG_TYPE.ease_in :
 							for( var i = 0, n = array_length(keyframe_selecting); i < n; i++ ) {
 								var k = keyframe_selecting[i];
-								k.ease_in_type  = keyframe_dragout? CURVE_TYPE.bezier : CURVE_TYPE.none;
+								k.ease_in_type  = keyframe_dragout? CURVE_TYPE.bezier : CURVE_TYPE.linear;
 								
 								k.ease_in[0] = dx;
 								if(!k.ease_y_lock) 
@@ -1410,7 +1411,7 @@ function Panel_Animation() : PanelContent() constructor {
 						case KEYFRAME_DRAG_TYPE.ease_out :
 							for( var i = 0, n = array_length(keyframe_selecting); i < n; i++ ) {
 								var k = keyframe_selecting[i];
-								k.ease_out_type = keyframe_dragout? CURVE_TYPE.bezier : CURVE_TYPE.none;
+								k.ease_out_type = keyframe_dragout? CURVE_TYPE.bezier : CURVE_TYPE.linear;
 								
 								k.ease_out[0] =  dx;
 								if(!k.ease_y_lock) 
@@ -1420,8 +1421,8 @@ function Panel_Animation() : PanelContent() constructor {
 						case KEYFRAME_DRAG_TYPE.ease_both :
 							for( var i = 0, n = array_length(keyframe_selecting); i < n; i++ ) {
 								var k  = keyframe_selecting[i];
-								k.ease_in_type  = keyframe_dragout? CURVE_TYPE.bezier : CURVE_TYPE.none;
-								k.ease_out_type = keyframe_dragout? CURVE_TYPE.bezier : CURVE_TYPE.none;
+								k.ease_in_type  = keyframe_dragout? CURVE_TYPE.bezier : CURVE_TYPE.linear;
+								k.ease_out_type = keyframe_dragout? CURVE_TYPE.bezier : CURVE_TYPE.linear;
 							
 								k.ease_in[0] = dx;
 								if(!k.ease_y_lock) 

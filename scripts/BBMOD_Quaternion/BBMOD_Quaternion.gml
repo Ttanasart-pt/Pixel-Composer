@@ -240,9 +240,9 @@ function BBMOD_Quaternion(_x=0.0, _y=0.0, _z=0.0, _w=1.0) constructor
 	/// @return {Struct.BBMOD_Quaternion} Returns `self`.
 	static FromLookRotation = function (_forward, _up) {
 		gml_pragma("forceinline");
-
-		_forward = _forward.Clone();
-		_up = _up.Clone();
+		
+		_forward = new BBMOD_Vec3(_forward);
+		_up      = new BBMOD_Vec3(_up);
 
 		if (!_forward.Orthonormalize(_up))
 		{
@@ -268,9 +268,9 @@ function BBMOD_Quaternion(_x=0.0, _y=0.0, _z=0.0, _w=1.0) constructor
 		gml_pragma("forceinline");
 
 		W = sqrt(1 + rotMatrix[0] + rotMatrix[5] + rotMatrix[10]) / 2;
-		X = (rotMatrix[9] - rotMatrix[6]) / (4 * W);
-		Y = (rotMatrix[2] - rotMatrix[8]) / (4 * W);
-		Z = (rotMatrix[4] - rotMatrix[1]) / (4 * W);
+		X =  (rotMatrix[9] - rotMatrix[6]) / (4 * W);
+		Y =  (rotMatrix[2] - rotMatrix[8]) / (4 * W);
+		Z =  (rotMatrix[4] - rotMatrix[1]) / (4 * W);
 		return self;
 	}
 
@@ -427,10 +427,19 @@ function BBMOD_Quaternion(_x=0.0, _y=0.0, _z=0.0, _w=1.0) constructor
 	/// @return {Struct.BBMOD_Vec3} The created vector.
 	static Rotate = function (_v) {
 		gml_pragma("forceinline");
+		
+		var _tovec = is_instanceof(_v, __vec3);
+		if(_tovec) _v = new BBMOD_Vec3(_v.x, _v.y, _v.z);
+		
 		var _q = Normalize();
 		var _V = new BBMOD_Quaternion(_v.X, _v.Y, _v.Z, 0.0);
 		var _rot = _q.Mul(_V).Mul(_q.Conjugate());
-		return new BBMOD_Vec3(_rot.X, _rot.Y, _rot.Z);
+		
+		var res;
+		if(_tovec)  res = new __vec3(_rot.X, _rot.Y, _rot.Z);
+		else		res = new BBMOD_Vec3(_rot.X, _rot.Y, _rot.Z);
+		
+		return res;
 	};
 
 	/// @func Scale(_s)

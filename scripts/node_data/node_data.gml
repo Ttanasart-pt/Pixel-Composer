@@ -371,7 +371,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		if(hasInspector1Update()) {
 			var trig = inspectInput1.getValue();
 			if(trig) {
-				inspectInput1.editWidget.onClick();
+				onInspector1Update();
 				inspectInput1.setValue(false);
 			}
 		}
@@ -379,7 +379,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		if(hasInspector2Update()) {
 			var trig = inspectInput2.getValue();
 			if(trig) {
-				inspectInput2.editWidget.onClick();
+				onInspector2Update();
 				inspectInput2.setValue(false);
 			}
 		}
@@ -1276,6 +1276,8 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	} #endregion
 	
 	static getTool = function() { return self; }
+	
+	static getToolSettings = function() { return tool_settings; }
 	
 	static setTool = function(tool) { #region
 		if(!tool) {
