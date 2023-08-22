@@ -19,7 +19,7 @@ function __vec4(_x = 0, _y = _x, _z = _x, _w = _x) constructor {
 			x = _x[0];
 			y = _x[1];
 			z = _x[2];
-			return;
+			return self;
 		}
 		
         x = _x;

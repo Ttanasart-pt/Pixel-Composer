@@ -42,7 +42,6 @@ function __3dICOSphere(radius = 0.5, level = 2, smt = false) : __3dObject() cons
 	static initModel = function() { // swap H, V because fuck me
 		var _vertices = ds_list_create();
 		var _normals  = ds_list_create();
-		var _uvs      = ds_list_create();
 		
 		var phi = (1 + sqrt(5)) * 0.5; // golden ratio
 		var a = 1.0;
@@ -127,26 +126,22 @@ function __3dICOSphere(radius = 0.5, level = 2, smt = false) : __3dObject() cons
 			var _v0 = _vertices[| i * 3 + 0];
 			var _v1 = _vertices[| i * 3 + 1];
 			var _v2 = _vertices[| i * 3 + 2];
-			var _n  = _v1.subtract(_v0).cross(_v2.subtract(_v0));
-			var _u = [ 0, 0 ];
-			
-			ds_list_add(_normals, _n, _n, _n);
-			ds_list_add(_uvs, _u, _u, _u);
+			if(smooth) {
+				ds_list_add(_normals, _v0.normalize(), _v1.normalize(), _v2.normalize());
+			} else {
+				var _n  = _v1.subtract(_v0).cross(_v2.subtract(_v0));
+				ds_list_add(_normals, _n, _n, _n);
+			}
 		} #endregion
 		
 		vertex   = array_create(ds_list_size(_vertices));
 		normals  = array_create(ds_list_size(_normals));
-		uv       = ds_list_to_array(_uvs);
 		
-		for( var i = 0, n = ds_list_size(_vertices); i < n; i++ ) 
-			vertex[i] = _vertices[| i].toArray();
-		
-		for( var i = 0, n = ds_list_size(_normals); i < n; i++ ) 
-			normals[i] = _normals[| i].toArray();
+		for( var i = 0, n = ds_list_size(_vertices); i < n; i++ )
+			vertex[i] = V3(_vertices[| i]).setNormal(_normals[| i]);
 		
 		ds_list_destroy(_vertices);
 		ds_list_destroy(_normals);
-		ds_list_destroy(_uvs);
 		
 		VB = build();
 	} initModel();

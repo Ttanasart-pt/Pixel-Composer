@@ -31,3 +31,31 @@ function vertex_add_2pc(buffer, _x, _y, color, alpha = 1) {
 	vertex_position(buffer, _x, _y);
 	vertex_color(buffer, color, alpha);
 }
+
+function vertex_add_v(buffer, vertex) {
+	vertex_position_3d(buffer, vertex.x, vertex.y, vertex.z);
+}
+
+function vertex_add_vc(buffer, vertex) {
+	vertex_position_3d(buffer, vertex.x, vertex.y, vertex.z);
+	vertex_color(buffer, vertex.color, vertex.alpha);
+}
+
+function vertex_add_vnt(buffer, vertex) {
+	var _normal = vertex.normal;
+	var _uv = vertex.uv;
+	
+	vertex_position_3d(buffer, vertex.x, vertex.y, vertex.z);
+	vertex_normal(buffer, _normal.x, _normal.y, _normal.z);
+	vertex_texcoord(buffer, _uv.x, _uv.y);
+}
+
+function vertex_add_vntc(buffer, vertex) {
+	var _normal = vertex.normal;
+	var _uv = vertex.uv;
+	
+	vertex_position_3d(buffer, vertex.x, vertex.y, vertex.z);
+	vertex_normal(buffer, _normal.x, _normal.y, _normal.z);
+	vertex_texcoord(buffer, _uv.x, _uv.y);
+	vertex_color(buffer, vertex.color, vertex.alpha);
+}

@@ -6,23 +6,23 @@ function __3dCube() : __3dObject() constructor {
 		size /= 2;
 		
 		vertex = [
-		    [-size, -size, size], [size, -size, size], [size, size, size],
-		    [-size, -size, size], [size, size, size], [-size, size, size],
+		    V3(-size, -size, size), V3(size, -size, size), V3(size, size, size),
+		    V3(-size, -size, size), V3(size, size, size), V3(-size, size, size),
+			
+		    V3(-size, -size, -size), V3(size, -size, -size), V3(size, size, -size),
+		    V3(-size, -size, -size), V3(size, size, -size), V3(-size, size, -size),
     
-		    [-size, -size, -size], [size, -size, -size], [size, size, -size],
-		    [-size, -size, -size], [size, size, -size], [-size, size, -size],
+		    V3(-size, -size, size), V3(-size, size, size), V3(-size, size, -size),
+		    V3(-size, -size, size), V3(-size, size, -size), V3(-size, -size, -size),
     
-		    [-size, -size, size], [-size, size, size], [-size, size, -size],
-		    [-size, -size, size], [-size, size, -size], [-size, -size, -size],
+		    V3(size, -size, size), V3(size, size, size), V3(size, size, -size),
+		    V3(size, -size, size), V3(size, size, -size), V3(size, -size, -size),
     
-		    [size, -size, size], [size, size, size], [size, size, -size],
-		    [size, -size, size], [size, size, -size], [size, -size, -size],
+		    V3(-size, size, size), V3(size, size, size), V3(size, size, -size),
+		    V3(-size, size, size), V3(size, size, -size), V3(-size, size, -size),
     
-		    [-size, size, size], [size, size, size], [size, size, -size],
-		    [-size, size, size], [size, size, -size], [-size, size, -size],
-    
-		    [-size, -size, size], [size, -size, size], [size, -size, -size],
-		    [-size, -size, size], [size, -size, -size], [-size, -size, -size]
+		    V3(-size, -size, size), V3(size, -size, size), V3(size, -size, -size),
+		    V3(-size, -size, size), V3(size, -size, -size), V3(-size, -size, -size)
 		];
 	
 		normals = [
@@ -64,6 +64,8 @@ function __3dCube() : __3dObject() constructor {
 		    [0, 0], [1, 0], [1, 1],
 		    [0, 0], [1, 1], [0, 1]
 		];
+		
+		array_foreach(vertex, function(val, ind) { val.setNormal(normals[ind]); val.setUV(uv[ind]); })
 	
 		VB = build();
 	} initModel(1);

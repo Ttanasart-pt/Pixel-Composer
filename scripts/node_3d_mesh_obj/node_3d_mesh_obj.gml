@@ -92,9 +92,8 @@ function Node_3D_Mesh_Obj(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group)
 		if(object != noone) object.destroy();
 		object = new __3dObject();
 		object.VB      = _v.vertex_groups;
-		object.vertex  = _v.vertex_positions;
-		object.normals = _v.vertex_normals;
-		object.uv      = _v.vertex_textures;
+		object.vertex  = _v.vertex;
+		object.object_counts  = _v.object_counts;
 		
 		object.size   = _v.model_size;
 		materialNames = _v.materials;
@@ -142,8 +141,7 @@ function Node_3D_Mesh_Obj(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group)
 		_object.VF		= global.VF_POS_NORM_TEX_COL;
 		_object.VB		= object.VB;
 		_object.vertex  = object.vertex;
-		_object.normals = object.normals; 
-		_object.uv      = object.uv;
+		_object.object_counts  = object.object_counts;
 		_object.texture = textures;
 		
 		setTransform(_object, _data);

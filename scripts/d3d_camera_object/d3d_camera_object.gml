@@ -6,24 +6,24 @@ function __3dCamera_object() : __3dObject() constructor {
 	len = 0.5; //cameraLength
 	
 	vertex = [
-		[ -len, -ivw,  ivh ], [ -len,  ivw,  ivh ],
-		[ -len,  ivw,  ivh ], [ -len,  ivw, -ivh ],
-		[ -len,  ivw, -ivh ], [ -len, -ivw, -ivh ],
-		[ -len, -ivw, -ivh ], [ -len, -ivw,  ivh ],
+		V3( -len, -ivw,  ivh ), V3( -len,  ivw,  ivh ),
+		V3( -len,  ivw,  ivh ), V3( -len,  ivw, -ivh ),
+		V3( -len,  ivw, -ivh ), V3( -len, -ivw, -ivh ),
+		V3( -len, -ivw, -ivh ), V3( -len, -ivw,  ivh ),
 									 
-		[  len, -ovw,  ovh ], [  len,  ovw,  ovh ],
-		[  len,  ovw,  ovh ], [  len,  ovw, -ovh ],
-		[  len,  ovw, -ovh ], [  len, -ovw, -ovh ],
-		[  len, -ovw, -ovh ], [  len, -ovw,  ovh ],
+		V3(  len, -ovw,  ovh ), V3(  len,  ovw,  ovh ),
+		V3(  len,  ovw,  ovh ), V3(  len,  ovw, -ovh ),
+		V3(  len,  ovw, -ovh ), V3(  len, -ovw, -ovh ),
+		V3(  len, -ovw, -ovh ), V3(  len, -ovw,  ovh ),
 								 	 
-		[ -len, -ivw,  ivh ], [  len, -ovw,  ovh ],  
-		[ -len,  ivw,  ivh ], [  len,  ovw,  ovh ],  
-		[ -len,  ivw, -ivh ], [  len,  ovw, -ovh ],  
-		[ -len, -ivw, -ivh ], [  len, -ovw, -ovh ],  
+		V3( -len, -ivw,  ivh ), V3(  len, -ovw,  ovh ),  
+		V3( -len,  ivw,  ivh ), V3(  len,  ovw,  ovh ),  
+		V3( -len,  ivw, -ivh ), V3(  len,  ovw, -ovh ),  
+		V3( -len, -ivw, -ivh ), V3(  len, -ovw, -ovh ),  
 		
-		[  len, -ovw * 0.5, ovh + 0.2 ], [  len,  ovw * 0.5, ovh + 0.2 ],  
-		[  len, 0, ovh + 0.6 ],			 [  len,  ovw * 0.5, ovh + 0.2 ],  
-		[  len, -ovw * 0.5, ovh + 0.2 ], [  len,  0, ovh + 0.6 ],  
+		V3(  len, -ovw * 0.5, ovh + 0.2 ), V3(  len,  ovw * 0.5, ovh + 0.2 ),  
+		V3(  len, 0, ovh + 0.6 ),	  	   V3(  len,  ovw * 0.5, ovh + 0.2 ),  
+		V3(  len, -ovw * 0.5, ovh + 0.2 ), V3(  len,  0, ovh + 0.6 ),  
 	];
 	
 	VF = global.VF_POS_COL;

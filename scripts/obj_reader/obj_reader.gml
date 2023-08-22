@@ -18,7 +18,7 @@ function readObj(path, flipUV = false) {
 	var tri = 0;
 	
 	var file = file_text_open_read(path);
-	while(!file_text_eof(file)) {
+	while(!file_text_eof(file)) { #region reading file
 		var l = file_text_readln(file);
 		l = string_trim(l);
 		
@@ -97,16 +97,17 @@ function readObj(path, flipUV = false) {
 		array_push(tris, tri);
 	}
 	file_text_close(file);
+	#endregion
 	
 	if(use_normal) vn[| 0] = [ 0, 0, 0 ];
 	
-	var txt = "OBJ summary";
-	txt += $"\n\tVerticies : {ds_list_size(v)}";
-	txt += $"\n\tTexture Verticies : {ds_list_size(vt)}";
-	txt += $"\n\tNormal Verticies : {ds_list_size(vn)}";
-	txt += $"\n\tVertex groups : {array_length(_VB)}";
-	txt += $"\n\tTriangles : {tris}";
-	print(txt);
+	//var txt = "OBJ summary";
+	//txt += $"\n\tVerticies : {ds_list_size(v)}";
+	//txt += $"\n\tTexture Verticies : {ds_list_size(vt)}";
+	//txt += $"\n\tNormal Verticies : {ds_list_size(vn)}";
+	//txt += $"\n\tVertex groups : {array_length(_VB)}";
+	//txt += $"\n\tTriangles : {tris}";
+	//print(txt);
 	
 	#region centralize vertex
 		var _bmin = v[| 0];
@@ -151,10 +152,8 @@ function readObj(path, flipUV = false) {
 	
 	#region vertex buffer creation
 		var _vblen = array_length(_VB);
-		var VBS  = array_create(_vblen);
-		var Vpos = array_create(_vblen);
-		var Vnor = array_create(_vblen);
-		var Vtex = array_create(_vblen);
+		var VBS    = array_create(_vblen);
+		var V      = array_create(_vblen);
 		
 		for(var i = 0; i < _vblen; i++)  {
 			var VB = vertex_create_buffer();
@@ -165,9 +164,7 @@ function readObj(path, flipUV = false) {
 			var tri   = tris[i];
 			
 			var _flen = ds_list_size(face);
-			var _vpos = array_create(tri * 3);
-			var _vnor = array_create(tri * 3);
-			var _vtex = array_create(tri * 3);
+			var _v    = array_create(tri * 3);
 			var _vind = 0;
 			
 			for(var j = 0; j < _flen; j++) {
@@ -189,10 +186,6 @@ function readObj(path, flipUV = false) {
 					
 					var _vTindex = _ft[k] - 1;
 					_pft[k] = vt[| _vTindex];
-					
-					//print($"vPos {k}[{_vPindex}] = {_pf[k]}");
-					//print($"vNor {k}[{_vNindex}] = {_pfn[k]}");
-					//print($"vTex {k}[{_vTindex}] = {_pft[k]}");
 				}
 				
 				if(_vlen >= 3) {
@@ -200,28 +193,27 @@ function readObj(path, flipUV = false) {
 					vertex_add_pntc(VB, _pf[1], _pfn[1], _pft[1]);
 					vertex_add_pntc(VB, _pf[2], _pfn[2], _pft[2]);
 					
-					_vpos[_vind] = _pf[0]; _vnor[_vind] = _pfn[0]; _vtex[_vind] = _pft[0]; _vind++;
-					_vpos[_vind] = _pf[1]; _vnor[_vind] = _pfn[1]; _vtex[_vind] = _pft[1]; _vind++;
-					_vpos[_vind] = _pf[2]; _vnor[_vind] = _pfn[2]; _vtex[_vind] = _pft[2]; _vind++;
+					_v[_vind] = V3(_pf[0]).setNormal(_pfn[0]).setUV(_pft[0]); _vind++;
+					_v[_vind] = V3(_pf[1]).setNormal(_pfn[1]).setUV(_pft[1]); _vind++;
+					_v[_vind] = V3(_pf[2]).setNormal(_pfn[2]).setUV(_pft[2]); _vind++;
 				} 
-			
+				
 				if(_vlen >= 4) {
 					vertex_add_pntc(VB, _pf[0], _pfn[0], _pft[0]);
 					vertex_add_pntc(VB, _pf[2], _pfn[2], _pft[2]);
 					vertex_add_pntc(VB, _pf[3], _pfn[3], _pft[3]);
 					
-					_vpos[_vind] = _pf[0]; _vnor[_vind] = _pfn[0]; _vtex[_vind] = _pft[0]; _vind++;
-					_vpos[_vind] = _pf[2]; _vnor[_vind] = _pfn[2]; _vtex[_vind] = _pft[2]; _vind++;
-					_vpos[_vind] = _pf[3]; _vnor[_vind] = _pfn[3]; _vtex[_vind] = _pft[3]; _vind++;
+					_v[_vind] = V3(_pf[0]).setNormal(_pfn[0]).setUV(_pft[0]); _vind++;
+					_v[_vind] = V3(_pf[2]).setNormal(_pfn[2]).setUV(_pft[2]); _vind++;
+					_v[_vind] = V3(_pf[3]).setNormal(_pfn[3]).setUV(_pft[3]); _vind++;
 				}
 			}
+			
 			vertex_end(VB);
 			vertex_freeze(VB);
 		
 			VBS[i]  = VB;
-			Vpos[i] = _vpos;
-			Vnor[i] = _vnor;
-			Vtex[i] = _vtex;
+			V[i]    = _v;
 		}
 	#endregion
 	
@@ -236,10 +228,9 @@ function readObj(path, flipUV = false) {
 	#endregion
 	
 	return { 
-		vertex_groups:	  VBS,
-		vertex_positions: Vpos,
-		vertex_normals:   Vnor,
-		vertex_textures:  Vtex,
+		vertex: V,
+		vertex_groups: VBS,
+		object_counts: _vblen,
 		
 		materials:		mats,
 		material_index: matIndex,

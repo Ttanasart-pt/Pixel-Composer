@@ -9,8 +9,6 @@ function __3dUVSphere(radius = 0.5, hori = 16, vert = 8, smt = false) : __3dObje
 	
 	static initModel = function() { // swap H, V because fuck me
 		vertex  = array_create(vert * hori * 2 * 3);
-		normals = array_create(vert * hori * 2 * 3);
-		uv      = array_create(vert * hori * 2 * 3);
 		var amo = 0;
 		
 	    for (var i = 0; i < vert; i++)
@@ -55,42 +53,42 @@ function __3dUVSphere(radius = 0.5, hori = 16, vert = 8, smt = false) : __3dObje
 			
 			var ind = (i * hori + j) * 6;
 			
-			vertex[ind + 0] = [hx0, hy0, hz0];
-			vertex[ind + 1] = [hx1, hy1, hz1];
-			vertex[ind + 2] = [hx2, hy2, hz2];
+			vertex[ind + 0] = V3(hx0, hy0, hz0);
+			vertex[ind + 1] = V3(hx1, hy1, hz1);
+			vertex[ind + 2] = V3(hx2, hy2, hz2);
 									   
-			vertex[ind + 3] = [hx1, hy1, hz1];
-			vertex[ind + 4] = [hx2, hy2, hz2];
-			vertex[ind + 5] = [hx3, hy3, hz3];
+			vertex[ind + 3] = V3(hx1, hy1, hz1);
+			vertex[ind + 4] = V3(hx2, hy2, hz2);
+			vertex[ind + 5] = V3(hx3, hy3, hz3);
 			
 			if(smooth) {
-				normals[ind + 0] = d3_normalize([hx0, hy0, hz0]);
-				normals[ind + 1] = d3_normalize([hx1, hy1, hz1]);
-				normals[ind + 2] = d3_normalize([hx2, hy2, hz2]);
-														 
-				normals[ind + 3] = d3_normalize([hx1, hy1, hz1]);
-				normals[ind + 4] = d3_normalize([hx2, hy2, hz2]);
-				normals[ind + 5] = d3_normalize([hx3, hy3, hz3]);
+				vertex[ind + 0].setNormal(hx0, hy0, hz0);
+				vertex[ind + 1].setNormal(hx1, hy1, hz1);
+				vertex[ind + 2].setNormal(hx2, hy2, hz2);
+										 
+				vertex[ind + 3].setNormal(hx1, hy1, hz1);
+				vertex[ind + 4].setNormal(hx2, hy2, hz2);
+				vertex[ind + 5].setNormal(hx3, hy3, hz3);
 			} else {
 				var nor = d3_cross_product([hx2 - hx0, hy2 - hy0, hz2 - hz0], [hx1 - hx0, hy1 - hy0, hz1 - hz0]);
 				nor = d3_normalize(nor);
 				
-				normals[ind + 0] = nor;
-				normals[ind + 1] = nor;
-				normals[ind + 2] = nor;
-				
-				normals[ind + 3] = nor;
-				normals[ind + 4] = nor;
-				normals[ind + 5] = nor;
+				vertex[ind + 0].setNormal(nor);
+				vertex[ind + 1].setNormal(nor);
+				vertex[ind + 2].setNormal(nor);
+										 
+				vertex[ind + 3].setNormal(nor);
+				vertex[ind + 4].setNormal(nor);
+				vertex[ind + 5].setNormal(nor);
 			}
 			
-			uv[ind + 0] = [u0, v0];
-			uv[ind + 1] = [u1, v1];
-			uv[ind + 2] = [u2, v2];
+			vertex[ind + 0].setUV(u0, v0);
+			vertex[ind + 1].setUV(u1, v1);
+			vertex[ind + 2].setUV(u2, v2);
 										
-			uv[ind + 3] = [u1, v1];
-			uv[ind + 4] = [u2, v2];
-			uv[ind + 5] = [u3, v3];
+			vertex[ind + 3].setUV(u1, v1);
+			vertex[ind + 4].setUV(u2, v2);
+			vertex[ind + 5].setUV(u3, v3);
 	    }
 		
 		VB = build();

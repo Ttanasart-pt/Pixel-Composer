@@ -353,7 +353,6 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 			addNodeObject(threeD, "Normal Light",		s_node_normal_light,	"Node_Normal_Light",	[1, Node_Normal_Light],, "Light up the image using normal mapping.");
 			addNodeObject(threeD, "Bevel",				s_node_bevel,			"Node_Bevel",			[1, Node_Bevel], ["shade", "auto shade"], "Apply 2D bevel on the image.");
 			addNodeObject(threeD, "Sprite Stack",		s_node_stack,			"Node_Sprite_Stack",	[1, Node_Sprite_Stack],, "Create sprite stack either from repeating a single image or stacking different images using array.");
-			///**/ addNodeObject(threeD, "Depth 3D",			s_node_stack,			"Node_3D_Depth",		[1, Node_3D_Depth],, "Create 3D looking image from depth map.").setVersion(1447);
 			
 			ds_list_add(threeD, "3D");
 			addNodeObject(threeD, "3D Scene",	s_node_3d_cube,		"Node_3D_Scene",		[1, Node_3D_Scene]);
@@ -361,17 +360,18 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 			
 			ds_list_add(threeD, "Mesh");
 			addNodeObject(threeD, "3D Object",		s_node_3d_obj,		"Node_3D_Mesh_Obj",			[0, Node_create_3D_Obj],, "Load .obj file from your computer as a 3D object.");
+			addNodeObject(threeD, "3D Plane",		s_node_3d_plane,	"Node_3D_Plane",			[1, Node_3D_Mesh_Plane],, "Put 2D image on a plane in 3D space.");
 			addNodeObject(threeD, "3D Cube",		s_node_3d_cube,		"Node_3D_Mesh_Cube",		[1, Node_3D_Mesh_Cube]);
 			addNodeObject(threeD, "3D Cylinder",	s_node_3d_cylinder,	"Node_3D_Mesh_Cylinder",	[1, Node_3D_Mesh_Cylinder]);
 			addNodeObject(threeD, "3D UV Sphere",	s_node_3d_sphere,	"Node_3D_Mesh_Sphere_UV",	[1, Node_3D_Mesh_Sphere_UV]);
 			addNodeObject(threeD, "3D Icosphere",	s_node_3d_sphere,	"Node_3D_Mesh_Sphere_Ico",	[1, Node_3D_Mesh_Sphere_Ico]);
+			addNodeObject(threeD, "3D Cone",		s_node_3d_cone,		"Node_3D_Mesh_Cone",		[1, Node_3D_Mesh_Cone])
 			
 			ds_list_add(threeD, "Light");
 			addNodeObject(threeD, "Directional Light",	s_node_3d_cube,		"Node_3D_Light_Directional",	[1, Node_3D_Light_Directional]);
 			addNodeObject(threeD, "Point Light",		s_node_3d_cube,		"Node_3D_Light_Point",			[1, Node_3D_Light_Point]);
 			
-			ds_list_add(threeD, "Legacy");
-			addNodeObject(threeD, "3D Object",			s_node_3d_obj,			"Node_3D_Obj",			[1, Node_3D_Obj],, "Load .obj file from your computer as a 3D object.").isDeprecated();
+			ds_list_add(threeD, "Legacy"); //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 			addNodeObject(threeD, "3D Plane",			s_node_3d_plane,		"Node_3D_Plane",		[1, Node_3D_Plane],, "Put 2D image on a plane in 3D space.").isDeprecated();
 			addNodeObject(threeD, "3D Cube",			s_node_3d_cube,			"Node_3D_Cube",			[1, Node_3D_Cube]).isDeprecated();
 			addNodeObject(threeD, "3D Cylinder",		s_node_3d_cylinder,		"Node_3D_Cylinder",		[1, Node_3D_Cylinder]).isDeprecated();

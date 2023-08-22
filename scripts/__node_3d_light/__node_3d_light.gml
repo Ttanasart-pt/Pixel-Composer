@@ -34,6 +34,7 @@ function Node_3D_Light(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group) 
 		var bbox  = drawGetBbox(xx, yy, _s);
 		draw_set_color(_colr);
 		
+		draw_set_circle_precision(32);
 		draw_circle(bbox.xc, bbox.yc,  8 * _s, false);
 		draw_circle(bbox.xc, bbox.yc, 12 * _s, true);
 	}

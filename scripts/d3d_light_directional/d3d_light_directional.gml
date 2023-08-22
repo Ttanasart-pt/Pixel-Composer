@@ -1,5 +1,5 @@
 function __3dLightDirectional() : __3dLight() constructor {
-	vertex		= [ [ 1, 0, 0, c_yellow, 0.8 ], [ 3, 0, 0, c_yellow, 0.8 ] ];
+	vertex		= [ V3(1, 0, 0, c_yellow, 0.8), V3(3, 0, 0, c_yellow, 0.8) ];
 	VF		    = global.VF_POS_COL;
 	render_type = pr_linelist;
 	VB			= build();

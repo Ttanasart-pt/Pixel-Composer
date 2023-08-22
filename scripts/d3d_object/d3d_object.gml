@@ -13,9 +13,8 @@
 #endregion
 
 function __3dObject() constructor {
-	vertex  = [];
-	normals = [];
-	uv      = [];
+	vertex = [];
+	object_counts = 1;
 	VB = noone;
 	VF = global.VF_POS_COL;
 	render_type = pr_trianglelist;
@@ -51,21 +50,8 @@ function __3dObject() constructor {
 				var v = _vertex[i];
 				
 				switch(VF) {
-					case global.VF_POS_COL : 
-						var cc = array_length(v) > 3? v[3] : c_gray;
-						var aa = array_length(v) > 4? v[4] : 1;
-						
-						vertex_position_3d(_buffer, v[0], v[1], v[2]);
-						vertex_color(_buffer, cc, aa);
-						break;
-					case global.VF_POS_NORM_TEX_COL : 
-						var nor = _normal[i];
-						var uuv = array_safe_get(_uv, i, [ 0, 0 ]);
-						var cc  = array_length(v) > 3? v[3] : c_white;
-						var aa  = array_length(v) > 4? v[4] : 1;
-						
-						vertex_add_pntc(_buffer, v, nor, uuv, cc, aa);
-						break;
+					case global.VF_POS_COL :			vertex_add_vc(_buffer, v);		break;
+					case global.VF_POS_NORM_TEX_COL :	vertex_add_vntc(_buffer, v);	break;
 				}
 			}
 		vertex_end(_buffer);
@@ -73,20 +59,19 @@ function __3dObject() constructor {
 		return _buffer;
 	} #endregion
 	
-	static build = function(_buffer = VB, _vertex = vertex, _normal = normals, _uv = uv) { #region
+	static build = function(_buffer = VB, _vertex = vertex) { #region
 		if(is_array(_buffer)) {
 			for( var i = 0, n = array_length(_buffer); i < n; i++ )
 				vertex_delete_buffer(_buffer[i])
 		} else if(_buffer != noone) vertex_delete_buffer(_buffer);
 		
 		if(array_empty(_vertex)) return noone;
-		var _buffer_count = is_array(_vertex[0][0])? array_length(_vertex) : 0;
 		
-		if(_buffer_count == 0) return buildVertex(_vertex, _normal, _uv);
+		if(object_counts == 1) return buildVertex(_vertex);
 		
-		var _res = array_create(_buffer_count);
-		for( var i = 0; i < _buffer_count; i++ )
-			_res[i] = buildVertex(_vertex[i], _normal[i], _uv[i]);
+		var _res = array_create(object_counts);
+		for( var i = 0; i < object_counts; i++ )
+			_res[i] = buildVertex(_vertex[i]);
 		
 		return _res;
 	} #endregion

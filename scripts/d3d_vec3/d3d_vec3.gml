@@ -8,21 +8,21 @@ function __vec3(_x = 0, _y = _x, _z = _x) constructor {
 			x = _x.x;
 			y = _x.y;
 			z = _x.z;
-			return;
+			return self;
 		}
 		
 		if(is_struct(_x) && is_instanceof(_x, BBMOD_Vec3)) {
 			x = _x.X;
 			y = _x.Y;
 			z = _x.Z;
-			return;
+			return self;
 		}
 		
 		if(is_array(_x)) {
 			x = _x[0];
 			y = _x[1];
 			z = _x[2];
-			return;
+			return self;
 		}
 		
 		x = _x;
