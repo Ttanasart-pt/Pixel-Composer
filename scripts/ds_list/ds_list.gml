@@ -10,9 +10,8 @@ function ds_list_to_array(list) {
 	if(!ds_exists(list, ds_type_list)) return [];
 	
 	var a = array_create(ds_list_size(list));
-	for( var i = 0; i < ds_list_size(list); i++ )  {
+	for( var i = 0; i < ds_list_size(list); i++ ) 
 		a[i] = list[| i];
-	}
 	return a;
 }
 

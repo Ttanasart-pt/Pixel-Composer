@@ -35,7 +35,7 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 	static getName    = function() { return name;		/*__txt_node_name(node, name);		 */ }
 	static getTooltip = function() { return tooltip;	/*__txt_node_tooltip(node, tooltip); */ }
 	
-	function build(_x, _y, _group = PANEL_GRAPH.getCurrentContext(), _param = "") {
+	static build = function(_x = 0, _y = 0, _group = PANEL_GRAPH.getCurrentContext(), _param = "") {
 		var _node = createNode[0]? new createNode[1](_x, _y, _group, _param) : createNode[1](_x, _y, _group, _param);
 		if(!_node) return noone;
 		
@@ -363,7 +363,8 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 			addNodeObject(threeD, "3D Object",		s_node_3d_obj,		"Node_3D_Mesh_Obj",			[0, Node_create_3D_Obj],, "Load .obj file from your computer as a 3D object.");
 			addNodeObject(threeD, "3D Cube",		s_node_3d_cube,		"Node_3D_Mesh_Cube",		[1, Node_3D_Mesh_Cube]);
 			addNodeObject(threeD, "3D Cylinder",	s_node_3d_cylinder,	"Node_3D_Mesh_Cylinder",	[1, Node_3D_Mesh_Cylinder]);
-			addNodeObject(threeD, "3D Sphere",		s_node_3d_sphere,	"Node_3D_Mesh_Sphere",		[1, Node_3D_Mesh_Sphere]);
+			addNodeObject(threeD, "3D UV Sphere",	s_node_3d_sphere,	"Node_3D_Mesh_Sphere_UV",	[1, Node_3D_Mesh_Sphere_UV]);
+			addNodeObject(threeD, "3D Icosphere",	s_node_3d_sphere,	"Node_3D_Mesh_Sphere_Ico",	[1, Node_3D_Mesh_Sphere_Ico]);
 			
 			ds_list_add(threeD, "Light");
 			addNodeObject(threeD, "Directional Light",	s_node_3d_cube,		"Node_3D_Light_Directional",	[1, Node_3D_Light_Directional]);

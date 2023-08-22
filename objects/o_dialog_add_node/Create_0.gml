@@ -433,7 +433,7 @@ event_inherited();
 					draw_sprite_ui_uniform(THEME.node_new_badge, 1, _boxx + grid_size - ui(12), yy + ui(6));
 				}
 				
-				if(_node.deprecated) {
+				if(struct_try_get(_node, "deprecated")) {
 					draw_sprite_ui_uniform(THEME.node_deprecated_badge, 0, _boxx + grid_size - ui(12), yy + ui(6),, COLORS._main_value_negative);
 					draw_sprite_ui_uniform(THEME.node_deprecated_badge, 1, _boxx + grid_size - ui(12), yy + ui(6));
 				}
@@ -551,7 +551,7 @@ event_inherited();
 					tx += ui(40);
 				}
 				
-				if(_node.deprecated) {
+				if(struct_try_get(_node, "deprecated")) {
 					draw_sprite_ui_uniform(THEME.node_deprecated_badge, 0, tx + ui(16), yy + list_height / 2 + ui(1),, COLORS._main_value_negative);
 					draw_sprite_ui_uniform(THEME.node_deprecated_badge, 1, tx + ui(16), yy + list_height / 2 + ui(1));
 					tx += ui(40);
@@ -645,7 +645,7 @@ event_inherited();
 
 				if(is_string(_node)) continue;
 				if(ds_map_exists(search_map, _node.node)) continue;
-				if(_node[$ "deprecated"]) continue;
+				if(struct_try_get(_node, "deprecated")) continue;
 				
 				var match = string_partial_match(string_lower(_node.getName()), search_lower);
 				var param = "";

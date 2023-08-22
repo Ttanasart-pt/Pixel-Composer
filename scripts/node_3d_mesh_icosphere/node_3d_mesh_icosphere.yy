@@ -1,7 +1,7 @@
 {
   "resourceType": "GMScript",
   "resourceVersion": "1.0",
-  "name": "node_3d_mesh_sphere",
+  "name": "node_3d_mesh_icosphere",
   "isCompatibility": false,
   "isDnD": false,
   "parent": {

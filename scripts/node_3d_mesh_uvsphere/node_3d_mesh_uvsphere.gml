@@ -1,5 +1,5 @@
-function Node_3D_Mesh_Sphere(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group) constructor {
-	name     = "3D Sphere";
+function Node_3D_Mesh_Sphere_UV(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group) constructor {
+	name     = "3D UV Sphere";
 	
 	object_class = __3dUVSphere;
 	
