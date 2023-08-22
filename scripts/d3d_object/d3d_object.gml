@@ -22,13 +22,29 @@ function __3dObject() constructor {
 	
 	custom_shader = noone;
 	
-	position = new __vec3(0, 0, 0);
+	position = new __vec3(0);
 	rotation = new BBMOD_Quaternion();
-	scale    = new __vec3(1, 1, 1);
+	scale    = new __vec3(1);
+	size     = new __vec3(1);
 	
 	texture  = -1;
 	
-	static buildVertex = function(_vertex, _normal, _uv) {
+	static checkParameter = function(params = {}) { #region
+		var _keys = struct_get_names(params);
+		var check = false;
+		for( var i = 0, n = array_length(_keys); i < n; i++ ) {
+			var key = _keys[i];
+			if(self[$ key] != params[$ key])
+				check = true;
+			self[$ key] = params[$ key];
+		}
+		
+		if(check) onParameterUpdate();
+	} #endregion
+	
+	static onParameterUpdate = function() {}
+	
+	static buildVertex = function(_vertex, _normal, _uv) { #region
 		var _buffer = vertex_create_buffer();
 		vertex_begin(_buffer, VF);
 			for( var i = 0, n = array_length(_vertex); i < n; i++ ) {
@@ -48,17 +64,14 @@ function __3dObject() constructor {
 						var cc  = array_length(v) > 3? v[3] : c_white;
 						var aa  = array_length(v) > 4? v[4] : 1;
 						
-						vertex_position_3d(_buffer, v[0], v[1], v[2]);
-						vertex_normal(_buffer, nor[0], nor[1], nor[2]);
-						vertex_texcoord(_buffer, uuv[0], uuv[1]);
-						vertex_color(_buffer, cc, aa);
+						vertex_add_pntc(_buffer, v, nor, uuv, cc, aa);
 						break;
 				}
 			}
 		vertex_end(_buffer);
 		
 		return _buffer;
-	}
+	} #endregion
 	
 	static build = function(_buffer = VB, _vertex = vertex, _normal = normals, _uv = uv) { #region
 		if(is_array(_buffer)) {
@@ -81,6 +94,9 @@ function __3dObject() constructor {
 	static preSubmitVertex  = function(params = {}) {}
 	static postSubmitVertex = function(params = {}) {}
 	
+	static getCenter = function() { return new __vec3(position.x, position.y, position.z); }
+	static getBBOX   = function() { return new __bbox3D(size.multiplyVec(scale).multiply(-0.5), size.multiplyVec(scale).multiply(0.5)); }
+	
 	static submitShader = function(params = {}, shader = noone) {}
 	
 	static submit    = function(params = {}, shader = noone) { submitVertex(params, shader); }
@@ -102,19 +118,37 @@ function __3dObject() constructor {
 		preSubmitVertex(params);
 		
 		if(VB != noone) {
-			var pos = matrix_build(position.x, position.y, position.z, 
-								   0, 0, 0, 
-								   1, 1, 1);
-			var rot = rotation.ToMatrix();
-			var sca = matrix_build(0, 0, 0, 
-								   0, 0, 0, 
-								   scale.x,    scale.y,    scale.z);
-		
 			matrix_stack_clear();
-			matrix_stack_push(pos);
-			matrix_stack_push(rot);
-			matrix_stack_push(sca);
-			matrix_set(matrix_world, matrix_stack_top());
+			
+			if(params.apply_transform) {
+				var pos = matrix_build(position.x, position.y, position.z, 
+									   0, 0, 0, 
+									   1, 1, 1);
+				var rot = rotation.ToMatrix();
+				var sca = matrix_build(0, 0, 0, 
+									   0, 0, 0, 
+									   scale.x,    scale.y,    scale.z);
+								   
+				matrix_stack_push(pos);
+				matrix_stack_push(rot);
+				matrix_stack_push(sca);
+				matrix_set(matrix_world, matrix_stack_top());
+			} else {
+				var pos = matrix_build(position.x - params.custom_transform.x, position.y - params.custom_transform.y, position.z - params.custom_transform.z, 
+									   0, 0, 0, 
+									   1, 1, 1);
+				var siz = matrix_build(0, 0, 0, 
+									   0, 0, 0, 
+									   scale.x,    scale.y,    scale.z);
+				var sca = matrix_build(0, 0, 0, 
+									   0, 0, 0, 
+									   params.custom_scale.x, params.custom_scale.y, params.custom_scale.z);
+									   
+				matrix_stack_push(pos);
+				matrix_stack_push(siz);
+				matrix_stack_push(sca);
+				matrix_set(matrix_world, matrix_stack_top());
+			}
 			
 			if(is_array(VB)) {
 				for( var i = 0, n = array_length(VB); i < n; i++ ) 
@@ -130,4 +164,20 @@ function __3dObject() constructor {
 		
 		shader_reset();
 	} #endregion
+		
+	static clone = function() { #region
+		var _obj = variable_clone(self);		
+		return _obj;
+	} #endregion
+	
+	static destroy = function() { #region
+		if(is_array(VB)) {
+			for( var i = 0, n = array_length(VB); i < n; i++ ) 
+				vertex_delete_buffer(VB[i]);
+		} else if(VB != noone)
+			vertex_delete_buffer(VB);
+		onDestroy();
+	} #endregion
+	
+	static onDestroy = function() { } 
 }

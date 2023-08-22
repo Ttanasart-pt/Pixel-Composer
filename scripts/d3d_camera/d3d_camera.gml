@@ -9,6 +9,8 @@ function __3dCamera() constructor {
 	focus    = new __vec3();
 	up       = new __vec3(0, 0, -1);
 	
+	raw = camera_create();
+	
 	useFocus = true;
 	focus_angle_x = 0;
 	focus_angle_y = 0;
@@ -17,8 +19,8 @@ function __3dCamera() constructor {
 	projection = CAMERA_PROJECTION.perspective;
 	
 	fov = 60;
-	view_near = 1;
-	view_far  = 32000;
+	view_near = .01;
+	view_far  = 100;
 	
 	view_w = 1;
 	view_h = 1;
@@ -40,18 +42,26 @@ function __3dCamera() constructor {
 	    return upVector._normalize();
 	}
 	
-	static applyCamera = function(cam) {
-		camera_set_proj_mat(cam, projMat.raw);
-		camera_set_view_mat(cam, viewMat.raw);
+	static applyCamera = function() {
+		camera_set_proj_mat(raw, projMat.raw);
+		camera_set_view_mat(raw, viewMat.raw);
 		
-		camera_apply(cam);
+		camera_apply(raw);
+	}
+	
+	static resetCamera = function() {
+		camera_apply(0);
+		gpu_set_cullmode(cull_noculling); 
 	}
 	
 	static setMatrix = function() {
 		if(projection == CAMERA_PROJECTION.perspective)
 			projMat.setRaw(matrix_build_projection_perspective_fov(fov, view_aspect, view_near, view_far));
-		else 
+		else {
 			projMat.setRaw(matrix_build_projection_ortho(view_w, view_h, view_near, view_far));
+			//print($"{view_w}, {view_h}, {view_near}, {view_far}")
+			//print(projMat);
+		}
 		
 		if(useFocus)
 			viewMat.setRaw(matrix_build_lookat(position.x, position.y, position.z, focus.x, focus.y, focus.z, up.x, up.y, up.z));

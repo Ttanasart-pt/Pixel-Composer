@@ -29,8 +29,10 @@ if !ready exit;
 		draw_text(dialog_x + ui(32), yy, _text);
 		
 		var params = new widgetParam(dialog_x + dialog_w - ui(16) - ww, yy - wh / 2, ww, wh, _data);
-		if(is_instanceof(_widg, checkBox))
+		if(is_instanceof(_widg, checkBox)) {
 			params.halign = fa_center;
+			params.valign = fa_center;
+		}
 		
 		_widg.drawParam(params);
 		

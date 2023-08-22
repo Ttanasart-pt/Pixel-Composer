@@ -1,4 +1,4 @@
-function __vec4(_x = 0, _y = 0, _z = 0, _w = 0) constructor {
+function __vec4(_x = 0, _y = _x, _z = _x, _w = _x) constructor {
     static set = function(_x = 0, _y = _x, _z = _x, _w = _x) {
         if (is_struct(_x)) {
 			if(is_instanceof(_x, __vec4)) {
@@ -166,6 +166,26 @@ function __vec4(_x = 0, _y = 0, _z = 0, _w = 0) constructor {
         return x == to.x && y == to.y && z == to.z && w == to.w;
     }
 
+	static minVal = function(vec) {
+		gml_pragma("forceinline");
+		return new __vec4(
+			min(x, vec.x),
+			min(y, vec.y),
+			min(z, vec.z),
+			min(w, vec.w),
+		);
+	}
+	
+	static maxVal = function(vec) {
+		gml_pragma("forceinline");
+		return new __vec4(
+			max(x, vec.x),
+			max(y, vec.y),
+			max(z, vec.z),
+			max(w, vec.w),
+		);
+	}
+	
     static clone = function() {
         gml_pragma("forceinline");
         return new __vec4(x, y, z, w);

@@ -139,12 +139,3 @@ if(PROJECT.active) {
 		}
 	}
 #endregion
-
-//print("===== Step end =====");
-
-//if(keyboard_check_pressed(ord("Q"))) {
-//	if(key_mod_press(CTRL))
-//		print(panelSerializeArray());
-//	else
-//		print(panelSerialize());
-//}

@@ -2,7 +2,7 @@
 #macro __vec3_right   new __vec3(0.0, 1.0, 0.0)
 #macro __vec3_up      new __vec3(0.0, 0.0, 1.0)
 
-function __vec3(_x = 0, _y = 0, _z = 0) constructor {
+function __vec3(_x = 0, _y = _x, _z = _x) constructor {
 	static set = function(_x = 0, _y = _x, _z = _x) {
 		if(is_struct(_x) && is_instanceof(_x, __vec3)) {
 			x = _x.x;
@@ -70,6 +70,11 @@ function __vec3(_x = 0, _y = 0, _z = 0) constructor {
 		return new __vec3(x * _scalar, y * _scalar, z * _scalar);
 	}
 
+	static multiplyVec = function(_vec) {
+		gml_pragma("forceinline");
+		return new __vec3(x * _vec.x, y * _vec.y, z * _vec.z);
+	}
+
 	static divide = function(_scalar) {
 		gml_pragma("forceinline");
 		if (_scalar != 0)
@@ -113,6 +118,14 @@ function __vec3(_x = 0, _y = 0, _z = 0) constructor {
 		x *= _scalar;
 		y *= _scalar;
 		z *= _scalar;
+		return self;
+	}
+
+	static _multiplyVec = function(_vec) {
+		gml_pragma("forceinline");
+		x *= _vec.x;
+		y *= _vec.y;
+		z *= _vec.z;
 		return self;
 	}
 
@@ -172,6 +185,24 @@ function __vec3(_x = 0, _y = 0, _z = 0) constructor {
 	static equal = function(to) {
 		gml_pragma("forceinline");
 		return x == to.x && y == to.y && z == to.z;
+	}
+	
+	static minVal = function(vec) {
+		gml_pragma("forceinline");
+		return new __vec3(
+			min(x, vec.x),
+			min(y, vec.y),
+			min(z, vec.z),
+		);
+	}
+	
+	static maxVal = function(vec) {
+		gml_pragma("forceinline");
+		return new __vec3(
+			max(x, vec.x),
+			max(y, vec.y),
+			max(z, vec.z),
+		);
 	}
 	
 	static clone = function() {

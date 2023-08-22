@@ -3,6 +3,10 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 	object = new __3dCamera_object();
 	camera = new __3dCamera();
 	lookat = new __3dGizmoSphere(0.5, c_ltgray, 1);
+	lookLine = noone;
+	lookRad  = new __3dGizmoCircleZ(0.5, c_yellow, 0.5);
+	
+	w = 128;
 	
 	scene = new __3dScene(camera);
 	scene.name = "Camera";
@@ -10,7 +14,7 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 	inputs[| in_d3d + 0] = nodeValue("FOV", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 60)
 		.setDisplay(VALUE_DISPLAY.slider, [ 10, 90, 1 ]);
 	
-	inputs[| in_d3d + 1] = nodeValue("Clipping Distance", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 1, 32000 ])
+	inputs[| in_d3d + 1] = nodeValue("Clipping Distance", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 0.01, 100 ])
 		.setDisplay(VALUE_DISPLAY.vector);
 	
 	inputs[| in_d3d + 2] = nodeValue("Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, DEF_SURF )
@@ -171,6 +175,7 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 					camera.rotation = new BBMOD_Quaternion().FromLookRotation(_for, camera.up).Mul(_qi1).Mul(_qi2);
 					
 				lookat.position.set(_look);
+				lookLine = new __3dGizmoLineDashed(camera.position, camera.focus, 0.25, c_gray, 1);
 				break;
 			case 2 :
 				camera.useFocus = true;
@@ -184,11 +189,18 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 					camera.rotation = new BBMOD_Quaternion().FromLookRotation(_for, camera.up).Mul(_qi1).Mul(_qi3);
 				
 				lookat.position.set(_look);
+				lookLine = new __3dGizmoLineDashed(camera.position, camera.focus, 0.25, c_gray, 1);
+				
+				var _camRad = camera.position.subtract(camera.focus);
+				var _rad = point_distance(0, 0, _camRad.x, _camRad.y) * 2;
+				lookRad.scale.set(_rad, _rad, 1);
+				lookRad.position.set(new __vec3(camera.focus.x, camera.focus.y, camera.position.z));
 				break;
 		}
 		
 		object.position.set(camera.position);
 		object.rotation = camera.rotation.Clone();
+		object.scale.set(1, _dim[0] / _dim[1], 1);
 		
 		if(_scne == noone) return;
 		
@@ -211,17 +223,17 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 		gpu_set_ztestenable(true);
 		gpu_set_cullmode(_back); 
 		
-		var cam = camera_get_active();
-		camera.applyCamera(cam);
+		camera.applyCamera();
 			
 		scene.reset();
 		_scne.submitShader(scene);
 		scene.apply();
-			
+		
 		_scne.submit(scene);						//////////////// SUBMIT ////////////////
 			
 		surface_reset_target();
-		gpu_set_cullmode(cull_noculling); 
+		
+		scene.resetCamera();
 		
 		return _output;
 	} #endregion
@@ -239,8 +251,8 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 		
 		switch(_posm) {
 			case 0 : return [ object, _scene ];
-			case 1 : return [ object, lookat, _scene ];
-			case 2 : return [ object, lookat, _scene ];
+			case 1 : return [ object, lookat, lookLine, _scene ];
+			case 2 : return [ object, lookat, lookLine, lookRad, _scene ];
 		}
 		
 		return [ object, _scene ]; 

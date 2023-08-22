@@ -51,6 +51,4 @@ function Node_3D_Scene(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constru
 		
 		return _scene;
 	}
-	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {}
 }

@@ -6,57 +6,56 @@ function readObj(path, flipUV = false) {
 	var _VBN = [];
 	var mats = [];
 	var matIndex = [];
+	var tris = [];
 	var mtlPath = "";
 	var use_normal = true;
-	var v  = [];
-	var vt = [];
-	var vn = [];
-	var f  = [];
-	var ft = [];
-	var fn = [];
-	var face = 0;
+	var v  = ds_list_create();
+	var vt = ds_list_create();
+	var vn = ds_list_create();
+	var f  = ds_list_create();
+	var ft = ds_list_create();
+	var fn = ds_list_create();
+	var tri = 0;
 	
 	var file = file_text_open_read(path);
 	while(!file_text_eof(file)) {
 		var l = file_text_readln(file);
-		l = string_replace_all(l, "\n", "");
+		l = string_trim(l);
 		
-		var sep = string_splice(l, " ");
-		if(array_length(sep) == 0 || sep[0] == "") continue;
+		var sep = string_split(l, " ");
+		if(array_length(sep) == 0) continue;
 		
 		switch(sep[0]) {
 			case "v" :
-				array_push(v, [ toNumber(sep[1]), toNumber(sep[2]), toNumber(sep[3]) ]);
+				ds_list_add(v, [ toNumber(sep[1]), toNumber(sep[2]), toNumber(sep[3]) ]);
 				break;
 			case "vt" :
-				if(flipUV) 
-					array_push(vt, [ toNumber(sep[1]), 1 - toNumber(sep[2]) ]);
-				else 
-					array_push(vt, [ toNumber(sep[1]), toNumber(sep[2]) ]);
+				ds_list_add(vt, [ toNumber(sep[1]), flipUV + toNumber(sep[2]) * (1 - flipUV * 2) ]); // flipUV? 1 - sep[2] : sep[2]
 				break;
 			case "vn" :
-				array_push(vn, [ toNumber(sep[1]), toNumber(sep[2]), toNumber(sep[3]) ]);
+				ds_list_add(vn, [ toNumber(sep[1]), toNumber(sep[2]), toNumber(sep[3]) ]);
 				break;
 			case "f" :
-				var _f  = [];
-				var _ft = [];
-				var _fn = [];
+				var _len = array_length(sep);
+				var _f   = array_create(_len - 1);
+				var _ft  = array_create(_len - 1);
+				var _fn  = array_create(_len - 1);
 				
-				for( var i = 1; i < array_length(sep); i++ ) {
-					var _sp    = string_splice(sep[i], "/");
+				for( var i = 1; i < _len; i++ ) {
+					var _sp    = string_split(sep[i], "/");
 					if(array_length(_sp) < 2) continue;
 					
-					_f[i - 1]  = toNumber(array_safe_get(_sp, 0));
-					_ft[i - 1] = toNumber(array_safe_get(_sp, 1));
-					_fn[i - 1] = toNumber(array_safe_get(_sp, 2));
+					_f[i - 1]  = toNumber(array_safe_get(_sp, 0, 1));
+					_ft[i - 1] = toNumber(array_safe_get(_sp, 1, 1));
+					_fn[i - 1] = toNumber(array_safe_get(_sp, 2, 1));
 					
 					if(array_length(_sp) < 3) use_normal = false;
 				}
 				
-				face++;
-				array_push(f,  _f ); //get position
-				array_push(ft, _ft); //get texture map
-				array_push(fn, _fn); //get normal
+				tri += _len - 2;
+				ds_list_add(f,  _f ); //get position
+				ds_list_add(ft, _ft); //get texture map
+				ds_list_add(fn, _fn); //get normal
 				break;
 			case "usemtl" :
 				var mname = "";
@@ -67,14 +66,17 @@ function readObj(path, flipUV = false) {
 				array_push_unique(mats, mname);
 				array_push(matIndex, array_find(mats, mname));
 				
-				if(array_length(f)) {
+				if(!ds_list_empty(f)) {
 					array_push(_VB,  f);
 					array_push(_VBT, ft);
 					array_push(_VBN, fn);
-					f  = [];
-					ft = [];
-					fn = [];
+					array_push(tris, tri);
+					f  = ds_list_create();
+					ft = ds_list_create();
+					fn = ds_list_create();
 				}
+				
+				tri = 0;
 				break;
 			case "mtllib" :
 				mtlPath = "";
@@ -87,93 +89,162 @@ function readObj(path, flipUV = false) {
 				break;
 		}
 	}
-	if(array_length(f)) {
+	
+	if(!ds_list_empty(f)) {
 		array_push(_VB,  f);
 		array_push(_VBT, ft);
 		array_push(_VBN, fn);
+		array_push(tris, tri);
 	}
 	file_text_close(file);
 	
-	//var txt = "OBJ summary";
-	//txt += "\n\tVerticies : " + string(array_length(v));
-	//txt += "\n\tTexture Verticies : " + string(array_length(vt));
-	//txt += "\n\tNormal Verticies : " + string(array_length(vn));
-	//txt += "\n\tFaces : " + string(face);
-	//txt += "\n\tVertex groups : " + string(array_length(_VB));
-	//print(txt);
+	if(use_normal) vn[| 0] = [ 0, 0, 0 ];
+	
+	var txt = "OBJ summary";
+	txt += $"\n\tVerticies : {ds_list_size(v)}";
+	txt += $"\n\tTexture Verticies : {ds_list_size(vt)}";
+	txt += $"\n\tNormal Verticies : {ds_list_size(vn)}";
+	txt += $"\n\tVertex groups : {array_length(_VB)}";
+	txt += $"\n\tTriangles : {tris}";
+	print(txt);
 	
 	#region centralize vertex
+		var _bmin = v[| 0];
+		var _bmax = v[| 0];
 		var cv = [0, 0, 0];
-		var vertex = array_length(v);
+		var vertex = ds_list_size(v);
+		
 		for( var i = 0; i < vertex; i++ ) {
-			var _v = v[i];
+			var _v = v[| i];
 			cv[0] += _v[0];
 			cv[1] += _v[1];
 			cv[2] += _v[2];
+			
+			_bmin = [
+				min(_bmin[0], _v[0]),
+				min(_bmin[1], _v[1]),
+				min(_bmin[2], _v[2]),
+			];
+			_bmax = [
+				max(_bmax[0], _v[0]),
+				max(_bmax[1], _v[1]),
+				max(_bmax[2], _v[2]),
+			];
 		}
 		
 		cv[0] /= vertex;
 		cv[1] /= vertex;
 		cv[2] /= vertex;
 		
-		for( var i = 0, n = array_length(v); i < n; i++ ) {
-			v[i][0] -= cv[0];
-			v[i][1] -= cv[1];
-			v[i][2] -= cv[2];
+		for( var i = 0, n = ds_list_size(v); i < n; i++ ) {
+			v[| i][0] -= cv[0];
+			v[| i][1] -= cv[1];
+			v[| i][2] -= cv[2];
+		}
+		
+		var _size = new __vec3(
+			_bmax[0] - _bmin[0],
+			_bmax[1] - _bmin[1],
+			_bmax[2] - _bmin[2],
+		);
+	#endregion
+	
+	#region vertex buffer creation
+		var _vblen = array_length(_VB);
+		var VBS  = array_create(_vblen);
+		var Vpos = array_create(_vblen);
+		var Vnor = array_create(_vblen);
+		var Vtex = array_create(_vblen);
+		
+		for(var i = 0; i < _vblen; i++)  {
+			var VB = vertex_create_buffer();
+			vertex_begin(VB, global.VF_POS_NORM_TEX_COL);
+			var face  = _VB[i];
+			var facet = _VBT[i];
+			var facen = _VBN[i];
+			var tri   = tris[i];
+			
+			var _flen = ds_list_size(face);
+			var _vpos = array_create(tri * 3);
+			var _vnor = array_create(tri * 3);
+			var _vtex = array_create(tri * 3);
+			var _vind = 0;
+			
+			for(var j = 0; j < _flen; j++) {
+				var _f   = face[| j];
+				var _ft  = facet[| j];
+				var _fn  = facen[| j];
+			
+				var _vlen = array_length(_f);
+				var _pf   = array_create(_vlen);
+				var _pft  = array_create(_vlen);
+				var _pfn  = array_create(_vlen);
+				
+				for( var k = 0; k < _vlen; k++ ) {
+					var _vPindex = _f[k]  - 1;
+					_pf[k] = v[| _vPindex];
+					
+					var _vNindex = _fn[k] - 1;
+					_pfn[k] = vn[| _vNindex];
+					
+					var _vTindex = _ft[k] - 1;
+					_pft[k] = vt[| _vTindex];
+					
+					//print($"vPos {k}[{_vPindex}] = {_pf[k]}");
+					//print($"vNor {k}[{_vNindex}] = {_pfn[k]}");
+					//print($"vTex {k}[{_vTindex}] = {_pft[k]}");
+				}
+				
+				if(_vlen >= 3) {
+					vertex_add_pntc(VB, _pf[0], _pfn[0], _pft[0]);
+					vertex_add_pntc(VB, _pf[1], _pfn[1], _pft[1]);
+					vertex_add_pntc(VB, _pf[2], _pfn[2], _pft[2]);
+					
+					_vpos[_vind] = _pf[0]; _vnor[_vind] = _pfn[0]; _vtex[_vind] = _pft[0]; _vind++;
+					_vpos[_vind] = _pf[1]; _vnor[_vind] = _pfn[1]; _vtex[_vind] = _pft[1]; _vind++;
+					_vpos[_vind] = _pf[2]; _vnor[_vind] = _pfn[2]; _vtex[_vind] = _pft[2]; _vind++;
+				} 
+			
+				if(_vlen >= 4) {
+					vertex_add_pntc(VB, _pf[0], _pfn[0], _pft[0]);
+					vertex_add_pntc(VB, _pf[2], _pfn[2], _pft[2]);
+					vertex_add_pntc(VB, _pf[3], _pfn[3], _pft[3]);
+					
+					_vpos[_vind] = _pf[0]; _vnor[_vind] = _pfn[0]; _vtex[_vind] = _pft[0]; _vind++;
+					_vpos[_vind] = _pf[2]; _vnor[_vind] = _pfn[2]; _vtex[_vind] = _pft[2]; _vind++;
+					_vpos[_vind] = _pf[3]; _vnor[_vind] = _pfn[3]; _vtex[_vind] = _pft[3]; _vind++;
+				}
+			}
+			vertex_end(VB);
+			vertex_freeze(VB);
+		
+			VBS[i]  = VB;
+			Vpos[i] = _vpos;
+			Vnor[i] = _vnor;
+			Vtex[i] = _vtex;
 		}
 	#endregion
 	
-	var VBS = [];
-	
-	for(var i = 0; i < array_length(_VB); i++)  {
-		var VB = vertex_create_buffer();
-		vertex_begin(VB, FORMAT_PNT);
-		var face  = _VB[i];
-		var facet = _VBT[i];
-		var facen = _VBN[i];
+	#region clean
+		array_foreach(_VB,  function(val, ind) { ds_list_destroy(val); });
+		array_foreach(_VBT, function(val, ind) { ds_list_destroy(val); });
+		array_foreach(_VBN, function(val, ind) { ds_list_destroy(val); });
 		
-		for(var j = 0; j < array_length(face); j++) {
-			var _f   = face[j];
-			var _ft  = facet[j];
-			var _fn  = facen[j];
-			
-			var _pf  = [];
-			var _pft = [];
-			var _pfn = [];
-			
-			for( var k = 0; k < array_length(_f); k++ ) {
-				var _f1  = v[_f[k] - 1];
-				var _ft1 = vt[_ft[k] - 1];
-				var _fn1 = _fn[k]? vn[_fn[k] - 1] : [0, 0, 0];
-				
-				array_push( _pf,  _f1);
-				array_push(_pft, _ft1);
-				array_push(_pfn, _fn1);
-			}
-			
-			if(array_length(_f) >= 3) {
-				vertex_add_pnt(VB, _pf[0], _pfn[0], _pft[0]);
-				vertex_add_pnt(VB, _pf[1], _pfn[1], _pft[1]);
-				vertex_add_pnt(VB, _pf[2], _pfn[2], _pft[2]);
-			} 
-			
-			if(array_length(_f) >= 4) {
-				vertex_add_pnt(VB, _pf[0], _pfn[0], _pft[0]);
-				vertex_add_pnt(VB, _pf[2], _pfn[2], _pft[2]);
-				vertex_add_pnt(VB, _pf[3], _pfn[3], _pft[3]);
-			}
-		}
-		vertex_end(VB);
-		vertex_freeze(VB);
-		
-		array_push(VBS, VB);
-	}
+		ds_list_destroy(v);
+		ds_list_destroy(vn);
+		ds_list_destroy(vt);
+	#endregion
 	
 	return { 
-		vertex_groups:	VBS,
+		vertex_groups:	  VBS,
+		vertex_positions: Vpos,
+		vertex_normals:   Vnor,
+		vertex_textures:  Vtex,
+		
 		materials:		mats,
 		material_index: matIndex,
 		use_normal:		use_normal,
 		mtl_path:		mtlPath,
+		model_size:		_size,
 	};
 }

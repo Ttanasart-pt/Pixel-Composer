@@ -129,10 +129,10 @@ function surface_verify(surf, w, h, format = surface_rgba8unorm) {
 	gml_pragma("forceinline");
 	w = round(w);
 	h = round(h);
+	var s = is_surface(surf);
 	
-	if(!is_surface(surf))
-		return surface_create_valid(w, h, format);
-	return surface_size_to(surf, w, h, format);
+	if(!s) return surface_create_valid(w, h, format);
+	return surface_size_to(surf, w, h, format, true);
 }
 
 //get
@@ -251,22 +251,23 @@ function surface_size_lim(surface, width, height) {
 	return s;
 }
 
-function surface_size_to(surface, width, height, format = noone) {
-	if(!is_surface(surface))	return surface;
+function surface_size_to(surface, width, height, format = noone, skipCheck = false) {
+	if(!skipCheck && !is_surface(surface)) return surface;
 	if(width < 1 && height < 1) return surface;
 	
 	if(format != noone && format != surface_get_format(surface)) {
 		surface_free(surface);
-		return surface_create_valid(width, height, format);
+		return surface_create(width, height, format);
 	}
 	
 	width  = surface_valid_size(width);
 	height = surface_valid_size(height);
 	
-	var ww = surface_get_width(surface);	
-	var hh = surface_get_height(surface);	
+	var ww = surface_get_width(surface);
+	var hh = surface_get_height(surface);
 	
 	if(ww == width && hh == height) return surface;
+	//print($"Reset surface {ww}, {width} | {hh}, {height}");
 	
 	surface_resize(surface, width, height);
 	surface_clear(surface);

@@ -1,4 +1,4 @@
-function __3dGizmoSphere(radius = 0.5, color = c_white, alpha = 1) : __3dObject() constructor {
+function __3dGizmoSphere(radius = 0.5, color = c_white, alpha = 1) : __3dGizmo() constructor {
 	vertex = array_create(33 * 3);
 	
 	var _i = 0;
@@ -17,14 +17,6 @@ function __3dGizmoSphere(radius = 0.5, color = c_white, alpha = 1) : __3dObject(
 		vertex[_i++] = [ x0, y0, 0, color, alpha ];
 		vertex[_i++] = [ x1, y1, 0, color, alpha ];
 	}
-		
-	VF = global.VF_POS_COL;
-	render_type = pr_linelist;
-	VB = build();
 	
-	static submitSel = function(params = {}) { 
-		shader_set(sh_d3d_wireframe);
-		submitVertex(params); 
-		shader_reset();
-	}
+	VB = build();
 }

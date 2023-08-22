@@ -27,7 +27,7 @@ if(PANEL_GRAPH.project == noone || !PANEL_GRAPH.project.active)
 	tb_size.register();
 	draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text);
 	draw_text(dialog_x + ui(32), yy, __txtx("grid_size", "Grid size"));
-	tb_size.draw(dialog_x + dialog_w - ui(24), yy, ww, TEXTBOX_HEIGHT, PANEL_GRAPH.project.graphGrid.size, mouse_ui,, fa_right, fa_center);
+	tb_size.draw(dialog_x + dialog_w - ui(24), yy, ww, TEXTBOX_HEIGHT, PANEL_GRAPH.project.graphGrid.size, mouse_ui, fa_right, fa_center);
 	
 	yy += ui(40);
 	sl_opacity.setFocusHover(sFOCUS, sHOVER);

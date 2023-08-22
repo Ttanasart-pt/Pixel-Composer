@@ -32,10 +32,10 @@ function Node_Struct_Get(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 			var val = variable_struct_get(_str, k);
 			if(j == array_length(keys) - 1) {
 				if(is_struct(val)) {
-					if(instanceof(val) == "Surface") {
+					if(is_instanceof(val, Surface)) {
 						out.type = VALUE_TYPE.surface;
 						val = val.get();
-					} else if(instanceof(val) == "Buffer") {
+					} else if(is_instanceof(val, Buffer)) {
 						out.type = VALUE_TYPE.buffer;
 						val = val.buffer;
 					} else 

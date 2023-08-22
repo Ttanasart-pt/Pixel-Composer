@@ -1,7 +1,7 @@
 function Node_3D_Object(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constructor {
 	name  = "3D Object";
-	h	  = 64;
-	min_h = h;
+	cached_object = [];
+	object_class  = noone;
 	
 	preview_channel = 0;
 	
@@ -24,6 +24,7 @@ function Node_3D_Object(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 		drag_delta = 0;
 		drag_prev  = 0;
 		
+		drag_val = 0;
 		drag_mx = 0;
 		drag_my = 0;
 		drag_px = 0;
@@ -124,7 +125,7 @@ function Node_3D_Object(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 					ga[i] = _qview.Rotate(_qinv.Rotate(_qrot.Rotate(ga[i])));
 				else if(_axis == 1)
 					ga[i] = _qview.Rotate(_qinv.Rotate(ga[i]));
-			
+				
 				th = 2 + (axis_hover == i || drag_axis == i);
 				if(drag_axis != noone && drag_axis != i)
 					continue;
@@ -215,11 +216,11 @@ function Node_3D_Object(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 					if(drag_prev != undefined) {
 						var _diff = mAdj.subtract(drag_prev);
 						var _dist = _diff.dot(prj);
-							
+						
 						for( var i = 0; i < 3; i++ ) 
-							_pos[i] += prj.getIndex(i) * _dist;
-							
-						if(inputs[| index].setValue(_pos)) 
+							drag_val[i] += prj.getIndex(i) * _dist;
+						
+						if(inputs[| index].setValue(value_snap(drag_val, _snx)))
 							UNDO_HOLDING = true;
 					}
 				} else {
@@ -239,9 +240,9 @@ function Node_3D_Object(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 						var _diff = mAdj.subtract(drag_prev);
 						
 						for( var i = 0; i < 3; i++ ) 
-							_pos[i] += _diff.getIndex(i);
-							
-						if(inputs[| index].setValue(_pos)) 
+							drag_val[i] += _diff.getIndex(i);
+						
+						if(inputs[| index].setValue(value_snap(drag_val, _snx))) 
 							UNDO_HOLDING = true;
 					}
 				}
@@ -263,7 +264,8 @@ function Node_3D_Object(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 			drag_py = _my;
 			drag_cx = cx;
 			drag_cy = cy;
-				
+			
+			drag_val = _pos;
 			drag_original = new __vec3(_pos);
 		} #endregion
 	} #endregion
@@ -345,7 +347,7 @@ function Node_3D_Object(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 			
 			if(_axis == 0) 
 				_n = _qrot.Rotate(_n).Normalize();
-				
+			
 			var _nv = _qview.Rotate(_qinv.Rotate(_n));
 			draw_line_round(cx, cy, cx + _nv.X * 100, cy + _nv.Y * 100, 2);
 				
@@ -353,12 +355,19 @@ function Node_3D_Object(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 				var _rd = (mAng - drag_prev) * (_nv.Z > 0? 1 : -1);
 					
 				var _currR = new BBMOD_Quaternion().FromAxisAngle(_n, _rd);
-				var _mulp  = _currR.Mul(_qrot);
-				var _Nrot  = _mulp.ToArray();
+				drag_val   = _currR.Mul(drag_val);
+				
+				var _axs = drag_val.GetAxis();
+				var _ang = drag_val.GetAngle();
+				var _ans = value_snap(_ang, _sny);
+				
+				var _NrotE = new BBMOD_Quaternion().FromAxisAngle(_axs, -_ans);
+				
+				var _Nrot  = _NrotE.ToArray();
 					
 				if(inputs[| index].setValue(_Nrot))
 					UNDO_HOLDING = true;
-			}
+			} 
 				
 			draw_set_color(COLORS._main_accent);
 			draw_line_dashed(cx, cy, _mx, _my, 1, 4);
@@ -369,6 +378,9 @@ function Node_3D_Object(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 		if(_hover != noone && mouse_press(mb_left, active)) { #region
 			drag_axis = _hover;
 			drag_prev = undefined;
+			
+			drag_axs  = undefined;
+			drag_val  = _qrot.Clone();
 		} #endregion
 	} #endregion
 	
@@ -514,9 +526,9 @@ function Node_3D_Object(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 						var _dist = _diff.dot(prj);
 							
 						for( var i = 0; i < 3; i++ ) 
-							_sca[i] += prj.getIndex(i) * _dist;
+							drag_val[i] += prj.getIndex(i) * _dist;
 							
-						if(inputs[| index].setValue(_sca)) 
+						if(inputs[| index].setValue(value_snap(drag_val, _snx))) 
 							UNDO_HOLDING = true;
 					}
 				} else {
@@ -535,9 +547,9 @@ function Node_3D_Object(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 						var _diff = mAdj.subtract(drag_prev);
 							
 						for( var i = 0; i < 3; i++ ) 
-							_sca[i] += _diff.getIndex(i);
+							drag_val[i] += _diff.getIndex(i);
 							
-						if(inputs[| index].setValue(_sca)) 
+						if(inputs[| index].setValue(value_snap(drag_val, _snx))) 
 							UNDO_HOLDING = true;
 					}
 				}
@@ -560,6 +572,7 @@ function Node_3D_Object(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 			drag_cx = cx;
 			drag_cy = cy;
 				
+			drag_val = _sca;
 			drag_original = new __vec3(_sca);
 		} #endregion
 	} #endregion
@@ -583,6 +596,7 @@ function Node_3D_Object(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 	} #endregion
 	
 	static setTransform = function(object, _data) { #region
+		if(object == noone) return;
 		var _pos = _data[0];
 		var _rot = _data[1];
 		var _sca = _data[2];
@@ -591,5 +605,20 @@ function Node_3D_Object(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 		object.rotation.set(_rot[0], _rot[1], _rot[2], _rot[3]);
 		object.scale.set(_sca[0], _sca[1], _sca[2]);
 		return object;
+	} #endregion
+		
+	static newObject = function() { return object_class == noone? noone : new object_class(); }
+	
+	static getObject = function(index, class = object_class) { #region
+		var _obj = array_safe_get(cached_object, index, noone);
+		if(_obj == noone) {
+			_obj = newObject();
+		} else if(!is_instanceof(_obj, class)) {
+			_obj.destroy();
+			_obj = newObject();
+		}
+		
+		cached_object[index] = _obj;
+		return _obj;
 	} #endregion
 }

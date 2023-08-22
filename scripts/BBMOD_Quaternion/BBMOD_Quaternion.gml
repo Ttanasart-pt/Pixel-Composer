@@ -156,9 +156,9 @@ function BBMOD_Quaternion(_x=0.0, _y=0.0, _z=0.0, _w=1.0) constructor
 		gml_pragma("forceinline");
 		_angle = -_angle;
 		var _sinHalfAngle = dsin(_angle * 0.5);
-		X = _axis.X * _sinHalfAngle;
-		Y = _axis.Y * _sinHalfAngle;
-		Z = _axis.Z * _sinHalfAngle;
+		X = is_nan(_axis.X)? 0 : _axis.X * _sinHalfAngle;
+		Y = is_nan(_axis.Y)? 0 : _axis.Y * _sinHalfAngle;
+		Z = is_nan(_axis.Z)? 0 : _axis.Z * _sinHalfAngle;
 		W = dcos(_angle * 0.5);
 		return self;
 	};

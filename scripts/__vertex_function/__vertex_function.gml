@@ -9,18 +9,25 @@ MATRIX_IDENTITY = matrix_build_identity();
 	global.format_pc = vertex_format_end();
 #endregion
 
-function vertex_add_pt(vertex, position, texture) {
-	vertex_position_3d(vertex, position[0], position[1], position[2]);
-	vertex_texcoord(vertex, texture[0], texture[1]);
+function vertex_add_pt(buffer, position, texture) {
+	vertex_position_3d(buffer, position[0], position[1], position[2]);
+	vertex_texcoord(buffer, texture[0], texture[1]);
 }
 
-function vertex_add_pnt(vertex, position, normal, texture) {
-	vertex_position_3d(vertex, position[0], position[1], position[2]);
-	vertex_normal(vertex, normal[0], normal[1], normal[2]);
-	vertex_texcoord(vertex, texture[0], texture[1]);
+function vertex_add_pnt(buffer, position, normal, texture) {
+	vertex_position_3d(buffer, position[0], position[1], position[2]);
+	vertex_normal(buffer, normal[0], normal[1], normal[2]);
+	vertex_texcoord(buffer, texture[0], texture[1]);
 }
 
-function vertex_add_2pc(vertex, _x, _y, color, alpha = 1) {
-	vertex_position(vertex, _x, _y);
-	vertex_color(vertex, color, alpha);
+function vertex_add_pntc(buffer, position, normal, texture, color = c_white, alpha = 1) {
+	vertex_position_3d(buffer, position[0], position[1], position[2]);
+	vertex_normal(buffer, normal[0], normal[1], normal[2]);
+	vertex_texcoord(buffer, texture[0], texture[1]);
+	vertex_color(buffer, color, alpha);
+}
+
+function vertex_add_2pc(buffer, _x, _y, color, alpha = 1) {
+	vertex_position(buffer, _x, _y);
+	vertex_color(buffer, color, alpha);
 }

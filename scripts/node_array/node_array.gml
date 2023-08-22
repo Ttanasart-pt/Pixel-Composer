@@ -137,17 +137,6 @@ function Node_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		
 		input_display_list = [ 0, array_adjust_tool, 1 ];
 		
-		//var _typ = getType();
-		
-		//for( var i = input_fix_len; i < ds_list_size(inputs); i++ ) {
-		//	if(_typ != VALUE_TYPE.any) 
-		//		inputs[| i].type = _typ;
-		//	inputs[| i].resetDisplay();
-			
-		//	if(_typ && inputs[| i].value_from && (value_bit(inputs[| i].value_from.type) & value_bit(_typ) == 0))
-		//		inputs[| i].removeFrom();
-		//}
-		
 		refreshDynamicInput();
 	}
 	

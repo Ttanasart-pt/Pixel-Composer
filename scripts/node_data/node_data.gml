@@ -614,11 +614,14 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	static drawGetBbox = function(xx, yy, _s) { #region
 		var pad_label = draw_name && display_parameter.avoid_label;
 		
-		var _w = w - draw_padding * 2;
-		var _h = h - draw_padding * 2 - 20 * pad_label;
+		var _w = w;
+		var _h = h;
 		
 		_w *= display_parameter.preview_scale / 100 * _s;
 		_h *= display_parameter.preview_scale / 100 * _s;
+		
+		_w -= draw_padding * 2;
+		_h -= draw_padding * 2 + 20 * pad_label;
 		
 		var _xc = xx +  w * _s / 2;
 		var _yc = yy + (h * _s + 20 * pad_label) / 2;
@@ -1024,6 +1027,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 			outputs[| i].destroy();
 		
 		onDestroy();
+		UPDATE |= RENDER_TYPE.full;
 	} #endregion
 	
 	static restore = function() { #region

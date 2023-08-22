@@ -301,6 +301,10 @@
 	NODE_COLOR_SHOW_PALETTE = false;
 #endregion
 
+#region 3D
+	set3DGlobalPreview();
+#endregion
+
 #region debug
 	//instance_create_depth(0, 0, 0, addon_key_displayer);
 #endregion

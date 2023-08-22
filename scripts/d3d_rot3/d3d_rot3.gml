@@ -51,7 +51,8 @@ function __rot3(_x = 0, _y = 0, _z = 0) constructor {
 		var w0 = new __vec3( -dir.y, dir.x, 0);
 		var u0 = w0.cross(dir);
 		var ax = arctan2( w0.dot(up) / w0.length(), u0.dot(up) / u0.length() );
-		
+		if(is_nan(ax)) ax = 0;
+				
 		ax = radtodeg(ax);
 		ay = radtodeg(ay);
 		az = radtodeg(az);

@@ -24,15 +24,21 @@ function checkBox(_onClick) : widget() constructor {
 	
 	static drawParam = function(params) {
 		var ss = params.s;
-		var x0;
+		var x0, y0;
 		
 		switch(params.halign) {
 			case fa_left :	 x0 = params.x; break;
 			case fa_center : x0 = params.x + (params.w - ss) / 2; break;
-			case fa_right :  x0 = params.x + params.w - ss; break;
+			case fa_right :  x0 = params.x +  params.w - ss; break;
 		}
 		
-		return draw(x0, params.y, params.data, params.m, params.s);
+		switch(params.valign) {
+			case fa_top :	 y0 = params.y; break;
+			case fa_center : y0 = params.y + (params.h - ss) / 2; break;
+			case fa_bottom : y0 = params.y +  params.h - ss; break;
+		}
+		
+		return draw(x0, y0, params.data, params.m, params.s);
 	}
 	
 	static draw = function(_x, _y, _value, _m, ss = ui(28), halign = fa_left, valign = fa_top) {

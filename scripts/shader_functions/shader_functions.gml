@@ -51,12 +51,14 @@ function shader_set_uniform_f_array_safe(uniform, array, max_length = 128) {
 	shader_set_uniform_f_array(uniform, array);
 }
 
-function shader_set_surface(sampler, surface) {
+function shader_set_surface(sampler, surface, linear = false, _repeat = false) {
 	var shader = shader_current();
 	if(!is_surface(surface)) return;
 	
 	var t = shader_get_sampler_index(shader, sampler);
 	texture_set_stage(t, surface_get_texture(surface));
+	gpu_set_tex_filter_ext(t, linear);
+	gpu_set_tex_repeat_ext(t, _repeat);
 }
 
 function shader_set_surface_dimension(uniform, surface) {

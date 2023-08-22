@@ -438,6 +438,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	
 	#region ---- value ----
 		def_val	    = _value;
+		def_length  = is_array(def_val)? array_length(def_val) : 0;
 		unit		= new nodeValueUnit(self);
 		extra_data	= {};
 		dyna_depo   = ds_list_create();
@@ -1171,12 +1172,32 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			return animator.getValue(_time);
 	} #endregion
 	
+	static arrayBalance = function(val) { #region //Balance array (generate uniform array from single values)
+		if(!is_array(def_val)) 
+			return val;
+		if(typeArrayDynamic(display_type)) 
+			return val;
+		
+		if(!is_array(val))
+			val = array_create(def_length, val);	
+		else if(array_length(val) < def_length) {
+			for( var i = array_length(val); i < def_length; i++ )
+				val[i] = 0;
+		} else if(array_length(val) > def_length)
+			array_resize(val, def_length);
+			
+		return val;
+	} #endregion
+	
 	static _getValue = function(_time = PROJECT.animator.current_frame, applyUnit = true, arrIndex = 0) { #region
 		var _val = getValueRecursive(_time);
 		var val = _val[0];
 		var nod = _val[1];
 		var typ = nod.type;
 		var dis = nod.display_type;
+		
+		if(connect_type == JUNCTION_CONNECT.output)
+			return val;
 		
 		if(typ == VALUE_TYPE.surface && (type == VALUE_TYPE.integer || type == VALUE_TYPE.float) && accept_array) { //Dimension conversion
 			if(is_array(val)) {
@@ -1203,15 +1224,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			return [1, 1];
 		} 
 		
-		if(is_array(def_val) && !typeArrayDynamic(display_type)) { //Balance array (generate uniform array from single values)
-			if(!is_array(val)) {
-				val = array_create(array_length(def_val), val);	
-				return valueProcess(val, nod, applyUnit, arrIndex);
-			} else if(array_length(val) < array_length(def_val)) {
-				for( var i = array_length(val); i < array_length(def_val); i++ )
-					val[i] = 0;
-			}
-		}
+		val = arrayBalance(val);
 		
 		if(isArray(val) && array_length(val) < 128) { //Process data
 			for( var i = 0, n = array_length(val); i < n; i++ )
@@ -1266,6 +1279,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	} #endregion
 	
 	static setAnim = function(anim) { #region
+		if(anim && !is_anim && ds_list_size(animator.values) == 1)
+			animator.values[| 0].time = PROJECT.animator.current_frame;
+		
 		is_anim = anim;
 		PANEL_ANIMATION.updatePropertyList();
 	} #endregion

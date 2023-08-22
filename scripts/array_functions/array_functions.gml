@@ -9,7 +9,9 @@ function array_create_from_list(list) {
 }
 
 function array_safe_set(arr, index, value, fill = 0) {
-	if(!is_array(arr)) return arr;
+	if(!is_array(arr))  return arr;
+	if(is_array(index)) return arr;
+	
 	if(index < 0) return arr;
 	if(index >= array_length(arr)) {
 		var i = array_length(arr);
@@ -42,7 +44,8 @@ enum ARRAY_OVERFLOW {
 
 function array_safe_get(arr, index, def = 0, overflow = ARRAY_OVERFLOW._default) {
 	gml_pragma("forceinline");
-	if(!is_array(arr)) return def;
+	if(!is_array(arr))  return def;
+	if(is_array(index)) return def;
 	
 	if(overflow == ARRAY_OVERFLOW.loop) {
 		var len = array_length(arr);

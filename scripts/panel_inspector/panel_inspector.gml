@@ -4,112 +4,122 @@ function Inspector_Custom_Renderer(drawFn) : widget() constructor {
 }
 
 function Panel_Inspector() : PanelContent() constructor {
-	title = __txt("Inspector");
-	context_str = "Inspector";
-	icon  = THEME.panel_inspector;
+	#region ---- main ----
+		title = __txt("Inspector");
+		context_str = "Inspector";
+		icon  = THEME.panel_inspector;
 	
-	w = ui(400);
-	h = ui(640);
+		w = ui(400);
+		h = ui(640);
+		min_w = ui(160);
 	
-	locked		= false;
-	inspecting	= noone;
-	top_bar_h	= ui(100);
+		locked		= false;
+		inspecting	= noone;
+		top_bar_h	= ui(100);
+		
+		static initSize = function() {
+			content_w = w - ui(32);
+			content_h = h - top_bar_h - ui(12);
+		}
+		initSize();
+	#endregion
 	
-	prop_hover		= noone;
-	prop_selecting  = noone;
+	#region ---- properties ----
+		prop_hover		= noone;
+		prop_selecting  = noone;
 	
-	prop_dragging   = noone;
-	prop_sel_drag_x = 0;
-	prop_sel_drag_y = 0;
+		prop_dragging   = noone;
+		prop_sel_drag_x = 0;
+		prop_sel_drag_y = 0;
 	
-	color_picking	= false;
-	
-	static initSize = function() {
-		content_w = w - ui(32);
-		content_h = h - top_bar_h - ui(12);
-	}
-	initSize();
-	
-	keyframe_dragging = noone;
-	keyframe_drag_st  = 0;
+		color_picking	= false;
+		
+		picker_index  = 0;
+		picker_change = false;
+	#endregion
 	
 	globalvar_viewer_init();
 	drawWidgetInit();
 	
-	min_w = ui(160);
+	#region ---- header labels ----
+		tb_node_name	= new textBox(TEXTBOX_INPUT.text, function(txt) {
+			if(inspecting) inspecting.setDisplayName(txt);
+		})
 	
-	tb_node_name	= new textBox(TEXTBOX_INPUT.text, function(txt) {
-		if(inspecting) inspecting.setDisplayName(txt);
-	})
+		tb_prop_filter	= new textBox(TEXTBOX_INPUT.text, function(txt) { filter_text = txt; })
+		tb_prop_filter.no_empty		= false;
+		tb_prop_filter.auto_update	= true;
+		tb_prop_filter.font			= f_p0;
+		tb_prop_filter.color		= COLORS._main_text_sub;
+		tb_prop_filter.align		= fa_center;
+		tb_prop_filter.hide			= true;
+		filter_text = "";
 	
-	tb_prop_filter	= new textBox(TEXTBOX_INPUT.text, function(txt) { filter_text = txt; })
-	tb_prop_filter.no_empty		= false;
-	tb_prop_filter.auto_update	= true;
-	tb_prop_filter.font			= f_p0;
-	tb_prop_filter.color		= COLORS._main_text_sub;
-	tb_prop_filter.align		= fa_center;
-	tb_prop_filter.hide			= true;
-	filter_text = "";
+		prop_page_button = new buttonGroup([ "Properties", "Settings" ], function(val) { prop_page = val; });
+		prop_page_button.buttonSpr	= [ THEME.button_hide_left, THEME.button_hide_middle, THEME.button_hide_right ];
+		prop_page_button.font		= f_p1;
+		prop_page_button.fColor		= COLORS._main_text_sub;
+		prop_page = 0;
+	#endregion
 	
-	prop_page_button = new buttonGroup([ "Properties", "Settings" ], function(val) { prop_page = val; });
-	prop_page_button.buttonSpr	= [ THEME.button_hide_left, THEME.button_hide_middle, THEME.button_hide_right ];
-	prop_page_button.font		= f_p1;
-	prop_page_button.fColor		= COLORS._main_text_sub;
-	prop_page = 0;
+	#region ---- metadata ----
+		current_meta = -1;
+		meta_tb[0] = new textArea(TEXTBOX_INPUT.text, function(str) { current_meta.description	= str; });	
+		meta_tb[1] = new textArea(TEXTBOX_INPUT.text, function(str) { current_meta.author		= str; });
+		meta_tb[2] = new textArea(TEXTBOX_INPUT.text, function(str) { current_meta.contact		= str; });
+		meta_tb[3] = new textArea(TEXTBOX_INPUT.text, function(str) { current_meta.alias		= str; });
+		meta_tb[4] = new textArrayBox(noone, META_TAGS);
+		for( var i = 0, n = array_length(meta_tb); i < n; i++ )
+			meta_tb[i].hide = true;
 	
-	picker_index = 0;
-	picker_change = false;
+		meta_display = [ 
+			[ __txt("Project Settings"), false ], 
+			[ __txt("Metadata"), true ], 
+			[ __txtx("panel_globalvar", "Global variables"), true, button(function() { panelAdd("Panel_Globalvar", true); }, THEME.node_goto).setIcon(THEME.node_goto, 0, COLORS._main_icon) ] 
+		];
+	#endregion
 	
-	current_meta = -1;
-	meta_tb[0] = new textArea(TEXTBOX_INPUT.text, function(str) { current_meta.description	= str; });	
-	meta_tb[1] = new textArea(TEXTBOX_INPUT.text, function(str) { current_meta.author		= str; });
-	meta_tb[2] = new textArea(TEXTBOX_INPUT.text, function(str) { current_meta.contact		= str; });
-	meta_tb[3] = new textArea(TEXTBOX_INPUT.text, function(str) { current_meta.alias		= str; });
-	meta_tb[4] = new textArrayBox(noone, META_TAGS);
-	for( var i = 0, n = array_length(meta_tb); i < n; i++ )
-		meta_tb[i].hide = true;
+	#region ---- workshop ----
+		workshop_uploading = false;
+	#endregion
 	
-	meta_display = [ 
-		[ __txt("Project Settings"), false ], 
-		[ __txt("Metadata"), true ], 
-		[ __txtx("panel_globalvar", "Global variables"), true, button(function() { panelAdd("Panel_Globalvar", true); }, THEME.node_goto).setIcon(THEME.node_goto, 0, COLORS._main_icon) ] 
-	];
+	#region ++++ hotkeys ++++
+		addHotkey("Inspector", "Copy property",		"C",   MOD_KEY.ctrl,	function() { PANEL_INSPECTOR.propSelectCopy(); });
+		addHotkey("Inspector", "Paste property",	"V",   MOD_KEY.ctrl,	function() { PANEL_INSPECTOR.propSelectPaste(); });
+		addHotkey("Inspector", "Toggle animation",	"I",   MOD_KEY.none,	function() { PANEL_INSPECTOR.anim_toggling = true; });
 	
-	workshop_uploading = false;
+		addHotkey("", "Color picker",		"",   MOD_KEY.alt,		function() { 
+																		if(!PREF_MAP[? "alt_picker"]) return; 
+																		PANEL_INSPECTOR.color_picking = true; 
+																	});
+	#endregion
 	
-	addHotkey("Inspector", "Copy property",		"C",   MOD_KEY.ctrl,	function() { PANEL_INSPECTOR.propSelectCopy(); });
-	addHotkey("Inspector", "Paste property",	"V",   MOD_KEY.ctrl,	function() { PANEL_INSPECTOR.propSelectPaste(); });
-	addHotkey("Inspector", "Toggle animation",	"I",   MOD_KEY.none,	function() { PANEL_INSPECTOR.anim_toggling = true; });
-	
-	addHotkey("", "Color picker",		"",   MOD_KEY.alt,		function() { 
-																	if(!PREF_MAP[? "alt_picker"]) return; 
-																	PANEL_INSPECTOR.color_picking = true; 
-																});
-	
-	group_menu = [
-		menuItem(__txt("Expand all"), function() {
-			if(inspecting == noone) return;
-			if(inspecting.input_display_list == -1) return;
+	#region ++++ menus ++++
+		group_menu = [
+			menuItem(__txt("Expand all"), function() {
+				if(inspecting == noone) return;
+				if(inspecting.input_display_list == -1) return;
 			
-			var dlist = inspecting.input_display_list;
-			for( var i = 0, n = array_length(dlist); i < n; i++ ) {
-				if(!is_array(dlist[i])) continue;
-				dlist[i][@ 1] = false;
-			}
-		}),
-		menuItem(__txt("Collapse all"), function() {
-			if(inspecting == noone) return;
-			if(inspecting.input_display_list == -1) return;
+				var dlist = inspecting.input_display_list;
+				for( var i = 0, n = array_length(dlist); i < n; i++ ) {
+					if(!is_array(dlist[i])) continue;
+					dlist[i][@ 1] = false;
+				}
+			}),
+			menuItem(__txt("Collapse all"), function() {
+				if(inspecting == noone) return;
+				if(inspecting.input_display_list == -1) return;
 			
-			var dlist = inspecting.input_display_list;
-			for( var i = 0, n = array_length(dlist); i < n; i++ ) {
-				if(!is_array(dlist[i])) continue;
-				dlist[i][@ 1] = true;
-			}
-		}),
-	]
+				var dlist = inspecting.input_display_list;
+				for( var i = 0, n = array_length(dlist); i < n; i++ ) {
+					if(!is_array(dlist[i])) continue;
+					dlist[i][@ 1] = true;
+				}
+			}),
+		]
+	#endregion
 	
-	function setInspecting(inspecting) { 
+	function setInspecting(inspecting) { #region
 		if(locked) return;
 		
 		self.inspecting = inspecting;
@@ -120,16 +130,16 @@ function Panel_Inspector() : PanelContent() constructor {
 		contentPane.scroll_y_to = 0;
 			
 		picker_index = 0;
-	}
+	} #endregion
 	
 	function onFocusBegin() { PANEL_INSPECTOR = self; }
 	
-	function onResize() {
+	function onResize() { #region
 		initSize();
 		contentPane.resize(content_w, content_h);
-	}
+	} #endregion
 	
-	static drawMeta = function(_y, _m) {
+	static drawMeta = function(_y, _m) { #region
 		var con_w = contentPane.surface_w - ui(4);
 		var _hover = pHOVER && contentPane.hover;
 		
@@ -310,9 +320,9 @@ function Panel_Inspector() : PanelContent() constructor {
 		}
 			
 		return hh;
-	}
+	} #endregion
 	
-	contentPane = new scrollPane(content_w, content_h, function(_y, _m) {
+	contentPane = new scrollPane(content_w, content_h, function(_y, _m) { #region
 		var con_w = contentPane.surface_w - ui(4);
 		var _hover = pHOVER && contentPane.hover;
 		
@@ -342,7 +352,7 @@ function Panel_Inspector() : PanelContent() constructor {
 		
 		var xc = con_w / 2;
 		
-		if(prop_page == 1) {
+		if(prop_page == 1) { #region attribute/settings editor
 			hh += ui(8);
 			var hg  = ui(32);
 			var yy  = hh;
@@ -391,7 +401,7 @@ function Panel_Inspector() : PanelContent() constructor {
 				hh += hg + ui(8);
 			}
 			return hh;
-		}
+		} #endregion
 		
 		var color_picker_selecting = noone;
 		var color_picker_index = 0;
@@ -400,7 +410,7 @@ function Panel_Inspector() : PanelContent() constructor {
 		for(var i = 0; i < amo; i++) {
 			var yy = hh + _y;
 			
-			if(i < amoIn) {
+			if(i < amoIn) { #region inputs
 				if(inspecting.input_display_list == -1) {
 					jun = inspecting.inputs[| i];
 				} else {
@@ -453,17 +463,20 @@ function Panel_Inspector() : PanelContent() constructor {
 					}
 					jun = inspecting.inputs[| inspecting.input_display_list[i]];
 				}
-			} else if(i == amoIn) { 
+			#endregion
+			} else if(i == amoIn) { #region output label
 				hh += ui(8 + 32 + 8);
 				
 				draw_sprite_stretched_ext(THEME.group_label, 0, 0, yy + ui(8), con_w, ui(32), COLORS.panel_inspector_output_label, 0.85);
 				draw_set_text(f_p0b, fa_center, fa_center, COLORS._main_text_sub);
 				draw_text_add(xc, yy + ui(8 + 16), __txt("Outputs"));
 				continue;
-			} else {
+			#endregion
+			} else { #region outputs
 				var outInd = i - amoIn - 1;
 				jun = inspecting.outputs[| outInd];
-			}
+			#endregion
+			} 
 			
 			if(!is_struct(jun)) continue;
 			if(instanceof(jun) != "NodeValue") continue;
@@ -474,34 +487,36 @@ function Panel_Inspector() : PanelContent() constructor {
 				if(pos == 0) continue;
 			}
 			
-			var lb_h    = line_get_height(f_p0) + ui(8);
-			var lb_w    = line_get_width(jun.name, f_p0) + ui(16);
-			var padd    = ui(8);
+			#region ++++ draw widget
+				var lb_h    = line_get_height(f_p0) + ui(8);
+				var lb_w    = line_get_width(jun.name, f_p0) + ui(16);
+				var padd    = ui(8);
 			
-			var _selY	= yy - ui(0);
-			var lbHov   = point_in_rectangle(_m[0], _m[1], ui(48), _selY, ui(48) + lb_w, _selY + lb_h);
-			if(lbHov) 
-				draw_sprite_stretched_ext(THEME.group_label, 0, ui(48), _selY + ui(2), lb_w, lb_h - ui(4), COLORS._main_icon_dark, 0.85);
+				var _selY	= yy - ui(0);
+				var lbHov   = point_in_rectangle(_m[0], _m[1], ui(48), _selY, ui(48) + lb_w, _selY + lb_h);
+				if(lbHov) 
+					draw_sprite_stretched_ext(THEME.group_label, 0, ui(48), _selY + ui(2), lb_w, lb_h - ui(4), COLORS._main_icon_dark, 0.85);
 				
-			var widg    = drawWidget(ui(16), yy, contentPane.surface_w - ui(24), _m, jun, false, pHOVER && contentPane.hover, pFOCUS, contentPane, ui(16) + x, top_bar_h + y);
-			var widH    = widg[0];
-			var mbRight = widg[1];
+				var widg    = drawWidget(ui(16), yy, contentPane.surface_w - ui(24), _m, jun, false, pHOVER && contentPane.hover, pFOCUS, contentPane, ui(16) + x, top_bar_h + y);
+				var widH    = widg[0];
+				var mbRight = widg[1];
 			
-			hh += lb_h + widH + padd;
+				hh += lb_h + widH + padd;
 			
-			var _selY1 = yy + lb_h + widH + ui(2);
-			var _selH  = _selY1 - _selY;
+				var _selY1 = yy + lb_h + widH + ui(2);
+				var _selH  = _selY1 - _selY;
 			
-			if(_hover && lbHov) {
-				if(prop_dragging == noone && mouse_press(mb_left, pFOCUS)) {
-					prop_dragging = jun;
+				if(_hover && lbHov) {
+					if(prop_dragging == noone && mouse_press(mb_left, pFOCUS)) {
+						prop_dragging = jun;
 					
-					prop_sel_drag_x = mouse_mx;
-	  				prop_sel_drag_y = mouse_my;
+						prop_sel_drag_x = mouse_mx;
+		  				prop_sel_drag_y = mouse_my;
+					}
 				}
-			}
+			#endregion
 			
-			if(jun.connect_type == JUNCTION_CONNECT.input && jun.type == VALUE_TYPE.color && jun.display_type == VALUE_DISPLAY._default) {
+			if(jun.connect_type == JUNCTION_CONNECT.input && jun.type == VALUE_TYPE.color && jun.display_type == VALUE_DISPLAY._default) { #region color picker
 				pickers[color_picker_index] = jun;
 				if(color_picker_index == picker_index) {
 					if(color_picking && WIDGET_CURRENT == noone && !instance_exists(_p_dialog))
@@ -510,9 +525,9 @@ function Panel_Inspector() : PanelContent() constructor {
 				}
 				
 				color_picker_index++;
-			}
+			} #endregion
 			
-			if(_hover && point_in_rectangle(_m[0], _m[1], ui(4), _selY, contentPane.surface_w - ui(4), _selY + _selH)) {
+			if(_hover && point_in_rectangle(_m[0], _m[1], ui(4), _selY, contentPane.surface_w - ui(4), _selY + _selH)) { #region mouse in widget
 				_HOVERING_ELEMENT = jun;
 				
 				if(NODE_DROPPER_TARGET != noone && NODE_DROPPER_TARGET != jun) {
@@ -535,7 +550,7 @@ function Panel_Inspector() : PanelContent() constructor {
 				if(mouse_press(mb_left, pFOCUS))
 					prop_selecting = jun;
 						
-				if(mouse_press(mb_right, pFOCUS && mbRight)) {
+				if(mouse_press(mb_right, pFOCUS && mbRight)) { #region right click menu
 					var _menuItem = [];
 					
 					if(i < amoIn) {
@@ -595,8 +610,8 @@ function Panel_Inspector() : PanelContent() constructor {
 					
 					var dia = menuCall("inspector_value_menu",,, _menuItem,, jun);
 					__dialog_junction = jun;
-				}
-			}
+				} #endregion
+			} #endregion
 		}
 		
 		if(color_picker_selecting == noone)
@@ -627,18 +642,19 @@ function Panel_Inspector() : PanelContent() constructor {
 		color_picking = false;
 		
 		return hh;
-	});
+	}); #endregion
 	
-	function propSelectCopy() {
+	function propSelectCopy() { #region
 		if(!prop_selecting) return;
 		clipboard_set_text(prop_selecting.getShowString());
-	}
-	function propSelectPaste() {
+	} #endregion
+	
+	function propSelectPaste() { #region
 		if(!prop_selecting) return;
 		prop_selecting.setString(clipboard_get_text());
-	}
+	} #endregion
 	
-	function drawInspectingNode() {
+	function drawInspectingNode() { #region
 		tb_node_name.font = f_h5;
 		tb_node_name.hide = true;
 		tb_node_name.setFocusHover(pFOCUS, pHOVER);
@@ -684,9 +700,9 @@ function Panel_Inspector() : PanelContent() constructor {
 			if(buttonInstant(THEME.button_hide, bx, by, ui(32), ui(32), [mx, my], pFOCUS, pHOVER, inspecting.insp2UpdateTooltip, icon[0], icon[1], icon[2]) = 2)
 				inspecting.inspector2Update();
 		}
-	}
+	} #endregion
 	
-	function drawContent(panel) {
+	function drawContent(panel) { #region					>>>>>>>>>>>>>>>>>>>> MAIN DRAW <<<<<<<<<<<<<<<<<<<<
 		draw_clear_alpha(COLORS.panel_bg_clear, 0);
 		lineBreak = w < PREF_MAP[? "inspector_line_break_width"];
 		
@@ -761,5 +777,5 @@ function Panel_Inspector() : PanelContent() constructor {
 		
 		if(!locked && PANEL_GRAPH.node_focus && inspecting != PANEL_GRAPH.node_focus)
 			setInspecting(PANEL_GRAPH.node_focus);
-	}
+	} #endregion
 }

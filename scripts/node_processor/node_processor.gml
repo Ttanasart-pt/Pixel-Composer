@@ -11,6 +11,7 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	attributes.array_process = ARRAY_PROCESS.loop;
 	current_data	= [];
 	inputs_data		= [];
+	inputs_is_array = [];
 	all_inputs      = [];
 	
 	process_amount	= 0;
@@ -29,7 +30,7 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index = 0) { return _outSurf; }
 	
-	static getSingleValue = function(_index, _arr = 0, output = false) {
+	static getSingleValue = function(_index, _arr = 0, output = false) { #region
 		var _l  = output? outputs : inputs;
 		var _n  = _l[| _index];
 		var _in = _n.getValue();
@@ -44,9 +45,9 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		}
 				
 		return array_safe_get(_in, _index);
-	}
+	} #endregion
 	
-	static getDimension = function(arr = 0) {
+	static getDimension = function(arr = 0) { #region
 		if(dimension_index == -1) return [1, 1];
 		
 		var _in = getSingleValue(dimension_index, arr);
@@ -61,9 +62,9 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 			return _in;
 			
 		return [1, 1];
-	}
+	} #endregion
 	
-	static preProcess = function(outIndex) {
+	static preProcess = function(outIndex) { #region
 		var _out   = outputs[| outIndex].getValue();
 		all_inputs = array_create(ds_list_size(inputs));
 		
@@ -128,15 +129,18 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 			for(var i = 0; i < ds_list_size(inputs); i++) { #region input preparation
 				var _in = inputs_data[i];
 				
-				if(!inputs[| i].isArray(_in)) {
-					_data[i] = inputs_data[i];	
+				if(!inputs_is_array[i]) {
+					_data[i] = _in;
+					all_inputs[i][l] = _data[i];
 					continue;
 				}
 				
 				if(array_length(_in) == 0) {
 					_data[i] = 0;
+					all_inputs[i][l] = _data[i];
 					continue;
 				}
+				
 				var _index = 0;
 				switch(attributes.array_process) {
 					case ARRAY_PROCESS.loop :		_index = safe_mod(l, array_length(_in)); break;
@@ -145,7 +149,7 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 					case ARRAY_PROCESS.expand_inv : _index = floor(l / process_length[ds_list_size(inputs) - 1 - i][1]) % process_length[i][0]; break;
 				}
 				
-				_data[i] = _in[_index];
+				_data[i] = inputs[| i].arrayBalance(_in[_index]);
 				all_inputs[i][l] = _data[i];
 			} #endregion
 			
@@ -180,18 +184,20 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		}
 		
 		return _out;
-	}
+	} #endregion
 	
 	static update = function(frame = PROJECT.animator.current_frame) { #region
 		process_amount	= 0;
 		inputs_data		= array_create(ds_list_size(inputs));
+		inputs_is_array	= array_create(ds_list_size(inputs));
 		process_length  = array_create(ds_list_size(inputs));
 		
 		for(var i = 0; i < ds_list_size(inputs); i++) { //pre-collect current input data
 			var val = inputs[| i].getValue();
 			var amo = inputs[| i].arrayLength(val);
 			
-			inputs_data[i] = val;
+			inputs_data[i]     = val;
+			inputs_is_array[i] = inputs[| i].isArray(val);
 			
 			switch(attributes.array_process) {
 				case ARRAY_PROCESS.loop : 
@@ -224,7 +230,11 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 				val = processData(noone, noone, i);
 			outputs[| i].setValue(val);
 		}
+		
+		postUpdate();
 	} #endregion
+	
+	static postUpdate = function() {}
 	
 	static processSerialize = function(_map) { #region
 		_map.array_process = attributes.array_process;

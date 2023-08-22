@@ -15,7 +15,7 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 	var lb_y = yy + lb_h / 2;
 			
 	var butx = xx;
-	if(jun.connect_type == JUNCTION_CONNECT.input && jun.isAnimable() && !jun.expUse) {
+	if(jun.connect_type == JUNCTION_CONNECT.input && jun.isAnimable() && !jun.expUse) { #region animation
 		var index = jun.value_from == noone? jun.is_anim : 2;
 		draw_sprite_ui_uniform(THEME.animate_clock, index, butx, lb_y, 1, index == 2? COLORS._main_accent : c_white, 0.8);
 		if(_hover && point_in_circle(_m[0], _m[1], butx, lb_y, ui(10))) {
@@ -36,13 +36,13 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 				PANEL_ANIMATION.updatePropertyList();
 			}
 		}
-	}
+	} #endregion
 		
 	if(anim_hold != noone && mouse_release(mb_left))
 		anim_hold = noone;
 		
 	butx += ui(20);
-	if(!global_var) {			
+	if(!global_var) { #region visibility
 		index = jun.visible;
 		draw_sprite_ui_uniform(THEME.junc_visible, index, butx, lb_y, 1,, 0.8);
 		if(_hover && point_in_circle(_m[0], _m[1], butx, lb_y, ui(10))) {
@@ -57,6 +57,7 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 				visi_hold = jun.visible;
 			}
 		}
+	#endregion
 	} else
 		draw_sprite_ui_uniform(THEME.node_use_expression, 0, butx, lb_y, 1,, 0.8);
 		
@@ -192,7 +193,7 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 	var widH	   = lineBreak? editBoxH : 0;
 	var mbRight	   = true;
 		
-	if(jun.expUse) {
+	if(jun.expUse) { #region expression editor
 		var expValid = jun.expTree != noone && jun.expTree.validate();
 		jun.express_edit.boxColor = expValid? COLORS._main_value_positive : COLORS._main_value_negative;
 		jun.express_edit.rx = rx;
@@ -203,7 +204,8 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 			
 		var wd_h = jun.express_edit.draw(editBoxX, editBoxY, editBoxW, editBoxH, jun.expression, _m);
 		widH = wd_h - (TEXTBOX_HEIGHT * !lineBreak);
-	} else if(jun.editWidget) {
+	#endregion
+	} else if(jun.editWidget) { #region edit widget
 		jun.editWidget.setFocusHover(_focus, _hover);
 			
 		if(jun.connect_type == JUNCTION_CONNECT.input) {
@@ -213,11 +215,6 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 			jun.editWidget.setInteract(false);
 		}
 		
-		//if(jun.display_type == VALUE_DISPLAY.area) {
-		//	print("======= Show value widget =====");
-		//	print(jun.animator.values[| 0].value);
-		//	print(jun.showValue());
-		//}
 		var param = new widgetParam(editBoxX, editBoxY, editBoxW, editBoxH, jun.showValue(), jun.extra_data, _m, rx, ry);
 		
 		switch(jun.type) {
@@ -241,19 +238,15 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 		
 		var _widH = jun.editWidget.drawParam(param) ?? 0;
 		widH = _widH - (TEXTBOX_HEIGHT * !lineBreak);
-		
-	} else if(jun.display_type == VALUE_DISPLAY.label) {
+	#endregion
+	} else if(jun.display_type == VALUE_DISPLAY.label) { #region label
 		draw_set_text(f_p1, fa_left, fa_top, COLORS._main_text_sub);
 		draw_text_add(xx + ui(16), _hsy, jun.display_data);
 				
 		widH = string_height(jun.display_data);
+	#endregion
 	} else
 		widH = 0;
-	
-	//draw_set_color(c_white);
-	//draw_rectangle(xx, yy, xx + ww, yy + widH, true);
-	//draw_set_color(c_red);
-	//draw_line(xx + ww / 2, yy, xx + ww / 2, yy + widH);
 	
 	return [ widH, mbRight ];
 }	

@@ -1,24 +1,3 @@
-function Node_create_3D_Obj(_x, _y, _group = noone) {
-	var path = "";
-	if(!LOADING && !APPENDING && !CLONING) {
-		path = get_open_filename(".obj", "");
-		key_release();
-		if(path == "") return noone;
-	}
-	
-	var node = new Node_3D_Obj(_x, _y, _group);
-	node.setPath(path);
-	return node;
-}
-
-function Node_create_3D_Obj_path(_x, _y, path) {
-	if(!file_exists(path)) return noone;
-	
-	var node = new Node_3D_Obj(_x, _y, PANEL_GRAPH.getCurrentContext());
-	node.setPath(path);
-	return node;
-}
-
 function Node_3D_Obj(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "3D Object";
 	
@@ -94,7 +73,7 @@ function Node_3D_Obj(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		["Textures",			 true], 12,
 	];
 	input_length = ds_list_size(inputs);
-	input_display_len  = array_length(input_display_list);
+	input_display_len = array_length(input_display_list);
 	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
@@ -110,6 +89,10 @@ function Node_3D_Obj(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	
 	tex_surface = surface_create(1, 1);
 	
+	materialNames = [];
+	materialIndex = [];
+	materials = [];
+		
 	function reset_tex() {
 		tex_surface = surface_verify(tex_surface, 1, 1);
 		surface_set_target(tex_surface);
@@ -153,10 +136,6 @@ function Node_3D_Obj(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		}
 	}
 	
-	materialNames = [];
-	materialIndex = [];
-	materials = [];
-		
 	static updateObj = function(updateMat = true) {
 		var _path = inputs[|  0].getValue();
 		if(!file_exists(_path)) return;

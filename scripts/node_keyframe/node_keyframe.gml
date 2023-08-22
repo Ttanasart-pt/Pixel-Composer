@@ -202,11 +202,6 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 				var fTime = from.time;
 				var tTime = to.time;
 				
-				//if(from > PROJECT.animator.frames_total) {
-				//	fTime = fTime % PROJECT.animator.frames_total;
-				//	tTime = tTime - PROJECT.animator.frames_total;
-				//}
-				
 				var prog = PROJECT.animator.frames_total - fTime + _time;
 				var totl = PROJECT.animator.frames_total - fTime + tTime;
 				

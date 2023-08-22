@@ -1,19 +1,21 @@
 function Node_3D_Mesh_Cube(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group) constructor {
 	name     = "3D Cube";
 	
+	object_class = noone;
+	
 	inputs[| in_mesh + 0] = nodeValue("Texture per side", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false );
 	
 	inputs[| in_mesh + 1] = nodeValue("Texture", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone );
 	
-	inputs[| in_mesh + 2] = nodeValue("Texture 2", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone );
+	inputs[| in_mesh + 2] = nodeValue("Texture Bottom", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone );
 	
-	inputs[| in_mesh + 3] = nodeValue("Texture 3", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone );
+	inputs[| in_mesh + 3] = nodeValue("Texture Left", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone );
 	
-	inputs[| in_mesh + 4] = nodeValue("Texture 4", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone );
+	inputs[| in_mesh + 4] = nodeValue("Texture Right", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone );
 	
-	inputs[| in_mesh + 5] = nodeValue("Texture 5", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone );
+	inputs[| in_mesh + 5] = nodeValue("Texture Back", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone );
 	
-	inputs[| in_mesh + 6] = nodeValue("Texture 6", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone );
+	inputs[| in_mesh + 6] = nodeValue("Texture Front", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone );
 	
 	input_display_list = [
 		__d3d_input_list_mesh,
@@ -22,10 +24,15 @@ function Node_3D_Mesh_Cube(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group
 							in_mesh + 4, in_mesh + 5, in_mesh + 6, 
 	]
 	
+	static newObject = function(_side) { 
+		if(_side) return new __3dCubeFaces();
+		return new __3dCube();
+	}
+	
 	static step = function() { #region
 		var _tex_side = inputs[| in_mesh + 0].getValue();
 		
-		inputs[| in_mesh + 1].name = _tex_side? "Texture 1" : "Texture";
+		inputs[| in_mesh + 1].name = _tex_side? "Texture Top" : "Texture";
 		inputs[| in_mesh + 1].setVisible(true, true);
 		inputs[| in_mesh + 2].setVisible(_tex_side, _tex_side);
 		inputs[| in_mesh + 3].setVisible(_tex_side, _tex_side);
@@ -45,12 +52,12 @@ function Node_3D_Mesh_Cube(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group
 		
 		var object;
 		if(_tex_side) {
-			object = new __3dCubeFaces();
+			object = getObject(_array_index, __3dCubeFaces);
 			object.texture = [ surface_texture(_tex_1), surface_texture(_tex_2), 
 							   surface_texture(_tex_3), surface_texture(_tex_4), 
 							   surface_texture(_tex_5), surface_texture(_tex_6) ];
 		} else {
-			object = new __3dCube();
+			object = getObject(_array_index, __3dCube);
 			object.texture = surface_texture(_tex_1);
 		}
 		

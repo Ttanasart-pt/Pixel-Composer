@@ -71,6 +71,8 @@ function Node_Struct(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			
 			if(frm != noone && frm.type == VALUE_TYPE.surface)
 				str[$ key] = new Surface(val);
+			else if(frm != noone && frm.type == VALUE_TYPE.buffer)
+				str[$ key] = new Buffer(val);
 			else
 				str[$ key] = val;
 		}
