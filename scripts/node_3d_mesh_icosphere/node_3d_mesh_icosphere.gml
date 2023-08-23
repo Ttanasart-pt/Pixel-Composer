@@ -22,7 +22,7 @@ function Node_3D_Mesh_Sphere_Ico(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, 
 		
 		var object = getObject(_array_index);
 		object.checkParameter({level: _sub, smooth: _smt});
-		object.texture = surface_texture(_tex);
+		object.texture = [ surface_texture(_tex) ];
 		
 		setTransform(object, _data);
 		

@@ -20,7 +20,7 @@ function __3dCamera() constructor {
 	
 	fov = 60;
 	view_near = .01;
-	view_far  = 100;
+	view_far  =  10;
 	
 	view_w = 1;
 	view_h = 1;
@@ -43,8 +43,11 @@ function __3dCamera() constructor {
 	}
 	
 	static applyCamera = function() {
-		camera_set_proj_mat(raw, projMat.raw);
 		camera_set_view_mat(raw, viewMat.raw);
+		camera_set_proj_mat(raw, projMat.raw);
+		
+		var _viewMat = viewMat.transpose();
+		var _projMat = projMat.transpose();
 		
 		camera_apply(raw);
 	}
@@ -57,11 +60,8 @@ function __3dCamera() constructor {
 	static setMatrix = function() {
 		if(projection == CAMERA_PROJECTION.perspective)
 			projMat.setRaw(matrix_build_projection_perspective_fov(fov, view_aspect, view_near, view_far));
-		else {
+		else
 			projMat.setRaw(matrix_build_projection_ortho(view_w, view_h, view_near, view_far));
-			//print($"{view_w}, {view_h}, {view_near}, {view_far}")
-			//print(projMat);
-		}
 		
 		if(useFocus)
 			viewMat.setRaw(matrix_build_lookat(position.x, position.y, position.z, focus.x, focus.y, focus.z, up.x, up.y, up.z));

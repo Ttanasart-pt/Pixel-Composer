@@ -12,7 +12,7 @@ if !ready exit;
 
 #region draw
 	var yy = dialog_y + ui(64);
-	var ww = ui(128);
+	var ww = ui(200);
 	var wh = TEXTBOX_HEIGHT;
 	
 	for( var i = 0, n = array_length(properties); i < n; i++ ) {

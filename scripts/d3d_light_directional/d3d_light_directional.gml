@@ -1,5 +1,5 @@
 function __3dLightDirectional() : __3dLight() constructor {
-	vertex		= [ V3(1, 0, 0, c_yellow, 0.8), V3(3, 0, 0, c_yellow, 0.8) ];
+	vertex		= [[ V3(1, 0, 0, c_yellow, 0.8), V3(3, 0, 0, c_yellow, 0.8) ]];
 	VF		    = global.VF_POS_COL;
 	render_type = pr_linelist;
 	VB			= build();
@@ -36,11 +36,11 @@ function __3dLightDirectional() : __3dLight() constructor {
 		matrix_stack_push(rot);
 		
 		matrix_set(matrix_world, matrix_stack_top());
-		vertex_submit(VB_UI, pr_linestrip, -1);
+		vertex_submit(VB_UI[0], pr_linestrip, -1);
 		
 		matrix_stack_push(sca);
 		matrix_set(matrix_world, matrix_stack_top());
-		vertex_submit(VB_UI, pr_linestrip, -1);
+		vertex_submit(VB_UI[0], pr_linestrip, -1);
 		
 		matrix_stack_clear();
 		matrix_set(matrix_world, matrix_build_identity());
@@ -50,7 +50,7 @@ function __3dLightDirectional() : __3dLight() constructor {
 		shadow_map = surface_verify(shadow_map, shadow_map_size, shadow_map_size, surface_r32float);
 		
 		shadow_map_view = matrix_build_lookat(position.x, position.y, position.z, 0, 0, 0, 0, 0, -1);
-		shadow_map_proj = matrix_build_projection_ortho(shadow_map_size / shadow_map_scale, shadow_map_size / shadow_map_scale, .01, 100);
+		shadow_map_proj = matrix_build_projection_ortho(shadow_map_scale, shadow_map_scale, .01, 100);
 		
 		surface_set_target(shadow_map);
 		draw_clear(c_black);

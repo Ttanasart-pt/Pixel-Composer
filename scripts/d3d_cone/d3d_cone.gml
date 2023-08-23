@@ -29,8 +29,8 @@ function __3dCone(radius = 0.5, height = 1, sides = 8, smooth = false) : __3dObj
 			var _v1 = 0.5 + lengthdir_y(0.5, a1);
 			
 			v0[i * 3 + 0] = V3( 0,  0, -_h).setNormal(0, 0, -1).setUV(0.5,  0.5);
-			v0[i * 3 + 1] = V3(x0, y0, -_h).setNormal(0, 0, -1).setUV(_u0,  _v0);
-			v0[i * 3 + 2] = V3(x1, y1, -_h).setNormal(0, 0, -1).setUV(_u1,  _v1);
+			v0[i * 3 + 1] = V3(x1, y1, -_h).setNormal(0, 0, -1).setUV(_u1,  _v1);
+			v0[i * 3 + 2] = V3(x0, y0, -_h).setNormal(0, 0, -1).setUV(_u0,  _v0);
 		}
 		
 		for( var i = 0; i < sides; i++ ) {
@@ -61,8 +61,9 @@ function __3dCone(radius = 0.5, height = 1, sides = 8, smooth = false) : __3dObj
 		}
 		
 		vertex	= [ v0, vs ];
-	
+		
 		VB = build();
+		generateNormal();
 	} initModel();
 	
 	static onParameterUpdate = initModel;

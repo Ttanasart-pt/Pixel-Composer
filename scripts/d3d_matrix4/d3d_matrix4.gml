@@ -73,13 +73,12 @@ function __mat4() constructor {
         var result = new __mat4();
         
         // Perform matrix multiplication
-        for (var i = 0; i < 4; i++) {
-            for (var j = 0; j < 4; j++) {
-                var sum = 0;
-                for (var k = 0; k < 4; k++)
-                    sum += raw[i * 4 + k] * matrix.raw[k * 4 + j];
-                result.raw[i * 4 + j] = sum;
-            }
+        for (var i = 0; i < 4; i++)
+        for (var j = 0; j < 4; j++) {
+            var sum = 0;
+            for (var k = 0; k < 4; k++)
+                sum += raw[i * 4 + k] * matrix.raw[k * 4 + j];
+            result.raw[i * 4 + j] = sum;
         }
         
         return result;

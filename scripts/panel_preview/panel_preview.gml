@@ -80,21 +80,34 @@ function Panel_Preview() : PanelContent() constructor {
 		tool_x_to    = 0;
 		tool_x_max   = 0;
 		tool_current = noone;
+		
+		sbChannel = new scrollBox([], function(index) { #region
+			var node = getNodePreview();
+			if(node == noone) return;
+		
+			node.preview_channel = array_safe_get(sbChannelIndex, index); 
+		}); #endregion
+		sbChannelIndex = [];
+		sbChannel.align = fa_left;
 	#endregion
 	
 	#region ---- 3d ----
 		d3_active  = false;
 		_d3_active = false;
 		d3_active_transition = 0;
+		
 		d3_surface = noone;
-		d3_outline_surface = noone;
+		d3_surface_normal  = noone;
+		d3_surface_depth   = noone;
+		d3_surface_outline = noone;
+		d3_preview_channel = 0;
 		
 		#region camera
 			d3_view_camera = new __3dCamera();
 			d3_camW = 1;
 			d3_camH = 1;
 		
-			d3_view_camera.setFocusAngle(135, 45, 16);
+			d3_view_camera.setFocusAngle(135, 45, 4);
 			d3_camLerp = false;
 	
 			d3_camTarget = new __vec3();
@@ -117,7 +130,7 @@ function Panel_Preview() : PanelContent() constructor {
 			d3_scene_light0.position.set(-1, -2, 3);
 			d3_scene_light0.color  = $FFFFFF;
 			d3_scene_light0.shadow_active = false;
-			d3_scene_light0.shadow_map_scale = 128;
+			d3_scene_light0.shadow_map_scale = 4;
 			
 			d3_scene_light1 = new __3dLightDirectional();
 			d3_scene_light1.position.set(1, 2, -3);
@@ -132,6 +145,12 @@ function Panel_Preview() : PanelContent() constructor {
 		
 		#region shadow map
 			
+		#endregion
+		
+		#region view channel
+			d3ChannelNames = [ "Rendered", "Normal", "Depth" ];
+			d3Channel = new scrollBox(d3ChannelNames, function(index) { d3_preview_channel = index; });
+			d3Channel.align = fa_left;
 		#endregion
 	#endregion
 	
@@ -498,15 +517,6 @@ function Panel_Preview() : PanelContent() constructor {
 		canvas_y = h / 2 - bbox.h * canvas_s / 2 - bbox.y0 * canvas_s;
 	} #endregion
 	
-	sbChannel = new scrollBox([], function(index) { #region
-		var node = getNodePreview();
-		if(node == noone) return;
-		
-		node.preview_channel = array_safe_get(sbChannelIndex, index); 
-	}); #endregion
-	
-	sbChannelIndex = [];
-	sbChannel.align = fa_left;
 	function drawNodeChannel(_x, _y) { #region
 		var _node = getNodePreview();
 		if(_node == noone) return;
@@ -531,6 +541,18 @@ function Panel_Preview() : PanelContent() constructor {
 		sbChannel.setFocusHover(pFOCUS, pHOVER);
 		
 		sbChannel.draw(_x - ww, _y - hh / 2, ww, hh, currName, [mx, my], x, y);
+		right_menu_y += ui(40);
+	} #endregion
+	
+	function drawNodeChannel3D(_x, _y) { #region
+		var _node = getNodePreview();
+		if(_node == noone) return;
+		
+		var ww = ui(128);
+		var hh = toolbar_height - ui(12);
+		
+		d3Channel.setFocusHover(pFOCUS, pHOVER);
+		d3Channel.draw(_x - ww, _y - hh / 2, ww, hh, d3ChannelNames[d3_preview_channel], [mx, my], x, y);
 		right_menu_y += ui(40);
 	} #endregion
 	
@@ -780,6 +802,8 @@ function Panel_Preview() : PanelContent() constructor {
 		
 		#region shadow
 			if(_prev_node.is_3D) {
+				d3_scene_light0.shadow_map_scale = d3_view_camera.focus_dist * 2;
+				
 				var _prev_obj = _prev_node.getPreviewObject();
 				d3_scene_light0.shadowProjectVertex(d3_scene, _prev_obj);
 				
@@ -798,11 +822,16 @@ function Panel_Preview() : PanelContent() constructor {
 			}
 		#endregion
 		
+		d3_surface		   = surface_verify(d3_surface, w, h);
+		d3_surface_normal  = surface_verify(d3_surface_normal, w, h);
+		d3_surface_depth   = surface_verify(d3_surface_depth, w, h);
+		d3_surface_outline = surface_verify(d3_surface_outline, w, h);
+		
 		#region grid
-			d3_surface = surface_verify(d3_surface, w, h);
-			d3_outline_surface = surface_verify(d3_outline_surface, w, h);
+			surface_set_target_ext(0, d3_surface);
+			surface_set_target_ext(1, d3_surface_normal);
+			surface_set_target_ext(2, d3_surface_depth);
 			
-			surface_set_target(d3_surface);
 			draw_clear(bg_color);
 			
 			d3_view_camera.applyCamera();
@@ -828,6 +857,7 @@ function Panel_Preview() : PanelContent() constructor {
 		#endregion
 		
 		#region draw
+			gpu_set_cullmode(cull_counterclockwise); 
 			if(_prev_node.is_3D) {
 				var _prev_obj = _prev_node.getPreviewObject();
 				
@@ -852,9 +882,16 @@ function Panel_Preview() : PanelContent() constructor {
 				}
 			}
 			
+			gpu_set_cullmode(cull_noculling); 
 			surface_reset_target();
-			draw_surface_safe(d3_surface);
-			//draw_surface_stretched(d3_scene_light0.shadow_map, 64, 64, 96, 96);
+			
+			switch(d3_preview_channel) {
+				case 0 : draw_surface_safe(d3_surface);			break;
+				case 1 : draw_surface_safe(d3_surface_normal);	break;
+				case 2 : draw_surface_safe(d3_surface_depth);	break;
+			}
+			
+			//draw_surface_stretched_safe(d3_scene_light0.shadow_map, 64, 64, 128, 128);
 		#endregion
 		
 		#region outline
@@ -863,7 +900,7 @@ function Panel_Preview() : PanelContent() constructor {
 			if(inspect_node && inspect_node.is_3D) {
 				var _inspect_obj = inspect_node.getPreviewObjectOutline();
 				
-				surface_set_target(d3_outline_surface);
+				surface_set_target(d3_surface_outline);
 				draw_clear(c_black);
 					
 				d3_view_camera.applyCamera();
@@ -876,9 +913,9 @@ function Panel_Preview() : PanelContent() constructor {
 				surface_reset_target();
 					
 				shader_set(sh_d3d_outline);
-					shader_set_dim("dimension", d3_outline_surface);
+					shader_set_dim("dimension", d3_surface_outline);
 					shader_set_color("outlineColor", COLORS._main_accent);
-					draw_surface(d3_outline_surface, 0, 0);
+					draw_surface(d3_surface_outline, 0, 0);
 				shader_reset();
 			}
 		#endregion
@@ -1256,7 +1293,9 @@ function Panel_Preview() : PanelContent() constructor {
 		
 		draw_set_color(COLORS.panel_toolbar_separator);
 		draw_line_width(tbx + ui(12), tby - toolbar_height / 2 + ui(8), tbx + ui(12), tby + toolbar_height / 2 - ui(8), 2);
-		drawNodeChannel(tbx, tby);
+		
+		if(d3_active)	drawNodeChannel3D(tbx, tby);
+		else			drawNodeChannel(tbx, tby);
 	} #endregion
 	
 	function drawSplitView() { #region

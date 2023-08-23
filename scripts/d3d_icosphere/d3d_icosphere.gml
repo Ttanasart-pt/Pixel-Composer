@@ -66,26 +66,26 @@ function __3dICOSphere(radius = 0.5, level = 2, smt = false) : __3dObject() cons
 		array_foreach(icoverts, function(vert) { vert.old = true; })
 		
 		// Generate icosphere vertices
-		ds_list_add(_vertices, icoverts[ 3], icoverts[ 2], icoverts[ 1]);
-		ds_list_add(_vertices, icoverts[ 2], icoverts[ 3], icoverts[ 4]);
-		ds_list_add(_vertices, icoverts[ 6], icoverts[ 5], icoverts[ 4]);
-		ds_list_add(_vertices, icoverts[ 5], icoverts[ 9], icoverts[ 4]);
-		ds_list_add(_vertices, icoverts[ 8], icoverts[ 7], icoverts[ 1]);
-		ds_list_add(_vertices, icoverts[ 7], icoverts[10], icoverts[ 1]);
-		ds_list_add(_vertices, icoverts[12], icoverts[11], icoverts[ 5]);
-		ds_list_add(_vertices, icoverts[11], icoverts[12], icoverts[ 7]);
-		ds_list_add(_vertices, icoverts[10], icoverts[ 6], icoverts[ 3]);
-		ds_list_add(_vertices, icoverts[ 6], icoverts[10], icoverts[12]);
-		ds_list_add(_vertices, icoverts[ 9], icoverts[ 8], icoverts[ 2]);
-		ds_list_add(_vertices, icoverts[ 8], icoverts[ 9], icoverts[11]);
-		ds_list_add(_vertices, icoverts[ 3], icoverts[ 6], icoverts[ 4]);
-		ds_list_add(_vertices, icoverts[ 9], icoverts[ 2], icoverts[ 4]);
-		ds_list_add(_vertices, icoverts[10], icoverts[ 3], icoverts[ 1]);
-		ds_list_add(_vertices, icoverts[ 2], icoverts[ 8], icoverts[ 1]);
-		ds_list_add(_vertices, icoverts[12], icoverts[10], icoverts[ 7]);
-		ds_list_add(_vertices, icoverts[ 8], icoverts[11], icoverts[ 7]);
-		ds_list_add(_vertices, icoverts[ 6], icoverts[12], icoverts[ 5]);
-		ds_list_add(_vertices, icoverts[11], icoverts[ 9], icoverts[ 5]);
+		ds_list_add(_vertices, icoverts[ 3], icoverts[ 1], icoverts[ 2]);
+		ds_list_add(_vertices, icoverts[ 2], icoverts[ 4], icoverts[ 3]);
+		ds_list_add(_vertices, icoverts[ 6], icoverts[ 4], icoverts[ 5]);
+		ds_list_add(_vertices, icoverts[ 5], icoverts[ 4], icoverts[ 9]);
+		ds_list_add(_vertices, icoverts[ 8], icoverts[ 1], icoverts[ 7]);
+		ds_list_add(_vertices, icoverts[ 7], icoverts[ 1], icoverts[10]);
+		ds_list_add(_vertices, icoverts[12], icoverts[ 5], icoverts[11]);
+		ds_list_add(_vertices, icoverts[11], icoverts[ 7], icoverts[12]);
+		ds_list_add(_vertices, icoverts[10], icoverts[ 3], icoverts[ 6]);
+		ds_list_add(_vertices, icoverts[ 6], icoverts[12], icoverts[10]);
+		ds_list_add(_vertices, icoverts[ 9], icoverts[ 2], icoverts[ 8]);
+		ds_list_add(_vertices, icoverts[ 8], icoverts[11], icoverts[ 9]);
+		ds_list_add(_vertices, icoverts[ 3], icoverts[ 4], icoverts[ 6]);
+		ds_list_add(_vertices, icoverts[ 9], icoverts[ 4], icoverts[ 2]);
+		ds_list_add(_vertices, icoverts[10], icoverts[ 1], icoverts[ 3]);
+		ds_list_add(_vertices, icoverts[ 2], icoverts[ 1], icoverts[ 8]);
+		ds_list_add(_vertices, icoverts[12], icoverts[ 7], icoverts[10]);
+		ds_list_add(_vertices, icoverts[ 8], icoverts[ 7], icoverts[11]);
+		ds_list_add(_vertices, icoverts[ 6], icoverts[ 5], icoverts[12]);
+		ds_list_add(_vertices, icoverts[11], icoverts[ 5], icoverts[ 9]);
 		
 		for( var w = 1; w <= level; w++ ) { #region subdivide
 		    ds_map_clear(_vhash);
@@ -129,21 +129,21 @@ function __3dICOSphere(radius = 0.5, level = 2, smt = false) : __3dObject() cons
 			if(smooth) {
 				ds_list_add(_normals, _v0.normalize(), _v1.normalize(), _v2.normalize());
 			} else {
-				var _n  = _v1.subtract(_v0).cross(_v2.subtract(_v0));
+				var _n  = _v2.subtract(_v0).cross(_v1.subtract(_v0));
 				ds_list_add(_normals, _n, _n, _n);
 			}
 		} #endregion
 		
-		vertex   = array_create(ds_list_size(_vertices));
-		normals  = array_create(ds_list_size(_normals));
+		vertex   = [ array_create(ds_list_size(_vertices)) ];
 		
 		for( var i = 0, n = ds_list_size(_vertices); i < n; i++ )
-			vertex[i] = V3(_vertices[| i]).setNormal(_normals[| i]);
+			vertex[0][i] = V3(_vertices[| i]).setNormal(_normals[| i]);
 		
 		ds_list_destroy(_vertices);
 		ds_list_destroy(_normals);
 		
 		VB = build();
+		generateNormal();
 	} initModel();
 	
 	static onParameterUpdate = initModel;

@@ -1,5 +1,7 @@
 function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group) constructor {
 	name = "3D Camera";
+	batch_output = true;
+	
 	object = new __3dCamera_object();
 	camera = new __3dCamera();
 	lookat = new __3dGizmoSphere(0.5, c_ltgray, 1);
@@ -11,10 +13,10 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 	scene = new __3dScene(camera);
 	scene.name = "Camera";
 	
-	inputs[| in_d3d + 0] = nodeValue("FOV", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 60)
+	inputs[| in_d3d + 0] = nodeValue("FOV", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 60 )
 		.setDisplay(VALUE_DISPLAY.slider, [ 10, 90, 1 ]);
 	
-	inputs[| in_d3d + 1] = nodeValue("Clipping Distance", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 0.01, 100 ])
+	inputs[| in_d3d + 1] = nodeValue("Clipping Distance", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 0.01, 10 ] )
 		.setDisplay(VALUE_DISPLAY.vector);
 	
 	inputs[| in_d3d + 2] = nodeValue("Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, DEF_SURF )
@@ -30,36 +32,44 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 	
 	inputs[| in_d3d + 6] = nodeValue("Show Background", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false );
 	
-	inputs[| in_d3d + 7] = nodeValue("Backface Culling", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+	inputs[| in_d3d + 7] = nodeValue("Backface Culling", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 2 )
 		.setDisplay(VALUE_DISPLAY.enum_button, [ "None", "CW", "CCW" ]);
 	
-	inputs[| in_d3d + 8] = nodeValue("Orthographic Scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
+	inputs[| in_d3d + 8] = nodeValue("Orthographic Scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1 )
 		.setDisplay(VALUE_DISPLAY.slider, [ 0.01, 4, 0.01 ]);
 	
-	inputs[| in_d3d + 9] = nodeValue("Postioning Mode", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Position + Rotation", "Position + Lookat", "Lookat + Rotation" ]);
+	inputs[| in_d3d + 9] = nodeValue("Postioning Mode", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0 )
+		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Position + Rotation", "Position + Lookat", "Lookat + Rotation" ] );
 	
-	inputs[| in_d3d + 10] = nodeValue("Lookat Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 0 ])
+	inputs[| in_d3d + 10] = nodeValue("Lookat Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 0 ] )
 		.setDisplay(VALUE_DISPLAY.vector);
 	
-	inputs[| in_d3d + 11] = nodeValue("Roll", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
+	inputs[| in_d3d + 11] = nodeValue("Roll", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0 )
 		.setDisplay(VALUE_DISPLAY.rotation);
 	
-	inputs[| in_d3d + 12] = nodeValue("Horizontal Angle", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
+	inputs[| in_d3d + 12] = nodeValue("Horizontal Angle", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0 )
 		.setDisplay(VALUE_DISPLAY.rotation);
 	
-	inputs[| in_d3d + 13] = nodeValue("Vertical Angle", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 45)
+	inputs[| in_d3d + 13] = nodeValue("Vertical Angle", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 45 )
 		.setDisplay(VALUE_DISPLAY.slider, [0, 90, 1]);
 	
-	inputs[| in_d3d + 14] = nodeValue("Distance", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 4);
+	inputs[| in_d3d + 14] = nodeValue("Distance", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 4 );
 	
-	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
+	inputs[| in_d3d + 15] = nodeValue("Gamma Adjust", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false );
+	
+	outputs[| 0] = nodeValue("Rendered", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone );
+	
+	outputs[| 1] = nodeValue("Normal", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone )
+		.setVisible(false);
+	
+	outputs[| 2] = nodeValue("Depth", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone )
+		.setVisible(false);
 	
 	input_display_list = [ in_d3d + 4,
 		["Output",		false], in_d3d + 2,
 		["Transform",	false], in_d3d + 9, 0, 1, in_d3d + 10, in_d3d + 11, in_d3d + 12, in_d3d + 13, in_d3d + 14, 
 		["Camera",		false], in_d3d + 3, in_d3d + 0, in_d3d + 1, in_d3d + 8, 
-		["Render",		false], in_d3d + 5, in_d3d + 6, in_d3d + 7, 
+		["Render",		false], in_d3d + 5, in_d3d + 6, in_d3d + 7, in_d3d + 15, 
 	];
 	
 	tool_lookat = new NodeTool( "Move Target", THEME.tools_3d_transform_object );
@@ -153,6 +163,7 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 		var _hAng = _data[in_d3d + 12];
 		var _vAng = _data[in_d3d + 13];
 		var _dist = _data[in_d3d + 14];
+		var _gamm = _data[in_d3d + 15];
 		
 		var _qi1  = new BBMOD_Quaternion().FromAxisAngle(new BBMOD_Vec3(0, 1, 0),  90);
 		var _qi2  = new BBMOD_Quaternion().FromAxisAngle(new BBMOD_Vec3(1, 0, 0), -90);
@@ -182,11 +193,11 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 				camera.focus.set(_look);
 				camera.setFocusAngle(_hAng, _vAng, _dist);
 				camera.setCameraLookRotate();
-				camera.up = camera.getUp();
+				camera.up = camera.getUp()._multiply(-1);
 				
 				var _for = camera.focus.subtract(camera.position);
 				if(!_for.isZero())
-					camera.rotation = new BBMOD_Quaternion().FromLookRotation(_for, camera.up).Mul(_qi1).Mul(_qi3);
+					camera.rotation = new BBMOD_Quaternion().FromLookRotation(_for, camera.up.multiply(-1)).Mul(_qi1).Mul(_qi3);
 				
 				lookat.position.set(_look);
 				lookLine = new __3dGizmoLineDashed(camera.position, camera.focus, 0.25, c_gray, 1);
@@ -210,12 +221,16 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 		else if(_proj == 1) camera.setViewSize(1 / _orts, _dim[0] / _dim[1] / _orts);
 		
 		scene.lightAmbient = _ambt;
+		_scne.gammaCorrection = _gamm;
 		
-		_output = surface_verify(_output, _dim[0], _dim[1]);
+		var _render = surface_create(_dim[0], _dim[1]);
+		var _normal = surface_create(_dim[0], _dim[1]);
+		var _depth  = surface_create(_dim[0], _dim[1]);
 		
-		camera.setMatrix();
+		surface_set_target_ext(0, _render);
+		surface_set_target_ext(1, _normal);
+		surface_set_target_ext(2, _depth );
 		
-		surface_set_target(_output);
 		if(_dbg) draw_clear(_ambt);
 		else	 DRAW_CLEAR
 		
@@ -223,6 +238,7 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 		gpu_set_ztestenable(true);
 		gpu_set_cullmode(_back); 
 		
+		camera.setMatrix();
 		camera.applyCamera();
 			
 		scene.reset();
@@ -235,17 +251,15 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 		
 		scene.resetCamera();
 		
-		return _output;
+		return [ _render, _normal, _depth ];
 	} #endregion
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-		
-	}
+	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {}
 	
 	static getPreviewObject = function() { #region 
 		var _posm = inputs[| in_d3d + 9].getValue();
 		
-		var _scene = array_safe_get(all_inputs, in_d3d + 4, []);
+		var _scene = array_safe_get(all_inputs, in_d3d + 4, noone);
 		if(is_array(_scene))
 			_scene = array_safe_get(_scene, preview_index, noone);
 		

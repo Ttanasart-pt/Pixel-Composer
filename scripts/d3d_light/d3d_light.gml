@@ -1,6 +1,7 @@
 function __3dLight() : __3dObject() constructor {
-	UI_vertex = array_create(33);
-	for( var i = 0; i <= 32; i++ ) UI_vertex[i] = V3(0, lengthdir_x(0.5, i / 32 * 360), lengthdir_y(0.5, i / 32 * 360), c_yellow, 0.8);
+	UI_vertex = [ array_create(33) ];
+	for( var i = 0; i <= 32; i++ ) 
+		UI_vertex[0][i] = V3(0, lengthdir_x(0.5, i / 32 * 360), lengthdir_y(0.5, i / 32 * 360), c_yellow, 0.8);
 	VB_UI = build(noone, UI_vertex);
 	
 	color = c_white;
@@ -10,10 +11,11 @@ function __3dLight() : __3dObject() constructor {
 	shadow_active = false;
 	shadow_map    = noone;
 	shadow_map_size   = 1024;
-	shadow_map_scale  = 256;
+	shadow_map_scale  = 4;
 	shadow_map_camera = camera_create();
 	shadow_map_view   = array_create(16, 0);
 	shadow_map_proj   = array_create(16, 0);
+	shadow_bias	  = 0.001;
 	
 	static getCenter = function() { return noone; }
 	static getBBOX   = function() { return noone; }

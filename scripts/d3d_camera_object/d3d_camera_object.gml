@@ -5,7 +5,7 @@ function __3dCamera_object() : __3dObject() constructor {
 	ovh = 0.5; //outerViewHeight
 	len = 0.5; //cameraLength
 	
-	vertex = [
+	vertex = [[
 		V3( -len, -ivw,  ivh ), V3( -len,  ivw,  ivh ),
 		V3( -len,  ivw,  ivh ), V3( -len,  ivw, -ivh ),
 		V3( -len,  ivw, -ivh ), V3( -len, -ivw, -ivh ),
@@ -24,7 +24,7 @@ function __3dCamera_object() : __3dObject() constructor {
 		V3(  len, -ovw * 0.5, ovh + 0.2 ), V3(  len,  ovw * 0.5, ovh + 0.2 ),  
 		V3(  len, 0, ovh + 0.6 ),	  	   V3(  len,  ovw * 0.5, ovh + 0.2 ),  
 		V3(  len, -ovw * 0.5, ovh + 0.2 ), V3(  len,  0, ovh + 0.6 ),  
-	];
+	]];
 	
 	VF = global.VF_POS_COL;
 	render_type = pr_linelist;

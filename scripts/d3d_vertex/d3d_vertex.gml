@@ -10,7 +10,7 @@ function __vertex(_x = 0, _y = _x, _z = _x, color = c_white, alpha = 1) : __vec3
 	self.alpha    = alpha;
 	
 	static setNormal = function(_nx = 0, _ny = _nx, _nz = _nx) {
-		normal.set(_nx, _ny, _nx)._normalize();
+		normal.set(_nx, _ny, _nz)._normalize();
 		return self;
 	}
 	
@@ -19,7 +19,7 @@ function __vertex(_x = 0, _y = _x, _z = _x, color = c_white, alpha = 1) : __vec3
 		return self;
 	}
 	
-	static toString = function() { return $"[{x}, {y}, {z}, {color}, {alpha}]"; }
+	static toString = function() { return $"[ pos: ({x}, {y}, {z}), nor: {normal}, uv: {uv}, {color}, {alpha} ]"; }
 	
 	static clone = function() {
 		gml_pragma("forceinline");

@@ -9,6 +9,8 @@ function Node_3D_Light_Point(_x, _y, _group = noone) : Node_3D_Light(_x, _y, _gr
 	
 	inputs[| in_light + 2] = nodeValue("Shadow Map Size", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1024);
 	
+	inputs[| in_light + 3] = nodeValue("Shadow Bias", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, .001);
+	
 	input_display_list = [
 		["Transform", false], 0,
 		__d3d_input_list_light, in_light,
@@ -26,6 +28,7 @@ function Node_3D_Light_Point(_x, _y, _group = noone) : Node_3D_Light(_x, _y, _gr
 		var _radius          = _data[in_light + 0];
 		var _shadow_active   = _data[in_light + 1];
 		var _shadow_map_size = _data[in_light + 2];
+		var _shadow_bias     = _data[in_light + 3];
 		
 		var object = getObject(_array_index);
 		
@@ -33,6 +36,7 @@ function Node_3D_Light_Point(_x, _y, _group = noone) : Node_3D_Light(_x, _y, _gr
 		setLight(object, _data);
 		object.setShadow(_shadow_active, _shadow_map_size);
 		object.radius = _radius;
+		object.shadow_bias = _shadow_bias;
 		
 		return object;
 	}

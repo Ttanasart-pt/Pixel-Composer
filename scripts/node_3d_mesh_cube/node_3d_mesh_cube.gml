@@ -24,11 +24,6 @@ function Node_3D_Mesh_Cube(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group
 							in_mesh + 4, in_mesh + 5, in_mesh + 6, 
 	]
 	
-	static newObject = function(_side) { 
-		if(_side) return new __3dCubeFaces();
-		return new __3dCube();
-	}
-	
 	static step = function() { #region
 		var _tex_side = inputs[| in_mesh + 0].getValue();
 		
@@ -58,7 +53,7 @@ function Node_3D_Mesh_Cube(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group
 							   surface_texture(_tex_5), surface_texture(_tex_6) ];
 		} else {
 			object = getObject(_array_index, __3dCube);
-			object.texture = surface_texture(_tex_1);
+			object.texture = [ surface_texture(_tex_1) ];
 		}
 		
 		setTransform(object, _data);

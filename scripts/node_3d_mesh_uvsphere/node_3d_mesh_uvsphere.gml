@@ -3,11 +3,11 @@ function Node_3D_Mesh_Sphere_UV(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _
 	
 	object_class = __3dUVSphere;
 	
-	inputs[| in_mesh + 0] = nodeValue("Horizontal Slices", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 16 );
+	inputs[| in_mesh + 0] = nodeValue("Horizontal Slices", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 8 );
 	
-	inputs[| in_mesh + 1] = nodeValue("Vertical Slices", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 8 );
+	inputs[| in_mesh + 1] = nodeValue("Vertical Slices", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 16 );
 	
-	inputs[| in_mesh + 2] = nodeValue("Texture", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone );
+	inputs[| in_mesh + 2] = nodeValue("Texture", self, JUNCTION_CONNECT.input, VALUE_TYPE.d3Material, noone );
 	
 	inputs[| in_mesh + 3] = nodeValue("Smooth Normal", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false );
 	
@@ -25,7 +25,7 @@ function Node_3D_Mesh_Sphere_UV(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _
 		
 		var object = getObject(_array_index);
 		object.checkParameter({hori: _sideH, vert: _sideV, smooth: _smt});
-		object.texture = surface_texture(_tex);
+		object.texture = [ surface_texture(_tex) ];
 		
 		setTransform(object, _data);
 		

@@ -18,6 +18,8 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	process_length  = [];
 	dimension_index = 0;	
 	
+	batch_output = false;	//Run processData once with all outputs as array.
+	
 	icon    = THEME.node_processor;
 	
 	array_push(attributeEditors, "Array processor");
@@ -64,20 +66,19 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		return [1, 1];
 	} #endregion
 	
-	static preProcess = function(outIndex) { #region
-		var _out   = outputs[| outIndex].getValue();
-		all_inputs = array_create(ds_list_size(inputs));
+	static processDataArray = function(outIndex) { #region
+		var _output = outputs[| outIndex];
+		var _out    = _output.getValue();
+		all_inputs  = array_create(ds_list_size(inputs));
 		
-		if(process_amount == 0) { #region render single data
-			if(outputs[| outIndex].type == VALUE_TYPE.d3object) //passing 3D vertex call
+		if(process_amount == 1) { #region render single data
+			if(_output.type == VALUE_TYPE.d3object) //passing 3D vertex call
 				return _out;
 			
-			if(is_array(_out) && outputs[| outIndex].type == VALUE_TYPE.surface) { //free surface if needed
-				for(var i = 1; i < array_length(_out); i++)
-					if(is_surface(_out[i])) surface_free(_out[i]);
-			}
+			if(_output.type == VALUE_TYPE.surface) //free surface if needed
+				surface_array_free(_out);
 			
-			if(outputs[| outIndex].type == VALUE_TYPE.surface && dimension_index > -1) { //resize surface
+			if(_output.type == VALUE_TYPE.surface && dimension_index > -1) { //resize surface
 				var surf = inputs_data[dimension_index];
 				var _sw = 1, _sh = 1;
 				if(inputs[| dimension_index].type == VALUE_TYPE.surface) {
@@ -108,52 +109,19 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 			return data;
 		} #endregion
 		
-		if(outputs[| outIndex].type == VALUE_TYPE.d3object) { #region passing 3D vertex call
-			if(is_array(_out)) _out = _out[0];
-			return array_create(process_amount, _out);
-		} #endregion
-		
 		#region ++++ array preparation ++++
 			if(!is_array(_out))
 				_out = array_create(process_amount);
 			else if(array_length(_out) != process_amount) 
 				array_resize(_out, process_amount);
-		
-			var _data  = array_create(ds_list_size(inputs));
-			
-			for(var i = 0; i < ds_list_size(inputs); i++)
-				all_inputs[i] = array_create(process_amount);
 		#endregion
 		
+		var _data  = array_create(ds_list_size(inputs));
 		for(var l = 0; l < process_amount; l++) {
-			for(var i = 0; i < ds_list_size(inputs); i++) { #region input preparation
-				var _in = inputs_data[i];
-				
-				if(!inputs_is_array[i]) {
-					_data[i] = _in;
-					all_inputs[i][l] = _data[i];
-					continue;
-				}
-				
-				if(array_length(_in) == 0) {
-					_data[i] = 0;
-					all_inputs[i][l] = _data[i];
-					continue;
-				}
-				
-				var _index = 0;
-				switch(attributes.array_process) {
-					case ARRAY_PROCESS.loop :		_index = safe_mod(l, array_length(_in)); break;
-					case ARRAY_PROCESS.hold :		_index = min(l, array_length(_in) - 1);  break;
-					case ARRAY_PROCESS.expand :		_index = floor(l / process_length[i][1]) % process_length[i][0]; break;
-					case ARRAY_PROCESS.expand_inv : _index = floor(l / process_length[ds_list_size(inputs) - 1 - i][1]) % process_length[i][0]; break;
-				}
-				
-				_data[i] = inputs[| i].arrayBalance(_in[_index]);
-				all_inputs[i][l] = _data[i];
-			} #endregion
+			for(var i = 0; i < ds_list_size(inputs); i++)
+				_data[i] = all_inputs[i][l];
 			
-			if(outputs[| outIndex].type == VALUE_TYPE.surface && dimension_index > -1) { #region output surface verification
+			if(_output.type == VALUE_TYPE.surface && dimension_index > -1) { #region output surface verification
 				var surf = _data[dimension_index];
 				var _sw = 1, _sh = 1;
 				if(inputs[| dimension_index].type == VALUE_TYPE.surface) {
@@ -178,21 +146,65 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 					_out[l] = surface_clone(_data[0], _out[l]);
 				else 
 					_out[l] = _data[0];
-			} else {
+			} else
 				_out[l] = processData(_out[l], _data, outIndex, l);						/// Process data
-			}
 		}
 		
 		return _out;
 	} #endregion
 	
-	static update = function(frame = PROJECT.animator.current_frame) { #region
-		process_amount	= 0;
+	static processBatchOutput = function() { #region
+		for(var i = 0; i < ds_list_size(outputs); i++) {
+			if(outputs[| i].type != VALUE_TYPE.surface) continue;
+			var _res = outputs[| i].getValue();
+			surface_array_free(_res);
+			outputs[| i].setValue(noone);
+		}
+		
+		if(process_amount == 1) {
+			var data = processData(noone, inputs_data, 0, 0);
+			for(var i = 0; i < ds_list_size(outputs); i++) {
+				var _outp = array_safe_get(data, i, undefined);
+				if(_outp == undefined) continue;
+				outputs[| i].setValue(_outp);
+			}
+		} else {
+			var _outputs = array_create(ds_list_size(outputs));
+			for( var l = 0; l < process_amount; l++ ) {
+				var _data = array_create(ds_list_size(inputs));
+				for(var i = 0; i < ds_list_size(inputs); i++)
+					_data[i] = all_inputs[i][l];
+				
+				var data = processData(_data, inputs_data, 0, l);
+				for(var i = 0; i < ds_list_size(outputs); i++) {
+					var _outp = array_safe_get(data, i, undefined);
+					_outputs[i][l] = _outp;
+				}
+			}
+				
+			for( var i = 0, n = ds_list_size(outputs); i < n; i++ )
+				outputs[| i].setValue(_outputs[i]);
+		}
+	} #endregion
+	
+	static processOutput = function() { #region
+		for(var i = 0; i < ds_list_size(outputs); i++) {
+			if(outputs[| i].process_array) {
+				val = processDataArray(i);
+				if(val == undefined) continue;
+			} else
+				val = processData(noone, noone, i);
+			outputs[| i].setValue(val);
+		}
+	} #endregion
+	
+	static getInputs = function() { #region
+		process_amount	= 1;
 		inputs_data		= array_create(ds_list_size(inputs));
 		inputs_is_array	= array_create(ds_list_size(inputs));
 		process_length  = array_create(ds_list_size(inputs));
 		
-		for(var i = 0; i < ds_list_size(inputs); i++) { //pre-collect current input data
+		for(var i = 0; i < ds_list_size(inputs); i++) {
 			var val = inputs[| i].getValue();
 			var amo = inputs[| i].arrayLength(val);
 			
@@ -221,15 +233,41 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 			process_length[i][1] = amoMax;
 		}
 		
+		for(var i = 0; i < ds_list_size(inputs); i++)
+			all_inputs[i] = array_create(process_amount);
+		
+		for(var l = 0; l < process_amount; l++) #region input preparation
+		for(var i = 0; i < ds_list_size(inputs); i++) { 
+			var _in = inputs_data[i];
+				
+			if(!inputs_is_array[i]) {
+				all_inputs[i][l] = _in;
+				continue;
+			}
+				
+			if(array_length(_in) == 0) {
+				all_inputs[i][l] = 0;
+				continue;
+			}
+				
+			var _index = 0;
+			switch(attributes.array_process) {
+				case ARRAY_PROCESS.loop :		_index = safe_mod(l, array_length(_in)); break;
+				case ARRAY_PROCESS.hold :		_index = min(l, array_length(_in) - 1);  break;
+				case ARRAY_PROCESS.expand :		_index = floor(l / process_length[i][1]) % process_length[i][0]; break;
+				case ARRAY_PROCESS.expand_inv : _index = floor(l / process_length[ds_list_size(inputs) - 1 - i][1]) % process_length[i][0]; break;
+			}
+				
+			all_inputs[i][l] = inputs[| i].arrayBalance(_in[_index]);
+		} #endregion
+	} #endregion
+	
+	static update = function(frame = PROJECT.animator.current_frame) { #region
+		getInputs();
+		
 		var val;
-		for(var i = 0; i < ds_list_size(outputs); i++) {
-			if(outputs[| i].process_array) {
-				val = preProcess(i);
-				if(val == undefined) continue;
-			} else
-				val = processData(noone, noone, i);
-			outputs[| i].setValue(val);
-		}
+		if(batch_output) processBatchOutput();
+		else			 processOutput();
 		
 		postUpdate();
 	} #endregion

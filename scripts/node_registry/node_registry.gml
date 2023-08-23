@@ -95,12 +95,13 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 		global.RECENT_NODES = file_exists(recPath)? json_load_struct(recPath) : [];
 		
 		var group = ds_list_create();
-		addNodeCatagory("Group", group, ["Node_Group"]);
+		addNodeCatagory("Group", group, ["Node_Group"]); #region
 			ds_list_add(group, "Groups");
 			addNodeObject(group, "Input",	s_node_group_input,	"Node_Group_Input",		[1, Node_Group_Input]);
 			addNodeObject(group, "Output",	s_node_group_output,"Node_Group_Output",	[1, Node_Group_Output]);
-			
-		var iter = ds_list_create();
+		#endregion
+		
+		var iter = ds_list_create(); #region
 		addNodeCatagory("Loop", iter, ["Node_Iterate"]);
 			ds_list_add(iter, "Groups");
 			addNodeObject(iter, "Input",	s_node_loop_input,		"Node_Iterator_Input",	[1, Node_Iterator_Input]);
@@ -109,8 +110,9 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 			ds_list_add(iter, "Loops");
 			addNodeObject(iter, "Index",		s_node_iterator_index,	"Node_Iterator_Index",	[1, Node_Iterator_Index]);
 			addNodeObject(iter, "Loop amount",	s_node_iterator_amount,	"Node_Iterator_Length",	[1, Node_Iterator_Length]);
-			
-		var itere = ds_list_create();
+		#endregion
+		
+		var itere = ds_list_create(); #region
 		addNodeCatagory("Loop", itere, ["Node_Iterate_Each"]);
 			ds_list_add(itere, "Groups");
 			addNodeObject(itere, "Input",	s_node_group_input,		"Node_Group_Input",		[1, Node_Group_Input]);
@@ -119,8 +121,9 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 			ds_list_add(itere, "Loops");
 			addNodeObject(itere, "Index",			s_node_iterator_index,	"Node_Iterator_Index",	[1, Node_Iterator_Index]);
 			addNodeObject(itere, "Array Length",	s_node_iterator_length,	"Node_Iterator_Each_Length",	[1, Node_Iterator_Each_Length]);
+		#endregion
 			
-		var filter = ds_list_create();
+		var filter = ds_list_create(); #region
 		addNodeCatagory("Filter", filter, ["Node_Iterate_Filter"]);
 			ds_list_add(filter, "Groups");
 			addNodeObject(filter, "Input",	s_node_group_input,		"Node_Group_Input",		[1, Node_Group_Input]);
@@ -129,14 +132,16 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 			ds_list_add(filter, "Loops");
 			addNodeObject(filter, "Index",			s_node_iterator_index,	"Node_Iterator_Index",			[1, Node_Iterator_Index]);
 			addNodeObject(filter, "Array Length",	s_node_iterator_length,	"Node_Iterator_Each_Length",	[1, Node_Iterator_Each_Length]);
-			
-		var feed = ds_list_create();
+		#endregion
+		
+		var feed = ds_list_create(); #region
 		addNodeCatagory("Feedback", feed, ["Node_Feedback"]);
 			ds_list_add(feed, "Groups");
 			addNodeObject(feed, "Input",	s_node_feedback_input,	"Node_Feedback_Input",	[1, Node_Feedback_Input]);
 			addNodeObject(feed, "Output",	s_node_feedback_output,	"Node_Feedback_Output",	[1, Node_Feedback_Output]);
-			
-		var vfx = ds_list_create();
+		#endregion
+		
+		var vfx = ds_list_create(); #region
 		addNodeCatagory("VFX", vfx, ["Node_VFX_Group"]);
 			ds_list_add(vfx, "Groups");
 			addNodeObject(vfx, "Input",			s_node_vfx_input,	"Node_Group_Input",		[1, Node_Group_Input]);
@@ -158,8 +163,9 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 			ds_list_add(vfx, "Instance control");
 			addNodeObject(vfx, "VFX Variable",	s_node_vfx_variable,	"Node_VFX_Variable",	[1, Node_VFX_Variable]).setVersion(1120);
 			addNodeObject(vfx, "VFX Override",	s_node_vfx_override,	"Node_VFX_Override",	[1, Node_VFX_Override]).setVersion(1120);
-			
-		var rigidSim = ds_list_create();
+		#endregion
+		
+		var rigidSim = ds_list_create(); #region
 		addNodeCatagory("RigidSim", rigidSim, ["Node_Rigid_Group"]);
 			ds_list_add(rigidSim, "Group");
 			addNodeObject(rigidSim, "Input",	s_node_group_input,	"Node_Group_Input",		[1, Node_Group_Input]);
@@ -175,8 +181,9 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 			addNodeObject(rigidSim, "Activate Physics",	s_node_rigidSim_activate,	"Node_Rigid_Activate",		[1, Node_Rigid_Activate]).setVersion(1110);
 			addNodeObject(rigidSim, "Rigidbody Variable",	s_node_rigid_variable,	"Node_Rigid_Variable",		[1, Node_Rigid_Variable]).setVersion(1120);
 			addNodeObject(rigidSim, "Rigidbody Override",	s_node_rigid_override,	"Node_Rigid_Override",		[1, Node_Rigid_Override]).setVersion(1120);
-			
-		var fluidSim = ds_list_create();
+		#endregion
+		
+		var fluidSim = ds_list_create(); #region
 		addNodeCatagory("FluidSim", fluidSim, ["Node_Fluid_Group"]);
 			ds_list_add(fluidSim, "Group");
 			addNodeObject(fluidSim, "Input",	s_node_group_input,		"Node_Group_Input",		[1, Node_Group_Input]);
@@ -195,8 +202,9 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 			addNodeObject(fluidSim, "Vortex",			s_node_fluidSim_vortex,			"Node_Fluid_Vortex",			[1, Node_Fluid_Vortex]).setVersion(1120);
 			addNodeObject(fluidSim, "Repulse",			s_node_fluidSim_repulse,		"Node_Fluid_Repulse",			[1, Node_Fluid_Repulse]).setVersion(1120);
 			addNodeObject(fluidSim, "Turbulence",		s_node_fluidSim_turbulence,		"Node_Fluid_Turbulence",		[1, Node_Fluid_Turbulence]).setVersion(1120);
-			
-		var strandSim = ds_list_create();
+		#endregion
+		
+		var strandSim = ds_list_create(); #region
 		addNodeCatagory("StrandSim", strandSim, ["Node_Strand_Group"]);
 			ds_list_add(strandSim, "Group");
 			addNodeObject(strandSim, "Input",	s_node_group_input,		"Node_Group_Input",		[1, Node_Group_Input]);
@@ -214,14 +222,15 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 			addNodeObject(strandSim, "Strand Break",		 s_node_strandSim_break,	"Node_Strand_Break",		 [1, Node_Strand_Break]).setVersion(1140);
 			addNodeObject(strandSim, "Strand Length Adjust", s_node_strandSim_length,	"Node_Strand_Length_Adjust", [1, Node_Strand_Length_Adjust]).setVersion(1140);
 			addNodeObject(strandSim, "Strand Collision",	s_node_strandSim_collide,		"Node_Strand_Collision",	[1, Node_Strand_Collision]).setVersion(1140);
-			
+		#endregion
+		
 		NODE_PAGE_DEFAULT = ds_list_size(NODE_CATEGORY);
 		ADD_NODE_PAGE = NODE_PAGE_DEFAULT;
 			
 		var fav = ds_list_create();
 		addNodeCatagory("Favourites", fav);
 			
-		var input = ds_list_create();
+		var input = ds_list_create(); #region
 		addNodeCatagory("IO", input);
 			ds_list_add(input, "Images");
 			addNodeObject(input, "Canvas",				s_node_canvas,			"Node_Canvas",					[1, Node_Canvas], ["draw"], "Draw on surface using brush, eraser, etc.")
@@ -248,8 +257,9 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 			ds_list_add(input, "Network");
 			addNodeObject(input, "Websocket Receiver",	s_node_websocket_receive,	"Node_Websocket_Receiver",	[1, Node_Websocket_Receiver],, "Create websocket server to receive data from the network.").setVersion(1145);
 			addNodeObject(input, "Websocket Sender",	s_node_websocket_send,		"Node_Websocket_Sender",	[1, Node_Websocket_Sender],, "Create websocket server to send data to the network.").setVersion(1145);
-			
-		var transform = ds_list_create();
+		#endregion
+		
+		var transform = ds_list_create(); #region
 		addNodeCatagory("Transform", transform);
 			ds_list_add(transform, "Transformations");
 			addNodeObject(transform, "Transform",		s_node_transform,		"Node_Transform",		[1, Node_Transform], ["move", "rotate", "scale"], "Move, rotate, and scale image.");
@@ -270,8 +280,9 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 			addNodeObject(transform, "Composite",		s_node_compose,			"Node_Composite",		[1, Node_Composite], ["merge"], "Combine multiple images with controllable position, rotation, scale.");
 			addNodeObject(transform, "Nine Slice",		s_node_9patch,			"Node_9Slice",			[1, Node_9Slice], ["9 slice", "splice"], "Cut image into 3x3 parts, and scale/repeat only the middle part.");
 			addNodeObject(transform, "Padding",			s_node_padding,			"Node_Padding",			[1, Node_Padding],, "Make image bigger by adding space in 4 directions.");
-			
-		var filter = ds_list_create();
+		#endregion
+		
+		var filter = ds_list_create(); #region
 		addNodeCatagory("Filter", filter);
 			ds_list_add(filter, "Combines");
 			addNodeObject(filter, "Blend",				s_node_blend,			"Node_Blend",			[0, Node_create_Blend], ["normal", "add", "subtract", "multiply", "screen", "maxx", "minn"], "Blend 2 images using different blendmodes.");
@@ -345,48 +356,51 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 			ds_list_add(filter, "Fixes");
 			addNodeObject(filter, "De-Corner",			s_node_decorner,		"Node_De_Corner",		[1, Node_De_Corner], ["decorner"], "Attempt to remove single pixel corner from the image.");
 			addNodeObject(filter, "De-Stray",			s_node_destray,			"Node_De_Stray",		[1, Node_De_Stray], ["destray"], "Attempt to remove orphan pixel.");
+		#endregion
+		
+		var d3d = ds_list_create(); #region
+		addNodeCatagory("3D", d3d);
+			ds_list_add(d3d, "2D Operations");
+			addNodeObject(d3d, "Normal",				s_node_normal,			"Node_Normal",			[1, Node_Normal],, "Create normal map using greyscale value as height.");
+			addNodeObject(d3d, "Normal Light",		s_node_normal_light,	"Node_Normal_Light",	[1, Node_Normal_Light],, "Light up the image using normal mapping.");
+			addNodeObject(d3d, "Bevel",				s_node_bevel,			"Node_Bevel",			[1, Node_Bevel], ["shade", "auto shade"], "Apply 2D bevel on the image.");
+			addNodeObject(d3d, "Sprite Stack",		s_node_stack,			"Node_Sprite_Stack",	[1, Node_Sprite_Stack],, "Create sprite stack either from repeating a single image or stacking different images using array.");
 			
-		var threeD = ds_list_create();
-		addNodeCatagory("3D", threeD);
-			ds_list_add(threeD, "2D Operations");
-			addNodeObject(threeD, "Normal",				s_node_normal,			"Node_Normal",			[1, Node_Normal],, "Create normal map using greyscale value as height.");
-			addNodeObject(threeD, "Normal Light",		s_node_normal_light,	"Node_Normal_Light",	[1, Node_Normal_Light],, "Light up the image using normal mapping.");
-			addNodeObject(threeD, "Bevel",				s_node_bevel,			"Node_Bevel",			[1, Node_Bevel], ["shade", "auto shade"], "Apply 2D bevel on the image.");
-			addNodeObject(threeD, "Sprite Stack",		s_node_stack,			"Node_Sprite_Stack",	[1, Node_Sprite_Stack],, "Create sprite stack either from repeating a single image or stacking different images using array.");
+			ds_list_add(d3d, "3D");
+			addNodeObject(d3d, "3D Scene",	s_node_3d_cube,		"Node_3D_Scene",		[1, Node_3D_Scene]);
+			addNodeObject(d3d, "3D Camera",	s_node_3d_cube,		"Node_3D_Camera",		[1, Node_3D_Camera]);
 			
-			ds_list_add(threeD, "3D");
-			addNodeObject(threeD, "3D Scene",	s_node_3d_cube,		"Node_3D_Scene",		[1, Node_3D_Scene]);
-			addNodeObject(threeD, "3D Camera",	s_node_3d_cube,		"Node_3D_Camera",		[1, Node_3D_Camera]);
+			ds_list_add(d3d, "Mesh");
+			addNodeObject(d3d, "3D Object",		s_node_3d_obj,		"Node_3D_Mesh_Obj",			[0, Node_create_3D_Obj],, "Load .obj file from your computer as a 3D object.");
+			addNodeObject(d3d, "3D Plane",		s_node_3d_plane,	"Node_3D_Mesh_Plane",		[1, Node_3D_Mesh_Plane],, "Put 2D image on a plane in 3D space.");
+			addNodeObject(d3d, "3D Cube",		s_node_3d_cube,		"Node_3D_Mesh_Cube",		[1, Node_3D_Mesh_Cube]);
+			addNodeObject(d3d, "3D Cylinder",	s_node_3d_cylinder,	"Node_3D_Mesh_Cylinder",	[1, Node_3D_Mesh_Cylinder]);
+			addNodeObject(d3d, "3D UV Sphere",	s_node_3d_sphere,	"Node_3D_Mesh_Sphere_UV",	[1, Node_3D_Mesh_Sphere_UV]);
+			addNodeObject(d3d, "3D Icosphere",	s_node_3d_sphere,	"Node_3D_Mesh_Sphere_Ico",	[1, Node_3D_Mesh_Sphere_Ico]);
+			addNodeObject(d3d, "3D Cone",		s_node_3d_cone,		"Node_3D_Mesh_Cone",		[1, Node_3D_Mesh_Cone])
+			addNodeObject(d3d, "Surface Extrude",	s_node_3d_extrude,		"Node_3D_Mesh_Extrude",		[1, Node_3D_Mesh_Extrude],, "Extrude 2D image into 3D object.");
 			
-			ds_list_add(threeD, "Mesh");
-			addNodeObject(threeD, "3D Object",		s_node_3d_obj,		"Node_3D_Mesh_Obj",			[0, Node_create_3D_Obj],, "Load .obj file from your computer as a 3D object.");
-			addNodeObject(threeD, "3D Plane",		s_node_3d_plane,	"Node_3D_Plane",			[1, Node_3D_Mesh_Plane],, "Put 2D image on a plane in 3D space.");
-			addNodeObject(threeD, "3D Cube",		s_node_3d_cube,		"Node_3D_Mesh_Cube",		[1, Node_3D_Mesh_Cube]);
-			addNodeObject(threeD, "3D Cylinder",	s_node_3d_cylinder,	"Node_3D_Mesh_Cylinder",	[1, Node_3D_Mesh_Cylinder]);
-			addNodeObject(threeD, "3D UV Sphere",	s_node_3d_sphere,	"Node_3D_Mesh_Sphere_UV",	[1, Node_3D_Mesh_Sphere_UV]);
-			addNodeObject(threeD, "3D Icosphere",	s_node_3d_sphere,	"Node_3D_Mesh_Sphere_Ico",	[1, Node_3D_Mesh_Sphere_Ico]);
-			addNodeObject(threeD, "3D Cone",		s_node_3d_cone,		"Node_3D_Mesh_Cone",		[1, Node_3D_Mesh_Cone])
+			ds_list_add(d3d, "Light");
+			addNodeObject(d3d, "Directional Light",	s_node_3d_cube,		"Node_3D_Light_Directional",	[1, Node_3D_Light_Directional]);
+			addNodeObject(d3d, "Point Light",		s_node_3d_cube,		"Node_3D_Light_Point",			[1, Node_3D_Light_Point]);
 			
-			ds_list_add(threeD, "Light");
-			addNodeObject(threeD, "Directional Light",	s_node_3d_cube,		"Node_3D_Light_Directional",	[1, Node_3D_Light_Directional]);
-			addNodeObject(threeD, "Point Light",		s_node_3d_cube,		"Node_3D_Light_Point",			[1, Node_3D_Light_Point]);
+			ds_list_add(d3d, "Legacy"); //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+			addNodeObject(d3d, "3D Plane",			s_node_3d_plane,		"Node_3D_Plane",		[1, Node_3D_Plane],, "Put 2D image on a plane in 3D space.").isDeprecated();
+			addNodeObject(d3d, "3D Cube",			s_node_3d_cube,			"Node_3D_Cube",			[1, Node_3D_Cube]).isDeprecated();
+			addNodeObject(d3d, "3D Cylinder",		s_node_3d_cylinder,		"Node_3D_Cylinder",		[1, Node_3D_Cylinder]).isDeprecated();
+			addNodeObject(d3d, "3D Sphere",			s_node_3d_sphere,		"Node_3D_Sphere",		[1, Node_3D_Sphere]).setVersion(1090).isDeprecated();
+			addNodeObject(d3d, "3D Cone",			s_node_3d_cone,			"Node_3D_Cone",			[1, Node_3D_Cone]).setVersion(1090).isDeprecated();
+			addNodeObject(d3d, "3D Extrude",		s_node_3d_extrude,		"Node_3D_Extrude",		[1, Node_3D_Extrude],, "Extrude 2D image into 3D object.").isDeprecated();
 			
-			ds_list_add(threeD, "Legacy"); //////////////////////////////////////////////////////////////////////////////////////////////////////////////
-			addNodeObject(threeD, "3D Plane",			s_node_3d_plane,		"Node_3D_Plane",		[1, Node_3D_Plane],, "Put 2D image on a plane in 3D space.").isDeprecated();
-			addNodeObject(threeD, "3D Cube",			s_node_3d_cube,			"Node_3D_Cube",			[1, Node_3D_Cube]).isDeprecated();
-			addNodeObject(threeD, "3D Cylinder",		s_node_3d_cylinder,		"Node_3D_Cylinder",		[1, Node_3D_Cylinder]).isDeprecated();
-			addNodeObject(threeD, "3D Sphere",			s_node_3d_sphere,		"Node_3D_Sphere",		[1, Node_3D_Sphere]).setVersion(1090).isDeprecated();
-			addNodeObject(threeD, "3D Cone",			s_node_3d_cone,			"Node_3D_Cone",			[1, Node_3D_Cone]).setVersion(1090).isDeprecated();
-			addNodeObject(threeD, "3D Extrude",			s_node_3d_extrude,		"Node_3D_Extrude",		[1, Node_3D_Extrude],, "Extrude 2D image into 3D object.").isDeprecated();
+			addNodeObject(d3d, "3D Transform",		s_node_3d_transform,	"Node_3D_Transform",	[1, Node_3D_Transform]).setVersion(1080).isDeprecated();
+			addNodeObject(d3d, "3D Combine",			s_node_3d_obj_combine,	"Node_3D_Combine",		[1, Node_3D_Combine],, "Combine multiple 3D object to a single scene,").setVersion(1080).isDeprecated();
+			addNodeObject(d3d, "3D Repeat",			s_node_3d_array,		"Node_3D_Repeat",		[1, Node_3D_Repeat], ["3d array"], "Repeat 3D object multiple times.").setVersion(1080).isDeprecated();
+			addNodeObject(d3d, "3D Displace",		s_node_3d_displace,		"Node_3D_Displace",		[1, Node_3D_Displace]).setVersion(1143).isDeprecated();
 			
-			addNodeObject(threeD, "3D Transform",		s_node_3d_transform,	"Node_3D_Transform",	[1, Node_3D_Transform]).setVersion(1080).isDeprecated();
-			addNodeObject(threeD, "3D Combine",			s_node_3d_obj_combine,	"Node_3D_Combine",		[1, Node_3D_Combine],, "Combine multiple 3D object to a single scene,").setVersion(1080).isDeprecated();
-			addNodeObject(threeD, "3D Repeat",			s_node_3d_array,		"Node_3D_Repeat",		[1, Node_3D_Repeat], ["3d array"], "Repeat 3D object multiple times.").setVersion(1080).isDeprecated();
-			addNodeObject(threeD, "3D Displace",		s_node_3d_displace,		"Node_3D_Displace",		[1, Node_3D_Displace]).setVersion(1143).isDeprecated();
-			
-			addNodeObject(threeD, "3D Export",			s_node_3d_export,		"Node_3D_Export",		[1, Node_3D_Export]).setVersion(1143).isDeprecated();
-			
-		var generator = ds_list_create();
+			addNodeObject(d3d, "3D Export",			s_node_3d_export,		"Node_3D_Export",		[1, Node_3D_Export]).setVersion(1143).isDeprecated();
+		#endregion
+		
+		var generator = ds_list_create(); #region
 		addNodeCatagory("Generate", generator);
 			ds_list_add(generator, "Colors");
 			addNodeObject(generator, "Solid",				s_node_solid,				"Node_Solid",				[1, Node_Solid],, "Create image of a single color.");
@@ -436,8 +450,9 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 			ds_list_add(generator, "Others");
 			addNodeObject(generator, "Flood Fill",		s_node_flood_fill,		"Node_Flood_Fill",		[1, Node_Flood_Fill],, "Filled connected pixel given position and color.").setVersion(1133);
 			addNodeObject(generator, "Bar / Graph",		s_node_bar_graph,		"Node_Plot_Linear",		[1, Node_Plot_Linear], ["graph", "waveform", "bar chart", "plot"], "Plot graph or bar chart from array of number.").setVersion(1144);
-			
-		var compose = ds_list_create();
+		#endregion
+		
+		var compose = ds_list_create(); #region
 		addNodeCatagory("Compose", compose);
 			ds_list_add(compose, "Composes");
 			addNodeObject(compose, "Blend",					s_node_blend,			"Node_Blend",				[1, Node_Blend]);
@@ -458,8 +473,9 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 				ds_list_add(compose, "Export");
 				addNodeObject(compose, "Export",	s_node_export,		"Node_Export",			[0, Node_create_Export]);
 			}
-			
-		var values = ds_list_create();
+		#endregion
+		
+		var values = ds_list_create(); #region
 		addNodeCatagory("Values", values);
 			ds_list_add(values, "Raw data");
 			addNodeObject(values, "Number",			s_node_number,		"Node_Number",			[1, Node_Number]);
@@ -568,8 +584,9 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 			
 			ds_list_add(values, "Buffer");
 			addNodeObject(values, "Buffer from Surface",	s_node_surface_to_buffer,	"Node_Surface_To_Buffer",	[1, Node_Surface_To_Buffer], ["surface to buffer"], "Create buffer from surface.").setVersion(1146);
-			
-		var color = ds_list_create();
+		#endregion
+		
+		var color = ds_list_create(); #region
 		addNodeCatagory("Color", color);
 			ds_list_add(color, "Colors");
 			addNodeObject(color, "Color",			s_node_color_out,		"Node_Color",			[1, Node_Color]);
@@ -592,8 +609,9 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 			addNodeObject(color, "Gradient Shift",		s_node_gradient_shift,		"Node_Gradient_Shift",			[1, Node_Gradient_Shift],, "Move gradients keys.");
 			addNodeObject(color, "Gradient Replace",	s_node_gradient_replace,	"Node_Gradient_Replace_Color",	[1, Node_Gradient_Replace_Color]).setVersion(1135);
 			addNodeObject(color, "Gradient Data",		s_node_gradient_data,		"Node_Gradient_Extract",		[1, Node_Gradient_Extract],, "Get palatte and array of key positions from gradient.").setVersion(1135);
-			
-		var animation = ds_list_create();
+		#endregion
+		
+		var animation = ds_list_create(); #region
 		addNodeCatagory("Animation", animation);
 			ds_list_add(animation, "Animations");
 			addNodeObject(animation, "Frame Index",		s_node_counter,		"Node_Counter",		[1, Node_Counter], ["current frame", "counter"], "Output current frame as frame index, or animation progress (0 - 1).");
@@ -607,8 +625,9 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 			addNodeObject(animation, "FFT",			 s_node_FFT,			"Node_FFT",				[1, Node_FFT], ["frequency analysis"], "Perform fourier transform on number array.").setVersion(1144);
 			addNodeObject(animation, "Bar / Graph",	 s_node_bar_graph,		"Node_Plot_Linear",		[1, Node_Plot_Linear], ["graph", "waveform", "bar chart", "plot"], "Plot graph or bar chart from array of number.").setVersion(1144);
 			addNodeObject(animation, "Audio Window", s_node_audio_trim,		"Node_Audio_Window",	[1, Node_Audio_Window],, "Take a slice of an audio array based on the current frame.").setVersion(1144);
-			
-		var node = ds_list_create();
+		#endregion
+		
+		var node = ds_list_create(); #region
 		addNodeCatagory("Node", node);
 			ds_list_add(node, "Control");
 			addNodeObject(node, "Condition",	s_node_condition,	"Node_Condition",	[1, Node_Condition],, "Given a condition, output one value if true, another value is false.");
@@ -641,7 +660,8 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 			
 			ds_list_add(node, "Debug");
 			addNodeObject(node, "Print",		s_node_print,		"Node_Print",		[1, Node_Print], ["debug log"], "Display text to notification.").setVersion(1145);
-			
+		#endregion
+		
 		var actions = ds_list_create();
 		addNodeCatagory("Actions", actions);
 			__initNodeActions(actions);
@@ -652,7 +672,7 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 			
 		//////////////////////////////////////////////////////////////// PIXEL BUILDER ////////////////////////////////////////////////////////////////
 			
-		var pb_draw = ds_list_create();
+		var pb_draw = ds_list_create(); #region
 		addNodePBCatagory("Draw", pb_draw);
 			ds_list_add(pb_draw, "Fill");
 			addNodeObject(pb_draw, "Fill",				s_node_pb_draw_fill,	"Node_PB_Draw_Fill",			[1, Node_PB_Draw_Fill]);
@@ -667,8 +687,9 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 			addNodeObject(pb_draw, "Line",				s_node_pb_draw_line,			"Node_PB_Draw_Line",			[1, Node_PB_Draw_Line]);
 			addNodeObject(pb_draw, "Angle",				s_node_pb_draw_angle,			"Node_PB_Draw_Angle",			[1, Node_PB_Draw_Angle]);
 			addNodeObject(pb_draw, "Blob",				s_node_pb_draw_blob,			"Node_PB_Draw_Blob",			[1, Node_PB_Draw_Blob]);
-			
-		var pb_box = ds_list_create();
+		#endregion
+		
+		var pb_box = ds_list_create(); #region
 		addNodePBCatagory("Box", pb_box);
 			ds_list_add(pb_box, "Layer");
 			addNodeObject(pb_box, "Layer",		s_node_pb_layer,	"Node_PB_Layer",		[1, Node_PB_Layer]);
@@ -681,8 +702,9 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 			addNodeObject(pb_box, "Divide",			s_node_pb_box_divide,		"Node_PB_Box_Divide",		[1, Node_PB_Box_Divide]);
 			addNodeObject(pb_box, "Divide Grid",	s_node_pb_box_divide_grid,	"Node_PB_Box_Divide_Grid",	[1, Node_PB_Box_Divide_Grid]);
 			addNodeObject(pb_box, "Contract",		s_node_pb_box_contract,		"Node_PB_Box_Contract",		[1, Node_PB_Box_Contract]);
-			
-		var pb_fx = ds_list_create();
+		#endregion
+		
+		var pb_fx = ds_list_create(); #region
 		addNodePBCatagory("Effects", pb_fx);
 			ds_list_add(pb_fx, "Effect");
 			addNodeObject(pb_fx, "Outline",			s_node_pb_fx_outline,	"Node_PB_Fx_Outline",		[1, Node_PB_Fx_Outline]);
@@ -702,16 +724,18 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 			addNodeObject(pb_fx, "Add",				s_node_pb_fx_add,		"Node_PB_Fx_Add",			[1, Node_PB_Fx_Add]);
 			addNodeObject(pb_fx, "Subtract",		s_node_pb_fx_subtract,	"Node_PB_Fx_Subtract",		[1, Node_PB_Fx_Subtract]);
 			addNodeObject(pb_fx, "Intersect",		s_node_pb_fx_interesct,	"Node_PB_Fx_Intersect",		[1, Node_PB_Fx_Intersect]);
-			
-		var pb_arr = ds_list_create();
+		#endregion
+		
+		var pb_arr = ds_list_create(); #region
 		addNodePBCatagory("Array", pb_arr);
 			addNodeObject(pb_arr, "Array",			s_node_array,			"Node_Array",			[1, Node_Array]);
 			addNodeObject(pb_arr, "Array Get",		s_node_array_get,		"Node_Array_Get",		[1, Node_Array_Get], ["get array"]);
 			addNodeObject(pb_arr, "Array Set",		s_node_array_set,		"Node_Array_Set",		[1, Node_Array_Set], ["set array"]).setVersion(1120);
 			addNodeObject(pb_arr, "Array Insert",	s_node_array_insert,	"Node_Array_Insert",	[1, Node_Array_Insert], ["insert array"]).setVersion(1120);
 			addNodeObject(pb_arr, "Array Remove",	s_node_array_remove,	"Node_Array_Remove",	[1, Node_Array_Remove], ["remove array", "delete array", "array delete"]).setVersion(1120);
-			
-		var hid = ds_list_create();
+		#endregion
+		
+		var hid = ds_list_create(); #region
 		addNodeCatagory("Hidden", hid, ["Hidden"]);
 			addNodeObject(hid, "Input",				s_node_loop_input,		"Node_Iterator_Each_Input",		[1, Node_Iterator_Each_Input]);
 			addNodeObject(hid, "Output",			s_node_loop_output,		"Node_Iterator_Each_Output",	[1, Node_Iterator_Each_Output]);
@@ -724,6 +748,7 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 			addNodeObject(hid, "Sort Output",		s_node_grid_hex_noise,	"Node_Iterator_Sort_Output",	[1, Node_Iterator_Sort_Output]);
 			addNodeObject(hid, "Onion Skin",		s_node_cache,			"Node_Onion_Skin",				[1, Node_Onion_Skin]).setVersion(1147);
 			addNodeObject(hid, "Pixel Builder",		s_node_pixel_builder,	"Node_Pixel_Builder",			[1, Node_Pixel_Builder]).setVersion(1150);
+		#endregion
 	}
 #endregion
 

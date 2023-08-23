@@ -164,8 +164,7 @@ function readObj(path, flipUV = false) {
 			var tri   = tris[i];
 			
 			var _flen = ds_list_size(face);
-			var _v    = array_create(tri * 3);
-			var _vind = 0;
+			var _v    = ds_list_create();
 			
 			for(var j = 0; j < _flen; j++) {
 				var _f   = face[| j];
@@ -190,22 +189,22 @@ function readObj(path, flipUV = false) {
 				
 				if(_vlen >= 3) {
 					vertex_add_pntc(VB, _pf[0], _pfn[0], _pft[0]);
-					vertex_add_pntc(VB, _pf[1], _pfn[1], _pft[1]);
 					vertex_add_pntc(VB, _pf[2], _pfn[2], _pft[2]);
+					vertex_add_pntc(VB, _pf[1], _pfn[1], _pft[1]);
 					
-					_v[_vind] = V3(_pf[0]).setNormal(_pfn[0]).setUV(_pft[0]); _vind++;
-					_v[_vind] = V3(_pf[1]).setNormal(_pfn[1]).setUV(_pft[1]); _vind++;
-					_v[_vind] = V3(_pf[2]).setNormal(_pfn[2]).setUV(_pft[2]); _vind++;
+					ds_list_add(_v, V3(_pf[0]).setNormal(_pfn[0]).setUV(_pft[0]));
+					ds_list_add(_v, V3(_pf[2]).setNormal(_pfn[2]).setUV(_pft[2]));
+					ds_list_add(_v, V3(_pf[1]).setNormal(_pfn[1]).setUV(_pft[1]));
 				} 
 				
 				if(_vlen >= 4) {
 					vertex_add_pntc(VB, _pf[0], _pfn[0], _pft[0]);
-					vertex_add_pntc(VB, _pf[2], _pfn[2], _pft[2]);
 					vertex_add_pntc(VB, _pf[3], _pfn[3], _pft[3]);
+					vertex_add_pntc(VB, _pf[2], _pfn[2], _pft[2]);
 					
-					_v[_vind] = V3(_pf[0]).setNormal(_pfn[0]).setUV(_pft[0]); _vind++;
-					_v[_vind] = V3(_pf[2]).setNormal(_pfn[2]).setUV(_pft[2]); _vind++;
-					_v[_vind] = V3(_pf[3]).setNormal(_pfn[3]).setUV(_pft[3]); _vind++;
+					ds_list_add(_v, V3(_pf[0]).setNormal(_pfn[0]).setUV(_pft[0]));
+					ds_list_add(_v, V3(_pf[3]).setNormal(_pfn[3]).setUV(_pft[3]));
+					ds_list_add(_v, V3(_pf[2]).setNormal(_pfn[2]).setUV(_pft[2]));
 				}
 			}
 			
@@ -213,7 +212,8 @@ function readObj(path, flipUV = false) {
 			vertex_freeze(VB);
 		
 			VBS[i]  = VB;
-			V[i]    = _v;
+			V[i]    = ds_list_to_array(_v);
+			ds_list_destroy(_v);
 		}
 	#endregion
 	

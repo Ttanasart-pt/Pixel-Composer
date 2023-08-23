@@ -9,8 +9,11 @@ attribute vec2 in_TextureCoord;              // (u,v)
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 varying vec3 v_vNormal;
-
 varying vec4 v_worldPosition;
+varying float v_cameraDistance;
+
+uniform float planeNear;
+uniform float planeFar;
 
 void main() {
     vec4 object_space_pos = vec4( in_Position.x, in_Position.y, in_Position.z, 1.0);
@@ -22,4 +25,7 @@ void main() {
 	
 	vec3 worldNormal = normalize(gm_Matrices[MATRIX_WORLD] * vec4(in_Normal, 0.)).xyz;
 	v_vNormal = worldNormal;
+	
+	float ndcDepth   = (gl_Position.z - planeNear - planeFar) / (planeFar - planeNear);
+	v_cameraDistance = ndcDepth * 0.5 + 0.5;
 }

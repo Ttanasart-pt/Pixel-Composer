@@ -33,8 +33,8 @@ function __3dCylinder(radius = 0.5, height = 1, sides = 8, smooth = false) : __3
 			v0[i * 3 + 2] = V3(x1, y1,  _h).setNormal(0, 0,  1).setUV(_u1,  _v1);
 			
 			v1[i * 3 + 0] = V3( 0,  0, -_h).setNormal(0, 0, -1).setUV(0.5,  0.5);
-			v1[i * 3 + 1] = V3(x0, y0, -_h).setNormal(0, 0, -1).setUV(_u0,  _v0);
-			v1[i * 3 + 2] = V3(x1, y1, -_h).setNormal(0, 0, -1).setUV(_u1,  _v1);
+			v1[i * 3 + 1] = V3(x1, y1, -_h).setNormal(0, 0, -1).setUV(_u1,  _v1);
+			v1[i * 3 + 2] = V3(x0, y0, -_h).setNormal(0, 0, -1).setUV(_u0,  _v0);
 		}
 		
 		for( var i = 0; i < sides; i++ ) {
@@ -55,17 +55,18 @@ function __3dCylinder(radius = 0.5, height = 1, sides = 8, smooth = false) : __3
 			var ux1 = (i + 1) / sides;
 			
 			vs[i * 3 * 2 + 0] = V3(x0, y0,  _h).setNormal(nx0, ny0, 0).setUV(ux0, 0);
-			vs[i * 3 * 2 + 1] = V3(x1, y1,  _h).setNormal(nx1, ny1, 0).setUV(ux1, 0);
-			vs[i * 3 * 2 + 2] = V3(x0, y0, -_h).setNormal(nx0, ny0, 0).setUV(ux0, 1);
+			vs[i * 3 * 2 + 1] = V3(x0, y0, -_h).setNormal(nx0, ny0, 0).setUV(ux0, 1);
+			vs[i * 3 * 2 + 2] = V3(x1, y1,  _h).setNormal(nx1, ny1, 0).setUV(ux1, 0);
 														  					  
 			vs[i * 3 * 2 + 3] = V3(x0, y0, -_h).setNormal(nx0, ny0, 0).setUV(ux0, 1);
-			vs[i * 3 * 2 + 4] = V3(x1, y1,  _h).setNormal(nx1, ny1, 0).setUV(ux1, 0);
-			vs[i * 3 * 2 + 5] = V3(x1, y1, -_h).setNormal(nx1, ny1, 0).setUV(ux1, 1);	
+			vs[i * 3 * 2 + 4] = V3(x1, y1, -_h).setNormal(nx1, ny1, 0).setUV(ux1, 1);
+			vs[i * 3 * 2 + 5] = V3(x1, y1,  _h).setNormal(nx1, ny1, 0).setUV(ux1, 0);	
 		}
 		
 		vertex	= [ v0, v1, vs ];
 	
 		VB = build();
+		generateNormal();
 	} initModel();
 	
 	static onParameterUpdate = initModel;

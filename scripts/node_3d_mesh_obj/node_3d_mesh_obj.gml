@@ -48,6 +48,14 @@ function Node_3D_Mesh_Obj(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group)
 	materialIndex = [];
 	use_normal    = false;
 	
+	insp1UpdateTooltip  = __txt("Refresh");
+	insp1UpdateIcon     = [ THEME.refresh, 1, COLORS._main_value_positive ];
+	
+	static onInspector1Update = function() {
+		var _path = inputs[| in_mesh + 0].getValue();
+		updateObj(_path);
+	}
+	
 	function setPath(path) {
 		inputs[| in_mesh + 0].setValue(path);
 		updateObj(path);
@@ -95,6 +103,8 @@ function Node_3D_Mesh_Obj(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group)
 		object.vertex  = _v.vertex;
 		object.object_counts  = _v.object_counts;
 		
+		object.generateNormal();
+		
 		object.size   = _v.model_size;
 		materialNames = _v.materials;
 		materialIndex = _v.material_index;
@@ -140,6 +150,7 @@ function Node_3D_Mesh_Obj(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group)
 		
 		_object.VF		= global.VF_POS_NORM_TEX_COL;
 		_object.VB		= object.VB;
+		_object.NVB		= object.NVB;
 		_object.vertex  = object.vertex;
 		_object.object_counts  = object.object_counts;
 		_object.texture = textures;

@@ -5,7 +5,6 @@ function __3dLightPoint() : __3dLight() constructor {
 	
 	shadow_mapper = sh_d3d_shadow_depth;
 	shadow_map_size   = 512;
-	shadow_map_scale  = 128;
 	
 	shadow_map_views = array_create(6);
 	shadow_maps      = array_create(6);
@@ -39,16 +38,16 @@ function __3dLightPoint() : __3dLight() constructor {
 		matrix_stack_push(rot);
 		
 		matrix_set(matrix_world, matrix_stack_top());
-		vertex_submit(VB_UI, pr_linestrip, -1);
+		vertex_submit(VB_UI[0], pr_linestrip, -1);
 		
 		matrix_stack_push(sca);
 		matrix_set(matrix_world, matrix_stack_top());
-		vertex_submit(VB_UI, pr_linestrip, -1);
+		vertex_submit(VB_UI[0], pr_linestrip, -1);
 		matrix_stack_pop();
 		
 		matrix_stack_push(ran);
 		matrix_set(matrix_world, matrix_stack_top());
-		vertex_submit(VB_UI, pr_linestrip, -1);
+		vertex_submit(VB_UI[0], pr_linestrip, -1);
 		matrix_stack_pop();
 		
 		matrix_stack_clear();

@@ -45,6 +45,8 @@ function __3dScene(camera) constructor {
 	
 	gammaCorrection = true;
 	
+	show_normal = false;
+	
 	static reset = function() {
 		lightDir_count     = 0;
 		lightDir_direction = [];
@@ -56,7 +58,7 @@ function __3dScene(camera) constructor {
 		lightDir_shadowMap = [];
 		lightDir_viewMat   = [];
 		lightDir_projMat   = [];
-		lightDir_shadowBias = .001;
+		lightDir_shadowBias = [];
 	
 		lightPnt_count     = 0;
 		lightPnt_position  = [];
@@ -69,6 +71,7 @@ function __3dScene(camera) constructor {
 		lightPnt_shadowMap = [];
 		lightPnt_viewMat   = [];
 		lightPnt_projMat   = [];
+		lightPnt_shadowBias = [];
 	} reset();
 	
 	static applyCamera = function() { camera.applyCamera(); }
@@ -88,7 +91,7 @@ function __3dScene(camera) constructor {
 					shader_set_surface($"light_dir_shadowmap_{i}", lightDir_shadowMap[i], true);
 				shader_set_f("light_dir_view",		lightDir_viewMat);
 				shader_set_f("light_dir_proj",		lightDir_projMat);
-				shader_set_f("shadowBias",			lightDir_shadowBias);
+				shader_set_f("light_dir_shadow_bias", lightDir_shadowBias);
 			}
 			
 			shader_set_i("light_pnt_count",		lightPnt_count);
@@ -102,9 +105,12 @@ function __3dScene(camera) constructor {
 					shader_set_surface($"light_pnt_shadowmap_{i}", lightPnt_shadowMap[i], true, true);
 				shader_set_f("light_pnt_view",		lightPnt_viewMat);
 				shader_set_f("light_pnt_proj",		lightPnt_projMat);
+				shader_set_f("light_ont_shadow_bias", lightPnt_shadowBias);
 			}
 			
-			shader_set_i("gammaCorrection",		gammaCorrection);
+			shader_set_i("gammaCorrection",	gammaCorrection);
+			shader_set_f("planeNear",		camera.view_near);
+			shader_set_f("planeFar",		camera.view_far );
 		shader_reset();
 	}
 	
@@ -129,6 +135,7 @@ function __3dScene(camera) constructor {
 		}
 		array_append(lightDir_viewMat, light.shadow_map_view);
 		array_append(lightDir_projMat, light.shadow_map_proj);
+		array_append(lightDir_shadowBias, light.shadow_bias);
 		lightDir_count++;
 		
 		return self;
@@ -156,6 +163,7 @@ function __3dScene(camera) constructor {
 		}
 		array_append(lightPnt_viewMat, light.shadow_map_view);
 		array_append(lightPnt_projMat, light.shadow_map_proj);
+		array_append(lightPnt_shadowBias, light.shadow_bias);
 		lightPnt_count++;
 		
 		return self;

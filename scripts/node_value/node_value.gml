@@ -50,6 +50,7 @@ enum VALUE_TYPE {
 	d3Light	  = 27,
 	d3Camera  = 28,
 	d3Scene	  = 29,
+	d3Material = 30,
 	
 	action	  = 99,
 }
@@ -153,6 +154,7 @@ function value_color(i) { #region
 		$ffa64d, //d3Light	
 		$ffa64d, //d3Camera
 		$ffa64d, //d3Scene	
+		$ffa64d, //d3Material
 	];
 	
 	if(i == 99) return $5dde8f;
@@ -220,6 +222,8 @@ function value_type_directional(f, t) { #region
 	
 	if(f == VALUE_TYPE.color && t == VALUE_TYPE.struct ) return true;
 	if(f == VALUE_TYPE.mesh  && t == VALUE_TYPE.struct ) return true;
+	
+	if(f == VALUE_TYPE.surface  && t == VALUE_TYPE.d3Material ) return true;
 	
 	return false;
 } #endregion
@@ -1038,28 +1042,30 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		var typeFrom = nodeFrom.type;
 		var display  = nodeFrom.display_type;
 		
-		if(type == VALUE_TYPE.gradient && typeFrom == VALUE_TYPE.color) { 
-			if(is_struct(value) && instanceof(value) == "gradientObject")
-				return value;
-			if(is_array(value)) {
-				var amo = array_length(value);
-				var grad = array_create(amo);
-				for( var i = 0; i < amo; i++ )
-					grad[i] = new gradientKey(i / amo, value[i]);
-				var g = new gradientObject();
-				g.keys = grad;
-				return g;
-			} 
+		#region color compatibility [ color, palette, gradient ]
+			if(type == VALUE_TYPE.gradient && typeFrom == VALUE_TYPE.color) { 
+				if(is_struct(value) && instanceof(value) == "gradientObject")
+					return value;
+				if(is_array(value)) {
+					var amo = array_length(value);
+					var grad = array_create(amo);
+					for( var i = 0; i < amo; i++ )
+						grad[i] = new gradientKey(i / amo, value[i]);
+					var g = new gradientObject();
+					g.keys = grad;
+					return g;
+				} 
 			
-			var grad = new gradientObject(value);
-			return grad;
-		}
+				var grad = new gradientObject(value);
+				return grad;
+			}
 		
-		if(display_type == VALUE_DISPLAY.palette && !is_array(value)) {
-			return [ value ];
-		}
+			if(display_type == VALUE_DISPLAY.palette && !is_array(value)) {
+				return [ value ];
+			}
+		#endregion
 		
-		if(display_type == VALUE_DISPLAY.area) {
+		if(display_type == VALUE_DISPLAY.area) { #region
 			var dispType = struct_try_get(nodeFrom.extra_data, "area_type", AREA_MODE.area);
 			var surfGet = nodeFrom.display_data;
 			if(!applyUnit || surfGet == -1) {
@@ -1089,20 +1095,17 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 					var sh = abs(value[1] - value[3]) / 2;
 					return [cx, cy, sw, sh, value[4]];
 			}
-		}
+		} #endregion
 		
-		
-		if(type == VALUE_TYPE.text) {
+		if(type == VALUE_TYPE.text) { #region
 			switch(display_type) {
-				case VALUE_DISPLAY.text_array : 
-					return value;
-				default:
-					return string_real(value);
+				case VALUE_DISPLAY.text_array : return value;
+				default: return string_real(value);
 			}
-		}
+		} #endregion
 		
-		if(typeFrom == VALUE_TYPE.integer && type == VALUE_TYPE.color)
-			return value;
+		if(typeFrom == VALUE_TYPE.surface && type == VALUE_TYPE.d3Material)
+			return new __d3dMaterial(value);
 		
 		if((typeFrom == VALUE_TYPE.integer || typeFrom == VALUE_TYPE.float || typeFrom == VALUE_TYPE.boolean) && type == VALUE_TYPE.color)
 			return value >= 1? value : make_color_hsv(0, 0, value * 255);

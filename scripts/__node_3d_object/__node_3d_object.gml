@@ -385,6 +385,7 @@ function Node_3D_Object(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 	} #endregion
 	
 	static drawGizmoScale = function(index, object, _vpos, active, params, _mx, _my, _snx, _sny, _panel) { #region
+		tool_attribute.context = 0;
 		#region ---- main ----
 			var _sca  = inputs[| index].getValue(,,, true);
 			var _qrot = object == noone? new BBMOD_Quaternion() : object.rotation;
@@ -504,8 +505,7 @@ function Node_3D_Object(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 				drag_mx += _mx - drag_px;
 				drag_my += _my - drag_py;
 					
-				var mAdj, nor;
-					
+				var mAdj, nor, prj;
 				var ray = _camera.viewPointToWorldRay(drag_mx, drag_my);
 					
 				if(drag_axis < 3) {
@@ -516,7 +516,6 @@ function Node_3D_Object(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 					}
 						
 					nor = _qrot.Rotate(nor);
-					prj = _qrot.Rotate(prj);
 				
 					var pln = new __plane(drag_original, nor);
 					mAdj = d3d_intersect_ray_plane(ray, pln);
@@ -525,8 +524,7 @@ function Node_3D_Object(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 						var _diff = mAdj.subtract(drag_prev);
 						var _dist = _diff.dot(prj);
 							
-						for( var i = 0; i < 3; i++ ) 
-							drag_val[i] += prj.getIndex(i) * _dist;
+						drag_val[drag_axis] += prj.getIndex(drag_axis) * _dist;
 							
 						if(inputs[| index].setValue(value_snap(drag_val, _snx))) 
 							UNDO_HOLDING = true;
@@ -607,15 +605,13 @@ function Node_3D_Object(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 		return object;
 	} #endregion
 		
-	static newObject = function() { return object_class == noone? noone : new object_class(); }
-	
 	static getObject = function(index, class = object_class) { #region
 		var _obj = array_safe_get(cached_object, index, noone);
 		if(_obj == noone) {
-			_obj = newObject();
+			_obj = new class();
 		} else if(!is_instanceof(_obj, class)) {
 			_obj.destroy();
-			_obj = newObject();
+			_obj = new class();
 		}
 		
 		cached_object[index] = _obj;

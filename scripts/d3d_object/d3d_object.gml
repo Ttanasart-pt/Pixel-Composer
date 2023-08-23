@@ -14,8 +14,13 @@
 
 function __3dObject() constructor {
 	vertex = [];
+	normal_vertex = [];
 	object_counts = 1;
-	VB = noone;
+	VB  = noone;
+	
+	NVB = noone;
+	normal_draw_size = 0.2;
+	
 	VF = global.VF_POS_COL;
 	render_type = pr_trianglelist;
 	
@@ -26,9 +31,9 @@ function __3dObject() constructor {
 	scale    = new __vec3(1);
 	size     = new __vec3(1);
 	
-	texture  = -1;
+	materials = [];
 	
-	static checkParameter = function(params = {}) { #region
+	static checkParameter = function(params = {}, forceUpdate = false) { #region
 		var _keys = struct_get_names(params);
 		var check = false;
 		for( var i = 0, n = array_length(_keys); i < n; i++ ) {
@@ -38,10 +43,32 @@ function __3dObject() constructor {
 			self[$ key] = params[$ key];
 		}
 		
-		if(check) onParameterUpdate();
+		if(forceUpdate || check) onParameterUpdate();
 	} #endregion
 	
 	static onParameterUpdate = function() {}
+	
+	static generateNormal = function() { #region
+		if(render_type != pr_trianglelist) return;
+		
+		NVB = array_create(object_counts);
+		var _s = normal_draw_size;
+		
+		for( var i = 0; i < object_counts; i++ ) {
+			NVB[i] = vertex_create_buffer();
+			
+			vertex_begin(NVB[i], global.VF_POS_COL);
+				for( var j = 0, n = array_length(vertex[i]); j < n; j++ ) {
+					var _v = vertex[i][j];
+					vertex_position_3d(NVB[i], _v.x, _v.y, _v.z);
+					vertex_color(NVB[i], c_red, 1);
+					
+					vertex_position_3d(NVB[i], _v.x + _v.normal.x * _s, _v.y + _v.normal.y * _s, _v.z + _v.normal.z * _s);
+					vertex_color(NVB[i], c_red, 1);
+				}
+			vertex_end(NVB[i]);
+		}
+	} #endregion
 	
 	static buildVertex = function(_vertex, _normal, _uv) { #region
 		var _buffer = vertex_create_buffer();
@@ -59,7 +86,7 @@ function __3dObject() constructor {
 		return _buffer;
 	} #endregion
 	
-	static build = function(_buffer = VB, _vertex = vertex) { #region
+	static build = function(_buffer = VB, _vertex = vertex, counts = object_counts) { #region
 		if(is_array(_buffer)) {
 			for( var i = 0, n = array_length(_buffer); i < n; i++ )
 				vertex_delete_buffer(_buffer[i])
@@ -67,10 +94,8 @@ function __3dObject() constructor {
 		
 		if(array_empty(_vertex)) return noone;
 		
-		if(object_counts == 1) return buildVertex(_vertex);
-		
-		var _res = array_create(object_counts);
-		for( var i = 0; i < object_counts; i++ )
+		var _res = array_create(counts);
+		for( var i = 0; i < counts; i++ )
 			_res[i] = buildVertex(_vertex[i]);
 		
 		return _res;
@@ -86,7 +111,12 @@ function __3dObject() constructor {
 	
 	static submit    = function(params = {}, shader = noone) { submitVertex(params, shader); }
 	static submitUI  = function(params = {}, shader = noone) { submitVertex(params, shader); }
-	static submitSel = function(params = {}) { submitVertex(params, sh_d3d_silhouette); }
+	
+	static submitSel = function(params = {}) { #region
+		var _p = variable_clone(params);
+		_p.show_normal = false;
+		submitVertex(_p, sh_d3d_silhouette); 
+	} #endregion
 	
 	static submitVertex = function(params = {}, shader = noone) { #region
 		if(shader != noone)
@@ -135,15 +165,19 @@ function __3dObject() constructor {
 				matrix_set(matrix_world, matrix_stack_top());
 			}
 			
-			if(is_array(VB)) {
-				for( var i = 0, n = array_length(VB); i < n; i++ ) 
-					vertex_submit(VB[i], render_type, array_safe_get(texture, i, -1));
-			} else 
-				vertex_submit(VB, render_type, texture);
-			
-			matrix_stack_clear();
-			matrix_set(matrix_world, matrix_build_identity());
+			for( var i = 0, n = array_length(VB); i < n; i++ ) 
+				vertex_submit(VB[i], render_type, array_safe_get(texture, i, -1));
 		}
+		
+		if(params.show_normal && NVB != noone) {
+			shader_set(sh_d3d_wireframe);
+			for( var i = 0, n = array_length(NVB); i < n; i++ ) 
+				vertex_submit(NVB[i], pr_linelist, -1);
+			shader_reset();
+		}
+		
+		matrix_stack_clear();
+		matrix_set(matrix_world, matrix_build_identity());
 		
 		postSubmitVertex(params);
 		

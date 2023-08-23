@@ -5,68 +5,62 @@ function __3dCube() : __3dObject() constructor {
 	static initModel = function(size) {
 		size /= 2;
 		
-		vertex = [
-		    V3(-size, -size, size), V3(size, -size, size), V3(size, size, size),
-		    V3(-size, -size, size), V3(size, size, size), V3(-size, size, size),
+		vertex = [[
+			V3(-size, -size,  size).setNormal(0, 0, 1).setUV(0, 0), 
+			V3( size,  size,  size).setNormal(0, 0, 1).setUV(1, 0), 
+			V3( size, -size,  size).setNormal(0, 0, 1).setUV(1, 1),
+		    
+			V3(-size, -size,  size).setNormal(0, 0, 1).setUV(0, 0), 
+			V3(-size,  size,  size).setNormal(0, 0, 1).setUV(1, 1), 
+			V3( size,  size,  size).setNormal(0, 0, 1).setUV(0, 1),
 			
-		    V3(-size, -size, -size), V3(size, -size, -size), V3(size, size, -size),
-		    V3(-size, -size, -size), V3(size, size, -size), V3(-size, size, -size),
+		    
+			V3(-size, -size, -size).setNormal(0, 0, -1).setUV(0, 0), 
+			V3( size, -size, -size).setNormal(0, 0, -1).setUV(1, 0), 
+			V3( size,  size, -size).setNormal(0, 0, -1).setUV(1, 1),
+		    
+			V3(-size, -size, -size).setNormal(0, 0, -1).setUV(0, 0), 
+			V3( size,  size, -size).setNormal(0, 0, -1).setUV(1, 1), 
+			V3(-size,  size, -size).setNormal(0, 0, -1).setUV(0, 1),
+			
+		    
+			V3(-size, -size,  size).setNormal(-1, 0, 0).setUV(0, 0), 
+			V3(-size,  size, -size).setNormal(-1, 0, 0).setUV(1, 0), 
+			V3(-size,  size,  size).setNormal(-1, 0, 0).setUV(1, 1),
+		    
+			V3(-size, -size,  size).setNormal(-1, 0, 0).setUV(0, 0), 
+			V3(-size, -size, -size).setNormal(-1, 0, 0).setUV(1, 1), 
+			V3(-size,  size, -size).setNormal(-1, 0, 0).setUV(0, 1),
+			
+		    
+			V3( size, -size,  size).setNormal(1, 0, 0).setUV(0, 0), 
+			V3( size,  size,  size).setNormal(1, 0, 0).setUV(1, 0), 
+			V3( size,  size, -size).setNormal(1, 0, 0).setUV(1, 1),
+		    
+			V3( size, -size,  size).setNormal(1, 0, 0).setUV(0, 0), 
+			V3( size,  size, -size).setNormal(1, 0, 0).setUV(1, 1), 
+			V3( size, -size, -size).setNormal(1, 0, 0).setUV(0, 1),
+			
+		    
+			V3(-size,  size,  size).setNormal(0, 1, 0).setUV(0, 0), 
+			V3( size,  size, -size).setNormal(0, 1, 0).setUV(1, 0), 
+			V3( size,  size,  size).setNormal(0, 1, 0).setUV(1, 1),
+		    
+			V3(-size,  size,  size).setNormal(0, 1, 0).setUV(0, 0), 
+			V3(-size,  size, -size).setNormal(0, 1, 0).setUV(1, 1), 
+			V3( size,  size, -size).setNormal(0, 1, 0).setUV(0, 1),
     
-		    V3(-size, -size, size), V3(-size, size, size), V3(-size, size, -size),
-		    V3(-size, -size, size), V3(-size, size, -size), V3(-size, -size, -size),
-    
-		    V3(size, -size, size), V3(size, size, size), V3(size, size, -size),
-		    V3(size, -size, size), V3(size, size, -size), V3(size, -size, -size),
-    
-		    V3(-size, size, size), V3(size, size, size), V3(size, size, -size),
-		    V3(-size, size, size), V3(size, size, -size), V3(-size, size, -size),
-    
-		    V3(-size, -size, size), V3(size, -size, size), V3(size, -size, -size),
-		    V3(-size, -size, size), V3(size, -size, -size), V3(-size, -size, -size)
-		];
-	
-		normals = [
-		    [0, 0, 1], [0, 0, 1], [0, 0, 1],
-		    [0, 0, 1], [0, 0, 1], [0, 0, 1],
-    
-		    [0, 0, -1], [0, 0, -1], [0, 0, -1],
-		    [0, 0, -1], [0, 0, -1], [0, 0, -1],
-    
-		    [-1, 0, 0], [-1, 0, 0], [-1, 0, 0],
-		    [-1, 0, 0], [-1, 0, 0], [-1, 0, 0],
-    
-		    [1, 0, 0], [1, 0, 0], [1, 0, 0],
-		    [1, 0, 0], [1, 0, 0], [1, 0, 0],
-    
-		    [0, 1, 0], [0, 1, 0], [0, 1, 0],
-		    [0, 1, 0], [0, 1, 0], [0, 1, 0],
-    
-		    [0, -1, 0], [0, -1, 0], [0, -1, 0],
-		    [0, -1, 0], [0, -1, 0], [0, -1, 0]
-		];
-		
-		uv = [
-			[0, 0], [1, 0], [1, 1],
-		    [0, 0], [1, 1], [0, 1],
-
-		    [0, 0], [1, 0], [1, 1],
-		    [0, 0], [1, 1], [0, 1],
-
-		    [0, 0], [1, 0], [1, 1],
-		    [0, 0], [1, 1], [0, 1],
-
-		    [0, 0], [1, 0], [1, 1],
-		    [0, 0], [1, 1], [0, 1],
-
-		    [0, 0], [1, 0], [1, 1],
-		    [0, 0], [1, 1], [0, 1],
-
-		    [0, 0], [1, 0], [1, 1],
-		    [0, 0], [1, 1], [0, 1]
-		];
-		
-		array_foreach(vertex, function(val, ind) { val.setNormal(normals[ind]); val.setUV(uv[ind]); })
+		    
+			V3(-size, -size,  size).setNormal(0, -1, 0).setUV(0, 0), 
+			V3( size, -size,  size).setNormal(0, -1, 0).setUV(1, 0), 
+			V3( size, -size, -size).setNormal(0, -1, 0).setUV(1, 1),
+		    
+			V3(-size, -size,  size).setNormal(0, -1, 0).setUV(0, 0), 
+			V3( size, -size, -size).setNormal(0, -1, 0).setUV(1, 1), 
+			V3(-size, -size, -size).setNormal(0, -1, 0).setUV(0, 1), 
+		]];
 	
 		VB = build();
+		generateNormal();
 	} initModel(1);
 }
