@@ -108,6 +108,7 @@ function __3dScene(camera) constructor {
 				shader_set_f("light_ont_shadow_bias", lightPnt_shadowBias);
 			}
 			
+			shader_set_f("cameraPosition",	camera.position.toArray());
 			shader_set_i("gammaCorrection",	gammaCorrection);
 			shader_set_f("planeNear",		camera.view_near);
 			shader_set_f("planeFar",		camera.view_far );

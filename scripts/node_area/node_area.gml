@@ -20,9 +20,11 @@ function Node_Area(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		.setDisplay(VALUE_DISPLAY.vector);
 	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
-		var _pos	= inputs[| 0].getValue();
-		var _span	= inputs[| 1].getValue();
-		var _shape	= inputs[| 2].getValue();
+		if(process_amount > 1) return;
+		
+		var _pos	= getInputData(0);
+		var _span	= getInputData(1);
+		var _shape	= getInputData(2);
 		var px = _x + _pos[0] * _s;
 		var py = _y + _pos[1] * _s;
 		var ex = _span[0] * _s;

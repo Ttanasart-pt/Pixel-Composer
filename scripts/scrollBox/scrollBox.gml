@@ -45,6 +45,7 @@ function scrollBox(_data, _onModify, update_hover = true) : widget() constructor
 		if(is_method(data_list)) data = data_list();
 		else					 data = data_list;
 		
+		if(is_array(_val)) return 0;
 		var _text = is_string(_val)? _val : array_safe_get(data, _val);
 		curr_text = _text;
 		

@@ -48,6 +48,10 @@ function transformBox(_onModify) : widget() constructor {
 		w = _w;
 		h = ui(148);
 		
+		if(!is_array(_data))   return 0;
+		if(array_empty(_data)) return 0;
+		if(is_array(_data[0])) return 0;
+		
 		rot.setFocusHover(active, hover);
 		for(var i = 0; i < array_length(_data); i++)
 			tb[i].setFocusHover(active, hover);

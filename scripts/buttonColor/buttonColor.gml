@@ -61,7 +61,7 @@ function buttonColor(_onApply, dialog = noone) : widget() constructor {
 		y = _y;
 		w = _w;
 		h = _h;
-		current_color = toNumber(_color);
+		current_color = _color;
 		
 		var _cw = _w;
 		
@@ -110,7 +110,10 @@ function buttonColor(_onApply, dialog = noone) : widget() constructor {
 			if(mouse_press(mb_left)) deactivate();
 		}
 		
-		draw_sprite_stretched_ext(THEME.button_color_overlay, 0, _x + ui(4), _y + ui(4), _cw - ui(8), _h - ui(8), current_color, 1);
+		if(is_array(current_color))
+			drawPalette(current_color, _x + ui(6), _y + ui(6), _cw - ui(12), _h - ui(12));
+		else 
+			draw_sprite_stretched_ext(THEME.button_color_overlay, 0, _x + ui(4), _y + ui(4), _cw - ui(8), _h - ui(8), current_color, 1);
 		
 		if(WIDGET_CURRENT == self)
 			draw_sprite_stretched_ext(THEME.widget_selecting, 0, _x - ui(3), _y - ui(3), _w + ui(6), _h + ui(6), COLORS._main_accent, 1);

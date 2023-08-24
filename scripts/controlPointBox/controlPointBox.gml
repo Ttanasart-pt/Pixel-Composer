@@ -59,12 +59,22 @@ function controlPointBox(_onModify) : widget() constructor {
 		x = _x;
 		y = _y;
 		
+		var _mode = array_safe_get(_data, PUPPET_CONTROL.mode);
+		var _cx   = array_safe_get(_data, PUPPET_CONTROL.cx);
+		var _cy   = array_safe_get(_data, PUPPET_CONTROL.cy);
+		var _fx   = array_safe_get(_data, PUPPET_CONTROL.fx);
+		var _fy   = array_safe_get(_data, PUPPET_CONTROL.fy);
+		var _wid  = array_safe_get(_data, PUPPET_CONTROL.width);
+		
+		if(is_array(_mode) || is_array(_cx) || is_array(_cy) || is_array(_fx) || is_array(_fy) || is_array(_wid))
+			return 0;
+		
 		for( var i = 0, n = array_length(widgets); i < n; i++ )
 			widgets[i].setFocusHover(active, hover);
 		
 		var yy = _y;
 		
-		scMode.draw(_x, yy, _w, TEXTBOX_HEIGHT, sMode[_data[PUPPET_CONTROL.mode]], _m, _rx, _ry);
+		scMode.draw(_x, yy, _w, TEXTBOX_HEIGHT, sMode[_mode], _m, _rx, _ry);
 		yy += TEXTBOX_HEIGHT + ui(8);
 		
 		var lw = ui(80);
@@ -73,36 +83,36 @@ function controlPointBox(_onModify) : widget() constructor {
 		draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text);
 		draw_text(_x,					yy + ui(17), "cx");
 		draw_text(_x + _w / 2 + ui(10), yy + ui(17), "cy");
-		tbCx.draw(_x + lw,				yy, w, TEXTBOX_HEIGHT, _data[PUPPET_CONTROL.cx], _m);
-		tbCy.draw(_x + _w / 2 + lw,		yy, w, TEXTBOX_HEIGHT, _data[PUPPET_CONTROL.cy], _m);
+		tbCx.draw(_x + lw,				yy, w, TEXTBOX_HEIGHT, _cx, _m);
+		tbCy.draw(_x + _w / 2 + lw,		yy, w, TEXTBOX_HEIGHT, _cy, _m);
 		yy += TEXTBOX_HEIGHT + ui(8);
 		
-		switch(_data[PUPPET_CONTROL.mode]) {
+		switch(_mode) {
 			case PUPPET_FORCE_MODE.move: 
 				draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text);
 				draw_text(_x,					yy + ui(17), "fx");
 				draw_text(_x + _w / 2 + ui(10), yy + ui(17), "fy");
-				tbFx.draw(_x + lw,				yy, w, TEXTBOX_HEIGHT, _data[PUPPET_CONTROL.fx],  _m);
-				tbFy.draw(_x + _w / 2 + lw,		yy, w, TEXTBOX_HEIGHT, _data[PUPPET_CONTROL.fy], _m);
+				tbFx.draw(_x + lw,				yy, w, TEXTBOX_HEIGHT, _fx, _m);
+				tbFy.draw(_x + _w / 2 + lw,		yy, w, TEXTBOX_HEIGHT, _fy, _m);
 				yy += TEXTBOX_HEIGHT + ui(8);
 		
 				draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text);
 				draw_text(_x, yy + ui(17), "radius");
-				sW.draw(_x + lw, yy, _w - lw, TEXTBOX_HEIGHT, _data[PUPPET_CONTROL.width],  _m);
+				sW.draw(_x + lw, yy, _w - lw, TEXTBOX_HEIGHT, _wid, _m);
 				yy += TEXTBOX_HEIGHT + ui(8);
 				break;
 			case PUPPET_FORCE_MODE.wind: 
 				draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text);
 				draw_text(_x, yy + ui(17), "strength");
-				tbFx.draw(_x + lw, yy, _w - lw, TEXTBOX_HEIGHT, _data[PUPPET_CONTROL.fx],  _m);
+				tbFx.draw(_x + lw, yy, _w - lw, TEXTBOX_HEIGHT, _fx, _m);
 				yy += TEXTBOX_HEIGHT + ui(8);
 				
 				draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text);
 				draw_text(_x, yy + ui(17), "width");
-				tbW.draw(_x + lw, yy, _w - lw, TEXTBOX_HEIGHT, _data[PUPPET_CONTROL.width], _m);
+				tbW.draw(_x + lw, yy, _w - lw, TEXTBOX_HEIGHT, _wid, _m);
 				yy += TEXTBOX_HEIGHT + ui(8);
 				
-				rot.draw(_x + _w / 2, yy, _data[PUPPET_CONTROL.fy], _m);
+				rot.draw(_x + _w / 2, yy, _fy, _m);
 				yy += ui(94 + 8);
 				break;
 		}

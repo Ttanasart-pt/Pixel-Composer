@@ -20,7 +20,7 @@ function __3dCamera() constructor {
 	
 	fov = 60;
 	view_near = .01;
-	view_far  =  10;
+	view_far  =  50;
 	
 	view_w = 1;
 	view_h = 1;

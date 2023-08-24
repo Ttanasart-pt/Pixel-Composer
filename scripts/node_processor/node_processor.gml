@@ -30,6 +30,8 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 			triggerRender();
 		}, false) ]);
 	
+	static getInputData = function(index) { return array_safe_get(current_data, index, 0); }
+	
 	static processData = function(_outSurf, _data, _output_index, _array_index = 0) { return _outSurf; }
 	
 	static getSingleValue = function(_index, _arr = 0, output = false) { #region
@@ -69,7 +71,6 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	static processDataArray = function(outIndex) { #region
 		var _output = outputs[| outIndex];
 		var _out    = _output.getValue();
-		all_inputs  = array_create(ds_list_size(inputs));
 		
 		if(process_amount == 1) { #region render single data
 			if(_output.type == VALUE_TYPE.d3object) //passing 3D vertex call
@@ -117,6 +118,7 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		#endregion
 		
 		var _data  = array_create(ds_list_size(inputs));
+		
 		for(var l = 0; l < process_amount; l++) {
 			for(var i = 0; i < ds_list_size(inputs); i++)
 				_data[i] = all_inputs[i][l];
@@ -216,10 +218,9 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 				case ARRAY_PROCESS.hold :   
 					process_amount = max(process_amount, amo);	
 					break;
+					
 				case ARRAY_PROCESS.expand : 
 				case ARRAY_PROCESS.expand_inv : 
-					if(amo && process_amount == 0)
-						process_amount = 1;
 					process_amount *= max(1, amo);
 					break;
 			}

@@ -60,7 +60,12 @@ function fontScrollBox(_onModify) : widget() constructor {
 			if(mouse_press(mb_left)) deactivate();
 		}
 		
-		_text = filename_name_only(_text);
+		var _txt   = "";
+		var _texts = is_array(_text)? _text : [ _text ];
+		for( var i = 0, n = array_length(_texts); i < n; i++ ) 
+			_txt += (i? ", " : "") + filename_name_only(_texts[i]);
+		_txt  = $"[{_txt}]";
+		_text = is_array(_text)? _txt : filename_name_only(_text);
 		
 		draw_set_text(f_p0, align, fa_center, COLORS._main_text);
 		draw_set_alpha(0.5 + 0.5 * interactable);

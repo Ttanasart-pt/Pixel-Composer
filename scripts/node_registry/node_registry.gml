@@ -361,14 +361,15 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 		var d3d = ds_list_create(); #region
 		addNodeCatagory("3D", d3d);
 			ds_list_add(d3d, "2D Operations");
-			addNodeObject(d3d, "Normal",				s_node_normal,			"Node_Normal",			[1, Node_Normal],, "Create normal map using greyscale value as height.");
+			addNodeObject(d3d, "Normal",			s_node_normal,			"Node_Normal",			[1, Node_Normal],, "Create normal map using greyscale value as height.");
 			addNodeObject(d3d, "Normal Light",		s_node_normal_light,	"Node_Normal_Light",	[1, Node_Normal_Light],, "Light up the image using normal mapping.");
 			addNodeObject(d3d, "Bevel",				s_node_bevel,			"Node_Bevel",			[1, Node_Bevel], ["shade", "auto shade"], "Apply 2D bevel on the image.");
 			addNodeObject(d3d, "Sprite Stack",		s_node_stack,			"Node_Sprite_Stack",	[1, Node_Sprite_Stack],, "Create sprite stack either from repeating a single image or stacking different images using array.");
 			
 			ds_list_add(d3d, "3D");
-			addNodeObject(d3d, "3D Scene",	s_node_3d_cube,		"Node_3D_Scene",		[1, Node_3D_Scene]);
-			addNodeObject(d3d, "3D Camera",	s_node_3d_cube,		"Node_3D_Camera",		[1, Node_3D_Camera]);
+			addNodeObject(d3d, "3D Scene",		s_node_3d_cube,		"Node_3D_Scene",		[1, Node_3D_Scene]);
+			addNodeObject(d3d, "3D Camera",		s_node_3d_cube,		"Node_3D_Camera",		[1, Node_3D_Camera]);
+			addNodeObject(d3d, "3D Material",	s_node_3d_cube,		"Node_3D_Material",		[1, Node_3D_Material]);
 			
 			ds_list_add(d3d, "Mesh");
 			addNodeObject(d3d, "3D Object",		s_node_3d_obj,		"Node_3D_Mesh_Obj",			[0, Node_create_3D_Obj],, "Load .obj file from your computer as a 3D object.");

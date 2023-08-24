@@ -863,7 +863,7 @@ function Panel_Preview() : PanelContent() constructor {
 				
 				if(d3_scene_light_enabled) {
 					d3_scene.addLightDirectional(d3_scene_light0);
-					d3_scene.addLightDirectional(d3_scene_light1);
+					//d3_scene.addLightDirectional(d3_scene_light1);
 				}
 				
 				for( var i = 0, n = array_length(_prev_obj); i < n; i++ ) {

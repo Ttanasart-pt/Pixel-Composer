@@ -1266,6 +1266,7 @@
     {"id":{"name":"draw_sprite_ext_override","path":"scripts/draw_sprite_ext_override/draw_sprite_ext_override.yy",},},
     {"id":{"name":"node_array_add","path":"scripts/node_array_add/node_array_add.yy",},},
     {"id":{"name":"o_dialog_textbox_function_guide","path":"objects/o_dialog_textbox_function_guide/o_dialog_textbox_function_guide.yy",},},
+    {"id":{"name":"node_3d_material","path":"scripts/node_3d_material/node_3d_material.yy",},},
     {"id":{"name":"pcx_server","path":"scripts/pcx_server/pcx_server.yy",},},
     {"id":{"name":"s_node_array_set","path":"sprites/s_node_array_set/s_node_array_set.yy",},},
     {"id":{"name":"node_dust","path":"scripts/node_dust/node_dust.yy",},},

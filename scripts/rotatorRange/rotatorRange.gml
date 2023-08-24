@@ -39,6 +39,7 @@ function rotatorRange(_onModify) : widget() constructor {
 		
 		if(!is_real(_data[0])) return;
 		if(!is_real(_data[1])) return;
+		
 		var knob_y = _y + h / 2;
 		var _r = ui(28);
 		

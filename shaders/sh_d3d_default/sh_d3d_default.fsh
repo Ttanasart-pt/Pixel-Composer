@@ -1,12 +1,16 @@
-//
-// Simple passthrough fragment shader
-//
+// PC3D rendering shader
+//   - BRDF By Xpanda and OGLDEV
+
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 varying vec3 v_vNormal;
 
 varying vec4  v_worldPosition;
+varying vec3  v_viewPosition;
 varying float v_cameraDistance;
+
+#define PI  3.14159265359
+#define TAU 6.28318530718
 
 #region ---- light ----
 	uniform vec4  light_ambient;
@@ -48,11 +52,21 @@ varying float v_cameraDistance;
 	uniform sampler2D light_pnt_shadowmap_7;
 #endregion
 
-#region ---- rendering ----
-	uniform int gammaCorrection;
+#region ---- material ----
+	vec4 mat_baseColor;
+	
+	uniform float mat_diffuse;
+	uniform float mat_specular;
+	uniform float mat_shine;
+	uniform int   mat_metalic;
 #endregion
 
-#region ---- matrix ----
+#region ---- rendering ----
+	uniform vec3 cameraPosition;
+	uniform int  gammaCorrection;
+#endregion
+
+#region ++++ matrix ++++
 	float matrixGet(mat4 matrix, int index) { 
 		if(index < 0 || index > 15) return 0.;
 		
@@ -71,32 +85,60 @@ varying float v_cameraDistance;
 	}
 #endregion
 
-float sampleDirShadowMap(int index, vec2 position) {
-	if(index == 0) return texture2D(light_dir_shadowmap_0, position).r;
-	if(index == 1) return texture2D(light_dir_shadowmap_1, position).r;
-	if(index == 2) return texture2D(light_dir_shadowmap_2, position).r;
-	if(index == 3) return texture2D(light_dir_shadowmap_3, position).r;
-	return 0.;
-}
-
-float samplePntShadowMap(int index, vec2 position, int side) {
-	position.x /= 2.;
-	if(side >= 3) {
-		position.x += 0.5;
-		side -= 3;
+#region ++++ shadow sampler ++++
+	float sampleDirShadowMap(int index, vec2 position) {
+		if(index == 0) return texture2D(light_dir_shadowmap_0, position).r;
+		if(index == 1) return texture2D(light_dir_shadowmap_1, position).r;
+		if(index == 2) return texture2D(light_dir_shadowmap_2, position).r;
+		if(index == 3) return texture2D(light_dir_shadowmap_3, position).r;
+		return 0.;
 	}
+
+	float samplePntShadowMap(int index, vec2 position, int side) {
+		position.x /= 2.;
+		if(side >= 3) {
+			position.x += 0.5;
+			side -= 3;
+		}
 	
-	if(index == 0) return texture2D(light_pnt_shadowmap_0, position)[side];
-	if(index == 1) return texture2D(light_pnt_shadowmap_1, position)[side];
-	if(index == 2) return texture2D(light_pnt_shadowmap_2, position)[side];
-	if(index == 3) return texture2D(light_pnt_shadowmap_3, position)[side];
-	return 0.;
-}
+		if(index == 0) return texture2D(light_pnt_shadowmap_0, position)[side];
+		if(index == 1) return texture2D(light_pnt_shadowmap_1, position)[side];
+		if(index == 2) return texture2D(light_pnt_shadowmap_2, position)[side];
+		if(index == 3) return texture2D(light_pnt_shadowmap_3, position)[side];
+		return 0.;
+	}
+#endregion
+
+#region ++++ Phong shading ++++
+	vec3 phongLight(vec3 normal, vec3 lightVec, vec3 viewVec, vec3 light) {
+		vec3 lightDir = normalize(lightVec);
+		vec3 viewDir  = normalize(viewVec);
+		vec3 refcDir  = reflect(-lightDir, normal);
+		
+		float kD = 1, kS = 0;
+		
+		if(mat_diffuse + mat_specular != 0) {
+			kD = mat_diffuse  / (mat_diffuse + mat_specular);
+			kS = mat_specular / (mat_diffuse + mat_specular);
+		}
+		
+		vec3  lLambert = max(0., dot(normal, lightDir)) * light;
+		
+		float specular  = pow(max(dot(viewDir, refcDir), 0.), max(0.001, mat_shine));
+		vec3  lSpecular = specular * light;
+		if(mat_metalic == 1) lSpecular *= mat_baseColor.rgb;
+		
+		return kD * lLambert + kS * lSpecular;
+	}
+#endregion
 
 void main() {
-	vec4 final_color = texture2D( gm_BaseTexture, v_vTexcoord );
-	final_color *= v_vColour;
-	vec3 normal = normalize(v_vNormal);
+	mat_baseColor = texture2D( gm_BaseTexture, v_vTexcoord );
+	mat_baseColor *= v_vColour;
+	
+	vec4 final_color   = mat_baseColor;
+	vec3 normal        = normalize(v_vNormal);
+	vec3 viewDirection = normalize(cameraPosition - v_worldPosition.xyz);
 	
 	gl_FragData[0] = vec4(0.);
 	gl_FragData[1] = vec4(0.);
@@ -107,7 +149,7 @@ void main() {
 		vec3 light_effect = light_ambient.rgb;
 		float val = 0.;
 		
-		#region ---- directional ----
+		#region ++++ directional ++++
 			float light_dir_strength;
 			float light_map_depth;
 			float lightDistance;
@@ -116,9 +158,9 @@ void main() {
 			shadow_map_index = 0;
 			for(int i = 0; i < light_dir_count; i++) {
 				vec3 lightVector   = normalize(light_dir_direction[i]);
-				light_dir_strength = dot(normal, normalize(lightVector));
-				if(light_dir_strength < 0.)
-					continue;
+				//light_dir_strength = dot(normal, lightVector);
+				//if(light_dir_strength < 0.)
+				//	continue;
 			
 				if(light_dir_shadow_active[i] == 1) {
 					vec4 cameraSpace = light_dir_view[i] * v_worldPosition;
@@ -137,11 +179,14 @@ void main() {
 						continue;
 				} 
 				
-				light_dir_strength = max(light_dir_strength * light_dir_intensity[i], 0.);
-				light_effect += light_dir_color[i].rgb * light_dir_strength;
+				//light_dir_strength = max(light_dir_strength * light_dir_intensity[i], 0.);
+				vec3 light_phong = phongLight(normal, lightVector, viewDirection, light_dir_color[i].rgb);
+				
+				light_effect += light_phong;
 			}
 		#endregion
-		#region ---- point ----
+		
+		#region ++++ point ++++
 			float light_pnt_strength;
 			float light_distance;
 			float light_attenuation;
@@ -149,9 +194,9 @@ void main() {
 			shadow_map_index = 0;
 			for(int i = 0; i < light_pnt_count; i++) {
 				vec3 lightVector   = normalize(light_pnt_position[i] - v_worldPosition.xyz);
-				light_pnt_strength = dot(normal, lightVector);
-				if(light_pnt_strength < 0.)
-					continue;
+				//light_pnt_strength = dot(normal, lightVector);
+				//if(light_pnt_strength < 0.)
+				//	continue;
 			
 				light_distance = length(lightVector);
 				if(light_distance > light_pnt_radius[i])
@@ -180,23 +225,26 @@ void main() {
 					if(v_lightDistance > light_map_depth + bias)
 						continue;
 				} 
-			
+				
 				light_attenuation = 1. - pow(light_distance / light_pnt_radius[i], 2.);
 			
-				light_pnt_strength = max(light_pnt_strength * light_pnt_intensity[i] * light_attenuation, 0.);
-				light_effect += light_pnt_color[i].rgb * light_pnt_strength;
+				//light_pnt_strength = max(light_pnt_strength * light_pnt_intensity[i] * light_attenuation, 0.);
+				vec3 light_phong = phongLight(normal, lightVector, viewDirection, light_pnt_color[i].rgb * light_attenuation);
+				
+				light_effect += light_phong;
 			}
 		#endregion
 	
 		light_effect = max(light_effect, 0.);
+		
+		if(gammaCorrection == 1) {
+			light_effect.r = pow(light_effect.r, 1. / 2.2);
+			light_effect.g = pow(light_effect.g, 1. / 2.2);
+			light_effect.b = pow(light_effect.b, 1. / 2.2);
+		}
+		
 		final_color.rgb *= light_effect;
 	#endregion
-	
-	if(gammaCorrection == 1) {
-		final_color.r = pow(final_color.r, 1. / 2.2);
-		final_color.g = pow(final_color.g, 1. / 2.2);
-		final_color.b = pow(final_color.b, 1. / 2.2);
-	}
 	
 	gl_FragData[0] = final_color;
 	gl_FragData[1] = vec4(0.5 + normal * 0.5, 1.);

@@ -33,6 +33,8 @@ function toggleGroup(_data, _onClick) : widget() constructor {
 		h = _h;
 		value = _data;
 		
+		if(!is_array(_data)) return 0;
+		
 		var amo = array_length(data);
 		var ww  = _w / amo;
 		

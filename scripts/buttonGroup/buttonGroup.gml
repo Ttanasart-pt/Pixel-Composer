@@ -45,6 +45,8 @@ function buttonGroup(_data, _onClick) : widget() constructor {
 		w = _w;
 		h = _h;
 		current_selecting = _selecting;
+		while(is_array(current_selecting))
+			current_selecting = array_safe_get(current_selecting, 0);
 		
 		var amo = array_length(data);
 		var ww  = _w / amo;

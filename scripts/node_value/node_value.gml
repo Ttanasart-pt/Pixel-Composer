@@ -154,7 +154,7 @@ function value_color(i) { #region
 		$ffa64d, //d3Light	
 		$ffa64d, //d3Camera
 		$ffa64d, //d3Scene	
-		$ffa64d, //d3Material
+		$976bff, //d3Material
 	];
 	
 	if(i == 99) return $5dde8f;
@@ -198,7 +198,8 @@ function value_bit(i) { #region
 		case VALUE_TYPE.d3Light		: return 1 << 29;
 		case VALUE_TYPE.d3Camera	: return 1 << 29;
 		case VALUE_TYPE.d3Scene		: return 1 << 29 | 1 << 30;
-	
+		case VALUE_TYPE.d3Material  : return 1 << 33;
+		
 		case VALUE_TYPE.any			: return ~0 & ~(1 << 32);
 	}
 	return 0;
@@ -1176,19 +1177,22 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	} #endregion
 	
 	static arrayBalance = function(val) { #region //Balance array (generate uniform array from single values)
-		if(!is_array(def_val)) 
+		if(!is_array(def_val))
 			return val;
+			
 		if(typeArrayDynamic(display_type)) 
 			return val;
 		
+		if(isArray(val))
+			return val;
+			
 		if(!is_array(val))
 			val = array_create(def_length, val);	
 		else if(array_length(val) < def_length) {
 			for( var i = array_length(val); i < def_length; i++ )
 				val[i] = 0;
-		} else if(array_length(val) > def_length)
-			array_resize(val, def_length);
-			
+		} 
+		
 		return val;
 	} #endregion
 	
@@ -1362,13 +1366,14 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			val = getValue();
 		
 		if(!isArray(val)) 
-			return 0;
+			return 1;
 		
 		if(array_depth == 0 && !typeArray(display_type)) 
 			return array_length(val);
 		
-		var ar = val;
-		repeat(array_depth - 1 + typeArray(display_type))
+		var ar     = val;
+		var _depth = max(0, array_depth + typeArray(display_type) - 1);
+		repeat(_depth)
 			ar = ar[0];
 		
 		return array_length(ar);

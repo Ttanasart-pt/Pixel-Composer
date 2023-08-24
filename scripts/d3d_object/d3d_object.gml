@@ -164,9 +164,18 @@ function __3dObject() constructor {
 				matrix_stack_push(sca);
 				matrix_set(matrix_world, matrix_stack_top());
 			}
+		}
+		
+		if(VF == global.VF_POS_NORM_TEX_COL)
+		for( var i = 0, n = array_length(VB); i < n; i++ ) {
+			var _mat = array_safe_get(materials, i, noone);
+			var _tex = _mat == noone? -1 : _mat.getTexture();
 			
-			for( var i = 0, n = array_length(VB); i < n; i++ ) 
-				vertex_submit(VB[i], render_type, array_safe_get(texture, i, -1));
+			shader_set_f("mat_diffuse",  _mat == noone?  1 : _mat.diffuse  );
+			shader_set_f("mat_specular", _mat == noone?  0 : _mat.specular );
+			shader_set_f("mat_shine",    _mat == noone?  1 : _mat.shine    );
+			shader_set_i("mat_metalic",  _mat == noone?  0 : _mat.metalic  );
+			vertex_submit(VB[i], render_type, _tex);
 		}
 		
 		if(params.show_normal && NVB != noone) {

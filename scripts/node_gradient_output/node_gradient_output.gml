@@ -20,7 +20,7 @@ function Node_Gradient_Out(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		var pal = _data[0];
 		var pos = _data[1];
 		
-		//print("Gradient out " + string(pal))
+		if(!is_instanceof(pal, gradientObject)) return 0;
 		
 		if(_output_index == 0) return pal;
 		if(_output_index == 1) return pal.eval(pos);

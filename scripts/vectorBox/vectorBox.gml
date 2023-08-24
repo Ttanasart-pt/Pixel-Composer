@@ -87,7 +87,10 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 		w = _w;
 		h = _h;
 		
-		if(!is_array(_data)) return;
+		if(!is_array(_data))   return 0;
+		if(array_empty(_data)) return 0;
+		if(is_array(_data[0])) return 0;
+		
 		current_value = _data;
 		
 		if(extras && instanceof(extras) == "buttonClass") {

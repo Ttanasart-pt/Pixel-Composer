@@ -17,14 +17,21 @@ function curveBox(_onModify) : widget() constructor {
 	}
 	
 	static draw = function(_x, _y, _w, _h, _data, _m) {
-		x = _x; y = _y;
-		w = _w; h = _h;
+		x = _x; 
+		y = _y;
+		w = _w; 
+		h = _h;
+		
+		if(!is_array(_data) || array_length(_data) == 0)
+			return 0;
+		var _is_array = is_array(_data[0]);
+		var points = array_length(_data) / 6;
+		
+		if(!_is_array) return 0;
 		
 		curve_surface = surface_verify(curve_surface, _w, _h);
 		
-		var points = array_length(_data) / 6;
-		
-		if(node_dragging != -1) {
+		if(node_dragging != -1) { #region editing
 			if(node_drag_typ == 0) { 
 				var node_point = (node_dragging - 2) / 6;
 				if(node_point > 0 && node_point < points - 1) {
@@ -96,7 +103,7 @@ function curveBox(_onModify) : widget() constructor {
 				
 				UNDO_HOLDING = false;
 			}
-		}
+		} #endregion
 		
 		var node_hovering  = -1;
 		var node_hover_typ = -1;
@@ -106,88 +113,92 @@ function curveBox(_onModify) : widget() constructor {
 		var msx = _m[0] - _x;
 		var msy = _m[1] - _y;
 		
-		surface_set_target(curve_surface);
-		DRAW_CLEAR
-			draw_set_color(COLORS.widget_curve_line);
-			draw_set_alpha(0.75);
-			var y0 = _h - _h * (0 - miny) / (maxy - miny);
-			draw_line(0, y0, _w, y0);
-			var y1 = _h - _h * (1 - miny) / (maxy - miny);
-			draw_line(0, y1, _w, y1);
-			draw_set_alpha(1);
-		
-			for( var i = 0; i < points; i++ ) {
-				var ind = i * 6;
-				var _x0 = _data[ind + 2];
-				var _y0 = _data[ind + 3];
-				var bx0 = _x0 + _data[ind + 0];
-				var by0 = _y0 + _data[ind + 1];
-				var ax0 = _x0 + _data[ind + 4];
-				var ay0 = _y0 + _data[ind + 5];
-			
-				bx0 = get_x(bx0, 0, _w);
-				by0 = get_y(by0, 0, _h);
-				_x0 = get_x(_x0, 0, _w);
-				_y0 = get_y(_y0, 0, _h);
-				ax0 = get_x(ax0, 0, _w);
-				ay0 = get_y(ay0, 0, _h);
-				
+		#region ==== draw ====
+			surface_set_target(curve_surface);
+			DRAW_CLEAR
 				draw_set_color(COLORS.widget_curve_line);
-				if(i > 0) { //draw pre line
-					draw_line(bx0, by0, _x0, _y0);
-				
-					draw_circle_prec(bx0, by0, 3, false);
-					if(hover && point_in_circle(msx, msy, bx0, by0, 10)) {
-						draw_circle_prec(bx0, by0, 5, false);
-						node_hovering = ind + 2;
-						node_hover_typ = -1;
-					}
-				}
+				draw_set_alpha(0.75);
+				var y0 = _h - _h * (0 - miny) / (maxy - miny);
+				draw_line(0, y0, _w, y0);
+				var y1 = _h - _h * (1 - miny) / (maxy - miny);
+				draw_line(0, y1, _w, y1);
+				draw_set_alpha(1);
+		
+				for( var i = 0; i < points; i++ ) {
+					var ind = i * 6;
+					var _x0 = _data[ind + 2];
+					var _y0 = _data[ind + 3];
+					var bx0 = _x0 + _data[ind + 0];
+					var by0 = _y0 + _data[ind + 1];
+					var ax0 = _x0 + _data[ind + 4];
+					var ay0 = _y0 + _data[ind + 5];
 			
-				if(i < points - 1) { //draw post line
-					draw_line(ax0, ay0, _x0, _y0);
+					bx0 = get_x(bx0, 0, _w);
+					by0 = get_y(by0, 0, _h);
+					_x0 = get_x(_x0, 0, _w);
+					_y0 = get_y(_y0, 0, _h);
+					ax0 = get_x(ax0, 0, _w);
+					ay0 = get_y(ay0, 0, _h);
 				
-					draw_circle_prec(ax0, ay0, 3, false);
-					if(hover && point_in_circle(msx, msy, ax0, ay0, 10)) {
-						draw_circle_prec(ax0, ay0, 5, false);
-						node_hovering = ind + 2;
-						node_hover_typ = 1;
+					draw_set_color(COLORS.widget_curve_line);
+					if(i > 0) { //draw pre line
+						draw_line(bx0, by0, _x0, _y0);
+				
+						draw_circle_prec(bx0, by0, 3, false);
+						if(hover && point_in_circle(msx, msy, bx0, by0, 10)) {
+							draw_circle_prec(bx0, by0, 5, false);
+							node_hovering = ind + 2;
+							node_hover_typ = -1;
+						}
 					}
-				}
 			
+					if(i < points - 1) { //draw post line
+						draw_line(ax0, ay0, _x0, _y0);
+				
+						draw_circle_prec(ax0, ay0, 3, false);
+						if(hover && point_in_circle(msx, msy, ax0, ay0, 10)) {
+							draw_circle_prec(ax0, ay0, 5, false);
+							node_hovering = ind + 2;
+							node_hover_typ = 1;
+						}
+					}
+			
+					draw_set_color(COLORS._main_accent);
+					draw_circle_prec(_x0, _y0, 3, false);
+					if(hover && point_in_circle(msx, msy, _x0, _y0, 10)) {
+						draw_circle_prec(_x0, _y0, 5, false);
+						node_hovering = ind + 2;
+						node_hover_typ = 0;
+					}
+			
+					if(msx >= _x1 && msy <= _x0)
+						point_insert = i;
+					_x1 = _x0;
+				}
+		
 				draw_set_color(COLORS._main_accent);
-				draw_circle_prec(_x0, _y0, 3, false);
-				if(hover && point_in_circle(msx, msy, _x0, _y0, 10)) {
-					draw_circle_prec(_x0, _y0, 5, false);
-					node_hovering = ind + 2;
-					node_hover_typ = 0;
-				}
-			
-				if(msx >= _x1 && msy <= _x0)
-					point_insert = i;
-				_x1 = _x0;
+				draw_curve(0, 0, _w, -_h, _data, miny, maxy);
+		
+			surface_reset_target();
+		#endregion
+		
+		#region ==== buttons ====
+			var bx = _x + _w - ui(6 + 24);
+			var by = _y + _h - ui(6 + 24);
+				
+			if(buttonInstant(THEME.button_hide, bx, by, ui(24), ui(24), _m, active, hover,, THEME.add) == 2) {
+				miny = 0;
+				maxy = 1;
 			}
-		
-			draw_set_color(COLORS._main_accent);
-			draw_curve(0, 0, _w, -_h, _data, miny, maxy);
-		
-		surface_reset_target();
-		
-		var bx = _x + _w - ui(6 + 24);
-		var by = _y + _h - ui(6 + 24);
 				
-		if(buttonInstant(THEME.button_hide, bx, by, ui(24), ui(24), _m, active, hover,, THEME.add) == 2) {
-			miny = 0;
-			maxy = 1;
-		}
-				
-		bx -= ui(24 + 4);
-		if(buttonInstant(THEME.button_hide, bx, by, ui(24), ui(24), _m, active, hover,, THEME.minus) == 2) {
-			miny = -1;
-			maxy =  2;
-		}
+			bx -= ui(24 + 4);
+			if(buttonInstant(THEME.button_hide, bx, by, ui(24), ui(24), _m, active, hover,, THEME.minus) == 2) {
+				miny = -1;
+				maxy =  2;
+			}
+		#endregion
 		
-		if(hover) {
+		if(!_is_array && hover) { #region
 			if(point_in_rectangle(_m[0], _m[1], _x + _w - ui(6 + 24 * 2 + 4), _y + _h - ui(6 + 24), _x + _w + ui(5), _y + _h + ui(5))) {
 			} else if(point_in_rectangle(msx, msy, -ui(5), -ui(5), _w + ui(5), _h + ui(5))) {
 				if(mouse_press(mb_left, active)) {
@@ -220,7 +231,7 @@ function curveBox(_onModify) : widget() constructor {
 					}
 				}
 			}
-		}
+		} #endregion
 		
 		draw_surface(curve_surface, _x, _y);
 		draw_set_color(COLORS.widget_curve_outline);

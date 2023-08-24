@@ -677,6 +677,7 @@
     {"name":"draw_sprite_ext_override","order":9,"path":"scripts/draw_sprite_ext_override/draw_sprite_ext_override.yy",},
     {"name":"node_array_add","order":9,"path":"scripts/node_array_add/node_array_add.yy",},
     {"name":"o_dialog_textbox_function_guide","order":7,"path":"objects/o_dialog_textbox_function_guide/o_dialog_textbox_function_guide.yy",},
+    {"name":"node_3d_material","order":16,"path":"scripts/node_3d_material/node_3d_material.yy",},
     {"name":"pcx_server","order":2,"path":"scripts/pcx_server/pcx_server.yy",},
     {"name":"s_node_array_set","order":9,"path":"sprites/s_node_array_set/s_node_array_set.yy",},
     {"name":"node_dust","order":21,"path":"scripts/node_dust/node_dust.yy",},
