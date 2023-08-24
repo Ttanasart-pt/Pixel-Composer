@@ -34,6 +34,8 @@ function __3dGroup() constructor {
 			_m1 = _m1 == noone? _n1 : _m1.maxVal(_n1);
 		}
 		
+		if(_m0 == noone) return new __bbox3D(new __vec3(-0.5), new __vec3(0.5));
+		
 		_m0._subtract(_cc);
 		_m1._subtract(_cc);
 		

@@ -3,7 +3,8 @@ function Node_3D_Mesh_Extrude(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _gr
 	
 	object_class = __3dSurfaceExtrude;
 	
-	inputs[| in_mesh + 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.d3Material, noone);
+	inputs[| in_mesh + 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.d3Material, noone)
+		.setVisible(true, true);
 	
 	inputs[| in_mesh + 1] = nodeValue("Height map", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
 	

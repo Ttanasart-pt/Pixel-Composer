@@ -961,6 +961,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						break;
 				}
 				break; #endregion
+			case VALUE_TYPE.d3Material :
 			case VALUE_TYPE.surface :	#region
 				editWidget = new surfaceBox(function(ind) { 
 					return setValueDirect(ind); 

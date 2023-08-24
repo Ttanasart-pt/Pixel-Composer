@@ -2,20 +2,33 @@ function Node_3D_Material(_x, _y, _group = noone) : Node_3D(_x, _y, _group) cons
 	name = "3D Material";
 	solid_surf = noone;
 	
-	inputs[| 0] = nodeValue("Texture", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone)
+	inputs[| 0] = nodeValue("Texture", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone )
 		.setVisible(true, true);
 	
-	inputs[| 1] = nodeValue("Diffuse", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
+	inputs[| 1] = nodeValue("Diffuse", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1 )
 		.setDisplay(VALUE_DISPLAY.slider, [ 0, 1, 0.01 ]);
 	
-	inputs[| 2] = nodeValue("Specular", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
+	inputs[| 2] = nodeValue("Specular", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0 )
 		.setDisplay(VALUE_DISPLAY.slider, [ 0, 1, 0.01 ]);
 	
-	inputs[| 3] = nodeValue("Shininess", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1);
+	inputs[| 3] = nodeValue("Shininess", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1 );
 	
-	inputs[| 4] = nodeValue("Metalic", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	inputs[| 4] = nodeValue("Metalic", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false );
+	
+	inputs[| 5] = nodeValue("Normal Map", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone );
+	
+	inputs[| 6] = nodeValue("Normal Strength", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1 )
+		.setDisplay(VALUE_DISPLAY.slider, [ 0, 2, 0.01 ]);
+		
+	inputs[| 7] = nodeValue("Roughness", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1 )
+		.setDisplay(VALUE_DISPLAY.slider, [ 0, 1, 0.01 ]);
 	
 	outputs[| 0] = nodeValue("Material", self, JUNCTION_CONNECT.output, VALUE_TYPE.d3Material, noone);
+	
+	input_display_list = [ 0, 
+		["Properties",	false], 1, 2, 3, 4, 7, 
+		["Normal",		false], 5, 6, 
+	];
 	
 	static processData = function(_output, _data, _output_index, _array_index = 0) {
 		var _surf = _data[0];
@@ -23,6 +36,9 @@ function Node_3D_Material(_x, _y, _group = noone) : Node_3D(_x, _y, _group) cons
 		var _spec = _data[2];
 		var _shin = _data[3];
 		var _metl = _data[4];
+		var _nor  = _data[5];
+		var _norS = _data[6];
+		var _roug = _data[7];
 		
 		if(!is_surface(_surf)) {
 			solid_surf = surface_verify(solid_surf, 1, 1);
@@ -34,6 +50,10 @@ function Node_3D_Material(_x, _y, _group = noone) : Node_3D(_x, _y, _group) cons
 		_mat.specular  = _spec;
 		_mat.shine     = _shin;
 		_mat.metalic   = _metl;
+		
+		_mat.normal    = _nor;
+		_mat.normalStr = _norS;
+		_mat.reflective = clamp(1 - _roug, 0, 1);
 		
 		return _mat;
 	}

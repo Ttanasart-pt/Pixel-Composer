@@ -1,5 +1,4 @@
 // PC3D rendering shader
-//   - BRDF By Xpanda and OGLDEV
 
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
@@ -46,10 +45,6 @@ varying float v_cameraDistance;
 	uniform sampler2D light_pnt_shadowmap_1;
 	uniform sampler2D light_pnt_shadowmap_2;
 	uniform sampler2D light_pnt_shadowmap_3;
-	uniform sampler2D light_pnt_shadowmap_4;
-	uniform sampler2D light_pnt_shadowmap_5;
-	uniform sampler2D light_pnt_shadowmap_6;
-	uniform sampler2D light_pnt_shadowmap_7;
 #endregion
 
 #region ---- material ----
@@ -59,11 +54,20 @@ varying float v_cameraDistance;
 	uniform float mat_specular;
 	uniform float mat_shine;
 	uniform int   mat_metalic;
+	uniform float mat_reflective;
+	
+	uniform int		  mat_use_normal;
+	uniform float	  mat_normal_strength;
+	uniform sampler2D mat_normal_map;
 #endregion
 
 #region ---- rendering ----
 	uniform vec3 cameraPosition;
 	uniform int  gammaCorrection;
+	
+	uniform int       env_use_mapping;
+	uniform sampler2D env_map;
+	uniform vec2      env_map_dimension;
 #endregion
 
 #region ++++ matrix ++++
@@ -132,17 +136,29 @@ varying float v_cameraDistance;
 	}
 #endregion
 
+#region ++++ mapping ++++
+	vec2 equirectangularUv(vec3 dir) {
+		vec3 n = normalize(dir);
+		return vec2((atan(n.x, n.y) / TAU) + 0.5, 1. - acos(n.z) / PI);
+	}
+#endregion
+
 void main() {
 	mat_baseColor = texture2D( gm_BaseTexture, v_vTexcoord );
 	mat_baseColor *= v_vColour;
 	
 	vec4 final_color   = mat_baseColor;
-	vec3 normal        = normalize(v_vNormal);
 	vec3 viewDirection = normalize(cameraPosition - v_worldPosition.xyz);
 	
-	gl_FragData[0] = vec4(0.);
-	gl_FragData[1] = vec4(0.);
-	gl_FragData[2] = vec4(0.);
+	#region ++++ normal ++++
+		vec3 _norm = v_vNormal;
+		if(mat_use_normal == 1) {
+			vec3 _sampled_normal = texture2D(mat_normal_map, v_vTexcoord).rgb;
+			_norm += (_sampled_normal - 0.5) * 2. * mat_normal_strength;
+		}
+		
+		vec3 normal        = normalize(_norm);
+	#endregion
 	
 	#region ++++ light ++++
 		int shadow_map_index = 0;
@@ -150,7 +166,6 @@ void main() {
 		float val = 0.;
 		
 		#region ++++ directional ++++
-			float light_dir_strength;
 			float light_map_depth;
 			float lightDistance;
 			float shadow_culled;
@@ -158,10 +173,7 @@ void main() {
 			shadow_map_index = 0;
 			for(int i = 0; i < light_dir_count; i++) {
 				vec3 lightVector   = normalize(light_dir_direction[i]);
-				//light_dir_strength = dot(normal, lightVector);
-				//if(light_dir_strength < 0.)
-				//	continue;
-			
+				
 				if(light_dir_shadow_active[i] == 1) {
 					vec4 cameraSpace = light_dir_view[i] * v_worldPosition;
 					vec4 screenSpace = light_dir_proj[i] * cameraSpace;
@@ -179,7 +191,6 @@ void main() {
 						continue;
 				} 
 				
-				//light_dir_strength = max(light_dir_strength * light_dir_intensity[i], 0.);
 				vec3 light_phong = phongLight(normal, lightVector, viewDirection, light_dir_color[i].rgb);
 				
 				light_effect += light_phong;
@@ -187,17 +198,13 @@ void main() {
 		#endregion
 		
 		#region ++++ point ++++
-			float light_pnt_strength;
 			float light_distance;
 			float light_attenuation;
 		
 			shadow_map_index = 0;
 			for(int i = 0; i < light_pnt_count; i++) {
 				vec3 lightVector   = normalize(light_pnt_position[i] - v_worldPosition.xyz);
-				//light_pnt_strength = dot(normal, lightVector);
-				//if(light_pnt_strength < 0.)
-				//	continue;
-			
+				
 				light_distance = length(lightVector);
 				if(light_distance > light_pnt_radius[i])
 					continue;
@@ -208,14 +215,15 @@ void main() {
 								  (dirAbs.x > dirAbs.z ? 0 : 2) :
 								  (dirAbs.y > dirAbs.z ? 1 : 2);
 					side *= 2;
-					if(side == 0 && lightVector.x < 0.)	     side += 1;
-					else if(side == 2 && lightVector.y < 0.) side += 1;
-					else if(side == 4 && lightVector.z < 0.) side += 1;
+					     if(side == 0 && lightVector.x > 0.) side += 1;
+					else if(side == 2 && lightVector.y > 0.) side += 1;
+					else if(side == 4 && lightVector.z > 0.) side += 1;
 					
-					vec4 cameraSpace = light_pnt_view[i * 6 + side] * v_worldPosition;
-					vec4 screenSpace = light_pnt_proj[i] * cameraSpace;
+					vec4 cameraSpace      = light_pnt_view[i * 6 + side] * v_worldPosition;
+					vec4 screenSpace      = light_pnt_proj[i] * cameraSpace;
 					float v_lightDistance = screenSpace.z / screenSpace.w;
 					vec2 lightMapPosition = (screenSpace.xy / screenSpace.w * 0.5) + 0.5;
+					
 					float shadowFactor = dot(normal, lightVector);
 					float bias = mix(light_pnt_shadow_bias[i], 0., shadowFactor);
 					
@@ -227,8 +235,7 @@ void main() {
 				} 
 				
 				light_attenuation = 1. - pow(light_distance / light_pnt_radius[i], 2.);
-			
-				//light_pnt_strength = max(light_pnt_strength * light_pnt_intensity[i] * light_attenuation, 0.);
+				
 				vec3 light_phong = phongLight(normal, lightVector, viewDirection, light_pnt_color[i].rgb * light_attenuation);
 				
 				light_effect += light_phong;
@@ -246,7 +253,34 @@ void main() {
 		final_color.rgb *= light_effect;
 	#endregion
 	
+	#region ++++ environment ++++
+		if(env_use_mapping == 1) {
+			vec3  reflectDir  = reflect(viewDirection, normal);
+			
+			float refRad      = mix(16., 0., mat_reflective);
+			vec2  tx = 1. / env_map_dimension;
+			vec2  reflect_sample_pos = equirectangularUv(reflectDir);
+			vec4  env_sampled = vec4(0.);
+			float weight = 0.;
+			
+			for(float i = -refRad; i <= refRad; i++)
+			for(float j = -refRad; j <= refRad; j++) {
+				vec2 _map_pos = reflect_sample_pos + vec2(i, j) * tx;
+				vec4 _samp = texture2D(env_map, _map_pos);
+				env_sampled += _samp;
+				weight      += _samp.a;
+			}
+			env_sampled /= weight;
+			env_sampled.a = 1.;
+			
+			vec4 env_effect  = mat_metalic == 1? env_sampled * final_color : env_sampled;
+			env_effect = 1. - ( mat_reflective * ( 1. - env_effect ));
+			
+			final_color *= env_effect;
+		}
+	#endregion
+	
 	gl_FragData[0] = final_color;
 	gl_FragData[1] = vec4(0.5 + normal * 0.5, 1.);
-	gl_FragData[2]  = vec4(vec3(v_cameraDistance), 1.);
+	gl_FragData[2] = vec4(vec3(v_cameraDistance), 1.);
 }

@@ -3,8 +3,8 @@ function __3dLightPoint() : __3dLight() constructor {
 	intensity = 1;
 	radius    = 10;
 	
-	shadow_mapper = sh_d3d_shadow_depth;
-	shadow_map_size   = 512;
+	shadow_mapper	= sh_d3d_shadow_depth;
+	shadow_map_size = 512;
 	
 	shadow_map_views = array_create(6);
 	shadow_maps      = array_create(6);

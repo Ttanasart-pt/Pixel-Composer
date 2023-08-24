@@ -228,9 +228,18 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 						break;
 				}
 				break;
-			case VALUE_TYPE.boolean : param.halign = lineBreak? fa_left : fa_center;
-			case VALUE_TYPE.surface : param.h = ui(96); break;
-			case VALUE_TYPE.curve :   param.h = ui(160);
+				
+			case VALUE_TYPE.boolean : 
+				param.halign = lineBreak? fa_left : fa_center;
+				break;
+				
+			case VALUE_TYPE.d3Material : 
+			case VALUE_TYPE.surface : 
+				param.h = ui(96); 
+				break;
+				
+			case VALUE_TYPE.curve :   
+				param.h = ui(160);
 				if(point_in_rectangle(_m[0], _m[1], ui(32), _hsy, ui(32) + ww - ui(16), _hsy + editBoxH))
 					mbRight = false;
 				break;

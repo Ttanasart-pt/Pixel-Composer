@@ -5,17 +5,23 @@ function Node_3D_Mesh_Cube(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group
 	
 	inputs[| in_mesh + 0] = nodeValue("Material per side", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false );
 	
-	inputs[| in_mesh + 1] = nodeValue("Material", self, JUNCTION_CONNECT.input, VALUE_TYPE.d3Material, noone );
+	inputs[| in_mesh + 1] = nodeValue("Material", self, JUNCTION_CONNECT.input, VALUE_TYPE.d3Material, noone )
+		.setVisible(true, true);
 	
-	inputs[| in_mesh + 2] = nodeValue("Material Bottom", self, JUNCTION_CONNECT.input, VALUE_TYPE.d3Material, noone );
+	inputs[| in_mesh + 2] = nodeValue("Material Bottom", self, JUNCTION_CONNECT.input, VALUE_TYPE.d3Material, noone )
+		.setVisible(true, true);
 	
-	inputs[| in_mesh + 3] = nodeValue("Material Left", self, JUNCTION_CONNECT.input, VALUE_TYPE.d3Material, noone );
+	inputs[| in_mesh + 3] = nodeValue("Material Left", self, JUNCTION_CONNECT.input, VALUE_TYPE.d3Material, noone )
+		.setVisible(true, true);
 	
-	inputs[| in_mesh + 4] = nodeValue("Material Right", self, JUNCTION_CONNECT.input, VALUE_TYPE.d3Material, noone );
+	inputs[| in_mesh + 4] = nodeValue("Material Right", self, JUNCTION_CONNECT.input, VALUE_TYPE.d3Material, noone )
+		.setVisible(true, true);
 	
-	inputs[| in_mesh + 5] = nodeValue("Material Back", self, JUNCTION_CONNECT.input, VALUE_TYPE.d3Material, noone );
+	inputs[| in_mesh + 5] = nodeValue("Material Back", self, JUNCTION_CONNECT.input, VALUE_TYPE.d3Material, noone )
+		.setVisible(true, true);
 	
-	inputs[| in_mesh + 6] = nodeValue("Material Front", self, JUNCTION_CONNECT.input, VALUE_TYPE.d3Material, noone );
+	inputs[| in_mesh + 6] = nodeValue("Material Front", self, JUNCTION_CONNECT.input, VALUE_TYPE.d3Material, noone )
+		.setVisible(true, true);
 	
 	input_display_list = [
 		__d3d_input_list_mesh,

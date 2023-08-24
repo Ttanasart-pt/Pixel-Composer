@@ -132,7 +132,7 @@ function __3dObject() constructor {
 		
 		preSubmitVertex(params);
 		
-		if(VB != noone) {
+		if(VB != noone) { #region
 			matrix_stack_clear();
 			
 			if(params.apply_transform) {
@@ -164,26 +164,35 @@ function __3dObject() constructor {
 				matrix_stack_push(sca);
 				matrix_set(matrix_world, matrix_stack_top());
 			}
-		}
+		} #endregion
 		
-		if(VF == global.VF_POS_NORM_TEX_COL)
-		for( var i = 0, n = array_length(VB); i < n; i++ ) {
-			var _mat = array_safe_get(materials, i, noone);
-			var _tex = _mat == noone? -1 : _mat.getTexture();
+		#region ++++ Submit & Material ++++
+			for( var i = 0, n = array_length(VB); i < n; i++ ) {
+				if(VF == global.VF_POS_NORM_TEX_COL) {
+					var _mat = array_safe_get(materials, i, noone);
+					if(_mat == noone) {
+						shader_set_f("mat_diffuse",    1);
+						shader_set_f("mat_specular",   0);
+						shader_set_f("mat_shine",      1);
+						shader_set_i("mat_metalic",    0);
+						shader_set_i("mat_use_normal", 0);
+						shader_set_f("mat_reflective", 0);
+					} else 
+						_mat.submitShader();
 			
-			shader_set_f("mat_diffuse",  _mat == noone?  1 : _mat.diffuse  );
-			shader_set_f("mat_specular", _mat == noone?  0 : _mat.specular );
-			shader_set_f("mat_shine",    _mat == noone?  1 : _mat.shine    );
-			shader_set_i("mat_metalic",  _mat == noone?  0 : _mat.metalic  );
-			vertex_submit(VB[i], render_type, _tex);
-		}
+					var _tex = _mat == noone? -1 : _mat.getTexture();
+					vertex_submit(VB[i], render_type, _tex);
+				} else 
+					vertex_submit(VB[i], render_type, -1);
+			}
+		#endregion
 		
-		if(params.show_normal && NVB != noone) {
+		if(params.show_normal && NVB != noone) { #region
 			shader_set(sh_d3d_wireframe);
 			for( var i = 0, n = array_length(NVB); i < n; i++ ) 
 				vertex_submit(NVB[i], pr_linelist, -1);
 			shader_reset();
-		}
+		} #endregion
 		
 		matrix_stack_clear();
 		matrix_set(matrix_world, matrix_build_identity());

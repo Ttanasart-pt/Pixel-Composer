@@ -40,4 +40,9 @@ function Node_3D_Light_Point(_x, _y, _group = noone) : Node_3D_Light(_x, _y, _gr
 		
 		return object;
 	}
+	
+	//static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
+	//	var object = getObject(0);
+	//	draw_surface_stretched_safe(object.shadow_map, xx, yy, 96, 96);
+	//}
 }

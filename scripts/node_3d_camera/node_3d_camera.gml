@@ -57,6 +57,8 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 	
 	inputs[| in_d3d + 15] = nodeValue("Gamma Adjust", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false );
 	
+	inputs[| in_d3d + 16] = nodeValue("Environment Texture", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone );
+	
 	outputs[| 0] = nodeValue("Rendered", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone );
 	
 	outputs[| 1] = nodeValue("Normal", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone )
@@ -69,7 +71,7 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 		["Output",		false], in_d3d + 2,
 		["Transform",	false], in_d3d + 9, 0, 1, in_d3d + 10, in_d3d + 11, in_d3d + 12, in_d3d + 13, in_d3d + 14, 
 		["Camera",		false], in_d3d + 3, in_d3d + 0, in_d3d + 1, in_d3d + 8, 
-		["Render",		false], in_d3d + 5, in_d3d + 6, in_d3d + 7, in_d3d + 15, 
+		["Render",		false], in_d3d + 5, in_d3d + 16, in_d3d + 6, in_d3d + 7, in_d3d + 15, 
 	];
 	
 	tool_lookat = new NodeTool( "Move Target", THEME.tools_3d_transform_object );
@@ -164,6 +166,7 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 		var _vAng = _data[in_d3d + 13];
 		var _dist = _data[in_d3d + 14];
 		var _gamm = _data[in_d3d + 15];
+		var _env  = _data[in_d3d + 16];
 		
 		var _qi1  = new BBMOD_Quaternion().FromAxisAngle(new BBMOD_Vec3(0, 1, 0),  90);
 		var _qi2  = new BBMOD_Quaternion().FromAxisAngle(new BBMOD_Vec3(1, 0, 0), -90);
@@ -220,9 +223,6 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 		if(_proj == 0)		camera.setViewSize(_dim[0], _dim[1]);
 		else if(_proj == 1) camera.setViewSize(1 / _orts, _dim[0] / _dim[1] / _orts);
 		
-		scene.lightAmbient = _ambt;
-		_scne.gammaCorrection = _gamm;
-		
 		var _render = surface_create(_dim[0], _dim[1]);
 		var _normal = surface_create(_dim[0], _dim[1]);
 		var _depth  = surface_create(_dim[0], _dim[1]);
@@ -242,6 +242,10 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 		camera.applyCamera();
 			
 		scene.reset();
+		scene.lightAmbient    = _ambt;
+		scene.gammaCorrection = _gamm;
+		scene.enviroment_map  = _env;
+		   
 		_scne.submitShader(scene);
 		scene.apply();
 		

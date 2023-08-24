@@ -72,6 +72,8 @@ function __3dScene(camera) constructor {
 		lightPnt_viewMat   = [];
 		lightPnt_projMat   = [];
 		lightPnt_shadowBias = [];
+		
+		enviroment_map = noone;
 	} reset();
 	
 	static applyCamera = function() { camera.applyCamera(); }
@@ -105,17 +107,21 @@ function __3dScene(camera) constructor {
 					shader_set_surface($"light_pnt_shadowmap_{i}", lightPnt_shadowMap[i], true, true);
 				shader_set_f("light_pnt_view",		lightPnt_viewMat);
 				shader_set_f("light_pnt_proj",		lightPnt_projMat);
-				shader_set_f("light_ont_shadow_bias", lightPnt_shadowBias);
+				shader_set_f("light_pnt_shadow_bias", lightPnt_shadowBias);
 			}
 			
 			shader_set_f("cameraPosition",	camera.position.toArray());
 			shader_set_i("gammaCorrection",	gammaCorrection);
 			shader_set_f("planeNear",		camera.view_near);
 			shader_set_f("planeFar",		camera.view_far );
+			
+			shader_set_i("env_use_mapping",		is_surface(enviroment_map) );
+			shader_set_surface("env_map",		enviroment_map );
+			shader_set_dim("env_map_dimension",	enviroment_map );
 		shader_reset();
 	}
 	
-	static addLightDirectional = function(light) {
+	static addLightDirectional = function(light) { #region
 		if(lightDir_count >= lightDir_max) {
 			noti_warning("Direction light limit exceeded");
 			return self;
@@ -136,13 +142,13 @@ function __3dScene(camera) constructor {
 		}
 		array_append(lightDir_viewMat, light.shadow_map_view);
 		array_append(lightDir_projMat, light.shadow_map_proj);
-		array_append(lightDir_shadowBias, light.shadow_bias);
+		array_push(lightDir_shadowBias, light.shadow_bias);
 		lightDir_count++;
 		
 		return self;
-	}
+	} #endregion
 	
-	static addLightPoint = function(light) {
+	static addLightPoint = function(light) { #region
 		if(lightPnt_count >= lightPnt_max) {
 			noti_warning("Point light limit exceeded");
 			return self;
@@ -164,9 +170,9 @@ function __3dScene(camera) constructor {
 		}
 		array_append(lightPnt_viewMat, light.shadow_map_view);
 		array_append(lightPnt_projMat, light.shadow_map_proj);
-		array_append(lightPnt_shadowBias, light.shadow_bias);
+		array_push(lightPnt_shadowBias, light.shadow_bias);
 		lightPnt_count++;
 		
 		return self;
-	}
+	} #endregion
 }

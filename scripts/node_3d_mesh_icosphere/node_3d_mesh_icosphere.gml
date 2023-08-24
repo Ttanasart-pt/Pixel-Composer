@@ -5,7 +5,8 @@ function Node_3D_Mesh_Sphere_Ico(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, 
 	
 	inputs[| in_mesh + 0] = nodeValue("Subdivision", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1 );
 	
-	inputs[| in_mesh + 1] = nodeValue("Material", self, JUNCTION_CONNECT.input, VALUE_TYPE.d3Material, noone );
+	inputs[| in_mesh + 1] = nodeValue("Material", self, JUNCTION_CONNECT.input, VALUE_TYPE.d3Material, noone )
+		.setVisible(true, true);
 	
 	inputs[| in_mesh + 2] = nodeValue("Smooth Normal", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false );
 	
