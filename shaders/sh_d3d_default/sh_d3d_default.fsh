@@ -115,9 +115,9 @@ varying float v_cameraDistance;
 		vec3 viewDir  = normalize(viewVec);
 		vec3 refcDir  = reflect(-lightDir, normal);
 		
-		float kD = 1, kS = 0;
+		float kD = 1., kS = 0.;
 		
-		if(mat_diffuse + mat_specular != 0) {
+		if(mat_diffuse + mat_specular != 0.) {
 			kD = mat_diffuse  / (mat_diffuse + mat_specular);
 			kS = mat_specular / (mat_diffuse + mat_specular);
 		}

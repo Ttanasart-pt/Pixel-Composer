@@ -158,7 +158,7 @@ function __3dObject() constructor {
 				var sca = matrix_build(0, 0, 0, 
 									   0, 0, 0, 
 									   params.custom_scale.x, params.custom_scale.y, params.custom_scale.z);
-									   
+				
 				matrix_stack_push(pos);
 				matrix_stack_push(siz);
 				matrix_stack_push(sca);

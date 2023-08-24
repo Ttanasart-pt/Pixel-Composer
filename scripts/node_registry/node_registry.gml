@@ -367,23 +367,23 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 			addNodeObject(d3d, "Sprite Stack",		s_node_stack,			"Node_Sprite_Stack",	[1, Node_Sprite_Stack],, "Create sprite stack either from repeating a single image or stacking different images using array.");
 			
 			ds_list_add(d3d, "3D");
-			addNodeObject(d3d, "3D Scene",		s_node_3d_cube,		"Node_3D_Scene",		[1, Node_3D_Scene]);
-			addNodeObject(d3d, "3D Camera",		s_node_3d_cube,		"Node_3D_Camera",		[1, Node_3D_Camera]);
-			addNodeObject(d3d, "3D Material",	s_node_3d_cube,		"Node_3D_Material",		[1, Node_3D_Material]);
+			addNodeObject(d3d, "3D Scene",		s_node_3d_scene,		"Node_3D_Scene",		[1, Node_3D_Scene]);
+			addNodeObject(d3d, "3D Camera",		s_node_3d_camera,		"Node_3D_Camera",		[1, Node_3D_Camera]);
+			addNodeObject(d3d, "3D Material",	s_node_3d_meterial,		"Node_3D_Material",		[1, Node_3D_Material]);
 			
 			ds_list_add(d3d, "Mesh");
-			addNodeObject(d3d, "3D Object",		s_node_3d_obj,		"Node_3D_Mesh_Obj",			[0, Node_create_3D_Obj],, "Load .obj file from your computer as a 3D object.");
-			addNodeObject(d3d, "3D Plane",		s_node_3d_plane,	"Node_3D_Mesh_Plane",		[1, Node_3D_Mesh_Plane],, "Put 2D image on a plane in 3D space.");
-			addNodeObject(d3d, "3D Cube",		s_node_3d_cube,		"Node_3D_Mesh_Cube",		[1, Node_3D_Mesh_Cube]);
-			addNodeObject(d3d, "3D Cylinder",	s_node_3d_cylinder,	"Node_3D_Mesh_Cylinder",	[1, Node_3D_Mesh_Cylinder]);
-			addNodeObject(d3d, "3D UV Sphere",	s_node_3d_sphere,	"Node_3D_Mesh_Sphere_UV",	[1, Node_3D_Mesh_Sphere_UV]);
-			addNodeObject(d3d, "3D Icosphere",	s_node_3d_sphere,	"Node_3D_Mesh_Sphere_Ico",	[1, Node_3D_Mesh_Sphere_Ico]);
-			addNodeObject(d3d, "3D Cone",		s_node_3d_cone,		"Node_3D_Mesh_Cone",		[1, Node_3D_Mesh_Cone])
-			addNodeObject(d3d, "Surface Extrude",	s_node_3d_extrude,		"Node_3D_Mesh_Extrude",		[1, Node_3D_Mesh_Extrude],, "Extrude 2D image into 3D object.");
+			addNodeObject(d3d, "3D Object",		s_node_3d_obj,			"Node_3D_Mesh_Obj",			[0, Node_create_3D_Obj],, "Load .obj file from your computer as a 3D object.");
+			addNodeObject(d3d, "3D Plane",		s_node_3d_plane,		"Node_3D_Mesh_Plane",		[1, Node_3D_Mesh_Plane],, "Put 2D image on a plane in 3D space.");
+			addNodeObject(d3d, "3D Cube",		s_node_3d_cube,			"Node_3D_Mesh_Cube",		[1, Node_3D_Mesh_Cube]);
+			addNodeObject(d3d, "3D Cylinder",	s_node_3d_cylinder,		"Node_3D_Mesh_Cylinder",	[1, Node_3D_Mesh_Cylinder]);
+			addNodeObject(d3d, "3D UV Sphere",	s_node_3d_sphere_uv,	"Node_3D_Mesh_Sphere_UV",	[1, Node_3D_Mesh_Sphere_UV]);
+			addNodeObject(d3d, "3D Icosphere",	s_node_3d_sphere_ico,	"Node_3D_Mesh_Sphere_Ico",	[1, Node_3D_Mesh_Sphere_Ico]);
+			addNodeObject(d3d, "3D Cone",		s_node_3d_cone,			"Node_3D_Mesh_Cone",		[1, Node_3D_Mesh_Cone])
+			addNodeObject(d3d, "Surface Extrude",	s_node_3d_extrude,	"Node_3D_Mesh_Extrude",		[1, Node_3D_Mesh_Extrude],, "Extrude 2D image into 3D object.");
 			
 			ds_list_add(d3d, "Light");
-			addNodeObject(d3d, "Directional Light",	s_node_3d_cube,		"Node_3D_Light_Directional",	[1, Node_3D_Light_Directional]);
-			addNodeObject(d3d, "Point Light",		s_node_3d_cube,		"Node_3D_Light_Point",			[1, Node_3D_Light_Point]);
+			addNodeObject(d3d, "Directional Light",	s_node_3d_light_directi,	"Node_3D_Light_Directional",	[1, Node_3D_Light_Directional]);
+			addNodeObject(d3d, "Point Light",		s_node_3d_light_point,		"Node_3D_Light_Point",			[1, Node_3D_Light_Point]);
 			
 			ds_list_add(d3d, "Legacy"); //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 			addNodeObject(d3d, "3D Plane",			s_node_3d_plane,		"Node_3D_Plane",		[1, Node_3D_Plane],, "Put 2D image on a plane in 3D space.").isDeprecated();

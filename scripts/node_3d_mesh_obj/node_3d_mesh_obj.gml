@@ -35,8 +35,8 @@ function Node_3D_Mesh_Obj(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group)
 	input_display_list = [
 		__d3d_input_list_mesh,
 		__d3d_input_list_transform,
-		["Object",	false], in_mesh + 0, 
-		["Texture",	false], in_mesh + 1, 
+		["Object",	 false], in_mesh + 0, 
+		["Material", false], in_mesh + 1, 
 	]
 	
 	input_fix_len = ds_list_size(inputs);
@@ -63,7 +63,7 @@ function Node_3D_Mesh_Obj(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group)
 	
 	static createMaterial = function(m_index) { #region
 		var index = ds_list_size(inputs);
-		inputs[| index] = nodeValue(materialNames[m_index] + " Texture", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone)
+		inputs[| index] = nodeValue(materialNames[m_index] + " Material", self, JUNCTION_CONNECT.input, VALUE_TYPE.d3Material, noone)
 							.setVisible(true, true);
 		input_display_list[input_display_len + m_index] = index;
 		
@@ -140,9 +140,9 @@ function Node_3D_Mesh_Obj(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group)
 		if(_path != current_path)
 			updateObj(_path);
 		
-		var textures = [];
+		var materials = [];
 		for( var i = input_fix_len, n = array_length(_data); i < n; i++ ) 
-			textures[i - input_fix_len] = surface_texture(_data[i]);
+			materials[i - input_fix_len] = _data[i];
 		
 		var _object = getObject(_array_index);
 		if(object == noone)
@@ -153,7 +153,7 @@ function Node_3D_Mesh_Obj(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group)
 		_object.NVB		= object.NVB;
 		_object.vertex  = object.vertex;
 		_object.object_counts  = object.object_counts;
-		_object.texture = textures;
+		_object.materials = materials;
 		
 		setTransform(_object, _data);
 		return _object;

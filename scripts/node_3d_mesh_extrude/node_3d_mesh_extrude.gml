@@ -3,7 +3,7 @@ function Node_3D_Mesh_Extrude(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _gr
 	
 	object_class = __3dSurfaceExtrude;
 	
-	inputs[| in_mesh + 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
+	inputs[| in_mesh + 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.d3Material, noone);
 	
 	inputs[| in_mesh + 1] = nodeValue("Height map", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
 	
@@ -18,14 +18,15 @@ function Node_3D_Mesh_Extrude(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _gr
 	]
 	
 	static processData = function(_output, _data, _output_index, _array_index = 0) { #region
-		var _surf = _data[in_mesh + 0];
+		var _mat  = _data[in_mesh + 0];
 		var _hght = _data[in_mesh + 1];
 		var _smt  = _data[in_mesh + 2];
 		var _updt = _data[in_mesh + 3];
+		var _surf = _mat == noone? noone : _mat.surface;
 		
 		var object = getObject(_array_index);
 		object.checkParameter({surface: _surf, height: _hght, smooth: _smt}, _updt);
-		object.texture = [ surface_texture(_surf) ];
+		object.materials = [ _mat ];
 		
 		setTransform(object, _data);
 		
