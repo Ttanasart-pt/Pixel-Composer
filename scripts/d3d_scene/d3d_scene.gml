@@ -35,19 +35,28 @@ function __3dScene(camera) constructor {
 	custom_transform = new __vec3();
 	custom_scale     = new __vec3(1, 1, 1);
 	
-	lightAmbient = c_black;
-	
-	lightDir_max = 16;
+	lightAmbient		= c_black;
+	lightDir_max		= 16;
 	lightDir_shadow_max = 4;
-	
-	lightPnt_max = 16;
+	lightPnt_max		= 16;
 	lightPnt_shadow_max = 4;
 	
+	cull_mode       = cull_noculling;
+	enviroment_map  = noone;
 	gammaCorrection = true;
 	
 	show_normal = false;
 	
-	static reset = function() {
+	geometry_data = [];
+	
+	ssao_enabled  = false;
+	ssao		  = noone;
+	ssao_sample   = 32;
+	ssao_radius   = 0.1;
+	ssao_bias     = 0.1;
+	ssao_strength = 1.;
+	
+	static reset = function() { #region
 		lightDir_count     = 0;
 		lightDir_direction = [];
 		lightDir_color     = [];
@@ -72,18 +81,118 @@ function __3dScene(camera) constructor {
 		lightPnt_viewMat   = [];
 		lightPnt_projMat   = [];
 		lightPnt_shadowBias = [];
-		
-		enviroment_map = noone;
-	} reset();
+	} reset(); #endregion
 	
 	static applyCamera = function() { camera.applyCamera(); }
 	static resetCamera = function() { camera.resetCamera(); }
 	
-	static apply = function() {
-		shader_set(sh_d3d_default);
-			shader_set_f("light_ambient", colToVec4(lightAmbient));
+	static submit		= function(object, shader = noone) { object.submit(self, shader); }
+	static submitUI		= function(object, shader = noone) { object.submitUI(self, shader); }
+	static submitSel	= function(object, shader = noone) { object.submitSel(self, shader); }
+	static submitShader	= function(object, shader = noone) { object.submitShader(self, shader); }
+	
+	static deferPass = function(object, w, h) { #region
+		geometryPass(object, w, h);
+		ssaoPass();
+	} #endregion
+	
+	static renderBackground = function(w, h) { #region
+		var _bgSurf = surface_create(w, h);
+		surface_set_shader(_bgSurf, sh_d3d_background);
+			shader_set_color("light_ambient",	lightAmbient);
+			shader_set_f("cameraPosition",		camera.position.toArray());
+			shader_set_i("env_use_mapping",		is_surface(enviroment_map) );
+			shader_set_surface("env_map",		enviroment_map );
+			shader_set_dim("env_map_dimension",	enviroment_map );
+				
+			camera.setMatrix();
+			camera.applyCamera();
+				
+			gpu_set_cullmode(cull_noculling);
+			var _s = (camera.view_near + camera.view_far) / 2;
 			
-			shader_set_i("light_dir_count",		lightDir_count);
+			matrix_set(matrix_world, matrix_build(camera.position.x, camera.position.y, camera.position.z, 0, 0, 0, _s, _s, _s));
+			vertex_submit(global.SKY_SPHERE.VB[0], pr_trianglelist, -1);
+			matrix_set(matrix_world, matrix_build_identity());
+		surface_reset_shader();
+		
+		return _bgSurf;
+	} #endregion
+	
+	static geometryPass = function(object, w = 512, h = 512) { #region
+		var world  = surface_create(w, h, surface_rgba32float);
+		var view   = surface_create(w, h, surface_rgba32float);
+		var normal = surface_create(w, h, surface_rgba32float);
+		
+		surface_set_target_ext(0, world);
+		surface_set_target_ext(1, view);
+		surface_set_target_ext(2, normal);
+			gpu_set_zwriteenable(true);
+			gpu_set_ztestenable(true);
+			
+			DRAW_CLEAR
+			camera.setMatrix();
+			applyCamera();
+			
+			gpu_set_cullmode(cull_mode);
+			
+			shader_set(sh_d3d_geometry);
+			shader_set_f("planeNear", camera.view_near);
+			shader_set_f("planeFar",  camera.view_far);
+			
+			submit(object, sh_d3d_geometry);
+			
+			shader_reset();
+			gpu_set_ztestenable(false);
+		surface_reset_target();
+		
+		geometry_data = [ world, view, normal ];
+	} #endregion
+	
+	static ssaoPass = function() { #region
+		surface_free_safe(ssao);
+		if(!ssao_enabled) return;
+		
+		var _sw = surface_get_width(geometry_data[0]);
+		var _sh = surface_get_height(geometry_data[0]);
+		var _ssao_surf = surface_create(_sw, _sh);
+		
+		surface_set_shader(_ssao_surf, sh_d3d_ssao);
+			shader_set_surface("vPosition", geometry_data[0]);
+			shader_set_surface("vNormal",   geometry_data[2]);
+			shader_set_f("radius",   ssao_radius);
+			shader_set_f("bias",     ssao_bias);
+			shader_set_f("strength", ssao_strength * 2);
+			shader_set_f("projMatrix",     camera.getCombinedMatrix());
+			shader_set_f("cameraPosition", camera.position.toArray());
+		
+			draw_sprite_stretched(s_fx_pixel, 0, 0, 0, _sw, _sh);
+		surface_reset_shader();
+		
+		var _ssao_blur = surface_create(_sw, _sh);
+		surface_set_shader(_ssao_blur, sh_d3d_ssao_blur);
+			shader_set_f("dimension", _sw, _sh);
+			shader_set_surface("vNormal",   geometry_data[2]);
+			
+			draw_surface_safe(_ssao_surf);
+		surface_reset_shader();
+		
+		surface_free(_ssao_surf);
+		
+		ssao = _ssao_blur;
+	} #endregion
+	
+	static apply = function() { #region
+		shader_set(sh_d3d_default);
+			#region ---- background ----
+				shader_set_f("light_ambient",		colToVec4(lightAmbient));
+				shader_set_i("env_use_mapping",		is_surface(enviroment_map) );
+				shader_set_surface("env_map",		enviroment_map, false, true );
+				shader_set_dim("env_map_dimension",	enviroment_map );
+				shader_set_surface("ao_map",		ssao );
+			#endregion
+			
+			shader_set_i("light_dir_count",		lightDir_count); #region
 			if(lightDir_count) {
 				shader_set_f("light_dir_direction", lightDir_direction);
 				shader_set_f("light_dir_color",		lightDir_color);
@@ -94,9 +203,9 @@ function __3dScene(camera) constructor {
 				shader_set_f("light_dir_view",		lightDir_viewMat);
 				shader_set_f("light_dir_proj",		lightDir_projMat);
 				shader_set_f("light_dir_shadow_bias", lightDir_shadowBias);
-			}
+			} #endregion
 			
-			shader_set_i("light_pnt_count",		lightPnt_count);
+			shader_set_i("light_pnt_count",		lightPnt_count); #region
 			if(lightPnt_count) {
 				shader_set_f("light_pnt_position",  lightPnt_position);
 				shader_set_f("light_pnt_color",		lightPnt_color);
@@ -108,18 +217,16 @@ function __3dScene(camera) constructor {
 				shader_set_f("light_pnt_view",		lightPnt_viewMat);
 				shader_set_f("light_pnt_proj",		lightPnt_projMat);
 				shader_set_f("light_pnt_shadow_bias", lightPnt_shadowBias);
-			}
+			} #endregion
 			
-			shader_set_f("cameraPosition",	camera.position.toArray());
-			shader_set_i("gammaCorrection",	gammaCorrection);
-			shader_set_f("planeNear",		camera.view_near);
-			shader_set_f("planeFar",		camera.view_far );
-			
-			shader_set_i("env_use_mapping",		is_surface(enviroment_map) );
-			shader_set_surface("env_map",		enviroment_map );
-			shader_set_dim("env_map_dimension",	enviroment_map );
+			#region ---- camera ----
+				shader_set_f("cameraPosition",	camera.position.toArray());
+				shader_set_i("gammaCorrection",	gammaCorrection);
+				shader_set_f("planeNear",		camera.view_near);
+				shader_set_f("planeFar",		camera.view_far );
+			#endregion
 		shader_reset();
-	}
+	} #endregion
 	
 	static addLightDirectional = function(light) { #region
 		if(lightDir_count >= lightDir_max) {

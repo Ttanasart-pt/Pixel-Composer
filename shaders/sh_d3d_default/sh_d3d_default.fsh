@@ -160,6 +160,36 @@ void main() {
 		vec3 normal        = normalize(_norm);
 	#endregion
 	
+	#region ++++ environment ++++
+		if(env_use_mapping == 1 && mat_reflective > 0.) {
+			vec3  reflectDir  = reflect(viewDirection, normal);
+			
+			float refRad      = mix(16., 0., mat_reflective);
+			vec2  tx = 1. / env_map_dimension;
+			vec2  reflect_sample_pos = equirectangularUv(reflectDir);
+			vec4  env_sampled = vec4(0.);
+			float weight = 0.;
+			
+			for(float i = -refRad; i <= refRad; i++)
+			for(float j = -refRad; j <= refRad; j++) {
+				vec2 _map_pos = reflect_sample_pos + vec2(i, j) * tx;
+				if(_map_pos.y < 0.)		 _map_pos.y = -_map_pos.y;
+				else if(_map_pos.y > 1.) _map_pos.y = 1. - (_map_pos.y - 1.);
+				
+				vec4 _samp = texture2D(env_map, _map_pos);
+				env_sampled += _samp;
+				weight      += _samp.a;
+			}
+			env_sampled /= weight;
+			env_sampled.a = 1.;
+			
+			vec4 env_effect  = mat_metalic == 1? env_sampled * final_color : env_sampled;
+			env_effect = 1. - ( mat_reflective * ( 1. - env_effect ));
+			
+			final_color *= env_effect;
+		}
+	#endregion
+	
 	#region ++++ light ++++
 		int shadow_map_index = 0;
 		vec3 light_effect = light_ambient.rgb;
@@ -251,33 +281,6 @@ void main() {
 		}
 		
 		final_color.rgb *= light_effect;
-	#endregion
-	
-	#region ++++ environment ++++
-		if(env_use_mapping == 1) {
-			vec3  reflectDir  = reflect(viewDirection, normal);
-			
-			float refRad      = mix(16., 0., mat_reflective);
-			vec2  tx = 1. / env_map_dimension;
-			vec2  reflect_sample_pos = equirectangularUv(reflectDir);
-			vec4  env_sampled = vec4(0.);
-			float weight = 0.;
-			
-			for(float i = -refRad; i <= refRad; i++)
-			for(float j = -refRad; j <= refRad; j++) {
-				vec2 _map_pos = reflect_sample_pos + vec2(i, j) * tx;
-				vec4 _samp = texture2D(env_map, _map_pos);
-				env_sampled += _samp;
-				weight      += _samp.a;
-			}
-			env_sampled /= weight;
-			env_sampled.a = 1.;
-			
-			vec4 env_effect  = mat_metalic == 1? env_sampled * final_color : env_sampled;
-			env_effect = 1. - ( mat_reflective * ( 1. - env_effect ));
-			
-			final_color *= env_effect;
-		}
 	#endregion
 	
 	gl_FragData[0] = final_color;

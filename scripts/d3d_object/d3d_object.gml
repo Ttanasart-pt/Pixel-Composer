@@ -101,41 +101,42 @@ function __3dObject() constructor {
 		return _res;
 	} #endregion
 	
-	static preSubmitVertex  = function(params = {}) {}
-	static postSubmitVertex = function(params = {}) {}
+	static preSubmitVertex  = function(scene = {}) {}
+	static postSubmitVertex = function(scene = {}) {}
 	
 	static getCenter = function() { return new __vec3(position.x, position.y, position.z); }
 	static getBBOX   = function() { return new __bbox3D(size.multiplyVec(scale).multiply(-0.5), size.multiplyVec(scale).multiply(0.5)); }
 	
-	static submitShader = function(params = {}, shader = noone) {}
+	static submitShader = function(scene = {}, shader = noone) {}
 	
-	static submit    = function(params = {}, shader = noone) { submitVertex(params, shader); }
-	static submitUI  = function(params = {}, shader = noone) { submitVertex(params, shader); }
+	static submit    = function(scene = {}, shader = noone) { submitVertex(scene, shader); }
+	static submitUI  = function(scene = {}, shader = noone) { submitVertex(scene, shader); }
 	
-	static submitSel = function(params = {}) { #region
-		var _p = variable_clone(params);
-		_p.show_normal = false;
-		submitVertex(_p, sh_d3d_silhouette); 
+	static submitSel = function(scene = {}) { #region
+		var _s = variable_clone(scene);
+		_s.show_normal = false;
+		submitVertex(_s, sh_d3d_silhouette); 
 	} #endregion
 	
-	static submitVertex = function(params = {}, shader = noone) { #region
-		if(shader != noone)
-			shader_set(shader);
-		else if(custom_shader != noone)
-			shader_set(custom_shader);
-		else {
-			switch(VF) {
-				case global.VF_POS_NORM_TEX_COL: shader_set(sh_d3d_default);	break;
-				case global.VF_POS_COL:			 shader_set(sh_d3d_wireframe);	break;
-			}
+	static submitVertex = function(scene = {}, shader = noone) { #region
+		var _shader = sh_d3d_default;
+		
+		switch(VF) {
+			case global.VF_POS_NORM_TEX_COL: _shader = sh_d3d_default;		break;
+			case global.VF_POS_COL:			 _shader = sh_d3d_wireframe;	break;
 		}
 		
-		preSubmitVertex(params);
+		if(custom_shader != noone) _shader = custom_shader;
+		if(shader != noone)        _shader = shader;
+
+		shader_set(_shader);
+		
+		preSubmitVertex(scene);
 		
 		if(VB != noone) { #region
 			matrix_stack_clear();
 			
-			if(params.apply_transform) {
+			if(scene.apply_transform) {
 				var pos = matrix_build(position.x, position.y, position.z, 
 									   0, 0, 0, 
 									   1, 1, 1);
@@ -149,7 +150,7 @@ function __3dObject() constructor {
 				matrix_stack_push(sca);
 				matrix_set(matrix_world, matrix_stack_top());
 			} else {
-				var pos = matrix_build(position.x - params.custom_transform.x, position.y - params.custom_transform.y, position.z - params.custom_transform.z, 
+				var pos = matrix_build(position.x - scene.custom_transform.x, position.y - scene.custom_transform.y, position.z - scene.custom_transform.z, 
 									   0, 0, 0, 
 									   1, 1, 1);
 				var siz = matrix_build(0, 0, 0, 
@@ -157,7 +158,7 @@ function __3dObject() constructor {
 									   scale.x,    scale.y,    scale.z);
 				var sca = matrix_build(0, 0, 0, 
 									   0, 0, 0, 
-									   params.custom_scale.x, params.custom_scale.y, params.custom_scale.z);
+									   scene.custom_scale.x, scene.custom_scale.y, scene.custom_scale.z);
 				
 				matrix_stack_push(pos);
 				matrix_stack_push(siz);
@@ -168,7 +169,7 @@ function __3dObject() constructor {
 		
 		#region ++++ Submit & Material ++++
 			for( var i = 0, n = array_length(VB); i < n; i++ ) {
-				if(VF == global.VF_POS_NORM_TEX_COL) {
+				if(_shader == sh_d3d_default) {
 					var _mat = array_safe_get(materials, i, noone);
 					if(_mat == noone) {
 						shader_set_f("mat_diffuse",    1);
@@ -182,12 +183,14 @@ function __3dObject() constructor {
 			
 					var _tex = _mat == noone? -1 : _mat.getTexture();
 					vertex_submit(VB[i], render_type, _tex);
-				} else 
+				} else
 					vertex_submit(VB[i], render_type, -1);
 			}
 		#endregion
 		
-		if(params.show_normal && NVB != noone) { #region
+		shader_reset();
+		
+		if(scene.show_normal && NVB != noone) { #region
 			shader_set(sh_d3d_wireframe);
 			for( var i = 0, n = array_length(NVB); i < n; i++ ) 
 				vertex_submit(NVB[i], pr_linelist, -1);
@@ -197,9 +200,8 @@ function __3dObject() constructor {
 		matrix_stack_clear();
 		matrix_set(matrix_world, matrix_build_identity());
 		
-		postSubmitVertex(params);
+		postSubmitVertex(scene);
 		
-		shader_reset();
 	} #endregion
 		
 	static clone = function() { #region
@@ -217,4 +219,6 @@ function __3dObject() constructor {
 	} #endregion
 	
 	static onDestroy = function() { } 
+	
+	static toString = function() { return $"[D3D Object\n\t{array_length(vertex)} vertex groups\n\tPosition: {position}\n\tRotation: {rotation}\n\tScale: {scale}]" }
 }

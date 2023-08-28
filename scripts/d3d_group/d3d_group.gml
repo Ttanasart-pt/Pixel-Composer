@@ -1,7 +1,7 @@
 function __3dGroup() constructor {
 	objects = [];
 	
-	static getCenter = function() {
+	static getCenter = function() { #region
 		var _v = new __vec3();
 		var _i = 0;
 		
@@ -13,9 +13,9 @@ function __3dGroup() constructor {
 		}
 		
 		return _i == 0? new __vec3() : _v.multiply(1 / _i);
-	}
+	} #endregion
 	
-	static getBBOX   = function() { 
+	static getBBOX   = function() { #region
 		if(array_empty(objects)) return new __bbox3D(new __vec3(-0.5), new __vec3(0.5));
 		var _m0 = noone;
 		var _m1 = noone;
@@ -40,20 +40,20 @@ function __3dGroup() constructor {
 		_m1._subtract(_cc);
 		
 		return new __bbox3D(_m0, _m1); 
-	}
+	} #endregion
 	
-	static _submit = function(callback, params = {}, shader = noone) {
+	static _submit = function(callback, scene = {}, shader = noone) { #region
 		for( var i = 0, n = array_length(objects); i < n; i++ )
-			callback(objects[i], params, shader);
-	}
+			callback(objects[i], scene, shader);
+	} #endregion
 	
-	static submitShader = function(params = {}) { _submit(function(_obj, params) { _obj.submitShader(params); }, params); }
-	static submitSel    = function(params = {}) { _submit(function(_obj, params) { _obj.submitSel(params); }, params); }
-	static submitUI     = function(params = {}, shader = noone) { _submit(function(_obj, params, shader) { _obj.submitUI(params, shader); }, params, shader); }
-	static submit       = function(params = {}, shader = noone) { _submit(function(_obj, params, shader) { _obj.submit(params, shader);   }, params, shader); }
+	static submitShader = function(scene = {}) { _submit(function(_obj, scene) { _obj.submitShader(scene); }, scene); }
+	static submitSel    = function(scene = {}) { _submit(function(_obj, scene) { _obj.submitSel(scene); }, scene); }
+	static submitUI     = function(scene = {}, shader = noone) { _submit(function(_obj, scene, shader) { _obj.submitUI(scene, shader); }, scene, shader); }
+	static submit       = function(scene = {}, shader = noone) { _submit(function(_obj, scene, shader) { _obj.submit(scene, shader);   }, scene, shader); }
 	
-	static map = function(callback, params = {}) {
+	static map = function(callback, scene = {}) { #region
 		for( var i = 0, n = array_length(objects); i < n; i++ ) 
-			callback(objects[i], params);
-	}
+			callback(objects[i], scene);
+	} #endregion
 }

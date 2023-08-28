@@ -576,7 +576,7 @@ function Node_3D_Object(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 	} #endregion
 	
 	static drawOverlay3D = function(active, params, _mx, _my, _snx, _sny, _panel) { #region
-		var object = getPreviewObject();
+		var object = getPreviewObjects();
 		if(array_empty(object)) return;
 		object = object[0];
 		

@@ -14,27 +14,29 @@ function Node_3D(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constr
 	static onDrawNode  = function(xx, yy, _mx, _my, _s, _hover, _focus) {}
 	
 	static getPreviewObject = function() { #region
-		if(ds_list_empty(outputs)) return [];
+		if(ds_list_empty(outputs)) return noone;
 		switch(outputs[| preview_channel].type) {
 			case VALUE_TYPE.d3Mesh		: 
 			case VALUE_TYPE.d3Light		: 
 			case VALUE_TYPE.d3Camera	: 
 			case VALUE_TYPE.d3Scene		: break;
 			
-			default : return [];
+			default : return noone;
 		}
 		
 		var _obj = outputs[| 0].getValue();
 		if(is_array(_obj))
 			_obj = array_safe_get(_obj, preview_index, noone);
 		
-		return [ _obj ];
+		return _obj;
 	} #endregion
 	
-	static getPreviewObjectOutline = function() { return getPreviewObject() }
+	static getPreviewObjects = function() { return [ getPreviewObject() ]; }
+	
+	static getPreviewObjectOutline = function() { return getPreviewObjects() }
 	
 	static refreshPreview = function() { #region
-		var _prev_obj = getPreviewObject();
+		var _prev_obj = getPreviewObjects();
 		
 		mesh_prev_surface = surface_verify(mesh_prev_surface, 64, 64);
 		surface_set_target(mesh_prev_surface);
@@ -50,6 +52,7 @@ function Node_3D(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constr
 			for( var i = 0, n = array_length(_prev_obj); i < n; i++ ) {
 				var _prev = _prev_obj[i];
 				if(_prev == noone) continue;
+				
 				var _b = _prev.getBBOX();
 				var _c = _prev.getCenter();
 				if(_b == noone || _c == noone) continue;
