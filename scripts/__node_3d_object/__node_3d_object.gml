@@ -23,8 +23,9 @@ function Node_3D_Object(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 		drag_sv    = 0;
 		drag_delta = 0;
 		drag_prev  = 0;
+		drag_dist  = 0;
+		drag_val   = 0;
 		
-		drag_val = 0;
 		drag_mx = 0;
 		drag_my = 0;
 		drag_px = 0;
@@ -352,18 +353,13 @@ function Node_3D_Object(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 			draw_line_round(cx, cy, cx + _nv.X * 100, cy + _nv.Y * 100, 2);
 				
 			if(drag_prev != undefined) {
-				var _rd = (mAng - drag_prev) * (_nv.Z > 0? 1 : -1);
-					
-				var _currR = new BBMOD_Quaternion().FromAxisAngle(_n, _rd);
-				drag_val   = _currR.Mul(drag_val);
+				var _rd    = (mAng - drag_prev) * (_nv.Z > 0? 1 : -1);
+				drag_dist += _rd;
+				var _dist  = value_snap(drag_dist, _sny);
 				
-				var _axs = drag_val.GetAxis();
-				var _ang = drag_val.GetAngle();
-				var _ans = value_snap(_ang, _sny);
-				
-				var _NrotE = new BBMOD_Quaternion().FromAxisAngle(_axs, -_ans);
-				
-				var _Nrot  = _NrotE.ToArray();
+				var _currR = new BBMOD_Quaternion().FromAxisAngle(_n, _dist);
+				var _val   = _currR.Mul(drag_val);
+				var _Nrot  = _val.ToArray();
 					
 				if(inputs[| index].setValue(_Nrot))
 					UNDO_HOLDING = true;
@@ -379,8 +375,8 @@ function Node_3D_Object(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 			drag_axis = _hover;
 			drag_prev = undefined;
 			
-			drag_axs  = undefined;
 			drag_val  = _qrot.Clone();
+			drag_dist = 0;
 		} #endregion
 	} #endregion
 	

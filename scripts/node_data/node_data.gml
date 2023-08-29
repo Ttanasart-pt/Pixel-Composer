@@ -1295,8 +1295,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		isTool = true;
 	} #endregion
 	
-	#region[#88ffe916] === Save Load ===
-	static serialize = function(scale = false, preset = false) {
+	static serialize = function(scale = false, preset = false) { #region
 		var _map = {};
 		//print(" > Serializing: " + name);
 		
@@ -1338,7 +1337,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		doSerialize(_map);
 		processSerialize(_map);
 		return _map;
-	}
+	} #endregion
 	
 	static attributeSerialize = function() { return attributes; }
 	static doSerialize = function(_map) {}
@@ -1346,7 +1345,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	
 	load_scale = false;
 	load_map = -1;
-	static deserialize = function(_map, scale = false, preset = false) {
+	static deserialize = function(_map, scale = false, preset = false) { #region
 		load_map = _map;
 		load_scale = scale;
 		
@@ -1390,9 +1389,9 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 			
 			triggerRender();
 		}
-	}
+	} #endregion
 	
-	static inputBalance = function() { //Cross version compatibility for dynamic input nodes
+	static inputBalance = function() { #region //Cross version compatibility for dynamic input nodes
 		if(!struct_has(load_map, "data_length")) 
 			return;
 		
@@ -1430,9 +1429,9 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		//print($"IO size after: {array_length(load_map.inputs)}");
 		//for( var i = 0, n = array_length(load_map.inputs); i < n; i++ ) 
 		//	print($"{i}: {load_map.inputs[i] == noone? "noone" : load_map.inputs[i].name}");
-	}
+	} #endregion
 	
-	static inputGenerate = function() { //Generate input for dynamic input nodes
+	static inputGenerate = function() { #region //Generate input for dynamic input nodes
 		if(createNewInput == noone) 
 			return;
 		
@@ -1440,16 +1439,16 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		//print($"Node {name} create {_dynamic_inputs} inputs for data length {data_length}");
 		repeat(_dynamic_inputs)
 			createNewInput();
-	}
+	} #endregion
 	
-	static attributeDeserialize = function(attr) {
+	static attributeDeserialize = function(attr) { #region
 		struct_override(attributes, attr);
 	}
-	
+	 #endregion
 	static postDeserialize = function() {}
 	static processDeserialize = function() {}
 		
-	static applyDeserialize = function(preset = false) {
+	static applyDeserialize = function(preset = false) { #region
 		var _inputs = load_map.inputs;
 		var amo = min(ds_list_size(inputs), array_length(_inputs));
 		
@@ -1475,11 +1474,11 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		}
 		
 		doApplyDeserialize();
-	}
+	} #endregion
 	
 	static doApplyDeserialize = function() {}
 	
-	static loadGroup = function(context = PANEL_GRAPH.getCurrentContext()) {
+	static loadGroup = function(context = PANEL_GRAPH.getCurrentContext()) { #region
 		if(_group == noone) {
 			var c = context;
 			if(c != noone) c.add(self);
@@ -1498,9 +1497,9 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 				throw(txt);
 			}
 		}
-	}
+	} #endregion
 	
-	static connect = function(log = false) {
+	static connect = function(log = false) { #region
 		var connected = true;
 		for(var i = 0; i < ds_list_size(inputs); i++)
 			connected &= inputs[| i].connect(log);
@@ -1513,11 +1512,10 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		if(!connected) ds_queue_enqueue(CONNECTION_CONFLICT, self);
 		
 		return connected;
-	}
+	} #endregion
 	
 	static preConnect = function() {}
 	static postConnect = function() {}
-	#endregion
 	
 	static resetAnimation = function() {}
 	

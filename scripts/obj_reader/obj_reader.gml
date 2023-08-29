@@ -1,4 +1,4 @@
-function readObj(path, flipUV = false) {
+function readObj(path) {
 	if(!file_exists(path)) return noone;
 	
 	var _VB  = [];
@@ -30,7 +30,10 @@ function readObj(path, flipUV = false) {
 				ds_list_add(v, [ toNumber(sep[1]), toNumber(sep[2]), toNumber(sep[3]) ]);
 				break;
 			case "vt" :
-				ds_list_add(vt, [ toNumber(sep[1]), flipUV + toNumber(sep[2]) * (1 - flipUV * 2) ]); // flipUV? 1 - sep[2] : sep[2]
+				var _u = toNumber(sep[1]);
+				var _v = toNumber(sep[2]);
+				
+				ds_list_add(vt, [ _u, _v ]);
 				break;
 			case "vn" :
 				ds_list_add(vn, [ toNumber(sep[1]), toNumber(sep[2]), toNumber(sep[3]) ]);

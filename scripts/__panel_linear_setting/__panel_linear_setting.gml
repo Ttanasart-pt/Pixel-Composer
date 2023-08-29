@@ -3,7 +3,9 @@ function Panel_Linear_Setting() : PanelContent() constructor {
 	
 	w = ui(380);
 	
-	bg_y = -1;
+	bg_y    = -1;
+	bg_y_to = -1;
+	bg_a    = 0;
 	
 	properties = []
 	static setHeight = function() { h = ui(12 + 36 * array_length(properties)); }
@@ -14,9 +16,8 @@ function Panel_Linear_Setting() : PanelContent() constructor {
 		var ww = ui(200);
 		var wh = TEXTBOX_HEIGHT;
 		
-		var bg_y_to = bg_y;
-		
-		if(bg_y) draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, ui(4), bg_y, w - ui(8), th, COLORS.panel_prop_bg, 0.5);
+		var _hov = false;
+		if(bg_y) draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, ui(4), bg_y, w - ui(8), th, COLORS.panel_prop_bg, 0.5 * bg_a);
 		
 		for( var i = 0, n = array_length(properties); i < n; i++ ) {
 			var _prop = properties[i];
@@ -28,8 +29,10 @@ function Panel_Linear_Setting() : PanelContent() constructor {
 			_widg.setFocusHover(pFOCUS, pHOVER);
 			_widg.register();
 			
-			if(pHOVER && point_in_rectangle(mx, my, 0, yy - th / 2, w, yy + th / 2)) 
+			if(pHOVER && point_in_rectangle(mx, my, 0, yy - th / 2, w, yy + th / 2)) {
 				bg_y_to = yy - th / 2;
+				_hov = true;
+			}
 				
 			draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text);
 			draw_text_add(ui(16), yy, _text);
@@ -45,8 +48,10 @@ function Panel_Linear_Setting() : PanelContent() constructor {
 			yy += th;
 		}
 		
+		bg_a = lerp_float(bg_a, _hov, 2);
+		
 		if(bg_y == -1) bg_y = bg_y_to;
-		else           bg_y = lerp_float(bg_y, bg_y_to, 3);
+		else           bg_y = lerp_float(bg_y, bg_y_to, 2);
 	}
 	
 	function drawContent(panel) { drawSettings(panel); }

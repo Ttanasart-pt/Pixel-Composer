@@ -31,7 +31,9 @@ function __3dObject() constructor {
 	scale    = new __vec3(1);
 	size     = new __vec3(1);
 	
-	materials = [];
+	materials      = [];
+	matrial_index  = [];
+	texture_flip   = false;
 	
 	static checkParameter = function(params = {}, forceUpdate = false) { #region
 		var _keys = struct_get_names(params);
@@ -169,9 +171,13 @@ function __3dObject() constructor {
 		} #endregion
 		
 		#region ++++ Submit & Material ++++
+			gpu_set_tex_repeat(true);
+		
 			for( var i = 0, n = array_length(VB); i < n; i++ ) {
 				if(_shader == sh_d3d_default) {
-					var _mat = array_safe_get(materials, i, noone);
+					var _ind = array_safe_get(matrial_index, i, i);
+					var _mat = array_safe_get(materials, _ind, noone);
+					
 					if(_mat == noone) {
 						shader_set_f("mat_diffuse",    1);
 						shader_set_f("mat_specular",   0);
@@ -181,12 +187,16 @@ function __3dObject() constructor {
 						shader_set_f("mat_reflective", 0);
 					} else 
 						_mat.submitShader();
-			
+					
+					shader_set_i("mat_flip", texture_flip);
+					//print($"{instanceof(self)}: {i}, {_mat}");
 					var _tex = _mat == noone? -1 : _mat.getTexture();
 					vertex_submit(VB[i], render_type, _tex);
 				} else
 					vertex_submit(VB[i], render_type, -1);
 			}
+			
+			gpu_set_tex_repeat(false);
 		#endregion
 		
 		shader_reset();

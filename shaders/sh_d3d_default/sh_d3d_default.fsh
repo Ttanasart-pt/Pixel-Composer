@@ -59,6 +59,8 @@ varying float v_cameraDistance;
 	uniform int		  mat_use_normal;
 	uniform float	  mat_normal_strength;
 	uniform sampler2D mat_normal_map;
+	
+	uniform int		  mat_flip;
 #endregion
 
 #region ---- rendering ----
@@ -144,7 +146,10 @@ varying float v_cameraDistance;
 #endregion
 
 void main() {
-	mat_baseColor = texture2D( gm_BaseTexture, v_vTexcoord );
+	vec2 uv_coord = v_vTexcoord;
+	if(mat_flip == 1) uv_coord.y = -uv_coord.y;
+	
+	mat_baseColor = texture2D( gm_BaseTexture, uv_coord );
 	mat_baseColor *= v_vColour;
 	
 	vec4 final_color   = mat_baseColor;
@@ -153,7 +158,7 @@ void main() {
 	#region ++++ normal ++++
 		vec3 _norm = v_vNormal;
 		if(mat_use_normal == 1) {
-			vec3 _sampled_normal = texture2D(mat_normal_map, v_vTexcoord).rgb;
+			vec3 _sampled_normal = texture2D(mat_normal_map, uv_coord).rgb;
 			_norm += (_sampled_normal - 0.5) * 2. * mat_normal_strength;
 		}
 		

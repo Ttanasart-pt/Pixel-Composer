@@ -39,8 +39,7 @@ function Node_3D_Mesh_Obj(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group)
 		["Material", false], in_mesh + 1, 
 	]
 	
-	input_fix_len = ds_list_size(inputs);
-	input_display_len = array_length(input_display_list);
+	setIsDynamicInput(1);
 	
 	current_path  = "";
 	materials     = [];
@@ -61,16 +60,26 @@ function Node_3D_Mesh_Obj(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group)
 		updateObj(path);
 	}
 	
-	static createMaterial = function(m_index) { #region
-		var index = ds_list_size(inputs);
-		inputs[| index] = nodeValue(materialNames[m_index] + " Material", self, JUNCTION_CONNECT.input, VALUE_TYPE.d3Material, noone)
+	static createNewInput = function(index = -1) { #region
+		if(index == -1) index = ds_list_size(inputs);
+		
+		inputs[| index] = nodeValue("Material", self, JUNCTION_CONNECT.input, VALUE_TYPE.d3Material, noone)
 							.setVisible(true, true);
+	} #endregion
+	
+	static createMaterial = function(m_index) { #region
+		var index = input_fix_len + m_index;
+		
 		input_display_list[input_display_len + m_index] = index;
+		if(index < ds_list_size(inputs)) return;
+		
+		createNewInput(index);
 		
 		if(m_index >= array_length(materials)) return;
 		
 		var matY = y - (array_length(materials) - 1) / 2 * (128 + 32);
 		var mat  = materials[m_index];
+		inputs[| index].name = materialNames[m_index] + " Material";
 		
 		if(file_exists(mat.diff_path)) {
 			var sol = Node_create_Image_path(x - (w + 128), matY + m_index * (128 + 32), mat.diff_path);
@@ -90,11 +99,10 @@ function Node_3D_Mesh_Obj(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group)
 		if(!file_exists(_path)) return;
 		current_path = _path;
 		
-		var _flip    = inputs[| in_mesh + 1].getValue();
 		var _dir     = filename_dir(_path);
 		var _pathMtl = string_copy(_path, 1, string_length(_path) - 4) + ".mtl";
 		
-		var _v = readObj(_path, _flip);
+		var _v = readObj(_path);
 		if(_v == noone) return;
 		
 		if(object != noone) object.destroy();
@@ -120,8 +128,9 @@ function Node_3D_Mesh_Obj(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group)
 			
 		array_resize(input_display_list, input_display_len);
 			
-		while(ds_list_size(inputs) > input_fix_len)
-			ds_list_delete(inputs, input_fix_len);
+		var _overflow = input_fix_len + array_length(materialNames);
+		while(ds_list_size(inputs) > _overflow)
+			ds_list_delete(inputs, _overflow);
 		
 		for(var i = 0; i < array_length(materialNames); i++) 
 			createMaterial(i);
@@ -135,27 +144,29 @@ function Node_3D_Mesh_Obj(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group)
 	
 	static processData = function(_output, _data, _output_index, _array_index = 0) { #region
 		var _path = _data[in_mesh + 0];
+		var _flip = _data[in_mesh + 1];
+		
 		if(_path != current_path)
 			updateObj(_path);
 		
+		if(object == noone) return noone;
 		var materials = [];
 		for( var i = input_fix_len, n = array_length(_data); i < n; i++ ) 
 			materials[i - input_fix_len] = _data[i];
 		
 		var _object = getObject(_array_index);
-		if(object == noone)
-			return _object;
-		
 		_object.VF		= global.VF_POS_NORM_TEX_COL;
 		_object.VB		= object.VB;
 		_object.NVB		= object.NVB;
 		_object.vertex  = object.vertex;
-		_object.object_counts  = object.object_counts;
-		_object.materials = materials;
+		_object.object_counts	= object.object_counts;
+		_object.materials		= materials;
+		_object.matrial_index	= materialIndex;
+		_object.texture_flip    = _flip;
 		
 		setTransform(_object, _data);
 		return _object;
 	} #endregion
 	
-	//static getPreviewValues = function() { return array_safe_get(all_inputs, in_mesh + 1, noone); }
+	static getPreviewValues = function() { return array_safe_get(all_inputs, in_mesh + 2, noone); }
 }
