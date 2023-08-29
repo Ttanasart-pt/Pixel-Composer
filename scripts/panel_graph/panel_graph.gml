@@ -181,8 +181,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 			function() { return PREF_MAP[? "curve_connection_line"];  },
 			function() { return __txtx("panel_graph_connection_line", "Connection render settings"); }, 
 			function(param) { 
-				var gs = dialogCall(o_dialog_graph_connection, param.x, param.y); 
-				gs.anchor = ANCHOR.bottom | ANCHOR.left;
+				dialogPanelCall(new Panel_Graph_Connection_Setting(), param.x, param.y, { anchor: ANCHOR.bottom | ANCHOR.left }); 
 			} 
 		],
 		[ 
@@ -190,8 +189,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 			function() { return 0; },
 			function() { return __txtx("grid_title", "Grid settings"); }, 
 			function(param) { 
-				var gs = dialogCall(o_dialog_graph_grid, param.x, param.y); 
-				gs.anchor = ANCHOR.bottom | ANCHOR.left;
+				dialogPanelCall(new Panel_Graph_Grid_Setting(), param.x, param.y, { anchor: ANCHOR.bottom | ANCHOR.left }); 
 			} 
 		],
 		[ 
@@ -199,8 +197,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 			function() { return 0; },
 			function() { return __txtx("graph_visibility_title", "Visibility settings"); }, 
 			function(param) { 
-				var gs = dialogCall(o_dialog_graph_view, param.x, param.y, { display_parameter }); 
-				gs.anchor = ANCHOR.bottom | ANCHOR.left;
+				dialogPanelCall(new Panel_Graph_View_Setting(display_parameter), param.x, param.y, { anchor: ANCHOR.bottom | ANCHOR.left }); 
 			} 
 		],
 	]; #endregion

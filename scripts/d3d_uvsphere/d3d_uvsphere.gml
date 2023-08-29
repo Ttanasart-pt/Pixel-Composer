@@ -53,13 +53,13 @@ function __3dUVSphere(radius = 0.5, hori = 16, vert = 8, smt = false) : __3dObje
 			
 			var ind = (i * hori + j) * 6;
 			
-			vertex[0][ind + 0] = V3(hx0, hy0, hz0);
-			vertex[0][ind + 1] = V3(hx1, hy1, hz1);
-			vertex[0][ind + 2] = V3(hx2, hy2, hz2);
+			vertex[0][ind + 0] = new __vertex(hx0, hy0, hz0);
+			vertex[0][ind + 1] = new __vertex(hx1, hy1, hz1);
+			vertex[0][ind + 2] = new __vertex(hx2, hy2, hz2);
 									   
-			vertex[0][ind + 3] = V3(hx1, hy1, hz1);
-			vertex[0][ind + 4] = V3(hx3, hy3, hz3);
-			vertex[0][ind + 5] = V3(hx2, hy2, hz2);
+			vertex[0][ind + 3] = new __vertex(hx1, hy1, hz1);
+			vertex[0][ind + 4] = new __vertex(hx3, hy3, hz3);
+			vertex[0][ind + 5] = new __vertex(hx2, hy2, hz2);
 			
 			if(smooth) {
 				vertex[0][ind + 0].setNormal(hx0, hy0, hz0);
@@ -73,13 +73,13 @@ function __3dUVSphere(radius = 0.5, hori = 16, vert = 8, smt = false) : __3dObje
 				var nor = d3_cross_product([hx2 - hx0, hy2 - hy0, hz2 - hz0], [hx1 - hx0, hy1 - hy0, hz1 - hz0]);
 				nor = d3_normalize(nor);
 				
-				vertex[0][ind + 0].setNormal(nor);
-				vertex[0][ind + 1].setNormal(nor);
-				vertex[0][ind + 2].setNormal(nor);
+				vertex[0][ind + 0].setNormal(nor[0], nor[1], nor[2]);
+				vertex[0][ind + 1].setNormal(nor[0], nor[1], nor[2]);
+				vertex[0][ind + 2].setNormal(nor[0], nor[1], nor[2]);
 											 
-				vertex[0][ind + 3].setNormal(nor);
-				vertex[0][ind + 4].setNormal(nor);
-				vertex[0][ind + 5].setNormal(nor);
+				vertex[0][ind + 3].setNormal(nor[0], nor[1], nor[2]);
+				vertex[0][ind + 4].setNormal(nor[0], nor[1], nor[2]);
+				vertex[0][ind + 5].setNormal(nor[0], nor[1], nor[2]);
 			}
 			
 			vertex[0][ind + 0].setUV(u0, v0);
@@ -92,7 +92,6 @@ function __3dUVSphere(radius = 0.5, hori = 16, vert = 8, smt = false) : __3dObje
 	    }
 		
 		VB = build();
-		generateNormal();
 	} initModel();
 	
 	static onParameterUpdate = initModel;

@@ -18,11 +18,12 @@ function dialogCall(_dia, _x = noone, _y = noone, param = {}, create = false) {
 	return dia;
 }
 
-function dialogPanelCall(_panel, _x = noone, _y = noone) {
+function dialogPanelCall(_panel, _x = noone, _y = noone, params = {}) {
 	if(_x == noone) _x = WIN_SW / 2;
 	if(_y == noone) _y = WIN_SH / 2;
 	
 	var dia = instance_create_depth(_x, _y, 0, o_dialog_panel);
+	variable_instance_set_struct(dia, params);
 	dia.setContent(_panel);
 	
 	dia.x = _x;

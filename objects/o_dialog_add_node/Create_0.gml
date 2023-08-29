@@ -4,9 +4,9 @@ event_inherited();
 #region data
 	draggable = false;
 	
-	node_target_x = 0;
-	node_target_y = 0;
-	node_called   = noone;
+	node_target_x	  = 0;
+	node_target_y	  = 0;
+	node_called		  = noone;
 	junction_hovering = noone;
 	
 	dialog_w = PREF_MAP[? "dialog_add_node_w"];
@@ -15,38 +15,39 @@ event_inherited();
 	destroy_on_click_out = true;
 	
 	node_selecting = 0;
-	node_focusing = -1;
+	node_focusing  = -1;
 	
 	node_show_connectable = true;
 	node_tooltip   = noone;
 	node_tooltip_x = 0;
 	node_tooltip_y = 0;
 	
-	var _con    = PANEL_GRAPH.getCurrentContext();
-	var context = _con == noone? "" : instanceof(_con);
-		
-	category = NODE_CATEGORY;
-	if(context == "Node_Pixel_Builder")
-		category = NODE_PB_CATEGORY;
-	
-	draw_set_font(f_p0);
-	var maxLen = 0;
-	for(var i = 0; i < ds_list_size(category); i++) {
-		var cat  = category[| i];
-		
-		if(array_length(cat.filter) && !array_exists(cat.filter, context))
-			continue;
-			
-		var name = __txt(cat.name);
-		maxLen   = max(maxLen, string_width(name));
-	}
-	category_width = maxLen + ui(44);
-	
 	anchor = ANCHOR.left | ANCHOR.top;
-	
 	node_menu_selecting = noone;
 	
-	function rightClick(node) {
+	var _con    = PANEL_GRAPH.getCurrentContext();
+	var context = _con == noone? "" : instanceof(_con);
+	
+	#region ---- category ----
+		category = NODE_CATEGORY;
+		if(context == "Node_Pixel_Builder")
+			category = NODE_PB_CATEGORY;
+	
+		draw_set_font(f_p0);
+		var maxLen = 0;
+		for(var i = 0; i < ds_list_size(category); i++) {
+			var cat  = category[| i];
+		
+			if(array_length(cat.filter) && !array_exists(cat.filter, context))
+				continue;
+			
+			var name = __txt(cat.name);
+			maxLen   = max(maxLen, string_width(name));
+		}
+		category_width = maxLen + ui(44);
+	#endregion
+	
+	function rightClick(node) { #region
 		node_menu_selecting = node;
 		var fav  = array_exists(global.FAV_NODES, node.node);
 		
@@ -61,9 +62,9 @@ event_inherited();
 		];
 		
 		menuCall("add_node_window_manu",,, menu,, node_menu_selecting);
-	}
+	} #endregion
 	
-	function filtered(node) {
+	function filtered(node) { #region
 		if(!node_show_connectable) return true;
 		if(node_called == noone && junction_hovering == noone) return true;
 		if(!struct_has(global.NODE_GUIDE, node.node)) return true;
@@ -108,16 +109,18 @@ event_inherited();
 		}
 		
 		return false;
-	}
+	} #endregion
 	
-	function setPage(pageIndex) {
-		ADD_NODE_PAGE	= min(pageIndex, ds_list_size(category) - 1);
-		node_list		= pageIndex == -1? noone : category[| ADD_NODE_PAGE].list;
-	}
-	ADD_NODE_PAGE = 0;
-	setPage(NODE_PAGE_DEFAULT);
+	#region ---- set page ----
+		function setPage(pageIndex) {
+			ADD_NODE_PAGE	= min(pageIndex, ds_list_size(category) - 1);
+			node_list		= pageIndex == -1? noone : category[| ADD_NODE_PAGE].list;
+		}
+		ADD_NODE_PAGE = 0;
+		setPage(NODE_PAGE_DEFAULT);
+	#endregion
 	
-	function buildNode(_node, _param = "") {
+	function buildNode(_node, _param = "") { #region
 		if(!_node) {
 			instance_destroy();
 			instance_destroy(o_dialog_menubox);
@@ -191,16 +194,17 @@ event_inherited();
 		
 		//try to connect
 		if(node_called != noone) { //dragging from junction
-			var _node_list = node_called.connect_type == JUNCTION_CONNECT.input? _outputs : _inputs;
+			var _call_input = node_called.connect_type == JUNCTION_CONNECT.input;
+			var _node_list  = _call_input? _outputs : _inputs;
 			for(var i = 0; i < ds_list_size(_node_list); i++) {
 				var _target = _node_list[| i]; 
 				if(!_target.visible) continue;
 				
-				if(_target.auto_connect && (value_bit(_target.type) & value_bit(node_called.type)) ) {
-					if(node_called.connect_type == JUNCTION_CONNECT.input) {
+				if(_target.auto_connect) {
+					if(_call_input && node_called.isConnectable(_node_list[| i])) {
 						node_called.setFrom(_node_list[| i]);
 						_new_node.x -= _new_node.w;
-					} else
+					} else if(!_call_input && _node_list[| i].isConnectable(node_called))
 						_node_list[| i].setFrom(node_called);
 					break;
 				}
@@ -229,9 +233,9 @@ event_inherited();
 		
 		instance_destroy();
 		instance_destroy(o_dialog_menubox);
-	}
+	} #endregion
 	
-	catagory_pane = new scrollPane(category_width, dialog_h - ui(66), function(_y, _m) {
+	catagory_pane = new scrollPane(category_width, dialog_h - ui(66), function(_y, _m) { #region
 		draw_clear_alpha(COLORS._main_text, 0);
 		
 		var hh  = 0;
@@ -284,9 +288,9 @@ event_inherited();
 		}
 		
 		return hh;
-	});
+	}); #endregion
 	
-	content_pane = new scrollPane(dialog_w - category_width - ui(8), dialog_h - ui(66), function(_y, _m) {
+	content_pane = new scrollPane(dialog_w - category_width - ui(8), dialog_h - ui(66), function(_y, _m) { #region
 		draw_clear_alpha(c_white, 0);
 		var hh = 0;
 		var _hover = sHOVER && content_pane.hover;
@@ -587,7 +591,7 @@ event_inherited();
 			ds_list_destroy(_list);
 		
 		return hh;
-	});
+	}); #endregion
 #endregion
 
 #region resize

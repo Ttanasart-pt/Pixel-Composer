@@ -210,8 +210,7 @@ function Panel_Preview() : PanelContent() constructor {
 			function() { return 0; },
 			function() { return __txtx("grid_title", "Grid setting") }, 
 			function(param) { 
-				var gs = dialogCall(o_dialog_preview_grid, param.x, param.y); 
-				gs.anchor = ANCHOR.bottom | ANCHOR.left;
+				var dia = dialogPanelCall(new Panel_Preview_Grid_Setting(), param.x, param.y, { anchor: ANCHOR.bottom | ANCHOR.left }); 
 			} 
 		],
 		[ 
@@ -219,8 +218,7 @@ function Panel_Preview() : PanelContent() constructor {
 			function() { return 0; },
 			function() { return __txt("Onion Skin") }, 
 			function(param) { 
-				var gs = dialogCall(o_dialog_preview_onion_skin, param.x, param.y); 
-				gs.anchor = ANCHOR.bottom | ANCHOR.left;
+				var dia = dialogPanelCall(new Panel_Preview_Onion_Setting(), param.x, param.y, { anchor: ANCHOR.bottom | ANCHOR.left }); 
 			} 
 		],
 	];
@@ -231,9 +229,7 @@ function Panel_Preview() : PanelContent() constructor {
 			function() { return 0; },
 			function() { return __txt("3D Preview Settings") }, 
 			function(param) { 
-				var gs = dialogCall(o_dialog_preview_3d_settings, param.x, param.y); 
-				gs.anchor = ANCHOR.bottom | ANCHOR.left;
-				gs.preview_panel = self;
+				var dia = dialogPanelCall(new Panel_Preview_3D_Setting(self), param.x, param.y, { anchor: ANCHOR.bottom | ANCHOR.left }); 
 			} 
 		],
 		[ 
@@ -241,9 +237,7 @@ function Panel_Preview() : PanelContent() constructor {
 			function() { return 0; },
 			function() { return __txt("3D Snap Settings") }, 
 			function(param) { 
-				var gs = dialogCall(o_dialog_preview_snap, param.x, param.y); 
-				gs.anchor = ANCHOR.bottom | ANCHOR.left;
-				gs.preview_panel = self;
+				var dia = dialogPanelCall(new Panel_Preview_Snap_Setting(self), param.x, param.y, { anchor: ANCHOR.bottom | ANCHOR.left }); 
 			} 
 		],
 	];
@@ -761,6 +755,7 @@ function Panel_Preview() : PanelContent() constructor {
 	
 	function draw3D() { #region
 		var _prev_node = getNodePreview();
+		if(_prev_node == noone) return;
 		_prev_node.previewing = 1;
 		
 		d3_scene_preview = struct_has(_prev_node, "scene")? _prev_node.scene : d3_scene;
@@ -966,27 +961,27 @@ function Panel_Preview() : PanelContent() constructor {
 			}
 		
 			draw_set_text(f_p0, fa_right, fa_top, fps >= PROJECT.animator.framerate? COLORS._main_text_sub : COLORS._main_value_negative);
-			draw_text(w - ui(8), right_menu_y, __txt("fps") + " " + string(fps));
+			draw_text(w - ui(8), right_menu_y, $"{__txt("fps")} {fps}");
 			right_menu_y += string_height("l");
 		
 			draw_set_text(f_p0, fa_right, fa_top, COLORS._main_text_sub);
-			draw_text(w - ui(8), right_menu_y, __txt("Frame") + " " + string(PROJECT.animator.current_frame) + "/" + string(PROJECT.animator.frames_total));
+			draw_text(w - ui(8), right_menu_y, $"{__txt("Frame")} {PROJECT.animator.current_frame}/{PROJECT.animator.frames_total}");
 		
 			right_menu_y += string_height("l");
-			draw_text(w - ui(8), right_menu_y, "x" + string(canvas_s));
+			draw_text(w - ui(8), right_menu_y, $"x{canvas_s}");
 		
 			if(pHOVER) {
 				right_menu_y += string_height("l");
 				var mpx = floor((mx - canvas_x) / canvas_s);
 				var mpy = floor((my - canvas_y) / canvas_s);
-				draw_text(w - ui(8), right_menu_y, "[" + string(mpx) + ", " + string(mpy) + "]");
+				draw_text(w - ui(8), right_menu_y, $"[{mpx}, {mpy}]");
 			}
 		
 			if(_node == noone) return;
 		
 			right_menu_y += string_height("l");
-			var txt = string(canvas_w) + "x" + string(canvas_h) + "px";
-			if(canvas_a) txt = string(canvas_a) + " x " + txt;
+			var txt = $"{canvas_w} x {canvas_h}px";
+			if(canvas_a) txt = $"{canvas_a} x {txt}";
 			draw_text(w - ui(8), right_menu_y, txt);
 		
 			right_menu_y += string_height("l");
@@ -1020,6 +1015,8 @@ function Panel_Preview() : PanelContent() constructor {
 		
 		for(var i = 0; i < array_length(pseq); i++) {
 			var prev   = pseq[i];
+			if(is_instanceof(prev, __d3dMaterial))
+				prev = prev.surface;
 			if(!is_surface(prev)) continue;
 				
 			var prev_w = surface_get_width(prev);
@@ -1409,12 +1406,14 @@ function Panel_Preview() : PanelContent() constructor {
 		
 		getPreviewData();
 		
-		if(d3_active) {
-			dragCanvas3D();
-			draw3D();
-		} else {
-			dragCanvas();
-			drawNodePreview();
+		if(_prev_node) {
+			if(d3_active) {
+				dragCanvas3D();
+				draw3D();
+			} else {
+				dragCanvas();
+				drawNodePreview();
+			}
 		}
 		
 		drawPreviewOverlay();

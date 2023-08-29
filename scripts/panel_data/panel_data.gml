@@ -49,26 +49,27 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 	tab_holding_my = 0;
 	tab_holding_sx = 0;
 	tab_holding_sy = 0;
+	tab_cover	   = noone;
 	
-	border_rb_close = menuItem(__txt("Close"),   function() { 
+	border_rb_close = menuItem(__txt("Close"), function() { #region
 		var con = getContent();
 		if(con == noone) return;
 		con.close();
-	}, THEME.cross);
+	}, THEME.cross); #endregion
 	
-	border_rb_menu = [
+	border_rb_menu = [ #region
 		menuItem(__txt("Move"),    function() { 
 			extract(); 
 			panel_mouse = 1;
 		}),
 		menuItem(__txtx("panel_pop_out", "Pop out"), function() { popWindow(); }, THEME.node_goto),
 		border_rb_close
-	];
+	]; #endregion
 	
 	static getContent = function() { return array_safe_get(content, content_index, noone, ARRAY_OVERFLOW._default); }
 	static hasContent = function() { return bool(array_length(content)); }
 	
-	function resetMask() {
+	function resetMask() { #region
 		var tab = array_length(content) > 1;
 		tx = x; ty = y + tab * ui(tab_height);
 		tw = w; th = h - tab * ui(tab_height);
@@ -81,15 +82,14 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 		draw_sprite_stretched(THEME.ui_panel_bg, 0, padding, padding, tw - padding * 2, th - padding * 2);
 		gpu_set_blendmode(bm_normal);
 		surface_reset_target();
-	}
-	resetMask();
+	} resetMask(); #endregion
 	
-	function setPadding(padding) {
+	function setPadding(padding) { #region
 		self.padding = padding;
 		refresh();
-	}
+	} #endregion
 	
-	function refresh() {
+	function refresh() { #region
 		resetMask();
 		
 		for( var i = 0, n = array_length(content); i < n; i++ )
@@ -97,9 +97,9 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 			
 		for( var i = 0; i < ds_list_size(childs); i++ )
 			childs[| i].refresh();
-	}
+	} #endregion
 	
-	function move(dx, dy) {
+	function move(dx, dy) { #region
 		x += dx;
 		y += dy;
 		
@@ -112,9 +112,9 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 			content[i].x = x;
 			content[i].y = y;
 		}
-	}
+	} #endregion
 	
-	function resizable(dw, dh, oppose = ANCHOR.left) {
+	function resizable(dw, dh, oppose = ANCHOR.left) { #region
 		var tab = array_length(content) > 1;
 		tx = x; ty = y + tab * ui(tab_height);
 		tw = w; th = h - tab * ui(tab_height);
@@ -130,9 +130,9 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 		
 		var ind  = hori? childs[| 1].w > childs[| 0].w : childs[| 1].h > childs[| 0].h;
 		return childs[| ind].resizable(dw, dh, oppose);
-	}
+	} #endregion
 	
-	function refreshSize(recur = true) { //refresh content surface after resize
+	function refreshSize(recur = true) { #region //refresh content surface after resize
 		//__debug_counter("refresh size");
 		var tab = array_length(content) > 1;
 		tx = x; ty = y + tab * ui(tab_height);
@@ -187,9 +187,9 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 		}
 		
 		refresh();
-	}
+	} #endregion
 	
-	function resize(dw, dh, oppose = ANCHOR.left) {
+	function resize(dw, dh, oppose = ANCHOR.left) { #region
 		if(dw == 0 && dh == 0) return;
 		
 		if(ds_list_size(childs) == 2) {
@@ -202,9 +202,9 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 		h = max(round(h + dh), min_h);
 		
 		refreshSize(false);
-	}
+	} #endregion
 	
-	function setContent(_content = noone, _switch = false) {
+	function setContent(_content = noone, _switch = false) { #region
 		if(is_array(_content))
 			content = array_append(content, _content);
 		else 
@@ -216,9 +216,9 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 		if(_switch) setTab(array_find(content, _content));
 			
 		refresh();
-	}
+	} #endregion
 	
-	function split_h(_w) {
+	function split_h(_w) { #region
 		if(abs(_w) > w) {
 			print("Error: Split panel larger than size w (" + string(_w) + " > " + string(w) + ")");
 			return noone;
@@ -252,9 +252,9 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 		content = [];
 		
 		return [ _panelL, _panelR ];
-	}
+	} #endregion
 	
-	function split_v(_h) {
+	function split_v(_h) { #region
 		if(abs(_h) > h) {
 			print("Error: Split panel larger than size h (" + string(_h) + " > " + string(h) + ")");
 			return noone;
@@ -287,9 +287,9 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 		content = [];
 		
 		return [_panelT, _panelB];
-	}
+	} #endregion
 	
-	function stepBegin() {
+	function stepBegin() { #region
 		var con = getContent();
 		if(con) con.panelStepBegin(self);
 		
@@ -385,16 +385,16 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 				}
 			}
 		}
-	}
+	} #endregion
 	
-	static step = function() {
+	static step = function() { #region
 		for(var i = 0; i < ds_list_size(childs); i++) {
 			var _panel = childs[| i];
 			_panel.step();
 		}
-	}
+	} #endregion
 	
-	function draw() {
+	function draw() { #region
 		if(hasContent()) {
 			drawPanel();
 			return;
@@ -449,10 +449,9 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 		
 		if(self == PANEL_MAIN && o_main.panel_dragging != noone && key_mod_press(CTRL))
 			checkHover();
-	}
+	} #endregion
 	
-	tab_cover = noone;
-	function drawTab() {
+	function drawTab() { #region
 		tab_surface = surface_verify(tab_surface, w - padding * 2 + 1, tab_height + ui(4));
 		
 		var tsx = x + padding - 1;
@@ -609,9 +608,9 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 		surface_reset_target();
 		
 		draw_surface(tab_surface, tsx, tsy);
-	}
+	} #endregion
 	
-	function setTab(tabIndex) {
+	function setTab(tabIndex) { #region
 		if(tabIndex < 0) return;
 		if(tabIndex >= array_length(content)) return;
 		
@@ -622,9 +621,9 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 		
 		var prec = array_safe_get(content, content_index);
 		if(prec) prec.onFocusBegin();
-	}
+	} #endregion
 	
-	function drawPanel() {
+	function drawPanel() { #region
 		if(w <= ui(16)) return;
 		var tab = array_length(content) > 1;
 		tx = x; ty = y + tab * ui(tab_height);
@@ -689,18 +688,18 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 		
 		if(o_main.panel_dragging != noone && m_ot && !key_mod_press(CTRL))
 			checkHover();
-	}
+	} #endregion
 	
-	function drawGUI() {
+	function drawGUI() { #region
 		for( var i = 0; i < ds_list_size(childs); i++ ) 
 			childs[| i].drawGUI();
 		
 		var con = getContent();
 		if(con == noone) return;
 		con.drawGUI();
-	}
+	} #endregion
 	
-	function extract() {
+	function extract() { #region
 		var con = getContent();
 		con.dragSurface = surface_clone(content_surface);
 		o_main.panel_dragging = con;
@@ -735,18 +734,18 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 			parent.setContent(sib.content);
 			ds_list_clear(parent.childs);
 		}
-	}
+	} #endregion
 	
-	function popWindow() {
+	function popWindow() { #region
 		var con = getContent();
 		if(con == noone) return;
 		
 		dialogPanelCall(con);
 		extract();
 		o_main.panel_dragging = noone;
-	}
+	} #endregion
 	
-	function checkHover() {
+	function checkHover() { #region
 		var dx = (mouse_mx - x) / w;
 		var dy = (mouse_my - y) / h;
 		var p  = ui(8);
@@ -803,9 +802,9 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 				}
 			}
 		}
-	}
+	} #endregion
 	
-	function remove(con = getContent()) {
+	function remove(con = getContent()) { #region
 		var curr = getContent();
 		
 		array_remove(content, con);
@@ -824,7 +823,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 		var otherPanel = parent.childs[| 0];
 		parent.setContent(otherPanel.content);
 		ds_list_clear(parent.childs);
-	}
+	} #endregion
 }
 
 function PanelContent() constructor {
@@ -859,10 +858,10 @@ function PanelContent() constructor {
 	dragSurface = surface_create(1, 1);
 	showHeader  = true;
 	
-	function refresh() {
+	function refresh() { #region
 		setPanelSize(panel);
 		onResize();
-	}
+	} #endregion
 	
 	function onResize() {}
 	
@@ -871,35 +870,35 @@ function PanelContent() constructor {
 	
 	static initSize = function() {}
 	
-	function setPanelSize(panel) {
+	function setPanelSize(panel) { #region
 		x = panel.tx;
 		y = panel.ty;
 		w = panel.tw;
 		h = panel.th;
-	}
+	} #endregion
 	
-	function onSetPanel(panel) {
+	function onSetPanel(panel) { #region
 		self.panel = panel;
 		setPanelSize(panel);
 		initSize();
 		onResize();
-	}
+	} #endregion
 	
-	function panelStepBegin(panel) {
+	function panelStepBegin(panel) { #region
 		setPanelSize(panel);
 		onStepBegin();
-	}
+	} #endregion
 	
-	function onStepBegin() {
+	function onStepBegin() { #region
 		mx = mouse_mx - x;
 		my = mouse_my - y;
 		
 		stepBegin();
-	}
+	} #endregion
 	
 	function stepBegin() {}
 	
-	function draw(panel) { 
+	function draw(panel) { #region
 		self.panel = panel;
 		if(o_main.panel_dragging == noone) {
 			pFOCUS = FOCUS == panel && panel.mouse_active;
@@ -907,7 +906,7 @@ function PanelContent() constructor {
 		}
 		
 		drawContent(panel);
-	}
+	} #endregion
 	
 	function drawContent(panel) {}
 	

@@ -21,7 +21,7 @@ function line_get_width(txt, font = noone, offset = 0) {
 }
 
 #region global
-	#macro TEXTBOX_HEIGHT line_get_height(f_p0, 12)
+	#macro TEXTBOX_HEIGHT line_get_height(f_p0, 8)
 
 	function ui(val) { 
 		gml_pragma("forceinline");

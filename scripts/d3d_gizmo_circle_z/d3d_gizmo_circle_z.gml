@@ -10,8 +10,8 @@ function __3dGizmoCircleZ(radius = 0.5, color = c_white, alpha = 1) : __3dGizmo(
 		var x1 = lengthdir_x(radius, a1);
 		var y1 = lengthdir_y(radius, a1);
 		
-		vertex[0][_i++] = V3( x0, y0, 0, color, alpha );
-		vertex[0][_i++] = V3( x1, y1, 0, color, alpha );
+		vertex[0][_i++] = new __vertex( x0, y0, 0, color, alpha );
+		vertex[0][_i++] = new __vertex( x1, y1, 0, color, alpha );
 	}
 	
 	VB = build();

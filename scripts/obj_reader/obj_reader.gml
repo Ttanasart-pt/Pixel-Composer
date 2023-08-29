@@ -192,9 +192,9 @@ function readObj(path, flipUV = false) {
 					vertex_add_pntc(VB, _pf[2], _pfn[2], _pft[2]);
 					vertex_add_pntc(VB, _pf[1], _pfn[1], _pft[1]);
 					
-					ds_list_add(_v, V3(_pf[0]).setNormal(_pfn[0]).setUV(_pft[0]));
-					ds_list_add(_v, V3(_pf[2]).setNormal(_pfn[2]).setUV(_pft[2]));
-					ds_list_add(_v, V3(_pf[1]).setNormal(_pfn[1]).setUV(_pft[1]));
+					ds_list_add(_v, new __vertex(_pf[0][0], _pf[0][1], _pf[0][2]).setNormal(_pfn[0][0], _pfn[0][1]).setUV(_pft[0][0], _pft[0][1]));
+					ds_list_add(_v, new __vertex(_pf[2][0], _pf[2][1], _pf[2][2]).setNormal(_pfn[2][0], _pfn[2][1]).setUV(_pft[2][0], _pft[2][1]));
+					ds_list_add(_v, new __vertex(_pf[1][0], _pf[1][1], _pf[1][2]).setNormal(_pfn[1][0], _pfn[1][1]).setUV(_pft[1][0], _pft[1][1]));
 				} 
 				
 				if(_vlen >= 4) {
@@ -202,9 +202,9 @@ function readObj(path, flipUV = false) {
 					vertex_add_pntc(VB, _pf[3], _pfn[3], _pft[3]);
 					vertex_add_pntc(VB, _pf[2], _pfn[2], _pft[2]);
 					
-					ds_list_add(_v, V3(_pf[0]).setNormal(_pfn[0]).setUV(_pft[0]));
-					ds_list_add(_v, V3(_pf[3]).setNormal(_pfn[3]).setUV(_pft[3]));
-					ds_list_add(_v, V3(_pf[2]).setNormal(_pfn[2]).setUV(_pft[2]));
+					ds_list_add(_v, new __vertex(_pf[0][0], _pf[0][1], _pf[0][2]).setNormal(_pfn[0][0], _pfn[0][1]).setUV(_pft[0][0], _pft[0][1]));
+					ds_list_add(_v, new __vertex(_pf[3][0], _pf[3][1], _pf[3][2]).setNormal(_pfn[3][0], _pfn[3][1]).setUV(_pft[3][0], _pft[3][1]));
+					ds_list_add(_v, new __vertex(_pf[2][0], _pf[2][1], _pf[2][2]).setNormal(_pfn[2][0], _pfn[2][1]).setUV(_pft[2][0], _pft[2][1]));
 				}
 			}
 			

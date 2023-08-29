@@ -76,31 +76,19 @@ function Node_Cellular(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		else if(_type == 3)
 			shader = sh_cell_noise_crystal;	
 		
-		uniform_dim = shader_get_uniform(shader, "dimension");
-		uniform_pos = shader_get_uniform(shader, "position");
-		uniform_sca = shader_get_uniform(shader, "scale");
-		uniform_tim = shader_get_uniform(shader, "time");
-		uniform_con = shader_get_uniform(shader, "contrast");
-		uniform_pat = shader_get_uniform(shader, "pattern");
-		uniform_mid = shader_get_uniform(shader, "middle");
-		
-		uniform_rad = shader_get_uniform(shader, "radiusScale");
-		uniform_sht = shader_get_uniform(shader, "radiusShatter");
-		uniform_col = shader_get_uniform(shader, "colored");
-		
 		surface_set_target(_outSurf);
 		shader_set(shader);
-			shader_set_uniform_f_array_safe(uniform_dim, _dim);
-			shader_set_uniform_f(uniform_tim, _tim);
-			shader_set_uniform_f_array_safe(uniform_pos, _pos);
-			shader_set_uniform_f(uniform_sca, _sca);
-			shader_set_uniform_f(uniform_con, _con);
-			shader_set_uniform_f(uniform_mid, _mid);
-			shader_set_uniform_f(uniform_rad, _rad);
-			shader_set_uniform_f(uniform_sht, _sht);
-			shader_set_uniform_i(uniform_pat, _pat);
-			shader_set_uniform_i(uniform_col, _col);
-			draw_sprite_ext(s_fx_pixel, 0, 0, 0, _dim[0], _dim[1], 0, c_white, 1);
+			shader_set_f("dimension",		_dim);
+			shader_set_f("time",			_tim);
+			shader_set_f("position",		_pos);
+			shader_set_f("scale",			_sca);
+			shader_set_f("contrast",		_con);
+			shader_set_f("middle",			_mid);
+			shader_set_f("radiusScale",		_rad);
+			shader_set_f("radiusShatter",	_sht);
+			shader_set_i("pattern",			_pat);
+			shader_set_i("colored",			_col);
+			draw_sprite_stretched(s_fx_pixel, 0, 0, 0, _dim[0], _dim[1]);
 		shader_reset();
 		surface_reset_target();
 		

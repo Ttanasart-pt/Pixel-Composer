@@ -60,10 +60,11 @@ function __3dObject() constructor {
 			vertex_begin(NVB[i], global.VF_POS_COL);
 				for( var j = 0, n = array_length(vertex[i]); j < n; j++ ) {
 					var _v = vertex[i][j];
+					
 					vertex_position_3d(NVB[i], _v.x, _v.y, _v.z);
 					vertex_color(NVB[i], c_red, 1);
 					
-					vertex_position_3d(NVB[i], _v.x + _v.normal.x * _s, _v.y + _v.normal.y * _s, _v.z + _v.normal.z * _s);
+					vertex_position_3d(NVB[i], _v.x + _v.nx * _s, _v.y + _v.ny * _s, _v.z + _v.nz * _s);
 					vertex_color(NVB[i], c_red, 1);
 				}
 			vertex_end(NVB[i]);
@@ -191,10 +192,13 @@ function __3dObject() constructor {
 		shader_reset();
 		
 		if(scene.show_normal && NVB != noone) { #region
-			shader_set(sh_d3d_wireframe);
-			for( var i = 0, n = array_length(NVB); i < n; i++ ) 
-				vertex_submit(NVB[i], pr_linelist, -1);
-			shader_reset();
+			if(NVB == noone) generateNormal();
+			if(NVB != noone) {
+				shader_set(sh_d3d_wireframe);
+				for( var i = 0, n = array_length(NVB); i < n; i++ ) 
+					vertex_submit(NVB[i], pr_linelist, -1);
+				shader_reset();
+			}
 		} #endregion
 		
 		matrix_stack_clear();

@@ -81,7 +81,7 @@ function widgetParam(x, y, w, h, data, extra_data = 0, m = mouse_ui, rx = 0, ry 
 	
 	self.w			= w;
 	self.h			= h;
-	self.s			= ui(28);
+	self.s			= ui(24);
 	self.data		= data;
 	self.extra_data = extra_data;
 	self.m			= m;

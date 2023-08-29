@@ -136,14 +136,17 @@ function __3dICOSphere(radius = 0.5, level = 2, smt = false) : __3dObject() cons
 		
 		vertex   = [ array_create(ds_list_size(_vertices)) ];
 		
-		for( var i = 0, n = ds_list_size(_vertices); i < n; i++ )
-			vertex[0][i] = V3(_vertices[| i]).setNormal(_normals[| i]);
+		for( var i = 0, n = ds_list_size(_vertices); i < n; i++ ) {
+			var _v = _vertices[| i];
+			var _n = _normals[| i];
+			
+			vertex[0][i] = new __vertex(_v.x, _v.y, _v.z).setNormal(_n.x, _n.y, _n.z);
+		}
 		
 		ds_list_destroy(_vertices);
 		ds_list_destroy(_normals);
 		
 		VB = build();
-		generateNormal();
 	} initModel();
 	
 	static onParameterUpdate = initModel;

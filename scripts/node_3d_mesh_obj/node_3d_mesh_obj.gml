@@ -103,8 +103,6 @@ function Node_3D_Mesh_Obj(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group)
 		object.vertex  = _v.vertex;
 		object.object_counts  = _v.object_counts;
 		
-		object.generateNormal();
-		
 		object.size   = _v.model_size;
 		materialNames = _v.materials;
 		materialIndex = _v.material_index;

@@ -11,6 +11,8 @@ if !ready exit;
 
 #region content
 	if(!is_undefined(content) && content != noone) {
+		content.panel = self;
+		
 		var cx = dialog_x + content.showHeader * padding;
 		var cy = dialog_y + content.showHeader * (padding + title_height);
 		content.x = cx;

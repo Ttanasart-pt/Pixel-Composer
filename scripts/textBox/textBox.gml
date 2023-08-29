@@ -43,6 +43,11 @@ function textBox(_input, _onModify, _extras = noone) : textInput(_input, _onModi
 	
 	text_surface = surface_create(1, 1);
 	
+	static setSlidable = function(slidable = true) {
+		self.slidable = slidable;
+		return self;
+	}
+	
 	static setFont = function(font) {
 		self.font = font;
 		return self;

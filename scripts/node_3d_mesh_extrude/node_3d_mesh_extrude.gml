@@ -34,5 +34,7 @@ function Node_3D_Mesh_Extrude(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _gr
 		return object;
 	} #endregion
 	
-	static getPreviewValues = function() { return array_safe_get(all_inputs, in_mesh + 0, noone); }
+	static getPreviewValues = function() { 
+		return array_safe_get(all_inputs, in_mesh + 0, noone); 
+	}
 }

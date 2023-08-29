@@ -62,4 +62,8 @@ event_inherited();
 		if(!content) return;
 		content.onClose();
 	}
+	
+	function remove() {
+		instance_destroy();
+	}
 #endregion
