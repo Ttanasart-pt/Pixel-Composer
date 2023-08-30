@@ -77,7 +77,7 @@ function PathSegment() : Path() constructor {
 		var to = (fr + 1) % getSegmentCount();
 		var st = frac(_seg);
 		
-		return segments[fr].lerpTo(to, st);
+		return segments[fr].lerpTo(segments[to], st);
 	}
 	
 	static getPointRatio = function(_rat) {
