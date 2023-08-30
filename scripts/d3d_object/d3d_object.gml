@@ -26,10 +26,8 @@ function __3dObject() constructor {
 	
 	custom_shader = noone;
 	
-	position = new __vec3(0);
-	rotation = new BBMOD_Quaternion();
-	scale    = new __vec3(1);
-	size     = new __vec3(1);
+	transform = new __transform();
+	size      = new __vec3(1);
 	
 	materials      = [];
 	matrial_index  = [];
@@ -50,11 +48,10 @@ function __3dObject() constructor {
 	
 	static onParameterUpdate = function() {}
 	
-	static generateNormal = function() { #region
+	static generateNormal = function(_s = normal_draw_size) { #region
 		if(render_type != pr_trianglelist) return;
 		
 		NVB = array_create(object_counts);
-		var _s = normal_draw_size;
 		
 		for( var i = 0; i < object_counts; i++ ) {
 			NVB[i] = vertex_create_buffer();
@@ -107,19 +104,17 @@ function __3dObject() constructor {
 	static preSubmitVertex  = function(scene = {}) {}
 	static postSubmitVertex = function(scene = {}) {}
 	
-	static getCenter = function() { return new __vec3(position.x, position.y, position.z); }
-	static getBBOX   = function() { return new __bbox3D(size.multiplyVec(scale).multiply(-0.5), size.multiplyVec(scale).multiply(0.5)); }
+	static getCenter = function() { return new __vec3(transform.position.x, transform.position.y, transform.position.z); }
+	static getBBOX   = function() { return new __bbox3D(size.multiplyVec(transform.scale).multiply(-0.5), size.multiplyVec(transform.scale).multiply(0.5)); }
 	
-	static submitShader = function(scene = {}, shader = noone) {}
-	
-	static submit    = function(scene = {}, shader = noone) { submitVertex(scene, shader); }
-	static submitUI  = function(scene = {}, shader = noone) { submitVertex(scene, shader); }
-	
-	static submitSel = function(scene = {}) { #region
+	static submit		= function(scene = {}, shader = noone) { submitVertex(scene, shader); }
+	static submitUI		= function(scene = {}, shader = noone) { submitVertex(scene, shader); }
+	static submitSel	= function(scene = {}, shader = noone) { #region
 		var _s = variable_clone(scene);
 		_s.show_normal = false;
 		submitVertex(_s, sh_d3d_silhouette); 
 	} #endregion
+	static submitShader = function(scene = {}, shader = noone) {}
 	
 	static submitVertex = function(scene = {}, shader = noone) { #region
 		var _shader = sh_d3d_default;
@@ -137,61 +132,38 @@ function __3dObject() constructor {
 		preSubmitVertex(scene);
 		
 		if(VB != noone) { #region
-			matrix_stack_clear();
+			transform.submitMatrix();
 			
-			if(scene.apply_transform) {
-				var pos = matrix_build(position.x, position.y, position.z, 
-									   0, 0, 0, 
-									   1, 1, 1);
-				var rot = rotation.ToMatrix();
-				var sca = matrix_build(0, 0, 0, 
-									   0, 0, 0, 
-									   scale.x,    scale.y,    scale.z);
-								   
-				matrix_stack_push(pos);
-				matrix_stack_push(rot);
-				matrix_stack_push(sca);
-				matrix_set(matrix_world, matrix_stack_top());
-			} else {
-				var pos = matrix_build(position.x - scene.custom_transform.x, position.y - scene.custom_transform.y, position.z - scene.custom_transform.z, 
-									   0, 0, 0, 
-									   1, 1, 1);
-				var siz = matrix_build(0, 0, 0, 
-									   0, 0, 0, 
-									   scale.x,    scale.y,    scale.z);
-				var sca = matrix_build(0, 0, 0, 
-									   0, 0, 0, 
-									   scene.custom_scale.x, scene.custom_scale.y, scene.custom_scale.z);
-				
-				matrix_stack_push(pos);
-				matrix_stack_push(siz);
-				matrix_stack_push(sca);
-				matrix_set(matrix_world, matrix_stack_top());
-			}
+			matrix_set(matrix_world, matrix_stack_top());
 		} #endregion
 		
 		#region ++++ Submit & Material ++++
 			gpu_set_tex_repeat(true);
 		
 			for( var i = 0, n = array_length(VB); i < n; i++ ) {
-				if(_shader == sh_d3d_default) {
-					var _ind = array_safe_get(matrial_index, i, i);
-					var _mat = array_safe_get(materials, _ind, noone);
+				var _ind = array_safe_get(matrial_index, i, i);
+				var _mat = array_safe_get(materials, _ind, noone);
 					
+				if(_shader == sh_d3d_default) {
 					if(_mat == noone) {
 						shader_set_f("mat_diffuse",    1);
 						shader_set_f("mat_specular",   0);
 						shader_set_f("mat_shine",      1);
 						shader_set_i("mat_metalic",    0);
-						shader_set_i("mat_use_normal", 0);
 						shader_set_f("mat_reflective", 0);
 					} else 
 						_mat.submitShader();
 					
 					shader_set_i("mat_flip", texture_flip);
-					//print($"{instanceof(self)}: {i}, {_mat}");
 					var _tex = _mat == noone? -1 : _mat.getTexture();
 					vertex_submit(VB[i], render_type, _tex);
+				} else if(_shader == sh_d3d_geometry) {
+					if(_mat == noone)
+						shader_set_i("use_normal", 0);
+					else 
+						_mat.submitGeometry();
+						
+					vertex_submit(VB[i], render_type, -1);
 				} else
 					vertex_submit(VB[i], render_type, -1);
 			}
@@ -201,7 +173,7 @@ function __3dObject() constructor {
 		
 		shader_reset();
 		
-		if(scene.show_normal && NVB != noone) { #region
+		if(scene.show_normal) { #region
 			if(NVB == noone) generateNormal();
 			if(NVB != noone) {
 				shader_set(sh_d3d_wireframe);
@@ -211,7 +183,7 @@ function __3dObject() constructor {
 			}
 		} #endregion
 		
-		matrix_stack_clear();
+		transform.clearMatrix();
 		matrix_set(matrix_world, matrix_build_identity());
 		
 		postSubmitVertex(scene);
@@ -234,5 +206,5 @@ function __3dObject() constructor {
 	
 	static onDestroy = function() { } 
 	
-	static toString = function() { return $"[D3D Object\n\t{array_length(vertex)} vertex groups\n\tPosition: {position}\n\tRotation: {rotation}\n\tScale: {scale}]" }
+	static toString = function() { return $"[D3D Object\n\t{array_length(vertex)} vertex groups\n\tPosition: {transform.position}\n\tRotation: {transform.rotation}\n\tScale: {transform.scale}]" }
 }

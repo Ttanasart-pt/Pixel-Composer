@@ -27,8 +27,6 @@ varying float v_cameraDistance;
 	uniform float light_dir_shadow_bias[LIGHT_DIR_LIMIT];
 	uniform sampler2D light_dir_shadowmap_0;
 	uniform sampler2D light_dir_shadowmap_1;
-	uniform sampler2D light_dir_shadowmap_2;
-	uniform sampler2D light_dir_shadowmap_3;
 	
 	#define LIGHT_PNT_LIMIT 16
 	uniform int	  light_pnt_count;
@@ -43,8 +41,6 @@ varying float v_cameraDistance;
 	uniform float light_pnt_shadow_bias[LIGHT_DIR_LIMIT];
 	uniform sampler2D light_pnt_shadowmap_0;
 	uniform sampler2D light_pnt_shadowmap_1;
-	uniform sampler2D light_pnt_shadowmap_2;
-	uniform sampler2D light_pnt_shadowmap_3;
 #endregion
 
 #region ---- material ----
@@ -56,7 +52,7 @@ varying float v_cameraDistance;
 	uniform int   mat_metalic;
 	uniform float mat_reflective;
 	
-	uniform int		  mat_use_normal;
+	uniform int		  mat_defer_normal;
 	uniform float	  mat_normal_strength;
 	uniform sampler2D mat_normal_map;
 	
@@ -70,6 +66,8 @@ varying float v_cameraDistance;
 	uniform int       env_use_mapping;
 	uniform sampler2D env_map;
 	uniform vec2      env_map_dimension;
+	
+	uniform mat4 viewProjMat;
 #endregion
 
 #region ++++ matrix ++++
@@ -95,8 +93,6 @@ varying float v_cameraDistance;
 	float sampleDirShadowMap(int index, vec2 position) {
 		if(index == 0) return texture2D(light_dir_shadowmap_0, position).r;
 		if(index == 1) return texture2D(light_dir_shadowmap_1, position).r;
-		if(index == 2) return texture2D(light_dir_shadowmap_2, position).r;
-		if(index == 3) return texture2D(light_dir_shadowmap_3, position).r;
 		return 0.;
 	}
 
@@ -109,8 +105,6 @@ varying float v_cameraDistance;
 	
 		if(index == 0) return texture2D(light_pnt_shadowmap_0, position)[side];
 		if(index == 1) return texture2D(light_pnt_shadowmap_1, position)[side];
-		if(index == 2) return texture2D(light_pnt_shadowmap_2, position)[side];
-		if(index == 3) return texture2D(light_pnt_shadowmap_3, position)[side];
 		return 0.;
 	}
 #endregion
@@ -155,14 +149,17 @@ void main() {
 	vec4 final_color   = mat_baseColor;
 	vec3 viewDirection = normalize(cameraPosition - v_worldPosition.xyz);
 	
+	vec4 viewProjPos = viewProjMat * vec4(v_worldPosition.xyz, 1.);
+	viewProjPos /= viewProjPos.w;
+	viewProjPos  = viewProjPos * 0.5 + 0.5;
+		
 	#region ++++ normal ++++
 		vec3 _norm = v_vNormal;
-		if(mat_use_normal == 1) {
-			vec3 _sampled_normal = texture2D(mat_normal_map, uv_coord).rgb;
-			_norm += (_sampled_normal - 0.5) * 2. * mat_normal_strength;
-		}
 		
-		vec3 normal        = normalize(_norm);
+		if(mat_defer_normal == 1)
+			_norm = texture2D(mat_normal_map, viewProjPos.xy).rgb;
+		
+		vec3 normal = normalize(_norm);
 	#endregion
 	
 	#region ++++ environment ++++

@@ -5,7 +5,7 @@
   "isCompatibility": false,
   "isDnD": false,
   "parent": {
-    "name": "__legacy",
-    "path": "folders/nodes/data/3D/__legacy.yy",
+    "name": "d3d compose",
+    "path": "folders/nodes/data/3D/d3d compose.yy",
   },
 }

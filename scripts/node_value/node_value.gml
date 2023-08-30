@@ -100,8 +100,9 @@ enum VALUE_DISPLAY {
 	path_load,
 	path_font,
 	
-	//vertex
+	//d3d
 	d3vertex,
+	d3quarternion,
 }
 
 enum KEYFRAME_END {
@@ -250,6 +251,7 @@ function typeArray(_type) { #region
 		case VALUE_DISPLAY.text_array :
 		
 		case VALUE_DISPLAY.d3vertex :
+		case VALUE_DISPLAY.d3quarternion :
 			return 1;
 	}
 	return 0;
@@ -666,6 +668,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						
 						extract_node = "Node_Number";
 						break; #endregion
+					case VALUE_DISPLAY.d3quarternion : 
 					case VALUE_DISPLAY.vector :			#region
 						var val = animator.getValue();
 						if(array_length(val) <= 4) {

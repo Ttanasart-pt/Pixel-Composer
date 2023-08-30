@@ -108,6 +108,14 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 			if(!struct_has(_f, "lerpTo")) return _f;
 			return _f.lerpTo(_t, _lrp);
 		}
+		
+		if(prop.display_type == VALUE_DISPLAY.d3quarternion) {
+			var _qf = new BBMOD_Quaternion(_f[0], _f[1], _f[2], _f[3]);
+			var _qt = new BBMOD_Quaternion(_t[0], _t[1], _t[2], _t[3]);
+			
+			var _ql = _qf.Slerp(_qt, _lrp);
+			return _ql.ToArray();
+		}
 			
 		if(prop.type == VALUE_TYPE.color) {
 			if(is_array(_f) && is_array(_t)) {

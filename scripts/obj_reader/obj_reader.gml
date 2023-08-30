@@ -36,7 +36,16 @@ function readObj(path) {
 				ds_list_add(vt, [ _u, _v ]);
 				break;
 			case "vn" :
-				ds_list_add(vn, [ toNumber(sep[1]), toNumber(sep[2]), toNumber(sep[3]) ]);
+				var _nx = toNumber(sep[1]);
+				var _ny = toNumber(sep[2]);
+				var _nz = toNumber(sep[3]);
+				var _di = sqrt(_nx * _nx + _ny * _ny + _nz * _nz);
+				
+				_nx /= _di;
+				_ny /= _di;
+				_nz /= _di;
+				
+				ds_list_add(vn, [ _nx, _ny, _nz ]);
 				break;
 			case "f" :
 				var _len = array_length(sep);

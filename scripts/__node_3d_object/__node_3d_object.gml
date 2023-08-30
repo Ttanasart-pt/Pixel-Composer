@@ -9,7 +9,7 @@ function Node_3D_Object(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 		.setDisplay(VALUE_DISPLAY.vector);
 	
 	inputs[| 1] = nodeValue("Rotation", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 0, 1 ])
-		.setDisplay(VALUE_DISPLAY.vector);
+		.setDisplay(VALUE_DISPLAY.d3quarternion);
 	
 	inputs[| 2] = nodeValue("Scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 1, 1 ])
 		.setDisplay(VALUE_DISPLAY.vector);
@@ -63,7 +63,7 @@ function Node_3D_Object(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 	static drawGizmoPosition = function(index, object, _vpos, active, params, _mx, _my, _snx, _sny, _panel) { #region
 		#region ---- main ----
 			var _pos  = inputs[| index].getValue(,,, true);
-			var _qrot = object == noone? new BBMOD_Quaternion() : object.rotation;
+			var _qrot = object == noone? new BBMOD_Quaternion() : object.transform.rotation;
 			var _qinv = new BBMOD_Quaternion().FromAxisAngle(new BBMOD_Vec3(1, 0, 0), 90);
 		
 			var _camera = params.camera;
@@ -274,7 +274,7 @@ function Node_3D_Object(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 	static drawGizmoRotation = function(index, object, _vpos, active, params, _mx, _my, _snx, _sny, _panel) { #region
 		#region ---- main ----
 			var _rot  = inputs[| index].getValue(,,, true);
-			var _qrot = object == noone? new BBMOD_Quaternion() : object.rotation;
+			var _qrot = object == noone? new BBMOD_Quaternion() : object.transform.rotation;
 			var _qinv = new BBMOD_Quaternion().FromAxisAngle(new BBMOD_Vec3(1, 0, 0), 90);
 		
 			var _camera = params.camera;
@@ -384,7 +384,7 @@ function Node_3D_Object(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 		tool_attribute.context = 0;
 		#region ---- main ----
 			var _sca  = inputs[| index].getValue(,,, true);
-			var _qrot = object == noone? new BBMOD_Quaternion() : object.rotation;
+			var _qrot = object == noone? new BBMOD_Quaternion() : object.transform.rotation;
 			var _qinv = new BBMOD_Quaternion().FromAxisAngle(new BBMOD_Vec3(1, 0, 0), 90);
 		
 			var _camera = params.camera;
@@ -595,9 +595,9 @@ function Node_3D_Object(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 		var _rot = _data[1];
 		var _sca = _data[2];
 		
-		object.position.set(_pos[0], _pos[1], _pos[2]);
-		object.rotation.set(_rot[0], _rot[1], _rot[2], _rot[3]);
-		object.scale.set(_sca[0], _sca[1], _sca[2]);
+		object.transform.position.set(_pos[0], _pos[1], _pos[2]);
+		object.transform.rotation.set(_rot[0], _rot[1], _rot[2], _rot[3]);
+		object.transform.scale.set(_sca[0], _sca[1], _sca[2]);
 		return object;
 	} #endregion
 		

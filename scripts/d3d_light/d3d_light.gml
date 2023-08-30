@@ -20,7 +20,7 @@ function __3dLight() : __3dObject() constructor {
 	static getCenter = function() { return noone; }
 	static getBBOX   = function() { return noone; }
 	
-	static submit    = function(params = {}, shader = noone) {}
+	static submit    = function(scene = {}, shader = noone) {}
 	
 	static setShadow = function(active, shadowMapSize, shadowMapScale = shadow_map_scale) { #region
 		shadow_active    = active;

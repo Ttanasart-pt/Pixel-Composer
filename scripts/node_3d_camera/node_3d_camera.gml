@@ -210,7 +210,7 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 				if(!_for.isZero())
 					camera.rotation = new BBMOD_Quaternion().FromLookRotation(_for, camera.up).Mul(_qi1).Mul(_qi2);
 					
-				lookat.position.set(_look);
+				lookat.transform.position.set(_look);
 				lookLine = new __3dGizmoLineDashed(camera.position, camera.focus, 0.25, c_gray, 1);
 				break;
 			case 2 :
@@ -224,19 +224,19 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 				if(!_for.isZero())
 					camera.rotation = new BBMOD_Quaternion().FromLookRotation(_for, camera.up.multiply(-1)).Mul(_qi1).Mul(_qi3);
 				
-				lookat.position.set(_look);
+				lookat.transform.position.set(_look);
 				lookLine = new __3dGizmoLineDashed(camera.position, camera.focus, 0.25, c_gray, 1);
 				
 				var _camRad = camera.position.subtract(camera.focus);
 				var _rad = point_distance(0, 0, _camRad.x, _camRad.y) * 2;
-				lookRad.scale.set(_rad, _rad, 1);
-				lookRad.position.set(new __vec3(camera.focus.x, camera.focus.y, camera.position.z));
+				lookRad.transform.scale.set(_rad, _rad, 1);
+				lookRad.transform.position.set(new __vec3(camera.focus.x, camera.focus.y, camera.position.z));
 				break;
 		} #endregion
 		
-		object.position.set(camera.position);
-		object.rotation = camera.rotation.Clone();
-		object.scale.set(1, _dim[0] / _dim[1], 1);
+		object.transform.position.set(camera.position);
+		object.transform.rotation = camera.rotation.Clone();
+		object.transform.scale.set(1, _dim[0] / _dim[1], 1);
 		
 		if(_scne == noone) return;
 		
@@ -255,6 +255,8 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 		scene.ssao_radius	  = _aoRa;
 		scene.ssao_bias  	  = _aoBi;
 		scene.ssao_strength   = _aoSr;
+		
+		scene.draw_background   = _dbg;
 		
 		var _bgSurf = _dbg? scene.renderBackground(_dim[0], _dim[1]) : noone;
 		scene.deferPass(_scne, _dim[0], _dim[1]);

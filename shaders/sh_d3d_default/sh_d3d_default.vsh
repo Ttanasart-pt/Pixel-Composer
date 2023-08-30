@@ -21,7 +21,8 @@ void main() {
     gl_Position = gm_Matrices[MATRIX_WORLD_VIEW_PROJECTION] * object_space_pos;
 	
     v_worldPosition = gm_Matrices[MATRIX_WORLD] * object_space_pos;
-    v_viewPosition  = (gm_Matrices[MATRIX_WORLD_VIEW] * object_space_pos).xyz;
+	v_viewPosition  = gl_Position.xyz;
+	
     v_vColour       = in_Colour;
     v_vTexcoord     = in_TextureCoord;
 	

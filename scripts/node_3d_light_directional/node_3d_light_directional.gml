@@ -37,8 +37,8 @@ function Node_3D_Light_Directional(_x, _y, _group = noone) : Node_3D_Light(_x, _
 		object.setShadow(_shadow_active, _shadow_map_size, _shadow_map_scal);
 		object.shadow_bias = _shadow_bias;
 		
-		var _rot = new __rot3().lookAt(object.position, new __vec3());
-		object.rotation.FromEuler(_rot.x, _rot.y, _rot.z);
+		var _rot = new __rot3().lookAt(object.transform.position, new __vec3());
+		object.transform.rotation.FromEuler(_rot.x, _rot.y, _rot.z);
 		
 		return object;
 	}

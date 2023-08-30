@@ -18,7 +18,7 @@ function __3dLightPoint() : __3dLight() constructor {
 	static submitShader = function(params = {}) { params.addLightPoint(self); }
 	
 	static preSubmitVertex = function(params = {}) { #region
-		var _rot = new __rot3(0, 0, 0).lookAt(position, params.camera.position);
+		var _rot = new __rot3(0, 0, 0).lookAt(transform.position, params.camera.position);
 		
 		var rot = matrix_build(0, 0, 0, 
 							   _rot.x, _rot.y, _rot.z, 
@@ -29,11 +29,10 @@ function __3dLightPoint() : __3dLight() constructor {
 		var ran = matrix_build(0, 0, 0, 
 							   0, 0, 0, 
 							   radius * 2, radius * 2, radius * 2);
-		var pos = matrix_build(position.x, position.y, position.z, 
+		var pos = matrix_build(transform.position.x, transform.position.y, transform.position.z, 
 							   0, 0, 0, 
 							   1, 1, 1);
 		
-		matrix_stack_clear();
 		matrix_stack_push(pos);
 		matrix_stack_push(rot);
 		
@@ -50,7 +49,9 @@ function __3dLightPoint() : __3dLight() constructor {
 		vertex_submit(VB_UI[0], pr_linestrip, -1);
 		matrix_stack_pop();
 		
-		matrix_stack_clear();
+		matrix_stack_pop();
+		matrix_stack_pop();
+		
 		matrix_set(matrix_world, matrix_build_identity());
 	} #endregion
 	
@@ -79,6 +80,8 @@ function __3dLightPoint() : __3dLight() constructor {
 		
 		for( var i = 0; i < 6; i++ ) 
 			shadow_maps[i] = surface_verify(shadow_maps[i], shadow_map_size, shadow_map_size, surface_r32float);
+		
+		var position = transform.position;
 		
 		shadow_map_views = array_create(6);
 		shadow_map_views[0] = matrix_build_lookat(position.x, position.y, position.z, position.x + 1, position.y, position.z, 0, 0, -1);

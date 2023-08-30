@@ -16,15 +16,17 @@ function __d3dMaterial(surface = noone) constructor {
 		return surface_get_texture(surface);
 	}
 	
+	static submitGeometry = function() {
+		shader_set_i("use_normal", is_surface(normal));
+		shader_set_surface("normal_map", normal);
+		shader_set_f("normal_strength", normalStr);
+	}
+	
 	static submitShader = function() {
 		shader_set_f("mat_diffuse",  diffuse  );
 		shader_set_f("mat_specular", specular );
 		shader_set_f("mat_shine",    shine    );
 		shader_set_i("mat_metalic",  metalic  );
-		
-		shader_set_i("mat_use_normal", is_surface(normal));
-		shader_set_surface("mat_normal_map", normal);
-		shader_set_f("mat_normal_strength", normalStr);
 		
 		shader_set_f("mat_reflective", reflective);
 	}

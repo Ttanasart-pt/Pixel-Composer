@@ -30,9 +30,9 @@ function __3dCamera_object() : __3dObject() constructor {
 	render_type = pr_linelist;
 	VB = build();
 	
-	position.set(-5, -5, 5);
-	rotation.set(0, 30, 135);
-	scale.set(1, room_width / room_height, 1);
+	transform.position.set(-5, -5, 5);
+	transform.rotation.set(0, 30, 135);
+	transform.scale.set(1, room_width / room_height, 1);
 	
 	static submitSel = function(params = {}) { 
 		shader_set(sh_d3d_wireframe);

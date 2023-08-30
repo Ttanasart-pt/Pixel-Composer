@@ -57,12 +57,12 @@ function Node_3D(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constr
 				var _c = _prev.getCenter();
 				if(_b == noone || _c == noone) continue;
 				
-				D3D_GLOBAL_PREVIEW.custom_transform.set(_c);
+				D3D_GLOBAL_PREVIEW.custom_transform.position.set(_c._multiply(-1));
 				
 				var _sca = 1 / _b.getMaximumScale();
-				D3D_GLOBAL_PREVIEW.custom_scale.set(_sca);
+				D3D_GLOBAL_PREVIEW.custom_transform.scale.set(_sca);
 				
-				_prev.submitUI(D3D_GLOBAL_PREVIEW);
+				D3D_GLOBAL_PREVIEW.submitUI(_prev);
 			}
 		surface_reset_target();
 		

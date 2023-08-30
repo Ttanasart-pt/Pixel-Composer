@@ -48,19 +48,19 @@ function __3dICOSphere(radius = 0.5, level = 2, smt = false) : __3dObject() cons
 		var b = 1.0 / phi;
 	
 		icoverts = [
-			new __vec3Sub( 1,  1,  1)._normalize(),
-			new __vec3Sub( 0,  b, -a)._normalize(),
-			new __vec3Sub( b,  a,  0)._normalize(),
-			new __vec3Sub(-b,  a,  0)._normalize(),
-			new __vec3Sub( 0,  b,  a)._normalize(),
-			new __vec3Sub( 0, -b,  a)._normalize(),
-			new __vec3Sub(-a,  0,  b)._normalize(),
-			new __vec3Sub( 0, -b, -a)._normalize(),
-			new __vec3Sub( a,  0, -b)._normalize(),
-			new __vec3Sub( a,  0,  b)._normalize(),
-			new __vec3Sub(-a,  0, -b)._normalize(),
-			new __vec3Sub( b, -a,  0)._normalize(),
-			new __vec3Sub(-b, -a,  0)._normalize(),
+			new __vec3Sub( 1,  1,  1)._normalize()._multiply(radius),
+			new __vec3Sub( 0,  b, -a)._normalize()._multiply(radius),
+			new __vec3Sub( b,  a,  0)._normalize()._multiply(radius),
+			new __vec3Sub(-b,  a,  0)._normalize()._multiply(radius),
+			new __vec3Sub( 0,  b,  a)._normalize()._multiply(radius),
+			new __vec3Sub( 0, -b,  a)._normalize()._multiply(radius),
+			new __vec3Sub(-a,  0,  b)._normalize()._multiply(radius),
+			new __vec3Sub( 0, -b, -a)._normalize()._multiply(radius),
+			new __vec3Sub( a,  0, -b)._normalize()._multiply(radius),
+			new __vec3Sub( a,  0,  b)._normalize()._multiply(radius),
+			new __vec3Sub(-a,  0, -b)._normalize()._multiply(radius),
+			new __vec3Sub( b, -a,  0)._normalize()._multiply(radius),
+			new __vec3Sub(-b, -a,  0)._normalize()._multiply(radius),
 		]
 		
 		array_foreach(icoverts, function(vert) { vert.old = true; })
@@ -140,7 +140,11 @@ function __3dICOSphere(radius = 0.5, level = 2, smt = false) : __3dObject() cons
 			var _v = _vertices[| i];
 			var _n = _normals[| i];
 			
-			vertex[0][i] = new __vertex(_v.x, _v.y, _v.z).setNormal(_n.x, _n.y, _n.z);
+			var _ha = point_direction(0, 0, _v.x, _v.y);
+			var _va = (point_direction(0, 0, _v.x, _v.z) + 90) % 360;
+			if(_va > 180) _va = 360 - _va;
+			
+			vertex[0][i] = new __vertex(_v.x, _v.y, _v.z).setNormal(_n.x, _n.y, _n.z).setUV(_ha / 360, _va / 180);
 		}
 		
 		ds_list_destroy(_vertices);

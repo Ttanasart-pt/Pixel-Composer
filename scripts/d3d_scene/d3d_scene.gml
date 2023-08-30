@@ -11,14 +11,15 @@
 		d3_view_camera.setMatrix();
 		
 		D3D_GLOBAL_PREVIEW = new __3dScene(d3_view_camera);
-		D3D_GLOBAL_PREVIEW.apply_transform = false;
+		D3D_GLOBAL_PREVIEW.apply_transform = true;
+		D3D_GLOBAL_PREVIEW.defer_normal    = false;
 	
 		var d3_scene_light0 = new __3dLightDirectional();
-		d3_scene_light0.position.set(-1, -2, 3);
+		d3_scene_light0.transform.position.set(-1, -2, 3);
 		d3_scene_light0.color  = $AAAAAA;
 		
 		var d3_scene_light1 = new __3dLightDirectional();
-		d3_scene_light1.position.set(1, 2, 3);
+		d3_scene_light1.transform.position.set(1, 2, 3);
 		d3_scene_light1.color  = $FFFFFF;
 	
 		D3D_GLOBAL_PREVIEW.lightAmbient = $404040;
@@ -31,9 +32,8 @@ function __3dScene(camera) constructor {
 	self.camera = camera;
 	name = "New scene";
 	
-	apply_transform  = true;
-	custom_transform = new __vec3();
-	custom_scale     = new __vec3(1, 1, 1);
+	apply_transform  = false;
+	custom_transform = new __transform();
 	
 	lightAmbient		= c_black;
 	lightDir_max		= 16;
@@ -45,9 +45,12 @@ function __3dScene(camera) constructor {
 	enviroment_map  = noone;
 	gammaCorrection = true;
 	
-	show_normal = false;
+	draw_background = false;
 	
-	geometry_data = [];
+	defer_normal = true;
+	show_normal  = false;
+	
+	geometry_data = [ noone, noone, noone ];
 	
 	ssao_enabled  = false;
 	ssao		  = noone;
@@ -86,10 +89,17 @@ function __3dScene(camera) constructor {
 	static applyCamera = function() { camera.applyCamera(); }
 	static resetCamera = function() { camera.resetCamera(); }
 	
-	static submit		= function(object, shader = noone) { object.submit(self, shader); }
-	static submitUI		= function(object, shader = noone) { object.submitUI(self, shader); }
-	static submitSel	= function(object, shader = noone) { object.submitSel(self, shader); }
-	static submitShader	= function(object, shader = noone) { object.submitShader(self, shader); }
+	static _submit = function(callback, object, shader = noone) {
+		matrix_stack_clear(); 
+		if(apply_transform) custom_transform.submitMatrix(); 
+		callback(object, shader);
+		if(apply_transform) custom_transform.clearMatrix(); 
+	}
+	
+	static submit		= function(object, shader = noone) { _submit(function(object, shader) { object.submit		(self, shader); }, object, shader) }
+	static submitUI		= function(object, shader = noone) { _submit(function(object, shader) { object.submitUI		(self, shader); }, object, shader) }
+	static submitSel	= function(object, shader = noone) { _submit(function(object, shader) { object.submitSel	(self, shader); }, object, shader) }
+	static submitShader	= function(object, shader = noone) { _submit(function(object, shader) { object.submitShader	(self, shader); }, object, shader) }
 	
 	static deferPass = function(object, w, h) { #region
 		geometryPass(object, w, h);
@@ -120,13 +130,13 @@ function __3dScene(camera) constructor {
 	} #endregion
 	
 	static geometryPass = function(object, w = 512, h = 512) { #region
-		var world  = surface_create(w, h, surface_rgba32float);
-		var view   = surface_create(w, h, surface_rgba32float);
-		var normal = surface_create(w, h, surface_rgba32float);
+		geometry_data[0] = surface_verify(geometry_data[0], w, h, surface_rgba32float);
+		geometry_data[1] = surface_verify(geometry_data[1], w, h, surface_rgba32float);
+		geometry_data[2] = surface_verify(geometry_data[2], w, h, surface_rgba32float);
 		
-		surface_set_target_ext(0, world);
-		surface_set_target_ext(1, view);
-		surface_set_target_ext(2, normal);
+		surface_set_target_ext(0, geometry_data[0]);
+		surface_set_target_ext(1, geometry_data[1]);
+		surface_set_target_ext(2, geometry_data[2]);
 			gpu_set_zwriteenable(true);
 			gpu_set_ztestenable(true);
 			
@@ -146,7 +156,15 @@ function __3dScene(camera) constructor {
 			gpu_set_ztestenable(false);
 		surface_reset_target();
 		
-		geometry_data = [ world, view, normal ];
+		var _normal_blurred = surface_create_size(geometry_data[2], surface_rgba32float);
+		surface_set_shader(_normal_blurred, sh_d3d_normal_blur);
+			shader_set_f("radius", 5);
+			shader_set_dim("dimension", geometry_data[2]);
+			draw_surface_safe(geometry_data[2]);
+		surface_reset_shader();
+		
+		surface_free(geometry_data[2]);
+		geometry_data[2] = _normal_blurred;
 	} #endregion
 	
 	static ssaoPass = function() { #region
@@ -219,11 +237,19 @@ function __3dScene(camera) constructor {
 				shader_set_f("light_pnt_shadow_bias", lightPnt_shadowBias);
 			} #endregion
 			
+			if(defer_normal && array_length(geometry_data) > 2) {
+				shader_set_i("mat_defer_normal", 1);
+				shader_set_surface("mat_normal_map", geometry_data[2]);
+			} else 
+				shader_set_i("mat_defer_normal", 0);
+			
 			#region ---- camera ----
 				shader_set_f("cameraPosition",	camera.position.toArray());
 				shader_set_i("gammaCorrection",	gammaCorrection);
 				shader_set_f("planeNear",		camera.view_near);
 				shader_set_f("planeFar",		camera.view_far );
+				
+				shader_set_f("viewProjMat",		camera.getCombinedMatrix() );
 			#endregion
 		shader_reset();
 	} #endregion
@@ -234,7 +260,7 @@ function __3dScene(camera) constructor {
 			return self;
 		}
 		
-		array_append(lightDir_direction, [ light.position.x, light.position.y, light.position.z ]);
+		array_append(lightDir_direction, [ light.transform.position.x, light.transform.position.y, light.transform.position.z ]);
 		array_append(lightDir_color,     colToVec4(light.color));
 		
 		array_push(lightDir_intensity, light.intensity);
@@ -261,7 +287,7 @@ function __3dScene(camera) constructor {
 			return self;
 		}
 		
-		array_append(lightPnt_position,  [ light.position.x, light.position.y, light.position.z ]);
+		array_append(lightPnt_position,  [ light.transform.position.x, light.transform.position.y, light.transform.position.z ]);
 		array_append(lightPnt_color,     colToVec4(light.color));
 		
 		array_push(lightPnt_intensity, light.intensity);
