@@ -105,7 +105,7 @@ function __Bone(parent = noone, distance = 0, direction = 0, angle = 0, length =
 		var len = _len * progress;
 		
 		if(parent == noone)
-			return new Point(lengthdir_x(distance, direction), lengthdir_y(distance, direction))
+			return new __vec2(lengthdir_x(distance, direction), lengthdir_y(distance, direction))
 						.add(lengthdir_x(len, _ang), lengthdir_y(len, _ang));
 		
 		if(parent_anchor) {

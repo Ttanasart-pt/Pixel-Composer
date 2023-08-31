@@ -42,7 +42,7 @@ function Node_Path_Trim(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		}
 		
 		if(!is_struct(_path) || !struct_has(_path, "getPointRatio"))
-			return new Point();
+			return new __vec2();
 		
 		_rat = _rng[0] + _rat * (_rng[1] - _rng[0]);
 		return _path.getPointRatio(_rat, ind).clone();

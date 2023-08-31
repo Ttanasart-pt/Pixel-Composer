@@ -93,13 +93,13 @@ function Node_Path_Blend(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		var p1 = _path1 != noone && struct_has(_path1, "getPointRatio");
 		var p2 = _path2 != noone && struct_has(_path2, "getPointRatio");
 			
-		if(!p1 && !p2) return new Point();
+		if(!p1 && !p2) return new __vec2();
 		if( p1 && !p2) return _path1.getPointRatio(_rat, ind);
 		if(!p1 &&  p2) return _path2.getPointRatio(_rat, ind);
 		
 		var _p1 = _path1.getPointRatio(_rat, ind);
 		var _p2 = _path2.getPointRatio(_rat, ind);
-		var _r  = new Point();
+		var _r  = new __vec2();
 		
 		_r.x = lerp(_p1.x, _p2.x, _lerp);
 		_r.y = lerp(_p1.y, _p2.y, _lerp);

@@ -409,7 +409,7 @@ function StrandMesh() constructor {
 	}
 	
 	static getPointRatio = function(rat, ind = 0) {
-		if(array_length(hairs) == 0) return new Point();
+		if(array_length(hairs) == 0) return new __vec2();
 		
 		var h  = array_safe_get(hairs, ind);
 		var sg = rat * (array_length(h.points) - 1);
@@ -418,7 +418,7 @@ function StrandMesh() constructor {
 		var p0 = array_safe_get(h.points, floor(sg));
 		var p1 = array_safe_get(h.points, floor(sg) + 1);
 		
-		return new Point(lerp(p0.x, p1.x, fr), lerp(p0.y, p1.y, fr));
+		return new __vec2(lerp(p0.x, p1.x, fr), lerp(p0.y, p1.y, fr));
 	}
 	
 	static getLineCount = function() {

@@ -37,9 +37,9 @@ function __3dScene(camera) constructor {
 	
 	lightAmbient		= c_black;
 	lightDir_max		= 16;
-	lightDir_shadow_max = 4;
+	lightDir_shadow_max = 2;
 	lightPnt_max		= 16;
-	lightPnt_shadow_max = 4;
+	lightPnt_shadow_max = 2;
 	
 	cull_mode       = cull_noculling;
 	enviroment_map  = noone;
@@ -47,7 +47,9 @@ function __3dScene(camera) constructor {
 	
 	draw_background = false;
 	
-	defer_normal = true;
+	defer_normal        = true;
+	defer_normal_radius = 0;
+	
 	show_normal  = false;
 	
 	geometry_data = [ noone, noone, noone ];
@@ -156,15 +158,17 @@ function __3dScene(camera) constructor {
 			gpu_set_ztestenable(false);
 		surface_reset_target();
 		
-		var _normal_blurred = surface_create_size(geometry_data[2], surface_rgba32float);
-		surface_set_shader(_normal_blurred, sh_d3d_normal_blur);
-			shader_set_f("radius", 5);
-			shader_set_dim("dimension", geometry_data[2]);
-			draw_surface_safe(geometry_data[2]);
-		surface_reset_shader();
+		if(defer_normal_radius) {
+			var _normal_blurred = surface_create_size(geometry_data[2], surface_rgba32float);
+			surface_set_shader(_normal_blurred, sh_d3d_normal_blur);
+				shader_set_f("radius", defer_normal_radius);
+				shader_set_dim("dimension", geometry_data[2]);
+				draw_surface_safe(geometry_data[2]);
+			surface_reset_shader();
 		
-		surface_free(geometry_data[2]);
-		geometry_data[2] = _normal_blurred;
+			surface_free(geometry_data[2]);
+			geometry_data[2] = _normal_blurred;
+		}
 	} #endregion
 	
 	static ssaoPass = function() { #region

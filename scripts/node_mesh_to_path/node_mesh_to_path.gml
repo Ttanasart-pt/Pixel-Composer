@@ -45,7 +45,7 @@ function Node_Mesh_To_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			l -= lengths[i];
 		}
 		
-		return new Point(0, 0);
+		return new __vec2();
 	}
 	
 	function update() {  

@@ -145,7 +145,7 @@ function __vec4(_x = 0, _y = _x, _z = _x, _w = _x) constructor {
         return self;
     }
 
-    static _lerp = function(to, speed = 0.3) {
+    static _lerpTo = function(to, speed = 0.3) {
         gml_pragma("forceinline");
         x = lerp(x, to.x, speed);
         y = lerp(y, to.y, speed);

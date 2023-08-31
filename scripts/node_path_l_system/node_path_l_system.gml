@@ -164,13 +164,13 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		var _p0 = lines[_ind][0];
 		var _p1 = lines[_ind][1];
 		
-		if(!is_array(_p0) || array_length(_p0) < 2) return new Point();
-		if(!is_array(_p1) || array_length(_p1) < 2) return new Point();
+		if(!is_array(_p0) || array_length(_p0) < 2) return new __vec2();
+		if(!is_array(_p1) || array_length(_p1) < 2) return new __vec2();
 		
 		var _x  = lerp(_p0[0], _p1[0], _rat);
 		var _y  = lerp(_p0[1], _p1[1], _rat);
 		
-		return new Point( _x, _y );
+		return new __vec2( _x, _y );
 	}
 	
 	static getPointDistance = function(_dist, _ind = 0) {

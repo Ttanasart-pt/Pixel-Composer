@@ -96,7 +96,7 @@ function Node_Path_Transform(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		}
 		
 		if(!is_struct(_path) || !struct_has(_path, "getPointRatio"))
-			return new Point();
+			return new __vec2();
 		
 		var _p = _path.getPointRatio(_rat, ind).clone();
 		

@@ -16,7 +16,7 @@ function Mesh() constructor {
 		var _x = (1 - sqrt(a1)) * p0.x + (sqrt(a1) * (1 - a2)) * p1.x + (sqrt(a1) * a2) * p2.x;
 		var _y = (1 - sqrt(a1)) * p0.y + (sqrt(a1) * (1 - a2)) * p1.y + (sqrt(a1) * a2) * p2.y;
 		
-		return new Point( _x, _y );
+		return new __vec2( _x, _y );
 	}
 	
 	static draw = function(_x, _y, _s) {

@@ -981,6 +981,8 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	
 	static drawActive = function(_x, _y, _s, ind = 0) { active_draw_index = ind; }
 	
+	static drawPreview = function(_x, _y, _s) {}
+	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {}
 	
 	static drawAnimationTimeline = function(_w, _h, _s) {}

@@ -63,7 +63,7 @@ function Node_Path_Plot(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		
 		_rat = _ran[0] + (_rat * (_ran[1] - _ran[0]));
 		
-		var _p = new Point();
+		var _p = new __vec2();
 		
 		switch(_coor) {
 			case 0 :
@@ -83,7 +83,7 @@ function Node_Path_Plot(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 				}
 				break;
 			case 1 :
-				var _a = new Point();
+				var _a = new __vec2();
 				switch(_eqa) {
 					case 0 : 
 						_a.x = _rat * _iran[0] + _shf[0];

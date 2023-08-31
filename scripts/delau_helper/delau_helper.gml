@@ -63,9 +63,9 @@ function _create_super_triangle(points) {
     var center_x = (min_x + max_x) / 2, center_y = (min_y + max_y) / 2;
 
     return [
-        new Point(center_x - 2 * d_max, center_y - d_max),
-        new Point(center_x, center_y + 2 * d_max),
-        new Point(center_x + 2 * d_max, center_y - d_max)
+        new __vec2(center_x - 2 * d_max, center_y - d_max),
+        new __vec2(center_x, center_y + 2 * d_max),
+        new __vec2(center_x + 2 * d_max, center_y - d_max)
     ];
 }
 

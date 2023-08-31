@@ -41,7 +41,7 @@ function Node_Path_Shift(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		}
 		
 		if(!is_struct(_path) || !struct_has(_path, "getPointRatio"))
-			return new Point();
+			return new __vec2();
 		
 		var _p0 = _path.getPointRatio(clamp(_rat - 0.001, 0, 0.999999), ind);
 		var _p  = _path.getPointRatio(_rat, ind).clone();

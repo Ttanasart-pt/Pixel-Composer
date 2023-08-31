@@ -91,28 +91,28 @@ function Node_Path_Array(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		return 0;
 	}
 	
-	static getPointRatio = function(_rat, ind = 0) {
+	static get__vec2Ratio = function(_rat, ind = 0) {
 		for( var i = input_fix_len; i < ds_list_size(inputs) - 1; i += data_length ) {
 			var _path = inputs[| i].getValue();
 			var lc = struct_has(_path, "getLineCount")? _path.getLineCount() : 1; 
 			
-			if(ind < lc) return _path.getPointRatio(_rat, ind).clone();
+			if(ind < lc) return _path.get__vec2Ratio(_rat, ind).clone();
 			ind -= lc;
 		}
 		
-		return new Point();
+		return new __vec2();
 	}
 	
-	static getPointDistance = function(_dist, ind = 0) {
+	static get__vec2Distance = function(_dist, ind = 0) {
 		for( var i = input_fix_len; i < ds_list_size(inputs) - 1; i += data_length ) {
 			var _path = inputs[| i].getValue();
 			var lc = struct_has(_path, "getLineCount")? _path.getLineCount() : 1; 
 			
-			if(ind < lc) return _path.getPointDistance(_dist, ind).clone();
+			if(ind < lc) return _path.get__vec2Distance(_dist, ind).clone();
 			ind -= lc;
 		}
 		
-		return new Point();
+		return new __vec2();
 	}
 	
 	static getBoundary = function(ind = 0) { 

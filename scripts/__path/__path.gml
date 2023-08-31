@@ -12,9 +12,9 @@ function Path() constructor {
 	static getLineCount     = function() { return 1; }
 	
 	static getTangentRatio  = function(_rat) { return 0; }
-	static getPointDistance = function(_seg) { return new Point(0, 0); }
-	static getPointSegment  = function(_seg) { return new Point(0, 0); }
-	static getPointRatio    = function(_rat) { return new Point(0, 0); }
+	static getPointDistance = function(_seg) { return new __vec2(0, 0); }
+	static getPointSegment  = function(_seg) { return new __vec2(0, 0); }
+	static getPointRatio    = function(_rat) { return new __vec2(0, 0); }
 }
 
 function PathSegment() : Path() constructor {
@@ -69,7 +69,7 @@ function PathSegment() : Path() constructor {
 			_dist -= lengths[i];
 		}
 		
-		return new Point(0, 0);
+		return new __vec2(0, 0);
 	}
 	
 	static getPointSegment = function(_seg) {

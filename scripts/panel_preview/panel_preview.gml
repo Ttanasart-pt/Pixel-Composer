@@ -618,8 +618,13 @@ function Panel_Preview() : PanelContent() constructor {
 		}
 		
 		var _node = getNodePreview();
-		if(_node)
+		if(_node) {
 			title = _node.display_name == ""? _node.name : _node.display_name;
+			
+			var cx = canvas_x + _node.preview_x * canvas_s;
+			var cy = canvas_y + _node.preview_y * canvas_s;
+			_node.drawPreview(cx, cy, canvas_s);
+		}
 		
 		if(splitView == 0 && tileMode == 0 && is_surface(preview_surface[0])) {
 			var node = preview_node[0];
@@ -1252,6 +1257,8 @@ function Panel_Preview() : PanelContent() constructor {
 				}
 				
 				var params = new widgetParam(tolx, toly, tolw, tolh, atr[$ key],, [ mx, my ])
+				params.s = tolh;
+				
 				wdg.drawParam(params);
 				
 				tolx	  += tolw + ui(16);

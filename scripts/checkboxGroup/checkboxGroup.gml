@@ -10,7 +10,7 @@ function checkBoxGroup(sprs, _onClick) : widget() constructor {
 	}
 	
 	static drawParam = function(params) {
-		return draw(params.x, params.y, params.data, params.m);
+		return draw(params.x, params.y, params.data, params.m, params.s);
 	}
 	
 	static draw = function(_x, _y, _value, _m, ss = ui(28), halign = fa_left, valign = fa_top) {
@@ -56,7 +56,7 @@ function checkBoxGroup(sprs, _onClick) : widget() constructor {
 			draw_sprite_stretched_ext(spr, ind, _dx, _dy, ss, ss, c_white, aa);
 			if(_value[i])
 				draw_sprite_stretched_ext(spr, 3, _dx, _dy, ss, ss, COLORS._main_accent, 1);
-			draw_sprite_stretched_ext(sprs, i, _dx, _dy, ss, ss, c_white, 0.5 + _value[i] * 0.5);
+			draw_sprite_ext(sprs, i, _dx + ss / 2, _dy + ss / 2, 1, 1, 0, c_white, 0.5 + _value[i] * 0.5);
 			
 			_dx += ss;
 		}

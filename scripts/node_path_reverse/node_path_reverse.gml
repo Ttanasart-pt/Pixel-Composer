@@ -38,7 +38,7 @@ function Node_Path_Reverse(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		var _path = inputs[| 0].getValue();
 		
 		if(!is_struct(_path) || !struct_has(_path, "getPointRatio"))
-			return new Point();
+			return new __vec2();
 		return _path.getPointRatio(1 - _rat, ind).clone();
 	}
 	

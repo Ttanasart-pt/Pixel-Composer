@@ -1,11 +1,11 @@
 {
   "resourceType": "GMScript",
   "resourceVersion": "1.0",
-  "name": "__point",
+  "name": "__vec4",
   "isCompatibility": false,
   "isDnD": false,
   "parent": {
-    "name": "geometry",
-    "path": "folders/functions/geometry.yy",
+    "name": "vector",
+    "path": "folders/functions/vector.yy",
   },
 }

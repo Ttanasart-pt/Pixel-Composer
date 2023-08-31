@@ -70,6 +70,8 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 	inputs[| in_d3d + 20] = nodeValue("AO Strength", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1. )
 		.setDisplay(VALUE_DISPLAY.slider, [ 0.01, 4, 0.01 ]);
 	
+	inputs[| in_d3d + 21] = nodeValue("Round Normal", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0 );
+	
 	outputs[| 0] = nodeValue("Rendered", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone );
 	
 	outputs[| 1] = nodeValue("Normal", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone )
@@ -84,6 +86,7 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 		["Camera",		false], in_d3d + 3, in_d3d + 0, in_d3d + 1, in_d3d + 8, 
 		["Render",		false], in_d3d + 5, in_d3d + 16, in_d3d + 6, in_d3d + 7, in_d3d + 15, 
 		["Ambient Occlusion",	false], in_d3d + 17, in_d3d + 20, in_d3d + 18, in_d3d + 19, 
+		["Effects",		false], in_d3d + 21,
 	];
 	
 	tool_lookat = new NodeTool( "Move Target", THEME.tools_3d_transform_object );
@@ -190,6 +193,8 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 		var _aoBi = _data[in_d3d + 19];
 		var _aoSr = _data[in_d3d + 20];
 		
+		var _nrmSmt = _data[in_d3d + 21];
+		
 		var _qi1  = new BBMOD_Quaternion().FromAxisAngle(new BBMOD_Vec3(0, 1, 0),  90);
 		var _qi2  = new BBMOD_Quaternion().FromAxisAngle(new BBMOD_Vec3(1, 0, 0), -90);
 		var _qi3  = new BBMOD_Quaternion().FromAxisAngle(new BBMOD_Vec3(1, 0, 0),  90);
@@ -255,6 +260,7 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 		scene.ssao_radius	  = _aoRa;
 		scene.ssao_bias  	  = _aoBi;
 		scene.ssao_strength   = _aoSr;
+		scene.defer_normal_radius   = _nrmSmt;
 		
 		scene.draw_background   = _dbg;
 		

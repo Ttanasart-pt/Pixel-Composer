@@ -35,27 +35,13 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	
 	setIsDynamicInput(1);
 	
-	function createAnchor(_x = 0, _y = 0, _dxx = 0, _dxy = 0, _dyx = 0, _dyy = 0) {
-		var index = ds_list_size(inputs);
-		
-		inputs[| index] = nodeValue("Anchor",  self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ _x, _y, _dxx, _dxy, _dyx, _dyy, false ])
-			.setDisplay(VALUE_DISPLAY.vector);
-		
-		recordAction(ACTION_TYPE.var_modify,  self, [ array_clone(input_display_list), "input_display_list" ]);
-		recordAction(ACTION_TYPE.list_insert, inputs, [ inputs[| index], index, "add path anchor point" ]);
-		array_push(input_display_list, index);
-		
-		return inputs[| index];
-	}
-	
-	static createNewInput = function() { createAnchor(0, 0); }
-	
 	outputs[| 0] = nodeValue("Position out", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, [ 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.vector);
 		
 	outputs[| 1] = nodeValue("Path data", self, JUNCTION_CONNECT.output, VALUE_TYPE.pathnode, self);
 		
-	outputs[| 2] = nodeValue("Anchors", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, []);
+	outputs[| 2] = nodeValue("Anchors", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, [])
+		.setArrayDepth(1);
 	
 	tool_pathDrawer = new NodeTool( "Draw path", THEME.path_tools_draw )	
 		.addSetting("Smoothness", VALUE_TYPE.float,   function(val) { tool_pathDrawer.attribute.thres = val; }, "thres", 4)
@@ -70,30 +56,58 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		new NodeTool( "Circle path", THEME.path_tools_circle ),
 	];
 	
-	anchors		= [];
-	lengths		= [];
-	lengthAccs	= [];
-	boundary    = [];
-	lengthTotal	= 0;
+	#region ---- path ----
+		anchors		= [];
+		lengths		= [];
+		lengthAccs	= [];
+		boundary    = [];
+		lengthTotal	= 0;
 	
-	cached_pos = ds_map_create();
+		cached_pos = ds_map_create();
+	#endregion
 	
-	drag_point    = -1;
-	drag_points   = [];
-	drag_type     = 0;
-	drag_point_mx = 0;
-	drag_point_my = 0;
-	drag_point_sx = 0;
-	drag_point_sy = 0;
+	#region ---- editor ----
+		drag_point    = -1;
+		drag_points   = [];
+		drag_type     = 0;
+		drag_point_mx = 0;
+		drag_point_my = 0;
+		drag_point_sx = 0;
+		drag_point_sy = 0;
 	
-	transform_type = 0;
-	transform_minx = 0; transform_miny = 0;
-	transform_maxx = 0; transform_maxy = 0;
-	transform_cx = 0;   transform_cy = 0;
-	transform_sx = 0;   transform_sy = 0;
-	transform_mx = 0;   transform_my = 0;
+		transform_type = 0;
+		transform_minx = 0; transform_miny = 0;
+		transform_maxx = 0; transform_maxy = 0;
+		transform_cx = 0;   transform_cy = 0;
+		transform_sx = 0;   transform_sy = 0;
+		transform_mx = 0;   transform_my = 0;
+	#endregion
 	
-	static onValueUpdate = function(index = 0) {
+	static resetDisplayList = function() {
+		recordAction(ACTION_TYPE.var_modify,  self, [ array_clone(input_display_list), "input_display_list" ]);
+		
+		input_display_list = [
+			["Path",	false], 0, 2, 1, 3, 
+			["Anchors",	false], 
+		];
+		
+		for( var i = input_fix_len, n = ds_list_size(inputs); i < n; i++ ) 
+			array_push(input_display_list, i);
+	} 
+	
+	static createNewInput = function(_x = 0, _y = 0, _dxx = 0, _dxy = 0, _dyx = 0, _dyy = 0) { #region
+		var index = ds_list_size(inputs);
+		
+		inputs[| index] = nodeValue("Anchor",  self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ _x, _y, _dxx, _dxy, _dyx, _dyy, false ])
+			.setDisplay(VALUE_DISPLAY.vector);
+		
+		recordAction(ACTION_TYPE.list_insert, inputs, [ inputs[| index], index, "add path anchor point" ]);
+		resetDisplayList();
+		
+		return inputs[| index];
+	} #endregion
+	
+	static onValueUpdate = function(index = 0) { #region
 		if(index == 2) {
 			var type = inputs[| 2].getValue();	
 			if(type == 0)
@@ -101,9 +115,13 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			else if(type == 1)
 				inputs[| 0].setDisplay(VALUE_DISPLAY._default);
 		}
-	}
+	} #endregion
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawPreview = function(_x, _y, _s) { #region
+		
+	} #endregion
+	
+	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
 		var sample = PREF_MAP[? "path_resolution"];
 		var loop   = inputs[| 1].getValue();
 		var ansize = ds_list_size(inputs) - input_fix_len;
@@ -422,7 +440,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 						
 						anc = [_p[_ANCHOR.x], _p[_ANCHOR.y], dxx, dxy, dyx, dyy];
 						if(input_fix_len + i >= ds_list_size(inputs))
-							createAnchor(_p[_ANCHOR.x], _p[_ANCHOR.y], dxx, dxy, dyx, dyy);
+							createNewInput(_p[_ANCHOR.x], _p[_ANCHOR.y], dxx, dxy, dyx, dyy);
 						else 
 							inputs[| input_fix_len + i].setValue(anc);
 					}
@@ -680,7 +698,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 				if(replace) {
 					while(ds_list_size(inputs) > input_fix_len)
 						ds_list_delete(inputs, input_fix_len);
-					array_resize(input_display_list, input_display_len);
+					resetDisplayList();
 				}
 				
 				drag_point    = 0;
@@ -696,7 +714,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			if(mouse_press(mb_left, active)) {
 				while(ds_list_size(inputs) > input_fix_len)
 					ds_list_delete(inputs, input_fix_len);
-				array_resize(input_display_list, input_display_len);
+				resetDisplayList();
 				
 				drag_point    = 0;
 				drag_type     = isUsingTool(4)? 3 : 4;
@@ -705,7 +723,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 				inputs[| 1].setValue(true);
 				
 				repeat(4)
-					createAnchor(value_snap((_mx - _x) / _s, _snx), value_snap((_my - _y) / _s, _sny));
+					createNewInput(value_snap((_mx - _x) / _s, _snx), value_snap((_my - _y) / _s, _sny));
 			}
 		#endregion
 		} else if(anchor_hover != -1) {						#region no tool, dragging existing point
@@ -740,11 +758,10 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 				draw_sprite_ui_uniform(THEME.cursor_path_remove, 0, _mx + 16, _my + 16);
 				
 				if(mouse_press(mb_left, active)) {
-					recordAction(ACTION_TYPE.var_modify,  self, [ array_clone(input_display_list), "input_display_list" ]);
 					recordAction(ACTION_TYPE.list_delete, inputs, [ inputs[| input_fix_len + anchor_hover], input_fix_len + anchor_hover, "remove path anchor point" ]);
 		
 					ds_list_delete(inputs, input_fix_len + anchor_hover);
-					array_remove(input_display_list, input_fix_len + anchor_hover);
+					resetDisplayList();
 					doUpdate();
 				}
 			} else {
@@ -777,7 +794,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			draw_sprite_ui_uniform(THEME.cursor_path_add, 0, _mx + 16, _my + 16);
 			
 			if(mouse_press(mb_left, active)) {
-				var anc = createAnchor(value_snap((_mx - _x) / _s, _snx), value_snap((_my - _y) / _s, _sny));
+				var anc = createNewInput(value_snap((_mx - _x) / _s, _snx), value_snap((_my - _y) / _s, _sny));
 				UNDO_HOLDING = true;
 				
 				if(line_hover == -1) {
@@ -798,9 +815,9 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			}
 		#endregion
 		}
-	}
+	} #endregion
 	
-	static updateLength = function() {
+	static updateLength = function() { #region
 		boundary    = new BoundingBox();
 		lengthTotal = 0;
 		var loop    = inputs[| 1].getValue();
@@ -851,7 +868,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			lengthTotal  += l;
 			lengthAccs[i] = lengthTotal;
 		}
-	}
+	} #endregion
 	
 	static getLineCount		= function() { return 1; }
 	static getSegmentCount	= function() { return array_length(lengths); }
@@ -860,7 +877,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	static getLength		= function() { return lengthTotal; }
 	static getAccuLength	= function() { return lengthAccs; }
 	
-	static getPointDistance = function(_dist) {
+	static getPointDistance = function(_dist) { #region
 		if(ds_map_exists(cached_pos, _dist))
 			return cached_pos[? _dist];
 		
@@ -871,7 +888,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		var ansize = array_length(lengths);
 		var amo    = ds_list_size(inputs) - input_fix_len;
 		
-		if(ansize == 0) return new Point();
+		if(ansize == 0) return new __vec2();
 		
 		var _a0, _a1;
 		
@@ -892,23 +909,23 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			var _t = _dist / lengths[i];
 			
 			if(!is_array(_a0) || !is_array(_a1))
-				return new Point();
+				return new __vec2();
 			
 			var _p = eval_bezier(_t, _a0[0], _a0[1], _a1[0], _a1[1], _a0[0] + _a0[4], _a0[1] + _a0[5], _a1[0] + _a1[2], _a1[1] + _a1[3]);
-			var _point = new Point(_p);
+			var _point = new __vec2(_p);
 			cached_pos[? _dist] = _point;
 			return _point;
 		}
 		
-		return new Point();
-	}
+		return new __vec2();
+	} #endregion
 	
-	static getPointRatio = function(_rat) {
+	static getPointRatio = function(_rat) { #region
 		var pix = frac(_rat) * lengthTotal;
 		return getPointDistance(pix);
-	}
+	} #endregion
 	
-	static getPointSegment = function(_rat) {
+	static getPointSegment = function(_rat) { #region
 		var loop   = inputs[| 1].getValue();
 		var rond   = inputs[| 3].getValue();
 		if(!is_real(rond)) rond = false;
@@ -916,12 +933,12 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		var ansize = array_length(lengths);
 		var amo    = ds_list_size(inputs) - input_fix_len;
 		
-		if(amo < 1) return new Point(0, 0);
+		if(amo < 1) return new __vec2(0, 0);
 		if(_rat < 0) {
 			var _p0 = inputs[| input_fix_len].getValue();
 			if(rond)
-				return new Point(round(_p0[0]), round(_p0[1]));
-			return new Point(_p0[0], _p0[1]);
+				return new __vec2(round(_p0[0]), round(_p0[1]));
+			return new __vec2(_p0[0], _p0[1]);
 		}
 		
 		_rat = safe_mod(_rat, ansize);
@@ -933,8 +950,8 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			if(!loop) {
 				var _p1 = inputs[| ds_list_size(inputs) - 1].getValue()
 				if(rond)
-					return new Point(round(_p1[0]), round(_p1[1]));
-				return new Point(_p1[0], _p1[1]);
+					return new __vec2(round(_p1[0]), round(_p1[1]));
+				return new __vec2(_p1[0], _p1[1]);
 			}
 			
 			_i1 = 0; 
@@ -949,10 +966,10 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		}
 		
 		var p = eval_bezier(_t, _a0[0], _a0[1], _a1[0], _a1[1], _a0[0] + _a0[4], _a0[1] + _a0[5], _a1[0] + _a1[2], _a1[1] + _a1[3]);
-		return new Point(p[0], p[1]);
-	}
+		return new __vec2(p[0], p[1]);
+	} #endregion
 	
-	static update = function(frame = PROJECT.animator.current_frame) {
+	static update = function(frame = PROJECT.animator.current_frame) { #region
 		ds_map_clear(cached_pos);
 		updateLength();
 		
@@ -988,10 +1005,10 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			
 			outputs[| 0].setValue(_out.toArray());
 		}
-	}
+	} #endregion
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
+	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { #region
 		var bbox = drawGetBbox(xx, yy, _s);
 		draw_sprite_fit(THEME.node_draw_path, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
-	}
+	} #endregion
 }

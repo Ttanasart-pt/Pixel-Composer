@@ -47,7 +47,7 @@ function Node_Path_Map_Area(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		}
 		
 		if(!is_struct(_path) || !struct_has(_path, "getPointRatio"))
-			return new Point();
+			return new __vec2();
 		
 		var _b = _path.getBoundary();
 		var _p = _path.getPointRatio(_rat, ind).clone();

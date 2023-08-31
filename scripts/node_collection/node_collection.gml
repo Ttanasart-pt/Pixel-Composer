@@ -226,7 +226,7 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	
 	static exitGroup = function() {}
 	
-	function add(_node) {
+	static add = function(_node) {
 		ds_list_add(getNodeList(), _node);
 		var list = _node.group == noone? PANEL_GRAPH.nodes_list : _node.group.getNodeList();
 		var _pos = ds_list_find_index(list, _node);
@@ -236,7 +236,7 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		_node.group = self;
 	}
 	
-	function remove(_node) {
+	static remove = function(_node) {
 		var node_list = getNodeList();
 		var _pos = ds_list_find_index(node_list, _node);
 		ds_list_delete(node_list, _pos);

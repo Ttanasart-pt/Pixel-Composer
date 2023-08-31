@@ -197,7 +197,7 @@ function polygon_triangulate_convex_fan(points) {
 	cx /= amo;
 	cy /= amo;
 	
-	var pc = new Point(cx, cy);
+	var pc = new __vec2(cx, cy);
 	for( var i = 0; i < amo; i++ ) {
 		array_push(triangles, [ points[i], points[(i + 1) % amo], pc ]);
 	}
