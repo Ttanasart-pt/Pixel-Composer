@@ -20,6 +20,8 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 			avoid_label   : true,
 			preview_scale : 100,
 		}
+		
+		bg_color = c_black;
 	#endregion
 	
 	#region ---- position ----
@@ -57,7 +59,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 	
 	#region ---- nodes ----
 		node_context = ds_list_create();
-	
+		
 		node_dragging = noone;
 		node_drag_mx  = 0;
 		node_drag_my  = 0;
@@ -684,7 +686,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 				}
 			}
 			
-			if(mouse_press(mb_right, pFOCUS)) {
+			if(mouse_press(mb_right, pFOCUS)) { #region
 				node_hover = node_hovering;	
 				if(node_hover) {
 					var menu = [];
@@ -850,7 +852,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 					menuCall("graph_node_selected_menu", o_dialog_add_node.dialog_x - ui(8), o_dialog_add_node.dialog_y + ui(4), menu, fa_right );
 					setFocus(o_dialog_add_node.id, "Dialog");
 				}
-			}
+			} #endregion
 		}
 		printIf(log, "Node selection time: " + string(current_time - t)); t = current_time;
 		
@@ -871,8 +873,28 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		
 		var hov = noone;
 		var hoverable = !bool(node_dragging) && pHOVER;
+		
+		var _params = {
+			x  : gr_x,
+			y  : gr_y,
+			s  : graph_s,
+			mx : mx,
+			my : my,
+			aa : aa,
+			bg : bg_color,
+			minx : -64,
+			miny : -64,
+			maxx : w + 64,
+			maxy : h + 64,
+			active    : hoverable,
+			max_layer : ds_list_size(nodes_list),
+			highlight : !ds_list_empty(nodes_select_list) || node_focus != noone,
+		};
+			
 		for(var i = 0; i < ds_list_size(nodes_list); i++) {
-			var _hov = nodes_list[| i].drawConnections(gr_x, gr_y, graph_s, mx, my, hoverable, aa, -64, -64, w + 64, h + 64);
+			_params.cur_layer = i + 1;
+			
+			var _hov = nodes_list[| i].drawConnections(_params);
 			if(_hov != noone && is_struct(_hov)) hov = _hov;
 		}
 		printIf(log, "Draw connection: " + string(current_time - t)); t = current_time;
@@ -990,7 +1012,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 				node_dragging = noone;
 		#endregion
 		
-		if(mouse_on_graph && pFOCUS) {
+		if(mouse_on_graph && pFOCUS) { #region
 			if(node_focus && node_focus.draggable && value_focus == noone) {
 				if(mouse_press(mb_left) && !key_mod_press(ALT)) {
 					node_dragging = node_focus;
@@ -1012,7 +1034,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 				_pin.inputs[| 0].setFrom(junction_hovering.value_from);
 				junction_hovering.setFrom(_pin.outputs[| 0]);
 			}
-		}
+		} #endregion
 		
 		#region draw selection frame
 			if(nodes_select_drag) {
@@ -1454,8 +1476,8 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		dragGraph();
 		
 		var context = getCurrentContext();
-		var bg = context == noone? COLORS.panel_bg_clear : merge_color(COLORS.panel_bg_clear, context.color, 0.05);
-		draw_clear(bg);
+		bg_color = context == noone? COLORS.panel_bg_clear : merge_color(COLORS.panel_bg_clear, context.color, 0.05);
+		draw_clear(bg_color);
 		drawGrid();
 		
 		draw_set_text(f_p0, fa_right, fa_top, COLORS._main_text_sub);

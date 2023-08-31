@@ -698,7 +698,8 @@ event_inherited();
 				__txtx("add_node_create_equation", "Create equation") + ": " + eq, -1, search_pane.w - ui(32));
 			
 			draw_set_text(f_p0, fa_center, fa_top, COLORS._main_text_sub);
-			draw_text(search_pane.w / 2, search_pane.h / 2 - ui(4), __txtx("add_node_equation_enter", "Press Enter to create equation node."));
+			draw_text_add(round(search_pane.w / 2), round(search_pane.h / 2 - ui(4)), 
+				__txtx("add_node_equation_enter", "Press Enter to create equation node."));
 			
 			if(keyboard_check_pressed(vk_enter))
 				buildNode(ALL_NODES[? "Node_Equation"], eq);

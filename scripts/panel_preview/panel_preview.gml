@@ -293,8 +293,8 @@ function Panel_Preview() : PanelContent() constructor {
 	function getNodePreviewSequence()	{ return preview_sequence[splitView? splitSelection : 0]; }
 	
 	function getPreviewData() { #region
-		preview_surface  = [ 0, 0 ];
-		preview_sequence = [ 0, 0 ];
+		preview_surface  = [ noone, noone ];
+		preview_sequence = [ noone, noone ];
 		
 		for( var i = 0; i < 2; i++ ) {
 			var node = preview_node[i];
@@ -315,7 +315,7 @@ function Panel_Preview() : PanelContent() constructor {
 				canvas_a = 0;
 			}
 			
-			if(preview_sequence[i] != 0) {
+			if(preview_sequence[i] != noone) {
 				if(array_length(preview_sequence[i]) == 0) return;
 				preview_surface[i] = preview_sequence[i][safe_mod(node.preview_index, array_length(preview_sequence[i]))];
 			}
@@ -618,13 +618,8 @@ function Panel_Preview() : PanelContent() constructor {
 		}
 		
 		var _node = getNodePreview();
-		if(_node) {
+		if(_node)
 			title = _node.display_name == ""? _node.name : _node.display_name;
-			
-			var cx = canvas_x + _node.preview_x * canvas_s;
-			var cy = canvas_y + _node.preview_y * canvas_s;
-			_node.drawPreview(cx, cy, canvas_s);
-		}
 		
 		if(splitView == 0 && tileMode == 0 && is_surface(preview_surface[0])) {
 			var node = preview_node[0];
@@ -997,7 +992,7 @@ function Panel_Preview() : PanelContent() constructor {
 		#endregion
 		
 		var pseq = getNodePreviewSequence();
-		if(pseq == 0) return;
+		if(pseq == noone) return;
 		
 		if(!array_equals(pseq, _preview_sequence)) {
 			_preview_sequence = pseq;

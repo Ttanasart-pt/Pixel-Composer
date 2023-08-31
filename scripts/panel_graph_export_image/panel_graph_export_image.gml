@@ -89,8 +89,21 @@ function graph_export_image(allList, nodeList, settings = {}) {
 		#region draw conneciton
 			surface_set_target(cs);
 				DRAW_CLEAR
+				var _params = {
+					x  : gr_x,
+					y  : gr_y,
+					s  : scale,
+					mx : mx,
+					my : my,
+					aa : aa,
+					active : true,
+					max_layer : 1,
+					cur_layer : 1,
+					highlight : false,
+				};
+			
 				for(var i = 0; i < ds_list_size(nodeList); i++)
-					nodeList[| i].drawConnections(gr_x, gr_y, scale, mx, my, true, aa);
+					nodeList[| i].drawConnections(_params);
 			surface_reset_target();
 		
 			shader_set(sh_downsample);

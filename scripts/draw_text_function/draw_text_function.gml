@@ -28,7 +28,10 @@ function draw_text_cut(x, y, str, w, scale = 1) {
 
 function __draw_text_ext_transformed(_x, _y, _text, _sep, _w, sx, sy, rotation) {
 	if(!LOCALE.config.per_character_line_break) {
+		BLEND_ALPHA_MULP;
 		draw_text_ext_transformed(_x, _y, _text, _sep, _w, sx, sy, rotation);
+		BLEND_NORMAL;
+		
 		return string_height_ext(_text, _sep, _w) * sy;
 	}
 	
@@ -71,7 +74,8 @@ function __draw_text_ext_transformed(_x, _y, _text, _sep, _w, sx, sy, rotation) 
 		case fa_middle : yy = _y - hh / 2;	break;
 		case fa_bottom : yy = _y - hh;		break;
 	}
-		
+	
+	BLEND_ALPHA_MULP;
 	for( var i = 0, n = array_length(lines); i < n; i++ ) {
 		var lw = string_width(lines[i]) * sx;
 		
@@ -84,6 +88,7 @@ function __draw_text_ext_transformed(_x, _y, _text, _sep, _w, sx, sy, rotation) 
 		draw_text_transformed(xx, yy, lines[i], sx, sy, rotation);
 		yy += string_height("M") * sy;
 	}
+	BLEND_NORMAL;
 	
 	draw_set_halign(ha);
 	draw_set_valign(va);

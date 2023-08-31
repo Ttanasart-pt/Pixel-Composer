@@ -94,6 +94,7 @@ enum VALUE_DISPLAY {
 	//Text
 	code,
 	text_array,
+	text_box,
 	
 	//path
 	path_save,
@@ -466,6 +467,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		draw_line_shift_y	= 0;
 		draw_line_thick		= 1;
 		draw_line_shift_hover	= false;
+		draw_line_blend     = 1;
 		drawLineIndex		= 1;
 		draw_line_vb		= noone;
 		
@@ -941,6 +943,13 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				switch(display_type) {
 					case VALUE_DISPLAY._default :
 						editWidget = new textArea(TEXTBOX_INPUT.text, function(str) { 
+							return setValueDirect(str); 
+						});
+						extract_node = "Node_String";
+						break;
+						
+					case VALUE_DISPLAY.text_box :
+						editWidget = new textBox(TEXTBOX_INPUT.text, function(str) { 
 							return setValueDirect(str); 
 						});
 						extract_node = "Node_String";
@@ -1709,10 +1718,28 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		}
 	} #endregion
 	
-	static drawConnections = function(_x, _y, _s, mx, my, _active, aa = 1, minx = undefined, miny = undefined, maxx = undefined, maxy = undefined) { #region
+	static drawConnections = function(params = {}) { #region
 		if(value_from == noone)		return noone;
 		if(!value_from.node.active) return noone;
 		if(!isVisible())			return noone;
+		
+		var _x	= params.x;
+		var _y	= params.y;
+		var _s	= params.s;
+		var mx	= params.mx;
+		var my	= params.my;
+		var _active   = params.active;
+		var cur_layer = params.cur_layer;
+		var max_layer = params.max_layer;
+		
+		var aa	 = struct_try_get(params, "aa", 1);
+		var minx = struct_try_get(params, "minx", undefined);
+		var miny = struct_try_get(params, "miny", undefined);
+		var maxx = struct_try_get(params, "maxx", undefined);
+		var maxy = struct_try_get(params, "maxy", undefined);
+		var high = struct_try_get(params, "highlight", true);
+		
+		var bg = struct_try_get(params, "bg", c_black);
 		
 		var hovering = noone;
 		var jx  = x;
@@ -1728,10 +1755,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			if(jy < miny && fry < miny) return noone;
 			if(jy > maxy && fry > maxy) return noone;
 		}
-					
-		var c0  = value_color(value_from.type);
-		var c1  = value_color(type);
-			
+		
 		var shx = draw_line_shift_x * _s;
 		var shy = draw_line_shift_y * _s;
 			
@@ -1792,7 +1816,25 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		var ty = LINE_STYLE.solid;
 		if(type == VALUE_TYPE.node)
 			ty = LINE_STYLE.dashed;
+		
+		var c0, c1;
+		
+		if(PREF_MAP[? "connection_line_highlight"]) {
+			var _colr = 1;
+			var _fade = PREF_MAP[? "connection_line_highlight_fade"];
 			
+			if(high)    _colr = node.active_draw_index == -1? _fade : 1;
+			if(thicken) _colr = 1;
+			
+			draw_line_blend = _colr == 1? 1 : lerp_float(draw_line_blend, _colr, 3);
+		
+			c0 = merge_color(bg, value_color(value_from.type), draw_line_blend);
+			c1 = merge_color(bg, value_color(type),			   draw_line_blend);
+		} else {
+			c0 = value_color(value_from.type);
+			c1 = value_color(type);
+		}
+		
 		var ss  = _s * aa;
 		jx  *= aa;
 		jy  *= aa;

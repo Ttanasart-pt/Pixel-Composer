@@ -7,10 +7,9 @@ enum TEXT_AREA_FORMAT {
 }
 
 function textArea(_input, _onModify, _extras = noone) : textInput(_input, _onModify, _extras) constructor {
-	font   = f_p0;
-	hide   = false;
-	line_width = 1000;
-	color  = COLORS._main_text;
+	font     = f_p0;
+	hide     = false;
+	color    = COLORS._main_text;
 	boxColor = c_white;
 	
 	auto_update = false;
@@ -24,7 +23,8 @@ function textArea(_input, _onModify, _extras = noone) : textInput(_input, _onMod
 	_prev_width		= 0;
 	_stretch_width  = false;
 	
-	min_lines = 0;
+	min_lines  = 0;
+	line_width = 1000;
 	
 	cursor			= 0;
 	cursor_tx		= 0;
@@ -32,7 +32,7 @@ function textArea(_input, _onModify, _extras = noone) : textInput(_input, _onMod
 	cursor_pos_x_to	= 0;
 	cursor_pos_y	= 0;
 	cursor_pos_y_to	= 0;
-	cursor_line = 0;
+	cursor_line     = 0;
 	
 	char_run = 0
 	
@@ -45,17 +45,17 @@ function textArea(_input, _onModify, _extras = noone) : textInput(_input, _onMod
 	
 	parser_server = noone;
 	
-	autocomplete_box = instance_create(0, 0, o_dialog_textbox_autocomplete);
+	autocomplete_box		 = instance_create(0, 0, o_dialog_textbox_autocomplete);
 	autocomplete_box.textbox = self;
-	autocomplete_server = noone;
+	autocomplete_server		 = noone;
 	
-	function_guide_box = instance_create(0, 0, o_dialog_textbox_function_guide);
+	function_guide_box		   = instance_create(0, 0, o_dialog_textbox_function_guide);
 	function_guide_box.textbox = self;
-	function_guide_server = noone;
+	function_guide_server	   = noone;
 	
 	_cl = -1;
 	
-	static activate = function() { 
+	static activate = function() { #region
 		WIDGET_CURRENT = self;
 		WIDGET_CURRENT_SCROLL = parent;
 		parentFocus();
@@ -70,16 +70,16 @@ function textArea(_input, _onModify, _extras = noone) : textInput(_input, _onMod
 		keyboard_lastkey = -1;
 					
 		cut_line();
-	}
+	} #endregion
 	
-	static deactivate = function() { 
+	static deactivate = function() { #region 
 		if(WIDGET_CURRENT != self) return;
 		apply();
 		WIDGET_CURRENT = noone;
 		UNDO_HOLDING = false;
-	}
+	} #endregion
 	
-	static onModified = function() { 
+	static onModified = function() { #region
 		if(format == TEXT_AREA_FORMAT.code && autocomplete_server != noone) {
 			var crop = string_copy(_input_text, 1, cursor);
 			var slp  = string_splice(crop, [" ", "(", ",", "\n"]);
@@ -138,9 +138,9 @@ function textArea(_input, _onModify, _extras = noone) : textInput(_input, _onMod
 			} else 
 				function_guide_box.active   = false;
 		}
-	}
+	} #endregion
 	
-	static onKey = function(key) {
+	static onKey = function(key) { #region
 		if(key == vk_left) {
 			if(key_mod_press(SHIFT)) {
 				if(cursor_select == -1)
@@ -244,21 +244,21 @@ function textArea(_input, _onModify, _extras = noone) : textInput(_input, _onMod
 			cursor = _target;
 			onModified();
 		}
-	}
+	} #endregion
 	
-	static apply = function() {
+	static apply = function() { #region
 		if(onModify) onModify(_input_text);
 		UNDO_HOLDING = true;
-	}
+	} #endregion
 	
-	static move_cursor = function(delta) {
+	static move_cursor = function(delta) { #region
 		var ll = string_length(_input_text);
 		cursor = clamp(cursor + delta, 0, ll);
 		
 		onModified();
-	}
+	} #endregion
 	
-	static cut_line = function() {
+	static cut_line = function() { #region
 		_input_text_line = [];
 		_input_text_line_index = [];
 		draw_set_font(font);
@@ -315,9 +315,9 @@ function textArea(_input, _onModify, _extras = noone) : textInput(_input, _onMod
 				array_push(_input_text_line_index, _iIndex); _iIndex = "";	
 			}
 		}
-	}
+	} #endregion
 	
-	static editText = function() {
+	static editText = function() { #region
 		//print("==========");
 		//print(_input_text);
 		//print($"cursor: {cursor}");
@@ -480,9 +480,9 @@ function textArea(_input, _onModify, _extras = noone) : textInput(_input, _onMod
 		} else if(keyboard_check_pressed(vk_enter) && !key_mod_press(SHIFT)) {
 			deactivate();
 		}
-	}
+	} #endregion
 	
-	static display_text = function(_x, _y, _text, _w, _mx = -1, _my = -1) {
+	static display_text = function(_x, _y, _text, _w, _mx = -1, _my = -1) { #region
 		_text = string_real(_text);
 		if(_w != _prev_width) {
 			_prev_width = _w;
@@ -576,13 +576,13 @@ function textArea(_input, _onModify, _extras = noone) : textInput(_input, _onMod
 				cursor_select = target;
 			}
 		}
-	}
+	} #endregion
 	
-	static drawParam = function(params) {
+	static drawParam = function(params) { #region
 		return draw(params.x, params.y, params.w, params.h, params.data, params.m);
-	}
+	} #endregion
 	
-	static draw = function(_x, _y, _w, _h, _text, _m) {
+	static draw = function(_x, _y, _w, _h, _text, _m) { #region
 		x = _x;
 		y = _y;
 		w = _w;
@@ -748,5 +748,5 @@ function textArea(_input, _onModify, _extras = noone) : textInput(_input, _onMod
 		resetFocus();
 		
 		return hh;
-	}
+	} #endregion
 }

@@ -15,9 +15,10 @@ void main() {
 	for( float j = 0.; j < down; j++ ) {
 		vec4 samp = texture2D( gm_BaseTexture, v_vTexcoord * down + vec2(i, j) / dimension );
 		col += samp;
+		wei += samp.a;
 	}
 	
-	col /= down * down;	
+	col /= wei;	
 	
     gl_FragColor = col * v_vColour;
 }

@@ -749,7 +749,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		}
 	} #endregion
 	
-	static drawConnections = function(_x, _y, _s, mx, my, _active, aa = 1, minx = undefined, miny = undefined, maxx = undefined, maxy = undefined) { #region
+	static drawConnections = function(params = {}) { #region
 		if(!active) return;
 		
 		var hovering = noone;
@@ -800,7 +800,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 			else if(i == -2)	jun = inspectInput2;
 			else				jun = inputs[| i];
 			
-			var hov = jun.drawConnections(_x, _y, _s, mx, my, _active, aa, minx, miny, maxx, maxy);
+			var hov = jun.drawConnections(params);
 			if(hov) hovering = hov;
 		}
 		
@@ -980,8 +980,6 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	} #endregion
 	
 	static drawActive = function(_x, _y, _s, ind = 0) { active_draw_index = ind; }
-	
-	static drawPreview = function(_x, _y, _s) {}
 	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {}
 	
@@ -1268,7 +1266,9 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	} #endregion
 	
 	static getPreviewValues = function() { #region
-		if(preview_channel > ds_list_size(outputs)) return noone;
+		if(preview_channel >= ds_list_size(outputs)) return noone;
+		if(outputs[| preview_channel].type != VALUE_TYPE.surface) return noone; //I feels like I've wrote this line before. Did I delete it because of a bug? Am I reintroducing old bug?
+		
 		return outputs[| preview_channel].getValue();
 	} #endregion
 	
