@@ -1,7 +1,7 @@
 function Panel_Graph_Connection_Setting() : Panel_Linear_Setting() constructor {
 	title = __txtx("graph_connection_settings", "Connection Settings");
 	
-	w = ui(380);
+	w = ui(400);
 	
 	#region data
 		properties = [
@@ -33,14 +33,16 @@ function Panel_Graph_Connection_Setting() : Panel_Linear_Setting() constructor {
 				function() { return PREF_MAP[? "connection_line_aa"]; }
 			],
 			[
-				new checkBox(function() {
-					PREF_MAP[? "connection_line_highlight"] = !PREF_MAP[? "connection_line_highlight"];
+				new buttonGroup([ "None", "ALT", "Always" ], function(val) {
+					PREF_MAP[? "connection_line_highlight"] = val;
 				}),
 				__txtx("pref_connection_highlight", "Highlight connection"),
 				function() { return PREF_MAP[? "connection_line_highlight"]; }
 			],
 			[
-				new slider(0, 1, 0.05, function(val) { PREF_MAP[? "connection_line_highlight_fade"] = val; }),
+				new slider(0, 1, 0.05, function(val) { 
+					PREF_MAP[? "connection_line_highlight_fade"] = val; 
+				}),
 				__txtx("pref_connection_highlight_fade", "Fade connection"),
 				function() { return PREF_MAP[? "connection_line_highlight_fade"] },
 			],

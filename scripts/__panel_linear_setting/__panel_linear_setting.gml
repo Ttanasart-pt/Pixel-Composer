@@ -13,7 +13,7 @@ function Panel_Linear_Setting() : PanelContent() constructor {
 	static drawSettings = function(panel) {
 		var yy = ui(24);
 		var th = ui(36);
-		var ww = ui(200);
+		var ww = w - ui(180);
 		var wh = TEXTBOX_HEIGHT;
 		
 		var _hov = false;

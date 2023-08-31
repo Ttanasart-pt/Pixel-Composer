@@ -1737,7 +1737,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		var miny = struct_try_get(params, "miny", undefined);
 		var maxx = struct_try_get(params, "maxx", undefined);
 		var maxy = struct_try_get(params, "maxy", undefined);
-		var high = struct_try_get(params, "highlight", true);
+		var high = struct_try_get(params, "highlight", 0);
 		
 		var bg = struct_try_get(params, "bg", c_black);
 		
@@ -1818,18 +1818,15 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			ty = LINE_STYLE.dashed;
 		
 		var c0, c1;
+		var _high = high * PREF_MAP[? "connection_line_highlight"];
+		var _selc = node.active_draw_index == 0 || value_from.node.active_draw_index == 0;
 		
-		if(PREF_MAP[? "connection_line_highlight"]) {
-			var _colr = 1;
+		if(!thicken && (_high == 1 && key_mod_press(ALT) || _high == 2)) {
 			var _fade = PREF_MAP[? "connection_line_highlight_fade"];
+			var _colr = _selc? 1 : _fade;
 			
-			if(high)    _colr = node.active_draw_index == -1? _fade : 1;
-			if(thicken) _colr = 1;
-			
-			draw_line_blend = _colr == 1? 1 : lerp_float(draw_line_blend, _colr, 3);
-		
-			c0 = merge_color(bg, value_color(value_from.type), draw_line_blend);
-			c1 = merge_color(bg, value_color(type),			   draw_line_blend);
+			c0 = merge_color(bg, value_color(value_from.type), _colr);
+			c1 = merge_color(bg, value_color(type),			   _colr);
 		} else {
 			c0 = value_color(value_from.type);
 			c1 = value_color(type);
@@ -1845,7 +1842,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		cy  *= aa;
 		corner *= aa;
 		th = max(1, round(th));
-			
+		
 		draw_set_color(c0);
 			
 		var fromIndex = value_from.drawLineIndex;

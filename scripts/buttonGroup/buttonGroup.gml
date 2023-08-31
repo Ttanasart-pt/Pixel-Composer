@@ -13,6 +13,11 @@ function buttonGroup(_data, _onClick) : widget() constructor {
 	
 	sb_small = new scrollBox(data, _onClick);
 	
+	static setFont = function(font) {
+		self.font = font;
+		return self;
+	}
+	
 	static trigger = function() {
 		if(current_selecting + 1 >= array_length(data))
 			onClick(0);
@@ -61,15 +66,16 @@ function buttonGroup(_data, _onClick) : widget() constructor {
 		display_button = total_width < _w;
 		
 		if(display_button) {
+			var bx = _x;
+			
 			for(var i = 0; i < amo; i++) {
 				buttons[i].setFocusHover(active, hover);
-			
-				var bx  = _x + ww * i;
+				
 				var spr = i == 0 ? buttonSpr[0] : (i == amo - 1? buttonSpr[2] : buttonSpr[1]);
 			
 				if(_selecting == i) {
-					draw_sprite_stretched(spr, 2, bx, _y, ww - !!i, _h);
-					draw_sprite_stretched_ext(spr, 3, bx, _y, ww - !!i, _h, COLORS._main_accent, 1);	
+					draw_sprite_stretched(spr, 2, bx, _y, ww, _h);
+					draw_sprite_stretched_ext(spr, 3, bx, _y, ww, _h, COLORS._main_accent, 1);	
 				} else {
 					buttons[i].draw(bx, _y, ww, _h, _m, spr);
 					if(buttons[i].clicked) onClick(i);
@@ -81,6 +87,8 @@ function buttonGroup(_data, _onClick) : widget() constructor {
 				} else if(sprite_exists(data[i])) {
 					draw_sprite_ui_uniform(data[i], i, bx + ww / 2, _y + _h / 2);
 				}
+				
+				bx += ww;
 			}
 			
 			if(point_in_rectangle(_m[0], _m[1], _x, _y, _x + w, _y + _h)) {
