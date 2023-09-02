@@ -33,7 +33,7 @@ if !ready exit;
 	var txt = $"Save project '{filename_name(project.path)}' before exit?";
 	draw_text(dialog_x + ui(24), py, txt);
 	
-	var bw = ui(96), bh = TEXTBOX_HEIGHT;
+	var bw = ui(96), bh = BUTTON_HEIGHT;
 	var bx1 = dialog_x + dialog_w - ui(16);
 	var by1 = dialog_y + dialog_h - ui(16);
 	var bx0 = bx1 - bw;

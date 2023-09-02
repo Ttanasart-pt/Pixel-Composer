@@ -21,7 +21,7 @@ draw_set_alpha(1);
 	draw_text_line(dialog_x + ui(24), py, __txtx("dialog_migration_content", 
 		"You can press migrate files or manually move all custom collections, assets, palettes, gradients, fonts and presets."), -1, dialog_w - ui(48));
 	
-	var bw = ui(112), bh = TEXTBOX_HEIGHT;
+	var bw = ui(112), bh = BUTTON_HEIGHT;
 	var bx1 = dialog_x + dialog_w - ui(16);
 	var by1 = dialog_y + dialog_h - ui(16);
 	var bx0 = bx1 - bw;

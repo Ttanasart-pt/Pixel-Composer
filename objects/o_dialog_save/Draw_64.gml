@@ -21,7 +21,7 @@ draw_set_alpha(1);
 	draw_set_text(f_p0, fa_left, fa_top, COLORS._main_text);
 	draw_text(dialog_x + ui(24), py, __txtx("dialog_exit_content", "Save progress before close?"));
 	
-	var bw = ui(96), bh = TEXTBOX_HEIGHT;
+	var bw = ui(96), bh = BUTTON_HEIGHT;
 	var bx1 = dialog_x + dialog_w - ui(16);
 	var by1 = dialog_y + dialog_h - ui(16);
 	var bx0 = bx1 - bw;
