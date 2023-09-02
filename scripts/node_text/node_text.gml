@@ -36,7 +36,7 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	input_display_list = [
 		["Output",			true],	9, 6, 10,
 		["Text",			false], 0, 7, 8, 5, 
-		["Font properties", false], 1, 2, 3, 4
+		["Font properties", false], 1, 2, 3,
 	];
 	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
@@ -46,30 +46,22 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	_font_current = "";
 	_size_current = 0;
 	_aa_current   = false;
-	_rang_current = [0, 0];
 	
-	static generateFont = function(_path, _size, _aa, _range) {
+	static generateFont = function(_path, _size, _aa) {
 		if(PROJECT.animator.is_playing) return;
-		
-		if(_path == _font_current && 
-		   _size == _size_current && 
-		   _aa == _aa_current && 
-		   _rang_current[0] == _range[0] && 
-		   _rang_current[1] == _range[1]) return;
+		if(_path == _font_current && _size == _size_current && _aa == _aa_current) return;
 		 
 		_font_current    = _path;
 		_size_current    = _size;
 		_aa_current      = _aa;
-		_rang_current[0] = _range[0];
-		_rang_current[1] = _range[1];
 		
-		if(file_exists(_path)) {
-			if(font != f_p0 && font_exists(font)) 
-				font_delete(font);
+		if(!file_exists(_path)) return;
+		
+		if(font != f_p0 && font_exists(font)) 
+			font_delete(font);
 			
-			font_add_enable_aa(_aa);
-			font = font_add(_path, _size, false, false, _range[0], _range[1]);
-		}
+		font_add_enable_aa(_aa);
+		font = font_add(_path, _size, false, false, 0, 0);
 	}
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) {
@@ -77,7 +69,6 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		var _font  = _data[1];
 		var _size  = _data[2];
 		var _aa    = _data[3];
-		var _range = _data[4];
 		var _col   = _data[5];
 		
 		var _dim_type = _data[9];
@@ -88,7 +79,7 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		
 		var ww, hh;
 		
-		generateFont(_font, _size, _aa, _range);
+		generateFont(_font, _size, _aa);
 		
 		draw_set_font(font);
 		if(_dim_type == 0) {
@@ -105,7 +96,7 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		
 		surface_set_target(_outSurf);
 			DRAW_CLEAR
-			BLEND_OVERRIDE;
+			BLEND_ALPHA
 			
 			if(_dim[0] != 0 && _dim[1] != 0) {
 				var _hali = _data[7];

@@ -19,6 +19,21 @@ function Node_Wrap_Area(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	attribute_surface_depth();
 	attribute_interpolation();
 
+	attributes[? "initalset"] = false;
+	
+	static onValueFromUpdate = function(index) { #region
+		if(index == 0 && attributes[? "initalset"] == false) {
+			var _surf = inputs[| 0].getValue();
+			if(!is_surface(_surf)) return;
+			
+			var _sw = surface_get_width(_surf);
+			var _sh = surface_get_height(_surf);
+			
+			inputs[| 1].setValue([ _sw / 2, _sh / 2, _sw / 2, _sh / 2, AREA_SHAPE.rectangle ]);
+			attributes[? "initalset"] = true;
+		}
+	} #endregion
+	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		inputs[| 1].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
 	}

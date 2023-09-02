@@ -2,9 +2,9 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 	name = "3D Camera";
 	batch_output = true;
 	
-	object = new __3dCamera_object();
-	camera = new __3dCamera();
-	lookat = new __3dGizmoSphere(0.5, c_ltgray, 1);
+	object   = new __3dCamera_object();
+	camera   = new __3dCamera();
+	lookat   = new __3dGizmoSphere(0.5, c_ltgray, 1);
 	lookLine = noone;
 	lookRad  = new __3dGizmoCircleZ(0.5, c_yellow, 0.5);
 	
