@@ -46,7 +46,7 @@ function Node_3D(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constr
 			gpu_set_ztestenable(true);
 			gpu_set_cullmode(cull_noculling); 
 			
-			D3D_GLOBAL_PREVIEW.applyCamera();
+			D3D_GLOBAL_PREVIEW.camera.applyCamera();
 			D3D_GLOBAL_PREVIEW.apply();
 			
 			for( var i = 0, n = array_length(_prev_obj); i < n; i++ ) {
@@ -66,7 +66,7 @@ function Node_3D(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constr
 			}
 		surface_reset_target();
 		
-		D3D_GLOBAL_PREVIEW.resetCamera();
+		D3D_GLOBAL_PREVIEW.camera.resetCamera();
 	} #endregion
 	
 	static postUpdate = function() { refreshPreview(); }

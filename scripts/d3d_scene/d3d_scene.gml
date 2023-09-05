@@ -37,9 +37,9 @@ function __3dScene(camera) constructor {
 	
 	lightAmbient		= c_black;
 	lightDir_max		= 16;
-	lightDir_shadow_max = 2;
+	lightDir_shadow_max = 4;
 	lightPnt_max		= 16;
-	lightPnt_shadow_max = 2;
+	lightPnt_shadow_max = 4;
 	
 	cull_mode       = cull_noculling;
 	enviroment_map  = noone;
@@ -52,10 +52,7 @@ function __3dScene(camera) constructor {
 	
 	show_normal  = false;
 	
-	geometry_data = [ noone, noone, noone ];
-	
 	ssao_enabled  = false;
-	ssao		  = noone;
 	ssao_sample   = 32;
 	ssao_radius   = 0.1;
 	ssao_bias     = 0.1;
@@ -88,9 +85,6 @@ function __3dScene(camera) constructor {
 		lightPnt_shadowBias = [];
 	} reset(); #endregion
 	
-	static applyCamera = function() { camera.applyCamera(); }
-	static resetCamera = function() { camera.resetCamera(); }
-	
 	static _submit = function(callback, object, shader = noone) {
 		matrix_stack_clear(); 
 		if(apply_transform) custom_transform.submitMatrix(); 
@@ -104,8 +98,10 @@ function __3dScene(camera) constructor {
 	static submitShader	= function(object, shader = noone) { _submit(function(object, shader) { object.submitShader	(self, shader); }, object, shader) }
 	
 	static deferPass = function(object, w, h) { #region
-		geometryPass(object, w, h);
-		ssaoPass();
+		var geometry_data = geometryPass(object, w, h);
+		var ssao = ssaoPass(geometry_data);
+		
+		return { geometry_data, ssao };
 	} #endregion
 	
 	static renderBackground = function(w, h) { #region
@@ -132,6 +128,7 @@ function __3dScene(camera) constructor {
 	} #endregion
 	
 	static geometryPass = function(object, w = 512, h = 512) { #region
+		var geometry_data = [ noone, noone, noone ];
 		geometry_data[0] = surface_verify(geometry_data[0], w, h, surface_rgba32float);
 		geometry_data[1] = surface_verify(geometry_data[1], w, h, surface_rgba32float);
 		geometry_data[2] = surface_verify(geometry_data[2], w, h, surface_rgba32float);
@@ -144,7 +141,7 @@ function __3dScene(camera) constructor {
 			
 			DRAW_CLEAR
 			camera.setMatrix();
-			applyCamera();
+			camera.applyCamera();
 			
 			gpu_set_cullmode(cull_mode);
 			
@@ -169,10 +166,11 @@ function __3dScene(camera) constructor {
 			surface_free(geometry_data[2]);
 			geometry_data[2] = _normal_blurred;
 		}
+		
+		return geometry_data;
 	} #endregion
 	
-	static ssaoPass = function() { #region
-		surface_free_safe(ssao);
+	static ssaoPass = function(geometry_data) { #region
 		if(!ssao_enabled) return;
 		
 		var _sw = surface_get_width(geometry_data[0]);
@@ -201,17 +199,17 @@ function __3dScene(camera) constructor {
 		
 		surface_free(_ssao_surf);
 		
-		ssao = _ssao_blur;
+		return _ssao_blur;
 	} #endregion
 	
-	static apply = function() { #region
+	static apply = function(deferData = noone) { #region
 		shader_set(sh_d3d_default);
 			#region ---- background ----
 				shader_set_f("light_ambient",		colToVec4(lightAmbient));
 				shader_set_i("env_use_mapping",		is_surface(enviroment_map) );
 				shader_set_surface("env_map",		enviroment_map, false, true );
 				shader_set_dim("env_map_dimension",	enviroment_map );
-				shader_set_surface("ao_map",		ssao );
+				if(deferData != noone) shader_set_surface("ao_map",		deferData.ssao );
 			#endregion
 			
 			shader_set_i("light_dir_count",		lightDir_count); #region
@@ -220,7 +218,7 @@ function __3dScene(camera) constructor {
 				shader_set_f("light_dir_color",		lightDir_color);
 				shader_set_f("light_dir_intensity", lightDir_intensity);
 				shader_set_i("light_dir_shadow_active", lightDir_shadow);
-				for( var i = 0, n = array_length(lightDir_shadowMap); i < n; i++ )
+				for( var i = 0, n = array_length(lightDir_shadowMap); i < n; i++ ) 
 					shader_set_surface($"light_dir_shadowmap_{i}", lightDir_shadowMap[i], true);
 				shader_set_f("light_dir_view",		lightDir_viewMat);
 				shader_set_f("light_dir_proj",		lightDir_projMat);
@@ -234,16 +232,16 @@ function __3dScene(camera) constructor {
 				shader_set_f("light_pnt_intensity", lightPnt_intensity);
 				shader_set_f("light_pnt_radius",    lightPnt_radius);
 				shader_set_i("light_pnt_shadow_active", lightPnt_shadow);
-				for( var i = 0, n = array_length(lightPnt_shadowMap); i < n; i++ ) 
+				for( var i = 0, n = array_length(lightPnt_shadowMap); i < n; i++ )
 					shader_set_surface($"light_pnt_shadowmap_{i}", lightPnt_shadowMap[i], true, true);
 				shader_set_f("light_pnt_view",		lightPnt_viewMat);
 				shader_set_f("light_pnt_proj",		lightPnt_projMat);
 				shader_set_f("light_pnt_shadow_bias", lightPnt_shadowBias);
 			} #endregion
 			
-			if(defer_normal && array_length(geometry_data) > 2) {
+			if(defer_normal && deferData != noone && array_length(deferData.geometry_data) > 2) {
 				shader_set_i("mat_defer_normal", 1);
-				shader_set_surface("mat_normal_map", geometry_data[2]);
+				shader_set_surface("mat_normal_map", deferData.geometry_data[2]);
 			} else 
 				shader_set_i("mat_defer_normal", 0);
 			
@@ -255,6 +253,8 @@ function __3dScene(camera) constructor {
 				
 				shader_set_f("viewProjMat",		camera.getCombinedMatrix() );
 			#endregion
+			
+			//print($"Submitting scene with {lightDir_count} dir, {lightPnt_count} pnt lights.");
 		shader_reset();
 	} #endregion
 	

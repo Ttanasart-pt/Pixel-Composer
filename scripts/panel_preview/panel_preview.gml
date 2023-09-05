@@ -756,6 +756,8 @@ function Panel_Preview() : PanelContent() constructor {
 	function draw3D() { #region
 		var _prev_node = getNodePreview();
 		if(_prev_node == noone) return;
+		if(!_prev_node.is_3D)   return;
+		
 		_prev_node.previewing = 1;
 		
 		d3_scene_preview = struct_has(_prev_node, "scene")? _prev_node.scene : d3_scene;
@@ -802,12 +804,12 @@ function Panel_Preview() : PanelContent() constructor {
 		#region background
 			surface_free_safe(d3_surface_bg);
 			
-			if(_prev_node.is_3D && d3_scene_preview != d3_scene)
+			if(d3_scene_preview != d3_scene)
 				d3_surface_bg = d3_scene_preview.renderBackground(w, h);
 		#endregion
 		
 		#region shadow
-			if(_prev_node.is_3D && d3_scene_preview == d3_scene) {
+			if(d3_scene_preview == d3_scene) {
 				d3_scene_light0.shadow_map_scale = d3_view_camera.focus_dist * 2;
 				
 				var _prev_obj = _prev_node.getPreviewObjects();
@@ -834,10 +836,8 @@ function Panel_Preview() : PanelContent() constructor {
 		d3_surface_outline = surface_verify(d3_surface_outline, w, h);
 		
 		#region defer
-			if(_prev_node.is_3D) {
-				var _prev_obj = _prev_node.getPreviewObject();
-				d3_scene_preview.deferPass(_prev_obj, w, h);
-			}
+			var _prev_obj = _prev_node.getPreviewObject();
+			var _defer    = d3_scene_preview.deferPass(_prev_obj, w, h);
 		#endregion
 		
 		#region grid
@@ -868,33 +868,31 @@ function Panel_Preview() : PanelContent() constructor {
 		#endregion
 		
 		#region draw
-			if(d3_scene_preview == d3_scene)
-				d3_scene_preview.reset();
+			d3_scene_preview.reset();
 			gpu_set_cullmode(cull_counterclockwise); 
 			
-			if(_prev_node.is_3D) {
-				var _prev_obj = _prev_node.getPreviewObjects();
+			var _prev_obj = _prev_node.getPreviewObjects();
 				
-				if(d3_scene_light_enabled && d3_scene_preview == d3_scene) {
-					d3_scene.addLightDirectional(d3_scene_light0);
-					d3_scene.addLightDirectional(d3_scene_light1);
+			if(d3_scene_preview == d3_scene) {
+				if(d3_scene_light_enabled) {
+					d3_scene_preview.addLightDirectional(d3_scene_light0);
+					d3_scene_preview.addLightDirectional(d3_scene_light1);
 				}
+			}
 				
-				if(d3_scene_preview == d3_scene)
-				for( var i = 0, n = array_length(_prev_obj); i < n; i++ ) {
-					var _prev = _prev_obj[i];
-					if(_prev == noone) continue;
+			for( var i = 0, n = array_length(_prev_obj); i < n; i++ ) {
+				var _prev = _prev_obj[i];
+				if(_prev == noone) continue;
 					
-					_prev.submitShader(d3_scene_preview);
-				}
+				_prev.submitShader(d3_scene_preview);
+			}
 				
-				d3_scene_preview.apply();
+			d3_scene_preview.apply(_defer);
 				
-				for( var i = 0, n = array_length(_prev_obj); i < n; i++ ) {
-					var _prev = _prev_obj[i];
-					if(_prev == noone) continue;
-					_prev.submitUI(d3_scene_preview);							//////////////// SUBMIT ////////////////
-				}
+			for( var i = 0, n = array_length(_prev_obj); i < n; i++ ) {
+				var _prev = _prev_obj[i];
+				if(_prev == noone) continue;
+				_prev.submitUI(d3_scene_preview);							//////////////// SUBMIT ////////////////
 			}
 			
 			gpu_set_cullmode(cull_noculling); 
@@ -909,7 +907,7 @@ function Panel_Preview() : PanelContent() constructor {
 					draw_surface_safe(d3_surface);
 					
 					BLEND_MULTIPLY
-					draw_surface_safe(d3_scene_preview.ssao);
+					draw_surface_safe(_defer.ssao);
 					BLEND_NORMAL
 					
 					//draw_clear(c_white);
@@ -919,7 +917,7 @@ function Panel_Preview() : PanelContent() constructor {
 				case 2 : draw_surface_safe(d3_surface_depth);	break;
 			}
 			
-			//draw_surface_stretched_safe(d3_scene_light0.shadow_map, 64, 64, 128, 128);
+			draw_surface_stretched_safe(d3_scene_light0.shadow_map, 64, 64, 128, 128);
 		#endregion
 		
 		#region outline
@@ -931,7 +929,7 @@ function Panel_Preview() : PanelContent() constructor {
 				surface_set_target(d3_surface_outline);
 				draw_clear(c_black);
 					
-				d3_view_camera.applyCamera();
+				d3_scene_preview.camera.applyCamera();
 					
 				gpu_set_ztestenable(false);
 					for( var i = 0, n = array_length(_inspect_obj); i < n; i++ ) {
@@ -948,7 +946,7 @@ function Panel_Preview() : PanelContent() constructor {
 			}
 		#endregion
 		
-		d3_scene_preview.resetCamera();
+		d3_scene_preview.camera.resetCamera();
 	} #endregion
 	
 	function drawPreviewOverlay() { #region

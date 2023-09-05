@@ -27,6 +27,8 @@ varying float v_cameraDistance;
 	uniform float light_dir_shadow_bias[LIGHT_DIR_LIMIT];
 	uniform sampler2D light_dir_shadowmap_0;
 	uniform sampler2D light_dir_shadowmap_1;
+	//uniform sampler2D light_dir_shadowmap_2;
+	//uniform sampler2D light_dir_shadowmap_3;
 	
 	#define LIGHT_PNT_LIMIT 16
 	uniform int	  light_pnt_count;
@@ -41,6 +43,8 @@ varying float v_cameraDistance;
 	uniform float light_pnt_shadow_bias[LIGHT_DIR_LIMIT];
 	uniform sampler2D light_pnt_shadowmap_0;
 	uniform sampler2D light_pnt_shadowmap_1;
+	//uniform sampler2D light_pnt_shadowmap_2;
+	//uniform sampler2D light_pnt_shadowmap_3;
 #endregion
 
 #region ---- material ----
@@ -93,6 +97,8 @@ varying float v_cameraDistance;
 	float sampleDirShadowMap(int index, vec2 position) {
 		if(index == 0) return texture2D(light_dir_shadowmap_0, position).r;
 		if(index == 1) return texture2D(light_dir_shadowmap_1, position).r;
+		//if(index == 2) return texture2D(light_dir_shadowmap_2, position).r;
+		//if(index == 3) return texture2D(light_dir_shadowmap_3, position).r;
 		return 0.;
 	}
 
@@ -105,6 +111,8 @@ varying float v_cameraDistance;
 	
 		if(index == 0) return texture2D(light_pnt_shadowmap_0, position)[side];
 		if(index == 1) return texture2D(light_pnt_shadowmap_1, position)[side];
+		//if(index == 2) return texture2D(light_pnt_shadowmap_2, position)[side];
+		//if(index == 3) return texture2D(light_pnt_shadowmap_3, position)[side];
 		return 0.;
 	}
 #endregion

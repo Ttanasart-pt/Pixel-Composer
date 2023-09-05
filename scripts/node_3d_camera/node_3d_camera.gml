@@ -126,9 +126,9 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 		}
 	} #endregion
 	
-	static onValueUpdate = function(index) {
+	static onValueUpdate = function(index) { #region
 		if(index == in_d3d + 9) PANEL_PREVIEW.tool_current = noone;
-	}
+	} #endregion
 		
 	static step = function() { #region
 		var _proj = inputs[| in_d3d +  3].getValue();
@@ -261,11 +261,10 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 		scene.ssao_bias  	  = _aoBi;
 		scene.ssao_strength   = _aoSr;
 		scene.defer_normal_radius   = _nrmSmt;
-		
 		scene.draw_background   = _dbg;
 		
 		var _bgSurf = _dbg? scene.renderBackground(_dim[0], _dim[1]) : noone;
-		scene.deferPass(_scne, _dim[0], _dim[1]);
+		var _defer  = scene.deferPass(_scne, _dim[0], _dim[1]);
 		
 		var _render = outputs[| 0].getValue();
 		var _normal = outputs[| 1].getValue();
@@ -289,7 +288,7 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 		
 		scene.reset();
 		scene.submitShader(_scne);
-		scene.apply();
+		scene.apply(_defer);
 		scene.submit(_scne);
 			
 		surface_reset_target();
@@ -308,7 +307,7 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 			draw_surface(_render, 0, 0);
 			
 			BLEND_MULTIPLY
-			draw_surface_safe(scene.ssao);
+			draw_surface_safe(_defer.ssao);
 			BLEND_NORMAL
 		surface_reset_target();
 		surface_free(_render);

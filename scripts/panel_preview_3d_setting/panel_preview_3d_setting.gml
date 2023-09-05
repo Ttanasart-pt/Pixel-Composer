@@ -5,7 +5,7 @@ function Panel_Preview_3D_Setting(panel) : Panel_Linear_Setting() constructor {
 	preview_panel = panel;
 	
 	#region data
-		properties = [
+		properties_default = [
 			[
 				new checkBox(function() { preview_panel.d3_scene_light_enabled = !preview_panel.d3_scene_light_enabled; }),
 				__txt("Preview Light"),
@@ -52,7 +52,18 @@ function Panel_Preview_3D_Setting(panel) : Panel_Linear_Setting() constructor {
 				function() { return preview_panel.d3_scene.show_normal },
 			],
 		]
-	
+		
+		var scene_camera = [
+			[ "Currently using camera node settings", THEME.noti_icon_warning, 1, COLORS._main_accent ],
+		];
+		
+		properties_camera = array_append(scene_camera, properties_default);
+		properties = preview_panel.d3_scene_preview == preview_panel.d3_scene? properties_default : properties_camera;
+		
 		setHeight();
 	#endregion
+	
+	function drawContent(panel) { 
+		drawSettings(panel); 
+	}
 }

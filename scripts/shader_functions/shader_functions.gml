@@ -56,10 +56,27 @@ function shader_set_surface(sampler, surface, linear = false, _repeat = false) {
 	if(!is_surface(surface)) return;
 	
 	var t = shader_get_sampler_index(shader, sampler);
+	
 	texture_set_stage(t, surface_get_texture(surface));
 	gpu_set_tex_filter_ext(t, linear);
 	gpu_set_tex_repeat_ext(t, _repeat);
 }
+
+//function shader_set_surface_ext(sampler, surface, linear = false, _repeat = false) {
+//	var shader = shader_current();
+//	if(!is_surface(surface)) return;
+	
+//	if (!GMD3D11_IS_SUPPORTED) {
+//		shader_set_surface(sampler, surface, linear, _repeat);
+//		return;
+//	}
+	
+//	var t = shader_get_sampler_index(shader, sampler);
+//	gpu_set_tex_filter_ext(t, linear);
+//	gpu_set_tex_repeat_ext(t, _repeat);
+	
+//	d3d11_texture_set_stage_ps(t, surface_get_texture(surface));
+//}
 
 function shader_set_surface_dimension(uniform, surface) {
 	var shader = shader_current();

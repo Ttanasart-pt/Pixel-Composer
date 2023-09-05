@@ -23,6 +23,23 @@ function Panel_Linear_Setting() : PanelContent() constructor {
 			var _prop = properties[i];
 		
 			var _widg = _prop[0];
+			
+			if(is_string(_widg)) {
+				var _text = _prop[0];
+				var _spr  = _prop[1];
+				var _ind  = _prop[2];
+				var _colr = _prop[3];
+				
+				draw_sprite_stretched_ext(THEME.group_label, 0, ui(4), yy - th / 2 + ui(2), w - ui(8), th - ui(4), _colr, 1);
+				draw_sprite_ui(_spr, _ind, ui(4) + th / 2, yy);
+				
+				draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text);
+				draw_text_add(ui(4) + th, yy, _text);
+				
+				yy += th;
+				continue;
+			}
+			
 			var _text = _prop[1];
 			var _data = _prop[2]();
 		
