@@ -97,11 +97,16 @@ function __3dScene(camera) constructor {
 	static submitSel	= function(object, shader = noone) { _submit(function(object, shader) { object.submitSel	(self, shader); }, object, shader) }
 	static submitShader	= function(object, shader = noone) { _submit(function(object, shader) { object.submitShader	(self, shader); }, object, shader) }
 	
-	static deferPass = function(object, w, h) { #region
-		var geometry_data = geometryPass(object, w, h);
-		var ssao = ssaoPass(geometry_data);
+	static deferPass = function(object, w, h, deferData = noone) { #region
+		if(deferData == noone) deferData = {
+			geometry_data: [ noone, noone, noone ],
+			ssao : noone,
+		};
 		
-		return { geometry_data, ssao };
+		geometryPass(deferData, object, w, h);
+		ssaoPass(deferData);
+		
+		return deferData;
 	} #endregion
 	
 	static renderBackground = function(w, h) { #region
@@ -127,15 +132,14 @@ function __3dScene(camera) constructor {
 		return _bgSurf;
 	} #endregion
 	
-	static geometryPass = function(object, w = 512, h = 512) { #region
-		var geometry_data = [ noone, noone, noone ];
-		geometry_data[0] = surface_verify(geometry_data[0], w, h, surface_rgba32float);
-		geometry_data[1] = surface_verify(geometry_data[1], w, h, surface_rgba32float);
-		geometry_data[2] = surface_verify(geometry_data[2], w, h, surface_rgba32float);
+	static geometryPass = function(deferData, object, w = 512, h = 512) { #region
+		deferData.geometry_data[0] = surface_verify(deferData.geometry_data[0], w, h, surface_rgba32float);
+		deferData.geometry_data[1] = surface_verify(deferData.geometry_data[1], w, h, surface_rgba32float);
+		deferData.geometry_data[2] = surface_verify(deferData.geometry_data[2], w, h, surface_rgba32float);
 		
-		surface_set_target_ext(0, geometry_data[0]);
-		surface_set_target_ext(1, geometry_data[1]);
-		surface_set_target_ext(2, geometry_data[2]);
+		surface_set_target_ext(0, deferData.geometry_data[0]);
+		surface_set_target_ext(1, deferData.geometry_data[1]);
+		surface_set_target_ext(2, deferData.geometry_data[2]);
 			gpu_set_zwriteenable(true);
 			gpu_set_ztestenable(true);
 			
@@ -156,50 +160,46 @@ function __3dScene(camera) constructor {
 		surface_reset_target();
 		
 		if(defer_normal_radius) {
-			var _normal_blurred = surface_create_size(geometry_data[2], surface_rgba32float);
+			var _normal_blurred = surface_create_size(deferData.geometry_data[2], surface_rgba32float);
 			surface_set_shader(_normal_blurred, sh_d3d_normal_blur);
 				shader_set_f("radius", defer_normal_radius);
-				shader_set_dim("dimension", geometry_data[2]);
-				draw_surface_safe(geometry_data[2]);
+				shader_set_dim("dimension", deferData.geometry_data[2]);
+				draw_surface_safe(deferData.geometry_data[2]);
 			surface_reset_shader();
 		
-			surface_free(geometry_data[2]);
-			geometry_data[2] = _normal_blurred;
+			surface_free(deferData.geometry_data[2]);
+			deferData.geometry_data[2] = _normal_blurred;
 		}
-		
-		return geometry_data;
 	} #endregion
 	
-	static ssaoPass = function(geometry_data) { #region
+	static ssaoPass = function(deferData) { #region
 		if(!ssao_enabled) return;
 		
-		var _sw = surface_get_width(geometry_data[0]);
-		var _sh = surface_get_height(geometry_data[0]);
+		var _sw = surface_get_width(deferData.geometry_data[0]);
+		var _sh = surface_get_height(deferData.geometry_data[0]);
 		var _ssao_surf = surface_create(_sw, _sh);
 		
 		surface_set_shader(_ssao_surf, sh_d3d_ssao);
-			shader_set_surface("vPosition", geometry_data[0]);
-			shader_set_surface("vNormal",   geometry_data[2]);
+			shader_set_surface("vPosition", deferData.geometry_data[0]);
+			shader_set_surface("vNormal",   deferData.geometry_data[2]);
 			shader_set_f("radius",   ssao_radius);
 			shader_set_f("bias",     ssao_bias);
 			shader_set_f("strength", ssao_strength * 2);
 			shader_set_f("projMatrix",     camera.getCombinedMatrix());
 			shader_set_f("cameraPosition", camera.position.toArray());
-		
+			
 			draw_sprite_stretched(s_fx_pixel, 0, 0, 0, _sw, _sh);
 		surface_reset_shader();
 		
-		var _ssao_blur = surface_create(_sw, _sh);
-		surface_set_shader(_ssao_blur, sh_d3d_ssao_blur);
+		deferData.ssao = surface_verify(deferData.ssao, _sw, _sh);
+		surface_set_shader(deferData.ssao, sh_d3d_ssao_blur);
 			shader_set_f("dimension", _sw, _sh);
-			shader_set_surface("vNormal",   geometry_data[2]);
+			shader_set_surface("vNormal",   deferData.geometry_data[2]);
 			
 			draw_surface_safe(_ssao_surf);
 		surface_reset_shader();
 		
 		surface_free(_ssao_surf);
-		
-		return _ssao_blur;
 	} #endregion
 	
 	static apply = function(deferData = noone) { #region

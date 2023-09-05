@@ -394,7 +394,7 @@ function Panel(_parent, _x, _y, _w, _h) constructor {
 		}
 	} #endregion
 	
-	function draw() { #region
+	static draw = function() { #region
 		if(hasContent()) {
 			drawPanel();
 			return;
@@ -898,7 +898,7 @@ function PanelContent() constructor {
 	
 	function stepBegin() {}
 	
-	function draw(panel) { #region
+	static draw = function(panel) { #region
 		self.panel = panel;
 		if(o_main.panel_dragging == noone) {
 			pFOCUS = FOCUS == panel && panel.mouse_active;

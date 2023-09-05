@@ -2,87 +2,86 @@
 if(OS == os_windows && gameframe_is_minimized()) exit;
 
 #region tooltip
-	if(is_array(TOOLTIP) || TOOLTIP != "") {
-		if(is_struct(TOOLTIP) && struct_has(TOOLTIP, "drawTooltip")) {
+	if(is_struct(TOOLTIP)) {
+		if(struct_has(TOOLTIP, "drawTooltip"))
 			TOOLTIP.drawTooltip();
-		} else if(is_array(TOOLTIP)) {
-			var content = TOOLTIP[0];
-			var type    = TOOLTIP[1];
+	} else if(is_array(TOOLTIP)) {
+		var content = TOOLTIP[0];
+		var type    = TOOLTIP[1];
 			
-			if(is_method(content)) content = content();
+		if(is_method(content)) content = content();
 			
-			switch(type) {
-				case VALUE_TYPE.float :
-				case VALUE_TYPE.integer :
-				case VALUE_TYPE.text :
-				case VALUE_TYPE.struct :
-				case VALUE_TYPE.path :
-					draw_tooltip_text(string_real(content));
-					break;
-				case VALUE_TYPE.boolean :
-					draw_tooltip_text(printBool(content));
-					break;
-				case VALUE_TYPE.curve :
-					draw_tooltip_text("[" + __txt("Curve Object") + "]");
-					break;
-				case VALUE_TYPE.color :
-					draw_tooltip_color(content);
-					break;
-				case VALUE_TYPE.gradient :
-					draw_tooltip_gradient(content);
-					break;
-				case VALUE_TYPE.d3object :
-					draw_tooltip_text("[" + __txt("3D Object") + "]");
-					break;
-				case VALUE_TYPE.object :
-					draw_tooltip_text("[" + __txt("Object") + "]");
-					break;
-				case VALUE_TYPE.surface :
-					draw_tooltip_surface(content);
-					break;
-				case VALUE_TYPE.rigid :
-					draw_tooltip_text("[" + __txt("Rigidbody Object") + " (id: " + string(content[$ "object"]) + ")]");
-					break;
-				case VALUE_TYPE.particle :
-					var txt = "[" + 
-						__txt("Particle Object") + 
-						" (size: " + string(array_length(content)) + ") " + 
-						"]";
-					draw_tooltip_text(txt);
-					break;
-				case VALUE_TYPE.pathnode :
-					draw_tooltip_text("[" + __txt("Path Object") + "]");
-					break;
-				case VALUE_TYPE.fdomain :
-					draw_tooltip_text("[" + __txt("Fluid Domain") + " (id: " + string(content) + ")]");
-					break;
-				case VALUE_TYPE.strands :
-					var txt = __txt("Strands Object");
-					if(is_struct(content))
-						txt += " (strands: " + string(array_length(content.hairs)) + ")";
-					draw_tooltip_text("[" + txt + "]");
-					break;
-				case VALUE_TYPE.mesh :
-					var txt = __txt("Mesh Object");
-					if(is_struct(content))
-						txt += " (triangles: " + string(array_length(content.triangles)) + ")";
-					draw_tooltip_text("[" + txt + "]");
-					break;
-				case VALUE_TYPE.d3vertex :
-					var txt = __txt("3D Vertex");
-					txt += " (groups: " + string(array_length(content)) + ")";
-					draw_tooltip_text("[" + txt + "]");
-					break;
-				case VALUE_TYPE.atlas :
-					draw_tooltip_atlas(content);
-					break;
-				case VALUE_TYPE.buffer :
-					draw_tooltip_buffer(content);
-					break;
-			}
-		} else 
-			draw_tooltip_text(TOOLTIP);
-	}
+		switch(type) {
+			case VALUE_TYPE.float :
+			case VALUE_TYPE.integer :
+			case VALUE_TYPE.text :
+			case VALUE_TYPE.struct :
+			case VALUE_TYPE.path :
+				draw_tooltip_text(string_real(content));
+				break;
+			case VALUE_TYPE.boolean :
+				draw_tooltip_text(printBool(content));
+				break;
+			case VALUE_TYPE.curve :
+				draw_tooltip_text("[" + __txt("Curve Object") + "]");
+				break;
+			case VALUE_TYPE.color :
+				draw_tooltip_color(content);
+				break;
+			case VALUE_TYPE.gradient :
+				draw_tooltip_gradient(content);
+				break;
+			case VALUE_TYPE.d3object :
+				draw_tooltip_text("[" + __txt("3D Object") + "]");
+				break;
+			case VALUE_TYPE.object :
+				draw_tooltip_text("[" + __txt("Object") + "]");
+				break;
+			case VALUE_TYPE.surface :
+				draw_tooltip_surface(content);
+				break;
+			case VALUE_TYPE.rigid :
+				draw_tooltip_text("[" + __txt("Rigidbody Object") + " (id: " + string(content[$ "object"]) + ")]");
+				break;
+			case VALUE_TYPE.particle :
+				var txt = "[" + 
+					__txt("Particle Object") + 
+					" (size: " + string(array_length(content)) + ") " + 
+					"]";
+				draw_tooltip_text(txt);
+				break;
+			case VALUE_TYPE.pathnode :
+				draw_tooltip_text("[" + __txt("Path Object") + "]");
+				break;
+			case VALUE_TYPE.fdomain :
+				draw_tooltip_text("[" + __txt("Fluid Domain") + " (id: " + string(content) + ")]");
+				break;
+			case VALUE_TYPE.strands :
+				var txt = __txt("Strands Object");
+				if(is_struct(content))
+					txt += " (strands: " + string(array_length(content.hairs)) + ")";
+				draw_tooltip_text("[" + txt + "]");
+				break;
+			case VALUE_TYPE.mesh :
+				var txt = __txt("Mesh Object");
+				if(is_struct(content))
+					txt += " (triangles: " + string(array_length(content.triangles)) + ")";
+				draw_tooltip_text("[" + txt + "]");
+				break;
+			case VALUE_TYPE.d3vertex :
+				var txt = __txt("3D Vertex");
+				txt += " (groups: " + string(array_length(content)) + ")";
+				draw_tooltip_text("[" + txt + "]");
+				break;
+			case VALUE_TYPE.atlas :
+				draw_tooltip_atlas(content);
+				break;
+			case VALUE_TYPE.buffer :
+				draw_tooltip_buffer(content);
+				break;
+		} 
+	} else if(TOOLTIP != "")
+		draw_tooltip_text(TOOLTIP);
 	TOOLTIP = "";
 #endregion
 

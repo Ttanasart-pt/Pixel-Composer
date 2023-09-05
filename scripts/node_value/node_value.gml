@@ -670,7 +670,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						
 						extract_node = "Node_Number";
 						break; #endregion
-					case VALUE_DISPLAY.d3quarternion : 
 					case VALUE_DISPLAY.vector :			#region
 						var val = animator.getValue();
 						if(array_length(val) <= 4) {
@@ -856,6 +855,14 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						key_inter    = CURVE_TYPE.cut;
 						extract_node = "";
 						break; #endregion
+					case VALUE_DISPLAY.d3quarternion :	#region
+						editWidget = new quarternionBox(function(index, val) { 
+							return setValueDirect(val, index);
+						});
+						
+						extra_data.angle_display = QUARTERNION_DISPLAY.quarterion;
+						break; #endregion
+						
 				}
 				break;
 			case VALUE_TYPE.boolean :	#region
@@ -1080,7 +1087,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		#endregion
 		
 		if(display_type == VALUE_DISPLAY.area) { #region
-			var dispType = struct_try_get(nodeFrom.extra_data, "area_type", AREA_MODE.area);
+			var dispType = struct_try_get(nodeFrom.extra_data, "area_type");
 			var surfGet = nodeFrom.display_data;
 			if(!applyUnit || surfGet == -1) {
 				//print($"     {value}");
@@ -1108,6 +1115,16 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 					var sw = abs(value[0] - value[2]) / 2;
 					var sh = abs(value[1] - value[3]) / 2;
 					return [cx, cy, sw, sh, value[4]];
+			}
+		} #endregion
+		
+		if(display_type == VALUE_DISPLAY.d3quarternion) { #region
+			var dispType = struct_try_get(nodeFrom.extra_data, "angle_display");
+			switch(dispType) {
+				case QUARTERNION_DISPLAY.quarterion : return value;
+				case QUARTERNION_DISPLAY.euler : 
+					var euler = new BBMOD_Quaternion().FromEuler(value[0], value[1], value[2]).ToArray();
+					return euler;
 			}
 		} #endregion
 		

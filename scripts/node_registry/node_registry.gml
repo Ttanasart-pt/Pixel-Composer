@@ -372,7 +372,7 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 			
 			ds_list_add(d3d, "Compose");
 			addNodeObject(d3d, "3D Scene",		s_node_3d_scene,		"Node_3D_Scene",		[1, Node_3D_Scene]);
-			addNodeObject(d3d, "3D Repeat",		s_node_3d_scene,		"Node_3D_Repeat",		[1, Node_3D_Repeat]);
+			addNodeObject(d3d, "3D Repeat",		s_node_3d_array,		"Node_3D_Repeat",		[1, Node_3D_Repeat]);
 			
 			ds_list_add(d3d, "Mesh");
 			addNodeObject(d3d, "3D Object",		s_node_3d_obj,			"Node_3D_Mesh_Obj",			[0, Node_create_3D_Obj],, "Load .obj file from your computer as a 3D object.");

@@ -1,7 +1,7 @@
 {
   "resourceType": "GMScript",
   "resourceVersion": "1.0",
-  "name": "draw_tooltip",
+  "name": "tooltip_selector_object",
   "isCompatibility": false,
   "isDnD": false,
   "parent": {

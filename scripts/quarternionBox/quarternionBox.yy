@@ -1,11 +1,11 @@
 {
   "resourceType": "GMScript",
   "resourceVersion": "1.0",
-  "name": "draw_tooltip",
+  "name": "quarternionBox",
   "isCompatibility": false,
   "isDnD": false,
   "parent": {
-    "name": "tooltip",
-    "path": "folders/functions/tooltip.yy",
+    "name": "widgets",
+    "path": "folders/widgets.yy",
   },
 }

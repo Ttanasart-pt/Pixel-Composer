@@ -13,6 +13,8 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 	scene = new __3dScene(camera);
 	scene.name = "Camera";
 	
+	deferData = noone;
+	
 	global.SKY_SPHERE = new __3dUVSphere(0.5, 16, 8, true);
 	
 	inputs[| in_d3d + 0] = nodeValue("FOV", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 60 )
@@ -264,7 +266,7 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 		scene.draw_background   = _dbg;
 		
 		var _bgSurf = _dbg? scene.renderBackground(_dim[0], _dim[1]) : noone;
-		var _defer  = scene.deferPass(_scne, _dim[0], _dim[1]);
+		deferData   = scene.deferPass(_scne, _dim[0], _dim[1], deferData);
 		
 		var _render = outputs[| 0].getValue();
 		var _normal = outputs[| 1].getValue();
@@ -288,7 +290,7 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 		
 		scene.reset();
 		scene.submitShader(_scne);
-		scene.apply(_defer);
+		scene.apply(deferData);
 		scene.submit(_scne);
 			
 		surface_reset_target();
@@ -307,7 +309,7 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 			draw_surface(_render, 0, 0);
 			
 			BLEND_MULTIPLY
-			draw_surface_safe(_defer.ssao);
+			draw_surface_safe(deferData.ssao);
 			BLEND_NORMAL
 		surface_reset_target();
 		surface_free(_render);

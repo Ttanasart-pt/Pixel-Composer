@@ -87,7 +87,8 @@ function Panel_Preview() : PanelContent() constructor {
 		
 			node.preview_channel = array_safe_get(sbChannelIndex, index); 
 		}); #endregion
-		sbChannelIndex = [];
+		sbChannelIndex  = [];
+		sbChannel.font  = f_p1;
 		sbChannel.align = fa_left;
 	#endregion
 	
@@ -102,6 +103,8 @@ function Panel_Preview() : PanelContent() constructor {
 		d3_surface_outline = noone;
 		d3_surface_bg      = noone;
 		d3_preview_channel = 0;
+		
+		d3_deferData = noone;
 		
 		global.SKY_SPHERE = new __3dUVSphere(0.5, 16, 8, true);
 		
@@ -521,9 +524,9 @@ function Panel_Preview() : PanelContent() constructor {
 		sbChannelIndex = [];
 		
 		var currName = _node.outputs[| _node.preview_channel].name;
-		draw_set_text(f_p0, fa_center, fa_center);
-		var ww = clamp(w - ui(240), string_width(currName) + ui(48), ui(200));
-		var hh = toolbar_height - ui(12);
+		draw_set_text(sbChannel.font, fa_center, fa_center);
+		var ww = 0;
+		var hh = TEXTBOX_HEIGHT - ui(2);
 		
 		for( var i = 0; i < ds_list_size(_node.outputs); i++ ) {
 			if(_node.outputs[| i].type != VALUE_TYPE.surface) continue;
@@ -532,9 +535,9 @@ function Panel_Preview() : PanelContent() constructor {
 			array_push(sbChannelIndex, i);
 			ww = max(ww, string_width(_node.outputs[| i].name) + ui(40));
 		}
+		
 		sbChannel.data_list = chName;
 		sbChannel.setFocusHover(pFOCUS, pHOVER);
-		
 		sbChannel.draw(_x - ww, _y - hh / 2, ww, hh, currName, [mx, my], x, y);
 		right_menu_y += ui(40);
 	} #endregion
@@ -837,7 +840,7 @@ function Panel_Preview() : PanelContent() constructor {
 		
 		#region defer
 			var _prev_obj = _prev_node.getPreviewObject();
-			var _defer    = d3_scene_preview.deferPass(_prev_obj, w, h);
+			d3_deferData  = d3_scene_preview.deferPass(_prev_obj, w, h, d3_deferData);
 		#endregion
 		
 		#region grid
@@ -887,7 +890,7 @@ function Panel_Preview() : PanelContent() constructor {
 				_prev.submitShader(d3_scene_preview);
 			}
 				
-			d3_scene_preview.apply(_defer);
+			d3_scene_preview.apply(d3_deferData);
 				
 			for( var i = 0, n = array_length(_prev_obj); i < n; i++ ) {
 				var _prev = _prev_obj[i];
@@ -907,7 +910,7 @@ function Panel_Preview() : PanelContent() constructor {
 					draw_surface_safe(d3_surface);
 					
 					BLEND_MULTIPLY
-					draw_surface_safe(_defer.ssao);
+					draw_surface_safe(d3_deferData.ssao);
 					BLEND_NORMAL
 					
 					//draw_clear(c_white);

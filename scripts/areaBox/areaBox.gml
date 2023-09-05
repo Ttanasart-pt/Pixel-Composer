@@ -25,6 +25,11 @@ function areaBox(_onModify, _unit = noone) : widget() constructor {
 	current_data = [ 0, 0, 0, 0 ];
 	adjust_shape = true;
 	mode		 = AREA_MODE.area;
+	tooltip		 = new tooltipSelector("Area type", [
+		__txtx("widget_area_center_Span", "Center + Span"),
+		__txtx("widget_area_padding",     "Padding"),
+		__txtx("widget_area_two_points",  "Two points"),
+	]);
 	
 	onModifySingle[0] = function(val) { #region
 		var v = toNumber(val);
@@ -166,18 +171,13 @@ function areaBox(_onModify, _unit = noone) : widget() constructor {
 				}
 			} #endregion
 			
-			var txt = "";
-			switch(mode) {
-				case AREA_MODE.area :	   txt = __txtx("widget_area_center_Span", "Center + Span");	break;
-				case AREA_MODE.padding :   txt = __txtx("widget_area_padding",     "Padding");			break;
-				case AREA_MODE.two_point : txt = __txtx("widget_area_two_points",  "Two points");		break;
-			}
+			tooltip.index = mode;
 			
 			var _bx = _x + ui(76 - 24);
 			var _by = _y + ui(28 - 12);
 			var _bs = ui(24);
 			
-			if(buttonInstant(THEME.button_hide, _bx, _by, _bs, _bs, _m, active, hover, txt, THEME.inspector_area_type, mode, c_white) == 2) { #region
+			if(buttonInstant(THEME.button_hide, _bx, _by, _bs, _bs, _m, active, hover, tooltip, THEME.inspector_area_type, mode, c_white) == 2) { #region
 				switch(mode) {
 					case AREA_MODE.area : //area to padding
 						var cx = array_safe_get(_data, 0);
