@@ -1,11 +1,11 @@
 {
   "resourceType": "GMScript",
   "resourceVersion": "1.0",
-  "name": "real_comparison",
+  "name": "shader_replace_simple_macros",
   "isCompatibility": false,
   "isDnD": false,
   "parent": {
-    "name": "PCX",
-    "path": "folders/functions/PCX.yy",
+    "name": "Shader replace",
+    "path": "folders/_extensions/Shader replace.yy",
   },
 }

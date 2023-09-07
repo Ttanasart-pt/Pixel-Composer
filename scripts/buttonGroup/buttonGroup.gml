@@ -67,6 +67,7 @@ function buttonGroup(_data, _onClick) : widget() constructor {
 		
 		if(display_button) {
 			var bx = _x;
+			var draw_sel = [];
 			
 			for(var i = 0; i < amo; i++) {
 				buttons[i].setFocusHover(active, hover);
@@ -75,7 +76,7 @@ function buttonGroup(_data, _onClick) : widget() constructor {
 			
 				if(_selecting == i) {
 					draw_sprite_stretched(spr, 2, bx, _y, ww, _h);
-					draw_sprite_stretched_ext(spr, 3, bx, _y, ww, _h, COLORS._main_accent, 1);	
+					draw_sel = [spr, bx];
 				} else {
 					buttons[i].draw(bx, _y, ww, _h, _m, spr);
 					if(buttons[i].clicked) onClick(i);
@@ -90,6 +91,8 @@ function buttonGroup(_data, _onClick) : widget() constructor {
 				
 				bx += ww;
 			}
+			
+			draw_sprite_stretched_ext(draw_sel[0], 3, draw_sel[1], _y, ww, _h, COLORS._main_accent, 1);	
 			
 			if(point_in_rectangle(_m[0], _m[1], _x, _y, _x + w, _y + _h)) {
 				if(is_array(data) && key_mod_press(SHIFT)) {

@@ -1,4 +1,4 @@
-function luaArgumentRenderer() {
+function argumentRenderer() {
 	argument_renderer = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) {
 		argument_renderer.x = _x;
 		argument_renderer.y = _y;

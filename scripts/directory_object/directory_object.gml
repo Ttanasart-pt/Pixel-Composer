@@ -60,11 +60,11 @@ function FileObject(_name, _path) constructor {
 				sprFetchID = sprite_add_ext(self.path, 0, 0, 0, true);
 				IMAGE_FETCH_MAP[? sprFetchID] = function(load_result) {
 					spr = load_result[? "id"];
-					sprite_set_offset(spr, sprite_get_width(spr) / 2, sprite_get_height(spr) / 2);
+					if(spr) sprite_set_offset(spr, sprite_get_width(spr) / 2, sprite_get_height(spr) / 2);
 				};
 			} else {
 				spr = sprite_add(self.path, 0, false, false, 0, 0);
-				sprite_set_offset(spr, sprite_get_width(spr) / 2, sprite_get_height(spr) / 2);
+				if(spr) sprite_set_offset(spr, sprite_get_width(spr) / 2, sprite_get_height(spr) / 2);
 			}
 			return spr;
 		}
@@ -78,13 +78,13 @@ function FileObject(_name, _path) constructor {
 			sprFetchID = sprite_add_ext(path, amo, 0, 0, true);
 			IMAGE_FETCH_MAP[? sprFetchID] = function(load_result) {
 				spr = load_result[? "id"];
-				if(array_safe_get(spr_path, 2))
+				if(spr && array_safe_get(spr_path, 2))
 					sprite_set_offset(spr, sprite_get_width(spr) / 2, sprite_get_height(spr) / 2);
-			};
+			}
 		} else {
-		spr = sprite_add(path, amo, false, false, 0, 0);
-		if(array_safe_get(spr_path, 2))
-			sprite_set_offset(spr, sprite_get_width(spr) / 2, sprite_get_height(spr) / 2);
+			spr = sprite_add(path, amo, false, false, 0, 0);
+			if(spr && array_safe_get(spr_path, 2))
+				sprite_set_offset(spr, sprite_get_width(spr) / 2, sprite_get_height(spr) / 2);
 		}
 		
 		return spr;

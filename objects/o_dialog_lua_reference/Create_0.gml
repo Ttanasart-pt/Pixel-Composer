@@ -65,7 +65,7 @@ event_inherited();
 			
 			draw_sprite_ui(THEME.arrow, is_open[i]? 3 : 0, ui(16), yy + pad + line_get_height() / 2,,,, COLORS._main_icon);
 			draw_set_text(f_code, fa_left, fa_top, COLORS._main_text);
-			draw_code(ui(28), yy + pad, _func);
+			draw_code_lua(ui(28), yy + pad, _func);
 			
 			if(is_open[i]) {
 				var ty = yy + pad + line_get_height() + ui(4);

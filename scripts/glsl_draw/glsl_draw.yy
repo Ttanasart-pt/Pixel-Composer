@@ -1,11 +1,11 @@
 {
   "resourceType": "GMScript",
   "resourceVersion": "1.0",
-  "name": "real_comparison",
+  "name": "glsl_draw",
   "isCompatibility": false,
   "isDnD": false,
   "parent": {
-    "name": "PCX",
-    "path": "folders/functions/PCX.yy",
+    "name": "GLSL",
+    "path": "folders/functions/GLSL.yy",
   },
 }

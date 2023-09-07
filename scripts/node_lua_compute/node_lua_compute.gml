@@ -8,7 +8,7 @@ function Node_Lua_Compute(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Number", "String", "Struct" ], { update_hover: false });
 	
 	inputs[| 2]  = nodeValue("Lua code", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "", o_dialog_lua_reference)
-		.setDisplay(VALUE_DISPLAY.code);
+		.setDisplay(VALUE_DISPLAY.codeLUA);
 	
 	inputs[| 3]  = nodeValue("Execution thread", self, JUNCTION_CONNECT.input, VALUE_TYPE.node, noone)
 		.setVisible(false, true);
@@ -32,7 +32,7 @@ function Node_Lua_Compute(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	outputs[| 1] = nodeValue("Return value", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, 0);
 	
-	luaArgumentRenderer();
+	argumentRenderer();
 	
 	input_display_list = [ 3, 4, 
 		["Function",	false], 0, 1,

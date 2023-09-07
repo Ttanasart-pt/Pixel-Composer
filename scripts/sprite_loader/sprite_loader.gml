@@ -32,7 +32,8 @@ function _sprite_load_from_struct(str, theme, key) {
 		if(struct_has(str.slice, "tilemode"))
 			slice.tilemode = str.slice.tilemode;
 		
-		sprite_set_nineslice(s, slice);
+		if(s >= 0) sprite_set_nineslice(s, slice);
+		else log_message("THEME", $"Load sprite {path} failed.");
 	}
 	return s; 
 }

@@ -92,7 +92,8 @@ enum VALUE_DISPLAY {
 	path_array,
 	
 	//Text
-	code,
+	codeLUA,
+	codeGLSL,
 	text_array,
 	text_box,
 	
@@ -315,7 +316,8 @@ function nodeValueUnit(value) constructor { #region
 		value.node.doUpdate();
 	});
 	triggerButton.icon_blend = COLORS._main_icon_light;
-	triggerButton.icon = THEME.unit_ref;
+	triggerButton.icon       = THEME.unit_ref;
+	triggerButton.tooltip    = new tooltipSelector("Unit", ["Pixel", "Fraction"]);
 	
 	static setMode = function(type) { #region
 		if(type == "constant" && mode == VALUE_UNIT.constant) return;
@@ -329,7 +331,7 @@ function nodeValueUnit(value) constructor { #region
 	
 	static draw = function(_x, _y, _w, _h, _m) { #region
 		triggerButton.icon_index = mode;
-		triggerButton.tooltip = (mode? "Fraction" : "Pixel") + " unit";
+		triggerButton.tooltip.index = mode;
 		
 		triggerButton.draw(_x, _y, _w, _h, _m, THEME.button_hide);
 	} #endregion
@@ -516,7 +518,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		express_edit.autocomplete_server	= pxl_autocomplete_server;
 		express_edit.function_guide_server	= pxl_function_guide_server;
 		express_edit.parser_server			= pxl_document_parser;
-		express_edit.format   = TEXT_AREA_FORMAT.code;
+		express_edit.format   = TEXT_AREA_FORMAT.codeLUA;
 		express_edit.font     = f_code;
 		express_edit.boxColor = COLORS._main_value_positive;
 		express_edit.align    = fa_left;
@@ -962,13 +964,23 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						extract_node = "Node_String";
 						break;
 					
-					case VALUE_DISPLAY.code :
+					case VALUE_DISPLAY.codeLUA :
 						editWidget = new textArea(TEXTBOX_INPUT.text, function(str) { 
 							return setValueDirect(str); 
 						});
 						
 						editWidget.font = f_code;
-						editWidget.format = TEXT_AREA_FORMAT.code;
+						editWidget.format = TEXT_AREA_FORMAT.codeLUA;
+						editWidget.min_lines = 4;
+						extract_node = "Node_String";
+						break;
+					case VALUE_DISPLAY.codeGLSL:
+						editWidget = new textArea(TEXTBOX_INPUT.text, function(str) { 
+							return setValueDirect(str); 
+						});
+						
+						editWidget.font = f_code;
+						editWidget.format = TEXT_AREA_FORMAT.codeGLSL;
 						editWidget.min_lines = 4;
 						extract_node = "Node_String";
 						break;

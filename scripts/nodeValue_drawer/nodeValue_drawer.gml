@@ -13,7 +13,10 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 		
 	var lb_h = line_get_height(f_p0) + ui(8);
 	var lb_y = yy + lb_h / 2;
-			
+	
+	var breakLine = lineBreak || jun.expUse;
+	if(jun.type == VALUE_TYPE.text) breakLine = true;
+	
 	var butx = xx;
 	if(jun.connect_type == JUNCTION_CONNECT.input && jun.isAnimable() && !jun.expUse) { #region animation
 		var index = jun.value_from == noone? jun.is_anim : 2;
@@ -73,7 +76,7 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 	if(global_var)
 		if(string_pos(" ", jun.name)) cc = COLORS._main_value_negative;
 	
-	draw_set_text(lineBreak? f_p0 : f_p1, fa_left, fa_center, cc);
+	draw_set_text(breakLine? f_p0 : f_p1, fa_left, fa_center, cc);
 	draw_text_add(xx + ui(40), lb_y - ui(2), jun.name);
 	var lb_w = string_width(jun.name) + ui(48);
 			
@@ -96,7 +99,7 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 	#endregion
 			
 	#region anim
-		if(jun.connect_type == JUNCTION_CONNECT.input && lineBreak && jun.is_anim) {
+		if(jun.connect_type == JUNCTION_CONNECT.input && breakLine && jun.is_anim) {
 			var bx = xx + ww - ui(12);
 			var by = lb_y;
 			if(buttonInstant(THEME.button_hide, bx - ui(12), by - ui(12), ui(24), ui(24), _m, _focus, _hover, "", THEME.prop_keyframe, 2) == 2) {
@@ -163,8 +166,8 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 		}
 	#endregion
 		
-	#region use expression
-		if(jun.connect_type == JUNCTION_CONNECT.input && lineBreak && !jun.is_anim && !global_var) {
+	#region right buttons
+		if(jun.connect_type == JUNCTION_CONNECT.input && breakLine && !jun.is_anim && !global_var) {
 			var bx = xx + ww - ui(12);
 			var by = lb_y;
 			var ic_b = jun.expUse? c_white : COLORS._main_icon;
@@ -174,25 +177,36 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 			if(jun.expUse) {
 				bx -= ui(28);
 				var cc = NODE_DROPPER_TARGET == jun? COLORS._main_value_positive : COLORS._main_icon;
-				if(buttonInstant(THEME.button_hide, bx - ui(12), by - ui(12), ui(24), ui(24), _m, _focus, _hover, __txtx("panel_inspector_dropper", "Node dropper"), THEME.node_dropper, 0, cc) == 2)
+				if(buttonInstant(THEME.button_hide, bx - ui(12), by - ui(12), ui(24), ui(24), _m, _focus, _hover, __txtx("panel_inspector_dropper", "Node Dropper"), THEME.node_dropper, 0, cc) == 2)
 					NODE_DROPPER_TARGET = NODE_DROPPER_TARGET == jun? noone : jun;
+			}
+			
+			if(jun.expUse || jun.type == VALUE_TYPE.text) {
+				bx -= ui(28);
+				if(buttonInstant(THEME.button_hide, bx - ui(12), by - ui(12), ui(24), ui(24), _m, _focus, _hover, __txtx("panel_inspector_pop_text", "Pop up Editor"), THEME.text_popup, 0, COLORS._main_icon) == 2) {
+					var _panel = noone;
+					
+					if(jun.expUse)	_panel = dialogPanelCall(new Panel_Text_Editor(jun.express_edit, function() { return context.expression;  }, jun));
+					else			_panel = dialogPanelCall(new Panel_Text_Editor(jun.editWidget,   function() { return context.showValue(); }, jun));
+					_panel.content.title = $"{jun.node.name} - {jun.name}";
+				}
 			}
 		}
 	#endregion
 	
 	var _hsy = yy + lb_h;
 	var padd = ui(8);
-			
+	
 	var labelWidth = max(lb_w, min(ui(80) + ww * 0.2, ui(200)));
-	var editBoxX   = xx	+ !lineBreak * labelWidth;
-	var editBoxY   = lineBreak? _hsy : yy;
+	var editBoxX   = xx	+ !breakLine * labelWidth;
+	var editBoxY   = breakLine? _hsy : yy;
 	
 	var editBoxW   = (xx + ww) - editBoxX;
-	var editBoxH   = lineBreak? TEXTBOX_HEIGHT : lb_h;
+	var editBoxH   = breakLine? TEXTBOX_HEIGHT : lb_h;
 			
-	var widH	   = lineBreak? editBoxH : 0;
-	var mbRight	   = true;
-		
+	var widH	= breakLine? editBoxH : 0;
+	var mbRight	= true;
+	
 	if(jun.expUse) { #region expression editor
 		var expValid = jun.expTree != noone && jun.expTree.validate();
 		jun.express_edit.boxColor = expValid? COLORS._main_value_positive : COLORS._main_value_negative;
@@ -203,7 +217,7 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 		if(_focus) jun.express_edit.register(_scrollPane);
 			
 		var wd_h = jun.express_edit.draw(editBoxX, editBoxY, editBoxW, editBoxH, jun.expression, _m);
-		widH = wd_h - (TEXTBOX_HEIGHT * !lineBreak);
+		widH = wd_h - (TEXTBOX_HEIGHT * !breakLine);
 	#endregion
 	} else if(jun.editWidget) { #region edit widget
 		jun.editWidget.setFocusHover(_focus, _hover);
@@ -230,7 +244,7 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 				break;
 				
 			case VALUE_TYPE.boolean : 
-				param.halign = lineBreak? fa_left : fa_center;
+				param.halign = breakLine? fa_left : fa_center;
 				break;
 				
 			case VALUE_TYPE.d3Material : 
@@ -246,7 +260,7 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 		}
 		
 		var _widH = jun.editWidget.drawParam(param) ?? 0;
-		widH = _widH - (TEXTBOX_HEIGHT * !lineBreak);
+		widH = _widH - (TEXTBOX_HEIGHT * !breakLine);
 	#endregion
 	} else if(jun.display_type == VALUE_DISPLAY.label) { #region label
 		draw_set_text(f_p1, fa_left, fa_top, COLORS._main_text_sub);

@@ -4,7 +4,7 @@ function Node_Lua_Global(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	previewable = false;
 	
 	inputs[| 0]  = nodeValue("Lua code", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "", o_dialog_lua_reference)
-		.setDisplay(VALUE_DISPLAY.code);
+		.setDisplay(VALUE_DISPLAY.codeLUA);
 		
 	inputs[| 1]  = nodeValue("Run order", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "On start", "Every frame" ]);

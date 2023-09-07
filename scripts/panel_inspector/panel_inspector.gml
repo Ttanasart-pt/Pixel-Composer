@@ -438,20 +438,21 @@ function Panel_Inspector() : PanelContent() constructor {
 						draw_text_add(ui(32), yy + ui(32) / 2, txt);
 					
 						hh += ui(32 + 8);
-					
+						
 						if(coll) {
-							var j = i + 1;
-							while(j < amo) {
-								if(j >= array_length(inspecting.input_display_list)) break;
+							var j    = i + 1;
+							var _len = array_length(inspecting.input_display_list);
+							
+							while(j < _len) {
 								var j_jun = inspecting.input_display_list[j];
 								if(is_array(j_jun))
 									break;
-								else
-									j++;
+								j++;
 							}
+							
 							i = j - 1;
-							continue;
 						}
+						
 						continue;
 					} else if(is_struct(jun_disp) && instanceof(jun_disp) == "Inspector_Custom_Renderer") {
 						if(pFOCUS) jun_disp.register(contentPane);
@@ -487,7 +488,7 @@ function Panel_Inspector() : PanelContent() constructor {
 				if(pos == 0) continue;
 			}
 			
-			#region ++++ draw widget
+			#region ++++ draw widget ++++
 				var lb_h    = line_get_height(f_p0) + ui(8);
 				var lb_w    = line_get_width(jun.name, f_p0) + ui(16);
 				var padd    = ui(8);

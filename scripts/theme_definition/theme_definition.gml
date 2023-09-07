@@ -201,7 +201,6 @@ function Theme() constructor {
     ui_panel_bg = noone;
     ui_panel_fg = noone;
     ui_panel_bg_cover = noone;
-    ui_panel_bg_dark = noone;
     ui_scrollbar = noone;
     ui_label_bg = noone;
     toolbar = noone;

@@ -61,6 +61,8 @@ event_inherited();
 	function onDestroy() {
 		if(!content) return;
 		content.onClose();
+		
+		print("On close on panel");
 	}
 	
 	function remove() {

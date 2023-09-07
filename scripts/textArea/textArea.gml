@@ -1,6 +1,7 @@
 enum TEXT_AREA_FORMAT {
 	_default,
-	code,
+	codeLUA,
+	codeGLSL,
 	delimiter,
 	path_template,
 	node_title,
@@ -53,6 +54,8 @@ function textArea(_input, _onModify, _extras = noone) : textInput(_input, _onMod
 	function_guide_box.textbox = self;
 	function_guide_server	   = noone;
 	
+	shift_new_line = true;
+	
 	_cl = -1;
 	
 	static activate = function() { #region
@@ -80,7 +83,7 @@ function textArea(_input, _onModify, _extras = noone) : textInput(_input, _onMod
 	} #endregion
 	
 	static onModified = function() { #region
-		if(format == TEXT_AREA_FORMAT.code && autocomplete_server != noone) {
+		if((format == TEXT_AREA_FORMAT.codeLUA || format == TEXT_AREA_FORMAT.codeGLSL) && autocomplete_server != noone) {
 			var crop = string_copy(_input_text, 1, cursor);
 			var slp  = string_splice(crop, [" ", "(", ",", "\n"]);
 			var pmt  = array_safe_get(slp, -1,, ARRAY_OVERFLOW.loop);
@@ -174,75 +177,75 @@ function textArea(_input, _onModify, _extras = noone) : textInput(_input, _onMod
 			} 
 		}
 		
-		if(format != TEXT_AREA_FORMAT.code || !autocomplete_box.active)
-		if(key == vk_up) {
-			var _target;
+		if(!(format == TEXT_AREA_FORMAT.codeLUA || format == TEXT_AREA_FORMAT.codeGLSL) || !autocomplete_box.active) {
+			if(key == vk_up) {
+				var _target;
 					
-			if(cursor_line == 0) 
-				_target = 0;
-			else {
-				var _l = cursor_line - 1;
-				var _str = _input_text_line[_l];
-				var _run = cursor_tx;
-				var _char = 0;
+				if(cursor_line == 0) 
+					_target = 0;
+				else {
+					var _l = cursor_line - 1;
+					var _str = _input_text_line[_l];
+					var _run = cursor_tx;
+					var _char = 0;
 						
-				for( var i = 0; i < _l; i++ )
-					_char += string_length(_input_text_line[i]);
+					for( var i = 0; i < _l; i++ )
+						_char += string_length(_input_text_line[i]);
 						
-				for( var i = 1; i < string_length(_str); i++ ) {
-					var _chr = string_char_at(_str, i);
-					_run += string_width(_chr);
-					if(_run > cursor_pos_x_to)
-						break;
-					_char++;
+					for( var i = 1; i < string_length(_str); i++ ) {
+						var _chr = string_char_at(_str, i);
+						_run += string_width(_chr);
+						if(_run > cursor_pos_x_to)
+							break;
+						_char++;
+					}
+						
+					_target = _char;
 				}
-						
-				_target = _char;
+					
+				if(key_mod_press(SHIFT)) {
+					if(cursor_select == -1)
+						cursor_select = cursor;
+				} else 
+					cursor_select	= -1;
+					
+				cursor = _target;
+				onModified();
 			}
-					
-			if(key_mod_press(SHIFT)) {
-				if(cursor_select == -1)
-					cursor_select = cursor;
-			} else 
-				cursor_select	= -1;
-					
-			cursor = _target;
-			onModified();
-		}
 		
-		if(format != TEXT_AREA_FORMAT.code || !autocomplete_box.active)
-		if(key == vk_down) {
-			var _target;
+			if(key == vk_down) {
+				var _target;
 					
-			if(cursor_line == array_length(_input_text_line) - 1) 
-				_target = string_length(_input_text);
-			else {
-				var _l = cursor_line + 1;
-				var _str = _input_text_line[_l];
-				var _run = cursor_tx;
-				var _char = 0;
+				if(cursor_line == array_length(_input_text_line) - 1) 
+					_target = string_length(_input_text);
+				else {
+					var _l = cursor_line + 1;
+					var _str = _input_text_line[_l];
+					var _run = cursor_tx;
+					var _char = 0;
 						
-				for( var i = 0; i < _l; i++ )
-					_char += string_length(_input_text_line[i]);
+					for( var i = 0; i < _l; i++ )
+						_char += string_length(_input_text_line[i]);
 						
-				for( var i = 1; i < string_length(_str); i++ ) {
-					var _chr = string_char_at(_str, i);
-					_run += string_width(_chr);
-					if(_run > cursor_pos_x_to) break;
-					_char++;
-				}
+					for( var i = 1; i < string_length(_str); i++ ) {
+						var _chr = string_char_at(_str, i);
+						_run += string_width(_chr);
+						if(_run > cursor_pos_x_to) break;
+						_char++;
+					}
 				
-				_target = _char;
+					_target = _char;
+				}
+					
+				if(key_mod_press(SHIFT)) {
+					if(cursor_select == -1)
+						cursor_select = cursor;
+				} else 
+					cursor_select	= -1;
+					
+				cursor = _target;
+				onModified();
 			}
-					
-			if(key_mod_press(SHIFT)) {
-				if(cursor_select == -1)
-					cursor_select = cursor;
-			} else 
-				cursor_select	= -1;
-					
-			cursor = _target;
-			onModified();
 		}
 	} #endregion
 	
@@ -265,10 +268,17 @@ function textArea(_input, _onModify, _extras = noone) : textInput(_input, _onMod
 		
 		var _txtLines = string_splice(_input_text, "\n");
 		var ss = "";
+		var _code = format == TEXT_AREA_FORMAT.codeLUA || format == TEXT_AREA_FORMAT.codeGLSL;
 		
 		for( var i = 0, n = array_length(_txtLines); i < n; i++ ) {
 			var _txt  = _txtLines[i] + (i < array_length(_txtLines)? "\n" : "");
-			var words = string_splice(_txt, " ");
+			var words;
+			
+			if(_code)
+				words = token_splice(_txt);
+			else
+				words = string_splice(_txt, " ");
+			
 			var currW = 0;
 			var currL = "";
 			var cut = true;
@@ -277,7 +287,7 @@ function textArea(_input, _onModify, _extras = noone) : textInput(_input, _onMod
 			
 			for( var j = 0; j < len; j++ ) {
 				var word = words[j];
-				if(j < len - 1) word = word + " ";
+				if(!_code && j < len - 1) word = word + " ";
 				
 				if(string_width(word) > line_width) { //the entire word is longer than a line
 					for( var k = 1; k <= string_length(word); k++ ) {
@@ -340,7 +350,8 @@ function textArea(_input, _onModify, _extras = noone) : textInput(_input, _onMod
 					
 				if(keyboard_check_pressed(vk_escape)) {
 				} else if(keyboard_check_pressed(vk_tab)) {
-				} else if(keyboard_check_pressed(vk_enter) && key_mod_press(SHIFT)) {
+				} else if(( shift_new_line && keyboard_check_pressed(vk_enter) && key_mod_press(SHIFT)) ||
+						  (!shift_new_line && keyboard_check_pressed(vk_enter))) {
 					var ch = "\n";
 					if(cursor_select == -1) {
 						var str_before	= string_copy(_input_text, 1, cursor);
@@ -477,15 +488,16 @@ function textArea(_input, _onModify, _extras = noone) : textInput(_input, _onMod
 			_input_text = _last_value;
 			cut_line();
 			deactivate();
-		} else if(keyboard_check_pressed(vk_enter) && !key_mod_press(SHIFT)) {
+		} else if(( shift_new_line && keyboard_check_pressed(vk_enter) && !key_mod_press(SHIFT)) ||
+				  (!shift_new_line && keyboard_check_pressed(vk_enter) &&  key_mod_press(SHIFT))) {
 			deactivate();
 		}
 	} #endregion
 	
-	static display_text = function(_x, _y, _text, _w, _mx = -1, _my = -1) { #region
+	static display_text = function(_x, _y, _text, _mx = -1, _my = -1) { #region
 		_text = string_real(_text);
-		if(_w != _prev_width) {
-			_prev_width = _w;
+		if(line_width != _prev_width) {
+			_prev_width = line_width;
 			cut_line();
 		}
 		
@@ -517,8 +529,10 @@ function textArea(_input, _onModify, _extras = noone) : textInput(_input, _onMod
 			
 			if(format == TEXT_AREA_FORMAT._default)
 				draw_text_add(ch_x, ch_y, _str);
-			else if(format == TEXT_AREA_FORMAT.code)
-				draw_code(ch_x, ch_y, _str);
+			else if(format == TEXT_AREA_FORMAT.codeLUA)
+				draw_code_lua(ch_x, ch_y, _str);
+			else if(format == TEXT_AREA_FORMAT.codeGLSL)
+				draw_code_glsl(ch_x, ch_y, _str);
 			else if(format == TEXT_AREA_FORMAT.delimiter)
 				draw_text_delimiter(ch_x, ch_y, _str);
 			else if(format == TEXT_AREA_FORMAT.path_template)
@@ -557,11 +571,12 @@ function textArea(_input, _onModify, _extras = noone) : textInput(_input, _onMod
 							break;
 						}
 						
-						ch_x += _ch_w;
+						ch_x  += _ch_w;
 						ch_cxo = ch_cxn;
 					}
 					break;
 				}
+				
 				char_run += string_length(_input_text_line[i]);	
 				ch_y += _ch_h;
 			}
@@ -579,6 +594,9 @@ function textArea(_input, _onModify, _extras = noone) : textInput(_input, _onMod
 	} #endregion
 	
 	static drawParam = function(params) { #region
+		rx = params.rx;
+		ry = params.ry;
+		
 		return draw(params.x, params.y, params.w, params.h, params.data, params.m);
 	} #endregion
 	
@@ -609,7 +627,7 @@ function textArea(_input, _onModify, _extras = noone) : textInput(_input, _onMod
 		
 		if(format == TEXT_AREA_FORMAT._default) {
 			line_width = _w - ui(16);
-		} else if(format == TEXT_AREA_FORMAT.code) {
+		} else if(format == TEXT_AREA_FORMAT.codeLUA || format == TEXT_AREA_FORMAT.codeGLSL) {
 			line_width = _w - ui(16 + code_line_width);
 			tx += ui(code_line_width);
 		}
@@ -624,7 +642,7 @@ function textArea(_input, _onModify, _extras = noone) : textInput(_input, _onMod
 		
 		draw_sprite_stretched_ext(THEME.textbox, 3, _x, _y, _w, hh, boxColor, 1);
 		
-		if(format == TEXT_AREA_FORMAT.code) {
+		if(format == TEXT_AREA_FORMAT.codeLUA || format == TEXT_AREA_FORMAT.codeGLSL) {
 			draw_sprite_stretched_ext(THEME.textbox_code, 0, _x, _y, ui(code_line_width), hh, boxColor, 1);
 			draw_set_text(f_code, fa_right, fa_top, COLORS._main_text_sub);
 			
@@ -712,7 +730,7 @@ function textArea(_input, _onModify, _extras = noone) : textInput(_input, _onMod
 					_my = _m[1];
 				}
 				
-				display_text(tx, _y + ui(7), _input_text, _w - ui(4), _mx, _my);
+				display_text(tx, _y + ui(7), _input_text, _mx, _my);
 				
 				if(cursor_pos_y != 0 && cursor_pos_x != 0) {
 					draw_set_color(COLORS._main_text_accent);
@@ -734,7 +752,7 @@ function textArea(_input, _onModify, _extras = noone) : textInput(_input, _onMod
 			} else if(!hide)
 				draw_sprite_stretched_ext(THEME.textbox, 0, _x, _y, _w, hh, boxColor, 0.5 + 0.5 * interactable);
 			
-			display_text(tx, _y + ui(7), _text, _w - ui(4));
+			display_text(tx, _y + ui(7), _text);
 			
 			autocomplete_box.active   = 0;
 		}
@@ -746,6 +764,7 @@ function textArea(_input, _onModify, _extras = noone) : textInput(_input, _onMod
 		}
 		
 		resetFocus();
+		shift_new_line = true;
 		
 		return hh;
 	} #endregion

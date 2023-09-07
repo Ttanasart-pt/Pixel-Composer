@@ -11,7 +11,7 @@ function token_splice(str) {
 	var ss = str;
 	var sp;
 	var cc;
-	var tk = [" ", "(", ")", "[", "]", "{", "}", ",", ";", "+", "-", "*", "/", "="];
+	var tk = [" ", "(", ")", "[", "]", "{", "}", ",", ";", "+", "-", "*", "/", "^", "="];
 	
 	do {
 		sp = 999999;
@@ -37,9 +37,8 @@ function token_splice(str) {
 	return st;
 }
 
-function draw_code(_x, _y, str) {
-	//print("  > Drawing: " + str);
-	var tx = _x
+function draw_code_lua(_x, _y, str) {
+	var tx = _x;
 	var ty = _y;
 	
 	var isStr  = true;
@@ -67,7 +66,7 @@ function draw_code(_x, _y, str) {
 			
 		for( var j = 0; j < array_length(words); j++ ) {
 			word = words[j];
-			var wordNoS = string_replace_all(word, " ", "");
+			var wordNoS = string_trim(word);
 			
 			draw_set_color(COLORS._main_text);
 			if(word == "(" || word == ")" || word == "[" || word == "]" || word == "{" || word == "}")

@@ -136,7 +136,6 @@ function __addon_lua_setup_constants(lua, context) {
 	
 	lua_add_code(lua, $"s_ui_panel_active = {THEME.ui_panel_active}");
 	lua_add_code(lua, $"s_ui_panel_bg = {THEME.ui_panel_bg}");
-	lua_add_code(lua, $"s_ui_panel_bg_dark = {THEME.ui_panel_bg_dark}");
 	lua_add_code(lua, $"s_ui_scrollbar = {THEME.ui_scrollbar}");
 	
 }

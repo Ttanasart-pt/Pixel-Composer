@@ -26,13 +26,6 @@ function scrollPane(_w, _h, ondraw) : widget() constructor {
 		h = _h;
 		surface_w   = _w - is_scroll * ui(12);
 		surface_h   = _h;
-		
-		if(surface_w > 1 && surface_h > 1) {
-			if(is_surface(surface))
-				surface_size_to(surface, surface_w, surface_h);
-			else
-				surface = surface_create_valid(surface_w, surface_h);
-		}
 	}
 	
 	static draw = function(x, y, _mx = mouse_mx - x, _my = mouse_my - y) {
@@ -40,9 +33,9 @@ function scrollPane(_w, _h, ondraw) : widget() constructor {
 		self.y = y;
 		
 		var mx = _mx, my = _my;
-		hover &= point_in_rectangle(mx, my, 0, 0, surface_w, surface_h);
+		hover  &= point_in_rectangle(mx, my, 0, 0, surface_w, surface_h);
+		surface = surface_verify(surface, surface_w, surface_h);
 		
-		if(!is_surface(surface)) surface = surface_create_valid(surface_w, surface_h);
 		surface_set_target(surface);
 			draw_clear(COLORS.panel_bg_clear);
 			var hh = drawFunc(scroll_y, [mx, my], [x, y]);

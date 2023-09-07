@@ -1,11 +1,11 @@
 {
   "resourceType": "GMScript",
   "resourceVersion": "1.0",
-  "name": "real_comparison",
+  "name": "node_glsl",
   "isCompatibility": false,
   "isDnD": false,
   "parent": {
-    "name": "PCX",
-    "path": "folders/functions/PCX.yy",
+    "name": "node",
+    "path": "folders/nodes/data/node.yy",
   },
 }
