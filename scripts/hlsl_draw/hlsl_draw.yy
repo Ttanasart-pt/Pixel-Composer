@@ -1,7 +1,7 @@
 {
   "resourceType": "GMScript",
   "resourceVersion": "1.0",
-  "name": "glsl_draw",
+  "name": "hlsl_draw",
   "isCompatibility": false,
   "isDnD": false,
   "parent": {

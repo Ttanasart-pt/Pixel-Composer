@@ -272,12 +272,10 @@ function textBox(_input, _onModify, _extras = noone) : textInput(_input, _onModi
 		
 		if(target != -999) {
 			if(mouse_press(mb_left, active) || click_block == 1) {
-				cursor_select = -1;
-				cursor = target;
-				click_block = 0;
-			} else if(mouse_click(mb_left, active) && cursor != target) {
 				cursor_select = target;
-			}
+				click_block = 0;
+			} else if(mouse_click(mb_left, active) && cursor != target)
+				cursor = target;	
 		}
 	}
 	

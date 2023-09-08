@@ -2,6 +2,7 @@ function Panel_Text_Editor(_textArea, _inputFunc, _context) : PanelContent() con
 	title = "";
 	w = ui(640);
 	h = ui(480);
+	auto_pin = true;
 	
 	self._textArea = new textArea(_textArea.input, _textArea.onModify);
 	self._textArea.color  = _textArea.color;
@@ -44,5 +45,6 @@ function Panel_Text_Editor(_textArea, _inputFunc, _context) : PanelContent() con
 	
 	function onClose() {
 		_textArea.apply();
+		context.popup_dialog = noone;
 	}
 }

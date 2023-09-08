@@ -1,7 +1,7 @@
 enum TEXT_AREA_FORMAT {
 	_default,
 	codeLUA,
-	codeGLSL,
+	codeHLSL,
 	delimiter,
 	path_template,
 	node_title,
@@ -83,7 +83,7 @@ function textArea(_input, _onModify, _extras = noone) : textInput(_input, _onMod
 	} #endregion
 	
 	static onModified = function() { #region
-		if((format == TEXT_AREA_FORMAT.codeLUA || format == TEXT_AREA_FORMAT.codeGLSL) && autocomplete_server != noone) {
+		if((format == TEXT_AREA_FORMAT.codeLUA || format == TEXT_AREA_FORMAT.codeHLSL) && autocomplete_server != noone) {
 			var crop = string_copy(_input_text, 1, cursor);
 			var slp  = string_splice(crop, [" ", "(", ",", "\n"]);
 			var pmt  = array_safe_get(slp, -1,, ARRAY_OVERFLOW.loop);
@@ -177,7 +177,7 @@ function textArea(_input, _onModify, _extras = noone) : textInput(_input, _onMod
 			} 
 		}
 		
-		if(!(format == TEXT_AREA_FORMAT.codeLUA || format == TEXT_AREA_FORMAT.codeGLSL) || !autocomplete_box.active) {
+		if(!(format == TEXT_AREA_FORMAT.codeLUA || format == TEXT_AREA_FORMAT.codeHLSL) || !autocomplete_box.active) {
 			if(key == vk_up) {
 				var _target;
 					
@@ -268,7 +268,7 @@ function textArea(_input, _onModify, _extras = noone) : textInput(_input, _onMod
 		
 		var _txtLines = string_splice(_input_text, "\n");
 		var ss = "";
-		var _code = format == TEXT_AREA_FORMAT.codeLUA || format == TEXT_AREA_FORMAT.codeGLSL;
+		var _code = format == TEXT_AREA_FORMAT.codeLUA || format == TEXT_AREA_FORMAT.codeHLSL;
 		
 		for( var i = 0, n = array_length(_txtLines); i < n; i++ ) {
 			var _txt  = _txtLines[i] + (i < array_length(_txtLines)? "\n" : "");
@@ -531,7 +531,7 @@ function textArea(_input, _onModify, _extras = noone) : textInput(_input, _onMod
 				draw_text_add(ch_x, ch_y, _str);
 			else if(format == TEXT_AREA_FORMAT.codeLUA)
 				draw_code_lua(ch_x, ch_y, _str);
-			else if(format == TEXT_AREA_FORMAT.codeGLSL)
+			else if(format == TEXT_AREA_FORMAT.codeHLSL)
 				draw_code_glsl(ch_x, ch_y, _str);
 			else if(format == TEXT_AREA_FORMAT.delimiter)
 				draw_text_delimiter(ch_x, ch_y, _str);
@@ -584,12 +584,10 @@ function textArea(_input, _onModify, _extras = noone) : textInput(_input, _onMod
 		
 		if(target != -999) {
 			if(mouse_press(mb_left, active) || click_block == 1) {
-				cursor_select = -1;
-				cursor = target;
-				click_block = 0;
-			} else if(mouse_click(mb_left, active) && cursor != target) {
 				cursor_select = target;
-			}
+				click_block   = 0;
+			} else if(mouse_click(mb_left, active) && cursor != target)
+				cursor		  = target;
 		}
 	} #endregion
 	
@@ -627,7 +625,7 @@ function textArea(_input, _onModify, _extras = noone) : textInput(_input, _onMod
 		
 		if(format == TEXT_AREA_FORMAT._default) {
 			line_width = _w - ui(16);
-		} else if(format == TEXT_AREA_FORMAT.codeLUA || format == TEXT_AREA_FORMAT.codeGLSL) {
+		} else if(format == TEXT_AREA_FORMAT.codeLUA || format == TEXT_AREA_FORMAT.codeHLSL) {
 			line_width = _w - ui(16 + code_line_width);
 			tx += ui(code_line_width);
 		}
@@ -642,7 +640,7 @@ function textArea(_input, _onModify, _extras = noone) : textInput(_input, _onMod
 		
 		draw_sprite_stretched_ext(THEME.textbox, 3, _x, _y, _w, hh, boxColor, 1);
 		
-		if(format == TEXT_AREA_FORMAT.codeLUA || format == TEXT_AREA_FORMAT.codeGLSL) {
+		if(format == TEXT_AREA_FORMAT.codeLUA || format == TEXT_AREA_FORMAT.codeHLSL) {
 			draw_sprite_stretched_ext(THEME.textbox_code, 0, _x, _y, ui(code_line_width), hh, boxColor, 1);
 			draw_set_text(f_code, fa_right, fa_top, COLORS._main_text_sub);
 			

@@ -219,7 +219,7 @@
     {"name":"sh_fd_add_velocity_glsl","order":1,"path":"shaders/sh_fd_add_velocity_glsl/sh_fd_add_velocity_glsl.yy",},
     {"name":"s_node_normal","order":30,"path":"sprites/s_node_normal/s_node_normal.yy",},
     {"name":"node_pixel_sort","order":12,"path":"scripts/node_pixel_sort/node_pixel_sort.yy",},
-    {"name":"node_glsl","order":13,"path":"scripts/node_glsl/node_glsl.yy",},
+    {"name":"node_hlsl","order":13,"path":"scripts/node_hlsl/node_hlsl.yy",},
     {"name":"sh_dither","order":28,"path":"shaders/sh_dither/sh_dither.yy",},
     {"name":"__vec2","order":7,"path":"scripts/__vec2/__vec2.yy",},
     {"name":"node_region_fill","order":20,"path":"scripts/node_region_fill/node_region_fill.yy",},

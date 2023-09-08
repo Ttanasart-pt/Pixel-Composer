@@ -27,8 +27,7 @@ event_inherited();
 		
 		content.in_dialog = true;
 		
-		if(instanceof(content) == "Panel_Menu")
-			destroy_on_click_out = false;
+		if(content.auto_pin) destroy_on_click_out = false;
 	}
 	
 	function resetMask() {

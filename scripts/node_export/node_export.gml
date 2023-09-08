@@ -202,8 +202,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	converter = working_directory + "ImageMagick/convert.exe";
 	magick    = working_directory + "ImageMagick/magick.exe";
 	webp      = working_directory + "webp/webpmux.exe";
-	
-	gifski = working_directory + "gifski\\win\\gifski.exe";
+	gifski    = working_directory + "gifski\\win\\gifski.exe";
 	
 	static onValueUpdate = function(_index) {
 		var form = inputs[| 3].getValue();

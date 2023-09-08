@@ -651,7 +651,7 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 			addNodeObject(node, "Lua Compute",		s_node_lua_compute,	"Node_Lua_Compute",		[1, Node_Lua_Compute]).setVersion(1090);
 			
 			ds_list_add(node, "Shader");
-			addNodeObject(node, "GLSL",				s_node_lua_compute,	"Node_GLSL",			[1, Node_GLSL]).setVersion(11520);
+			addNodeObject(node, "HLSL",				s_node_lua_compute,	"Node_HLSL",			[1, Node_HLSL]).setVersion(11520);
 			
 			ds_list_add(node, "Organize");
 			addNodeObject(node, "Pin",				s_node_pin,			"Node_Pin",				[1, Node_Pin],, "Craete pin to organize your connection. Can be create by double clicking on a connection line.");

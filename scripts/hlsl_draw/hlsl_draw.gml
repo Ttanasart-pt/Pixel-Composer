@@ -1,9 +1,9 @@
 global.glsl_reserved = ds_map_create();
 global.glsl_constant = ds_map_create();
 
-var reserved = ["int", "float", "bool", "vec2", "vec3", "vec4", "mat3", "mat4", "sampler2D",
+var reserved = ["int", "float", "float2", "float3", "float4", "float3x3", "float4x4", "Texture2D", "SamplerState", "uniform",
 				"gl_position", "gm_Matrices", "gl_FragColor", "gm_BaseTexture", 
-				"and", "break", "do", "else", "elseif", "end", "false", 
+				"and", "break", "do", "else", "end", "false", 
 				"for", "function", "if", "in", "local", "nil", "not", 
 				"or", "repeat", "return", "then", "true", "until", "while"];
 

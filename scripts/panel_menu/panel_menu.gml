@@ -1,11 +1,12 @@
 function Panel_Menu() : PanelContent() constructor {
-	title = __txt("Menu");
+	title	 = __txt("Menu");
+	auto_pin = true;
 	
-	noti_flash = 0;
+	noti_flash		 = 0;
 	noti_flash_color = COLORS._main_accent;
-	noti_icon = noone;
-	noti_icon_show = 0;
-	noti_icon_time = 0;
+	noti_icon		 = noone;
+	noti_icon_show   = 0;
+	noti_icon_time   = 0;
 	
 	version_name_copy = 0;
 	

@@ -93,7 +93,7 @@ enum VALUE_DISPLAY {
 	
 	//Text
 	codeLUA,
-	codeGLSL,
+	codeHLSL,
 	text_array,
 	text_box,
 	
@@ -497,6 +497,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	
 		display_data = -1;
 		display_attribute = noone;
+		
+		popup_dialog = noone;
 	#endregion
 	
 	#region ---- graph ----
@@ -974,13 +976,13 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						editWidget.min_lines = 4;
 						extract_node = "Node_String";
 						break;
-					case VALUE_DISPLAY.codeGLSL:
+					case VALUE_DISPLAY.codeHLSL:
 						editWidget = new textArea(TEXTBOX_INPUT.text, function(str) { 
 							return setValueDirect(str); 
 						});
 						
 						editWidget.font = f_code;
-						editWidget.format = TEXT_AREA_FORMAT.codeGLSL;
+						editWidget.format = TEXT_AREA_FORMAT.codeHLSL;
 						editWidget.min_lines = 4;
 						extract_node = "Node_String";
 						break;
