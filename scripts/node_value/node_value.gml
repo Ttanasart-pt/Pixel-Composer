@@ -981,6 +981,11 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 							return setValueDirect(str); 
 						});
 						
+						editWidget.autocomplete_server	 = hlsl_autocomplete_server;
+						editWidget.function_guide_server = hlsl_function_guide_server;
+						editWidget.parser_server		 = hlsl_document_parser;
+						editWidget.autocomplete_object	 = node;
+		
 						editWidget.font = f_code;
 						editWidget.format = TEXT_AREA_FORMAT.codeHLSL;
 						editWidget.min_lines = 4;

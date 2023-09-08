@@ -893,6 +893,7 @@
     {"name":"s_node_print","order":30,"path":"sprites/s_node_print/s_node_print.yy",},
     {"name":"sh_seperate_shape_counter","order":1,"path":"shaders/sh_seperate_shape_counter/sh_seperate_shape_counter.yy",},
     {"name":"s_node_stack","order":37,"path":"sprites/s_node_stack/s_node_stack.yy",},
+    {"name":"hlsl_server","order":2,"path":"scripts/hlsl_server/hlsl_server.yy",},
     {"name":"s_fade_up","order":3,"path":"sprites/s_fade_up/s_fade_up.yy",},
     {"name":"panel_globalvar","order":2,"path":"scripts/panel_globalvar/panel_globalvar.yy",},
     {"name":"__node_3d_render","order":5,"path":"scripts/__node_3d_render/__node_3d_render.yy",},

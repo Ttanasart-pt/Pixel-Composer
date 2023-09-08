@@ -43,22 +43,22 @@ function textBox(_input, _onModify, _extras = noone) : textInput(_input, _onModi
 	
 	text_surface = surface_create(1, 1);
 	
-	static setSlidable = function(slidable = true) {
+	static setSlidable = function(slidable = true) { #region
 		self.slidable = slidable;
 		return self;
-	}
+	} #endregion
 	
-	static setFont = function(font) {
+	static setFont = function(font) { #region
 		self.font = font;
 		return self;
-	}
+	} #endregion
 	
-	static setEmpty = function() {
+	static setEmpty = function() { #region
 		no_empty = false;
 		return self;
-	}
+	} #endregion
 	
-	static activate = function() { 
+	static activate = function() { #region
 		WIDGET_CURRENT = self;
 		WIDGET_CURRENT_SCROLL = parent;
 		parentFocus();
@@ -72,15 +72,15 @@ function textBox(_input, _onModify, _extras = noone) : textInput(_input, _onModi
 		click_block = 1;
 		KEYBOARD_STRING = "";
 		keyboard_lastkey = -1;
-	}
+	} #endregion
 	
-	static deactivate = function() { 
+	static deactivate = function() { #region
 		apply();
 		WIDGET_CURRENT = noone;
 		UNDO_HOLDING = false;
-	}
+	} #endregion
 	
-	static onKey = function(key) {
+	static onKey = function(key) { #region
 		if(KEYBOARD_PRESSED == vk_left) {
 			if(key_mod_press(SHIFT)) {
 				if(cursor_select == -1)
@@ -100,9 +100,9 @@ function textBox(_input, _onModify, _extras = noone) : textInput(_input, _onModi
 			else 
 				move_cursor(1);
 		}
-	}
+	} #endregion
 	
-	static apply = function() {
+	static apply = function() { #region
 		var _input_text_current = _input_text;
 		disp_x_to = 0;
 		
@@ -119,14 +119,14 @@ function textBox(_input, _onModify, _extras = noone) : textInput(_input, _onModi
 		if(is_callable(onModify))
 			return onModify(_input_text_current);
 		return false;
-	}
+	} #endregion
 	
-	static move_cursor = function(delta) {
+	static move_cursor = function(delta) { #region
 		var ll = string_length(_input_text) + 1;
 		cursor = safe_mod(cursor + delta + ll, ll);
-	}
+	} #endregion
 	
-	static editText = function() {
+	static editText = function() { #region
 		#region text editor
 			if(key_mod_press(CTRL) && keyboard_check_pressed(ord("A"))) {
 				cursor_select	= 0;
@@ -230,9 +230,9 @@ function textBox(_input, _onModify, _extras = noone) : textInput(_input, _onModi
 			deactivate();
 		else if(auto_update && keyboard_check_pressed(vk_anykey))
 			apply();
-	}
+	} #endregion
 	
-	static display_text = function(_x, _y, _text, _w, _m = -1) {
+	static display_text = function(_x, _y, _text, _w, _m = -1) { #region
 		_text = string_real(_text);
 		BLEND_OVERRIDE;
 		if(!interactable) draw_set_alpha(0.5);
@@ -278,13 +278,13 @@ function textBox(_input, _onModify, _extras = noone) : textInput(_input, _onModi
 			} else if(mouse_click(mb_left, active) && cursor != target)
 				cursor = target;	
 		}
-	}
+	} #endregion
 	
-	static drawParam = function(params) {
+	static drawParam = function(params) { #region
 		return draw(params.x, params.y, params.w, params.h, params.data, params.m, params.halign, params.valign);
-	}
+	} #endregion
 	
-	static draw = function(_x, _y, _w, _h, _text = "", _m = mouse_ui, halign = fa_left, valign = fa_top) {
+	static draw = function(_x, _y, _w, _h, _text = "", _m = mouse_ui, halign = fa_left, valign = fa_top) { #region
 		x = _x;
 		y = _y;
 		w = _w;
@@ -537,5 +537,5 @@ function textBox(_input, _onModify, _extras = noone) : textInput(_input, _onModi
 		resetFocus();		
 		sprite_index = -1;
 		return _h;
-	}
+	} #endregion
 }

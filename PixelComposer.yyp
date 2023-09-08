@@ -1523,6 +1523,7 @@
     {"id":{"name":"s_node_print","path":"sprites/s_node_print/s_node_print.yy",},},
     {"id":{"name":"sh_seperate_shape_counter","path":"shaders/sh_seperate_shape_counter/sh_seperate_shape_counter.yy",},},
     {"id":{"name":"s_node_stack","path":"sprites/s_node_stack/s_node_stack.yy",},},
+    {"id":{"name":"hlsl_server","path":"scripts/hlsl_server/hlsl_server.yy",},},
     {"id":{"name":"s_fade_up","path":"sprites/s_fade_up/s_fade_up.yy",},},
     {"id":{"name":"panel_globalvar","path":"scripts/panel_globalvar/panel_globalvar.yy",},},
     {"id":{"name":"__node_3d_render","path":"scripts/__node_3d_render/__node_3d_render.yy",},},

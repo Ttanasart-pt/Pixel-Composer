@@ -49,6 +49,7 @@ function textArea(_input, _onModify, _extras = noone) : textInput(_input, _onMod
 	autocomplete_box		 = instance_create(0, 0, o_dialog_textbox_autocomplete);
 	autocomplete_box.textbox = self;
 	autocomplete_server		 = noone;
+	autocomplete_object		 = noone;
 	
 	function_guide_box		   = instance_create(0, 0, o_dialog_textbox_function_guide);
 	function_guide_box.textbox = self;
@@ -90,7 +91,7 @@ function textArea(_input, _onModify, _extras = noone) : textInput(_input, _onMod
 					
 			var params = [];
 			if(parser_server != noone)
-				params = parser_server(crop);
+				params = parser_server(crop, autocomplete_object);
 					
 			var data = autocomplete_server(pmt, params);
 					
@@ -338,10 +339,7 @@ function textArea(_input, _onModify, _extras = noone) : textInput(_input, _onMod
 	} #endregion
 	
 	static editText = function() { #region
-		//print("==========");
-		//print(_input_text);
-		//print($"cursor: {cursor}");
-		
+		var _input_text_pre = _input_text;
 		var modified = false;
 		
 		#region text editor
@@ -357,7 +355,7 @@ function textArea(_input, _onModify, _extras = noone) : textInput(_input, _onMod
 			} else {
 				if(key_mod_press(CTRL) && keyboard_check_pressed(ord("V")))
 					KEYBOARD_STRING = clipboard_get_text();
-					
+				
 				if(keyboard_check_pressed(vk_escape)) {
 				} else if(keyboard_check_pressed(vk_tab)) {
 				} else if(( shift_new_line && keyboard_check_pressed(vk_enter) && key_mod_press(SHIFT)) ||
@@ -432,6 +430,8 @@ function textArea(_input, _onModify, _extras = noone) : textInput(_input, _onMod
 						var str_after	= string_copy(_input_text, cursor + 1, string_length(_input_text) - cursor);
 						
 						_input_text		= str_before + ch + str_after;
+						//print($"{str_before} + {ch} + {str_after}");
+						
 						cut_line();
 						move_cursor(string_length(ch));
 					} else {
@@ -451,6 +451,14 @@ function textArea(_input, _onModify, _extras = noone) : textInput(_input, _onMod
 				}
 			}
 			
+			//if(modified) {
+			//	print("==========");
+			//	print(_input_text_pre);
+			//	print($"cursor: {cursor}");
+			//	print($"press:  {KEYBOARD_STRING}");
+			//	print(_input_text);
+			//}
+			
 			KEYBOARD_STRING = "";
 			keyboard_lastkey = -1;
 		#endregion
@@ -464,8 +472,7 @@ function textArea(_input, _onModify, _extras = noone) : textInput(_input, _onMod
 		if(keyboard_check_pressed(vk_right)) onKey(vk_right);
 		if(keyboard_check_pressed(vk_up))	 onKey(vk_up);
 		if(keyboard_check_pressed(vk_down))  onKey(vk_down);
-			
-			
+		
 		if(keyboard_check_pressed(vk_home)) {
 			if(key_mod_press(SHIFT)) {
 				if(cursor_select == -1)
@@ -594,11 +601,13 @@ function textArea(_input, _onModify, _extras = noone) : textInput(_input, _onMod
 		
 		if(target != -999) {
 			if(mouse_press(mb_left, active) || click_block == 1) {
-				cursor_select = target;
-				cursor		  = target;	
-				click_block   = 0;
-			} else if(mouse_click(mb_left, active) && cursor != target)
 				cursor		  = target;
+				click_block   = 0;
+			} else if(mouse_click(mb_left, active) && cursor != target) {
+				if(cursor_select == -1)
+					cursor_select = cursor;
+				cursor		  = target;
+			}
 		}
 	} #endregion
 	

@@ -9,6 +9,11 @@ function Panel_Text_Editor(_textArea, _inputFunc, _context) : PanelContent() con
 	self._textArea.font   = _textArea.font;
 	self._textArea.format = _textArea.format;
 	
+	self._textArea.parser_server		  = _textArea.parser_server;
+	self._textArea.autocomplete_server	  = _textArea.autocomplete_server;
+	self._textArea.autocomplete_object	  = _textArea.autocomplete_object;
+	self._textArea.function_guide_server  = _textArea.function_guide_server;
+	
 	self.inputFunc = method(self, _inputFunc);
 	self.context   = _context;
 	

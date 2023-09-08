@@ -91,6 +91,18 @@ function array_exists(arr, val) {
 	});
 }
 
+function array_overlap(arr0, arr1) {
+	gml_pragma("forceinline");
+	self.__temp_arr = arr1;
+	
+	if(!is_array(arr0)) return false;
+	if(!is_array(arr1)) return false;
+	
+	return array_any(arr0, function(_val, _ind) {
+		return array_exists(self.__temp_arr, _val);
+	});
+}
+
 function array_empty(arr) {
 	gml_pragma("forceinline");
 	return is_array(arr) && array_length(arr) == 0;

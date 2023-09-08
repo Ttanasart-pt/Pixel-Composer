@@ -23,7 +23,9 @@ function draw_text_bbox(bbox, text) {
 }
 
 function draw_text_cut(x, y, str, w, scale = 1) {
+	BLEND_ALPHA_MULP;
 	draw_text_transformed(x, y, string_cut(str, w,, scale), scale, scale, 0);
+	BLEND_NORMAL;
 }
 
 function __draw_text_ext_transformed(_x, _y, _text, _sep, _w, sx, sy, rotation) {

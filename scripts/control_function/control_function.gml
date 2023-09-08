@@ -1,3 +1,11 @@
+#region key list
+	global.KEYS_VK = [ 
+		vk_left, vk_right, vk_up, vk_down, vk_space, vk_backspace, vk_tab, vk_home, vk_end, vk_delete, vk_insert, 
+		vk_pageup, vk_pagedown, vk_pause, vk_printscreen, 
+		vk_f1, vk_f2, vk_f3, vk_f4, vk_f5, vk_f6, vk_f7, vk_f8, vk_f9, vk_f10, vk_f11, vk_f12,
+	];
+#endregion
+
 #region keyboard
 	enum KEYBOARD_STATUS {
 		idle,

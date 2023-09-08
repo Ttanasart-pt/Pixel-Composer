@@ -31,6 +31,8 @@
 			//}
 			
 			if(selecting == i) {
+				WIDGET_TAB_BLOCK = true;
+				
 				draw_sprite_stretched_ext(THEME.textbox, 3, 0, _ly, _dw, hght, COLORS.dialog_menubox_highlight, 1);
 				
 				if(keyboard_check_pressed(vk_tab))
@@ -69,8 +71,9 @@
 	
 	function applyAutoComplete(rep) {
 		var line = array_safe_get(textbox._input_text_line, textbox.cursor_line, "");
-		var crop = string_copy(line, 1, textbox.cursor - textbox.char_run);
-		var rest = string_copy(line, textbox.cursor + 1, string_length(line) - textbox.cursor);
+		var _line_curs = textbox.cursor - textbox.char_run;
+		var crop = string_copy(line, 1, _line_curs);
+		var rest = string_copy(line, _line_curs + 1, string_length(line) - _line_curs);
 		var slp  = string_splice(crop, [" ", "(", ","], true);
 		slp[array_length(slp) - 1] = rep;
 		
@@ -92,7 +95,6 @@
 		textbox.cursor += shf;
 		textbox._input_text = txt;
 		textbox.cut_line();
-		textbox.apply();
 		
 		active = false;
 	}	
