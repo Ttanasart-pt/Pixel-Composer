@@ -1,3 +1,30 @@
+#region vb
+	vertex_format_begin();
+	vertex_format_add_position();
+	vertex_format_add_color();
+	vertex_format_add_texcoord();
+	global.HLSL_VB_FORMAT = vertex_format_end();
+
+	global.HLSL_VB = vertex_create_buffer();
+	vertex_begin(global.HLSL_VB, global.HLSL_VB_FORMAT);
+	vertex_position(global.HLSL_VB, 0, 0);
+	vertex_color(global.HLSL_VB, c_white, 1);
+	vertex_texcoord(global.HLSL_VB, 0, 0);
+	
+	vertex_position(global.HLSL_VB, 0, 1);
+	vertex_color(global.HLSL_VB, c_white, 1);
+	vertex_texcoord(global.HLSL_VB, 0, 1);
+	
+	vertex_position(global.HLSL_VB, 1, 0);
+	vertex_color(global.HLSL_VB, c_white, 1);
+	vertex_texcoord(global.HLSL_VB, 1, 0);
+	
+	vertex_position(global.HLSL_VB, 1, 1);
+	vertex_color(global.HLSL_VB, c_white, 1);
+	vertex_texcoord(global.HLSL_VB, 1, 1);
+	vertex_end(global.HLSL_VB);
+#endregion
+
 function Node_HLSL(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name   = "HLSL";
 	shader = { vs: -1, fs: -1 };
@@ -7,8 +34,8 @@ function Node_HLSL(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		.rejectArray();
 	
 	inputs[| 1] = nodeValue("Fragment", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, 
-@"float4 combinedColour = gm_BaseTextureObject.Sample(gm_BaseTexture, input.uv);
-return combinedColour;")
+@"float4 surfaceColor = gm_BaseTextureObject.Sample(gm_BaseTexture, input.uv);
+output.color = surfaceColor;")
 		.setDisplay(VALUE_DISPLAY.codeHLSL)
 		.rejectArray();
 	
@@ -61,7 +88,7 @@ cbuffer Matrices : register(b0) {
 
 struct VertexShaderInput {
 	float3 pos		: POSITION;
-	float4 color	: COLOR0;
+	float3 color	: COLOR0;
 	float2 uv		: TEXCOORD0;
 };
 
@@ -70,13 +97,9 @@ struct VertexShaderOutput {
 	float2 uv		: TEXCOORD0;
 };
 
-VertexShaderOutput main(VertexShaderInput input) {
-    VertexShaderOutput output;
-    
+void main(in VertexShaderInput input, out VertexShaderOutput output) {
 	output.pos   = mul(gm_Matrices[MATRIX_WORLD_VIEW_PROJECTION], float4(input.pos, 1.0f));
     output.uv    = input.uv;   
-	
-    return output;
 }";
 		file_text_write_all(_dir + "vout.shader", vs);
 		
@@ -84,9 +107,13 @@ VertexShaderOutput main(VertexShaderInput input) {
 Texture2D gm_BaseTextureObject : register(t0);
 SamplerState gm_BaseTexture    : register(s0);
 
-struct PixelShaderInput {
+struct VertexShaderOutput {
 	float4 pos		: SV_POSITION;
 	float2 uv		: TEXCOORD0;
+};
+
+struct PixelShaderOutput {
+	float4 color : SV_Target0;
 };
 "
 		var fs_param = "";
@@ -111,18 +138,18 @@ struct PixelShaderInput {
 			}
 		}
 		
-		var fs_pos = "float4 main(PixelShaderInput input) : SV_TARGET {" + fs + "}";
+		var fs_pos = "\nvoid main(in VertexShaderOutput input, out PixelShaderOutput output) {\n" + fs + "\n}";
 		
 		fs = fs_pre + fs_param + fs_pos;
 		file_text_write_all(_dir + "fout.shader", fs);
 		
 		shader.vs = d3d11_shader_compile_vs(_dir + "vout.shader", "main", "vs_4_0");
 		if (!d3d11_shader_exists(shader.vs)) 
-			print(d3d11_get_error_string());
+			noti_warning(d3d11_get_error_string());
 			
 		shader.fs = d3d11_shader_compile_ps(_dir + "fout.shader", "main", "ps_4_0");
 		if (!d3d11_shader_exists(shader.fs))
-			print(d3d11_get_error_string());
+			noti_warning(d3d11_get_error_string());
 	}
 	
 	static onValueUpdate = function(index) {
@@ -132,6 +159,7 @@ struct PixelShaderInput {
 	
 	static processData = function(_output, _data, _output_index, _array_index = 0) { 
 		var _surf = _data[2];
+		if(!is_surface(_surf)) return;
 		_output = surface_verify(_output, surface_get_width(_surf), surface_get_height(_surf));
 		
 		surface_set_target(_output);
@@ -158,7 +186,9 @@ struct PixelShaderInput {
 			}
 		}
 		
-		draw_surface_safe(_surf);
+		matrix_set(matrix_world, matrix_build(0, 0, 0, 0, 0, 0, surface_get_width(_surf), surface_get_height(_surf), 1));
+		vertex_submit(global.HLSL_VB, pr_trianglestrip, surface_get_texture(_surf));
+		matrix_set(matrix_world, matrix_build_identity());
 		
 		d3d11_shader_override_vs(-1);
 		d3d11_shader_override_ps(-1);
@@ -167,7 +197,5 @@ struct PixelShaderInput {
 		return _output;
 	}
 	
-	static postConnect = function() {
-		refreshShader();
-	}
+	static postConnect = function() { refreshShader(); }
 }

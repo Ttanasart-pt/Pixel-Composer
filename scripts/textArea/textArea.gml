@@ -143,6 +143,16 @@ function textArea(_input, _onModify, _extras = noone) : textInput(_input, _onMod
 		}
 	} #endregion
 	
+	static breakCharacter = function(ch) { #region
+		switch(format) { 
+			case TEXT_AREA_FORMAT.codeHLSL : 
+			case TEXT_AREA_FORMAT.codeLUA  : 
+				return ch == "\n" || array_exists(global.CODE_BREAK_TOKEN, ch);	
+			default : 
+				return ch == " " || ch == "\n";	
+		}
+	} #endregion
+	
 	static onKey = function(key) { #region
 		if(key == vk_left) {
 			if(key_mod_press(SHIFT)) {
@@ -155,7 +165,7 @@ function textArea(_input, _onModify, _extras = noone) : textInput(_input, _onMod
 			if(key_mod_press(CTRL)) {
 				while(cursor > 0) {
 					var ch = string_char_at(_input_text, cursor);
-					if(ch == " " || ch == "\n") break;
+					if(breakCharacter(ch)) break;
 					cursor--;
 				}
 			} 
@@ -171,7 +181,7 @@ function textArea(_input, _onModify, _extras = noone) : textInput(_input, _onMod
 			if(key_mod_press(CTRL)) {
 				while(cursor < string_length(_input_text)) {
 					var ch = string_char_at(_input_text, cursor);
-					if(ch == " " || ch == "\n") break;
+					if(breakCharacter(ch)) break;
 					cursor++;
 				}
 			} 
@@ -585,6 +595,7 @@ function textArea(_input, _onModify, _extras = noone) : textInput(_input, _onMod
 		if(target != -999) {
 			if(mouse_press(mb_left, active) || click_block == 1) {
 				cursor_select = target;
+				cursor		  = target;	
 				click_block   = 0;
 			} else if(mouse_click(mb_left, active) && cursor != target)
 				cursor		  = target;

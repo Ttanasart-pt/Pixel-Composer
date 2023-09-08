@@ -171,7 +171,6 @@
     {"name":"color picker","order":56,"path":"folders/shader/color picker.yy",},
     {"name":"color selector","order":51,"path":"folders/shader/color selector.yy",},
     {"name":"draw","order":39,"path":"folders/shader/draw.yy",},
-    {"name":"dummy","order":57,"path":"folders/shader/dummy.yy",},
     {"name":"filter","order":30,"path":"folders/shader/filter.yy",},
     {"name":"color","order":53,"path":"folders/shader/filter/color.yy",},
     {"name":"shadow caster","order":46,"path":"folders/shader/filter/shadow caster.yy",},

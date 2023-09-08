@@ -6,17 +6,18 @@ var reserved = ["and", "break", "do", "else", "elseif", "end", "false",
 for( var i = 0, n = array_length(reserved); i < n; i++ )
 	global.lua_reserved[? reserved[i]] = 1;
 
+global.CODE_BREAK_TOKEN = [" ", "(", ")", "[", "]", "{", "}", ",", ";", "+", "-", "*", "/", "^", "="];
+
 function token_splice(str) {
 	var st = [];
 	var ss = str;
 	var sp;
 	var cc;
-	var tk = [" ", "(", ")", "[", "]", "{", "}", ",", ";", "+", "-", "*", "/", "^", "="];
 	
 	do {
 		sp = 999999;
-		for( var i = 0, n = array_length(tk); i < n; i++ ) {
-			var _pos = string_pos(tk[i], ss);
+		for( var i = 0, n = array_length(global.CODE_BREAK_TOKEN); i < n; i++ ) {
+			var _pos = string_pos(global.CODE_BREAK_TOKEN[i], ss);
 			if(_pos != 0) sp = min(sp, _pos);
 		}
 		
