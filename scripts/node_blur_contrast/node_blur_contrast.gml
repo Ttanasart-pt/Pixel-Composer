@@ -41,8 +41,8 @@ function Node_Blur_Contrast(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		var _mask = _data[3];
 		var _mix  = _data[4];
 		
-		var ww = surface_get_width(_surf);
-		var hh = surface_get_height(_surf);
+		var ww = surface_get_width_safe(_surf);
+		var hh = surface_get_height_safe(_surf);
 		
 		temp_surface[0] = surface_verify(temp_surface[0], ww, hh, attrDepth());
 		

@@ -20,8 +20,8 @@ function Node_Sampler(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		
 		var _suf = current_data[0];
 		if(!is_surface(_suf)) return;
-		var ww = surface_get_width(_suf);
-		var hh = surface_get_height(_suf);
+		var ww = surface_get_width_safe(_suf);
+		var hh = surface_get_height_safe(_suf);
 		
 		var _pos = current_data[1];
 		var _sam = 1 + (current_data[2] - 1) * 2;
@@ -51,8 +51,8 @@ function Node_Sampler(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		var _sam = _data[2];
 		if(!is_surface(_surf)) return c_black;
 		
-		var ww = surface_get_width(_surf);
-		var hh = surface_get_height(_surf);
+		var ww = surface_get_width_safe(_surf);
+		var hh = surface_get_height_safe(_surf);
 		
 		var r = 0, g = 0, b = 0, amo = 0;
 		

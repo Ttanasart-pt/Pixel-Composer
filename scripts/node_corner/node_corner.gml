@@ -32,14 +32,14 @@ function Node_Corner(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	static processData = function(_outSurf, _data, _output_index, _array_index) {
 		var wd = _data[1];
 		
-		var temp = surface_create_valid(surface_get_width(_data[0]), surface_get_height(_data[0]), attrDepth());
+		var temp = surface_create_valid(surface_get_width_safe(_data[0]), surface_get_height_safe(_data[0]), attrDepth());
 		
 		surface_set_target(temp);
 			DRAW_CLEAR
 			BLEND_OVERRIDE;
 			
 			shader_set(sh_corner_erode);
-			shader_set_uniform_f_array_safe(uniform_er_dim, [surface_get_width(_data[0]), surface_get_height(_data[0])]);
+			shader_set_uniform_f_array_safe(uniform_er_dim, [surface_get_width_safe(_data[0]), surface_get_height_safe(_data[0])]);
 			shader_set_uniform_f(uniform_er_size, wd);
 			draw_surface_safe(_data[0], 0, 0);
 			
@@ -52,7 +52,7 @@ function Node_Corner(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			BLEND_OVERRIDE;
 			
 			shader_set(sh_corner);
-			shader_set_uniform_f_array_safe(uniform_dim, [surface_get_width(_data[0]), surface_get_height(_data[0])]);
+			shader_set_uniform_f_array_safe(uniform_dim, [surface_get_width_safe(_data[0]), surface_get_height_safe(_data[0])]);
 			shader_set_uniform_f(uniform_rad, wd);
 			shader_set_surface("original", _data[0]);
 			draw_surface_safe(temp, 0, 0);

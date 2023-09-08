@@ -63,8 +63,8 @@ function Node_Transform_Single(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 		var rot   = current_data[5];
 		var sca_x = current_data[6];
 		var sca_y = current_data[7];
-		var ww  = surface_get_width(_surf) * sca_x;
-		var hh  = surface_get_height(_surf) * sca_y;
+		var ww  = surface_get_width_safe(_surf) * sca_x;
+		var hh  = surface_get_height_safe(_surf) * sca_y;
 		
 		var psc_x = anc_x * sca_x;
 		var psc_y = anc_y * sca_y;

@@ -160,7 +160,7 @@ function gif_std_enum_getIndex() {
 			surface_set_target(_ws);
 			draw_clear(16777215);
 			surface_reset_target();
-			_white32 = sprite_create_from_surface(_ws, 0, 0, surface_get_width(_ws), surface_get_height(_ws), false, false, 0, 0);
+			_white32 = sprite_create_from_surface(_ws, 0, 0, surface_get_width_safe(_ws), surface_get_height_safe(_ws), false, false, 0, 0);
 			surface_free(_ws);
 			Gif_white32 = _white32;
 		}
@@ -182,11 +182,11 @@ function gif_std_enum_getIndex() {
 			surface_copy(_sf, _frame.x, _frame.y, _frame.surface);
 			
 			if (_spr == -1) {
-				_spr = sprite_create_from_surface(_sf, 0, 0, surface_get_width(_sf), surface_get_height(_sf), false, false, 0, 0); 
+				_spr = sprite_create_from_surface(_sf, 0, 0, surface_get_width_safe(_sf), surface_get_height_safe(_sf), false, false, 0, 0); 
 			} else {
 				//spr_size = sprite_get_width(_spr) * sprite_get_height(_spr) * sprite_get_number(_spr);
 				//show_debug_message(string(spr_size));
-				sprite_add_from_surface(_spr, _sf, 0, 0, surface_get_width(_sf), surface_get_height(_sf), false, false);
+				sprite_add_from_surface(_spr, _sf, 0, 0, surface_get_width_safe(_sf), surface_get_height_safe(_sf), false, false);
 			}
 				
 			var _fdelay = _frame.delay;
@@ -234,7 +234,7 @@ function gif_std_enum_getIndex() {
 			surface_set_target(_ws);
 			draw_clear(16777215);
 			surface_reset_target();
-			_white32 = sprite_create_from_surface(_ws, 0, 0, surface_get_width(_ws), surface_get_height(_ws), false, false, 0, 0);
+			_white32 = sprite_create_from_surface(_ws, 0, 0, surface_get_width_safe(_ws), surface_get_height_safe(_ws), false, false, 0, 0);
 			surface_free(_ws);
 			Gif_white32 = _white32;
 		}
@@ -255,11 +255,11 @@ function gif_std_enum_getIndex() {
 			surface_copy(_sf, _frame.x, _frame.y, _frame.surface);
 			
 			if (_spr == -1) {
-				_spr = sprite_create_from_surface(_sf, 0, 0, surface_get_width(_sf), surface_get_height(_sf), false, false, 0, 0); 
+				_spr = sprite_create_from_surface(_sf, 0, 0, surface_get_width_safe(_sf), surface_get_height_safe(_sf), false, false, 0, 0); 
 			} else {
 				//spr_size = sprite_get_width(_spr) * sprite_get_height(_spr) * sprite_get_number(_spr);
 				//show_debug_message(string(spr_size));
-				sprite_add_from_surface(_spr, _sf, 0, 0, surface_get_width(_sf), surface_get_height(_sf), false, false);
+				sprite_add_from_surface(_spr, _sf, 0, 0, surface_get_width_safe(_sf), surface_get_height_safe(_sf), false, false);
 			}
 				
 			var _fdelay = _frame.delay;

@@ -38,8 +38,8 @@ function Node_Scale(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		var ww, hh;
 		switch(mode) {
 			case 0 :
-				ww	= scale * surface_get_width(_data[0]);
-				hh	= scale * surface_get_height(_data[0]);
+				ww	= scale * surface_get_width_safe(_data[0]);
+				hh	= scale * surface_get_height_safe(_data[0]);
 				break;
 			case 1 :
 				ww	= targ[0];

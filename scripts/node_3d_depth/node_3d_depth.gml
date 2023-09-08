@@ -51,16 +51,16 @@ function Node_3D_Depth(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			DRAW_CLEAR
 			
 			shader_set_surface("texMap", _tex);
-			shader_set_f("dimension", surface_get_width(_tex), surface_get_height(_tex));
+			shader_set_f("dimension", surface_get_width_safe(_tex), surface_get_height_safe(_tex));
 			
 			shader_set_surface("depthMap", _dep);
-			shader_set_f("depthDimension", surface_get_width(_dep), surface_get_height(_dep));
+			shader_set_f("depthDimension", surface_get_width_safe(_dep), surface_get_height_safe(_dep));
 			
 			shader_set_f("cameraPos",   _cx,	 _cy,	  _cz);
 			shader_set_f("cameraUp",    up_x,	 up_y,	  up_z);
 			shader_set_f("cameraRight", right_x, right_y, right_z);
 			
-			draw_sprite_stretched(s_fx_pixel, 0, 0, 0, surface_get_width(_tex), surface_get_height(_tex));
+			draw_sprite_stretched(s_fx_pixel, 0, 0, 0, surface_get_width_safe(_tex), surface_get_height_safe(_tex));
 		surface_reset_shader();
 		
 		return _outSurf;

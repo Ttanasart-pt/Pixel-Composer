@@ -139,8 +139,8 @@ function Node_Colors_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 		var _pall = ds_map_create();
 		
 		for( var i = 0, n = array_length(_surf); i < n; i++ ) {
-			var ww = surface_get_width(_surf[i]);
-			var hh = surface_get_height(_surf[i]);
+			var ww = surface_get_width_safe(_surf[i]);
+			var hh = surface_get_height_safe(_surf[i]);
 		
 			var c_buffer = buffer_create(ww * hh * 4, buffer_fixed, 2);
 		

@@ -74,11 +74,11 @@ function Node_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		inputs[| 11].setVisible(_tile == 0);
 		
 		if(_tile == 0 && is_surface(_fore)) {
-			ww = surface_get_width(_back);
-			hh = surface_get_height(_back);
+			ww = surface_get_width_safe(_back);
+			hh = surface_get_height_safe(_back);
 			
-			var fw = surface_get_width(_fore);
-			var fh = surface_get_height(_fore);
+			var fw = surface_get_width_safe(_fore);
+			var fh = surface_get_height_safe(_fore);
 			
 			temp_surface[0] = surface_verify(temp_surface[0], ww, hh, cDep);
 			_foreDraw = temp_surface[0];
@@ -108,22 +108,22 @@ function Node_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		
 		switch(_outp) {
 			case 0 :
-				ww = surface_get_width(_back);
-				hh = surface_get_height(_back);
+				ww = surface_get_width_safe(_back);
+				hh = surface_get_height_safe(_back);
 				break;
 			case 1 :
 				if(is_surface(_foreDraw)) {
-					ww = surface_get_width(_foreDraw);
-					hh = surface_get_height(_foreDraw);
+					ww = surface_get_width_safe(_foreDraw);
+					hh = surface_get_height_safe(_foreDraw);
 				}
 				break;
 			case 2 :
-				ww = surface_get_width(_mask);
-				hh = surface_get_height(_mask);
+				ww = surface_get_width_safe(_mask);
+				hh = surface_get_height_safe(_mask);
 				break;
 			case 3 :
-				ww = max(surface_get_width(_back), is_surface(_fore)? surface_get_width(_fore) : 1, surface_get_width(_mask));
-				hh = max(surface_get_height(_back), is_surface(_fore)? surface_get_height(_fore) : 1, surface_get_height(_mask));
+				ww = max(surface_get_width_safe(_back), is_surface(_fore)? surface_get_width_safe(_fore) : 1, surface_get_width_safe(_mask));
+				hh = max(surface_get_height_safe(_back), is_surface(_fore)? surface_get_height_safe(_fore) : 1, surface_get_height_safe(_mask));
 				break;
 			case 4 :
 				ww = _out_dim[0];

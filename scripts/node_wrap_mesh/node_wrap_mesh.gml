@@ -374,9 +374,9 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		}
 		
 		static initSurface = function(surf) {
-			p0.mapTexture(surface_get_width(surf), surface_get_height(surf));
-			p1.mapTexture(surface_get_width(surf), surface_get_height(surf));
-			p2.mapTexture(surface_get_width(surf), surface_get_height(surf));	
+			p0.mapTexture(surface_get_width_safe(surf), surface_get_height_safe(surf));
+			p1.mapTexture(surface_get_width_safe(surf), surface_get_height_safe(surf));
+			p2.mapTexture(surface_get_width_safe(surf), surface_get_height_safe(surf));	
 		}
 		
 		static drawSurface = function(surf) {
@@ -411,8 +411,8 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		
 		if(!inputs[| 0].value_from) return;
 		var useArray = is_array(surf);
-		var ww = useArray? surface_get_width(surf[0]) : surface_get_width(surf);
-		var hh = useArray? surface_get_height(surf[0]) : surface_get_height(surf);
+		var ww = useArray? surface_get_width_safe(surf[0]) : surface_get_width_safe(surf);
+		var hh = useArray? surface_get_height_safe(surf[0]) : surface_get_height_safe(surf);
 		
 		var fullmh = inputs[| 7].getValue();
 		if(is_array(fullmh)) fullmh = false;
@@ -512,8 +512,8 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		
 		if(!inputs[| 0].value_from) return;
 		var useArray = is_array(surf);
-		var ww = useArray? surface_get_width(surf[0]) : surface_get_width(surf);
-		var hh = useArray? surface_get_height(surf[0]) : surface_get_height(surf);
+		var ww = useArray? surface_get_width_safe(surf[0]) : surface_get_width_safe(surf);
+		var hh = useArray? surface_get_height_safe(surf[0]) : surface_get_height_safe(surf);
 		
 		data.points = [];
 		data.tris	= [];
@@ -681,7 +681,7 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		reset();
 		control();
 		
-		_outSurf = surface_verify(_outSurf, surface_get_width(_inSurf), surface_get_height(_inSurf), attrDepth());
+		_outSurf = surface_verify(_outSurf, surface_get_width_safe(_inSurf), surface_get_height_safe(_inSurf), attrDepth());
 		
 		surface_set_shader(_outSurf);
 		shader_set_interpolation(_outSurf);

@@ -1,8 +1,8 @@
 function get_point_from_dist(distMap, attempt = 4) {
 	if(!is_surface(distMap)) return noone;
 	
-	var w = surface_get_width(distMap);
-	var h = surface_get_height(distMap);
+	var w = surface_get_width_safe(distMap);
+	var h = surface_get_height_safe(distMap);
 	var v = 0;
 	var res = noone;
 	
@@ -33,7 +33,7 @@ function get_points_from_dist(distMap, amount, seed = 0, attempt = 8) {
 	BLEND_OVERRIDE;
 		shader_set(sh_sample_points);
 		shader_set_uniform_f(shader_get_uniform(sh_sample_points, "dimension"), 
-			surface_get_width(distMap) / amount, surface_get_height(distMap));
+			surface_get_width_safe(distMap) / amount, surface_get_height_safe(distMap));
 		shader_set_uniform_i(shader_get_uniform(sh_sample_points, "attempt"), attempt);
 		shader_set_uniform_f(shader_get_uniform(sh_sample_points, "seed"), seed);
 		
@@ -47,8 +47,8 @@ function get_points_from_dist(distMap, amount, seed = 0, attempt = 8) {
 	buffer_seek(b, buffer_seek_start, 0);
 	
 	var pos = array_create(amount);
-	var w = surface_get_width(distMap);
-	var h = surface_get_height(distMap);
+	var w = surface_get_width_safe(distMap);
+	var h = surface_get_height_safe(distMap);
 	
 	for( var i = 0; i < amount; i++ ) {
 		var cc = buffer_read(b, buffer_u32);

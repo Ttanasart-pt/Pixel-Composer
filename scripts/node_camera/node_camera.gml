@@ -188,8 +188,8 @@ function Node_Camera(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 				py = _cam_y + sy;
 			}
 			
-			_scnW = surface_get_width(_surface);
-			_scnH = surface_get_height(_surface);
+			_scnW = surface_get_width_safe(_surface);
+			_scnH = surface_get_height_safe(_surface);
 			
 			px /= _scnW;
 			py /= _scnH;

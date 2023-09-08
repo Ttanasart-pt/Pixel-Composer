@@ -106,8 +106,8 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 				_atl[i] = [];
 				
 				if(!is_surface(inpt[i])) continue;
-				var sw = surface_get_width(inpt[i]);
-				var sh = surface_get_height(inpt[i]);
+				var sw = surface_get_width_safe(inpt[i]);
+				var sh = surface_get_height_safe(inpt[i]);
 				var ww = sw, hh = sh;
 				
 				switch(pack) {
@@ -184,11 +184,11 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 			else					oo = oupt[i];
 			if(!is_surface(oo)) break;
 			
-			var ww = surface_get_width(oo);
-			var hh = surface_get_height(oo);
+			var ww = surface_get_width_safe(oo);
+			var hh = surface_get_height_safe(oo);
 			
-			var _w = surface_get_width(inpt[i]);
-			var _h = surface_get_height(inpt[i]);
+			var _w = surface_get_width_safe(inpt[i]);
+			var _h = surface_get_height_safe(inpt[i]);
 			
 			surface_set_target(oo);
 			BLEND_OVERRIDE;
@@ -303,15 +303,15 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 		switch(pack) {
 			case SPRITE_STACK.horizontal :
 				for(var i = _st; i < _ed; i++) {
-					ww += surface_get_width(inpt[i]);
+					ww += surface_get_width_safe(inpt[i]);
 					if(i > _st) ww += spac;
-					hh  = max(hh, surface_get_height(inpt[i]));
+					hh  = max(hh, surface_get_height_safe(inpt[i]));
 				}
 				break;
 			case SPRITE_STACK.vertical :
 				for(var i = _st; i < _ed; i++) {
-					ww  = max(ww, surface_get_width(inpt[i]));
-					hh += surface_get_height(inpt[i]);
+					ww  = max(ww, surface_get_width_safe(inpt[i]));
+					hh += surface_get_height_safe(inpt[i]);
 					if(i > _st) hh += spac;
 				}
 				break;
@@ -329,9 +329,9 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 					for(var j = 0; j < col; j++) {
 						var index = _st + i * col + j;
 						if(index >= amo) break;
-						row_w += surface_get_width(inpt[index]);
+						row_w += surface_get_width_safe(inpt[index]);
 						if(j) row_w += spac;
-						row_h  = max(row_h, surface_get_height(inpt[index]));
+						row_h  = max(row_h, surface_get_height_safe(inpt[index]));
 					}
 							
 					ww  = max(ww, row_w);
@@ -354,8 +354,8 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 				var px = padd[2];
 				var py = padd[1];
 				for(var i = _st; i < _ed; i++) {
-					var _w  = surface_get_width(inpt[i]);
-					var _h  = surface_get_height(inpt[i]);
+					var _w  = surface_get_width_safe(inpt[i]);
+					var _h  = surface_get_height_safe(inpt[i]);
 					var _sx = px;
 					var _sy = py;
 					
@@ -374,8 +374,8 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 				var px = padd[2];
 				var py = padd[1];
 				for(var i = _st; i < _ed; i++) {
-					var _w = surface_get_width(inpt[i]);
-					var _h = surface_get_height(inpt[i]);
+					var _w = surface_get_width_safe(inpt[i]);
+					var _h = surface_get_height_safe(inpt[i]);
 					var _sx = px;
 					var _sy = py;
 							
@@ -409,8 +409,8 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 						var index = _st + i * col + j;
 						if(index >= amo) break;
 								
-						var _w = surface_get_width(inpt[index]);
-						var _h = surface_get_height(inpt[index]);
+						var _w = surface_get_width_safe(inpt[index]);
+						var _h = surface_get_height_safe(inpt[index]);
 						
 						array_push(_atl, new SurfaceAtlas(inpt[index], [px, py]));
 						draw_surface_safe(inpt[index], px, py);

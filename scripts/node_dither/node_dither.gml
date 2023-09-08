@@ -97,7 +97,7 @@ function Node_Dither(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			
 			shader_set(shader);
 			
-			shader_set_uniform_f_array_safe(uniform_dim, [ surface_get_width(_data[0]), surface_get_height(_data[0]) ] );
+			shader_set_uniform_f_array_safe(uniform_dim, [ surface_get_width_safe(_data[0]), surface_get_height_safe(_data[0]) ] );
 			
 			switch(_typ) {
 				case 0 :
@@ -118,7 +118,7 @@ function Node_Dither(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 				case 3 :
 					if(is_surface(_map)) {
 						shader_set_uniform_i(uniform_map_use, 1);
-						shader_set_uniform_f_array_safe(uniform_map_dim, [ surface_get_width(_map), surface_get_height(_map) ]);
+						shader_set_uniform_f_array_safe(uniform_map_dim, [ surface_get_width_safe(_map), surface_get_height_safe(_map) ]);
 						texture_set_stage(uniform_map, surface_get_texture(_map));
 					}
 					break;

@@ -26,8 +26,8 @@ function Node_Wrap_Area(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			var _surf = inputs[| 0].getValue();
 			if(!is_surface(_surf)) return;
 			
-			var _sw = surface_get_width(_surf);
-			var _sh = surface_get_height(_surf);
+			var _sw = surface_get_width_safe(_surf);
+			var _sh = surface_get_height_safe(_surf);
 			
 			inputs[| 1].setValue([ _sw / 2, _sh / 2, _sw / 2, _sh / 2, AREA_SHAPE.rectangle ]);
 			attributes[? "initalset"] = true;
@@ -51,8 +51,8 @@ function Node_Wrap_Area(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		var cw = _area[2];
 		var ch = _area[3];
 		
-		var ww = cw / surface_get_width(_inSurf) * 2;
-		var hh = ch / surface_get_height(_inSurf) * 2;
+		var ww = cw / surface_get_width_safe(_inSurf) * 2;
+		var hh = ch / surface_get_height_safe(_inSurf) * 2;
 		
 		surface_set_shader(_outSurf);
 		shader_set_interpolation(_inSurf);

@@ -34,7 +34,7 @@ function Node_Crop(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		for( var i = 0, n = array_length(_splice); i < n; i++ )
 			_splice[i] = round(_splice[i]);
 		
-		var dim = [ surface_get_width(_inSurf), surface_get_height(_inSurf) ]
+		var dim = [ surface_get_width_safe(_inSurf), surface_get_height_safe(_inSurf) ]
 		
 		var sp_r = _x + (dim[0] - _splice[0]) * _s;
 		var sp_l = _x + _splice[2] * _s;
@@ -110,7 +110,7 @@ function Node_Crop(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	static processData = function(_outSurf, _data, _output_index, _array_index) {
 		var _inSurf		= _data[0];
 		var _crop		= _data[1];
-		var _dim		= [ surface_get_width(_inSurf) - _crop[0] - _crop[2], surface_get_height(_inSurf) - _crop[1] - _crop[3] ];
+		var _dim		= [ surface_get_width_safe(_inSurf) - _crop[0] - _crop[2], surface_get_height_safe(_inSurf) - _crop[1] - _crop[3] ];
 		
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1]);
 		

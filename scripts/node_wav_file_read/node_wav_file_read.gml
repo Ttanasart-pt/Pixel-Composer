@@ -269,8 +269,8 @@ function Node_WAV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			draw_arc(cx, cy, rr, 90, 90 - 360 * wav_file_prg / content.packet, 4 * _s, 180);
 			return;
 		} else if(is_surface(audio_surface)) {
-			var sw = surface_get_width(audio_surface);
-			var sh = surface_get_height(audio_surface);
+			var sw = surface_get_width_safe(audio_surface);
+			var sh = surface_get_height_safe(audio_surface);
 			
 			var ss = min(bbox.w / sw, bbox.h / sh);
 			draw_surface_ext_safe(audio_surface, 

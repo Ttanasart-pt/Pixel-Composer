@@ -160,7 +160,7 @@ struct PixelShaderOutput {
 	static processData = function(_output, _data, _output_index, _array_index = 0) { 
 		var _surf = _data[2];
 		if(!is_surface(_surf)) return;
-		_output = surface_verify(_output, surface_get_width(_surf), surface_get_height(_surf));
+		_output = surface_verify(_output, surface_get_width_safe(_surf), surface_get_height_safe(_surf));
 		
 		surface_set_target(_output);
 		DRAW_CLEAR
@@ -186,7 +186,7 @@ struct PixelShaderOutput {
 			}
 		}
 		
-		matrix_set(matrix_world, matrix_build(0, 0, 0, 0, 0, 0, surface_get_width(_surf), surface_get_height(_surf), 1));
+		matrix_set(matrix_world, matrix_build(0, 0, 0, 0, 0, 0, surface_get_width_safe(_surf), surface_get_height_safe(_surf), 1));
 		vertex_submit(global.HLSL_VB, pr_trianglestrip, surface_get_texture(_surf));
 		matrix_set(matrix_world, matrix_build_identity());
 		

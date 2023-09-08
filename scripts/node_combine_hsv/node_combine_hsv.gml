@@ -28,7 +28,7 @@ function Node_Combine_HSV(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 			texture_set_stage(uniform_s, surface_get_texture(_s));
 			texture_set_stage(uniform_v, surface_get_texture(_v));
 			
-			draw_sprite_ext(s_fx_pixel, 0, 0, 0, surface_get_width(_outSurf), surface_get_width(_outSurf), 0, c_white, 1);
+			draw_sprite_ext(s_fx_pixel, 0, 0, 0, surface_get_width_safe(_outSurf), surface_get_width_safe(_outSurf), 0, c_white, 1);
 		shader_reset();
 		
 		BLEND_NORMAL;

@@ -132,8 +132,8 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 					for( var i = 0, n = array_length(_sdata); i < n; i++ ) {
 						var _sid  = _sdata[i][0];
 						var _surf = _sdata[i][1];
-						var _sw = surface_get_width(_surf);
-						var _sh = surface_get_height(_surf);
+						var _sw = surface_get_width_safe(_surf);
+						var _sh = surface_get_height_safe(_surf);
 						var _ss = (_hh - 8) / _sh;
 							
 						draw_surface_ext_safe(_surf, _sx, _sy, _ss, _ss, 0, c_white, 1);
@@ -281,8 +281,8 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 				var _sy1 = _sy0 + ssh;
 				draw_rectangle(_sx0, _sy0, _sx1, _sy1, true);
 			
-				var _ssw = surface_get_width(_surf);
-				var _ssh = surface_get_height(_surf);
+				var _ssw = surface_get_width_safe(_surf);
+				var _ssh = surface_get_height_safe(_surf);
 				var _sss = min(ssh / _ssw, ssh / _ssh);
 				draw_surface_ext_safe(_surf, _sx0, _sy0, _sss, _sss, 0, c_white, 1);
 			
@@ -556,8 +556,8 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 				_tran[TRANSFORM.rot] = sa;
 			} else if(drag_type == NODE_COMPOSE_DRAG.scale) {
 				var _rot = _aang * (_pang? _bone.angle : _bone.pose_local_angle) + _tran[TRANSFORM.rot];
-				var _sw = surface_get_width(_surf);
-				var _sh = surface_get_height(_surf);
+				var _sw = surface_get_width_safe(_surf);
+				var _sh = surface_get_height_safe(_surf);
 				
 				var _p = point_rotate(_mx - dragging_mx, _my - dragging_my, 0, 0, -_rot);
 				var sca_x = _p[0] / _s / _sw * 2;
@@ -621,8 +621,8 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 				_sca[1] *= _psca? _bone.pose_scale : _bone.pose_local_scale;
 			}
 			
-			var _ww = surface_get_width(_surf);
-			var _hh = surface_get_height(_surf);
+			var _ww = surface_get_width_safe(_surf);
+			var _hh = surface_get_height_safe(_surf);
 			var _sw = _ww * _sca[0];
 			var _sh = _hh * _sca[1];
 			
@@ -836,8 +836,8 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 				_sca[1] *= _psca? _b.pose_scale : _b.pose_local_scale;
 			}
 			
-			var _ww = surface_get_width(_s);
-			var _hh = surface_get_height(_s);
+			var _ww = surface_get_width_safe(_s);
+			var _hh = surface_get_height_safe(_s);
 			var _sw = _ww * _sca[0];
 			var _sh = _hh * _sca[1];
 			
@@ -887,8 +887,8 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		
 		_b = boneMap[? _b];
 		
-		var _cx  = surface_get_width(_surf)  / 2;
-		var _cy  = surface_get_height(_surf) / 2;
+		var _cx  = surface_get_width_safe(_surf)  / 2;
+		var _cy  = surface_get_height_safe(_surf) / 2;
 		
 		var _anc = _b.getPoint(0.5);
 		var _rot = _arot? -_b.angle : 0;

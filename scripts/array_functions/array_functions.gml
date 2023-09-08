@@ -207,7 +207,7 @@ function array_get_dimension(arr) {
 function array_shape(arr, first = true, isSurface = false) {
 	if(!is_array(arr)) {
 		if(isSurface && is_surface(arr)) 
-			return (first? "" : " x ") + string(surface_get_width(arr)) + " x " + string(surface_get_height(arr)) + " px";
+			return (first? "" : " x ") + string(surface_get_width_safe(arr)) + " x " + string(surface_get_height_safe(arr)) + " px";
 		return "";
 	}
 	

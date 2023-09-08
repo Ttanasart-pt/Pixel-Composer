@@ -29,14 +29,14 @@ function Node_Find_Pixel(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		DRAW_CLEAR
 		shader_set(shader);
 			texture_set_stage(shader_tex, surface_get_texture(_surf));
-			shader_set_uniform_f(shader_dim, surface_get_width(_surf), surface_get_height(_surf));
+			shader_set_uniform_f(shader_dim, surface_get_width_safe(_surf), surface_get_height_safe(_surf));
 			draw_sprite_ext(s_fx_pixel, 0, 0, 0, 1, 1, 0, _col, 1);
 		shader_reset();
 		surface_reset_target();
 		
 		var pos = surface_get_pixel(temp_surface[0], 0, 0);
-		var _x  = round(color_get_red(pos)   / 255 * surface_get_width(_surf));
-		var _y  = round(color_get_green(pos) / 255 * surface_get_height(_surf));
+		var _x  = round(color_get_red(pos)   / 255 * surface_get_width_safe(_surf));
+		var _y  = round(color_get_green(pos) / 255 * surface_get_height_safe(_surf));
 		
 		return [ _x, _y ];
 	}

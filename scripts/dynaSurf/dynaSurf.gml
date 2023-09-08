@@ -1,4 +1,4 @@
-function dynaSurf() constructor {
+function DynaSurf() constructor {
 	surfaces = [];
 	
 	static getWidth  = function() { return 1; }

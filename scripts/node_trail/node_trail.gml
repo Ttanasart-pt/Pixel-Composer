@@ -55,18 +55,18 @@ function Node_Trail(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		cacheCurrentFrame(_surf);
 		
 		for( var i = 0, n = array_length(temp_surface); i < n; i++ ) {
-			temp_surface[i] = surface_verify(temp_surface[i], surface_get_width(_surf), surface_get_height(_surf), cDep);
+			temp_surface[i] = surface_verify(temp_surface[i], surface_get_width_safe(_surf), surface_get_height_safe(_surf), cDep);
 			surface_set_target(temp_surface[i]);
 			DRAW_CLEAR
 			surface_reset_target();
 		}
 			
 		var _outSurf = outputs[| 0].getValue();
-		_outSurf = surface_verify(_outSurf, surface_get_width(_surf), surface_get_height(_surf), cDep);
+		_outSurf = surface_verify(_outSurf, surface_get_width_safe(_surf), surface_get_height_safe(_surf), cDep);
 		outputs[| 0].setValue(_outSurf);
 			
 		var _outUV = outputs[| 1].getValue();
-		_outUV = surface_verify(_outUV, surface_get_width(_surf), surface_get_height(_surf), cDep);
+		_outUV = surface_verify(_outUV, surface_get_width_safe(_surf), surface_get_height_safe(_surf), cDep);
 		outputs[| 1].setValue(_outUV);
 		
 		var curf = PROJECT.animator.current_frame;
@@ -102,7 +102,7 @@ function Node_Trail(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			
 			shader_set(sh_trail_filler_pass1);
 			shader_set_dim("dimension",  _surf);
-			shader_set_f("range",		 _rang? _rang : surface_get_width(_surf) / 2);
+			shader_set_f("range",		 _rang? _rang : surface_get_width_safe(_surf) / 2);
 			shader_set_i("matchColor",	 _colr);
 			shader_set_i("blendColor",	 _blend);
 			shader_set_f("segmentStart", (frame_amo - i) / frame_amo);

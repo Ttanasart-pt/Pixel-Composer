@@ -97,8 +97,8 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			if(_shp == 2) {
 				var _tex = inputs[| 6].getValue();
 				if(is_array(_tex)) _tex = _tex[safe_mod(preview_index, array_length(_tex))];
-				var tw = surface_get_width(_tex);
-				var th = surface_get_height(_tex);
+				var tw = surface_get_width_safe(_tex);
+				var th = surface_get_height_safe(_tex);
 				
 				draw_set_color(is_convex? COLORS._main_accent : COLORS._main_value_negative);
 				
@@ -263,8 +263,8 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		var meshes = attributes.mesh;
 		var mesh   = [];
 		
-		var ww = surface_get_width(_tex);
-		var hh = surface_get_height(_tex);
+		var ww = surface_get_width_safe(_tex);
+		var hh = surface_get_height_safe(_tex);
 		
 		var surface_buffer = buffer_create(ww * hh * 4, buffer_fixed, 2);
 		buffer_get_surface(surface_buffer, _tex, 0);
@@ -514,8 +514,8 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		
 		var _spos   = inputs[| 7].getValue();
 		
-		var ww = max(1, surface_get_width(_tex));
-		var hh = max(1, surface_get_height(_tex));
+		var ww = max(1, surface_get_width_safe(_tex));
+		var hh = max(1, surface_get_height_safe(_tex));
 		
 		var ox = rpos == noone? _spos[0] : rpos[0];
 		var oy = rpos == noone? _spos[1] : rpos[1];

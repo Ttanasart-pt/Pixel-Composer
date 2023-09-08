@@ -65,9 +65,9 @@ function steam_ugc_project_generate(dest_path = DIRECTORY + "steamUGCthumbnail.p
 		draw_sprite_stretched(s_workshop_frame, 0, 0, 0, prev_size, prev_size);
 		
 		if(is_surface(preview_surface)) {
-			var ss = (prev_size - 160) / max(surface_get_width(preview_surface), surface_get_height(preview_surface));
-			var ox = surface_get_width(preview_surface) / 2 * ss;
-			var oy = surface_get_height(preview_surface) / 2 * ss;
+			var ss = (prev_size - 160) / max(surface_get_width_safe(preview_surface), surface_get_height_safe(preview_surface));
+			var ox = surface_get_width_safe(preview_surface) / 2 * ss;
+			var oy = surface_get_height_safe(preview_surface) / 2 * ss;
 			draw_surface_ext(preview_surface, prev_size / 2 - ox, prev_size / 2 - oy, ss, ss, 0, c_white, 1);
 		}
 		

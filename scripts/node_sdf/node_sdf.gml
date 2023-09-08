@@ -34,8 +34,8 @@ function Node_SDF(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) const
 		var inSurf = _data[0];
 		var _side  = _data[2];
 		var _dist  = _data[3];
-		var sw	   = surface_get_width(inSurf);
-		var sh	   = surface_get_height(inSurf);
+		var sw	   = surface_get_width_safe(inSurf);
+		var sh	   = surface_get_height_safe(inSurf);
 		var _n	   = max(sw, sh);
 		var cDep   = attrDepth();
 		

@@ -175,8 +175,8 @@ function __3dScene(camera) constructor {
 	static ssaoPass = function(deferData) { #region
 		if(!ssao_enabled) return;
 		
-		var _sw = surface_get_width(deferData.geometry_data[0]);
-		var _sh = surface_get_height(deferData.geometry_data[0]);
+		var _sw = surface_get_width_safe(deferData.geometry_data[0]);
+		var _sh = surface_get_height_safe(deferData.geometry_data[0]);
 		var _ssao_surf = surface_create(_sw, _sh);
 		
 		surface_set_shader(_ssao_surf, sh_d3d_ssao);

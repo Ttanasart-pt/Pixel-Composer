@@ -195,8 +195,8 @@ function __part(_node) constructor {
 		scy   = sc_sy * scCurve;
 		
 		var _xx, _yy;
-		var s_w = surface_get_width(ss) * scx;
-		var s_h = surface_get_height(ss) * scy;
+		var s_w = surface_get_width_safe(ss) * scx;
+		var s_h = surface_get_height_safe(ss) * scy;
 		
 		if(boundary_data == -1) {
 			var _pp = point_rotate(-s_w / 2, -s_h / 2, 0, 0, rot);

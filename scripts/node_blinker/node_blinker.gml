@@ -38,7 +38,7 @@ function Node_Blinker(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		
 		//if(!is_surface(_surf)) return _outSurf;
 		
-		//temp_surface[0] = surface_verify(temp_surface[0], surface_get_width(_outSurf), surface_get_height(_outSurf));
+		//temp_surface[0] = surface_verify(temp_surface[0], surface_get_width_safe(_outSurf), surface_get_height_safe(_outSurf));
 		
 		//surface_set_shader(temp_surface[0], sh_blink_extract);
 		//	draw_surface_safe(_surf);

@@ -92,8 +92,8 @@ function Node_VFX_Renderer(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			else if(_blend == PARTICLE_BLEND_MODE.additive) 
 				BLEND_ADD;
 			
-			var surf_w = surface_get_width(_outSurf);
-			var surf_h = surface_get_height(_outSurf);
+			var surf_w = surface_get_width_safe(_outSurf);
+			var surf_h = surface_get_height_safe(_outSurf);
 			
 			for( var i = input_fix_len; i < ds_list_size(inputs) - 1; i++ ) {
 				var parts = inputs[| i].getValue(_time);

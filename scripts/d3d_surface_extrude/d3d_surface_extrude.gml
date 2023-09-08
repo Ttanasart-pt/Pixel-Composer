@@ -29,8 +29,8 @@ function __3dSurfaceExtrude(surface = noone, height = noone, smooth = false) : _
 		var _surface = surface;
 		var _height  = height;
 		
-		var ww = surface_get_width(_surface);
-		var hh = surface_get_height(_surface);
+		var ww = surface_get_width_safe(_surface);
+		var hh = surface_get_height_safe(_surface);
 		
 		surface_w = ww;
 		surface_h = hh;
@@ -61,8 +61,8 @@ function __3dSurfaceExtrude(surface = noone, height = noone, smooth = false) : _
 			}
 		
 			if(useH) {
-				var hgw = surface_get_width(_height);
-				var hgh = surface_get_height(_height);
+				var hgw = surface_get_width_safe(_height);
+				var hgh = surface_get_height_safe(_height);
 				var hgtW = hgw / ww;
 				var hgtH = hgh / hh;
 			

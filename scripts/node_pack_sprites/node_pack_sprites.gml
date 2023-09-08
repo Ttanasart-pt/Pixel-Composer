@@ -35,8 +35,8 @@ function Node_Pack_Sprites(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			
 			if(!is_surface(_surf)) continue;
 			
-			var _sw = surface_get_width(_surf);
-			var _sh = surface_get_height(_surf);
+			var _sw = surface_get_width_safe(_surf);
+			var _sh = surface_get_height_safe(_surf);
 			
 			draw_rectangle(
 				_x + _s * (_sx + spac), 
@@ -66,8 +66,8 @@ function Node_Pack_Sprites(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			var s = _inpt[i];
 			if(!is_surface(s)) continue;
 			
-			_rects[i] = new spriteAtlasData(0, 0, surface_get_width(s)  + _spac * 2, 
-												  surface_get_height(s) + _spac * 2, s, i);
+			_rects[i] = new spriteAtlasData(0, 0, surface_get_width_safe(s)  + _spac * 2, 
+												  surface_get_height_safe(s) + _spac * 2, s, i);
 		}
 		
 		var pack;

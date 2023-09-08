@@ -61,8 +61,8 @@ function surfaceBox(_onModify, def_path = "") : widget() constructor {
 				_surface = _surface[safe_mod(round(current_time / 250), array_length(_surface))];
 			
 			if(is_surface(_surface)) {
-				var sfw = surface_get_width(_surface);	
-				var sfh = surface_get_height(_surface);	
+				var sfw = surface_get_width_safe(_surface);	
+				var sfh = surface_get_height_safe(_surface);	
 				var ss  = min(sw / sfw, sh / sfh);
 				var _sx = sx0 + sw / 2 - ss * sfw / 2;
 				var _sy = sy0 + sh / 2 - ss * sfh / 2;

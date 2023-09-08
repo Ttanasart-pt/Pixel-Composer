@@ -42,8 +42,8 @@ function Panel_Array_Sequence(node) : PanelContent() constructor {
 				
 				var _sx = content_x + i * (_ns + ui(8));
 				var _sy = 0;
-				var _sw = surface_get_width(_s);
-				var _sh = surface_get_height(_s);
+				var _sw = surface_get_width_safe(_s);
+				var _sh = surface_get_height_safe(_s);
 				var _ss = (_ns - ui(8)) / max(_sw, _sh);
 				var _ssx = _sx + (_ns - _sw * _ss) / 2;
 				var _ssy = _sy + (_ns - _sh * _ss) / 2;
@@ -124,8 +124,8 @@ function Panel_Array_Sequence(node) : PanelContent() constructor {
 				
 				var _sx = sequence_x + i * _ns;
 				var _sy = ui(24);
-				var _sw = surface_get_width(_s);
-				var _sh = surface_get_height(_s);
+				var _sw = surface_get_width_safe(_s);
+				var _sh = surface_get_height_safe(_s);
 				var _ss = min(_ns / _sw, _ns / _sh);
 				var _ssx = _sx + (_ns - _sw * _ss) / 2;
 				var _ssy = _sy + (_ns - _sh * _ss) / 2;
@@ -146,8 +146,8 @@ function Panel_Array_Sequence(node) : PanelContent() constructor {
 				var frm  = round((msx - sequence_x - _ns / 2) / _ns);
 				var _sx  = sequence_x + frm * _ns;
 				var _sy  = ui(24);
-				var _sw  = surface_get_width(_s);
-				var _sh  = surface_get_height(_s);
+				var _sw  = surface_get_width_safe(_s);
+				var _sh  = surface_get_height_safe(_s);
 				var _ss  = min(_ns / _sw, _ns / _sh);
 				var _ssx = _sx + (_ns - _sw * _ss) / 2;
 				var _ssy = _sy + (_ns - _sh * _ss) / 2;
@@ -186,8 +186,8 @@ function Panel_Array_Sequence(node) : PanelContent() constructor {
 			if(draw_drag) {
 				var _s  = _seq[content_drag];
 				var _ns = content_h;
-				var _sw = surface_get_width(_s);
-				var _sh = surface_get_height(_s);
+				var _sw = surface_get_width_safe(_s);
+				var _sh = surface_get_height_safe(_s);
 				var _ss = (_ns - ui(8)) / max(_sw, _sh);
 				
 				draw_surface_ext_safe(_s, mx, my, _ss, _ss,,, 0.5);

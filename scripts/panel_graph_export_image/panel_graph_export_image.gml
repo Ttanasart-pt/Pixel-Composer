@@ -108,7 +108,7 @@ function graph_export_image(allList, nodeList, settings = {}) {
 		
 			shader_set(sh_downsample);
 			shader_set_f("down", aa);
-			shader_set_f("dimension", surface_get_width(cs), surface_get_height(cs));
+			shader_set_f("dimension", surface_get_width_safe(cs), surface_get_height_safe(cs));
 			draw_surface(cs, 0, 0);
 			shader_reset();
 			surface_free(cs);

@@ -79,6 +79,8 @@ if(OS == os_windows && gameframe_is_minimized()) exit;
 			case VALUE_TYPE.buffer :
 				draw_tooltip_buffer(content);
 				break;
+			default :
+				draw_tooltip_text(string(content));
 		} 
 	} else if(TOOLTIP != "")
 		draw_tooltip_text(TOOLTIP);

@@ -244,8 +244,8 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 					posS++;
 				}
 				
-				var sw = surface_get_width(surf);
-				var sh = surface_get_height(surf);
+				var sw = surface_get_width_safe(surf);
+				var sh = surface_get_height_safe(surf);
 			
 				if(_dist != AREA_DISTRIBUTION.area || _scat != AREA_SCATTER.uniform) {
 					var p = point_rotate(-sw / 2 * _scx, -sh * _scy / 2, 0, 0, _r);
@@ -264,8 +264,8 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 				draw_surface_ext_safe(surf, _x, _y, _scx, _scy, _r, clr, alp);
 				
 				if(_dist == 5) {
-					var _sw = surface_get_width(surf)  * _scx;
-					var _sh = surface_get_height(surf) * _scy;
+					var _sw = surface_get_width_safe(surf)  * _scx;
+					var _sh = surface_get_height_safe(surf) * _scy;
 					
 					if(_x < _sw)
 						draw_surface_ext_safe(surf, _dim[0] + _x, _y, _scx, _scy, _r, clr, alp);

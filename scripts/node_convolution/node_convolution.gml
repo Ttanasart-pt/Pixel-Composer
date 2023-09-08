@@ -41,7 +41,7 @@ function Node_Convolution(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		BLEND_OVERRIDE;
 		
 		shader_set(shader);
-			shader_set_uniform_f(uniform_dim, surface_get_width(_outSurf), surface_get_height(_outSurf));
+			shader_set_uniform_f(uniform_dim, surface_get_width_safe(_outSurf), surface_get_height_safe(_outSurf));
 			shader_set_uniform_f_array_safe(uniform_ker, _ker);
 			shader_set_uniform_i(uniform_sam, _sam);
 			draw_surface_safe(_data[0], 0, 0);

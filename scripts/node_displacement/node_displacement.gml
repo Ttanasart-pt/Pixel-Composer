@@ -68,10 +68,10 @@ If set, then strength value control how many times the effect applies on itself.
 				inputs[| 2].setVisible(false);
 				break;
 		}
-		var ww = surface_get_width(_data[0]);
-		var hh = surface_get_height(_data[0]);
-		var mw = surface_get_width(_data[1]);
-		var mh = surface_get_height(_data[1]);
+		var ww = surface_get_width_safe(_data[0]);
+		var hh = surface_get_height_safe(_data[0]);
+		var mw = surface_get_width_safe(_data[1]);
+		var mh = surface_get_height_safe(_data[1]);
 		
 		surface_set_shader(_outSurf, shader);
 		shader_set_interpolation(_data[0]);

@@ -1,4 +1,4 @@
-function dynaSurf_iso_4() : dynaSurf() constructor {
+function dynaSurf_iso_4() : DynaSurf() constructor {
 	surfaces = array_create(4, noone);
 	
 	static getSurface = function(_rot) {

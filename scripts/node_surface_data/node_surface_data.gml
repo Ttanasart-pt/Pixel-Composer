@@ -19,8 +19,8 @@ function Node_Surface_data(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			var _dim = array_create(len);
 			
 			for( var i = 0; i < len; i++ ) {
-				_dim[i][0] = surface_get_width(_insurf[i]);
-				_dim[i][1] = surface_get_height(_insurf[i]);
+				_dim[i][0] = surface_get_width_safe(_insurf[i]);
+				_dim[i][1] = surface_get_height_safe(_insurf[i]);
 			}
 			
 			outputs[| 0].setValue(_dim);
@@ -30,6 +30,6 @@ function Node_Surface_data(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		
 		if(!_insurf || !surface_exists(_insurf)) return;
 		
-		outputs[| 0].setValue([ surface_get_width(_insurf), surface_get_height(_insurf) ]);
+		outputs[| 0].setValue([ surface_get_width_safe(_insurf), surface_get_height_safe(_insurf) ]);
 	}
 }

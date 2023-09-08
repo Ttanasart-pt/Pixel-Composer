@@ -46,12 +46,12 @@ function Node_Blur_Radial(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		var _cen = _data[2];
 		var _mask = _data[4];
 		var _mix  = _data[5];
-		_cen[0] /= surface_get_width(_outSurf);
-		_cen[1] /= surface_get_height(_outSurf);
+		_cen[0] /= surface_get_width_safe(_outSurf);
+		_cen[1] /= surface_get_height_safe(_outSurf);
 		
 		surface_set_shader(_outSurf, sh_blur_radial);
 			shader_set_interpolation(_data[0]);
-			shader_set_f("dimension", surface_get_width(_outSurf), surface_get_height(_outSurf));
+			shader_set_f("dimension", surface_get_width_safe(_outSurf), surface_get_height_safe(_outSurf));
 			shader_set_f("strength", abs(_str));
 			shader_set_f("center", _cen);
 			

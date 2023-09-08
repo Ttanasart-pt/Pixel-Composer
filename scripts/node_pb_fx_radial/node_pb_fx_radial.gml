@@ -19,7 +19,7 @@ function Node_PB_Fx_Radial(_x, _y, _group = noone) : Node_PB_Fx(_x, _y, _group) 
 		surface_set_shader(_nbox.content);
 			for( var i = 0; i < _amo; i++ ) {
 				var aa = i / _amo * 360;
-				var p  = point_rotate(0, 0, surface_get_width(_pbox.content) / 2, surface_get_height(_pbox.content) / 2, aa);
+				var p  = point_rotate(0, 0, surface_get_width_safe(_pbox.content) / 2, surface_get_height_safe(_pbox.content) / 2, aa);
 				
 				draw_surface_ext_safe(_pbox.content, p[0], p[1],,, aa);
 			}

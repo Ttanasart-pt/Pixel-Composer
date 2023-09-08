@@ -69,20 +69,20 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		
 		switch(_out_type) {
 			case OUTPUT_SCALING.same_as_input :
-				ww  = surface_get_width(_surf);
-				hh  = surface_get_height(_surf);
+				ww  = surface_get_width_safe(_surf);
+				hh  = surface_get_height_safe(_surf);
 				break;
 			case OUTPUT_SCALING.relative : 
-				ww  = surface_get_width(_surf)  * _out[0];
-				hh  = surface_get_height(_surf) * _out[1];
+				ww  = surface_get_width_safe(_surf)  * _out[0];
+				hh  = surface_get_height_safe(_surf) * _out[1];
 				break;
 			case OUTPUT_SCALING.constant :	
 				ww  = _out[0];
 				hh  = _out[1];
 				break;
 			case OUTPUT_SCALING.scale :	
-				ww  = surface_get_width(_surf)  * _scale[0];
-				hh  = surface_get_height(_surf) * _scale[1];
+				ww  = surface_get_width_safe(_surf)  * _scale[0];
+				hh  = surface_get_height_safe(_surf) * _scale[1];
 				break;
 		}
 		
@@ -106,7 +106,7 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		}
 		
 		inputs[| 3].setValue([ 0.5, 0.5]);
-		inputs[| 2].setValue([ surface_get_width(_surf) / 2, surface_get_height(_surf) / 2 ]);
+		inputs[| 2].setValue([ surface_get_width_safe(_surf) / 2, surface_get_height_safe(_surf) / 2 ]);
 	}
 	
 	static step = function() {
@@ -145,8 +145,8 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		
 		var cDep = attrDepth();
 		
-		var ww  = surface_get_width(ins);
-		var hh  = surface_get_height(ins);
+		var ww  = surface_get_width_safe(ins);
+		var hh  = surface_get_height_safe(ins);
 		var _ww = ww, _hh = hh;
 		if(_ww <= 1 && _hh <= 1) return _outSurf;
 		
@@ -281,11 +281,11 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		var rot = current_data[5];
 		var sca = current_data[6];
 		
-		var srw = surface_get_width(_surf);
-		var srh = surface_get_height(_surf);
+		var srw = surface_get_width_safe(_surf);
+		var srh = surface_get_height_safe(_surf);
 		
-		var ow = surface_get_width(_surf_out);
-		var oh = surface_get_height(_surf_out);
+		var ow = surface_get_width_safe(_surf_out);
+		var oh = surface_get_height_safe(_surf_out);
 		
 		var ww  = srw * sca[0];
 		var hh  = srh * sca[1];

@@ -58,7 +58,7 @@ function Node_Twirl(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		
 		surface_set_shader(_outSurf, shader);
 		shader_set_interpolation(_data[0]);
-			shader_set_uniform_f_array_safe(uniform_dim, [ surface_get_width(_data[0]), surface_get_height(_data[0]) ]);
+			shader_set_uniform_f_array_safe(uniform_dim, [ surface_get_width_safe(_data[0]), surface_get_height_safe(_data[0]) ]);
 			shader_set_uniform_f_array_safe(uniform_cen, center);
 			shader_set_uniform_f(uniform_str, stren);
 			shader_set_uniform_f(uniform_rad, rad);

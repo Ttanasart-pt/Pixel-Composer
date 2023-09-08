@@ -59,11 +59,11 @@ function Node_Palette_Extract(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	}
 	
 	function extractKmean(_surfFull, _size, _seed) {
-		var _surf = surface_create_valid(min(32, surface_get_width(_surfFull)), min(32, surface_get_height(_surfFull)), attrDepth());
+		var _surf = surface_create_valid(min(32, surface_get_width_safe(_surfFull)), min(32, surface_get_height_safe(_surfFull)), attrDepth());
 		_size = max(1, _size);
 		
-		var ww = surface_get_width(_surf);
-		var hh = surface_get_height(_surf);
+		var ww = surface_get_width_safe(_surf);
+		var hh = surface_get_height_safe(_surf);
 		
 		surface_set_target(_surf);
 		DRAW_CLEAR
@@ -183,8 +183,8 @@ function Node_Palette_Extract(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	}
 	
 	function extractAll(_surfFull) {
-		var ww = surface_get_width(_surfFull);
-		var hh = surface_get_height(_surfFull);
+		var ww = surface_get_width_safe(_surfFull);
+		var hh = surface_get_height_safe(_surfFull);
 		
 		var c_buffer = buffer_create(ww * hh * 4, buffer_fixed, 2);
 		
@@ -209,11 +209,11 @@ function Node_Palette_Extract(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	
 	function extractFrequence(_surfFull, _size) {
 		var msize = 128;
-		var _surf = surface_create_valid(min(msize, surface_get_width(_surfFull)), min(msize, surface_get_height(_surfFull)));
+		var _surf = surface_create_valid(min(msize, surface_get_width_safe(_surfFull)), min(msize, surface_get_height_safe(_surfFull)));
 		_size = max(1, _size);
 		
-		var ww = surface_get_width(_surf);
-		var hh = surface_get_height(_surf);
+		var ww = surface_get_width_safe(_surf);
+		var hh = surface_get_height_safe(_surf);
 		
 		surface_set_target(_surf);
 		DRAW_CLEAR

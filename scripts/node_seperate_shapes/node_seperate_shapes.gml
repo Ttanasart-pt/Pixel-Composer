@@ -67,8 +67,8 @@ function Node_Seperate_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		
 		if(!is_surface(_inSurf)) return;
 		
-		var ww = surface_get_width(_inSurf);
-		var hh = surface_get_height(_inSurf);
+		var ww = surface_get_width_safe(_inSurf);
+		var hh = surface_get_height_safe(_inSurf);
 		surface_w = ww;
 		surface_h = hh;
 	

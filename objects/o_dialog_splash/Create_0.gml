@@ -72,8 +72,8 @@ event_inherited();
 			
 				draw_sprite_stretched(THEME.ui_panel_bg, 1, fx, _y, ww, hg);
 				if(thmb && _y + hg > 0 && _y < sp_recent.h) {
-					var sw = surface_get_width(thmb);
-					var sh = surface_get_height(thmb);
+					var sw = surface_get_width_safe(thmb);
+					var sh = surface_get_height_safe(thmb);
 					
 					var ss = (ww - ui(8)) / sw;
 					var sy = (((sh * ss) - hg) * clamp((_y + hg) / (sp_recent.h + hg), 0, 1)) / ss;

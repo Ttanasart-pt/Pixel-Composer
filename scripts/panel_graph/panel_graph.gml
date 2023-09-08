@@ -315,7 +315,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		
 			var _canvas = nodeBuild("Node_Canvas", _node.x + _node.w + 64, _node.y);
 		
-			_canvas.inputs[| 0].setValue([surface_get_width(surf), surface_get_height(surf)]);
+			_canvas.inputs[| 0].setValue([surface_get_width_safe(surf), surface_get_height_safe(surf)]);
 			_canvas.canvas_surface = surface_clone(surf);
 			_canvas.apply_surface();
 		} #endregion
@@ -364,7 +364,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		
 			var _canvas = nodeBuild("Node_Canvas", _node.x, _node.y + _node.h + 64);
 		
-			_canvas.inputs[| 0].setValue([surface_get_width(surf), surface_get_height(surf)]);
+			_canvas.inputs[| 0].setValue([surface_get_width_safe(surf), surface_get_height_safe(surf)]);
 			_canvas.inputs[| 5].setValue(true);
 		
 			var _blend = new Node_Blend(_node.x + _node.w + 64, _node.y, getCurrentContext());
@@ -902,7 +902,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		surface_reset_target();
 		shader_set(sh_downsample);
 		shader_set_f("down", aa);
-		shader_set_f("dimension", surface_get_width(connection_surface), surface_get_height(connection_surface));
+		shader_set_f("dimension", surface_get_width_safe(connection_surface), surface_get_height_safe(connection_surface));
 		draw_surface(connection_surface, 0, 0);
 		shader_reset();
 		
@@ -1320,7 +1320,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		
 		var hover = mini_hover && !point_in_rectangle(mx, my, mx0, my0, mx0 + ui(16), my0 + ui(16)) && !minimap_dragging;
 		
-		if(!is_surface(minimap_surface) || surface_get_width(minimap_surface) != minimap_w || surface_get_height(minimap_surface) != minimap_h) {
+		if(!is_surface(minimap_surface) || surface_get_width_safe(minimap_surface) != minimap_w || surface_get_height_safe(minimap_surface) != minimap_h) {
 			minimap_surface = surface_create_valid(minimap_w, minimap_h);
 		}
 		

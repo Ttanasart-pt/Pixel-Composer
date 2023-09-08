@@ -851,8 +851,8 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 			return "";
 		}
 		
-		var pw = surface_get_width(preview_surface);
-		var ph = surface_get_height(preview_surface);
+		var pw = surface_get_width_safe(preview_surface);
+		var ph = surface_get_height_safe(preview_surface);
 		var format = surface_get_format(preview_surface);
 		
 		var txt = "[" + string(pw) + " x " + string(ph) + " ";
@@ -1278,7 +1278,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 			_surf = array_safe_get(_surf, preview_index, noone);
 		if(!is_surface(_surf)) return noone;
 		
-		return BBOX().fromWH(preview_x, preview_y, surface_get_width(_surf), surface_get_height(_surf));
+		return BBOX().fromWH(preview_x, preview_y, surface_get_width_safe(_surf), surface_get_height_safe(_surf));
 	} #endregion
 	
 	static getTool = function() { return self; }

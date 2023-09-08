@@ -43,8 +43,8 @@ function Node_Pixel_Sort(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		if(_dr < 0) _dr = 4 + _dr;
 		if(_it <= 0) return _outSurf;
 		
-		var sw = surface_get_width(_outSurf);
-		var sh = surface_get_height(_outSurf);
+		var sw = surface_get_width_safe(_outSurf);
+		var sh = surface_get_height_safe(_outSurf);
 		
 		var pp = [ surface_create_valid(sw, sh), surface_create_valid(sw, sh) ];
 		var sBase, sDraw;
@@ -57,7 +57,7 @@ function Node_Pixel_Sort(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		surface_reset_target();
 		
 		shader_set(shader);
-		shader_set_uniform_f(uniform_dim, surface_get_width(_in), surface_get_height(_in));
+		shader_set_uniform_f(uniform_dim, surface_get_width_safe(_in), surface_get_height_safe(_in));
 		shader_set_uniform_f(uniform_tre, _tr);
 		shader_set_uniform_i(uniform_dir, _dr);
 		

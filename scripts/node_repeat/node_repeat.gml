@@ -97,11 +97,11 @@ function Node_Repeat(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		if(is_array(_surf)) {
 			if(array_length(_surf) == 0) return [1, 1];
 			if(!is_surface(_surf[0])) return [1, 1];
-			return [ surface_get_width(_surf[0]), surface_get_height(_surf[0]) ];
+			return [ surface_get_width_safe(_surf[0]), surface_get_height_safe(_surf[0]) ];
 		}
 			
 		if(!is_surface(_surf)) return [1, 1];
-		return [ surface_get_width(_surf), surface_get_height(_surf) ];
+		return [ surface_get_width_safe(_surf), surface_get_height_safe(_surf) ];
 	}
 	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
@@ -220,8 +220,8 @@ function Node_Repeat(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				if(is_array(_inSurf)) 
 					_surf = array_safe_get(_inSurf, _arr? irandom(array_length(_inSurf) - 1) : safe_mod(i, array_length(_inSurf)));
 				
-				var _sw = surface_get_width(_surf);
-				var _sh = surface_get_height(_surf);
+				var _sw = surface_get_width_safe(_surf);
+				var _sh = surface_get_height_safe(_surf);
 				var sw = _sw * scax;
 				var sh = _sh * scay;
 				

@@ -56,8 +56,8 @@ function histogramUpdate(surface) {
 	if(!is_surface(surface)) return;
 		
 	histMax = 0;
-	var sw = surface_get_width(surface);
-	var sh = surface_get_height(surface);
+	var sw = surface_get_width_safe(surface);
+	var sh = surface_get_height_safe(surface);
 	var stw = max(1, sw / attributes.preview_sample);
 	var sth = max(1, sh / attributes.preview_sample);
 		

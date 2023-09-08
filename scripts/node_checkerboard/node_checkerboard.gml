@@ -58,7 +58,7 @@ function Node_Checker(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			
 		surface_set_target(_outSurf);
 			shader_set(shader);
-			shader_set_uniform_f(uniform_dim, surface_get_width(_outSurf), surface_get_height(_outSurf));
+			shader_set_uniform_f(uniform_dim, surface_get_width_safe(_outSurf), surface_get_height_safe(_outSurf));
 			shader_set_uniform_f(uniform_pos, _pos[0] / _dim[0], _pos[1] / _dim[1]);
 			shader_set_uniform_f(uniform_angle,  degtorad(_ang));
 			shader_set_uniform_f(uniform_amount, _amo);

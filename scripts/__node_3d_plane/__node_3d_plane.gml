@@ -153,8 +153,8 @@ function __Node_3D_Plane(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		switch(_out_type) {
 			case OUTPUT_SCALING.same_as_input :
 				inputs[| 5].setVisible(false);
-				_ww  = surface_get_width(_data[0]);
-				_hh  = surface_get_height(_data[0]);
+				_ww  = surface_get_width_safe(_data[0]);
+				_hh  = surface_get_height_safe(_data[0]);
 				break;
 			case OUTPUT_SCALING.constant :	
 				inputs[| 5].setVisible(true);
@@ -163,8 +163,8 @@ function __Node_3D_Plane(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 				break;
 			case OUTPUT_SCALING.relative : 
 				inputs[| 5].setVisible(true);
-				_ww  = surface_get_width(_data[0]) * _out[0];
-				_hh  = surface_get_height(_data[0]) * _out[1];
+				_ww  = surface_get_width_safe(_data[0]) * _out[0];
+				_hh  = surface_get_height_safe(_data[0]) * _out[1];
 				break;
 		}
 		

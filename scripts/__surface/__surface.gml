@@ -18,8 +18,8 @@ function SurfaceAtlas(surface, position = [ 0, 0 ], rotation = 0, scale = [ 1, 1
 function Surface(surface) constructor {
 	static set = function(surface) {
 		self.surface = surface;
-		w = surface_get_width(surface);
-		h = surface_get_height(surface);
+		w = surface_get_width_safe(surface);
+		h = surface_get_height_safe(surface);
 		format = surface_get_format(surface);
 	}
 	set(surface);

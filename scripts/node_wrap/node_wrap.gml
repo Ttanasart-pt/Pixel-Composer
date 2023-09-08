@@ -44,8 +44,8 @@ function Node_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			var _surf = inputs[| 0].getValue();
 			if(!is_surface(_surf)) return;
 			
-			var _sw = surface_get_width(_surf);
-			var _sh = surface_get_height(_surf);
+			var _sw = surface_get_width_safe(_surf);
+			var _sh = surface_get_height_safe(_surf);
 			
 			inputs[| 1].setValue([   0,   0 ]);
 			inputs[| 2].setValue([ _sw,   0 ]);
@@ -198,8 +198,8 @@ function Node_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		var bl = _data[3];
 		var br = _data[4];
 		
-		var sw = surface_get_width(_data[0]);
-		var sh = surface_get_height(_data[0]);
+		var sw = surface_get_width_safe(_data[0]);
+		var sh = surface_get_height_safe(_data[0]);
 		
 		var teq = round(tl[1]) == round(tr[1]);
 		var beq = round(bl[1]) == round(br[1]);

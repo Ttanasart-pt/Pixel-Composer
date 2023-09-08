@@ -57,8 +57,8 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		var _in = getSingleValue(dimension_index, arr);
 		
 		if(inputs[| dimension_index].type == VALUE_TYPE.surface && is_surface(_in)) {
-			var ww = surface_get_width(_in);
-			var hh = surface_get_height(_in);
+			var ww = surface_get_width_safe(_in);
+			var hh = surface_get_height_safe(_in);
 			return [ww, hh];
 		}
 		
@@ -84,8 +84,8 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 				var _sw = 1, _sh = 1;
 				if(inputs[| dimension_index].type == VALUE_TYPE.surface) {
 					if(is_surface(surf)) {
-						_sw = surface_get_width(surf);
-						_sh = surface_get_height(surf);
+						_sw = surface_get_width_safe(surf);
+						_sh = surface_get_height_safe(surf);
 					} else 
 						return noone;
 				} else if(is_array(surf)) {
@@ -128,8 +128,8 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 				var _sw = 1, _sh = 1;
 				if(inputs[| dimension_index].type == VALUE_TYPE.surface) {
 					if(is_surface(surf)) {
-						_sw = surface_get_width(surf);
-						_sh = surface_get_height(surf);
+						_sw = surface_get_width_safe(surf);
+						_sh = surface_get_height_safe(surf);
 					} else 
 						return noone;
 				} else if(is_array(surf)) {

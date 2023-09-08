@@ -801,7 +801,7 @@ function gameframe_caption_get_overlap() {
 	if (window_get_fullscreen() || gameframe_isFullscreen_hx) return 0.;
 	var _h = gameframe_caption_get_height();
 	var _rect = application_get_position();
-	return max(0, _h - _rect[1]) / ((_rect[2] - _rect[0]) / surface_get_width(application_surface));
+	return max(0, _h - _rect[1]) / ((_rect[2] - _rect[0]) / surface_get_width_safe(application_surface));
 }
 
 function gameframe_caption_draw_border_default(__x, __y, __width, __height) {

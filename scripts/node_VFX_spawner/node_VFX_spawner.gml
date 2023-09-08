@@ -102,7 +102,7 @@ function Node_VFX_Spawner(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y
 		
 		var cx = xx + w * _s / 2;
 		var cy = yy + h * _s / 2;
-		var ss = min((w - 8) / surface_get_width(spr), (h - 8) / surface_get_height(spr)) * _s;
+		var ss = min((w - 8) / surface_get_width_safe(spr), (h - 8) / surface_get_height_safe(spr)) * _s;
 		draw_surface_align(spr, cx, cy, ss, fa_center, fa_center);
 	}
 }

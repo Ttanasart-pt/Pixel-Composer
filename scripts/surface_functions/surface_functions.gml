@@ -2,7 +2,7 @@
 function draw_surface_safe(surface, _x = 0, _y = 0) {
 	gml_pragma("forceinline");
 	
-	if(is_struct(surface) && is_instanceof(surface, dynaSurf)) {
+	if(is_struct(surface) && is_instanceof(surface, DynaSurf)) {
 		surface.draw(_x, _y);
 		return;
 	}
@@ -16,7 +16,7 @@ function draw_surface_safe(surface, _x = 0, _y = 0) {
 function draw_surface_stretched_safe(surface, _x, _y, _w, _h) {
 	gml_pragma("forceinline");
 	
-	if(is_struct(surface) && is_instanceof(surface, dynaSurf)) {
+	if(is_struct(surface) && is_instanceof(surface, DynaSurf)) {
 		surface.drawStretch(_x, _y, _w, _h);
 		return;
 	}
@@ -30,7 +30,7 @@ function draw_surface_stretched_safe(surface, _x, _y, _w, _h) {
 function draw_surface_ext_safe(surface, _x, _y, _xs = 1, _ys = 1, _rot = 0, _col = c_white, _alpha = 1) {
 	gml_pragma("forceinline");
 	
-	if(is_struct(surface) && is_instanceof(surface, dynaSurf)) {
+	if(is_struct(surface) && is_instanceof(surface, DynaSurf)) {
 		surface.draw(_x, _y, _xs, _ys, _rot, _col, _alpha);
 		return;
 	}
@@ -44,7 +44,7 @@ function draw_surface_ext_safe(surface, _x, _y, _xs = 1, _ys = 1, _rot = 0, _col
 function draw_surface_tiled_safe(surface, _x, _y) {
 	gml_pragma("forceinline");
 	
-	if(is_struct(surface) && is_instanceof(surface, dynaSurf)) {
+	if(is_struct(surface) && is_instanceof(surface, DynaSurf)) {
 		surface.drawTile(_x, _y);
 		return;
 	}
@@ -58,7 +58,7 @@ function draw_surface_tiled_safe(surface, _x, _y) {
 function draw_surface_tiled_ext_safe(surface, _x, _y, _xs = 1, _ys = 1, _col = c_white, _alpha = 1) {
 	gml_pragma("forceinline");
 	
-	if(is_struct(surface) && is_instanceof(surface, dynaSurf)) {
+	if(is_struct(surface) && is_instanceof(surface, DynaSurf)) {
 		surface.drawTile(_x, _y, _xs, _ys, _col, _alpha);
 		return;
 	}
@@ -72,7 +72,7 @@ function draw_surface_tiled_ext_safe(surface, _x, _y, _xs = 1, _ys = 1, _col = c
 function draw_surface_part_ext_safe(surface, _l, _t, _w, _h, _x, _y, _xs = 1, _ys = 1, _rot = 0, _col = c_white, _alpha = 1) {
 	gml_pragma("forceinline");
 	
-	if(is_struct(surface) && is_instanceof(surface, dynaSurf)) {
+	if(is_struct(surface) && is_instanceof(surface, DynaSurf)) {
 		surface.drawPart(_l, _t, _w, _h, _x, _y, _xs, _ys, _rot, _col, _alpha);
 		return;
 	}
@@ -102,8 +102,8 @@ function surface_save_safe(surface, path) {
 		return;
 	}
 	
-	var w = surface_get_width(surface);
-	var h = surface_get_height(surface);
+	var w = surface_get_width_safe(surface);
+	var h = surface_get_height_safe(surface);
 	var s = surface_create(w, h, surface_rgba8unorm);
 	
 	switch(f) {
@@ -138,18 +138,31 @@ function surface_save_safe(surface, path) {
 	return;
 }
 
+function surface_get_width_safe(s) {
+	gml_pragma("forceinline");
+	
+	return (is_struct(s) && is_instanceof(s, DynaSurf)))? s.getWidth() : surface_get_width(s);
+}
+
+function surface_get_height_safe(s) {
+	gml_pragma("forceinline");
+	
+	return (is_struct(s) && is_instanceof(s, DynaSurf)))? s.getHeight() : surface_get_height(s);
+}
+
 //check
 function is_surface(s) {
 	gml_pragma("forceinline");
 	
 	if(is_undefined(s)) return false;
 	if(is_array(s)) return false;
+	if(is_struct(s) && is_instanceof(s, DynaSurf)) return true;
 	if(!is_real(s)) return false;
 	if(!s) return false;
 	if(!surface_exists(s)) return false;
 	
-	if(surface_get_width(s) <= 0) return false;
-	if(surface_get_height(s) <= 0) return false;
+	if(surface_get_width_safe(s) <= 0) return false;
+	if(surface_get_height_safe(s) <= 0) return false;
 	
 	return true;
 }
@@ -198,7 +211,7 @@ function surface_create_empty(w, h, format = surface_rgba8unorm) {
 function surface_create_size(surface, format = surface_rgba8unorm) {
 	gml_pragma("forceinline");
 	
-	return surface_create_valid(surface_get_width(surface), surface_get_height(surface), format);
+	return surface_create_valid(surface_get_width_safe(surface), surface_get_height_safe(surface), format);
 }
 
 function surface_create_valid(w, h, format = surface_rgba8unorm) {
@@ -267,8 +280,8 @@ function surface_create_from_sprite_ext(spr, ind, format = surface_rgba8unorm) {
 }
 
 function surface_size_lim(surface, width, height) {
-	var sw = surface_get_width(surface);
-	var sh = surface_get_height(surface);
+	var sw = surface_get_width_safe(surface);
+	var sh = surface_get_height_safe(surface);
 	if(sw <= width && sh <= height) return surface;
 	
 	var ss = min(width / sw, height / sh);
@@ -292,8 +305,8 @@ function surface_size_to(surface, width, height, format = noone, skipCheck = fal
 	width  = surface_valid_size(width);
 	height = surface_valid_size(height);
 	
-	var ww = surface_get_width(surface);
-	var hh = surface_get_height(surface);
+	var ww = surface_get_width_safe(surface);
+	var hh = surface_get_height_safe(surface);
 	
 	if(ww == width && hh == height) return surface;
 	//print($"Reset surface {ww}, {width} | {hh}, {height}");
@@ -329,7 +342,7 @@ function surface_clone(surface, source = noone, format = noone) {
 	
 	if(!is_surface(surface)) return noone;
 	
-	source = surface_verify(source, surface_get_width(surface), surface_get_height(surface), format == noone? surface_get_format(surface) : format);
+	source = surface_verify(source, surface_get_width_safe(surface), surface_get_height_safe(surface), format == noone? surface_get_format(surface) : format);
 	
 	surface_set_target(source);
 	DRAW_CLEAR
@@ -369,8 +382,8 @@ function surface_mirror(surf, _h, _v) {
 	surface_set_target(_surf);
 		DRAW_CLEAR
 		
-		var x0 = _h * surface_get_width(_surf);
-		var y0 = _v * surface_get_height(_surf);
+		var x0 = _h * surface_get_width_safe(_surf);
+		var y0 = _v * surface_get_height_safe(_surf);
 		
 		draw_surface_ext(surf, x0, y0, _h * 2 - 1, _v * 2 - 1, 0, c_white, 1);
 	surface_reset_target();
@@ -386,7 +399,7 @@ function surface_copy_size(dest, source, format = noone) {
 	if(!is_surface(dest)) return;
 	if(!is_surface(source)) return;
 	
-	surface_size_to(dest, surface_get_width(source), surface_get_height(source), format);
+	surface_size_to(dest, surface_get_width_safe(source), surface_get_height_safe(source), format);
 	surface_set_target(dest);
 	DRAW_CLEAR
 	surface_reset_target();
@@ -441,12 +454,12 @@ function surface_array_serialize(arr) {
 function __surface_array_serialize(arr) {
 	if(!is_array(arr)) {
 		if(is_surface(arr)) {
-			var buff = buffer_create(surface_get_width(arr) * surface_get_height(arr) * 4, buffer_fixed, 1);
+			var buff = buffer_create(surface_get_width_safe(arr) * surface_get_height_safe(arr) * 4, buffer_fixed, 1);
 			buffer_get_surface(buff, arr, 0);
 			var comp = buffer_compress(buff, 0, buffer_get_size(buff));
 			var enc  = buffer_base64_encode(comp, 0, buffer_get_size(comp));
 			buffer_delete(buff);
-			return { width: surface_get_width(arr), height: surface_get_height(arr), buffer: enc };
+			return { width: surface_get_width_safe(arr), height: surface_get_height_safe(arr), buffer: enc };
 		} else
 			return arr;
 	}
@@ -487,12 +500,12 @@ function __surface_array_deserialize(arr) {
 function surface_encode(surface) {
 	if(!is_surface(surface)) return "";
 	
-	var buff = buffer_create(surface_get_width(surface) * surface_get_height(surface) * 4, buffer_fixed, 1);
+	var buff = buffer_create(surface_get_width_safe(surface) * surface_get_height_safe(surface) * 4, buffer_fixed, 1);
 	buffer_get_surface(buff, surface, 0);
 	var comp = buffer_compress(buff, 0, buffer_get_size(buff));
 	var enc = buffer_base64_encode(comp, 0, buffer_get_size(comp));
 	buffer_delete(buff);
-	var str = { width: surface_get_width(surface), height: surface_get_height(surface), buffer: enc };
+	var str = { width: surface_get_width_safe(surface), height: surface_get_height_safe(surface), buffer: enc };
 	return json_stringify(str);
 }
 
@@ -519,8 +532,8 @@ function surface_format_get_bytes(format) {
 function surface_get_size(surface) {
 	gml_pragma("forceinline");
 	
-	var sw = surface_get_width(surface);
-	var sh = surface_get_height(surface);
+	var sw = surface_get_width_safe(surface);
+	var sh = surface_get_height_safe(surface);
 	var sz = sw * sh * surface_format_get_bytes(surface_get_format(surface));
 	return sz;
 }

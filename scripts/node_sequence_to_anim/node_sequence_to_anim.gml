@@ -58,8 +58,8 @@ function Node_Sequence_Anim(_x, _y, _group = noone) : Node(_x, _y, _group) const
 				
 				var xx = nn * i;
 				
-				var _sw = surface_get_width(s);
-				var _sh = surface_get_height(s);
+				var _sw = surface_get_width_safe(s);
+				var _sh = surface_get_height_safe(s);
 				var _ss = (nn - ui(4)) / max(_sw, _sh);
 				var _sx = xx + nn / 2 - _sw * _ss / 2;
 				var _sy =      nn / 2 - _sh * _ss / 2;

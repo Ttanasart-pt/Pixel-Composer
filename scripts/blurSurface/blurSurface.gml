@@ -13,8 +13,8 @@ function surface_apply_gaussian(surface, size, bg = false, bg_c = c_white, sampl
 	static uni_ovc = shader_get_uniform(sh_blur_gaussian, "overColor");
 	
 	var format = surface_get_format(surface)
-	__blur_hori = surface_verify(__blur_hori, surface_get_width(surface), surface_get_height(surface), format);	
-	__blur_vert = surface_verify(__blur_vert, surface_get_width(surface), surface_get_height(surface), format);	
+	__blur_hori = surface_verify(__blur_hori, surface_get_width_safe(surface), surface_get_height_safe(surface), format);	
+	__blur_vert = surface_verify(__blur_vert, surface_get_width_safe(surface), surface_get_height_safe(surface), format);	
 	
 	#region kernel generation
 		size = max(1, round(size));
@@ -38,7 +38,7 @@ function surface_apply_gaussian(surface, size, bg = false, bg_c = c_white, sampl
 		draw_clear_alpha(bg_c, bg);
 		
 		shader_set(sh_blur_gaussian);
-		shader_set_uniform_f_array_safe(uni_dim, [ surface_get_width(surface), surface_get_height(surface) ]);
+		shader_set_uniform_f_array_safe(uni_dim, [ surface_get_width_safe(surface), surface_get_height_safe(surface) ]);
 		shader_set_uniform_f_array_safe(uni_wei, gau_array);
 		
 		shader_set_uniform_i(uni_bor, sampleMode);

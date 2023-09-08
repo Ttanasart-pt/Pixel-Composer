@@ -15,8 +15,8 @@ function Node_Random_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	
 	function surfaceContentRatio(_surf) {
 		var s     = 0;
-		var _sw   = surface_get_width(_surf);
-		var _sh   = surface_get_height(_surf);
+		var _sw   = surface_get_width_safe(_surf);
+		var _sh   = surface_get_height_safe(_surf);
 		var total = _sw * _sh;
 		var _buff = buffer_create(_sw * _sh * 4, buffer_fixed, 4);
 		buffer_get_surface(_buff, _surf, 0);

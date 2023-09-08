@@ -86,8 +86,8 @@ function Node_Sprite_Stack(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		surface_set_target(_outSurf);
 		DRAW_CLEAR
 			if(is_surface(_in)) {
-				var _ww = surface_get_width(_in);
-				var _hh = surface_get_height(_in);
+				var _ww = surface_get_width_safe(_in);
+				var _hh = surface_get_height_safe(_in);
 				var _po = point_rotate(0, 0, _ww / 2, _hh / 2, _rot);
 				var aa  = _alp;
 				var aa_delta = (1 - aa) / _amo;
@@ -117,8 +117,8 @@ function Node_Sprite_Stack(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 				for(var i = 0; i < _amo; i++) {
 					var index = clamp(i, 0, array_length(_in) - 1);
 					if(is_surface(_in[index])) {
-						var _ww = surface_get_width(_in[index]);
-						var _hh = surface_get_width(_in[index]);
+						var _ww = surface_get_width_safe(_in[index]);
+						var _hh = surface_get_width_safe(_in[index]);
 						var _po = point_rotate(0, 0, _ww / 2, _hh / 2, _rot);
 						_po[0]  += _pos[0];
 						_po[1]  += _pos[1];

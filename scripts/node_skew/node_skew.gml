@@ -39,8 +39,8 @@ function Node_Skew(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	
 	static centerAnchor = function() {
 		if(!is_surface(current_data[0])) return;
-		var ww = surface_get_width(current_data[0]);
-		var hh = surface_get_height(current_data[0]);
+		var ww = surface_get_width_safe(current_data[0]);
+		var hh = surface_get_height_safe(current_data[0]);
 		
 		inputs[| 4].setValue([ww / 2, hh / 2]);
 	}

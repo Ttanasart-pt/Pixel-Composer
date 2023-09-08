@@ -33,8 +33,8 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		.setDisplay(VALUE_DISPLAY.button, [ function() { 
 			var _sur = inputs[| 0].getValue();
 			if(!is_surface(_sur) || _sur == DEF_SURFACE) return;
-			var ww = surface_get_width(_sur);
-			var hh = surface_get_height(_sur);
+			var ww = surface_get_width_safe(_sur);
+			var hh = surface_get_height_safe(_sur);
 		
 			var _size = inputs[| 1].getValue();
 			var _offs = inputs[| 4].getValue();

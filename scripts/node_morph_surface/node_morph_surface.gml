@@ -34,11 +34,11 @@ function Node_Morph_Surface(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		shader_set_interpolation(_data[0]);
 			shader_set_surface("sFrom", sFrom);
 			shader_set_surface("sTo", sTo);
-			shader_set_f("dimension", surface_get_width(sFrom), surface_get_height(sTo));
+			shader_set_f("dimension", surface_get_width_safe(sFrom), surface_get_height_safe(sTo));
 			shader_set_f("amount", amo);
 			shader_set_f("threshold", thres);
 			
-			draw_sprite_stretched(s_fx_pixel, 0, 0, 0, surface_get_width(sFrom), surface_get_height(sTo));
+			draw_sprite_stretched(s_fx_pixel, 0, 0, 0, surface_get_width_safe(sFrom), surface_get_height_safe(sTo));
 		surface_reset_shader();
 		
 		return _outSurf;

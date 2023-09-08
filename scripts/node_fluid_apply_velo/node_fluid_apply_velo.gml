@@ -28,8 +28,8 @@ function Node_Fluid_Apply_Velocity(_x, _y, _group = noone) : Node_Fluid(_x, _y, 
 		var _pos = inputs[| 2].getValue();
 		
 		if(is_surface(_mat)) {
-			var sw = surface_get_width(_mat) * _s;
-			var sh = surface_get_height(_mat) * _s;
+			var sw = surface_get_width_safe(_mat) * _s;
+			var sh = surface_get_height_safe(_mat) * _s;
 			var mx = _x + _pos[0] * _s - sw / 2;
 			var my = _y + _pos[1] * _s - sh / 2;
 			
@@ -52,8 +52,8 @@ function Node_Fluid_Apply_Velocity(_x, _y, _group = noone) : Node_Fluid(_x, _y, 
 		if(!_act) return;
 		if(!is_surface(_mat)) return;
 		
-		var sw = surface_get_width(_mat);
-		var sh = surface_get_height(_mat);
+		var sw = surface_get_width_safe(_mat);
+		var sh = surface_get_height_safe(_mat);
 		
         fd_rectangle_add_velocity_surface(_dom, _mat, _pos[0] - sw / 2, _pos[1] - sh / 2, 1, 1, _vel[0], _vel[1]);
 	}

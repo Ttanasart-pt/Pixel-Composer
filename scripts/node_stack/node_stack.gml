@@ -73,8 +73,8 @@ function Node_Stack(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			
 			for( var j = 0; j < array_length(_surf); j++ ) {
 				if(!is_surface(_surf[j])) continue;
-				var sw = surface_get_width(_surf[j]);
-				var sh = surface_get_height(_surf[j]);
+				var sw = surface_get_width_safe(_surf[j]);
+				var sh = surface_get_height_safe(_surf[j]);
 				
 				if(_axis == 0) {
 					ww += sw + (i > input_fix_len && j == array_length(_surf) - 1) * _spac;
@@ -106,8 +106,8 @@ function Node_Stack(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 				
 				for( var j = 0; j < array_length(_surf); j++ ) {
 					if(!is_surface(_surf[j])) continue;
-					var sw = surface_get_width(_surf[j]);
-					var sh = surface_get_height(_surf[j]);
+					var sw = surface_get_width_safe(_surf[j]);
+					var sh = surface_get_height_safe(_surf[j]);
 					
 					if(_axis == 0) {
 						switch(_alig) {

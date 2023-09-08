@@ -36,8 +36,8 @@ function Node_Scale_Algo(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	static processData = function(_outSurf, _data, _output_index, _array_index) {
 		var inSurf = _data[0];
 		var algo   = _data[1];
-		var ww     = surface_get_width(inSurf);
-		var hh     = surface_get_height(inSurf);
+		var ww     = surface_get_width_safe(inSurf);
+		var hh     = surface_get_height_safe(inSurf);
 		var cDep   = attrDepth();
 		var shader;
 		var sc = 2;

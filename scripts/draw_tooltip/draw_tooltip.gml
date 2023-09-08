@@ -84,8 +84,8 @@ function draw_tooltip_surface_array(surf) {
 		var i = floor(ind / col);
 		var j = safe_mod(ind, col);
 		
-		var sw = surface_get_width(surf[ind]);
-		var sh = surface_get_height(surf[ind]);
+		var sw = surface_get_width_safe(surf[ind]);
+		var sh = surface_get_height_safe(surf[ind]);
 		var ss = nn / max(sw, sh);
 		var cx = mx + ui(8) + j * nn + nn / 2;
 		var cy = my + ui(8) + i * nn + nn / 2;
@@ -103,8 +103,8 @@ function draw_tooltip_surface(surf) {
 	}
 	if(!is_surface(surf)) return;
 	
-	var sw = surface_get_width(surf);
-	var sh = surface_get_height(surf);
+	var sw = surface_get_width_safe(surf);
+	var sh = surface_get_height_safe(surf);
 	
 	var ss = min(ui(128) / sw, ui(128) / sh);
 	
@@ -146,8 +146,8 @@ function draw_tooltip_atlas(atlas) {
 		
 		if(!is_surface(surf)) continue;
 		
-		var sw = surface_get_width(surf);
-		var sh = surface_get_height(surf);
+		var sw = surface_get_width_safe(surf);
+		var sh = surface_get_height_safe(surf);
 	
 		var ss = min(ui(48) / sw, ui(48) / sh);
 		draw_surface_ext_safe(surf, sx, _y, ss, ss);

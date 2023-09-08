@@ -47,8 +47,8 @@ function Node_Shadow(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 			_surf = _surf[preview_index];
 		}
 		
-		var ww = surface_get_width(_surf) * _s;
-		var hh = surface_get_height(_surf) * _s;
+		var ww = surface_get_width_safe(_surf) * _s;
+		var hh = surface_get_height_safe(_surf) * _s;
 		
 		inputs[| 3].drawOverlay(active, _x + ww / 2, _y + hh / 2, _s, _mx, _my, _snx, _sny);
 	}
@@ -60,13 +60,13 @@ function Node_Shadow(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		var _border = _data[4];
 		var _size   = _data[5];
 		
-		var pass1   = surface_create_valid(surface_get_width(_outSurf), surface_get_height(_outSurf), attrDepth());	
+		var pass1   = surface_create_valid(surface_get_width_safe(_outSurf), surface_get_height_safe(_outSurf), attrDepth());	
 		
 		surface_set_target(pass1);
 		DRAW_CLEAR
 		BLEND_OVERRIDE;
 			shader_set(shader);
-				shader_set_uniform_f_array_safe(uniform_dim,  [ surface_get_width(_outSurf), surface_get_height(_outSurf) ]);
+				shader_set_uniform_f_array_safe(uniform_dim,  [ surface_get_width_safe(_outSurf), surface_get_height_safe(_outSurf) ]);
 				shader_set_uniform_f(uniform_size, _border);
 				shader_set_uniform_f_array_safe(uniform_colr, [1., 1., 1., 1.0]);
 				

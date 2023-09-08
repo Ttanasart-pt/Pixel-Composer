@@ -34,8 +34,8 @@ function Node_Blur_Directional(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 			_surf = _surf[preview_index];
 		}
 		
-		var ww = surface_get_width(_surf);
-		var hh = surface_get_height(_surf);
+		var ww = surface_get_width_safe(_surf);
+		var hh = surface_get_height_safe(_surf);
 		
 		inputs[| 2].drawOverlay(active, _x + ww / 2 * _s, _y + hh / 2 * _s, _s, _mx, _my, _snx, _sny);
 	}
@@ -47,7 +47,7 @@ function Node_Blur_Directional(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 		var _mix  = _data[4];
 		
 		surface_set_shader(_outSurf, sh_blur_directional);
-			shader_set_f("size", max(surface_get_width(_data[0]), surface_get_height( _data[1])));
+			shader_set_f("size", max(surface_get_width_safe(_data[0]), surface_get_height_safe( _data[1])));
 			shader_set_f("strength", _str);
 			shader_set_f("direction", _dir + 90);
 			shader_set_i("sampleMode",	struct_try_get(attributes, "oversample"));

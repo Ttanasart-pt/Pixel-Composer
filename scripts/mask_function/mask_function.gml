@@ -14,7 +14,7 @@ function mask_apply(original, edited, mask, mix = 1) {
 			
 		shader_set_uniform_f(shader_get_uniform(sh_mask, "mixRatio"), mix);
 		
-		draw_sprite_stretched(s_fx_pixel, 0, 0, 0, surface_get_width(original), surface_get_height(original));
+		draw_sprite_stretched(s_fx_pixel, 0, 0, 0, surface_get_width_safe(original), surface_get_height_safe(original));
 	shader_reset();
 	surface_reset_target();
 	

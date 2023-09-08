@@ -55,7 +55,7 @@ function Node_Crop_Content(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		for( var j = 0; j < array_length(_inSurf); j++ ) {
 			var _surf = _inSurf[j];
 			
-			var _dim = [ surface_get_width(_surf), surface_get_height(_surf) ]; 
+			var _dim = [ surface_get_width_safe(_surf), surface_get_height_safe(_surf) ]; 
 			var s = surface_create(_dim[0], _dim[1], surface_r8unorm);
 			surface_set_target(s);
 				DRAW_CLEAR

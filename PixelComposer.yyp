@@ -1117,6 +1117,7 @@
     {"id":{"name":"surface_valid","path":"scripts/surface_valid/surface_valid.yy",},},
     {"id":{"name":"steam_ugc_collection","path":"scripts/steam_ugc_collection/steam_ugc_collection.yy",},},
     {"id":{"name":"sh_blur_zoom","path":"shaders/sh_blur_zoom/sh_blur_zoom.yy",},},
+    {"id":{"name":"node_isosurf","path":"scripts/node_isosurf/node_isosurf.yy",},},
     {"id":{"name":"node_VFX_renderer","path":"scripts/node_VFX_renderer/node_VFX_renderer.yy",},},
     {"id":{"name":"s_node_pb_fx_stack","path":"sprites/s_node_pb_fx_stack/s_node_pb_fx_stack.yy",},},
     {"id":{"name":"fd_draw_sprite_to_collision_mask_surface","path":"scripts/fd_draw_sprite_to_collision_mask_surface/fd_draw_sprite_to_collision_mask_surface.yy",},},

@@ -34,7 +34,7 @@ function Node_Time_Remap(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		var _loop    = inputs[| 3].getValue();
 		
 		var _surf  = outputs[| 0].getValue();
-		_surf = surface_verify(_surf, surface_get_width(_inSurf), surface_get_height(_inSurf), attrDepth());
+		_surf = surface_verify(_surf, surface_get_width_safe(_inSurf), surface_get_height_safe(_inSurf), attrDepth());
 		outputs[| 0].setValue(_surf);
 		
 		var ste = 1 / _life;

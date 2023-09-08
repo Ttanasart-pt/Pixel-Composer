@@ -27,7 +27,7 @@ function Node_9Slice(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		if(index == 0) {
 			var s = inputs[| 0].getValue();
 			if(is_array(s)) s = s[0];
-			inputs[| 1].setValue([surface_get_width(s), surface_get_height(s)]);	
+			inputs[| 1].setValue([surface_get_width_safe(s), surface_get_height_safe(s)]);	
 		}
 	}
 	
@@ -123,8 +123,8 @@ function Node_9Slice(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		shader_set_interpolation(_inSurf);
 			var ww   = _dim[0];
 			var hh   = _dim[1];
-			var in_w = surface_get_width(_inSurf);
-			var in_h = surface_get_height(_inSurf);
+			var in_w = surface_get_width_safe(_inSurf);
+			var in_h = surface_get_height_safe(_inSurf);
 			var sp_r = _splice[0];
 			var sp_t = _splice[1];
 			var sp_l = _splice[2];

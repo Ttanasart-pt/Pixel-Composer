@@ -14,11 +14,11 @@ function Node_PB_Fx(_x, _y, _group = noone) : Node_PB(_x, _y, _group) constructo
 																												\
 			var _pbox = new __pbBox();																			\
 																												\
-			_pbox.w = surface_get_width(_surf);																	\
-			_pbox.h = surface_get_height(_surf);																\
+			_pbox.w = surface_get_width_safe(_surf);																	\
+			_pbox.h = surface_get_height_safe(_surf);																\
 																												\
-			_pbox.layer_w = surface_get_width(_surf);															\
-			_pbox.layer_h = surface_get_height(_surf);															\
+			_pbox.layer_w = surface_get_width_safe(_surf);															\
+			_pbox.layer_h = surface_get_height_safe(_surf);															\
 																												\
 			_pbox.mask = surface_create(_pbox.w, _pbox.h);														\
 			surface_set_shader(_pbox.mask, sh_pb_to_mask);														\

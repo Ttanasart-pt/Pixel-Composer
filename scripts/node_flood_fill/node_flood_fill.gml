@@ -56,8 +56,8 @@ function Node_Flood_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		
 		var _filC = surface_get_pixel_ext(inSurf, _pos[0], _pos[1]);
 		
-		var sw = surface_get_width(inSurf);
-		var sh = surface_get_height(inSurf);
+		var sw = surface_get_width_safe(inSurf);
+		var sh = surface_get_height_safe(inSurf);
 		
 		for( var i = 0, n = array_length(temp_surface); i < n; i++ )
 			temp_surface[i] = surface_verify(temp_surface[i], sw, sh, attrDepth());

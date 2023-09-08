@@ -37,7 +37,7 @@ function Node_Blur_Bokeh(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 			BLEND_OVERRIDE;
 			
 			shader_set(shader);
-			shader_set_uniform_f(uniform_dim, surface_get_width(_data[0]), surface_get_height(_data[0]));
+			shader_set_uniform_f(uniform_dim, surface_get_width_safe(_data[0]), surface_get_height_safe(_data[0]));
 			shader_set_uniform_f(uniform_str, _str);
 			draw_surface_safe(_data[0], 0, 0);
 			shader_reset();

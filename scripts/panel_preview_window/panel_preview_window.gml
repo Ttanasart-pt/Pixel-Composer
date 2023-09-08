@@ -78,8 +78,8 @@ function Panel_Preview_Window() : PanelContent() constructor {
 		
 			for( var i = 0, n = array_length(surf); i < n; i++ ) {
 				var s  = surf[i];
-				var sw = surface_get_width(s);
-				var sh = surface_get_height(s);
+				var sw = surface_get_width_safe(s);
+				var sh = surface_get_height_safe(s);
 				if(scale == 0)
 					scale = min(w / sw, h / sh);
 				var sx = dx + w / 2 - (sw * scale) / 2 + panx;

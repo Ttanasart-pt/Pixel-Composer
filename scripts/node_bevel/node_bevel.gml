@@ -49,8 +49,8 @@ function Node_Bevel(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		var _surf = current_data[0];
 		if(!is_surface(_surf)) return;
 		
-		var _pw = surface_get_width(_surf) * _s / 2;
-		var _ph = surface_get_height(_surf) * _s / 2;
+		var _pw = surface_get_width_safe(_surf) * _s / 2;
+		var _ph = surface_get_height_safe(_surf) * _s / 2;
 		
 		inputs[| 2].drawOverlay(active, _x + _pw, _y + _ph, _s, _mx, _my, _snx, _sny);
 	}
@@ -67,7 +67,7 @@ function Node_Bevel(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 			shader_set_uniform_f_array_safe(uniform_shf, _shf);
 			shader_set_uniform_f_array_safe(uniform_sca, _sca);
 			shader_set_uniform_i(uniform_slp, _slp);
-			shader_set_uniform_f_array_safe(uniform_dim, [ surface_get_width(_data[0]), surface_get_height(_data[0]) ]);
+			shader_set_uniform_f_array_safe(uniform_dim, [ surface_get_width_safe(_data[0]), surface_get_height_safe(_data[0]) ]);
 			shader_set_uniform_i(uniform_sam, _sam);
 			
 			draw_surface_safe(_data[0], 0, 0);

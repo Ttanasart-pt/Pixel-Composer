@@ -44,7 +44,7 @@ function Node_Bloom(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		var _tole = _data[2];
 		var _stre = _data[3];
 		var _mask = _data[4];
-		var pass1 = surface_create_valid(surface_get_width(_outSurf), surface_get_height(_outSurf), attrDepth());	
+		var pass1 = surface_create_valid(surface_get_width_safe(_outSurf), surface_get_height_safe(_outSurf), attrDepth());	
 		
 		surface_set_target(pass1);
 		draw_clear_alpha(c_black, 1);

@@ -30,7 +30,7 @@ function Node_Solid(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		
 		inputs[| 4].setVisible(is_surface(_msk));
 		if(is_surface(_msk) && _msd)
-			_dim = [ surface_get_width(_msk), surface_get_height(_msk) ];
+			_dim = [ surface_get_width_safe(_msk), surface_get_height_safe(_msk) ];
 		
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
 		

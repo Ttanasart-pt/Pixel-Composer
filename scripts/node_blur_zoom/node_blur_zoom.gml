@@ -52,8 +52,8 @@ function Node_Blur_Zoom(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		var _msk = _data[5];
 		var _mask = _data[6];
 		var _mix  = _data[7];
-		_cen[0] /= surface_get_width(_outSurf);
-		_cen[1] /= surface_get_height(_outSurf);
+		_cen[0] /= surface_get_width_safe(_outSurf);
+		_cen[1] /= surface_get_height_safe(_outSurf);
 		
 		surface_set_shader(_outSurf, sh_blur_zoom);
 			shader_set_f("strength", _str);

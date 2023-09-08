@@ -43,7 +43,7 @@ function Node_Shadow_Cast(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 			if(!is_surface(_surf))
 				return [1, 1];
 			
-			return [surface_get_width(_surf), surface_get_height(_surf)];
+			return [surface_get_width_safe(_surf), surface_get_height_safe(_surf)];
 		}, VALUE_UNIT.reference);
 		
 	inputs[| 3] = nodeValue("Soft light radius", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
@@ -143,7 +143,7 @@ function Node_Shadow_Cast(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		BLEND_OVERRIDE;
 		
 		shader_set(shader);
-			shader_set_uniform_f(uniform_dim, surface_get_width(_bg), surface_get_height(_bg));
+			shader_set_uniform_f(uniform_dim, surface_get_width_safe(_bg), surface_get_height_safe(_bg));
 			shader_set_uniform_f_array_safe(uniform_lpos, _pos);
 			shader_set_uniform_f_array_safe(uniform_lamb, colToVec4(_lamb));
 			shader_set_uniform_f_array_safe(uniform_lclr, colToVec4(_lclr));

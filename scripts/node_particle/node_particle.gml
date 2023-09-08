@@ -87,8 +87,8 @@ function Node_Particle(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y, _
 			else if(_blend == PARTICLE_BLEND_MODE.additive) 
 				BLEND_ADD;
 			
-			var surf_w = surface_get_width(_outSurf);
-			var surf_h = surface_get_height(_outSurf);
+			var surf_w = surface_get_width_safe(_outSurf);
+			var surf_h = surface_get_height_safe(_outSurf);
 			
 			for(var i = 0; i < attributes.part_amount; i++)
 				parts[i].draw(_exact, surf_w, surf_h);

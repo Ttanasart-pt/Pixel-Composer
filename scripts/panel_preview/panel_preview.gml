@@ -326,8 +326,8 @@ function Panel_Preview() : PanelContent() constructor {
 		
 		var prevS = getNodePreviewSurface();
 		if(is_surface(prevS)) {
-			canvas_w = surface_get_width(prevS);
-			canvas_h = surface_get_height(prevS);	
+			canvas_w = surface_get_width_safe(prevS);
+			canvas_h = surface_get_height_safe(prevS);	
 		}
 	} #endregion
 	
@@ -603,8 +603,8 @@ function Panel_Preview() : PanelContent() constructor {
 			psx = canvas_x + preview_node[0].preview_x * ss;
 			psy = canvas_y + preview_node[0].preview_y * ss;
 			
-			psw = surface_get_width(preview_surface[0]);
-			psh = surface_get_height(preview_surface[0]);
+			psw = surface_get_width_safe(preview_surface[0]);
+			psh = surface_get_height_safe(preview_surface[0]);
 			pswd = psw * ss;
 			pshd = psh * ss;
 			
@@ -616,8 +616,8 @@ function Panel_Preview() : PanelContent() constructor {
 			var ssx = canvas_x + preview_node[1].preview_x * ss;
 			var ssy = canvas_y + preview_node[1].preview_y * ss;
 			
-			var ssw = surface_get_width(preview_surface[1]);
-			var ssh = surface_get_height(preview_surface[1]);
+			var ssw = surface_get_width_safe(preview_surface[1]);
+			var ssh = surface_get_height_safe(preview_surface[1]);
 		}
 		
 		var _node = getNodePreview();
@@ -642,7 +642,7 @@ function Panel_Preview() : PanelContent() constructor {
 					
 					switch(tileMode) {
 						case 1 : 
-							tile_surface = surface_verify(tile_surface, w, surface_get_height(preview_surface[0]) * ss);
+							tile_surface = surface_verify(tile_surface, w, surface_get_height_safe(preview_surface[0]) * ss);
 							surface_set_target(tile_surface);
 								DRAW_CLEAR
 								draw_surface_tiled_ext_safe(preview_surface[0], psx, 0, ss, ss, c_white, 1); 
@@ -650,7 +650,7 @@ function Panel_Preview() : PanelContent() constructor {
 							draw_surface_safe(tile_surface, 0, psy);
 							break;
 						case 2 : 
-							tile_surface = surface_verify(tile_surface, surface_get_width(preview_surface[0]) * ss, h);
+							tile_surface = surface_verify(tile_surface, surface_get_width_safe(preview_surface[0]) * ss, h);
 							surface_set_target(tile_surface);
 								DRAW_CLEAR
 								draw_surface_tiled_ext_safe(preview_surface[0], 0, psy, ss, ss, c_white, 1); 
@@ -1024,8 +1024,8 @@ function Panel_Preview() : PanelContent() constructor {
 				prev = prev.surface;
 			if(!is_surface(prev)) continue;
 				
-			var prev_w = surface_get_width(prev);
-			var prev_h = surface_get_height(prev);
+			var prev_w = surface_get_width_safe(prev);
+			var prev_h = surface_get_height_safe(prev);
 			var ss     = prev_size / max(prev_w, prev_h);
 			var prev_sw = prev_w * ss;
 			
@@ -1460,8 +1460,8 @@ function Panel_Preview() : PanelContent() constructor {
 		var prevS = getNodePreviewSurface();
 		if(!is_surface(prevS)) return;
 		
-		var buff = buffer_create(surface_get_width(prevS) * surface_get_height(prevS) * 4, buffer_fixed, 1);
-		var s = surface_create(surface_get_width(prevS), surface_get_height(prevS));
+		var buff = buffer_create(surface_get_width_safe(prevS) * surface_get_height_safe(prevS) * 4, buffer_fixed, 1);
+		var s = surface_create(surface_get_width_safe(prevS), surface_get_height_safe(prevS));
 		
 		surface_set_target(s);
 			shader_set(sh_BGR);
@@ -1472,7 +1472,7 @@ function Panel_Preview() : PanelContent() constructor {
 		buffer_get_surface(buff, s, 0);
 		surface_free(s);
 		
-		clipboard_set_bitmap(buffer_get_address(buff), surface_get_width(prevS), surface_get_height(prevS));
+		clipboard_set_bitmap(buffer_get_address(buff), surface_get_width_safe(prevS), surface_get_height_safe(prevS));
 	} #endregion
 	
 	function saveCurrentFrame() { #region

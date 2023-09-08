@@ -129,8 +129,8 @@ function __Node_3D_Extrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		var _smt = getSingleValue(19, index);
 		
 		if(!is_surface(_ins)) return noone;
-		var ww = surface_get_width(_ins);
-		var hh = surface_get_height(_ins);
+		var ww = surface_get_width_safe(_ins);
+		var hh = surface_get_height_safe(_ins);
 		
 		var tw = 1 / ww;
 		var th = 1 / hh;
@@ -159,8 +159,8 @@ function __Node_3D_Extrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		}
 		
 		if(useH) {
-			var hgw = surface_get_width(_hei);
-			var hgh = surface_get_height(_hei);
+			var hgw = surface_get_width_safe(_hei);
+			var hgh = surface_get_height_safe(_hei);
 			var hgtW = hgw / ww;
 			var hgtH = hgh / hh;
 			
@@ -479,8 +479,8 @@ function __Node_3D_Extrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		var _cam	   = new __3d_camera(_proj, _fov);
 			
 		if(_smt) {
-			var ww = surface_get_width(_ins);
-			var hh = surface_get_height(_ins);
+			var ww = surface_get_width_safe(_ins);
+			var hh = surface_get_height_safe(_ins);
 			
 			var ts = surface_create(ww, hh);
 			surface_set_shader(ts, sh_3d_extrude_corner);

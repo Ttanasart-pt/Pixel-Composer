@@ -203,8 +203,8 @@ function Node_Warp_Perspective(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 		var Tbl = _data[8];
 		var Tbr = _data[9];
 		
-		var sw = surface_get_width(_data[0]);
-		var sh = surface_get_height(_data[0]);
+		var sw = surface_get_width_safe(_data[0]);
+		var sh = surface_get_height_safe(_data[0]);
 		
 		surface_set_shader(_outSurf, sh_warp_4points_pers);
 		shader_set_interpolation(_data[0]);

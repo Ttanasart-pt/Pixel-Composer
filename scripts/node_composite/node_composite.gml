@@ -120,8 +120,8 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			var _sy1 = _sy0 + ssh;
 			draw_rectangle(_sx0, _sy0, _sx1, _sy1, true);
 			
-			var _ssw = surface_get_width(_surf);
-			var _ssh = surface_get_height(_surf);
+			var _ssw = surface_get_width_safe(_surf);
+			var _ssh = surface_get_height_safe(_surf);
 			var _sss = min(ssh / _ssw, ssh / _ssh);
 			draw_surface_ext_safe(_surf, _sx0, _sy0, _sss, _sss, 0, c_white, 1);
 			
@@ -496,8 +496,8 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				
 				if(key_mod_press(ALT)) {
 					var _surf = current_data[input_dragging - 1];
-					var _sw = surface_get_width(_surf);
-					var _sh = surface_get_height(_surf);
+					var _sw = surface_get_width_safe(_surf);
+					var _sh = surface_get_height_safe(_surf);
 					
 					var x0 = pos_x, x1 = pos_x + _sw;
 					var y0 = pos_y, y1 = pos_y + _sh;
@@ -554,8 +554,8 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			} else if(drag_type == NODE_COMPOSE_DRAG.scale) {
 				var _surf = inputs[| surf_dragging + 0].getValue();
 				var _rot  = inputs[| surf_dragging + 2].getValue();
-				var _sw = surface_get_width(_surf);
-				var _sh = surface_get_height(_surf);
+				var _sw = surface_get_width_safe(_surf);
+				var _sh = surface_get_height_safe(_surf);
 				
 				var _p = point_rotate(_mx - dragging_mx, _my - dragging_my, 0, 0, -_rot);
 				var sca_x = _p[0] / _s / _sw * 2;
@@ -599,8 +599,8 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			
 			if(!_surf || is_array(_surf)) continue;
 			
-			var _ww = surface_get_width(_surf);
-			var _hh = surface_get_height(_surf);
+			var _ww = surface_get_width_safe(_surf);
+			var _hh = surface_get_height_safe(_surf);
 			var _sw = _ww * _sca[0];
 			var _sh = _hh * _sca[1];
 			
@@ -757,14 +757,14 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		
 		switch(_dim_type) {
 			case COMPOSE_OUTPUT_SCALING.first :
-				ww = surface_get_width(base);
-				hh = surface_get_height(base);
+				ww = surface_get_width_safe(base);
+				hh = surface_get_height_safe(base);
 				break;
 			case COMPOSE_OUTPUT_SCALING.largest :
 				for(var i = input_fix_len; i < array_length(_data) - data_length; i += data_length) {
 					var _s = _data[i];
-					ww = max(ww, surface_get_width(_s));
-					hh = max(hh, surface_get_height(_s));
+					ww = max(ww, surface_get_width_safe(_s));
+					hh = max(hh, surface_get_height_safe(_s));
 				}
 				break;
 			case COMPOSE_OUTPUT_SCALING.constant :	
@@ -800,8 +800,8 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			
 			if(!_s || is_array(_s)) continue;
 			
-			var _ww = surface_get_width(_s);
-			var _hh = surface_get_height(_s);
+			var _ww = surface_get_width_safe(_s);
+			var _hh = surface_get_height_safe(_s);
 			var _sw = _ww * _sca[0];
 			var _sh = _hh * _sca[1];
 			

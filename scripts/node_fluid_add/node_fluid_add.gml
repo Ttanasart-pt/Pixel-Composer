@@ -33,8 +33,8 @@ function Node_Fluid_Add(_x, _y, _group = noone) : Node_Fluid(_x, _y, _group) con
 		var _pos = inputs[| 2].getValue();
 		
 		if(is_surface(_mat)) {
-			var sw = surface_get_width(_mat) * _s;
-			var sh = surface_get_height(_mat) * _s;
+			var sw = surface_get_width_safe(_mat) * _s;
+			var sh = surface_get_height_safe(_mat) * _s;
 			var mx = _x + _pos[0] * _s - sw / 2;
 			var my = _y + _pos[1] * _s - sh / 2;
 			
@@ -60,8 +60,8 @@ function Node_Fluid_Add(_x, _y, _group = noone) : Node_Fluid(_x, _y, _group) con
 		if(!_act) return;
 		if(!is_surface(_mat)) return;
 		
-		var sw = surface_get_width(_mat);
-		var sh = surface_get_height(_mat);
+		var sw = surface_get_width_safe(_mat);
+		var sh = surface_get_height_safe(_mat);
 		
 		if(_prevPos != noone && _inh != 0) {
 			var dx = _pos[0] - _prevPos[0];

@@ -106,7 +106,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		
 		if(!is_surface(canvas_surface)) {
 			canvas_surface = surface_create_from_buffer(_dim[0], _dim[1], canvas_buffer);
-		} else if(surface_get_width(canvas_surface) != _dim[0] || surface_get_height(canvas_surface) != _dim[1]) {
+		} else if(surface_get_width_safe(canvas_surface) != _dim[0] || surface_get_height_safe(canvas_surface) != _dim[1]) {
 			buffer_delete(canvas_buffer);
 			canvas_buffer  = buffer_create(_dim[0] * _dim[1] * 4, buffer_fixed, 4);
 			canvas_surface = surface_size_to(canvas_surface, _dim[0], _dim[1]);
@@ -119,8 +119,8 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	function surface_store_buffer() {
 		buffer_delete(canvas_buffer);
 		
-		surface_w = surface_get_width(canvas_surface);
-		surface_h = surface_get_height(canvas_surface);
+		surface_w = surface_get_width_safe(canvas_surface);
+		surface_h = surface_get_height_safe(canvas_surface);
 		canvas_buffer = buffer_create(surface_w * surface_h * 4, buffer_fixed, 4);
 		buffer_get_surface(canvas_buffer, canvas_surface, 0);
 		
@@ -163,8 +163,8 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			} else
 				draw_circle_prec(_x, _y, _siz / 2, 0);
 		} else {
-			var _sw = surface_get_width(_brush);
-			var _sh = surface_get_height(_brush);
+			var _sw = surface_get_width_safe(_brush);
+			var _sh = surface_get_height_safe(_brush);
 			
 			draw_surface_ext_safe(_brush, _x - floor(_sw / 2), _y - floor(_sh / 2), 1, 1, 0, draw_get_color(), draw_get_alpha());
 		}
@@ -377,8 +377,8 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	function canvas_fill(_x, _y, _surf, _thres) { #region
 		var _alp = inputs[| 11].getValue();
 		
-		var w = surface_get_width(_surf);
-		var h = surface_get_height(_surf);
+		var w = surface_get_width_safe(_surf);
+		var h = surface_get_height_safe(_surf);
 		
 		var _c1 = get_color_buffer(_x, _y);
 		var thr = _thres * _thres;
@@ -425,8 +425,8 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		if(!surface_exists(canvas_surface)) 
 			surface_store_buffer();
 			
-		var _surf_w		= surface_get_width(canvas_surface);
-		var _surf_h		= surface_get_height(canvas_surface);
+		var _surf_w		= surface_get_width_safe(canvas_surface);
+		var _surf_h		= surface_get_height_safe(canvas_surface);
 		
 		#region drawing surface review
 			_drawing_surface = surface_verify(_drawing_surface, _surf_w, _surf_h);
@@ -474,8 +474,8 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 					if(mouse_press(mb_left, active)) {
 						var pos_x = selection_position[0];
 						var pos_y = selection_position[1];
-						var sel_w = surface_get_width(selection_surface);
-						var sel_h = surface_get_height(selection_surface);
+						var sel_w = surface_get_width_safe(selection_surface);
+						var sel_h = surface_get_height_safe(selection_surface);
 						
 						if(point_in_rectangle(mouse_cur_x, mouse_cur_y, pos_x, pos_y, pos_x + sel_w, pos_y + sel_h)) {
 							is_select_drag = true;
@@ -683,7 +683,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			
 			prev_surface 		  = surface_verify(prev_surface,		  _dim[0], _dim[1]);
 			preview_draw_surface  = surface_verify(preview_draw_surface,  _dim[0], _dim[1]);
-			_preview_draw_surface = surface_verify(_preview_draw_surface, surface_get_width(__s), surface_get_height(__s));
+			_preview_draw_surface = surface_verify(_preview_draw_surface, surface_get_width_safe(__s), surface_get_height_safe(__s));
 			
 			surface_set_shader(preview_draw_surface, noone,, BLEND.alpha);
 				draw_surface_safe(_drawing_surface, 0, 0);
@@ -723,8 +723,8 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 					if(is_selected) {
 						var pos_x = _x + selection_position[0] * _s;
 						var pos_y = _y + selection_position[1] * _s;
-						var sel_w = surface_get_width(selection_surface)  * _s;
-						var sel_h = surface_get_height(selection_surface) * _s;
+						var sel_w = surface_get_width_safe(selection_surface)  * _s;
+						var sel_h = surface_get_height_safe(selection_surface) * _s;
 						
 						draw_set_color(c_white);
 						draw_rectangle_dashed(pos_x, pos_y, pos_x + sel_w, pos_y + sel_h, true, 4);
@@ -743,7 +743,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				surface_reset_target();
 				
 				shader_set(sh_brush_outline);
-					shader_set_f("dimension", surface_get_width(_preview_draw_surface), surface_get_height(_preview_draw_surface));
+					shader_set_f("dimension", surface_get_width_safe(_preview_draw_surface), surface_get_height_safe(_preview_draw_surface));
 					draw_surface_ext_safe(_preview_draw_surface, 0, 0, 1, 1, 0, c_white, 1);
 				shader_reset();
 			}

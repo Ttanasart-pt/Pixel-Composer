@@ -36,8 +36,8 @@ function Node_Region_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		var _fill = _data[3];
 		var _seed = _data[4];
 		
-		var _sw   = surface_get_width(_surf);
-		var _sh   = surface_get_height(_surf)
+		var _sw   = surface_get_width_safe(_surf);
+		var _sh   = surface_get_height_safe(_surf)
 		
 		temp_surface[0] = surface_verify(temp_surface[0], _sw, _sh); 
 		temp_surface[1] = surface_verify(temp_surface[1], _sw, _sh);

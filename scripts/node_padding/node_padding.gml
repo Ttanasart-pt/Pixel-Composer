@@ -63,8 +63,8 @@ function Node_Padding(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		
 		inputs[| 3].setVisible(fill);
 		
-		var ww	= surface_get_width(_data[0]);
-		var hh	= surface_get_height(_data[0]);
+		var ww	= surface_get_width_safe(_data[0]);
+		var hh	= surface_get_height_safe(_data[0]);
 		
 		if(mode == 0) {
 			var sw	= ww + padding[0] + padding[2];

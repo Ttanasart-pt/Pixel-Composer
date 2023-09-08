@@ -69,7 +69,7 @@ function Node_Normal_Light(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		
 		texture_set_stage(uniform_map, surface_get_texture(_map));
 		shader_set_uniform_f(uniform_hei, _hei);
-		shader_set_uniform_f_array_safe(uniform_dim, [ surface_get_width(_data[0]), surface_get_height(_data[0]) ]);
+		shader_set_uniform_f_array_safe(uniform_dim, [ surface_get_width_safe(_data[0]), surface_get_height_safe(_data[0]) ]);
 		shader_set_uniform_f_array_safe(uniform_amb, [color_get_red(_amb) / 255, color_get_green(_amb) / 255, color_get_blue(_amb) / 255]);
 			
 		shader_set_uniform_f_array_safe(uniform_light_pos, [ _light_pos[0], _light_pos[1], _light_pos[2] / 100, _light_ran ] );

@@ -52,6 +52,8 @@ enum VALUE_TYPE {
 	d3Scene	  = 29,
 	d3Material = 30,
 	
+	dynaSurf  = 31,
+	
 	action	  = 99,
 }
 
@@ -158,6 +160,7 @@ function value_color(i) { #region
 		$ffa64d, //d3Camera
 		$ffa64d, //d3Scene	
 		$976bff, //d3Material
+		$976bff, //dynaSurf
 	];
 	
 	if(i == 99) return $5dde8f;
@@ -171,6 +174,7 @@ function value_bit(i) { #region
 		case VALUE_TYPE.boolean		: return 1 << 3 | 1 << 1;
 		case VALUE_TYPE.color		: return 1 << 4;
 		case VALUE_TYPE.gradient	: return 1 << 25;
+		case VALUE_TYPE.dynaSurf	: 
 		case VALUE_TYPE.surface		: return 1 << 5;
 		case VALUE_TYPE.path		: return 1 << 10;
 		case VALUE_TYPE.text		: return 1 << 10;
@@ -1264,7 +1268,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				for( var i = 0, n = array_length(val); i < n; i++ ) {
 					if(!is_surface(val[i])) continue;
 					
-					var surfSz = [ surface_get_width(val[i]), surface_get_height(val[i]) ];
+					var surfSz = [ surface_get_width_safe(val[i]), surface_get_height_safe(val[i]) ];
 					array_push(sArr, surfSz);
 					
 					if(i && !array_equals(surfSz, _osZ))
@@ -1276,7 +1280,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				if(eqSize) return _osZ;
 				return sArr;
 			} else if (is_surface(val)) 
-				return [ surface_get_width(val), surface_get_height(val) ];
+				return [ surface_get_width_safe(val), surface_get_height_safe(val) ];
 			return [1, 1];
 		} 
 		

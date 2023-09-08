@@ -46,7 +46,7 @@ function Node_Onion_Skin(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		cacheCurrentFrame(_surf);
 		
 		var _outSurf = outputs[| 0].getValue();
-		_outSurf = surface_verify(_outSurf, surface_get_width(_surf), surface_get_height(_surf));
+		_outSurf = surface_verify(_outSurf, surface_get_width_safe(_surf), surface_get_height_safe(_surf));
 		outputs[| 0].setValue(_outSurf);
 		
 		surface_set_target(_outSurf);
