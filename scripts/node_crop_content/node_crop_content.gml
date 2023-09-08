@@ -76,7 +76,7 @@ function Node_Crop_Content(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 				surface_set_target(temp_surface[0]);
 					DRAW_CLEAR
 					BLEND_OVERRIDE;
-					draw_surface(s, 0, 0);
+					draw_surface_safe(s, 0, 0);
 					BLEND_NORMAL;
 				surface_reset_target();
 				

@@ -76,7 +76,7 @@ function Node_PB_Box_Split(_x, _y, _group = noone) : Node_PB_Box(_x, _y, _group)
 					_nbox.mask = surface_verify(_nbox.mask, _nbox.w, _nbox.h);
 					surface_set_target(_nbox.mask);
 						DRAW_CLEAR
-						draw_surface(_pbox.mask, 0, 0);
+						draw_surface_safe(_pbox.mask, 0, 0);
 					surface_reset_target();
 				}
 				
@@ -84,7 +84,7 @@ function Node_PB_Box_Split(_x, _y, _group = noone) : Node_PB_Box(_x, _y, _group)
 					_nbox.content = surface_verify(_nbox.content, _nbox.w, _nbox.h);
 					surface_set_target(_nbox.content);
 						DRAW_CLEAR
-						draw_surface(_pbox.content, 0, 0);
+						draw_surface_safe(_pbox.content, 0, 0);
 					surface_reset_target();
 				}
 			} else if(_output_index == 1) {
@@ -101,9 +101,9 @@ function Node_PB_Box_Split(_x, _y, _group = noone) : Node_PB_Box(_x, _y, _group)
 					surface_set_target(_nbox.mask);
 						DRAW_CLEAR
 						if(_mirr) 
-							draw_surface_ext(_pbox.mask, _nbox.w + shf, 0, -1, 1, 0, c_white, 1);
+							draw_surface_ext_safe(_pbox.mask, _nbox.w + shf, 0, -1, 1, 0, c_white, 1);
 						else 
-							draw_surface(_pbox.mask, -shf, 0);
+							draw_surface_safe(_pbox.mask, -shf, 0);
 					surface_reset_target();
 				}
 				
@@ -112,9 +112,9 @@ function Node_PB_Box_Split(_x, _y, _group = noone) : Node_PB_Box(_x, _y, _group)
 					surface_set_target(_nbox.content);
 						DRAW_CLEAR
 						if(_mirr) 
-							draw_surface_ext(_pbox.content, _nbox.w + shf, 0, -1, 1, 0, c_white, 1);
+							draw_surface_ext_safe(_pbox.content, _nbox.w + shf, 0, -1, 1, 0, c_white, 1);
 						else 
-							draw_surface(_pbox.content, -shf, 0);
+							draw_surface_safe(_pbox.content, -shf, 0);
 					surface_reset_target();
 				}
 			}
@@ -139,7 +139,7 @@ function Node_PB_Box_Split(_x, _y, _group = noone) : Node_PB_Box(_x, _y, _group)
 					_nbox.mask = surface_verify(_nbox.mask, _nbox.w, _nbox.h);
 					surface_set_target(_nbox.mask);
 						DRAW_CLEAR
-						draw_surface(_pbox.mask, 0, 0);
+						draw_surface_safe(_pbox.mask, 0, 0);
 					surface_reset_target();
 				}
 				
@@ -147,7 +147,7 @@ function Node_PB_Box_Split(_x, _y, _group = noone) : Node_PB_Box(_x, _y, _group)
 					_nbox.content = surface_verify(_nbox.content, _nbox.w, _nbox.h);
 					surface_set_target(_nbox.content);
 						DRAW_CLEAR
-						draw_surface(_pbox.content, 0, 0);
+						draw_surface_safe(_pbox.content, 0, 0);
 					surface_reset_target();
 				}
 			} else if(_output_index == 1) {
@@ -164,9 +164,9 @@ function Node_PB_Box_Split(_x, _y, _group = noone) : Node_PB_Box(_x, _y, _group)
 					surface_set_target(_nbox.mask);
 						DRAW_CLEAR
 						if(_mirr) 
-							draw_surface_ext(_pbox.mask, 0, _nbox.h + shf, 1, -1, 0, c_white, 1);
+							draw_surface_ext_safe(_pbox.mask, 0, _nbox.h + shf, 1, -1, 0, c_white, 1);
 						else 
-							draw_surface(_pbox.mask, -shf, 0);
+							draw_surface_safe(_pbox.mask, -shf, 0);
 					surface_reset_target();
 				}
 				
@@ -175,9 +175,9 @@ function Node_PB_Box_Split(_x, _y, _group = noone) : Node_PB_Box(_x, _y, _group)
 					surface_set_target(_nbox.content);
 						DRAW_CLEAR
 						if(_mirr) 
-							draw_surface_ext(_pbox.content, 0, _nbox.h + shf, 1, -1, 0, c_white, 1);
+							draw_surface_ext_safe(_pbox.content, 0, _nbox.h + shf, 1, -1, 0, c_white, 1);
 						else 
-							draw_surface(_pbox.content, -shf, 0);
+							draw_surface_safe(_pbox.content, -shf, 0);
 					surface_reset_target();
 				}
 			}

@@ -2,51 +2,80 @@
 function draw_surface_safe(surface, _x = 0, _y = 0) {
 	gml_pragma("forceinline");
 	
+	if(is_struct(surface) && is_instanceof(surface, dynaSurf)) {
+		surface.draw(_x, _y);
+		return;
+	}
 	if(!is_surface(surface)) return;
 	
 	__channel_pre(surface);
 		draw_surface(surface, _x, _y);
 	__channel_pos(surface);
 }
+
 function draw_surface_stretched_safe(surface, _x, _y, _w, _h) {
 	gml_pragma("forceinline");
 	
+	if(is_struct(surface) && is_instanceof(surface, dynaSurf)) {
+		surface.drawStretch(_x, _y, _w, _h);
+		return;
+	}
 	if(!is_surface(surface)) return;
 	
 	__channel_pre(surface);
 		draw_surface_stretched(surface, _x, _y, _w, _h);
 	__channel_pos(surface);
 }
+
 function draw_surface_ext_safe(surface, _x, _y, _xs = 1, _ys = 1, _rot = 0, _col = c_white, _alpha = 1) {
 	gml_pragma("forceinline");
 	
+	if(is_struct(surface) && is_instanceof(surface, dynaSurf)) {
+		surface.draw(_x, _y, _xs, _ys, _rot, _col, _alpha);
+		return;
+	}
 	if(!is_surface(surface)) return;
 	
 	__channel_pre(surface);
 		draw_surface_ext(surface, _x, _y, _xs, _ys, _rot, _col, _alpha);
 	__channel_pos(surface);
 }
+
 function draw_surface_tiled_safe(surface, _x, _y) {
 	gml_pragma("forceinline");
 	
+	if(is_struct(surface) && is_instanceof(surface, dynaSurf)) {
+		surface.drawTile(_x, _y);
+		return;
+	}
 	if(!is_surface(surface)) return;
 	
 	__channel_pre(surface);
 		draw_surface_tiled(surface, _x, _y);
 	__channel_pos(surface);
 }
+
 function draw_surface_tiled_ext_safe(surface, _x, _y, _xs = 1, _ys = 1, _col = c_white, _alpha = 1) {
 	gml_pragma("forceinline");
 	
+	if(is_struct(surface) && is_instanceof(surface, dynaSurf)) {
+		surface.drawTile(_x, _y, _xs, _ys, _col, _alpha);
+		return;
+	}
 	if(!is_surface(surface)) return;
 	
 	__channel_pre(surface);
 		draw_surface_tiled_ext(surface, _x, _y, _xs, _ys, _col, _alpha);
 	__channel_pos(surface);
 }
+
 function draw_surface_part_ext_safe(surface, _l, _t, _w, _h, _x, _y, _xs = 1, _ys = 1, _rot = 0, _col = c_white, _alpha = 1) {
 	gml_pragma("forceinline");
 	
+	if(is_struct(surface) && is_instanceof(surface, dynaSurf)) {
+		surface.drawPart(_l, _t, _w, _h, _x, _y, _xs, _ys, _rot, _col, _alpha);
+		return;
+	}
 	if(!is_surface(surface)) return;
 	
 	__channel_pre(surface);

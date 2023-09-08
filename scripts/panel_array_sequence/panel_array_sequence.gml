@@ -67,7 +67,7 @@ function Panel_Array_Sequence(node) : PanelContent() constructor {
 			if(mouse_wheel_up())	content_x_to = clamp(content_x_to + (_ns + ui(8)), -content_x_max, 0);
 		}
 		
-		draw_surface(content_surface, padding, padding);
+		draw_surface_safe(content_surface, padding, padding);
 		
 		var px = padding;
 		var py = padding + content_h + ui(16);
@@ -171,7 +171,7 @@ function Panel_Array_Sequence(node) : PanelContent() constructor {
 			if(mouse_wheel_up())	sequence_x_to = clamp(sequence_x_to + (_ns + ui(8)), -sequence_x_max, 0);
 		}
 		
-		draw_surface(sequence_surface, px, py);
+		draw_surface_safe(sequence_surface, px, py);
 		
 		if(len_stretching) {
 			var frm  = round((msx - sequence_x - _ns / 2) / _ns);

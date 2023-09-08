@@ -144,8 +144,23 @@ function textBox(_input, _onModify, _extras = noone) : textInput(_input, _onModi
 				if(keyboard_check_pressed(vk_escape) || keyboard_check_pressed(vk_enter)) {
 				} else if(KEYBOARD_PRESSED == vk_backspace) {
 					if(cursor_select == -1) {
-						var str_before	= string_copy(_input_text, 1, cursor - 1);
-						var str_after	= string_copy(_input_text, cursor + 1, string_length(_input_text) - cursor);
+						var str_before, str_after;
+						
+						if(key_mod_press(CTRL)) {
+							var _c = cursor - 1;
+							while(_c > 0) {
+								var ch = string_char_at(_input_text, _c);
+								if(breakCharacter(ch)) break;
+								_c--;
+							}
+							
+							str_before	= string_copy(_input_text, 1, _c);
+							str_after	= string_copy(_input_text, cursor + 1, string_length(_input_text) - cursor);
+							cursor = _c + 1;
+						} else {
+							str_before	= string_copy(_input_text, 1, cursor - 1);
+							str_after	= string_copy(_input_text, cursor + 1, string_length(_input_text) - cursor);
+						}
 						
 						_input_text		= str_before + str_after;
 					} else {

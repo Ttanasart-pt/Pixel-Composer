@@ -303,10 +303,10 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 			BLEND_ALPHA
 			
 			if(_dbg) { 
-				draw_surface(_bgSurf, 0, 0);
+				draw_surface_safe(_bgSurf, 0, 0);
 				surface_free(_bgSurf);
 			}
-			draw_surface(_render, 0, 0);
+			draw_surface_safe(_render, 0, 0);
 			
 			BLEND_MULTIPLY
 			draw_surface_safe(deferData.ssao);

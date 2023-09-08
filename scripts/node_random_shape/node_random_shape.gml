@@ -70,7 +70,7 @@ function Node_Random_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 				
 				var _sx = irandom_range(_dim[0] / 2 - _size / 2, _dim[0] / 2 + _size / 2);
 				var _sy = irandom_range(_dim[1] / 2 - _size / 2, _dim[1] / 2 + _size / 2);
-				draw_surface(_shape, _sx - _size / 2, _sy - _size / 2);
+				draw_surface_safe(_shape, _sx - _size / 2, _sy - _size / 2);
 				surface_free(_shape);
 			}
 		surface_reset_target();
@@ -79,10 +79,10 @@ function Node_Random_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		surface_set_target(_surf);
 			DRAW_CLEAR
 			
-			draw_surface_ext(_shap,       0,       0,  1,  1, 0, c_white, 1);
-			draw_surface_ext(_shap, _dim[0],       0, -1,  1, 0, c_white, 1);
-			draw_surface_ext(_shap,       0, _dim[1],  1, -1, 0, c_white, 1);
-			draw_surface_ext(_shap, _dim[0], _dim[1], -1, -1, 0, c_white, 1);
+			draw_surface_ext_safe(_shap,       0,       0,  1,  1, 0, c_white, 1);
+			draw_surface_ext_safe(_shap, _dim[0],       0, -1,  1, 0, c_white, 1);
+			draw_surface_ext_safe(_shap,       0, _dim[1],  1, -1, 0, c_white, 1);
+			draw_surface_ext_safe(_shap, _dim[0], _dim[1], -1, -1, 0, c_white, 1);
 		surface_reset_target();
 		surface_free(_shap);
 		
@@ -116,13 +116,13 @@ function Node_Random_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 				if(random(1) < 0.5) {
 					shader_set(sh_rsh_rotate);
 					shader_set_f("dimension", _dim[0], _dim[1]);
-					draw_surface(_surf, 0, 0);
+					draw_surface_safe(_surf, 0, 0);
 					shader_reset();
 				} else
-					draw_surface(_surf, 0, 0);
+					draw_surface_safe(_surf, 0, 0);
 					
 				BLEND_SUBTRACT
-					draw_surface(_subs, _sx - _size[0] / 2, _sy - _size[1] / 2);
+					draw_surface_safe(_subs, _sx - _size[0] / 2, _sy - _size[1] / 2);
 				BLEND_NORMAL
 			surface_reset_target();
 			surface_free(_subs);
@@ -143,9 +143,9 @@ function Node_Random_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 			shader_set_f("dimension", _dim[0], _dim[1]);
 			shader_set_i("type", choose(0, 0, 1, 1, 1));
 			
-			draw_surface(_prog, 0, 0);
-			if(_side == 1) draw_surface_ext(_prog, 0, _dim[1], 1, -1, 0, c_white, 1);
-			if(_side == 2) draw_surface_ext(_prog, _dim[0], 0, -1, 1, 0, c_white, 1);
+			draw_surface_safe(_prog, 0, 0);
+			if(_side == 1) draw_surface_ext_safe(_prog, 0, _dim[1], 1, -1, 0, c_white, 1);
+			if(_side == 2) draw_surface_ext_safe(_prog, _dim[0], 0, -1, 1, 0, c_white, 1);
 		surface_reset_shader();
 		surface_free(_prog);
 		

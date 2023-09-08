@@ -219,7 +219,7 @@ function Node_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 				shader_set_f("p2", tl[0] / sw, tl[1] / sh);
 				shader_set_f("p3", bl[0] / sw, bl[1] / sh);
 			
-				draw_surface(_data[0], 0, 0);
+				draw_surface_safe(_data[0], 0, 0);
 			surface_reset_shader();
 		}
 		

@@ -71,7 +71,7 @@ function Node_Sequence_Anim(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			}
 		surface_reset_target();
 		
-		draw_surface(sequence_surface, x0, y0 + ui(4));
+		draw_surface_safe(sequence_surface, x0, y0 + ui(4));
 		
 		draw_sprite_ui(THEME.gear, 0, x1 + ui(16), _y + _h / 2,,,, COLORS._main_icon);
 		

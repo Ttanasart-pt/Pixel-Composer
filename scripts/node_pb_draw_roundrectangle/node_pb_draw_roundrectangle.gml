@@ -169,10 +169,10 @@ function Node_PB_Draw_Round_Rectangle(_x, _y, _group = noone) : Node_PB_Draw(_x,
 						
 							BLEND_SUBTRACT
 								switch(c) {
-									case 0 : draw_surface_ext(_sub_surf, _x0,     _y0,     1, 1,   0, c_white, 1); break;
-									case 1 : draw_surface_ext(_sub_surf, _x1 + 1, _y0,     1, 1, -90, c_white, 1); break;
-									case 2 : draw_surface_ext(_sub_surf, _x0,     _y1 + 1, 1, 1,  90, c_white, 1); break;
-									case 3 : draw_surface_ext(_sub_surf, _x1 + 1, _y1 + 1, 1, 1, 180, c_white, 1); break;
+									case 0 : draw_surface_ext_safe(_sub_surf, _x0,     _y0,     1, 1,   0, c_white, 1); break;
+									case 1 : draw_surface_ext_safe(_sub_surf, _x1 + 1, _y0,     1, 1, -90, c_white, 1); break;
+									case 2 : draw_surface_ext_safe(_sub_surf, _x0,     _y1 + 1, 1, 1,  90, c_white, 1); break;
+									case 3 : draw_surface_ext_safe(_sub_surf, _x1 + 1, _y1 + 1, 1, 1, 180, c_white, 1); break;
 								}
 							BLEND_NORMAL
 						

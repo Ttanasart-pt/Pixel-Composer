@@ -320,7 +320,7 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 			surface_set_target(_s);
 				draw_clear_alpha(c_black, 0);
 				BLEND_OVERRIDE;
-				draw_surface_part(_inSurf, _spr_pos[0], _spr_pos[1], _dim[0], _dim[1], _pad[2], _pad[1]);
+				draw_surface_part_ext_safe(_inSurf, _spr_pos[0], _spr_pos[1], _dim[0], _dim[1], _pad[2], _pad[1]);
 				BLEND_NORMAL;
 			surface_reset_target();
 				

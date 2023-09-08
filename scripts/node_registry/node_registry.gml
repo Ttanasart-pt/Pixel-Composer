@@ -13,7 +13,7 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 		tooltip_spr = sprite_add(pth, 0, false, false, 0, 0);
 	else
 		tooltip_spr = noone;
-	new_node     = false;
+	new_node = false;
 	
 	if(struct_has(global.NODE_GUIDE, node)) {
 		var _n = global.NODE_GUIDEarn[$ node];

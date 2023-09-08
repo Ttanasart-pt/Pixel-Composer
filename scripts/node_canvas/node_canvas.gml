@@ -442,7 +442,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 						
 			surface_set_target(canvas_surface);
 				BLEND_ALPHA
-				draw_surface(selection_surface, pos_x, pos_y);
+				draw_surface_safe(selection_surface, pos_x, pos_y);
 				BLEND_NORMAL
 			surface_reset_target();
 							
@@ -488,7 +488,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 						
 							surface_set_target(canvas_surface);
 								BLEND_ALPHA
-								draw_surface(selection_surface, pos_x, pos_y);
+								draw_surface_safe(selection_surface, pos_x, pos_y);
 								BLEND_NORMAL
 							surface_reset_target();
 							
@@ -529,17 +529,17 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 						
 							surface_set_target(selection_surface);
 								DRAW_CLEAR
-								draw_surface(canvas_surface, -sel_x0, -sel_y0);
+								draw_surface_safe(canvas_surface, -sel_x0, -sel_y0);
 							
 								BLEND_MULTIPLY
-									draw_surface(selection_mask, 0, 0);
+									draw_surface_safe(selection_mask, 0, 0);
 								BLEND_NORMAL
 							surface_reset_target();
 							
 							storeAction();
 							surface_set_target(canvas_surface);
 								gpu_set_blendmode(bm_subtract);
-								draw_surface(selection_surface, sel_x0, sel_y0);
+								draw_surface_safe(selection_surface, sel_x0, sel_y0);
 								gpu_set_blendmode(bm_normal);
 							surface_reset_target();
 						
@@ -691,7 +691,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				draw_set_color(_col);
 				if(isUsingTool("Selection")) {
 					if(is_selected)
-						draw_surface(selection_surface, selection_position[0], selection_position[1]);
+						draw_surface_safe(selection_surface, selection_position[0], selection_position[1]);
 					else if(is_selecting) {
 						var sel_x0 = min(selection_sx, mouse_cur_x);
 						var sel_y0 = min(selection_sy, mouse_cur_y);
@@ -729,7 +729,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 						draw_set_color(c_white);
 						draw_rectangle_dashed(pos_x, pos_y, pos_x + sel_w, pos_y + sel_h, true, 4);
 						
-						draw_surface_ext(selection_surface, pos_x, pos_y, _s, _s, 0, c_white, 1);
+						draw_surface_ext_safe(selection_surface, pos_x, pos_y, _s, _s, 0, c_white, 1);
 					}
 				} else {
 					gpu_set_colorwriteenable(tool_attribute.channel[0], tool_attribute.channel[1], tool_attribute.channel[2], tool_attribute.channel[3]);
@@ -739,12 +739,12 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				
 				surface_set_target(_preview_draw_surface);
 					DRAW_CLEAR
-					draw_surface_ext(preview_draw_surface, _x, _y, _s, _s, 0, c_white, 1);
+					draw_surface_ext_safe(preview_draw_surface, _x, _y, _s, _s, 0, c_white, 1);
 				surface_reset_target();
 				
 				shader_set(sh_brush_outline);
 					shader_set_f("dimension", surface_get_width(_preview_draw_surface), surface_get_height(_preview_draw_surface));
-					draw_surface_ext(_preview_draw_surface, 0, 0, 1, 1, 0, c_white, 1);
+					draw_surface_ext_safe(_preview_draw_surface, 0, 0, 1, 1, 0, c_white, 1);
 				shader_reset();
 			}
 		#endregion

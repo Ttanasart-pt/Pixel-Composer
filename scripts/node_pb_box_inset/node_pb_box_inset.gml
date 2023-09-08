@@ -87,7 +87,7 @@ function Node_PB_Box_Inset(_x, _y, _group = noone) : Node_PB_Box(_x, _y, _group)
 						shader_set_dim(, _pbox.mask);
 						shader_set_f("inset", _inst);
 					
-						draw_surface(_pbox.mask, -_inst[2], -_inst[1]);
+						draw_surface_safe(_pbox.mask, -_inst[2], -_inst[1]);
 					surface_reset_shader();
 				} else if(_type == 1)
 					_nbox.mask = surface_stretch(_pbox.mask, _nbox.w, _nbox.h);
@@ -100,7 +100,7 @@ function Node_PB_Box_Inset(_x, _y, _group = noone) : Node_PB_Box(_x, _y, _group)
 						shader_set_dim(, _pbox.content);
 						shader_set_f("inset", _inst);
 					
-						draw_surface(_pbox.content, -_inst[2], -_inst[1]);
+						draw_surface_safe(_pbox.content, -_inst[2], -_inst[1]);
 					surface_reset_shader();
 				} else if(_type == 1)
 					_nbox.content = surface_stretch(_pbox.content, _nbox.w, _nbox.h);
@@ -117,7 +117,7 @@ function Node_PB_Box_Inset(_x, _y, _group = noone) : Node_PB_Box(_x, _y, _group)
 			surface_set_target(_nbox.mask);
 				if(is_surface(_pbox.mask)) {
 					draw_clear_alpha(0, 0);
-					draw_surface(_pbox.mask, 0, 0);
+					draw_surface_safe(_pbox.mask, 0, 0);
 				} else 
 					draw_clear(c_white);
 				
@@ -126,7 +126,7 @@ function Node_PB_Box_Inset(_x, _y, _group = noone) : Node_PB_Box(_x, _y, _group)
 				
 				BLEND_SUBTRACT
 					if(is_surface(_msk.mask))
-						draw_surface(_msk.mask, _x, _y);
+						draw_surface_safe(_msk.mask, _x, _y);
 					else {
 						draw_set_color(c_white);
 						draw_rectangle(_x, _y, _x + _w - 1, _y + _h - 1, false);

@@ -45,7 +45,7 @@ function Node_Region_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		surface_clear(temp_surface[0]);
 		
 		surface_set_shader(temp_surface[1], sh_region_fill_init);
-			draw_surface(_surf, 0, 0);
+			draw_surface_safe(_surf, 0, 0);
 		surface_reset_shader();
 		
 		var base = 0;
@@ -54,7 +54,7 @@ function Node_Region_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		for( var i = 0; i < amo; i++ ) {
 			surface_set_shader(temp_surface[base], sh_region_fill_coordinate);
 				shader_set_f("dimension", _sw, _sh);
-				draw_surface(temp_surface[!base], 0, 0);
+				draw_surface_safe(temp_surface[!base], 0, 0);
 				
 			surface_reset_shader();
 			
@@ -71,11 +71,11 @@ function Node_Region_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 				shader_set_f("seed",   _seed);
 				shader_set_f("colorAmount", array_length(_colr));
 				
-				draw_surface(temp_surface[base], 0, 0);
+				draw_surface_safe(temp_surface[base], 0, 0);
 			surface_reset_shader();
 		} else {
 			surface_set_shader(_outSurf);
-				draw_surface(temp_surface[base], 0, 0);
+				draw_surface_safe(temp_surface[base], 0, 0);
 			surface_reset_shader();
 		}
 		

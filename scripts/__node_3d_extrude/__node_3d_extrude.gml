@@ -143,7 +143,7 @@ function __Node_3D_Extrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 			surface_set_shader(ts, sh_3d_extrude_filler);
 				DRAW_CLEAR
 				shader_set_f("dimension", ww, hh);
-				draw_surface(_ins, 0, 0);
+				draw_surface_safe(_ins, 0, 0);
 			surface_reset_shader();
 			_ins = ts;
 			
@@ -152,7 +152,7 @@ function __Node_3D_Extrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 				surface_set_shader(ds, sh_3d_extrude_filler_depth);
 					DRAW_CLEAR
 					shader_set_f("dimension", ww, hh);
-					draw_surface(_hei, 0, 0);
+					draw_surface_safe(_hei, 0, 0);
 				surface_reset_shader();
 				_hei = ds;
 			}
@@ -485,7 +485,7 @@ function __Node_3D_Extrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 			var ts = surface_create(ww, hh);
 			surface_set_shader(ts, sh_3d_extrude_corner);
 				shader_set_f("dimension", ww, hh);
-				draw_surface(_ins, 0, 0);
+				draw_surface_safe(_ins, 0, 0);
 			surface_reset_shader();
 			textures[_array_index] = ts;
 		} else 

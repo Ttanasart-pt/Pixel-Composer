@@ -110,7 +110,7 @@ function Node_Pack_Sprites(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 				var r = rect[i];
 				
 				array_push(atlas, new SurfaceAtlas(r.surface, [ r.x + _spac, r.y + _spac ]));
-				draw_surface(r.surface, r.x + _spac, r.y + _spac);
+				draw_surface_safe(r.surface, r.x + _spac, r.y + _spac);
 			}
 			
 			BLEND_NORMAL
