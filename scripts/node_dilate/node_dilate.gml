@@ -43,6 +43,7 @@ function Node_Dilate(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var pos = inputs[| 1].getValue();
+		
 		var px = _x + pos[0] * _s;
 		var py = _y + pos[1] * _s;
 		
@@ -50,8 +51,7 @@ function Node_Dilate(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		inputs[| 3].drawOverlay(active, px, py, _s, _mx, _my, _snx, _sny, 0, 1, THEME.anchor_scale_hori);
 	}
 	
-	static processData = function(_outSurf, _data, _output_index, _array_index) {		
-		
+	static processData = function(_outSurf, _data, _output_index, _array_index) {
 		var center = _data[1];
 		var stren = _data[2];
 		var rad   = _data[3];

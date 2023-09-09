@@ -60,7 +60,7 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	vel = 0;
 	prev_pos = [0, 0];
 	
-	static getDimension = function(arr) {
+	static getDimension = function(arr) { #region
 		var _surf		= getSingleValue(0, arr);
 		var _out_type	= getSingleValue(9, arr);
 		var _out		= getSingleValue(1, arr);
@@ -87,13 +87,9 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		}
 		
 		return [ww, hh];
-	}
+	} #endregion
 	
-	static onValueUpdate = function(index, prev) {
-		var curr = inputs[| 0].getValue();
-	}
-	
-	static centerAnchor = function() {
+	static centerAnchor = function() { #region
 		var _surf = inputs[| 0].getValue();
 		
 		var _out_type = inputs[| 9].getValue();
@@ -105,11 +101,11 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			_surf = _surf[preview_index];
 		}
 		
-		inputs[| 3].setValue([ 0.5, 0.5]);
+		inputs[| 3].setValue([ 0.5, 0.5 ]);
 		inputs[| 2].setValue([ surface_get_width_safe(_surf) / 2, surface_get_height_safe(_surf) / 2 ]);
-	}
+	} #endregion
 	
-	static step = function() {
+	static step = function() { #region
 		var pos = inputs[| 2].getValue();
 		
 		if(!PROJECT.animator.frame_progress) return;
@@ -124,21 +120,21 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			prev_pos[0] = pos[0];
 			prev_pos[1] = pos[1];
 		}
-	}
+	} #endregion
 	
-	static processData = function(_outSurf, _data, _output_index, _array_index) {
+	static processData = function(_outSurf, _data, _output_index, _array_index) { #region
 		var ins = _data[0];
 		
 		var out_type = _data[9];
-		var out = _data[1];
+		var out		 = _data[1];
 		
-		var pos = _data[2];
+		var pos		  = _data[2];
 		var pos_exact = _data[10];
 		
 		var anc = _data[3];
 		
 		var rot_vel = vel * _data[8];
-		var rot = _data[5] + rot_vel;
+		var rot		= _data[5] + rot_vel;
 		
 		var sca  = _data[6];
 		var mode = _data[7];
@@ -244,7 +240,7 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		}
 		
 		return _outSurf;
-	}
+	} #endregion
 	
 	overlay_dragging = 0;
 	corner_dragging  = 0;
@@ -257,8 +253,8 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	overlay_drag_ma  = 0;
 	overlay_drag_sa  = 0;
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
-		if(array_length(current_data) < ds_list_size(inputs)) return;
+	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
+		PROCESSOR_OVERLAY_CHECK
 		
 		var _surf = inputs[| 0].getValue();
 		if(is_array(_surf)) {
@@ -335,7 +331,6 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			draw_line(tl[0], tl[1], bl[0], bl[1]);
 			draw_line(tr[0], tr[1], br[0], br[1]);
 			draw_line(bl[0], bl[1], br[0], br[1]);
-			
 		#endregion
 		
 		if(overlay_dragging && overlay_dragging < 3) { //Transform
@@ -502,5 +497,5 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				draw_set_alpha(1);
 			}
 		#endregion
-	}
+	} #endregion
 }

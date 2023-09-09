@@ -295,7 +295,7 @@ event_inherited();
 							gpu_set_colorwriteenable(1, 1, 1, 1);
 						surface_reset_target();
 					
-						draw_surface_ext(grid_surface, tx, ty, 1, 1, 0, c_white, 0.85);
+						draw_surface_ext_safe(grid_surface, tx, ty, 1, 1, 0, c_white, 0.85);
 					}
 				}
 			

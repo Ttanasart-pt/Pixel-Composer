@@ -220,7 +220,7 @@
 		[ "is_surface", is_surface ],
 
 		[ "draw_surface", draw_surface ],
-		[ "draw_surface_ext", draw_surface_ext ],
+		[ "draw_surface_ext_safe", draw_surface_ext_safe ],
 		[ "draw_surface_part", draw_surface_part ],
 		[ "draw_surface_part_ext", draw_surface_part_ext ],
 		[ "draw_surface_stretched", draw_surface_stretched ],

@@ -14,7 +14,7 @@ function fd_rectangle_add_velocity_surface(domain, surface, _x, _y, xscale, ysca
 	with (domain) {
 	    fd_rectangle_set_target(id, FD_TARGET_TYPE.ADD_VELOCITY);
 	        var color = make_color_rgb(ceil((clamp(xvelo, -1, 1) * 0.125 + 0.5) * 255), ceil((clamp(yvelo, -1, 1) * 0.125 + 0.5) * 255), 0);
-	        draw_surface_ext(surface, _x, _y, xscale, yscale, 0, color, 1);
+	        draw_surface_ext_safe(surface, _x, _y, xscale, yscale, 0, color, 1);
 	    fd_rectangle_reset_target(id);
 	}
 }

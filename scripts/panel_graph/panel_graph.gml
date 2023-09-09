@@ -1385,7 +1385,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		}
 		surface_reset_target();
 		
-		draw_surface_ext(minimap_surface, mx0, my0, 1, 1, 0, c_white, 0.5 + 0.35 * hover);
+		draw_surface_ext_safe(minimap_surface, mx0, my0, 1, 1, 0, c_white, 0.5 + 0.35 * hover);
 		draw_set_color(COLORS.panel_graph_minimap_outline);
 		draw_rectangle(mx0, my0, mx1 - 1, my1 - 1, true);
 		
@@ -1519,7 +1519,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 			if(ds_list_empty(nodes_select_list)) {
 				if(node_focus != noone && !ds_list_empty(node_focus.outputs)) {
 					var _o = node_focus.outputs[| 0];
-					if(_o.type == VALUE_TYPE.surface) {
+					if(_o.type == VALUE_TYPE.surface || _o.type == VALUE_TYPE.dynaSurf) {
 						var tr = nodeBuild("Node_Transform", node_focus.x + node_focus.w + 64, node_focus.y);
 						tr.inputs[| 0].setFrom(_o);
 					}
@@ -1530,7 +1530,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 					if(ds_list_empty(node.outputs)) continue;
 				
 					var _o = node.outputs[| 0];
-					if(_o.type == VALUE_TYPE.surface) {
+					if(_o.type == VALUE_TYPE.surface || _o.type == VALUE_TYPE.dynaSurf) {
 						var tr = nodeBuild("Node_Transform", node.x + node.w + 64, node.y);
 						tr.inputs[| 0].setFrom(_o);
 					}

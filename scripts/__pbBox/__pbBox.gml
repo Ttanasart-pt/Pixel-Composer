@@ -37,12 +37,12 @@ function __pbBox() constructor {
 			
 			surface_set_target(_ms);
 				DRAW_CLEAR
-				draw_surface_ext(mask, _x0, _y0, _s, _s, 0, color, 1);
+				draw_surface_ext_safe(mask, _x0, _y0, _s, _s, 0, color, 1);
 			surface_reset_target();
 			
 			shader_set(sh_pb_draw_mask);
 				shader_set_dim(, _ms);
-				draw_surface_ext(_ms, 0, 0, 1, 1, 0, color, 1);
+				draw_surface_ext_safe(_ms, 0, 0, 1, 1, 0, color, 1);
 			shader_reset();
 			
 			surface_free(_ms);

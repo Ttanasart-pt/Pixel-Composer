@@ -233,13 +233,11 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		var _hi = ui(32);
 		var _ho = ui(32);
 		
-		for( var i = 0; i < ds_list_size(inputs); i++ )  {
+		for( var i = 0; i < ds_list_size(inputs); i++ )
 			if(inputs[| i].isVisible()) _hi += 24;
-		}
 		
-		for( var i = 0; i < ds_list_size(outputs); i++ )  {
+		for( var i = 0; i < ds_list_size(outputs); i++ )
 			if(outputs[| i].isVisible()) _ho += 24;
-		}
 		
 		h = max(min_h, (preview_surface && previewable)? 128 : 0, _hi, _ho);
 	} #endregion
@@ -809,8 +807,13 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	
 	static getGraphPreviewSurface = function() { #region
 		var _node = outputs[| preview_channel];
-		if(_node.type != VALUE_TYPE.surface) return noone;
-		return _node.getValue();
+		switch(_node.type) {
+			case VALUE_TYPE.surface :
+			case VALUE_TYPE.dynaSurf :
+				return _node.getValue();
+		}
+		
+		return noone;
 	} #endregion
 	
 	static drawPreview = function(xx, yy, _s) { #region
@@ -924,7 +927,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 			draw_sprite_stretched_ext(THEME.node_glow, 0, xx - 9, yy - 9, w * _s + 18, h * _s + 18, COLORS._main_value_negative, 1);
 		
 		drawNodeBase(xx, yy, _s);
-		if(previewable && ds_list_size(outputs) > 0) {
+		if(previewable && ds_list_size(outputs)) {
 			if(preview_channel >= ds_list_size(outputs))
 				preview_channel = 0;
 			drawPreview(xx, yy, _s);
@@ -1267,7 +1270,14 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	
 	static getPreviewValues = function() { #region
 		if(preview_channel >= ds_list_size(outputs)) return noone;
-		if(outputs[| preview_channel].type != VALUE_TYPE.surface) return noone; //I feels like I've wrote this line before. Did I delete it because of a bug? Am I reintroducing old bug?
+		
+		switch(outputs[| preview_channel].type) {
+			case VALUE_TYPE.surface :
+			case VALUE_TYPE.dynaSurf :
+				break;
+			default :
+				return;
+		}
 		
 		return outputs[| preview_channel].getValue();
 	} #endregion

@@ -5,8 +5,8 @@ function fd_rectangle_draw_part(domain, left, top, width, height, _x, _y, xscale
 	// left, top, width, height: See the manual on draw_surface_part for an explanation.
 	// x, y: The pixel position to draw at.
 	// _x, _y: The scale to draw at.
-	// color: The image blending color, the same as color in draw_surface_ext.
-	// alpha: The alpha to draw at, the same as alpha in draw_surface_ext.
+	// color: The image blending color, the same as color in draw_surface_ext_safe.
+	// alpha: The alpha to draw at, the same as alpha in draw_surface_ext_safe.
 	// use interpolation: Set this to true if you want linear interpolation to be enabled, and false if you want nearest neighbor to be used instead.
 
 	with (domain) {

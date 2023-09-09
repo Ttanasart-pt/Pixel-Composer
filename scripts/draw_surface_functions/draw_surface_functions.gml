@@ -17,5 +17,5 @@ function draw_surface_align(surface, _x, _y, _s, _halign = fa_left, _valign = fa
 		case fa_bottom:	_sy = _y - h;		break;	
 	}
 	
-	draw_surface_ext(surface, _sx, _sy, _s, _s, 0, c_white, 1);
+	draw_surface_ext_safe(surface, _sx, _sy, _s, _s, 0, c_white, 1);
 }

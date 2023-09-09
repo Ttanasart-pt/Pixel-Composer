@@ -308,16 +308,16 @@ function isGraphable(prop) { #region
 	return false;
 } #endregion
 
-function nodeValueUnit(value) constructor { #region
-	self.value = value;
+function nodeValueUnit(_nodeValue) constructor { #region
+	self._nodeValue = _nodeValue;
 	
 	mode = VALUE_UNIT.constant;
 	reference = noone;
 	triggerButton = button(function() { 
 		mode = !mode; 
-		value.cache_value[0] = false;
-		value.unitConvert(mode);
-		value.node.doUpdate();
+		_nodeValue.cache_value[0] = false;
+		_nodeValue.unitConvert(mode);
+		_nodeValue.node.doUpdate();
 	});
 	triggerButton.icon_blend = COLORS._main_icon_light;
 	triggerButton.icon       = THEME.unit_ref;
@@ -328,9 +328,9 @@ function nodeValueUnit(value) constructor { #region
 		if(type == "relative" && mode == VALUE_UNIT.reference) return;
 		
 		mode = type == "constant"? VALUE_UNIT.constant : VALUE_UNIT.reference;
-		value.cache_value[0] = false;
-		value.unitConvert(mode);
-		value.node.doUpdate();
+		_nodeValue.cache_value[0] = false;
+		_nodeValue.unitConvert(mode);
+		_nodeValue.node.doUpdate();
 	} #endregion
 	
 	static draw = function(_x, _y, _w, _h, _m) { #region
@@ -341,6 +341,8 @@ function nodeValueUnit(value) constructor { #region
 	} #endregion
 	
 	static invApply = function(value, index = 0) { #region
+		//value = variable_clone(value);
+		
 		if(mode == VALUE_UNIT.constant) 
 			return value;
 		if(reference == noone)
@@ -350,18 +352,20 @@ function nodeValueUnit(value) constructor { #region
 	} #endregion
 	
 	static apply = function(value, index = 0) { #region
-		if(mode == VALUE_UNIT.constant) 
-			return value;
-		if(reference == noone)
-			return value;
+		//value = variable_clone(value);
+		
+		if(mode == VALUE_UNIT.constant) return value;
+		if(reference == noone)			return value;
 		
 		return convertUnit(value, VALUE_UNIT.constant, index);
 	} #endregion
 	
 	static convertUnit = function(value, unitTo, index = 0) { #region
-		var disp = self.value.display_type;
+		//value = variable_clone(value);
+		
+		var disp = _nodeValue.display_type;
 		var base = reference(index);
-		var inv = unitTo == VALUE_UNIT.reference;
+		var inv  = unitTo == VALUE_UNIT.reference;
 		
 		if(!is_array(base) && !is_array(value))
 			return inv? value / base : value * base;
@@ -372,9 +376,8 @@ function nodeValueUnit(value) constructor { #region
 			return value;
 		}
 		
-		if(is_array(base) && !is_array(value)) {
+		if(is_array(base) && !is_array(value))
 			return value;
-		}
 			
 		switch(disp) {
 			case VALUE_DISPLAY.padding :
@@ -458,7 +461,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		dyna_depo   = ds_list_create();
 		
 		is_changed  = true;
-		cache_value = [ false, false, undefined ];
+		cache_value = [ false, false, undefined, undefined ];
 		cache_array = [ false, false ];
 		use_cache   = true;
 		
@@ -1167,13 +1170,16 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(typeFrom == VALUE_TYPE.boolean && type == VALUE_TYPE.text)
 			return value? "true" : "false";
 		
-		if(type == VALUE_TYPE.integer || type == VALUE_TYPE.float) {
+		if(type == VALUE_TYPE.integer || type == VALUE_TYPE.float) { #region
 			if(typeFrom == VALUE_TYPE.text)
 				value = toNumber(value);
 			
-			if(applyUnit)
-				return unit.apply(value, arrIndex);
-		}
+			//print($"{name} get value {value} ({applyUnit})");
+			//printCallStack();
+			//print("=======================");
+			
+			if(applyUnit) return unit.apply(value, arrIndex);
+		} #endregion
 		
 		if(type == VALUE_TYPE.surface && connect_type == JUNCTION_CONNECT.input && !is_surface(value) && def_val == USE_DEF)
 			return DEF_SURFACE;
@@ -1187,15 +1193,16 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		return getValue(_time, applyUnit, arrIndex, true);
 	} #endregion
 	
-	static getValue = function(_time = PROJECT.animator.current_frame, applyUnit = true, arrIndex = 0, useCache = false) { #region
+	static getValue = function(_time = PROJECT.animator.current_frame, applyUnit = true, arrIndex = 0, useCache = false, log = false) { #region
 		if(type == VALUE_TYPE.trigger)
 			useCache = false;
-			
+		
 		global.cache_call++;
 		if(useCache && use_cache) {
 			var cache_hit = cache_value[0];
 			cache_hit &= (!is_anim && value_from == noone) || cache_value[1] == _time;
 			cache_hit &= cache_value[2] != undefined;
+			cache_hit &= cache_value[3] == applyUnit;
 			cache_hit &= connect_type == JUNCTION_CONNECT.input;
 			cache_hit &= unit.reference == noone || unit.mode == VALUE_UNIT.constant;
 			//cache_hit &= !expUse;
@@ -1206,7 +1213,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			}
 		}
 		
-		var val = _getValue(_time, applyUnit, arrIndex);
+		var val = _getValue(_time, applyUnit, arrIndex, log);
 		
 		if(useCache) {
 			is_changed = !isEqual(cache_value[2], val);
@@ -1215,6 +1222,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		}
 		
 		cache_value[2] = val;
+		cache_value[3] = applyUnit;
 		
 		return val;
 	} #endregion
@@ -1225,8 +1233,10 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			for( var i = 0, n = array_length(animators); i < n; i++ )
 				val[i] = animators[i].getValue(_time);
 			return val;
-		} else	
-			return animator.getValue(_time);
+		} 
+		
+		var _val = animator.getValue(_time);
+		return _val;
 	} #endregion
 	
 	static arrayBalance = function(val) { #region //Balance array (generate uniform array from single values)
@@ -1249,7 +1259,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		return val;
 	} #endregion
 	
-	static _getValue = function(_time = PROJECT.animator.current_frame, applyUnit = true, arrIndex = 0) { #region
+	static _getValue = function(_time = PROJECT.animator.current_frame, applyUnit = true, arrIndex = 0, log = false) { #region
 		var _val = getValueRecursive(_time);
 		var val = _val[0];
 		var nod = _val[1];
@@ -1371,7 +1381,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(display_type == VALUE_DISPLAY.area)
 			useCache = false;
 		
-		var val = getValue(, false, 0, useCache);
+		var val = getValue(, false, 0, useCache, true);
 		
 		if(isArray()) {
 			if(array_length(val) == 0) return 0;
@@ -1435,7 +1445,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	static setValue = function(val = 0, record = true, time = PROJECT.animator.current_frame, _update = true) { #region
 		//if(type == VALUE_TYPE.d3vertex && !is_array(val))
 		//	print(val);
-		
 		val = unit.invApply(val);
 		return setValueDirect(val, noone, record, time, _update);
 	} #endregion
@@ -1568,10 +1577,11 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		cache_array[0] = false;
 		cache_value[0] = false;
 		
-		draw_line_shift_x	= 0;
-		draw_line_shift_y	= 0;
-		
-		if(!LOADING) PROJECT.modified = true;
+		if(!LOADING) {
+			draw_line_shift_x	= 0;
+			draw_line_shift_y	= 0;
+			PROJECT.modified	= true;
+		}
 		
 		return true;
 	} #endregion
@@ -1798,7 +1808,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		var shx = draw_line_shift_x * _s;
 		var shy = draw_line_shift_y * _s;
-			
+		
 		var cx  = round((frx + jx) / 2 + shx);
 		var cy  = round((fry + jy) / 2 + shy);
 			

@@ -141,13 +141,13 @@ function surface_save_safe(surface, path) {
 function surface_get_width_safe(s) {
 	gml_pragma("forceinline");
 	
-	return (is_struct(s) && is_instanceof(s, DynaSurf)))? s.getWidth() : surface_get_width(s);
+	return (is_struct(s) && is_instanceof(s, DynaSurf))? s.getWidth() : surface_get_width(s);
 }
 
 function surface_get_height_safe(s) {
 	gml_pragma("forceinline");
 	
-	return (is_struct(s) && is_instanceof(s, DynaSurf)))? s.getHeight() : surface_get_height(s);
+	return (is_struct(s) && is_instanceof(s, DynaSurf))? s.getHeight() : surface_get_height(s);
 }
 
 //check
@@ -288,7 +288,7 @@ function surface_size_lim(surface, width, height) {
 	var s  = surface_create(sw * ss, sh * ss);
 	surface_set_target(s);
 	DRAW_CLEAR;
-	draw_surface_ext(surface, 0, 0, ss, ss, 0, c_white, 1);
+	draw_surface_ext_safe(surface, 0, 0, ss, ss, 0, c_white, 1);
 	surface_reset_target();
 	return s;
 }
@@ -385,7 +385,7 @@ function surface_mirror(surf, _h, _v) {
 		var x0 = _h * surface_get_width_safe(_surf);
 		var y0 = _v * surface_get_height_safe(_surf);
 		
-		draw_surface_ext(surf, x0, y0, _h * 2 - 1, _v * 2 - 1, 0, c_white, 1);
+		draw_surface_ext_safe(surf, x0, y0, _h * 2 - 1, _v * 2 - 1, 0, c_white, 1);
 	surface_reset_target();
 	surface_free(surf);
 	

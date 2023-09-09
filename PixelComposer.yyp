@@ -89,6 +89,7 @@
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"shader","folderPath":"folders/functions/shader.yy",},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"string","folderPath":"folders/functions/string.yy",},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"surface","folderPath":"folders/functions/surface.yy",},
+    {"resourceType":"GMFolder","resourceVersion":"1.0","name":"dynamic surface","folderPath":"folders/functions/surface/dynamic surface.yy",},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"test","folderPath":"folders/functions/test.yy",},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"tooltip","folderPath":"folders/functions/tooltip.yy",},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"tween","folderPath":"folders/functions/tween.yy",},
@@ -235,7 +236,6 @@
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"biterator","folderPath":"folders/VCT/biterator.yy",},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"widget","folderPath":"folders/VCT/widget.yy",},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"widgets","folderPath":"folders/widgets.yy",},
-    {"resourceType":"GMFolder","resourceVersion":"1.0","name":"dynamic surface","folderPath":"folders/functions/surface/dynamic surface.yy",},
   ],
   "IncludedFiles": [
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"ApolloHelp.html","ConfigValues":{"Itch":{"CopyToMask":"0",},},"CopyToMask":-1,"filePath":"datafiles",},

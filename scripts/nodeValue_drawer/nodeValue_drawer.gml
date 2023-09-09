@@ -228,7 +228,8 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 			jun.editWidget.setInteract(false);
 		}
 		
-		var param = new widgetParam(editBoxX, editBoxY, editBoxW, editBoxH, jun.showValue(), jun.extra_data, _m, rx, ry);
+		var _show = jun.showValue();
+		var param = new widgetParam(editBoxX, editBoxY, editBoxW, editBoxH, _show, jun.extra_data, _m, rx, ry);
 		
 		switch(jun.type) {
 			case VALUE_TYPE.integer :

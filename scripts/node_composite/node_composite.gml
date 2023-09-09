@@ -13,13 +13,6 @@ enum COMPOSE_OUTPUT_SCALING {
 function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name		= "Composite";
 	
-	shader = sh_blend_normal_dim;
-	uniform_dim = shader_get_uniform(shader, "dimension");
-	uniform_pos = shader_get_uniform(shader, "position");
-	uniform_sca = shader_get_uniform(shader, "scale");
-	uniform_rot = shader_get_uniform(shader, "rotation");
-	uniform_for = shader_get_sampler_index(shader, "fore");
-	
 	inputs[| 0] = nodeValue("Padding", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 0, 0, 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.padding);
 	
@@ -42,7 +35,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	hold_select = true;
 	layer_dragging = noone;
 	layer_remove = -1;
-	layer_renderer = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) {
+	layer_renderer = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) { #region
 		var amo = (ds_list_size(inputs) - input_fix_len) / data_length - 1;
 		if(array_length(current_data) != ds_list_size(inputs)) return 0;
 		
@@ -185,7 +178,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		}
 		
 		return _h;
-	});
+	}); #endregion
 	
 	input_display_list = [
 		["Output",	 true],	0, 1, 2,
@@ -194,7 +187,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	];
 	input_display_list_len = array_length(input_display_list);
 	
-	function deleteLayer(index) {
+	function deleteLayer(index) { #region
 		var idx = input_fix_len + index * data_length;
 		for( var i = 0; i < data_length; i++ ) {
 			ds_list_delete(inputs, idx);
@@ -209,9 +202,9 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		if(ds_list_size(inputs) == input_fix_len)
 			createNewInput();
 		doUpdate();
-	}
+	} #endregion
 	
-	static createNewInput = function()  {
+	static createNewInput = function() { #region
 		var index = ds_list_size(inputs);
 		var _s    = floor((index - input_fix_len) / data_length);
 		
@@ -241,7 +234,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			array_push(attributes.layer_visible, true);
 		while(_s >= array_length(attributes.layer_selectable))
 			array_push(attributes.layer_selectable, true);
-	}
+	} #endregion
 	if(!LOADING && !APPENDING) createNewInput();
 	
 	//function getInput() { return inputs[| ds_list_size(inputs) - data_length]; }
@@ -271,16 +264,16 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	surface_selecting = noone;
 	
-	static getInputAmount = function() {
+	static getInputAmount = function() { #region
 		return input_fix_len + (ds_list_size(inputs) - input_fix_len) / data_length;
-	}
+	} #endregion
 	
-	static getInputIndex = function(index) {
+	static getInputIndex = function(index) { #region
 		if(index < input_fix_len) return index;
 		return input_fix_len + (index - input_fix_len) * data_length;
-	}
+	} #endregion
 	
-	static setHeight = function() {
+	static setHeight = function() { #region
 		var _hi = ui(32);
 		var _ho = ui(32);
 		
@@ -293,9 +286,9 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				_ho += 24;
 		
 		h = max(min_h, (preview_surface && previewable)? 128 : 0, _hi, _ho);
-	}
+	} #endregion
 	
-	static drawJunctions = function(_x, _y, _mx, _my, _s) {
+	static drawJunctions = function(_x, _y, _mx, _my, _s) { #region
 		if(!active) return;
 		var hover = noone;
 		var amo = array_length(input_display_list);
@@ -352,9 +345,9 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				hover = outputs[| i];
 		
 		return hover;
-	}
+	} #endregion
 	
-	static drawJunctionNames = function(_x, _y, _mx, _my, _s) {
+	static drawJunctionNames = function(_x, _y, _mx, _my, _s) { #region
 		if(!active) return;
 		var amo = input_display_list == -1? ds_list_size(inputs) : array_length(input_display_list);
 		var jun;
@@ -404,9 +397,9 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			for(var i = 0; i < ds_list_size(outputs); i++)
 				outputs[| i].drawName(_s, _mx, _my);
 		}
-	}
+	} #endregion
 	
-	static preDraw = function(_x, _y, _s) {
+	static preDraw = function(_x, _y, _s) { #region
 		var xx = x * _s + _x;
 		var yy = y * _s + _y;
 		var jun;
@@ -456,16 +449,16 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			jun.y = _in;
 			_in += 24 * _s * jun.isVisible();
 		}
-	}
+	} #endregion
 	
-	static onValueFromUpdate = function(index) {
+	static onValueFromUpdate = function(index) { #region
 		if(LOADING || APPENDING) return;
 		
 		if(index + data_length >= ds_list_size(inputs))
 			createNewInput();
-	}
+	} #endregion
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
 		var pad = inputs[| 0].getValue();
 		var ww  = overlay_w;
 		var hh  = overlay_h;
@@ -735,15 +728,15 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			deleteLayer(layer_remove);
 			layer_remove = -1;
 		}
-	}
+	} #endregion
 	
-	static step = function() {
+	static step = function() { #region
 		var _dim_type = getSingleValue(1);
 		
 		inputs[| 2].setVisible(_dim_type == COMPOSE_OUTPUT_SCALING.constant);
-	}
+	} #endregion
 	
-	static processData = function(_outSurf, _data, _output_index, _array_index) {
+	static processData = function(_outSurf, _data, _output_index, _array_index) { #region
 		if(_output_index == 1) return atlas_data;
 		if(_output_index == 0 && _array_index == 0) atlas_data = [];
 		
@@ -826,22 +819,22 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		surface_reset_shader();
 		
 		return _outSurf;
-	}
+	} #endregion
 	
-	static attributeSerialize = function() {
+	static attributeSerialize = function() { #region
 		var att = {};
 		att.layer_visible    = attributes.layer_visible;
 		att.layer_selectable = attributes.layer_selectable;
 		
 		return att;
-	}
+	} #endregion
 	
-	static attributeDeserialize = function(attr) {
+	static attributeDeserialize = function(attr) { #region
 		if(struct_has(attr, "layer_visible"))
 			attributes.layer_visible = attr.layer_visible;
 			
 		if(struct_has(attr, "layer_selectable"))
 			attributes.layer_selectable = attr.layer_selectable;
-	}
+	} #endregion
 }
 

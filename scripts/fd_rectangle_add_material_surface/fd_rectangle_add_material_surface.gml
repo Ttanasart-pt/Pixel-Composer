@@ -10,7 +10,7 @@ function fd_rectangle_add_material_surface(domain, surface, _x, _y, xscale, ysca
 
 	with (domain) {
 	    fd_rectangle_set_target(id, FD_TARGET_TYPE.ADD_MATERIAL);
-	        draw_surface_ext(surface, _x, _y, xscale, yscale, 0, color, alpha);
+	        draw_surface_ext_safe(surface, _x, _y, xscale, yscale, 0, color, alpha);
 	    fd_rectangle_reset_target(id);
 	}
 }

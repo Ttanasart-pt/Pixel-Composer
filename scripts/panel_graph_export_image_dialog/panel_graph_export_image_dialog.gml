@@ -116,7 +116,7 @@ function Panel_Graph_Export_Image(targetPanel) : PanelContent() constructor {
 			var _sh = surface_get_height_safe(surface);
 			
 			var ss = min((w - padding * 2) / _sw, sh / _sh);
-			draw_surface_ext(surface, w / 2 - _sw * ss / 2, ty + sh / 2 - _sh * ss / 2, ss, ss, 0, c_white, 1);
+			draw_surface_ext_safe(surface, w / 2 - _sw * ss / 2, ty + sh / 2 - _sh * ss / 2, ss, ss, 0, c_white, 1);
 			
 			draw_set_text(f_p2, fa_center, fa_bottom, COLORS._main_text_sub);
 			draw_text_add(w / 2, ty + sh - ui(2), $"{surface_get_width_safe(surface)} x {surface_get_height_safe(surface)} px");

@@ -53,6 +53,9 @@ function shader_set_uniform_f_array_safe(uniform, array, max_length = 128) {
 
 function shader_set_surface(sampler, surface, linear = false, _repeat = false) {
 	var shader = shader_current();
+	
+	if(is_struct(shader) && is_instanceof(shader, dynaSurf)) 
+		shader = shader.surfaces[0];
 	if(!is_surface(surface)) return;
 	
 	var t = shader_get_sampler_index(shader, sampler);

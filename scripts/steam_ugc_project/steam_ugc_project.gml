@@ -68,7 +68,7 @@ function steam_ugc_project_generate(dest_path = DIRECTORY + "steamUGCthumbnail.p
 			var ss = (prev_size - 160) / max(surface_get_width_safe(preview_surface), surface_get_height_safe(preview_surface));
 			var ox = surface_get_width_safe(preview_surface) / 2 * ss;
 			var oy = surface_get_height_safe(preview_surface) / 2 * ss;
-			draw_surface_ext(preview_surface, prev_size / 2 - ox, prev_size / 2 - oy, ss, ss, 0, c_white, 1);
+			draw_surface_ext_safe(preview_surface, prev_size / 2 - ox, prev_size / 2 - oy, ss, ss, 0, c_white, 1);
 		}
 		
 		draw_sprite_stretched(s_workshop_badge, 0, 8, 8, 88, 88);

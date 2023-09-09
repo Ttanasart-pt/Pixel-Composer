@@ -239,7 +239,7 @@
 		}
 		
 		if(panel_dragging) {
-			draw_surface_ext(panel_dragging.dragSurface, mouse_mx + 8, mouse_my + 8, 0.5, 0.5, 0, c_white, 0.5);
+			draw_surface_ext_safe(panel_dragging.dragSurface, mouse_mx + 8, mouse_my + 8, 0.5, 0.5, 0, c_white, 0.5);
 			if((panel_mouse == 0 && mouse_release(mb_left)) || (panel_mouse == 1 && mouse_press(mb_left))) {
 				var p = [];
 				
