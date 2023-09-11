@@ -75,7 +75,7 @@ function __3dLightPoint() : __3dLight() constructor {
 		gpu_set_ztestenable(false);
 	} #endregion
 	
-	static shadowProjectVertex = function(scene, objects) { #region
+	static submitShadow = function(scene, objects) { #region
 		if(!shadow_active) return;
 		
 		for( var i = 0; i < 6; i++ ) 

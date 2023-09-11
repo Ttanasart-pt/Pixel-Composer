@@ -5,7 +5,7 @@
   "isCompatibility": false,
   "isDnD": false,
   "parent": {
-    "name": "PCX",
-    "path": "folders/functions/PCX.yy",
+    "name": "value",
+    "path": "folders/functions/value.yy",
   },
 }

@@ -12,8 +12,8 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	inputs[| 3] = nodeValue("Scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 1, 1, 1 ] )
 		.setDisplay(VALUE_DISPLAY.vector_range);
 	
-	inputs[| 4] = nodeValue("Angle", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [0, 0])
-		.setDisplay(VALUE_DISPLAY.rotation_range);
+	inputs[| 4] = nodeValue("Angle", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 0, 0, 0, 0, 0 ])
+		.setDisplay(VALUE_DISPLAY.rotation_random);
 	
 	inputs[| 5] = nodeValue("Area", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ DEF_SURF_W / 2, DEF_SURF_H / 2, DEF_SURF_W / 2, DEF_SURF_H / 2, AREA_SHAPE.rectangle ])
 		.setDisplay(VALUE_DISPLAY.area, function() { return inputs[| 1].getValue(); });
@@ -221,7 +221,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 					_scy *= _v;
 				}
 				
-				var _r	 = (_pint? point_direction(_area[0], _area[1], _x, _y) : 0) + random_range_seed(_rota[0], _rota[1], posS); posS++;
+				var _r	 = (_pint? point_direction(_area[0], _area[1], _x, _y) : 0) + angle_random_eval(_rota, posS); posS++;
 				
 				if(vRot && _v != noone)
 					_r *= _v;

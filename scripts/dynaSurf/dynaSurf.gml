@@ -23,4 +23,27 @@ function DynaSurf() constructor {
 	}
 	
 	static clone = function() {}
+	static destroy = function() {}
+}
+
+function Compute_DynaSurf() : DynaSurf() constructor {
+	drawFn   = noone;
+	widthFn  = noone;
+	heightFn = noone;
+	
+	static getWidth  = function() { return widthFn?  widthFn.eval() : 1; }
+	static getHeight = function() { return heightFn? heightFn.eval() : 1; }
+	
+	static draw = function(_x = 0, _y = 0, _sx = 1, _sy = 1, _ang = 0, _col = c_white, _alp = 1) {
+		if(drawFn == noone) return;
+		drawFn.evalFn({
+			x: _x, 
+			y: _y, 
+			sx: _sx, 
+			sy: _sy, 
+			angle: _ang, 
+			color: _col, 
+			alpha: _alp
+		});
+	}
 }

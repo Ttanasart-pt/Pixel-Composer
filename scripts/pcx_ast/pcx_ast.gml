@@ -2,26 +2,36 @@
 	global.EVALUATE_HEAD = noone;
 
 	global.FUNCTIONS    = ds_map_create();
-	global.FUNCTIONS[? "sin"]    = [ ["radian"], function(val) { return sin(val[0]); } ];
-	global.FUNCTIONS[? "cos"]    = [ ["radian"], function(val) { return cos(val[0]); } ];
-	global.FUNCTIONS[? "tan"]    = [ ["radian"], function(val) { return tan(val[0]); } ];
+	global.FUNCTIONS[? "sin"]    = [ ["radian"], function(val) { return sin(array_safe_get(val, 0)); } ];
+	global.FUNCTIONS[? "cos"]    = [ ["radian"], function(val) { return cos(array_safe_get(val, 0)); } ];
+	global.FUNCTIONS[? "tan"]    = [ ["radian"], function(val) { return tan(array_safe_get(val, 0)); } ];
 	
-	global.FUNCTIONS[? "arcsin"] = [ ["number"], function(val) { return arcsin(val[0]); } ];
-	global.FUNCTIONS[? "arccos"] = [ ["number"], function(val) { return arccos(val[0]); } ];
-	global.FUNCTIONS[? "arctan"] = [ ["number"], function(val) { return arctan(val[0]); } ];
+	global.FUNCTIONS[? "dsin"]    = [ ["degree"], function(val) { return dsin(array_safe_get(val, 0)); } ];
+	global.FUNCTIONS[? "dcos"]    = [ ["degree"], function(val) { return dcos(array_safe_get(val, 0)); } ];
+	global.FUNCTIONS[? "dtan"]    = [ ["degree"], function(val) { return dtan(array_safe_get(val, 0)); } ];
 	
-	global.FUNCTIONS[? "abs"]    = [ ["number"], function(val) { return abs(val[0]); } ];
-	global.FUNCTIONS[? "round"]  = [ ["number"], function(val) { return round(val[0]); } ];
-	global.FUNCTIONS[? "ceil"]   = [ ["number"], function(val) { return ceil(val[0]);  } ];
-	global.FUNCTIONS[? "floor"]  = [ ["number"], function(val) { return floor(val[0]); } ];
-	global.FUNCTIONS[? "fract"]  = [ ["number"], function(val) { return frac(val[0]); } ];
-	global.FUNCTIONS[? "sign"]   = [ ["number"], function(val) { return sign(val[0]); } ];
+	global.FUNCTIONS[? "arcsin"] = [ ["x"],       function(val) { return arcsin(array_safe_get(val, 0)); } ];
+	global.FUNCTIONS[? "arccos"] = [ ["x"],       function(val) { return arccos(array_safe_get(val, 0)); } ];
+	global.FUNCTIONS[? "arctan"] = [ ["x"],       function(val) { return arctan(array_safe_get(val, 0)); } ];
+	global.FUNCTIONS[? "arctan2"] = [ ["y", "x"], function(val) { return arctan2(array_safe_get(val, 0), array_safe_get(val, 1)); } ];
 	
-	global.FUNCTIONS[? "min"]   = [ ["number", "number"], function(val) { return min(array_safe_get(val, 0), array_safe_get(val, 1)); } ];
-	global.FUNCTIONS[? "max"]   = [ ["number", "number"], function(val) { return max(array_safe_get(val, 0), array_safe_get(val, 1)); } ];
-	global.FUNCTIONS[? "clamp"] = [ ["number", "min = 0", "max = 1"], function(val) { return clamp(array_safe_get(val, 0), array_safe_get(val, 1, 0), array_safe_get(val, 2, 1)); } ];
+	global.FUNCTIONS[? "darcsin"]  = [ ["x"],      function(val) { return darcsin(array_safe_get(val, 0)); } ];
+	global.FUNCTIONS[? "darccos"]  = [ ["x"],      function(val) { return darccos(array_safe_get(val, 0)); } ];
+	global.FUNCTIONS[? "darctan"]  = [ ["x"],      function(val) { return darctan(array_safe_get(val, 0)); } ];
+	global.FUNCTIONS[? "darctan2"] = [ ["y", "x"], function(val) { return darctan2(array_safe_get(val, 0), array_safe_get(val, 1)); } ];
 	
-	global.FUNCTIONS[? "lerp"]   = [ ["number_0", "number_1", "amount"], function(val) { return lerp(array_safe_get(val, 0), array_safe_get(val, 1), array_safe_get(val, 2)); } ];
+	global.FUNCTIONS[? "abs"]    = [ ["x"], function(val) { return abs(array_safe_get(val, 0)); } ];
+	global.FUNCTIONS[? "round"]  = [ ["x"], function(val) { return round(array_safe_get(val, 0)); } ];
+	global.FUNCTIONS[? "ceil"]   = [ ["x"], function(val) { return ceil(array_safe_get(val, 0));  } ];
+	global.FUNCTIONS[? "floor"]  = [ ["x"], function(val) { return floor(array_safe_get(val, 0)); } ];
+	global.FUNCTIONS[? "fract"]  = [ ["x"], function(val) { return frac(array_safe_get(val, 0)); } ];
+	global.FUNCTIONS[? "sign"]   = [ ["x"], function(val) { return sign(array_safe_get(val, 0)); } ];
+	
+	global.FUNCTIONS[? "min"]   = [ ["x", "y"], function(val) { return min(array_safe_get(val, 0), array_safe_get(val, 1)); } ];
+	global.FUNCTIONS[? "max"]   = [ ["x", "y"], function(val) { return max(array_safe_get(val, 0), array_safe_get(val, 1)); } ];
+	global.FUNCTIONS[? "clamp"] = [ ["x", "min = 0", "max = 1"], function(val) { return clamp(array_safe_get(val, 0), array_safe_get(val, 1, 0), array_safe_get(val, 2, 1)); } ];
+	
+	global.FUNCTIONS[? "lerp"]   = [ ["x", "y", "amount"], function(val) { return lerp(array_safe_get(val, 0), array_safe_get(val, 1), array_safe_get(val, 2)); } ];
 	
 	global.FUNCTIONS[? "wiggle"] = [ ["time", "frequency", "octave = 1", "seed = 0"],	function(val) { 
 																								return wiggle(0, 1, PROJECT.animator.frameTotal / array_safe_get(val, 1), 
@@ -51,10 +61,19 @@
 													return 0;
 												} ];
 	
-	global.FUNCTIONS[? "string"] = [ ["value"],  function(val) { return string(val[0]); } ];
-	global.FUNCTIONS[? "number"] = [ ["value"],  function(val) { return toNumber(val[0]); } ];
-	global.FUNCTIONS[? "chr"]    = [ ["number"], function(val) { return chr(val[0]); } ];
-	global.FUNCTIONS[? "ord"]    = [ ["char"],   function(val) { return ord(val[0]); } ];
+	global.FUNCTIONS[? "string"] = [ ["value"], function(val) { return string(array_safe_get(val, 0)); } ];
+	global.FUNCTIONS[? "number"] = [ ["value"], function(val) { return toNumber(array_safe_get(val, 0)); } ];
+	global.FUNCTIONS[? "chr"]    = [ ["x"],		function(val) { return chr(array_safe_get(val, 0)); } ];
+	global.FUNCTIONS[? "ord"]    = [ ["char"],  function(val) { return ord(array_safe_get(val, 0)); } ];
+	
+	global.FUNCTIONS[? "draw"]    = [ ["surface", "x = 0", "y = 0", "xs = 1", "ys = 1", "rot = 0", "color = white", "alpha = 1"], 
+		function(val) { return draw_surface_ext_safe(array_safe_get(val, 0, -1), array_safe_get(val, 1, 0), array_safe_get(val, 2, 0),
+													 array_safe_get(val, 3,  1), array_safe_get(val, 4, 1), array_safe_get(val, 5, 0),
+													 array_safe_get(val, 6, c_white),  array_safe_get(val, 7, 1)); 
+					  } ];
+	
+	global.FUNCTIONS[? "surface_get_width"]  = [ ["surface"], function(val) { return surface_get_width_safe(array_safe_get(val, 0)); } ];
+	global.FUNCTIONS[? "surface_get_height"] = [ ["surface"], function(val) { return surface_get_height_safe(array_safe_get(val, 0)); } ];
 	
 	globalvar PROJECT_VARIABLES;
 	PROJECT_VARIABLES = {};
@@ -87,7 +106,7 @@
 		animated
 	}
 	
-	function __funcList() constructor {
+	function __funcList() constructor { #region
 		funcTrees = [];
 		
 		static addFunction = function(fn) {
@@ -119,9 +138,9 @@
 				
 			return val;
 		}
-	}
+	} #endregion
 	
-	function __funcIf() constructor {
+	function __funcIf() constructor { #region
 		condition = noone;
 		if_true   = new __funcList();
 		if_false  = new __funcList();
@@ -149,9 +168,9 @@
 			if(res) return if_true == noone? 0  : if_true.eval(params);
 			else    return if_false == noone? 0 : if_false.eval(params);
 		}
-	}
+	} #endregion
 	
-	function __funcFor() constructor {
+	function __funcFor() constructor { #region
 		itr_array = false;
 		
 		cond_init = noone;
@@ -213,30 +232,28 @@
 				}
 			}
 		}
-	}
+	} #endregion
 	
-	function __funcTree(symbol, l = noone, r = noone) constructor {
+	function __funcTree(symbol, l = noone, r = noone) constructor { #region
 		self.symbol = symbol;
 		self.l = l;
 		self.r = r;
 		dependency = [];
 		
-		static _string = function(str) {
+		static _string = function(str) { #region
 			return string_char_at(str, 1) == "\"" &&  string_char_at(str, string_length(str)) == "\"";
-		}
+		} #endregion
 		
-		static _string_trim = function(str) {
+		static _string_trim = function(str) { #region
 			return string_trim(str, [ "\"" ]);
-		}
+		} #endregion
 		
-		static getVal = function(val, params = {}, getRaw = false) {
+		static getVal = function(val, params = {}, getRaw = false) { #region
 			if(is_struct(val))	return val.eval(params, getRaw);
 			if(is_real(val))	return val;
 			if(getRaw)			return val;
 			
 			if(is_string(val)) val = string_trim(val);
-			
-			//printIf(global.LOG_EXPRESSION, $"    [ get struct {params}[{val}] ]");
 			
 			if(struct_has(params, val))
 				return struct_try_get(params, val);
@@ -247,9 +264,9 @@
 				return _string_trim(val);
 			
 			return nodeGetData(val);
-		}
+		} #endregion
 		
-		static _validate = function(val) {
+		static _validate = function(val) { #region
 			if(is_real(val))   return true;
 			if(is_string(val)) return true;
 			if(is_struct(val)) return val.validate();
@@ -268,9 +285,9 @@
 			
 			array_push_unique(dependency, strs[0]);
 			return true;
-		}
+		} #endregion
 		
-		static validate = function() {
+		static validate = function() { #region
 			dependency = [];
 			
 			if(ds_map_exists(global.FUNCTIONS, symbol)) {
@@ -287,9 +304,9 @@
 			}
 			
 			return _validate(l) && _validate(r);
-		}
+		} #endregion
 		
-		static _isAnimated = function(val) {
+		static _isAnimated = function(val) { #region
 			if(is_real(val))   return EXPRESS_TREE_ANIM.none;
 			if(is_struct(val)) return val._isAnimated();
 			
@@ -300,18 +317,18 @@
 			}
 			
 			return EXPRESS_TREE_ANIM.none;
-		}
+		} #endregion
 		
-		static isAnimated = function() {
+		static isAnimated = function() { #region
 			var anim = EXPRESS_TREE_ANIM.none;
 			anim = max(anim, _isAnimated(l));
 			if(symbol != "@")
 				anim = max(anim, _isAnimated(r));
 			
 			return anim;
-		}
+		} #endregion
 		
-		static eval = function(params = {}, isLeft = false) {
+		static eval = function(params = {}, isLeft = false) { #region
 			if(ds_map_exists(global.FUNCTIONS, symbol)) {
 				if(!is_array(l)) return 0;
 				
@@ -369,6 +386,10 @@
 					params[$ v1] = v2;
 					res = v2;
 				}
+			} else if(symbol == "≔") {													// function default replacement
+				if(!struct_exists(params, v1))
+					params[$ v1] = v2;
+				res = params[$ v1];
 			} else if(is_array(v1) && !is_array(v2)) {									// evaluate value
 				res = array_create(array_length(v1));
 				for( var i = 0, n = array_length(res); i < n; i++ )
@@ -413,9 +434,20 @@
 			}
 			
 			return res;
-		}
+		} #endregion
 		
-		static eval_real = function(v1, v2, _symbol = symbol) {
+		static evalFn = function(params) { #region
+			if(!ds_map_exists(global.FUNCTIONS, symbol)) return;
+			
+			if(!is_array(params)) return 0;
+				
+			var _fn = global.FUNCTIONS[? symbol];
+			var _ev = _fn[1];
+			var res = _ev(params);
+			return res;
+		} #endregion
+		
+		static eval_real = function(v1, v2, _symbol = symbol) { #region
 			switch(_symbol) {
 				case "+": 
 				case "⊕": 
@@ -445,22 +477,14 @@
 				case "≥": return (is_real(v1) && is_real(v2))? v1 >= v2      : 0;
 				case ">": return (is_real(v1) && is_real(v2))? v1 > v2       : 0;
 				case "<": return (is_real(v1) && is_real(v2))? v1 < v2       : 0;
-				
-				case "sin"   : return is_real(v1)? sin(v1)    : 0;
-				case "cos"   : return is_real(v1)? cos(v1)    : 0;
-				case "tan"   : return is_real(v1)? tan(v1)    : 0;
-				case "abs"	 : return is_real(v1)? abs(v1)    : 0;
-				case "round" : return is_real(v1)? round(v1)  : 0;
-				case "ceil"	 : return is_real(v1)? ceil(v1)   : 0;
-				case "floor" : return is_real(v1)? floor(v1)  : 0;
 			}
 			
 			return v1;
-		}
-	}
+		} #endregion
+	} #endregion
 	
-	function evaluateFunction(fx, params = {}) {
+	function evaluateFunction(fx, params = {}) { #region
 		if(isNumber(fx)) return toNumber(fx);
 		return evaluateFunctionList(fx).eval(params);
-	}
+	} #endregion
 #endregion

@@ -816,19 +816,12 @@ function Panel_Preview() : PanelContent() constructor {
 				d3_scene_light0.shadow_map_scale = d3_view_camera.focus_dist * 2;
 				
 				var _prev_obj = _prev_node.getPreviewObjects();
-				d3_scene_light0.shadowProjectVertex(d3_scene_preview, _prev_obj);
+				d3_scene_light0.submitShadow(d3_scene_preview, _prev_obj);
 				
 				for( var i = 0, n = array_length(_prev_obj); i < n; i++ ) {
 					var _prev = _prev_obj[i];
-					if(_prev == noone) 
-						continue;
-					if(!is_instanceof(_prev, __3dGroup))
-						continue;
-					
-					_prev.map(function(object, params) { 
-						if(!is_instanceof(object, __3dLight)) return;
-						object.shadowProjectVertex(params.scene, params.objs); 
-					}, { scene: d3_scene_preview, objs:_prev_obj });
+					if(_prev == noone) continue;
+					_prev.submitShadow(d3_scene_preview, _prev_obj);
 				}
 			}
 		#endregion
@@ -912,15 +905,10 @@ function Panel_Preview() : PanelContent() constructor {
 					BLEND_MULTIPLY
 					draw_surface_safe(d3_deferData.ssao);
 					BLEND_NORMAL
-					
-					//draw_clear(c_white);
-					//draw_surface_safe(d3_scene_preview.geometry_data[2]);
 					break;
 				case 1 : draw_surface_safe(d3_surface_normal);	break;
 				case 2 : draw_surface_safe(d3_surface_depth);	break;
 			}
-			
-			draw_surface_stretched_safe(d3_scene_light0.shadow_map, 64, 64, 128, 128);
 		#endregion
 		
 		#region outline

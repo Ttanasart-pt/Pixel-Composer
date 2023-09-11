@@ -30,8 +30,14 @@ event_inherited();
 	
 	#region ---- category ----
 		category = NODE_CATEGORY;
-		if(context == "Node_Pixel_Builder")
-			category = NODE_PB_CATEGORY;
+		switch(context) {
+			case "Node_Pixel_Builder" : 
+				category = NODE_PB_CATEGORY; 
+				break;
+			case "Node_DynaSurf" : 
+				category = NODE_PCX_CATEGORY; 
+				break;
+		}
 	
 		draw_set_font(f_p0);
 		var maxLen = 0;
@@ -243,9 +249,7 @@ event_inherited();
 		var context = PANEL_GRAPH.getCurrentContext();
 		context = context == noone? "" : instanceof(context);
 		
-		var start = -1;
-		if(category == NODE_PB_CATEGORY)
-			start = 0;
+		var start = category == NODE_CATEGORY? -1 : 0;
 		
 		for(var i = start; i < ds_list_size(category); i++) {
 			var name = "";

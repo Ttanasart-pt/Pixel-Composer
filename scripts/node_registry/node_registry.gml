@@ -46,11 +46,12 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 }
 
 #region nodes
-	globalvar ALL_NODES, ALL_NODE_LIST, NODE_CATEGORY, NODE_PAGE_DEFAULT, NODE_PB_CATEGORY;
+	globalvar ALL_NODES, ALL_NODE_LIST, NODE_CATEGORY, NODE_PAGE_DEFAULT, NODE_PB_CATEGORY, NODE_PCX_CATEGORY;
 	ALL_NODES		 = ds_map_create();
 	ALL_NODE_LIST	 = ds_list_create();
 	NODE_CATEGORY	 = ds_list_create();
 	NODE_PB_CATEGORY = ds_list_create();
+	NODE_PCX_CATEGORY = ds_list_create();
 	
 	function nodeBuild(_name, _x, _y, _group = PANEL_GRAPH.getCurrentContext()) {
 		if(!ds_map_exists(ALL_NODES, _name)) {
@@ -85,6 +86,10 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 	
 	function addNodePBCatagory(name, list, filter = []) {
 		ds_list_add(NODE_PB_CATEGORY, { name: name, list: list, filter: filter });
+	}
+	
+	function addNodePCXCatagory(name, list, filter = []) {
+		ds_list_add(NODE_PCX_CATEGORY, { name: name, list: list, filter: filter });
 	}
 	
 	function __initNodes() {
@@ -584,7 +589,8 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 			addNodeObject(values, "Atlas Set",		s_node_atlas_set,	"Node_Atlas_Set",	[1, Node_Atlas_Set]).setVersion(1141);
 			
 			ds_list_add(values, "Surface");
-			addNodeObject(values, "IsoSurf",				s_node_surface_from_buffer,	"Node_IsoSurf",	[1, Node_IsoSurf]).setVersion(11520);
+			addNodeObject(values, "Dynamic Surface",		s_node_surface_from_buffer,	"Node_DynaSurf",	[1, Node_DynaSurf]).setVersion(11520);
+			addNodeObject(values, "IsoSurf",				s_node_surface_from_buffer,	"Node_IsoSurf",		[1, Node_IsoSurf]).setVersion(11520);
 			addNodeObject(values, "Surface from Buffer",	s_node_surface_from_buffer,	"Node_Surface_From_Buffer",	[1, Node_Surface_From_Buffer], ["buffer to surface"], "Create surface from buffer.").setVersion(1146);
 			
 			ds_list_add(values, "Buffer");
@@ -743,6 +749,33 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 			addNodeObject(pb_arr, "Array Remove",	s_node_array_remove,	"Node_Array_Remove",	[1, Node_Array_Remove], ["remove array", "delete array", "array delete"]).setVersion(1120);
 		#endregion
 		
+		//////////////////////////////////////////////////////////////// PCX NODES ////////////////////////////////////////////////////////////////
+		
+		var pcx_var = ds_list_create(); #region
+		addNodePCXCatagory("Variable", pcx_var);
+			addNodeObject(pcx_var, "Variable",		s_node_array,	"Node_PCX_var",		[1, Node_PCX_var]);
+			addNodeObject(pcx_var, "Fn Variable",	s_node_array,	"Node_PCX_fn_var",	[1, Node_PCX_fn_var]);
+		#endregion
+		
+		var pcx_fn = ds_list_create(); #region
+		addNodePCXCatagory("Functions", pcx_fn);
+			addNodeObject(pcx_fn, "Equation",	s_node_array,	"Node_PCX_Equation",		[1, Node_PCX_Equation]);
+			
+			ds_list_add(pcx_fn, "Numbers");
+			addNodeObject(pcx_fn, "Math",		s_node_array,	"Node_PCX_fn_Math",		[1, Node_PCX_fn_Math]);
+			addNodeObject(pcx_fn, "Random",		s_node_array,	"Node_PCX_fn_Random",	[1, Node_PCX_fn_Random]);
+			
+			ds_list_add(pcx_fn, "Surface");
+			addNodeObject(pcx_fn, "Surface Width",		s_node_array,	"Node_PCX_fn_Surface_Width",	[1, Node_PCX_fn_Surface_Width]);
+			addNodeObject(pcx_fn, "Surface Height",		s_node_array,	"Node_PCX_fn_Surface_Height",	[1, Node_PCX_fn_Surface_Height]);
+			
+			ds_list_add(pcx_fn, "Array");
+			addNodeObject(pcx_fn, "Array Get",		s_node_array,	"Node_PCX_Array_Get",		[1, Node_PCX_Array_Get]);
+			addNodeObject(pcx_fn, "Array Set",		s_node_array,	"Node_PCX_Array_Set",		[1, Node_PCX_Array_Set]);
+		#endregion
+		
+		//////////////////////////////////////////////////////////////// HIDDENS ////////////////////////////////////////////////////////////////
+		
 		var hid = ds_list_create(); #region
 		addNodeCatagory("Hidden", hid, ["Hidden"]);
 			addNodeObject(hid, "Input",				s_node_loop_input,		"Node_Iterator_Each_Input",		[1, Node_Iterator_Each_Input]);
@@ -756,6 +789,11 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 			addNodeObject(hid, "Sort Output",		s_node_grid_hex_noise,	"Node_Iterator_Sort_Output",	[1, Node_Iterator_Sort_Output]);
 			addNodeObject(hid, "Onion Skin",		s_node_cache,			"Node_Onion_Skin",				[1, Node_Onion_Skin]).setVersion(1147);
 			addNodeObject(hid, "Pixel Builder",		s_node_pixel_builder,	"Node_Pixel_Builder",			[1, Node_Pixel_Builder]).setVersion(1150);
+			
+			addNodeObject(hid, "Input",		s_node_pixel_builder,	"Node_DynaSurf_In",			[1, Node_DynaSurf_In]);
+			addNodeObject(hid, "Output",	s_node_pixel_builder,	"Node_DynaSurf_Out",		[1, Node_DynaSurf_Out]);
+			addNodeObject(hid, "getWidth",	s_node_pixel_builder,	"Node_DynaSurf_Out_Width",	[1, Node_DynaSurf_Out_Width]);
+			addNodeObject(hid, "getHeight",	s_node_pixel_builder,	"Node_DynaSurf_Out_Height",	[1, Node_DynaSurf_Out_Height]);
 		#endregion
 	}
 #endregion

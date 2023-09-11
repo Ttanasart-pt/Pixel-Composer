@@ -4,14 +4,23 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	color = COLORS.node_blend_collection;
 	previewable = false;
 	auto_height = false;
-	input_fix_len = -1;
 	
 	inParent = undefined;
+	
+	attributes.input_priority = group == noone? 0 : ds_list_size(group.inputs);
+	array_push(attributeEditors, "Group");
+	array_push(attributeEditors, ["Input Order", function() { return attributes.input_priority; }, 
+		new textBox(TEXTBOX_INPUT.number, function(val) { 
+			attributes.input_priority = val; 
+			group.setHeight();
+			group.sortIO();
+		})]);
 	
 	w = 96;
 	h = 32 + 24;
 	min_h = h;
 	
+	#region data
 	data_type_list = [	"Integer",		"Float",	"Boolean",	"Color",	"Surface", 
 						"File Path",	"Curve",	"Text",		"Object",	"Node", 
 						"3D object",	"Any",		"Path",		"Particle", "Rigidbody Object", 
@@ -46,6 +55,7 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		/*Mesh*/	[ "Default", ],
 		/*Trigger*/	[ "Default", ],
 	];
+	#endregion
 	
 	inputs[| 0] = nodeValue("Display type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.enum_scroll, display_list[0])
@@ -95,7 +105,7 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		.rejectArray();
 		
 	input_display_list = [ 
-		["Display", false], 5, 6, 
+		["Display", false], 6, 
 		["Data",	false], 2, 0, 4, 1, 7, 3, 8, 
 	];
 	
@@ -109,12 +119,12 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		attributes.inherit_name = false;
 	}
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
 		if(inParent.isArray()) return;
 		inParent.drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
-	}
+	} #endregion
 	
-	static onValueUpdate = function(index = 0) {
+	static onValueUpdate = function(index = 0) { #region
 		if(is_undefined(inParent)) return;
 		
 		var _dtype	    = inputs[| 0].getValue();
@@ -232,17 +242,13 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		
 		if(index == 5)
 			group.sortIO();
-	}
+	} #endregion
 	
-	static createInput = function(override_order = true) {
+	static createInput = function(override_order = true) { #region
 		if(group == noone || !is_struct(group)) return noone;
 		
-		if(override_order) {
-			input_fix_len = ds_list_size(group.inputs);
-			inputs[| 5].setValue(input_fix_len);
-		} else {
-			input_fix_len = inputs[| 5].getValue();
-		}
+		if(override_order)
+			attributes.input_priority = ds_list_size(group.inputs);
 		
 		if(!is_undefined(inParent))
 			ds_list_remove(group.inputs, inParent);
@@ -260,14 +266,14 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		onValueUpdate(0);
 		
 		return inParent;
-	}
+	} #endregion
 	
 	if(!LOADING && !APPENDING) createInput();
 	
 	dtype  = -1;
 	range  = 0;
 	
-	static step = function() {
+	static step = function() { #region
 		if(is_undefined(inParent)) return;
 		
 		if(inParent.name != display_name) {
@@ -295,11 +301,11 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 				doTrigger = 0;
 			}
 		}
-	}
+	} #endregion
 	
 	PATCH_STATIC
 	
-	static update = function(frame = PROJECT.animator.current_frame) {
+	static update = function(frame = PROJECT.animator.current_frame) { #region
 		if(is_undefined(inParent)) return;
 		
 		var _dstype = inputs[| 0].getValue();
@@ -330,20 +336,21 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 				inputs[| 4].setVisible(true);
 				break;
 		}
-	}
+	} #endregion
 	
-	static postDeserialize = function() {
+	static postDeserialize = function() { #region
 		createInput(false);
 		
 		var _inputs = load_map.inputs;
 		inputs[| 5].applyDeserialize(_inputs[5], load_scale);
+		if(PROJECT.version < 11520) attributes.input_priority = inputs[| 5].getValue();
 		group.sortIO();
 		
 		inputs[| 2].applyDeserialize(_inputs[2], load_scale);
 		onValueUpdate(2);
-	}
+	} #endregion
 	
-	static applyDeserialize = function() {
+	static applyDeserialize = function() { #region
 		var _inputs = load_map.inputs;
 		var amo = min(array_length(_inputs), ds_list_size(inputs));
 		
@@ -354,14 +361,14 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		
 		inParent.name = name;
 		onValueUpdate(0);
-	}
+	} #endregion
 	
-	static onDestroy = function() {
+	static onDestroy = function() { #region
 		if(is_undefined(inParent)) return;
 		ds_list_remove(group.inputs, inParent);
-	}
+	} #endregion
 	
-	static ungroup = function() {
+	static ungroup = function() { #region
 		var fr = inParent.value_from;
 		
 		for( var i = 0; i < ds_list_size(outputs[| 0].value_to); i++ ) {
@@ -370,5 +377,5 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 			
 			to.setFrom(fr);
 		}
-	}
+	} #endregion
 }

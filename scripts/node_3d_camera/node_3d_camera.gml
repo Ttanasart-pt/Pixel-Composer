@@ -168,38 +168,40 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 	} #endregion
 	
 	static processData = function(_output, _data, _output_index, _array_index = 0) { #region
-		var _pos = _data[0];
-		var _rot = _data[1];
+		#region data
+			var _pos = _data[0];
+			var _rot = _data[1];
 		
-		var _fov  = _data[in_d3d + 0];
-		var _clip = _data[in_d3d + 1];
-		var _dim  = _data[in_d3d + 2];
-		var _proj = _data[in_d3d + 3];
-		var _scne = _data[in_d3d + 4];
-		var _ambt = _data[in_d3d + 5];
-		var _dbg  = _data[in_d3d + 6];
-		var _back = _data[in_d3d + 7];
-		var _orts = _data[in_d3d + 8];
+			var _fov  = _data[in_d3d + 0];
+			var _clip = _data[in_d3d + 1];
+			var _dim  = _data[in_d3d + 2];
+			var _proj = _data[in_d3d + 3];
+			var _sobj = _data[in_d3d + 4];
+			var _ambt = _data[in_d3d + 5];
+			var _dbg  = _data[in_d3d + 6];
+			var _back = _data[in_d3d + 7];
+			var _orts = _data[in_d3d + 8];
 		
-		var _posm = _data[in_d3d + 9];
-		var _look = _data[in_d3d + 10];
-		var _roll = _data[in_d3d + 11];
-		var _hAng = _data[in_d3d + 12];
-		var _vAng = _data[in_d3d + 13];
-		var _dist = _data[in_d3d + 14];
-		var _gamm = _data[in_d3d + 15];
-		var _env  = _data[in_d3d + 16];
+			var _posm = _data[in_d3d + 9];
+			var _look = _data[in_d3d + 10];
+			var _roll = _data[in_d3d + 11];
+			var _hAng = _data[in_d3d + 12];
+			var _vAng = _data[in_d3d + 13];
+			var _dist = _data[in_d3d + 14];
+			var _gamm = _data[in_d3d + 15];
+			var _env  = _data[in_d3d + 16];
 		
-		var _aoEn = _data[in_d3d + 17];
-		var _aoRa = _data[in_d3d + 18];
-		var _aoBi = _data[in_d3d + 19];
-		var _aoSr = _data[in_d3d + 20];
+			var _aoEn = _data[in_d3d + 17];
+			var _aoRa = _data[in_d3d + 18];
+			var _aoBi = _data[in_d3d + 19];
+			var _aoSr = _data[in_d3d + 20];
 		
-		var _nrmSmt = _data[in_d3d + 21];
+			var _nrmSmt = _data[in_d3d + 21];
 		
-		var _qi1  = new BBMOD_Quaternion().FromAxisAngle(new BBMOD_Vec3(0, 1, 0),  90);
-		var _qi2  = new BBMOD_Quaternion().FromAxisAngle(new BBMOD_Vec3(1, 0, 0), -90);
-		var _qi3  = new BBMOD_Quaternion().FromAxisAngle(new BBMOD_Vec3(1, 0, 0),  90);
+			var _qi1  = new BBMOD_Quaternion().FromAxisAngle(new BBMOD_Vec3(0, 1, 0),  90);
+			var _qi2  = new BBMOD_Quaternion().FromAxisAngle(new BBMOD_Vec3(1, 0, 0), -90);
+			var _qi3  = new BBMOD_Quaternion().FromAxisAngle(new BBMOD_Vec3(1, 0, 0),  90);
+		#endregion
 		
 		switch(_posm) { #region ++++ camera positioning ++++
 			case 0 :
@@ -245,74 +247,85 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 		object.transform.rotation = camera.rotation.Clone();
 		object.transform.scale.set(1, _dim[0] / _dim[1], 1);
 		
-		if(_scne == noone) return;
+		if(_sobj == noone) return;
 		
-		camera.projection = _proj;
-		camera.setViewFov(_fov, _clip[0], _clip[1]);
-		if(_proj == 0)		camera.setViewSize(_dim[0], _dim[1]);
-		else if(_proj == 1) camera.setViewSize(1 / _orts, _dim[0] / _dim[1] / _orts);
-		camera.setMatrix();
+		#region camera view project
+			camera.projection = _proj;
+			camera.setViewFov(_fov, _clip[0], _clip[1]);
+			if(_proj == 0)		camera.setViewSize(_dim[0], _dim[1]);
+			else if(_proj == 1) camera.setViewSize(1 / _orts, _dim[0] / _dim[1] / _orts);
+			camera.setMatrix();
+		#endregion
 		
-		scene.camera		  = camera;
-		scene.lightAmbient    = _ambt;
-		scene.gammaCorrection = _gamm;
-		scene.enviroment_map  = _env;
-		scene.cull_mode		  = _back;
-		scene.ssao_enabled	  = _aoEn;
-		scene.ssao_radius	  = _aoRa;
-		scene.ssao_bias  	  = _aoBi;
-		scene.ssao_strength   = _aoSr;
-		scene.defer_normal_radius   = _nrmSmt;
-		scene.draw_background   = _dbg;
+		#region scene setting
+			scene.camera		  = camera;
+			scene.lightAmbient    = _ambt;
+			scene.gammaCorrection = _gamm;
+			scene.enviroment_map  = _env;
+			scene.cull_mode		  = _back;
+			scene.ssao_enabled	  = _aoEn;
+			scene.ssao_radius	  = _aoRa;
+			scene.ssao_bias  	  = _aoBi;
+			scene.ssao_strength   = _aoSr;
+			scene.defer_normal_radius   = _nrmSmt;
+			scene.draw_background   = _dbg;
+		#endregion
 		
 		var _bgSurf = _dbg? scene.renderBackground(_dim[0], _dim[1]) : noone;
-		deferData   = scene.deferPass(_scne, _dim[0], _dim[1], deferData);
+		deferData   = scene.deferPass(_sobj, _dim[0], _dim[1], deferData);
 		
-		var _render = outputs[| 0].getValue();
-		var _normal = outputs[| 1].getValue();
-		var _depth  = outputs[| 2].getValue();
+		#region surface
+			var _render = outputs[| 0].getValue();
+			var _normal = outputs[| 1].getValue();
+			var _depth  = outputs[| 2].getValue();
 		
-		_render = surface_verify(_render, _dim[0], _dim[1]);
-		_normal = surface_verify(_normal, _dim[0], _dim[1]);
-		_depth  = surface_verify(_depth , _dim[0], _dim[1]);
+			_render = surface_verify(_render, _dim[0], _dim[1]);
+			_normal = surface_verify(_normal, _dim[0], _dim[1]);
+			_depth  = surface_verify(_depth , _dim[0], _dim[1]);
 		
-		surface_set_target_ext(0, _render);
-		surface_set_target_ext(1, _normal);
-		surface_set_target_ext(2, _depth );
+			surface_set_target_ext(0, _render);
+			surface_set_target_ext(1, _normal);
+			surface_set_target_ext(2, _depth );
 		
-		DRAW_CLEAR
-		
-		gpu_set_zwriteenable(true);
-		gpu_set_ztestenable(true);
-		gpu_set_cullmode(_back); 
-		
-		camera.applyCamera();
-		
-		scene.reset();
-		scene.submitShader(_scne);
-		scene.apply(deferData);
-		scene.submit(_scne);
-			
-		surface_reset_target();
-		
-		camera.resetCamera();
-		
-		var _finalRender = surface_create(_dim[0], _dim[1]);
-		surface_set_target(_finalRender);
 			DRAW_CLEAR
-			BLEND_ALPHA
+		#endregion
+		
+		#region submit
+			gpu_set_zwriteenable(true);
+			gpu_set_ztestenable(true);
+			gpu_set_cullmode(_back); 
+		
+			camera.applyCamera();
+		
+			scene.reset();
+			scene.submitShadow(_sobj);
+			scene.submitShader(_sobj);
+			scene.apply(deferData);
+			scene.submit(_sobj);
 			
-			if(_dbg) { 
-				draw_surface_safe(_bgSurf, 0, 0);
-				surface_free(_bgSurf);
-			}
-			draw_surface_safe(_render, 0, 0);
+			surface_reset_target();
+		
+			camera.resetCamera();
+		#endregion
+		
+		#region render
+			var _finalRender = surface_create(_dim[0], _dim[1]);
+			surface_set_target(_finalRender);
+				DRAW_CLEAR
+				BLEND_ALPHA
 			
-			BLEND_MULTIPLY
-			draw_surface_safe(deferData.ssao);
-			BLEND_NORMAL
-		surface_reset_target();
-		surface_free(_render);
+				if(_dbg) { 
+					draw_surface_safe(_bgSurf, 0, 0);
+					surface_free(_bgSurf);
+				}
+				draw_surface_safe(_render, 0, 0);
+			
+				BLEND_MULTIPLY
+				draw_surface_safe(deferData.ssao);
+				BLEND_NORMAL
+			surface_reset_target();
+			surface_free(_render);
+		#endregion
 		
 		return [ _finalRender, _normal, _depth ];
 	} #endregion

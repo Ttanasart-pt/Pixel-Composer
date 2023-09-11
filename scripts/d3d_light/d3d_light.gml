@@ -34,7 +34,7 @@ function __3dLight() : __3dObject() constructor {
 	
 	static shadowProjectEnd = function() {} 
 	
-	static shadowProjectVertex = function(scene, objects) { #region
+	static submitShadow = function(scene, objects) { #region
 		if(!shadow_active) return;
 		
 		shadowProjectBegin();

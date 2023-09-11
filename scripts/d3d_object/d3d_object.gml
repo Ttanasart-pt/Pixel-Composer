@@ -116,6 +116,7 @@ function __3dObject() constructor {
 		submitVertex(_s, sh_d3d_silhouette); 
 	} #endregion
 	static submitShader = function(scene = {}, shader = noone) {}
+	static submitShadow = function(scene = {}, object = noone) {}
 	
 	static submitVertex = function(scene = {}, shader = noone) { #region
 		var _shader = sh_d3d_default;

@@ -19,6 +19,8 @@ function draw_text_bbox(bbox, text) {
 	var ss = min(bbox.w / string_width(text), bbox.h / string_height(text));
 	    ss = max(0.5, ss);
 	
+	draw_set_halign(fa_center);
+	draw_set_valign(fa_center);
 	draw_text_cut(bbox.xc, bbox.yc, text, bbox.w, ss);
 }
 

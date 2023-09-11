@@ -79,6 +79,7 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	attributes.h = 128;
 	
 	tool_node = noone;
+	draw_input_overlay = true;
 	
 	array_push(attributeEditors, ["Edit separator", function() { return attributes.separator; },
 		button(function() {
@@ -129,6 +130,7 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	}
 	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
+		if(!draw_input_overlay) return;
 		for(var i = custom_input_index; i < ds_list_size(inputs); i++) {
 			var _in   = inputs[| i];
 			var _show = _in.from.inputs[| 6].getValue();
@@ -344,7 +346,7 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		
 		for( var i = custom_input_index; i < siz; i++ ) {
 			var _in = inputs[| i];
-			var _or = _in.from.inputs[| 5].getValue();
+			var _or = _in.from.attributes.input_priority;
 			
 			ds_priority_add(ar, _in, _or);
 		}
@@ -373,7 +375,7 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		
 		for( var i = custom_output_index; i < siz; i++ ) {
 			var _out = outputs[| i];
-			var _or = _out.from.inputs[| 1].getValue();
+			var _or = _out.from.attributes.input_priority;
 			
 			ds_priority_add(ar, _out, _or);
 		}

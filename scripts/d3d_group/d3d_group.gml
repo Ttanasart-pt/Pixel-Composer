@@ -61,6 +61,8 @@ function __3dGroup() constructor {
 	static submitSel    = function(scene = {}, shader = noone) { _submit(function(_obj, scene, shader) { _obj.submitSel		(scene, shader); }, scene, shader); }
 	static submitShader = function(scene = {}, shader = noone) { _submit(function(_obj, scene, shader) { _obj.submitShader	(scene, shader); }, scene, shader); }
 	
+	static submitShadow = function(scene = {}, object = noone) { _submit(function(_obj, scene, object) { _obj.submitShadow	(scene, object); }, scene, object); }
+	
 	static map = function(callback, scene = {}) { #region
 		for( var i = 0, n = array_length(objects); i < n; i++ ) 
 			callback(objects[i], scene);

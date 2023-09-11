@@ -72,7 +72,7 @@ function rotatorRange(_onModify) : widget() constructor {
 			}
 					
 			draw_set_color(hover_arc? COLORS.widget_rotator_range_hover : COLORS.widget_rotator_range);
-			draw_arc_th(_x, knob_y, _r, 3, _data[0], _data[1]);
+			draw_arc_width(_x, knob_y, _r, 3, _data[0], _data[1]);
 		#endregion
 		
 		for(var i = 0; i < 2; i++)

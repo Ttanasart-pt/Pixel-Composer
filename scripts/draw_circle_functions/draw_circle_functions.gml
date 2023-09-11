@@ -68,7 +68,7 @@ function draw_circle_angle(_x, _y, _r, _angSt, _angEd, precision = 32) {
 	draw_primitive_end();
 }
 
-function draw_arc_th(_x, _y, _r, _th, _angSt, _angEd) {
+function draw_arc_width(_x, _y, _r, _th, _angSt, _angEd) {
 	draw_primitive_begin(pr_trianglelist);
 	var oxI, oyI, oxO, oyO;
 	

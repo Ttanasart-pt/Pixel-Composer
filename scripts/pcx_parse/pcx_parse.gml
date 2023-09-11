@@ -8,7 +8,7 @@
 	global.EQUATION_PRES[? "*"] = 2;
 	global.EQUATION_PRES[? "/"] = 2;
 	global.EQUATION_PRES[? "%"] = 2;
-	global.EQUATION_PRES[? "$"] = 3;
+	global.EQUATION_PRES[? "$"] = 3; //power
 	
 	global.EQUATION_PRES[? "&"] = 5;
 	global.EQUATION_PRES[? "|"] = 4;

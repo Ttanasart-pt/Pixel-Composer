@@ -5,6 +5,15 @@ function Node_Group_Output(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	previewable = false;
 	auto_height = false;
 	
+	attributes.input_priority = group == noone? 0 : ds_list_size(group.inputs);
+	array_push(attributeEditors, "Group");
+	array_push(attributeEditors, ["Input Order", function() { return attributes.input_priority; }, 
+		new textBox(TEXTBOX_INPUT.number, function(val) { 
+			attributes.input_priority = val; 
+			group.setHeight();
+			group.sortIO();
+		})]);
+	
 	w = 96;
 	h = 32 + 24;
 	min_h = h;
@@ -74,12 +83,8 @@ function Node_Group_Output(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		if(group == noone) return;
 		if(!is_struct(group)) return;
 		
-		if(override_order) {
-			output_index = ds_list_size(group.outputs);
-			inputs[| 1].setValue(output_index);
-		} else {
-			output_index = inputs[| 1].getValue();
-		}
+		if(override_order)
+			attributes.input_priority = ds_list_size(group.outputs);
 			
 		if(!is_undefined(outParent))
 			ds_list_remove(group.outputs, outParent);
@@ -136,6 +141,7 @@ function Node_Group_Output(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		
 		var _inputs = load_map.inputs;
 		inputs[| 1].applyDeserialize(_inputs[1], load_scale);
+		if(PROJECT.version < 11520) attributes.input_priority = inputs[| 1].getValue();
 		group.sortIO();
 	}
 	

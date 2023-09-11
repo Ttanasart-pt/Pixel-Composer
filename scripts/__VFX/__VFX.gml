@@ -127,6 +127,8 @@ function __part(_node) constructor {
 		if(!active) return;
 		x += speedx;
 		
+		random_set_seed(seed + life);
+		
 		if(ground && y + speedy > ground_y) {
 			y = ground_y;
 			speedy = -speedy * ground_bounce;

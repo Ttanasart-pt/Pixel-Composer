@@ -97,6 +97,8 @@ function __3dScene(camera) constructor {
 	static submitSel	= function(object, shader = noone) { _submit(function(object, shader) { object.submitSel	(self, shader); }, object, shader) }
 	static submitShader	= function(object, shader = noone) { _submit(function(object, shader) { object.submitShader	(self, shader); }, object, shader) }
 	
+	static submitShadow	= function(object) { object.submitShadow(self, object) }
+	
 	static deferPass = function(object, w, h, deferData = noone) { #region
 		if(deferData == noone) deferData = {
 			geometry_data: [ noone, noone, noone ],
@@ -109,9 +111,9 @@ function __3dScene(camera) constructor {
 		return deferData;
 	} #endregion
 	
-	static renderBackground = function(w, h) { #region
-		var _bgSurf = surface_create(w, h);
-		surface_set_shader(_bgSurf, sh_d3d_background);
+	static renderBackground = function(w, h, surf = noone) { #region
+		surf = surface_verify(surf, w, h);
+		surface_set_shader(surf, sh_d3d_background);
 			shader_set_color("light_ambient",	lightAmbient);
 			shader_set_f("cameraPosition",		camera.position.toArray());
 			shader_set_i("env_use_mapping",		is_surface(enviroment_map) );
@@ -129,7 +131,7 @@ function __3dScene(camera) constructor {
 			matrix_set(matrix_world, matrix_build_identity());
 		surface_reset_shader();
 		
-		return _bgSurf;
+		return surf;
 	} #endregion
 	
 	static geometryPass = function(deferData, object, w = 512, h = 512) { #region

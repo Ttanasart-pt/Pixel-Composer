@@ -53,6 +53,7 @@ enum VALUE_TYPE {
 	d3Material = 30,
 	
 	dynaSurf  = 31,
+	PCXnode   = 32,
 	
 	action	  = 99,
 }
@@ -66,6 +67,7 @@ enum VALUE_DISPLAY {
 	enum_button,
 	rotation,
 	rotation_range,
+	rotation_random,
 	slider,
 	slider_range,
 	
@@ -161,6 +163,7 @@ function value_color(i) { #region
 		$ffa64d, //d3Scene	
 		$976bff, //d3Material
 		$976bff, //dynaSurf
+		#c2c2d1, //PCX
 	];
 	
 	if(i == 99) return $5dde8f;
@@ -206,6 +209,8 @@ function value_bit(i) { #region
 		case VALUE_TYPE.d3Camera	: return 1 << 29;
 		case VALUE_TYPE.d3Scene		: return 1 << 29 | 1 << 30;
 		case VALUE_TYPE.d3Material  : return 1 << 33;
+		
+		case VALUE_TYPE.PCXnode		: return 1 << 34;
 		
 		case VALUE_TYPE.any			: return ~0 & ~(1 << 32);
 	}
@@ -410,7 +415,13 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		_initName = _name;
 		name = __txt_junction_name(instanceof(node), type, index, _name);
 		name = _name;
-	
+		
+		switch(type) {
+			case VALUE_TYPE.PCXnode : 
+				accept_array = false; 
+				break;
+		}
+		
 		static updateName = function() {
 			internalName = string_lower(string_replace_all(name, " ", "_"));
 		} updateName();
@@ -495,7 +506,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	#endregion
 	
 	#region ---- inspector ----
-		visible = _connect == JUNCTION_CONNECT.output || _type == VALUE_TYPE.surface || _type == VALUE_TYPE.path;
+		visible = _connect == JUNCTION_CONNECT.output || _type == VALUE_TYPE.surface || _type == VALUE_TYPE.path || _type == VALUE_TYPE.PCXnode;
 		show_in_inspector = true;
 	
 		display_type = VALUE_DISPLAY._default;
@@ -613,7 +624,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	} #endregion
 	
 	static isAnimable = function() { #region
-		//if(type == VALUE_TYPE.gradient)				 return false;
+		if(type == VALUE_TYPE.PCXnode)				 return false;
 		if(display_type == VALUE_DISPLAY.text_array) return false;
 		return true;
 	} #endregion
@@ -735,13 +746,18 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						break; #endregion
 					case VALUE_DISPLAY.rotation_range : #region
 						editWidget = new rotatorRange(function(index, val) { 
-							//var _val = animator.getValue();
-							//_val[index] = round(val);
 							return setValueDirect(val, index);
 						} );
 						
 						for( var i = 0, n = array_length(animators); i < n; i++ )
 							animators[i].suffix = " " + array_safe_get(global.displaySuffix_Range, i);
+						
+						extract_node = "Node_Vector2";
+						break; #endregion
+					case VALUE_DISPLAY.rotation_random: #region
+						editWidget = new rotatorRandom(function(index, val) { 
+							return setValueDirect(val, index);
+						} );
 						
 						extract_node = "Node_Vector2";
 						break; #endregion

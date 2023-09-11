@@ -1,23 +1,14 @@
 function string_cut(str, w, tail = "...", scale = 1) {
-	var ww   = 0;
-	var ind  = 1;
-	var ss   = "";
-	var _str = str;
-	var tw = string_width(tail) * scale;
-	if(string_width(str) <= w) return str;
+	if(string_width(str) * scale <= w) return str;
 	
-	var amo = string_length(str);
-	
-	for( var i = 1, n = string_length(str); i <= n; i++ ) {
-		var ch = string_char_at(str, i);
+	for( var i = string_length(str) - 1; i > 0; i-- ) {
+		var subS = string_copy(str, 1, i) + tail;
 		
-		if(string_width(ss + ch) + tw > w)
-			return ss + tail;
-			
-		ss += ch;
+		if(string_width(subS) * scale <= w)
+			return subS;
 	}
 	
-	return ss;
+	return "";
 }
 
 function string_cut_line(str, w) {

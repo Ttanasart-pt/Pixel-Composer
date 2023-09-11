@@ -8,6 +8,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		node_id = UUID_generate();
 	
 		group   = _group;
+		manual_deletable	 = true;
 		destroy_when_upgroup = false;
 		ds_list_add(PANEL_GRAPH.getNodeList(_group), self);
 	
@@ -71,6 +72,8 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		active_draw_index = -1;
 		
 		draw_droppable = false;
+		
+		junction_draw_pad_y = 32;
 	#endregion
 	
 	#region ---- junctions ----
@@ -155,7 +158,6 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		error_noti_update	 = noone;
 		error_update_enabled = false;
 		manual_updated		 = false;
-		manual_deletable	 = true;
 	#endregion
 	
 	#region ---- tools ----
@@ -230,8 +232,8 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	} #endregion
 	
 	static setHeight = function() { #region
-		var _hi = ui(32);
-		var _ho = ui(32);
+		var _hi = ui(junction_draw_pad_y);
+		var _ho = ui(junction_draw_pad_y);
 		
 		for( var i = 0; i < ds_list_size(inputs); i++ )
 			if(inputs[| i].isVisible()) _hi += 24;
@@ -250,6 +252,8 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		
 		if(onSetDisplayName != noone)
 			onSetDisplayName();
+		
+		return self;
 	} #endregion
 	
 	static setIsDynamicInput = function(_data_length = 1) { #region
@@ -575,7 +579,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		}
 		
 		var inamo = input_display_list == -1? ds_list_size(inputs) : array_length(input_display_list);
-		var _in = yy + ui(32) * _s;
+		var _in = yy + ui(junction_draw_pad_y) * _s;
 		
 		for(var i = 0; i < inamo; i++) {
 			var idx = getInputJunctionIndex(i);
@@ -591,7 +595,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		var outamo = output_display_list == -1? ds_list_size(outputs) : array_length(output_display_list);
 		
 		 xx = xx + w * _s;
-		_in = yy + ui(32) * _s;
+		_in = yy + ui(junction_draw_pad_y) * _s;
 		for(var i = 0; i < outamo; i++) {
 			var idx = getOutputJunctionIndex(i);
 			jun = outputs[| idx];

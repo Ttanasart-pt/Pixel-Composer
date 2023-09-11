@@ -43,8 +43,9 @@ function textBox(_input, _onModify, _extras = noone) : textInput(_input, _onModi
 	
 	text_surface = surface_create(1, 1);
 	
-	static setSlidable = function(slidable = true) { #region
+	static setSlidable = function(slidable = true, slideStep = slide_speed) { #region
 		self.slidable = slidable;
+		slide_speed   = slideStep;
 		return self;
 	} #endregion
 	

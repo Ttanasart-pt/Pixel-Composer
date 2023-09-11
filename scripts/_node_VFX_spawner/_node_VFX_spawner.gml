@@ -20,14 +20,14 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	inputs[| 5] = nodeValue("Lifespan", self,  JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 20, 30 ])
 		.setDisplay(VALUE_DISPLAY.range);
 	
-	inputs[| 6] = nodeValue("Spawn direction", self,  JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 45, 135 ])
-		.setDisplay(VALUE_DISPLAY.rotation_range);
+	inputs[| 6] = nodeValue("Spawn direction", self,  JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 0, 45, 135, 0, 0 ])
+		.setDisplay(VALUE_DISPLAY.rotation_random);
 	
 	inputs[| 7] = nodeValue("Acceleration", self,  JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.range);
 	
-	inputs[| 8] = nodeValue("Orientation", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 0, 0 ])
-		.setDisplay(VALUE_DISPLAY.rotation_range);
+	inputs[| 8] = nodeValue("Orientation", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 0, 0, 0, 0, 0 ])
+		.setDisplay(VALUE_DISPLAY.rotation_random);
 		
 	inputs[| 9] = nodeValue("Rotational speed", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.range);
@@ -210,8 +210,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		if(_rotation[1] < _rotation[0]) _rotation[1] += 360;
 		
 		var _posDist = [];
-		if(_distrib == 2)
-			_posDist = get_points_from_dist(_dist_map, _amo, seed);
+		if(_distrib == 2) _posDist = get_points_from_dist(_dist_map, _amo, seed);
 		
 		for( var i = 0; i < _amo; i++ ) {
 			random_set_seed(seed); 
@@ -219,6 +218,8 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 			
 			parts_runner = clamp(parts_runner, 0, array_length(parts) - 1);
 			var part = parts[parts_runner];
+			
+			//print($"Frame {_time}: Spawning particle {parts_runner}, seed {seed}, {irandom(99999999)}");
 			
 			var _spr = _inSurf, _index = 0;
 			if(is_array(_inSurf)) {
@@ -274,10 +275,10 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 				
 			var _lif = irandom_range(_life[0], _life[1]);
 				
-			var _rot	 = random_range(_rotation[0], _rotation[1]);
+			var _rot	 = angle_random_eval(_rotation);
 			var _rot_spd = random_range(_rotation_speed[0], _rotation_speed[1]);
 			
-			var _dirr	= _directCenter? point_direction(_spawn_area[0], _spawn_area[1], xx, yy) : random_range(_direction[0], _direction[1]);
+			var _dirr	= _directCenter? point_direction(_spawn_area[0], _spawn_area[1], xx, yy) : angle_random_eval(_direction);
 			
 			var _velo	= random_range(_velocity[0], _velocity[1]);
 			var _vx		= lengthdir_x(_velo, _dirr);
@@ -291,10 +292,10 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 			var _alp = random_range(_alpha[0], _alpha[1]);
 			var _bld = _blend.eval(random(1));
 			
-			part.seed = irandom(99999);
+			part.seed = irandom_range(100000, 999999);
 			part.create(_spr, xx, yy, _lif);
 			part.anim_speed = _anim_speed;
-			part.anim_end = _anim_end;
+			part.anim_end   = _anim_end;
 				
 			var _trn = random_range(_turn[0], _turn[1]);
 			if(_turnBi) _trn *= choose(-1, 1);
@@ -314,7 +315,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	
 	static updateParticleForward = function() {}
 	
-	function reset() {
+	function reset() { #region
 		spawn_index = 0;
 		scatter_index = 0;
 		for(var i = 0; i < array_length(parts); i++) {
@@ -325,7 +326,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		render();
 		seed = inputs[| 32].getValue();
 		
-		var _loop	= inputs[| 21].getValue();
+		var _loop = inputs[| 21].getValue();
 		if(!_loop) return;
 		
 		for(var i = 0; i < PROJECT.animator.frames_total; i++) {
@@ -334,9 +335,9 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		}
 		
 		seed = inputs[| 32].getValue();
-	}
+	} #endregion
 	
-	function checkPartPool() {
+	function checkPartPool() { #region
 		var _part_amo = attributes.part_amount;
 		var _curr_amo = array_length(parts);
 		
@@ -346,9 +347,9 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		} else if(_part_amo < _curr_amo) {
 			array_resize(parts, _part_amo);
 		}
-	}
+	} #endregion
 	
-	static runVFX = function(_time = PROJECT.animator.current_frame, _render = true) {
+	static runVFX = function(_time = PROJECT.animator.current_frame, _render = true) { #region
 		var _spawn_delay  = inputs[| 1].getValue(_time);
 		var _spawn_type   = inputs[| 16].getValue(_time);
 		var _spawn_active = inputs[| 27].getValue(_time);
@@ -378,11 +379,11 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		
 		triggerRender();
 		render(_time);
-	}
+	} #endregion
 	
 	static onStep = function() {}
 	
-	static step = function() {
+	static step = function() { #region
 		var _inSurf = inputs[|  0].getValue();
 		var _dist   = inputs[|  4].getValue();
 		var _scatt  = inputs[| 24].getValue();
@@ -406,24 +407,24 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		}
 		
 		onStep();
-	}
+	} #endregion
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
 		inputs[| 3].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
 		if(onDrawOverlay != -1)
 			onDrawOverlay(active, _x, _y, _s, _mx, _my);
-	}
+	} #endregion
 	
 	static onDrawOverlay = -1;
 	
-	static update = function(frame = PROJECT.animator.current_frame) {
+	static update = function(frame = PROJECT.animator.current_frame) { #region
 		checkPartPool();
 		var _spawn_type = inputs[| 16].getValue();
 		if(_spawn_type == 0)	inputs[| 1].name = "Spawn delay";
 		else					inputs[| 1].name = "Spawn frame";
 		
 		onUpdate();
-	}
+	} #endregion
 	
 	static onUpdate = function() {}
 	
@@ -433,10 +434,10 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	static onPartStep = function(part) {}
 	static onPartDestroy = function(part) {}
 	
-	static postDeserialize = function() {
+	static postDeserialize = function() { #region
 		if(PROJECT.version < 11480) {
 			for( var i = 37; i <= 39; i++ )
 				array_insert(load_map.inputs, i, noone);
 		}
-	}
+	} #endregion
 }
