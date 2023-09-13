@@ -207,6 +207,7 @@
     {"name":"widget","order":3,"path":"folders/VCT/widget.yy",},
     {"name":"widgets","order":5,"path":"folders/widgets.yy",},
     {"name":"what?","order":10,"path":"folders/panels/what?.yy",},
+    {"name":"bs","order":4,"path":"folders/sprites/bs.yy",},
   ],
   "ResourceOrderSettings": [
     {"name":"s_node_corner","order":16,"path":"sprites/s_node_corner/s_node_corner.yy",},
@@ -298,6 +299,7 @@
     {"name":"s_window_frame","order":6,"path":"sprites/s_window_frame/s_window_frame.yy",},
     {"name":"sh_fd_visualize_velocity_glsl","order":19,"path":"shaders/sh_fd_visualize_velocity_glsl/sh_fd_visualize_velocity_glsl.yy",},
     {"name":"fd_rectangle_set_material_time_step","order":8,"path":"scripts/fd_rectangle_set_material_time_step/fd_rectangle_set_material_time_step.yy",},
+    {"name":"credit_badge_popular","order":2,"path":"sprites/credit_badge_popular/credit_badge_popular.yy",},
     {"name":"s_node_path_sample","order":3,"path":"sprites/s_node_path_sample/s_node_path_sample.yy",},
     {"name":"s_node_colorize","order":15,"path":"sprites/s_node_colorize/s_node_colorize.yy",},
     {"name":"s_node_sepearte_shape","order":35,"path":"sprites/s_node_sepearte_shape/s_node_sepearte_shape.yy",},
@@ -840,6 +842,7 @@
     {"name":"fontScrollBox","order":26,"path":"scripts/fontScrollBox/fontScrollBox.yy",},
     {"name":"node_grid_hex","order":2,"path":"scripts/node_grid_hex/node_grid_hex.yy",},
     {"name":"node_pb_draw_blob","order":5,"path":"scripts/node_pb_draw_blob/node_pb_draw_blob.yy",},
+    {"name":"credit_badge_value","order":1,"path":"sprites/credit_badge_value/credit_badge_value.yy",},
     {"name":"s_node_text_display","order":4,"path":"sprites/s_node_text_display/s_node_text_display.yy",},
     {"name":"sh_d3d_outline","order":16,"path":"shaders/sh_d3d_outline/sh_d3d_outline.yy",},
     {"name":"node_strand_render_texture","order":7,"path":"scripts/node_strand_render_texture/node_strand_render_texture.yy",},

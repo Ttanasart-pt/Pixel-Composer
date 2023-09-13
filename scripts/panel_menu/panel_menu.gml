@@ -248,6 +248,12 @@ function Panel_Menu() : PanelContent() constructor {
 			menuItem(__txtx("panel_menu_test_crash", "Force crash"), function() { 
 				print(1 + "a");
 			}),
+			-1,
+			menuItem(__txt("Misc."), function(_dat) { 
+				return submenuCall(_dat, [
+					menuItem(__txtx("panel_menu_node_credit", "Node credit dialog"), function() { var dia = dialogPanelCall(new Panel_Node_Cost()); }),
+				]);
+			} ).setIsShelf(),
 		]]);
 	}
 	
