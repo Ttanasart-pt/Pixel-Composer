@@ -47,6 +47,29 @@ function Node_DynaSurf(_x, _y, _group = noone) : Node_Collection(_x, _y, _group)
 		UPDATE |= RENDER_TYPE.full; 
 	}
 	
+	static setRenderStatus = function(result) {
+		rendered = result;
+		
+		if(result)
+		for( var i = 0, n = ds_list_size(nodes); i < n; i++ ) {
+			var _n = nodes[| i];
+			
+			if(!is_instanceof(_n, Node_DynaSurf_Out) && 
+			   !is_instanceof(_n, Node_DynaSurf_Out_Width) &&
+			   !is_instanceof(_n, Node_DynaSurf_Out_Height))
+				continue;
+				
+			if(_n.rendered) continue;
+			rendered = false;
+			break;
+		}
+		
+		if(rendered) exitGroup();
+		
+		if(!result && group != noone) 
+			group.setRenderStatus(result);
+	}
+	
 	static setDynamicSurface = function() {
 		var _dyna = new Compute_DynaSurf();
 		
@@ -66,3 +89,24 @@ function Node_DynaSurf(_x, _y, _group = noone) : Node_Collection(_x, _y, _group)
 	
 	static update = function() {}
 }
+
+function dynaSurf_output_getNextNode() {
+	if(!is_instanceof(group, Node_DynaSurf)) return [];
+		
+	var junc  = group.outputs[| 0];
+	var nodes = [];
+	for(var j = 0; j < ds_list_size(junc.value_to); j++) {
+		var _to = junc.value_to[| j];
+		if(!_to.node.isRenderActive()) continue;
+			
+		if(!_to.node.active || _to.value_from == noone) 
+			continue; 
+		if(_to.value_from.node != group)
+			continue; 
+			
+		array_push(nodes, _to.node);
+	}
+		
+	return nodes;
+}
+	

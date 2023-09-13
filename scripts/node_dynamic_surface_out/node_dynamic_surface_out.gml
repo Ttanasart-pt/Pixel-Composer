@@ -29,6 +29,13 @@ function Node_DynaSurf_Out(_x, _y, _group = noone) : Node_PCX(_x, _y, _group) co
 		["Draw",      false], 6, 7, 
 	];
 	
+	static getNextNodes = method(self, dynaSurf_output_getNextNode);
+	
+	static setRenderStatus = function(result) {
+		rendered = result;
+		if(group) group.setRenderStatus(result);
+	}
+	
 	static update = function() {
 		var _surf = inputs[| 0].getValue();
 		var _x    = inputs[| 1].getValue();

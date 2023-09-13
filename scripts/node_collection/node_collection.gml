@@ -93,7 +93,7 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	static inspector1Update   = function() { onInspector1Update(); }
 	static onInspector1Update = function() { RenderListAction(nodes, group); }
 	
-	static hasInspector1Update = function(group = false) { 
+	static hasInspector1Update = function(group = false) { #region
 		if(!group) return false;
 		
 		for( var i = 0; i < ds_list_size(nodes); i++ ) {
@@ -102,19 +102,19 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		}
 		
 		return false;
-	}
+	} #endregion
 	
-	static getNodeBase = function() {
+	static getNodeBase = function() { #region 
 		if(instanceBase == noone) return self;
 		return instanceBase.getNodeBase();
-	}
+	} #endregion
 	
-	static getNodeList = function() {
+	static getNodeList = function() { #region
 		if(instanceBase == noone) return nodes;
 		return instanceBase.getNodeList();
-	}
+	} #endregion
 	
-	static setHeight = function() {
+	static setHeight = function() { #region
 		var _hi = ui(32);
 		var _ho = ui(32);
 		
@@ -127,9 +127,9 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		var preH = (preview_surface && previewable)? 128 : 0;
 		
 		h = max(min_h, preH, _hi, _ho);
-	}
+	} #endregion
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
 		if(!draw_input_overlay) return;
 		for(var i = custom_input_index; i < ds_list_size(inputs); i++) {
 			var _in   = inputs[| i];
@@ -138,9 +138,9 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 			if(!_show) continue;
 			_in.drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
 		}
-	}
+	} #endregion
 	
-	static getOutputNodes = function() {
+	static getOutputNodes = function() { #region
 		var nodes = [];
 		for( var i = custom_output_index; i < ds_list_size(outputs); i++ ) {
 			var _junc = outputs[| i];
@@ -152,9 +152,9 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 			}
 		}
 		return nodes;
-	}
+	} #endregion
 	
-	static getNextNodes = function() { //get node inside the group
+	static getNextNodes = function() { #region //get node inside the group
 		LOG_BLOCK_START();
 		LOG_IF(global.FLAG.render, $"→→→→→ Call get next node from group");
 		
@@ -177,9 +177,9 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		
 		LOG_BLOCK_END();
 		return nodes;
-	}
+	} #endregion
 	
-	static getNextNodesExternal = function() { //get node connected to the parent object
+	static getNextNodesExternal = function() { #region //get node connected to the parent object
 		LOG_IF(global.FLAG.render, $"Checking next node external for {internalName}");
 		LOG_BLOCK_START();
 		
@@ -201,9 +201,9 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		LOG_BLOCK_END();
 		
 		return nodes;
-	}
+	} #endregion
 	
-	static setRenderStatus = function(result) {
+	static setRenderStatus = function(result) { #region
 		LOG_BLOCK_START();
 		LOG_IF(global.FLAG.render, $"Set render status for {internalName} : {result}");
 		rendered = result;
@@ -224,11 +224,11 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		if(!result && group != noone) 
 			group.setRenderStatus(result);
 		LOG_BLOCK_END();
-	}
+	} #endregion
 	
 	static exitGroup = function() {}
 	
-	static add = function(_node) {
+	static add = function(_node) { #region
 		ds_list_add(getNodeList(), _node);
 		var list = _node.group == noone? PANEL_GRAPH.nodes_list : _node.group.getNodeList();
 		var _pos = ds_list_find_index(list, _node);
@@ -236,9 +236,9 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		
 		recordAction(ACTION_TYPE.group_added, self, _node);
 		_node.group = self;
-	}
+	} #endregion
 	
-	static remove = function(_node) {
+	static remove = function(_node) { #region
 		var node_list = getNodeList();
 		var _pos = ds_list_find_index(node_list, _node);
 		ds_list_delete(node_list, _pos);
@@ -254,16 +254,16 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 			nodeDelete(_node);
 		else
 			_node.group = group;
-	}
+	} #endregion
 	
-	static clearCache = function() {
+	static clearCache = function() { #region
 		var node_list = getNodeList();
 		for(var i = 0; i < ds_list_size(node_list); i++) {
 			node_list[| i].clearCache();
 		}
-	}
+	} #endregion
 	
-	static stepBegin = function() {
+	static stepBegin = function() { #region
 		use_cache = false;
 		
 		array_safe_set(cache_result, PROJECT.animator.current_frame, true);
@@ -296,9 +296,9 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		
 		setHeight();
 		doStepBegin();
-	}
+	} #endregion
 	
-	static step = function() {
+	static step = function() { #region
 		if(combine_render_time) render_time = 0;
 		
 		var node_list = getNodeList();
@@ -311,14 +311,14 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		w = attributes.w;
 		
 		onStep();
-	}
+	} #endregion
 	
-	static triggerCheck = function() {
+	static triggerCheck = function() { #region 
 		_triggerCheck();
 		var node_list = getNodeList();
 		for(var i = 0; i < ds_list_size(node_list); i++)
 			node_list[| i].triggerCheck();
-	}
+	} #endregion
 	
 	static onStep = function() {}
 	
@@ -331,12 +331,12 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	//	}
 	//}
 	
-	static preConnect = function() {
+	static preConnect = function() { #region
 		sortIO();
 		deserialize(load_map, load_scale);
-	}
+	} #endregion
 	
-	static sortIO = function() {
+	static sortIO = function() { #region
 		input_display_list = [];
 		
 		var sep = attributes.separator;		
@@ -391,18 +391,18 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		}
 		
 		ds_priority_destroy(ar);
-	}
+	} #endregion
 	
 	static getTool = function() {
-		for(var i = 0; i < ds_list_size(nodes); i++) {
+		for(var i = 0; i < ds_list_size(nodes); i++) { #region
 			var _node = nodes[| i];
 			if(_node.isTool) return _node.getTool();
 		}
 		
 		return self;
-	}
+	} #endregion 
 	
-	static onClone = function(_newNode, target = PANEL_GRAPH.getCurrentContext()) {
+	static onClone = function(_newNode, target = PANEL_GRAPH.getCurrentContext()) { #region
 		if(instanceBase != noone) {
 			_newNode.instanceBase = instanceBase;
 			return;
@@ -426,23 +426,23 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		APPENDING = false;
 		
 		ds_list_destroy(dups);
-	}
+	} #endregion
 	
-	static enable = function() { 
+	static enable = function() { #region
 		active = true;
 		var node_list = getNodeList();
 		for( var i = 0; i < ds_list_size(node_list); i++ )
 			node_list[| i].enable();
-	}
+	} #endregion
 	
-	static disable = function() {
+	static disable = function() { #region
 		active = false;
 		var node_list = getNodeList();
 		for( var i = 0; i < ds_list_size(node_list); i++ )
 			node_list[| i].disable();
-	}
+	} #endregion
 	
-	static resetRender = function() {
+	static resetRender = function() { #region
 		LOG_BLOCK_START();
 		LOG_IF(global.FLAG.render, $"Reset Render for {internalName}");
 		
@@ -454,44 +454,44 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		setRenderStatus(false);
 		
 		LOG_BLOCK_END();
-	}
+	} #endregion
 	
-	static setInstance = function(node) {
+	static setInstance = function(node) { #region
 		instanceBase = node;
-	}
+	} #endregion
 	
-	static resetInstance = function() {
+	static resetInstance = function() { #region
 		instanceBase = noone;
-	}
+	} #endregion
 	
-	static onDoubleClick = function(panel) {
+	static onDoubleClick = function(panel) { #region
 		panel.addContext(self);
-	}
+	} #endregion
 	
-	static processSerialize = function(_map) {
+	static processSerialize = function(_map) { #region
 		_map[? "instance_base"]	= instanceBase? instanceBase.node_id : noone;
-	}
+	} #endregion
 	
-	static preConnect = function() {
+	static preConnect = function() { #region 
 		instanceBase = GetAppendID(struct_try_get(load_map, "instance_base", noone));
 		
 		sortIO();
 		applyDeserialize();
-	}
+	} #endregion
 	
-	static attributeSerialize = function() {
+	static attributeSerialize = function() { #region
 		var att = {};
 		att.separator = json_stringify(attributes.separator);
 		att.w = attributes.w;
 		att.h = attributes.h;
 		return att;
-	}
+	} #endregion
 	
-	static attributeDeserialize = function(attr) {
+	static attributeDeserialize = function(attr) { #region
 		if(struct_has(attr, "separator"))
 			attributes.separator = json_parse(attr.separator);
 		attributes.w = struct_try_get(attr, "w", 128);
 		attributes.h = struct_try_get(attr, "h", 128);
-	}
+	} #endregion
 	
 }

@@ -12,6 +12,13 @@ function Node_DynaSurf_Out_Height(_x, _y, _group = noone) : Node_PCX(_x, _y, _gr
 	
 	input_display_list = [ 0 ];
 	
+	static getNextNodes = method(self, dynaSurf_output_getNextNode);
+	
+	static setRenderStatus = function(result) {
+		rendered = result;
+		if(group) group.setRenderStatus(result);
+	}
+	
 	static update = function() {
 		var _h = inputs[| 0].getValue();
 		outputs[| 0].setValue(_h);
