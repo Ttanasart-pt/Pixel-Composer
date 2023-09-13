@@ -1,10 +1,10 @@
 function Node_DynaSurf_In(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Input";
+	color = COLORS.node_blend_dynaSurf;
 	w    = 96;
 	
 	manual_deletable	 = false;
 	destroy_when_upgroup = true;
-	color = COLORS.node_blend_collection;
 	
 	inParent = undefined;
 	
@@ -54,6 +54,11 @@ function Node_DynaSurf_In(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	static update = function(frame = PROJECT.animator.current_frame) {
 		if(is_undefined(inParent)) return;
 		var _val = inParent.getValue();
+		
 		outputs[| 0].setValue(new __funcTree("", _val));
 	}
+	
+	static postDeserialize = function() { #region
+		createInput(false);
+	} #endregion
 }

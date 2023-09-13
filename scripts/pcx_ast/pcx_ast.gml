@@ -67,12 +67,22 @@
 	global.FUNCTIONS[? "ord"]    = [ ["char"],  function(val) { return ord(array_safe_get(val, 0)); } ];
 	
 	global.FUNCTIONS[? "draw"]    = [ ["surface", "x = 0", "y = 0", "xs = 1", "ys = 1", "rot = 0", "color = white", "alpha = 1"], 
-		function(val) { return draw_surface_ext_safe(array_safe_get(val, 0, -1), array_safe_get(val, 1, 0), array_safe_get(val, 2, 0),
-													 array_safe_get(val, 3,  1), array_safe_get(val, 4, 1), array_safe_get(val, 5, 0),
-													 array_safe_get(val, 6, c_white),  array_safe_get(val, 7, 1)); 
-					  } ];
+		function(val) { 
+			var _surface = array_safe_get(val, 0, -1);
+			if(!is_surface(_surface)) return false;
+			
+			var _x   = array_safe_get(val, 1, 0);
+			var _y   = array_safe_get(val, 2, 0);
+			var _xs  = array_safe_get(val, 3, 1);
+			var _ys  = array_safe_get(val, 4, 1);
+			var _rot = array_safe_get(val, 5, 0);
+			var _col = array_safe_get(val, 6, c_white);
+			var _alp = array_safe_get(val, 7, 1);
+			draw_surface_ext_safe(_surface, _x, _y, _xs, _ys, _rot, _col, _alp); 
+			return true;
+		} ];
 	
-	global.FUNCTIONS[? "surface_get_width"]  = [ ["surface"], function(val) { return surface_get_width_safe(array_safe_get(val, 0)); } ];
+	global.FUNCTIONS[? "surface_get_width"]  = [ ["surface"], function(val) { return surface_get_width_safe(array_safe_get(val, 0));  } ];
 	global.FUNCTIONS[? "surface_get_height"] = [ ["surface"], function(val) { return surface_get_height_safe(array_safe_get(val, 0)); } ];
 	
 	globalvar PROJECT_VARIABLES;
@@ -329,6 +339,9 @@
 		} #endregion
 		
 		static eval = function(params = {}, isLeft = false) { #region
+			//print($"{symbol}, {l} | {r}")
+			//print(params);
+			
 			if(ds_map_exists(global.FUNCTIONS, symbol)) {
 				if(!is_array(l)) return 0;
 				
@@ -338,7 +351,7 @@
 				
 				for( var i = 0, n = array_length(l); i < n; i++ )
 					_l[i] = getVal(l[i], params);
-					
+				
 				var res = _ev(_l);
 				printIf(global.LOG_EXPRESSION, $"Function {symbol}{_l} = {res}");
 				printIf(global.LOG_EXPRESSION, "====================");
@@ -349,6 +362,7 @@
 			var getRaw = false;
 			switch(symbol) {
 				case "=":	
+				case "≔":	
 				case "【":	
 					getRaw = true;
 			}
@@ -433,17 +447,6 @@
 					break;
 			}
 			
-			return res;
-		} #endregion
-		
-		static evalFn = function(params) { #region
-			if(!ds_map_exists(global.FUNCTIONS, symbol)) return;
-			
-			if(!is_array(params)) return 0;
-				
-			var _fn = global.FUNCTIONS[? symbol];
-			var _ev = _fn[1];
-			var res = _ev(params);
 			return res;
 		} #endregion
 		

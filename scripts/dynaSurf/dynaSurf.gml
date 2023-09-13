@@ -36,7 +36,8 @@ function Compute_DynaSurf() : DynaSurf() constructor {
 	
 	static draw = function(_x = 0, _y = 0, _sx = 1, _sy = 1, _ang = 0, _col = c_white, _alp = 1) {
 		if(drawFn == noone) return;
-		drawFn.evalFn({
+		
+		var params = {
 			x: _x, 
 			y: _y, 
 			sx: _sx, 
@@ -44,6 +45,8 @@ function Compute_DynaSurf() : DynaSurf() constructor {
 			angle: _ang, 
 			color: _col, 
 			alpha: _alp
-		});
+		};
+		
+		drawFn.eval(params);
 	}
 }

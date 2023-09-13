@@ -265,7 +265,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 	} #endregion
 	
 	static processValue = function(_val) { #region
-		if(is_array(_val))     return _val;
+		if(is_array(_val))     return array_clone(_val);
 		if(is_struct(_val))    return _val;
 		if(is_undefined(_val)) return 0;
 		

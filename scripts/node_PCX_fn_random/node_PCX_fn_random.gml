@@ -16,6 +16,6 @@ function Node_PCX_fn_Random(_x, _y, _group = noone) : Node_PCX(_x, _y, _group) c
 		var _max = inputs[| 1].getValue();
 		var _int = inputs[| 2].getValue();
 		
-		outputs[| 0].setValue(new __funcTree(_int? "irandom" : "random", _min, _max));
+		outputs[| 0].setValue(new __funcTree(_int? "irandom" : "random", [ _min, _max ]));
 	}
 }

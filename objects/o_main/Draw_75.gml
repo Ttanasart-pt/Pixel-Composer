@@ -80,7 +80,13 @@ if(OS == os_windows && gameframe_is_minimized()) exit;
 				draw_tooltip_buffer(content);
 				break;
 			default :
-				draw_tooltip_text(string(content));
+				var tt = "";
+				if(is_struct(content))
+					tt = $"[{instanceof(content)}] {content}";
+				else 
+					tt = string(content);
+				
+				draw_tooltip_text(tt);
 		} 
 	} else if(TOOLTIP != "")
 		draw_tooltip_text(TOOLTIP);

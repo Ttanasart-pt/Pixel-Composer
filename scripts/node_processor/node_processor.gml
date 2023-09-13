@@ -30,7 +30,7 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 			triggerRender();
 		}, false) ]);
 	
-	static getInputData = function(index) { return array_safe_get(current_data, index, 0); }
+	static getInputData = function(index, def = 0) { return array_safe_get(inputs_data, index, def); }
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index = 0) { return _outSurf; }
 	

@@ -268,14 +268,14 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			_surf_out = _surf_out[preview_index];
 		}
 		
-		var pos  = current_data[2];
+		var pos  = getInputData(2);
 		var _pos = [ pos[0], pos[1] ];
 		
-		var anc  = current_data[3];
+		var anc  = getInputData(3);
 		var _anc = [ anc[0], anc[1] ];
 		
-		var rot = current_data[5];
-		var sca = current_data[6];
+		var rot = getInputData(5);
+		var sca = getInputData(6);
 		
 		var srw = surface_get_width_safe(_surf);
 		var srh = surface_get_height_safe(_surf);

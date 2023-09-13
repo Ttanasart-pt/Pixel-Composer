@@ -20,6 +20,7 @@ function Node_PCX_fn_Math(_x, _y, _group = noone) : Node_PCX(_x, _y, _group) con
 		var _opr = inputs[| 0].getValue();
 		var _x   = inputs[| 1].getValue();
 		var _y   = inputs[| 2].getValue();
+		var _z   = inputs[| 3].getValue();
 		var _sym = syms[_opr];
 		
 		switch(_sym) {
@@ -46,6 +47,27 @@ function Node_PCX_fn_Math(_x, _y, _group = noone) : Node_PCX(_x, _y, _group) con
 			default: inputs[| 3].setVisible(false, false);
 		}
 		
-		outputs[| 0].setValue(new __funcTree(_sym, _x, _y));
+		switch(_sym) {
+			case "abs"		:
+			case "round"	:
+			case "floor"	:
+			case "ceil"		:
+			case "sin"		:
+			case "cos"		:
+			case "tan"		:
+			case "arcsin" 	:
+			case "arccos"	:
+			case "arctan"	:
+			case "min"	    :
+			case "max"	    :
+			case "clamp"    :
+			case "lerp"	    :
+				outputs[| 0].setValue(new __funcTree(_sym, [ _x, _y, _z ]));
+				break;
+			default:
+				outputs[| 0].setValue(new __funcTree(_sym, _x, _y));
+		}
+		
+		
 	}
 }

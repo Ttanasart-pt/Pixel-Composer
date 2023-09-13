@@ -346,7 +346,7 @@ function nodeValueUnit(_nodeValue) constructor { #region
 	} #endregion
 	
 	static invApply = function(value, index = 0) { #region
-		//value = variable_clone(value);
+		value = array_clone(value);
 		
 		if(mode == VALUE_UNIT.constant) 
 			return value;
@@ -357,7 +357,7 @@ function nodeValueUnit(_nodeValue) constructor { #region
 	} #endregion
 	
 	static apply = function(value, index = 0) { #region
-		//value = variable_clone(value);
+		value = array_clone(value);
 		
 		if(mode == VALUE_UNIT.constant) return value;
 		if(reference == noone)			return value;
@@ -366,8 +366,6 @@ function nodeValueUnit(_nodeValue) constructor { #region
 	} #endregion
 	
 	static convertUnit = function(value, unitTo, index = 0) { #region
-		//value = variable_clone(value);
-		
 		var disp = _nodeValue.display_type;
 		var base = reference(index);
 		var inv  = unitTo == VALUE_UNIT.reference;
@@ -1225,7 +1223,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			
 			if(cache_hit) {
 				global.cache_hit++;
-				return cache_value[2];
+				return array_clone(cache_value[2]);
 			}
 		}
 		
@@ -1240,7 +1238,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		cache_value[2] = val;
 		cache_value[3] = applyUnit;
 		
-		return val;
+		return array_clone(val);
 	} #endregion
 	
 	static __getAnimValue = function(_time = PROJECT.animator.current_frame) { #region
