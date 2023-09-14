@@ -27,7 +27,7 @@ function Node_Time_Remap(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	
 	attribute_surface_depth();
 	
-	static update = function(frame = PROJECT.animator.current_frame) {
+	static update = function(frame = PROJECT.animator.current_frame) { #region
 		var _inSurf  = inputs[| 0].getValue();
 		var _map     = inputs[| 1].getValue();
 		var _life    = inputs[| 2].getValue();
@@ -63,5 +63,5 @@ function Node_Time_Remap(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		surface_reset_target();
 		
 		cacheCurrentFrame(_inSurf);
-	}
+	} #endregion
 }

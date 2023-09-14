@@ -20,7 +20,7 @@ function Node_3D_Mesh_Plane(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _grou
 		var _axs = _data[in_mesh + 1];
 		
 		var object = getObject(_array_index);
-		object.checkParameter({normal: _axs});
+		object.checkParameter({ normal: _axs });
 		object.materials = [ _mat ];
 		
 		setTransform(object, _data);

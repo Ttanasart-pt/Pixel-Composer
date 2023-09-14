@@ -41,16 +41,16 @@ function Node_Twirl(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	attribute_oversample();
 	attribute_interpolation();
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
 		var pos = inputs[| 1].getValue();
 		var px = _x + pos[0] * _s;
 		var py = _y + pos[1] * _s;
 		
 		inputs[| 1].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
 		inputs[| 3].drawOverlay(active, px, py, _s, _mx, _my, _snx, _sny, 0, 1, THEME.anchor_scale_hori);
-	}
+	} #endregion
 	
-	static processData = function(_outSurf, _data, _output_index, _array_index) {		
+	static processData = function(_outSurf, _data, _output_index, _array_index) { #region	
 		var center = _data[1];
 		var stren  = _data[2];
 		var rad    = _data[3];
@@ -69,5 +69,5 @@ function Node_Twirl(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		_outSurf = mask_apply(_data[0], _outSurf, _data[5], _data[6]);
 		
 		return _outSurf;
-	}
+	} #endregion
 }

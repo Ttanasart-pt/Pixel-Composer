@@ -4,7 +4,7 @@ function Node_Fluid(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	
 	static updateForward = function(frame = PROJECT.animator.current_frame, _update = true) {
 		if(_update) update(frame);
-		print("Update " + string(frame) + ": " + name);
+		//print($"Update {frame}: {name}");
 		
 		var outJunc = outputs[| 0];
 		for( var i = 0; i < ds_list_size(outJunc.value_to); i++ ) {

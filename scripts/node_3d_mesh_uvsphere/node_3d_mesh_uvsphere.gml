@@ -25,7 +25,7 @@ function Node_3D_Mesh_Sphere_UV(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _
 		var _smt   = _data[in_mesh + 3];
 		
 		var object = getObject(_array_index);
-		object.checkParameter({hori: _sideH, vert: _sideV, smooth: _smt});
+		object.checkParameter({ hori: _sideH, vert: _sideV, smooth: _smt });
 		object.materials = [ _mat ];
 		
 		setTransform(object, _data);

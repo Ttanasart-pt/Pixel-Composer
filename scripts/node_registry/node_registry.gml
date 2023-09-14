@@ -679,7 +679,7 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 		var actions = ds_list_create();
 		addNodeCatagory("Actions", actions);
 			__initNodeActions(actions);
-			
+		
 		//var vct = ds_list_create();
 		//addNodeCatagory("VCT", vct);
 		//	addNodeObject(vct, "Biterator",		s_node_print,		"Node_Biterator",		[1, Node_Biterator]);
@@ -772,6 +772,11 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 			ds_list_add(pcx_fn, "Array");
 			addNodeObject(pcx_fn, "Array Get",		s_node_array,	"Node_PCX_Array_Get",		[1, Node_PCX_Array_Get]);
 			addNodeObject(pcx_fn, "Array Set",		s_node_array,	"Node_PCX_Array_Set",		[1, Node_PCX_Array_Set]);
+		#endregion
+		
+		var pcx_flow = ds_list_create(); #region
+		addNodePCXCatagory("Flow Control", pcx_flow);
+			addNodeObject(pcx_flow, "Condition",		s_node_array,	"Node_PCX_Condition",		[1, Node_PCX_Condition]);
 		#endregion
 		
 		//////////////////////////////////////////////////////////////// HIDDENS ////////////////////////////////////////////////////////////////

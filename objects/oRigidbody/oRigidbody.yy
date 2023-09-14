@@ -10,7 +10,7 @@
   "overriddenProperties": [],
   "parent": {
     "name": "rigidSim",
-    "path": "folders/nodes/data/rigidSim.yy",
+    "path": "folders/nodes/data/simulation/rigidSim.yy",
   },
   "parentObjectId": null,
   "persistent": true,

@@ -30,7 +30,7 @@ function Node_3D_Mesh_Cylinder(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _g
 		var _smt      = _data[in_mesh + 4];
 		
 		var object = getObject(_array_index);
-		object.checkParameter({sides: _side, smooth: _smt});
+		object.checkParameter({ sides: _side, smooth: _smt });
 		object.materials = [ _mat_top, _mat_bot, _mat_sid ];
 		
 		setTransform(object, _data);

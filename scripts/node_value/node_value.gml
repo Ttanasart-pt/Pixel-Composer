@@ -346,8 +346,6 @@ function nodeValueUnit(_nodeValue) constructor { #region
 	} #endregion
 	
 	static invApply = function(value, index = 0) { #region
-		value = array_clone(value);
-		
 		if(mode == VALUE_UNIT.constant) 
 			return value;
 		if(reference == noone)
@@ -357,8 +355,6 @@ function nodeValueUnit(_nodeValue) constructor { #region
 	} #endregion
 	
 	static apply = function(value, index = 0) { #region
-		value = array_clone(value);
-		
 		if(mode == VALUE_UNIT.constant) return value;
 		if(reference == noone)			return value;
 		
@@ -374,25 +370,28 @@ function nodeValueUnit(_nodeValue) constructor { #region
 			return inv? value / base : value * base;
 		
 		if(!is_array(base) && is_array(value)) {
+			var _val = array_create(array_length(value));
 			for( var i = 0, n = array_length(value); i < n; i++ )
-				value[i] = inv? value[i] / base : value[i] * base;
-			return value;
+				_val[i] = inv? value[i] / base : value[i] * base;
+			return _val;
 		}
 		
 		if(is_array(base) && !is_array(value))
 			return value;
 			
+		var _val = array_create(array_length(value));
+		
 		switch(disp) {
 			case VALUE_DISPLAY.padding :
 			case VALUE_DISPLAY.vector :
 			case VALUE_DISPLAY.vector_range :
 				for( var i = 0, n = array_length(value); i < n; i++ )
-					value[i] = inv? value[i] / base[i % 2] : value[i] * base[i % 2];
-				return value;
+					_val[i] = inv? value[i] / base[i % 2] : value[i] * base[i % 2];
+				return _val;
 			case VALUE_DISPLAY.area :
 				for( var i = 0; i < 4; i++ )
-					value[i] = inv? value[i] / base[i % 2] : value[i] * base[i % 2];
-				return value;
+					_val[i] = inv? value[i] / base[i % 2] : value[i] * base[i % 2];
+				return _val;
 		}
 		
 		return value;
@@ -1223,7 +1222,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			
 			if(cache_hit) {
 				global.cache_hit++;
-				return array_clone(cache_value[2]);
+				return cache_value[2];
 			}
 		}
 		
@@ -1238,7 +1237,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		cache_value[2] = val;
 		cache_value[3] = applyUnit;
 		
-		return array_clone(val);
+		return val;
 	} #endregion
 	
 	static __getAnimValue = function(_time = PROJECT.animator.current_frame) { #region
@@ -1402,6 +1401,10 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			var v = val[safe_mod(node.preview_index, array_length(val))];
 			if(array_length(v) >= 100) return $"[{array_length(v)}]";
 		}
+		
+		if(editWidget != noone && instanceof(editWidget) != "textArea" && string_length(string(val)) > 1024)
+			val = $"[Long string ({string_length(string(val))} char)]";
+		
 		return val;
 	} #endregion
 	

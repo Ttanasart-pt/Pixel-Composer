@@ -7,7 +7,7 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 	
 	//inputs[| 0] = nodeValue("Axis", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0);
 	
-	bone_renderer = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) {
+	bone_renderer = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) { #region
 		var _b  = attributes.bones;
 		if(_b == noone) return 0;
 		var amo = _b.childCount();
@@ -124,13 +124,13 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 		}
 		
 		return bh;
-	})
+	}); #endregion
 	
 	input_display_list = [
 		bone_renderer,
 	];
 	
-	static createBone = function(parent, distance, direction) {
+	static createBone = function(parent, distance, direction) { #region
 		recordAction(ACTION_TYPE.struct_modify, attributes.bones, attributes.bones.serialize());
 		
 		var bone  = new __Bone(parent, distance, direction,,, self);
@@ -139,10 +139,11 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 		if(parent == attributes.bones) 
 			bone.parent_anchor = false;
 		return bone;
-	}
+	} #endregion
 	
 	outputs[| 0] = nodeValue("Armature", self, JUNCTION_CONNECT.output, VALUE_TYPE.armature, noone);
 	
+	#region ++++ attributes ++++
 	attributes.bones = new __Bone(,,,,, self);
 	attributes.bones.name = "Main";
 	attributes.bones.is_main = true;
@@ -160,6 +161,7 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 		new scrollBox(["Octahedral", "Stick"], function(ind) { 
 			attributes.display_bone = ind;
 		})]);
+	#endregion
 	
 	tools = [
 		new NodeTool( [ "Move", "Scale" ], [ THEME.bone_tool_move, THEME.bone_tool_scale ] ),
@@ -186,7 +188,7 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 	moving = false;
 	scaling = false;
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
 		var mx = (_mx - _x) / _s;
 		var my = (_my - _y) / _s;
 		
@@ -195,7 +197,7 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 		
 		var _b = attributes.bones;
 		
-		if(builder_bone != noone) {
+		if(builder_bone != noone) { #region
 			anchor_selecting = _b.draw(attributes, false, _x, _y, _s, _mx, _my, anchor_selecting);
 			
 			var dir = point_direction(builder_sx, builder_sy, smx, smy);
@@ -264,7 +266,8 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 			}
 			
 			triggerRender();
-		} else if(ik_dragging != noone) {
+		#endregion
+		} else if(ik_dragging != noone) { #region
 			anchor_selecting = _b.draw(attributes, active * 0b100, _x, _y, _s, _mx, _my, anchor_selecting, ik_dragging);
 			
 			if(anchor_selecting != noone && anchor_selecting[1] == 2) {
@@ -309,9 +312,10 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 			}
 			
 			triggerRender();
+		#endregion
 		} 
 		
-		if(isUsingTool("Move")) { 
+		if(isUsingTool("Move")) { #region
 			_b.draw(attributes, false, _x, _y, _s, _mx, _my);
 			
 			var bbox = _b.bbox();
@@ -357,7 +361,8 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 				draw_rectangle(x0, y0, x1, y1, true);
 				draw_set_alpha(1);
 			}
-		} else if(isUsingTool("Scale")) { 
+		#endregion
+		} else if(isUsingTool("Scale")) { #region
 			_b.draw(attributes, false, _x, _y, _s, _mx, _my);
 			
 			var bbox = _b.bbox();
@@ -423,7 +428,8 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 					recordAction(ACTION_TYPE.struct_modify, attributes.bones, attributes.bones.serialize());
 				}
 			}
-		} else if(isUsingTool("Add bones")) { // builder
+		#endregion
+		} else if(isUsingTool("Add bones")) { #region // builder
 			if(builder_bone == noone)
 				anchor_selecting = _b.draw(attributes, active * 0b111, _x, _y, _s, _mx, _my, anchor_selecting);
 			
@@ -464,7 +470,8 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 				draw_sprite_ext(THEME.bone_tool_add, 1, _mx + 24, _my + 24, 1, 1, 0, c_white, 1);
 			} else if(anchor_selecting[1] == 2)
 				draw_sprite_ext(THEME.bone_tool_add, 0, _mx + 24, _my + 24, 1, 1, 0, c_white, 1);
-		} else if(isUsingTool("Remove bones")) { //remover
+		#endregion
+		} else if(isUsingTool("Remove bones")) { #region //remover
 			anchor_selecting = _b.draw(attributes, active * 0b100, _x, _y, _s, _mx, _my, anchor_selecting);
 			
 			if(anchor_selecting != noone && anchor_selecting[1] == 2 && anchor_selecting[0].parent != noone && mouse_press(mb_left, active)) {
@@ -485,7 +492,8 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 			
 			if(anchor_selecting != noone)
 				draw_sprite_ext(THEME.bone_tool_remove, 1, _mx + 24, _my + 24, 1, 1, 0, c_white, 1);
-		} else if(isUsingTool("Detach bones")) { //detach
+		#endregion
+		} else if(isUsingTool("Detach bones")) { #region //detach
 			if(builder_bone == noone)
 				anchor_selecting = _b.draw(attributes, active * 0b100, _x, _y, _s, _mx, _my, anchor_selecting);
 			
@@ -506,14 +514,16 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 				builder_my = my;
 				UNDO_HOLDING = true;
 			}
-		} else if(isUsingTool("IK")) { //IK
+		#endregion
+		} else if(isUsingTool("IK")) { #region //IK
 			if(ik_dragging == noone)
 				anchor_selecting = _b.draw(attributes, active * 0b100, _x, _y, _s, _mx, _my, anchor_selecting);
 			
 			if(anchor_selecting != noone && anchor_selecting[1] == 2 && mouse_press(mb_left, active)) {
 				ik_dragging = anchor_selecting[0];
 			}
-		} else { //mover
+		#endregion
+		} else { #region //mover
 			if(builder_bone == noone)
 				anchor_selecting = _b.draw(attributes, active * 0b111, _x, _y, _s, _mx, _my, anchor_selecting);
 			
@@ -545,18 +555,19 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 				
 				UNDO_HOLDING = true;
 			}
+		#endregion
 		}
-	}
+	} #endregion
 	
 	static step = function() {
 		
 	}
 	
-	static update = function(frame = PROJECT.animator.current_frame) {
+	static update = function(frame = PROJECT.animator.current_frame) { #region
 		outputs[| 0].setValue(attributes.bones);
-	}
+	} #endregion
 	
-	static getPreviewBoundingBox = function() {
+	static getPreviewBoundingBox = function() { #region
 		var minx =  9999999;
 		var miny =  9999999;
 		var maxx = -9999999;
@@ -587,25 +598,25 @@ function Node_Armature(_x, _y, _group = noone) : Node(_x, _y, _group) constructo
 		
 		if(minx == 9999999) return noone;
 		return BBOX().fromPoints(minx, miny, maxx, maxy);
-	}
+	} #endregion
 	
 	static attributeSerialize = function() { return {}; }
 	static attributeDeserialize = function(attr) {}
 	
-	static doSerialize = function(_map) {
+	static doSerialize = function(_map) { #region
 		_map.bones = attributes.bones.serialize();
-	}
+	} #endregion
 	
-	static postDeserialize = function() {
+	static postDeserialize = function() { #region
 		if(!struct_has(load_map, "bones")) return;
 		attributes.bones = new __Bone(,,,,, self);
 		attributes.bones.deserialize(load_map.bones, self);
 		attributes.bones.connect();
-	}
+	} #endregion
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
+	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { #region
 		var bbox = drawGetBbox(xx, yy, _s);
 		draw_sprite_fit(s_node_armature_create, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
-	}
+	} #endregion
 }
 

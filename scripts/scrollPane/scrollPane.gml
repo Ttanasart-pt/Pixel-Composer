@@ -15,6 +15,7 @@ function scrollPane(_w, _h, ondraw) : widget() constructor {
 	
 	content_h   = 0;
 	is_scroll	= true;
+	always_scroll = false;
 	
 	scroll_step = 64;
 	
@@ -24,7 +25,7 @@ function scrollPane(_w, _h, ondraw) : widget() constructor {
 	static resize = function(_w, _h) {
 		w = _w;
 		h = _h;
-		surface_w   = _w - is_scroll * ui(12);
+		surface_w   = _w - (always_scroll || is_scroll) * ui(12);
 		surface_h   = _h;
 	}
 	

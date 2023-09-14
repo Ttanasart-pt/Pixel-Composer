@@ -86,7 +86,7 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				break;
 		}
 		
-		return [ww, hh];
+		return [ ww, hh ];
 	} #endregion
 	
 	static centerAnchor = function() { #region
@@ -128,10 +128,10 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		var out_type = _data[9];
 		var out		 = _data[1];
 		
-		var pos		  = _data[2];
+		var pos		  = array_clone(_data[2]);
 		var pos_exact = _data[10];
 		
-		var anc = _data[3];
+		var anc = array_clone(_data[3]);
 		
 		var rot_vel = vel * _data[8];
 		var rot		= _data[5] + rot_vel;
@@ -268,10 +268,10 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			_surf_out = _surf_out[preview_index];
 		}
 		
-		var pos  = getInputData(2);
+		var pos  = array_clone(getInputData(2));
 		var _pos = [ pos[0], pos[1] ];
 		
-		var anc  = getInputData(3);
+		var anc  = array_clone(getInputData(3));
 		var _anc = [ anc[0], anc[1] ];
 		
 		var rot = getInputData(5);

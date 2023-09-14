@@ -1,4 +1,4 @@
-function Node_create_WAV_File_Read(_x, _y, _group = noone) {
+function Node_create_WAV_File_Read(_x, _y, _group = noone) { #region
 	var path = "";
 	if(!LOADING && !APPENDING && !CLONING) {
 		path = get_open_filename(".wav", "");
@@ -11,9 +11,9 @@ function Node_create_WAV_File_Read(_x, _y, _group = noone) {
 	node.doUpdate();
 	
 	return node;
-}
+} #endregion
 
-function Node_create_WAV_File_Read_path(_x, _y, path) {
+function Node_create_WAV_File_Read_path(_x, _y, path) { #region
 	if(!file_exists(path)) return noone;
 	
 	var node = new Node_WAV_File_Read(_x, _y, PANEL_GRAPH.getCurrentContext());
@@ -21,7 +21,7 @@ function Node_create_WAV_File_Read_path(_x, _y, path) {
 	node.doUpdate();
 	
 	return node;	
-}
+} #endregion
 
 function Node_WAV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "WAV File In";
@@ -75,31 +75,33 @@ function Node_WAV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	wav_file_prg = 0;
 	wav_file_lim = 1;
 	
-	attributes.preview_shift = 0;
-	attributes.preview_gain = 0.5;
+	#region attribute
+		attributes.preview_shift = 0;
+		attributes.preview_gain = 0.5;
 	
-	array_push(attributeEditors, "Audio Preview");
+		array_push(attributeEditors, "Audio Preview");
 	
-	array_push(attributeEditors, ["Gain", function() { return attributes.preview_gain; }, 
-		new textBox(TEXTBOX_INPUT.number, function(val) { 
-			attributes.preview_gain = val; 
-		})]);
+		array_push(attributeEditors, ["Gain", function() { return attributes.preview_gain; }, 
+			new textBox(TEXTBOX_INPUT.number, function(val) { 
+				attributes.preview_gain = val; 
+			})]);
 		
-	array_push(attributeEditors, ["Shift", function() { return attributes.preview_shift; }, 
-		new textBox(TEXTBOX_INPUT.number, function(val) { 
-			attributes.preview_shift = val; 
-		})]);
+		array_push(attributeEditors, ["Shift", function() { return attributes.preview_shift; }, 
+			new textBox(TEXTBOX_INPUT.number, function(val) { 
+				attributes.preview_shift = val; 
+			})]);
+	#endregion
 		
-	on_dragdrop_file = function(path) {
+	on_dragdrop_file = function(path) { #region
 		if(updatePaths(path)) {
 			doUpdate();
 			return true;
 		}
 		
 		return false;
-	}
+	} #endregion
 	
-	function checkPreview(force = false) {
+	function checkPreview(force = false) { #region
 		if(content == noone) return;
 		if(!force && is_surface(audio_surface)) return;
 		
@@ -135,9 +137,9 @@ function Node_WAV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 				oy = ny;
 			}
 		surface_reset_target();
-	}
+	} #endregion
 	
-	function updatePaths(path) {
+	function updatePaths(path) { #region
 		path = try_get_path(path);
 		if(path == -1) return false;
 		
@@ -156,9 +158,9 @@ function Node_WAV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		
 		content = file_read_wav(path);
 		return true;
-	}
+	} #endregion
 	
-	function readSoundComplete() {
+	function readSoundComplete() { #region
 		outputs[| 0].setValue(content.sound);
 		outputs[| 2].setValue(content.sample);
 		outputs[| 3].setValue(content.channels);
@@ -178,8 +180,9 @@ function Node_WAV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			buffer_write(bufferId, buffer_s16, round(content.sound[0][i] / 4 * 65535));
 		
 		preview_audio = audio_create_buffer_sound(bufferId, buffer_s16, content.sample, 0, content.packet * 2, audio_mono);
-	}
+	} #endregion
 	
+	#region ++++ inspector ++++
 	insp1UpdateTooltip  = __txt("Refresh");
 	insp1UpdateIcon     = [ THEME.refresh, 1, COLORS._main_value_positive ];
 	
@@ -197,8 +200,9 @@ function Node_WAV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	static onInspector2Update = function() {
 		attributes.play = !attributes.play;
 	}
+	#endregion
 	
-	static step = function() {
+	static step = function() { #region
 		if(file_read_wav_step()) {
 			print("Load audio complete");
 			readSoundComplete();
@@ -217,19 +221,14 @@ function Node_WAV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		if(!attributes.play) return;
 		
 		if(PROJECT.animator.is_playing) {
-			if(PROJECT.animator.current_frame == 0)
-				audio_stop_sound(preview_audio);
-				
 			var dur = PROJECT.animator.current_frame / PROJECT.animator.framerate - attributes.preview_shift;
-			//if(preview_id && PROJECT.animator.frame_progress)
-			//	audio_sound_set_track_position(preview_id, dur);
 			
 			if(!audio_is_playing(preview_audio))
 				preview_id = audio_play_sound(preview_audio, 1, false, attributes.preview_gain, dur);
 		}
-	}
+	} #endregion
 	
-	static update = function(frame = PROJECT.animator.current_frame) {
+	static update = function(frame = PROJECT.animator.current_frame) { #region
 		var path = inputs[| 0].getValue();
 		if(path == "") return;
 		
@@ -247,16 +246,18 @@ function Node_WAV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		var amp_ed = clamp(amp_ind + amp_win, 0, len);
 		
 		var val = 0;
-		for( var i = amp_st; i < amp_ed; i++ )
-			val += content.sound[0][i] * content.sound[0][i];
-		val /= amp_ed - amp_st;
-		val  = sqrt(val);
+		if(amp_ed > amp_st) {
+			for( var i = amp_st; i < amp_ed; i++ )
+				val += content.sound[0][i] * content.sound[0][i];
+			val /= amp_ed - amp_st;
+			val  = sqrt(val);
+		}
 		
 		var dec = 10 * log10(val);
 		outputs[| 5].setValue(dec);
-	}
+	} #endregion
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { 
+	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { #region
 		if(content == noone) return;
 		var bbox = drawGetBbox(xx, yy, _s);
 		
@@ -289,9 +290,9 @@ function Node_WAV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		draw_set_text(f_p0, fa_center, fa_bottom, COLORS._main_text);
 		var ss	= min(1, string_scale(str, bbox.w, bbox.h));
 		draw_text_transformed(bbox.xc, bbox.y1, str, ss, ss, 0);
-	}
+	} #endregion
 	
-	static drawAnimationTimeline = function(_shf, _w, _h, _s) { //return 0;
+	static drawAnimationTimeline = function(_shf, _w, _h, _s) { #region
 		if(content == noone) return;
 		draw_set_color(COLORS._main_icon_dark);
 		draw_set_alpha(1);
@@ -315,5 +316,5 @@ function Node_WAV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		}
 		
 		draw_set_alpha(1);
-	}
+	} #endregion
 }

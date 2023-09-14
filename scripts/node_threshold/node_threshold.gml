@@ -36,17 +36,17 @@ function Node_Threshold(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	attribute_surface_depth();
 	
-	static step = function() {
+	static step = function() { #region
 		var _bright = inputs[| 1].getValue();
-					  inputs[| 2].setVisible(_bright);
-					  inputs[| 3].setVisible(_bright);
+		inputs[| 2].setVisible(_bright);
+		inputs[| 3].setVisible(_bright);
 		
 		var _alpha  = inputs[| 7].getValue();
-					  inputs[| 8].setVisible(_alpha);
-					  inputs[| 9].setVisible(_alpha);
-	}
+		inputs[| 8].setVisible(_alpha);
+		inputs[| 9].setVisible(_alpha);
+	} #endregion
 	
-	static processData = function(_outSurf, _data, _output_index, _array_index) {		
+	static processData = function(_outSurf, _data, _output_index, _array_index) { #region
 		var _bright				= _data[1];
 		var _brightThreshold	= _data[2];
 		var _brightSmooth		= _data[3];
@@ -70,5 +70,5 @@ function Node_Threshold(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		_outSurf = mask_apply(_data[0], _outSurf, _data[4], _data[5]);
 		
 		return _outSurf;
-	}
+	} #endregion
 }

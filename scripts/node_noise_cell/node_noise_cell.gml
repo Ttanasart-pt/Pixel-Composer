@@ -67,14 +67,12 @@ function Node_Cellular(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
 		
-		if(_type == 0)
-			shader = sh_cell_noise;
-		else if(_type == 1)
-			shader = sh_cell_noise_edge;	
-		else if(_type == 2)
-			shader = sh_cell_noise_random;	
-		else if(_type == 3)
-			shader = sh_cell_noise_crystal;	
+		switch(_type) {
+			case 0 : shader = sh_cell_noise;			break;
+			case 1 : shader = sh_cell_noise_edge;		break;
+			case 2 : shader = sh_cell_noise_random;		break;
+			case 3 : shader = sh_cell_noise_crystal;	break;
+		}
 		
 		surface_set_target(_outSurf);
 		shader_set(shader);

@@ -22,14 +22,14 @@ function Node_Colors_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 		
 	selecting_index = 0;
 	
-	function setColor(colr) {
+	function setColor(colr) { #region
 		var _to   = inputs[| 2].getValue();
 		_to[selecting_index] = colr;
 		
-		inputs[| 2].setValue(_to);
-	}
+		inputs[| 2].setValue(_to);			// Not necessary due to array reference
+	} #endregion
 		
-	render_palette = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) {
+	render_palette = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) { #region
 		var bx = _x;
 		var by = _y;
 		
@@ -115,7 +115,7 @@ function Node_Colors_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 		}
 		
 		return hh;
-	});
+	}); #endregion
 	
 	input_display_list = [ 6, 
 		["Output",		 true], 0, 4, 5, 
@@ -127,7 +127,7 @@ function Node_Colors_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	
 	attribute_surface_depth();
 	
-	static refreshPalette = function() {
+	static refreshPalette = function() { #region
 		var _surf = array_safe_get(current_data, 0);
 		
 		inputs[| 1].setValue([]);
@@ -164,9 +164,9 @@ function Node_Colors_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 		
 		inputs[| 1].setValue(palette);
 		inputs[| 2].setValue(palette);
-	}
+	} #endregion
 	
-	static processData = function(_outSurf, _data, _output_index, _array_index) { 		
+	static processData = function(_outSurf, _data, _output_index, _array_index) { #region		
 		var fr  = _data[1];
 		var to  = _data[2];
 		var tr  = _data[3];
@@ -186,5 +186,5 @@ function Node_Colors_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 		_outSurf = mask_apply(_data[0], _outSurf, _data[4], _data[5]);
 		
 		return _outSurf;
-	}
+	} #endregion
 }

@@ -6,6 +6,6 @@
   "isDnD": false,
   "parent": {
     "name": "fluidSim",
-    "path": "folders/nodes/data/fluidSim.yy",
+    "path": "folders/nodes/data/simulation/fluidSim.yy",
   },
 }

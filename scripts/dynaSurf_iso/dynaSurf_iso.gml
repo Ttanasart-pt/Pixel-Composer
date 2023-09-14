@@ -4,12 +4,8 @@ function DynaSurf_iso() : DynaSurf() constructor {
 	static getSurface = function(_rot) {}
 	
 	static draw = function(_x = 0, _y = 0, _xs = 1, _ys = 1, _rot = 0, _col = c_white, _alp = 1) {
-		var _surf = getSurface(_rot);
-		var _w    = getWidth() * _xs;
-		var _h    = getHeight() * _ys;
-		var _px   = point_rotate(0, 0, _w / 2, _h / 2, _rot);
-		
-		draw_surface_ext_safe(_surf, _x - _px[0], _y - _px[1], _xs, _ys, 0, _col, _alp);
+		var _pos = getAbsolutePos(_x, _y, _xs, _ys, _rot);
+		draw_surface_ext_safe(_surf, _pos[0], _pos[1], _xs, _ys, 0, _col, _alp);
 	}
 	
 	static drawTile = function(_x = 0, _y = 0, _xs = 1, _ys = 1, _col = c_white, _alp = 1) {

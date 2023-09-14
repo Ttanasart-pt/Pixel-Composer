@@ -91,15 +91,15 @@ function Node_3D_Object(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 			ga[1] = new BBMOD_Vec3(0, 0,  size);
 			ga[2] = new BBMOD_Vec3(0, -size, 0);
 			
-			ga[3] = [ new BBMOD_Vec3(-hs + sq,        0,  hs - sq),
+			ga[3] = [	new BBMOD_Vec3(-hs + sq,        0,  hs - sq),
 						new BBMOD_Vec3(-hs - sq,        0,  hs - sq), 
 						new BBMOD_Vec3(-hs - sq,        0,  hs + sq), 
 						new BBMOD_Vec3(-hs + sq,        0,  hs + sq), ];
-			ga[4] = [ new BBMOD_Vec3(       0, -hs + sq,  hs - sq),
+			ga[4] = [	new BBMOD_Vec3(       0, -hs + sq,  hs - sq),
 						new BBMOD_Vec3(       0, -hs - sq,  hs - sq), 
 						new BBMOD_Vec3(       0, -hs - sq,  hs + sq), 
 						new BBMOD_Vec3(       0, -hs + sq,  hs + sq), ];
-			ga[5] = [ new BBMOD_Vec3(-hs + sq, -hs - sq,        0),
+			ga[5] = [	new BBMOD_Vec3(-hs + sq, -hs - sq,        0),
 						new BBMOD_Vec3(-hs - sq, -hs - sq,        0), 
 						new BBMOD_Vec3(-hs - sq, -hs + sq,        0), 
 						new BBMOD_Vec3(-hs + sq, -hs + sq,        0), ];
@@ -108,15 +108,15 @@ function Node_3D_Object(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 			ga[1] = new BBMOD_Vec3(0, -size, 0);
 			ga[2] = new BBMOD_Vec3(0, 0, -size);
 			
-			ga[3] = [ new BBMOD_Vec3(-hs + sq, -hs - sq,        0),
+			ga[3] = [	new BBMOD_Vec3(-hs + sq, -hs - sq,        0),
 						new BBMOD_Vec3(-hs - sq, -hs - sq,        0), 
 						new BBMOD_Vec3(-hs - sq, -hs + sq,        0), 
 						new BBMOD_Vec3(-hs + sq, -hs + sq,        0), ];
-			ga[4] = [ new BBMOD_Vec3(       0, -hs + sq, -hs - sq),
+			ga[4] = [	new BBMOD_Vec3(       0, -hs + sq, -hs - sq),
 						new BBMOD_Vec3(       0, -hs - sq, -hs - sq), 
 						new BBMOD_Vec3(       0, -hs - sq, -hs + sq), 
 						new BBMOD_Vec3(       0, -hs + sq, -hs + sq), ];
-			ga[5] = [ new BBMOD_Vec3(-hs + sq,        0, -hs - sq),
+			ga[5] = [	new BBMOD_Vec3(-hs + sq,        0, -hs - sq),
 						new BBMOD_Vec3(-hs - sq,        0, -hs - sq), 
 						new BBMOD_Vec3(-hs - sq,        0, -hs + sq), 
 						new BBMOD_Vec3(-hs + sq,        0, -hs + sq), ];
@@ -293,8 +293,8 @@ function Node_3D_Object(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 		
 			var ga   = [];
 			var size = 64;
-			var hs = size / 2;
-			var sq = 8;
+			var hs   = size / 2;
+			var sq   = 8;
 		#endregion
 		
 		#region display
@@ -417,15 +417,15 @@ function Node_3D_Object(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 			ga[1] = new BBMOD_Vec3(0, -size, 0);
 			ga[2] = new BBMOD_Vec3(0, 0, -size);
 			
-			ga[3] = [ new BBMOD_Vec3(-hs + sq, -hs - sq,        0),
+			ga[3] = [	new BBMOD_Vec3(-hs + sq, -hs - sq,        0),
 						new BBMOD_Vec3(-hs - sq, -hs - sq,        0), 
 						new BBMOD_Vec3(-hs - sq, -hs + sq,        0), 
 						new BBMOD_Vec3(-hs + sq, -hs + sq,        0), ];
-			ga[4] = [ new BBMOD_Vec3(       0, -hs + sq, -hs - sq),
+			ga[4] = [	new BBMOD_Vec3(       0, -hs + sq, -hs - sq),
 						new BBMOD_Vec3(       0, -hs - sq, -hs - sq), 
 						new BBMOD_Vec3(       0, -hs - sq, -hs + sq), 
 						new BBMOD_Vec3(       0, -hs + sq, -hs + sq), ];
-			ga[5] = [ new BBMOD_Vec3(-hs + sq,        0, -hs - sq),
+			ga[5] = [	new BBMOD_Vec3(-hs + sq,        0, -hs - sq),
 						new BBMOD_Vec3(-hs - sq,        0, -hs - sq), 
 						new BBMOD_Vec3(-hs - sq,        0, -hs + sq), 
 						new BBMOD_Vec3(-hs + sq,        0, -hs + sq), ];

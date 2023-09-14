@@ -14,7 +14,7 @@ function Node_Combine_HSV(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	attribute_surface_depth();
 	
-	static processData = function(_outSurf, _data, _output_index, _array_index) {
+	static processData = function(_outSurf, _data, _output_index, _array_index) { #region
 		var _h = _data[0];
 		var _s = _data[1];
 		var _v = _data[2];
@@ -35,5 +35,5 @@ function Node_Combine_HSV(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		surface_reset_target();
 		
 		return _outSurf;
-	}
+	} #endregion
 }

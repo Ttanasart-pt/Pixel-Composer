@@ -25,9 +25,9 @@ function Node_Array_Reverse(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			outputs[| 0].type = type;
 		}
 		
-		var arr = array_reverse(_arr);
+		_arr = array_reverse(_arr);
 		
-		outputs[| 0].setValue(arr);
+		outputs[| 0].setValue(_arr);
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {

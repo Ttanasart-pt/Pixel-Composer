@@ -10,7 +10,7 @@ function Node_DynaSurf(_x, _y, _group = noone) : Node_Collection(_x, _y, _group)
 	custom_input_index  = ds_list_size(inputs);
 	custom_output_index = ds_list_size(outputs);
 	
-	if(!LOADING && !APPENDING && !CLONING) {
+	if(!LOADING && !APPENDING && !CLONING) { #region
 		var _input  = nodeBuild("Node_DynaSurf_In",  -256, -32, self);
 		var _output = nodeBuild("Node_DynaSurf_Out",  256, -32, self);
 		
@@ -45,9 +45,9 @@ function Node_DynaSurf(_x, _y, _group = noone) : Node_Collection(_x, _y, _group)
 		_outH.inputs[| 0].setFrom(_surH.outputs[| 0]);
 		
 		UPDATE |= RENDER_TYPE.full; 
-	}
+	} #endregion
 	
-	static setRenderStatus = function(result) {
+	static setRenderStatus = function(result) { #region
 		rendered = result;
 		
 		if(result)
@@ -68,9 +68,9 @@ function Node_DynaSurf(_x, _y, _group = noone) : Node_Collection(_x, _y, _group)
 		
 		if(!result && group != noone) 
 			group.setRenderStatus(result);
-	}
+	} #endregion
 	
-	static setDynamicSurface = function() {
+	static setDynamicSurface = function() { #region
 		var _dyna = new Compute_DynaSurf();
 		
 		for( var i = 0, n = ds_list_size(nodes); i < n; i++ ) {
@@ -85,12 +85,12 @@ function Node_DynaSurf(_x, _y, _group = noone) : Node_Collection(_x, _y, _group)
 		}
 		
 		outputs[| 0].setValue(_dyna);
-	}
+	} #endregion
 	
 	static update = function() {}
 }
 
-function dynaSurf_output_getNextNode() {
+function dynaSurf_output_getNextNode() { #region
 	if(!is_instanceof(group, Node_DynaSurf)) return [];
 		
 	var junc  = group.outputs[| 0];
@@ -108,5 +108,5 @@ function dynaSurf_output_getNextNode() {
 	}
 		
 	return nodes;
-}
+} #endregion
 	

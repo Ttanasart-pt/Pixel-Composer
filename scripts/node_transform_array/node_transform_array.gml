@@ -22,8 +22,8 @@ function Node_Transform_Array(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		var pos = inputs[| 0].getValue();
-		var px = _x + pos[0] * _s;
-		var py = _y + pos[1] * _s;
+		var px  = _x + pos[0] * _s;
+		var py  = _y + pos[1] * _s;
 		
 		inputs[| 0].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
 		inputs[| 1].drawOverlay(active, px, py, _s, _mx, _my, _snx, _sny);

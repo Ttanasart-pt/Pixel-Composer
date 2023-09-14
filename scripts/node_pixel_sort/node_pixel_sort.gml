@@ -34,13 +34,13 @@ function Node_Pixel_Sort(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	
 	attribute_surface_depth();
 	
-	static processData = function(_outSurf, _data, _output_index, _array_index) {
+	static processData = function(_outSurf, _data, _output_index, _array_index) { #region
 		var _in = _data[0];
 		
 		var _it = _data[1];
 		var _tr = _data[2];
 		var _dr = floor(_data[3] / 90) % 4;
-		if(_dr < 0) _dr = 4 + _dr;
+		if(_dr < 0)  _dr = 4 + _dr;
 		if(_it <= 0) return _outSurf;
 		
 		var sw = surface_get_width_safe(_outSurf);
@@ -89,5 +89,5 @@ function Node_Pixel_Sort(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		_outSurf = mask_apply(_data[0], _outSurf, _data[4], _data[5]);
 		
 		return _outSurf;
-	}
+	} #endregion
 }

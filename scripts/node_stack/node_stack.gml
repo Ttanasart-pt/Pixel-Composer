@@ -14,11 +14,11 @@ function Node_Stack(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	
 	setIsDynamicInput(1);
 	
-	static createNewInput = function() {
+	static createNewInput = function() { #region
 		var index = ds_list_size(inputs);
 		inputs[| index] = nodeValue("Input", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, -1 )
 			.setVisible(true, true);
-	}
+	} #endregion
 	if(!LOADING && !APPENDING) createNewInput();
 	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
@@ -27,7 +27,7 @@ function Node_Stack(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	
 	attribute_surface_depth();
 	
-	static refreshDynamicInput = function() {
+	static refreshDynamicInput = function() { #region
 		var _l = ds_list_create();
 		for( var i = 0; i < ds_list_size(inputs); i++ ) {
 			if(i < input_fix_len || inputs[| i].value_from)	
@@ -43,23 +43,23 @@ function Node_Stack(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		inputs = _l;
 		
 		createNewInput();
-	}
+	} #endregion
 	
-	static onValueFromUpdate = function(index) {
+	static onValueFromUpdate = function(index) { #region
 		if(index < input_fix_len) return;
 		if(LOADING || APPENDING) return;
 		
 		refreshDynamicInput();
-	}
+	} #endregion
 	
-	static step = function() {
+	static step = function() { #region
 		var _axis = inputs[| 0].getValue();
 		
 		inputs[| 1].setVisible(_axis != 2);
 		inputs[| 2].setVisible(_axis != 2);
-	}
+	} #endregion
 	
-	static update = function(frame = PROJECT.animator.current_frame) {
+	static update = function(frame = PROJECT.animator.current_frame) { #region
 		var _axis = inputs[| 0].getValue();
 		var _alig = inputs[| 1].getValue();
 		var _spac = inputs[| 2].getValue();
@@ -140,6 +140,6 @@ function Node_Stack(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		surface_reset_target();
 		
 		outputs[| 1].setValue(atlas);
-	}
+	} #endregion
 }
 

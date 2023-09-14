@@ -58,7 +58,7 @@ If set, then strength value control how many times the effect applies on itself.
 	attribute_oversample();
 	attribute_interpolation();
 	
-	static processData = function(_outSurf, _data, _output_index, _array_index) {		
+	static processData = function(_outSurf, _data, _output_index, _array_index) { #region
 		switch(_data[5]) {
 			case 0 :
 				inputs[| 2].setVisible(true);
@@ -90,5 +90,5 @@ If set, then strength value control how many times the effect applies on itself.
 		_outSurf = mask_apply(_data[0], _outSurf, _data[8], _data[9]);
 		
 		return _outSurf;
-	}
+	} #endregion
 }

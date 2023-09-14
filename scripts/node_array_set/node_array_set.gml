@@ -53,12 +53,11 @@ function Node_Array_Set(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		draw_set_text(f_h3, fa_center, fa_center, COLORS._main_text);
-		var idx = inputs[| 1].getValue();
-		
-		var str	= string(idx);
-		
+		var idx  = inputs[| 1].getValue();
+		var str	 = string(idx);
 		var bbox = drawGetBbox(xx, yy, _s);
-		var ss	= string_scale(str, bbox.w, bbox.h);
+		var ss	 = string_scale(str, bbox.w, bbox.h);
+		
 		draw_text_transformed(bbox.xc, bbox.yc, str, ss, ss, 0);
 	}
 }

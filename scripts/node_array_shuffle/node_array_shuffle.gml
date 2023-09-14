@@ -20,6 +20,7 @@ function Node_Array_Shuffle(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		outputs[| 0].type = VALUE_TYPE.any;
 		
 		if(!is_array(arr)) return;
+		arr = array_clone(arr);
 		
 		if(inputs[| 0].value_from != noone) {
 			inputs[| 0].type = inputs[| 0].value_from.type;

@@ -596,6 +596,8 @@ event_inherited();
 		
 		return hh;
 	}); #endregion
+	
+	content_pane.always_scroll = true;
 #endregion
 
 #region resize

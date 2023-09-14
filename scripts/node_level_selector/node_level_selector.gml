@@ -25,7 +25,7 @@ function Node_Level_Selector(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	
 	attribute_surface_depth();
 	
-	level_renderer = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) {
+	level_renderer = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) { #region
 		var _h = 128;
 		var x0 = _x;
 		var x1 = _x + _w;
@@ -58,7 +58,7 @@ function Node_Level_Selector(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 		draw_rectangle(x0, y0, x1, y1, true);
 		
 		return _h;
-	});
+	}); #endregion
 	
 	input_display_list = [ 5, 
 		level_renderer,
@@ -67,20 +67,20 @@ function Node_Level_Selector(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	];
 	histogramInit();
 	
-	static onInspect = function() {
+	static onInspect = function() { #region
 		if(array_length(current_data) > 0)
 			histogramUpdate(current_data[0]);
-	}
+	} #endregion
 	
-	static onValueFromUpdate = function(index) {
+	static onValueFromUpdate = function(index) { #region
 		if(index == 0) {
 			update();
 			if(array_length(current_data) > 0)
 				histogramUpdate(current_data[0]);
 		}
-	}
+	} #endregion
 	
-	static processData = function(_outSurf, _data, _output_index, _array_index) {		
+	static processData = function(_outSurf, _data, _output_index, _array_index) { #region
 		var _middle = _data[1];
 		var _range  = _data[2];
 		
@@ -101,5 +101,5 @@ function Node_Level_Selector(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 		_outSurf = mask_apply(_data[0], _outSurf, _data[3], _data[4]);
 		
 		return _outSurf;
-	}
+	} #endregion
 }

@@ -34,7 +34,7 @@ function Node_Blur_Contrast(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	
 	attribute_surface_depth();
 	
-	static processData = function(_outSurf, _data, _output_index, _array_index) {
+	static processData = function(_outSurf, _data, _output_index, _array_index) { #region
 		var _surf = _data[0];
 		var _size = _data[1];
 		var _tres = _data[2];
@@ -72,5 +72,5 @@ function Node_Blur_Contrast(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		_outSurf = mask_apply(_data[0], _outSurf, _mask, _mix);
 		
 		return _outSurf;
-	}
+	} #endregion
 }

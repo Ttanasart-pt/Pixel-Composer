@@ -141,7 +141,7 @@ function Node_Seperate_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 			
 		for(var i = 0; i < px; i++) {
 			_outSurf = surface_create_valid(ww, hh);
-			_val[@ i] = _outSurf;
+			_val[i] = _outSurf;
 				
 			surface_set_target(_outSurf);
 			DRAW_CLEAR

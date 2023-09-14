@@ -26,7 +26,7 @@ function Node_3D_Mesh_Extrude(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _gr
 		var _surf = _mat == noone? noone : _mat.surface;
 		
 		var object = getObject(_array_index);
-		object.checkParameter({surface: _surf, height: _hght, smooth: _smt}, _updt);
+		object.checkParameter({ surface: _surf, height: _hght, smooth: _smt }, _updt);
 		object.materials = [ _mat ];
 		
 		setTransform(object, _data);

@@ -1,4 +1,4 @@
-function Node_create_3D_Obj(_x, _y, _group = noone) {
+function Node_create_3D_Obj(_x, _y, _group = noone) { #region
 	var path = "";
 	if(!LOADING && !APPENDING && !CLONING) {
 		path = get_open_filename(".obj", "");
@@ -9,15 +9,15 @@ function Node_create_3D_Obj(_x, _y, _group = noone) {
 	var node = new Node_3D_Mesh_Obj(_x, _y, _group);
 	node.setPath(path);
 	return node;
-}
+} #endregion
 
-function Node_create_3D_Obj_path(_x, _y, path) {
+function Node_create_3D_Obj_path(_x, _y, path) { #region
 	if(!file_exists(path)) return noone;
 	
 	var node = new Node_3D_Mesh_Obj(_x, _y, PANEL_GRAPH.getCurrentContext());
 	node.setPath(path);
 	return node;
-}
+} #endregion
 
 function Node_3D_Mesh_Obj(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group) constructor {
 	name = "3D Obj";
@@ -121,8 +121,8 @@ function Node_3D_Mesh_Obj(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group)
 		if(array_length(materialNames)) 
 			materials = readMtl(_pathMtl);
 		else {
-			materialNames = ["Material"];
-			materialIndex = [0];
+			materialNames = [ "Material" ];
+			materialIndex = [ 0 ];
 			materials = [ new MTLmaterial("Material") ];
 		}
 			

@@ -21,7 +21,7 @@ function Node_Morph_Surface(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	attribute_surface_depth();
 	attribute_interpolation();
 	
-	static processData = function(_outSurf, _data, _output_index, _array_index) {		
+	static processData = function(_outSurf, _data, _output_index, _array_index) { #region
 		var sFrom = _data[0];
 		var sTo   = _data[1];
 		var amo   = _data[2];
@@ -42,5 +42,5 @@ function Node_Morph_Surface(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		surface_reset_shader();
 		
 		return _outSurf;
-	}
+	} #endregion
 }

@@ -35,7 +35,7 @@ function Node_Color_Remove(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	
 	attribute_surface_depth();
 	
-	static processData = function(_outSurf, _data, _output_index, _array_index) {
+	static processData = function(_outSurf, _data, _output_index, _array_index) { #region
 		var frm = _data[1];
 		var thr = _data[2];
 		var inv = _data[6];
@@ -63,5 +63,5 @@ function Node_Color_Remove(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		_outSurf = mask_apply(_data[0], _outSurf, _data[3], _data[4]);
 		
 		return _outSurf;
-	}
+	} #endregion
 }

@@ -65,10 +65,10 @@ function Node_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			_surf = _surf[preview_index];
 		}
 		
-		var tl = current_data[1];
-		var tr = current_data[2];
-		var bl = current_data[3];
-		var br = current_data[4];
+		var tl = array_clone(current_data[1]);
+		var tr = array_clone(current_data[2]);
+		var bl = array_clone(current_data[3]);
+		var br = array_clone(current_data[4]);
 		
 		tl[0] = _x + tl[0] * _s;
 		tr[0] = _x + tr[0] * _s;

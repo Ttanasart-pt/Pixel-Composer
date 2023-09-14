@@ -33,7 +33,7 @@ function Node_Chromatic_Aberration(_x, _y, _group = noone) : Node_Processor(_x, 
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) {
 		var center = _data[1];
-		var stren = _data[2];
+		var stren  = _data[2];
 		
 		surface_set_shader(_outSurf, shader);
 		shader_set_interpolation(_data[0]);

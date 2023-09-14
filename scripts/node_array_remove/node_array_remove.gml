@@ -44,7 +44,6 @@ function Node_Array_Remove(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	static update = function(frame = PROJECT.animator.current_frame) {
 		var _arr = inputs[| 0].getValue();
-		
 		if(!is_array(_arr)) return;
 		
 		var type  = inputs[| 1].getValue();
@@ -52,24 +51,24 @@ function Node_Array_Remove(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		var value = inputs[| 3].getValue();
 		var spred = inputs[| 4].getValue();
 		
-		var arr = array_clone(_arr);
+		_arr = array_clone(_arr);
 		
 		if(type == 0) {
 			if(!is_array(index)) index = [ index ];
 			array_sort(index, false);
 			
 			for( var i = 0, n = array_length(index); i < n; i++ ) {
-				if(index[i] < 0) index[i] = array_length(arr) + index[i];
-				array_delete(arr, index[i], 1);
+				if(index[i] < 0) index[i] = array_length(_arr) + index[i];
+				array_delete(_arr, index[i], 1);
 			}
 		} else {
 			if(!spred || !is_array(value)) value = [ value ];
 			
 			for( var i = 0, n = array_length(value); i < n; i++ )
-				array_remove(arr, value[i]);
+				array_remove(_arr, value[i]);
 		}
 		
-		outputs[| 0].setValue(arr);
+		outputs[| 0].setValue(_arr);
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {

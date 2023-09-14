@@ -17,6 +17,7 @@ function Node_Armature_Sample(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	outputs[| 0] = nodeValue("Position", self, JUNCTION_CONNECT.output, VALUE_TYPE.integer, [ 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.vector);
 	
+	#region ++++ attributes ++++
 	attributes.display_name = true;
 	attributes.display_bone = 0;
 	
@@ -29,15 +30,16 @@ function Node_Armature_Sample(_x, _y, _group = noone) : Node(_x, _y, _group) con
 		new scrollBox(["Octahedral", "Stick"], function(ind) { 
 			attributes.display_bone = ind;
 		})]);
+	#endregion
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
 		var _b	  = inputs[| 0].getValue();
 		
 		if(_b == noone) return;
 		_b.draw(attributes, false, _x, _y, _s, _mx, _my);
-	}
+	} #endregion
 	
-	function update() { 
+	function update() { #region
 		var _bone = inputs[| 0].getValue();
 		var _name = inputs[| 1].getValue();
 		var _prog = inputs[| 2].getValue();
@@ -45,9 +47,6 @@ function Node_Armature_Sample(_x, _y, _group = noone) : Node(_x, _y, _group) con
 		if(_bone == noone) return;
 		
 		_name = string_trim(_name);
-		//print($"|{_name}|{string_length(_name)}");
-		//for( var i = 1; i <= string_length(_name); i++ ) 
-		//	print($"  {i}: |{string_char_at(_name, i)}|");
 		
 		var _b = _bone.findBoneByName(_name);
 		if(_b == noone) {
@@ -57,10 +56,10 @@ function Node_Armature_Sample(_x, _y, _group = noone) : Node(_x, _y, _group) con
 		
 		var _p = _b.getPoint(_prog);
 		outputs[| 0].setValue([_p.x, _p.y]);
-	}
+	} #endregion
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
+	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { #region
 		var bbox = drawGetBbox(xx, yy, _s);
 		draw_sprite_fit(s_node_armature_sample, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
-	}
+	} #endregion
 }

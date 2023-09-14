@@ -30,7 +30,7 @@ function Node_SDF(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) const
 	
 	temp_surface = [ surface_create(1, 1), surface_create(1, 1) ];
 	
-	static processData = function(_outSurf, _data, _output_index, _array_index) {
+	static processData = function(_outSurf, _data, _output_index, _array_index) { #region
 		var inSurf = _data[0];
 		var _side  = _data[2];
 		var _dist  = _data[3];
@@ -54,12 +54,11 @@ function Node_SDF(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) const
 		BLEND_NORMAL;
 		surface_reset_target();
 		
-		var step = ceil(log2(_n));
-		var stepSize = power(2, step);
-		var bg = 0;
-		//step = 2;
+		var _step    = ceil(log2(_n));
+		var stepSize = power(2, _step);
+		var bg       = 0;
 		
-		repeat(step) {
+		repeat(_step) {
 			stepSize /= 2;
 			bg = !bg;
 			
@@ -92,5 +91,5 @@ function Node_SDF(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) const
 		surface_reset_target();
 		
 		return _outSurf;
-	}
+	} #endregion
 }

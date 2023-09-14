@@ -22,7 +22,7 @@ function Node_3D_Mesh_Sphere_Ico(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, 
 		var _smt = _data[in_mesh + 2];
 		
 		var object = getObject(_array_index);
-		object.checkParameter({level: _sub, smooth: _smt});
+		object.checkParameter({ level: _sub, smooth: _smt });
 		object.materials = [ _mat ];
 		
 		setTransform(object, _data);

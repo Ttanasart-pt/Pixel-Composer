@@ -1,6 +1,14 @@
 function DynaSurf() constructor {
 	surfaces = [];
 	
+	static getAbsolutePos = function(_x, _y, _xs = 1, _ys = 1, _rot = 0) {
+		var _w    = getWidth() * _xs;
+		var _h    = getHeight() * _ys;
+		var _px   = point_rotate(0, 0, _w / 2, _h / 2, _rot);
+		
+		return [ _x - _px[0], _y - _px[1] ];
+	}
+	
 	static getWidth  = function() { return is_surface(surfaces[0])? surface_get_width(surfaces[0])  : 1; }
 	static getHeight = function() { return is_surface(surfaces[0])? surface_get_height(surfaces[0]) : 1; }
 	
@@ -31,15 +39,18 @@ function Compute_DynaSurf() : DynaSurf() constructor {
 	widthFn  = noone;
 	heightFn = noone;
 	
+	useAbsolutePose = false;
+	
 	static getWidth  = function() { return widthFn?  widthFn.eval() : 1; }
 	static getHeight = function() { return heightFn? heightFn.eval() : 1; }
 	
 	static draw = function(_x = 0, _y = 0, _sx = 1, _sy = 1, _ang = 0, _col = c_white, _alp = 1) {
 		if(drawFn == noone) return;
+		var pos = useAbsolutePose? getAbsolutePos(_x, _y, _xs, _ys, _rot) : [ _x, _y ];
 		
 		var params = {
-			x: _x, 
-			y: _y, 
+			x: pos[0], 
+			y: pos[1], 
 			sx: _sx, 
 			sy: _sy, 
 			angle: _ang, 

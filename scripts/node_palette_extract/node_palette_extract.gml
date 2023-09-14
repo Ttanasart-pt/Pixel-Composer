@@ -223,7 +223,7 @@ function Node_Palette_Extract(_x, _y, _group = noone) : Node(_x, _y, _group) con
 		surface_reset_target();
 		
 		var c_buffer = buffer_create(ww * hh * 4, buffer_fixed, 2);
-		var colors = array_create(ww * hh);
+		var colors   = array_create(ww * hh);
 		
 		buffer_get_surface(c_buffer, _surf, 0);
 		buffer_seek(c_buffer, buffer_seek_start, 0);

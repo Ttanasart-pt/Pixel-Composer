@@ -19,7 +19,7 @@ function Node_Invert(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	attribute_surface_depth();
 	
-	static processData = function(_outSurf, _data, _output_index, _array_index) {		
+	static processData = function(_outSurf, _data, _output_index, _array_index) { #region	
 		surface_set_target(_outSurf);
 		DRAW_CLEAR
 		BLEND_OVERRIDE;
@@ -34,5 +34,5 @@ function Node_Invert(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		_outSurf = mask_apply(_data[0], _outSurf, _data[1], _data[2]);
 		
 		return _outSurf;
-	}
+	} #endregion
 }

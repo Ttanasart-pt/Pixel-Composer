@@ -48,10 +48,7 @@ function Node_Iterator_Output(_x, _y, _group = noone) : Node_Group_Output(_x, _y
 		var _new_val;
 		
 		surface_array_free(_prev_val);
-		if(is_surf)
-			_new_val = surface_array_clone(_val);
-		else 
-			_new_val = array_clone(_val);
+		_new_val = is_surf? surface_array_clone(_val) : array_clone(_val);
 		
 		return _new_val;
 	}

@@ -284,12 +284,11 @@ function Node_Repeat(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				_outSurf[i] = _out;
 				doRepeat(_out, _inSurf[i]);
 			}
-			
-			outputs[| 0].setValue(_outSurf);
 		} else {
 			_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], cDep);
-			outputs[| 0].setValue(_outSurf);
 			doRepeat(_outSurf, _inSurf);
 		}
+		
+		outputs[| 0].setValue(_outSurf);
 	}
 }

@@ -16,6 +16,7 @@ function Node_Armature_Path(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	current_length  = 0;
 	boundary = new BoundingBox();
 	
+	#region ++++ attributes ++++
 	attributes.display_name = true;
 	attributes.display_bone = 0;
 	
@@ -28,13 +29,14 @@ function Node_Armature_Path(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		new scrollBox(["Octahedral", "Stick"], function(ind) { 
 			attributes.display_bone = ind;
 		})]);
+	#endregion
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
 		var _b	  = inputs[| 0].getValue();
 		
 		if(_b == noone) return;
 		_b.draw(attributes, false, _x, _y, _s, _mx, _my);
-	}
+	} #endregion
 	
 	static getBoundary	= function() { return boundary; }
 	
@@ -43,11 +45,11 @@ function Node_Armature_Path(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	static getLength		= function() { return current_length; }
 	static getAccuLength	= function() { return [ 0, current_length ]; }
 	
-	static getWeightDistance = function (_dist, _ind = 0) { 
+	static getWeightDistance = function (_dist, _ind = 0) { #region
 		return getWeightRatio(_dist / current_length, _ind); 
-	}
+	} #endregion
 	
-	static getWeightRatio = function (_rat, _ind = 0) { 
+	static getWeightRatio = function (_rat, _ind = 0) { #region
 		var _p0 = lines[_ind][0];
 		var _p1 = lines[_ind][1];
 		
@@ -55,13 +57,13 @@ function Node_Armature_Path(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		if(!is_array(_p1) || array_length(_p1) < 3) return 1;
 		
 		return lerp(_p0[2], _p1[2], _rat);
-	}
+	} #endregion
 	
-	static getPointDistance = function(_dist, _ind = 0) {
+	static getPointDistance = function(_dist, _ind = 0) { #region
 		return getPointRatio(_dist / current_length, _ind); 
-	}
+	} #endregion
 	
-	static getPointRatio = function(_rat, _ind = 0) {
+	static getPointRatio = function(_rat, _ind = 0) { #region
 		var _p0 = lines[_ind][0];
 		var _p1 = lines[_ind][1];
 		
@@ -72,9 +74,9 @@ function Node_Armature_Path(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		var _y  = lerp(_p0[1], _p1[1], _rat);
 		
 		return new __vec2( _x, _y );
-	}
+	} #endregion
 	
-	function update() { 
+	function update() { #region
 		var _bone = inputs[| 0].getValue();
 		if(_bone == noone) return;
 		
@@ -109,10 +111,10 @@ function Node_Armature_Path(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		ds_stack_destroy(_bst);
 		
 		outputs[| 0].setValue(self);
-	}
+	} #endregion
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
+	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { #region
 		var bbox = drawGetBbox(xx, yy, _s);
 		draw_sprite_fit(s_node_armature_path, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
-	}
+	} #endregion
 }

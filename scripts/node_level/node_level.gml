@@ -42,7 +42,7 @@ function Node_Level(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	
 	attribute_surface_depth();
 	
-	level_renderer = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) {
+	level_renderer = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) { #region
 		var _h = 128;
 		var x0 = _x;
 		var x1 = _x + _w;
@@ -73,7 +73,7 @@ function Node_Level(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		draw_rectangle(x0, y0, x1, y1, true);
 		
 		return _h;
-	});
+	}); #endregion
 	
 	input_display_list = [ 8, 
 		level_renderer,
@@ -88,15 +88,15 @@ function Node_Level(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 			histogramUpdate(current_data[0]);
 	}
 	
-	static onValueFromUpdate = function(index) {
+	static onValueFromUpdate = function(index) { #region
 		if(index == 0) {
 			doUpdate();
 			if(array_length(current_data) > 0)
 				histogramUpdate(current_data[0]);
 		}
-	}
+	} #endregion
 	
-	static processData = function(_outSurf, _data, _output_index, _array_index) {		
+	static processData = function(_outSurf, _data, _output_index, _array_index) { #region	
 		var _wmin = min(_data[1][0], _data[1][1]);
 		var _wmax = max(_data[1][0], _data[1][1]);
 		var _rmin = min(_data[2][0], _data[2][1]);
@@ -133,5 +133,5 @@ function Node_Level(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		_outSurf = mask_apply(_data[0], _outSurf, _data[6], _data[7]);
 		
 		return _outSurf;
-	}
+	} #endregion
 }

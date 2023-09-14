@@ -36,7 +36,7 @@ function Node_Camera(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	temp_surface = [ noone, noone ];
 	
-	static createNewInput = function()  {
+	static createNewInput = function() {
 		var index = ds_list_size(inputs);
 		var _s    = floor((index - input_fix_len) / data_length);
 		

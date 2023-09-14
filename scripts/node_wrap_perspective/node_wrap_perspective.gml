@@ -75,10 +75,10 @@ function Node_Warp_Perspective(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 		
 		var tool = 1;
 		
-		var tl = current_data[tool * 4 + 2];
-		var tr = current_data[tool * 4 + 3];
-		var bl = current_data[tool * 4 + 4];
-		var br = current_data[tool * 4 + 5];
+		var tl = array_clone(current_data[tool * 4 + 2]);
+		var tr = array_clone(current_data[tool * 4 + 3]);
+		var bl = array_clone(current_data[tool * 4 + 4]);
+		var br = array_clone(current_data[tool * 4 + 5]);
 		
 		tl[0] = _x + tl[0] * _s;
 		tr[0] = _x + tr[0] * _s;

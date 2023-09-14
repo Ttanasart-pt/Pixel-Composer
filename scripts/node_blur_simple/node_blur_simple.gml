@@ -42,7 +42,7 @@ function Node_Blur_Simple(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	attribute_surface_depth();
 	attribute_oversample();
 	
-	static processData = function(_outSurf, _data, _output_index, _array_index) {		
+	static processData = function(_outSurf, _data, _output_index, _array_index) { #region	
 		if(!is_surface(_data[0])) return _outSurf;
 		var _size	= _data[1];
 		var _samp	= struct_try_get(attributes, "oversample");
@@ -79,5 +79,5 @@ function Node_Blur_Simple(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		_outSurf = mask_apply(_data[0], _outSurf, _msk, _mix);
 		
 		return _outSurf;
-	}
+	} #endregion
 }

@@ -28,7 +28,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	setIsDynamicInput(4);
 	
-	attributes.layer_visible = [];
+	attributes.layer_visible    = [];
 	attributes.layer_selectable = [];
 	
 	hold_visibility = true;
@@ -54,7 +54,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		
 		layer_remove = -1;
 		for(var i = 0; i < amo; i++) {
-			var ind = amo - i - 1;
+			var ind   = amo - i - 1;
 			var index = input_fix_len + ind * data_length;
 			var _surf = current_data[index + 0];
 			var _pos  = current_data[index + 1];
@@ -88,7 +88,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 					hold_visibility = !_vis[ind];
 					
 				if(mouse_click(mb_left, _focus) && _vis[ind] != hold_visibility) {
-					_vis[@ ind] = hold_visibility;
+					_vis[ind] = hold_visibility;
 					doUpdate();
 				}
 			} else 
@@ -102,7 +102,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 					hold_select = !_sel[ind];
 					
 				if(mouse_click(mb_left, _focus) && _sel[ind] != hold_select)
-					_sel[@ ind] = hold_select;
+					_sel[ind] = hold_select;
 			} else 
 				draw_sprite_ui_uniform(THEME.cursor_select, sel, _bx, _cy + lh / 2, 1, COLORS._main_icon, 0.5 + 0.5 * sel);
 			
@@ -167,9 +167,8 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 					ds_list_delete(inputs, index);
 				}
 				
-				for( var i = 0; i < data_length; i++ ) {
+				for( var i = 0; i < data_length; i++ )
 					ds_list_insert(inputs, targt + i, ext[i]);
-				}
 				
 				doUpdate();
 			}
@@ -569,7 +568,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			}
 		}
 		
-		var hovering = noone;
+		var hovering      = noone;
 		var hovering_type = noone;
 		var _vis = attributes.layer_visible;
 		var _sel = attributes.layer_selectable;

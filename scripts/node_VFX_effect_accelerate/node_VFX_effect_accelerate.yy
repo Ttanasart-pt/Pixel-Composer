@@ -6,6 +6,6 @@
   "isDnD": false,
   "parent": {
     "name": "VFX",
-    "path": "folders/nodes/data/VFX.yy",
+    "path": "folders/nodes/data/simulation/VFX.yy",
   },
 }

@@ -35,7 +35,7 @@ function Node_Colorize(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	
 	attribute_surface_depth();
 	
-	static processData = function(_outSurf, _data, _output_index, _array_index) {
+	static processData = function(_outSurf, _data, _output_index, _array_index) { #region
 		var _gra		= _data[1];
 		var _gra_shift	= _data[2];
 		var _alpha		= _data[6];
@@ -65,5 +65,5 @@ function Node_Colorize(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		_outSurf = mask_apply(_data[0], _outSurf, _data[3], _data[4]);
 		
 		return _outSurf;
-	}
+	} #endregion
 }

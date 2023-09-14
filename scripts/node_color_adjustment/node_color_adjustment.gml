@@ -82,7 +82,7 @@ function Node_Color_adjust(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		outputs[| 1].setVisible(type == 1, type == 1);
 	}
 	
-	static processData = function(_outSurf, _data, _output_index, _array_index) {
+	static processData = function(_outSurf, _data, _output_index, _array_index) { #region
 		var _bri = _data[1];
 		var _con = _data[2];
 		var _hue = _data[3];
@@ -103,6 +103,8 @@ function Node_Color_adjust(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		
 		var _surf     = _data[0];
 		var _baseSurf = _outSurf;
+		
+		_col = array_clone(_col);
 		
 		if(_type == 1) {
 			if(!is_array(_col)) _col = [ _col ];
@@ -165,9 +167,9 @@ function Node_Color_adjust(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		surface_reset_target();
 		
 		return _outSurf;
-	}
+	} #endregion
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
+	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { #region
 		var type = inputs[| 12].getValue();
 		if(type == 0) return;
 		
@@ -178,5 +180,5 @@ function Node_Color_adjust(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		if(array_length(pal) && is_array(pal[0])) return;
 		
 		drawPalette(pal, bbox.x0, bbox.y0, bbox.w, bbox.h);
-	}
+	} #endregion
 }

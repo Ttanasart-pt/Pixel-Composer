@@ -35,16 +35,16 @@ function Node_Blur_Zoom(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	attribute_surface_depth();
 	attribute_oversample();
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
 		var pos = inputs[| 2].getValue();
 		var px = _x + pos[0] * _s;
 		var py = _y + pos[1] * _s;
 		
 		inputs[| 1].drawOverlay(active, px, py, _s, _mx, _my, _snx, _sny, 0, 64, THEME.anchor_scale_hori);
 		inputs[| 2].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
-	}
+	} #endregion
 	
-	static processData = function(_outSurf, _data, _output_index, _array_index) {
+	static processData = function(_outSurf, _data, _output_index, _array_index) { #region
 		var _str = _data[1];
 		var _cen = _data[2];
 		var _sam = struct_try_get(attributes, "oversample");
@@ -52,6 +52,8 @@ function Node_Blur_Zoom(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		var _msk = _data[5];
 		var _mask = _data[6];
 		var _mix  = _data[7];
+		
+		_cen = array_clone(_cen);
 		_cen[0] /= surface_get_width_safe(_outSurf);
 		_cen[1] /= surface_get_height_safe(_outSurf);
 		
@@ -70,5 +72,5 @@ function Node_Blur_Zoom(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		_outSurf = mask_apply(_data[0], _outSurf, _mask, _mix);
 		
 		return _outSurf;
-	}
+	} #endregion
 }

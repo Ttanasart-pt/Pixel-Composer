@@ -80,7 +80,7 @@ function Node_Grid(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		var _col_gap = _data[6];
 		var _gra	 = _data[5];
 		
-		var _grad = _gra.toArray();;
+		var _grad = _gra.toArray();
 		var _grad_color = _grad[0];
 		var _grad_time	= _grad[1];
 		
