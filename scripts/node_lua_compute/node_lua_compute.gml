@@ -32,7 +32,7 @@ function Node_Lua_Compute(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	outputs[| 1] = nodeValue("Return value", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, 0);
 	
-	argumentRenderer();
+	argumentRenderer(global.lua_arguments);
 	
 	input_display_list = [ 3, 4, 
 		["Function",	false], 0, 1,

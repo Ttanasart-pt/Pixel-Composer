@@ -2,7 +2,7 @@ function Node_PB_Fx_Highlight(_x, _y, _group = noone) : Node_PB_Fx(_x, _y, _grou
 	name = "Highlight";
 	
 	inputs[| 1] = nodeValue("Highlight Area", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, array_create(9) )
-		.setDisplay(VALUE_DISPLAY.kernel);
+		.setDisplay(VALUE_DISPLAY.matrix, 3);
 		
 	inputs[| 2] = nodeValue("Light Color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white );
 		

@@ -1,5 +1,5 @@
 function preview_overlay_rotation(interact, active, _x, _y, _s, _mx, _my, _snx, _sny, _rad) {
-	var _val = getValue();
+	var _val  = getValue();
 	var hover = -1;
 	if(is_array(_val)) return hover;
 	

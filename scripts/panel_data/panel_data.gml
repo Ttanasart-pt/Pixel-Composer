@@ -915,6 +915,8 @@ function PanelContent() constructor {
 	
 	function close() { panel.remove(self); }
 	
+	static checkClosable = function() { return true; }
+	
 	function onClose() {}
 }
 

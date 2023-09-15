@@ -1,5 +1,5 @@
 function preview_overlay_puppet(interact, active, _x, _y, _s, _mx, _my, _snx, _sny) {
-	var _val = getValue();
+	var _val  = array_clone(getValue());
 	var hover = -1;
 	if(is_array(_val[0])) return hover;
 	

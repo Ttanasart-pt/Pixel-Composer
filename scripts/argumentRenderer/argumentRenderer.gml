@@ -1,4 +1,4 @@
-function argumentRenderer() {
+function argumentRenderer(_typeArray = []) {
 	argument_renderer = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) {
 		argument_renderer.x = _x;
 		argument_renderer.y = _y;
@@ -11,7 +11,6 @@ function argumentRenderer() {
 		
 		for( var i = input_fix_len; i < ds_list_size(inputs); i += data_length ) {
 			var _jType = inputs[| i + 1];
-			var _typ   = _jType.getValue();
 			var _h = 0;
 			
 			_jType.editWidget.setFocusHover(_focus, _hover);
@@ -28,14 +27,10 @@ function argumentRenderer() {
 			
 			var _jValue = inputs[| i + 2];
 			if(_jValue.editWidget != noone) {
+				var params = new widgetParam(tx + ui(64), ty + _th + ui(6), _w - ui(64), TEXTBOX_HEIGHT, _jValue.showValue(), -1, _m, argument_renderer.rx, argument_renderer.ry);
+				
 				_jValue.editWidget.setFocusHover(_focus, _hover);
-				if(_typ == 2) {
-					_jValue.editWidget.draw(tx + ui(64), ty + _th + ui(6), _w - ui(64), ui(96), _jValue.showValue(), _m, argument_renderer.rx, argument_renderer.ry);
-					_h += ui(96 + 8);
-				} else {
-					_jValue.editWidget.draw(tx + ui(64), ty + _th + ui(6), _w - ui(64), TEXTBOX_HEIGHT, _jValue.showValue(), _m);
-					_h += TEXTBOX_HEIGHT + ui(8);
-				}
+				_h += _jValue.editWidget.drawParam(params) + ui(8);
 			}
 			
 			hh += _h;

@@ -1,5 +1,5 @@
 function preview_overlay_scalar(interact, active, _x, _y, _s, _mx, _my, _snx, _sny, _angle, _scale, _spr) {
-	var _val = getValue();
+	var _val  = getValue();
 	var hover = -1;
 	if(!is_real(_val)) return hover;
 	

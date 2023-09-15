@@ -56,12 +56,12 @@
 	global.HLSL_FUNCTIONS[? "sin"]		= ["x"];
 	global.HLSL_FUNCTIONS[? "sincos"]	= ["x", "out s", "out c"];
 	global.HLSL_FUNCTIONS[? "sinh"]		= ["x"];
-	global.HLSL_FUNCTIONS[? "smoothstep"]	= ["min", "max", "x"];
+	global.HLSL_FUNCTIONS[? "smoothstep"]= ["min", "max", "x"];
 	global.HLSL_FUNCTIONS[? "sqrt"]		= ["x"];
 	global.HLSL_FUNCTIONS[? "step"]		= ["y", "x"];
 	global.HLSL_FUNCTIONS[? "tan"]		= ["x"];
 	global.HLSL_FUNCTIONS[? "tanh"]		= ["x"];
-	global.HLSL_FUNCTIONS[? "transpose"]	= ["x"];
+	global.HLSL_FUNCTIONS[? "transpose"]= ["x"];
 	global.HLSL_FUNCTIONS[? "trunc"]	= ["x"];
 #endregion
 
@@ -75,7 +75,7 @@ function hlsl_document_parser(prompt, node = noone) {
 		var _arg_name = node.inputs[| i + 0].getValue();
 		var _arg_type = node.inputs[| i + 1].getValue();
 		
-		params = array_push(params, [ _arg_name, array_safe_get(global.HLSL_VAR, _arg_type) ]);
+		array_push(params, [ _arg_name, array_safe_get(global.HLSL_VAR, _arg_type) ]);
 	}
 	
 	for( var i = 0, n = array_length(lines); i < n; i++ ) {

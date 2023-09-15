@@ -57,6 +57,11 @@ event_inherited();
 		}
 	}
 	
+	function checkClosable() {
+		if(!content) return true;
+		return content.checkClosable();
+	}
+	
 	function onDestroy() {
 		if(!content) return;
 		content.onClose();

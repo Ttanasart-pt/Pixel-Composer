@@ -1,5 +1,6 @@
-function matrixGrid(_type, _onModify, _unit = noone) : widget() constructor {
-	size	 = 9;
+function matrixGrid(_type, _size, _onModify, _unit = noone) : widget() constructor {
+	size	 = _size;
+	inputs   = size * size;
 	onModify = _onModify;
 	unit	 = _unit;
 	
@@ -11,7 +12,7 @@ function matrixGrid(_type, _onModify, _unit = noone) : widget() constructor {
 		var modi = false;
 		
 		if(linked) {
-			for( var i = 0; i < size; i++ )
+			for( var i = 0; i < inputs; i++ )
 				modi |= onModify(i, toNumber(val)); 
 			return modi;
 		}
@@ -22,14 +23,17 @@ function matrixGrid(_type, _onModify, _unit = noone) : widget() constructor {
 	onModifySingle[0] = function(val) { return onModifyIndex(0, val); }
 	onModifySingle[1] = function(val) { return onModifyIndex(1, val); }
 	onModifySingle[2] = function(val) { return onModifyIndex(2, val); }
-	
 	onModifySingle[3] = function(val) { return onModifyIndex(3, val); }
+	
 	onModifySingle[4] = function(val) { return onModifyIndex(4, val); }
 	onModifySingle[5] = function(val) { return onModifyIndex(5, val); }
-	
 	onModifySingle[6] = function(val) { return onModifyIndex(6, val); }
 	onModifySingle[7] = function(val) { return onModifyIndex(7, val); }
-	onModifySingle[8] = function(val) { return onModifyIndex(8, val); }
+	
+	onModifySingle[ 8] = function(val) { return onModifyIndex( 8, val); }
+	onModifySingle[ 9] = function(val) { return onModifyIndex( 9, val); }
+	onModifySingle[10] = function(val) { return onModifyIndex(10, val); }
+	onModifySingle[11] = function(val) { return onModifyIndex(11, val); }
 	
 	extras = -1;
 	
@@ -37,7 +41,7 @@ function matrixGrid(_type, _onModify, _unit = noone) : widget() constructor {
 		self.interactable = interactable;
 		b_link.interactable = interactable;
 		
-		for( var i = 0; i < size; i++ )
+		for( var i = 0; i < inputs; i++ )
 			tb[i].interactable = interactable;
 		
 		if(extras) 
@@ -47,7 +51,7 @@ function matrixGrid(_type, _onModify, _unit = noone) : widget() constructor {
 	static register = function(parent = noone) {
 		b_link.register(parent);
 		
-		for( var i = 0; i < size; i++ )
+		for( var i = 0; i < inputs; i++ )
 			tb[i].register(parent);
 		
 		if(extras) 
@@ -57,13 +61,13 @@ function matrixGrid(_type, _onModify, _unit = noone) : widget() constructor {
 			unit.triggerButton.register(parent);
 	}
 	
-	for(var i = 0; i < size; i++) {
+	for(var i = 0; i < inputs; i++) {
 		tb[i] = new textBox(_type, onModifySingle[i]);
 		tb[i].slidable = true;
 	}
 	
 	static setSlideSpeed = function(speed) {
-		for(var i = 0; i < size; i++)
+		for(var i = 0; i < inputs; i++)
 			tb[i].slide_speed = speed;
 	}
 	
@@ -97,7 +101,7 @@ function matrixGrid(_type, _onModify, _unit = noone) : widget() constructor {
 		b_link.tooltip = linked? __txt("Unlink values") : __txt("Link values");
 		
 		var hh = TEXTBOX_HEIGHT + ui(8);
-		var th = hh * 3 - ui(8);
+		var th = hh * size - ui(8);
 		
 		var bx = _x;
 		var by = _y + th / 2 - ui(32 / 2);
@@ -106,11 +110,11 @@ function matrixGrid(_type, _onModify, _unit = noone) : widget() constructor {
 		_x += ui(28);
 		_w -= ui(28);
 		
-		var ww = _w / 3;
+		var ww = _w / size;
 		
-		for(var i = 0; i < 3; i++)
-		for(var j = 0; j < 3; j++) {
-			var ind = i * 3 + j;
+		for(var i = 0; i < size; i++)
+		for(var j = 0; j < size; j++) {
+			var ind = i * size + j;
 			tb[ind].setFocusHover(active, hover);
 			
 			var bx  = _x + ww * j;

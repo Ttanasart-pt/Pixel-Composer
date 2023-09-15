@@ -33,7 +33,7 @@ function Node_Lua_Surface(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	outputs[| 1] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	attribute_surface_depth();
-	argumentRenderer();
+	argumentRenderer(global.lua_arguments);
 	
 	input_display_list = [ 3, 4, 
 		["Function",	false], 0, 1,

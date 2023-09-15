@@ -1,5 +1,5 @@
 //
-// Simple passthrough fragment shader
+// Perspective transform
 //
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
@@ -8,6 +8,7 @@ uniform vec2 p0;
 uniform vec2 p1;
 uniform vec2 p2;
 uniform vec2 p3;
+uniform vec2 dimension;
 
 /////////////// SAMPLING ///////////////
 
@@ -61,24 +62,33 @@ float unmix( float st, float ed, float val) {
 	return (val - st) / (ed - st);
 }
 
+// 2 1
+// 3 0
+
 void main() {
 	float px = v_vTexcoord.x;
 	float py = v_vTexcoord.y;
 	float u, v;
 	vec2 uv;
 	
-	if (abs(p3.y - p0.y) < 0.001 && abs(p2.y - p1.y) < 0.001) { // trapezoid edge case
+	if (abs(p3.y - p0.y) < 1. / dimension.y && abs(p2.y - p1.y) < 1. / dimension.y) { // trapezoid edge case
         float t = (py - p2.y) / (p3.y - p2.y);
 		
 		u = unmix(mix(p3.x, p2.x, 1. - t), mix(p0.x, p1.x, 1. - t), px);
 		v = t;
+        uv = vec2(u, v);
+	} else if(abs(p2.x - p3.x) < 1. / dimension.x && abs(p1.x - p0.x) < 1. / dimension.x) { // trapezoid edge case
+		float t = (px - p2.x) / (p1.x - p2.x);
+		
+		u = t;
+		v = unmix(mix(p1.y, p2.y, 1. - t), mix(p0.y, p3.y, 1. - t), py);
         uv = vec2(u, v);
     } else {
 		vec2 A = (p3 - p0) - (p2 - p1);
 	    vec2 B = (p0 - p1);
 	    vec2 C = (p2 - p1);
 	    vec2 D =  p1;
-	
+		
 		float c1 = (B.y * C.x) + (A.y * D.x) - (B.x * C.y) - (A.x * D.y);
 	    float c2 = (B.y * D.x) - (B.x * D.y);
 

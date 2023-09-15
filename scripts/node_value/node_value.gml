@@ -79,10 +79,10 @@ enum VALUE_DISPLAY {
 	vector,
 	vector_range,
 	area,
-	kernel,
 	transform,
 	corner,
 	toggle,
+	matrix,
 	
 	//Curve
 	curve,
@@ -252,7 +252,7 @@ function typeArray(_type) { #region
 		case VALUE_DISPLAY.padding :
 		case VALUE_DISPLAY.area :
 		case VALUE_DISPLAY.puppet_control :
-		case VALUE_DISPLAY.kernel :
+		case VALUE_DISPLAY.matrix :
 		case VALUE_DISPLAY.transform :
 			
 		case VALUE_DISPLAY.curve :
@@ -289,7 +289,7 @@ function typeIncompatible(from, to) { #region
 	if(from.type == VALUE_TYPE.surface && (to.type == VALUE_TYPE.integer || to.type == VALUE_TYPE.float)) {
 		switch(to.display_type) {
 			case VALUE_DISPLAY.area : 
-			case VALUE_DISPLAY.kernel : 
+			case VALUE_DISPLAY.matrix : 
 			case VALUE_DISPLAY.vector_range : 
 			case VALUE_DISPLAY.puppet_control : 
 			case VALUE_DISPLAY.padding : 
@@ -691,8 +691,10 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						break; #endregion
 					case VALUE_DISPLAY.vector :			#region
 						var val = animator.getValue();
-						if(array_length(val) <= 4) {
-							editWidget = new vectorBox(array_length(animator.getValue()), function(index, val) { 
+						var len = display_data == -1? array_length(val) : display_data;
+						
+						if(len <= 4) {
+							editWidget = new vectorBox(len, function(index, val) { 
 								//var _val = animator.getValue();
 								//_val[index] = val;
 								return setValueDirect(val, index);
@@ -700,11 +702,11 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 							if(type == VALUE_TYPE.integer) editWidget.setSlideSpeed(1);
 							if(display_data != -1) editWidget.extras = display_data;
 							
-							if(array_length(val) == 2) {
+							if(len == 2) {
 								extract_node = [ "Node_Vector2", "Node_Path" ];
-							} else if(array_length(val) == 3)
+							} else if(len == 3)
 								extract_node = "Node_Vector3";
-							else if(array_length(val) == 4)
+							else if(len == 4)
 								extract_node = "Node_Vector4";
 						}
 						
@@ -847,8 +849,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						key_inter    = CURVE_TYPE.cut;
 						extract_node = "";
 						break; #endregion
-					case VALUE_DISPLAY.kernel :			#region
-						editWidget = new matrixGrid(_txt, function(index, val) {
+					case VALUE_DISPLAY.matrix :			#region
+						editWidget = new matrixGrid(_txt, display_data, function(index, val) {
 							var _val = animator.getValue();
 							_val[index] = val;
 							return setValueDirect(_val);

@@ -181,13 +181,17 @@
 		var y0 = dialog_y - dialog_resizable * 6;
 		var y1 = dialog_y + dialog_h + dialog_resizable * 6;
 		
-		if(destroy_on_click_out && mouse_press(mb_any) && !point_in_rectangle(mouse_mx, mouse_my, x0, y0, x1, y1)) {
+		if(destroy_on_click_out && mouse_press(mb_any) && !point_in_rectangle(mouse_mx, mouse_my, x0, y0, x1, y1) 
+			&& checkClosable()) {
+				
 			instance_destroy(self);
 			onDestroy();
 			DIALOG_CLICK = false;
 		}
 	}
 	
+	function checkClosable() { return true; }
+		
 	function onDestroy() {}
 #endregion
 

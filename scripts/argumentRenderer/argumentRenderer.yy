@@ -1,7 +1,7 @@
 {
   "resourceType": "GMScript",
   "resourceVersion": "1.0",
-  "name": "luaRenderer",
+  "name": "argumentRenderer",
   "isCompatibility": false,
   "isDnD": false,
   "parent": {

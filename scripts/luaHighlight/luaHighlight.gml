@@ -1,3 +1,5 @@
+global.lua_arguments = [];
+
 global.lua_reserved = ds_map_create();
 var reserved = ["and", "break", "do", "else", "elseif", "end", "false", 
 				"for", "function", "if", "in", "local", "nil", "not", 

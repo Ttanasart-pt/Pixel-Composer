@@ -31,6 +31,21 @@ function Panel_Text_Editor(_textArea, _inputFunc, _context) : PanelContent() con
 			shift_new_line = !shift_new_line;
 		bx += bs + ui(4);
 		
+		var txt = _textArea.show_line_number? "Hide line number" : "Show line number";
+		if(buttonInstant(THEME.button_hide, bx, by, bs, bs, [ mx, my ], pFOCUS, pHOVER, txt, THEME.code_show_line, _textArea.show_line_number) == 2)
+			_textArea.show_line_number = !_textArea.show_line_number;
+		bx += bs + ui(4);
+		
+		var txt = _textArea.use_autocomplete? "Disable Autocomplete" : "Enable Autocomplete";
+		if(buttonInstant(THEME.button_hide, bx, by, bs, bs, [ mx, my ], pFOCUS, pHOVER, txt, THEME.code_show_auto, _textArea.use_autocomplete) == 2)
+			_textArea.use_autocomplete = !_textArea.use_autocomplete;
+		bx += bs + ui(4);
+		
+		var txt = "Syntax Highlight";
+		if(buttonInstant(THEME.button_hide, bx, by, bs, bs, [ mx, my ], pFOCUS, pHOVER, txt, THEME.code_syntax_highlight, _textArea.syntax_highlight) == 2)
+			_textArea.syntax_highlight = !_textArea.syntax_highlight;
+		bx += bs + ui(4);
+		
 		var bx = w - ui(8) - bs;
 		if(buttonInstant(THEME.button_hide, bx, by, bs, bs, [ mx, my ], pFOCUS, pHOVER, "Apply", THEME.accept,, COLORS._main_value_positive) == 2) 
 			_textArea.apply();
@@ -48,7 +63,11 @@ function Panel_Text_Editor(_textArea, _inputFunc, _context) : PanelContent() con
 		_textArea.drawParam(new widgetParam(tx, ty, tw, th, _text,, [mx, my], x, y));
 	}
 	
-	function onClose() {
+	static checkClosable = function() {
+		return !_textArea.autocomplete_box.active;
+	}
+	
+	static onClose = function() {
 		_textArea.apply();
 		context.popup_dialog = noone;
 	}

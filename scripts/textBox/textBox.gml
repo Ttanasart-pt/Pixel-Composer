@@ -416,9 +416,9 @@ function textBox(_input, _onModify, _extras = noone) : textInput(_input, _onModi
 					}
 				
 					if(key_mod_press(ALT))
-						draw_text(_x + ui(8), _y + _h / 2, "/2");
+						draw_text_add(_x + ui(8), _y + _h / 2, "/2");
 					else
-						draw_text(_x + ui(8), _y + _h / 2, "x2");
+						draw_text_add(_x + ui(8), _y + _h / 2, "x2");
 					draw_set_alpha(1);
 				}
 			#endregion

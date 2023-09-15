@@ -70,30 +70,15 @@
 	});
 	
 	function applyAutoComplete(rep) {
-		var line = array_safe_get(textbox._input_text_line, textbox.cursor_line, "");
-		var _line_curs = textbox.cursor - textbox.char_run;
-		var crop = string_copy(line, 1, _line_curs);
-		var rest = string_copy(line, _line_curs + 1, string_length(line) - _line_curs);
-		var slp  = string_splice(crop, [" ", "(", ","], true);
-		slp[array_length(slp) - 1] = rep;
+		var _totAmo = string_length(textbox._input_text);
+		var _prmAmo = string_length(prompt);
+		var _repAmo = string_length(rep);
 		
-		var txt = "";
-		for( var i = 0, n = array_length(textbox._input_text_line); i < n; i++ ) {
-			if(i == textbox.cursor_line) {
-				for( var j = 0; j < array_length(slp); j++ )
-					txt += slp[j];
-				txt += rest;
-				continue;
-			}
-			
-			txt += textbox._input_text_line[i];
-		}
+		var _sPreC = string_copy(textbox._input_text, 1, textbox.cursor - _prmAmo);
+		var _sPosC = string_copy(textbox._input_text, textbox.cursor + 1, _totAmo - textbox.cursor);
 		
-		txt = string_trim(txt, [ "\n" ]);
-		var shf = string_length(rep) - string_length(prompt);
-		
-		textbox.cursor += shf;
-		textbox._input_text = txt;
+		textbox._input_text = $"{_sPreC}{rep}{_sPosC}";
+		textbox.cursor += _repAmo - _prmAmo;
 		textbox.cut_line();
 		
 		active = false;

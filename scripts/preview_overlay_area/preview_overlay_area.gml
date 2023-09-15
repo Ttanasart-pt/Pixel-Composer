@@ -1,5 +1,5 @@
 function preview_overlay_area_padding(interact, active, _x, _y, _s, _mx, _my, _snx, _sny, display_data) {
-	var _val = showValue();
+	var _val  = array_clone(getValue());
 	var hover = -1;
 	
 	if(display_data == -1) return hover;
@@ -134,7 +134,7 @@ function preview_overlay_area_padding(interact, active, _x, _y, _s, _mx, _my, _s
 }
 
 function preview_overlay_area_two_point(interact, active, _x, _y, _s, _mx, _my, _snx, _sny) {
-	var _val = showValue();
+	var _val  = array_clone(getValue());
 	var hover = -1;
 	
 	var __at = array_safe_get(_val, 4);
@@ -243,7 +243,7 @@ function preview_overlay_area_two_point(interact, active, _x, _y, _s, _mx, _my, 
 }
 
 function preview_overlay_area_span(interact, active, _x, _y, _s, _mx, _my, _snx, _sny) {
-	var _val = showValue();
+	var _val  = array_clone(getValue());
 	var hover = -1;
 	
 	var __ax = array_safe_get(_val, 0);
@@ -341,7 +341,7 @@ function preview_overlay_area_span(interact, active, _x, _y, _s, _mx, _my, _snx,
 }
 
 function preview_overlay_area(interact, active, _x, _y, _s, _mx, _my, _snx, _sny, display_data) {
-	var _val = getValue();
+	var _val  = array_clone(getValue());
 	var hover = -1;
 	if(is_array(_val[0])) return hover;
 	
