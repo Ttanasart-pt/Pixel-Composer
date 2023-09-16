@@ -19,7 +19,6 @@ function Node_Lua_Global(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	];
 	
 	lua_state = lua_create();
-	lua_error_handler = _lua_error;
 	
 	is_beginning = false;
 	error_notification = noone;

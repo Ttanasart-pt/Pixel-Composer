@@ -884,6 +884,7 @@
     {"name":"node_3dsurf","order":5,"path":"scripts/node_3dsurf/node_3dsurf.yy",},
     {"name":"fd_rectangle_reset_target","order":17,"path":"scripts/fd_rectangle_reset_target/fd_rectangle_reset_target.yy",},
     {"name":"node_rate_remap","order":3,"path":"scripts/node_rate_remap/node_rate_remap.yy",},
+    {"name":"s_node_dynasurf","order":3,"path":"sprites/s_node_dynasurf/s_node_dynasurf.yy",},
     {"name":"obj_reader","order":2,"path":"scripts/obj_reader/obj_reader.yy",},
     {"name":"sh_invert","order":17,"path":"shaders/sh_invert/sh_invert.yy",},
     {"name":"preview_overlay_puppet","order":4,"path":"scripts/preview_overlay_puppet/preview_overlay_puppet.yy",},

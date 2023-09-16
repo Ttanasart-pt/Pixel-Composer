@@ -61,9 +61,10 @@ output.color = surfaceColor;")
 	input_display_list = [ 2, 
 		["Shader",		false], 1,
 		["Arguments",	false], argument_renderer,
+		["Values",		false], 
 	];
 
-	setIsDynamicInput(3);
+	setIsDynamicInput(3, false);
 	
 	static refreshDynamicInput = function() { #region
 		var _in = ds_list_create();
@@ -81,8 +82,10 @@ output.color = surfaceColor;")
 				continue;
 			}
 			
+			var inp_name = inputs[| i + 0].getValue();
 			var inp_type = inputs[| i + 1];
 			var inp_valu = inputs[| i + 2];
+			var cur_valu = inputs[| i + 2].getValue();
 			
 			ds_list_add(_in, inputs[| i + 0]);
 			ds_list_add(_in, inp_type);
@@ -91,34 +94,47 @@ output.color = surfaceColor;")
 			inp_type.editWidget.interactable = true;
 			if(inp_valu.editWidget != noone)
 				inp_valu.editWidget.interactable = true;
+			inp_valu.name = inp_name;
 				
 			var type = inp_type.getValue();
 			switch(type) {
 				case 1 : 
+					if(is_array(cur_valu)) inp_valu.overrideValue(0);
 					inp_valu.type = VALUE_TYPE.integer;	
 					inp_valu.setDisplay(VALUE_DISPLAY._default);
 					break;
 				case 0 : 
+					if(is_array(cur_valu)) inp_valu.overrideValue(0);
 					inp_valu.type = VALUE_TYPE.float;	
 					inp_valu.setDisplay(VALUE_DISPLAY._default);
 					break;
 				case 2 : 
+					if(!is_array(cur_valu) || array_length(cur_valu) != 2)
+						inp_valu.overrideValue([ 0, 0 ]);
 					inp_valu.type = VALUE_TYPE.float;	
-					inp_valu.setDisplay(VALUE_DISPLAY.vector, 2);
+					inp_valu.setDisplay(VALUE_DISPLAY.vector);
 					break;
 				case 3 : 
+					if(!is_array(cur_valu) || array_length(cur_valu) != 3)
+						inp_valu.overrideValue([ 0, 0, 0 ]);
 					inp_valu.type = VALUE_TYPE.float;	
-					inp_valu.setDisplay(VALUE_DISPLAY.vector, 3);
+					inp_valu.setDisplay(VALUE_DISPLAY.vector);
 					break;
 				case 4 : 
+					if(!is_array(cur_valu) || array_length(cur_valu) != 4)
+						inp_valu.overrideValue([ 0, 0, 0, 0 ]);
 					inp_valu.type = VALUE_TYPE.float;	
-					inp_valu.setDisplay(VALUE_DISPLAY.vector, 4);
+					inp_valu.setDisplay(VALUE_DISPLAY.vector);
 					break;
 				case 5 : 
+					if(!is_array(cur_valu) || array_length(cur_valu) != 9)
+						inp_valu.overrideValue(array_create(9));
 					inp_valu.type = VALUE_TYPE.float;	
 					inp_valu.setDisplay(VALUE_DISPLAY.matrix, 3);
 					break;
 				case 6 : 
+					if(!is_array(cur_valu) || array_length(cur_valu) != 16)
+						inp_valu.overrideValue(array_create(16));
 					inp_valu.type = VALUE_TYPE.float;	
 					inp_valu.setDisplay(VALUE_DISPLAY.matrix, 4);
 					break;
@@ -142,6 +158,11 @@ output.color = surfaceColor;")
 		inputs = _in;
 		
 		createNewInput();
+		
+		//print("==========================");
+		//for( var i = 0, n = array_length(input_display_list); i < n; i++ )
+		//	print(input_display_list[i]);
+		//print("==========================");
 	#endregion
 	} if(!LOADING && !APPENDING) refreshDynamicInput();
 	
@@ -244,17 +265,20 @@ struct PixelShaderOutput {
 	if(!LOADING && !APPENDING) refreshShader();
 	
 	static onValueUpdate = function(index) { #region
-		var _refresh = index == 0 || index == 1 
-			|| (index >= input_fix_len && (index - input_fix_len) % data_length != 2);
-		if(_refresh) refreshShader();
+		var _refresh = index == 0 || index == 1 ||
+				(index >= input_fix_len && (index - input_fix_len) % data_length != 2);
 		
-		refreshDynamicInput();
+		if(_refresh) {
+			refreshShader();
+			refreshDynamicInput();
+		}
 	} #endregion
 	
 	static processData = function(_output, _data, _output_index, _array_index = 0) { #region
 		var _surf = _data[2];
 		if(!is_surface(_surf)) return noone;
 		if(!d3d11_shader_exists(shader.vs)) return noone;
+		if(!d3d11_shader_exists(shader.fs)) return noone;
 		
 		_output = surface_verify(_output, surface_get_width_safe(_surf), surface_get_height_safe(_surf));
 		
@@ -341,5 +365,8 @@ struct PixelShaderOutput {
 		return _output;
 	} #endregion
 	
-	static postConnect = function() { refreshShader(); }
+	static postConnect = function() { 
+		refreshShader(); 
+		refreshDynamicInput();
+	}
 }

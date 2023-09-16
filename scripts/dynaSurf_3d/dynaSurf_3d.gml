@@ -1,4 +1,4 @@
-function dynaSurf_3d() : DynaSurf() constructor {
+function dynaSurf_3d() : dynaSurf() constructor {
 	object = noone;
 	
 	camera    = new __3dCamera();

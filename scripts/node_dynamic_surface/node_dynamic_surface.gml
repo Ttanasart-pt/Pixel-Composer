@@ -5,7 +5,7 @@ function Node_DynaSurf(_x, _y, _group = noone) : Node_Collection(_x, _y, _group)
 	reset_all_child = true;
 	draw_input_overlay = false;
 	
-	outputs[| 0] = nodeValue("DynaSurf", self, JUNCTION_CONNECT.output, VALUE_TYPE.dynaSurf, noone);
+	outputs[| 0] = nodeValue("dynaSurf", self, JUNCTION_CONNECT.output, VALUE_TYPE.dynaSurface, noone);
 	
 	custom_input_index  = ds_list_size(inputs);
 	custom_output_index = ds_list_size(outputs);
@@ -71,7 +71,7 @@ function Node_DynaSurf(_x, _y, _group = noone) : Node_Collection(_x, _y, _group)
 	} #endregion
 	
 	static setDynamicSurface = function() { #region
-		var _dyna = new Compute_DynaSurf();
+		var _dyna = new compute_dynaSurf();
 		
 		for( var i = 0, n = ds_list_size(nodes); i < n; i++ ) {
 			var _n = nodes[| i];

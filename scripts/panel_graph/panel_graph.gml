@@ -1118,7 +1118,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 				}
 			}
 			
-			if(target != noone && target.connect_type == JUNCTION_CONNECT.input && target.node.is_dynamic_input)
+			if(target != noone && target.connect_type == JUNCTION_CONNECT.input && target.node.auto_input)
 				_addInput = true;
 			
 			var _mmx = target != noone? target.x : _mx;
@@ -1519,7 +1519,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 			if(ds_list_empty(nodes_select_list)) {
 				if(node_focus != noone && !ds_list_empty(node_focus.outputs)) {
 					var _o = node_focus.outputs[| 0];
-					if(_o.type == VALUE_TYPE.surface || _o.type == VALUE_TYPE.dynaSurf) {
+					if(_o.type == VALUE_TYPE.surface || _o.type == VALUE_TYPE.dynaSurface) {
 						var tr = nodeBuild("Node_Transform", node_focus.x + node_focus.w + 64, node_focus.y);
 						tr.inputs[| 0].setFrom(_o);
 					}
@@ -1530,7 +1530,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 					if(ds_list_empty(node.outputs)) continue;
 				
 					var _o = node.outputs[| 0];
-					if(_o.type == VALUE_TYPE.surface || _o.type == VALUE_TYPE.dynaSurf) {
+					if(_o.type == VALUE_TYPE.surface || _o.type == VALUE_TYPE.dynaSurface) {
 						var tr = nodeBuild("Node_Transform", node.x + node.w + 64, node.y);
 						tr.inputs[| 0].setFrom(_o);
 					}

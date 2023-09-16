@@ -52,7 +52,7 @@ enum VALUE_TYPE {
 	d3Scene	  = 29,
 	d3Material = 30,
 	
-	dynaSurf  = 31,
+	dynaSurface  = 31,
 	PCXnode   = 32,
 	
 	action	  = 99,
@@ -177,7 +177,7 @@ function value_bit(i) { #region
 		case VALUE_TYPE.boolean		: return 1 << 3 | 1 << 1;
 		case VALUE_TYPE.color		: return 1 << 4;
 		case VALUE_TYPE.gradient	: return 1 << 25;
-		case VALUE_TYPE.dynaSurf	: 
+		case VALUE_TYPE.dynaSurface	: 
 		case VALUE_TYPE.surface		: return 1 << 5;
 		case VALUE_TYPE.path		: return 1 << 10;
 		case VALUE_TYPE.text		: return 1 << 10;
@@ -691,7 +691,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						break; #endregion
 					case VALUE_DISPLAY.vector :			#region
 						var val = animator.getValue();
-						var len = display_data == -1? array_length(val) : display_data;
+						var len = array_length(val);
 						
 						if(len <= 4) {
 							editWidget = new vectorBox(len, function(index, val) { 
@@ -700,7 +700,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 								return setValueDirect(val, index);
 							}, unit );
 							if(type == VALUE_TYPE.integer) editWidget.setSlideSpeed(1);
-							if(display_data != -1) editWidget.extras = display_data;
+							if(display_data != -1 && is_struct(display_data)) 
+								editWidget.extras = display_data;
 							
 							if(len == 2) {
 								extract_node = [ "Node_Vector2", "Node_Path" ];
@@ -856,7 +857,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 							return setValueDirect(_val);
 						}, unit );
 						if(type == VALUE_TYPE.integer) editWidget.setSlideSpeed(1);
-						if(display_data != -1) editWidget.extras = display_data;
 						
 						for( var i = 0, n = array_length(animators); i < n; i++ )
 							animators[i].suffix = " " + string(i);
@@ -1328,9 +1328,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		if(value_from == noone) {
 			var _val = __getAnimValue(_time);
-			val = [ _val, self ];
+			return [ _val, self ];
 		} else if(value_from != self)
-			val = value_from.getValueRecursive(_time); 
+			return value_from.getValueRecursive(_time); 
 		
 		if(expUse && is_struct(expTree) && expTree.validate()) {
 			//print($"========== EXPRESSION CALLED ==========");
@@ -1468,6 +1468,16 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		return setValueDirect(val, noone, record, time, _update);
 	} #endregion
 	
+	static overrideValue = function(_val) { #region
+		ds_list_clear(animator.values);
+		ds_list_add(animator.values, new valueKey(0, _val, animator));
+		
+		for( var i = 0, n = array_length(animators); i < n; i++ ) {
+			ds_list_clear(animators[i].values);
+			ds_list_add(animators[i].values, new valueKey(0, array_safe_get(_val, i), animators[i]));
+		}
+	} #endregion
+	
 	static setValueDirect = function(val = 0, index = noone, record = true, time = PROJECT.animator.current_frame, _update = true) { #region
 		var updated = false;
 		
@@ -1566,6 +1576,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	} #endregion
 	
 	static setFrom = function(_valueFrom, _update = true, checkRecur = true, log = false) { #region
+		print($"Connecting {_valueFrom.name} to {name}");
+		
 		if(_valueFrom == noone)
 			return removeFrom();
 		

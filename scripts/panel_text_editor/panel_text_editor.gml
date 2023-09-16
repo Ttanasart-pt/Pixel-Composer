@@ -1,6 +1,6 @@
 function Panel_Text_Editor(_textArea, _inputFunc, _context) : PanelContent() constructor {
 	title = "";
-	w = ui(640);
+	w = min(WIN_W - ui(64), ui(800));
 	h = ui(480);
 	auto_pin = true;
 	

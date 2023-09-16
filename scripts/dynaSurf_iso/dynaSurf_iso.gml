@@ -1,10 +1,27 @@
-function DynaSurf_iso() : DynaSurf() constructor {
-	angle    = 0;
+function dynaSurf_iso() : dynaSurf() constructor {
+	angles      = [];
+	angle_shift = 0;
 	
-	static getSurface = function(_rot) {}
+	static getSurface = function(_rot) {
+		_rot += angle_shift;
+		var _ind  = 0;
+		var _minA = 360;
+		
+		for( var i = 0, n = array_length(angles); i < n; i++ ) {
+			var _dif = abs(angle_difference(_rot, angles[i]));
+			if(_dif < _minA) {
+				_minA = _dif;
+				_ind  = i;
+			}
+		}
+		
+		return array_safe_get(surfaces, _ind);
+	}
 	
 	static draw = function(_x = 0, _y = 0, _xs = 1, _ys = 1, _rot = 0, _col = c_white, _alp = 1) {
-		var _pos = getAbsolutePos(_x, _y, _xs, _ys, _rot);
+		var _surf = getSurface(_rot);
+		var _pos  = getAbsolutePos(_x, _y, _xs, _ys, _rot);
+		
 		draw_surface_ext_safe(_surf, _pos[0], _pos[1], _xs, _ys, 0, _col, _alp);
 	}
 	
@@ -19,7 +36,7 @@ function DynaSurf_iso() : DynaSurf() constructor {
 	}
 }
 
-function dynaSurf_iso_4() : DynaSurf_iso() constructor {
+function dynaSurf_iso_4() : dynaSurf_iso() constructor {
 	surfaces = array_create(4, noone);
 	
 	static getSurface = function(_rot) {
@@ -42,7 +59,7 @@ function dynaSurf_iso_4() : DynaSurf_iso() constructor {
 	}
 }
 
-function dynaSurf_iso_8() : DynaSurf_iso() constructor {
+function dynaSurf_iso_8() : dynaSurf_iso() constructor {
 	surfaces = array_create(8, noone);
 	
 	static getSurface = function(_rot) {

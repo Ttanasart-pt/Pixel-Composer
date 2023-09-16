@@ -11,7 +11,6 @@ event_inherited();
 		name = filename_name_only(directory);
 		
 		thread = lua_create();
-		lua_error_handler = _lua_error;
 		__addon_lua_setup(thread, self);
 		
 		self.directory = directory;

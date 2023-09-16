@@ -1,4 +1,4 @@
-function DynaSurf() constructor {
+function dynaSurf() constructor {
 	surfaces = [];
 	
 	static getAbsolutePos = function(_x, _y, _xs = 1, _ys = 1, _rot = 0) {
@@ -34,7 +34,7 @@ function DynaSurf() constructor {
 	static destroy = function() {}
 }
 
-function Compute_DynaSurf() : DynaSurf() constructor {
+function compute_dynaSurf() : dynaSurf() constructor {
 	drawFn   = noone;
 	widthFn  = noone;
 	heightFn = noone;

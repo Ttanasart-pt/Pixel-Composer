@@ -99,6 +99,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		updateAction = nodeValue("Update", self, JUNCTION_CONNECT.input, VALUE_TYPE.action, false).setVisible(true, true);
 		
 		is_dynamic_input  = false;
+		auto_input		  = false;
 		input_display_len = 0;
 		input_fix_len	  = 0;
 		data_length       = 1;
@@ -256,8 +257,9 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		return self;
 	} #endregion
 	
-	static setIsDynamicInput = function(_data_length = 1) { #region
-		is_dynamic_input	= true;							
+	static setIsDynamicInput = function(_data_length = 1, _auto_input = true) { #region
+		is_dynamic_input	= true;						
+		auto_input			= _auto_input;
 		input_display_len	= input_display_list == -1? 0 : array_length(input_display_list);
 		input_fix_len		= ds_list_size(inputs);
 		data_length			= _data_length;
@@ -813,7 +815,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		var _node = outputs[| preview_channel];
 		switch(_node.type) {
 			case VALUE_TYPE.surface :
-			case VALUE_TYPE.dynaSurf :
+			case VALUE_TYPE.dynaSurface :
 				return _node.getValue();
 		}
 		
@@ -1277,7 +1279,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		
 		switch(outputs[| preview_channel].type) {
 			case VALUE_TYPE.surface :
-			case VALUE_TYPE.dynaSurf :
+			case VALUE_TYPE.dynaSurface :
 				break;
 			default :
 				return;

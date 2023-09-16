@@ -14,7 +14,7 @@ function Node_3DSurf(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	
 	inputs[| 3] = nodeValue("Distance", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 4 );
 	
-	outputs[| 0] = nodeValue("3DSurf", self, JUNCTION_CONNECT.output, VALUE_TYPE.dynaSurf, noone);
+	outputs[| 0] = nodeValue("3DSurf", self, JUNCTION_CONNECT.output, VALUE_TYPE.dynaSurface, noone);
 	
 	input_display_list = [ 0,
 		["Camera", false], 1, 2, 3, 

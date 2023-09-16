@@ -35,7 +35,17 @@ function matrixGrid(_type, _size, _onModify, _unit = noone) : widget() construct
 	onModifySingle[10] = function(val) { return onModifyIndex(10, val); }
 	onModifySingle[11] = function(val) { return onModifyIndex(11, val); }
 	
+	onModifySingle[12] = function(val) { return onModifyIndex(12, val); }
+	onModifySingle[13] = function(val) { return onModifyIndex(13, val); }
+	onModifySingle[14] = function(val) { return onModifyIndex(14, val); }
+	onModifySingle[15] = function(val) { return onModifyIndex(15, val); }
+	
 	extras = -1;
+	
+	for(var i = 0; i < inputs; i++) {
+		tb[i] = new textBox(_type, onModifySingle[i]);
+		tb[i].slidable = true;
+	}
 	
 	static setInteract = function(interactable = noone) { 
 		self.interactable = interactable;
@@ -59,11 +69,6 @@ function matrixGrid(_type, _size, _onModify, _unit = noone) : widget() construct
 		
 		if(unit != noone && unit.reference != noone)
 			unit.triggerButton.register(parent);
-	}
-	
-	for(var i = 0; i < inputs; i++) {
-		tb[i] = new textBox(_type, onModifySingle[i]);
-		tb[i].slidable = true;
 	}
 	
 	static setSlideSpeed = function(speed) {
@@ -119,8 +124,9 @@ function matrixGrid(_type, _size, _onModify, _unit = noone) : widget() construct
 			
 			var bx  = _x + ww * j;
 			var by  = _y + hh * i;
+			var _dat = array_safe_get(_data, ind);
 			
-			tb[ind].draw(bx + ui(8), by, ww - ui(8), TEXTBOX_HEIGHT, _data[ind], _m);
+			tb[ind].draw(bx + ui(8), by, ww - ui(8), TEXTBOX_HEIGHT, _dat, _m);
 		}
 		
 		resetFocus();

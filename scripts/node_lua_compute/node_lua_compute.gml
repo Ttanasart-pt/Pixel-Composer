@@ -41,13 +41,12 @@ function Node_Lua_Compute(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		["Inputs",		 true], 
 	];
 
-	setIsDynamicInput(3);
+	setIsDynamicInput(3, false);
 	
 	argument_name = [];
 	argument_val  = [];
 	
 	lua_state = lua_create();
-	lua_error_handler = _lua_error;
 	
 	error_notification = noone;
 	compiled = false;

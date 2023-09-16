@@ -37,7 +37,7 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 	onModifySingle[2] = function(val) { return onModifyIndex(2, val); }
 	onModifySingle[3] = function(val) { return onModifyIndex(3, val); }
 	
-	extras = -1;
+	extras = noone;
 	
 	for(var i = 0; i < 4; i++) {
 		tb[i] = new textBox(TEXTBOX_INPUT.number, onModifySingle[i]);
@@ -53,8 +53,7 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 		self.interactable = interactable;
 		b_link.interactable = interactable;
 		
-		if(extras) 
-			extras.interactable = interactable;
+		if(extras != noone) extras.interactable = interactable;
 			
 		for( var i = 0; i < size; i++ ) 
 			tb[i].interactable = interactable;
@@ -66,8 +65,7 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 		for( var i = 0; i < size; i++ ) 
 			tb[i].register(parent);
 		
-		if(extras) 
-			extras.register(parent);
+		if(extras != noone) extras.register(parent);
 		
 		if(unit != noone && unit.reference != noone)
 			unit.triggerButton.register(parent);

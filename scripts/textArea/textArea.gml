@@ -365,8 +365,8 @@ function textArea(_input, _onModify, _extras = noone) : textInput(_input, _onMod
 				
 				if(keyboard_check_pressed(vk_escape)) {
 				} else if(keyboard_check_pressed(vk_tab)) {
-				} else if(( shift_new_line && keyboard_check_pressed(vk_enter) && key_mod_press(SHIFT)) ||
-						  (!shift_new_line && keyboard_check_pressed(vk_enter))) {
+				} else if(( shift_new_line && keyboard_check_pressed(vk_enter) &&  key_mod_press(SHIFT)) ||
+						  (!shift_new_line && keyboard_check_pressed(vk_enter) && !key_mod_press(SHIFT))) {
 					var ch = "\n";
 					if(cursor_select == -1) {
 						var str_before	= string_copy(_input_text, 1, cursor);

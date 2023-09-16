@@ -54,14 +54,9 @@ function rotator(_onModify, _step = -1) : widget() constructor {
 		var py = knob_y + lengthdir_y(_r, _data);
 		
 		if(dragging) {
-			var delta = angle_difference(point_direction(_x, knob_y, _m[0], _m[1]), drag_sa);
-			var val;
-			var real_val   = round(delta + drag_sv);
-			
-			if(key_mod_press(CTRL)) 
-				val = round(real_val / 15) * 15;
-			else 
-				val = real_val;
+			var delta    = angle_difference(point_direction(_x, knob_y, _m[0], _m[1]), drag_sa);
+			var real_val = round(delta + drag_sv);
+			var val      = key_mod_press(CTRL)? round(real_val / 15) * 15 : real_val;
 			
 			if(step != -1)
 				val = round(real_val / step) * step;
