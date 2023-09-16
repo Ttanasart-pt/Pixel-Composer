@@ -229,9 +229,9 @@ struct PixelShaderOutput {
 		fs = fs_pre + fs_param + fs_pos;
 		file_text_write_all(_dir + "fout.shader", fs);
 		
-		print("==================== Compiling ====================");
-		print(fs)
-		print("===================================================\n");
+		//print("==================== Compiling ====================");
+		//print(fs)
+		//print("===================================================\n");
 		
 		shader.vs = d3d11_shader_compile_vs(_dir + "vout.shader", "main", "vs_4_0");
 		if (!d3d11_shader_exists(shader.vs)) 
@@ -273,10 +273,11 @@ struct PixelShaderOutput {
 		
 		for( var i = input_fix_len, n = array_length(_data); i < n; i += data_length ) {
 			var _arg_name = _data[i + 0];
-			if(_arg_name == "") continue;
-			
 			var _arg_type = _data[i + 1];
 			var _arg_valu = _data[i + 2];
+			
+			if(_arg_name == "") continue;
+			
 			var _uni = shader_get_uniform(shader.fs, _arg_name);
 			
 			switch(_arg_type) {
@@ -301,8 +302,8 @@ struct PixelShaderOutput {
 						d3d11_cbuffer_add_float(array_length(_arg_valu)); 
 						_cbSize += array_length(_arg_valu);
 						
-						for( var i = 0, n = array_length(_arg_valu); i < n; i++ ) 
-							buffer_write(_buffer, buffer_f32, _arg_valu[i]);
+						for( var j = 0, m = array_length(_arg_valu); j < m; j++ ) 
+							buffer_write(_buffer, buffer_f32, _arg_valu[j]);
 					}
 					break;
 				case 8 : 
@@ -310,7 +311,7 @@ struct PixelShaderOutput {
 					d3d11_cbuffer_add_float(4);
 					_cbSize += 4;
 					
-					for( var i = 0, n = 4; i < n; i++ ) 
+					for( var j = 0, m = 4; j < m; j++ ) 
 						buffer_write(_buffer, buffer_f32, _clr[i]);
 					break;
 				case 7 : 

@@ -589,8 +589,8 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 			addNodeObject(values, "Atlas Set",		s_node_atlas_set,	"Node_Atlas_Set",	[1, Node_Atlas_Set]).setVersion(1141);
 			
 			ds_list_add(values, "Surface");
-			addNodeObject(values, "Dynamic Surface",		s_node_surface_from_buffer,	"Node_DynaSurf",	[1, Node_DynaSurf]).setVersion(11520);
-			addNodeObject(values, "IsoSurf",				s_node_surface_from_buffer,	"Node_IsoSurf",		[1, Node_IsoSurf]).setVersion(11520);
+			//addNodeObject(values, "Dynamic Surface",		s_node_surface_from_buffer,	"Node_DynaSurf",	[1, Node_DynaSurf]).setVersion(11520);
+			addNodeObject(values, "IsoSurf",				s_node_isosurf,				"Node_IsoSurf",		[1, Node_IsoSurf]).setVersion(11520);
 			addNodeObject(values, "Surface from Buffer",	s_node_surface_from_buffer,	"Node_Surface_From_Buffer",	[1, Node_Surface_From_Buffer], ["buffer to surface"], "Create surface from buffer.").setVersion(1146);
 			
 			ds_list_add(values, "Buffer");
@@ -658,7 +658,7 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 			addNodeObject(node, "Lua Compute",		s_node_lua_compute,	"Node_Lua_Compute",		[1, Node_Lua_Compute]).setVersion(1090);
 			
 			ds_list_add(node, "Shader");
-			addNodeObject(node, "HLSL",				s_node_lua_compute,	"Node_HLSL",			[1, Node_HLSL]).setVersion(11520);
+			addNodeObject(node, "HLSL",				s_node_hlsl,		"Node_HLSL",			[1, Node_HLSL]).setVersion(11520);
 			
 			ds_list_add(node, "Organize");
 			addNodeObject(node, "Pin",				s_node_pin,			"Node_Pin",				[1, Node_Pin],, "Craete pin to organize your connection. Can be create by double clicking on a connection line.");
