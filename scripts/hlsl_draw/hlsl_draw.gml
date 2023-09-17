@@ -15,10 +15,42 @@ var constant = ["MATRIX_VIEW", "MATRIX_PROJECTION", "MATRIX_WORLD", "MATRIX_WORL
 for( var i = 0, n = array_length(constant); i < n; i++ )
 	global.glsl_constant[? constant[i]] = 1;
 
-function draw_code_glsl(_x, _y, str) {
+global.HLSL_BREAK_TOKEN = [" ", "(", ")", "[", "]", "{", "}", ".", ",", ";", "+", "-", "*", "/", "^", "="];
+
+function hlsl_token_splice(str) {
+	var st = [];
+	var ss = str;
+	var sp;
+	var cc;
+	
+	do {
+		sp = 999999;
+		for( var i = 0, n = array_length(global.HLSL_BREAK_TOKEN); i < n; i++ ) {
+			var _pos = string_pos(global.HLSL_BREAK_TOKEN[i], ss);
+			if(_pos != 0) sp = min(sp, _pos);
+		}
+		
+		if(sp == 999999) { //no delim left
+			array_push(st, ss);
+			break;
+		}
+		
+		var _ss = string_copy(ss, 1, sp - 1);
+		array_push(st, _ss);
+		
+		cc = string_char_at(ss, sp);
+		array_push(st, cc);
+		
+		ss = string_copy(ss, sp + 1, string_length(ss) - sp);
+	} until(sp == 0);
+	
+	return st;
+}
+
+function draw_code_hlsl(_x, _y, str) {
 	var tx = _x;
 	var ty = _y;
-	var words = token_splice(str);
+	var words = hlsl_token_splice(str);
 	
 	for( var j = 0; j < array_length(words); j++ ) {
 		var word = words[j];

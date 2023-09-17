@@ -85,7 +85,9 @@ function __3dScene(camera) constructor {
 		lightPnt_shadowBias = [];
 	} reset(); #endregion
 	
-	static _submit = function(callback, object, shader = noone) {
+	static _submit = function(callback, object = noone, shader = noone) {
+		if(object == noone) return;
+		
 		matrix_stack_clear(); 
 		if(apply_transform) custom_transform.submitMatrix(); 
 		callback(object, shader);

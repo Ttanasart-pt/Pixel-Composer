@@ -1576,7 +1576,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	} #endregion
 	
 	static setFrom = function(_valueFrom, _update = true, checkRecur = true, log = false) { #region
-		print($"Connecting {_valueFrom.name} to {name}");
+		//print($"Connecting {_valueFrom.name} to {name}");
 		
 		if(_valueFrom == noone)
 			return removeFrom();

@@ -20,18 +20,22 @@ function argumentRenderer(_typeArray = []) {
 			_jName.editWidget.setFocusHover(_focus, _hover);
 			_jName.editWidget.draw(tx + ui(128 + 8), ty, _w - ui(128 + 8), _th, _jName.showValue(), _m, _jName.display_type);
 			
-			_h += _th + ui(6);
+			_h += _th + ui(8);
 			
 			draw_set_text(f_p1, fa_left, fa_top, COLORS._main_text_sub);
-			draw_text_add(tx + ui(8), ty + _th + ui(6) + ui(6), "Value");
+			draw_text_add(tx + ui(8), ty + _th + ui(8 + 6), "Value");
 			
 			var _jValue = inputs[| i + 2];
 			if(_jValue.editWidget != noone) {
-				var params = new widgetParam(tx + ui(64), ty + _th + ui(6), _w - ui(64), TEXTBOX_HEIGHT, _jValue.showValue(), -1, _m, argument_renderer.rx, argument_renderer.ry);
+				var params = new widgetParam(tx + ui(64), ty + _th + ui(10), _w - ui(64), TEXTBOX_HEIGHT, _jValue.showValue(), -1, _m, argument_renderer.rx, argument_renderer.ry);
 				
 				_jValue.editWidget.setFocusHover(_focus, _hover);
-				_h += _jValue.editWidget.drawParam(params) + ui(8);
+				_h += _jValue.editWidget.drawParam(params) + ui(10);
 			}
+			
+			//var _ly = ty + _h - ui(9);
+			//draw_set_color(COLORS.panel_separator);
+			//draw_line_width(_x + ui(16), _ly, _x + _w - ui(16 * 2), _ly, 2);
 			
 			hh += _h;
 			ty += _h;

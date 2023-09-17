@@ -1,4 +1,4 @@
-function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
+function NodeObject(_name, _spr, _node, _create, tags = []) constructor { #region
 	name = _name;
 	spr  = _spr;
 	node = _node;
@@ -43,7 +43,7 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 		_node.doUpdate();
 		return _node;
 	}
-}
+} #endregion
 
 #region nodes
 	globalvar ALL_NODES, ALL_NODE_LIST, NODE_CATEGORY, NODE_PAGE_DEFAULT, NODE_PB_CATEGORY, NODE_PCX_CATEGORY;
@@ -53,7 +53,7 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 	NODE_PB_CATEGORY = ds_list_create();
 	NODE_PCX_CATEGORY = ds_list_create();
 	
-	function nodeBuild(_name, _x, _y, _group = PANEL_GRAPH.getCurrentContext()) {
+	function nodeBuild(_name, _x, _y, _group = PANEL_GRAPH.getCurrentContext()) { #region
 		if(!ds_map_exists(ALL_NODES, _name)) {
 			log_warning("LOAD", $"Node type {_name} not found");
 			return noone;
@@ -61,9 +61,9 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 		
 		var _node = ALL_NODES[? _name];
 		return _node.build(_x, _y, _group);
-	}
+	} #endregion
 	
-	function addNodeObject(_list, _name, _spr, _node, _fun, _tag = [], tooltip = "") {
+	function addNodeObject(_list, _name, _spr, _node, _fun, _tag = [], tooltip = "") { #region
 		var _n;
 		
 		if(ds_map_exists(ALL_NODES, _node))
@@ -78,19 +78,19 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor {
 		if(tooltip != "") _n.tooltip = tooltip;
 		ds_list_add(_list, _n);
 		return _n;
-	}
+	} #endregion
 	
-	function addNodeCatagory(name, list, filter = []) {
+	function addNodeCatagory(name, list, filter = []) { #region
 		ds_list_add(NODE_CATEGORY, { name: name, list: list, filter: filter });
-	}
+	} #endregion
 	
-	function addNodePBCatagory(name, list, filter = []) {
+	function addNodePBCatagory(name, list, filter = []) { #region
 		ds_list_add(NODE_PB_CATEGORY, { name: name, list: list, filter: filter });
-	}
+	} #endregion
 	
-	function addNodePCXCatagory(name, list, filter = []) {
+	function addNodePCXCatagory(name, list, filter = []) { #region
 		ds_list_add(NODE_PCX_CATEGORY, { name: name, list: list, filter: filter });
-	}
+	} #endregion
 	
 	function __initNodes() {
 		var favPath = DIRECTORY + "Nodes/fav.json";

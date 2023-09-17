@@ -17,7 +17,7 @@ function Panel_Text_Editor(_textArea, _inputFunc, _context) : PanelContent() con
 	self.inputFunc = method(self, _inputFunc);
 	self.context   = _context;
 	
-	shift_new_line = false;
+	shift_new_line = true;
 	
 	function drawContent(panel) {
 		draw_clear_alpha(COLORS.panel_bg_clear, 0);

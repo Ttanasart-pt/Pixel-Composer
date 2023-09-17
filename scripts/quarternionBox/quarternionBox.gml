@@ -65,18 +65,19 @@ function quarternionBox(_onModify) : widget() constructor {
 		
 		current_value = _data;
 		
-		var bs  = ui(32);
-		var bx  = _x + _w - bs;
-		var by  = _y + _h / 2 - bs / 2;
-		tooltip.index = _extra_data.angle_display;
+		var bs = ui(32);
+		var bx = _x + _w - bs;
+		var by = _y + _h / 2 - bs / 2;
+		var _disp = struct_try_get(_extra_data, "angle_display");
+		tooltip.index = _disp;
 		
-		if(buttonInstant(THEME.button_hide, bx, by, bs, bs, _m, active, hover, tooltip, THEME.unit_angle, _extra_data.angle_display, c_white) == 2) {
+		if(buttonInstant(THEME.button_hide, bx, by, bs, bs, _m, active, hover, tooltip, THEME.unit_angle, _disp, c_white) == 2) {
 			clickable = false;
-			_extra_data.angle_display = (_extra_data.angle_display + 1) % 2;
+			_extra_data.angle_display = (_disp + 1) % 2;
 		}
 		_w -= ui(40);
 		
-		size = _extra_data.angle_display? 3 : 4;
+		size = _disp? 3 : 4;
 		var ww = _w / size;
 		var bx = _x;
 		disp_w = disp_w == noone? ww : lerp_float(disp_w, ww, 3);

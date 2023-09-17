@@ -23,7 +23,7 @@ function __3dSurfaceExtrude(surface = noone, height = noone, smooth = false) : _
 		return h[_i][_j];
 	}
 	
-	static initModel = function() {
+	static initModel = function() { 
 		if(!is_surface(surface)) return;
 		
 		var _surface = surface;
@@ -113,183 +113,60 @@ function __3dSurfaceExtrude(surface = noone, height = noone, smooth = false) : _
 			
 			var dep = (useH? getHeight(hei, hgtW, hgtH, i, j) : 1) * 0.5;
 			
-			if(smooth) { #region
-				var d0, d1, d2, d3;
-				var d00, d10, d01, d11;
-				var a, a0, a1, a2, a3;
-				
-				// d00 | a0 | d10
-				// a1  | a  | a2
-				// d01 | a3 | d11
-				
-				if(useH) {
-					d00 = (i > 0 && j > 0)?			  getHeight(hei, hgtW, hgtH, i - 1, j - 1) * 0.5 : 0;
-					d10 = (i < ww - 1 && j > 0)?	  getHeight(hei, hgtW, hgtH, i + 1, j - 1) * 0.5 : 0;
-					d01 = (i > 0 && j < hh - 1)?	  getHeight(hei, hgtW, hgtH, i - 1, j + 1) * 0.5 : 0;
-					d11 = (i < ww - 1 && j < hh - 1)? getHeight(hei, hgtW, hgtH, i + 1, j + 1) * 0.5 : 0;
-					
-					d0  = (j > 0)?		getHeight(hei, hgtW, hgtH, i, j - 1) * 0.5 : 0;
-					d1  = (i > 0)?		getHeight(hei, hgtW, hgtH, i - 1, j) * 0.5 : 0;
-					d2  = (i < ww - 1)?	getHeight(hei, hgtW, hgtH, i + 1, j) * 0.5 : 0;
-					d3  = (j < hh - 1)?	getHeight(hei, hgtW, hgtH, i, j + 1) * 0.5 : 0;
-				} else {
-					d00 = (i > 0 && j > 0)?			  bool(ap[i - 1][j - 1]) * 0.5 : 0;
-					d10 = (i < ww - 1 && j > 0)?	  bool(ap[i + 1][j - 1]) * 0.5 : 0;
-					d01 = (i > 0 && j < hh - 1)?	  bool(ap[i - 1][j + 1]) * 0.5 : 0;
-					d11 = (i < ww - 1 && j < hh - 1)? bool(ap[i + 1][j + 1]) * 0.5 : 0;
-					
-					d0 = (j > 0)?		bool(ap[i][j - 1]) * 0.5 : 0;
-					d1 = (i > 0)?		bool(ap[i - 1][j]) * 0.5 : 0;
-					d2 = (i < ww - 1)?	bool(ap[i + 1][j]) * 0.5 : 0;
-					d3 = (j < hh - 1)?	bool(ap[i][j + 1]) * 0.5 : 0;
-				}
-				
-				a  = ap[i][j];
-				a0 = (j > 0)?		ap[i][j - 1] : 0;
-				a1 = (i > 0)?		ap[i - 1][j] : 0;
-				a2 = (i < ww - 1)?	ap[i + 1][j] : 0;
-				a3 = (j < hh - 1)?	ap[i][j + 1] : 0;
-				
-				if(a1 && a0) d00 = (d1 + d0) / 2;
-				if(a0 && a2) d10 = (d0 + d2) / 2;
-				if(a2 && a3) d11 = (d2 + d3) / 2;
-				if(a3 && a1) d01 = (d3 + d1) / 2;
-				
-				if(a) {
-					ds_list_add(v, new __vertex(j0, i1, -d10).setNormal(0, 0, -1).setUV(tx1, ty0));
-					ds_list_add(v, new __vertex(j1, i1, -d11).setNormal(0, 0, -1).setUV(tx1, ty1));
-					ds_list_add(v, new __vertex(j0, i0, -d00).setNormal(0, 0, -1).setUV(tx0, ty0));
-						    			  
-					ds_list_add(v, new __vertex(j1, i1, -d11).setNormal(0, 0, -1).setUV(tx1, ty1));
-					ds_list_add(v, new __vertex(j1, i0, -d01).setNormal(0, 0, -1).setUV(tx0, ty1));
-					ds_list_add(v, new __vertex(j0, i0, -d00).setNormal(0, 0, -1).setUV(tx0, ty0));
-										  
-					ds_list_add(v, new __vertex(j0, i1,  d10).setNormal(0, 0, 1).setUV(tx1, ty0));
-					ds_list_add(v, new __vertex(j0, i0,  d00).setNormal(0, 0, 1).setUV(tx0, ty0));
-					ds_list_add(v, new __vertex(j1, i1,  d11).setNormal(0, 0, 1).setUV(tx1, ty1));
-						    		  	  	  					 				 
-					ds_list_add(v, new __vertex(j1, i1,  d11).setNormal(0, 0, 1).setUV(tx1, ty1));
-					ds_list_add(v, new __vertex(j0, i0,  d00).setNormal(0, 0, 1).setUV(tx0, ty0));
-					ds_list_add(v, new __vertex(j1, i0,  d01).setNormal(0, 0, 1).setUV(tx0, ty1));
-				} else if(!a0 && !a1 && a2 && a3) {
-					//var _tx0 = tw * (i + 1), _tx1 = _tx0 + tw;
-					//var _ty0 = th * (j + 0), _ty1 = _ty0 + th;
-					
-					d00 *= d0 * d1;
-					d10 *= d1 * d2;
-					d01 *= d1 * d3;
-					
-					ds_list_add(v, new __vertex(j0, i1, -d10).setNormal(0, 0, -1).setUV(tx1, ty0));
-					ds_list_add(v, new __vertex(j1, i1, -d11).setNormal(0, 0, -1).setUV(tx1, ty1));
-					ds_list_add(v, new __vertex(j1, i0, -d01).setNormal(0, 0, -1).setUV(tx0, ty1));
-												  					  				   
-					ds_list_add(v, new __vertex(j0, i1,  d10).setNormal(0, 0,  1).setUV(tx1, ty0));
-					ds_list_add(v, new __vertex(j1, i1,  d11).setNormal(0, 0,  1).setUV(tx1, ty1));
-					ds_list_add(v, new __vertex(j1, i0,  d01).setNormal(0, 0,  1).setUV(tx0, ty1));
-				} else if(!a0 && a1 && !a2 && a3) {
-					//var _tx0 = tw * (i - 1), _tx1 = _tx0 + tw;
-					//var _ty0 = th * (j + 0), _ty1 = _ty0 + th;
-					
-					d00 *= d0 * d1;
-					d10 *= d1 * d2;
-					d11 *= d2 * d3;
-					
-					ds_list_add(v, new __vertex(j1, i1, -d11).setNormal(0, 0, -1).setUV(tx1, ty1));
-					ds_list_add(v, new __vertex(j1, i0, -d01).setNormal(0, 0, -1).setUV(tx0, ty1));
-					ds_list_add(v, new __vertex(j0, i0, -d00).setNormal(0, 0, -1).setUV(tx0, ty0));
-												  					  				   
-					ds_list_add(v, new __vertex(j1, i1,  d11).setNormal(0, 0,  1).setUV(tx1, ty1));
-					ds_list_add(v, new __vertex(j1, i0,  d01).setNormal(0, 0,  1).setUV(tx0, ty1));
-					ds_list_add(v, new __vertex(j0, i0,  d00).setNormal(0, 0,  1).setUV(tx0, ty0));
-				} else if(a0 && a1 && !a2 && !a3) {
-					//var _tx0 = tw * (i - 1), _tx1 = _tx0 + tw;
-					//var _ty0 = th * (j + 0), _ty1 = _ty0 + th;
-					
-					d10 *= d1 * d2;
-					d01 *= d1 * d3;
-					d11 *= d2 * d3;
-					
-					ds_list_add(v, new __vertex(j0, i0, -d00).setNormal(0, 0, -1).setUV(tx0, ty0));
-					ds_list_add(v, new __vertex(j0, i1, -d10).setNormal(0, 0, -1).setUV(tx1, ty0));
-					ds_list_add(v, new __vertex(j1, i0, -d01).setNormal(0, 0, -1).setUV(tx0, ty1));
-												  					  				   
-					ds_list_add(v, new __vertex(j0, i0,  d00).setNormal(0, 0,  1).setUV(tx0, ty0));
-					ds_list_add(v, new __vertex(j0, i1,  d10).setNormal(0, 0,  1).setUV(tx1, ty0));
-					ds_list_add(v, new __vertex(j1, i0,  d01).setNormal(0, 0,  1).setUV(tx0, ty1));
-				} else if(a0 && !a1 && a2 && !a3) {
-					//var _tx0 = tw * (i + 1), _tx1 = _tx0 + tw;
-					//var _ty0 = th * (j + 0), _ty1 = _ty0 + th;
-					
-					d00 *= d0 * d1;
-					d01 *= d1 * d3;
-					d11 *= d2 * d3;
-					
-					ds_list_add(v, new __vertex(j0, i1, -d10).setNormal(0, 0, -1).setUV(tx1, ty0));
-					ds_list_add(v, new __vertex(j1, i1, -d11).setNormal(0, 0, -1).setUV(tx1, ty1));
-					ds_list_add(v, new __vertex(j0, i0, -d00).setNormal(0, 0, -1).setUV(tx0, ty0));
-												  					  				   
-					ds_list_add(v, new __vertex(j0, i1,  d10).setNormal(0, 0,  1).setUV(tx1, ty0));
-					ds_list_add(v, new __vertex(j1, i1,  d11).setNormal(0, 0,  1).setUV(tx1, ty1));
-					ds_list_add(v, new __vertex(j0, i0,  d00).setNormal(0, 0,  1).setUV(tx0, ty0));
-				} 
-			#endregion
-			} else { #region
-				ds_list_add(v, new __vertex(i1, j0, -dep).setNormal(0, 0, -1).setUV(tx1, ty0));
-				ds_list_add(v, new __vertex(i0, j0, -dep).setNormal(0, 0, -1).setUV(tx0, ty0));
-				ds_list_add(v, new __vertex(i1, j1, -dep).setNormal(0, 0, -1).setUV(tx1, ty1));
+			ds_list_add(v, new __vertex(i1, j0, -dep).setNormal(0, 0, -1).setUV(tx1, ty0));
+			ds_list_add(v, new __vertex(i0, j0, -dep).setNormal(0, 0, -1).setUV(tx0, ty0));
+			ds_list_add(v, new __vertex(i1, j1, -dep).setNormal(0, 0, -1).setUV(tx1, ty1));
 						    				  					  				   
-				ds_list_add(v, new __vertex(i1, j1, -dep).setNormal(0, 0, -1).setUV(tx1, ty1));
-				ds_list_add(v, new __vertex(i0, j0, -dep).setNormal(0, 0, -1).setUV(tx0, ty0));
-				ds_list_add(v, new __vertex(i0, j1, -dep).setNormal(0, 0, -1).setUV(tx0, ty1));
+			ds_list_add(v, new __vertex(i1, j1, -dep).setNormal(0, 0, -1).setUV(tx1, ty1));
+			ds_list_add(v, new __vertex(i0, j0, -dep).setNormal(0, 0, -1).setUV(tx0, ty0));
+			ds_list_add(v, new __vertex(i0, j1, -dep).setNormal(0, 0, -1).setUV(tx0, ty1));
 									  	  
-				ds_list_add(v, new __vertex(i1, j0,  dep).setNormal(0, 0, 1).setUV(tx1, ty0));
-				ds_list_add(v, new __vertex(i1, j1,  dep).setNormal(0, 0, 1).setUV(tx1, ty1));
-				ds_list_add(v, new __vertex(i0, j0,  dep).setNormal(0, 0, 1).setUV(tx0, ty0));
+			ds_list_add(v, new __vertex(i1, j0,  dep).setNormal(0, 0, 1).setUV(tx1, ty0));
+			ds_list_add(v, new __vertex(i1, j1,  dep).setNormal(0, 0, 1).setUV(tx1, ty1));
+			ds_list_add(v, new __vertex(i0, j0,  dep).setNormal(0, 0, 1).setUV(tx0, ty0));
 						    		  	    					 				  
-				ds_list_add(v, new __vertex(i1, j1,  dep).setNormal(0, 0, 1).setUV(tx1, ty1));
-				ds_list_add(v, new __vertex(i0, j1,  dep).setNormal(0, 0, 1).setUV(tx0, ty1));
-				ds_list_add(v, new __vertex(i0, j0,  dep).setNormal(0, 0, 1).setUV(tx0, ty0));
+			ds_list_add(v, new __vertex(i1, j1,  dep).setNormal(0, 0, 1).setUV(tx1, ty1));
+			ds_list_add(v, new __vertex(i0, j1,  dep).setNormal(0, 0, 1).setUV(tx0, ty1));
+			ds_list_add(v, new __vertex(i0, j0,  dep).setNormal(0, 0, 1).setUV(tx0, ty0));
 						   
-				if((useH && dep * 2 > getHeight(hei, hgtW, hgtH, i, j - 1)) || (j == 0 || ap[i][j - 1] == 0)) { //y side 
-					ds_list_add(v, new __vertex(i0, j0,  dep).setNormal(0, 1, 0).setUV(tx1, ty0));
-					ds_list_add(v, new __vertex(i0, j0, -dep).setNormal(0, 1, 0).setUV(tx0, ty0));
-					ds_list_add(v, new __vertex(i1, j0,  dep).setNormal(0, 1, 0).setUV(tx1, ty1));
+			if((useH && dep * 2 > getHeight(hei, hgtW, hgtH, i, j - 1)) || (j == 0 || ap[i][j - 1] == 0)) { //y side 
+				ds_list_add(v, new __vertex(i0, j0,  dep).setNormal(0, 1, 0).setUV(tx1, ty0));
+				ds_list_add(v, new __vertex(i0, j0, -dep).setNormal(0, 1, 0).setUV(tx0, ty0));
+				ds_list_add(v, new __vertex(i1, j0,  dep).setNormal(0, 1, 0).setUV(tx1, ty1));
 							    	  	  	  					  				   
-					ds_list_add(v, new __vertex(i0, j0, -dep).setNormal(0, 1, 0).setUV(tx1, ty1));
-					ds_list_add(v, new __vertex(i1, j0, -dep).setNormal(0, 1, 0).setUV(tx0, ty0));
-					ds_list_add(v, new __vertex(i1, j0,  dep).setNormal(0, 1, 0).setUV(tx0, ty1));
-				}
+				ds_list_add(v, new __vertex(i0, j0, -dep).setNormal(0, 1, 0).setUV(tx1, ty1));
+				ds_list_add(v, new __vertex(i1, j0, -dep).setNormal(0, 1, 0).setUV(tx0, ty0));
+				ds_list_add(v, new __vertex(i1, j0,  dep).setNormal(0, 1, 0).setUV(tx0, ty1));
+			}
 				
-				if((useH && dep * 2 > getHeight(hei, hgtW, hgtH, i, j + 1)) || (j == hh - 1 || ap[i][j + 1] == 0)) { //y side 
-					ds_list_add(v, new __vertex(i0, j1,  dep).setNormal(0, -1, 0).setUV(tx1, ty0));
-					ds_list_add(v, new __vertex(i1, j1,  dep).setNormal(0, -1, 0).setUV(tx1, ty1));
-					ds_list_add(v, new __vertex(i0, j1, -dep).setNormal(0, -1, 0).setUV(tx0, ty0));
+			if((useH && dep * 2 > getHeight(hei, hgtW, hgtH, i, j + 1)) || (j == hh - 1 || ap[i][j + 1] == 0)) { //y side 
+				ds_list_add(v, new __vertex(i0, j1,  dep).setNormal(0, -1, 0).setUV(tx1, ty0));
+				ds_list_add(v, new __vertex(i1, j1,  dep).setNormal(0, -1, 0).setUV(tx1, ty1));
+				ds_list_add(v, new __vertex(i0, j1, -dep).setNormal(0, -1, 0).setUV(tx0, ty0));
 							    				  					 				  
-					ds_list_add(v, new __vertex(i0, j1, -dep).setNormal(0, -1, 0).setUV(tx1, ty1));
-					ds_list_add(v, new __vertex(i1, j1,  dep).setNormal(0, -1, 0).setUV(tx0, ty1));
-					ds_list_add(v, new __vertex(i1, j1, -dep).setNormal(0, -1, 0).setUV(tx0, ty0));
-				}
+				ds_list_add(v, new __vertex(i0, j1, -dep).setNormal(0, -1, 0).setUV(tx1, ty1));
+				ds_list_add(v, new __vertex(i1, j1,  dep).setNormal(0, -1, 0).setUV(tx0, ty1));
+				ds_list_add(v, new __vertex(i1, j1, -dep).setNormal(0, -1, 0).setUV(tx0, ty0));
+			}
 			
-				if((useH && dep * 2 > getHeight(hei, hgtW, hgtH, i - 1, j)) || (i == 0 || ap[i - 1][j] == 0)) { //x side 
-					ds_list_add(v, new __vertex(i0, j0,  dep).setNormal(-1, 0, 0).setUV(tx1, ty0));
-					ds_list_add(v, new __vertex(i0, j1,  dep).setNormal(-1, 0, 0).setUV(tx1, ty1));
-					ds_list_add(v, new __vertex(i0, j0, -dep).setNormal(-1, 0, 0).setUV(tx0, ty0));
+			if((useH && dep * 2 > getHeight(hei, hgtW, hgtH, i - 1, j)) || (i == 0 || ap[i - 1][j] == 0)) { //x side 
+				ds_list_add(v, new __vertex(i0, j0,  dep).setNormal(-1, 0, 0).setUV(tx1, ty0));
+				ds_list_add(v, new __vertex(i0, j1,  dep).setNormal(-1, 0, 0).setUV(tx1, ty1));
+				ds_list_add(v, new __vertex(i0, j0, -dep).setNormal(-1, 0, 0).setUV(tx0, ty0));
 							    				  					 				  
-					ds_list_add(v, new __vertex(i0, j0, -dep).setNormal(-1, 0, 0).setUV(tx1, ty1));
-					ds_list_add(v, new __vertex(i0, j1,  dep).setNormal(-1, 0, 0).setUV(tx0, ty1));
-					ds_list_add(v, new __vertex(i0, j1, -dep).setNormal(-1, 0, 0).setUV(tx0, ty0));
-				}
+				ds_list_add(v, new __vertex(i0, j0, -dep).setNormal(-1, 0, 0).setUV(tx1, ty1));
+				ds_list_add(v, new __vertex(i0, j1,  dep).setNormal(-1, 0, 0).setUV(tx0, ty1));
+				ds_list_add(v, new __vertex(i0, j1, -dep).setNormal(-1, 0, 0).setUV(tx0, ty0));
+			}
 			
-				if((useH && dep * 2 > getHeight(hei, hgtW, hgtH, i + 1, j)) || (i == ww - 1 || ap[i + 1][j] == 0)) { //x side
-					ds_list_add(v, new __vertex(i1, j0,  dep).setNormal(1, 0, 0).setUV(tx1, ty0));
-					ds_list_add(v, new __vertex(i1, j0, -dep).setNormal(1, 0, 0).setUV(tx0, ty0));
-					ds_list_add(v, new __vertex(i1, j1,  dep).setNormal(1, 0, 0).setUV(tx1, ty1));
+			if((useH && dep * 2 > getHeight(hei, hgtW, hgtH, i + 1, j)) || (i == ww - 1 || ap[i + 1][j] == 0)) { //x side
+				ds_list_add(v, new __vertex(i1, j0,  dep).setNormal(1, 0, 0).setUV(tx1, ty0));
+				ds_list_add(v, new __vertex(i1, j0, -dep).setNormal(1, 0, 0).setUV(tx0, ty0));
+				ds_list_add(v, new __vertex(i1, j1,  dep).setNormal(1, 0, 0).setUV(tx1, ty1));
 							    				  					  				   
-					ds_list_add(v, new __vertex(i1, j0, -dep).setNormal(1, 0, 0).setUV(tx1, ty1));
-					ds_list_add(v, new __vertex(i1, j1, -dep).setNormal(1, 0, 0).setUV(tx0, ty0));
-					ds_list_add(v, new __vertex(i1, j1,  dep).setNormal(1, 0, 0).setUV(tx0, ty1));
-				}
-			#endregion
+				ds_list_add(v, new __vertex(i1, j0, -dep).setNormal(1, 0, 0).setUV(tx1, ty1));
+				ds_list_add(v, new __vertex(i1, j1, -dep).setNormal(1, 0, 0).setUV(tx0, ty0));
+				ds_list_add(v, new __vertex(i1, j1,  dep).setNormal(1, 0, 0).setUV(tx0, ty1));
 			}
 		}
 		

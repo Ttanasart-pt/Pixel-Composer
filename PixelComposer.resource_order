@@ -628,7 +628,7 @@
     {"name":"__vertex_function","order":1,"path":"scripts/__vertex_function/__vertex_function.yy",},
     {"name":"node_path_anchor","order":13,"path":"scripts/node_path_anchor/node_path_anchor.yy",},
     {"name":"s_node_path_wave","order":7,"path":"sprites/s_node_path_wave/s_node_path_wave.yy",},
-    {"name":"string_function","order":6,"path":"scripts/string_function/string_function.yy",},
+    {"name":"string_functions","order":6,"path":"scripts/string_functions/string_functions.yy",},
     {"name":"o_dialog_palette","order":2,"path":"objects/o_dialog_palette/o_dialog_palette.yy",},
     {"name":"sh_blend_hue","order":17,"path":"shaders/sh_blend_hue/sh_blend_hue.yy",},
     {"name":"s_node_threshold","order":47,"path":"sprites/s_node_threshold/s_node_threshold.yy",},

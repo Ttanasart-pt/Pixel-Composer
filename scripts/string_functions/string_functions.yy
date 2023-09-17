@@ -1,7 +1,7 @@
 {
   "resourceType": "GMScript",
   "resourceVersion": "1.0",
-  "name": "string_function",
+  "name": "string_functions",
   "isCompatibility": false,
   "isDnD": false,
   "parent": {

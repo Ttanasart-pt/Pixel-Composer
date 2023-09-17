@@ -1,12 +1,12 @@
-function string_to_array(str) {
+function string_to_array(str) { #region
 	var amo = string_length(str);
 	var arr = array_create(amo);
 	for( var i = 0; i < amo; i++ )
 		arr[i] = string_char_at(str, i + 1);
 	return arr;
-}
+} #endregion
 
-function string_partial_match(str, key) {
+function string_partial_match(str, key) { #region
 	var amo = string_length(str);
 	var run = 1;
 	var consec = 0;
@@ -29,9 +29,9 @@ function string_partial_match(str, key) {
 	}
 	
 	return -9999;
-}
+} #endregion
 
-function string_real(val, digMax = 999) {
+function string_real(val, digMax = 999) { #region
 	if(is_string(val)) return val;
 	if(is_struct(val)) return string(val);
 	
@@ -53,9 +53,14 @@ function string_real(val, digMax = 999) {
 	}
 	
 	return string_format(val, -1, pres);
-}
+} #endregion
 
-function filename_name_only(name) {
+function string_char_last(str, shift = 0) { #region
+	gml_pragma("forceinline");
+	return string_char_at(str, string_length(str) - shift);
+} #region
+
+function filename_name_only(name) { #region
 	name = filename_name(name);
 	return string_replace(name, filename_ext(name), "")
-}
+} #endregion

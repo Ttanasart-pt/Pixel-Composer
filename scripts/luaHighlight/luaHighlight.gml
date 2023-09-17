@@ -10,7 +10,7 @@ for( var i = 0, n = array_length(reserved); i < n; i++ )
 
 global.CODE_BREAK_TOKEN = [" ", "(", ")", "[", "]", "{", "}", ",", ";", "+", "-", "*", "/", "^", "="];
 
-function token_splice(str) {
+function lua_token_splice(str) {
 	var st = [];
 	var ss = str;
 	var sp;
@@ -65,7 +65,7 @@ function draw_code_lua(_x, _y, str) {
 			continue;
 		}
 		
-		var words = token_splice(_w);
+		var words = lua_token_splice(_w);
 			
 		for( var j = 0; j < array_length(words); j++ ) {
 			word = words[j];

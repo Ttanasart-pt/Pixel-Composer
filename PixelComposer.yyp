@@ -1219,7 +1219,7 @@
     {"id":{"name":"__vertex_function","path":"scripts/__vertex_function/__vertex_function.yy",},},
     {"id":{"name":"node_path_anchor","path":"scripts/node_path_anchor/node_path_anchor.yy",},},
     {"id":{"name":"s_node_path_wave","path":"sprites/s_node_path_wave/s_node_path_wave.yy",},},
-    {"id":{"name":"string_function","path":"scripts/string_function/string_function.yy",},},
+    {"id":{"name":"string_functions","path":"scripts/string_functions/string_functions.yy",},},
     {"id":{"name":"o_dialog_palette","path":"objects/o_dialog_palette/o_dialog_palette.yy",},},
     {"id":{"name":"sh_blend_hue","path":"shaders/sh_blend_hue/sh_blend_hue.yy",},},
     {"id":{"name":"_f_p0","path":"fonts/_f_p0/_f_p0.yy",},},

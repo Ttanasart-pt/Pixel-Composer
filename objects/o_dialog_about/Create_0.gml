@@ -21,6 +21,7 @@ event_inherited();
 		[ "Triangle grid", "Farini" ],
 		[ "Pixel sort", "Ciphrd" ],
 		[ "Simplex noise", "Ian McEwan" ],
+		[ "BBMOD", "BlueBurn" ],
 		
 		[ "Additional help", "ChatGPT by OpenAI" ],
 	]

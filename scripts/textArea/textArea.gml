@@ -292,8 +292,10 @@ function textArea(_input, _onModify, _extras = noone) : textInput(_input, _onMod
 			var _txt  = _txtLines[i] + (i < array_length(_txtLines)? "\n" : "");
 			var words;
 			
-			if(_code)
-				words = token_splice(_txt);
+			if(format == TEXT_AREA_FORMAT.codeLUA)
+				words = lua_token_splice(_txt);
+			else if(format == TEXT_AREA_FORMAT.codeHLSL)
+				words = hlsl_token_splice(_txt);
 			else
 				words = string_splice(_txt, " ");
 			
@@ -576,7 +578,7 @@ function textArea(_input, _onModify, _extras = noone) : textInput(_input, _onMod
 					break;
 				case TEXT_AREA_FORMAT.codeHLSL :
 					if(syntax_highlight)
-						draw_code_glsl(ch_x, ch_y, _str);
+						draw_code_hlsl(ch_x, ch_y, _str);
 					else 
 						draw_text_add(ch_x, ch_y, _str);
 					break;

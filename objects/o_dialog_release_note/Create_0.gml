@@ -68,6 +68,7 @@ event_inherited();
 						draw_sprite_ui_uniform(THEME.text_bullet, 0, _x - ui(12), _y + yy + ui(18), 1, COLORS._main_icon);
 						
 						var _lx = _x;
+						var _topic = false;
 						
 						draw_set_text(f_p0, fa_left, fa_top, COLORS._main_text);
 						for( var j = 1, m = array_length(_stx); j < m; j++ ) {
@@ -79,12 +80,14 @@ event_inherited();
 							}
 							
 							if(string_char_at(_word, 1) == "[")
-								draw_set_color(COLORS._main_text_accent);
-							else
-								draw_set_color(COLORS._main_text);
-							
-							draw_text(_x, _y + yy, _word);
+								_topic = true;
+								
+							draw_set_color(_topic? COLORS._main_text_accent : COLORS._main_text);
+							draw_text_add(_x, _y + yy, _word);
 							_x += string_width(_word);
+							
+							if(string_char_last(_word) == "]")
+								_topic = false;
 						}
 						
 						yy += line_get_height();
