@@ -106,17 +106,17 @@ function __Bone(parent = noone, distance = 0, direction = 0, angle = 0, length =
 		
 		if(parent == noone)
 			return new __vec2(lengthdir_x(distance, direction), lengthdir_y(distance, direction))
-						.add(lengthdir_x(len, _ang), lengthdir_y(len, _ang));
+						.addElement(lengthdir_x(len, _ang), lengthdir_y(len, _ang));
 		
 		if(parent_anchor) {
 			var p = parent.getPoint(1, pose)
-						  .add(lengthdir_x(len, _ang), lengthdir_y(len, _ang))
+						  .addElement(lengthdir_x(len, _ang), lengthdir_y(len, _ang))
 			return p;
 		}
 		
 		var p = parent.getPoint(0, pose)
-					  .add(lengthdir_x(distance, direction), lengthdir_y(distance, direction))
-					  .add(lengthdir_x(len, _ang), lengthdir_y(len, _ang))
+					  .addElement(lengthdir_x(distance, direction), lengthdir_y(distance, direction))
+					  .addElement(lengthdir_x(len, _ang), lengthdir_y(len, _ang))
 		return p;
 	} #endregion
 	

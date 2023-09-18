@@ -268,15 +268,6 @@ function typeArray(_type) { #region
 	return 0;
 } #endregion
 
-function typeArrayDynamic(_type) { #region
-	switch(_type) {
-		case VALUE_DISPLAY.curve :
-		case VALUE_DISPLAY.palette :
-			return true;
-	}
-	return false;
-} #endregion
-
 function typeCompatible(fromType, toType, directional_cast = true) { #region
 	if(value_bit(fromType) & value_bit(toType) != 0)
 		return true;
@@ -474,6 +465,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		use_cache   = true;
 		
 		process_array = true;
+		dynamic_array = false;
 		validateValue = true;
 		
 		fullUpdate = false;
@@ -597,6 +589,11 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	
 	static setArrayDepth = function(aDepth) { #region
 		array_depth = aDepth;
+		return self;
+	} #endregion
+	
+	static setArrayDynamic = function() { #region
+		dynamic_array = true;
 		return self;
 	} #endregion
 	
@@ -1130,10 +1127,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(display_type == VALUE_DISPLAY.area) { #region
 			var dispType = struct_try_get(nodeFrom.extra_data, "area_type");
 			var surfGet = nodeFrom.display_data;
-			if(!applyUnit || surfGet == -1) {
-				//print($"     {value}");
+			if(!applyUnit || surfGet == -1)
 				return value;
-			}
 			
 			var surf = surfGet();
 			var ww = surf[0];
@@ -1258,17 +1253,19 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(!is_array(def_val))
 			return val;
 			
-		if(typeArrayDynamic(display_type)) 
+		if(isDynamicArray(display_type)) 
 			return val;
 		
 		if(isArray(val))
 			return val;
-			
+		
 		if(!is_array(val))
-			val = array_create(def_length, val);	
+			return array_create(def_length, val);
 		else if(array_length(val) < def_length) {
-			for( var i = array_length(val); i < def_length; i++ )
-				val[i] = 0;
+			var _val = array_create(def_length);
+			for( var i = 0; i < def_length; i++ )
+				_val[i] = array_safe_get(val, i, 0);
+			return _val;
 		} 
 		
 		return val;
@@ -1311,13 +1308,14 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		val = arrayBalance(val);
 		
-		if(isArray(val) && array_length(val) < 128) { //Process data
+		if(isArray(val) && array_length(val) < 1024) { //Process data
+			var _val = array_create(array_length(val));
 			for( var i = 0, n = array_length(val); i < n; i++ )
-				val[i] = valueProcess(val[i], nod, applyUnit, arrIndex);
-		} else 
-			val = valueProcess(val, nod, applyUnit, arrIndex);
+				_val[i] = valueProcess(val[i], nod, applyUnit, arrIndex);
+			return _val;
+		} 
 		
-		return val;
+		return valueProcess(val, nod, applyUnit, arrIndex);
 	} #endregion
 	
 	static getValueRecursive = function(_time = PROJECT.animator.current_frame) { #region
@@ -1410,6 +1408,18 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		return val;
 	} #endregion
 	
+	static isDynamicArray = function() { #region
+		if(dynamic_array) return true;
+		
+		switch(display_type) {
+			case VALUE_DISPLAY.curve :
+			case VALUE_DISPLAY.palette :
+				return true;
+		}
+		
+		return false;
+	} #endregion
+
 	static isArray = function(val = undefined) { #region
 		if(val == undefined) {
 			if(cache_array[0])
@@ -1448,7 +1458,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			val = getValue();
 		
 		if(!isArray(val)) 
-			return 1;
+			return -1;
 		
 		if(array_depth == 0 && !typeArray(display_type)) 
 			return array_length(val);

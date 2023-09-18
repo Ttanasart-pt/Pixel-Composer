@@ -11,6 +11,7 @@ function Node_IsoSurf(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		.setDisplay(VALUE_DISPLAY.rotation);
 	
 	inputs[| 3] = nodeValue("Angle Split", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 0 * 90, 1 * 90, 2 * 90, 3 * 90 ])
+		.setArrayDynamic()
 		.setArrayDepth(1);
 	
 	outputs[| 0] = nodeValue("IsoSurf", self, JUNCTION_CONNECT.output, VALUE_TYPE.dynaSurface, noone);
@@ -80,9 +81,8 @@ function Node_IsoSurf(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 			
 			if(inputs[| 3].setValue(_angle)) UNDO_HOLDING = true;
 			
-			if(mouse_release(mb_left)) {
+			if(mouse_release(mb_left))
 				knob_dragging = noone;
-			}
 		}
 		
 		return hh;

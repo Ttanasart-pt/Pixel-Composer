@@ -9,8 +9,8 @@ function dynaSurf() constructor {
 		return [ _x - _px[0], _y - _px[1] ];
 	}
 	
-	static getWidth  = function() { return is_surface(surfaces[0])? surface_get_width(surfaces[0])  : 1; }
-	static getHeight = function() { return is_surface(surfaces[0])? surface_get_height(surfaces[0]) : 1; }
+	static getWidth  = function() { return is_surface(array_safe_get(surfaces, 0))? surface_get_width(surfaces[0])  : 1; }
+	static getHeight = function() { return is_surface(array_safe_get(surfaces, 0))? surface_get_height(surfaces[0]) : 1; }
 	
 	static draw = function(_x = 0, _y = 0, _sx = 1, _sy = 1, _ang = 0, _col = c_white, _alp = 1) {}
 	static drawStretch = function(_x = 0, _y = 0, _w = 1, _h = 1, _ang = 0, _col = c_white, _alp = 1) {

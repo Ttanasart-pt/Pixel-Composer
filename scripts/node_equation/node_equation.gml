@@ -148,7 +148,8 @@ function Node_Equation(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 			var _pName = _data[i + 0];
 			var _pVal  = _data[i + 1];
 			
-			variable_struct_set(params, _pName, _pVal);
+			if(_pName != "")
+				params[$ _pName] = _pVal;
 		}
 		
 		var _tree = array_safe_get(ast, _array_index, noone);

@@ -61,6 +61,17 @@ function __vec2(_x = 0, _y = _x) constructor {
 		y += _vec2.y;
 		return self;
 	} #endregion
+	
+	static  addElement = function(_x, _y) { #region
+		gml_pragma("forceinline");
+		return new __vec2(x + _x, y + _y);
+	} #endregion
+	static _addElement = function(_x, _y) { #region
+		gml_pragma("forceinline");
+		x += _x;
+		y += _y;
+		return self;
+	} #endregion
 
 	static  subtract = function(_vec2) { #region
 		gml_pragma("forceinline");
@@ -70,6 +81,17 @@ function __vec2(_x = 0, _y = _x) constructor {
 		gml_pragma("forceinline");
 		x -= _vec2.x;
 		y -= _vec2.y;
+		return self;
+	} #endregion
+
+	static  subtractElement = function(_x, _y) { #region
+		gml_pragma("forceinline");
+		return new __vec2(x - _x, y - _y);
+	} #endregion
+	static _subtractElement = function(_x, _y) { #region
+		gml_pragma("forceinline");
+		x -= _x;
+		y -= _y;
 		return self;
 	} #endregion
 
@@ -95,6 +117,17 @@ function __vec2(_x = 0, _y = _x) constructor {
 		return self;
 	} #endregion
 
+	static  multiplyElement = function(_x, _y) { #region
+		gml_pragma("forceinline");
+		return new __vec2(x * _x, y * _y);
+	} #endregion
+	static _multiplyElement = function(_x, _y) { #region
+		gml_pragma("forceinline");
+		x *= _x;
+		y *= _y;
+		return self;
+	} #endregion
+	
 	static  divide = function(_scalar) { #region
 		gml_pragma("forceinline");
 		if (_scalar != 0)

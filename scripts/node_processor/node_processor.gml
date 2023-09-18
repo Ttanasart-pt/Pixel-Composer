@@ -177,7 +177,7 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 				for(var i = 0; i < ds_list_size(inputs); i++)
 					_data[i] = all_inputs[i][l];
 				
-				var data = processData(_data, inputs_data, 0, l);
+				var data = processData(0, _data, 0, l);
 				for(var i = 0; i < ds_list_size(outputs); i++) {
 					var _outp = array_safe_get(data, i, undefined);
 					_outputs[i][l] = _outp;
@@ -210,6 +210,10 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 			var val = inputs[| i].getValue();
 			var amo = inputs[| i].arrayLength(val);
 			
+			if(amo == 0) val = noone;		//empty array
+			if(amo == 1) val = val[0];		//spread single array
+			amo = max(1, amo);
+			
 			inputs_data[i]     = val;
 			inputs_is_array[i] = inputs[| i].isArray(val);
 			
@@ -221,11 +225,11 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 					
 				case ARRAY_PROCESS.expand : 
 				case ARRAY_PROCESS.expand_inv : 
-					process_amount *= max(1, amo);
+					process_amount *= amo;
 					break;
 			}
 			
-			process_length[i] = [max(1, amo), process_amount];
+			process_length[i] = [amo, process_amount];
 		}
 		
 		var amoMax = process_amount;

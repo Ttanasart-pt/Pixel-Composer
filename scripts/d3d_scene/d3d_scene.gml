@@ -86,7 +86,8 @@ function __3dScene(camera) constructor {
 	} reset(); #endregion
 	
 	static _submit = function(callback, object = noone, shader = noone) {
-		if(object == noone) return;
+		if(object == noone)		return;
+		if(!is_struct(object))	return;
 		
 		matrix_stack_clear(); 
 		if(apply_transform) custom_transform.submitMatrix(); 
