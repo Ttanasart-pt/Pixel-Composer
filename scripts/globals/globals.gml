@@ -72,11 +72,17 @@
 		
 		static cleanup = function() {
 			if(!ds_map_empty(nodeMap))
-				array_map(ds_map_keys_to_array(nodeMap), function(_key, _ind) { nodeMap[? _key].active = false; });
+				array_map(ds_map_keys_to_array(nodeMap), function(_key, _ind) { 
+					var _node = nodeMap[? _key];
+					_node.active = false; 
+					_node.cleanUp(); 
+				});
 			
 			ds_list_destroy(nodes);
 			ds_map_destroy(nodeMap);
 			ds_map_destroy(nodeNameMap);
+			
+			gc_collect();
 		}
 	}
 	

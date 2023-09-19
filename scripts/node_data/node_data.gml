@@ -1001,9 +1001,9 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		if(!active) return;
 		disable();
 		
-		if(PANEL_GRAPH.node_hover         == self) PANEL_GRAPH.node_hover        = noone;
-		if(PANEL_GRAPH.node_focus         == self) PANEL_GRAPH.node_focus        = noone;
-		if(PANEL_INSPECTOR.inspecting     == self) PANEL_INSPECTOR.inspecting    = noone;
+		if(PANEL_GRAPH.node_hover     == self) PANEL_GRAPH.node_hover     = noone;
+		if(PANEL_GRAPH.node_focus     == self) PANEL_GRAPH.node_focus     = noone;
+		if(PANEL_INSPECTOR.inspecting == self) PANEL_INSPECTOR.inspecting = noone;
 		
 		PANEL_PREVIEW.removeNodePreview(self);
 		PANEL_ANIMATION.updatePropertyList();

@@ -42,7 +42,7 @@ function Panel_Collection() : PanelContent() constructor {
 					var _path = filename_dir(_menu_node.path);
 					var _name = filename_name(_menu_node.path);
 					
-					saveCollection(PANEL_INSPECTOR.inspecting, _path, _name, false, _menu_node.meta);
+					saveCollection(PANEL_INSPECTOR.getInspecting(), _path, _name, false, _menu_node.meta);
 				}),
 				menuItem(__txtx("panel_collection_edit_meta", "Edit metadata") + "...", function() { 
 					var dia  = dialogCall(o_dialog_file_name_collection, mouse_mx + ui(8), mouse_my + ui(-320));
@@ -50,7 +50,7 @@ function Panel_Collection() : PanelContent() constructor {
 					if(meta != noone && meta != undefined) 
 						dia.meta = meta;
 					
-					dia.node = PANEL_INSPECTOR.inspecting;
+					dia.node = PANEL_INSPECTOR.getInspecting();
 					dia.data_path = data_path;
 					dia.updating  = _menu_node;
 					dia.doExpand();
@@ -80,7 +80,7 @@ function Panel_Collection() : PanelContent() constructor {
 					if(meta != noone && meta != undefined) 
 						dia.meta = meta;
 				
-					dia.node		= PANEL_INSPECTOR.inspecting;
+					dia.node		= PANEL_INSPECTOR.getInspecting();
 					dia.data_path	= data_path;
 					dia.ugc			= 1;
 					dia.updating	= _menu_node;
@@ -94,7 +94,7 @@ function Panel_Collection() : PanelContent() constructor {
 						if(meta != noone && meta != undefined) 
 							dia.meta = meta;
 						
-						dia.node		= PANEL_INSPECTOR.inspecting;
+						dia.node		= PANEL_INSPECTOR.getInspecting();
 						dia.data_path	= data_path;
 						dia.ugc			= 2;
 						dia.updating	= _menu_node;
@@ -414,12 +414,12 @@ function Panel_Collection() : PanelContent() constructor {
 					if(context != root) {
 						var txt = __txtx("panel_collection_add_node", "Add selecting node as collection");
 						if(buttonInstant(THEME.button_hide, bx, by, bs, bs, [mx, my], pFOCUS, pHOVER, txt, THEME.add, 0, COLORS._main_value_positive) == 2) {
-							if(PANEL_INSPECTOR.inspecting != noone) {
+							if(PANEL_INSPECTOR.getInspecting() != noone) {
 								data_path = context.path;
 								var dia = dialogCall(o_dialog_file_name_collection, mouse_mx + ui(8), mouse_my + ui(8));
-								if(PANEL_INSPECTOR.inspecting) {
-									dia.meta.name = PANEL_INSPECTOR.inspecting.display_name;
-									dia.node	  = PANEL_INSPECTOR.inspecting;
+								if(PANEL_INSPECTOR.getInspecting()) {
+									dia.meta.name = PANEL_INSPECTOR.getInspecting().display_name;
+									dia.node	  = PANEL_INSPECTOR.getInspecting();
 									dia.data_path = data_path;
 								}
 							}

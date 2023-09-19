@@ -1398,7 +1398,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		var val = getValue(, false, 0, useCache, true);
 		
-		if(isArray()) {
+		if(isArray(val)) {
 			if(array_length(val) == 0) return 0;
 			var v = val[safe_mod(node.preview_index, array_length(val))];
 			if(array_length(v) >= 100) return $"[{array_length(v)}]";

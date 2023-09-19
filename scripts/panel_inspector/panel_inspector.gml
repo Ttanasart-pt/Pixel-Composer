@@ -132,6 +132,11 @@ function Panel_Inspector() : PanelContent() constructor {
 		picker_index = 0;
 	} #endregion
 	
+	function getInspecting() { #region
+		if(inspecting == noone) return noone;
+		return inspecting.active? inspecting : noone;
+	} #endregion
+	
 	function onFocusBegin() { PANEL_INSPECTOR = self; }
 	
 	function onResize() { #region

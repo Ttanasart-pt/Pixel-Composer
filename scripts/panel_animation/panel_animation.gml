@@ -435,7 +435,7 @@ function Panel_Animation() : PanelContent() constructor {
 		var bar_w = timeline_w;
 		var bar_h = timeline_h;
 		var bar_total_w = PROJECT.animator.frames_total * ui(timeline_scale);
-		var inspecting = PANEL_INSPECTOR.inspecting;
+		var inspecting = PANEL_INSPECTOR.getInspecting();
 		
 		resetTimelineMask();
 		timeline_surface = surface_verify(timeline_surface, timeline_w, timeline_h);
@@ -1082,7 +1082,7 @@ function Panel_Animation() : PanelContent() constructor {
 			} else 
 				draw_sprite_stretched_ext(THEME.ui_label_bg, 0, 0, _node_y - ui(10), lable_w, ui(20), COLORS.panel_animation_dope_bg, aa);
 			
-			if(_node == PANEL_INSPECTOR.inspecting)
+			if(_node == PANEL_INSPECTOR.getInspecting())
 				draw_sprite_stretched_ext(THEME.node_active, 0, 0, _node_y - ui(10), lable_w, ui(20), COLORS._main_accent, 1);
 							
 			var tx = tool_width - ui(10);

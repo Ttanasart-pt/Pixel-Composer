@@ -912,7 +912,7 @@ function Panel_Preview() : PanelContent() constructor {
 		#endregion
 		
 		#region outline
-			var inspect_node = PANEL_INSPECTOR.inspecting;
+			var inspect_node = PANEL_INSPECTOR.getInspecting();
 			
 			if(inspect_node && inspect_node.is_3D) {
 				var _inspect_obj = inspect_node.getPreviewObjectOutline();
@@ -1413,7 +1413,7 @@ function Panel_Preview() : PanelContent() constructor {
 		
 		drawPreviewOverlay();
 		
-		var inspect_node = PANEL_INSPECTOR.inspecting;
+		var inspect_node = PANEL_INSPECTOR.getInspecting();
 		
 		var tool = noone;
 		if(inspect_node) {
