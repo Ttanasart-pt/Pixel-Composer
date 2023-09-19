@@ -39,9 +39,7 @@ function Node_Time_Remap(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		
 		var ste = 1 / _life;
 		
-		surface_set_target(_surf);
-		DRAW_CLEAR
-		shader_set(shader);
+		surface_set_shader(_surf, shader);
 		texture_set_stage(uniform_map, surface_get_texture(_map));
 		
 		for(var i = 0; i <= _life; i++) {
@@ -59,8 +57,7 @@ function Node_Time_Remap(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 			draw_surface_safe(s, 0, 0);
 		}
 		
-		shader_reset();
-		surface_reset_target();
+		surface_reset_shader();
 		
 		cacheCurrentFrame(_inSurf);
 	} #endregion

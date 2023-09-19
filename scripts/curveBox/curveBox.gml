@@ -22,12 +22,10 @@ function curveBox(_onModify) : widget() constructor {
 		w = _w; 
 		h = _h;
 		
-		if(!is_array(_data) || array_length(_data) == 0)
-			return 0;
-		var _is_array = is_array(_data[0]);
-		var points = array_length(_data) / 6;
+		if(!is_array(_data) || array_length(_data) == 0) return 0;
+		if(is_array(_data[0])) return 0;
 		
-		if(!_is_array) return 0;
+		var points    = array_length(_data) / 6;
 		
 		curve_surface = surface_verify(curve_surface, _w, _h);
 		
@@ -198,7 +196,7 @@ function curveBox(_onModify) : widget() constructor {
 			}
 		#endregion
 		
-		if(!_is_array && hover) { #region
+		if(hover) { #region
 			if(point_in_rectangle(_m[0], _m[1], _x + _w - ui(6 + 24 * 2 + 4), _y + _h - ui(6 + 24), _x + _w + ui(5), _y + _h + ui(5))) {
 			} else if(point_in_rectangle(msx, msy, -ui(5), -ui(5), _w + ui(5), _h + ui(5))) {
 				if(mouse_press(mb_left, active)) {

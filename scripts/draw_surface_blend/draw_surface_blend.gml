@@ -38,7 +38,7 @@ function draw_surface_blend(background, foreground, blend = 0, alpha = 1, _pre_a
 		shader_set_i("tile_type",		tile);
 	}
 	
-	BLEND_ALPHA
+	BLEND_OVERRIDE
 	draw_surface_stretched_safe(background, 0, 0, surf_w, surf_h);
 	BLEND_NORMAL
 	shader_reset();

@@ -683,7 +683,7 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor { #regio
 		//var vct = ds_list_create();
 		//addNodeCatagory("VCT", vct);
 		//	addNodeObject(vct, "Biterator",		s_node_print,		"Node_Biterator",		[1, Node_Biterator]);
-			
+		
 		//////////////////////////////////////////////////////////////// PIXEL BUILDER ////////////////////////////////////////////////////////////////
 			
 		var pb_draw = ds_list_create(); #region

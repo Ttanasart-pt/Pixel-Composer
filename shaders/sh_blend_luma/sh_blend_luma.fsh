@@ -102,8 +102,10 @@ void main() {
 	
 	_hsl0.z = mix(_hsl0.z, _hsl1.z, _col1.a * opacity * sampleMask());
 	
+	float al = _col1.a + _col0.a * (1. - _col1.a);
 	vec4 res = vec4(hsl2rgb(_hsl0), _col0.a);
-	if(preserveAlpha == 1) res.a = _col0.a;
+	res.rgb /= al;
+	res.a = preserveAlpha == 1? _col0.a : res.a;
 	
 	gl_FragColor = res;
 }

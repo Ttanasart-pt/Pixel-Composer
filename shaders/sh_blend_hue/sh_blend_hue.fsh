@@ -49,8 +49,10 @@ void main() {
 	vec3 _hsv1 = rgb2hsv(_col1.rgb);
 	_hsv1.yz = _hsv0.yz;
 	
+	float al = _col1.a + _col0.a * (1. - _col1.a);
 	vec4 res = vec4(mix(_col0.rgb, hsv2rgb(_hsv1), _col1.a * opacity * sampleMask()), _col0.a);
-	if(preserveAlpha == 1) res.a = _col0.a;
+	res.rgb /= al;
+	res.a = preserveAlpha == 1? _col0.a : res.a;
 	
     gl_FragColor = res;
 }

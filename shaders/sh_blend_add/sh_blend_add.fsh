@@ -34,7 +34,9 @@ void main() {
 	_col1.a *= opacity * sampleMask();
 	_col1.rgb *= _col1.a;
 	
+	float al = _col1.a + _col0.a * (1. - _col1.a);
 	vec4 res = _col0 + _col1;
-	if(preserveAlpha == 1) res.a = _col0.a;
+	res.rgb /= al;
+	res.a = preserveAlpha == 1? _col0.a : res.a;
     gl_FragColor = res;
 }

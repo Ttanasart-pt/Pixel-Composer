@@ -603,6 +603,7 @@
     {"name":"node_scatter_points","order":6,"path":"scripts/node_scatter_points/node_scatter_points.yy",},
     {"name":"pack_bottom_left","order":2,"path":"scripts/pack_bottom_left/pack_bottom_left.yy",},
     {"name":"o_dialog_lua_reference","order":5,"path":"objects/o_dialog_lua_reference/o_dialog_lua_reference.yy",},
+    {"name":"__node_custom","order":14,"path":"scripts/__node_custom/__node_custom.yy",},
     {"name":"node_strand_gravity","order":4,"path":"scripts/node_strand_gravity/node_strand_gravity.yy",},
     {"name":"load_palette","order":3,"path":"scripts/load_palette/load_palette.yy",},
     {"name":"luaHighlight","order":1,"path":"scripts/luaHighlight/luaHighlight.yy",},

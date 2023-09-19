@@ -12,7 +12,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	inputs[| 3] = nodeValue("Scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 1, 1, 1 ] )
 		.setDisplay(VALUE_DISPLAY.vector_range);
 	
-	inputs[| 4] = nodeValue("Angle", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 0, 0, 0, 0, 0 ])
+	inputs[| 4] = nodeValue("Angle", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 0, 0, 0, 0, 0 ] )
 		.setDisplay(VALUE_DISPLAY.rotation_random);
 	
 	inputs[| 5] = nodeValue("Area", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ DEF_SURF_W / 2, DEF_SURF_H / 2, DEF_SURF_W / 2, DEF_SURF_H / 2, AREA_SHAPE.rectangle ])

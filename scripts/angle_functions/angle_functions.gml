@@ -4,8 +4,10 @@ function angle_random_eval(range, seed = undefined) {
 	
 	if(seed != undefined) random_set_seed(seed);
 	
+	if(array_empty(range)) return 0;
+	
 	if(array_length(range) < 2) 
-		return range
+		return range[0]
 	else if(array_length(range) == 2) 
 		return irandom_range(range[0], range[1]);
 	else if(array_length(range) > 2) {
@@ -17,5 +19,5 @@ function angle_random_eval(range, seed = undefined) {
 		}
 	}
 	
-	return range;
+	return array_safe_get(range, 0);
 }

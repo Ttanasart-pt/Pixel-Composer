@@ -246,6 +246,7 @@ function typeArray(_type) { #region
 		case VALUE_DISPLAY.range :
 		case VALUE_DISPLAY.vector_range :
 		case VALUE_DISPLAY.rotation_range :
+		case VALUE_DISPLAY.rotation_random :
 		case VALUE_DISPLAY.slider_range :
 		
 		case VALUE_DISPLAY.vector :

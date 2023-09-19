@@ -39,9 +39,10 @@ void main() {
 	vec4 blend = vec4(1.) - (vec4(1.) - _col0) * (vec4(1.) - _col1);
 	
 	float po = preserveAlpha == 1? _col1.a : opacity;
+	float al = _col1.a + _col0.a * (1. - _col1.a);
 	vec4 res = mix(_col0, blend, po);
-	
-	if(preserveAlpha == 1) res.a = _col0.a;
+	res.rgb /= al;
+	res.a = preserveAlpha == 1? _col0.a : res.a;
 	
     gl_FragColor = res;
 }

@@ -100,7 +100,7 @@ function Node_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 			
 			surface_set_target(temp_surface[0]);
 			DRAW_CLEAR
-			BLEND_ALPHA
+			BLEND_OVERRIDE
 				draw_surface_safe(_fore, sx, sy);
 			BLEND_NORMAL
 			surface_reset_target();
