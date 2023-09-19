@@ -1,6 +1,4 @@
 function closeProject(project) {
-	//print($"Close {PROJECT.path}");
-	
 	project.active = false;
 	array_remove(PROJECTS, project);
 	if(array_length(PROJECTS) == 0) {
@@ -19,6 +17,7 @@ function closeProject(project) {
 		if(array_length(panels) == 1) {
 			panel.setProject(PROJECT);
 			panel.onFocusBegin();
+			panel.resetContext();
 		} else {
 			panel.panel.remove(panel);
 			array_remove(panels, panel);

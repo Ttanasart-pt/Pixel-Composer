@@ -1325,10 +1325,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(type == VALUE_TYPE.trigger && connect_type == JUNCTION_CONNECT.output) //trigger even will not propagate from input to output, need to be done manually
 			return [ __getAnimValue(_time), self ];
 		
-		if(value_from == noone) {
-			var _val = __getAnimValue(_time);
-			return [ _val, self ];
-		} else if(value_from != self)
+		if(value_from && value_from != self)
 			return value_from.getValueRecursive(_time); 
 		
 		if(expUse && is_struct(expTree) && expTree.validate()) {
@@ -1336,10 +1333,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			//print(debug_get_callstack(8));
 			
 			if(global.EVALUATE_HEAD != noone && global.EVALUATE_HEAD == self)  {
-				//noti_warning($"Expression evaluation error : recursive call detected.");
+				noti_warning($"Expression evaluation error : recursive call detected.");
 			} else {
-				printIf(global.LOG_EXPRESSION, $"==================== EVAL BEGIN {expTree} ====================");
-				//print(json_beautify(json_stringify(expTree)));
+				//printIf(global.LOG_EXPRESSION, $"==================== EVAL BEGIN {expTree} ====================");
 				//printCallStack();
 				
 				global.EVALUATE_HEAD = self;
@@ -1350,6 +1346,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				};
 				
 				var _exp_res = expTree.eval(variable_clone(params));
+				//print(json_stringify(expTree, true));
+				//print($"======= {_exp_res}");
+				
 				if(is_undefined(_exp_res)) {
 					val[0] = 0;
 					noti_warning("Expression not returning any values.");
@@ -1357,9 +1356,11 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 					val[0] = _exp_res;
 				global.EVALUATE_HEAD = noone;
 			}
-		}
+			
+			return val;
+		} 
 		
-		return val;
+		return [ __getAnimValue(_time), self ];
 	} #endregion
 	
 	static setAnim = function(anim) { #region

@@ -1242,13 +1242,9 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 					PANEL_PREVIEW.resetNodePreview();
 					setContextFrame(true, node_context[| i + 1]);
 					
-					if(i == -1) {
-						ds_list_clear(node_context);
-						title = __txt("Graph");
-						nodes_list = project.nodes;
-						toCenterNode();
-						PANEL_ANIMATION.updatePropertyList();
-					} else {
+					if(i == -1)
+						resetContext();
+					else {
 						for(var j = ds_list_size(node_context) - 1; j > i; j--)
 							ds_list_delete(node_context, j);
 						nodes_list = node_context[| i].getNodeList();
@@ -1438,6 +1434,14 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		draw_set_alpha(0.5);
 		draw_roundrect_ext(frm_x0, frm_y0, frm_x1, frm_y1, THEME_VALUE.panel_corner_radius, THEME_VALUE.panel_corner_radius, true);
 		draw_set_alpha(1);
+	} #endregion
+	
+	function resetContext() { #region
+		ds_list_clear(node_context);
+		title = __txt("Graph");
+		nodes_list = project.nodes;
+		toCenterNode();
+		PANEL_ANIMATION.updatePropertyList();
 	} #endregion
 	
 	function addContext(node) { #region
