@@ -109,7 +109,7 @@ function SAVE_AT(project = PROJECT, path = "", log = "save at ") {
 	if(file_exists(path))
 		file_delete(path);
 	var file = file_text_open_write(path);
-	file_text_write_string(file, save_serialize());
+	file_text_write_string(file, save_serialize(project));
 	file_text_close(file);
 	
 	SAVING    = false;

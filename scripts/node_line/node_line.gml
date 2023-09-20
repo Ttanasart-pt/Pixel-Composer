@@ -239,12 +239,10 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 					wght = 1;
 					if(_useDistance) {
 						p = _pat.getPointDistance(_prog_curr, i);
-						
 						if(struct_has(_pat, "getWeightRatio"))
 							wght = _pat.getWeightRatio(_prog_curr, i);
 					} else {
 						p = _pat.getPointRatio(_prog_curr, i);
-						
 						if(struct_has(_pat, "getWeightDistance"))
 							wght = _pat.getWeightDistance(_prog_curr, i);
 					}
