@@ -161,10 +161,10 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 				var dy = my - transform_my;
 				
 				for( var i = input_fix_len; i < ds_list_size(inputs); i++ ) {
-					var p = inputs[| i].getValue();
-					p = [
-						p[0] + dx / _s,
-						p[1] + dy / _s	
+					var _p = inputs[| i].getValue();
+					var p = [
+						_p[0] + dx / _s,
+						_p[1] + dy / _s	
 					];
 					
 					if(inputs[| i].setValue(p))
@@ -833,9 +833,9 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		var sample = PREF_MAP[? "path_resolution"];
 		
 		var con = loop? ansize : ansize - 1;
-		lengths		= [];
-		lengthAccs	= [];
-		array_resize(anchors, ansize);
+		lengths	   = [];
+		lengthAccs = [];
+		anchors    = array_create(ansize);
 		
 		for(var i = 0; i < con; i++) {
 			var index_0 = input_fix_len + i;
@@ -844,13 +844,16 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			
 			var _a0 = array_clone(inputs[| index_0].getValue());
 			var _a1 = array_clone(inputs[| index_1].getValue());
-			anchors[i + 0] = _a0;
-			anchors[i + 1] = _a1;
 			
 			if(rond) {
-				_a0[0] = round(_a0[0]);	_a0[1] = round(_a0[1]);
-				_a1[0] = round(_a1[0]);	_a1[1] = round(_a1[1]);
+				_a0[0] = round(_a0[0]);	
+				_a0[1] = round(_a0[1]);
+				_a1[0] = round(_a1[0]);	
+				_a1[1] = round(_a1[1]);
 			}
+			
+			anchors[i + 0] = array_clone(_a0);
+			anchors[i + 1] = array_clone(_a1);
 			
 			var l = 0, _ox = 0, _oy = 0, _nx = 0, _ny = 0, p = 0;
 			for(var j = 0; j < sample; j++) {
@@ -880,8 +883,9 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	
 	static getPointDistance = function(_dist) { #region
 		if(ds_map_exists(cached_pos, _dist))
-			return cached_pos[? _dist];
+			return cached_pos[? _dist].clone();
 		
+		var _oDist = _dist;
 		var loop   = inputs[| 1].getValue();
 		var rond   = inputs[| 3].getValue();
 		if(!is_real(rond)) rond = false;
@@ -894,13 +898,18 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		var _a0, _a1;
 		
 		for(var i = 0; i < ansize; i++) {
-			_a0 = anchors[safe_mod(i + 0, amo)];
-			_a1 = anchors[safe_mod(i + 1, amo)];
+			_a0 = array_clone(anchors[safe_mod(i + 0, amo)]);
+			_a1 = array_clone(anchors[safe_mod(i + 1, amo)]);
+			
+			if(!is_array(_a0) || !is_array(_a1))
+				return new __vec2();
 			
 			if(rond) {
-				_a0[0] = round(_a0[0]);	_a0[1] = round(_a0[1]);
-				_a1[0] = round(_a1[0]);	_a1[1] = round(_a1[1]);
-			}
+				_a0[0] = round(_a0[0]);	
+				_a0[1] = round(_a0[1]);
+				_a1[0] = round(_a1[0]);	
+				_a1[1] = round(_a1[1]);
+			} 
 			
 			if(_dist > lengths[i]) {
 				_dist -= lengths[i];
@@ -908,13 +917,10 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			}
 			
 			var _t = _dist / lengths[i];
-			
-			if(!is_array(_a0) || !is_array(_a1))
-				return new __vec2();
-			
-			var _p = eval_bezier(_t, _a0[0], _a0[1], _a1[0], _a1[1], _a0[0] + _a0[4], _a0[1] + _a0[5], _a1[0] + _a1[2], _a1[1] + _a1[3]);
+			var _p     = eval_bezier(_t, _a0[0], _a0[1], _a1[0], _a1[1], _a0[0] + _a0[4], _a0[1] + _a0[5], _a1[0] + _a1[2], _a1[1] + _a1[3]);
 			var _point = new __vec2(_p);
-			cached_pos[? _dist] = _point;
+			
+			cached_pos[? _oDist] = _point.clone();
 			return _point;
 		}
 		

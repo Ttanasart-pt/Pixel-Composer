@@ -212,14 +212,14 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 				if(_useDistance) {						
 					_pathStr   *= _pathLength;
 					_pathEnd   *= _pathLength;
-					_stepLen    = min(_segL, _pathEnd);	//TODO: Change this to node input
+					_stepLen    = min(_segL, _pathEnd);
 						
 					_total	   *= _pathLength;
 					_total_prev = _total;
 						
 					_prog_curr *= _pathLength;
 				}
-						
+				
 				while(_total >= 0) {
 					if(_useDistance) {
 						var segmentLength = array_safe_get(_segLength, _segIndex, 99999);
@@ -242,13 +242,13 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 						
 						if(struct_has(_pat, "getWeightRatio"))
 							wght = _pat.getWeightRatio(_prog_curr, i);
-					} else if(!_useDistance) {
+					} else {
 						p = _pat.getPointRatio(_prog_curr, i);
 						
 						if(struct_has(_pat, "getWeightDistance"))
 							wght = _pat.getWeightDistance(_prog_curr, i);
 					}
-						
+					
 					_nx = p.x;
 					_ny = p.y;
 						
@@ -280,7 +280,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 					if(_total_prev == _total && ++_freeze > 16) break;
 					_total_prev = _total;
 				}
-					
+				
 				array_push(lines, points);
 			}
 		} else {
