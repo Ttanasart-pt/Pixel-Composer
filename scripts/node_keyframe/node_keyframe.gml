@@ -171,15 +171,11 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 			return false;
 		}
 		
-		if(ds_list_size(values) == 0) 
-			return processTypeDefault();
-		
-		if(ds_list_size(values) == 1)
-			return processType(values[| 0].value);
+		if(ds_list_size(values) == 0) return processTypeDefault();
+		if(ds_list_size(values) == 1) return processType(values[| 0].value);
 		
 		if(prop.type == VALUE_TYPE.path)
 			return processType(values[| 0].value);
-		
 		if(!prop.is_anim) 
 			return processType(values[| 0].value);
 		

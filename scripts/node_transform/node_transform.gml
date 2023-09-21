@@ -58,7 +58,7 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	attribute_interpolation();
 	
 	vel = 0;
-	prev_pos = [0, 0];
+	prev_pos = [ 0, 0 ];
 	
 	static getDimension = function(arr) { #region
 		var _surf		= getSingleValue(0, arr);
@@ -474,7 +474,9 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				draw_set_color(COLORS._main_accent);
 			
 				for( var i = 0; i < ds_list_size(allPos); i++ ) {
-					var _pos = allPos[| i].value;
+					var pos  = allPos[| i].value;
+					var _pos = [ pos[0], pos[1] ];
+					
 					if(posInp.unit.mode == VALUE_UNIT.reference) {
 						_pos[0] *= ow;
 						_pos[1] *= oh;

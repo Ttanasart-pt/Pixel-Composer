@@ -1,6 +1,7 @@
 /// @description 
 gameframe_init();
 gameframe_button_array = [];
+
 #region setup
 	window_set_size(640, 480);
 	display_set_gui_size(640, 480);
@@ -8,7 +9,7 @@ gameframe_button_array = [];
 	window_set_caption("Pixel Composer crashed")
 	window_set_position(
 		(display_get_width()  - 640) / 2, 
-		(display_get_height() - 320) / 2); // center window
+		(display_get_height() - 480) / 2); // center window
 #endregion
 
 #region directory
@@ -51,5 +52,5 @@ gameframe_button_array = [];
 	}
 	
 	win_w = 640;
-	win_h = 320;
+	win_h = 480;
 #endregion

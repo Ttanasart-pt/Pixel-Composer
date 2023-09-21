@@ -1220,7 +1220,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			
 			if(cache_hit) {
 				global.cache_hit++;
-				return cache_value[2];
+				return array_clone(cache_value[2]);
 			}
 		}
 		
@@ -1232,7 +1232,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			cache_value[1] = _time;
 		}
 		
-		cache_value[2] = val;
+		cache_value[2] = array_clone(val);
 		cache_value[3] = applyUnit;
 		
 		return val;

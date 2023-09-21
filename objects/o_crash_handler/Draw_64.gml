@@ -2,8 +2,8 @@
 gameframe_update();
 
 draw_clear(#1c1c23);
-var w = window_get_width();
-var h = window_get_height();
+var w = 640;
+var h = 480;
 
 if(win_w != w || win_h != h) {
 	display_set_gui_size(w, h);
@@ -31,9 +31,9 @@ draw_sprite_ext(s_noti_icon_error, 0, 18, 18, 0.5, 0.5, 0, c_white, 1);
 	var y0 = 32;
 	var x1 = w - 8;
 	var y1 = h - 8 - 32 - 8;
-	var tw = x1 - x0;
-	var th = y1 - y0;
-
+	var tw = max(1, x1 - x0);
+	var th = max(1, y1 - y0);
+	
 	draw_sprite_stretched(s_textbox, 3, x0, y0, tw, th);
 	draw_sprite_stretched(s_textbox, 0, x0, y0, tw, th);
 	
