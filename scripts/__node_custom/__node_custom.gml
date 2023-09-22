@@ -1,9 +1,8 @@
 function Node_create_Custom(_x, _y, _group = noone, _param = {}) {
 	if(!struct_has(_param, "path")) return noone;
-	var path = _param.path;
 	
 	var node = new Node_Custom(_x, _y, _group);
-	node.setPath(path);
+	if(!node.setPath(_param.path)) return noone;
 	return node;
 }
 
@@ -11,45 +10,76 @@ function Node_create_Custom_path(_x, _y, path) {
 	if(!file_exists(path)) return noone;
 	
 	var node = new Node_Custom(_x, _y, PANEL_GRAPH.getCurrentContext());
-	node.setPath(path);
+	if(!node.setPath(path)) return noone;
 	return node;	
 }
 
 function Node_Custom(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Custom";
 	path = "";
+	info = {};
+	shader = {
+		vs: noone,
+		fs: noone,
+	};
 	
-	inputs[| 0] = nodeValue("Base Texture", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
+	input_index_map  = ds_map_create();
+	output_index_map = ds_map_create();
 	
-	outputs[| 0] = nodeValue("Output", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone );
+	surface_in_index  = 0;
+	surface_out_index = 0;
 	
-	static setPath = function(path) {
-		self.path = path;
-	}
-	
-	static createNewInput = function() {
-		var index = ds_list_size(inputs);
-		inputs[| index] = nodeValue("Uniform", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0 )
-			.setVisible(true, true);
-	}
-	
-	static onValueUpdate = function(index) { #region
-		var _refresh = index == 0 || index == 1 ||
-				(index >= input_fix_len && (index - input_fix_len) % data_length != 2);
+	static setPath = function(_path) {
+		var _info = _path + "/info.json";
+		if(!file_exists(_info)) return false;
 		
-		if(_refresh) {
-			refreshShader();
-			refreshDynamicInput();
+		info = json_load_struct(_info);
+		path = _path;
+		name = info.name;
+		setDisplayName(name);
+		
+		shader.vs = d3d11_shader_compile_vs($"{path}/{info.shader_vs}", "main", "vs_4_0");
+		if(!d3d11_shader_exists(shader.vs)) noti_warning(d3d11_get_error_string());
+			
+		shader.fs = d3d11_shader_compile_ps($"{path}/{info.shader_fs}", "main", "ps_4_0");
+		if(!d3d11_shader_exists(shader.fs)) noti_warning(d3d11_get_error_string());
+		
+		ds_list_clear(inputs);
+		ds_list_clear(outputs);
+		
+		for( var i = 0, n = array_length(info.inputs); i < n; i++ ) {
+			var _input = info.inputs[i];
+			inputs[| i] = nodeValue(_input.name, self, JUNCTION_CONNECT.input, value_type_from_string(_input.type), _input.value)
+							.setVisible(_input.show_in_inspector, _input.show_in_graph);
+			input_index_map[? _input.name] = i;
+			
+			for( var j = 0, m = array_length(_input.flags); j < m; j++ ) {
+				switch(_input.flags[j]) {
+					case "SURFACE_IN" : surface_in_index = i; break;
+				}
+			}
 		}
-	} #endregion
+		
+		for( var i = 0, n = array_length(info.outputs); i < n; i++ ) {
+			var _output = info.outputs[i];
+			outputs[| i] = nodeValue(_output.name, self, JUNCTION_CONNECT.output, value_type_from_string(_output.type), _output.value)
+							.setVisible(_output.show_in_graph);
+			output_index_map[? _output.name] = i;
+			
+			for( var j = 0, m = array_length(_output.flags); j < m; j++ ) {
+				switch(_output.flags[j]) {
+					case "SURFACE_OUT" : surface_out_index = i; break;
+				}
+			}
+		}
+	}
 	
 	static processData = function(_output, _data, _output_index, _array_index = 0) { #region
-		var _surf = _data[2];
-		if(!is_surface(_surf)) return noone;
 		if(!d3d11_shader_exists(shader.vs)) return noone;
 		if(!d3d11_shader_exists(shader.fs)) return noone;
 		
-		_output = surface_verify(_output, surface_get_width_safe(_surf), surface_get_height_safe(_surf));
+		var _surf = _data[surface_in_index];
+		_output   = surface_verify(_output, surface_get_width_safe(_surf), surface_get_height_safe(_surf));
 		
 		surface_set_target(_output);
 		DRAW_CLEAR
@@ -64,43 +94,42 @@ function Node_Custom(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		var _buffer = buffer_create(1, buffer_grow, 1);
 		var _cbSize = 0;
 		
-		for( var i = input_fix_len, n = array_length(_data); i < n; i += data_length ) {
-			var _arg_name = _data[i + 0];
-			var _arg_type = _data[i + 1];
-			var _arg_valu = _data[i + 2];
+		for( var i = 0, n = array_length(info.uniforms); i < n; i++ ) {
+			var _u     = info.uniforms[i];
+			var _index = input_index_map[? _u.input_name];
 			
-			if(_arg_name == "") continue;
+			var _uname = _u.name;
+			var _utype = _u.type;
+			var _value = _data[_index];
 			
-			var _uni = shader_get_uniform(shader.fs, _arg_name);
-			
-			switch(_arg_type) {
+			switch(_utype) {
 				case 1 : 
 					d3d11_cbuffer_add_int(1); 
 					_cbSize++;
 					
-					buffer_write(_buffer, buffer_s32, _arg_valu);
+					buffer_write(_buffer, buffer_s32, _value);
 					break;
 				case 0 : 
 					d3d11_cbuffer_add_float(1); 
 					_cbSize++;
 					
-					buffer_write(_buffer, buffer_f32, _arg_valu);
+					buffer_write(_buffer, buffer_f32, _value);
 					break;
 				case 2 : 
 				case 3 : 
 				case 4 : 
 				case 5 : 
 				case 6 : 
-					if(is_array(_arg_valu)) {
-						d3d11_cbuffer_add_float(array_length(_arg_valu)); 
-						_cbSize += array_length(_arg_valu);
+					if(is_array(_value)) {
+						d3d11_cbuffer_add_float(array_length(_value)); 
+						_cbSize += array_length(_value);
 						
-						for( var j = 0, m = array_length(_arg_valu); j < m; j++ ) 
-							buffer_write(_buffer, buffer_f32, _arg_valu[j]);
+						for( var j = 0, m = array_length(_value); j < m; j++ ) 
+							buffer_write(_buffer, buffer_f32, _value[j]);
 					}
 					break;
 				case 8 : 
-					var _clr = colToVec4(_arg_valu);
+					var _clr = colToVec4(_value);
 					d3d11_cbuffer_add_float(4);
 					_cbSize += 4;
 					
@@ -108,8 +137,8 @@ function Node_Custom(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 						buffer_write(_buffer, buffer_f32, _clr[i]);
 					break;
 				case 7 : 
-					if(is_surface(_arg_valu))
-						d3d11_texture_set_stage_ps(sampler_slot, surface_get_texture(_arg_valu));
+					if(is_surface(_value))
+						d3d11_texture_set_stage_ps(sampler_slot, surface_get_texture(_value));
 					sampler_slot++;
 					break;
 			}
@@ -133,9 +162,68 @@ function Node_Custom(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		
 		return _output;
 	} #endregion
-	
-	static postConnect = function() { 
-		refreshShader(); 
-		refreshDynamicInput();
-	}
 }
+
+function __initNodeCustom(list) { #region
+	var root = DIRECTORY + "Nodes";
+	if(!directory_exists(root)) directory_create(root);
+	
+	root += "/Custom";
+	if(!directory_exists(root)) directory_create(root);
+	
+	var _l = root + "/version";
+	if(file_exists(_l)) {
+		var res = json_load_struct(_l);
+		if(!is_struct(res) || !struct_has(res, "version") || res.version != BUILD_NUMBER) 
+			zip_unzip("data/Nodes.zip", root);
+	} else 
+		zip_unzip("data/Nodes.zip", root);
+	json_save_struct(_l, { version: BUILD_NUMBER });
+		
+	var f = file_find_first(root + "/*", fa_directory);
+		
+	while (f != "") {
+		var _dir_raw = $"{root}/{f}";
+		f = file_find_next();
+		
+		if(!directory_exists(_dir_raw)) continue;
+		
+		var _dir  = _dir_raw + "/";
+		var _info = json_load_struct(_dir + "info.json");
+		if(_info == noone) continue;
+		
+		var _spr  = sprite_add_center(_dir + _info.icon);
+		var _n	  = new NodeObject(_info.name, _spr, "Node_Custom", [ 0, Node_create_Custom, { path: _dir_raw } ], _info.tags);
+		_n.tooltip = _info.tooltip;
+		
+		var _tol = _dir + _info.tooltip_spr;
+		if(file_exists(_tol)) _n.tooltip_spr = sprite_add(_tol, 0, false, false, 0, 0);
+		
+		ds_list_add(list, _n);
+				
+		if(_info.category != noone) {
+			var _cat = _info.location[0];
+			var _grp = _info.location[1];
+			var _ins = true;
+			
+			for( var i = 0, n = ds_list_size(NODE_CATEGORY); i < n; i++ ) {
+				if(NODE_CATEGORY[| i].name != _cat) continue;
+				var _list  = NODE_CATEGORY[| i].list;
+				var j = 0;
+						
+				for( var m = ds_list_size(_list); j < m; j++ )
+					if(_list[| j] == _grp) break;
+						
+				ds_list_insert(_list, j + 1, _n);
+				_ins = false;
+				break;
+			}
+			
+			if(_ins) {
+				ds_list_add(_list, _grp);
+				ds_list_add(_list, _n);
+			}
+		}
+	}
+	file_find_close();
+} #endregion

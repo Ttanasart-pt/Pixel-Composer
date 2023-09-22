@@ -241,6 +241,47 @@ function value_type_directional(f, t) { #region
 	return false;
 } #endregion
 
+function value_type_from_string(str) { #region
+	switch(str) {
+		case "integer"	: return VALUE_TYPE.integer;
+		case "float"	: return VALUE_TYPE.float;
+		case "boolean"	: return VALUE_TYPE.boolean;
+		case "color"	: return VALUE_TYPE.color;
+		case "surface"	: return VALUE_TYPE.surface;
+		case "path"		: return VALUE_TYPE.path;
+		case "curve"	: return VALUE_TYPE.curve;
+		case "text"		: return VALUE_TYPE.text;
+		case "object"	: return VALUE_TYPE.object;
+		case "node"		: return VALUE_TYPE.node;
+		case "d3object" : return VALUE_TYPE.d3object;
+		case "any"		: return VALUE_TYPE.any;
+		case "pathnode" : return VALUE_TYPE.pathnode;
+		case "particle" : return VALUE_TYPE.particle;
+		case "rigid"	: return VALUE_TYPE.rigid;
+		case "fdomain"	: return VALUE_TYPE.fdomain;
+		case "struct"	: return VALUE_TYPE.struct;
+		case "strands"	: return VALUE_TYPE.strands;
+		case "mesh"		: return VALUE_TYPE.mesh;
+		case "trigger"	: return VALUE_TYPE.trigger;
+		case "atlas"	: return VALUE_TYPE.atlas;
+		case "d3vertex" : return VALUE_TYPE.d3vertex;
+		case "gradient" : return VALUE_TYPE.gradient;
+		case "armature" : return VALUE_TYPE.armature;
+		case "buffer"	: return VALUE_TYPE.buffer;
+		case "pbBox"	: return VALUE_TYPE.pbBox;
+		case "d3Mesh"	: return VALUE_TYPE.d3Mesh;
+		case "d3Light"	: return VALUE_TYPE.d3Light;
+		case "d3Camera" : return VALUE_TYPE.d3Camera;
+		case "d3Scene"	: return VALUE_TYPE.d3Scene;
+		case "d3Material"	: return VALUE_TYPE.d3Material;
+		case "dynaSurface"	: return VALUE_TYPE.dynaSurface;
+		case "PCXnode"	: return VALUE_TYPE.PCXnode;
+		case "action"	: return VALUE_TYPE.action;
+	}
+	
+	return VALUE_TYPE.any;
+} #endregion
+
 function typeArray(_type) { #region
 	switch(_type) {
 		case VALUE_DISPLAY.range :

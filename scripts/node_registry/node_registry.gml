@@ -5,14 +5,13 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor { #regio
 	createNode = _create;
 	self.tags  = tags;
 	
-	tooltip	= "";
-	deprecated = false;
+	tooltip    	= "";
+	tooltip_spr = noone;
+	deprecated  = false;
 	
 	var pth = DIRECTORY + "Nodes/tooltip/" + node + ".png";
 	if(file_exists(pth))
 		tooltip_spr = sprite_add(pth, 0, false, false, 0, 0);
-	else
-		tooltip_spr = noone;
 	new_node = false;
 	
 	if(struct_has(global.NODE_GUIDE, node)) {
@@ -35,8 +34,15 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor { #regio
 	static getName    = function() { return name;		/*__txt_node_name(node, name);		 */ }
 	static getTooltip = function() { return tooltip;	/*__txt_node_tooltip(node, tooltip); */ }
 	
-	static build = function(_x = 0, _y = 0, _group = PANEL_GRAPH.getCurrentContext(), _param = "") {
-		var _node = createNode[0]? new createNode[1](_x, _y, _group, _param) : createNode[1](_x, _y, _group, _param);
+	static build = function(_x = 0, _y = 0, _group = PANEL_GRAPH.getCurrentContext(), _param = {}) {
+		var _node;
+		var _buildCon = createNode[0];
+		if(array_length(createNode) > 2)
+			_param = struct_append(_param, createNode[2]);
+		
+		if(_buildCon)	_node = new createNode[1](_x, _y, _group, _param);
+		else			_node = createNode[1](_x, _y, _group, _param);
+			
 		if(!_node) return noone;
 		
 		_node.clearInputCache();
@@ -677,8 +683,12 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor { #regio
 		#endregion
 		
 		var actions = ds_list_create();
-		addNodeCatagory("Actions", actions);
+		addNodeCatagory("Action", actions);
 			__initNodeActions(actions);
+		
+		var customs = ds_list_create();
+		addNodeCatagory("Custom", customs);
+			__initNodeCustom(customs);
 		
 		//var vct = ds_list_create();
 		//addNodeCatagory("VCT", vct);

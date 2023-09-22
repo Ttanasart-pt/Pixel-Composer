@@ -31,19 +31,21 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	
 	inputs[| 6] = nodeValue("Starting angle", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 90)
 		.setDisplay(VALUE_DISPLAY.rotation);
-		
+	
+	inputs[| 7] = nodeValue("Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, irandom_range(100000, 999999));
+	
 	setIsDynamicInput(2);
 	
-	static createNewInput = function() {
+	static createNewInput = function() { #region
 		var index = ds_list_size(inputs);
 		inputs[| index + 0] = nodeValue("Name " + string(index - input_fix_len), self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "" );
 		inputs[| index + 1] = nodeValue("Rule " + string(index - input_fix_len), self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "" );
-	}
+	} #endregion
 	if(!LOADING && !APPENDING) createNewInput();
 	
 	outputs[| 0] = nodeValue("Path", self, JUNCTION_CONNECT.output, VALUE_TYPE.pathnode, self);
 	
-	rule_renderer = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) {
+	rule_renderer = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) { #region
 		rule_renderer.x = _x;
 		rule_renderer.y = _y;
 		rule_renderer.w = _w;
@@ -75,11 +77,11 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		}
 		
 		return hh;
-	});
+	}); #endregion
 	
 	input_display_list = [
 		["Origin",		false], 2, 6, 
-		["Properties",  false], 0, 1,
+		["Properties",  false], 0, 1, 7, 
 		["Rules",		false], 3, 4, rule_renderer, 5, 
 	];
 	lines = [];
@@ -87,7 +89,7 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	current_length  = 0;
 	boundary = new BoundingBox();
 	
-	static refreshDynamicInput = function() {
+	static refreshDynamicInput = function() { #region
 		var _l = ds_list_create();
 		
 		for( var i = 0; i < input_fix_len; i++ )
@@ -110,7 +112,7 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		inputs = _l;
 		
 		createNewInput();
-	}
+	} #endregion
 	
 	static onValueUpdate = function(index) {
 		if(LOADING || APPENDING) return;
@@ -118,7 +120,7 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		refreshDynamicInput();
 	}
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
 		inputs[| 2].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
 		
 		draw_set_color(COLORS._main_accent);
@@ -138,7 +140,7 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node(_x, _y, _group) const
 				
 			draw_line(x0, y0, x1, y1);
 		}
-	}
+	} #endregion
 	
 	static getLineCount		= function() { return array_length(lines); }
 	static getSegmentCount	= function() { return 1; }
@@ -150,7 +152,7 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		return getWeightRatio(_dist / current_length, _ind); 
 	}
 	
-	static getWeightRatio = function (_rat, _ind = 0) { 
+	static getWeightRatio = function (_rat, _ind = 0) { #region
 		var _p0 = lines[_ind][0];
 		var _p1 = lines[_ind][1];
 		
@@ -158,9 +160,9 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		if(!is_array(_p1) || array_length(_p1) < 2) return 1;
 		
 		return lerp(_p0[2], _p1[2], _rat);
-	}
+	} #endregion
 	
-	static getPointRatio = function(_rat, _ind = 0) {
+	static getPointRatio = function(_rat, _ind = 0) { #region
 		var _p0 = lines[_ind][0];
 		var _p1 = lines[_ind][1];
 		
@@ -171,7 +173,7 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		var _y  = lerp(_p0[1], _p1[1], _rat);
 		
 		return new __vec2( _x, _y );
-	}
+	} #endregion
 	
 	static getPointDistance = function(_dist, _ind = 0) {
 		return getPointRatio(_dist / current_length, _ind); 
@@ -179,14 +181,16 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	
 	static getBoundary	= function() { return boundary; }
 	
-	function update() { 
+	function update() { #region
 		var _len = inputs[| 0].getValue();
 		var _ang = inputs[| 1].getValue();
 		var _pos = inputs[| 2].getValue();
 		var _itr = inputs[| 3].getValue();
 		var _san = inputs[| 6].getValue();
+		var _sad = inputs[| 7].getValue();
 		lines = [];
 		
+		random_set_seed(_sad);
 		current_length = _len;
 		
 		if(ds_list_size(inputs) < input_fix_len + 2) return;
@@ -278,7 +282,7 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			boundary.addPoint(lines[i][0][0], lines[i][0][1], lines[i][1][0], lines[i][1][1]);
 		
 		outputs[| 0].setValue(self);
-	}
+	} #endregion
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		var bbox = drawGetBbox(xx, yy, _s);

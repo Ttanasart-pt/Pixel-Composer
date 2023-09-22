@@ -1,4 +1,4 @@
-function Node_create_Blend(_x, _y, _group = noone, _param = "") {
+function Node_create_Blend(_x, _y, _group = noone, _param = {}) {
 	var node = new Node_Blend(_x, _y, _group);
 	return node;
 }

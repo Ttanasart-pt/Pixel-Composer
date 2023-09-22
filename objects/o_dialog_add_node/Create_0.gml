@@ -126,7 +126,7 @@ event_inherited();
 		setPage(NODE_PAGE_DEFAULT);
 	#endregion
 	
-	function buildNode(_node, _param = "") { #region
+	function buildNode(_node, _param = {}) { #region
 		if(!_node) {
 			instance_destroy();
 			instance_destroy(o_dialog_menubox);
@@ -708,7 +708,7 @@ event_inherited();
 				__txtx("add_node_equation_enter", "Press Enter to create equation node."));
 			
 			if(keyboard_check_pressed(vk_enter))
-				buildNode(ALL_NODES[? "Node_Equation"], eq);
+				buildNode(ALL_NODES[? "Node_Equation"], { query: eq } );
 			return hh;
 		}
 		
@@ -723,10 +723,10 @@ event_inherited();
 			
 			for(var i = 0; i < amo; i++) {
 				var s_res = search_list[| i];
-				var _node = noone, _param = "";
+				var _node = noone, _param = {};
 				if(is_array(s_res)) {
 					_node = s_res[0];
-					_param = s_res[1];
+					_param.query = s_res[1];
 				} else
 					_node = s_res;
 			
@@ -814,10 +814,10 @@ event_inherited();
 		
 			for(var i = 0; i < amo; i++) {
 				var s_res = search_list[| i];
-				var _node = noone, _param = "";
+				var _node = noone, _param = {};
 				if(is_array(s_res)) {
 					_node = s_res[0];
-					_param = s_res[1];
+					_param.query = s_res[1];
 				} else
 					_node = s_res;
 				

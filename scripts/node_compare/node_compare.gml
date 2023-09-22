@@ -9,16 +9,16 @@ enum COMPARE_OPERATOR {
 	lesserEqual,
 }
 
-function Node_create_Compare(_x, _y, _group = noone, _param = "") {
-	var node = new Node_Compare(_x, _y, _group);
+function Node_create_Compare(_x, _y, _group = noone, _param = {}) {
+	var query = struct_try_get(_param, "query", "");
+	var node  = new Node_Compare(_x, _y, _group);
 	
-	switch(_param) {
+	switch(query) {
 		case "equal" :		node.inputs[| 0].setValue(COMPARE_OPERATOR.equal); break;
 		case "greater" :	node.inputs[| 0].setValue(COMPARE_OPERATOR.greater); break;
 		case "lesser" :		node.inputs[| 0].setValue(COMPARE_OPERATOR.lesser); break;
 	}
 	
-	//ds_list_add(PANEL_GRAPH.nodes_list, node);
 	return node;
 }
 

@@ -6,11 +6,11 @@ enum STAT_OPERATOR {
 	_min
 }
 
-function Node_create_Statistic(_x, _y, _group = noone, _param = "") {
-	var node = new Node_Statistic(_x, _y, _group);
-	//ds_list_add(PANEL_GRAPH.nodes_list, node);
+function Node_create_Statistic(_x, _y, _group = noone, _param = {}) {
+	var query = struct_try_get(_param, "query", "");
+	var node  = new Node_Statistic(_x, _y, _group);
 	
-	switch(_param) {
+	switch(query) {
 		case "sum" :		node.inputs[| 0].setValue(STAT_OPERATOR._sum); break;	
 		case "mean" :	
 		case "average" :	node.inputs[| 0].setValue(STAT_OPERATOR._average); break;	

@@ -8,10 +8,11 @@ enum LOGIC_OPERATOR {
 	lxor
 }
 
-function Node_create_Logic(_x, _y, _group = noone, _param = "") {
-	var node = new Node_Logic(_x, _y, _group);
+function Node_create_Logic(_x, _y, _group = noone, _param = {}) {
+	var query = struct_try_get(_param, "query", "");
+	var node  = new Node_Logic(_x, _y, _group);
 	
-	switch(_param) {
+	switch(query) {
 		case "and" :	node.inputs[| 0].setValue(LOGIC_OPERATOR.land); break;
 		case "or" :		node.inputs[| 0].setValue(LOGIC_OPERATOR.lor); break;
 		case "not" :	node.inputs[| 0].setValue(LOGIC_OPERATOR.lnot); break;
@@ -20,7 +21,6 @@ function Node_create_Logic(_x, _y, _group = noone, _param = "") {
 		case "xor" :	node.inputs[| 0].setValue(LOGIC_OPERATOR.lxor); break;
 	}
 	
-	//ds_list_add(PANEL_GRAPH.nodes_list, node);
 	return node;
 }
 

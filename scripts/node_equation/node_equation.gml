@@ -1,16 +1,17 @@
-function Node_create_Equation(_x, _y, _group = noone, _param = "") { #region
-	var node = new Node_Equation(_x, _y, _group);
-	if(_param == "") return node;
+function Node_create_Equation(_x, _y, _group = noone, _param = {}) { #region
+	var query = struct_try_get(_param, "query", "");
+	var node  = new Node_Equation(_x, _y, _group);
+	if(query == "") return node;
 	
-	node.inputs[| 0].setValue(_param);
+	node.inputs[| 0].setValue(query);
 	var ind  = 1;
-	var amo  = string_length(_param);
+	var amo  = string_length(query);
 	var str  = "";
 	var pres = global.EQUATION_PRES;
 	var vars = [];
 	
 	for( var ind = 1; ind <= amo; ind++ ) {
-		var ch = string_char_at(_param, ind);
+		var ch = string_char_at(query, ind);
 		if(ds_map_exists(pres, ch) || ch == "(" || ch == ")") {
 			if(str != "" && str != toNumber(str)) 
 				array_push_unique(vars, str);

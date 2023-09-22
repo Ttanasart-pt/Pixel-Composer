@@ -1,8 +1,8 @@
-function Node_create_Scale_Algo(_x, _y, _group = noone, _param = "") {
-	var node = new Node_Scale_Algo(_x, _y, _group);
-	//ds_list_add(PANEL_GRAPH.nodes_list, node);
+function Node_create_Scale_Algo(_x, _y, _group = noone, _param = {}) {
+	var query = struct_try_get(_param, "query", "");
+	var node  = new Node_Scale_Algo(_x, _y, _group);
 	
-	switch(_param) {
+	switch(query) {
 		case "scale2x" : node.inputs[| 1].setValue(0); break;	
 		case "scale3x" : node.inputs[| 1].setValue(1); break;	
 	}

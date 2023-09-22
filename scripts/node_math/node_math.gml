@@ -20,10 +20,11 @@ enum MATH_OPERATOR {
 	abs
 }
 
-function Node_create_Math(_x, _y, _group = noone, _param = "") {
-	var node = new Node_Math(_x, _y, _group);
+function Node_create_Math(_x, _y, _group = noone, _param = {}) {
+	var query = struct_try_get(_param, "query", "");
+	var node  = new Node_Math(_x, _y, _group);
 	
-	switch(_param) {
+	switch(query) {
 		case "add" :		node.inputs[| 0].setValue(MATH_OPERATOR.add); break;
 		case "subtract" :	node.inputs[| 0].setValue(MATH_OPERATOR.subtract); break;
 		case "multiply" :	node.inputs[| 0].setValue(MATH_OPERATOR.multiply); break;
@@ -45,7 +46,6 @@ function Node_create_Math(_x, _y, _group = noone, _param = "") {
 		case "abs" :		node.inputs[| 0].setValue(MATH_OPERATOR.abs); break;
 	}
 	
-	//ds_list_add(PANEL_GRAPH.nodes_list, node);
 	return node;
 }
 
