@@ -74,6 +74,7 @@
 	PREF_MAP[? "render_all_export"] = true;
 	
 	PREF_MAP[? "alt_picker"] = true;
+	PREF_MAP[? "clear_temp_on_close"] = true;
 #endregion
 
 #region hotkeys	

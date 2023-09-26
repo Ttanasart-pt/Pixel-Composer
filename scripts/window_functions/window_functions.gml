@@ -1,3 +1,9 @@
+function close_program() {
+	PREF_SAVE();
+	if(PREF_MAP[? "clear_temp_on_close"]) directory_destroy(DIRECTORY + "temp");
+	game_end();
+}
+
 function window_close() {
 	var noSave = true;
 	
@@ -13,8 +19,5 @@ function window_close() {
 		}
 	}
 	
-	if(noSave) {
-		PREF_SAVE();
-		game_end();
-	}
+	if(noSave) close_program();
 }

@@ -49,10 +49,8 @@ if !ready exit;
 	var b = buttonInstant(THEME.button, bx0, by0, bw, bh, mouse_ui, sFOCUS, sHOVER);
 	draw_text(bx0 + bw / 2, by0 + bh / 2, __txtx("dont_save", "Don't save"));
 	if(b == 2) {
-		PREF_SAVE();
-		
-		if(instance_number(o_dialog_exit) == 1)
-			game_end();
+		if(instance_number(o_dialog_exit) == 1) 
+			close_program();
 		instance_destroy();
 	}
 	
@@ -60,9 +58,8 @@ if !ready exit;
 	var b = buttonInstant(THEME.button, bx0, by0, bw, bh, mouse_ui, sFOCUS, sHOVER);
 	draw_text(bx0 + bw / 2, by0 + bh / 2, __txt("Save"));
 	if(b == 2 && SAVE(project)) {
-		PREF_SAVE();
-		if(instance_number(o_dialog_exit) == 1)
-			game_end();
+		if(instance_number(o_dialog_exit) == 1) 
+			close_program();
 		instance_destroy();
 	}
 #endregion

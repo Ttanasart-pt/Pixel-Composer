@@ -223,6 +223,14 @@ event_inherited();
 		})
 	]);
 	
+	ds_list_add(pref_global, [
+		__txtx("pref_clear_temp", "Clear temp file on close."),
+		"clear_temp_on_close",
+		new checkBox(function() { 
+			PREF_MAP[? "clear_temp_on_close"] = !PREF_MAP[? "clear_temp_on_close"]; 
+			PREF_SAVE();
+		})
+	]);
 #endregion
 
 #region appearance

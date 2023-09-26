@@ -33,7 +33,7 @@ function Panel_Menu() : PanelContent() constructor {
 		menuItem(__txtx("panel_menu_auto_save_folder", "Open autosave folder"), function() { shellOpenExplorer(DIRECTORY + "autosave"); }, THEME.save_auto),
 		menuItem(__txt("Export"),			 function(_dat) { 
 			var arr = [
-				menuItem(__txt("Portable project (.zip)") + "...", function() { exportPortable(); }),
+				menuItem(__txt("Portable project (.zip)") + "...", function() { exportPortable(PROJECT); }),
 			];
 			
 			return submenuCall(_dat, arr);
