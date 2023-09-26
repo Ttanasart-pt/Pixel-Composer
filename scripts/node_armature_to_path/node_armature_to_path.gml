@@ -76,7 +76,7 @@ function Node_Armature_Path(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		return new __vec2( _x, _y );
 	} #endregion
 	
-	function update() { #region
+	static update = function() { #region
 		var _bone = inputs[| 0].getValue();
 		if(_bone == noone) return;
 		

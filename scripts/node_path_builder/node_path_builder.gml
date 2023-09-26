@@ -107,7 +107,7 @@ function Node_Path_Builder(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		return boundary; 
 	}
 	
-	function update() { 
+	static update = function() { 
 		var _lines = inputs[| 0].getValue();
 		var _conn  = inputs[| 1].getValue();
 		

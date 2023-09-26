@@ -59,7 +59,7 @@ function Node_VFX_Renderer(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		refreshDynamicInput();
 	}
 	
-	function step() {
+	static step = function() {
 		var _dim		= inputs[| 0].getValue();
 		var _outSurf	= outputs[| 0].getValue();
 		
@@ -67,7 +67,7 @@ function Node_VFX_Renderer(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		outputs[| 0].setValue(_outSurf);
 	}
 	
-	function update(_time = PROJECT.animator.current_frame) {
+	static update = function(_time = PROJECT.animator.current_frame) {
 		if(!PROJECT.animator.is_playing) {
 			recoverCache();
 			return;
@@ -103,6 +103,7 @@ function Node_VFX_Renderer(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 				
 				for(var j = 0; j < array_length(parts); j++)
 				for(var k = 0; k < array_length(parts[j]); k++) {
+					if(!parts[j][k].active) continue;
 					parts[j][k].draw(_exact, surf_w, surf_h);
 				}
 			}

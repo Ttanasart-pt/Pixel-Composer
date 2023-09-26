@@ -70,7 +70,7 @@ function Node_Path_Map_Area(_x, _y, _group = noone) : Node(_x, _y, _group) const
 								_area[AREA_INDEX.center_y] + _area[AREA_INDEX.half_h] );
 	}
 	
-	function update() { 
+	static update = function() { 
 		outputs[| 0].setValue(self);
 	}
 	

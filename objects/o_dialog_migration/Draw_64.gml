@@ -45,7 +45,7 @@ draw_set_alpha(1);
 			
 			if(directory_exists(_o)) {
 				var shell = "/E /I " + _o + " " + _n;
-				execute_shell("Xcopy", shell);
+				shell_execute("Xcopy", shell);
 			}
 		}
 		instance_destroy();

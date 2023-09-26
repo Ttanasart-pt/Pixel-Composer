@@ -18,7 +18,7 @@ function Node_Trigger_Bool(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	doTrigger = 0;
 	
-	function step() {
+	static step = function() {
 		if(doTrigger == 1) {
 			outputs[| 0].setValue(true);
 			doTrigger = -1;
@@ -28,7 +28,7 @@ function Node_Trigger_Bool(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		}
 	}
 	
-	function update() {  
+	static update = function() {  
 		var val = inputs[| 0].getValue();
 		var con = inputs[| 1].getValue();
 		

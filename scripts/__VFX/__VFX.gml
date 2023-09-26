@@ -11,18 +11,18 @@ enum PARTICLE_BLEND_MODE {
 }
 
 function __part(_node) constructor {
-	seed   = irandom(99999);
-	node   = _node;
-	active = false;
-	surf   = noone;
-	prevx  = 0;
-	prevy  = 0;
-	x   = 0;
-	y   = 0;
+	seed    = irandom(99999);
+	node    = _node;
+	active  = false;
+	surf    = noone;
+	prevx   = 0;
+	prevy   = 0;
+	x       = 0;
+	y       = 0;
 	speedx  = 0;
 	speedy  = 0;
 	turning = 0;
-	turnSpd = 0
+	turnSpd = 0;
 	
 	accel  = 0;
 	wig    = 0;
@@ -120,6 +120,7 @@ function __part(_node) constructor {
 	
 	static kill = function() {
 		active = false;
+		
 		node.onPartDestroy(self);
 	}
 	
@@ -169,7 +170,6 @@ function __part(_node) constructor {
 	}
 	
 	static draw = function(exact, surf_w, surf_h) { 
-		if(!active) return;
 		var ss = surf;
 		if(is_array(surf)) {
 			var ind = abs(round((life_total - life) * anim_speed));
@@ -189,7 +189,9 @@ function __part(_node) constructor {
 					break;
 			}
 		}
-		if(!is_surface(ss)) return;
+		
+		var surface = node.surface_cache[? ss];
+		if(!is_surface(surface)) return;
 		
 		var lifeRat = 1 - life / life_total;
 		var scCurve = eval_curve_x(sct, lifeRat);
@@ -197,8 +199,8 @@ function __part(_node) constructor {
 		scy   = sc_sy * scCurve;
 		
 		var _xx, _yy;
-		var s_w = surface_get_width_safe(ss) * scx;
-		var s_h = surface_get_height_safe(ss) * scy;
+		var s_w = surface_get_width_safe(surface) * scx;
+		var s_h = surface_get_height_safe(surface) * scy;
 		
 		if(boundary_data == -1) {
 			var _pp = point_rotate(-s_w / 2, -s_h / 2, 0, 0, rot);
@@ -233,7 +235,7 @@ function __part(_node) constructor {
 		if(blend != c_white) cc = colorMultiply(blend, cc);
 		alp_draw = alp * eval_curve_x(alp_fade, lifeRat);
 		
-		draw_surface_ext_safe(ss, _xx, _yy, scx, scy, rot, cc, alp_draw);
+		draw_surface_ext_safe(surface, _xx, _yy, scx, scy, rot, cc, alp_draw);
 	}
 	
 	static getPivot = function() {

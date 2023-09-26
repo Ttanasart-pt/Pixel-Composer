@@ -46,7 +46,7 @@ function Node_Path_Reverse(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		return getPointRatio(_dist / getLength(), ind);
 	}
 	
-	function update() { 
+	static update = function() { 
 		outputs[| 0].setValue(self);
 	}
 	

@@ -134,7 +134,7 @@ function Node_Path_Transform(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		_b[3] = cy + (_b[3] - cy) * _sca[1];
 	}
 	
-	function update() { 
+	static update = function() { 
 		outputs[| 0].setValue(self);
 	}
 	

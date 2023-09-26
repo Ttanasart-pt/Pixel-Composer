@@ -30,7 +30,7 @@ function dynaSurf() constructor {
 		onFree();
 	}
 	
-	static clone = function() {}
+	static clone = function() { return noone; }
 	static destroy = function() {}
 }
 
@@ -59,5 +59,15 @@ function compute_dynaSurf() : dynaSurf() constructor {
 		};
 		
 		drawFn.eval(params);
+	}
+	
+	static clone = function() {
+		var _surf = new compute_dynaSurf();
+		
+		_surf.drawFn   = drawFn;
+		_surf.widthFn  = widthFn;
+		_surf.heightFn = heightFn;
+		
+		return _surf;
 	}
 }

@@ -129,7 +129,7 @@ function Node_Path_Blend(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		return _p1.lerpTo(_p2, _lerp);
 	}
 	
-	function update() { 
+	static update = function() { 
 		outputs[| 0].setValue(self);
 	}
 	

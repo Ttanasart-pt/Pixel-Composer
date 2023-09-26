@@ -99,7 +99,7 @@ function Node_Path_Wave(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		return struct_has(_path, "getBoundary")? _path.getBoundary(ind) : new BoundingBox( 0, 0, 1, 1 ); 
 	}
 	
-	function update() { 
+	static update = function() { 
 		for( var i = 0, n = ds_list_size(inputs); i < n; i++ )
 			current_data[i] = inputs[| i].getValue();
 		

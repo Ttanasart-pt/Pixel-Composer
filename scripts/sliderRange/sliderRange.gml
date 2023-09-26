@@ -1,7 +1,7 @@
 function sliderRange(_min, _max, _step, _onModify) : widget() constructor {
 	minn = _min;
 	maxx = _max;
-	step = _step;
+	stepSize = _step;
 	
 	spr = THEME.slider;
 	onModify = _onModify;
@@ -70,7 +70,7 @@ function sliderRange(_min, _max, _step, _onModify) : widget() constructor {
 				draw_sprite_stretched_ext(spr, 3, _slider_x1 - ui(10), _y, ui(20), _h, COLORS._main_accent, 1);
 			
 			var val = (_m[0] - _x0) / sw * (maxx - minn) + minn;
-			val = round(val / step) * step;
+			val = round(val / stepSize) * stepSize;
 			val = clamp(val, minn, maxx);
 			if(key_mod_press(CTRL))
 				val = round(val);

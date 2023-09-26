@@ -10,7 +10,7 @@ function NEW() {
 	PANEL_GRAPH = graph;
 }
 
-function save_serialize(project = PROJECT) {
+function save_serialize(project = PROJECT, _outMap = false) {
 	var _map  = {};
 	_map.version = SAVE_VERSION;
 	
@@ -50,8 +50,9 @@ function save_serialize(project = PROJECT) {
 	}
 	_map.addon = _addon;
 	
-	var val = PREF_MAP[? "save_file_minify"]? json_stringify_minify(_map) : json_stringify(_map, true);
-	return val;
+	if(_outMap) return _map;
+	
+	return PREF_MAP[? "save_file_minify"]? json_stringify_minify(_map) : json_stringify(_map, true);
 }
 
 function SET_PATH(project, path) {

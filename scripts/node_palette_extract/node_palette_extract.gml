@@ -305,7 +305,7 @@ function Node_Palette_Extract(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	static onValueUpdate	 = function() { extractPalettes(); }
 	static onValueFromUpdate = function() { extractPalettes(); }
 	
-	function update() {  
+	static update = function() {  
 		extractPalettes();
 	}
 	

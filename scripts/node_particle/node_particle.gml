@@ -29,7 +29,7 @@ function Node_Particle(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y, _
 	
 	static onInspector2Update = function() { clearCache(); }
 	
-	static onValueUpdate = function(index = 0) {
+	static onValueUpdate = function(index = 0) { #region
 		if(index == input_len + 0) {
 			var _dim		= inputs[| input_len + 0].getValue();
 			var _outSurf	= outputs[| 0].getValue();
@@ -40,17 +40,17 @@ function Node_Particle(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y, _
 		
 		if(PROJECT.animator.is_playing)
 			PROJECT.animator.setFrame(-1);
-	}
+	} #endregion
 	
-	static onStep = function() {
+	static onStep = function() { #region
 		var _dim		= inputs[| input_len + 0].getValue();
 		var _outSurf	= outputs[| 0].getValue();
 			
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
 		outputs[| 0].setValue(_outSurf);
-	}
+	} #endregion
 	
-	static onUpdate = function() {
+	static onUpdate = function() { #region
 		if(ANIMATION_STATIC) {
 			if(!recoverCache()) {
 				var _dim		= inputs[| input_len + 0].getValue();
@@ -67,9 +67,9 @@ function Node_Particle(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y, _
 		if(PROJECT.animator.current_frame == 0)
 			reset();
 		runVFX(PROJECT.animator.current_frame);
-	}
+	} #endregion
 	
-	function render(_time = PROJECT.animator.current_frame) {
+	function render(_time = PROJECT.animator.current_frame) { #region
 		var _dim		= inputs[| input_len + 0].getValue(_time);
 		var _exact 		= inputs[| input_len + 1].getValue(_time);
 		var _blend 		= inputs[| input_len + 2].getValue(_time);
@@ -90,8 +90,12 @@ function Node_Particle(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y, _
 			var surf_w = surface_get_width_safe(_outSurf);
 			var surf_h = surface_get_height_safe(_outSurf);
 			
-			for(var i = 0; i < attributes.part_amount; i++)
+			//print($"===== Drawing frame {_time} =====");
+			for(var i = 0; i < attributes.part_amount; i++) {
+				if(!parts[i].active) continue;
+				//print($"    > Draw part {i} = ({parts[i].x}, {parts[i].y})");
 				parts[i].draw(_exact, surf_w, surf_h);
+			}
 			
 			BLEND_NORMAL;
 		surface_reset_shader();
@@ -100,5 +104,5 @@ function Node_Particle(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y, _
 			//print($"Cache frame {PROJECT.animator.current_frame}");
 			cacheCurrentFrame(_outSurf);
 		}
-	}
+	} #endregion
 }

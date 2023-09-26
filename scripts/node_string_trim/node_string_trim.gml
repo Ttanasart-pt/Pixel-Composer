@@ -25,7 +25,7 @@ function Node_String_Trim(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		["Trim",	false], 3, 4, 1, 2,
 	];
 	
-	function step() {
+	static step = function() {
 		var mode = inputs[| 4].getValue();
 		
 		inputs[| 1].type = mode? VALUE_TYPE.float : VALUE_TYPE.integer;

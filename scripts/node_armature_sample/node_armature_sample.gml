@@ -39,7 +39,7 @@ function Node_Armature_Sample(_x, _y, _group = noone) : Node(_x, _y, _group) con
 		_b.draw(attributes, false, _x, _y, _s, _mx, _my);
 	} #endregion
 	
-	function update() { #region
+	static update = function() { #region
 		var _bone = inputs[| 0].getValue();
 		var _name = inputs[| 1].getValue();
 		var _prog = inputs[| 2].getValue();

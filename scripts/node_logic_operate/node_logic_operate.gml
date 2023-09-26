@@ -181,7 +181,7 @@ function Node_Logic(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		return val;
 	}
 	
-	function update(frame = PROJECT.animator.current_frame) { 
+	static update = function(frame = PROJECT.animator.current_frame) { 
 		var mode = inputs[| 0].getValue();
 		var a = inputs[| 1].getValue();
 		var val;

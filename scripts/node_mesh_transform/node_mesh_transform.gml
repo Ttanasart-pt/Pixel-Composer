@@ -48,7 +48,7 @@ function Node_Mesh_Transform(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		p.y = _pp[1] + _pos[1];
 	}
 	
-	function update() {  
+	static update = function() {  
 		var _msh = inputs[| 0].getValue();
 		var _pos = inputs[| 1].getValue();
 		var _rot = inputs[| 2].getValue();

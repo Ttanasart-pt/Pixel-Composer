@@ -810,8 +810,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						break; #endregion
 					case VALUE_DISPLAY.slider_range :	#region
 						editWidget = new sliderRange(display_data[0], display_data[1], display_data[2], function(index, val) {
-							//var _val = animator.getValue();
-							//_val[index] = val;
 							return setValueDirect(val, index);
 						} );
 						if(type == VALUE_TYPE.integer) editWidget.setSlideSpeed(1);

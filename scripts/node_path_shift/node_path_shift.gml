@@ -64,7 +64,7 @@ function Node_Path_Shift(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		return struct_has(_path, "getBoundary")? _path.getBoundary(ind) : new BoundingBox( 0, 0, 1, 1 ); 
 	}
 	
-	function update() { 
+	static update = function() { 
 		outputs[| 0].setValue(self);
 	}
 	

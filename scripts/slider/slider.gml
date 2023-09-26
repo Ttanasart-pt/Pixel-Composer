@@ -1,7 +1,7 @@
 function slider(_min, _max, _step, _onModify = noone, _onRelease = noone) : widget() constructor {
 	minn = _min; curr_minn = _min;
 	maxx = _max; curr_maxx = _max;
-	step = _step;
+	stepSize = _step;
 	
 	onModify = _onModify;
 	onRelease = _onRelease;
@@ -38,7 +38,7 @@ function slider(_min, _max, _step, _onModify = noone, _onRelease = noone) : widg
 		return draw(params.x, params.y, params.w, params.h, params.data, params.m);
 	}
 	
-	static draw = function(_x, _y, _w, _h, _data, _m, tb_w = 50, halign = fa_left, valign = fa_top) {
+	static draw = function(_x, _y, _w, _h, _data, _m, tb_w = 64, halign = fa_left, valign = fa_top) {
 		x = _x;
 		y = _y;
 		w = _w;
@@ -89,7 +89,7 @@ function slider(_min, _max, _step, _onModify = noone, _onRelease = noone) : widg
 				draw_sprite_stretched_ext(spr, 3, _kx - handle_w / 2, _y, handle_w, _h, COLORS._main_accent, 1);
 			
 			var val = (_m[0] - _x) / sw * (curr_maxx - curr_minn) + curr_minn;
-			val = round(val / step) * step;
+			val = round(val / stepSize) * stepSize;
 			val = clamp(val, curr_minn, curr_maxx);
 			
 			if(key_mod_press(CTRL))

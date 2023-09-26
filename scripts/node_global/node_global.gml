@@ -25,10 +25,12 @@ function variable_editor(nodeVal) constructor {
 	
 	vb_range = new vectorBox(2, function(index, val) { 
 		slider_range[index] = val;
+		refreshInput();
 	});
 	
 	tb_step = new textBox(TEXTBOX_INPUT.number, function(val) { 
 		slider_step = val;
+		refreshInput();
 	});
 	
 	sc_type = new scrollBox(val_type_name, function(val) {
@@ -81,6 +83,7 @@ function variable_editor(nodeVal) constructor {
 							value.setValue([0, 0, 0]);
 							break;
 						case "Vector4" :	
+						case "Vector2 range" :	
 						case "Padding" :	
 							value.setValue([0, 0, 0, 0]);
 							break;
@@ -124,16 +127,16 @@ function variable_editor(nodeVal) constructor {
 			case "Rotation" :		value.setDisplay(VALUE_DISPLAY.rotation);		break;
 			case "Rotation range" : value.setDisplay(VALUE_DISPLAY.rotation_range);	break;
 			case "Slider" :			
-				value.setDisplay(VALUE_DISPLAY.slider, [0, 1, 0.01]);		
+				value.setDisplay(VALUE_DISPLAY.slider, [slider_range[0], slider_range[1], slider_step]);		
 				break;
 			case "Slider range" :	
-				value.setDisplay(VALUE_DISPLAY.slider_range, [0, 1, 0.01]);	
+				value.setDisplay(VALUE_DISPLAY.slider_range, [slider_range[0], slider_range[1], slider_step]);	
 				break;
 			case "Padding" :		value.setDisplay(VALUE_DISPLAY.padding);		break;
-			case "Vector2" :		value.setDisplay(VALUE_DISPLAY.vector);			break;
-			case "Vector3" :		value.setDisplay(VALUE_DISPLAY.vector);			break;
+			case "Vector2" :		
+			case "Vector3" :		
 			case "Vector4" :		value.setDisplay(VALUE_DISPLAY.vector);			break;
-			case "Vector range" :	value.setDisplay(VALUE_DISPLAY.vector_range);	break;
+			case "Vector range" :	
 			case "Vector2 range" :	value.setDisplay(VALUE_DISPLAY.vector_range);	break;
 			case "Area" :			value.setDisplay(VALUE_DISPLAY.area);			break;
 			case "Palette" :		value.setDisplay(VALUE_DISPLAY.palette);		break;

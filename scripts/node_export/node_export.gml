@@ -273,7 +273,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			var shell_cmd = _pathTemp + " -define webp:lossless=true " + _frame;
 			
 			array_push(frames, _frame);
-			execute_shell(magick, shell_cmd);
+			shell_execute(magick, shell_cmd, self);
 		
 		    _path = file_find_next();
 		}
@@ -291,7 +291,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		cmd += "-bgcolor 0,0,0,0 ";
 		cmd += "-o \"" + target_path + "\"";
 		
-		execute_shell(webp, cmd); 
+		shell_execute(webp, cmd, self); 
 		
 		var noti = log_message("EXPORT", "Export webp as " + target_path, THEME.noti_icon_tick, COLORS._main_value_positive, false);
 		noti.path = filename_dir(target_path);
@@ -318,14 +318,14 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				shell_cmd += temp_path;
 			
 			//print($"{gifski} {shell_cmd}");
-			execute_shell(gifski, shell_cmd);
+			shell_execute(gifski, shell_cmd, self);
 		} else {
 			var		 shell_cmd  = $"-delay {framerate} -alpha set -dispose previous -loop {loop_str}";
 			if(opti) shell_cmd += $" -fuzz {fuzz * 100}% -layers OptimizeFrame -layers OptimizeTransparency";
 					 shell_cmd += " " + temp_path + " " + target_path;
 			
 			//print($"{converter} {shell_cmd}");
-			execute_shell(converter, shell_cmd);
+			shell_execute(converter, shell_cmd, self);
 		}
 		
 		var noti = log_message("EXPORT", "Export gif as " + target_path, THEME.noti_icon_tick, COLORS._main_value_positive, false);
@@ -373,8 +373,18 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 							res = true;
 							break;
 						case "i" :
-							if(_array)	array_push(s, [ "i", string(index) ]);
-							else		s += string(index);
+							var _txt = "";
+							var float_str = string_digits(str);
+							if(float_str != "") {
+								var float_val = string_digits(float_str);
+								var str_val = max(float_val - string_length(string(index)), 0);
+								repeat(str_val)
+									_txt += "0";
+							}
+							
+							_txt += string(index);
+							if(_array)	array_push(s, [ "i", _txt ]);
+							else		s += _txt;
 							res = true;
 							break;
 						case "d" : 
@@ -418,8 +428,11 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			}
 		}
 		
-		if(_array)	array_push(s, ["ext", ".png"]);
-		else		s += ".png";
+		var _e   = inputs[| 9].getValue();
+		var _ext = array_safe_get(inputs[| 9].display_data, _e, ".png");
+		
+		if(_array)	array_push(s, ["ext", _ext]);
+		else		s += _ext;
 		
 		return s;
 	}
@@ -451,7 +464,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				_pathTemp = "\"" + _pathTemp + "\"";
 				var shell_cmd = _pathTemp + " -quality " + string(qual) + " " + _pathOut;
 				
-				execute_shell(magick, shell_cmd);
+				shell_execute(magick, shell_cmd, self);
 				break;
 				
 			case ".webp": 
@@ -461,7 +474,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				_pathTemp = "\"" + _pathTemp + "\"";
 				var shell_cmd = _pathTemp + " -quality " + string(qual) + " -define webp:lossless=true " + _pathOut;
 				
-				execute_shell(magick, shell_cmd);
+				shell_execute(magick, shell_cmd, self);
 				break;
 		}
 		

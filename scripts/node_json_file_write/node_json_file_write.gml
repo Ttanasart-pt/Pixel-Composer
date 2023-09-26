@@ -101,7 +101,7 @@ function Node_Json_File_Write(_x, _y, _group = noone) : Node(_x, _y, _group) con
 		json_save_struct(path, cont);
 	}
 	
-	function step() { 
+	static step = function() { 
 		for(var i = input_fix_len; i < ds_list_size(inputs) - data_length; i += data_length) {
 			var inp  = inputs[| i + 1];
 			var typ  = inp.value_from == noone? VALUE_TYPE.any : inp.value_from.type;

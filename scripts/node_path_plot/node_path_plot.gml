@@ -116,7 +116,7 @@ function Node_Path_Plot(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	static getBoundary		= function() { return boundary; }
 	
-	function step() { 
+	static step = function() { 
 		var _coor = inputs[| 1].getValue();
 		var _eqa  = inputs[| 2].getValue();
 		
@@ -167,7 +167,7 @@ function Node_Path_Plot(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		}
 	}
 	
-	function updateBoundary() {
+	static updateBoundary = function() {
 		boundary = new BoundingBox( 0, 0, 1, 1 );
 		length   = 0;
 		
@@ -184,7 +184,7 @@ function Node_Path_Plot(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		}
 	}
 	
-	function update() { 
+	static update = function() { 
 		updateBoundary();
 		outputs[| 0].setValue(self); 
 	}

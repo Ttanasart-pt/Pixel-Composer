@@ -15,7 +15,7 @@ function Panel_Menu() : PanelContent() constructor {
 	else
 		action_buttons = ["exit", "minimize", "maximize", "fullscreen"];
 	
-	menu_file = [
+	menu_file_nondemo = [
 		menuItem(__txt("New"),				function() { NEW(); }, THEME.new_file, ["", "New file"]),
 		menuItem(__txt("Open") + "...",		function() { LOAD(); }, THEME.noti_icon_file_load, ["", "Open"]),
 		menuItem(__txt("Save"),				function() { SAVE(); }, THEME.save, ["", "Save"]),
@@ -31,7 +31,17 @@ function Panel_Menu() : PanelContent() constructor {
 				return submenuCall(_dat, arr);
 		}).setIsShelf(),
 		menuItem(__txtx("panel_menu_auto_save_folder", "Open autosave folder"), function() { shellOpenExplorer(DIRECTORY + "autosave"); }, THEME.save_auto),
+		menuItem(__txt("Export"),			 function(_dat) { 
+			var arr = [
+				menuItem(__txt("Portable project (.zip)") + "...", function() { exportPortable(); }),
+			];
+			
+			return submenuCall(_dat, arr);
+		}).setIsShelf(),
 		-1,
+	];
+	
+	menu_file = [
 		menuItem(__txt("Preferences") + "...", function() { dialogCall(o_dialog_preference); }, THEME.gear),
 		menuItem(__txt("Splash screen"), function() { dialogCall(o_dialog_splash); }),
 		-1,
@@ -68,7 +78,7 @@ function Panel_Menu() : PanelContent() constructor {
 		menuItem(__txt("Close program"), function() { window_close(); },, [ "", "Close program" ]),
 	];
 	
-	if(DEMO) array_delete(menu_file, 1, 5);
+	if(!DEMO) menu_file = array_append(menu_file_nondemo, menu_file);
 	
 	menu_help = [
 		menuItem(__txtx("panel_menu_help_video", "Tutorial videos"), function() {

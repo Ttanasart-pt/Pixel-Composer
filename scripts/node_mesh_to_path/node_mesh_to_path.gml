@@ -48,7 +48,7 @@ function Node_Mesh_To_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		return new __vec2();
 	}
 	
-	function update() {  
+	static update = function() {  
 		var _mesh = inputs[| 0].getValue();	
 		outputs[| 0].setValue(self);
 		if(_mesh == noone) return;

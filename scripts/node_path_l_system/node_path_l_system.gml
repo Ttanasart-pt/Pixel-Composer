@@ -181,7 +181,7 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	
 	static getBoundary	= function() { return boundary; }
 	
-	function update() { #region
+	static update = function() { #region
 		var _len = inputs[| 0].getValue();
 		var _ang = inputs[| 1].getValue();
 		var _pos = inputs[| 2].getValue();

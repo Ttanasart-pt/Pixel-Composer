@@ -76,24 +76,25 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 			if(_output.type == VALUE_TYPE.d3object) //passing 3D vertex call
 				return _out;
 			
-			if(_output.type == VALUE_TYPE.surface) //free surface if needed
-				surface_array_free(_out);
-			
-			if(_output.type == VALUE_TYPE.surface && dimension_index > -1) { //resize surface
-				var surf = inputs_data[dimension_index];
-				var _sw = 1, _sh = 1;
-				if(inputs[| dimension_index].type == VALUE_TYPE.surface) {
-					if(is_surface(surf)) {
-						_sw = surface_get_width_safe(surf);
-						_sh = surface_get_height_safe(surf);
-					} else 
-						return noone;
-				} else if(is_array(surf)) {
-					_sw = array_safe_get(surf, 0, 1);
-					_sh = array_safe_get(surf, 1, 1);
+			if(_output.type == VALUE_TYPE.surface) { //resize surface
+				if(dimension_index == -1) 
+					surface_array_free(_out);
+				else {
+					var surf = inputs_data[dimension_index];
+					var _sw = 1, _sh = 1;
+					if(inputs[| dimension_index].type == VALUE_TYPE.surface) {
+						if(is_surface(surf)) {
+							_sw = surface_get_width_safe(surf);
+							_sh = surface_get_height_safe(surf);
+						} else 
+							return noone;
+					} else if(is_array(surf)) {
+						_sw = array_safe_get(surf, 0, 1);
+						_sh = array_safe_get(surf, 1, 1);
+					}
+					
+					_out = surface_verify(_out, _sw, _sh, attrDepth());
 				}
-				
-				_out = surface_verify(_out, _sw, _sh, attrDepth());
 			}
 			
 			current_data = inputs_data;
@@ -105,7 +106,6 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 					return inputs_data[0]
 			}
 			
-			all_inputs = inputs_data;
 			var data = processData(_out, inputs_data, outIndex, 0);						/// Process data
 			return data;
 		} #endregion
@@ -190,6 +190,8 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	} #endregion
 	
 	static processOutput = function() { #region
+		var val;
+		
 		for(var i = 0; i < ds_list_size(outputs); i++) {
 			if(outputs[| i].process_array) {
 				val = processDataArray(i);

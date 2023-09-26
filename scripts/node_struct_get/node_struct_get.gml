@@ -11,7 +11,7 @@ function Node_Struct_Get(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	
 	outputs[| 0] = nodeValue("Struct", self, JUNCTION_CONNECT.output, VALUE_TYPE.struct, {});
 	
-	function update() { 
+	static update = function() { 
 		var str = inputs[| 0].getValue();
 		var key = inputs[| 1].getValue();
 		

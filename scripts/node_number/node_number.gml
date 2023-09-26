@@ -36,7 +36,7 @@ function Node_Number(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		inputs[| 0].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
 	}
 	
-	function step() {
+	static step = function() {
 		var int  = inputs[| 1].getValueCached();
 		var disp = inputs[| 2].getValueCached();
 		
@@ -227,7 +227,7 @@ function Node_Vector2(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		} 
 	}
 	
-	function step() {
+	static step = function() {
 		var int  = inputs[| 2].getValueCached();
 		var disp = inputs[| 3].getValueCached();
 		
@@ -411,7 +411,7 @@ function Node_Vector3(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	outputs[| 0] = nodeValue("Vector", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, [ 0, 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.vector);
 	
-	function step() {
+	static step = function() {
 		var int = inputs[| 3].getValueCached();
 		for( var i = 0; i < 3; i++ ) {
 			inputs[| i].type  = int? VALUE_TYPE.integer : VALUE_TYPE.float;
@@ -466,7 +466,7 @@ function Node_Vector4(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	outputs[| 0] = nodeValue("Vector", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, [ 0, 0, 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.vector);
 		
-	function step() {
+	static step = function() {
 		var int = inputs[| 4].getValueCached();
 		for( var i = 0; i < 4; i++ ) {
 			inputs[| i].type  = int? VALUE_TYPE.integer : VALUE_TYPE.float;

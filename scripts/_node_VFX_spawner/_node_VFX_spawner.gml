@@ -147,19 +147,20 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	parts_runner = 0;
 	
 	seed = 0;
-	spawn_index = 0;
+	spawn_index   = 0;
 	scatter_index = 0;
-	def_surface = -1;
+	def_surface   = -1;
 	
-	current_data = [];
+	current_data  = [];
+	surface_cache = ds_map_create();
 	
 	for(var i = 0; i < attributes.part_amount; i++)
 		parts[i] = new __part(self);
 		
-	static spawn = function(_time = PROJECT.animator.current_frame, _pos = -1) {
+	static spawn = function(_time = PROJECT.animator.current_frame, _pos = -1) { #region
 		var _inSurf = current_data[0];
 		
-		if(_inSurf == 0) {
+		if(!is_surface(_inSurf)) {
 			if(!is_surface(def_surface)) 
 				return;
 			_inSurf = def_surface;	
@@ -309,7 +310,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 			
 			parts_runner = safe_mod(parts_runner + 1, attributes.part_amount);
 		}
-	}
+	} #endregion
 	
 	static onSpawn = function(_time, part) {}
 	
@@ -325,6 +326,10 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		
 		render();
 		seed = inputs[| 32].getValue();
+		
+		var keys = ds_map_keys_to_array(surface_cache);
+		for( var i = 0, n = array_length(keys); i < n; i++ )
+			surface_free_safe(surface_cache[? keys[i]]);
 		
 		var _loop = inputs[| 21].getValue();
 		if(!_loop) return;
@@ -356,6 +361,17 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		
 		for( var i = 0; i < ds_list_size(inputs); i++ )
 			current_data[i] = inputs[| i].getValue(_time);
+		
+		var surfs = current_data[0];
+		if(!is_array(current_data[0])) surfs = [ surfs ];
+		if(!array_empty(current_data[0])) {
+			if(is_array(current_data[0]))
+				surfs = array_spread(surfs);
+			for( var i = 0, n = array_length(surfs); i < n; i++ ) {
+				if(is_surface(surface_cache[? surfs[i]])) continue;
+				surface_cache[? surfs[i]] = surface_clone(surfs[i]);
+			}
+		}
 		
 		if(_spawn_active) {
 			switch(_spawn_type) {

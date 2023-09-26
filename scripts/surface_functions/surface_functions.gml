@@ -337,21 +337,23 @@ function surface_copy_from(dst, src, format = noone) {
 	surface_reset_target();
 }
 
-function surface_clone(surface, source = noone, format = noone) {
+function surface_clone(surface, destination = noone, format = noone) {
 	gml_pragma("forceinline");
 	
+	if(is_struct(surface) && is_instanceof(surface, dynaSurf)) 
+		return surface.clone();
 	if(!is_surface(surface)) return noone;
 	
-	source = surface_verify(source, surface_get_width_safe(surface), surface_get_height_safe(surface), format == noone? surface_get_format(surface) : format);
+	destination = surface_verify(destination, surface_get_width_safe(surface), surface_get_height_safe(surface), format == noone? surface_get_format(surface) : format);
 	
-	surface_set_target(source);
+	surface_set_target(destination);
 	DRAW_CLEAR
 	BLEND_OVERRIDE;
 		draw_surface_safe(surface, 0, 0);
 	BLEND_NORMAL
 	surface_reset_target();
 	
-	return source;
+	return destination;
 }
 
 //in-place modification

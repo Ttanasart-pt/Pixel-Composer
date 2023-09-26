@@ -25,7 +25,7 @@ function Node_Trigger(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 		inputs[| 0].setValue(true);
 	}
 	
-	function step() {
+	static step = function() {
 		if(doTrigger == 1) {
 			outputs[| 0].setValue(true);
 			doTrigger = -1;
@@ -35,7 +35,7 @@ function Node_Trigger(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 		}
 	}
 	
-	function update() {
+	static update = function() {
 		var trg = inputs[| 0].getValue();
 		if(trg) doTrigger = 1;
 	}

@@ -34,13 +34,26 @@ function dynaSurf_iso() : dynaSurf() constructor {
 		var _surf = getSurface(_rot);
 		draw_surface_part_ext_safe(_surf, _l, _t, _w, _h, _x, _y, _xs, _ys, 0, _col, _alp);
 	}
+	
+	static clone = function() {
+		var _new = new dynaSurf_iso();
+		_new.surfaces = surface_array_clone(surfaces);
+		_new.angles   = array_clone(angles);
+		_new.angle_shift = angle_shift;
+		
+		return _new;
+	}
+	
+	static destroy = function() {
+		surface_array_free(surfaces);
+	}
 }
 
 function dynaSurf_iso_4() : dynaSurf_iso() constructor {
 	surfaces = array_create(4, noone);
 	
 	static getSurface = function(_rot) {
-		_rot += angle;
+		_rot += angle_shift;
 		var ind = 0;
 			 if(abs(angle_difference(  0, _rot)) <= 45) ind = 0;
 		else if(abs(angle_difference( 90, _rot)) <= 45) ind = 1;
@@ -52,8 +65,9 @@ function dynaSurf_iso_4() : dynaSurf_iso() constructor {
 	
 	static clone = function() {
 		var _new = new dynaSurf_iso_4();
-		_new.surfaces = surfaces;
-		_new.angle    = angle;
+		_new.surfaces = surface_array_clone(surfaces);
+		_new.angles   = array_clone(angles);
+		_new.angle_shift = angle_shift;
 		
 		return _new;
 	}
@@ -63,7 +77,7 @@ function dynaSurf_iso_8() : dynaSurf_iso() constructor {
 	surfaces = array_create(8, noone);
 	
 	static getSurface = function(_rot) {
-		_rot += angle;
+		_rot += angle_shift;
 		var ind = 0;
 			 if(abs(angle_difference(  0, _rot)) <= 22.5) ind = 0;
 		else if(abs(angle_difference( 45, _rot)) <= 22.5) ind = 1;
@@ -79,8 +93,9 @@ function dynaSurf_iso_8() : dynaSurf_iso() constructor {
 	
 	static clone = function() {
 		var _new = new dynaSurf_iso_8();
-		_new.surfaces = surfaces;
-		_new.angle    = angle;
+		_new.surfaces = surface_array_clone(surfaces);
+		_new.angles   = array_clone(angles);
+		_new.angle_shift = angle_shift;
 		
 		return _new;
 	}
