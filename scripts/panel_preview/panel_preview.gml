@@ -726,11 +726,11 @@ function Panel_Preview() : PanelContent() constructor {
 		
 		if(is_surface(preview_surface[0])) { #region outline
 			if(PROJECT.previewGrid.show) {
-				var _gw = PROJECT.previewGrid.width  * canvas_s;
-				var _gh = PROJECT.previewGrid.height * canvas_s;
+				var _gw = PROJECT.previewGrid.size[0]  * canvas_s;
+				var _gh = PROJECT.previewGrid.size[1] * canvas_s;
 			
-				var gw = floor(pswd / _gw);
-				var gh = floor(pshd / _gh);
+				var gw = pswd / _gw;
+				var gh = pshd / _gh;
 			
 				var cx = canvas_x;
 				var cy = canvas_y;
@@ -1099,11 +1099,11 @@ function Panel_Preview() : PanelContent() constructor {
 			_node.drawOverlay3D(overlayHover, d3_scene, _mx, _my, _snx, _sny, { w, h });
 		} else {
 			if(key_mod_press(CTRL)) {
-				_snx = PROJECT.previewGrid.show? PROJECT.previewGrid.width  : 1;
-				_sny = PROJECT.previewGrid.show? PROJECT.previewGrid.height : 1;
+				_snx = PROJECT.previewGrid.show? PROJECT.previewGrid.size[0] : 1;
+				_sny = PROJECT.previewGrid.show? PROJECT.previewGrid.size[1] : 1;
 			} else if(PROJECT.previewGrid.snap) {
-				_snx = PROJECT.previewGrid.width;
-				_sny = PROJECT.previewGrid.height;
+				_snx = PROJECT.previewGrid.size[0];
+				_sny = PROJECT.previewGrid.size[1];
 			}
 		
 			_node.drawOverlay(overlayHover, cx, cy, canvas_s, _mx, _my, _snx, _sny, { w, h });

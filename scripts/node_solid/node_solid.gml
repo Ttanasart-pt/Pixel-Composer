@@ -40,6 +40,7 @@ function Node_Solid(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 			surface_reset_target();
 			return _outSurf;
 		}
+		
 		surface_set_target(_outSurf);
 			DRAW_CLEAR
 			

@@ -2,45 +2,45 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	name = "Spawner";
 	update_on_frame = true;
 	
-	inputs[| 0] = nodeValue("Particle sprite", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
+	inputs[| 0] = nodeValue("Particle sprite", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0 );
 	
-	inputs[| 1] = nodeValue("Spawn delay", self,  JUNCTION_CONNECT.input, VALUE_TYPE.integer, 4, "Frames delay between each particle spawn.")
+	inputs[| 1] = nodeValue("Spawn delay", self,  JUNCTION_CONNECT.input, VALUE_TYPE.integer, 4, "Frames delay between each particle spawn." )
 		.rejectArray();
 	
-	inputs[| 2] = nodeValue("Spawn amount", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 2, "Amount of particle spawn in that frame.")
+	inputs[| 2] = nodeValue("Spawn amount", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 2, "Amount of particle spawn in that frame." )
 		.rejectArray();
 	
-	inputs[| 3] = nodeValue("Spawn area", self,   JUNCTION_CONNECT.input, VALUE_TYPE.float, [ DEF_SURF_W / 2, DEF_SURF_H / 2, DEF_SURF_W / 2, DEF_SURF_H / 2, AREA_SHAPE.rectangle ])
+	inputs[| 3] = nodeValue("Spawn area", self,   JUNCTION_CONNECT.input, VALUE_TYPE.float, [ DEF_SURF_W / 2, DEF_SURF_H / 2, DEF_SURF_W / 2, DEF_SURF_H / 2, AREA_SHAPE.rectangle ] )
 		.setDisplay(VALUE_DISPLAY.area);
 	
-	inputs[| 4] = nodeValue("Spawn distribution", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+	inputs[| 4] = nodeValue("Spawn distribution", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0 )
 		.rejectArray()
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Area", "Border", "Map", "Direct Data" ]);
+		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Area", "Border", "Map", "Direct Data" ] );
 	
-	inputs[| 5] = nodeValue("Lifespan", self,  JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 20, 30 ])
+	inputs[| 5] = nodeValue("Lifespan", self,  JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 20, 30 ] )
 		.setDisplay(VALUE_DISPLAY.range);
 	
-	inputs[| 6] = nodeValue("Spawn direction", self,  JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 0, 45, 135, 0, 0 ])
-		.setDisplay(VALUE_DISPLAY.rotation_random);
+	inputs[| 6] = nodeValue("Spawn direction", self,  JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 0, 45, 135, 0, 0 ] )
+		.setDisplay(VALUE_DISPLAY.rotation_random); 
 	
-	inputs[| 7] = nodeValue("Acceleration", self,  JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ])
-		.setDisplay(VALUE_DISPLAY.range);
+	inputs[| 7] = nodeValue("Acceleration", self,  JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ] )
+		.setDisplay(VALUE_DISPLAY.range, { linked : true });
 	
-	inputs[| 8] = nodeValue("Orientation", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 0, 0, 0, 0, 0 ])
+	inputs[| 8] = nodeValue("Orientation", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 0, 0, 0, 0, 0 ] )
 		.setDisplay(VALUE_DISPLAY.rotation_random);
 		
-	inputs[| 9] = nodeValue("Rotational speed", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ])
-		.setDisplay(VALUE_DISPLAY.range);
+	inputs[| 9] = nodeValue("Rotational speed", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ] )
+		.setDisplay(VALUE_DISPLAY.range, { linked : true });
 	
 	inputs[| 10] = nodeValue("Spawn scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 1, 1, 1 ] )
-		.setDisplay(VALUE_DISPLAY.vector_range);
+		.setDisplay(VALUE_DISPLAY.vector_range, { linked : true });
 	
 	inputs[| 11] = nodeValue("Scale over time", self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_11 );
 	
 	inputs[| 12] = nodeValue("Color over lifetime", self, JUNCTION_CONNECT.input, VALUE_TYPE.gradient, new gradientObject(c_white) );
 	
 	inputs[| 13] = nodeValue("Alpha", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 1 ])
-		.setDisplay(VALUE_DISPLAY.range);
+		.setDisplay(VALUE_DISPLAY.range, { linked : true });
 	
 	inputs[| 14] = nodeValue("Alpha over time", self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_11);
 	
@@ -51,15 +51,17 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		.setDisplay(VALUE_DISPLAY.enum_button, [ "Stream", "Burst" ]);
 	
 	inputs[| 17] = nodeValue("Spawn size", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 1 ] )
-		.setDisplay(VALUE_DISPLAY.range);
+		.setDisplay(VALUE_DISPLAY.range, { linked : true });
 	
 	inputs[| 18] = nodeValue("Spawn velocity", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 2 ] )
 		.setDisplay(VALUE_DISPLAY.range);
 	
-	inputs[| 19] = nodeValue("Gravity", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0 )
+	inputs[| 19] = nodeValue("Gravity", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ] )
+		.setDisplay(VALUE_DISPLAY.range, { linked : true })
 		.rejectArray();
 	
-	inputs[| 20] = nodeValue("Wiggle", self, JUNCTION_CONNECT.input, VALUE_TYPE.float,  0 )
+	inputs[| 20] = nodeValue("Wiggle", self, JUNCTION_CONNECT.input, VALUE_TYPE.float,  [ 0, 0 ] )
+		.setDisplay(VALUE_DISPLAY.range, { linked : true })
 		.rejectArray();
 	
 	inputs[| 21] = nodeValue("Loop", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true )
@@ -69,7 +71,8 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Random", "Order", "Animation" ])
 		.setVisible(false);
 	
-	inputs[| 23] = nodeValue("Animation speed", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1 )
+	inputs[| 23] = nodeValue("Animation speed", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 1 ] )
+		.setDisplay(VALUE_DISPLAY.range, { linked : true })
 		.rejectArray()
 		.setVisible(false);
 	
@@ -107,7 +110,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		.setDisplay(VALUE_DISPLAY.rotation);
 	
 	inputs[| 34] = nodeValue("Turning", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ] )
-		.setDisplay(VALUE_DISPLAY.range);
+		.setDisplay(VALUE_DISPLAY.range, { linked : true });
 	
 	inputs[| 35] = nodeValue("Turn both directions", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false, "Apply randomized 1, -1 multiplier to the turning speed." )
 		.rejectArray();
@@ -152,19 +155,13 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	def_surface   = -1;
 	
 	current_data  = [];
-	surface_cache = ds_map_create();
+	surface_cache = {};
 	
 	for(var i = 0; i < attributes.part_amount; i++)
 		parts[i] = new __part(self);
 		
 	static spawn = function(_time = PROJECT.animator.current_frame, _pos = -1) { #region
 		var _inSurf = current_data[0];
-		
-		if(!is_surface(_inSurf)) {
-			if(!is_surface(def_surface)) 
-				return;
-			_inSurf = def_surface;	
-		}
 		
 		var _spawn_amount	= current_data[ 2];
 		var _amo = _spawn_amount;
@@ -295,13 +292,16 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 			
 			part.seed = irandom_range(100000, 999999);
 			part.create(_spr, xx, yy, _lif);
-			part.anim_speed = _anim_speed;
+			part.anim_speed = random_range(_anim_speed[0], _anim_speed[1]);
 			part.anim_end   = _anim_end;
 				
 			var _trn = random_range(_turn[0], _turn[1]);
 			if(_turnBi) _trn *= choose(-1, 1);
 			
-			part.setPhysic(_vx, _vy, _acc, _grav, _gvDir, _wigg, _trn, _turnSc);
+			var _gravity = random_range(_grav[0], _grav[1]);
+			var _wiggle  = random_range(_wigg[0], _wigg[1]);
+			
+			part.setPhysic(_vx, _vy, _acc, _gravity, _gvDir, _wiggle, _trn, _turnSc);
 			part.setGround(_ground, _ground_offset, _ground_bounce);
 			part.setTransform(_scx, _scy, _scale_time, _rot, _rot_spd, _follow);
 			part.setDraw(_color, _bld, _alp, _fade);
@@ -327,9 +327,10 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		render();
 		seed = inputs[| 32].getValue();
 		
-		var keys = ds_map_keys_to_array(surface_cache);
+		var keys = variable_struct_get_names(surface_cache);
 		for( var i = 0, n = array_length(keys); i < n; i++ )
-			surface_free_safe(surface_cache[? keys[i]]);
+			surface_free_safe(surface_cache[$ keys[i]]);
+		surface_cache = {};
 		
 		var _loop = inputs[| 21].getValue();
 		if(!_loop) return;
@@ -363,15 +364,18 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 			current_data[i] = inputs[| i].getValue(_time);
 		
 		var surfs = current_data[0];
+		
 		if(!is_array(current_data[0])) surfs = [ surfs ];
 		if(!array_empty(current_data[0])) {
 			if(is_array(current_data[0]))
 				surfs = array_spread(surfs);
 			for( var i = 0, n = array_length(surfs); i < n; i++ ) {
-				if(is_surface(surface_cache[? surfs[i]])) continue;
-				surface_cache[? surfs[i]] = surface_clone(surfs[i]);
+				if(is_surface(surface_cache[$ surfs[i]])) continue;
+				surface_cache[$ surfs[i]] = surface_clone(surfs[i]);
 			}
 		}
+		
+		//print(surface_cache);
 		
 		if(_spawn_active) {
 			switch(_spawn_type) {

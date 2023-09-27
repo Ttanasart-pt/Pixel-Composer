@@ -23,7 +23,7 @@ function Node_Number(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Number", "Slider", "Rotator" ], { update_hover: false });
 	
 	inputs[| 3] = nodeValue("Range", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 1 ])
-		.setDisplay(VALUE_DISPLAY.vector_range);
+		.setDisplay(VALUE_DISPLAY.range);
 	
 	inputs[| 4] = nodeValue("Step", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.01)
 	

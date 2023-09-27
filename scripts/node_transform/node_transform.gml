@@ -19,9 +19,9 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		.setUnitRef(function(index) { return getDimension(index); }, VALUE_UNIT.reference);
 	
 	inputs[| 3] = nodeValue("Anchor", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0.5, 0.5 ])
-		.setDisplay(VALUE_DISPLAY.vector, button(function() { centerAnchor(); })
-											.setIcon(THEME.anchor)
-											.setTooltip("Set to center"));
+		.setDisplay(VALUE_DISPLAY.vector, { side_button : button(function() { centerAnchor(); })
+																.setIcon(THEME.anchor)
+																.setTooltip("Set to center") });
 	
 	inputs[| 4] = nodeValue("Relative anchor", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
 	

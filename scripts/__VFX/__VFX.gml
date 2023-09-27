@@ -190,7 +190,8 @@ function __part(_node) constructor {
 			}
 		}
 		
-		var surface = node.surface_cache[? ss];
+		var surface = node.surface_cache[$ ss];
+		//print($"VFX: {surface} ({is_surface(surface)})")
 		if(!is_surface(surface)) return;
 		
 		var lifeRat = 1 - life / life_total;

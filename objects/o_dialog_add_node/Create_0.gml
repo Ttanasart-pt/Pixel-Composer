@@ -319,7 +319,11 @@ event_inherited();
 			_list = ds_list_create();
 			
 			if(node_called != noone) {
-				var sug = ds_map_try_get(global.VALUE_SUGGESTION, node_called.type, []);
+				var sug = nodeReleatedQuery(
+					node_called.connect_type == JUNCTION_CONNECT.input? "connectTo" : "connectFrom", 
+					node_called.type
+				);
+				
 				if(array_length(sug)) {
 					ds_list_add(_list, "Related");
 					for( var i = 0, n = array_length(sug); i < n; i++ )

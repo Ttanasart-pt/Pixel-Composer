@@ -2,13 +2,15 @@ function vectorRangeBox(_size, _type, _onModify, _unit = noone) : widget() const
 	size     = _size;
 	onModify = _onModify;
 	unit	 = _unit;
+	extra_data = { linked : false };
 	
-	linked = false;
-	b_link = button(function() { linked = !linked; });
-	b_link.icon = THEME.value_link;
+	tooltip	= new tooltipSelector("Value Type", [
+		__txt("Random Range"),
+		__txt("Constant"),
+	]);
 	
 	onModifyIndex = function(index, val) { 
-		if(linked) {
+		if(extra_data.linked) {
 			var modi = false;
 			modi |= onModify(floor(index / 2) * 2 + 0, toNumber(val)); 
 			modi |= onModify(floor(index / 2) * 2 + 1, toNumber(val)); 
@@ -19,7 +21,6 @@ function vectorRangeBox(_size, _type, _onModify, _unit = noone) : widget() const
 	}
 	
 	axis = [ "x", "y", "z", "w"];
-	label = [];
 	onModifySingle[0] = function(val) { return onModifyIndex(0, toNumber(val)); }
 	onModifySingle[1] = function(val) { return onModifyIndex(1, toNumber(val)); }
 	onModifySingle[2] = function(val) { return onModifyIndex(2, toNumber(val)); }
@@ -30,8 +31,6 @@ function vectorRangeBox(_size, _type, _onModify, _unit = noone) : widget() const
 	for(var i = 0; i < size; i++) {
 		tb[i] = new textBox(_type, onModifySingle[i]);
 		tb[i].slidable = true;
-		
-		label[i] = (i % 2? __txt("Max") : __txt("Min")) + " " + axis[floor(i / 2)];
 	}
 	
 	static setSlideSpeed = function(speed) {
@@ -41,64 +40,70 @@ function vectorRangeBox(_size, _type, _onModify, _unit = noone) : widget() const
 	
 	static setInteract = function(interactable = noone) { 
 		self.interactable = interactable;
-		b_link.interactable = interactable;
 		
-		for( var i = 0; i < size; i++ ) 
+		var _step = extra_data.linked? 2 : 1;
+		for( var i = 0; i < size; i += _step ) 
 			tb[i].interactable = interactable;
-		if(extras) 
-			extras.interactable = interactable;
 	}
 	
 	static register = function(parent = noone) {
-		b_link.register(parent);
-		
-		for( var i = 0; i < size; i++ ) 
+		var _step = extra_data.linked? 2 : 1;
+		for( var i = 0; i < size; i += _step ) 
 			tb[i].register(parent);
-		if(extras) extras.register(parent);
 	}
 	
 	static drawParam = function(params) {
-		return draw(params.x, params.y, params.w, params.h, params.data, params.m);
+		return draw(params.x, params.y, params.w, params.h, params.data, params.extra_data, params.m);
 	}
 	
-	static draw = function(_x, _y, _w, _h, _data, _m) {
+	static draw = function(_x, _y, _w, _h, _data, _extra_data, _m) {
 		x = _x;
 		y = _y;
 		w = _w;
-		h = _h * 2 + ui(4);
 		
-		b_link.setFocusHover(active, hover);
-		b_link.icon_index = linked;
-		b_link.icon_blend = linked? COLORS._main_accent : COLORS._main_icon;
-		b_link.tooltip = linked? __txt("Unlink values") : __txt("Link values");
+		if(struct_has(_extra_data, "linked"))	   extra_data.linked	  = _extra_data.linked;
+		h = extra_data.linked? _h : _h * 2 + ui(4);
+		tooltip.index = extra_data.linked;
+		
+		var _icon_blend = extra_data.linked? COLORS._main_accent : COLORS._main_icon;
 		
 		var bx = _x;
 		var by = _y + _h / 2 - ui(32 / 2);
-		b_link.draw(bx + ui(4), by + ui(4), ui(24), ui(24), _m, THEME.button_hide);
+		if(buttonInstant(THEME.button_hide, bx + ui(4), by + ui(4), ui(24), ui(24), _m, active, hover, tooltip, THEME.value_link, extra_data.linked, _icon_blend) == 2) {
+			extra_data.linked  = !extra_data.linked;
+			_extra_data.linked =  extra_data.linked;
+			
+			if(extra_data.linked) {
+				for(var i = 0; i < size; i += 2) {
+					onModify(i + 0, _data[i]);
+					onModify(i + 1, _data[i]);
+				}
+			}
+		}
 		
 		_x += ui(28);
 		_w -= ui(28);
 		
-		if(extras && instanceof(extras) == "buttonClass") {
-			extras.setFocusHover(active, hover);
-			extras.draw(_x + _w - ui(32), _y + _h / 2 - ui(32 / 2), ui(32), ui(32), _m, THEME.button_hide);
-			_w -= ui(40);
-		}
+		var _step = extra_data.linked? 2 : 1;
+		var ww    = _w / size * 2;
 		
-		var ww  = _w / size * 2;
-		for(var i = 0; i < size; i++) {
+		for(var i = 0; i < size; i += _step) {
 			tb[i].setFocusHover(active, hover);
 			
 			var bx  = _x + ww * floor(i / 2);
 			var by  = _y + i % 2 * (_h + ui(4));
-			tb[i].draw(bx + ui(56), by, ww - ui(56), _h, _data[i], _m);
+			var _ww = ui(32 + 32 * !extra_data.linked);
+			tb[i].draw(bx + _ww, by, ww - _ww, _h, _data[i], _m);
 			
 			draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text_inner);
-			draw_text(bx + ui(8), by + _h / 2, label[i]);
+			
+			var _label = extra_data.linked? axis[floor(i / 2)]
+				: (i % 2? __txt("Max") : __txt("Min")) + " " + axis[floor(i / 2)];
+			draw_text(bx + ui(8), by + _h / 2, _label);
 		}
 		
 		resetFocus();
 		
-		return _h * 2 + ui(4);
+		return h;
 	}
 }

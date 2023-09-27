@@ -54,7 +54,7 @@ function Panel_Linear_Setting() : PanelContent() constructor {
 			draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text);
 			draw_text_add(ui(16), yy, _text);
 		
-			var params = new widgetParam(w - ui(8) - ww, yy - wh / 2, ww, wh, _data,, [ mx, my ], x, y);
+			var params = new widgetParam(w - ui(8) - ww, yy - wh / 2, ww, wh, _data, {}, [ mx, my ], x, y);
 			if(is_instanceof(_widg, checkBox)) {
 				params.halign = fa_center;
 				params.valign = fa_center;

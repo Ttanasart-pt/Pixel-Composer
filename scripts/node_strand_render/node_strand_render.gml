@@ -11,7 +11,7 @@ function Node_Strand_Render(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		.setVisible(true, true);
 	
 	inputs[| 2] = nodeValue("Thickness", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 1 ])
-		.setDisplay(VALUE_DISPLAY.vector_range);
+		.setDisplay(VALUE_DISPLAY.range, { linked : true });
 	
 	inputs[| 3] = nodeValue("Thickness over length", self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_11);
 	

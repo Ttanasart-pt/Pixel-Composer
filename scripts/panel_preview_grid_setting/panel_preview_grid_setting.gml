@@ -20,18 +20,14 @@ function Panel_Preview_Grid_Setting() : Panel_Linear_Setting() constructor {
 				function() { return PROJECT.previewGrid.snap; }
 			],
 			[
-				new textBox(TEXTBOX_INPUT.number, function(str) {
-					PROJECT.previewGrid.width = max(1, real(str));	
-				}),
-				__txt("Grid width"),
-				function() { return PROJECT.previewGrid.width; }
-			],
-			[
-				new textBox(TEXTBOX_INPUT.number, function(str) {
-					PROJECT.previewGrid.height = max(1, real(str));	
-				}),
-				__txt("Grid height"),
-				function() { return PROJECT.previewGrid.height; }
+				new vectorBox(2, function(index, value) {
+					var _v = PROJECT.previewGrid.size[index];
+					PROJECT.previewGrid.size[index] = max(1, value);
+					
+					return _v != max(1, value);
+				}).setLinkInactiveColor(COLORS._main_icon_light),
+				__txt("Grid size"),
+				function() { return PROJECT.previewGrid.size; }
 			],
 			[
 				new slider(0, 1, .05, function(str) {

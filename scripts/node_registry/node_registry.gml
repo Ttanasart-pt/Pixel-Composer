@@ -428,6 +428,7 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor { #regio
 			addNodeObject(generator, "Draw Text",		s_node_text_render,		"Node_Text",			[1, Node_Text],, "Draw text on an image.");
 			addNodeObject(generator, "Shape",			s_node_shape,			"Node_Shape",			[1, Node_Shape],, "Draw simple shapes using signed distance field.");
 			addNodeObject(generator, "Polygon Shape",	s_node_shape_polygon,	"Node_Shape_Polygon",	[1, Node_Shape_Polygon],, "Draw simple shapes using triangles.").setVersion(1130);
+			addNodeObject(generator, "Interpret Number",s_node_interpret_number,"Node_Interpret_Number",[1, Node_Interpret_Number]).setVersion(11530);
 			addNodeObject(generator, "Random Shape",	s_node_random_shape,	"Node_Random_Shape",	[1, Node_Random_Shape]).setVersion(1147);
 			
 			ds_list_add(generator, "Noises");
@@ -450,7 +451,6 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor { #regio
 			addNodeObject(generator, "Scatter",				s_node_scatter,				"Node_Scatter",				[1, Node_Scatter],, "Scatter image randomly multiple times.");
 			
 			ds_list_add(generator, "Simulation");
-			//addNodeObject(generator, "Dust",				s_node_particle,			"Node_Dust",				[1, Node_Dust]).setVersion(1147);
 			addNodeObject(generator, "Particle",			s_node_particle,			"Node_Particle",			[1, Node_Particle],, "Generate particle effect.");
 			addNodeObject(generator, "VFX",					s_node_vfx,					"Node_VFX_Group",			[1, Node_VFX_Group],, "Create VFX group, which generate particles that can be manipulated using different force nodes.");
 			addNodeObject(generator, "RigidSim",			s_node_rigidSim,			"Node_Rigid_Group",			[1, Node_Rigid_Group],, "Create group for rigidbody simulation.").setVersion(1110);
@@ -811,40 +811,4 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor { #regio
 			addNodeObject(hid, "getHeight",	s_node_pixel_builder,	"Node_DynaSurf_Out_Height",	[1, Node_DynaSurf_Out_Height]);
 		#endregion
 	}
-#endregion
-
-#region node suggestion
-	global.VALUE_SUGGESTION = ds_map_create();
-	
-	global.VALUE_SUGGESTION[? VALUE_TYPE.integer]    = [ "Node_Math", "Node_Equation", "Node_To_Text" ];
-	global.VALUE_SUGGESTION[? VALUE_TYPE.float]      = [ "Node_Math", "Node_Equation", "Node_To_Text" ];
-	global.VALUE_SUGGESTION[? VALUE_TYPE.boolean]    = [  ];
-	global.VALUE_SUGGESTION[? VALUE_TYPE.color]      = [ "Node_Solid", "Node_Color_Data", "Node_Color_Mix" ];
-	global.VALUE_SUGGESTION[? VALUE_TYPE.surface]    = [ "Node_Transform", "Node_Blend", "Node_Composite", "Node_Export" ];
-	
-	global.VALUE_SUGGESTION[? VALUE_TYPE.path]       = [ "Node_Line" ];
-	global.VALUE_SUGGESTION[? VALUE_TYPE.curve]      = [  ];
-	global.VALUE_SUGGESTION[? VALUE_TYPE.text]       = [ "Node_Text", "Node_To_Number" ];
-	global.VALUE_SUGGESTION[? VALUE_TYPE.object]     = [  ];
-	global.VALUE_SUGGESTION[? VALUE_TYPE.node]       = [  ];
-	global.VALUE_SUGGESTION[? VALUE_TYPE.d3object]   = [  ];
-	
-	global.VALUE_SUGGESTION[? VALUE_TYPE.any]        = [  ];
-														  
-	global.VALUE_SUGGESTION[? VALUE_TYPE.pathnode]   = [ "Node_Line", "Node_Mesh_Create_Path" ];
-	global.VALUE_SUGGESTION[? VALUE_TYPE.particle]   = [  ];
-	global.VALUE_SUGGESTION[? VALUE_TYPE.rigid]      = [  ];
-	global.VALUE_SUGGESTION[? VALUE_TYPE.fdomain]    = [  ];
-	global.VALUE_SUGGESTION[? VALUE_TYPE.struct]     = [ "Node_Struct_Get" ];
-	global.VALUE_SUGGESTION[? VALUE_TYPE.strands]    = [  ];
-	global.VALUE_SUGGESTION[? VALUE_TYPE.mesh]       = [  ];
-	global.VALUE_SUGGESTION[? VALUE_TYPE.trigger]    = [  ];
-	global.VALUE_SUGGESTION[? VALUE_TYPE.atlas]      = [ "Node_Atlas_Draw", "Node_Atlas_Get", "Node_Atlas_Set" ];
-														  
-	global.VALUE_SUGGESTION[? VALUE_TYPE.d3vertex]   = [  ];
-	global.VALUE_SUGGESTION[? VALUE_TYPE.gradient]   = [ "Node_Gradient", "Node_Gradient_Extract" ];
-	global.VALUE_SUGGESTION[? VALUE_TYPE.armature]   = [ "Node_Armature_Pose", "Node_Armature_Bind", "Node_Armature_Path", "Node_Armature_Sample" ];
-	global.VALUE_SUGGESTION[? VALUE_TYPE.buffer]     = [ "Node_Surface_From_Buffer" ];
-														  
-	global.VALUE_SUGGESTION[? VALUE_TYPE.action]     = [  ];
 #endregion

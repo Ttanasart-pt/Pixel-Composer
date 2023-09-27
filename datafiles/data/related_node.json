@@ -1,0 +1,26 @@
+{
+    "connectFrom": {
+        "key": "connectionType",
+        "relations": {
+            "integer":   [ "Node_Math", "Node_Equation", "Node_To_Text" ],
+            "float":     [ "Node_Math", "Node_Equation", "Node_To_Text" ],
+            "color":     [ "Node_Solid", "Node_Color_Data", "Node_Color_Mix" ],
+            "surface":   [ "Node_Transform", "Node_Blend", "Node_Composite", "Node_Export" ],
+            
+            "path":      [ "Node_Line" ],
+            "text":      [ "Node_Text", "Node_To_Number" ],
+                                        
+            "pathnode":  [ "Node_Line", "Node_Mesh_Create_Path" ],
+            "struct":    [ "Node_Struct_Get" ],
+            "atlas":     [ "Node_Atlas_Draw", "Node_Atlas_Get", "Node_Atlas_Set" ],
+                                                                
+            "gradient":  [ "Node_Gradient", "Node_Gradient_Extract" ],
+            "armature":  [ "Node_Armature_Pose", "Node_Armature_Bind", "Node_Armature_Path", "Node_Armature_Sample" ],
+            "buffer":    [ "Node_Surface_From_Buffer" ]
+        }
+    },
+    "connectTo": {
+        "key": "connectionType",
+        "relations": {}
+    }
+}

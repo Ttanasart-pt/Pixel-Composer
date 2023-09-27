@@ -29,7 +29,7 @@ function Node_Websocket_Sender(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	connected = false;
 	socket = noone;
 	
-	function connectTo(newPort, newUrl) {
+	static connectTo = function(newPort, newUrl) {
 		if(ds_map_exists(PORT_MAP, port))
 			array_remove(PORT_MAP[? port], self);
 		

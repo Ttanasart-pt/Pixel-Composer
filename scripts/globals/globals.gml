@@ -35,8 +35,7 @@
 		previewGrid = {
 			show	: false,
 			snap	: false,
-			width	: 16,
-			height	: 16,
+			size	: [ 16, 16 ],
 			opacity : 0.5,
 			color   : COLORS.panel_preview_grid,
 		}
@@ -89,8 +88,7 @@
 	globalvar PROJECTS; /// @is {Project[]}
 	globalvar PROJECT; /// @is {Project}
 	
-	gml_pragma("global", "__init()");
-	function __init() {
+	function __initProject() {
 		PROJECT  = new Project();
 		PROJECTS = [ PROJECT ];
 	}
@@ -107,10 +105,10 @@
 	
 	globalvar VERSION, SAVE_VERSION, VERSION_STRING, BUILD_NUMBER;
 
-	VERSION			= 11523;
+	VERSION			= 11530;
 	SAVE_VERSION	= 11500;
-	VERSION_STRING  = "1.15.2.3";
-	BUILD_NUMBER	= 11523;
+	VERSION_STRING  = "1.15.3.0";
+	BUILD_NUMBER	= 11530;
 	
 	globalvar APPEND_MAP;
 	APPEND_MAP      = ds_map_create();

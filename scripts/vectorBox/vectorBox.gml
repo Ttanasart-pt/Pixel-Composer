@@ -8,14 +8,19 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 	onModify = _onModify;
 	unit	 = _unit;
 	current_value = [];
+	extra_data    = { linked : false, side_button : noone };
 	
-	linked = false;
-	b_link = button(function() { linked = !linked; });
+	link_inactive_color = noone;
+	
+	tooltip	= new tooltipSelector("Axis", [
+		__txt("Independent"),
+		__txt("Linked"),
+	]);
 	
 	onModifyIndex = function(index, val) { 
 		var v = toNumber(val);
 		
-		if(linked) {
+		if(extra_data.linked) {
 			var modi = false;
 			for( var i = 0; i < size; i++ ) {
 				tb[i]._input_text = v;
@@ -37,49 +42,56 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 	onModifySingle[2] = function(val) { return onModifyIndex(2, val); }
 	onModifySingle[3] = function(val) { return onModifyIndex(3, val); }
 	
-	extras = noone;
-	
 	for(var i = 0; i < 4; i++) {
 		tb[i] = new textBox(TEXTBOX_INPUT.number, onModifySingle[i]);
 		tb[i].slidable = true;
 	}
 	
+	static setLinkInactiveColor = function(color) {
+		link_inactive_color = color;
+		return self;
+	}
+	
 	static setSlideSpeed = function(speed) {
 		for(var i = 0; i < size; i++)
 			tb[i].slide_speed = speed;
+		return self;
 	}
 	
 	static setInteract = function(interactable) { 
 		self.interactable = interactable;
-		b_link.interactable = interactable;
 		
-		if(extras != noone) extras.interactable = interactable;
+		if(extra_data.side_button != noone) 
+			extra_data.side_button.interactable = interactable;
 			
 		for( var i = 0; i < size; i++ ) 
 			tb[i].interactable = interactable;
 	}
 	
 	static register = function(parent = noone) {
-		b_link.register(parent);
-		
 		for( var i = 0; i < size; i++ ) 
 			tb[i].register(parent);
 		
-		if(extras != noone) extras.register(parent);
+		if(extra_data.side_button != noone) 
+			extra_data.side_button.register(parent);
 		
 		if(unit != noone && unit.reference != noone)
 			unit.triggerButton.register(parent);
 	}
 	
 	static drawParam = function(params) {
-		return draw(params.x, params.y, params.w, params.h, params.data, params.m);
+		return draw(params.x, params.y, params.w, params.h, params.data, params.extra_data, params.m);
 	}
 	
-	static draw = function(_x, _y, _w, _h, _data, _m) {
+	static draw = function(_x, _y, _w, _h, _data, _extra_data, _m) {
 		x = _x;
 		y = _y;
 		w = _w;
 		h = _h;
+		
+		if(struct_has(_extra_data, "linked"))	   extra_data.linked	  = _extra_data.linked;
+		if(struct_has(_extra_data, "side_button")) extra_data.side_button = _extra_data.side_button;
+		tooltip.index = extra_data.linked;
 		
 		if(!is_array(_data))   return 0;
 		if(array_empty(_data)) return 0;
@@ -87,9 +99,9 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 		
 		current_value = _data;
 		
-		if(extras && instanceof(extras) == "buttonClass") {
-			extras.setFocusHover(active, hover);
-			extras.draw(_x + _w - ui(32), _y + _h / 2 - ui(32 / 2), ui(32), ui(32), _m, THEME.button_hide);
+		if(extra_data.side_button) {
+			extra_data.side_button.setFocusHover(active, hover);
+			extra_data.side_button.draw(_x + _w - ui(32), _y + _h / 2 - ui(32 / 2), ui(32), ui(32), _m, THEME.button_hide);
 			_w -= ui(40);
 		}
 		
@@ -101,15 +113,18 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 			_w -= ui(40);
 		}
 		
-		b_link.setFocusHover(active, hover);
-		b_link.icon			= THEME.value_link;
-		b_link.icon_index	= linked;
-		b_link.icon_blend	= linked? COLORS._main_accent : COLORS._main_icon;
-		b_link.tooltip		= linked? __txt("Unlink values") : __txt("Link values");
-		
+		var _icon_blend = extra_data.linked? COLORS._main_accent : (link_inactive_color == noone? COLORS._main_icon : link_inactive_color);
 		var bx = _x;
 		var by = _y + _h / 2 - ui(32 / 2);
-		b_link.draw(bx + ui(4), by + ui(4), ui(24), ui(24), _m, THEME.button_hide);
+		if(buttonInstant(THEME.button_hide, bx + ui(4), by + ui(4), ui(24), ui(24), _m, active, hover, tooltip, THEME.value_link, extra_data.linked, _icon_blend) == 2) {
+			extra_data.linked  = !extra_data.linked;
+			_extra_data.linked =  extra_data.linked;
+			
+			if(extra_data.linked) {
+				onModify(0, _data[0]);
+				onModify(1, _data[0]);
+			}
+		}
 		
 		_x += ui(28);
 		_w -= ui(28);

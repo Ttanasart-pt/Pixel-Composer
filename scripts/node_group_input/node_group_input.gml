@@ -64,7 +64,7 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	inputs[| 0].editWidget.update_hover = false;
 	
 	inputs[| 1] = nodeValue("Range", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [0, 1])
-		.setDisplay(VALUE_DISPLAY.vector_range)
+		.setDisplay(VALUE_DISPLAY.range)
 		.uncache()
 		.setVisible(false)
 		.rejectArray();

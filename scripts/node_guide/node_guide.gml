@@ -1,7 +1,7 @@
 globalvar NODE_EXTRACT;
 NODE_EXTRACT = false;
 
-function __generate_node_data() { 
+function __generate_node_data() { #region
 	var amo = ds_map_size(ALL_NODES);
 	var k = ds_map_find_first(ALL_NODES);
 	
@@ -82,19 +82,64 @@ function __generate_node_data() {
 	
 	CLONING = false;
 	game_end();
-}
+} #endregion
+
+#region node suggestion
+	function __loadNodeReleated(path) {
+		var _json = json_load_struct(path);
+		var _keys = variable_struct_get_names(_json);
+		var _rel  = global.NODE_RELATION;
+		
+		for( var i = 0, n = array_length(_keys); i < n; i++ ) {
+			var _group = _json[$ _keys[i]];
+			if(!struct_has(_rel, _keys[i]))
+				_rel[$ _keys[i]] = { relations : {} };
+			var _Vgroup = _rel[$ _keys[i]].relations;
+			
+			switch(_group.key) {
+				case "connectionType" :
+					var _types = variable_struct_get_names(_group.relations);
+					for( var j = 0, m = array_length(_types); j < m; j++ ) {
+						var _k = value_type_from_string(_types[j]);
+						if(!struct_has(_Vgroup, _k)) _Vgroup[$ _k] = [];
+						array_append(_Vgroup[$ _k], _group.relations[$ _types[j]]);
+					}
+					break;
+			}
+		}
+	}
+		
+		
+	function __initNodeReleated() {
+		global.NODE_RELATION = {};
+		
+		var _dir = DIRECTORY + "Nodes/Related";
+		if(!directory_exists(_dir)) return;
+		
+		var f = file_find_first(_dir + "/*.json", fa_none);
+		
+		while (f != "") {
+		    __loadNodeReleated(_dir + "/" + f);
+		    f = file_find_next();
+		}
+		
+		file_find_close();
+	}
+	
+	function nodeReleatedQuery(type, key) {
+		if(!struct_has(global.NODE_RELATION, type)) return [];
+		var _sugs = global.NODE_RELATION[$ type];
+		
+		if(!struct_has(_sugs.relations, key)) return [];
+		return _sugs.relations[$ key];
+	}
+#endregion
 
 function __initNodeData() {
 	global.NODE_GUIDE = {};
 	
 	var nodeDir = DIRECTORY + "Nodes/";
 	var _l = nodeDir + "/version";
-	
-	//if(file_exists(_l)) {
-	//	var res = json_load_struct(_l);
-	//	if(res.version == BUILD_NUMBER) return;
-	//}
-	//json_save_struct(_l, { version: BUILD_NUMBER });
 	
 	if(file_exists("data/tooltip.zip"))
 		zip_unzip("data/tooltip.zip", nodeDir);
@@ -103,6 +148,11 @@ function __initNodeData() {
 	
 	if(file_exists("data/nodes.json")) {
 		file_delete(nodeDir + "nodes.json");
-		file_copy("data/nodes.json", nodeDir + "nodes.json");
+		file_copy_override("data/nodes.json", nodeDir + "nodes.json");
 	}
+	
+	directory_verify(nodeDir + "/Related");
+	file_copy_override("data/related_node.json", nodeDir + "/Related/default.json");
+	
+	__initNodeReleated();
 }

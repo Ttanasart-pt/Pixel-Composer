@@ -52,8 +52,8 @@ enum VALUE_TYPE {
 	d3Scene	  = 29,
 	d3Material = 30,
 	
-	dynaSurface  = 31,
-	PCXnode   = 32,
+	dynaSurface = 31,
+	PCXnode     = 32,
 	
 	action	  = 99,
 }
@@ -248,13 +248,16 @@ function value_type_from_string(str) { #region
 		case "boolean"	: return VALUE_TYPE.boolean;
 		case "color"	: return VALUE_TYPE.color;
 		case "surface"	: return VALUE_TYPE.surface;
+		
 		case "path"		: return VALUE_TYPE.path;
 		case "curve"	: return VALUE_TYPE.curve;
 		case "text"		: return VALUE_TYPE.text;
 		case "object"	: return VALUE_TYPE.object;
 		case "node"		: return VALUE_TYPE.node;
 		case "d3object" : return VALUE_TYPE.d3object;
+		
 		case "any"		: return VALUE_TYPE.any;
+		
 		case "pathnode" : return VALUE_TYPE.pathnode;
 		case "particle" : return VALUE_TYPE.particle;
 		case "rigid"	: return VALUE_TYPE.rigid;
@@ -264,18 +267,23 @@ function value_type_from_string(str) { #region
 		case "mesh"		: return VALUE_TYPE.mesh;
 		case "trigger"	: return VALUE_TYPE.trigger;
 		case "atlas"	: return VALUE_TYPE.atlas;
+		
 		case "d3vertex" : return VALUE_TYPE.d3vertex;
 		case "gradient" : return VALUE_TYPE.gradient;
 		case "armature" : return VALUE_TYPE.armature;
 		case "buffer"	: return VALUE_TYPE.buffer;
+		
 		case "pbBox"	: return VALUE_TYPE.pbBox;
+		
 		case "d3Mesh"	: return VALUE_TYPE.d3Mesh;
 		case "d3Light"	: return VALUE_TYPE.d3Light;
 		case "d3Camera" : return VALUE_TYPE.d3Camera;
 		case "d3Scene"	: return VALUE_TYPE.d3Scene;
 		case "d3Material"	: return VALUE_TYPE.d3Material;
+		
 		case "dynaSurface"	: return VALUE_TYPE.dynaSurface;
 		case "PCXnode"	: return VALUE_TYPE.PCXnode;
+		
 		case "action"	: return VALUE_TYPE.action;
 	}
 	
@@ -716,12 +724,13 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						break; #endregion
 					case VALUE_DISPLAY.range :			#region
 						editWidget = new rangeBox(_txt, function(index, val) { 
-							//var _val = animator.getValue();
-							//_val[index] = val;
 							return setValueDirect(val, index);
 						} );
+						
 						if(type == VALUE_TYPE.integer) editWidget.setSlideSpeed(1);
-						if(display_data != -1) editWidget.extras = display_data;
+						
+						extra_data = { linked : false };
+						if(display_data != -1) struct_override(extra_data, display_data);
 						
 						for( var i = 0, n = array_length(animators); i < n; i++ )
 							animators[i].suffix = " " + array_safe_get(global.displaySuffix_Range, i);
@@ -734,13 +743,13 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						
 						if(len <= 4) {
 							editWidget = new vectorBox(len, function(index, val) { 
-								//var _val = animator.getValue();
-								//_val[index] = val;
 								return setValueDirect(val, index);
 							}, unit );
+							
 							if(type == VALUE_TYPE.integer) editWidget.setSlideSpeed(1);
-							if(display_data != -1 && is_struct(display_data)) 
-								editWidget.extras = display_data;
+							
+							extra_data = { linked : false, side_button : noone };
+							if(display_data != -1) struct_override(extra_data, display_data);
 							
 							if(len == 2) {
 								extract_node = [ "Node_Vector2", "Node_Path" ];
@@ -758,12 +767,13 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						var val = animator.getValue();
 						
 						editWidget = new vectorRangeBox(array_length(val), _txt, function(index, val) { 
-							//var _val = animator.getValue();
-							//_val[index] = val;
 							return setValueDirect(val, index);
 						}, unit );
+						
 						if(type == VALUE_TYPE.integer) editWidget.setSlideSpeed(1);
-						if(display_data != -1) editWidget.extras = display_data;
+						
+						extra_data = { linked : false };
+						if(display_data != -1) struct_override(extra_data, display_data);
 						
 						if(array_length(val) == 2)
 							extract_node = "Node_Vector2";

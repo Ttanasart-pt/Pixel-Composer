@@ -63,9 +63,10 @@
 	log_message("SESSION", "Begin");
 	log_message("DIRECTORY", DIRECTORY);
 	
+	log_message("SESSION", "> init Locale");		__initLocale();
+	log_message("SESSION", "> init Project");		__initProject();
 	log_message("SESSION", "> init Action");		__initAction();
 	log_message("SESSION", "> init SurfaceFormat");	__initSurfaceFormat();
-	log_message("SESSION", "> init Locale");		__initLocale();
 	log_message("SESSION", "> init Theme");			__initTheme();
 	log_message("SESSION", "> init Collection");	__initCollection();
 	log_message("SESSION", "> init Assets");		__initAssets();

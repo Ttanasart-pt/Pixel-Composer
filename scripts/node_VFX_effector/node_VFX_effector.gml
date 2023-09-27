@@ -34,7 +34,7 @@ function Node_VFX_effector(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		.rejectArray();
 	
 	inputs[| 7] = nodeValue("Scale particle", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 0, 0 ] )
-		.setDisplay(VALUE_DISPLAY.vector_range)
+		.setDisplay(VALUE_DISPLAY.vector_range, { linked : true })
 		.rejectArray();
 	
 	input_display_list = [ 0,

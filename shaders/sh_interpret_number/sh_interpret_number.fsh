@@ -1,18 +1,11 @@
-//
-// Simple passthrough fragment shader
-//
 varying vec2 v_vTexcoord;
 varying vec4 v_vColour;
 
-#define TAU 6.283185307179586
+#define BATCH_SIZE 1024
 
-uniform vec2 center;
-uniform float angle;
-uniform float radius;
-uniform float shift;
-uniform int type;
-
-uniform int gradient_loop;
+uniform int mode;
+uniform vec2 range;
+uniform float number[BATCH_SIZE];
 
 #region ////////////////////////////////////////// GRADIENT BEGIN //////////////////////////////////////////
 
@@ -89,28 +82,17 @@ vec4 gradientEval(in float prog) {
 #endregion ////////////////////////////////////////// GRADIENT END //////////////////////////////////////////
 
 void main() {
-	float prog = 0.;
-	if(type == 0) {
-		prog = .5 + (v_vTexcoord.x - center.x) * cos(angle) - (v_vTexcoord.y - center.y) * sin(angle);
-	} else if(type == 1) {
-		prog = distance(v_vTexcoord, center) / radius;
-	} else if(type == 2) {
-		vec2  _p = v_vTexcoord - center;
-		float _a = atan(_p.y, _p.x) + angle;
-		prog = (_a - floor(_a / TAU) * TAU) / TAU;
-	}
-	prog = prog + shift;
-	if(gradient_loop == 1) { 
-		prog = abs(prog);
-		if(prog > 1.) {
-			if(prog == floor(prog))
-				prog = 1.;
-			else 
-				prog = fract(prog);
-		}
-	}
+	vec2 px = v_vTexcoord;
+	px.x *= float(BATCH_SIZE);
+	float value = number[int(px.x)];
+	float grey  = (value - range[0]) / (range[1] - range[0]);
 	
-	vec4 col = gradientEval(prog);
+	gl_FragColor = vec4(0.);
 	
-	gl_FragColor = vec4(col.rgb, texture2D( gm_BaseTexture, v_vTexcoord ).a);
+	if(mode == 0) {
+	    gl_FragColor = vec4(vec3(grey), 1.);
+	} else if(mode == 1) {
+		vec4 color = gradientEval(grey);
+		gl_FragColor = color;
+	}
 }
