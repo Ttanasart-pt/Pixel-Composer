@@ -3,8 +3,8 @@ function rangeBox(_type, _onModify) : widget() constructor {
 	extra_data = { linked : false };
 	
 	tooltip	= new tooltipSelector("Value Type", [
-		__txt("Random Range"),
-		__txt("Constant"),
+		__txtx("widget_range_random",   "Random Range"),
+		__txtx("widget_range_constant", "Constant"),
 	]);
 	
 	onModifyIndex = function(index, val) { 

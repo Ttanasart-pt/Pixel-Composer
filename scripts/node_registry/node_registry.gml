@@ -31,8 +31,8 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor { #regio
 		return self;
 	}
 	
-	static getName    = function() { return name;		/*__txt_node_name(node, name);		 */ }
-	static getTooltip = function() { return tooltip;	/*__txt_node_tooltip(node, tooltip); */ }
+	static getName    = function() { return __txt_node_name(node, name);	   }
+	static getTooltip = function() { return __txt_node_tooltip(node, tooltip); }
 	
 	static build = function(_x = 0, _y = 0, _group = PANEL_GRAPH.getCurrentContext(), _param = {}) {
 		var _node;
@@ -680,6 +680,7 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor { #regio
 			
 			ds_list_add(node, "Debug");
 			addNodeObject(node, "Print",		s_node_print,		"Node_Print",		[1, Node_Print], ["debug log"], "Display text to notification.").setVersion(1145);
+			addNodeObject(node, "Widget Test",	s_node_print,		"Node_Widget_Test",	[1, Node_Widget_Test]);
 			
 			ds_list_add(node, "System");
 			addNodeObject(node, "Execute Shell",	s_node_shell_excecute,	"Node_Shell",		[1, Node_Shell], ["terminal", "execute", "run"], "Execute shell script.").setVersion(11530);

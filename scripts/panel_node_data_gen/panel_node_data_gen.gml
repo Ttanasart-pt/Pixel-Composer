@@ -90,16 +90,24 @@ function Panel_Node_Data_Gen() : PanelContent() constructor {
 		
 		for( var i = 0; i < ds_list_size(_b.inputs); i++ ) {
 			_din[i] = __node_data_clone(_b.inputs[| i]);
+			var _in = _b.inputs[| i];
 			
 			_jin[i] = {
-				type:	 _b.inputs[| i].type,
-				visible: _b.inputs[| i].visible? 1 : 0,
+				type:	 _in.type,
+				visible: _in.visible? 1 : 0,
 			};
 			
 			_lin[i] = {
-				name:	 _b.inputs[| i]._initName,
-				tooltip: _b.inputs[| i].tooltip,
+				name:	 _in._initName,
+				tooltip: _in.tooltip,
 			};
+			
+			switch(_in.display_type) {
+				case VALUE_DISPLAY.enum_button :
+				case VALUE_DISPLAY.enum_scroll :
+					_lin[i].display_data = _in.display_data;
+					break;
+			}
 		}
 		
 		for( var i = 0; i < ds_list_size(_b.outputs); i++ ) {

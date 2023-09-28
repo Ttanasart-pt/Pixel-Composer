@@ -12,7 +12,7 @@ function shell_execute(path, command, ref = noone) {
 	
 	try {
 		var res = execute_shell(path, command);
-		noti_status("Execute shell complete", THEME.noti_icon_console, COLORS._main_accent, ref);
+		noti_status("Execute shell complete", THEME.noti_icon_console,, ref);
 	} catch(e) {
 		noti_warning($"Execute shell failed: {e}", THEME.noti_icon_console_failed, COLORS._main_value_negative, ref);
 	}

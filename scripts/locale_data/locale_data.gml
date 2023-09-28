@@ -1,7 +1,7 @@
 #region locale
 	globalvar LOCALE, TEST_LOCALE;
 	LOCALE = {}
-	TEST_LOCALE = true;
+	TEST_LOCALE = false;
 	
 	function __initLocale() {
 		var lfile = $"data/locale/en.zip";
@@ -37,10 +37,12 @@
 		gml_pragma("forceinline");
 		
 		if(TEST_LOCALE) {
-			if(!struct_has(LOCALE.word, key) && !struct_has(LOCALE.ui, key))
+			if(!struct_has(LOCALE.word, key) && !struct_has(LOCALE.ui, key)) {
 				show_debug_message($"LOCALE: \"{key}\": \"{def}\",");
+				//return def;
+			}
 			
-			return def;
+			return "";
 		}
 		
 		if(struct_has(LOCALE.word, key))
@@ -60,20 +62,32 @@
 		return __txtx(prefix + key, txt);
 	}
 	
+	function __txta(txt) {
+		var _txt = __txt(txt);
+		for(var i = 1; i < argument_count; i++)
+			_txt = string_replace_all(_txt, "{" + string(i) + "}", string(argument[i]));
+		
+		return _txt;
+	}
+	
 	function __txt_node_name(node, def = "") {
 		gml_pragma("forceinline");
 		
-		if(struct_has(LOCALE.node, node))
-			return LOCALE.node[$ node].name;
+		if(!struct_has(LOCALE.node, node)) 
+			return def;
+			
+		if(TEST_LOCALE) return "";
 		return def;
 	}
 	
 	function __txt_node_tooltip(node, def = "") {
 		gml_pragma("forceinline");
 		
-		if(struct_has(LOCALE.node, node))
-			return LOCALE.node[$ node].tooltip;
-		return def;
+		if(!struct_has(LOCALE.node, node))
+			return def;
+			
+		if(TEST_LOCALE) return "";
+		return LOCALE.node[$ node].tooltip;
 	}
 	
 	function __txt_junction_name(node, type, index, def = "") {
@@ -86,6 +100,7 @@
 		var lst = type == JUNCTION_CONNECT.input? nde.inputs : nde.outputs;
 		if(index >= array_length(lst)) return def;
 		
+		if(TEST_LOCALE) return "";
 		return lst[index].name;
 	}
 	
@@ -99,7 +114,24 @@
 		var lst = type == JUNCTION_CONNECT.input? nde.inputs : nde.outputs;
 		if(index >= array_length(lst)) return def;
 		
+		if(TEST_LOCALE) return "";
 		return lst[index].tooltip;
 	}
 	
+	function __txt_junction_data(node, type, index, def = []) {
+		gml_pragma("forceinline");
+		
+		if(!struct_has(LOCALE.node, node))
+			return def;
+		
+		var nde = LOCALE.node[$ node];
+		var lst = type == JUNCTION_CONNECT.input? nde.inputs : nde.outputs;
+		if(index >= array_length(lst)) return def;
+		
+		if(!struct_has(lst[index], "display_data"))
+			return def;
+			
+		if(TEST_LOCALE) return [ "" ];
+		return lst[index].display_data;
+	}
 #endregion

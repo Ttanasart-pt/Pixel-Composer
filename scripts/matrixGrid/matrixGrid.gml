@@ -84,7 +84,9 @@ function matrixGrid(_type, _size, _onModify, _unit = noone) : widget() construct
 		x = _x;
 		y = _y;
 		w = _w;
-		h = _h;
+		
+		var hh = TEXTBOX_HEIGHT + ui(8);
+		h = hh * size - ui(8);
 		
 		if(extras && instanceof(extras) == "buttonClass") {
 			extras.setFocusHover(active, hover);			
@@ -105,7 +107,6 @@ function matrixGrid(_type, _size, _onModify, _unit = noone) : widget() construct
 		b_link.icon_blend = linked? COLORS._main_accent : COLORS._main_icon;
 		b_link.tooltip = linked? __txt("Unlink values") : __txt("Link values");
 		
-		var hh = TEXTBOX_HEIGHT + ui(8);
 		var th = hh * size - ui(8);
 		
 		var bx = _x;
@@ -131,6 +132,6 @@ function matrixGrid(_type, _size, _onModify, _unit = noone) : widget() construct
 		
 		resetFocus();
 		
-		return th;
+		return h;
 	}
 }

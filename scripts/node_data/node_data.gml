@@ -20,7 +20,8 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		var str = string_replace_all(name, " ", "_");
 			str = string_replace_all(str,  "/", "");
 			str = string_replace_all(str,  "-", "");
-			
+		
+		ds_map_delete(PROJECT.nodeNameMap, internalName);
 		internalName = str + string(irandom_range(10000, 99999)); 
 		PROJECT.nodeNameMap[? internalName] = self;
 	} #endregion
@@ -35,7 +36,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		run_in(1, function() { 
 			if(display_name != "") return;
 			resetInternalName();
-			display_name = name; //__txt_node_name(instanceof(self), name);
+			display_name = __txt_node_name(instanceof(self), name);
 		});
 	} #endregion
 	

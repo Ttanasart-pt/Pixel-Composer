@@ -60,7 +60,7 @@ function transformBox(_onModify) : widget() constructor {
 		var lbw = ui(80);
 		
 		draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text_inner);
-		draw_text_add(_x, _y + tbh / 2, "Position");
+		draw_text_add(_x, _y + tbh / 2, __txt("Position"));
 		
 		var tbw = (_w - lbw) / 2 - ui(4);
 		tb[TRANSFORM.pos_x].draw(_x + lbw,		         _y, tbw, tbh, _data[TRANSFORM.pos_x], _m);
@@ -76,7 +76,7 @@ function transformBox(_onModify) : widget() constructor {
 		_y += ui(72);
 		
 		draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text_inner);
-		draw_text_add(_x, _y + tbh / 2, "Scale");
+		draw_text_add(_x, _y + tbh / 2, __txt("Scale"));
 		
 		var tbw = array_length(_data) > 4? (_w - lbw) / 2 - ui(4) : _w - lbw;
 		

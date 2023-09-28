@@ -84,7 +84,7 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			var ty  = _y;
 			
 			draw_set_text(f_p0, fa_left, fa_top, COLORS._main_text);
-			draw_text_add(_x + ui(16), ty + ui(4), "Bones");
+			draw_text_add(_x + ui(16), ty + ui(4), __txt("Bones"));
 			
 			ty += ui(32);
 		
@@ -192,7 +192,7 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		//draw_line(_x + 16, ty - ui(4), _x + _w - 16, ty - ui(4));
 		
 		draw_set_text(f_p0, fa_left, fa_top, COLORS._main_text);
-		draw_text_add(_x + ui(16), ty + ui(4), "Surfaces");
+		draw_text_add(_x + ui(16), ty + ui(4), __txt("Surfaces"));
 			
 		ty += ui(32);
 		

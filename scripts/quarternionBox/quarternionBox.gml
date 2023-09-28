@@ -17,7 +17,7 @@ function quarternionBox(_onModify) : widget() constructor {
 	
 	size    = 4;
 	axis    = [ "x", "y", "z", "w" ];
-	tooltip = new tooltipSelector("Angle type", ["Quaternion", "Euler"]);
+	tooltip = new tooltipSelector("Angle type", [__txt("Quaternion"), __txt("Euler")]);
 	
 	disp_w    = noone;
 	clickable = true;

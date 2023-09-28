@@ -160,14 +160,14 @@ function variable_editor(nodeVal) constructor {
 				 tb_step.setFocusHover(_focus, _hover);
 				
 				draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text_sub);
-				draw_text(_x + ui(8), _y + wd_h / 2, "Range");
+				draw_text(_x + ui(8), _y + wd_h / 2, __txt("Range"));
 						
 				vb_range.draw(_x + lb_w, _y, _w - lb_w, wd_h, slider_range, noone, _m);
 				_h += wd_h + ui(4);
 				_y += wd_h + ui(4);
 				
 				draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text_sub);
-				draw_text(_x + ui(8), _y + wd_h / 2, "Step");
+				draw_text(_x + ui(8), _y + wd_h / 2, __txt("Step"));
 				
 				 tb_step.draw(_x + lb_w, _y, _w - lb_w, wd_h, slider_step , _m);
 				_h += wd_h + ui(8);

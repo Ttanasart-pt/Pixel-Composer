@@ -574,6 +574,7 @@
     {"name":"draw_text_delimiter","order":14,"path":"scripts/draw_text_delimiter/draw_text_delimiter.yy",},
     {"name":"s_node_path_anchor","order":13,"path":"sprites/s_node_path_anchor/s_node_path_anchor.yy",},
     {"name":"node_array_get","order":10,"path":"scripts/node_array_get/node_array_get.yy",},
+    {"name":"node_widget_test","order":16,"path":"scripts/node_widget_test/node_widget_test.yy",},
     {"name":"node_pb_fx_highlight","order":1,"path":"scripts/node_pb_fx_highlight/node_pb_fx_highlight.yy",},
     {"name":"Apollo","order":5,"path":"extensions/Apollo/Apollo.yy",},
     {"name":"panel_graph_grid_settings","order":7,"path":"scripts/panel_graph_grid_settings/panel_graph_grid_settings.yy",},

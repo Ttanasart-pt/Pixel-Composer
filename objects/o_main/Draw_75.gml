@@ -120,7 +120,7 @@ if(OS == os_windows && gameframe_is_minimized()) exit;
 			case "Bool" :
 				draw_set_alpha(0.5);
 				draw_set_text(f_h3, fa_center, fa_center, COLORS._main_text);
-				draw_text_bbox({ xc: mouse_mx, yc: mouse_my, w: ui(128), h: ui(24) }, DRAGGING.data? "True" : "False");
+				draw_text_bbox({ xc: mouse_mx, yc: mouse_my, w: ui(128), h: ui(24) }, __txt(DRAGGING.data? "True" : "False"));
 				draw_set_alpha(1);
 				break;
 			default:

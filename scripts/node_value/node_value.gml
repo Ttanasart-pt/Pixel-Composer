@@ -454,20 +454,21 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		index = _connect == JUNCTION_CONNECT.input? ds_list_size(node.inputs) : ds_list_size(node.outputs);
 		type  = _type;
 		forward = true;
-		
 		_initName = _name;
-		name = __txt_junction_name(instanceof(node), type, index, _name);
-		name = _name;
+		
+		static updateName = function(_name) {
+			name         = _name;
+			internalName = string_lower(string_replace_all(name, " ", "_"));
+			name_custom  = true;
+		} updateName(_name);
+		
+		name_custom = false;
 		
 		switch(type) {
 			case VALUE_TYPE.PCXnode : 
 				accept_array = false; 
 				break;
 		}
-		
-		static updateName = function() {
-			internalName = string_lower(string_replace_all(name, " ", "_"));
-		} updateName();
 		
 		if(struct_has(node, "inputMap")) {
 			if(_connect == JUNCTION_CONNECT.input)       node.inputMap[?  internalName] = self;
@@ -603,6 +604,11 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			ds_list_add(animator.values, new valueKey(vals[i][0], vals[i][1], animator));
 			
 		return self;
+	} #endregion
+	
+	static getName = function() { #region
+		if(name_custom) return name;
+		return __txt_junction_name(instanceof(node), connect_type, index, name);
 	} #endregion
 	
 	static resetValue = function() { setValue(def_val); }
@@ -883,6 +889,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						extract_node = "";
 						break; #endregion
 					case VALUE_DISPLAY.enum_scroll :	#region
+						display_data = __txt_junction_data(instanceof(node), connect_type, index, display_data);
+						
 						editWidget = new scrollBox(display_data, function(val) {
 							if(val == -1) return;
 							return setValueDirect(toNumber(val)); 
@@ -896,6 +904,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						extract_node = "";
 						break; #endregion
 					case VALUE_DISPLAY.enum_button :	#region
+						display_data = __txt_junction_data(instanceof(node), connect_type, index, display_data);
+						
 						editWidget = new buttonGroup(display_data, function(val) { 
 							return setValueDirect(val);
 						} );
@@ -2224,6 +2234,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		_map.animators = _anims;
 		_map.data = extra_data;
 		
+		_map.name_custom = name_custom;
+		
 		return _map;
 	} #endregion
 	
@@ -2250,6 +2262,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		draw_line_shift_x = struct_try_get(_map, "shift_x");
 		draw_line_shift_y = struct_try_get(_map, "shift_y");
+		
+		name_custom = struct_try_get(_map, "name_custom", false);
 		
 		animator.deserialize(struct_try_get(_map, "raw_value"), scale);
 		

@@ -48,7 +48,7 @@ function cornerBox(_onModify, _unit = noone) : widget() constructor {
 	}
 	
 	static drawParam = function(params) {
-		return draw(params.x, params.y, params.data, params.m);
+		return draw(params.x + params.w / 2, params.y + ui(32), params.data, params.m);
 	}
 	
 	static draw = function(_x, _y, _data, _m) {

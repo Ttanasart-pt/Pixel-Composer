@@ -253,8 +253,7 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			
 			if(ds_map_exists(boneMap, _id)) {
 				var _inp  = boneMap[? _id];
-				_inp.name = bone.name;
-				_inp.updateName();
+				_inp.updateName(bone.name);
 				
 				var _trn  = _inp.getValue();
 				

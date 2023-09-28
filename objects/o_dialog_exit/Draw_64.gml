@@ -24,13 +24,13 @@ if !ready exit;
 
 #region text
 	var py  = dialog_y + ui(16);
-	var txt = $"Project modified";
+	var txt = __txt($"Project modified");
 	draw_set_text(f_h5, fa_left, fa_top, COLORS._main_text);
 	draw_text(dialog_x + ui(24), py, txt);
 	py += line_get_height(, 4);
 	
 	draw_set_text(f_p0, fa_left, fa_top, COLORS._main_text);
-	var txt = $"Save project '{filename_name(project.path)}' before exit?";
+	var txt = __txta("Save project '{1}' before exit?", filename_name(project.path));
 	draw_text(dialog_x + ui(24), py, txt);
 	
 	var bw = ui(96), bh = BUTTON_HEIGHT;

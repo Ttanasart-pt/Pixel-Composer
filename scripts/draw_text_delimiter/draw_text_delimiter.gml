@@ -7,7 +7,7 @@ function draw_text_delimiter(ch_x, ch_y, _str) {
 		var ch = string_char_at(_str, i);
 		
 		if(ch == " ") {
-			ch = "<space>";
+			ch = __txtx("delimiter_space", "<space>");
 			draw_set_color(COLORS._main_text_sub);
 		} else
 			draw_set_color(cc);

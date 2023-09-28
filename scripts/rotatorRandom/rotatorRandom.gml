@@ -11,7 +11,12 @@ function rotatorRandom(_onModify) : widget() constructor {
 	tb_min_1 = new textBox(TEXTBOX_INPUT.number, function(val) { return onModify(3, val); } ).setSlidable(true, 1);
 	tb_max_1 = new textBox(TEXTBOX_INPUT.number, function(val) { return onModify(4, val); } ).setSlidable(true, 1);
 	
-	tooltip    = new tooltipSelector("Mode", ["Range", "Span", "Double Range", "Double Span"]);
+	tooltip    = new tooltipSelector("Mode", [
+		__txtx("widget_rotator_random_range",        "Range"), 
+		__txtx("widget_rotator_random_span",         "Span"), 
+		__txtx("widget_rotator_random_double_range", "Double Range"), 
+		__txtx("widget_rotator_random_double_span",  "Double Span")
+	]);
 	
 	static setInteract = function(interactable = noone) { 
 		self.interactable = interactable;

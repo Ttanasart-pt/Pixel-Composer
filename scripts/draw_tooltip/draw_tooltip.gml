@@ -156,9 +156,9 @@ function draw_tooltip_atlas(atlas) {
 		draw_rectangle(sx, _y, sx + ui(48), _y + ui(48), 1);
 		
 		draw_set_text(f_p3, fa_left, fa_top, COLORS._main_text_sub);
-		draw_text_add(sx + ui( 56), _y + ui( 0), "Position");
-		draw_text_add(sx + ui( 56), _y + ui(16), "Rotation");
-		draw_text_add(sx + ui( 56), _y + ui(32), "Scale");
+		draw_text_add(sx + ui( 56), _y + ui( 0), __txt("Position"));
+		draw_text_add(sx + ui( 56), _y + ui(16), __txt("Rotation"));
+		draw_text_add(sx + ui( 56), _y + ui(32), __txt("Scale"));
 		
 		draw_set_text(f_p3, fa_right, fa_top, COLORS._main_text);
 		draw_text_add(sx + ui(160), _y + ui( 0), atl.position);

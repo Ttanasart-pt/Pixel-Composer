@@ -17,6 +17,8 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 	var breakLine = lineBreak || jun.expUse;
 	if(jun.type == VALUE_TYPE.text) breakLine = true;
 	
+	var _name = jun.getName();
+	
 	var butx = xx;
 	if(jun.connect_type == JUNCTION_CONNECT.input && jun.isAnimable() && !jun.expUse) { #region animation
 		var index = jun.value_from == noone? jun.is_anim : 2;
@@ -32,7 +34,7 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 				if(jun.value_from != noone)
 					jun.removeFrom();
 				else {
-					recordAction(ACTION_TYPE.var_modify, jun.animator, [ jun.is_anim, "is_anim", jun.name + " animation" ]);
+					recordAction(ACTION_TYPE.var_modify, jun.animator, [ jun.is_anim, "is_anim", _name + " animation" ]);
 					jun.setAnim(!jun.is_anim);
 					anim_hold = jun.is_anim;
 				}
@@ -74,15 +76,15 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 	}
 	
 	if(global_var)
-		if(string_pos(" ", jun.name)) cc = COLORS._main_value_negative;
+		if(string_pos(" ", _name)) cc = COLORS._main_value_negative;
 	
 	draw_set_text(breakLine? f_p0 : f_p1, fa_left, fa_center, cc);
-	draw_text_add(xx + ui(40), lb_y - ui(2), jun.name);
-	var lb_w = string_width(jun.name) + ui(48);
+	draw_text_add(xx + ui(40), lb_y - ui(2), _name);
+	var lb_w = string_width(_name) + ui(48);
 			
 	#region tooltip
 		if(jun.tooltip != "") {
-			var tx = xx + ui(40) + string_width(jun.name) + ui(16);
+			var tx = xx + ui(40) + string_width(_name) + ui(16);
 			var ty = lb_y - ui(1);
 					
 			if(point_in_circle(_m[0], _m[1], tx, ty, ui(10))) {
@@ -187,7 +189,7 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 				if(buttonInstant(THEME.button_hide, bx - ui(12), by - ui(12), ui(24), ui(24), _m, _focus, _hover, __txtx("panel_inspector_pop_text", "Pop up Editor"), THEME.text_popup, 0, cc) == 2) {
 					if(jun.expUse)	jun.popup_dialog = dialogPanelCall(new Panel_Text_Editor(jun.express_edit, function() { return context.expression;  }, jun));
 					else			jun.popup_dialog = dialogPanelCall(new Panel_Text_Editor(jun.editWidget,   function() { return context.showValue(); }, jun));
-					jun.popup_dialog.content.title = $"{jun.node.name} - {jun.name}";
+					jun.popup_dialog.content.title = $"{jun.node.name} - {_name}";
 				}
 			}
 		}

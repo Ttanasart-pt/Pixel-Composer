@@ -31,7 +31,11 @@ function controlPointBox(_onModify) : widget() constructor {
 	
 	sW   = new slider(0, 32, 0.1, function(val) { onModify(PUPPET_CONTROL.width,  toNumber(val)); });
 	
-	sMode = ["Move", "Wind"];
+	sMode = [
+		__txtx("widget_control_point_move", "Move"), 
+		__txtx("widget_control_point_wind", "Wind"), 
+	];
+	
 	scMode = new scrollBox(
 		sMode, 
 		function(val) { onModify(PUPPET_CONTROL.mode, toNumber(val)); }
@@ -97,18 +101,18 @@ function controlPointBox(_onModify) : widget() constructor {
 				yy += TEXTBOX_HEIGHT + ui(8);
 		
 				draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text);
-				draw_text(_x, yy + ui(17), "radius");
+				draw_text(_x, yy + ui(17), __txt("radius"));
 				sW.draw(_x + lw, yy, _w - lw, TEXTBOX_HEIGHT, _wid, _m);
 				yy += TEXTBOX_HEIGHT + ui(8);
 				break;
 			case PUPPET_FORCE_MODE.wind: 
 				draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text);
-				draw_text(_x, yy + ui(17), "strength");
+				draw_text(_x, yy + ui(17), __txt("strength"));
 				tbFx.draw(_x + lw, yy, _w - lw, TEXTBOX_HEIGHT, _fx, _m);
 				yy += TEXTBOX_HEIGHT + ui(8);
 				
 				draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text);
-				draw_text(_x, yy + ui(17), "width");
+				draw_text(_x, yy + ui(17), __txt("width"));
 				tbW.draw(_x + lw, yy, _w - lw, TEXTBOX_HEIGHT, _wid, _m);
 				yy += TEXTBOX_HEIGHT + ui(8);
 				

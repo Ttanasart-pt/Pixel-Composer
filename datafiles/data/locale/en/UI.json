@@ -352,7 +352,17 @@
     "preview_onion_skin_settings": "Onion skin Settings",
     "project_graphGrid_color": "Grid color",
     "project_graphGrid_opacity": "Grid opacity",
+    "project_modified": "Project modified",
     "project_settings": "Project Settings",
+    "save_project_'{1}'_before_exit?": "Save project '{1}' before exit?",
+    "widget_control_point_move": "Move",
+    "widget_control_point_wind": "Wind",
+    "widget_range_constant": "Constant",
+    "widget_range_random": "Random Range",
+    "widget_rotator_random_double_range": "Double Range",
+    "widget_rotator_random_double_span": "Double Span",
+    "widget_rotator_random_range": "Range",
+    "widget_rotator_random_span": "Span",
 
     "" : ""
 }

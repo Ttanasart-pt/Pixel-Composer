@@ -17,8 +17,8 @@
 		
 		location = noone;
 	
-		static getName    = function() { return name;		/*__txt_node_name(node, name);		 */ }
-		static getTooltip = function() { return tooltip;	/*__txt_node_tooltip(node, tooltip); */ }
+		static getName    = function() { return name;	 }
+		static getTooltip = function() { return tooltip; }
 		
 		static build = function(_x = 0, _y = 0, _group = PANEL_GRAPH.getCurrentContext(), _param = {}) {
 			var _n = [];

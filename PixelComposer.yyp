@@ -1158,6 +1158,7 @@
     {"id":{"name":"draw_text_delimiter","path":"scripts/draw_text_delimiter/draw_text_delimiter.yy",},},
     {"id":{"name":"s_node_path_anchor","path":"sprites/s_node_path_anchor/s_node_path_anchor.yy",},},
     {"id":{"name":"node_array_get","path":"scripts/node_array_get/node_array_get.yy",},},
+    {"id":{"name":"node_widget_test","path":"scripts/node_widget_test/node_widget_test.yy",},},
     {"id":{"name":"node_pb_fx_highlight","path":"scripts/node_pb_fx_highlight/node_pb_fx_highlight.yy",},},
     {"id":{"name":"Apollo","path":"extensions/Apollo/Apollo.yy",},},
     {"id":{"name":"node_lua_compute","path":"scripts/node_lua_compute/node_lua_compute.yy",},},

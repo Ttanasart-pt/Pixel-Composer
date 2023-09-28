@@ -493,13 +493,13 @@ function Panel_Inspector() : PanelContent() constructor {
 			
 			if(!jun.show_in_inspector || jun.type == VALUE_TYPE.object) continue;
 			if(filter_text != "") {
-				var pos = string_pos(filter_text, string_lower(jun.name));
+				var pos = string_pos(filter_text, string_lower(jun.getName()));
 				if(pos == 0) continue;
 			}
 			
 			#region ++++ draw widget ++++
 				var lb_h    = line_get_height(f_p0) + ui(8);
-				var lb_w    = line_get_width(jun.name, f_p0) + ui(16);
+				var lb_w    = line_get_width(jun.getName(), f_p0) + ui(16);
 				var padd    = ui(8);
 			
 				var _selY	= yy - ui(0);

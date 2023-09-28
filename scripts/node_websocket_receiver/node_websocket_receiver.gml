@@ -115,7 +115,7 @@ function Node_Websocket_Receiver(_x, _y, _group = noone) : Node(_x, _y, _group) 
 		draw_set_alpha(0.75);
 		draw_text_add(bbox.xc, bbox.y0, $"Port {port}", _ts);
 		draw_set_valign(fa_bottom)
-		draw_text_add(bbox.xc, bbox.y1, $"{connected_device} Connected", _ts);
+		draw_text_add(bbox.xc, bbox.y1, $"{connected_device} " + __txt("Connected"), _ts);
 		draw_set_alpha(1);
 		
 		draw_sprite_fit(THEME.node_websocket_receive, 0, bbox.xc, (_y0 + _y1) / 2, bbox.w, _y1 - _y0, cc, aa);

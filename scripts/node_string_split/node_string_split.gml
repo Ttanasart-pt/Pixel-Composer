@@ -30,7 +30,7 @@ function Node_String_Split(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		
 		if(string_length(str) == 0) {
 			draw_set_text(f_p0b, fa_center, fa_center, COLORS._main_text_sub);
-			draw_text_cut(cx, cy, "None", w - ui(6), _s);
+			draw_text_cut(cx, cy, __txt("None"), w - ui(6), _s);
 			return;
 		}
 		
