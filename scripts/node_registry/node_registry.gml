@@ -645,7 +645,7 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor { #regio
 		#endregion
 		
 		var node = ds_list_create(); #region
-		addNodeCatagory("Node", node);
+		addNodeCatagory("Misc", node);
 			ds_list_add(node, "Control");
 			addNodeObject(node, "Condition",	s_node_condition,	"Node_Condition",	[1, Node_Condition],, "Given a condition, output one value if true, another value is false.");
 			addNodeObject(node, "Switch",		s_node_switch,		"Node_Switch",		[1, Node_Switch],, "Given an index, output value base on index matching.").setVersion(1090);
@@ -680,6 +680,9 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor { #regio
 			
 			ds_list_add(node, "Debug");
 			addNodeObject(node, "Print",		s_node_print,		"Node_Print",		[1, Node_Print], ["debug log"], "Display text to notification.").setVersion(1145);
+			
+			ds_list_add(node, "System");
+			addNodeObject(node, "Execute Shell",	s_node_shell_excecute,	"Node_Shell",		[1, Node_Shell], ["terminal", "execute", "run"], "Execute shell script.").setVersion(11530);
 		#endregion
 		
 		var actions = ds_list_create();

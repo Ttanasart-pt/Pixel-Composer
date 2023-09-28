@@ -1,7 +1,8 @@
 function Inspector_Custom_Renderer(drawFn, registerFn = noone) : widget() constructor {
 	h = 64;
 	self.draw = drawFn;
-	register  = registerFn;
+	
+	if(registerFn != noone) register = registerFn;
 }
 
 function Panel_Inspector() : PanelContent() constructor {
@@ -401,7 +402,9 @@ function Panel_Inspector() : PanelContent() constructor {
 				draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text);
 				draw_text_add(ui(8), yy + hg / 2, edt[0]);
 				
-				edt[2].drawParam(new widgetParam(wx0, yy, ww, hg, val, {}, _m, x + contentPane.x, y + contentPane.y));
+				var _param = new widgetParam(wx0, yy, ww, hg, val, {}, _m, x + contentPane.x, y + contentPane.y);
+				    _param.s = hg;
+				edt[2].drawParam(_param);
 				
 				yy += hg + ui(8);
 				hh += hg + ui(8);
@@ -461,11 +464,9 @@ function Panel_Inspector() : PanelContent() constructor {
 						
 						continue;
 					} else if(is_struct(jun_disp) && instanceof(jun_disp) == "Inspector_Custom_Renderer") {
-						if(pFOCUS) jun_disp.register(contentPane);
+						if(pFOCUS && is_callable(jun_disp.register)) jun_disp.register(contentPane);
 						jun_disp.rx = ui(16) + x;
 						jun_disp.ry = top_bar_h + y;
-						if(is_callable(jun_disp.register))
-							jun_disp.register(contentPane);
 						
 						hh += jun_disp.draw(ui(6), yy, con_w - ui(12), _m, _hover, pFOCUS) + ui(8);
 						continue;

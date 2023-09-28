@@ -1864,8 +1864,8 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 	#endregion
 	
 	function dropFile(path) { #region
-		if(node_hovering && node_hovering.on_dragdrop_file != -1)
-			return node_hovering.on_dragdrop_file(path);
+		if(node_hovering && is_callable(node_hovering.on_drop_file))
+			return node_hovering.on_drop_file(path);
 		return false;
 	} #endregion
 	

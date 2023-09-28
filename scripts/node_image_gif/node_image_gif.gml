@@ -56,7 +56,9 @@ function Node_Image_gif(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	surfaces = [];
 	
-	on_dragdrop_file = function(path) {
+	on_drop_file = function(path) {
+		inputs[| 0].setValue(path);
+		
 		if(updatePaths(path)) {
 			doUpdate();
 			return true;

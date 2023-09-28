@@ -90,13 +90,14 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		inspectInput1 = nodeValue("Toggle execution", self, JUNCTION_CONNECT.input, VALUE_TYPE.action, false).setVisible(true, true);
 		inspectInput2 = nodeValue("Toggle execution", self, JUNCTION_CONNECT.input, VALUE_TYPE.action, false).setVisible(true, true);
 		
+		autoUpdatedTrigger = true;
+		updatedTrigger = nodeValue("Updated", self, JUNCTION_CONNECT.output, VALUE_TYPE.trigger, false).setVisible(true, true);
+		
 		insp1UpdateTooltip  = __txtx("panel_inspector_execute", "Execute node");
 		insp1UpdateIcon     = [ THEME.sequence_control, 1, COLORS._main_value_positive ];
 	
 		insp2UpdateTooltip = __txtx("panel_inspector_execute", "Execute node");
 		insp2UpdateIcon    = [ THEME.sequence_control, 1, COLORS._main_value_positive ];
-	
-		updateAction = nodeValue("Update", self, JUNCTION_CONNECT.input, VALUE_TYPE.action, false).setVisible(true, true);
 		
 		is_dynamic_input  = false;
 		auto_input		  = false;
@@ -106,8 +107,14 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	#endregion
 	
 	#region --- attributes ----
-		attributes		 = {};
-		attributeEditors = [];
+		attributes		 = {
+			show_update_trigger: false
+		};
+		
+		attributeEditors = [
+			"Node",
+			["Update trigger", function() { return attributes.show_update_trigger; }, new checkBox(function() { attributes.show_update_trigger = !attributes.show_update_trigger; }) ]
+		];
 	#endregion
 	
 	#region ---- preview ----
@@ -171,8 +178,6 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	#region ---- 3d ----
 		is_3D = false;
 	#endregion
-	
-	on_dragdrop_file = -1;
 	
 	static createNewInput = noone;
 	
@@ -354,6 +359,8 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		
 		if(hasInspector1Update()) inspectInput1.name = insp1UpdateTooltip;
 		if(hasInspector2Update()) inspectInput2.name = insp2UpdateTooltip;
+		
+		updatedTrigger.setValue(false);
 	} #endregion
 	
 	static doStepBegin = function() {}
@@ -394,7 +401,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	static inspectorStep = function() {}
 	
 	static doUpdate = function() { #region
-		if(SAFE_MODE) return;
+		if(SAFE_MODE)    return;
 		if(NODE_EXTRACT) return;
 		
 		var sBase = surface_get_target();
@@ -436,6 +443,8 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 			var trigger = inspectInput2.getValue();
 			if(trigger) onInspector2Update();
 		}
+		
+		if(autoUpdatedTrigger) updatedTrigger.setValue(true);
 		LOG_BLOCK_END();
 	} #endregion
 	
@@ -580,6 +589,9 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 			ind++;
 		}
 		
+		updatedTrigger.x = xx + w * _s;
+		updatedTrigger.y = yy + 10;
+		
 		var inamo = input_display_list == -1? ds_list_size(inputs) : array_length(input_display_list);
 		var _in = yy + ui(junction_draw_pad_y) * _s;
 		
@@ -700,6 +712,9 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 			
 		if(hasInspector2Update() && inspectInput2.drawJunction(_s, _mx, _my))
 			hover = inspectInput2;
+		
+		if(attributes.show_update_trigger && updatedTrigger.drawJunction(_s, _mx, _my))
+			hover = updatedTrigger;
 		
 		return hover;
 	} #endregion
@@ -918,10 +933,12 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		}
 	} #endregion
 	
-	static drawNode = function(_x, _y, _mx, _my, _s, display_parameter) { #region
+	static drawNode = function(_x, _y, _mx, _my, _s, display_parameter = noone) { #region
 		if(draw_graph_culled) return;
 		if(!active) return;
-		self.display_parameter = display_parameter;
+		
+		if(display_parameter != noone)
+			self.display_parameter = display_parameter;
 		
 		var xx = x * _s + _x;
 		var yy = y * _s + _y;
@@ -1265,7 +1282,13 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		return false;
 	} #endregion
 	
+	on_drop_file = noone;
 	static onDrop = function(dragObj) { #region
+		if(dragObj.type == "Asset" && is_callable(on_drop_file)) {
+			on_drop_file(dragObj.data.path);
+			return;
+		}
+		
 		for( var i = 0; i < ds_list_size(inputs); i++ ) {
 			if(dragObj.type == inputs[| i].drop_key) {
 				inputs[| i].setValue(dragObj.data);
@@ -1350,6 +1373,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		var _trigger = [];
 		array_push(_trigger, inspectInput1.serialize(scale, preset));
 		array_push(_trigger, inspectInput2.serialize(scale, preset));
+		array_push(_trigger, updatedTrigger.serialize(scale, preset));
 		_map.inspectInputs = _trigger;
 		
 		doSerialize(_map);
@@ -1489,6 +1513,9 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 			var insInp = load_map.inspectInputs;
 			inspectInput1.applyDeserialize(insInp[0], load_scale, preset);
 			inspectInput2.applyDeserialize(insInp[1], load_scale, preset);
+			
+			if(array_length(insInp) > 2)
+				updatedTrigger.applyDeserialize(insInp[2], load_scale, preset);
 		}
 		
 		doApplyDeserialize();

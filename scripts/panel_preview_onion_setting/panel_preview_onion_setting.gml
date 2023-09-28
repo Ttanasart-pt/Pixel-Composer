@@ -23,21 +23,21 @@ function Panel_Preview_Onion_Setting() : Panel_Linear_Setting() constructor {
 				new textBox(TEXTBOX_INPUT.number, function(str) {
 					PROJECT.onion_skin.step = max(1, round(real(str)));	
 				}),
-				__txt("Frame step"),
+				__txtx("onion_skin_frame_step", "Frame step"),
 				function() { return PROJECT.onion_skin.step; }
 			],
 			[
 				new buttonColor(function(color) {
 					PROJECT.onion_skin.color[0] = color;
 				}, self),
-				__txt("Pre Color"),
+				__txtx("onion_skin_pre_color", "Pre Color"),
 				function() { return PROJECT.onion_skin.color[0]; }
 			],
 			[
 				new buttonColor(function(color) {
 					PROJECT.onion_skin.color[1] = color;
 				}, self),
-				__txt("Post Color"),
+				__txtx("onion_skin_post_color", "Post Color"),
 				function() { return PROJECT.onion_skin.color[1]; }
 			],
 			[

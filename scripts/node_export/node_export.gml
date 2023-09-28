@@ -44,6 +44,7 @@ enum NODE_EXPORT_FORMAT {
 function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Export";
 	preview_channel = 1;
+	autoUpdatedTrigger = false;
 	
 	playing = false;
 	played  = 0;
@@ -121,7 +122,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		["%f",  "Frame"],
 		["%i",  "Array index"],
 	];
-	export_template = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) {
+	export_template = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) { #region
 		var _tx = _x + ui(10);
 		var _ty = _y;
 		var _tw = _w - ui(8);
@@ -190,7 +191,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		}
 		
 		return hh;
-	});
+	}); #endregion
 	
 	input_display_list = [
 		["Export",		false], 0, 1, 2, export_template, 
@@ -204,7 +205,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	webp      = working_directory + "webp/webpmux.exe";
 	gifski    = working_directory + "gifski\\win\\gifski.exe";
 	
-	static onValueUpdate = function(_index) {
+	static onValueUpdate = function(_index) { #region
 		var form = inputs[| 3].getValue();
 		
 		if(_index == 3) {
@@ -236,9 +237,9 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				case ".webp" : inputs[| 9].setValue(1); break;
 			}
 		}
-	}
+	} #endregion
 	
-	static extensionCheck = function() {
+	static extensionCheck = function() { #region
 		var _path = inputs[| 1].getValue();
 		var _ext  = filename_ext(_path);
 			
@@ -261,9 +262,9 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				inputs[| 9].setValue(1);
 				break;
 		}
-	}
+	} #endregion
 	
-	static renderWebp = function(temp_path, target_path) {
+	static renderWebp = function(temp_path, target_path) { #region
 		var _path = file_find_first(temp_path + "*.png", 0);
 		var frames = [];
 		
@@ -298,9 +299,9 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		noti.setOnClick(function() { shellOpenExplorer(self.path); }, "Open in explorer", THEME.explorer);
 		
 		PANEL_MENU.setNotiIcon(THEME.noti_icon_tick);
-	}
+	} #endregion
 	
-	static renderGif = function(temp_path, target_path) {
+	static renderGif = function(temp_path, target_path) { #region
 		var loop = inputs[|  5].getValue();
 		var opti = inputs[|  6].getValue();
 		var fuzz = inputs[|  7].getValue();
@@ -333,9 +334,9 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		noti.setOnClick(function() { shellOpenExplorer(self.path); }, "Open in explorer", THEME.explorer);
 		
 		PANEL_MENU.setNotiIcon(THEME.noti_icon_tick);
-	}
+	} #endregion
 	
-	static pathString = function(path, index = 0, _array = false) {
+	static pathString = function(path, index = 0, _array = false) { #region
 		var suff = inputs[|  2].getValue();
 		var form = inputs[|  3].getValue();
 		var strt = inputs[| 11].getValue();
@@ -435,9 +436,9 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		else		s += _ext;
 		
 		return s;
-	}
+	} #endregion
 	
-	static save_surface = function(_surf, _path) {
+	static save_surface = function(_surf, _path) { #region
 		var form = inputs[| 3].getValue();
 		
 		if(form == NODE_EXPORT_FORMAT.gif) {
@@ -479,9 +480,9 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		}
 		
 		return _pathOut;
-	}
+	} #endregion
 	
-	static export = function() { 
+	static export = function() { #region
 		var surf = inputs[|  0].getValue();
 		var path = inputs[|  1].getValue();
 		var suff = inputs[|  2].getValue();
@@ -543,7 +544,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				PANEL_MENU.setNotiIcon(THEME.noti_icon_tick);
 			}
 		}
-	}
+	} #endregion
 	
 	insp1UpdateTooltip   = "Export";
 	insp1UpdateIcon      = [ THEME.sequence_control, 1, COLORS._main_value_positive ];
@@ -551,14 +552,14 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	insp2UpdateTooltip = "Export All";
 	insp2UpdateIcon    = [ THEME.play_all, 0, COLORS._main_value_positive ];
 	
-	static onInspector1Update = function() {
+	static onInspector1Update = function() { #region
 		if(isInLoop())	UPDATE |= RENDER_TYPE.full;
 		else			doInspectorAction();
-	}
+	} #endregion
 	
 	static onInspector2Update = function() { exportAll(); }
 	
-	static doInspectorAction = function() {
+	static doInspectorAction = function() { #region
 		if(LOADING || APPENDING) return;
 		
 		var path = inputs[| 1].getValue();
@@ -571,6 +572,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			PROJECT.animator.rendering = false;
 			
 			export();
+			updatedTrigger.setValue(true);
 			return;
 		}
 		
@@ -584,9 +586,9 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		if(directory_exists(directory))
 			directory_destroy(directory);
 		directory_create(directory);
-	}
+	} #endregion
 	
-	static step = function() {
+	static step = function() { #region
 		var surf = inputs[| 0].getValue();
 		if(is_array(surf)) {
 			inputs[| 3].display_data		 = format_array;
@@ -620,9 +622,9 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		}
 		
 		outputs[| 0].visible = isInLoop();
-	}
+	} #endregion
 	
-	static update = function(frame = PROJECT.animator.current_frame) {
+	static update = function(frame = PROJECT.animator.current_frame) { #region
 		var anim = inputs[| 3].getValue();
 		if(anim == NODE_EXPORT_FORMAT.single) {
 			if(isInLoop()) export();
@@ -680,10 +682,8 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			}
 		}
 		
-		//directory_destroy(directory);
-	}
+		updatedTrigger.setValue(true);
+	} #endregion
 	
-	static doApplyDeserialize = function() {
-		onValueUpdate(3);
-	}
+	static doApplyDeserialize = function() { onValueUpdate(3); }
 }

@@ -13,8 +13,7 @@ function draw_circle_border(xx, yy, r, w) {
 		var px = xx + lengthdir_x(r, i * angle_step);
 		var py = yy + lengthdir_y(r, i * angle_step);
 	
-		if(i)
-			draw_line_round(_px, _py, px, py, w);
+		if(i) draw_line_round(_px, _py, px, py, w);
 		
 		_px = px;
 		_py = py;

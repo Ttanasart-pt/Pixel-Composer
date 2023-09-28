@@ -323,5 +323,17 @@
     
     "workspace_replace_current":   "Replace with current",
 
+    "preview_3d_settings": "3D Preview Settings",
+    "graph_view_settings": "View Settings",
+    "graph_visibility_preview_scale": "Preview Scale",
+    "graph_visibility_avoid_label": "Avoid Label",
+    "graph_grid_settings": "Grid Settings",
+    "project.graphGrid.color": "Grid color",
+    "project.graphGrid.opacity": "Grid opacity",
+    "graph_connection_settings": "Connection Settings",
+    "pref_connection_highlight_fade": "Fade connection",
+    "pref_connection_highlight": "Highlight connection",
+    "pref_connection_quality": "Render quality",
+
     "" : ""
 }

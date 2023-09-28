@@ -1,5 +1,5 @@
 1. nodes.json, UI.json, words.json is for translation.
-2. If your language use non-ascii characters, you need to supply your own font files in the fonts folder.
+2. If your language use non-ascii characters (or character not included in the default font), you need to supply your own font files in the fonts folder.
     2.1. Copy font files (.ttf, .otf) to fonts/
     2.2. Edit fonts/fonts.json such that each "path" value point to the font file.
     2.3. If your language does not use space to separate words, you need to edit config.json and set "per_character_line_break" to true.

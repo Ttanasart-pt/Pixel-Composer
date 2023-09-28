@@ -26,7 +26,7 @@ function Panel_Graph_Grid_Setting() : Panel_Linear_Setting() constructor {
 					if(PANEL_GRAPH.project == noone || !PANEL_GRAPH.project.active) return;
 					PANEL_GRAPH.project.graphGrid.opacity = clamp(real(str), 0, 1);	
 				}),
-				__txtx("project.graphGrid.opacity", "Grid opacity"),
+				__txtx("project_graphGrid_opacity", "Grid opacity"),
 				function() { return PANEL_GRAPH.project.graphGrid.opacity; }
 			],
 			[
@@ -34,7 +34,7 @@ function Panel_Graph_Grid_Setting() : Panel_Linear_Setting() constructor {
 					if(PANEL_GRAPH.project == noone || !PANEL_GRAPH.project.active) return;
 					PANEL_GRAPH.project.graphGrid.color = color;
 				}, self),
-				__txtx("project.graphGrid.color", "Grid color"),
+				__txtx("project_graphGrid_color", "Grid color"),
 				function() { return PANEL_GRAPH.project.graphGrid.color; }
 			]
 		];

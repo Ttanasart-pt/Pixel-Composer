@@ -43,7 +43,9 @@ function Node_Image(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	
 	first_update = false;
 	
-	on_dragdrop_file = function(path) {
+	on_drop_file = function(path) {
+		inputs[| 0].setValue(path);
+		
 		if(updatePaths(path)) {
 			doUpdate();
 			return true;

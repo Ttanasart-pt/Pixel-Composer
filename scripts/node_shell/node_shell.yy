@@ -1,11 +1,11 @@
 {
   "resourceType": "GMScript",
   "resourceVersion": "1.0",
-  "name": "shell_helper",
+  "name": "node_shell",
   "isCompatibility": false,
   "isDnD": false,
   "parent": {
-    "name": "functions",
-    "path": "folders/functions.yy",
+    "name": "misc",
+    "path": "folders/nodes/data/misc.yy",
   },
 }

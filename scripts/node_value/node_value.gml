@@ -129,6 +129,11 @@ enum VALUE_UNIT {
 	reference
 }
 
+enum VALUE_TAG {
+	updateTrigger	= 1 << 0,
+	none			= 0
+}
+
 function value_color(i) { #region
 	static JUNCTION_COLORS = [ 
 		$6691ff, //int 
@@ -471,6 +476,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		tooltip    = _tooltip;
 		editWidget = noone;
+		
+		tags = VALUE_TAG.none;
 	#endregion
 	
 	#region ---- connection ----
@@ -1062,9 +1069,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						break;
 					
 					case VALUE_DISPLAY.text_array :
-						editWidget = new textArrayBox(function() { 
-							return animator.values[| 0].value; }, display_data, function() { node.doUpdate(); 
-						});
+						editWidget = new textArrayBox(function() { return animator.values[| 0].value; }, display_data, function() { node.doUpdate(); });
 						break;
 				}
 				break; #endregion
@@ -2194,8 +2199,19 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		_map.sep_axis	= sep_axis;
 		_map.shift_x	= draw_line_shift_x;
 		_map.shift_y	= draw_line_shift_y;
-		_map.from_node  = !preset && value_from? value_from.node.node_id	: -1;
-		_map.from_index = !preset && value_from? value_from.index			: -1;
+		
+		if(!preset && value_from) {
+			_map.from_node  = value_from.node.node_id;
+			
+			if(value_from.tags & VALUE_TAG.updateTrigger > 0)
+				_map.from_index = -2;
+			else
+				_map.from_index = value_from.index;
+		} else {
+			_map.from_node  = -1;
+			_map.from_index = -1;
+		}
+		
 		_map.global_use = expUse;
 		_map.global_key = expression;
 		_map.anim		= is_anim;
@@ -2279,7 +2295,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		if(log) log_warning("LOAD", $"[Connect] Reconnecting {node.name} to {_nd.name}", node);
 		
-		if(con_index < _ol) {
+		if(con_index == -2) {
+			setFrom(_nd.updatedTrigger);
+		} else if(con_index < _ol) {
 			var _set = setFrom(_nd.outputs[| con_index], false, true);
 			if(_set) return true;
 			

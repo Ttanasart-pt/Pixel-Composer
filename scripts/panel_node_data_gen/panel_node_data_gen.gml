@@ -2,7 +2,11 @@ var _filter = ["x", "y", "updated", "rendered", "show_output_name", "insp2Update
 	"preview_drop_y", "badgeInspect", "preview_mx", "temp_surface", "load_scale", "node_id", "show_input_name", "graph_h", "display_data", "drawLineIndex", "draw_line_shift_x", 
 	"draw_line_shift_y", "cache_array", "drag_mx", "drag_my", "expTree", "value_to", "draw_line_thick", "expUse", "expression", "drag_sx", "drag_sy", "drag_type", "con_node",
 	"cache_value", "show_graph", "preview_x", "preview_y", "badgePreview", "data_list", "open_rx", "open_ry", "parent", "active", "cached_output", "current_data", "cache_result",
-	"draw_graph_culled", "dopesheet_y", "render_time", "renderActive", "preview_speed", "preview_drop_x", "preview_drop_y", "inspecting", "value_to_arr", "draw_name" ];
+	"draw_graph_culled", "dopesheet_y", "render_time", "renderActive", "preview_speed", "preview_drop_x", "preview_drop_y", "inspecting", "value_to_arr", "draw_name", "anim_priority",
+	"draw_line_vb", "error_notification", "animators", "junction_drawing", "draw_line_shift_hover", "value_from", "is_anim", "popup_dialog", "draw_line_blend", "is_changed", 
+	"on_end", "editWidget", "key_inter", "dyna_depo", "def_length", "con_index", "bg_sel_spr", "load_map", "preview_alpha", "icon", "junction_draw_pad_y", "previewable", "active_range", 
+	"inputMap", "tools", "preview_amount", "anim_show", "active_draw_index", "onSetDisplayName", "previewing", "on_drop_file", "autoUpdatedTrigger", "attributeEditors", "error_noti_update",
+	"bg_spr", "insp1UpdateIcon", "outputMap", "preview_surface", "manual_updated", "preview_my", "tool_settings", "isTool" ];
 global.node_data_filter = ds_map_create();
 for( var i = 0, n = array_length(_filter); i < n; i++ ) 
 	global.node_data_filter[? _filter[i]] = 1;
@@ -38,7 +42,7 @@ function Panel_Node_Data_Gen() : PanelContent() constructor {
 	cur = 0;
 	key = ds_map_find_first(ALL_NODES);
 	
-	CLONING = true;
+	LOADING = true;
 	NODE_EXTRACT = true;
 	
 	dir  = DIRECTORY + "Nodes/";
@@ -133,8 +137,7 @@ function Panel_Node_Data_Gen() : PanelContent() constructor {
 		json_save_struct(dir + "node_junctions.json", junc, false);
 		json_save_struct(dir + "node_locale.json", locale, true);
 		shellOpenExplorer(dir);
-	
-		CLONING = false;
+		
 		game_end();
 	}
 }

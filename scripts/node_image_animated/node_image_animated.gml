@@ -73,7 +73,7 @@ function Node_Image_Animated(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	
 	path_loaded = [];
 	
-	on_dragdrop_file = function(path) {
+	on_drop_file = function(path) {
 		if(directory_exists(path)) {
 			with(dialogCall(o_dialog_drag_folder, WIN_W / 2, WIN_H / 2)) {
 				dir_paths = path;
@@ -83,6 +83,8 @@ function Node_Image_Animated(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		}
 		
 		var paths = paths_to_array(path);
+		
+		inputs[| 0].setValue(paths);
 		if(updatePaths(paths)) {
 			doUpdate();
 			return true;

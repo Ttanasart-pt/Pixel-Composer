@@ -45,6 +45,15 @@ function Node_Trigger(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 		var bbox = drawGetBbox(xx, yy, _s);
 		var trg  = outputs[| 0].getValue();
 		
-		draw_sprite_fit(THEME.node_trigger, trg, bbox.xc, bbox.yc, bbox.w, bbox.h, trg? COLORS._main_accent : COLORS._main_icon);
+		var cc = trg? COLORS._main_accent : COLORS._main_icon;
+		var rr = min(bbox.w, bbox.h) / 2 - 6;
+		
+		draw_set_color(cc);
+		
+		draw_set_circle_precision(32);
+		draw_circle_border(bbox.xc, bbox.yc, rr, 4);
+		
+		draw_set_circle_precision(32);
+		if(trg) draw_circle(bbox.xc, bbox.yc, rr - 6, false);
 	}
 }

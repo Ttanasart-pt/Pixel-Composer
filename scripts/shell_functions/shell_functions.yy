@@ -1,11 +1,11 @@
 {
   "resourceType": "GMScript",
   "resourceVersion": "1.0",
-  "name": "node_hlsl",
+  "name": "shell_functions",
   "isCompatibility": false,
   "isDnD": false,
   "parent": {
-    "name": "misc",
-    "path": "folders/nodes/data/misc.yy",
+    "name": "functions",
+    "path": "folders/functions.yy",
   },
 }

@@ -59,7 +59,7 @@ function Node_Json_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	
 	first_update = false;
 	
-	on_dragdrop_file = function(path) {
+	on_drop_file = function(path) {
 		if(updatePaths(path)) {
 			doUpdate();
 			return true;

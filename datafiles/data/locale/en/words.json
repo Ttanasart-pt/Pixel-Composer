@@ -188,5 +188,32 @@
     "zoom_in": "Zoom in",
     "zoom_out": "Zoom out",
     "zoom_to_fit": "Zoom to fit",
-    "zoom": "Zoom"
+    "zoom": "Zoom",
+
+    "action": "Action",
+    "armature": "Armature",
+    "buffer": "Buffer",
+    "custom": "Custom",
+    "default_surface": "Default Surface",
+    "format_": "Format ",
+    "independent": "Independent",
+    "legacy": "Legacy",
+    "light": "Light",
+    "linked": "Linked",
+    "misc.": "Misc.",
+    "misc": "Misc",
+    "onion_skin": "Onion skin",
+    "opacity": "Opacity",
+    "output": "Output",
+    "palette": "Palette",
+    "region": "Region",
+    "render": "Render",
+    "save_all": "Save all",
+    "settings": "Settings",
+    "shader": "Shader",
+    "shape": "Shape",
+    "surface": "Surface",
+    "system": "System",
+
+    "" : ""
 }

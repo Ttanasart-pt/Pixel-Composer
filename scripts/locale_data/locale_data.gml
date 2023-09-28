@@ -1,6 +1,7 @@
 #region locale
-	globalvar LOCALE;
+	globalvar LOCALE, TEST_LOCALE;
 	LOCALE = {}
+	TEST_LOCALE = true;
 	
 	function __initLocale() {
 		var lfile = $"data/locale/en.zip";
@@ -35,12 +36,18 @@
 	function __txtx(key, def = "") {
 		gml_pragma("forceinline");
 		
-		if(struct_has(LOCALE.word, key))
-			return LOCALE.word[$ key]
-		if(struct_has(LOCALE.ui, key)) 
-			return LOCALE.ui[$ key]
+		if(TEST_LOCALE) {
+			if(!struct_has(LOCALE.word, key) && !struct_has(LOCALE.ui, key))
+				show_debug_message($"LOCALE: \"{key}\": \"{def}\",");
+			
+			return def;
+		}
 		
-		//print($"LOCAL \"{key}\": \"{def}\",");
+		if(struct_has(LOCALE.word, key))
+			return LOCALE.word[$ key];
+		if(struct_has(LOCALE.ui, key)) 
+			return LOCALE.ui[$ key];
+		
 		return def;
 	}
 	

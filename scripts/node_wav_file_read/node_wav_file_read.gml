@@ -92,7 +92,7 @@ function Node_WAV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			})]);
 	#endregion
 		
-	on_dragdrop_file = function(path) { #region
+	on_drop_file = function(path) { #region
 		if(updatePaths(path)) {
 			doUpdate();
 			return true;

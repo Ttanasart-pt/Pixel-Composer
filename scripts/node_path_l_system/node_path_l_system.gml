@@ -94,6 +94,15 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	];
 	lines = [];
 	
+	attributes.rule_length_limit = 10000;
+	array_push(attributeEditors, "L System");
+	array_push(attributeEditors, [ "Rule length limit", function() { return attributes.rule_length_limit; }, 
+		new textBox(TEXTBOX_INPUT.number, function(val) { 
+			attributes.rule_length_limit = val; 
+			cache_data.start = "";
+			triggerRender();
+		}) ]);
+	
 	current_length  = 0;
 	boundary = new BoundingBox();
 	
@@ -165,9 +174,9 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	static getLength		= function() { return current_length; }
 	static getAccuLength	= function() { return [ 0, current_length ]; }
 	
-	static getWeightDistance = function (_dist, _ind = 0) { 
+	static getWeightDistance = function (_dist, _ind = 0) { #region
 		return getWeightRatio(_dist / current_length, _ind); 
-	}
+	} #endregion
 	
 	static getWeightRatio = function (_rat, _ind = 0) { #region
 		var _p0 = lines[_ind][0];
@@ -233,7 +242,10 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			})
 			
 			cache_data.result = _temp_s;
-			if(string_length(cache_data.result) > 10000) break;
+			if(string_length(cache_data.result) > attributes.rule_length_limit) {
+				noti_warning($"L System: Rules length limit ({attributes.rule_length_limit}) reached.");
+				break;
+			}
 		}
 		
 		var _es  = string_splice(_end_rule, ",");
@@ -305,7 +317,7 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node(_x, _y, _group) const
 					break;
 				case "+": t.ang += ang; break;
 				case "-": t.ang -= ang; break;
-				case "|": t.ang += 180;  break;
+				case "|": t.ang += 180; break;
 				case "[": ds_stack_push(st, t.clone()); break;
 				case "]": t = ds_stack_pop(st);			break;
 				
