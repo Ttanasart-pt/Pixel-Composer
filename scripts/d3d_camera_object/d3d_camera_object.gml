@@ -31,7 +31,7 @@ function __3dCamera_object() : __3dObject() constructor {
 	VB = build();
 	
 	transform.position.set(-5, -5, 5);
-	transform.rotation.set(0, 30, 135);
+	transform.rotation.FromEuler(0, 30, 135);
 	transform.scale.set(1, room_width / room_height, 1);
 	
 	static submitSel = function(params = {}) { 

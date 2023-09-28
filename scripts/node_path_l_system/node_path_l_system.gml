@@ -77,6 +77,14 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		}
 		
 		return hh;
+	}, function(parent = noone) {
+		for( var i = input_fix_len; i < ds_list_size(inputs); i += data_length ) {
+			var _name = inputs[| i + 0];
+			var _rule = inputs[| i + 1];
+			
+			_name.editWidget.register(parent);
+			_rule.editWidget.register(parent);
+		}
 	}); #endregion
 	
 	input_display_list = [
@@ -88,6 +96,15 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	
 	current_length  = 0;
 	boundary = new BoundingBox();
+	
+	cache_data = {
+		start: "",
+		rules: {},
+		end_rule: "",
+		iteration: 0,
+		seed: 0,
+		result: ""
+	}
 	
 	static refreshDynamicInput = function() { #region
 		var _l = ds_list_create();
@@ -175,97 +192,119 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		return new __vec2( _x, _y );
 	} #endregion
 	
-	static getPointDistance = function(_dist, _ind = 0) {
+	static getPointDistance = function(_dist, _ind = 0) { #region
 		return getPointRatio(_dist / current_length, _ind); 
-	}
+	} #endregion
 	
 	static getBoundary	= function() { return boundary; }
+	
+	static l_system = function(_start, _rules, _end_rule, _iteration, _seed) { #region
+		if(isEqual(cache_data.rules, _rules, true)
+			&& cache_data.start	     == _start
+			&& cache_data.end_rule	 == _end_rule
+			&& cache_data.iteration  == _iteration
+			&& cache_data.seed	     == _seed) {
+			
+			return cache_data.result;
+		}
+		
+		cache_data.start	 = _start;
+		cache_data.rules	 = _rules;
+		cache_data.end_rule	 = _end_rule;
+		cache_data.iteration = _iteration;
+		cache_data.seed		 = _seed;
+		cache_data.result    = _start;
+		
+		_temp_s = "";
+		
+		for( var j = 1; j <= _iteration; j++ ) {
+			_temp_s = "";
+			
+			string_foreach(cache_data.result, function(_ch, _) {
+				if(!struct_has(cache_data.rules, _ch)) {
+					_temp_s += _ch;
+					return;
+				}
+				
+				var _chr = cache_data.rules[$ _ch];
+				_chr = array_safe_get(_chr, irandom(array_length(_chr) - 1));
+				
+				_temp_s += _chr;
+			})
+			
+			cache_data.result = _temp_s;
+			if(string_length(cache_data.result) > 10000) break;
+		}
+		
+		var _es  = string_splice(_end_rule, ",");
+		for( var i = 0, n = array_length(_es); i < n; i++ ) {
+			var _sp = string_splice(_es[i], "=");
+			if(array_length(_sp) == 2)
+				cache_data.result = string_replace_all(cache_data.result, _sp[0], _sp[1]);
+		}
+		
+		return cache_data.result;
+	} #endregion
 	
 	static update = function() { #region
 		var _len = inputs[| 0].getValue();
 		var _ang = inputs[| 1].getValue();
 		var _pos = inputs[| 2].getValue();
 		var _itr = inputs[| 3].getValue();
+		var _sta = inputs[| 4].getValue();
+		var _end = inputs[| 5].getValue();
 		var _san = inputs[| 6].getValue();
 		var _sad = inputs[| 7].getValue();
-		lines = [];
+		lineq = ds_queue_create();
 		
 		random_set_seed(_sad);
 		current_length = _len;
 		
 		if(ds_list_size(inputs) < input_fix_len + 2) return;
 		
-		var l  = inputs[| 4].getValue();
-		
-		var rules = ds_map_create();
+		var rules = {};
 		for( var i = input_fix_len; i < ds_list_size(inputs) - data_length; i += data_length ) {
 			var _name = inputs[| i + 0].getValue();
 			var _rule = inputs[| i + 1].getValue();
-			if(!ds_map_exists(rules, _name))
-				rules[? _name] = [ _rule ];
+			if(!struct_has(rules, _name))
+				rules[$ _name] = [ _rule ];
 			else
-				array_push(rules[? _name], _rule);
+				array_push(rules[$ _name], _rule);
 		}
 		
-		for( var j = 1; j <= _itr; j++ ) {
-			var s = "";
-			for( var i = 1; i <= string_length(l); i++ ) {
-				var ch = string_char_at(l, i);
-				if(!ds_map_exists(rules, ch)) {
-					s += ch;
-					continue;
-				}
-				
-				var _chr = rules[? ch];
-				_chr = array_safe_get(_chr, irandom(array_length(_chr) - 1));
-				
-				s += _chr;
-			}
-			
-			l = s;
-			if(string_length(l) > 10000) break;
-		}
+		l_system(_sta, rules, _end, _itr, _sad);
+		itr = _itr;
+		ang = _ang;
+		len = _len;
+		st  = ds_stack_create();
+		t   = new L_Turtle(_pos[0], _pos[1], _san);
 		
-		ds_map_destroy(rules);
-		
-		var _end = inputs[| 5].getValue();
-		var _es  = string_splice(_end, ",");
-		for( var i = 0, n = array_length(_es); i < n; i++ ) {
-			var _sp = string_splice(_es[i], "=");
-			if(array_length(_sp) == 2)
-				l = string_replace_all(l, _sp[0], _sp[1]);
-		}
-		
-		var st = ds_stack_create();
-		var t = new L_Turtle(_pos[0], _pos[1], _san);
-		
-		for( var i = 1; i <= string_length(l); i++ ) {
-			var ch = string_char_at(l, i);
-			switch(ch) {
+		string_foreach(cache_data.result, function(_ch, _) {
+			switch(_ch) {
 				case "F": 
-					var nx = t.x + lengthdir_x(_len, t.ang);
-					var ny = t.y + lengthdir_y(_len, t.ang);
+					var nx = t.x + lengthdir_x(len, t.ang);
+					var ny = t.y + lengthdir_y(len, t.ang);
 					
-					array_push(lines, [ [t.x, t.y, t.w], [nx, ny, t.w] ]);
+					ds_queue_enqueue(lineq, [ [t.x, t.y, t.w], [nx, ny, t.w] ]);
 					
 					t.x = nx;
 					t.y = ny;
 					break;
 				case "G": 
-					t.x = t.x + lengthdir_x(_len, t.ang);
-					t.y = t.y + lengthdir_y(_len, t.ang);
+					t.x = t.x + lengthdir_x(len, t.ang);
+					t.y = t.y + lengthdir_y(len, t.ang);
 					break;
 				case "f": 
-					var nx = t.x + lengthdir_x(_len * frac(_itr), t.ang);
-					var ny = t.y + lengthdir_y(_len * frac(_itr), t.ang);
+					var nx = t.x + lengthdir_x(len * frac(itr), t.ang);
+					var ny = t.y + lengthdir_y(len * frac(itr), t.ang);
 					
-					array_push(lines, [ [t.x, t.y, t.w], [nx, ny, t.w] ]);
+					ds_queue_enqueue(lineq, [ [t.x, t.y, t.w], [nx, ny, t.w] ]);
 					
 					t.x = nx;
 					t.y = ny;
 					break;
-				case "+": t.ang += _ang; break;
-				case "-": t.ang -= _ang; break;
+				case "+": t.ang += ang; break;
+				case "-": t.ang -= ang; break;
 				case "|": t.ang += 180;  break;
 				case "[": ds_stack_push(st, t.clone()); break;
 				case "]": t = ds_stack_pop(st);			break;
@@ -273,13 +312,22 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node(_x, _y, _group) const
 				case ">": t.w += 0.1; break;
 				case "<": t.w -= 0.1; break;
 			}
-		}
+		});
 		
 		ds_stack_destroy(st);
 		
 		boundary = new BoundingBox();
-		for( var i = 0, n = array_length(lines); i < n; i++ )
-			boundary.addPoint(lines[i][0][0], lines[i][0][1], lines[i][1][0], lines[i][1][1]);
+		
+		lines = array_create(ds_queue_size(lineq));
+		var i = 0;
+		
+		while(!ds_queue_empty(lineq)) {
+			var _l = ds_queue_dequeue(lineq);
+			lines[i++] = _l;
+			boundary.addPoint(_l[0][0], _l[0][1], _l[1][0], _l[1][1]);
+		}
+		
+		ds_queue_destroy(lineq);
 		
 		outputs[| 0].setValue(self);
 	} #endregion

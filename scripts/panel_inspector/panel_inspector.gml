@@ -1,6 +1,7 @@
-function Inspector_Custom_Renderer(drawFn) : widget() constructor {
+function Inspector_Custom_Renderer(drawFn, registerFn = noone) : widget() constructor {
 	h = 64;
 	self.draw = drawFn;
+	register  = registerFn;
 }
 
 function Panel_Inspector() : PanelContent() constructor {
@@ -463,7 +464,9 @@ function Panel_Inspector() : PanelContent() constructor {
 						if(pFOCUS) jun_disp.register(contentPane);
 						jun_disp.rx = ui(16) + x;
 						jun_disp.ry = top_bar_h + y;
-					
+						if(is_callable(jun_disp.register))
+							jun_disp.register(contentPane);
+						
 						hh += jun_disp.draw(ui(6), yy, con_w - ui(12), _m, _hover, pFOCUS) + ui(8);
 						continue;
 					}

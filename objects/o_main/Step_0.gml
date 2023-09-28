@@ -16,8 +16,9 @@ if(PROJECT.active) {
 				PROJECT.nodes[| i].triggerCheck();
 				PROJECT.nodes[| i].step();
 			}
-		} catch(e)
+		} catch(e) {
 			noti_warning("Step error: " + exception_print(e));
+		}
 	#endregion
 }
 

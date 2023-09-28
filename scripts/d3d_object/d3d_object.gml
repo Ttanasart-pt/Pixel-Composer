@@ -70,7 +70,7 @@ function __3dObject() constructor {
 		}
 	} #endregion
 	
-	static buildVertex = function(_vertex, _normal, _uv) { #region
+	static buildVertex = function(_vertex) { #region
 		var _buffer = vertex_create_buffer();
 		vertex_begin(_buffer, VF);
 			for( var i = 0, n = array_length(_vertex); i < n; i++ ) {
