@@ -12,7 +12,10 @@
     "name": "widget",
     "path": "folders/dialog/widget.yy",
   },
-  "parentObjectId": null,
+  "parentObjectId": {
+    "name": "_p_dialog",
+    "path": "objects/_p_dialog/_p_dialog.yy",
+  },
   "persistent": false,
   "physicsAngularDamping": 0.1,
   "physicsDensity": 0.5,

@@ -1,4 +1,6 @@
 /// @description
+event_inherited();
+
 #region data
 	depth = -9999;
 	
@@ -13,6 +15,9 @@
 	prompt	  = "";
 	data	  = [];
 	
+	destroy_on_escape    = false;
+	destroy_on_click_out = false;
+	
 	sc_content = new scrollPane(dialog_w, dialog_h, function(_y, _m) {
 		draw_clear_alpha(COLORS.panel_bg_clear, 0);
 		var hght = line_get_height(f_p0, 8);
@@ -23,19 +28,19 @@
 		for(var i = 0; i < array_length(data); i++) {
 			var _dat = data[i];
 			
-			//if(point_in_rectangle(_m[0], _m[1], 0, _ly + 1, _dw, _ly + hght - 1)) {
-			//	selecting = i;
+			if(sHOVER && point_in_rectangle(_m[0], _m[1], 0, _ly + 1, _dw, _ly + hght - 1)) {
+				selecting = i;
 				
-			//	if(mouse_press(mb_left))
-			//		applyAutoComplete(_dat[3]);
-			//}
+				if(mouse_press(mb_left))
+					applyAutoComplete(_dat[3]);
+			}
 			
 			if(selecting == i) {
 				WIDGET_TAB_BLOCK = true;
 				
 				draw_sprite_stretched_ext(THEME.textbox, 3, 0, _ly, _dw, hght, COLORS.dialog_menubox_highlight, 1);
 				
-				if(keyboard_check_pressed(vk_tab))
+				if(keyboard_check_pressed(vk_tab) || keyboard_check_pressed(vk_enter))
 					applyAutoComplete(_dat[3]);
 			}
 			

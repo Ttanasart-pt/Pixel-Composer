@@ -1,3 +1,5 @@
+// feather ignore all
+
 #region setup
 	function __addon_lua_setup(lua, context) {
 		__addon_lua_setup_functions(lua);

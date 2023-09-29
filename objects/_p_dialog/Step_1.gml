@@ -1,5 +1,6 @@
 /// @description init
-if !ready exit;
+if !ready  exit;
+if !active exit;
 
 #region window control
 	if(sFOCUS) {

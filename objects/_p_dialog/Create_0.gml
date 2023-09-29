@@ -4,12 +4,13 @@
 		other.depth = min(depth - 1, other.depth);
 	ds_list_add(DIALOGS, self);
 	
-	dialog_w = 320;
-	dialog_h = 320;
+	active    = true;
+	dialog_w  = 320;
+	dialog_h  = 320;
 	_dialog_w = 320;
 	_dialog_h = 320;
-	dialog_x = 0;
-	dialog_y = 0;
+	dialog_x  = 0;
+	dialog_y  = 0;
 	
 	title_height = 64;
 	padding = 24;
@@ -35,6 +36,8 @@
 	dialog_drag_my  = 0;
 	
 	function doDrag() {
+		if(!active) return;
+		
 		mouse_active = true;
 		if(!draggable) return;
 		
@@ -71,6 +74,7 @@
 	onResize = -1;
 	
 	function doResize() {
+		if(!active) return;
 		if(!dialog_resizable) return;
 		
 		if(dialog_resizing & 1 << 0 != 0) {
@@ -121,6 +125,7 @@
 
 #region focus
 	function checkFocus() {
+		if(!active) return;
 		var x0 = dialog_x - dialog_resizable * 6;
 		var x1 = dialog_x + dialog_w + dialog_resizable * 6;
 		var y0 = dialog_y - dialog_resizable * 6;
@@ -135,6 +140,7 @@
 	}
 	
 	function checkDepth() {
+		if(!active) return;
 		if(HOVER != self.id) return;
 		
 		if(mouse_press(mb_any)) {
@@ -145,6 +151,7 @@
 	}
 	
 	function resetPosition() {
+		if(!active) return;
 		if(anchor == ANCHOR.none) {
 			dialog_x = xstart - dialog_w / 2;
 			dialog_y = ystart - dialog_h / 2;
@@ -160,6 +167,7 @@
 	}
 
 	function checkMouse() {
+		if(!active) return;
 		if(!DIALOG_CLICK) {
 			//printIf(mouse_press(mb_any), $"Check {object_get_name(object_index)} : Click"); 
 			return;

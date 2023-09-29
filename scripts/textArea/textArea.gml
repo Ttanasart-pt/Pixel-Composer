@@ -161,6 +161,16 @@ function textArea(_input, _onModify, _extras = noone) : textInput(_input, _onMod
 		return ch == " " || ch == "\n";	
 	} #endregion
 	
+	static keyboardEnter = function() { #region
+		if(!keyboard_check_pressed(vk_enter)) 
+			return 0;
+		
+		if(use_autocomplete && autocomplete_box.active) 
+			return 0;
+		
+		return 1 + ((shift_new_line && key_mod_press(SHIFT)) || (!shift_new_line && !key_mod_press(SHIFT)));
+	} #endregion
+	
 	static onKey = function(key) { #region
 		if(key == vk_left) {
 			if(key_mod_press(SHIFT)) {
@@ -367,8 +377,7 @@ function textArea(_input, _onModify, _extras = noone) : textInput(_input, _onMod
 				
 				if(keyboard_check_pressed(vk_escape)) {
 				} else if(keyboard_check_pressed(vk_tab)) {
-				} else if(( shift_new_line && keyboard_check_pressed(vk_enter) &&  key_mod_press(SHIFT)) ||
-						  (!shift_new_line && keyboard_check_pressed(vk_enter) && !key_mod_press(SHIFT))) {
+				} else if(keyboardEnter() == 2) {
 					var ch = "\n";
 					if(cursor_select == -1) {
 						var str_before	= string_copy(_input_text, 1, cursor);
@@ -521,8 +530,7 @@ function textArea(_input, _onModify, _extras = noone) : textInput(_input, _onMod
 			_input_text = _last_value;
 			cut_line();
 			deactivate();
-		} else if(( shift_new_line && keyboard_check_pressed(vk_enter) && !key_mod_press(SHIFT)) ||
-				  (!shift_new_line && keyboard_check_pressed(vk_enter) &&  key_mod_press(SHIFT))) {
+		} else if(keyboardEnter() == 1) {
 			deactivate();
 		}
 	} #endregion
@@ -628,14 +636,14 @@ function textArea(_input, _onModify, _extras = noone) : textInput(_input, _onMod
 			}
 		}
 		
-		if(target != -999) {
-			if(mouse_press(mb_left, active) || click_block == 1) {
+		if(target != -999 && mouse_press(mb_left, active) && HOVER != autocomplete_box.id) {
+			if(click_block == 1) {
 				cursor		  = target;
 				cursor_select = -1;
 				click_block   = 0;
 				
 				autocomplete_box.active = false;
-			} else if(mouse_click(mb_left, active) && cursor != target) {
+			} else if(cursor != target) {
 				if(cursor_select == -1)
 					cursor_select = cursor;
 				cursor		  = target;
@@ -798,7 +806,7 @@ function textArea(_input, _onModify, _extras = noone) : textInput(_input, _onMod
 				}
 			#endregion
 			
-			if(!point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + hh) && mouse_press(mb_left)) {
+			if(!point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + hh) && mouse_press(mb_left) && HOVER != autocomplete_box.id) {
 				deactivate();
 			}
 		} else {
