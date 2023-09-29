@@ -1497,6 +1497,8 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		
 		for(var i = 0; i < amo; i++) {
 			if(inputs[| i] == noone || _inputs[i] == noone) continue;
+			
+			//if(name == "Particle") print($"Apply {i} : {inputs[| i].name}");
 			inputs[| i].applyDeserialize(_inputs[i], load_scale, preset);
 		}
 		
@@ -1506,6 +1508,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 			
 			for(var i = 0; i < amo; i++) {
 				if(outputs[| i] == noone) continue;
+				
 				outputs[| i].applyDeserialize(_outputs[i], load_scale, preset);
 			}
 		}

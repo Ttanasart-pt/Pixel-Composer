@@ -1583,9 +1583,10 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				
 				if(fullUpdate)	UPDATE |= RENDER_TYPE.full;
 				else			UPDATE |= RENDER_TYPE.partial;
+				
+				if(!LOADING) PROJECT.modified = true;
 			}
 			
-			if(!LOADING) PROJECT.modified = true; 
 			cache_value[0] = false;
 		}
 		
@@ -1703,6 +1704,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			node.onValueFromUpdate(index);
 		node.clearCacheForward();
 		
+		PROJECT.modified = true;
 		return false;
 	} #endregion
 	
@@ -2249,7 +2251,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			return;
 		
 		//printIf(TESTING, "     |- Applying deserialize to junction " + name + " of node " + node.name);
-		name 		= struct_try_get(_map, "name", name);
 		on_end		= struct_try_get(_map, "on_end");
 		loop_range	= struct_try_get(_map, "loop_range", -1);
 		unit.mode	= struct_try_get(_map, "unit");
@@ -2264,6 +2265,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		draw_line_shift_y = struct_try_get(_map, "shift_y");
 		
 		name_custom = struct_try_get(_map, "name_custom", false);
+		if(name_custom) name 		= struct_try_get(_map, "name", name);
 		
 		animator.deserialize(struct_try_get(_map, "raw_value"), scale);
 		

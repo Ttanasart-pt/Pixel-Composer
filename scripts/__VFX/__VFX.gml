@@ -61,6 +61,7 @@ function __part(_node) constructor {
 	ground			= false;
 	ground_y		= 0;
 	ground_bounce	= 0;
+	ground_friction = 1;
 	
 	static create = function(_surf, _x, _y, _life) {
 		active	= true;
@@ -94,10 +95,11 @@ function __part(_node) constructor {
 		spVec[1] = point_direction(0, 0, speedx, speedy);
 	}
 	
-	static setGround = function(_ground, _ground_offset, _ground_bounce) {
+	static setGround = function(_ground, _ground_offset, _ground_bounce, _ground_frict) {
 		ground			= _ground;
 		ground_y		= y + _ground_offset;
 		ground_bounce	= _ground_bounce;
+		ground_friction	= clamp(1 - _ground_frict, 0, 1);
 	}
 	
 	static setTransform = function(_scx, _scy, _sct, _rot, _rots, _follow) {
@@ -133,6 +135,9 @@ function __part(_node) constructor {
 		if(ground && y + speedy > ground_y) {
 			y = ground_y;
 			speedy = -speedy * ground_bounce;
+			
+			if(abs(speedy) < 0.1)
+				speedx *= ground_friction;
 		} else
 			y += speedy;
 		

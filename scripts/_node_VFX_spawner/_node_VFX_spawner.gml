@@ -127,6 +127,10 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	inputs[| 39] = nodeValue("Bounce amount", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.5 )
 		.rejectArray()
 		.setDisplay(VALUE_DISPLAY.slider, [ 0, 1, 0.01 ]);
+	
+	inputs[| 40] = nodeValue("Bounce friction", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.1, "Apply horizontal friction once particle stop bouncing." )
+		.rejectArray()
+		.setDisplay(VALUE_DISPLAY.slider, [ 0, 1, 0.01 ]);
 		
 	input_len = ds_list_size(inputs);
 	
@@ -135,7 +139,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		["Spawn",		true],	27, 16, 1, 2, 3, 4, 30, 31, 24, 25, 5,
 		["Movement",	true],	29, 6, 18,
 		["Physics",		true],	7, 19, 33, 20, 34, 35, 36, 
-		["Ground",		true],	37, 38, 39, 
+		["Ground",		true],	37, 38, 39, 40, 
 		["Rotation",	true],	15, 8, 9, 
 		["Scale",		true],	10, 17, 11, 
 		["Color",		true],	12, 28, 13, 14, 
@@ -204,6 +208,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		var _ground			= current_data[37];
 		var _ground_offset	= current_data[38];
 		var _ground_bounce	= current_data[39];
+		var _ground_frict   = current_data[40];
 		
 		if(_rotation[1] < _rotation[0]) _rotation[1] += 360;
 		
@@ -302,7 +307,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 			var _wiggle  = random_range(_wigg[0], _wigg[1]);
 			
 			part.setPhysic(_vx, _vy, _acc, _gravity, _gvDir, _wiggle, _trn, _turnSc);
-			part.setGround(_ground, _ground_offset, _ground_bounce);
+			part.setGround(_ground, _ground_offset, _ground_bounce, _ground_frict);
 			part.setTransform(_scx, _scy, _scale_time, _rot, _rot_spd, _follow);
 			part.setDraw(_color, _bld, _alp, _fade);
 			spawn_index = safe_mod(spawn_index + 1, attributes.part_amount);
@@ -408,14 +413,26 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		var _dist   = inputs[|  4].getValue();
 		var _scatt  = inputs[| 24].getValue();
 		var _dirAng = inputs[| 29].getValue();
+		var _turn   = inputs[| 34].getValue();
+		var _colGnd = inputs[| 37].getValue();
 		
 		inputs[|  6].setVisible(!_dirAng);
+		
+		inputs[| 25].setVisible(_scatt == 2);
+		
+		inputs[| 30].setVisible(_dist == 2, _dist == 2);
+		inputs[| 31].setVisible(_dist == 3, _dist == 3);
+		
+		inputs[| 35].setVisible(_turn[0] != 0 && _turn[1] != 0);
+		inputs[| 36].setVisible(_turn[0] != 0 && _turn[1] != 0);
+		
+		inputs[| 38].setVisible(_colGnd);
+		inputs[| 39].setVisible(_colGnd);
+		inputs[| 40].setVisible(_colGnd);
+		
 		inputs[| 22].setVisible(false);
 		inputs[| 23].setVisible(false);
 		inputs[| 26].setVisible(false);
-		inputs[| 25].setVisible(_scatt == 2);
-		inputs[| 30].setVisible(_dist == 2, _dist == 2);
-		inputs[| 31].setVisible(_dist == 3, _dist == 3);
 		
 		if(is_array(_inSurf)) {
 			inputs[| 22].setVisible(true);
@@ -454,10 +471,14 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	static onPartStep = function(part) {}
 	static onPartDestroy = function(part) {}
 	
+	static doSerialize = function(_map) { #region
+		_map.part_base_length = input_len;
+	} #endregion
+	
 	static postDeserialize = function() { #region
-		if(PROJECT.version < 11480) {
-			for( var i = 37; i <= 39; i++ )
-				array_insert(load_map.inputs, i, noone);
-		}
+		var _tlen = struct_try_get(load_map, "part_base_length", 40);
+		
+		for( var i = _tlen; i < input_len; i++ )
+			array_insert(load_map.inputs, i, noone);
 	} #endregion
 }

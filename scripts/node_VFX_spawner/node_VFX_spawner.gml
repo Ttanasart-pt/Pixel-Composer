@@ -19,7 +19,7 @@ function Node_VFX_Spawner(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y
 	
 	UPDATE_PART_FORWARD
 	
-	static onUpdate = function() {
+	static onUpdate = function() { #region
 		RETURN_ON_REST
 		
 		if(PROJECT.animator.current_frame == 0)
@@ -37,13 +37,13 @@ function Node_VFX_Spawner(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y
 			}
 			outputs[| 0].setValue(_parts);
 		}
-	}
+	} #endregion
 	
-	static onSpawn = function(_time, part) {
+	static onSpawn = function(_time, part) { #region
 		part.step_int = inputs[| input_len + 1].getValue(_time);
-	}
+	} #endregion
 	
-	static onPartCreate = function(part) {  
+	static onPartCreate = function(part) { #region
 		var vt = outputs[| 1];
 		if(ds_list_empty(vt.value_to)) return;
 		
@@ -56,9 +56,9 @@ function Node_VFX_Spawner(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y
 			if(_n.value_from != vt) continue;
 			_n.node.spawn(, pv);
 		}
-	}
+	} #endregion
 	
-	static onPartStep = function(part) {
+	static onPartStep = function(part) { #region
 		var vt = outputs[| 2];
 		if(ds_list_empty(vt.value_to)) return;
 		
@@ -71,9 +71,9 @@ function Node_VFX_Spawner(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y
 			if(_n.value_from != vt) continue;
 			_n.node.spawn(, pv);
 		}
-	}
+	} #endregion
 	
-	static onPartDestroy = function(part) {
+	static onPartDestroy = function(part) { #region
 		var vt = outputs[| 3];
 		if(ds_list_empty(vt.value_to)) return;
 		
@@ -86,9 +86,9 @@ function Node_VFX_Spawner(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y
 			if(_n.value_from != vt) continue;
 			_n.node.spawn(, pv);
 		}
-	}
+	} #endregion
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
+	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { #region
 		var spr = inputs[| 0].getValue();
 		
 		if(spr == 0) {
@@ -104,5 +104,7 @@ function Node_VFX_Spawner(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y
 		var cy = yy + h * _s / 2;
 		var ss = min((w - 8) / surface_get_width_safe(spr), (h - 8) / surface_get_height_safe(spr)) * _s;
 		draw_surface_align(spr, cx, cy, ss, fa_center, fa_center);
-	}
+	} #endregion
+		
+	
 }
