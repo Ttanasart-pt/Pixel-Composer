@@ -49,10 +49,10 @@ function Node_Image_Animated(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	inputs[| 2] = nodeValue("Stretch frame", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false, "Stretch animation speed to match project length.")
 		.rejectArray();
 	
-	inputs[| 3] = nodeValue("Frame duration", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
+	inputs[| 3] = nodeValue("Animation speed", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
 		.rejectArray();
 		
-	inputs[| 4] = nodeValue("Animation end", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+	inputs[| 4] = nodeValue("Loop modes", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.enum_scroll, ["Loop", "Ping pong", "Hold last frame", "Hide"])
 		.rejectArray();
 		
@@ -62,18 +62,22 @@ function Node_Image_Animated(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 				PROJECT.animator.frames_total = array_length(spr);
 			}, "Match length"] );
 	
+	inputs[| 6]  = nodeValue("Custom frame order", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	
+	inputs[| 7]  = nodeValue("Frame", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0);
+	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [
 		["Image", false],		0, 1,
-		["Animation", false],	5, 2, 3, 4,
+		["Animation", false],	5, 4, 6, 7, 2, 3, 
 	];
 	
 	attribute_surface_depth();
 	
 	path_loaded = [];
 	
-	on_drop_file = function(path) {
+	on_drop_file = function(path) { #region
 		if(directory_exists(path)) {
 			with(dialogCall(o_dialog_drag_folder, WIN_W / 2, WIN_H / 2)) {
 				dir_paths = path;
@@ -91,9 +95,9 @@ function Node_Image_Animated(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		}
 		
 		return false;
-	}
+	} #endregion
 	
-	function updatePaths(paths) {
+	function updatePaths(paths) { #region
 		if(!is_array(paths) && ds_exists(paths, ds_type_list))
 			paths = ds_list_to_array(paths);
 			
@@ -123,56 +127,71 @@ function Node_Image_Animated(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		}
 		
 		return true;
-	}
+	} #endregion
 	
 	insp1UpdateTooltip  = __txt("Refresh");
 	insp1UpdateIcon     = [ THEME.refresh, 1, COLORS._main_value_positive ];
 	
-	static onInspector1Update = function() {
+	static onInspector1Update = function() { #region
 		var path = inputs[| 0].getValue();
 		if(path == "") return;
 		updatePaths(path);
 		update();
-	}
+	} #endregion
 	
-	static update = function(frame = PROJECT.animator.current_frame) {
+	static step = function() { #region
+		var str  = inputs[| 2].getValue();
+		var _cus = inputs[| 6].getValue();
+		
+		inputs[| 7].setVisible( _cus);
+		inputs[| 2].setVisible(!_cus);
+		inputs[| 3].setVisible(!_cus && !str);
+		inputs[| 4].setVisible(!_cus && !str);
+	} #endregion
+	
+	static update = function(frame = PROJECT.animator.current_frame) { #region
 		var path = inputs[| 0].getValue();
 		if(path == "") return;
 		if(is_array(path) && !array_equals(path, path_loaded)) 
 			updatePaths(path);
 		if(array_length(spr) == 0) return;
 		
-		var pad  = inputs[| 1].getValue();
-		var str  = inputs[| 2].getValue();
-		inputs[| 3].setVisible(!str);
-		inputs[| 4].setVisible(!str);
+		var _pad = inputs[| 1].getValue();
 		
-		var spd  = str? (PROJECT.animator.frames_total + 1) / array_length(spr) : inputs[| 3].getValue();
+		var _cus = inputs[| 6].getValue();
+		var _str = inputs[| 2].getValue();
 		var _end = inputs[| 4].getValue();
-		if(spd == 0) spd = 1;
+		var _spd = _str? (PROJECT.animator.frames_total + 1) / array_length(spr) : 1 / inputs[| 3].getValue();
+		if(_spd == 0) _spd = 1;
+		var _frame = _cus? inputs[| 7].getValue() : floor(PROJECT.animator.current_frame / _spd);
+		
+		var _len = array_length(spr);
+		var _drw = true;
 		
 		var ww = sprite_get_width(spr[0]); 
 		var hh = sprite_get_height(spr[0]);
-		ww += pad[0] + pad[2];
-		hh += pad[1] + pad[3];
+		ww += _pad[0] + _pad[2];
+		hh += _pad[1] + _pad[3];
 		
 		var surfs = outputs[| 0].getValue();
 		surfs = surface_verify(surfs, ww, hh, attrDepth());
 		outputs[| 0].setValue(surfs);
 		
-		var _frame = floor(PROJECT.animator.current_frame / spd);
-		
 		switch(_end) {
 			case ANIMATION_END.loop : 
-				_frame = safe_mod(_frame, array_length(spr));
+				_frame = safe_mod(_frame, _len);
 				break;
 			case ANIMATION_END.ping :
-				_frame = safe_mod(_frame, array_length(spr) * 2 - 2);
-				if(_frame >= array_length(spr))
-					_frame = array_length(spr) * 2 - 2 - _frame;
+				_frame = safe_mod(_frame, _len * 2 - 2);
+				if(_frame >= _len)
+					_frame = _len * 2 - 2 - _frame;
 				break;
 			case ANIMATION_END.hold :
-				_frame = min(_frame, array_length(spr) - 1);
+				_frame = min(_frame, _len - 1);
+				break;
+			case ANIMATION_END.hide :	
+				if(_frame < 0 || _frame >= _len) 
+					_drw = false;
 				break;
 		}
 		
@@ -181,18 +200,11 @@ function Node_Image_Animated(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		
 		var curr_w = sprite_get_width(spr[_frame]);
 		var curr_h = sprite_get_height(spr[_frame]);
-		var curr_x = pad[2] + (ww - curr_w) / 2;
-		var curr_y = pad[1] + (hh - curr_h) / 2;
+		var curr_x = _pad[2] + (ww - curr_w) / 2;
+		var curr_y = _pad[1] + (hh - curr_h) / 2;
 		
-		surface_set_target(surfs);
-			DRAW_CLEAR
-			BLEND_OVERRIDE;
-			if(_end == ANIMATION_END.hide) {
-				if(_frame < array_length(spr))
-					draw_sprite(spr[_frame], 0, curr_x, curr_y);
-			} else
-				draw_sprite(spr[_frame], 0, curr_x, curr_y);
-			BLEND_NORMAL;
-		surface_reset_target();
-	}
+		surface_set_shader(surfs);
+			if(_drw) draw_sprite(spr[_frame], 0, curr_x, curr_y);
+		surface_reset_shader();
+	} #endregion
 }

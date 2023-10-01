@@ -41,7 +41,7 @@ enum NODE_EXPORT_FORMAT {
 	gif,
 }
 
-function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
+function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor { 
 	name = "Export";
 	preview_channel = 1;
 	autoUpdatedTrigger = false;
@@ -105,10 +105,15 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		.setDisplay(VALUE_DISPLAY.slider, [0, 100, 1])
 		.rejectArray();
 	
-	inputs[| 11] = nodeValue("Sequence begin", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+	inputs[| 11] = nodeValue("Sequence begin", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0);
 	
 	inputs[| 12] = nodeValue("Frame range", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [0, -1])
-		.setDisplay(VALUE_DISPLAY.slider_range, [0, PROJECT.animator.frames_total, 1])
+		.setDisplay(VALUE_DISPLAY.slider_range, [0, PROJECT.animator.frames_total, 1]);
+	
+	png_format   = [ "INDEX4", "INDEX8", "Default (PNG32)" ];
+	png_format_r = [ "PNG4", "PNG8"  ];
+	inputs[| 13] = nodeValue("Subformat", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 4)
+		.setDisplay(VALUE_DISPLAY.enum_scroll, png_format, { update_hover: false });
 	
 	outputs[| 0] = nodeValue("Loop exit", self, JUNCTION_CONNECT.output, VALUE_TYPE.any, 0);
 	
@@ -196,7 +201,8 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	input_display_list = [
 		["Export",		false], 0, 1, 2, export_template, 
 		["Format ",		false], 3, 9, 
-		["Settings",	false], 12, 8, 5, 6, 7, 10, 11, 
+		["Animation",	false], 12, 8, 5, 11, 
+		["Quality",		false], 6, 7, 10, 13, 
 	];
 	
 	directory = DIRECTORY + "temp/" + string(irandom_range(100000, 999999));
@@ -448,32 +454,43 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		
 		var extd = inputs[|  9].getValue();
 		var qual = inputs[| 10].getValue();
+		var indx = inputs[| 13].getValue();
 		var ext  = array_safe_get(format_image, extd, ".png");
 		
 		var _pathOut  = _path;
-		var _pathTemp = directory + "/" + string(irandom_range(10000, 99999)) + ".png";
+		var _pathTemp = $"{directory}/{irandom_range(10000, 99999)}.png";
 		
 		switch(ext) {
 			case ".png": 
-				surface_save_safe(_surf, _path);
+				if(indx == 0) {
+					surface_save_safe(_surf, _pathTemp);
+					
+					var shell_cmd = $"convert \"{_pathTemp}\" \"{_pathOut}\"";
+					shell_execute(magick, shell_cmd, self);
+				} else if(indx == 2) {
+					surface_save_safe(_surf, _pathOut);
+				} else {
+					surface_save_safe(_surf, _pathTemp);
+					
+					var shell_cmd = $"convert {_pathTemp} {png_format_r[indx]}:\"{_pathOut}\"";
+					shell_execute(magick, shell_cmd, self);
+				}
 				break;
 				
 			case ".jpg": 
 				surface_save_safe(_surf, _pathTemp);
-				
-				_pathOut = "\"" + string_replace_all(_path, ".png", "") + ".jpg\"";
-				_pathTemp = "\"" + _pathTemp + "\"";
-				var shell_cmd = _pathTemp + " -quality " + string(qual) + " " + _pathOut;
+					
+				_pathOut = $"\"{string_replace_all(_path, ".png", "")}.jpg\"";
+				var shell_cmd = $"\"{_pathTemp}\" -quality {qual} {_pathOut}";
 				
 				shell_execute(magick, shell_cmd, self);
 				break;
 				
-			case ".webp": 
+			case ".webp":
 				surface_save_safe(_surf, _pathTemp);
 				
-				_pathOut = "\"" + string_replace_all(_path, ".png", "") + ".webp\"";
-				_pathTemp = "\"" + _pathTemp + "\"";
-				var shell_cmd = _pathTemp + " -quality " + string(qual) + " -define webp:lossless=true " + _pathOut;
+				_pathOut = $"\"{string_replace_all(_path, ".png", "")}.webp\"";
+				var shell_cmd = $"\"{_pathTemp}\" -quality {qual} -define webp:lossless=true {_pathOut}";
 				
 				shell_execute(magick, shell_cmd, self);
 				break;
@@ -589,7 +606,9 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	} #endregion
 	
 	static step = function() { #region
-		var surf = inputs[| 0].getValue();
+		var surf = inputs[|  0].getValue();
+		var pngf = inputs[| 13].getValue();
+		
 		if(is_array(surf)) {
 			inputs[| 3].display_data		 = format_array;
 			inputs[| 3].editWidget.data_list = format_array;
@@ -600,7 +619,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		
 		outputs[| 1].setValue(surf);
 		
-		var anim = inputs[| 3].getValue();
+		var anim = inputs[| 3].getValue(); // single, sequence, animation
 		var extn = inputs[| 9].getValue();
 		
 		inputs[|  5].setVisible(anim == 2);
@@ -608,8 +627,9 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		inputs[|  7].setVisible(anim == 2);
 		inputs[|  8].setVisible(anim == 2);
 		inputs[| 11].setVisible(anim == 1);
-		inputs[| 12].setVisible(anim >= 1);
+		inputs[| 12].setVisible(anim >  0);
 		inputs[| 12].editWidget.maxx = PROJECT.animator.frames_total;
+		inputs[| 13].setVisible(anim <  2);
 		
 		if(anim == NODE_EXPORT_FORMAT.gif) {
 			inputs[|  9].display_data		  = format_animation;
