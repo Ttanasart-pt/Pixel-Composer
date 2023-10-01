@@ -61,7 +61,7 @@ function Node_Text(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 			font_delete(font);
 			
 		font_add_enable_aa(_aa);
-		font = font_add(_path, _size, false, false, 0, 0);
+		font = _font_add(_path, _size);
 	}
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) {

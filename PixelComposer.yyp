@@ -1116,6 +1116,7 @@
     {"id":{"name":"o_dialog_add_node","path":"objects/o_dialog_add_node/o_dialog_add_node.yy",},},
     {"id":{"name":"s_node_curve_eval","path":"sprites/s_node_curve_eval/s_node_curve_eval.yy",},},
     {"id":{"name":"s_node_path_reverse","path":"sprites/s_node_path_reverse/s_node_path_reverse.yy",},},
+    {"id":{"name":"sh_draw_texture","path":"shaders/sh_draw_texture/sh_draw_texture.yy",},},
     {"id":{"name":"fd_rectangle_get_pressure_width","path":"scripts/fd_rectangle_get_pressure_width/fd_rectangle_get_pressure_width.yy",},},
     {"id":{"name":"s_node_strandSim_render","path":"sprites/s_node_strandSim_render/s_node_strandSim_render.yy",},},
     {"id":{"name":"sh_blend_normal","path":"shaders/sh_blend_normal/sh_blend_normal.yy",},},

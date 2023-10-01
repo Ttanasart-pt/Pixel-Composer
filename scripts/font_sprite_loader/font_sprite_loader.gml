@@ -5,7 +5,7 @@ FONT_SPRITES = ds_map_create();
 	function loadFontSprite(path) {
 		if(ds_map_exists(FONT_SPRITES, path)) return;
 		
-		var f = font_add(path, 32, false, false, 32, 255);
+		var f = _font_add(path, 32);
 		draw_set_text(f, fa_left, fa_top, c_white);
 		var name = "ABCabc123";
 		var ww = string_width(name);

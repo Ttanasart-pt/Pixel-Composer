@@ -49,7 +49,7 @@ if !ready exit;
 	tb_search.font			= f_p1;
 	tb_search.active		= sFOCUS;
 	tb_search.hover			= sHOVER;
-	tb_search.draw(dialog_x + dialog_w - ui(padding - 8), dialog_y + ui(title_height) / 2, ui(200), ui(28), search_text, mouse_ui,, fa_right, fa_center);
+	tb_search.draw(dialog_x + dialog_w - ui(padding - 8), dialog_y + ui(title_height) / 2, ui(200), ui(28), search_text, mouse_ui, fa_right, fa_center);
 	draw_sprite_ui_uniform(THEME.search, 0, dialog_x + dialog_w - ui(padding + 208), dialog_y + ui(title_height) / 2, 1, COLORS._main_text_sub);
 	
 	if(page_current == 0) {

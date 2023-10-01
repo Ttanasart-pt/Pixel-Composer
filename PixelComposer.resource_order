@@ -535,6 +535,7 @@
     {"name":"sh_draw_surface_part_tiled","order":1,"path":"shaders/sh_draw_surface_part_tiled/sh_draw_surface_part_tiled.yy",},
     {"name":"o_dialog_add_node","order":1,"path":"objects/o_dialog_add_node/o_dialog_add_node.yy",},
     {"name":"s_node_path_reverse","order":8,"path":"sprites/s_node_path_reverse/s_node_path_reverse.yy",},
+    {"name":"sh_draw_texture","order":6,"path":"shaders/sh_draw_texture/sh_draw_texture.yy",},
     {"name":"fd_rectangle_get_pressure_width","order":18,"path":"scripts/fd_rectangle_get_pressure_width/fd_rectangle_get_pressure_width.yy",},
     {"name":"sh_blend_normal","order":1,"path":"shaders/sh_blend_normal/sh_blend_normal.yy",},
     {"name":"node_feedback_output","order":2,"path":"scripts/node_feedback_output/node_feedback_output.yy",},
