@@ -1007,7 +1007,7 @@ end",
 			with(_addon_custom) if(self.ID == ID) _addon = self;
 			if(_addon == noone) return noone;
 			
-			var wd  = new button(onModify).setText(txt);
+			var wd  = button(onModify).setText(txt);
 			wd.setLua(_addon.thread, onModify, function() { 
 				return lua_call(lua_thread, lua_thread_key); 
 			});

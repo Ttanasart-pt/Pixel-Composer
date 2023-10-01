@@ -1,3 +1,5 @@
+// feather ignore all
+
 /// @func BBMOD_DualQuaternion([_x, _y, _z, _w, _dx, _dy, _dz, _dw])
 ///
 /// @desc A dual quaternion.

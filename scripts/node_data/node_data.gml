@@ -49,6 +49,8 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		name = "";
 		display_name = "";
 		internalName = "";
+		onSetDisplayName = noone;
+		renamed = false;
 	
 		tooltip = "";
 		x = _x;
@@ -251,8 +253,8 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		h = max(min_h, (preview_surface && previewable)? 128 : 0, _hi, _ho);
 	} #endregion
 	
-	onSetDisplayName = noone;
 	static setDisplayName = function(_name) { #region
+		renamed = true;
 		display_name = _name;
 		internalName = string_replace_all(display_name, " ", "_");
 		refreshNodeMap();
@@ -1376,6 +1378,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		array_push(_trigger, inspectInput2.serialize(scale, preset));
 		array_push(_trigger, updatedTrigger.serialize(scale, preset));
 		_map.inspectInputs = _trigger;
+		_map.renamed = renamed;
 		
 		doSerialize(_map);
 		processSerialize(_map);
@@ -1432,6 +1435,8 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 			
 			triggerRender();
 		}
+		
+		renamed = struct_try_get(load_map, "renamed", false);
 	} #endregion
 	
 	static inputBalance = function() { #region //Cross version compatibility for dynamic input nodes

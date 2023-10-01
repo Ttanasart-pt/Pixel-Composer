@@ -1,7 +1,7 @@
 function buttonPalette(_onApply, dialog = noone) : widget() constructor {
 	onApply = _onApply;
 	parentDialog = dialog;
-	current_palette = noone;
+	current_palette = [];
 	
 	function apply(value) {
 		if(!interactable) return;
@@ -42,7 +42,7 @@ function buttonPalette(_onApply, dialog = noone) : widget() constructor {
 			h = _h;
 		}
 		
-		if(!is_array(current_palette) || is_array(current_palette[0]))
+		if(!is_array(current_palette) || array_empty(current_palette) || is_array(current_palette[0]))
 			return 0;
 		
 		var hoverRect = point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + h);

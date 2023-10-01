@@ -29,9 +29,6 @@ function refreshCollections() {
 }
 
 function searchCollection(_list, _search_str, _clear_list = true) {
-	//if(_clear_list)
-	//	ds_list_clear(_list);
-	
 	if(_search_str == "") return;
 	var search_lower = string_lower(_search_str);
 		

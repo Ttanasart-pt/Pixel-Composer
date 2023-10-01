@@ -2,7 +2,6 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	name = "Object";
 	color = COLORS.node_blend_simulation;
 	icon  = THEME.rigidSim;
-	//update_on_frame = true;
 	
 	w = 96;
 	min_h = 96;
@@ -29,8 +28,7 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Box", "Circle", "Custom" ])
 		.rejectArray();
 	
-	inputs[| 6] = nodeValue("Texture", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone)
-		.rejectArray();
+	inputs[| 6] = nodeValue("Texture", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
 	
 	inputs[| 7] = nodeValue("Start shape", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 16, 16, 4, 4, AREA_SHAPE.rectangle ])
 		.setDisplay(VALUE_DISPLAY.area);

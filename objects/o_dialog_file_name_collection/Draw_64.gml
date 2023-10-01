@@ -30,9 +30,8 @@
 	var txt  = __txtx("new_collection_create", "Create collection");
 	var icon = THEME.accept;
 	var clr  = COLORS._main_value_positive;
-	if(updating != noone) { 
+	if(updating != noone)
 		txt  = __txtx("new_collection_update", "Update collection");
-	}
 	
 	if(ugc == 1) {
 		txt  = __txtx("panel_inspector_workshop_upload", "Upload to Steam Workshop");

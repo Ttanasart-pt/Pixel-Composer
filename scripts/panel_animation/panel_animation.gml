@@ -1884,8 +1884,10 @@ function Panel_Animation() : PanelContent() constructor {
 		for( var i = 0, n = array_length(keyframe_selecting); i < n; i++ ) {
 			var cl = keyframe_selecting[i].cloneAnimator(,, false);
 			if(cl == noone) continue;
-			array_append(clones, cl);
+			array_push(clones, cl);
 		}
+		
+		if(array_empty(clones)) return;
 		
 		keyframe_selecting = clones;
 		keyframe_dragging  = keyframe_selecting[0];

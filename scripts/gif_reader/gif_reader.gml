@@ -1055,7 +1055,7 @@ function gif_std_enum_getIndex() {
 		static readUInt16 = method(undefined, haxe_io_Input_readUInt16);
 		static readBytes = method(undefined, haxe_io_Input_readBytes);
 		static readString = method(undefined, haxe_io_Input_readString);
-		if (_sourcePos == undefined) _sourcePos = 0;
+		_sourcePos ??= 0;
 		if (false) throw argument[2];
 		method(self, haxe_io_Input_new)();
 		if (_sourceLen == undefined) _sourceLen = array_length(_sourceBytes.b) - _sourcePos;

@@ -1,3 +1,5 @@
+// feather ignore all
+
 /// @func BBMOD_Quaternion([_x, _y, _z, _w])
 ///
 /// @desc A quaternion.
@@ -410,10 +412,11 @@ function BBMOD_Quaternion(_x=0.0, _y=0.0, _z=0.0, _w=1.0) constructor
 	static Normalize = function () {
 		gml_pragma("forceinline");
 		var _lengthSqr = LengthSqr();
+		if(_lengthSqr == 0)
+			return new BBMOD_Quaternion();
+		
 		if (_lengthSqr >= math_get_epsilon())
-		{
 			return Scale(1.0 / sqrt(_lengthSqr));
-		}
 		return Clone();
 	};
 

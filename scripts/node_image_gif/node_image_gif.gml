@@ -109,7 +109,6 @@ function Node_Image_gif(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 			spr = spr_builder._spr;
 			triggerRender();
 			loading = 0;
-			delete spr_builder;
 			
 			gc_collect();
 		}

@@ -173,7 +173,7 @@ function SAVE_COLLECTION(_node, _path, save_surface = true, metadata = noone, co
 	if(save_surface) {
 		var preview_surface = PANEL_PREVIEW.getNodePreviewSurface();
 		if(is_surface(preview_surface)) {
-			var icon_path = string_copy(_path, 1, string_length(_path) - 5) + ".png";
+			var icon_path = string_replace(_path, filename_ext(_path), "") + ".png";
 			surface_save_safe(preview_surface, icon_path);
 		}
 	}

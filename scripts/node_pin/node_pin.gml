@@ -65,7 +65,7 @@ function Node_Pin(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			if(hov != noone) jun = hov.connect_type == JUNCTION_CONNECT.input? outputs[| 0] : inputs[| 0];
 			else			 jun = inputs[| 0].value_from == noone? inputs[| 0] : outputs[| 0];
 			
-			if(jun.drawJunction(_s, _mx, _my,))
+			if(jun.drawJunction(_s, _mx, _my))
 				hover = jun;
 		}
 		
@@ -85,7 +85,7 @@ function Node_Pin(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			active_draw_index = -1;
 		}
 		
-		if(display_name != "") {
+		if(renamed && display_name != "" && display_name != "Pin") {
 			draw_set_text(f_p0, fa_center, fa_bottom, COLORS._main_text);
 			draw_text_transformed(xx, yy - 12, display_name, _s, _s, 0);
 		}
