@@ -1,15 +1,6 @@
 function Node_Combine_RGB(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "RGB Combine";
 	
-	shader = sh_combine_rgb;
-	uniform_r = shader_get_sampler_index(shader, "samR");
-	uniform_g = shader_get_sampler_index(shader, "samG");
-	uniform_b = shader_get_sampler_index(shader, "samB");
-	uniform_a = shader_get_sampler_index(shader, "samA");
-	
-	uniform_usea = shader_get_uniform(shader, "useA");
-	uniform_mode = shader_get_uniform(shader, "mode");
-	
 	inputs[| 0] = nodeValue("Red",   self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 	inputs[| 1] = nodeValue("Green", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 	inputs[| 2] = nodeValue("Blue",  self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
@@ -34,24 +25,17 @@ function Node_Combine_RGB(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		var _a = _data[3];
 		var _mode = _data[4];
 		
-		surface_set_target(_outSurf);
-		DRAW_CLEAR
-		BLEND_OVERRIDE;
-		
-		shader_set(shader);
-			texture_set_stage(uniform_r, surface_get_texture(_r));
-			texture_set_stage(uniform_g, surface_get_texture(_g));
-			texture_set_stage(uniform_b, surface_get_texture(_b));
+		surface_set_shader(_outSurf, sh_combine_rgb);
+			shader_set_surface("samR", _r);
+			shader_set_surface("samG", _g);
+			shader_set_surface("samB", _b);
+			shader_set_surface("samA", _a);
 			
-			shader_set_uniform_i(uniform_mode, _mode);
-			shader_set_uniform_i(uniform_usea, is_surface(_a));
-			texture_set_stage(uniform_a, surface_get_texture(_a));
+			shader_set_i("useA", _mode);
+			shader_set_i("mode", is_surface(_a));
 			
-			draw_sprite_ext(s_fx_pixel, 0, 0, 0, surface_get_width_safe(_outSurf), surface_get_width_safe(_outSurf), 0, c_white, 1);
-		shader_reset();
-		
-		BLEND_NORMAL;
-		surface_reset_target();
+			draw_sprite_stretched(s_fx_pixel, 0, 0, 0, surface_get_width_safe(_outSurf), surface_get_height_safe(_outSurf));
+		surface_reset_shader();
 		
 		return _outSurf;
 	} #endregion

@@ -916,9 +916,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						break; #endregion
 					case VALUE_DISPLAY.matrix :			#region
 						editWidget = new matrixGrid(_txt, display_data, function(index, val) {
-							var _val = animator.getValue();
-							_val[index] = val;
-							return setValueDirect(_val);
+							return setValueDirect(val, index);
 						}, unit );
 						if(type == VALUE_TYPE.integer) editWidget.setSlideSpeed(1);
 						
