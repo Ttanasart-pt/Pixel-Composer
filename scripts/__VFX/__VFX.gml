@@ -24,9 +24,10 @@ function __part(_node) constructor {
 	turning = 0;
 	turnSpd = 0;
 	
-	accel  = 0;
-	wig    = 0;
-	spVec  = [ 0, 0 ];
+	accel   = 0;
+	spVec   = [ 0, 0 ];
+	
+	wig_pos = 0;
 	
 	boundary_data = -1;
 	
@@ -77,7 +78,7 @@ function __part(_node) constructor {
 		node.onPartCreate(self);
 	}
 	
-	static setPhysic = function(_sx, _sy, _ac, _g, _gDir, _wig, _turn, _turnSpd) {
+	static setPhysic = function(_sx, _sy, _ac, _g, _gDir, _wig_pos, _turn, _turnSpd) {
 		speedx  = _sx;
 		speedy  = _sy;
 		accel   = _ac;
@@ -89,7 +90,7 @@ function __part(_node) constructor {
 		turning = _turn;
 		turnSpd = _turnSpd;
 	
-		wig = _wig;
+		wig_pos = _wig_pos;
 		
 		spVec[0] = point_distance(0, 0, speedx, speedy);
 		spVec[1] = point_direction(0, 0, speedx, speedy);
@@ -146,8 +147,8 @@ function __part(_node) constructor {
 		diss = max(0, diss + accel);
 			
 		if(speedx != 0 || speedy != 0) {
-			if(wig != 0)
-				dirr += random_range(-wig, wig);
+			if(wig_pos != 0)
+				dirr += random_range(-wig_pos, wig_pos);
 			
 			if(turning != 0) {
 				var trn = turnSpd? turning * diss : turning;

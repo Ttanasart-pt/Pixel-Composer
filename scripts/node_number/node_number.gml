@@ -501,7 +501,7 @@ function Node_Vector_Split(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	previewable   = false;
 	
 	w = 96;
-	min_h = 32 + 24 * 4;
+	min_h = 32;
 	draw_padding = 4;
 	
 	inputs[| 0] = nodeValue("Vector", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 0, 0 ])
@@ -520,7 +520,7 @@ function Node_Vector_Split(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 			type = VALUE_TYPE.integer;
 		
 		inputs[| 0].type = type;
-		for( var i = 0; i < 4; i++ ) 
+		for( var i = 0; i < 4; i++ )
 			outputs[| i].type = type;
 	}
 	
@@ -530,7 +530,13 @@ function Node_Vector_Split(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		draw_set_text(f_h1, fa_center, fa_center, COLORS._main_text);
-		var str	 = $"{outputs[| 0].getValueCached()}\n{outputs[| 1].getValueCached()}\n{outputs[| 2].getValueCached()}\n{outputs[| 3].getValueCached()}";
+		var str = "";
+		for( var i = 0; i < 4; i++ ) {
+			if(outputs[| i].visible)
+				str += $"{outputs[| 0].getValueCached()}\n";
+		}
+		
+		str = string_trim(str);
 		var bbox = drawGetBbox(xx, yy, _s);
 		var ss	 = string_scale(str, bbox.w, bbox.h);
 		draw_text_transformed(bbox.xc, bbox.yc, str, ss, ss, 0);
