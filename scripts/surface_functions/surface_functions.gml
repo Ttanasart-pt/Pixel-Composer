@@ -154,8 +154,8 @@ function is_surface(s) {
 	if(!s) return false;
 	if(!surface_exists(s)) return false;
 	
-	if(surface_get_width_safe(s) <= 0) return false;
-	if(surface_get_height_safe(s) <= 0) return false;
+	//if(surface_get_width_safe(s) <= 0) return false;
+	//if(surface_get_height_safe(s) <= 0) return false;
 	
 	return true;
 }

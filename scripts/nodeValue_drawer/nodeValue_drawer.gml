@@ -69,7 +69,7 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 	if(visi_hold != noone && mouse_release(mb_left))
 		visi_hold = noone;
 		
-	var cc = COLORS._main_text_inner;
+	var cc = COLORS._main_text;
 	if(jun.expUse) {
 		var expValid = jun.expTree != noone && jun.expTree.validate();
 		cc = expValid? COLORS._main_value_positive : COLORS._main_value_negative;

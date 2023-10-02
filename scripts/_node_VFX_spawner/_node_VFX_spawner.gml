@@ -60,8 +60,8 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		.setDisplay(VALUE_DISPLAY.range, { linked : true })
 		.rejectArray();
 	
-	inputs[| 20] = nodeValue("Wiggle", self, JUNCTION_CONNECT.input, VALUE_TYPE.float,  [ 0, 0 ] )
-		.setDisplay(VALUE_DISPLAY.range, { linked : true })
+	inputs[| 20] = nodeValue("Direction wiggle", self, JUNCTION_CONNECT.input, VALUE_TYPE.float,  [ 0, 0 ] )
+		.setDisplay(VALUE_DISPLAY.vector, { label: [ "Amplitude", "Period" ], linkable: false, per_line: true })
 		.rejectArray();
 	
 	inputs[| 21] = nodeValue("Loop", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true )
@@ -132,16 +132,29 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		.rejectArray()
 		.setDisplay(VALUE_DISPLAY.slider, [ 0, 1, 0.01 ]);
 		
+	inputs[| 41] = nodeValue("Position wiggle", self, JUNCTION_CONNECT.input, VALUE_TYPE.float,  [ 0, 0 ] )
+		.setDisplay(VALUE_DISPLAY.vector, { label: [ "Amplitude", "Period" ], linkable: false, per_line: true })
+		.rejectArray();
+		
+	inputs[| 42] = nodeValue("Rotation wiggle", self, JUNCTION_CONNECT.input, VALUE_TYPE.float,  [ 0, 0 ] )
+		.setDisplay(VALUE_DISPLAY.vector, { label: [ "Amplitude", "Period" ], linkable: false, per_line: true })
+		.rejectArray();
+		
+	inputs[| 43] = nodeValue("Scale wiggle", self, JUNCTION_CONNECT.input, VALUE_TYPE.float,  [ 0, 0 ] )
+		.setDisplay(VALUE_DISPLAY.vector, { label: [ "Amplitude", "Period" ], linkable: false, per_line: true })
+		.rejectArray();
+		
 	input_len = ds_list_size(inputs);
 	
 	input_display_list = [ 32,
 		["Sprite",	   false],	0, 22, 23, 26,
 		["Spawn",		true],	27, 16, 1, 2, 3, 4, 30, 31, 24, 25, 5,
 		["Movement",	true],	29, 6, 18,
-		["Physics",		true],	7, 19, 33, 20, 34, 35, 36, 
+		["Physics",		true],	7, 19, 33, 34, 35, 36, 
 		["Ground",		true],	37, 38, 39, 40, 
 		["Rotation",	true],	15, 8, 9, 
 		["Scale",		true],	10, 17, 11, 
+		["Wiggles",		true],	20, 41, 42, 43, 
 		["Color",		true],	12, 28, 13, 14, 
 		["Render",		true],	21
 	];
@@ -161,7 +174,19 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	current_data  = [];
 	surface_cache = {};
 	
-	for(var i = 0; i < attributes.part_amount; i++)
+	wiggle_maps = {
+		wig_psx: new wiggleMap(seed, 1, 1000),
+		wig_psy: new wiggleMap(seed, 1, 1000),
+		wig_scx: new wiggleMap(seed, 1, 1000),
+		wig_scy: new wiggleMap(seed, 1, 1000),
+		wig_rot: new wiggleMap(seed, 1, 1000),
+		wig_dir: new wiggleMap(seed, 1, 1000),
+	};
+	
+	curve_scale = noone;
+	curve_alpha = noone;
+	
+	for( var i = 0; i < attributes.part_amount; i++ )
 		parts[i] = new __part(self);
 		
 	static spawn = function(_time = PROJECT.animator.current_frame, _pos = -1) { #region
@@ -184,7 +209,6 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		var _accel	= current_data[ 7];
 		var _grav	= current_data[19];
 		var _gvDir	= current_data[33];
-		var _wigg	= current_data[20];
 		var _turn	= current_data[34];
 		var _turnBi	= current_data[35];
 		var _turnSc	= current_data[36];
@@ -194,12 +218,10 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		var _rotation_speed	= current_data[ 9];
 		var _scale			= current_data[10];
 		var _size 			= current_data[17];
-		var _scale_time		= current_data[11];
 		
 		var _color	= current_data[12];
 		var _blend	= current_data[28];
 		var _alpha	= current_data[13];
-		var _fade	= current_data[14];
 		
 		var _arr_type	= current_data[22];
 		var _anim_speed	= current_data[23];
@@ -304,12 +326,12 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 			if(_turnBi) _trn *= choose(-1, 1);
 			
 			var _gravity = random_range(_grav[0], _grav[1]);
-			var _wiggle  = random_range(_wigg[0], _wigg[1]);
 			
-			part.setPhysic(_vx, _vy, _acc, _gravity, _gvDir, _wiggle, _trn, _turnSc);
+			part.setPhysic(_vx, _vy, _acc, _gravity, _gvDir, _trn, _turnSc);
+			part.setWiggle(wiggle_maps);
 			part.setGround(_ground, _ground_offset, _ground_bounce, _ground_frict);
-			part.setTransform(_scx, _scy, _scale_time, _rot, _rot_spd, _follow);
-			part.setDraw(_color, _bld, _alp, _fade);
+			part.setTransform(_scx, _scy, curve_scale, _rot, _rot_spd, _follow);
+			part.setDraw(_color, _bld, _alp, curve_alpha);
 			spawn_index = safe_mod(spawn_index + 1, attributes.part_amount);
 			onSpawn(_time, part);
 			
@@ -331,6 +353,24 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		
 		render();
 		seed = inputs[| 32].getValue();
+		
+		var _wigg_pos = inputs[| 41].getValue();
+		var _wigg_rot = inputs[| 42].getValue();
+		var _wigg_sca = inputs[| 43].getValue();
+		var _wigg_dir = inputs[| 20].getValue();
+		
+		wiggle_maps.wig_psx.check(_wigg_pos[0], _wigg_pos[1], seed + 10);
+		wiggle_maps.wig_psy.check(_wigg_pos[0], _wigg_pos[1], seed + 20);
+		wiggle_maps.wig_rot.check(_wigg_rot[0], _wigg_rot[1], seed + 30);
+		wiggle_maps.wig_scx.check(_wigg_sca[0], _wigg_sca[1], seed + 40);
+		wiggle_maps.wig_scy.check(_wigg_sca[0], _wigg_sca[1], seed + 50);
+		wiggle_maps.wig_dir.check(_wigg_dir[0], _wigg_dir[1], seed + 60);
+		
+		var _curve_sca = inputs[| 11].getValue();
+		var _curve_alp = inputs[| 14].getValue();
+		
+		curve_scale = new curveMap(_curve_sca, PROJECT.animator.frames_total);
+		curve_alpha = new curveMap(_curve_alp, PROJECT.animator.frames_total);
 		
 		var keys = variable_struct_get_names(surface_cache);
 		for( var i = 0, n = array_length(keys); i < n; i++ )

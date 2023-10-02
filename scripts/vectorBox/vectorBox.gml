@@ -7,6 +7,9 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 	size     = _size;
 	onModify = _onModify;
 	unit	 = _unit;
+	
+	linkable = true;
+	per_line = false;
 	current_value = [];
 	extra_data    = { linked : false, side_button : noone };
 	
@@ -87,7 +90,7 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 		x = _x;
 		y = _y;
 		w = _w;
-		h = _h;
+		h = per_line? (_h + ui(8)) * size - ui(8) : _h;
 		
 		if(struct_has(_extra_data, "linked"))	   extra_data.linked	  = _extra_data.linked;
 		if(struct_has(_extra_data, "side_button")) extra_data.side_button = _extra_data.side_button;
@@ -113,37 +116,44 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 			_w -= ui(40);
 		}
 		
-		var _icon_blend = extra_data.linked? COLORS._main_accent : (link_inactive_color == noone? COLORS._main_icon : link_inactive_color);
-		var bx = _x;
-		var by = _y + _h / 2 - ui(32 / 2);
-		if(buttonInstant(THEME.button_hide, bx + ui(4), by + ui(4), ui(24), ui(24), _m, active, hover, tooltip, THEME.value_link, extra_data.linked, _icon_blend) == 2) {
-			extra_data.linked  = !extra_data.linked;
-			_extra_data.linked =  extra_data.linked;
+		if(linkable) {
+			var _icon_blend = extra_data.linked? COLORS._main_accent : (link_inactive_color == noone? COLORS._main_icon : link_inactive_color);
+			var bx = _x;
+			var by = _y + _h / 2 - ui(32 / 2);
+			if(buttonInstant(THEME.button_hide, bx + ui(4), by + ui(4), ui(24), ui(24), _m, active, hover, tooltip, THEME.value_link, extra_data.linked, _icon_blend) == 2) {
+				extra_data.linked  = !extra_data.linked;
+				_extra_data.linked =  extra_data.linked;
 			
-			if(extra_data.linked) {
-				onModify(0, _data[0]);
-				onModify(1, _data[0]);
+				if(extra_data.linked) {
+					onModify(0, _data[0]);
+					onModify(1, _data[0]);
+				}
 			}
+		
+			_x += ui(28);
+			_w -= ui(28);
 		}
 		
-		_x += ui(28);
-		_w -= ui(28);
-		
 		var sz = min(size, array_length(_data));
-		var ww = _w / sz;
+		var ww = per_line? _w : _w / sz;
+		
 		for(var i = 0; i < sz; i++) {
-			tb[i].setFocusHover(active, hover);
+			draw_set_font(f_p0);
+			var lw = max(ui(24), string_width(axis[i]) + ui(16));
 			
-			var bx  = _x + ww * i;
-			tb[i].draw(bx + ui(24), _y, ww - ui(24), _h, _data[i], _m);
+			var bx = per_line? _x : _x + ww * i;
+			var by = per_line? _y + (_h + ui(8)) * i : _y;
+			
+			tb[i].setFocusHover(active, hover);
+			tb[i].draw(bx + lw, by, ww - lw, _h, _data[i], _m);
 			
 			draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text_inner);
-			draw_text(bx + ui(8), _y + _h / 2, axis[i]);
+			draw_text_add(bx + ui(8), by + _h / 2, axis[i]);
 		}
 		
 		resetFocus();
 		
-		return _h;
+		return h;
 	}
 	
 	static apply = function() {

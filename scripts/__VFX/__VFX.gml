@@ -24,10 +24,23 @@ function __part(_node) constructor {
 	turning = 0;
 	turnSpd = 0;
 	
+	drawx   = 0;
+	drawy   = 0;
+	drawrot = 0;
+	drawsx  = 0;
+	drawsy  = 0;
+	
 	accel   = 0;
 	spVec   = [ 0, 0 ];
 	
-	wig_pos = 0;
+	//wig_psx = new wiggleMap(seed, 1, PROJECT.animator.frames_total);
+	//wig_psy = new wiggleMap(seed, 1, PROJECT.animator.frames_total);
+	
+	//wig_scx = new wiggleMap(seed, 1, PROJECT.animator.frames_total);
+	//wig_scy = new wiggleMap(seed, 1, PROJECT.animator.frames_total);
+	
+	//wig_rot = new wiggleMap(seed, 1, PROJECT.animator.frames_total);
+	//wig_dir = new wiggleMap(seed, 1, PROJECT.animator.frames_total);
 	
 	boundary_data = -1;
 	
@@ -64,7 +77,7 @@ function __part(_node) constructor {
 	ground_bounce	= 0;
 	ground_friction = 1;
 	
-	static create = function(_surf, _x, _y, _life) {
+	static create = function(_surf, _x, _y, _life) { #region
 		active	= true;
 		surf	= _surf;
 		x	= _x;
@@ -76,9 +89,9 @@ function __part(_node) constructor {
 		life = _life;
 		life_total = life;
 		node.onPartCreate(self);
-	}
+	} #endregion
 	
-	static setPhysic = function(_sx, _sy, _ac, _g, _gDir, _wig_pos, _turn, _turnSpd) {
+	static setPhysic = function(_sx, _sy, _ac, _g, _gDir, _turn, _turnSpd) { #region
 		speedx  = _sx;
 		speedy  = _sy;
 		accel   = _ac;
@@ -90,20 +103,34 @@ function __part(_node) constructor {
 		turning = _turn;
 		turnSpd = _turnSpd;
 	
-		wig_pos = _wig_pos;
-		
 		spVec[0] = point_distance(0, 0, speedx, speedy);
 		spVec[1] = point_direction(0, 0, speedx, speedy);
-	}
+	} #endregion
 	
-	static setGround = function(_ground, _ground_offset, _ground_bounce, _ground_frict) {
+	static setWiggle = function(wiggle_maps) { #region
+		//wig_psx.check(_wig_pos[0], _wig_pos[1], seed + 10);
+		//wig_psy.check(_wig_pos[0], _wig_pos[1], seed + 20);
+		//wig_rot.check(_wig_rot[0], _wig_rot[1], seed + 30);
+		//wig_scx.check(_wig_sca[0], _wig_sca[1], seed + 40);
+		//wig_scy.check(_wig_sca[0], _wig_sca[1], seed + 50);
+		//wig_dir.check(_wig_dir[0], _wig_dir[1], seed + 60);
+		
+		wig_psx = wiggle_maps.wig_psx;
+		wig_psy = wiggle_maps.wig_psy;
+		wig_rot = wiggle_maps.wig_rot;
+		wig_scx = wiggle_maps.wig_scx;
+		wig_scy = wiggle_maps.wig_scy;
+		wig_dir = wiggle_maps.wig_dir;
+	} #endregion
+	
+	static setGround = function(_ground, _ground_offset, _ground_bounce, _ground_frict) { #region
 		ground			= _ground;
 		ground_y		= y + _ground_offset;
 		ground_bounce	= _ground_bounce;
 		ground_friction	= clamp(1 - _ground_frict, 0, 1);
-	}
+	} #endregion
 	
-	static setTransform = function(_scx, _scy, _sct, _rot, _rots, _follow) {
+	static setTransform = function(_scx, _scy, _sct, _rot, _rots, _follow) { #region
 		sc_sx = _scx;
 		sc_sy = _scy;
 		sct   = _sct;
@@ -111,23 +138,23 @@ function __part(_node) constructor {
 		rot   = _rot;
 		rot_s = _rots;
 		follow = _follow;
-	}
+	} #endregion
 	
-	static setDraw = function(_col, _blend, _alp, _fade) {
+	static setDraw = function(_col, _blend, _alp, _fade) { #region
 		col      = _col;
 		blend	 = _blend;
 		alp      = _alp;
 		alp_draw = _alp;
 		alp_fade = _fade;
-	}
+	} #endregion
 	
-	static kill = function() {
+	static kill = function() { #region
 		active = false;
 		
 		node.onPartDestroy(self);
-	}
+	} #endregion
 	
-	static step = function() { 
+	static step = function() { #region
 		if(!active) return;
 		x += speedx;
 		
@@ -145,10 +172,9 @@ function __part(_node) constructor {
 		var dirr = point_direction(0, 0, speedx, speedy);
 		var diss = point_distance(0, 0, speedx, speedy);
 		diss = max(0, diss + accel);
-			
+		
 		if(speedx != 0 || speedy != 0) {
-			if(wig_pos != 0)
-				dirr += random_range(-wig_pos, wig_pos);
+			dirr += wig_dir.get(seed + life);
 			
 			if(turning != 0) {
 				var trn = turnSpd? turning * diss : turning;
@@ -173,9 +199,21 @@ function __part(_node) constructor {
 		
 		prevx = x;
 		prevy = y;
-	}
+		
+		drawx   = x;
+		drawy   = y;
+		drawrot = rot;
+		drawsx  = sc_sx;
+		drawsy  = sc_sy;
+		
+		drawx   += wig_psx.get(seed + life);
+		drawy   += wig_psy.get(seed + life);
+		drawrot += wig_rot.get(seed + life);
+		drawsx  += wig_scy.get(seed + life);
+		drawsy  += wig_scy.get(seed + life);
+	} #endregion
 	
-	static draw = function(exact, surf_w, surf_h) { 
+	static draw = function(exact, surf_w, surf_h) { #region
 		var ss = surf;
 		if(is_array(surf)) {
 			var ind = abs(round((life_total - life) * anim_speed));
@@ -201,9 +239,9 @@ function __part(_node) constructor {
 		if(!is_surface(surface)) return;
 		
 		var lifeRat = 1 - life / life_total;
-		var scCurve = eval_curve_x(sct, lifeRat);
-		scx   = sc_sx * scCurve;
-		scy   = sc_sy * scCurve;
+		var scCurve = sct.get(lifeRat);
+		scx   = drawsx * scCurve;
+		scy   = drawsy * scCurve;
 		
 		var _xx, _yy;
 		var s_w = surface_get_width_safe(surface) * scx;
@@ -211,8 +249,8 @@ function __part(_node) constructor {
 		
 		if(boundary_data == -1) {
 			var _pp = point_rotate(-s_w / 2, -s_h / 2, 0, 0, rot);
-			_xx = x + _pp[0];
-			_yy = y + _pp[1];
+			_xx = drawx + _pp[0];
+			_yy = drawy + _pp[1];
 		} else {
 			var ww = boundary_data[2] + boundary_data[0];
 			var hh = boundary_data[3] + boundary_data[1];
@@ -222,8 +260,8 @@ function __part(_node) constructor {
 			
 			var _pp = point_rotate(-cx, -cy, 0, 0, rot);
 			
-			_xx = x + cx + _pp[0] * scx;
-			_yy = y + cy + _pp[1] * scy;
+			_xx = drawx + cx + _pp[0] * scx;
+			_yy = drawy + cy + _pp[1] * scy;
 		}
 		
 		if(exact) {
@@ -240,12 +278,12 @@ function __part(_node) constructor {
 		
 		var cc = (col == -1)? c_white : col.eval(lifeRat);
 		if(blend != c_white) cc = colorMultiply(blend, cc);
-		alp_draw = alp * eval_curve_x(alp_fade, lifeRat);
+		alp_draw = alp * alp_fade.get(lifeRat);
 		
-		draw_surface_ext_safe(surface, _xx, _yy, scx, scy, rot, cc, alp_draw);
-	}
+		draw_surface_ext_safe(surface, _xx, _yy, scx, scy, drawrot, cc, alp_draw);
+	} #endregion
 	
-	static getPivot = function() {
+	static getPivot = function() { #region
 		if(boundary_data == -1) 
 			return [x, y];
 		
@@ -255,7 +293,7 @@ function __part(_node) constructor {
 		var cy = y + boundary_data[1] + hh / 2;
 		
 		return [cx, cy];
-	}
+	} #endregion
 }
 
 #region helper
