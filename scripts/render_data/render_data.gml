@@ -8,7 +8,7 @@ enum RENDER_TYPE {
 	globalvar UPDATE, RENDER_QUEUE, RENDER_ORDER, UPDATE_RENDER_ORDER;
 	UPDATE_RENDER_ORDER = false;
 	
-	global.FLAG.render  = true;
+	global.FLAG.render  = false;
 	global.group_inputs = [ "Node_Group_Input", "Node_Feedback_Input", "Node_Iterator_Input", "Node_Iterator_Each_Input" ];
 	
 	#macro RENDER_ALL_REORDER	UPDATE_RENDER_ORDER = true; UPDATE |= RENDER_TYPE.full;
@@ -32,7 +32,7 @@ function __nodeLeafList(_list) { #region
 		}
 	}
 	
-	LOG_LINE_IF(global.FLAG.render, $"Push node {nodeNames} to stack");
+	LOG_LINE_IF(global.FLAG.render, $"Push node {nodeNames} to queue");
 	return nodes;
 } #endregion
 
@@ -57,6 +57,7 @@ function __nodeInLoop(_node) { #region
 } #endregion
 
 function ResetAllNodesRender() { #region
+	LOG_IF(global.FLAG.render, $"XXXXXXXXXXXXXXXXXXXX RESETTING ALL NODES [frame {PROJECT.animator.current_frame}] XXXXXXXXXXXXXXXXXXXX");
 	var _key = ds_map_find_first(PROJECT.nodeMap);
 	var amo  = ds_map_size(PROJECT.nodeMap);
 		
@@ -70,7 +71,7 @@ function ResetAllNodesRender() { #region
 function Render(partial = false, runAction = false) { #region
 	var t = get_timer();
 	LOG_BLOCK_START();
-	LOG_IF(global.FLAG.render, $"============================== RENDER START [frame {PROJECT.animator.current_frame}] ==============================");
+	LOG_IF(global.FLAG.render, $"============================== RENDER START [{partial? "PARTIAL" : "FULL"}] [frame {PROJECT.animator.current_frame}] ==============================");
 	
 	try {
 		var rendering = noone;
@@ -95,14 +96,16 @@ function Render(partial = false, runAction = false) { #region
 		repeat(amo) {
 			var _node = PROJECT.nodeMap[? key];
 			key = ds_map_find_next(PROJECT.nodeMap, key);
-		
+			
 			if(is_undefined(_node)) continue;
 			if(!is_struct(_node)) continue;
 			if(array_exists(global.group_inputs, instanceof(_node))) continue;
 			
+			_node.render_time = 0;
+			
 			if(!_node.active) continue;
 			if(!_node.isRenderActive()) continue;
-			if(_node.rendered) {
+			if(_node.rendered && !_node.isAnimated()) {
 				LOG_IF(global.FLAG.render, $"Skip rendered {_node.internalName}");
 				continue;
 			}
@@ -257,7 +260,7 @@ function RenderListAction(list, context = PANEL_GRAPH.getCurrentContext()) { #re
 		
 			if(_node.isRenderable()) {
 				RENDER_QUEUE.enqueue(_node);
-				printIf(global.FLAG.render, $"		> Push {_node.internalName} node to stack");
+				printIf(global.FLAG.render, $"		> Push {_node.internalName} node to queue");
 			}
 		}
 		

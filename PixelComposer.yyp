@@ -112,7 +112,6 @@
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"d3d light","folderPath":"folders/nodes/data/3D/d3d light.yy",},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"d3d mesh","folderPath":"folders/nodes/data/3D/d3d mesh.yy",},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"animation","folderPath":"folders/nodes/data/animation.yy",},
-    {"resourceType":"GMFolder","resourceVersion":"1.0","name":"audio","folderPath":"folders/nodes/data/audio.yy",},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"compose","folderPath":"folders/nodes/data/compose.yy",},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"armature","folderPath":"folders/nodes/data/compose/armature.yy",},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"dynasurf","folderPath":"folders/nodes/data/dynasurf.yy",},

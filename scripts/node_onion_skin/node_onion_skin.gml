@@ -1,6 +1,6 @@
 function Node_Onion_Skin(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name		= "Onion Skin";
-	use_cache   = true;
+	use_cache   = CACHE_USE.manual;
 	clearCacheOnChange = false;
 	
 	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);

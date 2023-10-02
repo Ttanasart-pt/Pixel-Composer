@@ -212,7 +212,7 @@
 			var _str_var = PROJECT_VARIABLES[$ strs[0]];
 			if(!struct_has(_str_var, strs[1])) return 0;
 			
-			var val = _str_var[$ strs[1]];
+			var val = _str_var[$ strs[1]][0];
 			if(is_callable(val))
 				return val();
 			return val;
@@ -243,6 +243,49 @@
 		}
 		
 		return 0;
+	}
+	
+	function nodeGetDataAnim(str) {
+		str = string_trim(str);
+		var strs = string_splice(str, ".");
+		
+		if(array_length(strs) == 0) return [ 0, true ];
+		
+		if(array_length(strs) == 1) {
+			return [ EXPRESS_TREE_ANIM.none, true ];
+		} else if(struct_has(PROJECT_VARIABLES, strs[0])) {
+			var _str_var = PROJECT_VARIABLES[$ strs[0]];
+			if(!struct_has(_str_var, strs[1])) return [ EXPRESS_TREE_ANIM.none, true ];
+			
+			var val = _str_var[$ strs[1]][1];
+			return [ val, true ];
+		} else if(array_length(strs) > 2) { 
+			var key = strs[0];
+			if(!ds_map_exists(PROJECT.nodeNameMap, key)) return [ EXPRESS_TREE_ANIM.none, true ];
+		
+			var node = PROJECT.nodeNameMap[? key];
+			var map  = noone;
+			switch(string_lower(strs[1])) {
+				case "inputs" :	
+				case "input" :	
+					map  = node.inputMap;
+					break;
+				case "outputs" :	
+				case "output" :	
+					map  = node.outputMap;
+					break;
+				default : return [ EXPRESS_TREE_ANIM.none, true ];
+			}
+			
+			var _junc_key = string_lower(strs[2]);
+			var _junc     = ds_map_try_get(map, _junc_key, noone);
+			
+			if(_junc == noone) return [ EXPRESS_TREE_ANIM.none, true ];
+			
+			return [ _junc.is_anim * 2, false ];
+		}
+		
+		return [ EXPRESS_TREE_ANIM.none, true ];
 	}
 
 	function create_preview_window(node) {

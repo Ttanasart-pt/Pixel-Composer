@@ -184,7 +184,7 @@ function Node_Global(_x = 0, _y = 0) : __Node_Base(_x, _y) constructor {
 	display_name = "";
 	
 	group = noone;
-	use_cache = false;
+	use_cache = CACHE_USE.none;
 	value = ds_map_create();
 	input_display_list = -1;
 	anim_priority = -999;

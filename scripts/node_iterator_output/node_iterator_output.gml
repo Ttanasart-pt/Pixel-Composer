@@ -54,9 +54,6 @@ function Node_Iterator_Output(_x, _y, _group = noone) : Node_Group_Output(_x, _y
 	}
 	
 	static update = function(frame = PROJECT.animator.current_frame) {
-		if(!variable_struct_exists(group, "iterated")) 
-			return;
-			
 		if(inputs[| 0].value_from == noone) {
 			group.iterationUpdate();
 			return;

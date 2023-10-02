@@ -139,7 +139,7 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 			k = ds_map_find_next(TUNNELS_OUT, k);
 		}
 		
-		LOG_IF(global.FLAG.render, $"→→ Push {nodeNames} to stack.");
+		LOG_IF(global.FLAG.render, $"→→ Push {nodeNames} to queue.");
 		
 		LOG_BLOCK_END();
 		LOG_BLOCK_END();

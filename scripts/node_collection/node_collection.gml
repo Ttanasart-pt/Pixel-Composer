@@ -264,7 +264,7 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	} #endregion
 	
 	static stepBegin = function() { #region
-		use_cache = false;
+		use_cache = CACHE_USE.none;
 		
 		array_safe_set(cache_result, PROJECT.animator.current_frame, true);
 		
@@ -274,7 +274,7 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 			_node.stepBegin();
 			if(!_node.use_cache) continue;
 			
-			use_cache = true;
+			use_cache = CACHE_USE.manual;
 			if(!array_safe_get(_node.cache_result, PROJECT.animator.current_frame))
 				array_safe_set(cache_result, PROJECT.animator.current_frame, false);
 		}

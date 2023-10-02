@@ -34,7 +34,7 @@
 	global.FUNCTIONS[? "lerp"]   = [ ["x", "y", "amount"], function(val) { return lerp(array_safe_get(val, 0), array_safe_get(val, 1), array_safe_get(val, 2)); } ];
 	
 	global.FUNCTIONS[? "wiggle"] = [ ["time", "frequency", "octave = 1", "seed = 0"],	function(val) { 
-																								return wiggle(0, 1, PROJECT.animator.frameTotal / array_safe_get(val, 1), 
+																								return wiggle(0, 1, PROJECT.animator.frames_total / array_safe_get(val, 1), 
 																												array_safe_get(val, 0), 
 																												array_safe_get(val, 3, 0), 
 																												array_safe_get(val, 2, 1)); 
@@ -89,24 +89,24 @@
 	PROJECT_VARIABLES = {};
 	
 	PROJECT_VARIABLES.Project = {};
-	PROJECT_VARIABLES.Project.frame			= function() /*=>*/ {return PROJECT.animator.current_frame};
-	PROJECT_VARIABLES.Project.progress		= function() /*=>*/ {return PROJECT.animator.current_frame / (PROJECT.animator.frames_total - 1)};
-	PROJECT_VARIABLES.Project.frameTotal	= function() /*=>*/ {return PROJECT.animator.frames_total};
-	PROJECT_VARIABLES.Project.fps			= function() /*=>*/ {return PROJECT.animator.framerate};
-	PROJECT_VARIABLES.Project.time			= function() /*=>*/ {return PROJECT.animator.current_frame / PROJECT.animator.framerate};
-	PROJECT_VARIABLES.Project.name			= function() /*=>*/ {return filename_name_only(PROJECT.path)};
+	PROJECT_VARIABLES.Project.frame			= [ function() { return PROJECT.animator.current_frame },										EXPRESS_TREE_ANIM.animated	];
+	PROJECT_VARIABLES.Project.progress		= [ function() { return PROJECT.animator.current_frame / (PROJECT.animator.frames_total - 1) }, EXPRESS_TREE_ANIM.animated	];
+	PROJECT_VARIABLES.Project.frameTotal	= [ function() { return PROJECT.animator.frames_total }, 										EXPRESS_TREE_ANIM.none		];
+	PROJECT_VARIABLES.Project.fps			= [ function() { return PROJECT.animator.framerate }, 											EXPRESS_TREE_ANIM.none		];
+	PROJECT_VARIABLES.Project.time			= [ function() { return PROJECT.animator.current_frame / PROJECT.animator.framerate }, 			EXPRESS_TREE_ANIM.animated	];
+	PROJECT_VARIABLES.Project.name			= [ function() { return filename_name_only(PROJECT.path) }, 									EXPRESS_TREE_ANIM.none		];
 	
 	PROJECT_VARIABLES.Program = {};
-	PROJECT_VARIABLES.Program.time			= function() /*=>*/ {return current_time / 1000};
+	PROJECT_VARIABLES.Program.time			= [ function() { return current_time / 1000 }, EXPRESS_TREE_ANIM.animated ];
 	
 	PROJECT_VARIABLES.Device = {};
-	PROJECT_VARIABLES.Device.timeSecond			= function() /*=>*/ {return current_second};
-	PROJECT_VARIABLES.Device.timeMinute			= function() /*=>*/ {return current_minute};
-	PROJECT_VARIABLES.Device.timeHour			= function() /*=>*/ {return current_hour};
-	PROJECT_VARIABLES.Device.timeDay			= function() /*=>*/ {return current_day};
-	PROJECT_VARIABLES.Device.timeDayInWeek		= function() /*=>*/ {return current_weekday};
-	PROJECT_VARIABLES.Device.timeMonth			= function() /*=>*/ {return current_month};
-	PROJECT_VARIABLES.Device.timeYear			= function() /*=>*/ {return current_year};
+	PROJECT_VARIABLES.Device.timeSecond			= [ function() { return current_second },	EXPRESS_TREE_ANIM.animated ];
+	PROJECT_VARIABLES.Device.timeMinute			= [ function() { return current_minute },	EXPRESS_TREE_ANIM.animated ];
+	PROJECT_VARIABLES.Device.timeHour			= [ function() { return current_hour },		EXPRESS_TREE_ANIM.animated ];
+	PROJECT_VARIABLES.Device.timeDay			= [ function() { return current_day },		EXPRESS_TREE_ANIM.animated ];
+	PROJECT_VARIABLES.Device.timeDayInWeek		= [ function() { return current_weekday },	EXPRESS_TREE_ANIM.animated ];
+	PROJECT_VARIABLES.Device.timeMonth			= [ function() { return current_month },	EXPRESS_TREE_ANIM.animated ];
+	PROJECT_VARIABLES.Device.timeYear			= [ function() { return current_year },		EXPRESS_TREE_ANIM.animated ];
 #endregion
 
 #region evaluator
@@ -132,11 +132,10 @@
 		}
 		
 		static isAnimated = function() {
+			var anim = EXPRESS_TREE_ANIM.none;
 			for( var i = 0, n = array_length(funcTrees); i < n; i++ )
-				if(!funcTrees[i].isAnimated())
-					return false;
-				
-			return true;
+				anim = max(anim, funcTrees[i].isAnimated());
+			return anim;
 		}
 		
 		static eval = function(params = {}) {
@@ -163,10 +162,13 @@
 		}
 		
 		static isAnimated = function() {
-			if(condition != noone && !condition.isAnimated())	return false;
-			if(if_true != noone && !if_true.isAnimated())		return false;
-			if(if_false != noone && !if_false.isAnimated())		return false;
-			return true;
+			var anim = EXPRESS_TREE_ANIM.none;
+			
+			if(condition != noone) anim = max(anim, condition.isAnimated());
+			if(if_true   != noone) anim = max(anim, if_true.isAnimated());
+			if(if_false  != noone) anim = max(anim, if_false.isAnimated());
+			
+			return anim;
 		}
 		
 		static eval = function(params = {}) {
@@ -207,16 +209,18 @@
 		}
 		
 		static isAnimated = function() {
+			var anim = EXPRESS_TREE_ANIM.none;
+			
 			if(itr_array) {
-				if(cond_arr == noone || !cond_arr.isAnimated())	return false;
+				if(cond_arr == noone) anim = max(anim, cond_arr.isAnimated())
 			} else {
-				if(cond_init == noone || !cond_init.isAnimated())	return false;
-				if(cond_term == noone || !cond_term.isAnimated())	return false;
+				if(cond_init == noone) anim = max(anim, cond_init.isAnimated())
+				if(cond_term == noone) anim = max(anim, cond_term.isAnimated())
 			}
 			
-			if(action != noone && !action.isAnimated())			return false;
+			if(action != noone) anim = max(anim, action.isAnimated())
 			
-			return true;
+			return anim;
 		}
 		
 		static eval = function(params = {}) {
@@ -249,6 +253,8 @@
 		self.l = l;
 		self.r = r;
 		dependency = [];
+		anim_stat  = undefined;
+		anim_cache = true;
 		
 		static _string = function(str) { #region
 			return string_char_at(str, 1) == "\"" &&  string_char_at(str, string_length(str)) == "\"";
@@ -318,24 +324,29 @@
 		
 		static _isAnimated = function(val) { #region
 			if(is_real(val))   return EXPRESS_TREE_ANIM.none;
-			if(is_struct(val)) return val._isAnimated();
-			
-			if(val == "value") return EXPRESS_TREE_ANIM.base_value;
-			if(PROJECT.globalNode.inputExist(val)) {
-				var _inp = PROJECT.globalNode.getInput(val);
-				if(_inp.is_anim) return EXPRESS_TREE_ANIM.animated;
+			if(is_struct(val)) return val.isAnimated();
+			if(is_array(val)) {
+				var anim = EXPRESS_TREE_ANIM.none;
+				for( var i = 0, n = array_length(val); i < n; i++ ) 
+					anim = max(anim, _isAnimated(val[i]));
+				return anim;
 			}
 			
-			return EXPRESS_TREE_ANIM.none;
+			if(val == "value") return EXPRESS_TREE_ANIM.base_value;
+			var anim = nodeGetDataAnim(val);
+			anim_cache &= anim[1];
+			
+			return anim[0];
 		} #endregion
 		
 		static isAnimated = function() { #region
-			var anim = EXPRESS_TREE_ANIM.none;
-			anim = max(anim, _isAnimated(l));
-			if(symbol != "@")
-				anim = max(anim, _isAnimated(r));
+			if(anim_cache && anim_stat != undefined) return anim_stat;
 			
-			return anim;
+			anim_stat = EXPRESS_TREE_ANIM.none;
+			anim_stat = max(anim_stat, _isAnimated(l));
+			if(symbol != "@") anim_stat = max(anim_stat, _isAnimated(r));
+			
+			return anim_stat;
 		} #endregion
 		
 		static eval = function(params = {}, isLeft = false) { #region
@@ -352,8 +363,10 @@
 				for( var i = 0, n = array_length(l); i < n; i++ )
 					_l[i] = getVal(l[i], params);
 				
+				printIf(global.LOG_EXPRESSION, $"Function {symbol}{_l}");
+				
 				var res = _ev(_l);
-				printIf(global.LOG_EXPRESSION, $"Function {symbol}{_l} = {res}");
+				printIf(global.LOG_EXPRESSION, $"              = {res}");
 				printIf(global.LOG_EXPRESSION, "====================");
 				
 				return res;

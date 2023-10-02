@@ -2,7 +2,7 @@ function Node_Fluid_Render(_x, _y, _group = noone) : Node_Fluid(_x, _y, _group) 
 	name  = "Render Domain";
 	color = COLORS.node_blend_fluid;
 	icon  = THEME.fluid_sim;
-	use_cache = true;
+	use_cache = CACHE_USE.auto;
 	
 	inputs[| 0] = nodeValue("Fluid Domain", self, JUNCTION_CONNECT.input, VALUE_TYPE.fdomain, noone)
 		.setVisible(true, true);

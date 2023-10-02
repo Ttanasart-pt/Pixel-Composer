@@ -154,16 +154,14 @@ function is_surface(s) {
 	if(!s) return false;
 	if(!surface_exists(s)) return false;
 	
-	//if(surface_get_width_safe(s) <= 0) return false;
-	//if(surface_get_height_safe(s) <= 0) return false;
-	
 	return true;
 }
 
 function surface_verify(surf, w, h, format = surface_rgba8unorm) {
 	gml_pragma("forceinline");
-	w = round(w);
-	h = round(h);
+	
+	w = max(1, round(w));
+	h = max(1, round(h));
 	var s = is_surface(surf);
 	
 	if(!s) return surface_create_valid(w, h, format);
@@ -302,7 +300,6 @@ function surface_size_to(surface, width, height, format = noone, skipCheck = fal
 	var hh = surface_get_height_safe(surface);
 	
 	if(ww == width && hh == height) return surface;
-	//print($"Reset surface {ww}, {width} | {hh}, {height}");
 	
 	surface_resize(surface, width, height);
 	surface_clear(surface);

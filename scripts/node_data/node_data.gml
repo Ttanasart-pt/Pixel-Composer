@@ -1,5 +1,11 @@
 global.loop_nodes = [ "Node_Iterate", "Node_Iterate_Each" ];
 
+enum CACHE_USE {
+	none,
+	manual,
+	auto
+}
+
 function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x, _y) constructor {
 	#region ---- main & active ----
 		active  = true;
@@ -109,6 +115,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		data_length       = 1;
 		inputs_data		  = [];
 		input_hash		  = "";
+		input_hash_raw	  = "";
 		
 		anim_last_step = false;
 	#endregion
@@ -149,10 +156,11 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		rendered         = false;
 		update_on_frame  = false;
 		render_time		 = 0;
+		render_cached    = false;
 		auto_render_time = true;
 		updated			 = false;
 	
-		use_cache			= false;
+		use_cache			= CACHE_USE.none;
 		clearCacheOnChange	= true;
 		cached_output	= [];
 		cache_result	= [];
@@ -348,17 +356,6 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	
 	static stepBegin = function() { #region
 		if(use_cache) cacheArrayCheck();
-		var willUpdate = false;
-		
-		if(PROJECT.animator.frame_progress) {
-			if(update_on_frame) willUpdate = true;
-			if(isAnimated()) willUpdate = true;
-				
-			if(willUpdate) {
-				setRenderStatus(false);
-				UPDATE |= RENDER_TYPE.partial;
-			}
-		}
 		
 		if(auto_height)
 			setHeight();
@@ -415,40 +412,53 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	} #endregion
 	
 	static getInputs = function() { #region
+		input_hash_raw = "";
 		inputs_data	= array_create(ds_list_size(inputs), undefined);
-		for(var i = 0; i < ds_list_size(inputs); i++)
+		for(var i = 0; i < ds_list_size(inputs); i++) {
 			inputs_data[i] = inputs[| i].getValue(,,, true);
+			input_hash_raw += string_copy(string(inputs_data[i]), 1, 256);
+		}
+	} #endregion
+	
+	static forceUpdate = function() { #region
+		input_hash = "";
+		doUpdate();
 	} #endregion
 	
 	static doUpdate = function() { #region
 		if(SAFE_MODE)    return;
 		if(NODE_EXTRACT) return;
 		
-		var sBase = surface_get_target();
-		LOG_BLOCK_START();
-		LOG_IF(global.FLAG.render, $">>>>>>>>>> DoUpdate called from {internalName} <<<<<<<<<<");
+		var render_timer = get_timer();
 		
-		var t     = get_timer();
-		var _hash = input_hash;
-		getInputs();
-		input_hash = md5_string_unicode(string(inputs_data));	
-		anim_last_step = isAnimated() || _hash != input_hash;
+		if(use_cache == CACHE_USE.auto && recoverCache()) {
+			render_cached = true;
+		} else {
+			render_cached = false;
+			var sBase = surface_get_target();	
+			var _hash = input_hash;
+			getInputs();
+			input_hash = md5_string_unicode(input_hash_raw);
+			anim_last_step = isAnimated() || _hash != input_hash || !rendered;
+			
+			LOG_BLOCK_START();
+			LOG_IF(global.FLAG.render, $">>>>>>>>>> DoUpdate called from {internalName} [{anim_last_step}] <<<<<<<<<<");
 		
-		try {
-			if(!is_instanceof(self, Node_Collection)) 
-				setRenderStatus(true);
+			try {
+				if(anim_last_step) update(); ///Update only if input hash differs from previous.
+			} catch(exception) {
+				var sCurr = surface_get_target();
+				while(surface_get_target() != sBase)
+					surface_reset_target();
 			
-			if(anim_last_step) update(); ///Update only if input hash differs from previous.
-		} catch(exception) {
-			var sCurr = surface_get_target();
-			while(surface_get_target() != sBase)
-				surface_reset_target();
-			
-			log_warning("RENDER", exception_print(exception), self);
+				log_warning("RENDER", exception_print(exception), self);
+			}
 		}
 		
-		if(!is_instanceof(self, Node_Collection))
-			render_time = get_timer() - t;
+		if(!is_instanceof(self, Node_Collection)) {
+			setRenderStatus(true);
+			render_time = get_timer() - render_timer;
+		}
 		
 		if(!use_cache && PROJECT.onion_skin) {
 			for( var i = 0; i < ds_list_size(outputs); i++ ) {
@@ -554,7 +564,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 			}
 		}	
 		
-		LOG_IF(global.FLAG.render, $"→→ Push {nodeNames} to stack.");
+		LOG_IF(global.FLAG.render, $"→→ Push {nodeNames} to queue.");
 		
 		LOG_BLOCK_END();
 		LOG_BLOCK_END();
@@ -939,8 +949,12 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		draw_set_font(f_p3);
 		
 		if(display_parameter.show_compute) {
-			var rt, unit;
-			if(render_time < 1000) {
+			var rt = 0, unit = "";
+			
+			if(render_time == 0) {
+				draw_set_color(COLORS._main_text_sub);
+				unit = "us";
+			} else if(render_time < 1000) {
 				rt = round(render_time / 10) * 10;
 				unit = "us";
 				draw_set_color(COLORS.speed[2]);
@@ -953,6 +967,9 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 				unit = "s";
 				draw_set_color(COLORS.speed[0]);
 			}
+			
+			if(render_cached) draw_set_color(COLORS._main_text_sub);
+			
 			draw_text(round(tx), round(ty), string(rt) + " " + unit);
 		}
 	} #endregion

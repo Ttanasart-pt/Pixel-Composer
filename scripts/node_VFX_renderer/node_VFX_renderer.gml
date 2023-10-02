@@ -3,7 +3,7 @@ function Node_VFX_Renderer(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	color = COLORS.node_blend_vfx;
 	icon  = THEME.vfx;
 	
-	use_cache = true;
+	use_cache = CACHE_USE.auto;
 	
 	inputs[| 0] = nodeValue("Output dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, DEF_SURF)
 		.setDisplay(VALUE_DISPLAY.vector);

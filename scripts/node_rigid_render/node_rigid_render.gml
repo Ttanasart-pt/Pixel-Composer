@@ -2,7 +2,7 @@ function Node_Rigid_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	name = "Render";
 	color = COLORS.node_blend_simulation;
 	icon  = THEME.rigidSim;
-	use_cache = true;
+	use_cache = CACHE_USE.auto;
 	
 	inputs[| 0] = nodeValue("Render dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, DEF_SURF)
 		.setDisplay(VALUE_DISPLAY.vector)

@@ -51,10 +51,10 @@ function Node_Iterator(_x, _y, _group = noone) : Node_Collection(_x, _y, _group)
 		var _ren = iterationStatus();
 		
 		if(_ren == ITERATION_STATUS.loop) { //Go back to the beginning of the loop, reset render status for leaf node inside?
-			//LOG_IF(global.FLAG.render, "Loop restart: iteration " + string(group.iterated));
+			LOG_IF(global.FLAG.render, $"Loop restart: iteration {iterated}");
 			_nodes = array_append(_nodes, __nodeLeafList(getNodeList()));
 		} else if(_ren == ITERATION_STATUS.complete) { //Go out of loop
-			//LOG_IF(global.FLAG.render, "Loop completed get next node external");
+			LOG_IF(global.FLAG.render, "Loop completed get next node external");
 			setRenderStatus(true);
 			_nodes = getNextNodesExternal();
 		} 

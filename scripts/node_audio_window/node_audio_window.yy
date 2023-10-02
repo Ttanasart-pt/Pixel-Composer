@@ -5,7 +5,7 @@
   "isCompatibility": false,
   "isDnD": false,
   "parent": {
-    "name": "audio",
-    "path": "folders/nodes/data/audio.yy",
+    "name": "array",
+    "path": "folders/nodes/data/value/array.yy",
   },
 }

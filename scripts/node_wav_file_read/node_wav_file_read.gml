@@ -208,6 +208,11 @@ function Node_WAV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			readSoundComplete();
 			checkPreview(true);
 			
+			if(content != noone) {
+				var frm = max(1, ceil(content.duration * PROJECT.animator.framerate));
+				inputs[| 1].editWidget.text = $"Sync ({frm} frames)";
+			}
+			
 			RENDER_ALL
 		}
 		

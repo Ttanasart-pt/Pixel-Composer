@@ -1292,7 +1292,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			
 			if(cache_hit) {
 				global.cache_hit++;
-				return array_clone(cache_value[2]);
+				return cache_value[2];
 			}
 		}
 		
@@ -1449,6 +1449,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(expUse) {
 			if(!is_struct(expTree)) return false;
 			var res = expTree.isAnimated();
+			
 			switch(res) {
 				case EXPRESS_TREE_ANIM.none :		return false;
 				case EXPRESS_TREE_ANIM.base_value : return is_anim;
@@ -1810,7 +1811,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				return preview_overlay_vector(value_from == noone, active, _x, _y, _s, _mx, _my, _snx, _sny, _spr);
 						
 			case VALUE_DISPLAY.area :
-				return preview_overlay_area(value_from == noone, active, _x, _y, _s, _mx, _my, _snx, _sny, struct_try_get(nodeFrom.display_data, "onSurfaceSize"));
+				return preview_overlay_area(value_from == noone, active, _x, _y, _s, _mx, _my, _snx, _sny, struct_try_get(display_data, "onSurfaceSize"));
 						
 			case VALUE_DISPLAY.puppet_control :
 				return preview_overlay_puppet(value_from == noone, active, _x, _y, _s, _mx, _my, _snx, _sny);

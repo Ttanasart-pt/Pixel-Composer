@@ -72,7 +72,7 @@ function Node_Group_Output(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			//printIf(global.FLAG.render, "Group output ready " + string(_to.node.isRenderable()));
 			
 			array_push(nodes, _to.node);
-			LOG_IF(global.FLAG.render, $"Check complete, push {_to.node.internalName} to stack.");
+			LOG_IF(global.FLAG.render, $"Check complete, push {_to.node.internalName} to queue.");
 		}
 		LOG_BLOCK_END();
 		

@@ -1,6 +1,6 @@
 function Node_Rate_Remap(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Rate Remap";
-	use_cache = true;
+	use_cache = CACHE_USE.manual;
 	
 	inputs[| 0] = nodeValue("Surface", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
 	
