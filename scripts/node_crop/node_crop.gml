@@ -24,7 +24,7 @@ function Node_Crop(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	drag_my   = 0;
 	drag_sv   = 0;
 	
-	static getPreviewValues = function() { return inputs[| 0].getValue(); }
+	static getPreviewValues = function() { return getInputData(0); }
 	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		if(array_length(current_data) < 2) return;

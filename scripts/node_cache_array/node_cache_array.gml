@@ -44,9 +44,9 @@ function Node_Cache_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	static update = function() {
 		var ss  = [];
-		var str = inputs[| 1].getValue();
-		var lst = inputs[| 2].getValue();
-		var stp = inputs[| 3].getValue();
+		var str = getInputData(1);
+		var lst = getInputData(2);
+		var stp = getInputData(3);
 		
 		if(str < 0) str = 1;
 		if(lst < 0) lst = PROJECT.animator.frames_total;
@@ -67,7 +67,7 @@ function Node_Cache_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		if(!PROJECT.animator.is_playing) return;
 		if(!inputs[| 0].value_from) return;
 		
-		var _surf  = inputs[| 0].getValue();
+		var _surf  = getInputData(0);
 		cacheCurrentFrame(_surf);
 	}
 	

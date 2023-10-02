@@ -24,7 +24,7 @@ function Node_Move_Point(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		.setDisplay(VALUE_DISPLAY.vector);
 	
 	static step = function() {
-		var _mode = inputs[| 1].getValue();
+		var _mode = getInputData(1);
 		
 		inputs[| 2].setVisible(_mode == 0);
 		inputs[| 3].setVisible(_mode == 1);

@@ -35,7 +35,7 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		.setDisplay(VALUE_DISPLAY.enum_button, [ "Normal", "Tile", "Wrap" ]);
 	
 	inputs[| 8] = nodeValue("Rotate by velocity", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0, "Make the surface rotates to follow its movement.")
-		.setDisplay(VALUE_DISPLAY.slider, [0, 1, 0.01]);
+		.setDisplay(VALUE_DISPLAY.slider);
 	
 	inputs[| 9] = nodeValue("Output dimension type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, OUTPUT_SCALING.same_as_input)
 		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Same as input", "Constant", "Relative to input", "Scale" ]);
@@ -90,11 +90,11 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	} #endregion
 	
 	static centerAnchor = function() { #region
-		var _surf = inputs[| 0].getValue();
+		var _surf = getInputData(0);
 		
-		var _out_type = inputs[| 9].getValue();
-		var _out = inputs[| 1].getValue();
-		var _sca = inputs[| 6].getValue();
+		var _out_type = getInputData(9);
+		var _out = getInputData(1);
+		var _sca = getInputData(6);
 		
 		if(is_array(_surf)) {
 			if(array_length(_surf) == 0) return;
@@ -106,7 +106,7 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	} #endregion
 	
 	static step = function() { #region
-		var pos = inputs[| 2].getValue();
+		var pos = getInputData(2);
 		
 		if(!PROJECT.animator.frame_progress) return;
 		
@@ -256,7 +256,7 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
 		PROCESSOR_OVERLAY_CHECK
 		
-		var _surf = inputs[| 0].getValue();
+		var _surf = getInputData(0);
 		if(is_array(_surf)) {
 			if(array_length(_surf) == 0) return;
 			_surf = _surf[preview_index];

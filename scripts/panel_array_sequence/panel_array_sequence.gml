@@ -24,8 +24,8 @@ function Panel_Array_Sequence(node) : PanelContent() constructor {
 	
 	function drawContent(panel) {
 		draw_clear_alpha(COLORS.panel_bg_clear, 0);
-		var _seq = node.inputs[| 0].getValue();
-		var _ord = node.inputs[| 2].getValue();
+		var _seq = node.getInputData(0);
+		var _ord = node.getInputData(2);
 		
 		var draw_drag = true;
 		var content_w = w - (padding + padding);

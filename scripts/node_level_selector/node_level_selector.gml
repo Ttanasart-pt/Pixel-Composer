@@ -8,15 +8,15 @@ function Node_Level_Selector(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 	
 	inputs[| 1] = nodeValue("Mid point", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
-		.setDisplay(VALUE_DISPLAY.slider, [ 0, 1, 0.01]);
+		.setDisplay(VALUE_DISPLAY.slider);
 	
 	inputs[| 2] = nodeValue("Range",   self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.1)
-		.setDisplay(VALUE_DISPLAY.slider, [ 0, 1, 0.01]);
+		.setDisplay(VALUE_DISPLAY.slider);
 	
 	inputs[| 3] = nodeValue("Mask", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 	
 	inputs[| 4] = nodeValue("Mix", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
-		.setDisplay(VALUE_DISPLAY.slider, [0, 1, 0.01]);
+		.setDisplay(VALUE_DISPLAY.slider);
 	
 	inputs[| 5] = nodeValue("Active", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
 		active_index = 5;
@@ -33,8 +33,8 @@ function Node_Level_Selector(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 		var y1 = _y + _h; 
 		level_renderer.h = 128;
 		
-		var _middle = inputs[| 1].getValue();
-		var _span   = inputs[| 2].getValue();
+		var _middle = getInputData(1);
+		var _span   = getInputData(2);
 		var _min    = _middle - _span;
 		var _max    = _middle + _span;
 		

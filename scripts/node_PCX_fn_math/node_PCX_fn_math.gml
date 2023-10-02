@@ -17,10 +17,10 @@ function Node_PCX_fn_Math(_x, _y, _group = noone) : Node_PCX(_x, _y, _group) con
 		static syms = [ "+", "-", "*", "/", "$", "%", "abs", -1, "round", "floor", "ceil", 
 						-1, "sin", "cos", "tan", "arcsin", "arccos", "arctan", -1, "min", "max", "clamp", -1, "lerp" ];
 		
-		var _opr = inputs[| 0].getValue();
-		var _x   = inputs[| 1].getValue();
-		var _y   = inputs[| 2].getValue();
-		var _z   = inputs[| 3].getValue();
+		var _opr = getInputData(0);
+		var _x   = getInputData(1);
+		var _y   = getInputData(2);
+		var _z   = getInputData(3);
 		var _sym = syms[_opr];
 		
 		switch(_sym) {

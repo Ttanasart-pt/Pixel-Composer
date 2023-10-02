@@ -49,7 +49,7 @@ function Node_Array_Zip(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	}
 	
 	static update = function(frame = PROJECT.animator.current_frame) {
-		var _arr = inputs[| 0].getValue();
+		var _arr = getInputData(0);
 		
 		if(inputs[| 0].value_from == noone) {
 			inputs[| 0].type  = VALUE_TYPE.any;
@@ -65,7 +65,7 @@ function Node_Array_Zip(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		var len = 1;
 		var val = [];
 		for( var i = 0; i < ds_list_size(inputs) - 1; i += data_length ) {
-			val[i] = inputs[| i].getValue();
+			val[i] = getInputData(i);
 			inputs[| i].type  = inputs[| i].value_from == noone? inputs[| i].value_from.type : VALUE_TYPE.any;
 			if(!is_array(val[i])) {
 				val[i] = [ val[i] ];

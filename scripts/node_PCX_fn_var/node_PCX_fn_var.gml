@@ -7,7 +7,7 @@ function Node_PCX_fn_var(_x, _y, _group = noone) : Node_PCX(_x, _y, _group) cons
 	outputs[| 0] = nodeValue("PCX", self, JUNCTION_CONNECT.output, VALUE_TYPE.PCXnode, noone);
 	
 	static update = function() {
-		var _def  = inputs[| 0].getValue();
+		var _def  = getInputData(0);
 		
 		outputs[| 0].setValue(new __funcTree("≔", display_name, _def));
 	}

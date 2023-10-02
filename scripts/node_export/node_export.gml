@@ -49,8 +49,8 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	playing = false;
 	played  = 0;
 	
-	_format_still = ["Portable Network Graphics (.png)|*.png|Joint Photographic Experts Group (.jpg)|*.jpg", ""];
-	_format_anim  = ["Graphics Interchange Format (.gif)|*.gif|Animated WebP (.webp)|*.webp", ""];
+	_format_still = { filter: "Portable Network Graphics (.png)|*.png|Joint Photographic Experts Group (.jpg)|*.jpg" };
+	_format_anim  = { filter: "Graphics Interchange Format (.gif)|*.gif|Animated WebP (.webp)|*.webp" };
 	
 	inputs[| 0] = nodeValue("Surface", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 	
@@ -67,7 +67,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	format_array  = ["Multiple images", "Image sequences", "Animation"];
 	
 	inputs[| 3] = nodeValue("Type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, format_single, { update_hover: false })
+		.setDisplay(VALUE_DISPLAY.enum_scroll, { data: format_single, update_hover: false })
 		.rejectArray();
 	
 	inputs[| 4] = nodeValue("Template guides", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
@@ -87,7 +87,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		.rejectArray();
 	
 	inputs[| 7] = nodeValue("Color merge", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.02)
-		.setDisplay(VALUE_DISPLAY.slider, [0, 1, 0.01])
+		.setDisplay(VALUE_DISPLAY.slider)
 		.setVisible(false)
 		.rejectArray();
 	
@@ -98,22 +98,22 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	format_animation = [ ".gif", ".webp" ];
 	
 	inputs[| 9] = nodeValue("Format", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, format_image, { update_hover: false })
+		.setDisplay(VALUE_DISPLAY.enum_scroll, { data: format_image, update_hover: false })
 		.rejectArray();
 	
 	inputs[| 10] = nodeValue("Quality", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 80)
-		.setDisplay(VALUE_DISPLAY.slider, [0, 100, 1])
+		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 100, 1] })
 		.rejectArray();
 	
 	inputs[| 11] = nodeValue("Sequence begin", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0);
 	
 	inputs[| 12] = nodeValue("Frame range", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [0, -1])
-		.setDisplay(VALUE_DISPLAY.slider_range, [0, PROJECT.animator.frames_total, 1]);
+		.setDisplay(VALUE_DISPLAY.slider_range, { range: [0, PROJECT.animator.frames_total, 1] });
 	
 	png_format   = [ "INDEX4", "INDEX8", "Default (PNG32)" ];
 	png_format_r = [ "PNG4", "PNG8"  ];
 	inputs[| 13] = nodeValue("Subformat", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 4)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, png_format, { update_hover: false });
+		.setDisplay(VALUE_DISPLAY.enum_scroll, { data: png_format, update_hover: false });
 	
 	outputs[| 0] = nodeValue("Loop exit", self, JUNCTION_CONNECT.output, VALUE_TYPE.any, 0);
 	
@@ -132,13 +132,13 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		var _ty = _y;
 		var _tw = _w - ui(8);
 		
-		var rawpath = inputs[| 1].getValue(,,, true);
+		var rawpath = getInputData(1);
 		if(is_array(rawpath)) rawpath = array_safe_get(rawpath, 0, "");
 		
-		var _ext    = inputs[| 9].getValue(,,, true);
+		var _ext    = getInputData(9);
 		var path    = pathString(rawpath);
 		var pathA   = pathString(rawpath,, true);
-		path = string_replace(path, ".png", array_safe_get(inputs[|  9].display_data, _ext, ""));
+		path = string_replace(path, ".png", array_safe_get(inputs[|  9].display_data.data, _ext, ""));
 		
 		draw_set_text(f_p1, fa_left, fa_top, COLORS._main_text);
 		var _th = ui(12) + string_height_ext(path, -1, _tw - ui(16), true);
@@ -212,7 +212,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	gifski    = working_directory + "gifski\\win\\gifski.exe";
 	
 	static onValueUpdate = function(_index) { #region
-		var form = inputs[| 3].getValue();
+		var form = getInputData(3);
 		
 		if(_index == 3) {
 			inputs[| 9].setValue(0);
@@ -232,7 +232,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			inputs[| 2].setValue("%d%n%3f%i");
 		
 		if(_index == 1) {
-			var _path = inputs[| 1].getValue();
+			var _path = getInputData(1);
 			var _ext  = filename_ext(_path);
 			
 			switch(_ext) {
@@ -246,7 +246,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	} #endregion
 	
 	static extensionCheck = function() { #region
-		var _path = inputs[| 1].getValue();
+		var _path = getInputData(1);
 		var _ext  = filename_ext(_path);
 			
 		switch(_ext) {
@@ -285,7 +285,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		    _path = file_find_next();
 		}
 		
-		var rate = inputs[| 8].getValue();
+		var rate = getInputData(8);
 		if(rate == 0) rate = 1;
 		
 		var framerate = round(1 / rate * 1000);
@@ -308,11 +308,11 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	} #endregion
 	
 	static renderGif = function(temp_path, target_path) { #region
-		var loop = inputs[|  5].getValue();
-		var opti = inputs[|  6].getValue();
-		var fuzz = inputs[|  7].getValue();
-		var rate = inputs[|  8].getValue();
-		var qual = inputs[| 10].getValue();
+		var loop = getInputData( 5);
+		var opti = getInputData( 6);
+		var fuzz = getInputData( 7);
+		var rate = getInputData( 8);
+		var qual = getInputData(10);
 		if(rate == 0) rate = 1;
 		
 		target_path = string_replace_all(target_path, "/", "\\");
@@ -343,9 +343,9 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	} #endregion
 	
 	static pathString = function(path, index = 0, _array = false) { #region
-		var suff = inputs[|  2].getValue();
-		var form = inputs[|  3].getValue();
-		var strt = inputs[| 11].getValue();
+		var suff = getInputData( 2);
+		var form = getInputData( 3);
+		var strt = getInputData(11);
 		
 		path = string_replace_all(path, "\\", "/");
 		
@@ -435,8 +435,8 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			}
 		}
 		
-		var _e   = inputs[| 9].getValue();
-		var _ext = array_safe_get(inputs[| 9].display_data, _e, ".png");
+		var _e   = getInputData(9);
+		var _ext = array_safe_get(inputs[| 9].display_data.data, _e, ".png");
 		
 		if(_array)	array_push(s, ["ext", _ext]);
 		else		s += _ext;
@@ -445,16 +445,16 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	} #endregion
 	
 	static save_surface = function(_surf, _path) { #region
-		var form = inputs[| 3].getValue();
+		var form = getInputData(3);
 		
 		if(form == NODE_EXPORT_FORMAT.gif) {
 			surface_save_safe(_surf, _path);
 			return _path;
 		}
 		
-		var extd = inputs[|  9].getValue();
-		var qual = inputs[| 10].getValue();
-		var indx = inputs[| 13].getValue();
+		var extd = getInputData( 9);
+		var qual = getInputData(10);
+		var indx = getInputData(13);
 		var ext  = array_safe_get(format_image, extd, ".png");
 		
 		var _pathOut  = _path;
@@ -500,11 +500,11 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	} #endregion
 	
 	static export = function() { #region
-		var surf = inputs[|  0].getValue();
-		var path = inputs[|  1].getValue();
-		var suff = inputs[|  2].getValue();
-		var form = inputs[|  3].getValue();
-		var rang = inputs[| 12].getValue();
+		var surf = getInputData( 0);
+		var path = getInputData( 1);
+		var suff = getInputData( 2);
+		var form = getInputData( 3);
+		var rang = getInputData(12);
 		
 		var _ts = current_time;
 		
@@ -579,9 +579,9 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	static doInspectorAction = function() { #region
 		if(LOADING || APPENDING) return;
 		
-		var path = inputs[| 1].getValue();
+		var path = getInputData(1);
 		if(path == "") return;
-		var form = inputs[| 3].getValue();
+		var form = getInputData(3);
 		
 		if(form == NODE_EXPORT_FORMAT.single) {
 			PROJECT.animator.rendering = true;
@@ -606,21 +606,21 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	} #endregion
 	
 	static step = function() { #region
-		var surf = inputs[|  0].getValue();
-		var pngf = inputs[| 13].getValue();
+		var surf = getInputData( 0);
+		var pngf = getInputData(13);
 		
 		if(is_array(surf)) {
-			inputs[| 3].display_data		 = format_array;
+			inputs[| 3].display_data.data	 = format_array;
 			inputs[| 3].editWidget.data_list = format_array;
 		} else {
-			inputs[| 3].display_data	     = format_single;
+			inputs[| 3].display_data.data    = format_single;
 			inputs[| 3].editWidget.data_list = format_single;
 		}
 		
 		outputs[| 1].setValue(surf);
 		
-		var anim = inputs[| 3].getValue(); // single, sequence, animation
-		var extn = inputs[| 9].getValue();
+		var anim = getInputData(3); // single, sequence, animation
+		var extn = getInputData(9);
 		
 		inputs[|  5].setVisible(anim == 2);
 		inputs[|  6].setVisible(anim == 2);
@@ -632,11 +632,11 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		inputs[| 13].setVisible(anim <  2);
 		
 		if(anim == NODE_EXPORT_FORMAT.gif) {
-			inputs[|  9].display_data		  = format_animation;
+			inputs[|  9].display_data.data	  = format_animation;
 			inputs[|  9].editWidget.data_list = format_animation;
 			inputs[| 10].setVisible(true);
 		} else {
-			inputs[|  9].display_data		  = format_image;
+			inputs[|  9].display_data.data	  = format_image;
 			inputs[|  9].editWidget.data_list = format_image;
 			inputs[| 10].setVisible(extn != 0);
 		}
@@ -645,7 +645,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	} #endregion
 	
 	static update = function(frame = PROJECT.animator.current_frame) { #region
-		var anim = inputs[| 3].getValue();
+		var anim = getInputData(3);
 		if(anim == NODE_EXPORT_FORMAT.single) {
 			if(isInLoop()) export();
 			return;
@@ -667,11 +667,11 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		if(anim != NODE_EXPORT_FORMAT.gif)
 			return;
 				
-		var surf = inputs[|  0].getValue();
-		var path = inputs[|  1].getValue();
-		var suff = inputs[|  2].getValue();
-		var extd = inputs[|  9].getValue();
-		var rang = inputs[| 12].getValue();
+		var surf = getInputData( 0);
+		var path = getInputData( 1);
+		var suff = getInputData( 2);
+		var extd = getInputData( 9);
+		var rang = getInputData(12);
 		var temp_path, target_path;
 		
 		if(is_array(surf)) {

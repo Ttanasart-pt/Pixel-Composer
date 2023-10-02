@@ -11,7 +11,8 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 	linkable = true;
 	per_line = false;
 	current_value = [];
-	extra_data    = { linked : false, side_button : noone };
+	linked        = false;
+	side_button   = noone;
 	
 	link_inactive_color = noone;
 	
@@ -23,7 +24,7 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 	onModifyIndex = function(index, val) { 
 		var v = toNumber(val);
 		
-		if(extra_data.linked) {
+		if(linked) {
 			var modi = false;
 			for( var i = 0; i < size; i++ ) {
 				tb[i]._input_text = v;
@@ -64,8 +65,8 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 	static setInteract = function(interactable) { 
 		self.interactable = interactable;
 		
-		if(extra_data.side_button != noone) 
-			extra_data.side_button.interactable = interactable;
+		if(side_button != noone) 
+			side_button.interactable = interactable;
 			
 		for( var i = 0; i < size; i++ ) 
 			tb[i].interactable = interactable;
@@ -75,26 +76,26 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 		for( var i = 0; i < size; i++ ) 
 			tb[i].register(parent);
 		
-		if(extra_data.side_button != noone) 
-			extra_data.side_button.register(parent);
+		if(side_button != noone) 
+			side_button.register(parent);
 		
 		if(unit != noone && unit.reference != noone)
 			unit.triggerButton.register(parent);
 	}
 	
 	static drawParam = function(params) {
-		return draw(params.x, params.y, params.w, params.h, params.data, params.extra_data, params.m);
+		return draw(params.x, params.y, params.w, params.h, params.data, params.display_data, params.m);
 	}
 	
-	static draw = function(_x, _y, _w, _h, _data, _extra_data, _m) {
+	static draw = function(_x, _y, _w, _h, _data, _display_data, _m) {
 		x = _x;
 		y = _y;
 		w = _w;
 		h = per_line? (_h + ui(8)) * size - ui(8) : _h;
 		
-		if(struct_has(_extra_data, "linked"))	   extra_data.linked	  = _extra_data.linked;
-		if(struct_has(_extra_data, "side_button")) extra_data.side_button = _extra_data.side_button;
-		tooltip.index = extra_data.linked;
+		if(struct_has(_display_data, "linked"))	     linked	     = _display_data.linked;
+		if(struct_has(_display_data, "side_button")) side_button = _display_data.side_button;
+		tooltip.index = linked;
 		
 		if(!is_array(_data))   return 0;
 		if(array_empty(_data)) return 0;
@@ -102,9 +103,9 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 		
 		current_value = _data;
 		
-		if(extra_data.side_button) {
-			extra_data.side_button.setFocusHover(active, hover);
-			extra_data.side_button.draw(_x + _w - ui(32), _y + _h / 2 - ui(32 / 2), ui(32), ui(32), _m, THEME.button_hide);
+		if(side_button) {
+			side_button.setFocusHover(active, hover);
+			side_button.draw(_x + _w - ui(32), _y + _h / 2 - ui(32 / 2), ui(32), ui(32), _m, THEME.button_hide);
 			_w -= ui(40);
 		}
 		
@@ -117,14 +118,14 @@ function vectorBox(_size, _onModify, _unit = noone) : widget() constructor {
 		}
 		
 		if(linkable) {
-			var _icon_blend = extra_data.linked? COLORS._main_accent : (link_inactive_color == noone? COLORS._main_icon : link_inactive_color);
+			var _icon_blend = linked? COLORS._main_accent : (link_inactive_color == noone? COLORS._main_icon : link_inactive_color);
 			var bx = _x;
 			var by = _y + _h / 2 - ui(32 / 2);
-			if(buttonInstant(THEME.button_hide, bx + ui(4), by + ui(4), ui(24), ui(24), _m, active, hover, tooltip, THEME.value_link, extra_data.linked, _icon_blend) == 2) {
-				extra_data.linked  = !extra_data.linked;
-				_extra_data.linked =  extra_data.linked;
-			
-				if(extra_data.linked) {
+			if(buttonInstant(THEME.button_hide, bx + ui(4), by + ui(4), ui(24), ui(24), _m, active, hover, tooltip, THEME.value_link, linked, _icon_blend) == 2) {
+				linked = !linked;
+				_display_data.linked =  linked;
+				
+				if(linked) {
 					onModify(0, _data[0]);
 					onModify(1, _data[0]);
 				}

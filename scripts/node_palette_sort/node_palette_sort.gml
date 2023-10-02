@@ -28,7 +28,7 @@ function Node_Palette_Sort(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	]
 	
 	static step = function() {
-		var _typ = inputs[| 1].getValue();
+		var _typ = getInputData(1);
 		
 		inputs[| 3].setVisible(_typ == 10);
 	}
@@ -62,10 +62,10 @@ function Node_Palette_Sort(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	}
 	
 	static update = function(frame = PROJECT.animator.current_frame) {
-		var _arr = inputs[| 0].getValue();
-		var _ord = inputs[| 1].getValue();
-		var _rev = inputs[| 2].getValue();
-		sort_string = inputs[| 3].getValue();
+		var _arr = getInputData(0);
+		var _ord = getInputData(1);
+		var _rev = getInputData(2);
+		sort_string = getInputData(3);
 		if(!is_array(_arr)) return;
 		
 		var _pal = array_clone(_arr);

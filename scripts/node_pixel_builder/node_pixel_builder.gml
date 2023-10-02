@@ -50,7 +50,7 @@ function Node_Pixel_Builder(_x, _y, _group = noone) : Node_Collection(_x, _y, _g
 	}
 	
 	static update = function() {
-		var _dim     = inputs[| 0].getValue();
+		var _dim     = getInputData(0);
 		
 		for( var i = 0; i < ds_list_size(nodes); i++ ) {
 			var _n = nodes[| i];
@@ -58,7 +58,7 @@ function Node_Pixel_Builder(_x, _y, _group = noone) : Node_Collection(_x, _y, _g
 			if(!is_instanceof(_n, Node_PB_Layer))
 				continue;
 			
-			var _layer = _n.inputs[| 0].getValue();
+			var _layer = _n.getInputData(0);
 			
 			var _box = new __pbBox();
 			_box.layer	 = _layer;
@@ -78,7 +78,7 @@ function Node_Pixel_Builder(_x, _y, _group = noone) : Node_Collection(_x, _y, _g
 		LOG_IF(global.FLAG.render, $"================== BUILD PIXEL ==================");
 		LOG_BLOCK_START();
 		
-		var _dim     = inputs[| 0].getValue();
+		var _dim     = getInputData(0);
 		var _surfs   = ds_map_create();
 		
 		for( var i = 0; i < ds_list_size(nodes); i++ ) {

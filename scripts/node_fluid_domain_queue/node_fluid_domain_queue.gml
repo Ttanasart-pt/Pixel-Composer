@@ -43,7 +43,7 @@ function Node_Fluid_Domain_Queue(_x, _y, _group = noone) : Node_Fluid(_x, _y, _g
 	
 	static update = function() {
 		for( var i = 0; i < ds_list_size(inputs) - 1; i++ ) {
-			var _dom = inputs[| i].getValue();
+			var _dom = getInputData(i);
 			if(_dom != noone && instance_exists(_dom))
 				outputs[| 0].setValue(_dom);
 		}

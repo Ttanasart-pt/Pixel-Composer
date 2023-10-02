@@ -75,7 +75,7 @@ function Node_PCX_Equation(_x, _y, _group = noone) : Node_PCX(_x, _y, _group) co
 		array_resize(input_display_list, input_display_len);
 		
 		for( var i = input_fix_len; i < ds_list_size(inputs); i += data_length ) {
-			var varName = inputs[| i].getValue();
+			var varName = getInputData(i);
 			
 			if(varName != "") {
 				ds_list_add(_in, inputs[| i + 0]);
@@ -103,20 +103,20 @@ function Node_PCX_Equation(_x, _y, _group = noone) : Node_PCX(_x, _y, _group) co
 		if(LOADING || APPENDING) return;
 		
 		if(safe_mod(index - input_fix_len, data_length) == 0) //Variable name
-			inputs[| index + 1].name = inputs[| index].getValue();
+			inputs[| index + 1].name = getInputData(index);
 		
 		refreshDynamicInput();
 	} #endregion
 	
 	static update = function() { #region
-		var eq = inputs[| 0].getValue();
+		var eq = getInputData(0);
 		var fn = evaluateFunctionTree(eq);
 		
 		var _fnL = new __funcList();
 		
 		for( var i = input_fix_len; i < array_length(_data); i += data_length ) {
-			var _pName = inputs[| i + 0].getValue();
-			var _pVal  = inputs[| i + 1].getValue();
+			var _pName = getInputData(i + 0);
+			var _pVal  = getInputData(i + 1);
 			
 			_fnL.addFunction(new __funcTree("=", _pName, _pVal));
 		}
@@ -127,7 +127,7 @@ function Node_PCX_Equation(_x, _y, _group = noone) : Node_PCX(_x, _y, _group) co
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { #region
 		draw_set_text(f_h5, fa_center, fa_center, COLORS._main_text);
-		var str = inputs[| 0].getValue();
+		var str = getInputData(0);
 		
 		var bbox = drawGetBbox(xx, yy, _s);
 		var ss	= string_scale(str, bbox.w, bbox.h);

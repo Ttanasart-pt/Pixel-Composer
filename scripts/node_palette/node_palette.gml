@@ -8,7 +8,7 @@ function Node_Palette(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		.setDisplay(VALUE_DISPLAY.palette);
 	
 	inputs[| 1] = nodeValue("Trim range", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 1 ])
-		.setDisplay(VALUE_DISPLAY.slider_range, [0, 1, 0.01]);
+		.setDisplay(VALUE_DISPLAY.slider_range);
 	
 	outputs[| 0] = nodeValue("Palette", self, JUNCTION_CONNECT.output, VALUE_TYPE.color, [])
 		.setDisplay(VALUE_DISPLAY.palette);

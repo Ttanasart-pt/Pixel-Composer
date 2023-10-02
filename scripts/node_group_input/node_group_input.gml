@@ -70,7 +70,7 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		.rejectArray();
 	
 	inputs[| 2] = nodeValue("Input type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, data_type_list, { update_hover: false })
+		.setDisplay(VALUE_DISPLAY.enum_scroll, { data: data_type_list, update_hover: false })
 		.uncache()
 		.rejectArray();
 	inputs[| 2].editWidget.update_hover = false;
@@ -81,7 +81,7 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		.rejectArray();
 	
 	inputs[| 4] = nodeValue("Vector size", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_button, [ "2", "3", "4" ], { update_hover: false })
+		.setDisplay(VALUE_DISPLAY.enum_button, [ "2", "3", "4" ])
 		.setVisible(false)
 		.uncache()
 		.rejectArray();
@@ -127,13 +127,13 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	static onValueUpdate = function(index = 0) { #region
 		if(is_undefined(inParent)) return;
 		
-		var _dtype	    = inputs[| 0].getValue();
-		var _range	    = inputs[| 1].getValue();
-		var _type		= inputs[| 2].getValue();
+		var _dtype	    = getInputData(0);
+		var _range	    = getInputData(1);
+		var _type		= getInputData(2);
 		var _val_type   = data_type_map[_type];
-		var _enum_label = inputs[| 3].getValue();
-		var _vec_size	= inputs[| 4].getValue();
-		var _step		= inputs[| 7].getValue();
+		var _enum_label = getInputData(3);
+		var _vec_size	= getInputData(4);
+		var _step		= getInputData(7);
 		
 		if(index == 2) {
 			var _o = outputs[| 0];
@@ -143,7 +143,7 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 					_to.removeFrom();
 			}
 			
-			inputs[| 0].display_data = array_safe_get(display_list, _val_type);
+			inputs[| 0].display_data.data    = array_safe_get(display_list, _val_type);
 			inputs[| 0].editWidget.data_list = array_safe_get(display_list, _val_type);
 			inputs[| 0].setValue(0);
 			_dtype = 0;
@@ -161,12 +161,12 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 				break;
 			
 			case "Slider" :	
-				inParent.setDisplay(VALUE_DISPLAY.slider, [_range[0], _range[1], _step]);	
+				inParent.setDisplay(VALUE_DISPLAY.slider, { range: [_range[0], _range[1], _step] });	
 				break;
 			case "Slider range" :	
 				if(!is_array(_val) || array_length(_val) != 2) 
 					inParent.animator = new valueAnimator([0, 0], inParent);
-				inParent.setDisplay(VALUE_DISPLAY.slider_range, [_range[0], _range[1], _step]);	
+				inParent.setDisplay(VALUE_DISPLAY.slider_range, { range: [_range[0], _range[1], _step] });
 				break;
 				
 			case "Rotation" : 
@@ -235,8 +235,8 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		
 		switch(_val_type) {
 			case VALUE_TYPE.trigger : 
-				var bname = inputs[| 8].getValue();
-				inParent.setDisplay(VALUE_DISPLAY.button, [ function() { doTrigger = 1; }, bname]);
+				var bname = getInputData(8);
+				inParent.setDisplay(VALUE_DISPLAY.button, { name: bname, onClick: function() { doTrigger = 1; } });
 				break;
 		}
 		
@@ -308,8 +308,8 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	static update = function(frame = PROJECT.animator.current_frame) { #region
 		if(is_undefined(inParent)) return;
 		
-		var _dstype = inputs[| 0].getValue();
-		var _data  = inputs[| 2].getValue();
+		var _dstype = getInputData(0);
+		var _data  = getInputData(2);
 		_dstype = array_safe_get(array_safe_get(display_list, _data, []), _dstype);
 		
 		var _datype = data_type_map[_data];
@@ -343,7 +343,7 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		
 		var _inputs = load_map.inputs;
 		inputs[| 5].applyDeserialize(_inputs[5], load_scale);
-		if(PROJECT.version < 11520) attributes.input_priority = inputs[| 5].getValue();
+		if(PROJECT.version < 11520) attributes.input_priority = getInputData(5);
 		group.sortIO();
 		
 		inputs[| 2].applyDeserialize(_inputs[2], load_scale);

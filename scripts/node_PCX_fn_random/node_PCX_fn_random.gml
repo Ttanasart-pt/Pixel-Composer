@@ -12,9 +12,9 @@ function Node_PCX_fn_Random(_x, _y, _group = noone) : Node_PCX(_x, _y, _group) c
 	input_display_list = [ 2, 0, 1 ];
 	
 	static update = function() {
-		var _min = inputs[| 0].getValue();
-		var _max = inputs[| 1].getValue();
-		var _int = inputs[| 2].getValue();
+		var _min = getInputData(0);
+		var _max = getInputData(1);
+		var _int = getInputData(2);
 		
 		outputs[| 0].setValue(new __funcTree(_int? "irandom" : "random", [ _min, _max ]));
 	}

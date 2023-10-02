@@ -48,8 +48,6 @@ function Node_VFX_Spawner(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y
 		if(ds_list_empty(vt.value_to)) return;
 		
 		var pv = part.getPivot();
-		for( var i = 0; i < ds_list_size(inputs); i++ )
-			current_data[i] = inputs[| i].getValue();
 		
 		for( var i = 0; i < ds_list_size(vt.value_to); i++ ) {
 			var _n = vt.value_to[| i];
@@ -63,9 +61,7 @@ function Node_VFX_Spawner(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y
 		if(ds_list_empty(vt.value_to)) return;
 		
 		var pv = part.getPivot();
-		for( var i = 0; i < ds_list_size(inputs); i++ )
-			current_data[i] = inputs[| i].getValue();
-			
+		
 		for( var i = 0; i < ds_list_size(vt.value_to); i++ ) {
 			var _n = vt.value_to[| i];
 			if(_n.value_from != vt) continue;
@@ -78,8 +74,6 @@ function Node_VFX_Spawner(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y
 		if(ds_list_empty(vt.value_to)) return;
 		
 		var pv = part.getPivot();
-		for( var i = 0; i < ds_list_size(inputs); i++ )
-			current_data[i] = inputs[| i].getValue();
 			
 		for( var i = 0; i < ds_list_size(vt.value_to); i++ ) {
 			var _n = vt.value_to[| i];
@@ -89,7 +83,7 @@ function Node_VFX_Spawner(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y
 	} #endregion
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { #region
-		var spr = inputs[| 0].getValue();
+		var spr = getInputData(0);
 		
 		if(spr == 0) {
 			if(!is_surface(def_surface)) 

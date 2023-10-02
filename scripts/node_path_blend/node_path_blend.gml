@@ -14,20 +14,20 @@ function Node_Path_Blend(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		.rejectArray();
 	
 	inputs[| 2] = nodeValue("Ratio", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
-		.setDisplay(VALUE_DISPLAY.slider, [ 0, 1, 0.01 ])
+		.setDisplay(VALUE_DISPLAY.slider)
 		.rejectArray();
 	
 	outputs[| 0] = nodeValue("Path", self, JUNCTION_CONNECT.output, VALUE_TYPE.pathnode, self);
 	
 	static getLineCount = function() { 
-		var _path = inputs[| 0].getValue();
+		var _path = getInputData(0);
 		return struct_has(_path, "getLineCount")? _path.getLineCount() : 1; 
 	}
 	
 	static getSegmentCount = function(ind = 0) { 
-		var _path1 = inputs[| 0].getValue();
-		var _path2 = inputs[| 1].getValue();
-		var _lerp  = inputs[| 2].getValue();
+		var _path1 = getInputData(0);
+		var _path2 = getInputData(1);
+		var _lerp  = getInputData(2);
 		
 		var p1 = _path1 != noone && struct_has(_path1, "getSegmentCount");
 		var p2 = _path2 != noone && struct_has(_path2, "getSegmentCount");
@@ -40,9 +40,9 @@ function Node_Path_Blend(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	}
 	
 	static getLength = function(ind = 0) { 
-		var _path1 = inputs[| 0].getValue();
-		var _path2 = inputs[| 1].getValue();
-		var _lerp  = inputs[| 2].getValue();
+		var _path1 = getInputData(0);
+		var _path2 = getInputData(1);
+		var _lerp  = getInputData(2);
 		
 		var p1 = _path1 != noone && struct_has(_path1, "getLength");
 		var p2 = _path2 != noone && struct_has(_path2, "getLength");
@@ -58,9 +58,9 @@ function Node_Path_Blend(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	}
 	
 	static getAccuLength = function(ind = 0) { 
-		var _path1 = inputs[| 0].getValue();
-		var _path2 = inputs[| 1].getValue();
-		var _lerp  = inputs[| 2].getValue();
+		var _path1 = getInputData(0);
+		var _path2 = getInputData(1);
+		var _lerp  = getInputData(2);
 		
 		var p1 = _path1 != noone && struct_has(_path1, "getAccuLength");
 		var p2 = _path2 != noone && struct_has(_path2, "getAccuLength");
@@ -86,9 +86,9 @@ function Node_Path_Blend(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	}
 	
 	static getPointRatio = function(_rat, ind = 0) {
-		var _path1 = inputs[| 0].getValue();
-		var _path2 = inputs[| 1].getValue();
-		var _lerp  = inputs[| 2].getValue();
+		var _path1 = getInputData(0);
+		var _path2 = getInputData(1);
+		var _lerp  = getInputData(2);
 		
 		var p1 = _path1 != noone && struct_has(_path1, "getPointRatio");
 		var p2 = _path2 != noone && struct_has(_path2, "getPointRatio");
@@ -112,9 +112,9 @@ function Node_Path_Blend(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	}
 	
 	static getBoundary = function(ind = 0) {
-		var _path1 = inputs[| 0].getValue();
-		var _path2 = inputs[| 1].getValue();
-		var _lerp  = inputs[| 2].getValue();
+		var _path1 = getInputData(0);
+		var _path2 = getInputData(1);
+		var _lerp  = getInputData(2);
 		
 		var p1 = _path1 != noone && struct_has(_path1, "getPointRatio");
 		var p2 = _path2 != noone && struct_has(_path2, "getPointRatio");

@@ -45,7 +45,7 @@ function Node_VFX_Variable(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		.setVisible(false);
 	
 	static update = function(frame = PROJECT.animator.current_frame) {
-		var parts = inputs[| 0].getValue();
+		var parts = getInputData(0);
 		if(!is_array(parts)) return;
 		
 		var _val = [];

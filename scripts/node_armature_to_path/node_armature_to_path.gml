@@ -32,7 +32,7 @@ function Node_Armature_Path(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	#endregion
 	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
-		var _b	  = inputs[| 0].getValue();
+		var _b	  = getInputData(0);
 		
 		if(_b == noone) return;
 		_b.draw(attributes, false, _x, _y, _s, _mx, _my);
@@ -77,7 +77,7 @@ function Node_Armature_Path(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	} #endregion
 	
 	static update = function() { #region
-		var _bone = inputs[| 0].getValue();
+		var _bone = getInputData(0);
 		if(_bone == noone) return;
 		
 		lines = [];

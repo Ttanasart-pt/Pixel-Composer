@@ -49,7 +49,7 @@ function Node_Path_Array(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	static getLineCount = function() { 
 		var l = 0;
 		for( var i = input_fix_len; i < ds_list_size(inputs) - 1; i += data_length ) {
-			var _path = inputs[| i].getValue();
+			var _path = getInputData(i);
 			l += struct_has(_path, "getLineCount")? _path.getLineCount() : 1; 
 		}
 		return l; 
@@ -57,7 +57,7 @@ function Node_Path_Array(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	
 	static getSegmentCount = function(ind = 0) { 
 		for( var i = input_fix_len; i < ds_list_size(inputs) - 1; i += data_length ) {
-			var _path = inputs[| i].getValue();
+			var _path = getInputData(i);
 			var lc    = struct_has(_path, "getLineCount")? _path.getLineCount() : 1; 
 			
 			if(ind < lc) return _path.getSegmentCount(ind);
@@ -69,7 +69,7 @@ function Node_Path_Array(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	
 	static getLength = function(ind = 0) { 
 		for( var i = input_fix_len; i < ds_list_size(inputs) - 1; i += data_length ) {
-			var _path = inputs[| i].getValue();
+			var _path = getInputData(i);
 			var lc    = struct_has(_path, "getLineCount")? _path.getLineCount() : 1; 
 			
 			if(ind < lc) return _path.getLength(ind);
@@ -81,7 +81,7 @@ function Node_Path_Array(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	
 	static getAccuLength = function(ind = 0) { 
 		for( var i = input_fix_len; i < ds_list_size(inputs) - 1; i += data_length ) {
-			var _path = inputs[| i].getValue();
+			var _path = getInputData(i);
 			var lc    = struct_has(_path, "getLineCount")? _path.getLineCount() : 1; 
 			
 			if(ind < lc) return _path.getAccuLength(ind);
@@ -93,7 +93,7 @@ function Node_Path_Array(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	
 	static get__vec2Ratio = function(_rat, ind = 0) {
 		for( var i = input_fix_len; i < ds_list_size(inputs) - 1; i += data_length ) {
-			var _path = inputs[| i].getValue();
+			var _path = getInputData(i);
 			var lc = struct_has(_path, "getLineCount")? _path.getLineCount() : 1; 
 			
 			if(ind < lc) return _path.get__vec2Ratio(_rat, ind).clone();
@@ -105,7 +105,7 @@ function Node_Path_Array(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	
 	static get__vec2Distance = function(_dist, ind = 0) {
 		for( var i = input_fix_len; i < ds_list_size(inputs) - 1; i += data_length ) {
-			var _path = inputs[| i].getValue();
+			var _path = getInputData(i);
 			var lc = struct_has(_path, "getLineCount")? _path.getLineCount() : 1; 
 			
 			if(ind < lc) return _path.get__vec2Distance(_dist, ind).clone();
@@ -117,7 +117,7 @@ function Node_Path_Array(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	
 	static getBoundary = function(ind = 0) { 
 		for( var i = input_fix_len; i < ds_list_size(inputs) - 1; i += data_length ) {
-			var _path = inputs[| i].getValue();
+			var _path = getInputData(i);
 			var lc    = struct_has(_path, "getLineCount")? _path.getLineCount() : 1; 
 			
 			if(ind < lc) return _path.getBoundary(ind);

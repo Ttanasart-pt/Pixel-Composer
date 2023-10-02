@@ -31,7 +31,7 @@ function Node_Text_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	w = 128;
 	
 	inputs[| 0]  = nodeValue("Path", self, JUNCTION_CONNECT.input, VALUE_TYPE.path, "")
-		.setDisplay(VALUE_DISPLAY.path_load, ["*.txt", ""])
+		.setDisplay(VALUE_DISPLAY.path_load, { filter: "*.txt" })
 		.rejectArray();
 	
 	outputs[| 0] = nodeValue("Content", self, JUNCTION_CONNECT.output, VALUE_TYPE.text, "");
@@ -56,7 +56,7 @@ function Node_Text_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	insp1UpdateIcon     = [ THEME.refresh, 1, COLORS._main_value_positive ];
 	
 	static onInspector1Update = function() {
-		var path = inputs[| 0].getValue();
+		var path = getInputData(0);
 		if(path == "") return;
 		updatePaths(path);
 		update();
@@ -85,7 +85,7 @@ function Node_Text_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	}
 	
 	static update = function(frame = PROJECT.animator.current_frame) {
-		var path = inputs[| 0].getValue();
+		var path = getInputData(0);
 		if(path == "") return;
 		if(path_current != path) updatePaths(path);
 		

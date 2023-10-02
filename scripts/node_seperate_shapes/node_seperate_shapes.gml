@@ -6,7 +6,7 @@ function Node_Seperate_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		.rejectArray();
 	
 	inputs[| 1] = nodeValue("Tolerance", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.2)
-		.setDisplay(VALUE_DISPLAY.slider, [0, 1, 0.01])
+		.setDisplay(VALUE_DISPLAY.slider)
 		.rejectArray();
 		
 	inputs[| 2] = nodeValue("Override color", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false)
@@ -58,11 +58,11 @@ function Node_Seperate_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	}
 	
 	static separateShape = function() {
-		var _inSurf = inputs[| 0].getValue();
-		var _thres  = inputs[| 1].getValue();
-		var _ovr    = inputs[| 2].getValue();
-		var _ovrclr = inputs[| 3].getValue();
-		var _ignore = inputs[| 4].getValue();
+		var _inSurf = getInputData(0);
+		var _thres  = getInputData(1);
+		var _ovr    = getInputData(2);
+		var _ovrclr = getInputData(3);
+		var _ignore = getInputData(4);
 		var t = current_time;
 		
 		if(!is_surface(_inSurf)) return;

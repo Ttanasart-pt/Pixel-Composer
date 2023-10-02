@@ -20,25 +20,25 @@ function Node_Animation_Control(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	inputs[| 6] = nodeValue("Skip Frames Count", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1);
 	
 	static step = function() { 
-		if(inputs[| 0].getValue())
+		if(getInputData(0))
 			PROJECT.animator.toggle();
 		
-		if(inputs[| 1].getValue())
+		if(getInputData(1))
 			PROJECT.animator.pause();
 		
-		if(inputs[| 2].getValue())
+		if(getInputData(2))
 			PROJECT.animator.resume();
 		
-		if(inputs[| 3].getValue()) {
+		if(getInputData(3)) {
 			PROJECT.animator.stop();
 			PROJECT.animator.play();
 		} 
 		
-		if(inputs[| 4].getValue())
+		if(getInputData(4))
 			PROJECT.animator.render();
 		
-		if(inputs[| 5].getValue()) { 
-			var fr = inputs[| 6].getValue();
+		if(getInputData(5)) { 
+			var fr = getInputData(6);
 			PROJECT.animator.setFrame(PROJECT.animator.current_frame + fr);
 		}
 	}

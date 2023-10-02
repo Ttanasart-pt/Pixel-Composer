@@ -30,17 +30,17 @@ function Node_Rigid_Override(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	outputs[| 0] = nodeValue("Object", self, JUNCTION_CONNECT.output, VALUE_TYPE.rigid, noone );
 	
 	static update = function(frame = PROJECT.animator.current_frame) {
-		var objNode = inputs[| 0].getValue();
+		var objNode = getInputData(0);
 		outputs[| 0].setValue(objNode);
 		if(!variable_struct_exists(objNode, "object")) return;
 		var objs = objNode.object;
 		
-		var _pos = inputs[| 1].getValue();
-		var _sca = inputs[| 2].getValue();
-		var _rot = inputs[| 3].getValue();
-		var _col = inputs[| 4].getValue();
-		var _alp = inputs[| 5].getValue();
-		var _vel = inputs[| 6].getValue();
+		var _pos = getInputData(1);
+		var _sca = getInputData(2);
+		var _rot = getInputData(3);
+		var _col = getInputData(4);
+		var _alp = getInputData(5);
+		var _vel = getInputData(6);
 		
 		for( var i = 0, n = array_length(objs); i < n; i++ ) {
 			var obj = objs[i];

@@ -30,10 +30,10 @@ function __Node_3D_Cylinder(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		.setDisplay(VALUE_DISPLAY.rotation);
 		
 	inputs[| 11] = nodeValue("Light height", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.5)
-		.setDisplay(VALUE_DISPLAY.slider, [-1, 1, 0.01]);
+		.setDisplay(VALUE_DISPLAY.slider, { range: [-1, 1, 0.01] });
 		
 	inputs[| 12] = nodeValue("Light intensity", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
-		.setDisplay(VALUE_DISPLAY.slider, [0, 1, 0.01]);
+		.setDisplay(VALUE_DISPLAY.slider);
 	
 	inputs[| 13] = nodeValue("Light color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white);
 	inputs[| 14] = nodeValue("Ambient color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_grey);
@@ -49,10 +49,10 @@ function __Node_3D_Cylinder(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		.rejectArray();
 		
 	inputs[| 18] = nodeValue("Field of view", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 60)
-		.setDisplay(VALUE_DISPLAY.slider, [ 1, 90, 1 ]);
+		.setDisplay(VALUE_DISPLAY.slider, { range: [ 1, 90, 1 ] });
 		
 	inputs[| 19] = nodeValue("Taper", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
-		.setDisplay(VALUE_DISPLAY.slider, [ 0, 1, 0.01 ]);
+		.setDisplay(VALUE_DISPLAY.slider);
 	
 	inputs[| 20] = nodeValue("Scale view with dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true)
 	

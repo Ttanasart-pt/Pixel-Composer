@@ -127,10 +127,10 @@ function variable_editor(nodeVal) constructor {
 			case "Rotation" :		value.setDisplay(VALUE_DISPLAY.rotation);		break;
 			case "Rotation range" : value.setDisplay(VALUE_DISPLAY.rotation_range);	break;
 			case "Slider" :			
-				value.setDisplay(VALUE_DISPLAY.slider, [slider_range[0], slider_range[1], slider_step]);		
+				value.setDisplay(VALUE_DISPLAY.slider, { range: [slider_range[0], slider_range[1], slider_step] });
 				break;
 			case "Slider range" :	
-				value.setDisplay(VALUE_DISPLAY.slider_range, [slider_range[0], slider_range[1], slider_step]);	
+				value.setDisplay(VALUE_DISPLAY.slider_range, { range: [slider_range[0], slider_range[1], slider_step] });	
 				break;
 			case "Padding" :		value.setDisplay(VALUE_DISPLAY.padding);		break;
 			case "Vector2" :		
@@ -141,9 +141,9 @@ function variable_editor(nodeVal) constructor {
 			case "Area" :			value.setDisplay(VALUE_DISPLAY.area);			break;
 			case "Palette" :		value.setDisplay(VALUE_DISPLAY.palette);		break;
 			
-			case "Import" :		value.setDisplay(VALUE_DISPLAY.path_load, ["", ""]);	break;
-			case "Export" :		value.setDisplay(VALUE_DISPLAY.path_save, ["", ""]);	break;
-			case "Font" :		value.setDisplay(VALUE_DISPLAY.path_font);				break;
+			case "Import" :		value.setDisplay(VALUE_DISPLAY.path_load, { filter: "" });	break;
+			case "Export" :		value.setDisplay(VALUE_DISPLAY.path_save, { filter: "" });	break;
+			case "Font" :		value.setDisplay(VALUE_DISPLAY.path_font);					break;
 		}
 	}
 	

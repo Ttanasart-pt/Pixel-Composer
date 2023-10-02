@@ -57,8 +57,8 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 	attribute_surface_depth();
 
 	static step = function() {
-		var grup = inputs[| 1].getValue();
-		var pack = inputs[| 3].getValue();
+		var grup = getInputData(1);
+		var pack = getInputData(3);
 		
 		if(pack == 0)	inputs[| 5].editWidget.data = [ "Top", "Center", "Bottom" ];
 		else			inputs[| 5].editWidget.data = [ "Left", "Center", "Right" ];
@@ -69,15 +69,15 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 	}
 	
 	static update = function(frame = PROJECT.animator.current_frame) { 
-		var inpt = inputs[| 0].getValue();
-		var grup = inputs[| 1].getValue();
-		var skip = inputs[| 2].getValue();
-		var pack = inputs[| 3].getValue();
-		var grid = inputs[| 4].getValue();
-		var alig = inputs[| 5].getValue();
-		var spac = inputs[| 6].getValue();
-		var padd = inputs[| 7].getValue();
-		var rang = inputs[| 8].getValue();
+		var inpt = getInputData(0);
+		var grup = getInputData(1);
+		var skip = getInputData(2);
+		var pack = getInputData(3);
+		var grid = getInputData(4);
+		var alig = getInputData(5);
+		var spac = getInputData(6);
+		var padd = getInputData(7);
+		var rang = getInputData(8);
 		
 		var _atl = outputs[| 1].getValue();
 		var cDep = attrDepth();
@@ -86,7 +86,7 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 			initRender();
 			return;
 		} else if(PROJECT.animator.rendering && PROJECT.animator.frame_progress && PROJECT.animator.current_frame == 0 && !refreshSurface) {
-			var skip = inputs[| 2].getValue();
+			var skip = getInputData(2);
 			
 			var arr = is_array(inpt);
 			if(arr && array_length(inpt) == 0) return;
@@ -119,7 +119,7 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 						break;
 					case SPRITE_STACK.grid :
 						var amo = floor(PROJECT.animator.frames_total / skip);
-						var col = inputs[| 4].getValue();
+						var col = getInputData(4);
 						var row = ceil(amo / col);
 						
 						ww = sw * col + spac * (col - 1);
@@ -223,7 +223,7 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 					
 					break;
 				case SPRITE_STACK.grid :
-					var col  = inputs[| 4].getValue();
+					var col  = getInputData(4);
 					var _row = floor(_frame / col);
 					var _col = safe_mod(_frame, col);
 					
@@ -261,13 +261,13 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 	static initRender = function() { 
 		for(var i = 0; i < array_length(anim_drawn); i++) anim_drawn[i] = false;
 		
-		var inpt = inputs[| 0].getValue();
-		var grup = inputs[| 1].getValue();
-		var pack = inputs[| 3].getValue();
-		var alig = inputs[| 5].getValue();
-		var spac = inputs[| 6].getValue();
-		var padd = inputs[| 7].getValue();
-		var rang = inputs[| 8].getValue();
+		var inpt = getInputData(0);
+		var grup = getInputData(1);
+		var pack = getInputData(3);
+		var alig = getInputData(5);
+		var spac = getInputData(6);
+		var padd = getInputData(7);
+		var rang = getInputData(8);
 		
 		var cDep = attrDepth();
 		
@@ -316,7 +316,7 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 				}
 				break;
 			case SPRITE_STACK.grid :
-				var col = inputs[| 4].getValue();
+				var col = getInputData(4);
 				var row = ceil(amo / col);
 						
 				var row_w = 0;
@@ -392,7 +392,7 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 				break;
 			case SPRITE_STACK.grid :
 				var amo = array_length(inpt);
-				var col = inputs[| 4].getValue();
+				var col = getInputData(4);
 				var row = ceil(amo / col);
 						
 				var row_w = 0;

@@ -22,7 +22,7 @@ function Node_Region_Fill(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	temp_surface = [ surface_create(1, 1), surface_create(1, 1) ];
 		
 	static step = function() {
-		var _fill = inputs[| 3].getValue();
+		var _fill = getInputData(3);
 		
 		inputs[| 2].setVisible(_fill);
 		inputs[| 4].setVisible(_fill);

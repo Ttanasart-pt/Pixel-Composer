@@ -25,7 +25,7 @@ function Node_Struct(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			ds_list_add(_in, inputs[| i]);
 		
 		for( var i = input_fix_len; i < ds_list_size(inputs); i += data_length ) {
-			if(inputs[| i].getValue() != "") {
+			if(getInputData(i) != "") {
 				ds_list_add(_in, inputs[| i + 0]);
 				ds_list_add(_in, inputs[| i + 1].setVisible(false, true));
 			} else {
@@ -50,7 +50,7 @@ function Node_Struct(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		
 		if(index < 0) return;
 		if(safe_mod(index - input_fix_len, data_length) == 0)
-			inputs[| index + 1].name = inputs[| index].getValue() + " value";
+			inputs[| index + 1].name = getInputData(index) + " value";
 	}
 	
 	static step = function() { 
@@ -65,8 +65,8 @@ function Node_Struct(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		var str = {};
 		
 		for(var i = input_fix_len; i < ds_list_size(inputs) - data_length; i += data_length) {
-			var key = inputs[| i + 0].getValue();
-			var val = inputs[| i + 1].getValue();
+			var key = getInputData(i + 0);
+			var val = getInputData(i + 1);
 			var frm = inputs[| i + 1].value_from;
 			
 			if(frm != noone && frm.type == VALUE_TYPE.surface)
@@ -85,7 +85,7 @@ function Node_Struct(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		draw_set_text(f_p0b, fa_left, fa_center, COLORS._main_text);
 		
 		for(var i = input_fix_len; i < ds_list_size(inputs) - data_length; i += data_length) {
-			var key = inputs[| i + 0].getValue();
+			var key = getInputData(i + 0);
 			var val = inputs[| i + 1];
 			
 			draw_set_color(value_color(val.type));

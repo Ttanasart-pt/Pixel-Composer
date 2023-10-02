@@ -28,10 +28,10 @@ function Node_Time_Remap(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	attribute_surface_depth();
 	
 	static update = function(frame = PROJECT.animator.current_frame) { #region
-		var _inSurf  = inputs[| 0].getValue();
-		var _map     = inputs[| 1].getValue();
-		var _life    = inputs[| 2].getValue();
-		var _loop    = inputs[| 3].getValue();
+		var _inSurf  = getInputData(0);
+		var _map     = getInputData(1);
+		var _life    = getInputData(2);
+		var _loop    = getInputData(3);
 		
 		var _surf  = outputs[| 0].getValue();
 		_surf = surface_verify(_surf, surface_get_width_safe(_inSurf), surface_get_height_safe(_inSurf), attrDepth());

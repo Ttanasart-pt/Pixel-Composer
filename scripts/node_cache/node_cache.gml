@@ -37,7 +37,7 @@ function Node_Cache(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		if(recoverCache()) return;
 		if(!inputs[| 0].value_from) return;
 		
-		var _surf  = inputs[| 0].getValue();
+		var _surf  = getInputData(0);
 		cacheCurrentFrame(_surf);
 	}
 	

@@ -2,14 +2,14 @@ function Node_PB_Fx_Highlight(_x, _y, _group = noone) : Node_PB_Fx(_x, _y, _grou
 	name = "Highlight";
 	
 	inputs[| 1] = nodeValue("Highlight Area", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, array_create(9) )
-		.setDisplay(VALUE_DISPLAY.matrix, 3);
+		.setDisplay(VALUE_DISPLAY.matrix, { size: 3 });
 		
 	inputs[| 2] = nodeValue("Light Color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white );
 		
 	inputs[| 3] = nodeValue("Shadow Color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_black );
 		
 	inputs[| 4] = nodeValue("Roughness", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0 )
-		.setDisplay(VALUE_DISPLAY.slider, [ 0, 1, 0.01 ]);
+		.setDisplay(VALUE_DISPLAY.slider);
 		
 	inputs[| 5] = nodeValue("Roughness Scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1 );
 		
@@ -26,7 +26,7 @@ function Node_PB_Fx_Highlight(_x, _y, _group = noone) : Node_PB_Fx(_x, _y, _grou
 		var _x0 = _x + _w / 2 - ww / 2;
 		var _y0 = _y + ui(8);
 		
-		var _side  = inputs[| 1].getValue();
+		var _side  = getInputData(1);
 		
 		if(holding_side != noone && mouse_release(mb_left))
 			holding_side = noone;

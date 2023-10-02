@@ -14,6 +14,6 @@ function Node_Iterator_Sort_Output(_x, _y, _group = noone) : Node(_x, _y, _group
 	static step = function() {}
 	
 	static update = function(frame = PROJECT.animator.current_frame) {
-		//print(display_name + ": " + string(inputs[| 0].getValue()));
+		//print(display_name + ": " + string(getInputData(0)));
 	}
 }

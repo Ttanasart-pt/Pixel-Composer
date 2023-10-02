@@ -13,7 +13,7 @@ function Node_Find_Pixel(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	outputs[| 0] = nodeValue("Position", self, JUNCTION_CONNECT.output, VALUE_TYPE.integer, [ 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.vector);
 	
-	static getPreviewValues = function() { return inputs[| 0].getValue(); }
+	static getPreviewValues = function() { return getInputData(0); }
 	
 	temp_surface = [ surface_create(1, 1) ];
 	
@@ -46,7 +46,7 @@ function Node_Find_Pixel(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		
 		if(bbox.h <= 0) return;
 		
-		var col = inputs[| 1].getValue();
+		var col = getInputData(1);
 		
 		if(is_array(col)) {
 			drawPalette(col, bbox.x0, bbox.y0, bbox.w, bbox.h);

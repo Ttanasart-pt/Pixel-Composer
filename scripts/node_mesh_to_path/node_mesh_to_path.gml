@@ -14,7 +14,7 @@ function Node_Mesh_To_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	lengths  = [];
 	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
-		var mesh = inputs[| 0].getValue();
+		var mesh = getInputData(0);
 		if(mesh == noone) return;
 		
 		draw_set_color(c_grey);
@@ -49,7 +49,7 @@ function Node_Mesh_To_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	}
 	
 	static update = function() {  
-		var _mesh = inputs[| 0].getValue();	
+		var _mesh = getInputData(0);	
 		outputs[| 0].setValue(self);
 		if(_mesh == noone) return;
 		

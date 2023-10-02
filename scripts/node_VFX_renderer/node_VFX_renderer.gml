@@ -60,7 +60,7 @@ function Node_VFX_Renderer(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	}
 	
 	static step = function() {
-		var _dim		= inputs[| 0].getValue();
+		var _dim		= getInputData(0);
 		var _outSurf	= outputs[| 0].getValue();
 		
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());

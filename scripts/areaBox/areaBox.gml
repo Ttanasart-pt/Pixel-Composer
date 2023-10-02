@@ -116,15 +116,15 @@ function areaBox(_onModify, _unit = noone) : widget() constructor {
 	} #endregion
 	
 	static drawParam = function(params) { #region
-		return draw(params.x + params.w / 2, params.y + ui(40), params.data, params.extra_data, params.m);
+		return draw(params.x + params.w / 2, params.y + ui(40), params.data, params.display_data, params.m);
 	} #endregion
 	
-	static draw = function(_x, _y, _data, _extra_data, _m) {
+	static draw = function(_x, _y, _data, _display_data, _m) {
 		x = _x;
 		y = _y;
 		w = 0;
 		h = ui(204);
-		mode = _extra_data.area_type;
+		mode = _display_data.area_type;
 		
 		var _bx   = _x - ui(48);
 		var _by   = _y + ui(64 - 48);
@@ -218,7 +218,7 @@ function areaBox(_onModify, _unit = noone) : widget() constructor {
 						break;
 				}
 				
-				_extra_data.area_type = (mode + 1) % 3;
+				_display_data.area_type = (mode + 1) % 3;
 			} #endregion
 		} 
 		

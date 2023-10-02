@@ -31,7 +31,7 @@ function Node_Rigid_Force_Apply(_x, _y, _group = noone) : Node(_x, _y, _group) c
 		.rejectArray();
 	
 	inputs[| 7] = nodeValue("Strength", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
-		.setDisplay(VALUE_DISPLAY.slider, [0, 16, 0.01])
+		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 16, 0.01] })
 		.rejectArray();
 	
 	inputs[| 8] = nodeValue("Range", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 8)
@@ -45,13 +45,13 @@ function Node_Rigid_Force_Apply(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	]
 	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
-		var _typ = inputs[| 1].getValue();
-		var _pos = inputs[| 2].getValue();
+		var _typ = getInputData(1);
+		var _pos = getInputData(2);
 		var px = _x + _pos[0] * _s;
 		var py = _y + _pos[1] * _s;
 			
 		if(_typ == 0 || _typ == 1) {
-			var _for = inputs[| 5].getValue();
+			var _for = getInputData(5);
 			
 			var fx = px + _for[0] * 10 * _s;
 			var fy = py + _for[1] * 10 * _s;
@@ -64,7 +64,7 @@ function Node_Rigid_Force_Apply(_x, _y, _group = noone) : Node(_x, _y, _group) c
 			inputs[| 2].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
 			inputs[| 5].drawOverlay(active, px, py, _s, _mx, _my, _snx, _sny, THEME.anchor, 10);
 		} else if(_typ == 3) {
-			var _rad = inputs[| 8].getValue();
+			var _rad = getInputData(8);
 			
 			draw_set_color(COLORS._main_accent);
 			draw_set_alpha(0.5);
@@ -78,7 +78,7 @@ function Node_Rigid_Force_Apply(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	}
 	
 	static step = function() {
-		var _typ = inputs[| 1].getValue();
+		var _typ = getInputData(1);
 		
 		inputs[| 3].setVisible(_typ == 2);
 		inputs[| 4].setVisible(_typ > 0);
@@ -89,20 +89,20 @@ function Node_Rigid_Force_Apply(_x, _y, _group = noone) : Node(_x, _y, _group) c
 	}
 	
 	static update = function(frame = PROJECT.animator.current_frame) {
-		var _obj = inputs[| 0].getValue();
+		var _obj = getInputData(0);
 		outputs[| 0].setValue(_obj);
 		
 		RETURN_ON_REST
 			
-		var _typ = inputs[| 1].getValue();
+		var _typ = getInputData(1);
 		
-		var _pos = inputs[| 2].getValue();
-		var _tor = inputs[| 3].getValue();
-		var _frm = inputs[| 4].getValue();
-		var _for = inputs[| 5].getValue();
-		var _sco = inputs[| 6].getValue();
-		var _str = inputs[| 7].getValue();
-		var _rad = inputs[| 8].getValue();
+		var _pos = getInputData(2);
+		var _tor = getInputData(3);
+		var _frm = getInputData(4);
+		var _for = getInputData(5);
+		var _sco = getInputData(6);
+		var _str = getInputData(7);
+		var _rad = getInputData(8);
 		
 		if((_typ > 0) && PROJECT.animator.current_frame != _frm)
 			return;

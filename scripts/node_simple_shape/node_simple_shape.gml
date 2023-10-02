@@ -38,14 +38,15 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	inputs[| 2] = nodeValue("Shape", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Rectangle", "Ellipse", "Regular polygon", "Star", "Arc", "Teardrop", "Cross", "Leaf" ]);
 	
+	onSurfaceSize = function() { return getInputData(0, DEF_SURF); };
 	inputs[| 3] = nodeValue("Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ DEF_SURF_W / 2, DEF_SURF_H / 2, DEF_SURF_W / 2, DEF_SURF_H / 2, AREA_SHAPE.rectangle ])
-		.setDisplay(VALUE_DISPLAY.area, function() { return inputs[| 0].getValue(); });
+		.setDisplay(VALUE_DISPLAY.area, { onSurfaceSize });
 	
 	inputs[| 4] = nodeValue("Sides", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 3)
 		.setVisible(false);
 	
 	inputs[| 5] = nodeValue("Inner radius", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.5)
-		.setDisplay(VALUE_DISPLAY.slider, [0, 1, 0.01])
+		.setDisplay(VALUE_DISPLAY.slider)
 		.setVisible(false);
 	
 	inputs[| 6] = nodeValue("Anti alising", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
@@ -57,7 +58,7 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		.setDisplay(VALUE_DISPLAY.rotation_range);
 	
 	inputs[| 9] = nodeValue("Corner radius", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
-		.setDisplay(VALUE_DISPLAY.slider, [0, 0.5, 0.01]);
+		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 0.5, 0.01] });
 	
 	inputs[| 10] = nodeValue("Shape color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white);
 	
@@ -66,7 +67,7 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	inputs[| 12] = nodeValue("Height", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
 	
 	inputs[| 13] = nodeValue("Start radius", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.1)
-		.setDisplay(VALUE_DISPLAY.slider, [0, 1, 0.01])
+		.setDisplay(VALUE_DISPLAY.slider)
 		.setVisible(false);
 	
 	inputs[| 14] = nodeValue("Shape path", self, JUNCTION_CONNECT.input, VALUE_TYPE.pathnode, noone)
@@ -83,7 +84,7 @@ function Node_Shape(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	attribute_surface_depth();
 	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
-		var _path	= inputs[| 14].getValue();
+		var _path	= getInputData(14);
 		if(_path != noone && struct_has(_path, "getPointRatio")) return;
 		inputs[| 3].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
 	}

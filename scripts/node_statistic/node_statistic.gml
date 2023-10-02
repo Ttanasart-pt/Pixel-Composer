@@ -76,13 +76,13 @@ function Node_Statistic(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	}
 	
 	static update = function(frame = PROJECT.animator.current_frame) {
-		var type = inputs[| 0].getValue();
+		var type = getInputData(0);
 		var res = 0;
 		
 		switch(type) {
 			case STAT_OPERATOR._sum : 
 				for( var i = input_fix_len; i < ds_list_size(inputs) - 1; i++ ) {
-					var val = inputs[| i].getValue();
+					var val = getInputData(i);
 					if(is_array(val)) {
 						for( var j = 0; j < array_length(val); j++ )
 							res += val[j];
@@ -98,7 +98,7 @@ function Node_Statistic(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 				
 				var amo = 0;
 				for( var i = input_fix_len; i < ds_list_size(inputs) - 1; i++ ) {
-					var val = inputs[| i].getValue();
+					var val = getInputData(i);
 					if(is_array(val)) {
 						for( var j = 0; j < array_length(val); j++ ) {
 							res += val[j];
@@ -120,7 +120,7 @@ function Node_Statistic(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 				var vals = [];
 				var amo = 0;
 				for( var i = input_fix_len; i < ds_list_size(inputs) - 1; i++ ) {
-					var val = inputs[| i].getValue();
+					var val = getInputData(i);
 					if(is_array(val)) {
 						for( var j = 0; j < array_length(val); j++ ) {
 							array_push(vals, val[j]);
@@ -146,7 +146,7 @@ function Node_Statistic(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 			case STAT_OPERATOR._min : 
 				var _min = 9999999999;
 				for( var i = input_fix_len; i < ds_list_size(inputs) - 1; i++ ) {
-					var val = inputs[| i].getValue();
+					var val = getInputData(i);
 					if(is_array(val)) {
 						for( var j = 0; j < array_length(val); j++ )
 							_min = min(_min, val[j]);
@@ -159,7 +159,7 @@ function Node_Statistic(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 				var _max = -9999999999;
 				
 				for( var i = input_fix_len; i < ds_list_size(inputs) - 1; i++ ) {
-					var val = inputs[| i].getValue();
+					var val = getInputData(i);
 					if(is_array(val)) {
 						for( var j = 0; j < array_length(val); j++ )
 							_max = max(_max, val[j]);
@@ -176,7 +176,7 @@ function Node_Statistic(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		draw_set_text(f_h3, fa_center, fa_center, COLORS._main_text);
 		var str = "";
-		switch(inputs[| 0].getValue()) {
+		switch(getInputData(0)) {
 			case STAT_OPERATOR._average : str = "Avg"; break;
 			case STAT_OPERATOR._sum : str = "Sum"; break;
 			case STAT_OPERATOR._median : str = "Med"; break;

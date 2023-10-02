@@ -32,7 +32,7 @@ function Node_Iterate_Filter(_x, _y, _group = noone) : Node_Iterator(_x, _y, _gr
 	}
 	
 	static doInitLoop = function() {
-		var arrIn  = inputs[| 0].getValue();
+		var arrIn  = getInputData(0);
 		var arrOut = outputs[| 0].getValue();
 		
 		surface_array_free(arrOut);
@@ -40,7 +40,7 @@ function Node_Iterate_Filter(_x, _y, _group = noone) : Node_Iterator(_x, _y, _gr
 	}
 	
 	static getIterationCount = function() {
-		var arrIn = inputs[| 0].getValue();
+		var arrIn = getInputData(0);
 		var maxIter = is_array(arrIn)? array_length(arrIn) : 0;
 		if(!is_real(maxIter)) maxIter = 1;
 		

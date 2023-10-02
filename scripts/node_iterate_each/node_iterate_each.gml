@@ -30,7 +30,7 @@ function Node_Iterate_Each(_x, _y, _group = noone) : Node_Iterator(_x, _y, _grou
 	}
 	
 	static doInitLoop = function() {
-		var arrIn = inputs[| 0].getValue();
+		var arrIn = getInputData(0);
 		var arrOut = outputs[| 0].getValue();
 		
 		if(array_length(arrOut) != array_length(arrIn)) {
@@ -40,7 +40,7 @@ function Node_Iterate_Each(_x, _y, _group = noone) : Node_Iterator(_x, _y, _grou
 	}
 	
 	static getIterationCount = function() {
-		var arrIn = inputs[| 0].getValue();
+		var arrIn = getInputData(0);
 		var maxIter = is_array(arrIn)? array_length(arrIn) : 0;
 		if(!is_real(maxIter)) maxIter = 1;
 		

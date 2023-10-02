@@ -29,15 +29,15 @@ function Node_Image_gif(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	update_on_frame = true;
 	
 	inputs[| 0] = nodeValue("Path", self, JUNCTION_CONNECT.input, VALUE_TYPE.path, "")
-		.setDisplay(VALUE_DISPLAY.path_load, ["*.gif", ""]);
+		.setDisplay(VALUE_DISPLAY.path_load, { filter: "*.gif" });
 		
 	inputs[| 1] = nodeValue("Set animation length to gif", self, JUNCTION_CONNECT.input, VALUE_TYPE.trigger, 0)
-		.setDisplay(VALUE_DISPLAY.button, [ function() { 
+		.setDisplay(VALUE_DISPLAY.button, { name: "Match length", onClick: function() { 
 				if(!spr) return;
 				if(!sprite_exists(spr)) return;
 				PROJECT.animator.frames_total = sprite_get_number(spr);
 				PROJECT.animator.framerate = 12;
-			}, "Match length"] );
+			} });
 	
 	inputs[| 2]  = nodeValue("Output as array", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
 	
@@ -86,7 +86,7 @@ function Node_Image_gif(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	insp1UpdateIcon     = [ THEME.refresh, 1, COLORS._main_value_positive ];
 	
 	static onInspector1Update = function() { #region
-		var path = inputs[| 0].getValue();
+		var path = getInputData(0);
 		if(path == "") return;
 		updatePaths(path);
 		update();
@@ -119,9 +119,9 @@ function Node_Image_gif(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	} #endregion
 	
 	static step = function() { #region
-		var _arr = inputs[| 2].getValue();
-		var _lop = inputs[| 3].getValue();
-		var _cus = inputs[| 5].getValue();
+		var _arr = getInputData(2);
+		var _lop = getInputData(3);
+		var _cus = getInputData(5);
 		
 		inputs[| 3].setVisible(!_arr);
 		inputs[| 4].setVisible(!_cus);
@@ -139,7 +139,7 @@ function Node_Image_gif(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	} #endregion
 	
 	static update = function(frame = PROJECT.animator.current_frame) { #region
-		var path = inputs[| 0].getValue();
+		var path = getInputData(0);
 		if(path == "") return;
 		if(path_current != path) updatePaths(path);
 		if(!spr || !sprite_exists(spr)) return;
@@ -148,7 +148,7 @@ function Node_Image_gif(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		var hh = sprite_get_height(spr);
 		
 		var _outsurf = outputs[| 0].getValue();
-		var array = inputs[| 2].getValue();
+		var array = getInputData(2);
 		
 		if(array) {
 			var amo = sprite_get_number(spr);
@@ -172,11 +172,11 @@ function Node_Image_gif(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 			return;
 		}
 		
-		var _loop = inputs[| 3].getValue();
-		var _strt = inputs[| 4].getValue();
-		var _cust = inputs[| 5].getValue();
-		var _spd  = inputs[| 7].getValue();
-		var _frm  = _cust? inputs[| 6].getValue() : PROJECT.animator.current_frame * _spd - _strt;
+		var _loop = getInputData(3);
+		var _strt = getInputData(4);
+		var _cust = getInputData(5);
+		var _spd  = getInputData(7);
+		var _frm  = _cust? getInputData(6) : PROJECT.animator.current_frame * _spd - _strt;
 		
 		var _len = sprite_get_number(spr);
 		var _drw = true;

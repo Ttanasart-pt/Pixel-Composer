@@ -53,7 +53,7 @@ function Node_Iterator_Each_Output(_x, _y, _group = noone) : Node(_x, _y, _group
 			return;
 		}
 		
-		_val[@ ind] = cloneValue(array_safe_get(_val, ind), inputs[| 0].getValue());
+		_val[@ ind] = cloneValue(array_safe_get(_val, ind), getInputData(0));
 		
 		outputs[| 0].setValue(_val);
 		group.outputs[| 0].setValue(_val);

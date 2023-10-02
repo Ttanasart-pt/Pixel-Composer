@@ -14,8 +14,8 @@ function Node_String_Join(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	outputs[| 0] = nodeValue("Text", self, JUNCTION_CONNECT.output, VALUE_TYPE.text, "");
 	
 	static update = function() { 
-		var _arr = inputs[| 0].getValue();
-		var _div = inputs[| 1].getValue();
+		var _arr = getInputData(0);
+		var _div = getInputData(1);
 		var str = "";
 		
 		for( var i = 0, n = array_length(_arr); i < n; i++ ) 

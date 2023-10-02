@@ -11,16 +11,16 @@ function Node_PB_Box_Inset(_x, _y, _group = noone) : Node_PB_Box(_x, _y, _group)
 		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Padding", "Ratio" ]);
 		
 	inputs[| 4] = nodeValue("Width", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.5 )
-		.setDisplay(VALUE_DISPLAY.slider, [ 0, 1, 0.01 ]);
+		.setDisplay(VALUE_DISPLAY.slider);
 		
 	inputs[| 5] = nodeValue("Height", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.5 )
-		.setDisplay(VALUE_DISPLAY.slider, [ 0, 1, 0.01 ]);
+		.setDisplay(VALUE_DISPLAY.slider);
 	
 	inputs[| 6] = nodeValue("Horizontal alignment", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.5 )
-		.setDisplay(VALUE_DISPLAY.slider, [ 0, 1, 0.01 ]);
+		.setDisplay(VALUE_DISPLAY.slider);
 	
 	inputs[| 7] = nodeValue("Vertical alignment", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.5 )
-		.setDisplay(VALUE_DISPLAY.slider, [ 0, 1, 0.01 ]);
+		.setDisplay(VALUE_DISPLAY.slider);
 		
 	outputs[| 0] = nodeValue("pBox Inset", self, JUNCTION_CONNECT.output, VALUE_TYPE.pbBox, noone );
 	

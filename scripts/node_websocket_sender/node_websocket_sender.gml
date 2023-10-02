@@ -56,8 +56,8 @@ function Node_Websocket_Sender(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	insp1UpdateIcon     = [ THEME.refresh, 1, COLORS._main_value_positive ];
 	
 	static onInspector1Update = function() {
-		var _port = inputs[| 0].getValue();
-		var _url  = inputs[| 5].getValue();
+		var _port = getInputData(0);
+		var _url  = getInputData(5);
 		connectTo(_port, _url);
 	}
 	
@@ -75,7 +75,7 @@ function Node_Websocket_Sender(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	}
 	
 	static step = function() {
-		var _type = inputs[| 1].getValue();
+		var _type = getInputData(1);
 		
 		inputs[| 2].setVisible(_type == 0, _type == 0);
 		inputs[| 3].setVisible(_type == 1, _type == 1);
@@ -84,8 +84,8 @@ function Node_Websocket_Sender(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	}
 	
 	static update = function(frame = PROJECT.animator.current_frame) { 
-		var _port   = inputs[| 0].getValue();
-		var _target = inputs[| 5].getValue();
+		var _port   = getInputData(0);
+		var _target = getInputData(5);
 		
 		if(port != _port || url != _target)
 			connectTo(_port, _target);
@@ -93,30 +93,30 @@ function Node_Websocket_Sender(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		var network = ds_map_try_get(NETWORK_CLIENTS, _port, noone);
 		if(network < 0) return;
 		
-		var _type = inputs[| 1].getValue();
+		var _type = getInputData(1);
 		var _buff, res;
 		
 		switch(_type) {
 			case 0 :
-				var _stru = inputs[| 2].getValue();
+				var _stru = getInputData(2);
 				var _str  = json_stringify(_stru);
 				_buff = buffer_from_string(_str);
 				res   = network_send_raw(network, _buff, buffer_get_size(_buff), network_send_text);
 				break;
 			case 1 :
-				var _surf = inputs[| 3].getValue();
+				var _surf = getInputData(3);
 				if(!is_surface(_surf)) return;
 				_buff = buffer_from_surface(_surf);
 				res   = network_send_raw(network, _buff, buffer_get_size(_buff), network_send_text);
 				break;
 			case 2 :
-				var _path = inputs[| 4].getValue();
+				var _path = getInputData(4);
 				if(!file_exists(_path)) return;
 				_buff = buffer_from_file(_path);
 				res   = network_send_raw(network, _buff, buffer_get_size(_buff), network_send_text);
 				break;
 			case 3 :
-				_buff = inputs[| 6].getValue();
+				_buff = getInputData(6);
 				if(!buffer_exists(_buff)) return;
 				res   = network_send_raw(network, _buff, buffer_get_size(_buff), network_send_text);
 				break;

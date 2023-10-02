@@ -2,10 +2,10 @@ function Node_PB_Draw_Blob(_x, _y, _group = noone) : Node_PB_Draw(_x, _y, _group
 	name = "Blob";
 	
 	inputs[| 3] = nodeValue("Top", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.5 )
-		.setDisplay(VALUE_DISPLAY.slider, [ 0, 1, 0.01 ] );
+		.setDisplay(VALUE_DISPLAY.slider);
 	
 	inputs[| 4] = nodeValue("Bottom", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1 )
-		.setDisplay(VALUE_DISPLAY.slider, [ 0, 1, 0.01 ] );
+		.setDisplay(VALUE_DISPLAY.slider);
 	
 	input_display_list = [
 		["Draw",	false], 0, 1, 2, 
@@ -13,7 +13,7 @@ function Node_PB_Draw_Blob(_x, _y, _group = noone) : Node_PB_Draw(_x, _y, _group
 	];
 	
 	static drawOverlayPB = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
-		var _pbox = inputs[| 0].getValue();
+		var _pbox = getInputData(0);
 		if(_pbox == noone) return;
 		
 		var x0 = _pbox.x + _pbox.w / 2;

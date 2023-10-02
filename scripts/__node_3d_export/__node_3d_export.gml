@@ -5,7 +5,7 @@ function __Node_3D_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		.setVisible(true, true);
 	
 	inputs[| 1] = nodeValue("Path", self, JUNCTION_CONNECT.input, VALUE_TYPE.path, "", "Export location without '.obj' extension." )
-		.setDisplay(VALUE_DISPLAY.path_save, ["*.obj", ""]);
+		.setDisplay(VALUE_DISPLAY.path_save, { filter: "*.obj" });
 	
 	inputs[| 2] = nodeValue("Export texture", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true );
 	
@@ -19,9 +19,9 @@ function __Node_3D_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	static onInspector1Update = function() { export(); }
 	
 	static export = function() { 
-		var vert = inputs[| 0].getValue();
-		var path = inputs[| 1].getValue();
-		var text = inputs[| 2].getValue();
+		var vert = getInputData(0);
+		var path = getInputData(1);
+		var text = getInputData(2);
 		
 		if(array_length(vert) == 0) return;
 		

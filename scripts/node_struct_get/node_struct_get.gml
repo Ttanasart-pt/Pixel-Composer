@@ -12,8 +12,8 @@ function Node_Struct_Get(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	outputs[| 0] = nodeValue("Struct", self, JUNCTION_CONNECT.output, VALUE_TYPE.struct, {});
 	
 	static update = function() { 
-		var str = inputs[| 0].getValue();
-		var key = inputs[| 1].getValue();
+		var str = getInputData(0);
+		var key = getInputData(1);
 		
 		var keys = string_splice(key, ".");
 		var _str = str;
@@ -55,7 +55,7 @@ function Node_Struct_Get(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		var bbox = drawGetBbox(xx, yy, _s);
-		var str  = inputs[| 1].getValue();
+		var str  = getInputData(1);
 		
 		draw_set_text(f_h5, fa_center, fa_center, COLORS._main_text);
 		var ss	= string_scale(str, bbox.w, bbox.h);

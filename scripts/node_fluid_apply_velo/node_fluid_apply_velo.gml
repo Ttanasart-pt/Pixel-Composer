@@ -24,8 +24,8 @@ function Node_Fluid_Apply_Velocity(_x, _y, _group = noone) : Node_Fluid(_x, _y, 
 	outputs[| 0] = nodeValue("Fluid Domain", self, JUNCTION_CONNECT.output, VALUE_TYPE.fdomain, noone);
 	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
-		var _mat = inputs[| 1].getValue();
-		var _pos = inputs[| 2].getValue();
+		var _mat = getInputData(1);
+		var _pos = getInputData(2);
 		
 		if(is_surface(_mat)) {
 			var sw = surface_get_width_safe(_mat) * _s;
@@ -60,7 +60,7 @@ function Node_Fluid_Apply_Velocity(_x, _y, _group = noone) : Node_Fluid(_x, _y, 
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		var bbox = drawGetBbox(xx, yy, _s);
-		var _mat = inputs[| 1].getValue();
+		var _mat = getInputData(1);
 		if(!is_surface(_mat)) return;
 		
 		draw_surface_fit(_mat, bbox.xc, bbox.yc, bbox.w, bbox.h);

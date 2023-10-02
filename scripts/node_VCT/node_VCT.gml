@@ -5,9 +5,9 @@ function Node_VCT(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) const
 	vct    = new VCT(self);
 	
 	inputs[| 0] = nodeValue("Editor", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.button, [ function() {
+		.setDisplay(VALUE_DISPLAY.button, { name: "Editor", onClick: function() {
 			vct.createDialog();
-		}, "Editor" ]);
+		} });
 	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 		
@@ -26,14 +26,14 @@ function Node_VCT(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) const
 		
 		inputs[| index] = nodeValue(name, self, JUNCTION_CONNECT.input, _var.type, 0)
 			.setDisplay(_var.disp, _var.disp_data);
-		inputs[| index].extra_data.key = key;
+		inputs[| index].display_data.key = key;
 		
 		array_append(input_display_list, [ index ]);
 	}
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) {
 		for( var i = 1; i < array_length(_data); i++ )
-			vct[$ inputs[| i].extra_data.key].setDirect(_data[i]);
+			vct[$ inputs[| i].display_data.key].setDirect(_data[i]);
 			
 		var params = {
 			frame: PROJECT.animator.current_frame
@@ -54,6 +54,6 @@ function Node_VCT(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) const
 		vct.deserialize(load_map.vct);
 		
 		//for(var i = input_fix_len; i < array_length(_inputs); i += data_length)
-		//	createNewInput(_inputs[i].extra_data.key);
+		//	createNewInput(_inputs[i].display_data.key);
 	}
 }

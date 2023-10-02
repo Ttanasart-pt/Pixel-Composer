@@ -5,7 +5,7 @@ function Node_Strand_Break(_x, _y, _group = noone) : _Node_Strand_Affector(_x, _
 	w = 96;
 	
 	inputs[| input_fix_len + 0] = nodeValue("Chance", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
-		.setDisplay(VALUE_DISPLAY.slider, [ 0, 1, 0.01 ]);
+		.setDisplay(VALUE_DISPLAY.slider);
 	
 	inputs[| input_fix_len + 1] = nodeValue("Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, irandom_range(100000, 999999));
 	
@@ -14,8 +14,8 @@ function Node_Strand_Break(_x, _y, _group = noone) : _Node_Strand_Affector(_x, _
 	);
 	
 	static update = function(frame = PROJECT.animator.current_frame) {
-		var _cha = inputs[| input_fix_len + 0].getValue();
-		var _sed = inputs[| input_fix_len + 1].getValue();
+		var _cha = getInputData(input_fix_len + 0);
+		var _sed = getInputData(input_fix_len + 1);
 		
 		STRAND_EFFECTOR_PRE
 			if(_sed && random1D(h.id) < _cha * mulp)

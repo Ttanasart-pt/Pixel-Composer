@@ -5,7 +5,7 @@ function Node_Strand_Force_Apply(_x, _y, _group = noone) : _Node_Strand_Affector
 	w = 96;
 	
 	inputs[| input_fix_len + 0] = nodeValue("Strength", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
-		.setDisplay(VALUE_DISPLAY.slider, [ 0, 5, 0.01 ]);
+		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 5, 0.01 ] });
 	
 	inputs[| input_fix_len + 1] = nodeValue("Turbulence", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0);
 		
@@ -20,14 +20,14 @@ function Node_Strand_Force_Apply(_x, _y, _group = noone) : _Node_Strand_Affector
 	);
 	
 	static update = function(frame = PROJECT.animator.current_frame) {
-		var _pos = inputs[|  2].getValue();
-		var _dir = inputs[|  4].getValue();
+		var _pos = getInputData(2);
+		var _dir = getInputData(4);
 	
-		var _stn = inputs[| input_fix_len + 0].getValue();
-		var _tur = inputs[| input_fix_len + 1].getValue();
-		var _sed = inputs[| input_fix_len + 2].getValue();
-		var _tfr = inputs[| input_fix_len + 3].getValue();
-		var _toc = inputs[| input_fix_len + 4].getValue();
+		var _stn = getInputData(input_fix_len + 0);
+		var _tur = getInputData(input_fix_len + 1);
+		var _sed = getInputData(input_fix_len + 2);
+		var _tfr = getInputData(input_fix_len + 3);
+		var _toc = getInputData(input_fix_len + 4);
 		
 		inputs[| 4].setVisible(true);
 		

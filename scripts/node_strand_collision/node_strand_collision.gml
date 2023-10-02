@@ -13,7 +13,7 @@ function Node_Strand_Collision(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	outputs[| 0] = nodeValue("Strand", self, JUNCTION_CONNECT.output, VALUE_TYPE.strands, noone);
 	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
-		var _msh = inputs[| 1].getValue();
+		var _msh = getInputData(1);
 		if(_msh == noone) return;
 		
 		draw_set_color(COLORS._main_accent);
@@ -21,8 +21,8 @@ function Node_Strand_Collision(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	}
 	
 	static update = function(frame = PROJECT.animator.current_frame) {
-		var _str = inputs[| 0].getValue();
-		var _msh = inputs[| 1].getValue();
+		var _str = getInputData(0);
+		var _msh = getInputData(1);
 		
 		if(_str == noone) return;
 		var __str = _str;

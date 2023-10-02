@@ -37,7 +37,7 @@ function Node_Strand_Render(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	static onInspector2Update = function() { clearCache(); }
 	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
-		var _str = inputs[| 1].getValue();
+		var _str = getInputData(1);
 		if(_str == noone) return;
 		if(!is_array(_str)) _str = [ _str ];
 		
@@ -48,15 +48,14 @@ function Node_Strand_Render(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	static update = function(frame = PROJECT.animator.current_frame) {
 		if(!PROJECT.animator.is_playing && recoverCache()) return;
 			
-		var _dim = inputs[| 0].getValue();
-		var _str = inputs[| 1].getValue();
-		
-		var _thk = inputs[| 2].getValue();
-		var _tln = inputs[| 3].getValue();
-		var _bld = inputs[| 4].getValue();
-		var _col = inputs[| 5].getValue();
-		var _sed = inputs[| 6].getValue();
-		var _chd = inputs[| 7].getValue();
+		var _dim = getInputData(0);
+		var _str = getInputData(1);
+		var _thk = getInputData(2);
+		var _tln = getInputData(3);
+		var _bld = getInputData(4);
+		var _col = getInputData(5);
+		var _sed = getInputData(6);
+		var _chd = getInputData(7);
 		
 		var _surf = outputs[| 0].getValue();
 		_surf = surface_verify(_surf, _dim[0], _dim[1]);

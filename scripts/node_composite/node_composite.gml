@@ -458,7 +458,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	} #endregion
 	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
-		var pad = inputs[| 0].getValue();
+		var pad = getInputData(0);
 		var ww  = overlay_w;
 		var hh  = overlay_h;
 		
@@ -544,8 +544,8 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 				if(inputs[| input_dragging].setValue(sa))
 					UNDO_HOLDING = true;	
 			} else if(drag_type == NODE_COMPOSE_DRAG.scale) {
-				var _surf = inputs[| surf_dragging + 0].getValue();
-				var _rot  = inputs[| surf_dragging + 2].getValue();
+				var _surf = getInputData(surf_dragging + 0);
+				var _rot  = getInputData(surf_dragging + 2);
 				var _sw = surface_get_width_safe(_surf);
 				var _sh = surface_get_height_safe(_surf);
 				

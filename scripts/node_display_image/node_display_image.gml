@@ -30,7 +30,7 @@ function Node_Display_Image(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	auto_height		= false;
 	
 	inputs[| 0]  = nodeValue("Path", self, JUNCTION_CONNECT.input, VALUE_TYPE.path, "")
-		.setDisplay(VALUE_DISPLAY.path_load, ["*.png", ""])
+		.setDisplay(VALUE_DISPLAY.path_load, { filter: "*.png" })
 		.rejectArray();
 	
 	spr = noone;
@@ -39,7 +39,7 @@ function Node_Display_Image(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	first_update = false;
 	
 	static onInspector1Update = function() {
-		var path = inputs[| 0].getValue();
+		var path = getInputData(0);
 		if(path == "") return;
 		updatePaths(path);
 		update();
@@ -72,7 +72,7 @@ function Node_Display_Image(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	}
 	
 	static update = function(frame = PROJECT.animator.current_frame) {
-		var path = inputs[| 0].getValue();
+		var path = getInputData(0);
 		if(path == "") return;
 		if(path_current != path) updatePaths(path);
 		

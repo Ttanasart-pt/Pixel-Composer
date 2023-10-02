@@ -16,7 +16,7 @@ function Node_Strand_Create(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	inputs[| 3] = nodeValue("Segment", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 4);
 	
 	inputs[| 4] = nodeValue("Elasticity", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.05, "Length preservation, the higher the value the easier it is to stretch each segment.")
-		.setDisplay(VALUE_DISPLAY.slider, [ 0, 1, 0.01 ]);
+		.setDisplay(VALUE_DISPLAY.slider);
 	
 	inputs[| 5] = nodeValue("Path", self, JUNCTION_CONNECT.input, VALUE_TYPE.pathnode, noone);
 	
@@ -27,17 +27,17 @@ function Node_Strand_Create(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		.setDisplay(VALUE_DISPLAY.enum_button, [ "Inner", "Outer", "Both" ]);
 	
 	inputs[| 8] = nodeValue("Spring", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.8, "Angular stiffness, the higher the value the easier it is to bend each segment.")
-		.setDisplay(VALUE_DISPLAY.slider, [ 0, 1, 0.01 ]);
+		.setDisplay(VALUE_DISPLAY.slider);
 	
 	inputs[| 9] = nodeValue("Structure", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.2, "The ability to keep its original shape.")
-		.setDisplay(VALUE_DISPLAY.slider, [ 0, 1, 0.01 ]);
+		.setDisplay(VALUE_DISPLAY.slider);
 		
 	inputs[| 10] = nodeValue("Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, irandom_range(10000, 99999));
 	
 	inputs[| 11] = nodeValue("Curl frequency", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0);
 	
 	inputs[| 12] = nodeValue("Curliness", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
-		.setDisplay(VALUE_DISPLAY.slider, [ 0, 1, 0.01 ]);
+		.setDisplay(VALUE_DISPLAY.slider);
 	
 	inputs[| 13] = nodeValue("Mesh", self, JUNCTION_CONNECT.input, VALUE_TYPE.mesh, noone);
 	
@@ -45,12 +45,12 @@ function Node_Strand_Create(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Uniform", "Random" ]);
 	
 	inputs[| 15] = nodeValue("Bake hair", self, JUNCTION_CONNECT.input, VALUE_TYPE.trigger, 0, "Prevent strand reseting to apply manual modification. Unbaking will remove all changes.")
-		.setDisplay(VALUE_DISPLAY.button, [ function() { 
+		.setDisplay(VALUE_DISPLAY.button, { name: "Bake", onClick: function() { 
 			attributes.use_groom = !attributes.use_groom; 
 			if(attributes.use_groom)
 				groomed = strands.clone();
 			strandUpdate(true);
-		}, "Bake" ]);
+		} });
 	
 	inputs[| 16] = nodeValue("View fix hair", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
 	
@@ -116,8 +116,8 @@ function Node_Strand_Create(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	tool_grabbing = [];
 	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
-		var _typ = inputs[|  0].getValue();
-		var _pre = inputs[| 16].getValue();
+		var _typ = getInputData(0);
+		var _pre = getInputData(16);
 		if(!attributes.use_groom) 
 			strands.draw(_x, _y, _s, _pre);
 		
@@ -127,8 +127,8 @@ function Node_Strand_Create(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			if(tool_dragging == noone)
 				inputs[| 6].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
 		} else if(_typ == 1) {
-			var _pth = inputs[| 5].getValue();
-			var _sid = inputs[| 7].getValue();
+			var _pth = getInputData(5);
+			var _sid = getInputData(7);
 			
 			if(!struct_has(_pth, "getPointRatio")) return;
 			var lines = struct_has(_pth, "getLineCount")? _pth.getLineCount() : 1;
@@ -147,7 +147,7 @@ function Node_Strand_Create(_x, _y, _group = noone) : Node(_x, _y, _group) const
 				oy = ny;
 			}
 		} else if(_typ == 2) {
-			var _msh = inputs[| 13].getValue();
+			var _msh = getInputData(13);
 			if(_msh == noone) return;
 			
 			draw_set_color(COLORS._main_accent);
@@ -421,7 +421,7 @@ function Node_Strand_Create(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	}
 	
 	static step = function() {
-		var _typ = inputs[| 0].getValue();
+		var _typ = getInputData(0);
 		
 		inputs[|  5].setVisible(_typ == 1, _typ == 1);
 		inputs[|  7].setVisible(_typ == 1);
@@ -433,22 +433,22 @@ function Node_Strand_Create(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	}
 	
 	static strandUpdate = function(willReset = false) {
-		var _typ = inputs[|  0].getValue();
-		var _den = inputs[|  1].getValue();
-		var _len = inputs[|  2].getValue();
-		var _seg = inputs[|  3].getValue(); _seg = _seg + 1;
-		var _ten = inputs[|  4].getValue(); _ten = 1 - _ten;
-		var _pth = inputs[|  5].getValue();
-		var _pos = inputs[|  6].getValue();
-		var _sid = inputs[|  7].getValue();
-		var _spr = inputs[|  8].getValue();
-		var _ang = inputs[|  9].getValue();
-		var _sed = inputs[| 10].getValue();
-		var _crF = inputs[| 11].getValue();
-		var _crS = inputs[| 12].getValue();
-		var _msh = inputs[| 13].getValue();
-		var _rnd = inputs[| 14].getValue();
-		var _rot = inputs[| 17].getValue();
+		var _typ = getInputData(0);
+		var _den = getInputData(1);
+		var _len = getInputData(2);
+		var _seg = getInputData(3); _seg = _seg + 1;
+		var _ten = getInputData(4); _ten = 1 - _ten;
+		var _pth = getInputData(5);
+		var _pos = getInputData(6);
+		var _sid = getInputData(7);
+		var _spr = getInputData(8);
+		var _ang = getInputData(9);
+		var _sed = getInputData(10);
+		var _crF = getInputData(11);
+		var _crS = getInputData(12);
+		var _msh = getInputData(13);
+		var _rnd = getInputData(14);
+		var _rot = getInputData(17);
 		var sx, sy, prog, dir;
 		
 		if(willReset) {

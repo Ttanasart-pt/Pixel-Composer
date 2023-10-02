@@ -23,8 +23,8 @@ function Node_IsoSurf(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	angle_renderer = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) {
 		var hh     = ui(240);
-		var _surfs = inputs[| 1].getValue();
-		var _angle = inputs[| 3].getValue();
+		var _surfs = getInputData(1);
+		var _angle = getInputData(3);
 		
 		var _kx = _x + _w / 2;
 		var _ky = _y + hh / 2;
@@ -95,7 +95,7 @@ function Node_IsoSurf(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	static onValueUpdate = function(index) {
 		if(index == 0) {
-			var _amo = inputs[| 0].getValue();
+			var _amo = getInputData(0);
 			var _ang = array_create(_amo);
 			
 			for( var i = 0, n = _amo; i < n; i++ ) 

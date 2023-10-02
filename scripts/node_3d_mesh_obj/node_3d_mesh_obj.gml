@@ -26,7 +26,7 @@ function Node_3D_Mesh_Obj(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group)
 	object_class = __3dObject;
 	
 	inputs[| in_mesh + 0] = nodeValue("File Path", self, JUNCTION_CONNECT.input, VALUE_TYPE.path, "" )
-		.setDisplay(VALUE_DISPLAY.path_load, [ "*.obj", "" ])
+		.setDisplay(VALUE_DISPLAY.path_load, { filter: "*.obj" })
 		.rejectArray();
 	
 	inputs[| in_mesh + 1] = nodeValue("Flip UV", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true, "Flip UV axis, can be use to fix some texture mapping error.")
@@ -51,7 +51,7 @@ function Node_3D_Mesh_Obj(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group)
 	insp1UpdateIcon     = [ THEME.refresh, 1, COLORS._main_value_positive ];
 	
 	static onInspector1Update = function() {
-		var _path = inputs[| in_mesh + 0].getValue();
+		var _path = getInputData(in_mesh + 0);
 		updateObj(_path);
 	}
 	

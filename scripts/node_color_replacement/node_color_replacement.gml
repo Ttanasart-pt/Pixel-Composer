@@ -10,12 +10,12 @@ function Node_Colors_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 		.setVisible(false, false);
 	
 	inputs[| 3] = nodeValue("Threshold", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.1)
-		.setDisplay(VALUE_DISPLAY.slider, [0, 1, 0.01]);
+		.setDisplay(VALUE_DISPLAY.slider);
 	
 	inputs[| 4] = nodeValue("Mask", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 	
 	inputs[| 5] = nodeValue("Mix", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
-		.setDisplay(VALUE_DISPLAY.slider, [0, 1, 0.01]);
+		.setDisplay(VALUE_DISPLAY.slider);
 	
 	inputs[| 6] = nodeValue("Active", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
 		active_index = 6;
@@ -23,7 +23,7 @@ function Node_Colors_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 	selecting_index = 0;
 	
 	function setColor(colr) { #region
-		var _to   = inputs[| 2].getValue();
+		var _to   = getInputData(2);
 		_to[selecting_index] = colr;
 		
 		inputs[| 2].setValue(_to);			// Not necessary due to array reference
@@ -48,8 +48,8 @@ function Node_Colors_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 		if(buttonInstant(THEME.button_hide, bx, by, bs, bs, _m, _focus, _hover,, THEME.junc_visible, vis) == 2)
 			jun.visible = !vis;
 			
-		var _from = inputs[| 1].getValue();
-		var _to   = inputs[| 2].getValue();
+		var _from = getInputData(1);
+		var _to   = getInputData(2);
 		
 		var ss  = TEXTBOX_HEIGHT;
 		var amo = array_length(_from);

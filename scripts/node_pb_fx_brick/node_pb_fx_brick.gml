@@ -12,7 +12,7 @@ function Node_PB_Fx_Brick(_x, _y, _group = noone) : Node_PB_Fx(_x, _y, _group) c
 	inputs[| 4] = nodeValue("Color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white );
 	
 	inputs[| 5] = nodeValue("Dissolve", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0. )
-		.setDisplay(VALUE_DISPLAY.slider, [ 0, 1, 0.01 ] )
+		.setDisplay(VALUE_DISPLAY.slider)
 	
 	inputs[| 6] = nodeValue("Detail", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1 )
 	

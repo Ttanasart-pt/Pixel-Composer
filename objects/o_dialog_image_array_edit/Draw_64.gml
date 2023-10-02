@@ -33,7 +33,7 @@ if !target exit;
 		key_release();
 		if(path != "") {
 			var paths = paths_to_array(path);
-			var arr = target.inputs[| 0].getValue();
+			var arr = target.getInputData(0);
 			
 			for( var i = 0, n = array_length(paths); i < n; i++ ) 
 				array_push(arr, paths[i]);

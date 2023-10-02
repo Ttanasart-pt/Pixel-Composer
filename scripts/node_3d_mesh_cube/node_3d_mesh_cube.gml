@@ -31,7 +31,7 @@ function Node_3D_Mesh_Cube(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group
 	]
 	
 	static step = function() { #region
-		var _mat_side = inputs[| in_mesh + 0].getValue();
+		var _mat_side = getInputData(in_mesh + 0);
 		
 		inputs[| in_mesh + 1].name = _mat_side? "Material Top" : "Material";
 		inputs[| in_mesh + 1].setVisible(true, true);

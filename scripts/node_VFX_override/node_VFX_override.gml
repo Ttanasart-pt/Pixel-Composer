@@ -30,15 +30,15 @@ function Node_VFX_Override(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	outputs[| 0] = nodeValue("Particles", self, JUNCTION_CONNECT.output, VALUE_TYPE.particle, -1 );
 	
 	static update = function(frame = PROJECT.animator.current_frame) {
-		var parts = inputs[| 0].getValue();
+		var parts = getInputData(0);
 		if(!is_array(parts)) return;
 		
-		var _pos = inputs[| 1].getValue();
-		var _sca = inputs[| 2].getValue();
-		var _rot = inputs[| 3].getValue();
-		var _col = inputs[| 4].getValue();
-		var _alp = inputs[| 5].getValue();
-		var _srf = inputs[| 6].getValue();
+		var _pos = getInputData(1);
+		var _sca = getInputData(2);
+		var _rot = getInputData(3);
+		var _col = getInputData(4);
+		var _alp = getInputData(5);
+		var _srf = getInputData(6);
 		
 		for( var i = 0, n = array_length(parts); i < n; i++ ) {
 			var part = parts[i];

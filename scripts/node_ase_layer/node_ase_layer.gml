@@ -20,7 +20,7 @@ function Node_ASE_layer(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	}
 	
 	static findLayer = function() {
-		var data = inputs[| 0].getValue();
+		var data = getInputData(0);
 		if(data == noone) return;
 		
 		var layer_index = 0;
@@ -35,7 +35,7 @@ function Node_ASE_layer(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	}
 	
 	static update = function(frame = PROJECT.animator.current_frame) { 
-		var data = inputs[| 0].getValue();
+		var data = getInputData(0);
 		if(data == noone) return;
 		
 		if(_name != display_name) {
@@ -46,7 +46,7 @@ function Node_ASE_layer(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		if(layer_object == noone) return;
 		var cel = layer_object.getCel(PROJECT.animator.current_frame - data._tag_delay);
 		
-		var celDim = inputs[| 1].getValue();
+		var celDim = getInputData(1);
 		var ww = data.content[? "Width"];
 		var hh = data.content[? "Height"];
 		var cw = cel? cel.data[? "Width"] : 1;

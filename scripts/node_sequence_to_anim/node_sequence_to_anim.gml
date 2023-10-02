@@ -19,8 +19,8 @@ function Node_Sequence_Anim(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	
 	sequence_surface = noone;
 	sequence_renderer = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) {
-		var _seq = inputs[| 0].getValue();
-		var _ord = inputs[| 2].getValue();
+		var _seq = getInputData(0);
+		var _ord = getInputData(2);
 		var _h = ui(64);
 		
 		if(array_length(_ord) == 0) {
@@ -84,15 +84,15 @@ function Node_Sequence_Anim(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	];
 	
 	static update = function(frame = PROJECT.animator.current_frame) {
-		var _sur = inputs[| 0].getValue();
+		var _sur = getInputData(0);
 		if(!is_array(_sur)) {
 			outputs[| 0].setValue(_sur);
 			return;
 		}
 		
-		var _spd = inputs[| 1].getValue();
-		var _seq = inputs[| 2].getValue();
-		var _ovf = inputs[| 3].getValue();
+		var _spd = getInputData(1);
+		var _seq = getInputData(2);
+		var _ovf = getInputData(3);
 		
 		var frm = floor(PROJECT.animator.current_frame / _spd);
 		var ind = frm;

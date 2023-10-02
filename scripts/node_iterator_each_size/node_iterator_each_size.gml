@@ -11,7 +11,7 @@ function Node_Iterator_Each_Length(_x, _y, _group = noone) : Node(_x, _y, _group
 	
 	static update = function(frame = PROJECT.animator.current_frame) { 
 		if(!variable_struct_exists(group, "iterated")) return;
-		var val = group.inputs[| 0].getValue();
+		var val = group.getInputData(0);
 		outputs[| 0].setValue(array_length(val));
 	}
 	

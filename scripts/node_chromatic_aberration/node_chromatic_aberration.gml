@@ -13,7 +13,7 @@ function Node_Chromatic_Aberration(_x, _y, _group = noone) : Node_Processor(_x, 
 		.setUnitRef(function(index) { return getDimension(index); }, VALUE_UNIT.reference);
 	
 	inputs[| 2] = nodeValue("Strength", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
-		.setDisplay(VALUE_DISPLAY.slider, [-16, 16, 0.01]);
+		.setDisplay(VALUE_DISPLAY.slider, { range: [-16, 16, 0.01] });
 	
 	inputs[| 3] = nodeValue("Active", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
 		active_index = 3;
@@ -24,7 +24,7 @@ function Node_Chromatic_Aberration(_x, _y, _group = noone) : Node_Processor(_x, 
 	attribute_interpolation();
 	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
-		var pos = inputs[| 1].getValue();
+		var pos = getInputData(1);
 		var px = _x + pos[0] * _s;
 		var py = _y + pos[1] * _s;
 		

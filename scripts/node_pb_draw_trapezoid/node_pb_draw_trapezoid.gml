@@ -8,13 +8,13 @@ function Node_PB_Draw_Trapezoid(_x, _y, _group = noone) : Node_PB_Draw(_x, _y, _
 		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Symmetric", "Independent" ]);
 	
 	inputs[| 5] = nodeValue("Bevel", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.5 )
-		.setDisplay(VALUE_DISPLAY.slider, [ 0, 1, 0.01 ]);
+		.setDisplay(VALUE_DISPLAY.slider);
 	
 	inputs[| 6] = nodeValue("Bevel 1", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.5 )
-		.setDisplay(VALUE_DISPLAY.slider, [ 0, 1, 0.01 ]);
+		.setDisplay(VALUE_DISPLAY.slider);
 	
 	inputs[| 7] = nodeValue("Bevel 2", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.5 )
-		.setDisplay(VALUE_DISPLAY.slider, [ 0, 1, 0.01 ]);
+		.setDisplay(VALUE_DISPLAY.slider);
 	
 	inputs[| 8] = nodeValue("Invert", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false );
 	

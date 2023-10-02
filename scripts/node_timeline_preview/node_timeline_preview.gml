@@ -11,7 +11,7 @@ function Node_Timeline_Preview(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	inputs[| 0] = nodeValue("Surface", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 	
 	static update = function(frame = PROJECT.animator.current_frame) {
-		var _inSurf = inputs[| 0].getValue();
+		var _inSurf = getInputData(0);
 		if(_inSurf == 0) return;
 		
 		if(is_array(_inSurf)) {

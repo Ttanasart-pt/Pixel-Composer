@@ -24,10 +24,10 @@ function Node_Path_Anchor(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	];
 	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
-		var _pos = inputs[| 0].getValue();
-		var _cn1 = inputs[| 1].getValue();
-		var _cn2 = inputs[| 2].getValue();
-		var _mir = inputs[| 3].getValue();
+		var _pos = getInputData(0);
+		var _cn1 = getInputData(1);
+		var _cn2 = getInputData(2);
+		var _mir = getInputData(3);
 		
 		var px = _x + _pos[0] * _s;
 		var py = _y + _pos[1] * _s;

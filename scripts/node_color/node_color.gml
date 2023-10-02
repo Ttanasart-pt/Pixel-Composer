@@ -15,7 +15,7 @@ function Node_Color(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		var bbox = drawGetBbox(xx, yy, _s);
 		if(bbox.h < 1) return;
 		
-		var col = inputs[| 0].getValue();
+		var col = getInputData(0);
 		
 		if(is_array(col)) {
 			drawPalette(col, bbox.x0, bbox.y0, bbox.w, bbox.h);

@@ -29,8 +29,8 @@ function Node_Trigger_Bool(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	}
 	
 	static update = function() {  
-		var val = inputs[| 0].getValue();
-		var con = inputs[| 1].getValue();
+		var val = getInputData(0);
+		var con = getInputData(1);
 		
 		switch(con) {
 			case 0 : doTrigger = val;				break;

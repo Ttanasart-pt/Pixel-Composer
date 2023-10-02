@@ -447,6 +447,8 @@ function nodeValueUnit(_nodeValue) constructor { #region
 function nodeValue(_name, _node, _connect, _type, _value, _tooltip = "") { return new NodeValue(_name, _node, _connect, _type, _value, _tooltip); }
 
 function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constructor {
+	static DISPLAY_DATA_KEYS = [ "linked", "angle_display", "bone_id", "area_type" ];
+	
 	#region ---- main ----
 		node  = _node;
 		x	  = node.x;
@@ -514,7 +516,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		def_val	    = _value;
 		def_length  = is_array(def_val)? array_length(def_val) : 0;
 		unit		= new nodeValueUnit(self);
-		extra_data	= {};
 		dyna_depo   = ds_list_create();
 		
 		is_changed  = true;
@@ -527,6 +528,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		validateValue = true;
 		
 		fullUpdate = false;
+		
+		attributes = {};
 	#endregion
 	
 	#region ---- draw ----
@@ -560,7 +563,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(_type == VALUE_TYPE.curve)			display_type = VALUE_DISPLAY.curve;
 		else if(_type == VALUE_TYPE.d3vertex)	display_type = VALUE_DISPLAY.d3vertex;
 	
-		display_data = -1;
+		display_data = {};
 		display_attribute = noone;
 		
 		popup_dialog = noone;
@@ -631,10 +634,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		return self;
 	} #endregion
 	
-	static setDisplay = function(_type = VALUE_DISPLAY._default, _data = -1, _attr = noone) { #region
+	static setDisplay = function(_type = VALUE_DISPLAY._default, _data = {}) { #region
 		display_type	  = _type;
 		display_data	  = _data;
-		display_attribute = _attr;
 		resetDisplay();
 		
 		return self;
@@ -713,8 +715,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		editWidget = noone;
 		switch(display_type) {
 			case VALUE_DISPLAY.button : #region
-				editWidget = button(display_data[0]);
-				editWidget.text = display_data[1];
+				editWidget = button(display_data.onClick);
+				editWidget.text = display_data.name;
 				visible = false;
 				return; #endregion
 		}
@@ -731,7 +733,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						} );
 						editWidget.slidable = true;
 						if(type == VALUE_TYPE.integer) editWidget.slide_speed = 1;
-						if(display_data != -1) editWidget.slide_speed = display_data;
+						if(struct_has(display_data, "slide_speed")) editWidget.slide_speed = display_data.slide_speed;
 						
 						extract_node = "Node_Number";
 						break; #endregion
@@ -742,8 +744,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						
 						if(type == VALUE_TYPE.integer) editWidget.setSlideSpeed(1);
 						
-						extra_data = { linked : false };
-						if(display_data != -1) struct_override(extra_data, display_data);
+						if(!struct_has(display_data, "linked")) display_data.linked = false;
 						
 						for( var i = 0, n = array_length(animators); i < n; i++ )
 							animators[i].suffix = " " + array_safe_get(global.displaySuffix_Range, i);
@@ -759,14 +760,13 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 								return setValueDirect(val, index);
 							}, unit );
 							
-							if(struct_has(display_data, "label"))	 editWidget.axis	 = display_data.label;
-							if(struct_has(display_data, "linkable")) editWidget.linkable = display_data.linkable;
-							if(struct_has(display_data, "per_line")) editWidget.per_line = display_data.per_line;
+							if(struct_has(display_data, "label"))		 editWidget.axis	    = display_data.label;
+							if(struct_has(display_data, "linkable"))	 editWidget.linkable    = display_data.linkable;
+							if(struct_has(display_data, "per_line"))	 editWidget.per_line    = display_data.per_line;
+							if(struct_has(display_data, "linked"))		 editWidget.linked      = display_data.linked;
+							if(struct_has(display_data, "side_button"))	 editWidget.side_button = display_data.side_button;
 							
 							if(type == VALUE_TYPE.integer) editWidget.setSlideSpeed(1);
-							
-							extra_data = { linked : false, side_button : noone };
-							if(display_data != -1) struct_override(extra_data, display_data);
 							
 							if(len == 2) {
 								extract_node = [ "Node_Vector2", "Node_Path" ];
@@ -789,8 +789,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						
 						if(type == VALUE_TYPE.integer) editWidget.setSlideSpeed(1);
 						
-						extra_data = { linked : false };
-						if(display_data != -1) struct_override(extra_data, display_data);
+						if(!struct_has(display_data, "linked")) display_data.linked = false;
 						
 						if(array_length(val) == 2)
 							extract_node = "Node_Vector2";
@@ -828,7 +827,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						extract_node = "Node_Vector2";
 						break; #endregion
 					case VALUE_DISPLAY.slider :			#region
-						editWidget = new slider(display_data[0], display_data[1], display_data[2], function(val) { 
+						var _range = struct_try_get(display_data, "range", [ 0, 1, 0.01 ]);
+						
+						editWidget = new slider(_range[0], _range[1], _range[2], function(val) { 
 							return setValueDirect(toNumber(val));
 						} );
 						if(type == VALUE_TYPE.integer) editWidget.setSlideSpeed(1);
@@ -836,7 +837,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						extract_node = "Node_Number";
 						break; #endregion
 					case VALUE_DISPLAY.slider_range :	#region
-						editWidget = new sliderRange(display_data[0], display_data[1], display_data[2], function(index, val) {
+						var _range = struct_try_get(display_data, "range", [ 0, 1, 0.01 ]);
+						
+						editWidget = new sliderRange(_range[0], _range[1], _range[2], function(index, val) {
 							return setValueDirect(val, index);
 						} );
 						if(type == VALUE_TYPE.integer) editWidget.setSlideSpeed(1);
@@ -851,12 +854,12 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 							return setValueDirect(val, index);
 						}, unit);
 						if(type == VALUE_TYPE.integer) editWidget.setSlideSpeed(1);
-						if(display_data != -1) editWidget.onSurfaceSize = display_data;
+						if(struct_has(display_data, "onSurfaceSize")) editWidget.onSurfaceSize = display_data.onSurfaceSize;
 						
 						for( var i = 0, n = array_length(animators); i < n; i++ )
 							animators[i].suffix = " " + array_safe_get(global.displaySuffix_Area, i, "");
 						
-						extra_data.area_type = AREA_MODE.area;
+						display_data.area_type = AREA_MODE.area;
 						extract_node = "Node_Area";
 						break; #endregion
 					case VALUE_DISPLAY.padding :		#region
@@ -893,24 +896,25 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						extract_node = "";
 						break; #endregion
 					case VALUE_DISPLAY.enum_scroll :	#region
-						display_data = __txt_junction_data(instanceof(node), connect_type, index, display_data);
+						if(!is_struct(display_data)) display_data = { data: display_data };
+						var choices = __txt_junction_data(instanceof(node), connect_type, index, display_data.data);
 						
-						editWidget = new scrollBox(display_data, function(val) {
+						editWidget = new scrollBox(choices, function(val) {
 							if(val == -1) return;
 							return setValueDirect(toNumber(val)); 
 						} );
-						if(is_struct(display_attribute)) {
-							editWidget.update_hover = display_attribute[$ "update_hover"];
-						}
+						if(struct_has(display_data, "update_hover"))
+							editWidget.update_hover = display_data.update_hover;
 						
 						rejectConnect();
 						key_inter    = CURVE_TYPE.cut;
 						extract_node = "";
 						break; #endregion
 					case VALUE_DISPLAY.enum_button :	#region
-						display_data = __txt_junction_data(instanceof(node), connect_type, index, display_data);
+						if(!is_struct(display_data)) display_data = { data: display_data };
+						var choices = __txt_junction_data(instanceof(node), connect_type, index, display_data.data);
 						
-						editWidget = new buttonGroup(display_data, function(val) { 
+						editWidget = new buttonGroup(choices, function(val) { 
 							return setValueDirect(val);
 						} );
 						
@@ -919,7 +923,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						extract_node = "";
 						break; #endregion
 					case VALUE_DISPLAY.matrix :			#region
-						editWidget = new matrixGrid(_txt, display_data, function(index, val) {
+						editWidget = new matrixGrid(_txt, display_data.size, function(index, val) {
 							return setValueDirect(val, index);
 						}, unit );
 						if(type == VALUE_TYPE.integer) editWidget.setSlideSpeed(1);
@@ -939,7 +943,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						extract_node = "Node_Transform_Array";
 						break; #endregion
 					case VALUE_DISPLAY.toggle :			#region
-						editWidget = new toggleGroup(display_data, function(val) { 
+						editWidget = new toggleGroup(display_data.data, function(val) { 
 							return setValueDirect(val);
 						} );
 						
@@ -952,7 +956,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 							return setValueDirect(val, index);
 						});
 						
-						extra_data.angle_display = QUARTERNION_DISPLAY.quarterion;
+						display_data.angle_display = QUARTERNION_DISPLAY.quarterion;
 						break; #endregion
 						
 				}
@@ -994,12 +998,12 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			case VALUE_TYPE.path :		#region
 				switch(display_type) {
 					case VALUE_DISPLAY.path_array :
-						editWidget = new pathArrayBox(node, display_data, function(path) { setValueDirect(path); } );
+						editWidget = new pathArrayBox(node, display_data.filter, function(path) { setValueDirect(path); } );
 						break;
 					case VALUE_DISPLAY.path_load :
 						editWidget = new textBox(TEXTBOX_INPUT.text, function(str) { setValueDirect(str); }, 
 							button(function() { 
-								var path = get_open_filename(display_data[0], display_data[1]);
+								var path = get_open_filename(display_data.filter, "");
 								key_release();
 								if(path == "") return noone;
 								return setValueDirect(path);
@@ -1012,7 +1016,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 					case VALUE_DISPLAY.path_save :
 						editWidget = new textBox(TEXTBOX_INPUT.text, function(str) { setValueDirect(str); }, 
 							button(function() { 
-								var path = get_save_filename(display_data[0], display_data[1]);
+								var path = get_save_filename(display_data.filter, "");
 								key_release();
 								if(path == "") return noone;
 								return setValueDirect(path);
@@ -1081,7 +1085,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						break;
 					
 					case VALUE_DISPLAY.text_array :
-						editWidget = new textArrayBox(function() { return animator.values[| 0].value; }, display_data, function() { node.doUpdate(); });
+						editWidget = new textArrayBox(function() { return animator.values[| 0].value; }, display_data.data, function() { node.doUpdate(); });
 						break;
 				}
 				break; #endregion
@@ -1089,7 +1093,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			case VALUE_TYPE.surface :	#region
 				editWidget = new surfaceBox(function(ind) { 
 					return setValueDirect(ind); 
-				}, display_data );
+				} );
 				show_in_inspector = true;
 				extract_node = "Node_Canvas";
 				break; #endregion
@@ -1192,12 +1196,14 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		#endregion
 		
 		if(display_type == VALUE_DISPLAY.area) { #region
-			var dispType = struct_try_get(nodeFrom.extra_data, "area_type");
-			var surfGet = nodeFrom.display_data;
-			if(!applyUnit || surfGet == -1)
-				return value;
+			var dispType = struct_try_get(nodeFrom.display_data, "area_type");
+			var surfGet  = struct_try_get(nodeFrom.display_data, "onSurfaceSize");
+			
+			if(!applyUnit) return value;
+			if(!is_callable(surfGet)) return value;
 			
 			var surf = surfGet();
+			if(!is_array(surf)) return value;
 			var ww = surf[0];
 			var hh = surf[1];
 			
@@ -1222,7 +1228,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		} #endregion
 		
 		if(display_type == VALUE_DISPLAY.d3quarternion) { #region
-			var dispType = struct_try_get(nodeFrom.extra_data, "angle_display");
+			var dispType = struct_try_get(nodeFrom.display_data, "angle_display");
 			switch(dispType) {
 				case QUARTERNION_DISPLAY.quarterion : return value;
 				case QUARTERNION_DISPLAY.euler : 
@@ -1439,6 +1445,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	
 	static __anim = function() { #region
 		if(node.update_on_frame) return true;
+		
 		if(expUse) {
 			if(!is_struct(expTree)) return false;
 			var res = expTree.isAnimated();
@@ -1454,7 +1461,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	
 	static isAnimated = function() { #region
 		if(value_from == noone) return __anim();
-		else					return value_from.isAnimated() || value_from.__anim();
+		else					return value_from.isAnimated() || value_from.__anim() || value_from.node.anim_last_step;
 	} #endregion
 	
 	static showValue = function() { #region
@@ -1487,7 +1494,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		return false;
 	} #endregion
-
+	
 	static isArray = function(val = undefined) { #region
 		if(val == undefined) {
 			if(cache_array[0])
@@ -1579,6 +1586,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		if(updated) {
 			if(connect_type == JUNCTION_CONNECT.input) {
+				node.inputs_data[self.index] = animator.getValue(time);
+				
 				node.triggerRender();
 				if(_update) node.valueUpdate(self.index);
 				node.clearCacheForward();
@@ -1798,7 +1807,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				return preview_overlay_vector(value_from == noone, active, _x, _y, _s, _mx, _my, _snx, _sny, _spr);
 						
 			case VALUE_DISPLAY.area :
-				return preview_overlay_area(value_from == noone, active, _x, _y, _s, _mx, _my, _snx, _sny, display_data);
+				return preview_overlay_area(value_from == noone, active, _x, _y, _s, _mx, _my, _snx, _sny, struct_try_get(nodeFrom.display_data, "onSurfaceSize"));
 						
 			case VALUE_DISPLAY.puppet_control :
 				return preview_overlay_puppet(value_from == noone, active, _x, _y, _s, _mx, _my, _snx, _sny);
@@ -2236,7 +2245,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		for( var i = 0, n = array_length(animators); i < n; i++ )
 			array_push(_anims, animators[i].serialize(scale));
 		_map.animators = _anims;
-		_map.data = extra_data;
+		_map.display_data = display_data;
+		_map.attributes   = attributes;
 		
 		_map.name_custom = name_custom;
 		
@@ -2283,8 +2293,10 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			con_index = struct_try_get(_map, "from_index", -1);
 		}
 		
-		if(struct_has(_map, "data") && is_struct(_map.data))
-			extra_data = _map.data;
+		if(struct_has(_map, "display_data")) {
+			for( var i = 0, n = array_length(DISPLAY_DATA_KEYS); i < n; i++ )
+				struct_try_override(display_data, _map.display_data, DISPLAY_DATA_KEYS[i]);
+		}
 		
 		if(APPENDING) def_val = getValue(0);
 		

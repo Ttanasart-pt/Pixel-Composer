@@ -37,7 +37,7 @@ function Node_Rigid_Variable(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		.setVisible(false);
 	
 	static update = function(frame = PROJECT.animator.current_frame) {
-		var objNode = inputs[| 0].getValue();
+		var objNode = getInputData(0);
 		outputs[| 0].setValue(objNode);
 		if(!variable_struct_exists(objNode, "object")) return;
 		var objs = objNode.object;

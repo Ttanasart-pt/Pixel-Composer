@@ -42,7 +42,7 @@ function Node_Switch(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		array_resize(input_display_list, input_display_len);
 		
 		for( var i = input_fix_len; i < ds_list_size(inputs); i += data_length ) {
-			if(inputs[| i].getValue() != "") {
+			if(getInputData(i) != "") {
 				ds_list_add(_in, inputs[| i + 0]);
 				ds_list_add(_in, inputs[| i + 1]);
 				
@@ -79,22 +79,21 @@ function Node_Switch(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		if(index < input_fix_len) return;
 		if(LOADING || APPENDING) return;
 		
-		if(safe_mod(index - input_fix_len, data_length) == 0) { //Variable name
-			inputs[| index + 1].name = inputs[| index].getValue() + " value";
-		}
+		if(safe_mod(index - input_fix_len, data_length) == 0) //Variable name
+			inputs[| index + 1].name = getInputData(index) + " value";
 		
 		refreshDynamicInput();
 	}
 	
 	static update = function(frame = PROJECT.animator.current_frame) {
-		var sele = inputs[| 0].getValue();
-		var _res = inputs[| 1].getValue();
+		var sele = getInputData(0);
+		var _res = getInputData(1);
 		
 		outputs[| 0].type = inputs[| 1].value_from? inputs[| 1].value_from.type : VALUE_TYPE.any;
 		
 		for( var i = input_fix_len; i < ds_list_size(inputs) - data_length; i += data_length ) {
-			var _cas = inputs[| i + 0].getValue();
-			var _val = inputs[| i + 1].getValue();
+			var _cas = getInputData(i + 0);
+			var _val = getInputData(i + 1);
 			
 			if(sele == _cas) {
 				_res = _val;
@@ -107,11 +106,11 @@ function Node_Switch(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		var frm = inputs[| 1];
-		var sele = inputs[| 0].getValue();
-		var _res = inputs[| 1].getValue();
+		var sele = getInputData(0);
+		var _res = getInputData(1);
 		
 		for( var i = input_fix_len; i < ds_list_size(inputs) - data_length; i += data_length ) {
-			var _cas = inputs[| i + 0].getValue();
+			var _cas = getInputData(i + 0);
 			if(sele == _cas) frm = inputs[| i + 1]; 
 		}
 		

@@ -8,10 +8,10 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	
 	inputs[|  1] = nodeValue("Color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white );
 	inputs[|  2] = nodeValue("Brush size", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1 )
-		.setDisplay(VALUE_DISPLAY.slider, [1, 32, 1]);
+		.setDisplay(VALUE_DISPLAY.slider, { range: [1, 32, 1] });
 	
 	inputs[|  3] = nodeValue("Fill threshold", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.)
-		.setDisplay(VALUE_DISPLAY.slider, [0, 1, 0.01]);
+		.setDisplay(VALUE_DISPLAY.slider);
 	
 	inputs[|  4] = nodeValue("Fill type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.enum_scroll, ["4 connect", "8 connect", "Entire canvas"]);
@@ -26,12 +26,12 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	inputs[|  8] = nodeValue("Background", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, -1);
 	
 	inputs[|  9] = nodeValue("Background alpha", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1.)
-		.setDisplay(VALUE_DISPLAY.slider, [0, 1, 0.01]);
+		.setDisplay(VALUE_DISPLAY.slider);
 		
 	inputs[| 10] = nodeValue("Render background", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
 	
 	inputs[| 11] = nodeValue("Alpha", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1 )
-		.setDisplay(VALUE_DISPLAY.slider, [0, 1, 0.01]);
+		.setDisplay(VALUE_DISPLAY.slider);
 	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
@@ -101,7 +101,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	}
 	
 	function apply_surface() {
-		var _dim = inputs[|  0].getValue();
+		var _dim = getInputData(0);
 		var cDep = attrDepth();
 		
 		if(!is_surface(canvas_surface)) {
@@ -129,7 +129,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	}
 	
 	function apply_draw_surface() {
-		var _alp = inputs[| 11].getValue();
+		var _alp = getInputData(11);
 		
 		storeAction();
 		
@@ -285,7 +285,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	} #endregion
 	
 	function flood_fill_scanline(_x, _y, _surf, _thres, _corner = false) { #region
-		var _alp = inputs[| 11].getValue();
+		var _alp = getInputData(11);
 		
 		var colorFill = draw_get_color() + (255 << 24);
 		var colorBase = get_color_buffer(_x, _y);
@@ -375,7 +375,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	} #endregion
 	
 	function canvas_fill(_x, _y, _surf, _thres) { #region
-		var _alp = inputs[| 11].getValue();
+		var _alp = getInputData(11);
 		
 		var w = surface_get_width_safe(_surf);
 		var h = surface_get_height_safe(_surf);
@@ -412,13 +412,13 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		mouse_cur_x = round((_mx - _x) / _s - 0.5);
 		mouse_cur_y = round((_my - _y) / _s - 0.5);
 		
-		var _dim		= inputs[| 0].getValue();
-		var _col		= inputs[| 1].getValue();
-		var _siz		= inputs[| 2].getValue();
-		var _thr		= inputs[| 3].getValue();
-		var _fill_type	= inputs[| 4].getValue();
-		var _prev		= inputs[| 5].getValue();
-		var _brush		= inputs[| 6].getValue();
+		var _dim		= getInputData(0);
+		var _col		= getInputData(1);
+		var _siz		= getInputData(2);
+		var _thr		= getInputData(3);
+		var _fill_type	= getInputData(4);
+		var _prev		= getInputData(5);
+		var _brush		= getInputData(6);
 		
 		if(key_mod_press(ALT)) return;
 		
@@ -674,10 +674,10 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		gpu_set_colorwriteenable(true, true, true, true);
 		
 		#region preview
-			var _bg  = inputs[|  8].getValue();
-			var _bga = inputs[|  9].getValue();
-			var _bgr = inputs[| 10].getValue();
-			var _alp = inputs[| 11].getValue();
+			var _bg  = getInputData(8);
+			var _bga = getInputData(9);
+			var _bgr = getInputData(10);
+			var _alp = getInputData(11);
 			
 			var __s = surface_get_target();
 			
@@ -761,10 +761,10 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	}
 	
 	static update = function(frame = PROJECT.animator.current_frame) {
-		var _dim   = inputs[|  0].getValue();
-		var _bg    = inputs[|  8].getValue();
-		var _bga   = inputs[|  9].getValue();
-		var _bgr   = inputs[| 10].getValue();
+		var _dim   = getInputData(0);
+		var _bg    = getInputData(8);
+		var _bga   = getInputData(9);
+		var _bgr   = getInputData(10);
 		
 		var cDep   = attrDepth();
 		apply_surface();
@@ -794,7 +794,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		var buff = buffer_base64_decode(load_map.surface);
 		canvas_buffer = buffer_decompress(buff);
 		
-		var _dim     = inputs[|  0].getValue();
+		var _dim     = getInputData(0);
 		var _outSurf = outputs[| 0].getValue();
 		_outSurf     = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
 		canvas_surface = surface_create_from_buffer(_dim[0], _dim[1], canvas_buffer);

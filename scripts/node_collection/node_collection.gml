@@ -133,7 +133,7 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		if(!draw_input_overlay) return;
 		for(var i = custom_input_index; i < ds_list_size(inputs); i++) {
 			var _in   = inputs[| i];
-			var _show = _in.from.inputs[| 6].getValue();
+			var _show = _in.from.getInputData(6);
 			
 			if(!_show) continue;
 			_in.drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);

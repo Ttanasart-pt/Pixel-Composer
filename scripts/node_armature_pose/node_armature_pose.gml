@@ -36,7 +36,7 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		
 		inputs[| index] = nodeValue(bone != noone? bone.name : "bone", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 0, 1 ] )
 			.setDisplay(VALUE_DISPLAY.transform);
-		inputs[| index].extra_data.bone_id = bone != noone? bone.ID : noone;
+		inputs[| index].display_data.bone_id = bone != noone? bone.ID : noone;
 		
 		if(bone != noone)
 			boneMap[? bone.ID] = inputs[| index];
@@ -48,7 +48,7 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	
 	static setBone = function() { #region
 		//print("Setting dem bones...");
-		var _b = inputs[| 0].getValue();
+		var _b = getInputData(0);
 		if(_b == noone) return;
 		
 		var _bones = [];
@@ -224,7 +224,7 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	
 	bone_prev = noone;
 	static step = function() { #region
-		var _b = inputs[| 0].getValue();
+		var _b = getInputData(0);
 		if(_b == noone) return;
 		if(bone_prev != _b) {
 			setBone();
@@ -237,7 +237,7 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	} #endregion
 	
 	static update = function(frame = PROJECT.animator.current_frame) { #region
-		var _b = inputs[| 0].getValue();
+		var _b = getInputData(0);
 		if(_b == noone) return;
 		
 		var _bone_pose = _b.clone();
@@ -310,7 +310,7 @@ function Node_Armature_Pose(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	static doApplyDeserialize = function() { #region
 		for( var i = input_fix_len; i < ds_list_size(inputs); i += data_length ) {
 			var inp = inputs[| i];
-			var idx = struct_try_get(inp.extra_data, "bone_id");
+			var idx = struct_try_get(inp.display_data, "bone_id");
 			
 			boneMap[? idx] = inp;
 		}

@@ -17,7 +17,7 @@ function Node_Array_Set(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	outputs[| 0] = nodeValue("Array", self, JUNCTION_CONNECT.output, VALUE_TYPE.any, 0);
 	
 	static update = function(frame = PROJECT.animator.current_frame) {
-		var _arr = inputs[| 0].getValue();
+		var _arr = getInputData(0);
 		
 		inputs[| 0].type  = VALUE_TYPE.any;
 		inputs[| 2].type  = VALUE_TYPE.any;
@@ -25,8 +25,8 @@ function Node_Array_Set(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		
 		if(!is_array(_arr)) return;
 		
-		var index = inputs[| 1].getValue();
-		var value = inputs[| 2].getValue();
+		var index = getInputData(1);
+		var value = getInputData(2);
 		var _len = array_length(_arr);
 		
 		if(inputs[| 0].value_from != noone) {
@@ -53,7 +53,7 @@ function Node_Array_Set(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		draw_set_text(f_h3, fa_center, fa_center, COLORS._main_text);
-		var idx  = inputs[| 1].getValue();
+		var idx  = getInputData(1);
 		var str	 = string(idx);
 		var bbox = drawGetBbox(xx, yy, _s);
 		var ss	 = string_scale(str, bbox.w, bbox.h);

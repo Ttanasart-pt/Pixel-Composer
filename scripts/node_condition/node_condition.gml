@@ -41,7 +41,7 @@ function Node_Condition(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	outputs[| 1] = nodeValue("Bool", self, JUNCTION_CONNECT.output, VALUE_TYPE.boolean, false);
 	
 	static step = function() {
-		var _mode = inputs[| 5].getValue();
+		var _mode = getInputData(5);
 		
 		inputs[| 0].setVisible(_mode == 1, _mode == 1);
 		inputs[| 1].setVisible(_mode == 1);
@@ -52,17 +52,17 @@ function Node_Condition(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	}
 	
 	static update = function(frame = PROJECT.animator.current_frame) {
-		var _true = inputs[| 3].getValue();
-		var _fals = inputs[| 4].getValue();
+		var _true = getInputData(3);
+		var _fals = getInputData(4);
 		
-		var _mode = inputs[| 5].getValue();
+		var _mode = getInputData(5);
 		
-		var _chck = inputs[| 0].getValue();
-		var _cond = inputs[| 1].getValue();
-		var _valu = inputs[| 2].getValue();
-		var _bool = inputs[| 6].getValue();
-		var _txt1 = inputs[| 7].getValue();
-		var _txt2 = inputs[| 8].getValue();
+		var _chck = getInputData(0);
+		var _cond = getInputData(1);
+		var _valu = getInputData(2);
+		var _bool = getInputData(6);
+		var _txt1 = getInputData(7);
+		var _txt2 = getInputData(8);
 		
 		inputs[| 3].type = inputs[| 3].value_from == noone? VALUE_TYPE.any : inputs[| 3].value_from.type;
 		inputs[| 4].type = inputs[| 4].value_from == noone? VALUE_TYPE.any : inputs[| 4].value_from.type;

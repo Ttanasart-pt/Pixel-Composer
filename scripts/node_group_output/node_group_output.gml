@@ -141,7 +141,7 @@ function Node_Group_Output(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		
 		var _inputs = load_map.inputs;
 		inputs[| 1].applyDeserialize(_inputs[1], load_scale);
-		if(PROJECT.version < 11520) attributes.input_priority = inputs[| 1].getValue();
+		if(PROJECT.version < 11520) attributes.input_priority = getInputData(1);
 		group.sortIO();
 	}
 	

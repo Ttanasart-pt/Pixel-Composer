@@ -52,7 +52,7 @@ function Node_Rigid_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	}
 	
 	static step = function() {
-		var _dim = inputs[| 0].getValue();
+		var _dim = getInputData(0);
 		var _outSurf = outputs[| 0].getValue();
 		
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
@@ -63,7 +63,7 @@ function Node_Rigid_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		if(recoverCache() || !PROJECT.animator.is_playing)
 			return;
 			
-		var _dim = inputs[| 0].getValue();
+		var _dim = getInputData(0);
 		var _outSurf = outputs[| 0].getValue();
 		
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
@@ -78,7 +78,7 @@ function Node_Rigid_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			physics_world_draw_debug(flag);
 		} else {
 			for( var i = input_fix_len; i < ds_list_size(inputs) - 1; i++ ) {
-				var objNode = inputs[| i].getValue();
+				var objNode = getInputData(i);
 				if(!is_array(objNode)) objNode = [ objNode ];
 				
 				for( var j = 0; j < array_length(objNode); j++ ) {

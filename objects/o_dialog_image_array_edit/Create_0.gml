@@ -35,7 +35,7 @@ event_inherited();
 		var hh  = ui(100);
 		var pad = ui(16);
 		
-		var arr = target.inputs[| 0].getValue();
+		var arr = target.getInputData(0);
 		if(array_length(arr) != array_length(target.spr)) 
 			target.updatePaths(arr);
 		
@@ -112,7 +112,7 @@ event_inherited();
 		if(menu > -1) {
 			menuCall("image_array_edit_menu",,, [
 				menuItem(__txt("Remove"), function() {
-					var arr = target.inputs[| 0].getValue();
+					var arr = target.getInputData(0);
 					array_delete(arr, menuOn, 1);
 					target.inputs[| 0].setValue(arr);
 				})
@@ -127,7 +127,7 @@ event_inherited();
 	function rearrange(oldindex, newindex) {
 		if(oldindex == newindex) return;
 		
-		var arr = target.inputs[| 0].getValue();
+		var arr = target.getInputData(0);
 		var val = arr[oldindex];
 		array_delete(arr, oldindex, 1);
 		array_insert(arr, newindex, val);
@@ -138,7 +138,7 @@ event_inherited();
 	sortAsc = true;
 	function sortByName() {
 		if(!target) return 0;
-		var arr = target.inputs[| 0].getValue();
+		var arr = target.getInputData(0);
 		
 		array_sort(arr, bool(sortAsc));
 		sortAsc = !sortAsc;

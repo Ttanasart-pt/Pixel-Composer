@@ -16,9 +16,9 @@
 	}
 	
 	function node_draw_transform_box(active, _x, _y, _s, _mx, _my, _snx, _sny, _posInd, _rotInd, _scaInd, _scaUnit = false) {
-		var _pos = inputs[| _posInd].getValue();
-		var _rot = inputs[| _rotInd].getValue();
-		var _sca = inputs[| _scaInd].getValue();
+		var _pos = getInputData(_posInd);
+		var _rot = getInputData(_rotInd);
+		var _sca = getInputData(_scaInd);
 		
 		if(drag_type > -1) {
 			if(drag_type == 0) {

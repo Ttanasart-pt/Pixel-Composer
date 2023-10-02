@@ -21,13 +21,13 @@ function Node_Cellular(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		.setDisplay(VALUE_DISPLAY.enum_button, [ "Uniform", "Radial" ]);
 	
 	inputs[| 7] = nodeValue("Middle", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.5)
-		.setDisplay(VALUE_DISPLAY.slider, [0., 1., 0.01]);
+		.setDisplay(VALUE_DISPLAY.slider, { range: [0., 1., 0.01] });
 	
 	inputs[| 8] = nodeValue("Radial scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 2)
-		.setDisplay(VALUE_DISPLAY.slider, [1., 10., 0.01]);
+		.setDisplay(VALUE_DISPLAY.slider, { range: [1., 10., 0.01] });
 	
 	inputs[| 9] = nodeValue("Radial shatter", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
-		.setDisplay(VALUE_DISPLAY.slider, [-10., 10., 0.01])
+		.setDisplay(VALUE_DISPLAY.slider, { range: [-10., 10., 0.01] })
 		.setVisible(false);
 	
 	inputs[| 10] = nodeValue("Colored", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false)

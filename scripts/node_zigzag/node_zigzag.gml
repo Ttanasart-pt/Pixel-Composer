@@ -13,7 +13,7 @@ function Node_Zigzag(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		.setDisplay(VALUE_DISPLAY.vector);
 	
 	inputs[| 1] = nodeValue("Amount", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1)
-		.setDisplay(VALUE_DISPLAY.slider, [1, 16, 0.1]);
+		.setDisplay(VALUE_DISPLAY.slider, { range: [1, 16, 0.1] });
 		
 	inputs[| 2] = nodeValue("Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [0, 0] )
 		.setDisplay(VALUE_DISPLAY.vector)

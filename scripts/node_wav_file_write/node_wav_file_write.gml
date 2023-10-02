@@ -7,7 +7,7 @@ function Node_WAV_File_Write(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	min_h = h;
 	
 	inputs[| 0]  = nodeValue("Path", self, JUNCTION_CONNECT.input, VALUE_TYPE.path, "")
-		.setDisplay(VALUE_DISPLAY.path_save, ["*.wav", ""])
+		.setDisplay(VALUE_DISPLAY.path_save, { filter: "*.wav" })
 		.rejectArray()
 		.setVisible(true);
 	
@@ -38,19 +38,19 @@ function Node_WAV_File_Write(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	}
 	
 	static step = function() {
-		var remap = inputs[| 4].getValue();
+		var remap = getInputData(4);
 		
 		inputs[| 5].setVisible(remap);
 	}
 	
 	static export = function() {
-		var path = inputs[| 0].getValue();
-		var data = inputs[| 1].getValue();
-		var samp = inputs[| 2].getValue();
-		var bitd = inputs[| 3].getValue() + 1;
+		var path = getInputData(0);
+		var data = getInputData(1);
+		var samp = getInputData(2);
+		var bitd = getInputData(3) + 1;
 		
-		var remp = inputs[| 4].getValue();
-		var rern = inputs[| 5].getValue();
+		var remp = getInputData(4);
+		var rern = getInputData(5);
 		
 		if(!is_array(data)) return;
 		

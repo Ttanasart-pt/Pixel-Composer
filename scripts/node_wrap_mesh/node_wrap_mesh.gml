@@ -21,13 +21,13 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 	
 	inputs[| 1] = nodeValue("Sample", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 8, "Amount of grid subdivision. Higher number means more grid, detail.")
-		.setDisplay(VALUE_DISPLAY.slider, [ 2, 32, 1 ] );
+		.setDisplay(VALUE_DISPLAY.slider, { range: [ 2, 32, 1 ] });
 	
 	inputs[| 2] = nodeValue("Spring Force", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.5)
-		.setDisplay(VALUE_DISPLAY.slider, [ 0, 1, 0.01 ] );
+		.setDisplay(VALUE_DISPLAY.slider);
 	
 	inputs[| 3] = nodeValue("Mesh", self, JUNCTION_CONNECT.input, VALUE_TYPE.trigger, 0)
-		.setDisplay(VALUE_DISPLAY.button, [ function() { setTriangle(); doUpdate(); }, "Generate"] );
+		.setDisplay(VALUE_DISPLAY.button, { name: "Generate", onClick: function() { setTriangle(); doUpdate(); } });
 	
 	inputs[| 4] = nodeValue("Diagonal Link", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false, "Include diagonal link to prevent drastic grid deformation.");
 	
@@ -35,7 +35,7 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		active_index = 5;
 	
 	inputs[| 6] = nodeValue("Link Strength", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0, "Link length preservation, setting it to 1 will prevent any stretching, contraction.")
-		.setDisplay(VALUE_DISPLAY.slider, [ 0, 1, 0.01 ] );
+		.setDisplay(VALUE_DISPLAY.slider);
 		
 	inputs[| 7] = nodeValue("Full Mesh", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
 		
@@ -109,7 +109,7 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		var mx = (_mx - _x) / _s;
 		var my = (_my - _y) / _s;
 		
-		var _type = inputs[| 8].getValue();
+		var _type = getInputData(8);
 		if(_type == 1 && (isUsingTool("Mesh edit") || isUsingTool("Anchor remove"))) {
 			var mesh = attributes.mesh_bound;
 			var len  = array_length(mesh);
@@ -405,16 +405,16 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	}
 	
 	static regularTri = function(surf) {
-		var sample = inputs[| 1].getValue();
-		var spring = inputs[| 2].getValue();
-		var diagon = inputs[| 4].getValue();
+		var sample = getInputData(1);
+		var spring = getInputData(2);
+		var diagon = getInputData(4);
 		
 		if(!inputs[| 0].value_from) return;
 		var useArray = is_array(surf);
 		var ww = useArray? surface_get_width_safe(surf[0]) : surface_get_width_safe(surf);
 		var hh = useArray? surface_get_height_safe(surf[0]) : surface_get_height_safe(surf);
 		
-		var fullmh = inputs[| 7].getValue();
+		var fullmh = getInputData(7);
 		if(is_array(fullmh)) fullmh = false;
 		fullmh |= useArray;
 		
@@ -507,8 +507,8 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	}
 	
 	static triangulate = function(surf) {
-		var sample = inputs[| 1].getValue();
-		var seed   = inputs[| 9].getValue();
+		var sample = getInputData(1);
+		var seed   = getInputData(9);
 		
 		if(!inputs[| 0].value_from) return;
 		var useArray = is_array(surf);
@@ -585,8 +585,8 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	}
 	
 	static setTriangle = function() {
-		var _inSurf = inputs[| 0].getValue();
-		var _type   = inputs[| 8].getValue();
+		var _inSurf = getInputData(0);
+		var _type   = getInputData(8);
 		
 		switch(_type) {
 			case 0 : regularTri(_inSurf);   break;
@@ -630,10 +630,10 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	}
 	
 	static control = function() {
-		var lStr = inputs[| 6].getValue();
+		var lStr = getInputData(6);
 		
 		for(var i = control_index; i < ds_list_size(inputs); i++) {
-			var c = inputs[| i].getValue();
+			var c = getInputData(i);
 			
 			for( var j = 0; j < array_length(data.points); j++ ) {
 				if(data.points[j] == 0) continue;
@@ -664,7 +664,7 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	}
 	
 	static step = function() {
-		var _type = inputs[| 8].getValue();
+		var _type = getInputData(8);
 		
 		inputs[| 2].setVisible(_type == 0);
 		inputs[| 4].setVisible(_type == 0);

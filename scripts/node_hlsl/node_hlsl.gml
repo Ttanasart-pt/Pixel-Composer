@@ -48,7 +48,7 @@ output.color = surfaceColor;")
 		inputs[| index + 0] = nodeValue("Argument name", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "" );
 		
 		inputs[| index + 1] = nodeValue("Argument type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0 )
-			.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Float", "Int", "Vec2", "Vec3", "Vec4", "Mat3", "Mat4", "Sampler2D", "Color" ], { update_hover: false });
+			.setDisplay(VALUE_DISPLAY.enum_scroll, { data: [ "Float", "Int", "Vec2", "Vec3", "Vec4", "Mat3", "Mat4", "Sampler2D", "Color" ], update_hover: false });
 		inputs[| index + 1].editWidget.interactable = false;
 		
 		inputs[| index + 2] = nodeValue("Argument value", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0 )
@@ -75,17 +75,17 @@ output.color = surfaceColor;")
 		array_resize(input_display_list, input_display_len);
 		
 		for( var i = input_fix_len; i < ds_list_size(inputs); i += data_length ) {
-			if(inputs[| i].getValue() == "") {
+			if(getInputData(i) == "") {
 				delete inputs[| i + 0];
 				delete inputs[| i + 1];
 				delete inputs[| i + 2];
 				continue;
 			}
 			
-			var inp_name = inputs[| i + 0].getValue();
+			var inp_name = getInputData(i + 0);
 			var inp_type = inputs[| i + 1];
 			var inp_valu = inputs[| i + 2];
-			var cur_valu = inputs[| i + 2].getValue();
+			var cur_valu = getInputData(i + 2);
 			
 			ds_list_add(_in, inputs[| i + 0]);
 			ds_list_add(_in, inp_type);
@@ -130,13 +130,13 @@ output.color = surfaceColor;")
 					if(!is_array(cur_valu) || array_length(cur_valu) != 9)
 						inp_valu.overrideValue(array_create(9));
 					inp_valu.type = VALUE_TYPE.float;	
-					inp_valu.setDisplay(VALUE_DISPLAY.matrix, 3);
+					inp_valu.setDisplay(VALUE_DISPLAY.matrix, { size: 3 });
 					break;
 				case 6 : 
 					if(!is_array(cur_valu) || array_length(cur_valu) != 16)
 						inp_valu.overrideValue(array_create(16));
 					inp_valu.type = VALUE_TYPE.float;	
-					inp_valu.setDisplay(VALUE_DISPLAY.matrix, 4);
+					inp_valu.setDisplay(VALUE_DISPLAY.matrix, { size: 4 });
 					break;
 				case 7 : 
 					inp_valu.type = VALUE_TYPE.surface;	
@@ -172,8 +172,8 @@ output.color = surfaceColor;")
 	static onInspector1Update = function() { refreshShader(); }
 	
 	static refreshShader = function() { #region
-		var vs = inputs[| 0].getValue();
-		var fs = inputs[| 1].getValue();
+		var vs = getInputData(0);
+		var fs = getInputData(1);
 		
 		var _dir = DIRECTORY + "shadertemp/";
 		var vs   = @"
@@ -220,10 +220,10 @@ struct PixelShaderOutput {
 		var sampler_slot = 1;
 		
 		for( var i = input_fix_len, n = ds_list_size(inputs); i < n; i += data_length ) {
-			var _arg_name = inputs[| i + 0].getValue();
+			var _arg_name = getInputData(i + 0);
 			if(_arg_name == "") continue;
 			
-			var _arg_type = inputs[| i + 1].getValue();
+			var _arg_type = getInputData(i + 1);
 			
 			switch(_arg_type) {
 				case 0 : fs_param += $"float  {_arg_name};\n";   break;	//u_float

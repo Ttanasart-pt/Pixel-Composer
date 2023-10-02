@@ -33,10 +33,10 @@ function __Node_3D_Cube(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		.setDisplay(VALUE_DISPLAY.rotation);
 		
 	inputs[| 14] = nodeValue("Light height", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.5)
-		.setDisplay(VALUE_DISPLAY.slider, [-1, 1, 0.01]);
+		.setDisplay(VALUE_DISPLAY.slider, { range: [-1, 1, 0.01] });
 		
 	inputs[| 15] = nodeValue("Light intensity", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
-		.setDisplay(VALUE_DISPLAY.slider, [0, 1, 0.01]);
+		.setDisplay(VALUE_DISPLAY.slider);
 	
 	inputs[| 16] = nodeValue("Light color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white);
 	
@@ -53,7 +53,7 @@ function __Node_3D_Cube(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		.rejectArray();
 		
 	inputs[| 21] = nodeValue("Field of view", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 60)
-		.setDisplay(VALUE_DISPLAY.slider, [ 1, 90, 1 ]);
+		.setDisplay(VALUE_DISPLAY.slider, { range: [ 1, 90, 1 ] });
 	
 	inputs[| 22] = nodeValue("Scale view with dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true)
 		

@@ -26,9 +26,9 @@ function Node_Array_Copy(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	}
 	
 	static update = function(frame = PROJECT.animator.current_frame) {
-		var _arr = inputs[| 0].getValue();
-		var _ind = inputs[| 1].getValue();
-		var _siz = inputs[| 2].getValue();
+		var _arr = getInputData(0);
+		var _ind = getInputData(1);
+		var _siz = getInputData(2);
 		
 		if(!is_array(_arr)) return;
 		var res = [];

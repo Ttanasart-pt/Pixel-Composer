@@ -37,8 +37,8 @@ function Node_PB_Draw_Round_Rectangle(_x, _y, _group = noone) : Node_PB_Draw(_x,
 	]
 	
 	static step = function() {
-		var _type = inputs[| 3].getValue();
-		var _rela = inputs[| 6].getValue();
+		var _type = getInputData(3);
+		var _rela = getInputData(6);
 		
 		inputs[| 4].setVisible(_type == 0);
 		inputs[| 5].setVisible(_type == 1);

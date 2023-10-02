@@ -39,7 +39,7 @@ function Node_Padding(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	attribute_surface_depth();
 	
 	static step = function() {
-		var mode = inputs[| 5].getValue();
+		var mode = getInputData(5);
 		
 		inputs[| 1].setVisible(mode == 0);
 		

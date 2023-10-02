@@ -32,8 +32,8 @@ function Node_Iterator_Filter_Output(_x, _y, _group = noone) : Node(_x, _y, _gro
 			return;
 		}
 			
-		var val = inputs[| 0].getValue();
-		var res = inputs[| 1].getValue();
+		var val = getInputData(0);
+		var res = getInputData(1);
 			
 		var _val = group.outputs[| 0].getValue();
 		if(!is_array(_val)) {

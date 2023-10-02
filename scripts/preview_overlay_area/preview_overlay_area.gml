@@ -2,7 +2,7 @@ function preview_overlay_area_padding(interact, active, _x, _y, _s, _mx, _my, _s
 	var _val  = array_clone(getValue());
 	var hover = -1;
 	
-	if(display_data == -1) return hover;
+	if(!is_callable(display_data)) return hover;
 	
 	var ss = display_data();
 	var __at = array_safe_get(_val, 4);

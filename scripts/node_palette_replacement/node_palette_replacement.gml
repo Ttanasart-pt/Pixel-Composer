@@ -14,7 +14,7 @@ function Node_Palette_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 		.setDisplay(VALUE_DISPLAY.palette);
 	
 	inputs[| 3] = nodeValue("Threshold", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.1)
-		.setDisplay(VALUE_DISPLAY.slider, [0, 1, 0.01]);
+		.setDisplay(VALUE_DISPLAY.slider);
 	
 	input_display_list = [ 0, 
 		["Palette",		false], 1, 2, 3, 

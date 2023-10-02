@@ -7,13 +7,13 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	inputs[| 1] = nodeValue("Background", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
 	
 	inputs[| 2] = nodeValue("Segment", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1)
-		.setDisplay(VALUE_DISPLAY.slider, [1, 32, 1]);
+		.setDisplay(VALUE_DISPLAY.slider, { range: [1, 32, 1] });
 	
 	inputs[| 3] = nodeValue("Width", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 2, 2 ])
 		.setDisplay(VALUE_DISPLAY.vector);
 	
 	inputs[| 4] = nodeValue("Wiggle", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
-		.setDisplay(VALUE_DISPLAY.slider, [0, 16, 0.01]);
+		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 16, 0.01] });
 	
 	inputs[| 5] = nodeValue("Random seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0);
 	
@@ -25,10 +25,10 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 		.setArrayDepth(1);
 	
 	inputs[| 8] = nodeValue("Range", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [0, 1], "Range of the path to draw.")
-		.setDisplay(VALUE_DISPLAY.slider_range, [0, 1, 0.01]);
+		.setDisplay(VALUE_DISPLAY.slider_range);
 	
 	inputs[| 9] = nodeValue("Shift", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
-		.setDisplay(VALUE_DISPLAY._default, 1 / 64);
+		.setDisplay(VALUE_DISPLAY._default, { slide_speed: 1 / 64 });
 	
 	inputs[| 10] = nodeValue("Color over length", self, JUNCTION_CONNECT.input, VALUE_TYPE.gradient, new gradientObject(c_white) );
 	
@@ -39,7 +39,7 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	inputs[| 13] = nodeValue("Round cap", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
 	
 	inputs[| 14] = nodeValue("Round segment", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 4)
-		.setDisplay(VALUE_DISPLAY.slider, [2, 16, 1]);
+		.setDisplay(VALUE_DISPLAY.slider, { range: [2, 16, 1] });
 	
 	inputs[| 15] = nodeValue("Span color over path", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false, "Apply the full 'color over length' to the trimmed path.");
 	
@@ -101,9 +101,9 @@ function Node_Line(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) cons
 	}
 	
 	static step = function() {
-		var px    = !inputs[| 17].getValue();
+		var px    = !getInputData(17);
 		var _tex  = inputs[| 18].value_from != noone;
-		var _flen = inputs[| 19].getValue();
+		var _flen = getInputData(19);
 		
 		inputs[|  3].setVisible(px);
 		inputs[| 11].setVisible(px);

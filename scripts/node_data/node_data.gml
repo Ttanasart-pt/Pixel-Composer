@@ -107,6 +107,10 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		input_display_len = 0;
 		input_fix_len	  = 0;
 		data_length       = 1;
+		inputs_data		  = [];
+		input_hash		  = "";
+		
+		anim_last_step = false;
 	#endregion
 	
 	#region --- attributes ----
@@ -306,10 +310,11 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	} #endregion
 	
 	static isAnimated = function() { #region
-		for(var i = 0; i < ds_list_size(inputs); i++) {
-			if(inputs[| i].isAnimated())
-				return true;
-		}
+		if(update_on_frame) return true;
+		
+		for(var i = 0; i < ds_list_size(inputs); i++)
+			if(inputs[| i].isAnimated()) return true;
+		
 		return false;
 	} #endregion
 	
@@ -403,6 +408,15 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	static focusStep = function() {}
 	static inspectorStep = function() {}
 	
+	static getInputData = function(index, def = 0) { return array_safe_get(inputs_data, index, def); }
+	
+	static getInputs = function() { #region
+		inputs_data	= array_create(ds_list_size(inputs));
+		
+		for(var i = 0; i < ds_list_size(inputs); i++)
+			inputs_data[i] = inputs[| i].getValue();
+	} #endregion
+	
 	static doUpdate = function() { #region
 		if(SAFE_MODE)    return;
 		if(NODE_EXTRACT) return;
@@ -411,13 +425,21 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		LOG_BLOCK_START();
 		LOG_IF(global.FLAG.render, $">>>>>>>>>> DoUpdate called from {internalName} <<<<<<<<<<");
 		
+		var _hash = input_hash;
+		getInputs();
+		input_hash = md5_string_unicode(json_stringify(inputs_data));
+		anim_last_step = isAnimated() || _hash != input_hash;
+		
+		if(name == "Shape") print($"{isAnimated()} - {_hash != input_hash}");
+		
 		try {
 			var t = get_timer();
 			
 			if(!is_instanceof(self, Node_Collection)) 
 				setRenderStatus(true);
-				
-			update();																						///UPDATE
+			
+			if(anim_last_step)
+				update(); ///Update only if input hash differs from previous.
 				
 			if(!is_instanceof(self, Node_Collection))
 				render_time = get_timer() - t;
@@ -1603,7 +1625,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 				return array_safe_get(global.SURFACE_FORMAT, form, surface_rgba8unorm);
 		}
 		
-		var _s = inputs[| 0].getValue();
+		var _s = getInputData(0);
 		while(is_array(_s) && array_length(_s)) _s = _s[0];
 		if(!is_surface(_s)) 
 			return surface_rgba8unorm;

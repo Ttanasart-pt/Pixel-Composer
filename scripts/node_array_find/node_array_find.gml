@@ -16,14 +16,14 @@ function Node_Array_Find(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	outputs[| 0] = nodeValue("Index", self, JUNCTION_CONNECT.output, VALUE_TYPE.integer, 0);
 	
 	static update = function(frame = PROJECT.animator.current_frame) {
-		var _arr = inputs[| 0].getValue();
+		var _arr = getInputData(0);
 		
 		inputs[| 0].type  = VALUE_TYPE.any;
 		inputs[| 1].type  = VALUE_TYPE.any;
 		
 		if(!is_array(_arr)) return;
 		
-		var value = inputs[| 1].getValue();
+		var value = getInputData(1);
 		
 		if(inputs[| 0].value_from != noone) {
 			var type = inputs[| 0].value_from.type;

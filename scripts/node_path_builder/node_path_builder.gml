@@ -15,8 +15,8 @@ function Node_Path_Builder(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	outputs[| 0] = nodeValue("Path", self, JUNCTION_CONNECT.output, VALUE_TYPE.pathnode, self);
 	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
-		var _lines = inputs[| 0].getValue();
-		var _conn  = inputs[| 1].getValue();
+		var _lines = getInputData(0);
+		var _conn  = getInputData(1);
 		
 		draw_set_color(COLORS._main_accent);
 		
@@ -42,15 +42,15 @@ function Node_Path_Builder(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	}
 	
 	static getLineCount = function() { 
-		var _lines = inputs[| 0].getValue();
-		var _conn  = inputs[| 1].getValue();
+		var _lines = getInputData(0);
+		var _conn  = getInputData(1);
 		
 		return _conn? 1 : floor(array_length(_lines) / 2); 
 	}
 	
 	static getSegmentCount = function() { 
-		var _lines = inputs[| 0].getValue();
-		var _conn  = inputs[| 1].getValue();
+		var _lines = getInputData(0);
+		var _conn  = getInputData(1);
 		
 		return _conn? array_length(_lines) - 1 : 1; 
 	}
@@ -60,8 +60,8 @@ function Node_Path_Builder(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	static getAccuLength = function(index) { return array_safe_get(lengthAcc, index, []); }
 	
 	static getPointRatio = function(_rat, _ind = 0) {
-		var _lines = inputs[| 0].getValue();
-		var _conn  = inputs[| 1].getValue();
+		var _lines = getInputData(0);
+		var _conn  = getInputData(1);
 		var _p0, _p1;
 		var _x, _y;
 		
@@ -92,7 +92,7 @@ function Node_Path_Builder(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	}
 	
 	static getPointDistance = function(_dist, ind = 0) {
-		var _conn  = inputs[| 1].getValue();
+		var _conn  = getInputData(1);
 		
 		if(_conn) return getPointRatio(_dist / length);
 		else      return getPointRatio(_dist / length[ind], ind);
@@ -100,7 +100,7 @@ function Node_Path_Builder(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	static getBoundary		= function() { 
 		var boundary = new BoundingBox();
-		var _lines = inputs[| 0].getValue();
+		var _lines = getInputData(0);
 		for( var i = 0, n = array_length(_lines); i < n; i++ )
 			boundary.addPoint(_lines[i][0], _lines[i][1]);
 		
@@ -108,8 +108,8 @@ function Node_Path_Builder(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	}
 	
 	static update = function() { 
-		var _lines = inputs[| 0].getValue();
-		var _conn  = inputs[| 1].getValue();
+		var _lines = getInputData(0);
+		var _conn  = getInputData(1);
 		
 		if(_conn) {
 			length = 0;

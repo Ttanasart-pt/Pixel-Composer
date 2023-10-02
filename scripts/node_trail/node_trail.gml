@@ -33,7 +33,7 @@ function Node_Trail(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	attribute_surface_depth();
 	
 	static step = function() {
-		var _colr  = inputs[| 4].getValue();
+		var _colr  = getInputData(4);
 		
 		inputs[| 5].setVisible(!_colr);
 	}
@@ -41,15 +41,15 @@ function Node_Trail(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	static update = function() {
 		if(!inputs[| 0].value_from) return;
 		
-		var _surf  = inputs[| 0].getValue();
-		var _life  = inputs[| 1].getValue();
-		var _loop  = inputs[| 2].getValue();
+		var _surf  = getInputData(0);
+		var _life  = getInputData(1);
+		var _loop  = getInputData(2);
 		if(!is_real(_loop)) _loop = false;
 		
-		var _rang  = inputs[| 3].getValue();
-		var _colr  = inputs[| 4].getValue();
-		var _blend = inputs[| 5].getValue();
-		var _alpha = inputs[| 6].getValue();
+		var _rang  = getInputData(3);
+		var _colr  = getInputData(4);
+		var _blend = getInputData(5);
+		var _alpha = getInputData(6);
 		var cDep   = attrDepth();
 		if(!is_surface(_surf)) return;
 		cacheCurrentFrame(_surf);

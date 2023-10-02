@@ -6,7 +6,7 @@
 	
 //	inputs[| 3] = nodeValue("Render position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0.5, 0.5 ])
 //		.setDisplay(VALUE_DISPLAY.vector)
-//		.setUnitRef( function() { return inputs[| 2].getValue(); }, VALUE_UNIT.reference);
+//		.setUnitRef( function() { return getInputData(2); }, VALUE_UNIT.reference);
 		
 //	inputs[| 4] = nodeValue("Render rotation", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 0 ])
 //		.setDisplay(VALUE_DISPLAY.vector);
@@ -19,11 +19,11 @@
 //		.rejectArray();
 		
 //	inputs[| 7] = nodeValue("Light height", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.5)
-//		.setDisplay(VALUE_DISPLAY.slider, [-1, 1, 0.01])
+//		.setDisplay(VALUE_DISPLAY.slider, { range: [-1, 1, 0.01] })
 //		.rejectArray();
 		
 //	inputs[| 8] = nodeValue("Light intensity", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
-//		.setDisplay(VALUE_DISPLAY.slider, [0, 1, 0.01])
+//		.setDisplay(VALUE_DISPLAY.slider)
 //		.rejectArray();
 	
 //	inputs[| 9] = nodeValue("Light color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white)
@@ -37,7 +37,7 @@
 //		.rejectArray();
 		
 //	inputs[| 16] = nodeValue("Field of view", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 60)
-//		.setDisplay(VALUE_DISPLAY.slider, [ 0, 90, 1 ])
+//		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 90, 1 ] })
 //		.rejectArray();
 	
 //	inputs[| 17] = nodeValue("Scale view with dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true)
@@ -115,8 +115,8 @@
 //	materials = [];
 		
 //	static updateObj = function(updateMat = true) {
-//		var _path = inputs[|  0].getValue();
-//		var _flip = inputs[| 12].getValue();
+//		var _path = getInputData(0);
+//		var _flip = getInputData(12);
 //		var _dir  = filename_dir(_path);
 //		var _pathMtl = string_copy(_path, 1, string_length(_path) - 4) + ".mtl";
 		
@@ -151,9 +151,9 @@
 //	}
 	
 //	static submit_vertex = function() {
-//		var _lpos = inputs[| 14].getValue();
-//		var _lrot = inputs[| 13].getValue();
-//		var _lsca = inputs[| 11].getValue();
+//		var _lpos = getInputData(14);
+//		var _lrot = getInputData(13);
+//		var _lsca = getInputData(11);
 		
 //		_3d_local_transform(_lpos, _lrot, _lsca);
 		
@@ -161,7 +161,7 @@
 //			if(i >= array_length(materialIndex)) continue;
 				
 //			var mIndex = materialIndex[i];
-//			var tex = inputs[| input_length + mIndex].getValue();
+//			var tex = getInputData(input_length + mIndex);
 						
 //			if(!is_surface(tex)) continue;
 //			vertex_submit(VB[i], pr_trianglelist, surface_get_texture(tex));
@@ -184,24 +184,24 @@
 //			do_reset_material = false;
 //		}
 		
-//		var _dim  = inputs[|  2].getValue();
-//		var _pos  = inputs[|  3].getValue();
-//		//var _rot  = inputs[|  4].getValue();
-//		var _sca  = inputs[|  5].getValue();
+//		var _dim  = getInputData(2);
+//		var _pos  = getInputData(3);
+//		//var _rot  = getInputData(4);
+//		var _sca  = getInputData(5);
 		
-//		var _ldir = inputs[|  6].getValue();
-//		var _lhgt = inputs[|  7].getValue();
-//		var _lint = inputs[|  8].getValue();
-//		var _lclr = inputs[|  9].getValue();
-//		var _aclr = inputs[| 10].getValue();
+//		var _ldir = getInputData(6);
+//		var _lhgt = getInputData(7);
+//		var _lint = getInputData(8);
+//		var _lclr = getInputData(9);
+//		var _aclr = getInputData(10);
 							  
-//		var _lpos = inputs[| 14].getValue();
-//		var _lrot = inputs[| 13].getValue();
-//		var _lsca = inputs[| 11].getValue();
+//		var _lpos = getInputData(14);
+//		var _lrot = getInputData(13);
+//		var _lsca = getInputData(11);
 		
-//		var _proj = inputs[| 15].getValue();
-//		var _fov  = inputs[| 16].getValue();
-//		var _dimS = inputs[| 17].getValue();
+//		var _proj = getInputData(15);
+//		var _fov  = getInputData(16);
+//		var _dimS = getInputData(17);
 		
 //		inputs[| 16].setVisible(_proj == 1);
 		
@@ -224,7 +224,7 @@
 //					if(i >= array_length(materialIndex)) continue;
 				
 //					var mIndex = materialIndex[i];
-//					var tex = inputs[| input_length + mIndex].getValue();
+//					var tex = getInputData(input_length + mIndex);
 						
 //					if(!is_surface(tex)) continue;
 //					vertex_submit(VB[i], pr_trianglelist, surface_get_texture(tex));

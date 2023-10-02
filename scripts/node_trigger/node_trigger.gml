@@ -11,7 +11,7 @@ function Node_Trigger(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 	
 	inputs[| 1] = nodeValue("Trigger", self, JUNCTION_CONNECT.input, VALUE_TYPE.trigger, false)
 		.setVisible(true, true)
-		.setDisplay(VALUE_DISPLAY.button, [ function() { onInspector2Update(); }, "Trigger"]);
+		.setDisplay(VALUE_DISPLAY.button, { name: "Trigger", onClick: function() { onInspector2Update(); } });
 	
 	outputs[| 0] = nodeValue("Trigger", self, JUNCTION_CONNECT.output, VALUE_TYPE.trigger, false);
 	
@@ -36,7 +36,7 @@ function Node_Trigger(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 	}
 	
 	static update = function() {
-		var trg = inputs[| 0].getValue();
+		var trg = getInputData(0);
 		if(trg) doTrigger = 1;
 	}
 	

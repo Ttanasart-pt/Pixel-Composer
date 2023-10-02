@@ -22,7 +22,7 @@ function Node_Counter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	];
 	
 	static step = function() {
-		var mode = inputs[| 2].getValue();
+		var mode = getInputData(2);
 		inputs[| 0].setVisible(mode == 0);
 	}
 	

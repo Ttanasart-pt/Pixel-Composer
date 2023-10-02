@@ -28,7 +28,7 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		.rejectArray();
 	
 	inputs[| 3] = nodeValue("Alpha", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.75)
-		.setDisplay(VALUE_DISPLAY.slider, [0, 1, 0.01])
+		.setDisplay(VALUE_DISPLAY.slider)
 		.rejectArray();
 	
 	inputs[| 4] = nodeValue("Line width", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, -1)
@@ -211,16 +211,16 @@ function Node_Display_Text(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	static onValueUpdate = function(index = 0) {
 		if(index == 1 || index == 4)
-			line_update(inputs[| 1].getValue(), inputs[| 4].getValue());
+			line_update(getInputData(1), getInputData(4));
 	}
 	
 	static drawNodeBase = function(xx, yy, mx, my, _s) {
-		var color  = inputs[| 0].getValue();
-		var txt = inputs[| 1].getValue();
+		var color  = getInputData(0);
+		var txt = getInputData(1);
 		if(txt == "") txt = "..."
-		var sty = inputs[| 2].getValue();
-		var alp = inputs[| 3].getValue();
-		var wid = inputs[| 4].getValue();
+		var sty = getInputData(2);
+		var alp = getInputData(3);
+		var wid = getInputData(4);
 		
 		font = f_p1;
 		switch(sty) {

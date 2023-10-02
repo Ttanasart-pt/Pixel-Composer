@@ -8,7 +8,7 @@ function Node_PB_Box_Contract(_x, _y, _group = noone) : Node_PB_Box(_x, _y, _gro
 		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Ratio", "Fix" ]);
 	
 	inputs[| 3] = nodeValue("Ratio", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.5 )
-		.setDisplay(VALUE_DISPLAY.slider, [ 0, 1, 0.01 ]);
+		.setDisplay(VALUE_DISPLAY.slider);
 	
 	inputs[| 4] = nodeValue("Fix Width", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 8 )
 	

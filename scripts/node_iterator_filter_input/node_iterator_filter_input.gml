@@ -11,7 +11,7 @@ function Node_Iterator_Filter_Input(_x, _y, _group = noone) : Node(_x, _y, _grou
 			return outputs[| 0].getValueDefault();
 			
 		var ind = group.iterated;
-		var val = group.inputs[| 0].getValue();
+		var val = group.getInputData(0);
 		
 		return [ array_safe_get(val, ind), group.inputs[| 0] ];
 	}

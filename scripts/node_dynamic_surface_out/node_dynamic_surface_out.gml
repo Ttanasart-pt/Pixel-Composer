@@ -37,14 +37,14 @@ function Node_DynaSurf_Out(_x, _y, _group = noone) : Node_PCX(_x, _y, _group) co
 	}
 	
 	static update = function() {
-		var _surf = inputs[| 0].getValue();
-		var _x    = inputs[| 1].getValue();
-		var _y    = inputs[| 2].getValue();
-		var _sx   = inputs[| 3].getValue();
-		var _sy   = inputs[| 4].getValue();
-		var _ang  = inputs[| 5].getValue();
-		var _clr  = inputs[| 6].getValue();
-		var _alp  = inputs[| 7].getValue();
+		var _surf = getInputData(0);
+		var _x    = getInputData(1);
+		var _y    = getInputData(2);
+		var _sx   = getInputData(3);
+		var _sy   = getInputData(4);
+		var _ang  = getInputData(5);
+		var _clr  = getInputData(6);
+		var _alp  = getInputData(7);
 		
 		outputs[| 0].setValue(new __funcTree("draw", [ _surf, _x, _y, _sx, _sy, _ang, _clr, _alp ]));
 		

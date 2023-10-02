@@ -18,7 +18,7 @@ function Node_Feedback_Output(_x, _y, _group = noone) : Node_Group_Output(_x, _y
 			return;
 		}
 		
-		var _val_get = inputs[| 0].getValue();
+		var _val_get = getInputData(0);
 		var _arr     = inputs[| 0].value_from.isArray();
 		var is_surf	 = inputs[| 0].type == VALUE_TYPE.surface;
 		

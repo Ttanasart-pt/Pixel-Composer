@@ -119,7 +119,7 @@ function Node_Iterate_Sort(_x, _y, _group = noone) : Node_Collection(_x, _y, _gr
 			return;
 		}
 		
-		var arrIn  = inputs[| 0].getValue();
+		var arrIn  = getInputData(0);
 		var arrOut = outputs[| 0].getValue();
 		
 		if(inputs[| 0].type == VALUE_TYPE.surface) {

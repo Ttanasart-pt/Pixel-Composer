@@ -8,12 +8,12 @@ function Node_Gradient_Shift(_x, _y, _group = noone) : Node_Processor(_x, _y, _g
 		.setDisplay(true, true);
 	
 	inputs[| 1] = nodeValue("Shift", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
-		.setDisplay(VALUE_DISPLAY.slider, [-1, 1, 0.01]);
+		.setDisplay(VALUE_DISPLAY.slider, { range: [-1, 1, 0.01] });
 	
 	inputs[| 2] = nodeValue("Wrap", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false)
 	
 	inputs[| 3] = nodeValue("Scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
-		.setDisplay(VALUE_DISPLAY.slider, [0, 2, 0.01]);
+		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 2, 0.01] });
 	
 	outputs[| 0] = nodeValue("Gradient", self, JUNCTION_CONNECT.output, VALUE_TYPE.gradient, new gradientObject(c_white) );
 	

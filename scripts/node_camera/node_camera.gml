@@ -3,11 +3,13 @@ function Node_Camera(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	preview_alpha = 0.5;
 	
 	inputs[| 0] = nodeValue("Background", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
+	
+	onSurfaceSize = function() { return getInputData(0, DEF_SURF); };
 	inputs[| 1] = nodeValue("Focus area", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 0, 0, 16, 16, AREA_SHAPE.rectangle ])
-		.setDisplay(VALUE_DISPLAY.area, function() { return getDimension(0); });
+		.setDisplay(VALUE_DISPLAY.area, { onSurfaceSize });
 	
 	inputs[| 2] = nodeValue("Zoom", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
-		.setDisplay(VALUE_DISPLAY.slider, [ 0.01, 4, 0.01 ]);
+		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0.01, 4, 0.01 ] });
 	
 	inputs[| 3] = nodeValue("Oversample mode", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0, "How to deal with pixel outside the surface.\n    - Empty: Use empty pixel\n    - Clamp: Repeat edge pixel\n    - Repeat: Repeat texture.")
 		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Empty", "Repeat", "Repeat X", "Repeat Y" ]);
@@ -93,7 +95,7 @@ function Node_Camera(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		refreshDynamicInput();
 	}
 	
-	static getPreviewValues = function() { return inputs[| 0].getValue(); }
+	static getPreviewValues = function() { return getInputData(0); }
 	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		if(array_length(current_data) == 0) return;

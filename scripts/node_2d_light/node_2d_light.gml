@@ -26,7 +26,7 @@ function Node_2D_light(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	inputs[| 3] = nodeValue("Range", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 16);
 	
 	inputs[| 4] = nodeValue("Intensity", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
-		.setDisplay(VALUE_DISPLAY.slider, [0, 1, 0.01]);
+		.setDisplay(VALUE_DISPLAY.slider);
 	
 	inputs[| 5] = nodeValue("Color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white);
 	
@@ -37,25 +37,25 @@ function Node_2D_light(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		.setDisplay(VALUE_DISPLAY.vector);
 	
 	inputs[| 8] = nodeValue("Sweep", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 15)
-		.setDisplay(VALUE_DISPLAY.slider, [-80, 80, 1]);
+		.setDisplay(VALUE_DISPLAY.slider, { range: [-80, 80, 1] });
 	
 	inputs[| 9] = nodeValue("Sweep end", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.slider, [-80, 80, 1]);
+		.setDisplay(VALUE_DISPLAY.slider, { range: [-80, 80, 1] });
 	
 	inputs[| 10] = nodeValue("Banding", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.slider, [0, 16, 1]);
+		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 16, 1] });
 	
 	inputs[| 11] = nodeValue("Attenuation", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0, "Control how light fade out over distance.")
 		.setDisplay(VALUE_DISPLAY.enum_scroll, ["Quadratic", "Invert quadratic", "Linear"]);
 	
 	inputs[| 12] = nodeValue("Radial banding", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.slider, [0, 16, 1]);
+		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 16, 1] });
 	
 	inputs[| 13] = nodeValue("Radial start", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.rotation);
 	
 	inputs[| 14] = nodeValue("Radial band ratio", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.5)
-		.setDisplay(VALUE_DISPLAY.slider, [0, 1, 0.01]);
+		.setDisplay(VALUE_DISPLAY.slider);
 	
 	inputs[| 15] = nodeValue("Active", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
 		active_index = 15;
@@ -72,11 +72,11 @@ function Node_2D_light(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	attribute_surface_depth();
 	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
-		var _shape = inputs[| 1].getValue();
+		var _shape = getInputData(1);
 		
 		switch(_shape) {
 			case LIGHT_SHAPE_2D.point :
-				var pos = inputs[| 2].getValue();
+				var pos = getInputData(2);
 				var px = _x + pos[0] * _s;
 				var py = _y + pos[1] * _s;
 		

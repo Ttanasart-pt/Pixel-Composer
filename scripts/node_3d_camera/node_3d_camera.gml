@@ -18,7 +18,7 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 	global.SKY_SPHERE = new __3dUVSphere(0.5, 16, 8, true);
 	
 	inputs[| in_d3d + 0] = nodeValue("FOV", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 60 )
-		.setDisplay(VALUE_DISPLAY.slider, [ 10, 90, 1 ]);
+		.setDisplay(VALUE_DISPLAY.slider, { range: [ 10, 90, 1 ] });
 	
 	inputs[| in_d3d + 1] = nodeValue("Clipping Distance", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 10 ] )
 		.setDisplay(VALUE_DISPLAY.vector);
@@ -40,7 +40,7 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 		.setDisplay(VALUE_DISPLAY.enum_button, [ "None", "CW", "CCW" ]);
 	
 	inputs[| in_d3d + 8] = nodeValue("Orthographic Scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1 )
-		.setDisplay(VALUE_DISPLAY.slider, [ 0.01, 4, 0.01 ]);
+		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0.01, 4, 0.01 ] });
 	
 	inputs[| in_d3d + 9] = nodeValue("Postioning Mode", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0 )
 		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Position + Rotation", "Position + Lookat", "Lookat + Rotation" ] );
@@ -55,7 +55,7 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 		.setDisplay(VALUE_DISPLAY.rotation);
 	
 	inputs[| in_d3d + 13] = nodeValue("Vertical Angle", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 45 )
-		.setDisplay(VALUE_DISPLAY.slider, [0, 90, 1]);
+		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 90, 1] });
 	
 	inputs[| in_d3d + 14] = nodeValue("Distance", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 4 );
 	
@@ -70,7 +70,7 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 	inputs[| in_d3d + 19] = nodeValue("AO Bias", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.05 );
 	
 	inputs[| in_d3d + 20] = nodeValue("AO Strength", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1. )
-		.setDisplay(VALUE_DISPLAY.slider, [ 0.01, 4, 0.01 ]);
+		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0.01, 4, 0.01 ] });
 	
 	inputs[| in_d3d + 21] = nodeValue("Round Normal", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0 );
 	
@@ -94,7 +94,7 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 	tool_lookat = new NodeTool( "Move Target", THEME.tools_3d_transform_object );
 	
 	static getToolSettings = function() { #region
-		var _posm = inputs[| in_d3d + 9].getValue();
+		var _posm = getInputData(in_d3d + 9);
 		
 		switch(_posm) {
 			case 0 : return tool_settings;
@@ -133,9 +133,9 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 	} #endregion
 		
 	static step = function() { #region
-		var _proj = inputs[| in_d3d +  3].getValue();
-		var _posm = inputs[| in_d3d +  9].getValue();
-		var _ao   = inputs[| in_d3d + 17].getValue();
+		var _proj = getInputData(in_d3d +  3);
+		var _posm = getInputData(in_d3d +  9);
+		var _ao   = getInputData(in_d3d + 17);
 		
 		inputs[| in_d3d + 0].setVisible(_proj == 0);
 		inputs[| in_d3d + 8].setVisible(_proj == 1);
@@ -340,7 +340,7 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 	} #endregion
 	
 	static getPreviewObjects = function() { #region 
-		var _posm = inputs[| in_d3d + 9].getValue();
+		var _posm = getInputData(in_d3d + 9);
 		
 		var _scene = array_safe_get(all_inputs, in_d3d + 4, noone);
 		if(is_array(_scene))

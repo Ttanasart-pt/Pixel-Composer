@@ -5,8 +5,9 @@ function Node_Scatter_Points(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	
 	w = 96;
 	
+	onSurfaceSize = function() { return getInputData(7, DEF_SURF); };
 	inputs[| 0] = nodeValue("Point area", self,   JUNCTION_CONNECT.input, VALUE_TYPE.float, [ DEF_SURF_W / 2, DEF_SURF_H / 2, DEF_SURF_W / 2, DEF_SURF_H / 2, AREA_SHAPE.rectangle ])
-		.setDisplay(VALUE_DISPLAY.area, function() { return inputs[| 7].getValue(); });
+		.setDisplay(VALUE_DISPLAY.area, { onSurfaceSize });
 	
 	inputs[| 1] = nodeValue("Point distribution", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.enum_button, [ "Area", "Border", "Map" ])
@@ -41,7 +42,7 @@ function Node_Scatter_Points(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	refVal = nodeValue("Reference value", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 	
 	static step = function() {
-		var _dist = inputs[| 1].getValue();
+		var _dist = getInputData(1);
 		
 		inputs[| 2].setVisible(_dist != 2);
 		inputs[| 4].setVisible(_dist == 2, _dist == 2);
@@ -54,14 +55,14 @@ function Node_Scatter_Points(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	static getPreviewValues = function() { return refVal.getValue(); }
 	
 	static update = function(frame = PROJECT.animator.current_frame) { 
-		var _area	 = inputs[| 0].getValue();
-		var _dist	 = inputs[| 1].getValue();
-		var _scat	 = inputs[| 2].getValue();
-		var _amo	 = inputs[| 3].getValue();
-		var _distMap = inputs[| 4].getValue();
-		var _seed	 = inputs[| 5].getValue();
-		var _fix	 = inputs[| 6].getValue();
-		var _fixRef  = inputs[| 7].getValue();
+		var _area	 = getInputData(0);
+		var _dist	 = getInputData(1);
+		var _scat	 = getInputData(2);
+		var _amo	 = getInputData(3);
+		var _distMap = getInputData(4);
+		var _seed	 = getInputData(5);
+		var _fix	 = getInputData(6);
+		var _fixRef  = getInputData(7);
 		
 		inputs[| 7].setVisible(_fix);
 		var pos = [];

@@ -231,7 +231,7 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 		}
 		
 		var _show = jun.showValue();
-		var param = new widgetParam(editBoxX, editBoxY, editBoxW, editBoxH, _show, jun.extra_data, _m, rx, ry);
+		var param = new widgetParam(editBoxX, editBoxY, editBoxW, editBoxH, _show, jun.display_data, _m, rx, ry);
 		
 		switch(jun.type) {
 			case VALUE_TYPE.integer :
@@ -266,9 +266,9 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 	#endregion
 	} else if(jun.display_type == VALUE_DISPLAY.label) { #region label
 		draw_set_text(f_p1, fa_left, fa_top, COLORS._main_text_sub);
-		draw_text_add(xx + ui(16), _hsy, jun.display_data);
+		draw_text_add(xx + ui(16), _hsy, jun.display_data.data);
 				
-		widH = string_height(jun.display_data);
+		widH = string_height(jun.display_data.data);
 	#endregion
 	} else
 		widH = 0;

@@ -1,5 +1,5 @@
 var _filter = ["x", "y", "updated", "rendered", "show_output_name", "insp2UpdateIcon", "preview_trans", "value_validation", "group", "draw_padding", "draw_droppable",
-	"preview_drop_y", "badgeInspect", "preview_mx", "temp_surface", "load_scale", "node_id", "show_input_name", "graph_h", "display_data", "drawLineIndex", "draw_line_shift_x", 
+	"preview_drop_y", "badgeInspect", "preview_mx", "temp_surface", "load_scale", "node_id", "show_input_name", "graph_h", "drawLineIndex", "draw_line_shift_x", 
 	"draw_line_shift_y", "cache_array", "drag_mx", "drag_my", "expTree", "value_to", "draw_line_thick", "expUse", "expression", "drag_sx", "drag_sy", "drag_type", "con_node",
 	"cache_value", "show_graph", "preview_x", "preview_y", "badgePreview", "data_list", "open_rx", "open_ry", "parent", "active", "cached_output", "current_data", "cache_result",
 	"draw_graph_culled", "dopesheet_y", "render_time", "renderActive", "preview_speed", "preview_drop_x", "preview_drop_y", "inspecting", "value_to_arr", "draw_name", "anim_priority",
@@ -105,7 +105,7 @@ function Panel_Node_Data_Gen() : PanelContent() constructor {
 			switch(_in.display_type) {
 				case VALUE_DISPLAY.enum_button :
 				case VALUE_DISPLAY.enum_scroll :
-					_lin[i].display_data = _in.display_data;
+					_lin[i].display_data = _in.display_data.data;
 					break;
 			}
 		}

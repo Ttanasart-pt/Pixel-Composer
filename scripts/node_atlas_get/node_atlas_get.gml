@@ -26,7 +26,7 @@ function Node_Atlas_Get(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		.setArrayDepth(1);
 	
 	static update = function(frame = PROJECT.animator.current_frame) {
-		var atl = inputs[| 0].getValue();
+		var atl = getInputData(0);
 		
 		if(atl == noone) return;
 		if(is_array(atl) && array_length(atl) == 0) return;

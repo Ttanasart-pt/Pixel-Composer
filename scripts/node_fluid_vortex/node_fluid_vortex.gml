@@ -12,10 +12,10 @@ function Node_Fluid_Vortex(_x, _y, _group = noone) : Node_Fluid(_x, _y, _group) 
 	inputs[| 2] = nodeValue("Radius", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 8);
 	
 	inputs[| 3] = nodeValue("Strength", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.10)
-		.setDisplay(VALUE_DISPLAY.slider, [-1, 1, 0.01]);
+		.setDisplay(VALUE_DISPLAY.slider, { range: [-1, 1, 0.01] });
 	
 	inputs[| 4] = nodeValue("Attraction", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
-		.setDisplay(VALUE_DISPLAY.slider, [-1, 1, 0.01]);
+		.setDisplay(VALUE_DISPLAY.slider, { range: [-1, 1, 0.01] });
 	
 	inputs[| 5] = nodeValue("Mode", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.enum_button, [ "Override", "Add" ]);
@@ -29,8 +29,8 @@ function Node_Fluid_Vortex(_x, _y, _group = noone) : Node_Fluid(_x, _y, _group) 
 	outputs[| 1] = nodeValue("Fluid Domain", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
-		var _pos = inputs[| 1].getValue();
-		var _rad = inputs[| 2].getValue();
+		var _pos = getInputData(1);
+		var _rad = getInputData(2);
 		var px = _x + _pos[0] * _s;
 		var py = _y + _pos[1] * _s;
 		

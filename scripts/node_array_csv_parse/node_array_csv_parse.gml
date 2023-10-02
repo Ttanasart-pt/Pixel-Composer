@@ -15,8 +15,8 @@ function Node_Array_CSV_Parse(_x, _y, _group = noone) : Node(_x, _y, _group) con
 		.setArrayDepth(1);
 	
 	static update = function(frame = PROJECT.animator.current_frame) {
-		var _str = inputs[| 0].getValue();
-		var _skp = inputs[| 1].getValue();
+		var _str = getInputData(0);
+		var _skp = getInputData(1);
 		
 		var _lines = string_splice(_str, "\n");
 		var _arr = [];

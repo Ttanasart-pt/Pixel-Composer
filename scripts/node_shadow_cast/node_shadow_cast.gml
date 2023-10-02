@@ -33,7 +33,7 @@ function Node_Shadow_Cast(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	inputs[| 2] = nodeValue("Light Position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.vector)
 		.setUnitRef(function(index) { 
-			var _surf = inputs[| 0].getValue();
+			var _surf = getInputData(0);
 			if(is_array(_surf) && array_length(_surf) == 0)
 				return [1, 1];
 				
@@ -47,10 +47,10 @@ function Node_Shadow_Cast(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		}, VALUE_UNIT.reference);
 		
 	inputs[| 3] = nodeValue("Soft light radius", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
-		.setDisplay(VALUE_DISPLAY.slider, [0, 2, 0.01]);
+		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 2, 0.01] });
 	
 	inputs[| 4] = nodeValue("Light density", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1)
-		.setDisplay(VALUE_DISPLAY.slider, [1, 16, 1]);
+		.setDisplay(VALUE_DISPLAY.slider, { range: [1, 16, 1] });
 	
 	inputs[| 5] = nodeValue("Light type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.enum_scroll, ["Point", "Sun"]);
@@ -66,22 +66,22 @@ function Node_Shadow_Cast(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	inputs[| 10] = nodeValue("Use BG color", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false, "If checked, background color will be used as shadow caster.");
 	
 	inputs[| 11] = nodeValue("BG threshold", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.1)
-		.setDisplay(VALUE_DISPLAY.slider, [0, 1, 0.01]);
+		.setDisplay(VALUE_DISPLAY.slider);
 	
 	inputs[| 12] = nodeValue("Light intensity", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
-		.setDisplay(VALUE_DISPLAY.slider, [0, 2, 0.01]);
+		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 2, 0.01] });
 	
 	inputs[| 13] = nodeValue("Banding", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.slider, [0, 16, 1]);
+		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 16, 1] });
 	
 	inputs[| 14] = nodeValue("Attenuation", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0, "Control how light fade out over distance.")
 		.setDisplay(VALUE_DISPLAY.enum_scroll, ["Quadratic", "Invert quadratic", "Linear"]);
 	
 	inputs[| 15] = nodeValue("Ambient occlusion", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.slider, [0, 16, 1]);
+		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 16, 1] });
 		
 	inputs[| 16] = nodeValue("Ambient occlusion strength", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.1)
-		.setDisplay(VALUE_DISPLAY.slider, [0, 0.5, 0.01]);
+		.setDisplay(VALUE_DISPLAY.slider, { range: [0, 0.5, 0.01] });
 	
 	inputs[| 17] = nodeValue("Active", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
 		active_index = 17;

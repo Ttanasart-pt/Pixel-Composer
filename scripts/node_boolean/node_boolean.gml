@@ -8,7 +8,7 @@ function Node_Boolean(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	hover_state = 0;
 	hover_state_to = 0;
 	
-	wd_checkBox = new checkBox( function() { inputs[| 0].setValue(!inputs[| 0].getValue()); } );
+	wd_checkBox = new checkBox( function() { inputs[| 0].setValue(!getInputData(0)); } );
 	wd_checkBox.spr = THEME.node_checkbox;
 	
 	inputs[| 0] = nodeValue("Value", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false)
@@ -30,7 +30,7 @@ function Node_Boolean(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	}
 	
 	static pointIn = function(_x, _y, _mx, _my, _s) {
-		var align = inputs[| 2].getValue();
+		var align = getInputData(2);
 		var xx = x * _s + _x;
 		var yy = (y - (!align * 20)) * _s + _y;
 		
@@ -43,7 +43,7 @@ function Node_Boolean(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	static drawNodeBase = function(xx, yy, _s) {
 		if(!active) return;
-		var hid = inputs[| 1].getValue();
+		var hid = getInputData(1);
 		
 		if(hid) {
 			hover_state = lerp_float(hover_state, hover_state_to, 3);
@@ -63,8 +63,8 @@ function Node_Boolean(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		var _name = display_name == ""? name : display_name;
 		if(_name == "") return;
 		
-		var hid   = inputs[| 1].getValue();
-		var align = inputs[| 2].getValue();
+		var hid   = getInputData(1);
+		var align = getInputData(2);
 		
 		if(align == 0) {
 			draw_set_text(f_p2, fa_center, fa_bottom, COLORS._main_text);
@@ -79,7 +79,7 @@ function Node_Boolean(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		draw_set_text(f_h5, fa_center, fa_center, COLORS._main_text);
-		var val	 = inputs[| 0].getValue();
+		var val	 = getInputData(0);
 		var bbox = drawGetBbox(xx, yy, _s);
 		
 		wd_checkBox.setFocusHover(_focus, _hover);

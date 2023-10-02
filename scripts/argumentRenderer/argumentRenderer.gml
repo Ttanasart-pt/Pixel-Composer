@@ -14,7 +14,7 @@ function argumentRenderer(_typeArray = []) {
 			var _h = 0;
 			
 			_jType.editWidget.setFocusHover(_focus, _hover);
-			_jType.editWidget.draw(tx, ty, ui(128), _th, _jType.display_data[_jType.showValue()], _m, argument_renderer.rx, argument_renderer.ry);
+			_jType.editWidget.draw(tx, ty, ui(128), _th, _jType.display_data.data[_jType.showValue()], _m, argument_renderer.rx, argument_renderer.ry);
 			
 			var _jName = inputs[| i + 0];
 			_jName.editWidget.setFocusHover(_focus, _hover);

@@ -10,13 +10,13 @@ function Node_Noise(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		.setDisplay(VALUE_DISPLAY.enum_button, [ "Greyscale", "RGB", "HSV" ]);
 	
 	inputs[| 3] = nodeValue("Color R range", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 1 ])
-		.setDisplay(VALUE_DISPLAY.slider_range, [0, 1, .01]);
+		.setDisplay(VALUE_DISPLAY.slider_range);
 	
 	inputs[| 4] = nodeValue("Color G range", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 1 ])
-		.setDisplay(VALUE_DISPLAY.slider_range, [0, 1, .01]);
+		.setDisplay(VALUE_DISPLAY.slider_range);
 	
 	inputs[| 5] = nodeValue("Color B range", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 1 ])
-		.setDisplay(VALUE_DISPLAY.slider_range, [0, 1, .01]);
+		.setDisplay(VALUE_DISPLAY.slider_range);
 	
 	input_display_list = [
 		["Output",	false], 0, 
@@ -29,7 +29,7 @@ function Node_Noise(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	attribute_surface_depth();
 	
 	static step = function() {
-		var _col = inputs[| 2].getValue();
+		var _col = getInputData(2);
 		
 		inputs[| 3].setVisible(_col != 0);
 		inputs[| 4].setVisible(_col != 0);

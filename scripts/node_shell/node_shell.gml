@@ -15,8 +15,8 @@ function Node_Shell(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	static onInspector1Update = function() { update(); }
 	
 	static update = function() { 
-		var _pro = inputs[| 0].getValue();
-		var _scr = inputs[| 1].getValue();
+		var _pro = getInputData(0);
+		var _scr = getInputData(1);
 		if(_pro == "") return;
 		
 		shell_execute(_pro, _scr);
@@ -24,7 +24,7 @@ function Node_Shell(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		var bbox = drawGetBbox(xx, yy, _s);
-		var txt  = inputs[| 0].getValue();
+		var txt  = getInputData(0);
 		
 		draw_set_text(f_p0, fa_center, fa_center, COLORS._main_text);
 		draw_text_bbox(bbox, txt);

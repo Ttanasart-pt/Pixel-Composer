@@ -17,7 +17,7 @@ function __Node_3D_Extrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	
 	inputs[| 5] = nodeValue("Render position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0.5, 0.5 ])
 		.setDisplay(VALUE_DISPLAY.vector)
-		.setUnitRef( function() { return inputs[| 1].getValue(); }, VALUE_UNIT.reference);
+		.setUnitRef( function() { return getInputData(1); }, VALUE_UNIT.reference);
 		
 	inputs[| 6] = nodeValue("Render rotation", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.vector);
@@ -26,19 +26,16 @@ function __Node_3D_Extrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		.setDisplay(VALUE_DISPLAY.vector);
 	
 	inputs[| 8] = nodeValue("Manual generate", self, JUNCTION_CONNECT.input, VALUE_TYPE.trigger, 0)
-		.setDisplay(VALUE_DISPLAY.button, [ function() {
-			generateMesh();
-			doUpdate();
-		}, "Generate"] );
+		.setDisplay(VALUE_DISPLAY.button, { name: "Generate", onClick: function() { generateMesh(); doUpdate(); } });
 		
 	inputs[| 9] = nodeValue("Light direction", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
 		.setDisplay(VALUE_DISPLAY.rotation);
 		
 	inputs[| 10] = nodeValue("Light height", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.5)
-		.setDisplay(VALUE_DISPLAY.slider, [-1, 1, 0.01]);
+		.setDisplay(VALUE_DISPLAY.slider, { range: [-1, 1, 0.01] });
 		
 	inputs[| 11] = nodeValue("Light intensity", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
-		.setDisplay(VALUE_DISPLAY.slider, [0, 1, 0.01]);
+		.setDisplay(VALUE_DISPLAY.slider);
 	
 	inputs[| 12] = nodeValue("Light color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white);
 	inputs[| 13] = nodeValue("Ambient color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_grey);
@@ -52,7 +49,7 @@ function __Node_3D_Extrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		.rejectArray();
 		
 	inputs[| 17] = nodeValue("Field of view", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 60)
-		.setDisplay(VALUE_DISPLAY.slider, [ 1, 90, 1 ]);
+		.setDisplay(VALUE_DISPLAY.slider, { range: [ 1, 90, 1 ] });
 	
 	inputs[| 18] = nodeValue("Scale view with dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true)
 	
@@ -108,7 +105,7 @@ function __Node_3D_Extrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	}
 	
 	static generateMesh = function() {
-		var _ins = inputs[| 0].getValue();
+		var _ins = getInputData(0);
 		if(!is_array(_ins)) _ins = [ _ins ];
 		
 		for( var i = 0, n = array_length(vertexObjects); i < n; i++ ) {

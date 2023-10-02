@@ -23,9 +23,9 @@ function Node_Mesh_Create_Path(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	}
 	
 	static update = function() {  
-		var _pth  = inputs[| 0].getValue();
-		var _sam  = inputs[| 1].getValue();
-		var _algo = inputs[| 2].getValue();
+		var _pth  = getInputData(0);
+		var _sam  = getInputData(1);
+		var _algo = getInputData(2);
 		var mesh = new Mesh();
 		
 		if(_pth == noone) return;

@@ -5,7 +5,7 @@ function Node_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	w = 96;
 	
 	inputs[| 0] = nodeValue("Type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0 )
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Any", "Surface", "Number", "Color", "Text" ], { update_hover: false })
+		.setDisplay(VALUE_DISPLAY.enum_scroll, { data: [ "Any", "Surface", "Number", "Color", "Text" ], update_hover: false })
 		.rejectArray();
 	
 	inputs[| 1] = nodeValue("Spread array", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false )
@@ -66,7 +66,7 @@ function Node_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	attributes.spread_value = false;
 	
 	static getType = function() {
-		var _type = inputs[| 0].getValue();
+		var _type = getInputData(0);
 		
 		switch(_type) {
 			case 1 : return VALUE_TYPE.surface; 
@@ -152,10 +152,10 @@ function Node_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		outputs[| 0].type = _typ;
 		var res = [];
 		var ind = 0;
-		var spd = inputs[| 1].getValue();
+		var spd = getInputData(1);
 		
 		for( var i = input_fix_len; i < ds_list_size(inputs) - 1; i++ ) {
-			var val = inputs[| i].getValue();
+			var val = getInputData(i);
 			
 			if(is_array(val) && spd)
 				array_append(res, val);

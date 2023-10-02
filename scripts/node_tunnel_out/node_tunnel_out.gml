@@ -14,7 +14,7 @@ function Node_Tunnel_Out(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	insp2UpdateIcon    = [ THEME.tunnel, 1, c_white ];
 	
 	static onInspector2Update = function() {		
-		var _key = inputs[| 0].getValue();
+		var _key = getInputData(0);
 		if(!ds_map_exists(TUNNELS_IN, _key)) return;
 		
 		var _node = TUNNELS_IN[? _key].node;
@@ -22,7 +22,7 @@ function Node_Tunnel_Out(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	}
 	
 	static isRenderable = function() { 
-		var _key = inputs[| 0].getValue();
+		var _key = getInputData(0);
 		if(!ds_map_exists(TUNNELS_IN, _key)) return false;
 		
 		return TUNNELS_IN[? _key].node.rendered;
@@ -37,7 +37,7 @@ function Node_Tunnel_Out(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		hover |= tun && tun.tunnel_hover == self;
 		if(!hover) return;
 		
-		var _key = inputs[| 0].getValue();
+		var _key = getInputData(0);
 		if(!ds_map_exists(TUNNELS_IN, _key)) return;
 		
 		var node = TUNNELS_IN[? _key].node;
@@ -56,7 +56,7 @@ function Node_Tunnel_Out(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	static onClone = function() { onValueUpdate(); }
 	
 	static onValueUpdate = function() {
-		var _key = inputs[| 0].getValue();
+		var _key = getInputData(0);
 		
 		TUNNELS_OUT[? node_id] = _key;
 		
@@ -64,7 +64,7 @@ function Node_Tunnel_Out(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	}
 	
 	static step = function() {
-		var _key = inputs[| 0].getValue();
+		var _key = getInputData(0);
 		if(ds_map_exists(TUNNELS_IN, _key)) {
 			outputs[| 0].type = TUNNELS_IN[? _key].type;
 			outputs[| 0].display_type = TUNNELS_IN[? _key].display_type;
@@ -75,7 +75,7 @@ function Node_Tunnel_Out(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	}
 	
 	static update = function(frame = PROJECT.animator.current_frame) {
-		var _key = inputs[| 0].getValue();
+		var _key = getInputData(0);
 		
 		if(ds_map_exists(TUNNELS_IN, _key))
 			outputs[| 0].setValue(TUNNELS_IN[? _key].getValue());
@@ -83,7 +83,7 @@ function Node_Tunnel_Out(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		draw_set_text(f_h5, fa_center, fa_center, COLORS._main_text);
-		var str	= string(inputs[| 0].getValue());
+		var str	= string(getInputData(0));
 		
 		var bbox = drawGetBbox(xx, yy, _s);
 		var ss	= string_scale(str, bbox.w, bbox.h);

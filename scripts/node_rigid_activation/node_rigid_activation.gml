@@ -19,12 +19,12 @@ function Node_Rigid_Activate(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	]
 	
 	static update = function(frame = PROJECT.animator.current_frame) {
-		var _obj = inputs[| 0].getValue();
+		var _obj = getInputData(0);
 		outputs[| 0].setValue(_obj);
 		
 		RETURN_ON_REST
 			
-		var _act = inputs[| 1].getValue();
+		var _act = getInputData(1);
 		
 		if(!is_array(_obj)) _obj = [ _obj ];
 			
@@ -44,7 +44,7 @@ function Node_Rigid_Activate(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		var bbox = drawGetBbox(xx, yy, _s);
-		var _act = inputs[| 1].getValue();
+		var _act = getInputData(1);
 		draw_sprite_fit(_act? s_node_rigidSim_activate : s_node_rigidSim_deactivate, 0, bbox.xc, bbox.yc, bbox.w, bbox.h);
 	}
 }

@@ -94,7 +94,7 @@ function Node_Dust(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	dusts = [ ];
 		
 	static update = function() {
-		var _dim = inputs[| 0].getValue();
+		var _dim = getInputData(0);
 		
 		var _outSurf = outputs[| 0].getValue();
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1]);

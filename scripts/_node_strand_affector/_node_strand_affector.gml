@@ -1,10 +1,10 @@
 #macro STRAND_EFFECTOR_PRE																										\
-	var _str = inputs[|  0].getValue();																							\
-	var _typ = inputs[|  1].getValue();																							\
-	var _pos = inputs[|  2].getValue();																							\
-	var _ran = inputs[|  3].getValue();																							\
-	var _dir = inputs[|  4].getValue();																							\
-	var _fal = inputs[|  5].getValue(); var fal = _ran * _fal;																	\
+	var _str = getInputData(0);																							\
+	var _typ = getInputData(1);																							\
+	var _pos = getInputData(2);																							\
+	var _ran = getInputData(3);																							\
+	var _dir = getInputData(4);																							\
+	var _fal = getInputData(5); var fal = _ran * _fal;																	\
 																																\
 	if(_str == noone) return;																									\
 	var __str = _str;																											\
@@ -55,7 +55,7 @@ function _Node_Strand_Affector(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		.setDisplay(VALUE_DISPLAY.rotation);
 	
 	inputs[| 5] = nodeValue("Falloff", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.2)
-		.setDisplay(VALUE_DISPLAY.slider, [ 0, 1, 0.01 ]);
+		.setDisplay(VALUE_DISPLAY.slider);
 	
 	outputs[| 0] = nodeValue("Strand", self, JUNCTION_CONNECT.output, VALUE_TYPE.strands, noone);
 	
@@ -66,11 +66,11 @@ function _Node_Strand_Affector(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	];
 	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
-		var _typ = inputs[| 1].getValue();
-		var _pos = inputs[| 2].getValue();
-		var _ran = inputs[| 3].getValue();
-		var _dir = inputs[| 4].getValue();
-		var _fal = inputs[| 5].getValue();
+		var _typ = getInputData(1);
+		var _pos = getInputData(2);
+		var _ran = getInputData(3);
+		var _dir = getInputData(4);
+		var _fal = getInputData(5);
 		
 		var px = _x + _pos[0] * _s;
 		var py = _y + _pos[1] * _s;
@@ -148,7 +148,7 @@ function _Node_Strand_Affector(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	}
 	
 	static update = function(frame = PROJECT.animator.current_frame) {
-		var _typ = inputs[| 1].getValue();
+		var _typ = getInputData(1);
 		inputs[| 4].setVisible(_typ == 1);
 		
 		STRAND_EFFECTOR_PRE

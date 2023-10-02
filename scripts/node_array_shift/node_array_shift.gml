@@ -14,8 +14,8 @@ function Node_Array_Shift(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	outputs[| 0] = nodeValue("Array", self, JUNCTION_CONNECT.output, VALUE_TYPE.any, 0);
 	
 	static update = function(frame = PROJECT.animator.current_frame) {
-		var _arr = inputs[| 0].getValue();
-		var _shf = inputs[| 1].getValue();
+		var _arr = getInputData(0);
+		var _shf = getInputData(1);
 		
 		inputs[| 0].type  = VALUE_TYPE.any;
 		outputs[| 0].type = VALUE_TYPE.any;

@@ -8,8 +8,8 @@ function Node_PCX_var(_x, _y, _group = noone) : Node_PCX(_x, _y, _group) constru
 	outputs[| 0] = nodeValue("PCX", self, JUNCTION_CONNECT.output, VALUE_TYPE.PCXnode, noone);
 	
 	static update = function() {
-		var _name = inputs[| 0].getValue();
-		var _val  = inputs[| 1].getValue();
+		var _name = getInputData(0);
+		var _val  = getInputData(1);
 		
 		outputs[| 0].setValue(new __funcTree("=", _name, _val));
 	}

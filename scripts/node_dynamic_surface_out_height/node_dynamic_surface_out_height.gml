@@ -20,7 +20,7 @@ function Node_DynaSurf_Out_Height(_x, _y, _group = noone) : Node_PCX(_x, _y, _gr
 	}
 	
 	static update = function() {
-		var _h = inputs[| 0].getValue();
+		var _h = getInputData(0);
 		outputs[| 0].setValue(_h);
 		
 		if(group) group.setDynamicSurface();

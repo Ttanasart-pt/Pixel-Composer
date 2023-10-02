@@ -12,8 +12,8 @@ function Node_Strand_Update(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	outputs[| 0] = nodeValue("Strand", self, JUNCTION_CONNECT.output, VALUE_TYPE.strands, noone);
 	
 	static update = function(frame = PROJECT.animator.current_frame) {
-		var _str = inputs[| 0].getValue();
-		var _itr = inputs[| 1].getValue();
+		var _str = getInputData(0);
+		var _itr = getInputData(1);
 		
 		if(_str == noone) return;
 		var __str = _str;

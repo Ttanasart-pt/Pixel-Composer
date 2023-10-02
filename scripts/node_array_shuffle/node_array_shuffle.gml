@@ -13,8 +13,8 @@ function Node_Array_Shuffle(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	outputs[| 0] = nodeValue("Shuffled array", self, JUNCTION_CONNECT.output, VALUE_TYPE.any, []);
 	
 	static update = function(frame = PROJECT.animator.current_frame) {
-		var arr = inputs[| 0].getValue();
-		var sed = inputs[| 1].getValue();
+		var arr = getInputData(0);
+		var sed = getInputData(1);
 		
 		inputs[| 0].type = VALUE_TYPE.any;
 		outputs[| 0].type = VALUE_TYPE.any;

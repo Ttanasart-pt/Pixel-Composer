@@ -9,10 +9,10 @@ function Node_Posterize(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	inputs[| 2] = nodeValue("Use palette", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
 	
 	inputs[| 3] = nodeValue("Colors", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 4)
-		.setDisplay(VALUE_DISPLAY.slider, [2, 16, 1]);
+		.setDisplay(VALUE_DISPLAY.slider, { range: [2, 16, 1] });
 	
 	inputs[| 4] = nodeValue("Gamma", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.6)
-		.setDisplay(VALUE_DISPLAY.slider, [0, 1, 0.01]);
+		.setDisplay(VALUE_DISPLAY.slider);
 	
 	inputs[| 5] = nodeValue("Active", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
 		active_index = 5;
@@ -29,7 +29,7 @@ function Node_Posterize(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	attribute_surface_depth();
 	
 	static step = function() {
-		var _use_pal = inputs[| 2].getValue();
+		var _use_pal = getInputData(2);
 		
 		inputs[| 1].setVisible(_use_pal);
 		inputs[| 3].setVisible(!_use_pal);

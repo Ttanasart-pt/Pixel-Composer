@@ -15,7 +15,7 @@ function __Node_3D_Repeat(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	inputs[| 4] = nodeValue("Render position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0.5, 0.5 ])
 		.setDisplay(VALUE_DISPLAY.vector)
-		.setUnitRef( function() { return inputs[| 0].getValue(); }, VALUE_UNIT.reference);
+		.setUnitRef( function() { return getInputData(0); }, VALUE_UNIT.reference);
 	
 	inputs[| 5] = nodeValue("Render scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 1 ])
 		.setDisplay(VALUE_DISPLAY.vector);
@@ -24,10 +24,10 @@ function __Node_3D_Repeat(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		.setDisplay(VALUE_DISPLAY.rotation);
 		
 	inputs[| 7] = nodeValue("Light height", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.5)
-		.setDisplay(VALUE_DISPLAY.slider, [-1, 1, 0.01]);
+		.setDisplay(VALUE_DISPLAY.slider, { range: [-1, 1, 0.01] });
 		
 	inputs[| 8] = nodeValue("Light intensity", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
-		.setDisplay(VALUE_DISPLAY.slider, [0, 1, 0.01]);
+		.setDisplay(VALUE_DISPLAY.slider);
 	
 	inputs[| 9] = nodeValue("Light color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white);
 	
@@ -64,7 +64,7 @@ function __Node_3D_Repeat(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		.rejectArray();
 		
 	inputs[| 21] = nodeValue("Field of view", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 60)
-		.setDisplay(VALUE_DISPLAY.slider, [ 1, 90, 1 ]);
+		.setDisplay(VALUE_DISPLAY.slider, { range: [ 1, 90, 1 ] });
 	
 	inputs[| 22] = nodeValue("Scale view with dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true)
 	
@@ -94,24 +94,24 @@ function __Node_3D_Repeat(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	}
 	
 	static submit_vertex = function() {
-		var _lpos = inputs[| 1].getValue();
-		var _lrot = inputs[| 2].getValue();
-		var _lsca = inputs[| 3].getValue();
+		var _lpos = getInputData(1);
+		var _lrot = getInputData(2);
+		var _lsca = getInputData(3);
 		
-		var sv = inputs[| 11].getValue();
+		var sv = getInputData(11);
 		if(sv == noone) return;
 		
-		var _samo = inputs[| 12].getValue();
-		var _patt = inputs[| 16].getValue();
+		var _samo = getInputData(12);
+		var _patt = getInputData(16);
 		
-		var _srot = inputs[| 14].getValue();
-		var _ssca = inputs[| 15].getValue();
+		var _srot = getInputData(14);
+		var _ssca = getInputData(15);
 		
-		var _spos = inputs[| 13].getValue();
+		var _spos = getInputData(13);
 		
-		var _raxs = inputs[| 17].getValue();
-		var _rrad = inputs[| 18].getValue();
-		var _rrot = inputs[| 19].getValue();
+		var _raxs = getInputData(17);
+		var _rrad = getInputData(18);
+		var _rrot = getInputData(19);
 		
 		_3d_local_transform(_lpos, _lrot, _lsca);
 			for( var i = 0; i < _samo; i++ ) {
@@ -151,8 +151,8 @@ function __Node_3D_Repeat(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	}
 	
 	static step = function() {
-		var _proj = inputs[| 20].getValue();
-		var _patt = inputs[| 16].getValue();
+		var _proj = getInputData(20);
+		var _patt = getInputData(16);
 		
 		inputs[| 13].setVisible(_patt == 0);
 		
@@ -163,25 +163,25 @@ function __Node_3D_Repeat(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	}
 	
 	static update = function(frame = PROJECT.animator.current_frame) {
-		var _dim  = inputs[| 0].getValue();
-		var _lpos = inputs[| 1].getValue();
-		var _lrot = inputs[| 2].getValue();
-		var _lsca = inputs[| 3].getValue();
+		var _dim  = getInputData(0);
+		var _lpos = getInputData(1);
+		var _lrot = getInputData(2);
+		var _lsca = getInputData(3);
 		
-		var _pos  = inputs[| 4].getValue();
-		var _sca  = inputs[| 5].getValue();
+		var _pos  = getInputData(4);
+		var _sca  = getInputData(5);
 		
-		var _ldir = inputs[|  6].getValue();
-		var _lhgt = inputs[|  7].getValue();
-		var _lint = inputs[|  8].getValue();
-		var _lclr = inputs[|  9].getValue();
-		var _aclr = inputs[| 10].getValue();
+		var _ldir = getInputData(6);
+		var _lhgt = getInputData(7);
+		var _lint = getInputData(8);
+		var _lclr = getInputData(9);
+		var _aclr = getInputData(10);
 		
-		var _proj = inputs[| 20].getValue();
-		var _fov  = inputs[| 21].getValue();
-		var _dimS = inputs[| 22].getValue();
+		var _proj = getInputData(20);
+		var _fov  = getInputData(21);
+		var _dimS = getInputData(22);
 		
-		var _patt = inputs[| 16].getValue();
+		var _patt = getInputData(16);
 		
 		for( var i = 0, n = array_length(output_display_list) - 1; i < n; i++ ) {
 			var ind = output_display_list[i];

@@ -16,19 +16,19 @@ function Node_CSV_File_Write(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	w = 128;
 	
 	inputs[| 0]  = nodeValue("Path", self, JUNCTION_CONNECT.input, VALUE_TYPE.path, "")
-		.setDisplay(VALUE_DISPLAY.path_save, ["*.csv", ""])
+		.setDisplay(VALUE_DISPLAY.path_save, { filter: "*.csv" })
 		.rejectArray();
 	
 	inputs[| 1]  = nodeValue("Content", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, "")
 		.setDisplay(true, true);
 	
 	static writeFile = function() {
-		var path = inputs[| 0].getValue();
+		var path = getInputData(0);
 		if(path == "") return;
 		if(filename_ext(path) != ".csv")
 			path += ".csv";
 		
-		var _val = inputs[| 1].getValue();
+		var _val = getInputData(1);
 		var str = "";
 		
 		if(is_array(_val)) {
@@ -54,7 +54,7 @@ function Node_CSV_File_Write(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		var bbox = drawGetBbox(xx, yy, _s);
 		
-		var str = filename_name(inputs[| 0].getValue());
+		var str = filename_name(getInputData(0));
 		if(filename_ext(str) != ".csv")
 			str += ".csv";
 			

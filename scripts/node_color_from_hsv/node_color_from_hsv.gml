@@ -5,15 +5,15 @@ function Node_Color_HSV(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	w = 96;
 	
 	inputs[| 0] = nodeValue("Hue", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
-		.setDisplay(VALUE_DISPLAY.slider, [0, 1, 0.01])
+		.setDisplay(VALUE_DISPLAY.slider)
 		.setVisible(true, true);
 	
 	inputs[| 1] = nodeValue("Saturation", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
-		.setDisplay(VALUE_DISPLAY.slider, [0, 1, 0.01])
+		.setDisplay(VALUE_DISPLAY.slider)
 		.setVisible(true, true);
 	
 	inputs[| 2] = nodeValue("Value", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
-		.setDisplay(VALUE_DISPLAY.slider, [0, 1, 0.01])
+		.setDisplay(VALUE_DISPLAY.slider)
 		.setVisible(true, true);
 	
 	inputs[| 3] = nodeValue("Normalized", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, 1);
@@ -34,26 +34,26 @@ function Node_Color_HSV(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	static onValueUpdate = function(index = 0) {
 		if(index == 3) {
-			var _nor = inputs[| 3].getValue();
+			var _nor = getInputData(3);
 			
 			if(_nor) {
 				inputs[| 0].type = VALUE_TYPE.integer;
-				inputs[| 0].setDisplay(VALUE_DISPLAY.slider, [0, 1, 0.01]);
+				inputs[| 0].setDisplay(VALUE_DISPLAY.slider);
 				
 				inputs[| 1].type = VALUE_TYPE.integer;
-				inputs[| 1].setDisplay(VALUE_DISPLAY.slider, [0, 1, 0.01]);
+				inputs[| 1].setDisplay(VALUE_DISPLAY.slider);
 				
 				inputs[| 2].type = VALUE_TYPE.integer;
-				inputs[| 2].setDisplay(VALUE_DISPLAY.slider, [0, 1, 0.01]);
+				inputs[| 2].setDisplay(VALUE_DISPLAY.slider);
 			} else {
 				inputs[| 0].type = VALUE_TYPE.integer;
-				inputs[| 0].setDisplay(VALUE_DISPLAY.slider, [0, 360, 1]);
+				inputs[| 0].setDisplay(VALUE_DISPLAY.slider, { range: [0, 360, 1] });
 				
 				inputs[| 1].type = VALUE_TYPE.integer;
-				inputs[| 1].setDisplay(VALUE_DISPLAY.slider, [0, 255, 1]);
+				inputs[| 1].setDisplay(VALUE_DISPLAY.slider, { range: [0, 255, 1] });
 				
 				inputs[| 2].type = VALUE_TYPE.integer;
-				inputs[| 2].setDisplay(VALUE_DISPLAY.slider, [0, 255, 1]);
+				inputs[| 2].setDisplay(VALUE_DISPLAY.slider, { range: [0, 255, 1] });
 			}
 		}
 	}

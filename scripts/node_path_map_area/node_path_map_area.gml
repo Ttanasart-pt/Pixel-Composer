@@ -18,28 +18,28 @@ function Node_Path_Map_Area(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	}
 	
 	static getLineCount = function() { 
-		var _path = inputs[| 0].getValue();
+		var _path = getInputData(0);
 		return struct_has(_path, "getLineCount")? _path.getLineCount() : 1; 
 	}
 	
 	static getSegmentCount = function(ind = 0) { 
-		var _path = inputs[| 0].getValue();
+		var _path = getInputData(0);
 		return struct_has(_path, "getSegmentCount")? _path.getSegmentCount(ind) : 0; 
 	}
 	
 	static getLength = function(ind = 0) { 
-		var _path = inputs[| 0].getValue();
+		var _path = getInputData(0);
 		return struct_has(_path, "getLength")? _path.getLength(ind) : 0; 
 	}
 	
 	static getAccuLength = function(ind = 0) { 
-		var _path = inputs[| 0].getValue();
+		var _path = getInputData(0);
 		return struct_has(_path, "getAccuLength")? _path.getAccuLength(ind) : []; 
 	}
 		
 	static getPointRatio = function(_rat, ind = 0) {
-		var _path = inputs[| 0].getValue();
-		var _area = inputs[| 1].getValue();
+		var _path = getInputData(0);
+		var _area = getInputData(1);
 		
 		if(is_array(_path)) {
 			_path = array_safe_get(_path, ind);
@@ -63,7 +63,7 @@ function Node_Path_Map_Area(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	}
 	
 	static getBoundary = function() {
-		var _area = inputs[| 1].getValue();
+		var _area = getInputData(1);
 		return new BoundingBox( _area[AREA_INDEX.center_x] - _area[AREA_INDEX.half_w], 
 								_area[AREA_INDEX.center_y] - _area[AREA_INDEX.half_h], 
 								_area[AREA_INDEX.center_x] + _area[AREA_INDEX.half_w], 

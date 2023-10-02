@@ -13,8 +13,8 @@ function Node_Atlas_Draw(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	attribute_interpolation(true);
 	
 	static update = function(frame = PROJECT.animator.current_frame) {
-		var dim = inputs[| 0].getValue();
-		var atl = inputs[| 1].getValue();
+		var dim = getInputData(0);
+		var atl = getInputData(1);
 		
 		if(atl == noone) return;
 		if(is_array(atl) && array_length(atl) == 0) return;

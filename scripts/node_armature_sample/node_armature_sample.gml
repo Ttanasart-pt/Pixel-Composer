@@ -12,7 +12,7 @@ function Node_Armature_Sample(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	inputs[| 1] = nodeValue("Bone name", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "");
 		
 	inputs[| 2] = nodeValue("Sample point", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
-		.setDisplay(VALUE_DISPLAY.slider, [ 0, 1, 0.01 ]);
+		.setDisplay(VALUE_DISPLAY.slider);
 	
 	outputs[| 0] = nodeValue("Position", self, JUNCTION_CONNECT.output, VALUE_TYPE.integer, [ 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.vector);
@@ -33,16 +33,16 @@ function Node_Armature_Sample(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	#endregion
 	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
-		var _b	  = inputs[| 0].getValue();
+		var _b	  = getInputData(0);
 		
 		if(_b == noone) return;
 		_b.draw(attributes, false, _x, _y, _s, _mx, _my);
 	} #endregion
 	
 	static update = function() { #region
-		var _bone = inputs[| 0].getValue();
-		var _name = inputs[| 1].getValue();
-		var _prog = inputs[| 2].getValue();
+		var _bone = getInputData(0);
+		var _name = getInputData(1);
+		var _prog = getInputData(2);
 		
 		if(_bone == noone) return;
 		

@@ -30,16 +30,16 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Horizontal", "Vertical"]);
 	
 	inputs[| 10] = nodeValue("Auto fill", self, JUNCTION_CONNECT.input, VALUE_TYPE.trigger, 0, "Automatically set amount based on sprite size.")
-		.setDisplay(VALUE_DISPLAY.button, [ function() { 
-			var _sur = inputs[| 0].getValue();
+		.setDisplay(VALUE_DISPLAY.button, { name: "Auto fill", onClick: function() { 
+			var _sur = getInputData(0);
 			if(!is_surface(_sur) || _sur == DEF_SURFACE) return;
 			var ww = surface_get_width_safe(_sur);
 			var hh = surface_get_height_safe(_sur);
 		
-			var _size = inputs[| 1].getValue();
-			var _offs = inputs[| 4].getValue();
-			var _spac = inputs[| 5].getValue();
-			var _orie = inputs[| 9].getValue();
+			var _size = getInputData(1);
+			var _offs = getInputData(4);
+			var _spac = getInputData(5);
+			var _orie = getInputData(9);
 		
 			var sh_w = _size[0] + _spac[0];
 			var sh_h = _size[1] + _spac[1];
@@ -53,14 +53,14 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 				inputs[| 3].setValue([ fill_h, fill_w ]);
 		
 			inspector1Update();
-		}, "Auto fill"] );
+		} });
 		
 	inputs[| 11] = nodeValue("Sync animation", self, JUNCTION_CONNECT.input, VALUE_TYPE.trigger, 0)
-		.setDisplay(VALUE_DISPLAY.button, [ function() { 
+		.setDisplay(VALUE_DISPLAY.button, { name: "Sync frames", onClick: function() { 
 			var _atl = outputs[| 1].getValue();
-			var _spd = inputs[| 8].getValue();
+			var _spd = getInputData(8);
 			PROJECT.animator.frames_total = max(1, _spd == 0? 1 : ceil(array_length(_atl) / _spd));
-		}, "Sync frames"] );
+		} });
 		
 	inputs[| 12] = nodeValue("Filter empty output", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
 		
@@ -93,14 +93,14 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	sprite_valid = [];
 	
-	static getPreviewValues = function() { return inputs[| 0].getValue(); }
+	static getPreviewValues = function() { return getInputData(0); }
 	
 	function getSpritePosition(index) {
 		var _dim = curr_dim;
 		var _col = curr_amo[0];
 		var _off = curr_off;
-		var _spa = inputs[| 5].getValue();
-		var _ori = inputs[| 9].getValue();
+		var _spa = getInputData(5);
+		var _ori = getInputData(9);
 		
 		var _irow = floor(index / _col);
 		var _icol = safe_mod(index, _col);
@@ -117,16 +117,16 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	}
 	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
-		var _inSurf  = inputs[| 0].getValue();
+		var _inSurf  = getInputData(0);
 		if(!is_surface(_inSurf)) return;
 		
-		var _out = inputs[| 7].getValue();
-		var _spc = inputs[| 5].getValue();
+		var _out = getInputData(7);
+		var _spc = getInputData(5);
 		
 		if(drag_type == 0) {
-			curr_dim = inputs[| 1].getValue();
-			curr_amo = inputs[| 3].getValue();
-			curr_off = inputs[| 4].getValue();
+			curr_dim = getInputData(1);
+			curr_amo = getInputData(3);
+			curr_off = getInputData(4);
 		}
 		
 		var _amo = array_safe_get(curr_amo, 0) * array_safe_get(curr_amo, 1);
@@ -180,9 +180,9 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		}
 		
 		#region area
-			var __dim = inputs[| 1].getValue();
-			var __amo = inputs[| 3].getValue();
-			var __off = inputs[| 4].getValue();
+			var __dim = getInputData(1);
+			var __amo = getInputData(3);
+			var __off = getInputData(4);
 						
 			var _ax = __off[0] * _s + _x;
 			var _ay = __off[1] * _s + _y;
@@ -262,9 +262,9 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	}
 	
 	static step = function() {
-		var _out  = inputs[|  7].getValue();
-		var _filt = inputs[| 12].getValue();
-		var _flty = inputs[| 13].getValue();
+		var _out  = getInputData(7);
+		var _filt = getInputData(12);
+		var _flty = getInputData(13);
 		
 		inputs[| 11].setVisible(!_out);
 		inputs[|  8].setVisible(!_out);
@@ -279,24 +279,24 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	static doInspectorAction = function() {
 		var _atl	 = [];
-		var _inSurf  = inputs[| 0].getValue();
+		var _inSurf  = getInputData(0);
 		if(!is_surface(_inSurf)) return;
 		
 		var _outSurf = outputs[| 0].getValue();
-		var _out	 = inputs[| 7].getValue();
+		var _out	 = getInputData(7);
 		
-		var _dim	= inputs[| 1].getValue();
-		var _amo	= inputs[| 3].getValue();
-		var _off	= inputs[| 4].getValue();
+		var _dim	= getInputData(1);
+		var _amo	= getInputData(3);
+		var _off	= getInputData(4);
 		var _total  = _amo[0] * _amo[1];
-		var _pad	= inputs[| 6].getValue();
+		var _pad	= getInputData(6);
 		
 		var ww   = _dim[0] + _pad[0] + _pad[2];
 		var hh   = _dim[1] + _pad[1] + _pad[3];
 		
-		var _filt = inputs[| 12].getValue();
-		var _fltp = inputs[| 13].getValue();
-		var _flcl = inputs[| 14].getValue();
+		var _filt = getInputData(12);
+		var _fltp = getInputData(13);
+		var _flcl = getInputData(14);
 		
 		var cDep  = attrDepth();
 		curr_dim = _dim;
@@ -371,14 +371,14 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	static update = function(frame = PROJECT.animator.current_frame) {
 		if(isInLoop()) doInspectorAction();
 		
-		var _out  = inputs[| 7].getValue();
+		var _out  = getInputData(7);
 		if(_out == 1) {
 			outputs[| 0].setValue(surf_array);
 			update_on_frame = false;
 			return;
 		}
 		
-		var _spd = inputs[| 8].getValue();
+		var _spd = getInputData(8);
 		update_on_frame = true;
 		
 		if(array_length(surf_array)) {

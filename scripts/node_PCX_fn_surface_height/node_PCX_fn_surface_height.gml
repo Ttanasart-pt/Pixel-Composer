@@ -6,7 +6,7 @@ function Node_PCX_fn_Surface_Height(_x, _y, _group = noone) : Node_PCX(_x, _y, _
 	outputs[| 0] = nodeValue("PCX", self, JUNCTION_CONNECT.output, VALUE_TYPE.PCXnode, noone);
 	
 	static update = function() {
-		var _surf = inputs[| 0].getValue();
+		var _surf = getInputData(0);
 		outputs[| 0].setValue(new __funcTree("surface_get_height", [ _surf ]));
 	}
 }

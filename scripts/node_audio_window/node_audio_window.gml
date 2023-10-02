@@ -18,13 +18,13 @@ function Node_Audio_Window(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		.setArrayDepth(1);
 	
 	static update = function(frame = PROJECT.animator.current_frame) {
-		var _arr = inputs[| 0].getValue();
+		var _arr = getInputData(0);
 		
 		if(!is_array(_arr) || array_length(_arr) < 1) return;
 		if(!is_array(_arr[0])) return;
 		
-		var sam = inputs[| 1].getValue();
-		var siz = inputs[| 2].getValue();
+		var sam = getInputData(1);
+		var siz = getInputData(2);
 		var res = [];
 		var off = frame / PROJECT.animator.framerate * sam;
 		

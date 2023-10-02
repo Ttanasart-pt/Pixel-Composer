@@ -20,7 +20,7 @@ function Node_DynaSurf_Out_Width(_x, _y, _group = noone) : Node_PCX(_x, _y, _gro
 	}
 	
 	static update = function() {
-		var _w = inputs[| 0].getValue();
+		var _w = getInputData(0);
 		outputs[| 0].setValue(_w);
 		
 		if(group) group.setDynamicSurface();

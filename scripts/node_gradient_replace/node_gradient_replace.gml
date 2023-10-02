@@ -14,7 +14,7 @@ function Node_Gradient_Replace_Color(_x, _y, _group = noone) : Node_Processor(_x
 		.setDisplay(VALUE_DISPLAY.palette);
 	
 	inputs[| 3] = nodeValue("Threshold", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.1)
-		.setDisplay(VALUE_DISPLAY.slider, [0, 1, 0.01]);
+		.setDisplay(VALUE_DISPLAY.slider);
 	
 	outputs[| 0] = nodeValue("Gradient", self, JUNCTION_CONNECT.output, VALUE_TYPE.gradient, new gradientObject(c_white) );
 	

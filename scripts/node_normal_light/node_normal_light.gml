@@ -46,7 +46,7 @@ function Node_Normal_Light(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 	attribute_surface_depth();
 	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
-		var pos = inputs[| 4].getValue();
+		var pos = getInputData(4);
 		var px = _x + pos[0] * _s;
 		var py = _y + pos[1] * _s;
 		

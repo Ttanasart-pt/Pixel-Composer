@@ -42,7 +42,7 @@ function Node_Websocket_Receiver(_x, _y, _group = noone) : Node(_x, _y, _group) 
 	insp1UpdateIcon     = [ THEME.refresh, 1, COLORS._main_value_positive ];
 	
 	static onInspector1Update = function() {
-		var _port = inputs[| 0].getValue();
+		var _port = getInputData(0);
 		
 		setPort(_port);
 	}
@@ -51,7 +51,7 @@ function Node_Websocket_Receiver(_x, _y, _group = noone) : Node(_x, _y, _group) 
 	static asyncPackets = function(_async_load) {
 		if(!active) return;
 		
-		var _active = inputs[| 1].getValue();
+		var _active = getInputData(1);
 		if(!_active) return;
 		
 		var type = async_load[? "type"];
@@ -92,14 +92,14 @@ function Node_Websocket_Receiver(_x, _y, _group = noone) : Node(_x, _y, _group) 
 	
 	static update = function(frame = PROJECT.animator.current_frame) { 
 		if(CLONING) return;
-		var _port = inputs[| 0].getValue();
+		var _port = getInputData(0);
 		
 		if(port != _port)
 			setPort(_port);
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
-		var _active = inputs[| 1].getValue();
+		var _active = getInputData(1);
 		var bbox    = drawGetBbox(xx, yy, _s);
 		var network = ds_map_try_get(NETWORK_SERVERS, port, noone);
 		

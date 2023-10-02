@@ -15,8 +15,9 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	inputs[| 4] = nodeValue("Angle", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 0, 0, 0, 0, 0 ] )
 		.setDisplay(VALUE_DISPLAY.rotation_random);
 	
+	onSurfaceSize = function() { return getInputData(1, DEF_SURF); };
 	inputs[| 5] = nodeValue("Area", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ DEF_SURF_W / 2, DEF_SURF_H / 2, DEF_SURF_W / 2, DEF_SURF_H / 2, AREA_SHAPE.rectangle ])
-		.setDisplay(VALUE_DISPLAY.area, function() { return inputs[| 1].getValue(); });
+		.setDisplay(VALUE_DISPLAY.area, { onSurfaceSize });
 	
 	inputs[| 6] = nodeValue("Distribution", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Area", "Border", "Map", "Direct Data", "Path", "Full image + Tile" ]);
@@ -33,7 +34,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	inputs[| 11] = nodeValue("Random blend", self, JUNCTION_CONNECT.input, VALUE_TYPE.gradient, new gradientObject(c_white) );
 	
 	inputs[| 12] = nodeValue("Alpha", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 1 ])
-		.setDisplay(VALUE_DISPLAY.slider_range, [0, 1, 0.01]);
+		.setDisplay(VALUE_DISPLAY.slider_range);
 		
 	inputs[| 13] = nodeValue("Distribution map", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 	
@@ -49,7 +50,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	inputs[| 16] = nodeValue("Multiply alpha", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
 		
 	inputs[| 17] = nodeValue("Use value", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, [ "Scale" ], "Apply the third value in each data point (if exist) on given properties.")
-		.setDisplay(VALUE_DISPLAY.text_array, [ "Scale",  "Rotation", "Color" ]);
+		.setDisplay(VALUE_DISPLAY.text_array, { data: [ "Scale",  "Rotation", "Color" ] });
 		
 	inputs[| 18] = nodeValue("Blend mode", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Normal", "Add" ]);
@@ -59,7 +60,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	inputs[| 20] = nodeValue("Rotate along path", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
 		
 	inputs[| 21] = nodeValue("Path Shift", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
-		.setDisplay(VALUE_DISPLAY.slider, [ 0, 1, 0.01 ]);
+		.setDisplay(VALUE_DISPLAY.slider);
 	
 	inputs[| 22] = nodeValue("Scatter Distance", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0);
 		
@@ -90,7 +91,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	
 	static onValueUpdate = function(index) {
 		if(index == 15) {
-			var _arr = inputs[| 15].getValue();
+			var _arr = getInputData(15);
 			inputs[| 0].array_depth = _arr;
 			
 			update();
@@ -98,8 +99,8 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	}
 	
 	static step = function() {
-		var _dis = inputs[|  6].getValue();
-		var _arr = inputs[| 15].getValue();
+		var _dis = getInputData(6);
+		var _arr = getInputData(15);
 		inputs[| 0].array_depth = _arr;
 		
 		inputs[| 13].setVisible(_dis == 2, _dis == 2);
@@ -289,7 +290,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	}
 	
 	static doApplyDeserialize = function() {
-		var _arr = inputs[| 15].getValue();
+		var _arr = getInputData(15);
 		inputs[| 0].array_depth = _arr;
 			
 		doUpdate();

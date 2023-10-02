@@ -72,8 +72,8 @@ function hlsl_document_parser(prompt, node = noone) {
 	var lines = string_split(prompt, "\n");
 	
 	for( var i = node.input_fix_len, n = ds_list_size(node.inputs); i < n; i += node.data_length ) {
-		var _arg_name = node.inputs[| i + 0].getValue();
-		var _arg_type = node.inputs[| i + 1].getValue();
+		var _arg_name = node.getInputData(i + 0);
+		var _arg_type = node.getInputData(i + 1);
 		
 		if(_arg_type == 7) {
 			array_push(params, [ _arg_name + "Object", "Texture2D" ]);

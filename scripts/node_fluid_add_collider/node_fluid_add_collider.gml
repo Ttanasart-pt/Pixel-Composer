@@ -19,8 +19,8 @@ function Node_Fluid_Add_Collider(_x, _y, _group = noone) : Node_Fluid(_x, _y, _g
 	outputs[| 0] = nodeValue("Fluid Domain", self, JUNCTION_CONNECT.output, VALUE_TYPE.fdomain, noone);
 	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
-		var _mat = inputs[| 1].getValue();
-		var _area = inputs[| 2].getValue();
+		var _mat = getInputData(1);
+		var _area = getInputData(2);
 		
 		if(is_surface(_mat)) {
 			var x0 = _x + (_area[0] - _area[2]) * _s;
@@ -51,7 +51,7 @@ function Node_Fluid_Add_Collider(_x, _y, _group = noone) : Node_Fluid(_x, _y, _g
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		var bbox = drawGetBbox(xx, yy, _s);
-		var _mat = inputs[| 1].getValue();
+		var _mat = getInputData(1);
 		if(!is_surface(_mat)) return;
 		
 		draw_surface_fit(_mat, bbox.xc, bbox.yc, bbox.w, bbox.h);

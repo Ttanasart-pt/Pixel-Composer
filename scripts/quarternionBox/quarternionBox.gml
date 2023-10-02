@@ -50,10 +50,10 @@ function quarternionBox(_onModify) : widget() constructor {
 	}
 	
 	static drawParam = function(params) {
-		return draw(params.x, params.y, params.w, params.h, params.data, params.extra_data, params.m);
+		return draw(params.x, params.y, params.w, params.h, params.data, params.display_data, params.m);
 	}
 	
-	static draw = function(_x, _y, _w, _h, _data, _extra_data, _m) {
+	static draw = function(_x, _y, _w, _h, _data, _display_data, _m) {
 		x = _x;
 		y = _y;
 		w = _w;
@@ -68,12 +68,12 @@ function quarternionBox(_onModify) : widget() constructor {
 		var bs = ui(32);
 		var bx = _x + _w - bs;
 		var by = _y + _h / 2 - bs / 2;
-		var _disp = struct_try_get(_extra_data, "angle_display");
+		var _disp = struct_try_get(_display_data, "angle_display");
 		tooltip.index = _disp;
 		
 		if(buttonInstant(THEME.button_hide, bx, by, bs, bs, _m, active, hover, tooltip, THEME.unit_angle, _disp, c_white) == 2) {
 			clickable = false;
-			_extra_data.angle_display = (_disp + 1) % 2;
+			_display_data.angle_display = (_disp + 1) % 2;
 		}
 		_w -= ui(40);
 		

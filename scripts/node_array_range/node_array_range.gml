@@ -16,9 +16,9 @@ function Node_Array_Range(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	outputs[| 0] = nodeValue("Array", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, []);
 	
 	static update = function(frame = PROJECT.animator.current_frame) {
-		var st   = inputs[| 0].getValue();
-		var ed   = inputs[| 1].getValue();
-		var step = inputs[| 2].getValue();
+		var st   = getInputData(0);
+		var ed   = getInputData(1);
+		var step = getInputData(2);
 		var arr  = [];
 		
 		if((step > 0 && st <= ed) || (step < 0 && st >= ed)) {
@@ -31,9 +31,9 @@ function Node_Array_Range(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		draw_set_text(f_p0, fa_center, fa_center, COLORS._main_text);
-		var str = inputs[| 0].getValue();
-		var edd = inputs[| 1].getValue();
-		var stp = inputs[| 2].getValue();
+		var str = getInputData(0);
+		var edd = getInputData(1);
+		var stp = getInputData(2);
 		
 		var str	= "[" + string(str) + ", " + string(str + stp) + ", ... ," + string(edd) + "]";
 		

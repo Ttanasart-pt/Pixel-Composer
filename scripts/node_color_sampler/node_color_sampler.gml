@@ -9,11 +9,11 @@ function Node_Sampler(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		.setUnitRef(function(index) { return getDimension(index); });
 		
 	inputs[| 2] = nodeValue("Sampling size", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1, "Size of square around the position to sample and average pixel color.")
-		.setDisplay(VALUE_DISPLAY.slider, [1, 3, 1]);
+		.setDisplay(VALUE_DISPLAY.slider, { range: [1, 3, 1] });
 	
 	outputs[| 0] = nodeValue("Color", self, JUNCTION_CONNECT.output, VALUE_TYPE.color, c_white);
 	
-	static getPreviewValues = function() { return inputs[| 0].getValue(); }
+	static getPreviewValues = function() { return getInputData(0); }
 	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		inputs[| 1].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);

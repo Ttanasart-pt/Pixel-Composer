@@ -8,15 +8,15 @@ function Node_Strand_Length_Adjust(_x, _y, _group = noone) : _Node_Strand_Affect
 		.setDisplay(VALUE_DISPLAY.enum_button, [ "Increase", "Decrease" ]);
 	
 	inputs[| input_fix_len + 1] = nodeValue("Strength", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.1)
-		.setDisplay(VALUE_DISPLAY.slider, [ 0, 1, 0.01 ]);
+		.setDisplay(VALUE_DISPLAY.slider);
 		
 	array_push(input_display_list, 
 		["Length adjust",	false], input_fix_len + 0, input_fix_len + 1,
 	);
 	
 	static update = function(frame = PROJECT.animator.current_frame) {
-		var _sTyp = inputs[| input_fix_len + 0].getValue();
-		var _sStr = inputs[| input_fix_len + 1].getValue();
+		var _sTyp = getInputData(input_fix_len + 0);
+		var _sStr = getInputData(input_fix_len + 1);
 		
 		STRAND_EFFECTOR_PRE
 			h.length[j] *= 1 + (_sTyp? -1 : 1) * mulp * _sStr;

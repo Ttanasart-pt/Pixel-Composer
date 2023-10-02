@@ -18,13 +18,13 @@ function Node_Noise_FBM(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		.setDisplay(VALUE_DISPLAY.enum_button, [ "Greyscale", "RGB", "HSV" ]);
 	
 	inputs[| 6] = nodeValue("Color R range", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 1 ])
-		.setDisplay(VALUE_DISPLAY.slider_range, [0, 1, .01]);
+		.setDisplay(VALUE_DISPLAY.slider_range);
 	
 	inputs[| 7] = nodeValue("Color G range", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 1 ])
-		.setDisplay(VALUE_DISPLAY.slider_range, [0, 1, .01]);
+		.setDisplay(VALUE_DISPLAY.slider_range);
 	
 	inputs[| 8] = nodeValue("Color B range", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 1 ])
-		.setDisplay(VALUE_DISPLAY.slider_range, [0, 1, .01]);
+		.setDisplay(VALUE_DISPLAY.slider_range);
 	
 	input_display_list = [
 		["Output",	false], 0, 
@@ -37,7 +37,7 @@ function Node_Noise_FBM(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	attribute_surface_depth();
 	
 	static step = function() {
-		var _col = inputs[| 5].getValue();
+		var _col = getInputData(5);
 		
 		inputs[| 6].setVisible(_col != 0);
 		inputs[| 7].setVisible(_col != 0);

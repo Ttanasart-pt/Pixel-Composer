@@ -28,7 +28,7 @@ function Node_Atlas_Set(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	outputs[| 0] = nodeValue("Atlas", self, JUNCTION_CONNECT.output, VALUE_TYPE.atlas, noone);
 	
 	static update = function(frame = PROJECT.animator.current_frame) {
-		var atl = inputs[| 0].getValue();
+		var atl = getInputData(0);
 		
 		if(atl == noone) return;
 		if(is_array(atl) && array_length(atl) == 0) return;
@@ -36,12 +36,12 @@ function Node_Atlas_Set(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		if(!is_array(atl))
 			atl = [ atl ];
 		
-		var surf = inputs[| 1].getValue();
-		var posi = inputs[| 2].getValue();
-		var rota = inputs[| 3].getValue();
-		var scal = inputs[| 4].getValue();
-		var blns = inputs[| 5].getValue();
-		var alph = inputs[| 6].getValue();
+		var surf = getInputData(1);
+		var posi = getInputData(2);
+		var rota = getInputData(3);
+		var scal = getInputData(4);
+		var blns = getInputData(5);
+		var alph = getInputData(6);
 		
 		var use = [ 0 ];
 		for( var i = 1; i < 7; i++ ) use[i] = inputs[| i].value_from != noone;

@@ -30,16 +30,16 @@ function Node_Gradient_Points(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 		.setDisplay(VALUE_DISPLAY.palette);
 	
 	inputs[| 11] = nodeValue("Falloff 1", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 6 )
-		.setDisplay(VALUE_DISPLAY.slider, [ 0, 32, 1 ]);
+		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 32, 1 ] });
 	
 	inputs[| 12] = nodeValue("Falloff 2", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 6 )
-		.setDisplay(VALUE_DISPLAY.slider, [ 0, 32, 1 ]);
+		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 32, 1 ] });
 	
 	inputs[| 13] = nodeValue("Falloff 3", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 6 )
-		.setDisplay(VALUE_DISPLAY.slider, [ 0, 32, 1 ]);
+		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 32, 1 ] });
 	
 	inputs[| 14] = nodeValue("Falloff 4", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 6 )
-		.setDisplay(VALUE_DISPLAY.slider, [ 0, 32, 1 ]);
+		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 32, 1 ] });
 	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
@@ -60,7 +60,7 @@ function Node_Gradient_Points(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 	}
 	
 	static step = function() {
-		var _usePal = inputs[| 9].getValue();
+		var _usePal = getInputData(9);
 		
 		inputs[| 10].setVisible(_usePal, _usePal);
 		

@@ -44,21 +44,19 @@ function Node_VFX_effector(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	outputs[| 0] = nodeValue("Particles", self, JUNCTION_CONNECT.output, VALUE_TYPE.particle, -1 );
 	
-	current_data = [];
-	
 	UPDATE_PART_FORWARD
 	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
 		inputs[| 1].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
 		
-		var area = inputs[| 1].getValue();
+		var area = getInputData(1);
 		var cx = _x + area[0] * _s;
 		var cy = _y + area[1] * _s;
 		var cw = area[2] * _s;
 		var ch = area[3] * _s;
 		var cs = area[4];
 		
-		var fall = inputs[| 3].getValue() * _s;
+		var fall = getInputData(3) * _s;
 		var x0 = cx - cw + fall;
 		var x1 = cx + cw - fall;
 		var y0 = cy - ch + fall;
@@ -95,9 +93,9 @@ function Node_VFX_effector(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	function affect(part) {
 		if(!part.active) return;
 		
-		var _area = current_data[1];
-		var _fall = current_data[2];
-		var _fads = current_data[3];
+		var _area = getInputData(1);
+		var _fall = getInputData(2);
+		var _fads = getInputData(3);
 		
 		var _area_x = _area[0];
 		var _area_y = _area[1];
@@ -142,12 +140,9 @@ function Node_VFX_effector(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	}
 	
 	static update = function(frame = PROJECT.animator.current_frame) {
-		var val = inputs[| 0].getValue();
+		var val = getInputData(0);
 		outputs[| 0].setValue(val);
 		if(val == -1) return;
-		
-		for( var i = 0; i < ds_list_size(inputs); i++ )
-			current_data[i] = inputs[| i].getValue();
 		
 		if(!is_array(val) || array_length(val) == 0) return;
 		if(!is_array(val[0])) val = [ val ];

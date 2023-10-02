@@ -11,17 +11,17 @@ function Node_Surface_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 		.setArrayDepth(1);
 	
 	inputs[| 3] = nodeValue("Color Threshold", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.1, "How similiar the color need to be in order to be count as matched." )
-		.setDisplay(VALUE_DISPLAY.slider, [ 0, 1, 0.01 ]);
+		.setDisplay(VALUE_DISPLAY.slider);
 	
 	inputs[| 4] = nodeValue("Draw Base Image", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true )
 	
 	inputs[| 5] = nodeValue("Fast Mode", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true )
 	
 	inputs[| 6] = nodeValue("Pixel Threshold", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.1, "How many pixel need to me matched to replace with replacement image." )
-		.setDisplay(VALUE_DISPLAY.slider, [ 0, 1, 0.01 ]);
+		.setDisplay(VALUE_DISPLAY.slider);
 	
 	inputs[| 7] = nodeValue("Array mode", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Match index", "Randomized" ], { update_hover: false });
+		.setDisplay(VALUE_DISPLAY.enum_scroll, { data: [ "Match index", "Randomized" ], update_hover: false });
 	
 	inputs[| 8] = nodeValue("Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, irandom_range(10000, 99999));
 	
@@ -47,10 +47,10 @@ function Node_Surface_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 			shader_set_f("colorThreshold", _cthr);
 			shader_set_f("pixelThreshold", _pthr);
 			shader_set_f("index", _index);
-			shader_set_i("mode", inputs[| 7].getValue());
-			shader_set_f("seed", inputs[| 8].getValue());
+			shader_set_i("mode", getInputData(7));
+			shader_set_f("seed", getInputData(8));
 			
-			var dest = inputs[| 2].getValue();
+			var dest = getInputData(2);
 			var size = is_array(dest)? array_length(dest) : 1;
 			shader_set_f("size", size);
 			
@@ -73,7 +73,7 @@ function Node_Surface_Replace(_x, _y, _group = noone) : Node_Processor(_x, _y, _
 	}
 	
 	static step = function() {
-		var _mode = inputs[| 7].getValue();
+		var _mode = getInputData(7);
 		inputs[| 8].setVisible(_mode == 1);
 	}
 	

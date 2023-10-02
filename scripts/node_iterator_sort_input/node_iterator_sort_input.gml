@@ -12,7 +12,7 @@ function Node_Iterator_Sort_Input(_x, _y, _group = noone) : Node(_x, _y, _group)
 	static update = function() {
 		outputs[| 0].type = inputs[| 0].type;
 		
-		var val = inputs[| 0].getValue();
+		var val = getInputData(0);
 		outputs[| 0].setValue(val);
 	}
 	

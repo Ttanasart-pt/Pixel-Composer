@@ -22,16 +22,16 @@ function Node_Frame(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		.rejectArray();
 	
 	inputs[| 2] = nodeValue("Alpha", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.75 )
-		.setDisplay(VALUE_DISPLAY.slider, [ 0, 1, 0.01 ])
+		.setDisplay(VALUE_DISPLAY.slider)
 		.rejectArray();
 	
 	static step = function() {
-		var si = inputs[| 0].getValue();
+		var si = getInputData(0);
 		w = si[0];
 		h = si[1];
 		
-		color  = inputs[| 1].getValue();
-		alpha  = inputs[| 2].getValue();
+		color  = getInputData(1);
+		alpha  = getInputData(2);
 	}
 	
 	static drawNodeBase = function(xx, yy, _s) {

@@ -15,7 +15,7 @@ function Node_Twirl(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		.setUnitRef(function(index) { return getDimension(index); });
 	
 	inputs[| 2] = nodeValue("Strength", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 3)
-		.setDisplay(VALUE_DISPLAY.slider, [-10, 10, 0.01]);
+		.setDisplay(VALUE_DISPLAY.slider, { range: [-10, 10, 0.01] });
 	
 	inputs[| 3] = nodeValue("Radius", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 16);
 	
@@ -25,7 +25,7 @@ function Node_Twirl(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	inputs[| 5] = nodeValue("Mask", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 	
 	inputs[| 6] = nodeValue("Mix", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
-		.setDisplay(VALUE_DISPLAY.slider, [0, 1, 0.01]);
+		.setDisplay(VALUE_DISPLAY.slider);
 	
 	inputs[| 7] = nodeValue("Active", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
 		active_index = 7;
@@ -42,7 +42,7 @@ function Node_Twirl(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	attribute_interpolation();
 	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
-		var pos = inputs[| 1].getValue();
+		var pos = getInputData(1);
 		var px = _x + pos[0] * _s;
 		var py = _y + pos[1] * _s;
 		

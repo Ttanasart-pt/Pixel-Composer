@@ -28,10 +28,10 @@ function Node_Crop_Content(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	temp_surface = [ surface_create(1, 1, surface_r32float) ];
 	
 	static update = function() {
-		var _inSurf	= inputs[| 0].getValue();
-		var _active	= inputs[| 1].getValue();
-		var _array	= inputs[| 2].getValue();
-		var _padd	= inputs[| 3].getValue();
+		var _inSurf	= getInputData(0);
+		var _active	= getInputData(1);
+		var _array	= getInputData(2);
+		var _padd	= getInputData(3);
 		
 		var _outSurf = outputs[| 0].getValue();
 		surface_array_free(_outSurf);

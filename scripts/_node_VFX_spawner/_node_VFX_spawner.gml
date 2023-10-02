@@ -126,11 +126,11 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	
 	inputs[| 39] = nodeValue("Bounce amount", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.5 )
 		.rejectArray()
-		.setDisplay(VALUE_DISPLAY.slider, [ 0, 1, 0.01 ]);
+		.setDisplay(VALUE_DISPLAY.slider);
 	
 	inputs[| 40] = nodeValue("Bounce friction", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.1, "Apply horizontal friction once particle stop bouncing." )
 		.rejectArray()
-		.setDisplay(VALUE_DISPLAY.slider, [ 0, 1, 0.01 ]);
+		.setDisplay(VALUE_DISPLAY.slider);
 		
 	inputs[| 41] = nodeValue("Position wiggle", self, JUNCTION_CONNECT.input, VALUE_TYPE.float,  [ 0, 0 ] )
 		.setDisplay(VALUE_DISPLAY.vector, { label: [ "Amplitude", "Period" ], linkable: false, per_line: true })
@@ -352,12 +352,12 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		}
 		
 		render();
-		seed = inputs[| 32].getValue();
+		seed = getInputData(32);
 		
-		var _wigg_pos = inputs[| 41].getValue();
-		var _wigg_rot = inputs[| 42].getValue();
-		var _wigg_sca = inputs[| 43].getValue();
-		var _wigg_dir = inputs[| 20].getValue();
+		var _wigg_pos = getInputData(41);
+		var _wigg_rot = getInputData(42);
+		var _wigg_sca = getInputData(43);
+		var _wigg_dir = getInputData(20);
 		
 		wiggle_maps.wig_psx.check(_wigg_pos[0], _wigg_pos[1], seed + 10);
 		wiggle_maps.wig_psy.check(_wigg_pos[0], _wigg_pos[1], seed + 20);
@@ -366,8 +366,8 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		wiggle_maps.wig_scy.check(_wigg_sca[0], _wigg_sca[1], seed + 50);
 		wiggle_maps.wig_dir.check(_wigg_dir[0], _wigg_dir[1], seed + 60);
 		
-		var _curve_sca = inputs[| 11].getValue();
-		var _curve_alp = inputs[| 14].getValue();
+		var _curve_sca = getInputData(11);
+		var _curve_alp = getInputData(14);
 		
 		curve_scale = new curveMap(_curve_sca, PROJECT.animator.frames_total);
 		curve_alpha = new curveMap(_curve_alp, PROJECT.animator.frames_total);
@@ -377,7 +377,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 			surface_free_safe(surface_cache[$ keys[i]]);
 		surface_cache = {};
 		
-		var _loop = inputs[| 21].getValue();
+		var _loop = getInputData(21);
 		if(!_loop) return;
 		
 		for(var i = 0; i < PROJECT.animator.frames_total; i++) {
@@ -385,7 +385,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 			updateParticleForward();
 		}
 		
-		seed = inputs[| 32].getValue();
+		seed = getInputData(32);
 	} #endregion
 	
 	function checkPartPool() { #region
@@ -449,12 +449,12 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	static onStep = function() {}
 	
 	static step = function() { #region
-		var _inSurf = inputs[|  0].getValue();
-		var _dist   = inputs[|  4].getValue();
-		var _scatt  = inputs[| 24].getValue();
-		var _dirAng = inputs[| 29].getValue();
-		var _turn   = inputs[| 34].getValue();
-		var _colGnd = inputs[| 37].getValue();
+		var _inSurf = getInputData(0);
+		var _dist   = getInputData(4);
+		var _scatt  = getInputData(24);
+		var _dirAng = getInputData(29);
+		var _turn   = getInputData(34);
+		var _colGnd = getInputData(37);
 		
 		inputs[|  6].setVisible(!_dirAng);
 		
@@ -476,7 +476,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		
 		if(is_array(_inSurf)) {
 			inputs[| 22].setVisible(true);
-			var _type = inputs[| 22].getValue();
+			var _type = getInputData(22);
 			if(_type == 2) {
 				inputs[| 23].setVisible(true);
 				inputs[| 26].setVisible(true);
@@ -496,7 +496,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	
 	static update = function(frame = PROJECT.animator.current_frame) { #region
 		checkPartPool();
-		var _spawn_type = inputs[| 16].getValue();
+		var _spawn_type = getInputData(16);
 		if(_spawn_type == 0)	inputs[| 1].name = "Spawn delay";
 		else					inputs[| 1].name = "Spawn frame";
 		

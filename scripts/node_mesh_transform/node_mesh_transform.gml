@@ -22,7 +22,7 @@ function Node_Mesh_Transform(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	outputs[| 0] = nodeValue("Mesh", self, JUNCTION_CONNECT.output, VALUE_TYPE.mesh, noone);
 	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
-		var pos = inputs[| 1].getValue();
+		var pos = getInputData(1);
 		
 		var px = _x + pos[0] * _s;
 		var py = _y + pos[1] * _s;
@@ -49,11 +49,11 @@ function Node_Mesh_Transform(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	}
 	
 	static update = function() {  
-		var _msh = inputs[| 0].getValue();
-		var _pos = inputs[| 1].getValue();
-		var _rot = inputs[| 2].getValue();
-		var _sca = inputs[| 3].getValue();
-		var _anc = inputs[| 4].getValue();
+		var _msh = getInputData(0);
+		var _pos = getInputData(1);
+		var _rot = getInputData(2);
+		var _sca = getInputData(3);
+		var _anc = getInputData(4);
 		
 		if(_msh == noone) return;
 		var mesh = _msh.clone();

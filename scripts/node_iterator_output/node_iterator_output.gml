@@ -62,7 +62,7 @@ function Node_Iterator_Output(_x, _y, _group = noone) : Node_Group_Output(_x, _y
 			return;
 		}
 		
-		var _val = inputs[| 0].getValue();
+		var _val = getInputData(0);
 		cache_value = cloneValue(cache_value, _val);
 		group.iterationUpdate();
 	}

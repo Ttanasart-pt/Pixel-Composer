@@ -25,7 +25,7 @@ function Node_Lua_Global(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	compiled = false;
 	
 	static stepBegin = function() {
-		var _type = inputs[| 1].getValue();
+		var _type = getInputData(1);
 		
 		if(PROJECT.animator.is_playing && PROJECT.animator.frame_progress && (PROJECT.animator.current_frame == 0 || _type == 1))
 			setRenderStatus(false);
@@ -62,8 +62,8 @@ function Node_Lua_Global(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		if(!compiled) return;
 		//if(!PROJECT.animator.is_playing || !PROJECT.animator.frame_progress) return;
 		
-		var _code = inputs[| 0].getValue();
-		var _type = inputs[| 1].getValue();
+		var _code = getInputData(0);
+		var _type = getInputData(1);
 		
 		//if(PROJECT.animator.current_frame == 0) { //rerfesh state on the first frame
 		//	lua_state_destroy(lua_state);

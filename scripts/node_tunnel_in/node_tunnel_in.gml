@@ -18,7 +18,7 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	static onInspector2Update = function() {		
 		var _node = nodeBuild("Node_Tunnel_Out", x + 128, y);
-		_node.inputs[| 0].setValue(inputs[| 0].getValue());
+		_node.inputs[| 0].setValue(getInputData(0));
 	}
 	
 	static onDrawNodeBehind = function(_x, _y, _mx, _my, _s) {
@@ -30,7 +30,7 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		hover |= tun && tun.tunnel_hover == self;
 		if(!hover) return;
 		
-		var _key = inputs[| 0].getValue();
+		var _key = getInputData(0);
 		var amo  = ds_map_size(TUNNELS_OUT);
 		var k    = ds_map_find_first(TUNNELS_OUT);
 		repeat(amo) {
@@ -56,13 +56,13 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	static update = function(frame = PROJECT.animator.current_frame) { onValueUpdate(); }
 	
 	static resetMap = function() {
-		var _key = inputs[| 0].getValue();
+		var _key = getInputData(0);
 		TUNNELS_IN_MAP[? node_id] = _key;
 		TUNNELS_IN[? _key] = inputs[| 1];
 	}
 	
 	static checkDuplicate = function() {
-		var _key = inputs[| 0].getValue();
+		var _key = getInputData(0);
 		var amo = ds_map_size(TUNNELS_IN_MAP);
 		var k   = ds_map_find_first(TUNNELS_IN_MAP);
 		var dup = false;
@@ -84,7 +84,7 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	}
 	
 	static onValueUpdate = function(index = 0) {
-		var _key = inputs[| 0].getValue();
+		var _key = getInputData(0);
 		resetMap();
 		
 		var amo = ds_map_size(TUNNELS_IN_MAP);
@@ -106,7 +106,7 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	}
 	
 	static step = function() {
-		var _key = inputs[| 0].getValue();
+		var _key = getInputData(0);
 		
 		value_validation[VALIDATION.error] = error_notification != noone;
 		
@@ -122,7 +122,7 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	static getNextNodes = function() {
 		var nodes = [];
 		var nodeNames = [];
-		var _key = inputs[| 0].getValue();
+		var _key = getInputData(0);
 		var amo = ds_map_size(TUNNELS_OUT);
 		var k = ds_map_find_first(TUNNELS_OUT);
 		
@@ -148,7 +148,7 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		draw_set_text(f_h5, fa_center, fa_center, COLORS._main_text);
-		var str	= string(inputs[| 0].getValue());
+		var str	= string(getInputData(0));
 		
 		var bbox = drawGetBbox(xx, yy, _s);
 		var ss	= string_scale(str, bbox.w, bbox.h);

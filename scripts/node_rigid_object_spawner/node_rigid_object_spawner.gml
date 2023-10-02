@@ -50,16 +50,16 @@ function Node_Rigid_Object_Spawner(_x, _y, _group = noone) : Node(_x, _y, _group
 	}
 	
 	static step = function() {
-		var _typ = inputs[| 2].getValue();
+		var _typ = getInputData(2);
 		
 		inputs[| 3].setVisible(_typ == 0);
 		inputs[| 5].setVisible(_typ == 1);
 	}
 	
 	static spawn = function(seed = 0) {
-		var _obj = inputs[| 0].getValue();
-		var _are = inputs[| 1].getValue();
-		var _amo = inputs[| 4].getValue();
+		var _obj = getInputData(0);
+		var _are = getInputData(1);
+		var _amo = getInputData(4);
 		
 		repeat(_amo) {
 			var pos = area_get_random_point(_are,,,,, seed); seed += 10;
@@ -74,17 +74,17 @@ function Node_Rigid_Object_Spawner(_x, _y, _group = noone) : Node(_x, _y, _group
 	static update = function(frame = PROJECT.animator.current_frame) {
 		RETURN_ON_REST
 			
-		var _obj = inputs[| 0].getValue();
+		var _obj = getInputData(0);
 		if(_obj == noone) return;
 		
-		var _spw = inputs[| 6].getValue();
+		var _spw = getInputData(6);
 		if(!_spw) return;
 		
-		var _typ = inputs[| 2].getValue();
-		var _del = inputs[| 3].getValue();
-		var _frm = inputs[| 5].getValue();
-		var _amo = inputs[| 4].getValue();
-		var _sed = inputs[| 7].getValue() + frame * _amo * 20;
+		var _typ = getInputData(2);
+		var _del = getInputData(3);
+		var _frm = getInputData(5);
+		var _amo = getInputData(4);
+		var _sed = getInputData(7) + frame * _amo * 20;
 		
 		if(_typ == 0 && (safe_mod(PROJECT.animator.current_frame, _del) == 0)) 
 			spawn(_sed);
@@ -95,12 +95,12 @@ function Node_Rigid_Object_Spawner(_x, _y, _group = noone) : Node(_x, _y, _group
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		var bbox = drawGetBbox(xx, yy, _s);
 		
-		var _obj = inputs[| 0].getValue();
+		var _obj = getInputData(0);
 		if(_obj == noone) return;
 		if(is_array(_obj)) return;
 		
-		var _tex  = _obj.inputs[| 6].getValue();
-		var _spos = _obj.inputs[| 7].getValue();
+		var _tex  = _obj.getInputData(6);
+		var _spos = _obj.getInputData(7);
 		
 		draw_surface_stretch_fit(_tex, bbox.xc, bbox.yc, bbox.w, bbox.h, _spos[2], _spos[3]);
 	}

@@ -20,7 +20,7 @@ function Node_Number(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	inputs[| 1] = nodeValue("Integer", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
 	
 	inputs[| 2] = nodeValue("Display", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Number", "Slider", "Rotator" ], { update_hover: false });
+		.setDisplay(VALUE_DISPLAY.enum_scroll, { data: [ "Number", "Slider", "Rotator" ], update_hover: false });
 	
 	inputs[| 3] = nodeValue("Range", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 1 ])
 		.setDisplay(VALUE_DISPLAY.range);
@@ -150,12 +150,12 @@ function Node_Vector2(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Number", "Coordinate" ]);
 	
 	inputs[| 4] = nodeValue("Reset to center", self, JUNCTION_CONNECT.input, VALUE_TYPE.trigger, 0)
-		.setDisplay(VALUE_DISPLAY.button, [ function () { 
+		.setDisplay(VALUE_DISPLAY.button, { name: "To center", onClick: function () { 
 			wd_minx		= -1;
 			wd_miny		= -1;
 			wd_maxx		=  1;
 			wd_maxy		=  1;
-		}, "To center" ]);
+		} });
 	
 	outputs[| 0] = nodeValue("Vector", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, [ 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.vector);

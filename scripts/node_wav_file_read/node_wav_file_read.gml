@@ -33,15 +33,15 @@ function Node_WAV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	min_h = h;
 	
 	inputs[| 0]  = nodeValue("Path", self, JUNCTION_CONNECT.input, VALUE_TYPE.path, "")
-		.setDisplay(VALUE_DISPLAY.path_load, ["*.wav", ""])
+		.setDisplay(VALUE_DISPLAY.path_load, { filter: "*.wav" })
 		.rejectArray();
 	
 	inputs[| 1]  = nodeValue("Sync lenght", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.button, [ function() { 
+		.setDisplay(VALUE_DISPLAY.button, { name: "Sync", onClick: function() { 
 			if(content == noone) return;
 			var frm = max(1, ceil(content.duration * PROJECT.animator.framerate));
 			PROJECT.animator.frames_total = frm;
-		}, "Sync"])
+		} })
 		.rejectArray();
 		
 	outputs[| 0] = nodeValue("Data", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, [])
@@ -191,7 +191,7 @@ function Node_WAV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	attributes.play = true;
 	
 	static onInspector1Update = function() {
-		var path = inputs[| 0].getValue();
+		var path = getInputData(0);
 		if(path == "") return;
 		updatePaths(path);
 		update();
@@ -229,7 +229,7 @@ function Node_WAV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	} #endregion
 	
 	static update = function(frame = PROJECT.animator.current_frame) { #region
-		var path = inputs[| 0].getValue();
+		var path = getInputData(0);
 		if(path == "") return;
 		
 		if(path_current != path) updatePaths(path);

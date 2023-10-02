@@ -30,10 +30,10 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	w = 128;
 	
 	inputs[| 0]  = nodeValue("Path", self, JUNCTION_CONNECT.input, VALUE_TYPE.path, "")
-		.setDisplay(VALUE_DISPLAY.path_load, ["*.ase, *.aseprite", ""]);
+		.setDisplay(VALUE_DISPLAY.path_load, { filter: "*.ase, *.aseprite" });
 		
 	inputs[| 1]  = nodeValue("Generate layers", self, JUNCTION_CONNECT.input, VALUE_TYPE.trigger, 0)
-		.setDisplay(VALUE_DISPLAY.button, [ function() { refreshLayers(); }, "Generate"] );
+		.setDisplay(VALUE_DISPLAY.button, { name: "Generate", onClick: function() { refreshLayers(); } });
 	
 	inputs[| 2]  = nodeValue("Current tag", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "");
 	
@@ -88,7 +88,7 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	});
 	
 	tag_renderer = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) {		
-		var current_tag = inputs[| 2].getValue();
+		var current_tag = getInputData(2);
 		var amo = array_length(tags);
 		var abx = ui(24);
 		var lb_h = line_get_height(f_p0);
@@ -138,7 +138,7 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			if(_hover && point_in_rectangle(_m[0], _m[1], _x + 8, _yy, _x + _w - 8, _yy + hh)) {
 				draw_sprite_stretched_ext(THEME.node_bg_name, 1, _x + 8, _yy, _w - 16, hh, c_white, 0.1);
 				if(mouse_click(mb_left, _focus)) {
-					var _currTag = inputs[| 2].getValue();
+					var _currTag = getInputData(2);
 					var _tagName = tag[? "Name"];
 					inputs[| 2].setValue(_currTag == _tagName? "" : _tagName);
 				}
@@ -185,7 +185,7 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		var nh = (array_length(layers) - 1) / 2 * _nh;
 		var ny = y - nh;
 		
-		var use_cel = inputs[| 3].getValue();
+		var use_cel = getInputData(3);
 		
 		var lvs = [];
 		for( var i = 0, n = array_length(layers); i < n; i++ ) {
@@ -287,7 +287,7 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	insp1UpdateIcon     = [ THEME.refresh, 1, COLORS._main_value_positive ];
 	
 	static onInspector1Update = function() {
-		var path = inputs[| 0].getValue();
+		var path = getInputData(0);
 		if(path == "") return;
 		updatePaths(path);
 		update();
@@ -300,8 +300,8 @@ function Node_ASE_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	}
 	
 	static update = function(frame = PROJECT.animator.current_frame) { 
-		var path = inputs[| 0].getValue();
-		var current_tag = inputs[| 2].getValue();
+		var path = getInputData(0);
+		var current_tag = getInputData(2);
 		if(path_current != path) updatePaths(path);
 		if(ds_map_empty(content)) return;
 		

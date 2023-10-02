@@ -23,7 +23,7 @@ function Node_Path_Plot(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		.setDisplay(VALUE_DISPLAY.vector);
 		
 	inputs[| 6] = nodeValue("Range", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 1 ])
-		.setDisplay(VALUE_DISPLAY.slider_range, [ -1, 1, 0.01 ]);
+		.setDisplay(VALUE_DISPLAY.slider_range, { range: [ -1, 1, 0.01 ] });
 		
 	inputs[| 7] = nodeValue("Input scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 1 ])
 		.setDisplay(VALUE_DISPLAY.vector);
@@ -51,15 +51,15 @@ function Node_Path_Plot(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	static getAccuLength	= function(ind = 0) { return [ length ]; }
 	
 	static getPointRatio = function(_rat, ind = 0) {
-		var _sca  = inputs[| 0].getValue();
-		var _coor = inputs[| 1].getValue();
-		var _eqa  = inputs[| 2].getValue();
-		var _eq0  = inputs[| 3].getValue();
-		var _eq1  = inputs[| 4].getValue();
-		var _orig = inputs[| 5].getValue();
-		var _ran  = inputs[| 6].getValue();
-		var _iran = inputs[| 7].getValue();
-		var _shf  = inputs[| 8].getValue();
+		var _sca  = getInputData(0);
+		var _coor = getInputData(1);
+		var _eqa  = getInputData(2);
+		var _eq0  = getInputData(3);
+		var _eq1  = getInputData(4);
+		var _orig = getInputData(5);
+		var _ran  = getInputData(6);
+		var _iran = getInputData(7);
+		var _shf  = getInputData(8);
 		
 		_rat = _ran[0] + (_rat * (_ran[1] - _ran[0]));
 		
@@ -117,11 +117,10 @@ function Node_Path_Plot(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	static getBoundary		= function() { return boundary; }
 	
 	static step = function() { 
-		var _coor = inputs[| 1].getValue();
-		var _eqa  = inputs[| 2].getValue();
+		var _coor = getInputData(1);
+		var _eqa  = getInputData(2);
 		
 		inputs[| 2].editWidget.data_list = _coor? eq_type_pol : eq_type_car;
-		inputs[| 2].display_data         = _coor? eq_type_pol : eq_type_car;
 		
 		switch(_coor) {
 			case 0 :

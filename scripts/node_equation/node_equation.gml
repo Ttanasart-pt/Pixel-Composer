@@ -108,7 +108,7 @@ function Node_Equation(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		array_resize(input_display_list, input_display_len);
 		
 		for( var i = input_fix_len; i < ds_list_size(inputs); i += data_length ) {
-			var varName = inputs[| i].getValue();
+			var varName = getInputData(i);
 			
 			if(varName != "") {
 				ds_list_add(_in, inputs[| i + 0]);
@@ -136,7 +136,7 @@ function Node_Equation(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 		if(LOADING || APPENDING) return;
 		
 		if(safe_mod(index - input_fix_len, data_length) == 0) //Variable name
-			inputs[| index + 1].name = inputs[| index].getValue();
+			inputs[| index + 1].name = getInputData(index);
 		
 		refreshDynamicInput();
 	} #endregion
@@ -165,7 +165,7 @@ function Node_Equation(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) 
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { #region
 		draw_set_text(f_h5, fa_center, fa_center, COLORS._main_text);
-		var str = inputs[| 0].getValue();
+		var str = getInputData(0);
 		
 		var bbox = drawGetBbox(xx, yy, _s);
 		var ss	= string_scale(str, bbox.w, bbox.h);

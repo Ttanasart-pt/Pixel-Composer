@@ -40,7 +40,7 @@ function Node_Gradient_Extract(_x, _y, _group = noone) : Node_Processor(_x, _y, 
 		var bbox = drawGetBbox(xx, yy, _s);
 		if(bbox.h < 1) return;
 		
-		var grad = inputs[| 0].getValue();
+		var grad = getInputData(0);
 		if(is_array(grad)) {
 			if(array_length(grad) == 0) return;
 			grad = grad[0];

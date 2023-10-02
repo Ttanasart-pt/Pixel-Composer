@@ -38,15 +38,15 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		.rejectArray();
 	
 	inputs[| 9] = nodeValue("Generate mesh", self, JUNCTION_CONNECT.input, VALUE_TYPE.trigger, 0)
-		.setDisplay(VALUE_DISPLAY.button, [ function() {
-			var _tex  = inputs[| 6].getValue();
+		.setDisplay(VALUE_DISPLAY.button, { name: "Generate", onClick: function() {
+			var _tex  = getInputData(6);
 			if(is_array(_tex)) {
 				for( var i = 0, n = array_length(_tex); i < n; i++ ) 
 					generateMesh(i);
 			} else 
 				generateMesh();
 			doUpdate();
-		}, "Generate"] );
+		} });
 	
 	inputs[| 10] = nodeValue("Mesh expansion", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
 		.rejectArray();
@@ -74,7 +74,7 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		new NodeTool( "Anchor remove",  THEME.mesh_tool_delete ),
 	];
 	
-	static getPreviewValues = function() { return inputs[| 6].getValue(); }
+	static getPreviewValues = function() { return getInputData(6); }
 	
 	is_convex = true;
 	hover = -1;
@@ -85,15 +85,15 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	anchor_drag_my  = -1;
 	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
-		var _shp = inputs[| 5].getValue();
-		var _box = inputs[| 7].getValue();
+		var _shp = getInputData(5);
+		var _box = getInputData(7);
 		
 		var meshes = attributes.mesh;
 		if(preview_index >= array_length(meshes)) return;
 		
 		if(previewing == 0) {
 			if(_shp == 2) {
-				var _tex = inputs[| 6].getValue();
+				var _tex = getInputData(6);
 				if(is_array(_tex)) _tex = _tex[safe_mod(preview_index, array_length(_tex))];
 				var tw = surface_get_width_safe(_tex);
 				var th = surface_get_height_safe(_tex);
@@ -248,8 +248,8 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	}
 	
 	static generateMesh = function(index = 0) {
-		var _tex = inputs[|  6].getValue();
-		var _exp = inputs[| 10].getValue();
+		var _tex = getInputData(6);
+		var _exp = getInputData(10);
 		
 		if(is_array(_tex)) {
 			index = safe_mod(index, array_length(_tex));
@@ -467,21 +467,21 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	static onValueUpdate = function(index = 0) {
 		if(index == 5) {
-			var _spos  = inputs[| 7].getValue();
-			var _shape = inputs[| 5].getValue();
+			var _spos  = getInputData(7);
+			var _shape = getInputData(5);
 			_spos[4] = _shape;
 			inputs[| 7].setValue(_spos);
 		}
 	}
 	
 	static fixtureCreate = function(fixture, object) {
-		var _mov	 = inputs[| 0].getValue();
-		var _den	 = inputs[| 1].getValue();
-		var _cnt_frc = inputs[| 2].getValue();
-		var _air_frc = inputs[| 3].getValue();
-		var _rot_frc = inputs[| 4].getValue();
+		var _mov	 = getInputData(0);
+		var _den	 = getInputData(1);
+		var _cnt_frc = getInputData(2);
+		var _air_frc = getInputData(3);
+		var _rot_frc = getInputData(4);
 		
-		var _spos   = inputs[| 7].getValue();
+		var _spos   = getInputData(7);
 		
 		if(!_mov) {
 			physics_fixture_set_kinematic(fixture);
@@ -501,8 +501,8 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	}
 	
 	static spawn = function(rpos = noone, index = 0, object = noone) {
-		var _shp     = inputs[| 5].getValue();
-		var _tex     = inputs[| 6].getValue();
+		var _shp     = getInputData(5);
+		var _tex     = getInputData(6);
 		
 		if(is_array(_tex)) {
 			index = safe_mod(index, array_length(_tex));
@@ -510,7 +510,7 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		} else 
 			index = 0;
 		
-		var _spos   = inputs[| 7].getValue();
+		var _spos   = getInputData(7);
 		
 		var ww = max(1, surface_get_width_safe(_tex));
 		var hh = max(1, surface_get_height_safe(_tex));
@@ -644,10 +644,10 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	}
 	
 	static step = function() {
-		var _shp = inputs[| 5].getValue();
+		var _shp = getInputData(5);
 		inputs[| 9].setVisible(_shp == 2);
 		
-		var _tex  = inputs[| 6].getValue();
+		var _tex  = getInputData(6);
 		
 		if(is_array(_tex)) {
 			var meshes = attributes.mesh;
@@ -658,14 +658,14 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	}
 	
 	static reset = function() {
-		var _tex  = inputs[| 6].getValue();
+		var _tex  = getInputData(6);
 		for( var i = 0, n = array_length(object); i < n; i++ ) {
 			if(instance_exists(object[i]))
 				instance_destroy(object[i]);
 		}
 		object = [];
 		
-		var _spwn = inputs[| 8].getValue();
+		var _spwn = getInputData(8);
 		if(!_spwn) return;
 		
 		if(is_array(_tex)) {
@@ -677,9 +677,9 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		var bbox = drawGetBbox(xx, yy, _s);
-		var _tex  = inputs[| 6].getValue();
+		var _tex  = getInputData(6);
 		if(is_array(_tex) && array_length(_tex)) _tex = _tex[0];
-		var _spos = inputs[| 7].getValue();
+		var _spos = getInputData(7);
 		
 		draw_surface_stretch_fit(_tex, bbox.xc, bbox.yc, bbox.w, bbox.h, _spos[2], _spos[3]);
 	}

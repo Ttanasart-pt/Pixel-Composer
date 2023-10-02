@@ -32,7 +32,7 @@ function Node_Json_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	
 	
 	inputs[| 0]  = nodeValue("Path", self, JUNCTION_CONNECT.input, VALUE_TYPE.path, "")
-		.setDisplay(VALUE_DISPLAY.path_load, ["*.json", ""])
+		.setDisplay(VALUE_DISPLAY.path_load, { filter: "*.json" })
 		.rejectArray();
 	
 	outputs[| 0] = nodeValue("Path", self, JUNCTION_CONNECT.output, VALUE_TYPE.path, "")
@@ -72,7 +72,7 @@ function Node_Json_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	insp1UpdateIcon     = [ THEME.refresh, 1, COLORS._main_value_positive ];
 	
 	static onInspector1Update = function() {
-		var path = inputs[| 0].getValue();
+		var path = getInputData(0);
 		if(path == "") return;
 		updatePaths(path);
 		update();
@@ -89,7 +89,7 @@ function Node_Json_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 			ds_list_add(_ot, outputs[| i]);
 		
 		for( var i = input_fix_len; i < ds_list_size(inputs); i++ ) {
-			if(inputs[| i].getValue() != "") {
+			if(getInputData(i) != "") {
 				ds_list_add(_in,  inputs[| i + 0]);
 				ds_list_add(_ot, outputs[| i + 1]);
 			} else {
@@ -140,14 +140,14 @@ function Node_Json_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	}
 	
 	static update = function(frame = PROJECT.animator.current_frame) {
-		var path = inputs[| 0].getValue();
+		var path = getInputData(0);
 		if(path == "") return;
 		if(path_current != path) updatePaths(path);
 		
 		outputs[| 1].setValue(content);
 		
 		for( var i = input_fix_len; i < ds_list_size(inputs) - 1; i++ ) {
-			var key = inputs[| i].getValue();
+			var key = getInputData(i);
 			var out = outputs[| i + 1];
 			
 			out.name = key;

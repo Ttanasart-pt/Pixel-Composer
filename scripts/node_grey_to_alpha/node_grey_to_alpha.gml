@@ -23,13 +23,13 @@ function Node_Grey_Alpha(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	attribute_surface_depth();
 	
 	static step = function() { #region
-		var _replace	= inputs[| 1].getValue();	
+		var _replace	= getInputData(1);	
 		inputs[| 2].setVisible(_replace);
 	} #endregion
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) { #region
-		var _replace	= inputs[| 1].getValue();
-		var _color		= inputs[| 2].getValue();
+		var _replace	= getInputData(1);
+		var _color		= getInputData(2);
 		
 		surface_set_target(_outSurf);
 		DRAW_CLEAR

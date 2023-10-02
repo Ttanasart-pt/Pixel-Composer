@@ -20,7 +20,7 @@ function Node_Array_Insert(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	outputs[| 0] = nodeValue("Array", self, JUNCTION_CONNECT.output, VALUE_TYPE.any, 0);
 	
 	static update = function(frame = PROJECT.animator.current_frame) {
-		var _arr = inputs[| 0].getValue();
+		var _arr = getInputData(0);
 		
 		inputs[| 0].type  = VALUE_TYPE.any;
 		inputs[| 2].type  = VALUE_TYPE.any;
@@ -28,9 +28,9 @@ function Node_Array_Insert(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		
 		if(!is_array(_arr)) return;
 		
-		var index = inputs[| 1].getValue();
-		var value = inputs[| 2].getValue();
-		var spred = inputs[| 3].getValue();
+		var index = getInputData(1);
+		var value = getInputData(2);
+		var spred = getInputData(3);
 		var _len = array_length(_arr);
 		
 		if(inputs[| 0].value_from != noone) {
@@ -63,7 +63,7 @@ function Node_Array_Insert(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		draw_set_text(f_h3, fa_center, fa_center, COLORS._main_text);
-		var idx = inputs[| 1].getValue();
+		var idx = getInputData(1);
 		
 		var str	= string(idx);
 		

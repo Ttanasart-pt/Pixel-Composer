@@ -8,7 +8,7 @@ function Node_PB_Box_Split(_x, _y, _group = noone) : Node_PB_Box(_x, _y, _group)
 		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Ratio", "Fix Left", "Fix Right" ]);
 	
 	inputs[| 3] = nodeValue("Ratio", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.5 )
-		.setDisplay(VALUE_DISPLAY.slider, [ 0, 1, 0.01 ]);
+		.setDisplay(VALUE_DISPLAY.slider);
 	
 	inputs[| 4] = nodeValue("Fix width", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 8 )
 	

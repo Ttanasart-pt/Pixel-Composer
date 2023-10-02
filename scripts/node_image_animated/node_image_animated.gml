@@ -40,7 +40,7 @@ function Node_Image_Animated(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	update_on_frame = true;
 	
 	inputs[| 0]  = nodeValue("Path", self, JUNCTION_CONNECT.input, VALUE_TYPE.path, [])
-		.setDisplay(VALUE_DISPLAY.path_array, ["*.png", ""]);
+		.setDisplay(VALUE_DISPLAY.path_array, { filter: ["*.png", ""] });
 	
 	inputs[| 1]  = nodeValue("Padding", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [0, 0, 0, 0])
 		.setDisplay(VALUE_DISPLAY.padding)
@@ -57,10 +57,10 @@ function Node_Image_Animated(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		.rejectArray();
 		
 	inputs[| 5] = nodeValue("Set animation length to match", self, JUNCTION_CONNECT.input, VALUE_TYPE.trigger, 0)
-		.setDisplay(VALUE_DISPLAY.button, [ function() { 
+		.setDisplay(VALUE_DISPLAY.button, { name: "Match length", onClick: function() { 
 				if(array_length(spr) == 0) return;
 				PROJECT.animator.frames_total = array_length(spr);
-			}, "Match length"] );
+			} });
 	
 	inputs[| 6]  = nodeValue("Custom frame order", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
 	
@@ -133,15 +133,15 @@ function Node_Image_Animated(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	insp1UpdateIcon     = [ THEME.refresh, 1, COLORS._main_value_positive ];
 	
 	static onInspector1Update = function() { #region
-		var path = inputs[| 0].getValue();
+		var path = getInputData(0);
 		if(path == "") return;
 		updatePaths(path);
 		update();
 	} #endregion
 	
 	static step = function() { #region
-		var str  = inputs[| 2].getValue();
-		var _cus = inputs[| 6].getValue();
+		var str  = getInputData(2);
+		var _cus = getInputData(6);
 		
 		inputs[| 7].setVisible( _cus);
 		inputs[| 2].setVisible(!_cus);
@@ -150,20 +150,20 @@ function Node_Image_Animated(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	} #endregion
 	
 	static update = function(frame = PROJECT.animator.current_frame) { #region
-		var path = inputs[| 0].getValue();
+		var path = getInputData(0);
 		if(path == "") return;
 		if(is_array(path) && !array_equals(path, path_loaded)) 
 			updatePaths(path);
 		if(array_length(spr) == 0) return;
 		
-		var _pad = inputs[| 1].getValue();
+		var _pad = getInputData(1);
 		
-		var _cus = inputs[| 6].getValue();
-		var _str = inputs[| 2].getValue();
-		var _end = inputs[| 4].getValue();
-		var _spd = _str? (PROJECT.animator.frames_total + 1) / array_length(spr) : 1 / inputs[| 3].getValue();
+		var _cus = getInputData(6);
+		var _str = getInputData(2);
+		var _end = getInputData(4);
+		var _spd = _str? (PROJECT.animator.frames_total + 1) / array_length(spr) : 1 / getInputData(3);
 		if(_spd == 0) _spd = 1;
-		var _frame = _cus? inputs[| 7].getValue() : floor(PROJECT.animator.current_frame / _spd);
+		var _frame = _cus? getInputData(7) : floor(PROJECT.animator.current_frame / _spd);
 		
 		var _len = array_length(spr);
 		var _drw = true;

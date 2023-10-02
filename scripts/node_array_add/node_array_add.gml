@@ -52,7 +52,7 @@ function Node_Array_Add(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	}
 	
 	static update = function(frame = PROJECT.animator.current_frame) {
-		var _arr = inputs[| 0].getValue();
+		var _arr = getInputData(0);
 		
 		if(inputs[| 0].value_from == noone) {
 			inputs[| 0].type  = VALUE_TYPE.any;
@@ -62,14 +62,14 @@ function Node_Array_Add(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		
 		if(!is_array(_arr)) return;
 		var _type = inputs[| 0].value_from.type;
-		var spd   = inputs[| 1].getValue();
+		var spd   = getInputData(1);
 		
 		inputs[| 0].type  = _type;
 		outputs[| 0].type = _type;
 		
 		var _out = array_clone(_arr);
 		for( var i = input_fix_len; i < ds_list_size(inputs) - 1; i += data_length ) {
-			var _val = inputs[| i].getValue();
+			var _val = getInputData(i);
 			inputs[| i].type  = _type;
 			
 			if(is_array(_val) && spd)

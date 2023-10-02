@@ -55,9 +55,9 @@ function Node_Compare(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 	}
 	
 	static update = function(frame = PROJECT.animator.current_frame) { 
-		var mode = inputs[| 0].getValue();
-		var a = inputs[| 1].getValue();
-		var b = inputs[| 2].getValue();
+		var mode = getInputData(0);
+		var a = getInputData(1);
+		var b = getInputData(2);
 		
 		var as = is_array(a);
 		var bs = is_array(b);
@@ -84,7 +84,7 @@ function Node_Compare(_x, _y, _group = noone) : Node(_x, _y, _group) constructor
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		draw_set_text(f_h3, fa_center, fa_center, COLORS._main_text);
 		var str = "";
-		switch(inputs[| 0].getValue()) {
+		switch(getInputData(0)) {
 			case COMPARE_OPERATOR.equal :		 str = "=";		break;
 			case COMPARE_OPERATOR.nonEqual :	 str = "!=";	break;
 			

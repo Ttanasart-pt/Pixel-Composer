@@ -292,12 +292,12 @@ enum CAMERA_PROJ {
 	}
 	
 	function _3d_gizmo(active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
-		var _gpos = inputs[| global_pos].getValue();
-		var _gsca = inputs[| global_sca].getValue();
+		var _gpos = getInputData(global_pos);
+		var _gsca = getInputData(global_sca);
 		
-		var _pos  = inputs[| input_pos].getValue();
-		var _rot  = inputs[| input_rot].getValue();
-		var _sca  = inputs[| input_sca].getValue();
+		var _pos  = getInputData(input_pos);
+		var _rot  = getInputData(input_rot);
+		var _sca  = getInputData(input_sca);
 		
 		var cx = _x + _gpos[0] * _s;
 		var cy = _y + _gpos[1] * _s;

@@ -8,7 +8,7 @@ function Node_PB_Fx_Hash(_x, _y, _group = noone) : Node_PB_Fx(_x, _y, _group) co
 	inputs[| 3] = nodeValue("Invert", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false );
 	
 	inputs[| 4] = nodeValue("Dissolve", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0. )
-		.setDisplay(VALUE_DISPLAY.slider, [ 0, 1, 0.01 ] )
+		.setDisplay(VALUE_DISPLAY.slider)
 	
 	inputs[| 5] = nodeValue("Detail", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1 )
 	

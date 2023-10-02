@@ -27,7 +27,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		
 	inputs[| 9] = nodeValue("Start position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [0, 0])
 		.setDisplay(VALUE_DISPLAY.vector)
-		.setUnitRef(function(index) { return inputs[| 1].getValue(); });
+		.setUnitRef(function(index) { return getInputData(1); });
 		
 	inputs[| 10] = nodeValue("Scale over copy", self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_11 );
 	
@@ -35,7 +35,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		.setVisible(true, true);
 	
 	inputs[| 12] = nodeValue("Path range", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [0, 1], "Range of the path to follow.")
-		.setDisplay(VALUE_DISPLAY.slider_range, [0, 1, 0.01]);
+		.setDisplay(VALUE_DISPLAY.slider_range);
 	
 	inputs[| 13] = nodeValue("Path shift", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0);
 	
@@ -55,10 +55,10 @@ function Node_Repeat(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		.setUnitRef(function() { return getDimension(); });
 	
 	inputs[| 20] = nodeValue("Animator midpoint", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.5)
-		.setDisplay(VALUE_DISPLAY.slider, [-1, 2, 0.01]);
+		.setDisplay(VALUE_DISPLAY.slider, { range: [-1, 2, 0.01] });
 	
 	inputs[| 21] = nodeValue("Animator range", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.1)
-		.setDisplay(VALUE_DISPLAY.slider, [0, 1, 0.01]);
+		.setDisplay(VALUE_DISPLAY.slider);
 	
 	inputs[| 22] = nodeValue("Animator position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0 ])
 		.setDisplay(VALUE_DISPLAY.vector);
@@ -77,7 +77,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	inputs[| 27] = nodeValue("Animator blend", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white);
 	
 	inputs[| 28] = nodeValue("Animator alpha", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
-		.setDisplay(VALUE_DISPLAY.slider, [0, 1, 0.01]);
+		.setDisplay(VALUE_DISPLAY.slider);
 		
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
@@ -93,7 +93,7 @@ function Node_Repeat(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	attribute_surface_depth();
 	
 	static getDimension = function() {
-		var _surf = inputs[| 0].getValue();
+		var _surf = getInputData(0);
 		if(is_array(_surf)) {
 			if(array_length(_surf) == 0) return [1, 1];
 			if(!is_surface(_surf[0])) return [1, 1];
@@ -108,8 +108,8 @@ function Node_Repeat(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		if(inputs[| 9].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny, THEME.anchor))
 			active = false;
 		
-		var _pat  = inputs[| 3].getValue();
-		var _spos = inputs[| 9].getValue();
+		var _pat  = getInputData(3);
+		var _spos = getInputData(9);
 		
 		var px = _x + _spos[0] * _s;
 		var py = _y + _spos[1] * _s;
@@ -124,43 +124,43 @@ function Node_Repeat(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	}
 	
 	function doRepeat(_outSurf, _inSurf) {
-		var _dim    = inputs[| 1].getValue();
-		var _amo    = inputs[| 2].getValue();
-		var _pat    = inputs[| 3].getValue();
+		var _dim    = getInputData( 1);
+		var _amo    = getInputData( 2);
+		var _pat    = getInputData( 3);
 							  
-		var _spos = inputs[|  9].getValue();
+		var _spos = getInputData( 9);
 		
-		var _rpos = inputs[|  4].getValue();
-		var _rsta = inputs[| 26].getValue();
-		var _rrot = inputs[|  5].getValue();
-		var _rsca = inputs[|  6].getValue();
-		var _msca = inputs[| 10].getValue();
+		var _rpos = getInputData( 4);
+		var _rsta = getInputData(26);
+		var _rrot = getInputData( 5);
+		var _rsca = getInputData( 6);
+		var _msca = getInputData(10);
 		
-		var _aran = inputs[|  7].getValue();
-		var _arad = inputs[|  8].getValue();
+		var _aran = getInputData( 7);
+		var _arad = getInputData( 8);
 		
-		var _path = inputs[| 11].getValue();
-		var _prng = inputs[| 12].getValue();
-		var _prsh = inputs[| 13].getValue();
+		var _path = getInputData(11);
+		var _prng = getInputData(12);
+		var _prsh = getInputData(13);
 		
-		var _grad = inputs[| 14].getValue();
-		var _alph = inputs[| 15].getValue();
+		var _grad = getInputData(14);
+		var _alph = getInputData(15);
 		
-		var _arr = inputs[| 16].getValue();
-		var _sed = inputs[| 17].getValue();
+		var _arr = getInputData(16);
+		var _sed = getInputData(17);
 		
-		var _col = inputs[| 18].getValue();
-		var _cls = inputs[| 19].getValue();
+		var _col = getInputData(18);
+		var _cls = getInputData(19);
 		
-		var _an_mid = inputs[| 20].getValue();
-		var _an_ran = inputs[| 21].getValue();
-		var _an_fal = inputs[| 25].getValue();
-		var _an_pos = inputs[| 22].getValue();
-		var _an_rot = inputs[| 23].getValue();
-		var _an_sca = inputs[| 24].getValue();
+		var _an_mid = getInputData(20);
+		var _an_ran = getInputData(21);
+		var _an_fal = getInputData(25);
+		var _an_pos = getInputData(22);
+		var _an_rot = getInputData(23);
+		var _an_sca = getInputData(24);
 		
-		var _an_bld = inputs[| 27].getValue();
-		var _an_alp = inputs[| 28].getValue();
+		var _an_bld = getInputData(27);
+		var _an_alp = getInputData(28);
 		
 		var _surf, runx, runy, posx, posy, scax, scay, rot;
 				   
@@ -252,15 +252,15 @@ function Node_Repeat(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	}
 	
 	static update = function(frame = PROJECT.animator.current_frame) {
-		var _inSurf = inputs[| 0].getValue();
+		var _inSurf = getInputData(0);
 		if(is_array(_inSurf) && array_length(_inSurf) == 0) return;
 		if(!is_array(_inSurf) && !is_surface(_inSurf)) return;
 					
-		var _dim = inputs[| 1].getValue();
-		var _pat = inputs[| 3].getValue();
+		var _dim = getInputData(1);
+		var _pat = getInputData(3);
 		var cDep = attrDepth();
 		
-		var _arr = inputs[| 16].getValue();
+		var _arr = getInputData(16);
 		
 		inputs[|  4].setVisible( _pat == 0 || _pat == 1);
 		inputs[|  7].setVisible( _pat == 2);

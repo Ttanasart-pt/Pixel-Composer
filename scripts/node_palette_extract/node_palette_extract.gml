@@ -17,7 +17,7 @@ function Node_Palette_Extract(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	outputs[| 0] = nodeValue("Palette", self, JUNCTION_CONNECT.output, VALUE_TYPE.color, [ ])
 		.setDisplay(VALUE_DISPLAY.palette);
 	
-	static getPreviewValues = function() { return inputs[| 0].getValue(); }
+	static getPreviewValues = function() { return getInputData(0); }
 	
 	input_display_list = [
 		["Output", 	 true],	0,
@@ -265,7 +265,7 @@ function Node_Palette_Extract(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	}
 	
 	static step = function() {
-		var _algo = inputs[| 3].getValue();
+		var _algo = getInputData(3);
 		
 		inputs[| 1].setVisible(_algo != 2);
 		inputs[| 2].setVisible(_algo == 0);
@@ -284,10 +284,10 @@ function Node_Palette_Extract(_x, _y, _group = noone) : Node(_x, _y, _group) con
 	}
 	
 	static extractPalettes = function() {
-		var _surf = inputs[| 0].getValue();
-		var _size = inputs[| 1].getValue();
-		var _seed = inputs[| 2].getValue();
-		var _algo = inputs[| 3].getValue();
+		var _surf = getInputData(0);
+		var _size = getInputData(1);
+		var _seed = getInputData(2);
+		var _algo = getInputData(3);
 		var res = [];
 		
 		if(is_surface(_surf)) {

@@ -109,7 +109,7 @@ function Node_Math(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	}
 	
 	static step = function() {
-		var mode = inputs[| 0].getValue();
+		var mode = getInputData(0);
 		
 		switch(mode) {
 			case MATH_OPERATOR.sin :
@@ -128,7 +128,7 @@ function Node_Math(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			case MATH_OPERATOR.ceiling :
 				inputs[| 4].setVisible(true);
 				
-				var int = inputs[| 4].getValue();
+				var int = getInputData(4);
 				if(int) outputs[| 0].type = VALUE_TYPE.integer;
 				else	outputs[| 0].type = VALUE_TYPE.float;
 				break;
@@ -202,11 +202,11 @@ function Node_Math(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	}
 	
 	static update = function(frame = PROJECT.animator.current_frame) {
-		use_mod = inputs[| 0].getValue();
-		var a	= inputs[| 1].getValue();
-		var b	= inputs[| 2].getValue();
-		use_deg = inputs[| 3].getValue();
-		var c	= inputs[| 5].getValue();
+		use_mod = getInputData(0);
+		var a	= getInputData(1);
+		var b	= getInputData(2);
+		use_deg = getInputData(3);
+		var c	= getInputData(5);
 		
 		var val = evalArray(a, b, c);
 		outputs[| 0].setValue(val);
@@ -215,7 +215,7 @@ function Node_Math(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		draw_set_text(f_h3, fa_center, fa_center, COLORS._main_text);
 		var str = "";
-		switch(inputs[| 0].getValue()) {
+		switch(getInputData(0)) {
 			case MATH_OPERATOR.add :		str = "+"; break;
 			case MATH_OPERATOR.subtract :	str = "-"; break;
 			case MATH_OPERATOR.multiply :	str = "*"; break;

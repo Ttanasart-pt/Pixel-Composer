@@ -2,9 +2,10 @@ function Node_Wrap_Area(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	name = "Area Warp";
 	
 	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
-	
+
+	onSurfaceSize = function() { return getInputData(0, DEF_SURF); };
 	inputs[| 1] = nodeValue("Area", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 16, 16, 4, 4, AREA_SHAPE.rectangle ])
-		.setDisplay(VALUE_DISPLAY.area, function() { return getDimension(0); });
+		.setDisplay(VALUE_DISPLAY.area, { onSurfaceSize });
 	
 	inputs[| 2] = nodeValue("Active", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
 		active_index = 2;
@@ -23,7 +24,7 @@ function Node_Wrap_Area(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	static onValueFromUpdate = function(index) { #region
 		if(index == 0 && attributes[? "initalset"] == false) {
-			var _surf = inputs[| 0].getValue();
+			var _surf = getInputData(0);
 			if(!is_surface(_surf)) return;
 			
 			var _sw = surface_get_width_safe(_surf);

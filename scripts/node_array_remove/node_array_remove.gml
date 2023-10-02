@@ -24,7 +24,7 @@ function Node_Array_Remove(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	outputs[| 0] = nodeValue("Array", self, JUNCTION_CONNECT.output, VALUE_TYPE.any, 0);
 	
 	static step = function() {
-		var type  = inputs[| 1].getValue();
+		var type  = getInputData(1);
 		
 		inputs[| 2].setVisible(type == 0, type == 0);
 		inputs[| 3].setVisible(type == 1, type == 1);
@@ -43,13 +43,13 @@ function Node_Array_Remove(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	}
 	
 	static update = function(frame = PROJECT.animator.current_frame) {
-		var _arr = inputs[| 0].getValue();
+		var _arr = getInputData(0);
 		if(!is_array(_arr)) return;
 		
-		var type  = inputs[| 1].getValue();
-		var index = inputs[| 2].getValue();
-		var value = inputs[| 3].getValue();
-		var spred = inputs[| 4].getValue();
+		var type  = getInputData(1);
+		var index = getInputData(2);
+		var value = getInputData(3);
+		var spred = getInputData(4);
 		
 		_arr = array_clone(_arr);
 		

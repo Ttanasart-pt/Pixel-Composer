@@ -19,7 +19,7 @@ function __Node_3D_Combine(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	inputs[| 4] = nodeValue("Render position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0.5, 0.5 ])
 		.setDisplay(VALUE_DISPLAY.vector)
-		.setUnitRef( function() { return inputs[| 2].getValue(); }, VALUE_UNIT.reference)
+		.setUnitRef( function() { return getInputData(2); }, VALUE_UNIT.reference)
 		.rejectArray();
 	
 	inputs[| 5] = nodeValue("Render scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 1 ])
@@ -31,11 +31,11 @@ function __Node_3D_Combine(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		.rejectArray();
 		
 	inputs[| 7] = nodeValue("Light height", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.5)
-		.setDisplay(VALUE_DISPLAY.slider, [-1, 1, 0.01])
+		.setDisplay(VALUE_DISPLAY.slider, { range: [-1, 1, 0.01] })
 		.rejectArray();
 		
 	inputs[| 8] = nodeValue("Light intensity", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
-		.setDisplay(VALUE_DISPLAY.slider, [0, 1, 0.01])
+		.setDisplay(VALUE_DISPLAY.slider)
 		.rejectArray();
 	
 	inputs[| 9] = nodeValue("Light color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_white)
@@ -49,7 +49,7 @@ function __Node_3D_Combine(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		.rejectArray();
 		
 	inputs[| 12] = nodeValue("Field of view", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 60)
-		.setDisplay(VALUE_DISPLAY.slider, [ 0, 90, 1 ])
+		.setDisplay(VALUE_DISPLAY.slider, { range: [ 0, 90, 1 ] })
 		.rejectArray();
 	
 	inputs[| 13] = nodeValue("Scale view with dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true)
@@ -124,14 +124,14 @@ function __Node_3D_Combine(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	}
 	
 	static submit_vertex = function() {
-		var _lpos = inputs[| 1].getValue();
-		var _lrot = inputs[| 2].getValue();
-		var _lsca = inputs[| 3].getValue();
+		var _lpos = getInputData(1);
+		var _lrot = getInputData(2);
+		var _lsca = getInputData(3);
 		
 		_3d_local_transform(_lpos, _lrot, _lsca);
 		
 		for( var i = input_fix_len; i < ds_list_size(inputs) - 1; i++ ) {
-			var sv = inputs[| i].getValue();
+			var sv = getInputData(i);
 			
 			if(is_array(sv)) {
 				for( var j = 0; j < array_length(sv); j++ ) {
@@ -146,23 +146,23 @@ function __Node_3D_Combine(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	}
 	
 	static update = function(frame = PROJECT.animator.current_frame) {
-		var _dim  = inputs[| 0].getValue();
-		var _lpos = inputs[| 1].getValue();
-		var _lrot = inputs[| 2].getValue();
-		var _lsca = inputs[| 3].getValue();
+		var _dim  = getInputData(0);
+		var _lpos = getInputData(1);
+		var _lrot = getInputData(2);
+		var _lsca = getInputData(3);
 		
-		var _pos  = inputs[| 4].getValue();
-		var _sca  = inputs[| 5].getValue();
+		var _pos  = getInputData(4);
+		var _sca  = getInputData(5);
 		
-		var _ldir = inputs[|  6].getValue();
-		var _lhgt = inputs[|  7].getValue();
-		var _lint = inputs[|  8].getValue();
-		var _lclr = inputs[|  9].getValue();
-		var _aclr = inputs[| 10].getValue();
+		var _ldir = getInputData( 6);
+		var _lhgt = getInputData( 7);
+		var _lint = getInputData( 8);
+		var _lclr = getInputData( 9);
+		var _aclr = getInputData(10);
 		
-		var _proj = inputs[| 11].getValue();
-		var _fov  = inputs[| 12].getValue();
-		var _dimS = inputs[| 13].getValue();
+		var _proj = getInputData(11);
+		var _fov  = getInputData(12);
+		var _dimS = getInputData(13);
 		
 		inputs[| 12].setVisible(_proj);
 		

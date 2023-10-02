@@ -10,10 +10,10 @@ function Node_Fluid_Turbulence(_x, _y, _group = noone) : Node_Fluid(_x, _y, _gro
 		.setDisplay(VALUE_DISPLAY.area);
 	
 	inputs[| 2] = nodeValue("Strength", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.10)
-		.setDisplay(VALUE_DISPLAY.slider, [-1, 1, 0.01]);
+		.setDisplay(VALUE_DISPLAY.slider, { range: [-1, 1, 0.01] });
 	
 	inputs[| 3] = nodeValue("Scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 4)
-		.setDisplay(VALUE_DISPLAY.slider, [1, 16, 0.01]);
+		.setDisplay(VALUE_DISPLAY.slider, { range: [1, 16, 0.01] });
 	
 	inputs[| 4] = nodeValue("Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, irandom(99999) );
 	

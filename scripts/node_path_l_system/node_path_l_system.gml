@@ -122,7 +122,7 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			_l[| i] = inputs[| i];
 		
 		for( var i = input_fix_len; i < ds_list_size(inputs); i += data_length ) {
-			if(inputs[| i].getValue() != "") {
+			if(getInputData(i) != "") {
 				ds_list_add(_l, inputs[| i + 0]);
 				ds_list_add(_l, inputs[| i + 1]);
 			} else {
@@ -259,14 +259,14 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	} #endregion
 	
 	static update = function() { #region
-		var _len = inputs[| 0].getValue();
-		var _ang = inputs[| 1].getValue();
-		var _pos = inputs[| 2].getValue();
-		var _itr = inputs[| 3].getValue();
-		var _sta = inputs[| 4].getValue();
-		var _end = inputs[| 5].getValue();
-		var _san = inputs[| 6].getValue();
-		var _sad = inputs[| 7].getValue();
+		var _len = getInputData(0);
+		var _ang = getInputData(1);
+		var _pos = getInputData(2);
+		var _itr = getInputData(3);
+		var _sta = getInputData(4);
+		var _end = getInputData(5);
+		var _san = getInputData(6);
+		var _sad = getInputData(7);
 		lineq = ds_queue_create();
 		
 		random_set_seed(_sad);
@@ -276,8 +276,8 @@ function Node_Path_L_System(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		
 		var rules = {};
 		for( var i = input_fix_len; i < ds_list_size(inputs) - data_length; i += data_length ) {
-			var _name = inputs[| i + 0].getValue();
-			var _rule = inputs[| i + 1].getValue();
+			var _name = getInputData(i + 0);
+			var _rule = getInputData(i + 1);
 			if(!struct_has(rules, _name))
 				rules[$ _name] = [ _rule ];
 			else

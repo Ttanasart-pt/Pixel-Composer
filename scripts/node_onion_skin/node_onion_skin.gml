@@ -6,10 +6,10 @@ function Node_Onion_Skin(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 	
 	inputs[| 1] = nodeValue("Range", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [-1, 1])
-		.setDisplay(VALUE_DISPLAY.slider_range, [ -16, 16, 1 ]);
+		.setDisplay(VALUE_DISPLAY.slider_range, { range: [ -16, 16, 1 ] });
 	
 	inputs[| 2] = nodeValue("Alpha", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.5)
-		.setDisplay(VALUE_DISPLAY.slider, [ 0, 1, 0.01 ]);
+		.setDisplay(VALUE_DISPLAY.slider);
 		
 	inputs[| 3] = nodeValue("Color pre", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_red)
 	
@@ -34,15 +34,15 @@ function Node_Onion_Skin(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	static update = function() { 
 		if(!inputs[| 0].value_from) return;
 		
-		var _surf = inputs[| 0].getValue();
-		var _rang = inputs[| 1].getValue();
+		var _surf = getInputData(0);
+		var _rang = getInputData(1);
 		
-		var _alph = inputs[| 2].getValue();
-		var _cpre = inputs[| 3].getValue();
-		var _cpos = inputs[| 4].getValue();
+		var _alph = getInputData(2);
+		var _cpre = getInputData(3);
+		var _cpos = getInputData(4);
 		
-		var _step = inputs[| 5].getValue();
-		var _top  = inputs[| 6].getValue();
+		var _step = getInputData(5);
+		var _top  = getInputData(6);
 		cacheCurrentFrame(_surf);
 		
 		var _outSurf = outputs[| 0].getValue();

@@ -1,8 +1,9 @@
 function Node_Particle(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y, _group) constructor {
 	name = "Particle";
 	use_cache = true;
-	
-	inputs[| 3].setDisplay(VALUE_DISPLAY.area, function() { return inputs[| input_len + 0].getValue(); });
+
+	onSurfaceSize = function() { return getInputData(input_len, DEF_SURF); };
+	inputs[| 3].setDisplay(VALUE_DISPLAY.area, { onSurfaceSize });
 	
 	inputs[| input_len + 0] = nodeValue("Output dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, DEF_SURF)
 		.setDisplay(VALUE_DISPLAY.vector);
@@ -31,7 +32,7 @@ function Node_Particle(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y, _
 	
 	static onValueUpdate = function(index = 0) { #region
 		if(index == input_len + 0) {
-			var _dim		= inputs[| input_len + 0].getValue();
+			var _dim		= getInputData(input_len + 0);
 			var _outSurf	= outputs[| 0].getValue();
 			
 			_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
@@ -43,7 +44,7 @@ function Node_Particle(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y, _
 	} #endregion
 	
 	static onStep = function() { #region
-		var _dim		= inputs[| input_len + 0].getValue();
+		var _dim		= getInputData(input_len + 0);
 		var _outSurf	= outputs[| 0].getValue();
 			
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
@@ -53,7 +54,7 @@ function Node_Particle(_x, _y, _group = noone) : Node_VFX_Spawner_Base(_x, _y, _
 	static onUpdate = function() { #region
 		if(ANIMATION_STATIC) {
 			if(!recoverCache()) {
-				var _dim		= inputs[| input_len + 0].getValue();
+				var _dim		= getInputData(input_len + 0);
 				var _outSurf	= outputs[| 0].getValue();
 				_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
 				outputs[| 0].setValue(_outSurf);

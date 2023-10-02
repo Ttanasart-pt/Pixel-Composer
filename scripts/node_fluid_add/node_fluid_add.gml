@@ -16,10 +16,10 @@ function Node_Fluid_Add(_x, _y, _group = noone) : Node_Fluid(_x, _y, _group) con
 	inputs[| 3] = nodeValue("Active", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
 	
 	inputs[| 4] = nodeValue("Inherit velocity", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
-		.setDisplay(VALUE_DISPLAY.slider, [ -1, 1, 0.01 ]);
+		.setDisplay(VALUE_DISPLAY.slider, { range: [ -1, 1, 0.01 ] });
 	
 	inputs[| 5] = nodeValue("Density", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
-		.setDisplay(VALUE_DISPLAY.slider, [ 0, 1, 0.01 ]);
+		.setDisplay(VALUE_DISPLAY.slider);
 	
 	inputs[| 6] = nodeValue("Expand velocity mask", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0);
 	
@@ -37,8 +37,8 @@ function Node_Fluid_Add(_x, _y, _group = noone) : Node_Fluid(_x, _y, _group) con
 	outputs[| 0] = nodeValue("Fluid Domain", self, JUNCTION_CONNECT.output, VALUE_TYPE.fdomain, noone);
 	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
-		var _mat = inputs[| 1].getValue();
-		var _pos = inputs[| 2].getValue();
+		var _mat = getInputData(1);
+		var _pos = getInputData(2);
 		
 		if(is_surface(_mat)) {
 			var sw = surface_get_width_safe(_mat) * _s;
@@ -113,7 +113,7 @@ function Node_Fluid_Add(_x, _y, _group = noone) : Node_Fluid(_x, _y, _group) con
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		var bbox = drawGetBbox(xx, yy, _s);
-		var _mat = inputs[| 1].getValue();
+		var _mat = getInputData(1);
 		if(!is_surface(_mat)) return;
 		
 		draw_surface_fit(_mat, bbox.xc, bbox.yc, bbox.w, bbox.h);

@@ -53,22 +53,22 @@ function Node_Stack(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	} #endregion
 	
 	static step = function() { #region
-		var _axis = inputs[| 0].getValue();
+		var _axis = getInputData(0);
 		
 		inputs[| 1].setVisible(_axis != 2);
 		inputs[| 2].setVisible(_axis != 2);
 	} #endregion
 	
 	static update = function(frame = PROJECT.animator.current_frame) { #region
-		var _axis = inputs[| 0].getValue();
-		var _alig = inputs[| 1].getValue();
-		var _spac = inputs[| 2].getValue();
+		var _axis = getInputData(0);
+		var _alig = getInputData(1);
+		var _spac = getInputData(2);
 		
 		var ww = 0;
 		var hh = 0;
 		
 		for( var i = input_fix_len; i < ds_list_size(inputs) - 1; i++ ) {
-			var _surf = inputs[| i].getValue();
+			var _surf = getInputData(i);
 			if(!is_array(_surf)) _surf = [ _surf ];
 			
 			for( var j = 0; j < array_length(_surf); j++ ) {
@@ -101,7 +101,7 @@ function Node_Stack(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			
 			var sx = 0, sy = 0;
 			for( var i = input_fix_len; i < ds_list_size(inputs) - 1; i++ ) {
-				var _surf = inputs[| i].getValue();
+				var _surf = getInputData(i);
 				if(!is_array(_surf)) _surf = [ _surf ];
 				
 				for( var j = 0; j < array_length(_surf); j++ ) {

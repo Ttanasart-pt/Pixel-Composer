@@ -37,7 +37,7 @@ function Node_Image_Sequence(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	color = COLORS.node_blend_input;
 	
 	inputs[| 0]  = nodeValue("Path", self, JUNCTION_CONNECT.input, VALUE_TYPE.path, [])
-		.setDisplay(VALUE_DISPLAY.path_array, ["*.png", ""]);
+		.setDisplay(VALUE_DISPLAY.path_array, { filter: ["*.png", ""] });
 	
 	inputs[| 1]  = nodeValue("Padding", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [0, 0, 0, 0])
 		.setDisplay(VALUE_DISPLAY.padding)
@@ -87,7 +87,7 @@ function Node_Image_Sequence(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	insp1UpdateIcon     = [ THEME.refresh, 1, COLORS._main_value_positive ];
 	
 	static onInspector1Update = function() {
-		var path = inputs[| 0].getValue();
+		var path = getInputData(0);
 		if(path == "") return;
 		updatePaths(path);
 		update();
@@ -123,17 +123,17 @@ function Node_Image_Sequence(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	}
 	
 	static update = function(frame = PROJECT.animator.current_frame) {
-		var path = inputs[| 0].getValue();
+		var path = getInputData(0);
 		if(path == "") return;
 		if(!is_array(path)) path = [ path ];
 		if(!array_equals(path, path_loaded)) 
 			updatePaths(path);
 		
-		var pad = inputs[| 1].getValue();
-		var can = inputs[| 2].getValue();
+		var pad = getInputData(1);
+		var can = getInputData(2);
 		inputs[| 3].setVisible(can != CANVAS_SIZE.individual);
 		
-		var siz = inputs[| 3].getValue();
+		var siz = getInputData(3);
 		
 		var ww = -1, hh = -1;
 		var _ww = -1, _hh = -1;

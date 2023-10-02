@@ -12,28 +12,28 @@ function Node_Path_Shift(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	outputs[| 0] = nodeValue("Path", self, JUNCTION_CONNECT.output, VALUE_TYPE.pathnode, self);
 	
 	static getLineCount = function() { 
-		var _path = inputs[| 0].getValue();
+		var _path = getInputData(0);
 		return struct_has(_path, "getLineCount")? _path.getLineCount() : 1; 
 	}
 	
 	static getSegmentCount = function(ind = 0) { 
-		var _path = inputs[| 0].getValue();
+		var _path = getInputData(0);
 		return struct_has(_path, "getSegmentCount")? _path.getSegmentCount(ind) : 0; 
 	}
 	
 	static getLength = function(ind = 0) { 
-		var _path = inputs[| 0].getValue(ind = 0);
+		var _path = getInputData(0);
 		return struct_has(_path, "getLength")? _path.getLength(ind) : 0; 
 	}
 	
 	static getAccuLength = function(ind = 0) { 
-		var _path = inputs[| 0].getValue(ind = 0);
+		var _path = getInputData(0);
 		return struct_has(_path, "getAccuLength")? _path.getAccuLength(ind) : []; 
 	}
 	
 	static getPointRatio = function(_rat, ind = 0) {
-		var _path = inputs[| 0].getValue();
-		var _shf  = inputs[| 1].getValue();
+		var _path = getInputData(0);
+		var _shf  = getInputData(1);
 		
 		if(is_array(_path)) {
 			_path = array_safe_get(_path, ind);
@@ -60,7 +60,7 @@ function Node_Path_Shift(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	}
 	
 	static getBoundary = function(ind = 0) { 
-		var _path = inputs[| 0].getValue();
+		var _path = getInputData(0);
 		return struct_has(_path, "getBoundary")? _path.getBoundary(ind) : new BoundingBox( 0, 0, 1, 1 ); 
 	}
 	

@@ -21,13 +21,13 @@ function Node_Perlin(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		.setDisplay(VALUE_DISPLAY.enum_button, [ "Greyscale", "RGB", "HSV" ]);
 	
 	inputs[| 7] = nodeValue("Color R range", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 1 ])
-		.setDisplay(VALUE_DISPLAY.slider_range, [0, 1, .01]);
+		.setDisplay(VALUE_DISPLAY.slider_range);
 	
 	inputs[| 8] = nodeValue("Color G range", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 1 ])
-		.setDisplay(VALUE_DISPLAY.slider_range, [0, 1, .01]);
+		.setDisplay(VALUE_DISPLAY.slider_range);
 	
 	inputs[| 9] = nodeValue("Color B range", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 1 ])
-		.setDisplay(VALUE_DISPLAY.slider_range, [0, 1, .01]);
+		.setDisplay(VALUE_DISPLAY.slider_range);
 	
 	input_display_list = [
 		["Output", 	 true],	0, 5, 
@@ -40,7 +40,7 @@ function Node_Perlin(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 	attribute_surface_depth();
 	
 	static step = function() {
-		var _col = inputs[| 6].getValue();
+		var _col = getInputData(6);
 		
 		inputs[| 7].setVisible(_col != 0);
 		inputs[| 8].setVisible(_col != 0);

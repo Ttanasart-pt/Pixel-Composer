@@ -100,7 +100,7 @@ function Node_Logic(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	static onValueUpdate = function(index) {
 		if(index != 0) return;
 		
-		var mode = inputs[| 0].getValue();
+		var mode = getInputData(0);
 		switch(mode) {
 			case LOGIC_OPERATOR.lnot :  
 				trimInputs(1);
@@ -122,7 +122,7 @@ function Node_Logic(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	static onValueFromUpdate = function(index) {
 		if(LOADING || APPENDING) return;
 		
-		var mode = inputs[| 0].getValue();
+		var mode = getInputData(0);
 		switch(mode) {
 			case LOGIC_OPERATOR.lnot :  
 				trimInputs(1);
@@ -152,12 +152,6 @@ function Node_Logic(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		return false;
 	}
 	
-	static step = function() {
-		var mode = inputs[| 0].getValue();
-		
-		//inputs[| 2].setVisible(mode != LOGIC_OPERATOR.lnot, mode != LOGIC_OPERATOR.lnot);
-	}
-	
 	function evalLogicArray(mode, a, b = false) {
 		var as = is_array(a);
 		var bs = is_array(b);
@@ -182,8 +176,8 @@ function Node_Logic(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	}
 	
 	static update = function(frame = PROJECT.animator.current_frame) { 
-		var mode = inputs[| 0].getValue();
-		var a = inputs[| 1].getValue();
+		var mode = getInputData(0);
+		var a = getInputData(1);
 		var val;
 		
 		switch(mode) {
@@ -193,7 +187,7 @@ function Node_Logic(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			case LOGIC_OPERATOR.lnand :	
 			case LOGIC_OPERATOR.lnor :	
 			case LOGIC_OPERATOR.lxor :	
-				var b = inputs[| 2].getValue();
+				var b = getInputData(2);
 				val = evalLogicArray(mode, a, b);
 				break;
 			
@@ -202,7 +196,7 @@ function Node_Logic(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 				var val = a;
 				var to  = max(2, ds_list_size(inputs) - 1);
 				for( var i = 2; i < to; i++ ) {
-					var b = inputs[| i].getValue();
+					var b = getInputData(i);
 					val = evalLogicArray(mode, val, b);
 				}
 		}
@@ -213,7 +207,7 @@ function Node_Logic(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		draw_set_text(f_h3, fa_center, fa_center, COLORS._main_text);
 		var str = "";
-		switch(inputs[| 0].getValue()) {
+		switch(getInputData(0)) {
 			case LOGIC_OPERATOR.land :	str = "And"; break;
 			case LOGIC_OPERATOR.lor :	str = "Or"; break;
 			case LOGIC_OPERATOR.lnot :  str = "Not"; break;

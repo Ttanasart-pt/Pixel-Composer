@@ -22,7 +22,7 @@ function Node_Path_Transform(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	outputs[| 0] = nodeValue("Path", self, JUNCTION_CONNECT.output, VALUE_TYPE.pathnode, self);
 	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
-		var pos = inputs[| 4].getValue();
+		var pos = getInputData(4);
 		var px  = _x + pos[0] * _s;
 		var py  = _y + pos[1] * _s;
 		
@@ -32,36 +32,36 @@ function Node_Path_Transform(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	}
 	
 	static getLineCount = function() { 
-		var _path = inputs[| 0].getValue();
+		var _path = getInputData(0);
 		return struct_has(_path, "getLineCount")? _path.getLineCount() : 1; 
 	}
 	
 	static getSegmentCount = function(ind = 0) { 
-		var _path = inputs[| 0].getValue();
+		var _path = getInputData(0);
 		return struct_has(_path, "getSegmentCount")? _path.getSegmentCount(ind) : 0; 
 	}
 	
 	static getLength = function(ind = 0) { 
-		var _path = inputs[| 0].getValue();
+		var _path = getInputData(0);
 		return struct_has(_path, "getLength")? _path.getLength(ind) : 0; 
 	}
 	
 	static getAccuLength = function(ind = 0) { 
-		var _path = inputs[| 0].getValue();
+		var _path = getInputData(0);
 		return struct_has(_path, "getAccuLength")? _path.getAccuLength(ind) : []; 
 	}
 		
 	static getBoundary = function(ind = 0) { 
-		var _path = inputs[| 0].getValue();
+		var _path = getInputData(0);
 		if(!struct_has(_path, "getBoundary"))
 			return new BoundingBox( 0, 0, 1, 1 );
 			
 		var b = _path.getBoundary(ind).clone();
 		
-		var _pos  = inputs[| 1].getValue();
-		var _rot  = inputs[| 2].getValue();
-		var _sca  = inputs[| 3].getValue();
-		var _anc  = inputs[| 4].getValue();
+		var _pos  = getInputData(1);
+		var _rot  = getInputData(2);
+		var _sca  = getInputData(3);
+		var _anc  = getInputData(4);
 		
 		b.minx	= _anc[0] + (b.minx - _anc[0]) * _sca[0]; 
 		b.miny	= _anc[1] + (b.miny - _anc[1]) * _sca[1];
@@ -84,11 +84,11 @@ function Node_Path_Transform(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	}
 	
 	static getPointRatio = function(_rat, ind = 0) {
-		var _path = inputs[| 0].getValue();
-		var _pos  = inputs[| 1].getValue();
-		var _rot  = inputs[| 2].getValue();
-		var _sca  = inputs[| 3].getValue();
-		var _anc  = inputs[| 4].getValue();
+		var _path = getInputData(0);
+		var _pos  = getInputData(1);
+		var _rot  = getInputData(2);
+		var _sca  = getInputData(3);
+		var _anc  = getInputData(4);
 		
 		if(is_array(_path)) {
 			_path = array_safe_get(_path, ind);
@@ -116,10 +116,10 @@ function Node_Path_Transform(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	}
 	
 	static getBoundary = function(ind = 0) {
-		var _path = inputs[| 0].getValue();
-		var _pos  = inputs[| 1].getValue();
-		var _rot  = inputs[| 2].getValue();
-		var _sca  = inputs[| 3].getValue();
+		var _path = getInputData(0);
+		var _pos  = getInputData(1);
+		var _rot  = getInputData(2);
+		var _sca  = getInputData(3);
 		
 		if(_path == noone) return [ 0, 0, 1, 1 ];
 		

@@ -7,7 +7,7 @@ function Node_Anim_Curve(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 	
 	inputs[| 0] = nodeValue("Curve",   self, JUNCTION_CONNECT.input, VALUE_TYPE.curve, CURVE_DEF_01);
 	inputs[| 1] = nodeValue("Progress", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
-		.setDisplay(VALUE_DISPLAY.slider, [0, 1, 0.01]);
+		.setDisplay(VALUE_DISPLAY.slider);
 	
 	inputs[| 2] = nodeValue("Minimum", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0);
 	inputs[| 3] = nodeValue("Maximum", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1);
