@@ -21,7 +21,7 @@ function Node_Strand_Group(_x, _y, _group = noone) : Node_Collection(_x, _y, _gr
 		RETURN_ON_REST
 		
 		setRenderStatus(false);
-		UPDATE |= RENDER_TYPE.full;
+		RENDER_ALL
 	}
 	
 	PATCH_STATIC

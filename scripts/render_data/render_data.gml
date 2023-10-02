@@ -5,11 +5,18 @@ enum RENDER_TYPE {
 }
 
 #region globalvar
-	global.FLAG.render  = false;
+	globalvar UPDATE, RENDER_QUEUE, RENDER_ORDER, UPDATE_RENDER_ORDER;
+	UPDATE_RENDER_ORDER = false;
+	
+	global.FLAG.render  = true;
 	global.group_inputs = [ "Node_Group_Input", "Node_Feedback_Input", "Node_Iterator_Input", "Node_Iterator_Each_Input" ];
+	
+	#macro RENDER_ALL_REORDER	UPDATE_RENDER_ORDER = true; UPDATE |= RENDER_TYPE.full;
+	#macro RENDER_ALL									    UPDATE |= RENDER_TYPE.full;
+	#macro RENDER_PARTIAL								    UPDATE |= RENDER_TYPE.partial;
 #endregion
 
-function __nodeLeafList(_list) {
+function __nodeLeafList(_list) { #region
 	var nodes = [];
 	var nodeNames = [];
 	
@@ -27,9 +34,9 @@ function __nodeLeafList(_list) {
 	
 	LOG_LINE_IF(global.FLAG.render, $"Push node {nodeNames} to stack");
 	return nodes;
-}
+} #endregion
 
-function __nodeIsLoop(_node) {
+function __nodeIsLoop(_node) { #region
 	switch(instanceof(_node)) {
 		case "Node_Iterate" : 
 		case "Node_Iterate_Each" : 
@@ -38,19 +45,30 @@ function __nodeIsLoop(_node) {
 			return true;
 	}
 	return false;
-}
+} #endregion
 
-function __nodeInLoop(_node) {
+function __nodeInLoop(_node) { #region
 	var gr = _node.group;
 	while(gr != noone) {
 		if(__nodeIsLoop(gr)) return true;
 		gr = gr.group;
 	}
 	return false;
-}
+} #endregion
 
-function Render(partial = false, runAction = false) { 
-	var t = current_time;
+function ResetAllNodesRender() { #region
+	var _key = ds_map_find_first(PROJECT.nodeMap);
+	var amo  = ds_map_size(PROJECT.nodeMap);
+		
+	repeat(amo) {
+		var _node = PROJECT.nodeMap[? _key];
+		_node.setRenderStatus(false);
+		_key = ds_map_find_next(PROJECT.nodeMap, _key);	
+	}
+} #endregion
+
+function Render(partial = false, runAction = false) { #region
+	var t = get_timer();
 	LOG_BLOCK_START();
 	LOG_IF(global.FLAG.render, $"============================== RENDER START [frame {PROJECT.animator.current_frame}] ==============================");
 	
@@ -69,7 +87,7 @@ function Render(partial = false, runAction = false) {
 				_key = ds_map_find_next(PROJECT.nodeMap, _key);	
 			}
 		}
-	
+		
 		// get leaf node
 		RENDER_QUEUE.clear();
 		var key = ds_map_find_first(PROJECT.nodeMap);
@@ -122,8 +140,9 @@ function Render(partial = false, runAction = false) {
 				rendering.doUpdate();
 				
 				var nextNodes = rendering.getNextNodes();
-				for( var i = 0, n = array_length(nextNodes); i < n; i++ )
+				for( var i = 0, n = array_length(nextNodes); i < n; i++ ) {
 					RENDER_QUEUE.enqueue(nextNodes[i]);
+				}
 				
 				if(runAction && rendering.hasInspector1Update())
 					rendering.inspector1Update();
@@ -135,20 +154,20 @@ function Render(partial = false, runAction = false) {
 		noti_warning(exception_print(e));
 	}
 	
-	LOG_IF(global.FLAG.render, "=== RENDER COMPLETE IN {" + string(current_time - t) + "ms} ===\n");
+	LOG_IF(global.FLAG.render, $"=== RENDER COMPLETE IN {(get_timer() - t) / 1000} ms ===\n");
 	LOG_END();
-}
+} #endregion
 
-function __renderListReset(list) {
+function __renderListReset(list) { #region
 	for( var i = 0; i < ds_list_size(list); i++ ) {
 		list[| i].setRenderStatus(false);
 		
 		if(struct_has(list[| i], "nodes"))
 			__renderListReset(list[| i].nodes);
 	}
-}
+} #endregion
 
-function RenderList(list) {
+function RenderList(list) { #region
 	LOG_BLOCK_START();
 	LOG_IF(global.FLAG.render, "=============== RENDER LIST START ===============");
 	var queue = ds_queue_create();
@@ -212,9 +231,9 @@ function RenderList(list) {
 	LOG_END();
 	
 	ds_queue_destroy(queue);
-}
+} #endregion
 
-function RenderListAction(list, context = PANEL_GRAPH.getCurrentContext()) {
+function RenderListAction(list, context = PANEL_GRAPH.getCurrentContext()) { #region
 	printIf(global.FLAG.render, "=== RENDER LIST ACTION START [frame " + string(PROJECT.animator.current_frame) + "] ===");
 	
 	try {
@@ -272,4 +291,4 @@ function RenderListAction(list, context = PANEL_GRAPH.getCurrentContext()) {
 	} catch(e) {
 		noti_warning(exception_print(e));
 	}
-}
+} #endregion

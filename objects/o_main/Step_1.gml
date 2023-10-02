@@ -80,6 +80,9 @@ _HOVERING_ELEMENT = noone;
 	//physics_pause_enable(true);
 	DEF_SURFACE_RESET();
 	
+	if(UPDATE_RENDER_ORDER) ResetAllNodesRender();
+	UPDATE_RENDER_ORDER = false;
+	
 	if(PROJECT.active) {
 		var _k = ds_map_find_first(PROJECT.nodeMap);
 		var _a = ds_map_size(PROJECT.nodeMap);
@@ -91,7 +94,11 @@ _HOVERING_ELEMENT = noone;
 		if(PROJECT.animator.is_playing || PROJECT.animator.rendering) {
 			if(PROJECT.animator.frame_progress) {
 				__addon_preAnim();
-				Render();
+				
+				if(PROJECT.animator.current_frame == 0)
+					ResetAllNodesRender();
+				Render(true);
+				
 				__addon_postAnim();
 			}
 			PROJECT.animator.frame_progress = false;

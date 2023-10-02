@@ -1,14 +1,12 @@
 #macro struct_has variable_struct_exists
 
-function struct_override(original, override, excludes = []) {
+function struct_override(original, override) {
 	var args = variable_struct_get_names(override);
 	
 	for( var i = 0, n = array_length(args); i < n; i++ ) {
 		var _key = args[i];
 		
 		if(!struct_has(original, _key))   continue;
-		if(is_callable(original[$ _key])) continue;
-		if(array_exists(excludes, _key))  continue;
 		
 		original[$ _key] = override[$ _key];
 	}

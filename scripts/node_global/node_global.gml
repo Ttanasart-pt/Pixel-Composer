@@ -20,7 +20,7 @@ function variable_editor(nodeVal) constructor {
 		
 		if(string_pos(" ", value.name))
 			noti_warning("Global variable name can't have space.");
-		UPDATE |= RENDER_TYPE.full;
+		RENDER_ALL
 	});
 	
 	vb_range = new vectorBox(2, function(index, val) { 
@@ -39,7 +39,7 @@ function variable_editor(nodeVal) constructor {
 		disp_index = 0;
 		refreshInput();
 		
-		UPDATE |= RENDER_TYPE.full;
+		RENDER_ALL
 	} );
 	sc_type.update_hover = false;
 	
@@ -47,7 +47,7 @@ function variable_editor(nodeVal) constructor {
 		disp_index = val;
 		refreshInput();
 		
-		UPDATE |= RENDER_TYPE.full;
+		RENDER_ALL
 	} );
 	sc_disp.update_hover = false;
 	
@@ -190,7 +190,7 @@ function Node_Global(_x = 0, _y = 0) : __Node_Base(_x, _y) constructor {
 	anim_priority = -999;
 	
 	static valueUpdate = function(index) {
-		UPDATE |= RENDER_TYPE.full;
+		RENDER_ALL
 	}
 	
 	static createValue = function() {

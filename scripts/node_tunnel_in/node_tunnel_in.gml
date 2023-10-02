@@ -102,7 +102,7 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 			k = ds_map_find_next(TUNNELS_IN_MAP, k);	
 		}
 		
-		UPDATE |= RENDER_TYPE.full;
+		RENDER_ALL
 	}
 	
 	static step = function() {

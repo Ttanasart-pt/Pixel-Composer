@@ -290,7 +290,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 				
 			if(mouse_release(mb_left)) {
 				transform_type = 0;
-				UPDATE |= RENDER_TYPE.full;
+				RENDER_ALL
 				UNDO_HOLDING = false;
 			}
 		} else if(drag_point > -1) { 
@@ -550,7 +550,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			
 			if(mouse_release(mb_left)) {
 				drag_point = -1;
-				UPDATE |= RENDER_TYPE.full;
+				RENDER_ALL
 				UNDO_HOLDING = false;
 			}
 		}
@@ -812,7 +812,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 				drag_point_sx = (_mx - _x) / _s;
 				drag_point_sy = (_my - _y) / _s;
 				
-				UPDATE |= RENDER_TYPE.full;
+				RENDER_ALL
 			}
 		#endregion
 		}

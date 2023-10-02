@@ -40,7 +40,9 @@
 	TOOLTIP  = "";
 	DRAGGING = noone;
 	KEYBOARD_STRING = "";
+	
 	RENDER_QUEUE = new Queue();
+	RENDER_ORDER = [];
 	
 	globalvar AUTO_SAVE_TIMER;
 	AUTO_SAVE_TIMER = 0;
@@ -78,7 +80,7 @@
 	});
 	
 	addHotkey("", "Render all", vk_f5,	MOD_KEY.none, function() { 
-		UPDATE |= RENDER_TYPE.full; 
+		RENDER_ALL_REORDER 
 	});
 	
 	addHotkey("", "Close file", "Q",		MOD_KEY.ctrl, function() { PANEL_GRAPH.close(); });

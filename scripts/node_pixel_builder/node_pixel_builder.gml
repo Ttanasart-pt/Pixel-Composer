@@ -15,7 +15,7 @@ function Node_Pixel_Builder(_x, _y, _group = noone) : Node_Collection(_x, _y, _g
 	
 	if(!LOADING && !APPENDING && !CLONING) {
 		var input  = nodeBuild("Node_PB_Layer", -256, -32, self);
-		UPDATE |= RENDER_TYPE.full; 
+		RENDER_ALL 
 	}
 	
 	static getNextNodes = function() {

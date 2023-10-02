@@ -208,7 +208,7 @@ function Node_WAV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			readSoundComplete();
 			checkPreview(true);
 			
-			UPDATE |= RENDER_TYPE.full;
+			RENDER_ALL
 		}
 		
 		insp2UpdateIcon[1] = attributes.play;

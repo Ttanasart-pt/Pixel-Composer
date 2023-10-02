@@ -130,7 +130,8 @@ function __APPEND_MAP(_map, context = PANEL_GRAPH.getCurrentContext()) {
 	
 	APPENDING = false;
 	PANEL_ANIMATION.updatePropertyList();
-	UPDATE |= RENDER_TYPE.full;
+	
+	RENDER_ALL_REORDER
 	
 	if(struct_has(_map, "metadata")) {
 		var meta = _map.metadata;

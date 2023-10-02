@@ -570,7 +570,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	insp2UpdateIcon    = [ THEME.play_all, 0, COLORS._main_value_positive ];
 	
 	static onInspector1Update = function() { #region
-		if(isInLoop())	UPDATE |= RENDER_TYPE.full;
+		if(isInLoop())	RENDER_ALL
 		else			doInspectorAction();
 	} #endregion
 	

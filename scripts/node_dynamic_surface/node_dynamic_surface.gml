@@ -44,7 +44,7 @@ function Node_DynaSurf(_x, _y, _group = noone) : Node_Collection(_x, _y, _group)
 		_surH.inputs[| 0].setFrom(_input.outputs[| 0]);
 		_outH.inputs[| 0].setFrom(_surH.outputs[| 0]);
 		
-		UPDATE |= RENDER_TYPE.full; 
+		RENDER_ALL 
 	} #endregion
 	
 	static setRenderStatus = function(result) { #region

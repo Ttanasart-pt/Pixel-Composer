@@ -408,13 +408,16 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	static focusStep = function() {}
 	static inspectorStep = function() {}
 	
-	static getInputData = function(index, def = 0) { return array_safe_get(inputs_data, index, def); }
+	static getInputData = function(index, def = 0) { #region
+		gml_pragma("forceinline");
+		
+		return array_safe_get(inputs_data, index, def);
+	} #endregion
 	
 	static getInputs = function() { #region
-		inputs_data	= array_create(ds_list_size(inputs));
-		
+		inputs_data	= array_create(ds_list_size(inputs), undefined);
 		for(var i = 0; i < ds_list_size(inputs); i++)
-			inputs_data[i] = inputs[| i].getValue();
+			inputs_data[i] = inputs[| i].getValue(,,, true);
 	} #endregion
 	
 	static doUpdate = function() { #region
@@ -425,24 +428,17 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		LOG_BLOCK_START();
 		LOG_IF(global.FLAG.render, $">>>>>>>>>> DoUpdate called from {internalName} <<<<<<<<<<");
 		
+		var t     = get_timer();
 		var _hash = input_hash;
 		getInputs();
-		input_hash = md5_string_unicode(json_stringify(inputs_data));
+		input_hash = md5_string_unicode(string(inputs_data));	
 		anim_last_step = isAnimated() || _hash != input_hash;
 		
-		if(name == "Shape") print($"{isAnimated()} - {_hash != input_hash}");
-		
 		try {
-			var t = get_timer();
-			
 			if(!is_instanceof(self, Node_Collection)) 
 				setRenderStatus(true);
 			
-			if(anim_last_step)
-				update(); ///Update only if input hash differs from previous.
-				
-			if(!is_instanceof(self, Node_Collection))
-				render_time = get_timer() - t;
+			if(anim_last_step) update(); ///Update only if input hash differs from previous.
 		} catch(exception) {
 			var sCurr = surface_get_target();
 			while(surface_get_target() != sBase)
@@ -450,6 +446,9 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 			
 			log_warning("RENDER", exception_print(exception), self);
 		}
+		
+		if(!is_instanceof(self, Node_Collection))
+			render_time = get_timer() - t;
 		
 		if(!use_cache && PROJECT.onion_skin) {
 			for( var i = 0; i < ds_list_size(outputs); i++ ) {
@@ -1078,7 +1077,8 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 			outputs[| i].destroy();
 		
 		onDestroy();
-		UPDATE |= RENDER_TYPE.full;
+		
+		RENDER_ALL_REORDER
 	} #endregion
 	
 	static restore = function() { #region
@@ -1513,8 +1513,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	
 	static attributeDeserialize = function(attr) { #region
 		struct_override(attributes, attr);
-	}
-	 #endregion
+	} #endregion
 	static postDeserialize = function() {}
 	static processDeserialize = function() {}
 		
@@ -1631,4 +1630,6 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 			return surface_rgba8unorm;
 		return surface_get_format(_s);
 	} #endregion
+	
+	static toString = function() { return $"PixelComposerNode: {node_id}[{internalName}] {input_hash}"; }
 }

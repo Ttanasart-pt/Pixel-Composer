@@ -236,7 +236,7 @@ function __LOAD_PATH(path, readonly = false, safe_mode = false, override = false
 		log_warning("LOAD, connect", exception_print(e));
 	}
 	
-	Render();
+	RENDER_ALL_REORDER
 	
 	LOADING = false;
 	PROJECT.modified = false;

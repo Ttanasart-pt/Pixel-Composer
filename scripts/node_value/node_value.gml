@@ -1283,7 +1283,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		global.cache_call++;
 		if(useCache && use_cache) {
 			var cache_hit = cache_value[0];
-			cache_hit &= (!is_anim && value_from == noone) || cache_value[1] == _time;
+			cache_hit &= !isAnimated() || cache_value[1] == _time;
 			cache_hit &= cache_value[2] != undefined;
 			cache_hit &= cache_value[3] == applyUnit;
 			cache_hit &= connect_type == JUNCTION_CONNECT.input;
@@ -1592,8 +1592,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				if(_update) node.valueUpdate(self.index);
 				node.clearCacheForward();
 				
-				if(fullUpdate)	UPDATE |= RENDER_TYPE.full;
-				else			UPDATE |= RENDER_TYPE.partial;
+				if(fullUpdate)	RENDER_ALL
+				else			RENDER_PARTIAL
 				
 				if(!LOADING) PROJECT.modified = true;
 			}
@@ -1702,6 +1702,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			PROJECT.modified	= true;
 		}
 		
+		UPDATE_RENDER_ORDER = true;
 		return true;
 	} #endregion
 	
@@ -1716,6 +1717,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		node.clearCacheForward();
 		
 		PROJECT.modified = true;
+		
+		UPDATE_RENDER_ORDER = true;
 		return false;
 	} #endregion
 	

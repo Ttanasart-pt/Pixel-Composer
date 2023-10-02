@@ -119,7 +119,6 @@
 	HOTKEY_CONTEXT[| 0] = "";
 	
 	globalvar CURSOR, TOOLTIP, DRAGGING, DIALOG_DEPTH_HOVER;
-	globalvar UPDATE, RENDER_QUEUE;
 #endregion
 
 #region inputs

@@ -141,9 +141,7 @@ function Panel_Menu() : PanelContent() constructor {
 		]],
 		[ __txt("Rendering"), [
 			menuItem(__txtx("panel_menu_render_all_nodes", "Render all nodes"), function() { 
-				for(var i = 0; i < ds_list_size(PROJECT.nodes); i++) 
-					PROJECT.nodes[| i].triggerRender();
-				UPDATE |= RENDER_TYPE.full; 
+				RENDER_ALL_REORDER 
 			}, [ THEME.sequence_control, 1 ], ["", "Render all"]),
 			menuItem(__txtx("panel_menu_execute_exports", "Execute all export nodes"), function() { 
 				var key = ds_map_find_first(PROJECT.nodeMap);

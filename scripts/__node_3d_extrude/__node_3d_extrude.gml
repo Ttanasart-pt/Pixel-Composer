@@ -403,7 +403,7 @@ function __Node_3D_Extrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 			mesh_generating = false;
 			mesh_genetated  = true;
 			
-			UPDATE |= RENDER_TYPE.full;
+			RENDER_ALL
 			outputs[| 3].setValue(vertexObjects);
 		}
 	}

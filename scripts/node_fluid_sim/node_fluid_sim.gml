@@ -21,7 +21,7 @@ function Node_Fluid_Group(_x, _y, _group = noone) : Node_Collection(_x, _y, _gro
 		RETURN_ON_REST
 		
 		setRenderStatus(false);
-		UPDATE |= RENDER_TYPE.full;
+		RENDER_ALL
 	}
 	
 	PATCH_STATIC

@@ -60,7 +60,7 @@ function Node_Tunnel_Out(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		
 		TUNNELS_OUT[? node_id] = _key;
 		
-		UPDATE |= RENDER_TYPE.full;
+		RENDER_ALL
 	}
 	
 	static step = function() {

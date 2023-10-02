@@ -47,7 +47,7 @@
 				frame_progress = true;
 				if(resetTime)
 					time_since_last_frame = 0;
-				UPDATE |= RENDER_TYPE.full;
+				RENDER_ALL
 			} else 
 				frame_progress = false;
 		}
