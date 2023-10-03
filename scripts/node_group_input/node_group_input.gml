@@ -39,16 +39,19 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		/*Boolean*/	[ "Default" ],
 		/*Color*/	[ "Default", "Gradient", "Palette" ],
 		/*Surface*/	[ "Default", ],
+		
 		/*Path*/	[ "Default", ],
 		/*Curve*/	[ "Default", ],
 		/*Text*/	[ "Default", ],
 		/*Object*/	[ "Default", ],
 		/*Node*/	[ "Default", ],
+		
 		/*3D*/		[ "Default", ],
 		/*Any*/		[ "Default", ],
 		/*Pathnode*/[ "Default", ],
 		/*Particle*/[ "Default", ],
 		/*Rigid*/	[ "Default", ],
+		
 		/*Fdomain*/	[ "Default", ],
 		/*Struct*/	[ "Default", ],
 		/*Strand*/	[ "Default", ],
@@ -143,10 +146,7 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 					_to.removeFrom();
 			}
 			
-			inputs[| 0].display_data.data    = array_safe_get(display_list, _val_type);
-			inputs[| 0].editWidget.data_list = array_safe_get(display_list, _val_type);
 			inputs[| 0].setValue(0);
-			_dtype = 0;
 		}
 		
 		_dtype = array_safe_get(array_safe_get(display_list, _val_type, []), _dtype);
@@ -276,6 +276,11 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	static step = function() { #region
 		if(is_undefined(inParent)) return;
 		
+		var _type		= getInputData(2);
+		var _val_type   = data_type_map[_type];
+		inputs[| 0].display_data.data    = array_safe_get(display_list, _val_type);
+		inputs[| 0].editWidget.data_list = array_safe_get(display_list, _val_type);
+			
 		if(inParent.name != display_name) {
 			inParent.name = display_name;
 			group.inputMap[? string_replace_all(display_name, " ", "_")] = inParent;
@@ -301,15 +306,9 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 				doTrigger = 0;
 			}
 		}
-	} #endregion
-	
-	PATCH_STATIC
-	
-	static update = function(frame = PROJECT.animator.current_frame) { #region
-		if(is_undefined(inParent)) return;
 		
 		var _dstype = getInputData(0);
-		var _data  = getInputData(2);
+		var _data   = getInputData(2);
 		_dstype = array_safe_get(array_safe_get(display_list, _data, []), _dstype);
 		
 		var _datype = data_type_map[_data];
@@ -338,30 +337,21 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		}
 	} #endregion
 	
-	static postDeserialize = function() { #region
-		createInput(false);
-		
-		var _inputs = load_map.inputs;
-		inputs[| 5].applyDeserialize(_inputs[5], load_scale);
-		if(PROJECT.version < 11520) attributes.input_priority = getInputData(5);
-		group.sortIO();
-		
-		inputs[| 2].applyDeserialize(_inputs[2], load_scale);
-		onValueUpdate(2);
+	PATCH_STATIC
+	
+	static update = function(frame = PROJECT.animator.current_frame) { #region
+		if(is_undefined(inParent)) return;
 	} #endregion
 	
-	static applyDeserialize = function() { #region
-		var _inputs = load_map.inputs;
-		var amo = min(array_length(_inputs), ds_list_size(inputs));
-		
-		for(var i = 0; i < amo; i++) {
-			if(i == 2 || i == 5) continue;
-			inputs[| i].applyDeserialize(_inputs[i], load_scale);
-		}
-		
+	static postDeserialize = function() { createInput(false); }
+	
+	static doApplyDeserialize = function() {
 		inParent.name = name;
-		onValueUpdate(0);
-	} #endregion
+		getInputs();
+		if(PROJECT.version < 11520) attributes.input_priority = getInputData(5);
+		onValueUpdate();
+		group.sortIO();
+	}
 	
 	static onDestroy = function() { #region
 		if(is_undefined(inParent)) return;

@@ -122,16 +122,19 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		}
 	} #endregion
 	
+	static processData_prebatch  = function() { shader_preset_interpolation();  }
+	static processData_postbatch = function() { shader_postset_interpolation(); }
+	
 	static processData = function(_outSurf, _data, _output_index, _array_index) { #region
 		var ins = _data[0];
 		
 		var out_type = _data[9];
 		var out		 = _data[1];
 		
-		var pos		  = array_clone(_data[2]);
+		var pos		  = [ _data[2][0], _data[2][1] ];
 		var pos_exact = _data[10];
 		
-		var anc = array_clone(_data[3]);
+		var anc = [ _data[3][0], _data[3][1] ];
 		
 		var rot_vel = vel * _data[8];
 		var rot		= _data[5] + rot_vel;
@@ -205,7 +208,7 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			
 			var _cc = point_rotate(-_px, -_py, _ww / 2, _hh / 2, rot);
 			surface_set_shader(_outSurf);
-			shader_set_interpolation(_s);
+			shader_set_interpolation_surface(_s);
 			draw_surface_ext_safe(_s, _cc[0], _cc[1], 1, 1, rot, c_white, 1);
 			surface_reset_shader();
 			
@@ -221,7 +224,7 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			}
 			
 			surface_set_shader(_outSurf);
-			shader_set_interpolation(ins);
+			shader_set_interpolation_surface(ins);
 			draw_surface_ext_safe(ins, draw_x, draw_y, sca[0], sca[1], rot, c_white, 1);
 			
 			if(mode == 2) {
@@ -268,11 +271,13 @@ function Node_Transform(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			_surf_out = _surf_out[preview_index];
 		}
 		
-		var pos  = array_clone(getInputData(2));
-		var _pos = [ pos[0], pos[1] ];
+		var __pos = getInputData(2)
+		var pos   = [ __pos[0], __pos[1] ];
+		var _pos  = [ __pos[0], __pos[1] ];
 		
-		var anc  = array_clone(getInputData(3));
-		var _anc = [ anc[0], anc[1] ];
+		var __anc = getInputData(3);
+		var anc   = [ __anc[0], __anc[1] ];
+		var _anc  = [ __anc[0], __anc[1] ];
 		
 		var rot = getInputData(5);
 		var sca = getInputData(6);

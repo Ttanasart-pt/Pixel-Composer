@@ -32,6 +32,9 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	static getInputData = function(index, def = 0) { return array_safe_get(inputs_data, index, def); }
 	
+	static processData_prebatch  = function() {}
+	static processData_postbatch = function() {}
+	
 	static processData = function(_outSurf, _data, _output_index, _array_index = 0) { return _outSurf; }
 	
 	static getSingleValue = function(_index, _arr = 0, output = false) { #region
@@ -270,8 +273,10 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	} #endregion
 	
 	static update = function(frame = PROJECT.animator.current_frame) { #region
+		processData_prebatch();
 		if(batch_output) processBatchOutput();
 		else			 processOutput();
+		processData_postbatch();
 		
 		postUpdate();
 	} #endregion

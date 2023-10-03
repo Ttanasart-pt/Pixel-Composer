@@ -458,7 +458,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		
 		cached_manual = false;
 		
-		if(!use_cache && PROJECT.onion_skin) {
+		if(!use_cache && PROJECT.onion_skin.enabled) {
 			for( var i = 0; i < ds_list_size(outputs); i++ ) {
 				if(outputs[| i].type != VALUE_TYPE.surface) continue;
 				cacheCurrentFrame(outputs[| i].getValue());

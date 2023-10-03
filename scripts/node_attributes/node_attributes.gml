@@ -62,6 +62,7 @@
 	
 	function attribute_interpolation(label = false) {
 		attributes.interpolation = 0;
+		attributes.oversample = 0;
 		
 		if(label) array_push(attributeEditors, "Surface");
 		array_push(attributeEditors, ["Texture interpolation", function() { return attributes.interpolation; }, 
@@ -72,6 +73,7 @@
 	}
 	
 	function attribute_oversample(label = false) {
+		attributes.interpolation = 0;
 		attributes.oversample = 0;
 		
 		if(label) array_push(attributeEditors, "Surface");

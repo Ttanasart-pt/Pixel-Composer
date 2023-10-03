@@ -45,14 +45,13 @@ function draw_surface_blend(background, foreground, blend = 0, alpha = 1, _pre_a
 }
 
 function draw_surface_blend_ext(bg, fg, _x, _y, _sx = 1, _sy = 1, _rot = 0, _col = c_white, _alpha = 1, _blend = 0) {
-	var _tmpS = surface_create_size(bg);
+	static _tempS = surface_create(1, 1);
+	_tempS = surface_verify(_tempS, surface_get_width_safe(bg), surface_get_height_safe(bg));
 	
-	surface_set_shader(_tmpS);
+	surface_set_shader(_tempS);
 		shader_set_interpolation(fg);
 		draw_surface_ext_safe(fg, _x, _y, _sx, _sy, _rot, _col, 1);
 	surface_reset_shader();
 	
-	draw_surface_blend(bg, _tmpS, _blend, _alpha, false);
-	
-	surface_free(_tmpS);
+	draw_surface_blend(bg, _tempS, _blend, _alpha, false);
 }

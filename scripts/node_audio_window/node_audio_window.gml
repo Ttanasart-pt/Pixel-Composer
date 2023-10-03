@@ -17,7 +17,7 @@ function Node_Audio_Window(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 					inputs[| 2].display_data.side_button.tooltip.index = inputs[| 2].display_data.unit; 
 					update();
 				}).setTooltip( new tooltipSelector("Unit", [ "Bit", "Second", "Progress" ]) ) 
-				  .setIcon( THEME.unit_audio, function() { return inputs[| 2].display_data.unit; }, COLORS._main_icon )
+				  .setIcon( THEME.unit_audio, [ function() { return inputs[| 2].display_data.unit; } ], COLORS._main_icon )
 			}
 		);
 		

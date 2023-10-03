@@ -20,11 +20,14 @@ function Node_Texture_Remap(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	attribute_surface_depth();
 	attribute_interpolation();
 	
+	static processData_prebatch  = function() { shader_preset_interpolation(shader);  }
+	static processData_postbatch = function() { shader_postset_interpolation(); }
+	
 	static processData = function(_outSurf, _data, _output_index, _array_index) { #region
 		if(!is_surface(_data[1])) return _outSurf;
 		
 		surface_set_shader(_outSurf, shader);
-		shader_set_interpolation(_data[0]);
+		shader_set_interpolation_surface(_data[0]);
 			texture_set_stage(uniform_map, surface_get_texture(_data[1]));
 			draw_surface_safe(_data[0], 0, 0);
 		surface_reset_shader();

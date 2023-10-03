@@ -15,7 +15,7 @@ function Node_Pixel_Sort(_x, _y, _group = noone) : Node_Processor(_x, _y, _group
 		.setDisplay(VALUE_DISPLAY.slider);
 	
 	inputs[| 3] = nodeValue("Direction", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.rotation, 90);
+		.setDisplay(VALUE_DISPLAY.rotation, { step: 90 });
 	
 	inputs[| 4] = nodeValue("Mask", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0);
 	

@@ -812,9 +812,11 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						
 						break; #endregion
 					case VALUE_DISPLAY.rotation :		#region
+						var _step = struct_try_get(display_data, "step", -1); 
+						
 						editWidget = new rotator(function(val) {
 							return setValueDirect(val);
-						}, display_data );
+						}, _step );
 						
 						extract_node = "Node_Number";
 						break; #endregion
@@ -1183,8 +1185,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		#region color compatibility [ color, palette, gradient ]
 			if(type == VALUE_TYPE.gradient && typeFrom == VALUE_TYPE.color) { 
-				if(is_struct(value) && instanceof(value) == "gradientObject")
+				if(is_instanceof(value, gradientObject))
 					return value;
+					
 				if(is_array(value)) {
 					var amo = array_length(value);
 					var grad = array_create(amo);
@@ -1194,9 +1197,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 					g.keys = grad;
 					return g;
 				} 
-			
-				var grad = new gradientObject(value);
-				return grad;
+				
+				if(is_real(value)) return new gradientObject(value);
+				return new gradientObject(0);
 			}
 		
 			if(display_type == VALUE_DISPLAY.palette && !is_array(value)) {
@@ -1470,8 +1473,15 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	} #endregion
 	
 	static isAnimated = function() { #region
+		gml_pragma("forceinline");
+		
 		if(value_from == noone) return __anim();
-		else					return value_from.isAnimated() || value_from.__anim() || value_from.node.anim_last_step;
+		
+		var from_anim	   = value_from.isAnimated();
+		var from_self_anim = value_from.__anim();
+		var from_node_anim = value_from.node.anim_last_step;
+		
+		return from_anim || from_self_anim || from_node_anim;
 	} #endregion
 	
 	static showValue = function() { #region

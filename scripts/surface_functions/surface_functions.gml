@@ -147,24 +147,15 @@ function surface_get_height_safe(s) {
 function is_surface(s) {
 	gml_pragma("forceinline");
 	
-	if(is_undefined(s)) return false;
-	if(is_array(s)) return false;
 	if(is_struct(s) && is_instanceof(s, dynaSurf)) return true;
-	if(!is_real(s)) return false;
-	if(!s) return false;
-	if(!surface_exists(s)) return false;
-	
-	return true;
+	if(is_real(s) && s > 0 && surface_exists(s))   return true;
+	return false;
 }
 
 function surface_verify(surf, w, h, format = surface_rgba8unorm) {
 	gml_pragma("forceinline");
 	
-	w = max(1, round(w));
-	h = max(1, round(h));
-	var s = is_surface(surf);
-	
-	if(!s) return surface_create_valid(w, h, format);
+	if(!is_surface(surf)) return surface_create_valid(w, h, format);
 	return surface_size_to(surf, w, h, format, true);
 }
 
@@ -388,7 +379,7 @@ function surface_mirror(surf, _h, _v) {
 function surface_copy_size(dest, source, format = noone) {
 	gml_pragma("forceinline");
 	
-	if(!is_surface(dest)) return;
+	if(!is_surface(dest))   return;
 	if(!is_surface(source)) return;
 	
 	surface_size_to(dest, surface_get_width_safe(source), surface_get_height_safe(source), format);
@@ -402,9 +393,8 @@ function surface_copy_size(dest, source, format = noone) {
 function surface_valid_size(s) {
 	gml_pragma("forceinline");
 	
+	if(!is_real(s))    return 1;
 	if(is_infinity(s)) return 1;
-	s = toNumber(s);
-	if(!is_real(s)) return 1;
 	return clamp(s, 1, 8196);
 }
 

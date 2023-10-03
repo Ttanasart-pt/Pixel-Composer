@@ -112,7 +112,7 @@ function buttonColor(_onApply, dialog = noone) : widget() constructor {
 		
 		if(is_array(current_color))
 			drawPalette(current_color, _x + ui(6), _y + ui(6), _cw - ui(12), _h - ui(12));
-		else 
+		else if(is_real(current_color))
 			draw_sprite_stretched_ext(THEME.button_color_overlay, 0, _x + ui(4), _y + ui(4), _cw - ui(8), _h - ui(8), current_color, 1);
 		
 		if(WIDGET_CURRENT == self)

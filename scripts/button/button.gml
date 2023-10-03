@@ -90,7 +90,7 @@ function buttonClass(_onClick, _icon = noone) : widget() constructor {
 		
 		var aa = interactable * 0.25 + 0.75;
 		if(icon) {
-			var ind = is_real(icon_index)? icon_index : icon_index();
+			var ind = is_array(icon_index)? icon_index[0]() : icon_index;
 			draw_sprite_ui_uniform(icon, ind, _x + _w / 2, _y + _h / 2,, icon_blend, aa);
 		}
 		

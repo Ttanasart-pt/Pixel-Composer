@@ -36,6 +36,8 @@ function struct_try_get(struct, key, def = 0) {
 function struct_try_override(original, override, key) {
 	gml_pragma("forceinline");
 	
+	if(!is_struct(original) || !is_struct(override)) return;
 	if(!struct_has(override, key)) return;
+	
 	original[$ key] = override[$ key];
 }

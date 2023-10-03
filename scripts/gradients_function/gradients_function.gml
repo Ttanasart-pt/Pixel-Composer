@@ -10,7 +10,7 @@ function gradientKey(time, value) constructor {
 	
 	static clone = function() { return new gradientKey(time, value); }
 	
-	static serialize = function() { return {time, value}; }
+	static serialize = function() { return { time, value }; }
 }
 
 function gradientObject(color = c_black) constructor {
@@ -116,10 +116,10 @@ function gradientObject(color = c_black) constructor {
 	
 	static toArray = function() {
 		var _grad_color = [], _grad_time = []; 
-	
+		
 		for(var i = 0; i < array_length(keys); i++) {
 			if(is_undefined(keys[i].value)) continue;
-		
+			
 			_grad_color[i * 4 + 0] = color_get_red(keys[i].value) / 255;
 			_grad_color[i * 4 + 1] = color_get_green(keys[i].value) / 255;
 			_grad_color[i * 4 + 2] = color_get_blue(keys[i].value) / 255;
@@ -175,7 +175,7 @@ function gradientObject(color = c_black) constructor {
 	}
 	
 	static serialize = function() {
-		var s = {type};
+		var s = { type: type };
 		s.keys = [];
 		for( var i = 0, n = array_length(keys); i < n; i++ )
 			s.keys[i] = keys[i].serialize();
@@ -198,10 +198,14 @@ function gradientObject(color = c_black) constructor {
 			return self;
 		}
 			
-		type = s.type;
-		keys = [];
-		for( var i = 0, n = array_length(s.keys); i < n; i++ )
-			keys[i] = new gradientKey(s.keys[i].time, s.keys[i].value); 
+		type = struct_try_get(s, "type");
+		keys = array_create(array_length(s.keys));
+		for( var i = 0, n = array_length(s.keys); i < n; i++ ) {
+			var _time  = real(s.keys[i].time);
+			var _value = real(s.keys[i].value);
+			
+			keys[i] = new gradientKey(_time, _value); 
+		}
 		
 		return self;
 	}

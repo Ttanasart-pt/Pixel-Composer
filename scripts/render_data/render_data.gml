@@ -106,11 +106,11 @@ function Render(partial = false, runAction = false) { #region
 			if(!_node.active) continue;
 			if(!_node.isRenderActive()) continue;
 			if(_node.rendered && !_node.isAnimated()) {
+				_node.anim_last_step = false;
 				LOG_IF(global.FLAG.render, $"Skip rendered {_node.internalName}");
 				continue;
 			}
 			
-			//if(__nodeInLoop(_node)) continue;
 			if(_node.group != noone) continue;
 			
 			LOG_BLOCK_START();
