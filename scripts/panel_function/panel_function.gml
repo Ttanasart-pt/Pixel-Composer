@@ -35,12 +35,12 @@
 		delete PANEL_GRAPH;
 		delete PANEL_COLLECTION;
 		
-		PANEL_MAIN = 0;
-		PANEL_MENU = 0;
-		PANEL_INSPECTOR = 0;
-		PANEL_PREVIEW = 0;
-		PANEL_GRAPH = 0;
-		PANEL_COLLECTION = 0;
+		PANEL_MAIN = {};
+		PANEL_MENU = {};
+		PANEL_INSPECTOR = {};
+		PANEL_PREVIEW = {};
+		PANEL_GRAPH = {};
+		PANEL_COLLECTION = {};
 	}
 	
 	function getPanelFromName(name, create = false) {

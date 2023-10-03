@@ -215,6 +215,7 @@
     {"name":"biterator","order":2,"path":"folders/VCT/biterator.yy",},
     {"name":"widget","order":3,"path":"folders/VCT/widget.yy",},
     {"name":"widgets","order":5,"path":"folders/widgets.yy",},
+    {"name":"audio","order":13,"path":"folders/nodes/data/value/audio.yy",},
   ],
   "ResourceOrderSettings": [
     {"name":"s_node_corner","order":16,"path":"sprites/s_node_corner/s_node_corner.yy",},
@@ -818,7 +819,6 @@
     {"name":"BBMOD_Vec4","order":6,"path":"scripts/BBMOD_Vec4/BBMOD_Vec4.yy",},
     {"name":"s_biterator_color_slot","order":17,"path":"sprites/s_biterator_color_slot/s_biterator_color_slot.yy",},
     {"name":"s_node_pb_layer","order":18,"path":"sprites/s_node_pb_layer/s_node_pb_layer.yy",},
-    {"name":"node_audio_window","order":16,"path":"scripts/node_audio_window/node_audio_window.yy",},
     {"name":"node_surface_from_color","order":1,"path":"scripts/node_surface_from_color/node_surface_from_color.yy",},
     {"name":"s_node_pb_draw_rectangle","order":13,"path":"sprites/s_node_pb_draw_rectangle/s_node_pb_draw_rectangle.yy",},
     {"name":"panel_animation","order":1,"path":"scripts/panel_animation/panel_animation.yy",},
@@ -1541,6 +1541,7 @@
     {"name":"sh_fd_replace_material_advanced_glsl","order":11,"path":"shaders/sh_fd_replace_material_advanced_glsl/sh_fd_replace_material_advanced_glsl.yy",},
     {"name":"sh_solid","order":15,"path":"shaders/sh_solid/sh_solid.yy",},
     {"name":"panel_animation_scaler","order":1,"path":"scripts/panel_animation_scaler/panel_animation_scaler.yy",},
+    {"name":"wav_file_object","order":2,"path":"scripts/wav_file_object/wav_file_object.yy",},
     {"name":"s_node_json_file_write","order":10,"path":"sprites/s_node_json_file_write/s_node_json_file_write.yy",},
     {"name":"node_pb_fx_intersect","order":5,"path":"scripts/node_pb_fx_intersect/node_pb_fx_intersect.yy",},
     {"name":"fd_rectangle_get_material_time_step","order":13,"path":"scripts/fd_rectangle_get_material_time_step/fd_rectangle_get_material_time_step.yy",},

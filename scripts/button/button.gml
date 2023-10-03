@@ -89,7 +89,11 @@ function buttonClass(_onClick, _icon = noone) : widget() constructor {
 		}
 		
 		var aa = interactable * 0.25 + 0.75;
-		if(icon) draw_sprite_ui_uniform(icon, icon_index, _x + _w / 2, _y + _h / 2,, icon_blend, aa);
+		if(icon) {
+			var ind = is_real(icon_index)? icon_index : icon_index();
+			draw_sprite_ui_uniform(icon, ind, _x + _w / 2, _y + _h / 2,, icon_blend, aa);
+		}
+		
 		if(text != "") {
 			draw_set_alpha(aa);
 			draw_set_text(f_p0, fa_center, fa_center, COLORS._main_text);
@@ -97,8 +101,7 @@ function buttonClass(_onClick, _icon = noone) : widget() constructor {
 			draw_set_alpha(1);
 		}
 		
-		if(WIDGET_CURRENT == self)
-			draw_sprite_stretched_ext(THEME.widget_selecting, 0, _x - ui(3), _y - ui(3), _w + ui(6), _h + ui(6), COLORS._main_accent, 1);
+		if(WIDGET_CURRENT == self) draw_sprite_stretched_ext(THEME.widget_selecting, 0, _x - ui(3), _y - ui(3), _w + ui(6), _h + ui(6), COLORS._main_accent, 1);
 		
 		resetFocus();
 		

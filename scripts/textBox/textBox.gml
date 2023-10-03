@@ -318,9 +318,9 @@ function textBox(_input, _onModify, _extras = noone) : textInput(_input, _onModi
 			case fa_bottom: _y = _y - _h;		break;	
 		}
 		
-		if(extras && instanceof(extras) == "buttonClass") {
-			extras.setFocusHover(active, hover);
-			extras.draw(_x + _w - ui(32), _y + _h / 2 - ui(32 / 2), ui(32), ui(32), _m, THEME.button_hide);
+		if(side_button && instanceof(side_button) == "buttonClass") {
+			side_button.setFocusHover(active, hover);
+			side_button.draw(_x + _w - ui(32), _y + _h / 2 - ui(32 / 2), ui(32), ui(32), _m, THEME.button_hide);
 			_w -= ui(40);
 		}
 		

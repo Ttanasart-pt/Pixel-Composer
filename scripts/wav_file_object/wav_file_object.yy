@@ -1,11 +1,11 @@
 {
   "resourceType": "GMScript",
   "resourceVersion": "1.0",
-  "name": "node_audio_window",
+  "name": "wav_file_object",
   "isCompatibility": false,
   "isDnD": false,
   "parent": {
     "name": "audio",
-    "path": "folders/nodes/data/value/audio.yy",
+    "path": "folders/functions/audio.yy",
   },
 }

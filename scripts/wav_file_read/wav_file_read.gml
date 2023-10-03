@@ -69,7 +69,8 @@ function file_read_wav(path) {
 	
 	var bpc  = br / ch;
 	var bits = l / br;
-	var data = array_create(ch);
+	var data  = array_create(ch);
+	var dataF = [ array_create(bits) ];
 	
 	debug_str += "-- READ --\n";
 	debug_str += $"Channels: {ch}\n";
@@ -78,18 +79,17 @@ function file_read_wav(path) {
 	debug_str += $"samples:  {sm}\n";
 	debug_str += $"duration: {real(bits) / real(sm)}\n";
 	
-	for( var j = 0; j < ch; j++ ) 
-		data[j] = array_create(bits);
+	for( var j = 0; j < ch; j++ )
+		data[j]  = array_create(bits);
 	
 	wav_file_range = [0, 0];
-	content = {
-		sound:		data,
-		sample:		sm,
-		channels:	ch,
-		bit_depth:	bpc * 8,
-		duration:	real(bits) / real(sm),
-		packet:		bits,
-	};
+	
+	content = new audioObject(sm, ch);
+	content.sound     = data;
+	content.soundF    = dataF;
+	content.bit_depth = bpc * 8;
+	content.duration  = real(bits) / real(sm);
+	content.packet 	  = bits;
 	
 	printIf(global.FLAG.wav_import, debug_str);
 	
@@ -106,11 +106,14 @@ function file_read_wav_step() {
 	else if(content.bit_depth == 32) { bf_type = buffer_s32; lim = 2_147_483_648; }
 	
 	for(; wav_file_prg < content.packet; wav_file_prg++ ) {
-		for( var j = 0; j < content.channels; j++ )
-			content.sound[j][wav_file_prg] = buffer_read(wav_file_reader, bf_type) / lim;
+		var ch = 0;
+		for( var j = 0; j < content.channels; j++ ) {
+			var b = buffer_read(wav_file_reader, bf_type) / lim;
+			ch += b;
+			content.sound[j][wav_file_prg] = b;
+		}
 		
-		//wav_file_range[0] = min(wav_file_range[0], content.sound[0][wav_file_prg]);
-		//wav_file_range[1] = max(wav_file_range[1], content.sound[0][wav_file_prg]);
+		content.soundF[0][wav_file_prg] = ch / content.channels;
 		
 		if(current_time - t > 1000 / 30) return false;
 	}

@@ -55,6 +55,8 @@ enum VALUE_TYPE {
 	dynaSurface = 31,
 	PCXnode     = 32,
 	
+	audioBit  = 33,
+	
 	action	  = 99,
 }
 
@@ -169,6 +171,7 @@ function value_color(i) { #region
 		$976bff, //d3Material
 		$976bff, //dynaSurf
 		#c2c2d1, //PCX
+		$5dde8f, //audiobit
 	];
 	
 	if(i == 99) return $5dde8f;
@@ -216,6 +219,7 @@ function value_bit(i) { #region
 		case VALUE_TYPE.d3Material  : return 1 << 33;
 		
 		case VALUE_TYPE.PCXnode		: return 1 << 34;
+		case VALUE_TYPE.audioBit	: return 1 << 35;
 		
 		case VALUE_TYPE.any			: return ~0 & ~(1 << 32);
 	}
@@ -447,7 +451,7 @@ function nodeValueUnit(_nodeValue) constructor { #region
 function nodeValue(_name, _node, _connect, _type, _value, _tooltip = "") { return new NodeValue(_name, _node, _connect, _type, _value, _tooltip); }
 
 function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constructor {
-	static DISPLAY_DATA_KEYS = [ "linked", "angle_display", "bone_id", "area_type" ];
+	static DISPLAY_DATA_KEYS = [ "linked", "angle_display", "bone_id", "area_type", "unit" ];
 	
 	#region ---- main ----
 		node  = _node;
@@ -733,7 +737,10 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						} );
 						editWidget.slidable = true;
 						if(type == VALUE_TYPE.integer) editWidget.slide_speed = 1;
-						if(struct_has(display_data, "slide_speed")) editWidget.slide_speed = display_data.slide_speed;
+						
+						if(struct_has(display_data, "slide_speed")) editWidget.slide_speed	= display_data.slide_speed;
+						if(struct_has(display_data, "unit"))		editWidget.unit			= display_data.unit;
+						if(struct_has(display_data, "side_button")) editWidget.side_button	= display_data.side_button;
 						
 						extract_node = "Node_Number";
 						break; #endregion

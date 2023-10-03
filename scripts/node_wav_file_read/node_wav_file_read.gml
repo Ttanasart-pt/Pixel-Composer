@@ -44,7 +44,9 @@ function Node_WAV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		} })
 		.rejectArray();
 		
-	outputs[| 0] = nodeValue("Data", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, [])
+	inputs[| 2]  = nodeValue("Mono", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+		
+	outputs[| 0] = nodeValue("Data", self, JUNCTION_CONNECT.output, VALUE_TYPE.audioBit, noone)
 		.setArrayDepth(1);
 	
 	outputs[| 1] = nodeValue("Path", self, JUNCTION_CONNECT.output, VALUE_TYPE.path, "");
@@ -66,8 +68,8 @@ function Node_WAV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	
 	first_update = false;
 	
+	input_display_list  = [ 0, 1, 2 ];
 	output_display_list = [ 0, 1, 2, 3, 4, 5 ];
-	audio_surface = -1;
 	preview_audio = -1;
 	preview_id = noone;
 	
@@ -101,44 +103,6 @@ function Node_WAV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		return false;
 	} #endregion
 	
-	function checkPreview(force = false) { #region
-		if(content == noone) return;
-		if(!force && is_surface(audio_surface)) return;
-		
-		print("-- Creating preview surface...");
-		
-		var ch  = content.channels;
-		if(ch == 0) return;
-		
-		if(!struct_has(content, "sound"))	return;
-		if(array_length(content.sound) < 1) return;
-		
-		var len = array_length(content.sound[0]);
-		if(len == 0) return;
-		
-		var spc = min(320, len);
-		var stp = len / spc;
-		var ww  = h;
-		
-		audio_surface = surface_verify(audio_surface, 320, ww);
-		surface_set_target(audio_surface);
-			draw_clear_alpha(c_white, 0);
-			draw_set_color(c_white);
-			
-			var ox, oy, nx, ny;
-			
-			for( var i = 0; i < len; i += stp ) {
-				nx = i / len * 320;
-				ny = ww / 2 + content.sound[0][i] * ww;
-				
-				if(i) draw_line_width(ox, oy, nx, ny, 4);
-				
-				ox = nx;
-				oy = ny;
-			}
-		surface_reset_target();
-	} #endregion
-	
 	function updatePaths(path) { #region
 		path = try_get_path(path);
 		if(path == -1) return false;
@@ -161,7 +125,7 @@ function Node_WAV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	} #endregion
 	
 	function readSoundComplete() { #region
-		outputs[| 0].setValue(content.sound);
+		outputs[| 0].setValue(content);
 		outputs[| 2].setValue(content.sample);
 		outputs[| 3].setValue(content.channels);
 		outputs[| 4].setValue(content.duration);
@@ -180,6 +144,7 @@ function Node_WAV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			buffer_write(bufferId, buffer_s16, round(content.sound[0][i] / 4 * 65535));
 		
 		preview_audio = audio_create_buffer_sound(bufferId, buffer_s16, content.sample, 0, content.packet * 2, audio_mono);
+		var surf = content.checkPreview(320, 128, true);
 	} #endregion
 	
 	#region ++++ inspector ++++
@@ -206,7 +171,6 @@ function Node_WAV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		if(file_read_wav_step()) {
 			print("Load audio complete");
 			readSoundComplete();
-			checkPreview(true);
 			
 			if(content != noone) {
 				var frm = max(1, ceil(content.duration * PROJECT.animator.framerate));
@@ -235,14 +199,13 @@ function Node_WAV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	
 	static update = function(frame = PROJECT.animator.current_frame) { #region
 		var path = getInputData(0);
+		var mono = getInputData(2);
 		if(path == "") return;
 		
 		if(path_current != path) updatePaths(path);
-		checkPreview();
+		if(!is_instanceof(content, audioObject)) return;
 		
-		if(!struct_has(content, "sound"))	return;
-		if(array_length(content.sound) < 1) return;
-		
+		content.mono = mono;
 		var len = content.packet;
 		var amp_ind = round(frame * content.sample / PROJECT.animator.framerate);
 		var amp_win = content.sample / PROJECT.animator.framerate * 3;
@@ -265,6 +228,7 @@ function Node_WAV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { #region
 		if(content == noone) return;
 		var bbox = drawGetBbox(xx, yy, _s);
+		var surf = content.checkPreview(320, 128);
 		
 		if(wav_file_reading) {
 			var cx = xx + w * _s / 2;
@@ -274,21 +238,21 @@ function Node_WAV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 			draw_set_color(COLORS._main_icon);
 			draw_arc(cx, cy, rr, 90, 90 - 360 * wav_file_prg / content.packet, 4 * _s, 180);
 			return;
-		} else if(is_surface(audio_surface)) {
-			var sw = surface_get_width_safe(audio_surface);
-			var sh = surface_get_height_safe(audio_surface);
-			
+		} else if(is_surface(surf)) {
+			var sw = surface_get_width_safe(surf);
+			var sh = surface_get_height_safe(surf);
 			var ss = min(bbox.w / sw, bbox.h / sh);
-			draw_surface_ext_safe(audio_surface, 
-				bbox.xc - sw * ss / 2, 
-				bbox.yc - sh * ss / 2, 
-				ss, ss,,, 0.50);
+			
+			var dx = bbox.xc - sw * ss / 2;
+			var dy = bbox.yc - sh * ss / 2;
+		
+			draw_surface_ext_safe(surf, dx, dy, ss, ss,,, 0.50);
 				
-			var wd = (PROJECT.animator.current_frame / PROJECT.animator.framerate) / content.duration * sw;
-			draw_surface_part_ext_safe(audio_surface, 0, 0, min(wd, sw), sh, 
-				bbox.xc - sw * ss / 2, 
-				bbox.yc - sh * ss / 2, 
-				ss, ss,, attributes.play? COLORS._main_accent : c_white);
+			var wd = clamp((PROJECT.animator.current_frame / PROJECT.animator.framerate) / content.duration, 0, 1) * sw;
+			draw_surface_part_ext_safe(surf, 0, 0, min(wd, sw), sh, dx, dy, ss, ss,, attributes.play? COLORS._main_accent : c_white);
+			
+			draw_set_color(attributes.play? COLORS._main_accent : c_white);
+			draw_line(dx + wd * ss, bbox.yc - 16 * _s, dx + wd * ss, bbox.yc + 16 * _s);
 		}
 		
 		var str = filename_name(path_current);

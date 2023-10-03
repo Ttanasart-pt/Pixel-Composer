@@ -248,6 +248,7 @@
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"biterator","folderPath":"folders/VCT/biterator.yy",},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"widget","folderPath":"folders/VCT/widget.yy",},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"widgets","folderPath":"folders/widgets.yy",},
+    {"resourceType":"GMFolder","resourceVersion":"1.0","name":"audio","folderPath":"folders/nodes/data/value/audio.yy",},
   ],
   "IncludedFiles": [
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"ApolloHelp.html","ConfigValues":{"Itch":{"CopyToMask":"0",},},"CopyToMask":-1,"filePath":"datafiles",},
@@ -453,6 +454,7 @@
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"s_tunnel.png","CopyToMask":-1,"filePath":"datafiles/data/themes/default/graphics/icon",},
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"s_undo.png","CopyToMask":-1,"filePath":"datafiles/data/themes/default/graphics/icon",},
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"s_unit_angle.png","CopyToMask":-1,"filePath":"datafiles/data/themes/default/graphics/icon",},
+    {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"s_unit_audio.png","CopyToMask":-1,"filePath":"datafiles/data/themes/default/graphics/icon",},
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"s_unit_ref.png","CopyToMask":-1,"filePath":"datafiles/data/themes/default/graphics/icon",},
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"s_vct.png","CopyToMask":-1,"filePath":"datafiles/data/themes/default/graphics/icon",},
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"s_vfx.png","CopyToMask":-1,"filePath":"datafiles/data/themes/default/graphics/icon",},
@@ -2262,6 +2264,7 @@
     {"id":{"name":"sh_fd_replace_material_advanced_glsl","path":"shaders/sh_fd_replace_material_advanced_glsl/sh_fd_replace_material_advanced_glsl.yy",},},
     {"id":{"name":"sh_solid","path":"shaders/sh_solid/sh_solid.yy",},},
     {"id":{"name":"panel_animation_scaler","path":"scripts/panel_animation_scaler/panel_animation_scaler.yy",},},
+    {"id":{"name":"wav_file_object","path":"scripts/wav_file_object/wav_file_object.yy",},},
     {"id":{"name":"s_node_json_file_write","path":"sprites/s_node_json_file_write/s_node_json_file_write.yy",},},
     {"id":{"name":"node_pb_fx_intersect","path":"scripts/node_pb_fx_intersect/node_pb_fx_intersect.yy",},},
     {"id":{"name":"timer_function","path":"scripts/timer_function/timer_function.yy",},},
