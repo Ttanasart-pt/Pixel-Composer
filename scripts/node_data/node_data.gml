@@ -160,7 +160,8 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		auto_render_time = true;
 		updated			 = false;
 	
-		use_cache			= CACHE_USE.none;
+		use_cache		= CACHE_USE.none;
+		cached_manual	= false;
 		clearCacheOnChange	= true;
 		cached_output	= [];
 		cache_result	= [];
@@ -378,7 +379,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 			if(!is_instanceof(inputs[| i].editWidget, buttonClass)) continue;
 			
 			var trig = inputs[| i].getValue();
-			if(trig) {
+			if(trig && !inputs[| i].display_data.output) {
 				inputs[| i].editWidget.onClick();
 				inputs[| i].setValue(false);
 			}
@@ -431,7 +432,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		
 		var render_timer = get_timer();
 		
-		if(use_cache == CACHE_USE.auto && recoverCache()) {
+		if(cached_manual || (use_cache == CACHE_USE.auto && recoverCache())) {
 			render_cached = true;
 		} else {
 			render_cached = false;
@@ -442,7 +443,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 			anim_last_step = isAnimated() || _hash != input_hash || !rendered;
 			
 			LOG_BLOCK_START();
-			LOG_IF(global.FLAG.render, $">>>>>>>>>> DoUpdate called from {internalName} [{anim_last_step}] <<<<<<<<<<");
+			LOG_IF(global.FLAG.render, $">>>>>>>>>> DoUpdate called from {internalName} [{anim_last_step}] [{update_on_frame}, {isAnimated()}, {_hash != input_hash}, {!rendered}] <<<<<<<<<<");
 		
 			try {
 				if(anim_last_step) update(); ///Update only if input hash differs from previous.
@@ -455,10 +456,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 			}
 		}
 		
-		if(!is_instanceof(self, Node_Collection)) {
-			setRenderStatus(true);
-			render_time = get_timer() - render_timer;
-		}
+		cached_manual = false;
 		
 		if(!use_cache && PROJECT.onion_skin) {
 			for( var i = 0; i < ds_list_size(outputs); i++ ) {
@@ -479,6 +477,12 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		}
 		
 		if(autoUpdatedTrigger) updatedTrigger.setValue(true);
+		
+		if(!is_instanceof(self, Node_Collection)) {
+			setRenderStatus(true);
+			render_time = get_timer() - render_timer;
+		}
+		
 		LOG_BLOCK_END();
 	} #endregion
 	
@@ -968,7 +972,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 				draw_set_color(COLORS.speed[0]);
 			}
 			
-			if(render_cached) draw_set_color(COLORS._main_text_sub);
+			if(render_cached || !anim_last_step) draw_set_color(COLORS._main_text_sub);
 			
 			draw_text(round(tx), round(ty), string(rt) + " " + unit);
 		}

@@ -62,6 +62,8 @@ function valueKey(_time, _value, _anim = noone, _in = 0, _ot = 0) constructor {
 		
 		return key;
 	} #endregion
+	
+	static toString = function() { return $"[Keyframe] {time}: {value}"; }
 }
 
 function valueAnimator(_val, _prop, _sep_axis = false) constructor {
@@ -473,9 +475,12 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 			} else if(!sep_axis && typeArray(prop.display_type)) {
 				_val = [];
 				
-				if(is_array(value))
-				for(var j = 0; j < array_length(value); j++)
-					_val[j] = processValue(value[j]);
+				if(is_array(value)) {
+					for(var j = 0; j < array_length(value); j++)
+						_val[j] = processValue(value[j]);
+				} else if(is_array(base)) 
+					for(var j = 0; j < array_length(base); j++)
+						_val[j] = processValue(value);
 			} 
 			
 			//print($"Deserialize {prop.node.name}:{prop.name} = {_val} ");

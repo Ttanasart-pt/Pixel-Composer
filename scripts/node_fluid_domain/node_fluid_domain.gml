@@ -2,7 +2,6 @@ function Node_Fluid_Domain(_x, _y, _group = noone) : Node_Fluid(_x, _y, _group) 
 	name  = "Fluid Domain";
 	color = COLORS.node_blend_fluid;
 	icon  = THEME.fluid_sim;
-	update_on_frame = true;
 	
 	min_h = 128;
 	

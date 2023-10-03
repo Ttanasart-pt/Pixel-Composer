@@ -7,7 +7,7 @@ enum TEXT_AREA_FORMAT {
 	node_title,
 }
 
-function textArea(_input, _onModify, _extras = noone) : textInput(_input, _onModify, _extras) constructor {
+function textArea(_input, _onModify) : textInput(_input, _onModify) constructor {
 	font     = f_p0;
 	hide     = false;
 	color    = COLORS._main_text;
@@ -546,7 +546,7 @@ function textArea(_input, _onModify, _extras = noone) : textInput(_input, _onMod
 		var target = -999;
 		
 		draw_set_text(font, fa_left, fa_top, color);
-		draw_set_alpha(0.5 + 0.5 * interactable)
+		draw_set_alpha(0.5 + 0.5 * interactable);
 		
 		var ch_x = _x;
 		var ch_y = _y;
@@ -636,20 +636,20 @@ function textArea(_input, _onModify, _extras = noone) : textInput(_input, _onMod
 			}
 		}
 		
-		if(target != -999 && mouse_press(mb_left, active) && HOVER != autocomplete_box.id) {
-			if(click_block == 1) {
-				cursor		  = target;
-				cursor_select = -1;
-				click_block   = 0;
+		if(target != -999 && HOVER != autocomplete_box.id) {
+			if(mouse_press(mb_left, active) && !click_block) {
+				cursor_select = target;
+				cursor		  = target;	
 				
-				autocomplete_box.active = false;
-			} else if(cursor != target) {
-				if(cursor_select == -1)
-					cursor_select = cursor;
+				autocomplete_box.active = true;
+			} else if(mouse_click(mb_left, active) && cursor != target) {
 				cursor		  = target;
 				
 				autocomplete_box.active = false;
 			}
+			
+			if(mouse_press(mb_left, active))
+				click_block	  = false;
 		}
 	} #endregion
 	
@@ -676,9 +676,9 @@ function textArea(_input, _onModify, _extras = noone) : textInput(_input, _onMod
 			w  = _w;
 		}
 		
-		if(extras && instanceof(extras) == "buttonClass") {
-			extras.setFocusHover(active, hover);
-			extras.draw(_x + _w - ui(32), _y + _h / 2 - ui(32 / 2), ui(32), ui(32), _m, THEME.button_hide);
+		if(side_button && instanceof(side_button) == "buttonClass") {
+			side_button.setFocusHover(active, hover);
+			side_button.draw(_x + _w - ui(32), _y + _h / 2 - ui(32 / 2), ui(32), ui(32), _m, THEME.button_hide);
 			_w -= ui(40);
 		}
 		
@@ -715,7 +715,7 @@ function textArea(_input, _onModify, _extras = noone) : textInput(_input, _onMod
 		
 		var hoverRect = point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + hh);
 		
-		if(self == WIDGET_CURRENT) { 
+		if(selecting) { 
 			WIDGET_TAB_BLOCK = true;
 			
 			draw_set_text(font, fa_left, fa_top, COLORS._main_text);
@@ -831,6 +831,7 @@ function textArea(_input, _onModify, _extras = noone) : textInput(_input, _onMod
 				onModify(DRAGGING.data);
 		}
 		
+		selecting = self == WIDGET_CURRENT;
 		resetFocus();
 		shift_new_line = true;
 		

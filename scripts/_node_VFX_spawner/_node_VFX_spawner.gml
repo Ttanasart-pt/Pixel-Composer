@@ -7,8 +7,8 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	inputs[| 1] = nodeValue("Spawn delay", self,  JUNCTION_CONNECT.input, VALUE_TYPE.integer, 4, "Frames delay between each particle spawn." )
 		.rejectArray();
 	
-	inputs[| 2] = nodeValue("Spawn amount", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 2, "Amount of particle spawn in that frame." )
-		.rejectArray();
+	inputs[| 2] = nodeValue("Spawn amount", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 2, 2 ], "Amount of particle spawn in that frame." )
+		.setDisplay(VALUE_DISPLAY.range, { linked : true });
 	
 	inputs[| 3] = nodeValue("Spawn area", self,   JUNCTION_CONNECT.input, VALUE_TYPE.float, [ DEF_SURF_W / 2, DEF_SURF_H / 2, DEF_SURF_W / 2, DEF_SURF_H / 2, AREA_SHAPE.rectangle ] )
 		.setDisplay(VALUE_DISPLAY.area);
@@ -48,7 +48,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	
 	inputs[| 16] = nodeValue("Spawn type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.rejectArray()
-		.setDisplay(VALUE_DISPLAY.enum_button, [ "Stream", "Burst" ]);
+		.setDisplay(VALUE_DISPLAY.enum_button, [ "Stream", "Burst", "Trigger" ]);
 	
 	inputs[| 17] = nodeValue("Spawn size", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 1 ] )
 		.setDisplay(VALUE_DISPLAY.range, { linked : true });
@@ -144,11 +144,16 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		.setDisplay(VALUE_DISPLAY.vector, { label: [ "Amplitude", "Period" ], linkable: false, per_line: true })
 		.rejectArray();
 		
+	triggerSpawn = function() { inputs[| 44].setAnim(true); inputs[| 44].setValue(true); };
+	inputs[| 44] = nodeValue("Spawn", self, JUNCTION_CONNECT.input, VALUE_TYPE.trigger,  false )
+		.setDisplay(VALUE_DISPLAY.button, { name: "Trigger", onClick: triggerSpawn, output: true })
+		.rejectArray();
+		
 	input_len = ds_list_size(inputs);
 	
 	input_display_list = [ 32,
 		["Sprite",	   false],	0, 22, 23, 26,
-		["Spawn",		true],	27, 16, 1, 2, 3, 4, 30, 31, 24, 25, 5,
+		["Spawn",		true],	27, 16, 44, 1, 2, 3, 4, 30, 31, 24, 25, 5,
 		["Movement",	true],	29, 6, 18,
 		["Physics",		true],	7, 19, 33, 34, 35, 36, 
 		["Ground",		true],	37, 38, 39, 40, 
@@ -193,7 +198,6 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		var _inSurf = current_data[0];
 		
 		var _spawn_amount	= current_data[ 2];
-		var _amo = _spawn_amount;
 		
 		var _spawn_area	= current_data[ 3];
 		var _distrib	= current_data[ 4];
@@ -237,9 +241,12 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		var _posDist = [];
 		if(_distrib == 2) _posDist = get_points_from_dist(_dist_map, _amo, seed);
 		
+		random_set_seed(seed); 
+		var _amo = irandom_range(_spawn_amount[0], _spawn_amount[1]);
+		
 		for( var i = 0; i < _amo; i++ ) {
-			random_set_seed(seed); 
 			seed += 100;
+			random_set_seed(seed); 
 			
 			parts_runner = clamp(parts_runner, 0, array_length(parts) - 1);
 			var part = parts[parts_runner];
@@ -404,6 +411,9 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		var _spawn_delay  = inputs[| 1].getValue(_time);
 		var _spawn_type   = inputs[| 16].getValue(_time);
 		var _spawn_active = inputs[| 27].getValue(_time);
+		var _spawn_trig   = inputs[| 44].getValue(_time);
+		
+		//print($"{_time} : {_spawn_trig} | {ds_list_to_array(inputs[| 44].animator.values)}");
 		
 		for( var i = 0; i < ds_list_size(inputs); i++ )
 			current_data[i] = inputs[| i].getValue(_time);
@@ -424,14 +434,9 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		
 		if(_spawn_active) {
 			switch(_spawn_type) {
-				case 0 :
-					if(safe_mod(_time, _spawn_delay) == 0)
-						spawn(_time);
-					break;
-				case 1 :
-					if(_time == _spawn_delay)
-						spawn(_time);
-					break;
+				case 0 : if(safe_mod(_time, _spawn_delay) == 0) spawn(_time); break;
+				case 1 : if(_time == _spawn_delay)				spawn(_time); break;
+				case 2 : if(_spawn_trig)						spawn(_time); break;
 			}
 		}
 			
@@ -455,6 +460,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		var _dirAng = getInputData(29);
 		var _turn   = getInputData(34);
 		var _colGnd = getInputData(37);
+		var _spwTyp = getInputData(16);
 		
 		inputs[|  6].setVisible(!_dirAng);
 		
@@ -473,6 +479,12 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		inputs[| 22].setVisible(false);
 		inputs[| 23].setVisible(false);
 		inputs[| 26].setVisible(false);
+		
+		inputs[| 1].setVisible(_spwTyp < 2);
+		if(_spwTyp == 0)		inputs[| 1].name = "Spawn delay";
+		else if(_spwTyp == 1)	inputs[| 1].name = "Spawn frame";
+		
+		inputs[| 44].setVisible(_spwTyp == 2);
 		
 		if(is_array(_inSurf)) {
 			inputs[| 22].setVisible(true);
@@ -496,10 +508,6 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	
 	static update = function(frame = PROJECT.animator.current_frame) { #region
 		checkPartPool();
-		var _spawn_type = getInputData(16);
-		if(_spawn_type == 0)	inputs[| 1].name = "Spawn delay";
-		else					inputs[| 1].name = "Spawn frame";
-		
 		onUpdate();
 	} #endregion
 	

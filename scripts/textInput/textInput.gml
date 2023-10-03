@@ -1,7 +1,8 @@
-function textInput(_input, _onModify, _extras = noone) : widget() constructor {
+function textInput(_input, _onModify) : widget() constructor {
 	input		= _input;
 	onModify	= _onModify;
 	side_button = noone;
+	selecting   = false;
 	
 	static _resetFocus = function() { resetFocus();	}
 	

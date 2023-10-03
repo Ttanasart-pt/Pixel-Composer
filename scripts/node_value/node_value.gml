@@ -721,6 +721,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			case VALUE_DISPLAY.button : #region
 				editWidget = button(display_data.onClick);
 				editWidget.text = display_data.name;
+				if(!struct_has(display_data, "output")) display_data.output = false;
+				
 				visible = false;
 				return; #endregion
 		}

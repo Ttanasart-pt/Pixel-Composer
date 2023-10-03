@@ -3,7 +3,7 @@ enum TEXTBOX_INPUT {
 	number
 }
 
-function textBox(_input, _onModify, _extras = noone) : textInput(_input, _onModify, _extras) constructor {
+function textBox(_input, _onModify) : textInput(_input, _onModify) constructor {
 	align  = _input == TEXTBOX_INPUT.number? fa_right : fa_left;
 	hide   = false;
 	font   = noone;
@@ -250,8 +250,7 @@ function textBox(_input, _onModify, _extras = noone) : textInput(_input, _onModi
 	
 	static display_text = function(_x, _y, _text, _w, _m = -1) { #region
 		_text = string_real(_text);
-		BLEND_OVERRIDE;
-		if(!interactable) draw_set_alpha(0.5);
+		draw_set_alpha(0.5 + 0.5 * interactable);
 		
 		switch(format) {
 			case TEXT_AREA_FORMAT._default :
@@ -265,34 +264,37 @@ function textBox(_input, _onModify, _extras = noone) : textInput(_input, _onModi
 		}
 		
 		draw_set_alpha(1);
-		BLEND_NORMAL;
 		
-		var _xx = _x, _ch, _chw;
+		var _xx = _x + disp_x;
+		var _mm = _m;
 		var target = -999;
 		
-		if(!sliding && _m != -1) {
+		if(!sliding && _mm >= 0) {
 			for( var i = 1; i <= string_length(_text); i++ ) {
-				_ch = string_char_at(_text, i);
-				_chw = string_width(_ch);
+				var _ch  = string_char_at(_text, i);
+				var _chw = string_width(_ch);
 						
-				if(_m < _xx + _chw / 2) {
+				if(_mm < _xx + _chw / 2) {
 					target = i - 1;
 					break;
-				} else if(_m < _xx + _chw) {
+				} else if(_mm < _xx + _chw) {
 					target = i;
 					break;
 				}
+				
 				_xx += _chw;
 			}
 		}
 		
 		if(target != -999) {
-			if(mouse_press(mb_left, active) || click_block == 1) {
+			if(mouse_press(mb_left, active) && !click_block) {
 				cursor_select = target;
 				cursor		  = target;	
-				click_block	  = 0;
 			} else if(mouse_click(mb_left, active) && cursor != target)
 				cursor = target;	
+				
+			if(mouse_press(mb_left, active))
+				click_block	  = false;
 		}
 	} #endregion
 	
@@ -393,7 +395,7 @@ function textBox(_input, _onModify, _extras = noone) : textInput(_input, _onModi
 		
 		var hoverRect = point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + _h);
 		
-		if(self == WIDGET_CURRENT) { 
+		if(selecting) { 
 			if(sprite_index == -1)
 				draw_sprite_stretched_ext(THEME.textbox, 2, _x, _y, _w, _h, COLORS._main_accent, 1);
 			else 
@@ -468,16 +470,18 @@ function textBox(_input, _onModify, _extras = noone) : textInput(_input, _onModi
 				
 				var _mx = -1;
 				var _my = -1;
-				if(mouse_press(mb_any, active) && hover && hoverRect) {
+				if(hover && hoverRect) {
 					_mx = _m[0];
 					_my = _m[1];
 				}
 				
-				surface_set_target(text_surface);
-				DRAW_CLEAR
-					display_text(tx - tb_surf_x, _h / 2 - th / 2, txt, _w - ui(4), _mx);
-				surface_reset_target();
+				surface_set_shader(text_surface, noone, true, BLEND.add);
+					display_text(tx - tb_surf_x, _h / 2 - th / 2, txt, _w - ui(4), _mx - tb_surf_x);
+				surface_reset_shader();
+				
+				BLEND_ALPHA
 				draw_surface(text_surface, tb_surf_x, tb_surf_y);
+				BLEND_NORMAL
 		
 				draw_set_color(COLORS._main_text_accent);
 				draw_line_width(cursor_pos, c_y0, cursor_pos, c_y1, 2);
@@ -485,7 +489,7 @@ function textBox(_input, _onModify, _extras = noone) : textInput(_input, _onModi
 			
 			disp_x_to = clamp(disp_x_to, disp_x_min, disp_x_max);
 			
-			if(!point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + _h) && mouse_press(mb_left))
+			if(!hoverRect && mouse_press(mb_left)) 
 				deactivate();
 		} else {
 			draw_set_text(font == noone? f_p0 : font, fa_left, fa_center);
@@ -534,14 +538,13 @@ function textBox(_input, _onModify, _extras = noone) : textInput(_input, _onModi
 				} 
 			}
 			
-			surface_set_target(text_surface);
-				DRAW_CLEAR
-				//draw_set_color(c_black);
-				//draw_line(0, _h / 2 - th / 2, 9999, _h / 2 - th / 2);
-				
+			surface_set_shader(text_surface, noone, true, BLEND.add);
 				display_text(tx - tb_surf_x, _h / 2 - th / 2, _display_text, _w - ui(4));
-			surface_reset_target();
+			surface_reset_shader();
+			
+			BLEND_ALPHA
 			draw_surface(text_surface, tb_surf_x, tb_surf_y);
+			BLEND_NORMAL
 		}
 		
 		if(DRAGGING && (DRAGGING.type == "Text" || DRAGGING.type == "Number") && hover && hoverRect) {
@@ -550,6 +553,7 @@ function textBox(_input, _onModify, _extras = noone) : textInput(_input, _onModi
 				onModify(DRAGGING.data);
 		}
 		
+		selecting = self == WIDGET_CURRENT;
 		resetFocus();		
 		sprite_index = -1;
 		return _h;

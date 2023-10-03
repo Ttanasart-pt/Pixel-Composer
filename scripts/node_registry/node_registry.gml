@@ -423,13 +423,13 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor { #regio
 			addNodeObject(generator, "4 Points Gradient",	s_node_gradient_4points,	"Node_Gradient_Points",		[1, Node_Gradient_Points],, "Create image from 4 color points.");
 			
 			ds_list_add(generator, "Drawer");
-			//addNodeObject(generator, "Pixel Builder",	s_node_pixel_builder,	"Node_Pixel_Builder",	[1, Node_Pixel_Builder]).setVersion(1147);
 			addNodeObject(generator, "Line",			s_node_line,			"Node_Line",			[1, Node_Line],, "Draw line on an image. Connect path data to it to draw line from path.");
 			addNodeObject(generator, "Draw Text",		s_node_text_render,		"Node_Text",			[1, Node_Text],, "Draw text on an image.");
 			addNodeObject(generator, "Shape",			s_node_shape,			"Node_Shape",			[1, Node_Shape],, "Draw simple shapes using signed distance field.");
 			addNodeObject(generator, "Polygon Shape",	s_node_shape_polygon,	"Node_Shape_Polygon",	[1, Node_Shape_Polygon],, "Draw simple shapes using triangles.").setVersion(1130);
 			addNodeObject(generator, "Interpret Number",s_node_interpret_number,"Node_Interpret_Number",[1, Node_Interpret_Number]).setVersion(11530);
 			addNodeObject(generator, "Random Shape",	s_node_random_shape,	"Node_Random_Shape",	[1, Node_Random_Shape]).setVersion(1147);
+			addNodeObject(generator, "Pixel Builder",	s_node_pixel_builder,	"Node_Pixel_Builder",	[1, Node_Pixel_Builder]).setVersion(11540);
 			
 			ds_list_add(generator, "Noises");
 			addNodeObject(generator, "Noise",				s_node_noise,				"Node_Noise",				[1, Node_Noise],, "Generate white noise.");
@@ -807,7 +807,7 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor { #regio
 			addNodeObject(hid, "Sort Input",		s_node_grid_hex_noise,	"Node_Iterator_Sort_Input",		[1, Node_Iterator_Sort_Input]);
 			addNodeObject(hid, "Sort Output",		s_node_grid_hex_noise,	"Node_Iterator_Sort_Output",	[1, Node_Iterator_Sort_Output]);
 			addNodeObject(hid, "Onion Skin",		s_node_cache,			"Node_Onion_Skin",				[1, Node_Onion_Skin]).setVersion(1147);
-			addNodeObject(hid, "Pixel Builder",		s_node_pixel_builder,	"Node_Pixel_Builder",			[1, Node_Pixel_Builder]).setVersion(1150);
+			//addNodeObject(hid, "Pixel Builder",		s_node_pixel_builder,	"Node_Pixel_Builder",			[1, Node_Pixel_Builder]).setVersion(1150);
 			
 			addNodeObject(hid, "Input",		s_node_pixel_builder,	"Node_DynaSurf_In",			[1, Node_DynaSurf_In]);
 			addNodeObject(hid, "Output",	s_node_pixel_builder,	"Node_DynaSurf_Out",		[1, Node_DynaSurf_Out]);
