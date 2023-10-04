@@ -548,6 +548,7 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor { #regio
 			addNodeObject(values, "Array Shift",	s_node_array_shift,		"Node_Array_Shift",		[1, Node_Array_Shift]).setVersion(1137);
 			addNodeObject(values, "Array Zip",		s_node_array_zip,		"Node_Array_Zip",		[1, Node_Array_Zip]).setVersion(1138);
 			addNodeObject(values, "Array Copy",		s_node_array_copy,		"Node_Array_Copy",		[1, Node_Array_Copy]).setVersion(1144);
+			addNodeObject(values, "Array Convolute",s_node_array_convolute,	"Node_Array_Convolute",	[1, Node_Array_Convolute]).setVersion(11540);
 			addNodeObject(values, "Sort Number",	s_node_array_sort,		"Node_Array_Sort",		[1, Node_Array_Sort], ["array sort"]).setVersion(1120);
 			addNodeObject(values, "Shuffle Array",	s_node_array_shuffle,	"Node_Array_Shuffle",	[1, Node_Array_Shuffle], ["array shuffle"]).setVersion(1120);
 			addNodeObject(values, "Loop Array",		s_node_loop_array,		"Node_Iterate_Each",	[1, Node_Iterate_Each], ["iterate each", "for each", "array loop"], "Create group that iterate to each member in an array.");

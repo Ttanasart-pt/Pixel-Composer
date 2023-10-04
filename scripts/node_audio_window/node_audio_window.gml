@@ -9,7 +9,7 @@ function Node_Audio_Window(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	inputs[| 0] = nodeValue("Audio data", self, JUNCTION_CONNECT.input, VALUE_TYPE.audioBit, noone)
 		.setVisible(true, true);
 	
-	inputs[| 1] = nodeValue("Width", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 64, "Amount of bits to extract.");
+	inputs[| 1] = nodeValue("Width", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 4096, "Amount of bits to extract.");
 	
 	inputs[| 2] = nodeValue("Location", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
 		.setDisplay(VALUE_DISPLAY._default, { unit: 0, side_button: button(function() { 
@@ -21,12 +21,12 @@ function Node_Audio_Window(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			}
 		);
 		
-	inputs[| 3] = nodeValue("Cursor location", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+	inputs[| 3] = nodeValue("Cursor location", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1)
 		.setDisplay(VALUE_DISPLAY.enum_button, [ "Start", "Middle", "End" ]);
 	
-	inputs[| 4] = nodeValue("Step", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1);
+	inputs[| 4] = nodeValue("Step", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 16);
 	
-	inputs[| 5] = nodeValue("Match animation", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false, "Set window cursor to match animation timeline.");
+	inputs[| 5] = nodeValue("Match timeline", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false, "Set window cursor to match animation timeline.");
 	
 	outputs[| 0] = nodeValue("Bit Array", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, [])
 		.setArrayDepth(1);
@@ -43,6 +43,7 @@ function Node_Audio_Window(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		var _anim = getInputData(5);
 		
 		inputs[| 2].setVisible(!_anim);
+		update_on_frame = _anim;
 	}
 	
 	static update = function(frame = PROJECT.animator.current_frame) {
@@ -74,9 +75,10 @@ function Node_Audio_Window(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			case 2 : st = off - _wid;			 break;
 		}
 		
-		ed = st + _wid;
 		st = clamp(st, 0, _aud.packet - 1);
-		ed = clamp(ed, 0, _aud.packet - 1);
+		
+		ed = clamp(st + _wid, 0, _aud.packet - 1);
+		st = clamp(ed - _wid, 0, _aud.packet - 1);
 		len = (ed - st) / _stp;
 		
 		preview_cr = off / _aud.packet;

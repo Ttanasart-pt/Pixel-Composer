@@ -12,7 +12,7 @@ if(win_w != w || win_h != h) {
 }
 
 draw_set_text(_f_p1, fa_left, fa_center, c_white);
-draw_text(34, 18, __txt("Pixel Composer crashed"));
+draw_text(34, 18, "Pixel Composer crashed");
 draw_sprite_ext(s_noti_icon_error, 0, 18, 18, 0.5, 0.5, 0, c_white, 1);
 
 #region display
@@ -75,7 +75,7 @@ draw_sprite_ext(s_noti_icon_error, 0, 18, 18, 0.5, 0.5, 0, c_white, 1);
 	}
 
 	draw_sprite_ext(s_copy, 0, bx0 + 16, by0 + 16, 0.5, 0.5, 0, #8fde5d, 1);
-	draw_text(bx0 + 32, by0 + 16, __txt("Copy") + " ");
+	draw_text(bx0 + 32, by0 + 16, "Copy" + " ");
 #endregion
 
 #region close
@@ -95,7 +95,7 @@ draw_sprite_ext(s_noti_icon_error, 0, 18, 18, 0.5, 0.5, 0, c_white, 1);
 			draw_sprite_stretched(s_button, 1, bx0, by0, bw, bh);
 	} else 
 		draw_sprite_stretched(s_button, 0, bx0, by0, bw, bh);
-	draw_text(bx0 + bw / 2, by0 + bh / 2, __txt("Close"));
+	draw_text(bx0 + bw / 2, by0 + bh / 2, "Close");
 #endregion
 
 #region open log
@@ -115,7 +115,7 @@ draw_sprite_ext(s_noti_icon_error, 0, 18, 18, 0.5, 0.5, 0, c_white, 1);
 			draw_sprite_stretched(s_button, 1, bx0, by0, bw, bh);
 	} else 
 		draw_sprite_stretched(s_button, 0, bx0, by0, bw, bh);
-	draw_text(bx0 + bw / 2, by0 + bh / 2, __txt("Open log folder"));
+	draw_text(bx0 + bw / 2, by0 + bh / 2, "Open log folder");
 #endregion
 
 #region restart
@@ -137,7 +137,7 @@ draw_sprite_ext(s_noti_icon_error, 0, 18, 18, 0.5, 0.5, 0, c_white, 1);
 			draw_sprite_stretched(s_button, 1, bx0, by0, bw, bh);
 	} else 
 		draw_sprite_stretched(s_button, 0, bx0, by0, bw, bh);
-	draw_text(bx0 + bw / 2, by0 + bh / 2, __txt("Restart application"));
+	draw_text(bx0 + bw / 2, by0 + bh / 2, "Restart application");
 #endregion
 
 #region discord

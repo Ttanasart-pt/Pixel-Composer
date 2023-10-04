@@ -184,21 +184,23 @@ function DirectoryObject(name, path) constructor {
 		ds_list_destroy(_temp_name);
 	}
 	
-	static draw = function(parent, _x, _y, _m, _w, _hover, _focus, _homedir) {
+	static draw = function(parent, _x, _y, _m, _w, _hover, _focus, _homedir, _colors = {}) {
 		var hg = ui(28);
 		var hh = 0;
 		
+		var color_selecting = struct_try_get(_colors, "selecting", COLORS.collection_path_current_bg);
+		
 		if(path == parent.context.path)
-			draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, _x + ui(28), _y, _w - ui(36), hg, COLORS.collection_path_current_bg, 1); 
+			draw_sprite_stretched_ext(THEME.group_label, 1, _x + ui(28), _y, _w - ui(36), hg, color_selecting, 1); 
 		
 		if(!ds_list_empty(subDir) && _hover && point_in_rectangle(_m[0], _m[1], _x, _y, ui(32), _y + hg - 1)) {
-			draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, _x, _y, ui(32), hg, COLORS.collection_path_current_bg, 1);
+			draw_sprite_stretched_ext(THEME.group_label, 1, _x, _y, ui(32), hg, color_selecting, 1);
 			if(mouse_press(mb_left, _focus))
 				open = !open;
 		}
 		
 		if(_hover && point_in_rectangle(_m[0], _m[1], _x + ui(32), _y, _w, _y + hg - 1)) {
-			draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, _x + ui(28), _y, _w - ui(36), hg, COLORS.collection_path_current_bg, 1);
+			draw_sprite_stretched_ext(THEME.group_label, 1, _x + ui(28), _y, _w - ui(36), hg, color_selecting, 1);
 			if(mouse_press(mb_left, _focus)) {
 				if(!ds_list_empty(subDir))
 					open = !open;
@@ -224,7 +226,7 @@ function DirectoryObject(name, path) constructor {
 		if(open && !ds_list_empty(subDir)) {
 			var l_y = _y;
 			for(var i = 0; i < ds_list_size(subDir); i++) {
-				var _hg = subDir[| i].draw(parent, _x + ui(16), _y, _m, _w - ui(16), _hover, _focus, _homedir);
+				var _hg = subDir[| i].draw(parent, _x + ui(16), _y, _m, _w - ui(16), _hover, _focus, _homedir, _colors);
 				draw_set_color(COLORS.collection_tree_line);
 				draw_line(_x + ui(12), _y + hg / 2, _x + ui(16), _y + hg / 2);
 				

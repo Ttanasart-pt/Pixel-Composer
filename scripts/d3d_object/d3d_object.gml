@@ -30,7 +30,7 @@ function __3dObject() constructor {
 	size      = new __vec3(1);
 	
 	materials      = [];
-	matrial_index  = [];
+	material_index = [];
 	texture_flip   = false;
 	
 	static checkParameter = function(params = {}, forceUpdate = false) { #region
@@ -143,7 +143,7 @@ function __3dObject() constructor {
 			gpu_set_tex_repeat(true);
 		
 			for( var i = 0, n = array_length(VB); i < n; i++ ) {
-				var _ind = array_safe_get(matrial_index, i, i);
+				var _ind = array_safe_get(material_index, i, i);
 				var _mat = array_safe_get(materials, _ind, noone);
 					
 				if(_shader == sh_d3d_default) {

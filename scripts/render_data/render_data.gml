@@ -64,6 +64,10 @@ function ResetAllNodesRender() { #region
 	repeat(amo) {
 		var _node = PROJECT.nodeMap[? _key];
 		_node.setRenderStatus(false);
+		
+		for( var i = 0, n = ds_list_size(_node.inputs); i < n; i++ ) 
+			_node.inputs[| i].resetCache();
+		
 		_key = ds_map_find_next(PROJECT.nodeMap, _key);	
 	}
 } #endregion

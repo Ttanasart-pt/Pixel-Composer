@@ -73,10 +73,14 @@ function Node_Iterator(_x, _y, _group = noone) : Node_Collection(_x, _y, _group)
 	}
 	
 	static iterationUpdate = function() {
-		for( var i = 0; i < ds_list_size(nodes); i++ ) // check if every node is updated
-			if(!nodes[| i].rendered) return;
-		
 		var maxIter = getIterationCount();
+		
+		for( var i = 0; i < ds_list_size(nodes); i++ ) // check if every node is updated
+			if(!nodes[| i].rendered) {
+				LOG_LINE_IF(global.FLAG.render, $"------------------< Iteration update: {iterated} / {maxIter} [RENDER FAILED] >------------------");
+				return;
+			}
+		
 		iterated++;
 		
 		for( var i = 0; i < ds_list_size(nodes); i++ )

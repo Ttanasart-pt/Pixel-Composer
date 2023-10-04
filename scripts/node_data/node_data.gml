@@ -1,5 +1,7 @@
 global.loop_nodes = [ "Node_Iterate", "Node_Iterate_Each" ];
 
+#macro INAME internalName == ""? name : internalName
+
 enum CACHE_USE {
 	none,
 	manual,
@@ -413,11 +415,12 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	} #endregion
 	
 	static getInputs = function() { #region
-		input_hash_raw = "";
 		inputs_data	= array_create(ds_list_size(inputs), undefined);
+		//input_hash_raw = "";
+		
 		for(var i = 0; i < ds_list_size(inputs); i++) {
 			inputs_data[i] = inputs[| i].getValue(,,, true);
-			input_hash_raw += string_copy(string(inputs_data[i]), 1, 256);
+			//input_hash_raw += string_copy(string(inputs_data[i]), 1, 256);
 		}
 	} #endregion
 	
@@ -429,24 +432,28 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	static doUpdate = function() { #region
 		if(SAFE_MODE)    return;
 		if(NODE_EXTRACT) return;
-		
+			
 		var render_timer = get_timer();
 		
 		if(cached_manual || (use_cache == CACHE_USE.auto && recoverCache())) {
 			render_cached = true;
+			
+			if(!is_instanceof(self, Node_Collection)) setRenderStatus(true);
 		} else {
 			render_cached = false;
 			var sBase = surface_get_target();	
-			var _hash = input_hash;
+			//var _hash = input_hash;
 			getInputs();
-			input_hash = md5_string_unicode(input_hash_raw);
-			anim_last_step = isAnimated() || _hash != input_hash || !rendered;
+			//input_hash = md5_string_unicode(input_hash_raw);
+			anim_last_step = isAnimated() || /*_hash != input_hash || */!rendered;
 			
 			LOG_BLOCK_START();
-			LOG_IF(global.FLAG.render, $">>>>>>>>>> DoUpdate called from {internalName} [{anim_last_step}] [{update_on_frame}, {isAnimated()}, {_hash != input_hash}, {!rendered}] <<<<<<<<<<");
-		
+			LOG_IF(global.FLAG.render, $">>>>>>>>>> DoUpdate called from {INAME} [{anim_last_step}] <<<<<<<<<<");
+			
+			if(!is_instanceof(self, Node_Collection)) setRenderStatus(true);
+			
 			try {
-				if(anim_last_step) update(); ///Update only if input hash differs from previous.
+				if(anim_last_step) update(); // Update only if input hash differs from previous.
 			} catch(exception) {
 				var sCurr = surface_get_target();
 				while(surface_get_target() != sBase)
@@ -478,10 +485,8 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		
 		if(autoUpdatedTrigger) updatedTrigger.setValue(true);
 		
-		if(!is_instanceof(self, Node_Collection)) {
-			setRenderStatus(true);
+		if(!is_instanceof(self, Node_Collection)) 
 			render_time = get_timer() - render_timer;
-		}
 		
 		LOG_BLOCK_END();
 	} #endregion
@@ -498,7 +503,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	
 	static triggerRender = function() { #region
 		LOG_BLOCK_START();
-		LOG_IF(global.FLAG.render, $"Trigger render for {internalName}");
+		LOG_IF(global.FLAG.render, $"Trigger render for {INAME}");
 		
 		setRenderStatus(false);
 		UPDATE |= RENDER_TYPE.partial;
@@ -534,7 +539,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 			if(!val_from.node.active) continue;
 			if(!val_from.node.isRenderActive()) continue;
 			if!(val_from.node.rendered || val_from.node.update_on_frame) {
-				LOG_LINE_IF(global.FLAG.render, $"Node {internalName} is not renderable because input {val_from.node.internalName} is not rendered ({val_from.node.rendered})");
+				LOG_LINE_IF(global.FLAG.render, $"Node {INAME} is not renderable because input {val_from.node.internalName} is not rendered ({val_from.node.rendered})");
 				return false;
 			}
 		}
@@ -549,7 +554,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		var nodeNames = [];
 		
 		LOG_BLOCK_START();
-		LOG_IF(global.FLAG.render, $"→→→→→ Call get next node from: {internalName}");
+		LOG_IF(global.FLAG.render, $"→→→→→ Call get next node from: {INAME}");
 		LOG_BLOCK_START();
 		
 		for(var i = 0; i < ds_list_size(outputs); i++) {
@@ -587,7 +592,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	static onInspect = function() {}
 	
 	static setRenderStatus = function(result) { #region
-		LOG_LINE_IF(global.FLAG.render, $"Set render status for {internalName} : {result}");
+		LOG_LINE_IF(global.FLAG.render, $"Set render status for {INAME} : {result}");
 		
 		rendered = result;
 	} #endregion

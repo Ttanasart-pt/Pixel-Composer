@@ -73,12 +73,12 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	];
 	
 	tools = [
-		new NodeTool( "Selection",	[ THEME.canvas_tools_selection_rectangle, THEME.canvas_tools_selection_circle ] ),
-		new NodeTool( "Pencil",		THEME.canvas_tools_pencil ),
-		new NodeTool( "Eraser",		THEME.canvas_tools_eraser ),
+		new NodeTool( "Selection",	[ THEME.canvas_tools_selection_rectangle, THEME.canvas_tools_selection_circle ]),
+		new NodeTool( "Pencil",		  THEME.canvas_tools_pencil),
+		new NodeTool( "Eraser",		  THEME.canvas_tools_eraser),
 		new NodeTool( "Rectangle",	[ THEME.canvas_tools_rect, THEME.canvas_tools_rect_fill ]),
 		new NodeTool( "Ellipse",	[ THEME.canvas_tools_ellip, THEME.canvas_tools_ellip_fill ]),
-		new NodeTool( "Fill",		THEME.canvas_tools_bucket ),
+		new NodeTool( "Fill",		  THEME.canvas_tools_bucket),
 	];
 	
 	draw_stack  = ds_list_create();

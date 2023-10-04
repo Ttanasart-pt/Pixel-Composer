@@ -17,9 +17,11 @@ if !ready exit;
 #endregion
 
 #region page
+	var xx = dialog_x + ui(padding + 8);
 	var yy = dialog_y + ui(title_height);
 	var yl = yy - ui(8);
 	var hg = line_get_height(f_p0, 16);
+	var hs = line_get_height(f_p1, 8);
 	
 	for(var i = 0; i < array_length(page); i++) {
 		draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text);
@@ -31,12 +33,32 @@ if !ready exit;
 				page_current = i;
 		}
 		
-		draw_text(dialog_x + ui(padding + 8), yl + hg / 2, page[i]);
+		draw_text(xx, yl + hg / 2, page[i]);
 		yl += hg;
+		
+		if(i == page_current && sections[i] != 0) {
+			for( var j = 0, m = array_length(sections[i]); j < m; j++ ) {
+				var sect = sections[i][j];
+				
+				draw_set_text(f_p1, fa_left, fa_center, section_current == sect[0]? COLORS._main_text : COLORS._main_text_sub);
+				
+				if(sHOVER && point_in_rectangle(mouse_mx, mouse_my, dialog_x, yl, dialog_x + page_width + ui(padding + 8), yl + hs - 1)) {
+					if(mouse_press(mb_left, sFOCUS))
+						sect[1].scroll_y_to = -sect[2];
+					
+					draw_set_color(COLORS._main_text);
+				}
+				
+				draw_text(xx + ui(16), yl + hs / 2, sect[0]);
+				
+				yl += hs;
+			}
+		}
 	}
 #endregion
 
 #region draw
+	section_current = "";
 	var px = dialog_x + ui(padding + page_width);
 	var py = dialog_y + ui(title_height);
 	var pw = dialog_w - ui(padding + page_width + padding);

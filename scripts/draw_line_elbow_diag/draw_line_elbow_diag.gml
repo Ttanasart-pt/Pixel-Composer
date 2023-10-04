@@ -7,8 +7,9 @@ function draw_line_elbow_diag_color(x0, y0, x1, y1, cx = noone, cy = noone, _s =
 		return;
 	}
 	
-	var sample = corner / 4;
-	sample = clamp(sample, 1, 8);
+	var sample = floor(corner / 8);
+	sample = clamp(sample, 0, 8);
+	if(sample == 0) corner = 0;
 	
 	if(cx == noone) cx = (x0 + x1) / 2;
 	if(cy == noone) cy = (y0 + y1) / 2;
@@ -210,8 +211,9 @@ function draw_line_elbow_diag_color(x0, y0, x1, y1, cx = noone, cy = noone, _s =
 }
 
 function draw_line_elbow_diag_corner(x0, y0, x1, y1, _s = 1, thick = 1, col1 = c_white, col2 = c_white, corner = 0, indexIn = 1, indexOut = 1, type = LINE_STYLE.solid) {
-	var sample = corner / 4;
-	sample = clamp(sample, 1, 8);
+	var sample = floor(corner / 8);
+	sample = clamp(sample, 0, 8);
+	if(sample == 0) corner = 0;
 	
 	var rat  = abs(x0 - x1) / (abs(x0 - x1) + abs(y0 - y1));
 	var colc = merge_color(col1, col2, rat);

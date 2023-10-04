@@ -1,6 +1,6 @@
 #region data
 	globalvar PREF_MAP;
-	PREF_MAP = ds_map_create();
+	PREF_MAP		= ds_map_create();
 #endregion
 
 #region pref map
@@ -75,62 +75,6 @@
 	
 	PREF_MAP[? "alt_picker"] = true;
 	PREF_MAP[? "clear_temp_on_close"] = true;
-#endregion
-
-#region hotkeys	
-	function hotkeyObject(_context, _name, _key, _mod, _action) constructor {
-		context	= _context;
-		name	= _name;
-		key		= _key;
-		modi	= _mod;
-		action	= _action;
-		
-		dKey	= _key;
-		dModi	= _mod;
-		
-		static serialize = function() {
-			var ll = ds_list_create();
-			ll[| 0] = context;
-			ll[| 1] = name;
-			ll[| 2] = key;
-			ll[| 3] = modi;
-			return ll;
-		}
-		
-		static deserialize = function(ll) {
-			key  = ll[| 2];
-			modi = ll[| 3];
-		}
-	}
-	
-	function addHotkey(_context, _name, _key, _mod, _action) {
-		if(is_string(_key)) {
-			var ind = key_get_index(_key);
-			_key = ind? ind : ord(_key);
-		}
-		
-		var key = new hotkeyObject(_context, _name, _key, _mod, _action);
-		
-		if(!ds_map_exists(HOTKEYS, _context)) {
-			HOTKEYS[? _context] = ds_list_create();
-			if(!ds_list_exist(HOTKEY_CONTEXT, _context))
-				ds_list_add(HOTKEY_CONTEXT, _context);
-		}
-		
-		for(var i = 0; i < ds_list_size(HOTKEYS[? _context]); i++) {
-			var hotkey	= HOTKEYS[? _context][| i];
-			if(hotkey.name == key.name) {
-				delete HOTKEYS[? _context][| i];
-				HOTKEYS[? _context][| i] = key;
-				return;
-			}
-		}
-		
-		if(_context == "")
-			ds_list_insert(HOTKEYS[? _context], 0, key);
-		else
-			ds_list_add(HOTKEYS[? _context], key);
-	}
 #endregion
 
 #region recent files

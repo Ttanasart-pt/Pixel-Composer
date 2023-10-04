@@ -29,6 +29,11 @@ event_inherited();
 	page[2] = __txt("Theme");
 	page[3] = __txt("Hotkeys");
 	
+	section_current = "";
+	sections = array_create(array_length(page));
+#endregion
+
+#region general
 	pref_global = ds_list_create();
 	
 	ds_list_add(pref_global, [
@@ -351,6 +356,8 @@ event_inherited();
 		var cx = x1 - cw - ui(8);
 		var category = "";
 		
+		var sect = [];
+		
 		for( var i = 0, n = array_length(COLOR_KEYS); i < n; i++ ) {
 			var key = COLOR_KEYS[i];
 			var val = variable_struct_get(COLORS, key);
@@ -363,8 +370,15 @@ event_inherited();
 			var cat = spl[0] == ""? spl[1] : spl[0];
 			if(cat != category) {
 				category = cat;
+				var _sect = string_title(category);
+				
 				draw_set_text(f_p0b, fa_left, fa_top, COLORS._main_text_sub);
-				draw_text(ui(16), yy, string_title(category));
+				draw_text(ui(16), yy, _sect);
+				
+				array_push(sect, [ _sect, sp_colors, hh ]);
+				if(yy > 0 && section_current == "") 
+					section_current = _sect;
+				
 				yy += string_height(category) + ui(8);
 				hh += string_height(category) + ui(8);
 				ind = 0;
@@ -401,6 +415,8 @@ event_inherited();
 			ind++;
 		}
 		
+		sections[2] = sect;
+		
 		return hh;
 	});
 	
@@ -408,92 +424,6 @@ event_inherited();
 		var path = DIRECTORY + "themes/" + PREF_MAP[? "theme"] + "/override.json";
 		json_save_struct(path, COLORS, true);
 	}
-#endregion
-
-#region draw
-	current_list = pref_global;
-	
-	sp_pref = new scrollPane(dialog_w - ui(padding + padding + page_width), dialog_h - ui(title_height + padding), function(_y, _m, _r) {
-		draw_clear_alpha(COLORS.panel_bg_clear, 0);
-		var hh		= 0;
-		var th		= TEXTBOX_HEIGHT;
-		var x1		= sp_pref.surface_w;
-		var yy		= _y + ui(8);
-		var padd	= ui(6);
-		var ind		= 0;
-		
-		for(var i = 0; i < ds_list_size(current_list); i++) {
-			var _pref = current_list[| i];
-			if(is_string(_pref)) continue;
-			
-			var name = _pref[0];
-			if(search_text != "" && string_pos(string_lower(search_text), string_lower(name)) == 0)
-				continue;
-			
-			_pref[2].register(sp_pref);
-		}
-		
-		for(var i = 0; i < ds_list_size(current_list); i++) {
-			var _pref = current_list[| i];
-			var th    = TEXTBOX_HEIGHT;
-			
-			if(is_string(_pref)) {
-				draw_set_text(f_p0b, fa_left, fa_top, COLORS._main_text_sub);
-				draw_text(ui(16), yy, _pref);
-				yy += string_height(_pref) + ui(8);
-				hh += string_height(_pref) + ui(8);
-				ind = 0;
-				continue;
-			}
-			
-			var name = _pref[0];
-			var txt  = _pref[1];
-			if(is_method(txt)) 
-				txt = txt();
-			else 
-				txt = PREF_MAP[? txt];
-			
-			if(search_text != "" && string_pos(string_lower(search_text), string_lower(name)) == 0)
-				continue;
-			
-			if(ind % 2 == 0)
-				draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, 0, yy - padd, sp_pref.surface_w, th + padd * 2, COLORS.dialog_preference_prop_bg, 1);
-				
-			draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text);
-			draw_text(ui(8), yy + th / 2, _pref[0]);
-			_pref[2].setFocusHover(sFOCUS, sHOVER && sp_pref.hover); 
-			
-			var widget_w = ui(240);
-			var widget_h = th;
-			
-			if(instanceof(_pref[2]) == "textBox") 
-				widget_w = _pref[2].input == TEXTBOX_INPUT.text? ui(400) : widget_w;
-			
-			var widget_x = x1 - ui(4) - widget_w;
-			var widget_y = yy;
-			
-			var params = new widgetParam(widget_x, widget_y, widget_w, widget_h, txt, {}, _m, _r[0], _r[1]);
-			if(instanceof(_pref[2]) == "checkBox")
-				params.halign = fa_center;
-				
-			var th     = _pref[2].drawParam(params) ?? 0;
-			
-			yy += th + padd + ui(8);
-			hh += th + padd + ui(8);
-			ind++;
-		}
-		
-		return hh;
-	});
-#endregion
-
-#region search
-	tb_search = new textBox(TEXTBOX_INPUT.text, function(str) {
-		search_text = str;
-	});
-	tb_search.align	= fa_left;
-	
-	search_text = "";
 #endregion
 
 #region hotkey
@@ -525,8 +455,9 @@ event_inherited();
 		
 		draw_set_text(f_p0, fa_left, fa_top);
 		
-		var yy  = _y + ui(8);
-		var ind = 0;
+		var yy   = _y + ui(8);
+		var ind  = 0;
+		var sect = [];
 		
 		for( var i = 0, n = ds_list_size(pref_hot); i < n; i++ ) {
 			var _pref = pref_hot[| i];
@@ -579,8 +510,14 @@ event_inherited();
 				
 				if(group != currGroup) {
 					if(group != "") hh += ui(12);
+					
+					var _grp = group == ""? __txt("Global") : group;
 					draw_set_text(f_p0b, fa_left, fa_top, COLORS._main_text_sub);
-					draw_text(ui(16), yy + hh, group == ""? __txt("Global") : group);
+					draw_text(ui(16), yy + hh, _grp);
+					
+					array_push(sect, [ _grp, sp_hotkey, hh ]);
+					if(yy > 0 && section_current == "") 
+						section_current = _grp;
 					
 					hh += string_height("l") + ui(16);
 					currGroup = group;
@@ -685,7 +622,96 @@ event_inherited();
 			}
 		}
 		
+		
+		
+		sections[3] = sect;
+		
 		return hh;
 	})
 #endregion
 
+#region draw
+	current_list = pref_global;
+	
+	sp_pref = new scrollPane(dialog_w - ui(padding + padding + page_width), dialog_h - ui(title_height + padding), function(_y, _m, _r) {
+		draw_clear_alpha(COLORS.panel_bg_clear, 0);
+		var hh		= 0;
+		var th		= TEXTBOX_HEIGHT;
+		var x1		= sp_pref.surface_w;
+		var yy		= _y + ui(8);
+		var padd	= ui(6);
+		var ind		= 0;
+		
+		for(var i = 0; i < ds_list_size(current_list); i++) {
+			var _pref = current_list[| i];
+			if(is_string(_pref)) continue;
+			
+			var name = _pref[0];
+			if(search_text != "" && string_pos(string_lower(search_text), string_lower(name)) == 0)
+				continue;
+			
+			_pref[2].register(sp_pref);
+		}
+		
+		for(var i = 0; i < ds_list_size(current_list); i++) {
+			var _pref = current_list[| i];
+			var th    = TEXTBOX_HEIGHT;
+			
+			if(is_string(_pref)) {
+				draw_set_text(f_p0b, fa_left, fa_top, COLORS._main_text_sub);
+				draw_text(ui(16), yy, _pref);
+				yy += string_height(_pref) + ui(8);
+				hh += string_height(_pref) + ui(8);
+				ind = 0;
+				continue;
+			}
+			
+			var name = _pref[0];
+			var txt  = _pref[1];
+			if(is_method(txt)) 
+				txt = txt();
+			else 
+				txt = PREF_MAP[? txt];
+			
+			if(search_text != "" && string_pos(string_lower(search_text), string_lower(name)) == 0)
+				continue;
+			
+			if(ind % 2 == 0)
+				draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, 0, yy - padd, sp_pref.surface_w, th + padd * 2, COLORS.dialog_preference_prop_bg, 1);
+				
+			draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text);
+			draw_text(ui(8), yy + th / 2, _pref[0]);
+			_pref[2].setFocusHover(sFOCUS, sHOVER && sp_pref.hover); 
+			
+			var widget_w = ui(240);
+			var widget_h = th;
+			
+			if(instanceof(_pref[2]) == "textBox") 
+				widget_w = _pref[2].input == TEXTBOX_INPUT.text? ui(400) : widget_w;
+			
+			var widget_x = x1 - ui(4) - widget_w;
+			var widget_y = yy;
+			
+			var params = new widgetParam(widget_x, widget_y, widget_w, widget_h, txt, {}, _m, _r[0], _r[1]);
+			if(instanceof(_pref[2]) == "checkBox")
+				params.halign = fa_center;
+				
+			var th     = _pref[2].drawParam(params) ?? 0;
+			
+			yy += th + padd + ui(8);
+			hh += th + padd + ui(8);
+			ind++;
+		}
+		
+		return hh;
+	});
+#endregion
+
+#region search
+	tb_search = new textBox(TEXTBOX_INPUT.text, function(str) {
+		search_text = str;
+	});
+	tb_search.align	= fa_left;
+	
+	search_text = "";
+#endregion

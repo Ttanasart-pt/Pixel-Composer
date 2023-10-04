@@ -20,7 +20,7 @@ function Node_Seperate_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	
 	outputs[| 0] = nodeValue("Surface out",	self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
-	outputs[| 1] = nodeValue("Boundary data",	self, JUNCTION_CONNECT.output, VALUE_TYPE.integer, []);
+	outputs[| 1] = nodeValue("Atlas",	self, JUNCTION_CONNECT.output, VALUE_TYPE.atlas, []);
 	
 	input_display_list = [
 		["Shape",	false], 0, 1, 4,
@@ -35,7 +35,7 @@ function Node_Seperate_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	surface_w = 1;
 	surface_h = 1;
 	
-	attributes.max_shape = 32;
+	attributes.max_shape = 64;
 	array_push(attributeEditors, ["Maximum shapes", function() { return attributes.max_shape; },
 		new textBox(TEXTBOX_INPUT.number, function(val) { 
 			attributes.max_shape = val;
@@ -71,7 +71,7 @@ function Node_Seperate_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 		var hh = surface_get_height_safe(_inSurf);
 		surface_w = ww;
 		surface_h = hh;
-	
+		
 		for(var i = 0; i < 2; i++) {
 			temp_surface[i] = surface_verify(temp_surface[i], ww, hh, attrDepth());
 			
@@ -80,112 +80,102 @@ function Node_Seperate_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 			surface_reset_target();
 		}
 		
-		shader_set(sh_seperate_shape_index);
-		shader_set_uniform_i(shader_get_uniform(sh_seperate_shape_index, "ignore"), _ignore);
-		surface_set_target(temp_surface[1]);
-			draw_sprite_stretched(s_fx_pixel, 0, 0, 0, ww, hh);
-		surface_reset_target();
-		shader_reset();
+		#region region indexing
+			surface_set_shader(temp_surface[1], sh_seperate_shape_index);
+				shader_set_i("ignore", _ignore);
+				draw_sprite_stretched(s_fx_pixel, 0, 0, 0, ww, hh);
+			surface_reset_shader();
 		
-		shader_set(sh_seperate_shape_ite);
-		shader_set_uniform_i(shader_get_uniform(sh_seperate_shape_ite, "ignore"), _ignore);
-		shader_set_uniform_f(shader_get_uniform(sh_seperate_shape_ite, "dimension"), ww, hh);
-		shader_set_uniform_f(shader_get_uniform(sh_seperate_shape_ite, "threshold"), _thres);
-		if(is_surface(_inSurf))
-			texture_set_stage(shader_get_sampler_index(sh_seperate_shape_ite, "map"), surface_get_texture(_inSurf));
-		
-		var res_index = 0, iteration = ww + hh;
-		for(var i = 0; i <= iteration; i++) {
-			var bg = i % 2;
-			var fg = !bg;
-			
-			surface_set_target(temp_surface[bg]);
-			DRAW_CLEAR
-			BLEND_OVERRIDE;
-				draw_surface_safe(temp_surface[fg], 0, 0);
-			BLEND_NORMAL;
-			surface_reset_target();
-			
-			res_index = bg;
-		}
-		
-		shader_reset();
-		
-		var _pixel_surface = surface_create_valid(attributes.max_shape, 1);
-		surface_set_target(_pixel_surface);
-		DRAW_CLEAR
-		BLEND_OVERRIDE;
-			shader_set(sh_seperate_shape_counter);
-			texture_set_stage(shader_get_sampler_index(sh_seperate_shape_counter, "surface"), surface_get_texture(temp_surface[res_index]));
-			shader_set_uniform_f_array_safe(shader_get_uniform(sh_seperate_shape_counter, "dimension"), [ ww, hh ]);
-			shader_set_uniform_i(shader_get_uniform(sh_seperate_shape_counter, "maxShape"), attributes.max_shape);
-			shader_set_uniform_i(shader_get_uniform(sh_seperate_shape_counter, "ignore"), _ignore);
-				draw_sprite_ext(s_fx_pixel, 0, 0, 0, attributes.max_shape, 1, 0, c_white, 1);
+			shader_set(sh_seperate_shape_ite);
+				shader_set_i("ignore", _ignore);
+				shader_set_f("dimension", ww, hh);
+				shader_set_f("threshold", _thres);
+				shader_set_surface("map", _inSurf);
 			shader_reset();
-		BLEND_NORMAL;
-		surface_reset_target();
 		
-		var px = surface_get_pixel(_pixel_surface, 0, 0);
+			var res_index = 0, iteration = ww + hh;
+			for(var i = 0; i <= iteration; i++) {
+				var bg = i % 2;
+				var fg = !bg;
+			
+				surface_set_shader(temp_surface[bg], sh_seperate_shape_ite,, BLEND.over);
+					draw_surface_safe(temp_surface[fg], 0, 0);
+				surface_reset_shader();
+			
+				res_index = bg;
+			}
+		#endregion
 		
-		if(px == 0) return;
+		#region count and match color
+			var _pixel_surface = surface_create_valid(attributes.max_shape, 1);
+			surface_set_shader(_pixel_surface, sh_seperate_shape_counter);
+				shader_set_surface("surface", temp_surface[res_index]);
+				shader_set_f("dimension", [ ww, hh ]);
+				shader_set_i("maxShape", attributes.max_shape);
+				shader_set_i("ignore", _ignore);
+			
+				draw_sprite_ext(s_fx_pixel, 0, 0, 0, attributes.max_shape, 1, 0, c_white, 1);
+			surface_reset_shader();
 		
-		var _outSurf, _val;
-		_val = array_create(px);
-		outputs[| 0].setValue(_val);
+			var px = surface_get_pixel(_pixel_surface, 0, 0);
+			if(px == 0) return;
+		#endregion
+		
+		#region extract region
+			var _outSurf, _val;
+			_val = array_create(px);
+			outputs[| 0].setValue(_val);
 			
-		var _boundary = array_create(px);
+			var _atlas = array_create(px);
 			
-		buffer_delete(surface_buffer);
-		surface_buffer = buffer_create(ww * hh * 4, buffer_fixed, 2);
-		buffer_get_surface(surface_buffer, temp_surface[res_index], 0);
+			buffer_delete(surface_buffer);
+			surface_buffer = buffer_create(ww * hh * 4, buffer_fixed, 2);
+			buffer_get_surface(surface_buffer, temp_surface[res_index], 0);
 			
-		for(var i = 0; i < px; i++) {
-			_outSurf = surface_create_valid(ww, hh);
-			_val[i] = _outSurf;
+			for(var i = 0; i < px; i++) {
+				_outSurf = surface_create_valid(ww, hh);
+				_val[i] = _outSurf;
 				
-			surface_set_target(_outSurf);
-			DRAW_CLEAR
-			BLEND_OVERRIDE;
-				shader_set(sh_seperate_shape_sep);
-				var ccx = surface_get_pixel_ext(_pixel_surface, 1 + i, 0);
-				var alpha = (ccx >> 24) & 255;
-				var blue = (ccx >> 16) & 255;
-				var green = (ccx >> 8) & 255;
-				var red = ccx & 255;
+				surface_set_shader(_outSurf, sh_seperate_shape_sep);
+					var ccx = surface_get_pixel_ext(_pixel_surface, 1 + i, 0);
+					var alpha = (ccx >> 24) & 255;
+					var blue = (ccx >> 16) & 255;
+					var green = (ccx >> 8) & 255;
+					var red = ccx & 255;
 					
-				var min_x = floor(red / 255 * ww);
-				var min_y = floor(green / 255 * hh);
-				var max_x = ceil(blue / 255 * ww);
-				var max_y = ceil(alpha / 255 * hh);
-				var t = max_y;
-				var b = min_y;
-				var l = max_x;
-				var r = min_x;
+					var min_x = floor(red / 255 * ww);
+					var min_y = floor(green / 255 * hh);
+					var max_x = ceil(blue / 255 * ww);
+					var max_y = ceil(alpha / 255 * hh);
+					var t = max_y;
+					var b = min_y;
+					var l = max_x;
+					var r = min_x;
 							
-				for( var j = min_x; j < max_x; j++ ) 
-				for( var k = min_y; k < max_y; k++ ) {
-					var _sc = get_color_buffer(j, k);
-					if(_sc != ccx) continue;
+					for( var j = min_x; j < max_x; j++ ) 
+					for( var k = min_y; k < max_y; k++ ) {
+						var _sc = get_color_buffer(j, k);
+						if(_sc != ccx) continue;
 					
-					t = min(t, k);
-					b = max(b, k);
-					l = min(l, j);
-					r = max(r, j);
-				}
+						t = min(t, k);
+						b = max(b, k);
+						l = min(l, j);
+						r = max(r, j);
+					}
 							
-				_boundary[i] = [l, t, r, b];
-					
-				if(is_surface(_inSurf))
-					texture_set_stage(shader_get_sampler_index(sh_seperate_shape_sep, "original"), surface_get_texture(_inSurf));
-				shader_set_uniform_f(shader_get_uniform(sh_seperate_shape_sep, "color"), red, green, blue, alpha);
-				shader_set_uniform_i(shader_get_uniform(sh_seperate_shape_sep, "override"), _ovr);
-				shader_set_uniform_f_array_safe(shader_get_uniform(sh_seperate_shape_sep, "overColor"), colToVec4(_ovrclr));
-				draw_surface_safe(temp_surface[res_index], 0, 0);
-				shader_reset();
-			BLEND_NORMAL;
-			surface_reset_target();
-		}
+					_atlas[i] = [l, t, r, b];
+					_atlas[i] = new SurfaceAtlas(_outSurf, [ r.x + _spac, r.y + _spac ]);
+				
+					shader_set_surface("original", _inSurf);
+					shader_set_f("color", red, green, blue, alpha);
+					shader_set_i("override", _ovr);
+					shader_set_f("overColor", colToVec4(_ovrclr));
+				
+					draw_surface_safe(temp_surface[res_index], 0, 0);
+				surface_reset_shader();
+			}
 			
-		outputs[| 1].setValue(_boundary,,, false);
+			outputs[| 1].setValue(_atlas);
+		#endregion
 	}
 }

@@ -22,9 +22,9 @@ function Node_Plot_Linear(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		
 	inputs[| 7] = nodeValue("Graph Thickness", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1);
 	
-	inputs[| 8] = nodeValue("Use Background", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+	inputs[| 8] = nodeValue("Background", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
 		
-	inputs[| 9] = nodeValue("Background", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_black);
+	inputs[| 9] = nodeValue("Background color", self, JUNCTION_CONNECT.input, VALUE_TYPE.color, c_black);
 	
 	inputs[| 10] = nodeValue("Direction", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
 		.setDisplay(VALUE_DISPLAY.rotation);
@@ -58,13 +58,18 @@ function Node_Plot_Linear(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 	
 	inputs[| 23] = nodeValue("Smooth", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
 		.setDisplay(VALUE_DISPLAY.slider);
+		
+	inputs[| 24] = nodeValue("Color Over Value", self, JUNCTION_CONNECT.input, VALUE_TYPE.gradient, new gradientObject(c_white));
+		
+	inputs[| 25] = nodeValue("Value range", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 1 ] )
+		.setDisplay(VALUE_DISPLAY.range);
 	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	input_display_list = [ 0, 
 		["Data", 	 true], 1, 12, 21, 14, 2, 3, 15, 16, 
-		["Plot",	false], 11, 4, 10, 20, 5, 17, 22, 23, 
-		["Render",	false], 6, 13, 7, 18, 19, 8, 9, 
+		["Plot",	false], 11, 4, 10, 20, 5, 22, 23, 
+		["Render",	false], 6, 13, 24, 25, 7, 17, 18, 19, 8, 9, 
 	];
 	
 	attribute_surface_depth();
@@ -105,14 +110,12 @@ function Node_Plot_Linear(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		var _sam = _data[ 3]; _sam = max(1, _sam);
 		var _ori = _data[ 4];
 		var _amp = _data[ 5];
-		var _lcl = _data[ 6];
 		var _lth = _data[ 7];
 		var _ubg = _data[ 8];
 		var _bgc = _data[ 9];
 		var _ang = _data[10];
 		var _typ = _data[11];
 		var _off = _data[12];
-		var _grd = _data[13];
 		
 		var _trim_mode = _data[14];
 		var _win_size  = _data[15];
@@ -127,6 +130,11 @@ function Node_Plot_Linear(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 		var _flip = _data[21];
 		var _loop = _data[22];
 		var _smt  = _data[23];
+		
+		var _lcl = _data[ 6];
+		var _cls = _data[13];
+		var _clv = _data[24];
+		var _clv_r = _data[25];
 		
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
 		
@@ -165,18 +173,18 @@ function Node_Plot_Linear(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 			}
 			
 			var amo = array_length(_smp_data);
-			var _px, _py, _ang_nor, _val, _grd_col;
+			var _px, _py, _ang_nor, _val, _col_sam, _col_val;
 			var _pnt, _ppnt = undefined;
-			var _bar_spc = _typ == 1? _pnt_spac : _pnt_spac + _bar_wid;
+			var _bar_spc = _typ == 1? _pnt_spac + 1 : _pnt_spac + _bar_wid;
+			var _oc;
 			
 			for( var i = 0; i < amo; i++ ) {
 				if(_path == noone) {
 					_px = _ori[0] + lengthdir_x(i * _bar_spc, _ang);
 					_py = _ori[1] + lengthdir_y(i * _bar_spc, _ang);
 				} else {
-					_pnt = _path.getPointRatio(i / amo);
-					if(_ppnt == undefined)
-						_ppnt = _path.getPointRatio(i / amo - 0.001);
+					_pnt    = _path.getPointRatio(i / amo);
+					_ppnt ??= _path.getPointRatio(i / amo - 0.001);
 					
 					_px = _pnt.x;
 					_py = _pnt.y;
@@ -186,11 +194,15 @@ function Node_Plot_Linear(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 				}
 				
 				_ang_nor = _ang + 90;
+				_val	 = _smp_data[i] + _off;
+				_col_sam = _cls.eval(i / amo);
+				_col_val = _clv.eval((_val - _clv_r[0]) - (_clv_r[1] - _clv_r[0]));
 				
-				_val = _smp_data[i] + _off;
+				var _c1 = colorMultiply(_lcl, _col_sam);
+				var _c2 = _col_val;
+				var _col_final = colorMultiply(_c1, _c2);
 				
-				_grd_col = _grd.eval(i / amo);
-				draw_set_color(colorMultiply(_lcl, _grd_col));
+				draw_set_color(_col_final);
 				
 				nx = _px + lengthdir_x(_amp * _val, _ang_nor);
 				ny = _py + lengthdir_y(_amp * _val, _ang_nor);
@@ -209,10 +221,6 @@ function Node_Plot_Linear(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 								var _b1x = nx + lengthdir_x(dist * _smt, _ang + 180);
 								var _b1y = ny + lengthdir_y(dist * _smt, _ang + 180);
 								
-								//draw_line(ox, oy, _b0x, _b0y);
-								//draw_line(_b0x, _b0y, _b1x, _b1y);
-								//draw_line(_b1x, _b1y, nx, ny);
-								
 								var _ox = ox, _oy = oy, _nx, _ny;
 								
 								for( var j = 1; j <= 8; j++ ) {
@@ -227,8 +235,8 @@ function Node_Plot_Linear(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 									_oy = _ny;
 								}
 							} else {
-								if(_lth > 1) draw_line_round(ox, oy, nx, ny, _lth);
-								else		 draw_line(ox, oy, nx, ny);
+								if(_lth > 1) draw_line_round_color(ox, oy, nx, ny, _lth, _oc, _col_final);
+								else		 draw_line_color(ox, oy, nx, ny, _oc, _col_final);
 							}
 						}
 						break;
@@ -236,6 +244,7 @@ function Node_Plot_Linear(_x, _y, _group = noone) : Node_Processor(_x, _y, _grou
 				
 				ox = nx;
 				oy = ny;
+				_oc = _col_final;
 				
 				if(i == 0) {
 					fx = nx;

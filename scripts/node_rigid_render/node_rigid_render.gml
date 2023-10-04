@@ -7,6 +7,8 @@ function Node_Rigid_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	inputs[| 0] = nodeValue("Render dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, DEF_SURF)
 		.setDisplay(VALUE_DISPLAY.vector)
 		.rejectArray();
+		
+	inputs[| 1] = nodeValue("Round position", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false)
 	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
@@ -64,6 +66,7 @@ function Node_Rigid_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			return;
 			
 		var _dim = getInputData(0);
+		var _rnd = getInputData(1);
 		var _outSurf = outputs[| 0].getValue();
 		
 		_outSurf = surface_verify(_outSurf, _dim[0], _dim[1], attrDepth());
@@ -95,8 +98,8 @@ function Node_Rigid_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 						var ixs = max(0, _o.xscale);
 						var iys = max(0, _o.yscale);
 						
-						var xx = _o.phy_position_x;
-						var yy = _o.phy_position_y;
+						var xx = _rnd? round(_o.phy_position_x) : _o.phy_position_x;
+						var yy = _rnd? round(_o.phy_position_y) : _o.phy_position_y;
 						
 						draw_surface_ext_safe(_o.surface, xx, yy, ixs, iys, _o.image_angle, _o.image_blend, _o.image_alpha);
 						

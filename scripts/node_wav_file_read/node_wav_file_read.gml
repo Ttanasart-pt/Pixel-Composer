@@ -177,7 +177,7 @@ function Node_WAV_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) const
 				inputs[| 1].editWidget.text = $"Sync ({frm} frames)";
 			}
 			
-			RENDER_ALL
+			RENDER_ALL_REORDER
 		}
 		
 		insp2UpdateIcon[1] = attributes.play;

@@ -446,7 +446,7 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 			return;
 		}
 					
-		var base = getValue();
+		var base = prop.def_val;
 		
 		for(var i = 0; i < array_length(_data); i++) {
 			var _keyframe = _data[i];
@@ -478,9 +478,10 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 				if(is_array(value)) {
 					for(var j = 0; j < array_length(value); j++)
 						_val[j] = processValue(value[j]);
-				} else if(is_array(base)) 
+				} else if(is_array(base)) {
 					for(var j = 0; j < array_length(base); j++)
 						_val[j] = processValue(value);
+				}
 			} 
 			
 			//print($"Deserialize {prop.node.name}:{prop.name} = {_val} ");

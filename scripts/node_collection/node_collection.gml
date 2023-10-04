@@ -180,7 +180,7 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	} #endregion
 	
 	static getNextNodesExternal = function() { #region //get node connected to the parent object
-		LOG_IF(global.FLAG.render, $"Checking next node external for {internalName}");
+		LOG_IF(global.FLAG.render, $"Checking next node external for {INAME}");
 		LOG_BLOCK_START();
 		
 		var nodes = [];
@@ -205,7 +205,7 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	
 	static setRenderStatus = function(result) { #region
 		LOG_BLOCK_START();
-		LOG_IF(global.FLAG.render, $"Set render status for {internalName} : {result}");
+		LOG_IF(global.FLAG.render, $"Set render status for {INAME} : {result}");
 		rendered = result;
 		
 		if(result)
@@ -444,7 +444,7 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	
 	static resetRender = function() { #region
 		LOG_BLOCK_START();
-		LOG_IF(global.FLAG.render, $"Reset Render for {internalName}");
+		LOG_IF(global.FLAG.render, $"Reset Render for {INAME}");
 		
 		for( var i = 0; i < ds_list_size(nodes); i++ ) {
 			LOG_IF(global.FLAG.render, $"Reseting {nodes[| i].internalName}");

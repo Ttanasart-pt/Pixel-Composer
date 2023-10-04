@@ -32,10 +32,10 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	attributes.layer_selectable = [];
 	
 	hold_visibility = true;
-	hold_select = true;
-	layer_dragging = noone;
-	layer_remove = -1;
-	layer_renderer = new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) { #region
+	hold_select		= true;
+	layer_dragging	= noone;
+	layer_remove	= -1;
+	layer_renderer	= new Inspector_Custom_Renderer(function(_x, _y, _w, _m, _hover, _focus) { #region
 		var amo = (ds_list_size(inputs) - input_fix_len) / data_length - 1;
 		if(array_length(current_data) != ds_list_size(inputs)) return 0;
 		

@@ -41,17 +41,18 @@ event_inherited();
 #endregion
 
 #region surface
-	folderW = ui(200);
+	folderW = ui(204);
 	folderW_dragging = false;
 	folderW_drag_mx = 0;
 	folderW_drag_sx = 0;
 	
-	content_w = dialog_w - ui(36) - folderW;
+	content_w = dialog_w - ui(34) - folderW;
 	content_h = dialog_h - ui(32);
 	
 	function onResize() {
-		content_w = dialog_w - ui(36) - folderW;
+		content_w = dialog_w - ui(34) - folderW;
 		content_h = dialog_h - ui(32);
+		
 		contentPane.resize(content_w, content_h);
 		folderPane.resize(folderW - ui(12), content_h - ui(32));
 	}
@@ -61,14 +62,20 @@ event_inherited();
 		var hh = 8;
 		
 		for(var i = 0; i < ds_list_size(global.ASSETS.subDir); i++) {
-			var hg = global.ASSETS.subDir[| i].draw(self, ui(8), _y + 8, _m, folderPane.surface_w - ui(16), 
-				sHOVER && folderPane.hover, sFOCUS, global.ASSETS);
+			var _w     = folderPane.surface_w - ui(16);
+			var _hover = sHOVER && folderPane.hover;
+			var _clr   = {
+				selecting : COLORS.assetbox_current_bg
+			}
+			
+			var hg = global.ASSETS.subDir[| i].draw(self, ui(8), _y + 8, _m, _w, _hover, sFOCUS, global.ASSETS, _clr);
 			hh += hg;
 			_y += hg;
 		}
 		
 		return hh + 8;
 	});
+	folderPane.always_scroll = true;
 	
 	contentPane = new scrollPane(content_w, content_h, function(_y, _m) {
 		draw_clear_alpha(c_white, 0);

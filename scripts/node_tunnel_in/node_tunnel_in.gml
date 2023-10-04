@@ -127,7 +127,7 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		var k = ds_map_find_first(TUNNELS_OUT);
 		
 		LOG_BLOCK_START();
-		LOG_IF(global.FLAG.render, $"→→→→→ Call get next node from: {internalName}");
+		LOG_IF(global.FLAG.render, $"→→→→→ Call get next node from: {INAME}");
 		LOG_BLOCK_START();
 		
 		repeat(amo) {

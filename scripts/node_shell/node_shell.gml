@@ -12,14 +12,25 @@ function Node_Shell(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	insp1UpdateTooltip   = "Run";
 	insp1UpdateIcon      = [ THEME.sequence_control, 1, COLORS._main_value_positive ];
 	
+	trusted = false;
+	
+	static onValueUpdate = function() {
+		trusted = false;
+	}
+	
 	static onInspector1Update = function() { update(); }
 	
 	static update = function() { 
 		var _pro = getInputData(0);
 		var _scr = getInputData(1);
-		if(_pro == "") return;
+		if(_pro == "" || _scr == "") return;
 		
-		shell_execute(_pro, _scr);
+		if(trusted) {
+			shell_execute(_pro, _scr);
+		} else {
+			var dia = dialogCall(o_dialog_run_shell);
+			dia.setData(self, _pro, _scr);
+		}
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {

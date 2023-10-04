@@ -2,10 +2,10 @@
 	global.junctionEndName = [ "Hold", "Loop", "Ping pong", "Wrap" ];
 
 	global.displaySuffix_Range		= [ "min", "max" ];
-	global.displaySuffix_Area		= [ "x", "y", "w", "h" ];
+	global.displaySuffix_Area		= [ "x", "y", "w", "h", "shape" ];
 	global.displaySuffix_Padding	= [ "right", "top", "left", "bottom" ];
 	global.displaySuffix_VecRange	= [ "x min", "x max", "y min", "y max" ];
-	global.displaySuffix_Axis		= [ "x", "y", "z", "w"];
+	global.displaySuffix_Axis		= [ "x", "y", "z", "w" ];
 #endregion
 
 enum JUNCTION_CONNECT {
@@ -1012,28 +1012,28 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 						editWidget = new pathArrayBox(node, display_data.filter, function(path) { setValueDirect(path); } );
 						break;
 					case VALUE_DISPLAY.path_load :
-						editWidget = new textBox(TEXTBOX_INPUT.text, function(str) { setValueDirect(str); }, 
-							button(function() { 
-								var path = get_open_filename(display_data.filter, "");
-								key_release();
-								if(path == "") return noone;
-								return setValueDirect(path);
-							}, THEME.button_path_icon)
-						);
+						editWidget = new textBox(TEXTBOX_INPUT.text, function(str) { setValueDirect(str); } );
+							
 						editWidget.align = fa_left;
+						editWidget.side_button = button(function() { 
+							var path = get_open_filename(display_data.filter, "");
+							key_release();
+							if(path == "") return noone;
+							return setValueDirect(path);
+						}, THEME.button_path_icon);
 						
 						extract_node = "Node_String";
 						break;
 					case VALUE_DISPLAY.path_save :
-						editWidget = new textBox(TEXTBOX_INPUT.text, function(str) { setValueDirect(str); }, 
-							button(function() { 
-								var path = get_save_filename(display_data.filter, "");
-								key_release();
-								if(path == "") return noone;
-								return setValueDirect(path);
-							}, THEME.button_path_icon)
-						);
+						editWidget = new textBox(TEXTBOX_INPUT.text, function(str) { setValueDirect(str); } );
+						
 						editWidget.align = fa_left;
+						editWidget.side_button = button(function() { 
+							var path = get_save_filename(display_data.filter, "");
+							key_release();
+							if(path == "") return noone;
+							return setValueDirect(path);
+						}, THEME.button_path_icon);
 						
 						extract_node = "Node_String";
 						break;
@@ -1124,6 +1124,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	
 	static expressionUpdate = function() { #region
 		expTree    = evaluateFunctionList(expression);
+		resetCache();
 		node.triggerRender();
 	} #endregion
 	

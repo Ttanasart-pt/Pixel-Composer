@@ -1,3 +1,5 @@
+global.__FRAME_LABEL_SCALE = 1;
+
 function Node_Frame(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	name = "Frame";
 	w = 240;
@@ -12,7 +14,13 @@ function Node_Frame(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	size_dragging_my = h;
 	
 	auto_height = false;
-	name_hover = false;
+	name_hover  = false;
+	hover_progress = 0;
+	
+	color = c_white;
+	alpha = 1;
+	scale = 1;
+	label_color = false;
 	
 	inputs[| 0] = nodeValue("Size", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 240, 160 ] )
 		.setDisplay(VALUE_DISPLAY.vector)
@@ -25,29 +33,44 @@ function Node_Frame(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		.setDisplay(VALUE_DISPLAY.slider)
 		.rejectArray();
 	
+	inputs[| 3] = nodeValue("Label size", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, global.__FRAME_LABEL_SCALE )
+		.setDisplay(VALUE_DISPLAY.slider)
+		.rejectArray();
+		
+	inputs[| 4] = nodeValue("Blend label", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0 )
+		.setDisplay(VALUE_DISPLAY.slider)
+		.rejectArray();
+	
+	static onValueUpdate = function(index = 3) {
+		global.__FRAME_LABEL_SCALE = getInputData(3);
+	}
+	
 	static step = function() {
 		var si = getInputData(0);
 		w = si[0];
 		h = si[1];
 		
-		color  = getInputData(1);
-		alpha  = getInputData(2);
+		color = getInputData(1);
+		alpha = getInputData(2);
+		scale = getInputData(3);
+		label_color = getInputData(4);
 	}
 	
 	static drawNodeBase = function(xx, yy, _s) {
 		draw_sprite_stretched_ext(bg_spr, 0, xx, yy, w * _s, h * _s, color, alpha);
 		var txt = display_name == ""? name : display_name;
 		
-		draw_set_text(f_h5, fa_left, fa_top, COLORS._main_text);
+		hover_progress = lerp_float(hover_progress, name_hover, 2);
+		
+		draw_set_text(f_h5, fa_left, fa_top, merge_color(COLORS._main_text, color, label_color));
 		draw_set_alpha(clamp(alpha + name_hover * 0.5, 0, 1));
-		draw_text_cut(xx + 24, yy + 4 * _s, txt, (w - 8) * _s - 24);
+		draw_text_cut(xx + 8 + 16 * hover_progress, yy + 4 * _s, txt, (w - 8) * _s - 24, scale);
 		draw_set_alpha(1);
 	}
 	
 	draw_scale = 1;
 	static drawNode = function(_x, _y, _mx, _my, _s) {
 		draw_scale = _s;
-		//if(group != PANEL_GRAPH.getCurrentContext()) return;
 		
 		if(size_dragging) {
 			w = size_dragging_w + (mouse_mx - size_dragging_mx) / _s;
@@ -78,7 +101,7 @@ function Node_Frame(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		var y0 = y1 - 16;
 		var ics = 0.5;
 		
-		draw_sprite_ext(THEME.node_move, 0, xx + 4, yy + 4 * _s, ics, ics, 0, c_white, 0.25 + 0.35 * name_hover);
+		if(name_hover) draw_sprite_ext(THEME.node_move, 0, xx + 4, yy + 4 * _s, ics, ics * scale, 0, color, 0.4);
 		
 		if(point_in_rectangle(_mx, _my, xx, yy, x1, y1) || size_dragging)
 			draw_sprite_ext(THEME.node_resize, 0, x1 - 4, y1 - 4, ics, ics, 0, c_white, 0.5);

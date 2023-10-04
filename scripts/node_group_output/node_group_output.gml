@@ -35,7 +35,7 @@ function Node_Group_Output(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	}
 	
 	static setRenderStatus = function(result) {
-		LOG_LINE_IF(global.FLAG.render, $"Set render status for {internalName} : {result}");
+		LOG_LINE_IF(global.FLAG.render, $"Set render status for {INAME} : {result}");
 		
 		rendered = result;
 		if(group) group.setRenderStatus(result);

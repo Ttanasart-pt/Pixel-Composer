@@ -1,25 +1,32 @@
-function readObj(path) {
-	if(!file_exists(path)) return noone;
+function readObj_init() {
+	obj_reading = true;
+	obj_read_progress = 0;
+	obj_read_prog_sub = 0;
+	obj_read_prog_tot = 3;
+	obj_raw = noone;
 	
-	var _VB  = [];
-	var _VBT = [];
-	var _VBN = [];
-	var mats = [];
-	var matIndex = [];
-	var tris = [];
-	var mtlPath = "";
-	var use_normal = true;
-	var v  = ds_list_create();
-	var vt = ds_list_create();
-	var vn = ds_list_create();
-	var f  = ds_list_create();
-	var ft = ds_list_create();
-	var fn = ds_list_create();
-	var tri = 0;
+	_VB  = [];
+	_VBT = [];
+	_VBN = [];
+	mats = [];
+	matIndex = [];
+	tris = [];
+	mtlPath = "";
+	use_normal = true;
+	v  = ds_list_create();
+	vt = ds_list_create();
+	vn = ds_list_create();
+	f  = ds_list_create();
+	ft = ds_list_create();
+	fn = ds_list_create();
+	tri = 0;
+}
+
+function readObj_file() {
+	var _time = current_time;
 	
-	var file = file_text_open_read(path);
-	while(!file_text_eof(file)) { #region reading file
-		var l = file_text_readln(file);
+	while(!file_text_eof(obj_read_file)) { #region reading file
+		var l = file_text_readln(obj_read_file);
 		l = string_trim(l);
 		
 		var sep = string_split(l, " ");
@@ -100,7 +107,9 @@ function readObj(path) {
 				//print("Reading vertex group: " + sep[1])
 				break;
 		}
-	}
+		
+		if(current_time - _time > 30) return;
+	} #endregion
 	
 	if(!ds_list_empty(f)) {
 		array_push(_VB,  f);
@@ -108,10 +117,12 @@ function readObj(path) {
 		array_push(_VBN, fn);
 		array_push(tris, tri);
 	}
-	file_text_close(file);
-	#endregion
+	file_text_close(obj_read_file);
 	
 	if(use_normal) vn[| 0] = [ 0, 0, 0 ];
+	
+	obj_read_progress = 1;
+	obj_read_prog_sub = 0;
 	
 	//var txt = "OBJ summary";
 	//txt += $"\n\tVerticies : {ds_list_size(v)}";
@@ -119,13 +130,15 @@ function readObj(path) {
 	//txt += $"\n\tNormal Verticies : {ds_list_size(vn)}";
 	//txt += $"\n\tVertex groups : {array_length(_VB)}";
 	//txt += $"\n\tTriangles : {tris}";
-	//print(txt);
-	
+	//print(txt);	
+}
+
+function readObj_cent() {
 	#region centralize vertex
-		var _bmin = v[| 0];
-		var _bmax = v[| 0];
-		var cv = [0, 0, 0];
-		var vertex = ds_list_size(v);
+		_bmin = v[| 0];
+		_bmax = v[| 0];
+		cv = [0, 0, 0];
+		vertex = ds_list_size(v);
 		
 		for( var i = 0; i < vertex; i++ ) {
 			var _v = v[| i];
@@ -149,19 +162,28 @@ function readObj(path) {
 		cv[1] /= vertex;
 		cv[2] /= vertex;
 		
-		for( var i = 0, n = ds_list_size(v); i < n; i++ ) {
-			v[| i][0] -= cv[0];
-			v[| i][1] -= cv[1];
-			v[| i][2] -= cv[2];
-		}
-		
-		var _size = new __vec3(
+		obj_size = new __vec3(
 			_bmax[0] - _bmin[0],
 			_bmax[1] - _bmin[1],
 			_bmax[2] - _bmin[2],
 		);
+		
+		var sc   = 1;
+		//var span = max(abs(_size.x), abs(_size.y), abs(_size.z));
+		//if(span > 10) sc = span / 10;
+		
+		for( var i = 0, n = ds_list_size(v); i < n; i++ ) {
+			v[| i][0] = (v[| i][0] - cv[0]) / sc;
+			v[| i][1] = (v[| i][1] - cv[1]) / sc;
+			v[| i][2] = (v[| i][2] - cv[2]) / sc;
+		}
 	#endregion
 	
+	obj_read_progress = 2;
+	obj_read_prog_sub = 0;
+}
+
+function readObj_buff() {
 	#region vertex buffer creation
 		var _vblen = array_length(_VB);
 		var VBS    = array_create(_vblen);
@@ -173,7 +195,6 @@ function readObj(path) {
 			var face  = _VB[i];
 			var facet = _VBT[i];
 			var facen = _VBN[i];
-			var tri   = tris[i];
 			
 			var _flen = ds_list_size(face);
 			var _v    = ds_list_create();
@@ -239,8 +260,12 @@ function readObj(path) {
 		ds_list_destroy(vt);
 	#endregion
 	
-	return { 
+	obj_read_progress = 3;
+	obj_read_prog_sub = 0;
+	
+	obj_raw = { 
 		vertex: V,
+		vertex_count:  vertex,
 		vertex_groups: VBS,
 		object_counts: _vblen,
 		
@@ -248,6 +273,6 @@ function readObj(path) {
 		material_index: matIndex,
 		use_normal:		use_normal,
 		mtl_path:		mtlPath,
-		model_size:		_size,
+		model_size:		obj_size,
 	};
 }

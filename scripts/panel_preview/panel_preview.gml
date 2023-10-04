@@ -1154,7 +1154,7 @@ function Panel_Preview() : PanelContent() constructor {
 					if(point_in_rectangle(_mx, _my, _sx0, _sy0 + 1, _sx1, _sy1 - 1)) {
 						TOOLTIP = tool.getName(j);
 						draw_sprite_stretched(THEME.button_hide, 1, _sx0 + pd, _sy0 + pd, tool_size - pd * 2, tool_size - pd * 2);
-								
+							
 						if(mouse_press(mb_left, pFOCUS))
 							tool.toggle(j);
 					} 
@@ -1179,8 +1179,12 @@ function Panel_Preview() : PanelContent() constructor {
 						tool.toggle();
 				}
 					
-				if(pFOCUS && WIDGET_CURRENT == noone && keyboard_check_pressed(ord(string(i + 1))))
-					tool.toggle();
+				if(pFOCUS && WIDGET_CURRENT == noone) {
+					var _key = tool.checkHotkey();
+					
+					if(keyboard_check_pressed(ord(string(i + 1))) || (_key != "" && keyboard_check_pressed(ord(_key))))
+						tool.toggleKeyboard();
+				}
 				
 				if(tool_current == tool) {
 					draw_sprite_stretched_ext(THEME.button_hide, 2, _x0 + pd, _y0 + pd, tool_size - pd * 2, tool_size - pd * 2, COLORS.panel_preview_grid, 1);

@@ -41,15 +41,11 @@ gameframe_button_array = [];
 	if(!file_exists(path)) game_end(1);
 	
 	crash_content = file_text_read_all(path);
-	log_surface = surface_create(1, 1);
-	log_y = 0;
-	log_y_to = 0;
+	log_surface   = surface_create(1, 1);
+	log_y         = 0;
+	log_y_to      = 0;
 	
-	LOCALE = {
-		config: {
-			per_character_line_break: true
-		}
-	}
+	LOCALE = { config: { per_character_line_break: true } }
 	
 	win_w = 640;
 	win_h = 480;
