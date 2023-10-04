@@ -261,6 +261,7 @@ function recordAction(_type, _object, _data = -1) {
 			actions[i].destroy();
 	}
 	
+	PANEL_MENU.undoUpdate();
 	return act;
 }
 
@@ -276,6 +277,7 @@ function UNDO() {
 	Render();
 	
 	ds_stack_push(REDO_STACK, actions);
+	PANEL_MENU.undoUpdate();
 }
 
 function REDO() {
@@ -290,4 +292,5 @@ function REDO() {
 	Render();
 	
 	ds_stack_push(UNDO_STACK, actions);	
+	PANEL_MENU.undoUpdate();
 }

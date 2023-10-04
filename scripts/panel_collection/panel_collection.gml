@@ -30,7 +30,7 @@ function Panel_Collection() : PanelContent() constructor {
 	updated_prog = 0;
 	data_path    = "";
 	
-	static initMenu = function() {
+	static initMenu = function() { #region
 		if(_menu_node == noone) return;
 		var meta = _menu_node.getMetadata();
 		
@@ -117,7 +117,7 @@ function Panel_Collection() : PanelContent() constructor {
 				}));
 			}
 		}
-	}
+	} #endregion
 	initMenu();
 	
 	search_string = "";
@@ -128,7 +128,7 @@ function Panel_Collection() : PanelContent() constructor {
 	tb_search.auto_update = true;
 	
 	contentView = 0;
-	contentPane = new scrollPane(content_w - ui(6), content_h, function(_y, _m) {
+	contentPane = new scrollPane(content_w - ui(6), content_h, function(_y, _m) { #region
 		draw_clear_alpha(COLORS._main_text_inner, 0);
 		
 		var nodes = search_string == ""? context.content : search_list;
@@ -298,9 +298,9 @@ function Panel_Collection() : PanelContent() constructor {
 		}
 		
 		return hh;
-	});
+	}); #endregion
 	
-	folderPane = new scrollPane(group_w - ui(8), content_h, function(_y, _m) {
+	folderPane = new scrollPane(group_w - ui(8), content_h, function(_y, _m) { #region
 		draw_clear_alpha(COLORS.panel_bg_clear, 0);
 		draw_sprite_stretched(THEME.ui_panel_bg, 1, ui(8), 0, folderPane.surface_w - ui(8), folderPane.surface_h);
 		var hh = ui(8);
@@ -313,32 +313,32 @@ function Panel_Collection() : PanelContent() constructor {
 		}
 		
 		return hh;
-	});
+	}); #endregion
 	
 	function onFocusBegin() { PANEL_COLLECTION = self; }
 	
-	function onResize() {
+	function onResize() { #region
 		initSize();
 		
 		folderPane.resize(group_w - ui(8), content_h);
 		contentPane.resize(content_w - ui(6), content_h);
-	}
+	} #endregion
 	
-	function setContext(cont) {
+	function setContext(cont) { #region
 		context = cont;
 		contentPane.scroll_y_raw = 0;
 		contentPane.scroll_y_to	 = 0;
-	}
+	} #endregion
 	
-	function refreshContext() {
+	function refreshContext() { #region
 		if(mode == 0)		context.scan([ ".json", ".pxcc" ]);	
 		else if(mode == 1)	context.scan([ ".png", ".jpg", ".gif" ]);	
 		
 		if(STEAM_ENABLED)
 			steamUCGload();
-	}
+	} #endregion
 	
-	function drawContent(panel) {
+	function drawContent(panel) { #region
 		draw_clear_alpha(COLORS.panel_bg_clear, 0);
 		
 		var content_y = ui(48);
@@ -465,5 +465,5 @@ function Panel_Collection() : PanelContent() constructor {
 			
 			tb_search.draw(tb_x, tb_y, tb_w, TEXTBOX_HEIGHT, search_string, [mx, my]);
 		}
-	}
+	} #endregion
 }

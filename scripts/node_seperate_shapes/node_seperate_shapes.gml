@@ -164,7 +164,7 @@ function Node_Seperate_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 					}
 							
 					_atlas[i] = [l, t, r, b];
-					_atlas[i] = new SurfaceAtlas(_outSurf, [ r.x + _spac, r.y + _spac ]);
+					//_atlas[i] = new SurfaceAtlas(_outSurf, [ r.x + _spac, r.y + _spac ]);
 				
 					shader_set_surface("original", _inSurf);
 					shader_set_f("color", red, green, blue, alpha);

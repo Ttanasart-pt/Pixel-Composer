@@ -32,6 +32,10 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	inputs[| 11] = nodeValue("Alpha", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1 )
 		.setDisplay(VALUE_DISPLAY.slider);
 	
+	inputs[| 12] = nodeValue("Frames animation", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false );
+	
+	inputs[| 13] = nodeValue("Animation speed", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1 );
+	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	frame_renderer_x     = 0;
@@ -74,12 +78,10 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			var _fr_x = 8 - frame_renderer_x;
 			var _fr_y = 4;
 			
-			var surfs = outputs[| 0].getValue();
+			var surfs = output_surface;
 			var _del  = noone;
 			
-			if(!is_array(surfs)) surfs = [ surfs ];
-			
-			for( var i = 0, n = array_length(surfs); i < n; i++ ) {
+			for( var i = 0, n = attributes.frames; i < n; i++ ) {
 				var _surf = surfs[i];
 				
 				if(!is_surface(_surf)) continue;
@@ -91,7 +93,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 				var _sx = _fr_x;
 				var _sy = _fr_y + _fr_h / 2 - _sh * _ss / 2;
 				
-				draw_surface_ext(_surf, _sx, _sy, _ss, _ss, 0, c_white, 1);
+				draw_surface_ext(_surf, _sx, _sy, _ss, _ss, 0, c_white, 0.75);
 				
 				draw_set_color(i == preview_index? COLORS._main_accent : COLORS.panel_toolbar_outline);
 				draw_rectangle(_sx, _sy, _sx + _sw * _ss, _sy + _sh * _ss, true);
@@ -143,7 +145,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	}); #endregion
 	
 	input_display_list = [ 
-		["Output",	false],	0, frame_renderer,
+		["Output",	false],	0, frame_renderer, 12, 13, 
 		["Brush",	false], 6, 2, 1, 11,
 		["Fill",	false], 3, 4, 
 		["Display", false], 8, 10, 9, 
@@ -152,6 +154,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	attributes.frames = 1;
 	attribute_surface_depth();
 	
+	output_surface   = [ surface_create_empty(1, 1) ];
 	canvas_surface   = [ surface_create_empty(1, 1) ];
 	canvas_buffer    = [ buffer_create(1 * 1 * 4, buffer_fixed, 2) ];
 	
@@ -838,6 +841,23 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 					mouse_holding = false;
 				}
 			}
+			
+			if(brush_sizing) {
+				var s = brush_sizing_s + (_mx - brush_sizing_mx) / 16;
+				    s = max(1, s);
+				inputs[| 2].setValue(s);
+				
+				if(mouse_release(mb_right)) 
+					brush_sizing = false;
+			} else if(mouse_press(mb_right, active) && key_mod_press(SHIFT) && !is_surface(_brush)) {
+				brush_sizing    = true;
+				brush_sizing_s  = _siz;
+				brush_sizing_mx = _mx;
+				brush_sizing_my = _my;
+				
+				brush_sizing_dx = mouse_cur_x;
+				brush_sizing_dy = mouse_cur_y;
+			}
 		#endregion
 		} else if(isUsingTool("Fill") || (DRAGGING && DRAGGING.type == "Color")) { #region
 			var fill = DRAGGING? mouse_release(mb_left, active) : mouse_press(mb_left, active);
@@ -901,12 +921,16 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 					} else 
 						draw_point_size(mouse_cur_x, mouse_cur_y, _siz, _brush);
 				} else if(isUsingTool("Rectangle"))	{
-					if(mouse_holding) 
+					if(brush_sizing) 
+						draw_point_size(brush_sizing_dx, brush_sizing_dy, _siz, _brush);
+					else if(mouse_holding) 
 						draw_rect_size(mouse_pre_x, mouse_pre_y, mouse_cur_x, mouse_cur_y, _siz, isUsingTool("Rectangle", 1), _brush);
 					else 
 						draw_point_size(mouse_cur_x, mouse_cur_y, _siz, _brush);
 				} else if(isUsingTool("Ellipse")) {
-					if(mouse_holding) 
+					if(brush_sizing) 
+						draw_point_size(brush_sizing_dx, brush_sizing_dy, _siz, _brush);
+					else if(mouse_holding) 
 						draw_ellp_size(mouse_pre_x, mouse_pre_y, mouse_cur_x, mouse_cur_y, _siz, isUsingTool("Ellipse", 1), _brush); 
 					else 
 						draw_point_size(mouse_cur_x, mouse_cur_y, _siz, _brush);
@@ -955,11 +979,23 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		previewing = 1;
 	} #endregion
 	
+	static step = function() { #region
+		var fram = attributes.frames;
+		var anim = getInputData(12);
+		
+		inputs[| 12].setVisible(fram > 1);
+		inputs[| 13].setVisible(fram > 1 && anim);
+		
+		update_on_frame = fram > 1 && anim;
+	} #endregion
+	
 	static update = function(frame = PROJECT.animator.current_frame) { #region
 		var _dim   = getInputData(0);
 		var _bg    = getInputData(8);
 		var _bga   = getInputData(9);
 		var _bgr   = getInputData(10);
+		var _anim  = getInputData(12);
+		var _anims = getInputData(13);
 		
 		var cDep   = attrDepth();
 		apply_surfaces();
@@ -980,27 +1016,35 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 					draw_surface_stretched_ext(_bg, 0, 0, _dim[0], _dim[1], c_white, _bga);
 				draw_surface_safe(_canvas_surface, 0, 0);
 			surface_reset_shader();
+			
+			outputs[| 0].setValue(_outSurf);
 		} else {
-			if(!is_array(_outSurf)) 
-				_outSurf = array_create(attributes.frames);
-			else if(array_length(_outSurf) != attributes.frames)
-				array_resize(_outSurf, attributes.frames);
+			if(!is_array(output_surface)) 
+				output_surface = array_create(attributes.frames);
+			else if(array_length(output_surface) != attributes.frames)
+				array_resize(output_surface, attributes.frames);
 				
 			for( var i = 0; i < attributes.frames; i++ ) {
 				var _canvas_surface = getCanvasSurface(i);
-				_outSurf[i] = surface_verify(_outSurf[i], _dim[0], _dim[1], cDep);
+				output_surface[i] = surface_verify(output_surface[i], _dim[0], _dim[1], cDep);
 			
-				surface_set_shader(_outSurf[i], noone,, BLEND.alpha);
+				surface_set_shader(output_surface[i], noone,, BLEND.alpha);
 					if(_bgr && is_surface(_bg))
 						draw_surface_stretched_ext(_bg, 0, 0, _dim[0], _dim[1], c_white, _bga);
 					draw_surface_safe(_canvas_surface, 0, 0);
 				surface_reset_shader();
 			
 			}
+			
+			if(_anim) {
+				var _fr_index = safe_mod(PROJECT.animator.current_frame * _anims, attributes.frames);
+				outputs[| 0].setValue(output_surface[_fr_index]);
+			} else
+				outputs[| 0].setValue(output_surface);
 		}
-		
-		outputs[| 0].setValue(_outSurf);
 	} #endregion
+	
+	static getPreviewValues = function() { return output_surface; }
 	
 	static doSerialize = function(_map) { #region
 		surface_store_buffers();

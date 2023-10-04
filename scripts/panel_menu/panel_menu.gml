@@ -280,9 +280,9 @@ function Panel_Menu() : PanelContent() constructor {
 		} else {
 			var act = ds_stack_top(UNDO_STACK);
 			if(array_length(act) > 1)
-				txt = __txt("Undo") + " " + string(array_length(act)) + " " + __txt("Actions");
+				txt = $"{__txt("Undo")} {array_length(act)} {__txt("Actions")}";
 			else 
-				txt = __txt("Undo") + " " + act[0].toString();
+				txt = $"{__txt("Undo")} {act[0]}";
 		}
 		
 		menus[1][1][0].active = !ds_stack_empty(UNDO_STACK);
@@ -293,9 +293,9 @@ function Panel_Menu() : PanelContent() constructor {
 		} else {
 			var act = ds_stack_top(REDO_STACK);
 			if(array_length(act) > 1)
-				txt = __txt("Redo") + " " + string(array_length(act)) + " " + __txt("Actions");
+				txt = $"{__txt("Redo")} {array_length(act)} {__txt("Actions")}";
 			else 
-				txt = __txt("Redo") + " " + act[0].toString();
+				txt = $"{__txt("Redo")} {act[0]}";
 		}
 		
 		menus[1][1][1].active = !ds_stack_empty(REDO_STACK);
@@ -718,7 +718,5 @@ function Panel_Menu() : PanelContent() constructor {
 				draw_text(tx0 + ui(8), tby0 + th / 2, tc);
 			}
 		#endregion
-			
-		undoUpdate();
 	}
 }

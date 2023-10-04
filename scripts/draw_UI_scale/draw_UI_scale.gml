@@ -26,6 +26,7 @@ function line_get_width(txt, font = noone, offset = 0) {
 
 	function ui(val) { 
 		gml_pragma("forceinline");
+		
 		return val * UI_SCALE; 
 	}
 #endregion

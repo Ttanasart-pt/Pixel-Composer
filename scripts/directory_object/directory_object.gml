@@ -3,7 +3,7 @@ function FileObject(_name, _path) constructor {
 	
 	name = _name;
 	path = _path;
-	spr_path = [];
+	spr_path   = [];
 	spr        = -1;
 	sprFetchID = noone;
 	
@@ -27,10 +27,10 @@ function FileObject(_name, _path) constructor {
 			break;
 	}
 	
-	retrive_data = false;
-	thumbnail_data = -1;
-	thumbnail = noone;
-	size = file_size(path);
+	retrive_data	= false;
+	thumbnail_data	= -1;
+	thumbnail		= noone;
+	size			= file_size(path);
 	
 	static getName = function() { return name; }
 	
@@ -41,7 +41,7 @@ function FileObject(_name, _path) constructor {
 		return surface;
 	}
 	
-	static getThumbnail = function() { 
+	static getThumbnail = function() {
 		if(size > 100000) return noone;
 		if(!retrive_data) getMetadata();
 		
@@ -52,7 +52,7 @@ function FileObject(_name, _path) constructor {
 	}
 	
 	static getSpr = function() {
-		if(sprite_exists(spr))  return spr;
+		if(spr != -1)			return spr;
 		if(sprFetchID != noone) return -1;
 		
 		if(array_length(spr_path) == 0) {
@@ -90,12 +90,12 @@ function FileObject(_name, _path) constructor {
 		return spr;
 	}
 	
-	static getMetadata = function() { 
+	static getMetadata = function() {
 		retrive_data = true;
 		
-		if(!file_exists(path))	return noone; 
 		if(meta != noone)		return meta;  
 		if(meta == undefined)	return noone; 
+		if(!file_exists(path))	return noone;
 		
 		meta = new MetaDataManager();
 		
@@ -212,13 +212,12 @@ function DirectoryObject(name, path) constructor {
 			}
 		}
 		
-		draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text_inner);
-		
 		if(ds_list_empty(subDir))
 			draw_sprite_ui_uniform(THEME.folder_content, parent.context == self, _x + ui(16), _y + hg / 2 - 1, 1, COLORS.collection_folder_empty);
 		else
 			draw_sprite_ui_uniform(THEME.folder_content, open, _x + ui(16), _y + hg / 2 - 1, 1, COLORS.collection_folder_nonempty);
 		
+		draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text_inner);
 		draw_text(_x + ui(32), _y + hg / 2, name);
 		hh += hg;
 		_y += hg;
