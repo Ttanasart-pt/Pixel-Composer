@@ -1278,10 +1278,10 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 			return false;
 		
 		var _tool = PANEL_PREVIEW.tool_current;
-		if(_tool == noone)
+		if(_tool == noone) //not using any tool
 			return false;
 		
-		if(index == undefined) 
+		if(index == undefined) //using any tool
 			return true;
 		
 		if(is_real(index) && _tool != tools[index])

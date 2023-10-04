@@ -8,13 +8,58 @@
 			"Rectangle": new hotkeySimple("N"),
 			"Ellipse":	 new hotkeySimple("M"),
 			"Fill":		 new hotkeySimple("F"),
-		}
+		},
+		"Node_Mesh_Warp": {
+			"Edit control point": new hotkeySimple("V"),
+			"Pin mesh":			  new hotkeySimple("P"),
+			"Mesh edit":		  new hotkeySimple("M"),
+			"Anchor remove":	  new hotkeySimple("E"),
+		},
+		"Node_Armature": {
+			"Move":			new hotkeySimple("V"),
+			"Scale":		new hotkeySimple("S"),
+			"Add bones":	new hotkeySimple("A"),
+			"Remove bones":	new hotkeySimple("E"),
+			"Detach bones":	new hotkeySimple("D"),
+			"IK":			new hotkeySimple("K"),
+		},
+		"Node_Path": {
+			"Transform":			new hotkeySimple("T"),
+			"Anchor add / remove":	new hotkeySimple("A"),
+			"Edit Control point":	new hotkeySimple("C"),
+			"Draw path":			new hotkeySimple("B"),
+			"Rectangle path":		new hotkeySimple("N"),
+			"Circle path":			new hotkeySimple("M"),
+		},
+		"Node_Rigid_Object": {
+			"Mesh edit":		new hotkeySimple("A"),
+			"Anchor remove":	new hotkeySimple("E"),
+		},
+		"Node_Strand_Create": {
+			"Push":		new hotkeySimple("P"),
+			"Comb":		new hotkeySimple("C"),
+			"Stretch":	new hotkeySimple("S"),
+			"Shorten":	new hotkeySimple("D"),
+			"Grab":		new hotkeySimple("G"),
+		},
+		"Node_Path_Anchor": {
+			"Adjust control point":		new hotkeySimple("A"),
+		},
+		"Node_3D_Object": {
+			"Transform":	new hotkeySimple("G"),
+			"Rotate":		new hotkeySimple("R"),
+			"Scale":		new hotkeySimple("S"),
+		},
+		"Node_3D_Camera": {
+			"Move Target":	new hotkeySimple("T"),
+		},
 	};
 #endregion
 
 #region hotkeys	
 	function hotkeySimple(_key) constructor {
 		self.key = _key;
+		dkey     = _key;
 	}
 	
 	function hotkeyObject(_context, _name, _key, _mod = MOD_KEY.none, _action = noone) constructor {
@@ -76,9 +121,10 @@
 	function getHotkey(_group, _key, _def = "") {
 		gml_pragma("forceinline");
 		
-		if(!struct_has(HOTKEYS_CUSTOM, _group)) return def;
+		if(!struct_has(HOTKEYS_CUSTOM, _group)) return _def;
 		
 		var _grp = HOTKEYS_CUSTOM[$ _group];
-		return struct_try_get(_grp, _key, _def);
+		if(!struct_has(_grp, _key)) return _def;
+		return _grp[$ _key].key;
 	}
 #endregion

@@ -408,7 +408,7 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	
 	mouse_holding = false;
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
+	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
 		mouse_cur_x = round((_mx - _x) / _s - 0.5);
 		mouse_cur_y = round((_my - _y) / _s - 0.5);
 		
@@ -758,9 +758,9 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		draw_rectangle(_x0, _y0, _x1 - 1, _y1 - 1, true);
 		
 		previewing = 1;
-	}
+	} #endregion
 	
-	static update = function(frame = PROJECT.animator.current_frame) {
+	static update = function(frame = PROJECT.animator.current_frame) { #region
 		var _dim   = getInputData(0);
 		var _bg    = getInputData(8);
 		var _bga   = getInputData(9);
@@ -779,17 +779,17 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		surface_reset_shader();
 		
 		outputs[| 0].setValue(_outSurf);
-	}
+	} #endregion
 	
-	static doSerialize = function(_map) {
+	static doSerialize = function(_map) { #region
 		surface_store_buffer();
 		var comp = buffer_compress(canvas_buffer, 0, buffer_get_size(canvas_buffer));
 		var enc  = buffer_base64_encode(comp, 0, buffer_get_size(comp));
 			
 		_map.surface = enc;
-	}
+	} #endregion
 	
-	static doApplyDeserialize = function() {
+	static doApplyDeserialize = function() { #region
 		if(!struct_has(load_map, "surface")) return;	
 		var buff = buffer_base64_decode(load_map.surface);
 		canvas_buffer = buffer_decompress(buff);
@@ -800,9 +800,9 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		canvas_surface = surface_create_from_buffer(_dim[0], _dim[1], canvas_buffer);
 		
 		apply_surface();
-	}
+	} #endregion
 	
-	static onCleanUp = function() {
+	static onCleanUp = function() { #region
 		surface_free(canvas_surface);
-	}
+	} #endregion
 }

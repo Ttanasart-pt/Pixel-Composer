@@ -1,5 +1,5 @@
-function NodeTool(name, spr) constructor {
-	node = other;
+function NodeTool(name, spr, context = instanceof(other)) constructor {
+	ctx = context;
 	self.name   = name;
 	self.spr    = spr;
 	
@@ -11,13 +11,17 @@ function NodeTool(name, spr) constructor {
 	static checkHotkey = function() {
 		gml_pragma("forceinline");
 		
-		return getHotkey(instanceof(node), name);
+		return getHotkey(ctx, name);
 	}
 	
 	static getName = function(index = 0) {
+		return is_array(name)? array_safe_get(name, index, "") : name;
+	}
+	
+	static getDisplayName = function(index = 0) {
 		var _key = checkHotkey();
 		
-		var _nme = is_array(name)? array_safe_get(name, index, "") : name;
+		var _nme = getName(index);
 		if(_key != "") _nme += $" ({_key})";
 		
 		return _nme;

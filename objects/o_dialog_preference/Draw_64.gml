@@ -17,44 +17,8 @@ if !ready exit;
 #endregion
 
 #region page
-	var xx = dialog_x + ui(padding + 8);
-	var yy = dialog_y + ui(title_height);
-	var yl = yy - ui(8);
-	var hg = line_get_height(f_p0, 16);
-	var hs = line_get_height(f_p1, 8);
-	
-	for(var i = 0; i < array_length(page); i++) {
-		draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text);
-		if(i == page_current) {
-			draw_sprite_stretched(THEME.ui_panel_bg, 0, dialog_x + ui(padding) - ui(8), yl, page_width + ui(8), hg);
-		} else if(sHOVER && point_in_rectangle(mouse_mx, mouse_my, dialog_x, yl, dialog_x + page_width + ui(padding + 8), yl + hg)) {
-			draw_sprite_stretched_ext(THEME.ui_panel_bg, 0, dialog_x + ui(padding) - ui(8), yl, page_width + ui(8), hg, c_white, 0.5);
-			if(mouse_click(mb_left, sFOCUS))
-				page_current = i;
-		}
-		
-		draw_text(xx, yl + hg / 2, page[i]);
-		yl += hg;
-		
-		if(i == page_current && sections[i] != 0) {
-			for( var j = 0, m = array_length(sections[i]); j < m; j++ ) {
-				var sect = sections[i][j];
-				
-				draw_set_text(f_p1, fa_left, fa_center, section_current == sect[0]? COLORS._main_text : COLORS._main_text_sub);
-				
-				if(sHOVER && point_in_rectangle(mouse_mx, mouse_my, dialog_x, yl, dialog_x + page_width + ui(padding + 8), yl + hs - 1)) {
-					if(mouse_press(mb_left, sFOCUS))
-						sect[1].scroll_y_to = -sect[2];
-					
-					draw_set_color(COLORS._main_text);
-				}
-				
-				draw_text(xx + ui(16), yl + hs / 2, sect[0]);
-				
-				yl += hs;
-			}
-		}
-	}
+	sp_page.setFocusHover(sFOCUS, sHOVER);
+	sp_page.draw(dialog_x + ui(padding), dialog_y + ui(title_height));
 #endregion
 
 #region draw
@@ -89,7 +53,7 @@ if !ready exit;
 		var _x   = dialog_x + dialog_w - ui(8);
 		var bx   = _x - ui(48);
 		var _txt = __txtx("pref_reset_color", "Reset colors");
-		var b = buttonInstant(THEME.button_hide, bx, yy, ui(32), ui(32), mouse_ui, sFOCUS, sHOVER, _txt, THEME.refresh);
+		var b = buttonInstant(THEME.button_hide, bx, py, ui(32), ui(32), mouse_ui, sFOCUS, sHOVER, _txt, THEME.refresh);
 		if(b == 2) {
 			var path = DIRECTORY + "themes/" + PREF_MAP[? "theme"] + "/override.json";
 			if(file_exists(path)) file_delete(path);
@@ -100,9 +64,9 @@ if !ready exit;
 		var x2 = _x - ui(32);
 		
 		draw_set_text(f_p1, fa_left, fa_center, COLORS._main_text);
-		draw_text(x1 + ui(8), yy + _h / 2, __txt("Theme"));
+		draw_text(x1 + ui(8), py + _h / 2, __txt("Theme"));
 		sb_theme.setFocusHover(sFOCUS, sHOVER);
-		sb_theme.draw(x2 - ui(24) - _w, yy, _w, _h, PREF_MAP[? "theme"]);
+		sb_theme.draw(x2 - ui(24) - _w, py, _w, _h, PREF_MAP[? "theme"]);
 		
 		sp_colors.setFocusHover(sFOCUS, sHOVER);
 		sp_colors.draw(px, py + ui(40));

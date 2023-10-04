@@ -57,8 +57,9 @@ function Panel_Preview() : PanelContent() constructor {
 		_preview_sequence = preview_sequence;
 		preview_rate      = 10;
 		
-		right_menu_y     = 8;
-		mouse_on_preview = false;
+		right_menu_y      = 8;
+		mouse_on_preview  = 0;
+		_mouse_on_preview = 0;
 		
 		resetViewOnDoubleClick = true;
 	
@@ -1003,7 +1004,7 @@ function Panel_Preview() : PanelContent() constructor {
 		var _xx = tool_side_drawing * ui(40);
 		var xx  = _xx + preview_x + ui(8);
 		var yy  = h - toolbar_height - prev_size - ui(8);
-		if(my > yy) mouse_on_preview = false;
+		if(my > yy) mouse_on_preview = 0;
 		var hoverable = pHOVER && point_in_rectangle(mx, my, _xx, ui(32), w, h - toolbar_height);
 		
 		for(var i = 0; i < array_length(pseq); i++) {
@@ -1070,7 +1071,7 @@ function Panel_Preview() : PanelContent() constructor {
 	function drawNodeTools(active, _node) { #region
 		var _mx = mx;
 		var _my = my;
-		var isHover = pHOVER && mouse_on_preview;
+		var isHover = pHOVER && mouse_on_preview == 1;
 		var tool_width = ui(40);
 		var tool_size  = ui(32);
 		
@@ -1082,7 +1083,7 @@ function Panel_Preview() : PanelContent() constructor {
 		
 		if(_node.tools != -1 && point_in_rectangle(_mx, _my, 0, 0, tool_width, h)) {
 			isHover = false;
-			mouse_on_preview = false;
+			mouse_on_preview = 0;
 		}
 		
 		var overlayHover =  tool_hovering == noone;
@@ -1152,7 +1153,7 @@ function Panel_Preview() : PanelContent() constructor {
 					var _sy1  = _syy + tool_size / 2;
 				
 					if(point_in_rectangle(_mx, _my, _sx0, _sy0 + 1, _sx1, _sy1 - 1)) {
-						TOOLTIP = tool.getName(j);
+						TOOLTIP = tool.getDisplayName(j);
 						draw_sprite_stretched(THEME.button_hide, 1, _sx0 + pd, _sy0 + pd, tool_size - pd * 2, tool_size - pd * 2);
 							
 						if(mouse_press(mb_left, pFOCUS))
@@ -1173,7 +1174,7 @@ function Panel_Preview() : PanelContent() constructor {
 			} else { #region single tools
 				if(tool_hovering == tool) {
 					draw_sprite_stretched(THEME.button_hide, 1, _x0 + pd, _y0 + pd, tool_size - pd * 2, tool_size - pd * 2);
-					TOOLTIP = tool.getName();
+					TOOLTIP = tool.getDisplayName();
 					
 					if(mouse_press(mb_left, pFOCUS))
 						tool.toggle();
@@ -1387,6 +1388,7 @@ function Panel_Preview() : PanelContent() constructor {
 	
 	function drawContent(panel) { #region					>>>>>>>>>>>>>>>>>>>> MAIN DRAW <<<<<<<<<<<<<<<<<<<<
 		mouse_on_preview = pHOVER && point_in_rectangle(mx, my, 0, toolbar_height, w, h - toolbar_height);
+			
 		var _prev_node   = getNodePreview();
 		
 		d3_active = _prev_node != noone && _prev_node.is_3D;
@@ -1422,9 +1424,10 @@ function Panel_Preview() : PanelContent() constructor {
 		var tool = noone;
 		if(inspect_node) {
 			tool = inspect_node.getTool();
-			if(tool) drawNodeTools(pFOCUS, tool);
+			if(tool) drawNodeTools(_mouse_on_preview, tool);
 		} else 
 			tool_current = noone;
+		_mouse_on_preview = pFOCUS;
 		
 		if(do_fullView) {
 			do_fullView = false;

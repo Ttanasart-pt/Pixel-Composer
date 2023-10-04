@@ -167,6 +167,8 @@
 		
 		json_save_struct(DIRECTORY + "Nodes/fav.json",	  global.FAV_NODES);
 		json_save_struct(DIRECTORY + "Nodes/recent.json", global.RECENT_NODES);
+		
+		json_save_struct(DIRECTORY + "key_nodes.json", HOTKEYS_CUSTOM);
 	}
 	
 	function PREF_LOAD() {
@@ -197,6 +199,9 @@
 		
 		if(!directory_exists(DIRECTORY + "Themes/" + PREF_MAP[? "theme"]))
 			PREF_MAP[? "theme"] = "default";
+			
+		var f = json_load_struct(DIRECTORY + "key_nodes.json");
+		struct_override(HOTKEYS_CUSTOM, f);
 	}
 	
 	function PREF_APPLY() {

@@ -39,9 +39,9 @@ function Node_3D_Object(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 	#endregion
 	
 	#region ---- tools ----
-		tool_pos = new NodeTool( "Transform", THEME.tools_3d_transform );
-		tool_rot = new NodeTool( "Rotate", THEME.tools_3d_rotate );
-		tool_sca = new NodeTool( "Scale", THEME.tools_3d_scale );
+		tool_pos = new NodeTool( "Transform", THEME.tools_3d_transform, "Node_3D_Object" );
+		tool_rot = new NodeTool( "Rotate", THEME.tools_3d_rotate, "Node_3D_Object" );
+		tool_sca = new NodeTool( "Scale", THEME.tools_3d_scale, "Node_3D_Object" );
 		tools = [ tool_pos, tool_rot, tool_sca ];
 		
 		tool_axis_edit = new scrollBox([ "local", "global" ], function(val) { tool_attribute.context = val; });

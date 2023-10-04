@@ -30,6 +30,7 @@ function string_splice(str, delim = " ", keep = false) {
 }
 
 function string_title(str) {
+	str = string_replace_all(str, "_", " ");
 	var ch = string_char_at(str, 1);
 	ch = string_upper(ch);
 	var rs = string_copy(str, 2, string_length(str) - 1);

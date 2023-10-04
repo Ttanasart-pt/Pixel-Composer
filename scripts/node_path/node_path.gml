@@ -49,7 +49,7 @@ function Node_Path(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	
 	tools = [
 		new NodeTool( "Transform", THEME.path_tools_transform ),
-		new NodeTool( "Anchor add / remove (+ Shift)", THEME.path_tools_add ),
+		new NodeTool( "Anchor add / remove", THEME.path_tools_add ),
 		new NodeTool( "Edit Control point", THEME.path_tools_anchor ),
 		tool_pathDrawer,
 		new NodeTool( "Rectangle path", THEME.path_tools_rectangle ),
