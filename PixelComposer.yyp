@@ -327,6 +327,7 @@
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"s_checkbox_on_start.png","CopyToMask":-1,"filePath":"datafiles/data/themes/default/graphics/icon",},
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"s_circle_12.png","CopyToMask":-1,"filePath":"datafiles/data/themes/default/graphics/icon",},
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"s_circle_16.png","CopyToMask":-1,"filePath":"datafiles/data/themes/default/graphics/icon",},
+    {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"s_close_16.png","CopyToMask":-1,"filePath":"datafiles/data/themes/default/graphics/icon",},
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"s_color_picker_dropper.png","CopyToMask":-1,"filePath":"datafiles/data/themes/default/graphics/icon",},
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"s_color_picker_sample_strip2.png","CopyToMask":-1,"filePath":"datafiles/data/themes/default/graphics/icon",},
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"s_color_picker_sample1.png","CopyToMask":-1,"filePath":"datafiles/data/themes/default/graphics/icon",},

@@ -464,7 +464,7 @@ function Panel_Inspector() : PanelContent() constructor {
 						
 						continue;
 					} else if(is_struct(jun_disp) && instanceof(jun_disp) == "Inspector_Custom_Renderer") {
-						if(pFOCUS && is_callable(jun_disp.register)) jun_disp.register(contentPane);
+						jun_disp.register(contentPane);
 						jun_disp.rx = ui(16) + x;
 						jun_disp.ry = top_bar_h + y;
 						
@@ -624,32 +624,44 @@ function Panel_Inspector() : PanelContent() constructor {
 			} #endregion
 		}
 		
-		if(color_picker_selecting == noone)
-			picker_selecting = 0;
+		#region color picker
+			if(color_picker_selecting == noone)
+				picker_selecting = 0;
 		
-		if(key_mod_press(ALT) && color_picker_index) {
-			var _p = picker_index;
+			if(key_mod_press(ALT) && color_picker_index) {
+				var _p = picker_index;
 			
-			if(mouse_wheel_down()) picker_index = safe_mod(picker_index + 1 + color_picker_index, color_picker_index);
-			if(mouse_wheel_up())   picker_index = safe_mod(picker_index - 1 + color_picker_index, color_picker_index);
+				if(mouse_wheel_down()) picker_index = safe_mod(picker_index + 1 + color_picker_index, color_picker_index);
+				if(mouse_wheel_up())   picker_index = safe_mod(picker_index - 1 + color_picker_index, color_picker_index);
 			
-			if(_p != picker_index) {
-				instance_destroy(o_dialog_color_selector);
-				pickers[picker_index].editWidget.onColorPick();
-			}
-		}
-		
-		if(prop_dragging) {
-			if(DRAGGING == noone && point_distance(prop_sel_drag_x, prop_sel_drag_y, mouse_mx, mouse_my) > 16) {
-				prop_dragging.dragValue();
-				prop_dragging = noone;
+				if(_p != picker_index) {
+					instance_destroy(o_dialog_color_selector);
+					pickers[picker_index].editWidget.onColorPick();
+				}
 			}
 			
-			if(mouse_release(mb_left))
-				prop_dragging = noone;
-		}
+			if(MESSAGE != noone && MESSAGE.type == "Color") {
+				var inp = array_safe_get(pickers, picker_index, 0);
+				if(is_struct(inp)) {
+					inp.setValue(MESSAGE.data);
+					MESSAGE = noone;
+				}
+			}
+			
+			color_picking = false;
+		#endregion
 		
-		color_picking = false;
+		#region drag
+			if(prop_dragging) {
+				if(DRAGGING == noone && point_distance(prop_sel_drag_x, prop_sel_drag_y, mouse_mx, mouse_my) > 16) {
+					prop_dragging.dragValue();
+					prop_dragging = noone;
+				}
+				
+				if(mouse_release(mb_left))
+					prop_dragging = noone;
+			}
+		#endregion
 		
 		return hh;
 	}); #endregion

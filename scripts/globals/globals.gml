@@ -1,11 +1,13 @@
 #region save
 	globalvar LOADING, APPENDING, CLONING, SAFE_MODE;
 	globalvar CONNECTION_CONFLICT, ALWAYS_FULL;
+	globalvar MESSAGE;
 	
 	LOADING		= false;
 	CLONING		= false;
 	APPENDING	= false;
 	SAFE_MODE	= false;
+	MESSAGE     = noone;
 	
 	CONNECTION_CONFLICT = ds_queue_create();
 	

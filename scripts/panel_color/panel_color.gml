@@ -141,6 +141,7 @@ function Panel_Color() : PanelContent() constructor {
 							type: "Color",
 							data: color
 						}
+						MESSAGE = DRAGGING;
 					}
 				}
 				continue;
@@ -154,6 +155,7 @@ function Panel_Color() : PanelContent() constructor {
 					type: "Color",
 					data: c
 				}
+				MESSAGE = DRAGGING;
 			}
 		}
 		

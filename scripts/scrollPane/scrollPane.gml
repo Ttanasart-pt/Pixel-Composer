@@ -19,6 +19,7 @@ function scrollPane(_w, _h, ondraw) : widget() constructor {
 	show_scroll = true;
 	
 	scroll_step = 64;
+	scroll_lock = false;
 	
 	is_scrolling = false;
 	scroll_ms   = 0;
@@ -54,10 +55,12 @@ function scrollPane(_w, _h, ondraw) : widget() constructor {
 		scroll_y	 = round(scroll_y_raw);
 		draw_surface_safe(surface, x, y);
 		
-		if(hover && !key_mod_press(SHIFT)) {
+		if(hover && !scroll_lock && !key_mod_press(SHIFT)) {
 			if(mouse_wheel_down())	scroll_y_to -= scroll_step * SCROLL_SPEED;
 			if(mouse_wheel_up())	scroll_y_to += scroll_step * SCROLL_SPEED;
 		}
+		
+		scroll_lock = false;
 		
 		if(show_scroll && (abs(content_h) > 0 || always_scroll)) {
 			var scr_w = sprite_get_width(THEME.ui_scrollbar);

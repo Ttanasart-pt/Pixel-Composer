@@ -1004,7 +1004,7 @@ function Panel_Preview() : PanelContent() constructor {
 		var _xx = tool_side_drawing * ui(40);
 		var xx  = _xx + preview_x + ui(8);
 		var yy  = h - toolbar_height - prev_size - ui(8);
-		if(my > yy) mouse_on_preview = 0;
+		if(my > yy - 8) mouse_on_preview = 0;
 		var hoverable = pHOVER && point_in_rectangle(mx, my, _xx, ui(32), w, h - toolbar_height);
 		
 		for(var i = 0; i < array_length(pseq); i++) {
@@ -1424,17 +1424,16 @@ function Panel_Preview() : PanelContent() constructor {
 		var tool = noone;
 		if(inspect_node) {
 			tool = inspect_node.getTool();
-			if(tool) drawNodeTools(_mouse_on_preview, tool);
+			if(tool) drawNodeTools(pFOCUS, tool);
 		} else 
 			tool_current = noone;
-		_mouse_on_preview = pFOCUS;
 		
 		if(do_fullView) {
 			do_fullView = false;
 			fullView();
 		}
 		
-		if(mouse_on_preview && mouse_press(mb_right, pFOCUS)) {
+		if(mouse_on_preview && mouse_press(mb_right, pFOCUS) && !key_mod_press(SHIFT)) {
 			menuCall("preview_context_menu",,, [ 
 				menuItem(__txtx("panel_graph_preview_window", "Send to preview window"), function() { create_preview_window(getNodePreview()); }, noone, ["Preview", "Preview window"]), 
 				-1,

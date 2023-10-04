@@ -3,7 +3,7 @@ function widget() constructor {
 	hover   = false;
 	iactive = false;
 	ihover  = false;
-	parent = noone;
+	parent  = noone;
 	interactable = true;
 	
 	lua_thread = noone;

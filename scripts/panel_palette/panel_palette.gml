@@ -75,16 +75,20 @@ function Panel_Palette() : PanelContent() constructor {
 					var m_gy = floor(m_ay / _gs);
 						
 					var _index = m_gy * col + m_gx;
-					if(_index < pre_amo && _index >= 0)
+					if(_index < pre_amo && _index >= 0) {
 						DRAGGING = {
 							type: "Color",
 							data: array_safe_get(preset.palette, _index)
 						}
-				} else if(point_in_rectangle(_m[0], _m[1], ui(10), yy, ww - ui(10), yy + ui(24))) 
+						MESSAGE = DRAGGING;
+					}
+				} else if(point_in_rectangle(_m[0], _m[1], ui(10), yy, ww - ui(10), yy + ui(24))) {
 					DRAGGING = {
 						type: "Palette",
 						data: preset.palette
 					}
+					MESSAGE = DRAGGING;
+				}
 			} 
 			
 			yy += _height + ui(8);

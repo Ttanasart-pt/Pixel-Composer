@@ -69,6 +69,7 @@ function Panel_Gradient() : PanelContent() constructor {
 						type: "Gradient",
 						data: preset.gradient
 					}
+					MESSAGE = DRAGGING;
 				} 
 			}
 			yy += hg + ui(8);

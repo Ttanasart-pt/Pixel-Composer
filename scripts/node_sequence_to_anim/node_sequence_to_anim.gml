@@ -2,7 +2,7 @@ function Node_Sequence_Anim(_x, _y, _group = noone) : Node(_x, _y, _group) const
 	name = "Array to Anim";
 	update_on_frame = true;
 	
-	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0)
+	inputs[| 0] = nodeValue("Surface in", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, [])
 		.setArrayDepth(1);
 	
 	inputs[| 1] = nodeValue("Speed", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
@@ -22,6 +22,8 @@ function Node_Sequence_Anim(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		var _seq = getInputData(0);
 		var _ord = getInputData(2);
 		var _h = ui(64);
+		
+		if(!is_array(_seq)) return _h;
 		
 		if(array_length(_ord) == 0) {
 			_ord = array_create(array_length(_seq));
