@@ -414,7 +414,8 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	
 	if(!LOADING && !APPENDING) createNewInput();
 	
-	temp_surface = [ surface_create(1, 1), surface_create(1, 1) ];
+	temp_surface = [ surface_create(1, 1), surface_create(1, 1), surface_create(1, 1) ];
+	blend_temp_surface = temp_surface[2];
 	
 	surf_dragging = -1;
 	drag_type   = 0;
@@ -792,7 +793,7 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 		overlay_w = _dim[0];
 		overlay_h = _dim[1];
 		
-		for(var i = 0; i < 2; i++) {
+		for(var i = 0; i < 3; i++) {
 			temp_surface[i] = surface_verify(temp_surface[i], _dim[0], _dim[1], cDep);
 			surface_clear(temp_surface[i]);
 		}
@@ -858,6 +859,7 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			});
 			
 			surface_set_shader(temp_surface[_bg], sh_sample, true, BLEND.over);
+				blend_temp_surface = temp_surface[2];
 				draw_surface_blend_ext(temp_surface[!_bg], _s, _pos[0], _pos[1], _sca[0], _sca[1], _rot);
 			surface_reset_shader();
 			

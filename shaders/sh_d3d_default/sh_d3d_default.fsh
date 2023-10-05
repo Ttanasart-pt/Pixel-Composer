@@ -214,10 +214,10 @@ void main() {
 			for(int i = 0; i < light_dir_count; i++) {
 				vec3 lightVector   = normalize(light_dir_direction[i]);
 				
-				if(light_dir_shadow_active[i] == 1) {
+				if(light_dir_shadow_active[i] == 1) { //use shadow
 					vec4 cameraSpace = light_dir_view[i] * v_worldPosition;
 					vec4 screenSpace = light_dir_proj[i] * cameraSpace;
-	
+					
 					float v_lightDistance = screenSpace.z / screenSpace.w;
 					vec2 lightMapPosition = (screenSpace.xy / screenSpace.w * 0.5) + 0.5;
 				
@@ -249,7 +249,7 @@ void main() {
 				if(light_distance > light_pnt_radius[i])
 					continue;
 			
-				if(light_pnt_shadow_active[i] == 1) {
+				if(light_pnt_shadow_active[i] == 1) { //use shadow
 					vec3 dirAbs = abs(lightVector);
 					int side    = dirAbs.x > dirAbs.y ?
 								  (dirAbs.x > dirAbs.z ? 0 : 2) :
@@ -294,6 +294,6 @@ void main() {
 	#endregion
 	
 	gl_FragData[0] = final_color;
-	gl_FragData[1] = vec4(0.5 + normal * 0.5, 1.);
-	gl_FragData[2] = vec4(vec3(v_cameraDistance), 1.);
+	gl_FragData[1] = vec4(0.5 + normal * 0.5, final_color.a);
+	gl_FragData[2] = vec4(vec3(v_cameraDistance), final_color.a);
 }

@@ -22,8 +22,17 @@ function string_decimal(str) {
 	return (neg? "-" : "") + string_digits(pre) + "." + string_digits(pos);
 }
 
+function toNumberFast(str) {
+	gml_pragma("forceinline");
+	
+	var r = real(str);
+	if(is_real(r)) return r;
+	return 0;
+}
+
 function toNumber(str) {
 	gml_pragma("forceinline");
+	
 	if(is_real(str))   return str;
 	if(!isNumber(str)) return 0;
 	

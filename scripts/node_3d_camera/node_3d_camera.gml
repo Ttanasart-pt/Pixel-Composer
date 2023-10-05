@@ -271,10 +271,11 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 			scene.draw_background   = _dbg;
 		#endregion
 		
-		var _bgSurf = _dbg? scene.renderBackground(_dim[0], _dim[1]) : noone;
-		deferData   = scene.deferPass(_sobj, _dim[0], _dim[1], deferData);
-		
-		#region surface
+		#region submit
+			var _bgSurf = _dbg? scene.renderBackground(_dim[0], _dim[1]) : noone;
+			scene.submitShadow(_sobj);
+			deferData   = scene.deferPass(_sobj, _dim[0], _dim[1], deferData);
+			
 			var _render = outputs[| 0].getValue();
 			var _normal = outputs[| 1].getValue();
 			var _depth  = outputs[| 2].getValue();
@@ -288,23 +289,19 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 			surface_set_target_ext(2, _depth );
 		
 			DRAW_CLEAR
-		#endregion
 		
-		#region submit
 			gpu_set_zwriteenable(true);
 			gpu_set_ztestenable(true);
 			gpu_set_cullmode(_back); 
 		
 			camera.applyCamera();
-		
 			scene.reset();
-			scene.submitShadow(_sobj);
 			scene.submitShader(_sobj);
 			scene.apply(deferData);
 			scene.submit(_sobj);
 			
 			surface_reset_target();
-		
+			
 			camera.resetCamera();
 		#endregion
 		
@@ -313,7 +310,7 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 			surface_set_target(_finalRender);
 				DRAW_CLEAR
 				BLEND_ALPHA
-			
+				
 				if(_dbg) { 
 					draw_surface_safe(_bgSurf, 0, 0);
 					surface_free(_bgSurf);

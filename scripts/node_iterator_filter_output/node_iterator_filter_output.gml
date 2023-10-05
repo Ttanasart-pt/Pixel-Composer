@@ -46,7 +46,7 @@ function Node_Iterator_Filter_Output(_x, _y, _group = noone) : Node(_x, _y, _gro
 			array_push(_val, _new_val);
 		}
 		
-		LOG_IF(global.FLAG.render, "Value " + string(val) + " filter result " + string(res) + " to array " + string(_val));
+		LOG_IF(global.FLAG.render == 1, "Value " + string(val) + " filter result " + string(res) + " to array " + string(_val));
 		
 		group.outputs[| 0].setValue(_val);
 		group.iterationUpdate();

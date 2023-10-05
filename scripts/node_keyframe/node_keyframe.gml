@@ -176,10 +176,8 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 		if(ds_list_size(values) == 0) return processTypeDefault();
 		if(ds_list_size(values) == 1) return processType(values[| 0].value);
 		
-		if(prop.type == VALUE_TYPE.path)
-			return processType(values[| 0].value);
-		if(!prop.is_anim) 
-			return processType(values[| 0].value);
+		if(prop.type == VALUE_TYPE.path) return processType(values[| 0].value);
+		if(!prop.is_anim)				 return processType(values[| 0].value);
 		
 		var _time_first = prop.loop_range == -1? values[| 0].time : values[| ds_list_size(values) - 1 - prop.loop_range].time;
 		var _time_last  = values[| ds_list_size(values) - 1].time;
@@ -267,11 +265,11 @@ function valueAnimator(_val, _prop, _sep_axis = false) constructor {
 		if(is_undefined(_val)) return 0;
 		
 		if(prop.type == VALUE_TYPE.integer && prop.unit.mode == VALUE_UNIT.constant)
-			return round(toNumber(_val));
+			return round(_val);
 		
 		switch(prop.type) {
 			case VALUE_TYPE.integer : 
-			case VALUE_TYPE.float   : return toNumber(_val);
+			case VALUE_TYPE.float   : return _val;
 			case VALUE_TYPE.text    : return string_real(_val);
 			case VALUE_TYPE.surface : 
 				if(is_string(_val))

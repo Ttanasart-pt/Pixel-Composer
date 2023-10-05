@@ -93,6 +93,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		inputMap  = ds_map_create();
 		outputMap = ds_map_create();
 	
+		use_display_list		= true;
 		input_display_list		= -1;
 		output_display_list		= -1;
 		inspector_display_list	= -1;
@@ -240,7 +241,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		run_in(1, method(self, resetDefault));
 	
 	static getInputJunctionIndex = function(index) { #region
-		if(input_display_list == -1)
+		if(input_display_list == -1 || !use_display_list)
 			return index;
 		
 		var jun_list_arr = input_display_list[index];
@@ -448,7 +449,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 			anim_last_step = isAnimated() || /*_hash != input_hash || */!rendered;
 			
 			LOG_BLOCK_START();
-			LOG_IF(global.FLAG.render, $">>>>>>>>>> DoUpdate called from {INAME} [{anim_last_step}] <<<<<<<<<<");
+			LOG_IF(global.FLAG.render == 1, $">>>>>>>>>> DoUpdate called from {INAME} [{anim_last_step}] <<<<<<<<<<");
 			
 			if(!is_instanceof(self, Node_Collection)) setRenderStatus(true);
 			
@@ -503,7 +504,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	
 	static triggerRender = function() { #region
 		LOG_BLOCK_START();
-		LOG_IF(global.FLAG.render, $"Trigger render for {INAME}");
+		LOG_IF(global.FLAG.render == 1, $"Trigger render for {INAME}");
 		
 		setRenderStatus(false);
 		UPDATE |= RENDER_TYPE.partial;
@@ -520,6 +521,22 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		
 		LOG_BLOCK_END();
 	} #endregion
+	
+	static resetRenderForward = function() { 
+		setRenderStatus(false); 
+		for( var i = 0, n = ds_list_size(outputs); i < n; i++ ) {
+			var _outp = outputs[| i];
+			
+			for(var j = 0; j < ds_list_size(_outp.value_to); j++) {
+				var _to = _outp.value_to[| j];
+				if(!_to.node.active || _to.value_from == noone) continue; 
+				if(_to.value_from != self) continue;
+				if(!_to.node.rendered) continue;
+				
+				_to.node.resetRenderForward();
+			}
+		}
+	}
 	
 	static resetRender = function() { setRenderStatus(false); }
 	static isRenderActive = function() { return renderActive || (PREF_MAP[? "render_all_export"] && PROJECT.animator.rendering); }
@@ -539,7 +556,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 			if(!val_from.node.active) continue;
 			if(!val_from.node.isRenderActive()) continue;
 			if!(val_from.node.rendered || val_from.node.update_on_frame) {
-				LOG_LINE_IF(global.FLAG.render, $"Node {INAME} is not renderable because input {val_from.node.internalName} is not rendered ({val_from.node.rendered})");
+				LOG_LINE_IF(global.FLAG.render == 1, $"Node {INAME} is not renderable because input {val_from.node.internalName} is not rendered ({val_from.node.rendered})");
 				return false;
 			}
 		}
@@ -554,7 +571,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		var nodeNames = [];
 		
 		LOG_BLOCK_START();
-		LOG_IF(global.FLAG.render, $"→→→→→ Call get next node from: {INAME}");
+		LOG_IF(global.FLAG.render == 1, $"→→→→→ Call get next node from: {INAME}");
 		LOG_BLOCK_START();
 		
 		for(var i = 0; i < ds_list_size(outputs); i++) {
@@ -569,11 +586,11 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 				array_push(nodes, _to.node);
 				array_push(nodeNames, _to.node.internalName);
 				
-				//LOG_IF(global.FLAG.render, $"→→ Check output: {_ot.name} connect to node {_to.node.internalName}");
+				//LOG_IF(global.FLAG.render == 1, $"→→ Check output: {_ot.name} connect to node {_to.node.internalName}");
 			}
 		}	
 		
-		LOG_IF(global.FLAG.render, $"→→ Push {nodeNames} to queue.");
+		LOG_IF(global.FLAG.render == 1, $"→→ Push {nodeNames} to queue.");
 		
 		LOG_BLOCK_END();
 		LOG_BLOCK_END();
@@ -592,7 +609,8 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	static onInspect = function() {}
 	
 	static setRenderStatus = function(result) { #region
-		LOG_LINE_IF(global.FLAG.render, $"Set render status for {INAME} : {result}");
+		gml_pragma("forceinline");
+		LOG_LINE_IF(global.FLAG.render == 1, $"Set render status for {INAME} : {result}");
 		
 		rendered = result;
 	} #endregion
@@ -635,7 +653,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		updatedTrigger.x = xx + w * _s;
 		updatedTrigger.y = yy + 10;
 		
-		var inamo = input_display_list == -1? ds_list_size(inputs) : array_length(input_display_list);
+		var inamo = (input_display_list == -1 || !use_display_list)? ds_list_size(inputs) : array_length(input_display_list);
 		var _in = yy + ui(junction_draw_pad_y) * _s;
 		
 		for(var i = 0; i < inamo; i++) {

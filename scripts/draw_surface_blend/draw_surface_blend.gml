@@ -6,19 +6,19 @@ function draw_surface_blend(background, foreground, blend = 0, alpha = 1, _pre_a
 	
 	var sh = sh_blend_normal
 	switch(array_safe_get(BLEND_TYPES, blend)) {
-		case "Normal" :		sh = sh_blend_normal	break;
-		case "Add" :		sh = sh_blend_add;		break;
-		case "Subtract" :	sh = sh_blend_subtract;	break;
-		case "Multiply" :	sh = sh_blend_multiply;	break;
-		case "Screen" :		sh = sh_blend_screen;	break;
-		case "Overlay" :	sh = sh_blend_overlay;	break;
-		case "Hue" :		sh = sh_blend_hue;		break;
-		case "Saturation" :	sh = sh_blend_sat;		break;
-		case "Luminosity" :	sh = sh_blend_luma;		break;
+		case "Normal" :		sh = sh_blend_normal		break;
+		case "Add" :		sh = sh_blend_add;			break;
+		case "Subtract" :	sh = sh_blend_subtract;		break;
+		case "Multiply" :	sh = sh_blend_multiply;		break;
+		case "Screen" :		sh = sh_blend_screen;		break;
+		case "Overlay" :	sh = sh_blend_overlay;		break;
+		case "Hue" :		sh = sh_blend_hue;			break;
+		case "Saturation" :	sh = sh_blend_sat;			break;
+		case "Luminosity" :	sh = sh_blend_luma;			break;
 		
-		case "Maximum" :	sh = sh_blend_max;		break;
-		case "Minimum" :	sh = sh_blend_min;		break;
-		case "Replace" :	sh = sh_blend_replace;	break;
+		case "Maximum" :	sh = sh_blend_max;			break;
+		case "Minimum" :	sh = sh_blend_min;			break;
+		case "Replace" :	sh = sh_blend_replace;		break;
 		case "Difference" :	sh = sh_blend_difference;	break;
 		default: return;
 	}
@@ -45,13 +45,10 @@ function draw_surface_blend(background, foreground, blend = 0, alpha = 1, _pre_a
 }
 
 function draw_surface_blend_ext(bg, fg, _x, _y, _sx = 1, _sy = 1, _rot = 0, _col = c_white, _alpha = 1, _blend = 0) {
-	static _tempS = surface_create(1, 1);
-	_tempS = surface_verify(_tempS, surface_get_width_safe(bg), surface_get_height_safe(bg));
-	
-	surface_set_shader(_tempS);
+	surface_set_shader(blend_temp_surface);
 		shader_set_interpolation(fg);
 		draw_surface_ext_safe(fg, _x, _y, _sx, _sy, _rot, _col, 1);
 	surface_reset_shader();
 	
-	draw_surface_blend(bg, _tempS, _blend, _alpha, false);
+	draw_surface_blend(bg, blend_temp_surface, _blend, _alpha, false);
 }

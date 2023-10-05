@@ -75,7 +75,7 @@ function Node_Pixel_Builder(_x, _y, _group = noone) : Node_Collection(_x, _y, _g
 	
 	static buildPixel = function() {
 		LOG_BLOCK_START();
-		LOG_IF(global.FLAG.render, $"================== BUILD PIXEL ==================");
+		LOG_IF(global.FLAG.render == 1, $"================== BUILD PIXEL ==================");
 		LOG_BLOCK_START();
 		
 		var _dim     = getInputData(0);

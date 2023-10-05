@@ -32,7 +32,7 @@ function __vertex(_x = 0, _y = _x, _z = _x, color = c_white, alpha = 1) construc
 		return self;
 	}
 	
-	static toString = function() { return $"[ pos: ({x}, {y}, {z}), nor: ({nx}, {ny}, {nz}), uv: ({u}, {v}), {color}, {alpha} ]"; }
+	static toString = function() { return $"[__vertex] ( pos: ({x}, {y}, {z}), nor: ({nx}, {ny}, {nz}), uv: ({u}, {v}), {color}, {alpha} )"; }
 	
 	static clone = function() {
 		gml_pragma("forceinline");

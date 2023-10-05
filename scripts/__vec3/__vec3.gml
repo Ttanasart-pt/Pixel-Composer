@@ -203,7 +203,7 @@ function __vec3(_x = 0, _y = _x, _z = _x) constructor {
 		return new __vec3(x, y, z);
 	} #endregion
 	
-	static toString = function() { return $"[{x}, {y}, {z}]"; }
+	static toString = function() { return $"[__vec3] ({x}, {y}, {z})"; }
 	
 	static toBBMOD = function() { return new BBMOD_Vec3(x, y, z); }
 	

@@ -40,7 +40,8 @@ function __3dLight() : __3dObject() constructor {
 		shadowProjectBegin();
 		for( var i = 0, n = array_length(objects); i < n; i++ ) {
 			var _prev = objects[i];
-			if(_prev == noone) continue;
+			if(!is_struct(_prev)) continue;
+				
 			_prev.submit(scene, shadow_mapper);
 		}
 		shadowProjectEnd();

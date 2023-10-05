@@ -128,10 +128,11 @@ function Panel_Preview() : PanelContent() constructor {
 		#endregion
 		
 		#region scene
-			d3_scene  = new __3dScene(d3_view_camera);
+			d3_scene  = new __3dScene(d3_view_camera, "Preview");
 			d3_scene.lightAmbient = $404040;
-			d3_scene_preview = d3_scene;
-		
+			d3_scene.cull_mode    = cull_counterclockwise;
+			d3_scene_preview	  = d3_scene;
+			
 			d3_scene_light_enabled = true;
 			
 			d3_scene_light0 = new __3dLightDirectional();
@@ -816,14 +817,9 @@ function Panel_Preview() : PanelContent() constructor {
 			if(d3_scene_preview == d3_scene) {
 				d3_scene_light0.shadow_map_scale = d3_view_camera.focus_dist * 2;
 				
-				var _prev_obj = _prev_node.getPreviewObjects();
+				var _prev_obj = _prev_node.getPreviewObject();
 				d3_scene_light0.submitShadow(d3_scene_preview, _prev_obj);
-				
-				for( var i = 0, n = array_length(_prev_obj); i < n; i++ ) {
-					var _prev = _prev_obj[i];
-					if(_prev == noone) continue;
-					_prev.submitShadow(d3_scene_preview, _prev_obj);
-				}
+				_prev_obj.submitShadow(d3_scene_preview, _prev_obj);
 			}
 		#endregion
 		
@@ -846,8 +842,10 @@ function Panel_Preview() : PanelContent() constructor {
 			
 			d3_view_camera.applyCamera();
 			
+			gpu_set_cullmode(cull_noculling); 
 			gpu_set_ztestenable(true);
 			gpu_set_zwriteenable(false);
+			
 			shader_set(sh_d3d_grid_view);
 				var _dist = round(d3_view_camera.focus.distance(d3_view_camera.position));
 				var _tx   = round(d3_view_camera.focus.x);
@@ -861,6 +859,7 @@ function Panel_Preview() : PanelContent() constructor {
 				shader_set_f("shift", _tx / _dist / 2, _ty / _dist / 2);
 				draw_sprite_stretched(s_fx_pixel, 0, _tx - _dist, _ty - _dist, _dist * 2, _dist * 2);
 			shader_reset();
+			
 			gpu_set_zwriteenable(true);
 		#endregion
 		
@@ -876,7 +875,7 @@ function Panel_Preview() : PanelContent() constructor {
 					d3_scene_preview.addLightDirectional(d3_scene_light1);
 				}
 			}
-				
+			
 			for( var i = 0, n = array_length(_prev_obj); i < n; i++ ) {
 				var _prev = _prev_obj[i];
 				if(_prev == noone) continue;
@@ -885,7 +884,7 @@ function Panel_Preview() : PanelContent() constructor {
 			}
 				
 			d3_scene_preview.apply(d3_deferData);
-				
+			
 			for( var i = 0, n = array_length(_prev_obj); i < n; i++ ) {
 				var _prev = _prev_obj[i];
 				if(_prev == noone) continue;
@@ -901,6 +900,7 @@ function Panel_Preview() : PanelContent() constructor {
 				case 0 : 
 					if(d3_scene_preview.draw_background)
 						draw_surface_safe(d3_surface_bg);	
+					
 					draw_surface_safe(d3_surface);
 					
 					BLEND_MULTIPLY

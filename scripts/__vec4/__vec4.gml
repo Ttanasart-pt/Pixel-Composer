@@ -191,7 +191,7 @@ function __vec4(_x = 0, _y = _x, _z = _x, _w = _x) constructor {
         return new __vec4(x, y, z, w);
     }
 
-    static toString = function() { return $"[{x}, {y}, {z}, {w}]"; }
+    static toString = function() { return $"[__vec4] ({x}, {y}, {z}, {w})"; }
 	
 	static toArray = function() { return [ x, y, z, w ]; }
 }

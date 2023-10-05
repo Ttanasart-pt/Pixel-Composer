@@ -980,13 +980,17 @@ function Node_Canvas(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	} #endregion
 	
 	static step = function() { #region
-		var fram = attributes.frames;
-		var anim = getInputData(12);
+		var fram  = attributes.frames;
+		var anim  = getInputData(12);
+		var anims = getInputData(12);
 		
 		inputs[| 12].setVisible(fram > 1);
 		inputs[| 13].setVisible(fram > 1 && anim);
 		
 		update_on_frame = fram > 1 && anim;
+		
+		if(update_on_frame) 
+			preview_index = safe_mod(PROJECT.animator.current_frame * anims, fram);
 	} #endregion
 	
 	static update = function(frame = PROJECT.animator.current_frame) { #region

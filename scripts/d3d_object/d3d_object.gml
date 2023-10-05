@@ -141,10 +141,13 @@ function __3dObject() constructor {
 		
 		#region ++++ Submit & Material ++++
 			gpu_set_tex_repeat(true);
-		
+			
 			for( var i = 0, n = array_length(VB); i < n; i++ ) {
 				var _ind = array_safe_get(material_index, i, i);
 				var _mat = array_safe_get(materials, _ind, noone);
+					
+				shader_set_i("mat_flip", texture_flip);
+				var _tex = _mat == noone? -1 : _mat.getTexture();
 					
 				if(_shader == sh_d3d_default) {
 					if(_mat == noone) {
@@ -156,18 +159,16 @@ function __3dObject() constructor {
 					} else 
 						_mat.submitShader();
 					
-					shader_set_i("mat_flip", texture_flip);
-					var _tex = _mat == noone? -1 : _mat.getTexture();
 					vertex_submit(VB[i], render_type, _tex);
 				} else if(_shader == sh_d3d_geometry) {
 					if(_mat == noone)
 						shader_set_i("use_normal", 0);
 					else 
 						_mat.submitGeometry();
-						
-					vertex_submit(VB[i], render_type, -1);
+					
+					vertex_submit(VB[i], render_type, _tex);
 				} else
-					vertex_submit(VB[i], render_type, -1);
+					vertex_submit(VB[i], render_type, _tex);
 			}
 			
 			gpu_set_tex_repeat(false);
@@ -208,5 +209,5 @@ function __3dObject() constructor {
 	
 	static onDestroy = function() { } 
 	
-	static toString = function() { return $"[D3D Object\n\t{array_length(vertex)} vertex groups\n\tPosition: {transform.position}\n\tRotation: {transform.rotation}\n\tScale: {transform.scale}]" }
+	static toString = function() { return $"[D3D Object]\n\t({array_length(vertex)} vertex groups\n\tPosition: {transform.position}\n\tRotation: {transform.rotation}\n\tScale: {transform.scale})" }
 }

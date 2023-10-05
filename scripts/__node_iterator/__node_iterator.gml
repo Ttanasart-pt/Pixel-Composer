@@ -31,19 +31,19 @@ function Node_Iterator(_x, _y, _group = noone) : Node_Collection(_x, _y, _group)
 	
 	static outputNextNode = function() {
 		LOG_BLOCK_START();	
-		LOG_IF(global.FLAG.render, "[outputNextNode] Get next node from Loop output");
+		LOG_IF(global.FLAG.render == 1, "[outputNextNode] Get next node from Loop output");
 		
 		var _nodes = [];
 		for( var i = 0; i < ds_list_size(nodes); i++ ) { // check if every node is updated
 			if(!nodes[| i].rendered) {
-				LOG_IF(global.FLAG.render, $"Skipped due to node {nodes[| i].internalName} not rendered.");
+				LOG_IF(global.FLAG.render == 1, $"Skipped due to node {nodes[| i].internalName} not rendered.");
 				LOG_BLOCK_END();
 				return _nodes;
 			}
 		}
 		
 		if(willRestart) {
-			LOG_IF(global.FLAG.render, $"Restart");
+			LOG_IF(global.FLAG.render == 1, $"Restart");
 			resetRender();
 			willRestart = false;
 		}
@@ -51,10 +51,10 @@ function Node_Iterator(_x, _y, _group = noone) : Node_Collection(_x, _y, _group)
 		var _ren = iterationStatus();
 		
 		if(_ren == ITERATION_STATUS.loop) { //Go back to the beginning of the loop, reset render status for leaf node inside?
-			LOG_IF(global.FLAG.render, $"Loop restart: iteration {iterated}");
+			LOG_IF(global.FLAG.render == 1, $"Loop restart: iteration {iterated}");
 			_nodes = array_append(_nodes, __nodeLeafList(getNodeList()));
 		} else if(_ren == ITERATION_STATUS.complete) { //Go out of loop
-			LOG_IF(global.FLAG.render, "Loop completed get next node external");
+			LOG_IF(global.FLAG.render == 1, "Loop completed get next node external");
 			setRenderStatus(true);
 			_nodes = getNextNodesExternal();
 		} 

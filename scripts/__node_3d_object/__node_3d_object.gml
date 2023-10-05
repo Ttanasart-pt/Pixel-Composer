@@ -566,7 +566,7 @@ function Node_3D_Object(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 			drag_cx = cx;
 			drag_cy = cy;
 				
-			drag_val = _sca;
+			drag_val = [ _sca[0], _sca[1], _sca[2] ];
 			drag_original = new __vec3(_sca);
 		} #endregion
 	} #endregion
@@ -598,6 +598,7 @@ function Node_3D_Object(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 		object.transform.position.set(_pos[0], _pos[1], _pos[2]);
 		object.transform.rotation.set(_rot[0], _rot[1], _rot[2], _rot[3]);
 		object.transform.scale.set(_sca[0], _sca[1], _sca[2]);
+		
 		return object;
 	} #endregion
 		

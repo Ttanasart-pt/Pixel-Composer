@@ -243,11 +243,12 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	outputs[| 1] = nodeValue("Atlas data", self, JUNCTION_CONNECT.output, VALUE_TYPE.atlas, [])
 		.rejectArrayProcess();
 	
-	temp_surface = [ surface_create(1, 1), surface_create(1, 1) ];
+	temp_surface = [ surface_create(1, 1), surface_create(1, 1), surface_create(1, 1) ];
+	blend_temp_surface = temp_surface[2];
 	
-	surf_dragging = -1;
+	surf_dragging  = -1;
 	input_dragging = -1;
-	drag_type = 0;
+	drag_type   = 0;
 	dragging_sx = 0;
 	dragging_sy = 0;
 	dragging_mx = 0;
@@ -770,7 +771,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		overlay_w = ww;
 		overlay_h = hh;
 		
-		for(var i = 0; i < 2; i++) {
+		for(var i = 0; i < 3; i++) {
 			temp_surface[i] = surface_verify(temp_surface[i], ww, hh, cDep);
 			surface_clear(temp_surface[i]);
 		}
@@ -805,6 +806,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			array_push(atlas_data, new SurfaceAtlas(_s, [ _d0[0], _d0[1] ], _rot, [ _sca[0], _sca[1] ]));
 			
 			surface_set_shader(temp_surface[_bg], sh_sample, true, BLEND.over);
+				blend_temp_surface = temp_surface[2];
 				draw_surface_blend_ext(temp_surface[!_bg], _s, _d0[0], _d0[1], _sca[0], _sca[1], _rot);
 			surface_reset_shader();
 			

@@ -49,19 +49,36 @@ function __3dGroup() constructor {
 		return new __bbox3D(_m0, _m1); 
 	} #endregion
 	
-	static _submit = function(callback, scene = {}, shader = noone) { #region
+	static submit       = function(scene = {}, shader = noone) { 
 		transform.submitMatrix();
 		for( var i = 0, n = array_length(objects); i < n; i++ )
-			callback(objects[i], scene, shader);
+			objects[i].submit(scene, shader);
 		transform.clearMatrix();
-	} #endregion
+	}
 	
-	static submit       = function(scene = {}, shader = noone) { _submit(function(_obj, scene, shader) { _obj.submit		(scene, shader); }, scene, shader); }
-	static submitUI     = function(scene = {}, shader = noone) { _submit(function(_obj, scene, shader) { _obj.submitUI		(scene, shader); }, scene, shader); }
-	static submitSel    = function(scene = {}, shader = noone) { _submit(function(_obj, scene, shader) { _obj.submitSel		(scene, shader); }, scene, shader); }
-	static submitShader = function(scene = {}, shader = noone) { _submit(function(_obj, scene, shader) { _obj.submitShader	(scene, shader); }, scene, shader); }
+	static submitUI     = function(scene = {}, shader = noone) {
+		transform.submitMatrix();
+		for( var i = 0, n = array_length(objects); i < n; i++ )
+			objects[i].submitUI(scene, shader);
+		transform.clearMatrix();
+	}
+	static submitSel    = function(scene = {}, shader = noone) { 
+		transform.submitMatrix();
+		for( var i = 0, n = array_length(objects); i < n; i++ )
+			objects[i].submitSel(scene, shader);
+		transform.clearMatrix();
+	}
+	static submitShader = function(scene = {}, shader = noone) { 
+		transform.submitMatrix();
+		for( var i = 0, n = array_length(objects); i < n; i++ )
+			objects[i].submitShader(scene, shader);
+		transform.clearMatrix();
+	}
 	
-	static submitShadow = function(scene = {}, object = noone) { _submit(function(_obj, scene, object) { _obj.submitShadow	(scene, object); }, scene, object); }
+	static submitShadow = function(scene = {}, object = noone) { 
+		for( var i = 0, n = array_length(objects); i < n; i++ )
+			objects[i].submitShadow(scene, object.objects);
+	}
 	
 	static map = function(callback, scene = {}) { #region
 		for( var i = 0, n = array_length(objects); i < n; i++ ) 

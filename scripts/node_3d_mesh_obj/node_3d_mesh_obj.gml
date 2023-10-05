@@ -46,6 +46,7 @@ function Node_3D_Mesh_Obj(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group)
 	obj_read_progress = 0;
 	obj_read_prog_sub = 0;
 	obj_read_prog_tot = 3;
+	obj_read_time     = 0;
 	
 	current_path  = "";
 	materials     = [];
@@ -101,7 +102,9 @@ function Node_3D_Mesh_Obj(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group)
 		
 		readObj_init();
 		
-		obj_read_file = file_text_open_read(current_path);
+		obj_read_time    = get_timer();
+		obj_read_file    = file_text_open_read(current_path);
+		use_display_list = false;
 	}
 	
 	static updateObjProcess = function() {
@@ -113,6 +116,7 @@ function Node_3D_Mesh_Obj(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group)
 	}
 	
 	static updateObjComplete = function() { #region
+		use_display_list = true;
 		if(obj_raw == noone) return;
 		
 		var txt = $"========== OBJ import ==========\n";
@@ -120,6 +124,7 @@ function Node_3D_Mesh_Obj(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group)
 		txt += $"Object counts:   {obj_raw.object_counts}\n";
 		txt += $"Material counts: {array_length(obj_raw.materials)}\n";
 		txt += $"Model BBOX:      {obj_raw.model_size}\n";
+		txt += $"Load completed in {(get_timer() - obj_read_time) / 1000} ms\n";
 		print(txt);
 		
 		var span = max(abs(obj_raw.model_size.x), abs(obj_raw.model_size.y), abs(obj_raw.model_size.z));

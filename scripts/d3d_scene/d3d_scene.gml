@@ -28,9 +28,12 @@
 	}
 #endregion
 
-function __3dScene(camera) constructor {
+#macro D3DSCENE_PRESUBMIT  if(!is_struct(object)) return; matrix_stack_clear(); if(apply_transform) custom_transform.submitMatrix(); 
+#macro D3DSCENE_POSTSUBMIT if(apply_transform) custom_transform.clearMatrix(); 
+
+function __3dScene(camera, name = "New scene") constructor {
 	self.camera = camera;
-	name = "New scene";
+	self.name = name;
 	
 	apply_transform  = false;
 	custom_transform = new __transform();
@@ -85,22 +88,11 @@ function __3dScene(camera) constructor {
 		lightPnt_shadowBias = [];
 	} reset(); #endregion
 	
-	static _submit = function(callback, object = noone, shader = noone) {
-		if(object == noone)		return;
-		if(!is_struct(object))	return;
-		
-		matrix_stack_clear(); 
-		if(apply_transform) custom_transform.submitMatrix(); 
-		callback(object, shader);
-		if(apply_transform) custom_transform.clearMatrix(); 
-	}
-	
-	static submit		= function(object, shader = noone) { _submit(function(object, shader) { object.submit		(self, shader); }, object, shader) }
-	static submitUI		= function(object, shader = noone) { _submit(function(object, shader) { object.submitUI		(self, shader); }, object, shader) }
-	static submitSel	= function(object, shader = noone) { _submit(function(object, shader) { object.submitSel	(self, shader); }, object, shader) }
-	static submitShader	= function(object, shader = noone) { _submit(function(object, shader) { object.submitShader	(self, shader); }, object, shader) }
-	
-	static submitShadow	= function(object) { object.submitShadow(self, object) }
+	static submit		= function(object, shader = noone) { D3DSCENE_PRESUBMIT object.submit		(self, shader); D3DSCENE_POSTSUBMIT }
+	static submitUI		= function(object, shader = noone) { D3DSCENE_PRESUBMIT object.submitUI		(self, shader); D3DSCENE_POSTSUBMIT }
+	static submitSel	= function(object, shader = noone) { D3DSCENE_PRESUBMIT object.submitSel	(self, shader); D3DSCENE_POSTSUBMIT }
+	static submitShader	= function(object, shader = noone) { D3DSCENE_PRESUBMIT object.submitShader (self, shader); D3DSCENE_POSTSUBMIT }
+	static submitShadow	= function(object)                 { D3DSCENE_PRESUBMIT object.submitShadow (self, object); D3DSCENE_POSTSUBMIT }
 	
 	static deferPass = function(object, w, h, deferData = noone) { #region
 		if(deferData == noone) deferData = {
@@ -147,6 +139,7 @@ function __3dScene(camera) constructor {
 		surface_set_target_ext(2, deferData.geometry_data[2]);
 			gpu_set_zwriteenable(true);
 			gpu_set_ztestenable(true);
+			gpu_set_alphatestenable(true);
 			
 			DRAW_CLEAR
 			camera.setMatrix();
@@ -162,6 +155,7 @@ function __3dScene(camera) constructor {
 			
 			shader_reset();
 			gpu_set_ztestenable(false);
+			gpu_set_alphatestenable(false);
 		surface_reset_target();
 		
 		if(defer_normal_radius) {

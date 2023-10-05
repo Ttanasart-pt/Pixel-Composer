@@ -156,7 +156,7 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	
 	static getNextNodes = function() { #region //get node inside the group
 		LOG_BLOCK_START();
-		LOG_IF(global.FLAG.render, $"→→→→→ Call get next node from group");
+		LOG_IF(global.FLAG.render == 1, $"→→→→→ Call get next node from group");
 		
 		var nodes = [];
 		if(isRenderActive()) {
@@ -166,7 +166,7 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 				if(!_in.isRenderActive()) continue;
 			
 				if(!_in.isRenderable()) {
-					LOG_IF(global.FLAG.render, $"Node {_in.internalName} not ready, loop skip.");
+					LOG_IF(global.FLAG.render == 1, $"Node {_in.internalName} not ready, loop skip.");
 					LOG_BLOCK_END();
 					return [];
 				}
@@ -180,7 +180,7 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	} #endregion
 	
 	static getNextNodesExternal = function() { #region //get node connected to the parent object
-		LOG_IF(global.FLAG.render, $"Checking next node external for {INAME}");
+		LOG_IF(global.FLAG.render == 1, $"Checking next node external for {INAME}");
 		LOG_BLOCK_START();
 		
 		var nodes = [];
@@ -192,7 +192,7 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 				var _to   = _tos[j];
 				var _node = _to.node;
 				
-				LOG_IF(global.FLAG.render, $"Checking node {_node.internalName} : {_node.isRenderable()}");
+				LOG_IF(global.FLAG.render == 1, $"Checking node {_node.internalName} : {_node.isRenderable()}");
 				if(!_node.isRenderable())	continue;
 				
 				array_push(nodes, _to.node);
@@ -205,7 +205,7 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	
 	static setRenderStatus = function(result) { #region
 		LOG_BLOCK_START();
-		LOG_IF(global.FLAG.render, $"Set render status for {INAME} : {result}");
+		LOG_IF(global.FLAG.render == 1, $"Set render status for {INAME} : {result}");
 		rendered = result;
 		
 		if(result)
@@ -213,7 +213,7 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 			var _o = outputs[| i];
 			if(_o.from.rendered) continue;
 				
-			LOG_IF(global.FLAG.render, $"Set fail because {_o.from.internalName} is not rendered.");
+			LOG_IF(global.FLAG.render == 1, $"Set fail because {_o.from.internalName} is not rendered.");
 			rendered = false;
 			break;
 		}
@@ -444,10 +444,10 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	
 	static resetRender = function() { #region
 		LOG_BLOCK_START();
-		LOG_IF(global.FLAG.render, $"Reset Render for {INAME}");
+		LOG_IF(global.FLAG.render == 1, $"Reset Render for {INAME}");
 		
 		for( var i = 0; i < ds_list_size(nodes); i++ ) {
-			LOG_IF(global.FLAG.render, $"Reseting {nodes[| i].internalName}");
+			LOG_IF(global.FLAG.render == 1, $"Reseting {nodes[| i].internalName}");
 			nodes[| i].resetRender();
 		}
 		

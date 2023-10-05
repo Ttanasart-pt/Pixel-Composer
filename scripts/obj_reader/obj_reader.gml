@@ -34,23 +34,23 @@ function readObj_file() {
 		
 		switch(sep[0]) {
 			case "v" :
-				ds_list_add(v, [ toNumber(sep[1]), toNumber(sep[2]), toNumber(sep[3]) ]);
+				ds_list_add(v, [ toNumberFast(sep[1]), toNumberFast(sep[2]), toNumberFast(sep[3]) ]);
 				break;
 			case "vt" :
-				var _u = toNumber(sep[1]);
-				var _v = toNumber(sep[2]);
+				var _u = toNumberFast(sep[1]);
+				var _v = toNumberFast(sep[2]);
 				
 				ds_list_add(vt, [ _u, _v ]);
 				break;
 			case "vn" :
-				var _nx = toNumber(sep[1]);
-				var _ny = toNumber(sep[2]);
-				var _nz = toNumber(sep[3]);
-				var _di = sqrt(_nx * _nx + _ny * _ny + _nz * _nz);
+				var _nx = toNumberFast(sep[1]);
+				var _ny = toNumberFast(sep[2]);
+				var _nz = toNumberFast(sep[3]);
+				//var _di = sqrt(_nx * _nx + _ny * _ny + _nz * _nz);
 				
-				_nx /= _di;
-				_ny /= _di;
-				_nz /= _di;
+				//_nx /= _di;
+				//_ny /= _di;
+				//_nz /= _di;
 				
 				ds_list_add(vn, [ _nx, _ny, _nz ]);
 				break;
@@ -64,9 +64,9 @@ function readObj_file() {
 					var _sp    = string_split(sep[i], "/");
 					if(array_length(_sp) < 2) continue;
 					
-					_f[i - 1]  = toNumber(array_safe_get(_sp, 0, 1));
-					_ft[i - 1] = toNumber(array_safe_get(_sp, 1, 1));
-					_fn[i - 1] = toNumber(array_safe_get(_sp, 2, 1));
+					_f[i - 1]  = toNumberFast(_sp[0]);
+					_ft[i - 1] = toNumberFast(_sp[1]);
+					_fn[i - 1] = toNumberFast(_sp[2]);
 					
 					if(array_length(_sp) < 3) use_normal = false;
 				}

@@ -206,7 +206,7 @@ function __vec2(_x = 0, _y = _x) constructor {
 		return new __vec2(x, y);
 	} #endregion
 	
-	static toString = function() { return $"[{x}, {y}]"; }
+	static toString = function() { return $"[__vec2] ({x}, {y})"; }
 	
 	static toBBMOD = function() { return new BBMOD_Vec2(x, y); }
 	

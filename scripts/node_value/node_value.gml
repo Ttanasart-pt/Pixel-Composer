@@ -1139,7 +1139,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 					case VALUE_DISPLAY.path_load: 
 						var path = animator.getValue();
 						if(is_array(path)) path = path[0];
-						if(try_get_path(path) == -1) {
+						if(path != "" && try_get_path(path) == -1) {
 							value_validation = VALIDATION.error;	
 							str = "File not exist: " + string(path);
 						}
@@ -1937,7 +1937,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		var hovering = noone;
 		var jx  = x;
-		var jy  = y;	
+		var jy  = y;
 			
 		var frx = value_from.x;
 		var fry = value_from.y;

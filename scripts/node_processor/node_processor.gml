@@ -30,7 +30,7 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 			triggerRender();
 		}, false) ]);
 	
-	static getInputData = function(index, def = 0) { return array_safe_get(inputs_data, index, def); }
+	static getInputData = function(index, def = 0) { gml_pragma("forceinline"); return array_safe_get(inputs_data, index, def); }
 	
 	static processData_prebatch  = function() {}
 	static processData_postbatch = function() {}
@@ -40,8 +40,7 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	static getSingleValue = function(_index, _arr = 0, output = false) { #region
 		var _l  = output? outputs : inputs;
 		var _n  = _l[| _index];
-		var _in = _n.getValue();
-		
+		var _in = output? _n.getValue() : getInputData(_index);
 		if(!_n.isArray()) return _in;
 		
 		switch(attributes.array_process) {
