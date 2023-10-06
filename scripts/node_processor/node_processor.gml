@@ -16,7 +16,10 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	process_amount	= 0;
 	process_length  = [];
-	dimension_index = 0;	
+	dimension_index = 0;
+	
+	manage_atlas    = true;
+	atlas_index     = 0;
 	
 	batch_output = false;	//Run processData once with all outputs as array.
 	
@@ -73,16 +76,27 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	static processDataArray = function(outIndex) { #region
 		var _output = outputs[| outIndex];
 		var _out    = _output.getValue();
+		var _atlas  = false;
+		var _pAtl   = noone;
+		var _data   = array_create(ds_list_size(inputs));
 		
 		if(process_amount == 1) { #region render single data
 			if(_output.type == VALUE_TYPE.d3object) //passing 3D vertex call
 				return _out;
 			
-			if(_output.type == VALUE_TYPE.surface) { //resize surface
-				if(dimension_index == -1) 
-					surface_array_free(_out);
-				else {
-					var surf = inputs_data[dimension_index];
+			for(var i = 0; i < ds_list_size(inputs); i++)
+				_data[i] = inputs_data[i];
+			
+			if(_output.type == VALUE_TYPE.surface) {								// Surface preparation
+				if(manage_atlas) {
+					_pAtl  = _data[atlas_index];
+					_atlas = is_instanceof(_pAtl, SurfaceAtlas);
+					
+					if(_atlas) _data[atlas_index] = _pAtl.getSurface();
+				}
+				
+				if(dimension_index > -1) {
+					var surf = _data[dimension_index];
 					var _sw = 1, _sh = 1;
 					if(inputs[| dimension_index].type == VALUE_TYPE.surface) {
 						if(is_surface(surf)) {
@@ -95,20 +109,31 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 						_sh = array_safe_get(surf, 1, 1);
 					}
 					
-					_out = surface_verify(_out, _sw, _sh, attrDepth());
+					if(manage_atlas && is_instanceof(_out, SurfaceAtlas)) {
+						surface_free_safe(_out.getSurface())
+						_out = surface_verify(_out.getSurface(), _sw, _sh, attrDepth());
+					} else
+						_out = surface_verify(_out, _sw, _sh, attrDepth());
 				}
 			}
 			
-			current_data = inputs_data;
+			current_data = _data;
 			
-			if(active_index > -1 && !inputs_data[active_index]) { // skip
+			if(active_index > -1 && !_data[active_index]) { // skip
 				if(inputs[| 0].type == VALUE_TYPE.surface)
-					return surface_clone(inputs_data[0], _out);
+					return surface_clone(_data[0], _out);
 				else 
-					return inputs_data[0]
+					return _data[0];
 			}
 			
-			var data = processData(_out, inputs_data, outIndex, 0);						/// Process data
+			var data = processData(_out, _data, outIndex, 0);					// Process data
+			
+			if(manage_atlas && _atlas && is_surface(data)) {										// Convert back to atlas
+				var _atl = _pAtl.clone();
+				_atl.setSurface(data);
+				return _atl;
+			}
+			
 			return data;
 		} #endregion
 		
@@ -119,39 +144,57 @@ function Node_Processor(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 				array_resize(_out, process_amount);
 		#endregion
 		
-		var _data  = array_create(ds_list_size(inputs));
-		
 		for(var l = 0; l < process_amount; l++) {
 			for(var i = 0; i < ds_list_size(inputs); i++)
 				_data[i] = all_inputs[i][l];
 			
-			if(_output.type == VALUE_TYPE.surface && dimension_index > -1) { #region output surface verification
-				var surf = _data[dimension_index];
-				var _sw = 1, _sh = 1;
-				if(inputs[| dimension_index].type == VALUE_TYPE.surface) {
-					if(is_surface(surf)) {
-						_sw = surface_get_width_safe(surf);
-						_sh = surface_get_height_safe(surf);
-					} else 
-						return noone;
-				} else if(is_array(surf)) {
-					_sw = surf[0];
-					_sh = surf[1];
+			if(_output.type == VALUE_TYPE.surface) { #region						// Output surface verification
+				if(manage_atlas) {
+					_pAtl  = _data[atlas_index];
+					_atlas = is_instanceof(_pAtl, SurfaceAtlas);
+					
+					if(_atlas) _data[atlas_index] = _pAtl.getSurface();
 				}
 				
-				_out[l] = surface_verify(_out[l], _sw, _sh, attrDepth());
+				if(dimension_index > -1) {
+					var surf = _data[dimension_index];
+					var _sw = 1, _sh = 1;
+					if(inputs[| dimension_index].type == VALUE_TYPE.surface) {
+						if(is_surface(surf)) {
+							_sw = surface_get_width_safe(surf);
+							_sh = surface_get_height_safe(surf);
+						} else 
+							return noone;
+					} else if(is_array(surf)) {
+						_sw = surf[0];
+						_sh = surf[1];
+					}
+					
+					if(manage_atlas && is_instanceof(_out[l], SurfaceAtlas)) {
+						surface_free_safe(_out[l].surface.surface)
+						_out[l] = surface_verify(_out[l].getSurface(), _sw, _sh, attrDepth());
+					} else
+						_out[l] = surface_verify(_out[l], _sw, _sh, attrDepth());
+				}
 			} #endregion
 			
 			if(l == 0 || l == preview_index) 
 				current_data = _data;
 			
 			if(active_index > -1 && !_data[active_index]) { // skip
-				if(inputs[| 0].type == VALUE_TYPE.surface)
+				if(!_atlas && inputs[| 0].type == VALUE_TYPE.surface)
 					_out[l] = surface_clone(_data[0], _out[l]);
 				else 
 					_out[l] = _data[0];
-			} else
-				_out[l] = processData(_out[l], _data, outIndex, l);						/// Process data
+			} else {
+				_out[l] = processData(_out[l], _data, outIndex, l);					// Process data
+				
+				if(manage_atlas && _atlas && is_surface(_out[l])) {					// Convert back to atlas
+					var _atl = _pAtl.clone();
+					_atl.setSurface(_out[l]);
+					_out[l] = _atl;
+				}
+			}
 		}
 		
 		return _out;

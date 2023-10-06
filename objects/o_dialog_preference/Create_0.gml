@@ -78,7 +78,7 @@ event_inherited();
 						sect_title = string_replace(sect_title, "- ", "");
 					}
 					
-					draw_text_add(_xx, yl + hs / 2, sect_title);
+					draw_text_add(_xx, yl + hs / 2, __txt(sect_title));
 				
 					yl += hs;
 					hh += hs;

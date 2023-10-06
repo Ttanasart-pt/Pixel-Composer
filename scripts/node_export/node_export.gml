@@ -589,7 +589,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			PROJECT.animator.rendering = false;
 			
 			export();
-			updatedTrigger.setValue(true);
+			updatedOutTrigger.setValue(true);
 			return;
 		}
 		
@@ -702,7 +702,7 @@ function Node_Export(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			}
 		}
 		
-		updatedTrigger.setValue(true);
+		updatedOutTrigger.setValue(true);
 	} #endregion
 	
 	static doApplyDeserialize = function() { onValueUpdate(3); }

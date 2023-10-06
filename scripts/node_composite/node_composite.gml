@@ -240,7 +240,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
-	outputs[| 1] = nodeValue("Atlas data", self, JUNCTION_CONNECT.output, VALUE_TYPE.atlas, [])
+	outputs[| 1] = nodeValue("Atlas data", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, [])
 		.rejectArrayProcess();
 	
 	temp_surface = [ surface_create(1, 1), surface_create(1, 1), surface_create(1, 1) ];
@@ -803,7 +803,7 @@ function Node_Composite(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 			
 			var _d0 = point_rotate(cx - _sw / 2, cy - _sh / 2, cx, cy, _rot);
 			
-			array_push(atlas_data, new SurfaceAtlas(_s, [ _d0[0], _d0[1] ], _rot, [ _sca[0], _sca[1] ]));
+			array_push(atlas_data, new SurfaceAtlas(_s, _d0[0], _d0[1], _rot, _sca[0], _sca[1]));
 			
 			surface_set_shader(temp_surface[_bg], sh_sample, true, BLEND.over);
 				blend_temp_surface = temp_surface[2];

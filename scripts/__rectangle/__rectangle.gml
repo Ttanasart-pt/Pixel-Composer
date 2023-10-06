@@ -1,4 +1,4 @@
-function Rectangle(x, y, w, h) constructor {
+function Rectangle(x = 0, y = 0, w = 0, h = 0) constructor {
     self.x = x;
     self.y = y;
     self.w = w;

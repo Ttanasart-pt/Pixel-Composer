@@ -61,6 +61,11 @@ function draw_tooltip_gradient(clr) {
 }
 
 function draw_tooltip_surface_array(surf) {
+	if(is_instanceof(surf[0], SurfaceAtlas)) {
+		draw_tooltip_atlas(surf);
+		return;
+	}
+	
 	var amo = array_length(surf);
 	var col = ceil(sqrt(amo));
 	var row = ceil(amo / col);
@@ -101,6 +106,12 @@ function draw_tooltip_surface(surf) {
 		draw_tooltip_surface_array(array_spread(surf))
 		return;
 	}
+	
+	if(is_instanceof(surf, SurfaceAtlas)) {
+		draw_tooltip_atlas(surf);
+		return;
+	}
+	
 	if(!is_surface(surf)) return;
 	
 	var sw = surface_get_width_safe(surf);
@@ -142,7 +153,7 @@ function draw_tooltip_atlas(atlas) {
 		var _y = sy + i * ui(48 + 8);
 		
 		var atl = atlas[i];
-		var surf = atl.surface.get();
+		var surf = atl.getSurface();
 		
 		if(!is_surface(surf)) continue;
 		
@@ -161,9 +172,9 @@ function draw_tooltip_atlas(atlas) {
 		draw_text_add(sx + ui( 56), _y + ui(32), __txt("Scale"));
 		
 		draw_set_text(f_p3, fa_right, fa_top, COLORS._main_text);
-		draw_text_add(sx + ui(160), _y + ui( 0), atl.position);
+		draw_text_add(sx + ui(160), _y + ui( 0), $"{atl.x}, {atl.y}");
 		draw_text_add(sx + ui(160), _y + ui(16), atl.rotation);
-		draw_text_add(sx + ui(160), _y + ui(32), atl.scale);
+		draw_text_add(sx + ui(160), _y + ui(32), $"{atl.sx}, {atl.sy}");
 	}
 }
 

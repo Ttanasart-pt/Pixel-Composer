@@ -42,7 +42,7 @@ function __part(_node) constructor {
 	//wig_rot = new wiggleMap(seed, 1, PROJECT.animator.frames_total);
 	//wig_dir = new wiggleMap(seed, 1, PROJECT.animator.frames_total);
 	
-	boundary_data = -1;
+	atlas = noone;
 	
 	grav    = 0;
 	gravDir = -90;
@@ -77,14 +77,23 @@ function __part(_node) constructor {
 	ground_bounce	= 0;
 	ground_friction = 1;
 	
+	static reset = function() { #region
+		gml_pragma("forceinline");
+		
+		surf  = noone;
+		atlas = noone;
+		
+		prevx  = undefined;
+		prevy  = undefined;
+	} #endregion
+	
 	static create = function(_surf, _x, _y, _life) { #region
+		gml_pragma("forceinline");
+		
 		active	= true;
 		surf	= _surf;
 		x	= _x;
 		y	= _y;
-		
-		prevx  = undefined;
-		prevy  = undefined;
 		
 		life = _life;
 		life_total = life;
@@ -92,6 +101,8 @@ function __part(_node) constructor {
 	} #endregion
 	
 	static setPhysic = function(_sx, _sy, _ac, _g, _gDir, _turn, _turnSpd) { #region
+		gml_pragma("forceinline");
+		
 		speedx  = _sx;
 		speedy  = _sy;
 		accel   = _ac;
@@ -108,6 +119,8 @@ function __part(_node) constructor {
 	} #endregion
 	
 	static setWiggle = function(wiggle_maps) { #region
+		gml_pragma("forceinline");
+		
 		//wig_psx.check(_wig_pos[0], _wig_pos[1], seed + 10);
 		//wig_psy.check(_wig_pos[0], _wig_pos[1], seed + 20);
 		//wig_rot.check(_wig_rot[0], _wig_rot[1], seed + 30);
@@ -124,6 +137,8 @@ function __part(_node) constructor {
 	} #endregion
 	
 	static setGround = function(_ground, _ground_offset, _ground_bounce, _ground_frict) { #region
+		gml_pragma("forceinline");
+		
 		ground			= _ground;
 		ground_y		= y + _ground_offset;
 		ground_bounce	= _ground_bounce;
@@ -131,6 +146,8 @@ function __part(_node) constructor {
 	} #endregion
 	
 	static setTransform = function(_scx, _scy, _sct, _rot, _rots, _follow) { #region
+		gml_pragma("forceinline");
+		
 		sc_sx = _scx;
 		sc_sy = _scy;
 		sct   = _sct;
@@ -141,6 +158,8 @@ function __part(_node) constructor {
 	} #endregion
 	
 	static setDraw = function(_col, _blend, _alp, _fade) { #region
+		gml_pragma("forceinline");
+		
 		col      = _col;
 		blend	 = _blend;
 		alp      = _alp;
@@ -149,12 +168,16 @@ function __part(_node) constructor {
 	} #endregion
 	
 	static kill = function() { #region
+		gml_pragma("forceinline");
+		
 		active = false;
 		
 		node.onPartDestroy(self);
 	} #endregion
 	
 	static step = function() { #region
+		gml_pragma("forceinline");
+		
 		if(!active) return;
 		x += speedx;
 		
@@ -214,8 +237,11 @@ function __part(_node) constructor {
 	} #endregion
 	
 	static draw = function(exact, surf_w, surf_h) { #region
+		gml_pragma("forceinline");
+		
 		var ss = surf;
-		if(is_array(surf)) {
+		
+		if(surf != noone && is_array(surf)) {
 			var ind = abs(round((life_total - life) * anim_speed));
 			var len = array_length(surf);
 			
@@ -234,8 +260,9 @@ function __part(_node) constructor {
 			}
 		}
 		
-		var surface = node.surface_cache[$ ss];
-		//print($"VFX: {surface} ({is_surface(surface)})")
+		var surface = atlas == noone? node.surface_cache[$ ss] : atlas.getSurface();
+		//print($"VFX: {surface} ({is_surface(surface)}), {atlas}")
+		
 		if(!is_surface(surface)) return;
 		
 		var lifeRat = 1 - life / life_total;
@@ -247,22 +274,9 @@ function __part(_node) constructor {
 		var s_w = surface_get_width_safe(surface) * scx;
 		var s_h = surface_get_height_safe(surface) * scy;
 		
-		if(boundary_data == -1) {
-			var _pp = point_rotate(-s_w / 2, -s_h / 2, 0, 0, rot);
-			_xx = drawx + _pp[0];
-			_yy = drawy + _pp[1];
-		} else {
-			var ww = boundary_data[2] + boundary_data[0];
-			var hh = boundary_data[3] + boundary_data[1];
-			
-			var cx = (boundary_data[0] + boundary_data[2]) / 2;
-			var cy = (boundary_data[1] + boundary_data[3]) / 2;
-			
-			var _pp = point_rotate(-cx, -cy, 0, 0, rot);
-			
-			_xx = drawx + cx + _pp[0] * scx;
-			_yy = drawy + cy + _pp[1] * scy;
-		}
+		var _pp = point_rotate(-s_w / 2, -s_h / 2, 0, 0, rot);
+		_xx = drawx + _pp[0];
+		_yy = drawy + _pp[1];
 		
 		if(exact) {
 			_xx = round(_xx);
@@ -284,15 +298,9 @@ function __part(_node) constructor {
 	} #endregion
 	
 	static getPivot = function() { #region
-		if(boundary_data == -1) 
-			return [x, y];
+		gml_pragma("forceinline");
 		
-		var ww = (boundary_data[2] - boundary_data[0]) * scx;
-		var hh = (boundary_data[3] - boundary_data[1]) * scy;
-		var cx = x + boundary_data[0] + ww / 2;
-		var cy = y + boundary_data[1] + hh / 2;
-		
-		return [cx, cy];
+		return [x, y];
 	} #endregion
 }
 

@@ -3,7 +3,6 @@ function Node_Group_Output(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	destroy_when_upgroup = true;
 	color = COLORS.node_blend_collection;
 	previewable = false;
-	auto_height = false;
 	
 	attributes.input_priority = group == noone? 0 : ds_list_size(group.inputs);
 	array_push(attributeEditors, "Group");

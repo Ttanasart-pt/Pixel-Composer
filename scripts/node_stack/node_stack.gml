@@ -23,7 +23,7 @@ function Node_Stack(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
-	outputs[| 1] = nodeValue("Atlas data", self, JUNCTION_CONNECT.output, VALUE_TYPE.atlas, []);
+	outputs[| 1] = nodeValue("Atlas data", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, []);
 	
 	attribute_surface_depth();
 	
@@ -126,7 +126,7 @@ function Node_Stack(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 						sy = hh / 2 - sh / 2;
 					}
 					
-					array_push(atlas, new SurfaceAtlas(_surf[j], [ sx, sy ]));
+					array_push(atlas, new SurfaceAtlas(_surf[j], sx, sy));
 					draw_surface_safe(_surf[j], sx, sy);
 					
 					if(_axis == 0)

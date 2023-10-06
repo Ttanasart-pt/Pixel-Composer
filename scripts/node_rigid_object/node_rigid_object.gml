@@ -30,33 +30,31 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	inputs[| 6] = nodeValue("Texture", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
 	
-	inputs[| 7] = nodeValue("Start shape", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 16, 16, 4, 4, AREA_SHAPE.rectangle ])
-		.setDisplay(VALUE_DISPLAY.area);
-	inputs[| 7].editWidget.adjust_shape = false;
+	inputs[| 7] = nodeValue("Start position", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 16, 16 ])
+		.setDisplay(VALUE_DISPLAY.vector);
 	
 	inputs[| 8] = nodeValue("Spawn", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true, "Make object spawn when start.")
 		.rejectArray();
 	
 	inputs[| 9] = nodeValue("Generate mesh", self, JUNCTION_CONNECT.input, VALUE_TYPE.trigger, 0)
-		.setDisplay(VALUE_DISPLAY.button, { name: "Generate", onClick: function() {
-			var _tex  = getInputData(6);
-			if(is_array(_tex)) {
-				for( var i = 0, n = array_length(_tex); i < n; i++ ) 
-					generateMesh(i);
-			} else 
-				generateMesh();
-			doUpdate();
-		} });
+		.setDisplay(VALUE_DISPLAY.button, { name: "Generate", onClick: function() { generateAllMesh(); } });
 	
 	inputs[| 10] = nodeValue("Mesh expansion", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
+		.setDisplay(VALUE_DISPLAY.slider, { range: [ -2, 2, 0.1 ] })
 		.rejectArray();
+	
+	inputs[| 11] = nodeValue("Texture type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Surface", "Atlas" ])
+		.rejectArray();
+	
+	inputs[| 12] = nodeValue("Atlas", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, []);
 	
 	outputs[| 0] = nodeValue("Object", self, JUNCTION_CONNECT.output, VALUE_TYPE.rigid, self);
 	
 	input_display_list = [ 8,
-		["Texture",		false],	6,
+		["Texture",		false],	11, 6, 12, 
 		["Physical",	false],	0, 1, 2, 3, 4,
-		["Shape",		false],	5, 9, 10, 7, 
+		["Shape",		false],	7, 5, 9, 10, 
 	];
 	
 	static newMesh = function(index) {
@@ -74,7 +72,22 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		new NodeTool( "Anchor remove",  THEME.mesh_tool_delete ),
 	];
 	
-	static getPreviewValues = function() { return getInputData(6); }
+	static getPreviewValues = function() { 
+		var _typ = getInputData(11);
+		return _typ? getInputData(12) : getInputData(6); 
+	}
+	
+	static generateAllMesh = function() {
+		var _typ  = getInputData(11);
+		var _tex  = _typ? getInputData(12) : getInputData(6);
+			
+		if(is_array(_tex)) {
+			for( var i = 0, n = array_length(_tex); i < n; i++ ) 
+				generateMesh(i);
+		} else 
+			generateMesh();
+		doUpdate();
+	}
 	
 	is_convex = true;
 	hover = -1;
@@ -84,71 +97,95 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	anchor_drag_mx  = -1;
 	anchor_drag_my  = -1;
 	
-	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
-		var _shp = getInputData(5);
-		var _box = getInputData(7);
-		
+	static drawOverlayPreview = function(_i, _x, _y, _s, _pr_x, _pr_y, _atl_s, _tex_s) { #region
 		var meshes = attributes.mesh;
-		if(preview_index >= array_length(meshes)) return;
+		var _shp = getInputData(5);
+		var _typ = getInputData(11);
+		
+		var ww = max(1, surface_get_width_safe(_tex_s));
+		var hh = max(1, surface_get_height_safe(_tex_s));
+		
+		if(_typ == 0) {
+			_pr_x -= ww * _s / 2;
+			_pr_y -= hh * _s / 2;
+		} else if(_typ == 1) {
+			_pr_x += _atl_s.x * _s;
+			_pr_y += _atl_s.y * _s;
+		}
+		
+		if(_shp == 2 && array_length(meshes) > _i) {
+			draw_set_color(is_convex? COLORS._main_accent : COLORS._main_value_negative);
+				
+			var _m = meshes[_i];
+			var _l = array_length(_m);
+					
+			for( var i = 0; i < _l; i++ ) {
+				var _px0 = _m[i][0];
+				var _py0 = _m[i][1];
+				var _px1 = _m[safe_mod(i + 1, _l)][0];
+				var _py1 = _m[safe_mod(i + 1, _l)][1];
+						
+				_px0 = _pr_x + _px0 * _s;
+				_py0 = _pr_y + _py0 * _s;
+				_px1 = _pr_x + _px1 * _s;
+				_py1 = _pr_y + _py1 * _s;
+						
+				draw_line_width(_px0, _py0, _px1, _py1, 1);
+			}
+		} 
+			
+		draw_surface_ext_safe(_tex_s, _pr_x, _pr_y, _s, _s, 0, c_white, 0.5);
+	} #endregion
+	
+	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
+		var _shp = getInputData(5);
+		var _pos = getInputData(7);	
+		var _typ = getInputData(11);
+		
+		var _typ = getInputData(11);
+		var _atl = getInputData(12);
+		var _tex = getInputData(6);
+		
+		var _atl_s = _atl;
+		var _tex_s = _tex;
+		
+		var _isArr = false;
+		
+		if(_typ == 0) {
+			if(is_array(_tex)) {
+				_tex_s = array_safe_get(_tex, preview_index);
+				_isArr = true;
+			}
+		} else if(_typ == 1) {
+			if(is_array(_atl)) {
+				_atl_s = array_safe_get(_atl, preview_index);
+				_isArr = true;
+			}
+			if(_atl_s == 0) return;
+			_tex_s = _atl_s.getSurface();
+		}
 		
 		if(previewing == 0) {
-			if(_shp == 2) {
-				var _tex = getInputData(6);
-				if(is_array(_tex)) _tex = _tex[safe_mod(preview_index, array_length(_tex))];
-				var tw = surface_get_width_safe(_tex);
-				var th = surface_get_height_safe(_tex);
-				
-				draw_set_color(is_convex? COLORS._main_accent : COLORS._main_value_negative);
-				
-				for( var j = 0; j < array_length(meshes); j++ ) {
-					var _m = meshes[j];
-					var _l = array_length(_m);
-					
-					for( var i = 0; i < _l; i++ ) {
-						var _px0 = _m[i][0];
-						var _py0 = _m[i][1];
-						var _px1 = _m[safe_mod(i + 1, _l)][0];
-						var _py1 = _m[safe_mod(i + 1, _l)][1];
-						
-						_px0 = (_px0 / tw) * 2 - 1;
-						_py0 = (_py0 / th) * 2 - 1;
-						_px1 = (_px1 / tw) * 2 - 1;
-						_py1 = (_py1 / th) * 2 - 1;
-					
-						_px0 = _box[0] + (_box[2]) * _px0;
-						_py0 = _box[1] + (_box[3]) * _py0;
-						_px1 = _box[0] + (_box[2]) * _px1;
-						_py1 = _box[1] + (_box[3]) * _py1;
-					
-						var _dx0 = _x + _px0 * _s;
-						var _dy0 = _y + _py0 * _s;
-						var _dx1 = _x + _px1 * _s;
-						var _dy1 = _y + _py1 * _s;
+			var _pr_x = _x + _pos[0] * _s;
+			var _pr_y = _y + _pos[1] * _s;
 			
-						draw_line_width(_dx0, _dy0, _dx1, _dy1, 1);
-					}
+			if(_isArr) {
+				if(_typ == 0) {
+					for( var i = 0, n = array_length(_tex); i < n; i++ ) 
+						drawOverlayPreview(i, _x, _y, _s, _pr_x, _pr_y, noone, _tex[i]);
+				} else {
+					for( var i = 0, n = array_length(_atl); i < n; i++ ) 
+						drawOverlayPreview(i, _x, _y, _s, _pr_x, _pr_y, _atl[i], _atl[i].getSurface());
 				}
-				
-				draw_set_color(COLORS._main_accent);
-				var x0 = _box[0] - _box[2];
-				var x1 = _box[0] + _box[2];
-				var y0 = _box[1] - _box[3];
-				var y1 = _box[1] + _box[3];
-				
-				x0 = _x + x0 * _s;
-				x1 = _x + x1 * _s;
-				y0 = _y + y0 * _s;
-				y1 = _y + y1 * _s;
-				
-				draw_rectangle(x0, y0, x1, y1, true);
-			}
-			
+			} else 
+				drawOverlayPreview(0, _x, _y, _s, _pr_x, _pr_y, _atl, _tex);
 			inputs[| 7].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
 			return;
 		}
 		
 		if(_shp != 2) return;
 		
+		var meshes = attributes.mesh;
 		var _hover = -1, _side = 0;
 		draw_set_color(is_convex? COLORS._main_accent : COLORS._main_value_negative);
 		
@@ -245,15 +282,20 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 				anchor_drag_my  = _my;
 			}
 		}
-	}
+	} #endregion
 	
-	static generateMesh = function(index = 0) {
+	static generateMesh = function(index = 0) { #region
 		var _tex = getInputData(6);
 		var _exp = getInputData(10);
+		var _typ = getInputData(11);
+		var _atl = getInputData(12);
 		
-		if(is_array(_tex)) {
-			index = safe_mod(index, array_length(_tex));
-			_tex = _tex[index];
+		if(_typ == 0) {
+			if(is_array(_tex)) _tex = array_safe_get(_tex, index);
+		} else if(_typ == 1) {
+			if(is_array(_atl)) _atl = array_safe_get(_atl, index);
+			if(_atl == 0) return;
+			_tex = _atl.getSurface();
 		}
 		
 		if(!is_surface(_tex)) return;
@@ -367,9 +409,9 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		
 		meshes[index] = mesh;
 		attributes.mesh = meshes;
-	}
+	} #endregion
 	
-	static removeColinear = function(mesh) {
+	static removeColinear = function(mesh) { #region
 		var len   = array_length(mesh), _side = 0;
 		var remSt = [];
 		var tolerance = 5;
@@ -396,9 +438,9 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		}
 		
 		return mesh;
-	}
+	} #endregion
 	
-	static removeConcave = function(mesh) {
+	static removeConcave = function(mesh) { #region
 		var len = array_length(mesh);
 		if(len <= 3) return;
 		
@@ -463,25 +505,14 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		}
 		
 		return mesh;
-	}
+	} #endregion
 	
-	static onValueUpdate = function(index = 0) {
-		if(index == 5) {
-			var _spos  = getInputData(7);
-			var _shape = getInputData(5);
-			_spos[4] = _shape;
-			inputs[| 7].setValue(_spos);
-		}
-	}
-	
-	static fixtureCreate = function(fixture, object) {
+	static fixtureCreate = function(fixture, object, dx = 0, dy = 0) { #region
 		var _mov	 = getInputData(0);
 		var _den	 = getInputData(1);
 		var _cnt_frc = getInputData(2);
 		var _air_frc = getInputData(3);
 		var _rot_frc = getInputData(4);
-		
-		var _spos   = getInputData(7);
 		
 		if(!_mov) {
 			physics_fixture_set_kinematic(fixture);
@@ -496,32 +527,41 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		if(group != noone)
 			physics_fixture_set_collision_group(fixture, group.collIndex);
 		
-		array_push(object.fixture, physics_fixture_bind_ext(fixture, object, _spos[2], _spos[3]));
+		array_push(object.fixture, physics_fixture_bind_ext(fixture, object, dx, dy));
 		physics_fixture_delete(fixture);
-	}
+	} #endregion
 	
-	static spawn = function(rpos = noone, index = 0, object = noone) {
-		var _shp     = getInputData(5);
-		var _tex     = getInputData(6);
+	static spawn = function(index = 0, object = noone) { #region
+		var _shp = getInputData(5);
+		var _tex = getInputData(6);
+		var _typ = getInputData(11);
+		var _atl = getInputData(12);
 		
-		if(is_array(_tex)) {
-			index = safe_mod(index, array_length(_tex));
-			_tex = _tex[index];
-		} else 
-			index = 0;
+		if(_typ == 0 && is_array(_tex)) { index = safe_mod(index, array_length(_tex)); _tex = array_safe_get(_tex, index); }
+		if(_typ == 1 && is_array(_atl)) { index = safe_mod(index, array_length(_atl)); _atl = array_safe_get(_atl, index); }
+		if(_typ == 1) {
+			if(_atl == 0) return;
+			_tex = _atl.getSurface();
+		}
 		
 		var _spos   = getInputData(7);
 		
 		var ww = max(1, surface_get_width_safe(_tex));
 		var hh = max(1, surface_get_height_safe(_tex));
+		var sw = ww, sh = hh;
 		
-		var ox = rpos == noone? _spos[0] : rpos[0];
-		var oy = rpos == noone? _spos[1] : rpos[1];
+		var ox = _spos[0];
+		var oy = _spos[1];
+		
+		if(_typ == 1) {
+			ox += _atl.x;
+			oy += _atl.y;
+			sw  = 0;
+			sh  = 0;
+		}
 		
 		if(object == noone) {
-			object = instance_create_depth(ox - _spos[2], oy - _spos[3], 0, oRigidbody);
-			object.xscale = _spos[2] / ww * 2;
-			object.yscale = _spos[3] / hh * 2;
+			object = instance_create_depth(ox - sw / 2, oy - sh / 2, 0, oRigidbody);
 			object.surface = _tex;
 		} else if(instance_exists(object)) {
 			for( var i = 0, n = array_length(object.fixture); i < n; i++ )
@@ -532,12 +572,17 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		
 		if(_shp == 0) {
 			var fixture = physics_fixture_create();
-			physics_fixture_set_box_shape(fixture, _spos[2], _spos[3]);
-			fixtureCreate(fixture, object);
+			
+			physics_fixture_set_box_shape(fixture, ww / 2, hh / 2);
+			
+			fixtureCreate(fixture, object, ww / 2, hh / 2);
 		} else if(_shp == 1) {
 			var fixture = physics_fixture_create();
-			physics_fixture_set_circle_shape(fixture, min(_spos[2], _spos[3]));
-			fixtureCreate(fixture, object);
+			var rr = min(ww, hh) / 2;
+			
+			physics_fixture_set_circle_shape(fixture, rr);
+			
+			fixtureCreate(fixture, object, rr, rr);
 		} else if(_shp == 2) {
 			var meshes = attributes.mesh;
 			if(array_safe_get(meshes, index, noone) == noone)
@@ -569,17 +614,8 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			cx /= len;
 			cy /= len;
 			
-			cmx = cx;
-			cmy = cy;
-			
-			cx = (cx / ww) * 2 - 1;
-			cy = (cy / hh) * 2 - 1;
-			
-			cx = _spos[2] * cx;
-			cy = _spos[3] * cy;
-			
 			if(!is_convex) return object;
-			if(len < 3) return object;
+			if(len < 3)    return object;
 				
 			if(len <= 8) {
 				var fixture = physics_fixture_create();
@@ -589,16 +625,10 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 					var _px0 = mesh[i][0];
 					var _py0 = mesh[i][1];
 					
-					_px0 = (_px0 / ww) * 2 - 1;
-					_py0 = (_py0 / hh) * 2 - 1;
-					
-					_px0 = _spos[2] * _px0;
-					_py0 = _spos[3] * _py0;
-					
-					physics_fixture_add_point(fixture, round(_px0), round(_py0));
+					physics_fixture_add_point(fixture, _px0, _py0);
 				}
 				
-				fixtureCreate(fixture, object);
+				fixtureCreate(fixture, object, -1, -1);
 			} else {
 				for( var i = 0; i < len; i++ ) {
 					var fixture = physics_fixture_create();
@@ -608,43 +638,30 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 					var _py0 = mesh[safe_mod(i + 0, len)][1];
 					var _px1 = mesh[safe_mod(i + 1, len)][0];
 					var _py1 = mesh[safe_mod(i + 1, len)][1];
-						
-					_px0 = (_px0 / ww) * 2 - 1;
-					_py0 = (_py0 / hh) * 2 - 1;
-					_px1 = (_px1 / ww) * 2 - 1;
-					_py1 = (_py1 / hh) * 2 - 1;
 					
-					_px0 = _spos[2] * _px0;
-					_py0 = _spos[3] * _py0;
-					_px1 = _spos[2] * _px1;
-					_py1 = _spos[3] * _py1;
-				
-					var d0 = point_direction(cx, cy, _px0, _py0);
-					var d1 = point_direction(cx, cy, _px1, _py1);
-				
 					physics_fixture_add_point(fixture,   cx,   cy);
 					physics_fixture_add_point(fixture, _px0, _py0);
 					physics_fixture_add_point(fixture, _px1, _py1);
 				
-					fixtureCreate(fixture, object);
+					fixtureCreate(fixture, object, -1, -1);
 				}
 			}
-			
-			//with(object) physics_mass_properties(phy_mass, cmx, cmy, phy_inertia);
 		}
 		
 		return object;
-	}
+	} #endregion
 	
-	static update = function(frame = PROJECT.animator.current_frame) {
-		if(!isAnimated()) return;
-		
-		//for( var i = 0, n = array_length(object); i < n; i++ )
-		//	spawn(noone, i, object[i]);
-	}
+	static update = function(frame = PROJECT.animator.current_frame) { #region
+		//
+	} #endregion
 	
-	static step = function() {
+	static step = function() { #region
 		var _shp = getInputData(5);
+		var _tex = getInputData(11);
+		
+		inputs[|  6].setVisible(_tex == 0, _tex == 0);
+		inputs[| 12].setVisible(_tex == 1, _tex == 1);
+		
 		inputs[| 9].setVisible(_shp == 2);
 		
 		var _tex  = getInputData(6);
@@ -655,10 +672,12 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			for( var i = array_length(meshes); i < array_length(_tex); i++ )
 				newMesh(i);
 		}
-	}
+	} #endregion
 	
-	static reset = function() {
-		var _tex  = getInputData(6);
+	static reset = function() { #region
+		var _typ = getInputData(11);
+		var _tex = _typ? getInputData(12) : getInputData(6);
+		
 		for( var i = 0, n = array_length(object); i < n; i++ ) {
 			if(instance_exists(object[i]))
 				instance_destroy(object[i]);
@@ -670,31 +689,35 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		
 		if(is_array(_tex)) {
 			for( var i = 0, n = array_length(_tex); i < n; i++ )
-				object[i] = spawn(noone, i);
+				object[i] = spawn(i);
 		} else 
 			object = [ spawn() ];
-	}
+	} #endregion
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
+	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { #region
 		var bbox = drawGetBbox(xx, yy, _s);
-		var _tex  = getInputData(6);
-		if(is_array(_tex) && array_length(_tex)) _tex = _tex[0];
-		var _spos = getInputData(7);
+		var _typ = getInputData(11);
+		var _tex = _typ? getInputData(12) : getInputData(6);
 		
-		draw_surface_stretch_fit(_tex, bbox.xc, bbox.yc, bbox.w, bbox.h, _spos[2], _spos[3]);
-	}
+		if(is_array(_tex)) {
+			if(array_empty(_tex)) return;
+			_tex = _tex[0];
+		}
+		
+		draw_surface_bbox(_typ? _tex.getSurface() : _tex, bbox);
+	} #endregion
 	
-	static attributeSerialize = function() {
+	static attributeSerialize = function() { #region
 		var att = {};
 		
 		var mesh = struct_try_get(attributes, "mesh", []);
 		att.mesh = json_stringify(mesh);
 		
 		return att;
-	}
+	} #endregion
 	
-	static attributeDeserialize = function(attr) {
+	static attributeDeserialize = function(attr) { #region
 		if(struct_has(attr, "mesh"))
 			attributes.mesh = json_parse(attr.mesh);
-	}
+	} #endregion
 }

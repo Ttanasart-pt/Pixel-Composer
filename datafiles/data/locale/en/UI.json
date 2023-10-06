@@ -364,5 +364,10 @@
     "widget_rotator_random_range": "Range",
     "widget_rotator_random_span": "Span",
 
+    "pref_clear_temp": "Clear temp file on close.",
+    "pref_connection_type": "Connection type",
+    "pref_use_alt": "Use ALT for",
+    "meta_old_version": "Created on an older version",
+
     "" : ""
 }

@@ -5,6 +5,8 @@ function Node_create_Blend(_x, _y, _group = noone, _param = {}) {
 
 function Node_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constructor {
 	name = "Blend";
+	atlas_index  = 1;
+	manage_atlas = false;
 	
 	inputs[| 0] = nodeValue("Background", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
 	inputs[| 1] = nodeValue("Foreground", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone);
@@ -48,7 +50,24 @@ function Node_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 	
 	attribute_surface_depth();
 	
-	temp_surface = [ surface_create(1, 1) ];
+	temp_surface	   = [ surface_create(1, 1), surface_create(1, 1) ];
+	blend_temp_surface = temp_surface[1];
+	
+	static step = function() { #region
+		var _back = getSingleValue(0);
+		var _fore = getSingleValue(1);
+		var _fill = getSingleValue(5);
+		var _outp = getSingleValue(6);
+		
+		var _atlas  = is_instanceof(_fore, SurfaceAtlas);
+		
+		inputs[| 5].editWidget.data_list = _atlas? [ "None", "Stretch" ] : [ "None", "Stretch", "Tile" ];
+		inputs[| 6].editWidget.data_list = _atlas? [ "Background", "Forground" ] : [ "Background", "Forground", "Mask", "Maximum", "Constant" ];
+		inputs[| 7].setVisible(_outp == 4);
+		
+		inputs[| 10].setVisible(_fill == 0 && !_atlas);
+		inputs[| 11].setVisible(_fill == 0 && !_atlas);
+	} #endregion
 	
 	static processData = function(_outSurf, _data, _output_index, _array_index) { #region
 		var _back	 = _data[0];
@@ -56,7 +75,7 @@ function Node_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		var _type	 = _data[2];
 		var _opacity = _data[3];
 		var _mask	 = _data[4];
-		var _tile	 = _data[5];
+		var _fill	 = _data[5];
 		
 		var _outp	 = _data[6];
 		var _out_dim = _data[7];
@@ -66,64 +85,28 @@ function Node_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		var _valign = _data[11];
 		var cDep    = attrDepth();
 		
-		inputs[| 7].setVisible(_outp == 4);
-		var ww = 1, hh = 1;
-		var _foreDraw = _fore;
+		var ww = 1, hh  = 1;
+		var _backDraw   = _back;
+		var _foreDraw   = _fore;
 		
-		inputs[| 10].setVisible(_tile == 0);
-		inputs[| 11].setVisible(_tile == 0);
+		var _atlas  = is_instanceof(_fore, SurfaceAtlas);
 		
-		if(_tile == 0 && is_surface(_fore)) {
-			ww = surface_get_width_safe(_back);
-			hh = surface_get_height_safe(_back);
-			
-			var fw = surface_get_width_safe(_fore);
-			var fh = surface_get_height_safe(_fore);
-			
-			temp_surface[0] = surface_verify(temp_surface[0], ww, hh, cDep);
-			_foreDraw = temp_surface[0];
-			
-			var sx = 0;
-			var sy = 0;
-			
-			switch(_halign) {
-				case 0 : sx = 0; break;
-				case 1 : sx = ww / 2 - fw / 2; break;
-				case 2 : sx = ww - fw; break;
-			}
-			
-			switch(_valign) {
-				case 0 : sy = 0; break;
-				case 1 : sy = hh / 2 - fh / 2; break;
-				case 2 : sy = hh - fh; break;
-			}
-			
-			surface_set_target(temp_surface[0]);
-			DRAW_CLEAR
-			BLEND_OVERRIDE
-				draw_surface_safe(_fore, sx, sy);
-			BLEND_NORMAL
-			surface_reset_target();
-		}
-		
-		switch(_outp) {
+		switch(_outp) { // Dimension
 			case 0 :
 				ww = surface_get_width_safe(_back);
 				hh = surface_get_height_safe(_back);
 				break;
 			case 1 :
-				if(is_surface(_foreDraw)) {
-					ww = surface_get_width_safe(_foreDraw);
-					hh = surface_get_height_safe(_foreDraw);
-				}
+				ww = surface_get_width_safe(_fore);
+				hh = surface_get_height_safe(_fore);
 				break;
 			case 2 :
 				ww = surface_get_width_safe(_mask);
 				hh = surface_get_height_safe(_mask);
 				break;
 			case 3 :
-				ww = max(surface_get_width_safe(_back), is_surface(_fore)? surface_get_width_safe(_fore) : 1, surface_get_width_safe(_mask));
-				hh = max(surface_get_height_safe(_back), is_surface(_fore)? surface_get_height_safe(_fore) : 1, surface_get_height_safe(_mask));
+				ww = max(surface_get_width_safe(_back),  surface_get_width_safe(_fore),  surface_get_width_safe(_mask));
+				hh = max(surface_get_height_safe(_back), surface_get_height_safe(_fore), surface_get_height_safe(_mask));
 				break;
 			case 4 :
 				ww = _out_dim[0];
@@ -131,12 +114,69 @@ function Node_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 				break;
 		}
 		
-		_outSurf = surface_verify(_outSurf, ww, hh, cDep);
+		if(_fill == 0) { // Direct placement
+			for( var i = 0; i < 2; i++ )
+				temp_surface[i] = surface_verify(temp_surface[i], ww, hh, cDep);
+			
+			_foreDraw = temp_surface[1];
+				
+			if(_atlas) {
+				if(_outp == 0) {
+					surface_set_shader(_foreDraw, noone,, BLEND.over);
+						draw_surface_safe(_fore.getSurface(), _fore.x, _fore.y);
+					surface_reset_shader();
+				} else if(_outp == 1) {
+					_backDraw = temp_surface[0];
+					
+					surface_set_shader(_foreDraw, noone,, BLEND.over);
+						draw_surface_safe(_fore, 0, 0);
+					surface_reset_shader();
+					
+					surface_set_shader(_backDraw, noone,, BLEND.over);
+						draw_surface_safe(_back, -_fore.x, -_fore.y);
+					surface_reset_shader();
+				}
+			} else if(is_surface(_fore)) {
+				var sx = 0;
+				var sy = 0;
+			
+				var fw = surface_get_width_safe(_fore);
+				var fh = surface_get_height_safe(_fore);
+			
+				switch(_halign) {
+					case 0 : sx = 0; break;
+					case 1 : sx = ww / 2 - fw / 2; break;
+					case 2 : sx = ww - fw; break;
+				}
+			
+				switch(_valign) {
+					case 0 : sy = 0; break;
+					case 1 : sy = hh / 2 - fh / 2; break;
+					case 2 : sy = hh - fh; break;
+				}
+			
+				surface_set_shader(_foreDraw, noone,, BLEND.over);
+					draw_surface_safe(_fore, sx, sy);
+				surface_reset_shader();
+			}
+		}
 		
-		surface_set_target(_outSurf);
-		DRAW_CLEAR
-		draw_surface_blend(_back, _foreDraw, _type, _opacity, _pre_alp, _mask, max(0, _tile - 1));
-		surface_reset_target();
+		var _output = noone;
+		
+		if(is_instanceof(_outSurf, SurfaceAtlas)) 
+			_output = surface_verify(_outSurf.surface.surface, ww, hh, cDep);
+		else	  
+			_output = surface_verify(_outSurf, ww, hh, cDep);
+		
+		surface_set_shader(_output, noone);
+			draw_surface_blend(_backDraw, _foreDraw, _type, _opacity, _pre_alp, _mask, _fill == 2);
+		surface_reset_shader();
+		
+		if(_atlas) {
+			var _newAtl = _fore.clone();
+			_newAtl.surface.set(_output);
+			return _newAtl;
+		}
 		
 		return _outSurf;
 	} #endregion

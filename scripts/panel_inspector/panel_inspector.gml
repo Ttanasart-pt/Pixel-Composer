@@ -212,17 +212,7 @@ function Panel_Inspector() : PanelContent() constructor {
 					var wh = 0;
 					var _data = PROJECT.attributes[$ param];
 					
-					wh = editW.drawParam(new widgetParam(
-						ui(16),
-						yy,
-						w - ui(16 + 48),
-						TEXTBOX_HEIGHT, 
-						_data,
-						{},
-						_m,
-						rx,
-						ry,
-					));
+					wh = editW.drawParam(new widgetParam(ui(16), yy, w - ui(16 + 48), TEXTBOX_HEIGHT, _data, {}, _m, rx, ry));
 					
 					yy += wh + ui(8);
 					hh += wh + ui(8);

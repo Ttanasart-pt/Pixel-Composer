@@ -5,7 +5,7 @@ function Node_Atlas_Draw(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	inputs[| 0] = nodeValue("Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, DEF_SURF)
 		.setDisplay(VALUE_DISPLAY.vector);
 	
-	inputs[| 1] = nodeValue("Atlas", self, JUNCTION_CONNECT.input, VALUE_TYPE.atlas, noone)
+	inputs[| 1] = nodeValue("Atlas", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone)
 		.setVisible(true, true);
 	
 	outputs[| 0] = nodeValue("Surface", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
@@ -28,7 +28,7 @@ function Node_Atlas_Draw(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		
 		surface_set_shader(outSurf,,, BLEND.alpha);
 			for( var i = 0, n = array_length(atl); i < n; i++ ) {
-				shader_set_interpolation(atl[i].surface.get())
+				shader_set_interpolation(atl[i].getSurface())
 				atl[i].draw();
 			}
 		surface_reset_shader();

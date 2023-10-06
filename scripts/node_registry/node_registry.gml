@@ -108,15 +108,17 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor { #regio
 		var group = ds_list_create();
 		addNodeCatagory("Group", group, ["Node_Group"]); #region
 			ds_list_add(group, "Groups");
-			addNodeObject(group, "Input",	s_node_group_input,	"Node_Group_Input",		[1, Node_Group_Input]);
-			addNodeObject(group, "Output",	s_node_group_output,"Node_Group_Output",	[1, Node_Group_Output]);
+			addNodeObject(group, "Input",		s_node_group_input,		"Node_Group_Input",		[1, Node_Group_Input]);
+			addNodeObject(group, "Output",		s_node_group_output,	"Node_Group_Output",	[1, Node_Group_Output]);
+			addNodeObject(group, "Thumbnail",	s_node_group_thumbnail,	"Node_Group_Thumbnail",	[1, Node_Group_Thumbnail]);
 		#endregion
 		
 		var iter = ds_list_create(); #region
 		addNodeCatagory("Loop", iter, ["Node_Iterate"]);
 			ds_list_add(iter, "Groups");
-			addNodeObject(iter, "Input",	s_node_loop_input,		"Node_Iterator_Input",	[1, Node_Iterator_Input]);
-			addNodeObject(iter, "Output",	s_node_loop_output,		"Node_Iterator_Output",	[1, Node_Iterator_Output]);
+			addNodeObject(iter, "Input",		s_node_loop_input,		"Node_Iterator_Input",	[1, Node_Iterator_Input]);
+			addNodeObject(iter, "Output",		s_node_loop_output,		"Node_Iterator_Output",	[1, Node_Iterator_Output]);
+			addNodeObject(iter, "Thumbnail",	s_node_group_thumbnail,	"Node_Group_Thumbnail",	[1, Node_Group_Thumbnail]);
 			
 			ds_list_add(iter, "Loops");
 			addNodeObject(iter, "Index",		s_node_iterator_index,	"Node_Iterator_Index",	[1, Node_Iterator_Index]);
@@ -126,8 +128,9 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor { #regio
 		var itere = ds_list_create(); #region
 		addNodeCatagory("Loop", itere, ["Node_Iterate_Each"]);
 			ds_list_add(itere, "Groups");
-			addNodeObject(itere, "Input",	s_node_group_input,		"Node_Group_Input",		[1, Node_Group_Input]);
-			addNodeObject(itere, "Output",	s_node_group_output,	"Node_Group_Output",	[1, Node_Group_Output]);
+			addNodeObject(itere, "Input",		s_node_group_input,		"Node_Group_Input",		[1, Node_Group_Input]);
+			addNodeObject(itere, "Output",		s_node_group_output,	"Node_Group_Output",	[1, Node_Group_Output]);
+			addNodeObject(itere, "Thumbnail",	s_node_group_thumbnail,	"Node_Group_Thumbnail",	[1, Node_Group_Thumbnail]);
 			
 			ds_list_add(itere, "Loops");
 			addNodeObject(itere, "Index",			s_node_iterator_index,	"Node_Iterator_Index",	[1, Node_Iterator_Index]);
@@ -137,8 +140,9 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor { #regio
 		var filter = ds_list_create(); #region
 		addNodeCatagory("Filter", filter, ["Node_Iterate_Filter"]);
 			ds_list_add(filter, "Groups");
-			addNodeObject(filter, "Input",	s_node_group_input,		"Node_Group_Input",		[1, Node_Group_Input]);
-			addNodeObject(filter, "Output",	s_node_group_output,	"Node_Group_Output",	[1, Node_Group_Output]);
+			addNodeObject(filter, "Input",		s_node_group_input,		"Node_Group_Input",		[1, Node_Group_Input]);
+			addNodeObject(filter, "Output",		s_node_group_output,	"Node_Group_Output",	[1, Node_Group_Output]);
+			addNodeObject(filter, "Thumbnail",	s_node_group_thumbnail,	"Node_Group_Thumbnail",	[1, Node_Group_Thumbnail]);
 			
 			ds_list_add(filter, "Loops");
 			addNodeObject(filter, "Index",			s_node_iterator_index,	"Node_Iterator_Index",			[1, Node_Iterator_Index]);
@@ -148,8 +152,9 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor { #regio
 		var feed = ds_list_create(); #region
 		addNodeCatagory("Feedback", feed, ["Node_Feedback"]);
 			ds_list_add(feed, "Groups");
-			addNodeObject(feed, "Input",	s_node_feedback_input,	"Node_Feedback_Input",	[1, Node_Feedback_Input]);
-			addNodeObject(feed, "Output",	s_node_feedback_output,	"Node_Feedback_Output",	[1, Node_Feedback_Output]);
+			addNodeObject(feed, "Input",		s_node_feedback_input,	"Node_Feedback_Input",	[1, Node_Feedback_Input]);
+			addNodeObject(feed, "Output",		s_node_feedback_output,	"Node_Feedback_Output",	[1, Node_Feedback_Output]);
+			addNodeObject(feed, "Thumbnail",	s_node_group_thumbnail,	"Node_Group_Thumbnail",	[1, Node_Group_Thumbnail]);
 		#endregion
 		
 		var vfx = ds_list_create(); #region

@@ -233,7 +233,7 @@ void main() {
 				
 				vec3 light_phong = phongLight(normal, lightVector, viewDirection, light_dir_color[i].rgb);
 				
-				light_effect += light_phong;
+				light_effect += light_phong * light_dir_intensity[i];
 			}
 		#endregion
 		
@@ -278,7 +278,7 @@ void main() {
 				
 				vec3 light_phong = phongLight(normal, lightVector, viewDirection, light_pnt_color[i].rgb * light_attenuation);
 				
-				light_effect += light_phong;
+				light_effect += light_phong * light_pnt_intensity[i];
 			}
 		#endregion
 	
@@ -292,6 +292,8 @@ void main() {
 		
 		final_color.rgb *= light_effect;
 	#endregion
+	
+	if(final_color.a < 0.1) discard;
 	
 	gl_FragData[0] = final_color;
 	gl_FragData[1] = vec4(0.5 + normal * 0.5, final_color.a);

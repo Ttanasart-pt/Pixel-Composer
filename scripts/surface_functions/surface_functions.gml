@@ -2,9 +2,12 @@
 function draw_surface_safe(surface, _x = 0, _y = 0) {
 	gml_pragma("forceinline");
 	
-	if(is_struct(surface) && is_instanceof(surface, dynaSurf)) {
-		surface.draw(_x, _y);
-		return;
+	if(is_struct(surface)) {
+		if(is_instanceof(surface, dynaSurf)) {
+			surface.draw(_x, _y);
+			return;
+		} else if(is_instanceof(surface, SurfaceAtlas))
+			surface = surface.getSurface();
 	}
 	if(!is_surface(surface)) return;
 	
@@ -16,9 +19,12 @@ function draw_surface_safe(surface, _x = 0, _y = 0) {
 function draw_surface_stretched_safe(surface, _x, _y, _w, _h) {
 	gml_pragma("forceinline");
 	
-	if(is_struct(surface) && is_instanceof(surface, dynaSurf)) {
-		surface.drawStretch(_x, _y, _w, _h);
-		return;
+	if(is_struct(surface)) {
+		if(is_instanceof(surface, dynaSurf)) {
+			surface.drawStretch(_x, _y, _w, _h);
+			return;
+		} else if(is_instanceof(surface, SurfaceAtlas))
+			surface = surface.getSurface();
 	}
 	if(!is_surface(surface)) return;
 	
@@ -30,9 +36,12 @@ function draw_surface_stretched_safe(surface, _x, _y, _w, _h) {
 function draw_surface_ext_safe(surface, _x, _y, _xs = 1, _ys = 1, _rot = 0, _col = c_white, _alpha = 1) {
 	gml_pragma("forceinline");
 	
-	if(is_struct(surface) && is_instanceof(surface, dynaSurf)) {
-		surface.draw(_x, _y, _xs, _ys, _rot, _col, _alpha);
-		return;
+	if(is_struct(surface)) {
+		if(is_instanceof(surface, dynaSurf)) {
+			surface.draw(_x, _y, _xs, _ys, _rot, _col, _alpha);
+			return;
+		} else if(is_instanceof(surface, SurfaceAtlas))
+			surface = surface.getSurface();
 	}
 	if(!is_surface(surface)) return;
 	
@@ -44,9 +53,12 @@ function draw_surface_ext_safe(surface, _x, _y, _xs = 1, _ys = 1, _rot = 0, _col
 function draw_surface_tiled_safe(surface, _x, _y) {
 	gml_pragma("forceinline");
 	
-	if(is_struct(surface) && is_instanceof(surface, dynaSurf)) {
-		surface.drawTile(_x, _y);
-		return;
+	if(is_struct(surface)) {
+		if(is_instanceof(surface, dynaSurf)) {
+			surface.drawTile(_x, _y);
+			return;
+		} else if(is_instanceof(surface, SurfaceAtlas))
+			surface = surface.getSurface();
 	}
 	if(!is_surface(surface)) return;
 	
@@ -58,9 +70,12 @@ function draw_surface_tiled_safe(surface, _x, _y) {
 function draw_surface_tiled_ext_safe(surface, _x, _y, _xs = 1, _ys = 1, _col = c_white, _alpha = 1) {
 	gml_pragma("forceinline");
 	
-	if(is_struct(surface) && is_instanceof(surface, dynaSurf)) {
-		surface.drawTile(_x, _y, _xs, _ys, _col, _alpha);
-		return;
+	if(is_struct(surface)) {
+		if(is_instanceof(surface, dynaSurf)) {
+			surface.drawTile(_x, _y, _xs, _ys, _col, _alpha);
+			return;
+		} else if(is_instanceof(surface, SurfaceAtlas))
+			surface = surface.getSurface();
 	}
 	if(!is_surface(surface)) return;
 	
@@ -72,9 +87,12 @@ function draw_surface_tiled_ext_safe(surface, _x, _y, _xs = 1, _ys = 1, _col = c
 function draw_surface_part_ext_safe(surface, _l, _t, _w, _h, _x, _y, _xs = 1, _ys = 1, _rot = 0, _col = c_white, _alpha = 1) {
 	gml_pragma("forceinline");
 	
-	if(is_struct(surface) && is_instanceof(surface, dynaSurf)) {
-		surface.drawPart(_l, _t, _w, _h, _x, _y, _xs, _ys, _rot, _col, _alpha);
-		return;
+	if(is_struct(surface)) {
+		if(is_instanceof(surface, dynaSurf)) {
+			surface.drawPart(_l, _t, _w, _h, _x, _y, _xs, _ys, _rot, _col, _alpha);
+			return;
+		} else if(is_instanceof(surface, SurfaceAtlas))
+			surface = surface.getSurface();
 	}
 	if(!is_surface(surface)) return;
 	
@@ -131,23 +149,33 @@ function surface_save_safe(surface, path) {
 	return;
 }
 
-function surface_get_width_safe(s) {
+function surface_get_width_safe(s, crop = true) {
 	gml_pragma("forceinline");
 	
-	return (is_struct(s) && is_instanceof(s, dynaSurf))? s.getWidth() : surface_get_width(s);
+	if(is_struct(s)) {
+		if(is_instanceof(s, dynaSurf)) return s.getWidth();
+		else if(is_instanceof(s, SurfaceAtlas)) return crop? surface_get_width(s.getSurface()) : s.oriSurf_w;
+	}
+	
+	return surface_get_width(s);
 }
 
-function surface_get_height_safe(s) {
+function surface_get_height_safe(s, crop = true) {
 	gml_pragma("forceinline");
 	
-	return (is_struct(s) && is_instanceof(s, dynaSurf))? s.getHeight() : surface_get_height(s);
+	if(is_struct(s)) {
+		if(is_instanceof(s, dynaSurf)) return s.getHeight();
+		else if(is_instanceof(s, SurfaceAtlas)) return crop? surface_get_height(s.getSurface()) : s.oriSurf_h;
+	}
+	
+	return surface_get_height(s);
 }
 
 //check
 function is_surface(s) {
 	gml_pragma("forceinline");
 	
-	if(is_struct(s) && is_instanceof(s, dynaSurf)) return true;
+	if(is_instanceof(s, dynaSurf) || is_instanceof(s, SurfaceAtlas)) return true;
 	if(is_real(s) && s > 0 && surface_exists(s))   return true;
 	return false;
 }

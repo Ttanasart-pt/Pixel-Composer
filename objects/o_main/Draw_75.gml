@@ -73,9 +73,6 @@ if(OS == os_windows && gameframe_is_minimized()) exit;
 				txt += " (groups: " + string(array_length(content)) + ")";
 				draw_tooltip_text("[" + txt + "]");
 				break;
-			case VALUE_TYPE.atlas :
-				draw_tooltip_atlas(content);
-				break;
 			case VALUE_TYPE.buffer :
 				draw_tooltip_buffer(content);
 				break;

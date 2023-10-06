@@ -7,6 +7,12 @@ function surfaceBox(_onModify, def_path = "") : widget() constructor {
 	open_ry = 0;
 	
 	align = fa_center;
+	display_data = {};
+	
+	cb_atlas_crop = new checkBox(function() { 
+		display_data.atlas_crop = !display_data.atlas_crop; 
+		display_data.update();
+	});
 	
 	static trigger = function() {
 		open = true;
@@ -16,11 +22,16 @@ function surfaceBox(_onModify, def_path = "") : widget() constructor {
 		}
 	}
 	
-	static drawParam = function(params) {
-		return draw(params.x, params.y, params.w, params.h, params.data, params.m, params.rx, params.ry);
+	static setInteract = function(interactable) { 
+		self.interactable = interactable;
+		cb_atlas_crop.interactable = true;
 	}
 	
-	static draw = function(_x, _y, _w, _h, _surface, _m, _rx, _ry) {
+	static drawParam = function(params) {
+		return draw(params.x, params.y, params.w, params.h, params.data, params.display_data, params.m, params.rx, params.ry);
+	}
+	
+	static draw = function(_x, _y, _w, _h, _surface, _display_data, _m, _rx, _ry) {
 		_h = ui(96);
 		
 		x = _x;
@@ -29,13 +40,25 @@ function surfaceBox(_onModify, def_path = "") : widget() constructor {
 		h = _h;
 		open_rx = _rx;
 		open_ry = _ry;
+		display_data = _display_data;
 		
 		var hoverRect = point_in_rectangle(_m[0], _m[1], _x, _y, _x + _w, _y + _h);
+		var _type = VALUE_TYPE.surface;
+		
+		var _surf_single = _surface;
+		if(is_array(_surf_single) && !array_empty(_surf_single))
+			_surf_single = _surf_single[0];
+			
+		if(is_instanceof(_surf_single, dynaSurf)) {
+			_type = VALUE_TYPE.dynaSurface;
+		} else if(is_instanceof(_surf_single, SurfaceAtlas)) {
+			_type = VALUE_TYPE.atlas;
+		}
 		
 		if(!open) {
 			draw_sprite_stretched(THEME.textbox, 3, _x, _y, _w, _h);
 			
-			if(hover && hoverRect) {
+			if(_type == VALUE_TYPE.surface && hover && hoverRect) {
 				draw_sprite_stretched(THEME.textbox, 1, _x, _y, _w, _h);
 				if(mouse_press(mb_left, active))
 					trigger();
@@ -72,8 +95,22 @@ function surfaceBox(_onModify, def_path = "") : widget() constructor {
 				draw_surface_ext_safe(_surface, _sx, _sy, ss, ss, 0, c_white, 1);
 			}
 			
-			draw_sprite_ui_uniform(THEME.scroll_box_arrow, 0, _x + _w - ui(20), _y + _h / 2, 1, COLORS._main_icon);
+			if(_type == VALUE_TYPE.surface)
+				draw_sprite_ui_uniform(THEME.scroll_box_arrow, 0, _x + _w - ui(20), _y + _h / 2, 1, COLORS._main_icon);
 		}
+		
+		//if(_type == VALUE_TYPE.atlas) {
+		//	draw_sprite_stretched_ext(THEME.ui_panel_inner_bg, 1, _x, _y + _h + ui(8), _w, ui(40), COLORS.node_composite_bg_blend, 1);
+			
+		//	var set_y = _y + _h + ui(16);
+		//	var set_w = ui(64);
+		//	var set_h = ui(24);
+			
+		//	draw_set_text(f_p0, fa_left, fa_center, COLORS._main_text);
+		//	draw_text_add(_x + ui(16), set_y + set_h / 2, __txt("Crop atlas"));
+			
+		//	cb_atlas_crop.drawParam(new widgetParam(_x + _w - set_w, set_y, set_w, set_h, display_data.atlas_crop,, _m, _rx, _ry));
+		//}
 		
 		if(WIDGET_CURRENT == self)
 			draw_sprite_stretched_ext(THEME.widget_selecting, 0, _x - ui(3), _y - ui(3), _w + ui(6), _h + ui(6), COLORS._main_accent, 1);	

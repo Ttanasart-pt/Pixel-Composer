@@ -2,7 +2,7 @@ function Node_Atlas_Get(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	name = "Atlas Get";
 	previewable = true;
 	
-	inputs[| 0] = nodeValue("Atlas", self, JUNCTION_CONNECT.input, VALUE_TYPE.atlas, noone)
+	inputs[| 0] = nodeValue("Atlas", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone)
 		.setVisible(true, true);
 	
 	outputs[| 0] = nodeValue("Surface", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, [])
@@ -42,7 +42,7 @@ function Node_Atlas_Get(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		var alph = [];
 		
 		for( var i = 0, n = array_length(atl); i < n; i++ ) {
-			surf[i] = atl[i].surface.get();
+			surf[i] = atl[i].getSurface();
 			posi[i] = atl[i].position;
 			rota[i] = atl[i].rotation;
 			scal[i] = atl[i].scale;

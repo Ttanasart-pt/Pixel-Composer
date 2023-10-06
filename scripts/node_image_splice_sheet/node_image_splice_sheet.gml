@@ -77,7 +77,7 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
-	outputs[| 1] = nodeValue("Atlas Data", self, JUNCTION_CONNECT.output, VALUE_TYPE.struct, [])
+	outputs[| 1] = nodeValue("Atlas Data", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, [])
 		.setArrayDepth(1);
 	
 	attribute_surface_depth();
@@ -350,12 +350,12 @@ function Node_Image_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 				}
 					
 				if(!empty) {
-					array_push(_atl, new spriteAtlasData(_spr_pos[0], _spr_pos[1], ww, hh, _s, array_length(surf_array)));
+					array_push(_atl, new SurfaceAtlas(_s, _spr_pos[0], _spr_pos[1]));
 					array_push(surf_array, _s);
 				}
 				sprite_valid[i] = !empty;
 			} else {
-				array_push(_atl, new spriteAtlasData(_spr_pos[0], _spr_pos[1], ww, hh, _s, array_length(surf_array)));
+				array_push(_atl, new SurfaceAtlas(_s, _spr_pos[0], _spr_pos[1]));
 				array_push(surf_array, _s);
 				sprite_valid[i] = true;
 			}

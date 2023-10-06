@@ -14,7 +14,7 @@ function Node_Pack_Sprites(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	outputs[| 0] = nodeValue("Packed image", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
-	outputs[| 1] = nodeValue("Atlas data", self, JUNCTION_CONNECT.output, VALUE_TYPE.atlas, []);
+	outputs[| 1] = nodeValue("Atlas data", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, []);
 	
 	input_display_list = [
 		0, 4, 1, 2, 3,
@@ -29,9 +29,9 @@ function Node_Pack_Sprites(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		for( var i = 0, n = array_length(rect); i < n; i++ ) {
 			var r = rect[i];
 			
-			var _surf = r.surface.get();
-			var _sx   = r.position[0];
-			var _sy   = r.position[1];
+			var _surf = r.getSurface();
+			var _sx   = r.x;
+			var _sy   = r.y;
 			
 			if(!is_surface(_surf)) continue;
 			
@@ -66,8 +66,9 @@ function Node_Pack_Sprites(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			var s = _inpt[i];
 			if(!is_surface(s)) continue;
 			
-			_rects[i] = new spriteAtlasData(0, 0, surface_get_width_safe(s)  + _spac * 2, 
-												  surface_get_height_safe(s) + _spac * 2, s, i);
+			_rects[i] = new SurfaceAtlas(s);
+			_rects[i].w = surface_get_width_safe(s)  + _spac * 2;
+			_rects[i].h = surface_get_height_safe(s) + _spac * 2;
 		}
 		
 		var pack;
@@ -109,7 +110,7 @@ function Node_Pack_Sprites(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			for( var i = 0, n = array_length(rect); i < n; i++ ) {
 				var r = rect[i];
 				
-				array_push(atlas, new SurfaceAtlas(r.surface, [ r.x + _spac, r.y + _spac ]));
+				array_push(atlas, new SurfaceAtlas(r.surface, r.x + _spac, r.y + _spac));
 				draw_surface_safe(r.surface, r.x + _spac, r.y + _spac);
 			}
 			

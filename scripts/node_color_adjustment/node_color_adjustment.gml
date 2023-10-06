@@ -139,11 +139,7 @@ function Node_Color_adjust(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 			return _col;
 		}
 		
-		surface_set_target(_baseSurf);
-		DRAW_CLEAR
-		BLEND_OVERRIDE;
-		
-		shader_set(shader);
+		surface_set_shader(_baseSurf, shader);
 			shader_set_uniform_i(uniform_mask_use, _m != DEF_SURFACE);
 			texture_set_stage(uniform_mask, surface_get_texture(_m));
 			
@@ -161,10 +157,7 @@ function Node_Color_adjust(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 			draw_surface_safe(_surf, 0, 0);
 			gpu_set_colorwriteenable(1, 1, 1, 1);
 			draw_surface_ext_safe(_surf, 0, 0, 1, 1, 0, c_white, _alp);
-		shader_reset();
-		
-		BLEND_NORMAL;
-		surface_reset_target();
+		surface_reset_shader();
 		
 		return _outSurf;
 	} #endregion

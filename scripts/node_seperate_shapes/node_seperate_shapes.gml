@@ -20,7 +20,7 @@ function Node_Seperate_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	
 	outputs[| 0] = nodeValue("Surface out",	self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
-	outputs[| 1] = nodeValue("Atlas",	self, JUNCTION_CONNECT.output, VALUE_TYPE.atlas, []);
+	outputs[| 1] = nodeValue("Atlas",	self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, []);
 	
 	input_display_list = [
 		["Shape",	false], 0, 1, 4,
@@ -28,7 +28,6 @@ function Node_Seperate_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	]
 	
 	attribute_surface_depth();
-	attribute_auto_execute(true);
 	
 	temp_surface = [ surface_create(1, 1), surface_create(1, 1) ];
 	surface_buffer = buffer_create(1 * 1 * 4, buffer_fixed, 2);
@@ -53,8 +52,7 @@ function Node_Seperate_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 	static onInspector1Update = function() { separateShape(); }
 	
 	static update = function() {
-		if(attributes.auto_exe)
-			separateShape();
+		separateShape();
 	}
 	
 	static separateShape = function() {
@@ -127,52 +125,52 @@ function Node_Seperate_Shape(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 			outputs[| 0].setValue(_val);
 			
 			var _atlas = array_create(px);
+			var _pad   = 0;
 			
 			buffer_delete(surface_buffer);
 			surface_buffer = buffer_create(ww * hh * 4, buffer_fixed, 2);
 			buffer_get_surface(surface_buffer, temp_surface[res_index], 0);
 			
 			for(var i = 0; i < px; i++) {
-				_outSurf = surface_create_valid(ww, hh);
+				var ccx = surface_get_pixel_ext(_pixel_surface, 1 + i, 0);
+				var alpha = (ccx >> 24) & 255;
+				var blue = (ccx >> 16) & 255;
+				var green = (ccx >> 8) & 255;
+				var red = ccx & 255;
+				
+				var min_x = floor(red / 255 * ww);
+				var min_y = floor(green / 255 * hh);
+				var max_x = ceil(blue / 255 * ww);
+				var max_y = ceil(alpha / 255 * hh);
+				var t = max_y;
+				var b = min_y;
+				var l = max_x;
+				var r = min_x;
+				
+				for( var j = min_x; j < max_x; j++ ) 
+				for( var k = min_y; k < max_y; k++ ) {
+					var _sc = get_color_buffer(j, k);
+					if(_sc != ccx) continue;
+					
+					t = min(t, k);
+					b = max(b, k);
+					l = min(l, j);
+					r = max(r, j);
+				}
+				
+				_outSurf = surface_create_valid(r - l + 1 + _pad * 2, b - t + 1 + _pad * 2);
 				_val[i] = _outSurf;
 				
 				surface_set_shader(_outSurf, sh_seperate_shape_sep);
-					var ccx = surface_get_pixel_ext(_pixel_surface, 1 + i, 0);
-					var alpha = (ccx >> 24) & 255;
-					var blue = (ccx >> 16) & 255;
-					var green = (ccx >> 8) & 255;
-					var red = ccx & 255;
-					
-					var min_x = floor(red / 255 * ww);
-					var min_y = floor(green / 255 * hh);
-					var max_x = ceil(blue / 255 * ww);
-					var max_y = ceil(alpha / 255 * hh);
-					var t = max_y;
-					var b = min_y;
-					var l = max_x;
-					var r = min_x;
-							
-					for( var j = min_x; j < max_x; j++ ) 
-					for( var k = min_y; k < max_y; k++ ) {
-						var _sc = get_color_buffer(j, k);
-						if(_sc != ccx) continue;
-					
-						t = min(t, k);
-						b = max(b, k);
-						l = min(l, j);
-						r = max(r, j);
-					}
-							
-					_atlas[i] = [l, t, r, b];
-					//_atlas[i] = new SurfaceAtlas(_outSurf, [ r.x + _spac, r.y + _spac ]);
-				
 					shader_set_surface("original", _inSurf);
 					shader_set_f("color", red, green, blue, alpha);
 					shader_set_i("override", _ovr);
 					shader_set_f("overColor", colToVec4(_ovrclr));
 				
-					draw_surface_safe(temp_surface[res_index], 0, 0);
+					draw_surface_safe(temp_surface[res_index], -l + _pad, -t + _pad);
 				surface_reset_shader();
+				
+				_atlas[i] = new SurfaceAtlas(_outSurf, l, t).setOrginalSurface(_inSurf);
 			}
 			
 			outputs[| 1].setValue(_atlas);

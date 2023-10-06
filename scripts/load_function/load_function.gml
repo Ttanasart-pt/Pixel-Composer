@@ -133,6 +133,9 @@ function __LOAD_PATH(path, readonly = false, safe_mode = false, override = false
 	if(struct_has(_load_content, "graphGrid"))
 		PROJECT.graphGrid = _load_content.graphGrid;
 	
+	if(struct_has(_load_content, "attributes"))
+		struct_override(PROJECT.attributes, _load_content.attributes);
+	
 	try {
 		if(struct_has(_load_content, "metadata"))
 			METADATA.deserialize(_load_content.metadata);
@@ -201,7 +204,7 @@ function __LOAD_PATH(path, readonly = false, safe_mode = false, override = false
 		log_warning("LOAD, update", exception_print(e));
 	}
 	
-	Render(, true);
+	Render();
 	
 	if(!ds_queue_empty(CONNECTION_CONFLICT)) {
 		var pass = 0;
@@ -236,7 +239,7 @@ function __LOAD_PATH(path, readonly = false, safe_mode = false, override = false
 		log_warning("LOAD, connect", exception_print(e));
 	}
 	
-	RENDER_ALL_REORDER
+	Render(, true);
 	
 	LOADING = false;
 	PROJECT.modified = false;

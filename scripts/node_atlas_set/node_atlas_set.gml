@@ -2,7 +2,7 @@ function Node_Atlas_Set(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	name = "Atlas Set";
 	previewable = true;
 	
-	inputs[| 0] = nodeValue("Atlas", self, JUNCTION_CONNECT.input, VALUE_TYPE.atlas, noone)
+	inputs[| 0] = nodeValue("Atlas", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, noone)
 		.setVisible(true, true);
 	
 	inputs[| 1] = nodeValue("Surface", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, [])
@@ -25,7 +25,7 @@ function Node_Atlas_Set(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	inputs[| 6] = nodeValue("Alpha", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [])
 		.setArrayDepth(1);
 	
-	outputs[| 0] = nodeValue("Atlas", self, JUNCTION_CONNECT.output, VALUE_TYPE.atlas, noone);
+	outputs[| 0] = nodeValue("Atlas", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
 	static update = function(frame = PROJECT.animator.current_frame) {
 		var atl = getInputData(0);

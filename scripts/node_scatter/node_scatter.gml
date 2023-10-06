@@ -66,7 +66,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 		
-	outputs[| 1] = nodeValue("Atlas data", self, JUNCTION_CONNECT.output, VALUE_TYPE.atlas, [])
+	outputs[| 1] = nodeValue("Atlas data", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, [])
 		.rejectArrayProcess();
 	
 	input_display_list = [ 
@@ -261,7 +261,7 @@ function Node_Scatter(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 				var clr = color.eval(grSamp); 
 				var alp = random_range_seed(alpha[0], alpha[1], posS); posS++;
 				
-				array_push(scatter_data, new SurfaceAtlas(surf, [ _x, _y ], _r, [ _scx, _scy ], clr, alp));
+				array_push(scatter_data, new SurfaceAtlas(surf, _x, _y, _r, _scx, _scy, clr, alp));
 				draw_surface_ext_safe(surf, _x, _y, _scx, _scy, _r, clr, alp);
 				
 				if(_dist == 5) {

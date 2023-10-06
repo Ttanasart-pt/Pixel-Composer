@@ -7,7 +7,6 @@ enum RENDER_TYPE {
 #region globalvar
 	globalvar UPDATE, RENDER_QUEUE, RENDER_ORDER, UPDATE_RENDER_ORDER;
 	UPDATE_RENDER_ORDER = false;
-	
 	global.FLAG.render  = 0;
 	global.group_inputs = [ "Node_Group_Input", "Node_Feedback_Input", "Node_Iterator_Input", "Node_Iterator_Each_Input" ];
 	
@@ -117,6 +116,8 @@ function Render(partial = false, runAction = false) { #region
 			
 			if(!_node.active)			{ LOG_IF(global.FLAG.render == 1, $"Skip inactive          {_node.internalName}"); continue; }
 			if(!_node.isRenderActive()) { LOG_IF(global.FLAG.render == 1, $"Skip non-renderActive  {_node.internalName}"); continue; }
+			if(!_node.attributes.update_graph) { LOG_IF(global.FLAG.render == 1, $"Skip non-auto update {_node.internalName}"); continue; }
+			
 			if(_node.rendered && !_node.isAnimated()) {
 				_node.anim_last_step = false;
 				LOG_IF(global.FLAG.render == 1, $"Skip rendered {_node.internalName}");

@@ -103,7 +103,11 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		inspectInput2 = nodeValue("Toggle execution", self, JUNCTION_CONNECT.input, VALUE_TYPE.action, false).setVisible(true, true);
 		
 		autoUpdatedTrigger = true;
-		updatedTrigger = nodeValue("Updated", self, JUNCTION_CONNECT.output, VALUE_TYPE.trigger, false).setVisible(true, true);
+		updatedInTrigger   = nodeValue("Update",  self, JUNCTION_CONNECT.input,  VALUE_TYPE.trigger, false).setVisible(true, true);
+		updatedOutTrigger  = nodeValue("Updated", self, JUNCTION_CONNECT.output, VALUE_TYPE.trigger, false).setVisible(true, true);
+		
+		updatedInTrigger.tags  = VALUE_TAG.updateInTrigger;
+		updatedOutTrigger.tags = VALUE_TAG.updateOutTrigger;
 		
 		insp1UpdateTooltip  = __txtx("panel_inspector_execute", "Execute node");
 		insp1UpdateIcon     = [ THEME.sequence_control, 1, COLORS._main_value_positive ];
@@ -125,12 +129,14 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	
 	#region --- attributes ----
 		attributes		 = {
+			update_graph: true,
 			show_update_trigger: false
 		};
 		
 		attributeEditors = [
-			"Node",
-			["Update trigger", function() { return attributes.show_update_trigger; }, new checkBox(function() { attributes.show_update_trigger = !attributes.show_update_trigger; }) ]
+			"Node update",
+			["Auto update", function() { return attributes.update_graph; }, new checkBox(function() { attributes.update_graph = !attributes.update_graph; }) ],
+			["Update trigger", function() { return attributes.show_update_trigger; }, new checkBox(function() { attributes.show_update_trigger = !attributes.show_update_trigger; }) ],
 		];
 	#endregion
 	
@@ -369,7 +375,14 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		if(hasInspector1Update()) inspectInput1.name = insp1UpdateTooltip;
 		if(hasInspector2Update()) inspectInput2.name = insp2UpdateTooltip;
 		
-		updatedTrigger.setValue(false);
+		if(updatedInTrigger.getValue()) { 
+			getInputs();
+			update();
+			
+			updatedInTrigger.setValue(false);
+		}
+		
+		updatedOutTrigger.setValue(false);
 	} #endregion
 	
 	static doStepBegin = function() {}
@@ -417,12 +430,9 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	
 	static getInputs = function() { #region
 		inputs_data	= array_create(ds_list_size(inputs), undefined);
-		//input_hash_raw = "";
 		
-		for(var i = 0; i < ds_list_size(inputs); i++) {
+		for(var i = 0; i < ds_list_size(inputs); i++)
 			inputs_data[i] = inputs[| i].getValue(,,, true);
-			//input_hash_raw += string_copy(string(inputs_data[i]), 1, 256);
-		}
 	} #endregion
 	
 	static forceUpdate = function() { #region
@@ -484,7 +494,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 			if(trigger) onInspector2Update();
 		}
 		
-		if(autoUpdatedTrigger) updatedTrigger.setValue(true);
+		updatedOutTrigger.setValue(true);
 		
 		if(!is_instanceof(self, Node_Collection)) 
 			render_time = get_timer() - render_timer;
@@ -522,7 +532,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		LOG_BLOCK_END();
 	} #endregion
 	
-	static resetRenderForward = function() { 
+	static resetRenderForward = function() { #region
 		setRenderStatus(false); 
 		for( var i = 0, n = ds_list_size(outputs); i < n; i++ ) {
 			var _outp = outputs[| i];
@@ -536,7 +546,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 				_to.node.resetRenderForward();
 			}
 		}
-	}
+	} #endregion
 	
 	static resetRender = function() { setRenderStatus(false); }
 	static isRenderActive = function() { return renderActive || (PREF_MAP[? "render_all_export"] && PROJECT.animator.rendering); }
@@ -650,8 +660,11 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 			ind++;
 		}
 		
-		updatedTrigger.x = xx + w * _s;
-		updatedTrigger.y = yy + 10;
+		updatedInTrigger.x = xx;
+		updatedInTrigger.y = yy + 10;
+		
+		updatedOutTrigger.x = xx + w * _s;
+		updatedOutTrigger.y = yy + 10;
 		
 		var inamo = (input_display_list == -1 || !use_display_list)? ds_list_size(inputs) : array_length(input_display_list);
 		var _in = yy + ui(junction_draw_pad_y) * _s;
@@ -774,8 +787,10 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		if(hasInspector2Update() && inspectInput2.drawJunction(_s, _mx, _my))
 			hover = inspectInput2;
 		
-		if(attributes.show_update_trigger && updatedTrigger.drawJunction(_s, _mx, _my))
-			hover = updatedTrigger;
+		if(attributes.show_update_trigger) {
+			if(updatedInTrigger.drawJunction(_s, _mx, _my))  hover = updatedInTrigger;
+			if(updatedOutTrigger.drawJunction(_s, _mx, _my)) hover = updatedOutTrigger;
+		}
 		
 		return hover;
 	} #endregion
@@ -882,6 +897,11 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 			
 			var hov = jun.drawConnections(params);
 			if(hov) hovering = hov;
+		}
+		
+		if(attributes.show_update_trigger) {
+			if(updatedInTrigger.drawConnections(params))  hovering = updatedInTrigger;
+			if(updatedOutTrigger.drawConnections(params)) hovering = updatedOutTrigger;
 		}
 		
 		return hovering;
@@ -1018,7 +1038,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 			draw_sprite_stretched_ext(THEME.node_glow, 0, xx - 9, yy - 9, w * _s + 18, h * _s + 18, COLORS._main_value_negative, 1);
 		
 		drawNodeBase(xx, yy, _s);
-		if(previewable && ds_list_size(outputs)) {
+		if(previewable) {
 			if(preview_channel >= ds_list_size(outputs))
 				preview_channel = 0;
 			drawPreview(xx, yy, _s);
@@ -1442,7 +1462,8 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		var _trigger = [];
 		array_push(_trigger, inspectInput1.serialize(scale, preset));
 		array_push(_trigger, inspectInput2.serialize(scale, preset));
-		array_push(_trigger, updatedTrigger.serialize(scale, preset));
+		array_push(_trigger, updatedInTrigger.serialize(scale, preset));
+		array_push(_trigger, updatedOutTrigger.serialize(scale, preset));
 		_map.inspectInputs = _trigger;
 		_map.renamed = renamed;
 		
@@ -1588,8 +1609,8 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 			inspectInput1.applyDeserialize(insInp[0], load_scale, preset);
 			inspectInput2.applyDeserialize(insInp[1], load_scale, preset);
 			
-			if(array_length(insInp) > 2)
-				updatedTrigger.applyDeserialize(insInp[2], load_scale, preset);
+			if(array_length(insInp) > 2) updatedInTrigger.applyDeserialize(insInp[2], load_scale, preset);
+			if(array_length(insInp) > 3) updatedOutTrigger.applyDeserialize(insInp[3], load_scale, preset);
 		}
 		
 		doApplyDeserialize();
@@ -1623,10 +1644,9 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		for(var i = 0; i < ds_list_size(inputs); i++)
 			connected &= inputs[| i].connect(log);
 		
-		if(struct_has(load_map, "inspectInputs")) {
-			inspectInput1.connect(log);
-			inspectInput2.connect(log);
-		}
+		inspectInput1.connect(log);
+		inspectInput2.connect(log);
+		updatedInTrigger.connect(log);
 		
 		if(!connected) ds_queue_enqueue(CONNECTION_CONFLICT, self);
 		

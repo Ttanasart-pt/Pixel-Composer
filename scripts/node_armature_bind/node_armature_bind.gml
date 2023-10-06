@@ -20,7 +20,7 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 	
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 	
-	outputs[| 1] = nodeValue("Atlas data", self, JUNCTION_CONNECT.output, VALUE_TYPE.atlas, [])
+	outputs[| 1] = nodeValue("Atlas data", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, [])
 		.rejectArrayProcess();
 	
 	outputs[| 2] = nodeValue("Bind data", self, JUNCTION_CONNECT.output, VALUE_TYPE.struct, [])
@@ -810,7 +810,7 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 			if(!vis) continue;
 			
 			var datInd = input_fix_len + i * data_length;
-			var _s     = use_data? _bind[i].surface.get() : _data[datInd];
+			var _s     = use_data? _bind[i].getSurface() : _data[datInd];
 			if(!is_surface(_s)) continue;
 			
 			var _b = use_data? _bind[i].bone : inputs[| datInd].display_data.bone_id;
@@ -847,7 +847,7 @@ function Node_Armature_Bind(_x, _y, _group = noone) : Node_Processor(_x, _y, _gr
 				(_anc.y * _dsca) + _cen[1] + _mov[1] + _dpos[1]
 			];
 			
-			array_push(atlas_data, new SurfaceAtlas(_s, _pos, _rot, _sca));
+			array_push(atlas_data, new SurfaceAtlas(_s, _pos[0], _pos[1], _rot, _sca[0], _sca[1]));
 			array_push(bind_data, {
 				surface:	new Surface(_s),
 				bone:		_b.ID,

@@ -3,7 +3,7 @@ function sprite_pack_best_fit(rectangles) {
         return rect2.w * rect2.h - rect1.w * rect1.h;
     });
 	
-    var area = new spriteAtlasData(0, 0, 0, 0);
+    var area = new Rectangle(0, 0, 0, 0);
 	
 	var grW = 1;
 	var grH = 1;

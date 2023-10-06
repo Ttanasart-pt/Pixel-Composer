@@ -324,13 +324,6 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	
 	PATCH_STATIC
 	
-	//static triggerRender = function() {
-	//	for(var i = custom_input_index; i < ds_list_size(inputs); i++) {
-	//		var jun_node = inputs[| i].from;
-	//		jun_node.triggerRender();
-	//	}
-	//}
-	
 	static preConnect = function() { #region
 		sortIO();
 		deserialize(load_map, load_scale);
@@ -466,6 +459,23 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	
 	static onDoubleClick = function(panel) { #region
 		panel.addContext(self);
+	} #endregion
+	
+	static getGraphPreviewSurface = function() { #region
+		var _output_junc = outputs[| preview_channel];
+		for( var i = 0, n = ds_list_size(nodes); i < n; i++ ) {
+			if(!nodes[| i].active) continue;
+			if(is_instanceof(nodes[| i], Node_Group_Thumbnail))
+				_output_junc = nodes[| i].inputs[| 0];
+		}
+		
+		switch(_output_junc.type) {
+			case VALUE_TYPE.surface :
+			case VALUE_TYPE.dynaSurface :
+				return _output_junc.getValue();
+		}
+		
+		return noone;
 	} #endregion
 	
 	static processSerialize = function(_map) { #region

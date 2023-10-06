@@ -132,8 +132,9 @@ enum VALUE_UNIT {
 }
 
 enum VALUE_TAG {
-	updateTrigger	= 1 << 0,
-	none			= 0
+	updateInTrigger		= -2,
+	updateOutTrigger	= -3,
+	none				= 0
 }
 
 function value_color(i) { #region
@@ -186,7 +187,7 @@ function value_bit(i) { #region
 		case VALUE_TYPE.color		: return 1 << 4;
 		case VALUE_TYPE.gradient	: return 1 << 25;
 		case VALUE_TYPE.dynaSurface	: 
-		case VALUE_TYPE.surface		: return 1 << 5;
+		case VALUE_TYPE.surface		: return 1 << 5 | 1 << 23;
 		case VALUE_TYPE.path		: return 1 << 10;
 		case VALUE_TYPE.text		: return 1 << 10;
 		case VALUE_TYPE.object		: return 1 << 13;
@@ -200,7 +201,6 @@ function value_bit(i) { #region
 		case VALUE_TYPE.struct   	: return 1 << 19;
 		case VALUE_TYPE.strands   	: return 1 << 20;
 		case VALUE_TYPE.mesh	  	: return 1 << 21;
-		case VALUE_TYPE.atlas	  	: return 1 << 23;
 		case VALUE_TYPE.armature  	: return 1 << 26 | 1 << 19;
 		
 		case VALUE_TYPE.node		: return 1 << 32;
@@ -275,7 +275,6 @@ function value_type_from_string(str) { #region
 		case "strands"	: return VALUE_TYPE.strands;
 		case "mesh"		: return VALUE_TYPE.mesh;
 		case "trigger"	: return VALUE_TYPE.trigger;
-		case "atlas"	: return VALUE_TYPE.atlas;
 		
 		case "d3vertex" : return VALUE_TYPE.d3vertex;
 		case "gradient" : return VALUE_TYPE.gradient;
@@ -451,7 +450,7 @@ function nodeValueUnit(_nodeValue) constructor { #region
 function nodeValue(_name, _node, _connect, _type, _value, _tooltip = "") { return new NodeValue(_name, _node, _connect, _type, _value, _tooltip); }
 
 function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constructor {
-	static DISPLAY_DATA_KEYS = [ "linked", "angle_display", "bone_id", "area_type", "unit" ];
+	static DISPLAY_DATA_KEYS = [ "linked", "angle_display", "bone_id", "area_type", "unit", "atlas_crop" ];
 	
 	#region ---- main ----
 		node  = _node;
@@ -544,6 +543,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		draw_line_blend     = 1;
 		drawLineIndex		= 1;
 		draw_line_vb		= noone;
+		draw_junction_index = type;
 		
 		junction_drawing = [ THEME.node_junctions_single, type ];
 		
@@ -566,9 +566,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		display_type = VALUE_DISPLAY._default;
 		if(_type == VALUE_TYPE.curve)			display_type = VALUE_DISPLAY.curve;
 		else if(_type == VALUE_TYPE.d3vertex)	display_type = VALUE_DISPLAY.d3vertex;
-	
-		display_data = {};
-		display_attribute = noone;
+		
+		display_data		= { update: method(node, node.triggerRender) };
+		display_attribute	= noone;
 		
 		popup_dialog = noone;
 	#endregion
@@ -719,7 +719,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		editWidget = noone;
 		switch(display_type) {
 			case VALUE_DISPLAY.button : #region
-				editWidget = button(display_data.onClick);
+				editWidget = button(method(node, display_data.onClick));
 				editWidget.text = display_data.name;
 				if(!struct_has(display_data, "output")) display_data.output = false;
 				
@@ -1105,6 +1105,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 				editWidget = new surfaceBox(function(ind) { 
 					return setValueDirect(ind); 
 				} );
+				
+				if(!struct_has(display_data, "atlas")) display_data.atlas = true;
 				show_in_inspector = true;
 				extract_node = "Node_Canvas";
 				break; #endregion
@@ -1311,6 +1313,15 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		var val = _getValue(_time, applyUnit, arrIndex, log);
 		
+		draw_junction_index = type;
+		if(type == VALUE_TYPE.surface) {
+			var _sval = val;
+			if(is_array(_sval) && !array_empty(_sval))
+				_sval = _sval[0];
+			if(is_instanceof(_sval, SurfaceAtlas))
+				draw_junction_index = VALUE_TYPE.atlas;
+		}
+		
 		if(useCache) {
 			is_changed = !isEqual(cache_value[2], val);
 			cache_value[0] = true;
@@ -1498,7 +1509,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			if(array_length(v) >= 100) return $"[{array_length(v)}]";
 		}
 		
-		if(editWidget != noone && instanceof(editWidget) != "textArea" && string_length(string(val)) > 1024)
+		if(editWidget != noone && instanceof(editWidget) == "textBox" && string_length(string(val)) > 1024)
 			val = $"[Long string ({string_length(string(val))} char)]";
 		
 		return val;
@@ -1568,8 +1579,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	} #endregion
 	
 	static setValue = function(val = 0, record = true, time = PROJECT.animator.current_frame, _update = true) { #region
-		//if(type == VALUE_TYPE.d3vertex && !is_array(val))
-		//	print(val);
 		val = unit.invApply(val);
 		return setValueDirect(val, noone, record, time, _update);
 	} #endregion
@@ -1605,26 +1614,36 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(type == VALUE_TYPE.gradient)				updated = true;
 		if(display_type == VALUE_DISPLAY.palette)   updated = true;
 		
-		if(updated) {
-			if(connect_type == JUNCTION_CONNECT.input) {
-				node.inputs_data[self.index] = animator.getValue(time);
-				
-				node.triggerRender();
-				if(_update) node.valueUpdate(self.index);
-				node.clearCacheForward();
-				
-				if(fullUpdate)	RENDER_ALL
-				else			RENDER_PARTIAL
-				
-				if(!LOADING) PROJECT.modified = true;
-			}
-			
-			cache_value[0] = false;
+		if(!updated) return false;
+		
+		draw_junction_index = type;
+		if(type == VALUE_TYPE.surface) {
+			var _sval = val;
+			if(is_array(_sval) && !array_empty(_sval))
+				_sval = _sval[0];
+			if(is_instanceof(_sval, SurfaceAtlas))
+				draw_junction_index = VALUE_TYPE.atlas;
 		}
 		
+		if(connect_type == JUNCTION_CONNECT.output) return;
+		
+		node.inputs_data[self.index] = animator.getValue(time);
+		
+		if(tags != VALUE_TAG.none) return true;
+		
+		node.triggerRender();
+		if(_update) node.valueUpdate(self.index);
+		node.clearCacheForward();
+				
+		if(fullUpdate)	RENDER_ALL
+		else			RENDER_PARTIAL
+					
+		if(!LOADING) PROJECT.modified = true;
+					
+		cache_value[0] = false;
 		onValidate();
 		
-		return updated;
+		return true;
 	} #endregion
 	
 	static isConnectable = function(_valueFrom, checkRecur = true, log = false) { #region
@@ -1857,12 +1876,12 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			if(type == VALUE_TYPE.action)
 				junction_drawing = [THEME.node_junction_inspector, 1];
 			else
-				junction_drawing = [isArray()? THEME.node_junctions_array_hover : THEME.node_junctions_single_hover, type];
+				junction_drawing = [isArray()? THEME.node_junctions_array_hover : THEME.node_junctions_single_hover, draw_junction_index];
 		} else {
 			if(type == VALUE_TYPE.action)
 				junction_drawing = [THEME.node_junction_inspector, 0];
 			else
-				junction_drawing = [isArray()? THEME.node_junctions_array : THEME.node_junctions_single, type];
+				junction_drawing = [isArray()? THEME.node_junctions_array : THEME.node_junctions_single, draw_junction_index];
 		}
 		
 		draw_sprite_ext(junction_drawing[0], junction_drawing[1], x, y, ss, ss, 0, c_white, 1);
@@ -2130,20 +2149,17 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	} #endregion
 	 
 	static isVisible = function() { #region
-		if(!node.active) 
-			return false;
-			
-		if(value_from) 
-			return true;
+		if(!node.active) return false;
 		
-		if(connect_type == JUNCTION_CONNECT.input) {
-			if(!visible) 
-				return false;
-				
-			if(is_array(node.input_display_list))
-				return array_exists(node.input_display_list, index);
-		}
-		return visible;
+		if(connect_type == JUNCTION_CONNECT.output)
+			return visible || !ds_list_empty(value_to);
+		
+		if(value_from) return true;
+		if(!visible)   return false;
+		
+		if(is_array(node.input_display_list))
+			return array_exists(node.input_display_list, index);
+		return true;
 	} #endregion
 	
 	static extractNode = function(_type = extract_node) { #region
@@ -2201,7 +2217,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	} #endregion
 	
 	static getJunctionTo = function() { #region
-		var to =  [];
+		var to = [];
 		
 		for(var j = 0; j < ds_list_size(value_to); j++) {
 			var _to = value_to[| j];
@@ -2250,10 +2266,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		if(!preset && value_from) {
 			_map.from_node  = value_from.node.node_id;
 			
-			if(value_from.tags & VALUE_TAG.updateTrigger > 0)
-				_map.from_index = -2;
-			else
-				_map.from_index = value_from.index;
+			if(value_from.tags != 0) _map.from_index = value_from.tags;
+			else					 _map.from_index = value_from.index;
 		} else {
 			_map.from_node  = -1;
 			_map.from_index = -1;
@@ -2349,9 +2363,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		if(log) log_warning("LOAD", $"[Connect] Reconnecting {node.name} to {_nd.name}", node);
 		
-		if(con_index == -2) {
-			setFrom(_nd.updatedTrigger);
-		} else if(con_index < _ol) {
+		     if(con_index == VALUE_TAG.updateInTrigger)  setFrom(_nd.updatedInTrigger);
+		else if(con_index == VALUE_TAG.updateOutTrigger) setFrom(_nd.updatedOutTrigger);
+		else if(con_index < _ol) {
 			var _set = setFrom(_nd.outputs[| con_index], false, true);
 			if(_set) return true;
 			

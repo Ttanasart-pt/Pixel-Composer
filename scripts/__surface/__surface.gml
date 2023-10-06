@@ -1,22 +1,61 @@
-function SurfaceAtlas(surface, position = [ 0, 0 ], rotation = 0, scale = [ 1, 1 ], blend = c_white, alpha = 1) constructor {
+function SurfaceAtlas(surface, _x = 0, _y = 0, rot = 0, sx = 1, sy = 1, blend = c_white, alpha = 1) constructor {
 	self.surface  = new Surface(surface);
-	self.position = position;
-	self.rotation = rotation;
-	self.scale = scale;
+	self.x = _x;
+	self.y = _y;
+	self.rotation = rot;
+	self.sx = sx;
+	self.sy = sy;
 	self.blend = blend;
 	self.alpha = alpha;
 	
+	w = surface_get_width_safe(surface);
+	h = surface_get_height_safe(surface);
+	
+	oriSurf = noone;
+	oriSurf_w = w;
+	oriSurf_h = h;
+	
+	static setOrginalSurface = function(surf) {
+		gml_pragma("forceinline");
+		
+		oriSurf   = surf;
+		oriSurf_w = surface_get_width_safe(surf);
+		oriSurf_h = surface_get_height_safe(surf);
+		return self;
+	}
+	
+	static getSurface = function() {
+		gml_pragma("forceinline");
+		
+		return surface.get();
+	}
+	
+	static setSurface = function(surface) {
+		gml_pragma("forceinline");
+		self.surface.set(surface);
+		
+		w = surface_get_width_safe(surface);
+		h = surface_get_height_safe(surface);
+	}
+	
 	static draw = function() {
-		draw_surface_ext_safe(surface.get(), position[0], position[1], scale[0], scale[1], rotation, blend, alpha);
+		gml_pragma("forceinline");
+		
+		draw_surface_ext_safe(surface.get(), x, y, sx, sy, rotation, blend, alpha);
+		return self;
 	}
 	
 	static clone = function() {
-		return new SurfaceAtlas(surface.get(), position, rotation, scale, blend, alpha);
+		gml_pragma("forceinline");
+		
+		return new SurfaceAtlas(getSurface(), x, y, rotation, sx, sy, blend, alpha);
 	}
 }
 
 function Surface(surface) constructor {
 	static set = function(surface) {
+		gml_pragma("forceinline");
+		
 		self.surface = surface;
 		w = surface_get_width_safe(surface);
 		h = surface_get_height_safe(surface);
@@ -24,11 +63,13 @@ function Surface(surface) constructor {
 	}
 	set(surface);
 	
-	static get = function() { return surface; }
+	static get = function() { gml_pragma("forceinline"); return surface; }
 	
-	static isValid = function() { return is_surface(surface); }
+	static isValid = function() { gml_pragma("forceinline"); return is_surface(surface); }
 	
 	static resize = function(w, h) { 
+		gml_pragma("forceinline");
+		
 		surface_resize(surface, w, h);
 		self.w = w;
 		self.h = h;
@@ -36,22 +77,30 @@ function Surface(surface) constructor {
 	}
 	
 	static draw = function(x, y, xs = 1, ys = 1, rot = 0, col = c_white, alpha = 1) { 
+		gml_pragma("forceinline");
+		
 		draw_surface_ext_safe(surface, x, y, xs, ys, rot, col, alpha);
 		return self; 
 	}
 	
 	static drawStretch = function(x, y, w = 1, h = 1, rot = 0, col = c_white, alpha = 1) { 
+		gml_pragma("forceinline");
+		
 		draw_surface_stretched_ext(surface, x, y, w, h, col, alpha);
 		return self; 
 	}
 	
 	static destroy = function() {
+		gml_pragma("forceinline");
+		
 		if(!isValid()) return;
 		surface_free(surface);
 	}
 }
 
 function Surface_get(surface) {
+	gml_pragma("forceinline");
+		
 	if(is_real(surface)) 
 		return surface;
 	if(is_struct(surface) && struct_has(surface, "surface")) 

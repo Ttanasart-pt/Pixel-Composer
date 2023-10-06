@@ -3,7 +3,6 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	destroy_when_upgroup = true;
 	color = COLORS.node_blend_collection;
 	previewable = false;
-	auto_height = false;
 	
 	inParent = undefined;
 	
@@ -24,13 +23,13 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	data_type_list = [	"Integer",		"Float",	"Boolean",	"Color",	"Surface", 
 						"File Path",	"Curve",	"Text",		"Object",	"Node", 
 						"3D object",	"Any",		"Path",		"Particle", "Rigidbody Object", 
-						"Fluid Domain", "Struct",	"Strands",	"Mesh",		"Trigger"
+						"Fluid Domain", "Struct",	"Strands",	"Mesh",		"Trigger",
 					 ];
 	
 	data_type_map  = [	VALUE_TYPE.integer,		VALUE_TYPE.float,	VALUE_TYPE.boolean,		VALUE_TYPE.color,		VALUE_TYPE.surface, 
 						VALUE_TYPE.path,		VALUE_TYPE.curve,	VALUE_TYPE.text,		VALUE_TYPE.object,		VALUE_TYPE.node, 
 						VALUE_TYPE.d3object,	VALUE_TYPE.any,		VALUE_TYPE.pathnode,	VALUE_TYPE.particle,	VALUE_TYPE.rigid, 
-						VALUE_TYPE.fdomain,		VALUE_TYPE.struct,	VALUE_TYPE.strands,		VALUE_TYPE.mesh,		VALUE_TYPE.trigger
+						VALUE_TYPE.fdomain,		VALUE_TYPE.struct,	VALUE_TYPE.strands,		VALUE_TYPE.mesh,		VALUE_TYPE.trigger,
 					 ];
 	
 	display_list = [

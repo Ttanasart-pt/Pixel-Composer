@@ -1,10 +1,3 @@
-function Strip(x, y, w, h) constructor {
-    self.x = x;
-	self.y = y;
-	self.w = w;
-	self.h = h;
-}
-
 function sprite_pack_skyline(rectangles, width, height) {
 	var maxw = 0;
 	var maxh = 0;
@@ -13,7 +6,7 @@ function sprite_pack_skyline(rectangles, width, height) {
         return b.w - a.w;
     });
     
-    var skyline = [ new Strip(0, 0, width, height) ];
+    var skyline = [ new Rectangle(0, 0, width, height) ];
     var packed  = [];
 	
     for (var i = 0; i < array_length(rectangles); i++) {
@@ -39,10 +32,10 @@ function sprite_pack_skyline(rectangles, width, height) {
         array_push(packed, rect);
 			
         if (bestStrip.w > rect.w)
-            array_push(skyline, new Strip(bestStrip.x + rect.w, bestStrip.y, bestStrip.w - rect.w, bestStrip.h));
+            array_push(skyline, new Rectangle(bestStrip.x + rect.w, bestStrip.y, bestStrip.w - rect.w, bestStrip.h));
             
         if (bestStrip.h > rect.h)
-            array_push(skyline, new Strip(bestStrip.x, bestStrip.y + rect.h, rect.w, bestStrip.h - rect.h));
+            array_push(skyline, new Rectangle(bestStrip.x, bestStrip.y + rect.h, rect.w, bestStrip.h - rect.h));
             
         array_remove(skyline, bestStrip);
             

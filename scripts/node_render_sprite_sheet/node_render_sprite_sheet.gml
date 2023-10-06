@@ -43,7 +43,7 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 		
 	outputs[| 0] = nodeValue("Surface out", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
 		
-	outputs[| 1] = nodeValue("Atlas Data", self, JUNCTION_CONNECT.output, VALUE_TYPE.atlas, [])
+	outputs[| 1] = nodeValue("Atlas Data", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, [])
 		.setArrayDepth(1);
 	
 	refreshSurface = false;
@@ -204,7 +204,7 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 						case 2 : _sy = py + (hh - _h);		break;
 					}
 					
-					_atl[i] = array_push_create(_atl[i], new SurfaceAtlas(inpt[i], [_sx, _sy]));
+					_atl[i] = array_push_create(_atl[i], new SurfaceAtlas(inpt[i], _sx, _sy));
 					draw_surface_safe(inpt[i], _sx, _sy);
 					
 					break;
@@ -218,7 +218,7 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 						case 2 : _sx = px + (ww - _w);		break;
 					}
 					
-					_atl[i] = array_push_create(_atl[i], new SurfaceAtlas(inpt[i], [_sx, _sy]));
+					_atl[i] = array_push_create(_atl[i], new SurfaceAtlas(inpt[i], _sx, _sy));
 					draw_surface_safe(inpt[i], _sx, _sy);
 					
 					break;
@@ -230,7 +230,7 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 					px = padd[2] + _col * _w + max(0, _col) * spac;
 					py = padd[1] + _row * _h + max(0, _row) * spac;
 					
-					_atl[i] = array_push_create(_atl[i], new SurfaceAtlas(inpt[i], [px, py]));
+					_atl[i] = array_push_create(_atl[i], new SurfaceAtlas(inpt[i], px, py));
 					draw_surface_safe(inpt[i], px, py);
 					break;
 			}
@@ -364,7 +364,7 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 						case 2 : _sy = py + (hh - _h);		break;
 					}
 					
-					array_push(_atl, new SurfaceAtlas(inpt[i], [_sx, _sy]));
+					array_push(_atl, new SurfaceAtlas(inpt[i], _sx, _sy));
 					draw_surface_safe(inpt[i], _sx, _sy);
 					
 					px += _w + spac;
@@ -384,7 +384,7 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 						case 2 : _sx = px + (ww - _w);		break;
 					}
 					
-					array_push(_atl, new SurfaceAtlas(inpt[i], [_sx, _sy]));
+					array_push(_atl, new SurfaceAtlas(inpt[i], _sx, _sy));
 					draw_surface_safe(inpt[i], _sx, _sy);
 					
 					py += _h + spac;
@@ -412,7 +412,7 @@ function Node_Render_Sprite_Sheet(_x, _y, _group = noone) : Node(_x, _y, _group)
 						var _w = surface_get_width_safe(inpt[index]);
 						var _h = surface_get_height_safe(inpt[index]);
 						
-						array_push(_atl, new SurfaceAtlas(inpt[index], [px, py]));
+						array_push(_atl, new SurfaceAtlas(inpt[index], px, py));
 						draw_surface_safe(inpt[index], px, py);
 								
 						px += _w + spac;

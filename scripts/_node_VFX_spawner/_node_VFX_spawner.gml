@@ -15,7 +15,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	
 	inputs[| 4] = nodeValue("Spawn distribution", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0 )
 		.rejectArray()
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Area", "Border", "Map", "Direct Data" ] );
+		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Area", "Border", "Map", "Atlas" ] );
 	
 	inputs[| 5] = nodeValue("Lifespan", self,  JUNCTION_CONNECT.input, VALUE_TYPE.integer, [ 20, 30 ] )
 		.setDisplay(VALUE_DISPLAY.range);
@@ -78,7 +78,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	
 	inputs[| 24] = nodeValue("Scatter", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 1)
 		.rejectArray()
-		.setDisplay(VALUE_DISPLAY.enum_button, [ "Uniform", "Random", "Data" ]);
+		.setDisplay(VALUE_DISPLAY.enum_button, [ "Uniform", "Random" ]);
 	
 	inputs[| 25] = nodeValue("Boundary data", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [])
 		.setVisible(false, true);
@@ -99,8 +99,9 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	inputs[| 30] = nodeValue("Distribution map", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, 0)
 		.rejectArray()
 	
-	inputs[| 31] = nodeValue("Distribution data", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [])
-		.setDisplay(VALUE_DISPLAY.vector);
+	inputs[| 31] = nodeValue("Atlas", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface,  [] )
+		.setArrayDepth(1)
+		.rejectArray();
 	
 	inputs[| 32] = nodeValue("Seed", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, irandom_range(100000, 999999))
 		.rejectArray();
@@ -148,12 +149,12 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 	inputs[| 44] = nodeValue("Spawn", self, JUNCTION_CONNECT.input, VALUE_TYPE.trigger,  false )
 		.setDisplay(VALUE_DISPLAY.button, { name: "Trigger", onClick: triggerSpawn, output: true })
 		.rejectArray();
-		
+	
 	input_len = ds_list_size(inputs);
 	
 	input_display_list = [ 32,
-		["Sprite",	   false],	0, 22, 23, 26,
-		["Spawn",		true],	27, 16, 44, 1, 2, 3, 4, 30, 31, 24, 25, 5,
+		["Sprite",	   false],	0, 31, 22, 23, 26,
+		["Spawn",		true],	27, 16, 44, 1, 2, 3, 4, 30, 24, 5,
 		["Movement",	true],	29, 6, 18,
 		["Physics",		true],	7, 19, 33, 34, 35, 36, 
 		["Ground",		true],	37, 38, 39, 40, 
@@ -195,14 +196,14 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		parts[i] = new __part(self);
 		
 	static spawn = function(_time = PROJECT.animator.current_frame, _pos = -1) { #region
-		var _inSurf = current_data[0];
+		var _inSurf = current_data[ 0];
+		var _atlas  = current_data[31];
 		
 		var _spawn_amount	= current_data[ 2];
 		
 		var _spawn_area	= current_data[ 3];
 		var _distrib	= current_data[ 4];
 		var _dist_map	= current_data[30];
-		var _dist_data	= current_data[31];
 		var _scatter	= current_data[24];
 		
 		var _life			= current_data[ 5];
@@ -244,6 +245,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		random_set_seed(seed); 
 		var _amo = irandom_range(_spawn_amount[0], _spawn_amount[1]);
 		
+		//print($"Frame {_time}: Spawning {_amo} particles, seed {seed}, {irandom(99999999)}");
 		for( var i = 0; i < _amo; i++ ) {
 			seed += 100;
 			random_set_seed(seed); 
@@ -251,7 +253,7 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 			parts_runner = clamp(parts_runner, 0, array_length(parts) - 1);
 			var part = parts[parts_runner];
 			
-			//print($"Frame {_time}: Spawning particle {parts_runner}, seed {seed}, {irandom(99999999)}");
+			part.reset();
 			
 			var _spr = _inSurf, _index = 0;
 			if(is_array(_inSurf)) {
@@ -269,36 +271,23 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 			var yy = 0;
 			
 			if(_pos == -1) {
-				if(_scatter == 2) {
-					var _b_data = current_data[25];
-					if(!is_array(_b_data) || array_length(_b_data) <= 0) return;
-					var _b = _b_data[safe_mod(_index, array_length(_b_data))];
-					if(!is_array(_b) || array_length(_b) != 4) return;
-					
-					xx = array_safe_get(_spawn_area, 0) - array_safe_get(_spawn_area, 2);
-					yy = array_safe_get(_spawn_area, 1) - array_safe_get(_spawn_area, 3);
-					
-					part.boundary_data = _b;
-				} else {
-					if(_distrib < 2) {
-						var sp = area_get_random_point(_spawn_area, _distrib, _scatter, spawn_index, _spawn_amount, seed);
-						xx = sp[0];
-						yy = sp[1];
-					
-						part.boundary_data = -1;
-					} else if(_distrib == 2) {
-						var sp = array_safe_get(_posDist, i);
-						if(!is_array(sp)) continue;
+				if(_distrib < 2) {
+					var sp = area_get_random_point(_spawn_area, _distrib, _scatter, spawn_index, _spawn_amount, seed);
+					xx = sp[0];
+					yy = sp[1];
+				} else if(_distrib == 2) {
+					var sp = array_safe_get(_posDist, i);
+					if(!is_array(sp)) continue;
 						
-						xx = _spawn_area[0] + _spawn_area[2] * (sp[0] * 2 - 1.);
-						yy = _spawn_area[1] + _spawn_area[3] * (sp[1] * 2 - 1.);
-					} else if(_distrib == 3) {
-						sp = array_safe_get(_dist_data, spawn_index);
-						if(!is_array(sp)) continue;
-				
-						_x = sp[0];
-						_y = sp[1];
-					}
+					xx = _spawn_area[0] + _spawn_area[2] * (sp[0] * 2 - 1.);
+					yy = _spawn_area[1] + _spawn_area[3] * (sp[1] * 2 - 1.);
+				} else if(_distrib == 3) {
+					sp = array_safe_get(_atlas, spawn_index,, ARRAY_OVERFLOW.loop);
+					
+					if(!is_instanceof(sp, SurfaceAtlas)) continue;
+					xx = sp.x + sp.w / 2;
+					yy = sp.y + sp.h / 2;
+					part.atlas = sp;
 				}
 			} else {
 				xx = _pos[0];
@@ -464,8 +453,9 @@ function Node_VFX_Spawner_Base(_x, _y, _group = noone) : Node(_x, _y, _group) co
 		
 		inputs[|  6].setVisible(!_dirAng);
 		
-		inputs[| 25].setVisible(_scatt == 2);
+		inputs[| 24].setVisible(_dist < 2);
 		
+		inputs[|  0].setVisible(_dist != 3, _dist != 3);
 		inputs[| 30].setVisible(_dist == 2, _dist == 2);
 		inputs[| 31].setVisible(_dist == 3, _dist == 3);
 		

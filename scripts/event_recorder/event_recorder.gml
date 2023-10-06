@@ -1,6 +1,6 @@
 globalvar UNDO_STACK, REDO_STACK;
 globalvar IS_UNDOING, UNDO_HOLDING;
-	
+
 IS_UNDOING		= false;
 UNDO_HOLDING	= false;
 UNDO_STACK		= ds_stack_create();
