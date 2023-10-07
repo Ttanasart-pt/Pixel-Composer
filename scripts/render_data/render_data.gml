@@ -7,8 +7,14 @@ enum RENDER_TYPE {
 #region globalvar
 	globalvar UPDATE, RENDER_QUEUE, RENDER_ORDER, UPDATE_RENDER_ORDER;
 	UPDATE_RENDER_ORDER = false;
-	global.FLAG.render  = 0;
-	global.group_inputs = [ "Node_Group_Input", "Node_Feedback_Input", "Node_Iterator_Input", "Node_Iterator_Each_Input" ];
+	global.FLAG.render  = 1;
+	global.group_io = [ 
+		"Node_Group_Input",				"Node_Group_Output", 
+		"Node_Feedback_Input", 			"Node_Feedback_Output", 
+		"Node_Iterator_Input", 			"Node_Iterator_Output", 
+		"Node_Iterator_Each_Input", 	"Node_Iterator_Each_Output", 
+		"Node_Iterator_Filter_Input", 	"Node_Iterator_Filter_Output",
+	];
 	
 	#macro RENDER_ALL_REORDER	UPDATE_RENDER_ORDER = true; UPDATE |= RENDER_TYPE.full;
 	#macro RENDER_ALL									    UPDATE |= RENDER_TYPE.full;
@@ -107,7 +113,7 @@ function Render(partial = false, runAction = false) { #region
 			
 			if(is_undefined(_node)) { LOG_IF(global.FLAG.render == 1, $"Skip undefiend   {_node}"); continue; }
 			if(!is_struct(_node))	{ LOG_IF(global.FLAG.render == 1, $"Skip non-struct  {_node}"); continue; }
-			if(array_exists(global.group_inputs, instanceof(_node))) {
+			if(array_exists(global.group_io, instanceof(_node))) {
 				LOG_IF(global.FLAG.render == 1, $"Skip group IO {_node.internalName}");
 				continue;
 			}
