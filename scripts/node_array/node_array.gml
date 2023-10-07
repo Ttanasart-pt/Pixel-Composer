@@ -149,7 +149,7 @@ function Node_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 	static update = function(frame = PROJECT.animator.current_frame) {
 		var _typ = getType();
 		
-		outputs[| 0].type = _typ;
+		outputs[| 0].setType(_typ);
 		var res = [];
 		var ind = 0;
 		var spd = getInputData(1);
@@ -162,10 +162,10 @@ function Node_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 			else
 				array_push(res, val);
 			
-			inputs[| i].type = inputs[| i].value_from? inputs[| i].value_from.type : _typ;
+			inputs[| i].setType(inputs[| i].value_from? inputs[| i].value_from.type : _typ);
 			
 			if(i == input_fix_len && _typ == VALUE_TYPE.any && inputs[| i].value_from)
-				outputs[| 0].type = inputs[| i].value_from.type;
+				outputs[| 0].setType(inputs[| i].value_from.type);
 		}
 		
 		outputs[| 0].setValue(res);
@@ -176,7 +176,7 @@ function Node_Array(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 		if(_typ == VALUE_TYPE.any) return;
 		
 		for( var i = input_fix_len; i < ds_list_size(inputs); i++ ) {
-			inputs[| i].type = _typ;
+			inputs[| i].setType(_typ);
 			inputs[| i].resetDisplay();
 		}
 	}

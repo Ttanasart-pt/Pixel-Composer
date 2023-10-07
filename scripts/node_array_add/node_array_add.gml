@@ -55,8 +55,8 @@ function Node_Array_Add(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		var _arr = getInputData(0);
 		
 		if(inputs[| 0].value_from == noone) {
-			inputs[| 0].type  = VALUE_TYPE.any;
-			outputs[| 0].type = VALUE_TYPE.any;
+			inputs[| 0].setType(VALUE_TYPE.any);
+			outputs[| 0].setType(VALUE_TYPE.any);
 			return;
 		}
 		
@@ -64,13 +64,13 @@ function Node_Array_Add(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		var _type = inputs[| 0].value_from.type;
 		var spd   = getInputData(1);
 		
-		inputs[| 0].type  = _type;
-		outputs[| 0].type = _type;
+		inputs[| 0].setType(_type);
+		outputs[| 0].setType(_type);
 		
 		var _out = array_clone(_arr);
 		for( var i = input_fix_len; i < ds_list_size(inputs) - 1; i += data_length ) {
 			var _val = getInputData(i);
-			inputs[| i].type  = _type;
+			inputs[| i].setType(_type);
 			
 			if(is_array(_val) && spd)
 				array_append(_out, _val);

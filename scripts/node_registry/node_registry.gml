@@ -202,8 +202,9 @@ function NodeObject(_name, _spr, _node, _create, tags = []) constructor { #regio
 		var fluidSim = ds_list_create(); #region
 		addNodeCatagory("FluidSim", fluidSim, ["Node_Fluid_Group"]);
 			ds_list_add(fluidSim, "Group");
-			addNodeObject(fluidSim, "Input",	s_node_group_input,		"Node_Group_Input",		[1, Node_Group_Input]);
-			addNodeObject(fluidSim, "Output",	s_node_group_output,	"Node_Group_Output",	[1, Node_Group_Output]);
+			addNodeObject(fluidSim, "Input",			s_node_group_input,			"Node_Group_Input",			[1, Node_Group_Input]);
+			addNodeObject(fluidSim, "Output",			s_node_group_output,		"Node_Group_Output",		[1, Node_Group_Output]);
+			addNodeObject(fluidSim, "Render Domain",	s_node_fluidSim_render,		"Node_Fluid_Render_Output",	[1, Node_Fluid_Render_Output]).setVersion(11540);
 			
 			ds_list_add(fluidSim, "Domain");
 			addNodeObject(fluidSim, "Fluid Domain",		s_node_fluidSim_domain,			"Node_Fluid_Domain",		[1, Node_Fluid_Domain]).setVersion(1120);

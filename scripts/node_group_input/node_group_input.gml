@@ -129,7 +129,7 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		
 		if(ind == inputs[| 2].getValue()) return;
 		
-		outputs[| 0].type = juncTo.type;
+		outputs[| 0].setType(juncTo.type);
 		inputs[| 2].setValue(ind);
 	}
 	
@@ -165,8 +165,8 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		
 		_dtype = array_safe_get(array_safe_get(display_list, _val_type, []), _dtype);
 		
-		inParent.type     = _val_type;
-		outputs[| 0].type = _val_type;
+		inParent.setType(_val_type);
+		outputs[| 0].setType(_val_type);
 		var _val = inParent.getValue();
 		
 		switch(_dtype) {
@@ -235,8 +235,8 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 				break;
 				
 			case "Gradient":
-				inParent.type     = VALUE_TYPE.gradient;
-				outputs[| 0].type = inParent.type;
+				inParent.setType(VALUE_TYPE.gradient);
+				outputs[| 0].setType(inParent.type);
 				
 				inParent.animator = new valueAnimator(new gradientObject(c_white), inParent);
 				inParent.setDisplay(VALUE_DISPLAY._default);

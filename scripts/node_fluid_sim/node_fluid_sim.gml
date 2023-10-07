@@ -8,6 +8,8 @@ function Node_Fluid_Group(_x, _y, _group = noone) : Node_Collection(_x, _y, _gro
 	ungroupable = false;
 	update_on_frame = true;
 	
+	outputNode = noone;
+	
 	inputs[| 0] = nodeValue("Dimension", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, DEF_SURF)
 		.setDisplay(VALUE_DISPLAY.vector);
 	
@@ -57,10 +59,9 @@ function Node_Fluid_Group(_x, _y, _group = noone) : Node_Collection(_x, _y, _gro
 	
 	if(!LOADING && !APPENDING && !CLONING) {
 		//var _domain = nodeBuild("Node_Fluid_Domain", -384, -32, self);
-		var _render = nodeBuild("Node_Fluid_Render",  128, -32, self);
-		var _output = nodeBuild("Node_Group_Output",  384, -32, self);
+		var _render = nodeBuild("Node_Fluid_Render_Output",  128, -32, self);
 		
-		_output.inputs[| 0].setFrom(_render.outputs[| 0]);
+		//_output.inputs[| 0].setFrom(_render.outputs[| 0]);
 		//_render.inputs[| 0].setFrom(_domain.outputs[| 0]);
 	}
 	
@@ -116,6 +117,11 @@ function Node_Fluid_Group(_x, _y, _group = noone) : Node_Collection(_x, _y, _gro
 	    fd_rectangle_set_material_maccormack_weight(domain, mMac);
 		
 		fd_rectangle_set_repeat(domain, wrap);
+	}
+	
+	static getAnimationCacheExist = function(frame) { 
+		if(outputNode == noone) return false;
+		return outputNode.cacheExist(frame); 
 	}
 	
 	PATCH_STATIC

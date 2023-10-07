@@ -17,15 +17,15 @@ function Node_Array_Shift(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		var _arr = getInputData(0);
 		var _shf = getInputData(1);
 		
-		inputs[| 0].type  = VALUE_TYPE.any;
-		outputs[| 0].type = VALUE_TYPE.any;
+		inputs[| 0].setType(VALUE_TYPE.any);
+		outputs[| 0].setType(VALUE_TYPE.any);
 		
 		if(!is_array(_arr)) return;
 		
 		if(inputs[| 0].value_from != noone) {
 			var type = inputs[| 0].value_from.type;
-			inputs[| 0].type  = type;
-			outputs[| 0].type = type;
+			inputs[| 0].setType(type);
+			outputs[| 0].setType(type);
 		}
 		
 		var arr = [];

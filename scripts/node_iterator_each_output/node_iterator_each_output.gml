@@ -19,9 +19,9 @@ function Node_Iterator_Each_Output(_x, _y, _group = noone) : Node(_x, _y, _group
 		if(!variable_struct_exists(group, "iterated")) return;
 		
 		var type = inputs[| 0].value_from == noone? VALUE_TYPE.any : inputs[| 0].value_from.type;
-		inputs[| 0].type = type;
-		group.outputs[| 0].type = type;
-		outputs[| 0].type = type;
+		inputs[| 0].setType(type);
+		group.outputs[| 0].setType(type);
+		outputs[| 0].setType(type);
 	}
 	
 	static cloneValue = function(_prev_val, _val) {

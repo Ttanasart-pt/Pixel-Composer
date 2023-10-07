@@ -19,12 +19,12 @@ function Node_Array_Get(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	outputs[| 0] = nodeValue("Value", self, JUNCTION_CONNECT.output, VALUE_TYPE.any, 0);
 	
 	static step = function() {
-		inputs[| 0].type  = VALUE_TYPE.any;
-		outputs[| 0].type = VALUE_TYPE.any;
+		inputs[| 0].setType(VALUE_TYPE.any);
+		outputs[| 0].setType(VALUE_TYPE.any);
 		
 		if(inputs[| 0].value_from != noone) {
-			inputs[| 0].type  = inputs[| 0].value_from.type;
-			outputs[| 0].type = inputs[| 0].type;
+			inputs[| 0].setType(inputs[| 0].value_from.type);
+			outputs[| 0].setType(inputs[| 0].type);
 		}
 	}
 	

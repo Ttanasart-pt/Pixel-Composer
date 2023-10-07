@@ -53,23 +53,21 @@ function Node_Tunnel_Out(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		draw_set_alpha(1);
 	}
 	
-	static onClone = function() { onValueUpdate(); }
-	
-	static onValueUpdate = function() {
+	static onValueUpdate = function(index = -1) {
 		var _key = getInputData(0);
 		
 		TUNNELS_OUT[? node_id] = _key;
 		
-		RENDER_ALL
+		if(index == 0) { RENDER_ALL_REORDER }
 	}
 	
 	static step = function() {
 		var _key = getInputData(0);
 		if(ds_map_exists(TUNNELS_IN, _key)) {
-			outputs[| 0].type = TUNNELS_IN[? _key].type;
+			outputs[| 0].setType(TUNNELS_IN[? _key].type);
 			outputs[| 0].display_type = TUNNELS_IN[? _key].display_type;
 		} else {
-			outputs[| 0].type = VALUE_TYPE.any;
+			outputs[| 0].setType(VALUE_TYPE.any);
 			outputs[| 0].display_type = VALUE_DISPLAY._default;
 		}
 	}
@@ -90,5 +88,7 @@ function Node_Tunnel_Out(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		draw_text_transformed(bbox.xc, bbox.yc, str, ss, ss, 0);
 	}
 	
-	static postConnect = function() { onValueUpdate(); }
+	static onClone = function() { onValueUpdate(0); }
+	
+	static postConnect = function() { onValueUpdate(0); }
 }

@@ -221,6 +221,7 @@
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"color","folderPath":"folders/shader/filter/color.yy",},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"shadow caster","folderPath":"folders/shader/filter/shadow caster.yy",},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"flood fill","folderPath":"folders/shader/flood fill.yy",},
+    {"resourceType":"GMFolder","resourceVersion":"1.0","name":"fluid","folderPath":"folders/shader/fluid.yy",},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"generator","folderPath":"folders/shader/generator.yy",},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"blinker","folderPath":"folders/shader/generator/blinker.yy",},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"cell","folderPath":"folders/shader/generator/cell.yy",},
@@ -249,7 +250,6 @@
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"biterator","folderPath":"folders/VCT/biterator.yy",},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"widget","folderPath":"folders/VCT/widget.yy",},
     {"resourceType":"GMFolder","resourceVersion":"1.0","name":"widgets","folderPath":"folders/widgets.yy",},
-    {"resourceType":"GMFolder","resourceVersion":"1.0","name":"fluid","folderPath":"folders/shader/fluid.yy",},
   ],
   "IncludedFiles": [
     {"resourceType":"GMIncludedFile","resourceVersion":"1.0","name":"ApolloHelp.html","ConfigValues":{"Itch":{"CopyToMask":"0",},},"CopyToMask":-1,"filePath":"datafiles",},
@@ -1578,6 +1578,7 @@
     {"id":{"name":"o_dialog_fontscrollbox","path":"objects/o_dialog_fontscrollbox/o_dialog_fontscrollbox.yy",},},
     {"id":{"name":"sh_d3d_normal_blur","path":"shaders/sh_d3d_normal_blur/sh_d3d_normal_blur.yy",},},
     {"id":{"name":"d3d_vertex","path":"scripts/d3d_vertex/d3d_vertex.yy",},},
+    {"id":{"name":"node_fluid_render_output","path":"scripts/node_fluid_render_output/node_fluid_render_output.yy",},},
     {"id":{"name":"s_node_vfx_output","path":"sprites/s_node_vfx_output/s_node_vfx_output.yy",},},
     {"id":{"name":"sh_greyscale","path":"shaders/sh_greyscale/sh_greyscale.yy",},},
     {"id":{"name":"gameframe_native","path":"extensions/gameframe_native/gameframe_native.yy",},},

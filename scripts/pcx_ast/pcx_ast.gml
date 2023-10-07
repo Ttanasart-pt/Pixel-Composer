@@ -131,10 +131,10 @@
 			return true;
 		}
 		
-		static isAnimated = function() {
+		static isDynamic = function() {
 			var anim = EXPRESS_TREE_ANIM.none;
 			for( var i = 0, n = array_length(funcTrees); i < n; i++ )
-				anim = max(anim, funcTrees[i].isAnimated());
+				anim = max(anim, funcTrees[i].isDynamic());
 			return anim;
 		}
 		
@@ -161,12 +161,12 @@
 			return true;
 		}
 		
-		static isAnimated = function() {
+		static isDynamic = function() {
 			var anim = EXPRESS_TREE_ANIM.none;
 			
-			if(condition != noone) anim = max(anim, condition.isAnimated());
-			if(if_true   != noone) anim = max(anim, if_true.isAnimated());
-			if(if_false  != noone) anim = max(anim, if_false.isAnimated());
+			if(condition != noone) anim = max(anim, condition.isDynamic());
+			if(if_true   != noone) anim = max(anim, if_true.isDynamic());
+			if(if_false  != noone) anim = max(anim, if_false.isDynamic());
 			
 			return anim;
 		}
@@ -208,17 +208,17 @@
 			return true;
 		}
 		
-		static isAnimated = function() {
+		static isDynamic = function() {
 			var anim = EXPRESS_TREE_ANIM.none;
 			
 			if(itr_array) {
-				if(cond_arr == noone) anim = max(anim, cond_arr.isAnimated())
+				if(cond_arr == noone) anim = max(anim, cond_arr.isDynamic())
 			} else {
-				if(cond_init == noone) anim = max(anim, cond_init.isAnimated())
-				if(cond_term == noone) anim = max(anim, cond_term.isAnimated())
+				if(cond_init == noone) anim = max(anim, cond_init.isDynamic())
+				if(cond_term == noone) anim = max(anim, cond_term.isDynamic())
 			}
 			
-			if(action != noone) anim = max(anim, action.isAnimated())
+			if(action != noone) anim = max(anim, action.isDynamic())
 			
 			return anim;
 		}
@@ -324,7 +324,7 @@
 		
 		static _isAnimated = function(val) { #region
 			if(is_real(val))   return EXPRESS_TREE_ANIM.none;
-			if(is_struct(val)) return val.isAnimated();
+			if(is_struct(val)) return val.isDynamic();
 			if(is_array(val)) {
 				var anim = EXPRESS_TREE_ANIM.none;
 				for( var i = 0, n = array_length(val); i < n; i++ ) 
@@ -339,7 +339,7 @@
 			return anim[0];
 		} #endregion
 		
-		static isAnimated = function() { #region
+		static isDynamic = function() { #region
 			if(anim_cache && anim_stat != undefined) return anim_stat;
 			
 			anim_stat = EXPRESS_TREE_ANIM.none;

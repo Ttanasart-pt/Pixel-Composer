@@ -52,7 +52,6 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		}
 	}
 	
-	static onClone = function() { onValueUpdate(); }
 	static update = function(frame = PROJECT.animator.current_frame) { onValueUpdate(); }
 	
 	static resetMap = function() {
@@ -83,7 +82,7 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		}
 	}
 	
-	static onValueUpdate = function(index = 0) {
+	static onValueUpdate = function(index = -1) {
 		var _key = getInputData(0);
 		resetMap();
 		
@@ -102,7 +101,7 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 			k = ds_map_find_next(TUNNELS_IN_MAP, k);	
 		}
 		
-		RENDER_ALL
+		if(index == 0) { RENDER_ALL_REORDER }
 	}
 	
 	static step = function() {
@@ -111,10 +110,10 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		value_validation[VALIDATION.error] = error_notification != noone;
 		
 		if(inputs[| 1].value_from == noone) {
-			inputs[| 1].type = VALUE_TYPE.any;
+			inputs[| 1].setType(VALUE_TYPE.any);
 			inputs[| 1].display_type = VALUE_DISPLAY._default;
 		} else {
-			inputs[| 1].type = inputs[| 1].value_from.type;
+			inputs[| 1].setType(inputs[| 1].value_from.type);
 			inputs[| 1].display_type = inputs[| 1].value_from.display_type;
 		}
 	}
@@ -155,7 +154,9 @@ function Node_Tunnel_In(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		draw_text_transformed(bbox.xc, bbox.yc, str, ss, ss, 0);
 	}
 	
-	static postConnect = function() { onValueUpdate(); }
+	static onClone = function() { onValueUpdate(0); }
+	
+	static postConnect = function() { onValueUpdate(0); }
 	
 	static onDestroy = function() {
 		if(error_notification != noone)

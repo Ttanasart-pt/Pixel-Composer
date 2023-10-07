@@ -100,50 +100,50 @@ output.color = surfaceColor;")
 			switch(type) {
 				case 1 : 
 					if(is_array(cur_valu)) inp_valu.overrideValue(0);
-					inp_valu.type = VALUE_TYPE.integer;	
+					inp_valu.setType(VALUE_TYPE.integer);	
 					inp_valu.setDisplay(VALUE_DISPLAY._default);
 					break;
 				case 0 : 
 					if(is_array(cur_valu)) inp_valu.overrideValue(0);
-					inp_valu.type = VALUE_TYPE.float;	
+					inp_valu.setType(VALUE_TYPE.float);
 					inp_valu.setDisplay(VALUE_DISPLAY._default);
 					break;
 				case 2 : 
 					if(!is_array(cur_valu) || array_length(cur_valu) != 2)
 						inp_valu.overrideValue([ 0, 0 ]);
-					inp_valu.type = VALUE_TYPE.float;	
+					inp_valu.setType(VALUE_TYPE.float);	
 					inp_valu.setDisplay(VALUE_DISPLAY.vector);
 					break;
 				case 3 : 
 					if(!is_array(cur_valu) || array_length(cur_valu) != 3)
 						inp_valu.overrideValue([ 0, 0, 0 ]);
-					inp_valu.type = VALUE_TYPE.float;	
+					inp_valu.setType(VALUE_TYPE.float);	
 					inp_valu.setDisplay(VALUE_DISPLAY.vector);
 					break;
 				case 4 : 
 					if(!is_array(cur_valu) || array_length(cur_valu) != 4)
 						inp_valu.overrideValue([ 0, 0, 0, 0 ]);
-					inp_valu.type = VALUE_TYPE.float;	
+					inp_valu.setType(VALUE_TYPE.float);	
 					inp_valu.setDisplay(VALUE_DISPLAY.vector);
 					break;
 				case 5 : 
 					if(!is_array(cur_valu) || array_length(cur_valu) != 9)
 						inp_valu.overrideValue(array_create(9));
-					inp_valu.type = VALUE_TYPE.float;	
+					inp_valu.setType(VALUE_TYPE.float);	
 					inp_valu.setDisplay(VALUE_DISPLAY.matrix, { size: 3 });
 					break;
 				case 6 : 
 					if(!is_array(cur_valu) || array_length(cur_valu) != 16)
 						inp_valu.overrideValue(array_create(16));
-					inp_valu.type = VALUE_TYPE.float;	
+					inp_valu.setType(VALUE_TYPE.float);	
 					inp_valu.setDisplay(VALUE_DISPLAY.matrix, { size: 4 });
 					break;
 				case 7 : 
-					inp_valu.type = VALUE_TYPE.surface;	
+					inp_valu.setType(VALUE_TYPE.surface);	
 					inp_valu.setDisplay(VALUE_DISPLAY._default);
 					break;
 				case 8 : 
-					inp_valu.type = VALUE_TYPE.color;	
+					inp_valu.setType(VALUE_TYPE.color);	
 					inp_valu.setDisplay(VALUE_DISPLAY._default);
 					break;
 			}
@@ -365,7 +365,7 @@ struct PixelShaderOutput {
 		return _output;
 	} #endregion
 	
-	static postConnect = function() { 
+	static postLoad = function() { 
 		refreshShader(); 
 		refreshDynamicInput();
 	}

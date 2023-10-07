@@ -1129,6 +1129,15 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	} #endregion
 	resetDisplay();
 	
+	static setType = function(_type) { #region
+		if(type == _type) return false;
+		
+		type = _type;
+		draw_junction_index = type;
+		
+		return true;
+	} #endregion
+	
 	static expressionUpdate = function() { #region
 		expTree    = evaluateFunctionList(expression);
 		resetCache();
@@ -1303,7 +1312,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		global.cache_call++;
 		if(useCache && use_cache) {
 			var cache_hit = cache_value[0];
-			cache_hit &= !isAnimated() || cache_value[1] == _time;
+			cache_hit &= !isActiveDynamic() || cache_value[1] == _time;
 			cache_hit &= cache_value[2] != undefined;
 			cache_hit &= cache_value[3] == applyUnit;
 			cache_hit &= connect_type == JUNCTION_CONNECT.input;
@@ -1319,7 +1328,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		var val = _getValue(_time, applyUnit, arrIndex, log);
 		
 		draw_junction_index = type;
-		if(type == VALUE_TYPE.surface) {
+		if(type == VALUE_TYPE.surface || type == VALUE_TYPE.any) {
 			var _sval = val;
 			if(is_array(_sval) && !array_empty(_sval))
 				_sval = _sval[0];
@@ -1472,12 +1481,14 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		PANEL_ANIMATION.updatePropertyList();
 	} #endregion
 	
-	static __anim = function() { #region
-		if(node.update_on_frame) return true;
+	static isActiveDynamic = function() { #region
+		gml_pragma("forceinline");
+		
+		if(value_from != noone) return false;
 		
 		if(expUse) {
 			if(!is_struct(expTree)) return false;
-			var res = expTree.isAnimated();
+			var res = expTree.isDynamic();
 			
 			switch(res) {
 				case EXPRESS_TREE_ANIM.none :		return false;
@@ -1487,18 +1498,6 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		}
 		
 		return is_anim;
-	} #endregion
-	
-	static isAnimated = function() { #region
-		gml_pragma("forceinline");
-		
-		if(value_from == noone) return __anim();
-		
-		var from_anim	   = value_from.isAnimated();
-		var from_self_anim = value_from.__anim();
-		var from_node_anim = value_from.node.anim_last_step;
-		
-		return from_anim || from_self_anim || from_node_anim;
 	} #endregion
 	
 	static showValue = function() { #region
@@ -1747,7 +1746,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 			PROJECT.modified	= true;
 		}
 		
-		UPDATE_RENDER_ORDER = true;
+		RENDER_ALL_REORDER
 		
 		if(onSetFrom != noone)			onSetFrom(_valueFrom);
 		if(_valueFrom.onSetTo != noone) _valueFrom.onSetTo(self);
@@ -1767,7 +1766,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		
 		PROJECT.modified = true;
 		
-		UPDATE_RENDER_ORDER = true;
+		RENDER_ALL_REORDER
 		return false;
 	} #endregion
 	
@@ -1871,7 +1870,7 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 	static drawJunction = function(_s, _mx, _my, sca = 1) { #region
 		if(!isVisible()) return false;
 		
-		var ss = max(0.25, _s / 2);
+		var ss  = max(0.25, _s / 2);
 		var is_hover = false;
 		
 		if(PANEL_GRAPH.pHOVER && point_in_circle(_mx, _my, x, y, 10 * _s * sca)) {
@@ -2346,6 +2345,11 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		}
 		
 		if(APPENDING) def_val = getValue(0);
+		
+		if(connect_type == JUNCTION_CONNECT.input && index >= 0) {
+			node.inputs_data[index] = animator.getValue(0);
+			//print($"Set input {node.name} - {index} = {node.inputs_data[index]} | {node.inputs_data}");
+		}
 		
 		onValidate();
 	} #endregion

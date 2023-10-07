@@ -64,8 +64,8 @@ function Node_Condition(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		var _txt1 = getInputData(7);
 		var _txt2 = getInputData(8);
 		
-		inputs[| 3].type = inputs[| 3].value_from == noone? VALUE_TYPE.any : inputs[| 3].value_from.type;
-		inputs[| 4].type = inputs[| 4].value_from == noone? VALUE_TYPE.any : inputs[| 4].value_from.type;
+		inputs[| 3].setType(inputs[| 3].value_from == noone? VALUE_TYPE.any : inputs[| 3].value_from.type);
+		inputs[| 4].setType(inputs[| 4].value_from == noone? VALUE_TYPE.any : inputs[| 4].value_from.type);
 		
 		var res = false;
 		
@@ -86,11 +86,11 @@ function Node_Condition(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		
 		if(res) {
 			outputs[| 0].setValue(_true);
-			outputs[| 0].type         = inputs[| 3].type;
+			outputs[| 0].setType(inputs[| 3].type);
 			outputs[| 0].display_type = inputs[| 3].display_type;
 		} else {
 			outputs[| 0].setValue(_fals);
-			outputs[| 0].type	      = inputs[| 4].type;	
+			outputs[| 0].setType(inputs[| 4].type);	
 			outputs[| 0].display_type = inputs[| 4].display_type;
 		}
 		

@@ -22,9 +22,9 @@ function Node_Array_Insert(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	static update = function(frame = PROJECT.animator.current_frame) {
 		var _arr = getInputData(0);
 		
-		inputs[| 0].type  = VALUE_TYPE.any;
-		inputs[| 2].type  = VALUE_TYPE.any;
-		outputs[| 0].type = VALUE_TYPE.any;
+		inputs[| 0].setType(VALUE_TYPE.any);
+		inputs[| 2].setType(VALUE_TYPE.any);
+		outputs[| 0].setType(VALUE_TYPE.any);
 		
 		if(!is_array(_arr)) return;
 		
@@ -35,9 +35,9 @@ function Node_Array_Insert(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		
 		if(inputs[| 0].value_from != noone) {
 			var type = inputs[| 0].value_from.type;
-			inputs[| 0].type  = type;
-			inputs[| 2].type  = type;
-			outputs[| 0].type = type;
+			inputs[| 0].setType(type);
+			inputs[| 2].setType(type);
+			outputs[| 0].setType(type);
 		}
 		
 		var arr = array_clone(_arr);

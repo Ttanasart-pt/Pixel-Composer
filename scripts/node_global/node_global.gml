@@ -62,7 +62,7 @@ function variable_editor(nodeVal) constructor {
 	slider_step  = 0.01;
 	
 	static refreshInput = function() {
-		value.type = val_type[type_index];
+		value.setType(val_type[type_index]);
 		value.name = value_name;
 		
 		if(_type_index != type_index || _disp_index != disp_index) {

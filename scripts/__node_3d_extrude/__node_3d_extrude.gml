@@ -506,7 +506,7 @@ function __Node_3D_Extrude(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		}
 	}
 	
-	static postConnect = function() {
+	static postLoad = function() {
 		generateMesh();
 	}
 }

@@ -119,7 +119,7 @@ function __APPEND_MAP(_map, context = PANEL_GRAPH.getCurrentContext()) {
 	
 	try {
 		for(var i = 0; i < ds_list_size(appended_list); i++)
-			appended_list[| i].postConnect();
+			appended_list[| i].postLoad();
 	} catch(e) {
 		log_warning("APPEND, connect", exception_print(e));
 	}

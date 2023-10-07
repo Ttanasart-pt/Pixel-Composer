@@ -19,7 +19,7 @@ function Node_Iterator_Filter_Input(_x, _y, _group = noone) : Node(_x, _y, _grou
 	static step = function() {
 		if(!variable_struct_exists(group, "iterated")) return;
 		
-		outputs[| 0].type = group.inputs[| 0].type;
+		outputs[| 0].setType(group.inputs[| 0].type);
 	}
 	
 }

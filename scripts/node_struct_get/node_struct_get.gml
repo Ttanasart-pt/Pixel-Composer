@@ -25,7 +25,7 @@ function Node_Struct_Get(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 				
 			if(!variable_struct_exists(_str, k)) {
 				out.setValue(0);
-				out.type = VALUE_TYPE.float;
+				out.setType(VALUE_TYPE.float);
 				break;
 			}
 				
@@ -33,17 +33,17 @@ function Node_Struct_Get(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 			if(j == array_length(keys) - 1) {
 				if(is_struct(val)) {
 					if(is_instanceof(val, Surface)) {
-						out.type = VALUE_TYPE.surface;
+						out.setType(VALUE_TYPE.surface);
 						val = val.get();
 					} else if(is_instanceof(val, Buffer)) {
-						out.type = VALUE_TYPE.buffer;
+						out.setType(VALUE_TYPE.buffer);
 						val = val.buffer;
 					} else 
-						out.type = VALUE_TYPE.struct;
+						out.setType(VALUE_TYPE.struct);
 				} else if(is_array(val) && array_length(val))
-					out.type = is_string(val[0])? VALUE_TYPE.text : VALUE_TYPE.float;
+					out.setType(is_string(val[0])? VALUE_TYPE.text : VALUE_TYPE.float);
 				else
-					out.type = is_string(val)? VALUE_TYPE.text : VALUE_TYPE.float;
+					out.setType(is_string(val)? VALUE_TYPE.text : VALUE_TYPE.float);
 					
 				out.setValue(val);
 			}

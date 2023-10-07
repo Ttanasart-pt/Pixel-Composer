@@ -190,6 +190,7 @@
     {"name":"color","order":53,"path":"folders/shader/filter/color.yy",},
     {"name":"shadow caster","order":46,"path":"folders/shader/filter/shadow caster.yy",},
     {"name":"flood fill","order":11,"path":"folders/shader/flood fill.yy",},
+    {"name":"fluid","order":20,"path":"folders/shader/fluid.yy",},
     {"name":"generator","order":1,"path":"folders/shader/generator.yy",},
     {"name":"blinker","order":30,"path":"folders/shader/generator/blinker.yy",},
     {"name":"cell","order":31,"path":"folders/shader/generator/cell.yy",},
@@ -215,7 +216,6 @@
     {"name":"biterator","order":2,"path":"folders/VCT/biterator.yy",},
     {"name":"widget","order":3,"path":"folders/VCT/widget.yy",},
     {"name":"widgets","order":5,"path":"folders/widgets.yy",},
-    {"name":"fluid","order":20,"path":"folders/shader/fluid.yy",},
   ],
   "ResourceOrderSettings": [
     {"name":"s_node_corner","order":16,"path":"sprites/s_node_corner/s_node_corner.yy",},
@@ -940,6 +940,7 @@
     {"name":"o_dialog_fontscrollbox","order":4,"path":"objects/o_dialog_fontscrollbox/o_dialog_fontscrollbox.yy",},
     {"name":"sh_d3d_normal_blur","order":25,"path":"shaders/sh_d3d_normal_blur/sh_d3d_normal_blur.yy",},
     {"name":"d3d_vertex","order":10,"path":"scripts/d3d_vertex/d3d_vertex.yy",},
+    {"name":"node_fluid_render_output","order":11,"path":"scripts/node_fluid_render_output/node_fluid_render_output.yy",},
     {"name":"s_node_vfx_output","order":11,"path":"sprites/s_node_vfx_output/s_node_vfx_output.yy",},
     {"name":"sh_greyscale","order":13,"path":"shaders/sh_greyscale/sh_greyscale.yy",},
     {"name":"gameframe_native","order":2,"path":"extensions/gameframe_native/gameframe_native.yy",},

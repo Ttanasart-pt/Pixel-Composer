@@ -129,13 +129,13 @@ function Node_Math(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
 				inputs[| 4].setVisible(true);
 				
 				var int = getInputData(4);
-				if(int) outputs[| 0].type = VALUE_TYPE.integer;
-				else	outputs[| 0].type = VALUE_TYPE.float;
+				if(int) outputs[| 0].setType(VALUE_TYPE.integer);
+				else	outputs[| 0].setType(VALUE_TYPE.float);
 				break;
 			default:
 				inputs[| 4].setVisible(false);
 				
-				outputs[| 0].type = VALUE_TYPE.float;
+				outputs[| 0].setType(VALUE_TYPE.float);
 				break;
 		}
 		

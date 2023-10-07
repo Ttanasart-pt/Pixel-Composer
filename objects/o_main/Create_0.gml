@@ -79,9 +79,7 @@
 			gameframe_set_fullscreen(2);
 	});
 	
-	addHotkey("", "Render all", vk_f5,	MOD_KEY.none, function() { 
-		RENDER_ALL_REORDER 
-	});
+	addHotkey("", "Render all", vk_f5,		MOD_KEY.none, function() { RENDER_ALL_REORDER });
 	
 	addHotkey("", "Close file", "Q",		MOD_KEY.ctrl, function() { PANEL_GRAPH.close(); });
 	addHotkey("", "Close program", vk_f4,	MOD_KEY.alt, window_close);

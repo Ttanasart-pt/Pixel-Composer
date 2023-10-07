@@ -193,18 +193,20 @@ function __LOAD_PATH(path, readonly = false, safe_mode = false, override = false
 			create_list[| i].preConnect();
 		for(var i = 0; i < ds_list_size(create_list); i++)
 			create_list[| i].connect();
+		for(var i = 0; i < ds_list_size(create_list); i++)
+			create_list[| i].postConnect();
 	} catch(e) {
 		log_warning("LOAD, connect", exception_print(e));
 	}
 	
-	try {
-		for(var i = 0; i < ds_list_size(create_list); i++)
-			create_list[| i].doUpdate();
-	} catch(e) {
-		log_warning("LOAD, update", exception_print(e));
-	}
+	//try {
+	//	for(var i = 0; i < ds_list_size(create_list); i++)
+	//		create_list[| i].doUpdate();
+	//} catch(e) {
+	//	log_warning("LOAD, update", exception_print(e));
+	//}
 	
-	Render();
+	//Render();
 	
 	if(!ds_queue_empty(CONNECTION_CONFLICT)) {
 		var pass = 0;
@@ -227,7 +229,7 @@ function __LOAD_PATH(path, readonly = false, safe_mode = false, override = false
 	
 	try {
 		for(var i = 0; i < ds_list_size(create_list); i++)
-			create_list[| i].postConnect();
+			create_list[| i].postLoad();
 	} catch(e) {
 		log_warning("LOAD, connect", exception_print(e));
 	}
@@ -239,7 +241,7 @@ function __LOAD_PATH(path, readonly = false, safe_mode = false, override = false
 		log_warning("LOAD, connect", exception_print(e));
 	}
 	
-	Render(, true);
+	RENDER_ALL_REORDER
 	
 	LOADING = false;
 	PROJECT.modified = false;

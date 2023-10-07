@@ -7,13 +7,14 @@ enum RENDER_TYPE {
 #region globalvar
 	globalvar UPDATE, RENDER_QUEUE, RENDER_ORDER, UPDATE_RENDER_ORDER;
 	UPDATE_RENDER_ORDER = false;
-	global.FLAG.render  = 1;
+	global.FLAG.render  = 0;
 	global.group_io = [ 
 		"Node_Group_Input",				"Node_Group_Output", 
 		"Node_Feedback_Input", 			"Node_Feedback_Output", 
 		"Node_Iterator_Input", 			"Node_Iterator_Output", 
 		"Node_Iterator_Each_Input", 	"Node_Iterator_Each_Output", 
 		"Node_Iterator_Filter_Input", 	"Node_Iterator_Filter_Output",
+		"Node_Tunnel_In",				"Node_Tunnel_Out"
 	];
 	
 	#macro RENDER_ALL_REORDER	UPDATE_RENDER_ORDER = true; UPDATE |= RENDER_TYPE.full;
@@ -63,6 +64,7 @@ function __nodeInLoop(_node) { #region
 
 function ResetAllNodesRender() { #region
 	LOG_IF(global.FLAG.render == 1, $"XXXXXXXXXXXXXXXXXXXX RESETTING ALL NODES [frame {PROJECT.animator.current_frame}] XXXXXXXXXXXXXXXXXXXX");
+	
 	var _key = ds_map_find_first(PROJECT.nodeMap);
 	var amo  = ds_map_size(PROJECT.nodeMap);
 		
@@ -74,6 +76,72 @@ function ResetAllNodesRender() { #region
 			_node.inputs[| i].resetCache();
 		
 		_key = ds_map_find_next(PROJECT.nodeMap, _key);	
+	}
+} #endregion
+
+function NodeTopoSort() { #region
+	var _key = ds_map_find_first(PROJECT.nodeMap);
+	var amo = ds_map_size(PROJECT.nodeMap);
+		
+	repeat(amo) {
+		var _node = PROJECT.nodeMap[? _key];
+		_node.topoSorted = false;
+		_key = ds_map_find_next(PROJECT.nodeMap, _key);	
+	}
+	
+	ds_list_clear(PROJECT.nodeTopo);
+	__sortGraph(PROJECT.nodeTopo, PROJECT.nodes);
+} #endregion
+
+function __sortGraph(_list, _nodeList) { #region
+	var _root = [];
+	
+	for( var i = 0, n = ds_list_size(_nodeList); i < n; i++ ) {
+		var _node = _nodeList[| i];
+		var _isRoot = true;
+		
+		for( var j = 0, m = ds_list_size(_node.outputs); j < m; j++ ) {
+			if(!array_empty(_node.outputs[| j].getJunctionTo())) {
+				_isRoot = false;
+				break;
+			}
+		}
+		
+		if(_isRoot) array_push(_root, _node);
+	}
+	
+	var _st = ds_stack_create();
+	
+	for( var i = 0, n = array_length(_root); i < n; i++ ) 
+		ds_stack_push(_st, _root[i]);
+		
+	while(!ds_stack_empty(_st)) {
+		var _node = ds_stack_pop(_st);
+		if(_node.topoSorted) continue;
+		
+		var _isLeaf = true;
+		var _childs = [];
+		
+		for( var i = 0, n = ds_list_size(_node.inputs); i < n; i++ ) {
+			var _in = _node.inputs[| i];
+			if(_in.value_from == noone)   continue;
+			if(_in.value_from.node.topoSorted) continue;
+			
+			array_push(_childs, _in.value_from.node);
+			_isLeaf = false;
+		}
+		
+		if(_isLeaf) {
+			ds_list_add(_list, _node);
+			_node.topoSorted = true;
+			
+			if(is_instanceof(_node, Node_Collection))
+				__sortGraph(_list, _node.nodes);
+		} else {
+			ds_stack_push(_st, _node);
+			for( var i = 0, n = array_length(_childs); i < n; i++ ) 
+				ds_stack_push(_st, _childs[i]);
+		}
 	}
 } #endregion
 
@@ -105,44 +173,34 @@ function Render(partial = false, runAction = false) { #region
 		
 		// get leaf node
 		RENDER_QUEUE.clear();
-		var key = ds_map_find_first(PROJECT.nodeMap);
-		var amo = ds_map_size(PROJECT.nodeMap);
-		repeat(amo) {
-			var _node = PROJECT.nodeMap[? key];
-			key = ds_map_find_next(PROJECT.nodeMap, key);
+		for( var i = 0, n = ds_list_size(PROJECT.nodeTopo); i < n; i++ ) {
+			var _node = PROJECT.nodeTopo[| i];
+			_node.passiveDynamic = false;
+		}
+		
+		for( var i = 0, n = ds_list_size(PROJECT.nodeTopo); i < n; i++ ) {
+			var _node = PROJECT.nodeTopo[| i];
 			
-			if(is_undefined(_node)) { LOG_IF(global.FLAG.render == 1, $"Skip undefiend   {_node}"); continue; }
-			if(!is_struct(_node))	{ LOG_IF(global.FLAG.render == 1, $"Skip non-struct  {_node}"); continue; }
-			if(array_exists(global.group_io, instanceof(_node))) {
-				LOG_IF(global.FLAG.render == 1, $"Skip group IO {_node.internalName}");
-				continue;
-			}
-			
+			if(is_undefined(_node))							{ LOG_IF(global.FLAG.render == 1, $"Skip undefiend		  [{_node}]"); continue; }
+			if(!is_instanceof(_node, Node))					{ LOG_IF(global.FLAG.render == 1, $"Skip non-node		  [{_node}]"); continue; }
 			_node.render_time = 0;
 			
-			if(!_node.active)			{ LOG_IF(global.FLAG.render == 1, $"Skip inactive          {_node.internalName}"); continue; }
-			if(!_node.isRenderActive()) { LOG_IF(global.FLAG.render == 1, $"Skip non-renderActive  {_node.internalName}"); continue; }
-			if(!_node.attributes.update_graph) { LOG_IF(global.FLAG.render == 1, $"Skip non-auto update {_node.internalName}"); continue; }
+			if(array_exists(global.group_io, instanceof(_node))) {
+															  LOG_IF(global.FLAG.render == 1, $"Skip group IO		  [{_node.internalName}]"); continue; }
 			
-			if(_node.rendered && !_node.isAnimated()) {
-				_node.anim_last_step = false;
-				LOG_IF(global.FLAG.render == 1, $"Skip rendered {_node.internalName}");
-				continue;
-			}
+			if(!_node.active)								{ LOG_IF(global.FLAG.render == 1, $"Skip inactive         [{_node.internalName}]"); continue; }
+			if(!_node.isRenderActive())						{ LOG_IF(global.FLAG.render == 1, $"Skip non-renderActive [{_node.internalName}]"); continue; }
+			if(!_node.attributes.update_graph)				{ LOG_IF(global.FLAG.render == 1, $"Skip non-auto update  [{_node.internalName}]"); continue; }
+			if(__nodeInLoop(_node))							{ LOG_IF(global.FLAG.render == 1, $"Skip in-loop          [{_node.internalName}]"); continue; }
 			
-			if(__nodeInLoop(_node)) { LOG_IF(global.FLAG.render == 1, $"Skip in-loop {_node.internalName}"); continue; }
+			if(_node.passiveDynamic) { 
+				_node.forwardPassiveDynamic();				  LOG_IF(global.FLAG.render == 1, $"Skip passive dynamic  [{_node.internalName}]"); continue; }
 			
-			LOG_BLOCK_START();
+			if(_node.rendered && !_node.isActiveDynamic())	{ LOG_IF(global.FLAG.render == 1, $"Skip rendered static  [{_node.internalName}]"); continue; }
 			
-			var _startNode = _node.isRenderable(global.FLAG.render);
-			if(_startNode) {
-				LOG_IF(global.FLAG.render == 1, $"Found leaf {_node.internalName}");
-				//if(!reset_all) _node.resetRenderForward();
-				RENDER_QUEUE.enqueue(_node);
-			} else 
-				LOG_IF(global.FLAG.render == 1, $"Skip non-leaf {_node.internalName}");
-			
-			LOG_BLOCK_END();
+			LOG_IF(global.FLAG.render == 1, $"    Found leaf [{_node.internalName}]");
+			RENDER_QUEUE.enqueue(_node);
+			_node.forwardPassiveDynamic();
 		}
 		
 		_leaf_time = get_timer() - t;
@@ -153,6 +211,7 @@ function Render(partial = false, runAction = false) { #region
 		while(!RENDER_QUEUE.empty()) {
 			LOG_BLOCK_START();
 			LOG_IF(global.FLAG.render == 1, $"➤➤➤➤➤➤ CURRENT RENDER QUEUE {RENDER_QUEUE} [{RENDER_QUEUE.size()}] ");
+			
 			rendering = RENDER_QUEUE.dequeue();
 			var renderable = rendering.isRenderable();
 			
@@ -192,6 +251,14 @@ function Render(partial = false, runAction = false) { #region
 	LOG_END();
 } #endregion
 
+function NodeListSort(_list, _nodeList) { #region
+	for( var i = 0, n = ds_list_size(_nodeList); i < n; i++ )
+		_nodeList[| i].topoSorted = false;
+	
+	ds_list_clear(_list);
+	__sortGraph(_list, _nodeList);
+} #endregion
+
 function __renderListReset(list) { #region
 	for( var i = 0; i < ds_list_size(list); i++ ) {
 		list[| i].setRenderStatus(false);
@@ -214,18 +281,45 @@ function RenderList(list) { #region
 		__renderListReset(list);
 		
 		// get leaf node
-		for( var i = 0; i < ds_list_size(list); i++ ) {
+		for( var i = 0, n = ds_list_size(list); i < n; i++ ) {
+			var _node = list[| i];
+			_node.passiveDynamic = false;
+		}
+		
+		for( var i = 0, n = ds_list_size(list); i < n; i++ ) {
 			var _node = list[| i];
 			
-			if(is_undefined(_node)) continue;
-			if(!is_struct(_node)) continue;
+			if(is_undefined(_node))			{ LOG_IF(global.FLAG.render == 1, $"Skip undefiend {_node}"); continue; }
+			if(!is_instanceof(_node, Node))	{ LOG_IF(global.FLAG.render == 1, $"Skip non-node  {_node}"); continue; }
+			_node.render_time = 0;
 			
-			if(!_node.active) continue;
-			if(!_node.isRenderActive()) continue;
-			if(_node.rendered) continue;
-		
-			if(_node.isRenderable())
-				ds_queue_enqueue(queue, _node);
+			if(array_exists(global.group_io, instanceof(_node))) {
+				LOG_IF(global.FLAG.render == 1, $"Skip group IO {_node.internalName}");
+				continue;
+			}
+			
+			if(!_node.active)			       { LOG_IF(global.FLAG.render == 1, $"Skip inactive         {_node.internalName}"); continue; }
+			if(!_node.isRenderActive())        { LOG_IF(global.FLAG.render == 1, $"Skip non-renderActive {_node.internalName}"); continue; }
+			if(!_node.attributes.update_graph) { LOG_IF(global.FLAG.render == 1, $"Skip non-auto update  {_node.internalName}"); continue; }
+			
+			if(__nodeInLoop(_node))            { LOG_IF(global.FLAG.render == 1, $"Skip in-loop          {_node.internalName}"); continue; }
+			
+			if(_node.passiveDynamic)		   { 
+				_node.forwardPassiveDynamic();
+				LOG_IF(global.FLAG.render == 1, $"Skip passive dynamic  {_node.internalName}"); 
+				continue; 
+			}
+			
+			if(_node.rendered && !_node.isActiveDynamic())	   { LOG_IF(global.FLAG.render == 1, $"Skip rendered static {_node.internalName}"); continue; }
+			//if()	   { LOG_IF(global.FLAG.render == 1, $"Skip static   {_node.internalName}"); continue; }
+			
+			LOG_BLOCK_START();
+			
+			LOG_IF(global.FLAG.render == 1, $"Found leaf {_node.internalName}");
+			ds_queue_enqueue(queue, _node);
+			_node.forwardPassiveDynamic();
+			
+			LOG_BLOCK_END();
 		}
 		
 		LOG_IF(global.FLAG.render == 1, "Get leaf complete: found " + string(ds_queue_size(queue)) + " leaves.");
@@ -234,8 +328,7 @@ function RenderList(list) { #region
 		// render forward
 		while(!ds_queue_empty(queue)) {
 			LOG_BLOCK_START();
-			LOG_IF(global.FLAG.render == 1, $"➤➤➤➤➤➤ CURRENT RENDER QUEUE {RENDER_QUEUE}");
-			rendering = RENDER_QUEUE.dequeue();
+			rendering = ds_queue_dequeue(queue)
 			if(!ds_list_exist(list, rendering)) continue;
 			var renderable = rendering.isRenderable();
 			
@@ -246,13 +339,11 @@ function RenderList(list) { #region
 				
 				var nextNodes = rendering.getNextNodes();
 				for( var i = 0, n = array_length(nextNodes); i < n; i++ )
-					RENDER_QUEUE.enqueue(nextNodes[i]);
+					ds_queue_enqueue(queue, nextNodes[i]);
 				
 				if(runAction && rendering.hasInspector1Update())
 					rendering.inspector1Update();
-			} else if(rendering.isRenderActive()) {
-				RENDER_QUEUE.enqueue(rendering);
-			}
+			} 
 			
 			LOG_BLOCK_END();
 		}

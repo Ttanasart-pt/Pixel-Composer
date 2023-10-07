@@ -478,7 +478,7 @@ function Panel_Animation() : PanelContent() constructor {
 					var x0 = (i + 0) * ui(timeline_scale) + timeline_shift;
 					var x1 = (i + 1) * ui(timeline_scale) + timeline_shift;
 					
-					draw_set_color(inspecting.cacheExist(i)? c_lime : c_red);
+					draw_set_color(inspecting.getAnimationCacheExist(i)? c_lime : c_red);
 					draw_set_alpha(0.5);
 					draw_rectangle(x0, bar_h - ui(4), x1, bar_h, false);
 					draw_set_alpha(1);

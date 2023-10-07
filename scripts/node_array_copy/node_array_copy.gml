@@ -21,8 +21,8 @@ function Node_Array_Copy(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		var _typ = VALUE_TYPE.any;
 		if(inputs[| 0].value_from != noone) _typ = inputs[| 0].value_from.type;
 		
-		inputs[| 0].type  = _typ;
-		outputs[| 0].type = _typ;
+		inputs[| 0].setType(_typ);
+		outputs[| 0].setType(_typ);
 	}
 	
 	static update = function(frame = PROJECT.animator.current_frame) {

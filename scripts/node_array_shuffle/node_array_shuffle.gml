@@ -16,15 +16,15 @@ function Node_Array_Shuffle(_x, _y, _group = noone) : Node(_x, _y, _group) const
 		var arr = getInputData(0);
 		var sed = getInputData(1);
 		
-		inputs[| 0].type = VALUE_TYPE.any;
-		outputs[| 0].type = VALUE_TYPE.any;
+		inputs[| 0].setType(VALUE_TYPE.any);
+		outputs[| 0].setType(VALUE_TYPE.any);
 		
 		if(!is_array(arr)) return;
 		arr = array_clone(arr);
 		
 		if(inputs[| 0].value_from != noone) {
-			inputs[| 0].type = inputs[| 0].value_from.type;
-			outputs[| 0].type = inputs[| 0].value_from.type;
+			inputs[| 0].setType(inputs[| 0].value_from.type);
+			outputs[| 0].setType(inputs[| 0].value_from.type);
 		}
 		
 		random_set_seed(sed);

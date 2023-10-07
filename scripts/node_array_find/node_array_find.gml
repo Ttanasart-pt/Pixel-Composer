@@ -18,8 +18,8 @@ function Node_Array_Find(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	static update = function(frame = PROJECT.animator.current_frame) {
 		var _arr = getInputData(0);
 		
-		inputs[| 0].type  = VALUE_TYPE.any;
-		inputs[| 1].type  = VALUE_TYPE.any;
+		inputs[| 0].setType(VALUE_TYPE.any);
+		inputs[| 1].setType(VALUE_TYPE.any);
 		
 		if(!is_array(_arr)) return;
 		
@@ -27,8 +27,8 @@ function Node_Array_Find(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		
 		if(inputs[| 0].value_from != noone) {
 			var type = inputs[| 0].value_from.type;
-			inputs[| 0].type  = type;
-			inputs[| 1].type  = type;
+			inputs[| 0].setType(type);
+			inputs[| 1].setType(type);
 		}
 		
 		outputs[| 0].setValue(array_find(_arr, value));

@@ -26,7 +26,7 @@ function Node_Iterate_Each(_x, _y, _group = noone) : Node_Iterator(_x, _y, _grou
 	
 	static onStep = function() {
 		var type = inputs[| 0].value_from == noone? VALUE_TYPE.any : inputs[| 0].value_from.type;
-		inputs[| 0].type = type;
+		inputs[| 0].setType(type);
 	}
 	
 	static doInitLoop = function() {

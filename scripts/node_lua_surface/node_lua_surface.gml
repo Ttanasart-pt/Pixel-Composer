@@ -99,10 +99,10 @@ function Node_Lua_Surface(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 				
 				var type = getInputData(i + 1);
 				switch(type) {
-					case 0 : inputs[| i + 2].type = VALUE_TYPE.float;	break;
-					case 1 : inputs[| i + 2].type = VALUE_TYPE.text;	break;
-					case 2 : inputs[| i + 2].type = VALUE_TYPE.surface;	break;
-					case 3 : inputs[| i + 2].type = VALUE_TYPE.struct;	break;
+					case 0 : inputs[| i + 2].setType(VALUE_TYPE.float);		break;
+					case 1 : inputs[| i + 2].setType(VALUE_TYPE.text);		break;
+					case 2 : inputs[| i + 2].setType(VALUE_TYPE.surface);	break;
+					case 3 : inputs[| i + 2].setType(VALUE_TYPE.struct);	break;
 				}
 					
 				inputs[| i + 2].setDisplay(VALUE_DISPLAY._default);
@@ -243,10 +243,10 @@ function Node_Lua_Surface(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 			inputs[| i + 2].name = name;
 			
 			switch(type) {
-				case 0 : inputs[| i + 2].type = VALUE_TYPE.float;	break;
-				case 1 : inputs[| i + 2].type = VALUE_TYPE.text;	break;
-				case 2 : inputs[| i + 2].type = VALUE_TYPE.surface;	break;
-				case 3 : inputs[| i + 2].type = VALUE_TYPE.struct;	break;
+				case 0 : inputs[| i + 2].setType(VALUE_TYPE.float);		break;
+				case 1 : inputs[| i + 2].setType(VALUE_TYPE.text);		break;
+				case 2 : inputs[| i + 2].setType(VALUE_TYPE.surface);	break;
+				case 3 : inputs[| i + 2].setType(VALUE_TYPE.struct);	break;
 			}
 			
 			inputs[| i + 2].setDisplay(VALUE_DISPLAY._default);

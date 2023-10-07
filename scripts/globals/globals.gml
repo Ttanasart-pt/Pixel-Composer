@@ -29,6 +29,7 @@
 		nodes	    = ds_list_create();
 		nodeMap	    = ds_map_create();
 		nodeNameMap = ds_map_create();
+		nodeTopo    = ds_list_create();
 		
 		animator	= new AnimationManager();
 		

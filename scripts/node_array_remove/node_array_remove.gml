@@ -29,15 +29,15 @@ function Node_Array_Remove(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		inputs[| 2].setVisible(type == 0, type == 0);
 		inputs[| 3].setVisible(type == 1, type == 1);
 		
-		inputs[| 0].type  = VALUE_TYPE.any;
-		inputs[| 3].type  = VALUE_TYPE.any;
-		outputs[| 0].type = VALUE_TYPE.any;
+		inputs[| 0].setType(VALUE_TYPE.any);
+		inputs[| 3].setType(VALUE_TYPE.any);
+		outputs[| 0].setType(VALUE_TYPE.any);
 		
 		if(inputs[| 0].value_from != noone) {
 			var type = inputs[| 0].value_from.type;
-			inputs[| 0].type  = type;
-			inputs[| 3].type  = type;
-			outputs[| 0].type = type;
+			inputs[| 0].setType(type);
+			inputs[| 3].setType(type);
+			outputs[| 0].setType(type);
 		}
 		
 	}

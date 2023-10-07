@@ -102,9 +102,15 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		inspectInput1 = nodeValue("Toggle execution", self, JUNCTION_CONNECT.input, VALUE_TYPE.action, false).setVisible(true, true);
 		inspectInput2 = nodeValue("Toggle execution", self, JUNCTION_CONNECT.input, VALUE_TYPE.action, false).setVisible(true, true);
 		
+		inspectInput1.index = -1;
+		inspectInput2.index = -1;
+		
 		autoUpdatedTrigger = true;
 		updatedInTrigger   = nodeValue("Update",  self, JUNCTION_CONNECT.input,  VALUE_TYPE.trigger, false).setVisible(true, true);
 		updatedOutTrigger  = nodeValue("Updated", self, JUNCTION_CONNECT.output, VALUE_TYPE.trigger, false).setVisible(true, true);
+		
+		updatedInTrigger.index  = -1;
+		updatedOutTrigger.index = -1;
 		
 		updatedInTrigger.tags  = VALUE_TAG.updateInTrigger;
 		updatedOutTrigger.tags = VALUE_TAG.updateOutTrigger;
@@ -123,8 +129,6 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		inputs_data		  = [];
 		input_hash		  = "";
 		input_hash_raw	  = "";
-		
-		anim_last_step = false;
 	#endregion
 	
 	#region --- attributes ----
@@ -168,6 +172,8 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		render_cached    = false;
 		auto_render_time = true;
 		updated			 = false;
+		passiveDynamic   = false;
+		topoSorted		 = false;
 	
 		use_cache		= CACHE_USE.none;
 		cached_manual	= false;
@@ -327,11 +333,12 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		targ.setFrom(junctionFrom);
 	} #endregion
 	
-	static isAnimated = function() { #region
+	static isActiveDynamic = function() { #region
+		//if(passiveDynamic)  return false;
 		if(update_on_frame) return true;
 		
 		for(var i = 0; i < ds_list_size(inputs); i++)
-			if(inputs[| i].isAnimated()) return true;
+			if(inputs[| i].isActiveDynamic()) return true;
 		
 		return false;
 	} #endregion
@@ -453,18 +460,15 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		} else {
 			render_cached = false;
 			var sBase = surface_get_target();	
-			//var _hash = input_hash;
 			getInputs();
-			//input_hash = md5_string_unicode(input_hash_raw);
-			anim_last_step = isAnimated() || /*_hash != input_hash || */!rendered;
 			
 			LOG_BLOCK_START();
-			LOG_IF(global.FLAG.render == 1, $">>>>>>>>>> DoUpdate called from {INAME} [{anim_last_step}] <<<<<<<<<<");
+			LOG_IF(global.FLAG.render == 1, $">>>>>>>>>> DoUpdate called from {INAME} <<<<<<<<<<");
 			
 			if(!is_instanceof(self, Node_Collection)) setRenderStatus(true);
 			
 			try {
-				if(anim_last_step) update(); // Update only if input hash differs from previous.
+				update(); // Update only if input hash differs from previous.
 			} catch(exception) {
 				var sCurr = surface_get_target();
 				while(surface_get_target() != sBase)
@@ -532,18 +536,15 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		LOG_BLOCK_END();
 	} #endregion
 	
-	static resetRenderForward = function() { #region
-		setRenderStatus(false); 
+	static forwardPassiveDynamic = function() { #region
 		for( var i = 0, n = ds_list_size(outputs); i < n; i++ ) {
 			var _outp = outputs[| i];
 			
 			for(var j = 0; j < ds_list_size(_outp.value_to); j++) {
 				var _to = _outp.value_to[| j];
-				if(!_to.node.active || _to.value_from == noone) continue; 
-				if(_to.value_from != self) continue;
-				if(!_to.node.rendered) continue;
+				if(!_to.node.active || _to.value_from != _outp) continue; 
 				
-				_to.node.resetRenderForward();
+				_to.node.passiveDynamic = true;
 			}
 		}
 	} #endregion
@@ -565,7 +566,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 			if( val_from == noone) continue;
 			if(!val_from.node.active) continue;
 			if(!val_from.node.isRenderActive()) continue;
-			if!(val_from.node.rendered || val_from.node.update_on_frame) {
+			if(!val_from.node.rendered) {
 				LOG_LINE_IF(global.FLAG.render == 1, $"Node {INAME} is not renderable because input {val_from.node.internalName} is not rendered ({val_from.node.rendered})");
 				return false;
 			}
@@ -1022,7 +1023,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 				draw_set_color(COLORS.speed[0]);
 			}
 			
-			if(render_cached || !anim_last_step) draw_set_color(COLORS._main_text_sub);
+			if(render_cached) draw_set_color(COLORS._main_text_sub);
 			
 			draw_text(round(tx), round(ty), string(rt) + " " + unit);
 		}
@@ -1105,6 +1106,8 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {}
 	
 	static drawAnimationTimeline = function(_w, _h, _s) {}
+	
+	static getAnimationCacheExist = function(frame) { return cacheExist(frame); }
 	
 	static enable = function() { active = true; }
 	static disable = function() { active = false; }
@@ -1664,6 +1667,8 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 	
 	static preConnect = function() {}
 	static postConnect = function() {}
+	
+	static postLoad = function() {}
 	
 	static resetAnimation = function() {}
 	

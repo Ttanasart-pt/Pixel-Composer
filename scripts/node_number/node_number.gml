@@ -67,11 +67,11 @@ function Node_Number(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) co
 		}
 		
 		for( var i = 0; i < 1; i++ ) {
-			inputs[| i].type  = int? VALUE_TYPE.integer : VALUE_TYPE.float;
+			inputs[| i].setType(int? VALUE_TYPE.integer : VALUE_TYPE.float);
 			inputs[| i].editWidget.slide_speed = int? 1 : 0.1;
 		}
 		
-		outputs[| 0].type = int? VALUE_TYPE.integer : VALUE_TYPE.float;
+		outputs[| 0].setType(int? VALUE_TYPE.integer : VALUE_TYPE.float);
 	}
 	
 	static processData = function(_output, _data, _output_index, _array_index = 0) {  
@@ -232,12 +232,12 @@ function Node_Vector2(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 		var disp = inputs[| 3].getValueCached();
 		
 		for( var i = 0; i < 2; i++ ) {
-			inputs[| i].type  = int? VALUE_TYPE.integer : VALUE_TYPE.float;
+			inputs[| i].setType(int? VALUE_TYPE.integer : VALUE_TYPE.float);
 			inputs[| i].editWidget.slide_speed = int? 1 : 0.1;
 		}
 		
 		inputs[| 4].setVisible(disp == 1, disp == 1);
-		outputs[| 0].type = int? VALUE_TYPE.integer : VALUE_TYPE.float;
+		outputs[| 0].setType(int? VALUE_TYPE.integer : VALUE_TYPE.float);
 		
 		w	  = 96;	
 		min_h = 80; 
@@ -414,11 +414,11 @@ function Node_Vector3(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	static step = function() {
 		var int = inputs[| 3].getValueCached();
 		for( var i = 0; i < 3; i++ ) {
-			inputs[| i].type  = int? VALUE_TYPE.integer : VALUE_TYPE.float;
+			inputs[| i].setType(int? VALUE_TYPE.integer : VALUE_TYPE.float);
 			inputs[| i].editWidget.slide_speed = int? 1 : 0.1;
 		}
 		
-		outputs[| 0].type = int? VALUE_TYPE.integer : VALUE_TYPE.float;
+		outputs[| 0].setType(int? VALUE_TYPE.integer : VALUE_TYPE.float);
 	}
 	
 	static processData = function(_output, _data, _output_index, _array_index = 0) {  
@@ -469,11 +469,11 @@ function Node_Vector4(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) c
 	static step = function() {
 		var int = inputs[| 4].getValueCached();
 		for( var i = 0; i < 4; i++ ) {
-			inputs[| i].type  = int? VALUE_TYPE.integer : VALUE_TYPE.float;
+			inputs[| i].setType(int? VALUE_TYPE.integer : VALUE_TYPE.float);
 			inputs[| i].editWidget.slide_speed = int? 1 : 0.1;
 		}
 		
-		outputs[| 0].type = int? VALUE_TYPE.integer : VALUE_TYPE.float;
+		outputs[| 0].setType(int? VALUE_TYPE.integer : VALUE_TYPE.float);
 	}
 	
 	static processData = function(_output, _data, _output_index, _array_index = 0) {  
@@ -519,9 +519,9 @@ function Node_Vector_Split(_x, _y, _group = noone) : Node_Processor(_x, _y, _gro
 		if(inputs[| 0].value_from.type == VALUE_TYPE.integer)
 			type = VALUE_TYPE.integer;
 		
-		inputs[| 0].type = type;
+		inputs[| 0].setType(type);
 		for( var i = 0; i < 4; i++ )
-			outputs[| i].type = type;
+			outputs[| i].setType(type);
 	}
 	
 	static processData = function(_output, _data, _output_index, _array_index = 0) { 

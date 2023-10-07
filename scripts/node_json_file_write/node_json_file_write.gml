@@ -91,7 +91,7 @@ function Node_Json_File_Write(_x, _y, _group = noone) : Node(_x, _y, _group) con
 				var _key = getInputData(i + 0);
 				var _val = getInputData(i + 1);
 			
-				inputs[| i + 1].type = inputs[| i + 1].value_from? inputs[| i + 1].value_from.type : VALUE_TYPE.any;
+				inputs[| i + 1].setType(inputs[| i + 1].value_from? inputs[| i + 1].value_from.type : VALUE_TYPE.any);
 			
 				variable_struct_set(cont, _key, _val);
 			}
@@ -105,7 +105,7 @@ function Node_Json_File_Write(_x, _y, _group = noone) : Node(_x, _y, _group) con
 		for(var i = input_fix_len; i < ds_list_size(inputs) - data_length; i += data_length) {
 			var inp  = inputs[| i + 1];
 			var typ  = inp.value_from == noone? VALUE_TYPE.any : inp.value_from.type;
-			inp.type = typ;
+			inp.setType(typ);
 		}
 	}
 	

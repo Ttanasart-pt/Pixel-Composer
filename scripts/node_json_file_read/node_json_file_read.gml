@@ -159,18 +159,18 @@ function Node_Json_File_Read(_x, _y, _group = noone) : Node(_x, _y, _group) cons
 				
 				if(!variable_struct_exists(_str, k)) {
 					out.setValue(0);
-					out.type = VALUE_TYPE.float;
+					out.setType(VALUE_TYPE.float);
 					break;
 				}
 				
 				var val = variable_struct_get(_str, k);
 				if(j == array_length(keys) - 1) {
 					if(is_struct(val))
-						out.type = VALUE_TYPE.struct;
+						out.setType(VALUE_TYPE.struct);
 					else if(is_array(val) && array_length(val))
-						out.type = is_string(val[0])? VALUE_TYPE.text : VALUE_TYPE.float;
+						out.setType(is_string(val[0])? VALUE_TYPE.text : VALUE_TYPE.float);
 					else
-						out.type = is_string(val)? VALUE_TYPE.text : VALUE_TYPE.float;
+						out.setType(is_string(val)? VALUE_TYPE.text : VALUE_TYPE.float);
 					
 					out.setValue(val);
 				}

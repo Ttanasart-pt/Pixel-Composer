@@ -80,7 +80,10 @@ _HOVERING_ELEMENT = noone;
 	//physics_pause_enable(true);
 	DEF_SURFACE_RESET();
 	
-	if(UPDATE_RENDER_ORDER) ResetAllNodesRender();
+	if(UPDATE_RENDER_ORDER) {
+		ResetAllNodesRender();
+		NodeTopoSort();
+	}
 	UPDATE_RENDER_ORDER = false;
 	
 	if(PROJECT.active) {

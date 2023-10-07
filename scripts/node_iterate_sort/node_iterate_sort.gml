@@ -11,6 +11,8 @@ function Node_Iterate_Sort(_x, _y, _group = noone) : Node_Collection(_x, _y, _gr
 	
 	outputs[| 0] = nodeValue("Array", self, JUNCTION_CONNECT.output, VALUE_TYPE.any, noone );
 	
+	topoList = ds_list_create();
+	
 	custom_input_index = ds_list_size(inputs);
 	custom_output_index = ds_list_size(inputs);
 	loop_start_time = 0;
@@ -36,10 +38,12 @@ function Node_Iterate_Sort(_x, _y, _group = noone) : Node_Collection(_x, _y, _gr
 	
 	static onStep = function() {
 		var type = inputs[| 0].value_from == noone? VALUE_TYPE.any : inputs[| 0].value_from.type;
-		inputs[| 0].type = type;
+		inputs[| 0].setType(type);
 	}
 	
 	static update = function(frame = PROJECT.animator.current_frame) {
+		if(frame == 0) NodeListSort(topoList, nodes);
+		
 		initLoop();
 	}
 	
@@ -79,7 +83,7 @@ function Node_Iterate_Sort(_x, _y, _group = noone) : Node_Collection(_x, _y, _gr
 		inputNodes[0].setValue(val1);
 		inputNodes[1].setValue(val2);
 		
-		RenderList(nodes);
+		RenderList(topoList);
 		var res = outputNode.getValue();
 		//print("Comparing " + string(val1) + ", " + string(val2) + ": " + string(res));
 		return res;
@@ -87,8 +91,8 @@ function Node_Iterate_Sort(_x, _y, _group = noone) : Node_Collection(_x, _y, _gr
 	
 	static initLoop = function() {
 		if(inputs[| 0].value_from) {
-			inputs[| 0].type  = inputs[| 0].value_from.type;
-			outputs[| 0].type = inputs[| 0].value_from.type;
+			inputs[| 0].setType(inputs[| 0].value_from.type);
+			outputs[| 0].setType(inputs[| 0].value_from.type);
 		}
 		
 		resetRender();
@@ -101,11 +105,11 @@ function Node_Iterate_Sort(_x, _y, _group = noone) : Node_Collection(_x, _y, _gr
 		for( var i = 0; i < ds_list_size(nodes); i++ ) {
 			if(nodes[| i].display_name == "Value 1") {
 				inputNodes[0] = nodes[| i].inputs[| 0];
-				inputNodes[0].type = inputs[| 0].type;
+				inputNodes[0].setType(inputs[| 0].type);
 				inputReady++;
 			} else if(nodes[| i].display_name == "Value 2") {
 				inputNodes[1] = nodes[| i].inputs[| 0];
-				inputNodes[1].type = inputs[| 0].type;
+				inputNodes[1].setType(inputs[| 0].type);
 				inputReady++;
 			} else if(nodes[| i].name == "Swap result") {
 				outputNode = nodes[| i].inputs[| 0];

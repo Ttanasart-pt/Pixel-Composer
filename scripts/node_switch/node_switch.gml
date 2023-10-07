@@ -66,12 +66,12 @@ function Node_Switch(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 	static onValueFromUpdate = function(index) {
 		if(LOADING || APPENDING) return;
 		
-		inputs[| 1].type = inputs[| 1].value_from? inputs[| 1].value_from.type : VALUE_TYPE.any;
+		inputs[| 1].setType(inputs[| 1].value_from? inputs[| 1].value_from.type : VALUE_TYPE.any);
 		
 		for( var i = input_fix_len; i < ds_list_size(inputs); i += data_length ) {
-			inputs[| i + 1].type = VALUE_TYPE.any;
+			inputs[| i + 1].setType(VALUE_TYPE.any);
 			if(inputs[| i + 1].value_from != noone)
-				inputs[| i + 1].type = inputs[| i + 1].value_from.type;
+				inputs[| i + 1].setType(inputs[| i + 1].value_from.type);
 		}
 	}
 	
@@ -89,7 +89,7 @@ function Node_Switch(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 		var sele = getInputData(0);
 		var _res = getInputData(1);
 		
-		outputs[| 0].type = inputs[| 1].value_from? inputs[| 1].value_from.type : VALUE_TYPE.any;
+		outputs[| 0].setType(inputs[| 1].value_from? inputs[| 1].value_from.type : VALUE_TYPE.any);
 		
 		for( var i = input_fix_len; i < ds_list_size(inputs) - data_length; i += data_length ) {
 			var _cas = getInputData(i + 0);
@@ -97,7 +97,7 @@ function Node_Switch(_x, _y, _group = noone) : Node(_x, _y, _group) constructor 
 			
 			if(sele == _cas) {
 				_res = _val;
-				outputs[| 0].type = inputs[| i + 1].type;
+				outputs[| 0].setType(inputs[| i + 1].type);
 			}
 		}
 		

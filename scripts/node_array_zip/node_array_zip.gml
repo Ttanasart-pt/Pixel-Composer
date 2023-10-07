@@ -52,21 +52,21 @@ function Node_Array_Zip(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		var _arr = getInputData(0);
 		
 		if(inputs[| 0].value_from == noone) {
-			inputs[| 0].type  = VALUE_TYPE.any;
-			outputs[| 0].type = VALUE_TYPE.any;
+			inputs[| 0].setType(VALUE_TYPE.any);
+			outputs[| 0].setType(VALUE_TYPE.any);
 			return;
 		}
 		
 		if(!is_array(_arr)) return;
 		var _type = inputs[| 0].value_from.type;
-		inputs[| 0].type  = _type;
-		outputs[| 0].type = _type;
+		inputs[| 0].setType(_type);
+		outputs[| 0].setType(_type);
 		
 		var len = 1;
 		var val = [];
 		for( var i = 0; i < ds_list_size(inputs) - 1; i += data_length ) {
 			val[i] = getInputData(i);
-			inputs[| i].type  = inputs[| i].value_from == noone? inputs[| i].value_from.type : VALUE_TYPE.any;
+			inputs[| i].setType(inputs[| i].value_from == noone? inputs[| i].value_from.type : VALUE_TYPE.any);
 			if(!is_array(val[i])) {
 				val[i] = [ val[i] ];
 				continue;

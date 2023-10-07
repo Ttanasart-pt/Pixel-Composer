@@ -21,10 +21,6 @@ function Node_Group_Output(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		.uncache()
 		.setVisible(true, true);
 	
-	inputs[| 1] = nodeValue("Order", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.uncache()
-		.rejectArray();
-	
 	attributes.inherit_name = !LOADING && !APPENDING;
 	outParent = undefined;
 	output_index = -1;
@@ -98,23 +94,20 @@ function Node_Group_Output(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		group.sortIO();
 		
 		outParent.setFrom(inputs[| 0]);
-	}
-	
-	if(!LOADING && !APPENDING)
-		createOutput();
+	} if(!LOADING && !APPENDING) createOutput();
 	
 	static step = function() {
 		if(is_undefined(outParent)) return;
 		
 		outParent.name = display_name; 
 		
-		inputs[| 0].type = VALUE_TYPE.any;
+		inputs[| 0].setType(VALUE_TYPE.any);
 		if(inputs[| 0].value_from != noone) {
-			inputs[| 0].type = inputs[| 0].value_from.type;
+			inputs[| 0].setType(inputs[| 0].value_from.type);
 			inputs[| 0].display_type = inputs[| 0].value_from.display_type;
 		} 
 		
-		outParent.type = inputs[| 0].type;
+		outParent.setType(inputs[| 0].type);
 		outParent.display_type = inputs[| 0].display_type;
 		
 		onSetDisplayName = _onSetDisplayName;
@@ -126,20 +119,9 @@ function Node_Group_Output(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		}
 	}
 	
-	//static triggerRender = function() {
-	//	if(is_undefined(outParent)) return;
-		
-	//	for(var j = 0; j < ds_list_size(outParent.value_to); j++) {
-	//		if(outParent.value_to[| j].value_from == outParent)
-	//			outParent.value_to[| j].node.triggerRender();
-	//	}
-	//}
-	
 	static postDeserialize = function() {
 		createOutput(false);
 		
-		var _inputs = load_map.inputs;
-		inputs[| 1].applyDeserialize(_inputs[1], load_scale);
 		if(PROJECT.version < 11520) attributes.input_priority = getInputData(1);
 		group.sortIO();
 	}

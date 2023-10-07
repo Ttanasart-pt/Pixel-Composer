@@ -729,7 +729,7 @@ function Node_Mesh_Warp(_x, _y, _group = noone) : Node_Processor(_x, _y, _group)
 		if(struct_has(attr, "mesh_bound"))  attributes.mesh_bound = attr.mesh_bound;;
 	}
 	
-	static postConnect = function() {
+	static postLoad = function() {
 		setTriangle();
 		
 		if(loadPin == noone) return;
