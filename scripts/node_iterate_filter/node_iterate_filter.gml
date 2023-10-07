@@ -14,7 +14,7 @@ function Node_Iterate_Filter(_x, _y, _group = noone) : Node_Iterator(_x, _y, _gr
 	
 	outputs[| 0] = nodeValue("Array", self, JUNCTION_CONNECT.output, VALUE_TYPE.any, noone );
 	
-	custom_input_index = ds_list_size(inputs);
+	custom_input_index  = ds_list_size(inputs);
 	custom_output_index = ds_list_size(inputs);
 	loop_start_time = 0;
 	ALWAYS_FULL = true;

@@ -667,7 +667,7 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 		updatedOutTrigger.y = yy + 10;
 		
 		var inamo = (input_display_list == -1 || !use_display_list)? ds_list_size(inputs) : array_length(input_display_list);
-		var _in = yy + ui(junction_draw_pad_y) * _s;
+		var _iny = yy + ui(junction_draw_pad_y) * _s;
 		
 		for(var i = 0; i < inamo; i++) {
 			var idx = getInputJunctionIndex(i);
@@ -676,23 +676,27 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 			jun = ds_list_get(inputs, idx, noone);
 			if(jun == noone || is_undefined(jun)) continue;
 			jun.x = xx;
-			jun.y = _in;
-			_in += 24 * _s * jun.isVisible();
+			jun.y = _iny;
+			_iny += 24 * _s * jun.isVisible();
 		}
 		
 		var outamo = output_display_list == -1? ds_list_size(outputs) : array_length(output_display_list);
 		
 		 xx = xx + w * _s;
-		_in = yy + ui(junction_draw_pad_y) * _s;
+		var _outy = yy + ui(junction_draw_pad_y) * _s;
 		for(var i = 0; i < outamo; i++) {
 			var idx = getOutputJunctionIndex(i);
 			jun = outputs[| idx];
 			
 			jun.x = xx;
-			jun.y = _in;
-			_in += 24 * _s * jun.isVisible();
+			jun.y = _outy;
+			_outy += 24 * _s * jun.isVisible();
 		}
+		
+		onPreDraw(_x, _y, _s, _iny, _outy);
 	} #endregion
+	
+	static onPreDraw = function(_x, _y, _s, _iny, _outy) {}
 	
 	static drawNodeBase = function(xx, yy, _s) { #region
 		if(draw_graph_culled) return;
@@ -792,8 +796,11 @@ function Node(_x, _y, _group = PANEL_GRAPH.getCurrentContext()) : __Node_Base(_x
 			if(updatedOutTrigger.drawJunction(_s, _mx, _my)) hover = updatedOutTrigger;
 		}
 		
+		onDrawJunctions(_x, _y, _mx, _my, _s);
 		return hover;
 	} #endregion
+	
+	static onDrawJunctions = function(_x, _y, _mx, _my, _s) {}
 	
 	static drawJunctionNames = function(_x, _y, _mx, _my, _s) { #region
 		if(draw_graph_culled) return;

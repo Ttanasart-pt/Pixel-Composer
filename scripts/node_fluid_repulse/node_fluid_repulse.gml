@@ -44,7 +44,7 @@ function Node_Fluid_Repulse(_x, _y, _group = noone) : Node_Fluid(_x, _y, _group)
 		var _str = inputs[| 3].getValue(frame);
 		var _mod = inputs[| 4].getValue(frame);
 		
-		if(_dom == noone || !instance_exists(_dom)) return;
+		FLUID_DOMAIN_CHECK
 		outputs[| 0].setValue(_dom);
 		
 		_rad = max(_rad, 1);

@@ -36,6 +36,8 @@ function Node_Fluid_Add(_x, _y, _group = noone) : Node_Fluid(_x, _y, _group) con
 	
 	outputs[| 0] = nodeValue("Fluid Domain", self, JUNCTION_CONNECT.output, VALUE_TYPE.fdomain, noone);
 	
+	temp_surface = [ surface_create(1, 1) ];
+	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
 		var _mat = getInputData(1);
 		var _pos = getInputData(2);
@@ -62,7 +64,7 @@ function Node_Fluid_Add(_x, _y, _group = noone) : Node_Fluid(_x, _y, _group) con
 		var _msk = inputs[| 6].getValue(frame);
 		var _vel = inputs[| 7].getValue(frame);
 		
-		if(_dom == noone || !instance_exists(_dom)) return;
+		FLUID_DOMAIN_CHECK
 		outputs[| 0].setValue(_dom);
 		
 		if(!_act) return;
@@ -79,16 +81,21 @@ function Node_Fluid_Add(_x, _y, _group = noone) : Node_Fluid(_x, _y, _group) con
 			dy += (_pos[1] - _prevPos[1]) * _inh;
 		}
 		
+		temp_surface[0] = surface_verify(temp_surface[0], sw, sh);
+		surface_set_shader(temp_surface[0], sh_fluid_bleach);
+			draw_surface_safe(_mat);
+		surface_reset_shader();
+			
 		if(dx != 0 || dy != 0) {
 			if(_msk == 0) 
-				fd_rectangle_add_velocity_surface(_dom, _mat, _pos[0] - sw / 2, _pos[1] - sh / 2, 1, 1, dx, dy);
+				fd_rectangle_add_velocity_surface(_dom, temp_surface[0], _pos[0] - sw / 2, _pos[1] - sh / 2, 1, 1, dx, dy);
 			else {
 				var _vw = sw + max(0, _msk * 2);
 				var _vh = sh + max(0, _msk * 2);
 			
 				var _vmask = surface_create(_vw, _vh);
 				surface_set_shader(_vmask,,, BLEND.over);
-					draw_surface_safe(_mat, max(0, _msk), max(0, _msk));
+					draw_surface_safe(temp_surface[0], max(0, _msk), max(0, _msk));
 				surface_reset_shader();
 				
 				var vel_mask = surface_create(_vw, _vh);
@@ -99,13 +106,13 @@ function Node_Fluid_Add(_x, _y, _group = noone) : Node_Fluid(_x, _y, _group) con
 				surface_reset_shader();
 				
 				fd_rectangle_add_velocity_surface(_dom, vel_mask, _pos[0] - _vw / 2, _pos[1] - _vh / 2, 1, 1, dx, dy);
-			
+				
 				surface_free(_vmask);
 				surface_free(vel_mask);
 			}
 		}
 		
-		fd_rectangle_add_material_surface(_dom, _mat, _pos[0] - sw / 2, _pos[1] - sh / 2, 1, 1, c_white, _den);
+		fd_rectangle_add_material_surface(_dom, temp_surface[0], _pos[0] - sw / 2, _pos[1] - sh / 2, 1, 1, c_white, _den);
 		
 		_prevPos[0] = _pos[0];
 		_prevPos[1] = _pos[1];

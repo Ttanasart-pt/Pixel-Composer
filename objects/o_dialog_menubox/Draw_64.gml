@@ -79,19 +79,28 @@ if(!ready) exit;
 				var _spr	 = noone, _ind = 0;
 				var _sprs	 = _submenu[0];
 				var _tlp	 = array_safe_get(_submenu, 2, "");
+				var _str     = "";
 				
-				if(is_array(_sprs)) {
-					_spr = _sprs[0];
-					_ind = _sprs[1];
+				var _sw = ui(28);
+				var _sh = ui(28);
+				
+				if(is_string(_sprs)) {
+					_str = _sprs;
+					draw_set_text(f_p2, fa_center, fa_center, COLORS._main_text);
+					
+					_sw = string_width(_str) + ui(12);
+					_sh = string_height(_str) + ui(8);
 				} else {
-					_spr = _sprs;
-					_ind = 0;
+					if(is_array(_sprs)) {
+						_spr = _sprs[0];
+						_ind = _sprs[1];
+					} else _spr = _sprs;
 				}
 				
-				if(sHOVER && point_in_rectangle(mouse_mx, mouse_my, _bx - ui(14), _by - ui(14), _bx + ui(14), _by + ui(14))) {
+				if(sHOVER && point_in_rectangle(mouse_mx, mouse_my, _bx - _sw / 2, _by - _sh / 2, _bx + _sw / 2, _by + _sh / 2)) {
 					if(_tlp != "") TOOLTIP = _tlp;
-					draw_sprite_stretched_ext(THEME.textbox, 3, _bx - ui(14), _by - ui(14), ui(28), ui(28), COLORS.dialog_menubox_highlight, 1);
-					draw_sprite_stretched_ext(THEME.textbox, 1, _bx - ui(14), _by - ui(14), ui(28), ui(28), COLORS.dialog_menubox_highlight, 1);
+					draw_sprite_stretched_ext(THEME.textbox, 3, _bx - _sw / 2, _by - _sh / 2, _sw, _sh, COLORS.dialog_menubox_highlight, 1);
+					draw_sprite_stretched_ext(THEME.textbox, 1, _bx - _sw / 2, _by - _sh / 2, _sw, _sh, COLORS.dialog_menubox_highlight, 1);
 					
 					if(mouse_press(mb_left, sFOCUS)) {
 						_submenu[1]();
@@ -99,7 +108,11 @@ if(!ready) exit;
 					}
 				}
 				
-				draw_sprite_ui_uniform(_spr, _ind, _bx, _by);
+				if(_spr != noone)
+					draw_sprite_ui_uniform(_spr, _ind, _bx, _by);
+				
+				if(_str != "")
+					draw_text(_bx, _by, _str);
 			}
 		} else {
 			var tx = dialog_x + show_icon * ui(32) + ui(16);

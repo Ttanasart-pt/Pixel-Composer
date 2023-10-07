@@ -67,6 +67,7 @@
 	function menuItemGroup(name, group) {
 		return new MenuItemGroup(name, group);
 	}
+	
 	function MenuItemGroup(name, group) constructor {
 		active = true;
 		self.name	= name;

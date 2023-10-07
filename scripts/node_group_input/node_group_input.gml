@@ -40,7 +40,7 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		/*Surface*/	[ "Default", ],
 		
 		/*Path*/	[ "Default", ],
-		/*Curve*/	[ "Default", ],
+		/*Curve*/	[ "Curve", ],
 		/*Text*/	[ "Default", ],
 		/*Object*/	[ "Default", ],
 		/*Node*/	[ "Default", ],
@@ -60,10 +60,9 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 	#endregion
 	
 	inputs[| 0] = nodeValue("Display type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, display_list[0])
+		.setDisplay(VALUE_DISPLAY.enum_scroll, { data: display_list[0], update_hover: false })
 		.uncache()
 		.rejectArray();
-	inputs[| 0].editWidget.update_hover = false;
 	
 	inputs[| 1] = nodeValue("Range", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, [0, 1])
 		.setDisplay(VALUE_DISPLAY.range)
@@ -71,11 +70,10 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		.setVisible(false)
 		.rejectArray();
 	
-	inputs[| 2] = nodeValue("Input type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
+	inputs[| 2] = nodeValue("Input type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 11)
 		.setDisplay(VALUE_DISPLAY.enum_scroll, { data: data_type_list, update_hover: false })
 		.uncache()
 		.rejectArray();
-	inputs[| 2].editWidget.update_hover = false;
 	
 	inputs[| 3] = nodeValue("Enum label", self, JUNCTION_CONNECT.input, VALUE_TYPE.text, "")
 		.setVisible(false)
@@ -115,10 +113,24 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		.uncache();
 	
 	attributes.inherit_name = !LOADING && !APPENDING;
+	attributes.inherit_type = !LOADING && !APPENDING;
 	doTrigger = 0;
 	
 	_onSetDisplayName = function() {
 		attributes.inherit_name = false;
+	}
+	
+	outputs[| 0].onSetTo = function(juncTo) {
+		if(!attributes.inherit_type) return;
+		attributes.inherit_type = false;
+		
+		var ind = array_find(data_type_map, juncTo.type);
+		if(ind == -1) return;
+		
+		if(ind == inputs[| 2].getValue()) return;
+		
+		outputs[| 0].type = juncTo.type;
+		inputs[| 2].setValue(ind);
 	}
 	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
@@ -138,14 +150,17 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 		var _step		= getInputData(7);
 		
 		if(index == 2) {
-			var _o = outputs[| 0];
-			for(var j = 0; j < ds_list_size(_o.value_to); j++) {
-				var _to = _o.value_to[| j];
-				if(_to.value_from == _o)
-					_to.removeFrom();
+			if(outputs[| 0].type != _val_type) {
+				var _o = outputs[| 0];
+				for(var j = 0; j < ds_list_size(_o.value_to); j++) {
+					var _to = _o.value_to[| j];
+					if(_to.value_from == _o)
+						_to.removeFrom();
+				}
 			}
 			
 			inputs[| 0].setValue(0);
+			attributes.inherit_type = false;
 		}
 		
 		_dtype = array_safe_get(array_safe_get(display_list, _val_type, []), _dtype);
@@ -225,6 +240,11 @@ function Node_Group_Input(_x, _y, _group = noone) : Node(_x, _y, _group) constru
 				
 				inParent.animator = new valueAnimator(new gradientObject(c_white), inParent);
 				inParent.setDisplay(VALUE_DISPLAY._default);
+				break;
+				
+			case "Curve":
+				inParent.animator = new valueAnimator(CURVE_DEF_11, inParent);
+				inParent.setDisplay(VALUE_DISPLAY.curve);
 				break;
 				
 			default:

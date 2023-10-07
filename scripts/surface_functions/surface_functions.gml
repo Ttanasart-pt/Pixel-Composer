@@ -155,6 +155,7 @@ function surface_get_width_safe(s, crop = true) {
 	if(is_struct(s)) {
 		if(is_instanceof(s, dynaSurf)) return s.getWidth();
 		else if(is_instanceof(s, SurfaceAtlas)) return crop? surface_get_width(s.getSurface()) : s.oriSurf_w;
+		else return 1;
 	}
 	
 	return surface_get_width(s);
@@ -166,6 +167,7 @@ function surface_get_height_safe(s, crop = true) {
 	if(is_struct(s)) {
 		if(is_instanceof(s, dynaSurf)) return s.getHeight();
 		else if(is_instanceof(s, SurfaceAtlas)) return crop? surface_get_height(s.getSurface()) : s.oriSurf_h;
+		else return 1;
 	}
 	
 	return surface_get_height(s);

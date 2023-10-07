@@ -43,16 +43,10 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		.setDisplay(VALUE_DISPLAY.slider, { range: [ -2, 2, 0.1 ] })
 		.rejectArray();
 	
-	inputs[| 11] = nodeValue("Texture type", self, JUNCTION_CONNECT.input, VALUE_TYPE.integer, 0)
-		.setDisplay(VALUE_DISPLAY.enum_scroll, [ "Surface", "Atlas" ])
-		.rejectArray();
-	
-	inputs[| 12] = nodeValue("Atlas", self, JUNCTION_CONNECT.input, VALUE_TYPE.surface, []);
-	
 	outputs[| 0] = nodeValue("Object", self, JUNCTION_CONNECT.output, VALUE_TYPE.rigid, self);
 	
 	input_display_list = [ 8,
-		["Texture",		false],	11, 6, 12, 
+		["Texture",		false],	6, 
 		["Physical",	false],	0, 1, 2, 3, 4,
 		["Shape",		false],	7, 5, 9, 10, 
 	];
@@ -71,24 +65,7 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		new NodeTool( "Mesh edit",		THEME.mesh_tool_edit ),
 		new NodeTool( "Anchor remove",  THEME.mesh_tool_delete ),
 	];
-	
-	static getPreviewValues = function() { 
-		var _typ = getInputData(11);
-		return _typ? getInputData(12) : getInputData(6); 
-	}
-	
-	static generateAllMesh = function() {
-		var _typ  = getInputData(11);
-		var _tex  = _typ? getInputData(12) : getInputData(6);
-			
-		if(is_array(_tex)) {
-			for( var i = 0, n = array_length(_tex); i < n; i++ ) 
-				generateMesh(i);
-		} else 
-			generateMesh();
-		doUpdate();
-	}
-	
+		
 	is_convex = true;
 	hover = -1;
 	anchor_dragging = -1;
@@ -97,20 +74,36 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	anchor_drag_mx  = -1;
 	anchor_drag_my  = -1;
 	
-	static drawOverlayPreview = function(_i, _x, _y, _s, _pr_x, _pr_y, _atl_s, _tex_s) { #region
+	static getPreviewValues = function() { #region
+		return getInputData(6); 
+	} #endregion
+	
+	static generateAllMesh = function() { #region
+		var _tex  = getInputData(6);
+			
+		if(is_array(_tex)) {
+			for( var i = 0, n = array_length(_tex); i < n; i++ ) 
+				generateMesh(i);
+		} else 
+			generateMesh();
+		doUpdate();
+	} #endregion
+	
+	static drawOverlayPreviewSingle = function(_i, _x, _y, _s, _pr_x, _pr_y, _tex_s) { #region
 		var meshes = attributes.mesh;
 		var _shp = getInputData(5);
-		var _typ = getInputData(11);
 		
-		var ww = max(1, surface_get_width_safe(_tex_s));
-		var hh = max(1, surface_get_height_safe(_tex_s));
+		var ww = surface_get_width_safe(_tex_s);
+		var hh = surface_get_height_safe(_tex_s);
+		var _tex = _tex_s;
 		
-		if(_typ == 0) {
+		if(is_instanceof(_tex_s, SurfaceAtlas)) {
+			_tex = _tex_s.getSurface();
+			_pr_x += _tex_s.x * _s;
+			_pr_y += _tex_s.y * _s;
+		} else {
 			_pr_x -= ww * _s / 2;
 			_pr_y -= hh * _s / 2;
-		} else if(_typ == 1) {
-			_pr_x += _atl_s.x * _s;
-			_pr_y += _atl_s.y * _s;
 		}
 		
 		if(_shp == 2 && array_length(meshes) > _i) {
@@ -132,57 +125,37 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 						
 				draw_line_width(_px0, _py0, _px1, _py1, 1);
 			}
-		} 
+		}
 			
-		draw_surface_ext_safe(_tex_s, _pr_x, _pr_y, _s, _s, 0, c_white, 0.5);
+		draw_surface_ext_safe(_tex, _pr_x, _pr_y, _s, _s, 0, c_white, 0.5);
+	} #endregion
+	
+	static drawOverlayPreview = function(_x, _y, _s, _mx, _my, _snx, _sny) { #region
+		var _pos = getInputData(7);	
+		var _tex = getInputData(6);
+		
+		var _pr_x = _x + _pos[0] * _s;
+		var _pr_y = _y + _pos[1] * _s;
+			
+		if(is_array(_tex)) {
+			for( var i = 0, n = array_length(_tex); i < n; i++ ) 
+				drawOverlayPreviewSingle(i, _x, _y, _s, _pr_x, _pr_y, _tex[i]);
+		} else 
+			drawOverlayPreviewSingle(0, _x, _y, _s, _pr_x, _pr_y, _tex);
+		inputs[| 7].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
 	} #endregion
 	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
-		var _shp = getInputData(5);
-		var _pos = getInputData(7);	
-		var _typ = getInputData(11);
-		
-		var _typ = getInputData(11);
-		var _atl = getInputData(12);
-		var _tex = getInputData(6);
-		
-		var _atl_s = _atl;
-		var _tex_s = _tex;
-		
-		var _isArr = false;
-		
-		if(_typ == 0) {
-			if(is_array(_tex)) {
-				_tex_s = array_safe_get(_tex, preview_index);
-				_isArr = true;
+		if(previewing == 0 && is_instanceof(group, Node_Rigid_Group)) {
+			for( var i = 0, n = ds_list_size(group.nodes); i < n; i++ ) {
+				var _node = group.nodes[| i];
+				if(!is_instanceof(_node, Node_Rigid_Object)) continue;
+				_node.drawOverlayPreview(_x, _y, _s, _mx, _my, _snx, _sny);
 			}
-		} else if(_typ == 1) {
-			if(is_array(_atl)) {
-				_atl_s = array_safe_get(_atl, preview_index);
-				_isArr = true;
-			}
-			if(_atl_s == 0) return;
-			_tex_s = _atl_s.getSurface();
-		}
-		
-		if(previewing == 0) {
-			var _pr_x = _x + _pos[0] * _s;
-			var _pr_y = _y + _pos[1] * _s;
-			
-			if(_isArr) {
-				if(_typ == 0) {
-					for( var i = 0, n = array_length(_tex); i < n; i++ ) 
-						drawOverlayPreview(i, _x, _y, _s, _pr_x, _pr_y, noone, _tex[i]);
-				} else {
-					for( var i = 0, n = array_length(_atl); i < n; i++ ) 
-						drawOverlayPreview(i, _x, _y, _s, _pr_x, _pr_y, _atl[i], _atl[i].getSurface());
-				}
-			} else 
-				drawOverlayPreview(0, _x, _y, _s, _pr_x, _pr_y, _atl, _tex);
-			inputs[| 7].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
 			return;
 		}
 		
+		var _shp = getInputData(5);
 		if(_shp != 2) return;
 		
 		var meshes = attributes.mesh;
@@ -287,16 +260,11 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	static generateMesh = function(index = 0) { #region
 		var _tex = getInputData(6);
 		var _exp = getInputData(10);
-		var _typ = getInputData(11);
-		var _atl = getInputData(12);
 		
-		if(_typ == 0) {
-			if(is_array(_tex)) _tex = array_safe_get(_tex, index);
-		} else if(_typ == 1) {
-			if(is_array(_atl)) _atl = array_safe_get(_atl, index);
-			if(_atl == 0) return;
-			_tex = _atl.getSurface();
-		}
+		if(is_array(_tex)) _tex = array_safe_get(_tex, index);
+		
+		if(is_instanceof(_tex, SurfaceAtlas))
+			_tex = _tex.getSurface();
 		
 		if(!is_surface(_tex)) return;
 		
@@ -326,6 +294,8 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			}
 		}
 		
+		if(cmA == 0) return;
+		
 		cmX /= cmA;
 		cmY /= cmA;
 		
@@ -354,15 +324,17 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 			var cc = buffer_read(surface_buffer, buffer_u32);
 			var _a = (cc & (0b11111111 << 24)) >> 24;
 			
-			if(_a > 0)
+			if(_a > 0) 
 				_pm[? point_direction_positive(cmX, cmY, i, j)] = [i, j];
 		}
 		
 		if(ds_map_size(_pm)) {
 			var keys = ds_map_keys_to_array(_pm);
 			array_sort(keys, false);
-		
+			
 			for( var i = 0, n = array_length(keys); i < n; i++ ) {
+				//print($"Getting key {keys[i]} - {_pm[? keys[i]]}");
+				
 				var px = _pm[? keys[i]][0];
 				var py = _pm[? keys[i]][1];
 				
@@ -532,32 +504,29 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	} #endregion
 	
 	static spawn = function(index = 0, object = noone) { #region
-		var _shp = getInputData(5);
-		var _tex = getInputData(6);
-		var _typ = getInputData(11);
-		var _atl = getInputData(12);
+		var _shp  = getInputData(5);
+		var _tex  = getInputData(6);
+		var _spos = getInputData(7);
 		
-		if(_typ == 0 && is_array(_tex)) { index = safe_mod(index, array_length(_tex)); _tex = array_safe_get(_tex, index); }
-		if(_typ == 1 && is_array(_atl)) { index = safe_mod(index, array_length(_atl)); _atl = array_safe_get(_atl, index); }
-		if(_typ == 1) {
-			if(_atl == 0) return;
-			_tex = _atl.getSurface();
+		if(is_array(_tex)) { 
+			index = safe_mod(index, array_length(_tex)); 
+			_tex = array_safe_get(_tex, index); 
 		}
 		
-		var _spos   = getInputData(7);
-		
-		var ww = max(1, surface_get_width_safe(_tex));
-		var hh = max(1, surface_get_height_safe(_tex));
+		var ww = surface_get_width_safe(_tex);
+		var hh = surface_get_height_safe(_tex);
 		var sw = ww, sh = hh;
 		
 		var ox = _spos[0];
 		var oy = _spos[1];
 		
-		if(_typ == 1) {
-			ox += _atl.x;
-			oy += _atl.y;
+		if(is_instanceof(_tex, SurfaceAtlas)) {
+			ox += _tex.x;
+			oy += _tex.y;
 			sw  = 0;
 			sh  = 0;
+			
+			_tex = _tex.getSurface();
 		}
 		
 		if(object == noone) {
@@ -657,10 +626,6 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	static step = function() { #region
 		var _shp = getInputData(5);
-		var _tex = getInputData(11);
-		
-		inputs[|  6].setVisible(_tex == 0, _tex == 0);
-		inputs[| 12].setVisible(_tex == 1, _tex == 1);
 		
 		inputs[| 9].setVisible(_shp == 2);
 		
@@ -675,8 +640,7 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	} #endregion
 	
 	static reset = function() { #region
-		var _typ = getInputData(11);
-		var _tex = _typ? getInputData(12) : getInputData(6);
+		var _tex = getInputData(6);
 		
 		for( var i = 0, n = array_length(object); i < n; i++ ) {
 			if(instance_exists(object[i]))
@@ -696,15 +660,14 @@ function Node_Rigid_Object(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { #region
 		var bbox = drawGetBbox(xx, yy, _s);
-		var _typ = getInputData(11);
-		var _tex = _typ? getInputData(12) : getInputData(6);
+		var _tex = getInputData(6);
 		
 		if(is_array(_tex)) {
 			if(array_empty(_tex)) return;
 			_tex = _tex[0];
 		}
 		
-		draw_surface_bbox(_typ? _tex.getSurface() : _tex, bbox);
+		draw_surface_bbox(_tex, bbox);
 	} #endregion
 	
 	static attributeSerialize = function() { #region

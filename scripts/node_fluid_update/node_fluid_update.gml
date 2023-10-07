@@ -22,7 +22,8 @@ function Node_Fluid_Update(_x, _y, _group = noone) : Node_Fluid(_x, _y, _group) 
 		
 		var _dom = inputs[| 0].getValue(frame);
 		var _act = inputs[| 1].getValue(frame);
-		if(_dom == noone || !instance_exists(_dom)) return;
+		
+		FLUID_DOMAIN_CHECK
 		outputs[| 0].setValue(_dom);
 		
 		if(!_act) return;

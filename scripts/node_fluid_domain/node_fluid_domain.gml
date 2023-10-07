@@ -31,15 +31,13 @@ function Node_Fluid_Domain(_x, _y, _group = noone) : Node_Fluid(_x, _y, _group) 
 	inputs[| 8] = nodeValue("Initial pressure", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0.75)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 9] = nodeValue("Material maccormack weight", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
+	inputs[| 9] = nodeValue("Material Maccormack weight", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 1)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
-	inputs[| 10] = nodeValue("Velocity maccormack weight", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
+	inputs[| 10] = nodeValue("Velocity Maccormack weight", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, 0)
 		.setDisplay(VALUE_DISPLAY.slider);
 	
 	inputs[| 11] = nodeValue("Wrap", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
-	
-	inputs[| 12] = nodeValue("Loop", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false );
 	
 	outputs[| 0] = nodeValue("Fluid Domain", self, JUNCTION_CONNECT.output, VALUE_TYPE.fdomain, noone);
 	
@@ -53,7 +51,7 @@ function Node_Fluid_Domain(_x, _y, _group = noone) : Node_Fluid(_x, _y, _group) 
 	domain = fd_rectangle_create(256, 256);
 	_dim_old = [0, 0];
 	
-	static update = function(frame = PROJECT.animator.current_frame) {
+	static update = function(frame = PROJECT.animator.current_frame) { #region
 		RETURN_ON_REST
 		
 		var _dim	= inputs[|  0].getValue(frame);
@@ -68,7 +66,6 @@ function Node_Fluid_Domain(_x, _y, _group = noone) : Node_Fluid(_x, _y, _group) 
 		var mMac	= inputs[|  9].getValue(frame);
 		var vMac	= inputs[| 10].getValue(frame);
 		var wrap	= inputs[| 11].getValue(frame);
-		//var loop	= inputs[| 12].getValue(frame);
 		
 		if(PROJECT.animator.current_frame == 0 || !is_surface(domain.sf_world)) {
 			fd_rectangle_clear(domain);
@@ -82,15 +79,6 @@ function Node_Fluid_Domain(_x, _y, _group = noone) : Node_Fluid(_x, _y, _group) 
 			
 	        fd_rectangle_set_pressure_iteration_type(domain, -2);
 			fd_rectangle_set_initial_value_pressure(domain, inPress);
-		}
-		
-		if(_dim[0] != _dim_old[0] || _dim[1] != _dim_old[1]) {
-			fd_rectangle_set_pressure_size(domain, _dim[0], _dim[1]);
-		    fd_rectangle_set_velocity_size(domain, _dim[0], _dim[1]);
-		    fd_rectangle_set_material_size(domain, _dim[0], _dim[1]);
-			
-			_dim_old[0] = _dim[0];
-			_dim_old[1] = _dim[1];
 		}
 		
 		surface_set_target(domain.sf_world);
@@ -113,13 +101,7 @@ function Node_Fluid_Domain(_x, _y, _group = noone) : Node_Fluid(_x, _y, _group) 
 		fd_rectangle_set_repeat(domain, wrap);
 		
 		outputs[| 0].setValue(domain);
-		
-		//if(!loop) return;
-		//if(PROJECT.animator.current_frame != 0) return;
-			
-		//for( var i = 0; i < PROJECT.animator.frames_total; i++ )
-		//	updateForward(i, false);
-	}
+	} #region
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
 		var bbox = drawGetBbox(xx, yy, _s);

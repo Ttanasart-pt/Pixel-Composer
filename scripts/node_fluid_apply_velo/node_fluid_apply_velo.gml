@@ -46,7 +46,7 @@ function Node_Fluid_Apply_Velocity(_x, _y, _group = noone) : Node_Fluid(_x, _y, 
 		var _vel = inputs[| 3].getValue(frame);
 		var _act = inputs[| 4].getValue(frame);
 		
-		if(_dom == noone || !instance_exists(_dom)) return;
+		FLUID_DOMAIN_CHECK
 		outputs[| 0].setValue(_dom);
 		
 		if(!_act) return;
@@ -55,7 +55,12 @@ function Node_Fluid_Apply_Velocity(_x, _y, _group = noone) : Node_Fluid(_x, _y, 
 		var sw = surface_get_width_safe(_mat);
 		var sh = surface_get_height_safe(_mat);
 		
-        fd_rectangle_add_velocity_surface(_dom, _mat, _pos[0] - sw / 2, _pos[1] - sh / 2, 1, 1, _vel[0], _vel[1]);
+		temp_surface[0] = surface_verify(temp_surface[0], sw, sh);
+		surface_set_shader(temp_surface[0], sh_fluid_bleach);
+			draw_surface_safe(_mat);
+		surface_reset_shader();
+		
+        fd_rectangle_add_velocity_surface(_dom, temp_surface[0], _pos[0] - sw / 2, _pos[1] - sh / 2, 1, 1, _vel[0], _vel[1]);
 	}
 	
 	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {

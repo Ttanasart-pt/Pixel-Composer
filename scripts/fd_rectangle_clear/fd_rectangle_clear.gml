@@ -9,7 +9,4 @@ function fd_rectangle_clear(domain) {
 	    surface_free(sf_material_0); surface_free(sf_material_1);
 	    surface_free(sf_world);
 	}
-
-
-
 }

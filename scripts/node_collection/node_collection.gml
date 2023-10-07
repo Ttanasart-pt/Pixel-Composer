@@ -69,6 +69,7 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	isInstancer		= false;
 	instanceBase	= noone;
 	
+	input_display_list_def = [];
 	custom_input_index  = 0;
 	custom_output_index = 0;
 	
@@ -77,6 +78,27 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	attributes.separator = [];
 	attributes.w = 128;
 	attributes.h = 128;
+	
+	input_dummy = nodeValue("Add to group", self, JUNCTION_CONNECT.input, VALUE_TYPE.any, 0);
+	draw_dummy  = false;
+	
+	input_dummy.onSetFrom = function(juncFrom) {
+		ds_list_remove(juncFrom.value_to, input_dummy);
+		input_dummy.value_from = noone;
+		
+		var input = nodeBuild("Node_Group_Input", 0, 0, self);
+		var _type = juncFrom.type;
+		var _tind = array_find(input.data_type_map, juncFrom.type);
+		
+		//input.attributes.inherit_name = false;
+		//input.setDisplayName(juncFrom.name);
+		
+		input.attributes.inherit_type = false;
+		if(_tind != -1)
+			input.inputs[| 2].setValue(_tind);
+			
+		input.inParent.setFrom(juncFrom);
+	}
 	
 	tool_node = noone;
 	draw_input_overlay = true;
@@ -120,6 +142,8 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		
 		for( var i = 0; i < ds_list_size(inputs); i++ )
 			if(inputs[| i].isVisible()) _hi += 24;
+		if(active_draw_index == 1) _hi += 24;
+		draw_dummy  = active_draw_index == 1;
 		
 		for( var i = 0; i < ds_list_size(outputs); i++ )
 			if(outputs[| i].isVisible()) _ho += 24;
@@ -152,6 +176,10 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 			}
 		}
 		return nodes;
+	} #endregion
+	
+	static getInput = function(junc = noone) { #region
+		return input_dummy;
 	} #endregion
 	
 	static getNextNodes = function() { #region //get node inside the group
@@ -324,14 +352,31 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 	
 	PATCH_STATIC
 	
+	static onPreDraw = function(_x, _y, _s, _iny, _outy) { #region
+		var xx = x * _s + _x;
+		var yy = y * _s + _y;
+		
+		input_dummy.x = xx;
+		input_dummy.y = _iny;
+	} #endregion
+	
 	static preConnect = function() { #region
 		sortIO();
 		deserialize(load_map, load_scale);
 	} #endregion
 	
-	static sortIO = function() { #region
-		input_display_list = [];
+	static onDrawJunctions = function(_x, _y, _mx, _my, _s) { #region
+		input_dummy.visible = false;
 		
+		if(draw_dummy) {
+			input_dummy.visible = true;
+			input_dummy.drawJunction(_s, _mx, _my);
+		}
+		
+		draw_dummy = false;
+	} #endregion
+	
+	static sortIO = function() { #region
 		var sep = attributes.separator;		
 		array_sort(sep, function(a0, a1) { return a0[0] - a1[0]; });
 		var siz = ds_list_size(inputs);
@@ -347,9 +392,14 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 		for( var i = siz - 1; i >= custom_input_index; i-- )
 			ds_list_delete(inputs, i);
 		
-		for( var i = 0; i < custom_input_index; i++ ) 
-			array_push(input_display_list, i);
-			
+		if(array_empty(input_display_list_def)) {
+			input_display_list = [];
+			for( var i = 0; i < custom_input_index; i++ ) 
+				array_push(input_display_list, i);
+		} else {
+			input_display_list = array_clone(input_display_list_def);
+		}
+		
 		for( var i = custom_input_index; i < siz; i++ ) {
 			var _jin = ds_priority_delete_min(ar);
 			_jin.index = i;
@@ -357,9 +407,8 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 			array_push(input_display_list, i);
 		}
 		
-		for( var i = array_length(sep) - 1; i >= 0; i-- ) {
-			array_insert(input_display_list, sep[i][0], [ sep[i][1], false, i ]);
-		}
+		for( var i = array_length(sep) - 1; i >= 0; i-- )
+			array_insert(input_display_list, array_length(input_display_list_def) + sep[i][0], [ sep[i][1], false, i ]);
 		
 		ds_priority_destroy(ar);
 		
@@ -468,6 +517,8 @@ function Node_Collection(_x, _y, _group = noone) : Node(_x, _y, _group) construc
 			if(is_instanceof(nodes[| i], Node_Group_Thumbnail))
 				_output_junc = nodes[| i].inputs[| 0];
 		}
+		
+		if(!is_instanceof(_output_junc, NodeValue)) return noone;
 		
 		switch(_output_junc.type) {
 			case VALUE_TYPE.surface :

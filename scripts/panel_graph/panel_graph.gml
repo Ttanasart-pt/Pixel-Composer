@@ -1118,7 +1118,7 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 				}
 			}
 			
-			if(target != noone && target.connect_type == JUNCTION_CONNECT.input && target.node.auto_input)
+			if(key_mod_press(CTRL) && target != noone && target.connect_type == JUNCTION_CONNECT.input && target.node.auto_input)
 				_addInput = true;
 			
 			var _mmx = target != noone? target.x : _mx;
@@ -1636,8 +1636,10 @@ function Panel_Graph(project = PROJECT) : PanelContent() constructor {
 		function doPaste() { #region
 			var txt  = clipboard_get_text();
 			var _map = json_try_parse(txt, noone);
-		
-			if(_map != noone) {
+			
+			if(txt == "") return;
+			
+			if(is_struct(_map)) {
 				ds_map_clear(APPEND_MAP);
 				APPENDING = true;
 				CLONING	  = true;

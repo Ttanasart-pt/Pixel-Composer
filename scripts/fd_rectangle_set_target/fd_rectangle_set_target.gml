@@ -41,6 +41,7 @@ function fd_rectangle_set_target(domain, type) {
 	            surface_set_target(sf_velocity_temporary);
 	            draw_enable_alphablend(false);
 	            draw_surface(sf_velocity, 0, 0);
+				
 	            shader_set(sh_fd_add_velocity_glsl);
 	            shader_set_uniform_f(shader_get_uniform(sh_fd_add_velocity_glsl, "addend"), 0.5 + 0.5 * sf_velocity_texel_width, 0.5 + 0.5 * sf_velocity_texel_height);
 	            texture_set_stage(shader_get_sampler_index(sh_fd_add_velocity_glsl, "texture_velocity"), surface_get_texture(sf_velocity));

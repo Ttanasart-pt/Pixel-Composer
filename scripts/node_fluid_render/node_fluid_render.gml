@@ -13,10 +13,12 @@ function Node_Fluid_Render(_x, _y, _group = noone) : Node_Fluid(_x, _y, _group) 
 	inputs[| 2] = nodeValue("Interpolate", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
 		
 	inputs[| 3] = nodeValue("Draw Domain", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, false);
+		
+	inputs[| 4] = nodeValue("Auto Update", self, JUNCTION_CONNECT.input, VALUE_TYPE.boolean, true);
 	
 	input_display_list = [
 		["Domain",	false], 0, 
-		["Render",	false], 1, 2, 3,
+		["Render",	false], 4, 1, 2, 3,
 	];
 		
 	outputs[| 0] = nodeValue("Fluid", self, JUNCTION_CONNECT.output, VALUE_TYPE.surface, noone);
@@ -51,11 +53,16 @@ function Node_Fluid_Render(_x, _y, _group = noone) : Node_Fluid(_x, _y, _group) 
 		var _dom = inputs[| 0].getValue(frame);
 		var _int = inputs[| 2].getValue(frame);
 		var _drw = inputs[| 3].getValue(frame);
+		var _upd = inputs[| 4].getValue(frame);
 		
-		if(_dom == noone || !instance_exists(_dom)) return;
+		FLUID_DOMAIN_CHECK
 		
 		var fSurf = _dom.sf_material_0;
 		if(!is_surface(fSurf)) return;
+		
+		if(_upd) fd_rectangle_update(_dom);
+		texture_set_interpolation(false);
+		
 		outputs[| 1].setValue(_dom.sf_world);
 		
 		surface_set_shader(_outSurf, sh_fd_visualize_colorize_glsl);

@@ -256,8 +256,10 @@ function drawWidget(xx, yy, ww, _m, jun, global_var = true, _hover = false, _foc
 				
 			case VALUE_TYPE.curve :   
 				param.h = ui(160);
-				if(point_in_rectangle(_m[0], _m[1], ui(32), _hsy, ui(32) + ww - ui(16), _hsy + editBoxH))
+				if(point_in_rectangle(_m[0], _m[1], ui(32), _hsy, ui(32) + ww - ui(16), _hsy + param.h)) {
 					mbRight = false;
+					//_scrollPane.scroll_lock = true; // Not good UX-wise
+				}
 				break;
 		}
 		

@@ -49,7 +49,7 @@ function Node_Fluid_Vortex(_x, _y, _group = noone) : Node_Fluid(_x, _y, _group) 
 		var _aio = inputs[| 4].getValue(frame);
 		var _mod = inputs[| 5].getValue(frame);
 		
-		if(_dom == noone || !instance_exists(_dom)) return;
+		FLUID_DOMAIN_CHECK
 		outputs[| 0].setValue(_dom);
 		
 		_rad = max(_rad, 1);

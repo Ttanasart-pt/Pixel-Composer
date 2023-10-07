@@ -40,7 +40,21 @@ function Node_Rigid_Object_Spawner(_x, _y, _group = noone) : Node(_x, _y, _group
 	
 	spawn_index = 0;
 	
+	attributes.show_objects = true;
+	array_push(attributeEditors, "Display");
+	array_push(attributeEditors, ["Show objects", function() { return attributes.show_objects; }, 
+		new checkBox(function() { 
+			attributes.show_objects = !attributes.show_objects;
+		})]);
+	
 	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) {
+		if(attributes.show_objects) 
+		for( var i = 0, n = ds_list_size(group.nodes); i < n; i++ ) {
+			var _node = group.nodes[| i];
+			if(!is_instanceof(_node, Node_Rigid_Object)) continue;
+			_node.drawOverlayPreview(_x, _y, _s, _mx, _my, _snx, _sny);
+		}
+		
 		inputs[| 1].drawOverlay(active, _x, _y, _s, _mx, _my, _snx, _sny);
 	}
 	

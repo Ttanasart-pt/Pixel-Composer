@@ -129,7 +129,7 @@
 	function __txt_junction_data(node, type, index, def = []) {
 		gml_pragma("forceinline");
 		
-		if(TESTING) return def;
+		return def;
 		
 		if(!struct_has(LOCALE.node, node))
 			return def;

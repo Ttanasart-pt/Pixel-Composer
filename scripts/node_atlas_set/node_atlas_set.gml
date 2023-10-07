@@ -51,11 +51,24 @@ function Node_Atlas_Set(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		for( var i = 0, n = array_length(atl); i < n; i++ ) {
 			natl[i] = atl[i].clone();
 			
-			if(use[1]) natl[i].surface.set(array_safe_get(surf, i));
-			if(use[2]) natl[i].position =  array_safe_get(posi, i);
+			if(use[1]) natl[i].setSurface(array_safe_get(surf, i));
+			
+			if(use[2]) {
+				var pos = array_safe_get(posi, i);
+				natl[i].x = array_safe_get(pos, 0);
+				natl[i].y = array_safe_get(pos, 1);
+			}
+			
 			if(use[3]) natl[i].rotation =  array_safe_get(rota, i);
-			if(use[4]) natl[i].scale    =  array_safe_get(scal, i);
+			
+			if(use[4]) {
+				var sca = array_safe_get(scal, i);
+				natl[i].sx = array_safe_get(sca, 0, 1);
+				natl[i].sy = array_safe_get(sca, 1, 1);
+			}
+			
 			if(use[5]) natl[i].blend    =  array_safe_get(blns, i);
+			
 			if(use[6]) natl[i].alpha    =  array_safe_get(alph, i);
 		}
 		

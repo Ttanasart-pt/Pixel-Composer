@@ -18,6 +18,13 @@ function Node_Rigid_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 	
 	attribute_surface_depth();
 	
+	attributes.show_objects = true;	
+	array_push(attributeEditors, "Display");
+	array_push(attributeEditors, ["Show objects", function() { return attributes.show_objects; }, 
+		new checkBox(function() { 
+			attributes.show_objects = !attributes.show_objects;
+		})]);
+	
 	static createNewInput = function() {
 		var index = ds_list_size(inputs);
 		inputs[| index] = nodeValue("Object", self, JUNCTION_CONNECT.input, VALUE_TYPE.rigid, noone )
@@ -54,6 +61,17 @@ function Node_Rigid_Render(_x, _y, _group = noone) : Node(_x, _y, _group) constr
 		
 		refreshDynamicInput();
 	}
+	
+	static drawOverlay = function(active, _x, _y, _s, _mx, _my, _snx, _sny) { #region
+		if(!is_instanceof(group, Node_Rigid_Group)) return;
+		if(!attributes.show_objects) return;
+		
+		for( var i = 0, n = ds_list_size(group.nodes); i < n; i++ ) {
+			var _node = group.nodes[| i];
+			if(!is_instanceof(_node, Node_Rigid_Object)) continue;
+			_node.drawOverlayPreview(_x, _y, _s, _mx, _my, _snx, _sny);
+		}
+	} #endregion
 	
 	static step = function() {
 		var _dim = getInputData(0);

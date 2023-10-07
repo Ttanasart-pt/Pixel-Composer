@@ -495,6 +495,9 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		array_depth  = 0;
 		auto_connect = true;
 		setFrom_condition = -1;
+		
+		onSetFrom = noone;
+		onSetTo   = noone;
 	#endregion
 	
 	#region ---- animation ----
@@ -533,6 +536,8 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		fullUpdate = false;
 		
 		attributes = {};
+		
+		node.inputs_data[index] = _value;
 	#endregion
 	
 	#region ---- draw ----
@@ -1743,6 +1748,10 @@ function NodeValue(_name, _node, _connect, _type, _value, _tooltip = "") constru
 		}
 		
 		UPDATE_RENDER_ORDER = true;
+		
+		if(onSetFrom != noone)			onSetFrom(_valueFrom);
+		if(_valueFrom.onSetTo != noone) _valueFrom.onSetTo(self);
+		
 		return true;
 	} #endregion
 	

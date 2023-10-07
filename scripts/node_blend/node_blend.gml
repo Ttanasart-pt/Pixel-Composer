@@ -61,7 +61,7 @@ function Node_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		
 		var _atlas  = is_instanceof(_fore, SurfaceAtlas);
 		
-		inputs[| 5].editWidget.data_list = _atlas? [ "None", "Stretch" ] : [ "None", "Stretch", "Tile" ];
+		inputs[| 5].setVisible(!_atlas);
 		inputs[| 6].editWidget.data_list = _atlas? [ "Background", "Forground" ] : [ "Background", "Forground", "Mask", "Maximum", "Constant" ];
 		inputs[| 7].setVisible(_outp == 4);
 		
@@ -114,7 +114,7 @@ function Node_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 				break;
 		}
 		
-		if(_fill == 0) { // Direct placement
+		if(_fill == 0 || _atlas) { // Direct placement
 			for( var i = 0; i < 2; i++ )
 				temp_surface[i] = surface_verify(temp_surface[i], ww, hh, cDep);
 			
@@ -174,7 +174,13 @@ function Node_Blend(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) con
 		
 		if(_atlas) {
 			var _newAtl = _fore.clone();
-			_newAtl.surface.set(_output);
+			
+			if(_outp == 0) {
+				_newAtl.x = 0;
+				_newAtl.y = 0;
+			}
+			
+			_newAtl.setSurface(_output);
 			return _newAtl;
 		}
 		

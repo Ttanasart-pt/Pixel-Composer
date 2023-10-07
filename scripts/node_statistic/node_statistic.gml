@@ -35,16 +35,16 @@ function Node_Statistic(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 	
 	setIsDynamicInput(1);
 	
-	static createNewInput = function() {
+	static createNewInput = function() { #region
 		var index = ds_list_size(inputs);
 		inputs[| index] = nodeValue("Input", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, -1 )
-			.setVisible(true, true);
-	}
+			.setVisible(false, true);
+	} #endregion
 	if(!LOADING && !APPENDING) createNewInput();
 	
 	outputs[| 0] = nodeValue("Statistic", self, JUNCTION_CONNECT.output, VALUE_TYPE.float, -1);
 	
-	static refreshDynamicInput = function() {
+	static refreshDynamicInput = function() { #region
 		var _l = ds_list_create();
 		
 		for( var i = 0; i < input_fix_len; i++ ) {
@@ -54,6 +54,7 @@ function Node_Statistic(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		for( var i = input_fix_len; i < ds_list_size(inputs); i++ ) {
 			if(inputs[| i].value_from) {
 				ds_list_add(_l, inputs[| i]);
+				inputs[| i].setVisible(true, true);
 			} else {
 				delete inputs[| i];	
 			}
@@ -67,17 +68,22 @@ function Node_Statistic(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		inputs = _l;
 		
 		createNewInput();
-	}
+	} #endregion
 	
-	static onValueFromUpdate = function(index) {
+	static onValueFromUpdate = function(index) { #region
 		if(LOADING || APPENDING) return;
 		
 		refreshDynamicInput();
-	}
+	} #endregion
 	
-	static update = function(frame = PROJECT.animator.current_frame) {
+	static update = function(frame = PROJECT.animator.current_frame) { #region
 		var type = getInputData(0);
 		var res = 0;
+		
+		if(ds_list_size(inputs) - 1 == input_fix_len) {
+			outputs[| 0].setValue(0);
+			return;
+		}
 		
 		switch(type) {
 			case STAT_OPERATOR._sum : 
@@ -171,9 +177,9 @@ function Node_Statistic(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		}
 		
 		outputs[| 0].setValue(res);
-	}
+	} #endregion
 	
-	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) {
+	static onDrawNode = function(xx, yy, _mx, _my, _s, _hover, _focus) { #region
 		draw_set_text(f_h3, fa_center, fa_center, COLORS._main_text);
 		var str = "";
 		switch(getInputData(0)) {
@@ -187,5 +193,5 @@ function Node_Statistic(_x, _y, _group = noone) : Node(_x, _y, _group) construct
 		var bbox = drawGetBbox(xx, yy, _s);
 		var ss	= string_scale(str, bbox.w, bbox.h);
 		draw_text_transformed(bbox.xc, bbox.yc, str, ss, ss, 0);
-	}
+	} #endregion
 }

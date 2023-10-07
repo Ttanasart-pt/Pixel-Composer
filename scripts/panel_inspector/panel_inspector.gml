@@ -77,7 +77,8 @@ function Panel_Inspector() : PanelContent() constructor {
 		meta_display = [ 
 			[ __txt("Project Settings"), false ], 
 			[ __txt("Metadata"), true ], 
-			[ __txtx("panel_globalvar", "Global variables"), true, button(function() { panelAdd("Panel_Globalvar", true); }, THEME.node_goto).setIcon(THEME.node_goto, 0, COLORS._main_icon) ] 
+			[ __txtx("panel_globalvar", "Global variables"), true, button(function() { panelAdd("Panel_Globalvar", true); }, THEME.node_goto).setIcon(THEME.node_goto, 0, COLORS._main_icon) ], 
+			[ __txt("Group Properties"), true ], 
 		];
 	#endregion
 	
@@ -162,6 +163,11 @@ function Panel_Inspector() : PanelContent() constructor {
 		var ry = y + top_bar_h;
 		
 		for( var i = 0, n = array_length(meta_display); i < n; i++ ) {
+			if(i == 3) {
+				var context = PANEL_GRAPH.getCurrentContext();
+				if(context == noone) continue;
+			}
+			
 			var _meta = meta_display[i];
 			var _txt  = array_safe_get(_meta, 0);
 			var _b	  = array_safe_get(_meta, 2, noone);
@@ -194,148 +200,148 @@ function Panel_Inspector() : PanelContent() constructor {
 				continue;
 			}
 			
-			if(i == 0) {
-				var _edt = PROJECT.attributeEditor;
-				for( var j = 0; j < array_length(_edt); j++ ) {
-					var title = _edt[j][0];
-					var param = _edt[j][1];
-					var editW = _edt[j][2];
+			switch(i) {
+				case 0 :
+					var _edt = PROJECT.attributeEditor;
+					for( var j = 0; j < array_length(_edt); j++ ) {
+						var title = _edt[j][0];
+						var param = _edt[j][1];
+						var editW = _edt[j][2];
 					
-					draw_set_text(f_p0, fa_left, fa_top, COLORS._main_text_inner);
-					draw_text_add(ui(16), yy, __txt(title));
-					yy += line_get_height() + ui(6);
-					hh += line_get_height() + ui(6);
+						draw_set_text(f_p0, fa_left, fa_top, COLORS._main_text_inner);
+						draw_text_add(ui(16), yy, __txt(title));
+						yy += line_get_height() + ui(6);
+						hh += line_get_height() + ui(6);
 					
-					editW.setFocusHover(pFOCUS, _hover);
-					if(pFOCUS) editW.register(contentPane);
+						editW.setFocusHover(pFOCUS, _hover);
+						if(pFOCUS) editW.register(contentPane);
 					
-					var wh = 0;
-					var _data = PROJECT.attributes[$ param];
+						var wh = 0;
+						var _data = PROJECT.attributes[$ param];
 					
-					wh = editW.drawParam(new widgetParam(ui(16), yy, w - ui(16 + 48), TEXTBOX_HEIGHT, _data, {}, _m, rx, ry));
+						wh = editW.drawParam(new widgetParam(ui(16), yy, w - ui(16 + 48), TEXTBOX_HEIGHT, _data, {}, _m, rx, ry));
 					
-					yy += wh + ui(8);
-					hh += wh + ui(8);
-				}
-			} else if(i == 1) {				
-				for( var j = 0; j < array_length(meta.displays); j++ ) {
-					var display = meta.displays[j];
-					
-					draw_set_text(f_p0, fa_left, fa_top, COLORS._main_text_inner);
-					draw_text_add(ui(16), yy, __txt(display[0]));
-					yy += line_get_height() + ui(6);
-					hh += line_get_height() + ui(6);
-				
-					meta_tb[j].setFocusHover(pFOCUS, _hover);
-					if(pFOCUS) meta_tb[j].register(contentPane);
-					
-					var wh = 0;
-					var _dataFunc = display[1];
-					var _data     = _dataFunc(meta);
-					
-					switch(instanceof(meta_tb[j])) {
-						case "textArea" :	
-							wh = meta_tb[j].draw(ui(16), yy, w - ui(16 + 48), display[2], _data, _m);
-							break;
-						case "textArrayBox" :	
-							meta_tb[j].arraySet = current_meta.tags;
-							wh = meta_tb[j].draw(ui(16), yy, w - ui(16 + 48), display[2], _m, rx, ry);
-							break;
+						yy += wh + ui(8);
+						hh += wh + ui(8);
 					}
+					break;
+				case 1 :
+					for( var j = 0; j < array_length(meta.displays); j++ ) {
+						var display = meta.displays[j];
 					
-					yy += wh + ui(8);
-					hh += wh + ui(8);
-				}
-			} else if (i == 2) {
-				if(findPanel("Panel_Globalvar")) {
-					yy += ui(4);
-					hh += ui(4);
-					continue;
-				}
+						draw_set_text(f_p0, fa_left, fa_top, COLORS._main_text_inner);
+						draw_text_add(ui(16), yy, __txt(display[0]));
+						yy += line_get_height() + ui(6);
+						hh += line_get_height() + ui(6);
 				
-				var gvh = globalvar_viewer_draw(ui(16), yy, contentPane.surface_w - ui(24), _m, pFOCUS, _hover, contentPane, ui(16) + x, top_bar_h + y);
-				yy += gvh + ui(8);
-				hh += gvh + ui(8);
-				
-				var bh = ui(36);
-				var bx = ui(16);
-				var by = yy;
-				var bbw = contentPane.surface_w - ui(24);
-				
-				if(var_editing) {
-					var bw = bbw / 2 - ui(4);
+						meta_tb[j].setFocusHover(pFOCUS, _hover);
+						if(pFOCUS) meta_tb[j].register(contentPane);
 					
-					if(buttonInstant(THEME.button_hide, bx, by, bw, bh, _m, pFOCUS, _hover) == 2)
-						var_editing = !var_editing;
+						var wh = 0;
+						var _dataFunc = display[1];
+						var _data     = _dataFunc(meta);
+					
+						switch(instanceof(meta_tb[j])) {
+							case "textArea" :	
+								wh = meta_tb[j].draw(ui(16), yy, w - ui(16 + 48), display[2], _data, _m);
+								break;
+							case "textArrayBox" :	
+								meta_tb[j].arraySet = current_meta.tags;
+								wh = meta_tb[j].draw(ui(16), yy, w - ui(16 + 48), display[2], _m, rx, ry);
+								break;
+						}
+					
+						yy += wh + ui(8);
+						hh += wh + ui(8);
+					}
+					break;
+				case 2 :
+					if(findPanel("Panel_Globalvar")) {
+						yy += ui(4);
+						hh += ui(4);
+						continue;
+					}
+				
+					var gvh = globalvar_viewer_draw(ui(16), yy, contentPane.surface_w - ui(24), _m, pFOCUS, _hover, contentPane, ui(16) + x, top_bar_h + y);
+					yy += gvh + ui(8);
+					hh += gvh + ui(8);
+				
+					var bh = ui(36);
+					var bx = ui(16);
+					var by = yy;
+					var bbw = contentPane.surface_w - ui(24);
+				
+					if(var_editing) {
+						var bw = bbw / 2 - ui(4);
+					
+						if(buttonInstant(THEME.button_hide, bx, by, bw, bh, _m, pFOCUS, _hover) == 2)
+							var_editing = !var_editing;
 		
-					var txt  = __txt("Apply");
-					var icon = THEME.accept;
-					var colr = COLORS._main_value_positive;
+						var txt  = __txt("Apply");
+						var icon = THEME.accept;
+						var colr = COLORS._main_value_positive;
 					
-					draw_set_text(f_p0b, fa_left, fa_center, COLORS._main_icon)
-					var bxc = bx + bw / 2 - (string_width(txt) + ui(48)) / 2;
-					var byc = by + bh / 2;
-					draw_sprite_ui(icon, 0, bxc + ui(24), byc,,,, colr);
-					draw_text_add(bxc + ui(48), byc, txt);
+						draw_set_text(f_p0b, fa_left, fa_center, COLORS._main_icon)
+						var bxc = bx + bw / 2 - (string_width(txt) + ui(48)) / 2;
+						var byc = by + bh / 2;
+						draw_sprite_ui(icon, 0, bxc + ui(24), byc,,,, colr);
+						draw_text_add(bxc + ui(48), byc, txt);
 				
-					bx += bw + ui(4);
+						bx += bw + ui(4);
 				
-					if(buttonInstant(THEME.button_hide, bx, by, bw, bh, _m, pFOCUS, _hover) == 2)
-						PROJECT.globalNode.createValue();
+						if(buttonInstant(THEME.button_hide, bx, by, bw, bh, _m, pFOCUS, _hover) == 2)
+							PROJECT.globalNode.createValue();
 					
-					var txt  = __txt("Add");
-					var icon = THEME.add;
+						var txt  = __txt("Add");
+						var icon = THEME.add;
 				
-					draw_set_text(f_p0b, fa_left, fa_center, COLORS._main_icon)
-					var bxc = bx + bw / 2 - (string_width(txt) + ui(48)) / 2;
-					var byc = by + bh / 2;
-					draw_sprite_ui(icon, 0, bxc + ui(24), byc,,,, colr);
-					draw_text_add(bxc + ui(48), byc, txt);
-				} else {
-					var bw = bbw;
+						draw_set_text(f_p0b, fa_left, fa_center, COLORS._main_icon)
+						var bxc = bx + bw / 2 - (string_width(txt) + ui(48)) / 2;
+						var byc = by + bh / 2;
+						draw_sprite_ui(icon, 0, bxc + ui(24), byc,,,, colr);
+						draw_text_add(bxc + ui(48), byc, txt);
+					} else {
+						var bw = bbw;
 					
-					if(buttonInstant(THEME.button_hide, bx, by, bw, bh, _m, pFOCUS, _hover) == 2)
-						var_editing = !var_editing;
+						if(buttonInstant(THEME.button_hide, bx, by, bw, bh, _m, pFOCUS, _hover) == 2)
+							var_editing = !var_editing;
 		
-					var txt  = __txt("Edit");
-					var icon = THEME.gear;
-					var colr = COLORS._main_icon;
+						var txt  = __txt("Edit");
+						var icon = THEME.gear;
+						var colr = COLORS._main_icon;
 					
-					draw_set_text(f_p0b, fa_left, fa_center, colr)
-					var bxc = bx + bw / 2 - (string_width(txt) + ui(48)) / 2;
-					var byc = by + bh / 2;
-					draw_sprite_ui(icon, 0, bxc + ui(24), byc,,,, colr);
-					draw_text_add(bxc + ui(48), byc, txt);
-				}
-				
-				yy += bh + ui(16);
-				hh += bh + ui(16);
+						draw_set_text(f_p0b, fa_left, fa_center, colr)
+						var bxc = bx + bw / 2 - (string_width(txt) + ui(48)) / 2;
+						var byc = by + bh / 2;
+						draw_sprite_ui(icon, 0, bxc + ui(24), byc,,,, colr);
+						draw_text_add(bxc + ui(48), byc, txt);
+					}
+					break;
+				case 3 :
+					var context = PANEL_GRAPH.getCurrentContext();
+					var _h = drawNodeProperties(yy, _m, context);
+					
+					yy += _h;
+					hh += _h;
+					break;
 			}
 			
 			yy += ui(8);
 			hh += ui(8);
 		}
-			
+		
 		return hh;
 	} #endregion
 	
-	contentPane = new scrollPane(content_w, content_h, function(_y, _m) { #region
-		var con_w = contentPane.surface_w - ui(4);
+	static drawNodeProperties = function(_y, _m, _inspecting = inspecting) { #region
+		var con_w = contentPane.surface_w - ui(4); 
 		var _hover = pHOVER && contentPane.hover;
 		
-		draw_clear_alpha(COLORS.panel_bg_clear, 0);
-		
-		if(point_in_rectangle(_m[0], _m[1], 0, 0, con_w, content_h) && mouse_press(mb_left, pFOCUS))
-			prop_selecting = noone;
-		
-		if(inspecting == noone) // metadata
-			return drawMeta(_y, _m);
-		
-		inspecting.inspecting = true;
+		_inspecting.inspecting = true;
 		prop_hover	= noone;
 		var jun		= noone;
-		var amoIn	= inspecting.input_display_list == -1? ds_list_size(inspecting.inputs) : array_length(inspecting.input_display_list);
-		var amoOut	= ds_list_size(inspecting.outputs);
+		var amoIn	= _inspecting.input_display_list == -1? ds_list_size(_inspecting.inputs) : array_length(_inspecting.input_display_list);
+		var amoOut	= ds_list_size(_inspecting.outputs);
 		var amo		= amoIn + 1 + amoOut;
 		var hh		= ui(40);
 		
@@ -357,8 +363,8 @@ function Panel_Inspector() : PanelContent() constructor {
 			var ww  = max(ui(180), con_w / 3);
 			var wx0 = wx1 - ww;
 			
-			for( var i = 0, n = array_length(inspecting.attributeEditors); i < n; i++ ) {
-				var edt = inspecting.attributeEditors[i];
+			for( var i = 0, n = array_length(_inspecting.attributeEditors); i < n; i++ ) {
+				var edt = _inspecting.attributeEditors[i];
 				
 				if(is_string(edt)) {
 					var lby = yy + ui(12);
@@ -410,11 +416,11 @@ function Panel_Inspector() : PanelContent() constructor {
 			var yy = hh + _y;
 			
 			if(i < amoIn) { #region inputs
-				if(inspecting.input_display_list == -1) {
-					jun = inspecting.inputs[| i];
+				if(_inspecting.input_display_list == -1) {
+					jun = _inspecting.inputs[| i];
 				} else {
-					if(i >= array_length(inspecting.input_display_list)) break;
-					var jun_disp = inspecting.input_display_list[i];
+					if(i >= array_length(_inspecting.input_display_list)) break;
+					var jun_disp = _inspecting.input_display_list[i];
 					if(is_array(jun_disp)) {
 						var txt  = __txt(jun_disp[0]);
 						var coll = jun_disp[1] && filter_text == "";
@@ -425,7 +431,7 @@ function Panel_Inspector() : PanelContent() constructor {
 							if(mouse_press(mb_left, pFOCUS))
 								jun_disp[@ 1] = !coll;
 							if(mouse_press(mb_right, pFOCUS))
-								menuCall("inspector_group_menu",,, group_menu,, inspecting);
+								menuCall("inspector_group_menu",,, group_menu,, _inspecting);
 						} else
 							draw_sprite_stretched_ext(THEME.group_label, 0, 0, yy, con_w, ui(32), COLORS.panel_inspector_group_bg, 1);
 					
@@ -440,10 +446,10 @@ function Panel_Inspector() : PanelContent() constructor {
 						
 						if(coll) {
 							var j    = i + 1;
-							var _len = array_length(inspecting.input_display_list);
+							var _len = array_length(_inspecting.input_display_list);
 							
 							while(j < _len) {
-								var j_jun = inspecting.input_display_list[j];
+								var j_jun = _inspecting.input_display_list[j];
 								if(is_array(j_jun))
 									break;
 								j++;
@@ -461,7 +467,7 @@ function Panel_Inspector() : PanelContent() constructor {
 						hh += jun_disp.draw(ui(6), yy, con_w - ui(12), _m, _hover, pFOCUS) + ui(8);
 						continue;
 					}
-					jun = inspecting.inputs[| inspecting.input_display_list[i]];
+					jun = _inspecting.inputs[| _inspecting.input_display_list[i]];
 				}
 			#endregion
 			} else if(i == amoIn) { #region output label
@@ -474,7 +480,7 @@ function Panel_Inspector() : PanelContent() constructor {
 			#endregion
 			} else { #region outputs
 				var outInd = i - amoIn - 1;
-				jun = inspecting.outputs[| outInd];
+				jun = _inspecting.outputs[| outInd];
 			#endregion
 			} 
 			
@@ -654,6 +660,19 @@ function Panel_Inspector() : PanelContent() constructor {
 		#endregion
 		
 		return hh;
+	} #endregion
+	
+	contentPane = new scrollPane(content_w, content_h, function(_y, _m) { #region
+		var con_w  = contentPane.surface_w - ui(4);
+		
+		draw_clear_alpha(COLORS.panel_bg_clear, 0);
+		
+		if(point_in_rectangle(_m[0], _m[1], 0, 0, con_w, content_h) && mouse_press(mb_left, pFOCUS))
+			prop_selecting = noone;
+		
+		if(inspecting == noone) // metadata
+			return drawMeta(_y, _m);
+		return drawNodeProperties(_y, _m);
 	}); #endregion
 	
 	function propSelectCopy() { #region

@@ -39,7 +39,7 @@ function Node_Fluid_Turbulence(_x, _y, _group = noone) : Node_Fluid(_x, _y, _gro
 		var _sed = inputs[| 4].getValue(frame);
 		var _mod = inputs[| 5].getValue(frame);
 		
-		if(_dom == noone || !instance_exists(_dom)) return;
+		FLUID_DOMAIN_CHECK
 		outputs[| 0].setValue(_dom);
 		
 		var vSurface = surface_create_size(_dom.sf_velocity);

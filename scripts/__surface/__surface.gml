@@ -32,6 +32,7 @@ function SurfaceAtlas(surface, _x = 0, _y = 0, rot = 0, sx = 1, sy = 1, blend = 
 	
 	static setSurface = function(surface) {
 		gml_pragma("forceinline");
+		
 		self.surface.set(surface);
 		
 		w = surface_get_width_safe(surface);
