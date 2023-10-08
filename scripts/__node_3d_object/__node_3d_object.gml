@@ -35,6 +35,7 @@ function Node_3D_Object(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 		drag_py = 0;
 		drag_cx = 0;
 		drag_cy = 0;
+		drag_rot_axis = new BBMOD_Quaternion();
 		
 		drag_original = 0;
 		
@@ -341,18 +342,20 @@ function Node_3D_Object(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 			
 		if(drag_axis != noone) { #region
 			var mAng = point_direction(cx, cy, _mx, _my);
-			var _n   = BBMOD_VEC3_FORWARD;
+			
+			if(drag_rot_axis == undefined) {
+				drag_rot_axis = BBMOD_VEC3_FORWARD;
 				
-			switch(drag_axis) {
-				case 0 : _n = new BBMOD_Vec3(-1,  0,  0); break;
-				case 1 : _n = new BBMOD_Vec3( 0,  0, -1); break;
-				case 2 : _n = new BBMOD_Vec3( 0, -1,  0); break;
+				switch(drag_axis) {
+					case 0 : drag_rot_axis = new BBMOD_Vec3(-1,  0,  0); break;
+					case 1 : drag_rot_axis = new BBMOD_Vec3( 0,  0, -1); break;
+					case 2 : drag_rot_axis = new BBMOD_Vec3( 0, -1,  0); break;
+				}
+			
+				if(_axis == 0) drag_rot_axis = _qrot.Rotate(drag_rot_axis).Normalize();
 			}
 			
-			if(_axis == 0) 
-				_n = _qrot.Rotate(_n).Normalize();
-			
-			var _nv = _qview.Rotate(_qinv.Rotate(_n));
+			var _nv = _qview.Rotate(_qinv.Rotate(drag_rot_axis));
 			draw_line_round(cx, cy, cx + _nv.X * 100, cy + _nv.Y * 100, 2);
 				
 			if(drag_prev != undefined) {
@@ -360,10 +363,10 @@ function Node_3D_Object(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 				drag_dist += _rd;
 				var _dist  = value_snap(drag_dist, _sny);
 				
-				var _currR = new BBMOD_Quaternion().FromAxisAngle(_n, _dist);
+				var _currR = new BBMOD_Quaternion().FromAxisAngle(drag_rot_axis, _dist);
 				var _val   = _currR.Mul(drag_val);
 				var _Nrot  = _val.ToArray();
-					
+				
 				if(inputs[| index].setValue(_Nrot))
 					UNDO_HOLDING = true;
 			} 
@@ -377,9 +380,10 @@ function Node_3D_Object(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 		if(_hover != noone && mouse_press(mb_left, active)) { #region
 			drag_axis = _hover;
 			drag_prev = undefined;
-			
 			drag_val  = _qrot.Clone();
 			drag_dist = 0;
+			
+			drag_rot_axis = undefined;
 		} #endregion
 	} #endregion
 	

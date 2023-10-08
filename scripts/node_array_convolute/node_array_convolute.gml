@@ -1,5 +1,5 @@
 function Node_Array_Convolute(_x, _y, _group = noone) : Node(_x, _y, _group) constructor {
-	name		= "Array Convulute";
+	name		= "Array Convolute";
 	previewable = false;
 	
 	w = 96;
