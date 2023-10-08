@@ -92,7 +92,6 @@ function __3dScene(camera, name = "New scene") constructor {
 	static submitUI		= function(object, shader = noone) { D3DSCENE_PRESUBMIT object.submitUI		(self, shader); D3DSCENE_POSTSUBMIT }
 	static submitSel	= function(object, shader = noone) { D3DSCENE_PRESUBMIT object.submitSel	(self, shader); D3DSCENE_POSTSUBMIT }
 	static submitShader	= function(object, shader = noone) { D3DSCENE_PRESUBMIT object.submitShader (self, shader); D3DSCENE_POSTSUBMIT }
-	static submitShadow	= function(object)                 { D3DSCENE_PRESUBMIT object.submitShadow (self, object); D3DSCENE_POSTSUBMIT }
 	
 	static deferPass = function(object, w, h, deferData = noone) { #region
 		if(deferData == noone) deferData = {

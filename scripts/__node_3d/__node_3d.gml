@@ -15,6 +15,7 @@ function Node_3D(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constr
 	
 	static getPreviewObject = function() { #region
 		if(ds_list_empty(outputs)) return noone;
+		
 		switch(outputs[| preview_channel].type) {
 			case VALUE_TYPE.d3Mesh		: 
 			case VALUE_TYPE.d3Light		: 
@@ -25,8 +26,7 @@ function Node_3D(_x, _y, _group = noone) : Node_Processor(_x, _y, _group) constr
 		}
 		
 		var _obj = outputs[| 0].getValue();
-		if(is_array(_obj))
-			_obj = array_safe_get(_obj, preview_index, noone);
+		if(is_array(_obj)) _obj = array_safe_get(_obj, preview_index, noone);
 		
 		return _obj;
 	} #endregion

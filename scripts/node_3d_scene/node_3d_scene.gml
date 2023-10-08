@@ -46,7 +46,7 @@ function Node_3D_Scene(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constru
 			var _obj = _data[i];
 			if(_obj == noone) continue;
 			
-			array_push(_scene.objects, _obj);
+			_scene.addObject(_obj);
 		}
 		
 		return _scene;

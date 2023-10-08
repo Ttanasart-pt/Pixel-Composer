@@ -105,15 +105,15 @@ function Node_3D_Mesh_Obj(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group)
 		obj_read_time    = get_timer();
 		obj_read_file    = file_text_open_read(current_path);
 		use_display_list = false;
-	}
+	} #endregion
 	
-	static updateObjProcess = function() {
+	static updateObjProcess = function() { #region
 		switch(obj_read_progress) {
 			case 0 : readObj_file(); break;
 			case 1 : readObj_cent(); break;
 			case 2 : readObj_buff(); break;
 		}
-	}
+	} #endregion
 	
 	static updateObjComplete = function() { #region
 		use_display_list = true;
@@ -227,5 +227,5 @@ function Node_3D_Mesh_Obj(_x, _y, _group = noone) : Node_3D_Mesh(_x, _y, _group)
 		draw_set_color(COLORS._main_icon);
 		//draw_arc(cx, cy, rr, 90, 90 - 360 * (obj_read_progress + obj_read_prog_sub) / obj_read_prog_tot, 4 * _s, 180);
 		draw_arc(cx, cy, rr, current_time / 5, current_time / 5 + 90, 4 * _s, 90);
-	}
+	} #endregion
 }

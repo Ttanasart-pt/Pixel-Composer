@@ -38,12 +38,7 @@ function __3dLight() : __3dObject() constructor {
 		if(!shadow_active) return;
 		
 		shadowProjectBegin();
-		for( var i = 0, n = array_length(objects); i < n; i++ ) {
-			var _prev = objects[i];
-			if(!is_struct(_prev)) continue;
-				
-			_prev.submit(scene, shadow_mapper);
-		}
+		objects.submit(scene, shadow_mapper);
 		shadowProjectEnd();
 	} #endregion
 }

@@ -14,9 +14,12 @@ function Node_3D_Object(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 	inputs[| 2] = nodeValue("Scale", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 1, 1, 1 ])
 		.setDisplay(VALUE_DISPLAY.vector);
 	
+	inputs[| 3] = nodeValue("Anchor", self, JUNCTION_CONNECT.input, VALUE_TYPE.float, [ 0, 0, 0 ])
+		.setDisplay(VALUE_DISPLAY.vector);
+	
 	in_d3d = ds_list_size(inputs);
 	
-	#macro __d3d_input_list_transform ["Transform", false], 0, 1, 2
+	#macro __d3d_input_list_transform ["Transform", false], 0, 3, 1, 2
 	
 	#region ---- overlay ----
 		drag_axis  = noone;
@@ -594,10 +597,12 @@ function Node_3D_Object(_x, _y, _group = noone) : Node_3D(_x, _y, _group) constr
 		var _pos = _data[0];
 		var _rot = _data[1];
 		var _sca = _data[2];
+		var _anc = _data[3];
 		
-		object.transform.position.set(_pos[0], _pos[1], _pos[2]);
-		object.transform.rotation.set(_rot[0], _rot[1], _rot[2], _rot[3]);
-		object.transform.scale.set(_sca[0], _sca[1], _sca[2]);
+		object.transform.position.set(	_pos[0], _pos[1], _pos[2]);
+		object.transform.anchor.set(	_anc[0], _anc[1], _anc[2]);
+		object.transform.rotation.set(	_rot[0], _rot[1], _rot[2], _rot[3]);
+		object.transform.scale.set(		_sca[0], _sca[1], _sca[2]);
 		
 		return object;
 	} #endregion

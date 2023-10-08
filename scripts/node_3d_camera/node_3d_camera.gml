@@ -273,7 +273,7 @@ function Node_3D_Camera(_x, _y, _group = noone) : Node_3D_Object(_x, _y, _group)
 		
 		#region submit
 			var _bgSurf = _dbg? scene.renderBackground(_dim[0], _dim[1]) : noone;
-			scene.submitShadow(_sobj);
+			_sobj.submitShadow(scene, _sobj);
 			deferData   = scene.deferPass(_sobj, _dim[0], _dim[1], deferData);
 			
 			var _render = outputs[| 0].getValue();

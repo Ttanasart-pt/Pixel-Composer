@@ -1,5 +1,6 @@
 function __3dGroup() constructor {
 	objects = [];
+	
 	transform = new __transform();
 	
 	static getCenter = function() { #region
@@ -49,6 +50,11 @@ function __3dGroup() constructor {
 		return new __bbox3D(_m0, _m1); 
 	} #endregion
 	
+	static addObject = function(_obj) { #region
+		gml_pragma("forceinline");
+		array_push(objects, _obj);
+	} #endregion
+	
 	static submit       = function(scene = {}, shader = noone) { 
 		transform.submitMatrix();
 		for( var i = 0, n = array_length(objects); i < n; i++ )
@@ -77,7 +83,7 @@ function __3dGroup() constructor {
 	
 	static submitShadow = function(scene = {}, object = noone) { 
 		for( var i = 0, n = array_length(objects); i < n; i++ )
-			objects[i].submitShadow(scene, object.objects);
+			objects[i].submitShadow(scene, object);
 	}
 	
 	static map = function(callback, scene = {}) { #region

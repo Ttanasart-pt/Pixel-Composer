@@ -96,11 +96,7 @@ function __3dLightPoint() : __3dLight() constructor {
 		
 		for( var j = 0; j < 6; j++ ) { ///FUCK There's gotta be a better way to do this in GameMaker
 			shadowProjectBegin(j);
-			for( var i = 0, n = array_length(objects); i < n; i++ ) {
-				var _prev = objects[i];
-				if(_prev == noone) continue;
-				_prev.submit(scene, shadow_mapper);
-			}
+			objects.submit(scene, shadow_mapper);
 			shadowProjectEnd();
 		}
 		

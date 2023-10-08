@@ -2,6 +2,7 @@ function __transform() constructor {
 	parent = noone;
 	
 	position = new __vec3(0);
+	anchor   = new __vec3(0);
 	rotation = new BBMOD_Quaternion();
 	scale    = new __vec3(1);
 	
@@ -15,13 +16,18 @@ function __transform() constructor {
 		var sca = matrix_build(0, 0, 0, 
 					  		   0, 0, 0, 
 					  		   scale.x,    scale.y,    scale.z);
+		var anc = matrix_build(-anchor.x, -anchor.y, -anchor.z, 
+							   0, 0, 0, 
+							   1, 1, 1);
 							   
 		matrix_stack_push(pos);
 		matrix_stack_push(rot);
 		matrix_stack_push(sca);
+		matrix_stack_push(anc);
 	}
 	
 	static clearMatrix = function() {
+		matrix_stack_pop();
 		matrix_stack_pop();
 		matrix_stack_pop();
 		matrix_stack_pop();
